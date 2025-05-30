@@ -1,526 +1,214 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F34E52222DF
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:34:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748597694; cv=none; b=JICzyLglG0nwnLhQmUgC3wmA143VYZucXMbMuTKTup6F6GuGt6X7kKylf4lt5i8hB446GPc0r0QIlzlRweD3kI47He9YnxhnzQdAYRct98YRAEN6xwohQ+WRBqf+Zx1QTJlSGQs5zp50f1E3p5nGHJ7qqq29j21YdP8ZCF8FSxs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748597694; c=relaxed/simple;
-	bh=huOWwdeBYR2ktVOxaLw5MQ08zC/qZOEF1LgzmHEU8B4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BGN94+HwkEpGGZ8E8nz7TghW3QLx2ewE0Yy9Htyzqp2Fr3qZtCfFqjIsWAM9C7K5Q+W1R8QsSGqgPbc9WDm1rXiDUF8geKgakV15MkWc+IfQQDkFgjyXKr9M1lmhPbYopZi2zNxOXA7tvzolNr2hFqzn9ZItMtV0lFduQFW95/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=lIRmN2ee; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23DD5223329;
+	Fri, 30 May 2025 09:34:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748597699; cv=fail; b=dxiq7D/NXMuZ47zY9+nabT1zOzc5zl6cCmCsAlJqvSmlIoEs4UYzaszr3IDkA9vepBz06LoAyZiGOVsFVF6NXy3FbGvxE/gEqywmoQEMA16QDk4RBTECMIf5aXDWocUG1SqDDy41w5/UXt2TBOiVg3ig2EllPoPkXfgPxi+BVk4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748597699; c=relaxed/simple;
+	bh=q+VHYhTE9aFecDltfYda6QQGYbdez3jnFxvXanydKDk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=SlVEWPMWwwkSUHcezkiKot/axGn8fqqUK8LX43iHZ504i/icTN/vIIvgfzZiW/aPdzGMJfPsP+bOokBxPvYuvJI6JdvvWy5Os2iYcz5OhSOQkHUwDTUc8FFkAZ7lLltb4LKmiqt2+fInlSudZHwsc7MWZf9T37N2QWl/DYUEv+o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=btDkUdUp; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=cCEBbPYu; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="lIRmN2ee"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-3109fb9f941so2028108a91.3
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:34:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="btDkUdUp";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="cCEBbPYu"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54U6u1HR004285;
+	Fri, 30 May 2025 09:34:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=q+VHYhTE9aFecDltfY
+	da6QQGYbdez3jnFxvXanydKDk=; b=btDkUdUprQ+0w8L7bLFKmdgcqf/ksiNTTs
+	Dc+5q4Rj+XnY2zc/xFYHgHDDOKMKsfogSSYMYYFCgKayJRWK4zQ+7zjtb9VSzkWG
+	Axu8uju5GjuezsSjQcKnJ36hKSNyzPYgqt7dsTNzU8TSUlh7fJbFwZIEr0fwvb+m
+	CADTSRIGKLbGdFyF/aBI4yDXHDDGIeVOvlqozOTQz5RpHtMVL+l8YzXZbCEZyHCD
+	ik3ZrD6U4zPL4xaDyhAo19ADpVBNrg4t2yiOiDppgiuxF6LHw/71d833vK2Q5Nm2
+	MzIdC5OsUqCvG+fT6YRW4OF4uaK2YKMF9aohIFj2XgQljPN/P5iw==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46v0ym21en-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 30 May 2025 09:34:42 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54U8fjsG026679;
+	Fri, 30 May 2025 09:34:42 GMT
+Received: from bl2pr02cu003.outbound.protection.outlook.com (mail-eastusazon11010043.outbound.protection.outlook.com [52.101.51.43])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46u4jd29s9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 30 May 2025 09:34:41 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fskhCaPucbnEzy1vnbqYMP5RT9hhJ5PXdYbw21rRhAlqWDe45KXCXkoH0mll5520LcNJBZpT+fz/86kUuB7MKPdYvC4xxr4ni1kJcbKmmplI9jYxnwrGw5D4A9+vq8uBJSer6zqVKY84shKkofDZ35pIioqtp0VOd7jI/RK4LUib35rRBfmIOeC3CvsLZhv9yJUGeERg8mGHx1blZjDdRVz4WuvM4ic1AWEa3CPMmjjn+Y7xyLc31zd5/f1K/0YAuXWqsfwdvEPQTPzblMBGgeomlHs09RoYF5Z5rtXS1GtoGhNXX+aB0UFwaGCm7Bgp7fFVjNFLwsAVmq+8xIzBTQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=q+VHYhTE9aFecDltfYda6QQGYbdez3jnFxvXanydKDk=;
+ b=s1xicqXkeLfheoZaB2/U+TANiv1vUsJH1S7Mnnp9YrE4ytEzUxiOAtCqZ6V4WJk2hkgmEG8qgesut3VLbO2Y+nLc/EAIrit+AiPYfeRR1Qvdwh5z6MdKZC3dcXisN8j/4csZ1TjOrIBwOmNwG+BXTZlKmFKgQMUBm2mZUfQ6Nll8VQQRbB/BgjWuvHjQeZ7xSS0Zyo/JnrV8/NuVlIqe1Hs7Rz/gmyMSh28wA/VG8Zf3ehJTduLDN2WUuXyxfq8ebSqxr+yu0Py5rw/5ewY9Os8p7ayWILwJ4ObCJ313R8xxWgclMJ6usCv6BKBAb74fM3cbEfgAVWoaSTInwYXgdQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1748597691; x=1749202491; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4r9koD1NPFSh7WkJOunYhnXV7czMJGlSW2YfbvvIqZo=;
-        b=lIRmN2eeZ8hSHOyD39mDvrocaoB8bYLso4269wCfjXQI0Z8JKAB6gX6E1JAqesqZ/l
-         zaiBhXOow9Usxm0YRWoacFzS88MYj527OdXbqSVqJ1/1BO+xLI32fpqghiDeoKeOCtCU
-         u8iM/Bfx+qO4chcVapQLofBcqDwsjrgzxfXdYb676HxXu+4OoSAEtNhOwekhobMWxe5b
-         VrmEQwZP8W8pjANYe8ZNtzAHPMNLXeC1Sv3tW4hu7PDctYmDkiIKsRP0vycUImdyIOns
-         w/0C7zy0BB/CD1W6apOtKJLlYzXpQ1a6enbXVSMYtpU7Um7GyF2uvmS9ZZMjLd3ah+Uw
-         zd0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748597691; x=1749202491;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4r9koD1NPFSh7WkJOunYhnXV7czMJGlSW2YfbvvIqZo=;
-        b=fThKqwJbXgYmaFEmcIHQhoe4CYEvhqFvNk/SYYyOcX2nC96ORyOixTqMu33VKmwNxj
-         UUjZe3emCSDL9/CL5mttwy0dE31VcLGzAzzcTWxCOJV+a3VA8ExoMYvfhVmBH++t/OIv
-         fuXYIXAPDHCmNZR+YZmSy+nvZDka7Z8gAWz3c0V8d9HC4K12MOzqAQqzRd6K6fPs2a03
-         V3uFdXy2aWMORTP3HmBfHxMaZDE1bb2m1VTj54SDlvhef9YHfV9LrIT5eW2PDn1OYcmI
-         udmKfsFCJtAe56uC+YMGY/PjC/9+NI3Cyc+EId7yBKLgwv3kPOcgeGolE2y0aANbXz+p
-         xWKA==
-X-Forwarded-Encrypted: i=1; AJvYcCVTJlAM56kypMsUY5Tl56dIodGa76esH4he2D3YNPOJFyIFmg8qTf1WFiETh1ugUxDRc3Gwr4EG3pVoHeM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQ9hRgevlnk1xMcUv4a5qTNhSfEmBjGs4fzzOEZT+wGJ2erwbY
-	eNfn6fwythp4wwu9AWLnE1fA1LA1gvT2fziqVc87efUHw8J+j6LxYzy46I2DITPYCEo=
-X-Gm-Gg: ASbGncvwtYxPvjoU1BnBFS1u/6hb1u4ab8d0AQGHwXPLPJRaFbhMwngiYyZy8clQB11
-	AQR2ByFsUCjXSRoic/9T4dIkopEI+dHgZh3/jxGX3XGXAqaVob50SAESj+SaIdtMIlDZ7jF6U4j
-	5SsNu9yhI6tCXAtbjMDlawzIlrsOGs1lrHaVcilpS6sb0krgd+eo96MX3VKO0I0xSHZRnHrIvGQ
-	+x57QgePNFneBEAHu+dGQ3JxsT9WqdP23+5E7VZDygtIbCDnyT25DFUwUkVWjcw+dypIhzuF354
-	sSGTQp43tLSCRyNVxCQ8On/KXxTustV6YhTivO0Hm56Bj133ErHizTJuvCn1bPi6MoKcMOeqzPy
-	bL1TuyvWMWA==
-X-Google-Smtp-Source: AGHT+IEYFSuwVcZ5gMKEd63K0LSZFm1at7KJSWQADYXZzWbymIXeS5JhogJZ9S4360x8945TmkY35w==
-X-Received: by 2002:a17:90b:2e8b:b0:311:e637:287b with SMTP id 98e67ed59e1d1-3124198a8e2mr3896259a91.29.1748597690878;
-        Fri, 30 May 2025 02:34:50 -0700 (PDT)
-Received: from FQ627FTG20.bytedance.net ([63.216.146.178])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e29f7b8sm838724a91.2.2025.05.30.02.34.35
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 30 May 2025 02:34:50 -0700 (PDT)
-From: Bo Li <libo.gcs85@bytedance.com>
-To: tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	luto@kernel.org,
-	kees@kernel.org,
-	akpm@linux-foundation.org,
-	david@redhat.com,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	peterz@infradead.org
-Cc: dietmar.eggemann@arm.com,
-	hpa@zytor.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	vbabka@suse.cz,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com,
-	jannh@google.com,
-	pfalcato@suse.de,
-	riel@surriel.com,
-	harry.yoo@oracle.com,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	duanxiongchun@bytedance.com,
-	yinhongbo@bytedance.com,
-	dengliang.1214@bytedance.com,
-	xieyongji@bytedance.com,
-	chaiwen.cc@bytedance.com,
-	songmuchun@bytedance.com,
-	yuanzhu@bytedance.com,
-	chengguozhu@bytedance.com,
-	sunjiadong.lff@bytedance.com,
-	Bo Li <libo.gcs85@bytedance.com>
-Subject: [RFC v2 25/35] RPAL: add MPK initialization and interface
-Date: Fri, 30 May 2025 17:27:53 +0800
-Message-Id: <569387db40571a03a71506cbec12813c1e5dde62.1748594841.git.libo.gcs85@bytedance.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <cover.1748594840.git.libo.gcs85@bytedance.com>
-References: <cover.1748594840.git.libo.gcs85@bytedance.com>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=q+VHYhTE9aFecDltfYda6QQGYbdez3jnFxvXanydKDk=;
+ b=cCEBbPYu6ukzXZdxXzWSYnYiQjTjlSHlx/BXdMvxn5rJPOpVfFWkDIB9tyHJxriyAx4f3q8iZ2nn9CWC69lnh6CsbskOQGNHhTaD360C0XtG6wfo8dmfbcSe/Cekk1a8baPzMe1JSKWqWN3cPD63tgHV5/anAS36i22GFZMS2K4=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by IA4PR10MB8494.namprd10.prod.outlook.com (2603:10b6:208:564::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.40; Fri, 30 May
+ 2025 09:34:39 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.8746.030; Fri, 30 May 2025
+ 09:34:39 +0000
+Date: Fri, 30 May 2025 10:34:36 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
+        hughd@google.com, Liam.Howlett@oracle.com, npache@redhat.com,
+        dev.jain@arm.com, ziy@nvidia.com, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] fix MADV_COLLAPSE issue if THP settings are disabled
+Message-ID: <60a81a60-b7da-4439-b177-9d1bca82828d@lucifer.local>
+References: <cover.1748506520.git.baolin.wang@linux.alibaba.com>
+ <05d60e72-3113-41f0-b81f-225397f06c81@arm.com>
+ <f3dad5b5-143d-4896-b315-38e1d7bb1248@redhat.com>
+ <9b1bac6c-fd9f-4dc1-8c94-c4da0cbb9e7f@arm.com>
+ <abe284a4-db5c-4a5f-b2fd-e28e1ab93ed1@redhat.com>
+ <6caefe0b-c909-4692-a006-7f8b9c0299a6@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6caefe0b-c909-4692-a006-7f8b9c0299a6@redhat.com>
+X-ClientProxiedBy: LO2P265CA0433.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:e::13) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|IA4PR10MB8494:EE_
+X-MS-Office365-Filtering-Correlation-Id: 00a0c160-4915-4450-a431-08dd9f5d330e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Qa9nM3JPhTfPXWdnRpRGAlF4+LbQtDfY1qCECYuQ6n/feROz10K1KWgJ/EhR?=
+ =?us-ascii?Q?pYVHW8tK9scDlp1ck/ym3pavi1wmxVnqbWkuXfyfRPOBVUYPHOitsBnTq30u?=
+ =?us-ascii?Q?nwVBVYBF+bhQm4cQwHYibZbK+tsl2RnfaFuwnrVSgNjUvAesHup5mkOmve1O?=
+ =?us-ascii?Q?t7RSrWKerqtsbCZU2thwQrxwo5by28FBZ0D33A8oMV8qVSbnRw5SJYGJA3io?=
+ =?us-ascii?Q?CzwP4y91rL1td/BrPZdEQJ3I3bzo75sf2IMc5y0TkI4Tc90IPwEYTcJo/z3d?=
+ =?us-ascii?Q?cfSv8POypxECyTa6FmkM3eNDCDHqfpxJSVMXs8/4yoPeyLr1ssCmuO/VhzhR?=
+ =?us-ascii?Q?td0mFVDe0S5PPae3YV4bO5DQLuTg3XSjmHzgKbbYU6LZbGnKJBPl5ea1QjZV?=
+ =?us-ascii?Q?tGZbz+8Lgu05/gzZmFOz+3hjI9M/LzIi7ftI1J1brQaDJM9ToelYfsdqg7d/?=
+ =?us-ascii?Q?EWu8GfiC5RS/nFYYUetPhyJo1lvhpFCG8vsblamahCpNTG64Mh1cFOGW9AfO?=
+ =?us-ascii?Q?foheUnrWG5hkvmmG0wFRB23QmV9ls+ZdDx2yXvmXsJ5EyI88rlv7qPiMnNA3?=
+ =?us-ascii?Q?F9xiIoNVgA/4SW7ChFzgoZweaN83LYMWCglIwgSs70HhtvTYYLiwPs4PRtfV?=
+ =?us-ascii?Q?sMmJ3gKeRjfYr5D1FIebR9/vybnBoytjuckKFojEleAcTgqJurF3g7WvKyVk?=
+ =?us-ascii?Q?D883Bs3f4/BLk3x18NNfuF+mIAkcUdyjIC7+vh/G2oaIDalH5qzV3qjYMblG?=
+ =?us-ascii?Q?vMI9qW+eBEZzCX1Cp5Uw7APKTUi/e7skOl9D0mOJXlxGel8QqNaowGbG019i?=
+ =?us-ascii?Q?IcrXE9Vm67pAAsjvKqCFsq5Kb0k4n6/KM35qHaaa5tLcoqzfBwNXidy7MBbD?=
+ =?us-ascii?Q?YaGWHRupuLqQded/jbAjMOSPqFIuWXyPAkpCvfXROG2cR5tgOCK9Q3+W+NMR?=
+ =?us-ascii?Q?3zmS7blpfC4Ikvr1C5I7DX+Jm/04ne2Pe8vcIp2Id3Ip0l+lMGs8zXKXTPUo?=
+ =?us-ascii?Q?hdnVIk36cOWeOHjAvvDIMLZY5DXynIV3IhbGPqhpN90bUGZNgB+fqUj1VwGD?=
+ =?us-ascii?Q?yB3EGl5bPAQ61MGC9M3ONsBnUxp2Dqcz+kRIuFg/O7sgWg5QbCqPtVPe+PcE?=
+ =?us-ascii?Q?T/dM+fwWNtiiAqRrAARk2TfyRnMLcwlGnm9PiEyPa809k4AFQM3QrnfnBJfl?=
+ =?us-ascii?Q?6cKzw+74zs0sKqU4glhgia5AChIMG7H4eVZ6z79FGkr2+Jq0qPIv+CSD46Up?=
+ =?us-ascii?Q?O4A1E3Hk4m9VKmDZCgfV5uTh2Kuibtwu7ChTcG9Y+dGtUoWIg2qS9rbPRN81?=
+ =?us-ascii?Q?+DWPnLdy27DeMObcbhhy7hyWbSN+aKihrXrb6WAeYI3mUXZd0g0/K+4pKPQP?=
+ =?us-ascii?Q?zxG7eX90R5BHo4/8IGuxgqPFOjUH+v4QBs06aB1f7KX/3xQOnRrN3o+10I0i?=
+ =?us-ascii?Q?uwL0Hl18za0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?kphRsHfP3LjMvJ2NaUoeSnobD18dXFT1He/1dDTZmbLyyRRxoqXYl3y1JcKL?=
+ =?us-ascii?Q?8Zt9v2EJRb3dWjBbo1zDpF8K1HU9F1uBfjd4zbFPVharEnRTlyNIX4ztFwR4?=
+ =?us-ascii?Q?Jkt86cMxK95jU8iaQFtNdvOJfu7+CeZQ6xseRRsluC+FC6m4tw6BGOEa3eYg?=
+ =?us-ascii?Q?XxGcFOCuygWF8v4Tcy/U92AYlL/t5BqKoD+SnTdFr2FKqeO+mpvnedOPpkEe?=
+ =?us-ascii?Q?z5bGgSDd30ylU+sd6jX8M48N7DfV3c/Kae13K4YCqtfaLZxGKUfidbH4MA/9?=
+ =?us-ascii?Q?irbdKXxGP5sSFGRXF2GMR1GrBO9B4zUecBZOKO2zN0kUv55HiQtECp0bMKe1?=
+ =?us-ascii?Q?JQOBZNJg2QfebjjGCv7U4r74Pjel71MQOUZaEsYB2ylNJIVLUkdzfUDwNNIu?=
+ =?us-ascii?Q?IcsmHkwpwM1RiivThgbo6NPE6tEjY+Ll1hQIak0GINyAOdc9F8fZtrSVsSam?=
+ =?us-ascii?Q?TLCiEz1AD6PVQ0cKtEIEs2C8TZY/7k2eW3wKLIGGFp6kZfDziCp3INttEqfW?=
+ =?us-ascii?Q?cnbsHaSArdCijoDVFY060jKZy4D02U4jl3CLbRBW980R8TOwjY6/LrVON6rg?=
+ =?us-ascii?Q?J3qtL/0O7yTBwTjyqG/L+V6XniDrB6YlJlKBKoHWAwhvrd9W9fN41+KojnJW?=
+ =?us-ascii?Q?sIpQXzGt3TFZQwNyVZjqvpwEszqA58WmPgB/J9dy0tjXf5+OD8pl9ARQx4zn?=
+ =?us-ascii?Q?5BOon2JPeER140DVQ3twuVWRn3sg51ntMxF0uetaWXBBrxRnhhqxYPVFdjjT?=
+ =?us-ascii?Q?tSpif956Y7DkY8jvk61NGaD1xFWviZNORkw+Zr7doObgqES+HFUn0HnEA2Q4?=
+ =?us-ascii?Q?vUMzuQ6/0ixZdr1QPvJKDhnSj3ggadinRjhqc4oOKRcJrQycWHGipUR70FV2?=
+ =?us-ascii?Q?kFYxHsAwHUSWcPOXhOGuhOCDF/eP3aszDi3aqkrcXriv6wafp4K4/Cjekark?=
+ =?us-ascii?Q?BYSmetOafCgrDtwKDcy4tzxITzi6LpXeKY8wNYXk5FC+jAVl7ehqm2vOSMnO?=
+ =?us-ascii?Q?9esCWtL1p+VSZeMcma3FLGED76a6Hq4ztfOvtVuc7ME9ve5Dwka2LODWj/aE?=
+ =?us-ascii?Q?jt+yM12rls+Xca666y2cZ/DHrnaCRrwzkLXg3A2HsXi6ALIcf3oIwESswOUt?=
+ =?us-ascii?Q?YDp8uzYl/TSsIm7S9zi0WUgz0pfQAm8NwlMfQDmft7kZek9yRDk3lCTXW5KB?=
+ =?us-ascii?Q?gZ1WC8OMrzNeBL3stYFMpQyFa4r8nxIteHsakFWZkrvip90nIOegN2GEu0qb?=
+ =?us-ascii?Q?Sy82TqQGRdBN8jFlXruBcCehgIyloiSGKUUpI7TEF+jBM7tEkOVWp8uL1dRl?=
+ =?us-ascii?Q?tFFoD4qrEsotn/XA50ZjbCgqGidCSYzJSDF43g/dddmZ+N8wwnuu/otx8kXo?=
+ =?us-ascii?Q?SR6zaeslOf3dRKFLwPOeVNUdf2onqsbVvEYSqV8cKi/IkO0HFhTZ/JyRAs7G?=
+ =?us-ascii?Q?P5CNgTXPUu3jK0/3X5KUf1ZafzwpnrWFq7L4YOlLD+uuTw0hBEXuszTiQhhN?=
+ =?us-ascii?Q?0uMgJJkHyJPtzu/m5WVG+s4f7Dux7b3gv+mE4X6xCfLYPwE4HmWhFtpS2O88?=
+ =?us-ascii?Q?MFO+vwQOehqko7K89TI/ZRCHLSZDSlNXflsNjIGnufB8kP784rJZ70Y27+iQ?=
+ =?us-ascii?Q?UQ=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	gS77m2/MXI3ZMz7S+htv8nu6MttAvGeYt1UQI27iABb+/ta2tVl5HEUtd3yQsCLuwwDHL43fnI4nR2sKrCLUELBrKQQ5995n18NxU1Vl5l0W2IvaOa0MsBVW6cz1gbcfZNIog0Hb7pWCCjlFM27hNUndErRNe4Kv8805ikxj8c/FdXfDt8FjveRzLFs5v2oIH9FD0htmo8Wibq2Tz8ZITzDduzny+WULUzRPkVmEBq0pv488yPqMlCVQ7BoaLUQ7W5mdwKIE/fupUUwU8YNgKlZA5trfoJ8dczB6TUYuWhnfi72IEWLQKlPo4xL/gHs307pKECoiqfjfcu1EzouCy/avUicyrxSxMDCiKX58ctsmL1DjfbVlNr7HX7JSCW6T9Pc2SmhpsVwODOsmcRUGaS/synOrOhGMlRz+3G81vcvt9bAN5BHqcB/W1xA0pL03jaKTcbRkOUlQR7d607Ec0hokN/S/jWER/FU7F5gCVDmzEQjmVXsWg3LqTYeHn0acy7SwxAmRxuZfaYyq+fdiQUlZZj2Ciro5whD98y7PTeLygxH7TIZhAh5tAK1zAZUR5hjeG5lXKwoVS/cDYnDvzsp3dl7OhrR1w8teL2wQRvY=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00a0c160-4915-4450-a431-08dd9f5d330e
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 09:34:39.4449
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BbYbmNTpJ2vP1gWDX2o2uKyAZuwjovQC9yX28E2TVlJMIz3dfRAtaznpTriQw4j588aKfk+f3psA/+XgqMDwUhzglhEpu8GMm6rgMdojzzM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA4PR10MB8494
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-30_04,2025-05-29_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 adultscore=0
+ malwarescore=0 mlxlogscore=999 bulkscore=0 spamscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2505300081
+X-Proofpoint-GUID: fFoTNhnHmj4SwObrP3acnijz9WOOWkQC
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMwMDA4MSBTYWx0ZWRfX/We3qfA9ftAG cstON/TwYTqlchwo6N8zoxu1rd4ClawR6nGcPqehIq5pMwD+1IEOsDgnsWXS/vIjMAr8j6OknsZ cDisDKGmX5/mqIPj9WKPuYhxFwfZVpL86HiyhG8CFVvzaB5TyyW4C+N5dt7/nnpeie4FPGrF9c5
+ Idt2DLOwcyQoeYURfPq8AzbAbgA4NeA5+mQFgxE8Spzwj/oQjH3+c+/GDFEkX3ItzKIKqXBUhUX kc7AlmYgtkgfqjMmfLRiv6UNWZc8nKiVI+D4JFHeALlU6rNf3jQdDeiZ7peJQspcJsCiFVO/cL8 MSS/aUa09AovC7J94DP1JY8EZeFQwCiRrp/JUQV5Ff/0V03eEnclLbFJDFY+dGgrqdqU20YPUGm
+ fWZZDcaxhvanlu3+aMWzXz+8NWTqe+8dwh4dUTO3yMckTeBMC5FwU7p3ODz3kyQ2OOgIU0IT
+X-Proofpoint-ORIG-GUID: fFoTNhnHmj4SwObrP3acnijz9WOOWkQC
+X-Authority-Analysis: v=2.4 cv=N7MpF39B c=1 sm=1 tr=0 ts=68397bb2 b=1 cx=c_pps a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=NFPYR10K5HdowB0G7XMA:9 a=CjuIK1q_8ugA:10
 
-RPAL uses MPK (Memory Protection Keys) to protect memory. Therefore, RPAL
-needs to perform MPK initialization, allocation, and other related tasks,
-while providing corresponding user-mode interfaces.
+On Fri, May 30, 2025 at 11:16:51AM +0200, David Hildenbrand wrote:
+[snip]
+> It kind-of contradicts the linked
+> Documentation/admin-guide/mm/transhuge.rst, where we have this *beautiful*
+> comment
+>
+> "Transparent Hugepage Support for anonymous memory can be entirely disable
+> (mostly for debugging purposes".
+>
+> I mean, "entirely" is also pretty clear to me.
+>
+> I would assume that the man page of MADV_COLLAPSE should have talked about
+> ignoring *khugepaged* toggles (max_ptes_none ...), at least that's what I
+> recall from the discussions back then.
 
-This patch executes MPK initialization operations, including feature
-detection, implementation of user mode interfaces for setting and
-retrieving pkeys, and development of utility functions. For pkey
-allocation, RPAL prioritizes using pkeys provided by user mode, with user
-mode responsible for preventing pkey collisions between different services.
-If user mode does not provide a valid pkey, RPAL generates a pkey via
-id % arch_max_pkey() to maximize the avoidance of pkey collisions.
-Additionally, RPAL does not permit services to manipulate pkeys
-independently; thus, all pkeys are marked as allocated, and services are
-prohibited from releasing pkeys.
+Sorry I don't want to turn this stuff into too much of a mega-thread but
+just a small comment here - I think we should go and update the
+documentation/man pages to be clearer and consistent.
 
-Signed-off-by: Bo Li <libo.gcs85@bytedance.com>
----
- arch/x86/rpal/Kconfig    | 12 +++++++-
- arch/x86/rpal/Makefile   |  1 +
- arch/x86/rpal/core.c     | 13 ++++++++
- arch/x86/rpal/internal.h |  5 +++
- arch/x86/rpal/pku.c      | 47 ++++++++++++++++++++++++++++
- arch/x86/rpal/proc.c     |  5 +++
- arch/x86/rpal/service.c  | 24 +++++++++++++++
- include/linux/rpal.h     | 66 ++++++++++++++++++++++++++++++++++++++++
- mm/mprotect.c            |  9 ++++++
- 9 files changed, 181 insertions(+), 1 deletion(-)
- create mode 100644 arch/x86/rpal/pku.c
+There is enough confusion around this as it is...
 
-diff --git a/arch/x86/rpal/Kconfig b/arch/x86/rpal/Kconfig
-index e5e6996553ea..5434fdb2940d 100644
---- a/arch/x86/rpal/Kconfig
-+++ b/arch/x86/rpal/Kconfig
-@@ -8,4 +8,14 @@ config RPAL
- 	depends on X86_64
- 	help
- 		This option enables system support for Run Process As
--		library (RPAL).
-\ No newline at end of file
-+		library (RPAL).
-+
-+config RPAL_PKU
-+	bool "mpk protection for RPAL"
-+	default y
-+	depends on RPAL
-+	help
-+		Memory protection key (MPK) can achieve intra-process
-+		memory separation which is broken by RPAL, Always keep
-+		it on when use RPAL. CPU feature will be detected at
-+		boot time as some CPUs do not support it.
-\ No newline at end of file
-diff --git a/arch/x86/rpal/Makefile b/arch/x86/rpal/Makefile
-index 89f745382c51..42a42b0393be 100644
---- a/arch/x86/rpal/Makefile
-+++ b/arch/x86/rpal/Makefile
-@@ -3,3 +3,4 @@
- obj-$(CONFIG_RPAL)		+= rpal.o
- 
- rpal-y := service.o core.o mm.o proc.o thread.o
-+rpal-$(CONFIG_RPAL_PKU) += pku.o
-\ No newline at end of file
-diff --git a/arch/x86/rpal/core.c b/arch/x86/rpal/core.c
-index 406d54788bac..41111d693994 100644
---- a/arch/x86/rpal/core.c
-+++ b/arch/x86/rpal/core.c
-@@ -8,6 +8,7 @@
- 
- #include <linux/rpal.h>
- #include <linux/sched/task_stack.h>
-+#include <linux/pkeys.h>
- #include <asm/fsgsbase.h>
- 
- #include "internal.h"
-@@ -374,6 +375,14 @@ static bool check_hardware_features(void)
- 		rpal_err("no fsgsbase feature\n");
- 		return false;
- 	}
-+
-+#ifdef CONFIG_RPAL_PKU
-+	if (!arch_pkeys_enabled()) {
-+		rpal_err("MPK is not enabled\n");
-+		return false;
-+	}
-+#endif
-+
- 	return true;
- }
- 
-@@ -390,6 +399,10 @@ int __init rpal_init(void)
- 	if (ret)
- 		goto fail;
- 
-+#ifdef CONFIG_RPAL_PKU
-+	rpal_set_cap(RPAL_CAP_PKU);
-+#endif
-+
- 	rpal_inited = true;
- 	return 0;
- 
-diff --git a/arch/x86/rpal/internal.h b/arch/x86/rpal/internal.h
-index 6256172bb79e..71afa8225450 100644
---- a/arch/x86/rpal/internal.h
-+++ b/arch/x86/rpal/internal.h
-@@ -54,3 +54,8 @@ rpal_build_call_state(const struct rpal_sender_data *rsd)
- 	return ((rsd->rcd.service_id << RPAL_SID_SHIFT) |
- 		(rsd->scc->sender_id << RPAL_ID_SHIFT) | RPAL_RECEIVER_STATE_CALL);
- }
-+
-+/* pkey.c */
-+int rpal_alloc_pkey(struct rpal_service *rs, int pkey);
-+int rpal_pkey_setup(struct rpal_service *rs, int pkey);
-+void rpal_service_pku_init(void);
-diff --git a/arch/x86/rpal/pku.c b/arch/x86/rpal/pku.c
-new file mode 100644
-index 000000000000..4c5151ca5b8b
---- /dev/null
-+++ b/arch/x86/rpal/pku.c
-@@ -0,0 +1,47 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * RPAL service level operations
-+ * Copyright (c) 2025, ByteDance. All rights reserved.
-+ *
-+ *     Author: Jiadong Sun <sunjiadong.lff@bytedance.com>
-+ */
-+
-+#include <linux/rpal.h>
-+#include <linux/pkeys.h>
-+
-+#include "internal.h"
-+
-+void rpal_service_pku_init(void)
-+{
-+	u16 all_pkeys_mask = ((1U << arch_max_pkey()) - 1);
-+	struct mm_struct *mm = current->mm;
-+
-+	/* We consume all pkeys so that no pkeys will be allocated by others */
-+	mmap_write_lock(mm);
-+	if (mm->context.pkey_allocation_map != 0x1)
-+		rpal_err("pkey has been allocated: %u\n",
-+			 mm->context.pkey_allocation_map);
-+	mm->context.pkey_allocation_map = all_pkeys_mask;
-+	mmap_write_unlock(mm);
-+}
-+
-+int rpal_pkey_setup(struct rpal_service *rs, int pkey)
-+{
-+	int val;
-+
-+	val = rpal_pkey_to_pkru(pkey);
-+	rs->pkey = pkey;
-+	return 0;
-+}
-+
-+int rpal_alloc_pkey(struct rpal_service *rs, int pkey)
-+{
-+	int ret;
-+
-+	if (pkey >= 0 && pkey < arch_max_pkey())
-+		return pkey;
-+
-+	ret = rs->id % arch_max_pkey();
-+
-+	return ret;
-+}
-diff --git a/arch/x86/rpal/proc.c b/arch/x86/rpal/proc.c
-index 16ac9612bfc5..2f9cceec4992 100644
---- a/arch/x86/rpal/proc.c
-+++ b/arch/x86/rpal/proc.c
-@@ -76,6 +76,11 @@ static long rpal_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 	case RPAL_IOCTL_RELEASE_SERVICE:
- 		ret = rpal_release_service(arg);
- 		break;
-+#ifdef CONFIG_RPAL_PKU
-+	case RPAL_IOCTL_GET_SERVICE_PKEY:
-+		ret = put_user(cur->pkey, (int __user *)arg);
-+		break;
-+#endif
- 	default:
- 		return -EINVAL;
- 	}
-diff --git a/arch/x86/rpal/service.c b/arch/x86/rpal/service.c
-index 16e94d710445..ca795dacc90d 100644
---- a/arch/x86/rpal/service.c
-+++ b/arch/x86/rpal/service.c
-@@ -208,6 +208,10 @@ struct rpal_service *rpal_register_service(void)
- 	spin_lock_init(&rs->rpd.poll_lock);
- 	bitmap_zero(rs->rpd.dead_key_bitmap, RPAL_NR_ID);
- 	init_waitqueue_head(&rs->rpd.rpal_waitqueue);
-+#ifdef CONFIG_RPAL_PKU
-+	rs->pkey = -1;
-+	rpal_service_pku_init();
-+#endif
- 
- 	rs->bad_service = false;
- 	rs->base = calculate_base_address(rs->id);
-@@ -288,6 +292,9 @@ static int add_mapped_service(struct rpal_service *rs, struct rpal_service *tgt,
- 	if (node->rs == NULL) {
- 		node->rs = rpal_get_service(tgt);
- 		set_bit(type_bit, &node->type);
-+#ifdef CONFIG_RPAL_PKU
-+		node->pkey = tgt->pkey;
-+#endif
- 	} else {
- 		if (node->rs != tgt) {
- 			ret = -EINVAL;
-@@ -397,6 +404,19 @@ int rpal_request_service(unsigned long arg)
- 		goto put_service;
- 	}
- 
-+#ifdef CONFIG_RPAL_PKU
-+	if (cur->pkey == tgt->pkey) {
-+		ret = -EINVAL;
-+		goto put_service;
-+	}
-+
-+	ret = put_user(tgt->pkey, rra.pkey);
-+	if (ret) {
-+		ret = -EFAULT;
-+		goto put_service;
-+	}
-+#endif
-+
- 	ret = put_user((unsigned long)(tgt->rsm.user_meta), rra.user_metap);
- 	if (ret) {
- 		ret = -EFAULT;
-@@ -577,6 +597,10 @@ int rpal_enable_service(unsigned long arg)
- 	mutex_lock(&cur->mutex);
- 	if (!cur->enabled) {
- 		cur->rsm = rsm;
-+#ifdef CONFIG_RPAL_PKU
-+		rsm.pkey = rpal_alloc_pkey(cur, rsm.pkey);
-+		rpal_pkey_setup(cur, rsm.pkey);
-+#endif
- 		cur->enabled = true;
- 	}
- 	mutex_unlock(&cur->mutex);
-diff --git a/include/linux/rpal.h b/include/linux/rpal.h
-index 4f1d92053818..2f2982d281cc 100644
---- a/include/linux/rpal.h
-+++ b/include/linux/rpal.h
-@@ -97,6 +97,12 @@ enum {
- #define RPAL_ID_MASK (~(0 | RPAL_RECEIVER_STATE_MASK | RPAL_SID_MASK))
- #define RPAL_MAX_ID ((1 << (RPAL_SID_SHIFT - RPAL_ID_SHIFT)) - 1)
- 
-+#define RPAL_PKRU_BASE_CODE_READ 0xAAAAAAAA
-+#define RPAL_PKRU_BASE_CODE 0xFFFFFFFF
-+#define RPAL_PKRU_SET 0
-+#define RPAL_PKRU_UNION 1
-+#define RPAL_PKRU_INTERSECT 2
-+
- extern unsigned long rpal_cap;
- 
- enum rpal_task_flag_bits {
-@@ -122,6 +128,10 @@ enum rpal_sender_state {
- 	RPAL_SENDER_STATE_KERNEL_RET,
- };
- 
-+enum rpal_capability {
-+	RPAL_CAP_PKU
-+};
-+
- struct rpal_critical_section {
- 	unsigned long ret_begin;
- 	unsigned long ret_end;
-@@ -134,6 +144,7 @@ struct rpal_service_metadata {
- 	unsigned long version;
- 	void __user *user_meta;
- 	struct rpal_critical_section rcs;
-+	int pkey;
- };
- 
- struct rpal_request_arg {
-@@ -141,11 +152,17 @@ struct rpal_request_arg {
- 	u64 key;
- 	unsigned long __user *user_metap;
- 	int __user *id;
-+#ifdef CONFIG_RPAL_PKU
-+	int __user *pkey;
-+#endif
- };
- 
- struct rpal_mapped_service {
- 	unsigned long type;
- 	struct rpal_service *rs;
-+#ifdef CONFIG_RPAL_PKU
-+	int pkey;
-+#endif
- };
- 
- struct rpal_poll_data {
-@@ -220,6 +237,11 @@ struct rpal_service {
- 	/* fsbase / pid map */
- 	struct rpal_fsbase_tsk_map fs_tsk_map[RPAL_MAX_RECEIVER_NUM];
- 
-+#ifdef CONFIG_RPAL_PKU
-+	/* pkey */
-+	int pkey;
-+#endif
-+
- 	/* delayed service put work */
- 	struct delayed_work delayed_put_work;
- 
-@@ -323,6 +345,7 @@ enum rpal_command_type {
- 	RPAL_CMD_DISABLE_SERVICE,
- 	RPAL_CMD_REQUEST_SERVICE,
- 	RPAL_CMD_RELEASE_SERVICE,
-+	RPAL_CMD_GET_SERVICE_PKEY,
- 	RPAL_NR_CMD,
- };
- 
-@@ -351,6 +374,8 @@ enum rpal_command_type {
- 	_IOWR(RPAL_IOCTL_MAGIC, RPAL_CMD_REQUEST_SERVICE, unsigned long)
- #define RPAL_IOCTL_RELEASE_SERVICE \
- 	_IOWR(RPAL_IOCTL_MAGIC, RPAL_CMD_RELEASE_SERVICE, unsigned long)
-+#define RPAL_IOCTL_GET_SERVICE_PKEY \
-+	_IOWR(RPAL_IOCTL_MAGIC, RPAL_CMD_GET_SERVICE_PKEY, int *)
- 
- #define rpal_for_each_requested_service(rs, idx)                             \
- 	for (idx = find_first_bit(rs->requested_service_bitmap, RPAL_NR_ID); \
-@@ -420,6 +445,47 @@ static inline bool rpal_is_correct_address(struct rpal_service *rs, unsigned lon
- 	return true;
- }
- 
-+static inline void rpal_set_cap(unsigned long cap)
-+{
-+	set_bit(cap, &rpal_cap);
-+}
-+
-+static inline void rpal_clear_cap(unsigned long cap)
-+{
-+	clear_bit(cap, &rpal_cap);
-+}
-+
-+static inline bool rpal_has_cap(unsigned long cap)
-+{
-+	return test_bit(cap, &rpal_cap);
-+}
-+
-+static inline u32 rpal_pkey_to_pkru(int pkey)
-+{
-+	int offset = pkey * 2;
-+	u32 mask = 0x3 << offset;
-+
-+	return RPAL_PKRU_BASE_CODE & ~mask;
-+}
-+
-+static inline u32 rpal_pkey_to_pkru_read(int pkey)
-+{
-+	int offset = pkey * 2;
-+	u32 mask = 0x3 << offset;
-+
-+	return RPAL_PKRU_BASE_CODE_READ & ~mask;
-+}
-+
-+static inline u32 rpal_pkru_union(u32 pkru0, u32 pkru1)
-+{
-+	return pkru0 & pkru1;
-+}
-+
-+static inline u32 rpal_pkru_intersect(u32 pkru0, u32 pkru1)
-+{
-+	return pkru0 | pkru1;
-+}
-+
- #ifdef CONFIG_RPAL
- static inline struct rpal_service *rpal_current_service(void)
- {
-diff --git a/mm/mprotect.c b/mm/mprotect.c
-index 62c1f7945741..982f911ffaba 100644
---- a/mm/mprotect.c
-+++ b/mm/mprotect.c
-@@ -33,6 +33,7 @@
- #include <linux/userfaultfd_k.h>
- #include <linux/memory-tiers.h>
- #include <uapi/linux/mman.h>
-+#include <linux/rpal.h>
- #include <asm/cacheflush.h>
- #include <asm/mmu_context.h>
- #include <asm/tlbflush.h>
-@@ -895,6 +896,14 @@ SYSCALL_DEFINE1(pkey_free, int, pkey)
- {
- 	int ret;
- 
-+#ifdef CONFIG_RPAL_PKU
-+	if (rpal_current_service()) {
-+		rpal_err("try_to_free pkey: %d %s\n", current->pid,
-+			 current->comm);
-+		return -EINVAL;
-+	}
-+#endif
-+
- 	mmap_write_lock(current->mm);
- 	ret = mm_pkey_free(current->mm, pkey);
- 	mmap_write_unlock(current->mm);
--- 
-2.20.1
-
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
