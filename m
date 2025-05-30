@@ -1,96 +1,169 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB14C1DA5F;
-	Fri, 30 May 2025 10:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42471DA5F;
+	Fri, 30 May 2025 10:28:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748600867; cv=none; b=ScoZeQ5UF+nT9mAmBROpF6drPPWXCPJYCK5s/rVaMtPPk/MyA8dRQTYyP1Her8I2P5H46+64DaLnpYOLERm0lc2ZqpLN/76q7vyOJe1X3DFN4bhKsY2du1cwDqgRicLUq8b7MdfzJKfboiXi/7x3Ua5//1Ij3ulCkugGm59nLtg=
+	t=1748600907; cv=none; b=egunZRfq4HJlKLnLygsr3eJLqtLEB2r2XcikjI/rIZBDmCK1KJLoDZp3zTtN6NHe5whKgBuz9OLsj2gNmljr0qqOoIM5PBRbO2KzUhJTrGVoKjMsR8NBsXW8aBR10rsER5saxEKUbdGJRsp9BSs+VzhbDM1jFbASfDQbYBVpHYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748600867; c=relaxed/simple;
-	bh=yimb/h/oIv9nrFU36k+skWXKj5ccHe01EMDttikc/sI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NhmRshq2Jipx3iFUE7BKXnAQlpGnYVT4uim8iXJ81cyCM6+0H/zyslFNL1NnL+fHI4XQl7/CKSjqdOnZ8qKAXRkwcs2DbqK6JYnyGdQSGO5eqgZqJPh/tKbUWd70dNycVse5e4nIUJQs5PQy2ZAbKPoiVoVq4iulawdmpbsRD9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=JOE1VagW; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1748600907; c=relaxed/simple;
+	bh=45d9iV4MqNSrG586a9RU27aF4aPbOpcp4hQDGkfnGxk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=kElDALmttN9KDJTLA4RFUOs2ekaN3U3LTy3nPLH3kc8dshJLlHFX5s+2BwyxaqvQgQvC0hoWLCBXLkek7mhdmcsrKnoEy8CICQYqkCJ6pxqtUEkZguA9IBhERBKJ6k9+DJIxad8P8QSmoXE74FO5Q91XHby+C0/fpks64G3mGHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OqwPchuX; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="JOE1VagW"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D951140E01A3;
-	Fri, 30 May 2025 10:27:40 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id P9lM-Eo2BI2t; Fri, 30 May 2025 10:27:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1748600856; bh=blS/JssQQ0agsCa6iwZIdjI/QV/iJgq7L8Ra63G35JA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JOE1VagW3LYq3qu19XX/Arlt27IOQZt4+zPdZpViVzMy6uWRVk/mkXSNTXzPr38xn
-	 D/b7Z6745UcKg3okH4WGahMbGP3+iNOG9Zb8Ocmq3U74uV9bOJwdIX7oWX44dCQkQP
-	 u54doDUI/UV45/wP7sFLZX2Fm/wTlcL4ViWNmT8PuylToQrstROVIiuYpaIbWFksYQ
-	 WJ3vhjMZX7ELJ0SzQI2EW9MeZtuZleMry3k1Qlx3kB0EKDmpl+PvEUe9FysqMVOWqU
-	 H7FwKfyrJxQl9HxIgiHB+3aZ3UVoe/v75/3n7ZEJyAMF0CJ+BoIvyqBJuOu2qgQoW9
-	 31aqPfQ/9l61h+oYXz3wgVNUVlXwx0REwbhlLlSZE2EucBbrENuNX4gdRx5g0of8vP
-	 pO/OVN0jCutGg56HJVf3dd0hFNQ8ds/AYpdrVTQe46XUiryBQEPWfsuPflXOsqVD46
-	 1S9AORwC8RP0TBzzGrWu6+nVQ6RGbYwaMKAWbR0UuFEhEMf6LGlvIUvHhDFf/H47Si
-	 upGfGM5fsHupxhda7XSxT11MLb5MnOgteJFK5AuuTI1soRoL0qL++hETl1ZMwk7UGu
-	 FHFr0o/klRY4IWEVWnuiVHaqAy3lgKTE+3sH0C9hrJe1s3hT+oaEnBKN6I+M2Fwppy
-	 rRS45TdAQBSTODtdNbAILmSc=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3B32D40E015E;
-	Fri, 30 May 2025 10:27:19 +0000 (UTC)
-Date: Fri, 30 May 2025 12:27:11 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Zaid Alali <zaidal@os.amperecomputing.com>
-Cc: rafael@kernel.org, lenb@kernel.org, james.morse@arm.com,
-	tony.luck@intel.com, robert.moore@intel.com,
-	Jonathan.Cameron@huawei.com, ira.weiny@intel.com,
-	Benjamin.Cheatham@amd.com, dan.j.williams@intel.com, arnd@arndb.de,
-	Avadhut.Naik@amd.com, u.kleine-koenig@pengutronix.de,
-	john.allen@amd.com, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, acpica-devel@lists.linux.dev
-Subject: Re: [PATCH v7 9/9] ACPI: APEI: EINJ: Update the documentation for
- EINJv2 support
-Message-ID: <20250530102711.GAaDmH_1O7lc6kuveY@fat_crate.local>
-References: <20250506213814.2365788-1-zaidal@os.amperecomputing.com>
- <20250506213814.2365788-10-zaidal@os.amperecomputing.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OqwPchuX"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54U0dhw6031636;
+	Fri, 30 May 2025 10:28:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	A51p7QqjaXVhq/X6ZId6qxk/TZtmy9x/0PBeEDiqRug=; b=OqwPchuX4ruA4Is+
+	fWPQeqkXbn5AdVNH0OZI+Of8ObYImuqrPB26lMmOi0RimzTMwy/HPHRRMPA7a90k
+	+zahYakljIiHOue5qvptLmz2cONxm6i00E1Ys2PHHrEsCRsFJOJxaA6H+evsXHbo
+	1/EtW9B8KGfsn0j1PqLjZESv+N+EVURRVoExrFLap8ob2vShfEeL8/YpmfYVGfl+
+	xdGsNbVTmK8FTlQ1WX1P0XUNe70YSYRh5Aml4whBYaGQlBuH3ptiBS4a6TD+Kda+
+	+AsSnlpjriPdDwqfG9RdsC4VA2yJMhTij91Gai4GYh+nVBDLhIuAb6AhApzHIDOr
+	7BUkwg==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u6vk0qg4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 30 May 2025 10:28:14 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54UASD9I009759
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 30 May 2025 10:28:13 GMT
+Received: from [10.239.133.114] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 30 May
+ 2025 03:28:10 -0700
+Message-ID: <62d1e4cb-cc13-4333-a160-66a280dca5f6@quicinc.com>
+Date: Fri, 30 May 2025 18:28:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250506213814.2365788-10-zaidal@os.amperecomputing.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/2] coresight: add coresight Trace Network On Chip
+ driver
+To: Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@arm.com>
+CC: Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>,
+        <kernel@oss.qualcomm.com>, <linux-arm-msm@vger.kernel.org>,
+        <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250522-trace-noc-v6-0-f5a9bcae90ee@quicinc.com>
+ <20250522-trace-noc-v6-2-f5a9bcae90ee@quicinc.com>
+ <3a19197d-b534-458c-b4d7-51fd9d2c954d@arm.com>
+ <40599afc-4342-467c-87d8-3f53cbcfd242@quicinc.com>
+ <20250523085655.GD2566836@e132581.arm.com>
+ <4d54e620-abb9-4a36-bab0-3970c7e30a5f@arm.com>
+Content-Language: en-US
+From: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+In-Reply-To: <4d54e620-abb9-4a36-bab0-3970c7e30a5f@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=UOXdHDfy c=1 sm=1 tr=0 ts=6839883e cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=r03utmzGDo6xATuXh-kA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: IW1NTlKSK6P1c9yx8AtZwPR1z2zQiOt-
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMwMDA5MCBTYWx0ZWRfX+hgg0vSkh/9I
+ UooJahbzKz+/d79vt0JomJfOtdXN04i+OIocJI2NfHTgmz95teSKUR+5BirWFFdv/h4QyWnDpFL
+ UtnrnOnIs+tz0ZIkORtqRbAn/TAk42k6aEXB0XzgwjylUPCIgIP44Afh/EGW2gMo7y/zqnH8o09
+ Gu2oC1Q3eb3Wer6+T/y9N2SuIw87qpHDPGDsFBgg4VvBZVfzPvuRCBQAgy9mbtV3CVU3LohNZVA
+ QroHeHuJNV4VPt6C2//7wHxv60WROK7CJUd4Vm0ZpDBELLccFIfD72CJGbU2w9Oi/iZ3jEcTlYn
+ pZ20YQVOn7GJiMdpHDpSLOF1XZHHC+zbXbrS/yAFxgyjFRtWf1AAMttSNg2MeWMqFaLuCihuAu2
+ agYZrhu8nio03cUD1PbyQm+MKusxZkJKarMwWrA85bueBehneptlW7Le/muoAmcvL4KMYNH3
+X-Proofpoint-GUID: IW1NTlKSK6P1c9yx8AtZwPR1z2zQiOt-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-30_04,2025-05-29_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 phishscore=0 mlxscore=0 adultscore=0 priorityscore=1501
+ mlxlogscore=999 bulkscore=0 malwarescore=0 impostorscore=0 spamscore=0
+ suspectscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505300090
 
-On Tue, May 06, 2025 at 02:38:13PM -0700, Zaid Alali wrote:
-> +- einjv2_component_array
-> +
-> +  The contents of this file are used to set the "Component Array" field
-> +  of the EINJv2 Extension Structure. The expected format is hex values
-> +  for component id and syndrome separated by space, and multiple
-> +  components are separated by new line.
 
-How is this a good design?
 
-Do you guys not see that the other injection files are one value per file?
+On 5/27/2025 6:19 PM, Suzuki K Poulose wrote:
+> On 23/05/2025 09:56, Leo Yan wrote:
+>> On Fri, May 23, 2025 at 04:08:58PM +0800, Yuanfang Zhang wrote:
+>>
+>> [...]
+>>
+>>>>> +static int trace_noc_init_default_data(struct trace_noc_drvdata *drvdata)
+>>>>> +{
+>>>>> +    int atid;
+>>>>> +
+>>>>> +    atid = coresight_trace_id_get_system_id();
+>>>>> +    if (atid < 0)
+>>>>> +        return atid;
+>>>>> +
+>>>>> +    drvdata->atid = atid;
+>>>>
+>>>> Do you need to expose this via sysfs ? Otherwise, how can you map
+>>>> a trace to a TNOC at decoding ?
+>>>
+>>> yes, need to expose the atid via sysfs, but it better to expose it on source driver which connect with
+>>> this TNOC. so dont expose it on this driver.
+> 
+> But why ? How does that work ? The packets that come via TNOC (irrespective of the source(s)) will have the same ATID as that of the TNOC. So :
+> 
+> 1) How does it help if the source exports the ID that was allocated in the TNOC driver ?
+>
+The sources connecting to TNOC will have the same ATID which allocate in TNOC.
+This is convenient as users do not need to know which source is connected to this TNOC, 
+to get ID can through reading the trace_id sysfs node in the source directory.
 
-> +  # comp_arr="0x1 0x2				# Fill in the component array
-> +    >0x1 0x4
-> +    >0x2 0x4"
-> +  # echo "$comp_arr" > einjv2_component_array
+> 2) How does the source driver know the TraceID for exposing via sysfs ?
+> Does it expose its own traceid ?
+No, sources connecting to TNOC don't have their own traceid, it expose the ATID which allocated in TNOC.
+TNOC will maintain the ID in coresight_path:: trace_id, when enable source, the source can get it from path.
 
-Oh boy. Srsly?!
+Here is the patch to expose id in source:
+https://patchwork.kernel.org/project/linux-arm-kernel/patch/20250530-showtraceid-v1-1-2761352cf7b4@quicinc.com/ 
+> 
+>>
+>> If so, why the ID is not maintained in coresight_path::trace_id?
+>>
+>> A source device allocates ID and maintains in coresight path, then
+>> this ID is passed (when enabling the link) to TNOC driver to consume it.
+> 
+This is because there can be multiple sources connected to one TNOC, and these sources share one Trace ID, so the ID is allocated in TNOC.
 
--- 
-Regards/Gruss,
-    Boris.
+> Good question, since we have the "path" maintaining the TraceID, we
+> should use that here for the TNOC. But the other question is, can there be multiple sources connected to a single TNOC ? (I am guessing, yes!. And thus it may not work with what you are proposing.
+>
+ 
+yes, there can be multiple sources connected to one TNOC, and these sources share one Trace ID which allocate in TNOC. 
+To decode the scenario relay on TraceID + Inport number, TraceID identifies the TNOC, the decoder maintains a table that maps each TNOC inport to its corresponding source.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+> Cheers
+> Suzuki
+> 
+> 
+>>
+>> Thanks,
+>> Leo
+> 
+> 
+> 
+
