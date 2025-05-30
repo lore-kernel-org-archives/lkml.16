@@ -1,184 +1,135 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76AF922F152
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 12:50:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA01A22B5AB;
+	Fri, 30 May 2025 12:52:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748609427; cv=none; b=gneO4GDdkKZCDOIPEq0U+HPmxfHHwrxbr9HUTfH6aFyt6jXiiMqpmFAI/MdJa1Oyh4V1D8x/fy7pvTVPut+nw+uAu/aW4V3tuUHk7RbTwdZPdQeOT8NyXrPITm/5lNKIuovaYWXo8hm4xx8AQ/TTLNMFqpBbiMkg/S3NbmureuQ=
+	t=1748609529; cv=none; b=pzqpuZNQrl0DKNRuLx5DSwXqS99uSu9fAH6+pwVhAWO+HQuteCDvvrRXQQzrFf5XvrJ+7C+fq/iW94S9tLX7u3w28fWAXWnhwT4uk8Ef78AjOL8p5deyPapnXRemsdG9RJ/efMFsEm5goHMsEWp3xPsF5hxVYRmVZT4DD8az2zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748609427; c=relaxed/simple;
-	bh=gk8BiJoSOlM3EqZ6vwCloN3a2SIIrJpadfrjVem2k44=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RRqr+opiGIwRgfH8a+JZpA9+K9EUKDsYxA9GF9TBW6vNVda50fm8BzTQ+GsADcZTxR1fswk2IUI1cVUEKHfPJqdihGf0M0k8HbCoykKsG1id4xT4qQeBaJYl76W1p/dSSvmBjvRaUYPxrKKpodQAzKmQsCfj+YXHoZd8QEU0nNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qIymp3Lj; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748609529; c=relaxed/simple;
+	bh=UQcVtwjs57NCo0a9YDF3wREUlaK90WOqq5g46sAvigg=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=C3QA+OqYmjpo1I1nmk/28OtT2d+LB/iRB1fPFJ2ZeIIrUPVSGmw7VZyXCNA+zpKrAEUrXHDs1xwYh0c9vk+Nous54PKVihT5ez5saUnYBifUYNgjU3M1pmsOEVHQfrycQs/7gSDwtb8D1yFhG86kLX5OL7oF7au/4xOPxiT2d44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ra2olD78; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qIymp3Lj"
-Date: Fri, 30 May 2025 20:50:08 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748609412;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=km2hEb2lbFSiszO5Mv9A3LDpKYpU+31AAVM6oBaOIfc=;
-	b=qIymp3LjJaxvfeMmlUqtvh+Ks6XOvtd7Ldxb7h7rWNPAp8jFUFs+KNcDyyuDGIMdFFC8wr
-	al2g6TJs8zO1bszqhsws/1tImhCLGlHj5MlCp6ijbJGlqyhxFVmwpfJUXUkcLrHws4LcYX
-	ZGQlPBZl54DKqDnwu16vbT1ZIQ6jLjo=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Dawei Li <dawei.li@linux.dev>
-To: Beleswar Prasad Padhi <b-padhi@ti.com>
-Cc: andersson@kernel.org, mathieu.poirier@linaro.org,
-	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	set_pte_at@outlook.com, dawei.li@linux.dev
-Subject: Re: [PATCH v3 3/3] rpmsg: ctrl: Introduce RPMSG_CREATE_EPT_FD_IOCTL
- uAPI
-Message-ID: <20250530125008.GA5355@wendao-VirtualBox>
-References: <20250519150823.62350-1-dawei.li@linux.dev>
- <20250519150823.62350-4-dawei.li@linux.dev>
- <7e983702-6662-465d-86ac-d515849d731d@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ra2olD78"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 223FFC4CEE9;
+	Fri, 30 May 2025 12:52:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748609528;
+	bh=UQcVtwjs57NCo0a9YDF3wREUlaK90WOqq5g46sAvigg=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=Ra2olD78R+++u/Q1wQAKNFyK/4T9kaxrz3Srtkq9PeX6OmziR448c53Lcgghrathh
+	 OKRKbr6kJttLG1p8E9BJ68u4tH4LkbGZfsEtmhlFJXF+GofHpt99TiW+M+L50EmF/u
+	 kESczJ/S8aSLX0l4YWtHplRy9G/caV9ZSGB/MS0Z5/A7S2tejjbQkIrsQVnzeQPcYw
+	 1kforgKu/xq1IMD79Y7gbul6YEDjDlF8e3GOhuJUm9WupaLKV0NuPTcA6QfUZ1nmab
+	 OvN+iObUZHeEDfQ4Sx57XzGwksmiH3NFey4NfbgG1Xnc3gK4pIq+EeORaJcIzhDqkM
+	 hAVeT1v8tJCHA==
+Date: Fri, 30 May 2025 07:52:06 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7e983702-6662-465d-86ac-d515849d731d@ti.com>
-X-Migadu-Flow: FLOW_OUT
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: heiko@sntech.de, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+ quentin.schulz@cherry.de, inindev@gmail.com, sfr@canb.auug.org.au, 
+ conor+dt@kernel.org, linux-kernel@vger.kernel.org, krzk+dt@kernel.org, 
+ nicolas.frattaroli@collabora.com, krzysztof.kozlowski@linaro.org, 
+ andrew@lunn.ch, jonas@kwiboo.se
+To: Hsun Lai <i@chainsx.cn>
+In-Reply-To: <20250530031046.166202-1-i@chainsx.cn>
+References: <20250530031046.166202-1-i@chainsx.cn>
+Message-Id: <174860938675.1571999.8236778735226903385.robh@kernel.org>
+Subject: Re: [PATCH v5 0/2] Add support for Firefly
+ Station-M3/ROC-RK3588S-PC
 
-HI Beleswar,
 
-Thanks for reviewing.
-
-On Fri, May 30, 2025 at 03:15:28PM +0530, Beleswar Prasad Padhi wrote:
-> Hi Dawei,
+On Fri, 30 May 2025 11:10:44 +0800, Hsun Lai wrote:
+> This series add support for Firefly Station-M3/ROC-RK3588S-PC.
 > 
-> On 19/05/25 20:38, Dawei Li wrote:
-> > Implement RPMSG_CREATE_EPT_FD_IOCTL, new uAPI for rpmsg ctrl, which
-> > shares most of operations of RPMSG_CREATE_EPT_IOCTL except that it
-> > returns fd representing eptdev to userspace directly.
-> >
-> > Possible calling procedures for userspace are:
-> > - fd = open("/dev/rpmsg_ctrlX")
-> > - ioctl(fd, RPMSG_CREATE_EPT_FD_IOCTL, &info);
-> > - fd_ep = info.fd
+> Info of device can be found at:
+> https://wiki.t-firefly.com/en/Station-M3/index.html
 > 
+> Changes in v5:
+> - Make led-1 off by default (Chukun Pan, v4)
+> - Add color settings for led (Chukun Pan, v4)
+> - Remove vcc5v0_usbdcin
+> - Put enable/gpio before regulator (Chukun Pan, v4)
+> - Remove always-on and boot-on from vcc5v0_host (Chukun Pan, v4)
+> - Update the name of vbus_typec (Chukun Pan, v4)
+> - Remove always-on and boot-on from vbus5v0_typec (Chukun Pan, v4)
+> - Put pinctrl-names before pinctrl-0 (Chukun Pan, v4)
+> - Remove usb_con node
+> - Remove extra blank lines (Chukun Pan, v4)
+> - Add phy-supply for u2phy3_host (Chukun Pan, v4)
 > 
-> We are returning a new fd to userspace from inside an IOCTL itself. Is this a
-> standard way of doing things in Kernel space? (see below related comment)
-
-Yes, anon_get_{fd,file} are used extensively in kernel for returning a new
-fd to userspace which is associated with an unique data structure in kernel
-space, in different ways:
-
-- via ioctl(), some examples are:
-
- - KVM ioctl(s)
-   - KVM_CREATE_VCPU -> kvm_vm_ioctl_create_vcpu
-   - KVM_GET_STATS_FD -> kvm_vcpu_ioctl_get_stats_fd
-   - KVM_CREATE_DEVICE -> kvm_ioctl_create_device
-   - KVM_CREATE_VM -> kvm_dev_ioctl_create_vm 
-
- - DMA buf/fence/sync ioctls
-   - DMA_BUF_IOCTL_EXPORT_SYNC_FILE -> dma_buf_export_sync_file
-   - SW_SYNC_IOC_CREATE_FENCE -> sw_sync_ioctl_create_fence
-   - Couples of driver implement DMA buf by using anon file _implicitly_:
-     - UDMABUF_CREATE -> udmabuf_ioctl_create
-     - DMA_HEAP_IOCTL_ALLOC -> dma_heap_ioctl_allocate
-
- - gpiolib ioctls:
-   - GPIO_GET_LINEHANDLE_IOCTL -> linehandle_create
-   - GPIO_V2_GET_LINE_IOCTL
-
- -  IOMMUFD ioctls:
-
- -  VFIO Ioctls:
-
- - ....
-
-
-- via other specific syscalls:
- - epoll_create1
- - bpf 
- - perf_event_open
- - inotify_init
- - ...
-
+> Changes in v4:
+> - Update the name of the regulator
+> - Remove the i2s5_8ch node
 > 
-> > - operations on fd_ep(write, read, poll ioctl)
-> > - ioctl(fd_ep, RPMSG_DESTROY_EPT_IOCTL)
-> > - close(fd_ep)
+> Changes in v3:
+> - Update the name of leds
+> - Add more cpu nodes
+> - Update mdio compatible
+> - Fix the order in the node
+> - Add the default serial port(uart2)
+> - Patch 1: Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de>
+> 
+> Changes in v2:
+> - Fix rgmii delays
+> 
+> Changes in v1:
+> - Add support for Firefly ROC-RK3588S-PC
+> 
+> Hsun Lai (2):
+>   dt-bindings: arm: rockchip: Add Firefly ROC-RK3588S-PC
+>   arm64: dts: rockchip: add DTs for Firefly ROC-RK3588S-PC
+> 
+>  .../devicetree/bindings/arm/rockchip.yaml     |   5 +
+>  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+>  .../boot/dts/rockchip/rk3588s-roc-pc.dts      | 838 ++++++++++++++++++
+>  3 files changed, 844 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3588s-roc-pc.dts
+> 
+> --
+> 2.34.1
 > 
 > 
-> Can we rely on the userspace to close() the fd_ep? (if not done, could be a
-> memory leak..).. Opposed to fd, which we can rely on the userspace to
-> close() since they initiated the open() call. I am just trying to understand if
-> this is a standard way of doing things...
-
-Good question.
-
-When userland gets a fd from kernel, it's userland's duty to manage and release
-the resource when it's done with it, because kernel never knows when the fd and
-its resourcen are not needed by userland except process is on exiting. The fact
-remains true no matter how fd is generated from kernel:
-- open()
-- ioctl()
-- Other syscalls(epoll_create1, e.g, as listed above)
-
-As a result, kernel & driver provide fops->release() to achieve resource
-release when fd is not needed for userland, some callers of it maybe:
-- Userland call close() explicitly
-- Kernel does the dirty job when user process exits(if some fds are
-  still opened):
-  - Userland call exit() explicitly.
-  - User process was killed by some signals.
-
-Maybe some comments/docs are needed in uAPI?
-
 > 
-> > - close(fd)
-> >
 
-[snip]
 
-> > +
-> > +	if (cmd == RPMSG_CREATE_EPT_IOCTL || cmd == RPMSG_CREATE_DEV_IOCTL ||
-> > +	    cmd == RPMSG_RELEASE_DEV_IOCTL) {
-> > +		if (copy_from_user(&eptinfo, argp, sizeof(eptinfo)))
-> > +			return -EFAULT;
-> > +
-> > +		memcpy(chinfo.name, eptinfo.name, RPMSG_NAME_SIZE);
-> > +		chinfo.name[RPMSG_NAME_SIZE - 1] = '\0';
-> > +		chinfo.src = eptinfo.src;
-> > +		chinfo.dst = eptinfo.dst;
-> > +	} else if (cmd == RPMSG_CREATE_EPT_FD_IOCTL) {
-> 
-> 
-> Maybe we can put this 'else if condition' in the first 'if' and treat other
-> conditions under 'else', as 'RPMSG_CREATE_EPT_FD_IOCTL' is the only
-> ioctl with a different struct type.
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
-Good point! I will try to address it in next respin.
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
 
-> 
-> Thanks,
-> Beleswar
-> 
-> > +		if (copy_from_user(&ept_fd_info, argp, sizeof(ept_fd_info)))
-> > +			return -EFAULT;
-> > +
-> > +		memcpy(chinfo.name, ept_fd_info.name, RPMSG_NAME_SIZE);
-> > +		chinfo.name[RPMSG_NAME_SIZE - 1] = '\0';
-> > +		chinfo.src = ept_fd_info.src;
-> > +		chinfo.dst = ept_fd_info.dst;
-> > +	}
-> >  
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
 
-[snip]
+  pip3 install dtschema --upgrade
 
-Thanks,
 
-	Dawei
+This patch series was applied (using b4) to base:
+ Base: attempting to guess base-commit...
+ Base: remotes/arm-soc/rockchip/dt64-31-ge463625af7f9 (exact match)
+
+If this is not the correct base, please add 'base-commit' tag
+(or use b4 which does this automatically)
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/rockchip/' for 20250530031046.166202-1-i@chainsx.cn:
+
+arch/arm64/boot/dts/rockchip/rk3588s-roc-pc.dtb: /edp@fdec0000: failed to match any schema with compatible: ['rockchip,rk3588-edp']
+
+
+
+
+
