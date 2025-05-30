@@ -1,215 +1,477 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB11F2AE6F
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 07:15:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0FD31F0E34
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 07:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748589355; cv=none; b=Zv3bcr18RnPTXhvp65Gn4IAF1TCt+k7ATq5+M3Zxlh5k8huWmNpSa0gZKToTymBKGblUyCKXCscMHJq8rl+qckYvf2ArMpAKSVI1Qd7BZJaJFsr0+NmWT5I74oE3dpIzJ50IwrUI9wbpcy4BPRaIjs9mU6wUeo2PVmYmEMa47yY=
+	t=1748589375; cv=none; b=gj5pAKAr5BKsg8Px6PNEL92/B8WMmzq28dmxKEnSlgtfswulLFlXUKxlPnnMOvf0sUvIW/8WmmExt6lF4U2tMZkgqFtsyEoS5Y8ZmVlMNb/1YTIYh+VrcZgY8uereMPzwObd1pqoC/QuDAP8yaTJKX9swywa6+TeqyIjbz4fyUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748589355; c=relaxed/simple;
-	bh=i/sTP8kxv2bHjU6/5tEla5HY5Q+6eGeBtucd+gZOaCU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jr9yLe62Osr+L94S9fJ5Ii2RyVuEwQkn9Yeihrcj4qgfGirGqSo6zipGs0fwGOBWEYiVFz7Pr7PiXXaav/q/2ZODyA3OLdw2q8uJ/u8nTDBg7Tnf8mLXkQpXHet4oFQQDJEszHRVn9FFhX+G3zcxzkKYiM6ttQ/0xOQmoK1puF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=oBbrXNvT; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=9OD/Zc0w; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=oBbrXNvT; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=9OD/Zc0w; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1748589375; c=relaxed/simple;
+	bh=Wqv44jqsdsXHNZZ0Py7UlIVLoL8po8LiL4dYM3Poszo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MdUtqto1pL77nwdrqxWMfQNKSeYW4Pzb6do8WfNpwiKAl5QZwlmD0aHFWpuwWlXKzRpobHfzYZQkso+p2TWzGIcL6Ve7LqW7qLEPpR8Y0JucEHeQ2vmuXHbwtiSNnhIbc5tFZ8Fq6QLpsZJlOh/pHPnLY01yKNMYgdclaa/8rXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=FtUWSb5D; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="oBbrXNvT";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="9OD/Zc0w";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="oBbrXNvT";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="9OD/Zc0w"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id A49AF1F7A1;
-	Fri, 30 May 2025 07:15:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748589351; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=uzU19k1ECLHjrvkeXuOD+PC+beRlg03ZHwC8d7LjQWg=;
-	b=oBbrXNvT2xBNFjpKCbW13YHP4O66WtaiTyPNKlnuc5QcBuF4n+TcsqWcbcPb4nwo1a2jC6
-	1C1SrGTPcNCN7IH3f4mTqvPbTXqogrgCxf56lmABQO7PgEaqPgxP13QXHIM5J6U4W+fjYs
-	b4sx+5gytVsbJLWJUQecvMjY+JSgh1w=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748589351;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=uzU19k1ECLHjrvkeXuOD+PC+beRlg03ZHwC8d7LjQWg=;
-	b=9OD/Zc0wTvD0qN2XodBjaOf/qYa0n0OKAYU0m6GtrS7ZK435G9v4pzPmvuueiYHx8fJI/A
-	7lXqe5U+gx0WHYDQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748589351; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=uzU19k1ECLHjrvkeXuOD+PC+beRlg03ZHwC8d7LjQWg=;
-	b=oBbrXNvT2xBNFjpKCbW13YHP4O66WtaiTyPNKlnuc5QcBuF4n+TcsqWcbcPb4nwo1a2jC6
-	1C1SrGTPcNCN7IH3f4mTqvPbTXqogrgCxf56lmABQO7PgEaqPgxP13QXHIM5J6U4W+fjYs
-	b4sx+5gytVsbJLWJUQecvMjY+JSgh1w=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748589351;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=uzU19k1ECLHjrvkeXuOD+PC+beRlg03ZHwC8d7LjQWg=;
-	b=9OD/Zc0wTvD0qN2XodBjaOf/qYa0n0OKAYU0m6GtrS7ZK435G9v4pzPmvuueiYHx8fJI/A
-	7lXqe5U+gx0WHYDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 84BD8132D8;
-	Fri, 30 May 2025 07:15:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Lw3OHydbOWhcSwAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Fri, 30 May 2025 07:15:51 +0000
-Message-ID: <ecc2b2c4-418f-44c1-b860-eb836cc5841d@suse.cz>
-Date: Fri, 30 May 2025 09:15:51 +0200
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="FtUWSb5D"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e7f7d5ff805so946787276.1
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 00:16:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google; t=1748589372; x=1749194172; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vgcHaRaxMh2WbXNoh/qrbXHdrEGtMeR1ldHMhM030sw=;
+        b=FtUWSb5DLXIW/d/pmg/yKrMZeUoTX+yVZ3cSEncJoOoa6AzDSqWrC/4ROVdQYgIRDq
+         0Y95UP3IScJavxl7v/skNmljXdo+OJ22oSSd16ACnkG6VNRsKg027GbFJ7Qt1lUCqhjL
+         Uti77YA++zwoXPgG97CmY+09D0ZjtVb/DkpX8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748589372; x=1749194172;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vgcHaRaxMh2WbXNoh/qrbXHdrEGtMeR1ldHMhM030sw=;
+        b=G4cjAaPP0F98mGvbCJGYTdT6x6gK+uJ7pA+Z7C7GbG5sDRjxGP0Xx799RioC7c64yo
+         uM12WdKMcrA0zoR/vxgbVnbE46rFhCfwy6FTvdwyHtOVsENllPPSCL8cI5oQ4uTNDoJY
+         rmzqCYvz6YQbGF5GVy5NLx1YArz2/Sq7ED0KYRMGhhaaraghh9y3h6lWtZBpzgEPySH+
+         FyzgWF5WsZhC0Nqvmkzf1JtS+9to0W9ogmKNpd9NTO/hDdy2PmEwPVB3u656L7OkxAQa
+         QkfA+1a3/gl3Qn9OZ8YIHHXDZ5aYSHmwvWrBTiif80h1XKP0v709zlMxOo/CP1lXcYNo
+         evqA==
+X-Gm-Message-State: AOJu0YwK6HBXZE3mbBDTz0oVSlk456j8KUUL6QLMCZ6SM9QDk9AUwGLp
+	8mRP/tS8oTEhzVHtZw0rHSsmjc9C0wfMVRGIxx2ZUtHxSOQFszhM3BQN2cELrE2OmUdhhLL2m8y
+	DeKwNCHVRBg3X7FBFPxZMBd3bNzafqmZRLYQBUuur2Xb/E0bJRbfd9qc=
+X-Gm-Gg: ASbGncuJC+gtcjARP5kCYEbzD+RgR1zKCUmMWIPvtH+c1D4ld+LdGnXPP8GU1ApxD20
+	/pbFYvgcJyZh/4+Q5mN8TbtLvxTnw41lcdkJlleeK/F/J6J16bvzP0Cekz8EndKcqjUQXBC8Nbf
+	eUB8ofQ/LLLCVNavjuLeEFjPm5DX2e9jsWem4R+354
+X-Google-Smtp-Source: AGHT+IGRsXkIuu587xAn1aOXqHZH9/FTuNF5ewSeuATBJbnOQrjPTYZFfIwV+E/yE+CdERS8vXt8QgflfaHX20EKDWA=
+X-Received: by 2002:a05:6902:2ec5:b0:e7d:b16f:f804 with SMTP id
+ 3f1490d57ef6-e7f81de0b4dmr2375591276.15.1748589372522; Fri, 30 May 2025
+ 00:16:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] mm: prevent KSM from breaking VMA merging for new
- VMAs
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>, David Hildenbrand <david@redhat.com>,
- Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, Stefan Roesch <shr@devkernel.io>
-References: <cover.1748537921.git.lorenzo.stoakes@oracle.com>
- <3ba660af716d87a18ca5b4e635f2101edeb56340.1748537921.git.lorenzo.stoakes@oracle.com>
-Content-Language: en-US
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- m6M14QORSWTLRg==
-In-Reply-To: <3ba660af716d87a18ca5b4e635f2101edeb56340.1748537921.git.lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:mid,suse.cz:email]
-X-Spam-Level: 
+References: <20250529143544.2381031-1-dario.binacchi@amarulasolutions.com>
+ <20250529143544.2381031-5-dario.binacchi@amarulasolutions.com> <aDiDUm6cvrC2q/SP@lizhi-Precision-Tower-5810>
+In-Reply-To: <aDiDUm6cvrC2q/SP@lizhi-Precision-Tower-5810>
+From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+Date: Fri, 30 May 2025 09:16:01 +0200
+X-Gm-Features: AX0GCFvYo9dOy9zIb2T_By8Dl0RHc058BX9IZtozb0vhcx7jqadzWyBHPYQtSZo
+Message-ID: <CABGWkvrYiVJn4WdEpNfn8HnZgxYvNJG2Hu59eSvFNvOk7XvkEw@mail.gmail.com>
+Subject: Re: [PATCH v4 4/6] ARM: dts: mxs: support i.MX28 Amarula rmm board
+To: Frank Li <Frank.li@nxp.com>
+Cc: linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com, 
+	michael@amarulasolutions.com, Conor Dooley <conor+dt@kernel.org>, 
+	Fabio Estevam <festevam@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, 
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/29/25 19:15, Lorenzo Stoakes wrote:
-> If a user wishes to enable KSM mergeability for an entire process and all
-> fork/exec'd processes that come after it, they use the prctl()
-> PR_SET_MEMORY_MERGE operation.
-> 
-> This defaults all newly mapped VMAs to have the VM_MERGEABLE VMA flag set
-> (in order to indicate they are KSM mergeable), as well as setting this flag
-> for all existing VMAs and propagating this across fork/exec.
-> 
-> However it also breaks VMA merging for new VMAs, both in the process and
-> all forked (and fork/exec'd) child processes.
-> 
-> This is because when a new mapping is proposed, the flags specified will
-> never have VM_MERGEABLE set. However all adjacent VMAs will already have
-> VM_MERGEABLE set, rendering VMAs unmergeable by default.
-> 
-> To work around this, we try to set the VM_MERGEABLE flag prior to
-> attempting a merge. In the case of brk() this can always be done.
-> 
-> However on mmap() things are more complicated - while KSM is not supported
-> for MAP_SHARED file-backed mappings, it is supported for MAP_PRIVATE
-> file-backed mappings.
-> 
-> These mappings may have deprecated .mmap() callbacks specified which could,
-> in theory, adjust flags and thus KSM eligibility.
-> 
-> So we check to determine whether this is possible. If not, we set
-> VM_MERGEABLE prior to the merge attempt on mmap(), otherwise we retain the
-> previous behaviour.
-> 
-> This fixes VMA merging for all new anonymous mappings, which covers the
-> majority of real-world cases, so we should see a significant improvement in
-> VMA mergeability.
-> 
-> For MAP_PRIVATE file-backed mappings, those which implement the
-> .mmap_prepare() hook and shmem are both known to be safe, so we allow
-> these, disallowing all other cases.
-> 
-> Also add stubs for newly introduced function invocations to VMA userland
-> testing.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Fixes: d7597f59d1d3 ("mm: add new api to enable ksm per process") # please no backport!
-> Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
-> Acked-by: David Hildenbrand <david@redhat.com>
-> Reviewed-by: Liam R. Howlett <Liam.Howlett@oracle.com>
+Hi Frank,
 
-The commit log is much clearer to me now, thanks :)
+On Thu, May 29, 2025 at 5:55=E2=80=AFPM Frank Li <Frank.li@nxp.com> wrote:
+>
+> On Thu, May 29, 2025 at 04:35:11PM +0200, Dario Binacchi wrote:
+> > The board includes the following resources:
+> >  - 256 Mbytes NAND Flash
+> >  - 128 Mbytes DRAM DDR2
+> >  - CAN
+> >  - USB 2.0 high-speed/full-speed
+> >  - Ethernet MAC
+> >
+> > Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+> >
+> > ---
+> >
+> > Changes in v4:
+> > - Drop label property (deprecated) under the leds sub-nodes.
+> > - Add microSD comment above the ssp0 node.
+> >
+> > Changes in v3:
+> > - Drop xceiver-supply property from can0 node.
+> > - Rearrange the order of specific nodes and properties
+> >   alphabetically.
+> >
+> > Changes in v2:
+> > - Replace '-' with '@' for the pinctrl sub-nodes.
+> > - Replace edt,edt-ft5x06 with edt,edt-ft5306.
+> > - Drop LCD reset hog pin.
+> > - Add correct #address-cells and #size-cells to gpmi node.
+> > - Replace edt-ft5x06@38 with touchscreen@38.
+> >
+> >  arch/arm/boot/dts/nxp/mxs/Makefile            |   1 +
+> >  .../boot/dts/nxp/mxs/imx28-amarula-rmm.dts    | 301 ++++++++++++++++++
+> >  2 files changed, 302 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/nxp/mxs/imx28-amarula-rmm.dts
+> >
+> > diff --git a/arch/arm/boot/dts/nxp/mxs/Makefile b/arch/arm/boot/dts/nxp=
+/mxs/Makefile
+> > index 96dd31ea19ba..d72ba702b6fa 100644
+> > --- a/arch/arm/boot/dts/nxp/mxs/Makefile
+> > +++ b/arch/arm/boot/dts/nxp/mxs/Makefile
+> > @@ -5,6 +5,7 @@ dtb-$(CONFIG_ARCH_MXS) +=3D \
+> >       imx23-sansa.dtb \
+> >       imx23-stmp378x_devb.dtb \
+> >       imx23-xfi3.dtb \
+> > +     imx28-amarula-rmm.dtb \
+> >       imx28-apf28.dtb \
+> >       imx28-apf28dev.dtb \
+> >       imx28-apx4devkit.dtb \
+> > diff --git a/arch/arm/boot/dts/nxp/mxs/imx28-amarula-rmm.dts b/arch/arm=
+/boot/dts/nxp/mxs/imx28-amarula-rmm.dts
+> > new file mode 100644
+> > index 000000000000..5ef9b79cda1c
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/nxp/mxs/imx28-amarula-rmm.dts
+> > @@ -0,0 +1,301 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (C) 2025 Amarula Solutions, Dario Binacchi <dario.binacch=
+i@amarulasolutions.com>
+> > + */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "imx28.dtsi"
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +#include <dt-bindings/interrupt-controller/irq.h>
+> > +
+> > +/ {
+> > +     compatible =3D "amarula,imx28-rmm", "fsl,imx28";
+> > +     model =3D "Amarula i.MX28 rmm";
+> > +
+> > +     memory@40000000 {
+> > +             reg =3D <0x40000000 0x08000000>;
+> > +             device_type =3D "memory";
+> > +     };
+> > +
+> > +     backlight {
+> > +             compatible =3D "pwm-backlight";
+> > +             pwms =3D <&pwm 4 5000000 0>;
+> > +             brightness-levels =3D <0 255>;
+> > +             num-interpolated-steps =3D <255>;
+> > +             default-brightness-level =3D <255>;
+> > +             power-supply =3D <&reg_5v>;
+> > +     };
+> > +
+> > +     beeper {
+> > +             compatible =3D "pwm-beeper";
+> > +             pwms =3D <&pwm 7 100000 0>;
+> > +     };
+> > +
+> > +     leds {
+> > +             compatible =3D "gpio-leds";
+> > +             pinctrl-names =3D "default";
+> > +             pinctrl-0 =3D <&leds_pins>;
+> > +
+> > +             led-0 {
+> > +                     gpios =3D <&gpio2 7 GPIO_ACTIVE_HIGH>;
+> > +                     default-state =3D "off";
+> > +             };
+> > +
+> > +             led-1 {
+> > +                     gpios =3D <&gpio3 16 GPIO_ACTIVE_HIGH>;
+> > +                     default-state =3D "off";
+> > +             };
+> > +
+> > +             led-2 {
+> > +                     gpios =3D <&gpio3 17 GPIO_ACTIVE_HIGH>;
+> > +                     default-state =3D "off";
+> > +             };
+> > +     };
+> > +
+> > +     reg_1v8: regulator-1v8 {
+> > +             compatible =3D "regulator-fixed";
+> > +             regulator-name =3D "1v8";
+> > +             regulator-min-microvolt =3D <1800000>;
+> > +             regulator-max-microvolt =3D <1800000>;
+> > +     };
+> > +
+> > +     reg_3v3: regulator-3v3 {
+> > +             compatible =3D "regulator-fixed";
+> > +             regulator-name =3D "3v3";
+> > +             regulator-min-microvolt =3D <3300000>;
+> > +             regulator-max-microvolt =3D <3300000>;
+> > +             regulator-always-on;
+> > +     };
+> > +
+> > +     reg_5v: regulator-5v {
+> > +             compatible =3D "regulator-fixed";
+> > +             regulator-name =3D "5v";
+> > +             regulator-min-microvolt =3D <5000000>;
+> > +             regulator-max-microvolt =3D <5000000>;
+> > +             regulator-always-on;
+> > +     };
+> > +
+> > +     reg_fec_3v3: regulator-fec-3v3 {
+> > +             compatible =3D "regulator-fixed";
+> > +             pinctrl-names =3D "default";
+> > +             pinctrl-0 =3D <&fec_3v3_enable_pin>;
+> > +             regulator-name =3D "fec-3v3";
+> > +             regulator-min-microvolt =3D <3300000>;
+> > +             regulator-max-microvolt =3D <3300000>;
+> > +             gpios =3D <&gpio3 27 GPIO_ACTIVE_HIGH>;
+> > +             enable-active-high;
+> > +             startup-delay-us =3D <300000>;
+> > +             vin-supply =3D <&reg_5v>;
+> > +     };
+> > +
+> > +     reg_usb0_vbus: regulator-usb0-vbus {
+> > +             compatible =3D "regulator-fixed";
+> > +             pinctrl-names =3D "default";
+> > +             pinctrl-0 =3D <&usb0_vbus_enable_pin>;
+> > +             regulator-name =3D "usb0_vbus";
+> > +             regulator-min-microvolt =3D <5000000>;
+> > +             regulator-max-microvolt =3D <5000000>;
+> > +             gpio =3D <&gpio2 5 GPIO_ACTIVE_HIGH>;
+> > +             enable-active-high;
+> > +             regulator-always-on;
+> > +     };
+> > +
+> > +     reg_usb1_vbus: regulator-usb1-vbus {
+> > +             compatible =3D "regulator-fixed";
+> > +             pinctrl-names =3D "default";
+> > +             pinctrl-0 =3D <&usb1_vbus_enable_pin>;
+> > +             regulator-name =3D "usb1_vbus";
+> > +             regulator-min-microvolt =3D <5000000>;
+> > +             regulator-max-microvolt =3D <5000000>;
+> > +             gpio =3D <&gpio2 6 GPIO_ACTIVE_HIGH>;
+> > +             enable-active-high;
+> > +             regulator-always-on;
+> > +     };
+> > +};
+> > +
+> > +&auart0 {
+> > +     pinctrl-names =3D "default";
+> > +     pinctrl-0 =3D <&auart0_2pins_a>;
+> > +     status =3D "okay";
+> > +};
+> > +
+> > +&auart1 {
+> > +     pinctrl-names =3D "default";
+> > +     pinctrl-0 =3D <&auart1_pins_a>;
+> > +     status =3D "okay";
+> > +};
+> > +
+> > +&can0 {
+> > +     pinctrl-names =3D "default";
+> > +     pinctrl-0 =3D <&can0_pins_a>;
+> > +     status =3D "okay";
+> > +};
+> > +
+> > +&duart {
+> > +     pinctrl-names =3D "default";
+> > +     pinctrl-0 =3D <&duart_pins_b>;
+> > +     status =3D "okay";
+> > +};
+> > +
+> > +&duart_pins_b {
+> > +     fsl,voltage =3D <MXS_VOLTAGE_LOW>;
+> > +};
+> > +
+> > +&gpmi {
+> > +     #address-cells =3D <1>;
+> > +     #size-cells =3D <0>;
+>
+> Needn't this, dtsi already set it.
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Yes,  I can drop #address-cells, it's already set by imx28.dtsi
+But I must re-set size-cells.
 
+>
+> > +     pinctrl-names =3D "default";
+> > +     pinctrl-0 =3D <&gpmi_pins_a &gpmi_status_cfg>;
+> > +     status =3D "okay";
+> > +};
+> > +
+> > +&i2c0 {
+> > +     pinctrl-names =3D "default";
+> > +     pinctrl-0 =3D <&i2c0_pins_a>;
+> > +     status =3D "okay";
+> > +
+> > +     touchscreen: touchscreen@38 {
+> > +             compatible =3D "edt,edt-ft5306";
+> > +             reg =3D <0x38>;
+> > +             pinctrl-names =3D "default";
+> > +             pinctrl-0 =3D <&edt_ft5x06_pins &edt_ft5x06_wake_pin>;
+> > +             interrupt-parent =3D <&gpio0>;
+> > +             interrupts =3D <19 IRQ_TYPE_EDGE_RISING>;
+> > +             reset-gpios =3D <&gpio0 21 GPIO_ACTIVE_LOW>;
+> > +             wake-gpios =3D <&gpio0 18 GPIO_ACTIVE_HIGH>;
+> > +     };
+> > +};
+> > +
+> > +&lradc {
+> > +     status =3D "okay";
+> > +};
+> > +
+> > +&mac0 {
+> > +     pinctrl-names =3D "default";
+> > +     pinctrl-0 =3D <&mac0_pins_a>;
+> > +     phy-mode =3D "rmii";
+> > +     phy-supply =3D <&reg_fec_3v3>;
+> > +     phy-handle =3D <&ethphy>;
+> > +     status =3D "okay";
+> > +
+> > +     mdio {
+> > +             #address-cells =3D <1>;
+> > +             #size-cells =3D <0>;
+> > +
+> > +             ethphy: ethernet-phy@0 {
+> > +                     compatible =3D "ethernet-phy-ieee802.3-c22";
+> > +                     reg =3D <0>;
+> > +                     max-speed =3D <100>;
+> > +                     reset-gpios =3D <&gpio3 28 GPIO_ACTIVE_LOW>;
+> > +                     reset-assert-us =3D <4000>;
+> > +                     reset-deassert-us =3D <4000>;
+> > +             };
+> > +     };
+> > +};
+> > +
+> > +&pinctrl {
+> > +     pinctrl-names =3D "default";
+> > +     pinctrl-0 =3D <&hog_pins_a>;
+> > +
+> > +     edt_ft5x06_pins: edt-ft5x06@0 {
+> > +             reg =3D <0>;
+> > +             fsl,pinmux-ids =3D <
+> > +                     MX28_PAD_GPMI_RDY1__GPIO_0_21 /* Reset */
+> > +                     MX28_PAD_GPMI_CE3N__GPIO_0_19 /* Interrupt */
+> > +             >;
+> > +             fsl,drive-strength =3D <MXS_DRIVE_4mA>;
+> > +             fsl,pull-up =3D <MXS_PULL_ENABLE>;
+> > +             fsl,voltage =3D <MXS_VOLTAGE_HIGH>;
+> > +     };
+> > +
+> > +     edt_ft5x06_wake_pin: edt-ft5x06-wake@0 {
+> > +             reg =3D <0>;
+>
+> Any warning report if all reg is 0?
+
+No, I don't see any warnings of that kind. Nor do I see them for those
+contained in imx28.dtsi.
+
+Thanks and regards,
+Dario
+>
+> Frank
+> > +             fsl,pinmux-ids =3D <MX28_PAD_GPMI_CE2N__GPIO_0_18>;
+> > +             fsl,drive-strength =3D <MXS_DRIVE_16mA>;
+> > +             fsl,pull-up =3D <MXS_PULL_DISABLE>;
+> > +             fsl,voltage =3D <MXS_VOLTAGE_HIGH>;
+> > +     };
+> > +
+> > +     fec_3v3_enable_pin: fec-3v3-enable@0 {
+> > +             reg =3D <0>;
+> > +             fsl,pinmux-ids =3D <MX28_PAD_SPDIF__GPIO_3_27>;
+> > +             fsl,drive-strength =3D <MXS_DRIVE_4mA>;
+> > +             fsl,pull-up =3D <MXS_PULL_DISABLE>;
+> > +             fsl,voltage =3D <MXS_VOLTAGE_HIGH>;
+> > +     };
+> > +
+> > +     hog_pins_a: hog@0 {
+> > +             reg =3D <0>;
+> > +             fsl,pinmux-ids =3D <
+> > +                     MX28_PAD_SSP2_SS1__GPIO_2_20  /* External power *=
+/
+> > +             >;
+> > +             fsl,drive-strength =3D <MXS_DRIVE_4mA>;
+> > +             fsl,pull-up =3D <MXS_PULL_DISABLE>;
+> > +             fsl,voltage =3D <MXS_VOLTAGE_HIGH>;
+> > +     };
+> > +
+> > +     leds_pins: leds@0 {
+> > +             reg =3D <0>;
+> > +             fsl,pinmux-ids =3D <
+> > +                     MX28_PAD_SSP0_DATA7__GPIO_2_7
+> > +                     MX28_PAD_PWM0__GPIO_3_16
+> > +                     MX28_PAD_PWM1__GPIO_3_17
+> > +             >;
+> > +             fsl,drive-strength =3D <MXS_DRIVE_4mA>;
+> > +             fsl,pull-up =3D <MXS_PULL_DISABLE>;
+> > +             fsl,voltage =3D <MXS_VOLTAGE_HIGH>;
+> > +     };
+> > +
+> > +     usb0_vbus_enable_pin: usb0-vbus-enable@0 {
+> > +             reg =3D <0>;
+> > +             fsl,pinmux-ids =3D <MX28_PAD_SSP0_DATA5__GPIO_2_5>;
+> > +             fsl,drive-strength =3D <MXS_DRIVE_4mA>;
+> > +             fsl,pull-up =3D <MXS_PULL_DISABLE>;
+> > +             fsl,voltage =3D <MXS_VOLTAGE_HIGH>;
+> > +     };
+> > +
+> > +     usb1_vbus_enable_pin: usb1-vbus-enable@0 {
+> > +             reg =3D <0>;
+> > +             fsl,pinmux-ids =3D <MX28_PAD_SSP0_DATA6__GPIO_2_6>;
+> > +             fsl,drive-strength =3D <MXS_DRIVE_4mA>;
+> > +             fsl,pull-up =3D <MXS_PULL_DISABLE>;
+> > +             fsl,voltage =3D <MXS_VOLTAGE_HIGH>;
+> > +     };
+> > +};
+> > +
+> > +&pwm {
+> > +     pinctrl-names =3D "default";
+> > +     pinctrl-0 =3D <&pwm4_pins_a &pwm7_pins_a>;
+> > +     status =3D "okay";
+> > +};
+> > +
+> > +/* microSD */
+> > +&ssp0 {
+> > +     compatible =3D "fsl,imx28-mmc";
+> > +     pinctrl-names =3D "default";
+> > +     pinctrl-0 =3D <&mmc0_4bit_pins_a &mmc0_sck_cfg>;
+> > +     broken-cd;
+> > +     bus-width =3D <4>;
+> > +     status =3D "okay";
+> > +};
+> > +
+> > +&usb0 {
+> > +     dr_mode =3D "host";
+> > +     vbus-supply =3D <&reg_usb0_vbus>;
+> > +     status =3D "okay";
+> > +};
+> > +
+> > +&usb1 {
+> > +     dr_mode =3D "host";
+> > +     vbus-supply =3D <&reg_usb1_vbus>;
+> > +     status =3D "okay";
+> > +};
+> > +
+> > +&usbphy0 {
+> > +     status =3D "okay";
+> > +};
+> > +
+> > +&usbphy1 {
+> > +     status =3D "okay";
+> > +};
+> > --
+> > 2.43.0
+> >
+
+
+
+--=20
+
+Dario Binacchi
+
+Senior Embedded Linux Developer
+
+dario.binacchi@amarulasolutions.com
+
+__________________________________
+
+
+Amarula Solutions SRL
+
+Via Le Canevare 30, 31100 Treviso, Veneto, IT
+
+T. +39 042 243 5310
+info@amarulasolutions.com
+
+www.amarulasolutions.com
