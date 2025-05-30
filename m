@@ -1,204 +1,125 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6992AE6F
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 07:52:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA18C213254;
+	Fri, 30 May 2025 07:52:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748591562; cv=none; b=hcap0/ahJbaioXAnEa1r6FijNQwvMwEMzs9mELmEEzMpOWFC1+sP5CaFmGIFi2EKLzgVyv0V8+ZAJieBVz2zveqKIUzPrVz3jaWQp5V2xbFsldwvDjqPqUEnXPh+q0PQkfa8/O0GBtGIepVY9fSjZcqAPjpT3eo6auZ+kOmNevA=
+	t=1748591565; cv=none; b=HRMkHFd06ylTCnyTgXLTahmtMzgHkgQ0p0SAk/P8lLnh7+zyN2O1/Of+yoHTXhAu9jXIc4wyLXXr+22n6Sy4oCtUip9DYLUjUX4Be7do+F3m4z4RgTPPu1pUDc03IQsBdyO3Er43IoDyjsXl16xGL0dDAidKWsVSYoAZpd6uqzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748591562; c=relaxed/simple;
-	bh=G7T/l+SD9ggtZyaAliggeCOwfSM27hsQMoMmxA00zko=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LyyivIB1SPHc3Km8oHJIswSEcQz0xxEH+YnRbi6k+Fyee46lh6T4Gbx0RJ0HQQtnjiPyCa2T/ZcR+i/R1BfYPSzA9FUOMLpbiUkeBxcC+c9B6zsP2lCAZbMFKf6C/a9uxHEYeayvHRy4Ov+A3GJxkzzE96zzBQ4F2zAc6DD5VQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cgi2AZCl; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748591565; c=relaxed/simple;
+	bh=r8IP4NCo5XgD5PidO3HPYahdoy790r8YukrCMHSEkBE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=a1QFdKE1TXJJiTnCv7hAoNYOgNV+8wDgcdE0LZ4m/VCSFZ2uZOvSVJKdikuRfJkBo+vqwTJrpBQG/utm+x3TS9D2c3tL3RmgpVE1wfhbIhY+7tR2xr3D17KIqTmRFCp7r4HkKab4X6Ma2Tq9gk6DpBCKEZr+EUmHt1JwCrTLUjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MHEgB0C0; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cgi2AZCl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748591559;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=dXme6NLsCN/6JumBzv0W754qfhIz6/enEzzfyphIa0E=;
-	b=cgi2AZCl2lBqCQilxK3mZgp9525Sf3BYMVZdWWlo6QFg/aEZbjieAvIpL4Ey1ezy4oMEU1
-	5R/zj+DviJaEh4kSBcoP2lQze5SwD3Ui28+FXRSoADuDwqMZMyQ1SmDZyJLjppXL00gGTK
-	69a2GCz+ULLk2eANK4MDprHNW0BlDi0=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-547-b_0YqXyeOWGUkEf8xSzrDQ-1; Fri, 30 May 2025 03:52:38 -0400
-X-MC-Unique: b_0YqXyeOWGUkEf8xSzrDQ-1
-X-Mimecast-MFC-AGG-ID: b_0YqXyeOWGUkEf8xSzrDQ_1748591557
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-602df3e7adcso1916892a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 00:52:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MHEgB0C0"
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-86d587dbc15so1212772241.1;
+        Fri, 30 May 2025 00:52:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748591560; x=1749196360; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZKtlyRzdj1hzUN4lNvAG8wP0iwSwojEvBGmYnQtcdS0=;
+        b=MHEgB0C0dp/QTi+0x1+DDsZaOiXUVHLwi1rCau2ZthJcptc3EGfhdUwVrWkI4FIb22
+         wwZKHmQR3gYauwL/GEgY4tHnP0qO0hit4/FUZK6bMvtYY/eoZ77Yp5XkMVLRmGPlFzSw
+         t9lML+dS5ryH1dCoNKdzSXEE/5Z2Vde8Rj2jALm8mtChhmSWIPKaZnFnWW0N6pkbPDN8
+         I6TQIGz3Q22LPqOOR/XYvNXcaM1FalqKnMZaEn6l1pYGM5Ls+8NJDYh+YOqNc9n9ZrPG
+         HxpjsT4ZXguwdjIugVIcm2E6HywYTmBWC6vizi66+dbl6V//YQTSlnZ3cDfJ+ZuVDerK
+         CU7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748591557; x=1749196357;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dXme6NLsCN/6JumBzv0W754qfhIz6/enEzzfyphIa0E=;
-        b=RJRbqYBFN3GwfWHKGF016c5XyqKf20IZ2fFIvYgUa2ANtjD8PdizId08zeWGWUqxFQ
-         BeSDMb6xfMr/Efdkyo6540522SaFB8GatlLQGs4QBUeH422RHle5DD6X0y4/6ZJeFZ/W
-         wrqzQm4qBLSuEs1JJ3mrKt/l25oHwL6O9Ni61r62nY1xDuNCVRWGvKPzBBkOd5UUckaX
-         xkrzvYDLplpJn+L86A6uTbqcJCnaeHREmWqPM8MrueSxALDzBU7rQ9Mom+TNmRY6dXOb
-         qg6SIfIGUZ6onOy6ZaMu15XraLCCOrFhe/4n3jpH4Z4U/K81Fe/iZV0JJp/09YeQvdl3
-         6W/w==
-X-Gm-Message-State: AOJu0Yyr5+AsjRIyGb1GIuis6Hkgs+2E5mw4FJ4RBNuTYWIv5Wuc/Kn1
-	Lqe/S3/8bgDi8hK+UsgibTKJqJAKXWG2ys1EOSq3AGzo802wAFyx6cv+qufqN59kbDQ+QTTcIXo
-	RhofwfIyNxbNoKgNeX22KcgHy1BoF3x92Al342SndEnTQg6yF8CnqTuvrO0bZ487+aQ==
-X-Gm-Gg: ASbGncvrLugMAGXH/HOHDKZoSTniWFSKj/3Pb+r5LU2JSbiC5Q3Zom35caGWKDXzaLZ
-	6gxWMiXEoA7d6Oso+emgTnNQSAL6yKvL5d7QXcp70pH4YvzCiNinCc8+OcPslbBdsii9qWebbkJ
-	4lZUpntjUwVUjrBuPnPsb806AezPeDPcoV5T2w3VZzCyYAqKYe4JLGiQmZZ2zYi465u+VmWlwAM
-	ox9/uOckwt9aQBqY9UqbMwE5M525CBbiNw75zpJc8ls1gDVJrPP3N9VD67ScE9SiQEiP4K7loXH
-	pRxXqAldKP3M3A==
-X-Received: by 2002:a05:6402:2813:b0:5fb:87a2:5ef9 with SMTP id 4fb4d7f45d1cf-6057c621ee7mr948145a12.23.1748591556916;
-        Fri, 30 May 2025 00:52:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGWrvvdA9UB3dms/gjMEl+Cd773vHH5XoMNH/OJN8Qpd3i0iyiTFpV0kUVwOV/w6O9TdD8GEg==
-X-Received: by 2002:a05:6402:2813:b0:5fb:87a2:5ef9 with SMTP id 4fb4d7f45d1cf-6057c621ee7mr948131a12.23.1748591556503;
-        Fri, 30 May 2025 00:52:36 -0700 (PDT)
-Received: from [192.168.10.48] ([151.49.64.79])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-60566c5c222sm1235068a12.27.2025.05.30.00.52.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 May 2025 00:52:35 -0700 (PDT)
-Message-ID: <a283a171-7c74-4e05-bdb1-dd28f1fe6a6e@redhat.com>
-Date: Fri, 30 May 2025 09:52:34 +0200
+        d=1e100.net; s=20230601; t=1748591560; x=1749196360;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZKtlyRzdj1hzUN4lNvAG8wP0iwSwojEvBGmYnQtcdS0=;
+        b=M/qKxkAtR7qwXXxa9uUUTS50cfNIazMj6lkl1y44TtTFJqfS9jjlNpUTWn7Z2y60fA
+         qN9gnuJbylCG+UAgWr8B2KasYyjpc3rUV+zh7hI/L0tI7sms3pTO6qf1qQLQSzRE0h+9
+         Xgz3nkRcjFAo7SO5pBudoV80KXCRreGEaqT48S3RkWtUH7nNepM6E58mnLqFwN0E3nyj
+         16skYpf3BciEsvHmE1xQPBpTsWj3n9Sz5KV92J+1RdVj106VO2UPpB7B+dRz/JlRlUae
+         8teWt68Hh8YB96FF/ovtlzKzHkwq3NIhJsM3/xEFWGdC4f4O52Vq00WKr/u+abyOq9cy
+         vN+A==
+X-Forwarded-Encrypted: i=1; AJvYcCVgIlGUXNLVfkmbA3fDDLWhPt3pArgsI1mIrucZdAOa2X2Q3Gm9RRb6Clvw+pUFyzCNhl/NOUBSCig=@vger.kernel.org, AJvYcCWlvqaP7fcJfNbCCq5zck9JVgfSB63U2vvrn7ZlM0P8a2ihlQO8mmCqdNLy/GUOBZ5VBhrKywX9xkRisw==@vger.kernel.org, AJvYcCXb+ofFuN9cUjIWhiK8Rlm7SnmqsWSpp7b/7kaNhhEMQM2K52YH51zv3ustu83Vkk7CWovyhpFgd7xYGARr@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIAtfKR7rZQiU0q8k55w9OA0jS1a/qzjS05szaOLSqU415Cbsd
+	/337JmTqw0DAFo0LjFAohmvm4ZROxDv/KAWrdr4Wfp4/fHNEhg8e/j8aXZ9Si0A3uLfFpWKclVc
+	l10djNp6NmqZ2Za7ZV/rDNKMY+Ae5KnA=
+X-Gm-Gg: ASbGncuIi+ZoyGYMN9aM7Ayu8DzLaSQyaJlH93bWcJqgPrlUH/KuRuJvQqFpoU8Mtqq
+	T9TfgYbe93fmzR92nc5l2KftetaoEZ7/wKwFkxJ5Bd6HESfBXV4XeuyxSZzHtiR1eisEqEpjDnE
+	WcSWP403KuGJOi65tUJRuCR2PSgA8sc/CujR1XYjV/bUvp
+X-Google-Smtp-Source: AGHT+IEu0wvQ5rhdA7BJLa2LTFM56TLWJzqwagC9Vg/DVegxmBIqU65ZnQ+yPR7TraWX6oDXCxLvKV4jW7/+CnRcrpk=
+X-Received: by 2002:a05:6102:c89:b0:4e2:86e8:3188 with SMTP id
+ ada2fe7eead31-4e6e473792bmr1885640137.0.1748591560495; Fri, 30 May 2025
+ 00:52:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: Tree for May 29 (kernel/locking/rtmutex_api.c)
-To: Randy Dunlap <rdunlap@infradead.org>,
- Stephen Rothwell <sfr@canb.auug.org.au>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Maxim Levitsky <mlevitsk@redhat.com>
-References: <20250529165801.6dcb3fcf@canb.auug.org.au>
- <2d9429d0-e76c-429b-80d4-780052e0907c@infradead.org>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=pbonzini@redhat.com; keydata=
- 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
-In-Reply-To: <2d9429d0-e76c-429b-80d4-780052e0907c@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <85778a76-7dc8-4ea8-8827-acb45f74ee05@lucifer.local>
+ <aDh9LtSLCiTLjg2X@casper.infradead.org> <20250529211423.GA1271329@cmpxchg.org>
+In-Reply-To: <20250529211423.GA1271329@cmpxchg.org>
+From: Barry Song <21cnbao@gmail.com>
+Date: Fri, 30 May 2025 19:52:28 +1200
+X-Gm-Features: AX0GCFtLq2Vrtv-b7fSZ_FGTqJuT5ElgRYnChnL5uE5cw7If3ZrbkNFfQmhEunI
+Message-ID: <CAGsJ_4yKDqUu8yZjHSmWBz3CpQhU6DM0=EhibfTwHbTo+QWvZA@mail.gmail.com>
+Subject: Re: [DISCUSSION] proposed mctl() API
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Matthew Wilcox <willy@infradead.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, David Hildenbrand <david@redhat.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Christian Brauner <brauner@kernel.org>, SeongJae Park <sj@kernel.org>, Usama Arif <usamaarif642@gmail.com>, 
+	Mike Rapoport <rppt@kernel.org>, linux-mm@kvack.org, linux-arch@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org, 
+	Pedro Falcato <pfalcato@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/29/25 19:12, Randy Dunlap wrote:
-> 
-> 
-> On 5/28/25 11:58 PM, Stephen Rothwell wrote:
->> Hi all,
->>
->> Changes since 20250528:
->>
-> 
-> on x86_64 or i386:
-> 
-> 
-> In file included from ../include/uapi/linux/posix_types.h:5,
->                   from ../include/uapi/linux/types.h:14,
->                   from ../include/linux/types.h:6,
->                   from ../include/linux/kasan-checks.h:5,
->                   from ../include/asm-generic/rwonce.h:26,
->                   from ./arch/x86/include/generated/asm/rwonce.h:1,
->                   from ../include/linux/compiler.h:390,
->                   from ../include/linux/export.h:5,
->                   from ../include/linux/linkage.h:7,
->                   from ../include/linux/preempt.h:10,
->                   from ../include/linux/spinlock.h:56,
->                   from ../kernel/locking/rtmutex_api.c:5:
-> ../include/linux/stddef.h:8:14: error: expected declaration specifiers or ‘...’ before ‘(’ token
->      8 | #define NULL ((void *)0)
->        |              ^
-> ../include/linux/mutex.h:183:46: note: in expansion of macro ‘NULL’
->    183 |         _mutex_lock_killable(lock, subclass, NULL)
->        |                                              ^~~~
-> ../kernel/locking/rtmutex_api.c:547:13: note: in expansion of macro ‘mutex_lock_killable_nested’
->    547 | int __sched mutex_lock_killable_nested(struct mutex *lock,
->        |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
-> ../kernel/locking/rtmutex_api.c:552:19: error: ‘mutex_lock_killable_nested’ undeclared here (not in a function); did you mean ‘mutex_lock_io_nested’?
->    552 | EXPORT_SYMBOL_GPL(mutex_lock_killable_nested);
->        |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
-> ../include/linux/export.h:76:23: note: in definition of macro ‘__EXPORT_SYMBOL’
->     76 |         extern typeof(sym) sym;                                 \
->        |                       ^~~
-> ../include/linux/export.h:90:41: note: in expansion of macro ‘_EXPORT_SYMBOL’
->     90 | #define EXPORT_SYMBOL_GPL(sym)          _EXPORT_SYMBOL(sym, "GPL")
->        |                                         ^~~~~~~~~~~~~~
-> ../kernel/locking/rtmutex_api.c:552:1: note: in expansion of macro ‘EXPORT_SYMBOL_GPL’
->    552 | EXPORT_SYMBOL_GPL(mutex_lock_killable_nested);
->        | ^~~~~~~~~~~~~~~~~
-> ../include/linux/stddef.h:8:14: error: expected declaration specifiers or ‘...’ before ‘(’ token
->      8 | #define NULL ((void *)0)
->        |              ^
-> ../include/linux/mutex.h:215:60: note: in expansion of macro ‘NULL’
->    215 | #define mutex_trylock(lock) _mutex_trylock_nest_lock(lock, NULL)
->        |                                                            ^~~~
-> ../kernel/locking/rtmutex_api.c:596:13: note: in expansion of macro ‘mutex_trylock’
->    596 | int __sched mutex_trylock(struct mutex *lock)
->        |             ^~~~~~~~~~~~~
-> ../kernel/locking/rtmutex_api.c:609:15: error: ‘mutex_trylock’ undeclared here (not in a function); did you mean ‘ww_mutex_trylock’?
->    609 | EXPORT_SYMBOL(mutex_trylock);
->        |               ^~~~~~~~~~~~~
-> ../include/linux/export.h:76:23: note: in definition of macro ‘__EXPORT_SYMBOL’
->     76 |         extern typeof(sym) sym;                                 \
->        |                       ^~~
-> ../include/linux/export.h:89:41: note: in expansion of macro ‘_EXPORT_SYMBOL’
->     89 | #define EXPORT_SYMBOL(sym)              _EXPORT_SYMBOL(sym, "")
->        |                                         ^~~~~~~~~~~~~~
-> ../kernel/locking/rtmutex_api.c:609:1: note: in expansion of macro ‘EXPORT_SYMBOL’
->    609 | EXPORT_SYMBOL(mutex_trylock);
->        | ^~~~~~~~~~~~~
-> 
-> 
-> This seems to be due to <linux/mutex.h> containing a #define for mutex_lock_killable_nested()
-> when DEBUG_PAGE_ALLOC is set and another for when DEBUG_PAGE_ALLOC is not set.
-> But then rtmutex_api.c has a function by that name also... (for the DEBUG_PAGE_ALLOC=y case,
-> which is set in my failing randconfig file, which is attached).
+On Fri, May 30, 2025 at 9:14=E2=80=AFAM Johannes Weiner <hannes@cmpxchg.org=
+> wrote:
+>
+> On Thu, May 29, 2025 at 04:28:46PM +0100, Matthew Wilcox wrote:
+> > Barry's problem is that we're all nervous about possibly regressing
+> > performance on some unknown workloads.  Just try Barry's proposal, see
+> > if anyone actually compains or if we're just afraid of our own shadows.
+>
+> I actually explained why I think this is a terrible idea. But okay, I
+> tried the patch anyway.
+>
+> This is 'git log' on a hot kernel repo after a large IO stream:
+>
+>                                      VANILLA                      BARRY
+> Real time                 49.93 (    +0.00%)         60.36 (   +20.48%)
+> User time                 32.10 (    +0.00%)         32.09 (    -0.04%)
+> System time               14.41 (    +0.00%)         14.64 (    +1.50%)
+> pgmajfault              9227.00 (    +0.00%)      18390.00 (   +99.30%)
+> workingset_refault_file  184.00 (    +0.00%)    236899.00 (+127954.05%)
+>
+> Clearly we can't generally ignore page cache hits just because the
+> mmaps() are intermittent.
 
-Yep, the bad condition is CONFIG_DEBUG_PAGE_ALLOC=y + CONFIG_RT_MUTEXES=y.
-Patch at https://lore.kernel.org/r/20250530075136.11842-1-pbonzini@redhat.com.
+Hi Johannes,
+Thanks!
 
-Thanks for the report!
+Are you on v1, which lacks folio demotion[1], or v2, which includes it [2]?
 
-Paolo
+[1] https://lore.kernel.org/linux-mm/20250412085852.48524-1-21cnbao@gmail.c=
+om/
+[2] https://lore.kernel.org/linux-mm/20250514070820.51793-1-21cnbao@gmail.c=
+om/
 
+>
+> The whole point is to cache across processes and their various
+> apertures into a common, long-lived filesystem space.
+>
+> Barry knows something about the relationship between certain processes
+> and certain files that he could exploit with MADV_COLD-on-exit
+> semantics. But that's not something the kernel can safely assume. Not
+> without defeating the page cache for an entire class of file accesses.
+
+Best Regards
+Barry
