@@ -1,76 +1,41 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 334BC194A65;
-	Fri, 30 May 2025 18:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0FF6320B;
+	Fri, 30 May 2025 18:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748628228; cv=none; b=iUM0wifWl5mazNjX04jJeIbTI5gMgRELiO4N0bJu517F6kjLwGlla9MDD14HfZQe3QSRYkNFzJTibwEOtYv9TkrMbTExsRVAk0dWKkPkAbsB6PuTBwDDDLqcWNdh7v1RixUL9q4v1TNoMnyYP5u6WZcNDLfUTZzU3Jm1Wva9BXk=
+	t=1748628367; cv=none; b=YeRXrRDfWU+Gnz8SqyHfus5cMcy0ECu4gemCdjfhq/qL+pn9K6/IxEboeaTgipBgf2ykOty5UuSTsfFzdGspOHZ1P4n+aAOyM2V47Hl5uMHeJKw4EyvKzQXsliPtspTp2b9kBo+Jy5hw+gEyoDqHJJ9DhBI/GkD+zAX5J/9twXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748628228; c=relaxed/simple;
-	bh=GsM+4Qr9aj4qagDnoyITSBIuLxhzdohf0nnOponVHEo=;
+	s=arc-20240116; t=1748628367; c=relaxed/simple;
+	bh=vTjL12s6KvtxA3tMHxUHBMgloZwocQuSUhLfD5vvNtU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UvRsXG+IZ1bMVOMiNn7S4N2xAjQha0FTYTvQA6qlfkfdAN92KXwu8Nu8LRP5BeOgzfsAzJuiCZrdVTCQyaZ1eSFVIRKwCWrIH8yb3dm5VH0MLOMUGrfizkxFnab02IMryvs7eEPwOV+q2ev/VHh8fSBCBB2xE7clurQJFbJ7Y1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m4tcP8Rm; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=BxBttSELVAaXWA+lO6wEHor4iXWaE2WCsUqoU4LsmXKRxYh744V/HijdPtNlGc3s/VGDEgALNUZNuKK6UiRFFlAZc3pQ5LpvBjbfs4RIGFShCVv0F0+Yl0nTzgOKvOKBQl8n6C9OoK3rwDyAwohUkzx9d5DcGTOfd2mFWihXHFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tN4Re0Sd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m4tcP8Rm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748628227; x=1780164227;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=GsM+4Qr9aj4qagDnoyITSBIuLxhzdohf0nnOponVHEo=;
-  b=m4tcP8RmUAfrLzzW+O3jkGhOQTLiilpL2yBf08obkFN3O8yclOFc7Yae
-   mOlqrkqIgcUlqVCdKJNBKU8hAwY8uEzvynEY7Ts2EkFCa1lazY0brZINs
-   GQlk5Exo0rskTWRl3v/rTw1MZ+EQXsMi6azptaYUKL15seT5fw/jgmeNk
-   /ziYcm6Wkhrwx5pSEhlJthO4UhL02pFCw7cNMt7NMjNLsxzr08UhzKMW8
-   4wTSJEPGTyQC1CSQPhQWdwmEpq0mtspALwLCtkfs+Obht6GRW2lwsBf1M
-   7aYQXVNZU3rabsXH70iWrGDwwfboB3OBDi/L6+egir/TyXXvHCtQdUjvC
-   Q==;
-X-CSE-ConnectionGUID: yaSt2uR1R0KHshN7Jy0N6Q==
-X-CSE-MsgGUID: LzTh8hKAScqJGvA3p/b+Gg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="68278438"
-X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="68278438"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 11:03:46 -0700
-X-CSE-ConnectionGUID: CFxSeM/fTvK/Gb3vTQnePg==
-X-CSE-MsgGUID: OJkQmo4dQGC92H0g53ilvQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="143922953"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 11:03:41 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uL44w-000000024lP-4BsB;
-	Fri, 30 May 2025 21:03:39 +0300
-Date: Fri, 30 May 2025 21:03:38 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v10 08/11] gpio: max7360: Add MAX7360 gpio support
-Message-ID: <aDny-kJqiPq-Yyx9@smile.fi.intel.com>
-References: <20250530-mdb-max7360-support-v10-0-ce3b9e60a588@bootlin.com>
- <20250530-mdb-max7360-support-v10-8-ce3b9e60a588@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tN4Re0Sd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D1D7C4CEE9;
+	Fri, 30 May 2025 18:06:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748628366;
+	bh=vTjL12s6KvtxA3tMHxUHBMgloZwocQuSUhLfD5vvNtU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tN4Re0SduTQAupT/AgsL3IJXj9KsGw3/jtt0x6mQ+11wviDGwPUzdmQ/NdKf9FTLH
+	 igXbZ6mzpvUFiZAi3IuZQqtfe7gPbwSJgkmtrxATmw5o3ZAhpF+nLPzRta2SLUEpng
+	 ZFp1w4XoguzIeaoUkNuZAtB1nH0KrnaRbm9a16FRdr74kXxyNedo4mGH4rYakB/UTO
+	 TvBobJDk021EBFRx7ognli1P2B659+5AEat0M5tsuUxnE8wK/nv3ynPmCFIhs2BFCt
+	 PVyhxifT3Mj0K+BnqmMbjIBiVKUOr5lAViQWeC9yuGILIn2ySKjWRoJ0ZU/Ve44TyT
+	 6Lh37fMXtwPUA==
+Date: Fri, 30 May 2025 11:06:01 -0700
+From: Kees Cook <kees@kernel.org>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3][next] overflow: Fix direct struct member
+ initialization in _DEFINE_FLEX()
+Message-ID: <202505301054.A786A183@keescook>
+References: <aBQVeyKfLOkO9Yss@kspp>
+ <d4eed1e3-6fc0-4372-8ced-ae6a49f3c5c1@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,39 +44,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250530-mdb-max7360-support-v10-8-ce3b9e60a588@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <d4eed1e3-6fc0-4372-8ced-ae6a49f3c5c1@intel.com>
 
-On Fri, May 30, 2025 at 12:00:16PM +0200, Mathieu Dubois-Briand wrote:
-> Add driver for Maxim Integrated MAX7360 GPIO/GPO controller.
+On Fri, May 30, 2025 at 04:59:35PM +0200, Alexander Lobakin wrote:
+> Unfortunately this can hurt performance on my setup.
+> In XDP, we usually place &xdp_buff on the stack. It's 56 bytes. We
+> initialize it only during the packet processing, not in advance.
 > 
-> Two sets of GPIOs are provided by the device:
-> - Up to 8 GPIOs, shared with the PWM and rotary encoder functionalities.
->   These GPIOs also provide interrupts on input changes.
-> - Up to 6 GPOs, on unused keypad columns pins.
+> In libeth_xdp, see [1], I provide a small extension for this struct.
+> This extension is 64 byte, plus I added a definition (see
+> `__LIBETH_XDP_ONSTACK_BUFF()`) to be able to define a bigger one in case
+> a driver might need more fields there.
+> The same as with &xdp_buff, it shouldn't be initialized in advance, only
+> during the packet processing. Otherwise, it can really decrease
+> performance, you might've seen recent Mellanox report that even
+> CONFIG_INIT_STACK_ZERO provokes this.
 
-LGTM,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+FYI, you can use __uninitialized to force CONFIG_INIT_STACK_ZERO to
+leave an automatic variable uninitialized.
 
-...
+> What would be the best option to resolve this? This flex XDP buff on the
+> stack is fully safe, there are a couple checks that its size does not
+> exceed the maximum (defined by xdp_buff_xsk) etc. And we really need to
+> initialize it field-by-field in a loop on a per-packet basis -- we are
+> sure that there will be no garbage.
 
-> +#include <linux/gpio/driver.h>
+But yes, this is suddenly not available for _DEFINE_FLEX after the
+referenced patch.
 
-Do we still need this header? I mean do we have anything used from it here?
+> It's even worse that most drivers will most likely not want to add any
+> additional fields, i.e. this flex array at the end will be empty, IOW
+> they just want a plain libeth_xdp_buff, but I made a unified definition,
+> with which you can declare them on the stack both with and without
+> additional fields. So, even if the drivers doesn't want any additional
+> fields and the flex array is empty, the struct will be zero-initialized
+> and the same perf hit will apply.
+> [...]
+> [1] https://lore.kernel.org/netdev/20250520205920.2134829-9-anthony.l.nguyen@intel.com
 
-> +#include <linux/gpio/regmap.h>
-> +#include <linux/init.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/mfd/max7360.h>
-> +#include <linux/minmax.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/property.h>
-> +#include <linux/regmap.h>
+Okay, so it sounds like you need the old behavior of _DEFINE_FLEX, *and*
+a way to apply attributes (like __uninitialized).
+
+How about replacing _DEFINE_FLEX with:
+
+
+#define __DEFINE_FLEX(type, name, member, count, trailer...)		\
+        _Static_assert(__builtin_constant_p(count),			\
+                       "onstack flex array members require compile-time const count"); \
+        union {								\
+                u8 bytes[struct_size_t(type, member, count)];		\
+                type obj;						\
+        } name##_u trailer;						\
+        type *name = (type *)&name##_u
+
+#define _DEFINE_FLEX(type, name, member, count, initializer...)		\
+	__DEFINE_FLEX(type, name, member, count, = { .obj = initializer })
+
+
+Which would yield this for ___LIBETH_XDP_ONSTACK_BUFF:
+
+
+#define ___LIBETH_XDP_ONSTACK_BUFF(name, ...)				\
+	__DEFINE_FLEX(struct libeth_xdp_buff, name, priv,		\
+		      LIBETH_XDP_PRIV_SZ(__VA_ARGS__ + 0),		\
+		      __uninitialized);					\
+	LIBETH_XDP_ASSERT_PRIV_SZ(__VA_ARGS__ + 0)
+
+
+Does that look like what you'd want? (Note I didn't actually build this;
+I want to make sure the concept is workable...)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Kees Cook
