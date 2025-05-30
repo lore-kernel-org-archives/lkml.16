@@ -1,194 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59555155C87;
-	Fri, 30 May 2025 06:04:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 517A01E2858
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 06:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748585070; cv=none; b=ffoXOHOUEdTlKnniE8Z0C3zfPWT8E0LguZAs3YOgjMI+xuvc1eM8avjCrC1ZTJ9oYrDmWwr8nUEvg7/l8wsb+bgSObX7Vwr4tZ6sG2M0lpSA22kW5HqDUzafDm7oN6ZRJD2z+y7jLy/K6YhM5HWJBZa6fcSLo4m2MRHyzg3/R28=
+	t=1748585212; cv=none; b=teGriHXbcAWJ1epX7q8Wu0xMI59TbgdTrWfi5lH7Cd2ihqk2otEQkRYvVgrX9YRMVhGOlFrYp2qT5AdwbSE6krZ6VhFScFuTC7iKy1/01Q8bane5F672WdtIErLfmxiIFDx+tpQjPzXKxdrl9idKFwuVuqWy/LpUHRDh4+lh6bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748585070; c=relaxed/simple;
-	bh=g8jtVttjRRpBP82A1uFMOQKqTsegSsDamHgL5kRcTNA=;
+	s=arc-20240116; t=1748585212; c=relaxed/simple;
+	bh=SH221srNFL7pEpU42O3+CTSkBAPPKNwmvmN1SK6EYLg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QFVKw9qnJaryj529JIselelmMzKC+k8GaQPB/uxLMPcsSoiNxqNEVNX0Cv+EAOQckGLjViaFfSjVwiYUcYFT1QT29IZcTzGL/BbM1TIyDS+v4jD4Ps19lmhoswt3buvpseqN0sGhjRoGm2IezMwGv/vw3Fw/Qwf8Msnef5nY9Ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UA6kFVrP; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UA6kFVrP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748585068; x=1780121068;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=g8jtVttjRRpBP82A1uFMOQKqTsegSsDamHgL5kRcTNA=;
-  b=UA6kFVrPSrJCHPRR+kmAIyFECwkZE3AHTeJKY0pkiiK+fXlQidwKixmv
-   Nxk0OiXpL5uAGLKt2RbPwbc0nt0AJzXnOa9a+iktqNRNzzG30dDnuMhDt
-   VQ/R+d+EORSXMH3oJSSth28gyQw4uYJ5udoAdRiWYBTq23m/eU11n4a+L
-   aZy3YCOdfYExZeQeRLI/HMJDa7P5uGEwo5FhF1LRfFCCL+ueJ6+KNPYgv
-   Cvtc0VzYaQnwo1BFFmn718qOAs+lZh6vWLQZc5BlwCs0PIdCp3S8B7FUJ
-   EVZtrnva/jFomEvVv6UvSblJaBw9QA9v44u6rdkOGP/6hOFPzso3w5Q6n
-   Q==;
-X-CSE-ConnectionGUID: 7ebF6N1GRQSGkSTLdyO7kQ==
-X-CSE-MsgGUID: 8IkwNgEcRrmTnNPo7XroSw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="53293893"
-X-IronPort-AV: E=Sophos;i="6.16,195,1744095600"; 
-   d="scan'208";a="53293893"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 23:04:28 -0700
-X-CSE-ConnectionGUID: rE8VyW84Si291zFSyY6n7A==
-X-CSE-MsgGUID: GR/GcTsDTkeei3qtVEgUvQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,195,1744095600"; 
-   d="scan'208";a="148656468"
-Received: from drlynch-mobl1.amr.corp.intel.com (HELO desk) ([10.125.146.32])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 23:04:27 -0700
-Date: Thu, 29 May 2025 23:04:20 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Richard Narron <richard@aaazen.com>, Guenter Roeck <linux@roeck-us.net>,
-	Linux stable <stable@vger.kernel.org>,
-	Linux kernel <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH 5.15 00/59] 5.15.184-rc1 review
-Message-ID: <20250530060420.4zra7jlrwvvurr3k@desk>
-References: <20250520125753.836407405@linuxfoundation.org>
- <0f597436-5da6-4319-b918-9f57bde5634a@roeck-us.net>
- <67f03e41-245e-202-f0df-687cc4d9a915@aaazen.com>
- <20250528005520.dpip4qe45zvsn7vw@desk>
- <b8a9acaf-3d3e-7931-23ce-d61ee77b4e10@aaazen.com>
- <20250529174017.lwctaondsbg7tk37@desk>
- <2025053037-tribunal-shortlist-5207@gregkh>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q2uSDM9qmE5JwR3Sb8P6FnqxhGjXLnG1V3tfisLmtfbFsj9u09LGvLoeqn/J2H1EtqudNJlerT9kUy2ifnSLXz9j9+uQyKUhSEgAT3DlssDiir3884+SGcINILLneoxbrwGOXIyFr2PW4dM49TBQX1z4RYP/Cyx404v1P8oX8B8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uKst8-0007Jd-Ci; Fri, 30 May 2025 08:06:42 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uKst7-000vwy-33;
+	Fri, 30 May 2025 08:06:41 +0200
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uKst7-000nJw-2f;
+	Fri, 30 May 2025 08:06:41 +0200
+Date: Fri, 30 May 2025 08:06:41 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Troy Mitchell <troymitchell988@gmail.com>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Andi Shyti <andi.shyti@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, linux-i2c@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, Yongchao Jia <jyc0019@gmail.com>,
+	Frank Li <Frank.Li@nxp.com>
+Subject: Re: [PATCH v3 1/2] i2c: imx: use guard to take spinlock
+Message-ID: <aDlK8VH3GRSJCKCk@pengutronix.de>
+References: <20250513-i2c-imx-update-v3-0-817b7426a67e@gmail.com>
+ <20250513-i2c-imx-update-v3-1-817b7426a67e@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <2025053037-tribunal-shortlist-5207@gregkh>
+In-Reply-To: <20250513-i2c-imx-update-v3-1-817b7426a67e@gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Fri, May 30, 2025 at 07:11:58AM +0200, Greg Kroah-Hartman wrote:
-> On Thu, May 29, 2025 at 10:40:17AM -0700, Pawan Gupta wrote:
-> > On Wed, May 28, 2025 at 09:49:40PM -0700, Richard Narron wrote:
-> > > On Tue, 27 May 2025, Pawan Gupta wrote:
-> > > 
-> > > > On Tue, May 27, 2025 at 12:31:47PM -0700, Richard Narron wrote:
-> > > > > On Fri, 23 May 2025, Guenter Roeck wrote:
-> > > > >
-> > > > > > On 5/20/25 06:49, Greg Kroah-Hartman wrote:
-> > > > > > > This is the start of the stable review cycle for the 5.15.184 release.
-> > > > > > > There are 59 patches in this series, all will be posted as a response
-> > > > > > > to this one.  If anyone has any issues with these being applied, please
-> > > > > > > let me know.
-> > > > > > >
-> > > > > > > Responses should be made by Thu, 22 May 2025 12:57:37 +0000.
-> > > > > > > Anything received after that time might be too late.
-> > > > > > >
-> > > > > >
-> > > > > > Build reference: v5.15.184
-> > > > > > Compiler version: x86_64-linux-gcc (GCC) 12.4.0
-> > > > > > Assembler version: GNU assembler (GNU Binutils) 2.40
-> > > > > >
-> > > > > > Configuration file workarounds:
-> > > > > >     "s/CONFIG_FRAME_WARN=.*/CONFIG_FRAME_WARN=0/"
-> > > > > >
-> > > > > > Building i386:defconfig ... passed
-> > > > > > Building i386:allyesconfig ... failed
-> > > > > > --------------
-> > > > > > Error log:
-> > > > > > x86_64-linux-ld: arch/x86/kernel/static_call.o: in function
-> > > > > > `__static_call_transform':
-> > > > > > static_call.c:(.ref.text+0x46): undefined reference to `cpu_wants_rethunk_at'
-> > > > > > make[1]: [Makefile:1234: vmlinux] Error 1 (ignored)
-> > > > > > --------------
-> > > > > > Building i386:allmodconfig ... failed
-> > > > > > --------------
-> > > > > > Error log:
-> > > > > > x86_64-linux-ld: arch/x86/kernel/static_call.o: in function
-> > > > > > `__static_call_transform':
-> > > > > > static_call.c:(.ref.text+0x46): undefined reference to `cpu_wants_rethunk_at'
-> > > > > > make[1]: [Makefile:1234: vmlinux] Error 1 (ignored)
-> > > > > > --------------
-> > > > > >
-> > > > > > In v5.15.y, cpu_wants_rethunk_at is only built if CONFIG_STACK_VALIDATION=y,
-> > > > > > but that is not supported for i386 builds. The dummy function in
-> > > > > > arch/x86/include/asm/alternative.h doesn't take that dependency into account.
-> > > > > >
-> > > > >
-> > > > > I found this bug too using the Slackware 15.0 32-bit kernel
-> > > > > configuration.
-> > > > >
-> > > > > Here is a simple work around patch, but there may be a better solution...
-> > > > >
-> > > > > --- arch/x86/kernel/static_call.c.orig	2025-05-22 05:08:28.000000000 -0700
-> > > > > +++ arch/x86/kernel/static_call.c	2025-05-27 10:25:27.630496538 -0700
-> > > > > @@ -81,9 +81,12 @@
-> > > > >  		break;
-> > > > >
-> > > > >  	case RET:
-> > > > > +
-> > > > > +#ifdef CONFIG_64BIT
-> > > > >  		if (cpu_wants_rethunk_at(insn))
-> > > > >  			code = text_gen_insn(JMP32_INSN_OPCODE, insn, x86_return_thunk);
-> > > > >  		else
-> > > > > +#endif
-> > > > >  			code = &retinsn;
-> > > > >  		break;
-> > > > >
-> > > >
-> > > > Another option is to define the empty function when CONFIG_STACK_VALIDATION=n as below:
-> > > >
-> > > > --- 8< ---
-> > > > From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-> > > > Subject: [PATCH] x86/its: Fix undefined reference to cpu_wants_rethunk_at()
-> > > >
-> > > > Below error was reported in 32-bit kernel build:
-> > > >
-> > > >   static_call.c:(.ref.text+0x46): undefined reference to `cpu_wants_rethunk_at'
-> > > >   make[1]: [Makefile:1234: vmlinux] Error
-> > > >
-> > > > This is because the definition of cpu_wants_rethunk_at() depends on
-> > > > CONFIG_STACK_VALIDATION which is only enabled in 64-bit mode.
-> > > >
-> > > > Define the empty function when CONFIG_STACK_VALIDATION=n, rethunk mitigation
-> > > > is anyways not supported without it.
-> > > >
-> > > > Reported-by: Guenter Roeck <linux@roeck-us.net>
-> > > > Link: https://lore.kernel.org/stable/0f597436-5da6-4319-b918-9f57bde5634a@roeck-us.net/
-> > > > Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-> > > > ---
-> > > >  arch/x86/include/asm/alternative.h | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/arch/x86/include/asm/alternative.h b/arch/x86/include/asm/alternative.h
-> > > > index 1797f80c10de..a5f704dbb4a1 100644
-> > > > --- a/arch/x86/include/asm/alternative.h
-> > > > +++ b/arch/x86/include/asm/alternative.h
-> > > > @@ -98,7 +98,7 @@ static inline u8 *its_static_thunk(int reg)
-> > > >  }
-> > > >  #endif
-> > > >
-> > > > -#ifdef CONFIG_RETHUNK
-> > > > +#if defined(CONFIG_RETHUNK) && defined(CONFIG_STACK_VALIDATION)
-> > > >  extern bool cpu_wants_rethunk(void);
-> > > >  extern bool cpu_wants_rethunk_at(void *addr);
-> > > >  #else
-> > > > --
-> > > > 2.34.1
-> > > >
-> > > 
-> > > Thanks for looking at this Pawan.
-> > > 
-> > > Your new patch works fine on both Slackware 15.0 32-bit and 64-bit
-> > > systems.
-> > 
-> > Thank you for verifying the patch.
+On Tue, May 13, 2025 at 02:36:13PM +0800, Troy Mitchell wrote:
+> Use guard to automatically release the lock after going out of scope
+> instead of calling it manually.
 > 
-> Is someone going to submit this in a form we can apply it in?  (hint...)
+> i2c_imx_slave_handle() can safely be entered with the lock held.
+> 
+> Refactored the i2c_imx_isr function so that i2c_imx_master_isr
+> does not participate in the guard scope
+> 
+> So Using scoped_guard simplifies the control flow
+> by ensuring consistent and automatic unlock,
+> which improves readability without affecting correctness.
+> 
+> Co-developed-by: Yongchao Jia <jyc0019@gmail.com>
+> Signed-off-by: Yongchao Jia <jyc0019@gmail.com>
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> Signed-off-by: Troy Mitchell <troymitchell988@gmail.com>
 
-Now submitted here:
+Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
-https://lore.kernel.org/all/8c84125f71aec2fd81adf423dbc12156ac11706a.1748584726.git.pawan.kumar.gupta@linux.intel.com/
+Thank you!
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
