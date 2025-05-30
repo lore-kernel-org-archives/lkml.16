@@ -1,125 +1,129 @@
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA18C213254;
-	Fri, 30 May 2025 07:52:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8551D2AE6F;
+	Fri, 30 May 2025 07:54:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748591565; cv=none; b=HRMkHFd06ylTCnyTgXLTahmtMzgHkgQ0p0SAk/P8lLnh7+zyN2O1/Of+yoHTXhAu9jXIc4wyLXXr+22n6Sy4oCtUip9DYLUjUX4Be7do+F3m4z4RgTPPu1pUDc03IQsBdyO3Er43IoDyjsXl16xGL0dDAidKWsVSYoAZpd6uqzY=
+	t=1748591677; cv=none; b=gj1lMwo2qsQ/V9jBMYTas+i5hDR4ig7VkFmzcVG0NaZKyjn8IuC5HCJI52/KZxHQWhkS2UnmgwFogc4P9/9lz/9BBsvKokX4OHyqCZ2VQ0bh0jpNvAwVT/qNxa+KejW2qImBSaBE5z/Mc7QHrriRju30RBLQCKBHSBur9Vs14xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748591565; c=relaxed/simple;
-	bh=r8IP4NCo5XgD5PidO3HPYahdoy790r8YukrCMHSEkBE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a1QFdKE1TXJJiTnCv7hAoNYOgNV+8wDgcdE0LZ4m/VCSFZ2uZOvSVJKdikuRfJkBo+vqwTJrpBQG/utm+x3TS9D2c3tL3RmgpVE1wfhbIhY+7tR2xr3D17KIqTmRFCp7r4HkKab4X6Ma2Tq9gk6DpBCKEZr+EUmHt1JwCrTLUjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MHEgB0C0; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748591677; c=relaxed/simple;
+	bh=eJk6U97j4Cdh5nBfahL6CHsEtxMaisXTKlbSbz6RKnU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=iuivLjJvS6QruZpqK21GRdE9KkGdkpUjFvXM6kbJWKxyTOAACHxjdQGDCudvBA43/U25KBtIYTCkxF513Pkh22ZfWjeYQ+iaRXmcVhHpIzjE7qwMwcV1z52e6ZKCzODnHxmxdUXVB9gDQpT1y8lppmOJhc99tYBWmjQW+sPL9uU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Eln8R0q6; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MHEgB0C0"
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-86d587dbc15so1212772241.1;
-        Fri, 30 May 2025 00:52:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748591560; x=1749196360; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZKtlyRzdj1hzUN4lNvAG8wP0iwSwojEvBGmYnQtcdS0=;
-        b=MHEgB0C0dp/QTi+0x1+DDsZaOiXUVHLwi1rCau2ZthJcptc3EGfhdUwVrWkI4FIb22
-         wwZKHmQR3gYauwL/GEgY4tHnP0qO0hit4/FUZK6bMvtYY/eoZ77Yp5XkMVLRmGPlFzSw
-         t9lML+dS5ryH1dCoNKdzSXEE/5Z2Vde8Rj2jALm8mtChhmSWIPKaZnFnWW0N6pkbPDN8
-         I6TQIGz3Q22LPqOOR/XYvNXcaM1FalqKnMZaEn6l1pYGM5Ls+8NJDYh+YOqNc9n9ZrPG
-         HxpjsT4ZXguwdjIugVIcm2E6HywYTmBWC6vizi66+dbl6V//YQTSlnZ3cDfJ+ZuVDerK
-         CU7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748591560; x=1749196360;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZKtlyRzdj1hzUN4lNvAG8wP0iwSwojEvBGmYnQtcdS0=;
-        b=M/qKxkAtR7qwXXxa9uUUTS50cfNIazMj6lkl1y44TtTFJqfS9jjlNpUTWn7Z2y60fA
-         qN9gnuJbylCG+UAgWr8B2KasYyjpc3rUV+zh7hI/L0tI7sms3pTO6qf1qQLQSzRE0h+9
-         Xgz3nkRcjFAo7SO5pBudoV80KXCRreGEaqT48S3RkWtUH7nNepM6E58mnLqFwN0E3nyj
-         16skYpf3BciEsvHmE1xQPBpTsWj3n9Sz5KV92J+1RdVj106VO2UPpB7B+dRz/JlRlUae
-         8teWt68Hh8YB96FF/ovtlzKzHkwq3NIhJsM3/xEFWGdC4f4O52Vq00WKr/u+abyOq9cy
-         vN+A==
-X-Forwarded-Encrypted: i=1; AJvYcCVgIlGUXNLVfkmbA3fDDLWhPt3pArgsI1mIrucZdAOa2X2Q3Gm9RRb6Clvw+pUFyzCNhl/NOUBSCig=@vger.kernel.org, AJvYcCWlvqaP7fcJfNbCCq5zck9JVgfSB63U2vvrn7ZlM0P8a2ihlQO8mmCqdNLy/GUOBZ5VBhrKywX9xkRisw==@vger.kernel.org, AJvYcCXb+ofFuN9cUjIWhiK8Rlm7SnmqsWSpp7b/7kaNhhEMQM2K52YH51zv3ustu83Vkk7CWovyhpFgd7xYGARr@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIAtfKR7rZQiU0q8k55w9OA0jS1a/qzjS05szaOLSqU415Cbsd
-	/337JmTqw0DAFo0LjFAohmvm4ZROxDv/KAWrdr4Wfp4/fHNEhg8e/j8aXZ9Si0A3uLfFpWKclVc
-	l10djNp6NmqZ2Za7ZV/rDNKMY+Ae5KnA=
-X-Gm-Gg: ASbGncuIi+ZoyGYMN9aM7Ayu8DzLaSQyaJlH93bWcJqgPrlUH/KuRuJvQqFpoU8Mtqq
-	T9TfgYbe93fmzR92nc5l2KftetaoEZ7/wKwFkxJ5Bd6HESfBXV4XeuyxSZzHtiR1eisEqEpjDnE
-	WcSWP403KuGJOi65tUJRuCR2PSgA8sc/CujR1XYjV/bUvp
-X-Google-Smtp-Source: AGHT+IEu0wvQ5rhdA7BJLa2LTFM56TLWJzqwagC9Vg/DVegxmBIqU65ZnQ+yPR7TraWX6oDXCxLvKV4jW7/+CnRcrpk=
-X-Received: by 2002:a05:6102:c89:b0:4e2:86e8:3188 with SMTP id
- ada2fe7eead31-4e6e473792bmr1885640137.0.1748591560495; Fri, 30 May 2025
- 00:52:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Eln8R0q6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748591675; x=1780127675;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=eJk6U97j4Cdh5nBfahL6CHsEtxMaisXTKlbSbz6RKnU=;
+  b=Eln8R0q6E+eM+1lBigc7XFKLU/vgxKfpuSmJc52CVFe6J7dG+DuEX+Kv
+   Muige0tyVlUzsYTXKFf7LaBK96scpZPEh04nWCj9n8EtMt5458AcBgIjw
+   gQkEwlEZidV5VNhsZO3xw4i0LH2zJO5z6/h475YmN+1YyE/MEn4zV1nKs
+   Y8f4Ms2/mSVwumKir+lGgdhyMG2JuAPMvxIH0OnluFQB0eMdWriY5N0H3
+   ysvrE/MYjwL5KFbfB6DUwguLzwSKN9wVkT29mflFJKxRe56viB7QdTbBR
+   P6bvJvGuLiEpsRMoUnlRMKdIdu8vOAIVIqMDuhxhwC79GeScczPQ/JFF7
+   w==;
+X-CSE-ConnectionGUID: RoF1p9/zThayUxceRmN2wg==
+X-CSE-MsgGUID: dfkeFuGHQvOFLScCLOXypA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="50373970"
+X-IronPort-AV: E=Sophos;i="6.16,195,1744095600"; 
+   d="scan'208";a="50373970"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 00:54:34 -0700
+X-CSE-ConnectionGUID: G1YyP1mfQjG7cWX7/6GdDA==
+X-CSE-MsgGUID: RIdpZUmwTpy8E6dWJCtpfg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,195,1744095600"; 
+   d="scan'208";a="148951718"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.183])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 00:54:33 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 30 May 2025 10:54:30 +0300 (EEST)
+To: Stuart Hayes <stuart.w.hayes@gmail.com>
+cc: LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] platform/x86: dell_rbu: Fix list usage
+In-Reply-To: <20250529202758.8440-3-stuart.w.hayes@gmail.com>
+Message-ID: <d7adf2ca-0cd7-99eb-9be1-a2b37fa8445e@linux.intel.com>
+References: <20250529202758.8440-1-stuart.w.hayes@gmail.com> <20250529202758.8440-3-stuart.w.hayes@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <85778a76-7dc8-4ea8-8827-acb45f74ee05@lucifer.local>
- <aDh9LtSLCiTLjg2X@casper.infradead.org> <20250529211423.GA1271329@cmpxchg.org>
-In-Reply-To: <20250529211423.GA1271329@cmpxchg.org>
-From: Barry Song <21cnbao@gmail.com>
-Date: Fri, 30 May 2025 19:52:28 +1200
-X-Gm-Features: AX0GCFtLq2Vrtv-b7fSZ_FGTqJuT5ElgRYnChnL5uE5cw7If3ZrbkNFfQmhEunI
-Message-ID: <CAGsJ_4yKDqUu8yZjHSmWBz3CpQhU6DM0=EhibfTwHbTo+QWvZA@mail.gmail.com>
-Subject: Re: [DISCUSSION] proposed mctl() API
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Matthew Wilcox <willy@infradead.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, David Hildenbrand <david@redhat.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Christian Brauner <brauner@kernel.org>, SeongJae Park <sj@kernel.org>, Usama Arif <usamaarif642@gmail.com>, 
-	Mike Rapoport <rppt@kernel.org>, linux-mm@kvack.org, linux-arch@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org, 
-	Pedro Falcato <pfalcato@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Fri, May 30, 2025 at 9:14=E2=80=AFAM Johannes Weiner <hannes@cmpxchg.org=
-> wrote:
->
-> On Thu, May 29, 2025 at 04:28:46PM +0100, Matthew Wilcox wrote:
-> > Barry's problem is that we're all nervous about possibly regressing
-> > performance on some unknown workloads.  Just try Barry's proposal, see
-> > if anyone actually compains or if we're just afraid of our own shadows.
->
-> I actually explained why I think this is a terrible idea. But okay, I
-> tried the patch anyway.
->
-> This is 'git log' on a hot kernel repo after a large IO stream:
->
->                                      VANILLA                      BARRY
-> Real time                 49.93 (    +0.00%)         60.36 (   +20.48%)
-> User time                 32.10 (    +0.00%)         32.09 (    -0.04%)
-> System time               14.41 (    +0.00%)         14.64 (    +1.50%)
-> pgmajfault              9227.00 (    +0.00%)      18390.00 (   +99.30%)
-> workingset_refault_file  184.00 (    +0.00%)    236899.00 (+127954.05%)
->
-> Clearly we can't generally ignore page cache hits just because the
-> mmaps() are intermittent.
+On Thu, 29 May 2025, Stuart Hayes wrote:
 
-Hi Johannes,
-Thanks!
+> Stop using an entire struct packet_data just for the embedded list_head,
+> and fix usage of that list_head.
+> 
+> Fixes: d19f359fbdc6 ("platform/x86: dell_rbu: don't open code list_for_each_entry*()")
+> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
 
-Are you on v1, which lacks folio demotion[1], or v2, which includes it [2]?
+Isn't this just refactor so Fixes tag for this commit is not warranted?
 
-[1] https://lore.kernel.org/linux-mm/20250412085852.48524-1-21cnbao@gmail.c=
-om/
-[2] https://lore.kernel.org/linux-mm/20250514070820.51793-1-21cnbao@gmail.c=
-om/
+> ---
+>  drivers/platform/x86/dell/dell_rbu.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/dell/dell_rbu.c b/drivers/platform/x86/dell/dell_rbu.c
+> index 7b019fb72e86..c03d4d55fcc1 100644
+> --- a/drivers/platform/x86/dell/dell_rbu.c
+> +++ b/drivers/platform/x86/dell/dell_rbu.c
+> @@ -77,14 +77,14 @@ struct packet_data {
+>  	int ordernum;
+>  };
+>  
+> -static struct packet_data packet_data_head;
+> +static struct list_head packet_data_list;
+>  
+>  static struct platform_device *rbu_device;
+>  static int context;
+>  
+>  static void init_packet_head(void)
+>  {
+> -	INIT_LIST_HEAD(&packet_data_head.list);
+> +	INIT_LIST_HEAD(&packet_data_list);
+>  	rbu_data.packet_read_count = 0;
+>  	rbu_data.num_packets = 0;
+>  	rbu_data.packetsize = 0;
+> @@ -183,7 +183,7 @@ static int create_packet(void *data, size_t length) __must_hold(&rbu_data.lock)
+>  
+>  	/* initialize the newly created packet headers */
+>  	INIT_LIST_HEAD(&newpacket->list);
+> -	list_add_tail(&newpacket->list, &packet_data_head.list);
+> +	list_add_tail(&newpacket->list, &packet_data_list);
+>  
+>  	memcpy(newpacket->data, data, length);
+>  
+> @@ -292,7 +292,7 @@ static int packet_read_list(char *data, size_t * pread_length)
+>  	remaining_bytes = *pread_length;
+>  	bytes_read = rbu_data.packet_read_count;
+>  
+> -	list_for_each_entry(newpacket, (&packet_data_head.list)->next, list) {
+> +	list_for_each_entry(newpacket, &packet_data_list, list) {
+>  		bytes_copied = do_packet_read(pdest, newpacket,
+>  			remaining_bytes, bytes_read, &temp_count);
+>  		remaining_bytes -= bytes_copied;
+> @@ -315,7 +315,7 @@ static void packet_empty_list(void)
+>  {
+>  	struct packet_data *newpacket, *tmp;
+>  
+> -	list_for_each_entry_safe(newpacket, tmp, (&packet_data_head.list)->next, list) {
+> +	list_for_each_entry_safe(newpacket, tmp, &packet_data_list, list) {
+>  		list_del(&newpacket->list);
+>  
+>  		/*
+> 
 
->
-> The whole point is to cache across processes and their various
-> apertures into a common, long-lived filesystem space.
->
-> Barry knows something about the relationship between certain processes
-> and certain files that he could exploit with MADV_COLD-on-exit
-> semantics. But that's not something the kernel can safely assume. Not
-> without defeating the page cache for an entire class of file accesses.
+-- 
+ i.
 
-Best Regards
-Barry
