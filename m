@@ -1,373 +1,211 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89982220F5F
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:37:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2779B22B598
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:37:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748597829; cv=none; b=hB67eKZgTkweJjyjtonfxgytjRD7s9oVPGr1Ffz2vEpjZgsM3c7crCl0aFwDbYX14PzN/xde4VOXOTT7ScuGJuILAPVr/Z8xdsFegVXw1pSTbLjGGfNK4CBJH+lUqdCiWN6p3etY1eVkKJxphNs1VGUlvRPqKvV1GuA2cVPJY/E=
+	t=1748597850; cv=none; b=RwEil6jpU3BIgroSv188AcECm//l4RZp375RDnjJ926TjtOI+Ou820kx713f1EZMiSaF4mCiSUEroxpMPbIh/IlKXziWq3fCOkiVRGyKngPjXwcZwCh27nRXiry7W34RPmUdimS/aNkEh1pkgudXlXQRS47lydud38ty8u4Wc+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748597829; c=relaxed/simple;
-	bh=OO8xU47yO/bdoL2deRtc+JSUSQ1CGyj22+/NieuKsMM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bVPZQ/nQpif/uKs1qu8pexlQ8+1hEIX8bz8pBqWROsoq291OWPc80giT6NrENawpsBTdfrN8Pxcdy0bOVOhT6nNkynp5h6CaS+HBmROL18uuOsc3tcAIQ0ny98B946MMpawIAFlJBzcaVU5eUqyRm9uJn0b6cq7n2ivPYvaoA2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=bQw0UddR; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1748597850; c=relaxed/simple;
+	bh=Vo15I+t4ldDz+udo0/J6K2wEPwd7uOm20jAwOh5675U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FIXjLdBZ2VdfnnkxRFjo6SQ/Xl0HSwMmGrY0uAO2prcakFren3JGCBywCt0WceS4OBMLc0/xZnyL5ROlFMqqyhDD6MOY3zz/zUYv0HYAd5LZTihzfZUikA1li0dSRH3+aTfwJ70FhtcA4gpGUUVFd20FxCXSi/DnUMObQYbKXfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F3eRGqSf; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="bQw0UddR"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-311d5fdf1f0so1705684a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:37:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1748597827; x=1749202627; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ff5bIYNqY4yUnollIgoWVZucxS5phnK+GSArqqp8njA=;
-        b=bQw0UddRSd0zodJFoDpQPUYtbH1/vf+TrFM/oYUAFXfqB280B0OrDjvwoGgX/58GYZ
-         j4hvdO+XitJo8fkmEr2ugoXnozUApYaq5qz1miA5ra+AYe749tpVZer6npWBXRkke9rl
-         4J9pA24qUUSFt3yjLUYeKiqaXphcZbGmGr4E2mI/FIppeSvb1doRHrPpaGvzlfwxVuko
-         CH3ZTO94pN8EXwoy2vai6ATQnh+0Ijh8Vsj3fLcmjpHubwMPj+kp8l1Xp8olIg2p8bxo
-         JmRg7UYZYAOyDt7wqRwOKkr9jUx6FV0s/w2/PQAYB/BKmaJbzssmmI2i9aOBaStyjc9s
-         tz5w==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F3eRGqSf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748597847;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=yhyTHW9/iNSmJ3o1/+Kc2KlH+vX1ja7mHJ+mDxpkv9E=;
+	b=F3eRGqSf/naq58IBMHrYtrb93TuXz2tHgKs5FOHBLNuv8r89hCK1Km5ApOAl0yWYRGmMKz
+	JVQClIFiiHtw1veKrCx/07QzVPbyblJiLbS3KEbubfRtG1nRnjkOe7keuNTfgwZqYpycNU
+	RXsk0x37kJcCr856Vm21+g1AtfR9I3o=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-502-aix-I5LcPzmrRjWTfEQF4A-1; Fri, 30 May 2025 05:37:25 -0400
+X-MC-Unique: aix-I5LcPzmrRjWTfEQF4A-1
+X-Mimecast-MFC-AGG-ID: aix-I5LcPzmrRjWTfEQF4A_1748597845
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-450cb8ff0c6so9515095e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:37:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748597827; x=1749202627;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ff5bIYNqY4yUnollIgoWVZucxS5phnK+GSArqqp8njA=;
-        b=h4jikp4J+Mij4bzN0xuFGnQBI1U3pLg1U8Sfjpmxd4qBF2wcnqdEyKEUX3ZqttCJ+r
-         qJqWoHe/fPo/bhfDnjVVw093ZJ78Y3hePh7y3BRQGRWcT6+fJfjd4WHH6cAieDOY2qhs
-         kI+M1BFudiEyH9GAzFAuX0AOfLZbt4GmSjvZxyCRd/nfqb73mNd9hsFnfMC2sfDd+11u
-         WP7yz/aLPkKv1/6cWkFGAryNLeMzpy43mxk1WULr0SVGYhKr94TwmNHo838jCsmF8/Lv
-         3Ih6DCkp285VeMIm5QxDNiNZsWdVJK5vc0oC2/rbcDB2EFLwpGEi0kmSmH7ywE88kWz9
-         UKiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWoB6SejjtbtoPXZCSHBlQ537lofXUeg6w82B+kKjpSlp1eechuyNXrt/5yJhzf7JqFxbNNZo+khKL1eSI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5nSTY+jFtSKtJRkix7lkU31BgdlTaSDk8WtyZW4rDhXOQsMho
-	Y1iwL/qN3U2p+oc/FUUFOsh5pkHT7+QjOF1UwkjJITwcWKkmF/MzdANyu+w7V6qGLOA=
-X-Gm-Gg: ASbGnctaQ16oO33ikc/wT2yAzcCs7OvKNbKZlWba0kxsa5BqK3QGvLQo3v69DjKWUfI
-	Nlw0P406OY2RFqzQhOrxA1ZocYrvqCQaJzY7Jilw0dMit9Gv/HpDyFT184wNxIzQbqBNmhW2nOw
-	HRm5cOSkopIkKR27iIWBgAOZ4FHDi72n9ojxu4WPIKXQ+R6G0U81R3kh/z60ZmUb11BnJVIF6u1
-	rP02ddueL/HhJ69V4jb+Nj8bXlOa/b+Szf6H//BSiOd6gw54jT3bahFo1/k0Bh2A/72VkHGFCUp
-	vV9ezFB2vQ6Jsqq2zrYQeuYksmitvnpeHip1fpEwug6oOKoBYWs9kE3dczlu0tcKUS1wNeRJsGy
-	hItd2K9VuSQ==
-X-Google-Smtp-Source: AGHT+IGPAReH+gj/mAHjw8Fc+v5rLzKHU0DKOTk3FhYthS79DtKAel685Vp30oKSxbQ9599VbyBn4A==
-X-Received: by 2002:a17:90b:4d:b0:311:be51:bdec with SMTP id 98e67ed59e1d1-3125036326fmr2501710a91.11.1748597826688;
-        Fri, 30 May 2025 02:37:06 -0700 (PDT)
-Received: from FQ627FTG20.bytedance.net ([63.216.146.178])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e29f7b8sm838724a91.2.2025.05.30.02.36.51
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 30 May 2025 02:37:06 -0700 (PDT)
-From: Bo Li <libo.gcs85@bytedance.com>
-To: tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	luto@kernel.org,
-	kees@kernel.org,
-	akpm@linux-foundation.org,
-	david@redhat.com,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	peterz@infradead.org
-Cc: dietmar.eggemann@arm.com,
-	hpa@zytor.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	vbabka@suse.cz,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com,
-	jannh@google.com,
-	pfalcato@suse.de,
-	riel@surriel.com,
-	harry.yoo@oracle.com,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	duanxiongchun@bytedance.com,
-	yinhongbo@bytedance.com,
-	dengliang.1214@bytedance.com,
-	xieyongji@bytedance.com,
-	chaiwen.cc@bytedance.com,
-	songmuchun@bytedance.com,
-	yuanzhu@bytedance.com,
-	chengguozhu@bytedance.com,
-	sunjiadong.lff@bytedance.com,
-	Bo Li <libo.gcs85@bytedance.com>
-Subject: [RFC v2 34/35] RPAL: enable fast epoll wait
-Date: Fri, 30 May 2025 17:28:02 +0800
-Message-Id: <b13520ef51366f6c25c50f05de7210d37fcd9489.1748594841.git.libo.gcs85@bytedance.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <cover.1748594840.git.libo.gcs85@bytedance.com>
-References: <cover.1748594840.git.libo.gcs85@bytedance.com>
+        d=1e100.net; s=20230601; t=1748597844; x=1749202644;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=yhyTHW9/iNSmJ3o1/+Kc2KlH+vX1ja7mHJ+mDxpkv9E=;
+        b=nAewBizHyan6xd3jJOlnZKiZ3NnfZmU3mag/duvQN7voggA4YpOuhB5eG1eBurlImm
+         WPXKqpPq47LDUFDRoP5pdOMfukzRvEfV3ikFXyryHzNA28nlPXO7Y7KPloA2xrbYen59
+         CnwPiUaI06yZk/lOQaJNZg7qpTM/deQdYldmxcZuI63WxWt/DXOEz+2vmZ0JBJYlDZyq
+         R//+nLBbRbAF70iByiQM0dC+n0Pn6tUrocyDE0Vi8qr7KFGiI2GAWLz9xnFn7UK31XO+
+         Nnd7oTXPsgDMeQxh/SyEHuiJd+K9qu1N81IoT7Nw4yA7kiz4qXNACgpBgPqqZWWkXjoe
+         L9rw==
+X-Forwarded-Encrypted: i=1; AJvYcCUJ78I9/QdXBlyIOj79OrWa/VaPC/sq/goDAQPIYgz8VPlII5odGalVJscc0ufWmK7Ebi9SlCYEh+1Cd1w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6oZXhUFRrFwVn6922m7/m8HnzJFiPU808TuamKryUaMktZtvg
+	85euguSryvZVsZjxW86vbBySn4sLp3MBz247NKIeH3AIUxcp5toFqXbSbk9hRTIJQh4AN1K879G
+	RKReleJHhtM6QTO79U7PudwctkEhu+qYGqIwQTZdfenfkd4EmX7EbpmaX2GNokxPYTA==
+X-Gm-Gg: ASbGncsAAiDiXMdL70BzdQ3KuWdoHyaR7ibAgdoaewge+gy07X68C1JoVAkTwZbUcSz
+	WLUTfqt6Rc7bJLOCeeQeDEiz9nfpjO3/QTGiQVChlJbaZYwVPhnC7jS2pQf9fB1DimQ2B3tY4IT
+	t0dZGtwHXlAnSKTxjE92gVOmJIMogM/nTT8Y33OxWakqIR/abc0tcU4fh+OMw2syY2tFfvjbfK9
+	fYfOGHx7l5UqMHGi2fFqZVwCIdPEH61kXrpY8Luft8drekpKf6h4H0deRlZOStvxkCpXK7k9+xN
+	WlxWMofh8ldgfCSMuHbl+m0zPT+lC2jr0tinyYikSpwrOTL0gbTXFYa/F8EI9gC5Ls1+cNkHR+E
+	ScMgMhAd2foPK8kG8zS7RyX/j7PVNYSV+yargbqk=
+X-Received: by 2002:a05:600c:6207:b0:43c:ea36:9840 with SMTP id 5b1f17b1804b1-450d885e38amr12675375e9.22.1748597844509;
+        Fri, 30 May 2025 02:37:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGccFKRFTCgkkT3ae/QFUuhHOQzucrbv9tCboH5VNdb/K0MlBO6YnvTUAz5zFzNoWT7UAvZNw==
+X-Received: by 2002:a05:600c:6207:b0:43c:ea36:9840 with SMTP id 5b1f17b1804b1-450d885e38amr12675135e9.22.1748597844047;
+        Fri, 30 May 2025 02:37:24 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f03:5b00:f549:a879:b2d3:73ee? (p200300d82f035b00f549a879b2d373ee.dip0.t-ipconnect.de. [2003:d8:2f03:5b00:f549:a879:b2d3:73ee])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d800671csm12953125e9.30.2025.05.30.02.37.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 May 2025 02:37:22 -0700 (PDT)
+Message-ID: <371b8fdd-129d-4fe3-bbc7-f0a1bc433b30@redhat.com>
+Date: Fri, 30 May 2025 11:37:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/12] mm: Convert pXd_devmap checks to vma_is_dax
+To: Alistair Popple <apopple@nvidia.com>, linux-mm@kvack.org
+Cc: gerald.schaefer@linux.ibm.com, dan.j.williams@intel.com, jgg@ziepe.ca,
+ willy@infradead.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
+ zhang.lyra@gmail.com, debug@rivosinc.com, bjorn@kernel.org,
+ balbirs@nvidia.com, lorenzo.stoakes@oracle.com,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org, John@Groves.net
+References: <cover.541c2702181b7461b84f1a6967a3f0e823023fcc.1748500293.git-series.apopple@nvidia.com>
+ <224f0265027a9578534586fa1f6ed80270aa24d5.1748500293.git-series.apopple@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <224f0265027a9578534586fa1f6ed80270aa24d5.1748500293.git-series.apopple@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-When a kernel event occurs during an RPAL call and triggers a lazy switch,
-the kernel context switches from the sender to the receiver. When the
-receiver later returns from user space to the sender, a second lazy switch
-is required to switch the kernel context back to the sender. In the current
-implementation, after the second lazy switch, the receiver returns to user
-space via rpal_kernel_ret() and then calls epoll_wait() from user space to
-re-enter the kernel. This causes the receiver to be unable to process epoll
-events for a long period, degrading performance.
+On 29.05.25 08:32, Alistair Popple wrote:
+> Currently dax is the only user of pmd and pud mapped ZONE_DEVICE
+> pages. Therefore page walkers that want to exclude DAX pages can check
+> pmd_devmap or pud_devmap. However soon dax will no longer set PFN_DEV,
+> meaning dax pages are mapped as normal pages.
+> 
+> Ensure page walkers that currently use pXd_devmap to skip DAX pages
+> continue to do so by adding explicit checks of the VMA instead.
+> 
+> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+> ---
+>   fs/userfaultfd.c | 2 +-
+>   mm/hmm.c         | 2 +-
+>   mm/userfaultfd.c | 2 +-
+>   3 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+> index 22f4bf9..de671d3 100644
+> --- a/fs/userfaultfd.c
+> +++ b/fs/userfaultfd.c
+> @@ -304,7 +304,7 @@ static inline bool userfaultfd_must_wait(struct userfaultfd_ctx *ctx,
+>   		goto out;
+>   
+>   	ret = false;
+> -	if (!pmd_present(_pmd) || pmd_devmap(_pmd))
+> +	if (!pmd_present(_pmd) || vma_is_dax(vmf->vma))
+>   		goto out;
+>   
+>   	if (pmd_trans_huge(_pmd)) {
+> diff --git a/mm/hmm.c b/mm/hmm.c
+> index 082f7b7..db12c0a 100644
+> --- a/mm/hmm.c
+> +++ b/mm/hmm.c
+> @@ -429,7 +429,7 @@ static int hmm_vma_walk_pud(pud_t *pudp, unsigned long start, unsigned long end,
+>   		return hmm_vma_walk_hole(start, end, -1, walk);
+>   	}
+>   
+> -	if (pud_leaf(pud) && pud_devmap(pud)) {
+> +	if (pud_leaf(pud) && vma_is_dax(walk->vma)) {
+>   		unsigned long i, npages, pfn;
+>   		unsigned int required_fault;
+>   		unsigned long *hmm_pfns;
+> diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+> index e0db855..133f750 100644
+> --- a/mm/userfaultfd.c
+> +++ b/mm/userfaultfd.c
+> @@ -1791,7 +1791,7 @@ ssize_t move_pages(struct userfaultfd_ctx *ctx, unsigned long dst_start,
+>   
+>   		ptl = pmd_trans_huge_lock(src_pmd, src_vma);
+>   		if (ptl) {
+> -			if (pmd_devmap(*src_pmd)) {
+> +			if (vma_is_dax(src_vma)) {
+>   				spin_unlock(ptl);
+>   				err = -ENOENT;
+>   				break;
 
-This patch introduces a fast epoll wait feature. During the second lazy
-switch, the kernel configures epoll-related data structures so that the
-receiver can directly enter the epoll wait state without first returning
-to user space and then calling epoll_wait(). The patch adds a new state
-RPAL_RECEIVER_STATE_READY_LS, which is used to mark that the receiver can
-transition to RPAL_RECEIVER_STATE_WAIT during the second lazy switch. The
-kernel then performs this state transition in rpal_lazy_switch_tail().
+I assume we could also just refuse dax folios, right?
 
-Signed-off-by: Bo Li <libo.gcs85@bytedance.com>
----
- arch/x86/rpal/core.c |  29 ++++++++++++-
- fs/eventpoll.c       | 101 +++++++++++++++++++++++++++++++++++++++++++
- include/linux/rpal.h |   3 ++
- kernel/sched/core.c  |  13 +++++-
- 4 files changed, 143 insertions(+), 3 deletions(-)
+If we decide to check VMAs, we should probably check earlier.
 
-diff --git a/arch/x86/rpal/core.c b/arch/x86/rpal/core.c
-index 2ac5d932f69c..7b6efde23e48 100644
---- a/arch/x86/rpal/core.c
-+++ b/arch/x86/rpal/core.c
-@@ -51,7 +51,25 @@ void rpal_lazy_switch_tail(struct task_struct *tsk)
- 		atomic_cmpxchg(&rcc->receiver_state, rpal_build_call_state(tsk->rpal_sd),
- 			       RPAL_RECEIVER_STATE_LAZY_SWITCH);
- 	} else {
-+		/* tsk is receiver */
-+		int state;
-+
-+		rcc = tsk->rpal_rd->rcc;
-+		state = atomic_read(&rcc->receiver_state);
-+		/* receiver may be scheduled on another cpu after unlock. */
- 		rpal_unlock_cpu(tsk);
-+		/*
-+		 * We must not use RPAL_RECEIVER_STATE_READY instead of
-+		 * RPAL_RECEIVER_STATE_READY_LS. As receiver may at
-+		 * TASK_RUNNING state and then call epoll_wait() again,
-+		 * the state may become RPAL_RECEIVER_STATE_READY, we should
-+		 * not changed its state to RPAL_RECEIVER_STATE_WAIT since
-+		 * the state is set by another RPAL call.
-+		 */
-+		if (state == RPAL_RECEIVER_STATE_READY_LS)
-+			atomic_cmpxchg(&rcc->receiver_state,
-+				       RPAL_RECEIVER_STATE_READY_LS,
-+				       RPAL_RECEIVER_STATE_WAIT);
- 		rpal_unlock_cpu(current);
- 	}
- }
-@@ -63,8 +81,14 @@ void rpal_kernel_ret(struct pt_regs *regs)
- 	int state;
- 
- 	if (rpal_test_current_thread_flag(RPAL_RECEIVER_BIT)) {
--		rcc = current->rpal_rd->rcc;
--		regs->ax = rpal_try_send_events(current->rpal_rd->ep, rcc);
-+		struct rpal_receiver_data *rrd = current->rpal_rd;
-+
-+		rcc = rrd->rcc;
-+		if (rcc->timeout > 0)
-+			hrtimer_cancel(&rrd->ep_sleeper.timer);
-+		rpal_remove_ep_wait_list(rrd);
-+		regs->ax = rpal_try_send_events(rrd->ep, rcc);
-+		fdput(rrd->f);
- 		atomic_xchg(&rcc->receiver_state, RPAL_RECEIVER_STATE_KERNEL_RET);
- 	} else {
- 		tsk = current->rpal_sd->receiver;
-@@ -173,6 +197,7 @@ rpal_do_kernel_context_switch(struct task_struct *next, struct pt_regs *regs)
- 		 * Otherwise, sender's user context will be corrupted.
- 		 */
- 		rebuild_receiver_stack(current->rpal_rd, regs);
-+		rpal_fast_ep_poll(current->rpal_rd, regs);
- 		rpal_schedule(next);
- 		rpal_clear_task_thread_flag(prev, RPAL_LAZY_SWITCHED_BIT);
- 		prev->rpal_rd->sender = NULL;
-diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-index 791321639561..b70c1cd82335 100644
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -2143,6 +2143,107 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
- }
- 
- #ifdef CONFIG_RPAL
-+static void *rpal_get_eventpoll(struct rpal_receiver_data *rrd, struct pt_regs *regs)
-+{
-+	struct rpal_receiver_call_context *rcc = rrd->rcc;
-+	int epfd = rcc->epfd;
-+	struct epoll_event __user *events = rcc->events;
-+	int maxevents = rcc->maxevents;
-+	struct file *file;
-+
-+	if (maxevents <= 0 || maxevents > EP_MAX_EVENTS) {
-+		regs->ax = -EINVAL;
-+		return NULL;
-+	}
-+
-+	if (!access_ok(events, maxevents * sizeof(struct epoll_event))) {
-+		regs->ax = -EFAULT;
-+		return NULL;
-+	}
-+
-+	rrd->f = fdget(epfd);
-+	file = fd_file(rrd->f);
-+	if (!file) {
-+		regs->ax = -EBADF;
-+		return NULL;
-+	}
-+
-+	if (!is_file_epoll(file)) {
-+		regs->ax = -EINVAL;
-+		fdput(rrd->f);
-+		return NULL;
-+	}
-+
-+	rrd->ep = file->private_data;
-+	return rrd->ep;
-+}
-+
-+void rpal_fast_ep_poll(struct rpal_receiver_data *rrd, struct pt_regs *regs)
-+{
-+	struct eventpoll *ep;
-+	struct rpal_receiver_call_context *rcc = rrd->rcc;
-+	ktime_t ts = 0;
-+	struct hrtimer *ht = &rrd->ep_sleeper.timer;
-+	int state;
-+	int avail;
-+
-+	regs->orig_ax = __NR_epoll_wait;
-+	ep = rpal_get_eventpoll(rrd, regs);
-+
-+	if (!ep || signal_pending(current) ||
-+	    unlikely(ep_events_available(ep)) ||
-+	    atomic_read(&rcc->ep_pending) || unlikely(rcc->timeout == 0)) {
-+		INIT_LIST_HEAD(&rrd->ep_wait.entry);
-+	} else {
-+		/*
-+		 * Here we use RPAL_RECEIVER_STATE_READY_LS to avoid conflict with
-+		 * RPAL_RECEIVER_STATE_READY. As the RPAL_RECEIVER_STATE_READY_LS
-+		 * is convert to RPAL_RECEIVER_STATE_WAIT in rpal_lazy_switch_tail(),
-+		 * it is possible the receiver is woken at that time. Thus,
-+		 * rpal_lazy_switch_tail() should figure out whether the receiver
-+		 * state is set by lazy switch or not. See rpal_lazy_switch_tail()
-+		 * for details.
-+		 */
-+		state = atomic_xchg(&rcc->receiver_state, RPAL_RECEIVER_STATE_READY_LS);
-+		if (unlikely(state != RPAL_RECEIVER_STATE_LAZY_SWITCH))
-+			rpal_err("%s: unexpected state: %d\n", __func__, state);
-+		init_waitqueue_func_entry(&rrd->ep_wait, rpal_ep_autoremove_wake_function);
-+		rrd->ep_wait.private = rrd;
-+		INIT_LIST_HEAD(&rrd->ep_wait.entry);
-+		write_lock(&ep->lock);
-+		set_current_state(TASK_INTERRUPTIBLE);
-+		avail = ep_events_available(ep);
-+		if (!avail)
-+			__add_wait_queue_exclusive(&ep->wq, &rrd->ep_wait);
-+		write_unlock(&ep->lock);
-+		if (avail) {
-+			/* keep state consistent when we enter rpal_kernel_ret() */
-+			atomic_set(&rcc->receiver_state,
-+				   RPAL_RECEIVER_STATE_LAZY_SWITCH);
-+			set_current_state(TASK_RUNNING);
-+			return;
-+		}
-+
-+		if (rcc->timeout > 0) {
-+			rrd->ep_sleeper.task = rrd->rcd.bp_task;
-+			ts = ms_to_ktime(rcc->timeout);
-+			hrtimer_start(ht, ts, HRTIMER_MODE_REL);
-+		}
-+	}
-+}
-+
-+void rpal_remove_ep_wait_list(struct rpal_receiver_data *rrd)
-+{
-+	struct eventpoll *ep = (struct eventpoll *)rrd->ep;
-+	wait_queue_entry_t *wait = &rrd->ep_wait;
-+
-+	if (!list_empty_careful(&wait->entry)) {
-+		write_lock_irq(&ep->lock);
-+		__remove_wait_queue(&ep->wq, wait);
-+		write_unlock_irq(&ep->lock);
-+	}
-+}
-+
- void *rpal_get_epitemep(wait_queue_entry_t *wait)
- {
- 	struct epitem *epi = ep_item_from_wait(wait);
-diff --git a/include/linux/rpal.h b/include/linux/rpal.h
-index f5f4da63f28c..676113f0ba1f 100644
---- a/include/linux/rpal.h
-+++ b/include/linux/rpal.h
-@@ -126,6 +126,7 @@ enum rpal_receiver_state {
- 	RPAL_RECEIVER_STATE_WAIT,
- 	RPAL_RECEIVER_STATE_CALL,
- 	RPAL_RECEIVER_STATE_LAZY_SWITCH,
-+	RPAL_RECEIVER_STATE_READY_LS,
- 	RPAL_RECEIVER_STATE_MAX,
- };
- 
-@@ -627,4 +628,6 @@ void rpal_resume_ep(struct task_struct *tsk);
- void *rpal_get_epitemep(wait_queue_entry_t *wait);
- int rpal_get_epitemfd(wait_queue_entry_t *wait);
- int rpal_try_send_events(void *ep, struct rpal_receiver_call_context *rcc);
-+void rpal_remove_ep_wait_list(struct rpal_receiver_data *rrd);
-+void rpal_fast_ep_poll(struct rpal_receiver_data *rrd, struct pt_regs *regs);
- #endif
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index d6f8e0d76fc0..1728b04d1387 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3965,6 +3965,11 @@ static bool rpal_check_state(struct task_struct *p)
- 		case RPAL_RECEIVER_STATE_LAZY_SWITCH:
- 		case RPAL_RECEIVER_STATE_RUNNING:
- 			break;
-+		/*
-+		 * Allow RPAL_RECEIVER_STATE_READY_LS to be woken will cause irq
-+		 * being enabled in rpal_unlock_cpu.
-+		 */
-+		case RPAL_RECEIVER_STATE_READY_LS:
- 		case RPAL_RECEIVER_STATE_CALL:
- 			rpal_set_task_thread_flag(p, RPAL_WAKE_BIT);
- 			ret = false;
-@@ -11403,7 +11408,13 @@ void __sched notrace rpal_schedule(struct task_struct *next)
- 
- 	prev_state = READ_ONCE(prev->__state);
- 	if (prev_state) {
--		try_to_block_task(rq, prev, &prev_state);
-+		if (!try_to_block_task(rq, prev, &prev_state)) {
-+			/*
-+			 * As the task enter TASK_RUNNING state, we should clean up
-+			 * RPAL_RECEIVER_STATE_READY_LS status.
-+			 */
-+			rpal_check_ready_state(prev, RPAL_RECEIVER_STATE_READY_LS);
-+		}
- 		switch_count = &prev->nvcsw;
- 	}
- 
+But I wonder, what about anonymous non-dax pages in COW mappings? Is it 
+possible? Not supported?
+
+If supported, checking the actual folio would be the right thing to do.
+
 -- 
-2.20.1
+Cheers,
+
+David / dhildenb
 
