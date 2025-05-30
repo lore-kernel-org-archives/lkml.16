@@ -1,306 +1,111 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749D3221560
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:31:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E23221560;
+	Fri, 30 May 2025 09:31:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748597461; cv=none; b=FwFyAOiFT+Rf5sCCWEuo1O31BCkDUott2dnsDvilrz/P9ozCBfckF3U+jYPV/fn7IpNHZZINQZYTucXguPXKJaK+W65PjTs2HqrfF3isOXtWrpZy74IwTYE7+27UEdafTuKVoEIsVdIuWFVZwkx1VG8hiX3Rcywyp76zbZ0cj+E=
+	t=1748597475; cv=none; b=XDQsH0+YHY5XjVaTgW1RXTiRtlDQ/lp88FXy4/cj7GBakfV6qVUY2cKke9J9lZ2jjdpFZv55ByhPv8cTeziefySjasfOZXZKIhjru0aIZ4rpFGehtisopqnpXMlQp9s0H1c1alTedwqiyPewprK8rgH/9aKuIj06/sty1GfygjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748597461; c=relaxed/simple;
-	bh=zWuwJn1AfK9f6Ju/rr0kFMON4yyaiLCS77HNg2YNluA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=geD4hR6aGupV4u6KNuwtjZ1PIQn8uWtnltniK98M00LfhdCoWZBVxNJA/OU2KjYw21/CbdoJpbrNraVJxzbINZchThQQtgSWn27u+zlEUR82jySCBrpf4IklFtSkEX21LQKtH7iiojjMK1YxM6VWukMyEdEQkCaUicJIr7bmjcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=UTab4Njo; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="UTab4Njo"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-30f0d8628c8so2061994a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:31:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1748597460; x=1749202260; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kZkk3bjH1sfOYp+VjBWd01Gh2LTXey//pWYFXMUcbnQ=;
-        b=UTab4NjoLFxlKeL8jmboXD5UpJMWaUHx3DVCAYwZLB0nlwEIlfiWuXkN22bpxm4Vi9
-         DTYrVN9yOy9VnBFeRgd2x8I5ZuuGH0WWwucVoUAv1AgR2lBacf6sTSZhDN9NNTQJoIq+
-         n3v8UiML8CowCq3JUHmtMvuVFYD22l5wG/lZ7TwlFcSvwCvCiD1TKBltNVnDZClzfipx
-         WdFgJsC2Qf54Z2bSF6uFlzzY/0CeWh0mm8ttBgqOtvLWFUdrFaRaSVGW7yjBXCRIWoiK
-         UvmKF9rH2tUV1J9ndAicxUy3UJGVcmSqBxY7jkpzEAWmcB2KeTTE3GLIcbp0y9hjo+17
-         XyZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748597460; x=1749202260;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kZkk3bjH1sfOYp+VjBWd01Gh2LTXey//pWYFXMUcbnQ=;
-        b=PDFbFXrXSBZGTWLToirV9oEvVhp8TPLXfi48rWjgYN6MqsqgAjE+5pMV5TPI4LOURH
-         ZNTC8lMTxVxn5fnfF7+OZ+bYpIxL6PxdHBKWKgUZ5aO2TJG9pI3DeQ6r/TGB1pHpy3Zr
-         zvOXLP3YOVrxiD0pfimx8pJtp9EemV3+1j9OeYSQ3slya11bBWL1RIGyb49UCBafDU2y
-         W4f4WeCNnm0S0tP28PiXpV5CgbyI2S/b+YipaWaRuk1xoBZuXmT9P/VkGJNfwK3JMCH2
-         QBJl/z/znTdl8ZP8g5LQ96DlQuUZ4fUWhR5V85YaBuqhyxudt4xe1mI4LJYxoaTEDKLT
-         HsEA==
-X-Forwarded-Encrypted: i=1; AJvYcCV8N5r8E7TQrqfFLEV/HS79KlUVpi4ibC8McExAeRtLSOtuvCc+bIq+90v2ePGuSa+v0spfyd+T5iEVzxY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvOPFzRiyK+aRiEn0W+X3xAGWphTbnV72qpknsVnxZ8yFJoWbb
-	gHTXixQEg2fwq2mk4cD3Av6UTuHTGCW/teeXHam/gD/qvLKqP+/dk8XBpMD8DtGmvEs=
-X-Gm-Gg: ASbGncsvB6SsP72NBwGziQspZKEgVxqnz+yZdm/Qr2udQW7QUCDascPQspFFbtdTA9o
-	M3styXsOz73UDITZeay+BtnvErNXyZhzakNm4byKhr8DDKs+3HP5nzpMPL2uZWWi4wJMefJX/ja
-	YxoIAKaoOWMNt9Xw46HAP0+yliGxm9YIyTijMYoyFwuFF0kAktVaJS1s2yiAiHlS5dMNA27O/tM
-	Q2FG4S85CUNxX2nBJlCeOULu8QBqRWZ6XWK+t1hp/3Bkce5NXY8GwFQ4knjrz7z1mmJjQZ6z6Up
-	8Ewm/vx1mt25l0ycZu6dCHuJM9ps7pSYI2PnyL5HSFgTor9xI18qzoCGRj5QdPJEf0mW0sXxxEk
-	K6WXUcg+PvnZdJNimnmwGmawf6x8p0gA=
-X-Google-Smtp-Source: AGHT+IEDp+vpzbXXEsQMocz8uu8WDoupHL7dKOSkVefmCskmswDnpl1KI6oBSxmQepUxjo/3kPsGsg==
-X-Received: by 2002:a17:90b:28c8:b0:30e:e9f1:8447 with SMTP id 98e67ed59e1d1-31214e11c6cmr9475340a91.4.1748597459572;
-        Fri, 30 May 2025 02:30:59 -0700 (PDT)
-Received: from FQ627FTG20.bytedance.net ([63.216.146.178])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e29f7b8sm838724a91.2.2025.05.30.02.30.44
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 30 May 2025 02:30:59 -0700 (PDT)
-From: Bo Li <libo.gcs85@bytedance.com>
-To: tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	luto@kernel.org,
-	kees@kernel.org,
-	akpm@linux-foundation.org,
-	david@redhat.com,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	peterz@infradead.org
-Cc: dietmar.eggemann@arm.com,
-	hpa@zytor.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	vbabka@suse.cz,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com,
-	jannh@google.com,
-	pfalcato@suse.de,
-	riel@surriel.com,
-	harry.yoo@oracle.com,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	duanxiongchun@bytedance.com,
-	yinhongbo@bytedance.com,
-	dengliang.1214@bytedance.com,
-	xieyongji@bytedance.com,
-	chaiwen.cc@bytedance.com,
-	songmuchun@bytedance.com,
-	yuanzhu@bytedance.com,
-	chengguozhu@bytedance.com,
-	sunjiadong.lff@bytedance.com,
-	Bo Li <libo.gcs85@bytedance.com>
-Subject: [RFC v2 10/35] RPAL: allow service enable/disable
-Date: Fri, 30 May 2025 17:27:38 +0800
-Message-Id: <34c12765bcf534c5afedd10ee3e763695c6a045d.1748594840.git.libo.gcs85@bytedance.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <cover.1748594840.git.libo.gcs85@bytedance.com>
-References: <cover.1748594840.git.libo.gcs85@bytedance.com>
+	s=arc-20240116; t=1748597475; c=relaxed/simple;
+	bh=aggFkJ8dzIspA0Ee5ZCSXr4Q9BtosF9ZAdFKHZ23WJo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z6FuM1baEJfcQGThZwWYaN+tXugFSQ43L79TFAHQKqmMcJO3zBO4hcsOV1PreEBWZPOoKjgp/ikJgmnHs04zx/bTKn1i1toDcQIVcX36h4aAZVp5otRMe4K6ck3XLd8y/IODVygwXlFdCqId1AnSDQtpXJumA+v4tUm77xuySus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: ce23f0383d3811f0b29709d653e92f7d-20250530
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:9901f846-04db-40fa-9f89-284431738858,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:30,RULE:Release_Ham,ACTI
+	ON:release,TS:31
+X-CID-INFO: VERSION:1.1.45,REQID:9901f846-04db-40fa-9f89-284431738858,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:30,RULE:Release_Ham,ACTION
+	:release,TS:31
+X-CID-META: VersionHash:6493067,CLOUDID:9a3853ec8758490979c83e53ed79c393,BulkI
+	D:250522180435BN613KC0,BulkQuantity:9,Recheck:0,SF:17|19|24|38|45|64|66|78
+	|80|81|82|83|102|841,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:ni
+	l,Bulk:40|23,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:
+	0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR
+X-UUID: ce23f0383d3811f0b29709d653e92f7d-20250530
+X-User: aichao@kylinos.cn
+Received: from [172.25.120.86] [(112.64.161.44)] by mailgw.kylinos.cn
+	(envelope-from <aichao@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
+	with ESMTP id 1724392610; Fri, 30 May 2025 17:31:03 +0800
+Message-ID: <22dfeb0b-c3ff-4a7a-8471-1bb89dccdc17@kylinos.cn>
+Date: Fri, 30 May 2025 17:30:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/6] ASoC: aoa: Use helper function
+ for_each_child_of_node_scoped()
+To: Johannes Berg <johannes@sipsolutions.net>, perex <perex@perex.cz>,
+ tiwai <tiwai@suse.com>,
+ "kuninori.morimoto.gx" <kuninori.morimoto.gx@renesas.com>,
+ lgirdwood <lgirdwood@gmail.com>, broonie <broonie@kernel.org>,
+ jbrunet <jbrunet@baylibre.com>, "neil.armstrong"
+ <neil.armstrong@linaro.org>, khilman <khilman@baylibre.com>,
+ "martin.blumenstingl" <martin.blumenstingl@googlemail.com>,
+ "shengjiu.wang" <shengjiu.wang@gmail.com>, "Xiubo.Lee"
+ <Xiubo.Lee@gmail.com>, festevam <festevam@gmail.com>,
+ nicoleotsuka <nicoleotsuka@gmail.com>, shawnguo <shawnguo@kernel.org>,
+ "s.hauer" <s.hauer@pengutronix.de>,
+ "srinivas.kandagatla" <srinivas.kandagatla@linaro.org>
+Cc: linux-sound <linux-sound@vger.kernel.org>,
+ linux-kernel <linux-kernel@vger.kernel.org>,
+ linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+ linux-renesas-soc <linux-renesas-soc@vger.kernel.org>,
+ linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+ linux-amlogic <linux-amlogic@lists.infradead.org>, imx
+ <imx@lists.linux.dev>, kernel <kernel@pengutronix.de>,
+ linux-arm-msm <linux-arm-msm@vger.kernel.org>
+References: <2aq0nyvyf7t-2aq4hsc7kp6@nsmail7.0.0--kylin--1>
+ <7e708dcc98c6f0f615b1b87d190464cfe78be668.camel@sipsolutions.net>
+ <eb1ddeb3-06b6-4ac5-b20a-06b92c7f1363@kylinos.cn>
+ <23aadbd78d3585c900c579c26f360011cf1ca830.camel@sipsolutions.net>
+ <9ec008a8-b569-4ad1-9206-fe241fb1712d@kylinos.cn>
+ <b36908bf35a20f7196bec4fe22e392a015d9b7d1.camel@sipsolutions.net>
+Content-Language: en-US
+From: Ai Chao <aichao@kylinos.cn>
+In-Reply-To: <b36908bf35a20f7196bec4fe22e392a015d9b7d1.camel@sipsolutions.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Since RPAL involves communication between services, and services require
-certain preparations (e.g., registering senders/receivers) before
-communication, the kernel needs to sense whether a service is ready to
-perform RPAL call-related operations.
+Hi Johannes:
+     Thanks for your feedback.  I will drop it.
 
-This patch adds two interfaces: rpal_enable_service() and
-rpal_disable_service(). rpal_enable_service() passes necessary information
-to the kernel and marks the service as enabled. RPAL only permits
-communication between services in the enabled state. rpal_disable_service()
-clears the service's enabled state, thereby prohibiting communication
-between the service and others via RPAL.
+> On Mon, 2025-05-26 at 16:20 +0800, Ai Chao wrote:
+>> Hi Johannes:
+>>>> for_each_child_of_node.
+>>> You still haven't explained why it's even correct.
+>>>
+>>> johannes
+>> The for_each_child_of_node() function is used to iterate over all child
+>> nodes of a device tree node.
+>> During each iteration, it retrieves a pointer to the child node via
+>> of_get_next_child() and automatically increments the node's reference
+>> count (of_node_get()).
+>> Each call to of_get_next_child() increases the reference count
+>> (refcount) of the returned child node, ensuring that the node is not
+>> freed while in use.
+>> for_each_child_of_node() increments the child node's reference count in
+>> each iteration but does not decrement it automatically.
+>> If of_node_put() is not called manually, the reference count will never
+>> reach zero, resulting in a memory leak of the node.
+> Yes, good! Now show that you can apply what you've learned to the
+> specific code (and changes) at hand.
+>
+> johannes
 
-Signed-off-by: Bo Li <libo.gcs85@bytedance.com>
----
- arch/x86/rpal/internal.h |  2 ++
- arch/x86/rpal/proc.c     |  6 +++++
- arch/x86/rpal/service.c  | 50 ++++++++++++++++++++++++++++++++++++++++
- include/linux/rpal.h     | 18 +++++++++++++++
- 4 files changed, 76 insertions(+)
-
-diff --git a/arch/x86/rpal/internal.h b/arch/x86/rpal/internal.h
-index 65f2cf4baf8f..769d3bbe5a6b 100644
---- a/arch/x86/rpal/internal.h
-+++ b/arch/x86/rpal/internal.h
-@@ -17,6 +17,8 @@ extern bool rpal_inited;
- /* service.c */
- int __init rpal_service_init(void);
- void __init rpal_service_exit(void);
-+int rpal_enable_service(unsigned long arg);
-+int rpal_disable_service(void);
- 
- /* mm.c */
- static inline struct rpal_shared_page *
-diff --git a/arch/x86/rpal/proc.c b/arch/x86/rpal/proc.c
-index 8a1e4a8a2271..acd814f31649 100644
---- a/arch/x86/rpal/proc.c
-+++ b/arch/x86/rpal/proc.c
-@@ -63,6 +63,12 @@ static long rpal_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 	case RPAL_IOCTL_UNREGISTER_RECEIVER:
- 		ret = rpal_unregister_receiver();
- 		break;
-+	case RPAL_IOCTL_ENABLE_SERVICE:
-+		ret = rpal_enable_service(arg);
-+		break;
-+	case RPAL_IOCTL_DISABLE_SERVICE:
-+		ret = rpal_disable_service();
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-diff --git a/arch/x86/rpal/service.c b/arch/x86/rpal/service.c
-index 42fb719dbb2a..8a7b679bc28b 100644
---- a/arch/x86/rpal/service.c
-+++ b/arch/x86/rpal/service.c
-@@ -177,6 +177,7 @@ struct rpal_service *rpal_register_service(void)
- 	rs->nr_shared_pages = 0;
- 	INIT_LIST_HEAD(&rs->shared_pages);
- 	atomic_set(&rs->thread_cnt, 0);
-+	rs->enabled = false;
- 
- 	rs->bad_service = false;
- 	rs->base = calculate_base_address(rs->id);
-@@ -228,6 +229,52 @@ void rpal_unregister_service(struct rpal_service *rs)
- 	rpal_put_service(rs);
- }
- 
-+int rpal_enable_service(unsigned long arg)
-+{
-+	struct rpal_service *cur = rpal_current_service();
-+	struct rpal_service_metadata rsm;
-+	int ret = 0;
-+
-+	if (cur->bad_service) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	ret = copy_from_user(&rsm, (void __user *)arg, sizeof(rsm));
-+	if (ret) {
-+		ret = -EFAULT;
-+		goto out;
-+	}
-+
-+	mutex_lock(&cur->mutex);
-+	if (!cur->enabled) {
-+		cur->rsm = rsm;
-+		cur->enabled = true;
-+	}
-+	mutex_unlock(&cur->mutex);
-+
-+out:
-+	return ret;
-+}
-+
-+int rpal_disable_service(void)
-+{
-+	struct rpal_service *cur = rpal_current_service();
-+	int ret = 0;
-+
-+	mutex_lock(&cur->mutex);
-+	if (cur->enabled) {
-+		cur->enabled = false;
-+	} else {
-+		ret = -EINVAL;
-+		goto unlock_mutex;
-+	}
-+
-+unlock_mutex:
-+	mutex_unlock(&cur->mutex);
-+	return ret;
-+}
-+
- void copy_rpal(struct task_struct *p)
- {
- 	struct rpal_service *cur = rpal_current_service();
-@@ -244,6 +291,9 @@ void exit_rpal(bool group_dead)
- 
- 	exit_rpal_thread();
- 
-+	if (group_dead)
-+		rpal_disable_service();
-+
- 	current->rpal_rs = NULL;
- 	rpal_put_service(rs);
- 
-diff --git a/include/linux/rpal.h b/include/linux/rpal.h
-index c33425e896af..2e5010602177 100644
---- a/include/linux/rpal.h
-+++ b/include/linux/rpal.h
-@@ -84,6 +84,14 @@ enum rpal_task_flag_bits {
- 	RPAL_RECEIVER_BIT,
- };
- 
-+/*
-+ * user_meta will be sent to other service when requested.
-+ */
-+struct rpal_service_metadata {
-+	unsigned long version;
-+	void __user *user_meta;
-+};
-+
- /*
-  * Each RPAL process (a.k.a RPAL service) should have a pointer to
-  * struct rpal_service in all its tasks' task_struct.
-@@ -125,6 +133,10 @@ struct rpal_service {
- 	/* sender/receiver thread count */
- 	atomic_t thread_cnt;
- 
-+	/* service metadata */
-+	bool enabled;
-+	struct rpal_service_metadata rsm;
-+
- 	/* delayed service put work */
- 	struct delayed_work delayed_put_work;
- 
-@@ -206,6 +218,8 @@ enum rpal_command_type {
- 	RPAL_CMD_UNREGISTER_SENDER,
- 	RPAL_CMD_REGISTER_RECEIVER,
- 	RPAL_CMD_UNREGISTER_RECEIVER,
-+	RPAL_CMD_ENABLE_SERVICE,
-+	RPAL_CMD_DISABLE_SERVICE,
- 	RPAL_NR_CMD,
- };
- 
-@@ -226,6 +240,10 @@ enum rpal_command_type {
- 	_IOWR(RPAL_IOCTL_MAGIC, RPAL_CMD_REGISTER_RECEIVER, unsigned long)
- #define RPAL_IOCTL_UNREGISTER_RECEIVER \
- 	_IO(RPAL_IOCTL_MAGIC, RPAL_CMD_UNREGISTER_RECEIVER)
-+#define RPAL_IOCTL_ENABLE_SERVICE \
-+	_IOWR(RPAL_IOCTL_MAGIC, RPAL_CMD_ENABLE_SERVICE, unsigned long)
-+#define RPAL_IOCTL_DISABLE_SERVICE \
-+	_IO(RPAL_IOCTL_MAGIC, RPAL_CMD_DISABLE_SERVICE)
- 
- /**
-  * @brief get new reference to a rpal service, a corresponding
 -- 
-2.20.1
+Best regards,
+Ai Chao
 
