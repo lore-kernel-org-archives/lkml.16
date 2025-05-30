@@ -1,170 +1,181 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mta21.hihonor.com (mta21.honor.com [81.70.160.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B96021C9F9
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 10:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D7E21C9F8;
+	Fri, 30 May 2025 10:57:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.160.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748602612; cv=none; b=pVVZ0xkJrnki/FRn4AYllWSYqBVBP4LuDfJjPfQSVSTwCGNOd1KWK2+W/G8aiNzQmF1lnsbdhgZ0lNWLpXZuVECWvMpO3znbs+YpsLcJMsfkhiO5uxm/dgIf6F6mHVgZaEOg2np2tctyvY7q8tFDdd4nOsgel9w1pTdhDUBJJuo=
+	t=1748602643; cv=none; b=qumVJABGqlGetS2UBoOrCWyrnNZfOiA9qvnvbmrLyP0wehq0t5SaTbM9t4jk6RhmCkb7k3LhONwDpgKTEhy2WLt+qmEidPCf5SNHiHh/vgBBixomsQb3A5Vl9v7vmp75vENZoFjZTADKTUYvSSffVE6zCAPQC3OS5AiNIwk2vEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748602612; c=relaxed/simple;
-	bh=wXzNltEAfvd2Z9TuqPjRTjSk3qvDN5IHyR2ohzs6boE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lBgvvQ2KzcpfpMNsOeQqOMkUGMyZcWQu76+E9CTDM2xkCF0l74DFFyFLZlLIRgRH9mQEb+zPzvpyedlO1RfVtGO3w93uQA8qewJ6ENmPvX1sTYWRNO39ZJGke5Watdq16ByiRewBO3r4cfsc/vzsf2FSxNyfp6YIJ3F92RyK70A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=kZRVEeIj; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="kZRVEeIj"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54U16f3S011691
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 10:56:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	odW9Gnbh0pAigIu977/CYjbuP4cZbGddXolCkSLXzHI=; b=kZRVEeIjcFr+g/o2
-	H7opx7uDuqhRJhyu3p9dKmR3VsPNX2SDDngRwAy4PjXS2Kny+Bbf6LwhzObSjFO7
-	bbex/gcsQN7IWlPObXnT64+6u5Hyzxvst3C3zVCOTk36cCys9SuEpec+NW/f8kPH
-	kr0jXKFwvI4LN+djLvmlXOuP/C1faSFbBu6iApc2MqPMflDnwerCyhn1oAzD5CHw
-	/CkkIdGXRtTJfCxfZq5eJgHXcM+f/z7CvymjPTrXOvHBmd/QZS3JYdH+7JOeiYxC
-	QdmULlmPJKse2D1ChjNTmO0NcNAn7xTURhiMSPTymdFklTmJJsp8e05H//IKrP3/
-	8bJJ4w==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u6g98sun-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 10:56:49 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5841ae28eso43870885a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 03:56:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748602609; x=1749207409;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=odW9Gnbh0pAigIu977/CYjbuP4cZbGddXolCkSLXzHI=;
-        b=qLRhbeTypmu3OdAy7CGn2UXFx5SHHEcj0wWAgqfEtl/HVltabVeol6SO5jAbFqRC2V
-         oRoceOv6d/m8HcikfLXjRFesfQYPFeY48BU3Igo4OiLaHvir9Ajpq8hCJw+EXor0GDX1
-         TXoEA+tHkp41CdaQEjZgjd0m/zx6IJjBx4S48quelQIOOLY1wFLcd5hq+a/RVnXCEYjO
-         7g1HohhxEJ0MUct4Z+mxNrJhuRpLwC0JOYSSakHuo2TYzvjZkhtNMDmbZcawHWWh/W1w
-         mA0wAHqGDC9GHbwbcW4ofp6Fb/3tc3cNAr0wAaonUx2OGlR57gaKMxYqMA20CxilRL+7
-         9Xjg==
-X-Forwarded-Encrypted: i=1; AJvYcCXcD/lWDgA93fOQhewz/ceHiWOMxAsL6GKFZAr6fGtywSPNiuXRI8jKWGv9fmPjHYppj9U6I+coHzqou/o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywc6UncL0c5H3qXlH5+IawQwKgU1CQzAZawifsFACnCGvEjp531
-	8sGetcfjyL6l/fW6M4Mhp+m4iN8I2o5aXqfFI7Rqwv/n78X3JjxbMhA0u2puaOaBc1oxAv4e9YP
-	yIiVgj7X9UggPUuhhM8073T72HK8oC/kZSymDYCUDbd+yIDNgP4a1MDLhEXF9tZXJVLs=
-X-Gm-Gg: ASbGncvEDJwWOckFMv0uxD+46K/rWPgO9JUs9rVeXsBsrPVL51ct1penwRV3Uc/8JUM
-	yEFXK/dj4TEPsPt/C/v1mgqxfjC8m5lHF2XGDE8EC7G5i1SOc9KOmNdIKYUOX0+pZ6kYX5DVQSB
-	cAbFmH4Q2+7+VJj4ZbGxF4c7c5SGtEUKaVABkLsoNnlRuwex2GIvUXR3jFFYDtKrYQ4E82IAyow
-	R8NuzuK9sfIR4pD8sL5/Eni5ozJgG5oyzTEcpIV7booaPEPCs16XsJm2xiXqq/cHcX0ahuIW3HB
-	DzgQZ9uVMDH0d4KFnJesJNhTYi9zqIWePRCwYgUHsVnNrKqBICQT3giRY/oVkJeXKw==
-X-Received: by 2002:a05:620a:22cb:b0:7d0:a873:41b6 with SMTP id af79cd13be357-7d0a87341eemr23248185a.13.1748602609017;
-        Fri, 30 May 2025 03:56:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFVhwGo6eIBUc8NIPWCq/VAYr79CpNK6ZT1bJU+Fx1YS9w2pL/7LMaola04s9DtuAsRXHuuOQ==
-X-Received: by 2002:a05:620a:22cb:b0:7d0:a873:41b6 with SMTP id af79cd13be357-7d0a87341eemr23247285a.13.1748602608611;
-        Fri, 30 May 2025 03:56:48 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5d84f2bcsm306618166b.83.2025.05.30.03.56.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 May 2025 03:56:47 -0700 (PDT)
-Message-ID: <8972adb4-b6ae-4ea9-986a-32e59fe84c50@oss.qualcomm.com>
-Date: Fri, 30 May 2025 12:56:44 +0200
+	s=arc-20240116; t=1748602643; c=relaxed/simple;
+	bh=Kn2+KeM5+tbI7Gdz/WkW+X9jyaEGB44QCGr1f17zrbY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pmV0+7Joy85FUA3QK38L5HO5nGB7lxwzJPOFp3g+2WNqNd319w1cSyXjW/bq9OLBbUK3t228P7dDZ0b+08HvrY52KD2gyI51OS0NzJu/S/XW9x0IflOEUXC3CEMlKQyI7/N4FKQcIc08KtLYcomPPBXU7hMcXiK0oBSVtNhBcpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.160.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
+Received: from w003.hihonor.com (unknown [10.68.17.88])
+	by mta21.hihonor.com (SkyGuard) with ESMTPS id 4b808J0DcCzYkxr7;
+	Fri, 30 May 2025 18:38:40 +0800 (CST)
+Received: from a010.hihonor.com (10.68.16.52) by w003.hihonor.com
+ (10.68.17.88) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 30 May
+ 2025 18:40:39 +0800
+Received: from localhost.localdomain (10.144.18.117) by a010.hihonor.com
+ (10.68.16.52) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 30 May
+ 2025 18:40:39 +0800
+From: wangtao <tao.wangtao@honor.com>
+To: <sumit.semwal@linaro.org>, <christian.koenig@amd.com>,
+	<kraxel@redhat.com>, <vivek.kasireddy@intel.com>, <viro@zeniv.linux.org.uk>,
+	<brauner@kernel.org>, <hughd@google.com>, <akpm@linux-foundation.org>,
+	<amir73il@gmail.com>
+CC: <benjamin.gaignard@collabora.com>, <Brian.Starkey@arm.com>,
+	<jstultz@google.com>, <tjmercier@google.com>, <jack@suse.cz>,
+	<baolin.wang@linux.alibaba.com>, <linux-media@vger.kernel.org>,
+	<dri-devel@lists.freedesktop.org>, <linaro-mm-sig@lists.linaro.org>,
+	<linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+	<linux-mm@kvack.org>, <bintian.wang@honor.com>, <yipengxiang@honor.com>,
+	<liulu.liu@honor.com>, <feng.han@honor.com>, wangtao <tao.wangtao@honor.com>
+Subject: [PATCH v3 0/4] Optimizing disk file & dmabuf copies via copy_file_range.
+Date: Fri, 30 May 2025 18:39:37 +0800
+Message-ID: <20250530103941.11092-1-tao.wangtao@honor.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] arm64: dts: qcom: sa8775p: Remove max link speed
- property for PCIe EP
-To: Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-        devicetree@vger.kernel.org, krishna.chundru@oss.qualcomm.com,
-        quic_vbadigan@quicinc.com, quic_nayiluri@quicinc.com,
-        quic_ramkri@quicinc.com, quic_nitegupt@quicinc.com,
-        Mrinmay Sarkar <quic_msarkar@quicinc.com>
-References: <20250525-update_phy-v3-0-5b315cd39993@quicinc.com>
- <20250525-update_phy-v3-2-5b315cd39993@quicinc.com>
- <mcmpmaapzv3vbiynlrp6sijdjvj6a5j3dxzoixz6b4cxqsvbsl@ecljexn3zg2e>
- <0aef1687-0158-4d7e-8e3d-b6eafc38d049@oss.qualcomm.com>
- <CAMyL0qPd2HRv4nr2C9=5SgzSkuKO_1cfZbOUO2aUj3vPWnmJbA@mail.gmail.com>
- <41ac26a6-7a5a-4c11-b05c-9ce688ad1856@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <41ac26a6-7a5a-4c11-b05c-9ce688ad1856@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=d4b1yQjE c=1 sm=1 tr=0 ts=68398ef1 cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8
- a=EUspDBNiAAAA:8 a=ra-v6aFW90cMH64V2wwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: mwbXU_DL_8aK-4JxGMR4zq5KrF0Cm7f1
-X-Proofpoint-GUID: mwbXU_DL_8aK-4JxGMR4zq5KrF0Cm7f1
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMwMDA5MyBTYWx0ZWRfX8iD4iJnvxujY
- 37o3IrelDtN31vdmrz6eRK1Zplfq4CsVYlgSaXD693TaAodO79gDQaRdtv2LK7oR+rODC5Zk6Vo
- 0gOWDyHlPxnYiGsKIB0qptRkz5xbK0qYZFsuOpEkeNM6fb0n2FKRNLnxp/PGsCl2OLc0SPTzuZH
- ICCFOENpfBfc9VFjM+LgHs1wvCsBKRngXFpiIst1pbpojUvaKAGTVMo1NdCduPKIYB7fawB0f48
- OZTQlKgOfHsqOYN0TLEejZpWn04QknCLn7Bm6M8AibdTRV/Rk9y/HHiaTf0P9jlcoMU2TXf5A36
- l6dMPIbsMYKaEuAUGyB2Zyrf+c44Z3pFoftbH5zIe+Z44pyDjQ5g+rU88gw3eQm8JjKY8T0V9m7
- dNMwG9FOOsWDPpgjD/QaJilQE95Dj7JA13vjeYO1Dc0eZVWGWfyFQk2H/ElpvcRqVO6Os+zF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-30_04,2025-05-29_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 suspectscore=0 malwarescore=0 phishscore=0 mlxlogscore=886
- lowpriorityscore=0 priorityscore=1501 bulkscore=0 spamscore=0 clxscore=1015
- impostorscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505300093
+Content-Type: text/plain
+X-ClientProxiedBy: w011.hihonor.com (10.68.20.122) To a010.hihonor.com
+ (10.68.16.52)
 
-On 5/30/25 12:50 PM, Konrad Dybcio wrote:
-> On 5/30/25 7:38 AM, Mrinmay Sarkar wrote:
->> On Tue, May 27, 2025 at 4:06 PM Konrad Dybcio
->> <konrad.dybcio@oss.qualcomm.com> wrote:
->>>
->>> On 5/25/25 3:29 PM, Dmitry Baryshkov wrote:
->>>> On Sun, May 25, 2025 at 11:27:18AM +0530, Mrinmay Sarkar wrote:
->>>>> From: Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>
->>>>>
->>>>> The maximum link speed was previously restricted to Gen3 due to the
->>>>> absence of Gen4 equalization support in the driver.
->>>>>
->>>>> Add change to remove max link speed property, Since Gen4 equalization
->>>>> support has already been added into the driver.
->>>>
->>>> As Gen4 equalization is already supported by the XYZ driver remove the
->>>> max-link-speed property.
->>>>
->>>> "Add change to remove" is a bit clumsy.
->>>
->>> I'm more worried about this node not having these gen4 eq settings
->>> (i.e. the part talking about driver support landing is true, but it's
->>> unused without the presets being explicitly defined in eq-presets-16gts)
->>>
->>> Konrad
->>
->> Hi Konrad,
->>
->> Actually stability issue was resolved by this patch series:
->> https://lore.kernel.org/linux-pci/20240911-pci-qcom-gen4-stability-v7-3-743f5c1fd027@linaro.org/
->> and I don't think we need to define eq-presets-16gts for this.
-> 
-> Okay, so there's multiple parts to it..
-> 
-> I was referring to this series
-> 
-> https://lore.kernel.org/all/20250328-preset_v6-v9-0-22cfa0490518@oss.qualcomm.com/
-> 
-> Please check if you need this as well
+Typical dmabuf file reading steps:
+1. dmabuf_fd = dmabuf_alloc(len, heap_fd)
+2. vaddr = mmap(NULL, len, PROT_READ | PROT_WRITE, MAP_SHARED, dmabuf_fd, 0)
+3. file_fd = open(file_path, O_RDONLY)
+4. read(file_fd, vaddr, len)
 
-If not, we can get this merged as-is
+dmabuf's attachment/map/fence model uses remap_pfn_range for mmap, which
+lacks Direct I/O support[1]. Buffer IO causes latency when loading large AI
+model files.
 
-Konrad
+My previous patch added dmabuf ioctl for Direct IO file operations, showing
+good performance on low-power CPUs[2][3]. Christian suggested using existing
+uAPIs (read/sendfile/splice/c_f_r) instead of new ioctls.
+
+sendfile/splice/c_f_r enable zero-copy via Direct IO for disk-disk/network:
+sendfile(skt_fd, disk_fd): [DISK]-DMA->[pipe(buf)]-DMA->[NIC]
+sendfile(dst_disk, src_disk): [DISK] -DMA-> [pipe(buf)] -DMA-> [DISK]
+
+Analysis shows existing uAPIs can't achieve zero-copy disk-to-dmabuf.
+Since dmabuf lacks file ops, using tmpfs for disk-to-tmpfs CPU analysis:
+| Method            | CPU Copies | Key Overhead               |
+|-------------------|------------|----------------------------|
+| 1. Buffer R+W     | 2          | Alloc(cache) & 2 CPU copies|
+| 2. Direct R+W     | 1          | GUP(usr_buf) & 1 CPU copy  |
+| 3. Mmap+Buffer R  | 1          | Alloc(cache) & 1 CPU copy  |
+| 4. Mmap+Direct R  | 0          | GUP(mem_buf) ~50% CPU      |
+| 5. Buffer Sendfile| 1          | Alloc(cache) & 1 CPU copy  |
+| 6. Direct Sendfile| 1          | Small pipe, high IRQ       |
+| 7. Buffer Splice  | 1          | Alloc(cache) & 1 CPU copy  |
+| 8. Direct Splice  | 1          | Larger pipe buffer         |
+| 9. c_f_r          | N/A        | Cross-FS blocked           |
+
+GUP: get_user_page
+Alloc(cache): allocate page cache
+
+Data flows:
+1. [DISK] -DMA-> [Alloc(cache)] -COPY-> [usr_buf] -COPY-> [MEM]
+2. [DISK] -DMA-> [GUP(usr_buf)] -COPY-> [MEM]
+3. [DISK] -DMA-> [Alloc(cache)] -COPY-> [mem_buf]
+4. [DISK] -DMA-> [GUP(mem_buf)]
+5. [DISK] -DMA-> [pipe(Alloc(cache))] -COPY-> [tmpfs page]
+6. [DISK] -DMA-> [pipe(buf)] -COPY-> [tmpfs page]
+7. [DISK] -DMA-> [big_pipe(Alloc(cache))] -COPY-> [tmpfs page]
+8. [DISK] -DMA-> [big_pipe(buf)] -COPY-> [tmpfs page]
+9. [DISK] -DMA-> [tmpfs page] (blocked)
+
+Key findings:
+- Buffer I/O requires page cache allocation and at least one CPU copy
+- Read+Write incurs excessive CPU copies and will no longer be analyzed.
+  Future approaches will use Read instead of mmap+Read.
+- Mmap+Direct has zero copies but 50% GUP overhead, and dmabuf doesn't support
+- sendfile/splice require intermediate pipes, needing 1 CPU copy
+- c_f_r limitations: Cross-FS blocks + missing memory FS support
+
+Modifications:
+1. Enable cross-FS c_f_r for memory file types
+2. Add dmabuf c_f_r callbacks for [DISK]-DMA->[dmabuf]
+3. Test tmpfs c_f_r locally only (no upstream) due to lock_page deadlock risks
+
+Performance (1GHz CPU, UFS4@4GB):
+1. tmpfs(memfd) direct c_f_r(1197 MB/s): +15% vs mmap&read(1014)
+2. udmabuf+memfd(2318 MB/s): +50% vs mmap&read(1457 MB/s)
+3. dmabuf direct c_f_r(3405 MB/s): 260% faster than buffer IO(918 MB/s)
+   40% faster than udmabuf(2318 MB/s)
+
+|    32x32MB Read 1024MB  |Creat-ms|Close-ms|  I/O-ms|I/O-MB/s| I/O%
+|-------------------------|--------|--------|--------|--------|-----
+| 1)Beg  dmabuf buffer R/W|     52 |      5 |   1170 |    918 | 100%
+| 2)    udmabuf buffer R/W|    591 |    326 |   1281 |    838 |  91%
+| 3)      memfd buffer R/W|      1 |    323 |   2370 |    453 |  49%
+| 4)      memfd direct R/W|      1 |    321 |   1058 |   1014 | 110%
+| 5) memfd buffer sendfile|      1 |    329 |   1577 |    681 |  74%
+| 6) memfd direct sendfile|      1 |    327 |   2672 |    401 |  43%
+| 7)   memfd buffer splice|      2 |    321 |   1729 |    621 |  67%
+| 8)   memfd direct splice|      2 |    324 |   1528 |    702 |  76%
+| 9)    memfd buffer c_f_r|      1 |    325 |   1586 |    677 |  73%
+|10)    memfd direct c_f_r|      1 |    323 |    897 |   1197 | 130%
+|11)      u+mfd buffer R/W|    609 |    344 |   2207 |    486 |  52%
+|12)      u+mfd direct R/W|    580 |    342 |    737 |   1457 | 158%
+|13) u+mfd buffer sendfile|    582 |    343 |   1270 |    845 |  92%
+|14) u+mfd direct sendfile|    573 |    344 |   2254 |    476 |  51%
+|15)   u+mfd buffer splice|    584 |    341 |   1202 |    893 |  97%
+|16)   u+mfd direct splice|    564 |    340 |    851 |   1263 | 137%
+|17)    u+mfd buffer c_f_r|    585 |    344 |   1244 |    863 |  94%
+|18)    u+mfd direct c_f_r|    578 |    341 |    581 |   1848 | 201%
+|19)  udmabuf buffer c_f_r|    585 |    328 |   1163 |    923 | 100%
+|20)  udmabuf direct c_f_r|    579 |    328 |    464 |   2318 | 252%
+|21)   dmabuf buffer c_f_r|     48 |      5 |   1058 |   1015 | 110%
+|22)   dmabuf direct c_f_r|     48 |      5 |    316 |   3405 | 370%
+|23)End  dmabuf buffer R/W|     48 |      5 |   1173 |    915 |  99%
+
+u+mfd = udma+memfd = udmabuf + pre-allocated memfd combo.
+Cache cleared during tests to simulate real-world large file loading.
+
+dmabuf file Use Cases:
+- Loading large AI models using dmabuf
+- Real-time data capture and storage with dmabuf
+- Persisting task snapshots in Android
+
+v1: [2]
+v1 -> v2: [3]
+ Dma-buf exporter verify exclusive access to the dmabuf's sgtable.
+v2 -> v3:
+ copy_file_range supports copying from disk files to memory files.
+ Implement the copy_file_range callback functions for dmabuf/udmabuf.
+
+Reference:
+[1] https://lore.kernel.org/all/0393cf47-3fa2-4e32-8b3d-d5d5bdece298@amd.com
+[2] https://lore.kernel.org/all/20250513092803.2096-1-tao.wangtao@honor.com
+[3] https://lore.kernel.org/all/20250516092148.12778-1-tao.wangtao@honor.com
+
+
+wangtao (4):
+  fs: allow cross-FS copy_file_range for memory-backed files
+  dmabuf: Implement copy_file_range for dmabuf
+  udmabuf: Implement udmabuf rw_file callback
+  dmabuf:system_heap Implement system_heap exporter's rw_file callback.
+
+ drivers/dma-buf/dma-buf.c           | 32 ++++++++++++
+ drivers/dma-buf/heaps/system_heap.c | 79 +++++++++++++++++++++++++++++
+ drivers/dma-buf/udmabuf.c           | 59 +++++++++++++++++++++
+ fs/read_write.c                     | 71 +++++++++++++++++++-------
+ include/linux/dma-buf.h             | 16 ++++++
+ include/linux/fs.h                  |  2 +
+ 6 files changed, 240 insertions(+), 19 deletions(-)
+
+-- 
+2.17.1
+
