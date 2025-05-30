@@ -1,279 +1,414 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1CE21B1AA;
-	Thu, 29 May 2025 23:55:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748562945; cv=fail; b=nBZhA+AeuRNpnTra4B++6bjg4ftQmfjrpQmTUf+zzkxcTGYsWShr7YEP2q3LohzUn8ZxN0rhicBg6DA3g6xNwaryQ6z3x/u/pSO6rVfzUSevQZ+ElUpV5X12EsMqcPe9L6addhgnOM68tzYBvxSsW3N+J4CcGH1CKFAZeDeusBs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748562945; c=relaxed/simple;
-	bh=pNBlzEzA20qPBcEm7ffAkEHL3LH82KAnkb52VXB8mNc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=LYhoAWBf1CpEqoUl7+8Ytg/8VwWiO+1MlQbwjDxmKLMzMbfVrITs/ISjNoYxh8tjMtCDbIySzBaVA9+IPIDCb+yTuAbvHmHCx7T7gWSkQtH5sLgUJgpDgn+Oj3+cv/2zNuqNT285/x9ezwUf8OWUiuGsLe7a+evrS103wSdRA48=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IaEcUDtz; arc=fail smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABC1632
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 00:00:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748563255; cv=none; b=G5Z8LXxt86aMb37fBqMvWuFwDzJxCgY/tpYxORajdHHoLeQnjV47lsOvN9TTlKQ2fbpE61yNLhR9JHcSHZHn9p5FG2AW+4UPmU7m9Yf8JAU085Ih+is/VZPWh8REmM0yCeSeZ8ez/keqF6Mom3l0N3XykRhQmeKjDLiy45NQyDo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748563255; c=relaxed/simple;
+	bh=QWNfWZXatl0Z2yv3mGR4WVUDR8pVPP0OzMVla/VQ3LE=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ukvLKx+MRtB87/KplrybaWh7s269GdqpoJyS02RWWbrmggcW+KDlAOGBQAXGzH4xlaptRvIsZ+RM3eO4kBAudHp8EkOZvHG+2O+xaPbfOGsDKy+n4fFfuCJ5+22xMW4P2BSt2I0lIsqNKnI+kC5N9nBr+JopxlHs1Lsgc/eD+wI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dylanbhatch.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TWMmt0F9; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dylanbhatch.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IaEcUDtz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748562944; x=1780098944;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=pNBlzEzA20qPBcEm7ffAkEHL3LH82KAnkb52VXB8mNc=;
-  b=IaEcUDtzG0xVw7K2rkwHWFhz7BuvVtpu6E4x460EOq3nsb1O3pPTiXCP
-   8UwDGhqv0nRWvYyERIRMpUk4CpssRfb5Ow0WK3lXqk1UF4JSQM9N+QO/T
-   agsO1bTa4mKI0tQcjbN2P314kVYPc3h+L+yhFD249i+ovAXU6hYsQhGYm
-   Z3y2gJJdFAJH/QZ9VFMe3eXjtIHV2X0INtmphwHl/PeH8Xh41lYytuPjl
-   PsRqwRmHmXGYsTdhRyA4659KL+7DGbMqcAojx9pCM+bTxpeT5QaAUJSpj
-   N3HH4kSoQB5Nf+4T0mJzm4SnA8zxm22JhBbkrqQfFgfGqC2VAVNwp28on
-   Q==;
-X-CSE-ConnectionGUID: uWN6rGxQRPqvTRgPW40o+g==
-X-CSE-MsgGUID: 6US8B2/WTq60i4pdKRZUQA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="50699704"
-X-IronPort-AV: E=Sophos;i="6.16,194,1744095600"; 
-   d="scan'208";a="50699704"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 16:55:41 -0700
-X-CSE-ConnectionGUID: bpdcj1bKSta/Sipq7UtbAA==
-X-CSE-MsgGUID: 0giS9qubSZOIsCxZFdzCQA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,194,1744095600"; 
-   d="scan'208";a="148575344"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 16:55:40 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 29 May 2025 16:55:40 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Thu, 29 May 2025 16:55:40 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (40.107.93.62) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Thu, 29 May 2025 16:55:40 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Laq0MIJEbSGNpampuvJnsdZ7Ee0Ohhqo+J6X4NYS8ctqyiL+wNd3jbDuNgsG+tLdUwRsiIS2ZgSgWyZrigjdg/sP8wi81Bv9giP4e2RXyiK/em3e9GMUy3jR/TYM77NzT1DO0J+DdUZ1lyIeISGTlHhyF0WJhyO8nrsarq9VF5XDoxXO5jUlt4dyXUgnTDEJqagWhUkha9dAa9rR0IhNozBnu5QyB1EfMtd29YwKBp/lczzLFsRwiC98VKZvtfMtL3F9TCtE3S7ITm08wRJaIgGAR2dYfv1oKiF8oUvrXJw++oN9keZVz7DGVKniWUYNXZRAfbXxwGRyaiuE+EAhbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pNBlzEzA20qPBcEm7ffAkEHL3LH82KAnkb52VXB8mNc=;
- b=J1iiWPz6qT8ufk8gb6gHHfVOSU5QUqb5lVtqOdxuc5A5X12tAbRdL/HP+TqT7HRIE7Twm48whSKK1Fd4votRTytyQ+hiSkO2cjy19gd2BoJ8p71A1EFb55GCOqGydjt7vAIMcEdQ41ySH789H98V32fjDObStuuc2d8ARka5lvKE/XlWbv0YeiyLFWTOoK08wHgaU/SZPIFaqsdLpB/V0Iu7nKtf87Hr4WiCxb4UPWt+kZ/8lW8DYJLLTuaaxWbdElLKdjx69xBjEnwHrVJUuaivX4OLaY4MegdNZBtQv/+ME1W6eCexDkvR1PMD3bfJixb4BoPQP5UL28HzLBraKg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BL1PR11MB5525.namprd11.prod.outlook.com (2603:10b6:208:31f::10)
- by CO1PR11MB5169.namprd11.prod.outlook.com (2603:10b6:303:95::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.31; Thu, 29 May
- 2025 23:55:11 +0000
-Received: from BL1PR11MB5525.namprd11.prod.outlook.com
- ([fe80::1a2f:c489:24a5:da66]) by BL1PR11MB5525.namprd11.prod.outlook.com
- ([fe80::1a2f:c489:24a5:da66%5]) with mapi id 15.20.8769.029; Thu, 29 May 2025
- 23:55:11 +0000
-From: "Huang, Kai" <kai.huang@intel.com>
-To: "seanjc@google.com" <seanjc@google.com>
-CC: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com"
-	<pbonzini@redhat.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "vkuznets@redhat.com" <vkuznets@redhat.com>
-Subject: Re: [PATCH 11/15] KVM: x86: Add CONFIG_KVM_IOAPIC to allow disabling
- in-kernel I/O APIC
-Thread-Topic: [PATCH 11/15] KVM: x86: Add CONFIG_KVM_IOAPIC to allow disabling
- in-kernel I/O APIC
-Thread-Index: AQHbyRYxNH/GJBJvrUmF7CZUp+ur/rPpjuOAgAAAgICAACsbgIAAi6uAgAAEvoCAAA0fgA==
-Date: Thu, 29 May 2025 23:55:10 +0000
-Message-ID: <5d659b1e14ce4862dbb77ad97c6341fa149376ce.camel@intel.com>
-References: <20250519232808.2745331-1-seanjc@google.com>
-	 <20250519232808.2745331-12-seanjc@google.com>
-	 <d131524927ffe1ec70300296343acdebd31c35b3.camel@intel.com>
-	 <019c1023c26e827dc538f24d885ec9a8530ad4af.camel@intel.com>
-	 <aDhvs1tXH6pv8MxN@google.com>
-	 <58a580b0f3274f6a7bba8431b2a6e6fef152b237.camel@intel.com>
-	 <aDjo16EcJiWx9Nfa@google.com>
-In-Reply-To: <aDjo16EcJiWx9Nfa@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.56.2 (3.56.2-1.fc42) 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BL1PR11MB5525:EE_|CO1PR11MB5169:EE_
-x-ms-office365-filtering-correlation-id: 128b7b25-9eac-4337-4e41-08dd9f0c3f29
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?TkoyeE9yMFZlcDNCbU5HM1paa3ZIekNZenc1dkxsclJTa2FqVE1PN2UzRzlY?=
- =?utf-8?B?bTluRWRJd1h2aGhtNzZYeXVkMmJTYktqYk1GTVhQVUdLYkYxazdLR2phU1Fu?=
- =?utf-8?B?S2NndmM1NGdVUXNaODFzMDdLKzNHeWJnMmlreWViVlRVbzR4OG1rVjRJeHdw?=
- =?utf-8?B?SjNPWGpETjRvV3NXbnNXZURRUy9xZUVHMnMwbW1jcHpCRjQ2dWhwLzBsVTFl?=
- =?utf-8?B?S0ZLYWZ3N3U2eEo0Vk5ISnd3WXF4ZENsUXN3NnlhZDgrYXdPd1J5Rnc3QmJY?=
- =?utf-8?B?OU9EcDQ2SHk1cVJkRlBWSXN1ZENvMXZXeHMydnZBTlpPQWZFazQydDRPaTdq?=
- =?utf-8?B?L01lMW9jYkc3TVZ2ZjJ0b1ozb0p0TUExR25nN3Qrcy9KSEdQMjhEblZka3Mv?=
- =?utf-8?B?VHVqWGhaNmZXdFA1SGw0aHBpeHpUMERCT0w4SHJObk5kZ3hjS0N6Y095d0Zh?=
- =?utf-8?B?akpHaXhrNWFpajFCcTJpSm84cUNFVWpFbkpacjdTdFZQbVZPMk9za2xUU25n?=
- =?utf-8?B?Z2FiSHRCeTdYU1M0S3lUR1IzYnpJZEJKbEFzeS95Z3p5dnVLU2k0Zno4d2Ur?=
- =?utf-8?B?QVBRTEp4ODByK3NUN09mUlh2TW5SanF0dlJRQXlSNzFQeDEvdzB4ZzJqaHUx?=
- =?utf-8?B?WHE3bHBsU3E3bWtkQ1pSMG9LVUZvcm83ZlE0ZGZHNTkwQzJ3TUV2NDRGdFhL?=
- =?utf-8?B?QzUwbVJFNGZUME1UYXlpb1BRWXBXQXE0VU1DaU1LWVFJNTFQUUV5S0gzTllR?=
- =?utf-8?B?K0FseTQrSmwxZks4Q001cDlOcGRGelNqQThFeU1uWC90NkNtRXAzNjFweCtI?=
- =?utf-8?B?TnhqUEhOTFI4QzQrU2FVWWlOODA3d2pxRUhrekd0K2l4b3lGaTFhUGdjR3Rj?=
- =?utf-8?B?V2E1M1ZVa21NZ0Z5M2txOEVuaVNkNC9VRVdtSldNTkljKzlxQkt0eE9LY05X?=
- =?utf-8?B?NjZSTFlzelV3djVna2Y3MFpxNndaNndKbE5tdkRRTldBUWRXU1dLdW5zdXdD?=
- =?utf-8?B?V1VpSUlIV29RVCtvM3l5cndHSXBnZzV4VFRjUFJzRXYrajVuSHJYZXFlTkQ4?=
- =?utf-8?B?RDBHRDhnTGVOTVRoS0hWejJONndKakxtS09RYnNwNWs2SC8vQjZubTd6cEQz?=
- =?utf-8?B?MGQ0ZW1zdUQ4dVV2R25RME11cCtKbGgzVGs4K0hpNkxaaHJyV2JrZFR6bElC?=
- =?utf-8?B?ZUhYbnZZbUIwcUxBTHBaWnFIeEZGVTVTWjgwbks4VVEveDNkQXpMZWtnTkNz?=
- =?utf-8?B?b0pra2ltODh2N2U4VDNYbVZoOFp5eGp5amZzWHozL3FUTVYyMEdUZXZqZ29O?=
- =?utf-8?B?b25iWHBXOGw2eFpkQTU1M2I1SDZkM3BQL211cTd0bXJvdHpKOTJWL2R2dWZH?=
- =?utf-8?B?RUpwMyswZTgwZnRnd0ZHc2dSdUhpVDRUNXBrQjNqU1RJWlptNzU4UUdXdTVh?=
- =?utf-8?B?TnBRRllTMHZDZ2FoU2hxeEFyNFFhdDZXQnVFQWI3dVI1aFlXRzJwV050K3gy?=
- =?utf-8?B?WEo2ZmdtZGNpblJ0NC9JbXZkVDdyZ2ZuUUFHWkxQVzIxaDlzWFU4UEZjNDNW?=
- =?utf-8?B?MTJHVVVNM3pJZlJDYU5tLzBsNk1kQmQ3cmkrWjR1UDF3dDVFRnk2MXA4RGZG?=
- =?utf-8?B?ejRjekF5bHNlS2N3VzIvcDVEWVdNdDdKYTVNcXFBWEJ3VGJWZFluWm9RZDJV?=
- =?utf-8?B?VHRPVVZPdW9zRmQwWTZQWFMzeHhhOFJ3YlV1MDAvUVBjUG54SUZWY1FNSEFY?=
- =?utf-8?B?cXoxdHhCYXlLR2dQUnBrQWZTOStvMHVlaDVjL0pEc1F0N3ljU0duQ1M3eXJ4?=
- =?utf-8?B?Q3dqMFhvQXVST2E1TUFrL203Ni90ZFVNTDlOVENKSnlNeUlabUZWS3Q2eFN3?=
- =?utf-8?B?aVhrejkyMStkaGgyWWNVa1VKWFF1czhjTTUzaVplK0dwckVkcEMyYjhoNDlj?=
- =?utf-8?B?OWdja2dVdjFnK0NML1hybjlBcTlvTk5hRjkwbDNoOXBEd0prbXBuQWlUY3pU?=
- =?utf-8?Q?NsFjVkHJ4YyQ0DAPN51k6g5ImUgl2E=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5525.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?QVViMEcrenk4ejFLTHF4MWxtUVpUUFhySUdSMVFHV3ZuQ3N0UHFhRU40RkMz?=
- =?utf-8?B?dG9sQUYzKytjYkFUaDVvdE4zVDE1U0FNUlhoU1BOUkNGYU45S1VORUppM2Fl?=
- =?utf-8?B?MFJiU05LS1d4ejg3K2ltWkdvbWgwSTRueXpaTzNPaFB4Z0JhL044K3RiRysv?=
- =?utf-8?B?WXliSEVMOC9selA1OWV2YmtTR2sxTDRXTjFNdjhvQitRZk5uSU9nRDUvVHB6?=
- =?utf-8?B?aThDeVFUbVN3cXRkYXFPdG5aTDcvV3FnbUVyYnZnVjRJOXNFbSt0eWgzMDJn?=
- =?utf-8?B?Q1N5dVJYanhyNlNQUG15ZFJodE5rWmQzRmtVR2d3MTBtNzdFZERXYVdMbTQ2?=
- =?utf-8?B?dmZXVE5DQkw5eWNHV2Q2dUI2WE9EZlI5MFUrOVdpQ25IckQrSjRxRnZSZTg1?=
- =?utf-8?B?TkpHSWtKbmpKYjJoazBBZDhGemFPT1NsSFZKdnE2ZFZzQnNtck9nMm5MK2kx?=
- =?utf-8?B?NUUrbFd2S0xJQ0czRWlvQ01ZYk16WEsxZ3dOWndsamwxZG11SEdtazNseCs2?=
- =?utf-8?B?YTRjTWw5blVsd29VYVZGSm5oUGd2Z0dWb0N4ekhzR3FiVFM5QjJuKy9Rd1JN?=
- =?utf-8?B?R1dpMStNZjlxcG80L1lSaUg0dHM4S1RXM2xzNWlxcEVGRmNZK3RUVjBhbDdZ?=
- =?utf-8?B?V29HUlJ0KzZIMVEvVXp5eW1mRUlpZmlZTlFwSk81VTk5T0EvS2Q0ckJNWGZO?=
- =?utf-8?B?Rm1neDA0VFE5Mzk5ME5FcGZFMDJVQ3dkN0wyaW5nVUhKVGV0NWpHcDNrRXJL?=
- =?utf-8?B?Wml3b3dvVE5WZWZNQXBxc0ZWclNxakthZ0FCM08vZ3dsekJJTnQ5aHJvNjVh?=
- =?utf-8?B?UnZpOUU0TmFkZUNaSVlVUlVEZk4xaWYxNGVtcitnL3greDdDQ2d5ckcwdytk?=
- =?utf-8?B?ZjFhdncwUnA1RW83NExxd0loNkVTWFNXekJRL1hlMjFVTGE4RUhGYlVuV0lL?=
- =?utf-8?B?anVuOFl2aHU2TlpJWjJTY0dzQisrVHZSMzY3REo4ZmZ4UzZzcUwrZXdNYWty?=
- =?utf-8?B?a0M1VHlJSkhVMHZxUml3UVV3eWtkSEczak1xbWZqRmdRVEt3WWl4L1FiaVZ5?=
- =?utf-8?B?TGhOZWM4Z1BNMFBaSmtrNTEwUU9PSm5JclAwOXkvdW0rUkN3NVNScVRpT1du?=
- =?utf-8?B?ODVlMHl1alZIU1dTem4zTGtqQVNFenFYR1lqQTJ1NjZTZVpBenpIQmVidTR3?=
- =?utf-8?B?bWRWZmpVZlZ6enNlK0xlQTJGRHlPYXk5M01iaDc2WERVcldBNmViR2FIaTVs?=
- =?utf-8?B?KzRkYUJ5UHlFZC9lbm50MW5tcUlxakY0RXA2ODN6ZmQ1dkxHT2s5Nm5TTCtK?=
- =?utf-8?B?Q1BUR09EcGl3cHZKWS9MNGZNVE9vSzRFT3YwTFRXSHdLNWMreTlEcHNOa0J0?=
- =?utf-8?B?VFlxYTFVeVBIMWU0Nk9pQXZScFpmT0wzK1U0N3F5RkZoVW9xYzc4TWd6REdX?=
- =?utf-8?B?UWVxMzY0UXE1dU5uWVZDZytTWXRrbFRsemtCUUNpY3pEaHI5ZnRQZTdxZC9q?=
- =?utf-8?B?ZWtyaVBsYWdnTmVhRU1mZVZ2VXZCakZFQjhHYTA0V3JBZzFoV3FTVG1xWmli?=
- =?utf-8?B?RTN4RkEyMUtxTm9ZY2l1cFdVaCsvSFZxRTZNL2pYbXd1dGVUT0NBUHc2OFRB?=
- =?utf-8?B?cHdTL0JDa3RGczNtUmhndlUyMjBIQWprSVlvdEcraVRud0UzN3RKQXp0ZEU4?=
- =?utf-8?B?dnZIMEVDMDJvN1ZkZkNpRkFDVmRqdDArR3hsWlhEUUpCeFRMcUpoY1llZXJw?=
- =?utf-8?B?U1RPSlVWTmF2RHgxV25JaXNuRDFocFFLOXVFcWJwSDIvcUdqb2tGckp6K3hn?=
- =?utf-8?B?dWdpejdjQWdWVzNzL2RmL2k3azdlZTU1VkpXSldGZWVaWGZUU0wyYkM1bzR4?=
- =?utf-8?B?cmtLaCs1bkRYY1dzazY1NFEzNGhoNldWWHlhSFoyYlJ6Z3FVdmZid1ppY3FP?=
- =?utf-8?B?S1J1a3dmTFBkN0xwQlRvRG1zMVJRM0x4UFFHWFNpTGs1VlZqMGhOZ2o5YThq?=
- =?utf-8?B?a3RlUnY5dS9ZTlZ2a0NPWHRmeERaK0RtU3B6b1hsWG9XOTBCaDh2ZUZsWXZB?=
- =?utf-8?B?ckh1U2ZVQWFGZW1CZ2o3QVQ5TUMwOVRnN1RsTURZeG5hZFBFZThLTzlmRTZC?=
- =?utf-8?B?Q1BvVENiOUZGRHdOUmZaRVQ2ejlWamlrTk1HYTF0d3cxV3V6ZCtyelNaZ0dM?=
- =?utf-8?B?VXc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5D1235A8DE341C4E8763C7220D757B85@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TWMmt0F9"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2342ebb8a83so10861915ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 17:00:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748563252; x=1749168052; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=oqV2zaZYb16msnNvkKWqjXHPhCsvjDjyIHn68xDKX7U=;
+        b=TWMmt0F9upu0X5mDC9GpV5SA8R9lss2r81vLEaDxY8sqoBRDdxUntlOVTolPTSR+WE
+         J47mtlR24KUdENBVwGnhlXIYoG5gzd15hsUjZbEZ8/i5TP5Mqi+T8LI9xyQh4M2AkVyo
+         uW+dfUKoXAWH10oGgLV6cHyQPltN8WNbHWAPwItZl+5q5wDOjoM6MqXYDa5Dj3CtNqoQ
+         YpoOjLa8EgW+GzTe1WLmlax4c8+WilRHL7hSkqd2rQdzVuX5TJPbPpOjQtTGsid/81+7
+         2r4TMLnzsZzQwzBuTtzwre+9c83xt+D4/koy54fGymXwrgHRp6hMkzsS52nsUpgR5um9
+         TAcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748563252; x=1749168052;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oqV2zaZYb16msnNvkKWqjXHPhCsvjDjyIHn68xDKX7U=;
+        b=iUz5GKjakV4bYsiumaTv81uu4tn6EGJBtcZaDi2BQBz4vfgCLc9+tcJ3sVcygtfRBi
+         l6tjOMU2eloxVKY9RoS6F3APpW4M2h26xJ67GkEC5EYodt8Alp6w+gjkKLIkoSRe0+Ib
+         juYZK08wabTJspD9KZ1q6U8yGP/4xJS0XRRjCqE5JxmuGArLhnvttkJlhHSrb6LQC/lM
+         jg2eLDkzc86KTjKeQiqs16dBsBehgu3zxuzaAzrfSCqO1nq0isBYmGopKRmcSqJNzlWX
+         LygQ0CKdpqM7EzwcNos62TXur4csEl5ekKc+RE0CUoLLSykec10IkSjQ4z3+60y/cQME
+         N2ag==
+X-Forwarded-Encrypted: i=1; AJvYcCUKNjx0pwUxteJuUUSdu1N9XQ6EL14QpmYDSMa15DOY+nbkTHEpLsUvfhWOZtxdzBBrwdlExlNyjX2LBJA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOjeSG/T/F2lDrSyaFvekMlq6EvNyGddlvjolZ3j6l5x/Zo7IU
+	uB4Fl7OcmdNy12lwltxZcsBRHaZ3necgohDvaf0TbP6zhosYp+J8pQnyO1UhZ7pM+YDUUSV2loU
+	+oOk9qe2IZZVaQwGVvvyfGVhwEA==
+X-Google-Smtp-Source: AGHT+IFdBTb1UXSqpPt5cykjw9rqT6+HOnXH5PPgiJXNByeADrqw52IRjSlVO7u2LJ43PKOwmtraEC4P0wAYvbLsSQ==
+X-Received: from plsl18.prod.google.com ([2002:a17:903:2452:b0:223:690d:fd84])
+ (user=dylanbhatch job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:902:f711:b0:235:1962:1c13 with SMTP id d9443c01a7336-23539563146mr1447435ad.14.1748563252125;
+ Thu, 29 May 2025 17:00:52 -0700 (PDT)
+Date: Fri, 30 May 2025 00:00:44 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5525.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 128b7b25-9eac-4337-4e41-08dd9f0c3f29
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 May 2025 23:55:10.4135
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vvYbHBALrhXmekpsf7fXVdUxO/If8FrVS0ZEqG8/hoKJqOt3lJK9bivqf9NMyCXsemwalH+r153Jak3IdjPw2w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB5169
-X-OriginatorOrg: intel.com
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
+Message-ID: <20250530000044.341911-1-dylanbhatch@google.com>
+Subject: [PATCH v5] arm64/module: Use text-poke API for late relocations.
+From: Dylan Hatch <dylanbhatch@google.com>
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Song Liu <song@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Dylan Hatch <dylanbhatch@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Toshiyuki Sato <fj6611ie@aa.jp.fujitsu.com>
+Content-Type: text/plain; charset="UTF-8"
 
-T24gVGh1LCAyMDI1LTA1LTI5IGF0IDE2OjA4IC0wNzAwLCBTZWFuIENocmlzdG9waGVyc29uIHdy
-b3RlOg0KPiBPbiBUaHUsIE1heSAyOSwgMjAyNSwgS2FpIEh1YW5nIHdyb3RlOg0KPiA+IE9uIFRo
-dSwgMjAyNS0wNS0yOSBhdCAwNzozMSAtMDcwMCwgU2VhbiBDaHJpc3RvcGhlcnNvbiB3cm90ZToN
-Cj4gPiA+IE9uIFRodSwgTWF5IDI5LCAyMDI1LCBLYWkgSHVhbmcgd3JvdGU6DQo+ID4gPiA+IE9u
-IFRodSwgMjAyNS0wNS0yOSBhdCAyMzo1NSArMTIwMCwgS2FpIEh1YW5nIHdyb3RlOg0KPiA+ID4g
-PiA+IE9uIE1vbiwgMjAyNS0wNS0xOSBhdCAxNjoyOCAtMDcwMCwgU2VhbiBDaHJpc3RvcGhlcnNv
-biB3cm90ZToNCj4gPiA+ID4gPiA+IEFkZCBhIEtjb25maWcgdG8gYWxsb3dpbmcgYnVpbGRpbmcg
-S1ZNIHdpdGhvdXQgc3VwcG9ydCBmb3IgZW11bGF0aW5nIGFuDQo+ID4gPiA+ID4gCQkgICBeDQo+
-ID4gPiA+ID4gCQkgICBhbGxvdw0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gSS9PIEFQSUMsIFBJ
-QywgYW5kIFBJVCwgd2hpY2ggaXMgZGVzaXJhYmxlIGZvciBkZXBsb3ltZW50cyB0aGF0IGVmZmVj
-dGl2ZWx5DQo+ID4gPiA+ID4gPiBkb24ndCBzdXBwb3J0IGEgZnVsbHkgaW4ta2VybmVsIElSUSBj
-aGlwLCBpLmUuIG5ldmVyIGV4cGVjdCBhbnkgVk1NIHRvDQo+ID4gPiA+ID4gPiBjcmVhdGUgYW4g
-aW4ta2VybmVsIEkvTyBBUElDLiDCoA0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+IERvIHlvdSBoYXBw
-ZW4gdG8ga25vdyB3aGF0IGRldmVsb3BtZW50cyBkb24ndCBzdXBwb3J0IGEgZnVsbCBpbi1rZXJu
-ZWwgSVJRIGNoaXA/DQo+ID4gPiANCj4gPiA+IEdvb2dsZSBDbG91ZCwgZm9yIG9uZS4gIEkgc3Vz
-cGVjdC9hc3N1bWUgbWFueS9tb3N0IENTUHMgZG9uJ3QgdXRpbGl6ZSBhbiBpbi1rZXJuZWwNCj4g
-PiA+IEkvTyBBUElDLg0KPiA+ID4gDQo+ID4gPiA+ID4gRG8gdGhleSBvbmx5IHN1cHBvcnQgdXNl
-cnNwYWNlIElSUSBjaGlwLCBvciBub3Qgc3VwcG9ydCBhbnkgSVJRIGNoaXAgYXQgYWxsPw0KPiA+
-ID4gDQo+ID4gPiBUaGUgZm9ybWVyLCBvbmx5IHVzZXJzcGFjZSBJL08gQVBJQyAoYW5kIGFzc29j
-aWF0ZWQgZGV2aWNlcyksIHRob3VnaCBzb21lIFZNDQo+ID4gPiBzaGFwZXMsIGUuZy4gVERYLCBk
-b24ndCBwcm92aWRlIGFuIEkvTyBBUElDIG9yIFBJQy4NCj4gPiANCj4gPiBUaGFua3MgZm9yIHRo
-ZSBpbmZvLg0KPiA+IA0KPiA+IEp1c3Qgd29uZGVyaW5nIHdoYXQncyB0aGUgYmVuZWZpdCBvZiB1
-c2luZyB1c2Vyc3BhY2UgSVJRQ0hJUCBpbnN0ZWFkIG9mDQo+ID4gZW11bGF0aW5nIGluIHRoZSBr
-ZXJuZWw/DQo+IA0KPiBSZWR1Y2VkIGtlcm5lbCBhdHRhY2sgc3VyZmFjZSAodGhpcyB3YXMgZXNw
-ZWNpYWxseSB0cnVlIHllYXJzIGFnbywgYmVmb3JlIEtWTSdzDQo+IEkvTyBBUElDIGVtdWxhdGlv
-biB3YXMgd2VsbC10ZXN0ZWQpIGFuZCBtb3JlIGZsZXhpYmlsaXR5IChlLmcuIHNoaXBwaW5nIHVz
-ZXJzcGFjZQ0KPiBjaGFuZ2VzIGlzIHR5cGljYWxseSBlYXNpZXIgdGhhbiBzaGlwcGluZyBuZXcg
-a2VybmVscy4gIEknbSBwcmV0dHkgc3VyZSB0aGVyZSdzDQo+IG9uZSBtb3JlIGJpZyBvbmUgdGhh
-dCBJJ20gYmxhbmtpbmcgb24gYXQgdGhlIG1vbWVudC4NCg0KWWVhaCB0aG9zZSBtYWtlIHNlbnNl
-LiAgSSB0aG91Z2h0IGl0IHdhcyBmcm9tIGZ1bmN0aW9uYWxpdHkvcGVyZm9ybWFuY2Uncw0KcGVy
-c3BlY3RpdmUgYnV0IEkgd2FzIGF0IHdyb25nIGRpcmVjdGlvbi4NCg0KPiANCj4gPiBJIHRob3Vn
-aHQgb25lIHNob3VsZCBlaXRoZXIgdXNlIGluLWtlcm5lbCBJUlFDSElQIG9yIGRvZXNuJ3QgdXNl
-IGFueS4NCj4gPiANCj4gPiA+IA0KPiA+ID4gPiBGb3Jnb3QgdG8gYXNrOg0KPiA+ID4gPiANCj4g
-PiA+ID4gU2luY2UgdGhpcyBuZXcgS2NvbmZpZyBvcHRpb24gaXMgbm90IG9ubHkgZm9yIElPQVBJ
-QyBidXQgYWxzbyBpbmNsdWRlcyBQSUMgYW5kDQo+ID4gPiA+IFBJVCwgaXMgQ09ORklHX0tWTV9J
-UlFDSElQIGEgYmV0dGVyIG5hbWU/DQo+ID4gPiANCj4gPiA+IEkgbXVjaCBwcmVmZXIgSU9BUElD
-LCBiZWNhdXNlIElSUUNISVAgaXMgZmFyIHRvbyBhbWJpZ3VvdXMgYW5kIGNvbmZ1c2luZywgZS5n
-Lg0KPiA+ID4ganVzdCBsb29rIGF0IEtWTSdzIGludGVybmFsIEFQSXMsIHdoZXJlIHRoZXNlOg0K
-PiA+ID4gDQo+ID4gPiAgIGlycWNoaXBfaW5fa2VybmVsKCkNCj4gPiA+ICAgaXJxY2hpcF9rZXJu
-ZWwoKQ0KPiA+ID4gDQo+ID4gPiBhcmUgbm90IGVxdWl2YWxlbnQuICBJbiBwcmFjdGljZSwgbm8g
-bW9kZXJuIGd1ZXN0IGtlcm5lbCBpcyBnb2luZyB0byB1dGlsaXplIHRoZQ0KPiA+ID4gUElDLCBh
-bmQgdGhlIFBJVCBpc24ndCBhbiBJUlEgY2hpcCwgaS5lLiBpc24ndCBzdHJpY3RseSBjb3ZlcmVk
-IGJ5IElSUUNISVAgZWl0aGVyLg0KPiA+IA0KPiA+IFJpZ2h0Lg0KPiA+IA0KPiA+IE1heWJlIGl0
-IGlzIHdvcnRoIHRvIGZ1cnRoZXIgaGF2ZSBkZWRpY2F0ZWQgS2NvbmZpZyBmb3IgUElDLCBQSVQg
-YW5kIElPQVBJQz8NCj4gDQo+IE5haC4gIFBJQyBhbmQgSS9PIEFQSUMgY2FuJ3QgYmUgc3BsaXQg
-KHdpdGhvdXQgbmV3IHVBUEkgYW5kIG5vbi10cml2aWFsIGNvbXBsZXhpdHkpLA0KDQpSaWdodC4g
-IEkgZm9yZ290IHRoaXMuDQoNCj4gYW5kIEkgaGlnaGx5IGRvdWJ0IHRoZXJlIGlzIGFueSB1c2Ug
-Y2FzZSB0aGF0IHdvdWxkIHdhbnQgYW4gaW4ta2VybmVsIEkvTyBBUElDDQo+IHdpdGggYSB1c2Vy
-c3BhY2UgUElULiAgSS5lLiBpbiBwcmFjdGljZSwgdGhlIHRocmVlYWxtb3N0IGFsd2F5cyBjb21l
-IGFzIGEgZ3JvdXA7DQo+IGVpdGhlciBhIHNldHVwIHdhbnRzIGFsbCwgb3IgYSBzZXR1cCB3YW50
-cyBub25lLg0KDQpPSy4NCg0KPiANCj4gPiBCdXQgaG1tLCBJIGFtIG5vdCBzdXJlIHdoZXRoZXIg
-ZW11bGF0aW5nIElPQVBJQyBoYXMgbW9yZSB2YWx1ZSB0aGFuIFBJQy4NCj4gDQo+IEFJVUksIGl0
-J3Mgbm90IHJlYWxseSBhbiBlaXRoZXIgb3IsIHNpbmNlIG1vc3Qgc29mdHdhcmUgZXhwZWN0cyBi
-b3RoIGFuIEkvTyBBUElDDQo+IGFuZCBQSUMuICBBbnkgcmVtb3RlbHkgbW9kZXJuIGtlcm5lbCB3
-aWxsIGRlZmluaXRlbHkgcHJlZmVyIHRoZSBJL08gQVBJQywgYnV0IEkNCj4gZG9uJ3QgdGhpbmsg
-aXQncyBzb21ldGhpbmcgdGhhdCBjYW4gYmUgZ3VhcmFudGVlZC4NCg0KT0sgOi0pDQoNCj4gDQo+
-ID4gRm9yIG1vZGVybiBndWVzdHMgYWxsIGVtdWxhdGVkL2Fzc2lnbmVkIGRldmljZXMgc2hvdWxk
-IGp1c3QgdXNlIE1TSS9NU0ktWD8NCj4gDQo+IE5vdCBhbGwgZW11bGF0ZWQgZGV2aWNlcywgc2lu
-Y2Ugc29tZSBsZWdhY3kgaGFuZyBvZmYgdGhlIEkvTyBBUElDLCBpLmUuIGFyZW4ndA0KPiBjYXBh
-YmxlIG9mIGdlbmVyYXRpbmcgTUlTcy4NCg0KWWVhaC4gIEkgdGhvdWdodCBpbiB0aG9zZSBkZXBs
-b3ltZW50cyB0aGUgZ3Vlc3RzIHNob3VsZCBub3QgYmUgY29uZmlndXJlZCB0bw0KaGF2ZSB0aG9z
-ZSBkZXZpY2VzLg0KDQo+IA0KPiA+ID4gU28gSSB0aGluay9ob3BlIHRoZSB2YXN0IG1ham9yaXR5
-IG9mIHVzZXJzL3JlYWRlcnMgd2lsbCBiZSBhYmxlIHRvIGludHVpdCB0aGF0DQo+ID4gPiBDT05G
-SUdfS1ZNX0lPQVBJQyBhbHNvIGNvdmVycyB0aGUgUElDIGFuZCBQSVQuDQo+ID4gDQo+ID4gU3Vy
-ZS4NCj4gPiANCj4gPiBCdHcsIEkgYWxzbyBmaW5kIGlycWNoaXBfaW5fa2VybmVsKCkgYW5kIGly
-cWNoaXBfa2VybmVsKCkgY29uZnVzaW5nLiAgSSBhbSBub3QNCj4gPiBzdXJlIHRoZSB2YWx1ZSBv
-ZiBoYXZpbmcgaXJxY2hpcF9pbl9rZXJuZWwoKSBpbiBmYWN0LiAgVGhlIGd1ZXN0IHNob3VsZCBh
-bHdheXMNCj4gPiBoYXZlIGFuIGluLWtlcm5lbCBBUElDIGZvciBtb2Rlcm4gZ3Vlc3RzLiAgSSBh
-bSB3b25kZXJpbmcgd2hldGhlciB3ZSBjYW4gZ2V0IHJpZA0KPiA+IG9mIGl0IGNvbXBsZXRlbHkg
-KHRoZSBsb2dpYyB3aWxsIGJlIGl0IGlzIGFsd2F5cyBiZSB0cnVlKSwgb3Igd2UgY2FuIGhhdmUg
-YQ0KPiA+IEtjb25maWcgdG8gb25seSBidWlsZCBpdCB3aGVuIHVzZXIgdHJ1bHkgd2FudHMgaXQu
-DQo+IA0KPiBGb3IgYmV0dGVyIG9yIHdvcnNlLCBhbiBpbi1rZXJuZWwgbG9jYWwgQVBJQyBpcyBz
-dGlsbCBvcHRpb25hbC4gIEkgZG8gaG9wZS93YW50DQo+IHRvIG1ha2UgaXQgbWFuZGF0b3J5LCBi
-dXQgdGhhdCdzIG5vdCBhIHNtYWxsIEFCSSBjaGFuZ2UuDQoNClJpZ2h0LiAgVGhlIEFCSSBjaGFu
-Z2UgaXMgY29uY2Vybi4gIA0KDQpUaGFua3MgZm9yIGFsbCB0aGUgZXhwbGFuYXRpb24hDQo=
+To enable late module patching, livepatch modules need to be able to
+apply some of their relocations well after being loaded. In this
+scenario however, the livepatch module text and data is already RX-only,
+so special treatment is needed to make the late relocations possible. To
+do this, use the text-poking API for these late relocations.
+
+This patch is partially based off commit 88fc078a7a8f6 ("x86/module: Use
+text_poke() for late relocations").
+
+Signed-off-by: Dylan Hatch <dylanbhatch@google.com>
+Acked-by: Song Liu <song@kernel.org>
+---
+ arch/arm64/kernel/module.c | 110 ++++++++++++++++++++++---------------
+ 1 file changed, 66 insertions(+), 44 deletions(-)
+
+diff --git a/arch/arm64/kernel/module.c b/arch/arm64/kernel/module.c
+index 06bb680bfe975..93e6d63074afe 100644
+--- a/arch/arm64/kernel/module.c
++++ b/arch/arm64/kernel/module.c
+@@ -23,6 +23,7 @@
+ #include <asm/insn.h>
+ #include <asm/scs.h>
+ #include <asm/sections.h>
++#include <asm/text-patching.h>
+ 
+ enum aarch64_reloc_op {
+ 	RELOC_OP_NONE,
+@@ -48,7 +49,26 @@ static u64 do_reloc(enum aarch64_reloc_op reloc_op, __le32 *place, u64 val)
+ 	return 0;
+ }
+ 
+-static int reloc_data(enum aarch64_reloc_op op, void *place, u64 val, int len)
++static void write_data(void *place, s64 *sval, size_t len, struct module *me)
++{
++	if (me->state == MODULE_STATE_UNFORMED)
++		memcpy(place, sval, len);
++	else
++		aarch64_insn_copy(place, sval, len);
++}
++
++static void write_insn(__le32 *place, u32 insn, struct module *me)
++{
++	__le32 le = cpu_to_le32(insn);
++
++	if (me->state == MODULE_STATE_UNFORMED)
++		*place = le;
++	else
++		aarch64_insn_copy(place, &le, sizeof(le));
++}
++
++static int reloc_data(enum aarch64_reloc_op op, void *place, u64 val, int len,
++		      struct module *me)
+ {
+ 	s64 sval = do_reloc(op, place, val);
+ 
+@@ -66,7 +86,7 @@ static int reloc_data(enum aarch64_reloc_op op, void *place, u64 val, int len)
+ 
+ 	switch (len) {
+ 	case 16:
+-		*(s16 *)place = sval;
++		write_data(place, &sval, sizeof(s16), me);
+ 		switch (op) {
+ 		case RELOC_OP_ABS:
+ 			if (sval < 0 || sval > U16_MAX)
+@@ -82,7 +102,7 @@ static int reloc_data(enum aarch64_reloc_op op, void *place, u64 val, int len)
+ 		}
+ 		break;
+ 	case 32:
+-		*(s32 *)place = sval;
++		write_data(place, &sval, sizeof(s32), me);
+ 		switch (op) {
+ 		case RELOC_OP_ABS:
+ 			if (sval < 0 || sval > U32_MAX)
+@@ -98,7 +118,7 @@ static int reloc_data(enum aarch64_reloc_op op, void *place, u64 val, int len)
+ 		}
+ 		break;
+ 	case 64:
+-		*(s64 *)place = sval;
++		write_data(place, &sval, sizeof(s64), me);
+ 		break;
+ 	default:
+ 		pr_err("Invalid length (%d) for data relocation\n", len);
+@@ -113,7 +133,8 @@ enum aarch64_insn_movw_imm_type {
+ };
+ 
+ static int reloc_insn_movw(enum aarch64_reloc_op op, __le32 *place, u64 val,
+-			   int lsb, enum aarch64_insn_movw_imm_type imm_type)
++			   int lsb, enum aarch64_insn_movw_imm_type imm_type,
++			   struct module *me)
+ {
+ 	u64 imm;
+ 	s64 sval;
+@@ -145,7 +166,7 @@ static int reloc_insn_movw(enum aarch64_reloc_op op, __le32 *place, u64 val,
+ 
+ 	/* Update the instruction with the new encoding. */
+ 	insn = aarch64_insn_encode_immediate(AARCH64_INSN_IMM_16, insn, imm);
+-	*place = cpu_to_le32(insn);
++	write_insn(place, insn, me);
+ 
+ 	if (imm > U16_MAX)
+ 		return -ERANGE;
+@@ -154,7 +175,8 @@ static int reloc_insn_movw(enum aarch64_reloc_op op, __le32 *place, u64 val,
+ }
+ 
+ static int reloc_insn_imm(enum aarch64_reloc_op op, __le32 *place, u64 val,
+-			  int lsb, int len, enum aarch64_insn_imm_type imm_type)
++			  int lsb, int len, enum aarch64_insn_imm_type imm_type,
++			  struct module *me)
+ {
+ 	u64 imm, imm_mask;
+ 	s64 sval;
+@@ -170,7 +192,7 @@ static int reloc_insn_imm(enum aarch64_reloc_op op, __le32 *place, u64 val,
+ 
+ 	/* Update the instruction's immediate field. */
+ 	insn = aarch64_insn_encode_immediate(imm_type, insn, imm);
+-	*place = cpu_to_le32(insn);
++	write_insn(place, insn, me);
+ 
+ 	/*
+ 	 * Extract the upper value bits (including the sign bit) and
+@@ -189,17 +211,17 @@ static int reloc_insn_imm(enum aarch64_reloc_op op, __le32 *place, u64 val,
+ }
+ 
+ static int reloc_insn_adrp(struct module *mod, Elf64_Shdr *sechdrs,
+-			   __le32 *place, u64 val)
++			   __le32 *place, u64 val, struct module *me)
+ {
+ 	u32 insn;
+ 
+ 	if (!is_forbidden_offset_for_adrp(place))
+ 		return reloc_insn_imm(RELOC_OP_PAGE, place, val, 12, 21,
+-				      AARCH64_INSN_IMM_ADR);
++				      AARCH64_INSN_IMM_ADR, me);
+ 
+ 	/* patch ADRP to ADR if it is in range */
+ 	if (!reloc_insn_imm(RELOC_OP_PREL, place, val & ~0xfff, 0, 21,
+-			    AARCH64_INSN_IMM_ADR)) {
++			    AARCH64_INSN_IMM_ADR, me)) {
+ 		insn = le32_to_cpu(*place);
+ 		insn &= ~BIT(31);
+ 	} else {
+@@ -211,7 +233,7 @@ static int reloc_insn_adrp(struct module *mod, Elf64_Shdr *sechdrs,
+ 						   AARCH64_INSN_BRANCH_NOLINK);
+ 	}
+ 
+-	*place = cpu_to_le32(insn);
++	write_insn(place, insn, me);
+ 	return 0;
+ }
+ 
+@@ -255,23 +277,23 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
+ 		/* Data relocations. */
+ 		case R_AARCH64_ABS64:
+ 			overflow_check = false;
+-			ovf = reloc_data(RELOC_OP_ABS, loc, val, 64);
++			ovf = reloc_data(RELOC_OP_ABS, loc, val, 64, me);
+ 			break;
+ 		case R_AARCH64_ABS32:
+-			ovf = reloc_data(RELOC_OP_ABS, loc, val, 32);
++			ovf = reloc_data(RELOC_OP_ABS, loc, val, 32, me);
+ 			break;
+ 		case R_AARCH64_ABS16:
+-			ovf = reloc_data(RELOC_OP_ABS, loc, val, 16);
++			ovf = reloc_data(RELOC_OP_ABS, loc, val, 16, me);
+ 			break;
+ 		case R_AARCH64_PREL64:
+ 			overflow_check = false;
+-			ovf = reloc_data(RELOC_OP_PREL, loc, val, 64);
++			ovf = reloc_data(RELOC_OP_PREL, loc, val, 64, me);
+ 			break;
+ 		case R_AARCH64_PREL32:
+-			ovf = reloc_data(RELOC_OP_PREL, loc, val, 32);
++			ovf = reloc_data(RELOC_OP_PREL, loc, val, 32, me);
+ 			break;
+ 		case R_AARCH64_PREL16:
+-			ovf = reloc_data(RELOC_OP_PREL, loc, val, 16);
++			ovf = reloc_data(RELOC_OP_PREL, loc, val, 16, me);
+ 			break;
+ 
+ 		/* MOVW instruction relocations. */
+@@ -280,88 +302,88 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
+ 			fallthrough;
+ 		case R_AARCH64_MOVW_UABS_G0:
+ 			ovf = reloc_insn_movw(RELOC_OP_ABS, loc, val, 0,
+-					      AARCH64_INSN_IMM_MOVKZ);
++					      AARCH64_INSN_IMM_MOVKZ, me);
+ 			break;
+ 		case R_AARCH64_MOVW_UABS_G1_NC:
+ 			overflow_check = false;
+ 			fallthrough;
+ 		case R_AARCH64_MOVW_UABS_G1:
+ 			ovf = reloc_insn_movw(RELOC_OP_ABS, loc, val, 16,
+-					      AARCH64_INSN_IMM_MOVKZ);
++					      AARCH64_INSN_IMM_MOVKZ, me);
+ 			break;
+ 		case R_AARCH64_MOVW_UABS_G2_NC:
+ 			overflow_check = false;
+ 			fallthrough;
+ 		case R_AARCH64_MOVW_UABS_G2:
+ 			ovf = reloc_insn_movw(RELOC_OP_ABS, loc, val, 32,
+-					      AARCH64_INSN_IMM_MOVKZ);
++					      AARCH64_INSN_IMM_MOVKZ, me);
+ 			break;
+ 		case R_AARCH64_MOVW_UABS_G3:
+ 			/* We're using the top bits so we can't overflow. */
+ 			overflow_check = false;
+ 			ovf = reloc_insn_movw(RELOC_OP_ABS, loc, val, 48,
+-					      AARCH64_INSN_IMM_MOVKZ);
++					      AARCH64_INSN_IMM_MOVKZ, me);
+ 			break;
+ 		case R_AARCH64_MOVW_SABS_G0:
+ 			ovf = reloc_insn_movw(RELOC_OP_ABS, loc, val, 0,
+-					      AARCH64_INSN_IMM_MOVNZ);
++					      AARCH64_INSN_IMM_MOVNZ, me);
+ 			break;
+ 		case R_AARCH64_MOVW_SABS_G1:
+ 			ovf = reloc_insn_movw(RELOC_OP_ABS, loc, val, 16,
+-					      AARCH64_INSN_IMM_MOVNZ);
++					      AARCH64_INSN_IMM_MOVNZ, me);
+ 			break;
+ 		case R_AARCH64_MOVW_SABS_G2:
+ 			ovf = reloc_insn_movw(RELOC_OP_ABS, loc, val, 32,
+-					      AARCH64_INSN_IMM_MOVNZ);
++					      AARCH64_INSN_IMM_MOVNZ, me);
+ 			break;
+ 		case R_AARCH64_MOVW_PREL_G0_NC:
+ 			overflow_check = false;
+ 			ovf = reloc_insn_movw(RELOC_OP_PREL, loc, val, 0,
+-					      AARCH64_INSN_IMM_MOVKZ);
++					      AARCH64_INSN_IMM_MOVKZ, me);
+ 			break;
+ 		case R_AARCH64_MOVW_PREL_G0:
+ 			ovf = reloc_insn_movw(RELOC_OP_PREL, loc, val, 0,
+-					      AARCH64_INSN_IMM_MOVNZ);
++					      AARCH64_INSN_IMM_MOVNZ, me);
+ 			break;
+ 		case R_AARCH64_MOVW_PREL_G1_NC:
+ 			overflow_check = false;
+ 			ovf = reloc_insn_movw(RELOC_OP_PREL, loc, val, 16,
+-					      AARCH64_INSN_IMM_MOVKZ);
++					      AARCH64_INSN_IMM_MOVKZ, me);
+ 			break;
+ 		case R_AARCH64_MOVW_PREL_G1:
+ 			ovf = reloc_insn_movw(RELOC_OP_PREL, loc, val, 16,
+-					      AARCH64_INSN_IMM_MOVNZ);
++					      AARCH64_INSN_IMM_MOVNZ, me);
+ 			break;
+ 		case R_AARCH64_MOVW_PREL_G2_NC:
+ 			overflow_check = false;
+ 			ovf = reloc_insn_movw(RELOC_OP_PREL, loc, val, 32,
+-					      AARCH64_INSN_IMM_MOVKZ);
++					      AARCH64_INSN_IMM_MOVKZ, me);
+ 			break;
+ 		case R_AARCH64_MOVW_PREL_G2:
+ 			ovf = reloc_insn_movw(RELOC_OP_PREL, loc, val, 32,
+-					      AARCH64_INSN_IMM_MOVNZ);
++					      AARCH64_INSN_IMM_MOVNZ, me);
+ 			break;
+ 		case R_AARCH64_MOVW_PREL_G3:
+ 			/* We're using the top bits so we can't overflow. */
+ 			overflow_check = false;
+ 			ovf = reloc_insn_movw(RELOC_OP_PREL, loc, val, 48,
+-					      AARCH64_INSN_IMM_MOVNZ);
++					      AARCH64_INSN_IMM_MOVNZ, me);
+ 			break;
+ 
+ 		/* Immediate instruction relocations. */
+ 		case R_AARCH64_LD_PREL_LO19:
+ 			ovf = reloc_insn_imm(RELOC_OP_PREL, loc, val, 2, 19,
+-					     AARCH64_INSN_IMM_19);
++					     AARCH64_INSN_IMM_19, me);
+ 			break;
+ 		case R_AARCH64_ADR_PREL_LO21:
+ 			ovf = reloc_insn_imm(RELOC_OP_PREL, loc, val, 0, 21,
+-					     AARCH64_INSN_IMM_ADR);
++					     AARCH64_INSN_IMM_ADR, me);
+ 			break;
+ 		case R_AARCH64_ADR_PREL_PG_HI21_NC:
+ 			overflow_check = false;
+ 			fallthrough;
+ 		case R_AARCH64_ADR_PREL_PG_HI21:
+-			ovf = reloc_insn_adrp(me, sechdrs, loc, val);
++			ovf = reloc_insn_adrp(me, sechdrs, loc, val, me);
+ 			if (ovf && ovf != -ERANGE)
+ 				return ovf;
+ 			break;
+@@ -369,46 +391,46 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
+ 		case R_AARCH64_LDST8_ABS_LO12_NC:
+ 			overflow_check = false;
+ 			ovf = reloc_insn_imm(RELOC_OP_ABS, loc, val, 0, 12,
+-					     AARCH64_INSN_IMM_12);
++					     AARCH64_INSN_IMM_12, me);
+ 			break;
+ 		case R_AARCH64_LDST16_ABS_LO12_NC:
+ 			overflow_check = false;
+ 			ovf = reloc_insn_imm(RELOC_OP_ABS, loc, val, 1, 11,
+-					     AARCH64_INSN_IMM_12);
++					     AARCH64_INSN_IMM_12, me);
+ 			break;
+ 		case R_AARCH64_LDST32_ABS_LO12_NC:
+ 			overflow_check = false;
+ 			ovf = reloc_insn_imm(RELOC_OP_ABS, loc, val, 2, 10,
+-					     AARCH64_INSN_IMM_12);
++					     AARCH64_INSN_IMM_12, me);
+ 			break;
+ 		case R_AARCH64_LDST64_ABS_LO12_NC:
+ 			overflow_check = false;
+ 			ovf = reloc_insn_imm(RELOC_OP_ABS, loc, val, 3, 9,
+-					     AARCH64_INSN_IMM_12);
++					     AARCH64_INSN_IMM_12, me);
+ 			break;
+ 		case R_AARCH64_LDST128_ABS_LO12_NC:
+ 			overflow_check = false;
+ 			ovf = reloc_insn_imm(RELOC_OP_ABS, loc, val, 4, 8,
+-					     AARCH64_INSN_IMM_12);
++					     AARCH64_INSN_IMM_12, me);
+ 			break;
+ 		case R_AARCH64_TSTBR14:
+ 			ovf = reloc_insn_imm(RELOC_OP_PREL, loc, val, 2, 14,
+-					     AARCH64_INSN_IMM_14);
++					     AARCH64_INSN_IMM_14, me);
+ 			break;
+ 		case R_AARCH64_CONDBR19:
+ 			ovf = reloc_insn_imm(RELOC_OP_PREL, loc, val, 2, 19,
+-					     AARCH64_INSN_IMM_19);
++					     AARCH64_INSN_IMM_19, me);
+ 			break;
+ 		case R_AARCH64_JUMP26:
+ 		case R_AARCH64_CALL26:
+ 			ovf = reloc_insn_imm(RELOC_OP_PREL, loc, val, 2, 26,
+-					     AARCH64_INSN_IMM_26);
++					     AARCH64_INSN_IMM_26, me);
+ 			if (ovf == -ERANGE) {
+ 				val = module_emit_plt_entry(me, sechdrs, loc, &rel[i], sym);
+ 				if (!val)
+ 					return -ENOEXEC;
+ 				ovf = reloc_insn_imm(RELOC_OP_PREL, loc, val, 2,
+-						     26, AARCH64_INSN_IMM_26);
++						     26, AARCH64_INSN_IMM_26, me);
+ 			}
+ 			break;
+ 
+-- 
+2.49.0.1204.g71687c7c1d-goog
+
