@@ -1,153 +1,81 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52878A92E;
-	Fri, 30 May 2025 03:49:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001C454652;
+	Fri, 30 May 2025 03:53:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748577001; cv=none; b=diNd8rvzYo9myIwKrSg1L2xVKByRabs1HdGyqkjtOwBjV015y2lGbLgjC/Zbz2y5MZTgDcxnr2guHsCxCVhD6LpYVNWK+i/9nLb7mrvgAaSkaubar2JhskRvuBijaUv2dztOla/ByDTOyf1N2BJx1wgza7nm9a7wNrqZ/nzwSa8=
+	t=1748577195; cv=none; b=At6xTqgVrqEqVE0FNvQQItaMPJaGQE657dht+Dy+JzVDHhEwWTsiFlNvCdmPuBGJ2m8yuLtUJJadVJq6WhfqwnuiPkE02omxX5a/jAairU+O5MX+8cKwrCzhSSVbY9l4HxG5Tb2m7eXcbcM6u3kRvMYPZmueuFcHm+Svx6ivJjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748577001; c=relaxed/simple;
-	bh=hupVuWNTHUjaEF6ZZ/p3LO17tuveX9vxzgAMn6RfA4s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O+saFKu8uh9cCjRhoqPLUakUVTdPcGYuBLDirmZmkU3FBvVEb8yF3ILF286Fqpy5M9gQ88dHJiFjMfIPt2E2yjHNkbWpoAPKtz8j1UI79SymxjwZqlo74MQbmWcqo5fcpzmGPAbM+sfEnAMV4nepzcTaMUZLz8vsTNyiF/6lKrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9AAC816F8;
-	Thu, 29 May 2025 20:49:41 -0700 (PDT)
-Received: from [10.164.18.46] (a077893.blr.arm.com [10.164.18.46])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 50EB13F5A1;
-	Thu, 29 May 2025 20:49:56 -0700 (PDT)
-Message-ID: <8f6bba3a-4cf6-44c2-abeb-8d419ca5a6c3@arm.com>
-Date: Fri, 30 May 2025 09:19:53 +0530
+	s=arc-20240116; t=1748577195; c=relaxed/simple;
+	bh=dQQUntt1ss5Ok8Y5E6ZNrvwcuMGQPmjWrkgxYZOEJts=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=WW3MeHk9OOO6vq4HbIZjbsrsxQ+JWE5rLsCx64aBLOc4t8jPlEABPVwZI7LwzEvTONSOhmSVoTHxcy9KTqKVOcAOSEjewLGwlEsbmojsXJHLSEIXw9Gdr0Nx8nX5OdGF7bGXQo6IOaMYZFEk7SSz+nBZhIC7Qw9Pshol02Nwh78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=lrjw8+vj; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="lrjw8+vj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E929EC4CEE9;
+	Fri, 30 May 2025 03:53:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1748577194;
+	bh=dQQUntt1ss5Ok8Y5E6ZNrvwcuMGQPmjWrkgxYZOEJts=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=lrjw8+vjHne+Cm4nbQaTnY/Yw0sQCNrd1cLA4RbmsUYgUlPBQTKvVDv0t1vHDCFDX
+	 pqQAHc+ACogHUOQVS+w2L4TePGUdleQf2ZDMYi3Nsup9QWV94FZgEGc/6znc48+fZW
+	 FRIQlR2e25SfNqJBkSJhHz/VZImmH9BV8GyeAczc=
+Date: Thu, 29 May 2025 20:53:13 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: david@redhat.com, shakeel.butt@linux.dev, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+ surenb@google.com, mhocko@suse.com, donettom@linux.ibm.com,
+ aboorvad@linux.ibm.com, sj@kernel.org, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: fix the inaccurate memory statistics issue for
+ users
+Message-Id: <20250529205313.a1285b431bbec2c54d80266d@linux-foundation.org>
+In-Reply-To: <4f0fd51eb4f48c1a34226456b7a8b4ebff11bf72.1748051851.git.baolin.wang@linux.alibaba.com>
+References: <4f0fd51eb4f48c1a34226456b7a8b4ebff11bf72.1748051851.git.baolin.wang@linux.alibaba.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64/ptrace: Make user_hwdebug_state.dbg_regs[] array
- size as ARM_MAX_BRP
-To: Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland
- <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250421055212.123774-1-anshuman.khandual@arm.com>
- <20250516135958.GA13612@willie-the-truck>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250516135958.GA13612@willie-the-truck>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Sat, 24 May 2025 09:59:53 +0800 Baolin Wang <baolin.wang@linux.alibaba.com> wrote:
 
-
-On 5/16/25 19:29, Will Deacon wrote:
-> On Mon, Apr 21, 2025 at 11:22:12AM +0530, Anshuman Khandual wrote:
->> Array elements inside 'struct user_hwdebug_state.dbg_regs[]' are inherently
->> coupled with maximum breakpoints or watchpoints which could be present on a
->> platform and which are defined with macros ARM_MAX_[BRP|WRP].
->>
->> Rather than explicitly trying to keep the array elements in sync with these
->> macros and then adding a BUILD_BUG_ON() just to ensure continued compliance
->> , move these two macros into the uapi ptrace header itself thus making them
->> available both for user space and kernel.
->>
->> While here also ensure that ARM_MAX_BRP and ARM_MAX_WRP are always the same
->> via a new BUILD_BUG_ON(). This helps in making sure that user_hwdebug_state
->> structure remains usable both for breakpoint and watchpoint registers set
->> via ptrace() system call interface.
->>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-perf-users@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->> This patch applies on v6.15-rc3
->>
->>  arch/arm64/include/asm/hw_breakpoint.h |  7 -------
->>  arch/arm64/include/uapi/asm/ptrace.h   | 10 +++++++++-
->>  arch/arm64/kernel/hw_breakpoint.c      |  9 +++++++++
->>  3 files changed, 18 insertions(+), 8 deletions(-)
->>
->> diff --git a/arch/arm64/include/asm/hw_breakpoint.h b/arch/arm64/include/asm/hw_breakpoint.h
->> index bd81cf17744a..63c21b515647 100644
->> --- a/arch/arm64/include/asm/hw_breakpoint.h
->> +++ b/arch/arm64/include/asm/hw_breakpoint.h
->> @@ -75,13 +75,6 @@ static inline void decode_ctrl_reg(u32 reg,
->>  #define ARM_KERNEL_STEP_ACTIVE	1
->>  #define ARM_KERNEL_STEP_SUSPEND	2
->>  
->> -/*
->> - * Limits.
->> - * Changing these will require modifications to the register accessors.
->> - */
->> -#define ARM_MAX_BRP		16
->> -#define ARM_MAX_WRP		16
->> -
->>  /* Virtual debug register bases. */
->>  #define AARCH64_DBG_REG_BVR	0
->>  #define AARCH64_DBG_REG_BCR	(AARCH64_DBG_REG_BVR + ARM_MAX_BRP)
->> diff --git a/arch/arm64/include/uapi/asm/ptrace.h b/arch/arm64/include/uapi/asm/ptrace.h
->> index 0f39ba4f3efd..8683f541a467 100644
->> --- a/arch/arm64/include/uapi/asm/ptrace.h
->> +++ b/arch/arm64/include/uapi/asm/ptrace.h
->> @@ -99,6 +99,14 @@ struct user_fpsimd_state {
->>  	__u32		__reserved[2];
->>  };
->>  
->> +/*
->> + * Maximum number of breakpoint and watchpoint registers
->> + * on the platform. These macros get used both in kernel
->> + * and user space as well.
->> + */
->> +#define ARM_MAX_BRP		16
->> +#define ARM_MAX_WRP		16
->> +
->>  struct user_hwdebug_state {
->>  	__u32		dbg_info;
->>  	__u32		pad;
->> @@ -106,7 +114,7 @@ struct user_hwdebug_state {
->>  		__u64	addr;
->>  		__u32	ctrl;
->>  		__u32	pad;
->> -	}		dbg_regs[16];
->> +	}		dbg_regs[ARM_MAX_BRP];	/* Or ARM_MAX_WRP */
->>  };
->>  
->>  /* SVE/FP/SIMD state (NT_ARM_SVE & NT_ARM_SSVE) */
->> diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
->> index 722ac45f9f7b..9bc51682713d 100644
->> --- a/arch/arm64/kernel/hw_breakpoint.c
->> +++ b/arch/arm64/kernel/hw_breakpoint.c
->> @@ -981,6 +981,15 @@ static int __init arch_hw_breakpoint_init(void)
->>  {
->>  	int ret;
->>  
->> +	/*
->> +	 * Maximum supported breakpoint and watchpoint registers must
->> +	 * always be the same - regardless of actual register numbers
->> +	 * found on a given platform. This is because the user facing
->> +	 * ptrace structure 'user_hwdebug_state' actually depends on
->> +	 * these macros to be the same.
->> +	 */
->> +	BUILD_BUG_ON(ARM_MAX_BRP != ARM_MAX_WRP);
+> On some large machines with a high number of CPUs running a 64K pagesize
+> kernel, we found that the 'RES' field is always 0 displayed by the top
+> command for some processes, which will cause a lot of confusion for users.
 > 
-> Sorry, but I don't understand why this patch is an improvement over what
-> we have.
-This is an improvement because
+>     PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+>  875525 root      20   0   12480      0      0 R   0.3   0.0   0:00.08 top
+>       1 root      20   0  172800      0      0 S   0.0   0.0   0:04.52 systemd
+> 
+> The main reason is that the batch size of the percpu counter is quite large
+> on these machines, caching a significant percpu value, since converting mm's
+> rss stats into percpu_counter by commit f1a7941243c1 ("mm: convert mm's rss
+> stats into percpu_counter"). Intuitively, the batch number should be optimized,
+> but on some paths, performance may take precedence over statistical accuracy.
+> Therefore, introducing a new interface to add the percpu statistical count
+> and display it to users, which can remove the confusion. In addition, this
+> change is not expected to be on a performance-critical path, so the modification
+> should be acceptable.
+> 
+> Fixes: f1a7941243c1 ("mm: convert mm's rss stats into percpu_counter")
 
-- user_hwdebug_state.dbg_regs[16] is hard coded for size without context
-  requiring explicit sync up when ARM_MAX_WRP/BRP changes to 64 later on
-  with FEAT_Debugv8p9. Defining the array size in terms of ARM_MAX_WRP/
-  BRP provides required context and also avoids the need for an explicit
-  hard coded sync up when those macros change.
+Three years ago.
 
-- user_hwdebug_state.dbg_regs[16] gets used both for breakpoint registers
-  and watchpoint registers. Hence there is an inherent assumption that
-  ARM_MAX_BRP == ARM_MAX_WRP which should be ensured with a corresponding
-  assert.
+> Tested-by Donet Tom <donettom@linux.ibm.com>
+> Reviewed-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
+> Tested-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
+> Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
+> Acked-by: SeongJae Park <sj@kernel.org>
+> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+
+Thanks, I added cc:stable to this.
+
