@@ -1,403 +1,171 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2056.outbound.protection.outlook.com [40.107.220.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F64623182E;
-	Fri, 30 May 2025 15:32:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.56
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748619172; cv=fail; b=bekMkkTB1XQLhoSsprLS4Eoztvi6KBLLXHfSl2POhqic1XLvP8RJMj/2haX2oyEpVKt9nLucMvX6HTT6pPTivMSoR3M8+60o4P9WvMnvHdYcKO0+0IxQQC1qFFJEp0j+sFA6uhTh6Ff5ZDVLOZcapR6J7+3i1irneloPxxJITKg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748619172; c=relaxed/simple;
-	bh=1ZMtpaoGVi0B3LsE1zeazNWFmpFBh4/s7jLs5/fbN4c=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=WZ7OcikKZRWj+LXft6V52/cxolV28yU5hffzYJOJlBSC+skNy+U9oPe3TG95Ls9aWJI7TB5tsZMlDqrY3DGDP2oiM3QISFsnjK6G2gqIwXRmaY/qTxzNHqXKxFmxWNEb0SNj+adklLHQrTEE5mIruxHxMzlITucoGK4weeQFVsY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=bhIqo7QZ; arc=fail smtp.client-ip=40.107.220.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altera.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD2E19DF41;
+	Fri, 30 May 2025 15:35:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748619362; cv=none; b=r4YF50njjFI4lqkEMrBJ3a6tYUdas+Y5/MMzNSCy6jhRXN5BLY06q875GrGcHn7CGZBzBkeU0SEYkzkotJNll5YbPtQkKC+O6zCfhbz1BYYvPk6lUho9v23RRlvrBtZ8g+Oo9SDg1EOWVUAOnUQ+GuCa0RvIroLsuYSryyGQa3Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748619362; c=relaxed/simple;
+	bh=lGI7Ml61Bx/0vKqhUITDjPdL59+Gud4yiPqB0I/lT6Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z6CFWlOh76du19A78Gn2n48CME/STl4qKNOTcCtHQuFk7J4eobnywcIshSR1cV0Rf4u3tXQ4iOy9axfZNqVF+vymXw6g1AuliUVKFSyZCEv2Ym8re9SHaGE5+8kiPzhiqC5euwqK77oBN18TlqHlvSQXt/NiTnIyuvEc2xXE7CM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NZz0K2va; arc=none smtp.client-ip=209.85.210.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="bhIqo7QZ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZFELXhPLB7JDB2L4ikgn4aNDxbQT/cbEHvvS97MjZJREqGKsBVdgwgKj/ikf8P5rAQHDWHyWPI9l4NJ4xbWeb7gR5bO9c2u3BmiN2xIAVTY2vcuFQnQKxfb6p1ACfU1z+it4jDtDyG2/HXlBmNdkTJQBWOW+kJ5kGK/KnRryA+b9V4KJ2MNvv01FXcHIBsImjrT7ZQbEKDXJR6Au+Q68yrThp0XthFBHxQrwZ4mIkG6VazuTOQB7L3zQkxFHkOvheRzL65tKo431i10OV7oTV50n0fZl1TO+CnuXzx2QBn2Vabb7iEE3QEc/WtqplcBN+mbIpPZYN+Zn8zO/MnRSbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PRcaumTjv7pyTCE7O1y8g+p3ac/vuGWzQY05TZ1gpYI=;
- b=ZWollFdssvxmCc9gRe7MmSQAoX/4YZGAN5UHxlRg7u5mYpx35iZYzUFCR9TxxGn4w65lWBErhIIkoiZ3WdLSWflJ8YRqlDS7q7noaEUFr2n7InGjkoYUwpA8xY9AQ7oc/irMlu2QjYglrRIlhDBKaGpuGvzkSYl00cC07JhTvs8QbqPN6i+ngWRwj8pjw4lZFQPA529E0auTX2CRhqAUwUzsFycCuTi/CJPmOprgPTVcpAF5GXT2pZ+CUZqpDn3+otS8aN3R+S0qhrgSLgFDCsnL5atG6x0O3JJSX3lxLnQS9CNZGk6d8/fRpK+3Vwr5nVFNSD+Wphea04WYcRQCzA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=altera.com; dmarc=pass action=none header.from=altera.com;
- dkim=pass header.d=altera.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altera.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PRcaumTjv7pyTCE7O1y8g+p3ac/vuGWzQY05TZ1gpYI=;
- b=bhIqo7QZd0FTae0F3bgA2snMad3YntOXGRZevfzcbheXrvFh204w4zEM+gwdwwtpdIWghISBXQBZjI7q6l+VyrijaZkX9wphS4xIigoVuPBplM7IqUG+qKBatMZcSoEiK4uEN7QKEhta+4PjHXUK9r1lfJh+hnAZyxEXiYSyamB9atgk4Hzqzyc4TmzWyw+s+ETOSnEsKvI9wT0cn1dcDlKNH7fpPWyNpDvJKRlkffRPG5nT0ax0wZqJJSOCSIViAwMMJ27zcW7hySLYfiuDmsAw75+2quq4hcE/t4EQC9QZNgZEVOxoO8ceOzfq1NcScesGSGKf50HNrTWwhEaVOg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=altera.com;
-Received: from BYAPR03MB3461.namprd03.prod.outlook.com (2603:10b6:a02:b4::23)
- by DM4PR03MB6126.namprd03.prod.outlook.com (2603:10b6:5:395::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.27; Fri, 30 May
- 2025 15:32:48 +0000
-Received: from BYAPR03MB3461.namprd03.prod.outlook.com
- ([fe80::706b:dd15:bc81:313c]) by BYAPR03MB3461.namprd03.prod.outlook.com
- ([fe80::706b:dd15:bc81:313c%4]) with mapi id 15.20.8769.029; Fri, 30 May 2025
- 15:32:48 +0000
-From: Matthew Gerlach <matthew.gerlach@altera.com>
-To: andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	maxime.chevallier@bootlin.com,
-	richardcochran@gmail.com,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Mun Yew Tham <mun.yew.tham@altera.com>,
-	Matthew Gerlach <matthew.gerlach@altera.com>
-Subject: [PATCH v3] dt-bindings: net: Convert socfpga-dwmac bindings to yaml
-Date: Fri, 30 May 2025 08:32:41 -0700
-Message-Id: <20250530153241.8737-1-matthew.gerlach@altera.com>
-X-Mailer: git-send-email 2.35.3
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BY3PR03CA0019.namprd03.prod.outlook.com
- (2603:10b6:a03:39a::24) To BYAPR03MB3461.namprd03.prod.outlook.com
- (2603:10b6:a02:b4::23)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NZz0K2va"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-72c27166ab3so1584343a34.1;
+        Fri, 30 May 2025 08:35:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748619356; x=1749224156; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ECfivYZ85+kkXqokUDM85sc8NAUi1hs55XP9K+BfhRo=;
+        b=NZz0K2vaZoOZyXfqBzXZy2O+vDBsf12eDccEJUM/5edPKqKhccKcBNceD7BAts/nwY
+         u1Yic2nZ0/n+/BXGFBKamuDf9VqlLajAo/y5eZiFsiBF0jLicg+AbSHp05DPSPpCvusM
+         WVv5XByMUtewc9Gp55tJmDo8uG2FX/z4dNUBDJr/3QeontE0N8LTFh/V+1tqBTvl7Mjw
+         NHZ6s9yNM7PqFRTRpbaUdWiwi5MGLmc+Dzspez2MbUGZtSCB3L0/yXIQGVK+Vw8Ky9hc
+         eHk8NgKelosoNJeO/E4OR0nghEoSKPpSlg/PojKGET9UsywV0Zjgcer/XbI3E7IXZy0e
+         iH+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748619356; x=1749224156;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ECfivYZ85+kkXqokUDM85sc8NAUi1hs55XP9K+BfhRo=;
+        b=mAaMzoxTeKN1yEoVxie/cKAd/qPJi87y/tVgOshvmqXB6KwWzc7TvIKEz93ZJuCTua
+         dXIY/h0yzLJrH5y7F8h/URV+5B8I+j3kOYrdoD/ADjf2tKoxYaYdSvnsuNBgQTElc4aq
+         C2lF5ZiIzJ05cqIH1N4uL/qR12wc33KFMCK3+0gtCyOaC/brbWaY4Tcnz7theOb9MvS4
+         d5NX44q5g9+FTPMp01P8PcgYnz74MTSBOm/RafXjyp5NFoj+oyrlI8Az6uWP6P/FGMqN
+         ydd6XRhDgNSjK665QVa0kv7MQlsoPTFw4Fwf5TTL5E4zqzzk8jojIwsytqtmviUVQbLK
+         jxKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW22oJTclBLin/ZdKphG1dwr+R8SGXTqpaFhDF7HuI6KZx/yj32mzRj50dk/4LYeyrMnHFSW+rzbkgEN15P91WSlOsf@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoErYclaSaGxxOb+2ywiwYyeFBXkOp0TJFwKJEkli0y7PGIM8+
+	rikJhgdx0CvyO2D/KeDqiTZxItX2R8XljwoseKKwGhry7YrZqs7NlTqA
+X-Gm-Gg: ASbGncvJoq/eKQ4cwcYvJzIggzC/nPSecXVbX2IT+qHS9aT9kS6wQ+w8b/OiEr+z7K/
+	qP+sOJltSXAHQdDZFzRSCHtlpVtUaq619bnZs5zmsXJkbAFbcD5HM0qOvh60vl6ZXludJnCVHE+
+	mSIH7oQ42z+b/WWk7KfF6I0Ioxd3R4oLtfy5Y1thHTLKCSCSCGuY5HhTyieN+TqazjeKobFo5q6
+	w6Sb23DaT/AK7w6xmAn9JGtGqu6pPYTVCCnN7z4Zugp1vFii6UQFf9OuVsAKBrjn2OIa3R+IbP8
+	zKIpnEjS4P/dnJdq0AZAEa0XJ/7OAa3PswvVgTf32nuCRmHlejaxeEf3zporyHsp2/lVYCNU9QK
+	7SxTt+E/YTtt81NdWYthc+m0I0D9L4NRN1Dr0
+X-Google-Smtp-Source: AGHT+IF3vqo9sjX+GZp3WsEU1iC+kTjPy0F5RxoHM7U3v6JS34r2Xh1CgHa6Mth4nj0/KB6o97Yaag==
+X-Received: by 2002:a05:6830:6b07:b0:72b:a5e0:f76 with SMTP id 46e09a7af769-736ecdde735mr1508551a34.4.1748619356620;
+        Fri, 30 May 2025 08:35:56 -0700 (PDT)
+Received: from [192.168.1.7] (syn-067-048-091-116.res.spectrum.com. [67.48.91.116])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-735af9bc906sm622694a34.48.2025.05.30.08.35.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 May 2025 08:35:56 -0700 (PDT)
+Message-ID: <04ba20e6-ce2c-4e47-8884-c563b931cd66@gmail.com>
+Date: Fri, 30 May 2025 10:35:54 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR03MB3461:EE_|DM4PR03MB6126:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2f5b49f2-7752-4922-ec19-08dd9f8f3b12
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?eb5E1p8WbJtFcu0uPPpwUdTnZNI2CO3yLaF2If2pTzK9YyziF7VcgWrWgr9o?=
- =?us-ascii?Q?e3L2HFBTooGvqBbEvUm6aMQbMzMDCwjAJlKYVcxeT0tMWZuu7G2BJNdYaqS8?=
- =?us-ascii?Q?Cbi7IbGT1o7ENz5fpswDrhj2CcbOmDZKJhagWS8XS0uHt1eh6y4Nn/rBninD?=
- =?us-ascii?Q?rABnsFgJXUd7PUS2/eGTYZpsX7aPsGD+YAzBvfAP2EICJ0/MdufoatKNo4/1?=
- =?us-ascii?Q?1yl/CIoeIA/qEZ697hvApQqzWRQ7PiL2EhL1Y+lrNr1RM+wm6QSF729XjKlw?=
- =?us-ascii?Q?+K3Ln1gpISIk67mT2uheFUmG0B12agx6mhlRrkFEj1RE5mgyY52JxcCOmqQQ?=
- =?us-ascii?Q?dz8Ul3jhpNu1Jm5Vqz9M5bnqfQeiz7Eo6VpqHOBxtWPBmM4WzOwbqfXCf8H6?=
- =?us-ascii?Q?gqxP4aXGf5iJ6za4Dd10uhd1KNpACru2pAkmKBHx+4RE3qbJvFu8dT0waHmH?=
- =?us-ascii?Q?j5dPlEHqljDj72Gf/ysJYiH21ibkkhfUU7nyDzjHov4NK10oe910m2u8UAOF?=
- =?us-ascii?Q?TpfhSOwfav/GM580bGSJM2Gc6pof9G8SxITXTzG4FHkzUh8xNOHRPVVszdcN?=
- =?us-ascii?Q?aONvkn6KYRnM3qjOmOyLNqMOiNQB4I2ibWpB/YcK80IoS6Ehnhr8b3J1axor?=
- =?us-ascii?Q?N1bFhJysxNBR6uuV9Ps/vg23/MLhXDhnCpPfnCS+58OcV86XheWJF8ADPZgv?=
- =?us-ascii?Q?EfqWbpa4tvWKMwJB1vd/swbPTxxBvimA8HF10Ea3XPwdfkf4SAaif0TZZD6r?=
- =?us-ascii?Q?6OrBs2AYiTaAYwJejig2QEZMU+hMk/rV5hFERvipmcFwuFBkHDK9+Xdpbh3T?=
- =?us-ascii?Q?N8c++8v6nwYqrSYSGJ6SFXe30WlPqjNaULjmhmlNjYUeu20vSB03cSHfDXUm?=
- =?us-ascii?Q?gSUZrfJtLZEDQhNImEnNpV0ZnaEFU/bgQvKsxWNKYpiyBKe0RKQg5lTKlqsi?=
- =?us-ascii?Q?leoQ4K8BSpgLMRgSKtO53tdnUjNNy+v2gDCydoj6nby5Elw9CCNba2kgrfjF?=
- =?us-ascii?Q?c/oaneCbjZh96ZYfKsUQd/ue6lOyCui97AmaYdIDNH7Tppwaw7sPPCH7eizz?=
- =?us-ascii?Q?6QUFU8FCiPBcU7nGuZ/99idVdaNG3+iqg2QmAL4mQInqX6M+fo82Xk7OaahX?=
- =?us-ascii?Q?TE/U4o68WSwzSQn66Wq2WhlrfuxuYR8nG5mZZXj5KFsOGivIYKiyksjYE9IP?=
- =?us-ascii?Q?12dNikq9eY+lx7b0mVpZvJQiwpKU1fT0bR/JuBmmcwpC8tyf35QOZCIAu5dP?=
- =?us-ascii?Q?2yohZU45HO5iRSaOPxdZBE+u//asx2Bc+4tVgcJbB9EwJsL9FynvjLnAQ4MN?=
- =?us-ascii?Q?kGMXXNvtQ8xLAcXijNX6Kr11AfDiskBFevagOQgc0Iyly2A+lkGYBVzQzKq8?=
- =?us-ascii?Q?g9li1zdRzTOTbpgcz16fasuc2ElUzszDG5d39+KsM2NLjCUIVw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3461.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?UfyHe2KClBA6GvRWyBfw3t0vafeGjkfANqYk65mmBUCknJRjIrFdZXxVzHwi?=
- =?us-ascii?Q?MzZYwVzUBYgHW0MG1Lc/4KaocDcY8k45qYhZfsYMINzGaphf7zheW+Spdq/a?=
- =?us-ascii?Q?nKHsD82lkOQ2AqM8AP15tIe0yKWEfKRjJCoXsmaFDjlF2vBlPFoB8UFrFQU3?=
- =?us-ascii?Q?en3vjIzagg+LkftTdWnPTu516lmE7F7xIM6hxz5ZFzZjNe5m45aF4Qzw3NaX?=
- =?us-ascii?Q?gfq9+LRkGBtHezSkZIDIO+xSffxjER/YNMdpR6st4J1YKfKniaxdyMQCPoNo?=
- =?us-ascii?Q?E65eYRIiITwDEaBacFEEeuoQeogU987Mx7veYuLyySNpMbHm3cZlk2fvY8O2?=
- =?us-ascii?Q?YUGrmaV367Rh2W5jfNqzUWVo6f+4m7dkLjeuiZN+qyOxTGTvrPGshDVqjgJH?=
- =?us-ascii?Q?gUfMgA2LdRK6oY11HiuzqhMC2yDCApBDegSPDj8Lp9IyDcVO+IY4o/ZE2I2b?=
- =?us-ascii?Q?Qi7iJ9yI0q/kKSOuDoeZZ99Nj0Mem2w9O0zpPpaAPVNnuLm3sKr09HqjKbrd?=
- =?us-ascii?Q?Mg0acLaQy5z0SlbSnVZKPwX1pemKnTfzxv/lImHiJh+wjMCSpP6QAyA2aElH?=
- =?us-ascii?Q?wVzSFJJ5k7eJBLTbmTEZS4/p0SXeo/LqQXk26/yTSeuCvIvPvJXGmVzHF3lt?=
- =?us-ascii?Q?TVLnPvlJ8WY3+D9qDa/OcZ+yRaLlBmRBQXkJcRIsfcTpM7qJBxGrCj6o65rw?=
- =?us-ascii?Q?g3si24t1CDGU1oaZB1nCJMa2O1UjR4gHnJHZnjP/CBNSu4X0B9DwKcsN+2hX?=
- =?us-ascii?Q?WzeQRs/FRihe79joMnkXZwJg2R3Qpa4JKIJh5UD/L2BqS9uGlwHZxLIE1KY/?=
- =?us-ascii?Q?C5G5jwmI1bgjKUSWvdq4KuzX44X1KVw3wAJmuIPWjsYjphAbpjwub/bU9//U?=
- =?us-ascii?Q?dGVtcSji6V3kPIUxPHa7I92pobP6Rr1YarannK2tPTI2ZNabuwbjijEXNVHh?=
- =?us-ascii?Q?6IA6P5dgR3d5QovT5HJn3CnucYLH18GBv/1Ws5ZI8RRVdvaBjtoPs5eFHhhE?=
- =?us-ascii?Q?LdmUtRrgK1vh1IKkE0zXrvtTrd4TOd28LkTNBBUZz7kmswirJCjaVQcUNNKI?=
- =?us-ascii?Q?QKhlT4ilkqaC7gNkiNKavF+efEFzi4rkcxLAbzwOPoRuGc1hMhGD7y7sCX73?=
- =?us-ascii?Q?65ETsHNfHwEpo6lmzGoWtdUxUA3ENFMg229ht9DgmzNjgRngRAdaAdyxTBYZ?=
- =?us-ascii?Q?cGqq8lNIZbH3GdANWSWZJPzL7QnRfKM4aUNahl/6/dW/gvGRc1V0NR9P++Mb?=
- =?us-ascii?Q?fruPOYxbkJ0FF3Pz/N8n5NmFPXRkm9ZBU5IPIHTbWYl2CNI3EdakYQLlB2SB?=
- =?us-ascii?Q?B6VGUf7CuEZM47PnvEv3rwIrrJo0QSlwwSTyzJ2sAjJqdPj4PFIaNTTcAazY?=
- =?us-ascii?Q?Kl293QaXhUd0bkDCICkzf7hx5k4uwWCnpjaeALyhKreRIU6xpkHGkOptfxhc?=
- =?us-ascii?Q?GBayfmsRne1cE+Ep2xC1ECMsyUXD1hwcB9n5oXOndFG+jyzefSDootqvJaYt?=
- =?us-ascii?Q?VflZvI5JigXxU114fKOgVWw0zxsNo38UacPmvq0CE89tu262BNXipTaFuNz2?=
- =?us-ascii?Q?QWgZ9FQRshvBAtQX3sKq/28XSPXF00WQGMIGS+HOkILkat4uswvd3qbAXcsG?=
- =?us-ascii?Q?7w=3D=3D?=
-X-OriginatorOrg: altera.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2f5b49f2-7752-4922-ec19-08dd9f8f3b12
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR03MB3461.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 15:32:48.1243
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fbd72e03-d4a5-4110-adce-614d51f2077a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ibjwhgo8gRcPYxxBDu1FCPvS03c0dbN1hKI0zwWO6he/jdwMxJTl2vZM40SfshZXgVSFekxs2n2L5/Zuqye8BqHPWKcbBFgWz1IaljfnjAg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR03MB6126
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/4] platform/x86: dell_rbu: Fix list usage
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+ platform-driver-x86@vger.kernel.org
+References: <20250529202758.8440-1-stuart.w.hayes@gmail.com>
+ <20250529202758.8440-3-stuart.w.hayes@gmail.com>
+ <d7adf2ca-0cd7-99eb-9be1-a2b37fa8445e@linux.intel.com>
+ <c213733e-e907-40cd-ab60-ec8fa0b15e4d@gmail.com>
+ <54523dfb-e1ff-fa55-0628-0a8377457f0d@linux.intel.com>
+Content-Language: en-US
+From: stuart hayes <stuart.w.hayes@gmail.com>
+In-Reply-To: <54523dfb-e1ff-fa55-0628-0a8377457f0d@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-From: Mun Yew Tham <mun.yew.tham@altera.com>
+On 5/30/2025 10:25 AM, Ilpo Järvinen wrote:
+> On Fri, 30 May 2025, stuart hayes wrote:
+> 
+>> On 5/30/2025 2:54 AM, Ilpo Järvinen wrote:
+>>> On Thu, 29 May 2025, Stuart Hayes wrote:
+>>>
+>>>> Stop using an entire struct packet_data just for the embedded list_head,
+>>>> and fix usage of that list_head.
+>>>>
+>>>> Fixes: d19f359fbdc6 ("platform/x86: dell_rbu: don't open code
+>>>> list_for_each_entry*()")
+>>>> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+>>>
+>>> Isn't this just refactor so Fixes tag for this commit is not warranted?
+>>>
+>>
+>> No. The patch that this fixes had converted the driver to use
+>> list_for_each_entry*() to loop through the packet list instead of a while
+>> loop. But it passed (&packet_data_head.list)->next to list_for_each_entry*()
+>> instead of the list head itself.
+>>
+>> That resulted in to issues. In the function that prints the packets, it would
+>> start with the wrong packet, and in the function that deletes the packets, it
+>> would get a null pointer dereference when it tried to zero out the data
+>> associated with the packet that held the actual list head.
+> 
+> Oh, I see that difference now. Good catch.
+> 
+> However, that also means the ->next part is wrong and there are two
+> independent changes here, one that fixes this ->next problem and then the
+> refactoring of packet_data_head to packet_data_list?
+> 
 
-Convert the bindings for socfpga-dwmac to yaml.
+Correct. Do you want those as two separate patches?
 
-Signed-off-by: Mun Yew Tham <mun.yew.tham@altera.com>
-Signed-off-by: Matthew Gerlach <matthew.gerlach@altera.com>
----
-v3:
- - Add missing supported phy-modes.
-
-v2:
- - Add compatible to required.
- - Add descriptions for clocks.
- - Add clock-names.
- - Clean up items: in altr,sysmgr-syscon.
- - Change "additionalProperties: true" to "unevaluatedProperties: false".
- - Add properties needed for "unevaluatedProperties: false".
- - Fix indentation in examples.
- - Drop gmac0: label in examples.
- - Exclude support for Arria10 that is not validating.
----
- .../bindings/net/socfpga,dwmac.yaml           | 153 ++++++++++++++++++
- .../devicetree/bindings/net/socfpga-dwmac.txt |  57 -------
- 2 files changed, 153 insertions(+), 57 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/socfpga,dwmac.yaml
- delete mode 100644 Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-
-diff --git a/Documentation/devicetree/bindings/net/socfpga,dwmac.yaml b/Documentation/devicetree/bindings/net/socfpga,dwmac.yaml
-new file mode 100644
-index 000000000000..29dad0b58e1a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/socfpga,dwmac.yaml
-@@ -0,0 +1,153 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/socfpga,dwmac.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Altera SOCFPGA SoC DWMAC controller
-+
-+maintainers:
-+  - Matthew Gerlach <matthew.gerlach@altera.com>
-+
-+description:
-+  This binding describes the Altera SOCFPGA SoC implementation of the
-+  Synopsys DWMAC for the Cyclone5, Arria5, Stratix10, and Agilex7 families
-+  of chips.
-+  # TODO: Determine how to handle the Arria10 reset-name, stmmaceth-ocp, that
-+  # does not validate against net/snps,dwmac.yaml.
-+
-+select:
-+  properties:
-+    compatible:
-+      oneOf:
-+        - items:
-+            - const: altr,socfpga-stmmac
-+            - const: snps,dwmac-3.70a
-+            - const: snps,dwmac
-+        - items:
-+            - const: altr,socfpga-stmmac-a10-s10
-+            - const: snps,dwmac-3.74a
-+            - const: snps,dwmac
-+
-+  required:
-+    - compatible
-+    - altr,sysmgr-syscon
-+
-+properties:
-+  clocks:
-+    minItems: 1
-+    items:
-+      - description: GMAC main clock
-+      - description:
-+          PTP reference clock. This clock is used for programming the
-+          Timestamp Addend Register. If not passed then the system
-+          clock will be used and this is fine on some platforms.
-+
-+  clock-names:
-+    minItems: 1
-+    maxItems: 2
-+    contains:
-+      enum:
-+        - stmmaceth
-+        - ptp_ref
-+
-+  iommus:
-+    maxItems: 1
-+
-+  phy-mode:
-+    enum:
-+      - gmii
-+      - mii
-+      - rgmii
-+      - rgmii-id
-+      - rgmii-rxid
-+      - rgmii-txid
-+      - sgmii
-+      - 1000base-x
-+
-+  rxc-skew-ps:
-+    description: Skew control of RXC pad
-+
-+  rxd0-skew-ps:
-+    description: Skew control of RX data 0 pad
-+
-+  rxd1-skew-ps:
-+    description: Skew control of RX data 1 pad
-+
-+  rxd2-skew-ps:
-+    description: Skew control of RX data 2 pad
-+
-+  rxd3-skew-ps:
-+    description: Skew control of RX data 3 pad
-+
-+  rxdv-skew-ps:
-+    description: Skew control of RX CTL pad
-+
-+  txc-skew-ps:
-+    description: Skew control of TXC pad
-+
-+  txen-skew-ps:
-+    description: Skew control of TXC pad
-+
-+  altr,emac-splitter:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      Should be the phandle to the emac splitter soft IP node if DWMAC
-+      controller is connected an emac splitter.
-+
-+  altr,f2h_ptp_ref_clk:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      Phandle to Precision Time Protocol reference clock. This clock is
-+      common to gmac instances and defaults to osc1.
-+
-+  altr,gmii-to-sgmii-converter:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      Should be the phandle to the gmii to sgmii converter soft IP.
-+
-+  altr,sysmgr-syscon:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description:
-+      Should be the phandle to the system manager node that encompass
-+      the glue register, the register offset, and the register shift.
-+      On Cyclone5/Arria5, the register shift represents the PHY mode
-+      bits, while on the Arria10/Stratix10/Agilex platforms, the
-+      register shift represents bit for each emac to enable/disable
-+      signals from the FPGA fabric to the EMAC modules.
-+    items:
-+      - items:
-+          - description: phandle to the system manager node
-+          - description: offset of the control register
-+          - description: shift within the control register
-+
-+patternProperties:
-+  "^mdio[0-9]$":
-+    type: object
-+
-+allOf:
-+  - $ref: snps,dwmac.yaml#
-+
-+unevaluatedProperties: false
-+
-+examples:
-+
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    soc {
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        ethernet@ff700000 {
-+            compatible = "altr,socfpga-stmmac", "snps,dwmac-3.70a",
-+            "snps,dwmac";
-+            altr,sysmgr-syscon = <&sysmgr 0x60 0>;
-+            reg = <0xff700000 0x2000>;
-+            interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
-+            interrupt-names = "macirq";
-+            mac-address = [00 00 00 00 00 00]; /* Filled in by U-Boot */
-+            clocks = <&emac_0_clk>;
-+            clock-names = "stmmaceth";
-+            phy-mode = "sgmii";
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-deleted file mode 100644
-index 612a8e8abc88..000000000000
---- a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-+++ /dev/null
-@@ -1,57 +0,0 @@
--Altera SOCFPGA SoC DWMAC controller
--
--This is a variant of the dwmac/stmmac driver an inherits all descriptions
--present in Documentation/devicetree/bindings/net/stmmac.txt.
--
--The device node has additional properties:
--
--Required properties:
-- - compatible	: For Cyclone5/Arria5 SoCs it should contain
--		  "altr,socfpga-stmmac". For Arria10/Agilex/Stratix10 SoCs
--		  "altr,socfpga-stmmac-a10-s10".
--		  Along with "snps,dwmac" and any applicable more detailed
--		  designware version numbers documented in stmmac.txt
-- - altr,sysmgr-syscon : Should be the phandle to the system manager node that
--   encompasses the glue register, the register offset, and the register shift.
--   On Cyclone5/Arria5, the register shift represents the PHY mode bits, while
--   on the Arria10/Stratix10/Agilex platforms, the register shift represents
--   bit for each emac to enable/disable signals from the FPGA fabric to the
--   EMAC modules.
-- - altr,f2h_ptp_ref_clk use f2h_ptp_ref_clk instead of default eosc1 clock
--   for ptp ref clk. This affects all emacs as the clock is common.
--
--Optional properties:
--altr,emac-splitter: Should be the phandle to the emac splitter soft IP node if
--		DWMAC controller is connected emac splitter.
--phy-mode: The phy mode the ethernet operates in
--altr,sgmii-to-sgmii-converter: phandle to the TSE SGMII converter
--
--This device node has additional phandle dependency, the sgmii converter:
--
--Required properties:
-- - compatible	: Should be altr,gmii-to-sgmii-2.0
-- - reg-names	: Should be "eth_tse_control_port"
--
--Example:
--
--gmii_to_sgmii_converter: phy@100000240 {
--	compatible = "altr,gmii-to-sgmii-2.0";
--	reg = <0x00000001 0x00000240 0x00000008>,
--		<0x00000001 0x00000200 0x00000040>;
--	reg-names = "eth_tse_control_port";
--	clocks = <&sgmii_1_clk_0 &emac1 1 &sgmii_clk_125 &sgmii_clk_125>;
--	clock-names = "tse_pcs_ref_clk_clock_connection", "tse_rx_cdr_refclk";
--};
--
--gmac0: ethernet@ff700000 {
--	compatible = "altr,socfpga-stmmac", "snps,dwmac-3.70a", "snps,dwmac";
--	altr,sysmgr-syscon = <&sysmgr 0x60 0>;
--	reg = <0xff700000 0x2000>;
--	interrupts = <0 115 4>;
--	interrupt-names = "macirq";
--	mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
--	clocks = <&emac_0_clk>;
--	clock-names = "stmmaceth";
--	phy-mode = "sgmii";
--	altr,gmii-to-sgmii-converter = <&gmii_to_sgmii_converter>;
--};
--- 
-2.35.3
+>>>> ---
+>>>>    drivers/platform/x86/dell/dell_rbu.c | 10 +++++-----
+>>>>    1 file changed, 5 insertions(+), 5 deletions(-)
+>>>>
+>>>> diff --git a/drivers/platform/x86/dell/dell_rbu.c
+>>>> b/drivers/platform/x86/dell/dell_rbu.c
+>>>> index 7b019fb72e86..c03d4d55fcc1 100644
+>>>> --- a/drivers/platform/x86/dell/dell_rbu.c
+>>>> +++ b/drivers/platform/x86/dell/dell_rbu.c
+>>>> @@ -77,14 +77,14 @@ struct packet_data {
+>>>>    	int ordernum;
+>>>>    };
+>>>>    -static struct packet_data packet_data_head;
+>>>> +static struct list_head packet_data_list;
+>>>>      static struct platform_device *rbu_device;
+>>>>    static int context;
+>>>>      static void init_packet_head(void)
+>>>>    {
+>>>> -	INIT_LIST_HEAD(&packet_data_head.list);
+>>>> +	INIT_LIST_HEAD(&packet_data_list);
+>>>>    	rbu_data.packet_read_count = 0;
+>>>>    	rbu_data.num_packets = 0;
+>>>>    	rbu_data.packetsize = 0;
+>>>> @@ -183,7 +183,7 @@ static int create_packet(void *data, size_t length)
+>>>> __must_hold(&rbu_data.lock)
+>>>>      	/* initialize the newly created packet headers */
+>>>>    	INIT_LIST_HEAD(&newpacket->list);
+>>>> -	list_add_tail(&newpacket->list, &packet_data_head.list);
+>>>> +	list_add_tail(&newpacket->list, &packet_data_list);
+>>>>      	memcpy(newpacket->data, data, length);
+>>>>    @@ -292,7 +292,7 @@ static int packet_read_list(char *data, size_t *
+>>>> pread_length)
+>>>>    	remaining_bytes = *pread_length;
+>>>>    	bytes_read = rbu_data.packet_read_count;
+>>>>    -	list_for_each_entry(newpacket, (&packet_data_head.list)->next, list) {
+>>>> +	list_for_each_entry(newpacket, &packet_data_list, list) {
+>>>>    		bytes_copied = do_packet_read(pdest, newpacket,
+>>>>    			remaining_bytes, bytes_read, &temp_count);
+>>>>    		remaining_bytes -= bytes_copied;
+>>>> @@ -315,7 +315,7 @@ static void packet_empty_list(void)
+>>>>    {
+>>>>    	struct packet_data *newpacket, *tmp;
+>>>>    -	list_for_each_entry_safe(newpacket, tmp,
+>>>> (&packet_data_head.list)->next, list) {
+>>>> +	list_for_each_entry_safe(newpacket, tmp, &packet_data_list, list) {
+>>>>    		list_del(&newpacket->list);
+>>>>      		/*
+>>>>
+>>>
+>>
+> 
 
