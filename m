@@ -1,94 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CDB9C147;
-	Fri, 30 May 2025 02:30:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A5164A1D;
+	Fri, 30 May 2025 02:32:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748572253; cv=none; b=CNsyoDiG21FxOHp4xH4KsgNxI6ZhPqJckYGE+23CiPrxAoANpXNtU9koPv7nYk+Crfe/fdPU/5Gw8ScUFxwQ0FUHmOvURCjkrxdaWantJTLTdtHRre2p54jtMxwmtsMXJyX4sB6uhIaxZpZi4czEdiuCnxVJ/3PNovrKpQIKb7M=
+	t=1748572357; cv=none; b=CQoxf7xezzDI8BuRjm4T+iJ6ZshQJrJoHZPojjh4FK5BqQw7Eohnb4Q5ekSDFQEoPY2gWMeEJgG+inhxX5wsiEO0XrAcRCCEouY1rtYA0JLBBslz+nULnhYXt5MhaMUdxJHaS4m/OJRpeHDx8ZA1TDAZCKM39W9PK4A4Q4QJocw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748572253; c=relaxed/simple;
-	bh=78K/uRg12LAyCDBBxuqUJOtxtkUyuf3T7qNs8Ajqr1c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=arbbMN49Pj2zXOJmy9nBU3ezjMBLLDcNbqs402sOnQnzoeh4UwpdgGOQEahjEri3odBgtGUniKHpIipoJ6mt2+yr3MnBTtyH6LmMOXRShScUzPl+5caXC1fnaMTRSKY6yl0rU5+T7dug+jszrYMzFNiZhQiWsXmusopStbyqsKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dGsAMSae; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748572357; c=relaxed/simple;
+	bh=XNk7U7Io0evThCV3ya40+xcB4zMlUriEjwU5JF2v+y8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rXgnELJDDChehmVwpyGryG4Q1RfNbHTCBNJXPvcSod/VfmGPeplEIWLjSGxjc4LnEVYFN+2MtsMYz2tY29a2anltvPRnRNiaWWodCA50su3HBXeivihFEOLJZ/asOE/X2esFZBURXF9TgrXSzdaek9BLV+ooM5XbDLVw83WaBO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=R5cKHIYX; arc=none smtp.client-ip=115.124.30.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dGsAMSae"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D3B2C4CEE7;
-	Fri, 30 May 2025 02:30:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748572252;
-	bh=78K/uRg12LAyCDBBxuqUJOtxtkUyuf3T7qNs8Ajqr1c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dGsAMSae1+Fy/8DwH38881VMtRy90s/TjF3AjeZk+y8b2EpAimPc7MteEpTbhfz9+
-	 2mheFacNrNCa5WlNQCT5woXFswHoeIIYj/7q1nQZiB5fW8UMqOOmk2MRz1b4CquHgD
-	 sUJs/efjr4HX2QU3urc0MoTQFdBtHB6rkAFk7z7+S/nwi73zdAlalZbzK57+MovsFF
-	 +gt/QFCyLpKN4KtB1Hk7MQSSlmp30i7+Hnj0G0QIXiugyuUnUBaejnQHApDgn5rkbD
-	 HCn4AbEIWoP59+YIprel/r+tBcLUqfMm3qpcbPkB6ZO1iD3VrdlgfItVjcSy2+SuLh
-	 HJeyHopfO/qAg==
-Date: Thu, 29 May 2025 19:30:48 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, will@kernel.org,
-	catalin.marinas@arm.com, Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH] arm64: Disable LLD linker ASSERT()s for the time being
-Message-ID: <20250530023048.GA1491122@ax162>
-References: <20250529073507.2984959-2-ardb+git@google.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="R5cKHIYX"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1748572345; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=FnpZqDey5u3mslj2S0Hfd7m5wbIzCQtrpGZcOidM//Q=;
+	b=R5cKHIYX3wVyi1K1ybr5RTubE/BJEGgDJjDjvIfUGLpkgR2EV2vbMDMfRCJAkC+MM9ox7BvvTXoHUGX5pVusdb/9CWBuTnTh7IZ2wcSBsV8SHhs3U8fGU4dKUmNkGyPBirnyoVnL5jsbvM1PJruTecqslBne2SkSrVLzqfQT7XQ=
+Received: from 30.74.144.115(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WcJeWDE_1748572344 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 30 May 2025 10:32:25 +0800
+Message-ID: <6132583a-1754-4eb1-9b84-19b55cac176c@linux.alibaba.com>
+Date: Fri, 30 May 2025 10:32:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250529073507.2984959-2-ardb+git@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] mm: shmem: disallow hugepages if the system-wide
+ shmem THP sysfs settings are disabled
+To: Zi Yan <ziy@nvidia.com>
+Cc: akpm@linux-foundation.org, hughd@google.com, david@redhat.com,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
+ ryan.roberts@arm.com, dev.jain@arm.com, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1748506520.git.baolin.wang@linux.alibaba.com>
+ <c1a6fe55f668cfe87ad113faa49120f049ba9cb5.1748506520.git.baolin.wang@linux.alibaba.com>
+ <BB3BDA79-3185-4346-9260-BA5E1B9C9949@nvidia.com>
+ <bd89651e-0ee0-4819-87da-d3a5db04c5b3@linux.alibaba.com>
+ <D61B9FA2-4EAC-4F0E-AF56-236D37A766BE@nvidia.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <D61B9FA2-4EAC-4F0E-AF56-236D37A766BE@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 29, 2025 at 09:35:08AM +0200, Ard Biesheuvel wrote:
-> From: Ard Biesheuvel <ardb@kernel.org>
-> 
-> It turns out that the way LLD handles ASSERT()s in the linker script can
-> result in spurious failures, so disable them for the newly introduced
-> BSS symbol export checks.
-> 
-> Link: https://github.com/ClangBuiltLinux/linux/issues/2094
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
 
-You could add Fangrui's commit as a reference to why LLD 21 is needed
-for this to work but it is probably not worth a v2 by itself.
+On 2025/5/30 10:17, Zi Yan wrote:
+> On 29 May 2025, at 21:58, Baolin Wang wrote:
+> 
+>> On 2025/5/29 23:21, Zi Yan wrote:
+>>> On 29 May 2025, at 4:23, Baolin Wang wrote:
+>>>
+>>>> The MADV_COLLAPSE will ignore the system-wide shmem THP sysfs settings, which
+>>>> means that even though we have disabled the shmem THP configuration, MADV_COLLAPSE
+>>>> will still attempt to collapse into a shmem THP. This violates the rule we have
+>>>> agreed upon: never means never.
+>>>>
+>>>> Then the current strategy is:
+>>>> For shmem, if none of always, madvise, within_size, and inherit have enabled
+>>>> PMD-sized mTHP, then MADV_COLLAPSE will be prohibited from collapsing PMD-sized mTHP.
+>>>>
+>>>> For tmpfs, if the mount option is set with the 'huge=never' parameter, then
+>>>> MADV_COLLAPSE will be prohibited from collapsing PMD-sized mTHP.
+>>>>
+>>>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>>>> ---
+>>>>    mm/huge_memory.c |  2 +-
+>>>>    mm/shmem.c       | 12 ++++++------
+>>>>    2 files changed, 7 insertions(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>>>> index d3e66136e41a..a8cfa37cae72 100644
+>>>> --- a/mm/huge_memory.c
+>>>> +++ b/mm/huge_memory.c
+>>>> @@ -166,7 +166,7 @@ unsigned long __thp_vma_allowable_orders(struct vm_area_struct *vma,
+>>>>    	 * own flags.
+>>>>    	 */
+>>>>    	if (!in_pf && shmem_file(vma->vm_file))
+>>>> -		return shmem_allowable_huge_orders(file_inode(vma->vm_file),
+>>>> +		return orders & shmem_allowable_huge_orders(file_inode(vma->vm_file),
+>>>>    						   vma, vma->vm_pgoff, 0,
+>>>>    						   !enforce_sysfs);
+>>>
+>>> OK, here orders is checked against allowed orders.
+>>>
+>>>>
+>>>> diff --git a/mm/shmem.c b/mm/shmem.c
+>>>> index 4b42419ce6b2..4dbb28d85cd9 100644
+>>>> --- a/mm/shmem.c
+>>>> +++ b/mm/shmem.c
+>>>> @@ -613,7 +613,7 @@ static unsigned int shmem_get_orders_within_size(struct inode *inode,
+>>>>    }
+>>>>
+>>>>    static unsigned int shmem_huge_global_enabled(struct inode *inode, pgoff_t index,
+>>>> -					      loff_t write_end, bool shmem_huge_force,
+>>>> +					      loff_t write_end,
+>>>>    					      struct vm_area_struct *vma,
+>>>>    					      unsigned long vm_flags)
+>>>>    {
+>>>> @@ -625,7 +625,7 @@ static unsigned int shmem_huge_global_enabled(struct inode *inode, pgoff_t index
+>>>>    		return 0;
+>>>>    	if (shmem_huge == SHMEM_HUGE_DENY)
+>>>>    		return 0;
+>>>> -	if (shmem_huge_force || shmem_huge == SHMEM_HUGE_FORCE)
+>>>> +	if (shmem_huge == SHMEM_HUGE_FORCE)
+>>>>    		return maybe_pmd_order;
+>>>
+>>> shmem_huge is set by sysfs?
+>>
+>> Yes, through the '/sys/kernel/mm/transparent_hugepage/shmem_enabled' interface.
+>>
+>>>>    	/*
+>>>> @@ -860,7 +860,7 @@ static unsigned long shmem_unused_huge_shrink(struct shmem_sb_info *sbinfo,
+>>>>    }
+>>>>
+>>>>    static unsigned int shmem_huge_global_enabled(struct inode *inode, pgoff_t index,
+>>>> -					      loff_t write_end, bool shmem_huge_force,
+>>>> +					      loff_t write_end,
+>>>>    					      struct vm_area_struct *vma,
+>>>>    					      unsigned long vm_flags)
+>>>>    {
+>>>> @@ -1261,7 +1261,7 @@ static int shmem_getattr(struct mnt_idmap *idmap,
+>>>>    			STATX_ATTR_NODUMP);
+>>>>    	generic_fillattr(idmap, request_mask, inode, stat);
+>>>>
+>>>> -	if (shmem_huge_global_enabled(inode, 0, 0, false, NULL, 0))
+>>>> +	if (shmem_huge_global_enabled(inode, 0, 0, NULL, 0))
+>>>>    		stat->blksize = HPAGE_PMD_SIZE;
+>>>>
+>>>>    	if (request_mask & STATX_BTIME) {
+>>>> @@ -1768,7 +1768,7 @@ unsigned long shmem_allowable_huge_orders(struct inode *inode,
+>>>>    		return 0;
+>>>>
+>>>>    	global_orders = shmem_huge_global_enabled(inode, index, write_end,
+>>>> -						  shmem_huge_force, vma, vm_flags);
+>>>> +						  vma, vm_flags);
+>>>>    	/* Tmpfs huge pages allocation */
+>>>>    	if (!vma || !vma_is_anon_shmem(vma))
+>>>>    		return global_orders;
+>>>> @@ -1790,7 +1790,7 @@ unsigned long shmem_allowable_huge_orders(struct inode *inode,
+>>>>    	/* Allow mTHP that will be fully within i_size. */
+>>>>    	mask |= shmem_get_orders_within_size(inode, within_size_orders, index, 0);
+>>>>
+>>>> -	if (vm_flags & VM_HUGEPAGE)
+>>>> +	if (shmem_huge_force || (vm_flags & VM_HUGEPAGE))
+>>>>    		mask |= READ_ONCE(huge_shmem_orders_madvise);
+>>>>
+>>>>    	if (global_orders > 0)
+>>>> -- 
+>>>> 2.43.5
+>>>
+>>> shmem_huge_force comes from !enforce_sysfs in __thp_vma_allowable_orders().
+>>> Do you know when sysfs is not enforced and why?
+>>
+>> IIUC, shmem_huge_force will only be set during MADV_COLLAPSE. Originally, MADV_COLLAPSE was intended to ignore the system-wide THP sysfs settings. However, if all system-wide shmem THP settings are disabled, we should not allow MADV_COLLAPSE to collapse a THP. This is the issue this patchset aims to fix. Thanks for the review.
+> 
+> Got it. If we want to enforce sysfs, why not just get rid of TVA_ENFORCE_SYSFS
+> and make everyone follow sysfs?
 
-https://github.com/llvm/llvm-project/commit/5859863bab7fb1cd98b6028293cba6ba25f7d514
+Now MADV_COLLAPSE will ignore the VM_HUGEPAGE, while the others will 
+check the VM_HUGEPAGE flag before using 'huge_shmem_orders_madvise' with 
+the TVA_ENFORCE_SYSFS flag set.
 
-> ---
->  arch/arm64/kernel/image-vars.h | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
-> index c5266430284b..86f088a16147 100644
-> --- a/arch/arm64/kernel/image-vars.h
-> +++ b/arch/arm64/kernel/image-vars.h
-> @@ -10,6 +10,10 @@
->  #error This file should only be included in vmlinux.lds.S
->  #endif
->  
-> +#if defined(CONFIG_LD_IS_LLD) && CONFIG_LLD_VERSION < 210000
-> +#define ASSERT(...)
-> +#endif
-> +
->  #define PI_EXPORT_SYM(sym)		\
->  	__PI_EXPORT_SYM(sym, __pi_ ## sym, Cannot export BSS symbol sym to startup code)
->  #define __PI_EXPORT_SYM(sym, pisym, msg)\
-> @@ -142,4 +146,6 @@ KVM_NVHE_ALIAS(kvm_protected_mode_initialized);
->  _kernel_codesize = ABSOLUTE(__inittext_end - _text);
->  #endif
->  
-> +#undef ASSERT
-> +
->  #endif /* __ARM64_KERNEL_IMAGE_VARS_H */
-> -- 
-> 2.49.0.1238.gf8c92423fb-goog
-> 
-> 
+That is to follow the rule: “allowing for collapsing in a VM without 
+VM_HUGEPAGE in the "madvise" mode would be fine".
+
+So I think we should still keep the TVA_ENFORCE_SYSFS flag.
