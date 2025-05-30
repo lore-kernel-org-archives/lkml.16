@@ -1,31 +1,32 @@
 Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
 	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF279258A;
-	Fri, 30 May 2025 16:44:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92CD41C6FE8;
+	Fri, 30 May 2025 16:44:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748623490; cv=none; b=MdR91u+xEFh3hFqJGBIZNWRTAeC/p5RAzZ04tZQun/vL7V0VaQYSlVpQTLcAuK3Qmse5NLRud7ZPN3H/7MozGSBEo+iJ2VarpBDeJOReFjWypqyhp6fEfKoGaROm3lRjjlW+YD7LQXUHZd8wOGRw2rm+1Ch+ymlIt0/2f49X9OU=
+	t=1748623491; cv=none; b=h7/Pi4PSV0jxC7jGwB1NLCGG2nmOfzBeFQ5wM0Ha2J0BEwT5LZf/Usv7SGhOnP18pM/IfqolJItdAx/+UPyjUeWZYejKrRi/cBjPJiiCHCVCeUOsjX5zo0Ja1GKQ/BDieg6vtjCec79PColrNhmb4qf1GBkeGQd9GOzfty/kvh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748623490; c=relaxed/simple;
-	bh=pUFXPNioH5+1QSGJlHV1wuX4spmGaSHYnbG/z3bhnWI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D5R+6QnJ2x/ypDwRvCXeoI3IWiUX4NaVJOfDtAD1WPpZUWtl1keL3giDCa5B/iIJXugr+5zyE5DnmOujsbi60i6vp5X9/77fQfnTpcvP/gQAbLKhR2xT7nl5H/Ep2YCq7fhk3SDN9upHShevbcLxGk3ykH2aAnnaLY/mUODJViQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=UJKJizg+; arc=none smtp.client-ip=83.149.199.84
+	s=arc-20240116; t=1748623491; c=relaxed/simple;
+	bh=N63jKpGiCSXNWDphomYejhXm4R3ctp0/FkZ77iqGKfU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=e84gkhYYweglTqO939+skrDZCrvJgcucZPdCzYgqRhlVTymlzbIMc8IpAwX0AgW/A1a4fn4E6BZuhUNaIheP0xXh7wRn94yW8bC2/8QeQ6WH1w6ebPVACoJduNlxGtydd+Fi5MqdlZOcr8R68ukCdbKxlsWUdWdRSj/BI0by7Vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=Hy0nElZe; arc=none smtp.client-ip=83.149.199.84
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="UJKJizg+"
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="Hy0nElZe"
 Received: from fedora.intra.ispras.ru (unknown [10.10.165.16])
-	by mail.ispras.ru (Postfix) with ESMTPSA id 502AD40737D7;
-	Fri, 30 May 2025 16:44:38 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 502AD40737D7
+	by mail.ispras.ru (Postfix) with ESMTPSA id 01B994076165;
+	Fri, 30 May 2025 16:44:42 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 01B994076165
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1748623478;
-	bh=wgZVDaiwB/ysM5KR2x6/lxy0bp5OSY9UQ0R5kiHgSPk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=UJKJizg+m5aLZgu0NoDS8CBHBgkB6OpnECX5TYGhWhKU2ddcT0xNYX/CGqhDwbQhb
-	 UNFPwhH5fSk5gcZbx1YrupVuHC5yvaXJVtngZXPRzkOmLvBNeL/FaQ30GvObPolqPJ
-	 /Y2HM+G76PHkpquFI1te9Kq/Y9DkcfTJE0yeAeB4=
+	s=default; t=1748623482;
+	bh=fPS9KLJ/Uc9OoO0w2alburJ4UW3qX59EuFMYSOSI0iI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Hy0nElZeftqtkdS9jx271XZtlE7wOHh2eUSunioomRU4HmPCx6MqLHnkEBqAQKlCT
+	 Dq+k2QEU27qC64z/zyJ8yJbcQbnER/ouHR2vgAm0QK1TfjJiqGIW5986FcTKoYLsHf
+	 yvr6Wjcl1EKnbvyd7cUDQGTZQsnBSEi193MHAQWQ=
 From: Fedor Pchelkin <pchelkin@ispras.ru>
 To: Liam Girdwood <lgirdwood@gmail.com>,
 	Mark Brown <broonie@kernel.org>,
@@ -37,11 +38,14 @@ Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
 	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
 	linux-sound@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: [PATCH 0/3] ASoC: amd: fixes for runtime private data memory leaks
-Date: Fri, 30 May 2025 19:44:13 +0300
-Message-ID: <20250530164425.119102-1-pchelkin@ispras.ru>
+	lvc-project@linuxtesting.org,
+	stable@vger.kernel.org
+Subject: [PATCH 3/3] ASoC: amd: acp3x-pdm-dma: free pdm device data on closing
+Date: Fri, 30 May 2025 19:44:16 +0300
+Message-ID: <20250530164425.119102-4-pchelkin@ispras.ru>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250530164425.119102-1-pchelkin@ispras.ru>
+References: <20250530164425.119102-1-pchelkin@ispras.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,19 +54,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Here follows a set of related patches regarding leaks of memory referenced
-to by runtime->private_data pointers in amd soc drivers.
+Dynamic memory referenced by runtime->private_data pointer is allocated in
+acp_pdm_dma_open() and needs to be freed in the corresponding ->close()
+callback.
 
-Fedor Pchelkin (3):
-  ASoC: amd: acp6x-pdm-dma: free pdm device data on closing
-  ASoC: amd: acp3x-pcm-dma: free runtime private data on closing
-  ASoC: amd: acp3x-pdm-dma: free pdm device data on closing
+Found by Linux Verification Center (linuxtesting.org).
 
- sound/soc/amd/raven/acp3x-pcm-dma.c  | 2 +-
+Fixes: 4a767b1d039a ("ASoC: amd: add acp3x pdm driver dma ops")
+Cc: stable@vger.kernel.org
+Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
+---
  sound/soc/amd/renoir/acp3x-pdm-dma.c | 2 ++
- sound/soc/amd/yc/acp6x-pdm-dma.c     | 2 ++
- 3 files changed, 5 insertions(+), 1 deletion(-)
+ 1 file changed, 2 insertions(+)
 
+diff --git a/sound/soc/amd/renoir/acp3x-pdm-dma.c b/sound/soc/amd/renoir/acp3x-pdm-dma.c
+index 95ac8c680037..6b294040e164 100644
+--- a/sound/soc/amd/renoir/acp3x-pdm-dma.c
++++ b/sound/soc/amd/renoir/acp3x-pdm-dma.c
+@@ -301,9 +301,11 @@ static int acp_pdm_dma_close(struct snd_soc_component *component,
+ 			     struct snd_pcm_substream *substream)
+ {
+ 	struct pdm_dev_data *adata = dev_get_drvdata(component->dev);
++	struct snd_pcm_runtime *runtime = substream->runtime;
+ 
+ 	disable_pdm_interrupts(adata->acp_base);
+ 	adata->capture_stream = NULL;
++	kfree(runtime->private_data);
+ 	return 0;
+ }
+ 
 -- 
 2.49.0
 
