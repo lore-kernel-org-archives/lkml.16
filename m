@@ -1,73 +1,25 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761A513AC1
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 10:51:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 118DB221732
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 10:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748602292; cv=none; b=YVRUHJwBb3TQF2C+RIBPgRIS1UFgldwoIqWe01Kt8l13NWLZowZ1pCfBVo7W9dp4geEiMpfxn5om+8g2fSdHStvtYX7C63LipJT08cJ9F+eBFKhOlpbT3cWr2ojm6m5MihMkMZGfm+v9FviHHmOMTOxKM8jU2JDoJV5gM6YSHxg=
+	t=1748602304; cv=none; b=tsGGnC1bN8QCTacm/Yk7w1R2haUUj/4yimeSvme4+IFHDA82VZ9/0Cf0bEwKIpXmC8r4cLcUtD0lZLqSZPGalKwXuhLqpVM1fcENk/Sk/Cxul+uMelJEyYFjCcQiR/X6nrzQZo14maeoYK0q5Fs2I1Yy2l5M4uhz8UTPgmU1F0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748602292; c=relaxed/simple;
-	bh=UE1nkwZ0zcjYSP/AylrjxytDKypTft3B0EPtc4t1pwk=;
+	s=arc-20240116; t=1748602304; c=relaxed/simple;
+	bh=pi0JAIfOlkeSzeD1ahAYz2Irnrqa0G7iMV/wfhBIroI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sSrP1PpYBL7m/0PrNkebyFD+t8K1pshRFVGW2uBNrjvkqA62MQBULcHhGEjNftthzdwTzdReYtmoXFvtMPKs9FJoUHGHp9G0j4e7qXXF2iQRp/+ORM1fcLn56pX9jvpgmH0/2eUPJ3Ya7s/cbIgPlTpn/zDB1Z5/gYIGuMraUb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=hd6mzy//; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="hd6mzy//"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54UAOFBm008030
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 10:51:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Ykz22sxUN2Hw1bYKpmMC5UWd4JotYn0mF64c25jalVk=; b=hd6mzy//zMrYdi3m
-	2bJGbpXYxsa0Ab+btr+D3e0OwypGudXa8qVJLdhNU6NI5ypfWMRaRstAVuaPFel1
-	Pwdetbzwieg17uDIh6Da1+/YMeiSUtWLopLYzsWqIZLXemeoiAq00AKIwMveO98Q
-	VR3NUXec23B24SLjGEKo4y3d85RPhoYRGoAVFnkov05BRxzaO4LIOWIEgBjo2Aw7
-	EUxuIY942YqFbDf32QMCyJnnZM5jHvt5zzJb7nKmQ0lB9JElbD9W1gFKbREVa+C4
-	ZbY3CbByO3v+2rD1A5o+xhissJVFQ3twBCg5OTgx56CuXOqwBkOpNWRED4kUn0OD
-	GeEd7g==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46whuf94ur-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 10:51:30 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d097083cc3so40414885a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 03:51:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748602289; x=1749207089;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ykz22sxUN2Hw1bYKpmMC5UWd4JotYn0mF64c25jalVk=;
-        b=IDqo6wdjmXjtFYehPm5GcVlzfjJUk6taIxKa9ooi1+iqSiMSibvbDFClX4HJnA0VIa
-         tZlp3ArgpY5UhVElNTxTqOBTo6jv4cL8MtKoyrX4SFt6R/hmnIG0Kta3Imp+bN2O/W1+
-         zF4Hxr8TJ2e+MvE+Czn9DMWWiLqC8WtZLRaD9l5Rpo81cu0UQkPV3UO0nnkaIwSCinXs
-         cXsn/UKr4IzP9eFp3QqNJiGN/RkbFh9OknEMDgojCf+22TfQ3YeHdiolyQw9RJlxCz5U
-         MhFtOqCKzMJKuJL1nJWisfhUrBBRxd8e7Bv+GnKvjoNlKwY1d8Nm8lOFrsaAXWGRn4X4
-         TlOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV5AVNiYaFnqq+vOEel5dRoZm0DEUKdcHp+MM0RBTaMTYt8dmUFR5CZCns1ttJWhJO4LKXyt2zzk8OQGJ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzotYYla3iv5foTLukL9+jSDTcqSPw8BvZUoQTJ3kmHNDvtdgEe
-	AgA2wS9PM+KHDmiNZkrAazUUJv1HI0fJGfCjrBv7LGe+npCaJpzyWASD7w6tD8Ou0B+E2hRbonu
-	6UUWcLYAR2sj86iF6A8lDxOJLp/BcBAob2OFbd306h5OK7DMFIBU48qhzSg/08EUearM=
-X-Gm-Gg: ASbGncvpOvoGC8w/d5uBr253Qgo723DhoLBohpyzXeov402Q66DPCD6J3hKdr4W9p0m
-	OaYrWqkDIPoNQn6+NQfCRvl2pVzKARWGLdAG4CrXUkhyZX0DNt/lXQ9HZYzhXSl+854Gdd65Xgo
-	MFgyU6V7K1YNIB1VnkBklC9GSFS142ib4VWTcpCSwDjbI7nutE2KRD0ZTGrd1fz+R9Y5V485G38
-	6lgk4WRv5y5LcO/tWb9zCnS9YNVKmVJVslHw1CKodriRj6t9vhJPP2WphyE2hRos+H/ppDcML2T
-	dciXEdNh3EI+qS/vMm4fjffXzPzCprZTpMfvKXwAf+YBrGvGBmDkbeKdnFLPdfgyf/3uLacm1XH
-	p
-X-Received: by 2002:a05:620a:19a9:b0:7c5:687f:d79d with SMTP id af79cd13be357-7d0a3d97b79mr114734085a.8.1748602289504;
-        Fri, 30 May 2025 03:51:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHziPYjNP2s6LLQZYshTIYmZqGevpTj1cIMCZjPhU6B9bmfaCGLTz4ZXmXiuXBtFAGhr5eO8g==
-X-Received: by 2002:a05:620a:19a9:b0:7c5:687f:d79d with SMTP id af79cd13be357-7d0a3d97b79mr114732885a.8.1748602289173;
-        Fri, 30 May 2025 03:51:29 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60566c593f2sm1428259a12.17.2025.05.30.03.51.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 May 2025 03:51:28 -0700 (PDT)
-Message-ID: <0f855d7e-a85d-4fcb-aa6f-6254b509e259@oss.qualcomm.com>
-Date: Fri, 30 May 2025 12:51:26 +0200
+	 In-Reply-To:Content-Type; b=TBrp2Ad0KYc5os9iRgeQCntInQJKsEqiKMdxo1u/OmlXOLb7TII0LNOKRUIXTWl9/SdSnY4JZpjnHaIZQFjjuDHF5B78VeGk4gJM2uvB4IHnGlOGUdZv5PBf65yxSYHrA6SJXzJYiYxsHcn6inSO+OoTvgYyhuhD5t5a/pU834w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E031616F2;
+	Fri, 30 May 2025 03:51:25 -0700 (PDT)
+Received: from [10.57.95.14] (unknown [10.57.95.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CB0233F5A1;
+	Fri, 30 May 2025 03:51:39 -0700 (PDT)
+Message-ID: <23fc2527-cd32-4750-9b3b-df65f4f76609@arm.com>
+Date: Fri, 30 May 2025 11:51:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,59 +27,127 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 2/3] arm64: dts: qcom: qcs615: add venus node to
- devicetree
-To: Renjiang Han <quic_renjiang@quicinc.com>,
-        Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Dikshita Agarwal <quic_dikshita@quicinc.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
- <20250530-add-venus-for-qcs615-v8-2-c0092ac616d0@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250530-add-venus-for-qcs615-v8-2-c0092ac616d0@quicinc.com>
+Subject: Re: [PATCH 0/3] Enable huge-vmalloc permission change
+Content-Language: en-GB
+To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org, david@redhat.com,
+ catalin.marinas@arm.com, will@kernel.org
+Cc: lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+ rppt@kernel.org, surenb@google.com, mhocko@suse.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, suzuki.poulose@arm.com, steven.price@arm.com,
+ gshan@redhat.com, linux-arm-kernel@lists.infradead.org
+References: <20250530090407.19237-1-dev.jain@arm.com>
+ <adfe981a-ec9a-4051-a26f-91b691230161@arm.com>
+ <381fec11-0e05-4bf0-9cd8-f272fde7558f@arm.com>
+ <090440b6-9501-4f29-8b9f-1f6e6f3a6fbc@arm.com>
+ <6f8d893e-ddb9-4416-979f-eca3b0f9fb5b@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <6f8d893e-ddb9-4416-979f-eca3b0f9fb5b@arm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=OslPyz/t c=1 sm=1 tr=0 ts=68398db2 cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8
- a=Y0e4vqo_zEX2NYFcfF4A:9 a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: bFPgW61GCDSrEbyg-zPlVpxjEUMcmwve
-X-Proofpoint-GUID: bFPgW61GCDSrEbyg-zPlVpxjEUMcmwve
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMwMDA5MyBTYWx0ZWRfX081bBB1z8KKM
- DT4uZ0T3mXFQziangXAWvhXdzspudk0kVpcckkU5wFQdP/3jXCLlPSvMt7LZ5uUbUmE5Ml4HOpD
- 89Zu3smXJM1z+5xTnC5pdKlrOTscx+rChYl0/KYTVxH6mwEzZuN1nc/Kt0OlPD7bAIt+7CJdqn7
- AhXfrhTWtxm5eQw1WleEUkvCrQ3LU/S1jNwNdpFcILhgDgdremO2fgB5S24RRNLtoE2ARujcJQl
- HEsiAuScV4Mi8Hda0mcUr1LJLSuONszDWemqBPc5zP7a3DAo7I6HyByz0b/RSypkyQAnQy0gRL0
- vPHJQKLNyWSUjorxavPQsHMsZ2U4aj+JcY/XvsS7VzEKgzdqnCw4MVcz6N4WcbWGN0tGlOfjqfU
- SPohOYkn/NvLn/NoxzKto2ru+miXwnxn1faHvDlDYEuCfy/EnmQNameR4ffxD7jmJdu0BRK5
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-30_04,2025-05-29_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 phishscore=0 mlxlogscore=698 adultscore=0 malwarescore=0
- bulkscore=0 priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0
- spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505300093
+Content-Transfer-Encoding: 8bit
 
-On 5/30/25 6:02 AM, Renjiang Han wrote:
-> Add the venus node to the devicetree for the qcs615 platform to enable
-> video functionality. The qcs615 platform currently lacks video
-> functionality due to the absence of the venus node. Fallback to sc7180 due
-> to the same video core.
+On 30/05/2025 11:42, Dev Jain wrote:
 > 
-> Signed-off-by: Renjiang Han <quic_renjiang@quicinc.com>
-> ---
+> On 30/05/25 4:07 pm, Ryan Roberts wrote:
+>> On 30/05/2025 11:10, Dev Jain wrote:
+>>> On 30/05/25 3:33 pm, Ryan Roberts wrote:
+>>>> On 30/05/2025 10:04, Dev Jain wrote:
+>>>>> This series paves the path to enable huge mappings in vmalloc space by
+>>>>> default on arm64. > For this we must ensure that we can handle any permission
+>>>>> games on vmalloc space.
+>>>> And the linear map :)
+>>>>
+>>>>> Currently, __change_memory_common() uses
+>>>>> apply_to_page_range() which does not support changing permissions for
+>>>>> leaf mappings.
+>>>> nit: A "leaf mapping" is the lowest level entry in the page tables for a given
+>>>> address - i.e. it maps an address to some actual memory rather than to another
+>>>> pgtable. It includes what the Arm ARM calls "page mappings" (PTE level) and
+>>>> "block mappings" (PMD/PUD/.. level). apply_to_page_range() does support page
+>>>> mappings, so saying it doesn't support leaf mappings is incorrect. It doesn't
+>>>> support block mappings.
+>>> Sorry, again got confused by nomenclature : )
+>>>
+>>>>> We attempt to move away from this by using walk_page_range_novma(),
+>>>>> similar to what riscv does right now; however, it is the responsibility
+>>>>> of the caller to ensure that we do not pass a range, or split the range
+>>>>> covering a partial leaf mapping.
+>>>>>
+>>>>> This series is tied with Yang Shi's attempt [1] at using huge mappings
+>>>>> in the linear mapping in case the system supports BBML2, in which case
+>>>>> we will be able to split the linear mapping if needed without break-before-
+>>>>> make.
+>>>>> Thus, Yang's series, IIUC, will be one such user of my series; suppose we
+>>>>> are changing permissions on a range of the linear map backed by PMD-hugepages,
+>>>>> then the sequence of operations should look like the following:
+>>>>>
+>>>>> split_range(start, (start + HPAGE_PMD_SIZE) & ~HPAGE_PMD_MASK);
+>>>>> split_range(end & ~HPAGE_PMD_MASK, end);
+>>>> I don't understand what the HPAGE_PMD_MASK twiddling is doing? That's not
+>>>> right.
+>>>> It's going to give you the offset within the 2M region. You just want:
+>>>>
+>>>> split_range(start)
+>>>> split_range(end)
+>>>>
+>>>> right?
+>>> Suppose start = 2M + 4K, end = 8M + 5K. Then my sequence will compute to
+>> 8M + 5K is not a valid split point. It has to be at least page aligned.
+> 
+> Sorry, so consider 8M + 4K.
+> 
+>>> split_range(2M + 4K, 3M)
+>>> split_range(8M, 8M + 5K)
+>> We just want to split at start and end. What are the 3M and 8M params supposed
+>> to be? Anyway, this is off-topic for this series.
+> 
+> I think we are both saying the same thing; yes we will split only the start and
+> the end,
+> so if the address 2Mb + 4Kb is mapped as a PMD-hugepage, we need to split this
+> PMD into
+> a PTE table, which will map 2Mb till 4Mb as base pages now.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Not quite; if you start with [2M, 4M) mapped by PMD, then want to ensure a
+boundary at 2M+4K, I think you would end up with the first 64K (16 pages) mapped
+by base page, then the then the next 1984K mapped by contpte blocks (31 contpte
+blocks).
 
-Konrad
+But yes, we agree :)
+
+> 
+>>
+>>> __change_memory_common(2M + 4K, 8M + 5K)
+>>>
+>>> So now __change_memory_common() wouldn't have to deal with splitting the
+>>> starts and ends. Please correct me if I am wrong.
+>>>
+>>>>> __change_memory_common(start, end);
+>>>>>
+>>>>> However, this series can be used independently of Yang's; since currently
+>>>>> permission games are being played only on pte mappings (due to
+>>>>> apply_to_page_range
+>>>>> not supporting otherwise), this series provides the mechanism for enabling
+>>>>> huge mappings for various kernel mappings like linear map and vmalloc.
+>>>> In other words, you are saying that this series is a prerequisite for Yang's
+>>>> series (and both are prerequisites for huge vmalloc by default). Your series
+>>>> adds a new capability that Yang's series will rely on (the ability to change
+>>>> permissions on block mappings).
+>>> That's right.
+>>>
+>>>> Thanks,
+>>>> Ryan
+>>>>
+>>>>> [1] https://lore.kernel.org/all/20250304222018.615808-1-
+>>>>> yang@os.amperecomputing.com/
+>>>>>
+>>>>> Dev Jain (3):
+>>>>>     mm: Allow pagewalk without locks
+>>>>>     arm64: pageattr: Use walk_page_range_novma() to change memory
+>>>>>       permissions
+>>>>>     mm/pagewalk: Add pre/post_pte_table callback for lazy MMU on arm64
+>>>>>
+>>>>>    arch/arm64/mm/pageattr.c | 81 +++++++++++++++++++++++++++++++++++++---
+>>>>>    include/linux/pagewalk.h |  4 ++
+>>>>>    mm/pagewalk.c            | 18 +++++++--
+>>>>>    3 files changed, 94 insertions(+), 9 deletions(-)
+>>>>>
+
