@@ -1,146 +1,113 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99488EACD;
-	Fri, 30 May 2025 12:31:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D225A221578;
+	Fri, 30 May 2025 12:31:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748608306; cv=none; b=lNChdWrtlmvlHyypGdJUSqdEJsN6t5li1dEbAAZhleS1PFx8BVmzknfJdzHG0zrvtKNZ9tE0YXHYNiIXSRykTtsrxV3ef2ue7fHZo9ZyQhY0CBzcaSSLJQKRg+TYWH1sXwnioaYpY/9zJ/vdsLjIW5+3a72kclmsdRVgPusCZnw=
+	t=1748608318; cv=none; b=IqVw3023yTp7SCbYivhzDJeBWeSNtv2YAyhHPi7MkZxhfNxLcQZEl/KOArAbscOacu+u9gSKFLlviJX0ZgVtEGmT+D90vvLNWfREaXAkW5QdMd2s5FJlbvacrp5WDQO0przwzU/yx3NsVZGSCpkGwXoNquYzCtvGQbvtNwqFJwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748608306; c=relaxed/simple;
-	bh=BAY44QjCBDFX7mnuiCogvS5wrINuqMgfmrcW2vgKub0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=JFl0SHiUpralEZ59/r/zFn63/G1lEZfpKXfzN0t2JaXuUcUY/Y8SjyUj6GTabvHHDJc+iGAj7Q4q6w6Xo4+HadkaXWgqQf11uTfKy0SY53kVsTXHI7d7nBBdZqbnftpRf58f5zb8K+D8otGQN29Yn3sFBwk4lIxYNq2qpg3DSGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=eyLKp/bs; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1748608318; c=relaxed/simple;
+	bh=sO2wcKkTWn8Ruc6WilodzmUuspP187dLfFR4PRbI7N8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DwmUp8BXhhpKIUonrodzMs/NnnmURfAs3Kb6W2gHYhejA/HSoQpLMpoyJ8zH8BRoD0DetTH5a28M217nmrjmm9WU7zFOyjhqT/QNHxzONVtMpOCLa6j86H39XxfN667APxC0u2zF8Es/dIYDgP+H0FxKJ9PxFbnqPjZXJ5w+Nks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iHt4FG4l; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="eyLKp/bs"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2E5DC82E;
-	Fri, 30 May 2025 14:31:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1748608275;
-	bh=BAY44QjCBDFX7mnuiCogvS5wrINuqMgfmrcW2vgKub0=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=eyLKp/bsJ6T4LFInHYYXGNdzv+H+E8OJlIvM7yBhwpvXs9BxKLY7CyKeOwQ3Job2X
-	 3k8htqwZJTjjIWJYgX3rigQvRf3ToXtbZRQaFOFPOZ6esybGQb5/VLtv51HuvW8pYK
-	 hQKoVPk4wYM+adxH+YQG5EbbnCPgIvnqoGbxkf/Q=
-Message-ID: <5c3bdd6e-c88a-4621-8d14-ccf4346c7bc6@ideasonboard.com>
-Date: Fri, 30 May 2025 15:31:39 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iHt4FG4l"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-234b9dfb842so18742185ad.1;
+        Fri, 30 May 2025 05:31:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748608316; x=1749213116; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=72KHt82ImNQl2pBGkQFZ11eayYSJEhzYqZXSpD4WT/4=;
+        b=iHt4FG4lr02lXD4J52bEz5Pr64NrQVze6hl62bF7Tqjsub2iT12c1pw/gjazsZOzM2
+         k/Myh177oLkPVgRd6VlRWoaiec/GHqfBoKbkfST1rXmA0+CJF7rpdd4JUvWnJLcvUDLh
+         GjeE8bWLF31a0CuwZah8wgGr9X9nk3fqkOC6t4kXEzApPMvNnV5kXn3B093hiAaBHxkC
+         SErUh/2vLhKML4OWk8k6DehsRHZeaJ17cRUO/bfdWX4ayFe85E7VjnESMuQZP65lnBTV
+         JWNXTyzZXIuPCXkKYTiuzXuNrVk0KfLHe/W37Fz0Rw7fVev9ZH5oY/O2FeGUv7A5DOrl
+         /KRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748608316; x=1749213116;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=72KHt82ImNQl2pBGkQFZ11eayYSJEhzYqZXSpD4WT/4=;
+        b=ohT4+LVPeWT2JJWDHCNtCWth1rbPapc/Oc/myam30XFNz8N+AQzIfUAHjz1dXlnLLI
+         0fBov8BNXC1svx/Gm/i6cBSCmuPyLmxW/aEmgvvW8vC9p5guuYmEglI/tC6GddQmaJ0y
+         MF+w2UuWdH4Jivs0I+6HYbUFN7n5rrvECnpJ2VpvuRU1G9ipWCyn1INrTGWkEuRCYDIC
+         90LZP33A7XE2P5R6F2h5fXZWmqMkIRmh/S1PZ572AAdMYQjkVUd2xAodcTE+blBCukTt
+         ylll6sMPN+j0h7q8VrpS2dMhAmIZkD8xdtQ9TD2XXRECoAbzlBbW6KbEnXXu+hODSGRi
+         UI8w==
+X-Gm-Message-State: AOJu0Ywy8kDA8j1KTKKcfeSf8TAph5BwJ8Gz4r2AN9D9qye2QpFiVXP9
+	AkoObp6AQaOYeqia8luHXiAo41v1GmKTHI9Z5/L4StM2vSVwc6Of1ZJv26o67wkg1quoIQ==
+X-Gm-Gg: ASbGnctYbsfrwCIx4PPkg72C5/r5AZKodz0lpc7PY2lUNYsXhsHo62CRsN6gxe4Jall
+	V3vR15lNgmqPFVjSbpEuqAUCAYyVCmC2+fzELUUeJccnfsPnaTksTJaBz8T6XeXBZ3cyD4vJTyN
+	FX3W4teddeer4w/wQGuPJbtVC1IGMyhoAF/VL4N0p/EsclY09JnHhYXSEQsoKPzwuOGp9pBvkP8
+	jivyw1PN1qpI7PIc98rk1g5g1SJYYwaCUrgc4ezybap8jtarvKzDJYtWV0r6FaMtyA57b1R4i7Q
+	qAhbj21HBIiKpnZdBoAAJUL+zrkYigjzH8VFoex9fjxD6QDMMxuWnYeXZkfNxDDGxLfaoE+a
+X-Google-Smtp-Source: AGHT+IEE5bejLJGWszuWSHkoZrP0G/Du5/ykQa29oGeJG3sxkmqpBQToVj6aYENw5V1jpLJ9egj4IQ==
+X-Received: by 2002:a17:902:f551:b0:235:737:7ba with SMTP id d9443c01a7336-23529a07743mr52983835ad.44.1748608315740;
+        Fri, 30 May 2025 05:31:55 -0700 (PDT)
+Received: from localhost.localdomain ([2409:40f2:216d:d0ee:67f1:e9e1:1106:f1b4])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506d21df0sm27477595ad.229.2025.05.30.05.31.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 May 2025 05:31:55 -0700 (PDT)
+From: saivishnu725@gmail.com
+To: rust-for-linux@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	lossin@kernel.org,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dakr@kernel.org,
+	gregkh@linuxfoundation.org,
+	daniel.almeida@collabora.com,
+	me@kloenk.dev,
+	Sai Vishnu M <saivishnu725@gmail.com>
+Subject: [PATCH] rust: doc: Clean up formatting in io.rs
+Date: Fri, 30 May 2025 18:01:30 +0530
+Message-ID: <20250530123129.31505-2-saivishnu725@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] media: rcar-csi2: Clarify usage of mbps and msps
-To: =?UTF-8?Q?Niklas_S=C3=B6derlund?=
- <niklas.soderlund+renesas@ragnatech.se>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250511174730.944524-1-niklas.soderlund+renesas@ragnatech.se>
- <20250511174730.944524-2-niklas.soderlund+renesas@ragnatech.se>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-In-Reply-To: <20250511174730.944524-2-niklas.soderlund+renesas@ragnatech.se>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Sai Vishnu M <saivishnu725@gmail.com>
 
-On 11/05/2025 20:47, Niklas Söderlund wrote:
-> The helper function to deal with calculating the link speed is designed
-> in such a way that it returns the correct type bps (bits per second) for
-> D-PHY and sps (symbols per second) for C-PHY. And for historical reasons
-> the function kept the name mbps.
-> 
-> This is confusing, fix it by having the function only deal with bps
-> values as this is the most common use-case and convert bps to sps in the
-> only function where it is needed to configure the C-PHY.
-> 
-> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> ---
->  drivers/media/platform/renesas/rcar-csi2.c | 22 +++++++++++-----------
->  1 file changed, 11 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/media/platform/renesas/rcar-csi2.c b/drivers/media/platform/renesas/rcar-csi2.c
-> index 9979de4f6ef1..358e7470befc 100644
-> --- a/drivers/media/platform/renesas/rcar-csi2.c
-> +++ b/drivers/media/platform/renesas/rcar-csi2.c
-> @@ -975,10 +975,6 @@ static int rcsi2_calc_mbps(struct rcar_csi2 *priv, unsigned int bpp,
->  
->  	mbps = div_u64(freq * 2, MEGA);
->  
-> -	/* Adjust for C-PHY, divide by 2.8. */
-> -	if (priv->cphy)
-> -		mbps = div_u64(mbps * 5, 14);
-> -
->  	return mbps;
->  }
->  
-> @@ -1203,9 +1199,13 @@ static int rcsi2_wait_phy_start_v4h(struct rcar_csi2 *priv, u32 match)
->  	return -ETIMEDOUT;
->  }
->  
-> -static int rcsi2_c_phy_setting_v4h(struct rcar_csi2 *priv, int msps)
-> +static int rcsi2_c_phy_setting_v4h(struct rcar_csi2 *priv, int mbps)
->  {
->  	const struct rcsi2_cphy_setting *conf;
-> +	int msps;
-> +
-> +	/* Adjust for C-PHY symbols, divide by 2.8. */
-> +	msps = div_u64(mbps * 5, 14);
->  
->  	for (conf = cphy_setting_table_r8a779g0; conf->msps != 0; conf++) {
->  		if (conf->msps > msps)
-> @@ -1301,7 +1301,7 @@ static int rcsi2_start_receiver_v4h(struct rcar_csi2 *priv,
->  	const struct rcar_csi2_format *format;
->  	const struct v4l2_mbus_framefmt *fmt;
->  	unsigned int lanes;
-> -	int msps;
-> +	int mbps;
->  	int ret;
->  
->  	/* Use the format on the sink pad to compute the receiver config. */
-> @@ -1314,9 +1314,9 @@ static int rcsi2_start_receiver_v4h(struct rcar_csi2 *priv,
->  	if (ret)
->  		return ret;
->  
-> -	msps = rcsi2_calc_mbps(priv, format->bpp, lanes);
-> -	if (msps < 0)
-> -		return msps;
-> +	mbps = rcsi2_calc_mbps(priv, format->bpp, lanes);
-> +	if (mbps < 0)
-> +		return mbps;
->  
->  	/* Reset LINK and PHY*/
->  	rcsi2_write(priv, V4H_CSI2_RESETN_REG, 0);
-> @@ -1352,7 +1352,7 @@ static int rcsi2_start_receiver_v4h(struct rcar_csi2 *priv,
->  	rcsi2_write16(priv, V4H_PPI_RW_COMMON_CFG_REG, 0x0003);
->  
->  	/* C-PHY settings */
-> -	ret = rcsi2_c_phy_setting_v4h(priv, msps);
-> +	ret = rcsi2_c_phy_setting_v4h(priv, mbps);
->  	if (ret)
->  		return ret;
->  
-> @@ -1363,7 +1363,7 @@ static int rcsi2_start_receiver_v4h(struct rcar_csi2 *priv,
->  	return 0;
->  }
->  
-> -static int rcsi2_d_phy_setting_v4m(struct rcar_csi2 *priv, int data_rate)
-> +static int rcsi2_d_phy_setting_v4m(struct rcar_csi2 *priv, int mbps)
->  {
->  	unsigned int timeout;
->  	int ret;
+Replace `@` with backticks in a comment of `io.rs` to follow Rust doc
+convention
 
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+Reported-by: Miguel Ojeda <ojeda@kernel.org>
+Closes: https://github.com/Rust-for-Linux/linux/issues/1167
+Signed-off-by: Sai Vishnu M <saivishnu725@gmail.com>
+---
+ rust/kernel/io.rs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- Tomi
+diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
+index 72d80a6f131e..92bc4e3cd8ec 100644
+--- a/rust/kernel/io.rs
++++ b/rust/kernel/io.rs
+@@ -43,7 +43,7 @@ pub fn maxsize(&self) -> usize {
+     }
+ }
+ 
+-/// IO-mapped memory, starting at the base address @addr and spanning @maxlen bytes.
++/// IO-mapped memory, starting at the base address `addr` and spanning `maxlen` bytes.
+ ///
+ /// The creator (usually a subsystem / bus such as PCI) is responsible for creating the
+ /// mapping, performing an additional region request etc.
+-- 
+2.49.0
 
