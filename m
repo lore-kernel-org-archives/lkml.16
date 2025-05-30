@@ -1,62 +1,50 @@
-Received: from sonic311-30.consmr.mail.ne1.yahoo.com (sonic311-30.consmr.mail.ne1.yahoo.com [66.163.188.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195A222D7BF
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 17:02:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.188.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA687186284;
+	Fri, 30 May 2025 17:03:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748624558; cv=none; b=pS653kN2a/bOkc3Lc9ifFRW6gUjNLNL7kTW8OWG/CbQPSY1dJG/Pdu811V3ylmwGM2rtD9bGIAeyu2ccSXgzokl7mAvkmVrs9AggoJPiG5MgKjlSQKe+PLU9Alrv3ooo9Hb7TgomTTe4Vb6awVfo/hpoB2TFW0X45wxwVEwv5Ac=
+	t=1748624592; cv=none; b=DD4cwYzmS7aKLxvbQ4TeSJOOyIFZ4wYKZD8AYFkPsDbTUeu1QkMPK1CxeYZB2/1WyO80A+jsjIBqWfZvTN3qKGwI7D7a3I4o8uPQyZbgLReNQr1b0w+H7i+Mh7B5WFN4IzBPpON3+wb7vBhFUvtTN2y8/8BIhBZCtvfNquzfO5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748624558; c=relaxed/simple;
-	bh=eFawQOwx0t+3UujBh4Fr3uZplLDO6ijeohvSoG1jjw0=;
+	s=arc-20240116; t=1748624592; c=relaxed/simple;
+	bh=NfqFbKolECl1/oE1cuEzQtp/WJCpNHwOzjyns7R82hY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K83mg9DzwyCs94/G8d/1Kmh/h1OT5P6IAYj5op52PaFkIS6IWRlK3TlsjAUQ0B6bPtJ8NVoAviaZypbmJg2erje6C6N0Nj5YeT0r2s1gXmz4m0AeEjWelbQx0Op1t6jUMlzHPSuqG2HgBSIqYRdxmvjz9p4X/76sDlg+GsmaczA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=QWhZCCSB; arc=none smtp.client-ip=66.163.188.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
+	 In-Reply-To:Content-Type; b=N4D00RFztiVKB+8Oev8nu9zLgNmOms8sOKu8iqe4jKt/kFICpqW0VJDq4s14klTbcEhi790mT6r5Pb8QSmwkJWpapZYY1Yuof/cLi1K+dsQDMxC1wpMjgWNydHIwBqJDp8+CqSw7Kr7UuoGpVqSCZ80WMcVW38IWM2y/hdQQRdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FQQ2PvlZ; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="QWhZCCSB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1748624549; bh=79d3wEeq0DfVMh6u8bOiCnavXHOMOyotm1cKZBRGi5Y=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=QWhZCCSBuwDP7kPLIM/0CWjUqndI2T6bDlc7PYQJaZmE6QZUehbrx7DAtynsnnxK0msL1vFmM9Bn+aitxHAednWPRs+kIxXJ5fPbytDN662ElDGGAJGw5OQJfFkhYj/6y5l6pUyIgX9bOzBvlj8nyi5dm9Y8E/AKWvEspUQq4s88UNUI1CfBpZJJuQU778B/RWBiNAOWvpKrGrk0fRklciV4T1Dvfb0c5krcyW6aeNmQPJZ9edB0UpsVjUJeTvhGme7eT6ROnTkP0xtX0F1u8ZsTJbh08GkSgLtJbnMMQVUHAVJ+XGnodCuD2hBmZXVwg1LObF5tKmChkpd2gr4Cvw==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1748624549; bh=4SFla4BU7AGPmBKuQ530/0PPtqaE5RsIglOGB0q5Iut=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=mQOmakngaW+Xu0+xfCHaMT28Besix6GEezHbsTM20TRn3A0pgriFoYkFTf+bi4y2nMHriU/UcEalJ+coQiCqiLmmUH6vsCEz0Yhk0Mc3h4xTmZtwksJfCXIbO/2367XyhPcJb6UWLJgJRRxWt1CTxiu1VUHio5nspwiAuW/9JzebOL5dNqOFJ0pMA/1YFKwigD6aiL6m3DYcEV7HkhMYrRFtxXyfhVSvtkJnzw4U22eFdtmvoHcQ1fYLdZTixZZamKWFl8Vb6seDd9Z1jMTE+N3y2aLR4qsCh41Hj8/8HKjIJX8esgzFNxCACSbfBPRzVTqC5UgBvpmdm8Mp5INfuQ==
-X-YMail-OSG: 9H8usBAVM1mXvzZYu6juGgF7x128gp_YEHcGoEQLPh05TEOjpl2CxBe_i14A5.V
- Ezg9IR141c6Z5HQtIs5ixMLu7Cnd3tsQ2kPdxaVITSLjZOkziaCx4jofNbNHBKs5l51WAPJ0zu85
- 2qKnq4ZHSo3MY.dcrmRBmdBkhogG1YqMVtJ0yublc8HpvuN7A1biW9WUP2KSs_6osytGi7gZAD99
- SeH0xEHlWke3_PUW7twBOZYm6IzZHtTGZxBQq1R6yOYhBblW3q69ooJtJYstiSa5Erz5I6vVeMrN
- NUuI9RqcfrdIVjG5euyRU4uGTY6zgvXHHgvVUBSnDmZOsfq73EvQY1BwO4ggakazLclK8vo_cHUl
- 9RaOm5re2dl0w7BdxzcVtg_jiVLhATGQ21sYaqXebwXQqdymnyB11sYmR05KhG5No9rQO8yYtz9l
- wgAE5s9ss0tGT2ZIZTIutU.pyMLc89zeDHo47foBKqX6JUD1gZAREJMVG_fEb4zlSXnYO.ZMx7J9
- FjyCVqLGNVeOid6iZ9sX09lZjcWMkr_K6Y723kOsXcrnTthyy0YanDWdvsKQTlMkjWO0PYrny.Pq
- zgnKopb4cCkXYPNO55I5n43REkCSpzrhz7umZ4D.HAyM69UF32lwQSUws3lWQU8lXhK_5Wjz8G3Y
- ar8Et9NPkg7RR6z2YYzUM7BYAoGvkUfGf1AmEG4lq9JKySYNwhvCGtGYo6_tM1_d.Ew9pIFyInyI
- 1.L_IqI76QV1ZBEl2RVbb5agcW7R35pBpxIihwTLExFlRzkbgchJZGNteArKl2nk0fQvptEZlToE
- lBXYZC2MwKKyDOavr4rnPpN6uubCYUrEfSdMcyTaFlC9EUJeuzex0L7BLSAmr5ZcVZIAIL4B97Xi
- o2_JiEU2lAGRz5tSpnyIRG14sPPC8ojyyOMTO0yh0baDcQaQM5IGkuasb1_gTva9xTR.UpY.00aV
- ML9q7toHdmKZFnG_1xCsBnl.7FeBYZm9VskRNpLT.kJ6DwvDKvSnxfbM6m1C3EpDO5PKw_7.TWlB
- 48DIDGv1GfCHygXXmIZy_HBF6JdYCq7CMLhIVT8mN1mqGZx4ovNtidTR2gqm1yMYgFg7Ik6QCXGM
- 5CO1LVwOtlJGtBoieObslgXR3hB_wL2d2eoIwg0IriWgdYgaKiA9OKj70npmowWAeascm_pV04cz
- dCM.yXjL3ml3Zym4hhWGrBPjtMwQp24pAv4fM3xVMSUZ2N_ZodU8HD6.oHc2xqOwdCfeHmXNBGF4
- GvF6oV1WaIuS5MezqdgnjfYpqEotIil7ZX4Yv.D7kuLDXY760GNQ6BkIDDvGWSe86wryhh0E50CO
- Boj7nJDg3U445rPvlZxyehMpeGZXyEZMo3vmHo_stdkC8K8OYwYKjOiKlN19ApGOgSlCa9VmH9Fj
- 41grxKTuX_boyBqfoQaN4UxQwSBeATt_dE.t8N8DSSaJgKTjOWk.FQQVeWYbhOmG.MEFSmbQ3cJX
- nIgtcypZriNNft8a7oNiutuHTZJlQc8u3JXpsbDwh6sBVr5TKiNlScc2J.DIi64Q5dwJphs93EGj
- yJGw3e.ikVbWPFWWXRgJWkFbwUFj2kJNq2vIMoOy.t6RI1yzmRUBi0LN.ZFSzEBql1rS34QHvSoV
- F3s0_..cQKvvbdjqzuT.bZHL.lB_IyPCEpunQcDviWnaNpGZsriCizAK3.AxWgq06ewPnsWjxLUG
- yb1oBoG1M5kG8Uxd5uew.fOEgl.3p6w8mPU.5xYgqrhVfHnGJTXOZQGD5lJXhVmiClb2Y6OfKfrt
- .rz3xPzKuxsgm5MOP9mJdfy1K.wy58TmiTYQN9lR.xj6oc2cDUXF28JiPajKhBJoGcL7BGuEA.zL
- vua1v9UiadmBKzBchj9ixbCjy3tL7ocUOESUuPJqdrSNuejhkPlKFYIfcDDodA07kp4pmeLTUl.i
- nqYJLwv9KKBLkvqvi8n.dD0vkFDZkcTFwJFokXBTWtPoKe2h8I8Psah7OtlQeagqiH1RRFV7G_Ut
- FchLYQE2qtwfN8Ak0wE3MKQb7YNgYClxi02f7fJuKdxbtSuflnbedsw4JezUVNHlhkYqrhcrIbyw
- nftjkQe9Qg3P0NfXbOfdCjglc5jyP8tBDo_zWUDeRFzOmEz6Xz4QrH5mrKgk7aNp4QOjIIpmhmO6
- NeAEanx0_j87qvrAZfVx4_fDH42deiO_otLJCThCcMdQn.0oKHoqR63oTNZK.oYNejbjm7l4E.0b
- 7dc6c.gsCTJbKePlbXIv6Y.OBDbkcRGGjIlGviFVLQcPyAAicMJfeh3fC_d6F2RswhgyJeBOqWYl
- PYShwye9cFFEaAn6PBHiU3oqLej0zY_j_
-X-Sonic-MF: <casey@schaufler-ca.com>
-X-Sonic-ID: e297110d-07b8-4426-97e4-592aefd09b3c
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic311.consmr.mail.ne1.yahoo.com with HTTP; Fri, 30 May 2025 17:02:29 +0000
-Received: by hermes--production-gq1-74d64bb7d7-r5xbr (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 55de6f3c173c43eb92ce6bb799c178d9;
-          Fri, 30 May 2025 16:52:19 +0000 (UTC)
-Message-ID: <08a97aac-6c77-451a-a2a5-20606bdde51f@schaufler-ca.com>
-Date: Fri, 30 May 2025 09:52:17 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FQQ2PvlZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748624591; x=1780160591;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=NfqFbKolECl1/oE1cuEzQtp/WJCpNHwOzjyns7R82hY=;
+  b=FQQ2PvlZeccqe5u1vA2oO25yvzkjVjOLCf+X3PomF7miAaPKjbhNPzmL
+   sjSmBYKXh8HxsnzVopAVMv6nPuXwEeJ7254W6vgVc4B1zvIftgWkwsfsl
+   56cfHGGRDqXDRoEdR3WciT6CQpolDwE6OsY/rAl/8e/R0isZ2oGWO98WI
+   8kZRH08V2CINfGiUye1sYo8J/9SPsxvUU1BduBja7L4+EWZHmQg19EL0c
+   21Qm02QfWq5icR7Q/mH8TIq23BSEohUYIUfhWhL2b2QKDHfmT65KWMREv
+   3aaF3E1ZRH1D2TlcPeUI4tpYSIcz1onVfYj2byqLRMMcFUg5Kh9Cnb5nB
+   A==;
+X-CSE-ConnectionGUID: TYfaXoF4SIOxLvg7ZYmE3w==
+X-CSE-MsgGUID: lgkpLjM9TtGyaExSaK2b8A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="60981859"
+X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
+   d="scan'208";a="60981859"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 10:03:10 -0700
+X-CSE-ConnectionGUID: rb/OBHWGSf+6UYcWCh2fpA==
+X-CSE-MsgGUID: YzFQ5tC3S92B6z9UF8u0ZQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
+   d="scan'208";a="181128897"
+Received: from mgoodin-mobl2.amr.corp.intel.com (HELO [10.125.110.94]) ([10.125.110.94])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 10:03:09 -0700
+Message-ID: <ae794a43-19d0-4c51-a7bc-96427feac5e6@intel.com>
+Date: Fri, 30 May 2025 10:03:08 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,158 +52,92 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 1/2] landlock: Multithreading support for
- landlock_restrict_self()
-To: =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>,
- =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-Cc: =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack3000@gmail.com>,
- Paul Moore <paul@paul-moore.com>, sergeh@kernel.org,
- David Howells <dhowells@redhat.com>, Kees Cook <keescook@chromium.org>,
- linux-security-module@vger.kernel.org,
- Konstantin Meskhidze <konstantin.meskhidze@huawei.com>,
- Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org,
- Peter Newman <peternewman@google.com>, Andy Lutomirski
- <luto@amacapital.net>, Will Drewry <wad@chromium.org>,
- Jarkko Sakkinen <jarkko@kernel.org>, Casey Schaufler <casey@schaufler-ca.com>
-References: <20250221184417.27954-3-gnoack3000@gmail.com>
- <20250227.Aequah6Avieg@digikod.net> <20250228.b3794e33d5c0@gnoack.org>
- <20250304.aroh3Aifiiz9@digikod.net> <20250310.990b29c809af@gnoack.org>
- <20250311.aefai7vo6huW@digikod.net> <20250518.be040c48937c@gnoack.org>
- <20250518.xeevoom3kieY@digikod.net> <aDmvpOMlaAZOXrji@google.com>
- <20250530.ozeuZufee5yu@digikod.net> <aDncH8D9FoyAIsTv@google.com>
+Subject: Re: [RFC v2 26/35] RPAL: enable MPK support
+To: Bo Li <libo.gcs85@bytedance.com>, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, luto@kernel.org,
+ kees@kernel.org, akpm@linux-foundation.org, david@redhat.com,
+ juri.lelli@redhat.com, vincent.guittot@linaro.org, peterz@infradead.org
+Cc: dietmar.eggemann@arm.com, hpa@zytor.com, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, viro@zeniv.linux.org.uk,
+ brauner@kernel.org, jack@suse.cz, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
+ mhocko@suse.com, rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+ vschneid@redhat.com, jannh@google.com, pfalcato@suse.de, riel@surriel.com,
+ harry.yoo@oracle.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, duanxiongchun@bytedance.com, yinhongbo@bytedance.com,
+ dengliang.1214@bytedance.com, xieyongji@bytedance.com,
+ chaiwen.cc@bytedance.com, songmuchun@bytedance.com, yuanzhu@bytedance.com,
+ chengguozhu@bytedance.com, sunjiadong.lff@bytedance.com
+References: <cover.1748594840.git.libo.gcs85@bytedance.com>
+ <a7da7fe131b0ce6582dbb77903745673d83a6195.1748594841.git.libo.gcs85@bytedance.com>
+From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
-From: Casey Schaufler <casey@schaufler-ca.com>
-In-Reply-To: <aDncH8D9FoyAIsTv@google.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <a7da7fe131b0ce6582dbb77903745673d83a6195.1748594841.git.libo.gcs85@bytedance.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Mailer: WebService/1.1.23884 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+Content-Transfer-Encoding: 7bit
 
-On 5/30/2025 9:26 AM, Günther Noack wrote:
-> On Fri, May 30, 2025 at 05:11:34PM +0200, Mickaël Salaün wrote:
->> On Fri, May 30, 2025 at 03:16:20PM +0200, Günther Noack wrote:
->>> On Sun, May 18, 2025 at 09:57:32PM +0200, Mickaël Salaün wrote:
->>>> We should rename the flag to LANDLOCK_RESTRICT_SELF_PROCESS to make it
->>>> clear what it does.
->>>>
->>>> The remaining issues are still the potential memory allocation failures.
->>>> There are two things:
->>>>
->>>> 1. We should try as much as possible to limit useless credential
->>>>    duplications by not creating a new struct cred if parent credentials
->>>>    are the same.
->>>>
->>>> 2. To avoid the libpsx inconsistency (because of ENOMEM or EPERM),
->>>>    landlock_restrict_self(2) should handle memory allocation and
->>>>    transition the process from a known state to another known state.
->>>>
->>>> What about this approach:
->>>> - "Freeze" all threads of the current process (not ideal but simple) to
->>>>   make sure their credentials don't get updated.
->>>> - Create a new blank credential for the calling thread.
->>>> - Walk through all threads and create a new blank credential for all
->>>>   threads with a different cred than the caller.
->>>> - Inject a task work that will call cred_transfer() for all threads with
->>>>   either the same new credential used by the caller (incrementing the
->>>>   refcount), or it will populate and use a blank one if it has different
->>>>   credentials than the caller.
->>>>
->>>> This may not efficiently deduplicate credentials for all threads but it
->>>> is a simple deduplication approach that should be useful in most cases.
->>>>
->>>> The difficult part is mainly in the "fleezing". It would be nice to
->>>> change the cred API to avoid that but I'm not sure how.
->>> I don't see an option how we could freeze the credentials of other threads:
->>>
->>> To freeze a task's credentials, we would have to inhibit that commit_creds()
->>> succeeds on that task, and I don't see how that would be done - we can not
->>> prevent these tasks from calling commit_creds() [1], and when commit_creds()
->>> gets called, it is guaranteed to work.
->>>
->>> So in my mind, we have to somehow deal with the possibility that a task has a
->>> new and not-previously-seen struct creds, by the time that its task_work gets
->>> called.  As a consequence, I think a call to prepare_creds() would then be
->>> unavoidable in the task_work?
->> OK, we don't need to freeze all threads, just to block thread creation.
->>
->> What about that:
->> 1. lock thread creation for this process
->> 2. call prepare_creds() for the calling thread (called new_cred)
->> 3. call cred_alloc_blank() for all other threads, store them in a list,
->>    and exit if ENOMEM
->> 4. asynchronously walk through all threads, and for each:
->>   a. if its creds are the same (i.e. same pointer) as the calling
->>      thread's ones, then call get_cred(new_cred) and
->>      commit_creds(new_cred).
->>   b. otherwise, take a blank cred, call cred_transfer(), add the
->>      Landlock domain, and commit_creds() with it.
->> 5. free all unused blank creds (most)
->> 6. call commit_creds(new_creds) and return
->>
->> Pros:
->> - do not block threads
->> - minimize cred duplication
->> - atomic operation (from the point of view of the caller): all or
->>   nothing (with an error)
->> - almost no change to existing cred API
->>
->> Cons:
->> - block thread creation
->> - initially allocate one cred per thread (but free most of them after)
-> The proposal is growing on me.
->
-> One way to view transfer_creds() and have it nicely fit into the credentials API
-> would be to view prepare_creds() as a convenience wrapper around
-> transfer_creds(), so that prepare_creds() is implemented as a function which:
->
->   1) allocates a new struct cred (this may fail)
->   2) calls transfer_creds() with the new struct cred to populate
->
-> We could then move the bulk of its existing prepare_creds() implementation into
-> the new transfer_creds(), and could also move the keyctl implementation to use
-> that.
->
-> A remaining problem is: The caveat and the underlying assumption is that
-> transfer_creds() must never fail when it runs in the task work, if we want to
-> avoid the additional synchronization.  The existing cases in which the
-> credentials preparation logic can return an error are:
->
-> * Allocation failure for struct cred  (we would get rid of this)
-> * get_ucounts(new->ucounts) returns NULL  (not supposed to happen, AFAICT)
-> * security_prepare_creds() fails.  Existing LSM implementations are:
->   * Tomoyo, SELinux, AppArmor, Landlock: always return 0
->   * SMACK: May return -ENOMEM on allocation failure
->
->
-> So summing up, in my understanding, the prerequisites for this approach are that:
->
->   1) get_ucounts() never returns NULL, and
->
->   2) SMACK does not bubble up allocation errors from the cred_prepare hook
->
->      Casey, Jarkko: do you think this is realistic for SMACK to change?
+On 5/30/25 02:27, Bo Li wrote:
+> RPAL leverages Memory Protection Keys (MPK) to safeguard shared memory
+> from illegal access and corruption by other processes. 
 
-It's possible, but not trivial. The task based access rule list and relabel
-list would need to move from the Smack cred blob to a Smack task blob. There
-wasn't a task blob when these lists were introduced, so the cred was the only
-option. I would entertain patches.
+... as long as nobody uses the completely unprivileged WRPKRU or XRSTOR
+instructions. Right?
 
->
-> and that
->
->   3) We can block new thread creation
->
->      Mickaël, do you have a specific approach in mind for that?
->
->      As Jann pointed out in [1], the tasklist_lock and siglock are not sleepable
->      and can't be used while waiting, which is why he proposed an approach where
->      we retry in a loop until no new threads show up any more, while getting the
->      existing threads stuck in the task_work as well (where they can't spawn new
->      threads).
->
->
-> Thanks,
->
-> —Günther
->
-> [1] https://lore.kernel.org/all/CAG48ez0pWg3OTABfCKRk5sWrURM-HdJhQMcWedEppc_z1rrVJw@mail.gmail.com/
->
+... the instructions that are plainly available in super obscure
+libraries like glibc?
+
+This seems like a rather major oversight.
+
+Oh, speaking of major oversights, you stymied pkey_alloc() but forgot
+pkey_free(). There's nothing to stop folks from pkey_free()'ing a pkey
+that RPAL is using and then letting someone else allocate it.
+
+Is this all for real and serious?
+
+
