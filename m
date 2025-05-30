@@ -1,79 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD036273FE;
-	Fri, 30 May 2025 14:15:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0423522F16C;
+	Fri, 30 May 2025 14:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748614553; cv=none; b=XcV96tWIdqSXJIQX1wYoFg+IEnoJdm3X+NayKQqu1HypKnDxPYGX+Z8BQoVXxlVIVhxD40PIlPKUovVmedEIzM7NiBdUDPPVaZr4R4CdS1JjyiH0Ki1Kiu5Vd1pbpIfz++/DSCRTO7hIsHHbgpmvOTH19+YKmY5EaOyI69mut4Y=
+	t=1748614674; cv=none; b=FstjnAfcPED1P6ogtdSfDYTfjT6PB8ix/QWT/rLxlRjx6CUgXYgO/J/qzQQw94AXqtBeWfiIuVBSipFdDbDV4/jWMt4czFyPjX1bccW0fCZIXvmnKWKxvLcOIMnF4z0EmA9aDL8pyh/1WB/UhohcXjOFK1pUEf/cx+cX1UXOfZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748614553; c=relaxed/simple;
-	bh=A4LnFuYc2L5vHO1Q/YLKYIygxkVBYLeUccYIYNErrG8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GZDBRcGLELXU2B2JtykVbtG8HPA4ZyKvawfSwk25kGQpV7xC2yMW7cg2a+TZ9yDZa+vzTEh4saITh26uiSNaCaQKGxqDLOfq7C+P6RRZxked2AvR9eayIWaE2VYrwk0wHsGtQaIUZWagU3nGknStJA98SPCf83XHo4CClZ++GtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=M6EUwY86; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748614674; c=relaxed/simple;
+	bh=XhnVt0QnfEI5gIUVP3wWJDi899FVeshy3p4Ui1JgNmA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k6nJOGkFrrS/vOpNLHiqfcrAH71L5IWxDa22sXbrKpfOfsW4BX7C/vkZ4i8iDEqvxIyc5ErjvzXDyFlHalOGyTOh7tRckfywcfNCwdqlVL2QRvmbZ2r8htAEM8AqGFhAnMS66c05bUVii00eWVJG3oKRS5syipVZWIolKvSYepg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cfUPmghU; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="M6EUwY86"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1CC7C4CEE9;
-	Fri, 30 May 2025 14:15:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1748614553;
-	bh=A4LnFuYc2L5vHO1Q/YLKYIygxkVBYLeUccYIYNErrG8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M6EUwY86J9xNI4G4K9HgKrh+O2rMO1PavRywfeSCap6BTscdattegQko/qtRHwFKe
-	 WRt/ImYDeAB1BIiBUe1frWs3a9/HiC/R1ouUAdgRFEP+xtCEb6lmP8A/k5g0/kqwFE
-	 dfPEGqABpjWrZ4a5m/ujL//0aIwCS6SLeNaTw7go=
-Date: Fri, 30 May 2025 16:15:50 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Giovanni Gherdovich <giovanni.gherdovich@suse.com>
-Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
-	linux-cve-announce@vger.kernel.org
-Subject: Re: CVE-2025-37832: cpufreq: sun50i: prevent out-of-bounds access
-Message-ID: <2025053010-legible-destiny-23d3@gregkh>
-References: <2025050824-CVE-2025-37832-e235@gregkh>
- <1db6d340-bfae-4d81-a1d1-dcbd7bc1294f@suse.com>
- <2025053006-multitask-profanity-3590@gregkh>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cfUPmghU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748614670; x=1780150670;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=XhnVt0QnfEI5gIUVP3wWJDi899FVeshy3p4Ui1JgNmA=;
+  b=cfUPmghUj8zobHkiS3OWIaew+hWPZrgBbMxX0s9TAV5LU0bGrtJtt2cg
+   Xr3YmbEZiUHx5yqPIQrXRNgf76gg9OgWwdBTbqjrbO85PWcoOPsVM0Waq
+   xSUMQj3SDJ9d++VCu5J1wV0WuFvjW2N6arsJTtIbO2X7TMbiVfEXdVJdr
+   Hp1BLyWFnyk6Zo2ACViWhg88zZAyX6QXa8DJ8JWClyR99yCHJPY3dVRCp
+   KZ2DJYNoyzXhOpzHHUUEVYBQbOFQ7Py5ZlphPawmWR9py8A+YjMDXjKD9
+   SZyfDBuoyEph9UdE1hzZcBLvhJk3IU8C638YAIJEqU91JCVut2NoQjw1Z
+   g==;
+X-CSE-ConnectionGUID: 1qz+MbXsQfusX9KWglJgFw==
+X-CSE-MsgGUID: ztdfuPZHQEyHcsZmlmWpYQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="53339229"
+X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
+   d="scan'208";a="53339229"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 07:17:49 -0700
+X-CSE-ConnectionGUID: 6uoBg92/RW+QSNuKEY3qAg==
+X-CSE-MsgGUID: fQMZyfYTQym9V3XRiV1JZQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
+   d="scan'208";a="144222531"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by fmviesa008.fm.intel.com with ESMTP; 30 May 2025 07:17:45 -0700
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Lucas De Marchi <lucas.demarchi@intel.com>,
+	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc: David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Jan Dabros <jsd@semihalf.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Raag Jadav <raag.jadav@intel.com>,
+	"Tauro, Riana" <riana.tauro@intel.com>,
+	"Adatrao, Srinivasa" <srinivasa.adatrao@intel.com>,
+	intel-xe@lists.freedesktop.org,
+	linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/2] drm/xe: i2c support
+Date: Fri, 30 May 2025 17:17:42 +0300
+Message-ID: <20250530141744.3605983-1-heikki.krogerus@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025053006-multitask-profanity-3590@gregkh>
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 30, 2025 at 04:14:51PM +0200, Greg KH wrote:
-> On Fri, May 30, 2025 at 03:57:35PM +0200, Giovanni Gherdovich wrote:
-> > On Thu May 8, 2025 08:39, Greg Kroah-Hartman wrote:
-> > > A KASAN enabled kernel reports an out-of-bounds access when handling the
-> > > nvmem cell in the sun50i cpufreq driver:
-> > > [...]
-> > 
-> > The invalid data that may be read comes from a ROM in the SoC,
-> > programmed by the vendor, and is only used to configure CPU frequency
-> > and voltage in the cpufreq framework.
-> > 
-> > Even assuming that improper frequency/voltage settings constitute a
-> > security risk, writing to the ROM in question is at least a privileged
-> > operation, and may require physical access to the SoC.
-> 
-> Obviously there are systems out there that have this issue, with device
-> trees that can trigger this issue, this isn't a matter of "malicious ROM
-> doing bad things" type of issue, it's a "the DT can't express this
-> properly, so we might have taken data from the hardware and handled it
-> in the wrong way" type of issue.
-> 
-> > I don't think this qualifies as vulnerability.
-> 
-> I don't see how this is a ROM configuration issue, but rather just a
-> kernel bug in how the hardware is accessed on different types of systems
-> where we previously could not handle such accesses correctly.
+Hi,
 
-Note, if the maintainer or the developer of the change in question here
-disagrees with me, great, we'll be glad to revoke this CVE, as we defer
-to them.  But for some reason you didn't include them in this thread :(
+Some of the future "data center GPUs" will provide access to the
+on-board Synopsys DesignWare I2C host adapter. The i2c is used to
+connect various microcontrollers. The initially supported
+microcontroller unit is called Add-In Management Controller (AMC).
 
-thanks,
+Thanks,
 
-greg k-h
+Heikki Krogerus (2):
+  i2c: designware: Add quirk for Intel Xe
+  drm/xe: Support for I2C attached MCUs
+
+ drivers/gpu/drm/xe/Makefile                 |   1 +
+ drivers/gpu/drm/xe/regs/xe_i2c_regs.h       |  16 ++
+ drivers/gpu/drm/xe/regs/xe_irq_regs.h       |   1 +
+ drivers/gpu/drm/xe/xe_device.c              |   3 +
+ drivers/gpu/drm/xe/xe_device_types.h        |   4 +
+ drivers/gpu/drm/xe/xe_i2c.c                 | 270 ++++++++++++++++++++
+ drivers/gpu/drm/xe/xe_i2c.h                 |  60 +++++
+ drivers/gpu/drm/xe/xe_irq.c                 |   2 +
+ drivers/i2c/busses/i2c-designware-platdrv.c |  18 +-
+ 9 files changed, 369 insertions(+), 6 deletions(-)
+ create mode 100644 drivers/gpu/drm/xe/regs/xe_i2c_regs.h
+ create mode 100644 drivers/gpu/drm/xe/xe_i2c.c
+ create mode 100644 drivers/gpu/drm/xe/xe_i2c.h
+
+-- 
+2.47.2
+
