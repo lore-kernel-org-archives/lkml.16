@@ -1,98 +1,190 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1043222B8AA
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 13:51:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 820EE22F177;
+	Fri, 30 May 2025 13:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748613102; cv=none; b=BL99EthdkvWZztBI5PE9zeM5WPgD7zyZRF5ehH37kA1Ollioo2f6zg52J9/d353tyNK7melcOJNXo9JGRnpH/ndPzK9CqiutNXZCr+Pmna9xe9yZX/sUbvZsIQ34yh//HL3XWTpqxRrn7k4bALd9jtnN7uHGGu8gdhtBa2f3T5Q=
+	t=1748613103; cv=none; b=GKN7ujo7terrlS1s+0Ys2+nWOiyjLdhdU1y1SiPLetFG25DpGPuYe7UyirHB3Y18l7QMdDvXYBnNbAd8PtY1Dmo462iCH3nViNupkvnXmQhB8pIsELHL5rzGtC24oAae6hJ1/a3RspX2sWDAbdS0VNSI8/nAWrplepg050ApDug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748613102; c=relaxed/simple;
-	bh=pX2PTHtPzqLQ5kA1NmW2FjwzP4CXJktF96ar71uadBI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gQo0xcBVc0/g5nm8uh39Km/Tbn9DJyFiPiW32V0aBEBiyONO7C5xAj3HO6CPzykVjm6frJc5nTBgTg0y5xk7BtCqNhUcVJEq4u0y96F+CRDwBr/HjpMUtKNAK1YGJ6X/KAPhhEo4XFGboMGr6A0XHj4z4hfd42ui5faPWTWiEiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KhZz1V7H; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748613103; c=relaxed/simple;
+	bh=f9Zu08iRKcpOonJQPT1z5w861yw0MT1qatoa5Fhmp1w=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=s2XM/cV+FaThyuYKN7esCu613aIDmjJMkOfJRDhIjH7/waaMiE2PHzBFkjM4XLs8kZR/r9D/dJtKbtHuBCRTetyo0qgvJ39HMTJnU16ZNMh560nq3u/3dftERmE2fN5SXsNFZv+7YE9LGhGF56aHr2ZbX40GnMd+IxdAFCCgKDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=n+NrvRvP; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KhZz1V7H"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748613100; x=1780149100;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=pX2PTHtPzqLQ5kA1NmW2FjwzP4CXJktF96ar71uadBI=;
-  b=KhZz1V7HZpT1lTWCixRKiPNu0n/2jjxfxvd26JFcyq7HSGzmk1StFJXs
-   /hrhPTxEy34Gf/7602ypcwnVt4XD1SUQjX7MOpUOVOO0+NIFHMQmywyDL
-   uxdbGKiF/NAGT3Rqi3NYSG4hUkNs2/CteQ25aIIAPgNkplgTnrmuzQ4Hz
-   K4ZrglkUxOdgY9CDPhk3rTXUTMwDjPbl7PFKEB+/DDm/HbYibjzVErF/2
-   bD/zeE45H5rYbDvItCMnfsKFXLOOH95Q17T1nB7UZGOjH+zqWhv+r+3av
-   vOEx9ptOLvdTLaSGeRhSmb2FqcSXJvuhvYoLeeZq7ABsd4cNjV/oDXYLF
-   A==;
-X-CSE-ConnectionGUID: MXk8CQboQW+uhWWQJEdihg==
-X-CSE-MsgGUID: mnbBTU04T2CcE0PhoBoMmA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="50402009"
-X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="50402009"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 06:51:39 -0700
-X-CSE-ConnectionGUID: ZJN+7x+rQCm/0h/vPOARow==
-X-CSE-MsgGUID: P+15Gi7KSJGyJHH3fdtplg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="143850083"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 06:51:34 -0700
-Date: Fri, 30 May 2025 16:51:30 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: Alexander Usyskin <alexander.usyskin@intel.com>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Karthik Poosa <karthik.poosa@intel.com>,
-	Reuven Abliyev <reuven.abliyev@intel.com>,
-	Oren Weil <oren.jer.weil@intel.com>, linux-mtd@lists.infradead.org,
-	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	Tomas Winkler <tomasw@gmail.com>,
-	Vitaly Lubart <lubvital@gmail.com>
-Subject: Re: [PATCH v11 04/10] mtd: intel-dg: register with mtd
-Message-ID: <aDm34rQxtYhvt6fc@black.fi.intel.com>
-References: <20250528135115.2512429-1-alexander.usyskin@intel.com>
- <20250528135115.2512429-5-alexander.usyskin@intel.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="n+NrvRvP"
+Received: from [127.0.1.1] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7903918B9;
+	Fri, 30 May 2025 15:51:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1748613066;
+	bh=f9Zu08iRKcpOonJQPT1z5w861yw0MT1qatoa5Fhmp1w=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=n+NrvRvPFHrs2RxiCfukHYWAgrkAw5dlXignOfRYlDHhmOEeYve7xqOQbtWOTJKgx
+	 0TO0VN8oReqPeeDGgeAP3LpJBf7+pePxXzBpQAdum/CfKoaApftxx4bE+eqOLgkivJ
+	 r3RwHbDvpPvmILEVqDVzRmSdsNkbELdGYL9LlSF0=
+From: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+Date: Fri, 30 May 2025 16:50:35 +0300
+Subject: [PATCH v3 06/15] media: rcar-csi2: Simplify rcsi2_calc_mbps()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250528135115.2512429-5-alexander.usyskin@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250530-rcar-streams-v3-6-026655df7138@ideasonboard.com>
+References: <20250530-rcar-streams-v3-0-026655df7138@ideasonboard.com>
+In-Reply-To: <20250530-rcar-streams-v3-0-026655df7138@ideasonboard.com>
+To: =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, 
+ Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Jacopo Mondi <jacopo.mondi@ideasonboard.com>, 
+ Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3595;
+ i=tomi.valkeinen+renesas@ideasonboard.com; h=from:subject:message-id;
+ bh=f9Zu08iRKcpOonJQPT1z5w861yw0MT1qatoa5Fhmp1w=;
+ b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBoObfcPSkp3vyJSwbTde2dwYrlWJfHsNOBgz5yX
+ c8Ovq/E/dGJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCaDm33AAKCRD6PaqMvJYe
+ 9TLuD/0T+gn4n8w5SPNtPddeWlQzF+0598QNlON16oJCj2ksX5gaJ42JSyuUV5EVvhlZq1v4wny
+ LPnmFlTS6X1kn4tTHHWw0weslcv5/ChXCmwsGxvPkU4MxoI2XJGs7tvXavUKUik3us+nJ1FdKhE
+ tU1smuiXdcBsFkXTRenffZSkM4fMYfez2o9fhNcERPUjZiClfNRxTfRh5nbQcjPxAGNyn1N0ZLU
+ MiWtouyw1KU4W4MGNFkOI2TmImyPNvsLV8LwM9mUb5+ltL31xB25hrSzNWVq0QDg6+OlMOXCl4d
+ mKqSbgz3N82fit7YWL/ek29SriTGHfHyr3OTMzmGd1xzJvGuNhQaLQDPDlJ6Gwv4XMYwOH6l/Nj
+ LKHfcmNFW7ahfdyBqCXZbCJ3J0CqCc/Wzren2rAq2rAL/mWgPzjl7uesMsAh7F39hj26a7vF7mo
+ iKSDLNnaJaZUNXKFgecjGKEwqk1Jm9iRSYV73V+sdTpxazro1CKxP6LTDylzKtECJKUsVI0rkLV
+ eJwh3i1oY+Vv9IiVT7zNianT6tcSWvL4ncndTNH40vYuw4Plo2xZnCocD9bsj/nQu1umOR11uCx
+ wcv1y6ZM9gtRenuDkIBJwHKwWUyRdEGSsKLnQotC6ECCUcN+Xb9KnRJEkMVoi0Ue2xjVSA82QEB
+ BikkiwK9rFqbkfg==
+X-Developer-Key: i=tomi.valkeinen+renesas@ideasonboard.com; a=openpgp;
+ fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
 
-On Wed, May 28, 2025 at 04:51:09PM +0300, Alexander Usyskin wrote:
-> Register the on-die nvm device with the mtd subsystem.
-> Refcount nvm object on _get and _put mtd callbacks.
-> For erase operation address and size should be 4K aligned.
-> For write operation address and size has to be 4bytes aligned.
-> 
-> CC: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> CC: Lucas De Marchi <lucas.demarchi@intel.com>
-> Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> Co-developed-by: Tomas Winkler <tomasw@gmail.com>
-> Signed-off-by: Tomas Winkler <tomasw@gmail.com>
-> Co-developed-by: Vitaly Lubart <lubvital@gmail.com>
-> Signed-off-by: Vitaly Lubart <lubvital@gmail.com>
-> Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Instead of taking the bpp and the number of lanes as parameters to
+rcsi2_calc_mbps(), change the function to get those parameters inside
+the function. This centralizes the code a bit and makes it easier to add
+streams support.
 
-Reviewed-by: Raag Jadav <raag.jadav@intel.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+---
+ drivers/media/platform/renesas/rcar-csi2.c | 45 ++++++++++++++++--------------
+ 1 file changed, 24 insertions(+), 21 deletions(-)
+
+diff --git a/drivers/media/platform/renesas/rcar-csi2.c b/drivers/media/platform/renesas/rcar-csi2.c
+index 8aca35096408..90973f3cba38 100644
+--- a/drivers/media/platform/renesas/rcar-csi2.c
++++ b/drivers/media/platform/renesas/rcar-csi2.c
+@@ -998,13 +998,18 @@ static int rcsi2_get_active_lanes(struct rcar_csi2 *priv,
+ 	return 0;
+ }
+ 
+-static int rcsi2_calc_mbps(struct rcar_csi2 *priv, unsigned int bpp,
+-			   unsigned int lanes)
++static int rcsi2_calc_mbps(struct rcar_csi2 *priv,
++			   struct v4l2_subdev_state *state)
+ {
++	const struct rcar_csi2_format *format;
++	struct v4l2_mbus_framefmt *fmt;
+ 	struct media_pad *remote_pad;
+ 	struct v4l2_subdev *source;
++	unsigned int lanes;
++	unsigned int bpp;
+ 	s64 freq;
+ 	u64 mbps;
++	int ret;
+ 
+ 	if (!priv->remote)
+ 		return -ENODEV;
+@@ -1012,6 +1017,20 @@ static int rcsi2_calc_mbps(struct rcar_csi2 *priv, unsigned int bpp,
+ 	source = priv->remote;
+ 	remote_pad = &source->entity.pads[priv->remote_pad];
+ 
++	ret = rcsi2_get_active_lanes(priv, &lanes);
++	if (ret)
++		return ret;
++
++	fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK);
++	if (!fmt)
++		return -EINVAL;
++
++	format = rcsi2_code_to_fmt(fmt->code);
++	if (!format)
++		return -EINVAL;
++
++	bpp = format->bpp;
++
+ 	freq = v4l2_get_link_freq(remote_pad, bpp, 2 * lanes);
+ 	if (freq < 0) {
+ 		int ret = (int)freq;
+@@ -1092,7 +1111,7 @@ static int rcsi2_start_receiver_gen3(struct rcar_csi2 *priv,
+ 	phycnt = PHYCNT_ENABLECLK;
+ 	phycnt |= (1 << lanes) - 1;
+ 
+-	mbps = rcsi2_calc_mbps(priv, format->bpp, lanes);
++	mbps = rcsi2_calc_mbps(priv, state);
+ 	if (mbps < 0)
+ 		return mbps;
+ 
+@@ -1300,23 +1319,15 @@ static int rcsi2_c_phy_setting_v4h(struct rcar_csi2 *priv, int msps)
+ static int rcsi2_start_receiver_v4h(struct rcar_csi2 *priv,
+ 				    struct v4l2_subdev_state *state)
+ {
+-	const struct rcar_csi2_format *format;
+-	const struct v4l2_mbus_framefmt *fmt;
+ 	unsigned int lanes;
+ 	int msps;
+ 	int ret;
+ 
+-	/* Use the format on the sink pad to compute the receiver config. */
+-	fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK);
+-	format = rcsi2_code_to_fmt(fmt->code);
+-	if (!format)
+-		return -EINVAL;
+-
+ 	ret = rcsi2_get_active_lanes(priv, &lanes);
+ 	if (ret)
+ 		return ret;
+ 
+-	msps = rcsi2_calc_mbps(priv, format->bpp, lanes);
++	msps = rcsi2_calc_mbps(priv, state);
+ 	if (msps < 0)
+ 		return msps;
+ 
+@@ -1494,23 +1505,15 @@ static int rcsi2_init_common_v4m(struct rcar_csi2 *priv, unsigned int mbps)
+ static int rcsi2_start_receiver_v4m(struct rcar_csi2 *priv,
+ 				    struct v4l2_subdev_state *state)
+ {
+-	const struct rcar_csi2_format *format;
+-	const struct v4l2_mbus_framefmt *fmt;
+ 	unsigned int lanes;
+ 	int mbps;
+ 	int ret;
+ 
+-	/* Calculate parameters */
+-	fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK);
+-	format = rcsi2_code_to_fmt(fmt->code);
+-	if (!format)
+-		return -EINVAL;
+-
+ 	ret = rcsi2_get_active_lanes(priv, &lanes);
+ 	if (ret)
+ 		return ret;
+ 
+-	mbps = rcsi2_calc_mbps(priv, format->bpp, lanes);
++	mbps = rcsi2_calc_mbps(priv, state);
+ 	if (mbps < 0)
+ 		return mbps;
+ 
+
+-- 
+2.43.0
+
