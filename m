@@ -1,38 +1,38 @@
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C7E222A4EE;
-	Fri, 30 May 2025 10:00:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2211522B8D0;
+	Fri, 30 May 2025 10:00:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748599248; cv=none; b=I0d3Z4RyL2zLpqzSz5MJXc8Y4ue5OozTClF1LK1YdFB55gnAgf0NHHcXYCn7q4IyyYah1nAg0Y6m5jV964jUVYREvVgjJsJvRnWe7mGcmggvFlqWYRt2ruPFgegVbLoxc2hTvlcosMbWgfyfS/EFKXcDZ+9YejIWSUkgc3bvBSo=
+	t=1748599249; cv=none; b=lC2WM5pjdfeNBq9TZosQXyW5T/PxP+N4ti+8zrM62+BxhkKSoTXVi06gbY9itjWCnFftj55+JhfhmOa6tc9hbk9Y53rmOmDqYVu/oqfaDCwDRF68Ohwzr3aOTbhjBkU2uMifvjwlmJMSDqg+LjahwK1z51+X3RsyN9qs8h/30mY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748599248; c=relaxed/simple;
-	bh=ph62CXiTAZLzxGextFF9YhOvdfMikE+SYVRFbNnzTSI=;
+	s=arc-20240116; t=1748599249; c=relaxed/simple;
+	bh=P2mGvxZoG6ZE3Q4kz6QOL2u7zhSCXZBHWICISg35DrE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OjNWxZkgVhpmEYvU1/UsRtyheuH024IRRYEvssib+8R5mnUcnGYul02f2GfPtGKGGYEu8mXe6xMnR9XiO/h/6uHyqbdgyCZBEXFcgnpDyZDQ/ASvGXLn4BwB9HpxVo84XM5G2Sb0KIdNsYmrFP8rWsf0HIOHeJw62lYD64jZQrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=a8LAuHmV; arc=none smtp.client-ip=217.70.183.200
+	 In-Reply-To:To:Cc; b=Uof4AoJavrVXCaVonQxvFfGnIf/Ho+zhqTQG0YF2q789OTV20idBngPKGC5RU7rDiz3M9TSm/QNHxvLi8nAgVurv7r0l/NYhrhT0zbSDqZnFmw990zinVzkIBqJhZ+ZOHR3THLoTqDJwvn3BGY+afjskDYbeInz46oDw2vo4kTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QNk5P+gM; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="a8LAuHmV"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7C94E43961;
-	Fri, 30 May 2025 10:00:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QNk5P+gM"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 810204316C;
+	Fri, 30 May 2025 10:00:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1748599243;
+	t=1748599245;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BPidBZWTEjJ0CTeEDfEXh/U7XkGkCBtbH79PRkQHOHs=;
-	b=a8LAuHmVCM4ofbIDkmO+LXqDScUogwCyVHv2P8F3Cldbz7MUQeSHVRdl52snW69RRL/UrI
-	oQ4bO5y/0VBXetIlTDcbT4026YsxHkHdyKCVpqgUxPwpXdZp0a6Ec+87J4plBmxckWtk4N
-	4L4herVpXvN9brXvthgUkH0Us4gQ/1msFuIidL0HPCdskop/Dfco0QIcx80jy2aUGSB+DH
-	zj1kI1pXWSe/qr3zgBj2+g8vncD4nbgEj036ooS7pAv5zqO/Xdqi85K6VC2JPRiiTCZmRG
-	hQr8ftdV2dvEgQkQqNRVSckUQGW3VKmR2Pgd7+tyaUtZlYWw6MJ5xPeTCDsWeg==
+	bh=miTMLIddELk2REFq4ru4EgvOogHgYu6OpIgiwMjIZsQ=;
+	b=QNk5P+gMJFudCQk3mnN6tEaqb5ESsHF8J9D1t2Hxdfe2dQk4CA5BeOo8kfpjxY9eH659Hi
+	67gto811E1yBmPgSpqWn+tWuq2zx+iDFyb0YFRAiXDti0MaQpxNA7+6Ox1z8te+C5uQ73e
+	bXupXgpyDtkE5gLd52oCK5weO+GBMsdh/WLGSTlFyzrWIwUIERXqh8bIt1X+ukfFbcdort
+	i9q2ndQ89Lnscvdu8cTVzRxZdFYD9LRYA3Zg1DVoIr7HCh3bOcYh+ru5p/p5dCP//e8tZi
+	TXoy8J6As3nNd/3JF9ffiGzYz3UEs7T4uTbPhkVbUxJax4zveyJouwqhGJa6mg==
 From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Date: Fri, 30 May 2025 12:00:16 +0200
-Subject: [PATCH v10 08/11] gpio: max7360: Add MAX7360 gpio support
+Date: Fri, 30 May 2025 12:00:18 +0200
+Subject: [PATCH v10 10/11] input: misc: Add support for MAX7360 rotary
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250530-mdb-max7360-support-v10-8-ce3b9e60a588@bootlin.com>
+Message-Id: <20250530-mdb-max7360-support-v10-10-ce3b9e60a588@bootlin.com>
 References: <20250530-mdb-max7360-support-v10-0-ce3b9e60a588@bootlin.com>
 In-Reply-To: <20250530-mdb-max7360-support-v10-0-ce3b9e60a588@bootlin.com>
 To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -60,335 +60,260 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com, 
  =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
  Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+ Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748599233; l=10212;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748599233; l=7670;
  i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
- bh=ph62CXiTAZLzxGextFF9YhOvdfMikE+SYVRFbNnzTSI=;
- b=Erqi4msxLV9s5Tlm/bmUDn8Ux+MZrD7d69sG98p6HLMa+5psE6SHBVfWUJ2WN58RD/g8ZQJgZ
- 3mwESr++1sbDVc11+sNTHAg11iS2mgyXrmHDSr+RFoRtb+ML4LcmOTb
+ bh=P2mGvxZoG6ZE3Q4kz6QOL2u7zhSCXZBHWICISg35DrE=;
+ b=lB+nR8y5zFfu0KaaoHPVqLm/UddOZdMvTBguw0vQk8N39sII7R4u4Cc3dmFZfXP/s1i8iwajr
+ UjJP/oYfJFTCe9YNQAmUM3ZdCX1OsIrrQxCm+rvZfg0QOvSanb902fL
 X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
  pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvkeejvdculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpeforghthhhivghuucffuhgsohhishdquehrihgrnhguuceomhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheptdfhgeetvddvheejieehheehueetjeelkedtfeehhefgfeeglefhteegtddthfetnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejieenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejiedphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdegpdhrtghpthhtohepughmihhtrhihrdhtohhrohhkhhhovhesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrn
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvkeejvdculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpeforghthhhivghuucffuhgsohhishdquehrihgrnhguuceomhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheptdfhgeetvddvheejieehheehueetjeelkedtfeehhefgfeeglefhteegtddthfetnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejieenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejiedphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdefpdhrtghpthhtohepughmihhtrhihrdhtohhrohhkhhhovhesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrn
  hgvlhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqihhnphhuthesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhpfihmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehmfigrlhhlvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-Add driver for Maxim Integrated MAX7360 GPIO/GPO controller.
+Add driver for Maxim Integrated MAX7360 rotary encoder controller,
+supporting a single rotary switch.
 
-Two sets of GPIOs are provided by the device:
-- Up to 8 GPIOs, shared with the PWM and rotary encoder functionalities.
-  These GPIOs also provide interrupts on input changes.
-- Up to 6 GPOs, on unused keypad columns pins.
-
-Co-developed-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 ---
- drivers/gpio/Kconfig        |  12 +++
- drivers/gpio/Makefile       |   1 +
- drivers/gpio/gpio-max7360.c | 257 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 270 insertions(+)
+ drivers/input/misc/Kconfig          |  10 ++
+ drivers/input/misc/Makefile         |   1 +
+ drivers/input/misc/max7360-rotary.c | 192 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 203 insertions(+)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index f2c39bbff83a..42fae2ff86de 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1446,6 +1446,18 @@ config GPIO_MADERA
- 	help
- 	  Support for GPIOs on Cirrus Logic Madera class codecs.
+diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+index f5496ca0c0d2..0bc9d121c984 100644
+--- a/drivers/input/misc/Kconfig
++++ b/drivers/input/misc/Kconfig
+@@ -230,6 +230,16 @@ config INPUT_M68K_BEEP
+ 	tristate "M68k Beeper support"
+ 	depends on M68K
  
-+config GPIO_MAX7360
-+	tristate "MAX7360 GPIO support"
++config INPUT_MAX7360_ROTARY
++	tristate "Maxim MAX7360 Rotary Encoder"
 +	depends on MFD_MAX7360
-+	select GPIO_REGMAP
-+	select REGMAP_IRQ
 +	help
-+	  Allows to use MAX7360 I/O Expander PWM lines as GPIO and keypad COL
-+	  lines as GPO.
++	  If you say yes here you get support for the rotary encoder on the
++	  Maxim MAX7360 I/O Expander.
 +
-+	  This driver can also be built as a module. If so, the module will be
-+	  called gpio-max7360.
++	  To compile this driver as a module, choose M here: the module will be
++	  called max7360_rotary.
 +
- config GPIO_MAX77620
- 	tristate "GPIO support for PMIC MAX77620 and MAX20024"
- 	depends on MFD_MAX77620
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index af130882ffee..b34ecc97bab9 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -103,6 +103,7 @@ obj-$(CONFIG_GPIO_MAX7300)		+= gpio-max7300.o
- obj-$(CONFIG_GPIO_MAX7301)		+= gpio-max7301.o
- obj-$(CONFIG_GPIO_MAX730X)		+= gpio-max730x.o
- obj-$(CONFIG_GPIO_MAX732X)		+= gpio-max732x.o
-+obj-$(CONFIG_GPIO_MAX7360)		+= gpio-max7360.o
- obj-$(CONFIG_GPIO_MAX77620)		+= gpio-max77620.o
- obj-$(CONFIG_GPIO_MAX77650)		+= gpio-max77650.o
- obj-$(CONFIG_GPIO_MB86S7X)		+= gpio-mb86s7x.o
-diff --git a/drivers/gpio/gpio-max7360.c b/drivers/gpio/gpio-max7360.c
+ config INPUT_MAX77650_ONKEY
+ 	tristate "Maxim MAX77650 ONKEY support"
+ 	depends on MFD_MAX77650
+diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+index 6d91804d0a6f..c454fba3a3ae 100644
+--- a/drivers/input/misc/Makefile
++++ b/drivers/input/misc/Makefile
+@@ -51,6 +51,7 @@ obj-$(CONFIG_INPUT_IQS7222)		+= iqs7222.o
+ obj-$(CONFIG_INPUT_KEYSPAN_REMOTE)	+= keyspan_remote.o
+ obj-$(CONFIG_INPUT_KXTJ9)		+= kxtj9.o
+ obj-$(CONFIG_INPUT_M68K_BEEP)		+= m68kspkr.o
++obj-$(CONFIG_INPUT_MAX7360_ROTARY)	+= max7360-rotary.o
+ obj-$(CONFIG_INPUT_MAX77650_ONKEY)	+= max77650-onkey.o
+ obj-$(CONFIG_INPUT_MAX77693_HAPTIC)	+= max77693-haptic.o
+ obj-$(CONFIG_INPUT_MAX8925_ONKEY)	+= max8925_onkey.o
+diff --git a/drivers/input/misc/max7360-rotary.c b/drivers/input/misc/max7360-rotary.c
 new file mode 100644
-index 000000000000..db92a43776a9
+index 000000000000..b7f46cbd5400
 --- /dev/null
-+++ b/drivers/gpio/gpio-max7360.c
-@@ -0,0 +1,257 @@
++++ b/drivers/input/misc/max7360-rotary.c
+@@ -0,0 +1,192 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
 + * Copyright 2025 Bootlin
 + *
-+ * Author: Kamel BOUHARA <kamel.bouhara@bootlin.com>
 + * Author: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 + */
 +
 +#include <linux/bitfield.h>
-+#include <linux/bitmap.h>
-+#include <linux/err.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/gpio/regmap.h>
++#include <linux/device/devres.h>
++#include <linux/dev_printk.h>
 +#include <linux/init.h>
++#include <linux/input.h>
 +#include <linux/interrupt.h>
 +#include <linux/mfd/max7360.h>
-+#include <linux/minmax.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
 +#include <linux/property.h>
++#include <linux/platform_device.h>
++#include <linux/pm_wakeirq.h>
 +#include <linux/regmap.h>
++#include <linux/types.h>
 +
-+#define MAX7360_GPIO_PORT	1
-+#define MAX7360_GPIO_COL	2
++#define MAX7360_ROTARY_DEFAULT_STEPS 24
 +
-+struct max7360_gpio_plat_data {
-+	unsigned int function;
-+};
-+
-+static struct max7360_gpio_plat_data max7360_gpio_port_plat = { .function = MAX7360_GPIO_PORT };
-+static struct max7360_gpio_plat_data max7360_gpio_col_plat = { .function = MAX7360_GPIO_COL };
-+
-+static int max7360_get_available_gpos(struct device *dev, unsigned int *available_gpios)
-+{
-+	u32 columns;
-+	int ret;
-+
-+	ret = device_property_read_u32(dev->parent, "keypad,num-columns", &columns);
-+	if (ret) {
-+		dev_err(dev, "Failed to read columns count\n");
-+		return ret;
-+	}
-+
-+	*available_gpios = min(MAX7360_MAX_GPO, MAX7360_MAX_KEY_COLS - columns);
-+
-+	return 0;
-+}
-+
-+static int max7360_gpo_init_valid_mask(struct gpio_chip *gc,
-+				       unsigned long *valid_mask,
-+				       unsigned int ngpios)
-+{
-+	unsigned int available_gpios;
-+	int ret;
-+
-+	ret = max7360_get_available_gpos(gc->parent, &available_gpios);
-+	if (ret)
-+		return ret;
-+
-+	bitmap_clear(valid_mask, 0, MAX7360_MAX_KEY_COLS - available_gpios);
-+
-+	return 0;
-+}
-+
-+static int max7360_set_gpos_count(struct device *dev, struct regmap *regmap)
-+{
-+	/*
-+	 * MAX7360 COL0 to COL7 pins can be used either as keypad columns,
-+	 * general purpose output or a mix of both.
-+	 * By default, all pins are used as keypad, here we update this
-+	 * configuration to allow to use some of them as GPIOs.
-+	 */
-+	unsigned int available_gpios;
-+	unsigned int val;
-+	int ret;
-+
-+	ret = max7360_get_available_gpos(dev, &available_gpios);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * Configure which GPIOs will be used for keypad.
-+	 * MAX7360_REG_DEBOUNCE contains configuration both for keypad debounce
-+	 * timings and gpos/keypad columns repartition. Only the later is
-+	 * modified here.
-+	 */
-+	val = FIELD_PREP(MAX7360_PORTS, available_gpios);
-+	ret = regmap_write_bits(regmap, MAX7360_REG_DEBOUNCE, MAX7360_PORTS, val);
-+	if (ret)
-+		dev_err(dev, "Failed to write max7360 columns/gpos configuration");
-+
-+	return ret;
-+}
-+
-+static int max7360_gpio_reg_mask_xlate(struct gpio_regmap *gpio,
-+				       unsigned int base, unsigned int offset,
-+				       unsigned int *reg, unsigned int *mask)
-+{
-+	if (base == MAX7360_REG_PWMBASE) {
-+		/*
-+		 * GPIO output is using PWM duty cycle registers: one register
-+		 * per line, with value being either 0 or 255.
-+		 */
-+		*reg = base + offset;
-+		*mask = GENMASK(7, 0);
-+	} else {
-+		*reg = base;
-+		*mask = BIT(offset);
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct regmap_irq max7360_regmap_irqs[MAX7360_MAX_GPIO] = {
-+	REGMAP_IRQ_REG(0, 0, BIT(0)),
-+	REGMAP_IRQ_REG(1, 0, BIT(1)),
-+	REGMAP_IRQ_REG(2, 0, BIT(2)),
-+	REGMAP_IRQ_REG(3, 0, BIT(3)),
-+	REGMAP_IRQ_REG(4, 0, BIT(4)),
-+	REGMAP_IRQ_REG(5, 0, BIT(5)),
-+	REGMAP_IRQ_REG(6, 0, BIT(6)),
-+	REGMAP_IRQ_REG(7, 0, BIT(7)),
-+};
-+
-+static int max7360_handle_mask_sync(const int index,
-+				    const unsigned int mask_buf_def,
-+				    const unsigned int mask_buf,
-+				    void *const irq_drv_data)
-+{
-+	struct regmap *regmap = irq_drv_data;
-+	int ret;
-+
-+	for (unsigned int i = 0; i < MAX7360_MAX_GPIO; i++) {
-+		ret = regmap_assign_bits(regmap, MAX7360_REG_PWMCFG(i),
-+					 MAX7360_PORT_CFG_INTERRUPT_MASK, mask_buf & BIT(i));
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int max7360_gpio_probe(struct platform_device *pdev)
-+{
-+	const struct max7360_gpio_plat_data *plat_data;
-+	struct gpio_regmap_config gpio_config = { };
-+	struct regmap_irq_chip *irq_chip;
-+	struct device *dev = &pdev->dev;
++struct max7360_rotary {
++	struct input_dev *input;
 +	struct regmap *regmap;
-+	unsigned int outconf;
-+	int ret;
++	unsigned int debounce_ms;
++
++	unsigned int pos;
++
++	u32 steps;
++	u32 axis;
++	bool relative_axis;
++	bool rollover;
++};
++
++static void max7360_rotaty_report_event(struct max7360_rotary *max7360_rotary, int steps)
++{
++	if (max7360_rotary->relative_axis) {
++		input_report_rel(max7360_rotary->input, max7360_rotary->axis, steps);
++	} else {
++		int pos = max7360_rotary->pos;
++		int maxval = max7360_rotary->steps;
++
++		/*
++		 * Add steps to the position.
++		 * Make sure added steps are always in ]-maxval; maxval[
++		 * interval, so (pos + maxval) is always >= 0.
++		 * Then set back pos to the [0; maxval[ interval.
++		 */
++		pos += steps % maxval;
++		if (max7360_rotary->rollover)
++			pos = (pos + maxval) % maxval;
++		else
++			pos = clamp(pos, 0, maxval);
++
++		max7360_rotary->pos = pos;
++		input_report_abs(max7360_rotary->input, max7360_rotary->axis, max7360_rotary->pos);
++	}
++
++	input_sync(max7360_rotary->input);
++}
++
++static irqreturn_t max7360_rotary_irq(int irq, void *data)
++{
++	struct max7360_rotary *max7360_rotary = data;
++	struct device *dev = max7360_rotary->input->dev.parent;
++	unsigned int val;
++	int error;
++
++	error = regmap_read(max7360_rotary->regmap, MAX7360_REG_RTR_CNT, &val);
++	if (error < 0) {
++		dev_err(dev, "Failed to read rotary counter\n");
++		return IRQ_NONE;
++	}
++
++	if (val == 0)
++		return IRQ_NONE;
++
++	max7360_rotaty_report_event(max7360_rotary, sign_extend32(val, 7));
++
++	return IRQ_HANDLED;
++}
++
++static int max7360_rotary_hw_init(struct max7360_rotary *max7360_rotary)
++{
++	struct device *dev = max7360_rotary->input->dev.parent;
++	int val;
++	int error;
++
++	val = FIELD_PREP(MAX7360_ROT_DEBOUNCE, max7360_rotary->debounce_ms) |
++	      FIELD_PREP(MAX7360_ROT_INTCNT, 1) | MAX7360_ROT_INTCNT_DLY;
++	error = regmap_write(max7360_rotary->regmap, MAX7360_REG_RTRCFG, val);
++	if (error)
++		dev_err(dev, "Failed to set max7360 rotary encoder configuration\n");
++
++	return error;
++}
++
++static int max7360_rotary_probe(struct platform_device *pdev)
++{
++	struct max7360_rotary *max7360_rotary;
++	struct device *dev = &pdev->dev;
++	struct input_dev *input;
++	struct regmap *regmap;
++	int irq;
++	int error;
 +
 +	regmap = dev_get_regmap(dev->parent, NULL);
 +	if (!regmap)
-+		return dev_err_probe(dev, -ENODEV, "could not get parent regmap\n");
++		return dev_err_probe(dev, -ENODEV, "Could not get parent regmap\n");
 +
-+	plat_data = device_get_match_data(dev);
-+	if (plat_data->function == MAX7360_GPIO_PORT) {
-+		if (device_property_read_bool(dev, "interrupt-controller")) {
-+			/*
-+			 * Port GPIOs with interrupt-controller property: add IRQ
-+			 * controller.
-+			 */
-+			gpio_config.regmap_irq_flags = IRQF_ONESHOT | IRQF_SHARED;
-+			gpio_config.regmap_irq_line =
-+				fwnode_irq_get_byname(dev_fwnode(dev->parent), "inti");
-+			if (gpio_config.regmap_irq_line < 0)
-+				return dev_err_probe(dev, gpio_config.regmap_irq_line,
-+						     "Failed to get IRQ\n");
++	irq = fwnode_irq_get_byname(dev_fwnode(dev->parent), "inti");
++	if (irq < 0)
++		return dev_err_probe(dev, irq, "Failed to get IRQ\n");
 +
-+			/* Create custom IRQ configuration. */
-+			irq_chip = devm_kzalloc(dev, sizeof(*irq_chip), GFP_KERNEL);
-+			gpio_config.regmap_irq_chip = irq_chip;
-+			if (!irq_chip)
-+				return -ENOMEM;
++	max7360_rotary = devm_kzalloc(dev, sizeof(*max7360_rotary), GFP_KERNEL);
++	if (!max7360_rotary)
++		return -ENOMEM;
 +
-+			irq_chip->name = dev_name(dev);
-+			irq_chip->status_base = MAX7360_REG_GPIOIN;
-+			irq_chip->status_is_level = true;
-+			irq_chip->num_regs = 1;
-+			irq_chip->num_irqs = MAX7360_MAX_GPIO;
-+			irq_chip->irqs = max7360_regmap_irqs;
-+			irq_chip->handle_mask_sync = max7360_handle_mask_sync;
-+			irq_chip->irq_drv_data = regmap;
++	max7360_rotary->regmap = regmap;
 +
-+			for (unsigned int i = 0; i < MAX7360_MAX_GPIO; i++) {
-+				ret = regmap_write_bits(regmap, MAX7360_REG_PWMCFG(i),
-+							MAX7360_PORT_CFG_INTERRUPT_EDGES,
-+							MAX7360_PORT_CFG_INTERRUPT_EDGES);
-+				if (ret)
-+					return dev_err_probe(dev, ret,
-+							     "Failed to enable interrupts\n");
-+			}
-+		}
++	device_property_read_u32(dev->parent, "linux,axis", &max7360_rotary->axis);
++	max7360_rotary->rollover = device_property_read_bool(dev->parent,
++							     "rotary-encoder,rollover");
++	max7360_rotary->relative_axis =
++		device_property_read_bool(dev->parent, "rotary-encoder,relative-axis");
 +
-+		/*
-+		 * Port GPIOs: set output mode configuration (constant-current or not).
-+		 * This property is optional.
-+		 */
-+		ret = device_property_read_u32(dev, "maxim,constant-current-disable", &outconf);
-+		if (!ret) {
-+			ret = regmap_write(regmap, MAX7360_REG_GPIOOUTM, outconf);
-+			if (ret)
-+				return dev_err_probe(dev, ret,
-+						     "Failed to set constant-current configuration\n");
-+		}
-+	}
++	error = device_property_read_u32(dev->parent, "rotary-encoder,steps",
++					 &max7360_rotary->steps);
++	if (error)
++		max7360_rotary->steps = MAX7360_ROTARY_DEFAULT_STEPS;
 +
-+	/* Add gpio device. */
-+	gpio_config.parent = dev;
-+	gpio_config.regmap = regmap;
-+	if (plat_data->function == MAX7360_GPIO_PORT) {
-+		gpio_config.ngpio = MAX7360_MAX_GPIO;
-+		gpio_config.reg_dat_base = GPIO_REGMAP_ADDR(MAX7360_REG_GPIOIN);
-+		gpio_config.reg_set_base = GPIO_REGMAP_ADDR(MAX7360_REG_PWMBASE);
-+		gpio_config.reg_dir_out_base = GPIO_REGMAP_ADDR(MAX7360_REG_GPIOCTRL);
-+		gpio_config.ngpio_per_reg = MAX7360_MAX_GPIO;
-+		gpio_config.reg_mask_xlate = max7360_gpio_reg_mask_xlate;
-+	} else {
-+		ret = max7360_set_gpos_count(dev, regmap);
-+		if (ret)
-+			return dev_err_probe(dev, ret, "Failed to set GPOS pin count\n");
++	device_property_read_u32(dev->parent, "rotary-debounce-delay-ms",
++				 &max7360_rotary->debounce_ms);
++	if (max7360_rotary->debounce_ms > MAX7360_ROT_DEBOUNCE_MAX)
++		return dev_err_probe(dev, -EINVAL, "Invalid debounce timing: %u\n",
++				     max7360_rotary->debounce_ms);
 +
-+		gpio_config.reg_set_base = GPIO_REGMAP_ADDR(MAX7360_REG_PORTS);
-+		gpio_config.ngpio = MAX7360_MAX_KEY_COLS;
-+		gpio_config.init_valid_mask = max7360_gpo_init_valid_mask;
-+	}
++	input = devm_input_allocate_device(dev);
++	if (!input)
++		return -ENOMEM;
 +
-+	return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(dev, &gpio_config));
++	max7360_rotary->input = input;
++
++	input->id.bustype = BUS_I2C;
++	input->name = pdev->name;
++
++	if (max7360_rotary->relative_axis)
++		input_set_capability(input, EV_REL, max7360_rotary->axis);
++	else
++		input_set_abs_params(input, max7360_rotary->axis, 0, max7360_rotary->steps, 0, 1);
++
++	error = devm_request_threaded_irq(dev, irq, NULL, max7360_rotary_irq,
++					  IRQF_ONESHOT | IRQF_SHARED,
++					  "max7360-rotary", max7360_rotary);
++	if (error)
++		return dev_err_probe(dev, error, "Failed to register interrupt\n");
++
++	error = input_register_device(input);
++	if (error)
++		return dev_err_probe(dev, error, "Could not register input device\n");
++
++	error = max7360_rotary_hw_init(max7360_rotary);
++	if (error)
++		return dev_err_probe(dev, error, "Failed to initialize max7360 rotary\n");
++
++	device_init_wakeup(dev, true);
++	error = dev_pm_set_wake_irq(dev, irq);
++	if (error)
++		dev_warn(dev, "Failed to set up wakeup irq: %d\n", error);
++
++	return 0;
 +}
 +
-+static const struct of_device_id max7360_gpio_of_match[] = {
-+	{
-+		.compatible = "maxim,max7360-gpo",
-+		.data = &max7360_gpio_col_plat
-+	}, {
-+		.compatible = "maxim,max7360-gpio",
-+		.data = &max7360_gpio_port_plat
-+	}, {
-+	}
-+};
-+MODULE_DEVICE_TABLE(of, max7360_gpio_of_match);
++static void max7360_rotary_remove(struct platform_device *pdev)
++{
++	dev_pm_clear_wake_irq(&pdev->dev);
++	device_init_wakeup(&pdev->dev, false);
++}
 +
-+static struct platform_driver max7360_gpio_driver = {
++static struct platform_driver max7360_rotary_driver = {
 +	.driver = {
-+		.name	= "max7360-gpio",
-+		.of_match_table = max7360_gpio_of_match,
++		.name	= "max7360-rotary",
 +	},
-+	.probe		= max7360_gpio_probe,
++	.probe		= max7360_rotary_probe,
++	.remove		= max7360_rotary_remove,
 +};
-+module_platform_driver(max7360_gpio_driver);
++module_platform_driver(max7360_rotary_driver);
 +
-+MODULE_DESCRIPTION("MAX7360 GPIO driver");
-+MODULE_AUTHOR("Kamel BOUHARA <kamel.bouhara@bootlin.com>");
++MODULE_DESCRIPTION("MAX7360 Rotary driver");
 +MODULE_AUTHOR("Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>");
 +MODULE_LICENSE("GPL");
 
