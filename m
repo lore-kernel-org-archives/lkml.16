@@ -1,48 +1,50 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BBB54689;
-	Fri, 30 May 2025 04:03:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 763481DEFD9;
+	Fri, 30 May 2025 04:03:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748577794; cv=none; b=Png/Ecn2G7g+RPr7bpfUWHAQhO8jc9hagKDs44PeKTJHU8QnKw7rWJwLd2+oqhPGkrMVvXWVS3Q/3u5ZgutH7uLyj9i5RC5Sly6X15sd8G/g4LcHpSbv+jAp2uVkvhshYiGnz4DVsrU4cl/es2GMKqedThzXw7yixzKI1pVULWo=
+	t=1748577796; cv=none; b=n4r1py88o7R33HHM13LcqX9W9j2y2QKlxLQ40rl1fOJ41I/sw9YqkA5zQximb53nGsKY4AVyLD+OPt/iJM1dab4ZZFO50JgYMjHzzuTJkQ6iDf8uXSE9SxDbUBkHn46aiQJLrbvUznyxv5rsZ4l14m4COsTr98rhTvcwFHJllfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748577794; c=relaxed/simple;
-	bh=OFyAwHWb5Hq6ccy32Q8MA/AWh/hYU+rVoeYvcZptIUA=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=B1gA8tFvVa2lpZXOKv3VGI33GtQ+Pw+bdukrAS66F9khBG/h/wnVnzw1MxDutVXR61QY670kiPqm4nXqhcldm2VSzZPdNXddSbF1xqHVipKC6Xt11LmV0eQlJsTpVHV3CfTaNfn2T8v/aCfkrFKGRJRBOb5Ml4EP2QlCvPJY/vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=b/EwWc3f; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1748577796; c=relaxed/simple;
+	bh=QYWgsOd7CNByg/mX76M2GoNppwnTPA5nQhPXxsopQC0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=WP2i3TcW1VjprWzSQ//4LZFp1aqy4ztY77NsvgpXHZE1Q3PIe9/6/C6ppWobziiJqPMqOVZYeNl3XaSkfxFmd3FE+vkDaRKeZ7zwWqfP4vbw2JsUEYqYDMmO+9pIVly35y3rONRVnKqwhScvE78t1nAp2t114NyNGmCj9h/eft0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=VKYMIeUT; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="b/EwWc3f"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54U0oko8003582;
-	Fri, 30 May 2025 04:03:05 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="VKYMIeUT"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54U0Mhjw031513;
+	Fri, 30 May 2025 04:03:10 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=Cknv53wXBx53wYTbwAA7sM
-	Dw3tbOlyZ7iqCJkb6NquI=; b=b/EwWc3f+MO+JtDLD7Msh9+WE/3ag4yI327fbO
-	yJToE0OD5yS7+aQWLC6/7uUFjxhfMx2tKEFqJZp9TM1B6I8fIPHLvvrCKAfa8rbq
-	7ONjuwCIbebjQg18vxC9me/pQjzJYmEMnAmn1KQ/P/JkcRnt4DnqFE1Exv/JpGD5
-	Xg58qIsalPk8hcXV1ZimQ8a//AJ9mQtQzJuDGgi56pwLHf2tiFzUM8i76PZ69PQJ
-	DxmtW305Gk1gLxgXgw8bgcoYGkHSoAVxAIRZnqrRPh1HkLcJU5/QdumcG+I5PGZq
-	Y+smdwjPEEg+zY9gvw851mn4pss9qwUtU+D9D3UctlRA2aDA==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u549qmsp-1
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ZUmBnBiodsYdM0a2O31C8qrILUrUFfb9zBL2Xj+sdZE=; b=VKYMIeUTzBmErz1G
+	2fGLYMzIHJc7M98oW/SKX1QoNCRWjX5HBJVemXpCKYJZgmSVZW1aFVXw9Z9viwET
+	mnf3+0vX1ac2xSPVoyaPBwRgLD42dW5K8arCbMdQL0znepDPdqyG1VK7iuuI2d6Y
+	qjfcd/CE33HG3ovZaaUFWSReh8wpGj62aNd1/2qZzr1zGBj4yHBURhFU2Xp2/OMS
+	IsC7WsJE1/AXkFmAh0Q0IX+DgfOW6O985qa+1F0nhq5O8hMQd7c8xbuIuAdsx0zX
+	CZbfpl4ijj1DF/N/qs7pebdcNu4rhlQt061xhs3dMEr2CxFM83VoMfkEXzKXMprc
+	SAPb1g==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u6vjys2y-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 30 May 2025 04:03:04 +0000 (GMT)
+	Fri, 30 May 2025 04:03:10 +0000 (GMT)
 Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54U4330L001317
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54U4398A023614
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 30 May 2025 04:03:03 GMT
+	Fri, 30 May 2025 04:03:09 GMT
 Received: from hu-renjiang-sha.qualcomm.com (10.80.80.8) by
  nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 29 May 2025 21:03:00 -0700
+ 15.2.1544.9; Thu, 29 May 2025 21:03:06 -0700
 From: Renjiang Han <quic_renjiang@quicinc.com>
-Subject: [PATCH v8 0/3] media: venus: enable venus on qcs615
-Date: Fri, 30 May 2025 09:32:12 +0530
-Message-ID: <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
+Date: Fri, 30 May 2025 09:32:14 +0530
+Subject: [PATCH v8 2/3] arm64: dts: qcom: qcs615: add venus node to
+ devicetree
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,15 +52,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAMUtOWgC/3XS207DMAwG4FeZek2Qc3QzIcR7IDSliQu5aMuar
- gJNe3eSDbRB6aUt5csv28cq0RgpVdvNsRppjikOfS7qu03l31z/SiyGXFcChAYtDHMhsJn6Q2L
- tMLK9T4Zr5rRCrcBoE3iVn76P1MaPM/v8kuu3mKZh/Dz/MvPSLaDiAHUBdxdmN8dAA5s5A6ak8
- QTYtN7Ip/0h+tj7ez90VeFmcSU4F/9nmkVmyKBV2FqNrl0y8oYReoWRmdFOomksOlPTklFXRnC
- 5wqjMIAlvHYogwS4ZfcvgCqMLo1BaHSwZCUvG3DJ2hTFlNjmKCrIBkGHJ4A9T1r6WBjPjvROGB
- ObR/NnU6XIJI+VuitPlHKqOUnLnu9puHs4+zzG/xa4rewsT64dA6bJDr4xrFNRg619TeyyX1rh
- ELBddnLYbjoYsRwIOvsHgvQHdch5E46VsJShhhapFk6OdvgCc/adR+gIAAA==
-X-Change-ID: 20250526-add-venus-for-qcs615-a547540656d1
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250530-add-venus-for-qcs615-v8-2-c0092ac616d0@quicinc.com>
+References: <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
+In-Reply-To: <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
 To: Vikash Garodia <quic_vgarodia@quicinc.com>,
         Dikshita Agarwal
 	<quic_dikshita@quicinc.com>,
@@ -74,144 +71,150 @@ To: Vikash Garodia <quic_vgarodia@quicinc.com>,
 CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         Renjiang Han
-	<quic_renjiang@quicinc.com>,
-        Nicolas Dufresne
-	<nicolas.dufresne@collabora.com>
+	<quic_renjiang@quicinc.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748577780; l=4682;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748577780; l=3163;
  i=quic_renjiang@quicinc.com; s=20241001; h=from:subject:message-id;
- bh=OFyAwHWb5Hq6ccy32Q8MA/AWh/hYU+rVoeYvcZptIUA=;
- b=HKhGJup8dtOCwHsbkXX5oFw2wHpVOp8qaJUntreFFcZ0tFIORoQZ6iMovQ6yle5qWe3b+Vi4e
- +L5OecgiXCGCFBXrs5kr3lU2yS/4MHwBgJU+s7fuQOrs0nIoSBAnoGR
+ bh=QYWgsOd7CNByg/mX76M2GoNppwnTPA5nQhPXxsopQC0=;
+ b=f6tK0GEDIwIsHA0mqDB39N3JZFdNq6zYpIV50i4Urn8d3BJVwvEjG571OIgRYp+K9JinAQ9ZJ
+ JebZjon/vaeA5nhIKVirb8VFZTRaX0+N4vCmMr2yyfY3L69Tq9j3lbt
 X-Developer-Key: i=quic_renjiang@quicinc.com; a=ed25519;
  pk=8N59kMJUiVH++5QxJzTyHB/wh/kG5LxQ44j9zhUvZmw=
 X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nalasex01c.na.qualcomm.com (10.47.97.35)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 82IPsUsr2Jw1E2IcLG4wUKr5FGK-YitN
-X-Authority-Analysis: v=2.4 cv=E9nNpbdl c=1 sm=1 tr=0 ts=68392df8 cx=c_pps
+X-Authority-Analysis: v=2.4 cv=UOXdHDfy c=1 sm=1 tr=0 ts=68392dfe cx=c_pps
  a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
- a=COk6AnOGAAAA:8 a=ZRKmEd25s01oF459BEEA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
+ a=Xa-eRHvFdKebgvYFA8kA:9 a=gocLtHhLMEw7F235:21 a=QEXdDO2ut3YA:10
  a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMwMDAzMSBTYWx0ZWRfXw6HNCslIx1EH
- OQsj59KHZyQ6/tZdph2bL1EPOHnXIypg+rAGD9RNpzIc9TG0d1yOeMlyTGl446x8B5ynGALuh6o
- kuTxT9JesOxKrq7RsT7ag73iG38hSG6Nk+K9TjScz7TSsEr1e+BeBaDrGA8wMBXlEv/O8el4W7T
- /gPS4HG1gWvzJgfug1wPZfdReYXfq1Nhp9BAnrs9V3z+KgitL0TQ8C7M1ycKxcjOrzXgDhJ6T7l
- BEIAofplVMzuHSiWsb9imqOoYoiouv1ZrEpDcG2HGJpYmrd68r2W0WBbTb3slcGIDyPOO9FTuJo
- PEBXDYBL7NG38o7oyN2svPC3UD3WS/Reg7nSijpncRKRk1Mbm5HVSOzSo3H5tKV2sCimHodMB06
- 1nMURV10xlKAyjPT5P2aAW+T/YNfkAv4FWAyBniZAdd8ZTcEwzxjPneTMP7oJ11RBCKQdAdn
-X-Proofpoint-ORIG-GUID: 82IPsUsr2Jw1E2IcLG4wUKr5FGK-YitN
+X-Proofpoint-ORIG-GUID: y-r_2l3mMBUbQOHfI6xJbwq2jAu2WHeh
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMwMDAzMSBTYWx0ZWRfX+oWhgl3hRIFU
+ DWs5UmI36hO3n6cxqiX2rVQsakzmKekjfTlGhapJGh0SU/ccUtOxbeo6M0bzNP3bOtnYl5HQUEx
+ +q9GUcpai3TomNKkEwKlq4EnjDKKmvH3s+LvTjl9icHvjbnaxZeAg7ChLGyKQHHj7FG1CTypcnb
+ fHAqaFVHlsfUnoMvfxhVU3S74f0kjOOF3ugKgz4YK9mDurUCszHiyrRCyXZOtBc3kI33l6I5VrY
+ Vs4mQ4e6d/xQJkyeCmICJOFiPg7zp0UERT/zvvNDTrOOyymcY7J1HL01MuealUdFlh1ynVVcVI6
+ iOX+HI4WGT3Jj0KLCT7OrPf1H+NgIIPxNP42L+q+H9aue93IkKA44D5lWtgTJqZNXlliI+yhrlM
+ wWjj+7PKCr5CnwgC5pG+OUngipMFmBwW7gJ4kKneoCGtZzuZc0OzsOrlgta7T1AAbmWcu5fV
+X-Proofpoint-GUID: y-r_2l3mMBUbQOHfI6xJbwq2jAu2WHeh
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-30_01,2025-05-29_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 mlxlogscore=999 spamscore=0 malwarescore=0 priorityscore=1501
- adultscore=0 phishscore=0 impostorscore=0 lowpriorityscore=0 suspectscore=0
- clxscore=1011 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505300031
+ clxscore=1015 phishscore=0 mlxscore=0 adultscore=0 priorityscore=1501
+ mlxlogscore=612 bulkscore=0 malwarescore=0 impostorscore=0 spamscore=0
+ suspectscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505300031
 
-QCS615 uses the same video core as SC7180, so reuse the same resource
-data of SC7180 for QCS615 to enable video functionality.
-
-There are no resources for the video-decoder and video-encoder nodes
-in the device tree, so remove these two nodes from the device tree. In
-addition, to ensure that the video codec functions properly, use [3]
-to add encoder and decoder node entries in the venus driver.
-
-Validated this series on QCS615 and SC7180.
-
-Note:
-This series consist of DT patches and a venus driver patch. The patch
-1/3, which is venus driver patch, can be picked independently without
-having any functional dependency. But patch 2/3 & patch 3/3, which are
-DT patches, still depend on [1].
-
-[1] https://lore.kernel.org/all/20250119-qcs615-mm-v2-dt-nodes-v2-0-c46ab4080989@quicinc.com
+Add the venus node to the devicetree for the qcs615 platform to enable
+video functionality. The qcs615 platform currently lacks video
+functionality due to the absence of the venus node. Fallback to sc7180 due
+to the same video core.
 
 Signed-off-by: Renjiang Han <quic_renjiang@quicinc.com>
 ---
-Changes in v8:
-- 1. Add missing tags.
-- 2. Fix the dependency to point to videoCC series alone.
-- 3. Fix review comments from Konrad.
-- Link to v7: https://lore.kernel.org/r/20250527-add-venus-for-qcs615-v7-0-cca26e2768e3@quicinc.com
+ arch/arm64/boot/dts/qcom/qcs615.dtsi | 78 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
 
-Changes in v7:
-- 1. Update devicetree patch to fix the cherry-pick patch conflict issue.
-- 2. Remove dt-bindings patch from this patch series due to it has been
-picked.
-- Link to v6: https://lore.kernel.org/r/20241219-add-venus-for-qcs615-v6-0-e9a74d3b003d@quicinc.com
+diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
+index 9befd9a40113245137779d96ac4e822cb9a142c5..7d1497dab9f3266a0837a4ec0b76120dc839575f 100644
+--- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
+@@ -449,6 +449,11 @@ smem_region: smem@86000000 {
+ 			no-map;
+ 			hwlocks = <&tcsr_mutex 3>;
+ 		};
++
++		pil_video_mem: pil-video@93400000 {
++			reg = <0x0 0x93400000 0x0 0x500000>;
++			no-map;
++		};
+ 	};
+ 
+ 	soc: soc@0 {
+@@ -3253,6 +3258,79 @@ gem_noc: interconnect@9680000 {
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
+ 
++		venus: video-codec@aa00000 {
++			compatible = "qcom,qcs615-venus", "qcom,sc7180-venus";
++			reg = <0x0 0x0aa00000 0x0 0x100000>;
++			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
++
++			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
++				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
++				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
++				 <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
++				 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
++			clock-names = "core",
++				      "iface",
++				      "bus",
++				      "vcodec0_core",
++				      "vcodec0_bus";
++
++			power-domains = <&videocc VENUS_GDSC>,
++					<&videocc VCODEC0_GDSC>,
++					<&rpmhpd RPMHPD_CX>;
++			power-domain-names = "venus",
++					     "vcodec0",
++					     "cx";
++
++			operating-points-v2 = <&venus_opp_table>;
++
++			interconnects = <&mmss_noc MASTER_VIDEO_P0 QCOM_ICC_TAG_ALWAYS
++					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
++					<&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
++					 &config_noc SLAVE_VENUS_CFG QCOM_ICC_TAG_ACTIVE_ONLY>;
++			interconnect-names = "video-mem",
++					     "cpu-cfg";
++
++			iommus = <&apps_smmu 0xe60 0x20>;
++
++			memory-region = <&pil_video_mem>;
++
++			status = "disabled";
++
++			venus_opp_table: opp-table {
++				compatible = "operating-points-v2";
++
++				opp-133330000 {
++					opp-hz = /bits/ 64 <133330000>;
++					required-opps = <&rpmhpd_opp_low_svs>;
++				};
++
++				opp-240000000 {
++					opp-hz = /bits/ 64 <240000000>;
++					required-opps = <&rpmhpd_opp_svs>;
++				};
++
++				opp-300000000 {
++					opp-hz = /bits/ 64 <300000000>;
++					required-opps = <&rpmhpd_opp_svs_l1>;
++				};
++
++				opp-380000000 {
++					opp-hz = /bits/ 64 <380000000>;
++					required-opps = <&rpmhpd_opp_nom>;
++				};
++
++				opp-410000000 {
++					opp-hz = /bits/ 64 <410000000>;
++					required-opps = <&rpmhpd_opp_nom_l1>;
++				};
++
++				opp-460000000 {
++					opp-hz = /bits/ 64 <460000000>;
++					required-opps = <&rpmhpd_opp_turbo>;
++				};
++			};
++		};
++
+ 		videocc: clock-controller@ab00000 {
+ 			compatible = "qcom,qcs615-videocc";
+ 			reg = <0 0x0ab00000 0 0x10000>;
 
-Changes in v6:
-- 1. Remove video-decoder and video-encoder nodes from the device tree
-- 2. Add a new dependency.
-- 3. Fix missing tag.
-- 4. Update commit message.
-- Link to v5: https://lore.kernel.org/r/20241217-add-venus-for-qcs615-v5-0-747395d9e630@quicinc.com
-
-Changes in v5:
-- 1. Remove extra blank lines in yaml files.
-- 2. Add new variables in the driver while keeping the order of the
-original variables. And remove unnecessary variable initialization.
-- 3. Update commit message.
-- 4. Update the order of nodes in the device tree.
-- Link to v4: https://lore.kernel.org/r/20241213-add-venus-for-qcs615-v4-0-7e2c9a72d309@quicinc.com
-
-Changes in v4:
-- 1. Remove qcom,qcs615-venus.yaml and use qcom,sc7180-venus.yaml for
-qcs615 dt-bindings.
-- 2. Add "qcom,qcs615-venus" compatible into qcom,sc7180-venus.yaml.
-- 3. Remove qcs615 resource from the driver and use sc7180 resource for
-the qcs615.
-- 4. Use the frequency in the opp-table in devicetree for the driver.
-For compatibility, if getting data from the opp table fails, the data
-in the frequency table will be used.
-- 5. Keep the reverse Christmas tree order coding style.
-- 6. Add "qcom,sc7180-venus" compatible in devicetree.
-- 7. Update cover letter message.
-- Link to v3: https://lore.kernel.org/r/20241125-add-venus-for-qcs615-v3-0-5a376b97a68e@quicinc.com
-
-Changes in v3:
-- 1. Remove the ‘|’ after 'description' in the qcom,qcs615-venus.yaml.
-- 2. Add a blank line before 'opp-table' in the qcom,qcs615-venus.yaml.
-- 3. Put ‘additionalProperties’ before ‘properties’ in the
-qcom,qcs615-venus.yaml.
-- 4. Update the subject of qcom,qcs615-venus.yaml patch.
-- Link to v2: https://lore.kernel.org/r/20241112-add-venus-for-qcs615-v2-0-e67947f957af@quicinc.com
-
-Changes in v2:
-- 1. The change-id of DT and driver are removed.
-- 2. Add qcom,qcs615-venus.yaml files to explain DT.
-- 3. The order of driver's commit and DT's commit is adjusted. Place the
-driver's commit before the DT's commit.
-- 4. Extends driver's commit message.
-- 5. Split DT's commit into two commits. Add the venus node to the
-qcs615.dtsi file. Then in the qcs615-ride.dts file enable the venus node.
-- 6. Modify alignment, sort, upper and lower case letters issue.
-- 7. Update cover letter message description.
-- Link to v1: https://lore.kernel.org/r/20241008-add_qcs615_video-v1-0-436ce07bfc63@quicinc.com
-
----
-Renjiang Han (3):
-      media: venus: pm_helpers: use opp-table for the frequency
-      arm64: dts: qcom: qcs615: add venus node to devicetree
-      arm64: dts: qcom: qcs615-ride: enable venus node to initialize video codec
-
- arch/arm64/boot/dts/qcom/qcs615-ride.dts       |  4 ++
- arch/arm64/boot/dts/qcom/qcs615.dtsi           | 78 ++++++++++++++++++++++++++
- drivers/media/platform/qcom/venus/pm_helpers.c | 53 ++++++++++++-----
- 3 files changed, 121 insertions(+), 14 deletions(-)
----
-base-commit: 176e917e010cb7dcc605f11d2bc33f304292482b
-change-id: 20250526-add-venus-for-qcs615-a547540656d1
-prerequisite-message-id: <20250119-qcs615-mm-v2-dt-nodes-v2-0-c46ab4080989@quicinc.com>
-prerequisite-patch-id: afd2dce9e6066b1f6ce0b41ceafe0dd47ad97c40
-prerequisite-patch-id: f8d64c8cf6cd883dc7bbb2a4ed6d5a4db85c536d
-
-Best regards,
 -- 
-Renjiang Han <quic_renjiang@quicinc.com>
+2.34.1
 
