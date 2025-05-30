@@ -1,45 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD59322DF87;
-	Fri, 30 May 2025 12:39:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B09A2405F8;
+	Fri, 30 May 2025 12:39:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748608786; cv=none; b=Po60t/9F7uHTJTUdglirSNcZAhwm+c3KRqn6P+WpbfFHSnJfzs2CiK2P98gT5oeUSkL0NW5rslg8adPQKLs6nsf2szRCGg9Gt/gtfiYRnIO458FZblVir3wGy5Hi5gDisuCN4CldSw+1XQ+I7cwgREHvEcI/3R26/rGtyrcj2gs=
+	t=1748608789; cv=none; b=f7RyxyqUqHtMrFQqd1bNnKPFewgdHOZy0N9LQSTgDQQdiO9Zkb+UnccJvrgT83T7d1VSSH0ZNDs4EOfWfMN6ZfZfqsJWeiRMMHEyothzgkYzBkX1bpqC1M1nb162NlRR/XyCh/pDHSdHxBR+a4LwdZPQuC4sCrRdMd/SB3dPohY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748608786; c=relaxed/simple;
-	bh=WCfPEgF7U60SODsr12OJ4UDT8DSIMuvTRTm+GCIA8F0=;
+	s=arc-20240116; t=1748608789; c=relaxed/simple;
+	bh=NCUICTrC8+gqXYnUCqs7UKPOFce2Teg+APrv6Pq+XjQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=G7npqcmfD27ThJE5OjKAxsyTVaFkppOjdShcLjP4ebcEvVRgSLEeRhDi2v9QGzPP/c/0Y7rl7E4jiKsbBWJw+X8uSd251XN6+XEGDp3BmutmZcVlgM+OtVN/WOrTbGMAZ5fzOA968vs3ULoJQMnTlY1inPRdpSCxo8Jxrt56lsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QugkCWIk; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=JUs/ls/PAE7Jk5DEUYPz5FKbZvKNJzRdjhrBPrw9DN3CExH2HmfKjESpoVuhZpAgy+mIi3+dKQZUP3R4JB3/PQH69amCQhYwbqXk3XH33WdcU4dsWbkG4RSXVOv6/Pp8QTVCICVl7gflNy/XimdoLD9+8yAGeyrl8N/1kQNeazc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RqqxPgNU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QugkCWIk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49E54C4CEF0;
-	Fri, 30 May 2025 12:39:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RqqxPgNU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C50CAC4CEEA;
+	Fri, 30 May 2025 12:39:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748608786;
-	bh=WCfPEgF7U60SODsr12OJ4UDT8DSIMuvTRTm+GCIA8F0=;
+	s=k20201202; t=1748608788;
+	bh=NCUICTrC8+gqXYnUCqs7UKPOFce2Teg+APrv6Pq+XjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QugkCWIk+lc+prLUscbvxu03O1lou4bXaxBNeV49i7Y3LGfDzkdnYkJrZa/kFwkQz
-	 4525Y2hIW6ZiY3p+fnYmCZJ+CsgzJNcjTlkNepTxC1wyLQ66RiDWsMc8K7SNHd2CX0
-	 I04DiEjyc8wi0IhC9EIuGL8JAGUpCbdtv2w7t0GRyoBQ4QeHl0yXIDP/YKfDH44rxp
-	 +GET6VwFRtLrvuCmuAmzvkENx3SLJBXGkFhHaOwx+JBElZLwrPhf0+8t5jZvJsrIGC
-	 hqsRAaTSITpnYE4mC5LgHWyccUo8AIKjnfgWUbTDMSy8rY6U2oQavg1iDekTGILR7u
-	 bWybTzfjKlJfQ==
+	b=RqqxPgNUgQcihsqG3lv1lTHXZFmZ/rt85Inni152vJGIl0PjIV1RdeYsrJiuVFxsP
+	 vLt58Xmh7ajj4hJG7V9Ot7Ldm4/H7ht2Fdl+ZTUF+WpsoGdJlAEeyz3ahs53S2M7j6
+	 vL61bwHdAmJexujPJROhvfOeDIN8TgBsM7Ibw9gxMzuCcBy8jntaGHn7FZJpNdtJKt
+	 ytUYI0jJHpjRYfKYpUTWcAPYJHgzoSCOHeOU6wGFtoFI7RKhIUyBSj1d0LFoUkMv5W
+	 2muWoXwaW35O9bcxMlUtjomCJmHKtMRkO1sYvk6hmOchy9Ud4YY25LMqgxXlMUwKtx
+	 aGO1HqyhSdm5A==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Luke Wang <ziniu.wang_1@nxp.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
+Cc: Hector Martin <marcan@marcan.st>,
+	Neal Gompa <neal@gompa.dev>,
+	James Calligeros <jcalligeros99@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	shawnguo@kernel.org,
-	linux-mmc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
+	lgirdwood@gmail.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	alsa-devel@alsa-project.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 09/28] mmc: sdhci-esdhc-imx: Save tuning value when card stays powered in suspend
-Date: Fri, 30 May 2025 08:39:15 -0400
-Message-Id: <20250530123934.2574748-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.14 11/28] ASoC: tas2770: Power cycle amp on ISENSE/VSENSE change
+Date: Fri, 30 May 2025 08:39:17 -0400
+Message-Id: <20250530123934.2574748-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250530123934.2574748-1-sashal@kernel.org>
 References: <20250530123934.2574748-1-sashal@kernel.org>
@@ -54,249 +56,113 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.14.9
 Content-Transfer-Encoding: 8bit
 
-From: Luke Wang <ziniu.wang_1@nxp.com>
+From: Hector Martin <marcan@marcan.st>
 
-[ Upstream commit c63d25cdc59ae2891b39ba2da950910291d9bcbf ]
+[ Upstream commit f529c91be8a34ac12e7599bf87c65b6f4a2c9f5c ]
 
-For SoCs like i.MX6UL(L/Z) and i.MX7D, USDHC powers off completely during
-system power management (PM), causing the internal tuning status to be
-lost. To address this, save the tuning value when system suspend and
-restore it for any command issued after system resume when re-tuning is
-held.
+The ISENSE/VSENSE blocks are only powered up when the amplifier
+transitions from shutdown to active. This means that if those controls
+are flipped on while the amplifier is already playing back audio, they
+will have no effect.
 
-A typical case involves SDIO WiFi devices with the MMC_PM_KEEP_POWER and
-MMC_PM_WAKE_SDIO_IRQ flag, which retain power during system PM. To
-conserve power, WiFi switches to 1-bit mode and restores 4-bit mode upon
-resume. As per the specification, tuning commands are not supported in
-1-bit mode. When sending CMD52 to restore 4-bit mode, re-tuning must be
-held. However, CMD52 still requires a correct sample point to avoid CRC
-errors, necessitating preservation of the previous tuning value.
+Fix this by forcing a power cycle around transitions in those controls.
 
-Signed-off-by: Luke Wang <ziniu.wang_1@nxp.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Link: https://lore.kernel.org/r/20250328112517.2624806-1-ziniu.wang_1@nxp.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reviewed-by: Neal Gompa <neal@gompa.dev>
+Signed-off-by: Hector Martin <marcan@marcan.st>
+Signed-off-by: James Calligeros <jcalligeros99@gmail.com>
+Link: https://patch.msgid.link/20250406-apple-codec-changes-v5-1-50a00ec850a3@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
-Based on my analysis of the commit message, code changes, and
-examination of the kernel repository, here is my assessment: **YES**
-This commit should be backported to stable kernel trees. **Extensive
-Analysis:** **1. Bug Fix Nature:** This commit fixes a specific bug
-affecting SDIO WiFi devices on i.MX6UL(L/Z) and i.MX7D SoCs during
-system suspend/resume cycles. The problem occurs when: - SDIO devices
-maintain power during suspend (MMC_PM_KEEP_POWER) - USDHC hardware
-completely loses power despite software flags - Tuning values are lost,
-causing CRC errors on resume - This affects real-world WiFi
-functionality **2. Code Analysis - Key Changes:** The commit adds three
-main components: a) **Data Structure Addition** (line ~241): ```c
-unsigned int saved_tuning_delay_cell; /bin /bin.usr-is-merged /boot /dev
-/etc /home /init /lib /lib.usr-is-merged /lib64 /lost+found /media /mnt
-/opt /proc /root /run /sbin /sbin.usr-is-merged /snap /srv /sys /tmp
-/usr /var save the value of tuning delay cell model/ prompt/ src/
-target/ ``` This adds storage for the tuning value in the platform data
-structure. b) **Tuning Save Function** (`sdhc_esdhc_tuning_save`): ```c
-if (host->timing == MMC_TIMING_UHS_SDR50 || host->timing ==
-MMC_TIMING_UHS_SDR104) { reg = readl(host->ioaddr +
-ESDHC_TUNE_CTRL_STATUS); reg =
-FIELD_GET(ESDHC_TUNE_CTRL_STATUS_TAP_SEL_PRE_MASK, reg);
-imx_data->boarddata.saved_tuning_delay_cell = reg; } ``` This safely
-reads and stores the current tuning delay value for modes that require
-tuning. c) **Tuning Restore Function** (`sdhc_esdhc_tuning_restore`):
-```c reg = readl(host->ioaddr + ESDHC_TUNING_CTRL); reg &=
-~ESDHC_STD_TUNING_EN; writel(reg, host->ioaddr + ESDHC_TUNING_CTRL); reg
-= readl(host->ioaddr + ESDHC_MIX_CTRL); reg |= ESDHC_MIX_CTRL_SMPCLK_SEL
-| ESDHC_MIX_CTRL_FBCLK_SEL; writel(reg, host->ioaddr + ESDHC_MIX_CTRL);
-writel(FIELD_PREP(ESDHC_TUNE_CTRL_STATUS_DLY_CELL_SET_PRE_MASK,
-imx_data->boarddata.saved_tuning_delay_cell), host->ioaddr +
-ESDHC_TUNE_CTRL_STATUS); ``` This carefully restores the tuning value by
-manually configuring the hardware registers. **3. Risk Assessment - Very
-Low Risk:** - **Conditional Execution**: Both save/restore functions
-only execute when specific conditions are met: -
-`mmc_card_keep_power(host->mmc)` AND `mmc_card_wake_sdio_irq(host->mmc)`
-AND `esdhc_is_usdhc(imx_data)` - Only affects SDR50/SDR104 timing modes
-- Only targets specific SoC families (i.MX6UL(L/Z), i.MX7D) - **Register
-Manipulation Safety**: The code uses proper field masking (`FIELD_GET`,
-`FIELD_PREP`) and follows existing patterns in the driver - **No
-Architectural Changes**: This is purely a state preservation mechanism,
-doesn't change driver architecture **4. Comparison with Similar
-Commits:** Looking at the reference commits: - **Similar Commit #4
-(YES)**: Also fixes SDIO suspend/resume tuning issues with
-`mmc_retune_hold_now()` - **Similar Commit #5 (YES)**: Also addresses
-tuning-related problems by disabling CMD CRC checks This new commit
-follows the same pattern of fixing specific SDIO tuning issues with
-targeted, low-risk changes. **5. Hardware-Specific Nature:** The fix
-targets specific hardware (i.MX SoCs) where USDHC loses power despite
-software flags. This hardware-specific bug affects real users with SDIO
-WiFi cards and has a clear, contained solution. **6. Clear Problem
-Statement:** The commit message clearly describes the problem: "CMD52
-still requires a correct sample point to avoid CRC errors, necessitating
-preservation of the previous tuning value." This is a well-defined
-technical issue with a specific solution. **Conclusion:** This is a
-contained, hardware-specific bug fix that addresses real-world WiFi
-functionality issues on specific i.MX SoCs. The changes are
-conservative, well-guarded by conditions, and follow established
-patterns in the subsystem. The risk of regression is very low while the
-benefit to affected users is significant.
+**YES** This commit should be backported to stable kernel trees based on
+my analysis of both the commit message and code changes. Here's my
+extensive explanation: ## Bug Fix Analysis This commit addresses a
+specific functional bug in the tas2770 audio codec driver where
+ISENSE/VSENSE controls don't work properly when changed during active
+playback. The commit message clearly states: "if those controls are
+flipped on while the amplifier is already playing back audio, they will
+have no effect." ## Code Changes Analysis The fix is contained and
+minimal, involving three key changes to `sound/soc/codecs/tas2770.c`: 1.
+**Addition of `sense_event` function (lines +21 to +43)**: This function
+implements a power cycling mechanism that forces the amplifier through a
+shutdown state when ISENSE/VSENSE controls are changed. This ensures the
+changes take effect regardless of playback state. 2. **Modified DAPM
+widget definitions (lines +45 to +48)**: The ISENSE and VSENSE switches
+are changed from simple `SND_SOC_DAPM_SWITCH` to `SND_SOC_DAPM_SWITCH_E`
+with event handling, connecting them to the new `sense_event` function.
+3. **Event triggers**: The widgets respond to `SND_SOC_DAPM_PRE_REG` and
+`SND_SOC_DAPM_POST_REG` events to perform the power cycling around
+register changes. ## Why This Should Be Backported 1. **User-Affecting
+Bug**: This fixes a real functional issue where audio controls don't
+work as expected during playback, which directly impacts user
+experience. 2. **Small and Contained**: The fix is confined to a single
+driver file (`tas2770.c`) and doesn't affect other subsystems. The
+changes are surgical and targeted. 3. **Low Risk**: The fix follows
+established ASoC patterns using standard DAPM event handling. Similar
+power cycling approaches are used throughout the ASoC subsystem. 4. **No
+New Features**: This purely fixes existing functionality rather than
+adding new features. 5. **Comparison with Similar Commits**: Looking at
+the provided examples, this commit is very similar to "Similar Commit
+#2" and "Similar Commit #5" which were both marked as backportable
+(YES). Like commit #2, it fixes incorrect hardware behavior with a small
+register/control change. Like commit #5, it addresses power state
+management issues in audio hardware. 6. **Hardware-Specific Fix**: The
+commit addresses a hardware limitation specific to the tas2770 chip
+where ISENSE/VSENSE blocks are only powered up during shutdown-to-active
+transitions. This is documented in the commit message and is a
+legitimate hardware workaround. The fix ensures that software speaker
+protection functionality works correctly by guaranteeing that IVSENSE
+controls are functional, which is critical for protecting audio hardware
+from damage.
 
- drivers/mmc/host/sdhci-esdhc-imx.c | 88 +++++++++++++++++++++++++++++-
- 1 file changed, 86 insertions(+), 2 deletions(-)
+ sound/soc/codecs/tas2770.c | 30 ++++++++++++++++++++++++++++--
+ 1 file changed, 28 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
-index ff78a7c6a04c9..7e8addaed697e 100644
---- a/drivers/mmc/host/sdhci-esdhc-imx.c
-+++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-@@ -81,6 +81,8 @@
- #define  ESDHC_TUNE_CTRL_STEP		1
- #define  ESDHC_TUNE_CTRL_MIN		0
- #define  ESDHC_TUNE_CTRL_MAX		((1 << 7) - 1)
-+#define  ESDHC_TUNE_CTRL_STATUS_TAP_SEL_PRE_MASK	GENMASK(30, 24)
-+#define  ESDHC_TUNE_CTRL_STATUS_DLY_CELL_SET_PRE_MASK	GENMASK(14, 8)
+diff --git a/sound/soc/codecs/tas2770.c b/sound/soc/codecs/tas2770.c
+index 863c3f672ba98..0931b6109755f 100644
+--- a/sound/soc/codecs/tas2770.c
++++ b/sound/soc/codecs/tas2770.c
+@@ -156,11 +156,37 @@ static const struct snd_kcontrol_new isense_switch =
+ static const struct snd_kcontrol_new vsense_switch =
+ 	SOC_DAPM_SINGLE("Switch", TAS2770_PWR_CTRL, 2, 1, 1);
  
- /* strobe dll register */
- #define ESDHC_STROBE_DLL_CTRL		0x70
-@@ -235,6 +237,7 @@ struct esdhc_platform_data {
- 	unsigned int tuning_step;       /* The delay cell steps in tuning procedure */
- 	unsigned int tuning_start_tap;	/* The start delay cell point in tuning procedure */
- 	unsigned int strobe_dll_delay_target;	/* The delay cell for strobe pad (read clock) */
-+	unsigned int saved_tuning_delay_cell;	/* save the value of tuning delay cell */
- };
- 
- struct esdhc_soc_data {
-@@ -1057,7 +1060,7 @@ static void esdhc_reset_tuning(struct sdhci_host *host)
- {
- 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
- 	struct pltfm_imx_data *imx_data = sdhci_pltfm_priv(pltfm_host);
--	u32 ctrl;
-+	u32 ctrl, tuning_ctrl;
- 	int ret;
- 
- 	/* Reset the tuning circuit */
-@@ -1071,6 +1074,16 @@ static void esdhc_reset_tuning(struct sdhci_host *host)
- 			writel(0, host->ioaddr + ESDHC_TUNE_CTRL_STATUS);
- 		} else if (imx_data->socdata->flags & ESDHC_FLAG_STD_TUNING) {
- 			writel(ctrl, host->ioaddr + ESDHC_MIX_CTRL);
-+			/*
-+			 * enable the std tuning just in case it cleared in
-+			 * sdhc_esdhc_tuning_restore.
-+			 */
-+			tuning_ctrl = readl(host->ioaddr + ESDHC_TUNING_CTRL);
-+			if (!(tuning_ctrl & ESDHC_STD_TUNING_EN)) {
-+				tuning_ctrl |= ESDHC_STD_TUNING_EN;
-+				writel(tuning_ctrl, host->ioaddr + ESDHC_TUNING_CTRL);
-+			}
-+
- 			ctrl = readl(host->ioaddr + SDHCI_AUTO_CMD_STATUS);
- 			ctrl &= ~ESDHC_MIX_CTRL_SMPCLK_SEL;
- 			ctrl &= ~ESDHC_MIX_CTRL_EXE_TUNE;
-@@ -1149,7 +1162,8 @@ static void esdhc_prepare_tuning(struct sdhci_host *host, u32 val)
- 	reg |= ESDHC_MIX_CTRL_EXE_TUNE | ESDHC_MIX_CTRL_SMPCLK_SEL |
- 			ESDHC_MIX_CTRL_FBCLK_SEL;
- 	writel(reg, host->ioaddr + ESDHC_MIX_CTRL);
--	writel(val << 8, host->ioaddr + ESDHC_TUNE_CTRL_STATUS);
-+	writel(FIELD_PREP(ESDHC_TUNE_CTRL_STATUS_DLY_CELL_SET_PRE_MASK, val),
-+	       host->ioaddr + ESDHC_TUNE_CTRL_STATUS);
- 	dev_dbg(mmc_dev(host->mmc),
- 		"tuning with delay 0x%x ESDHC_TUNE_CTRL_STATUS 0x%x\n",
- 			val, readl(host->ioaddr + ESDHC_TUNE_CTRL_STATUS));
-@@ -1569,6 +1583,57 @@ static void sdhci_esdhc_imx_hwinit(struct sdhci_host *host)
- 	}
- }
- 
-+static void sdhc_esdhc_tuning_save(struct sdhci_host *host)
++static int sense_event(struct snd_soc_dapm_widget *w,
++			struct snd_kcontrol *kcontrol, int event)
 +{
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct pltfm_imx_data *imx_data = sdhci_pltfm_priv(pltfm_host);
-+	u32 reg;
++	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
++	struct tas2770_priv *tas2770 = snd_soc_component_get_drvdata(component);
 +
 +	/*
-+	 * SD/eMMC do not need this tuning save because it will re-init
-+	 * after system resume back.
-+	 * Here save the tuning delay value for SDIO device since it may
-+	 * keep power during system PM. And for usdhc, only SDR50 and
-+	 * SDR104 mode for SDIO device need to do tuning, and need to
-+	 * save/restore.
++	 * Powering up ISENSE/VSENSE requires a trip through the shutdown state.
++	 * Do that here to ensure that our changes are applied properly, otherwise
++	 * we might end up with non-functional IVSENSE if playback started earlier,
++	 * which would break software speaker protection.
 +	 */
-+	if (host->timing == MMC_TIMING_UHS_SDR50 ||
-+	    host->timing == MMC_TIMING_UHS_SDR104) {
-+		reg = readl(host->ioaddr + ESDHC_TUNE_CTRL_STATUS);
-+		reg = FIELD_GET(ESDHC_TUNE_CTRL_STATUS_TAP_SEL_PRE_MASK, reg);
-+		imx_data->boarddata.saved_tuning_delay_cell = reg;
++	switch (event) {
++	case SND_SOC_DAPM_PRE_REG:
++		return snd_soc_component_update_bits(component, TAS2770_PWR_CTRL,
++						    TAS2770_PWR_CTRL_MASK,
++						    TAS2770_PWR_CTRL_SHUTDOWN);
++	case SND_SOC_DAPM_POST_REG:
++		return tas2770_update_pwr_ctrl(tas2770);
++	default:
++		return 0;
 +	}
 +}
 +
-+static void sdhc_esdhc_tuning_restore(struct sdhci_host *host)
-+{
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct pltfm_imx_data *imx_data = sdhci_pltfm_priv(pltfm_host);
-+	u32 reg;
-+
-+	if (host->timing == MMC_TIMING_UHS_SDR50 ||
-+	    host->timing == MMC_TIMING_UHS_SDR104) {
-+		/*
-+		 * restore the tuning delay value actually is a
-+		 * manual tuning method, so clear the standard
-+		 * tuning enable bit here. Will set back this
-+		 * ESDHC_STD_TUNING_EN in esdhc_reset_tuning()
-+		 * when trigger re-tuning.
-+		 */
-+		reg = readl(host->ioaddr + ESDHC_TUNING_CTRL);
-+		reg &= ~ESDHC_STD_TUNING_EN;
-+		writel(reg, host->ioaddr + ESDHC_TUNING_CTRL);
-+
-+		reg = readl(host->ioaddr + ESDHC_MIX_CTRL);
-+		reg |= ESDHC_MIX_CTRL_SMPCLK_SEL | ESDHC_MIX_CTRL_FBCLK_SEL;
-+		writel(reg, host->ioaddr + ESDHC_MIX_CTRL);
-+
-+		writel(FIELD_PREP(ESDHC_TUNE_CTRL_STATUS_DLY_CELL_SET_PRE_MASK,
-+				  imx_data->boarddata.saved_tuning_delay_cell),
-+		       host->ioaddr + ESDHC_TUNE_CTRL_STATUS);
-+	}
-+}
-+
- static void esdhc_cqe_enable(struct mmc_host *mmc)
- {
- 	struct sdhci_host *host = mmc_priv(mmc);
-@@ -1900,6 +1965,15 @@ static int sdhci_esdhc_suspend(struct device *dev)
- 	if (host->tuning_mode != SDHCI_TUNING_MODE_3)
- 		mmc_retune_needed(host->mmc);
- 
-+	/*
-+	 * For the device need to keep power during system PM, need
-+	 * to save the tuning delay value just in case the usdhc
-+	 * lost power during system PM.
-+	 */
-+	if (mmc_card_keep_power(host->mmc) && mmc_card_wake_sdio_irq(host->mmc) &&
-+	    esdhc_is_usdhc(imx_data))
-+		sdhc_esdhc_tuning_save(host);
-+
- 	ret = sdhci_suspend_host(host);
- 	if (ret)
- 		return ret;
-@@ -1916,6 +1990,8 @@ static int sdhci_esdhc_suspend(struct device *dev)
- static int sdhci_esdhc_resume(struct device *dev)
- {
- 	struct sdhci_host *host = dev_get_drvdata(dev);
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct pltfm_imx_data *imx_data = sdhci_pltfm_priv(pltfm_host);
- 	int ret;
- 
- 	ret = pinctrl_pm_select_default_state(dev);
-@@ -1929,6 +2005,14 @@ static int sdhci_esdhc_resume(struct device *dev)
- 	if (ret)
- 		return ret;
- 
-+	/*
-+	 * restore the saved tuning delay value for the device which keep
-+	 * power during system PM.
-+	 */
-+	if (mmc_card_keep_power(host->mmc) && mmc_card_wake_sdio_irq(host->mmc) &&
-+	    esdhc_is_usdhc(imx_data))
-+		sdhc_esdhc_tuning_restore(host);
-+
- 	if (host->mmc->caps2 & MMC_CAP2_CQE)
- 		ret = cqhci_resume(host->mmc);
- 
+ static const struct snd_soc_dapm_widget tas2770_dapm_widgets[] = {
+ 	SND_SOC_DAPM_AIF_IN("ASI1", "ASI1 Playback", 0, SND_SOC_NOPM, 0, 0),
+ 	SND_SOC_DAPM_MUX("ASI1 Sel", SND_SOC_NOPM, 0, 0, &tas2770_asi1_mux),
+-	SND_SOC_DAPM_SWITCH("ISENSE", TAS2770_PWR_CTRL, 3, 1, &isense_switch),
+-	SND_SOC_DAPM_SWITCH("VSENSE", TAS2770_PWR_CTRL, 2, 1, &vsense_switch),
++	SND_SOC_DAPM_SWITCH_E("ISENSE", TAS2770_PWR_CTRL, 3, 1, &isense_switch,
++		sense_event, SND_SOC_DAPM_PRE_REG | SND_SOC_DAPM_POST_REG),
++	SND_SOC_DAPM_SWITCH_E("VSENSE", TAS2770_PWR_CTRL, 2, 1, &vsense_switch,
++		sense_event, SND_SOC_DAPM_PRE_REG | SND_SOC_DAPM_POST_REG),
+ 	SND_SOC_DAPM_DAC_E("DAC", NULL, SND_SOC_NOPM, 0, 0, tas2770_dac_event,
+ 			   SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),
+ 	SND_SOC_DAPM_OUTPUT("OUT"),
 -- 
 2.39.5
 
