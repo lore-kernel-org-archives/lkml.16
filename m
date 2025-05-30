@@ -1,35 +1,39 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066961A0BD0
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 04:35:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18484685
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 04:39:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748579738; cv=none; b=FdWyxMVjoElsmMJ46FhjyNn444FFKmgMF/pQHj22cBxnIF+T+eQdLDbXNaiqvFMws/PJxYeHl7JVqsrqmOrFUVJn0zS7Ps1zJnq2+yDYKlibTfGAGWTe0cKwINCRjzvmjQT/oJsDrONscBBnXfD1rZKk0dOVpqB/+U7VseBapPo=
+	t=1748579968; cv=none; b=aEq56xbL9FBJdrOrK8wOhv42N2ZcbD93W1/+55M83O7O1eQTpEoJa/R9+AaNEldGQPHK0Gq7vHRaLPT0aOVZqpnNlN2MFEb8cJJmv/8uvZCNX7vLzQrT48eq/xN9jnzDqU/f8EMpVAjp8ZfDTeQEUZV3CMGR22Qtu4/OofFZIXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748579738; c=relaxed/simple;
-	bh=gUkxrJALy1SAUy+uYGJNhJ50tKrIGIVCcOAFinEY/Nc=;
+	s=arc-20240116; t=1748579968; c=relaxed/simple;
+	bh=zbTSaxnssCPvb2qltwiAHT0BNGjubLbhKJp7/VptBpY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DRRogynm98Xac7u4iVQ7p4W9XJxfA2GFdaLB5Vy1WluNR6dRpAHoY22xMroFsELSaxczsKoM6p6OT0CbBrt58CejJyfkeZGsiFwpmzixhljBzsPgBFiVLE5FSd3ChHLNN7GR0RQGaYybSb4KJt6O0OE20RHtA4lIu2Q8MvhTpUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
-Received: from trampoline.thunk.org (pool-173-48-111-235.bstnma.fios.verizon.net [173.48.111.235])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 54U4ZGWs020446
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 30 May 2025 00:35:17 -0400
-Received: by trampoline.thunk.org (Postfix, from userid 15806)
-	id 7B8CD2E00DD; Fri, 30 May 2025 00:35:16 -0400 (EDT)
-Date: Fri, 30 May 2025 00:35:16 -0400
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: David Wang <00107082@163.com>
-Cc: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC] ext4: use kmem_cache for short fname allocation in readdir
-Message-ID: <20250530043516.GD332467@mit.edu>
-References: <20250529144256.4517-1-00107082@163.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZM+JnyXxv7/C4u4Gko+UFIeXTrgZ6Gbx+Hfm2JBi+NRUW98HoBuL/ndmeU3YtDelYTzCztsnEwhAe23S8mzDQTujyURK58rCcTOa80cycH65ELlACxA+ID8YHZy1lgy6q/+7epf3MaLQVn+kGf4Yxbj8gu0ag1kvGwySVv+JEeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WgdqL6gq; arc=none smtp.client-ip=91.218.175.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WgdqL6gq"
+Date: Fri, 30 May 2025 00:39:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748579962;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pgZ6uh8kfi/EBIHAyh230akWXNFstDoaF0ea/dpWw9k=;
+	b=WgdqL6gqPrLcUBZ6MNFvUwzMSDgixE87L/YbE9FZh0rakfHmFmVcOHZqmNagMKEm8s1M1Z
+	djHdXM4dnMUf135YklWr0bCodBAMJDcpC5+F4aUZOhidOMa0ez95cLuyd0JlwYreh3PnzA
+	y5UhSOE9resYu8RVxgaYvBTQfkF0MvE=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Qasim Ijaz <qasdev00@gmail.com>
+Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bcachefs: fix uninitialised-access bug in
+ bch2_alloc_sectors_start_trans
+Message-ID: <y3ojfcuvlj4vk3fz7z7meky4ccvbgcb24hdzfrxldvpungvmgy@oiwjlmqbut7c>
+References: <20250528190610.50604-1-qasdev00@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,41 +42,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250529144256.4517-1-00107082@163.com>
+In-Reply-To: <20250528190610.50604-1-qasdev00@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, May 29, 2025 at 10:42:56PM +0800, David Wang wrote:
-> When searching files, ext4_readdir would kzalloc() a fname
-> object for each entry. It would be faster if a dedicated
-> kmem_cache is used for fname.
+On Wed, May 28, 2025 at 08:06:10PM +0100, Qasim Ijaz wrote:
+> During bch2_alloc_sectors_start_trans() if bch2_trans_relock() fails
+> the code jumps to label "err", skipping "cl" initialisation. Once at
+> the "err" label "cl" could potentially be accessed leading to a uinit
+> access.
 > 
-> But fnames are of variable length.
+> Fix this by moving "cl" initialisation before bch2_trans_relock().
 > 
-> This patch suggests using kmem_cache for fname with short
-> length, and resorting to kzalloc when fname needs larger buffer.
-> Assuming long file names are not very common.
+> Fixes: c2e7fa88544d ("bcachefs: Use a loop for open_bucket_add_buckets() retries")
+> Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
+
+Thanks, folded this in.
+
+> ---
+>  fs/bcachefs/alloc_foreground.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
 > 
-> Profiling when searching files in kernel code base, with following
-> command:
-> 	# perf record -g -e cpu-clock --freq=max bash -c \
-> 	"for i in {1..100}; do find ./linux -name notfoundatall > /dev/null; done"
-> And using sample counts as indicator of performance improvement.
-
-I would think a better indicator of performance improvement would be
-to measure the system time when running the find commands.  (i.e.,
-either using getrusange with RUSAGE_CHILDREN or wait3 or wait4).
-
-We're trading off some extra memory usage and code complexity with
-less CPU time because entries in the kmem_cache might be more TLB
-friendly.  But this is only really going to be applicable if the
-directory is large enough such that the cycles spent in readdir is
-significant compared to the rest of the userspace program, *and* you
-are reading the directory multiple times (e.g., calling find on a
-directory hierarchy many, many times) such that the disk blocks are
-cahed and you don't need to read them from the storage device.
-Otherwise the I/O costs will completely dominate and swamp the
-marginal TLB cache savings.
-
-Given that it's really rare for readdir() to be the bottleneck of many
-workloads, the question is, is it worth it?
-
-						- Ted
+> diff --git a/fs/bcachefs/alloc_foreground.c b/fs/bcachefs/alloc_foreground.c
+> index 1410a4afb36a..ccd51bcbcec5 100644
+> --- a/fs/bcachefs/alloc_foreground.c
+> +++ b/fs/bcachefs/alloc_foreground.c
+> @@ -1277,6 +1277,11 @@ int bch2_alloc_sectors_start_trans(struct btree_trans *trans,
+>  
+>  	req->data_type		= req->wp->data_type;
+>  
+> +	/* If we're going to fall back to the whole fs, try nonblocking first */
+> +	struct closure *cl = req->target && !(flags & BCH_WRITE_only_specified_devs)
+> +		? _cl
+> +		: NULL;
+> +
+>  	ret = bch2_trans_relock(trans);
+>  	if (ret)
+>  		goto err;
+> @@ -1285,10 +1290,6 @@ int bch2_alloc_sectors_start_trans(struct btree_trans *trans,
+>  	if (req->data_type != BCH_DATA_user)
+>  		req->have_cache = true;
+>  
+> -	/* If we're going to fall back to the whole fs, try nonblocking first */
+> -	struct closure *cl = req->target && !(flags & BCH_WRITE_only_specified_devs)
+> -		? _cl
+> -		: NULL;
+>  	while (1) {
+>  		ret = open_bucket_add_buckets(trans, req, cl);
+>  		if (!ret ||
+> -- 
+> 2.39.5
+> 
