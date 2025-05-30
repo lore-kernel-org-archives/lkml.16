@@ -1,192 +1,229 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 072BF22F164;
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D14622D7AC;
 	Fri, 30 May 2025 14:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748613933; cv=none; b=Km52urKL47JrlKd2yzYCo7L3JOm3tUh13O9JpzA1kfekS8Tn7eAENRgCCNX+CmipErtYyeN0NBjwNoKFNZr9XpxGL5V9Hac57ERiT2BckrD2bjFjX6ZHzjNhACGWwGrc7z6gM+/i69ZuR3Q6C+1mrLaZsNa1pF26i8M9o4rMu70=
+	t=1748613935; cv=none; b=e6DOCJl28xpA2VNz7U9r2QZXbl4GebeVJqq8G8g5fy8BkgcGKkRlVJX7algjtjp4/zHRu6zSQBaxAWjst8DMAKDS+7gpinxD+ESq2cXx4pa7U++AF9vnKa+QkoSV8znHmj9WEcDRfHd140ewnAXJhI7z/24OahmMiywS8fB9hmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748613933; c=relaxed/simple;
-	bh=yLm0jyQJu0WZrXh+w7GKCHO5nUthXsl1vtsPqXVY914=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HUIYqqwkEVuzCX8ErGh/wMh99VqlKpBCDElo9R8Y+jH3IxYc6otJELNDCpAFsfrsH8XDWc21I5ZF0SFh/kr8u24YHpsfiFe1CKX7aUFSuDVI0rvI6Wu+8GzJej1En4UdZu4dyDj1kVux8MzFmyE3caPRWyaGpmkKqVsVqXSVHMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A52826A4;
-	Fri, 30 May 2025 07:05:15 -0700 (PDT)
-Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9729C3F673;
-	Fri, 30 May 2025 07:05:26 -0700 (PDT)
-From: Ryan Roberts <ryan.roberts@arm.com>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Juergen Gross <jgross@suse.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.makhalov@broadcom.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	sparclinux@vger.kernel.org,
-	virtualization@lists.linux.dev,
-	xen-devel@lists.xenproject.org,
-	linux-mm@kvack.org
-Subject: [RFC PATCH v1 5/6] mm: Avoid calling page allocator while in lazy mmu mode
-Date: Fri, 30 May 2025 15:04:43 +0100
-Message-ID: <20250530140446.2387131-6-ryan.roberts@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250530140446.2387131-1-ryan.roberts@arm.com>
-References: <20250530140446.2387131-1-ryan.roberts@arm.com>
+	s=arc-20240116; t=1748613935; c=relaxed/simple;
+	bh=4gkgjY5kGR6zQCrqpo0+hFqLbpk3iPh4aMlab+1tfiU=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=iVj6TgK/kjvXhfpWQ8AUlR+weAgXWlYZk6UQ+UaLA3QGCR3RG/cGb56SUFfpkw/rqyjnVhyCuaqAtI6tQY6pLNg0dDcAKqpitd8q/v6PD/sPV4yrXigz7HAFMoufZtIN6NZvjWuzcqvUoYJEfsTPLZsPPYsOhSNu3bDOtDnDsqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dMc4ePrL; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dMc4ePrL"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54UAWXnH008272;
+	Fri, 30 May 2025 14:05:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	4iVEmPMyZopwyfXJVjKqstdsuW2AD1p5Y2D0gUSNpEw=; b=dMc4ePrL76kNx+9n
+	My70cNWd/sP9JsoWAOv45q6M+2OYDHgBI5CBMoUcYFhBd1aSb60ufxk+VyJwyu8K
+	c37PZxSr6IZ5FVzxDF4ZXWaFlamwYQMCcY/dvnyOOLe1f31j4hXXESvcqMMDqkpJ
+	UJfIMYHYJxrUcL0SOZWDDlVMXxlgfCik6khXQmEM3MSLA/fyJDZ3kCk4x43haruL
+	zMHRdORwR6Ft+9Z8kpWoNFDAy7NL7ZJS+ZvNaq7rlXhc/AGbN1j9OkCyo3N5Iajh
+	ldOvnqowz2h2O4hvjKmkAAiQ0gZx92PRzIQaPHMhVFCns5s5fTnRjb5eFf1g5YGp
+	w2glDg==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46w992uetx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 30 May 2025 14:05:17 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54UE5HKX001222
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 30 May 2025 14:05:17 GMT
+Received: from [10.217.219.62] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 30 May
+ 2025 07:05:12 -0700
+Message-ID: <de00809a-2775-4417-b987-5f557962ec31@quicinc.com>
+Date: Fri, 30 May 2025 19:35:10 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/2] dmaengine: qcom: gpi: Add GPI Block event
+ interrupt support
+From: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: Vinod Koul <vkoul@kernel.org>,
+        Mukesh Kumar Savaliya
+	<quic_msavaliy@quicinc.com>,
+        Viken Dadhaniya <quic_vdadhani@quicinc.com>,
+        Andi Shyti <andi.shyti@kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linaro-mm-sig@lists.linaro.org>, <quic_vtanuku@quicinc.com>
+References: <20250506111844.1726-1-quic_jseerapu@quicinc.com>
+ <20250506111844.1726-2-quic_jseerapu@quicinc.com>
+ <ze5y6llgo2qx4nvilaqcmkam5ywqa76d6uetn34iblz4nefpeu@ozbgzwbyd54u>
+ <4456d0e2-3451-4749-acda-3b75ae99e89b@quicinc.com>
+Content-Language: en-US
+In-Reply-To: <4456d0e2-3451-4749-acda-3b75ae99e89b@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMwMDEyNCBTYWx0ZWRfX+HFHJqP6AUQh
+ /F7kIWa/YYSTMBf+9sF8PbIxkXJ2TGSP6218m4NSYH0l3bn/6/kk+MM5wxOXJF1c6hNA9U5H956
+ XUGqLTH7KtUNW+PXf0GlAAYt9o6fQ+AGwsGWsciTdTNRxIbasz8boxUF1Ch24gw/rJf5QqmS3Km
+ fpqoUdRLu4U9ETmDNSAn3G4WcLmIRmLe0eRuFa46+dSl7RfKmkY1ICAXZfp1fPPzY3l6/aYrwdf
+ 3t2EE3VM154j9J7eYpPC/riJlJ61/TYI5QnpCVgxLvCk68OGk+RyDFZcENc1DIY2SwmHj/t7vhW
+ Ex+r5AsExKFqytrNh1IkLVn8uXj5FphgdNVt9o/fc2hDJcJxJ1ywZXAuOioWhEvMY8Lnlil1s8L
+ tkhyWoT5VnUyjR0wWjU1C84lpNPuVnL2oYi6q2xurLqra2EnWP75ohGUVKHXCz6C6ch86a/7
+X-Authority-Analysis: v=2.4 cv=Fes3xI+6 c=1 sm=1 tr=0 ts=6839bb1d cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
+ a=ABChF0pPfgsoSLu0HJQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: Jal4qF9HP_k9GDbkw8uB1H7T2eq9ttJO
+X-Proofpoint-ORIG-GUID: Jal4qF9HP_k9GDbkw8uB1H7T2eq9ttJO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-30_06,2025-05-30_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 malwarescore=0 impostorscore=0 phishscore=0 clxscore=1015
+ lowpriorityscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=999 spamscore=0
+ adultscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505300124
 
-Lazy mmu mode applies to the current task and permits pte modifications
-to be deferred and updated at a later time in a batch to improve
-performance. tlb_next_batch() is called in lazy mmu mode as follows:
 
-zap_pte_range
-  arch_enter_lazy_mmu_mode
-  do_zap_pte_range
-    zap_present_ptes
-      zap_present_folio_ptes
-        __tlb_remove_folio_pages
-          __tlb_remove_folio_pages_size
-            tlb_next_batch
-  arch_leave_lazy_mmu_mode
 
-tlb_next_batch() may call into the page allocator which is problematic
-with CONFIG_DEBUG_PAGEALLOC because debug_pagealloc_[un]map_pages()
-calls the arch implementation of __kernel_map_pages() which must modify
-the ptes for the linear map.
+On 5/9/2025 11:48 AM, Jyothi Kumar Seerapu wrote:
+> 
+> 
+> On 5/6/2025 5:02 PM, Dmitry Baryshkov wrote:
+>> On Tue, May 06, 2025 at 04:48:43PM +0530, Jyothi Kumar Seerapu wrote:
+>>> GSI hardware generates an interrupt for each transfer completion.
+>>> For multiple messages within a single transfer, this results in
+>>> N interrupts for N messages, leading to significant software
+>>> interrupt latency.
+>>>
+>>> To mitigate this latency, utilize Block Event Interrupt (BEI) mechanism.
+>>> Enabling BEI instructs the GSI hardware to prevent interrupt generation
+>>> and BEI is disabled when an interrupt is necessary.
+>>>
+>>> When using BEI, consider splitting a single multi-message transfer into
+>>> chunks of 8 messages internally and so interrupts are not expected for
+>>> the first 7 message completions, only the last message triggers
+>>> an interrupt, indicating the completion of 8 messages.
+>>>
+>>> This BEI mechanism enhances overall transfer efficiency.
+>>>
+>>> Signed-off-by: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+>>> ---
+>>> v5 ->v6:
+>>>    - For updating the block event interrupt bit, instead of relying on
+>>>      bei_flag, decision check is moved with DMA_PREP_INTERRUPT flag.
+>>> v4 -> v5:
+>>>    - BEI flag naming changed from flags to bei_flag.
+>>>    - QCOM_GPI_BLOCK_EVENT_IRQ macro is removed from qcom-gpi-dma.h
+>>>      file, and Block event interrupt support is checked with bei_flag.
+>>>
+>>> v3 -> v4:
+>>>    - API's added for Block event interrupt with multi descriptor 
+>>> support for
+>>>      I2C is moved from qcom-gpi-dma.h file to I2C geni qcom driver file.
+>>>    - gpi_multi_xfer_timeout_handler function is moved from GPI driver to
+>>>      I2C driver.
+>>>
+>>> v2-> v3:
+>>>     - Renamed gpi_multi_desc_process to gpi_multi_xfer_timeout_handler
+>>>     - MIN_NUM_OF_MSGS_MULTI_DESC changed from 4 to 2
+>>>     - Added documentation for newly added changes in "qcom-gpi-dma.h" 
+>>> file
+>>>     - Updated commit description.
+>>>
+>>> v1 -> v2:
+>>>     - Changed dma_addr type from array of pointers to array.
+>>>     - To support BEI functionality with the TRE size of 64 defined in 
+>>> GPI driver,
+>>>       updated QCOM_GPI_MAX_NUM_MSGS to 16 and NUM_MSGS_PER_IRQ to 4.
+>>>
+>>>   drivers/dma/qcom/gpi.c           | 3 +++
+>>>   include/linux/dma/qcom-gpi-dma.h | 2 ++
+>>>   2 files changed, 5 insertions(+)
+>>>
+>>> diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
+>>> index b1f0001cc99c..7e511f54166a 100644
+>>> --- a/drivers/dma/qcom/gpi.c
+>>> +++ b/drivers/dma/qcom/gpi.c
+>>> @@ -1695,6 +1695,9 @@ static int gpi_create_i2c_tre(struct gchan 
+>>> *chan, struct gpi_desc *desc,
+>>>           tre->dword[3] = u32_encode_bits(TRE_TYPE_DMA, TRE_FLAGS_TYPE);
+>>>           tre->dword[3] |= u32_encode_bits(1, TRE_FLAGS_IEOT);
+>>> +
+>>> +        if (!(i2c->dma_flags & DMA_PREP_INTERRUPT))
+>>> +            tre->dword[3] |= u32_encode_bits(1, TRE_FLAGS_BEI);
+>>>       }
+>>>       for (i = 0; i < tre_idx; i++)
+>>> diff --git a/include/linux/dma/qcom-gpi-dma.h b/include/linux/dma/ 
+>>> qcom-gpi-dma.h
+>>> index 6680dd1a43c6..ebac0d3edff2 100644
+>>> --- a/include/linux/dma/qcom-gpi-dma.h
+>>> +++ b/include/linux/dma/qcom-gpi-dma.h
+>>> @@ -65,6 +65,7 @@ enum i2c_op {
+>>>    * @rx_len: receive length for buffer
+>>>    * @op: i2c cmd
+>>>    * @muli-msg: is part of multi i2c r-w msgs
+>>> + * @dma_flags: Flags indicating DMA capabilities
+>>>    */
+>>>   struct gpi_i2c_config {
+>>>       u8 set_config;
+>>> @@ -78,6 +79,7 @@ struct gpi_i2c_config {
+>>>       u32 rx_len;
+>>>       enum i2c_op op;
+>>>       bool multi_msg;
+>>> +    unsigned int dma_flags;
+>>
+>> Why do you need extra field instead of using
+>> dma_async_tx_descriptor.flags?
+> 
+> In the original I2C QCOM GENI driver, using the local variable (unsigned 
+> in flags) and updating the "DMA_PREP_INTERRUPT" flag.
+> 
+> Sure, i will review if "dma_async_tx_descriptor.flags" can be retrieved 
+> in GPI driver for DMA_PREP_INTERRUPT flag status.
 
-There are two possibilities at this point:
+Hi Dmitry,
 
-- If the arch implementation modifies the ptes directly without first
-  entering lazy mmu mode, the pte modifications may get deferred until
-  the existing lazy mmu mode is exited. This could result in taking
-  spurious faults for example.
+In the I2C Geni driver, the dma flags are primarily used in the 
+dmaengine_prep_slave_single() function, which expects the argument type 
+to be unsigned int. Therefore, the flags should be defined either as
+enum dma_ctrl_flags, or unsigned int.
 
-- If the arch implementation enters a nested lazy mmu mode before
-  modification of the ptes (many arches use apply_to_page_range()),
-  then the linear map updates will definitely be applied upon leaving
-  the inner lazy mmu mode. But because lazy mmu mode does not support
-  nesting, the remainder of the outer user is no longer in lazy mmu
-  mode and the optimization opportunity is lost.
+In the GPI driver, specifically within the gpi_prep_slave_sg() function, 
+the flags are correctly received from the I2C driver. However, these 
+flags are not currently passed to the gpi_create_i2c_tre() function.
 
-So let's just ensure that the page allocator is never called from within
-lazy mmu mode. Use the new arch_in_lazy_mmu_mode() API to check if we
-are in lazy mmu mode, and if so, when calling into the page allocator,
-temporarily leave lazy mmu mode.
+If we pass the existing flags variable to the gpi_create_i2c_tre() 
+function, we can retrieve the DMA flags information without introducing 
+any additional or external variables.
 
-Given this new API we can also add VM_WARNings to check that we exit
-lazy mmu mode when required to ensure the PTEs are actually updated
-prior to tlb flushing.
+Please confirm if this approach—reusing the existing flags argument in 
+the GPI driver—is acceptable and good to proceed with.
 
-Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
----
- include/asm-generic/tlb.h |  2 ++
- mm/mmu_gather.c           | 15 +++++++++++++++
- 2 files changed, 17 insertions(+)
-
-diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
-index 88a42973fa47..84fb269b78a5 100644
---- a/include/asm-generic/tlb.h
-+++ b/include/asm-generic/tlb.h
-@@ -469,6 +469,8 @@ tlb_update_vma_flags(struct mmu_gather *tlb, struct vm_area_struct *vma)
- 
- static inline void tlb_flush_mmu_tlbonly(struct mmu_gather *tlb)
- {
-+	VM_WARN_ON(arch_in_lazy_mmu_mode());
-+
- 	/*
- 	 * Anything calling __tlb_adjust_range() also sets at least one of
- 	 * these bits.
-diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
-index db7ba4a725d6..0bd1e69b048b 100644
---- a/mm/mmu_gather.c
-+++ b/mm/mmu_gather.c
-@@ -18,6 +18,7 @@
- static bool tlb_next_batch(struct mmu_gather *tlb)
- {
- 	struct mmu_gather_batch *batch;
-+	bool lazy_mmu;
- 
- 	/* Limit batching if we have delayed rmaps pending */
- 	if (tlb->delayed_rmap && tlb->active != &tlb->local)
-@@ -32,7 +33,15 @@ static bool tlb_next_batch(struct mmu_gather *tlb)
- 	if (tlb->batch_count == MAX_GATHER_BATCH_COUNT)
- 		return false;
- 
-+	lazy_mmu = arch_in_lazy_mmu_mode();
-+	if (lazy_mmu)
-+		arch_leave_lazy_mmu_mode();
-+
- 	batch = (void *)__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
-+
-+	if (lazy_mmu)
-+		arch_enter_lazy_mmu_mode();
-+
- 	if (!batch)
- 		return false;
- 
-@@ -145,6 +154,8 @@ static void tlb_batch_pages_flush(struct mmu_gather *tlb)
- {
- 	struct mmu_gather_batch *batch;
- 
-+	VM_WARN_ON(arch_in_lazy_mmu_mode());
-+
- 	for (batch = &tlb->local; batch && batch->nr; batch = batch->next)
- 		__tlb_batch_free_encoded_pages(batch);
- 	tlb->active = &tlb->local;
-@@ -154,6 +165,8 @@ static void tlb_batch_list_free(struct mmu_gather *tlb)
- {
- 	struct mmu_gather_batch *batch, *next;
- 
-+	VM_WARN_ON(arch_in_lazy_mmu_mode());
-+
- 	for (batch = tlb->local.next; batch; batch = next) {
- 		next = batch->next;
- 		free_pages((unsigned long)batch, 0);
-@@ -363,6 +376,8 @@ void tlb_remove_table(struct mmu_gather *tlb, void *table)
- {
- 	struct mmu_table_batch **batch = &tlb->batch;
- 
-+	VM_WARN_ON(arch_in_lazy_mmu_mode());
-+
- 	if (*batch == NULL) {
- 		*batch = (struct mmu_table_batch *)__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
- 		if (*batch == NULL) {
--- 
-2.43.0
+>>
+>>>   };
+>>>   #endif /* QCOM_GPI_DMA_H */
+>>> -- 
+>>> 2.17.1
+>>>
+>>
+> 
+> 
 
