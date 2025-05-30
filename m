@@ -1,107 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4652367A8;
-	Fri, 30 May 2025 20:18:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE982798EA
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 20:18:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748636297; cv=none; b=Twi6RyzTcEiSU/ZhnBqo5JScqqgNsVmM8Zp7MRfXtLZneoa2cTVtrxSTVxf9zP6glsU+kyAZKDTEoBWUzOY3IlHOgq8ybPdWfJ161YEBMr/LaUvN9BN+jHhzu2RQ9Ik7wDeadq6Vqxe//ZQg9foiWrNq1nCQNGZqIdVIi4YnTwo=
+	t=1748636297; cv=none; b=max2dsMV+c0MglLn8LnXg88K3g5OJkWaoZo0QBtsLxZwCFU6qvci/BrsnxBLak2fasi5ODptgGmvR1CWvg2CgPyxVdpd4whWX5UM/dkbZ7iVecrHDHsiotNaEkr00igsqvYFm/uSXHHWtGIGkHKS/fqaNRPXHcxTj//LL9S4vk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748636297; c=relaxed/simple;
-	bh=49AjdxWn7iqeqTjNiqjBIRJwcJBY/yGfwGX1i4ALquI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CKGxdnG57sJIePUArpeydfes7BlVSFcGuf9Bnawy/tcyEkFBdmtuWTazubdY1yWB0XmN76shyhP5ccAzQO8pEpsUMjajxa+988ADDT2j7xIs5QvgO3wmtfhIIK8igmQgOpFDBglFMNfUGYM0ug6jRErkSHzO2hf0IjY+0seqILY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f6eA7DOz; arc=none smtp.client-ip=10.30.226.201
+	bh=gD4OE8mGUgFikae1GLGN4X9YkI2G5QLIpQiO20Ua8Eo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bJ9AXqa1du8DHflky4wFcZL9dgsPclEpAonP/VHYBqhG7zDwOALawPzsHFe5Ox5arENKx5hjz/yKJcJHsryIhB9C3Eni2Pw/fpezkHoCOBrMonorPUeIYuvZVVl0C4ygyAmqVL0LYnl0yPLXlMl9UvhZ12aIqoaLeBJptVyFihc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ItY80usA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f6eA7DOz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C86FC4CEEA;
-	Fri, 30 May 2025 20:18:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ItY80usA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 077D6C4CEE9;
+	Fri, 30 May 2025 20:18:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748636296;
-	bh=49AjdxWn7iqeqTjNiqjBIRJwcJBY/yGfwGX1i4ALquI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=f6eA7DOzTHxxzXZ2hKyRB1ErQau2wshKA0qCRHCVrudHpBNKDvi4aqnYCSqdIh/O/
-	 92v5u841WqZrvcCzOzirtr2E2YgctUuxZM9EDbCau/6SHffW2q7zevBOaeej9IoCpB
-	 aZG52ljHT7oPaB4jAHnYC7lkJ4nVpPSqf0bX56Zx+mLAGikLbNZrhQ6pPxY340HcCm
-	 iExE1VmeRICXK4/PhfLegxrFd0KrDmAoW0ogw9qfA0RhfVrE8vGzUd6ZI0xQQ0nwFV
-	 QJzq7L+jnHQpMnbxD5MTybkTWFFRgTMX3+GDKjt/pIZXvJLs9dUMipqhckjSUgXKRD
-	 F5IH6sQZqqemQ==
-From: SeongJae Park <sj@kernel.org>
-To: Ye Liu <ye.liu@linux.dev>
-Cc: SeongJae Park <sj@kernel.org>,
-	akpm@linux-foundation.org,
-	linux-debuggers@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-toolchains@vger.kernel.org,
-	osandov@osandov.com,
-	paulmck@kernel.org,
-	sweettea-kernel@dorminy.me,
-	liuye@kylinos.cn,
-	fweimer@redhat.com
-Subject: Re: [PATCH v4] tools/mm: Add script to display page state for a given PID and VADDR
-Date: Fri, 30 May 2025 13:18:14 -0700
-Message-Id: <20250530201814.52489-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <7867c19d-bd6c-4f8a-a227-1145fa0516d9@linux.dev>
-References: 
+	s=k20201202; t=1748636297;
+	bh=gD4OE8mGUgFikae1GLGN4X9YkI2G5QLIpQiO20Ua8Eo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ItY80usAQwQa/V4EOFuzUL2OBmBnHjgkUrDNB181AvSdwC8INWh823XFJjMlNL5nS
+	 XkIviVDRfnwSF5BkbT3VoDQJlGSg0QdGJYU0mJniMkxJxzkOI0/II2pzYh3XBZpCAN
+	 Noogt39otuzayagT1RqWAnwBRdF/uZA7hNtUfiD7wE5x66QL/h4+y4KHYwJPsfHObw
+	 OKKgjqXX5dzAFLcs7xWOaoTGLUslmED6EzwsFDyR5hPiy3N7ct51hBuNUSuZLEiBVP
+	 BpXV1LCUpAvD95BwGjT+9sRZaiGSIoH3Nk9EqJ9q6VFmqsLBunBbkdog7XlDck+33f
+	 E45JMJZ1WTHQg==
+Date: Fri, 30 May 2025 22:18:10 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Igor Mammedov <imammedo@redhat.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, Shiju Jose <shiju.jose@huawei.com>,
+ qemu-arm@nongnu.org, qemu-devel@nongnu.org, Philippe =?UTF-8?B?TWF0aGll?=
+ =?UTF-8?B?dS1EYXVkw6k=?= <philmd@linaro.org>, Ani Sinha
+ <anisinha@redhat.com>, Eduardo Habkost <eduardo@habkost.net>, Marcel
+ Apfelbaum <marcel.apfelbaum@gmail.com>, Peter Maydell
+ <peter.maydell@linaro.org>, Shannon Zhao <shannon.zhaosl@gmail.com>, Yanan
+ Wang <wangyanan55@huawei.com>, Zhao Liu <zhao1.liu@intel.com>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 12/20] acpi/generic_event_device: add logic to detect
+ if HEST addr is available
+Message-ID: <20250530221810.694ce02e@foz.lan>
+In-Reply-To: <20250530164903.0f9f8444@imammedo.users.ipa.redhat.com>
+References: <cover.1747722973.git.mchehab+huawei@kernel.org>
+	<aa74b756f633dbee5442cf4baa2c1d81a669d2f9.1747722973.git.mchehab+huawei@kernel.org>
+	<20250528174212.2823d3de@imammedo.users.ipa.redhat.com>
+	<20250530080120-mutt-send-email-mst@kernel.org>
+	<20250530164903.0f9f8444@imammedo.users.ipa.redhat.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, 30 May 2025 11:18:59 +0800 Ye Liu <ye.liu@linux.dev> wrote:
+Em Fri, 30 May 2025 16:49:03 +0200
+Igor Mammedov <imammedo@redhat.com> escreveu:
 
+> On Fri, 30 May 2025 08:01:28 -0400
+> "Michael S. Tsirkin" <mst@redhat.com> wrote:
 > 
-> 在 2025/5/29 07:42, SeongJae Park 写道:
-> > On Wed, 28 May 2025 17:15:43 +0800 Ye Liu <ye.liu@linux.dev> wrote:
-> >
-> >> From: Ye Liu <liuye@kylinos.cn>
-[...]
-> >> Output example:
-> >> sudo ./show_page_info.py 1 0x7fb3eb1b2000
-> >> PID: 1 Comm: systemd mm: 0xffff8d27279f9cc0
-> >> Raw: 0017ffffc000416c fffff31105a61b08 fffff31105a63608 ffff8d27121326a8
-> >> Raw: 0000000000000000 ffff8d271b9dcc40 0000002500000007 ffff8d2711f12700
-> >> User Virtual Address: 0x7fb3eb1b2000
-> > This is same to what the user passes as the input.  I think this is not really
-> > needed?
+> > On Wed, May 28, 2025 at 05:42:12PM +0200, Igor Mammedov wrote:  
+> > > On Tue, 20 May 2025 08:41:31 +0200
+> > > Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+> > >     
+> > > > Create a new property (x-has-hest-addr) and use it to detect if
+> > > > the GHES table offsets can be calculated from the HEST address
+> > > > (qemu 10.0 and upper) or via the legacy way via an offset obtained
+> > > > from the hardware_errors firmware file.    
+> > > 
+> > > 
+> > > it doesn't apply to current master anymore    
+> > 
+> > indeed. Mauro?  
 > 
-> It will be removed in the next version.
+> Michael,
+> it's trivial conflict in machine compat,
+> could you fix it up while applying?
 
-Thank you!
+IMHO, that's the best. The thing is, as code gets merged upstream with
+backports, conflicts happen.
 
-> 
-> >> Page Address:         0xfffff31106356a00
-> >> Page Flags:           PG_referenced|PG_uptodate|PG_lru|PG_head|PG_active|
-> >>                       PG_private|PG_reported|PG_has_hwpoisoned
-> >> Page Size:            4096
-> >> Page PFN:             0x18d5a8
-> >> Page Physical:        0x18d5a8000
-> >> Page Virtual:         0xffff8d274d5a8000
-> >> Page Refcount:        37
-> >> Page Mapcount:        7
-> >> Page Index:           0x0
-> >> Page Memcg Data:      0xffff8d2711f12700
-> >> Memcg Name:           init.scope
-> >> Memcg Path:           /sys/fs/cgroup/memory/init.scope
-> > On my setup, above two lines look like below:
-> >
-> >     Memcg Name:           unknown
-> >     Memcg Path:           Unexpected error: 'struct kernfs_node' has no member 'parent'
-> >
-> > Maybe there are rooms to improve?
-> The drgn version needs to be updated.
+I can re-send the series, if you prefer, as I'm keeping it rebasing it
+from time to time at:
+	https://gitlab.com/mchehab_kernel/qemu/-/tree/qemu_submitted?ref_type=heads
 
-As I mentioned on the v5 of this patch series, I'd hope this output be easier
-to understand that.
+(it is on the top of upstream/master)
+
+But even that might have conflicts on your test tree if you pick
+other patches touching this backport table:
+
+> -GlobalProperty hw_compat_10_0[] = {};
+> +GlobalProperty hw_compat_10_0[] = {
+> +    { TYPE_ACPI_GED, "x-has-hest-addr", "false" },
+> +};
+
+(this was the code when I sent the PR. When applying upstream,
+such hunk is now(*):
+
+ GlobalProperty hw_compat_10_0[] = {
+     { "scsi-hd", "dpofua", "off" },
++    { TYPE_ACPI_GED, "x-has-hest-addr", "false" },
+ };
 
 
-Thanks,
-SJ
+(*) https://gitlab.com/mchehab_kernel/qemu/-/commit/08c4859f8c6f36d7dccf2b773be88847e5d1fe0c
 
-[...]
+If you still prefer that I resubmit the entire PR, let me know.
+
+Regards,
+Mauro
