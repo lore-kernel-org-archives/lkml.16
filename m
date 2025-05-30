@@ -1,28 +1,28 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640941FF603;
-	Fri, 30 May 2025 06:41:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 417CA10E4;
+	Fri, 30 May 2025 06:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748587295; cv=none; b=E6qYQ96RXcNRpVMB6Ps1v5RgMCo6rg9ZDrUBKGWOlxh/jQIZYWsg11Olrqz+QVBre7y30OLitbWX95JIDcvxFk/5IRkXsOheyPK/feTt2GvMbCfAnC8db4+QL/u4/JQ3bXet5UPF2qhMnScjU3b8AIYGfoRNO5B/tzmP0oO9U48=
+	t=1748587294; cv=none; b=aT3nWzh5qV2xoEFazSFc4azjpoBxsAJS0ZzH6UPfznMMoHZ8+7aJRXr2pxBj0FUjeweoBR70k7ZCQH9admoNTpEJdWgCMH+BOp+pfssGaHExnBNFamOCXJHGe4PK1dDTpMm84BHTJV2ZITx7XxJOtHcEIP0HFzWWMT0kfWq6xUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748587295; c=relaxed/simple;
-	bh=31pg3NfsTdoDbfbC0W3wpIDc4mZQaJdYYDqYgSQlYt4=;
+	s=arc-20240116; t=1748587294; c=relaxed/simple;
+	bh=tUMQBqe6r5aCm9KVSgtfKgYNRS9LTGVsv46mlBlMcDE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mrkcBENA+vA3HdcyX0Vnu6a21RX2Vr3SvaMzTBjxIbRyEN1ZS39yrfpKLpngtr0XG7GJ/YqqoHfX43KRBJ0dc4gOMWEKk2BndsPLri+Tkf32m6Lza+Fy3RHIsEjbV0P3Z+7Jl4H0qGBoGY9Qo7s8LtLW1K+k01N+YtzAopy6kQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=OkPHdCh86yQr2ot3Wt4yh5HZN6XuxoSnI5Wpjbc76E9CHHvWra9eUz3eiQjfqXtmmgPXFcDm61I0EQD01OwHtEcRkf2iLygsv7SzaTiuEMi2bDH/EZUGOgnFCo/U16HwgtlXdIkrqlzX1k/lRxqLxnAoEaZoXJWRczreqTPMoZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4b7ttg61XSzYQtH1;
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4b7ttg3yhyzKHLw5;
 	Fri, 30 May 2025 14:41:31 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id E6A4F1A1349;
-	Fri, 30 May 2025 14:41:30 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id EBAEA1A0CC7;
+	Fri, 30 May 2025 14:41:29 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.112.188])
-	by APP4 (Coremail) with SMTP id gCh0CgD3Wl8PUzlo_wXRNw--.6893S7;
-	Fri, 30 May 2025 14:41:30 +0800 (CST)
+	by APP4 (Coremail) with SMTP id gCh0CgD3Wl8PUzlo_wXRNw--.6893S5;
+	Fri, 30 May 2025 14:41:29 +0800 (CST)
 From: Zhang Yi <yi.zhang@huaweicloud.com>
 To: linux-ext4@vger.kernel.org
 Cc: linux-fsdevel@vger.kernel.org,
@@ -36,9 +36,9 @@ Cc: linux-fsdevel@vger.kernel.org,
 	libaokun1@huawei.com,
 	yukuai3@huawei.com,
 	yangerkun@huawei.com
-Subject: [PATCH 3/5] ext4/jbd2: reintroduce jbd2_journal_blocks_per_page()
-Date: Fri, 30 May 2025 14:28:56 +0800
-Message-ID: <20250530062858.458039-4-yi.zhang@huaweicloud.com>
+Subject: [PATCH 1/5] ext4: restart handle if credits are insufficient during writepages
+Date: Fri, 30 May 2025 14:28:54 +0800
+Message-ID: <20250530062858.458039-2-yi.zhang@huaweicloud.com>
 X-Mailer: git-send-email 2.46.1
 In-Reply-To: <20250530062858.458039-1-yi.zhang@huaweicloud.com>
 References: <20250530062858.458039-1-yi.zhang@huaweicloud.com>
@@ -49,13 +49,13 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgD3Wl8PUzlo_wXRNw--.6893S7
-X-Coremail-Antispam: 1UD129KBjvJXoWxCFW3uFW3ZFy8Gry7KrWDXFb_yoWrXry7pF
-	ZrCFyrCr95uFyDuFs7Wr4DZryagay0kFWUWr9a9FnYqa9Fq3s7tFnrtw1ayFy5trWDGa10
-	vF45G3yDGw1Dt37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgD3Wl8PUzlo_wXRNw--.6893S5
+X-Coremail-Antispam: 1UD129KBjvJXoW3Xw47Kw13XFyrAw17tryDGFg_yoWxXw13pr
+	W7C3s8Ca17W3WagF4fZa1kAF1fCw18JrWUJa43KFZ0g3Z8KF97KFy8tFyYyFWjyrs3Za43
+	ZF4jk34DGa17AFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUm014x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
 	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
 	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
 	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
@@ -66,112 +66,179 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxCFW3uFW3ZFy8Gry7KrWDXFb_yoWrXry7pF
 	kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
 	6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
 	vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVj
-	vjDU0xZFpf9x0JUHWlkUUUUU=
+	vjDU0xZFpf9x0JU4OJ5UUUUU=
 X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
 From: Zhang Yi <yi.zhang@huawei.com>
 
-This partially reverts commit d6bf294773a4 ("ext4/jbd2: convert
-jbd2_journal_blocks_per_page() to support large folio"). This
-jbd2_journal_blocks_per_folio() will lead to a significant
-overestimation of journal credits. Since we still reserve credits for
-one page and attempt to extend and restart handles during large folio
-writebacks, so we should convert this helper back to
-ext4_journal_blocks_per_page().
+After large folios are supported on ext4, writing back a sufficiently
+large and discontinuous folio may consume a significant number of
+journal credits, placing considerable strain on the journal. For
+example, in a 20GB filesystem with 1K block size and 1MB journal size,
+writing back a 2MB folio could require thousands of credits in the
+worst-case scenario (when each block is discontinuous and distributed
+across different block groups), potentially exceeding the journal size.
 
+Fix this by making the write-back process first reserves credits for one
+page and attempts to extend the transaction if the credits are
+insufficient. In particular, if the credits for a transaction reach
+their upper limit, stop the handle and initiate a new transaction.
+
+Note that since we do not support partial folio writeouts, some blocks
+within this folio may have been allocated. These allocated extents are
+submitted through the current transaction, but the folio itself is not
+submitted. To prevent stale data and potential deadlocks in ordered
+mode, only the dioread_nolock mode supports this solution, as it always
+allocate unwritten extents.
+
+Suggested-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
 ---
- fs/ext4/ext4_jbd2.h  | 7 +++++++
- fs/ext4/inode.c      | 6 +++---
- fs/jbd2/journal.c    | 6 ++++++
- include/linux/jbd2.h | 1 +
- 4 files changed, 17 insertions(+), 3 deletions(-)
+ fs/ext4/inode.c | 57 +++++++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 51 insertions(+), 6 deletions(-)
 
-diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
-index 63d17c5201b5..c0ee756cb34c 100644
---- a/fs/ext4/ext4_jbd2.h
-+++ b/fs/ext4/ext4_jbd2.h
-@@ -326,6 +326,13 @@ static inline int ext4_journal_blocks_per_folio(struct inode *inode)
- 	return 0;
- }
- 
-+static inline int ext4_journal_blocks_per_page(struct inode *inode)
-+{
-+	if (EXT4_JOURNAL(inode) != NULL)
-+		return jbd2_journal_blocks_per_page(inode);
-+	return 0;
-+}
-+
- static inline int ext4_journal_force_commit(journal_t *journal)
- {
- 	if (journal)
 diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index d35c07c1dcac..1818a2a7ba8f 100644
+index be9a4cba35fd..5ef34c0c5633 100644
 --- a/fs/ext4/inode.c
 +++ b/fs/ext4/inode.c
-@@ -2516,7 +2516,7 @@ static int mpage_map_and_submit_extent(handle_t *handle,
+@@ -1680,6 +1680,7 @@ struct mpage_da_data {
+ 	unsigned int do_map:1;
+ 	unsigned int scanned_until_end:1;
+ 	unsigned int journalled_more_data:1;
++	unsigned int continue_map:1;
+ };
+ 
+ static void mpage_release_unused_pages(struct mpage_da_data *mpd,
+@@ -2367,6 +2368,8 @@ static int mpage_map_one_extent(handle_t *handle, struct mpage_da_data *mpd)
+  *
+  * @handle - handle for journal operations
+  * @mpd - extent to map
++ * @needed_blocks - journal credits needed for one writepages iteration
++ * @check_blocks - journal credits needed for map one extent
+  * @give_up_on_write - we set this to true iff there is a fatal error and there
+  *                     is no hope of writing the data. The caller should discard
+  *                     dirty pages to avoid infinite loops.
+@@ -2383,6 +2386,7 @@ static int mpage_map_one_extent(handle_t *handle, struct mpage_da_data *mpd)
   */
- static int ext4_da_writepages_trans_blocks(struct inode *inode)
+ static int mpage_map_and_submit_extent(handle_t *handle,
+ 				       struct mpage_da_data *mpd,
++				       int needed_blocks, int check_blocks,
+ 				       bool *give_up_on_write)
  {
--	int bpp = ext4_journal_blocks_per_folio(inode);
-+	int bpp = ext4_journal_blocks_per_page(inode);
+ 	struct inode *inode = mpd->inode;
+@@ -2393,6 +2397,8 @@ static int mpage_map_and_submit_extent(handle_t *handle,
+ 	ext4_io_end_t *io_end = mpd->io_submit.io_end;
+ 	struct ext4_io_end_vec *io_end_vec;
  
- 	return ext4_meta_trans_blocks(inode,
- 				MAX_WRITEPAGES_EXTENT_LEN + bpp - 1, bpp);
-@@ -2594,7 +2594,7 @@ static int mpage_prepare_extent_to_map(struct mpage_da_data *mpd)
- 	ext4_lblk_t lblk;
- 	struct buffer_head *head;
- 	handle_t *handle = NULL;
--	int bpp = ext4_journal_blocks_per_folio(mpd->inode);
-+	int bpp = ext4_journal_blocks_per_page(mpd->inode);
- 
- 	if (mpd->wbc->sync_mode == WB_SYNC_ALL || mpd->wbc->tagged_writepages)
- 		tag = PAGECACHE_TAG_TOWRITE;
-@@ -6221,7 +6221,7 @@ int ext4_meta_trans_blocks(struct inode *inode, int lblocks, int pextents)
-  */
- int ext4_writepage_trans_blocks(struct inode *inode)
- {
--	int bpp = ext4_journal_blocks_per_folio(inode);
-+	int bpp = ext4_journal_blocks_per_page(inode);
- 	int ret;
- 
- 	ret = ext4_meta_trans_blocks(inode, bpp, bpp);
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index 6d5e76848733..2d8e9053c3cf 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -84,6 +84,7 @@ EXPORT_SYMBOL(jbd2_journal_start_commit);
- EXPORT_SYMBOL(jbd2_journal_force_commit_nested);
- EXPORT_SYMBOL(jbd2_journal_wipe);
- EXPORT_SYMBOL(jbd2_journal_blocks_per_folio);
-+EXPORT_SYMBOL(jbd2_journal_blocks_per_page);
- EXPORT_SYMBOL(jbd2_journal_invalidate_folio);
- EXPORT_SYMBOL(jbd2_journal_try_to_free_buffers);
- EXPORT_SYMBOL(jbd2_journal_force_commit);
-@@ -2661,6 +2662,11 @@ int jbd2_journal_blocks_per_folio(struct inode *inode)
- 		     inode->i_sb->s_blocksize_bits);
- }
- 
-+int jbd2_journal_blocks_per_page(struct inode *inode)
-+{
-+	return 1 << (PAGE_SHIFT - inode->i_sb->s_blocksize_bits);
-+}
++	mpd->continue_map = 0;
 +
- /*
-  * helper functions to deal with 32 or 64bit block numbers.
-  */
-diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
-index 43b9297fe8a7..f35369c104ba 100644
---- a/include/linux/jbd2.h
-+++ b/include/linux/jbd2.h
-@@ -1724,6 +1724,7 @@ static inline int tid_geq(tid_t x, tid_t y)
+ 	io_end_vec = ext4_alloc_io_end_vec(io_end);
+ 	if (IS_ERR(io_end_vec))
+ 		return PTR_ERR(io_end_vec);
+@@ -2439,6 +2445,34 @@ static int mpage_map_and_submit_extent(handle_t *handle,
+ 		err = mpage_map_and_submit_buffers(mpd);
+ 		if (err < 0)
+ 			goto update_disksize;
++		if (!map->m_len)
++			goto update_disksize;
++
++		/*
++		 * For mapping a folio that is sufficiently large and
++		 * discontinuous, the current handle credits may be
++		 * insufficient, try to extend the handle.
++		 */
++		err = __ext4_journal_ensure_credits(handle, check_blocks,
++				needed_blocks, 0);
++		if (err < 0)
++			goto update_disksize;
++		/*
++		 * The credits for the current handle and transaction have
++		 * reached their upper limit, stop the handle and initiate a
++		 * new transaction. Note that some blocks in this folio may
++		 * have been allocated, and these allocated extents are
++		 * submitted through the current transaction, but the folio
++		 * itself is not submitted. To prevent stale data and
++		 * potential deadlock in ordered mode, only the
++		 * dioread_nolock mode supports this.
++		 */
++		if (err > 0) {
++			WARN_ON_ONCE(!ext4_should_dioread_nolock(inode));
++			mpd->continue_map = 1;
++			err = 0;
++			goto update_disksize;
++		}
+ 	} while (map->m_len);
+ 
+ update_disksize:
+@@ -2467,6 +2501,9 @@ static int mpage_map_and_submit_extent(handle_t *handle,
+ 		if (!err)
+ 			err = err2;
+ 	}
++	if (!err && mpd->continue_map)
++		ext4_get_io_end(io_end);
++
+ 	return err;
  }
  
- extern int jbd2_journal_blocks_per_folio(struct inode *inode);
-+extern int jbd2_journal_blocks_per_page(struct inode *inode);
- extern size_t journal_tag_bytes(journal_t *journal);
+@@ -2703,7 +2740,7 @@ static int ext4_do_writepages(struct mpage_da_data *mpd)
+ 	handle_t *handle = NULL;
+ 	struct inode *inode = mpd->inode;
+ 	struct address_space *mapping = inode->i_mapping;
+-	int needed_blocks, rsv_blocks = 0, ret = 0;
++	int needed_blocks, check_blocks, rsv_blocks = 0, ret = 0;
+ 	struct ext4_sb_info *sbi = EXT4_SB(mapping->host->i_sb);
+ 	struct blk_plug plug;
+ 	bool give_up_on_write = false;
+@@ -2825,10 +2862,13 @@ static int ext4_do_writepages(struct mpage_da_data *mpd)
  
- static inline int jbd2_journal_has_csum_v2or3(journal_t *journal)
+ 	while (!mpd->scanned_until_end && wbc->nr_to_write > 0) {
+ 		/* For each extent of pages we use new io_end */
+-		mpd->io_submit.io_end = ext4_init_io_end(inode, GFP_KERNEL);
+ 		if (!mpd->io_submit.io_end) {
+-			ret = -ENOMEM;
+-			break;
++			mpd->io_submit.io_end =
++					ext4_init_io_end(inode, GFP_KERNEL);
++			if (!mpd->io_submit.io_end) {
++				ret = -ENOMEM;
++				break;
++			}
+ 		}
+ 
+ 		WARN_ON_ONCE(!mpd->can_map);
+@@ -2841,10 +2881,13 @@ static int ext4_do_writepages(struct mpage_da_data *mpd)
+ 		 */
+ 		BUG_ON(ext4_should_journal_data(inode));
+ 		needed_blocks = ext4_da_writepages_trans_blocks(inode);
++		check_blocks = ext4_chunk_trans_blocks(inode,
++				MAX_WRITEPAGES_EXTENT_LEN);
+ 
+ 		/* start a new transaction */
+ 		handle = ext4_journal_start_with_reserve(inode,
+-				EXT4_HT_WRITE_PAGE, needed_blocks, rsv_blocks);
++				EXT4_HT_WRITE_PAGE, needed_blocks,
++				mpd->continue_map ? 0 : rsv_blocks);
+ 		if (IS_ERR(handle)) {
+ 			ret = PTR_ERR(handle);
+ 			ext4_msg(inode->i_sb, KERN_CRIT, "%s: jbd2_start: "
+@@ -2861,6 +2904,7 @@ static int ext4_do_writepages(struct mpage_da_data *mpd)
+ 		ret = mpage_prepare_extent_to_map(mpd);
+ 		if (!ret && mpd->map.m_len)
+ 			ret = mpage_map_and_submit_extent(handle, mpd,
++					needed_blocks, check_blocks,
+ 					&give_up_on_write);
+ 		/*
+ 		 * Caution: If the handle is synchronous,
+@@ -2894,7 +2938,8 @@ static int ext4_do_writepages(struct mpage_da_data *mpd)
+ 			ext4_journal_stop(handle);
+ 		} else
+ 			ext4_put_io_end(mpd->io_submit.io_end);
+-		mpd->io_submit.io_end = NULL;
++		if (ret || !mpd->continue_map)
++			mpd->io_submit.io_end = NULL;
+ 
+ 		if (ret == -ENOSPC && sbi->s_journal) {
+ 			/*
 -- 
 2.46.1
 
