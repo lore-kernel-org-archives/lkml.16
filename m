@@ -1,158 +1,256 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 468642116F2
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 20:44:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0076283682
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 20:45:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748637885; cv=none; b=C0bZPgWtFeRof7SgFq1sha9Lre8CfkttrRFaxlVU1J20SKjIJaA1f/PKbu55GfzDhs8XdmD7evz8vLLJA8nr4bdLtY6N6wqowege0Q9JBLyQEkF5QmgQSwqwSgAQ/gHmfO07rtuBie5TnyNk9lq6zpznhKcJ7TJ/LzurABle5WA=
+	t=1748637906; cv=none; b=AvebZ0dqrLpykfvkZmIYlJl518lwWltIoUefuxlej/xg+gDBTQn2Q1lf6/waDKdikArQd8AU4rmrAf0LpUEn1Xl3A4JydoZezhWoBPBEDTBzE290B3DzL2cOB+llZdw5DKuhNtvb1m+yhTVLkCYPiRRMvkCwVxAyaRJXWXJDrQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748637885; c=relaxed/simple;
-	bh=WKODy9FgXDgbxxqWIA/IwTJOy8VJdioFU2ccnli5Qqw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NDd92YVnewYhCfon9xVvW7wgg7DfSKBldcj0Th71iWTB6mqgcqzMaUiGNY75WMJAnJAglmZKONFOTRR9HHVvhdkR8ZPv7mrV3hhZs2KBdJVqiYT076hsJkgK9S7im3g1uOOdyz068L8WMk1PYb30A5yhAmUPKVEfSyhmDLHMvsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NhULeYnk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748637906; c=relaxed/simple;
+	bh=cll4mXUzms/0nywiTQVSWPQQUD9+MUxrsSZXKKnTxAw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IRJni+A1pl1gXlFSoUPJEVBlnl2r3MQXADQIpc/Ds/M81QKUvpka1JeFQrjrX/Y8NIizkLdR03tasx83q22kWFUk5fbhMIkE5qTrPwKPHzHQ3hSFrHdG/dONq7RS+GJuCcsU/s4pBukt4Uj0KyMlhsnM70pgpn7vdYr9Q3JLZFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wgTv7ZFz; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NhULeYnk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09072C19422
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 20:44:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748637885;
-	bh=WKODy9FgXDgbxxqWIA/IwTJOy8VJdioFU2ccnli5Qqw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=NhULeYnkFIv8cAnghglb0olb6942P2eUOgBTcSPoCqvYSI9VWlXaHDmzmvMw/d6IS
-	 sakjIhQH05D5ba2tnHyjonBdVLG8oavmTFd8X+PvrKdkMvm5nFrE7pwAMChr8Uu9Bp
-	 gEb4wUESy/jQ96iLD8+DTtUkpN0TjL+YnYPZiFxUj9EPKARF+swgKKV1aV/3XPVMMZ
-	 6u2CoLsZfiisq38mvSURbNHQKN6o6m0K9qhfJvvOpmIOboxy0BeiUiqWZ8hd877UAd
-	 FuFAgk3yU1NFKdI6WwWiwLHJr0+gkgH9ymcZA1panimkYAyweBu1GXrZBTHGAy1uNf
-	 8lTzufpS4BdzQ==
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ad5273c1fd7so501707066b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 13:44:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXFZmvVt9WRBKl8XDcSLvMkHijv99mEgjZVv0VRwcNwJZ8mFzULrMLZT8Sf2F/Vl+xpBWgwkq88Hr7NosA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0DMYsiVGcSUpfG68djYLbU479++01pmknQ6zp3Mwzj3qVXzRY
-	MDPaHX4aCedMOYWmRknNRixlx+2W2hbYnvX8aqdW3nyFC5wy/5P9CgXz3hVjNsOR7NG3uDcIbQu
-	ei9rs0AJKmUaSinGuUdoaz3uwiPfKlY5JQ1mxy87f
-X-Google-Smtp-Source: AGHT+IFYPjLrtRmSUw02l8acZu75ZEk31voCEunbDz/ggHhtTlCZtv6L/sdj5D+DMpzfEs9+aMo/5KET1xbavpqajeo=
-X-Received: by 2002:a17:907:3d16:b0:ad8:a935:b8f9 with SMTP id
- a640c23a62f3a-adb36ba4a97mr335177366b.32.1748637883137; Fri, 30 May 2025
- 13:44:43 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wgTv7ZFz"
+Message-ID: <e6f20d3c-65fb-4809-a105-36ad8f2b2645@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748637900;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V/7Rjw+WopmTa1vaLvNS1VCjRXs+bdi21LWvZ4+BSm4=;
+	b=wgTv7ZFzuDrEitYZ5MS8IP+Z11ysmO775gDIsE9WW/aQp24Xv8kAr0htlnYVlgzDMWkUM/
+	WypaObQwodd5JfdOeavCTx6Vh+ez9+1uYfsXIcCfsKLmpa622ZEGqjC8gkeYKwH8XDSTIn
+	BF4TbEDqLaAkP4lK4Jue+2ttGk1rMNA=
+Date: Fri, 30 May 2025 16:44:56 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528215037.2081066-1-bboscaccy@linux.microsoft.com>
- <CACYkzJ5oJASZ43B531gY8mESqAF3WYFKez-H5vKxnk8r48Ouxg@mail.gmail.com> <CAHC9VhSLOjQr4Ph2CefyEZGiB-Vqd4a8Y9=uA2YPo79Xo=Qopg@mail.gmail.com>
-In-Reply-To: <CAHC9VhSLOjQr4Ph2CefyEZGiB-Vqd4a8Y9=uA2YPo79Xo=Qopg@mail.gmail.com>
-From: KP Singh <kpsingh@kernel.org>
-Date: Fri, 30 May 2025 22:44:32 +0200
-X-Gmail-Original-Message-ID: <CACYkzJ4W9yhET8AnwvU5hhbP8nsH12sneqzKexVs6p4C596+sA@mail.gmail.com>
-X-Gm-Features: AX0GCFtEzKd5icGNP9zMXhh3w0IjhKTZ4H9XX606OWYKl73LpaAxQPOFCdjO9vc
-Message-ID: <CACYkzJ4W9yhET8AnwvU5hhbP8nsH12sneqzKexVs6p4C596+sA@mail.gmail.com>
-Subject: Re: [PATCH 0/3] BPF signature verification
-To: Paul Moore <paul@paul-moore.com>
-Cc: Blaise Boscaccy <bboscaccy@linux.microsoft.com>, jarkko@kernel.org, zeffron@riotgames.com, 
-	xiyou.wangcong@gmail.com, kysrinivasan@gmail.com, code@tyhicks.com, 
-	linux-security-module@vger.kernel.org, roberto.sassu@huawei.com, 
-	James.Bottomley@hansenpartnership.com, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, David Howells <dhowells@redhat.com>, Lukas Wunner <lukas@wunner.de>, 
-	Ignat Korchagin <ignat@cloudflare.com>, Quentin Monnet <qmo@kernel.org>, 
-	Jason Xing <kerneljasonxing@gmail.com>, Willem de Bruijn <willemb@google.com>, 
-	Anton Protopopov <aspsk@isovalent.com>, Jordan Rome <linux@jordanrome.com>, 
-	Martin Kelly <martin.kelly@crowdstrike.com>, Alan Maguire <alan.maguire@oracle.com>, 
-	Matteo Croce <teknoraver@meta.com>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	keyrings@vger.kernel.org, linux-crypto@vger.kernel.org, kys@microsoft.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH net-next] net: xilinx: axienet: Configure and report
+ coalesce parameters in DMAengine flow
+To: "Gupta, Suraj" <Suraj.Gupta2@amd.com>,
+ "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+ "davem@davemloft.net" <davem@davemloft.net>,
+ "edumazet@google.com" <edumazet@google.com>,
+ "kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com"
+ <pabeni@redhat.com>, "vkoul@kernel.org" <vkoul@kernel.org>,
+ "Simek, Michal" <michal.simek@amd.com>,
+ "Pandey, Radhey Shyam" <radhey.shyam.pandey@amd.com>,
+ "horms@kernel.org" <horms@kernel.org>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "git (AMD-Xilinx)" <git@amd.com>, "Katakam, Harini" <harini.katakam@amd.com>
+References: <20250525102217.1181104-1-suraj.gupta2@amd.com>
+ <679d6810-9e76-425c-9d4e-d4b372928cc3@linux.dev>
+ <BL3PR12MB6571ABA490895FDB8225CAEBC967A@BL3PR12MB6571.namprd12.prod.outlook.com>
+ <d5be7218-8ec1-4208-ac24-94d4831bfdb6@linux.dev>
+ <BL3PR12MB6571A48E5FD0092231D0B0A5C961A@BL3PR12MB6571.namprd12.prod.outlook.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <BL3PR12MB6571A48E5FD0092231D0B0A5C961A@BL3PR12MB6571.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, May 30, 2025 at 10:15=E2=80=AFPM Paul Moore <paul@paul-moore.com> w=
-rote:
->
-> On Fri, May 30, 2025 at 12:42=E2=80=AFPM KP Singh <kpsingh@kernel.org> wr=
-ote:
-> > On Wed, May 28, 2025 at 11:50=E2=80=AFPM Blaise Boscaccy
-> > <bboscaccy@linux.microsoft.com> wrote:
->
-> ...
->
-> > Please hold off on further iterations, I am working on a series and
-> > will share these patches based on the design that was proposed.
->
-> I don't think there is any harm in Blaise continuing his work in this
-> area, especially as he seems to be making reasonable progress towards
-> a solution that satisfies everyone's needs.  Considering all of the
-> work that Blaise has already invested in this, and his continued
-> willingness to try to work with everyone in the community to converge
-> on a solution, wouldn't it be more beneficial to work with Blaise on
-> further developing/refining his patchset instead of posting a parallel
-> effort?  It's your call of course, I'm not going to tell you, or
-> anyone else, to refrain from posting patches upstream, but it seems
-> like this is a good opportunity to help foster the development of a
-> new contributor.
+On 5/30/25 06:18, Gupta, Suraj wrote:
+> [AMD Official Use Only - AMD Internal Distribution Only]
+> 
+>> -----Original Message-----
+>> From: Sean Anderson <sean.anderson@linux.dev>
+>> Sent: Thursday, May 29, 2025 9:48 PM
+>> To: Gupta, Suraj <Suraj.Gupta2@amd.com>; andrew+netdev@lunn.ch;
+>> davem@davemloft.net; edumazet@google.com; kuba@kernel.org;
+>> pabeni@redhat.com; vkoul@kernel.org; Simek, Michal <michal.simek@amd.com>;
+>> Pandey, Radhey Shyam <radhey.shyam.pandey@amd.com>; horms@kernel.org
+>> Cc: netdev@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+>> kernel@vger.kernel.org; git (AMD-Xilinx) <git@amd.com>; Katakam, Harini
+>> <harini.katakam@amd.com>
+>> Subject: Re: [PATCH net-next] net: xilinx: axienet: Configure and report coalesce
+>> parameters in DMAengine flow
+>>
+>> Caution: This message originated from an External Source. Use proper caution
+>> when opening attachments, clicking links, or responding.
+>>
+>>
+>> On 5/28/25 08:00, Gupta, Suraj wrote:
+>> > [AMD Official Use Only - AMD Internal Distribution Only]
+>> >
+>> >> -----Original Message-----
+>> >> From: Sean Anderson <sean.anderson@linux.dev>
+>> >> Sent: Tuesday, May 27, 2025 9:47 PM
+>> >> To: Gupta, Suraj <Suraj.Gupta2@amd.com>; andrew+netdev@lunn.ch;
+>> >> davem@davemloft.net; edumazet@google.com; kuba@kernel.org;
+>> >> pabeni@redhat.com; vkoul@kernel.org; Simek, Michal
+>> >> <michal.simek@amd.com>; Pandey, Radhey Shyam
+>> >> <radhey.shyam.pandey@amd.com>; horms@kernel.org
+>> >> Cc: netdev@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+>> >> linux- kernel@vger.kernel.org; git (AMD-Xilinx) <git@amd.com>;
+>> >> Katakam, Harini <harini.katakam@amd.com>
+>> >> Subject: Re: [PATCH net-next] net: xilinx: axienet: Configure and
+>> >> report coalesce parameters in DMAengine flow
+>> >>
+>> >> Caution: This message originated from an External Source. Use proper
+>> >> caution when opening attachments, clicking links, or responding.
+>> >>
+>> >>
+>> >> On 5/25/25 06:22, Suraj Gupta wrote:
+>> >> > Add support to configure / report interrupt coalesce count and
+>> >> > delay via ethtool in DMAEngine flow.
+>> >> > Netperf numbers are not good when using non-dmaengine default
+>> >> > values, so tuned coalesce count and delay and defined separate
+>> >> > default values in dmaengine flow.
+>> >> >
+>> >> > Netperf numbers and CPU utilisation change in DMAengine flow after
+>> >> > introducing coalescing with default parameters:
+>> >> > coalesce parameters:
+>> >> >    Transfer type        Before(w/o coalescing)  After(with coalescing)
+>> >> > TCP Tx, CPU utilisation%      925, 27                 941, 22
+>> >> > TCP Rx, CPU utilisation%      607, 32                 741, 36
+>> >> > UDP Tx, CPU utilisation%      857, 31                 960, 28
+>> >> > UDP Rx, CPU utilisation%      762, 26                 783, 18
+>> >> >
+>> >> > Above numbers are observed with 4x Cortex-a53.
+>> >>
+>> >> How does this affect latency? I would expect these RX settings to
+>> >> increase latency around 5-10x. I only use these settings with DIM
+>> >> since it will disable coalescing during periods of light load for better latency.
+>> >>
+>> >> (of course the way to fix this in general is RSS or some other method
+>> >> involving multiple queues).
+>> >>
+>> >
+>> > I took values before NAPI addition in legacy flow (rx_threshold: 24, rx_usec: 50) as
+>> reference. But netperf numbers were low with them, so tried tuning both and
+>> selected the pair which gives good numbers.
+>>
+>> Yeah, but the reason is that you are trading latency for throughput.
+>> There is only one queue, so when the interface is saturated you will not get good
+>> latency anyway (since latency-sensitive packets will get head-of-line blocked). But
+>> when activity is sparse you can good latency if there is no coalescing. So I think
+>> coalescing should only be used when there is a lot of traffic. Hence why I only
+>> adjusted the settings once I implemented DIM. I think you should be able to
+>> implement it by calling net_dim from axienet_dma_rx_cb, but it will not be as efficient
+>> without NAPI.
+>>
+> 
+> Ok, got it. I'll keep default values used before NAPI in legacy flow (coalesce count: 24, delay: 50) for both Tx and Rx and remove perf comparisons.
 
-I think Blaise's interactions leave a lot to be desired, especially as
-a new contributor with the replies being unnecessarily abrasive, which
-I am choosing to ignore.
+Those settings are actually probably even worse for latency. I'd leave
+the settings at 0/0 (coalescing disabled) to match the existing
+behavior. I think the perf comparisons are helpful, especially for
+people who know they are going to be throughput-limited.
 
-Regardless, it would be more efficient to handle the subtleties here
-if someone from the core BPF community implements this. This is why I
-volunteered myself, but I need some time to wrap up the code and send
-it on the list. Blaise can continue to send patches that don't
-incorporate the feedback, it will only delay me further.
+My main point is that I think extending the dmaengine API to allow for
+DIM will have practical benefits in reduced latency.
 
->
-> > > 2. Timing of Signature Check
-> > >
-> > > This patchset moves the signature check to a point before
-> > > security_bpf_prog_load is invoked, due to an unresolved discussion
-> > > here:
-> >
-> > This is fine and what I had in mind, signature verification does not
-> > need to happen in the verifier and the existing hooks are good enough.
->
-> Excellent, I'm glad we can agree on the relative placement of the
-> signature verification and the LSM hook.  Perhaps I misunderstood your
-> design idea, but I took your comment:
->
-> "The signature check in the verifier (during BPF_PROG_LOAD):
+>> Actually, if you are looking into improving performance, I think lack of NAPI is
+>> probably the biggest limitation with the dmaengine backend.
+>>
+> Yes, I agree. NAPI for DMAEngine implementation is underway and will be sent to mainline soon.
 
-I meant during BPF_PROG_LOAD i.e. before the bpf_check is triggered,
-as I said this is better explained when implemented.
+Looking forward to it.
 
->> trust me, friend=E2=80=9D aspect of the original design.
+>> >> > Signed-off-by: Suraj Gupta <suraj.gupta2@amd.com>
+>> >> > ---
+>> >> > This patch depend on following AXI DMA dmengine driver changes sent
+>> >> > to dmaengine mailing list as pre-requisit series:
+>> >> > https://lore.kernel.org/all/20250525101617.1168991-1-suraj.gupta2@amd.
+>> >> > com/
+>> >> > ---
+>> >> >  drivers/net/ethernet/xilinx/xilinx_axienet.h  |  6 +++
+>> >> > .../net/ethernet/xilinx/xilinx_axienet_main.c | 53
+>> >> > +++++++++++++++++++
+>> >> >  2 files changed, 59 insertions(+)
+>> >> >
+>> >> > diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet.h
+>> >> > b/drivers/net/ethernet/xilinx/xilinx_axienet.h
+>> >> > index 5ff742103beb..cdf6cbb6f2fd 100644
+>> >> > --- a/drivers/net/ethernet/xilinx/xilinx_axienet.h
+>> >> > +++ b/drivers/net/ethernet/xilinx/xilinx_axienet.h
+>> >> > @@ -126,6 +126,12 @@
+>> >> >  #define XAXIDMA_DFT_TX_USEC          50
+>> >> >  #define XAXIDMA_DFT_RX_USEC          16
+>> >> >
+>> >> > +/* Default TX/RX Threshold and delay timer values for SGDMA mode
+>> >> > +with
+>> >> DMAEngine */
+>> >> > +#define XAXIDMAENGINE_DFT_TX_THRESHOLD       16
+>> >> > +#define XAXIDMAENGINE_DFT_TX_USEC    5
+>> >> > +#define XAXIDMAENGINE_DFT_RX_THRESHOLD       24
+>> >> > +#define XAXIDMAENGINE_DFT_RX_USEC    16
+>> >> > +
+>> >> >  #define XAXIDMA_BD_CTRL_TXSOF_MASK   0x08000000 /* First tx packet
+>> */
+>> >> >  #define XAXIDMA_BD_CTRL_TXEOF_MASK   0x04000000 /* Last tx packet
+>> */
+>> >> >  #define XAXIDMA_BD_CTRL_ALL_MASK     0x0C000000 /* All control bits */
+>> >> > diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+>> >> > b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+>> >> > index 1b7a653c1f4e..f9c7d90d4ecb 100644
+>> >> > --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+>> >> > +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+>> >> > @@ -1505,6 +1505,7 @@ static int axienet_init_dmaengine(struct
+>> >> > net_device *ndev)  {
+>> >> >       struct axienet_local *lp = netdev_priv(ndev);
+>> >> >       struct skbuf_dma_descriptor *skbuf_dma;
+>> >> > +     struct dma_slave_config tx_config, rx_config;
+>> >> >       int i, ret;
+>> >> >
+>> >> >       lp->tx_chan = dma_request_chan(lp->dev, "tx_chan0"); @@
+>> >> > -1520,6
+>> >> > +1521,22 @@ static int axienet_init_dmaengine(struct net_device
+>> >> > +*ndev)
+>> >> >               goto err_dma_release_tx;
+>> >> >       }
+>> >> >
+>> >> > +     tx_config.coalesce_cnt = XAXIDMAENGINE_DFT_TX_THRESHOLD;
+>> >> > +     tx_config.coalesce_usecs = XAXIDMAENGINE_DFT_TX_USEC;
+>> >> > +     rx_config.coalesce_cnt = XAXIDMAENGINE_DFT_RX_THRESHOLD;
+>> >> > +     rx_config.coalesce_usecs =  XAXIDMAENGINE_DFT_RX_USEC;
+>> >>
+>> >> I think it would be clearer to just do something like
+>> >>
+>> >>         struct dma_slave_config tx_config = {
+>> >>                 .coalesce_cnt = 16,
+>> >>                 .coalesce_usecs = 5,
+>> >>         };
+>> >>
+>> >> since these are only used once. And this ensures that you initialize the whole
+>> struct.
+>> >>
+>> >> But what tree are you using? I don't see these members on net-next or
+>> dmaengine.
+>> >
+>> > These changes are proposed in separate series in dmaengine
+>> https://lore.kernel.org/all/20250525101617.1168991-2-suraj.gupta2@amd.com/ and I
+>> described it here below my SOB.
+>>
+>> I think you should post those patches with this series to allow them to be reviewed
+>> appropriately.
+>>
+>> --Sean
+> 
+> DMAengine series functionality depends on commit
+> (https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git/commit/drivers/dma/xilinx?h=next&id=7e01511443c30a55a5ae78d3debd46d4d872517e)
+> in dmaengine which is currently not there in net-next. So I sent that
+> to dmaengine only. Please let me know if any way to send as single
+> series.
 
-The kernel is the TCB, both LSM and BPF are a part of the kernel and
-part of the same trust domain, LSM has sufficient information in the
-existing LSM hooks to enforce a signature policy and there is no need
-for a boolean:
+It looks like this won't cause any conflicts, so I think you can just
+send the whole series with a note in the cover letter like
 
-* If attr.signature is set, it's enforced, a new boolean does not
-convey any new information here.
-* If we specifically need auditing here, we can add an audit call in
-the signature_verification method, this can be done in a follow-up
-series.
+| This series depends on commit 7e01511443c3 ("dmaengine: xilinx_dma:
+| Set dma_device directions") currently in dmaengine/next.
 
-
->
->  verify_pkcs7_signature(prog->aux->sha, sizeof(prog->aux->sha),
->    sig_from_bpf_attr, =E2=80=A6);"
->
-> https://lore.kernel.org/linux-security-module/CACYkzJ6VQUExfyt0=3D-FmXz46=
-GHJh3d=3DFXh5j4KfexcEFbHV-vg@mail.gmail.com/
->
-> ... to mean that the PKCS7 signature verification was going to happen
-> *in* the verifier, with the verifier being bpf_check().  Simply for my
-> own education, if bpf_check() and/or the bpf_check() call in
-> bpf_prog_load() is not the verifier, it would be helpful to know that,
-> and also what code is considered the be the BPF verifier.  Regardless,
-> it's a good step forward that we are all on the same page with respect
-> to the authorization of signed/unsigned BPF programs.  We still have a
-> ways to go it looks like, but we're making good progress.
->
-> --
-> paul-moore.com
+--Sean
