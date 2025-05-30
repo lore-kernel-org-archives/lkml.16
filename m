@@ -1,384 +1,162 @@
-Received: from mx0a-00206402.pphosted.com (mx0a-00206402.pphosted.com [148.163.148.77])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2063.outbound.protection.outlook.com [40.107.102.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA7AF1547D2;
-	Fri, 30 May 2025 13:33:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.148.77
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748611997; cv=none; b=hCeEpNiwQyyR1S9jH9+sXb9d2mW3c4jktfxpVH/n0wmrobN8S2H5ctxkfZFj+jvqeSrkQcF3t1gy6y1HyPYG8bIx/WW8o2XhwsOOTyojdhUoDMkgsuC5HHQuRaAGN7J1siwfFWQ5GZ1I6UYNTOzUmNE2FBx2vZR+SNU07HIobAs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748611997; c=relaxed/simple;
-	bh=4w22kZ52negMUTuIli5dR16SY+t1/SlhL095ZunFByM=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nvcKWYbxTwDxnPnmMRTD5xlnHB6k2Z9RuAbm6LTRzTtr3X8wz/7pnVOGIDmMph0ze+NQMVNEVJURONnL3A180VZb8aPXzP+1ci5ytchaydB3QV3JkIjTrYM3GFfIcYkTxtrMopztuu537RgtngD1Fzb7UtnrTMR6nTFqSq7tP/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com; spf=pass smtp.mailfrom=crowdstrike.com; dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b=NweBX4q9; arc=none smtp.client-ip=148.163.148.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crowdstrike.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC864A3E;
+	Fri, 30 May 2025 13:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748612075; cv=fail; b=FwGqdR8miREIsJJ0YjJ6js7C55XZWqy5OgyTnqUkK72XTTknCFp7MwO77FLPq27QCQ2LJgO0Ht/aQkIizsg+712Sh/qP6+eG1USSQ9FRPKA4y2v82uvbFw7UyrmNaYoUrNixwhF85kRDcPDfy4l8Ev7BaEnmam3I/4N2QMyBH8I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748612075; c=relaxed/simple;
+	bh=FOEz+JmGgIU8KbxSgfgfpd353Sjh4aICDLbxJb3ENVE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EM+/l5UujZrRksQdYQBacW2Mp53ejyL+KzCEl93Uhq6LLqIU8dulnUXFCHE2VQA4fG5ikPADOjiP7K0M0S4ONU5ojLfiCJBZ2/UCj7kAo8aaP/iIL9oqisiIIthe1DpI4ZLfOhf0IT1RtK/1kAaPMhXA3tvHszE6QsvLjJADlkI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=WGjpURN6; arc=fail smtp.client-ip=40.107.102.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b="NweBX4q9"
-Received: from pps.filterd (m0354652.ppops.net [127.0.0.1])
-	by mx0a-00206402.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54UCLQEJ002202;
-	Fri, 30 May 2025 12:58:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crowdstrike.com;
-	 h=content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=default; bh=Wz
-	t3C1uyCswPs1cKeQlufIRtqHdv3juNPPqO3gwQN9g=; b=NweBX4q9U8U+Xwn+TB
-	dxkaC5s7rVhsmhpnkXk+AIyZ6BfIcPhOpTE/t4n6bU08npF4lSl7Td0psX416x1v
-	mgN2EzP3rTcIbXkvdHsppxHZOTelclkYxCgTDJJ7+rkYxBNn3kIPgdKag+F0aUHf
-	7Wvk3bqcGKEa/c/+1vGgn2EB89ngJ4gA/VVf6QdpotqwL4nsfnHyLCOp5basQ9R+
-	Eh3oE/mRPaNp004RVBsH3RSBoR8kcYazvDlPgY9eveO40yK+JS6JaeeB5iOFJ4LR
-	qOPtoEPY92fy/CT59rU2OTi599VJRNrE2RZXSBYYThEfk0ZPQB8VjcBoAkSZ42Vs
-	Yd8Q==
-Received: from mail.crowdstrike.com (dragosx.crowdstrike.com [208.42.231.60] (may be forged))
-	by mx0a-00206402.pphosted.com (PPS) with ESMTPS id 46uux3kfr6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 30 May 2025 12:58:07 +0000 (GMT)
-Received: from ML-CTVHTF21DX.crowdstrike.sys (10.100.11.122) by
- 04WPEXCH007.crowdstrike.sys (10.100.11.74) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 30 May 2025 12:58:02 +0000
-From: Slava Imameev <slava.imameev@crowdstrike.com>
-To: <qmo@kernel.org>, <ast@kernel.org>, <daniel@iogearbox.net>,
-        <andrii@kernel.org>, <martin.lau@linux.dev>, <eddyz87@gmail.com>,
-        <song@kernel.org>, <yonghong.song@linux.dev>,
-        <john.fastabend@gmail.com>, <kpsingh@kernel.org>, <sdf@fomichev.me>,
-        <haoluo@google.com>, <jolsa@kernel.org>, <mykolal@fb.com>,
-        <shuah@kernel.org>, <slava.imameev@crowdstrike.com>,
-        <justin.deschamp@crowdstrike.com>, <mark.fontana@crowdstrike.com>,
-        <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>
-Subject: [PATCH bpf-next 2/2] selftests/bpf: Add test for bpftool access to read-only protected maps
-Date: Fri, 30 May 2025 22:57:17 +1000
-Message-ID: <20250530125717.34746-2-slava.imameev@crowdstrike.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250530125717.34746-1-slava.imameev@crowdstrike.com>
-References: <20250530125717.34746-1-slava.imameev@crowdstrike.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="WGjpURN6"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=F7tFzjbb6wXn7ylY2jkQzSeKGw8miOp2zQIj4aYPb0OFyt3XEPWlGG2CQKz9a8onbIpjlZq7Qbq/lmjOQmWKkK6Evw7tZTHObjv7AAq8iKW2IfLh1LXox7bUY1yVJkNTRYm4+sbuDj5jBeeGxxjyIYkI5xyRhGyRHu0+L1ogRHBQuXIQbMKfVG6vN5EgRACnTt5zLZtJPQ9+GmAw2x9Yli6qgGLDhK0SK6sX5jvtMN3qN923A0zaO9vpJu3fIjWDBk9n5HFgVY+DopXglSoVvj5NR1OIG/3l2fXA7792ua2fuUj6/svYUdCclEGFqVM8klJPMjHX1raDR4/Rti2L0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ilOZJZT7S7lJJUWZn7i4qJT0V7CL8j2t0gUv8Ii24No=;
+ b=jwGitgwNA1G6xKcI//6HXYoxp3UEOO5M3e454MUrLn3oOlFemJ4c7dwLBZZFx+sY1qYq+2hybfTRtE/H7pFCpI4HpxIbeovaGDDsL3WV01ejFYvN21oDUMwHp10vEzs9wpMm7SlWq/BcfFQut24uhkeDjpffOugq96hdjHLSdRfvJxoyjUhKegqUynaRr+yqzdhWsKCEhUEdVNLPxvmJp8RvWjKxV7LZNrrVjDDYVtPnE/MmNhp5qVgq5FHVIb6/DXWEGzFWnIp1eA4GRrO6+xIBw+ZbbSNEfgnWM0QmbKNB08hSi/xN1gaBi0JWvf8DF+PRUSMbYSqTMm9tQjoFNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ilOZJZT7S7lJJUWZn7i4qJT0V7CL8j2t0gUv8Ii24No=;
+ b=WGjpURN6+sgm1g/uiqLqm0PoAwgBi+AVNYioibKm+ieS9CQOURL4l5csHiW7Nm2Fz2MvZuMyoGhNpYc/jTcZaf9LOhkGfvTX5VMNPI2dOGtM1hQNbZMXxOVXlO2Z9SMi5JaKrThTfwMwWJa880hmNKAqsbolrc2cNQ5z2Pt0tFs8AyWQ/mF0797OQx7n7b1TqNhDDrSQhySUOMrFjMYu4bHH/ji6Nexs8ljZ8n4M75vYLLVl/B8a51J23uJgu8l2HlEEPqZtyorf/Q3sJqVzZn7wQl8p8e4BkpWdS1CMB7s8A9XJgn3U82ErKDJBZN5c3VteD8mDqIS/Hoc/HCeGxQ==
+Received: from DM6PR18CA0017.namprd18.prod.outlook.com (2603:10b6:5:15b::30)
+ by CH2PR12MB4136.namprd12.prod.outlook.com (2603:10b6:610:a4::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.32; Fri, 30 May
+ 2025 13:34:30 +0000
+Received: from DS1PEPF0001709C.namprd05.prod.outlook.com
+ (2603:10b6:5:15b:cafe::61) by DM6PR18CA0017.outlook.office365.com
+ (2603:10b6:5:15b::30) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8746.32 via Frontend Transport; Fri,
+ 30 May 2025 13:34:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ DS1PEPF0001709C.mail.protection.outlook.com (10.167.18.106) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8769.18 via Frontend Transport; Fri, 30 May 2025 13:34:30 +0000
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 30 May
+ 2025 06:34:12 -0700
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail202.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Fri, 30 May
+ 2025 06:34:11 -0700
+Received: from sumitg-l4t.nvidia.com (10.127.8.14) by mail.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
+ Transport; Fri, 30 May 2025 06:34:08 -0700
+From: Sumit Gupta <sumitg@nvidia.com>
+To: <treding@nvidia.com>, <jonathanh@nvidia.com>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <linux-tegra@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC: <--to=tbergstrom@nvidia.com>, <bbasu@nvidia.com>, <sumitg@nvidia.com>
+Subject: [Patch 0/8] Support for Tegra264 and GB10 in CBB driver
+Date: Fri, 30 May 2025 19:03:28 +0530
+Message-ID: <20250530133336.1419971-1-sumitg@nvidia.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-NVConfidentiality: public
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: 04WPEXCH009.crowdstrike.sys (10.100.11.79) To
- 04WPEXCH007.crowdstrike.sys (10.100.11.74)
-X-Disclaimer: USA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-30_05,2025-05-30_01,2025-03-28_01
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS1PEPF0001709C:EE_|CH2PR12MB4136:EE_
+X-MS-Office365-Filtering-Correlation-Id: b4de6287-0a0d-431e-21b2-08dd9f7eb4f7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|36860700013|82310400026|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?CPRprjA93XPMywPvdc0RYygHj9XeitKECYK5mXyIEWRz6/b1M+7sD5tHlxni?=
+ =?us-ascii?Q?ESSeMnXnKHFu0/S52/zTp2UQ9X/22WdogRNXsiMrKpC4YPmVkxMvMaSL3vsM?=
+ =?us-ascii?Q?P/ondDJRpTHdUDtqXTmDv1QvfHRflevfo7+mFwKSC0ZW/H0FKH4BVigoAjVT?=
+ =?us-ascii?Q?q4xaq0pPQgeM3ShbmEIa2m/W9UBiyC/BZHdQ63ir9YOd5p2TCWzkjFPhGanq?=
+ =?us-ascii?Q?S1OOnxEr0Gfu5+JkesxJu9NM0FCHsO8Up+DZGCxb+kwkpglF3EEAOLzowJTu?=
+ =?us-ascii?Q?C7H8JfLF/DTVy78y0ZSFh0QM+cOei8czoQ5wTStpjIyv4Dnzdp4rxZdE24pZ?=
+ =?us-ascii?Q?KrgawiO07lVQdqHIyjHyao2H/n90B1+Anq8xG5K7+P+5VM/OirgYNNokUldk?=
+ =?us-ascii?Q?fNfJg07hHy2CWhKujscpoxpSwY6oKX2NUqjrN3OTafruD8Z8LPqumn54/37I?=
+ =?us-ascii?Q?IesVzMB9ySZGfTxdgdmCshynQgqEjFMaLVaZkQmcgtkIkj/Kn0osz/f7wJAU?=
+ =?us-ascii?Q?wHm/vcKwVjW0tY+8RhdcHEPD6mPYWSi6tWihW26Cu+MrxBRlUxoZNRmOcvjP?=
+ =?us-ascii?Q?0gp0WiVIB7ud8tIYptXRY8LrykuZhRWGa1VAql0r5Z421UgFWAsJfZteyMyY?=
+ =?us-ascii?Q?SigdpGPNJ/+Dlte8jpa9AIxXYo0YtqgZ8KmiD7AYilPPhR8ucM/LGGZQo0XZ?=
+ =?us-ascii?Q?ETyE5o6jdGuZ4/IC5F3MbukZ4BOn0rTe5kop43fbHYQ6nekD9wkelV1b28Mv?=
+ =?us-ascii?Q?PoAQibHBwl7qjTAZkchu0flEKNHYflf6lYapzY3awfuOO1i6QPmWn+jqixTa?=
+ =?us-ascii?Q?aFy1YmQd6MjRWLhFKWswev3C8VkRvRknaDU78nKnhao/9NsxgcQrNFhF1SbH?=
+ =?us-ascii?Q?gFgzcoSrVL2Xz77DeEGTC6I8Vwa5Qky73AteBu8bSpJ7lBMQtAF0Rl65fdrr?=
+ =?us-ascii?Q?06W3b6rwbSBlSl4SqnDf7nGLZ1ujiBVo9sRc7vQmVDfbbUDN9lNt4N9EOWBJ?=
+ =?us-ascii?Q?4rHh5fPovFFY8zudK1DYrhASpwXp/av18MkT9W9ObCCJLU9MvucWshmjDpuv?=
+ =?us-ascii?Q?voLuWsdsW+liIJpvlTWliyfHn5MlYKqAbIw2Z12up0HurMIxwWWD0mVgqzYy?=
+ =?us-ascii?Q?Z26biJGj6AYw5EMLy3Krb3Bl1+HC5OIAZqzDcTlOu16iH16i/Hq0VdLGaiT/?=
+ =?us-ascii?Q?z83c96Sdb4bWjI6mZIK2Ld0A15n4kIx5XsWOIV2KsF8EFimLGah2uzIYJG1R?=
+ =?us-ascii?Q?IMTv9OEcG5KM+R28am/teXj9OUniUa3vzhjLvZ10cj0/CqZRyn4Vyc6PSM+Y?=
+ =?us-ascii?Q?uRL+SVyDdXN/z76mC6aJOV7iljY3x9XirVBxZw9clVqMWitSZy7UNN5xm+k1?=
+ =?us-ascii?Q?BLpOgDqLvaToYDgWXrA5Mvo8w2RW+OuG5gMqhNSdry8HILEmMYyGi8zx1+iS?=
+ =?us-ascii?Q?j+64I5g6J2KmsZkqGb9uLb45MLsaQTB9SsWUuklQJ9qFASA/YD6wIaG6o3nS?=
+ =?us-ascii?Q?JdWGHuyOH/nnn3Gr/MxSBa7Ay0ZrE16il37p?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(36860700013)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 13:34:30.5810
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b4de6287-0a0d-431e-21b2-08dd9f7eb4f7
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS1PEPF0001709C.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4136
 
-Add selftest cases that validate bpftool's expected behavior when
-accessing maps protected from modification via security_bpf_map.
+This patch series adds support for Tegar264 and GB10 SoCs in the
+Tegra CBB driver. It also includes a fix and some improvements to
+make the driver more generic to add new SoC support.
 
-The test includes a BPF program attached to security_bpf_map with two maps:
-- A protected map that only allows read-only access
-- An unprotected map that allows full access
+The patches can be applied in sequence. Patch info:
+- Patch 1: Fix.
+- Patch 2: Change lingo from 'Master/Slave' to 'Initiator/Target'.
+- Patch 3 & 4: Improvements.
+- Patch 5: New feature for HW lookup.
+- Patch 6 & 7: Tegra264 SoC support.
+- Patch 8: GB10 SoC support.
 
-The test script attaches the BPF program to security_bpf_map and
-verifies that for the bpftool map command:
-- Read access works on both maps
-- Write access fails on the protected map
-- Write access succeeds on the unprotected map
-- These behaviors remain consistent when the maps are pinned
+Sumit Gupta (8):
+  soc: tegra: cbb: clear err force register with err status
+  soc: tegra: cbb: change master-slave to initiator-target
+  soc: tegra: cbb: make error interrupt enable and status per SoC
+  soc: tegra: cbb: improve handling for per SoC fabric data
+  soc: tegra: cbb: support hw lookup to get timed out target address
+  dt-bindings: arm: tegra: Add NVIDIA Tegra264 CBB 2.0 binding
+  soc: tegra: cbb: add support for cbb fabrics in Tegra264
+  soc: tegra: cbb: add support for cbb fabrics in GB10
 
-Signed-off-by: Slava Imameev <slava.imameev@crowdstrike.com>
----
- tools/testing/selftests/bpf/Makefile          |   1 +
- .../selftests/bpf/progs/security_bpf_map.c    |  56 +++++
- .../testing/selftests/bpf/test_bpftool_map.sh | 208 ++++++++++++++++++
- 3 files changed, 265 insertions(+)
- create mode 100644 tools/testing/selftests/bpf/progs/security_bpf_map.c
- create mode 100755 tools/testing/selftests/bpf/test_bpftool_map.sh
+ .../arm/tegra/nvidia,tegra234-cbb.yaml        |   4 +
+ drivers/soc/tegra/cbb/tegra194-cbb.c          |  34 +-
+ drivers/soc/tegra/cbb/tegra234-cbb.c          | 758 ++++++++++++++----
+ 3 files changed, 606 insertions(+), 190 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-index cf5ed3bee573..731a86407799 100644
---- a/tools/testing/selftests/bpf/Makefile
-+++ b/tools/testing/selftests/bpf/Makefile
-@@ -109,6 +109,7 @@ TEST_PROGS := test_kmod.sh \
- 	test_xdping.sh \
- 	test_bpftool_build.sh \
- 	test_bpftool.sh \
-+	test_bpftool_map.sh \
- 	test_bpftool_metadata.sh \
- 	test_doc_build.sh \
- 	test_xsk.sh \
-diff --git a/tools/testing/selftests/bpf/progs/security_bpf_map.c b/tools/testing/selftests/bpf/progs/security_bpf_map.c
-new file mode 100644
-index 000000000000..57226f2ceb5f
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/security_bpf_map.c
-@@ -0,0 +1,56 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include "vmlinux.h"
-+#include <bpf/bpf_tracing.h>
-+#include <bpf/bpf_helpers.h>
-+
-+char _license[] SEC("license") = "GPL";
-+
-+#define EPERM 1 /* Operation not permitted */
-+
-+/* From include/linux/mm.h. */
-+#define FMODE_WRITE	0x2
-+
-+struct map;
-+
-+struct {
-+	__uint(type, BPF_MAP_TYPE_ARRAY);
-+	__type(key, __u32);
-+	__type(value, __u32);
-+	__uint(max_entries, 1);
-+} prot_map SEC(".maps");
-+
-+struct {
-+	__uint(type, BPF_MAP_TYPE_ARRAY);
-+	__type(key, __u32);
-+	__type(value, __u32);
-+	__uint(max_entries, 1);
-+} not_prot_map SEC(".maps");
-+
-+SEC("fmod_ret/security_bpf_map")
-+int BPF_PROG(fmod_bpf_map, struct bpf_map *map, int fmode)
-+{
-+	if (map == &prot_map) {
-+		/* Allow read-only access */
-+		if (fmode & FMODE_WRITE)
-+			return -EPERM;
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * This program keeps references to maps. This is needed to prevent
-+ * optimizing them out.
-+ */
-+SEC("fentry/bpf_fentry_test1")
-+int BPF_PROG(bpf_fentry_test1, int a)
-+{
-+	__u32 key = 0;
-+	__u32 val1 = a;
-+	__u32 val2 = a + 1;
-+
-+	bpf_map_update_elem(&prot_map, &key, &val1, BPF_ANY);
-+	bpf_map_update_elem(&not_prot_map, &key, &val2, BPF_ANY);
-+	return 0;
-+}
-diff --git a/tools/testing/selftests/bpf/test_bpftool_map.sh b/tools/testing/selftests/bpf/test_bpftool_map.sh
-new file mode 100755
-index 000000000000..c7c7f3d2071e
---- /dev/null
-+++ b/tools/testing/selftests/bpf/test_bpftool_map.sh
-@@ -0,0 +1,208 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+
-+# Kselftest framework requirement - SKIP code is 4.
-+ksft_skip=4
-+
-+PROTECTED_MAP_NAME="prot_map"
-+NOT_PROTECTED_MAP_NAME="not_prot_map"
-+BPF_FILE="security_bpf_map.bpf.o"
-+TESTNAME="security_bpf_map"
-+BPF_FS=$(awk '$3 == "bpf" {print $2; exit}' /proc/mounts)
-+BPF_DIR="$BPF_FS/test_$TESTNAME"
-+SCRIPT_DIR=$(dirname $(realpath "$0"))
-+BPF_FILE_PATH="$SCRIPT_DIR/$BPF_FILE"
-+# Assume the script is located under tools/testing/selftests/bpf/
-+KDIR_ROOT_DIR=$(realpath "$SCRIPT_DIR"/../../../../)
-+
-+_cleanup()
-+{
-+	set +eu
-+	[ -d "$TMPDIR" ] && rm -rf "$TMPDIR" 2> /dev/null
-+	[ -d "$BPF_DIR" ] && rm -rf "$BPF_DIR" 2> /dev/null
-+}
-+
-+cleanup_skip()
-+{
-+	echo "selftests: $TESTNAME [SKIP]"
-+	_cleanup
-+
-+	exit $ksft_skip
-+}
-+
-+cleanup()
-+{
-+	if [ "$?" = 0 ]; then
-+		echo "selftests: $TESTNAME [PASS]"
-+	else
-+		echo "selftests: $TESTNAME [FAILED]"
-+	fi
-+	_cleanup
-+}
-+
-+# Parameters:
-+#   $1: The top of kernel repository
-+#   $2: Output directory
-+build_bpftool()
-+{
-+	local kdir_root_dir="$1"
-+	local output_dir="$2"
-+	local pwd="$(pwd)"
-+	local ncpus=1
-+
-+	echo Building bpftool ...
-+
-+	#We want to start build from the top of kernel repository.
-+	cd "$kdir_root_dir"
-+	if [ ! -e tools/bpf/bpftool/Makefile ]; then
-+		echo bpftool files not found
-+		exit $ksft_skip
-+	fi
-+
-+	# Determine the number of CPUs for parallel compilation
-+	if command -v nproc >/dev/null 2>&1; then
-+		ncpus=$(nproc)
-+	fi
-+
-+	make -C tools/bpf/bpftool -s -j"$ncpus" OUTPUT="$output_dir"/ >/dev/null
-+	echo ... finished building bpftool
-+	cd "$pwd"
-+}
-+
-+# Function to test map access with configurable write expectations
-+# Parameters:
-+#   $1: Map name
-+#   $2: Whether write should succeed (true/false)
-+#   $3: bpftool path
-+#   $4: BPF_DIR
-+test_map_access() {
-+	local map_name="$1"
-+	local write_should_succeed="$2"
-+	local bpftool_path="$3"
-+	local pin_path="$4/${map_name}_pinned"
-+	local key="0 0 0 0"
-+	local value="1 1 1 1"
-+
-+	echo "Testing access to map: $map_name"
-+
-+	# Test read access to the map
-+	if "$bpftool_path" map lookup name "$map_name" key $key; then
-+		echo "  Read access to $map_name succeeded"
-+	else
-+		echo "  Read access to $map_name failed"
-+		exit 1
-+	fi
-+
-+	# Test write access to the map
-+	if "$bpftool_path" map update name "$map_name" key $key value $value; then
-+		if [ "$write_should_succeed" = "true" ]; then
-+			echo "  Write access to $map_name succeeded as expected"
-+		else
-+			echo "  Write access to $map_name succeeded but should have failed"
-+			exit 1
-+		fi
-+	else
-+		if [ "$write_should_succeed" = "true" ]; then
-+			echo "  Write access to $map_name failed but should have succeeded"
-+			exit 1
-+		else
-+			echo "  Write access to $map_name failed as expected"
-+		fi
-+	fi
-+
-+	# Pin the map to the BPF filesystem
-+	"$bpftool_path" map pin name "$map_name" "$pin_path"
-+	if [ -e "$pin_path" ]; then
-+		echo "  Successfully pinned $map_name to $pin_path"
-+	else
-+		echo "  Failed to pin $map_name"
-+		exit 1
-+	fi
-+
-+	# Test read access to the pinned map
-+	if "$bpftool_path" map lookup pinned "$pin_path" key $key; then
-+		echo "  Read access to pinned $map_name succeeded"
-+	else
-+		echo "  Read access to pinned $map_name failed"
-+		exit 1
-+	fi
-+
-+	# Test write access to the pinned map
-+	if "$bpftool_path" map update pinned "$pin_path" key $key value $value; then
-+		if [ "$write_should_succeed" = "true" ]; then
-+			echo "  Write access to pinned $map_name succeeded as expected"
-+		else
-+			echo "  Write access to pinned $map_name succeeded but should have failed"
-+			exit 1
-+		fi
-+	else
-+		if [ "$write_should_succeed" = "true" ]; then
-+			echo "  Write access to pinned $map_name failed but should have succeeded"
-+			exit 1
-+		else
-+			echo "  Write access to pinned $map_name failed as expected"
-+		fi
-+	fi
-+
-+	echo "  Finished testing $map_name"
-+	echo
-+}
-+
-+check_root_privileges() {
-+	if [ $(id -u) -ne 0 ]; then
-+		echo "Need root privileges"
-+		exit $ksft_skip
-+	fi
-+}
-+
-+check_bpffs() {
-+	if [ -z "$BPF_FS" ]; then
-+		echo "Could not run test without bpffs mounted"
-+		exit $ksft_skip
-+	fi
-+}
-+
-+create_tmp_dir() {
-+	TMPDIR=$(mktemp -d)
-+	if [ $? -ne 0 ] || [ ! -d "$TMPDIR" ]; then
-+		echo "Failed to create temporary directory"
-+		exit $ksft_skip
-+	fi
-+}
-+
-+locate_or_build_bpftool() {
-+	if ! bpftool version > /dev/null 2>&1; then
-+		build_bpftool "$KDIR_ROOT_DIR" "$TMPDIR"
-+		BPFTOOL_PATH="$TMPDIR"/bpftool
-+	else
-+		echo "Using bpftool from PATH"
-+		BPFTOOL_PATH="bpftool"
-+	fi
-+}
-+
-+set -eu
-+
-+trap cleanup_skip EXIT
-+
-+check_root_privileges
-+
-+check_bpffs
-+
-+create_tmp_dir
-+
-+locate_or_build_bpftool
-+
-+mkdir "$BPF_DIR"
-+
-+trap cleanup EXIT
-+
-+# Load and attach the BPF programs to control maps access
-+"$BPFTOOL_PATH" prog loadall "$BPF_FILE_PATH" "$BPF_DIR"/prog autoattach
-+
-+# Test protected map (write should fail)
-+test_map_access "$PROTECTED_MAP_NAME" "false" "$BPFTOOL_PATH" "$BPF_DIR"
-+
-+# Test not protected map (write should succeed)
-+test_map_access "$NOT_PROTECTED_MAP_NAME" "true" "$BPFTOOL_PATH" "$BPF_DIR"
-+
-+exit 0
 -- 
-2.34.1
+2.25.1
 
