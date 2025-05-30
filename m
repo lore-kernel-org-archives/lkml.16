@@ -1,369 +1,251 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5483E382;
-	Fri, 30 May 2025 21:30:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55B1C28315A
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 21:32:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748640658; cv=none; b=Jy4rmy0NTK2Amr9QO0ayVnuFcoGj739yX0CC17i/3CWHi9eqbzmFD/QGvG1rBjk46LXsDAflGuLoCiANEpevGwd67dUqb8QG9SyYewNwhHl+htFopRLup2gbCk1EGgfyhNmuNOYogw8DSLVdFZTn2Fiwm0h4OtNV28sIIJ86+IA=
+	t=1748640746; cv=none; b=ToZewMycOcU49gfUwiRr1Y/w8M9CUvaERqj55j8+QknoM9PPRq+FtKfSCxvIuqR5esHDkVMoGCFgudbP8m/QlLefi3vQAdTrdTZghE9189d6puvHAqi1Y4jqpz/ULIQh5nb27AKLPpI6/F/rMI7f5lVqbYIdBTB85mCmUMDoNGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748640658; c=relaxed/simple;
-	bh=XsIFtlVBSH+rDREw64t9rjQmHJXpEwo27PTmMUHngX0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kh5z3Z85wa0gvBVaP1Lauo4pN2amv6tMltkydKzRmmOk8IB+ZbEmd0uTdRtGOj6fqHIb2VZloQD2d5nGUNO8yLWXQSt62YW5v6H2qEDm8nzO2ZnwfNSHa3BZikAFyDwgLCbNz3R1+9idvnNt5FAC8/1YGKD9rfhr74zW4mCrmUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E2NOfzTs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748640746; c=relaxed/simple;
+	bh=mjVP80LsyVqMr8SzfD3fX+uyyMSczZSrqSEdqBQhikQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Aj5BRTJYmLxJRi311f/P66GbO+J4kj6K3HwzqLVk8Yytd+2cvRr7owFEUfIYaMlBV5OGRrlwwbbvpaBZg1rmf3yvGvuJdbl2s/T83AVttkRMR90SxgxHknIiG6pJJ5q8ot5QyenzfQDfmYK/m4sllZwzqUfhPVPyqDRlraG/82s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UMVncpeR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E2NOfzTs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B758C4CEE9;
-	Fri, 30 May 2025 21:30:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UMVncpeR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEE70C4CEEA
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 21:32:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748640657;
-	bh=XsIFtlVBSH+rDREw64t9rjQmHJXpEwo27PTmMUHngX0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E2NOfzTsp9CONrg9oqHLKHL3djYrlOWDChYd4sbQ5iIeuMH5seoSMy5SFV9pn9Uxw
-	 eyf3usHfqL46LvJpKy6IYgTD5KTMB5l6hclLABUMMialWiLgHzftJYeW3m5XAt/uz+
-	 sS145L/txNsZ/Nsq4UMxa8l6yoE3cI4gQtHkoBUhQGyfEjJLVy+cWsUYb/yeDxLz+/
-	 uDcPTkhXY6LCNX41diBqnwd8/tm9zPpJ+4kDaizepWnuM6D3ksSyoZe/Qv/1uAuQVD
-	 TLxD9yopnjLbW7df0fSop5TSFoilByF9BmDbPhDaIasX8r86kHjDIlDIm1KDaX8YHc
-	 swU/qgB05f2Kg==
-Date: Fri, 30 May 2025 14:30:56 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: acme@kernel.org, mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com, peterz@infradead.org,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] perf trace: Enhance task filtering
-Message-ID: <aDojkKOJCgvlgL2x@google.com>
-References: <20250530062408.1438861-1-howardchu95@gmail.com>
- <20250530062408.1438861-2-howardchu95@gmail.com>
+	s=k20201202; t=1748640745;
+	bh=mjVP80LsyVqMr8SzfD3fX+uyyMSczZSrqSEdqBQhikQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=UMVncpeRpRi7OETh9Ov3i3nrV7Rs9rtddj17EWjtajaxwpFxbA4u2F9wcDwJgzv/j
+	 cXIFbc8euLcKE8RyxDCQR4lGNTAl3UPhJlc9XzdydoxXD44nxB82t+QI1TaWZp8+fe
+	 2i9GWI34guxGAqzpu6FQKfAcoMc9CBRm6oTnh7NZc8NFoDb3Itnjc9oyBR1sU9rkvM
+	 4AGIAOJnnaCJINJuTl+4iSGoAPkXUcP41TIoetRjEEiygrCX5pUDPO4y5QZtxTxdnV
+	 UyQMPVmQagD0pYjeFZSDUWmVKETuCNFrXQGuJLCFGzLBMT+Q0g94twrCbcTJ/V7Y3c
+	 7tao5QGAbzwsA==
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-602039559d8so4451479a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 14:32:25 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXhyAAyuNAbTStkGlOmIEUOqgLCGVc64BizJ9yMbpPmiwZSYEYw6W90l6XUS0cl3gHmXYcrf47S044U48E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpuCbmLRKDtwrZw7u2hlUKsDOx8WyIzHlhGDc1lVAJFLqDdqiU
+	BTkxqeSAeyeiXYqznc2nY8OmoS37nlI2mUqIi69w7gNyoVNANSRw0528ElZdBq0os/hGKvNoplC
+	VoAGGZs5AWXaKYLfxdzxcICSTeYL7rGcBbTYfTEP3
+X-Google-Smtp-Source: AGHT+IGRvgPTQ5NzyWjSBzaam8qjiQiAJjrLVpG5rlkZTlJ4anR3muqMb8vG13bsjgwzb8YDl6Fk8qf2paOLggv06iY=
+X-Received: by 2002:a05:6402:4408:b0:5fd:1972:7fac with SMTP id
+ 4fb4d7f45d1cf-6057c1a509bmr3536113a12.3.1748640744327; Fri, 30 May 2025
+ 14:32:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250530062408.1438861-2-howardchu95@gmail.com>
+References: <20250528215037.2081066-1-bboscaccy@linux.microsoft.com>
+ <CACYkzJ5oJASZ43B531gY8mESqAF3WYFKez-H5vKxnk8r48Ouxg@mail.gmail.com> <87iklhn6ed.fsf@microsoft.com>
+In-Reply-To: <87iklhn6ed.fsf@microsoft.com>
+From: KP Singh <kpsingh@kernel.org>
+Date: Fri, 30 May 2025 23:32:13 +0200
+X-Gmail-Original-Message-ID: <CACYkzJ75JXUM_C2og+JNtBat5psrEzjsgcV+b74FwrNaDF68nA@mail.gmail.com>
+X-Gm-Features: AX0GCFvrRMx9UyMuXl-mqwSbtomflk8hXgAKvkXTrVpIT8PG3VIi0lc6UW5_5fU
+Message-ID: <CACYkzJ75JXUM_C2og+JNtBat5psrEzjsgcV+b74FwrNaDF68nA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] BPF signature verification
+To: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
+Cc: Paul Moore <paul@paul-moore.com>, jarkko@kernel.org, zeffron@riotgames.com, 
+	xiyou.wangcong@gmail.com, kysrinivasan@gmail.com, code@tyhicks.com, 
+	linux-security-module@vger.kernel.org, roberto.sassu@huawei.com, 
+	James.Bottomley@hansenpartnership.com, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, David Howells <dhowells@redhat.com>, Lukas Wunner <lukas@wunner.de>, 
+	Ignat Korchagin <ignat@cloudflare.com>, Quentin Monnet <qmo@kernel.org>, 
+	Jason Xing <kerneljasonxing@gmail.com>, Willem de Bruijn <willemb@google.com>, 
+	Anton Protopopov <aspsk@isovalent.com>, Jordan Rome <linux@jordanrome.com>, 
+	Martin Kelly <martin.kelly@crowdstrike.com>, Alan Maguire <alan.maguire@oracle.com>, 
+	Matteo Croce <teknoraver@meta.com>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	keyrings@vger.kernel.org, linux-crypto@vger.kernel.org, kys@microsoft.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Howard,
+On Fri, May 30, 2025 at 11:19=E2=80=AFPM Blaise Boscaccy
+<bboscaccy@linux.microsoft.com> wrote:
+>
+> KP Singh <kpsingh@kernel.org> writes:
+>
 
-On Thu, May 29, 2025 at 11:24:07PM -0700, Howard Chu wrote:
-> This patch does two things:
-> 1. Add a pids_targeted map, put pids that interest perf trace in.
-> 2. Make bpf-output event system-wide.
-> 
-> Effect 1:
-> perf trace doesn't augment threads properly. With the script below:
-> 
-> Program test_trace_loop.c
-> ~~~
->     #include <pthread.h>
->     #include <stdio.h>
->     #include <unistd.h>
->     #include <stdlib.h>
-> 
->     #define THREAD_NR 2
-> 
->     struct thread_arg {
-> 	    int index;
->     };
-> 
->     void *func(void *arg) {
-> 	    struct thread_arg *t_arg = arg;
-> 	    while (1) {
-> 		    printf("thread %d running\n", t_arg->index);
-> 		    sleep(1);
-> 	    }
-> 	    return NULL;
->     }
-> 
->     int main()
->     {
-> 	    pthread_t thread_ids[THREAD_NR];
-> 	    struct thread_arg thread_args[THREAD_NR];
-> 
-> 	    for (int i = 0; i < THREAD_NR; i++) {
-> 		    thread_args[i].index = i;
-> 		    if (pthread_create(&thread_ids[i], NULL, &func, &thread_args[i])) {
-> 			    perror("failed to create thread, exiting\n");
-> 			    exit(1);
-> 		    }
-> 	    }
-> 
-> 	    while (1) {
-> 		    printf("parent sleeping\n");
-> 		    sleep(1);
-> 	    }
-> 
-> 	    for (int i = 0; i < THREAD_NR; i++)
-> 		    pthread_join(thread_ids[i], NULL);
-> 
-> 	    return 0;
->     }
-> ~~~
-> 
-> Commands
-> ~~~
-> $ gcc test_trace_loop.c -o test_trace_loop
-> 
-> $ ./test_trace_loop &
-> [1] 1404183
-> 
-> $ pstree 1404183 -p
-> test_trace_loop(1404183)─┬─{test_trace_loop}(1404185)
->                          └─{test_trace_loop}(1404186)
-> 
-> $ sudo perf trace -p 1404183 -e *sleep
-> ~~~
-> 
-> Output
-> before:
-> $ sudo /tmp/perf/perf trace -p 1404183 -e *sleep
->          ? (         ): test_trace_loo/1404186  ... [continued]: clock_nanosleep())                                  = 0
->          ? (         ): test_trace_loo/1404183  ... [continued]: clock_nanosleep())                                  = 0
->      0.119 (         ): test_trace_loo/1404186 clock_nanosleep(rqtp: 0x7a86061fde60, rmtp: 0x7a86061fde60)        ...
->          ? (         ): test_trace_loo/1404185  ... [continued]: clock_nanosleep())                                  = 0
->      0.047 (         ): test_trace_loo/1404183 clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 0 }, rmtp: 0x7ffd89091450) ...
->      0.047 (1000.127 ms): test_trace_loo/1404183  ... [continued]: clock_nanosleep())                                  = 0
-> 
-> explanation: only the parent thread 1404183 got augmented
-> 
-> after:
-> $ sudo /tmp/perf/perf trace -p 1404183 -e *sleep
->          ? (         ): test_trace_loo/1404183  ... [continued]: clock_nanosleep())                                  = 0
->          ? (         ): test_trace_loo/1404186  ... [continued]: clock_nanosleep())                                  = 0
->      0.147 (         ): test_trace_loo/1404186 clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 0 }, rmtp: 0x7a86061fde60) ...
->          ? (         ): test_trace_loo/1404185  ... [continued]: clock_nanosleep())                                  = 0
->      0.076 (         ): test_trace_loo/1404183 clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 0 }, rmtp: 0x7ffd89091450) ...
->      0.076 (1000.160 ms): test_trace_loo/1404183  ... [continued]: clock_nanosleep())                                  = 0
->      0.147 (1000.090 ms): test_trace_loo/1404186  ... [continued]: clock_nanosleep())                                  = 0
->      2.557 (         ): test_trace_loo/1404185 clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 0 }, rmtp: 0x7a86069fee60) ...
->   1000.323 (         ): test_trace_loo/1404186 clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 0 }, rmtp: 0x7a86061fde60) ...
->      2.557 (1000.129 ms): test_trace_loo/1404185  ... [continued]: clock_nanosleep())                                  = 0
->   1000.384 (         ): test_trace_loo/1404183 clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 0 }, rmtp: 0x7ffd89091450) ...
-> 
-> explanation: all threads augmented
-> 
-> Effect 2: perf trace doesn't collect syscall argument data for *ALL*
-> pids, and throw it away anymore. Those uninteresting pids get filtered
-> right away. There should be a performance advantage.
+[...]
 
-Thanks for doing this!
+> >
+>
+> And that isn't at odds with the kernel being able to do it nor is it
+> with what I posted.
+>
+> > If your build environment that signs the BPF program is compromised
+> > and can inject arbitrary code, then signing does not help.  Can you
+> > explain what a supply chain attack would look like here?
+> >
+>
+> Most people here can read C code. The number of people that can read
+> ebpf assembly metaprogramming code is much smaller. Compromising clang
+> is one thing, compromising libbpf is another. Your proposal increases
+> the attack surface with no observable benefit. If I was going to leave a
+> hard-to-find backdoor into ring0, gen.c would be a fun place to explore
+> doing it. Module and UEFI signature verification code doesn't live
+> inside of GCC or Clang as set of meta-instructions that get emitted, and
+> there are very good reasons for that.
+>
+> Further, since the signature verification code is unique for each and
+> every program it needs to be verified/proved/tested for each and every
+> program. Additionally, since all these checks are being forced outside
+> of the kernel proper, with the insistence of keeping the LSM layer in
+> the dark of the ultimate result, the only way to test that a program
+> will fail if the map is corrupted is to physically corrupt each and
+> every program and test that individually. That isn't "elegant" nor "user
+> friendly" in any way, shape or form.
+>
+> >> subsystem.  Additionally, it is impossible to verify the code
+> >> performing the signature verification, as it is uniquely regenerated
+> >
+> > The LSM needs to ensure that it allows trusted LOADER programs i.e.
+> > with signatures and potentially trusted signed user-space binaries
+> > with unsigned or delegated signing (this will be needed for Cilium and
+> > bpftrace that dynamically generate BPF programs), that's a more
+> > important aspect of the LSM policy from a BPF perspective.
+> >
+>
+> I would like to be able to sign my programs please and have the kernel
+> verify it was done correctly. Why are you insisting that I *don't* do
+> that?  I'm yet to see any technical objection to doing that. Do you have
+> one that you'd like to share at this point?
 
-> 
-> Signed-off-by: Howard Chu <howardchu95@gmail.com>
-> ---
->  tools/perf/builtin-trace.c                    | 52 ++++++++++++++++---
->  .../bpf_skel/augmented_raw_syscalls.bpf.c     | 35 ++++++++++---
->  tools/perf/util/evlist.c                      |  2 +-
->  3 files changed, 73 insertions(+), 16 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 67b557ec3b0d..11620cb40198 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -4377,6 +4377,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
->  	unsigned long before;
->  	const bool forks = argc > 0;
->  	bool draining = false;
-> +	bool enable_evlist = false;
->  
->  	trace->live = true;
->  
-> @@ -4447,6 +4448,9 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
->  		evlist__set_default_cgroup(trace->evlist, trace->cgroup);
->  
->  create_maps:
-> +	if (trace->syscalls.events.bpf_output)
-> +		trace->syscalls.events.bpf_output->core.system_wide = true;
-> +
->  	err = evlist__create_maps(evlist, &trace->opts.target);
->  	if (err < 0) {
->  		fprintf(trace->output, "Problems parsing the target to trace, check your options!\n");
-> @@ -4481,20 +4485,54 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
->  		goto out_error_open;
->  #ifdef HAVE_BPF_SKEL
->  	if (trace->syscalls.events.bpf_output) {
-> +		struct perf_evsel *perf_evsel = &trace->syscalls.events.bpf_output->core;
->  		struct perf_cpu cpu;
-> +		bool t = true;
-> +
-> +		enable_evlist = true;
-> +		if (trace->opts.target.system_wide)
-> +			trace->skel->bss->system_wide = true;
-> +		else
-> +			trace->skel->bss->system_wide = false;
->  
->  		/*
->  		 * Set up the __augmented_syscalls__ BPF map to hold for each
->  		 * CPU the bpf-output event's file descriptor.
->  		 */
-> -		perf_cpu_map__for_each_cpu(cpu, i, trace->syscalls.events.bpf_output->core.cpus) {
-> +		perf_cpu_map__for_each_cpu(cpu, i, perf_evsel->cpus) {
->  			int mycpu = cpu.cpu;
->  
-> -			bpf_map__update_elem(trace->skel->maps.__augmented_syscalls__,
-> -					&mycpu, sizeof(mycpu),
-> -					xyarray__entry(trace->syscalls.events.bpf_output->core.fd,
-> -						       mycpu, 0),
-> -					sizeof(__u32), BPF_ANY);
-> +			err = bpf_map__update_elem(trace->skel->maps.__augmented_syscalls__,
-> +						   &mycpu, sizeof(mycpu),
-> +						   xyarray__entry(perf_evsel->fd, mycpu, 0),
-> +						   sizeof(__u32), BPF_ANY);
-> +			if (err) {
-> +				pr_err("Couldn't set system-wide bpf output perf event fd"
-> +				       ", err: %d\n", err);
-> +				goto out_disable;
-> +			}
-> +		}
-> +
-> +		if (target__has_task(&trace->opts.target)) {
-> +			struct perf_thread_map *threads = trace->evlist->core.threads;
-> +
-> +			for (int thread = 0; thread < perf_thread_map__nr(threads); thread++) {
-> +				pid_t pid = perf_thread_map__pid(threads, thread);
-> +
-> +				err = bpf_map__update_elem(trace->skel->maps.pids_targeted, &pid,
-> +							   sizeof(pid), &t, sizeof(t), BPF_ANY);
-> +				if (err) {
-> +					pr_err("Couldn't set pids_targeted map, err: %d\n", err);
-> +					goto out_disable;
-> +				}
-> +			}
-> +		} else if (workload_pid != -1) {
-> +			err = bpf_map__update_elem(trace->skel->maps.pids_targeted, &workload_pid,
-> +						   sizeof(workload_pid), &t, sizeof(t), BPF_ANY);
-> +			if (err) {
-> +				pr_err("Couldn't set pids_targeted map for workload, err: %d\n", err);
-> +				goto out_disable;
-> +			}
->  		}
->  	}
->  
-> @@ -4553,7 +4591,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
->  			goto out_error_mmap;
->  	}
->  
-> -	if (!target__none(&trace->opts.target) && !trace->opts.target.initial_delay)
-> +	if (enable_evlist || (!target__none(&trace->opts.target) && !trace->opts.target.initial_delay))
+The kernel allows a trusted loader that's signed with your private
+key, that runs in the kernel context to delegate the verification.
+This pattern of a trusted / delegated loader is going to be required
+for many of the BPF use-cases that are out there (Cilium, bpftrace)
+that dynamically generate eBPF programs.
 
-I guess target__none() should not call evlist__enable() here.
+The technical objection is that:
 
+* It does not align with most BPF use-cases out there as most
+use-cases need a trusted loader.
+* Locks us into a UAPI, whereas a signed LOADER allows us to
+incrementally build signing for all use-cases without compromising the
+security properties.
 
->  		evlist__enable(evlist);
->  
->  	if (forks)
-> diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> index e4352881e3fa..e517eec7290b 100644
-> --- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> @@ -26,6 +26,7 @@
->  #define is_power_of_2(n) (n != 0 && ((n & (n - 1)) == 0))
->  
->  #define MAX_CPUS  4096
-> +#define MAX_PIDS  4096
->  
->  /* bpf-output associated map */
->  struct __augmented_syscalls__ {
-> @@ -113,6 +114,15 @@ struct pids_filtered {
->  	__uint(max_entries, 64);
->  } pids_filtered SEC(".maps");
->  
-> +volatile bool system_wide;
-> +
-> +struct pids_targeted {
-> +	__uint(type, BPF_MAP_TYPE_HASH);
-> +	__type(key, pid_t);
-> +	__type(value, bool);
-> +	__uint(max_entries, MAX_PIDS);
-> +} pids_targeted SEC(".maps");
-> +
->  struct augmented_args_payload {
->  	struct syscall_enter_args args;
->  	struct augmented_arg arg, arg2; // We have to reserve space for two arguments (rename, etc)
-> @@ -145,6 +155,11 @@ struct beauty_payload_enter_map {
->  	__uint(max_entries, 1);
->  } beauty_payload_enter_map SEC(".maps");
->  
-> +static pid_t getpid(void)
-> +{
-> +	return bpf_get_current_pid_tgid();
-> +}
-> +
->  static inline struct augmented_args_payload *augmented_args_payload(void)
->  {
->  	int key = 0;
-> @@ -418,14 +433,18 @@ int sys_enter_nanosleep(struct syscall_enter_args *args)
->  	return 1; /* Failure: don't filter */
->  }
->  
-> -static pid_t getpid(void)
-> +static bool filter_pid(void)
->  {
-> -	return bpf_get_current_pid_tgid();
-> -}
-> +	if (system_wide)
-> +		return false;
+BPF's philosophy is that of flexibility and not locking the users into
+a rigid in-kernel implementation and UAPI.
 
-Doesn't it need to check CPU list when -C option is used?
+- KP
 
->  
-> -static bool pid_filter__has(struct pids_filtered *pids, pid_t pid)
-> -{
-> -	return bpf_map_lookup_elem(pids, &pid) != NULL;
-> +	pid_t pid = getpid();
-> +
-> +	if (bpf_map_lookup_elem(&pids_targeted, &pid) &&
-> +	    !bpf_map_lookup_elem(&pids_filtered, &pid))
-
-Can we just use a single map for this purpose?
-
-Thanks,
-Namhyung
-
-
-> +		return false;
-> +
-> +	return true;
->  }
->  
->  static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
-> @@ -534,7 +553,7 @@ int sys_enter(struct syscall_enter_args *args)
->  	 * initial, non-augmented raw_syscalls:sys_enter payload.
->  	 */
->  
-> -	if (pid_filter__has(&pids_filtered, getpid()))
-> +	if (filter_pid())
->  		return 0;
->  
->  	augmented_args = augmented_args_payload();
-> @@ -560,7 +579,7 @@ int sys_exit(struct syscall_exit_args *args)
->  {
->  	struct syscall_exit_args exit_args;
->  
-> -	if (pid_filter__has(&pids_filtered, getpid()))
-> +	if (filter_pid())
->  		return 0;
->  
->  	bpf_probe_read_kernel(&exit_args, sizeof(exit_args), args);
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index dcd1130502df..7b5837c6e6bb 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -1012,7 +1012,7 @@ int evlist__create_maps(struct evlist *evlist, struct target *target)
->  	if (!threads)
->  		return -1;
->  
-> -	if (target__uses_dummy_map(target) && !evlist__has_bpf_output(evlist))
-> +	if (target__uses_dummy_map(target))
->  		cpus = perf_cpu_map__new_any_cpu();
->  	else
->  		cpus = perf_cpu_map__new(target->cpu_list);
-> -- 
-> 2.45.2
-> 
+>
+> > MAP_EXCLUSIVE is missing and is required which prevents maps from
+> > being accessed by other programs as explained in the proposal.
+> >
+> > Please hold off on further iterations, I am working on a series and
+> > will share these patches based on the design that was proposed.
+> >
+>
+> So the premise here seems to be that people should only be allowed to
+> sign trusted loaders, and that trusted loaders must additionally be
+> authored by you, correct?
+>
+> When can we expect to see your patchset posted?
+>
+> >>
+> >> for every program.
+> >>
+> >>
+> >>
+> >> 2. Timing of Signature Check
+> >>
+> >> This patchset moves the signature check to a point before
+> >> security_bpf_prog_load is invoked, due to an unresolved discussion
+> >> here:
+> >
+> > This is fine and what I had in mind, signature verification does not
+> > need to happen in the verifier and the existing hooks are good enough.
+> > I did not reply to Paul's comment since this is a fairly trivial
+> > detail and would be obvious in the implementation that the verifier is
+> > not the right place to check the signature anyways as the instruction
+> > buffer is only stable pre-verification.
+> >
+> >> https://lore.kernel.org/linux-security-module/CAHC9VhTj3=3DZXgrYMNA+G6=
+4zsOyZO+78uDs1g=3Dkh91=3DGR5KypYg@mail.gmail.com/
+> >> This change allows the LSM subsystem to be informed of the signature
+> >> verification result=E2=80=94if it occurred=E2=80=94and the method used=
+, all without
+> >> introducing a new hook. It improves visibility and auditability,
+> >> reducing the =E2=80=9Ctrust me, friend=E2=80=9D aspect of the original=
+ design.
+> >
+> >
+> > On Wed, May 28, 2025 at 11:50=E2=80=AFPM Blaise Boscaccy
+> > <bboscaccy@linux.microsoft.com> wrote:
+> >>
+> >> As suggested or mandated by KP Singh
+> >> https://lore.kernel.org/linux-security-module/CACYkzJ6VQUExfyt0=3D-FmX=
+z46GHJh3d=3DFXh5j4KfexcEFbHV-vg@mail.gmail.com/,
+> >> this patchset proposes and implements an alternative hash-chain
+> >> algorithm for signature verification of BPF programs.
+> >>
+> >> This design diverges in two key ways:
+> >>
+> >> 1. Signature Strategy
+> >>
+> >> Two different signature strategies are
+> >> implemented. One verifies only the signature of the loader program in
+> >> the kernel, as described in the link above. The other verifies the
+> >> program=E2=80=99s maps in-kernel via a hash chain.  The original desig=
+n
+> >> required loader programs to be =E2=80=9Cself-aborting=E2=80=9D and emb=
+edded the
+> >> terminal hash verification logic as metaprogramming code generation
+> >> routines inside libbpf. While this patchset supports that scheme, it
+> >> is considered undesirable in certain environments due to the potential
+> >> for supply-chain attack vectors and the lack of visibility for the LSM
+> >> subsystem.  Additionally, it is impossible to verify the code
+> >> performing the signature verification, as it is uniquely regenerated
+> >> for every program.
+> >>
+> >> 2. Timing of Signature Check
+> >>
+> >> This patchset moves the signature check to a point before
+> >> security_bpf_prog_load is invoked, due to an unresolved discussion
+> >> here:
+> >> https://lore.kernel.org/linux-security-module/CAHC9VhTj3=3DZXgrYMNA+G6=
+4zsOyZO+78uDs1g=3Dkh91=3DGR5KypYg@mail.gmail.com/
+> >> This change allows the LSM subsystem to be informed of the signature
+> >> verification result=E2=80=94if it occurred=E2=80=94and the method used=
+, all without
+> >> introducing a new hook. It improves visibility and auditability,
+> >> reducing the =E2=80=9Ctrust me, friend=E2=80=9D aspect of the original=
+ design.
+> >>
+> >>
+> >> Blaise Boscaccy (3):
+> >>   bpf: Add bpf_check_signature
+> >>   bpf: Support light-skeleton signatures in autogenerated code
+> >>   bpftool: Allow signing of light-skeleton programs
+> >>
+> >>  include/linux/bpf.h            |   2 +
+> >>  include/linux/verification.h   |   1 +
+> >>  include/uapi/linux/bpf.h       |   4 +
+> >>  kernel/bpf/arraymap.c          |  11 +-
+> >>  kernel/bpf/syscall.c           | 123 +++++++++++++++++++-
+> >>  tools/bpf/bpftool/Makefile     |   4 +-
+> >>  tools/bpf/bpftool/common.c     | 204 ++++++++++++++++++++++++++++++++=
++
+> >>  tools/bpf/bpftool/gen.c        |  66 ++++++++++-
+> >>  tools/bpf/bpftool/main.c       |  24 +++-
+> >>  tools/bpf/bpftool/main.h       |  23 ++++
+> >>  tools/include/uapi/linux/bpf.h |   4 +
+> >>  tools/lib/bpf/libbpf.h         |   4 +
+> >>  tools/lib/bpf/skel_internal.h  |  28 ++++-
+> >>  13 files changed, 491 insertions(+), 7 deletions(-)
+> >>
+> >> --
+> >> 2.48.1
+> >>
