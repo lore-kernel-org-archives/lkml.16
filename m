@@ -1,188 +1,190 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 045AE230D0D;
-	Fri, 30 May 2025 14:25:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9616E15746E;
+	Fri, 30 May 2025 14:29:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748615133; cv=none; b=GEjitBf7U7oHu3rdA0smDelHWwbvR4Bktt7nFyhPSKs5rej4ZZarZWwWp5nyvKDZjYN1wmrUiYOMMN9pvspRkdSNGoK/+7q/OdNf81HUng5KKOnsSOyUGZ68lQIwAp8yf+X40yV/uuEgAl2D1q747IS135Hk6cgYCo3piWTyC5s=
+	t=1748615347; cv=none; b=krJ7Yu/b79ANK2WJKs0K2gU+wsqDJkBkRvbQZd3dgcVdT6M4dAy35Dhyw9cEfVhw+tAjbMbvFGtjg4PueBl6gFNuNmR4xwadB/FWcpcOHTdCMsk3FLVV907Nb0M4E8FMnDpdp50Gczr4E5dO0nIS1XXv0TAgp3eYa9cZBKryHt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748615133; c=relaxed/simple;
-	bh=ebhvap3uGIXeOkgxbWkbzYk5e87c3HNY7AXyqp6Ao+U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oBs4ukqps4LNKt0rjxmZtdxpz6mQcFFBsq2rrPrZLqPk+iDj30VXvgxPwuHed3gVghMQhRjaiegmFmv0vtJVAuXrWPERqPYwrpcR6gRzWu56XEMN2GC06nUTz2jsUhFhWK/nGugiiSwMwmt5fdfnM2FVtfZq23EOWGvDHtjP/FI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LtQ3nWmW; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748615347; c=relaxed/simple;
+	bh=yHUgtt6QjNoZ2/oQT+YPFW2ct/TvQH3PYUbwT81dasY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jn6RKiVUA4LYZUw7qZXLZfKJHU4mvOCYIZjk+v65xIejb4te4k3yb7s4bNxFwzOTN5TCXvV3g9LvSaFgbyKBUGfpEFhhN22lF/Tnt54tjIVMS8PWx+s36ONx/5DrtnanYzDCyTb60V0CO1jkMmZHr2nZR1jbx7mY8NODhznYlWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=INgpYX0m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LtQ3nWmW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748615131; x=1780151131;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ebhvap3uGIXeOkgxbWkbzYk5e87c3HNY7AXyqp6Ao+U=;
-  b=LtQ3nWmWCSfkemP3ezydgtAzbfGH6wJjwZ4mYhWHfS2dCgMe6ZpTrM9l
-   XhvazVLOKNRtpbsYlSNaQ97Z1nE49+yAOZtoBTq+iJrm596nhtCUWB6fI
-   m0XYVorD44Iju6sIbyIvUnhPxen+9Ce3vYx8NGdJaHYHz9TJUfe3AaHVe
-   JuCMQGenyFWss7zp6qOMM+zRDA4Q7t52xKWjm09LsaYGBAoAmVGKKtTmE
-   mBy40PxwxFFRcqFHoPZ3x+Uz5Cnf/ZH4TZ1xcxKfoy0/y7Ga9mB1XctgI
-   j+hQBg3RxM1VM5UMBq9P9rxNOG210ksdBi8FYQxxmObS18/877uF7BbFN
-   A==;
-X-CSE-ConnectionGUID: u9/T5//HTR2dB3e6hTjr2w==
-X-CSE-MsgGUID: IqVYCbdESCu/97XP+/eF1A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="61336573"
-X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="61336573"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 07:25:30 -0700
-X-CSE-ConnectionGUID: ZKP7FC/5Re2B7jgQnKVX5w==
-X-CSE-MsgGUID: Etq2N76sQ3mlvbSQ+wT7jw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="143855846"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 30 May 2025 07:25:24 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uL0fh-000XhK-1e;
-	Fri, 30 May 2025 14:25:21 +0000
-Date: Fri, 30 May 2025 22:24:41 +0800
-From: kernel test robot <lkp@intel.com>
-To: wangtao <tao.wangtao@honor.com>, sumit.semwal@linaro.org,
-	christian.koenig@amd.com, kraxel@redhat.com,
-	vivek.kasireddy@intel.com, viro@zeniv.linux.org.uk,
-	brauner@kernel.org, hughd@google.com, akpm@linux-foundation.org,
-	amir73il@gmail.com
-Cc: oe-kbuild-all@lists.linux.dev, benjamin.gaignard@collabora.com,
-	Brian.Starkey@arm.com, jstultz@google.com, tjmercier@google.com,
-	jack@suse.cz, baolin.wang@linux.alibaba.com,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	bintian.wang@honor.com, yipengxiang@honor.com, liulu.liu@honor.com,
-	feng.han@honor.com, wangtao <tao.wangtao@honor.com>
-Subject: Re: [PATCH v3 3/4] udmabuf: Implement udmabuf rw_file callback
-Message-ID: <202505302235.mDzENMSm-lkp@intel.com>
-References: <20250530103941.11092-4-tao.wangtao@honor.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="INgpYX0m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 002CAC4CEEB;
+	Fri, 30 May 2025 14:29:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748615346;
+	bh=yHUgtt6QjNoZ2/oQT+YPFW2ct/TvQH3PYUbwT81dasY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=INgpYX0m4B9tzDtY1ZK0N8eGxmJS419QNPGpYOVMvpYZ1d17byT2AyuIuRQxzBbGw
+	 FjZwxrqlHtRaggrorj5CLsFqgOdjNx/SsZ1Uk93f2rfCaz/ndolW7rLAVqXeOH+34L
+	 1rPT8xMz9W+pyNdan8u8rwl+TF+R+vULt5hPV5n5KjsAkNQbcpKPK4gO2GlZzTLsbV
+	 XgqnlIFimA0lhdhW50ptDACFEPeABcUteatZTMC39qqfaJUQ9k3TtA7RK9ofAgf279
+	 s9gcAIBu786igM7ris+qQohNPhb3T97lXvEBFzO/AX2vssm7+8/yTlJd5lRd8nVn36
+	 YFxaDLUzSCIow==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-551efd86048so2556291e87.3;
+        Fri, 30 May 2025 07:29:05 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCURHRrXvHpODd4q9OjqACCY7NUpTGB4qvnLfkeF1dcdp10QAHRoP/4lhcMQOg5NtJoqdV0U+UGyh50YXUeX@vger.kernel.org, AJvYcCXkq/SgHpJWjfoC6h5z+3AWzR+29OxdncVgM8qFB2fRHIUdab5FD7pSB/kqCsSE5CPj1odvqLCT6Sc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNEsPEGXsMbFluVmpFGCB9VdUPPqwdcJDCq+XvNAX0Mni8XEJj
+	r8UZS20CRelXeNgTUktvfHgW7nbr+gDFno7Jen7fFn2vq9s9G6R7K+qOu95s1dZ3pwCculfZWZT
+	d6E6lac0FkjvIHtnG52ntfFmtv44DiTk=
+X-Google-Smtp-Source: AGHT+IFnRhV3+HTUiNUqrYjZd3G12lOC37LBzo9prk1PXkbvPDPRiegfaa21qZlLGuMaRZOAqcjahfeiLOGIMUt8854=
+X-Received: by 2002:a05:6512:23a2:b0:553:3621:310a with SMTP id
+ 2adb3069b0e04-5533d16dbaamr768389e87.21.1748615344329; Fri, 30 May 2025
+ 07:29:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250530103941.11092-4-tao.wangtao@honor.com>
+References: <20250512190834.332684-23-ardb+git@google.com> <20250512190834.332684-35-ardb+git@google.com>
+ <20250530111645.GAaDmTneZG7KOX0ApR@fat_crate.local>
+In-Reply-To: <20250530111645.GAaDmTneZG7KOX0ApR@fat_crate.local>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 30 May 2025 16:28:52 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEzbBTYr2vF3g_z49muSTHwRY1QUm2iOFsaLNYuijqHDg@mail.gmail.com>
+X-Gm-Features: AX0GCFsHN16GrjCPQcshtyMpUhezV1a_8qejPONH3p7G-taT6t1sSUGWFP1MvPA
+Message-ID: <CAMj1kXEzbBTYr2vF3g_z49muSTHwRY1QUm2iOFsaLNYuijqHDg@mail.gmail.com>
+Subject: Re: [RFT PATCH v3 12/21] x86/sev: Unify SEV-SNP hypervisor feature check
+To: Borislav Petkov <bp@alien8.de>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
+	linux-efi@vger.kernel.org, x86@kernel.org, Ingo Molnar <mingo@kernel.org>, 
+	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi wangtao,
+On Fri, 30 May 2025 at 13:17, Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Mon, May 12, 2025 at 09:08:47PM +0200, Ard Biesheuvel wrote:
+> > diff --git a/arch/x86/boot/startup/sev-shared.c b/arch/x86/boot/startup/sev-shared.c
+> > index 70ad9a0aa023..560985ef8df6 100644
+> > --- a/arch/x86/boot/startup/sev-shared.c
+> > +++ b/arch/x86/boot/startup/sev-shared.c
+> > @@ -66,16 +66,10 @@ sev_es_terminate(unsigned int set, unsigned int reason)
+> >               asm volatile("hlt\n" : : : "memory");
+> >  }
+> >
+> > -/*
+> > - * The hypervisor features are available from GHCB version 2 onward.
+> > - */
+> > -u64 get_hv_features(void)
+> > +static u64 __head get_hv_features(void)
+> >  {
+> >       u64 val;
+> >
+> > -     if (ghcb_version < 2)
+> > -             return 0;
+>
+> Why?
+>
 
-kernel test robot noticed the following build errors:
+It is explained below ...
+> > -
+> >       sev_es_wr_ghcb_msr(GHCB_MSR_HV_FT_REQ);
+> >       VMGEXIT();
+> >
+> > @@ -86,6 +80,31 @@ u64 get_hv_features(void)
+> >       return GHCB_MSR_HV_FT_RESP_VAL(val);
+> >  }
+> >
+> > +u64 __head snp_check_hv_features(void)
+> > +{
+> > +     /*
+> > +      * SNP is supported in v2 of the GHCB spec which mandates support for HV
+> > +      * features.
+> > +      */
 
-[auto build test ERROR on brauner-vfs/vfs.all]
-[also build test ERROR on next-20250530]
-[cannot apply to linus/master v6.15]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+... get_hv_features() is only when SEV-SNP has already been detected.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/wangtao/fs-allow-cross-FS-copy_file_range-for-memory-backed-files/20250530-184146
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.all
-patch link:    https://lore.kernel.org/r/20250530103941.11092-4-tao.wangtao%40honor.com
-patch subject: [PATCH v3 3/4] udmabuf: Implement udmabuf rw_file callback
-config: sparc64-randconfig-002-20250530 (https://download.01.org/0day-ci/archive/20250530/202505302235.mDzENMSm-lkp@intel.com/config)
-compiler: sparc64-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250530/202505302235.mDzENMSm-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505302235.mDzENMSm-lkp@intel.com/
-
-All error/warnings (new ones prefixed by >>):
-
-   drivers/dma-buf/udmabuf.c: In function 'udmabuf_rw_file':
->> drivers/dma-buf/udmabuf.c:298:25: error: storage size of 'iter' isn't known
-     298 |         struct iov_iter iter;
-         |                         ^~~~
->> drivers/dma-buf/udmabuf.c:299:45: error: 'ITER_SOURCE' undeclared (first use in this function)
-     299 |         unsigned int direction = is_write ? ITER_SOURCE : ITER_DEST;
-         |                                             ^~~~~~~~~~~
-   drivers/dma-buf/udmabuf.c:299:45: note: each undeclared identifier is reported only once for each function it appears in
->> drivers/dma-buf/udmabuf.c:299:59: error: 'ITER_DEST' undeclared (first use in this function)
-     299 |         unsigned int direction = is_write ? ITER_SOURCE : ITER_DEST;
-         |                                                           ^~~~~~~~~
->> drivers/dma-buf/udmabuf.c:327:17: error: implicit declaration of function 'iov_iter_bvec'; did you mean 'bvec_iter_bvec'? [-Wimplicit-function-declaration]
-     327 |                 iov_iter_bvec(&iter, direction, bvec, bv_idx, bv_total);
-         |                 ^~~~~~~~~~~~~
-         |                 bvec_iter_bvec
->> drivers/dma-buf/udmabuf.c:298:25: warning: unused variable 'iter' [-Wunused-variable]
-     298 |         struct iov_iter iter;
-         |                         ^~~~
-
-
-vim +298 drivers/dma-buf/udmabuf.c
-
-   286	
-   287	static ssize_t udmabuf_rw_file(struct dma_buf *dmabuf, loff_t my_pos,
-   288				struct file *other, loff_t pos,
-   289				size_t count, bool is_write)
-   290	{
-   291		struct udmabuf *ubuf = dmabuf->priv;
-   292		loff_t my_end = my_pos + count, bv_beg, bv_end = 0;
-   293		pgoff_t pg_idx = my_pos / PAGE_SIZE;
-   294		pgoff_t pg_end = DIV_ROUND_UP(my_end, PAGE_SIZE);
-   295		size_t i, bv_off, bv_len, bv_num, bv_idx = 0, bv_total = 0;
-   296		struct bio_vec *bvec;
-   297		struct kiocb kiocb;
- > 298		struct iov_iter iter;
- > 299		unsigned int direction = is_write ? ITER_SOURCE : ITER_DEST;
-   300		ssize_t ret = 0, rw_total = 0;
-   301		struct folio *folio;
-   302	
-   303		bv_num = min_t(size_t, pg_end - pg_idx + 1, 1024);
-   304		bvec = kvcalloc(bv_num, sizeof(*bvec), GFP_KERNEL);
-   305		if (!bvec)
-   306			return -ENOMEM;
-   307	
-   308		init_sync_kiocb(&kiocb, other);
-   309		kiocb.ki_pos = pos;
-   310	
-   311		for (i = 0; i < ubuf->nr_pinned && my_pos < my_end; i++) {
-   312			folio = ubuf->pinned_folios[i];
-   313			bv_beg = bv_end;
-   314			bv_end += folio_size(folio);
-   315			if (bv_end <= my_pos)
-   316				continue;
-   317	
-   318			bv_len = min(bv_end, my_end) - my_pos;
-   319			bv_off = my_pos - bv_beg;
-   320			my_pos += bv_len;
-   321			bv_total += bv_len;
-   322			bvec_set_page(&bvec[bv_idx], &folio->page, bv_len, bv_off);
-   323			if (++bv_idx < bv_num && my_pos < my_end)
-   324				continue;
-   325	
-   326			/* start R/W if bvec is full or count reaches zero. */
- > 327			iov_iter_bvec(&iter, direction, bvec, bv_idx, bv_total);
-   328			if (is_write)
-   329				ret = other->f_op->write_iter(&kiocb, &iter);
-   330			else
-   331				ret = other->f_op->read_iter(&kiocb, &iter);
-   332			if (ret <= 0)
-   333				break;
-   334			rw_total += ret;
-   335			if (ret < bv_total || fatal_signal_pending(current))
-   336				break;
-   337	
-   338			bv_idx = bv_total = 0;
-   339		}
-   340		kvfree(bvec);
-   341	
-   342		return rw_total > 0 ? rw_total : ret;
-   343	}
-   344	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> > +     if (sev_status & MSR_AMD64_SEV_SNP_ENABLED) {
+> > +             u64 hv_features;
+> > +
+> > +             hv_features = get_hv_features();
+> > +             if (!(hv_features & GHCB_HV_FT_SNP))
+> > +                     sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SNP_UNSUPPORTED);
+> > +
+> > +             /*
+> > +              * Running at VMPL0 is required unless an SVSM is present and
+> > +              * the hypervisor supports the required SVSM GHCB events.
+> > +              */
+> > +             if (snp_vmpl > 0 && !(hv_features & GHCB_HV_FT_SNP_MULTI_VMPL))
+> > +                     sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_NOT_VMPL0);
+> > +
+> > +             return hv_features;
+> > +     }
+> > +     return 0;
+> > +}
+> > +
+> >  int svsm_perform_msr_protocol(struct svsm_call *call)
+> >  {
+> >       u8 pending = 0;
+> > diff --git a/arch/x86/boot/startup/sme.c b/arch/x86/boot/startup/sme.c
+> > index 753cd2094080..0ae04e333f51 100644
+> > --- a/arch/x86/boot/startup/sme.c
+> > +++ b/arch/x86/boot/startup/sme.c
+> > @@ -533,6 +533,8 @@ void __head sme_enable(struct boot_params *bp)
+> >       if (snp_en ^ !!(msr & MSR_AMD64_SEV_SNP_ENABLED))
+> >               snp_abort();
+> >
+> > +     sev_hv_features = snp_check_hv_features();
+>
+> Is this writing the sev_hv_features declared in
+>
+> arch/x86/boot/startup/sev-startup.c
+>
+> ?
+>
+> arch/x86/boot/startup/sev-startup.c:45:u64 sev_hv_features __ro_after_init;
+> arch/x86/boot/startup/sme.c:536:        sev_hv_features = snp_check_hv_features();
+> arch/x86/coco/sev/core.c:980:   if (!(sev_hv_features & GHCB_HV_FT_SNP_AP_CREATION))
+> arch/x86/include/asm/sev-internal.h:5:extern u64 sev_hv_features;
+> arch/x86/include/asm/sev.h:428:extern u64 sev_hv_features;
+>
+> I'm confused.
+>
+> If sev_hv_features is startup code, why isn't it accessed this way...?
+>
+> /me goes and looks forward in the set...
+>
+> oh my, that is coming.
+>
+> > +
+> >       /* Check if memory encryption is enabled */
+> >       if (feature_mask == AMD_SME_BIT) {
+> >               if (!(bp->hdr.xloadflags & XLF_MEM_ENCRYPTION))
+> > diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
+> > index fa7fdd11a45b..fc4f6f188d42 100644
+> > --- a/arch/x86/coco/sev/core.c
+> > +++ b/arch/x86/coco/sev/core.c
+> > @@ -1264,17 +1264,6 @@ void __init sev_es_init_vc_handling(void)
+> >       if (!sev_es_check_cpu_features())
+> >               panic("SEV-ES CPU Features missing");
+> >
+> > -     /*
+> > -      * SNP is supported in v2 of the GHCB spec which mandates support for HV
+> > -      * features.
+> > -      */
+> > -     if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP)) {
+> > -             sev_hv_features = get_hv_features();
+> > -
+> > -             if (!(sev_hv_features & GHCB_HV_FT_SNP))
+> > -                     sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SNP_UNSUPPORTED);
+> > -     }
+>
+> I guess we would've terminated earlier anyway so that's probably ok...
+>
+> > -
+> >       /* Initialize per-cpu GHCB pages */
+> >       for_each_possible_cpu(cpu) {
+> >               alloc_runtime_data(cpu);
+>
+> --
+> Regards/Gruss,
+>     Boris.
+>
+> https://people.kernel.org/tglx/notes-about-netiquette
