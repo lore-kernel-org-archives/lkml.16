@@ -1,176 +1,233 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A465421C9EE
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 12:20:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748607613; cv=none; b=Uxaibj2uoD08oRA+AbtkZ099H9YrqhR/keI4mQYcTQP0cE7LgnsgFnP03NsSHqfkeMquBD5NcH7NMeV7jzAIrklsY0ZUieFPUe9CyAEcXoFohs5Z1Vh7buyAOJKDy+4ZQ3y44PDRJS7aNkzjow3fhydPyv4M5iD5WPAe1leE9iY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748607613; c=relaxed/simple;
-	bh=Jn4kRM73bkmQ53+JkTUDGYTN55oniv/gib2YYcJqFtk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bMg8FUNLrp46yqtLcGT4acBXi4CzzKgUv18ip/uZTGW1nb5T6m1o+I2oR/Wd0KXldgcan1Tp7sy2TWi1vzlZWbyefdI/tPUaHo1WfIBvvaEn/chUYAsIbGLp6VHru3PRrLEpU+EAgYHD+/yNr3Hrs5svb3PhApmgDuwcF3v7GGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=doZt437b; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31A6410F1;
+	Fri, 30 May 2025 12:26:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748607999; cv=fail; b=ayZZpnX5C7jMxk6xljEhvU5LRzaA6QFf/aARrSMHCaSUS/mL4PvjnfkJ3QK35eRUsknbeYMHe4IONJztO7Q+DwVq+KneUj65EMbd6bdhu6AfaEjbAoX4LIUl9QMZ0M7DT7Su/n0DKHnQT9+jhXpF09NdFETW7h5FIKbOmHUYzFE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748607999; c=relaxed/simple;
+	bh=kWDMNC6gz1RQ5m+Cp7ihyfYoDc7Njv8tPJPmKzJu2u4=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=WpILVpcIUm9UlyCTtuKM2qMQZG9GsGAwARCHKcNB0d85rUS6YR+w3UMc9Egyg8zwBA5HU4VV997yXj611YSPc3J31FwsJ8ocJjisWTZw2KQ/VeqOJ2r0zn106n2SWo/9jRXSjldOQ1A92nUuIzxb4/zlUrpG5wGgHsK6fWC/52w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gJCJLP2K; arc=fail smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="doZt437b"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2350fc2591dso12095995ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 05:20:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1748607611; x=1749212411; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zVX/fq17IZ0Mm65tm69m9qikaxT2MG0++vNA13gmJdc=;
-        b=doZt437b0e3j8mwFNRbtMLOXsbj+8AMhmDgXQBNFJzp3L5sydEaf9n+RQsSoDANd0l
-         8pFPM24+nDK7L4d5oADb+KBiqeF7/A02GcMWoZDeVqM7uc0NA2xAuPM9WPQ93jrOqQQl
-         QMMC+ukuKil6uCG2YtxtB4hqU75xnmduKKOoYRpVw6P79bQBYGXpqzjN4icmKAMhWhju
-         hncsj/H0+W9pqtOIiPm9iRJb6wvfOJ56JtVtFbIXVjSTtzCyUzfGzXTirYX8OlOdYTmH
-         ojxjx9/IkzuGxB3RK425q/6Z4i86Vn22PSAK4f1X5u9YxSe1U/cDvG2a1bFSULniAniK
-         Splg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748607611; x=1749212411;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zVX/fq17IZ0Mm65tm69m9qikaxT2MG0++vNA13gmJdc=;
-        b=Yn2mQ6/FUUrt1Oj3IfvoYEoyxXFix7qsyGJ4vEukte96QxlPMkzqLWaHfzZ/5Shi5Y
-         T1oMUXsxH0yNuL+fKsDE0i1bm3ubLh1h33lKwCLeBHZcriimJX5B7fL8n3WK6c+PeLmT
-         /QhaImqQENZi4r1qEdt91i06MBKTeyD3QEs5XNDWKGFcrOikHG4r5DX/sZmKvpfM7O7A
-         fwRzvm/QHjoHgmX7p+KzURe4Y1ZfDf3fcXPnXjRK86EZGmnatdcVqBdzjDS/ADxBhCbh
-         v4MMChDGeStxF0rXjPHpmX1XlGByGzK8w6st38TyBf2jvAfwmm4jm2btMIwYdKCTfsOd
-         a7BA==
-X-Forwarded-Encrypted: i=1; AJvYcCWuNctn2d+5KXvB+Bg14BafsTAS1f6oCc5mJZRsYrBAWONa57nX+fI2u0dJTfUwvjDoJcaU9fGZ87v/Ttw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6F7xolB4aoncrSKEsYUtzOmXLwINp7uFBjZRqFpDfYQyTrwBa
-	nMcgfkGtVhXis3BPBvqnj/6DouJULsxFMvlVINUKQW+m9AnVZUEfjb1nN7Go+KKd+4tCARIjZOy
-	76YdFtDo=
-X-Gm-Gg: ASbGncvz6zY6e8rzOFvHmn30QOKKCQ2pXrB3EG4a74BZLemVYDSHR1+nC1ClBZwEHwN
-	j5kuZwXkIZ3K1uS6cub0cER6FvZnq8oOpHhwcCa0uSugSOayZRybiBDvh30XubM6qOgE7W4s0BA
-	EN3+oS+ts/iRN0L2MWIyGAOEGs3Vq9qlo+OsDlbovW1L9Xu82A+Wjv3XNNyBg7wJ0JNfwXSdKp3
-	GFBQk6y/CaRSTANrZAKC5vIzLylAuUHrg94Pud2/eqO+6df/FSvpW2wVg35dgSDE2EcAuBh1/nR
-	aNN6NVMSyCYWpoWq7lYiiszfZHSO4uSaWwhjnLpg+rjAgfnoJbpy48LtC94vhzA336w0d5GEjfF
-	a3uQ=
-X-Google-Smtp-Source: AGHT+IFyawdNLxKKpOA2yzMb22+sXYnk0MR0MJj7pdjyGbLyRuPeq/XfzsI6szDaRh1omT087EqOTw==
-X-Received: by 2002:a17:903:2a8e:b0:234:2d80:36 with SMTP id d9443c01a7336-234f68dbb53mr120049685ad.14.1748607610592;
-        Fri, 30 May 2025 05:20:10 -0700 (PDT)
-Received: from localhost.localdomain ([203.208.189.12])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506d209f5sm27146855ad.252.2025.05.30.05.20.06
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 30 May 2025 05:20:10 -0700 (PDT)
-From: lizhe.67@bytedance.com
-To: david@redhat.com
-Cc: akpm@linux-foundation.org,
-	jgg@ziepe.ca,
-	jhubbard@nvidia.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	lizhe.67@bytedance.com,
-	muchun.song@linux.dev,
-	peterx@redhat.com
-Subject: Re: [PATCH] gup: optimize longterm pin_user_pages() for large folio
-Date: Fri, 30 May 2025 20:20:03 +0800
-Message-ID: <20250530122003.44555-1-lizhe.67@bytedance.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <a98bc945-0020-40ce-a650-47dcd0274001@redhat.com>
-References: <a98bc945-0020-40ce-a650-47dcd0274001@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gJCJLP2K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748607998; x=1780143998;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=kWDMNC6gz1RQ5m+Cp7ihyfYoDc7Njv8tPJPmKzJu2u4=;
+  b=gJCJLP2KIKG2YfUdBemDC8cPP7vyAzgzTMoo6BG+qXifVz46C3rErsth
+   EwYB4zCgubexz+aOva9QkDx3WMms5osXCqHXwB26uXnBpqL+K6qAqUegL
+   UecEiVJREWImAawviNu5L4xPP3NEcFW0024mtEEwUSH3CcwLGpG/Z5vDo
+   vszrupFsg12X+N9FLmA+bfCm3TskVbtCvYbKVUAYCmriKwdL+GOqq5OTK
+   GRc1DKukW5gQmdwAyH/4N9qsDC9CZlgoGEpMvLqLUbo5a0t0/nUNqmjRk
+   U84zc50I/SWTTHVncFoVGaFQi5roB1peWkeBAn/yYM6DLHU2FFqTlVLlT
+   Q==;
+X-CSE-ConnectionGUID: FUrqqYfmSpKVT3oZbDtvPQ==
+X-CSE-MsgGUID: xO22aCWNT3SkYMS6vvnKHg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="38325326"
+X-IronPort-AV: E=Sophos;i="6.16,195,1744095600"; 
+   d="scan'208";a="38325326"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 05:26:38 -0700
+X-CSE-ConnectionGUID: NzAG6lkRToaKefeumJ6ULg==
+X-CSE-MsgGUID: /WgGqZr7R8OjhYN6DSOoaw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,195,1744095600"; 
+   d="scan'208";a="144197640"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 05:26:37 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Fri, 30 May 2025 05:26:36 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Fri, 30 May 2025 05:26:36 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (40.107.237.43)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.55; Fri, 30 May 2025 05:26:35 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Ao0MqtfuftYbJZwyOmiDCrdUZNsDdtmO6HVztoCRW3RK6EilxMA0kSLoPDi5vc5RR1RpwmyLKwI45fC4FNT/eYu8k54ljkxBLTa4kBGH+22iDyVBKZ5mT2J3x4DsyRQbPt6390nkDLDV/ulkth+nEgcpaP3ImNDc/uJmFQ6DgHvPlyewhkxrvHJ8sicXp9AM8a4NMt+nIJl76Gu2tT2LwOwz6Ljb4zR/14cf+3Gtg5ZdPwzEqI1mj0wpfBikPr9bYdvzmgUP3xqIYKb27dZfLRknHfp5oEu851uGxmnYpReaPdZKxFE3S9S1qPEHEdZLVNCDdXqZh+fFUnJi0+VrzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mHPwBlGmMqe0hZ4rR+ek9Jfjj65MHRxZWBEN3AJImzY=;
+ b=FTNs5gZpQJz2XtyyYLnrAhNlfOqE+4XTMWii3O434NOSwqHh1IvR1IBA7PJYtxmaz6UB14PrhEUbm352y6MzP1HNChLlA2cQKUlD5BUaLehSiRXF/YDbMccFZZQxpXuN3e5LPEFhz69dPPiLWrkSRUiaVR8DiVztJp9FYMSfiLIxTfV09XPSsIZqB6Cpl+tceQrUehZU2+pRtrshpoK12uLBnOq6E4pn9EryDsWD7H1Dm4V27X1FGdLWs6IaracWQxpv0s12IrMRoRsD6VKZHeAejr3hrA2BOp6gQgYYHrT3BZozGnWrZK93CfGylHxifcCvqGTUCtyPzl6FRjINtw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH7PR11MB6054.namprd11.prod.outlook.com (2603:10b6:510:1d2::8)
+ by SA2PR11MB4811.namprd11.prod.outlook.com (2603:10b6:806:11d::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.30; Fri, 30 May
+ 2025 12:26:33 +0000
+Received: from PH7PR11MB6054.namprd11.prod.outlook.com
+ ([fe80::a255:8692:8575:1301]) by PH7PR11MB6054.namprd11.prod.outlook.com
+ ([fe80::a255:8692:8575:1301%6]) with mapi id 15.20.8769.029; Fri, 30 May 2025
+ 12:26:33 +0000
+Message-ID: <bcf606a1-1a06-42bd-89d0-c388a57a94f2@intel.com>
+Date: Fri, 30 May 2025 15:26:27 +0300
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mmc: sdhci-sprd: Add error handling for
+ sdhci_runtime_suspend_host()
+To: Wentao Liang <vulab@iscas.ac.cn>, <ulf.hansson@linaro.org>,
+	<orsonzhai@gmail.com>, <baolin.wang@linux.alibaba.com>,
+	<zhang.lyra@gmail.com>
+CC: <linux-mmc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<stable@vger.kernel.org>
+References: <20250519123347.2242-1-vulab@iscas.ac.cn>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20250519123347.2242-1-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P123CA0317.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:197::16) To PH7PR11MB6054.namprd11.prod.outlook.com
+ (2603:10b6:510:1d2::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR11MB6054:EE_|SA2PR11MB4811:EE_
+X-MS-Office365-Filtering-Correlation-Id: c90d7a58-b71d-4f3a-70e2-08dd9f75362e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?bzE0a25jTkpkb2E4ZW5ySE14RUNMdXRqeEJSRXZPTGdUYUdQYWg0N2tGS2hs?=
+ =?utf-8?B?NndvME1EQmVhRElxQnVvNHdRUXVxTXRPb3ZtQkVWakN5WDVRWStiNlhCMlo2?=
+ =?utf-8?B?ZFlBbUFBVVUxUnJESjZQbjVab2hmQW5MQ085WXJJSnVlV0VUZWNWNlNQZDBJ?=
+ =?utf-8?B?YzRNUnlYT2dlM20xWFdPamNwQ3NQeFhyZHJzVytIc24rMXpRTVJyMWxiNFNn?=
+ =?utf-8?B?Z0ptZkNhS28zRzJUZmxiUmhMYUdqSlNOenJCK0IzaTRsZHJ4WVZxQm1QTXRo?=
+ =?utf-8?B?UUNIV2NhNVM5YzhKM0NESHRQdlJFQnVKUVkzKy9sNkVFdFhudElmRGRqaGY0?=
+ =?utf-8?B?WFRPRll5RHhzLzZXUFBDZXg1bUQvVitYUzNxaFZQbUxWUng1WERNYTFmWCt3?=
+ =?utf-8?B?UmhoT2M4Vmt5Wm14Z0t6ZWpXTWtnTmNrV3kvbFFoMVJDeHFIK2dBUWZEMHZW?=
+ =?utf-8?B?RXhOeVcvb1J6UDMzUVliVC8wb1cxTDNsNVhCYlZycTU0dXhZZnVwYVdhcHpR?=
+ =?utf-8?B?bzFtblhxQTBYcm1CU3Ryclhnd1ZsY0VPZHQrbzIzanU2NWxHcXNkb0lUR21N?=
+ =?utf-8?B?NlV6cGxkSmNRNWs0Qzd6cS93UW5kaTlNVWs3b3cxQzEvTnlXckdod1ZhQnQ5?=
+ =?utf-8?B?OW96dXQvSjF4WUJwaVRJN0ZwT2pHNGR6MEZrOUI2cU1CNUt3WE1aZFQ5NmJU?=
+ =?utf-8?B?aGpIQ1AyZ2ZvZkdDNWVvWE8rYWhscE5YN1lUT1QxSU5JcktBTUxXbWJ6ZytJ?=
+ =?utf-8?B?c014V3l3UWIyTUVNQU5NQlc4eHRRaWExRUZ6RlBNaGs3MDRMVkUvNzhXV2o4?=
+ =?utf-8?B?TytyYjhIaklWT25wcllQQ0Eza2FRZDczRzFZeXVrMEJNSGlCZzF4MEI1aGxm?=
+ =?utf-8?B?WG1TUGU2NlpGeFRxenNCWVBvdVE2a2lFcE9idmxKTk53bU5LUXVobDhsR1RH?=
+ =?utf-8?B?ckxzRkdLSjg0MElRcXFkd1pkNzRnQko0MzdkR0NvWGtaSGNkV1ZZTm5VNzRL?=
+ =?utf-8?B?Zlc0RGl0QS9TTlg5eVZzY3BCeU1wS3ZqS2UxcWd5R0VSbEpFVFNLM2UwNzYz?=
+ =?utf-8?B?dytsNnhPSmQ0YThjWDlkVk1ZUFZ0dEwyWitJbi9ZdC9tbGRuUVVkaUwyVk9C?=
+ =?utf-8?B?NG40cStNNC9QYy93ZnFLRCtpZW1acXBTRzVSKzRWYkgvZDVsYy9RUXpvT1F2?=
+ =?utf-8?B?WkJ5dVFVbDJEN1pOZVpVMmlDeGV5NFh4NGd3SUdqc2lqc0VpdFdWSmpadkFV?=
+ =?utf-8?B?UXM3em40Ni9McFhZS0NjS0VwSGJISVhZYUU5OFdpMlBOWWRBYnZkV3czMHJQ?=
+ =?utf-8?B?alprRVlJeGZZT1gwOXdpbk9aOVY2MC94bWZ4M29JamJOeTJxVlpUTzczTSsv?=
+ =?utf-8?B?VTB1ZHF6a2ZNaTdVSC9OVFlmZzV4MDM3STA0Qk16YTFEdmdBMWNWN3pMVjJh?=
+ =?utf-8?B?SnlhYkgvUWl6YnA2cjB1WlFMbS9JRnNIMGZ5cy9GSmJpejh5a2lUc1c5emha?=
+ =?utf-8?B?WjlHdk04NEZuNGhjbU1vdHk2bmVvdnFkLzFac0l3SEY2SVJPWnV2dC9maHJ4?=
+ =?utf-8?B?MlAvUS9UcU83VkF1K1hXenR5d2tGRnVUZi81Z3kwTGcxMkZFUTNJa0FjZXhq?=
+ =?utf-8?B?a1dyRzZJenFqTlU5TURmOVJhQVRUVEtTTmtsZnA1bEE0ZzAzcU5jcDRpb1Ax?=
+ =?utf-8?B?eHJRUFFWY2VQQ0dRZW1ZQnIyaVlENzZkUU45TVA2V05Vd3Z6V2RUdXlnTk0y?=
+ =?utf-8?B?UUZOZ0VVaDRRQkYwcmZwTTNhOUdUbTNSN1dtd2E1ZnduRnY3T1NrY2Z1WHls?=
+ =?utf-8?B?VmNnM2djVnJPYzNGQkFXZVlNL21wdVB0empTZzZwdFRCaXpSeGR4d2ZWS1hS?=
+ =?utf-8?Q?4vfyAlLwo7U6/?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6054.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MnJ5VjBNN0loYXNvZlBtcUdhZ0lKcGdqQ1h6SEcrYmFSUHRzUE95eHdJSDBi?=
+ =?utf-8?B?T3VmVlJDeXhrdUw2aE8vUTUzZHBKVUNuTHFNZHhaaW9yZXBwUHY4NlJKazZK?=
+ =?utf-8?B?TzZaMEIyV25nOFk3RFMvUTV2Zi8zd3dyRUtRMWx3WUk1Y1lUaWNnY29heGxZ?=
+ =?utf-8?B?MFd4WGdkZldpdDQvRlAvQmpJbU5zc2s5YjlqRzk3clJnd3JtK0NVU0Q1dmNR?=
+ =?utf-8?B?WE04UjNUbzkrekdKbUhiUUV1ZnZnNmpHQlA1ZVFFUkh2LzlmYXducFhTYS9V?=
+ =?utf-8?B?MU16cUNwbXkyYThjc252S3N5b2puZThOVC9tZ3oxaEZ3R0dNTXNNNkQyL3BD?=
+ =?utf-8?B?QlliakpkakhmQ3dKMEc2dkJqY3h1U0tKZ1VsQ0FHaWUxYXlzK0RCeFdmcDhX?=
+ =?utf-8?B?UnJkYnZQOEtscWUyOFVhMlZvL0xMcUh0eXVGRlovR0JXUmxzUitMTXQrSGZk?=
+ =?utf-8?B?bG5yTW02L29wWXYwcFJkL3oxVGZpQVJKTnQ3SGtHMlVOY01DbUQyK1ZMOHBx?=
+ =?utf-8?B?aXFVNnlRcWJNN2NlWHdreDJyK0hFa3RMVlU0d2cxQ0pFRG1yOWFYQlpVYUx5?=
+ =?utf-8?B?Y1ZKaUdUVVFPTm9YcnpwZjR3dzRsck9NcHV0Z1hmelpqWDBrVWd1RXRZM0py?=
+ =?utf-8?B?TmFsbWU2QjhCem5Cekt4enM2eGxKMVE3T0RaMVJNbkJGaHVzV0ZvczVPRFdn?=
+ =?utf-8?B?bEdqbjhBR2JEclVyZUVvUHplQXRnTHJFbXh6M2JHMWVNUGNIMDVkK2I3R09j?=
+ =?utf-8?B?MGFFaHNNV1BMOWpFOUJjY1lQMzlJRnhydGZqbVdSMUdaL1RhNmo1Ykd5RnNz?=
+ =?utf-8?B?T0Y0V1VtaG5KRHcwRFNrQXNFM1dtNmErQlhmVVVPWFBrdE42VjFGTTcvdzdJ?=
+ =?utf-8?B?V0NuTER5VWNmVU9ueGZ5MERXWDVFUjI2b0pnL01LMXdtWWh5dkpYUlE4dW5p?=
+ =?utf-8?B?aDMwelpuek02TU55L2N2VGZkZlJ0cENaZkU4RlA3ZWttZTV1UmYzdElYc3Bv?=
+ =?utf-8?B?cmp6V2FyM0NpQkcvVXhUa2ZIVGlOd1dmaWdPY2lIYWZlc1htU21BYVB1bEgy?=
+ =?utf-8?B?VWRKUGJjbnlEdmdkQjRUWkhjZVNJM0cwRFVwSDROSm9TNG9QR3A4NFlrditY?=
+ =?utf-8?B?MDg2YUVoeUpJQXZ4dkhuZ2ZlOXlEL3J1ZnhWVllZNDBUODlKVnFseFhUS0hG?=
+ =?utf-8?B?cUZ3RjNtYis5TlhIOW5hR0V1NU1GKzJUMGVwMXdkWnB6VXI5OUNKTlV2WEpM?=
+ =?utf-8?B?TTBCa3hjeFpOYlhKaTRvcmMwK2gvSU5tdDJHc1pObk55aWxYYWhwdENoVmlZ?=
+ =?utf-8?B?bUtxbU1MZ011cU1wOGc2WFJ0UzBEUjJlTUtPaHhoZ0xzUDNVNTFyak8zaGFT?=
+ =?utf-8?B?MDhZTytSK25Ta25MTGcwaGduNUhSdWZIb2xCSEEyUmJQZENCdUczTGEyblJM?=
+ =?utf-8?B?WDhFTDMzcU5SSXJNcFRtWVhJMFZQSWRISWhFZWdRazB4NytXc3VJM2R5VmlQ?=
+ =?utf-8?B?WXIvUE9PSldMOEhNc015NEhuNEhFOHJVWGIySlpabFRDc1poRk13Mkw3em4y?=
+ =?utf-8?B?ZmZnT1JxNWFsWllKQTBIc0cyclVTdlB4MHl3SlBJUGdlYXFFZ05sa2JRWnNN?=
+ =?utf-8?B?VEdUOERTbFlKL2VEdngvMnZ2ZnEwQjJnbmZISG4ySlZ3REl3WHY4SGxPdk9G?=
+ =?utf-8?B?NlhYTFM3SGtaM1FsRFBiN2QvbnBjQlh5L0xkV3NReUNiMW9kSXlRNlhYY3dk?=
+ =?utf-8?B?SjQ5dnk4ZVliRDR6UFlkSm9BNnV1b2lBWmRUV1FEWVltcGhtWVdTb1pUdFpT?=
+ =?utf-8?B?NG5CMmpoT2s2R2VXdkVIVVorTXh4NklxaFJlZDVEbnNCdEIzdGRreU1tbVNu?=
+ =?utf-8?B?emdzS1NBTGhxeWdUc0lTRkZVQU5uSlRaU29LWmN3WGlRdjlIcWlmbFprcmFj?=
+ =?utf-8?B?M1pzOHRRTzVEY1FDbU5USTk2ME1Xa1JMU3JCV3RHby9JLzdpVzJCcmtLNWxB?=
+ =?utf-8?B?YlorODVmcDIyYnhBZGtRN2tPRWdVblFkSld3SysvbmYzVGsxNTU0QWdaSHg4?=
+ =?utf-8?B?S1VoNjRvWFovL1lVcTFaZ21vam9IbzM2Wm9tcW1RS3RFVFRYVlg4UkNGUnQ4?=
+ =?utf-8?B?eWtBQ1E0U0NKZnp2TWNXd3FiTTFjVlk0RTBZMXRyUW9QZEdxWE5KQmhJRy8r?=
+ =?utf-8?B?OXc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: c90d7a58-b71d-4f3a-70e2-08dd9f75362e
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6054.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 12:26:32.9158
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1hqqLYmFQ0iZJZOhhAVqfDEEaSCQ3lRZ4CId8RDp3JezipaPPrXULhnnrGrEr29zeKKsi2msPPqwd2UNNj6dbQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB4811
+X-OriginatorOrg: intel.com
 
-On Fri, 30 May 2025 13:31:26 +0200, david@redhat.com wrote:
-
-> On 30.05.25 11:23, lizhe.67@bytedance.com wrote:
-> > From: Li Zhe <lizhe.67@bytedance.com>
-> > 
-> > In the current implementation of the longterm pin_user_pages() function,
-> > we invoke the collect_longterm_unpinnable_folios() function. This function
-> > iterates through the list to check whether each folio belongs to the
-> > "longterm_unpinnabled" category. The folios in this list essentially
-> > correspond to a contiguous region of user-space addresses, with each folio
-> > representing a physical address in increments of PAGESIZE. If this
-> > user-space address range is mapped with large folio, we can optimize the
-> > performance of function pin_user_pages() by reducing the number of if-else
-> > branches and the frequency of memory accesses using READ_ONCE. This patch
-> > leverages this approach to achieve performance improvements.
-> > 
-> > The performance test results obtained through the gup_test tool from the
-> > kernel source tree are as follows. We achieve an improvement of over 75%
-> > for large folio with pagesize=2M. For normal page, we have only observed
-> > a very slight degradation in performance.
-> > 
-> > Without this patch:
-> > 
-> >      [root@localhost ~] ./gup_test -HL -m 8192 -n 512
-> >      TAP version 13
-> >      1..1
-> >      # PIN_LONGTERM_BENCHMARK: Time: get:13623 put:10799 us#
-> >      ok 1 ioctl status 0
-> >      # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
-> >      [root@localhost ~]# ./gup_test -LT -m 8192 -n 512
-> >      TAP version 13
-> >      1..1
-> >      # PIN_LONGTERM_BENCHMARK: Time: get:129733 put:31753 us#
-> >      ok 1 ioctl status 0
-> >      # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
-> > 
-> > With this patch:
-> > 
-> >      [root@localhost ~] ./gup_test -HL -m 8192 -n 512
-> >      TAP version 13
-> >      1..1
-> >      # PIN_LONGTERM_BENCHMARK: Time: get:3386 put:10844 us#
-> >      ok 1 ioctl status 0
-> >      # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
-> >      [root@localhost ~]# ./gup_test -LT -m 8192 -n 512
-> >      TAP version 13
-> >      1..1
-> >      # PIN_LONGTERM_BENCHMARK: Time: get:131652 put:31393 us#
-> >      ok 1 ioctl status 0
-> >      # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
-> > 
-> > Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
-> > ---
-> >   mm/gup.c | 31 +++++++++++++++++++++++--------
-> >   1 file changed, 23 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/mm/gup.c b/mm/gup.c
-> > index 84461d384ae2..8c11418036e2 100644
-> > --- a/mm/gup.c
-> > +++ b/mm/gup.c
-> > @@ -2317,6 +2317,25 @@ static void pofs_unpin(struct pages_or_folios *pofs)
-> >   		unpin_user_pages(pofs->pages, pofs->nr_entries);
-> >   }
-> >   
-> > +static struct folio *pofs_next_folio(struct folio *folio,
-> > +				struct pages_or_folios *pofs, long *index_ptr)
-> > +{
-> > +	long i = *index_ptr + 1;
-> > +	unsigned long nr_pages = folio_nr_pages(folio);
-> > +
-> > +	if (!pofs->has_folios)
-> > +		while ((i < pofs->nr_entries) &&
-> > +			/* Is this page part of this folio? */
-> > +			(folio_page_idx(folio, pofs->pages[i]) < nr_pages))
+On 19/05/2025 15:33, Wentao Liang wrote:
+> The dhci_sprd_runtime_suspend() calls sdhci_runtime_suspend_host() but
+> does not handle the return value. A proper implementation can be found
+> in sdhci_am654_runtime_suspend().
 > 
-> passing in a page that does not belong to the folio looks shaky and not 
-> future proof.
-> 
-> folio_page() == folio
-> 
-> is cleaner
+> Add error handling for sdhci_runtime_suspend_host(). Return the error
+> code if the suspend fails.
 
-Yes, this approach is cleaner. However, when obtaining a folio
-corresponding to a page through the page_folio() interface,
-READ_ONCE() is used internally to read from memory, which results
-in the performance of pin_user_pages() being worse than before.
-Could you please suggest an alternative approach to address this
-problem?
+I think it's better to remove the return value instead:
 
-Thanks,
-Zhe
+	https://lore.kernel.org/linux-mmc/20250530122018.37250-1-adrian.hunter@intel.com/T/#u
+
+> 
+> Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host controller")
+> Cc: stable@vger.kernel.org # v4.20
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+> ---
+>  drivers/mmc/host/sdhci-sprd.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
+> index db5e253b0f79..dd41427e973a 100644
+> --- a/drivers/mmc/host/sdhci-sprd.c
+> +++ b/drivers/mmc/host/sdhci-sprd.c
+> @@ -922,9 +922,12 @@ static int sdhci_sprd_runtime_suspend(struct device *dev)
+>  {
+>  	struct sdhci_host *host = dev_get_drvdata(dev);
+>  	struct sdhci_sprd_host *sprd_host = TO_SPRD_HOST(host);
+> +	int ret;
+>  
+>  	mmc_hsq_suspend(host->mmc);
+> -	sdhci_runtime_suspend_host(host);
+> +	ret = sdhci_runtime_suspend_host(host);
+> +	if (ret)
+> +		return ret;
+>  
+>  	clk_disable_unprepare(sprd_host->clk_sdio);
+>  	clk_disable_unprepare(sprd_host->clk_enable);
+
