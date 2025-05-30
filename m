@@ -1,61 +1,180 @@
-Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE633FC2;
-	Fri, 30 May 2025 11:50:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.51.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83DF22579B;
+	Fri, 30 May 2025 11:50:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748605810; cv=none; b=jTn0VYedpDbKgLn9KAteFuL10hDSNKAlZa+JsgjSI1yoc/yI9BzvpuFCF2uHz65Ao2qhjkppupNv+FTqtOVufmmfB0QYSV5Mpl3NTn1SsURNkRPAgChpFW9ugIOG9wbySClHyiNAj9LyiVb7fvWvbGJcnv58QUiWX3A+fsha8nU=
+	t=1748605819; cv=none; b=YXJZWaBu4ecSDUnS/0RPUV/DVAA28znB0TfJ969WGQrbzfTrUEh7Bekc+aaMoxQcYQCYk33QF2jn2Gbz6loYGGTXIlIzUeEsB4VecvDsWb1VZG4X375R/LloYU4hPfv7WO5pDgChSxccZIhaPEABDHKRmjjyrCY5knnWrb+2tuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748605810; c=relaxed/simple;
-	bh=idu8Ow8BMuBX4wTfRDd8vQr0HjKab5Y2sMtyPt5uE1Y=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S4ftujbReRW9iAJTaw18pD3o/PWL6ODSp1FdVXlDIz2DVwmUs2Sw0XTPH3ljYBRn46C/VG956AZQpn+QInCd44OZ2sCzwnUUNtMRUQmRSGfGRtZKS2uMGV0IvlQi9czKr/dBr5L4AFQCDt2mgYTv/rJPeH76H/EINYbYm4ALBPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=nxsw.ie; spf=pass smtp.mailfrom=nxsw.ie; dkim=pass (2048-bit key) header.d=nxsw.ie header.i=@nxsw.ie header.b=UVxmlLZn; arc=none smtp.client-ip=188.165.51.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=nxsw.ie
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxsw.ie
+	s=arc-20240116; t=1748605819; c=relaxed/simple;
+	bh=fz3ZQSWr7CY1akxZLr471YVGDzGqo++bGWSlgdU6ahw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A7x2oyhduiHEVSZg//1S5nWsi53Xvivml/XbwTkfp0jn91eWuuL36AhbCdC3i7QRfwBvq3MSf09gHZ0ktLJIqRBh+OSV7XNheOpHhttaTnOfqRDSz02BcDNekyB1Ok39dfwS9+rGY1JH+2PU4V9LtsSyuuArqo8xnLhiA6t+LjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ePLDMET0; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxsw.ie header.i=@nxsw.ie header.b="UVxmlLZn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxsw.ie;
-	s=protonmail2; t=1748605797; x=1748864997;
-	bh=LK8UUp4Bx1tCTim2vLQR0cYMads/iCl1Xz8T7cjEVNs=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=UVxmlLZnUq4kKJb23XiaT2Y5Z/UQqHTcA98TrVRs2YaNFwXc0rsjlUNXRLJtsphaF
-	 nIth6y1QjaUXzMa1n/DHSC9Tg859t/qW+gH03E1usZe+WCCBxT8q3tmliOMubAoA8z
-	 H9L/AL4zkZASd7jZA9ODf0FsZf86EecIucpbSiBgmzzoYA66sc915qh5ivWdxO1oIw
-	 9ygNEOXhyyOp5FJkD1J3GtbaVL8NRplRYdmCONd9Ruhnh7TG5DlIfggKgSAebWONHr
-	 B5tAgie71cMTVRsD3K9kWLkCzFurYJAWcUFZtydJ7v28oiHtBr+IVV+mC1J/AZt1j8
-	 X28Ci54q0aDfg==
-Date: Fri, 30 May 2025 11:49:52 +0000
-To: vincent.knecht@mailoo.org, Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
-From: Bryan O'Donoghue <bod.linux@nxsw.ie>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, =?utf-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH v3 2/4] media: qcom: camss: Add support for MSM8939
-Message-ID: <e28b518b-26ac-4d3c-bfaa-21a7cce63366@nxsw.ie>
-In-Reply-To: <20250530-camss-8x39-vbif-v3-2-fc91d15bb5d6@mailoo.org>
-References: <20250530-camss-8x39-vbif-v3-0-fc91d15bb5d6@mailoo.org> <20250530-camss-8x39-vbif-v3-2-fc91d15bb5d6@mailoo.org>
-Feedback-ID: 136405006:user:proton
-X-Pm-Message-ID: e039232186c158fc9bdd69f31340df6e1336c81d
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ePLDMET0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748605818; x=1780141818;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=fz3ZQSWr7CY1akxZLr471YVGDzGqo++bGWSlgdU6ahw=;
+  b=ePLDMET0IoI8Ue0dAHLJUJQx3aqTnlFFryrDrdvP7jdfd0ikCVfrZfAI
+   jvYStHp8H4+j3QCyURZaS9JXC3uYeI92DZdbN3oSnnLD/Yfwwthb5NEZU
+   Lo3Y7l3MzTxxG+9mTj6q6/mS+7GOgoNVQyIaK1maGUYvMfMIpGonI+eSw
+   Z83VvsojGz6QJM1ruELKsXvnszJ10lXu4LgySgQdWlMIbu+Xo45LwGdao
+   HK0CJCDkkH1ofRZZa1+cSejBvPQp9t01iL3XAojMTcFEbltZF+6nvXro5
+   ulGWjHj+PZe7Gd3YLWo/3dRHJdZp16dXgnOOAQaBkiGEwYUkbZiNeqUdc
+   Q==;
+X-CSE-ConnectionGUID: FuSBA4z2QIaF58kaVpX9PQ==
+X-CSE-MsgGUID: Liy4hCN7TQqbwgFi/Bzgyw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="50565722"
+X-IronPort-AV: E=Sophos;i="6.16,195,1744095600"; 
+   d="scan'208";a="50565722"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 04:50:15 -0700
+X-CSE-ConnectionGUID: Mdc9ZpEFTCq33nDfnQxj5g==
+X-CSE-MsgGUID: Gu9Gr+uqRoC3L7F7Kr3HGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,195,1744095600"; 
+   d="scan'208";a="174858935"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 30 May 2025 04:50:11 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uKyFV-000Xbw-1S;
+	Fri, 30 May 2025 11:50:09 +0000
+Date: Fri, 30 May 2025 19:49:28 +0800
+From: kernel test robot <lkp@intel.com>
+To: Hilda Wu <hildawu@realtek.com>, marcel@holtmann.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	luiz.dentz@gmail.com, linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org, max.chou@realtek.com,
+	alex_lu@realsil.com.cn
+Subject: Re: [PATCH 2/2] Bluetooth: btrtl: Add enhanced download support
+Message-ID: <202505301910.8q5W0vf5-lkp@intel.com>
+References: <20250529124816.4186320-3-hildawu@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250529124816.4186320-3-hildawu@realtek.com>
 
-On 30/05/2025 10:00, Vincent Knecht via B4 Relay wrote:
-> +=09    camss->res->version =3D=3D CAMSS_8x39 ||
+Hi Hilda,
 
-This is not correct - it should be 893x since 8939 and 8936 are ~ the=20
-same SoC - probably 36 is just a binned version of 39.
+kernel test robot noticed the following build warnings:
 
-Anyway the x is the least significant digit.
+[auto build test WARNING on bluetooth/master]
+[also build test WARNING on bluetooth-next/master linus/master v6.15 next-20250530]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Please fix
----
-bod
+url:    https://github.com/intel-lab-lkp/linux/commits/Hilda-Wu/Bluetooth-btrtl-Firmware-format-v3-support/20250529-205020
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth.git master
+patch link:    https://lore.kernel.org/r/20250529124816.4186320-3-hildawu%40realtek.com
+patch subject: [PATCH 2/2] Bluetooth: btrtl: Add enhanced download support
+config: i386-buildonly-randconfig-004-20250530 (https://download.01.org/0day-ci/archive/20250530/202505301910.8q5W0vf5-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250530/202505301910.8q5W0vf5-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505301910.8q5W0vf5-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/bluetooth/btrtl.c:1339:7: warning: format specifies type 'unsigned long' but the argument has type 'unsigned int' [-Wformat]
+    1338 |                 bt_dev_err(hdev, "got invalid cmd complete, %u %lu", skb->len,
+         |                                                                ~~~
+         |                                                                %u
+    1339 |                            sizeof(*ev));
+         |                            ^~~~~~~~~~~
+   include/net/bluetooth/bluetooth.h:280:42: note: expanded from macro 'bt_dev_err'
+     280 |         BT_ERR("%s: " fmt, bt_dev_name(hdev), ##__VA_ARGS__)
+         |                       ~~~                       ^~~~~~~~~~~
+   include/net/bluetooth/bluetooth.h:265:45: note: expanded from macro 'BT_ERR'
+     265 | #define BT_ERR(fmt, ...)        bt_err(fmt "\n", ##__VA_ARGS__)
+         |                                        ~~~         ^~~~~~~~~~~
+   drivers/bluetooth/btrtl.c:2071:1: error: function definition is not allowed here
+    2071 | {
+         | ^
+   drivers/bluetooth/btrtl.c:2113:1: error: function definition is not allowed here
+    2113 | {
+         | ^
+   drivers/bluetooth/btrtl.c:2172:1: error: function definition is not allowed here
+    2172 | {
+         | ^
+   drivers/bluetooth/btrtl.c:2199:1: error: function definition is not allowed here
+    2199 | {
+         | ^
+   drivers/bluetooth/btrtl.c:2219:1: error: function definition is not allowed here
+    2219 | {
+         | ^
+   drivers/bluetooth/btrtl.c:2246:1: error: function definition is not allowed here
+    2246 | {
+         | ^
+   drivers/bluetooth/btrtl.c:2286:1: error: function definition is not allowed here
+    2286 | {
+         | ^
+   drivers/bluetooth/btrtl.c:2404:48: error: expected '}'
+    2404 | MODULE_FIRMWARE("rtl_bt/rtl8922au_config.bin");
+         |                                                ^
+   drivers/bluetooth/btrtl.c:1878:1: note: to match this '{'
+    1878 | {
+         | ^
+   1 warning and 8 errors generated.
+
+
+vim +1339 drivers/bluetooth/btrtl.c
+
+  1322	
+  1323	static int btrtl_enhanced_download_mode_enable(struct hci_dev *hdev,
+  1324						struct btrtl_device_info *btrtl_dev)
+  1325	{
+  1326		struct hci_rp_enhanced_download_mode *ev;
+  1327		struct sk_buff *skb;
+  1328		u16 opcode = 0xfc1f;
+  1329		u8 val = 1;
+  1330		int ret = -EINVAL;
+  1331	
+  1332		skb = __hci_cmd_sync(hdev, opcode, 1, &val, HCI_CMD_TIMEOUT);
+  1333		if (IS_ERR(skb)) {
+  1334			bt_dev_err(hdev, "send %04x error (%lu)", opcode, PTR_ERR(skb));
+  1335			return -EIO;
+  1336		}
+  1337		if (skb->len != sizeof(*ev)) {
+  1338			bt_dev_err(hdev, "got invalid cmd complete, %u %lu", skb->len,
+> 1339				   sizeof(*ev));
+  1340			goto err;
+  1341		}
+  1342		ev = (struct hci_rp_enhanced_download_mode *)skb->data;
+  1343		if (ev->status) {
+  1344			bt_dev_err(hdev, "got invalid status 0x%02x", ev->status);
+  1345			goto err;
+  1346		}
+  1347		btrtl_dev->handle = le16_to_cpu(ev->handle);
+  1348		btrtl_dev->acldata_pkt_len = le16_to_cpu(ev->acldata_pkt_len);
+  1349		kfree_skb(skb);
+  1350	
+  1351		bt_dev_info(hdev, "enhanced download mode enabled, handle %04x, acl %u",
+  1352			    btrtl_dev->handle, btrtl_dev->acldata_pkt_len);
+  1353	
+  1354		return 0;
+  1355	err:
+  1356		kfree_skb(skb);
+  1357		return ret;
+  1358	}
+  1359	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
