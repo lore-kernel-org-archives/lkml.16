@@ -1,174 +1,151 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDF69143736;
-	Fri, 30 May 2025 19:00:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577D4BE5E;
+	Fri, 30 May 2025 19:03:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748631602; cv=none; b=lCc5cxnQ9cJz2/WB0fzwwnHayy51CoDn3pHZxcO8Z7jtFF0AZKPlbKSX6s9eyQqo09axK8CT8x67nBOgli7q4dxXL39mItB5PUmhWiCV+ZewTUG93N5WTpBs8K0Nl/ir0Q4V6AnzwvGIjTse4Vccvwi1/ooLyYL9/b3NUSHrHvs=
+	t=1748631812; cv=none; b=O8M/8j9+NEh8YhCWw6W7dW5pPCqJinXQZ5J9QX6gEBoQyYrIYNR2AW2yFi4mwmDunzpEFQDIk7pG6d1Igw2ySdzTK/DDZ3/0p8EHchBXT22UjOjKdeX+fmJJOLpQyLeUsi9y1QIYHUXMUYu9tDubJKJz2rTjAVu3/BLV/nn7BJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748631602; c=relaxed/simple;
-	bh=R/1ttUhwWL20tO3Oj72nIul8lSsN8Vi4gj6eFjy4uvk=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=VWN7Cf+cLlc65i28LEuC+X+gGmInwCe6J+YXIR4xqPW7zSkYuy+n9tO2YHYfkZleWU0s7rcICjH86KyS4ufFVHx5g1s6Ts/Scz/WtMfK+l+QcKWULYz2UoVTxwBbE0mUnU0SiQX18yzErWK9zkzK8fCn12e9xTQziCctsazGag8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U2ytXwcq; arc=none smtp.client-ip=209.85.219.47
+	s=arc-20240116; t=1748631812; c=relaxed/simple;
+	bh=4vbQ5jCAW+jtK9mrlFfnJQg4whCgQlT1OkkWoaglvgY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P4XNxSpohyvBk+uPwpmKzrzNkg3uvzPwfUQTfAjJ3KVhPbRA3/usOm8Zp4v8NLzFbAM48uJ84s2CK3YP+UUwwm6hEK5YnLWazNbOhavJwYFfsEhNLmbkc2uXkps9itQLRn0c3Q4Ad06kfenJtDU4bsO5xhAFSETwPzYNTGb2YXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NkPsHNvm; arc=none smtp.client-ip=209.85.166.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U2ytXwcq"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6f0ad74483fso24461356d6.1;
-        Fri, 30 May 2025 12:00:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NkPsHNvm"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3dd7553c7e3so7592995ab.3;
+        Fri, 30 May 2025 12:03:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748631599; x=1749236399; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1748631810; x=1749236610; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VlSkcnxW3G6p+It/B2UidZpyAR61Usu9SZ3iGbjjQoo=;
-        b=U2ytXwcqz7iPQjluGDB7eizWTatHauLU5BGvGegwzIrp0QvN6Lyqrns7ClW52y1wqr
-         U288xA3nPjcb8NwWnU/zn+MB9hQoo6ZmpoQYTnGq8eT4ZCcca3NCQPU7awMHYxHwer2a
-         BZs8R3CLBb9W+wnziHLwbwDN7uH8V5Uzq2KMiqwt1E4XB2iPIGTyyeuv3NPeyXh1e2si
-         bEtNuJR3JeHcwaXIVKwrkqcD1LYISP3YZAo6QpbfheXkInU4BtxKElzpjG5bl2OtOjLG
-         Yze6iL2wygrCHeUwbLk3xF3dL3gjSrCzDSaI6r88GPcg0kOTosDtrTeOX1Lb9eL7aPOl
-         jK7A==
+        bh=LWbYSIdO62OOJiQnecBL9sTo7G5vpYkrti7/TBlHzU8=;
+        b=NkPsHNvmx6/16LPpfho26rTeaOI55PbRkTxfxtNI5hLji1i+3dLpW5TkIimanlY9aY
+         XeXeYcUmFPN2oukMV2pslYe9x0KF8iQ33NA5rscQM7ePHifCCPry4M1cQjh0ynRoJmPQ
+         /pw4+3tzzudMrjbNiZWnkU515YrfIklCz9pv9frDpL4XZCUznrh2ZxgRE0xsHBnsFr9E
+         pGFh70DVxO7KZIuRArkpM42kljoiT701qQZzfZ/3GphG2jaM/r29G6LWSYOINKc6unA1
+         A0QcLNo9jM/Lsic3jqCq9Hw9CR/iheJGVTUmm3K3VoxTlxOvwUhSRr6ljww4E8j8d8Vj
+         W0RA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748631599; x=1749236399;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=VlSkcnxW3G6p+It/B2UidZpyAR61Usu9SZ3iGbjjQoo=;
-        b=d9bWqsQxUbhjryUB2OcaN79S0RSxsnTijo+WJiG9MbhrvW0j8MXmCMuSyIiiGw2yBf
-         Ae4UQ+VSv3tDMG923+g3M0lBhHkgHfJoTZe9fz0N6WvDp2DTcl0F/hC2RJdGascs+kF6
-         GVOeu/RpwFxD9hPsS6rkXDhO5wBOGFu8BLrUvQ4x0D8zsf9txjF6mTldXqByRwkVC3/D
-         zEVRFyvPu2PtAJEaYMMUX0W/ACgtaCHuFj26J5YA6htHd3uWHL6wWZiK99xK544pOJ7a
-         X02GmSeDfkUSCYOGXgSvHGah/0x3HfZf/pKGsdo3qIeThj9FhNzERTjkiFBNWDDDmGZS
-         F/cg==
-X-Forwarded-Encrypted: i=1; AJvYcCUPfH+qdPKCTHo29pFYeukWdXTNSybWI0fGeFkTiK20E8ap5NFeHPYhUwO9WQ8wUHQgXpi6roe3UAD7tOo=@vger.kernel.org, AJvYcCWFK6Ma14GaQppdT+cOXl2sw1lG0+KWnOnfPxEeom1iHr49VuD3RTGy04PCJxqxAsYHStuu7UJ7@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywu/s/9ml4m8DCYDTD0IlKY4/oqYEu2q1frS2kvMyoT9O3OIdOF
-	B2TL0QyeRlraZJ3NYKE1giSF/hnULOae92kAqeiixIzbDTGBmStQ+4Hq
-X-Gm-Gg: ASbGnctmvaTjr7H9I6qXomiIcr2xYaCouKFViRxNNthkXtraKgkJqf42hG1ycVe1XSX
-	pDaQjMa6sfIrlxm+Zgzfvi86utbbKS8JVFBzvCFBNlkMYEbpJoF8baBxNMkQ8PyH/oP1kCGehy6
-	pEqHPoOOdfR0u3ilHdIp4apykv3rUYPNUlLQb4CQ3n0bvBTlYPTDtMl3+6VZxOT+3ZTWWMpVS0t
-	8cE+epmIAtb836hmPy49bZ6NACLH1HS0zw2lq0qnOyoKyJw4xWkdBAr0oOwO3mEpN08uHKz+Xx6
-	QUvP5TTkGL8EpvpveMe+T/HnsM5J+b9FLz5eJyMin/BU0nt8rSLKsb5xW2WCteNZPrVA66OYwZk
-	KvI0MhAlJpT+Q4ejSpy6Rvpw=
-X-Google-Smtp-Source: AGHT+IFx8IyTKo5TZ833fVfIeZTnexMvd1NFwxQvRRS1nv0eUFRm+lGvfllz96odl8pQhvtQnBlihg==
-X-Received: by 2002:a05:6214:d02:b0:6fa:c5be:dac7 with SMTP id 6a1803df08f44-6facebcf4bdmr90062106d6.18.1748631599419;
-        Fri, 30 May 2025 11:59:59 -0700 (PDT)
-Received: from localhost (23.67.48.34.bc.googleusercontent.com. [34.48.67.23])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6fac6d5b144sm27523856d6.55.2025.05.30.11.59.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 May 2025 11:59:58 -0700 (PDT)
-Date: Fri, 30 May 2025 14:59:58 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Simon Horman <horms@kernel.org>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: Shiming Cheng <shiming.cheng@mediatek.com>, 
- willemb@google.com, 
- edumazet@google.com, 
- davem@davemloft.net, 
- kuba@kernel.org, 
- pabeni@redhat.com, 
- matthias.bgg@gmail.com, 
- linux-kernel@vger.kernel.org, 
- netdev@vger.kernel.org, 
- lena.wang@mediatek.com
-Message-ID: <683a002e73efd_14767f294d6@willemb.c.googlers.com.notmuch>
-In-Reply-To: <20250530183706.GV1484967@horms.kernel.org>
-References: <20250530012622.7888-1-shiming.cheng@mediatek.com>
- <6839a707f1b14_1003de2943b@willemb.c.googlers.com.notmuch>
- <20250530183706.GV1484967@horms.kernel.org>
-Subject: Re: [PATCH net v6] net: fix udp gso skb_segment after pull from
- frag_list
+        d=1e100.net; s=20230601; t=1748631810; x=1749236610;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LWbYSIdO62OOJiQnecBL9sTo7G5vpYkrti7/TBlHzU8=;
+        b=NM3k29u+YgDkBs0XsXG8PUGLwnPp9iQK1RQKXlrJidQ0dJNXMhS/CRdAlM6wW0gy0o
+         S9hHiW//f1Jt/uC5MtmSAjC8RS2oy9Zh0ZvRzZC6IHja5trEkxazPWkMcpFwb/5S2E6c
+         aYWSZeqztB4hsCxb+agPaKmaT9/xnlpdvT3+5RBitTrqpAaVdAD7WgLoItsRCWN3zwdo
+         kLfk8OA1To9Iu0g+lMPSGE7I4TOy6WfEOQHrx+UPlXDkI6CHiwSSKM1oKvPNylXXZYPH
+         CxRzddNEbyFYB7l40D5bBsxHqbAao6qKqWVIm/Yr/OQep9RECQ7Fw6xTAE2OtXR/8nuQ
+         psEg==
+X-Forwarded-Encrypted: i=1; AJvYcCULuoZJQ+AZj8AumO0sVWgj5llKdZV6hbluLpx2Gv4R17l50gZk1Wrfk1h7ydfwIEAA2MNKpHLaXe7Rqm44jA==@vger.kernel.org, AJvYcCUiJYa7XV8ipKrnWlJEczTqoZZHcSsSg6d62HgKxTv1ZDRzRFjQwiA3UJvJaLG40XXiasaGOLldEWIwSjy2@vger.kernel.org, AJvYcCXCfWJ+81JURWNLhMT9Hd90iysBfvhckaXeOOo9x/pf30tCYyt2dgWomZ0fZxqKmsyTBmJhJDwsMaUa@vger.kernel.org, AJvYcCXQmvp4jH3Hvde8GYjkM7JvCaj0yosGlopqwZVuXjxn6GAt5KRx2BJrq6Dswp4XwW5lLtdn4t+IG50f@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZN++owd11BqJeUx39+Pt+/CDGNTh9OrlqVAWLwLIYs1Ar7+vh
+	axyjnXIOGg809dkwBUyfMesVlbUvfujtL+n5pdFkilmcQsC8ZCnucpw+dtWmCMNBOTi08Nrtvyj
+	5qOsCGzysLL5L4nPQqLp/GhUqw0YR+9I=
+X-Gm-Gg: ASbGncts2ul4tsR6ZMZ4X1uHU1F7V9bGHs8UfRaJ9UKKPyVEOW0kRBKeRSiqky3r/ti
+	0uAcaf5lpMBLbf1CcR+aX9x137OyeYJjr0zpdcbwe4iMdaW38HpMLPuDIayyrgXazaydt9y2qZj
+	OKHCICYMfLUsGfcKPJMOhwhqg25jXcKBGt3HzR4ET0EJQMeVpDgRdJLSlAos/V9TmTV8Zw1RXjJ
+	rM=
+X-Google-Smtp-Source: AGHT+IH2zORH2vRySz0CN9TNdgBEf5yVzy1SECE5QTG2S2acXnAdLOUPR0LiQ0ef8xzgUUWbKZrn52sT/HqDiLS85eE=
+X-Received: by 2002:a05:6e02:184e:b0:3dc:7c5d:6372 with SMTP id
+ e9e14a558f8ab-3dd9c9ae2abmr31711735ab.7.1748631810172; Fri, 30 May 2025
+ 12:03:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20250524-tb16-dt-v4-0-2c1e6018d3f0@oldschoolsolutions.biz>
+ <20250524-tb16-dt-v4-5-2c1e6018d3f0@oldschoolsolutions.biz>
+ <g7vlyqma6ow6tdsaqt2rfwvblxqwbqlwmoueio7i4vqvjy76kw@5bz4g33pq4t7>
+ <CAMcHhXoYkQru_0n5siMGGkTcHu8yWRZWfT4ByiD8D0ieZHF+wQ@mail.gmail.com>
+ <vwoixgdyjjzcjlv4muwrzv7wztnqyidtj7ghacgkjg6hgkkyl7@ji53bhiltaef>
+ <CAMcHhXqDFuo+x99KOK0pQFj-FyTdQoZS_JvehNE2AC_JSoQ2gQ@mail.gmail.com>
+ <rvyfkow43atquc64p6slck6lpfsot67v47ngvfnuhxqo222h6k@kdvbsmf3fwsr>
+ <CAF6AEGvr_foMVwaE_VSVWLT50cbGi8i3UGwo2e=rORD-1JmTmA@mail.gmail.com>
+ <152f5150-30b0-400c-9816-13e4710a4156@oss.qualcomm.com> <kbmqr7gjkd72hgorbhbwb7ttvmecfbb6pg72st7zwt5ogxju6p@itycxk6vriy5>
+ <CAF6AEGsTtEA=So1CDhvg8H5+Z-RJ9OnhgSzDoa+zkWSPO3cvnA@mail.gmail.com> <CAO9ioeWk1-dUQYDS1oQNc-QaRu5MG_C=JRx6RPiFE-OQjB7g3g@mail.gmail.com>
+In-Reply-To: <CAO9ioeWk1-dUQYDS1oQNc-QaRu5MG_C=JRx6RPiFE-OQjB7g3g@mail.gmail.com>
+From: Rob Clark <robdclark@gmail.com>
+Date: Fri, 30 May 2025 12:03:18 -0700
+X-Gm-Features: AX0GCFuyrh8MEvD6KG3oIYX8kJg14cADV2Gw-IJWO2LGxnsfrU4hztAz5uwEVuA
+Message-ID: <CAF6AEGtvvu=cBqtYUm1k6+N0L26sRz6nehOmC=5OxxZMvTngog@mail.gmail.com>
+Subject: Re: [PATCH v4 5/5] arm64: dts: qcom: Add Lenovo ThinkBook 16 G7 QOY
+ device tree
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+	Aleksandrs Vinarskis <alex.vinarskis@gmail.com>, jens.glathe@oldschoolsolutions.biz, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Matthias Kaehlcke <mka@chromium.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Douglas Anderson <dianders@chromium.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>, 
+	linux-usb@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Simon Horman wrote:
-> On Fri, May 30, 2025 at 08:39:35AM -0400, Willem de Bruijn wrote:
-> > Shiming Cheng wrote:
-> > > Commit a1e40ac5b5e9 ("net: gso: fix udp gso fraglist segmentation after
-> > > pull from frag_list") detected invalid geometry in frag_list skbs and
-> > > redirects them from skb_segment_list to more robust skb_segment. But some
-> > > packets with modified geometry can also hit bugs in that code. We don't
-> > > know how many such cases exist. Addressing each one by one also requires
-> > > touching the complex skb_segment code, which risks introducing bugs for
-> > > other types of skbs. Instead, linearize all these packets that fail the
-> > > basic invariants on gso fraglist skbs. That is more robust.
-> > > 
-> > > If only part of the fraglist payload is pulled into head_skb, it will
-> > > always cause exception when splitting skbs by skb_segment. For detailed
-> > > call stack information, see below.
-> > > 
-> > > Valid SKB_GSO_FRAGLIST skbs
-> > > - consist of two or more segments
-> > > - the head_skb holds the protocol headers plus first gso_size
-> > > - one or more frag_list skbs hold exactly one segment
-> > > - all but the last must be gso_size
-> > > 
-> > > Optional datapath hooks such as NAT and BPF (bpf_skb_pull_data) can
-> > > modify fraglist skbs, breaking these invariants.
-> > > 
-> > > In extreme cases they pull one part of data into skb linear. For UDP,
-> > > this  causes three payloads with lengths of (11,11,10) bytes were
-> > > pulled tail to become (12,10,10) bytes.
-> > > 
-> > > The skbs no longer meets the above SKB_GSO_FRAGLIST conditions because
-> > > payload was pulled into head_skb, it needs to be linearized before pass
-> > > to regular skb_segment.
-> > > 
-> > >     skb_segment+0xcd0/0xd14
-> > >     __udp_gso_segment+0x334/0x5f4
-> > >     udp4_ufo_fragment+0x118/0x15c
-> > >     inet_gso_segment+0x164/0x338
-> > >     skb_mac_gso_segment+0xc4/0x13c
-> > >     __skb_gso_segment+0xc4/0x124
-> > >     validate_xmit_skb+0x9c/0x2c0
-> > >     validate_xmit_skb_list+0x4c/0x80
-> > >     sch_direct_xmit+0x70/0x404
-> > >     __dev_queue_xmit+0x64c/0xe5c
-> > >     neigh_resolve_output+0x178/0x1c4
-> > >     ip_finish_output2+0x37c/0x47c
-> > >     __ip_finish_output+0x194/0x240
-> > >     ip_finish_output+0x20/0xf4
-> > >     ip_output+0x100/0x1a0
-> > >     NF_HOOK+0xc4/0x16c
-> > >     ip_forward+0x314/0x32c
-> > >     ip_rcv+0x90/0x118
-> > >     __netif_receive_skb+0x74/0x124
-> > >     process_backlog+0xe8/0x1a4
-> > >     __napi_poll+0x5c/0x1f8
-> > >     net_rx_action+0x154/0x314
-> > >     handle_softirqs+0x154/0x4b8
-> > > 
-> > >     [118.376811] [C201134] rxq0_pus: [name:bug&]kernel BUG at net/core/skbuff.c:4278!
-> > >     [118.376829] [C201134] rxq0_pus: [name:traps&]Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
-> > >     [118.470774] [C201134] rxq0_pus: [name:mrdump&]Kernel Offset: 0x178cc00000 from 0xffffffc008000000
-> > >     [118.470810] [C201134] rxq0_pus: [name:mrdump&]PHYS_OFFSET: 0x40000000
-> > >     [118.470827] [C201134] rxq0_pus: [name:mrdump&]pstate: 60400005 (nZCv daif +PAN -UAO)
-> > >     [118.470848] [C201134] rxq0_pus: [name:mrdump&]pc : [0xffffffd79598aefc] skb_segment+0xcd0/0xd14
-> > >     [118.470900] [C201134] rxq0_pus: [name:mrdump&]lr : [0xffffffd79598a5e8] skb_segment+0x3bc/0xd14
-> > >     [118.470928] [C201134] rxq0_pus: [name:mrdump&]sp : ffffffc008013770
-> > > 
-> > > Fixes: a1e40ac5b5e9 ("gso: fix udp gso fraglist segmentation after pull from frag_list")
-> > > Signed-off-by: Shiming Cheng <shiming.cheng@mediatek.com>
+On Wed, May 28, 2025 at 10:42=E2=80=AFAM Dmitry Baryshkov
+<dmitry.baryshkov@oss.qualcomm.com> wrote:
+>
+> On Wed, 28 May 2025 at 19:50, Rob Clark <robdclark@gmail.com> wrote:
+> >
+> > On Tue, May 27, 2025 at 11:18=E2=80=AFAM Dmitry Baryshkov
+> > <dmitry.baryshkov@oss.qualcomm.com> wrote:
+> > >
+> > > On Tue, May 27, 2025 at 12:55:06PM +0200, Konrad Dybcio wrote:
+> > > > On 5/26/25 5:28 PM, Rob Clark wrote:
+> > > > > On Mon, May 26, 2025 at 1:36=E2=80=AFAM Dmitry Baryshkov
+> > > > > <dmitry.baryshkov@oss.qualcomm.com> wrote:
+> > > > >>
+> > > > >> On Sun, May 25, 2025 at 09:43:36PM +0200, Aleksandrs Vinarskis w=
+rote:
+> > > > >>> On Sun, 25 May 2025 at 15:33, Dmitry Baryshkov
+> > > > >>> <dmitry.baryshkov@oss.qualcomm.com> wrote:
+> > > > >>>>
+> > > >
+> > > > [...]
+> > > >
+> > > > >> Yes, please. Don't set okay status for the GPU until it gets ena=
+bled.
+> > > > >
+> > > > > Drive-by: Shouldn't the dtb describe the hw and not the state of =
+the
+> > > > > linux kernel's support for the hw?  Ie. if bad things happen if w=
+e
+> > > > > describe hw which is missing driver support, shouldn't we fix tha=
+t in
+> > > > > the driver.
+> > > > >
+> > > > > (In the case of the GPU there is the slight wrinkle that we don't=
+ have
+> > > > > a gpu-id yet so there is no compatible in the dtb yet.)
+> > > >
+> > > > My two cents are that it's okay to enable it, at least in this case=
+..
+> > >
+> > > That would most likely make display unavailable as DPU driver uses GP=
+U
+> > > as one of the components.
+> >
+> > Hmm, perhaps we should allow the gpu to probe, but just fail to create
+> > priv->gpu, similarly to how we handle missing firmware?
+>
+> Ack from my side. I'd also like to remind you about my split-GPU-from
+> display series.
 
-Reviewed-by: Willem de Bruijn <willemb@google.com>
+True.. although if possible it would be nice to not depend on extra
+non-default config for this scenario.  So I'd prefer to fix it in
+addition to your series, but have been a bit short on time for the
+last few days ;-)
 
-> > 
-> > Is this effectively a repost of v5?
-> > 
-> > I think Simon suggested changing the subject line from starting with
-> > "net:" to starting with "gso:", but this revision does not make such
-> > a change.
-> 
-> FTR, my suggestion was to correct the subject embedded in the Fixes tag.
-> And that appears to be addressed in this revision (v6).
-
-Oh, your comment was on the Fixes tag. I misunderstood. Good catch, thanks.
-
+BR,
+-R
