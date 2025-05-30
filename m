@@ -1,198 +1,108 @@
-Received: from mta20.hihonor.com (mta20.honor.com [81.70.206.69])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A901DA5F;
-	Fri, 30 May 2025 10:41:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.206.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58A6219A81;
+	Fri, 30 May 2025 10:42:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748601662; cv=none; b=izmFJcEuhaz0dti9dFI3ji1InIE6Gy+B+djpp5xfZXEweBGjkF2/qsgF5bG3LlMwyeI2HIgVKd0l027QA95X+/gadQltfAqZGHon3Q2227sljfatRZQc5TSYc36Cvzgo4TnRwa9q2mFhTJd/5hOhaMx3GP972VW5WSH21LnJRUY=
+	t=1748601751; cv=none; b=F7vY3BAbF8c7Ysq2YU1vh4AfU0cbDG8tLRk6Gz/yFx9+3tVghrzxTXyM814c6R2GRiayGF8fkmz8FRLVQzxU7Cxctv62/ROpFN25lkVq/mziBSI7/NLyjB8BOJv8CWG1Wv2lIw/K83AOAKFUOMu8WHNwd8GQaL5OtqqhphewYqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748601662; c=relaxed/simple;
-	bh=RzPnU0Bkpy/sjTHlR6rlb6bBzrtLK8bjYM4mKwg7rIY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WBt49K9oK4qty9vbdI6+UUi7tsrE7WZUa+boatyusRBD3groi0zEqi0gvGBFR/ls4ZfvqxLY6rmBlRO13ES+BrS5nsYdAtSd06yx8IAfqgnDEHHuqjs+XfGmISQ4gHDv96UH923OPCBiKWcDEPuXz4aH1DkTa2GSmOSj+REnz48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.206.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
-Received: from w013.hihonor.com (unknown [10.68.26.19])
-	by mta20.hihonor.com (SkyGuard) with ESMTPS id 4b808G4q3zzYl7DQ;
-	Fri, 30 May 2025 18:38:38 +0800 (CST)
-Received: from a010.hihonor.com (10.68.16.52) by w013.hihonor.com
- (10.68.26.19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 30 May
- 2025 18:40:52 +0800
-Received: from localhost.localdomain (10.144.18.117) by a010.hihonor.com
- (10.68.16.52) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 30 May
- 2025 18:40:52 +0800
-From: wangtao <tao.wangtao@honor.com>
-To: <sumit.semwal@linaro.org>, <christian.koenig@amd.com>,
-	<kraxel@redhat.com>, <vivek.kasireddy@intel.com>, <viro@zeniv.linux.org.uk>,
-	<brauner@kernel.org>, <hughd@google.com>, <akpm@linux-foundation.org>,
-	<amir73il@gmail.com>
-CC: <benjamin.gaignard@collabora.com>, <Brian.Starkey@arm.com>,
-	<jstultz@google.com>, <tjmercier@google.com>, <jack@suse.cz>,
-	<baolin.wang@linux.alibaba.com>, <linux-media@vger.kernel.org>,
-	<dri-devel@lists.freedesktop.org>, <linaro-mm-sig@lists.linaro.org>,
-	<linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <bintian.wang@honor.com>, <yipengxiang@honor.com>,
-	<liulu.liu@honor.com>, <feng.han@honor.com>, wangtao <tao.wangtao@honor.com>
-Subject: [PATCH v3 4/4] dmabuf:system_heap Implement system_heap exporter's rw_file callback.
-Date: Fri, 30 May 2025 18:39:41 +0800
-Message-ID: <20250530103941.11092-5-tao.wangtao@honor.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250530103941.11092-1-tao.wangtao@honor.com>
-References: <20250530103941.11092-1-tao.wangtao@honor.com>
+	s=arc-20240116; t=1748601751; c=relaxed/simple;
+	bh=uc61bsBJSLGuSuh9Jcrbv8/TNMNS1gczvGk3TJaNKSA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=L3kbY40x+dd1qN3kHw/pKgaICZlvV2DWf73ALsrBsLbsaomiWFk1FoyXivsKaFynQ17rIv5uPX0IYRwMvKAAmjYvotLzeDk6ilmk9+hIKXc+79QCfaoQxJjFaKFr5Aa+UBCWxm/8c0MU6L0CaDM67l+G4Bro+cXtuKJ1kGGTtSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rq4V1QOh; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rq4V1QOh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C47C8C4CEE9;
+	Fri, 30 May 2025 10:42:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748601751;
+	bh=uc61bsBJSLGuSuh9Jcrbv8/TNMNS1gczvGk3TJaNKSA=;
+	h=From:Date:Subject:To:Cc:From;
+	b=rq4V1QOhTFtu6WYvLhUsG4RxERkCFeqYCg1yzNMacBFLYgbKut/Hpr1fVYXZWusjy
+	 Lihv8O25Fb7DRQz8mKUGKJ1qu3Xu4sg4n4TbV6Z1Reft1XFDnT1CfllK6lP4gGtV16
+	 Ard1kh+GT8jLC2JWle2GOwbZVJM2ypt5Hr6UkLi5oHVonJ+RWwMwQjy2IFh/I/N0DA
+	 65Tl57WneQqrzXuxEDQYVMVY4SE+UBdM+uQF1NNSLv3fw1VBO3i1dduuvMxZYRVZ+n
+	 4ZOfkfV9N7o+x2Wfr5p+GdyDVhPW+ZIPsb/VjcSA+TUOAw68TZgBhJ/IvND5odIpqX
+	 EoTPM15UbjcLw==
+From: Mark Brown <broonie@kernel.org>
+Date: Fri, 30 May 2025 11:42:25 +0100
+Subject: [PATCH v2] selftests/filesystems: Fix build of anon_inode_test
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: w011.hihonor.com (10.68.20.122) To a010.hihonor.com
- (10.68.16.52)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250530-selftests-anon-inode-build-v2-1-74c47eeeacd1@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAJCLOWgC/33NQQ6CMBCF4auQWTumUwUaV97DsECZwkTSmg4SD
+ eHuVhK3Lv+3+N4CyklY4VQskHgWlRhy2F0Bt6ENPaN0ucEaW5qSKlQe/cQ6KbYhBpQQO8brU8Y
+ OjanZmord0VrIwCOxl9eGX5rcg+gU03v7mum7/lj3j50JCWti7x25A1XufOcUeNzH1EOzrusHo
+ LFb4sUAAAA=
+X-Change-ID: 20250516-selftests-anon-inode-build-007e206e8422
+To: Linus Torvalds <torvalds@linux-foundation.org>, 
+ Shuah Khan <shuah@kernel.org>, Christian Brauner <brauner@kernel.org>, 
+ Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>
+Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1744; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=uc61bsBJSLGuSuh9Jcrbv8/TNMNS1gczvGk3TJaNKSA=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoOYuUux6srIgAg/623R/aOfehkFPP2EL4N0FOZ
+ 74Oi/rgEGmJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaDmLlAAKCRAk1otyXVSH
+ 0HQAB/9rYJWf4VDl17XhI9ebWXABeXt2NIdwSKBY56ows9Bej4mHqLFLjqwGnGejTB94xQlX7k/
+ +e2spX4/BRSYiLNBG1JBBdMcDXM6VM/Nrdw+bAJBwcwlj4yT+JFQQQMZP69iFCM0g1TOfMavnpx
+ mh0EnkQ9X5KrKnmUgXO5q7jLTDnDL4mLW5ybrUXEH+naQO3Zpy1vCpbym0N5bazhspQj3XKuXhB
+ PEgpaBRTUfeh7m2o6v7VOXDwUfxblnRB69lkP2SHWgx/AZlgOC1Sd9Nh2BSinsK7EYDnQLUlQhu
+ T1TkFrd/WrFueGryrNCA07GfZWBvEs0eII2p32Frgj7mrPKo
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-First verify system_heap exporter has exclusive dmabuf access.
-Build bio_vec from sgtable, then invoke target file's r/w callbacks for IO.
-Outperforms buffer IO mmap/read by 250%, beats direct I/O udmabuf
-copy_file_range by over 30% with initialization time significantly lower
-than udmabuf.
+The newly added anon_inode_test test fails to build due to attempting to
+include a nonexisting overlayfs/wrapper.h:
 
-Test data:
-|    32x32MB Read 1024MB  |Creat-ms|Close-ms|  I/O-ms|I/O-MB/s| I/O%
-|-------------------------|--------|--------|--------|--------|-----
-| 1)Beg  dmabuf buffer R/W|     47 |      5 |   1125 |    954 | 100%
-| 2)    udmabuf buffer R/W|    576 |    323 |   1228 |    874 |  91%
-| 3) udma+memfd buffer R/W|    596 |    340 |   2166 |    495 |  51%
-| 4) udma+memfd direct R/W|    570 |    338 |    711 |   1510 | 158%
-| 5)  udmabuf buffer c_f_r|    578 |    329 |   1128 |    952 |  99%
-| 6)  udmabuf direct c_f_r|    570 |    324 |    405 |   2651 | 277%
-| 7)   dmabuf buffer c_f_r|     47 |      5 |   1035 |   1037 | 108%
-| 8)   dmabuf direct c_f_r|     51 |      5 |    309 |   3480 | 364%
-| 9)End  dmabuf buffer R/W|     48 |      5 |   1153 |    931 |  97%
+anon_inode_test.c:10:10: fatal error: overlayfs/wrappers.h: No such file or directory
+   10 | #include "overlayfs/wrappers.h"
+      |          ^~~~~~~~~~~~~~~~~~~~~~
 
-|    32x32MB Write 1024MB |Creat-ms|Close-ms|  I/O-ms|I/O-MB/s| I/O%
-|-------------------------|--------|--------|--------|--------|-----
-| 1)Beg  dmabuf buffer R/W|     50 |      5 |   1405 |    764 | 100%
-| 2)    udmabuf buffer R/W|    580 |    341 |   1337 |    803 | 105%
-| 3) udma+memfd buffer R/W|    588 |    331 |   1820 |    590 |  77%
-| 4) udma+memfd direct R/W|    585 |    333 |    662 |   1622 | 212%
-| 5)  udmabuf buffer c_f_r|    577 |    329 |   1326 |    810 | 106%
-| 6)  udmabuf direct c_f_r|    580 |    330 |    602 |   1784 | 233%
-| 7)   dmabuf buffer c_f_r|     49 |      5 |   1330 |    807 | 105%
-| 8)   dmabuf direct c_f_r|     49 |      5 |    344 |   3127 | 409%
-| 9)End  dmabuf buffer R/W|     50 |      5 |   1442 |    745 |  97%
+This is due to 0bd92b9fe538 ("selftests/filesystems: move wrapper.h out
+of overlayfs subdir") which was added in the vfs-6.16.selftests branch
+which was based on -rc5 and did not contain the newly added test so once
+things were merged into mainline the build started failing - both
+parent commits are fine.
 
-Signed-off-by: wangtao <tao.wangtao@honor.com>
+Fixes: 3e406741b1989 ("Merge tag 'vfs-6.16-rc1.selftests' of git://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs")
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/dma-buf/heaps/system_heap.c | 79 +++++++++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
+Changes in v2:
+- Rebase onto mainline and adjust fixes commit now the two branches got
+  merged there.
+- Link to v1: https://lore.kernel.org/r/20250518-selftests-anon-inode-build-v1-1-71eff8183168@kernel.org
+---
+ tools/testing/selftests/filesystems/anon_inode_test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma-buf/heaps/system_heap.c b/drivers/dma-buf/heaps/system_heap.c
-index 26d5dc89ea16..d3a1956ebad8 100644
---- a/drivers/dma-buf/heaps/system_heap.c
-+++ b/drivers/dma-buf/heaps/system_heap.c
-@@ -20,6 +20,9 @@
- #include <linux/scatterlist.h>
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
-+#include <linux/bvec.h>
-+#include <linux/bio.h>
-+#include <linux/uio.h>
+diff --git a/tools/testing/selftests/filesystems/anon_inode_test.c b/tools/testing/selftests/filesystems/anon_inode_test.c
+index e8e0ef1460d2..73e0a4d4fb2f 100644
+--- a/tools/testing/selftests/filesystems/anon_inode_test.c
++++ b/tools/testing/selftests/filesystems/anon_inode_test.c
+@@ -7,7 +7,7 @@
+ #include <sys/stat.h>
  
- static struct dma_heap *sys_heap;
+ #include "../kselftest_harness.h"
+-#include "overlayfs/wrappers.h"
++#include "wrappers.h"
  
-@@ -281,6 +284,81 @@ static void system_heap_vunmap(struct dma_buf *dmabuf, struct iosys_map *map)
- 	iosys_map_clear(map);
- }
- 
-+static ssize_t system_heap_buffer_rw_other(struct system_heap_buffer *buffer,
-+			loff_t my_pos, struct file *other, loff_t pos,
-+			size_t count, bool is_write)
-+{
-+	struct sg_table *sgt = &buffer->sg_table;
-+	struct scatterlist *sg;
-+	loff_t my_end = my_pos + count, bv_beg, bv_end = 0;
-+	pgoff_t pg_idx = my_pos / PAGE_SIZE;
-+	pgoff_t pg_end = DIV_ROUND_UP(my_end, PAGE_SIZE);
-+	size_t i, bv_off, bv_len, bv_num, bv_idx = 0, bv_total = 0;
-+	struct bio_vec *bvec;
-+	struct kiocb kiocb;
-+	struct iov_iter iter;
-+	unsigned int direction = is_write ? ITER_SOURCE : ITER_DEST;
-+	ssize_t ret = 0, rw_total = 0;
-+
-+	bv_num = min_t(size_t, pg_end - pg_idx + 1, 1024);
-+	bvec = kvcalloc(bv_num, sizeof(*bvec), GFP_KERNEL);
-+	if (!bvec)
-+		return -ENOMEM;
-+
-+	init_sync_kiocb(&kiocb, other);
-+	kiocb.ki_pos = pos;
-+
-+	for_each_sg(sgt->sgl, sg, sgt->nents, i) {
-+		if (my_pos >= my_end)
-+			break;
-+		bv_beg = bv_end;
-+		bv_end += sg->length;
-+		if (bv_end <= my_pos)
-+			continue;
-+
-+		bv_len = min(bv_end, my_end) - my_pos;
-+		bv_off = sg->offset + my_pos - bv_beg;
-+		my_pos += bv_len;
-+		bv_total += bv_len;
-+		bvec_set_page(&bvec[bv_idx], sg_page(sg), bv_len, bv_off);
-+		if (++bv_idx < bv_num && my_pos < my_end)
-+			continue;
-+
-+		/* start R/W if bvec is full or count reaches zero. */
-+		iov_iter_bvec(&iter, direction, bvec, bv_idx, bv_total);
-+		if (is_write)
-+			ret = other->f_op->write_iter(&kiocb, &iter);
-+		else
-+			ret = other->f_op->read_iter(&kiocb, &iter);
-+		if (ret <= 0)
-+			break;
-+		rw_total += ret;
-+		if (ret < bv_total || fatal_signal_pending(current))
-+			break;
-+
-+		bv_idx = bv_total = 0;
-+	}
-+	kvfree(bvec);
-+
-+	return rw_total > 0 ? rw_total : ret;
-+}
-+
-+static ssize_t system_heap_dma_buf_rw_file(struct dma_buf *dmabuf,
-+			loff_t my_pos, struct file *file, loff_t pos,
-+			size_t count, bool is_write)
-+{
-+	struct system_heap_buffer *buffer = dmabuf->priv;
-+	ssize_t ret = -EBUSY;
-+
-+	mutex_lock(&buffer->lock);
-+	if (list_empty(&buffer->attachments) && !buffer->vmap_cnt)
-+		ret = system_heap_buffer_rw_other(buffer, my_pos,
-+			file, pos, count, is_write);
-+	mutex_unlock(&buffer->lock);
-+
-+	return ret;
-+}
-+
- static void system_heap_dma_buf_release(struct dma_buf *dmabuf)
+ TEST(anon_inode_no_chown)
  {
- 	struct system_heap_buffer *buffer = dmabuf->priv;
-@@ -308,6 +386,7 @@ static const struct dma_buf_ops system_heap_buf_ops = {
- 	.mmap = system_heap_mmap,
- 	.vmap = system_heap_vmap,
- 	.vunmap = system_heap_vunmap,
-+	.rw_file = system_heap_dma_buf_rw_file,
- 	.release = system_heap_dma_buf_release,
- };
- 
+
+---
+base-commit: f66bc387efbee59978e076ce9bf123ac353b389c
+change-id: 20250516-selftests-anon-inode-build-007e206e8422
+
+Best regards,
 -- 
-2.17.1
+Mark Brown <broonie@kernel.org>
 
