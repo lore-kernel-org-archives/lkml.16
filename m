@@ -1,109 +1,209 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30FA2853E2;
-	Fri, 30 May 2025 22:42:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D3C1AC891
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 22:47:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748644973; cv=none; b=oTjQ0ztaae4g2zV9RsH2efAk26DJ6f0ClTr3BT2XU4dmHpvN6LuDoJlitPa2d38hf72Yb0nCcsP34at0z0Sc3OjnlUkfp68oQLq7GDU2V7wPqzteCLtZHRJx85NlvRxryP2sPAjFe+ehSVEdYn5EzcCe71mRssQWJFFvFSiUrz8=
+	t=1748645244; cv=none; b=j2r1a/ph2u+/w9oFtIDaDMPdE1jkqCCT7C5gmWchALRQpO/tvyYMcAR741Xk2NAc/cESQkr1tco9fw+E1Rnpe/gaE7jn2R/whRAM4pnvR0HUI03lrBYzjIjXBBAx2GaAIFlVygJ7i9+jreSIQdFPGH2HCgNQB2XiY1BNYHINyAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748644973; c=relaxed/simple;
-	bh=B/iHNMvw8mF0JmcbV/Ww2Zu1GyyER0SInWNMF1ybJBs=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=pRDITXUwEAi14Z3Ysgz4szrHwX48xGpUGPC3MuHXC1vW3zyr+YrfnmMppt0nA0wV75uIQG31svdeVEisxMk1IUzMonOSvsKpS7X0xk2tkLacc8NzkqPj8dDQpH4dI740xxh8lf7ckrJb3CVFXW7Y91i59MQoEL+CWP67b9dK/o4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=cUql0G7M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748645244; c=relaxed/simple;
+	bh=HHG2788MAfzLv6FpNbSS2PT5GiBzIy9/XDiczvd4Vls=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Z3PrQoY+ApDvkhDPCpkHv9aIayaClF/7eUjl79U3WTUKbEaFGnBAiLy6m3ns8bQJYDMef+f9qQ6dtwud0NNsFFojY1OlYc5OSiRoEuPTjeBgEB8Is6f07mwzwT+YnHAbB8ALr46aQSnL3KOwxbewTF6Mjp7ptxypebIRxSTFqEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l1FWsg4t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="cUql0G7M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A865BC4CEE9;
-	Fri, 30 May 2025 22:42:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1748644972;
-	bh=B/iHNMvw8mF0JmcbV/Ww2Zu1GyyER0SInWNMF1ybJBs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=cUql0G7MM2YqNN/UBvnnZgBT5VGYfWKe1XBDEBCJVTML/dklTuCOChratyStM1z3r
-	 NJGXoD/xMliKV8+qGZt/n12lWHmh43UX9/OjWVD4xk4/ASqHI1bHx3hR+6ehcrgJ/t
-	 CSb9wxzn0ZeI/U2uCsz/KkL5wFRvOwr+0ymJ1WYM=
-Date: Fri, 30 May 2025 15:42:50 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Bo Li <libo.gcs85@bytedance.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, luto@kernel.org,
- kees@kernel.org, david@redhat.com, juri.lelli@redhat.com,
- vincent.guittot@linaro.org, peterz@infradead.org, dietmar.eggemann@arm.com,
- hpa@zytor.com, acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com,
- viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
- rppt@kernel.org, surenb@google.com, mhocko@suse.com, rostedt@goodmis.org,
- bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, jannh@google.com,
- pfalcato@suse.de, riel@surriel.com, harry.yoo@oracle.com,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- duanxiongchun@bytedance.com, yinhongbo@bytedance.com,
- dengliang.1214@bytedance.com, xieyongji@bytedance.com,
- chaiwen.cc@bytedance.com, songmuchun@bytedance.com, yuanzhu@bytedance.com,
- chengguozhu@bytedance.com, sunjiadong.lff@bytedance.com
-Subject: Re: [RFC v2 00/35] optimize cost of inter-process communication
-Message-Id: <20250530154250.15caab4e3991de779aabe02c@linux-foundation.org>
-In-Reply-To: <cover.1748594840.git.libo.gcs85@bytedance.com>
-References: <cover.1748594840.git.libo.gcs85@bytedance.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l1FWsg4t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99F3DC4CEFD
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 22:47:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748645243;
+	bh=HHG2788MAfzLv6FpNbSS2PT5GiBzIy9/XDiczvd4Vls=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=l1FWsg4tKRnT/+vxnW+s7WAje5WmMWUZwWWJwgmrze6OL8JCQRd2AsEPi0qy/q2RC
+	 ieMtxazaCgd4f/seXGhloWLSUi32DKh51gLbujFVpLiJvM7oq6upiGJ/KbjEisTHDV
+	 aECAHKirIPKQsJS9/FCXcZup+dlv+HZfaw4bcLnrRUO3s3etaFvwaLB+kjgQVbHjRb
+	 +2Xd1vQFTbNTGUO3RsGNPnvKCR4ONlY89hqqi6zfKGesSGGNg3Mk9vWC9cA1uiHUCS
+	 ERtmBtxatMMKGmI1uSuOSkByb3uO5OxQA1ApDrEEYesHc6w1iQtVqh/SBDAbh3PLA2
+	 0ykWFNEWnpAwQ==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-605b9488c28so3751a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 15:47:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXWgICizCba3MvWchZi9LCnKQdrLnDJtVlOFb5c8U5mDdFwfOxoeWfNNY7S1qsxSmZL8z9qTbGLnPIxJcM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPcaoa4kdJ7oEUVc+vAW5TCZuUDrzhM51PmZZ06Ymh3UjljOUI
+	oNBWjOCmDzK62f+MuyADXtLWB/sjhJxSQDzMWRAKa29dv8ucWSv5qYcVZhWHdkkcISj56gQArJp
+	f97TSltrH0FhwGG6EJQAGG86Sx8k57gW1aYKo4rdu
+X-Google-Smtp-Source: AGHT+IFYxnUR608wUuerbDE05DFFV1ug2zC4oLVRvqWuBJ5505E/XEYgfXCYPZcgaF6AS2m1jiZPgriYTwhKBizbrzM=
+X-Received: by 2002:a05:6402:268c:b0:5fa:f7ed:f19c with SMTP id
+ 4fb4d7f45d1cf-6057c1a98f4mr3487149a12.4.1748645241501; Fri, 30 May 2025
+ 15:47:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+References: <20250528215037.2081066-1-bboscaccy@linux.microsoft.com>
+ <CACYkzJ5oJASZ43B531gY8mESqAF3WYFKez-H5vKxnk8r48Ouxg@mail.gmail.com>
+ <87iklhn6ed.fsf@microsoft.com> <CACYkzJ75JXUM_C2og+JNtBat5psrEzjsgcV+b74FwrNaDF68nA@mail.gmail.com>
+ <87ecw5n3tz.fsf@microsoft.com> <CACYkzJ4ondubPHDF8HL-sseVQo7AtJ2uo=twqhqLWaE3zJ=jEA@mail.gmail.com>
+ <878qmdn39e.fsf@microsoft.com>
+In-Reply-To: <878qmdn39e.fsf@microsoft.com>
+From: KP Singh <kpsingh@kernel.org>
+Date: Sat, 31 May 2025 00:47:10 +0200
+X-Gmail-Original-Message-ID: <CACYkzJ6ChW6GeG8CJiUR6w-Nu3U2OYednXgCYJmp6N5FysLc2w@mail.gmail.com>
+X-Gm-Features: AX0GCFvje4fvKUf4y96Q3VqXMLTB0Y_ktvXyo16G-5-1AcLf8dXPpXsGOmvMgcg
+Message-ID: <CACYkzJ6ChW6GeG8CJiUR6w-Nu3U2OYednXgCYJmp6N5FysLc2w@mail.gmail.com>
+Subject: Re: [PATCH 0/3] BPF signature verification
+To: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
+Cc: Paul Moore <paul@paul-moore.com>, jarkko@kernel.org, zeffron@riotgames.com, 
+	xiyou.wangcong@gmail.com, kysrinivasan@gmail.com, code@tyhicks.com, 
+	linux-security-module@vger.kernel.org, roberto.sassu@huawei.com, 
+	James.Bottomley@hansenpartnership.com, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, David Howells <dhowells@redhat.com>, Lukas Wunner <lukas@wunner.de>, 
+	Ignat Korchagin <ignat@cloudflare.com>, Quentin Monnet <qmo@kernel.org>, 
+	Jason Xing <kerneljasonxing@gmail.com>, Willem de Bruijn <willemb@google.com>, 
+	Anton Protopopov <aspsk@isovalent.com>, Jordan Rome <linux@jordanrome.com>, 
+	Martin Kelly <martin.kelly@crowdstrike.com>, Alan Maguire <alan.maguire@oracle.com>, 
+	Matteo Croce <teknoraver@meta.com>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	keyrings@vger.kernel.org, linux-crypto@vger.kernel.org, kys@microsoft.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 30 May 2025 17:27:28 +0800 Bo Li <libo.gcs85@bytedance.com> wrote:
+On Sat, May 31, 2025 at 12:27=E2=80=AFAM Blaise Boscaccy
+<bboscaccy@linux.microsoft.com> wrote:
+>
+> KP Singh <kpsingh@kernel.org> writes:
+>
+> > On Sat, May 31, 2025 at 12:14=E2=80=AFAM Blaise Boscaccy
+> > <bboscaccy@linux.microsoft.com> wrote:
+> >>
+> >> KP Singh <kpsingh@kernel.org> writes:
+> >>
+> >> > On Fri, May 30, 2025 at 11:19=E2=80=AFPM Blaise Boscaccy
+> >> > <bboscaccy@linux.microsoft.com> wrote:
+> >> >>
+> >> >> KP Singh <kpsingh@kernel.org> writes:
+> >> >>
+> >> >
+> >> > [...]
+> >> >
+> >> >> >
+> >> >>
+> >> >> And that isn't at odds with the kernel being able to do it nor is i=
+t
+> >> >> with what I posted.
+> >> >>
+> >> >> > If your build environment that signs the BPF program is compromis=
+ed
+> >> >> > and can inject arbitrary code, then signing does not help.  Can y=
+ou
+> >> >> > explain what a supply chain attack would look like here?
+> >> >> >
+> >> >>
+> >> >> Most people here can read C code. The number of people that can rea=
+d
+> >> >> ebpf assembly metaprogramming code is much smaller. Compromising cl=
+ang
+> >> >> is one thing, compromising libbpf is another. Your proposal increas=
+es
+> >> >> the attack surface with no observable benefit. If I was going to le=
+ave a
+> >> >> hard-to-find backdoor into ring0, gen.c would be a fun place to exp=
+lore
+> >> >> doing it. Module and UEFI signature verification code doesn't live
+> >> >> inside of GCC or Clang as set of meta-instructions that get emitted=
+, and
+> >> >> there are very good reasons for that.
+> >> >>
+> >> >> Further, since the signature verification code is unique for each a=
+nd
+> >> >> every program it needs to be verified/proved/tested for each and ev=
+ery
+> >> >> program. Additionally, since all these checks are being forced outs=
+ide
+> >> >> of the kernel proper, with the insistence of keeping the LSM layer =
+in
+> >> >> the dark of the ultimate result, the only way to test that a progra=
+m
+> >> >> will fail if the map is corrupted is to physically corrupt each and
+> >> >> every program and test that individually. That isn't "elegant" nor =
+"user
+> >> >> friendly" in any way, shape or form.
+> >> >>
+> >> >> >> subsystem.  Additionally, it is impossible to verify the code
+> >> >> >> performing the signature verification, as it is uniquely regener=
+ated
+> >> >> >
+> >> >> > The LSM needs to ensure that it allows trusted LOADER programs i.=
+e.
+> >> >> > with signatures and potentially trusted signed user-space binarie=
+s
+> >> >> > with unsigned or delegated signing (this will be needed for Ciliu=
+m and
+> >> >> > bpftrace that dynamically generate BPF programs), that's a more
+> >> >> > important aspect of the LSM policy from a BPF perspective.
+> >> >> >
+> >> >>
+> >> >> I would like to be able to sign my programs please and have the ker=
+nel
+> >> >> verify it was done correctly. Why are you insisting that I *don't* =
+do
+> >> >> that?  I'm yet to see any technical objection to doing that. Do you=
+ have
+> >> >> one that you'd like to share at this point?
+> >> >
+> >> > The kernel allows a trusted loader that's signed with your private
+> >> > key, that runs in the kernel context to delegate the verification.
+> >> > This pattern of a trusted / delegated loader is going to be required
+> >> > for many of the BPF use-cases that are out there (Cilium, bpftrace)
+> >> > that dynamically generate eBPF programs.
+> >> >
+> >> > The technical objection is that:
+> >> >
+> >> > * It does not align with most BPF use-cases out there as most
+> >> > use-cases need a trusted loader.
+> >>
+> >> No, it's definitely a use case. It's trivial to support both a trusted
+> >> loader and a signature over the hash chain of supplied assets.
+> >>
+> >> > * Locks us into a UAPI, whereas a signed LOADER allows us to
+> >> > incrementally build signing for all use-cases without compromising t=
+he
+> >> > security properties.
+> >> >
+> >>
+> >> Your proposal locks us into a UAPI as well. There is no way to make to
+> >> do this via UAPI without making a UAPI design choice.
+> >>
+> >> > BPF's philosophy is that of flexibility and not locking the users in=
+to
+> >> > a rigid in-kernel implementation and UAPI.
+> >> >
+> >>
+> >> Then why are you locking us into a rigid
+> >> only-signing-the-loader-is-allowed implementation?
+> >
+> > I explained this before, the delegated / trusted loader is needed by
+> > many BPF use-cases. A UAPI is forever, thus the lock-in.
+> >
+>
+> Again, I'm not following. What is technically wrong with supporting both
+> signing a loader only and allowing for the signature of multiple
+> passed-in assets? It's trivial to support both and any path forward will
+> force a UAPI lock-in.
+>
+> Do you simply feel that it isn't a valid use case and therefore we
+> shouldn't be allowed to do it?
+>
 
-> During testing, the client transmitted 1 million 32-byte messages, and we
-> computed the per-message average latency. The results are as follows:
-> 
-> *****************
-> Without RPAL: Message length: 32 bytes, Total TSC cycles: 19616222534,
->  Message count: 1000000, Average latency: 19616 cycles
-> With RPAL: Message length: 32 bytes, Total TSC cycles: 1703459326,
->  Message count: 1000000, Average latency: 1703 cycles
-> *****************
-> 
-> These results confirm that RPAL delivers substantial latency improvements
-> over the current epoll implementation—achieving a 17,913-cycle reduction
-> (an ~91.3% improvement) for 32-byte messages.
+I am saying both are not needed when one (trusted loader) handles all
+cases. You are writing / generating the loader anyways, you have the
+private key, the only thing to be done is add a few lines to the
+loader to verify an embedded hash.
 
-Noted ;)
-
-Quick question:
-
->  arch/x86/Kbuild                               |    2 +
->  arch/x86/Kconfig                              |    2 +
->  arch/x86/entry/entry_64.S                     |  160 ++
->  arch/x86/events/amd/core.c                    |   14 +
->  arch/x86/include/asm/pgtable.h                |   25 +
->  arch/x86/include/asm/pgtable_types.h          |   11 +
->  arch/x86/include/asm/tlbflush.h               |   10 +
->  arch/x86/kernel/asm-offsets.c                 |    3 +
->  arch/x86/kernel/cpu/common.c                  |    8 +-
->  arch/x86/kernel/fpu/core.c                    |    8 +-
->  arch/x86/kernel/nmi.c                         |   20 +
->  arch/x86/kernel/process.c                     |   25 +-
->  arch/x86/kernel/process_64.c                  |  118 +
->  arch/x86/mm/fault.c                           |  271 ++
->  arch/x86/mm/mmap.c                            |   10 +
->  arch/x86/mm/tlb.c                             |  172 ++
->  arch/x86/rpal/Kconfig                         |   21 +
->  arch/x86/rpal/Makefile                        |    6 +
->  arch/x86/rpal/core.c                          |  477 ++++
->  arch/x86/rpal/internal.h                      |   69 +
->  arch/x86/rpal/mm.c                            |  426 +++
->  arch/x86/rpal/pku.c                           |  196 ++
->  arch/x86/rpal/proc.c                          |  279 ++
->  arch/x86/rpal/service.c                       |  776 ++++++
->  arch/x86/rpal/thread.c                        |  313 +++
-
-The changes are very x86-heavy.  Is that a necessary thing?  Would
-another architecture need to implement a similar amount to enable RPAL?
-IOW, how much of the above could be made arch-neutral?
+Let's have this discussion in the patch series, much easier to discuss
+with the code.
