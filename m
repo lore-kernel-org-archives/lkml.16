@@ -1,41 +1,25 @@
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8188221C19B
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:06:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4390113A244;
+	Fri, 30 May 2025 09:07:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748595981; cv=none; b=lpkVnH/vFQoygixp6RsLQC1LXxe0h86wSSLnXLK1K1xvyn+k7rQC0ISjibZOBYWwKSruK2gNNQGOrUBfYVomlYyBQXsMAm0ERrPWGKt0j9OK7SQI07htqePVERRPv8wTXVcX7FbYGyIJG6F89lyOWGbenGbhi6pgTV5IwlYfTWM=
+	t=1748596037; cv=none; b=FIfEnRUZ/ZNszRGrouF3gR3Ktv/sokYwZrEbdTJBJz0EeifzsRK7lVm6o1iKezItWyBp1gGpCV8fGZWco5cJvps3RO1we1h4oaohc8iBlGrnLKN7+j5wkx0PR0DAtX0yqIX9hQRCbEamq+2nItDl/qBkZi5g++xH0temu3eaPP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748595981; c=relaxed/simple;
-	bh=bxQMzxNhia+6ZXQDuN6obyd0azK05G5bLOSYlyomuSo=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=WJfpEFxuCPx+c4q8ktkbM8eNQ8xRxHozFcpXkUseew+L0cvs438Nri/gQ37J6kJkt2nbYoV1bkk81px7WZunnaNDfJvVVIOYMv8ivoAJTQ6wJDT4BLeqJ4cKDuLP6SBKmgPH7VbV7lv6YOZEeS1lyEthb4zEuVQ6YFlLTTtc+iA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-philosophy.net; spf=pass smtp.mailfrom=bit-philosophy.net; dkim=pass (2048-bit key) header.d=bit-philosophy.net header.i=@bit-philosophy.net header.b=pN5urq9Y; arc=none smtp.client-ip=194.63.252.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-philosophy.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bit-philosophy.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bit-philosophy.net header.i=@bit-philosophy.net header.b="pN5urq9Y"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=bit-philosophy.net; s=ds202411; h=Content-Transfer-Encoding:Content-Type:
-	Subject:From:To:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=e5XPgjVWWMJIYR8N9QzQ5DcnNAdQRMECJP8Vjil3Mm4=; b=pN5urq9YXjiR7iDjM4cCgcNAVx
-	mFwkCS/qbCjhCn3Y/QVjrF2aZG2AFOb0ULm+AfLJz93kMJuygliQk9dMYrrpjPO10QzWJM+a61JmH
-	lr0UJQGCpESTETU37nD5PDEzW0YjFqb/aZZN4OCrcXX2KQHywmt2rT0XgnMwP2lSHwho9QOL14QBe
-	rQsBWVfEsWpBzyNALpsBbS9Gg3rTcLGT55jDwMumPSt+xc9hDH41npVVAg7uleWVaSG7SIPZLp4zR
-	E5CZGpftAiJOUlls2MgoVWygZGNk9wAbXpmfDg0HNiif2e8hIB41aX65qqxRWeZrSuhMIzSLIImwL
-	opKUygEw==;
-Received: from smtp
-	by smtp.domeneshop.no with esmtpsa (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	id 1uKuH2-00Elno-Sz
-	for linux-kernel@vger.kernel.org;
-	Fri, 30 May 2025 09:35:28 +0200
-Message-ID: <1b80772e-6308-4bb7-9112-4be6a43d9b3f@bit-philosophy.net>
-Date: Fri, 30 May 2025 09:35:29 +0200
+	s=arc-20240116; t=1748596037; c=relaxed/simple;
+	bh=iViSuV0R+rv+QTUVkg89jRMRkjWH+ao1h5/HuE8kknI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ednUkCryZrhHxj7Qc9gyWS3buzvPa/6ioQs07MXASkP7ZyvY8X/8jnMJTii98a2bF3uEcocoBUZZGS53by/p3k+stjZz0OaQYPzETKIvkF4aVFsH74BzKWL4lHzDUe1fES9Q0I3U6AqsK0JEtvNetNAa4dtV6DmO+JgfOojkFp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2882016F2;
+	Fri, 30 May 2025 02:06:58 -0700 (PDT)
+Received: from [10.57.95.14] (unknown [10.57.95.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BFAAD3F5A1;
+	Fri, 30 May 2025 02:07:12 -0700 (PDT)
+Message-ID: <00999fc3-3a4a-4ee5-8021-81c73253fe7f@arm.com>
+Date: Fri, 30 May 2025 10:07:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,34 +27,78 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: linux-kernel@vger.kernel.org
-From: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <budi@bit-philosophy.net>
-Subject: A Note On Wayland (was Fair Pay Philosophy, Low Jitter)
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH 0/2] fix MADV_COLLAPSE issue if THP settings are disabled
+Content-Language: en-GB
+To: David Hildenbrand <david@redhat.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
+ hughd@google.com, Liam.Howlett@oracle.com, npache@redhat.com,
+ dev.jain@arm.com, ziy@nvidia.com, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1748506520.git.baolin.wang@linux.alibaba.com>
+ <05d60e72-3113-41f0-b81f-225397f06c81@arm.com>
+ <f3dad5b5-143d-4896-b315-38e1d7bb1248@redhat.com>
+ <ade3bdb7-7103-4ecd-bce2-7768a0d729ef@lucifer.local>
+ <9c920642-228b-4eb0-920a-269473ea824e@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <9c920642-228b-4eb0-920a-269473ea824e@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-A note on Wayland. It seems to be X, through "Satan".
+On 30/05/2025 09:52, David Hildenbrand wrote:
+> On 30.05.25 10:47, Lorenzo Stoakes wrote:
+>> On Fri, May 30, 2025 at 10:44:36AM +0200, David Hildenbrand wrote:
+>>> On 30.05.25 10:04, Ryan Roberts wrote:
+>>>> On 29/05/2025 09:23, Baolin Wang wrote:
+>>>>> As we discussed in the previous thread [1], the MADV_COLLAPSE will ignore
+>>>>> the system-wide anon/shmem THP sysfs settings, which means that even though
+>>>>> we have disabled the anon/shmem THP configuration, MADV_COLLAPSE will still
+>>>>> attempt to collapse into a anon/shmem THP. This violates the rule we have
+>>>>> agreed upon: never means never. This patch set will address this issue.
+>>>>
+>>>> This is a drive-by comment from me without having the previous context, but...
+>>>>
+>>>> Surely MADV_COLLAPSE *should* ignore the THP sysfs settings? It's a deliberate
+>>>> user-initiated, synchonous request to use huge pages for a range of memory.
+>>>> There is nothing *transparent* about it, it just happens to be implemented
+>>>> using
+>>>> the same logic that THP uses.
+>>>>
+>>>> I always thought this was a deliberate design decision.
+>>>
+>>> If the admin said "never", then why should a user be able to overwrite that?
+>>>
+>>> The design decision I recall is that if VM_NOHUGEPAGE is set, we'll ignore
+>>> that. Because that was set by the app itself (MADV_NOHUEPAGE).
+>>>
+>>
+>> I'm with David on this one.
+>>
+>> I think it's principal of least surprise - to me 'never' is pretty
+>> emphatic, and keep in mind the other choices are 'always' and...  'madvise'
+>> :) which explicitly is 'hey only do this if madvise tells you to'.
 
-That seems to be a bit of a problem, that some think a thing like that 
-is needed.
+I think it's a bit reductive to suggest that enabled=madvise means all madvise
+calls though. I don't think anyone would suggest MADV_DONTNEED should be ignored
+if enabled=never. MADV_COLLAPSE just happens to be implemented on top of the THP
+logic. But it's a different feature in my view.
 
-I rather prefer a 1:1 reality naming. The background philosophy I do, 
-supports that.
+>>
+>> I'd be rather surprised if I hadn't set madvise and a user uses madvise to
+>> in some fashion override the never.
+>>
+>> I mean I think we all agree this interface is to use a technical term -
+>> crap - and we need something a lot more fine-grained and smart, 
 
-X is actually that, symbolcorrect.
+Yes agreed there!
 
-"Ya" also changes naming, for instance Bitstream OS, would be "Mandrake 
-OS", there.
+>> but I think
+>> given the situation we're in we should make it at least as least surprising
+>> as possible.
 
-Here one needs to take a philosophical standpoint.
+> 
+> Yes. If you configure "never" you are supposed to suffer, consistently.
+> 
 
-My research is at: https://bit-philosophy.net/
-
-(with full support for Obes and all relevant science, instead of Lamb 
-Churches.)
-
-Light!,
-Ywe Cærlyn,
-Budi (iMAM)
-Bitstream OS.
+OK fair enough. Just giving my 2 cents.
 
