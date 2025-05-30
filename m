@@ -1,132 +1,274 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60EBA279337
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 18:50:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 843EC277032;
+	Fri, 30 May 2025 18:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748631014; cv=none; b=JiEiYVd/tg2+d4AFasEcN1WejQ60EDZK/axn5gr0XMHLlNMoNYZLElOAPr+O2EsnYHevdkEz2ryEntM5IuWWwMwLt33LEfu7bR4CQQmYjyU4eIy/mFvUJXIkkpLO85MuXnTDPxv150oH8+kVzvslRght+04GEYAn/lKgr6D46wU=
+	t=1748631030; cv=none; b=aIddKXtpcJhT2HL6HBEFzAe8s7OtDaauiv76Ve2+vmhxgS6qbqK4TzWWGzBPDOI6Z4SW2QffYuQnr/WcQ+XKebJBvqiKdGG/J0XWO0RD5JBFX8rc9TlVkmRtqFplOHTlyCllCgWwk+FHG4TyEH7m8pDuyfrDA/Gz+KB1Gr3qW7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748631014; c=relaxed/simple;
-	bh=D1P2hjUoye3he0La/a+iQ8GuVBH89z9c8PtYeykiOpQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bMmlG6NrslvUVes6YE+zEgvPNuujijGDSkr9tGEjDDrDF7cMzXgiirUnGbX3MsKLcE6CXw6y6cxIiAsaAPNfk++eqdtYyJHytc56f2OYU1b+q+A4y8Xf731Rj9unVRFCIyPxi1rNnK+IkDQWf0BPhEXcLY2u8X0SlT5vOra8i8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=edgeble.ai; spf=none smtp.mailfrom=edgeble.ai; dkim=pass (2048-bit key) header.d=edgeble-ai.20230601.gappssmtp.com header.i=@edgeble-ai.20230601.gappssmtp.com header.b=o3r7N3Ld; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=edgeble.ai
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=edgeble.ai
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=edgeble-ai.20230601.gappssmtp.com header.i=@edgeble-ai.20230601.gappssmtp.com header.b="o3r7N3Ld"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2349282084bso30187185ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 11:50:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=edgeble-ai.20230601.gappssmtp.com; s=20230601; t=1748631012; x=1749235812; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=CX8RVGcjNGfza1J+8Y/TBJXjjM61IDQf7sORQ0CRlUE=;
-        b=o3r7N3LdxZb+mP2Gi74J071rrydJRzZ+Pb9zspL7Kt8x0zrmQxM+TjOg3IzLGD/Ilz
-         I9QlyrEcW1Gk1nJ+zPUnzYkWa2KDfhDcUtN5HG0Ecy1/ncvas1i2OX+rBns/e+uZ7a7O
-         4ZjXRvxqly4y5z452RmDlkKSjHrXGlEENaQy4Z1Ei4CHWKSBVWoZnddG8tvU/7EmL/D4
-         wzu+Ke39byEHVqJSIky7j8FjKC0+Zsy6ZGEqYeowS0g2ahqv7unAIilzTtq9JQ23mj5/
-         AL94ioEfGZKMoTwgPM4/h/yVuhMCQhpOTWSOKjHRjGO38FkJjZmSv9BDBYQ55rbyOo+t
-         7tLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748631012; x=1749235812;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CX8RVGcjNGfza1J+8Y/TBJXjjM61IDQf7sORQ0CRlUE=;
-        b=gFzrmFLLorkhsCAOvkWqT/4K+R0JQOQHXLi0WIVeQscRXTF+CiLIQq4l2ohd58Y9x1
-         AJ5LpBEOMGN8/xu46hkB5QJV8gNYhzeMA6PoQv6aKjltPVCaQ+SpIhY7wr8igcFcdNAN
-         m9u8UDeAZinLOUCLlCuuWJw9JBIBRFQzawhWZ/jH7uA35wMuAMwnCu3PEp9NfIZodYCA
-         s5zLtymaeJaWEV1jhOkK8o6Gs4OZBBqxIUdUMxjBdXgc8oYk5fSSu8zOWQkxwabO3/Aj
-         1NYrTZfzF9+XFDcrwYRv5QaLP1EEWsq1SBOBtXMD62/xHEKUxTKzZSzekFoabfakuvj6
-         +Oaw==
-X-Forwarded-Encrypted: i=1; AJvYcCXsDY0Am6CVK9llxLiHR8NNfbNOZgMbNtFkIMdLFmRsIfRm6Gh+5HqOTHNaK1WM5pFidMc13VsfCoqHpkw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0GAEiMg3URqEpwip47agZSIazsxRhEW3AHostAqdmzkfMQC6Q
-	dLz4ZWHsFB0jiRH1yZBjrYAKB5M5z/gX7FfRc+it+eSkz+zPikiXb9Ul/uzLWdqUbhMVNxKS6vS
-	SceZqevuYbXIndAiVLxqmyU0eNEh8SSP8swsrOTP2UA==
-X-Gm-Gg: ASbGncvK/fauZwjAhec9rScyuoq2K5hxQM3gUylDlRLkeGLa1Uj1j+1ZKkNuU99WNSC
-	XU9a67WfFfhNasa3vB4jBJRANhCZm5rSygrSZKWCVxs+HmVZrTXdOzb6J65MT8axsaiIPuWj7Oa
-	GGAV0i+k4AHdEb9D0GWs3hVFLRE4Ox0BeMOABg4h1Dow==
-X-Google-Smtp-Source: AGHT+IFy6gculqd6TMBrN0rYJWssXVz6+60yi4DzoSheepAu+OoDDguVK86eUKc83jB1uCOQJbumvqYQqLIeYGr+pL0=
-X-Received: by 2002:a17:903:1b6c:b0:234:ba37:87b6 with SMTP id
- d9443c01a7336-23528ef7833mr65464395ad.17.1748631012585; Fri, 30 May 2025
- 11:50:12 -0700 (PDT)
+	s=arc-20240116; t=1748631030; c=relaxed/simple;
+	bh=MdwIl4EQeRjVnOgLv1c9KkHZGR/XGGH2xz3WYu6RX34=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hTwyqHqwrRZq3b/gJdUxAwovE5MyPEPS5zP3RJeZix56zC60rLnAmlCsJr4NJkF5TdXE1P97P2pl2gcOasa13YQbP9sAzj6dzhyLlKj5VZiLH5IrVB2jTevvvpdCXNFWvjFg+8Ihk3PdBCq8PPGza12CvzaDRkTmdtqWCRTX60k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timmermann.space; spf=pass smtp.mailfrom=timmermann.space; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timmermann.space
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timmermann.space
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4b8Bv34lCCz9t5w;
+	Fri, 30 May 2025 20:42:55 +0200 (CEST)
+From: Lukas Timmermann <linux@timmermann.space>
+To: lee@kernel.org,
+	pavel@kernel.org
+Cc: linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lukas Timmermann <lukas@timmermann.space>
+Subject: [PATCH 1/2] leds: as3668: Driver for the ams Osram 4-channel i2c LED driver
+Date: Fri, 30 May 2025 20:42:21 +0200
+Message-ID: <20250530184219.78085-5-linux@timmermann.space>
+In-Reply-To: <20250530184219.78085-3-linux@timmermann.space>
+References: <20250530184219.78085-3-linux@timmermann.space>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250519-6-10-rocket-v4-0-d6dff6b4c0ae@tomeuvizoso.net>
-In-Reply-To: <20250519-6-10-rocket-v4-0-d6dff6b4c0ae@tomeuvizoso.net>
-From: Jagan Teki <jagan@edgeble.ai>
-Date: Sat, 31 May 2025 00:20:00 +0530
-X-Gm-Features: AX0GCFvkNnwtQ--V1GCDW4BcbIzs35k_zL3RhgmHKFDsjekxRIDXrFhtYRu24lI
-Message-ID: <CA+VMnFzisyMFzze52RRf6=Gstq29jmukrPSfqXfBWrVw0a7k1Q@mail.gmail.com>
-Subject: Re: [PATCH v4 00/10] New DRM accel driver for Rockchip's RKNN NPU
-To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Oded Gabbay <ogabbay@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Sebastian Reichel <sebastian.reichel@collabora.com>, 
-	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, Jeff Hugo <jeff.hugo@oss.qualcomm.com>, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
-	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 4b8Bv34lCCz9t5w
 
-On Mon, 19 May 2025 at 19:14, Tomeu Vizoso <tomeu@tomeuvizoso.net> wrote:
->
-> This series adds a new driver for the NPU that Rockchip includes in its
-> newer SoCs, developed by them on the NVDLA base.
->
-> In its current form, it supports the specific NPU in the RK3588 SoC.
->
-> The userspace driver is part of Mesa and an initial draft can be found at:
->
-> https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/29698
->
-> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-> ---
-> Changes in v4:
-> - Several fixes to DT bindings.
-> - Link to v3: https://lore.kernel.org/r/20250516-6-10-rocket-v3-0-7051ac9225db@tomeuvizoso.net
->
-> Changes in v3:
-> - Reference in the device tree only the register blocks that are
->   actually used.
-> - Several style and robustness fixes suggested in the mailing list.
-> - Added patches from Nicolas Frattaroli that add support to the NPU for
->   the Rock 5B board.
-> - Link to v2: https://lore.kernel.org/r/20250225-6-10-rocket-v2-0-d4dbcfafc141@tomeuvizoso.net
->
-> Changes in v2:
-> - Drop patch adding the rk3588 compatible to rockchip-iommu (Sebastian Reichel)
-> - Drop patch adding support for multiple power domains to rockchip-iommu (Sebastian Reichel)
-> - Link to v1: https://lore.kernel.org/r/20240612-6-10-rocket-v1-0-060e48eea250@tomeuvizoso.net
->
-> ---
-> Nicolas Frattaroli (2):
->       arm64: dts: rockchip: add pd_npu label for RK3588 power domains
->       arm64: dts: rockchip: enable NPU on ROCK 5B
->
-> Tomeu Vizoso (8):
->       dt-bindings: npu: rockchip,rknn: Add bindings
->       arm64: dts: rockchip: Add nodes for NPU and its MMU to rk3588s
->       arm64: dts: rockchip: Enable the NPU on quartzpro64
->       accel/rocket: Add registers header
->       accel/rocket: Add a new driver for Rockchip's NPU
->       accel/rocket: Add IOCTL for BO creation
->       accel/rocket: Add job submission IOCTL
->       accel/rocket: Add IOCTLs for synchronizing memory accesses
+From: Lukas Timmermann <lukas@timmermann.space>
 
-Can this be possible to infer yolov8/10? Do we need to convert PT/ONNX
-to any other common format's unlike rknn?
+Document Osram as3668 LED driver devicetree
+bindings.
 
-Thanks,
-Jagan.
+---
+ drivers/leds/Kconfig       |  10 +++
+ drivers/leds/Makefile      |   1 +
+ drivers/leds/leds-as3668.c | 178 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 189 insertions(+)
+ create mode 100644 drivers/leds/leds-as3668.c
+
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index a104cbb0a001..56477c170f0a 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -100,6 +100,16 @@ config LEDS_ARIEL
+ 
+ 	  Say Y to if your machine is a Dell Wyse 3020 thin client.
+ 
++config LEDS_AS3668
++	tristate "LED support for AMS AS3668"
++	depends on LEDS_CLASS
++	depends on I2C
++	help
++		This option enables support for the AMS AS3668 LED controller.
++
++		To compile this driver as a module, choose M here: the module
++		will be called leds-as3668.
++
+ config LEDS_AW200XX
+ 	tristate "LED support for Awinic AW20036/AW20054/AW20072/AW20108"
+ 	depends on LEDS_CLASS
+diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+index 2f170d69dcbf..983811384fec 100644
+--- a/drivers/leds/Makefile
++++ b/drivers/leds/Makefile
+@@ -14,6 +14,7 @@ obj-$(CONFIG_LEDS_ADP5520)		+= leds-adp5520.o
+ obj-$(CONFIG_LEDS_AN30259A)		+= leds-an30259a.o
+ obj-$(CONFIG_LEDS_APU)			+= leds-apu.o
+ obj-$(CONFIG_LEDS_ARIEL)		+= leds-ariel.o
++obj-$(CONFIG_LEDS_AS3668)		+= leds-as3668.o
+ obj-$(CONFIG_LEDS_AW200XX)		+= leds-aw200xx.o
+ obj-$(CONFIG_LEDS_AW2013)		+= leds-aw2013.o
+ obj-$(CONFIG_LEDS_BCM6328)		+= leds-bcm6328.o
+diff --git a/drivers/leds/leds-as3668.c b/drivers/leds/leds-as3668.c
+new file mode 100644
+index 000000000000..f9448c12d170
+--- /dev/null
++++ b/drivers/leds/leds-as3668.c
+@@ -0,0 +1,178 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ *  Osram AMS AS3668 LED Driver IC
++ *
++ *  Copyright (C) 2025 Lukas Timmermann <linux@timmermann.space>
++ */
++
++#include <linux/i2c.h>
++#include <linux/leds.h>
++#include <linux/module.h>
++#include <linux/uleds.h>
++
++#define AS3668_MAX_LEDS 4
++
++/* Chip Registers */
++#define AS3668_CHIP_ID1 0x3e
++#define AS3668_CHIP_ID2 0x3f
++
++#define AS3668_CHIP_ID2_SERIAL_MASK GENMASK(7, 4)
++#define AS3668_CHIP_ID2_REV_MASK GENMASK(3, 0)
++
++#define AS3668_CURRX_CONTROL 0x01
++#define AS3668_CURR1 0x02
++#define AS3668_CURR2 0x03
++#define AS3668_CURR3 0x04
++#define AS3668_CURR4 0x05
++
++/* Constants */
++#define AS3668_CHIP_IDENT 0xa5
++#define AS3668_CHIP_REV1 0x01
++
++struct as3668_led {
++	struct led_classdev cdev;
++	struct as3668 *chip;
++	struct fwnode_handle *fwnode;
++
++	int num;
++};
++
++struct as3668 {
++	struct i2c_client *client;
++	struct as3668_led leds[AS3668_MAX_LEDS];
++};
++
++static int as3668_read_value(struct i2c_client *client, u8 reg)
++{
++	return i2c_smbus_read_byte_data(client, reg);
++}
++
++static int as3668_write_value(struct i2c_client *client, u8 reg, u8 value)
++{
++	return i2c_smbus_write_byte_data(client, reg, value);
++}
++
++static enum led_brightness as3668_brightness_get(struct led_classdev *cdev)
++{
++	struct as3668_led *led = container_of(cdev, struct as3668_led, cdev);
++
++	return as3668_read_value(led->chip->client, AS3668_CURR1 + led->num);
++}
++
++static void as3668_brightness_set(struct led_classdev *cdev, enum led_brightness brightness)
++{
++	struct as3668_led *led = container_of(cdev, struct as3668_led, cdev);
++
++	as3668_write_value(led->chip->client, AS3668_CURR1 + led->num, brightness);
++}
++
++static int as3668_dt_init(struct as3668 *as3668)
++{
++	struct device *dev = &as3668->client->dev;
++	struct as3668_led *led;
++	struct led_init_data init_data = {};
++	int err;
++	int i = 0;
++
++	for_each_available_child_of_node_scoped(dev_of_node(dev), child) {
++		of_property_read_u8(child, "reg", &i);
++
++		if (i < 0 || i > AS3668_MAX_LEDS)
++			return dev_err_probe(dev, -EOPNOTSUPP, "Unsupported led reg %d\n", i);
++
++		led = &as3668->leds[i];
++		led->fwnode = of_fwnode_handle(child);
++
++		led->num = i;
++		led->chip = as3668;
++
++		led->cdev.max_brightness = U8_MAX;
++		led->cdev.brightness_get = as3668_brightness_get;
++		led->cdev.brightness_set = as3668_brightness_set;
++
++		init_data.fwnode = led->fwnode;
++		init_data.default_label = ":";
++
++		err = devm_led_classdev_register_ext(dev, &led->cdev, &init_data);
++		if (err)
++			return dev_err_probe(dev, err, "Failed to register %d LED\n", i);
++	}
++
++	return 0;
++}
++
++static int as3668_probe(struct i2c_client *client)
++{
++	u8 chip_id1, chip_id2, chip_serial, chip_rev;
++	struct as3668 *as3668;
++
++	/* Check for sensible i2c address */
++	if (client->addr != 0x42)
++		return dev_err_probe(&client->dev, -EFAULT, "Unexpected address for as3668 device\n");
++
++	/* Read identifier from chip */
++	chip_id1 = as3668_read_value(client, AS3668_CHIP_ID1);
++
++	if (chip_id1 != AS3668_CHIP_IDENT)
++		return dev_err_probe(&client->dev, -ENODEV, "Chip reported wrong id: 0x%tx\n", chip_id1);
++
++	/* Check the revision*/
++	chip_id2 = as3668_read_value(client, AS3668_CHIP_ID2);
++	chip_serial = FIELD_GET(AS3668_CHIP_ID2_SERIAL_MASK, chip_id2);
++	chip_rev = FIELD_GET(AS3668_CHIP_ID2_REV_MASK, chip_id2);
++
++	if (chip_rev != AS3668_CHIP_REV1)
++		dev_warn(&client->dev, "Unexpected chip revision\n");
++
++	/* Print out information about the chip */
++	dev_dbg(&client->dev, "chip_id: 0x%tx | chip_id2: 0x%tx | chip_serial: 0x%tx | chip_rev: 0x%tx\n", chip_id1, chip_id2, chip_serial, chip_rev);
++
++	as3668 = devm_kzalloc(&client->dev, struct_size(as3668, leds, 4), GFP_KERNEL);
++	as3668->client = client;
++
++	as3668_dt_init(as3668);
++
++	/* Initialize the chip */
++	as3668_write_value(client, AS3668_CURRX_CONTROL, 0x55);
++	as3668_write_value(client, AS3668_CURR1, 0x00);
++	as3668_write_value(client, AS3668_CURR2, 0x00);
++	as3668_write_value(client, AS3668_CURR3, 0x00);
++	as3668_write_value(client, AS3668_CURR4, 0x00);
++
++	return 0;
++}
++
++static void as3668_remove(struct i2c_client *client)
++{
++	as3668_write_value(client, AS3668_CURRX_CONTROL, 0x0);
++}
++
++static const struct i2c_device_id as3668_idtable[] = {
++	{"as3668"},
++	{}
++};
++
++MODULE_DEVICE_TABLE(i2c, as3668_idtable);
++
++static const struct of_device_id as3668_match_table[] = {
++	{.compatible = "ams,as3668"},
++	{}
++};
++
++MODULE_DEVICE_TABLE(of, as3668_match_table);
++
++static struct i2c_driver as3668_driver = {
++	.driver = {
++		.name           = "leds_as3668",
++		.of_match_table = as3668_match_table,
++	},
++	.probe          = as3668_probe,
++	.remove         = as3668_remove,
++	.id_table       = as3668_idtable,
++};
++
++module_i2c_driver(as3668_driver);
++
++MODULE_AUTHOR("Lukas Timmermann <linux@timmermann.space>");
++MODULE_DESCRIPTION("AS3668 LED driver");
++MODULE_LICENSE("GPL");
+-- 
+2.49.0
+
