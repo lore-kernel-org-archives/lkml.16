@@ -1,63 +1,63 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CDBF238142;
-	Fri, 30 May 2025 16:59:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C0223645F;
+	Fri, 30 May 2025 16:59:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748624363; cv=none; b=l1fuG51aSnzXz6G2PaAlSyiOhmM0iTPSlGP5ysyydwqDVPoqGwbqnirPug2SXSCyU0X9+iHM8o986lLsB0lTXVUTfKdi1ss85h9J1bXPUF4SfcMqv2gZQ/sVlSNua6fxbZIiMsm2y6gbtQSDI75rJukE6+U+ROpXRY7q1NznVBY=
+	t=1748624364; cv=none; b=FlzNS4AgCm1mBvQcrJXf4mXnDVjyrYstuwNrn0+SvFaI6R0b0aBI0GLw8JMURv5rVl3Q/v7MXelbhiEnGroGOkSriSNEDJ6todRkOvOVPhGqVKtZebYm0c/odHRqYcf3wr3Qx8KmTSWFBWSllvMiZVfmZF5GPuuwF6f7C1bDAfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748624363; c=relaxed/simple;
-	bh=Bw8iZTWu8MTaLwyx4ObP0Hf862JZMPN0gK2muh1bNns=;
+	s=arc-20240116; t=1748624364; c=relaxed/simple;
+	bh=FGuxDfWFnOxoU7A4nX6tM3l+aZHqPOhc3350TQiuBlU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iVQtwEMDN5N3D/dz1WJMwSroWitWRkayQ/o+mHTs9Pqqm16bUJrjlq22GWulhtqTVRsypZfzoxUPrTXsDtlOVXKGfFOR+QAW7mU5dJ3aQfmRI+B+55CN4pUGyco7rl91mz1aTxL2jMOiXN4PLXJgejJn9EzRg5ZhfbSzl0DT4gQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RYMcHvYe; arc=none smtp.client-ip=209.85.128.43
+	 MIME-Version; b=OWNkcEjbnunctXhLvdx6YNQFOYvaJ8WmxvItWorCd0ewRWoEYJTBYDknpla39q1+oRR+zjNMPfOW3+IsYoP952YxpLn2qW4NNesh5rb0fRJxdyGsd/fTXdPTzLH7qIxM3COOY2E55NUWp6NcbEis8k6c/pP7VGSrpPiDB2mvIok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lXBKuuaW; arc=none smtp.client-ip=209.85.128.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RYMcHvYe"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-450cfb79177so11050785e9.0;
-        Fri, 30 May 2025 09:59:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lXBKuuaW"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso15409275e9.3;
+        Fri, 30 May 2025 09:59:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748624358; x=1749229158; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748624361; x=1749229161; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=I3L+RIQYCMNrklB64jsd6geUHslrVR/KKInWrov1lsI=;
-        b=RYMcHvYe4MGDQy65Y7BEytXRpwYQf7QC//6oahBsMe563nEJz0+WKhCidpH8Mf0nCx
-         8BZ/DIxPYb6Oa4GOjhalcqj3/Rkl+oe/OsdrIv3q6LcCUNF2WUMkrK4P3djk38TQMlns
-         sU+lIF3aTkGjXAGdHWeDCy5Ub0Jzd3Eu1dTtsKHl+s9CpkkrSp7DzWoFWZVcAPDfK8FE
-         DxtdxYtmFZ0/iVYUYPxMrQGuqVZxcPNdQjXtb3jiN7dJT3fA1l9gNU3uT59QMElcEqJ7
-         PXxINSIky1uxXEAmR58OQpRwMqOor1STvsKegVzQ03l/+RHhNJn78G4h/UxLTE060Qxe
-         jzRQ==
+        bh=53a6EE9nbnZeGvbpsTgBtcSF6DIb/DdGkT1QIK8MVG0=;
+        b=lXBKuuaWSOg3zMpl2C6G4auEs+GphNgthYOwMQeb+g75hea01E8UzFngjkvTmqFbg2
+         xqT2N5qx1f6tut3LE/rcabMCZLJfVAO70/WE/7tMMzbOo8WL5+0Rme/lDrW10NagClAj
+         T6irOWRrS2v0xUTEnOZGPzfS2oRbOh1Lw9s3OPysAo0IIt96c0ECcz4OUidojuZVBwMg
+         riZxlfvDScJYlGJRmzEdj+IcrTZCAHAqgq/O1dF3i15jqn5rEov9U2gw88QOem1e04j2
+         ZA1IClXZNK4ekZIhOTnKn51l/p1siOmXXzHOLOQ6uY8plWSx+ZZp4eMIVBUu/vAijCbl
+         3hvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748624358; x=1749229158;
+        d=1e100.net; s=20230601; t=1748624361; x=1749229161;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=I3L+RIQYCMNrklB64jsd6geUHslrVR/KKInWrov1lsI=;
-        b=SUSUQS7MfKzEy0WfJxPeOWwI2S/wpIkVs/ucg2TgZFZtIUybXCAG0z5FVKt6qovH2z
-         qzBJ1ZMXevn8KYqwOXyQczgCoNATequ+fkgJ2vYJm4ub4pCT8Ce7Vck1YDHSNW9XIaye
-         M8TIrjjU1gfHHNF3anVoCEHph8/48CGLP/mmzbYqfvf3CAvVCfaqGkCKngEhmHiJikiY
-         iE+kfecWpRDY+slqV7m1AuYn+1f+PfVFvWZAMmLwqW7aNOPdLuDcvyfLeUnk8jfThry/
-         kw0IxmQ1EtUMTDTFCa6y/EAThha5m46r9cjxy7x3okWBBHcU1eBmJ42HNobSVRt31qzR
-         5Z5A==
-X-Forwarded-Encrypted: i=1; AJvYcCUb17VODXU5U09tAtFaKGc9vNDZib0259P5F/vF9lfD3gOmAZZ6nIro8hC9+ylf3idCnKfaLP2BKTI59pc6@vger.kernel.org, AJvYcCXJXLJ5oKBAjRNXuXhNiJJj4ZCcU6upRc2YLQDyiDFKiXGrArDrhs5VEoj209yZSbxlYhYIrSpigfv022brm5/TXIE=@vger.kernel.org, AJvYcCXeLnVsEGcsz4KJCXWz8A24ZlW9Em0Vv3DVBlFy75bR5sli2fQyRyd22KgbGqaTnLkKTK0bI4emp6lD@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzm4tGYt9/D/A9vDl6XYS5lDdNL9S/GBpC81Po8gKoXoHBSBuXM
-	lU1YjHaI2d5Ocwu8QaH/kQ7fdPaYAWj7XPPyV9C7s2ZoSJUBeAw6IhWx
-X-Gm-Gg: ASbGncshzAyvyjNM7zK7fK3pOGFSPl2JxXmLZwmsb5GHHyP8marlu2LtbYX4I4ssKk8
-	Em64Y1G+tvrHzQoIL8/cwbwLU6YLp8/hwd+UcIIaqd+wO8E2XzpbnoaUucw3FTVt75ItBRY3L+S
-	hk84+UQet/XngxD7kH0PH3zRqwB7mXV9keJo6J/QtCZ+N6/CVTlUzQw0e+dCl4BcCB1kfsWV3BA
-	hJhoZJu6sUMNG7oWGqyEzFcZe0E3VX+yrBUXCx4FdZTua/hcG6/MckFX2ESB6WQDtFfAAUiaWZr
-	haBzSpTz9Qyy+MN9vkNek+xRtxe8fFHm7JPB6iLefjF3FBbghfrW9FqlYXvu2GldyB6IISoGLsk
-	ESqupt1aIsB8j3oPQR0Pr
-X-Google-Smtp-Source: AGHT+IHzh1iAOJwPvcR1JFXJ7Vl6AdbyIp+YhO/RO6sQKIczVAhCjVVCNPw2h/oEmK4cZ16HCgXxiA==
-X-Received: by 2002:a05:6000:40e0:b0:3a4:f41d:6973 with SMTP id ffacd0b85a97d-3a4f89ad29emr2674715f8f.13.1748624358429;
-        Fri, 30 May 2025 09:59:18 -0700 (PDT)
+        bh=53a6EE9nbnZeGvbpsTgBtcSF6DIb/DdGkT1QIK8MVG0=;
+        b=JT8lOW/mEsJCLOWPzjXMitOCqHllcLiGqmlf2Xm3B4xSK6KLDDxczcPQ9xVo5Uqqow
+         lyD/9vme40LvuKtBbVL0z/V2KFCTZBbEvlsXh+YaK3TKKkacwmCPSVPngPaYGdK8+NdE
+         nQDpTYmEbOJYrfqGI++JNVL8covL+E9H/5jxi1d50ybEKEbfa9TWXRvd4eiioQ4Neo7r
+         zdXY/5kIC1/rZubdqSe5w8BxG3a1c3UF/QyTmLYWHibgLx5bG8MdJUwibEBWORCgK4am
+         SlAGmplwbZA0UAws/e5iS+dS6EknPcXGysKwLlhbl6BRAfTA6Xrm64CDb3sNcvIZs5Ga
+         /w3g==
+X-Forwarded-Encrypted: i=1; AJvYcCUHkojswglfH8XLh1I0q2iLgKIDSTFmUNnYs2xG8L+xNgKSviSYkTBnuyU2a11i26V1t7KYWVOK/yfnPH2F3mN9+GA=@vger.kernel.org, AJvYcCVCrw1CamlizF5Z+NWs3UsQGAUxoRltPqCr5QjE/z7rrqWY80sVWTLsDG78p1rX8INufAfmJCSHToMNMEXu@vger.kernel.org, AJvYcCW22fh8VuuPiIRM+QHpxspS/ZZ0kBq3XaagfEZyy9oHyUD4BDpqWXLn6tO6Qq8qECZIlXkPp8i8Ny62@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw92DghkLgLDwaRYbKy+eNqCyOtgvHi0cZ3z2JX7e5NDeFcyVhK
+	lIpZBclMyN4NJc1qpKeXAAQo1T72FrkT4S++b3UDANWljiGE25KlRDgL
+X-Gm-Gg: ASbGncs4yMhlUbUAZr51vTq/QldvwD9JlruN/9u0bXLJjXHaQiwKa7UvgHsIHz5lzlS
+	0+CvW4uBKR0qzuGeRSEz7Yql3n07Zalw5OK2tDkYhg0JlJCWGa9nmQqZ9Fm8BeGk0TMbuAB0L8e
+	d/FSSBIuS4UNFcxOVeyhWjdzh0aud+fSjXcU+LuwtPj6PBujnNiJdbL8fVEcULHYaCcA5msZj0y
+	A02WQrJK0HExs6Epfy+BnwCRAruQxMsJ1Ckp7J/bdYH3GVrqmr4q/lzrXyEluVgUhNMdylQhWdK
+	aR1wSILkMY2WVKa3fYHDEzD9FqQJLKQfx2vFWAoTXfCnr/2PCwBV872QtCEHcWBetduzLeX1eKC
+	RwiAJxfmVxw==
+X-Google-Smtp-Source: AGHT+IFPRhpgt3qPxqJVPfnpBQeTkaN8+oiBWp/bmUKW1jnbX/PcMfMQy4r2p5CTyqNDjyPLfAnvpw==
+X-Received: by 2002:a05:600c:8207:b0:43c:f0ae:da7 with SMTP id 5b1f17b1804b1-450d64c31b3mr39434305e9.7.1748624360971;
+        Fri, 30 May 2025 09:59:20 -0700 (PDT)
 Received: from iku.example.org ([2a06:5906:61b:2d00:bcab:7ec7:2377:13b0])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7f9efa3sm22733455e9.9.2025.05.30.09.59.17
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7f9efa3sm22733455e9.9.2025.05.30.09.59.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 May 2025 09:59:17 -0700 (PDT)
+        Fri, 30 May 2025 09:59:19 -0700 (PDT)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Biju Das <biju.das.jz@bp.renesas.com>,
@@ -80,9 +80,9 @@ Cc: dri-devel@lists.freedesktop.org,
 	Prabhakar <prabhakar.csengg@gmail.com>,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v6 06/12] drm: renesas: rz-du: mipi_dsi: Add OF data support
-Date: Fri, 30 May 2025 17:59:00 +0100
-Message-ID: <20250530165906.411144-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v6 08/12] drm: renesas: rz-du: mipi_dsi: Use mHz for D-PHY frequency calculations
+Date: Fri, 30 May 2025 17:59:02 +0100
+Message-ID: <20250530165906.411144-9-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250530165906.411144-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20250530165906.411144-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -96,209 +96,98 @@ Content-Transfer-Encoding: 8bit
 
 From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-In preparation for adding support for the Renesas RZ/V2H(P) SoC, this patch
-introduces a mechanism to pass SoC-specific information via OF data in the
-DSI driver. This enables the driver to adapt dynamically to various
-SoC-specific requirements without hardcoding configurations.
+Pass the HSFREQ in milli-Hz to the `dphy_init()` callback to improve
+precision, especially for the RZ/V2H(P) SoC, where PLL dividers require
+high accuracy.
 
-The MIPI DSI interface on the RZ/V2H(P) SoC is nearly identical to the one
-on the RZ/G2L SoC. While the LINK registers are shared between the two
-SoCs, the D-PHY registers differ. Also the VCLK range differs on both these
-SoCs. To accommodate these differences `struct rzg2l_mipi_dsi_hw_info` is
-introduced and as now passed as OF data.
-
-These changes lay the groundwork for the upcoming RZ/V2H(P) SoC support by
-allowing SoC-specific data to be passed through OF.
+These changes prepare the driver for upcoming RZ/V2H(P) SoC support.
 
 Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
 Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
 v5->v6:
-- Added min_dclk above max_dclk in rzg2l_mipi_dsi_hw_info
-- Added Reviewed-by tag from Laurent
+- No changes
 
 v4->v5:
-- Dropped RZ_MIPI_DSI_FEATURE_DPHY_RST feature flag
 - Added Reviewed tag from Biju
 
 v3->v4:
-- No changes
+- Used MILLI instead of KILO
+- Made use of mul_u32_u32() for multiplication
 
 v2->v3:
-- Dropped !dsi->info check in rzg2l_mipi_dsi_probe() as it is not needed.
+- Replaced `unsigned long long` with `u64`
+- Replaced *_mhz with *_millihz` in functions
 
 v1->v2:
-- Added DPHY_RST as feature flag
+- No changes
 ---
- .../gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c    | 51 ++++++++++++++-----
- .../drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h   |  2 -
- 2 files changed, 38 insertions(+), 15 deletions(-)
+ drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-index 4d4521a231cb..2c03cad66711 100644
+index 0e0659dfe5a5..fd5d4551f39d 100644
 --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
 +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-@@ -28,10 +28,23 @@
+@@ -31,7 +31,7 @@
+ struct rzg2l_mipi_dsi;
  
- #include "rzg2l_mipi_dsi_regs.h"
+ struct rzg2l_mipi_dsi_hw_info {
+-	int (*dphy_init)(struct rzg2l_mipi_dsi *dsi, unsigned long hsfreq);
++	int (*dphy_init)(struct rzg2l_mipi_dsi *dsi, u64 hsfreq_millihz);
+ 	void (*dphy_exit)(struct rzg2l_mipi_dsi *dsi);
+ 	u32 phy_reg_offset;
+ 	u32 link_reg_offset;
+@@ -200,8 +200,9 @@ static u32 rzg2l_mipi_dsi_link_read(struct rzg2l_mipi_dsi *dsi, u32 reg)
+  */
  
-+struct rzg2l_mipi_dsi;
-+
-+struct rzg2l_mipi_dsi_hw_info {
-+	int (*dphy_init)(struct rzg2l_mipi_dsi *dsi, unsigned long hsfreq);
-+	void (*dphy_exit)(struct rzg2l_mipi_dsi *dsi);
-+	u32 phy_reg_offset;
-+	u32 link_reg_offset;
-+	unsigned long min_dclk;
-+	unsigned long max_dclk;
-+};
-+
- struct rzg2l_mipi_dsi {
- 	struct device *dev;
- 	void __iomem *mmio;
- 
-+	const struct rzg2l_mipi_dsi_hw_info *info;
-+
- 	struct reset_control *rstc;
- 	struct reset_control *arstc;
- 	struct reset_control *prstc;
-@@ -164,22 +177,22 @@ static const struct rzg2l_mipi_dsi_timings rzg2l_mipi_dsi_global_timings[] = {
- 
- static void rzg2l_mipi_dsi_phy_write(struct rzg2l_mipi_dsi *dsi, u32 reg, u32 data)
+ static int rzg2l_mipi_dsi_dphy_init(struct rzg2l_mipi_dsi *dsi,
+-				    unsigned long hsfreq)
++				    u64 hsfreq_millihz)
  {
--	iowrite32(data, dsi->mmio + reg);
-+	iowrite32(data, dsi->mmio + dsi->info->phy_reg_offset + reg);
- }
- 
- static void rzg2l_mipi_dsi_link_write(struct rzg2l_mipi_dsi *dsi, u32 reg, u32 data)
++	unsigned long hsfreq = DIV_ROUND_CLOSEST_ULL(hsfreq_millihz, MILLI);
+ 	const struct rzg2l_mipi_dsi_timings *dphy_timings;
+ 	unsigned int i;
+ 	u32 dphyctrl0;
+@@ -274,6 +275,7 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mipi_dsi *dsi,
+ 				  const struct drm_display_mode *mode)
  {
--	iowrite32(data, dsi->mmio + LINK_REG_OFFSET + reg);
-+	iowrite32(data, dsi->mmio + dsi->info->link_reg_offset + reg);
- }
- 
- static u32 rzg2l_mipi_dsi_phy_read(struct rzg2l_mipi_dsi *dsi, u32 reg)
- {
--	return ioread32(dsi->mmio + reg);
-+	return ioread32(dsi->mmio + dsi->info->phy_reg_offset + reg);
- }
- 
- static u32 rzg2l_mipi_dsi_link_read(struct rzg2l_mipi_dsi *dsi, u32 reg)
- {
--	return ioread32(dsi->mmio + LINK_REG_OFFSET + reg);
-+	return ioread32(dsi->mmio + dsi->info->link_reg_offset + reg);
- }
- 
- /* -----------------------------------------------------------------------------
-@@ -294,7 +307,7 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mipi_dsi *dsi,
+ 	unsigned long hsfreq, vclk_rate;
++	u64 hsfreq_millihz;
+ 	unsigned int bpp;
+ 	u32 txsetr;
+ 	u32 clstptsetr;
+@@ -305,9 +307,9 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mipi_dsi *dsi,
+ 	if (vclk_rate != mode->clock * KILO)
+ 		dev_dbg(dsi->dev, "Requested vclk rate %lu, actual %lu mismatch\n",
  			mode->clock * KILO, vclk_rate);
- 	hsfreq = DIV_ROUND_CLOSEST_ULL(vclk_rate * bpp, dsi->lanes);
+-	hsfreq = DIV_ROUND_CLOSEST_ULL(vclk_rate * bpp, dsi->lanes);
++	hsfreq_millihz = DIV_ROUND_CLOSEST_ULL(mul_u32_u32(vclk_rate, bpp * MILLI), dsi->lanes);
  
--	ret = rzg2l_mipi_dsi_dphy_init(dsi, hsfreq);
-+	ret = dsi->info->dphy_init(dsi, hsfreq);
+-	ret = dsi->info->dphy_init(dsi, hsfreq);
++	ret = dsi->info->dphy_init(dsi, hsfreq_millihz);
  	if (ret < 0)
  		goto err_phy;
  
-@@ -337,7 +350,7 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mipi_dsi *dsi,
- 	return 0;
+@@ -315,6 +317,7 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mipi_dsi *dsi,
+ 	txsetr = TXSETR_DLEN | TXSETR_NUMLANEUSE(dsi->lanes - 1) | TXSETR_CLEN;
+ 	rzg2l_mipi_dsi_link_write(dsi, TXSETR, txsetr);
  
- err_phy:
--	rzg2l_mipi_dsi_dphy_exit(dsi);
-+	dsi->info->dphy_exit(dsi);
- 	pm_runtime_put(dsi->dev);
- 
- 	return ret;
-@@ -345,7 +358,7 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mipi_dsi *dsi,
- 
- static void rzg2l_mipi_dsi_stop(struct rzg2l_mipi_dsi *dsi)
- {
--	rzg2l_mipi_dsi_dphy_exit(dsi);
-+	dsi->info->dphy_exit(dsi);
- 	pm_runtime_put(dsi->dev);
- }
- 
-@@ -588,10 +601,12 @@ rzg2l_mipi_dsi_bridge_mode_valid(struct drm_bridge *bridge,
- 				 const struct drm_display_info *info,
- 				 const struct drm_display_mode *mode)
- {
--	if (mode->clock > 148500)
-+	struct rzg2l_mipi_dsi *dsi = bridge_to_rzg2l_mipi_dsi(bridge);
-+
-+	if (mode->clock > dsi->info->max_dclk)
- 		return MODE_CLOCK_HIGH;
- 
--	if (mode->clock < 5803)
-+	if (mode->clock < dsi->info->min_dclk)
- 		return MODE_CLOCK_LOW;
- 
- 	return MODE_OK;
-@@ -717,6 +732,8 @@ static int rzg2l_mipi_dsi_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, dsi);
- 	dsi->dev = &pdev->dev;
- 
-+	dsi->info = of_device_get_match_data(&pdev->dev);
-+
- 	ret = drm_of_get_data_lanes_count_ep(dsi->dev->of_node, 1, 0, 1, 4);
- 	if (ret < 0)
- 		return dev_err_probe(dsi->dev, ret,
-@@ -760,13 +777,13 @@ static int rzg2l_mipi_dsi_probe(struct platform_device *pdev)
++	hsfreq = DIV_ROUND_CLOSEST_ULL(hsfreq_millihz, MILLI);
+ 	/*
+ 	 * Global timings characteristic depends on high speed Clock Frequency
+ 	 * Currently MIPI DSI-IF just supports maximum FHD@60 with:
+@@ -777,7 +780,7 @@ static int rzg2l_mipi_dsi_probe(struct platform_device *pdev)
  	 * mode->clock and format are not available. So initialize DPHY with
  	 * timing parameters for 80Mbps.
  	 */
--	ret = rzg2l_mipi_dsi_dphy_init(dsi, 80000000);
-+	ret = dsi->info->dphy_init(dsi, 80000000);
+-	ret = dsi->info->dphy_init(dsi, 80000000);
++	ret = dsi->info->dphy_init(dsi, 80000000ULL * MILLI);
  	if (ret < 0)
  		goto err_phy;
  
- 	txsetr = rzg2l_mipi_dsi_link_read(dsi, TXSETR);
- 	dsi->num_data_lanes = min(((txsetr >> 16) & 3) + 1, num_data_lanes);
--	rzg2l_mipi_dsi_dphy_exit(dsi);
-+	dsi->info->dphy_exit(dsi);
- 	pm_runtime_put(dsi->dev);
- 
- 	/* Initialize the DRM bridge. */
-@@ -783,7 +800,7 @@ static int rzg2l_mipi_dsi_probe(struct platform_device *pdev)
- 	return 0;
- 
- err_phy:
--	rzg2l_mipi_dsi_dphy_exit(dsi);
-+	dsi->info->dphy_exit(dsi);
- 	pm_runtime_put(dsi->dev);
- err_pm_disable:
- 	pm_runtime_disable(dsi->dev);
-@@ -798,8 +815,16 @@ static void rzg2l_mipi_dsi_remove(struct platform_device *pdev)
- 	pm_runtime_disable(&pdev->dev);
- }
- 
-+static const struct rzg2l_mipi_dsi_hw_info rzg2l_mipi_dsi_info = {
-+	.dphy_init = rzg2l_mipi_dsi_dphy_init,
-+	.dphy_exit = rzg2l_mipi_dsi_dphy_exit,
-+	.link_reg_offset = 0x10000,
-+	.min_dclk = 5803,
-+	.max_dclk = 148500,
-+};
-+
- static const struct of_device_id rzg2l_mipi_dsi_of_table[] = {
--	{ .compatible = "renesas,rzg2l-mipi-dsi" },
-+	{ .compatible = "renesas,rzg2l-mipi-dsi", .data = &rzg2l_mipi_dsi_info, },
- 	{ /* sentinel */ }
- };
- 
-diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h
-index 1dbc16ec64a4..16efe4dc59f4 100644
---- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h
-+++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h
-@@ -41,8 +41,6 @@
- #define DSIDPHYTIM3_THS_ZERO(x)		((x) << 0)
- 
- /* --------------------------------------------------------*/
--/* Link Registers */
--#define LINK_REG_OFFSET			0x10000
- 
- /* Link Status Register */
- #define LINKSR				0x10
 -- 
 2.49.0
 
