@@ -1,138 +1,129 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A18BF224B0C
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 10:37:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239E21EA7C8;
+	Fri, 30 May 2025 10:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748601464; cv=none; b=cKqE2pGBDK0RtHyYG2QsH2u0VEGNNTcnPO8FKnQHXBMe7iwP0Ek1L9voKvM/6ADDUFfGrzeDAM2kUxWx7e4Nc4UT8lUaadYn/DMw2ZEp124sMc/dtxlT2XiRgnhDg7CqPhKuAfIKASDUMJHuK64p3J2FnNxp0spSVInYhGbXJ08=
+	t=1748601553; cv=none; b=IwTCYAmsRtjnmHSKBYpb2IcHcnVVtdUPzsiBXUREDrcALawuigXnfp996kCoaRdQaVwgJwJVVlC0YNAEYnffG6agaiDNee6uwTXnusngHmgryhqZACUqJo5gBU0VYvtrgQNkQ3c5/VsNSr/FfJt2FcTYAPKB1CGLEc5ytOKXVkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748601464; c=relaxed/simple;
-	bh=1gNL5Rt4d56/QJoGWjP13DkH9mtmDIhFBrROFNoz7BA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GuFTM3eTH80TSKPOnzI0CC9SXd2ilEJVQoLZtwtqFUSwM4fnunqPzvx0AvXKt1S/5jITh0P3nTmPUuBwghZY4MxwrtcOXbstBU71AxsZPXXrgS6ozD+aHWVpyFgdRpAenFE8e77NqhDp/J/ryTkgsr7/aF0IRcExXKjq8J6Yi/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6B8316F2;
-	Fri, 30 May 2025 03:37:25 -0700 (PDT)
-Received: from [10.57.95.14] (unknown [10.57.95.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8E0FB3F673;
-	Fri, 30 May 2025 03:37:39 -0700 (PDT)
-Message-ID: <090440b6-9501-4f29-8b9f-1f6e6f3a6fbc@arm.com>
-Date: Fri, 30 May 2025 11:37:37 +0100
+	s=arc-20240116; t=1748601553; c=relaxed/simple;
+	bh=Cc2l0TKz5YaK8S3redSaC1apH9Fo0cyDOkhqfVmqyV8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L4n1lM1U59PHCwVx8g1XIFdIzh5pcTcFxQQ4dPS22y9WTdCqZMXcBxb52XsJpac0fzi/pc4ZuhSFqFrbD74JT0k0FqfQu600RdOQ3AGZQ8v6OZWHVWjwbZPsS2iop5LmcVr16tvphekjcQ29ZLX5vkR1ZRHZ3PEt18Cn4NYZMDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fBOVtftm; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fBOVtftm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23472C4CEE9;
+	Fri, 30 May 2025 10:39:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748601552;
+	bh=Cc2l0TKz5YaK8S3redSaC1apH9Fo0cyDOkhqfVmqyV8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fBOVtftmYoDSz8Bt5BjQ/uzq726rmBsv5MS2Nm1e5hA45gB8lpcf1jec5FbGK1KoE
+	 b33TNaiQ5KuKgHbj2Wj+1lWNNr5AzT7M8Iv8SM6TuNl0kfxIHKiNcsgcnNg/avAPPq
+	 ClSX2StLLgVvq9R4VOc5JSceZquAd4Y+ek3+FQ/Ikkl3dFAisnW+R1WP4b4ZbLD5Z3
+	 3OQGXYnY/qfZ1XYdfM7oNbLigEu6iMcTvcHGVQJQkXaKEhnj73glkcscBAiqY54RRH
+	 TaC3EYyGMuRwdsXzqjBhHQbQXFElCEp7KUMQ0705zEG735JsEuNcI+i+hwId0D0G15
+	 0C2H5FgovOerw==
+Date: Fri, 30 May 2025 11:39:09 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Shuah Khan <shuah@kernel.org>, Christian Brauner <brauner@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] selftests/filesystems: Fix build of anon_inode_test
+Message-ID: <aDmKzSkIlOAkj_Bq@finisterre.sirena.org.uk>
+References: <20250518-selftests-anon-inode-build-v1-1-71eff8183168@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] Enable huge-vmalloc permission change
-Content-Language: en-GB
-To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org, david@redhat.com,
- catalin.marinas@arm.com, will@kernel.org
-Cc: lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
- rppt@kernel.org, surenb@google.com, mhocko@suse.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, suzuki.poulose@arm.com, steven.price@arm.com,
- gshan@redhat.com, linux-arm-kernel@lists.infradead.org
-References: <20250530090407.19237-1-dev.jain@arm.com>
- <adfe981a-ec9a-4051-a26f-91b691230161@arm.com>
- <381fec11-0e05-4bf0-9cd8-f272fde7558f@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <381fec11-0e05-4bf0-9cd8-f272fde7558f@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="DLuH41Ng1iRNSMtA"
+Content-Disposition: inline
+In-Reply-To: <20250518-selftests-anon-inode-build-v1-1-71eff8183168@kernel.org>
+X-Cookie: Anger is momentary madness.
 
-On 30/05/2025 11:10, Dev Jain wrote:
-> 
-> On 30/05/25 3:33 pm, Ryan Roberts wrote:
->> On 30/05/2025 10:04, Dev Jain wrote:
->>> This series paves the path to enable huge mappings in vmalloc space by
->>> default on arm64. > For this we must ensure that we can handle any permission
->>> games on vmalloc space.
->> And the linear map :)
->>
->>> Currently, __change_memory_common() uses
->>> apply_to_page_range() which does not support changing permissions for
->>> leaf mappings.
->> nit: A "leaf mapping" is the lowest level entry in the page tables for a given
->> address - i.e. it maps an address to some actual memory rather than to another
->> pgtable. It includes what the Arm ARM calls "page mappings" (PTE level) and
->> "block mappings" (PMD/PUD/.. level). apply_to_page_range() does support page
->> mappings, so saying it doesn't support leaf mappings is incorrect. It doesn't
->> support block mappings.
-> 
-> Sorry, again got confused by nomenclature : )
-> 
->>
->>> We attempt to move away from this by using walk_page_range_novma(),
->>> similar to what riscv does right now; however, it is the responsibility
->>> of the caller to ensure that we do not pass a range, or split the range
->>> covering a partial leaf mapping.
->>>
->>> This series is tied with Yang Shi's attempt [1] at using huge mappings
->>> in the linear mapping in case the system supports BBML2, in which case
->>> we will be able to split the linear mapping if needed without break-before-make.
->>> Thus, Yang's series, IIUC, will be one such user of my series; suppose we
->>> are changing permissions on a range of the linear map backed by PMD-hugepages,
->>> then the sequence of operations should look like the following:
->>>
->>> split_range(start, (start + HPAGE_PMD_SIZE) & ~HPAGE_PMD_MASK);
->>> split_range(end & ~HPAGE_PMD_MASK, end);
->> I don't understand what the HPAGE_PMD_MASK twiddling is doing? That's not right.
->> It's going to give you the offset within the 2M region. You just want:
->>
->> split_range(start)
->> split_range(end)
->>
->> right?
-> 
-> Suppose start = 2M + 4K, end = 8M + 5K. Then my sequence will compute to
 
-8M + 5K is not a valid split point. It has to be at least page aligned.
+--DLuH41Ng1iRNSMtA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> split_range(2M + 4K, 3M)
-> split_range(8M, 8M + 5K)
+On Sun, May 18, 2025 at 03:01:34PM +0100, Mark Brown wrote:
+> The anon_inode_test test fails to build due to attempting to include
+> a nonexisting overlayfs/wrapper.h:
+>=20
+> anon_inode_test.c:10:10: fatal error: overlayfs/wrappers.h: No such file =
+or directory
+>    10 | #include "overlayfs/wrappers.h"
+>       |          ^~~~~~~~~~~~~~~~~~~~~~
 
-We just want to split at start and end. What are the 3M and 8M params supposed
-to be? Anyway, this is off-topic for this series.
+This build failure, first reported against -next and which should be
+fixed by this patch, is now present in mainline.
 
-> __change_memory_common(2M + 4K, 8M + 5K)
-> 
-> So now __change_memory_common() wouldn't have to deal with splitting the
-> starts and ends. Please correct me if I am wrong.
-> 
->>
->>> __change_memory_common(start, end);
->>>
->>> However, this series can be used independently of Yang's; since currently
->>> permission games are being played only on pte mappings (due to
->>> apply_to_page_range
->>> not supporting otherwise), this series provides the mechanism for enabling
->>> huge mappings for various kernel mappings like linear map and vmalloc.
->> In other words, you are saying that this series is a prerequisite for Yang's
->> series (and both are prerequisites for huge vmalloc by default). Your series
->> adds a new capability that Yang's series will rely on (the ability to change
->> permissions on block mappings).
-> 
-> That's right.
-> 
->>
->> Thanks,
->> Ryan
->>
->>> [1] https://lore.kernel.org/all/20250304222018.615808-1-
->>> yang@os.amperecomputing.com/
->>>
->>> Dev Jain (3):
->>>    mm: Allow pagewalk without locks
->>>    arm64: pageattr: Use walk_page_range_novma() to change memory
->>>      permissions
->>>    mm/pagewalk: Add pre/post_pte_table callback for lazy MMU on arm64
->>>
->>>   arch/arm64/mm/pageattr.c | 81 +++++++++++++++++++++++++++++++++++++---
->>>   include/linux/pagewalk.h |  4 ++
->>>   mm/pagewalk.c            | 18 +++++++--
->>>   3 files changed, 94 insertions(+), 9 deletions(-)
->>>
+> This is due to 0bd92b9fe538 ("selftests/filesystems: move wrapper.h out
+> of overlayfs subdir") which was added in the vfs-6.16.selftests branch
+> which was based on -rc5 and does not contain the newly added test so
+> once things were merged into vfs.all in the build started failing - both
+> parent commits are fine.
+>=20
+> Fixes: feaa00dbff45a ("Merge branch 'vfs-6.16.selftests' into vfs.all")
 
+I see that the two branches get sent separately to Linus so the merge
+that triggers things is now:
+
+   3e406741b19890 ("Merge tag 'vfs-6.16-rc1.selftests' of git://git.kernel.=
+org/pub/scm/linux/kernel/git/vfs/vfs")
+
+I'll resend with that updated.
+
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
+>  tools/testing/selftests/filesystems/anon_inode_test.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/tools/testing/selftests/filesystems/anon_inode_test.c b/tool=
+s/testing/selftests/filesystems/anon_inode_test.c
+> index e8e0ef1460d2..73e0a4d4fb2f 100644
+> --- a/tools/testing/selftests/filesystems/anon_inode_test.c
+> +++ b/tools/testing/selftests/filesystems/anon_inode_test.c
+> @@ -7,7 +7,7 @@
+>  #include <sys/stat.h>
+> =20
+>  #include "../kselftest_harness.h"
+> -#include "overlayfs/wrappers.h"
+> +#include "wrappers.h"
+> =20
+>  TEST(anon_inode_no_chown)
+>  {
+>=20
+> ---
+> base-commit: feaa00dbff45ad9a0dcd04a92f88c745bf880f55
+> change-id: 20250516-selftests-anon-inode-build-007e206e8422
+>=20
+> Best regards,
+> --=20
+> Mark Brown <broonie@kernel.org>
+>=20
+
+--DLuH41Ng1iRNSMtA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmg5iswACgkQJNaLcl1U
+h9A0ngf/a9bipV7ZRWFfwG/WshIDaw6GGK5V72tmc3qGRudNpzCiAiJ/qrXXJ3k3
+4CDmCgSmRRvNlIiX2JC+tk/0tZVFhLhri+RdUwOo1xx8KSHgJiW82JhZC4pdNk1O
+1n9Fqhk40psqQnMBJX5P5eBgYA9JqyavrXbTDGbQ+N4E/Kg6r99f9ktvFamL06Gt
+biRdnGJiB01Kime1zU3Q/PWz4YYRf291dwcoC+KxIKpG/NwWfUMQhHOfpPsOCSRx
+Se0RNrB5TAScO1DEXjWFjx4fG7MPWf3XjIFu8r5Grv/nxwp2lDfZN1LZsARVl1i6
+jDRAxTTwCxXrfBZw/PzO7SSBdvMovw==
+=7Piu
+-----END PGP SIGNATURE-----
+
+--DLuH41Ng1iRNSMtA--
