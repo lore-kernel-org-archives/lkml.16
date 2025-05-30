@@ -1,109 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1304822D7BF;
-	Fri, 30 May 2025 18:13:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63DAE20E6
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 18:16:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748628805; cv=none; b=cXPGPROd17McnyoAGyn1dZ9pipltx+VvCYDnzqypI5uHhhr32O4ZPewOIWwKLV2lvpMAfsHTWgTOexEw7Co/nIY5QKOJkwhLUd8pXRy4/ekIzfokoJHYJ+GJFsFYP6DwuTNulILjvpzEwQT7NB6zLnW3KvhfgGHl0QiWbda0dJU=
+	t=1748628983; cv=none; b=jxoz680OssWmScGM5tSuA9FywTGqZMYhGN4E35s+DbGHLSGlngic3RD41qEKenAVqwUIVgoYq4H9y35yTPPW6YJ42JIyG3i2tRdY5VvM+4/xlL30vP4YabTqLkVYxEMo/l513XLCN4ec/QpGJFwT7Jtxmoz9BkfgwZOSWRndD3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748628805; c=relaxed/simple;
-	bh=6Uu4JDOtA/oJ7T/hSTt8ii+u9NVEV5G00HIMfiylB10=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=DfyLV22Bpwc/4u6eYwUhbCx1RiZDPEEBpcqn1VuaaCrBYD9L+3JTe1jIDaenSCG6LRz1qypS+yXGKRM0mPxs/K3dA4nBCY7A2dj7/u4w/eBZWPgAG9v+INUnCmy1tT82wthZBvxMNSFMccxNiJdRETyCBnq4rAdZwQQv6ChxSnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IdKvAkmi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748628983; c=relaxed/simple;
+	bh=g9x9I/D5iLYNub2uY6+ty3L4YZQgs1kiASUNbQlL4Qw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OEqwAEZxtWDQChrJ/8tc24XQSdDzuXH2rci8UR2TSqPVc5+DCUl25FsS18KD9CPW3R1PuOA9vD7dxNooqK7Yj9j/Yhs6Doqe7tk6TJBwhPQSqMM4W5ijZvJfAfX5BWdUrTaiCAKWAOAQBxr6nPPZMSzHtzUpK3Dck8gIsFj/iSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Dy9NNCg+; arc=none smtp.client-ip=115.124.30.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IdKvAkmi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFD9DC4CEE9;
-	Fri, 30 May 2025 18:13:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748628804;
-	bh=6Uu4JDOtA/oJ7T/hSTt8ii+u9NVEV5G00HIMfiylB10=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=IdKvAkmiTrIQxU9jHgn2PSeeQwXPh4McJATjn31UmVgyQdhYM/Zk8ThhXS2blSGER
-	 BmMDiDl5aVc7WuFbinPzI22McM/3v6emN2UUJlpr/S1AlfJXs9RFhRgh9JegndccF4
-	 fg3Q7gbGq64v6EdjLTiUelTPKJ73kBmDKuJM52oReIyxl3jzwGXPYBc4PJLhQYHl7w
-	 ndktQFbJElBSRxnJkbMyGTPO5tAAv8km9fRA7TOy+Jv2ByLULG49x0MWgSIjUeWaSt
-	 hS51BDefWjJl79g9cxoYllWCAxrV1/G7ZY0NVMNKCGnBOUwbvDb6ePweTSOOdr4bY6
-	 PmrjO6BxhIl+A==
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Dy9NNCg+"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1748628978; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=Vgoipm8jNsxeGuLT4hKP6WLOTd56kdYWyDhKuAXv0mU=;
+	b=Dy9NNCg+N/Lf1bSDl7PhKraFf8etjbVmGjvXfRAN5solsfvglywBAXzSuqo/bomgp3uie//1Xrfs+3iDpc9TRp+mPDOxxxZUmZHp5bghrnbYfDLWguFxLPZSINlVvdQEzYHhpXoxkE9QTVJuIS5T9aGhQZd1F4E7i4ZmOLgHmpU=
+Received: from localhost.localdomain(mailfrom:qinyuntan@linux.alibaba.com fp:SMTPD_---0WcMBeWF_1748628665 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Sat, 31 May 2025 02:11:06 +0800
+From: Qinyun Tan <qinyuntan@linux.alibaba.com>
+To: Tony Luck <tony.luck@intel.com>
+Cc: "H . Peter Anvin" <hpa@zytor.com>,
+	linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Qinyun Tan <qinyuntan@linux.alibaba.com>
+Subject: [PATCH V5 0/1] x86/resctrl: Remove unappropriate references to cacheinfo in the resctrl subsystem.
+Date: Sat, 31 May 2025 02:11:02 +0800
+Message-ID: <20250530181103.34563-1-qinyuntan@linux.alibaba.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 30 May 2025 20:13:19 +0200
-Message-Id: <DA9P6CSP6563.1OYPZXIP5S7N1@kernel.org>
-Cc: "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
- <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 1/2] uaccess: rust: add strncpy_from_user
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Alice Ryhl" <aliceryhl@google.com>, "Miguel Ojeda" <ojeda@kernel.org>,
- "Andrew Morton" <akpm@linux-foundation.org>, "Alexander Viro"
- <viro@zeniv.linux.org.uk>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>
-X-Mailer: aerc 0.20.1
-References: <20250527-strncpy-from-user-v4-0-82168470d472@google.com>
- <20250527-strncpy-from-user-v4-1-82168470d472@google.com>
-In-Reply-To: <20250527-strncpy-from-user-v4-1-82168470d472@google.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-This patch's title should be adjusted, as it's adding
-`raw_strncpy_from_user` and not `strncpy_from_user`.
+V5:
+- Modify the commit log format again. I am truly grateful to Reinette
+  for her thoughtful guidance :).
 
-On Tue May 27, 2025 at 2:34 PM CEST, Alice Ryhl wrote:
-> +/// Reads a nul-terminated string into `dst` and returns the length.
-> +///
-> +/// This reads from userspace until a NUL byte is encountered, or until =
-`dst.len()` bytes have been
-> +/// read. Fails with [`EFAULT`] if a read happens on a bad address (some=
- data may have been
-> +/// copied). When the end of the buffer is encountered, no NUL byte is a=
-dded, so the string is
-> +/// *not* guaranteed to be NUL-terminated when `Ok(dst.len())` is return=
-ed.
-> +///
-> +/// # Guarantees
-> +///
-> +/// When this function returns `Ok(len)`, it is guaranteed that the firs=
-t `len` bytes of `dst` are
-> +/// initialized and non-zero. Furthermore, if `len < dst.len()`, then `d=
-st[len]` is a NUL byte.
-> +/// Unsafe code may rely on these guarantees.
+V4:
+- Add the tested by and reviewed by tags.
+- Modify the commit log format.
 
-I would remove the last sentence, it already is implied.
+V3:
+- According to Reinette suggestion, modify the commit log description to
+ make it easier for readers to understand
 
-> +#[inline]
-> +#[expect(dead_code)]
-> +fn raw_strncpy_from_user(dst: &mut [MaybeUninit<u8>], src: UserPtr) -> R=
-esult<usize> {
-> +    // CAST: Slice lengths are guaranteed to be `<=3D isize::MAX`.
-> +    let len =3D dst.len() as isize;
-> +
-> +    // SAFETY: `dst` is valid for writing `dst.len()` bytes.
-> +    let res =3D unsafe {
-> +        bindings::strncpy_from_user(dst.as_mut_ptr().cast::<c_char>(), s=
-rc as *const c_char, len)
-> +    };
-> +
-> +    if res < 0 {
-> +        return Err(Error::from_errno(res as i32));
-> +    }
-> +
-> +    #[cfg(CONFIG_RUST_OVERFLOW_CHECKS)]
-> +    assert!(res <=3D len);
-> +
-> +    Ok(res as usize)
+V2:
+- Keep sanity checks in the __mon_event_count to ensure execution occurs
+  exclusively on CPUs sharing the same L3 cache cluster
+- When reading the top level event, obtain a CPU within hdr.cpu_mask.
+  Then use the cacheinfo shared_cpu_map of this CPU instead of using
+  hdr.cpu_mask directly
+- Adjust code formatting and commit log descriptions.
 
-We probably should add a `GUARANTEES` comment here, no?
+In the resctrl subsystem's Sub-NUMA Cluster (SNC) mode, the rdt_mon_domain
+structure representing a NUMA node relies on the cacheinfo interface
+(rdt_mon_domain::ci) to store L3 cache information (e.g., shared_cpu_map)
+for monitoring. The L3 cache information of a SNC NUMA node determines
+which domains are summed for the "top level" L3-scoped events.
 
----
-Cheers,
-Benno
+rdt_mon_domain::ci is initialized using the first online CPU of a NUMA
+node. When this CPU goes offline, its shared_cpu_map is cleared to contain
+only the offline CPU itself. Subsequently, attempting to read counters
+via smp_call_on_cpu(offline_cpu) fails (and error ignored), returning
+zero values for "top-level events" without any error indication.
 
-> +}
+Replace the cacheinfo references in struct rdt_mon_domain and struct
+rmid_read with the cacheinfo ID (a unique identifier for the L3 cache).
+
+rdt_domain_hdr::cpu_mask contains the online CPUs associated with that
+domain. When reading "top-level events", select a CPU from
+rdt_domain_hdr::cpu_mask and utilize its L3 shared_cpu_map to determine
+valid CPUs for reading RMID counter via the MSR interface.
+
+Considering all CPUs associated with the L3 cache improves the chances
+of picking a housekeeping CPU on which the counter reading work can be
+queued, avoiding an unnecessary IPI.
+
+Qinyun Tan (1):
+  x86/resctrl: Remove unappropriate references to cacheinfo in the
+    resctrl subsystem.
+
+ arch/x86/kernel/cpu/resctrl/core.c |  6 ++++--
+ fs/resctrl/ctrlmondata.c           | 13 +++++++++----
+ fs/resctrl/internal.h              |  4 ++--
+ fs/resctrl/monitor.c               |  6 ++++--
+ fs/resctrl/rdtgroup.c              |  6 +++---
+ include/linux/resctrl.h            |  4 ++--
+ 6 files changed, 24 insertions(+), 15 deletions(-)
+
+-- 
+2.43.5
 
