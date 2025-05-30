@@ -1,117 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF15E1898F8;
-	Fri, 30 May 2025 07:44:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8BF211460;
+	Fri, 30 May 2025 07:45:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748591066; cv=none; b=BQlHHYCN2Xaf0fQ2VdqAij2WRXE6zl95d9pbEskX8j6cEKjC/nseRd5FEuC0iYLWgj0jlgha6lDknhnceCP1djoPeevB8TyOR75Ijw0avwcqDT3yHcsX/0aqM6Bs4HRmQJptg9LacIYayFEdDPnFf98zhGlNkDu7DEF3+14Nic4=
+	t=1748591108; cv=none; b=ojbW8XQiWhOLfjj893Z+4zD1JM8e0i7+rBc52Gzv2uUIxrD//d7vaOj7mkmA07hk/ewL88n8xb0DUqv8s/qixKgiecy1P5D5181i/7x4VOwFd68beoAslJnsTn1mCien2bDESBOA0jj5h0K/7DvMNPRPJRrPTwnHzZBxVPDCuBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748591066; c=relaxed/simple;
-	bh=8c1YIHEOyuZ64Oyvg+rqcARTrCsOO97Ri4WDAUf/M30=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Afck1FnUU5cPnR/EdvzGBWR9Wd2aTS5CLSlRe+u1NLr7ouyxTXPTaw+Jzox1o+4W9/ZxWh0dioNcl9+lmlA5dj3jPl0UVpn0GgTL+67wvLrqIwp5W8POdBSXNu5H7RMTC5AYzjDFrpQ/0lpTgGFPMH/u/BVZsoUaGAI0pm2k+a8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H6YHDQ5Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748591108; c=relaxed/simple;
+	bh=uGdOVtddhxaxBRd29KpCqAVkDSswK1sItiY62AIVya4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VkIShQFOe6TyqgGlCzZqpgoR9StUOBw9bdgeDdyeuUUtedKzaJCjz1TPKl1WiZIqqZML257vurQSJrH+EOVsJ6nWt4uGbIQnzHfif3AgoAvVDpxDadKUm1wIwjCOlTJVa5idVZvqsF5echK1qp9/vWW9V4z9i8St4NfwiLNZXvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=OjuvM95V; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H6YHDQ5Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A93BC4CEE9;
-	Fri, 30 May 2025 07:44:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748591065;
-	bh=8c1YIHEOyuZ64Oyvg+rqcARTrCsOO97Ri4WDAUf/M30=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=H6YHDQ5QVoqXtXRK+buaeNxZoI+pVT8pRdt9UpEb+oG1WmMh9BylSo2tukQpxVvDK
-	 MQv1rtvuP3TjgoZAG1Y63P3EMgpR7UtVmcMsUB4e0Q6aWHvJ4yS/0hUaY1M2tBP3gQ
-	 lO3HFMirCJBhxg9RsiHPTM//YrA2r8gVuoHD0tEUJdut7r6ap0v3YGB/1fAhr/uBGX
-	 F3NMO6t5wFz2prkEsxgb2dGvGHzGy+9vtAa/2Z44Bt9PIFtCZntx4wTtrPk43eImba
-	 gHrONh8jdqiPPHIbuYHzesZqH57onOOrUNCNmzAvJbwYeaF0sVd+fw3tvYviSEacn9
-	 zendjYwUo4etw==
-Message-ID: <f4b8657e-17c5-49d0-bee8-8621c811b6ca@kernel.org>
-Date: Fri, 30 May 2025 09:44:21 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OjuvM95V"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=sDfVHR/wCQYqHHG+BTpVWxebqA5paftiQgcZz9s2BbI=; b=OjuvM95VpMa3VS4r8W2UEl/wY5
+	IMizMyyXbYaDdk+YlrOVlJL/K5AtkhIzVjIjBseZrbaMy9zHnxSj/kYAy/pZyvcpv/tZ4FHYO2ChC
+	sngFBX6JTxIH2XFEslq/QASqR0WeKiywh/AdINfTdCdMj5sAvlV5HxKcM8g9qJxOHwNXKw9c/ipJ/
+	Ge1kRYKvRVd8AarsUkjaygeh2n4YWndz1Qc70ZzlqHbUO56jjuNv7WE290f8rnKwpCcoeZhzIUDQ1
+	NFy9mQfae2+T/kC8TMwqseaZSWceWmcgOYhmo8eCGPpOdKiIVRr/qxbGYeJTY9+H2i2BHOgQ9mTmU
+	6GQLD3MQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uKuQ9-00000000DjN-4BZP;
+	Fri, 30 May 2025 07:44:54 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 643D530066A; Fri, 30 May 2025 09:44:53 +0200 (CEST)
+Date: Fri, 30 May 2025 09:44:53 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, xin@zytor.com,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	"H. Peter Anvin" <hpa@zytor.com>, stable@vger.kernel.org
+Subject: Re: [PATCH 1/3] x86/execmem: don't use PAGE_KERNEL protection for
+ code pages
+Message-ID: <20250530074453.GG39944@noisy.programming.kicks-ass.net>
+References: <20250528123557.12847-1-jgross@suse.com>
+ <20250528123557.12847-2-jgross@suse.com>
+ <aDdHdwf8REvdu5FF@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: Tree for May 27 (drivers/platform/x86/amd/amd_isp4.c)
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Nirujogi, Pratap" <pnirujog@amd.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>,
- Stephen Rothwell <sfr@canb.auug.org.au>,
- Linux Next Mailing List <linux-next@vger.kernel.org>,
- Pratap Nirujogi <pratap.nirujogi@amd.com>,
- Benjamin Chan <benjamin.chan@amd.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- "open list:AMD HETERO CORE HARDWARE FEEDBACK DRIVER"
- <platform-driver-x86@vger.kernel.org>
-References: <20250527203231.3c6c0b9d@canb.auug.org.au>
- <04577a46-9add-420c-b181-29bad582026d@infradead.org>
- <d2ac901b-f7d2-46e6-b977-0ad90faa46f2@kernel.org>
- <b712a69d-e899-4286-b5f6-06d87d732ed8@amd.com>
- <e079d753-554e-7a42-11c6-a08cc095eb91@linux.intel.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <e079d753-554e-7a42-11c6-a08cc095eb91@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aDdHdwf8REvdu5FF@kernel.org>
 
-Hi,
-
-On 30-May-25 9:41 AM, Ilpo Järvinen wrote:
-> On Tue, 27 May 2025, Nirujogi, Pratap wrote:
->> On 5/27/2025 3:43 PM, Hans de Goede wrote:
->>> Caution: This message originated from an External Source. Use proper caution
->>> when opening attachments, clicking links, or responding.
->>>
->>>
->>> Hi,
->>>
->>> On 27-May-25 8:56 PM, Randy Dunlap wrote:
->>>>
->>>>
->>>> On 5/27/25 3:32 AM, Stephen Rothwell wrote:
->>>>> Hi all,
->>>>>
->>>>> Changes since 20250526:
->>>>>
->>>>
->>>> on x86_64, when
->>>> # CONFIG_MODULES is not set
->>>>
->>>> ../drivers/platform/x86/amd/amd_isp4.c: In function 'is_isp_i2c_adapter':
->>>> ../drivers/platform/x86/amd/amd_isp4.c:154:35: error: invalid use of
->>>> undefined type 'struct module'
->>>>    154 |         return !strcmp(adap->owner->name,
->>>> "i2c_designware_amdisp");
->>>>        |                                   ^~
->>>
->>> Hmm, this should not check the owner->name at all.
->>>
->>> Instead the i2c_designware_amdisp should set adap->name to something
->>> unique and then this should check adap->name.
->>>
->> I noticed the unique name set to "adap->name" in i2c_designware_amdisp is
->> getting overwritten to the generic "Synopsys DesignWare I2C adapter" name in
->> i2c_dw_probe_master().
->>
->> https://github.com/torvalds/linux/blob/master/drivers/i2c/busses/i2c-designware-master.c#L1046
->>
->> Inorder to use unique name to detect the specific adapter without making
->> changes in i2c-designware-master.c, I used adap->owner->name.
->>
->> Since it is causing build issues when CONFIG_MODULES is not set, can I make a
->> change in i2c-designware-master.c to initialize the generic "Synopsys
->> DesignWare I2C adapter" name only when adap->name is NULL. This way I should
->> be able to pass the unique name from i2c_designware_amdisp module.
+On Wed, May 28, 2025 at 08:27:19PM +0300, Mike Rapoport wrote:
+> On Wed, May 28, 2025 at 02:35:55PM +0200, Juergen Gross wrote:
+> > In case X86_FEATURE_PSE isn't available (e.g. when running as a Xen
+> > PV guest), execmem_arch_setup() will fall back to use PAGE_KERNEL
+> > protection for the EXECMEM_MODULE_TEXT range.
+> > 
+> > This will result in attempts to execute code with the NX bit set in
+> > case of ITS mitigation being applied.
+> > 
+> > Avoid this problem by using PAGE_KERNEL_EXEC protection instead,
+> > which will not set the NX bit.
+> > 
+> > Cc: <stable@vger.kernel.org>
+> > Reported-by: Xin Li <xin@zytor.com>
+> > Fixes: 5185e7f9f3bd ("x86/module: enable ROX caches for module text on 64 bit")
+> > Signed-off-by: Juergen Gross <jgross@suse.com>
+> > ---
+> >  arch/x86/mm/init.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+> > index 7456df985d96..f5012ae31d8b 100644
+> > --- a/arch/x86/mm/init.c
+> > +++ b/arch/x86/mm/init.c
+> > @@ -1089,7 +1089,7 @@ struct execmem_info __init *execmem_arch_setup(void)
+> >  		pgprot = PAGE_KERNEL_ROX;
+> >  		flags = EXECMEM_KASAN_SHADOW | EXECMEM_ROX_CACHE;
+> >  	} else {
+> > -		pgprot = PAGE_KERNEL;
+> > +		pgprot = PAGE_KERNEL_EXEC;
 > 
-> How can you check that, it's char name[48]; not a pointer???
+> Please don't. Everything except ITS can work with PAGE_KENREL so the fix
+> should be on ITS side. 
 
-A NULL check indeed will not work, but we can check that (name[0] != 0).
+Well, this is early vs post make_ro again.
 
-Regards,
+Does something like so work for you?
 
-Hans
-
-
+---
+diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+index 7456df985d96..f5012ae31d8b 100644
+--- a/arch/x86/mm/init.c
++++ b/arch/x86/mm/init.c
+@@ -1089,7 +1089,7 @@ struct execmem_info __init *execmem_arch_setup(void)
+ 		pgprot = PAGE_KERNEL_ROX;
+ 		flags = EXECMEM_KASAN_SHADOW | EXECMEM_ROX_CACHE;
+ 	} else {
+-		pgprot = PAGE_KERNEL;
++		pgprot = PAGE_KERNEL_EXEC;
+ 		flags = EXECMEM_KASAN_SHADOW;
+ 	}
+ 
+diff --git a/mm/execmem.c b/mm/execmem.c
+index 6f7a2653b280..dbe2eedea0e6 100644
+--- a/mm/execmem.c
++++ b/mm/execmem.c
+@@ -258,6 +258,7 @@ static bool execmem_cache_rox = false;
+ 
+ void execmem_cache_make_ro(void)
+ {
++	struct execmem_range *module_text = &execmem_info->ranges[EXECMEM_MODULE_TEXT];
+ 	struct maple_tree *free_areas = &execmem_cache.free_areas;
+ 	struct maple_tree *busy_areas = &execmem_cache.busy_areas;
+ 	MA_STATE(mas_free, free_areas, 0, ULONG_MAX);
+@@ -269,6 +270,9 @@ void execmem_cache_make_ro(void)
+ 
+ 	mutex_lock(mutex);
+ 
++	if (!(module_text->flags & EXECMEM_ROX_CACHE))
++		module_text->pgprot = PAGE_KERNEL;
++
+ 	mas_for_each(&mas_free, area, ULONG_MAX) {
+ 		unsigned long pages = mas_range_len(&mas_free) >> PAGE_SHIFT;
+ 		set_memory_ro(mas_free.index, pages);
