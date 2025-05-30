@@ -1,89 +1,64 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F211AA786
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 20:49:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA7362116F5;
+	Fri, 30 May 2025 20:52:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748638189; cv=none; b=liDpsGchTVJXbePc3EAxo+Tg5btnq7TlYbXLiVABVPqB7YHLDLnrYKH7+VAJvYmekre/hloBWUgzIs/nH7BkgwWHUEPMXLz01B+W0pLx+NaPd9u3m6PsdyxBdN6R/PKBJfRvPCWUw+uAl6+c9kN9w3SvgQzcB4d6QE9kOgkZypY=
+	t=1748638365; cv=none; b=Lb5FeZtpky6Si0LdLbD0vS1tD+Qy3l8bS5dUFcPJ/XKWsbtZs4QRpNVxqQ4MhbT2VCaos8LvxPNEr3VXnV03be7SDxOeLM1fbMrYP8DEnPBna4PAKpVXAKiXlh8mGojPPc1Z+o9cLfueYgSlTjkvqlNGI3rtV9O9n4o4zB404HQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748638189; c=relaxed/simple;
-	bh=Z/SQDguAIObEY8C0kHCDdptrHc6WvAlDkwRE+kpr6ME=;
+	s=arc-20240116; t=1748638365; c=relaxed/simple;
+	bh=6wD9qLU9InEHmkifduhSxAoPuEl6o3f+VKiVSxBDZfY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sNPS/obN2vccdsWZS5aQZqr61eA7uRAeEQHsuIeOSQA2oIajVENh1rU18c+6T/chGQhpkXEsxXGmq6llp5bHtLgshhjtEq5Zi/WXmc3AsafDzTTsY4tbvumgBhes8hHG0zcJbuJqVyc1vb398OfvQBFs9FiEtYRS7+Qo1Comj9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=XEXK/iEN; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=fpr5vqedrUitV/7x3Aj0DqPrn1HKpRJbekZIGi1B9MgNsmLol2EA/3KdT8C9UP1DkXoxtVqODC7zdcn9wDEt/WctFvKGuhOQk5idcl2mnCndtrz13bTlU94E1zwPAqydMLKbV+usrlbXwaqw18NH3rUNObZNts0pD31Jb6ShEYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fGseEN0s; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="XEXK/iEN"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54UKZ2tR008333
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 20:49:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=DsyXZy2cnb9zt4NqdViRPyHO
-	LOS/pgCy2Yd70hjrCn0=; b=XEXK/iENVYHvvInR2h95LM1tesv2yX7broViRsRM
-	cRhQyvjsHejEsBaMV5PEDftzDgejlYHUjscpSU29eVdd90byQi8dUVbHSBMxOCHF
-	nygAhmWOjYx4xc4zAFrhRWmJf8vLyQazeIbEq1UzzFGb9fh3vsLcPG8K1CX2j2j3
-	FecRCklTYWTzpQ19tmWvM+bY1G9bmY9/K5KdZdZXXhzf6EZ8SHv2d3o5PWgaHPep
-	UYZi+HCegULsWj47cl/p6S6Big3MMknPqTZG3S+YVfUDLlBX0F5KtUYJYGviPlFS
-	HQ64m3hJ1wp3aab/FM4u9p9u383wLSlX8jTl3XEwjpn1pA==
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46w992vmgn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 20:49:47 +0000 (GMT)
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6faca9925b0so27314836d6.0
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 13:49:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748638185; x=1749242985;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DsyXZy2cnb9zt4NqdViRPyHOLOS/pgCy2Yd70hjrCn0=;
-        b=acT9OWwuT/C7MReSqnei4y4qPOBXfSmd7XgBY5VR6D5sGmcEVz6heRzNl0xL6VASKv
-         BNMm84Ivv9YkWteJyOOmMjo7igbYcC5IzGlHsZwDxVbWBAxlFEu7nnogU+yT192eKReh
-         Ykr6Zk3Bhgi4d6XOIEghWq1JZibL5jTaYMKCBKkYnaLqNg4LSht7vzzt0q8PO2bCufGn
-         HIMAOItfv+GKabAKujUVSwacLXO/zKSgsWUv6jFADcb6dRz5Gofb4P9JjhjxcXMyuVBc
-         qurJ3bV+fqL9KvhUcLnwTkeAyFLW62yMJUY7qsGTXhUXC+rVZje3x7/YYTaZj35Ur0Fi
-         3yNA==
-X-Forwarded-Encrypted: i=1; AJvYcCWnJFF7ixqaKM0Fhn7c9iSdfblofA+LUBldZRFo9+s7q1Loz8qyI52yOZXVUP6S0WftMBVtcu9IGK4ZwMA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVw3tPMsj3S2YSuKq79v8aRoFKbrb5FFseaNpXC1edAAHEwfgy
-	Ecfdql2A52Q3BpLxa45CPMxcVYPZ9YsRSh9+ybHhzalRorV2MO9thzgaB2rCn2vIEgfzHeBficS
-	gV4W8iLXwr/jGQjpSreDsLfagDwfsKqOfw6YStUIleZW5VIpjpVGnBxKqxoZlfLngOn7DX6gIo0
-	g=
-X-Gm-Gg: ASbGncv3JNzXZW8vEKcnwOG1vkXOYqRTXZbAHgMqNBXXATV5wKdSLFr3InzT9xDIp0/
-	pFnovi1NxO2GmndAOmrDBInh+Mbui3wZoYWCml9nz+Jr0KboAPrHi7lZQvX/iwrbEqm9YlUZzbv
-	eV/89CRinOpztabKmvAlummBaspuGtgSjN6OaZj8CmPPCt2kg4HZxV1T5IyKlDM/lBBLEsKkwwq
-	nBOQysq8Wid4utpAsbcmpVBhnkv8etgCuUwt765SHvvE/LENRO1ygJJCQ9kS/o2nidTzhaZ11IX
-	vkDUcAYIxuga8dvSHd4rx5lW6t+KfC7LGVkIvBm1p2h4a3qrG0qGa1wUPxC5lR53qCDUv2RGqKo
-	=
-X-Received: by 2002:a05:6214:2128:b0:6fa:864f:87cc with SMTP id 6a1803df08f44-6facebe8473mr92538256d6.33.1748638184843;
-        Fri, 30 May 2025 13:49:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEZn6yOPwjbeFojONTjtNi8bdxrJYlYPkbczEfleXf91W2XSrAC4HcDXRZlVG6gYS9oZroZwA==
-X-Received: by 2002:a05:620a:31a3:b0:7c5:562d:cd02 with SMTP id af79cd13be357-7d0a201de9fmr732139085a.41.1748638173430;
-        Fri, 30 May 2025 13:49:33 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55337937719sm822559e87.236.2025.05.30.13.49.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 May 2025 13:49:32 -0700 (PDT)
-Date: Fri, 30 May 2025 23:49:29 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Maulik Shah <maulik.shah@oss.qualcomm.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v4 2/3] soc: qcom: qcom_stats: Add QMP support for
- syncing ddr stats
-Message-ID: <tqmugtxmauwo5o3lqilb3q5czpyl6uvs4wjcmq6pthni6eq7ky@ndzn6ovhnzdq>
-References: <20250528-ddr_stats_-v4-0-b4b7dae072dc@oss.qualcomm.com>
- <20250528-ddr_stats_-v4-2-b4b7dae072dc@oss.qualcomm.com>
- <6ldwvqqhk4lndesk7oac4ly2vhdxyd57f5hhijvutik5gm2czu@vmkasgeg2tmm>
- <4f7168d9-8d8e-4fdf-8917-47c1cc71cf82@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fGseEN0s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748638361; x=1780174361;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6wD9qLU9InEHmkifduhSxAoPuEl6o3f+VKiVSxBDZfY=;
+  b=fGseEN0sk5Bf82aIRvmpT8XyqVRLHDu+NHmUas6pM9MHruafCIg5PYEe
+   hgrd0cMePcOu/kOZssi0r0JwkGqorADdVWACKhv/c7zuL2WwEx7N2ndId
+   WSbsOsTQMMEMkZdXoklFdzar9T1J9yB7arvYlmgYbfK1sM86/3aA9J+90
+   sudkjksf8Ol+GpTAwXkf/XDWLCJtdn18nkvPXBRtw0eV5qRAWYZ/dk9z+
+   CKo8E0lAnJb9xOZYnF/G5fN2n4elbKoP2LoLXWuIIODSLNnR32PQymxvP
+   x35vahBXUcKNkFJivvVRvIvpncxERCxOj/WFe6K8aSgPdGlJbYNnxpfs6
+   Q==;
+X-CSE-ConnectionGUID: I54f2HoETKazH34Gi4czYA==
+X-CSE-MsgGUID: CDQv7QaHQVynxt8rnB2oWg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="50619082"
+X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
+   d="scan'208";a="50619082"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 13:52:41 -0700
+X-CSE-ConnectionGUID: Cj6n6M3rTVuOoqAhFPI/fg==
+X-CSE-MsgGUID: kr7aRojyQUGQYs4Bqi4fWQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
+   d="scan'208";a="144952758"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 13:52:41 -0700
+Date: Fri, 30 May 2025 13:52:39 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Zaid Alali <zaidal@os.amperecomputing.com>, rafael@kernel.org,
+	lenb@kernel.org, james.morse@arm.com, robert.moore@intel.com,
+	Jonathan.Cameron@huawei.com, ira.weiny@intel.com,
+	Benjamin.Cheatham@amd.com, dan.j.williams@intel.com, arnd@arndb.de,
+	Avadhut.Naik@amd.com, john.allen@amd.com,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	acpica-devel@lists.linux.dev
+Subject: Re: [PATCH v7 9/9] ACPI: APEI: EINJ: Update the documentation for
+ EINJv2 support
+Message-ID: <aDoal24J-BMTIBCq@agluck-desk3>
+References: <20250506213814.2365788-1-zaidal@os.amperecomputing.com>
+ <20250506213814.2365788-10-zaidal@os.amperecomputing.com>
+ <20250530102711.GAaDmH_1O7lc6kuveY@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -92,157 +67,383 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4f7168d9-8d8e-4fdf-8917-47c1cc71cf82@oss.qualcomm.com>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMwMDE4NiBTYWx0ZWRfX4aZw42H7IrqI
- czWpRHOPhPatIbOTFvFYtFq67Z5H35jkTY2ySRqpezTP3/Ul8ywsD6Z6Y3N5vJiKm3PKhOCxUUM
- r/fsfNTAovv5fRBlcCuL48n5w51dbEdiVtYBhb+WXXy069mm3PZcTmNFJ2Gux/EhMRrIdbAtZ1z
- 0yRwwU/dQQsYwHW9h8SZraG2tY4LvyWmPCdOBBqh4NHHJCVXnxMi+1Ii2cCS9M1VvLvJqQiiMZb
- sYfV3+oFkpEOIbDn1zz/8iR3nQpLk+h+j3san0AatdtlGR/JwGHYp32W3KyGL0XsZSBuW2yE/AZ
- lLJxorzmPM0liv708oIlj4bQ3Dv4gDz9l9B/IlKajkn/9I2GPecoalqNjqOHwrwJxC4VX7GaNOg
- uyUWpgwJqejJkuJDxsaIe0vfv5Z9i30SB1YC4jqWL5IHSaDG0my03uoHGV+xtgoriQ7wWeJg
-X-Authority-Analysis: v=2.4 cv=Fes3xI+6 c=1 sm=1 tr=0 ts=683a19eb cx=c_pps
- a=oc9J++0uMp73DTRD5QyR2A==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=o5tYnl-ncifjDb1ZhVoA:9 a=CjuIK1q_8ugA:10
- a=iYH6xdkBrDN1Jqds4HTS:22
-X-Proofpoint-GUID: DIutocWSam51vT1MNXgpxnkCQ8KTEDJx
-X-Proofpoint-ORIG-GUID: DIutocWSam51vT1MNXgpxnkCQ8KTEDJx
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-30_09,2025-05-30_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 malwarescore=0 impostorscore=0 phishscore=0 clxscore=1015
- lowpriorityscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=999 spamscore=0
- adultscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505300186
+In-Reply-To: <20250530102711.GAaDmH_1O7lc6kuveY@fat_crate.local>
 
-On Thu, May 29, 2025 at 09:07:49PM +0200, Konrad Dybcio wrote:
-> On 5/28/25 1:02 PM, Dmitry Baryshkov wrote:
-> > On Wed, May 28, 2025 at 02:51:32PM +0530, Maulik Shah wrote:
-> >> Recent SoCs (SM8450 onwards) require QMP command to be sent before reading
-> >> ddr stats. The duration field of ddr stats will get populated only if QMP
-> >> command is sent.
-> >>
-> >> Add support to send ddr stats freqsync QMP command.
-> >>
-> >> Signed-off-by: Maulik Shah <maulik.shah@oss.qualcomm.com>
-> >> ---
-> >>  drivers/soc/qcom/qcom_stats.c | 34 +++++++++++++++++++++++++++++++++-
-> >>  1 file changed, 33 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/soc/qcom/qcom_stats.c b/drivers/soc/qcom/qcom_stats.c
-> >> index 33fd2a1574464768bd07289e743fbb79ba415e84..0545c8cbefb8f18758d4eb51638e4ecb94e05422 100644
-> >> --- a/drivers/soc/qcom/qcom_stats.c
-> >> +++ b/drivers/soc/qcom/qcom_stats.c
-> >> @@ -13,6 +13,7 @@
-> >>  #include <linux/platform_device.h>
-> >>  #include <linux/seq_file.h>
-> >>  
-> >> +#include <linux/soc/qcom/qcom_aoss.h>
-> >>  #include <linux/soc/qcom/smem.h>
-> >>  #include <clocksource/arm_arch_timer.h>
-> >>  
-> >> @@ -37,6 +38,8 @@
-> >>  #define DDR_STATS_TYPE(data)		FIELD_GET(GENMASK(15, 8), data)
-> >>  #define DDR_STATS_FREQ(data)		FIELD_GET(GENMASK(31, 16), data)
-> >>  
-> >> +static struct qmp *qcom_stats_qmp;
-> >> +
-> >>  struct subsystem_data {
-> >>  	const char *name;
-> >>  	u32 smem_item;
-> >> @@ -188,12 +191,28 @@ static int qcom_ddr_stats_show(struct seq_file *s, void *d)
-> >>  	struct ddr_stats_entry data[DDR_STATS_MAX_NUM_MODES];
-> >>  	void __iomem *reg = (void __iomem *)s->private;
-> >>  	u32 entry_count;
-> >> -	int i;
-> >> +	int i, ret;
-> >>  
-> >>  	entry_count = readl_relaxed(reg + DDR_STATS_NUM_MODES_ADDR);
-> >>  	if (entry_count > DDR_STATS_MAX_NUM_MODES)
-> >>  		return -EINVAL;
-> >>  
-> >> +	if (qcom_stats_qmp) {
-> >> +		/*
-> >> +		 * Recent SoCs (SM8450 onwards) do not have duration field
-> >> +		 * populated from boot up onwards for both DDR LPM Stats
-> >> +		 * and DDR Frequency Stats.
-> >> +		 *
-> >> +		 * Send QMP message to Always on processor which will
-> >> +		 * populate duration field into MSG RAM area.
-> >> +		 *
-> >> +		 * Sent every time to read latest data.
-> >> +		 */
-> >> +		ret = qmp_send(qcom_stats_qmp, "{class: ddr, action: freqsync}");
-> >> +		if (ret)
-> >> +			return ret;
-> >> +	}
-> >> +
-> >>  	reg += DDR_STATS_ENTRY_START_ADDR;
-> >>  	memcpy_fromio(data, reg, sizeof(struct ddr_stats_entry) * entry_count);
-> >>  
-> >> @@ -304,6 +323,19 @@ static int qcom_stats_probe(struct platform_device *pdev)
-> >>  
-> >>  	for (i = 0; i < config->num_records; i++)
-> >>  		d[i].appended_stats_avail = config->appended_stats_avail;
-> >> +	/*
-> >> +	 * QMP is used for DDR stats syncing to MSG RAM for recent SoCs (SM8450 onwards).
-> >> +	 * The prior SoCs do not need QMP handle as the required stats are already present
-> >> +	 * in MSG RAM, provided the DDR_STATS_MAGIC_KEY matches.
-> >> +	 */
-> >> +	qcom_stats_qmp = qmp_get(&pdev->dev);
-> >> +	if (IS_ERR(qcom_stats_qmp)) {
-> >> +		if (PTR_ERR(qcom_stats_qmp) == -EPROBE_DEFER)
-> >> +			return -EPROBE_DEFER;
-> >> +
-> >> +		/* We assume any other error means it's not defined/needed */
-> >> +		qcom_stats_qmp = NULL;
-> > 
-> > I still think that we shouldn't be ignoring actual errors here. I'd say,
-> > check for of_property_present(dev->of_node, "qcom,qmp") before.
+On Fri, May 30, 2025 at 12:27:11PM +0200, Borislav Petkov wrote:
+> On Tue, May 06, 2025 at 02:38:13PM -0700, Zaid Alali wrote:
+> > +- einjv2_component_array
+> > +
+> > +  The contents of this file are used to set the "Component Array" field
+> > +  of the EINJv2 Extension Structure. The expected format is hex values
+> > +  for component id and syndrome separated by space, and multiple
+> > +  components are separated by new line.
 > 
-> /**
->  * qmp_get() - get a qmp handle from a device
->  * @dev: client device pointer
->  *
->  * Return: handle to qmp device on success, ERR_PTR() on failure
->  */
-> struct qmp *qmp_get(struct device *dev)
-> {
->         struct platform_device *pdev;
->         struct device_node *np;
->         struct qmp *qmp;
+> How is this a good design?
 > 
->         if (!dev || !dev->of_node)
->                 return ERR_PTR(-EINVAL);
+> Do you guys not see that the other injection files are one value per file?
 > 
->         np = of_parse_phandle(dev->of_node, "qcom,qmp", 0);
->         if (!np)
->                 return ERR_PTR(-ENODEV);
+> > +  # comp_arr="0x1 0x2				# Fill in the component array
+> > +    >0x1 0x4
+> > +    >0x2 0x4"
+> > +  # echo "$comp_arr" > einjv2_component_array
+> 
+> Oh boy. Srsly?!
 
-So, I'd say, we need to identify whether it is this caluse or another
-error. It should be enough to ignore ENODEV and return an error in all
-other cases.
+I've been staring at the debugfs blob used for einjv2_component_array
+to try and come up with some sane way to use it ... but I think it is
+a lost cause and I agree we need "one file, one value" like the rest of
+the EINJ user interface.
 
-> 
->         pdev = of_find_device_by_node(np);
->         of_node_put(np);
->         if (!pdev)
->                 return ERR_PTR(-EINVAL);
-> 
->         qmp = platform_get_drvdata(pdev);
-> 
->         if (!qmp) {
->                 put_device(&pdev->dev);
->                 return ERR_PTR(-EPROBE_DEFER);
->         }
->         return qmp;
-> }
-> EXPORT_SYMBOL_GPL(qmp_get);
-> 
-> 
-> Konrad
+I poked at the code a bit and mangled it into the patch below. I've
+tested that the new files read/write as expected. But I don't have
+an EINJV2 enabled system to run a full test.
 
+New files in the einj directory (assuming the system reports that
+it supports up to four simultaneous injections):
+
+-rw-------. 1 root root 0 May 30 13:26 component_id0
+-rw-------. 1 root root 0 May 30 13:26 component_id1
+-rw-------. 1 root root 0 May 30 13:26 component_id2
+-rw-------. 1 root root 0 May 30 13:26 component_id3
+-rw-------. 1 root root 0 May 30 13:26 component_syndrome0
+-rw-------. 1 root root 0 May 30 13:26 component_syndrome1
+-rw-------. 1 root root 0 May 30 13:26 component_syndrome2
+-rw-------. 1 root root 0 May 30 13:26 component_syndrome3
+-r--------. 1 root root 0 May 30 13:26 max_nr_components
+-rw-------. 1 root root 0 May 30 13:26 nr_components
+
+Use case to inject to one device would be:
+
+# echo 1 > nr_components
+# echo 4 > component_id0
+# echo A5A5A5A5 > component_syndrome0
+... set other files and finish with usual
+# echo 1 > error_inject
+
+There isn't a fancy "debugfs_create_x128_le()" helper to manage these
+128-bit little endian numbers. So I've coded with the basic building
+blocks (though using copy_from_user() and copy_to_user() feels like
+back in the stone age). If there some helpers that I missed I'd be
+happy to see that part simplified.
+
+Patch is on top of the existing v7 set. Obviously it needs to be folded
+back into the earlier patches to make a clean history that doesn't add
+functions and then replace them with different code.
+
+-Tony
+
+---
+
+diff --git a/drivers/acpi/apei/einj-core.c b/drivers/acpi/apei/einj-core.c
+index ab3d20b51ff1..9f29fc97f6a6 100644
+--- a/drivers/acpi/apei/einj-core.c
++++ b/drivers/acpi/apei/einj-core.c
+@@ -65,7 +65,7 @@ struct syndrome_array {
+ 		u8	pcie_synd[16];
+ 		u8	vendor_synd[16];
+ 	} comp_synd;
+-};
++} *syndrome_data;
+ 
+ struct einjv2_extension_struct {
+ 	u32 length;
+@@ -117,9 +117,7 @@ static struct debugfs_blob_wrapper vendor_blob;
+ static struct debugfs_blob_wrapper vendor_errors;
+ static char vendor_dev[64];
+ 
+-static struct debugfs_blob_wrapper einjv2_component_arr;
+-static void *user_input;
+-static int nr_components;
++static u32 max_nr_components, nr_components;
+ static u32 available_error_type;
+ static u32 available_error_type_v2;
+ 
+@@ -327,7 +325,7 @@ static void __iomem *einj_get_parameter_address(void)
+ 			if (available_error_type & ACPI65_EINJV2_SUPP) {
+ 				len = v5param.einjv2_struct.length;
+ 				offset = offsetof(struct einjv2_extension_struct, component_arr);
+-				nr_components = (len - offset) /
++				max_nr_components = (len - offset) /
+ 						sizeof(v5param.einjv2_struct.component_arr[0]);
+ 				/*
+ 				 * The first call to acpi_os_map_iomem above does not include the
+@@ -338,7 +336,7 @@ static void __iomem *einj_get_parameter_address(void)
+ 				acpi_os_unmap_iomem(p, v5param_size);
+ 				offset = offsetof(struct set_error_type_with_address, einjv2_struct);
+ 				v5param_size = offset + struct_size(&v5param.einjv2_struct,
+-					component_arr, nr_components);
++					component_arr, max_nr_components);
+ 				p = acpi_os_map_iomem(pa_v5, v5param_size);
+ 			}
+ 			return p;
+@@ -518,104 +516,6 @@ static int __einj_error_trigger(u64 trigger_paddr, u32 type,
+ 	return rc;
+ }
+ 
+-static int parse_hex_to_u8(char *str, u8 *arr)
+-{
+-	char *ptr, val[32];
+-	int pad, str_len;
+-
+-
+-	if (str[0] == '0' && (str[1] == 'x' || str[1] == 'X'))
+-		str += 2;
+-
+-	str_len = strlen(str);
+-	if (str_len > 32)
+-		return -EINVAL;
+-
+-	memcpy(val, str, str_len);
+-
+-	ptr = val;
+-	while (*ptr != '\0') {
+-		if (!isxdigit(*ptr))
+-			return -EINVAL;
+-		ptr++;
+-	}
+-
+-	pad = 32 - str_len;
+-
+-	memmove(val + pad, val, str_len);
+-	memset(val, '0', pad);
+-
+-	for (int i = 0; i < COMPONENT_LEN; ++i) {
+-		char byte_str[3] = {val[i * 2], val[i * 2 + 1], '\0'};
+-		/* write bytes in little endian format to follow ACPI specs */
+-		arr[COMPONENT_LEN - i - 1] = (u8)strtoul(byte_str, NULL, 16);
+-	}
+-
+-	return 0;
+-}
+-
+-static int read_component_array(struct set_error_type_with_address *v5param)
+-{
+-	int count = 0, str_len;
+-	u8 comp_arr[COMPONENT_LEN], synd_arr[COMPONENT_LEN];
+-	struct syndrome_array *component_arr;
+-	char *tok, *comp_str, *synd_str, *user;
+-
+-	component_arr = v5param->einjv2_struct.component_arr;
+-	str_len = strlen(user_input);
+-	user = user_input;
+-	user[str_len - 1] = '\0';
+-	while ((tok = strsep(&user, "\n")) != NULL) {
+-		if (count >= nr_components)
+-			return -EINVAL;
+-
+-		comp_str = strsep(&tok, " \t");
+-		synd_str = strsep(&tok, " \t");
+-
+-		if (!comp_str || !synd_str)
+-			return -EINVAL;
+-
+-		if (parse_hex_to_u8(comp_str, comp_arr))
+-			return -EINVAL;
+-		if (parse_hex_to_u8(synd_str, synd_arr))
+-			return -EINVAL;
+-
+-		switch (v5param->type) {
+-		case EINJV2_PROCESSOR_ERROR:
+-			for (int i = 0; i < COMPONENT_LEN; ++i) {
+-				component_arr[count].comp_id.acpi_id[i] = comp_arr[i];
+-				component_arr[count].comp_synd.proc_synd[i] = synd_arr[i];
+-			}
+-			break;
+-		case EINJV2_MEMORY_ERROR:
+-			for (int i = 0; i < COMPONENT_LEN; ++i) {
+-				component_arr[count].comp_id.device_id[i] = comp_arr[i];
+-				component_arr[count].comp_synd.mem_synd[i] = synd_arr[i];
+-			}
+-			break;
+-		case EINJV2_PCIE_ERROR:
+-			for (int i = 0; i < COMPONENT_LEN; ++i) {
+-				component_arr[count].comp_id.pcie_sbdf[i] = comp_arr[i];
+-				component_arr[count].comp_synd.pcie_synd[i] = synd_arr[i];
+-			}
+-			break;
+-		case EINJV2_VENDOR_ERROR:
+-			for (int i = 0; i < COMPONENT_LEN; ++i) {
+-				component_arr[count].comp_id.vendor_id[i] = comp_arr[i];
+-				component_arr[count].comp_synd.vendor_synd[i] = synd_arr[i];
+-			}
+-			break;
+-		}
+-		count++;
+-
+-	}
+-	v5param->einjv2_struct.component_arr_count = count;
+-
+-	/* clear buffer after user input for next injection */
+-	memset(user_input, 0, COMP_ARR_SIZE);
+-	return 0;
+-}
+-
+ static int __einj_error_inject(u32 type, u32 flags, u64 param1, u64 param2,
+ 			       u64 param3, u64 param4)
+ {
+@@ -655,13 +555,17 @@ static int __einj_error_inject(u32 type, u32 flags, u64 param1, u64 param2,
+ 			v5param->memory_address_range = param2;
+ 
+ 			if (is_V2) {
+-				rc = read_component_array(v5param);
+-				if (rc) {
++				if (nr_components < 1 || nr_components > max_nr_components) {
+ 					kfree(v5param);
+-					goto err_out;
++					return -EINVAL;
++				}
++				v5param->einjv2_struct.component_arr_count = nr_components;
++				for (int i = 0; i < nr_components; i++) {
++					v5param->einjv2_struct.component_arr[i].comp_id =
++						syndrome_data[i].comp_id;
++					v5param->einjv2_struct.component_arr[i].comp_synd =
++						syndrome_data[i].comp_synd;
+ 				}
+-				/* clear buffer after user input for next injection */
+-				memset(user_input, 0, COMP_ARR_SIZE);
+ 			} else {
+ 				v5param->apicid = param3;
+ 				v5param->pcie_sbdf = param4;
+@@ -742,9 +646,6 @@ static int __einj_error_inject(u32 type, u32 flags, u64 param1, u64 param2,
+ 	rc = apei_exec_run_optional(&ctx, ACPI_EINJ_END_OPERATION);
+ 
+ 	return rc;
+-err_out:
+-	memset(user_input, 0, COMP_ARR_SIZE);
+-	return -EINVAL;
+ }
+ 
+ /* Inject the specified hardware error */
+@@ -984,6 +885,97 @@ static int einj_check_table(struct acpi_table_einj *einj_tab)
+ 	return 0;
+ }
+ 
++static ssize_t u128_read(struct file *f, char __user *buf, size_t count, loff_t *off)
++{
++	char output[2 * COMPONENT_LEN + 1];
++	u8 *data = f->f_inode->i_private;
++	ssize_t n;
++	int i;
++
++	if (*off >= sizeof(output))
++		return 0;
++
++	for (i = 0; i < COMPONENT_LEN; i++)
++		sprintf(output + 2 * i, "%.02x", data[i]);
++	output[2 * COMPONENT_LEN] = '\n';
++
++	n = min(count, sizeof(output) - *off);
++	if (copy_to_user(buf, output + *off, n))
++		return -EFAULT;
++	*off += n;
++
++	return n;
++}
++
++static ssize_t u128_write(struct file *f, const char __user *buf, size_t count, loff_t *off)
++{
++	char input[2 + 2 * COMPONENT_LEN + 2];
++	u8 *save = f->f_inode->i_private;
++	u8 tmp[COMPONENT_LEN];
++	char byte[3] = {};
++	char *s, *e;
++	long val;
++	int i;
++
++	if (count > sizeof(input))
++		return -EINVAL;
++	if (copy_from_user(input, buf, count))
++		return -EFAULT;
++
++	if (input[0] == '0' && (input[1] == 'x' || input[1] == 'X'))
++		s = input + 2;
++	else
++		s = input;
++	e = input + count;
++	if (e[-1] == '\n')
++		e--;
++
++	for (i = 0; i < COMPONENT_LEN; i++) {
++		byte[1] = *--e;
++		byte[0] = e > s ? *--e : '0';
++		if (kstrtol(byte, 16, &val))
++			return -EINVAL;
++		tmp[i] = val;
++		if (e <= s)
++			break;
++	}
++	while (++i < COMPONENT_LEN)
++		tmp[i] = 0;
++
++	memcpy(save, tmp, COMPONENT_LEN);
++
++	return count;
++}
++
++static const struct file_operations u128_fops = {
++	.read	= u128_read,
++	.write	= u128_write,
++};
++
++static bool setup_einjv2_component_files(void)
++{
++	char name[32];
++
++	max_nr_components = 4; //FAKE!!!
++	debugfs_create_u32("max_nr_components", 0400, einj_debug_dir, &max_nr_components);
++	debugfs_create_u32("nr_components", 0600, einj_debug_dir, &nr_components);
++
++	syndrome_data = kcalloc(max_nr_components, sizeof(syndrome_data[0]), GFP_KERNEL);
++	if (!syndrome_data)
++		return false;
++
++	for (int i = 0; i < max_nr_components; i++) {
++		sprintf(name, "component_id%d", i);
++		debugfs_create_file(name, 0600, einj_debug_dir,
++				    &syndrome_data[i].comp_id, &u128_fops);
++		sprintf(name, "component_syndrome%d", i);
++		debugfs_create_file(name, 0600, einj_debug_dir,
++				    &syndrome_data[i].comp_synd, &u128_fops);
++	}
++
++	return true;
++}
++
+ static int __init einj_probe(struct faux_device *fdev)
+ {
+ 	int rc;
+@@ -1056,21 +1048,10 @@ static int __init einj_probe(struct faux_device *fdev)
+ 		debugfs_create_x32("notrigger", S_IRUSR | S_IWUSR,
+ 				   einj_debug_dir, &notrigger);
+ 		if (available_error_type & ACPI65_EINJV2_SUPP) {
+-			user_input = kzalloc(COMP_ARR_SIZE, GFP_KERNEL);
+-			if (!user_input) {
+-				EINJv2_enabled = false;
+-				pr_info("EINJv2 is disabled: not enough memory\n");
+-				goto skip_EINJv2;
+-			}
+-			EINJv2_enabled = true;
+-			einjv2_component_arr.data = user_input;
+-			einjv2_component_arr.size = COMP_ARR_SIZE;
+-			debugfs_create_blob("einjv2_component_array", S_IRUSR | S_IWUSR,
+-					einj_debug_dir, &einjv2_component_arr);
++			EINJv2_enabled = setup_einjv2_component_files();
+ 		}
+ 	}
+ 
+-skip_EINJv2:
+ 	if (vendor_dev[0]) {
+ 		vendor_blob.data = vendor_dev;
+ 		vendor_blob.size = strlen(vendor_dev);
+@@ -1112,7 +1093,7 @@ static void __exit einj_remove(struct faux_device *fdev)
+ 		if (vendor_errors.size)
+ 			acpi_os_unmap_memory(vendor_errors.data, vendor_errors.size);
+ 	}
+-	kfree(user_input);
++	kfree(syndrome_data);
+ 	einj_exec_ctx_init(&ctx);
+ 	apei_exec_post_unmap_gars(&ctx);
+ 	apei_resources_release(&einj_resources);
 -- 
-With best wishes
-Dmitry
+2.49.0
+
