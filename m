@@ -1,192 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF271F0984;
-	Fri, 30 May 2025 05:21:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A1D186A;
+	Fri, 30 May 2025 05:23:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748582507; cv=none; b=rYVw6DCMYqDD6kE6A7jvslUVb2KQNLUtJ7ycEDkhMs9BkMiSr28E7IBqnEOibaHMWkKTCZxFpv8aidXUfzyr7y3ucMgN0Mg5007rZi8jgLalODkpf+QbuxXUXnhStvtFRbYNhQ/LTVkEuIsKPgh/5XSsUpTxWxde2VlJPKgsU+A=
+	t=1748582595; cv=none; b=uYyDJqFtpeTSt+gn5iF+nYi2QJGbXxTrQqjrZnK+j+6qOHYU083HtQP+lUK+SrecAmmt0Lv+wpukae15wGmhQWyuW8oF8EGRetz3hrpxl+k40KXvkPgL175mqvx0wsRlmhvlCLo3OPt/8Tr1Q+9DtCBnBrLzR+0fZmsLuqrzSOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748582507; c=relaxed/simple;
-	bh=2l1YUXZItlR3yfNk88iiqJTy1FzASjZjGnqbsO5S0wI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aDVP1hZPoYhW6pz32zfFMFwm+huhEWyy9/iS1QJD6uIZSF02dBW3VrudW8JLmC7B2TXk7N8gJxQ+sxH1rqEuFTUXO2+84Rdbj8STYoRbC9Rvo2ienT6gQKHtvTvkMGZUIY4kv/zRlqRE7Q4zBU/WIK8p4xyNhzPb7ts/646mKjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TKk3Y2Vl; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748582595; c=relaxed/simple;
+	bh=UUSQVyHtUMB0ilUAqR1Rlf0jpDZeu+aMdADtiW9AjRg=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=MgOwcBfhfzvqVYNUJqw7b2xtyCsrgr7wElpTYPnSkILLDIESZcGJU6ITmIYzG0COTH13iWSTv7X6ZRyB4NkjP/6Sh6DOUZdxDBoYdEQd9mrmUHKCmfEA8s/AEqjUILu93v7Rb7HToJgAOOTCbnzFoRcWQepTVi3OrDJ0Ys2VGWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EQN3ylPM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TKk3Y2Vl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748582506; x=1780118506;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2l1YUXZItlR3yfNk88iiqJTy1FzASjZjGnqbsO5S0wI=;
-  b=TKk3Y2VlxxJOfHsZU+Z8KQckAuwyegoN1bucnPArO0LI5ex6pXevbEea
-   ABvO6xPNaW+z5RsjVo/MB2VJflxvwL6YEjKGep5jOrIc+cvyHSUX2d2lF
-   QWPhIZk4+OmqXTUEzq2aZJ4gblukqw4Yq9s3aQTFlePh15+g4/kbtAkQO
-   esl2CIVXdfNRzHVItFyY5zyzJ8xUWQtIzHAjhMztsBoNr5AG9HESWNbV9
-   qO6KLaCzedwWy2/WmQ5swmwVAoivtkAtFU207unEfgtdrw7mGJsTsqmLV
-   2xhnK1g6/wyxX9AxXxC8UGl7Ahx7GcgevRTG8EbUXku51R6dMkVXkVCqZ
-   A==;
-X-CSE-ConnectionGUID: OEhDLybQTN6ts/+3kDw10g==
-X-CSE-MsgGUID: 0BUafWtzR7Gm4xRGhm+jtQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="61719741"
-X-IronPort-AV: E=Sophos;i="6.16,194,1744095600"; 
-   d="scan'208";a="61719741"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 22:21:43 -0700
-X-CSE-ConnectionGUID: fPgJ4XzPRYa0YV2aBwMkSg==
-X-CSE-MsgGUID: lSjwr7bRRRSQNb/XQnhprA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,194,1744095600"; 
-   d="scan'208";a="148803763"
-Received: from drlynch-mobl1.amr.corp.intel.com (HELO desk) ([10.125.146.32])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 22:21:43 -0700
-Date: Thu, 29 May 2025 22:21:35 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Richard Narron <richard@aaazen.com>, Guenter Roeck <linux@roeck-us.net>,
-	Linux stable <stable@vger.kernel.org>,
-	Linux kernel <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH 5.15 00/59] 5.15.184-rc1 review
-Message-ID: <20250530052135.nz547z5ecbrb6muh@desk>
-References: <20250520125753.836407405@linuxfoundation.org>
- <0f597436-5da6-4319-b918-9f57bde5634a@roeck-us.net>
- <67f03e41-245e-202-f0df-687cc4d9a915@aaazen.com>
- <20250528005520.dpip4qe45zvsn7vw@desk>
- <b8a9acaf-3d3e-7931-23ce-d61ee77b4e10@aaazen.com>
- <20250529174017.lwctaondsbg7tk37@desk>
- <2025053037-tribunal-shortlist-5207@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EQN3ylPM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE68DC4CEE9;
+	Fri, 30 May 2025 05:23:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748582595;
+	bh=UUSQVyHtUMB0ilUAqR1Rlf0jpDZeu+aMdADtiW9AjRg=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=EQN3ylPMk6L+RQBbKDNzD5lyjR1EuIOP0zJsqimNHN+PrE/qgGcit3uoeGPqakenx
+	 A2M2Wf55qsM9e3N4GNHy1Y+3q9K8aF7arvh1tbvknrK0qxym14g1+MJ3nG+Om8s05x
+	 q4vZDm+ZlIAsL9jbveFxCQrtXiz4woKV3d69ZockYv6VZ11VubCtLUryJVcOcoBMjo
+	 S9tvDTxRGUxxQCjHUKT11+cAgbSmcb5RQ03wEys0506UYIRQZM/tMW6a9wvSXi0AAl
+	 l3X1cSLDYmQaU8Ek89vvU6+lMVWv6O+SMDdwyBfqEOgADnQZYtO2TBpSkC6tK0SWRC
+	 08esfnMGqk9FQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70FC939F1DEE;
+	Fri, 30 May 2025 05:23:50 +0000 (UTC)
+Subject: Re: [GIT PULL] VFIO updates for v6.16-rc1
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250529144851.1ce2ce66.alex.williamson@redhat.com>
+References: <20250529144851.1ce2ce66.alex.williamson@redhat.com>
+X-PR-Tracked-List-Id: <kvm.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250529144851.1ce2ce66.alex.williamson@redhat.com>
+X-PR-Tracked-Remote: https://github.com/awilliam/linux-vfio.git tags/vfio-v6.16-rc1
+X-PR-Tracked-Commit-Id: 4518e5a60c7fbf0cdff393c2681db39d77b4f87e
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 3536049822060347c8cb5a923186a8d65a8f7a48
+Message-Id: <174858262905.3833287.15899806792991622129.pr-tracker-bot@kernel.org>
+Date: Fri, 30 May 2025 05:23:49 +0000
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025053037-tribunal-shortlist-5207@gregkh>
 
-On Fri, May 30, 2025 at 07:11:58AM +0200, Greg Kroah-Hartman wrote:
-> On Thu, May 29, 2025 at 10:40:17AM -0700, Pawan Gupta wrote:
-> > On Wed, May 28, 2025 at 09:49:40PM -0700, Richard Narron wrote:
-> > > On Tue, 27 May 2025, Pawan Gupta wrote:
-> > > 
-> > > > On Tue, May 27, 2025 at 12:31:47PM -0700, Richard Narron wrote:
-> > > > > On Fri, 23 May 2025, Guenter Roeck wrote:
-> > > > >
-> > > > > > On 5/20/25 06:49, Greg Kroah-Hartman wrote:
-> > > > > > > This is the start of the stable review cycle for the 5.15.184 release.
-> > > > > > > There are 59 patches in this series, all will be posted as a response
-> > > > > > > to this one.  If anyone has any issues with these being applied, please
-> > > > > > > let me know.
-> > > > > > >
-> > > > > > > Responses should be made by Thu, 22 May 2025 12:57:37 +0000.
-> > > > > > > Anything received after that time might be too late.
-> > > > > > >
-> > > > > >
-> > > > > > Build reference: v5.15.184
-> > > > > > Compiler version: x86_64-linux-gcc (GCC) 12.4.0
-> > > > > > Assembler version: GNU assembler (GNU Binutils) 2.40
-> > > > > >
-> > > > > > Configuration file workarounds:
-> > > > > >     "s/CONFIG_FRAME_WARN=.*/CONFIG_FRAME_WARN=0/"
-> > > > > >
-> > > > > > Building i386:defconfig ... passed
-> > > > > > Building i386:allyesconfig ... failed
-> > > > > > --------------
-> > > > > > Error log:
-> > > > > > x86_64-linux-ld: arch/x86/kernel/static_call.o: in function
-> > > > > > `__static_call_transform':
-> > > > > > static_call.c:(.ref.text+0x46): undefined reference to `cpu_wants_rethunk_at'
-> > > > > > make[1]: [Makefile:1234: vmlinux] Error 1 (ignored)
-> > > > > > --------------
-> > > > > > Building i386:allmodconfig ... failed
-> > > > > > --------------
-> > > > > > Error log:
-> > > > > > x86_64-linux-ld: arch/x86/kernel/static_call.o: in function
-> > > > > > `__static_call_transform':
-> > > > > > static_call.c:(.ref.text+0x46): undefined reference to `cpu_wants_rethunk_at'
-> > > > > > make[1]: [Makefile:1234: vmlinux] Error 1 (ignored)
-> > > > > > --------------
-> > > > > >
-> > > > > > In v5.15.y, cpu_wants_rethunk_at is only built if CONFIG_STACK_VALIDATION=y,
-> > > > > > but that is not supported for i386 builds. The dummy function in
-> > > > > > arch/x86/include/asm/alternative.h doesn't take that dependency into account.
-> > > > > >
-> > > > >
-> > > > > I found this bug too using the Slackware 15.0 32-bit kernel
-> > > > > configuration.
-> > > > >
-> > > > > Here is a simple work around patch, but there may be a better solution...
-> > > > >
-> > > > > --- arch/x86/kernel/static_call.c.orig	2025-05-22 05:08:28.000000000 -0700
-> > > > > +++ arch/x86/kernel/static_call.c	2025-05-27 10:25:27.630496538 -0700
-> > > > > @@ -81,9 +81,12 @@
-> > > > >  		break;
-> > > > >
-> > > > >  	case RET:
-> > > > > +
-> > > > > +#ifdef CONFIG_64BIT
-> > > > >  		if (cpu_wants_rethunk_at(insn))
-> > > > >  			code = text_gen_insn(JMP32_INSN_OPCODE, insn, x86_return_thunk);
-> > > > >  		else
-> > > > > +#endif
-> > > > >  			code = &retinsn;
-> > > > >  		break;
-> > > > >
-> > > >
-> > > > Another option is to define the empty function when CONFIG_STACK_VALIDATION=n as below:
-> > > >
-> > > > --- 8< ---
-> > > > From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-> > > > Subject: [PATCH] x86/its: Fix undefined reference to cpu_wants_rethunk_at()
-> > > >
-> > > > Below error was reported in 32-bit kernel build:
-> > > >
-> > > >   static_call.c:(.ref.text+0x46): undefined reference to `cpu_wants_rethunk_at'
-> > > >   make[1]: [Makefile:1234: vmlinux] Error
-> > > >
-> > > > This is because the definition of cpu_wants_rethunk_at() depends on
-> > > > CONFIG_STACK_VALIDATION which is only enabled in 64-bit mode.
-> > > >
-> > > > Define the empty function when CONFIG_STACK_VALIDATION=n, rethunk mitigation
-> > > > is anyways not supported without it.
-> > > >
-> > > > Reported-by: Guenter Roeck <linux@roeck-us.net>
-> > > > Link: https://lore.kernel.org/stable/0f597436-5da6-4319-b918-9f57bde5634a@roeck-us.net/
-> > > > Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-> > > > ---
-> > > >  arch/x86/include/asm/alternative.h | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/arch/x86/include/asm/alternative.h b/arch/x86/include/asm/alternative.h
-> > > > index 1797f80c10de..a5f704dbb4a1 100644
-> > > > --- a/arch/x86/include/asm/alternative.h
-> > > > +++ b/arch/x86/include/asm/alternative.h
-> > > > @@ -98,7 +98,7 @@ static inline u8 *its_static_thunk(int reg)
-> > > >  }
-> > > >  #endif
-> > > >
-> > > > -#ifdef CONFIG_RETHUNK
-> > > > +#if defined(CONFIG_RETHUNK) && defined(CONFIG_STACK_VALIDATION)
-> > > >  extern bool cpu_wants_rethunk(void);
-> > > >  extern bool cpu_wants_rethunk_at(void *addr);
-> > > >  #else
-> > > > --
-> > > > 2.34.1
-> > > >
-> > > 
-> > > Thanks for looking at this Pawan.
-> > > 
-> > > Your new patch works fine on both Slackware 15.0 32-bit and 64-bit
-> > > systems.
-> > 
-> > Thank you for verifying the patch.
-> 
-> Is someone going to submit this in a form we can apply it in?  (hint...)
+The pull request you sent on Thu, 29 May 2025 14:48:51 -0600:
 
-Oops, sending it now.
+> https://github.com/awilliam/linux-vfio.git tags/vfio-v6.16-rc1
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/3536049822060347c8cb5a923186a8d65a8f7a48
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
