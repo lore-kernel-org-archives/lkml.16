@@ -1,90 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B311A194124;
-	Fri, 30 May 2025 16:06:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75C418FC80
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 16:07:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748621205; cv=none; b=r9bSxMHk4QjYgCLqHNFIFcw/lQ4tRWsxa+GlGxzQG+aLbRtkuALB96yqFh8fyafxAxpz8haih389OydN1UFtueimQX4VPWG4uZStiT1W0dOh2IJ8APlS019hdCE1XV/683tPm2nR0jblfrmJOgds4tvaOxuPExBDNeMjKur6/Bg=
+	t=1748621276; cv=none; b=A699NYxOYUQ/7+6aao8ZtQzdDuItFVml1OnwZuPbmDwHwId6Kp/Y1JkoOvHeuLBmgwFDGhvxaXmd4jmeUkJKH0dlRgH3haTAOVKLM9FeR0ztzj+vhpQ3jBeOHEA/vv+ZMF+uN66phC/NqTNQ9odcuEyPRMj/8jurDZVksKyEI7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748621205; c=relaxed/simple;
-	bh=QE5vZGB4Ai+yRaeiycLEe0jyVNRUeLHTkrCHAA4Iou4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yrp/u9olqyBEc6/sto/c/YUkhUVqr9bSjBsRJrXpm3iXfCUqDPFTFfcwTC5vDZ6v/VQSY/VLpJl115q99EPOQqFEWJZZMKwLyCBz2uFKnLQd9GHYMxq35gloPAq4j8NtGLoUHBqejkUhHEPzrK3y6AI5vrc1Xt/hLlvjFPgiFEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jwiqu090; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748621276; c=relaxed/simple;
+	bh=KmLizsZC/EHsG+B3pqWO/Yxj0X1XdikxJ6WfhvkFKkc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tiDNm+13gVNY/bp2ifd7UNmS9Cr6YsPmJistALdRqzrf6zJ7+Hsvhg7QzWubxp1fxbPp+GMpLz+7o2GmsXRdiHJtatuffT9eFy0thtMFREV0H+h2c1aBeVwoz8Cr7gXZ+4XlpbhC36YO72epAKKzyhBc2kBTAUw/6rZ2RwKwhYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=ZQB7lhVN; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jwiqu090"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04216C4CEE9;
-	Fri, 30 May 2025 16:06:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748621204;
-	bh=QE5vZGB4Ai+yRaeiycLEe0jyVNRUeLHTkrCHAA4Iou4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jwiqu090/qhzPkXyeBmBinFeGCzivQHGPhQYkSn/uD1aNWWg/9mcNJRrJ2XFvJPE5
-	 O/sWCAVYme7W5w1O7ZRIdqE7gbyasvamQOxq5hOLoSDuzu6H7eb8Ayr3Gk6Oxo7e5G
-	 UR4eLFvRqFENyGzF/nD0AEVuvG5uY7kK0Cxh503v+rYsFoVuuDgnemf8z/uhledgOe
-	 T+nYH91VkZkoDluvlejL4NW8H3qwyATeOLt2CkSuu47ZKuYiiW2Ntm9U7/k0c++NXH
-	 +vsG/do+93DqSYLjAZeEzFQkjEaV2bv63vXP6U0jhmo++x/h545FCrrvIUBn99NyVi
-	 iDF1ER/xff2kA==
-Date: Fri, 30 May 2025 17:06:38 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Chris Brandt <chris.brandt@renesas.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="ZQB7lhVN"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a4dc0f164fso2095308f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:07:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google; t=1748621273; x=1749226073; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=koRnW66k+022ggfFoSoQrqqTLl823zuv/376lcTR9I8=;
+        b=ZQB7lhVNliQktHrvBDzHNyL5o9MeI/nVYyAtfHIKQu8sceJi988rOX6/qfcDjYSnEG
+         Q+k5iwoK2MhOkOfj3TsG8xsetsVdM7K9AVnyXRJfzlyGBPaCupYKUetB4cgcRzuZhmt5
+         Y9skRKUAs01z4OVPJOHlsAxpb3jWXujCtOxCk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748621273; x=1749226073;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=koRnW66k+022ggfFoSoQrqqTLl823zuv/376lcTR9I8=;
+        b=vf3sVqTHN5MNYrLsfPUHzqKMmVIAapnKjnYOaawwnPD2RXkCV3NcJOlC6XCUweMrHB
+         23p//RTTGjaNdCaFblRmLMkaU8o2xl77il6DamEoeIvf3oQuBF1OALJWuiu0kkdYhUf7
+         dXy+4xIf3yjzyK1edHcDoe/SAIX/0RKx7bXnpFKkJFCRveldlW2OjSPz3Stj6UAseQbD
+         CtcZasIwbEmTfAkLMMOSNKA669CRSrYV7wQcNlXAqDYH19uE77j9ZxOqmnf9nDuhMUnE
+         b21qFui6FsML2tFRGtdTJ/2UCoOp+U5HQAalcO6pyWVLgCIyyICOFgg8aVA47Al8tZxy
+         AaVQ==
+X-Gm-Message-State: AOJu0YwkW/idrByYxf9vaUKyYjNKJdjr887sZgTpSlufhrsTRqLIgLMI
+	LS/VtbOuk8Hiv3A3RIqbhTqChXCaeMMHSi/WM0/5FLKVfMoXLEXlcGh1Sy9tpkxKkrnROqgUOSp
+	8MwCG
+X-Gm-Gg: ASbGncui6y7WfTdp04V4gA5U1pbKkidaxMYNtcMmwzmSXMp6YeAtn6MRTmU6n5CSXyH
+	LDNbSAX/8NVYhNUxlxj3ERPv1rER2v/8t+hbmd7l8QaOLfuBoetptiWtkXDIzQSOjdC1aj2vrpK
+	3PeA6vPQup4sVMJWEqb995QFqDS6pM/xsOP1HwWCtlD2Qvf4FOsjb+V9V+ckkC6VkDvv/t9rGMw
+	qsO8SjVr3X43D1iiUxK6TsMmZmox8Uwj6SErdShkt4L0qEaAdPDzRBHhwEMDpSDl+GA9Bwz5dDm
+	K6UCtMRSMSYbSlLGlTrv1stxeTwDycLGrfFunGfcQS+n7dqAGHQvRyxDpwX4A06vxre2kmLV/E1
+	0PcRw5BqdPxSYU6LGMul1WdOThfVMGjoCt9s/khm3
+X-Google-Smtp-Source: AGHT+IEgCfDLZvTgBMKT8zzGqvGoHF8+fTV9cPyrjWspDgJx5+AgYctVuJO1cy1dC+MaM92LcBU+ZQ==
+X-Received: by 2002:a05:6000:25c2:b0:3a4:f038:af87 with SMTP id ffacd0b85a97d-3a4f7a9d575mr3347648f8f.47.1748621272729;
+        Fri, 30 May 2025 09:07:52 -0700 (PDT)
+Received: from dario-ThinkPad-T14s-Gen-2i.amarulasolutions.com ([2.196.43.33])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450dcc18a80sm9716365e9.38.2025.05.30.09.07.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 May 2025 09:07:51 -0700 (PDT)
+From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+To: linux-kernel@vger.kernel.org
+Cc: michael@amarulasolutions.com,
+	Frank Li <Frank.Li@nxp.com>,
+	linux-amarula@amarulasolutions.com,
+	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Andreas Kemnade <andreas@kemnade.info>,
+	Ard Biesheuvel <ardb@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 3/6] dt-bindings: i2c: renesas,riic: Document RZ/N2H
- support
-Message-ID: <20250530-gear-sneer-6a8b186f6a20@spud>
-References: <20250530143135.366417-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250530143135.366417-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	Eric Biggers <ebiggers@google.com>,
+	Fabio Estevam <festevam@denx.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	Frieder Schrempf <frieder.schrempf@kontron.de>,
+	Heiko Schocher <hs@denx.de>,
+	=?UTF-8?q?Jo=C3=A3o=20Paulo=20Gon=C3=A7alves?= <joao.goncalves@toradex.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	Marek Vasut <marex@denx.de>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Max Merchel <Max.Merchel@ew.tq-group.com>,
+	Michael Walle <mwalle@kernel.org>,
+	Peng Fan <peng.fan@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Tim Harvey <tharvey@gateworks.com>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v5 0/6] Support i.MX28 Amarula rmm board
+Date: Fri, 30 May 2025 18:07:31 +0200
+Message-ID: <20250530160748.2476088-1-dario.binacchi@amarulasolutions.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jZNX5/bk39sC52rF"
-Content-Disposition: inline
-In-Reply-To: <20250530143135.366417-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Transfer-Encoding: 8bit
 
+The series adds support for i.MX28 Amarula rmm board.
 
---jZNX5/bk39sC52rF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The board includes the following resources:
+ - 256 Mbytes NAND Flash
+ - 128 Mbytes DRAM DDR2
+ - CAN
+ - USB 2.0 high-speed/full-speed
+ - Ethernet MAC
 
-On Fri, May 30, 2025 at 03:31:32PM +0100, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->=20
-> Document support for the I2C Bus Interface (RIIC) found on the Renesas
-> RZ/N2H (R9A09G087) SoC. The RIIC IP on this SoC is identical to that on
-> the RZ/T2H SoC so `renesas,riic-r9a09g077` will be used as a fallback
-> compatible.
->=20
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Changes in v5:
+- In mxs-lradc.txt:
+  - Fix deacription formating
+- In imx28-amarula-rmm.dts:
+  - Drop #address-cells from gpmi node
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Changes in v4:
+- In mxs-lradc.txt:
+  - Fix typo Low-Resoulution -> Low-Resolution'
+  - Wrap lines at 80 char.
+  - Drop '|' from the description
+  - Describe what each interrupt is for.
+  - Move touchscreen-wires constraint for imx28 to the top level
+- In imx28-amarula-rmm.dts:
+  - Drop label property (deprecated) under the leds sub-nodes.
+  - Add microSD comment above the ssp0 node.
+- Add patch 5/6 "ARM: mxs_defconfig: Cleanup mxs_defconfig"
+- Add patch 6/6 "ARM: mxs_defconfig: select new drivers used by
+  imx28-amarula-rmm"
 
---jZNX5/bk39sC52rF
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes in v3:
+- In imx28-amarula-rmm.dts:
+  - Drop xceiver-supply property from can0 node.
+  - Rearrange the order of specific nodes and properties
+    alphabetically.
 
------BEGIN PGP SIGNATURE-----
+Changes in v2:
+- In imx28-amarula-rmm.dts:
+  - Replace '-' with '@' for the pinctrl sub-nodes.
+  - Replace edt,edt-ft5x06 with edt,edt-ft5306.
+  - Drop LCD reset hog pin.
+  - Add correct #address-cells and #size-cells to gpmi node.
+  - Replace edt-ft5x06@38 with touchscreen@38.
+- Drop from commit messages all references to LCD display.
+- Add patch [1/4] "dt-bindings: mfd: convert mxs-lradc bindings to
+  json-schema".
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaDnXjgAKCRB4tDGHoIJi
-0mYOAP0chDMedOz4gTJJJvgNzUXjKkdlOO9Jf2lTjMHcRDQnXgD/aVXzcVFwqL2s
-BPKVIG0d/5NNZOexx2icbsBHzMr1AA4=
-=x//Q
------END PGP SIGNATURE-----
+Dario Binacchi (6):
+  dt-bindings: mfd: convert mxs-lradc bindings to json-schema
+  ARM: dts: imx28: add pwm7 muxing options
+  dt-bindings: arm: fsl: add i.MX28 Amarula rmm board
+  ARM: dts: mxs: support i.MX28 Amarula rmm board
+  ARM: mxs_defconfig: Cleanup mxs_defconfig
+  ARM: mxs_defconfig: select new drivers used by imx28-amarula-rmm
 
---jZNX5/bk39sC52rF--
+ .../devicetree/bindings/arm/fsl.yaml          |   1 +
+ .../devicetree/bindings/mfd/mxs-lradc.txt     |  45 ---
+ .../devicetree/bindings/mfd/mxs-lradc.yaml    | 134 ++++++++
+ arch/arm/boot/dts/nxp/mxs/Makefile            |   1 +
+ .../boot/dts/nxp/mxs/imx28-amarula-rmm.dts    | 300 ++++++++++++++++++
+ arch/arm/boot/dts/nxp/mxs/imx28.dtsi          |  10 +
+ arch/arm/configs/mxs_defconfig                |  14 +-
+ 7 files changed, 449 insertions(+), 56 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mfd/mxs-lradc.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/mxs-lradc.yaml
+ create mode 100644 arch/arm/boot/dts/nxp/mxs/imx28-amarula-rmm.dts
+
+-- 
+2.43.0
+
+base-commit: 6100186e509525510e2b38d790338fae3fa463f3
+branch: imx28-amarula-rmm
