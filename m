@@ -1,71 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F9F482EB;
-	Sat, 31 May 2025 05:52:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88562E628
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 06:08:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748670749; cv=none; b=VFvg7i0TsULXw4LcC00zIn1NLlVE1yCwzmNNzGra+ZtpZy7cL1Cj+QqhAN4bfz0+zaYVcqnkre+ZOu7Y+NItoxIZTw9AdzkP0AWVTjqVyTB6kcqBCzDaRW+DFeOVHqLyiRWiyi+HnyLSG0refi3teST7sYIjm+juYi1fVOSr6Ww=
+	t=1748671688; cv=none; b=ZR5NPeQ4tOWLGHWdogR81f1txkmLaYewm256btZAZrSL9jLWQ5ps+Y1OY8OU1RdrHBA/cd/9tA6SpZ/H4qQCfCsjUgyYbfXkUicGR4G0zgyCuAGfQe7NG8JZeVZ2fjW5tGrAl6xV9HK7LY1kBb3pZ/h+/igljr6o224b85eUYHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748670749; c=relaxed/simple;
-	bh=cALAC45bcmWERtlmr7LoJYVyMgKP9/CIORLyNtIJDTo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XVXrK0bAJI+strxnzFOCznONAlt3JUoELwj5wVGpDpG8rvH76PAwjqxhsHJvF8gaw1dAoE4VJAilgjGSVMK+t3xndfX6XAsc47AoqxjHKEK7v85zxHn4NwcUumlrHK8djGyR1PeaecpbTZ3fRUwJtobDr0USdDATlVd2l+HcR2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=BBWe77Ry; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748671688; c=relaxed/simple;
+	bh=SFlrWWfG74B6exhPjuCqn0hBLGYXiSjGf/EbvYaaAVs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PVEyVQsEVRtl5F40oDnpWoWPLZMVcyDMFKz5sKcjkNP1ETVa9fXBm6z+dkyDnj9utOGx0PWCcTg60fZSQ9cn8XlFKXajV+23MueJHGcmDCR5GgeXY66lyUbJTasMy73mXGN6GSOr9BTh2+Ghwarh+Nf5IJpRDb+C9Gkk0lMiJcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iTEndOEw; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BBWe77Ry"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11D52C4CEE3;
-	Sat, 31 May 2025 05:52:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1748670748;
-	bh=cALAC45bcmWERtlmr7LoJYVyMgKP9/CIORLyNtIJDTo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BBWe77RykKrSJXfko9OgPsygLKF6tjS8vhKXHLKhBdQrJtrdN6bhd9areOJ/wj+U+
-	 qBJYns24X8rDCbSdzvbZHJx6NMv7qt0hJnX3c2M5t4KBzB+Nq+TEzvQjPm/wwQiky1
-	 zOb2NinsAuY2zsMl2sfINgff+ZCp/HDMbBACbPm4=
-Date: Sat, 31 May 2025 07:52:25 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: "Vankar, Chintan" <c-vankar@ti.com>
-Cc: Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>, Peter Rosin <peda@axentia.se>,
-	s-vadapalli@ti.com, danishanwar@ti.com,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	Vignesh Raghavendra <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RFC PATCH v2 0/2] Extend mmio-mux driver to configure mux with
- new DT property
-Message-ID: <2025053128-profound-importer-8436@gregkh>
-References: <20250304102306.2977836-1-c-vankar@ti.com>
- <f844e44e-6b71-442a-ae3c-7bbe74a908af@ti.com>
- <2e80f6bc-2fb0-4f0d-9450-cbcf4dddca66@ti.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iTEndOEw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748671684;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Mi36qKJqcFRPx400y/HtJCcteAnaWg5UTYhGBt/SiY8=;
+	b=iTEndOEwVNkWnbwSt2hn3DAfjkjCtLk03rprbk6d5r0psxJzFATdoa2hrtJX4wcOtbeAe8
+	UL0i8DEzsu/yFoqnZ/Y/UO145oOjjas3xHsmwffq+AI5zfHQ3GIS6OSObs5Vegry/QYZBP
+	AexwLor/sJOUx3smv0lPjjcah1PSeGo=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-531-OxWsT9zqM4SBTVYQ970Fcg-1; Sat,
+ 31 May 2025 02:07:59 -0400
+X-MC-Unique: OxWsT9zqM4SBTVYQ970Fcg-1
+X-Mimecast-MFC-AGG-ID: OxWsT9zqM4SBTVYQ970Fcg_1748671679
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7F9F0180045C;
+	Sat, 31 May 2025 06:07:58 +0000 (UTC)
+Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EE6C21954191;
+	Sat, 31 May 2025 06:07:56 +0000 (UTC)
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Cc: mlevitsk@redhat.com,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH v2] rtmutex_api: provide correct extern functions
+Date: Sat, 31 May 2025 02:07:56 -0400
+Message-ID: <20250531060756.130554-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2e80f6bc-2fb0-4f0d-9450-cbcf4dddca66@ti.com>
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Fri, May 30, 2025 at 10:35:24PM +0530, Vankar, Chintan wrote:
-> Hello Greg,
-> 
-> I have tried to implement Timesync Router node to the suitable
-> Subsystems (Interrupt controller and Mux-controller). Thomas
-> has provided a feedback with a reason why Timesync Router is not
-> suitable for irqchip. But I didn't get a proper feedback for mux-
-> controller subsystem.
+Commit fb49f07ba1d9 ("locking/mutex: implement mutex_lock_killable_nest_lock")
+changed the set of functions that mutex.c defines when CONFIG_DEBUG_LOCK_ALLOC
+is set.
 
-What do you mean "proper feedback"?
+- it removed the "extern" declaration of mutex_lock_killable_nested from
+  include/linux/mutex.h, and replaced it with a macro since it could be
+  treated as a special case of _mutex_lock_killable.  It also removed a
+  definition of the function in kernel/locking/mutex.c.
 
-> Can you please help me deciding in which subsystem I should implement
-> it, if not mux-controller can it go in drivers/misc ?
+- likewise, it replaced mutex_trylock() with the more generic
+  mutex_trylock_nest_lock() and replaced mutex_trylock() with a macro.
 
-Why not mux?  What's preventing that from happening?  Why would misc be
-better?
+However, it left the old definitions in place in kernel/locking/rtmutex_api.c,
+which causes failures when building with CONFIG_RT_MUTEXES=y.  Bring over
+the changes.
 
-thanks,
+Fixes: fb49f07ba1d9 ("locking/mutex: implement mutex_lock_killable_nest_lock")
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+	This time, with brain connected.
 
-greg k-h
+ kernel/locking/rtmutex_api.c | 33 +++++++++++++++++++++------------
+ 1 file changed, 21 insertions(+), 12 deletions(-)
+
+diff --git a/kernel/locking/rtmutex_api.c b/kernel/locking/rtmutex_api.c
+index 191e4720e546..f21e59a0525e 100644
+--- a/kernel/locking/rtmutex_api.c
++++ b/kernel/locking/rtmutex_api.c
+@@ -544,12 +544,12 @@ int __sched mutex_lock_interruptible_nested(struct mutex *lock,
+ }
+ EXPORT_SYMBOL_GPL(mutex_lock_interruptible_nested);
+ 
+-int __sched mutex_lock_killable_nested(struct mutex *lock,
+-					    unsigned int subclass)
++int __sched _mutex_lock_killable(struct mutex *lock, unsigned int subclass,
++				 struct lockdep_map *nest_lock)
+ {
+-	return __mutex_lock_common(lock, TASK_KILLABLE, subclass, NULL, _RET_IP_);
++	return __mutex_lock_common(lock, TASK_KILLABLE, subclass, nest_lock, _RET_IP_);
+ }
+-EXPORT_SYMBOL_GPL(mutex_lock_killable_nested);
++EXPORT_SYMBOL_GPL(_mutex_lock_killable);
+ 
+ void __sched mutex_lock_io_nested(struct mutex *lock, unsigned int subclass)
+ {
+@@ -563,6 +563,21 @@ void __sched mutex_lock_io_nested(struct mutex *lock, unsigned int subclass)
+ }
+ EXPORT_SYMBOL_GPL(mutex_lock_io_nested);
+ 
++int __sched _mutex_trylock_nest_lock(struct mutex *lock,
++				     struct lockdep_map *nest_lock)
++{
++	int ret;
++
++	if (IS_ENABLED(CONFIG_DEBUG_RT_MUTEXES) && WARN_ON_ONCE(!in_task()))
++		return 0;
++
++	ret = __rt_mutex_trylock(&lock->rtmutex);
++	if (ret)
++		mutex_acquire_nest(&lock->dep_map, 0, 1, nest_lock, _RET_IP_);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(_mutex_trylock_nest_lock);
+ #else /* CONFIG_DEBUG_LOCK_ALLOC */
+ 
+ void __sched mutex_lock(struct mutex *lock)
+@@ -591,22 +606,16 @@ void __sched mutex_lock_io(struct mutex *lock)
+ 	io_schedule_finish(token);
+ }
+ EXPORT_SYMBOL(mutex_lock_io);
+-#endif /* !CONFIG_DEBUG_LOCK_ALLOC */
+ 
+ int __sched mutex_trylock(struct mutex *lock)
+ {
+-	int ret;
+-
+ 	if (IS_ENABLED(CONFIG_DEBUG_RT_MUTEXES) && WARN_ON_ONCE(!in_task()))
+ 		return 0;
+ 
+-	ret = __rt_mutex_trylock(&lock->rtmutex);
+-	if (ret)
+-		mutex_acquire(&lock->dep_map, 0, 1, _RET_IP_);
+-
+-	return ret;
++	return __rt_mutex_trylock(&lock->rtmutex);
+ }
+ EXPORT_SYMBOL(mutex_trylock);
++#endif /* !CONFIG_DEBUG_LOCK_ALLOC */
+ 
+ void __sched mutex_unlock(struct mutex *lock)
+ {
+-- 
+2.43.5
+
