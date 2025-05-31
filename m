@@ -1,57 +1,48 @@
-Received: from mxout1.routing.net (mxout1.routing.net [134.0.28.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ADF118E20;
-	Sat, 31 May 2025 11:32:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E09C1239570
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 11:39:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748691140; cv=none; b=mcW6qxFMF0+0IJOPX+CmUbA7yHXDsco3VxKusvw1U/QT/okBSidkzaUb89m0/qafDv8jkFHFeL1nG9RPSOyOL+sGB+watw2JBCz0E0juQk08XEkLaZ5Eq4+7eE6suDkKwXMhyyp2EMatsBZOSyb6MeCzHq0LdU35wfc3tBfmqiA=
+	t=1748691557; cv=none; b=YmB2xSbsXdtfp1pw6PUMC/yLQM63Fvhgu5s2kJEU3zXlkvUZRbL3avmbO9y7MHpgB7O+kNDACrtAcAyOXZJ39pkAn0nKDHQclkDn2WYkf04q339vRhUhLbwqBs83FbH9W3jKLnCGUsXvAQo1jacnsLZtczAdycgw+/KKf3nJe/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748691140; c=relaxed/simple;
-	bh=A2DHo1HywB/qwxABiJK0abopHwRYGfy7HmZJoH0S/ZU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n9En52mGvRYJ8iHyije9sDx+v2VRK6Qe5qr6Fkw0c/9jJ42WCF3cVzADpkWBbZ2NHqTYUejJ5AVDHFNJaw3UoD3mzvf+uXNub70f/t1DuZGLxPQPz3l1wM3Jm1lgWc9Sllvnm0YVb3gaFKSDZjaRhC8JLgZcbRVQnzqVUl8Bnxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=Sqc5sypC; arc=none smtp.client-ip=134.0.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
+	s=arc-20240116; t=1748691557; c=relaxed/simple;
+	bh=FThwoyjp+lIKrPd5bzRRSkMXiwi1LjBL90jgimirWd8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RINANgt0X42B8tuUrn2WAEL2nGqiZ0lQ3xqqwG5etVzkHQ5yE6g+PMFKgubLJtenj8kKOcm0vzHbR1vK4k2rcXxcO0+QJ03/rej2oakzg3GbSI8Eq0Lc9D7BYYJ5+D9qyk0J9Zoq1qVE6JfowjDrlAPGG9Pdq/QO03agB8lanj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=HL9lD6uo; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="Sqc5sypC"
-Received: from mxbulk.masterlogin.de (unknown [192.168.10.85])
-	by mxout1.routing.net (Postfix) with ESMTP id 076673FD38;
-	Sat, 31 May 2025 11:24:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1748690673;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=fWlDJZFGibouXI9Xxl4L3ttSojMBpE6uWpsKddJDyoY=;
-	b=Sqc5sypCBpxJrJDNGjSFApEEtY22xuSJ5xLurDITmfc/4AYyfZl/euSGGlmGJoB9ow6hh9
-	mb6pe6aNOMCXRZzFKZEW0VaIdC2tcbIFwPdm9phfyBp6t8bzEI0Sdc5mzlXneLd88t1YRm
-	KWtAC5fcXUNU0f7qKQgN5z6X1xx4gXU=
-Received: from frank-u24.. (fttx-pool-217.61.150.8.bambit.de [217.61.150.8])
-	by mxbulk.masterlogin.de (Postfix) with ESMTPSA id BB9171226A5;
-	Sat, 31 May 2025 11:24:32 +0000 (UTC)
-From: Frank Wunderlich <linux@fw-web.de>
-To: MyungJoo Ham <myungjoo.ham@samsung.com>,
-	Kyungmin Park <kyungmin.park@samsung.com>,
-	Chanwoo Choi <cw00.choi@samsung.com>,
-	Georgi Djakov <djakov@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Jia-Wei Chang <jia-wei.chang@mediatek.com>,
-	Johnson Wang <johnson.wang@mediatek.com>
-Cc: Frank Wunderlich <frank-w@public-files.de>,
-	linux-pm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH v2] dt-bindings: interconnect: add mt7988-cci compatible
-Date: Sat, 31 May 2025 13:24:23 +0200
-Message-ID: <20250531112425.10525-1-linux@fw-web.de>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="HL9lD6uo"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id C10A525C1E;
+	Sat, 31 May 2025 13:39:06 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id tdtcKqBGVBb8; Sat, 31 May 2025 13:39:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1748691546; bh=FThwoyjp+lIKrPd5bzRRSkMXiwi1LjBL90jgimirWd8=;
+	h=From:To:Cc:Subject:Date;
+	b=HL9lD6uo72BQbIVpdfk9aqygljJNUq37nzFGQlzRKGG3MshIP9SaNNup4DsLt5p9h
+	 B9PsAgeFWsDMmNsggg8mB+iqXSD/JnVm5SUL61hgjwpQLzA8+mOehWMNt4sjXpsm6O
+	 bqvaMDB2slkCcxhCB23toOuysofKwdlQ0bJ4Y/07zQ1+VUVxmF/f4wHTOtU8BKE1hk
+	 m85sG6t81pDZ1vY4JHX/N17FqvzkauOCjB0/3FDw04PC4lbDu7Ym/HoCqx92BtzX8+
+	 EUrf1GDNmaWXKt8s+2Hxm+UKfnggtMbUvNpceLvAba2HWoxpHAb4FAzdRikwWSDYsW
+	 mTUJsXrD0vNSg==
+From: Yao Zi <ziyao@disroot.org>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Mingcong Bai <jeffbai@aosc.io>,
+	Kexy Biscuit <kexybiscuit@aosc.io>,
+	Yao Zi <ziyao@disroot.org>
+Subject: [PATCH 0/2] Backlight control improvements for loongson_laptop
+Date: Sat, 31 May 2025 11:38:49 +0000
+Message-ID: <20250531113851.21426-1-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,42 +51,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Frank Wunderlich <frank-w@public-files.de>
+I've observed strange screen brightness changes on TongFang L860-T2
+3A5000 laptop after resumption. It's found that a brightness value that
+doesn't match the hardware state before suspension is "restored" for the
+EC, causing the strange behavior.
 
-Add compatible for Mediatek MT7988 SoC with mediatek,mt8183-cci fallback
-which is taken by driver.
+This series fixes the behavior by obtaining EC's brightness setting
+instead of using a constant as current brightness on probe.
 
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
----
-v2:
-- no RFC
-- drop "items" as sugested by conor
----
- .../bindings/interconnect/mediatek,cci.yaml           | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+While digging through the code, I've found some unused,
+power-control-related functions in the driver. They're cleaned up and
+used to support power control of backlight in the second patch as well.
 
-diff --git a/Documentation/devicetree/bindings/interconnect/mediatek,cci.yaml b/Documentation/devicetree/bindings/interconnect/mediatek,cci.yaml
-index 58611ba2a0f4..4d72525f407e 100644
---- a/Documentation/devicetree/bindings/interconnect/mediatek,cci.yaml
-+++ b/Documentation/devicetree/bindings/interconnect/mediatek,cci.yaml
-@@ -17,9 +17,14 @@ description: |
- 
- properties:
-   compatible:
--    enum:
--      - mediatek,mt8183-cci
--      - mediatek,mt8186-cci
-+    oneOf:
-+      - enum:
-+          - mediatek,mt8183-cci
-+          - mediatek,mt8186-cci
-+      - items:
-+          - enum:
-+              - mediatek,mt7988-cci
-+          - const: mediatek,mt8183-cci
- 
-   clocks:
-     items:
+Yao Zi (2):
+  platform/loongarch: laptop: Get brightness setting from EC on probe
+  platform/loongarch: laptop: Support backlight power control
+
+ drivers/platform/loongarch/loongson-laptop.c | 55 +++++++-------------
+ 1 file changed, 20 insertions(+), 35 deletions(-)
+
 -- 
-2.43.0
+2.49.0
 
