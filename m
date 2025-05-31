@@ -1,119 +1,102 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62E11096F;
-	Sat, 31 May 2025 05:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE951096F;
+	Sat, 31 May 2025 05:11:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748668258; cv=none; b=LmJ7QzMqrh/IVGJNq2O9yGujIoKNCnoGLg65anQgNM7T6A1n2uDgO8v1WVSsj/CWsk1SrlDUuD4bvhRp/7V3egJ/kj70D8yXC4Omg+27hIhR/sGKF8uj4y5LL6LcAT152jyt/juC6h/QVGvV7xU0QtuEp2RzmQlL/aFjn166NK4=
+	t=1748668319; cv=none; b=NkXZlAKHUbzGmHepJxwWQojbg8wuADcZZbvvQGPvG+Cvf5FcSxa8DiJoIhA8dzr8YzVN/sxt6J/V30CallD1LJ7fDG0ywBMz9dnRAgKepz7xeQBGlMNihyZPgHHKXSeFZghBVDoBQ5cVkO93GdKpZGQTKVubIEEcQZwbPi+Udyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748668258; c=relaxed/simple;
-	bh=Q/3NgC5YAv/sLlRho9eipXhR4jPMKVejH7/5YMH1zLU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AiSENV0nQ2uk11r9lL1uhmHxSKg/vThVD8XE/QvnJnKJ0DjMKmdNDeyP2a0p1Eprtwbx6TvfcFbW7IJBN0p1ewX7OvuNM/v48ZZSLJ8i90qkzsLKsZIhUEbH275quALS+4nENUONl4g/DE7ZaIM/fH/y6kyCGReMImnNvT6LVxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hfCgZX3G; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748668319; c=relaxed/simple;
+	bh=JVbcaufnfIc/KhfpdmMAmhDvMF0gYQQiWfMmevxHT6M=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=J6ivo1MLk0hrZshrI2lSA5aXIEYqw6A4YNmU+PTdbuTS7tT71R0wMMKmTUsYHqZKK6+pERrEMqdAABXQsvb97sVlCAMK5PWoUbzdqnMoSLJuLQ7p99I+U4zREh5lR76UQnqiNzEOFrlYeHTZv70ZpHD1MTx8MmkUfCi/GiNwJyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SvYXatAU; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hfCgZX3G"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b2c41acd479so1856364a12.2;
-        Fri, 30 May 2025 22:10:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748668256; x=1749273056; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mU0qbiJgr9zua+cBR3kFzOAUJVTnz0mj9Ono3++R7a4=;
-        b=hfCgZX3GAcmkT2IA9Todqy/fEuMBp7QgqM5TAjdXLuZSjeoPRHlmSHoJtBUEHM2zpL
-         pCyyJemsbaFOzXF9/vXnHxsvXPfqLNkJ/96KeEsi0LmfTVAjfh+EfH5BV9otLgSFdvGq
-         TSWBHcvJ/O/z2yjsd6tSDH5i0T2O611gs0Kh+CsYkdUa3pb/wSpxZlfFYDCDP8sQwTjx
-         Bj+2r8/pumpQRUZfL53co7H8svB6b++BZ0craVpkO760/A1LtHfV309eHRwVDKMawzYp
-         J2tvrLkceBNMNDpOrqg72Nbr0pTXRGCFGYzHudAwi1OW3EZ3gfsh6nMRNFJR/YIjHzR1
-         RCdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748668256; x=1749273056;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mU0qbiJgr9zua+cBR3kFzOAUJVTnz0mj9Ono3++R7a4=;
-        b=DpqIvwsMYFPpGi2ocP7bPC8bBIVl9V3fUW9xye//31sTawZ4BFCwSphO1/Kg3jl+72
-         /H8kvJQg/y1ZBC4gOH2vUmYLjpUsv6g76ATej9TXHU3r+C9DQg2085vHkMAe3p9V++/W
-         RiEJLyMHU8clj47/sB7Ow2oWgcXqnlDsyK6Gt9AP2LOySUGqh8DtIGzyTKLeeN1rNsBs
-         t7QCmJU9Nn9n0U11VMusWw8eyDCd2K5otpQYGc5e1DBFMVnKD1Ea/SwJ2vuYrJlLf7De
-         MdeBdW1L7npXJjxhOkgckmoVdfCeCq+2q4+QQuxKLCIcuiZL5JyOWQC9XEmQ8NHvi01a
-         3Q+A==
-X-Forwarded-Encrypted: i=1; AJvYcCVBC1dAZOgso21mw0sXEYDKJfeF11p9pm/ESuwxO4lx9nmiCyv79PW6o+6gtpj24QPGq+ZIVTx3o1ID31I=@vger.kernel.org, AJvYcCVZuX6FO7bpLNVbqLOLdMQRyenOw5PC/8Wr6qcRWpwTGxpHHZFujQ3FX2D4G3Fr2OR+g4OewI71pH5C8vcgCWMt@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMWCgDhOhPgwYK4Tk8t2kW1ZGnD572Nvuts3NSOB/CwwJ4NSOq
-	ktyPefCUXKkrFQR0YBi4iPyNvgxOTLABQVhwLYn7+gwGpbEuxo7MH/iNUU3ipTKu3Cw=
-X-Gm-Gg: ASbGncua3GMGYf6zkCUUzy1SVAWRVeAELCEVbyLWDgoU8H2uSWlL+dYitrkAqK0kD0p
-	zHLlszTGOWGdcVnCeTj9I3SRvs/Dj0OxwLSRDvC43KiZWTid51p7FJG7xwITxKrcPP2LTpfuJfk
-	2SRzC/quN4j+30uAmKpBzybz8rKAfpO1lirKQp/o9ANYLpBLAGj8N8Lgll+PFKMNUNxePdAErhr
-	gtkCa9NtjTM4cYpIhsqjn73FBU7zWWR4CtK2Dk9eNWUIP05woJshBng2CVbD4i623Z4PLjJzo8t
-	Tjq61CBe3Tf9DAYkHBZtTjYUI7LEVI/ypjS3xxqAZ19a8uKBqP84Fwy/4noeHLVqDvU=
-X-Google-Smtp-Source: AGHT+IF7KKaVbGsmx/RswYFw51WZct5NOZ14VEoN8FMOS4cHviEpTeI3GVxjG6n7f1TM0qV2ZO1J1A==
-X-Received: by 2002:a17:902:d58d:b0:234:8c64:7885 with SMTP id d9443c01a7336-2355f784ab6mr13423525ad.53.1748668255766;
-        Fri, 30 May 2025 22:10:55 -0700 (PDT)
-Received: from minh.192.168.1.1 ([2001:ee0:4f0e:fb30:1655:88ee:e7f3:487a])
-        by smtp.googlemail.com with ESMTPSA id 41be03b00d2f7-b2eceb297c8sm2291117a12.26.2025.05.30.22.10.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 May 2025 22:10:55 -0700 (PDT)
-From: Bui Quang Minh <minhquangbui99@gmail.com>
-To: netdev@vger.kernel.org
-Cc: Jakub Kicinski <kuba@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	Philip Li <philip.li@intel.com>,
-	oliver.sang@intel.com,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bui Quang Minh <minhquangbui99@gmail.com>
-Subject: [PATCH net v2] selftests: net: build net/lib dependency in all target
-Date: Sat, 31 May 2025 12:10:39 +0700
-Message-ID: <20250531051039.6561-1-minhquangbui99@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SvYXatAU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748668317; x=1780204317;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=JVbcaufnfIc/KhfpdmMAmhDvMF0gYQQiWfMmevxHT6M=;
+  b=SvYXatAUQXPq+btIO4JKYammVCDSoAk3kp6id1tIwqaTzR2cY/X0IeVC
+   p6MFTSZOw8EV03cubu7ozhbTSBp/C4RW9k7j//wOexgTtsiMXFgkbsYje
+   2vWxrRTJ77EOXzY6dPHpq2epK6OwUYsTf2aSK9a5RJ1XG5KRPW0SDt/0L
+   YYvWo4RJlbKtUZJT8bjSDO69xcM6nV/qO3qgrYcCVAgZrK8ScXUL7dq/K
+   /Gq5vGTcMwz5thZY9C5uvjU/MARfUhflCQFrJ+uVA5Br4bzm/1d7U9obp
+   m/D+nMiZKQqcx4ibo5MTbd/hYqOGQb6RZzzOXg508zAseHdqr7USfig5a
+   w==;
+X-CSE-ConnectionGUID: 2AJoLjXhT4OLd52fYbViKQ==
+X-CSE-MsgGUID: Dn8obadFTl2W0bWGt3DsSA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="62106249"
+X-IronPort-AV: E=Sophos;i="6.16,197,1744095600"; 
+   d="scan'208";a="62106249"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 22:11:56 -0700
+X-CSE-ConnectionGUID: 1u2d66MLRn+1RZgNdveFhw==
+X-CSE-MsgGUID: HNFbF5wSRhiqp9+Q6rBOsQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,197,1744095600"; 
+   d="scan'208";a="149095334"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.71])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 22:11:52 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Sat, 31 May 2025 08:11:48 +0300 (EEST)
+To: Pratap Nirujogi <pratap.nirujogi@amd.com>
+cc: rdunlap@infradead.org, Hans de Goede <hdegoede@redhat.com>, 
+    sfr@canb.auug.org.au, linux-next@vger.kernel.org, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    benjamin.chan@amd.com, bin.du@amd.com, gjorgji.rosikopulos@amd.com, 
+    king.li@amd.com, dantony@amd.com
+Subject: Re: [PATCH 3/3] platform/x86: Use i2c adapter name to fix build
+ errors
+In-Reply-To: <20250530200234.1539571-4-pratap.nirujogi@amd.com>
+Message-ID: <ea615c2e-d306-06b2-10b0-2423ab59a8e9@linux.intel.com>
+References: <20250530200234.1539571-1-pratap.nirujogi@amd.com> <20250530200234.1539571-4-pratap.nirujogi@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-We have the logic to include net/lib automatically for net related
-selftests. However, currently, this logic is only in install target
-which means only `make install` will have net/lib included. This commit
-moves the logic to all target so that all `make`, `make run_tests` and
-`make install` will have net/lib included in net related selftests.
+On Fri, 30 May 2025, Pratap Nirujogi wrote:
 
-Reviewed-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
----
-Changes in v2:
-- Make the commit message clearer.
+> Use 'adapater->name' inplace of 'adapter->owner->name' to fix build issues
+> when CONFIG_MODULES is not defined.
+> 
+> Fixes: 90b85567e457 ("platform/x86: Add AMD ISP platform config for OV05C10")
 
- tools/testing/selftests/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This is the which should have this Fixes tag, the other commits should not 
+have it as they're not really the fix (but this change just depends on 
+them, but since stable is not in picture yet for this driver we don't 
+need to indicate even those deps).
 
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index 6aa11cd3db42..5b04d83ad9a1 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -205,7 +205,7 @@ export KHDR_INCLUDES
- 
- all:
- 	@ret=1;							\
--	for TARGET in $(TARGETS); do				\
-+	for TARGET in $(TARGETS) $(INSTALL_DEP_TARGETS); do	\
- 		BUILD_TARGET=$$BUILD/$$TARGET;			\
- 		mkdir $$BUILD_TARGET  -p;			\
- 		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$TARGET	\
-@@ -270,7 +270,7 @@ ifdef INSTALL_PATH
- 	install -m 744 run_kselftest.sh $(INSTALL_PATH)/
- 	rm -f $(TEST_LIST)
- 	@ret=1;	\
--	for TARGET in $(TARGETS) $(INSTALL_DEP_TARGETS); do \
-+	for TARGET in $(TARGETS); do \
- 		BUILD_TARGET=$$BUILD/$$TARGET;	\
- 		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$TARGET install \
- 				INSTALL_PATH=$(INSTALL_PATH)/$$TARGET \
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Link: https://lore.kernel.org/all/04577a46-9add-420c-b181-29bad582026d@infradead.org
+> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
+> ---
+>  drivers/platform/x86/amd/amd_isp4.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/amd/amd_isp4.c b/drivers/platform/x86/amd/amd_isp4.c
+> index 0cc01441bcbb..80b57b58621a 100644
+> --- a/drivers/platform/x86/amd/amd_isp4.c
+> +++ b/drivers/platform/x86/amd/amd_isp4.c
+> @@ -151,7 +151,7 @@ MODULE_DEVICE_TABLE(acpi, amdisp_sensor_ids);
+>  
+>  static inline bool is_isp_i2c_adapter(struct i2c_adapter *adap)
+>  {
+> -	return !strcmp(adap->owner->name, "i2c_designware_amdisp");
+> +	return !strcmp(adap->name, "AMDISP DesignWare I2C adapter");
+
+Since both are in-kernel code, share that name through a define in some 
+header.
+
 -- 
-2.43.0
+ i.
 
