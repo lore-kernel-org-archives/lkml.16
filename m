@@ -1,80 +1,269 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C688222094
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 16:20:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D3C17A2EF;
+	Sat, 31 May 2025 16:33:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748708404; cv=none; b=HfH4pGQG2kA4mD7tmTkNE7eQXCVcmmjU/0HXOxhS8L3mHI79de4kSmfQ+52uZEMsxq9D00uZUlRLG3blMnH4isILIPczTGzWGAp32Vrj5r0gXE8lL8HSZ0g1REHKhEa+jtlaQ/5mTTdLxf8IH/g/jiBxqFCBXnoNW7WYLqbXeAo=
+	t=1748709219; cv=none; b=m+dSHwh/1QXUXin7zj/RNque+j8yeLqbPKur5UP3jHVMBVt+jbvUWp5l5moqBONv9dJIvkF/1xQOGrgN22ZlgnIx9oqYve38N0GPQpYBKAoX8htNG8iskjn3qqVNlE7L3DmRNG8E8WSG9JRJWAd4QLlGtn6olNvWBSZV3CRPiSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748708404; c=relaxed/simple;
-	bh=sgPA9Q230YlwYNsgLsUAGT+EIJ3MJXCV8CkuV+njEC8=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=h++K/4vpIsvYxikqgHRuSKSL0BaOQGLUGXCSsWkLQB3Eiq/92MlvaQXyNMwlvfLdB5/qZiUtnC1q916U6noZAfNnIkjUDcKI2mjjyLRZcVcwOY+JsN7HXhc8/HCfnTKA3WbX/Q8O+ncaNMufKhF6h2MV+yZaWBqhIorK4Thk9KQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3dc9cd70437so37060045ab.1
-        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 09:20:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748708402; x=1749313202;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jOT3+3dtKmIMbjiKp4WKPYIYOuy19lzYdhT8ETpxuvo=;
-        b=qVeGp8fJwHgX4Xc+8c0MNs9aM8bT/eVBzO0sTE9uUCKnRpK4qXzvWy09HalvurNBOp
-         CXILtdgktLlxken89yQ7eNV33Zd6O661Edum5Aii0wLkyJfEDZpCJE1Xhib/F5mKXc53
-         HlBYwtXWgIH9d8QfHQqVqMAxakhHb5JUiesmg+qXRRX7WOWwTsE400U8aQf07K48BdFa
-         3x6LknYWySmfRb2DA1FdjlEYSeYpij0RUUKocw0PHX10g8bBIXz6CB/6dLGIHr9OAiFU
-         zU2porlUtLuYRCAxHQVHoyNdlfeawqfexS5VaFq0D2foO3BP00Wgk6O1LOJjSRTiOc3H
-         +Prg==
-X-Forwarded-Encrypted: i=1; AJvYcCXSWM9uZJxxKeVYSvjFcQ3FFzunKOtgj2LG6De7rwoArmHxtK3/YTSnRN9aP4VrHikZOKLlMwwf5aGLXLA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjDSUHmQQ3OkgaOWwVlhVJGFlu4SwsU0zznlN7ZP2WPUf32dkR
-	Ehit3DrVCGIkpi85j7gkX2Wsqd3D9dSfRQe3WMxLecrSwR8QTRG4OjRkxy1F4pME9RnZ1ZS9AP1
-	Rai3kkyN/RE8cFQNWgqzYJDi1v+LQlmIv/YeytroHyJlvEV+/7YaT5mVrdvI=
-X-Google-Smtp-Source: AGHT+IGdap3ueor/+dC4QVfuI3dEjhxnuRezgHUx4IFWYUjshQSu+2Ssy2m7Z8B44GaIOMUzHwVmDX58Z5+KnBdSnlu+zMS+qDxq
+	s=arc-20240116; t=1748709219; c=relaxed/simple;
+	bh=B97QqIpCY6V/3BaPtrDVnyViN6IWZPEPLmJYDSMdDTs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fdVLxbfs6ZXIZjN9+hPKQKOY5cqqKYTl5MB/5OY7sjqsMcGeNIy9oE8clFA35b3cA7OM/aGPldpLgkQK8zz4DKptELJOtLgMp8a62+OWyo8pqyflbziJZWMVfjUmL0PIfD25+5rcn7XFxly92ioRP+YfCsB1yScje9+N3wVjGOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WTq/D0BQ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WTq/D0BQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 131FDC4CEE3;
+	Sat, 31 May 2025 16:33:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748709218;
+	bh=B97QqIpCY6V/3BaPtrDVnyViN6IWZPEPLmJYDSMdDTs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=WTq/D0BQd1zlkfM6f8MqKVEPGSOk8UJ0KtaC8axY0Y2L9B18+YQaLLm9RhcKZYlOF
+	 aFy46Pbg8LGickEFm9eD547wEnEqkiMUdI2fVs1ezWOtHgsRTrI6h/TqkrZGIL7LE5
+	 fiInn4yMcWGpdCQmwz567NS01gKurcV+iccUgPtKzOQUjyk9sOMn0TgGujglIpPbBL
+	 gTgwSC/0jWJs0zoD5gWk3Xx+9Kwj7p0Z3OIH3+MGhaPzexgHpGOqR9+iz5D498/5xL
+	 JEnOEmCDL+/rrJW+vzCGtVptCdwpAtrY9G7PPD/igjEBBoCIL/faqK7bd7ho01rfap
+	 LlJIGeVZWmoZA==
+Date: Sat, 31 May 2025 17:33:30 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+ corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de,
+ Michael.Hennerich@analog.com, linux-iio@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 07/12] iio: accel: adxl313: add basic interrupt
+ handling
+Message-ID: <20250531173330.4d913f65@jic23-huawei>
+In-Reply-To: <CAFXKEHaM1xEk-v7rXdKoxdXKV-k=_Leu+hMBukDyKoWr3irVRQ@mail.gmail.com>
+References: <20250523223523.35218-1-l.rubusch@gmail.com>
+	<20250523223523.35218-8-l.rubusch@gmail.com>
+	<20250525134831.68b3c905@jic23-huawei>
+	<CAFXKEHaM1xEk-v7rXdKoxdXKV-k=_Leu+hMBukDyKoWr3irVRQ@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1568:b0:3dd:8a06:4db3 with SMTP id
- e9e14a558f8ab-3dda339232emr19169295ab.19.1748708401944; Sat, 31 May 2025
- 09:20:01 -0700 (PDT)
-Date: Sat, 31 May 2025 09:20:01 -0700
-In-Reply-To: <000000000000ec1f6b061ba43f7d@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <683b2c31.a00a0220.d8eae.001b.GAE@google.com>
-Subject: Re: [syzbot] [smc?] possible deadlock in smc_switch_to_fallback (2)
-From: syzbot <syzbot+bef85a6996d1737c1a2f@syzkaller.appspotmail.com>
-To: agordeev@linux.ibm.com, alibuda@linux.alibaba.com, davem@davemloft.net, 
-	edumazet@google.com, guwen@linux.alibaba.com, horms@kernel.org, 
-	jaka@linux.ibm.com, kuba@kernel.org, kuniyu@amazon.com, 
-	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	linux-s390@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
-	syzkaller-bugs@googlegroups.com, tonylu@linux.alibaba.com, 
-	wenjia@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-syzbot suspects this issue was fixed by commit:
+On Wed, 28 May 2025 22:52:55 +0200
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
 
-commit 752e2217d789be2c6a6ac66554b981cd71cd9f31
-Author: Kuniyuki Iwashima <kuniyu@amazon.com>
-Date:   Mon Apr 7 17:03:17 2025 +0000
+> Hi Jonathan,
+> 
+> I feel here either I have some missunderstanding or it needs more
+> (better?) explanation. Perhaps I'm using the wrong terminology.
+> 
+> One point, I forgot, do I actually need to add a Reviewed-by tag or
+> something like that for Andys review? Or if so, they will let me know,
+> I guess?
 
-    smc: Fix lockdep false-positive for IPPROTO_SMC.
+Only add a tag if Andy gives it.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13833ed4580000
-start commit:   47e55e4b410f openvswitch: fix lockup on tx to unregisterin..
-git tree:       net
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4ef22c4fce5135b4
-dashboard link: https://syzkaller.appspot.com/bug?extid=bef85a6996d1737c1a2f
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14832cb0580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17e17218580000
+> 
+> First of all, introducing the adxl313_fifo_reset(data) here is the
+> crucial part. So, the title I chose is not matching with the topic, or
+> is too general. I'll answer and try to better explain down below.
 
-If the result looks correct, please mark the issue as fixed by replying with:
+I'd misunderstood somewhat what we had here which probably didn't help.
+Partly this was down to patch break up and you putting something called
+reset in temporarily covering the normal read path (threshold interrupt).
 
-#syz fix: smc: Fix lockdep false-positive for IPPROTO_SMC.
+> >  
+> > >  static const struct regmap_range adxl312_readable_reg_range[] = {
+> > >       regmap_reg_range(ADXL313_REG_DEVID0, ADXL313_REG_DEVID0),
+> > >       regmap_reg_range(ADXL313_REG_OFS_AXIS(0), ADXL313_REG_OFS_AXIS(2)),
+> > > @@ -62,6 +71,7 @@ bool adxl313_is_volatile_reg(struct device *dev, unsigned int reg)
+> > >       case ADXL313_REG_DATA_AXIS(4):
+> > >       case ADXL313_REG_DATA_AXIS(5):
+> > >       case ADXL313_REG_FIFO_STATUS:
+> > > +     case ADXL313_REG_INT_SOURCE:
+> > >               return true;
+> > >       default:
+> > >               return false;
+> > > @@ -363,6 +373,118 @@ static int adxl313_write_raw(struct iio_dev *indio_dev,
+> > >       }
+> > >  }
+> > >
+> > > +static int adxl313_get_samples(struct adxl313_data *data)  
+> >
+> > I doubt this gets called from multiple places. I'd just put
+> > the code inline and no have this helper at all.
+> >  
+> 
+> It will be a called at least in two places. First, when reading the
+> measurements and second when clearing the fifo in the reset.
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Ok. Then this is fine to keep.
+
+> > > +static int adxl313_fifo_transfer(struct adxl313_data *data, int samples)
+> > > +{
+> > > +     size_t count;
+> > > +     unsigned int i;
+> > > +     int ret;
+> > > +
+> > > +     count = array_size(sizeof(data->fifo_buf[0]), ADXL313_NUM_AXIS);
+> > > +     for (i = 0; i < samples; i++) {
+> > > +             ret = regmap_bulk_read(data->regmap, ADXL313_REG_XYZ_BASE,
+> > > +                                    data->fifo_buf + (i * count / 2), count);  
+> >
+> > that 2 is I'd guessed based on size of some data store element?
+> > I'd guess sizeof(data->fifo_buf[0]) is appropriate.
+> >  
+> 
+> My calculation was the following:
+> * samples := number of "lines" in the FIFO e.g. by watermark
+> * count := number of bytes per "line"
+> * ADXL313_NUM_AXIS := 3 for the three axis here
+> There's a bulk read per "line" of the FIFO. A "line" comprises
+> measurement for x, y and z axis. Each measurement consists of 2 bytes,
+> i.e. count has 6 bytes.
+> 
+> At a second look now, probably count/2 can be replaced directly by
+> ADXL313_NUM_AXIS. If so, I don't need the count variable. I see,
+> count/2 being already a constant expression here smells somehow. I
+> guess, this might be your point? I'll change that and need verify.
+
+I was only commenting on the 2.  But sure, using ADXL313_NUM_AXIS
+resolves that and is better still.
+Not sure I'd bother with array_size() here, probably simply
+using sizeof(data->fifo_buf[0]) * ADXL313_NUM_AXIS for that
+final parameter is fine given we know it can't over flow and it's
+the size of a subset of a larger array rather than an array
+(kind of anyway!)
+
+
+> >  
+> > > +             if (ret)
+> > > +                     return ret;
+> > > +     }
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +/**
+> > > + * adxl313_fifo_reset() - Reset the FIFO and interrupt status registers.
+> > > + * @data: The device data.
+> > > + *
+> > > + * Reset the FIFO status registers. Reading out status registers clears the  
+> >
+> > I think you already read it before calling this. So how is it ever set?
+> >  
+> > > + * FIFO and interrupt configuration. Thus do not evaluate regmap return values.
+> > > + * Ignore particular read register content. Register content is not processed
+> > > + * any further. Therefore the function returns void.
+> > > + */
+> > > +static void adxl313_fifo_reset(struct adxl313_data *data)  
+> >
+> > As below.  This isn't a reset.  Fifo reset is normally the term used
+> > for when we have lost tracking of what is in the fifo and drop all data,
+> > not normal readback.
+> >  
+> > > +{
+> > > +     unsigned int regval;
+> > > +     int samples;
+> > > +
+> > > +     adxl313_set_measure_en(data, false);  
+> > Disabling measurement to read a fifo is unusual -  is this really necessary
+> > as it presumably puts a gap in the data, which is what we are trying
+> > to avoid by using a fifo.
+> >  
+> > > +
+> > > +     samples = adxl313_get_samples(data);
+> > > +     if (samples > 0)
+> > > +             adxl313_fifo_transfer(data, samples);
+> > > +
+> > > +     regmap_read(data->regmap, ADXL313_REG_INT_SOURCE, &regval);  
+> >
+> > Not processing the convents of INT_SOURCE every time you read it
+> > introduces race conditions.  This logic needs a rethink so that
+> > never happens.  I guess this is why you are disabling measurement
+> > to stop the status changing?  Just whatever each read of INT_SOURCE
+> > tells us we need to handle and all should be fine without disabling
+> > measurement.  That read should only clear bits that are set, so no
+> > race conditions.
+> >  
+> 
+> When the ADXL345 triggers an interrupt for e.g. watermark, data ready,
+> or overrun,... it will stop from triggerring further interrupts until
+> the status registers, INT_SOURCE and FIFO_STATUS are cleared. This I
+> call "reset". In consequence the FIFO will simply run full.
+
+Hmm.  I'd not use the reset term so broadly.  Reset for a fifo typically means
+dropping all data on the floor after an overflow or other error condition.
+
+> 
+> Usually when the interrupt handler reads the interrupt status
+> (INT_SOURCE). In case of, say, watermark, it then reads the
+> FIFO_STATUS to obtain number of entries and reads this number of
+> samples by a linewise bulk read from the sensor DATA registers.
+> Reading all FIFO entries from the DATA register clears FIFO_STATUS,
+> and this clears INT_SOURCE.
+> 
+> Now, in case of error or overrun, I'd use this reset function as a
+> fallback error handling. I stop measurement i.e. I set the sensor to
+> standby. The sensor should not accept further measurements. Then I
+> read out the fifo entries to clear FIFO_STATUS and I (already) read
+> INT_SOURCE to clear interrupt status. Eventually I turn on measurement
+> to bring the sensor back to operational. I ignore the read
+> measurements, I'm reading here.
+> 
+> As alternative approaches I also saw for similar sensors (not Linux)
+> to e.g. switch FIFO_STREAM mode to FIFO_BYPASS and back. This works
+> here too, but only for the FIFO_STATUS not for INT_SOURCE. Another
+> idea I can imagine with the ADXL313, there is a soft reset register,
+> but never tried that.
+> 
+> In this initial patch, the reset function will resume the interrupt
+> handler function. With the follow up patches, this will form rather
+> the error handling. It is easy to get into this kind of overrun
+> situation, if the interrupt handler is still not working correctly.
+> I'm actually pretty confident, that it now works only as a fallback
+> error handling, but perhaps I'm doing something wrong here?
+
+This is where I got confused - because it wasn't just the error
+paths. All made sense after later patches.  Stopping measurements when
+you enter an error condition is fine.
+> 
+
+> > > +             return IRQ_NONE;
+> > > +
+> > > +     adxl313_fifo_reset(data);  
+> >
+> > Given we don't know it had anything to do with the fifo at this point
+> > resetting the fifo doesn't make much sense.  I'd expect a check
+> > on int_status, probably for overrun, before doing this.
+> >
+> > Ah. On closer inspection this isn't resetting the fifo, it's just
+> > reading it.  Rename that function and make it dependent on what
+> > was in int_stat.
+> >  
+> 
+> As mentioned before, I used the term "reset" to clear the status
+> registers. This can occur for typically overrun, but also would cover
+> all events which are still not handled by the interrupt handler. I
+> could give it a try to see if the soft reset here would be a better
+> fit.
+
+No need to change the code, just don't use the term reset if you
+are not clearing all data (without using it) and any outstanding
+interrupt status.  Pick a different term clear_int for example.
+
+Soft reset is massive overkill for an overrun event.
+
+Jonathan
+
+> 
+> Best,
+> L
+> 
+> >  
+> > > +
+> > > +     return IRQ_HANDLED;
+> > > +}  
+> >  
+
