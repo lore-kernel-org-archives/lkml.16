@@ -1,148 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D7AC4C74
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 14:25:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1B329D19;
+	Sat, 31 May 2025 14:37:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748701543; cv=none; b=nMzxfRRKVU7VfrGeISJcVQ2aCsGE4MMhqt8kpr+Z9NORTX7YQU/6WeI1klZOXzpScns04HGiYjQg7LHrioNs3xYM2B8JtDspa1kpFUQac/Nl92vMeVLEkDeyACXKZeP24/g/JzQTdGgDXsY7Ms/bKW3in2M2FCZeKJ0bznbKLsI=
+	t=1748702241; cv=none; b=jMRPHzf8G+aQZePVNdBciG34kiKbwPKY7dwcdlOOj9xKT6jeqyf+yRdnxsEPUkSfkWaz7EHqsyOLQR6A5CNGf6XWMTuUqtAIBsHepXrluwjxy91PGHI07a021K7FK8oIqzKT6iXiPvffuAWYgOm+qSU8hywG9fBBnZoPHYyx0yE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748701543; c=relaxed/simple;
-	bh=xuDCvCvdHEHm3JsKagYF8rxk9+nEuh+sV/bde5HWyJs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=EfiR+xuGqIp38N+7bBKr1RZn0YElR3IBP9rSxgOTnV+NNZRbJBa0UkJyfRrrQeB7Ppt8Yki7eg5Qa1aJPMM+iVPwfVX2VMwDGy44/+fRsWtDzfqrQa8p00q5LJnqpr7698zZnhKolNY7jGk0pEJea0/MmFg8vFhUbsIws9i00nU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a1Fcj70a; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748702241; c=relaxed/simple;
+	bh=fivt1Mk4Yw5WXYfrIwOJfSKG3z+m2LyIrjnukMMgFOg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JUVJhtt6ymHLHPbEZjeTKHlDTYeTV7GgLvOFrcGPNNkn4eSK90gJRceyJeKWvoZIXzwJtl+hl6VjBoxadJsmdhlbBPSEk0IRnBTVQd+ZI0VahBj/Agwlg9SzfoF6ax43qZB62PEYerxlpRWenaTIXSqDsuhr+hofD8NkhLXWi7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DSeMVG/F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a1Fcj70a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748701541; x=1780237541;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=xuDCvCvdHEHm3JsKagYF8rxk9+nEuh+sV/bde5HWyJs=;
-  b=a1Fcj70aj25gsA42UEPI04IY1xMwdjxnKYk7+4QW1JEgOR9KWtQXKtov
-   2QIEoMRs1BJMJCfVEp+eJ0MIqYfsROq0mR6x0xdA5ZNPf568CpjAjno4b
-   aKzC+ItxvNisjMuYIoM0sRCldUtW+CVqrI9b+lp8sijGibZVQs3Ef6lZM
-   2+ySMjmvlYpmBwev8tFnhGo0z9GPFwbxxwMBU8z4ShC2Zq5aWiCTRY5ze
-   TsUpb8aJaQAbIWZG+5ukm37AiI2hwbIiJvkDBFBQDaE711t7d9YAVa+0/
-   phrjkPK4b9FWyt6ZDYQYkevkEKw7HOJYkTsOZrCQlVf2c06d9uoUfC57K
-   A==;
-X-CSE-ConnectionGUID: ClLb40EAQMS0KJjhicAPLw==
-X-CSE-MsgGUID: 037/w4esQeOxs3fA/UiKww==
-X-IronPort-AV: E=McAfee;i="6700,10204,11450"; a="61444928"
-X-IronPort-AV: E=Sophos;i="6.16,198,1744095600"; 
-   d="scan'208";a="61444928"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2025 07:25:40 -0700
-X-CSE-ConnectionGUID: Xm9pf0XRSJyonE3c40gLbg==
-X-CSE-MsgGUID: hzGyegY7QHqecWTpXY6J3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,198,1744095600"; 
-   d="scan'208";a="167324262"
-Received: from igk-lkp-server01.igk.intel.com (HELO b69e6467d450) ([10.211.3.150])
-  by fmviesa002.fm.intel.com with ESMTP; 31 May 2025 07:25:39 -0700
-Received: from kbuild by b69e6467d450 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uLN9U-00011S-2t;
-	Sat, 31 May 2025 14:25:36 +0000
-Date: Sat, 31 May 2025 22:24:46 +0800
-From: kernel test robot <lkp@intel.com>
-To: Pohsun Su <pohsuns@nvidia.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Robert Lin <robelin@nvidia.com>
-Subject: drivers/clocksource/timer-tegra186.c:282: undefined reference to
- `__udivdi3'
-Message-ID: <202505312203.NmHWLzpj-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DSeMVG/F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF4CFC4CEE3;
+	Sat, 31 May 2025 14:37:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748702240;
+	bh=fivt1Mk4Yw5WXYfrIwOJfSKG3z+m2LyIrjnukMMgFOg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DSeMVG/Fbe4qRBejiZw0EyatWeyiWsE20b6NZA1wBfJWpepek0YCiHbxmDi/Mb0gA
+	 YvT1GDR0JgkrXPMEXnskuvgMpIxBIia/wv9AEZFvb8mJ9bKRGsuKfUfbHjQDaVTLqO
+	 tteVaN0kse0EAUXGjtVD3idwokMzsGoi9l23MVq/J8ZnRSxOgCM8pzbX9ZiroqYtAx
+	 tu+YSV3yG0bys0FsnbU5PPjpg1kkC4VGSF+612EPLKmNtGdAc49h5+AkeFtJUarRSk
+	 Vtm4GfcJfJkvP9fKwRXo1G2dwMCcQAmwalOWUIRRBZlHfqXr0aDbl+gmHjbCeJT7qF
+	 bimcc3X3iNdww==
+Date: Sat, 31 May 2025 16:37:12 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Lyude Paul <lyude@redhat.com>, Alexandre Courbot <acourbot@nvidia.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v4 11/20] gpu: nova-core: wait for GFW_BOOT completion
+Message-ID: <aDsUGGrjbJ_8KyrP@pollux>
+References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
+ <20250521-nova-frts-v4-11-05dfd4f39479@nvidia.com>
+ <adbf5fa1104978df76ae40705e5df13dfbe59bb8.camel@redhat.com>
+ <CANiq72n42hbKPmED4PnzCADsy8iM-i0R2dizypTd_Vui5GctJg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72n42hbKPmED4PnzCADsy8iM-i0R2dizypTd_Vui5GctJg@mail.gmail.com>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   0f70f5b08a47a3bc1a252e5f451a137cde7c98ce
-commit: 28c842c8b0f5d1c2da823b11326e63cdfdbc3def clocksource/drivers/timer-tegra186: Add WDIOC_GETTIMELEFT support
-date:   2 weeks ago
-config: i386-buildonly-randconfig-2002-20250531 (https://download.01.org/0day-ci/archive/20250531/202505312203.NmHWLzpj-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250531/202505312203.NmHWLzpj-lkp@intel.com/reproduce)
+On Sat, May 31, 2025 at 04:09:29PM +0200, Miguel Ojeda wrote:
+> On Fri, May 30, 2025 at 11:51 PM Lyude Paul <lyude@redhat.com> wrote:
+> > TBH - we should really add some safe bindings for sleeps instead of calling
+> > this unsafely, I'd be happy to review them if you do
+> 
+> In case it helps, there is:
+> 
+>     https://lore.kernel.org/rust-for-linux/20250423192857.199712-6-fujita.tomonori@gmail.com/
+> 
+> I think that is the last one -- we have been going back and forth a
+> bit on it (e.g. we had `coarse_sleep()` in the old `rust` pre-merge
+> branch), but, yeah, let's try to get the abstraction(s) in.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505312203.NmHWLzpj-lkp@intel.com/
+We've already discussed this on previous versions of this patch series, where I
+also pointed to the patch series linked above.
 
-All errors (new ones prefixed by >>):
+I agreed to take this code without waiting for those abstractions, but with a
+TODO to fix things up once they land.
 
-   ld: drivers/clocksource/timer-tegra186.o: in function `tegra186_wdt_get_timeleft':
->> drivers/clocksource/timer-tegra186.c:282: undefined reference to `__udivdi3'
-
-
-vim +282 drivers/clocksource/timer-tegra186.c
-
-   241	
-   242	static unsigned int tegra186_wdt_get_timeleft(struct watchdog_device *wdd)
-   243	{
-   244		struct tegra186_wdt *wdt = to_tegra186_wdt(wdd);
-   245		u32 expiration, val;
-   246		u64 timeleft;
-   247	
-   248		if (!watchdog_active(&wdt->base)) {
-   249			/* return zero if the watchdog timer is not activated. */
-   250			return 0;
-   251		}
-   252	
-   253		/*
-   254		 * Reset occurs on the fifth expiration of the
-   255		 * watchdog timer and so when the watchdog timer is configured,
-   256		 * the actual value programmed into the counter is 1/5 of the
-   257		 * timeout value. Once the counter reaches 0, expiration count
-   258		 * will be increased by 1 and the down counter restarts.
-   259		 * Hence to get the time left before system reset we must
-   260		 * combine 2 parts:
-   261		 * 1. value of the current down counter
-   262		 * 2. (number of counter expirations remaining) * (timeout/5)
-   263		 */
-   264	
-   265		/* Get the current number of counter expirations. Should be a
-   266		 * value between 0 and 4
-   267		 */
-   268		val = readl_relaxed(wdt->regs + WDTSR);
-   269		expiration = FIELD_GET(WDTSR_CURRENT_EXPIRATION_COUNT, val);
-   270		if (WARN_ON_ONCE(expiration > 4))
-   271			return 0;
-   272	
-   273		/* Get the current counter value in microsecond. */
-   274		val = readl_relaxed(wdt->tmr->regs + TMRSR);
-   275		timeleft = FIELD_GET(TMRSR_PCV, val);
-   276	
-   277		/*
-   278		 * Calculate the time remaining by adding the time for the
-   279		 * counter value to the time of the counter expirations that
-   280		 * remain.
-   281		 */
- > 282		timeleft += (((u64)wdt->base.timeout * USEC_PER_SEC) / 5) * (4 - expiration);
-   283	
-   284		/*
-   285		 * Convert the current counter value to seconds,
-   286		 * rounding up to the nearest second. Cast u64 to
-   287		 * u32 under the assumption that no overflow happens
-   288		 * when coverting to seconds.
-   289		 */
-   290		timeleft = DIV_ROUND_CLOSEST_ULL(timeleft, USEC_PER_SEC);
-   291	
-   292		if (WARN_ON_ONCE(timeleft > U32_MAX))
-   293			return U32_MAX;
-   294	
-   295		return lower_32_bits(timeleft);
-   296	}
-   297	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+- Danilo
