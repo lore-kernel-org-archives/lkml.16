@@ -1,83 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF544D8CE
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 18:09:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DBB57260A;
+	Sat, 31 May 2025 18:09:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748714962; cv=none; b=mogi/cmdvQ8LPcLWax6FpoaqYbNZN/Zh5j3aNYor4gszAjRz1EG+P+KTlMYBiZQe2da3vW1N8cvIHgNJiWbEW71Lelm9creuxOQ0gL0IAF92z7cAV4dGAL2rewTYD1jJYOLAbQpQraggF+eTM9HhXoC52PWIvB9CC/guwoBRYjE=
+	t=1748714974; cv=none; b=u1srl2q/f+5APyM3L4YQZsW+Hz6eeJCayfzLDsi1L2/kUKvVamjZetR8Kn85e+FQPFauwYn2du3K7Y13CzWOwpJytR7NHDnEc6QgaZ7T224IoSSnw00SVf5HrZqD7hDkLskaDXoo+2IaMiIPZCDUQXUNlUAujiIQrke3W2w+bsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748714962; c=relaxed/simple;
-	bh=WWlrY9er8h6X1eA1p1CShRyP68Nw8AbO6/HC5H1vYeQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nHD1L6ovl59RJzOnt33A6n30gJwZ/fTRNJEBn6N5fKvVwDg6b3+/djreLUrAMCM+y4Q9cSZ+SkHa/cvezDg4HFtvcetKbejZMLAhRx6Q62fKVlZX10KHavc4C4RJvnUraUvM+1zmnRbYqv/FLXRKmU1c8dXx9aDcH7+kj/l8dtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VU+KXZE9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748714974; c=relaxed/simple;
+	bh=gb0uZRUR+9QRJoit/ysAGvshX0ef0Mgkah6NHv/jSNo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ei6umm876fBskgk28JlofNfhJqlf56rWOk1yD6jxYrfla6ct1Wpm3JMJDrcivJcJL74EaDRJ2qG0FblG/zGsAe+Mv8M4JpZ+rgqAeEnZLy2INV8AGGCDby4C6Omwq7100ECTdHDE7PIPfudKhWvtcnej3iRLIyrTVRV3OtfWOsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UvtzZpIe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VU+KXZE9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D238C4CEE3;
-	Sat, 31 May 2025 18:09:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UvtzZpIe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D28EFC4CEE3;
+	Sat, 31 May 2025 18:09:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748714961;
-	bh=WWlrY9er8h6X1eA1p1CShRyP68Nw8AbO6/HC5H1vYeQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VU+KXZE9ySt298FyisW7/vvGGU5Mtc/EbnfRImhsQzsMFlhZywretVlTMaO6Y2/YW
-	 EhEquuCk04hJ5D1JasJ3ZVs3/rpmoRQZ/NY7ICdOlnK9KeI7l0Xe7PVWqfYaQrAXFI
-	 aZvyuUPWlrWcafAZRVymRftu8SlXGKVCBwj3pAnGQTU3i3bCmxTJHnB3c41BzgQRFs
-	 pSCOOcz1ntQ1eomUv3nRKq7qtgCgdj10QzAlo3H6oFLZf+s5BrTsVk2R44FdBJb97v
-	 rN4806sgEt6c3L0RaCsJj5nuGeNQlIIQRcOi/XDfb7e+mjpOF9DEusIopLuWgpyLnp
-	 WUcggkqzQEMfQ==
-Date: Sat, 31 May 2025 20:09:15 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
-	Borislav Petkov <bp@alien8.de>, Juergen Gross <jgross@suse.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Kees Cook <keescook@chromium.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	David Woodhouse <dwmw@amazon.co.uk>
-Subject: Re: [PATCH 09/32] x86/boot/e820: Call the PCI gap a 'gap' in the
- boot log printout
-Message-ID: <aDtFy1Fw5HUZtfcc@gmail.com>
-References: <20250515120549.2820541-1-mingo@kernel.org>
- <20250515120549.2820541-10-mingo@kernel.org>
- <aCsjvKT_FO7HxIt4@smile.fi.intel.com>
+	s=k20201202; t=1748714974;
+	bh=gb0uZRUR+9QRJoit/ysAGvshX0ef0Mgkah6NHv/jSNo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=UvtzZpIetEwHJXNmsrVr84J0zpdsTPeo07XICGQWkm8fWlEoDPZpZ/bfeHr1lTvAy
+	 wQ1HlhBh+Tuq6nVzXywfKM12f/VmHRjXIx3Sou5OuaHhNUIoO12dxJ3YaCbJVKrcfT
+	 8aEmaRgMQgUdXgo8wmiJXG86Td29xEm0JvgSPX3Wkbvb1kT3/WbtkHovb32mnNc0wP
+	 JkRVYEtouHipkzkyjxuUhr/0/N8w+BfX7xQ8NGB4KeQqqzef2/AiFz95WLp+UAzNW0
+	 x8pZR9PqX+wnIgkDshx13uprkXOrA5X5SEPI8HmBCukJpsHF1jRuaE8RQRQepHpkEB
+	 tz4Dx2CevQC6Q==
+Date: Sat, 31 May 2025 19:09:28 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Gyeyoung Baek <gye976@gmail.com>
+Cc: David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 6/9] iio: trigger: Define timetamp-related
+ structures and constants
+Message-ID: <20250531190928.201bcd5a@jic23-huawei>
+In-Reply-To: <20250519-timestamp-v1-6-fcb4f6c2721c@gmail.com>
+References: <20250519-timestamp-v1-0-fcb4f6c2721c@gmail.com>
+	<20250519-timestamp-v1-6-fcb4f6c2721c@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCsjvKT_FO7HxIt4@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, 19 May 2025 23:25:58 +0900
+Gyeyoung Baek <gye976@gmail.com> wrote:
 
-* Andy Shevchenko <andy@kernel.org> wrote:
+> The `trig_type` indicates whether the trigger calls poll() or poll_nested=
+().
+> The `early_timestamp` indicates whether the trigger grabs the timestamp a=
+t the trigger.
+> We need this to prevent the consumer from overwriting the timestamp.
+>=20
+> To allow the trigger to directly write the timestamp into the consumer's =
+poll_func,
+> add poll_func pointer member to the iio_trigger structure.
+>=20
+> However, I'm not sure if having a poll_func pointer member
+> in iio_trigger is a good approach.
+> Would this approach be acceptable?
 
-> On Thu, May 15, 2025 at 02:05:25PM +0200, Ingo Molnar wrote:
-> > It is a bit weird and inconsistent that the PCI gap is
-> > advertised during bootup as 'mem'ory:
-> > 
-> >   [mem 0xc0000000-0xfed1bfff] available for PCI devices
-> >    ^^^
-> > 
-> > It's not really memory, it's a gap that PCI devices can decode
-> > and use and they often do not map it to any memory themselves.
-> > 
-> > So advertise it for what it is, a gap:
-> > 
-> >   [gap 0xc0000000-0xfed1bfff] available for PCI devices
-> 
-> Why not use word 'range' instead of the 'gap'? This will allow to switch to
-> %pra without modifying the output.
+I need to think about that.  My initial thought was that it crosses boundar=
+ies
+that we really don't want to cross.
 
-Well, it's not a range, it's a gap in the memory map. Why does %pra 
-dictate details of the output in such a fashion?
+I'm not sure I yet understand why we ever want the trigger to do that
+write of the timestamp. Why are the wrapping handlers not enough?
 
-Thanks,
+>=20
+> Signed-off-by: Gyeyoung Baek <gye976@gmail.com>
+> ---
+>  include/linux/iio/trigger.h | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/include/linux/iio/trigger.h b/include/linux/iio/trigger.h
+> index bce3b1788199..f3b89a1e0318 100644
+> --- a/include/linux/iio/trigger.h
+> +++ b/include/linux/iio/trigger.h
+> @@ -36,6 +36,10 @@ struct iio_trigger_ops {
+>  			       struct iio_dev *indio_dev);
+>  };
+> =20
+> +#define IIO_TRIG_TYPE_POLL		BIT(0)
+> +#define IIO_TRIG_TYPE_POLL_NESTED	BIT(1)
+> +#define IIO_TRIG_TYPE_BOTH		(IIO_TRIG_TYPE_POLL | \
+> +					IIO_TRIG_TYPE_POLL_NESTED)
 
-	Ingo
+I'm lost. How does a given trigger do both?
+
+Also didn't these get used in an earlier patch?  Even for an RFC make
+sure it bisects.
+
+> =20
+>  /**
+>   * struct iio_trigger - industrial I/O trigger device
+> @@ -56,7 +60,10 @@ struct iio_trigger_ops {
+>   *			i.e. if we registered a poll function to the same
+>   *			device as the one providing the trigger.
+>   * @reenable_work:	[INTERN] work item used to ensure reenable can sleep.
+> + * @trig_type:		[DRIVER] specifies whether the trigger calls poll(), pol=
+l_nested(), or both.
+> + * @early_timestamp:	[DRIVER] set to true if the trigger supports grabbi=
+ng timestamp.
+>   **/
+> +
+Stray blank line.
+>  struct iio_trigger {
+>  	const struct iio_trigger_ops	*ops;
+>  	struct module			*owner;
+> @@ -76,8 +83,13 @@ struct iio_trigger {
+>  	struct mutex			pool_lock;
+>  	bool				attached_own_device;
+>  	struct work_struct		reenable_work;
+> -};
+> =20
+> +	/* RFC, exists to access the consumer device=E2=80=99s pollfunc. */
+> +	struct iio_poll_func *consumer_pf[CONFIG_IIO_CONSUMERS_PER_TRIGGER];
+> +
+> +	int trig_type;
+> +	bool early_timestamp;
+> +};
+> =20
+>  static inline struct iio_trigger *to_iio_trigger(struct device *d)
+>  {
+>=20
+
