@@ -1,125 +1,227 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287844A08;
-	Sat, 31 May 2025 00:45:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCAF6BE46;
+	Sat, 31 May 2025 00:49:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748652352; cv=none; b=EPEJSIfg66Odm6oArEYx5oGZ+3CRWUH/Zpmu+4Ig2PBrqhJvkdaCg6oAIfuXolC54kBy6UjYeRbBrNNdhH/uuLHnXTTGkfAPrZqgLDcPdXSbh1GXqnnI/VU0NIXtHUJW0GLoTePmQbWyxphGk5uyeiHEJ50bo03JTSml7B1G2HQ=
+	t=1748652564; cv=none; b=NDOYu6ztZFdiaQrYeEbTEUgMwaf+otlJ9+GIGvxIZako8ju50WpeKrJAGZZERAUSbzTc3BI137UJoGmqMVHiw8hsppQaOgwkZWW9aJ+LfXDLt2a1TodP/2Xn+dRgw+Lv8jcOPjHK8HlB4XP+NYeEHo//bjfYxYLgZOkkP8zkm+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748652352; c=relaxed/simple;
-	bh=eFuUU5H0EZTvta9tnSmPNt8NChN173VFZtM77Xz79WU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bc0h7vMtct8GpVFQ8pD9IDH9s2JEA8T0Ydn8JVwgJGFtK38QTX/+NZQzQMpRB63iZ1IzzkhIT8AAE8dN+sDa3ShdE8NxwrltXktuYKYj27Dl8Wbe6YT2c2NwfozxVZbnkc2mcBIC01wGHKAAyIxCGTUaDVhEGITGS4vQAYqll3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JF92qscn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748652564; c=relaxed/simple;
+	bh=OvNqFUQ+wdR1AxR4NQ0AQuNa2dYebScEFxP0hfZDOEU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sa2kGD6QaZ10xs38+fFKB3CJQdgWYJJ9w6PYowAsI3Ce2yxcRAUgnNGIZ9UwykxXT+kokqAWwtoFTvOuwl+MwpFrbeG2Vb5jM/kalt9TiZ3Xxg1XJ9LuuJi6RxxNhiQPQ1ziGfDAoMWtPwjveOcoPZwcOjLqWQr+RUivOPb8trE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WPUQkE2k; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JF92qscn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C24AC4CEE9;
-	Sat, 31 May 2025 00:45:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748652351;
-	bh=eFuUU5H0EZTvta9tnSmPNt8NChN173VFZtM77Xz79WU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JF92qscn5WOuWyTX5GtXUGeQFX4mdZ/eypeD+e9RGTcztb40wgLhpY5jj3iqEnBFs
-	 WRZh9mJgorIz8wJoZ92f8UCyvqw8Lx/lsWmTlRzEENCfsvdPk7XJMxGJnqMm0p6bWA
-	 1HSsiDjprlXGcfI0pBn8URbxtCOfb7VGB9SnfKA++PevnkWjzOKEESsJozCJUysTpx
-	 f3FsquHVIlRPedOqPG1vB1rk5cn6oNB7K287kdtqi0jce6ADuSuzyR08qcL2LWxij5
-	 OJ7ytBjxgX2gZI2MYNIWDlRUlS5z5Sm3H4qp9F5oclFq7uSRXNNirsJoSAzZDbXNiv
-	 3M2hfcSDwQNNQ==
-From: SeongJae Park <sj@kernel.org>
-To: Stephen Brennan <stephen.s.brennan@oracle.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	Ye Liu <ye.liu@linux.dev>,
-	akpm@linux-foundation.org,
-	linux-debuggers@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-toolchains@vger.kernel.org,
-	osandov@osandov.com,
-	paulmck@kernel.org,
-	sweettea-kernel@dorminy.me,
-	liuye@kylinos.cn,
-	fweimer@redhat.com
-Subject: Re: [PATCH v5] tools/mm: Add script to display page state for a given PID and VADDR
-Date: Fri, 30 May 2025 17:45:48 -0700
-Message-Id: <20250531004548.170935-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <875xhhagp8.fsf@oracle.com>
-References: 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WPUQkE2k"
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-52617ceae0dso876868e0c.0;
+        Fri, 30 May 2025 17:49:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748652561; x=1749257361; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=344ZXOydtru+LtTP4kRXS0HZ8/NsKlEl+mhmACEHqDs=;
+        b=WPUQkE2k9JbnpJukDny3o42prentYrvxTkslw3tl7uPPT1a5IVriL8auKmb9OVFcqk
+         vfFSRg/ubpWDDU929JaKvIHAE5oi9VXe33xyu7JoJY63q/MEM/YP37YNYBQKE4wvnqFQ
+         I0woudJHFrwyd9aGaoFnW8XQA0/+MadoC+kd471rLPVju6Q7uoL4+rI4l3e8W+fJXFx/
+         cXK/IqToCpa3J18VamX0P0QBZPT9fjPp3sH5DOvKtWw6yPlXJxElzALuCukgfWRBtUDh
+         xhCpH1vKWBHCBKWwijwv1Qgm4g3s7gS4iV5dT28PgTaztAODw87OFugWktGx6Hkbb8E+
+         gw6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748652561; x=1749257361;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=344ZXOydtru+LtTP4kRXS0HZ8/NsKlEl+mhmACEHqDs=;
+        b=f0X+IlfapcaxP5caqX2AMsFMJnl3OYo2b1JLX3H08A6Ol7gCC8qLw6aFrVw5kkE1m1
+         eEVQv2XinCW3RNiSpbH54vmBeti5cO+yJVj5M6W6Pm/PkzJG638uxmzRaemkyZHRs/mJ
+         K/gR4A5E7zxL8lzWm3RxC6sj8WktEFRgLBpCOKca25Elmj9dJmcZ+a3vjcrCPI9jPZFd
+         TSRNza7bx7M9OxRqn0Vn6XxWn3nP0Yte290VIT+QBiU3kZ0zvfA+Rjtgn/O+oUzTxDT7
+         isHvLVvAKfwB01G+xqbWXbvpak1Yf2/PUdM3ubja0atOI+lmjULUQJ0juOOI+2qJKm4G
+         gUYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUodOtz2MNmLrjuoFbYHsv2Js894SNrfiO2rw58Df6m+3sPnak+6XzYHT3RQ+r4a1P0f+LMTve6@vger.kernel.org, AJvYcCVbCC2XUpUqWqWBMxsleSTIQRLdcSEIQfqwkt5FYkQkKN6HFQt6gGvEOMX04ehMHihY4kG6Jl2GJRYOAlo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKf2p1AKufqmLFaBXXzd9jg9kJ6mYxA/WWYqVk/UGKYeXoeTOV
+	fdzlyloRMbwcsbC9VnQ6NnycWqMA7AmfYYAijtSVBM414zdoc97JkG9tBN58qvcPIU2AeNrxe9n
+	e/yWPOvGGn/eY8daXZ53Vfi5X+Vzn9As=
+X-Gm-Gg: ASbGncu23Q3SA6WvCL6ltEmK5LB8LmYfnXxXegsCczP2LLLmbxQwz0fqRVmsWxzt2lW
+	ANiQSXBjaUYXx/Bb/a0b3OoCZBkxl91BFevdxZDifX+QlM41TxP4eUlF4JOcI5DYRKwc7CtGEUd
+	2U9c69M/9KQsqru4jU5DpMaV0dwvBRoU4KYDVQd8xAFHIx
+X-Google-Smtp-Source: AGHT+IGXJmVpo36K5gmhxZOj9Z0RnB1rGuSi9/anoCRMQ6XHT10/qBZWClCon53dYhxQ1OUjw4aaz69nJ9Y0sSEFAok=
+X-Received: by 2002:a05:6102:d8a:b0:4e6:245b:cf5e with SMTP id
+ ada2fe7eead31-4e6ece4b027mr3457384137.17.1748652561434; Fri, 30 May 2025
+ 17:49:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250527175558.2738342-1-james.hilliard1@gmail.com>
+ <631ed4fe-f28a-443b-922b-7f41c20f31f3@lunn.ch> <CADvTj4rGdb_kHV_gjKTJNkzYEPMzqLcHY_1xw7wy5r-ryqDfNQ@mail.gmail.com>
+ <fe8fb314-de99-45c2-b71e-5cedffe590b0@lunn.ch> <CADvTj4posNXP4FCXPqABtP0cMD1dPUH+hXcRQnetZ65ReKjOKQ@mail.gmail.com>
+ <e1f4e2b7-edf9-444c-ad72-afae6e271e36@gmail.com> <CADvTj4oSbYLy3-w7m19DP-p0vwaJ8swNhoOFjOQiPFA24JKfMQ@mail.gmail.com>
+ <f5461b58-79ad-40b0-becd-3af61658bf61@gmail.com>
+In-Reply-To: <f5461b58-79ad-40b0-becd-3af61658bf61@gmail.com>
+From: James Hilliard <james.hilliard1@gmail.com>
+Date: Fri, 30 May 2025 18:49:09 -0600
+X-Gm-Features: AX0GCFupWsNFi2CuUY75nrFXpih2klRDW7O5Fm08l0tn6Tcu2AX3UTC3nexx8v4
+Message-ID: <CADvTj4pZrOo8O=kH_RzoTNMG3vHEzwy8KsgP9eWSic46o9cAdA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] net: stmmac: allow drivers to explicitly select
+ PHY device
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org, linux-sunxi@lists.linux.dev, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Russell King <linux@armlinux.org.uk>, 
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, Furong Xu <0x1207@gmail.com>, 
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 30 May 2025 15:15:15 -0700 Stephen Brennan <stephen.s.brennan@oracle.com> wrote:
-
-> SeongJae Park <sj@kernel.org> writes:
-> > On Fri, 30 May 2025 13:58:55 +0800 Ye Liu <ye.liu@linux.dev> wrote:
-[...]
-> > As reported to the previous version, I show below on my test.
+On Fri, May 30, 2025 at 6:24=E2=80=AFPM Florian Fainelli <f.fainelli@gmail.=
+com> wrote:
+>
+> On 5/30/25 17:02, James Hilliard wrote:
+> > On Fri, May 30, 2025 at 5:56=E2=80=AFPM Florian Fainelli <f.fainelli@gm=
+ail.com> wrote:
+> >>
+> >> On 5/30/25 16:46, James Hilliard wrote:
+> >>> On Tue, May 27, 2025 at 2:02=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> =
+wrote:
+> >>>>
+> >>>> On Tue, May 27, 2025 at 01:21:21PM -0600, James Hilliard wrote:
+> >>>>> On Tue, May 27, 2025 at 1:14=E2=80=AFPM Andrew Lunn <andrew@lunn.ch=
+> wrote:
+> >>>>>>
+> >>>>>> On Tue, May 27, 2025 at 11:55:54AM -0600, James Hilliard wrote:
+> >>>>>>> Some devices like the Allwinner H616 need the ability to select a=
+ phy
+> >>>>>>> in cases where multiple PHY's may be present in a device tree due=
+ to
+> >>>>>>> needing the ability to support multiple SoC variants with runtime
+> >>>>>>> PHY selection.
+> >>>>>>
+> >>>>>> I'm not convinced about this yet. As far as i see, it is different
+> >>>>>> variants of the H616. They should have different compatibles, sinc=
+e
+> >>>>>> they are not actually compatible, and you should have different DT
+> >>>>>> descriptions. So you don't need runtime PHY selection.
+> >>>>>
+> >>>>> Different compatibles for what specifically? I mean the PHY compati=
+bles
+> >>>>> are just the generic "ethernet-phy-ieee802.3-c22" compatibles.
+> >>>>
+> >>>> You at least have a different MTD devices, exporting different
+> >>>> clocks/PWM/Reset controllers. That should have different compatibles=
+,
+> >>>> since they are not compatible. You then need phandles to these
+> >>>> different clocks/PWM/Reset controllers, and for one of the PHYs you
+> >>>> need a phandle to the I2C bus, so the PHY driver can do the
+> >>>> initialisation. So i think in the end you know what PHY you have on
+> >>>> the board, so there is no need to do runtime detection.
+> >>>
+> >>> Hmm, thinking about this again, maybe it makes sense to just
+> >>> do the runtime detection in the MFD driver entirely, as it turns
+> >>> out the AC300 initialization sequence is largely a subset of the
+> >>> AC200 initialization sequence(AC300 would just not need any
+> >>> i2c part of the initialization sequence). So if we use the same
+> >>> MFD driver which internally does autodetection then we can
+> >>> avoid the need for selecting separate PHY's entirely. This at
+> >>> least is largely how the vendor BSP driver works at the moment.
+> >>>
+> >>> Would this approach make sense?
+> >>
+> >> This has likely been discussed, but cannot you move the guts of patch =
+#2
+> >> into u-boot or the boot loader being used and have it patch the PHY
+> >> Device Tree node's "reg" property accordingly before handing out the D=
+TB
+> >> to the kernel?
 > >
-> > Memcg Name:      unknown
-> > Memcg Path:      Unexpected error: 'struct kernfs_node' has no member 'parent'
+> > No, that's not really the issue, the "reg" property can actually be
+> > the same for both the AC200 and AC300 phy's, both support using
+> > address 0, the AC200 additionally supports address 1. In my example
+> > they are different simply so that they don't conflict in the device tre=
+e.
 > >
-> > I know you explained it is an issue of drgn version on my setup, as a reply to
-> > my previous report.  But, could you please make the output more easy to
-> > understand the problem?  No strong opinion, though.
-> 
-> This is an interesting issue.
-> 
-> The cgroup helpers in drgn were broken by the name change of
-> kernfs_node.parent to kernfs_node.__parent in Linux 6.15. This was fixed
-> in drgn promptly, and the fix is included in drgn's 0.0.31 release. If
-> you use that, the error should go away. In essence, 0.0.31 was the first
-> drgn version to support Linux 6.15.
+> > The actual issue is that they have differing initialization sequences a=
+nd
+> > won't appear in mdio bus scans until after the initialization is comple=
+te.
+>  > >> Another way to address what you want to do is to remove the "reg"
+> >> property from the Ethernet PHY node and just let of_mdiobus_register()
+> >> automatically scan, you have the advantage of having the addresses
+> >> consecutive so this won't dramatically increase the boot time... I do
+> >> that on the boards I suppose that have a removable mezzanine card that
+> >> includes a PHY address whose address is dictated by straps so we don't
+> >> want to guess, we let the kernel auto detect instead.
+> >
+> > Yeah, I noticed this, but it doesn't really help since it's not the add=
+ress
+> > that's incompatible but the reset sequence, I'm having trouble finding
+> > examples for mdio based reset drivers in the kernel however.
+>
+> Fair enough, but it seems like we need to dig up a bit more here on that
+> topic. There is an opportunity for a MDIO driver to implement a
+> "pre-scan" reset by filling in a mdio_bus::reset callback and there you
+> can do various things to ensure that your Ethernet PHY will be
+> responsive. You can see an example under
+> drivers/net/mdio/mdio-bcm-unimac.c to address a deficiency of certain
+> Ethernet PHYs.
 
-FYI, I'm using drgn package on Debian 12, which says
+So if I need to do custom stuff to make the generic PHY's addresses
+on the mdio bus live would I replace the generic "snps,dwmac-mdio"
+compatible with a custom compatible maybe?
 
-    $ drgn --version
-    drgn 0.0.30+82.ge2b60e4b (using Python 3.11.2, elfutils 0.188, without libkdumpfile)
+> Through Device Tree you can use the standard properties "reset-gpios",
+> "reset-assert-us", "reset-deassert-us" to implement a basic reset
+> sequence on a per-PHY basis, there are other properties that apply to
+> the MDIO bus/controller specifically that are also documented.
 
-Also I run a kernel built from damon/next[1], which is based on 6.15-rc6.
+The mdio initialization sequence for both PHY's is custom from my
+understanding so presumably we can't use the generic "reset-gpios"
+and such.
 
-> 
-> However, there's no general way to catch any drgn error and determine
-> that that drgn doesn't support your kernel version (yet). The code could
-> be updated for this specific issue, but it wouldn't really fix the
-> general problem. I think drgn needs to include an (INFORMATIONAL ONLY)
-> set of kernel versions that it has been tested on. Then, you could use
-> that in a script to print a warning (or add it to your general purpose
-> error handling).
+> How does it currently work given that your example Device Tree uses:
+>
+> compatible =3D "ethernet-phy-ieee802.3-c22"
+>
+> this will still require the OF MDIO bus layer to read the
+> PHYSID1/PHYSID2 registers in order to match your PHY device with its
+> driver. You indicated that the PHYs "won't appear in mdio bus scan"
+> unless that sequence is implemented. How would they currently respond
+> given the example?
 
-Sounds like a nice plan!
+In my example it's not actually doing the initialization part yet, that's
+all being done in some super hacky u-boot code. My assumption was
+that we need different generic phy nodes to differentiate the resets
+but I suppose that could all be done elsewhere in whichever driver
+implements the initialization sequence.
 
-> I'll look into adding this.
+> If you can involve the boot loader, you can create a compatible string
+> for your PHY of the form:
+>
+> compatible =3D "ethernet-phy-idae02.5090"
+>
+> that includes the PHY OUI, and that will tell the OF MDIO bus code to
+> bind the PHY device with the driver specified in the compatible string
+> without reading the PHYSID1/PHYSID2 registers. Since you can detect the
+> boards variants, you could do that.
 
-Thank you!  I'm not urgent or having a real problem with this at the moment,
-though.  So, please take your time and fun!
+The address 0 and 1 PHY OUI's are the same for the AC200/AC300,
+the AC300 PHY however has a different PHY OUI for address 0x10
+which is effectively used in place of the i2c initialization sequence in
+the AC200. Note this 0x10 address is not usable for normal operations,
+it's essentially only used to activate the main mdio address 0 used
+for normal operations.
 
-> 
-> This is itself a corner case for committing drgn scripts in the kernel.
-> Omar does a really excellent job with running tests on the -rc's and
-> finding broken helpers promptly -- usually well ahead of the kernel
-> release. But even then, there can be a delay from the fix to the next
-> drgn release. The more that you rely on drgn's helpers for a script that
-> you distribute in the kernel, the more likely that it will periodically
-> break, and the in-tree version wouldn't work until the newer drgn
-> version is released.
-> 
-> I don't have a solution for *that*, but it's something to consider when
-> deciding whether to include a script in drgn's contrib/ directory, versus
-> in the kernel.
-
-Makes sense, thank you for sharing your wise thoughts.  This is very helpful to
-me.
-
-[1] https://origin.kernel.org/doc/html/latest/mm/damon/maintainer-profile.html#scm-trees
-
-
-Thanks,
-SJ
-
-[...]
+> It then becomes highly desirable to have a "dedicated" (as opposed to
+> using the "Generic PHY") driver that within the .probe function can take
+> care of putting the PHY in a working state.
+> --
+> Florian
