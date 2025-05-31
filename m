@@ -1,139 +1,213 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dvalin.narfation.org (dvalin.narfation.org [213.160.73.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B55372608;
-	Sat, 31 May 2025 08:30:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742AE22D4EB;
+	Sat, 31 May 2025 08:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.160.73.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748680220; cv=none; b=SmKz/00/I6VIiBY5UYw3LYrdNpSRftHpqHUDHdCF2eOepZ4R7IL5UIjCZbAimdOV49GYguAPiNFLKMmBvhJyBY4NSCjL2e4MXJw/93zfl2of5Su9gBepOm4+plJbI1FXZvMSB5drYpTYlAZ2qa7s0P4iEBQzW9GlhP0ZdvCymrY=
+	t=1748680883; cv=none; b=LYcX+zbmTU/XI01QkuCk/mtMTQMd6SE02ZjMgM4l40KSpH6+tOgI0NlpZhSn+mMoy4FLKdQ59wbqhGOKJV2vlKzJWshBLYJF1j87OjAiXrdrjuGEPT1Pqz0aYjaKHmSDjwK0kzWRQrsic2Y3bhRZA9Yl+mxTNNKt2jjyKqA8meM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748680220; c=relaxed/simple;
-	bh=SXSXDy40WaxtHCF6QED8ZGmEZ1lJdaaHt0UvQ6KDqhw=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uON9H7qNivlXG8JgCTwj8y31fMzI2zhDP0ZaYPKg/wa3zfrBmasYpPgkGR0Zg77gfkjAm6/XZRLke/YXZ7hzfiTJ2QtOZ+Q+TpkhG3vmETPODdP3L/t8xpDDCTseitDlAaeTQfya6az6TPR8qRRsmclJfehEGA2vl3JArS8DREs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XWk0lN8D; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748680883; c=relaxed/simple;
+	bh=799jq6gFPy5XEnSwpA8+a+qrM154nWLIKmOn7fwmLLM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=vBHrfle7UTf4/JkvtUqgrc7tDTMJ6iTcunmLxGe473WcQm/rYTGYgxAvT3aVJ8vYtBW6GztZSZyJmxika86wHXVT5erekiYyfbLo/ehRPSqGgspf5GqNe1pSJnaMaJzdhwKohQjH/pp/3898xncUhSBzGa81ELV3+W/AhCjlR6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org; spf=pass smtp.mailfrom=narfation.org; dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b=i3bZKa+/; arc=none smtp.client-ip=213.160.73.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=narfation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XWk0lN8D"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ad88d77314bso490411766b.1;
-        Sat, 31 May 2025 01:30:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748680217; x=1749285017; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jPvaR31j5liYWmKFXeknzL+qjeQFmOq6Nv/68VW+G58=;
-        b=XWk0lN8DycXYhFhufFUwRy1csVb3MxJJbtHfaoOY6ncKc2k7POZ+xk41USKEyVfO4I
-         LhuDULfe+lMtq0c+b2yg2Gr4FkkwOAUSrneyd59umw4PzNZFrAHFOEp/KCybMghKW1Mi
-         FBWzwIyrDgqvpyQaSNXts1mghn1xsF2SNnUGMnNHwffP0A8LtiCQdhPg/gKtvWG6BpND
-         a0bFxWBVxZ1NdqE+wYcUcXXbeCvoUdZ8itRwZr3I+eZXihm9RNV0YN878v/ZyCG1vHlM
-         tQqKilxi3hEk8EnaQVlcBBcJVsFnBW8EdgWPG7IKkhSDifBRSUwenKCDJCD/j66qUQxn
-         Df6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748680217; x=1749285017;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jPvaR31j5liYWmKFXeknzL+qjeQFmOq6Nv/68VW+G58=;
-        b=rMMa4R9ti//z5z4RvV9kvHHRIZLZt5M6UM2uv2VnAu2OnofFFudYm1VrkAOT6lcyIJ
-         /ejSeGxoTV1X42FemIGLtuP9tNEKKg0tjgyyxtglq0uhSdjxJWHAH6zeynHz9rNLvSsM
-         HbjcMoDs4ivwc/+kfo8TTYYO3hpn5Vt+mvAOvzjqUzIxdMAPwGSFVeAA3/8Gq0Q9c3x9
-         Rv4a61j2hMbTghq0gZapFej2GJQsoud80c1vLNKGMveAP+VuCH9h3+a5ox/zkShlQfcW
-         DcZ1ZJV2PzM6CdJD5FW2rKBtDn5cfRdIaX/dB6u0BIPqB1sncWCSj0I942IlRT3YZqM/
-         75zQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVQDTGz3oOAfQJ8rEo8ZvfbXwv9g2JSsgsCXzju9Hgfmp2MvyxzNF2i2WehwfJWyy0bkp34x+6v3/pUC3Wj@vger.kernel.org, AJvYcCW360cCqtuml/cRAbUQrmKoDC4go6YM+xYLp1l1x0wadM/chAFSFdEMmyQPYc5k2mifYCQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqAFx6W7RjdV0Jl1rcyT4fPTbUEGIU/amTjoG7K0wRLTVk3QUt
-	MpJkP8hDVsqvqg8bRIj4J8aHtf+4FWeIXCLkcrbWvxdPXFIZI3i6vqtg
-X-Gm-Gg: ASbGncs2J8fuh4Ea5xgSAqgyDmbQtHTkrlaYk9mgPtS7M5pxbPg+PwCnBmYYbSR3MkG
-	kMZS/vlUYceuoggnJ+r/cn5Q5WR+5OjaP7vRdkTisvacOvCxEE6SwwDdyBUF0JCyRCq6ReWH2yG
-	/3f7F1OkUhUOM/srY8tPuliqR+xo4h7O73dNvzM2CtJCdk9gGxPxxrKrcrA0nzi32S7aIeBzR1o
-	MO32A8lc+vM2+lrqd53Tu/BjDl4ziEAUYX5sMJPxUBwi1iXdmcJrLA7CU03Kj+rXZaE1SDhsk2T
-	GYbQcdlkTJvluQKRMnn/nPZDUmI6rTJTW8BQVC0SdIXSaZvcSw==
-X-Google-Smtp-Source: AGHT+IGotvBseJAMbLvgO9Xrpod7ZwJRyG5Td7SuGZoIXVLVp59qbNcJuN7+yc4STOYDZfZx+msYYQ==
-X-Received: by 2002:a17:907:9721:b0:ad2:4c38:5a22 with SMTP id a640c23a62f3a-adb3243dd27mr541887966b.51.1748680217139;
-        Sat, 31 May 2025 01:30:17 -0700 (PDT)
-Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60566c2a762sm2899876a12.4.2025.05.31.01.30.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 May 2025 01:30:16 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Sat, 31 May 2025 10:30:15 +0200
-To: Tao Chen <chen.dylane@linux.dev>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-	martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
-	yonghong.song@linux.dev, john.fastabend@gmail.com,
-	kpsingh@kernel.org, sdf@fomichev.me, qmo@kernel.org,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next  1/3] bpf: Add cookie to raw_tp bpf_link_info
-Message-ID: <aDq-F9nK4K74ubjo@krava>
-References: <20250529165759.2536245-1-chen.dylane@linux.dev>
+	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="i3bZKa+/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
+	s=20121; t=1748680271;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jll3XeKX99pWqsCTGFwx78r84HFnraGM4zNForfuar4=;
+	b=i3bZKa+/0lAKv8gR00vmayeK2aJiwvdrqTxJxAaXTEBLkXOwvbc+zORX/B0oIwems0YMAN
+	tu5Sv+Sn0Pl2VSVzj8GwBCls8lvt8IS8RO+QwBCo8vYYPt+Ib5EHQmEFIACe0fAeXvF+NY
+	oiW/bKeKsUqSJdNcoLoAa9ErZ/nl78A=
+From: Sven Eckelmann <sven@narfation.org>
+To: Marek Lindner <marek.lindner@mailbox.org>,
+ Simon Wunderlich <sw@simonwunderlich.de>,
+ Antonio Quartulli <antonio@mandelbit.com>,
+ Matthias Schiffer <mschiffer@universe-factory.net>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH batadv 1/5] batman-adv: store hard_iface as iflink private data
+Date: Sat, 31 May 2025 10:31:07 +0200
+Message-ID: <4075596.ElGaqSPkdT@sven-desktop>
+In-Reply-To:
+ <0b26554afea5203820faef1dfb498af7533a9b5d.1747687504.git.mschiffer@universe-factory.net>
+References:
+ <0b26554afea5203820faef1dfb498af7533a9b5d.1747687504.git.mschiffer@universe-factory.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250529165759.2536245-1-chen.dylane@linux.dev>
+Content-Type: multipart/signed; boundary="nextPart6691312.GXAFRqVoOG";
+ micalg="pgp-sha512"; protocol="application/pgp-signature"
 
-On Fri, May 30, 2025 at 12:57:57AM +0800, Tao Chen wrote:
-> After commit 68ca5d4eebb8 ("bpf: support BPF cookie in raw tracepoint
-> (raw_tp, tp_btf) programs"), we can show the cookie in bpf_link_info
-> like kprobe etc.
+--nextPart6691312.GXAFRqVoOG
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: Sven Eckelmann <sven@narfation.org>
+Date: Sat, 31 May 2025 10:31:07 +0200
+Message-ID: <4075596.ElGaqSPkdT@sven-desktop>
+MIME-Version: 1.0
+
+On Monday, 19 May 2025 22:46:28 CEST Matthias Schiffer wrote:
+> By passing the hard_iface to netdev_master_upper_dev_link() as private
+> data, we can iterate over hardifs of a mesh interface more efficiently
+> using netdev_for_each_lower_private*() (instead of iterating over the
+> global hardif list). In addition, this will enable resolving a hardif
+> from its netdev using netdev_lower_dev_get_private() and getting rid of
+> the global list altogether in the following patches.
 > 
-> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+> A similar approach can be seen in the bonding driver.
+> 
+> Signed-off-by: Matthias Schiffer <mschiffer@universe-factory.net>
 > ---
->  include/uapi/linux/bpf.h       | 1 +
->  kernel/bpf/syscall.c           | 1 +
->  tools/include/uapi/linux/bpf.h | 1 +
->  3 files changed, 3 insertions(+)
-> 
-> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> index 07ee73cdf9..7d0ad5c2b6 100644
-> --- a/include/uapi/linux/bpf.h
-> +++ b/include/uapi/linux/bpf.h
-> @@ -6644,6 +6644,7 @@ struct bpf_link_info {
->  		struct {
->  			__aligned_u64 tp_name; /* in/out: tp_name buffer ptr */
->  			__u32 tp_name_len;     /* in/out: tp_name buffer len */
+>  net/batman-adv/bat_algo.h       |  1 -
+>  net/batman-adv/bat_iv_ogm.c     | 25 +++++++--------------
+>  net/batman-adv/bat_v.c          |  6 ++---
+>  net/batman-adv/bat_v_elp.c      |  7 ++----
+>  net/batman-adv/bat_v_ogm.c      | 12 ++++------
+>  net/batman-adv/hard-interface.c | 39 ++++++++++++---------------------
+>  net/batman-adv/main.c           |  6 ++---
+>  net/batman-adv/mesh-interface.c |  6 ++---
+>  net/batman-adv/multicast.c      |  6 ++---
+>  net/batman-adv/netlink.c        |  6 ++---
+>  net/batman-adv/originator.c     |  6 ++---
+>  net/batman-adv/send.c           |  6 ++---
+>  12 files changed, 43 insertions(+), 83 deletions(-)
 
-there's hole now in here, let's add something like
+Looks mostly good - I just want to modify the includes slightly (if it is ok for you):
 
-  __u32 reserved;
+index c165dede..ba5bea4c 100644
+--- a/net/batman-adv/bat_algo.c
++++ b/net/batman-adv/bat_algo.c
+@@ -14,6 +14,7 @@
+ #include <linux/skbuff.h>
+ #include <linux/stddef.h>
+ #include <linux/string.h>
++#include <linux/types.h>
+ #include <net/genetlink.h>
+ #include <net/netlink.h>
+ #include <uapi/linux/batman_adv.h>
+diff --git a/net/batman-adv/bat_algo.h b/net/batman-adv/bat_algo.h
+index 898c71b5..cdd1ccfe 100644
+--- a/net/batman-adv/bat_algo.h
++++ b/net/batman-adv/bat_algo.h
+@@ -11,7 +11,6 @@
 
-jirka
+ #include <linux/netlink.h>
+ #include <linux/skbuff.h>
+-#include <linux/types.h>
+
+ extern char batadv_routing_algo[];
+
+diff --git a/net/batman-adv/bat_v_elp.c b/net/batman-adv/bat_v_elp.c
+index 56b6216f..8df2dcc2 100644
+--- a/net/batman-adv/bat_v_elp.c
++++ b/net/batman-adv/bat_v_elp.c
+@@ -35,7 +35,6 @@
+ #include <net/cfg80211.h>
+ #include <uapi/linux/batadv_packet.h>
+
+-#include "bat_algo.h"
+ #include "bat_v_ogm.h"
+ #include "hard-interface.h"
+ #include "log.h"
+diff --git a/net/batman-adv/bat_v_ogm.c b/net/batman-adv/bat_v_ogm.c
+index 5c955ac2..cab83d37 100644
+--- a/net/batman-adv/bat_v_ogm.c
++++ b/net/batman-adv/bat_v_ogm.c
+@@ -22,7 +22,6 @@
+ #include <linux/mutex.h>
+ #include <linux/netdevice.h>
+ #include <linux/random.h>
+-#include <linux/rculist.h>
+ #include <linux/rcupdate.h>
+ #include <linux/skbuff.h>
+ #include <linux/slab.h>
+@@ -33,7 +32,6 @@
+ #include <linux/workqueue.h>
+ #include <uapi/linux/batadv_packet.h>
+
+-#include "bat_algo.h"
+ #include "hard-interface.h"
+ #include "hash.h"
+ #include "log.h"
+diff --git a/net/batman-adv/main.c b/net/batman-adv/main.c
+index af1e644b..d41ce799 100644
+--- a/net/batman-adv/main.c
++++ b/net/batman-adv/main.c
+@@ -27,7 +27,6 @@
+ #include <linux/module.h>
+ #include <linux/netdevice.h>
+ #include <linux/printk.h>
+-#include <linux/rculist.h>
+ #include <linux/rcupdate.h>
+ #include <linux/skbuff.h>
+ #include <linux/slab.h>
+diff --git a/net/batman-adv/netlink.c b/net/batman-adv/netlink.c
+index 35d7ecee..5afb1b70 100644
+--- a/net/batman-adv/netlink.c
++++ b/net/batman-adv/netlink.c
+@@ -20,7 +20,6 @@
+ #include <linux/if_vlan.h>
+ #include <linux/init.h>
+ #include <linux/limits.h>
+-#include <linux/list.h>
+ #include <linux/minmax.h>
+ #include <linux/netdevice.h>
+ #include <linux/netlink.h>
+diff --git a/net/batman-adv/originator.c b/net/batman-adv/originator.c
+index 5e4168f8..c13e05d3 100644
+--- a/net/batman-adv/originator.c
++++ b/net/batman-adv/originator.c
+@@ -29,7 +29,6 @@
+ #include <linux/workqueue.h>
+ #include <uapi/linux/batadv_packet.h>
+
+-#include "bat_algo.h"
+ #include "distributed-arp-table.h"
+ #include "fragmentation.h"
+ #include "gateway_client.h"
+diff --git a/net/batman-adv/send.c b/net/batman-adv/send.c
+index 788fcfd1..a9929948 100644
+--- a/net/batman-adv/send.c
++++ b/net/batman-adv/send.c
+@@ -21,7 +21,6 @@
+ #include <linux/list.h>
+ #include <linux/netdevice.h>
+ #include <linux/printk.h>
+-#include <linux/rculist.h>
+ #include <linux/rcupdate.h>
+ #include <linux/skbuff.h>
+ #include <linux/slab.h>
+
+Thanks,
+	Sven
+--nextPart6691312.GXAFRqVoOG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQS81G/PswftH/OW8cVND3cr0xT1ywUCaDq+SwAKCRBND3cr0xT1
+y3drAQC++qUIxjP/5zx4qVUE0mPTESzY622rxoVLLdoMxpjWmwEAxQfC0Aj4rQZN
+/JLZqkC1kiWXGPIigQVmK6Q+O3cnYQw=
+=0ODT
+-----END PGP SIGNATURE-----
+
+--nextPart6691312.GXAFRqVoOG--
 
 
-> +			__u64 cookie;
->  		} raw_tracepoint;
->  		struct {
->  			__u32 attach_type;
-> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-> index 9794446bc8..1c3dbe44ac 100644
-> --- a/kernel/bpf/syscall.c
-> +++ b/kernel/bpf/syscall.c
-> @@ -3687,6 +3687,7 @@ static int bpf_raw_tp_link_fill_link_info(const struct bpf_link *link,
->  		return -EINVAL;
->  
->  	info->raw_tracepoint.tp_name_len = tp_len + 1;
-> +	info->raw_tracepoint.cookie = raw_tp_link->cookie;
->  
->  	if (!ubuf)
->  		return 0;
-> diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
-> index 07ee73cdf9..7d0ad5c2b6 100644
-> --- a/tools/include/uapi/linux/bpf.h
-> +++ b/tools/include/uapi/linux/bpf.h
-> @@ -6644,6 +6644,7 @@ struct bpf_link_info {
->  		struct {
->  			__aligned_u64 tp_name; /* in/out: tp_name buffer ptr */
->  			__u32 tp_name_len;     /* in/out: tp_name buffer len */
-> +			__u64 cookie;
->  		} raw_tracepoint;
->  		struct {
->  			__u32 attach_type;
-> -- 
-> 2.43.0
-> 
+
