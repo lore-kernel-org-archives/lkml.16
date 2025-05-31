@@ -1,112 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58CE4645;
-	Sat, 31 May 2025 18:01:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C907928371;
+	Sat, 31 May 2025 18:08:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748714490; cv=none; b=YwHaicY7brWzbOaCDHwLj78Ioeal3GZ7MDGpJOolDxKNsrfmexmDWX3HJFhwC14rkUBXNXYHCgYJBUR/VgOiTwLhfz27jS8nx7YaQn0SdhUqBm4VP+FTv57MTZZJDVo/FGn7fh3mw8QH0xfSCHHdxN6v0+SVNBEgU5O82z0TcUo=
+	t=1748714925; cv=none; b=SgaBSkj6pUD7f3UFBUPyEU9vpNkNcJ/KeOa9vVU2A+EMgnI1YWVMIThVJIxRdMrGcigZeRgFodWIeTrzo62juSeOyTdkmYwWBX287QigyATYr0G1D+tjXerEtBLxZF7Qvs3oIVTsqgMDvkjr0yLbazT417uTA+bl/jzihYKAZ1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748714490; c=relaxed/simple;
-	bh=3f5z1sc5+Pgcw89xps+F1E5eYIZX9QvaPM8JVy0CBG0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QXGei8tZ0Od19twH72pYV7iDAt8nrmclB3C/GHdpoXnCs6pTStnddW1lrYMMM7E/9Ty6pWinZzPsTpdze38kaPlracvjAL9QMNqjX3LL7WRraSADcvL8hA6uydjZ2wM3ZX8/G+lvM2aKfJy761J5sCYuhDc9HNe+fXqtiCzWu9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NJr++5aH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748714925; c=relaxed/simple;
+	bh=X+Md5IzRRo0ZXMh/hz3sUlwNFPlQ9YC8sd7qODiBw20=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gfu5HJK8YQb8YorOv/3qROMWNChcanTlibuftS5cIPRQaQry3F9wUyDC4Ykg4AyHofg0ZgHnxPndrwPFy7NUriN3dcHUCPOLNCRYh56JIs8cGhSKufqRXJlAB07zrHTi75mhsOJR6ss+ULxaaG/Ke4TQ9YxYq6t3qoCJby24iwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uDjIaGTl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NJr++5aH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1760C4CEEA;
-	Sat, 31 May 2025 18:01:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uDjIaGTl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1583EC4CEE3;
+	Sat, 31 May 2025 18:08:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748714489;
-	bh=3f5z1sc5+Pgcw89xps+F1E5eYIZX9QvaPM8JVy0CBG0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=NJr++5aH7UJJjE0f90S3etJRSC5oJu8UkgXzrGT2Ri/wcXOGXBr0fMKO23d5mLk2O
-	 MatmIbDbHcuMiyAEK/DuzTEaxNQEMIFZYysnJfwJdI/fg5S1O+A2I9J0P6yNtPy1PI
-	 njapoMUaUV87WAHvlK1E76M/4OPYspyWv67nZENVWqLMX9/d0e82fGFl3n/Pb3Tsg3
-	 Qtsdr//+iboafqJop1GIpzUzX3RvcJ94f6jj0wrONd3Yy8a5sewRJCkz+/6OJ/iBrm
-	 R3bOyuFAhhV8uL7JXTYfU29Dm+SMGNKlgLOqZwI+7KlHMeLfZIv5HmUtfJrwWoyUKP
-	 aJcOUQRslvJ2A==
-Date: Sat, 31 May 2025 19:01:24 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Gyeyoung Baek <gye976@gmail.com>
-Cc: David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 2/9] iio: consumer: Define timestamp-related
- structures and constants
-Message-ID: <20250531190124.30704d19@jic23-huawei>
-In-Reply-To: <20250519-timestamp-v1-2-fcb4f6c2721c@gmail.com>
-References: <20250519-timestamp-v1-0-fcb4f6c2721c@gmail.com>
-	<20250519-timestamp-v1-2-fcb4f6c2721c@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=k20201202; t=1748714925;
+	bh=X+Md5IzRRo0ZXMh/hz3sUlwNFPlQ9YC8sd7qODiBw20=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uDjIaGTlYE7bPSZQL+5IaB/XE5QnHBheqotizP1HCLyaHktZXx0llqjeYbrWfNtOO
+	 FxQxTdapKznG5X1oKyj5vpy1PFRa6COELDoMPljNYH46rfHnCu1bsqnYCRhvIJvFSF
+	 eYx2yxxysO0YFQW+cDdzGCivvWyGrk5jQjKPUhsnIAOCGakgeSfVLPvwUOIhYmSbgL
+	 mMwo1pAYAM8QXFMgo2O7V/VFtFXtuYvQe0bi4Gxs6dhkZPrLXWL1WrUnivL0PfNOjT
+	 kN8uhtACbV247wNmzCqMlLircvEXH+N88mcA8xz7NhW8d7ZJ1qtIZsp12XbGsdfNt6
+	 iupU2z6XeSwGg==
+Date: Sat, 31 May 2025 11:08:43 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+	ardb@kernel.org
+Subject: Re: [PATCH] crypto/crc32: register only one shash_alg
+Message-ID: <20250531180843.GA5482@quark>
+References: <20250530160940.12761-1-ebiggers@kernel.org>
+ <aDqrMb7U18DcMSRl@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aDqrMb7U18DcMSRl@gondor.apana.org.au>
 
-On Mon, 19 May 2025 23:25:54 +0900
-Gyeyoung Baek <gye976@gmail.com> wrote:
+On Sat, May 31, 2025 at 03:09:37PM +0800, Herbert Xu wrote:
+> Eric Biggers <ebiggers@kernel.org> wrote:
+> > From: Eric Biggers <ebiggers@google.com>
+> > 
+> > Stop unnecessarily registering a "crc32-generic" shash_alg when a
+> > "crc32-$(ARCH)" shash_alg is registered too.
+> > 
+> > While every algorithm does need to have a generic implementation to
+> > ensure uniformity of support across platforms, that doesn't mean that we
+> > need to make the generic implementation available through crypto_shash
+> > when an optimized implementation is also available.
+> > 
+> > Registering the generic shash_alg did allow users of the crypto_shash or
+> > crypto_ahash APIs to request the generic implementation specifically,
+> > instead of an optimized one.  However, the only known use case for that
+> > was the differential fuzz tests in crypto/testmgr.c.  Equivalent test
+> > coverage is now provided by crc_kunit.
+> > 
+> > Signed-off-by: Eric Biggers <ebiggers@google.com>
+> > ---
+> > 
+> > I'm planning to take this through the crc tree.
+> > 
+> > crypto/crc32.c | 69 ++++++++------------------------------------------
+> > 1 file changed, 11 insertions(+), 58 deletions(-)
+> 
+> Please don't do this without first removing all drivers providing
+> "crc32" as otherwise their test coverge will be reduced.
+> 
+> Cheers,
 
-> Define the required constants and structures on the consumer side.
-> 
-> The `timestamp_enabled` indicates whether a timestamp is grabbed or not.
-> This is passed to `iio_triggered_buffer_setup_new()` as an argument.
-> 
-> The `timestamp_type` indicates which handler grabs the timestamp.
-> This value is set by `iio_poll_func_register()`.
-> 
-> Signed-off-by: Gyeyoung Baek <gye976@gmail.com>
-> ---
->  include/linux/iio/trigger_consumer.h | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/include/linux/iio/trigger_consumer.h b/include/linux/iio/trigger_consumer.h
-> index 2c05dfad88d7..5e6ff8738386 100644
-> --- a/include/linux/iio/trigger_consumer.h
-> +++ b/include/linux/iio/trigger_consumer.h
-> @@ -13,6 +13,13 @@
->  struct iio_dev;
->  struct iio_trigger;
->  
-> +enum iio_timestamp_type {
-> +	IIO_TIMESTAMP_TYPE_NONE,
-> +	IIO_TIMESTAMP_TYPE_CONSUMER_TOP_HALF,
-> +	IIO_TIMESTAMP_TYPE_CONSUMER_BOTTOM_HALF,
-> +	IIO_TIMESTAMP_TYPE_TRIGGER,
-> +};
+Yes, I'll do that.  It's time to do that anyway.
 
-This needs documentation. I'm struggling even with the series in front of me
-to understand what each of these means. The comment below helps somewhat
-but we should have it alongside the enum.
+For other algorithms like sha256 where it's unlikely that all the drivers can be
+removed, testmgr.c should just compare against the library implementation, not
+the "generic" implementation specifically.
 
-> +
->  /**
->   * struct iio_poll_func - poll function pair
->   *
-> @@ -26,7 +33,10 @@ struct iio_trigger;
->   * @timestamp:			some devices need a timestamp grabbed as soon
->   *				as possible after the trigger - hence handler
->   *				passes it via here.
-> + * @timestamp_type:		indicates which handler grabs the timestamp.
-> + * @timestamp_enabled:		if true, automatically grabs the timestamp.
->   **/
-> +
->  struct iio_poll_func {
->  	struct iio_dev *indio_dev;
->  	irqreturn_t (*h)(int irq, void *p);
-> @@ -35,6 +45,9 @@ struct iio_poll_func {
->  	char *name;
->  	int irq;
->  	s64 timestamp;
-> +
-> +	enum iio_timestamp_type timestamp_type;
-> +	bool timestamp_enabled;
->  };
->  
->  
-> 
+Ideally we'll just stop pretending that cra_driver_name actually matters, and
+just name the software algorithms *-lib or *-software.
 
+- Eric
