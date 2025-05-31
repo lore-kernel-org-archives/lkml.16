@@ -1,325 +1,132 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pf1-f196.google.com (mail-pf1-f196.google.com [209.85.210.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD69221D9C
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 07:20:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC4321CD1E1;
+	Sat, 31 May 2025 07:25:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748676045; cv=none; b=b9aAJOvy8hkbu6P8vKrDx5/ALNG7u3Z1eVZ9yHQ4vju0p5LtzdvW/1Lys5RgvR6CVSypJA/84VFBqIpDdaP+lr5Gyer85trgsrcdFDsbC9ulUnKuarRkkruB3HyMoNzTk1Sr1Z2Hj9rfFu4VuMp/QM1wzfgRvUYx4RrolWMy3aM=
+	t=1748676313; cv=none; b=fyBJSl2E/dM/5ilO3kJKk2BT+YukH4E1WhLr9OU3dbzWFTRrzZntwGyr4USpaK8gm/dpKO8TfI0e5gD1grlkK+lIwsiRHwSxQcl7ki+tqxuVbQnWGJTgt4+l93/EiINedqnsEPywGyEKO9Qn7X1kUPqzBLhYtDVKLKeaKRul7YA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748676045; c=relaxed/simple;
-	bh=JYRAtjfbQbexez6DzLbAn++nRbKQ2hLy6stSmzX5WLw=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=g9QNkL/EN0CGaJ9fCgAXnnA6hdPkVPUoPueLRU0tyP7M1cx0EdgjERs8ja5QXz5GQKU9AkBubeIMJZdYllWLIAgxhEzssTbi3Fgeawo1vuuGtwzCXcZDVVoRtZ3As+CLgVEH5yhUomr0yYX6K0o3QDimxyBPhBK3gObSZfTs/ZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--blakejones.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IUluujMm; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--blakejones.bounces.google.com
+	s=arc-20240116; t=1748676313; c=relaxed/simple;
+	bh=sEJs3eN1pXM9A35ABPY3FL2cpEkPCsb4SdnpHf5Oysw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=HawkIBBDcAygsNFfzQbs3V8LEuW/uZ41usHC5459wRyrnI5BGUxsbrzpM1i6sYUUIWKjJ3rk6BpTruLK0GuWF1BRVFvG7xNxzgzKH+fG9DPem1LHvYsHarJYGxnxeVJoQJrwhPfjayuJoVGN3yORbToHri3vOQnSQh7IsHZWTrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S7uqYUDI; arc=none smtp.client-ip=209.85.210.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IUluujMm"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b26e4fe0c08so1884532a12.3
-        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 00:20:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S7uqYUDI"
+Received: by mail-pf1-f196.google.com with SMTP id d2e1a72fcca58-74264d1832eso2920018b3a.0;
+        Sat, 31 May 2025 00:25:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748676042; x=1749280842; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=FnpYXBCDsrO3XrowDX8lwOY6h9hDw7KEtyfape8Lgkc=;
-        b=IUluujMmTLr8Lq8RlCtUgVfdVgTBLaMQzTYCj9VYWhcNbscOLZ1S7+8tryRkTlCZ8E
-         YptDDkif4WfHRUW52JPvdzMZW0XV9M+Z6HhDKA/FbZHkxx8Rd2kCqMy6aYj3U4G7ZI25
-         GKAdEzsNxrgZU1tu3o+Ohl6ApzIFhKQrjag+Q9ZfiFIbzqzHSsaLkyENWDapINW0MDP+
-         aZqtGoexVFUjYm/moLw9WZ1yAy86X0R2VR17WuJyUKMbq1OZq16easU2yLfMLnienoOT
-         YYe6El9mPSUBfV0r4AH6+6VHZJBbI9Ce2JTGqiUcl60vDeCEWCTMTgoZBnMKAESeF/5W
-         Ze5A==
+        d=gmail.com; s=20230601; t=1748676311; x=1749281111; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tb9gy41WCYgYTze5BunX9HwNT2eQ+EQ0m35v75yOUmk=;
+        b=S7uqYUDIZGv+Kz43oPPm7+//bfP7p+0vdvI05pRfSy9j2TTlSb1X6zhFdte2gj1rpu
+         Wzvw0HkDodbx1A0PIRltgn6TkEVu+reeO5orcuz4E1VlAMHDII4ceMy6ohTs/ftwkwPG
+         I1ziYZjzKuJa8H82rxPwzF86YkN5BTABGJl1A0xCw7oI3/2+4w2DWBipFBpDvXpMv7NL
+         U0USr9nq3KIBd8Ycs229Kc5MTbJALbGG4aOz6rljjUlUtneZgjUjCdSatOQsNGHJudfh
+         Gc+eK56FR4Uv67A3XEdBdnVeRJn8hL0o3vXW6AMYEL+JZGfD5pxi/9Px6lgK6MOrC86r
+         R/Mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748676042; x=1749280842;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FnpYXBCDsrO3XrowDX8lwOY6h9hDw7KEtyfape8Lgkc=;
-        b=GBgU8h6RnHqIbEuwpXDCou7GWQgwNGZ5fExGCupUh115hBf5OZ3BrsluE2d2j6lK6J
-         tUkvLvycAk5x2CB7iO4bcXZ9N+94D3D7V7Yce1cn7TuOzu0Yj6MydMYtlKHs/gdNG3Bx
-         QXn4gHPmXHtte1SrVDFNFG8OM6kRvwz9FMql8ymF3J7MiGtUgHYK0UNs6FPwZ0xWybU1
-         q2KsUvi0u9EXTP7U6N9N2AeUkP6TUYttn1ZESX68loLPL2RE4sQnoQJ3DQ7487XnapjA
-         FJn7J+S8ds8PE0EaRNTq28IHxeezoYYDvI/eHHIL4oPBRTseIv7NPpNx7pIp2NZ1q4mA
-         Keew==
-X-Forwarded-Encrypted: i=1; AJvYcCWSXTJr3nKiMwfXNmKij41IX9AQjKCtffzRLzeMLIRAYLaSgwTD4Ex1jfI1aTXxWEzmEC7oKfhHqgHF6TI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFroT+CvAaJzMTbPEs0n7r0UGps7VO7ju0EiNL4GgDrkrZ1JB3
-	UuboPDBarnGB3FECD10OB2t9aa3mZEsRQdlwCZRpPAt92R21J9EVHWudxeg1omvmkGQZdorOCM6
-	b89lYr6h1YRWkAC8A4HgKvg==
-X-Google-Smtp-Source: AGHT+IHqVzQuAfCWZJ0i2lpECpuI8J7A8UURukqTUlT7ZQYqAtCFnDsazLTEp9TfImh5iMxGbxg/BVnItcPMlt13
-X-Received: from pllq23.prod.google.com ([2002:a17:902:7897:b0:234:8a16:9a5])
- (user=blakejones job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:902:cf0a:b0:224:26fd:82e5 with SMTP id d9443c01a7336-23529b4637emr102706605ad.48.1748676042608;
- Sat, 31 May 2025 00:20:42 -0700 (PDT)
-Date: Sat, 31 May 2025 00:20:31 -0700
+        d=1e100.net; s=20230601; t=1748676311; x=1749281111;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tb9gy41WCYgYTze5BunX9HwNT2eQ+EQ0m35v75yOUmk=;
+        b=dIq3sogJjBcaDMDhNK3EiqK4o6vZvYQOtI9Y2qncjazXzvYCm3yAxENKBxHSvbdzd9
+         IUA6wEpH4NYj77XNN4ivW9T5vZSa/tGjbdIx2d9v3OgBw4xP55ItksScYO/Oxijm3E2V
+         f0fZ97Vf4PUOm2IL6F0FYh8pNRUXJUPw6tDEUSlhVHMQy8bDZNoy+gsobXT7g3OvXNBw
+         /OxKNxTwBx7OhReUGCr6uRSaXde86vycdoG+1srXSLrA5xYINO8XqN7+iobrW9AohCvL
+         ayFLb+pXj6FvGjNm0ygd+AOCsgQNMkAx+2OlGy2zABejH/gPRScv3CbOlgj+qzB/Ef2D
+         qLxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWnOD3eYrN0GQw1E/aLPt6Hzafa0IgC54gOQDSUTBgiylqD1HqbgPsje/Jh2E9npxLsnMqE/kudGgdpRKs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxx4GDYKoiU6HyTMoOkp3wn+m06PmZ8ey+b8Qcq4af98Cc2Y5xO
+	2LGpl3MbbKGokTmICLBBZ4YpaCRJ8quFGcHU3uys6eZFe/hj38gONN+z
+X-Gm-Gg: ASbGncuSOxGEIbQzkHNN3rJEqcalZKZh53xr/tKqFr/mD+5KaSZqlcy13zVmyf0UQMw
+	MFwu+KwZW4zWop8fy8KrAiglVgEO35v2k+lQ7oA3r6SzqyZMFxLlVRGfLGNgIlevUQHFAhWhaHU
+	aGLkp+szaFMTxYiQZb0pFD9+XzIS1dUSh5Qy5AL9y4EFRF2FJpT/zufmsr/ezNjNhdVvpqoSd5k
+	G2LMO80D959GnPdP0dFMnkK0ENQnuJfg9hUzHMwimmO6dmKyU4UBX+PTU+HB8CVHVxee8H0L7iP
+	xj/ogBpgTemYp0DKYJG3wpIwmrCOIfrCt1/jX0NJCsV7HUSq/CPnOwJg42q955i/AI0ICw==
+X-Google-Smtp-Source: AGHT+IEHz/d2PhDuz8MAfJqDuNx8fU6jAudf7ehnCahFtjAR8/ORj9wyQ5AF/9aDjb3wguzDHWmGyw==
+X-Received: by 2002:a05:6a20:7349:b0:215:d565:3026 with SMTP id adf61e73a8af0-21bad1573damr1434429637.20.1748676310781;
+        Sat, 31 May 2025 00:25:10 -0700 (PDT)
+Received: from [127.0.1.1] ([240e:341:e44:6f00:3985:d8aa:a949:3e22])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afe9643fsm4101113b3a.2.2025.05.31.00.25.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 31 May 2025 00:25:10 -0700 (PDT)
+From: Troy Mitchell <troymitchell988@gmail.com>
+Date: Sat, 31 May 2025 15:20:40 +0800
+Subject: [PATCH v2] rtc: pcf8563: fix wrong alarm register
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
-Message-ID: <20250531072031.2263491-1-blakejones@google.com>
-Subject: [PATCH] libbpf: add support for printing BTF character arrays as strings
-From: Blake Jones <blakejones@google.com>
-To: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	Ihor Solodrai <ihor.solodrai@linux.dev>, Namhyung Kim <namhyung@kernel.org>, 
-	Ian Rogers <irogers@google.com>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, Blake Jones <blakejones@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250531-pcf8563-fix-alarm-v2-1-cac4b1716167@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAMetOmgC/32NQQ6CMBBFr0Jm7RgKDhRX3sOwKGWASYCS1hAN6
+ d2tHMDl+z///QMCe+EA9+wAz7sEcWuC4pKBncw6MkqfGIq8oPymGtzsoKkqcZA3mtn4BYlrXQ9
+ 5Q7pSkHab51SezmebeJLwcv5zXuzql/6z7QoVdropDfVM1OnHuBiZr9Yt0MYYv6xPZdKyAAAA
+X-Change-ID: 20250419-pcf8563-fix-alarm-5e787f095861
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Troy Mitchell <troymitchell988@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748676045; l=1668;
+ i=troymitchell988@gmail.com; h=from:subject:message-id;
+ bh=sEJs3eN1pXM9A35ABPY3FL2cpEkPCsb4SdnpHf5Oysw=;
+ b=/S3wCjKhAbXZmbfcU+bjQSA9mgsA8tmAEEnQwaUKVlN6zA4xGmGHWg/tJ29izLwpoQb/Lq3lN
+ CWSHcjE3GQBBHofbANOiYTx9JwPzhxfQxcHY/ld9IMK8DV1zckGvJ0x
+X-Developer-Key: i=troymitchell988@gmail.com; a=ed25519;
+ pk=2spEMGBd/Wkpd36N1aD9KFWOk0aHrhVxZQt+jxLXVC0=
 
-The BTF dumper code currently displays arrays of characters as just that -
-arrays, with each character formatted individually. Sometimes this is what
-makes sense, but it's nice to be able to treat that array as a string.
+When the regmap framework was introduced to this driver,
+the PCF8563_REG_AMN register within the set_alarm function was
+incorrectly changed to PCF8563_REG_SC.
 
-This change adds a special case to the btf_dump functionality to allow
-arrays of single-byte integer values to be printed as character strings.
-Characters for which isprint() returns false are printed as hex-escaped
-values. This is enabled when the new ".print_strings" is set to 1 in the
-btf_dump_type_data_opts structure.
+The PCF8563_REG_SC register is the seconds register.
+This caused alarm values to be written to the seconds register
+when an alarm was set. Which means the alarm would not trigger
+as expected and the seconds register would be overwritten
+with an incorrect value.
 
-As an example, here's what it looks like to dump the string "hello" using
-a few different field values for btf_dump_type_data_opts (.compact = 1):
-
-- .print_strings = 0, .skip_names = 0:  (char[6])['h','e','l','l','o',]
-- .print_strings = 0, .skip_names = 1:  ['h','e','l','l','o',]
-- .print_strings = 1, .skip_names = 0:  (char[6])"hello"
-- .print_strings = 1, .skip_names = 1:  "hello"
-
-Here's the string "h\xff", dumped with .compact = 1 and .skip_names = 1:
-
-- .print_strings = 0:  ['h',-1,]
-- .print_strings = 1:  "h\xff"
-
-Signed-off-by: Blake Jones <blakejones@google.com>
+Signed-off-by: Troy Mitchell <troymitchell988@gmail.com>
 ---
- tools/lib/bpf/btf.h                           |   3 +-
- tools/lib/bpf/btf_dump.c                      |  51 ++++++++-
- .../selftests/bpf/prog_tests/btf_dump.c       | 102 ++++++++++++++++++
- 3 files changed, 154 insertions(+), 2 deletions(-)
+Since this patch[1], the set_alarm function has been setting
+an wrong register.
 
-diff --git a/tools/lib/bpf/btf.h b/tools/lib/bpf/btf.h
-index 4392451d634b..be8e8e26d245 100644
---- a/tools/lib/bpf/btf.h
-+++ b/tools/lib/bpf/btf.h
-@@ -326,9 +326,10 @@ struct btf_dump_type_data_opts {
- 	bool compact;		/* no newlines/indentation */
- 	bool skip_names;	/* skip member/type names */
- 	bool emit_zeroes;	/* show 0-valued fields */
-+	bool print_strings;	/* print char arrays as strings */
- 	size_t :0;
- };
--#define btf_dump_type_data_opts__last_field emit_zeroes
-+#define btf_dump_type_data_opts__last_field print_strings
+Link:
+https://lore.kernel.org/all/20241010084949.3351182-3-iwamatsu@nigauri.org/ [1]
+---
+Changes in v2:
+- Remove irrelevant changes
+- Link to v1: https://lore.kernel.org/r/20250419-pcf8563-fix-alarm-v1-1-b893a5de55b8@gmail.com
+---
+ drivers/rtc/rtc-pcf8563.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/rtc/rtc-pcf8563.c b/drivers/rtc/rtc-pcf8563.c
+index 5a084d426e58d09cfedf0809695a96a27627c420..b2611697fa5e3adc61f687e39385d10736dec677 100644
+--- a/drivers/rtc/rtc-pcf8563.c
++++ b/drivers/rtc/rtc-pcf8563.c
+@@ -285,7 +285,7 @@ static int pcf8563_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *tm)
+ 	buf[2] = bin2bcd(tm->time.tm_mday);
+ 	buf[3] = tm->time.tm_wday & 0x07;
  
- LIBBPF_API int
- btf_dump__dump_type_data(struct btf_dump *d, __u32 id,
-diff --git a/tools/lib/bpf/btf_dump.c b/tools/lib/bpf/btf_dump.c
-index 460c3e57fadb..a07dd5accdd8 100644
---- a/tools/lib/bpf/btf_dump.c
-+++ b/tools/lib/bpf/btf_dump.c
-@@ -75,6 +75,7 @@ struct btf_dump_data {
- 	bool is_array_member;
- 	bool is_array_terminated;
- 	bool is_array_char;
-+	bool print_strings;
- };
- 
- struct btf_dump {
-@@ -2028,6 +2029,50 @@ static int btf_dump_var_data(struct btf_dump *d,
- 	return btf_dump_dump_type_data(d, NULL, t, type_id, data, 0, 0);
- }
- 
-+static int btf_dump_string_data(struct btf_dump *d,
-+				const struct btf_type *t,
-+				__u32 id,
-+				const void *data)
-+{
-+	const struct btf_array *array = btf_array(t);
-+	__u32 i;
-+
-+	if (!btf_is_int(skip_mods_and_typedefs(d->btf, array->type, NULL)) ||
-+	    btf__resolve_size(d->btf, array->type) != 1 ||
-+	    !d->typed_dump->print_strings) {
-+		pr_warn("unexpected %s() call for array type %u\n",
-+			__func__, array->type);
-+		return -EINVAL;
-+	}
-+
-+	btf_dump_data_pfx(d);
-+	btf_dump_printf(d, "\"");
-+
-+	for (i = 0; i < array->nelems; i++, data++) {
-+		char c;
-+
-+		if (data >= d->typed_dump->data_end)
-+			return -E2BIG;
-+
-+		c = *(char *)data;
-+		if (c == '\0') {
-+			/* When printing character arrays as strings, NUL bytes
-+			 * are always treated as string terminators; they are
-+			 * never printed.
-+			 */
-+			break;
-+		}
-+		if (isprint(c))
-+			btf_dump_printf(d, "%c", c);
-+		else
-+			btf_dump_printf(d, "\\x%02x", *(__u8 *)data);
-+	}
-+
-+	btf_dump_printf(d, "\"");
-+
-+	return 0;
-+}
-+
- static int btf_dump_array_data(struct btf_dump *d,
- 			       const struct btf_type *t,
- 			       __u32 id,
-@@ -2055,8 +2100,11 @@ static int btf_dump_array_data(struct btf_dump *d,
- 		 * char arrays, so if size is 1 and element is
- 		 * printable as a char, we'll do that.
- 		 */
--		if (elem_size == 1)
-+		if (elem_size == 1) {
-+			if (d->typed_dump->print_strings)
-+				return btf_dump_string_data(d, t, id, data);
- 			d->typed_dump->is_array_char = true;
-+		}
- 	}
- 
- 	/* note that we increment depth before calling btf_dump_print() below;
-@@ -2544,6 +2592,7 @@ int btf_dump__dump_type_data(struct btf_dump *d, __u32 id,
- 	d->typed_dump->compact = OPTS_GET(opts, compact, false);
- 	d->typed_dump->skip_names = OPTS_GET(opts, skip_names, false);
- 	d->typed_dump->emit_zeroes = OPTS_GET(opts, emit_zeroes, false);
-+	d->typed_dump->print_strings = OPTS_GET(opts, print_strings, false);
- 
- 	ret = btf_dump_dump_type_data(d, NULL, t, id, data, 0, 0);
- 
-diff --git a/tools/testing/selftests/bpf/prog_tests/btf_dump.c b/tools/testing/selftests/bpf/prog_tests/btf_dump.c
-index c0a776feec23..70e51943f148 100644
---- a/tools/testing/selftests/bpf/prog_tests/btf_dump.c
-+++ b/tools/testing/selftests/bpf/prog_tests/btf_dump.c
-@@ -879,6 +879,106 @@ static void test_btf_dump_var_data(struct btf *btf, struct btf_dump *d,
- 			  "static int bpf_cgrp_storage_busy = (int)2", 2);
- }
- 
-+/*
-+ * String-like types are generally not named, so they need to be
-+ * found this way rather than via btf__find_by_name().
-+ */
-+static int find_char_array_type(struct btf *btf, int nelems)
-+{
-+	const int nr_types = btf__type_cnt(btf);
-+	const int char_type = btf__find_by_name(btf, "char");
-+
-+	for (int i = 1; i < nr_types; i++) {
-+		const struct btf_type *t;
-+		const struct btf_array *at;
-+
-+		t = btf__type_by_id(btf, i);
-+		if (btf_kind(t) != BTF_KIND_ARRAY)
-+			continue;
-+
-+		at = btf_array(t);
-+		if (at->nelems == nelems && at->type == char_type)
-+			return i;
-+	}
-+
-+	return -ENOENT;
-+}
-+
-+static int btf_dump_string_data(struct btf *btf, struct btf_dump *d,
-+				char *str, struct btf_dump_type_data_opts *opts,
-+				char *ptr, size_t ptr_sz,
-+				const char *expected_val)
-+{
-+	char name[64];
-+	size_t type_sz;
-+	int type_id;
-+	int ret = 0;
-+
-+	snprintf(name, sizeof(name), "char[%zu]", ptr_sz);
-+	type_id = find_char_array_type(btf, ptr_sz);
-+	if (!ASSERT_GE(type_id, 0, "find type id"))
-+		return -ENOENT;
-+	type_sz = btf__resolve_size(btf, type_id);
-+	str[0] = '\0';
-+	ret = btf_dump__dump_type_data(d, type_id, ptr, ptr_sz, opts);
-+	if (type_sz <= ptr_sz) {
-+		if (!ASSERT_EQ(ret, type_sz, "failed/unexpected type_sz"))
-+			return -EINVAL;
-+	} else {
-+		if (!ASSERT_EQ(ret, -E2BIG, "failed to return -E2BIG"))
-+			return -EINVAL;
-+	}
-+	if (!ASSERT_STREQ(str, expected_val, "ensure expected/actual match"))
-+		return -EFAULT;
-+	return 0;
-+}
-+
-+static void test_btf_dump_string_data(struct btf *btf, struct btf_dump *d,
-+				      char *str)
-+{
-+	DECLARE_LIBBPF_OPTS(btf_dump_type_data_opts, opts);
-+
-+	opts.compact = true;
-+	opts.emit_zeroes = false;
-+	opts.print_strings = true;
-+
-+	opts.skip_names = false;
-+	btf_dump_string_data(btf, d, str, &opts, "foo", 4,
-+		"(char[4])\"foo\"");
-+
-+	opts.skip_names = true;
-+	btf_dump_string_data(btf, d, str, &opts, "foo", 4,
-+		"\"foo\"");
-+
-+	/* This should have no effect. */
-+	opts.emit_zeroes = false;
-+	btf_dump_string_data(btf, d, str, &opts, "foo", 4,
-+		"\"foo\"");
-+
-+	/* This should have no effect. */
-+	opts.compact = false;
-+	btf_dump_string_data(btf, d, str, &opts, "foo", 4,
-+		"\"foo\"");
-+
-+	/* Non-printable characters come out as hex. */
-+	btf_dump_string_data(btf, d, str, &opts, "fo\xff", 4,
-+		"\"fo\\xff\"");
-+	btf_dump_string_data(btf, d, str, &opts, "fo\x7", 4,
-+		"\"fo\\x07\"");
-+
-+	/* Should get printed properly even though there's no NUL. */
-+	char food[4] = { 'f', 'o', 'o', 'd' };
-+
-+	btf_dump_string_data(btf, d, str, &opts, food, 4,
-+		"\"food\"");
-+
-+	/* The embedded NUL should terminate the string. */
-+	char embed[4] = { 'f', 'o', '\0', 'd' };
-+
-+	btf_dump_string_data(btf, d, str, &opts, embed, 4,
-+		"\"fo\"");
-+}
-+
- static void test_btf_datasec(struct btf *btf, struct btf_dump *d, char *str,
- 			     const char *name, const char *expected_val,
- 			     void *data, size_t data_sz)
-@@ -970,6 +1070,8 @@ void test_btf_dump() {
- 		test_btf_dump_struct_data(btf, d, str);
- 	if (test__start_subtest("btf_dump: var_data"))
- 		test_btf_dump_var_data(btf, d, str);
-+	if (test__start_subtest("btf_dump: string_data"))
-+		test_btf_dump_string_data(btf, d, str);
- 	btf_dump__free(d);
- 	btf__free(btf);
- 
+-	err = regmap_bulk_write(pcf8563->regmap, PCF8563_REG_SC, buf,
++	err = regmap_bulk_write(pcf8563->regmap, PCF8563_REG_AMN, buf,
+ 				sizeof(buf));
+ 	if (err)
+ 		return err;
+
+---
+base-commit: 8560697b23dc2f405cb463af2b17256a9888129d
+change-id: 20250419-pcf8563-fix-alarm-5e787f095861
+
+Best regards,
 -- 
-2.49.0.1204.g71687c7c1d-goog
+Troy Mitchell <troymitchell988@gmail.com>
 
