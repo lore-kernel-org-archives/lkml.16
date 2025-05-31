@@ -1,121 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63D61E520F;
-	Sat, 31 May 2025 09:25:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A1DEAD0;
+	Sat, 31 May 2025 09:37:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748683542; cv=none; b=cm4A25x1ecIIIPC9ObTKJKLPxQ0rfLpz5QyzdBVSyfyiWH0/Zilj4itvsk3HZ7tjHZhMCH1RZqAffoLMLsTa9YKdRz3+zXkgJulLZPZ0D9lattSC3Z8KtTpFcw0C+ijYCgm863KQ6/OahDI92aiOlGm7sbyLLq9PzMClZxmu3eo=
+	t=1748684275; cv=none; b=QD4+JDTt+LvxxutB8s9SnZ98vExL8/Jo3MkxwXsfdVbdOGWrSVk+67zl7JwaBgVVT/M1lADWt/rIYgyMqJOdGXy2vWLPqaghhjzoiSVzVquoPmQ7NTKqcZIacczm3wWXiONvRxXXzvlyfSMGfPx9xwrAFfr/uZns9iSUexGCCrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748683542; c=relaxed/simple;
-	bh=gh1SR7miY5UdrONx8owoLj2CLoe9Kbv/kgJkX7nLA/I=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=fNDdIwKigc8dtbPNd3k13Bgmt3bY3gPCdXaHHVWWEqrP9wWs/eLRN0JUOT1XxG6AUpG5dUxD+vtZkIQ6Qlzwe0uApSk9tRkDC26zJ7W04iR/n8huoGPeQ4pDbRCciMaVx+1G9UyYAxpcIdeqTxt3UiSmgbexsq4wiS2GjOFKjmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fz1VZYlx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748684275; c=relaxed/simple;
+	bh=iYoiiZF3675d1cOL29QNB0MBlhtJ9YHSUGYiAeQGfuY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=fmHH3tgarXXdGF/nvo1G23SKfdERjmFtasbrpvPAiLCKSGrtywjuFqDBbCNWrBmWY//BO7R0OE732DYwk1WKD6vkYB0wlY2SK5m+lbxeMHUwC8g6Pp7pZfao0Otzo2soiHk14OiUSpJNyVYTb+DYWD9WSgVqVdFORNamO7KAGAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=c3M4svPN; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fz1VZYlx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6782C4CEE3;
-	Sat, 31 May 2025 09:25:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748683542;
-	bh=gh1SR7miY5UdrONx8owoLj2CLoe9Kbv/kgJkX7nLA/I=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=Fz1VZYlx0Intc+r890Ozgzaf+qe1xVhR5INS1LhDlYFJlulrWq6rlJHLwDnGeh4Bo
-	 f2nOal6mWiMg/KEhhya/lJDPVWhLVOyWgW871COuLwHds/n1aSTF2BdtBTsU+5sO8D
-	 teSlvChbpHfPwQjv60yx0aF0bvW3bhMFa7eFWNrUkwv4UN5dH/vej7nBuObWw6/Lt1
-	 ceh/RHguDJeRDXmTdtiDFfw/VoQmdDIp3N0Geqtrydn7toPcinJwQ2vP47IMDNenSJ
-	 iEqiagaD8b3BNvC9zAFciOHyfzxSQndYbHeTeSOGs7cu+l0TLec/7YRrDSdJyY41a0
-	 +ov8tOVJGxNQg==
-Date: Sat, 31 May 2025 04:25:39 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="c3M4svPN"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54V9bKUs2857327;
+	Sat, 31 May 2025 04:37:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1748684240;
+	bh=YCcKjdVOPE9WOzG8bceQSsuc4dKtSsVhhPh6vA/1a2g=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=c3M4svPNv/Svq3T8GOw8MFg7jOOkg2aAesUEjQWtoJEBv+DFpkRGCRkK0VNVE4ZSt
+	 JTIRisJBwJITO1fdnrN0GII/v7HohiIOmQ7x7jOpfp4pzru/Rikr1lmGAOgSu8jQMj
+	 h/508I1o80c235jqEi8bUROXyB6KmoLXKBkGhqnQ=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54V9bKSF1469677
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Sat, 31 May 2025 04:37:20 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 31
+ May 2025 04:37:20 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Sat, 31 May 2025 04:37:19 -0500
+Received: from [10.250.148.85] ([10.250.148.85])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 54V9bFxL146542;
+	Sat, 31 May 2025 04:37:16 -0500
+Message-ID: <7024867d-91ac-40eb-b41f-eed811032f95@ti.com>
+Date: Sat, 31 May 2025 15:07:14 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
- linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de
-To: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-In-Reply-To: <20250531081159.2007319-2-abd.masalkhi@gmail.com>
-References: <20250531081159.2007319-1-abd.masalkhi@gmail.com>
- <20250531081159.2007319-2-abd.masalkhi@gmail.com>
-Message-Id: <174868353988.72600.7039743404673669325.robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: misc: Add binding for ST M24LR
- control interface
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 0/2] Extend mmio-mux driver to configure mux with
+ new DT property
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Conor Dooley <conor+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>, Peter Rosin
+	<peda@axentia.se>,
+        <s-vadapalli@ti.com>, <danishanwar@ti.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Vignesh
+ Raghavendra <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>,
+        Thomas Gleixner
+	<tglx@linutronix.de>
+References: <20250304102306.2977836-1-c-vankar@ti.com>
+ <f844e44e-6b71-442a-ae3c-7bbe74a908af@ti.com>
+ <2e80f6bc-2fb0-4f0d-9450-cbcf4dddca66@ti.com>
+ <2025053128-profound-importer-8436@gregkh>
+Content-Language: en-US
+From: "Vankar, Chintan" <c-vankar@ti.com>
+In-Reply-To: <2025053128-profound-importer-8436@gregkh>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+Hello Greg,
 
-On Sat, 31 May 2025 08:11:57 +0000, Abd-Alrhman Masalkhi wrote:
-> Add a Device Tree binding for the STMicroelectronics M24LR series
-> RFID/NFC EEPROM chips (e.g., M24LR04E-R), which support a separate
-> I2C interface for control and configuration.
+On 5/31/2025 11:22 AM, Greg Kroah-Hartman wrote:
+> On Fri, May 30, 2025 at 10:35:24PM +0530, Vankar, Chintan wrote:
+>> Hello Greg,
+>>
+>> I have tried to implement Timesync Router node to the suitable
+>> Subsystems (Interrupt controller and Mux-controller). Thomas
+>> has provided a feedback with a reason why Timesync Router is not
+>> suitable for irqchip. But I didn't get a proper feedback for mux-
+>> controller subsystem.
 > 
-> This binding documents the control interface that is managed by
-> a dedicated driver exposing sysfs attributes. The EEPROM memory
-> interface is handled by the standard 'at24' driver and is
-> represented as a child node in the Device Tree.
-> 
-> Signed-off-by: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-> ---
->  .../devicetree/bindings/misc/st,m24lr.yaml    | 70 +++++++++++++++++++
->  1 file changed, 70 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/st,m24lr.yaml
+> What do you mean "proper feedback"?
 > 
 
-My bot found errors running 'make dt_binding_check' on your patch:
+By proper feedback, I meant, from the comments I was not able to figure
+out whether Timesync Router will be acceptable in the "mux-controller"
+subsystem or not.
 
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/misc/st,m24lr.yaml:25:11: [error] string value is redundantly quoted with any quotes (quoted-strings)
-./Documentation/devicetree/bindings/misc/st,m24lr.yaml:30:5: [warning] wrong indentation: expected 6 but found 4 (indentation)
-./Documentation/devicetree/bindings/misc/st,m24lr.yaml:70:4: [error] no new line character at the end of file (new-line-at-end-of-file)
+>> Can you please help me deciding in which subsystem I should implement
+>> it, if not mux-controller can it go in drivers/misc ?
+> 
+> Why not mux?  What's preventing that from happening?  Why would misc be
+> better?
+> 
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/st,m24lr.yaml: maintainers:0: {'name': 'Abd-Alrhman Masalkhi', 'email': 'abd.masalkhi@gmail.com'} is not of type 'string'
-	from schema $id: http://devicetree.org/meta-schemas/base.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/st,m24lr.yaml:
-	Error in referenced schema matching $id: http://devicetree.org/schemas/misc/i2c-mux.yaml
-	Tried these paths (check schema $id if path is wrong):
-	/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/i2c-mux.yaml
-	/usr/local/lib/python3.11/dist-packages/dtschema/schemas/misc/i2c-mux.yaml
-Documentation/devicetree/bindings/misc/st,m24lr.example.dts:21.13-26: Warning (reg_format): /example-0/i2c/m24lr@57:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-Documentation/devicetree/bindings/misc/st,m24lr.example.dtb: Warning (pci_device_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/misc/st,m24lr.example.dtb: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/misc/st,m24lr.example.dtb: Warning (simple_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/misc/st,m24lr.example.dts:18.13-35.11: Warning (i2c_bus_bridge): /example-0/i2c: incorrect #address-cells for I2C bus
-Documentation/devicetree/bindings/misc/st,m24lr.example.dts:18.13-35.11: Warning (i2c_bus_bridge): /example-0/i2c: incorrect #size-cells for I2C bus
-Documentation/devicetree/bindings/misc/st,m24lr.example.dtb: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/misc/st,m24lr.example.dtb: Warning (i2c_bus_reg): Failed prerequisite 'i2c_bus_bridge'
-Documentation/devicetree/bindings/misc/st,m24lr.example.dtb: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/misc/st,m24lr.example.dts:19.20-34.13: Warning (avoid_default_addr_size): /example-0/i2c/m24lr@57: Relying on default #address-cells value
-Documentation/devicetree/bindings/misc/st,m24lr.example.dts:19.20-34.13: Warning (avoid_default_addr_size): /example-0/i2c/m24lr@57: Relying on default #size-cells value
-Documentation/devicetree/bindings/misc/st,m24lr.example.dtb: Warning (unique_unit_address_if_enabled): Failed prerequisite 'avoid_default_addr_size'
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/st,m24lr.example.dtb: m24lr@57 (st,m24lr04e-r): 'i2c-gate' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/misc/st,m24lr.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/st,m24lr.example.dtb: m24lr@57 (st,m24lr04e-r): {'compatible': ['st,m24lr04e-r'], 'reg': [[87]], 'i2c-gate': {'#address-cells': 1, '#size-cells': 0, 'm24lr_eeprom@53': {'compatible': ['atmel,24c04'], 'reg': [[83]], 'address-width': 16, 'pagesize': 4}}, '$nodename': ['m24lr@57']} should not be valid under {'description': "Can't find referenced schema: http://devicetree.org/schemas/misc/i2c-mux.yaml#"}
-	from schema $id: http://devicetree.org/schemas/misc/st,m24lr.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/st,m24lr.example.dtb: m24lr_eeprom@53 (atmel,24c04): $nodename:0: 'm24lr_eeprom@53' does not match '^eeprom@[0-9a-f]{1,2}$'
-	from schema $id: http://devicetree.org/schemas/eeprom/at24.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/st,m24lr.example.dtb: m24lr_eeprom@53 (atmel,24c04): pagesize: 4 is not one of [1, 8, 16, 32, 64, 128, 256]
-	from schema $id: http://devicetree.org/schemas/eeprom/at24.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/st,m24lr.example.dtb: m24lr_eeprom@53 (atmel,24c04): Unevaluated properties are not allowed ('$nodename', 'pagesize' were unexpected)
-	from schema $id: http://devicetree.org/schemas/eeprom/at24.yaml#
+Sure, if mux-controller subsystem is acceptable, I will implement the
+Timesync Router with that and post a series.
 
-doc reference errors (make refcheckdocs):
+I thought of misc, when mux-controller subsystem is not acceptable and I
+could not find any other subsystem which is suitable for Timesync
+Router.
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250531081159.2007319-2-abd.masalkhi@gmail.com
+Regards,
+Chintan.
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+> thanks,
+> 
+> greg k-h
