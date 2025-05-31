@@ -1,142 +1,160 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3DB2EED7;
-	Sat, 31 May 2025 07:16:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121B6EED7;
+	Sat, 31 May 2025 07:20:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748675810; cv=none; b=tGc7k4bwiFOxJvNqW0bvfEF0t4NW6OUHXh7TlLBYuTDjU50EmPpRDQ7Wgq+c/bunBphYXciyU+6vmo7sXGZHyFuj/wwri8LkKDarjrXd5o761POn0y+fbatKniMAGuyrYtihqkkN7lXvBeFdBQJlySRreErYya55ZGzTwxCKke4=
+	t=1748676038; cv=none; b=D/dd9DwSIddEb10NdV7MdL7fedBNR7x/6sCLPBO71GhWNmzFvtHybZOr6Nd5A3JkOjWfLLl6xrLexA/BIkAh21GrbROLoh37NHuzA154h2noCsKr1n5Drlvj7InFWGFUOAHT+/fXrkK8WgVL4jTBNJqjxds382xmS3GbQt/dY2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748675810; c=relaxed/simple;
-	bh=zYe1+sXdqUMmr98YnXHwFBRq+aXOFiQG6wruVnbdSlU=;
+	s=arc-20240116; t=1748676038; c=relaxed/simple;
+	bh=q7StwAEdoCBLTvHso5qOc4F4XXzh+vqPXGAmdy6h9sY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sPS/tS4GqpWgRQY2y4u147ScQHBBt6NCg/IXkVpwsE+6VHhM0phBHKWNuwDFuAgyd/1nbkzaNGeIS3t0iLV82EuQXv3jv7hDV5XvcYXuIvhc0JSPOm8NGX0BGUJtXSrJlNl7hOT1OPDTHhsb77vryTQaQpSrhk7WpPLVRNoyPj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bqnCQjCi; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=jXZO4JDxq830Kfv4isoLw4XiLnQYqmfaTOkoK+ms6g4jeWgcu4sDDVVYgsEDhCGtmPA+76/CP/h7qjzAXB1L8R9hAUEdClBcaNh0SgIWO9EeWf060jo0DAhFdYNkeBkyGSLB2DmyPqf25wZ7D4Bz58Hkg64W5ZBO434+0Fj9xr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=r34oAsx1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bqnCQjCi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95955C4CEE3;
-	Sat, 31 May 2025 07:16:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748675809;
-	bh=zYe1+sXdqUMmr98YnXHwFBRq+aXOFiQG6wruVnbdSlU=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="r34oAsx1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D60AC4CEE3;
+	Sat, 31 May 2025 07:20:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1748676037;
+	bh=q7StwAEdoCBLTvHso5qOc4F4XXzh+vqPXGAmdy6h9sY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bqnCQjCiCD2PbdPMeu84qfvj3Nx7yg7/rzrJ2htLvMM+rP8AmTcuFww7uFsPlBgb6
-	 5BxKRXheiIHLHM8HR27gVsdgqIhowEPm2lDDSt8sGqBtixIkypSI/iLBIu89/MuvXV
-	 Mkyc0eQhfUkyLpRFEWir3/XVPEGCuDKPWaC1/5kJIW7HIE3YyRWt6FWIlFT595E/DZ
-	 Od8df52QJx0jo/LUPW2H1bJELKIDCwk+WRLadZBn/p16U8yvyjsGvuQJH3ePnn6MAG
-	 5WZzuVvFtAjIgkW59InOd959UEMCxUuSC5FH/5MRtYIt9cyWd0L8SyxKHtlPekWcr+
-	 eFtvjLAdNQXAg==
-Date: Sat, 31 May 2025 09:16:35 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Bo Li <libo.gcs85@bytedance.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, luto@kernel.org,
-	kees@kernel.org, akpm@linux-foundation.org, david@redhat.com,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	peterz@infradead.org, dietmar.eggemann@arm.com, hpa@zytor.com,
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, viro@zeniv.linux.org.uk,
-	brauner@kernel.org, jack@suse.cz, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, rostedt@goodmis.org,
-	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
-	jannh@google.com, pfalcato@suse.de, riel@surriel.com,
-	harry.yoo@oracle.com, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, duanxiongchun@bytedance.com,
-	yinhongbo@bytedance.com, dengliang.1214@bytedance.com,
-	xieyongji@bytedance.com, chaiwen.cc@bytedance.com,
-	songmuchun@bytedance.com, yuanzhu@bytedance.com,
-	chengguozhu@bytedance.com, sunjiadong.lff@bytedance.com
-Subject: Re: [RFC v2 00/35] optimize cost of inter-process communication
-Message-ID: <aDqs0_c_vq96EWW6@gmail.com>
-References: <cover.1748594840.git.libo.gcs85@bytedance.com>
+	b=r34oAsx1vmLgzO6MhbhXs5hcu1zojKEgRFxumhD9ugI1bBJGdsHonJcXNzhdK0fnC
+	 uUA1/TAd7X+h+L+HQO1APbk7fgE7M0cul4gz8yfC2W9aVcDfaMpR3ADFu1PRRH2RhY
+	 Q8i03rEywRlDzIkkgBgYb7mTjkRYnL5iKQgC7Y8c=
+Date: Sat, 31 May 2025 09:20:34 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Xin Chen <quic_cxin@quicinc.com>
+Cc: Rob Herring <robh@kernel.org>, Jiri Slaby <jirislaby@kernel.org>,
+	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+	liulzhao@qti.qualcomm.com, quic_chejiang@quicinc.com,
+	zaiyongc@qti.qualcomm.com, quic_zijuhu@quicinc.com,
+	quic_mohamull@quicinc.com,
+	Panicker Harish <quic_pharish@quicinc.com>
+Subject: Re: [PATCH v1] tty: serdev: serdev-ttyport: Fix use-after-free in
+ ttyport_close() due to uninitialized serport->tty
+Message-ID: <2025053107-ancient-departed-a202@gregkh>
+References: <20250430111617.1151390-1-quic_cxin@quicinc.com>
+ <2025043022-rumbling-guy-26fb@gregkh>
+ <d388b471-482b-48ba-a504-694529535362@quicinc.com>
+ <2025050851-splatter-thesaurus-f54e@gregkh>
+ <38bf94e1-ebed-4d03-8ea0-4040009e8d31@quicinc.com>
+ <8e171057-b3c3-4808-b49e-f04ffd310b31@quicinc.com>
+ <2025052926-net-economist-a016@gregkh>
+ <2025052957-jawless-superhero-09be@gregkh>
+ <25361fe1-988d-41cc-a5f0-76773e41531a@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cover.1748594840.git.libo.gcs85@bytedance.com>
+In-Reply-To: <25361fe1-988d-41cc-a5f0-76773e41531a@quicinc.com>
 
-
-* Bo Li <libo.gcs85@bytedance.com> wrote:
-
-> # Performance
+On Fri, May 30, 2025 at 04:34:49PM +0800, Xin Chen wrote:
 > 
-> To quantify the performance improvements driven by RPAL, we measured 
-> latency both before and after its deployment. Experiments were 
-> conducted on a server equipped with two Intel(R) Xeon(R) Platinum 
-> 8336C CPUs (2.30 GHz) and 1 TB of memory. Latency was defined as the 
-> duration from when the client thread initiates a message to when the 
-> server thread is invoked and receives it.
 > 
-> During testing, the client transmitted 1 million 32-byte messages, and we
-> computed the per-message average latency. The results are as follows:
+> On 5/29/2025 5:41 PM, Greg Kroah-Hartman wrote:
+> > On Thu, May 29, 2025 at 11:07:25AM +0200, Greg Kroah-Hartman wrote:
+> >> On Fri, May 23, 2025 at 10:52:27AM +0800, Xin Chen wrote:
+> >>>
+> >>>
+> >>> On 5/14/2025 5:14 PM, Xin Chen wrote:
+> >>>>
+> >>>>
+> >>>> On 5/8/2025 5:41 PM, Greg Kroah-Hartman wrote:
+> >>>>> On Thu, May 08, 2025 at 05:29:18PM +0800, Xin Chen wrote:
+> >>>>>>
+> >>>>>> On 4/30/2025 7:40 PM, Greg Kroah-Hartman wrote:
+> >>>>>>> On Wed, Apr 30, 2025 at 07:16:17PM +0800, Xin Chen wrote:
+> >>>>>>>> When ttyport_open() fails to initialize a tty device, serport->tty is not
+> >>>>>>>> --- a/drivers/tty/serdev/serdev-ttyport.c
+> >>>>>>>> +++ b/drivers/tty/serdev/serdev-ttyport.c
+> >>>>>>>> @@ -88,6 +88,10 @@ static void ttyport_write_flush(struct serdev_controller *ctrl)
+> >>>>>>>>  {
+> >>>>>>>>  	struct serport *serport = serdev_controller_get_drvdata(ctrl);
+> >>>>>>>>  	struct tty_struct *tty = serport->tty;
+> >>>>>>>> +	if (!tty) {
+> >>>>>>>> +		dev_err(&ctrl->dev, "tty is null\n");
+> >>>>>>>> +		return;
+> >>>>>>>> +	}
+> >>>>>>>
+> >>>>>>> What prevents tty from going NULL right after you just checked this?
+> >>>>>>
+> >>>>>> First sorry for reply so late for I have a long statutory holidays.
+> >>>>>> Maybe I don't get your point. From my side, there is nothing to prevent it.
+> >>>>>> Check here is to avoid code go on if tty is NULL.
+> >>>>>
+> >>>>> Yes, but the problem is, serport->tty could change to be NULL right
+> >>>>> after you check it, so you have not removed the real race that can
+> >>>>> happen here.  There is no lock, so by adding this check you are only
+> >>>>> reducing the risk of the problem happening, not actually fixing the
+> >>>>> issue so that it will never happen.
+> >>>>>
+> >>>>> Please fix it so that this can never happen.
+> >>>>>
+> >>>>
+> >>>> Actually I have never thought the race condition issue since the crash I met is
+> >>>> not caused by race condition. It's caused due to Bluetooth driver call
+> >>>> ttyport_close() after ttyport_open() failed. This two action happen one after
+> >>>> another in one thread and it seems impossible to have race condition. And with
+> >>>> my fix the crash doesn't happen again in several test of same case.
+> >>>>
+> >>>> Let me introduce the complete process for you:
+> >>>>   1) hci_dev_open_sync()->
+> >>>> hci_dev_init_sync()->hci_dev_setup_sync()->hdev->setup()(hci_uart_setup)->qca_setup(),
+> >>>> here in qca_setup(), qca_read_soc_version() fails and goto out, then calls
+> >>>> serdev_device_close() to close tty normally. And then call serdev_device_open()
+> >>>> to retry.
+> > 
+> > Wait, what?  Why is qca_read_soc_version() failing?  
 > 
-> *****************
-> Without RPAL: Message length: 32 bytes, Total TSC cycles: 19616222534,
->  Message count: 1000000, Average latency: 19616 cycles
-> With RPAL: Message length: 32 bytes, Total TSC cycles: 1703459326,
->  Message count: 1000000, Average latency: 1703 cycles
-> *****************
+> Actually I have not root cause why qca_read_soc_version() fails of
+> __hci_cmd_sync_ev(). It may be relative to FW issue.
+
+Please start there, don't you want to know why things are failing?
+
+> > Why are you retrying multiple times until either you run out of attempts?  
 > 
-> These results confirm that RPAL delivers substantial latency 
-> improvements over the current epoll implementation—achieving a 
-> 17,913-cycle reduction (an ~91.3% improvement) for 32-byte messages.
+> This is a retry mechanism. I find the reason in the change commit message
+> "Currently driver only retries to download FW if FW downloading
+> is failed. Sometimes observed command timeout for version request
+> command, if this happen on some platforms during boot time, then
+> a reboot is needed to turn ON BT. Instead to avoid a reboot, now
+> extended retry logic for version request command too."
+> 
+> > Why are you closing the port and then opening it again right away? 
+> 
+> This is a retry mechanism as above said. Do you mean there should be a gap
+> between close and open? The change owner maybe don't think about this issue.
 
-No, these results do not necessarily confirm that.
+Why are you calling close/open at all?  Why does that do anything?
+Doesn't that feel wrong?
 
-19,616 cycles per message on a vanilla kernel on a 2.3 GHz CPU suggests 
-a messaging performance of 117k messages/second or 8.5 usecs/message, 
-which is *way* beyond typical kernel interprocess communication 
-latencies on comparable CPUs:
+Again, please root-cause the failure, don't try to paper over it by
+loads of looping and odd open/close attempts that are not understood and
+seem to actually cause other types of crashes :)
 
-  root@localhost:~# taskset 1 perf bench sched pipe
-  # Running 'sched/pipe' benchmark:
-  # Executed 1000000 pipe operations between two processes
+> > What close/open pair seems totally unnecessary, why do that at all?
+> > 
+> > If I read that function qca_setup(), it can NEVER detect if a failure
+> > really happened (i.e. if it does run out of retries, you just plow on
+> > and keep going and keep on registering things and THEN return an error
+> > for some reason.
+> > 
+> > In other words, the error handling in qca_setup() is very suspect, why
+> > not fix all of that up first?
+> > 
+> 
+> qca_read_soc_version() in qca_setup() can detect whether the hci_dev is set up
+> successfully. If if fails then a failure happens.
+> You mean I should fix why qca_read_soc_version() fails?
 
-       Total time: 2.790 [sec]
+Yes, why wouldn't you want to do that?
 
-       2.790614 usecs/op
-         358344 ops/sec
+thanks,
 
-And my 2.8 usecs result was from a kernel running inside a KVM sandbox 
-...
-
-( I used 'taskset' to bind the benchmark to a single CPU, to remove any 
-  inter-CPU migration noise from the measurement. )
-
-The scheduler parts of your series simply try to remove much of 
-scheduler and context switching functionality to create a special 
-fast-path with no FPU context switching and TLB flushing AFAICS, for 
-the purposes of message latency benchmarking in essence, and you then 
-compare it against the full scheduling and MM context switching costs 
-of full-blown Linux processes.
-
-I'm not convinced, at all, that this many changes are required to speed 
-up the usecase you are trying to optimize:
-
-  >  61 files changed, 9710 insertions(+), 4 deletions(-)
-
-Nor am I convinced that 9,700 lines of *new* code of a parallel 
-facility are needed, crudely wrapped in 1970s technology (#ifdefs), 
-instead of optimizing/improving facilities we already have...
-
-So NAK for the scheduler bits, until proven otherwise (and presented in 
-a clean fashion, which the current series is very far from).
-
-I'll be the first one to acknowledge that our process and MM context 
-switching overhead is too high and could be improved, and I have no 
-objections against the general goal of improving Linux inter-process 
-messaging performance either, I only NAK this particular 
-implementation/approach.
-
-Thanks,
-
-	Ingo
+greg k-h
