@@ -1,277 +1,268 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB60C35949;
-	Sat, 31 May 2025 07:00:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF803398B;
+	Sat, 31 May 2025 07:02:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748674853; cv=none; b=ZQ1oTpEOW6yxWIaivGjb9LKhu8kqxCn/R9j9BNWMR5Ht92HRYtyD2iNJzkA/WuUmOR9rcQDbtexbqnaVZTlaruoa0JJ77oyx6iPdXGBWRhqxxAd5SekWJm6f5CMU3d0mYHJXZ26r0F2mGpWqGoDLeD6jX85Trm7KmZTN741CDdY=
+	t=1748674981; cv=none; b=hUtBi0DaCvfb3azRcQ4fZKEBlmI4WsB/26EfSFEJEHe05mPLEHtnU1CXj0kSQ0o0oOcvGwnKveost4ikSYHbCOK5nf1NAMSSpvjQosHy1/uaj+gmLYV4fvrDBu6JzZQjntxU8SDr5pHEDkf842qd6+VLL4rBvqi0wOypfkOMtas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748674853; c=relaxed/simple;
-	bh=xNtSKnlo3ooiXUucFc3Lir6rDSSBwUqAmtThG9rzzwE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HY/zSDfFuZPvU2oOeBYEzIYspXL1VCNpRCB37MvqC4oov/Yvk4y7VfWUx6lzs7nS56cpl8ynJWNo+uO7vZW+lGojp6ggcZcAsT621+HgLhFyv9cSFl8HkERFPrfZvK4mucmOQbV2dZsvkzNZ0JGOmER43LVV9PB4JxWRPa8JNpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mXc6ro2c; arc=none smtp.client-ip=209.85.208.172
+	s=arc-20240116; t=1748674981; c=relaxed/simple;
+	bh=DswE2TwuuIytt3LvxEg3WwL0l+4g2d16uTME9WzPi2c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A+QSfPhzFQES/6ZjbG3oQAtnzcrzfIGja4jLR5OnC8S5izhQOjAyhz+iRYnFnM2Ne+vF2LGk9asIukLAyFNzh+FjOw99R17i0x4GZjDo3F6uEbPVu/Z/CCaBrPrEUDeBzcssdwdwRYbpTjeZZkdnb43zjgy2g/T9m4uDxIFYrUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OG83xyDa; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mXc6ro2c"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-32a63ff3bdfso21948201fa.3;
-        Sat, 31 May 2025 00:00:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OG83xyDa"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-747d59045a0so53490b3a.1;
+        Sat, 31 May 2025 00:02:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748674850; x=1749279650; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O0/6i247A0yd7g/ohON1pSpOBinIfrLgbq10zNbzL4E=;
-        b=mXc6ro2cIDj+vLO18qqH/lvUmJpwMuksLTSh0Y558b5EOlwx7vjW5nxySR/5lQr7yT
-         9PNN16UCw7YB7E0KPmrYJBzXvLcuyZfp8Ju9gcRi1U9DU/GEEgooPQ0SHdWg4SzD7Bvy
-         z8s6LMlV4IR+roBaAj8V9JgHYLxTu0+ijFxYBkWZVBYavDJy7gYW7O0wx3iXcHSg6l8B
-         Oqjk3Xh9bRikAD0DYAA1aisHlzOTUSI4m1CgO84o5kIijdQPnKoDlx4gtYgLUAdDUMcd
-         z7WyNpy6dY3VWlsCPshoP538DQmm1HpTXVM8Sf+kJesGDxZDFr8HBbTSfZ1y2dWVqqoO
-         5IIw==
+        d=gmail.com; s=20230601; t=1748674979; x=1749279779; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vaJSKOBzeU+bQnzHBt7Umgn5ZEd7j+MngwkiV+M03AY=;
+        b=OG83xyDaXorMyfkOW3PlRDn76lyX0DmA005Wf5raZigVy8cE9pIzcCDnShGURXrVQv
+         VwvuUCVN8ZQIbEXgjOR852cj5WUpRoaB63SzqJHa9oXmtXAvyKqxwRqnTqhhhBjjiS1p
+         kqmvP/y7sFx2RTe1Rrc4pWeVefMZ/7DhpgRLVDVCbVswQCBBEdCs7R+fr0JnItgBqy+m
+         ugnlc1UaILP01xW6uX6J5IJulPdYivWR89WZ2ZjxtZ4NWUXU0kCe78IOiTGewynOwFuZ
+         2NNe3IIqdSbcyeRcj+i3lBOsFGfUFQ6In0MB0v6nxXnsJKvreXWy3iB6O9NPBPFbmdWo
+         65VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748674850; x=1749279650;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=O0/6i247A0yd7g/ohON1pSpOBinIfrLgbq10zNbzL4E=;
-        b=OauxO4/XxjYr9fb+MAS0FmnSEGg4AFDu35Mh8XWwCrg7XXGC+T/gLj3hdynZ47gBtN
-         IeswK5qGnLCyoLVWu9Ww4f+taR1gY4Lv/JHpGxlFZ0sK4bs6ZYu5xllBj9RobW0t9dta
-         yL5H3/TSTt70142HPXwIjtFO2/QEd++0hTsOeSBnNRkxAOQCffJpt5SO+SHPUg8MjLKc
-         7MvTYuSDj7XePtfS8OuQXyjZO/KCQJzfzI/Mcr6RxRCxrZMK23adOAiihBjgem5coqJn
-         P3K/7slHXkYiL/uL/Ul8y82MJ58g1lRwQPa3M1S+/ZMXUbTN4gdSMbavT55eKtGS33HE
-         hQaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV7AVZl5TqNZ9d7PIoPhfGHDZg+xKLjUIxmcabYuktOZPPn44eB9KINoeeKQoLMY/fRUQIHKPlCl3j4vmw=@vger.kernel.org, AJvYcCVoIodLQbgUgtEthHim5SZ8tR/2XuwQ3qSYEwmwS0VzBRU++pSDzYJXkJpSjdVXUJxC1xCVuFzj@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwZAbtHuMEQaS6IBWEtOuyzdufwNppq8FY229Hz25XZ0uHOd2J
-	6KCecZ/LgBv1WvvnmxTUd4T5oOgg4FNe2YhIEFTlpkCxTymZ0ZD56LQ1iA7xq0a0yBsCnrBOVey
-	pf6t19qwIKl7A6MT1CygVeT5O7/GGM8uksTnsUe/w8Q==
-X-Gm-Gg: ASbGncviTjK7PXWPIVOjdgOrDyB1ZimSKqpDGfU0nEWeuGJCIAqcmcN5bcZaSSIwGIx
-	SrM0+hpMrNbJVC4QnfY/SzSwJmLA39Wvi68aWMGlrndqlBCk3BjnvsMdCWqk6UdpzgAhn01K86l
-	eNqZi+fvGCoEUjDVyKLt5eASLDeMKLrlAdIfNNADBLKMg=
-X-Google-Smtp-Source: AGHT+IFQfYTOUKoUQsoKvjrVG8EjikBueS9mdC3qCctGVd586bN2S/4pCQTvJwmEnsD58/V2Q3nlHbLroDe2+EGI8A8=
-X-Received: by 2002:a05:651c:b1f:b0:32a:8bf4:3a54 with SMTP id
- 38308e7fff4ca-32a9e99b639mr3723201fa.2.1748674849519; Sat, 31 May 2025
- 00:00:49 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748674979; x=1749279779;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vaJSKOBzeU+bQnzHBt7Umgn5ZEd7j+MngwkiV+M03AY=;
+        b=QjPAYAF2/ZEBd1Y/wwGHxyoR8zAXQqhE2/quEWazk9DXo/0UOiNk0caQaRd+f3iPI0
+         0haMjnjnYIKdk9rr3bgD/g1OO+8bZ1Gn9fvO99ZAzTZfj3MlvwkXUUsDPa616IOxbEB0
+         d8WvjLYTDpIzAFuPljqPET/rH2Y1HNDAhcByQFKkXdNUUcgJGo5hzjRbccmoKCqBHtsz
+         MxBVIew/1M0xF1VVTRzRQHgKBq7Td5Vg7M9Z3yy9tnOfKMxfpuXkq2cbvY4ECBz0rl6y
+         lXOgCW0kmEJrw17lRolpah6J2D1O+ZCdO/UhbdaCJceyLOPNS3GjSMSqL966lHCnbRpm
+         PY/g==
+X-Forwarded-Encrypted: i=1; AJvYcCViulKgIpusuEBwxkdt/quKCxwXh+nm0Rl9e9AVpymJLWRf6rEhqVUMPdOR2aYhdv8aXBHbmTBtej3P11U=@vger.kernel.org, AJvYcCWlO22aQlkyb/YkPPzhpSWolrk+ORvjqTMbBSpkeoo2cDUsSVNAfmIRwsZ5n7h8T0cc2p3MwvZV6HI3LqQLqU7m@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuYiA7aiaKhVv41J/fCQ/676ZZomfigeJPt+sjsbI3Iy2Mze6g
+	6u32lRvkqHUm7DqJjYakUF9TvumCnaEjIgKurLIymvre4MdzzJFmEj/I
+X-Gm-Gg: ASbGncvLeDxfD3pmFsaydmsvpT0nPaIEnc65jZTiFgY4k29HYqk0+6LhQDSDw42TtZt
+	gsrZwmcQSL8OWMsa7YkeWybIZQWMopGnte9mz4eNOt8YuXgVoUAQaA3nLb2VGZbQ+9SbUEQb/b+
+	lk6gOo8uZ/4Dj4DuRUlic+XUs1QGH3CrW1Y0mveUQry70dFbAf8RmYhqdZbJ0wj/AscJCFlW8WM
+	zrMyGMZkdN5rIZ1N+KuYSvZFyspWGEn04RmiL4rqU/0IgTespj3QQrXIdGQ+gyZs0RczOjIfhyf
+	aFjSioYiT44sV1bfgB6qcvlejgk8gLEzUnx7t3AexbmXzT3uR+Ce4HEqKhtjxK7CoOXzzOuh7I+
+	LvUcm6uG4JIHUMaqGoVFKpyM+rSxUO2CvTiyy17OBAg==
+X-Google-Smtp-Source: AGHT+IGh3EaAtFlrfSeI9IH8D1uOTK4HYia9JvlVMLpWPHep8rlmidI+sAlX9uRRm9NAevjP+iAWQg==
+X-Received: by 2002:a05:6a20:3ca5:b0:203:becd:f9ce with SMTP id adf61e73a8af0-21ae00ce772mr6822768637.39.1748674978829;
+        Sat, 31 May 2025 00:02:58 -0700 (PDT)
+Received: from localhost.localdomain (114-136-199-106.emome-ip.hinet.net. [114.136.199.106])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2eceb29a39sm2116126a12.22.2025.05.31.00.02.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 31 May 2025 00:02:58 -0700 (PDT)
+From: Nick Huang <sef1548@gmail.com>
+To: shuah@kernel.org,
+	linux-kselftest@vger.kernel.org
+Cc: usama.anjum@collabora.com,
+	zhangjiao2@cmss.chinamobile.com,
+	linux-kernel@vger.kernel.org,
+	Nick Huang <sef1548@gmail.com>
+Subject: [PATCH] selftests: ipc: Replace fail print statements with ksft_test_result_fail
+Date: Sat, 31 May 2025 15:01:40 +0800
+Message-ID: <20250531070140.24287-1-sef1548@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530201710.81365-1-ryncsn@gmail.com> <CA+EESO4-L5sOTgsTE1txby9f3a3_W49tSnkufzVnJhnR809zRQ@mail.gmail.com>
- <CAGsJ_4wkY8UcyU3LnNc1a55AvjYsVjBiST=Dy07UiaH8MU5-yg@mail.gmail.com>
- <CAMgjq7CFhboj1qDjdzwb2_vWKpzSzY5d0s-kWmE2ZYDDJ4s-JQ@mail.gmail.com> <CAGsJ_4yJhJBo16XhiC-nUzSheyX-V3-nFE+tAi=8Y560K8eT=A@mail.gmail.com>
-In-Reply-To: <CAGsJ_4yJhJBo16XhiC-nUzSheyX-V3-nFE+tAi=8Y560K8eT=A@mail.gmail.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Sat, 31 May 2025 15:00:31 +0800
-X-Gm-Features: AX0GCFuLqGZrssa2ETQMnuocMxOiKaSYx_nnjXGgLT7jaHa6QNo6cy-ULN9-bYc
-Message-ID: <CAMgjq7BzBFTOb-urmfuF5y6qsWxwFMy0Eq=Fym+2x2pjcqg1fQ@mail.gmail.com>
-Subject: Re: [PATCH] mm: userfaultfd: fix race of userfaultfd_move and swap cache
-To: Barry Song <21cnbao@gmail.com>
-Cc: Lokesh Gidra <lokeshgidra@google.com>, linux-mm@kvack.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Peter Xu <peterx@redhat.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Andrea Arcangeli <aarcange@redhat.com>, 
-	David Hildenbrand <david@redhat.com>, stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, May 31, 2025 at 2:36=E2=80=AFPM Barry Song <21cnbao@gmail.com> wrot=
-e:
->
-> On Sat, May 31, 2025 at 6:25=E2=80=AFPM Kairui Song <ryncsn@gmail.com> wr=
-ote:
-> >
-> > On Sat, May 31, 2025 at 11:39=E2=80=AFAM Barry Song <21cnbao@gmail.com>=
- wrote:
-> > >
-> > > On Sat, May 31, 2025 at 11:40=E2=80=AFAM Lokesh Gidra <lokeshgidra@go=
-ogle.com> wrote:
-> > > >
-> > > > On Fri, May 30, 2025 at 1:17=E2=80=AFPM Kairui Song <ryncsn@gmail.c=
-om> wrote:
-> > > > >
-> > > > > From: Kairui Song <kasong@tencent.com>
-> > > > >
-> > > > > On seeing a swap entry PTE, userfaultfd_move does a lockless swap=
- cache
-> > > > > lookup, and try to move the found folio to the faulting vma when.
-> > > > > Currently, it relies on the PTE value check to ensure the moved f=
-olio
-> > > > > still belongs to the src swap entry, which turns out is not relia=
-ble.
-> > > > >
-> > > > > While working and reviewing the swap table series with Barry, fol=
-lowing
-> > > > > existing race is observed and reproduced [1]:
-> > > > >
-> > > > > ( move_pages_pte is moving src_pte to dst_pte, where src_pte is a
-> > > > >  swap entry PTE holding swap entry S1, and S1 isn't in the swap c=
-ache.)
-> > > > >
-> > > > > CPU1                               CPU2
-> > > > > userfaultfd_move
-> > > > >   move_pages_pte()
-> > > > >     entry =3D pte_to_swp_entry(orig_src_pte);
-> > > > >     // Here it got entry =3D S1
-> > > > >     ... < Somehow interrupted> ...
-> > > > >                                    <swapin src_pte, alloc and use=
- folio A>
-> > > > >                                    // folio A is just a new alloc=
-ated folio
-> > > > >                                    // and get installed into src_=
-pte
-> > > > >                                    <frees swap entry S1>
-> > > > >                                    // src_pte now points to folio=
- A, S1
-> > > > >                                    // has swap count =3D=3D 0, it=
- can be freed
-> > > > >                                    // by folio_swap_swap or swap
-> > > > >                                    // allocator's reclaim.
-> > > > >                                    <try to swap out another folio=
- B>
-> > > > >                                    // folio B is a folio in anoth=
-er VMA.
-> > > > >                                    <put folio B to swap cache usi=
-ng S1 >
-> > > > >                                    // S1 is freed, folio B could =
-use it
-> > > > >                                    // for swap out with no proble=
-m.
-> > > > >                                    ...
-> > > > >     folio =3D filemap_get_folio(S1)
-> > > > >     // Got folio B here !!!
-> > > > >     ... < Somehow interrupted again> ...
-> > > > >                                    <swapin folio B and free S1>
-> > > > >                                    // Now S1 is free to be used a=
-gain.
-> > > > >                                    <swapout src_pte & folio A usi=
-ng S1>
-> > > > >                                    // Now src_pte is a swap entry=
- pte
-> > > > >                                    // holding S1 again.
-> > > > >     folio_trylock(folio)
-> > > > >     move_swap_pte
-> > > > >       double_pt_lock
-> > > > >       is_pte_pages_stable
-> > > > >       // Check passed because src_pte =3D=3D S1
-> > > > >       folio_move_anon_rmap(...)
-> > > > >       // Moved invalid folio B here !!!
-> > > > >
-> > > > > The race window is very short and requires multiple collisions of
-> > > > > multiple rare events, so it's very unlikely to happen, but with a
-> > > > > deliberately constructed reproducer and increased time window, it=
- can be
-> > > > > reproduced [1].
-> > > >
-> > > > Thanks for catching and fixing this. Just to clarify a few things
-> > > > about your reproducer:
-> > > > 1. Is it necessary for the 'race' mapping to be MAP_SHARED, or
-> > > > MAP_PRIVATE will work as well?
-> > > > 2. You mentioned that the 'current dir is on a block device'. Are y=
-ou
-> > > > indicating that if we are using zram for swap then it doesn't
-> > > > reproduce?
-> > > >
-> > > > >
-> > > > > It's also possible that folio (A) is swapped in, and swapped out =
-again
-> > > > > after the filemap_get_folio lookup, in such case folio (A) may st=
-ay in
-> > > > > swap cache so it needs to be moved too. In this case we should al=
-so try
-> > > > > again so kernel won't miss a folio move.
-> > > > >
-> > > > > Fix this by checking if the folio is the valid swap cache folio a=
-fter
-> > > > > acquiring the folio lock, and checking the swap cache again after
-> > > > > acquiring the src_pte lock.
-> > > > >
-> > > > > SWP_SYNCRHONIZE_IO path does make the problem more complex, but s=
-o far
-> > > > > we don't need to worry about that since folios only might get exp=
-osed to
-> > > > > swap cache in the swap out path, and it's covered in this patch t=
-oo by
-> > > > > checking the swap cache again after acquiring src_pte lock.
-> > > > >
-> > > > > Fixes: adef440691ba ("userfaultfd: UFFDIO_MOVE uABI")
-> > > > > Closes: https://lore.kernel.org/linux-mm/CAMgjq7B1K=3D6OOrK2OUZ0-=
-tqCzi+EJt+2_K97TPGoSt=3D9+JwP7Q@mail.gmail.com/ [1]
-> > > > > Signed-off-by: Kairui Song <kasong@tencent.com>
-> > > > > ---
-> > > > >  mm/userfaultfd.c | 26 ++++++++++++++++++++++++++
-> > > > >  1 file changed, 26 insertions(+)
-> > > > >
-> > > > > diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-> > > > > index bc473ad21202..a1564d205dfb 100644
-> > > > > --- a/mm/userfaultfd.c
-> > > > > +++ b/mm/userfaultfd.c
-> > > > > @@ -15,6 +15,7 @@
-> > > > >  #include <linux/mmu_notifier.h>
-> > > > >  #include <linux/hugetlb.h>
-> > > > >  #include <linux/shmem_fs.h>
-> > > > > +#include <linux/delay.h>
-> > > > I guess you mistakenly left it from your reproducer code :)
-> > > > >  #include <asm/tlbflush.h>
-> > > > >  #include <asm/tlb.h>
-> > > > >  #include "internal.h"
-> > > > > @@ -1086,6 +1087,8 @@ static int move_swap_pte(struct mm_struct *=
-mm, struct vm_area_struct *dst_vma,
-> > > > >                          spinlock_t *dst_ptl, spinlock_t *src_ptl=
-,
-> > > > >                          struct folio *src_folio)
-> > > > >  {
-> > > > > +       swp_entry_t entry;
-> > > > > +
-> > > > >         double_pt_lock(dst_ptl, src_ptl);
-> > > > >
-> > > > >         if (!is_pte_pages_stable(dst_pte, src_pte, orig_dst_pte, =
-orig_src_pte,
-> > > > > @@ -1102,6 +1105,19 @@ static int move_swap_pte(struct mm_struct =
-*mm, struct vm_area_struct *dst_vma,
-> > > > >         if (src_folio) {
-> > > > >                 folio_move_anon_rmap(src_folio, dst_vma);
-> > > > >                 src_folio->index =3D linear_page_index(dst_vma, d=
-st_addr);
-> > > > > +       } else {
-> > > > > +               /*
-> > > > > +                * Check again after acquiring the src_pte lock. =
-Or we might
-> > > > > +                * miss a new loaded swap cache folio.
-> > > > > +                */
-> > > > > +               entry =3D pte_to_swp_entry(orig_src_pte);
-> > > > > +               src_folio =3D filemap_get_folio(swap_address_spac=
-e(entry),
-> > > > > +                                             swap_cache_index(en=
-try));
-> > > >
-> > > > Given the non-trivial overhead of filemap_get_folio(), do you think=
- it
-> > > > will work if filemap_get_filio() was only once after locking src_pt=
-l?
-> > > > Please correct me if my assumption about the overhead is wrong.
-> > >
-> > > not quite sure as we have a folio_lock(src_folio) before move_swap_pt=
-e().
-> > > can we safely folio_move_anon_rmap + src_folio->index while not holdi=
-ng
-> > > folio lock?
-> >
-> > I think no, we can't even make sure the folio is still in the swap
-> > cache, so it can be a freed folio that does not belong to any VMA
-> > while not holding the folio lock.
->
-> Right, but will the following be sufficient, given that we don=E2=80=99t =
-really
-> care about the folio=E2=80=94only whether there=E2=80=99s new cache?
->
-> if (READ_ONCE(si->swap_map[offset]) & SWAP_HAS_CACHE) {
->              double_pt_unlock(dst_ptl, src_ptl);
->              return -EAGAIN;
-> }
+Use the standard kselftest failure report function to ensure consistent
+test output formatting. This improves readability and integration with
+automated test frameworks.
 
-The problem is reading swap_map without locking the cluster map seems
-unstable, and has strange false positives, a swapin will set this bit
-first, while not adding the folio to swap cache or even when skipping
-the swap cache, that seems could make it more complex.
+Signed-off-by: Nick Huang <sef1548@gmail.com>
+---
+ tools/testing/selftests/ipc/msgque.c | 47 ++++++++++++++--------------
+ 1 file changed, 23 insertions(+), 24 deletions(-)
+
+diff --git a/tools/testing/selftests/ipc/msgque.c b/tools/testing/selftests/ipc/msgque.c
+index e9dbb84c100a..5e36aeeb9901 100644
+--- a/tools/testing/selftests/ipc/msgque.c
++++ b/tools/testing/selftests/ipc/msgque.c
+@@ -39,26 +39,26 @@ int restore_queue(struct msgque_data *msgque)
+ 
+ 	fd = open("/proc/sys/kernel/msg_next_id", O_WRONLY);
+ 	if (fd == -1) {
+-		printf("Failed to open /proc/sys/kernel/msg_next_id\n");
++		ksft_test_result_fail("Failed to open /proc/sys/kernel/msg_next_id\n");
+ 		return -errno;
+ 	}
+ 	sprintf(buf, "%d", msgque->msq_id);
+ 
+ 	ret = write(fd, buf, strlen(buf));
+ 	if (ret != strlen(buf)) {
+-		printf("Failed to write to /proc/sys/kernel/msg_next_id\n");
++		ksft_test_result_fail("Failed to write to /proc/sys/kernel/msg_next_id\n");
+ 		return -errno;
+ 	}
+ 
+ 	id = msgget(msgque->key, msgque->mode | IPC_CREAT | IPC_EXCL);
+ 	if (id == -1) {
+-		printf("Failed to create queue\n");
++		ksft_test_result_fail("Failed to create queue\n");
+ 		return -errno;
+ 	}
+ 
+ 	if (id != msgque->msq_id) {
+-		printf("Restored queue has wrong id (%d instead of %d)\n",
+-							id, msgque->msq_id);
++		ksft_test_result_fail("Restored queue has wrong id (%d instead of %d)\n"
++								, id, msgque->msq_id);
+ 		ret = -EFAULT;
+ 		goto destroy;
+ 	}
+@@ -66,7 +66,7 @@ int restore_queue(struct msgque_data *msgque)
+ 	for (i = 0; i < msgque->qnum; i++) {
+ 		if (msgsnd(msgque->msq_id, &msgque->messages[i].mtype,
+ 			   msgque->messages[i].msize, IPC_NOWAIT) != 0) {
+-			printf("msgsnd failed (%m)\n");
++			ksft_test_result_fail("msgsnd failed (%m)\n");
+ 			ret = -errno;
+ 			goto destroy;
+ 		}
+@@ -90,23 +90,22 @@ int check_and_destroy_queue(struct msgque_data *msgque)
+ 		if (ret < 0) {
+ 			if (errno == ENOMSG)
+ 				break;
+-			printf("Failed to read IPC message: %m\n");
++			ksft_test_result_fail("Failed to read IPC message: %m\n");
+ 			ret = -errno;
+ 			goto err;
+ 		}
+ 		if (ret != msgque->messages[cnt].msize) {
+-			printf("Wrong message size: %d (expected %d)\n", ret,
+-						msgque->messages[cnt].msize);
++			ksft_test_result_fail("Wrong message size: %d (expected %d)\n", ret, msgque->messages[cnt].msize);
+ 			ret = -EINVAL;
+ 			goto err;
+ 		}
+ 		if (message.mtype != msgque->messages[cnt].mtype) {
+-			printf("Wrong message type\n");
++			ksft_test_result_fail("Wrong message type\n");
+ 			ret = -EINVAL;
+ 			goto err;
+ 		}
+ 		if (memcmp(message.mtext, msgque->messages[cnt].mtext, ret)) {
+-			printf("Wrong message content\n");
++			ksft_test_result_fail("Wrong message content\n");
+ 			ret = -EINVAL;
+ 			goto err;
+ 		}
+@@ -114,7 +113,7 @@ int check_and_destroy_queue(struct msgque_data *msgque)
+ 	}
+ 
+ 	if (cnt != msgque->qnum) {
+-		printf("Wrong message number\n");
++		ksft_test_result_fail("Wrong message number\n");
+ 		ret = -EINVAL;
+ 		goto err;
+ 	}
+@@ -139,7 +138,7 @@ int dump_queue(struct msgque_data *msgque)
+ 		if (ret < 0) {
+ 			if (errno == EINVAL)
+ 				continue;
+-			printf("Failed to get stats for IPC queue with id %d\n",
++			ksft_test_result_fail("Failed to get stats for IPC queue with id %d\n",
+ 					kern_id);
+ 			return -errno;
+ 		}
+@@ -150,7 +149,7 @@ int dump_queue(struct msgque_data *msgque)
+ 
+ 	msgque->messages = malloc(sizeof(struct msg1) * ds.msg_qnum);
+ 	if (msgque->messages == NULL) {
+-		printf("Failed to get stats for IPC queue\n");
++		ksft_test_result_fail("Failed to get stats for IPC queue\n");
+ 		return -ENOMEM;
+ 	}
+ 
+@@ -162,7 +161,7 @@ int dump_queue(struct msgque_data *msgque)
+ 		ret = msgrcv(msgque->msq_id, &msgque->messages[i].mtype,
+ 				MAX_MSG_SIZE, i, IPC_NOWAIT | MSG_COPY);
+ 		if (ret < 0) {
+-			printf("Failed to copy IPC message: %m (%d)\n", errno);
++			ksft_test_result_fail("Failed to copy IPC message: %m (%d)\n", errno);
+ 			return -errno;
+ 		}
+ 		msgque->messages[i].msize = ret;
+@@ -178,7 +177,7 @@ int fill_msgque(struct msgque_data *msgque)
+ 	memcpy(msgbuf.mtext, TEST_STRING, sizeof(TEST_STRING));
+ 	if (msgsnd(msgque->msq_id, &msgbuf.mtype, sizeof(TEST_STRING),
+ 				IPC_NOWAIT) != 0) {
+-		printf("First message send failed (%m)\n");
++		ksft_test_result_fail("First message send failed (%m)\n");
+ 		return -errno;
+ 	}
+ 
+@@ -186,7 +185,7 @@ int fill_msgque(struct msgque_data *msgque)
+ 	memcpy(msgbuf.mtext, ANOTHER_TEST_STRING, sizeof(ANOTHER_TEST_STRING));
+ 	if (msgsnd(msgque->msq_id, &msgbuf.mtype, sizeof(ANOTHER_TEST_STRING),
+ 				IPC_NOWAIT) != 0) {
+-		printf("Second message send failed (%m)\n");
++		ksft_test_result_fail("Second message send failed (%m)\n");
+ 		return -errno;
+ 	}
+ 	return 0;
+@@ -202,44 +201,44 @@ int main(int argc, char **argv)
+ 
+ 	msgque.key = ftok(argv[0], 822155650);
+ 	if (msgque.key == -1) {
+-		printf("Can't make key: %d\n", -errno);
++		ksft_test_result_fail("Can't make key: %d\n", -errno);
+ 		ksft_exit_fail();
+ 	}
+ 
+ 	msgque.msq_id = msgget(msgque.key, IPC_CREAT | IPC_EXCL | 0666);
+ 	if (msgque.msq_id == -1) {
+ 		err = -errno;
+-		printf("Can't create queue: %d\n", err);
++		ksft_test_result_fail("Can't create queue: %d\n", err);
+ 		goto err_out;
+ 	}
+ 
+ 	err = fill_msgque(&msgque);
+ 	if (err) {
+-		printf("Failed to fill queue: %d\n", err);
++		ksft_test_result_fail("Failed to fill queue: %d\n", err);
+ 		goto err_destroy;
+ 	}
+ 
+ 	err = dump_queue(&msgque);
+ 	if (err) {
+-		printf("Failed to dump queue: %d\n", err);
++		ksft_test_result_fail("Failed to dump queue: %d\n", err);
+ 		goto err_destroy;
+ 	}
+ 
+ 	err = check_and_destroy_queue(&msgque);
+ 	if (err) {
+-		printf("Failed to check and destroy queue: %d\n", err);
++		ksft_test_result_fail("Failed to check and destroy queue: %d\n", err);
+ 		goto err_out;
+ 	}
+ 
+ 	err = restore_queue(&msgque);
+ 	if (err) {
+-		printf("Failed to restore queue: %d\n", err);
++		ksft_test_result_fail("Failed to restore queue: %d\n", err);
+ 		goto err_destroy;
+ 	}
+ 
+ 	err = check_and_destroy_queue(&msgque);
+ 	if (err) {
+-		printf("Failed to test queue: %d\n", err);
++		ksft_test_result_fail("Failed to test queue: %d\n", err);
+ 		goto err_out;
+ 	}
+ 	ksft_exit_pass();
+-- 
+2.48.1
+
