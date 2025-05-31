@@ -1,205 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD2B23815B;
-	Sat, 31 May 2025 12:23:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C7B1EDA02;
+	Sat, 31 May 2025 12:24:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748694209; cv=none; b=U8Eo6eZx/zntFzfv9IrqB6Asx6hBwa6AXGPIrc7mVk7zpkmJfEtavTkN6JqmBAmAkj79aLN6UMAIrX/nn8jFvGRPXVeWv2dGM9dWKWAWMzp4HhupJvLb6B765Na+BHYhi7YPl0Wmo2m6u/Fv7HOoNlrs28RBl/PaoqV2+nPAb0w=
+	t=1748694295; cv=none; b=Oai4HwHW9ikkrY7LB7caZf4vLShWAWephSPruKPhDnRGoqcmm57cRWI56Ck7ityIkj6177u4g72SAn5rPuwzu8DYv//wzlfr28cRGyKDbxaDH8ddGXloHOvGZ57lNG1UpE9Y0X4+4/nee6QQ+0mbBzyjkwR0DT+dlk+m65klHDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748694209; c=relaxed/simple;
-	bh=QWLkZ5kheg/ARX1/KT1tH/POfsJpTnSnthqFZliEbE4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=kXZXvBEqfR+QkiLQnpWP82mCmGAvLYyPVdlEotacqhm2KFnonl1KzxV4MVJYzPWF2z9agd0p8w9wQmdkuqqNEL4YIRg68z6xddz5iF8Sv+feEEGeMb2vsHEA04bhY2T0+JzL2SFAzzGJy5kJG03CEg7wTU2Gn79ndXoJad1tYvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D6S0NsHY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748694295; c=relaxed/simple;
+	bh=zjDPoVOSfkcrVTFow4R0P40L1Sy8ujWeHLMMwa94e+M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CrEHPZd2SnR9492v/fwXl6QQFGb4Liuyt8rN6Wj8IsNp4WUHYwzeInsn2z0bQxh+OGA8RMAUfn7GfyZziXI1po0ldNEyc1iittxzW9zNym2bkuKcNTHV/Rbj5egZ3bEVPPWrK5axF/2uU0cDwtNedmljZ+XkZDSZ/iyHJYtOQwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XGthnRo1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D6S0NsHY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7583BC4CEE3;
-	Sat, 31 May 2025 12:23:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XGthnRo1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B069C4CEE3;
+	Sat, 31 May 2025 12:24:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748694208;
-	bh=QWLkZ5kheg/ARX1/KT1tH/POfsJpTnSnthqFZliEbE4=;
+	s=k20201202; t=1748694295;
+	bh=zjDPoVOSfkcrVTFow4R0P40L1Sy8ujWeHLMMwa94e+M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=D6S0NsHY9Qx7yJQp8IlDOylqwH66QIc0zUrMC4TZ3PEMebZCFnl2YiwW/Wk288pJe
-	 du43UL6BKHBR5iFm2fZ7XPf7/0DsQ7C/OUJDEGzptO0otwIyjPn5geLMD5jStcCT+c
-	 ZYspdnVBjjZCEHnFTHt+MAnww+qxZ6abdZu3bc7wuez9Q0YUFxV5RRPYCYzzXWTOc5
-	 mSP4Pof+xdy1MRP+OnHqikmDinVUxoUvf28zDhAWXXN/RbEFhIwoZQjMQBFlt31JiT
-	 DSwLm4hIOiIpvXi+yK5U7RamDYICV1zQCoDOrdNhAY9a52vsWdR62qf9zqVBLgXqIv
-	 XxOrZ+YA1MQ/Q==
+	b=XGthnRo1MzoqjktqwkqFm4ou8/ncQIGwt1L6vyGQnOwbPDj9vqHsXkrinolnhWmuE
+	 WwhONxdMNxM5Hd0i0ZB3+FlItLVuCAs3rldE7M8lKhKVjiRv24nRSsOcEz6DO7aBF6
+	 Rct/oWzuI4eKEsZO3Xb1/JCNCR+bbdjkKILiU5tyo9XKlrDvbrmz4HOc6IktX55VzJ
+	 PJoSLvfjWVWFk+bCBJHJIKCZz9PYMIkY5fSEy+K4JI9QGtC40GVmxo22udt0Q6/sUD
+	 xrnCr3EMUMmR5PRqydTNbzuMnyIGqlALXA00Abnpj7kuOiMWlpFtoPkpZlbq25bjSP
+	 B04weEmWl5j+w==
+Date: Sat, 31 May 2025 14:24:49 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Benno Lossin <lossin@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
+	chrisi.schrefl@gmail.com, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 7/7] rust: sample: misc: implement device driver sample
+Message-ID: <aDr1EWOIeDVgjau9@pollux>
+References: <20250530142447.166524-1-dakr@kernel.org>
+ <20250530142447.166524-8-dakr@kernel.org>
+ <DA9RRZVPZSMW.1LGW9H4G0RLT5@kernel.org>
+ <aDowAzvEvrQcella@pollux>
+ <DAA6ZTTNP0CM.270XX92YOFGWB@kernel.org>
+ <aDrZ7ma_aNki3FRz@pollux>
+ <DAABXF5QDYF0.21V01UJODPM89@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 31 May 2025 14:23:23 +0200
-Message-Id: <DAACCYW3QRQE.1O75L2SHJYVPM@kernel.org>
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Christian Schrefl" <chrisi.schrefl@gmail.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Arnd Bergmann" <arnd@arndb.de>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Lee Jones" <lee@kernel.org>, "Daniel
- Almeida" <daniel.almeida@collabora.com>
-Cc: =?utf-8?q?Gerald_Wisb=C3=B6ck?= <gerald.wisboeck@feather.ink>,
- <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 2/3] rust: miscdevice: add additional data to
- MiscDeviceRegistration
-X-Mailer: aerc 0.20.1
-References: <20250530-b4-rust_miscdevice_registrationdata-v4-0-d313aafd7e59@gmail.com> <20250530-b4-rust_miscdevice_registrationdata-v4-2-d313aafd7e59@gmail.com>
-In-Reply-To: <20250530-b4-rust_miscdevice_registrationdata-v4-2-d313aafd7e59@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DAABXF5QDYF0.21V01UJODPM89@kernel.org>
 
-On Fri May 30, 2025 at 10:46 PM CEST, Christian Schrefl wrote:
-> @@ -45,32 +46,46 @@ pub const fn into_raw<T: MiscDevice>(self) -> binding=
-s::miscdevice {
->  /// # Invariants
->  ///
->  /// `inner` is a registered misc device.
-> -#[repr(transparent)]
-> +#[repr(C)]
+On Sat, May 31, 2025 at 02:03:05PM +0200, Benno Lossin wrote:
+> On Sat May 31, 2025 at 12:29 PM CEST, Danilo Krummrich wrote:
+> > On Sat, May 31, 2025 at 10:11:08AM +0200, Benno Lossin wrote:
+> >> On Sat May 31, 2025 at 12:24 AM CEST, Danilo Krummrich wrote:
+> >> > On Fri, May 30, 2025 at 10:15:37PM +0200, Benno Lossin wrote:
+> >> >> On Fri May 30, 2025 at 4:24 PM CEST, Danilo Krummrich wrote:
+> >> >> > +config SAMPLE_RUST_MISC_DEVICE_WITH_PARENT
+> >> >> > +	bool "Create a misc device with a parent device"
+> >> >> > +	depends on SAMPLE_RUST_MISC_DEVICE
+> >> >> > +	default n
+> >> >> > +	help
+> >> >> > +	  Say Y here if you want the misc device sample to create a misc
+> >> >> > +	  device with a parent device.
+> >> >> > +
+> >> >> 
+> >> >> Why not create a separate file? The `cfg`s might confuse newcomers
+> >> >> looking at the sample.
+> >> >
+> >> > It would be a lot of duplicated code, unless we really *only* exercise the
+> >> > device creation and registration part, which would be a bit unfortunate, given
+> >> > that this sample is also a pretty good test.
+> >> 
+> >> We could separate the common parts into a single file and then
+> >> `include!` that file from the two samples. (Or if the build system
+> >> supports multi-file samples then just use that, but my gut feeling is
+> >> that it doesn't)
+> >
+> > The samples are normal modules, where we can have multiple files. But I don't
+> > see how that helps.
+> >
+> > `include!` works, but I'm not sure it's that much better.
+> >
+> > Another option would be to put the `cfg` on the module!() macro itself and have
+> > two separate module types, this way there is only a `cfg` on the two module!()
+> > invocations.
+> 
+> How about we do it like this:
+> 
+> We create samples/rust/rust_misc_device/{module.rs,parent.rs,common.rs}
+> and `module.rs`/`parent.rs` are the two entry points. Both of these
+> files:
+> * include `common.rs` using `include!` at the very top.
+> * define a `RustMiscDeviceModule` struct and implmement `InPlaceModule`
+>   for it.
+> 
+> The module-level docs, common imports constants, `module!` invocation &
+> other definitions stay in `common.rs`.
+> 
+> This way we can build them at the same time and have no cfgs :)
 
-Why do we need linear layout? `container_of!` also works with the `Rust`
-layout.
-
->  #[pin_data(PinnedDrop)]
-> -pub struct MiscDeviceRegistration<T> {
-> +pub struct MiscDeviceRegistration<T: MiscDevice> {
->      #[pin]
->      inner: Opaque<bindings::miscdevice>,
-> +    #[pin]
-> +    data: Opaque<T::RegistrationData>,
->      _t: PhantomData<T>,
-
-No need to keep the `PhantomData` field around, since you're using `T`
-above.
-
->  }
-> =20
-> -// SAFETY: It is allowed to call `misc_deregister` on a different thread=
- from where you called
-> -// `misc_register`.
-> -unsafe impl<T> Send for MiscDeviceRegistration<T> {}
-> -// SAFETY: All `&self` methods on this type are written to ensure that i=
-t is safe to call them in
-> -// parallel.
-> -unsafe impl<T> Sync for MiscDeviceRegistration<T> {}
-> +// SAFETY:
-> +// - It is allowed to call `misc_deregister` on a different thread from =
-where you called
-> +//   `misc_register`.
-> +// - Only implements `Send` if `MiscDevice::RegistrationData` is also `S=
-end`.
-> +unsafe impl<T: MiscDevice> Send for MiscDeviceRegistration<T> where T::R=
-egistrationData: Send {}
-> +
-> +// SAFETY:
-> +// - All `&self` methods on this type are written to ensure that it is s=
-afe to call them in
-> +//   parallel.
-> +// - `MiscDevice::RegistrationData` is always `Sync`.
-> +unsafe impl<T: MiscDevice> Sync for MiscDeviceRegistration<T> {}
-
-I would feel better if we still add the `T::RegistrationData: Sync`
-bound here even if it is vacuous today.
-
->  impl<T: MiscDevice> MiscDeviceRegistration<T> {
->      /// Register a misc device.
-> -    pub fn register(opts: MiscDeviceOptions) -> impl PinInit<Self, Error=
-> {
-> +    pub fn register(
-> +        opts: MiscDeviceOptions,
-> +        data: impl PinInit<T::RegistrationData, Error>,
-> +    ) -> impl PinInit<Self, Error> {
->          try_pin_init!(Self {
-> +            data <- Opaque::pin_init(data),
->              inner <- Opaque::try_ffi_init(move |slot: *mut bindings::mis=
-cdevice| {
->                  // SAFETY: The initializer can write to the provided `sl=
-ot`.
->                  unsafe { slot.write(opts.into_raw::<T>()) };
-> =20
-> -                // SAFETY: We just wrote the misc device options to the =
-slot. The miscdevice will
-> -                // get unregistered before `slot` is deallocated because=
- the memory is pinned and
-> -                // the destructor of this type deallocates the memory.
-> +                // SAFETY:
-> +                // * We just wrote the misc device options to the slot. =
-The miscdevice will
-> +                //   get unregistered before `slot` is deallocated becau=
-se the memory is pinned and
-> +                //   the destructor of this type deallocates the memory.
-> +                // * `data` is Initialized before `misc_register` so no =
-race with `fops->open()`
-> +                //   is possible.
->                  // INVARIANT: If this returns `Ok(())`, then the `slot` =
-will contain a registered
->                  // misc device.
->                  to_result(unsafe { bindings::misc_register(slot) })
-> @@ -93,13 +108,24 @@ pub fn device(&self) -> &Device {
->          // before the underlying `struct miscdevice` is destroyed.
->          unsafe { Device::as_ref((*self.as_raw()).this_device) }
->      }
-> +
-> +    /// Access the additional data stored in this registration.
-> +    pub fn data(&self) -> &T::RegistrationData {
-> +        // SAFETY:
-> +        // * No mutable reference to the value contained by `self.data` =
-can ever be created.
-> +        // * The value contained by `self.data` is valid for the entire =
-lifetime of `&self`.
-
-Please add type invariants for these two requirements.
-
-> +        unsafe { &*self.data.get() }
-> +    }
->  }
-> =20
->  #[pinned_drop]
-> -impl<T> PinnedDrop for MiscDeviceRegistration<T> {
-> +impl<T: MiscDevice> PinnedDrop for MiscDeviceRegistration<T> {
->      fn drop(self: Pin<&mut Self>) {
->          // SAFETY: We know that the device is registered by the type inv=
-ariants.
->          unsafe { bindings::misc_deregister(self.inner.get()) };
-> +
-> +        // SAFETY: `self.data` is valid for dropping and nothing uses it=
- anymore.
-
-Ditto.
-
-> +        unsafe { core::ptr::drop_in_place(self.data.get()) };
->      }
->  }
-> =20
-> @@ -109,6 +135,13 @@ pub trait MiscDevice: Sized {
->      /// What kind of pointer should `Self` be wrapped in.
->      type Ptr: ForeignOwnable + Send + Sync;
-> =20
-> +    /// The additional data carried by the [`MiscDeviceRegistration`] fo=
-r this [`MiscDevice`].
-> +    /// If no additional data is required than the unit type `()` should=
- be used.
-> +    ///
-> +    /// This data can be accessed in [`MiscDevice::open()`] using
-> +    /// [`MiscDeviceRegistration::data()`].
-> +    type RegistrationData: Sync;
-
-Why do we require `Sync` here?
-
-We might want to give this a shorter name?
-
----
-Cheers,
-Benno
-
-> +
->      /// Called when the misc device is opened.
->      ///
->      /// The returned pointer will be stored as the private data for the =
-file.
+Seems reasonable to me -- let's do that then.
