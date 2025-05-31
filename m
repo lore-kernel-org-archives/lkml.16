@@ -1,52 +1,60 @@
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B365F1758B;
-	Sat, 31 May 2025 14:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D7AC4C74
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 14:25:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748700946; cv=none; b=VBGNmfKoNlPGfqog5BLGdbSK3+5eToRFObNjy9UMFrvgScezi/KAAEOmLsf1rRVnhcK2nuzQfXkD0DmTLxbqtUuocLEi1HN9kA7MxFI98nbRirnmMW2hX29Y/86DMFWD1FonSG69fZ+XGSJo0ZDNteJ196wfLaIqcU1olrGj3Ac=
+	t=1748701543; cv=none; b=nMzxfRRKVU7VfrGeISJcVQ2aCsGE4MMhqt8kpr+Z9NORTX7YQU/6WeI1klZOXzpScns04HGiYjQg7LHrioNs3xYM2B8JtDspa1kpFUQac/Nl92vMeVLEkDeyACXKZeP24/g/JzQTdGgDXsY7Ms/bKW3in2M2FCZeKJ0bznbKLsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748700946; c=relaxed/simple;
-	bh=+AbBPIg8jujjvnsIiFys7cvXSxsuoXKAm1dwhoDtFuM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N8/lA3T8wvZdMnEOqFPhHfKabgoFs0yo3cNI12n5i3PZOnNdvRO8GHwKX43oSW1SJTonWwpBN4U3y1e6n9AN+MW3duBH2rYWuoIJg14Bzx485FezyIblSfyq4hTwb1dDJyVrd1vodf/achVLxVp21lQr37ZT/L+mF1bu8ttRVBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 4B5182C000A5;
-	Sat, 31 May 2025 16:15:41 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 2251CC9C53; Sat, 31 May 2025 16:15:41 +0200 (CEST)
-Date: Sat, 31 May 2025 16:15:41 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, rostedt@goodmis.org,
-	linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	helgaas@kernel.org, tony.luck@intel.com, bp@alien8.de,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-	oleg@redhat.com, naveen@kernel.org, davem@davemloft.net,
-	anil.s.keshavamurthy@intel.com, mark.rutland@arm.com,
-	peterz@infradead.org, tianruidong@linux.alibaba.com
-Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for
- hotplug event
-Message-ID: <aDsPDTVkH5kkc_Fk@wunner.de>
-References: <20250512013839.45960-1-xueshuai@linux.alibaba.com>
- <87b1f8c6-bd72-b1a8-40a6-bbf552552806@linux.intel.com>
- <650cd4e4-561b-4d50-9cf2-c601518c9b9f@linux.alibaba.com>
- <31693574-e8bc-9a56-bad0-6a22280c4b6b@linux.intel.com>
- <aCxdFm_BpgOTFFUv@wunner.de>
- <aCxxA-4HEnZ-O2W0@wunner.de>
- <9b46a12b-90e2-c1ba-9394-5caa23a5cad7@linux.intel.com>
- <aCx_aXy9MEs6XKZE@wunner.de>
- <6af283ea-bd36-44a7-949a-2ab8c80cf136@linux.alibaba.com>
+	s=arc-20240116; t=1748701543; c=relaxed/simple;
+	bh=xuDCvCvdHEHm3JsKagYF8rxk9+nEuh+sV/bde5HWyJs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=EfiR+xuGqIp38N+7bBKr1RZn0YElR3IBP9rSxgOTnV+NNZRbJBa0UkJyfRrrQeB7Ppt8Yki7eg5Qa1aJPMM+iVPwfVX2VMwDGy44/+fRsWtDzfqrQa8p00q5LJnqpr7698zZnhKolNY7jGk0pEJea0/MmFg8vFhUbsIws9i00nU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a1Fcj70a; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a1Fcj70a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748701541; x=1780237541;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=xuDCvCvdHEHm3JsKagYF8rxk9+nEuh+sV/bde5HWyJs=;
+  b=a1Fcj70aj25gsA42UEPI04IY1xMwdjxnKYk7+4QW1JEgOR9KWtQXKtov
+   2QIEoMRs1BJMJCfVEp+eJ0MIqYfsROq0mR6x0xdA5ZNPf568CpjAjno4b
+   aKzC+ItxvNisjMuYIoM0sRCldUtW+CVqrI9b+lp8sijGibZVQs3Ef6lZM
+   2+ySMjmvlYpmBwev8tFnhGo0z9GPFwbxxwMBU8z4ShC2Zq5aWiCTRY5ze
+   TsUpb8aJaQAbIWZG+5ukm37AiI2hwbIiJvkDBFBQDaE711t7d9YAVa+0/
+   phrjkPK4b9FWyt6ZDYQYkevkEKw7HOJYkTsOZrCQlVf2c06d9uoUfC57K
+   A==;
+X-CSE-ConnectionGUID: ClLb40EAQMS0KJjhicAPLw==
+X-CSE-MsgGUID: 037/w4esQeOxs3fA/UiKww==
+X-IronPort-AV: E=McAfee;i="6700,10204,11450"; a="61444928"
+X-IronPort-AV: E=Sophos;i="6.16,198,1744095600"; 
+   d="scan'208";a="61444928"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2025 07:25:40 -0700
+X-CSE-ConnectionGUID: Xm9pf0XRSJyonE3c40gLbg==
+X-CSE-MsgGUID: hzGyegY7QHqecWTpXY6J3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,198,1744095600"; 
+   d="scan'208";a="167324262"
+Received: from igk-lkp-server01.igk.intel.com (HELO b69e6467d450) ([10.211.3.150])
+  by fmviesa002.fm.intel.com with ESMTP; 31 May 2025 07:25:39 -0700
+Received: from kbuild by b69e6467d450 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uLN9U-00011S-2t;
+	Sat, 31 May 2025 14:25:36 +0000
+Date: Sat, 31 May 2025 22:24:46 +0800
+From: kernel test robot <lkp@intel.com>
+To: Pohsun Su <pohsuns@nvidia.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Robert Lin <robelin@nvidia.com>
+Subject: drivers/clocksource/timer-tegra186.c:282: undefined reference to
+ `__udivdi3'
+Message-ID: <202505312203.NmHWLzpj-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,29 +63,86 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6af283ea-bd36-44a7-949a-2ab8c80cf136@linux.alibaba.com>
 
-On Thu, May 22, 2025 at 05:50:05PM +0800, Shuai Xue wrote:
-> As @Lukas points out, link speed changes and device plug/unplug events are
-> orthogonal issues.
-> 
-> Based on this thread discussion, I believe we need additional tweaking to
-> introduce a new tracepoint (perhaps named PCI_LINK_EVENT) to handle
-> link speed changes separately.
-> 
-> Regarding our next steps, would it be acceptable to merge the
-> PCI_HOTPLUG_EVENT to mainline first, and then work on implementing
-> the new link event tracepoint afterward?
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   0f70f5b08a47a3bc1a252e5f451a137cde7c98ce
+commit: 28c842c8b0f5d1c2da823b11326e63cdfdbc3def clocksource/drivers/timer-tegra186: Add WDIOC_GETTIMELEFT support
+date:   2 weeks ago
+config: i386-buildonly-randconfig-2002-20250531 (https://download.01.org/0day-ci/archive/20250531/202505312203.NmHWLzpj-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250531/202505312203.NmHWLzpj-lkp@intel.com/reproduce)
 
-Yes I think so, I think this patch is ready to go in.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505312203.NmHWLzpj-lkp@intel.com/
 
-However I'm not part of the PCI maintainer team,
-it would have to be applied by them (barring any objections).
+All errors (new ones prefixed by >>):
 
-We're now in the merge window and it may be too late to squeeze it
-into the v6.16 pull request, but maybe it can be applied after
-the merge window has closed (in 1 week).
+   ld: drivers/clocksource/timer-tegra186.o: in function `tegra186_wdt_get_timeleft':
+>> drivers/clocksource/timer-tegra186.c:282: undefined reference to `__udivdi3'
 
-Thanks,
 
-Lukas
+vim +282 drivers/clocksource/timer-tegra186.c
+
+   241	
+   242	static unsigned int tegra186_wdt_get_timeleft(struct watchdog_device *wdd)
+   243	{
+   244		struct tegra186_wdt *wdt = to_tegra186_wdt(wdd);
+   245		u32 expiration, val;
+   246		u64 timeleft;
+   247	
+   248		if (!watchdog_active(&wdt->base)) {
+   249			/* return zero if the watchdog timer is not activated. */
+   250			return 0;
+   251		}
+   252	
+   253		/*
+   254		 * Reset occurs on the fifth expiration of the
+   255		 * watchdog timer and so when the watchdog timer is configured,
+   256		 * the actual value programmed into the counter is 1/5 of the
+   257		 * timeout value. Once the counter reaches 0, expiration count
+   258		 * will be increased by 1 and the down counter restarts.
+   259		 * Hence to get the time left before system reset we must
+   260		 * combine 2 parts:
+   261		 * 1. value of the current down counter
+   262		 * 2. (number of counter expirations remaining) * (timeout/5)
+   263		 */
+   264	
+   265		/* Get the current number of counter expirations. Should be a
+   266		 * value between 0 and 4
+   267		 */
+   268		val = readl_relaxed(wdt->regs + WDTSR);
+   269		expiration = FIELD_GET(WDTSR_CURRENT_EXPIRATION_COUNT, val);
+   270		if (WARN_ON_ONCE(expiration > 4))
+   271			return 0;
+   272	
+   273		/* Get the current counter value in microsecond. */
+   274		val = readl_relaxed(wdt->tmr->regs + TMRSR);
+   275		timeleft = FIELD_GET(TMRSR_PCV, val);
+   276	
+   277		/*
+   278		 * Calculate the time remaining by adding the time for the
+   279		 * counter value to the time of the counter expirations that
+   280		 * remain.
+   281		 */
+ > 282		timeleft += (((u64)wdt->base.timeout * USEC_PER_SEC) / 5) * (4 - expiration);
+   283	
+   284		/*
+   285		 * Convert the current counter value to seconds,
+   286		 * rounding up to the nearest second. Cast u64 to
+   287		 * u32 under the assumption that no overflow happens
+   288		 * when coverting to seconds.
+   289		 */
+   290		timeleft = DIV_ROUND_CLOSEST_ULL(timeleft, USEC_PER_SEC);
+   291	
+   292		if (WARN_ON_ONCE(timeleft > U32_MAX))
+   293			return U32_MAX;
+   294	
+   295		return lower_32_bits(timeleft);
+   296	}
+   297	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
