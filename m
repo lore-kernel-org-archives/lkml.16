@@ -1,179 +1,244 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA332101F2
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 13:26:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D93101F2;
+	Sat, 31 May 2025 13:26:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748697976; cv=none; b=bdqsI/TItzZJnKzm7j8xuOBWOGXmCKs9I9cU+XYQv5t328jBM4Ox13qEpiB+CO093074syWbxt28JguO+VRbrPzHZXHUhtnH717I/eFHpUqoNTn37uFnHuGcXb0PXS+tUdOEipkVDFHdG9syb0b8Wx67cPMebUGeYKzChaLGLjo=
+	t=1748698021; cv=none; b=AUcAerOuOFUBlWhaUOt5J3bvmECnlHMthJXMSCrsdZQZBgjKVlAbfbF5K886bymFHu6hYCLdmbIqfOEky6E4XgUUiYWXQ5NVe+zBlqRl8I2rUNJN0qMDzOMzNE5ZfCrEKrv4J4avWJJlCYxYcxBZ18p4AjEQJt7GpC4bLigYrI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748697976; c=relaxed/simple;
-	bh=W9KCPpIgVUVF2Ha44C+Ff3OIGGXCprwabXjXMKOwsHU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=risfn/E/K7ueG2kM69vYw1JAm+s4hbWaGRJcTdRrGmSZDAISljBTkPFpkB7DXVK07bSziNs4oB2V3ekD3PeWL6Xc1y5kLaFb4TkFNf6wNIcPchFYUFDuNo5VQjJDgWLz11+Gc0Un/hyk9oqNgJwK/iD/kKWv+sGO6Ifxj4TKE7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Bc4d6XKQ; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748698021; c=relaxed/simple;
+	bh=/wIF/TryaTRf16TItuBGroDgD3DysoPOltvJzZR8kfw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=okBZ+WXLBGFMM9L/NzNj9VYuPJ0u9OVMrX4EywnQtRnwMtX9eTH9qwZ71psCg0yutiudc7oEcoUDXe6CMOZ0rVHWXWr2xUjmmXKPN5nmj6qTldh3Rwv64qgty1O67BvmxHBQ6W+tAEmxJPROTpib39j3TNj9vUKGrmvP9Njwa8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=Mu8596DQ; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bc4d6XKQ"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-450cf214200so24690055e9.1
-        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 06:26:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748697973; x=1749302773; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T9DR5NCa957iPYKZxiFu8GdXDM88JZymN1Uk+Vzg6j0=;
-        b=Bc4d6XKQ433wM3240xQSB3Y2/73iq9D1mYEDzR+q4KisO7lfjh9yHUj6dDJlD9pyvr
-         K3ZPeuKac3FH1Ht2CcfYmwNzhlvpK/gJnKsQXcpK0Xo72Kpx10+9ZAJRX4/ulG9cz2F0
-         8zvQHbdhg5rDFml8bDtk2QVcXCecO29LcgatUyI1dJYm8Q6ilZFJRcf3Vg9CV59dDFKC
-         7uy1d2iTiLoeR6RZj0kR/F4M19lFSXATAcy1CqECy/MH7JdeNQ1lnrzFehhx4LHxNpyu
-         UdUY9XZuFx6/50VMpVckAOXTYCqasgsnFtDvz7gegicWix8vcuyt8WqsrNinExveGn6U
-         JlIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748697973; x=1749302773;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T9DR5NCa957iPYKZxiFu8GdXDM88JZymN1Uk+Vzg6j0=;
-        b=whtautGeYO69N8szNvjmVhQjJb92v891jV0dzJN4Jp6A1EFuA11ymOMHF2xrPyIvGr
-         NkVnU17QOalacx6BJUULmjlM9JZNgR2psnK9Ucbi6RrnT/u9C5U1S/Zeg6mVFhGhbo+g
-         /54ZxoJAX8xnmOzQ6hZP41uJZsuC9+HeE99T5J3P2M1nfM/8D2WB41//enADmNHIODce
-         DAaYjCMTTXUAEvEH5DvisKYhgU/RGw4XXx/5zTsiOzJ30u+VdPWUwIAhT0d/Xq21fu1s
-         I0+JBtqdgF1VwEqHtdt9FxlpxdjPassO1dMKTP3bIQ1o2zlducxfz5IeID4OxA7/D5+W
-         vEUw==
-X-Forwarded-Encrypted: i=1; AJvYcCXuJ6R8Rp8W8Bh6zku3DzY1UtiHy3g6eWGT5dfT4vs5k/CRJIz2yGats9lekJvWPKd9KTJyyFmd6VkG7eE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaV8PS5M+4LayxWfXGawuCjOHjRPBiw41Mz6zbYn6Ht4rgtpUs
-	ukRh3JFGYMBTg49mgNbFQNmUYWoinzfcllXkRoe0iSA7mMsNJEfTP89+5snbIEVjau6wS+hBDcB
-	wZyj+gnXt6xRgGwzm2V19qESrkmRUCM2nwhtuU0p8
-X-Gm-Gg: ASbGncsCUJGinQI/hmGS6DrTe/BzwiogjHWHVr/ZcBx6KlxQGImO7sa51P5BODHaDkX
-	Md+teA+i/3nHBqOBvlKDYl9mmdRT77AIJpTqzuTEB7awy7wF2ui/C72WkoaCdUcYMrbClA0Io4t
-	Ta11eOdGN70p9nUxjyWsu1h5Vcko3N1ITZ9fxPNvqhW+H+
-X-Google-Smtp-Source: AGHT+IGfp7hAa2spWVj2SPN735mg85khi0WUeYTJjMXgdY9zq6ZssaO+bV4k8ffrTsF1yUBZ29L6uhBVYwowFKEqnHk=
-X-Received: by 2002:a05:600c:4f87:b0:442:cd03:3e2 with SMTP id
- 5b1f17b1804b1-450d87fd991mr56835405e9.2.1748697972759; Sat, 31 May 2025
- 06:26:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="Mu8596DQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=71D51htRSeJGCuuHOHD8b943bYQGqpFoTtzqn/JTPCw=; b=Mu8596DQ4iCe89ntwpBhl75Pbp
+	UheiA2gyCWpuQhWw8b+IX+5gbOtCZswwY5Xe8KuS/I4A48P8o/P4mEZISgII/se1hHD6R6IxbsHgV
+	e9BdNKzWi7CpVokSVpeCfkBjrnSPDGRB/w9vroZHTQbQTBZTG2TED1T6hwk/euJVOmfb9G2A3dkYv
+	uSne6voiWy5YpvDLrxPwEFPmEIOiCkm6LGZve9/GjbZVivXqmDjkBl01K6nf7Zzdkggh8En1GCF6l
+	NmZKWsqO4E8i1MUsHSf784QwDDMlnFzqg6z+X53hre+VK2rG5jaDs0E/fzbuter6WUOugo8zwX+Yk
+	Ql/UoCMA==;
+Received: from i53875a3e.versanet.de ([83.135.90.62] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uLMEd-0002yn-Tg; Sat, 31 May 2025 15:26:51 +0200
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
+ William Breathitt Gray <wbg@kernel.org>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Kever Yang <kever.yang@rock-chips.com>,
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+ linux-iio@vger.kernel.org, kernel@collabora.com,
+ Jonas Karlman <jonas@kwiboo.se>,
+ Detlev Casanova <detlev.casanova@collabora.com>,
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Subject:
+ Re: [PATCH 3/7] soc: rockchip: add utils header for things shared across
+ drivers
+Date: Sat, 31 May 2025 15:26:50 +0200
+Message-ID: <1895349.atdPhlSkOF@diego>
+In-Reply-To: <20250408-rk3576-pwm-v1-3-a49286c2ca8e@collabora.com>
+References:
+ <20250408-rk3576-pwm-v1-0-a49286c2ca8e@collabora.com>
+ <20250408-rk3576-pwm-v1-3-a49286c2ca8e@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250527-strncpy-from-user-v4-0-82168470d472@google.com>
- <20250527-strncpy-from-user-v4-2-82168470d472@google.com> <DA9P904SL0KL.1QNQAI240QLH6@kernel.org>
-In-Reply-To: <DA9P904SL0KL.1QNQAI240QLH6@kernel.org>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Sat, 31 May 2025 15:25:59 +0200
-X-Gm-Features: AX0GCFtznRzZkf4kQM1n1yrj4tNMoC1t-3RZZV41dZwGVCOxltkfbwDODmlvkuU
-Message-ID: <CAH5fLgjZrJ66VnW0J_CHc-3yUFOt+DRWgTCNxoftACga+Lw+fA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] uaccess: rust: add UserSliceReader::strcpy_into_buf
-To: Benno Lossin <lossin@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On Fri, May 30, 2025 at 8:16=E2=80=AFPM Benno Lossin <lossin@kernel.org> wr=
-ote:
->
-> On Tue May 27, 2025 at 2:34 PM CEST, Alice Ryhl wrote:
-> > This patch adds a more convenient method for reading C strings from
-> > userspace. Logic is added to NUL-terminate the buffer when necessary so
-> > that a &CStr can be returned.
-> >
-> > Note that we treat attempts to read past `self.length` as a fault, so
-> > this returns EFAULT if that limit is exceeded before `buf.len()` is
-> > reached.
-> >
-> > Reviewed-by: Danilo Krummrich <dakr@kernel.org>
-> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> > ---
-> >  rust/kernel/uaccess.rs | 56 ++++++++++++++++++++++++++++++++++++++++++=
-+++++++-
-> >  1 file changed, 55 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
-> > index 9b1e4016fca2c25a44a8417c7e35e0fcf08aa959..e6534b52a1920254d61f834=
-9426d4cdb38286089 100644
-> > --- a/rust/kernel/uaccess.rs
-> > +++ b/rust/kernel/uaccess.rs
-> > @@ -293,6 +293,61 @@ pub fn read_all<A: Allocator>(mut self, buf: &mut =
-Vec<u8, A>, flags: Flags) -> R
-> >          unsafe { buf.set_len(buf.len() + len) };
-> >          Ok(())
-> >      }
-> > +
-> > +    /// Read a NUL-terminated string from userspace and return it.
-> > +    ///
-> > +    /// The string is read into `buf` and a NUL-terminator is added if=
- the end of `buf` is reached.
-> > +    /// Since there must be space to add a NUL-terminator, the buffer =
-must not be empty. The
-> > +    /// returned `&CStr` points into `buf`.
-> > +    ///
-> > +    /// Fails with [`EFAULT`] if the read happens on a bad address (so=
-me data may have been
-> > +    /// copied).
-> > +    #[doc(alias =3D "strncpy_from_user")]
-> > +    pub fn strcpy_into_buf<'buf>(self, buf: &'buf mut [u8]) -> Result<=
-&'buf CStr> {
-> > +        if buf.is_empty() {
-> > +            return Err(EINVAL);
-> > +        }
-> > +
-> > +        // SAFETY: The types are compatible and `strncpy_from_user` do=
-esn't write uninitialized
-> > +        // bytes to `buf`.
-> > +        let mut dst =3D unsafe { &mut *(buf as *mut [u8] as *mut [Mayb=
-eUninit<u8>]) };
-> > +
-> > +        // We never read more than `self.length` bytes.
-> > +        if dst.len() > self.length {
-> > +            dst =3D &mut dst[..self.length];
-> > +        }
-> > +
-> > +        let mut len =3D raw_strncpy_from_user(dst, self.ptr)?;
-> > +        if len < dst.len() {
-> > +            // Add one to include the NUL-terminator.
-> > +            len +=3D 1;
-> > +        } else if len < buf.len() {
-> > +            // This implies that `len =3D=3D dst.len() < buf.len()`.
-> > +            //
-> > +            // This means that we could not fill the entire buffer, bu=
-t we had to stop reading
-> > +            // because we hit the `self.length` limit of this `UserSli=
-ceReader`. Since we did not
-> > +            // fill the buffer, we treat this case as if we tried to r=
-ead past the `self.length`
-> > +            // limit and received a page fault, which is consistent wi=
-th other `UserSliceReader`
-> > +            // methods that also return page faults when you exceed `s=
-elf.length`.
-> > +            return Err(EFAULT);
-> > +        } else {
-> > +            // This implies that len =3D=3D buf.len().
-> > +            //
-> > +            // This means that we filled the buffer exactly. In this c=
-ase, we add a NUL-terminator
-> > +            // and return it. Unlike the `len < dst.len()` branch, don=
-'t modify `len` because it
-> > +            // already represents the length including the NUL-termina=
-tor.
-> > +            //
-> > +            // SAFETY: Due to the check at the beginning, the buffer i=
-s not empty.
-> > +            unsafe { *buf.last_mut().unwrap_unchecked() =3D 0 };
->
-> In this case you're overwriting the last character read. Should we give
-> `raw_strncpy_from_user` access to one less byte and then write NUL into
-> that?
+Hi,
 
-Why? I'm not interested in changing the implementation just because.
-It needs to be significantly simpler, and I do not think it is.
+Am Dienstag, 8. April 2025, 14:32:15 Mitteleurop=C3=A4ische Sommerzeit schr=
+ieb Nicolas Frattaroli:
+> Rockchip hardware has some functionality that is shared across many
+> hardware IPs, and therefore many drivers for them.
+>=20
+> Most notably is "HIWORD_UPDATE", a macro with slightly different
+> semantics replicated across many a rockchip driver. It currently can be
+> found defined in 19 files, of which 18 are Rockchip drivers.
+>=20
+> Instead of continuing this tradition with yet another version of it in
+> my new drivers, add a rockchip soc header for utility macros and such.
+> In this header, we define a new set of macros: REG_UPDATE_WE and its
+> little brother REG_UPDATE_BIT_WE. These are purposefully named something
+> other than "HIWORD_UPDATE", to reduce the likelihood of macro
+> redefinitions and also reduce the potential to mislead any adopter into
+> thinking this HIWORD_UPDATE is just like their HIWORD_UPDATE.
+>=20
+> Old drivers can be moved over to the new macros over the next while if
+> their maintainers think it makes sense for them, which it probably does.
+>=20
+> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 
-Alice
+when you're doing these fancy nice new macros, I think they might want to
+be even more centrally located for _everyone_ :-) .
+
+
+Because while true, Rockchip seems to be the biggest user of hiword-mask-
+registers, they're not the only one.
+
+Just simply grepping for HIWORD in kernel drivers revealed
+=2D Sunplus sp7021 clock and reset drivers [0]
+=2D a number of hisilicon clock drivers [1]
+=2D some other clock drivers
+
+and as the naming is not really standarized, I guess there will be more
+of the same thing under different names in other places.
+
+Similarly, we already have a FIELD_PREP_HIWORD in [2], so all in all
+I think all of this wants to move in with the other bitfield stuff like
+=46IELD_PREP.
+
+
+Heiko
+
+
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/drivers/clk/clk-sp7021.c#n42
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/drivers/reset/reset-sunplus.c
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/drivers/clk/hisilicon/clk-hi3620.c
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/drivers/clk/hisilicon/clk-hi3660.c
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/drivers/clk/hisilicon/clk-hi3670.c
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/drivers/clk/hisilicon/clk-hi6220.c
+[2] https://elixir.bootlin.com/linux/v6.15/source/drivers/phy/rockchip/phy-=
+rockchip-samsung-dcphy.c#L23
+
+> ---
+>  include/soc/rockchip/utils.h | 76 ++++++++++++++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 76 insertions(+)
+>=20
+> diff --git a/include/soc/rockchip/utils.h b/include/soc/rockchip/utils.h
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..3349069e75ff51ebd7a22089a=
+f796feafd227ffb
+> --- /dev/null
+> +++ b/include/soc/rockchip/utils.h
+> @@ -0,0 +1,76 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +/*
+> + * Copyright (c) 2025 Collabora Ltd.
+> + *
+> + * Utility types, inline functions, and macros that are used across seve=
+ral
+> + * Rockchip-specific drivers.
+> + *
+> + * Authors:
+> + *     Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> + */
+> +
+> +#ifndef __SOC_ROCKCHIP_UTILS_H__
+> +#define __SOC_ROCKCHIP_UTILS_H__
+> +
+> +#include <linux/bits.h>
+> +#include <linux/build_bug.h>
+> +#include <linux/limits.h>
+> +
+> +/*
+> + * Incoming macro basilisks, stare directly at them at your own peril.
+> + * As a gentle reminder to help with code comprehension: BUILD_BUG_ON_ZE=
+RO
+> + * is confusingly named; it's a version of BUILD_BUG_ON that evaluates t=
+o zero
+> + * if it does not trigger, i.e. the assertion within the macro still che=
+cks
+> + * for a truthy value, not zero.
+> + */
+> +
+> +/**
+> + * REG_UPDATE_WE - generate a register write value with a write-enable m=
+ask
+> + * @_val: unshifted value we wish to update between @_low and @_high
+> + * @_low: index of the low bit of the bit range we want to update
+> + * @_high: index of the high bit of the bit range we want to update
+> + *
+> + * This macro statically generates a value consisting of @_val shifted t=
+o the
+> + * left by @_low, and a write-enable mask in the upper 16 bits of the va=
+lue
+> + * that sets bit ``i << 16`` to ``1`` if bit ``i`` is within the @_low t=
+o @_high
+> + * range. Only up to bit (@_high - @_low) of @_val is used for safety, i=
+=2Ee.
+> + * trying to write a value that doesn't fit in the specified range will =
+simply
+> + * truncate it.
+> + *
+> + * This is useful for some hardware, like some of Rockchip's registers, =
+where
+> + * a 32-bit width register is divided into a value low half, and a write=
+ enable
+> + * high half. Bits in the low half are only update if the corresponding =
+bit in
+> + * the high half is ``1``, allowing for lock-free atomic updates of a re=
+gister.
+> + *
+> + * This macro replaces the venerable ``HIWORD_UPDATE``, which is copied =
+and
+> + * pasted in slightly different forms across many different Rockchip dri=
+vers.
+> + * Before switching drivers to use it, familiarise yourself with the sem=
+antics
+> + * of your specific ``HIWORD_UPDATE`` compared to this function-like mac=
+ro's
+> + * semantics.
+> + *
+> + * Return: the value, shifted into place, with the required write-enable=
+ bits
+> + */
+> +#define REG_UPDATE_WE(_val, _low, _high) ( \
+> +	BUILD_BUG_ON_ZERO(const_true((_low) > (_high))) + \
+> +	BUILD_BUG_ON_ZERO(const_true((_high) > 15)) + \
+> +	BUILD_BUG_ON_ZERO(const_true((_low) < 0)) + \
+> +	BUILD_BUG_ON_ZERO(const_true((u64) (_val) > U16_MAX)) + \
+> +	((_val & GENMASK((_high) - (_low), 0)) << (_low) | \
+> +	(GENMASK((_high), (_low)) << 16)))
+> +
+> +/**
+> + * REG_UPDATE_BIT_WE - update a bit with a write-enable mask
+> + * @__val: new value of the bit, either ``0`` 0r ``1``
+> + * @__bit: bit index to modify, 0 <=3D @__bit < 16.
+> + *
+> + * This is like REG_UPDATE_WE() but only modifies a single bit, thereby =
+making
+> + * invocation easier by avoiding having to pass a repeated value.
+> + *
+> + * Return: a value with bit @__bit set to @__val and @__bit << 16 set to=
+ ``1``
+> + */
+> +#define REG_UPDATE_BIT_WE(__val, __bit) ( \
+> +	BUILD_BUG_ON_ZERO(const_true((__val) > 1)) + \
+> +	BUILD_BUG_ON_ZERO(const_true((__val) < 0)) + \
+> +	REG_UPDATE_WE((__val), (__bit), (__bit)))
+> +
+> +#endif /* __SOC_ROCKCHIP_UTILS_H__ */
+>=20
+>=20
+
+
+
+
