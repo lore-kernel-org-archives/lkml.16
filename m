@@ -1,107 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C7B1EDA02;
-	Sat, 31 May 2025 12:24:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A94D123AE87;
+	Sat, 31 May 2025 12:25:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748694295; cv=none; b=Oai4HwHW9ikkrY7LB7caZf4vLShWAWephSPruKPhDnRGoqcmm57cRWI56Ck7ityIkj6177u4g72SAn5rPuwzu8DYv//wzlfr28cRGyKDbxaDH8ddGXloHOvGZ57lNG1UpE9Y0X4+4/nee6QQ+0mbBzyjkwR0DT+dlk+m65klHDc=
+	t=1748694319; cv=none; b=LfZ65Ax7KLsUKX96HaPicZV9M8pYyijqO+aQdgTqs0LiRG8pLMquxi0cMetEfbuiAKARlCvkY3dr1PRv2bVH0mqknj8C047+3f60JE7EOHsd2jIX66ShnLHUpodd7GMGflPT2xjj92skxUTCNVczlpI/vxC2nEjnlLZfLXssQok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748694295; c=relaxed/simple;
-	bh=zjDPoVOSfkcrVTFow4R0P40L1Sy8ujWeHLMMwa94e+M=;
+	s=arc-20240116; t=1748694319; c=relaxed/simple;
+	bh=bcljbFcD6OznCcHMG+UE0Av+yr3cs6EZ0rxpsiywH8s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CrEHPZd2SnR9492v/fwXl6QQFGb4Liuyt8rN6Wj8IsNp4WUHYwzeInsn2z0bQxh+OGA8RMAUfn7GfyZziXI1po0ldNEyc1iittxzW9zNym2bkuKcNTHV/Rbj5egZ3bEVPPWrK5axF/2uU0cDwtNedmljZ+XkZDSZ/iyHJYtOQwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XGthnRo1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=X840llC3UUpmns4TFWgL8rvwOVsqiQjbjNHfbhJekQ3K6R8WDUmi2K2b0qIubRVQbLY4WcegkJ0mKohe/Oes5TCpZvHOQe4QQyco7zpuLxMsp3r/sMkVmMqZng6hWEWTepQiO/RwCu1SxaxnkoB8LwHWUmF7kgOUZ8Ycb0mw0H0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=fX5g9FKq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XGthnRo1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B069C4CEE3;
-	Sat, 31 May 2025 12:24:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748694295;
-	bh=zjDPoVOSfkcrVTFow4R0P40L1Sy8ujWeHLMMwa94e+M=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="fX5g9FKq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A96BC4CEE3;
+	Sat, 31 May 2025 12:25:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1748694315;
+	bh=bcljbFcD6OznCcHMG+UE0Av+yr3cs6EZ0rxpsiywH8s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XGthnRo1MzoqjktqwkqFm4ou8/ncQIGwt1L6vyGQnOwbPDj9vqHsXkrinolnhWmuE
-	 WwhONxdMNxM5Hd0i0ZB3+FlItLVuCAs3rldE7M8lKhKVjiRv24nRSsOcEz6DO7aBF6
-	 Rct/oWzuI4eKEsZO3Xb1/JCNCR+bbdjkKILiU5tyo9XKlrDvbrmz4HOc6IktX55VzJ
-	 PJoSLvfjWVWFk+bCBJHJIKCZz9PYMIkY5fSEy+K4JI9QGtC40GVmxo22udt0Q6/sUD
-	 xrnCr3EMUMmR5PRqydTNbzuMnyIGqlALXA00Abnpj7kuOiMWlpFtoPkpZlbq25bjSP
-	 B04weEmWl5j+w==
-Date: Sat, 31 May 2025 14:24:49 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Benno Lossin <lossin@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
-	chrisi.schrefl@gmail.com, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 7/7] rust: sample: misc: implement device driver sample
-Message-ID: <aDr1EWOIeDVgjau9@pollux>
-References: <20250530142447.166524-1-dakr@kernel.org>
- <20250530142447.166524-8-dakr@kernel.org>
- <DA9RRZVPZSMW.1LGW9H4G0RLT5@kernel.org>
- <aDowAzvEvrQcella@pollux>
- <DAA6ZTTNP0CM.270XX92YOFGWB@kernel.org>
- <aDrZ7ma_aNki3FRz@pollux>
- <DAABXF5QDYF0.21V01UJODPM89@kernel.org>
+	b=fX5g9FKqEh0uwgHwGYgHFdyIX2T6Bl3aqr9bnCzZ994c3M/EyoTAYZQETdJXjWTJq
+	 4L0FmcyBp9xfzKgLhno35+nl4RWKZACUUd2pCskgOhLHawepqEYbV8cGtir8P1Po9O
+	 PLzr6rW9jxV8XiO1JxE0Njzh8of8HeULXocSoan4=
+Date: Sat, 31 May 2025 14:25:11 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Timur Tabi <timur@kernel.org>
+Cc: Alexandre Courbot <acourbot@nvidia.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	John Hubbard <jhubbard@nvidia.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	Timur Tabi <ttabi@nvidia.com>
+Subject: Re: [PATCH] rust: add basic ELF sections parser
+Message-ID: <2025053109-flatterer-error-7432@gregkh>
+References: <2025052932-pyramid-unvisited-68f7@gregkh>
+ <DA935OIFBM1H.3CMSHQ46LLG4P@nvidia.com>
+ <2025053047-theology-unsaid-d6ac@gregkh>
+ <DA9AU3OBT29Z.3CX827C91I3IH@nvidia.com>
+ <2025053050-maggot-landfall-d5eb@gregkh>
+ <DA9KIGDH4IF6.2T383ZVLTJN0G@nvidia.com>
+ <2025053039-reselect-thinness-e0a2@gregkh>
+ <CAOZdJXVvmDro0Mv36grqQ6LB_1O5GzwPx+Dde+wsfu9Cu_me7A@mail.gmail.com>
+ <2025053148-gore-badass-1d1d@gregkh>
+ <CAOZdJXVSByiwGWusdajdTVma2aC3ibZtSz9XBpRy4MJrKuxfvw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <DAABXF5QDYF0.21V01UJODPM89@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOZdJXVSByiwGWusdajdTVma2aC3ibZtSz9XBpRy4MJrKuxfvw@mail.gmail.com>
 
-On Sat, May 31, 2025 at 02:03:05PM +0200, Benno Lossin wrote:
-> On Sat May 31, 2025 at 12:29 PM CEST, Danilo Krummrich wrote:
-> > On Sat, May 31, 2025 at 10:11:08AM +0200, Benno Lossin wrote:
-> >> On Sat May 31, 2025 at 12:24 AM CEST, Danilo Krummrich wrote:
-> >> > On Fri, May 30, 2025 at 10:15:37PM +0200, Benno Lossin wrote:
-> >> >> On Fri May 30, 2025 at 4:24 PM CEST, Danilo Krummrich wrote:
-> >> >> > +config SAMPLE_RUST_MISC_DEVICE_WITH_PARENT
-> >> >> > +	bool "Create a misc device with a parent device"
-> >> >> > +	depends on SAMPLE_RUST_MISC_DEVICE
-> >> >> > +	default n
-> >> >> > +	help
-> >> >> > +	  Say Y here if you want the misc device sample to create a misc
-> >> >> > +	  device with a parent device.
-> >> >> > +
-> >> >> 
-> >> >> Why not create a separate file? The `cfg`s might confuse newcomers
-> >> >> looking at the sample.
-> >> >
-> >> > It would be a lot of duplicated code, unless we really *only* exercise the
-> >> > device creation and registration part, which would be a bit unfortunate, given
-> >> > that this sample is also a pretty good test.
-> >> 
-> >> We could separate the common parts into a single file and then
-> >> `include!` that file from the two samples. (Or if the build system
-> >> supports multi-file samples then just use that, but my gut feeling is
-> >> that it doesn't)
+On Sat, May 31, 2025 at 05:17:48AM -0500, Timur Tabi wrote:
+> On Sat, May 31, 2025 at 12:45 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> 
+> > > IMHO, Nova should really do what Nouveau does, and just have the image
+> > > parser in the driver itself, without any generic Rust code to do it.
+> > > After all, what Nova needs to do with these images is driver-specific.
 > >
-> > The samples are normal modules, where we can have multiple files. But I don't
-> > see how that helps.
-> >
-> > `include!` works, but I'm not sure it's that much better.
-> >
-> > Another option would be to put the `cfg` on the module!() macro itself and have
-> > two separate module types, this way there is only a `cfg` on the two module!()
-> > invocations.
+> > Again, no, do not do any firmware image parsing in the kernel please
+> > unless you can prove exactly why it MUST be done there.
 > 
-> How about we do it like this:
+> Nouveau is already doing all this, just in C.  This entire argument is
+> over a 12-line function:
 > 
-> We create samples/rust/rust_misc_device/{module.rs,parent.rs,common.rs}
-> and `module.rs`/`parent.rs` are the two entry points. Both of these
-> files:
-> * include `common.rs` using `include!` at the very top.
-> * define a `RustMiscDeviceModule` struct and implmement `InPlaceModule`
->   for it.
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/rm/r535/gsp.c#n1824
 > 
-> The module-level docs, common imports constants, `module!` invocation &
-> other definitions stay in `common.rs`.
+> Nouveau needs to do this in kernel space because, once it finds the
+> appropriate section in the ELF image, it reads a hardware register to
+> determine how to patch it:
 > 
-> This way we can build them at the same time and have no cfgs :)
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/nouveau/nvkm/falcon/gm200.c#n342
+> 
+> Since this hardware register cannot be read in user-space, this needs
+> to be done in the kernel.
 
-Seems reasonable to me -- let's do that then.
+What exactly do you mean by this?  That is what I have been asking, what
+is the specific reason why this can't be done in userspace?  What
+hardware "thing" can't be read by userspace, and why not?  Userspace has
+access to PCI devices directly, surely there is nothing "secret" here.
+
+> Please note that there other drivers in Linux that iterate over ELF
+> sections in order to parse their firmware images:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/imagination/pvr_fw_util.c#n29
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/media/platform/st/sti/c8sectpfe/c8sectpfe-core.c#n925
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/remoteproc/qcom_q6v5_mss.c#n1374
+
+As pointed out before, those have "slipped in" and should not be used to
+justify continuing to do the same thing.
+
+Again, just do it in userspace, if it's "just" 12 lines in the kernel,
+then put those 12 lines in userspace and you are fine.
+
+And the proposed patch was NOT 12 lines of rust, so please don't
+conflate the two things here.  That's not what we are talking about.
+
+greg k-h
