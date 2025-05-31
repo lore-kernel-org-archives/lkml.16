@@ -1,194 +1,117 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 559BB13AA3C
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 17:38:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 080E23B19A;
+	Sat, 31 May 2025 17:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748713139; cv=none; b=n8GuhdPFm0BUWhyNsVcvMn+oj2BcZ4MKh3yoop/Cg5+Xl+QONCfhoQVcnwqF/UYDhIjev1eBv/FWoERnUL9gQU59Tf5V5uFlpcc08dDwoD2OFgj3W4hgEAd0sgN8d17fN2mcNmFbiNLyS/BlZmpegbJVfujoQ5WTeKC7/17fyes=
+	t=1748713375; cv=none; b=jfpDbMCW7Y8mDKY0Y2wXkwMHdtkye/MyPYATqt4RKDcZFReT3idZ/fw5LV7NR4Hbk3L+bqqe/O4i8bFhVUVVIPf21FO6qi87z1AHHcPI85WHmq+X9SlR/ljYKRVTRxEv1bJFKxrY26WfbmyZdZT/KxmzknQ1LH/YIlfgZS4tZpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748713139; c=relaxed/simple;
-	bh=+yiCfGe4fW0XffAwNncdBCVmgxhtqqA4Z5ANJlPMTug=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZaHLfvfy5BYZysilfO8tPGpnGOg5/c6pVM3XnfITwyGmnIlOhkI0CS6K9YT92E4AIzkBnxuG0++9MGe8/+1duEBW9ERv4Xp6BOV32gV2Bd2VDu3ZKUYh+fagW1XJbQZeX1oxYdzwHmpaFhgi3DKTeYn+220tQiYX04OR6nIZb0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qf1RFcfK; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748713375; c=relaxed/simple;
+	bh=Iva5rHF/MAVSoSgGRlbmsQ1Mf85wBltXL8rYWFF5QzY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HRtav2EBVDZ67L6xSj+wDNEFEwg68DgwpAOdam6F7+CUCqk9UymARGkII1h1xVDJr/aINkbvLrH0SkXVj1t4OS3fRoWqM8+Xd65PLNUkDVsjn42qmAafsY6Hk2sXETMITqGjqIRohDbN/fkLQsZYO1KYA0Osikhw0H8o2OjkdQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iCAuOuZc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qf1RFcfK"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a3798794d3so2567322f8f.1
-        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 10:38:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748713135; x=1749317935; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eLCLVg3DRY+kdQKI3UOmRBlx/q2NwNG+bRafEeb9LK4=;
-        b=qf1RFcfKwcW5/Hk47bNBUBgraAI0lhsiNe/xpJiwQSRUWCLo5lg7d9SLEvoZzC8e+F
-         iidoSxdM8HhaLQZqa2YgjLf6fCGUqT8qYCTl7NIWYw9hNgJoITjzaXSFj8bXajyL3MFg
-         mBkIxodI48Idcv4OdNVPXeYjl+P4erJOtvCtvSWj5oONdrOterSXseVtGvj2ipIhyD8v
-         Wly6cA/KvVmWyXqEr6InEVPcjiJ6E0Lgc+oojO9EjfYtrAyfd7+qIHU0KUS8oKUI0Gfv
-         vEhnTEpVU0cWmxmEkUYYPco/a+c2I8csdeAGGAR/ek5Rfsgl4sf64IyiFbpphr2kG8YK
-         sFiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748713135; x=1749317935;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eLCLVg3DRY+kdQKI3UOmRBlx/q2NwNG+bRafEeb9LK4=;
-        b=UsMQ8h9LeUBxtdmnaf9pu5kUX1UH0DcR9sjlSjxZeUl1NKWxTBeA0unN3PiJPgvWwi
-         FL9r6f5+934riL3++cvfYTi+ubPkgIFtKO6UiiLm+JrwIWBYkkQPHIyQgp9j+J4TvaHp
-         pZ/Zz6Fap8dQDrwwXw90974cgmNDyf/lZCUBBgU6zUet6gF5uSU7Jngm5w3BqWwqOHsy
-         Ht0o3h+SQjxncf0qnuvJHa9veNZJ76Ge3D+1X8mhuj9pPwP7EKU94EOqOOiaEL1F5xDC
-         WIF9s/71GGodklVZ7BymZLuq+mZOqQrkj4ZDzgdcc1lnMxXqw+sEy6LLnSCZvg3SEXsw
-         He8A==
-X-Forwarded-Encrypted: i=1; AJvYcCVPtX/+x/M9S4y5UjrmP+r/94rEvGu/jmPhxxWlmf1x3soBJF6Y0pUdmV2m3reigRIrLrSE4Xqj4rHaBF8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuxFtSioXQsG1DffBt9yCbJmF6UpDEgco/OrnLwYCKcn+6RKx9
-	hTMGkdV5t6lVSQLLhFAbxnUebr3pzXHBk4uHRX6uthbyyQbrcdeP0ZziZyf6y6LSMWXY+6Wwn3l
-	9oxq7l+qeihJ4rAUpQl5p5aTgkevhyWbfCnHY0mJx
-X-Gm-Gg: ASbGncs45Jp+saMd0xwxw2G7O/l7yohR1z0mTuZB1veTGSEmbbQh6Ixa+pWbVUoPNib
-	aFc8LbCSlXfBDars1z8e0Z+dR6iIcIRb2KoitGezCJK7bldmzfB8bYCXaX3z8W5HyDlCgfXZ5DN
-	lRN8nMiWwqFPdCKyyR4flWTaxyLaIUycKEZHPjRrEO5k1N
-X-Google-Smtp-Source: AGHT+IFcQc7PhrlU3iGzooaB91LCZp9G23UHEC8GFDWBqsB6YALAnfq0jsP/gQvtcHrgFUl7d6tErACA3KF7ENhU2+U=
-X-Received: by 2002:a5d:64e2:0:b0:3a4:e1e1:777f with SMTP id
- ffacd0b85a97d-3a4fe160ce4mr1952606f8f.1.1748713135419; Sat, 31 May 2025
- 10:38:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iCAuOuZc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2912C4CEE3;
+	Sat, 31 May 2025 17:42:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748713374;
+	bh=Iva5rHF/MAVSoSgGRlbmsQ1Mf85wBltXL8rYWFF5QzY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=iCAuOuZccwSniju3wtQ1/YL9YqNaTH2yu61vHn1g4dZ2nHLwe1LAVeZKm7qn/33bB
+	 2FIjNOOeg7q3Gb7WbN716cp6sauzZuYJ2ONRo4I7w99uo23Zr3Yt/6uCiUOdsCeMn3
+	 GMeSg3thU3fDis892ECaOvSnIdl6Ra4PLAhR6d3WGsfereNBb/ZUoaKUgeA6KITfMC
+	 X/JgXBzlvlPpWe+3c+WNYwVTJzVJ67LZD/mDeFh+zYXpPNHgHRWJKoSAdV4q9XAgJ3
+	 /3kgbEAR806TcWJAi0htKC4lOkpxExlcvKxPmK3w+/7aGiFJ50REvqBxblZRYJjqMe
+	 KgFerdgsoTsGQ==
+Date: Sat, 31 May 2025 18:42:42 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org, nuno.sa@analog.com,
+ Michael.Hennerich@analog.com, marcelo.schmitt@analog.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+ linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+ broonie@kernel.org, jonath4nns@gmail.com, dlechner@baylibre.com,
+ rafael@kernel.org, djrscally@gmail.com
+Subject: Re: [PATCH v9 09/12] iio: adc: ad7768-1: add support for
+ Synchronization over SPI
+Message-ID: <20250531184242.468e9e27@jic23-huawei>
+In-Reply-To: <aDnuvAdkcTAP2tMt@smile.fi.intel.com>
+References: <cover.1748447035.git.Jonathan.Santos@analog.com>
+	<27cccb51cc56f1bb57cb06d279854a503d779e25.1748447035.git.Jonathan.Santos@analog.com>
+	<aDnuvAdkcTAP2tMt@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250527-strncpy-from-user-v4-0-82168470d472@google.com>
- <20250527-strncpy-from-user-v4-2-82168470d472@google.com> <DA9P904SL0KL.1QNQAI240QLH6@kernel.org>
- <CAH5fLgjZrJ66VnW0J_CHc-3yUFOt+DRWgTCNxoftACga+Lw+fA@mail.gmail.com> <DAAG8AUG7GE2.EVO9Y6PZTHDI@kernel.org>
-In-Reply-To: <DAAG8AUG7GE2.EVO9Y6PZTHDI@kernel.org>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Sat, 31 May 2025 19:38:43 +0200
-X-Gm-Features: AX0GCFupvoH_OV-ioJo2JO2JFQ27ZZjQte_A5hZNPm4JMyO-baMu7qThPLV4JKs
-Message-ID: <CAH5fLgjNCQV8zsfdeq21iXiu_VOpt=WGnm9nMp-B0bOEMEBctw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] uaccess: rust: add UserSliceReader::strcpy_into_buf
-To: Benno Lossin <lossin@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, May 31, 2025 at 5:25=E2=80=AFPM Benno Lossin <lossin@kernel.org> wr=
-ote:
->
-> On Sat May 31, 2025 at 3:25 PM CEST, Alice Ryhl wrote:
-> > On Fri, May 30, 2025 at 8:16=E2=80=AFPM Benno Lossin <lossin@kernel.org=
-> wrote:
-> >> On Tue May 27, 2025 at 2:34 PM CEST, Alice Ryhl wrote:
-> >> > This patch adds a more convenient method for reading C strings from
-> >> > userspace. Logic is added to NUL-terminate the buffer when necessary=
- so
-> >> > that a &CStr can be returned.
-> >> >
-> >> > Note that we treat attempts to read past `self.length` as a fault, s=
-o
-> >> > this returns EFAULT if that limit is exceeded before `buf.len()` is
-> >> > reached.
-> >> >
-> >> > Reviewed-by: Danilo Krummrich <dakr@kernel.org>
-> >> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> >> > ---
-> >> >  rust/kernel/uaccess.rs | 56 +++++++++++++++++++++++++++++++++++++++=
-++++++++++-
-> >> >  1 file changed, 55 insertions(+), 1 deletion(-)
-> >> >
-> >> > diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
-> >> > index 9b1e4016fca2c25a44a8417c7e35e0fcf08aa959..e6534b52a1920254d61f=
-8349426d4cdb38286089 100644
-> >> > --- a/rust/kernel/uaccess.rs
-> >> > +++ b/rust/kernel/uaccess.rs
-> >> > @@ -293,6 +293,61 @@ pub fn read_all<A: Allocator>(mut self, buf: &m=
-ut Vec<u8, A>, flags: Flags) -> R
-> >> >          unsafe { buf.set_len(buf.len() + len) };
-> >> >          Ok(())
-> >> >      }
-> >> > +
-> >> > +    /// Read a NUL-terminated string from userspace and return it.
-> >> > +    ///
-> >> > +    /// The string is read into `buf` and a NUL-terminator is added=
- if the end of `buf` is reached.
-> >> > +    /// Since there must be space to add a NUL-terminator, the buff=
-er must not be empty. The
-> >> > +    /// returned `&CStr` points into `buf`.
-> >> > +    ///
-> >> > +    /// Fails with [`EFAULT`] if the read happens on a bad address =
-(some data may have been
-> >> > +    /// copied).
-> >> > +    #[doc(alias =3D "strncpy_from_user")]
-> >> > +    pub fn strcpy_into_buf<'buf>(self, buf: &'buf mut [u8]) -> Resu=
-lt<&'buf CStr> {
-> >> > +        if buf.is_empty() {
-> >> > +            return Err(EINVAL);
-> >> > +        }
-> >> > +
-> >> > +        // SAFETY: The types are compatible and `strncpy_from_user`=
- doesn't write uninitialized
-> >> > +        // bytes to `buf`.
-> >> > +        let mut dst =3D unsafe { &mut *(buf as *mut [u8] as *mut [M=
-aybeUninit<u8>]) };
-> >> > +
-> >> > +        // We never read more than `self.length` bytes.
-> >> > +        if dst.len() > self.length {
-> >> > +            dst =3D &mut dst[..self.length];
-> >> > +        }
-> >> > +
-> >> > +        let mut len =3D raw_strncpy_from_user(dst, self.ptr)?;
-> >> > +        if len < dst.len() {
-> >> > +            // Add one to include the NUL-terminator.
-> >> > +            len +=3D 1;
-> >> > +        } else if len < buf.len() {
-> >> > +            // This implies that `len =3D=3D dst.len() < buf.len()`=
-.
-> >> > +            //
-> >> > +            // This means that we could not fill the entire buffer,=
- but we had to stop reading
-> >> > +            // because we hit the `self.length` limit of this `User=
-SliceReader`. Since we did not
-> >> > +            // fill the buffer, we treat this case as if we tried t=
-o read past the `self.length`
-> >> > +            // limit and received a page fault, which is consistent=
- with other `UserSliceReader`
-> >> > +            // methods that also return page faults when you exceed=
- `self.length`.
-> >> > +            return Err(EFAULT);
-> >> > +        } else {
-> >> > +            // This implies that len =3D=3D buf.len().
-> >> > +            //
-> >> > +            // This means that we filled the buffer exactly. In thi=
-s case, we add a NUL-terminator
-> >> > +            // and return it. Unlike the `len < dst.len()` branch, =
-don't modify `len` because it
-> >> > +            // already represents the length including the NUL-term=
-inator.
-> >> > +            //
-> >> > +            // SAFETY: Due to the check at the beginning, the buffe=
-r is not empty.
-> >> > +            unsafe { *buf.last_mut().unwrap_unchecked() =3D 0 };
-> >>
-> >> In this case you're overwriting the last character read. Should we giv=
-e
-> >> `raw_strncpy_from_user` access to one less byte and then write NUL int=
-o
-> >> that?
-> >
-> > Why? I'm not interested in changing the implementation just because.
-> > It needs to be significantly simpler, and I do not think it is.
->
-> Sure, but then I think we should document this behavior.
+On Fri, 30 May 2025 20:45:32 +0300
+Andy Shevchenko <andy@kernel.org> wrote:
 
-Document what? I understood your suggestion as a change to the
-implementation of strcpy_into_buf that would not change its behavior.
-Did I misunderstand?
+> On Thu, May 29, 2025 at 07:50:29PM -0300, Jonathan Santos wrote:
+> > The synchronization method using GPIO requires the generated pulse to be
+> > truly synchronous with the base MCLK signal. When it is not possible to
+> > do that in hardware, the datasheet recommends using synchronization over
+> > SPI, where the generated pulse is already synchronous with MCLK. This
+> > requires the SYNC_OUT pin to be connected to the SYNC_IN pin.
+> > 
+> > Use trigger-sources property to enable device synchronization over SPI
+> > and multi-device synchronization while replacing sync-in-gpios property.  
+> 
+> ...
+> 
+> > struct ad7768_state {  
+> 
+> >  	struct iio_trigger *trig;
+> >  	struct gpio_desc *gpio_sync_in;
+> >  	struct gpio_desc *gpio_reset;  
+> 
+> > +	bool en_spi_sync;  
+> 
+> I'm wondering if moving this...
+> 
+> >  	const char *labels[ARRAY_SIZE(ad7768_channels)];
+> >  	struct gpio_chip gpiochip;  
+> 
+> ...to here saves a few bytes in accordance to `pahole`.
+> 
+> >  };  
+> 
+> ...
+> 
+> > +static int ad7768_trigger_sources_sync_setup(struct device *dev,
+> > +					     struct fwnode_handle *dev_fwnode,
+> > +					     struct ad7768_state *st)
+> > +{
+> > +	struct fwnode_reference_args args;
+> > +
+> > +	struct fwnode_handle *fwnode __free(fwnode_handle) =
+> > +		fwnode_find_reference_args(dev_fwnode, "trigger-sources",
+> > +					   "#trigger-source-cells", 0,
+> > +					   AD7768_TRIGGER_SOURCE_SYNC_IDX, &args);  
+> 
+> I don't see how args are being used. This puts in doubt the need of the first
+> patch.
 
-Alice
+That did get discussed (more context needed in the commit message for patch 1).
+I wasn't happy with ignoring #trigger-source-cells which is required in the
+binding but here is known to be 0.
+
+If it was larger than 0 but we didn't care about the arguments I believe
+we'd still need to use this call to take the right stride through the
+data array that this is coming from.
+Ultimately I think that is this bit of code establishing the end of the phandle.
+https://elixir.bootlin.com/linux/v6.15/source/drivers/of/base.c#L1300
+
+I might have gotten it wrong how this all works though!
+
+J
