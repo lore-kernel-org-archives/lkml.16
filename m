@@ -1,185 +1,142 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31A88F40;
-	Sat, 31 May 2025 18:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C305319D06B
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 18:27:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748716029; cv=none; b=AlHP5rlOZvSBdpw/9slfie7pmbOS7nPodFCP/wjigg730GrOUwJZPYp3XYiCaAjKidc5XxOuJlAE2F5Ns+D7zjSyd4XQDVA8G9X7cvXKfgDrr6eRzRDx4g2vqTG+ahNo9XxuGRmoyb+sqOsln0kJLlgu3uInjYeLsEG0myAgozQ=
+	t=1748716070; cv=none; b=GIURQPYaun1cqo9K5HFqWBEhIgLDuh2hWCyYRNIEx0GdllBfN2jboltx6V26WX7eR+pql9DzsS4st7NwnA48aYGgsxNFpGinU/lEPHjh3aY2BYr7GXUHKQCb2lXYWpELKPUEMUnxIRK+IpMnR4puSiZCOaQoy7F64sDDacjMwuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748716029; c=relaxed/simple;
-	bh=ZOeDWXgXrHFqlu9o3PxRq5KOYpnvjmgKckvdPePoi6s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JhXwwCpkbqShVyYF4i/2xMrcLItec8p+ASpfX4aZHycQvZTZTs20MtcKz8EKy5pl43x5L6V8QuG1nFRSf64c13RucDoo8CsKu8jI/xOKebAhhGEKUlgQBGFObxf9qOoi7yjop2SohmdgwoY7Ri5pLL5xGxJzlqLbvmdpn4yW5NM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nMxIR4yn; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748716070; c=relaxed/simple;
+	bh=QVyTy39kGa7O/ePiyt+9nmFnLXJK/m+e+8pa1txDyEI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GXYxOEZ587X8t+n6VYLRBaVjAbR4xirz/H2+A6GheKR/Owwd//b8xju9AlQ5XwgLADj48i1KTT2dwMId/XktQDOBzF0ED7JZ9abaxhqG/GfMUmiUBQDDc54c92bLjGP63fQ33b7WdUIyg2LGV+8LHirYCNcJQRQR3zC25yqved0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=LOt1W4ok; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nMxIR4yn"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-451d3f72391so3846045e9.3;
-        Sat, 31 May 2025 11:27:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748716026; x=1749320826; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=05RESsPmrzkuTqXqpIc5GsOlAsLgZ3bjJiYGP08CxsA=;
-        b=nMxIR4ynikYRpQ8gWuAKCCtdryfw90ZDMcgIHPad2MQ29XBxFUvNjJeXA7irRMwYJs
-         Z+1alXbXdTnZepgPIn+JYMc/tQYrG3qpuqgU1UtBjNQF9e60Y78bt2SbMZRMN5108ZVK
-         oDzYxbyC1B07W5BW49xHjTSakkzovLO3jVBZ5dukQrxgQJ8RXVemywUpuqGZ7IlBwpGT
-         Cj7vrUSuUoIdXBCry4xhqcaZC3GonewmTA1XwyP9QkWXFTMVHQnShflWny2nS2i4yNap
-         I5srDw8CYoANwYQIhQNdfHQOmdsv+puwrVzRQQYKvR9OZXqaR/Lksng7/MeWQWSkQapF
-         GTLg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="LOt1W4ok"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54VI7JO2021374
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 18:27:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	dNLoxJaeNa7H9bgjtofmrjyfeoUO0fEK6F2yize1zNw=; b=LOt1W4okxakbYLOA
+	+Wk4LRUaEH5afMT2rxrcAR0ehLnk0BQmTiKh3x3YqPwgqnsXSToeEzfR9wHASoHp
+	KUgabv5mkXnIK/LodEMYUssWg/PgXv7ceS9crjh/KoeMdFFCIZ9UcA7YL6tjUoU6
+	92YSDS76VRgKVeUlgZ1CPNtd8z/EUGR4lWACPptAgMZb5L75eJsRw13FI7GhaRyx
+	oz8kITxX6ysSpQPFfXBnRra0rXELn3rs3ia53CKwu03mo1QxEMSAf8OfkmqIpMzc
+	DyTWrnfQUGOOgIXDlXX3uIZPmEpaj54KaGnxUB0OPuDyc2R+/R/aYVFON+8zAO6+
+	9mBQKw==
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46ytm6967d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 18:27:39 +0000 (GMT)
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4a517ff0ebdso1725991cf.3
+        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 11:27:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748716026; x=1749320826;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=05RESsPmrzkuTqXqpIc5GsOlAsLgZ3bjJiYGP08CxsA=;
-        b=kvZBQ6WaK5bhnTuIvuAwMMvXFdXWoagN3FArVMS8mHmgNRFsk9uqRTyrQGNEPcP47r
-         Z53SheGb2QRmgkrmR6ROekLtzNq4qHYIw94L8/+g08E48u8JvAFnlimQDkfZjFtlneRP
-         hFNbCOkisixSFxCgBENBmvvaStTLjwwaJaJx8VKF54T5GAOOLzchAy47ULgFjvpzspLs
-         ToVqsipQAudbSXh96CPwpzn9yiShFd3lzZqlUPPlLesbHr5cQmEcctux1txMbYbRq7vM
-         qXoXbeZrTilH8ARb/ZJIB9d7VEr68y7wPLraR3is2mvmKa2gmaEgG65M3b/UE5osEOaS
-         8KGg==
-X-Forwarded-Encrypted: i=1; AJvYcCUHl0Qwn1HG6NwQMZ64AEOpiMM8yVv6tDw1BirRYit7r3kOVxUO/Dtub3fWvNxkh6Yx0OGTwtoXcgE3DXM=@vger.kernel.org, AJvYcCXd88OZOe5JHfs7vvId7iarKpZARhb3lD+eCqo7L0PLhAhW1u8MB2D1YGRZIv0zG9v1uF8bAg/xIYCl@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxsx3f4nELjNC7N18rr0pJ5JFRbhQ0RMD/KsiGOJzElPcvRzUq6
-	fxo4nxGpA68LNCfYWwGdM1w4M3F4L/Int7Uv9FYx8UjmcYFkf3cKVECD
-X-Gm-Gg: ASbGncvrPVHAJ/BjUfqDuntI6Twf4Pu3zl2kCVV11W4p0/yEx2+FEn43j0mYlh5eGUt
-	lGgbU7QiSUAQVDevLEaxq2LAL+VcftMFIB87IbK3+R79Ls9c2Wi9aJU1d6h/tRp01bSzuN1/bYG
-	LyHxkpBGANSahgZxj+VUwVTuW26QgwmtaPtmtcb6B9zDdxQnjqTP1Ot832qf47/gapY3VXUpNIf
-	41YPvZtYEqhWqpjQ7NsVlefQx8J/PCmA7tJKgUEcdPFQIiZbPaqNtt/z7ZZeeqVcnZhOC3CheET
-	5qbZDjHi2JiKOsKy6lWrHeEhLZkUmtjY/8wJR9Zp2w2J+C7h/Q0WAbEk++QVFOu2
-X-Google-Smtp-Source: AGHT+IG365FuJ1CqHc6DPYx6kl2K6EbX2FXiQrKnyScc7d84ZDsZKPlmAD7FOqJZV/xr8ZHOzEh4Bg==
-X-Received: by 2002:a05:600c:608a:b0:43d:3df:42d8 with SMTP id 5b1f17b1804b1-450d87fd857mr57240395e9.6.1748716025785;
-        Sat, 31 May 2025 11:27:05 -0700 (PDT)
-Received: from debian.local ([2a0a:ef40:eaf:3101:2d68:caee:7294:3fe1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7f8edf9sm57146225e9.3.2025.05.31.11.27.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 May 2025 11:27:05 -0700 (PDT)
-Date: Sat, 31 May 2025 19:27:03 +0100
-From: Chris Bainbridge <chris.bainbridge@gmail.com>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
-	linux-rtc@vger.kernel.org,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Mateusz =?utf-8?Q?Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
-	lkml <linux-kernel@vger.kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] timekeeping: Add a lockdep override in tick_freeze().
-Message-ID: <aDtJ92foPUYmGheF@debian.local>
-References: <20250330113202.GAZ-krsjAnurOlTcp-@fat_crate.local>
- <87sempv17b.ffs@tglx>
- <20250403135031.giGKVTEO@linutronix.de>
- <20250403193659.hhUTgJLH@linutronix.de>
- <87r029uh3j.ffs@tglx>
- <20250404133429.pnAzf-eF@linutronix.de>
+        d=1e100.net; s=20230601; t=1748716059; x=1749320859;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dNLoxJaeNa7H9bgjtofmrjyfeoUO0fEK6F2yize1zNw=;
+        b=PBQiiYoo2XNEmmMns00Qj9T0iEO1tPUuMqmULrdzVei9AjTy7UMS/PrTK62PUAmiEe
+         krFNUHPpgw3os0MJu/mjQdbAtRW/bqlbBR9HJHnL2wfLJQ5zWfwqBbC2vBG8OWJI2aeP
+         qlM+AiDVHMDRHkuyefAmYt5cmLOA7LVGciYk7y+nIEJ5rkg9bwboX6w6OBDFxc8VDBmt
+         I3k/HUhFjuNeYUtb/aQw1SCCHL13CYDUqsIMDXKk1vK90fQ2J1nFc0dP1rMu3IYjqfiI
+         PNJ29B+lWdTXYka1A63Satr6u7sH9alBt3lZHTfHL91KL9dhzOTz/hE+3a3ZscgF9B87
+         47Lw==
+X-Forwarded-Encrypted: i=1; AJvYcCWOesNTdmhFrg5SqGxnH9G4DD1/D7klr7QHniRu9+dPgXOYsEy3JubQTkvoZcX5tcOt2nyNBR2Nud8z2wA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzApsV9b9UhQUWjvHWOfR5sw/Esnmh71u78ULD6xHh68pfFibpI
+	p0INSIxaeCeQ/CepJEJiqcnXxWr879iYeHE4AePooU+cI6HNVRIjUJjIKbhMVLndYfyRZA3BvK9
+	EXHOlxrFHTqrFpeFfe6R+R6wClDvWnT0DhGAMjlwfe3WjbOj4NzJUKv04oohgxwImzg4=
+X-Gm-Gg: ASbGncshkqI0Hr5yzkjJIhtRFW1KRS9Qy5dIPNuUmrL75WlYxv7Sgu2WXZjRoT3fD6r
+	e4rWOlKCaMxemTJ0HmfWRkLn6TKMW6v0ifEqvjTakiQkf9zuNODbdSXREKP0aD0FItWRTKaGNWd
+	aV5w7TYkX294v6bP+XoE8TdFOX7qP4Rs/qRDbJ/WOguWaDBJvy9GBASD4VrRkj4b0UnZrxrUFH5
+	IO/LdsBP/ZCQpRRDIeWdxmAKbs5luOR4lN/jtfOlSYNhddGbHeWygGV9Q2TqwRhL8E+N5eKstZi
+	UF5mfycGBJJQCnJlT1bYbe5VqzQvM9mVhU+PDwUM3lr1ht5KC3Qu+kNaAcDpm/l03A==
+X-Received: by 2002:a05:620a:298c:b0:7c0:cc94:46c4 with SMTP id af79cd13be357-7d0a3d775a0mr413430885a.2.1748716059142;
+        Sat, 31 May 2025 11:27:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG4okjwDO7D+IbmXbi6WJ92L36mIWN1ZbbjDie9mCBjaikBKTLN4+hEu+tJwMEbwza5FLtwWA==
+X-Received: by 2002:a05:620a:298c:b0:7c0:cc94:46c4 with SMTP id af79cd13be357-7d0a3d775a0mr413428085a.2.1748716058574;
+        Sat, 31 May 2025 11:27:38 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5d7fef7dsm530456866b.6.2025.05.31.11.27.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 31 May 2025 11:27:37 -0700 (PDT)
+Message-ID: <d3ee0492-afca-471f-9dc3-456a94bfa355@oss.qualcomm.com>
+Date: Sat, 31 May 2025 20:27:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250404133429.pnAzf-eF@linutronix.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 4/8] arm64: dts: qcom: qcs6490-audioreach: Modify LPASS
+ macros clock settings for audioreach
+To: Prasad Kumpatla <quic_pkumpatl@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Srinivas Kandagatla <srini@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
+        kernel@oss.qualcomm.com, Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+References: <20250527111227.2318021-1-quic_pkumpatl@quicinc.com>
+ <20250527111227.2318021-5-quic_pkumpatl@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250527111227.2318021-5-quic_pkumpatl@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMxMDE2OCBTYWx0ZWRfXyH5L5AvXoNvn
+ elQdP/+/wwHvtv7QQXJK42PPhfOsY21c/5MGTkLZ4Er7JqQVaFrwBWGfB5kpb7QJSsbN9+IWCke
+ gjj4UsuwghrAc32itahqjkswbWRYEq4EXIqhLa0fw6Vpny1XmcKPl+YpWEXixrjPgQGxSs+qpLZ
+ xwZBZjbVwQB6dDLpY57fiH6u3/5EyvBRvM0Atf7gVFYTtAQtvw0EIEy88nS3cVRQHNsf2ZNwjIM
+ 1wjNg3BeUgfLrVbYc5prjbn0gsIRdryY1vpxIk8Hde4N4fh9OJ35fFPI92BVSjrMPfR33T9SptD
+ NqOLNlFs0jA9i7+ceydevy5W5tL/rgaVGbrxDx86NUUByi5BphPW6VE0NErAfVzZ4TlLvbauO+L
+ Hd26W/JjbVvmVY7vCaR7TrH5HjZXBHeV9RYQEHyDueixpHzCqPUqTgEyAC5AGV0KT8QNrQVO
+X-Authority-Analysis: v=2.4 cv=EOIG00ZC c=1 sm=1 tr=0 ts=683b4a1b cx=c_pps
+ a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8
+ a=IZQIRLw8iM99TnyeTF4A:9 a=QEXdDO2ut3YA:10 a=dawVfQjAaf238kedN5IG:22
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: _vZa5Wh_QeyaOcojlBgmzv5BRO6ECLQ2
+X-Proofpoint-ORIG-GUID: _vZa5Wh_QeyaOcojlBgmzv5BRO6ECLQ2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-31_09,2025-05-30_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 mlxlogscore=897 adultscore=0 lowpriorityscore=0 mlxscore=0
+ phishscore=0 impostorscore=0 spamscore=0 bulkscore=0 priorityscore=1501
+ clxscore=1015 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505310168
 
-Hi,
+On 5/27/25 1:12 PM, Prasad Kumpatla wrote:
+> From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+> 
+> Modify and enable WSA, VA, RX and TX lpass macros and lpass_tlmm clock
+> settings. For audioreach solution mclk, npl and fsgen clocks are enabled
+> through the q6prm clock driver.
+> 
+> For qcs6490 RX drives clk from TX CORE which is mandated from DSP side,
+> Unlike dedicated core clocks. Core TX clk is used for both RX and
+> WSA as per DSP recommendations.
+> 
+> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+> ---
 
-I'm getting "WARNING: inconsistent lock state" on resume with this
-commit (92e250c624ea37fde64bfd624fd2556f0d846f18):
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-[   43.747069] ACPI: \_SB_.PEP_: Successfully transitioned to state screen off
-[   43.753611] ACPI: \_SB_.PEP_: Successfully transitioned to state lps0 ms entry
-[   43.753777] ACPI: \_SB_.PEP_: Successfully transitioned to state lps0 entry
-[   43.838479] amd_pmc AMDI0005:00: failed to set RTC: -22
-[   43.838489] PM: suspend-to-idle
-[   43.838542] amd_pmc: SMU idlemask s0i3: 0xc00e0eb5
-[   46.246882] Timekeeping suspended for 2.528 seconds
-[   46.249132] PM: Triggering wakeup from IRQ 9
-[   46.249292] ACPI: PM: ACPI fixed event wakeup
-[   46.249297] PM: resume from suspend-to-idle
-[   46.250801] amd_pmc AMDI0005:00: Last suspend didn't reach deepest state
-[   46.251096] ACPI: \_SB_.PEP_: Successfully transitioned to state lps0 exit
-[   46.257167] ACPI: \_SB_.PEP_: Successfully transitioned to state lps0 ms exit
-[   46.258450] ACPI: \_SB_.PEP_: Successfully transitioned to state screen on
-[   46.259652] ACPI: EC: interrupt unblocked
-[   46.291758] PM: noirq resume of devices complete after 32.885 msecs
-
-[   46.291907] ================================
-[   46.291909] WARNING: inconsistent lock state
-[   46.291911] 6.15.0-rc1-00002-g92e250c624ea #379 Not tainted
-[   46.291914] --------------------------------
-[   46.291915] inconsistent {IN-HARDIRQ-W} -> {HARDIRQ-ON-W} usage.
-[   46.291917] irq/9-acpi/142 [HC0[0]:SC0[0]:HE1:SE1] takes:
-[   46.291921] ffffffff88e48d18 (rtc_lock){?...}-{3:3}, at: cmos_interrupt+0x21/0x110
-[   46.291939] {IN-HARDIRQ-W} state was registered at:
-[   46.291941]   lock_acquire+0xc9/0x2d0
-[   46.291946]   _raw_spin_lock+0x30/0x40
-[   46.291951]   cmos_interrupt+0x21/0x110
-[   46.291956]   __handle_irq_event_percpu+0x81/0x290
-[   46.291962]   handle_irq_event+0x38/0x70
-[   46.291966]   handle_edge_irq+0x85/0x210
-[   46.291970]   __common_interrupt+0x45/0xd0
-[   46.291973]   common_interrupt+0x80/0xa0
-[   46.291977]   asm_common_interrupt+0x26/0x40
-[   46.291981]   cpuidle_enter_state+0x113/0x540
-[   46.291985]   cpuidle_enter+0x2d/0x40
-[   46.291989]   do_idle+0x1f5/0x250
-[   46.291992]   cpu_startup_entry+0x29/0x30
-[   46.291994]   start_secondary+0x10c/0x130
-[   46.291998]   common_startup_64+0x13e/0x141
-[   46.292002] irq event stamp: 877
-[   46.292004] hardirqs last  enabled at (877): [<ffffffff88778a90>] _raw_spin_unlock_irqrestore+0x40/0x50
-[   46.292010] hardirqs last disabled at (876): [<ffffffff8877884c>] _raw_spin_lock_irqsave+0x5c/0x60
-[   46.292014] softirqs last  enabled at (362): [<ffffffff87b0dc3c>] __irq_exit_rcu+0xcc/0xf0
-[   46.292019] softirqs last disabled at (353): [<ffffffff87b0dc3c>] __irq_exit_rcu+0xcc/0xf0
-[   46.292022] 
-               other info that might help us debug this:
-[   46.292024]  Possible unsafe locking scenario:
-
-[   46.292025]        CPU0
-[   46.292026]        ----
-[   46.292027]   lock(rtc_lock);
-[   46.292029]   <Interrupt>
-[   46.292030]     lock(rtc_lock);
-[   46.292032] 
-                *** DEADLOCK ***
-
-[   46.292033] no locks held by irq/9-acpi/142.
-[   46.292035] 
-               stack backtrace:
-[   46.292040] CPU: 1 UID: 0 PID: 142 Comm: irq/9-acpi Not tainted 6.15.0-rc1-00002-g92e250c624ea #379 PREEMPT(voluntary) 
-[   46.292046] Hardware name: HP HP Pavilion Aero Laptop 13-be0xxx/8916, BIOS F.17 12/18/2024
-[   46.292049] Call Trace:
-[   46.292052]  <TASK>
-[   46.292058]  dump_stack_lvl+0x6e/0x90
-[   46.292063]  print_usage_bug.part.0+0x22c/0x2c0
-[   46.292067]  mark_lock+0x6f7/0x890
-[   46.292072]  ? __lock_acquire+0x449/0x21c0
-[   46.292077]  __lock_acquire+0x7e5/0x21c0
-[   46.292080]  ? psi_task_switch+0x10a/0x330
-[   46.292086]  lock_acquire+0xc9/0x2d0
-[   46.292088]  ? cmos_interrupt+0x21/0x110
-[   46.292094]  ? acpi_write_bit_register+0x79/0xf0
-[   46.292102]  _raw_spin_lock+0x30/0x40
-[   46.292106]  ? cmos_interrupt+0x21/0x110
-[   46.292110]  cmos_interrupt+0x21/0x110
-[   46.292115]  rtc_handler+0x28/0xc0
-[   46.292120]  acpi_ev_fixed_event_detect+0xc8/0x140
-[   46.292127]  ? irq_thread+0xa4/0x340
-[   46.292129]  acpi_ev_sci_xrupt_handler+0x13/0x40
-[   46.292132]  acpi_irq+0x16/0x30
-[   46.292136]  irq_thread_fn+0x1d/0x50
-[   46.292139]  irq_thread+0x1d5/0x340
-[   46.292140]  ? irq_copy_pending.isra.0+0x70/0x70
-[   46.292144]  ? irq_finalize_oneshot.part.0+0xc0/0xc0
-[   46.292147]  ? irq_forced_thread_fn+0x70/0x70
-[   46.292149]  kthread+0x10a/0x250
-[   46.292154]  ? kthreads_online_cpu+0x130/0x130
-[   46.292158]  ret_from_fork+0x31/0x50
-[   46.292162]  ? kthreads_online_cpu+0x130/0x130
-[   46.292166]  ret_from_fork_asm+0x11/0x20
-[   46.292174]  </TASK>
-[   46.292918] PM: early resume of devices complete after 0.829 msecs
+Konrad
