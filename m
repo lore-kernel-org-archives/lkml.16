@@ -1,282 +1,103 @@
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE1828CF4C;
-	Sat, 31 May 2025 04:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0E528CF6D
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 04:57:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748666529; cv=none; b=QJP9A0vyEpfpDZc9CXwDbWDVPmtdDvNLbecLMBeE7ozsv44kfB5EKyY3oqL4DK9M4UB7tci2TYxJso8rCa0vMhTNlzg6g8LBXc24p9ohFfyNllJ+6BVUNF+lqslsyMyJpOlLiNDZ+PNvVTqASv0bD8jtNowjX3VRF6qQ5kXlNXg=
+	t=1748667476; cv=none; b=PvKoqy65H9MLiEupuG+YkhhkXYZbhTn6T3rfO6QoRyEGffVhHn5EhFGZFScUArcF3HJ57iZ2poqIzhS46VXgJIsJs3VHtvDpxzCZkj9qb/bMEGjguRtqj34nyCqqbwkUf5i/7Yvi/HiwQU4u6O/G6cyAfuZEZrH/PtUiEoPeoIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748666529; c=relaxed/simple;
-	bh=VGqXujUi9yFx/a/hYVK6eAXwihXUAVub5lzgM1XcGr0=;
+	s=arc-20240116; t=1748667476; c=relaxed/simple;
+	bh=8K3tn6cFhZLTgoSBk3aO4SLumHWKsqeM5XcaTpuz+eE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DvtQcsD6uSJ56R4jhXfOheWkKbaeuroM/xf9MuZB258bjcElHuZhUgwyiaggxusMoLI2TFOWjrMwx3vKmmXtgMDpRRQRUoxSe6OR8UNIiwuT9e14LQbGxEY+1iJRU+3ZH9yYCsBF3SkcOZhbsFqpjB48mxQSLaKjkpVRpb4r74M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WnktmMBA; arc=none smtp.client-ip=209.85.217.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=YCiuM2oxlPMJJeUTanc8tvXMfbP/8aJGoXuI35u7ZADwRey7a9VfFEfQqxGb6W+5aPgw2G0DKANMGtuCd3KWcdSUjOl5eaSquVdSkjtT7iXN7G7zCbtHGxamkW0nyuSsVkJDUKhvsPDji3RaKXOL0985G4dVbxgTLaK5QzCBb6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=huffjJIX; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WnktmMBA"
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4c4fa0bfca2so845537137.0;
-        Fri, 30 May 2025 21:42:07 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="huffjJIX"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-60461fc88d7so5089698a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 21:57:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748666526; x=1749271326; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V9EBOQZoadO8Tdn5XLSCzKniJvmsxChEl4wEsHQNLR0=;
-        b=WnktmMBAz87QmMvrZqzULxb1+GnXycFlLoJtR2kPhxtLxJhDvEC197L28sLJGNeWhr
-         DtVN+LL2w4YSDwt/u9rvGggy9J4WAGWIHzzlyBfPdiFY65XOqeRdHP2XEekfCRv1DAAH
-         lkjzW1+hzHt6egbP83amRVe+j4ZPfr2GhZcKt8tKsTLKKp+CXLXnA1fnc3aAoWVZla5+
-         KGkAMZYHsyE9qV5oZCkYetLr43vNaDmwMUKwRdoQBp6y0HDP8qkoudX2gYbh/FmaN2uG
-         ya82RspOlBZ1Xeq6DYMKm6NrXsDfCXHNaFUEMQIS2o+S5lYPAzj/p3OxsxSTbxjxZkZ2
-         NN9Q==
+        d=linux-foundation.org; s=google; t=1748667473; x=1749272273; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=NSpiWOEvMO3N5M8jkH7wtrupzevXtJYKexVa9S/kUp0=;
+        b=huffjJIX66Q/sorYYxI1icI2y9otzuqrYBn8kt1hARNUOu3052oKEgL6gPv6YZ2v0P
+         BlR0UcA2zkdgfKiYd+9xk7Dn0A3WPL6AUFx5Anja1kqTwoaih5X9QTDroUuNg/mOw/k2
+         fk7rWBeD+5u6bVeYltiG46SqhCVkWCMZaWVvg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748666526; x=1749271326;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V9EBOQZoadO8Tdn5XLSCzKniJvmsxChEl4wEsHQNLR0=;
-        b=ZsA3aRWjBDDWxr9w2sFOGKVQGY73VAQUpGV3sF2tKIieuAoCzK9dPNqK5s2gBbzboD
-         8Hzpi3eFdiu+53Spm5U1PCjgC49VZauRG1pDlz2GmOH5zhG9+Ju5M5FyK078biI1v3++
-         PnPEPnPAtE9iNlHtxQlGQFew10qw+52IKcapwRpsaz2a92fR0kAqRB/vC/RJB0XstbaV
-         s1GS97e4t5HhjCBd8pxvJK2hIa7SRdzcP6c4lEMWbQLGZCdsxVXUNutPwZdf7dQ0IGYp
-         fhcBoR0OEOk1OICkO3NE/ly6eKVlPFl24QlJtyaPRhmSTLa9QhKIHNpaNlmAGW+pHh5l
-         NBHw==
-X-Forwarded-Encrypted: i=1; AJvYcCUhJhf02ZJpOKRbl3YPwObHGckPHTNNKX5pWgdBXUOBmVwnbI+VSDvNuAr8waPAlCxRCxztZvle@vger.kernel.org, AJvYcCWGDjyHovYlQiUTi/B+kdCUWMLSPaLujulHwoUy3MG3HzT5kO93nFHLF3o0bbFfHCvKRkjyYKkDRUzQCl8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBVoN6/T+ZmgVDbbq0kq04e3Ree2Lhgl27jCKZbtuhks5gUbhM
-	KiONo8deZCdaIzt7RzIUp4GpaRpC4kA2PPz73wOlFmyc4olSjDtnKs97rQBiVlp0Q10Ocw4XvPq
-	RdheuW4qeEEiwCabbG/0yrSCFui0amHQ=
-X-Gm-Gg: ASbGncsH2q+evnexzi51XZyFzK8eZQJQ0uwmvvsUu8kmgRWKEKYIeClLkG3jZm8Ti5E
-	CG4p7Rm8fZOj7IIvrROQHH0XiIeD7ZOzonHeorVBFjDKkSFYTQWhN0uuhcEETiQa4WaanyHnWdl
-	Hcksmkr5QGNJEd8knXsNkCXJzp/F9k6f4rYw==
-X-Google-Smtp-Source: AGHT+IEZt3bmd4/+ChkCUkHgAFdPa9qd/ctYAKrj6kzFX3PgCnevvFkD585y/++RKRQweFgx95IXcjH2OZjWEoc2ag4=
-X-Received: by 2002:a05:6102:358d:b0:4c1:992c:b95d with SMTP id
- ada2fe7eead31-4e701bae866mr309508137.17.1748666525967; Fri, 30 May 2025
- 21:42:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748667473; x=1749272273;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NSpiWOEvMO3N5M8jkH7wtrupzevXtJYKexVa9S/kUp0=;
+        b=GnRTqttcIPIJPBfs0GyNBJEjcmyd5shmXsfiSp2nCxDNh/snJL1Cb/7gUuQYP0Hkkk
+         RwtMsGTBH2ROBEgYd0FVwjLMD8msKsVofPwDRzhUr4qTnsziA2D0OaLlnHmduaY3jOHN
+         mUIe+W0roRU/uPzCEUNPLbUDKlaGmnHDJLHqV1a/W5ravDuM2fqewSM+c7pvfr3T5v9a
+         XmE4OtAn8XzgV+3azRBpQUOMA+kQfNoc/vk4g6IVAHg1KNH2L2uE5RdfAAhq7pyShNJo
+         CShl2KmlE1Y/NTX0922/KMrvJveWlSoiqVwN/nqNxHyIWF/h4aPrmybP4A4RRQRkZyqC
+         NG2A==
+X-Forwarded-Encrypted: i=1; AJvYcCVRYmWkbBddHLCJE4mcsMmwc1j7RuIdJoYMRofVRp/948xWeTckghspixjC8/jCKKYBi76aDJdllpbdxWA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmFN5HXKBLqbiDtLSqgRD4GkmVcQ0sh4wMruQCOke8Hl5KhApe
+	TPFwEwH2K8symvyGmuew4T0y2GgnWszQf9rrf/DQCrcHU+MUyvyzwweewdDd7q8byMAlm0UWVS3
+	kiDywMeo=
+X-Gm-Gg: ASbGncs/DqKvrSEfFV4tZuP1V5yTX00wapSywrRG/i3WV3S3/FdfmrxFmEDy66snBnZ
+	LnuQSzb0qwvs93nxlM0L7HQp9XgehmBS8aCAUBaZy6AYIArMuY5nCLSk/minkvOOB2gjAA18OrH
+	5RtlWzu6/C6D/fJc2+yXm1MQxisgSNZGse+Sh6wetrQYje5HYpajNBjw99HCCxI5Bm1AieXH0tO
+	s2W3Kk2KUEZKzGhW11+Z1trsFnkPkY68V+p3YjcKFpb1BU1fAPHiwS9sbBV3Su9igK4WyoDan+Y
+	0kX3qgKkFqynYbzApEEHjvunvsQCiKAp6XAhOQRHAmZbpVz7dJSxzXNRU8rkugX60EhwYvzepoj
+	exjCKh4Kvgb04ogFaAQgpHuKueeaW9DTMlIIO
+X-Google-Smtp-Source: AGHT+IHFxge5zDpNf6R50662CSi4rBJNXi9NZ+vjISmycvhHWbTRyrchxQ3WHVXj2+CPSCB/YLBd2g==
+X-Received: by 2002:a05:6402:13c5:b0:601:9dc3:2795 with SMTP id 4fb4d7f45d1cf-6056dd31f11mr5654935a12.7.1748667472565;
+        Fri, 30 May 2025 21:57:52 -0700 (PDT)
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com. [209.85.208.46])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6059b007c66sm1362164a12.62.2025.05.30.21.57.51
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 May 2025 21:57:52 -0700 (PDT)
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-60461fc88d7so5089671a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 21:57:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWeiLY6ko2f3dWoenaOpzKKHWimPY5ozyFU0stBQbpkdDw7DqzKQ7PM9WmOv4MLpRaro+mfytYTaIbFREE=@vger.kernel.org
+X-Received: by 2002:a05:6402:2747:b0:600:e549:3c19 with SMTP id
+ 4fb4d7f45d1cf-6056dd32172mr4701465a12.1.1748667470987; Fri, 30 May 2025
+ 21:57:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530201710.81365-1-ryncsn@gmail.com> <CAGsJ_4wBMxQSeoTwpKoWwEGRAr=iohbYf64aYyJ55t0Z11FkwA@mail.gmail.com>
-In-Reply-To: <CAGsJ_4wBMxQSeoTwpKoWwEGRAr=iohbYf64aYyJ55t0Z11FkwA@mail.gmail.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Sat, 31 May 2025 16:41:54 +1200
-X-Gm-Features: AX0GCFukT232aOA-NzZjeQ0scZe458Zm-uPbRRQUphoV6tAN2n8wvIXgiMZah0o
-Message-ID: <CAGsJ_4wM8Tph0Mbc-1Y9xNjgMPL7gqEjp=ArBuv3cJijHVXe6w@mail.gmail.com>
-Subject: Re: [PATCH] mm: userfaultfd: fix race of userfaultfd_move and swap cache
-To: Kairui Song <kasong@tencent.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Peter Xu <peterx@redhat.com>, Suren Baghdasaryan <surenb@google.com>, 
-	Andrea Arcangeli <aarcange@redhat.com>, David Hildenbrand <david@redhat.com>, 
-	Lokesh Gidra <lokeshgidra@google.com>, stable@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <aDmght5YpHmJ6qZ2@8bytes.org>
+In-Reply-To: <aDmght5YpHmJ6qZ2@8bytes.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 30 May 2025 21:57:34 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wguPX5w3UVmQpOk+v1ahJwRzRNXKHUJB92cwJfNpMU4ZA@mail.gmail.com>
+X-Gm-Features: AX0GCFtMpDskWfc2_AvCLjHC4dHVHudEo-Xx4HYHew7xlRDeRM-eGMEdr31NwII
+Message-ID: <CAHk-=wguPX5w3UVmQpOk+v1ahJwRzRNXKHUJB92cwJfNpMU4ZA@mail.gmail.com>
+Subject: Re: [git pull] IOMMU Updates for Linux v6.16
+To: Joerg Roedel <joro@8bytes.org>
+Cc: Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org, iommu@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 31, 2025 at 4:04=E2=80=AFPM Barry Song <21cnbao@gmail.com> wrot=
-e:
+On Fri, 30 May 2025 at 05:11, Joerg Roedel <joro@8bytes.org> wrote:
 >
-> On Sat, May 31, 2025 at 8:17=E2=80=AFAM Kairui Song <ryncsn@gmail.com> wr=
-ote:
-> >
-> > From: Kairui Song <kasong@tencent.com>
-> >
-> > On seeing a swap entry PTE, userfaultfd_move does a lockless swap cache
-> > lookup, and try to move the found folio to the faulting vma when.
-> > Currently, it relies on the PTE value check to ensure the moved folio
-> > still belongs to the src swap entry, which turns out is not reliable.
-> >
-> > While working and reviewing the swap table series with Barry, following
-> > existing race is observed and reproduced [1]:
-> >
-> > ( move_pages_pte is moving src_pte to dst_pte, where src_pte is a
-> >  swap entry PTE holding swap entry S1, and S1 isn't in the swap cache.)
-> >
-> > CPU1                               CPU2
-> > userfaultfd_move
-> >   move_pages_pte()
-> >     entry =3D pte_to_swp_entry(orig_src_pte);
-> >     // Here it got entry =3D S1
-> >     ... < Somehow interrupted> ...
-> >                                    <swapin src_pte, alloc and use folio=
- A>
-> >                                    // folio A is just a new allocated f=
-olio
-> >                                    // and get installed into src_pte
-> >                                    <frees swap entry S1>
-> >                                    // src_pte now points to folio A, S1
-> >                                    // has swap count =3D=3D 0, it can b=
-e freed
-> >                                    // by folio_swap_swap or swap
-> >                                    // allocator's reclaim.
-> >                                    <try to swap out another folio B>
-> >                                    // folio B is a folio in another VMA=
-.
-> >                                    <put folio B to swap cache using S1 =
->
-> >                                    // S1 is freed, folio B could use it
-> >                                    // for swap out with no problem.
-> >                                    ...
-> >     folio =3D filemap_get_folio(S1)
-> >     // Got folio B here !!!
-> >     ... < Somehow interrupted again> ...
-> >                                    <swapin folio B and free S1>
-> >                                    // Now S1 is free to be used again.
-> >                                    <swapout src_pte & folio A using S1>
-> >                                    // Now src_pte is a swap entry pte
-> >                                    // holding S1 again.
-> >     folio_trylock(folio)
-> >     move_swap_pte
-> >       double_pt_lock
-> >       is_pte_pages_stable
-> >       // Check passed because src_pte =3D=3D S1
-> >       folio_move_anon_rmap(...)
-> >       // Moved invalid folio B here !!!
-> >
-> > The race window is very short and requires multiple collisions of
-> > multiple rare events, so it's very unlikely to happen, but with a
-> > deliberately constructed reproducer and increased time window, it can b=
-e
-> > reproduced [1].
-> >
-> > It's also possible that folio (A) is swapped in, and swapped out again
-> > after the filemap_get_folio lookup, in such case folio (A) may stay in
-> > swap cache so it needs to be moved too. In this case we should also try
-> > again so kernel won't miss a folio move.
-> >
-> > Fix this by checking if the folio is the valid swap cache folio after
-> > acquiring the folio lock, and checking the swap cache again after
-> > acquiring the src_pte lock.
-> >
-> > SWP_SYNCRHONIZE_IO path does make the problem more complex, but so far
-> > we don't need to worry about that since folios only might get exposed t=
-o
-> > swap cache in the swap out path, and it's covered in this patch too by
-> > checking the swap cache again after acquiring src_pte lock.
-> >
-> > Fixes: adef440691ba ("userfaultfd: UFFDIO_MOVE uABI")
-> > Closes: https://lore.kernel.org/linux-mm/CAMgjq7B1K=3D6OOrK2OUZ0-tqCzi+=
-EJt+2_K97TPGoSt=3D9+JwP7Q@mail.gmail.com/ [1]
-> > Signed-off-by: Kairui Song <kasong@tencent.com>
-> > ---
-> >  mm/userfaultfd.c | 26 ++++++++++++++++++++++++++
-> >  1 file changed, 26 insertions(+)
-> >
-> > diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-> > index bc473ad21202..a1564d205dfb 100644
-> > --- a/mm/userfaultfd.c
-> > +++ b/mm/userfaultfd.c
-> > @@ -15,6 +15,7 @@
-> >  #include <linux/mmu_notifier.h>
-> >  #include <linux/hugetlb.h>
-> >  #include <linux/shmem_fs.h>
-> > +#include <linux/delay.h>
-> >  #include <asm/tlbflush.h>
-> >  #include <asm/tlb.h>
-> >  #include "internal.h"
-> > @@ -1086,6 +1087,8 @@ static int move_swap_pte(struct mm_struct *mm, st=
-ruct vm_area_struct *dst_vma,
-> >                          spinlock_t *dst_ptl, spinlock_t *src_ptl,
-> >                          struct folio *src_folio)
-> >  {
-> > +       swp_entry_t entry;
-> > +
-> >         double_pt_lock(dst_ptl, src_ptl);
-> >
-> >         if (!is_pte_pages_stable(dst_pte, src_pte, orig_dst_pte, orig_s=
-rc_pte,
-> > @@ -1102,6 +1105,19 @@ static int move_swap_pte(struct mm_struct *mm, s=
-truct vm_area_struct *dst_vma,
-> >         if (src_folio) {
-> >                 folio_move_anon_rmap(src_folio, dst_vma);
-> >                 src_folio->index =3D linear_page_index(dst_vma, dst_add=
-r);
-> > +       } else {
-> > +               /*
-> > +                * Check again after acquiring the src_pte lock. Or we =
-might
-> > +                * miss a new loaded swap cache folio.
-> > +                */
-> > +               entry =3D pte_to_swp_entry(orig_src_pte);
-> > +               src_folio =3D filemap_get_folio(swap_address_space(entr=
-y),
-> > +                                             swap_cache_index(entry));
-> > +               if (!IS_ERR_OR_NULL(src_folio)) {
-> > +                       double_pt_unlock(dst_ptl, src_ptl);
-> > +                       folio_put(src_folio);
-> > +                       return -EAGAIN;
-> > +               }
-> >         }
->
-> step 1: src pte points to a swap entry without swapcache
-> step 2: we call move_swap_pte()
-> step 3: someone swap-in src_pte by swap_readhead() and make src_pte's swa=
-p entry
-> have swapcache again - for non-sync/non-zRAM swap device;
-> step 4: move_swap_pte() gets ptl, move src_pte to dst_pte and *clear* src=
-_pte;
-> step 5: do_swap_page() for src_pte holds the ptl and found pte has
-> been cleared in
->             step 4; pte_same() returns false;
-> step 6: do_swap_page() won't map src_pte to the new swapcache got from st=
-ep 3;
->             if the swapcache folio is dropped, it seems everything is fin=
-e.
->
-> So the real issue is that do_swap_page() doesn=E2=80=99t drop the new swa=
-pcache
-> even when pte_same() returns false? That means the dst_pte swap-in
-> can still hit the swap cache entry brought in by the src_pte's swap-in?
+>           - SMMUv3:
 
-It seems also possible for the sync zRAM device.
+Bah. This seems very broken.
 
- step 1: src pte points to a swap entry S without swapcache
- step 2: we call move_swap_pte()
- step 3: someone swap-in src_pte by sync path, no swapcache; swap slot
-S is freed.
-             -- for zRAM;
- step 4: someone swap-out src_pte, get the exactly same swap slot S as step=
- 1,
-             adds folio to swapcache due to swapout;
- step 5: move_swap_pte() gets ptl and finds page tables are stable
-since swap-out
-             happens to have the same swap slot as step1;
- step 6: we clear src_pte, move src_pte to dst_pte; but miss to move the fo=
-lio.
+I haven't bisected it, but my arm64 build - which I sadly didn't end
+up doing earlier today - breaks with modpost errors:
 
-Yep, we really need to re-check pte for swapcache after holding PTL.
+   ERROR: modpost: "arm_smmu_make_cdtable_ste"
+[drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
 
->
-> >
-> >         orig_src_pte =3D ptep_get_and_clear(mm, src_addr, src_pte);
-> > @@ -1409,6 +1425,16 @@ static int move_pages_pte(struct mm_struct *mm, =
-pmd_t *dst_pmd, pmd_t *src_pmd,
-> >                                 folio_lock(src_folio);
-> >                                 goto retry;
-> >                         }
-> > +                       /*
-> > +                        * Check if the folio still belongs to the targ=
-et swap entry after
-> > +                        * acquiring the lock. Folio can be freed in th=
-e swap cache while
-> > +                        * not locked.
-> > +                        */
-> > +                       if (unlikely(!folio_test_swapcache(folio) ||
-> > +                                    entry.val !=3D folio->swap.val)) {
-> > +                               err =3D -EAGAIN;
-> > +                               goto out;
-> > +                       }
-> >                 }
-> >                 err =3D move_swap_pte(mm, dst_vma, dst_addr, src_addr, =
-dst_pte, src_pte,
-> >                                 orig_dst_pte, orig_src_pte, dst_pmd, ds=
-t_pmdval,
-> > --
-> > 2.49.0
-> >
->
+(and the same error then repeated for arm_smmu_make_s2_domain_ste /
+arm_smmu_make_s1_cd / arm_smmu_make_bypass_ste /
+arm_smmu_make_abort_ste / arm_smmu_make_sva_cd / arm_smmu_get_ste_used
+/ arm_smmu_write_entry / arm_smmu_get_cd_used).
 
-Thanks
-Barry
+I assume it's some obvious D'oh moment to whoever changed things to
+cause this, but the cause isn't immediately obvious to me.
+
+             Linus
