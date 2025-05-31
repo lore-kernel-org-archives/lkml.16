@@ -1,82 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B269B23505E
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 07:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ADEF23505E
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 07:26:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748676329; cv=none; b=sU88H0k8Ljf6YOtg4IogwunnrJlPIBOBgj9TkwEY0+thbcBSrJJP5KecCnyvwm62CgA0/wgTcDxtYuP7x/YjDegypCoFVFJviW2y6FuQQ4cfnwqU/8FF1/9j9SV93nedgp4r+VsznQLcOpAM3X3Z12eGEbIk36mJCtEdBIHLUck=
+	t=1748676393; cv=none; b=FGbUahrYHW7K6kSuZv7EZsucRpfgRTWnDHCL3D8zCRCzVDGZeOy17R5IUEgl8YQcGmpLCfs/0CQ4DE5NRmVYFCqFDJp3sjtBMuw3Vs7nxUwP9dMKJTql1J5EngN5GWo/gJIBNQFKQKqeTEtC2VpJN02GfWKJ2C94zhcmZhngRSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748676329; c=relaxed/simple;
-	bh=NagLXxxSyzmFTRRKMhPYoJXTUDNWkfTfgXDNoIv4eeM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gSYFVG2oXUnM6M/2XvoxvOAGPEc3KQWoRATJM9jjhVL9aDB+hWzn5jvv1Ua86L/3qsRpBBJFl+W3TJOxj9zEUje//2HW+7JYfVbETOGwsqQCcLGUYTjgJh6BCZttNe3qrVB4szdxMG38aUp4YlOuGLOahX+BmtLh1YbpPI5rlUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=czlwe8Yt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748676393; c=relaxed/simple;
+	bh=X0LYj/eW+1AU4BHmHS1Hd51x+t+f70loUF5+rqrYZxI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=o0/BTWoebowpRWwQ0LyCN1t0T8J1XAhu1cwr3DYlj7h3J3WCGwaxTUXJw8faPWTDgS5dIBlMv5TZaeq0JDNg5WHNfoRdyiw7Dgq5rT0PnLZegbX/XaoKrhqrj+IxzLI+xjATLxrjP/sMCNsBBSZY8y/diTLQQY9BVrzVcKhQtI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mVF3H8vJ; arc=none smtp.client-ip=209.85.221.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="czlwe8Yt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2903DC4CEE3;
-	Sat, 31 May 2025 07:25:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748676329;
-	bh=NagLXxxSyzmFTRRKMhPYoJXTUDNWkfTfgXDNoIv4eeM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=czlwe8YtSu2aDzsDCw5JszDxe3yxoiianoYYKrbPsDPNJkLszQwXO+1xOCjXzKmqn
-	 bxnPyY39tbpMrCcH7TtH/Pz1g5I7EKmwTqnv6lN3rgcYt7vrM2MZufOW7SI/2JM5ig
-	 aKSTcmdwlPdkI2NMJZ5si29yleVD0N8on+N356/BZnkiTWs0u3ppSFBFLAix166Bzy
-	 gThQ6cP8vTA/0NZx4wJ9+NRRUIUewylFYG8iwFOQedGEKuT7s0X+UJR9OS7tFKld5v
-	 l79VsK1TW6nftr8Q/YsPvG/6AFwvrfmyRU4/sRwQInkfNQrJMpzlE/OOxud43t06Jb
-	 DMAaaF7SrqSdg==
-Date: Sat, 31 May 2025 09:25:24 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Rik van Riel <riel@surriel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH v2] x86/mm: resize user_pcid_flush_mask for PTI /
- broadcast TLB flush combination
-Message-ID: <aDqu5Fhbf3mV6Xsj@gmail.com>
-References: <20250530174136.61b8086a@fangorn>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mVF3H8vJ"
+Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-525b44ec88aso884912e0c.3
+        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 00:26:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748676391; x=1749281191; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X0LYj/eW+1AU4BHmHS1Hd51x+t+f70loUF5+rqrYZxI=;
+        b=mVF3H8vJudZMrlnGnshjFuzUdweko06tEBl8b4UJ52uh+KP2QtcTmFavN8kud80HBY
+         HcyiRasg1RfAkMA4WOxMSS0e4DOGX0+vkQhaj6pFp9DbAvxnPJgmv/vhmxk8aPm/nF5P
+         AJnBVLBGTeO+BFqpungoaRPzm0V92qwO37DRm8a8bdJz+dhBH5lOxK5UoX1NscTIbzj8
+         lTZryJpe9teUSDaMeu7JJVdIjCYpTVgEEoZPXA0EYwlyl55Y8RY2hxhNtzxtIxb8jl9+
+         EynNYSMaggaydKTZODgwso689k95czVWem3vfTa+PPYvKMzcYyx7YXjS3d7PwbEJVf4v
+         2VLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748676391; x=1749281191;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=X0LYj/eW+1AU4BHmHS1Hd51x+t+f70loUF5+rqrYZxI=;
+        b=oPrR+xAAjMoHnIFK70hOOvx4lw7BknyH0LE1cLYen7TlIYj7boanhzs9qrForziN8a
+         8ePfDmCl+9xJV2lsS5Yemes1KVqpGWvT8j3NSL+mI2vH3EcPVv3QUmMsnsvg96iiJaPm
+         cQaJiE1p1h2onaATtQsJ4eSWDyIDXsWJkj5iEY29yZOfYeRqjE7KZG2va+HSg7nNHms+
+         5d8NuDmaVK9ryCZ3Doum/Xhly2MvPYdlZEgZcHCIgaLFwiIM9q9i73Bl75AYgv/q0DYU
+         xu9bfADAQ63vkfNBtZB+n1OKIbGDJ8ZgVIN3YvYEXMGzbGBjApVceC7hUKgKGfeD3KP/
+         WJ1g==
+X-Forwarded-Encrypted: i=1; AJvYcCXgIo+gosGdm+hPZIIGWVpAaKV7ID+AbPjo01laVFPBeLf/xb88C9vbhXeBRdzhEQ5IH9En9ZNFlFpFnYY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywb6K4OeeD1bXwR+UiZ3to5wwTn4NEoMJ+Nla9W23KiBNsAIeje
+	uzWmpC266fR/NPpSCXCkVGqA59qN9D+Md90FDCBvIhXo7hSvVGIT07hgbzHLghlNGrfDXoo4N91
+	Y+BS7UIWSObhPJ01KNFtf93FuRFiGuFa3A4Op2Nvq
+X-Gm-Gg: ASbGnctx+bP4EHSQ9giCW59eRrmG5IFsH0ZS1pAK4DL7ximQ/2cRCcvDkjjQkHQ0kZz
+	Y9x0eQ7St6K63K/0d/XIWK7OBXkte34haByvDxXHiOJ4rlYEWDtWOoYn1Eqbs+wNTICfQGnhJTL
+	NNsqJqcCt2BiqZdixbRTSOjm+Gd6XqFVj4tgERTCbp5cs=
+X-Google-Smtp-Source: AGHT+IG7+8v8kogFT0/mnSqsIheQS6+VT2Gk/Es74puVTsuV9tUkd/CTGzoaKIcaMncezCtLdPZlZwKfCwPXYDgxLD4=
+X-Received: by 2002:a05:6122:8285:b0:520:61ee:c814 with SMTP id
+ 71dfb90a1353d-53093688632mr459050e0c.1.1748676390966; Sat, 31 May 2025
+ 00:26:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250530174136.61b8086a@fangorn>
+References: <20250521222725.3895192-1-blakejones@google.com>
+ <20250521222725.3895192-2-blakejones@google.com> <aC9iF4_eASPkPxXd@x1>
+ <CAP_z_Cg_vH1+BAm87U4gYQ0hDRGtHkkYb2DHtTRSd_QNvg3ZLQ@mail.gmail.com>
+ <CAP_z_ChErhmooT5rhyXH8L-Ltkz3xdJ7PG20UKDpn9usMUgqTA@mail.gmail.com> <aDntjJcJsrQWfPkB@google.com>
+In-Reply-To: <aDntjJcJsrQWfPkB@google.com>
+From: Blake Jones <blakejones@google.com>
+Date: Sat, 31 May 2025 00:26:20 -0700
+X-Gm-Features: AX0GCFvP4PKt3NFBYoQVdhXB4HmMLosfmYPKc30P1NvRJeaacdkCzkp9zNZYmwU
+Message-ID: <CAP_z_CjLtMq_FvmijnFUQbD5UUw=T9jP_pHWCw5fS=38dgSh9g@mail.gmail.com>
+Subject: Re: [PATCH 1/3] perf: add support for printing BTF character arrays
+ as strings
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Chun-Tse Shao <ctshao@google.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
+	James Clark <james.clark@linaro.org>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, Leo Yan <leo.yan@arm.com>, 
+	Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Ben Gainey <ben.gainey@arm.com>, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Namhyung,
 
-* Rik van Riel <riel@surriel.com> wrote:
+On Fri, May 30, 2025 at 10:40=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+> I think it's better to go to the bpf tree although it'd take longer to
+> get your perf patches.
 
-> [re-sent]
-> ---8<---
-> From 96958fa1ed02e2434305fc7b0e37374eee899daf Mon Sep 17 00:00:00 2001
-> From: Rik van Riel <riel@meta.com>
-> Date: Fri, 16 May 2025 08:37:04 -0700
-> Subject: [PATCH] x86/mm: resize user_pcid_flush_mask for PTI / broadcast TLB flush combination
+Thanks for the suggestion. I've sent this patch to the bpf tree, and I'll
+resend the rest of this series once that change makes its way to this tree.
 
-1)
-
-Please always check whether the title style you are using matches that 
-of the subsystem you are submitting it to. (x86 in this case, and no, 
-it doesn't match it)
-
-2)
-
-Also, 'resize' is not the proper verb for a bug fix ...
-
-> - invalidate_user_asid() sets a bit corresponding to the process pcid in user_pcid_flush_mask
-> - SWITCH_TO_USER_CR3 tests and clears a bit corresponding to the process PCID in user_pcid_flush_mask
-
-3)
-
-Why are 'pcid' and 'PCID' capitalized differently right next to each 
-other? This is completely unnecessary noise that makes a maintainer 
-question of how attentively this patch was created.
-
-Thanks,
-
-	Ingo
+Blake
