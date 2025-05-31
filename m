@@ -1,82 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E544C74;
-	Sat, 31 May 2025 01:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 534A82556E
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 01:33:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748655102; cv=none; b=LBQNavdzAw7V883TTwDizoD1Zi8jxNc5Q+e7XGMhRuIsWmR0iKxxg9h4MMBFfNTzMCKb2dVgMBLjw6cplfBvKvU+XZURgqoMSY9PIlqvwhxXfYgmWpLa7VgYZ7ZPS6HwVgO79NreJWzKgtfa5N6PA73xXNZnrV3fraUpyBdyOKk=
+	t=1748655185; cv=none; b=ItWhIiUp5MsiFJZ7uZUzKUrzuSS1cgtbnnxv+ZnRUTtecfuvvRs0hV72T1jC7FTU7vhIf09UjRx5H9v2Vf+pGwozFnyD8daagxcFB2YIGc9OUmCScho9tHcTI0qJvVlu8nBnnluxbE2ybg+4WqrEpi0QVr10zxV+XJ+KsBmhql0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748655102; c=relaxed/simple;
-	bh=SeUxHDr/ovRgaIvx1nnr6AEFPNfj0/y2SyAmVaiwcko=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g9apiDmaLOEMQTeAj3INTUyB2z6+9jVR4gGdHDxt41mQIDGfJ8uFIvN6KaMZ2DGqvZhGPEye25omY1FP0/nZfkhP4+Ymx4U6m6jrPrPAgnV4uXF9TTLwoHkB/hZCmy1Oxv9YXLqUfFEXRX7K8T7nn67URodhZ0itarHd6T3BiAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OaX9pnSH; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OaX9pnSH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AD5BC4CEEB;
-	Sat, 31 May 2025 01:31:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748655101;
-	bh=SeUxHDr/ovRgaIvx1nnr6AEFPNfj0/y2SyAmVaiwcko=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=OaX9pnSHDCbGdiDnup73JGl16WHOa4dTLIen1Z+gHD0BtEFl6UYvX4tbVA9iy5an3
-	 taGfejmVAUotdaLZntWpY3i/sfH5rMc2o0QKzUaDqJhI6WfAq1FJtpbNnzPhXdS0pX
-	 cd7A8fKPMyoxS/zkxmVkbHvNH3xoaz3EbLu+pYopW8Lc08C0MF6PyMcKUFaZaUsm4v
-	 S5sLCI4MyxiYCggletz5cpNQojT1tkRNdQORLOkQN8XoKM7CGTarIeSnI6XATUn75P
-	 HXOHnt99fUrh5t/xIRAwzGHe7XzvT9DXr71wqp3yZ1Y9DCbpN4Z6TBgv8mzPuxlUNd
-	 sBxcMQYQHt80Q==
-Date: Fri, 30 May 2025 18:31:40 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Joe Damato <jdamato@fastly.com>
-Cc: Stanislav Fomichev <stfomichev@gmail.com>, netdev@vger.kernel.org,
- john.cs.hey@gmail.com, jacob.e.keller@intel.com,
- syzbot+846bb38dc67fe62cc733@syzkaller.appspotmail.com, Tony Nguyen
- <anthony.l.nguyen@intel.com>, Przemek Kitszel
- <przemyslaw.kitszel@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David
- S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
- Abeni <pabeni@redhat.com>, "moderated list:INTEL ETHERNET DRIVERS"
- <intel-wired-lan@lists.osuosl.org>, open list
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH iwl-net] e1000: Move cancel_work_sync to avoid deadlock
-Message-ID: <20250530183140.6cfad3ae@kernel.org>
-In-Reply-To: <aDoKyVE7_hVENi4O@LQ3V64L9R2>
-References: <20250530014949.215112-1-jdamato@fastly.com>
-	<aDnJsSb-DNBJPNUM@mini-arch>
-	<aDoKyVE7_hVENi4O@LQ3V64L9R2>
+	s=arc-20240116; t=1748655185; c=relaxed/simple;
+	bh=8AXhBefoFK/R4XBK96I+XaEw80nCTiWICu0cUz+1J5Y=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=bbqgauBK2LAuQtUYKAOv49sBY4nK6oDU1SrwjEjG1IdRe3idq6wqqCTEwq9AfWsebSJzC9kVxfvriaMA1sQg7cvKKrgwjdW9a6byRnpVHemXd7kQlsTeYYDefk3/PaTuJNtj03ynGFGqlvFsUMyqRDNomi+78ZEW9wNxajlpl0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-86d0bac7afbso89978039f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 18:33:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748655183; x=1749259983;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qrAooAO0eA9dkl4xsiBOdhOrw7MeEo/UVhjo5DU+RhM=;
+        b=Dm3+DBgdGfRIrOD38XLkfAMad2rQavUIagzhFDDq/IdvCXJEhfzYFlY+BWP+UaZScP
+         CZ2gn2rwwQJb2go5E9Kn+uc5JJczLoVULIBESUPsmWcOrGiiGKUqNM9K9qRw1wRILqDA
+         83rfJB3Bkr8ilvr/2ssdmZ+vh+JRsLUDOoa9/wTdrxRXTQbtWpmfD5e7IdIOtvX0DAv0
+         3pChAZ2K4rvci17KjNzn3QdftHf8OgwKJrLylUa+TX7JAFQqp8p2hWU0Etni9mniElVI
+         cD4kYvpqjoR0DwQXfTKtzw7FrL9rkGkRoaKFJ5In9kx/VI+Q9Axg9aUbcBo/E7YM2mUZ
+         tQMg==
+X-Forwarded-Encrypted: i=1; AJvYcCWLVsgDJtU25y4qRt2WPgYGlfTrC3Z7MJaBJtPH8f1lc8GT/Cv2et3Pc8fECy81/0zDSXodfwkcXENVKxM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiTUfkKyg3j9Qx+dideK7RbEQFfSvuMSVq/ofX6HjD6grIYKBk
+	uFYTT0aScq/6H6H8fyv1VMDJ8N4aVJOWeI/j03kCacrMeHte5eAi1ysTZ/dUttLyuEA2SgMHkY6
+	B2pXpSRapRm3429kTgve6dNPhCG73kqS+HraMh/Gc21hsgeXfnzdTEPvf2XE=
+X-Google-Smtp-Source: AGHT+IGx4jTzgiH+6ygy7tZbN+oY9byRGDtT48Ip+NBhJ4baZT9lgdMEXUTOuy6g36q5sW9IXOeLgCilTsf4anolmqp0Dg2t/s7e
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:1fec:b0:3dc:8667:342d with SMTP id
+ e9e14a558f8ab-3dd9cacc967mr45817895ab.12.1748655182810; Fri, 30 May 2025
+ 18:33:02 -0700 (PDT)
+Date: Fri, 30 May 2025 18:33:02 -0700
+In-Reply-To: <20250531011248.2445-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <683a5c4e.a70a0220.1a6ae.0007.GAE@google.com>
+Subject: Re: [syzbot] [net?] possible deadlock in rtnl_newlink
+From: syzbot <syzbot+846bb38dc67fe62cc733@syzkaller.appspotmail.com>
+To: edumazet@google.com, hdanton@sina.com, jdamato@fastly.com, 
+	john.cs.hey@gmail.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	stfomichev@gmail.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 30 May 2025 12:45:13 -0700 Joe Damato wrote:
-> > nit: as Jakub mentioned in another thread, it seems more about the
-> > flush_work waiting for the reset_task to complete rather than
-> > wq mutexes (which are fake)?  
-> 
-> Hm, I probably misunderstood something. Also, not sure what you
-> meant by the wq mutexes being fake?
-> 
-> My understanding (which is prob wrong) from the syzbot and user
-> report was that the order of wq mutex and rtnl are inverted in the
-> two paths, which can cause a deadlock if both paths run.
+Hello,
 
-Take a look at touch_work_lockdep_map(), theres nosaj thing as wq mutex.
-It's just a lockdep "annotation" that helps lockdep connect the dots
-between waiting thread and the work item, not a real mutex. So the
-commit msg may be better phrased like this (modulo the lines in front):
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+no output from test machine
 
-   CPU 0:
-  , - RTNL is held
- /  - e1000_close
- |  - e1000_down
- +- - cancel_work_sync (cancel / wait for e1000_reset_task())
- |
- | CPU 1:
- |  - process_one_work
-  \ - e1000_reset_task
-   `- take RTNL 
+
+
+Tested on:
+
+commit:         0f70f5b0 Merge tag 'pull-automount' of git://git.kerne..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15927ff4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8a01551457d63a4b
+dashboard link: https://syzkaller.appspot.com/bug?extid=846bb38dc67fe62cc733
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=17b8ded4580000
+
