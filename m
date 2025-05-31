@@ -1,201 +1,284 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143DE2E628;
-	Sat, 31 May 2025 06:14:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64774EEA9;
+	Sat, 31 May 2025 06:22:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748672053; cv=none; b=k1ShI9MViGXBGe4BJ//65btguJwbR+28Q9elbcqrWfgF/KfP6epESP2sdycbPHRe+cWL1P87F99nzrYpnRkLYAT6C2Trgvxn7ULKBMRKuH88gOKaSOSH1aaJ5MUHGhQSjZ+hW/cKlfNCG4p2lITR81YUwgJ/DjiiO2D4OrxUvhA=
+	t=1748672576; cv=none; b=tHrva/561eoV4+yONJCK6wLbZono2pyAY7VpTkilG6CqyBOBpqpz0Kc7G5DM89Qd9+k2kFqxqbGKRcWWpP+e2cCNcM/GCd0POgj0f9xtlTEFdNI0I47PqRvENkd4rvv6USct6odWgq5+Uovk3Oy+cBWHfqDkdDVmwbOIMqbGe3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748672053; c=relaxed/simple;
-	bh=bqi6rJ0hiVr8slNOa6h3sST0DYxL7m3H/YQ3HcJjmhU=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=X4blWRPMl8InCGvqO31UfsTw+JLUqZJd9VYzlIzHZ45iC8FG3Cb2hK1BFaZYRW5Xy9VvVbxhi20wWNqcwaYPcl1n7iqjT5yJp140ocDHB1/AD777xMxtg0kKdHIMqLlLCGzTi57kAg7m1Jo7JAa40ZUG5q0eKurE9nZ3BNKw7NY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Szt+Gcdq; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748672576; c=relaxed/simple;
+	bh=YuLdvkfK+9Pn96qHV6pjgzwb7AkKwqjHCAwt6FM17BA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K/wxR4s4pXC+4MHraFq9vxPjhu28+ePtTUOrNoCp+Lv8s9HV7ihgVhGW6cjttGtLNltUy7U7xcZsMIosTCbMCPoG8n1qQXtijXbHMxx39uYbJYmmgfbbaeuJj4HlFWeKwuiOsiIHVPkuLisa7zowbgOIldDiWJLfwiczaKIyhoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DQXutqWx; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Szt+Gcdq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748672051; x=1780208051;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=bqi6rJ0hiVr8slNOa6h3sST0DYxL7m3H/YQ3HcJjmhU=;
-  b=Szt+GcdqjnF/v8/IqrJT10YH79e8Xfvvm/qcf6QQ8HMfHVWk3eGHgIsK
-   cuk2wTgweD8nXsL3HUOYPWgS56DvOxxpp/5GAdueOqVPkYprz5hEbdM9X
-   6Mzs1XZrhht1CIu7qFk3oysh70knsdYTRBNJhvWrYJxNFAHFH/QxscubE
-   X5JrgwIybzVMflDhWsvZKJviZla9RY5Cd3XAczvJqb1HAmhtMlsWOBQpE
-   tpdSxeQRsmZ4dwfMiy92Ug9d6Xg+Ne+91bx+Ke9ZVVxB5dym8s9I2LmfT
-   KMObahQD6glgIQMTpfNk52kURMDp0cJ77ttU36z1HR6MnsuaOnCynHln7
-   Q==;
-X-CSE-ConnectionGUID: g3AVgr+tQrSNQrz/s1Kdsg==
-X-CSE-MsgGUID: HJlWUEPJSSiSXgO55qFOAg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="54429665"
-X-IronPort-AV: E=Sophos;i="6.16,197,1744095600"; 
-   d="scan'208";a="54429665"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 23:14:10 -0700
-X-CSE-ConnectionGUID: zk+4zkahSJioxj5UcKUAKg==
-X-CSE-MsgGUID: vHJUI23TQWCCrPFGUJPBIQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,197,1744095600"; 
-   d="scan'208";a="144038811"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.71])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 23:14:03 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Sat, 31 May 2025 09:14:00 +0300 (EEST)
-To: Derek John Clark <derekjohn.clark@gmail.com>, 
-    Luc Van Oostenryck <luc.vanoostenryck@gmail.com>, 
-    linux-sparse@vger.kernel.org
-cc: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>, 
-    Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>, 
-    Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>, 
-    Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>, 
-    "Cody T . -H . Chiu" <codyit@gmail.com>, 
-    John Martens <johnfanv2@gmail.com>, Kurt Borja <kuurtb@gmail.com>, 
-    platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v11 0/6] platform/x86: Add Lenovo WMI Gaming Series
- Drivers
-In-Reply-To: <CAFqHKTnp2zMTAfdYBpxestSErpsgwSf_TmkLjjU0W5HOFiC9bA@mail.gmail.com>
-Message-ID: <e98eccf5-1006-3d1b-d2fb-783637807ac7@linux.intel.com>
-References: <20250522015350.471070-1-derekjohn.clark@gmail.com> <2972c4c6-7080-e058-ec39-b8c1dc603f7a@linux.intel.com> <2c7ffaa6-e639-e215-42d0-78a2b185ad45@linux.intel.com> <CAFqHKTnp2zMTAfdYBpxestSErpsgwSf_TmkLjjU0W5HOFiC9bA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DQXutqWx"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-32a696ff4deso24994691fa.1;
+        Fri, 30 May 2025 23:22:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748672572; x=1749277372; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8z6mh7pdJDvN8yUkwBxqHC+Y8n4XgRQIeuqir52nwPE=;
+        b=DQXutqWx/VXwjala8XN9r7+d/ylfw4zPY/de6qg2KOQKdM5hH5MuefJG96+JfpRz5B
+         xTd9izemTi9IieEFgRUMtq5mOd2LM9/wsSBLy+h4iICVecDvMTFla5L9+HpIZhR8h6f/
+         Y4gTcj3ozo+qvKiKY6vBUz4V2I9S4hFfmpxROP/pRiiKykoeD4GUkdwM3rVYfJy+V5Xx
+         8vOzTs9QKhHwYNZniTuJjubC3LVOSXDJmrrMd3XSoNLBQN27OvLvQW7AGtUKbIf9szUs
+         SIJHplLp+WLWsBSd+SAKCb2J7IAXOhlv26OcQtnx32ogj0fJcwyGUYoK8ihMKPIDNNhO
+         IfqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748672572; x=1749277372;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8z6mh7pdJDvN8yUkwBxqHC+Y8n4XgRQIeuqir52nwPE=;
+        b=ZG0ZrPyPMBpPcFkVPQ/8rVw8Jq0RM50giT6C3k8ap1lXD+JAOpkTzTowhvVEJzkAFb
+         4ffFdmrZzjzZYYJ7+Lly20sNIw+9SQebamqT8ZNoPA/2Ff1k/1OUyTAhTUh2j6vxAtRG
+         StHMtQrZcM9cnaj0/et+ecHFuK1LNhGVVIBuM6nCP1s/sgsOir4wsTl+d1JEhHHU/5Q4
+         VNjEd8FV0X6FeIa24IA6PIjEkj9EAsBcV+usxzhxT0ln/gyay+nitLrVDpebwgFu0ebl
+         QykdBrazEQ3ICjv2TX7fLJ/8IY4kEYaTklOftYniLSQydAKHiFgE9iFNyDQhtjCqUzZC
+         rGDw==
+X-Forwarded-Encrypted: i=1; AJvYcCVjQSyQKywo1aFYO62RXAi2fjMZ5G/jUCANyVtA6NKtcJmWsQ0FsqDwjf327/b5nTI4fmyP5JGTWn19bHI=@vger.kernel.org, AJvYcCWt8prIo3XT7SWLeOiewePzXg8KzVGttQfuYxhXxpF2DkRmGEsXQLfhNDS3TcTBwquQsF96yjD/@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhkVzGgyx3f/c7N7FHQ8iUybGUC/LoETAu/BcDLPXGeUKXrg64
+	vPZwvIJf9Y0lDyjmeu1bovedMf4/zNqUOFbNfKM6xQUvxb0FTRd1ucXxnE/a63aPnArg5iz3mbd
+	73O4QIR/Kr6jZ8OLorNkQKBaD+Q2aoXc=
+X-Gm-Gg: ASbGncutrE7GP5KR5skLEnkONY998KH5CGzIyKcWea+vu0sm+4/klfeBtvrrygjwpgU
+	1IqgImGZ19Fg4QG68EgbB1sWpCbHkDOjx01OVuOiluEN3VXYRNCIxiOtZi8F73+4IuUhxL1OIoz
+	hhgeFXEcX2Qk1ZPn6TK9OP1r+ZuGHgEs+4
+X-Google-Smtp-Source: AGHT+IHS8XLKQ5NmPv0l2ZJX5RYz0dEFA4DWAVhyuy7guXysiJ85JCN16IFjvHRjGXXy7OsItWIIp4P8s8h7CeYnOrs=
+X-Received: by 2002:a2e:a986:0:b0:32a:710f:5a0 with SMTP id
+ 38308e7fff4ca-32a906d76a0mr15468041fa.11.1748672572114; Fri, 30 May 2025
+ 23:22:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-43950218-1748671245=:937"
-Content-ID: <8ecdec3f-fb03-044b-ec92-17e1a21e1ebd@linux.intel.com>
+References: <20250530201710.81365-1-ryncsn@gmail.com> <CA+EESO4-L5sOTgsTE1txby9f3a3_W49tSnkufzVnJhnR809zRQ@mail.gmail.com>
+In-Reply-To: <CA+EESO4-L5sOTgsTE1txby9f3a3_W49tSnkufzVnJhnR809zRQ@mail.gmail.com>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Sat, 31 May 2025 14:22:34 +0800
+X-Gm-Features: AX0GCFs1kvLiRCh7TzrXTKfCqNtzaev34lKPFyF-_wQf4bInaissLB-H6Q8jHs4
+Message-ID: <CAMgjq7B=CEhEE_M3d07Vtq+Fkv8+A7pu2axQu0oLi44d1r9Xrg@mail.gmail.com>
+Subject: Re: [PATCH] mm: userfaultfd: fix race of userfaultfd_move and swap cache
+To: Lokesh Gidra <lokeshgidra@google.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Barry Song <21cnbao@gmail.com>, Peter Xu <peterx@redhat.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Andrea Arcangeli <aarcange@redhat.com>, 
+	David Hildenbrand <david@redhat.com>, stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-43950218-1748671245=:937
-Content-Type: text/plain; CHARSET=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <f0193626-50b6-a117-7794-a28eb0b5443e@linux.intel.com>
-
-+ Cc sparse people.
-
-On Fri, 30 May 2025, Derek John Clark wrote:
-
-> On Sun, May 25, 2025 at 2:42=E2=80=AFPM Ilpo J=C3=A4rvinen
-> <ilpo.jarvinen@linux.intel.com> wrote:
+On Sat, May 31, 2025 at 7:42=E2=80=AFAM Lokesh Gidra <lokeshgidra@google.co=
+m> wrote:
+>
+> On Fri, May 30, 2025 at 1:17=E2=80=AFPM Kairui Song <ryncsn@gmail.com> wr=
+ote:
 > >
-> > On Mon, 26 May 2025, Ilpo J=C3=A4rvinen wrote:
+> > From: Kairui Song <kasong@tencent.com>
 > >
-> > > On Wed, 21 May 2025, Derek J. Clark wrote:
-> > >
-> > > > Adds support for the Lenovo "Gaming Series" of laptop hardware that=
- use
-> > > > WMI interfaces that control various power settings. There are multi=
-ple WMI
-> > > > interfaces that work in concert to provide getting and setting valu=
-es as
-> > > > well as validation of input. Currently only the "Gamezone", "Other
-> > > > Mode", and "LENOVO_CAPABILITY_DATA_01" interfaces are implemented, =
-but
-> > > > I attempted to structure the driver so that adding the "Custom Mode=
-",
-> > > > "Lighting", and other data block interfaces would be trivial in lat=
-er
-> > > > patches.
-> > > >
-> > > > This driver attempts to standardize the exposed sysfs by mirroring =
-the
-> > > > asus-armoury driver currently under review. As such, a lot of
-> > > > inspiration has been drawn from that driver.
-> > > > https://lore.kernel.org/platform-driver-x86/20250319065827.53478-1-=
-luke@ljones.dev/#t
-> > > >
-> > > > The drivers have been tested by me on the Lenovo Legion Go and Legi=
-on Go
-> > > > S.
-> > > >
-> > > > Suggested-by: Mario Limonciello <superm1@kernel.org>
-> > > > Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-> > > > Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> > > > ---
-> > > > v11:
-> > > >   - Fix formmating issues.
-> > >
-> > > Thanks for the update, I've applied this now into the review-ilpo-nex=
-t
-> > > branch. BUT, this is very late in the cycle now and if there's a buil=
-d
-> > > issue (or LKP doesn't build test it in reasonable time), I'll have to=
- drop
-> > > this series and postpone it into the next cycle as I don't want to de=
-lay
-> > > the main PR to Linus too long.
-> > >
-> > > But lets hope for the best, I think some depends on issues were fixed
-> > > earlier (IIRC), so hopefully it works good enough now. :-)
+> > On seeing a swap entry PTE, userfaultfd_move does a lockless swap cache
+> > lookup, and try to move the found folio to the faulting vma when.
+> > Currently, it relies on the PTE value check to ensure the moved folio
+> > still belongs to the src swap entry, which turns out is not reliable.
 > >
-> > Hmpf, these give me a few new warnings related to this series:
+> > While working and reviewing the swap table series with Barry, following
+> > existing race is observed and reproduced [1]:
 > >
-> > make W=3D1 drivers/platform/x86/
-> > make C=3D2 drivers/platform/x86/
->=20
-> When I use scoped_guard the warnings go away.
+> > ( move_pages_pte is moving src_pte to dst_pte, where src_pte is a
+> >  swap entry PTE holding swap entry S1, and S1 isn't in the swap cache.)
+> >
+> > CPU1                               CPU2
+> > userfaultfd_move
+> >   move_pages_pte()
+> >     entry =3D pte_to_swp_entry(orig_src_pte);
+> >     // Here it got entry =3D S1
+> >     ... < Somehow interrupted> ...
+> >                                    <swapin src_pte, alloc and use folio=
+ A>
+> >                                    // folio A is just a new allocated f=
+olio
+> >                                    // and get installed into src_pte
+> >                                    <frees swap entry S1>
+> >                                    // src_pte now points to folio A, S1
+> >                                    // has swap count =3D=3D 0, it can b=
+e freed
+> >                                    // by folio_swap_swap or swap
+> >                                    // allocator's reclaim.
+> >                                    <try to swap out another folio B>
+> >                                    // folio B is a folio in another VMA=
+.
+> >                                    <put folio B to swap cache using S1 =
+>
+> >                                    // S1 is freed, folio B could use it
+> >                                    // for swap out with no problem.
+> >                                    ...
+> >     folio =3D filemap_get_folio(S1)
+> >     // Got folio B here !!!
+> >     ... < Somehow interrupted again> ...
+> >                                    <swapin folio B and free S1>
+> >                                    // Now S1 is free to be used again.
+> >                                    <swapout src_pte & folio A using S1>
+> >                                    // Now src_pte is a swap entry pte
+> >                                    // holding S1 again.
+> >     folio_trylock(folio)
+> >     move_swap_pte
+> >       double_pt_lock
+> >       is_pte_pages_stable
+> >       // Check passed because src_pte =3D=3D S1
+> >       folio_move_anon_rmap(...)
+> >       // Moved invalid folio B here !!!
+> >
+> > The race window is very short and requires multiple collisions of
+> > multiple rare events, so it's very unlikely to happen, but with a
+> > deliberately constructed reproducer and increased time window, it can b=
+e
+> > reproduced [1].
+>
+> Thanks for catching and fixing this. Just to clarify a few things
+> about your reproducer:
+> 1. Is it necessary for the 'race' mapping to be MAP_SHARED, or
+> MAP_PRIVATE will work as well?
 
-Okay, not that it helps much because the implementation of guard() and=20
-scoped_guard() is dramatically different.
+Hi, I used MAP_SHARED just to prevent vma merging, so folio B and
+folio A belong to different vma, so the folio_move_anon_rmap will
+cause a real problem. The race is not related to the map flag.
 
-> It seems to be a
-> limitation of sparse in that its not correctly identifying the guard
-> will be unlocked on the return perhaps?
+> 2. You mentioned that the 'current dir is on a block device'. Are you
+> indicating that if we are using zram for swap then it doesn't
+> reproduce?
 
-It's odd because we'd have those warnings all over the place if it would=20
-be general thing for sparse to not understand how guard() works. Maybe=20
-sparse people have some idea what's so special here?
+ZRAM may also trigger the race, with a slightly different race window,
+but the race window is even shorter so I can't reproduce with that.
 
-To give context to sparse people, this patch triggers two false=20
-positives in sparse:
+>
+> >
+> > It's also possible that folio (A) is swapped in, and swapped out again
+> > after the filemap_get_folio lookup, in such case folio (A) may stay in
+> > swap cache so it needs to be moved too. In this case we should also try
+> > again so kernel won't miss a folio move.
+> >
+> > Fix this by checking if the folio is the valid swap cache folio after
+> > acquiring the folio lock, and checking the swap cache again after
+> > acquiring the src_pte lock.
+> >
+> > SWP_SYNCRHONIZE_IO path does make the problem more complex, but so far
+> > we don't need to worry about that since folios only might get exposed t=
+o
+> > swap cache in the swap out path, and it's covered in this patch too by
+> > checking the swap cache again after acquiring src_pte lock.
+> >
+> > Fixes: adef440691ba ("userfaultfd: UFFDIO_MOVE uABI")
+> > Closes: https://lore.kernel.org/linux-mm/CAMgjq7B1K=3D6OOrK2OUZ0-tqCzi+=
+EJt+2_K97TPGoSt=3D9+JwP7Q@mail.gmail.com/ [1]
+> > Signed-off-by: Kairui Song <kasong@tencent.com>
+> > ---
+> >  mm/userfaultfd.c | 26 ++++++++++++++++++++++++++
+> >  1 file changed, 26 insertions(+)
+> >
+> > diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+> > index bc473ad21202..a1564d205dfb 100644
+> > --- a/mm/userfaultfd.c
+> > +++ b/mm/userfaultfd.c
+> > @@ -15,6 +15,7 @@
+> >  #include <linux/mmu_notifier.h>
+> >  #include <linux/hugetlb.h>
+> >  #include <linux/shmem_fs.h>
+> > +#include <linux/delay.h>
+> I guess you mistakenly left it from your reproducer code :)
 
-https://lore.kernel.org/platform-driver-x86/20250522015350.471070-6-derekjo=
-hn.clark@gmail.com/
+Ah, yes, I'll drop this :)
 
-$ make C=3D2 drivers/platform/x86/lenovo-wmi-gamezone.o
-  CHECK   scripts/mod/empty.c
-  CALL    scripts/checksyscalls.sh
-  DESCEND objtool
-  INSTALL libsubcmd_headers
-  CHECK   drivers/platform/x86/lenovo-wmi-gamezone.c
-drivers/platform/x86/lenovo-wmi-gamezone.c:155:12: warning: context=20
-imbalance in 'lwmi_gz_profile_get' - different lock contexts for basic=20
-block
-drivers/platform/x86/lenovo-wmi-gamezone.c:206:12: warning: context=20
-imbalance in 'lwmi_gz_profile_set' - different lock contexts for basic=20
-block
+> >  #include <asm/tlbflush.h>
+> >  #include <asm/tlb.h>
+> >  #include "internal.h"
+> > @@ -1086,6 +1087,8 @@ static int move_swap_pte(struct mm_struct *mm, st=
+ruct vm_area_struct *dst_vma,
+> >                          spinlock_t *dst_ptl, spinlock_t *src_ptl,
+> >                          struct folio *src_folio)
+> >  {
+> > +       swp_entry_t entry;
+> > +
+> >         double_pt_lock(dst_ptl, src_ptl);
+> >
+> >         if (!is_pte_pages_stable(dst_pte, src_pte, orig_dst_pte, orig_s=
+rc_pte,
+> > @@ -1102,6 +1105,19 @@ static int move_swap_pte(struct mm_struct *mm, s=
+truct vm_area_struct *dst_vma,
+> >         if (src_folio) {
+> >                 folio_move_anon_rmap(src_folio, dst_vma);
+> >                 src_folio->index =3D linear_page_index(dst_vma, dst_add=
+r);
+> > +       } else {
+> > +               /*
+> > +                * Check again after acquiring the src_pte lock. Or we =
+might
+> > +                * miss a new loaded swap cache folio.
+> > +                */
+> > +               entry =3D pte_to_swp_entry(orig_src_pte);
+> > +               src_folio =3D filemap_get_folio(swap_address_space(entr=
+y),
+> > +                                             swap_cache_index(entry));
+>
+> Given the non-trivial overhead of filemap_get_folio(), do you think it
+> will work if filemap_get_filio() was only once after locking src_ptl?
+> Please correct me if my assumption about the overhead is wrong.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.=
-git/tree/drivers/platform/x86/lenovo-wmi-gamezone.c?h=3Dreview-ilpo-next#n1=
-90
+No we can't do the filemap_get_filio after locking src_ptl, moving the
+folio requires locking it, lock a folio inside a PTE lock looks a bad
+idea... So I just added a lockless lookup and fallback to try again if
+found one.
 
-(That code link is just for convinience, it's not a perma one, I'll be=20
-overwriting that branch eventually once the merge window is over, if not=20
-sooner.)
+The overhead should be low I think, it's a lockless xarray lookup and
+when I was doing many profiling of SWAP performance optimizations,
+Xarray look up is not a heavy burden.
 
-> In any case, if you're okay
-> with a scoped guard here (matches both other invocations) I'll send it
-> up.
-
-I'd prefer to keep using guard() for now as this looks clearly a false=20
-positive from sparse, not a problem in your code.
-
-> I also took care of the warnings for W=3D1.
-
-Thanks.
-
-> > ...I really don't know why sparse complains about the lock context
-> > imbalance though, those functions use guard().
-
---=20
- i.
---8323328-43950218-1748671245=:937--
+>
+> > +               if (!IS_ERR_OR_NULL(src_folio)) {
+> > +                       double_pt_unlock(dst_ptl, src_ptl);
+> > +                       folio_put(src_folio);
+> > +                       return -EAGAIN;
+> > +               }
+> >         }
+> >
+> >         orig_src_pte =3D ptep_get_and_clear(mm, src_addr, src_pte);
+> > @@ -1409,6 +1425,16 @@ static int move_pages_pte(struct mm_struct *mm, =
+pmd_t *dst_pmd, pmd_t *src_pmd,
+> >                                 folio_lock(src_folio);
+> >                                 goto retry;
+> >                         }
+> > +                       /*
+> > +                        * Check if the folio still belongs to the targ=
+et swap entry after
+> > +                        * acquiring the lock. Folio can be freed in th=
+e swap cache while
+> > +                        * not locked.
+> > +                        */
+> > +                       if (unlikely(!folio_test_swapcache(folio) ||
+> > +                                    entry.val !=3D folio->swap.val)) {
+> > +                               err =3D -EAGAIN;
+> > +                               goto out;
+> > +                       }
+>
+> To avoid further increasing move_pages_pte() size, I recommend moving
+> the entire 'pte not present' case into move_swap_pte(), and maybe
+> returning some positive integer (or something more appropriate) to
+> handle the retry case. And then in move_swap_pte(), as suggested
+> above, you can do filemap_get_folio only once after locking ptl.
+>
+> I think this will fix the bug as well as improve the code's organization.
+>
+> >                 }
+> >                 err =3D move_swap_pte(mm, dst_vma, dst_addr, src_addr, =
+dst_pte, src_pte,
+> >                                 orig_dst_pte, orig_src_pte, dst_pmd, ds=
+t_pmdval,
+> > --
+> > 2.49.0
+> >
+>
