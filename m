@@ -1,98 +1,107 @@
-Received: from dvalin.narfation.org (dvalin.narfation.org [213.160.73.56])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5621921FF22;
-	Sat, 31 May 2025 09:18:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.160.73.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971708479;
+	Sat, 31 May 2025 09:21:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748683107; cv=none; b=FaxN5NWFpf/enR5JhpoBgAT2QzB+OFgwMSrqvLP2QjD158s3JsnSXwlv91+SmVXvi+3NparIQFWtjUGy0TxeNTxAf0knw6M5KkAR4fITqguceVvOgYG6C1OIaoyCiU1MF61CKcquHEMi3e1/kqDoXpueqdLjZlGnOTd+oXu/K2o=
+	t=1748683277; cv=none; b=rst5PfSz2wWAc0F7nz0RcXbkLjiNlH9vPZcdPzszznyhFDHz/qkaWVJ6/2hBAiK8Ft4whPxy9YVp6CcCrZEw5EQoXxh/rV6elKjmy7SjfaUwr/j2tT413BaFzdPD5bf1+HP2WZTkvoJ/T0UXbDfw1WhZTb38Ojev6nCvInLDh2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748683107; c=relaxed/simple;
-	bh=iWr0zkYv1wNHDiLMVdxrVbj3HpclaXjmHLi03DGv0tE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Lk8HbG4njSo+v1VuwQ4GYpIBr37aiGkCx1K/hbyLTOj/nl9R7CkLjdRA7CJZ6GF1LK5/HsyC0K/4sjRYdSqr3TpqRfbyInoHpdhn251JtqToPSR0shPUw0k3HgjzJtmBVtsGWcd7Yr0CE430kznyX1UsIfOxzP7QcjoK1Bo0icM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org; spf=pass smtp.mailfrom=narfation.org; dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b=a/98SsFD; arc=none smtp.client-ip=213.160.73.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=narfation.org
+	s=arc-20240116; t=1748683277; c=relaxed/simple;
+	bh=2cKWC+jp3T+h4rEeMC3I3qwW+MyoPZ9M8l6BinJBIvw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cpqK7YW63sWocy7wGnS/2OT7Yf4VmJ77ScXGBpxKDiUh7ELyGEzxwYwyKM3lHNiOg9gyhuPHTmWHc+PUW9ApxYyuPMfxgVehdIBEuI36zrN9UgXqRaEVeEKOYa/ghnf+DZUSHTiMVYo7qVjVbX9M6hekU+SoGGjkYkZ5dIiEqpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Eabi1BoP; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="a/98SsFD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
-	s=20121; t=1748683102;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rQNzauAFKXYmmu3TktHsj7RSHhKaZTHxe8GsYvpuUP4=;
-	b=a/98SsFD5kXArAHzvHH8VpBQbRoH+MSrN4n6w4o6J67jYoailA6AHGxLcCKYxou7iDgZ2O
-	0TzCaG0awMXwf2X/17bBycrRHvcvjhTTnaNSufzqQIU19ro+mAK8ynzwtGzrwipXuJLIyv
-	yYiDma7+42C8gKY4zuQoEyfQixTLibk=
-From: Sven Eckelmann <sven@narfation.org>
-To: Marek Lindner <marek.lindner@mailbox.org>,
- Simon Wunderlich <sw@simonwunderlich.de>,
- Antonio Quartulli <antonio@mandelbit.com>,
- Matthias Schiffer <mschiffer@universe-factory.net>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Matthias Schiffer <mschiffer@universe-factory.net>
-Subject:
- Re: [PATCH batadv 3/5] batman-adv: remove BATADV_IF_NOT_IN_USE hardif state
-Date: Sat, 31 May 2025 11:18:19 +0200
-Message-ID: <3730915.usQuhbGJ8B@sven-desktop>
-In-Reply-To:
- <18929b62aafd4ce02940bea02b7a2bf6c5661089.1747687504.git.mschiffer@universe-factory.net>
-References:
- <0b26554afea5203820faef1dfb498af7533a9b5d.1747687504.git.mschiffer@universe-factory.net>
- <18929b62aafd4ce02940bea02b7a2bf6c5661089.1747687504.git.mschiffer@universe-factory.net>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Eabi1BoP"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4E00A40E01B0;
+	Sat, 31 May 2025 09:21:11 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id C7FoGxDnSMSc; Sat, 31 May 2025 09:21:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1748683267; bh=hPncIQfmkOc9jGoevaB6tq3hVWi4s4eLHLj2UZams40=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Eabi1BoPz0FpYimj5i2YRLX7/2E9Xtq4U8idvjkw8cbbHC0QwCeVLC7UgwkOPqnrm
+	 0h+//cn/exUzXZSWpM6G/fpg7oFOAmc0GAs7JTWvdmzlWzADSxEsLJI8ok5Fk2HJRw
+	 5Rpo3sHvt/JXvJPSGWSBt9udWuIwRDLhPqKoXbtdmqPAmxO2oqOQ9SpK8W1Jb8pk8W
+	 BYr+pOMAoOQ2lTTtH10C+ZRdbLq2Vtssb8Ds1QiACiU4e9ZFxay1MYuCwuz7ol0pl2
+	 RL31ECgAhjjngJ7Gijo93stVn546NZ3IIaB1JilP1tVqn0KWeQcJjkd+1bsa007mmI
+	 tVSF2U0G2vZ56jU4NfSNe3yeFJOm/YV0Qr0+hEHO6HdKEdye+1fG/8MZmex8h8tlU2
+	 oXvMwiY5OugDmUvM51P++Z/OJlKICZ0UY14K5ANqrGEWZco2/fSIa/ZmQBSRtRJ4L/
+	 XJZ+PeuPV2tiyl7txx6dcBton+J+UDKMPplCCkW8m/8Ui3IkqOHt5h1/vlB0xpPSw7
+	 DRlIKp5MPKDG6AsUYoAjHiK24YCnVhF6iDHYp6MIS198cYJS3roE85sxxlt81uDJcf
+	 rxSkqL5J+q+kEe01zJi1ZWZM6JXsrxdLIl72r/LHrdSinNJk0rCrsK1yJe34JTobwF
+	 g/MexLYzvAuNhvcpr6b/yhf4=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 32DF240E016A;
+	Sat, 31 May 2025 09:20:51 +0000 (UTC)
+Date: Sat, 31 May 2025 11:20:50 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Luck, Tony" <tony.luck@intel.com>
+Cc: Zaid Alali <zaidal@os.amperecomputing.com>, rafael@kernel.org,
+	lenb@kernel.org, james.morse@arm.com, robert.moore@intel.com,
+	Jonathan.Cameron@huawei.com, ira.weiny@intel.com,
+	Benjamin.Cheatham@amd.com, dan.j.williams@intel.com, arnd@arndb.de,
+	Avadhut.Naik@amd.com, john.allen@amd.com,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	acpica-devel@lists.linux.dev
+Subject: Re: [PATCH v7 9/9] ACPI: APEI: EINJ: Update the documentation for
+ EINJv2 support
+Message-ID: <20250531092050.GBaDrJ8iw7cNcpOKeA@fat_crate.local>
+References: <20250506213814.2365788-1-zaidal@os.amperecomputing.com>
+ <20250506213814.2365788-10-zaidal@os.amperecomputing.com>
+ <20250530102711.GAaDmH_1O7lc6kuveY@fat_crate.local>
+ <aDoal24J-BMTIBCq@agluck-desk3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart5256341.QJadu78ljV";
- micalg="pgp-sha512"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aDoal24J-BMTIBCq@agluck-desk3>
 
---nextPart5256341.QJadu78ljV
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Sven Eckelmann <sven@narfation.org>
-Date: Sat, 31 May 2025 11:18:19 +0200
-Message-ID: <3730915.usQuhbGJ8B@sven-desktop>
-MIME-Version: 1.0
-
-On Monday, 19 May 2025 22:46:30 CEST Matthias Schiffer wrote:
-> With hardifs only existing while an interface is part of a mesh, the
-> BATADV_IF_NOT_IN_USE state has become redundant.
+On Fri, May 30, 2025 at 01:52:39PM -0700, Luck, Tony wrote:
+> Use case to inject to one device would be:
 > 
-> Signed-off-by: Matthias Schiffer <mschiffer@universe-factory.net>
-> ---
->  net/batman-adv/bat_iv_ogm.c     | 3 +--
->  net/batman-adv/bat_v_elp.c      | 3 +--
->  net/batman-adv/hard-interface.c | 9 ---------
->  net/batman-adv/hard-interface.h | 6 ------
->  net/batman-adv/originator.c     | 4 ----
->  5 files changed, 2 insertions(+), 23 deletions(-)
+> # echo 1 > nr_components
 
-Acked-by: Sven Eckelmann <sven@narfation.org>
+What does that do?
 
-Thanks,
-	Sven
---nextPart5256341.QJadu78ljV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+The interface probably needs a little refinement, but...
 
------BEGIN PGP SIGNATURE-----
+> # echo 4 > component_id0
+> # echo A5A5A5A5 > component_syndrome0
+> ... set other files and finish with usual
+> # echo 1 > error_inject
+> 
+> There isn't a fancy "debugfs_create_x128_le()" helper to manage these
+> 128-bit little endian numbers. So I've coded with the basic building
+> blocks (though using copy_from_user() and copy_to_user() feels like
+> back in the stone age). If there some helpers that I missed I'd be
+> happy to see that part simplified.
+> 
+> Patch is on top of the existing v7 set. Obviously it needs to be folded
+> back into the earlier patches to make a clean history that doesn't add
+> functions and then replace them with different code.
 
-iHUEABYKAB0WIQS81G/PswftH/OW8cVND3cr0xT1ywUCaDrJWwAKCRBND3cr0xT1
-y04gAPwMoJas4EzdQIDr04VKE1UCLzkUwpr53WaxvHRdT5BJDQD/fgj+8WPsYSSM
-FX7YY8MrPBQD/KKyq+M4ZdC2rfVpkws=
-=odll
------END PGP SIGNATURE-----
+... yes, definitely much better.
 
---nextPart5256341.QJadu78ljV--
+Thanks!
 
+-- 
+Regards/Gruss,
+    Boris.
 
-
+https://people.kernel.org/tglx/notes-about-netiquette
