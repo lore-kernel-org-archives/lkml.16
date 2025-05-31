@@ -1,87 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D61828F1
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 00:42:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287844A08;
+	Sat, 31 May 2025 00:45:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748652174; cv=none; b=t6UZZDYEhNywxe06opn9F5QrbpzeMPGsqT+Ql6Nol36zcggytjVo07TSq1gIUEQjN5aqDN5bbetFxx4+1LZsw0qwLZATjR/OTjdvHu2l/1n8VdGWzE3Z3Iwf0aL0C6NeMP0m7HheQ25xYvM4C6mMlazFRj94329Hc7M7Efh5jBQ=
+	t=1748652352; cv=none; b=EPEJSIfg66Odm6oArEYx5oGZ+3CRWUH/Zpmu+4Ig2PBrqhJvkdaCg6oAIfuXolC54kBy6UjYeRbBrNNdhH/uuLHnXTTGkfAPrZqgLDcPdXSbh1GXqnnI/VU0NIXtHUJW0GLoTePmQbWyxphGk5uyeiHEJ50bo03JTSml7B1G2HQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748652174; c=relaxed/simple;
-	bh=iUNUy94mWTB8H5m7hjFZyOAGSllh42g02dI7gBE0gvY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VqR+YWT7VW+deRomHlFasBn9rGkCkxbECOA7AVXmu3w2fK1Hajk7DTyHDx+UVKMiXdURYE4+NMSe+Xo2Q+gm3Q29k4BkwgLVUg/RihwdmCx/F2YgiRUOtSqzOc9K8dYFn5Ve6By6X7c4Uwq4/fOae2d+SQjeKDVu6KB/k4yFdEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PT3xCz4e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748652352; c=relaxed/simple;
+	bh=eFuUU5H0EZTvta9tnSmPNt8NChN173VFZtM77Xz79WU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=bc0h7vMtct8GpVFQ8pD9IDH9s2JEA8T0Ydn8JVwgJGFtK38QTX/+NZQzQMpRB63iZ1IzzkhIT8AAE8dN+sDa3ShdE8NxwrltXktuYKYj27Dl8Wbe6YT2c2NwfozxVZbnkc2mcBIC01wGHKAAyIxCGTUaDVhEGITGS4vQAYqll3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JF92qscn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PT3xCz4e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD384C4CEE9;
-	Sat, 31 May 2025 00:42:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JF92qscn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C24AC4CEE9;
+	Sat, 31 May 2025 00:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748652174;
-	bh=iUNUy94mWTB8H5m7hjFZyOAGSllh42g02dI7gBE0gvY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PT3xCz4eRt4lBcuE44A9+flbNsS0tRmnhrg1h9JFh8w9Jpb5S39IYFLeO98oxIqhc
-	 QulzOXy2DWKCZ+R9P4BuHNxZfUq8im0R1qbMG65CQtwtp08OLDwaqciFLiPxpChb6w
-	 XZRiqWYr/kYXMd02dH52Zfk9uUHxUl9H8NYdEXewBixT20uJt6jQ0eHDdnI6BzRdAX
-	 gGwu6SCYhrky+ojFAbHd0jCf0q6/5hFcbqUV29x6WZyG/p/q9x+T9xi0OKsdRdBunx
-	 ElSeqBrYhyKnDy8/dDrN0DJBTaTM/Yym4xJBsBg9XNt86W/GFwOaM5haRJsTdvbLRb
-	 KbDZUqb3P9KFw==
-Date: Fri, 30 May 2025 14:42:52 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Andrea Righi <arighi@nvidia.com>
-Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched_ext: idle: Properly handle invalid prev_cpu during
- idle selection
-Message-ID: <aDpQjDsPGkwf3qRs@slm.duckdns.org>
-References: <20250530154629.52651-1-arighi@nvidia.com>
+	s=k20201202; t=1748652351;
+	bh=eFuUU5H0EZTvta9tnSmPNt8NChN173VFZtM77Xz79WU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=JF92qscn5WOuWyTX5GtXUGeQFX4mdZ/eypeD+e9RGTcztb40wgLhpY5jj3iqEnBFs
+	 WRZh9mJgorIz8wJoZ92f8UCyvqw8Lx/lsWmTlRzEENCfsvdPk7XJMxGJnqMm0p6bWA
+	 1HSsiDjprlXGcfI0pBn8URbxtCOfb7VGB9SnfKA++PevnkWjzOKEESsJozCJUysTpx
+	 f3FsquHVIlRPedOqPG1vB1rk5cn6oNB7K287kdtqi0jce6ADuSuzyR08qcL2LWxij5
+	 OJ7ytBjxgX2gZI2MYNIWDlRUlS5z5Sm3H4qp9F5oclFq7uSRXNNirsJoSAzZDbXNiv
+	 3M2hfcSDwQNNQ==
+From: SeongJae Park <sj@kernel.org>
+To: Stephen Brennan <stephen.s.brennan@oracle.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	Ye Liu <ye.liu@linux.dev>,
+	akpm@linux-foundation.org,
+	linux-debuggers@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-toolchains@vger.kernel.org,
+	osandov@osandov.com,
+	paulmck@kernel.org,
+	sweettea-kernel@dorminy.me,
+	liuye@kylinos.cn,
+	fweimer@redhat.com
+Subject: Re: [PATCH v5] tools/mm: Add script to display page state for a given PID and VADDR
+Date: Fri, 30 May 2025 17:45:48 -0700
+Message-Id: <20250531004548.170935-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <875xhhagp8.fsf@oracle.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250530154629.52651-1-arighi@nvidia.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 30, 2025 at 05:46:29PM +0200, Andrea Righi wrote:
-> The default idle selection policy doesn't properly handle the case where
-> @prev_cpu is not part of the task's allowed CPUs.
-> 
-> In this situation, it may return an idle CPU that is not usable by the
-> task, breaking the assumption that the returned CPU must always be
-> within the allowed cpumask, causing inefficiencies or even stalls in
-> certain cases.
-> 
-> This issue can arise in the following cases:
-> 
->  - The task's affinity may have changed by the time the function is
->    invoked, especially now that the idle selection logic can be used
->    from multiple contexts (i.e., BPF test_run call).
-> 
->  - The BPF scheduler may provide a @prev_cpu that is not part of the
->    allowed mask, either unintentionally or as a placement hint. In fact
->    @prev_cpu may not necessarily refer to the CPU the task last ran on,
->    but it can also be considered as a target CPU that the scheduler
->    wishes to use for the task.
-> 
-> Therefore, enforce the right behavior by always checking whether
-> @prev_cpu is in the allowed mask, when using scx_bpf_select_cpu_and(),
-> and it's also usable by the task (@p->cpus_ptr). If it is not, try to
-> find a valid CPU nearby @prev_cpu, following the usual locality-aware
-> fallback path (SMT, LLC, node, allowed CPUs).
-> 
-> This ensures the returned CPU is always allowed, improving robustness to
-> affinity changes and invalid scheduler hints, while preserving locality
-> as much as possible.
-> 
-> Fixes: a730e3f7a48bc ("sched_ext: idle: Consolidate default idle CPU selection kfuncs")
-> Signed-off-by: Andrea Righi <arighi@nvidia.com>
+On Fri, 30 May 2025 15:15:15 -0700 Stephen Brennan <stephen.s.brennan@oracle.com> wrote:
 
-Applied to sched_ext/for-6.16-fixes.
+> SeongJae Park <sj@kernel.org> writes:
+> > On Fri, 30 May 2025 13:58:55 +0800 Ye Liu <ye.liu@linux.dev> wrote:
+[...]
+> > As reported to the previous version, I show below on my test.
+> >
+> > Memcg Name:      unknown
+> > Memcg Path:      Unexpected error: 'struct kernfs_node' has no member 'parent'
+> >
+> > I know you explained it is an issue of drgn version on my setup, as a reply to
+> > my previous report.  But, could you please make the output more easy to
+> > understand the problem?  No strong opinion, though.
+> 
+> This is an interesting issue.
+> 
+> The cgroup helpers in drgn were broken by the name change of
+> kernfs_node.parent to kernfs_node.__parent in Linux 6.15. This was fixed
+> in drgn promptly, and the fix is included in drgn's 0.0.31 release. If
+> you use that, the error should go away. In essence, 0.0.31 was the first
+> drgn version to support Linux 6.15.
 
-Thanks.
+FYI, I'm using drgn package on Debian 12, which says
 
--- 
-tejun
+    $ drgn --version
+    drgn 0.0.30+82.ge2b60e4b (using Python 3.11.2, elfutils 0.188, without libkdumpfile)
+
+Also I run a kernel built from damon/next[1], which is based on 6.15-rc6.
+
+> 
+> However, there's no general way to catch any drgn error and determine
+> that that drgn doesn't support your kernel version (yet). The code could
+> be updated for this specific issue, but it wouldn't really fix the
+> general problem. I think drgn needs to include an (INFORMATIONAL ONLY)
+> set of kernel versions that it has been tested on. Then, you could use
+> that in a script to print a warning (or add it to your general purpose
+> error handling).
+
+Sounds like a nice plan!
+
+> I'll look into adding this.
+
+Thank you!  I'm not urgent or having a real problem with this at the moment,
+though.  So, please take your time and fun!
+
+> 
+> This is itself a corner case for committing drgn scripts in the kernel.
+> Omar does a really excellent job with running tests on the -rc's and
+> finding broken helpers promptly -- usually well ahead of the kernel
+> release. But even then, there can be a delay from the fix to the next
+> drgn release. The more that you rely on drgn's helpers for a script that
+> you distribute in the kernel, the more likely that it will periodically
+> break, and the in-tree version wouldn't work until the newer drgn
+> version is released.
+> 
+> I don't have a solution for *that*, but it's something to consider when
+> deciding whether to include a script in drgn's contrib/ directory, versus
+> in the kernel.
+
+Makes sense, thank you for sharing your wise thoughts.  This is very helpful to
+me.
+
+[1] https://origin.kernel.org/doc/html/latest/mm/damon/maintainer-profile.html#scm-trees
+
+
+Thanks,
+SJ
+
+[...]
