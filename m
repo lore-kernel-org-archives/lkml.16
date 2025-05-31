@@ -1,171 +1,191 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20BB199FD0
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 18:28:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E368B7260A
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 18:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748716087; cv=none; b=DGZJMdVDk2nOfZksHlq/j6Th0razXhBQJYljxKKZTnjTNSwdissNl7dah0sBAkj6XC50t8NKi8dxAAVZAHccKZlMMP+3mdv5MPCEMhI70ABWiGkkTByV9kl2l7+4NzZ272GMNBycs/djp1088Ho1NmJ99fa/AT1sSTQQ2N5UuY0=
+	t=1748716118; cv=none; b=VCKOSxKM8d1FBAN0LEktWmHq/OJ4TvpOAipANUECRFoTXM2efBHBGpKAEunT4wkrPXOVQn7hukYAn0sCouUM5MzVNaiVzrx6F7gwoMxOePVQsBA6oYJtRZYa/64FTL06tdWg7M/steC9+wB5rOVrcSYT+PbJQlioFrs5Qf2Feak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748716087; c=relaxed/simple;
-	bh=dk3fI/RFl3JBQlIF7cdxOmi75SUbSYf9k2jysCiZRo8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mHtP8FfoJO+ccCqxr8q4+U5yeSKtZICQ3aDqp/nBa9KivFobwmGfRy/A+RsGVvFtu5lP450sOfxB8Vr++Mi8jTCBF6cDaRGT2xKhemphhV8q4T0WneH+7+fQy+b7GbbeKCfblm6S/jAVK55REBj5WtbEwyrXZOedd8aJycOmSQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jrVRKdEd; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jrVRKdEd"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a366843fa6so1604437f8f.1
-        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 11:28:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748716083; x=1749320883; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1YdbwTnzAydK1ENdR81ZzCGwAItUOCi2suDZhdSPMmY=;
-        b=jrVRKdEd4DmCRUMdSEMO7T+Pw81VDlJDsnUBXyCZR0UdjFsuUJB/74e0fz3zrKI2I5
-         xFa27tv27yTm05hJgkrdDJ2JFIkHbLdYL6djqKF87+/rT5bK3CtZ2l4bBpOBf7YWdDJ3
-         zu1ixxHzKxMV8AK5PxHW5qG0aP7BEBLCZ8aTMldp6I9TwegbzhAqiUh/nEosiDkAYGZO
-         lOpKkrvdi9vqaE1ACjodwS5ENs3+ERypS7k4FmJAUjqtboA5NczuC0Uol53bhs16SBtq
-         4/ucJ8xueWZIYwxevvlXo25Z+CqWnQP+rGz0E8tVnLZNh3rFksfcm7regm77UK4UjZc7
-         b95w==
+	s=arc-20240116; t=1748716118; c=relaxed/simple;
+	bh=KzSffM1aevSBmkvD6jkFGDQpUHk+Z6oxjiHShe29E7E=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ETh7yhQq2GUnIFpBYe1XDK6iFGsDUhhA3ZERpG9Pl/C8zlj7V4w8mAoq7jGbHq1553DTiEi16xswcYNKwuqSHlh9h2+7lFp/rQNzR7QSrk74oN8xGeFDzpnwr62bCQOQ9syobw+Bw5Q+eYG6mK7QCx4vR3med6kK46BknHgEYjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3da7c9e4bcfso26661595ab.0
+        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 11:28:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748716083; x=1749320883;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1YdbwTnzAydK1ENdR81ZzCGwAItUOCi2suDZhdSPMmY=;
-        b=ZIoRigRZPYHkzjj20bZuiWRIVY7abFgibcYaddVA2Bo+z8EmgXGv/BK76d1n60JcQb
-         LZUZ6drxPynLzOKPao4XfvPFojne/JZZyzjOnB1mWI+SIv0gdJNrLW6IaG/UpcPzKRF1
-         AhvisE/3rtvcjsy8b3wZyFCyAAFKwHT5XzmQyhDUbk6ghAOtxgKH/Q17liAqQHWA5MLA
-         I9esFj7OPiAg5B7RWRIfNv8EyVq8ojAZBwSOq3Oq7BNAKkZazwtXczhzYkLe/GNwGdU4
-         jvefYdhsUQRqjpt1uaUiRZ5wKq0TtoQiICkbL94wVEgBCzZKRwnWbDxjRPWN85qi/rBg
-         nRLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXWT6REO+7zqlpicIBVQP1VxcqtARHDQusNtqGe4YJI4s+sG4GzKmQc3c0l3dIxORrmP93p3F115G9dtgk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnW1zTIGCWKJCtF82WnwF8Aayh/HJiguv0fPcr4uD0lRLrj89/
-	T29NccUCcpmuZSgOdu+KdmTalGp7dB20nCgg5sczna4vOeDqaF8Xou2S
-X-Gm-Gg: ASbGncvB0+U6wWVtEJ86sAqLD0s+5ahCTiAyg0o6HCxREuQbDIGWn3bp5ypDkZuAae1
-	n1AKG6DLBg2Tr7R/44C3V3aCDJ6byUNLFNishWheGdo8zMLSZyw9jKiaMvqftRWbvPXHP6HK3E6
-	/u/7vBzm999TJ6kfzYWh14FGkQjKbO4ajXc2fRI+70bw9EZDteCGMtRLwFEQ36h8swnwU5iYvyq
-	Pzye/jka3RciE1KVHCkKhcLw8ko62LSykupwvyUSmlK9pFLL5+N3Hry48hcV4/bJMGgnDOyITbC
-	SN0r7YAmv+g00ou9+Ne7iUi7CdJxsg63TOLKh7/qJSHCXQU0b7rH+HWJ5AReyCVI+xRtJI4FPH6
-	lglKYt0LB1DT6NQ==
-X-Google-Smtp-Source: AGHT+IHWo5ANP+dqauzoVoWuJ4LwCO1gMzfyDDlO2VCYKfnBp1d20CxKeSOkRv6fVimOUljOEpnsvw==
-X-Received: by 2002:adf:a111:0:b0:3a4:f2aa:2e32 with SMTP id ffacd0b85a97d-3a4f89dcc2fmr4588914f8f.44.1748716082823;
-        Sat, 31 May 2025 11:28:02 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe2b35dsm8766372f8f.0.2025.05.31.11.28.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 May 2025 11:28:02 -0700 (PDT)
-Date: Sat, 31 May 2025 19:28:01 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>
-Subject: Re: [PATCH 2/2] riscv: uaccess: do not do misaligned accesses in
- get/put_user()
-Message-ID: <20250531192801.5d6329c3@pumpkin>
-In-Reply-To: <20250530205658.624195-3-cleger@rivosinc.com>
-References: <20250530205658.624195-1-cleger@rivosinc.com>
-	<20250530205658.624195-3-cleger@rivosinc.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        d=1e100.net; s=20230601; t=1748716116; x=1749320916;
+        h=content-transfer-encoding:to:from:subject:message-id:date
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TZWE0pzSq45hRnTBBprYcArathFtef7VGWSlEoL/nWM=;
+        b=O3bo9PYCWHmaR3DcitkxaEWg5Hh3Oz4twM0M71szfAYmLiJ+0KBxUtkhxzpIwdx5QE
+         83o4nuSJO+UpJF4Q1jst7y7d1xAjeoHpV4hPU6kuCQAETMDY6V1fC+kqpBiSbt/8DmtM
+         S1Yhu7uNu3eZtxl4ztWsauVWIKrWnQNu9cMBbu+MgvwOi7kCYWxEy4Z5FfvkVcMbXw2o
+         9M+CChGclI8VRruetOxspmNoliBFuJFiDEru8W7AKGQJXHCEwNtVZA6gvdAj+sliI0gC
+         iqm4e1+JxzVfxmPmzFL6/C8KtYroi9htsDTyhNfK13w5HSRxBgukel0pygWPh3RUpjem
+         ohTA==
+X-Forwarded-Encrypted: i=1; AJvYcCVYE+hjyzbtDGnuqx61IV5NO3nnkh7lqGbdPbv+PslCf0s7H5opqDf7JmkZobxucrKLA7aR4K8Oyp9knkw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyuuj2xrpc8LEVN8hjoepLi2c7YM8DdKS9qlGxLj+ZZ5/7Shpq2
+	WgPmVKAul5JZQWAGHfhVwGFxraFx71l431A17m/bW7KfvYbg/EhZz2BF+4cGG6lcSrtbnr/Ke2N
+	csL654mI0LUaZV8wBXsn9ESigozZGKiGTEOjLgj4nvPzb7vOpFsGWVYvJDQM=
+X-Google-Smtp-Source: AGHT+IHRYtGaTQNH2dyAo3CMNaycgyyhx42ObEZBhpal3YuvV0mkrdnkAFmA4sZYx0yqzK5O6K3zV3OiCZcO4cNrUGEx5WpXjYR3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-Received: by 2002:a05:6e02:3a04:b0:3dc:7240:94a6 with SMTP id
+ e9e14a558f8ab-3dda33367a8mr19543635ab.3.1748716115952; Sat, 31 May 2025
+ 11:28:35 -0700 (PDT)
+Date: Sat, 31 May 2025 11:28:35 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <683b4a53.a00a0220.d8eae.001c.GAE@google.com>
+Subject: [syzbot] [bcachefs?] WARNING in bch2_fs_journal_start
+From: syzbot <syzbot+527519da96e15b411c73@syzkaller.appspotmail.com>
+To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 30 May 2025 22:56:58 +0200
-Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com> wrote:
+Hello,
 
-> Doing misaligned access to userspace memory would make a trap on
-> platform where it is emulated. Latest fixes removed the kernel
-> capability to do unaligned accesses to userspace memory safely since
-> interrupts are kept disabled at all time during that. Thus doing so
-> would crash the kernel.
->=20
-> Such behavior was detected with GET_UNALIGN_CTL() that was doing
-> a put_user() with an unsigned long* address that should have been an
-> unsigned int*. Reenabling kernel misaligned access emulation is a bit
-> risky and it would also degrade performances. Rather than doing that,
-> we will try to avoid any misaligned accessed by using copy_from/to_user()
-> which does not do any misaligned accesses. This can be done only for
-> !CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS and thus allows to only generate
-> a bit more code for this config.
+syzbot found the following issue on:
 
-For get_user() you are much better off reading the two words that contain
-the value and then doing 'shift' and 'or' to get the correct value.
+HEAD commit:    b1456f6dc167 Merge tag 'timers-core-2025-05-25' of git://g.=
+.
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=3D17256df4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3De178ebeb0aded44=
+c
+dashboard link: https://syzkaller.appspot.com/bug?extid=3D527519da96e15b411=
+c73
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-=
+1~exp1~20250514183223.118), Debian LLD 20.1.6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D1560048258000=
+0
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D1409a6d4580000
 
-Even for put_user() doing the explicit byte accesses will be faster than
-going though the generic copy_to/from_user() function.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/501bf321b156/disk-=
+b1456f6d.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/d3c8e81517e2/vmlinux-=
+b1456f6d.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/e6e8960905fd/bzI=
+mage-b1456f6d.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/674711f8120d=
+/mount_0.gz
 
-	David
+The issue was bisected to:
 
->=20
-> Signed-off-by: Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com>
-> ---
->  arch/riscv/include/asm/uaccess.h | 28 ++++++++++++++++++++++------
->  1 file changed, 22 insertions(+), 6 deletions(-)
->=20
-> diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/asm/ua=
-ccess.h
-> index 046de7ced09c..b542c05f394f 100644
-> --- a/arch/riscv/include/asm/uaccess.h
-> +++ b/arch/riscv/include/asm/uaccess.h
-> @@ -169,8 +169,21 @@ do {								\
-> =20
->  #endif /* CONFIG_64BIT */
-> =20
-> +unsigned long __must_check __asm_copy_to_user(void __user *to,
-> +	const void *from, unsigned long n);
-> +unsigned long __must_check __asm_copy_from_user(void *to,
-> +	const void __user *from, unsigned long n);
-> +
->  #define __get_user_nocheck(x, __gu_ptr, label)			\
->  do {								\
-> +	if (!IS_ENABLED(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS)) {			\
-> +		if (!IS_ALIGNED((uintptr_t)__gu_ptr, sizeof(*__gu_ptr))) {		\
-> +			if (__asm_copy_from_user(&(x), __gu_ptr, sizeof(*__gu_ptr)))	\
-> +				goto label;			\
-> +			else					\
-> +				break;				\
-> +		}						\
-> +	}							\
->  	switch (sizeof(*__gu_ptr)) {				\
->  	case 1:							\
->  		__get_user_asm("lb", (x), __gu_ptr, label);	\
-> @@ -297,6 +310,15 @@ do {								\
-> =20
->  #define __put_user_nocheck(x, __gu_ptr, label)			\
->  do {								\
-> +	if (!IS_ENABLED(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS)) {			\
-> +		if (!IS_ALIGNED((uintptr_t)__gu_ptr, sizeof(*__gu_ptr))) {		\
-> +			unsigned long val =3D (unsigned long)(x);				\
-> +			if (__asm_copy_to_user(__gu_ptr, &(val), sizeof(*__gu_ptr)))	\
-> +				goto label;			\
-> +			else					\
-> +				break;				\
-> +		}						\
-> +	}							\
->  	switch (sizeof(*__gu_ptr)) {				\
->  	case 1:							\
->  		__put_user_asm("sb", (x), __gu_ptr, label);	\
-> @@ -385,12 +407,6 @@ err_label:							\
->  		-EFAULT;					\
->  })
-> =20
-> -
-> -unsigned long __must_check __asm_copy_to_user(void __user *to,
-> -	const void *from, unsigned long n);
-> -unsigned long __must_check __asm_copy_from_user(void *to,
-> -	const void __user *from, unsigned long n);
-> -
->  static inline unsigned long
->  raw_copy_from_user(void *to, const void __user *from, unsigned long n)
->  {
+commit 521f9584c2bd48198ac9d9b99a372b1306f3bb97
+Author: Kent Overstreet <kent.overstreet@linux.dev>
+Date:   Fri May 23 18:03:06 2025 +0000
 
+    bcachefs: Ensure we don't use a blacklisted journal seq
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D170266d45800=
+00
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=3D148266d45800=
+00
+console output: https://syzkaller.appspot.com/x/log.txt?x=3D108266d4580000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit=
+:
+Reported-by: syzbot+527519da96e15b411c73@syzkaller.appspotmail.com
+Fixes: 521f9584c2bd ("bcachefs: Ensure we don't use a blacklisted journal s=
+eq")
+
+bcachefs (loop0): Version upgrade required:
+Version upgrade from 0.24: unwritten_extents to 1.7: mi_btree_bitmap incomp=
+lete
+Doing incompatible version upgrade from 0.24: unwritten_extents to 1.28: in=
+ode_has_case_insensitive
+  running recovery passes: check_allocations,check_alloc_info,check_lrus,ch=
+eck_btree_backpointers,check_backpointers_to_extents,check_extents_to_backp=
+ointers,check_alloc_to_lru_refs,bucket_gens_init,check_snapshot_trees,check=
+_snapshots,check_subvols,check_subvol_children,delete_dead_snapshots,check_=
+inodes,check_extents,check_indirect_extents,check_dirents,check_xattrs,chec=
+k_root,check_unreachable_inodes,check_subvolume_structure,check_directory_s=
+tructure,check_nlinks,check_rebalance_work,set_fs_needs_rebalance
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 5823 at mm/slub.c:5024 __kvmalloc_node_noprof+0x4ca/0x=
+600 mm/slub.c:5024
+Modules linked in:
+CPU: 1 UID: 0 PID: 5823 Comm: syz-executor230 Not tainted 6.15.0-syzkaller-=
+02198-gb1456f6dc167 #0 PREEMPT(full)=20
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Goo=
+gle 05/07/2025
+RIP: 0010:__kvmalloc_node_noprof+0x4ca/0x600 mm/slub.c:5024
+Code: 0f 85 36 fc ff ff 31 c0 41 f6 c5 10 0f 94 c0 4c 8d 34 45 01 00 00 00 =
+e9 20 fc ff ff 41 f7 c0 00 20 00 00 0f 85 8f fe ff ff 90 <0f> 0b 90 31 db e=
+9 f2 fe ff ff 48 c7 c7 80 86 04 8e 48 89 de e8 0d
+RSP: 0018:ffffc900043af1d8 EFLAGS: 00010246
+RAX: 0000000000000360 RBX: 0000000000000000 RCX: 72c1c7b072d25100
+RDX: 000001b000000000 RSI: ffffffff8bc17920 RDI: ffffffff8bc178e0
+RBP: ffffffff843fb660 R08: 0000000000000cc0 R09: 00000000ffffffff
+R10: ffffc900043af080 R11: fffff52000875e15 R12: 000001b000000000
+R13: 0000000000012cc0 R14: ffffffff843fb660 R15: 00000000ffffffff
+FS:  0000555588a53380(0000) GS:ffff8881261c7000(0000) knlGS:000000000000000=
+0
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffca09dfed4 CR3: 0000000034b80000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ bch2_fs_journal_start+0x480/0x1500 fs/bcachefs/journal.c:1459
+ bch2_fs_recovery+0x20ca/0x3970 fs/bcachefs/recovery.c:953
+ bch2_fs_start+0xa43/0xd30 fs/bcachefs/super.c:1206
+ bch2_fs_get_tree+0xbfc/0x15f0 fs/bcachefs/fs.c:2479
+ vfs_get_tree+0x92/0x2b0 fs/super.c:1809
+ do_new_mount+0x24a/0xa40 fs/namespace.c:3882
+ do_mount fs/namespace.c:4222 [inline]
+ __do_sys_mount fs/namespace.c:4433 [inline]
+ __se_sys_mount+0x317/0x410 fs/namespace.c:4410
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fa56d6f7faa
+Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 5e 04 00 00 66 2e 0f 1f 84 =
+00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff f=
+f 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fffe2a8b108 EFLAGS: 00000282 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007fffe2a8b120 RCX: 00007fa56d6f7faa
+RDX: 0000200000000040 RSI: 0000200000000000 RDI: 00007fffe2a8b120
+RBP: 0000200000000000 R08: 00007fffe2a8b160 R09: 00000000000059d1
+R10: 0000000000800000 R11: 0000000000000282 R12: 0000200000000040
+R13: 00007fffe2a8b160 R14: 0000000000000003 R15: 0000000000800000
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisectio=
+n
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
