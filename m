@@ -1,76 +1,77 @@
-Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
+Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D319D9460
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 09:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 305BE78F4E;
+	Sat, 31 May 2025 09:10:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748682494; cv=none; b=l/NXz6pad41EKvQLSzLeao8+9cd0sTxZIiy4W02I7HpeF2Yddb+LlCSZcnhCBvE9rjghjpCcQSA3qqMh1mPYDmx8xn4ul/3vg7BcLfBTXbSx08OSTxidl9z7270dHaGAg956o9Mri//35e2Epld4vP6blfyRigIxXOcKdidCT/M=
+	t=1748682616; cv=none; b=pikQSFsEY7Y8MTM3WPW7Zq/uMBrTkmPgFyoEMFL6wza5Kt01kfiOYXdRea6Ris2u9kR9DY2rHD22+0mLK7KhR85644EshvDsD48Qp7eD71hkrE5GdCZCXSN6jxml4UMw3FAUsEaMzKTXM8Q94KgAVbJOScq0TnGfTVEaMUJghr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748682494; c=relaxed/simple;
-	bh=K4TOYYT8nHtZXhM1aD4vCE1xpy0XKhOVbDXjLfKl5f4=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=M22GRccxxU5me2DWlC/9ZcP6/h6pwUmx8qqXg4yLtSMpZ3MCTDL2cWCSnji+HzN5+ymTauFCTZq/hzs04bxdtn7MDmgtUqz1OKpusxnFeYUU/mJr7i8JmC8xBYMtuv1ZMuFq5TCgRliP+jey7ZiofAT8hFL9S6wSzBwR2ETJVOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=FkiD4rR+; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=WQ9vZ5Z9; arc=none smtp.client-ip=103.168.172.152
+	s=arc-20240116; t=1748682616; c=relaxed/simple;
+	bh=S7wsb9tmfVZDNNnUG1r3Rq5K3E7DRT2sd2LlOM/ibMQ=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:Subject:Content-Type; b=QF5y+mTaxJrVksXEkaK4VrSWgwQhn2Q5HwiEFWj2Oh+WbTdmJX3h5WDiAwQDn6iRfVaObZefaZ8jSbeg0+pGKvss+RypzS1ccOdkBJUzEoZx9ck4GJOxnK30VW6d13u1Q1c1yHxctS8Cw9VK57crwhuoKNi6F+DMHnRt1YFZHr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=sz4IZZbz; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=lDSX/gnq; arc=none smtp.client-ip=103.168.172.149
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="FkiD4rR+";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WQ9vZ5Z9"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="sz4IZZbz";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lDSX/gnq"
 Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 0F7D11140138;
-	Sat, 31 May 2025 05:08:12 -0400 (EDT)
+	by mailfout.phl.internal (Postfix) with ESMTP id 55656138034E;
+	Sat, 31 May 2025 05:10:14 -0400 (EDT)
 Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Sat, 31 May 2025 05:08:12 -0400
+  by phl-compute-05.internal (MEProxy); Sat, 31 May 2025 05:10:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1748682492;
-	 x=1748768892; bh=wvcVlRsTp9UBvTgpnxSSZSMuazuqeYvLY20AHwA431Y=; b=
-	FkiD4rR+Day+l+ahdkODGcXBtozfJGRiKS2vcnCY74JfeuhfdzJ14ODGOz+blDfK
-	Sw4Nk4pEqOtvTNDqaac27pPw5PdfpdjwVLgG+LKKOUcoWzTOSnwj8ZHgCJRaPyAL
-	gjU2n7kasv+kXWMHv3UYEhEY8Bq7VaE8DjZdKxo+aKkBGpkVDnVrWSlL8YnWt1m7
-	sEe3qjDNxsxRiBKomZ2Cd4H8H2ssU0H0ryM1h5CVJQ3O8gN4CdHVXYm1+R1N3HjN
-	De/+rP/oaDqeWfursMaM9ICja+Db5mawF7OxNcBklJj9AMxASR3eo3OOhkLxF+mh
-	sCe+4RN2MmCtVEiWP8kIXw==
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm3; t=1748682614; x=1748769014; bh=RX
+	O4f3Yp6Be71rD2cH9gM61HbHGWJD/s7+tuHyvcz5U=; b=sz4IZZbzEd7DDdVpIP
+	PcvuT23+ITNiLVgPM/ZwbxesELoZPwW5k6dEvBLAPTuMUQIsy6tRZNOH7QvB/dmJ
+	NFQLHWXj9R7XNM8httMvK2n3NyIaAvpUEVIidEoHqQc88LYKExFQd2PHiueDT/R3
+	s1cOaTIAmYfd4Zl2di0KogiuLcn86CkJnASeb2Skt9m35eaC8LBs79D7TAU2XkYY
+	SMJM+iJSKdBEPXfRYxmfqtujfowd8HThjyGe/9tL+BYLFthRnRNeoHh53B6N2XQ0
+	78gj7nZLJsomffo2rY09wU8G1Bw6A+zvwU+7rH4AT1GfdIQxejpG4MQgv6ynHTQH
+	qTsw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1748682492; x=
-	1748768892; bh=wvcVlRsTp9UBvTgpnxSSZSMuazuqeYvLY20AHwA431Y=; b=W
-	Q9vZ5Z91lOY0ccUMnYK54tyQoRK6/0zMXS2IjIyd7UMq/qJAEfgUU5DfexGtViQk
-	C1FT9hk42j8vcHZOKjvOHiOZOfrpeS58zP/20YHiwnso/M2XEcwZsZw0EJj4dUhh
-	q6WU2AJtm0ftEmAGXpSv5JsFiSaWbo+Gby2IGfjKGjixMsmxmIX9sZOj0pi07HOs
-	gmpotYuGENKkcMSMIYopNyg5z5K2kJ+ja6HNyfrpzN/BxFzptsLE+BLMA2mUeGYo
-	LVcP120R3UlD5peZVLRgTeXkirTd8TQhX85d30T+VtvLh5JRa92I+jG33yaMF/n3
-	oWrng7/OnBSbV3lhfJiXw==
-X-ME-Sender: <xms:-8Y6aABswAzZWF8zh0LSyneYqhkjfJ9J8_J09_K4x76rPD3mec5n2A>
-    <xme:-8Y6aCgY7CYwZkGsf4iTVa5dLFsEF2H0yp9GLwBNxcu7bXqCOglAbJjaHCW-SLzLW
-    7B9405LXxwPcIZyfOE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdefudehtdculddtuddrgeefvddrtd
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1748682614; x=1748769014; bh=RXO4f3Yp6Be71rD2cH9gM61HbHGW
+	JD/s7+tuHyvcz5U=; b=lDSX/gnqofokQz3vlh2ZNFDjUTV/FIwwX0zhFNEmtcm7
+	cIAKkvmjnKFmlhwQsGoRNPxgHL09iRpqD+vjUXzjH0hCXMX8TLQtdHW6jMoQeDwW
+	mWw529YDvlkgyvUH6tpoKiBd4gPw7frqQViSEGc8CXbx62ivpx/tDyuNcMd3OD4S
+	Rqh421esWYP4jv425UXUtPpqYps4UiheSwV2wobami9nwo1EXCFAbQY9npvEvsw+
+	UHcghVkxi1T7+QNWlO3yOM/TQJUKD2kL4R8r/N8inNb5WHgecGSUlwmIkF6EUfco
+	vSHCGRLAweeTczuIQBISNpcH+5U4BrT3xDuALJQ6mw==
+X-ME-Sender: <xms:dsc6aIhtHfr4LZdGNKoMy7tjoUrGxaTEshiQ8hJxjjjJMjzTZ2lnDw>
+    <xme:dsc6aBDvRSByIYaUh0tsGtfvBgdVWhYUfYHYr4lkiq4g65UNuJlUmn64UjHSIi1gj
+    oIH32iQQlMXY9SQyH8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdefudehudculddtuddrgeefvddrtd
     dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
     fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
     dtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefk
-    jghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfd
-    cuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrhhnpeefffelleduheeh
-    leejtdfhheegtdffhedtffeileehkeetffevtdegheduhfeiudenucffohhmrghinhepkh
-    gvrhhnvghlrdhorhhgpdhgihhthhhusgdrtghomhenucevlhhushhtvghrufhiiigvpedt
-    necurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprh
-    gtphhtthhopeegpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehtohhrvhgrlhgu
-    sheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugi
-    dqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghp
-    thhtohepshhotgeslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuh
-    igqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:-8Y6aDmRepwYIrUZHgQn5ULBv4Zh7oOOoK9Qr-dNYqlKzazM_9bFUg>
-    <xmx:-8Y6aGx3GFIAYgUJBwVrfw5ilD9emcopHoabArEPVFHHN7rqNI-HuQ>
-    <xmx:-8Y6aFSlietPKYPKJmY5ABxCljSgDx1SsqV5TXMGR4BfdpE7iPrXdg>
-    <xmx:-8Y6aBZ5e7aTl7SqP5_HyDFT-bdREkxDKjZVck2_PlGFJWqfrCAxmw>
-    <xmx:_MY6aAkHL2Y8m_0qQb8nNoNNiekU9mobYsZa0807IIgRSt4U9ilBllsR>
+    ufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoe
+    grrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrhhnpeduleeigeekveeugeet
+    tdejtddtleeghefhvdfhueehtefhudelffduvdeuleevteenucffohhmrghinhepkhgvrh
+    hnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
+    rhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepkedpmhhouggvpe
+    hsmhhtphhouhhtpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphht
+    thhopeigkeeisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtohhrvhgrlhgusheslh
+    hinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghr
+    mhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoh
+    eplhhinhhugidqrghrtghhsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    lhhinhhugidqhhgrrhguvghnihhnghesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtph
+    htthhopehlihhnuhigqdhksghuihhlugesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgt
+    phhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:dsc6aAGCr8yQaaseQMm_XQw4bZ095G5ZcWNy3prGMpNDFUCkKUcXUw>
+    <xmx:dsc6aJSsVtH9gcAsTJWgx2yz1bCs3TBYSBJtlX9KAM_Mj1yE7P4bfQ>
+    <xmx:dsc6aFw3qK1oBAaTZx1JPlv4RKKfH8K5kxcR1osQPu3OWGao_VlLGQ>
+    <xmx:dsc6aH7WEmQyHMUDTYsHrMIGmeCqAze97w2bgFFUe44teRBWQHKJNw>
+    <xmx:dsc6aHf5EfpfJKJ4dzibYskkAxRFVm6jl0WdKbgtXw1s1FYvv1tXWftn>
 Feedback-ID: i56a14606:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id AA599700061; Sat, 31 May 2025 05:08:11 -0400 (EDT)
+	id F1CC9700060; Sat, 31 May 2025 05:10:13 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -78,78 +79,93 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T97262eb0f1793ba4
-Date: Sat, 31 May 2025 11:07:48 +0200
+Date: Sat, 31 May 2025 11:09:53 +0200
 From: "Arnd Bergmann" <arnd@arndb.de>
 To: "Linus Torvalds" <torvalds@linux-foundation.org>
-Cc: soc@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Message-Id: <d98adabb-a26a-4962-af9d-5707e1cb3715@app.fastmail.com>
-In-Reply-To: <28a4c0cf-7978-4547-bf89-42804975c848@app.fastmail.com>
-References: <28a4c0cf-7978-4547-bf89-42804975c848@app.fastmail.com>
-Subject: [GIT PULL 5/5] soc: sophgo devicetree updates for 6.16
+Cc: linux-kernel@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
+ linux-kbuild@vger.kernel.org, "Kees Cook" <kees@kernel.org>, x86@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org
+Message-Id: <feab370a-3857-4ae9-a22d-1ab6d992c73c@app.fastmail.com>
+Subject: [GIT PULL] require gcc-8 and binutils-2.30
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-The following changes since commit a5806cd506af5a7c19bcd596e4708b5c464bfd21:
+The following changes since commit b4432656b36e5cc1d50a1f2dc15357543add530e:
 
-  Linux 6.15-rc7 (2025-05-18 13:57:29 -0700)
+  Linux 6.15-rc4 (2025-04-27 15:19:23 -0700)
 
 are available in the Git repository at:
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/soc-newsoc-6.16
+  https://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic.git tags/gcc-minimum-version-6.16
 
-for you to fetch changes up to 9bba618694cc905b898661c18e3e40955573ef5e:
+for you to fetch changes up to 582847f9702461b0a1cba3efdb2b8135bf940d53:
 
-  Merge tag 'riscv-sophgo-dt-for-v6.16' of https://github.com/sophgo/linux into soc/late (2025-05-23 23:59:45 +0200)
-
-----------------------------------------------------------------
-soc: sophgo devicetree updates for 6.16
-
-The Sophgo SG2044 SoC is their second generation server chip
-with 64 cores, following the SG2042.
-
-In addition, there are minor updates for the cv180x SoCs.
+  Makefile.kcov: apply needed compiler option unconditionally in CFLAGS_KCOV (2025-05-21 16:08:42 +0200)
 
 ----------------------------------------------------------------
-Arnd Bergmann (1):
-      Merge tag 'riscv-sophgo-dt-for-v6.16' of https://github.com/sophgo/linux into soc/late
+require gcc-8 and binutils-2.30
 
-Inochi Amaoto (10):
-      riscv: dts: sophgo: sg2042: add pinctrl support
-      riscv: dts: sophgo: Move all soc specific device into soc dtsi file
-      riscv: dts: sophgo: Move riscv cpu definition to a separate file
-      riscv: dts: sophgo: rename header file cv18xx.dtsi to cv180x.dtsi
-      riscv: dts: sopgho: use SOC_PERIPHERAL_IRQ to calculate interrupt number
-      dt-bindings: interrupt-controller: Add Sophgo SG2044 CLINT mswi
-      dt-bindings: interrupt-controller: Add Sophgo SG2044 PLIC
-      dt-bindings: riscv: sophgo: Add SG2044 compatible string
-      riscv: dts: sophgo: Add initial device tree of Sophgo SRD3-10
-      riscv: dts: sophgo: switch precise compatible for existed clock device for CV18XX
+x86 already uses gcc-8 as the minimum version, this changes all other
+architectures to the same version. gcc-8 is used is Debian 10 and Red
+Hat Enterprise Linux 8, both of which are still supported, and binutils
+2.30 is the oldest corresponding version on those. Ubuntu Pro 18.04 and
+SUSE Linux Enterprise Server 15 both use gcc-7 as the system compiler
+but additionally include toolchains that remain supported.
 
-Zixian Zeng (1):
-      riscv: sophgo: dts: Add spi controller for SG2042
+With the new minimum toolchain versions, a number of workarounds for older
+versions can be dropped, in particular on x86_64 and arm64.  Importantly,
+the updated compiler version allows removing two of the five remaining
+gcc plugins, as support for sancov and structeak features is already
+included in modern compiler versions.
 
- .../interrupt-controller/sifive,plic-1.0.0.yaml    |    1 +
- .../thead,c900-aclint-mswi.yaml                    |    1 +
- .../devicetree/bindings/riscv/sophgo.yaml          |    4 +
- arch/riscv/boot/dts/sophgo/Makefile                |    1 +
- arch/riscv/boot/dts/sophgo/cv1800b.dtsi            |   39 +-
- arch/riscv/boot/dts/sophgo/cv180x-cpus.dtsi        |   36 +
- .../boot/dts/sophgo/{cv18xx.dtsi => cv180x.dtsi}   |   95 +-
- arch/riscv/boot/dts/sophgo/cv1812h.dtsi            |   39 +-
- arch/riscv/boot/dts/sophgo/cv181x.dtsi             |    2 +-
- arch/riscv/boot/dts/sophgo/sg2002.dtsi             |   39 +-
- .../riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts |   72 +
- arch/riscv/boot/dts/sophgo/sg2042.dtsi             |   32 +
- arch/riscv/boot/dts/sophgo/sg2044-cpus.dtsi        | 3002 ++++++++++++++++++++
- arch/riscv/boot/dts/sophgo/sg2044-reset.h          |  128 +
- .../boot/dts/sophgo/sg2044-sophgo-srd3-10.dts      |   32 +
- arch/riscv/boot/dts/sophgo/sg2044.dtsi             |   86 +
- 16 files changed, 3502 insertions(+), 107 deletions(-)
- create mode 100644 arch/riscv/boot/dts/sophgo/cv180x-cpus.dtsi
- rename arch/riscv/boot/dts/sophgo/{cv18xx.dtsi => cv180x.dtsi} (75%)
- create mode 100644 arch/riscv/boot/dts/sophgo/sg2044-cpus.dtsi
- create mode 100644 arch/riscv/boot/dts/sophgo/sg2044-reset.h
- create mode 100644 arch/riscv/boot/dts/sophgo/sg2044-sophgo-srd3-10.dts
- create mode 100644 arch/riscv/boot/dts/sophgo/sg2044.dtsi
+I tried collecting the known changes that are possible based on the
+new toolchain version, but expect that more cleanups will be possible.
+Since this touches multiple architectures, I merged the patches through
+the asm-generic tree.
+
+----------------------------------------------------------------
+Arnd Bergmann (6):
+      kbuild: require gcc-8 and binutils-2.30
+      raid6: skip avx512 checks
+      arm64: drop binutils version checks
+      Kbuild: remove structleak gcc plugin
+      gcc-plugins: remove SANCOV gcc plugin
+      Documentation: update binutils-2.30 version reference
+
+Lukas Bulwahn (1):
+      Makefile.kcov: apply needed compiler option unconditionally in CFLAGS_KCOV
+
+ Documentation/admin-guide/README.rst               |   2 +-
+ Documentation/kbuild/makefiles.rst                 |   4 +-
+ Documentation/process/changes.rst                  |   6 +-
+ .../translations/it_IT/process/changes.rst         |   6 +-
+ .../translations/zh_CN/admin-guide/README.rst      |   2 +-
+ arch/arm64/Kconfig                                 |  37 +--
+ arch/arm64/Makefile                                |  21 +-
+ arch/arm64/include/asm/rwonce.h                    |   4 -
+ arch/arm64/kvm/Kconfig                             |   1 -
+ arch/arm64/lib/xor-neon.c                          |   2 +-
+ arch/um/Makefile                                   |   4 +-
+ drivers/gpu/drm/panel/panel-tpo-td028ttec1.c       |   6 +-
+ include/linux/unroll.h                             |   4 +-
+ kernel/gcov/gcc_4_7.c                              |   4 -
+ lib/Kconfig.debug                                  |  10 +-
+ lib/raid6/algos.c                                  |   6 -
+ lib/raid6/avx512.c                                 |   4 -
+ lib/raid6/recov_avx512.c                           |   6 -
+ lib/raid6/test/Makefile                            |   3 -
+ lib/test_fortify/Makefile                          |   5 +-
+ lib/tests/stackinit_kunit.c                        |  10 +-
+ mm/mm_init.c                                       |   6 -
+ scripts/Makefile.compiler                          |   2 +-
+ scripts/Makefile.gcc-plugins                       |  16 --
+ scripts/Makefile.kcov                              |   3 +-
+ scripts/gcc-plugins/Kconfig                        |  10 -
+ scripts/gcc-plugins/gcc-common.h                   |  45 ----
+ scripts/gcc-plugins/sancov_plugin.c                | 134 -----------
+ scripts/gcc-plugins/structleak_plugin.c            | 257 ---------------------
+ scripts/min-tool-version.sh                        |   6 +-
+ security/Kconfig.hardening                         |  76 ------
+ 31 files changed, 25 insertions(+), 677 deletions(-)
+ delete mode 100644 scripts/gcc-plugins/sancov_plugin.c
+ delete mode 100644 scripts/gcc-plugins/structleak_plugin.c
