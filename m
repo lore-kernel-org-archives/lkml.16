@@ -1,91 +1,121 @@
-Received: from dvalin.narfation.org (dvalin.narfation.org [213.160.73.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C4D2CCC9;
-	Sat, 31 May 2025 09:22:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.160.73.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63D61E520F;
+	Sat, 31 May 2025 09:25:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748683326; cv=none; b=RPPUJ3UfzmSpto3KMrIwIFpqlVko95D3kq09ChDhXsCioqbnO1lpFyerJ/hkUD6sGMOp477Z1bL1bI/5IccR8Vty70o0tOGoiJp0KOkbNT7tYfEa9hnMRdmWNagN9ZoP+0Ud5/Zcn2QqTJv4Bz0wBfskR+B+YwCtotOXmFajMFc=
+	t=1748683542; cv=none; b=cm4A25x1ecIIIPC9ObTKJKLPxQ0rfLpz5QyzdBVSyfyiWH0/Zilj4itvsk3HZ7tjHZhMCH1RZqAffoLMLsTa9YKdRz3+zXkgJulLZPZ0D9lattSC3Z8KtTpFcw0C+ijYCgm863KQ6/OahDI92aiOlGm7sbyLLq9PzMClZxmu3eo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748683326; c=relaxed/simple;
-	bh=AdscRCctEiDVk+KrsLD7YZHALhZ8CgY98mZKJ9zDPeY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Sp4n7TsilUJInEmeZPSriIMahPBzOxZbsTj+l2rboaKk7hlrVY3txX+KHyvd7+4kgta7RCzmOJ+8dZHmZzl3SGwkdt30wI+8BoHL7q9Gs5UbeyWyS7VdKCAIaNMWptP5mzYMjnEzo2xotyke6NWZ8h8Bsgi95iEikiIVsANLhFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org; spf=pass smtp.mailfrom=narfation.org; dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b=xE1048Mn; arc=none smtp.client-ip=213.160.73.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=narfation.org
+	s=arc-20240116; t=1748683542; c=relaxed/simple;
+	bh=gh1SR7miY5UdrONx8owoLj2CLoe9Kbv/kgJkX7nLA/I=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=fNDdIwKigc8dtbPNd3k13Bgmt3bY3gPCdXaHHVWWEqrP9wWs/eLRN0JUOT1XxG6AUpG5dUxD+vtZkIQ6Qlzwe0uApSk9tRkDC26zJ7W04iR/n8huoGPeQ4pDbRCciMaVx+1G9UyYAxpcIdeqTxt3UiSmgbexsq4wiS2GjOFKjmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fz1VZYlx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="xE1048Mn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
-	s=20121; t=1748683322;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j8v7hhYADUSDBALNMgGQ0eVg8nF9mMtO+msRRg6pCVQ=;
-	b=xE1048MnNYlE8NWyUEINeLcBKvFzOU3ZrUeJI91t1dMT8EufgIXw40OqgkALKjiomh5ZnQ
-	V7r0M8ACaKnWgOEQEw4JeoLD7fwgvB+hgLuiqmTwSO2IWrwdhKgupbbCeuuyNZtz8sTNUH
-	Z9k1AiJROhhvyqVaYuT9+L8Pkuc5JLc=
-From: Sven Eckelmann <sven@narfation.org>
-To: Marek Lindner <marek.lindner@mailbox.org>,
- Simon Wunderlich <sw@simonwunderlich.de>,
- Antonio Quartulli <antonio@mandelbit.com>,
- Matthias Schiffer <mschiffer@universe-factory.net>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH batadv 2/5] batman-adv: only create hardif while a netdev is part
- of a mesh
-Date: Sat, 31 May 2025 11:21:59 +0200
-Message-ID: <25663883.6Emhk5qWAg@sven-desktop>
-In-Reply-To: <7760123.MhkbZ0Pkbq@sven-desktop>
-References:
- <0b26554afea5203820faef1dfb498af7533a9b5d.1747687504.git.mschiffer@universe-factory.net>
- <e311c7d643fa1a7d13f2b518f6ee525eb6711f6c.1747687504.git.mschiffer@universe-factory.net>
- <7760123.MhkbZ0Pkbq@sven-desktop>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fz1VZYlx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6782C4CEE3;
+	Sat, 31 May 2025 09:25:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748683542;
+	bh=gh1SR7miY5UdrONx8owoLj2CLoe9Kbv/kgJkX7nLA/I=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=Fz1VZYlx0Intc+r890Ozgzaf+qe1xVhR5INS1LhDlYFJlulrWq6rlJHLwDnGeh4Bo
+	 f2nOal6mWiMg/KEhhya/lJDPVWhLVOyWgW871COuLwHds/n1aSTF2BdtBTsU+5sO8D
+	 teSlvChbpHfPwQjv60yx0aF0bvW3bhMFa7eFWNrUkwv4UN5dH/vej7nBuObWw6/Lt1
+	 ceh/RHguDJeRDXmTdtiDFfw/VoQmdDIp3N0Geqtrydn7toPcinJwQ2vP47IMDNenSJ
+	 iEqiagaD8b3BNvC9zAFciOHyfzxSQndYbHeTeSOGs7cu+l0TLec/7YRrDSdJyY41a0
+	 +ov8tOVJGxNQg==
+Date: Sat, 31 May 2025 04:25:39 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart4362857.Lt9SDvczpP";
- micalg="pgp-sha512"; protocol="application/pgp-signature"
-
---nextPart4362857.Lt9SDvczpP
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Sven Eckelmann <sven@narfation.org>
-Date: Sat, 31 May 2025 11:21:59 +0200
-Message-ID: <25663883.6Emhk5qWAg@sven-desktop>
-In-Reply-To: <7760123.MhkbZ0Pkbq@sven-desktop>
-MIME-Version: 1.0
-
-On Saturday, 31 May 2025 11:16:30 CEST Sven Eckelmann wrote:
-> And yes, this means that this needs to be removed in PATCH 3 again - together 
-> with the `kref_get` from this chunk (from PATCH 3):
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+ linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de
+To: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
+In-Reply-To: <20250531081159.2007319-2-abd.masalkhi@gmail.com>
+References: <20250531081159.2007319-1-abd.masalkhi@gmail.com>
+ <20250531081159.2007319-2-abd.masalkhi@gmail.com>
+Message-Id: <174868353988.72600.7039743404673669325.robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: misc: Add binding for ST M24LR
+ control interface
 
 
-Sorry, I meant [PATCH batadv 4/5] batman-adv: remove global hardif list
+On Sat, 31 May 2025 08:11:57 +0000, Abd-Alrhman Masalkhi wrote:
+> Add a Device Tree binding for the STMicroelectronics M24LR series
+> RFID/NFC EEPROM chips (e.g., M24LR04E-R), which support a separate
+> I2C interface for control and configuration.
+> 
+> This binding documents the control interface that is managed by
+> a dedicated driver exposing sysfs attributes. The EEPROM memory
+> interface is handled by the standard 'at24' driver and is
+> represented as a child node in the Device Tree.
+> 
+> Signed-off-by: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
+> ---
+>  .../devicetree/bindings/misc/st,m24lr.yaml    | 70 +++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/st,m24lr.yaml
+> 
 
-Kind regards,
-	Sven
---nextPart4362857.Lt9SDvczpP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+My bot found errors running 'make dt_binding_check' on your patch:
 
------BEGIN PGP SIGNATURE-----
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/misc/st,m24lr.yaml:25:11: [error] string value is redundantly quoted with any quotes (quoted-strings)
+./Documentation/devicetree/bindings/misc/st,m24lr.yaml:30:5: [warning] wrong indentation: expected 6 but found 4 (indentation)
+./Documentation/devicetree/bindings/misc/st,m24lr.yaml:70:4: [error] no new line character at the end of file (new-line-at-end-of-file)
 
-iHUEABYKAB0WIQS81G/PswftH/OW8cVND3cr0xT1ywUCaDrKNwAKCRBND3cr0xT1
-y/M0AP9g+BqAjjlxOI9kCnFV3nh+CKN2Ove7pEJWMkP87I5VgwEA5PqgyCOIwLh1
-ubidCl1lIiLg5iFmDYyAEkgqy89H7AM=
-=+h/T
------END PGP SIGNATURE-----
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/st,m24lr.yaml: maintainers:0: {'name': 'Abd-Alrhman Masalkhi', 'email': 'abd.masalkhi@gmail.com'} is not of type 'string'
+	from schema $id: http://devicetree.org/meta-schemas/base.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/st,m24lr.yaml:
+	Error in referenced schema matching $id: http://devicetree.org/schemas/misc/i2c-mux.yaml
+	Tried these paths (check schema $id if path is wrong):
+	/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/i2c-mux.yaml
+	/usr/local/lib/python3.11/dist-packages/dtschema/schemas/misc/i2c-mux.yaml
+Documentation/devicetree/bindings/misc/st,m24lr.example.dts:21.13-26: Warning (reg_format): /example-0/i2c/m24lr@57:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
+Documentation/devicetree/bindings/misc/st,m24lr.example.dtb: Warning (pci_device_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/misc/st,m24lr.example.dtb: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/misc/st,m24lr.example.dtb: Warning (simple_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/misc/st,m24lr.example.dts:18.13-35.11: Warning (i2c_bus_bridge): /example-0/i2c: incorrect #address-cells for I2C bus
+Documentation/devicetree/bindings/misc/st,m24lr.example.dts:18.13-35.11: Warning (i2c_bus_bridge): /example-0/i2c: incorrect #size-cells for I2C bus
+Documentation/devicetree/bindings/misc/st,m24lr.example.dtb: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/misc/st,m24lr.example.dtb: Warning (i2c_bus_reg): Failed prerequisite 'i2c_bus_bridge'
+Documentation/devicetree/bindings/misc/st,m24lr.example.dtb: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/misc/st,m24lr.example.dts:19.20-34.13: Warning (avoid_default_addr_size): /example-0/i2c/m24lr@57: Relying on default #address-cells value
+Documentation/devicetree/bindings/misc/st,m24lr.example.dts:19.20-34.13: Warning (avoid_default_addr_size): /example-0/i2c/m24lr@57: Relying on default #size-cells value
+Documentation/devicetree/bindings/misc/st,m24lr.example.dtb: Warning (unique_unit_address_if_enabled): Failed prerequisite 'avoid_default_addr_size'
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/st,m24lr.example.dtb: m24lr@57 (st,m24lr04e-r): 'i2c-gate' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/misc/st,m24lr.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/st,m24lr.example.dtb: m24lr@57 (st,m24lr04e-r): {'compatible': ['st,m24lr04e-r'], 'reg': [[87]], 'i2c-gate': {'#address-cells': 1, '#size-cells': 0, 'm24lr_eeprom@53': {'compatible': ['atmel,24c04'], 'reg': [[83]], 'address-width': 16, 'pagesize': 4}}, '$nodename': ['m24lr@57']} should not be valid under {'description': "Can't find referenced schema: http://devicetree.org/schemas/misc/i2c-mux.yaml#"}
+	from schema $id: http://devicetree.org/schemas/misc/st,m24lr.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/st,m24lr.example.dtb: m24lr_eeprom@53 (atmel,24c04): $nodename:0: 'm24lr_eeprom@53' does not match '^eeprom@[0-9a-f]{1,2}$'
+	from schema $id: http://devicetree.org/schemas/eeprom/at24.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/st,m24lr.example.dtb: m24lr_eeprom@53 (atmel,24c04): pagesize: 4 is not one of [1, 8, 16, 32, 64, 128, 256]
+	from schema $id: http://devicetree.org/schemas/eeprom/at24.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/st,m24lr.example.dtb: m24lr_eeprom@53 (atmel,24c04): Unevaluated properties are not allowed ('$nodename', 'pagesize' were unexpected)
+	from schema $id: http://devicetree.org/schemas/eeprom/at24.yaml#
 
---nextPart4362857.Lt9SDvczpP--
+doc reference errors (make refcheckdocs):
 
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250531081159.2007319-2-abd.masalkhi@gmail.com
 
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
