@@ -1,330 +1,235 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3BC528FF;
-	Sat, 31 May 2025 00:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748650527; cv=fail; b=LQVOfYZm8TGcsxT44JUag6NJc6N3eAMxBR8iYSMYw+5bz7u7ZPiyC9YL0XAXme3dF0rrZY/TE+xEw5Qoyg0rQWvz/hdscKKNXtcndhm03H6hKBmjVFCP6ZZ1/ubgU0YADlLvmpVdI4BEhDZAWpIzaNgD0OIEb18//GBxZDY0lgA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748650527; c=relaxed/simple;
-	bh=s0IyvXYrNgM/AW/PGmikeIIQPiIM/3ZO1RRCxAPdMyA=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=h/2n6Zj7g/cGx0Q8lZWOHJlxJffnwhxAvKkuXFEd+GfH+mQ69UcjeUAE4F+udLsqIjQpDrxZQRJaWxITLCAeUo8NykmeVxjJhrVm2BbbY6wi/3bU8A2RwFsmIbUbeyrJBFlet0mZ47OkmMifmCEyNLsiA9ySmWEtMZ/K0gspeCg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dNX+znx5; arc=fail smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A655528FF;
+	Sat, 31 May 2025 00:24:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748651079; cv=none; b=HrUMS2REXDjbAWhumRw3RROybBZelBGWJlfYSvN9lnPJDDKDG3WY0rV2cxDuN2yL688SQxlPjCVtRtCVwb1YHXH44vv456bHWT4IuBavv8Y8bfX+GlK0kmbvFVhKja3HubEMg9WRh5G0HglB6MYAn/PdZbVypRxUmbISlnIG0PM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748651079; c=relaxed/simple;
+	bh=kdjY5G68O/RRWuFyUIE57CZllkCraz+Vj3AUv2+NaSs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kUX8arcJuMvY/6VBOjJ+RQNCv2Hbijjo97I8MGTTJwF+9ZU7n8ZPEyVu+6fkTG35zhAiYEq5a9DYRoVjnJaMn1zqdccNB2XqOq22OM4cUeguG8fvzAt8CoMvVi4dLogUVAnaU89mlLfQoOiv1xQqrgNO5utmFfmnllOkcLZnpn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jt7pnwpa; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dNX+znx5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748650525; x=1780186525;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=s0IyvXYrNgM/AW/PGmikeIIQPiIM/3ZO1RRCxAPdMyA=;
-  b=dNX+znx5WtTtKa9vHeoCYJG8pCG97bvlRTJgKt4Zyy4Pbr37kHMrZTAl
-   P+ExN2DntLcIQ+YzPER3f1DVty/T/OyjwlT+DVQNtcEzsJjNlXAJjx8zk
-   8nr3h2hFEG4RQaW+/uF5l7QeHhSUm3gaFGJ7OXrxE9TAPgHzBwZuFwBqA
-   tr84UlnZ2LeLyvrd4HcNRCc0xpwxStbWQutS4PaQNdTNHhKRGCGFAXRng
-   pmO/edIFZSBc06nBDLdwCHunxle0j2lYx+1QKVOffW21D6HyfqYqfKB+X
-   AYh1yXv7NANONwWWM0JHaGBjwi7B6nLn4XzMjq9OzvsKpIQjTHnOcOOK2
-   w==;
-X-CSE-ConnectionGUID: u9qeDUo8TOOdBXjog8hJSA==
-X-CSE-MsgGUID: OmlxxoRCQ3WINeZRUO0pqQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="50851488"
-X-IronPort-AV: E=Sophos;i="6.16,197,1744095600"; 
-   d="scan'208";a="50851488"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 17:15:21 -0700
-X-CSE-ConnectionGUID: GIbDHBPyRaysk4cPyGB6MQ==
-X-CSE-MsgGUID: HRzoH6rMQiGf6MwrAcFKRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,197,1744095600"; 
-   d="scan'208";a="167198903"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 17:15:14 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Fri, 30 May 2025 17:15:12 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Fri, 30 May 2025 17:15:12 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (40.107.94.46) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Fri, 30 May 2025 17:15:12 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=koDsB6KDhBVWqyPkjMiC/WlSwe5NmmqAjr2fEll9NWNe6TeBkm4roTDD/WgoqQaLFlpKFyRZW4yr04CTWlafIUIhL3FE8dbEw1LYIwEYHtnkeHkzeNBGrEHeeLb0ZHPsVwg7mFLdXe693r1rVxfqZMKESivuIku9eb4RS7I8uAELwYQF4e0fqdNtRyN+C/V86id2E2fTqRdqI+wyprIA8ksFMI8stjzc8vmlAxIOw+PaEA8Nl5gz71Iwwsqk06A5ulP4JW4uLOWi6/8xNU0NtdmHfe76IxQNWPvHTgnGfsQgB6j+ND3+oxI6d9QgY4x6xvYrOnAd8RmTorlmY4B5gQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DNhceUk75rXGzzpE9gysovv87urg/r4sGJKOGYOl9r4=;
- b=oPQgC0cWif/Ja4tyi1yH3+9vk+eQm0mMRj6+hNKgv0LS08joMuuqYG1o9FWpKVKBECOIbf/6yVC1VKdbJ5RkCttFb/W6tO1XhSD8JjQkq0dCr6ucQ0g8uvpWT5PCrT93Qc4ifP8KdMEa1MNKP1tSwwePpYD9SVtxHA87l4BgOrZ7AcrtzkZYSZDufih+JlGWlTTg/QqPhMpXSM985tVywaNbrNxA0eOEvW5NPAcJKLV3lQn2mRcfa2wSDTJlJhf+Z8dpY/vT9iUi++2K6Yus+u8utdaM2MTxazoFTPzPeCYp3HnN+Ro8VY6dYdaffQDwPEZnywBTyutsHQf4GY2KGQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM6PR11MB3322.namprd11.prod.outlook.com (2603:10b6:5:55::19) by
- BN9PR11MB5257.namprd11.prod.outlook.com (2603:10b6:408:132::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.30; Sat, 31 May
- 2025 00:14:29 +0000
-Received: from DM6PR11MB3322.namprd11.prod.outlook.com
- ([fe80::fca4:6188:1cda:9c1e]) by DM6PR11MB3322.namprd11.prod.outlook.com
- ([fe80::fca4:6188:1cda:9c1e%4]) with mapi id 15.20.8769.025; Sat, 31 May 2025
- 00:14:29 +0000
-Message-ID: <cd6bffc0-2d11-4f2f-be82-0f4504fb26d2@intel.com>
-Date: Fri, 30 May 2025 17:14:27 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/1] selftests/x86: Add a test to detect infinite
- sigtrap handler loop
-To: "Xin Li (Intel)" <xin@zytor.com>
-CC: <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
-	<shuah@kernel.org>, <andrew.cooper3@citrix.com>,
-	<linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
-References: <20250530230707.2528916-1-xin@zytor.com>
-Content-Language: en-US
-From: Sohil Mehta <sohil.mehta@intel.com>
-In-Reply-To: <20250530230707.2528916-1-xin@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BYAPR07CA0063.namprd07.prod.outlook.com
- (2603:10b6:a03:60::40) To DM6PR11MB3322.namprd11.prod.outlook.com
- (2603:10b6:5:55::19)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jt7pnwpa"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-742c27df0daso2133682b3a.1;
+        Fri, 30 May 2025 17:24:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748651077; x=1749255877; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=OJ4CEjhtCsMEo3sQ6MMn2NqLJYvOFiif6cKeN6zOFkg=;
+        b=Jt7pnwpaLKy/zyQ9qyIDYhzqQLBRAachEr0h0zM5LYE0HyhoqGElAeHPGVEAYGWtA7
+         RjokIWmPdvnZV0wj+CzUOOWYrWpSA0bEDsNU+h11OED3hrJr51td1VbXfcnjycHR+QlF
+         DapX/xdhOuVlxZNvmsKJCRefG2K2/syNQOFly9LcDsyPOx1VA/vUJL8p1z86bV0/cmsD
+         0CUQCtuCGAGtkJ5aH+5KU70lNJNilcT7kxcTyfIO3TFdybdTDE/UtVCYgD56vEwnLpUf
+         W37VHfs1CR2QfIyRKe8QjIEXGs7UCoB5ZqTDOBYyxTEhL2V9T90ny3nstZQUar5jexnD
+         aivw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748651077; x=1749255877;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OJ4CEjhtCsMEo3sQ6MMn2NqLJYvOFiif6cKeN6zOFkg=;
+        b=R/1FJ/K8SJqb/RDDwT64RRayNPOTt532A0/EGNLdKUrQONKRGIwCQTmDHJeUh2Gz3P
+         RigNj1ptG48Lcx9BrKCFcSqxiz7hlkJPG83Cej93BR9d7B+zgalGS3wS3g/XRvgMTT/O
+         kq2FstLLdc1Mm5J2+miSvjAQjoiCJ3t2xUt1KbeJ75H0Bbl5+ZChWpYokdxLHgNvOiSA
+         grhN3t38c4EtM/IjxrJt/4Sx64rpOkTRUeNbObH7VJ47ixLH8vqJfFIMhHNZaB2c6URj
+         D6hG36rn7wC9Q17it8dfHBcQcAu01lIt426xIkm8oK+ebOSwwhJgq1yvZtg/MtIQbLUx
+         nRzw==
+X-Forwarded-Encrypted: i=1; AJvYcCW1Cs3odbkXeuKB2pjHYjwmjGJIF7sterZIchTrkQSHy74AwUWHJzza/2V0xh9ZHQuTMj3YMw3l@vger.kernel.org, AJvYcCXP1XKg/fan0gdExfbwYB5Hk5+KbTV/dAvl91d6lIX/ozBzH78PldLWi7XY5AYE6mbISBIlXoAPMd38kdY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8o7RMZxfWZvA6/KNz47QGC5+E+3vlg2yWB00VY577ALgxPqyf
+	sFUnO53mJ0CAoZkMvQbvATaTNoI+whccd2cL4U5W8E/iW/SPlh2sJDde
+X-Gm-Gg: ASbGnctXtIMh5absdm5kU76WP1udtN6mr877aswuhx3waWMt84oftu9CdCGKTCaGjYt
+	kKhTf8K9zWl2rr6no2iDKc63NxUOIXfrFHSjxn4UhjZ9QPJoRH+KrALtz6W5wmrcdtxhKSzwzsI
+	yMAgKE9++8l8ZBVyXl0lBd9SoSwVesAQNDClq/Ty0vRrXmIXtzrAg6r2x/1tMgf0HOap0XzANbN
+	8glxnKkOwSG4YzYeoLMhgIIbV6kk2Vt0dospObZiQGbiWEQ67zy7mnMVbxjQmMn+O/xKGhuuUcD
+	7ZmhYvSVjkLQYMYKYW44KyB3akyLCP/Oy6APAo60R4z5TGk6Od51ejkHRC9e2acLzL/0zkc4MGY
+	354GRm1f4Wak6n1j8wAXFTAtm
+X-Google-Smtp-Source: AGHT+IFDfpYHHpHeHr4rwGfSLVFcV+747OCTV1m4KHfob0XclD4SaKP/MqNM1dE9b/Hm/BcBa5/D9g==
+X-Received: by 2002:a05:6a20:7484:b0:218:5954:1293 with SMTP id adf61e73a8af0-21ad97f95b5mr10118656637.34.1748651076822;
+        Fri, 30 May 2025 17:24:36 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747affafb51sm3601133b3a.120.2025.05.30.17.24.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 May 2025 17:24:36 -0700 (PDT)
+Message-ID: <f5461b58-79ad-40b0-becd-3af61658bf61@gmail.com>
+Date: Fri, 30 May 2025 17:24:34 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR11MB3322:EE_|BN9PR11MB5257:EE_
-X-MS-Office365-Filtering-Correlation-Id: ebc7a125-519b-44eb-38e1-08dd9fd81c4e
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?eXQvajNRa25PTnRwNWlSV3AraGQ1SFU0cHBFdkFvcml4ZnFZVVJaQmh2eXY3?=
- =?utf-8?B?Z0w0ZmRXZit0cXlPR2cySUxzeFhwZDhhbWJSWW5yVzMwelNWeHhOczJQOVhJ?=
- =?utf-8?B?QmVpUXRRUDJ3bndJcFpYMThGNE5xTEk3cDg2NEY4WFBzY3p0VDIvSkwzbXds?=
- =?utf-8?B?SUdGNHd6N2R3cVg0UlQ0SC9yenhqUEFBa3d6RDRxTkR2ZEQzVzlHWTFSZ200?=
- =?utf-8?B?OWpkTXJDbGsxTkY2ZGw3bXFiU3IraWl6ZHBjd0I4Z3lZbXdab3RqRjlrcEN6?=
- =?utf-8?B?T0JyeExISFgrdG4yK1JiVnJHbTZMaS9hbTlNNUtNaWp3VTRQS3JKQ3k2RnBt?=
- =?utf-8?B?YTNhMURUdGVCV285SEhFZ3lQUVZGWng2RU53RUh1UmpGRFZzczhUVVpMbHU2?=
- =?utf-8?B?SVRCYlR0WFZoL3kvRkxhQ3MyZlVhd2dlMWVUWWUyYklvVHFCNGJ3Y2JsTGNF?=
- =?utf-8?B?ajFPMndPak41TTVtWTdYQm5aY2l0cEw3WWxWRlpyRWVrMjRiMHBVL0hNWUpC?=
- =?utf-8?B?OFEydGFmdEtqdm5HQmxyRis2aENVcXpsRXo5cGV5eXcxUE1mS3ZhcmdQL0Fj?=
- =?utf-8?B?cGxDbEtoNGd6MW1Md3JCTmpMVWttSFZHYytJM0dMdEpPajFKNXRDQ2M2eWE0?=
- =?utf-8?B?cEc5RTE3SVA3aHd4TnBzdE1GOTYvU1BvUWx1MGd0bGpIdWtlMTVwV09yRzZB?=
- =?utf-8?B?SjU3MFpmZk5hVytjUndBY1Q3Vm5zV0QxK0N0MC96N0lYZnN4Y3g5ZUlLVElN?=
- =?utf-8?B?R05LWVc5LzAxR2s2bGdGakNYTEdCN3llWHNLeWFmUENxUE91U0dJb1RESisz?=
- =?utf-8?B?TTRSWURDNGN5U0JHSnpGZGV6UVgxYjJES2p3TFAxaCt4TG14RjBkMEpUQk1T?=
- =?utf-8?B?ZWlmM3lPUFdYYkREYnFGQ3lFaFBzQ25tMXlPbHp6QXN1TnVSSkdOMmFmQ2Fj?=
- =?utf-8?B?eUpoYUxvcnUyT3l6RkFnQTNrSno3bzhjWXdmd1hsR3RpVzBrUHRkVThGUkF0?=
- =?utf-8?B?UXZqSWc4ZnFnakxBVHMyaGgvVkdHTXhhcE1oQmtUdytYcUl5eVRiL0pMVHJq?=
- =?utf-8?B?OVVGZTNXaXRNUkZua0oyNkJ0ZjZlSVc2SDhTMFY2UjhVdnRHYkhoY3MwVEVR?=
- =?utf-8?B?d0tzRExNNUVieUFGSEpPL3puZVFRREQyNTZUZi9lam9RNTJGUlJNcEg3Q05x?=
- =?utf-8?B?bVQyZ3lqWVRPWkw0MGRmOUpFYjF6NDBqR0VhdkVWbENhamtMWWp0M2JYV0tT?=
- =?utf-8?B?cEFDcXZVeVo3RVlKS25sUXp4Z2drMjFlQUdHVHFGRWZINHUzV3NPYi9YbThP?=
- =?utf-8?B?dUlhMDhtR1dXcXU5RnAzN1AzY25jdnl2dXJibEpOV0Q4TlpnQ2dzMHU5c3Bn?=
- =?utf-8?B?TTJxUDZXcEptcWNoOEJmL00ycFB3ejc0aWVpbGNUMGIyUVBxZldDSTJsRXFU?=
- =?utf-8?B?ME5UdEY3K1Z6ZXl2N0UrNUFvT09RbkhTQ3ZFMEhkN2ZCOFl4R2lYYlpSdVhJ?=
- =?utf-8?B?Yk9OQ0ZlRXFBcjlwTVZCcmtqUXp2RFFkR1VpdEVLWU5xNEt0V29DZGV5TVI5?=
- =?utf-8?B?Z3B2ZkpNb3JyZnZ0aGJMNjNubzVrZnBiWEJnU3hleE9oNTJVc3U0MXpuZC9I?=
- =?utf-8?B?UlVKZmY2bk8ySTJ1YUN1Q3JnZVBDS20wa3k1VENRZ3lJTmFHdjhWTkpKWjlj?=
- =?utf-8?B?M1F5OVNqeFFhaXdjYU1JTG9WZElETURSNkhONXkvZnVXRWJOc1U3U0daa1pi?=
- =?utf-8?B?anZCY2pNTXBDa3VnbitZamRIOEF1SHhGWG4zMU0rYngvQklvQ0svUHlDdTFt?=
- =?utf-8?B?ZmZnQklnbXpHTWhaV2dFSCtvdlBJNW14eVdaeFJ2Z3dNU0NhcHJhTnBuY2tx?=
- =?utf-8?B?RmNTQXdPVW5mZVl6ZS9zNjVQZFRnTG82TjNnYWRNZlBjVzllTzQzZFpUVitS?=
- =?utf-8?Q?0XPqnZ6ek+k=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3322.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?a3ZVaU9yNm96SGtZaWttQWRWQ215UnNlRkJGUktLZDY5UWZWWmJmYldtd1BQ?=
- =?utf-8?B?c3A0NEQrK2hTYzRaOUFRUDkvM09VdTg1NVJ4VmNKOGVhMStxb2ZCK0ZSdFdV?=
- =?utf-8?B?NlRJOFJ0Z2ErbE1UZ1B2QmIxVy9SVnJ4bHRBc1VsRlFLdDBoZlhKQWhpWVJH?=
- =?utf-8?B?THMwekcwOFJ3SzBvaGwwZnArbWlGZDZHTmsxUTZudS9ielhxc2lIOVBOK2xi?=
- =?utf-8?B?M1YwNHFnSGN3NDJFcFBodVNUTjhGU3VDcXg2QmtCaXVhdThYRjN3RmQ0L0kw?=
- =?utf-8?B?bzVQaUpjR09MakhkREF6U2JML05jWE1aOGFVN0JFYXdJT3BMV1djZEdCWlpE?=
- =?utf-8?B?Sm9VakZpUU1OS3JVRnZqalRSVjFGUXJzeTB2UDBYcytZeW5qbkJ0QmcwVnpv?=
- =?utf-8?B?QytFTmNiS0F6UVVkK2dsTkxJUk1tK0x3NHA0Q0JNZTdHTTM0bUNuNGkxYlBC?=
- =?utf-8?B?OGl5b3NiSWd5OTJpVTNIaVVZU2lDTWczZ2tkNFlTbjYwUXBoZ0thMjcyUVNj?=
- =?utf-8?B?MjZkUmNZZEFYTkw2QnpjclBsUnZOOXk0aE05YkdubnRVTVFCd3h1bXI4c1Fn?=
- =?utf-8?B?ZE9BakZzTnJmaS9aWUZPVndIeWRseGFTV3d1Rm1lQ3ZzNWxRd0xyVWpNdmIx?=
- =?utf-8?B?MzhwWjBlWVJMM2lwNzhhMGttdllYS1o0S0ZQR0tvb1laMUJtVzdMRkt6VUc4?=
- =?utf-8?B?WjJHVXpFdmJFM3dSSzNrMWNJWGJSanFxUXlHWVpvenBmT29zSk9zU1JWcThz?=
- =?utf-8?B?VHpnczJBb2xYKytTdURRb0VuMzJCVGNyVHRoajg3Zjh5QVExaUcrT1pJYWxJ?=
- =?utf-8?B?Qm9NUHRaS25XTFQ0SVo3N0xsS0x6MFpON0hVVkljTmwvOTU1ekFSQUNRYWtJ?=
- =?utf-8?B?VjhUWWFTYUlIdzFIeEUxY3NnVHBvUS9jVXhmVmlIVExRWW1mbWdBU3VHbzNp?=
- =?utf-8?B?UGUrWHlQaDN6dDBqcVF0Ym05ZExjRWwvZGh1TzdEUTZaOFE3VU1Uc3VvNGhv?=
- =?utf-8?B?TFdLdUQxNkZULzlVUnFCYjlTQkhwZ25GdEZKdnRMT0F4NDEwZk5nbjRwOFpX?=
- =?utf-8?B?emhIVUt1MFl2RXBPakx2QWZCVHdYSnVGU2Q4d1pMK0srdGhLeVR2L1dEb0J2?=
- =?utf-8?B?VVBIdEtKdmhNN3UzNHNRVXJUelpXWDhtMlBDT093MXFWYzdUZVVJV0Z2ZWV1?=
- =?utf-8?B?SFhhSHd1WXFienc4YWpVOU5XZUZsRG9rSms5bFdRdXFKazRFNXBPOUgxT3Vn?=
- =?utf-8?B?OEVpekdJdmM1eWxDQ0Rac3ZqaWJoQTJMbG1zV1JQaUVqakZPSHAwbHhoMWdp?=
- =?utf-8?B?d0trdmNGZDFaRHhBdXZOUGZGM2pJRkd0d042YWt6LzN1VFhjRitjM0JPemlW?=
- =?utf-8?B?YmMyOUVVRUx2alZDVlJQTlAzOTdpWjQzNlpNVkNianJKc2pUZFVFcGZ5M0k0?=
- =?utf-8?B?aXJuQmJQQjA2MXpjaU82aFhYMk5iRUVnRFg0S0xsNThhcHJDMHNBM0RQVmR5?=
- =?utf-8?B?RFI5bzhKbE56QThNNzFpZy9YY3NvR0IxRGNkNEI3aGRPR0x0RlgzYVNNdVNN?=
- =?utf-8?B?aHg4aDJGcVlzZWFQOCtVN1JjSjUxUlNVU2xuYUVETVJBRjUzbjBGbDVDbnFs?=
- =?utf-8?B?OW5EMW11SjZFbGNGMmJuMmEzbTFsbngxSzNiYi82RDUvWXdjRFk4dDk2TFhs?=
- =?utf-8?B?QlgrMnNFU1RDbTd3RFpjcmVJdjMyWVBDUExvVHVDZzZCRHAzZnZTQnZSWDNZ?=
- =?utf-8?B?Kzd1STJ2TDdpUm0rQnFmdFVTUDUyR0NpTnB5MHZUWXQ4bEZyY0NGSDdvOVl6?=
- =?utf-8?B?ZHR0a0s3dlE3bXFxWmhDMzFBTGNDOG1LbWxWT2VHdHRnQk1wREU3S0Z6a2tP?=
- =?utf-8?B?eXJ6aHZ0dkFkRnRxdzE1VzQwRGlHN2lNemdOUVNSckltaUp2OGVNUXhhRm9P?=
- =?utf-8?B?T2t0NDlQUGF0ZEJTSzRSQ1hpYVRjUlYyWk94b1UyaVNnZlF6YUVXc3JkN3RJ?=
- =?utf-8?B?NjUzZHQ1cVlIa0g4WlBJeEJWRWhlempjMTVuZ3NWRnNhbVI1Z1RGeGFOa1Vn?=
- =?utf-8?B?Y1ROSW5jNHZPK3pFNTFFWm8rMExUekJZUXl3d3c2YlNDeHI1MWNhdHo2NlRa?=
- =?utf-8?Q?vyEjnoPsb353VH5uGdCMEV4Op?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: ebc7a125-519b-44eb-38e1-08dd9fd81c4e
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3322.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2025 00:14:29.5603
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rst5cLKLmZWsCLsAGM5QJyxTOnOmw2IPXTggyaiPWVAhSd3CACWxo1VDb0gx4X6GJM0FgxenBhdvw+1ODCunXw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR11MB5257
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] net: stmmac: allow drivers to explicitly select
+ PHY device
+To: James Hilliard <james.hilliard1@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
+ linux-sunxi@lists.linux.dev, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Russell King <linux@armlinux.org.uk>,
+ "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+ Furong Xu <0x1207@gmail.com>,
+ Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250527175558.2738342-1-james.hilliard1@gmail.com>
+ <631ed4fe-f28a-443b-922b-7f41c20f31f3@lunn.ch>
+ <CADvTj4rGdb_kHV_gjKTJNkzYEPMzqLcHY_1xw7wy5r-ryqDfNQ@mail.gmail.com>
+ <fe8fb314-de99-45c2-b71e-5cedffe590b0@lunn.ch>
+ <CADvTj4posNXP4FCXPqABtP0cMD1dPUH+hXcRQnetZ65ReKjOKQ@mail.gmail.com>
+ <e1f4e2b7-edf9-444c-ad72-afae6e271e36@gmail.com>
+ <CADvTj4oSbYLy3-w7m19DP-p0vwaJ8swNhoOFjOQiPFA24JKfMQ@mail.gmail.com>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <CADvTj4oSbYLy3-w7m19DP-p0vwaJ8swNhoOFjOQiPFA24JKfMQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 5/30/2025 4:07 PM, Xin Li (Intel) wrote:
-> When FRED is enabled, if the Trap Flag (TF) is set without an external
-> debugger attached, it can lead to an infinite loop in the SIGTRAP
-> handler.  To avoid this, the software event flag in the augmented SS
-> must be cleared, ensuring that no single-step trap remains pending when
-> ERETU completes.
+On 5/30/25 17:02, James Hilliard wrote:
+> On Fri, May 30, 2025 at 5:56 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>>
+>> On 5/30/25 16:46, James Hilliard wrote:
+>>> On Tue, May 27, 2025 at 2:02 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>>>>
+>>>> On Tue, May 27, 2025 at 01:21:21PM -0600, James Hilliard wrote:
+>>>>> On Tue, May 27, 2025 at 1:14 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>>>>>>
+>>>>>> On Tue, May 27, 2025 at 11:55:54AM -0600, James Hilliard wrote:
+>>>>>>> Some devices like the Allwinner H616 need the ability to select a phy
+>>>>>>> in cases where multiple PHY's may be present in a device tree due to
+>>>>>>> needing the ability to support multiple SoC variants with runtime
+>>>>>>> PHY selection.
+>>>>>>
+>>>>>> I'm not convinced about this yet. As far as i see, it is different
+>>>>>> variants of the H616. They should have different compatibles, since
+>>>>>> they are not actually compatible, and you should have different DT
+>>>>>> descriptions. So you don't need runtime PHY selection.
+>>>>>
+>>>>> Different compatibles for what specifically? I mean the PHY compatibles
+>>>>> are just the generic "ethernet-phy-ieee802.3-c22" compatibles.
+>>>>
+>>>> You at least have a different MTD devices, exporting different
+>>>> clocks/PWM/Reset controllers. That should have different compatibles,
+>>>> since they are not compatible. You then need phandles to these
+>>>> different clocks/PWM/Reset controllers, and for one of the PHYs you
+>>>> need a phandle to the I2C bus, so the PHY driver can do the
+>>>> initialisation. So i think in the end you know what PHY you have on
+>>>> the board, so there is no need to do runtime detection.
+>>>
+>>> Hmm, thinking about this again, maybe it makes sense to just
+>>> do the runtime detection in the MFD driver entirely, as it turns
+>>> out the AC300 initialization sequence is largely a subset of the
+>>> AC200 initialization sequence(AC300 would just not need any
+>>> i2c part of the initialization sequence). So if we use the same
+>>> MFD driver which internally does autodetection then we can
+>>> avoid the need for selecting separate PHY's entirely. This at
+>>> least is largely how the vendor BSP driver works at the moment.
+>>>
+>>> Would this approach make sense?
+>>
+>> This has likely been discussed, but cannot you move the guts of patch #2
+>> into u-boot or the boot loader being used and have it patch the PHY
+>> Device Tree node's "reg" property accordingly before handing out the DTB
+>> to the kernel?
 > 
-> This test checks for that specific scenario—verifying whether the kernel
-> correctly prevents an infinite SIGTRAP loop in this edge case.
+> No, that's not really the issue, the "reg" property can actually be
+> the same for both the AC200 and AC300 phy's, both support using
+> address 0, the AC200 additionally supports address 1. In my example
+> they are different simply so that they don't conflict in the device tree.
 > 
-
-It isn't clear from the commit message whether the test is specific to
-FRED or a generic one.
-
-> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-> ---
->  tools/testing/selftests/x86/Makefile          |  2 +-
->  .../selftests/x86/test_sigtrap_handler.c      | 80 +++++++++++++++++++
->  2 files changed, 81 insertions(+), 1 deletion(-)
->  create mode 100644 tools/testing/selftests/x86/test_sigtrap_handler.c
+> The actual issue is that they have differing initialization sequences and
+> won't appear in mdio bus scans until after the initialization is complete.
+ > >> Another way to address what you want to do is to remove the "reg"
+>> property from the Ethernet PHY node and just let of_mdiobus_register()
+>> automatically scan, you have the advantage of having the addresses
+>> consecutive so this won't dramatically increase the boot time... I do
+>> that on the boards I suppose that have a removable mezzanine card that
+>> includes a PHY address whose address is dictated by straps so we don't
+>> want to guess, we let the kernel auto detect instead.
 > 
-> diff --git a/tools/testing/selftests/x86/Makefile b/tools/testing/selftests/x86/Makefile
-> index f703fcfe9f7c..c486fd88ebb1 100644
-> --- a/tools/testing/selftests/x86/Makefile
-> +++ b/tools/testing/selftests/x86/Makefile
-> @@ -12,7 +12,7 @@ CAN_BUILD_WITH_NOPIE := $(shell ./check_cc.sh "$(CC)" trivial_program.c -no-pie)
->  
->  TARGETS_C_BOTHBITS := single_step_syscall sysret_ss_attrs syscall_nt test_mremap_vdso \
->  			check_initial_reg_state sigreturn iopl ioperm \
-> -			test_vsyscall mov_ss_trap \
-> +			test_vsyscall mov_ss_trap test_sigtrap_handler \
->  			syscall_arg_fault fsgsbase_restore sigaltstack
->  TARGETS_C_BOTHBITS += nx_stack
->  TARGETS_C_32BIT_ONLY := entry_from_vm86 test_syscall_vdso unwind_vdso \
-> diff --git a/tools/testing/selftests/x86/test_sigtrap_handler.c b/tools/testing/selftests/x86/test_sigtrap_handler.c
-> new file mode 100644
-> index 000000000000..9c5c2cf0cf88
-> --- /dev/null
-> +++ b/tools/testing/selftests/x86/test_sigtrap_handler.c
-> @@ -0,0 +1,80 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
+> Yeah, I noticed this, but it doesn't really help since it's not the address
+> that's incompatible but the reset sequence, I'm having trouble finding
+> examples for mdio based reset drivers in the kernel however.
 
-Curious about your use of GPL-2.0-or-later?
+Fair enough, but it seems like we need to dig up a bit more here on that 
+topic. There is an opportunity for a MDIO driver to implement a 
+"pre-scan" reset by filling in a mdio_bus::reset callback and there you 
+can do various things to ensure that your Ethernet PHY will be 
+responsive. You can see an example under 
+drivers/net/mdio/mdio-bcm-unimac.c to address a deficiency of certain 
+Ethernet PHYs.
 
-All the files in this directory use GPL-2.0-only or GPL-2.0.
+Through Device Tree you can use the standard properties "reset-gpios", 
+"reset-assert-us", "reset-deassert-us" to implement a basic reset 
+sequence on a per-PHY basis, there are other properties that apply to 
+the MDIO bus/controller specifically that are also documented.
 
-> +/*
-> + *  Copyright (C) 2025 Intel Corporation
-> + */
-> +#define _GNU_SOURCE
-> +
-> +#include <err.h>
-> +#include <signal.h>
-> +#include <stdio.h>
-> +#include <stdlib.h>
-> +#include <string.h>
-> +#include <sys/ucontext.h>
-> +
-> +#ifdef __x86_64__
-> +# define REG_IP REG_RIP
-> +#else
-> +# define REG_IP REG_EIP
-> +#endif
-> +
-> +static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *), int flags)
-> +{
-> +	struct sigaction sa;
-> +
-> +	memset(&sa, 0, sizeof(sa));
-> +	sa.sa_sigaction = handler;
-> +	sa.sa_flags = SA_SIGINFO | flags;
-> +	sigemptyset(&sa.sa_mask);
-> +
-> +	if (sigaction(sig, &sa, 0))
-> +		err(1, "sigaction");
-> +
-> +	return;
-> +}
-> +
-> +static unsigned int loop_count_on_same_ip;
-> +
-> +static void sigtrap(int sig, siginfo_t *info, void *ctx_void)
-> +{
-> +	ucontext_t *ctx = (ucontext_t *)ctx_void;
-> +	static unsigned long last_trap_ip;
-> +
-> +	if (last_trap_ip == ctx->uc_mcontext.gregs[REG_IP]) {
-> +		printf("trapped on %016lx\n", last_trap_ip);
-> +
-> +		if (++loop_count_on_same_ip > 10) {
-> +			printf("trap loop detected, test failed\n");
-> +			exit(2);
-> +		}
+How does it currently work given that your example Device Tree uses:
 
-Most of the x86 selftests use the ksft_exit_fail_msg(), ksft_print_msg()
-or [RUN, FAIL, OK] style for error messages and other informational prints.
+compatible = "ethernet-phy-ieee802.3-c22"
 
+this will still require the OF MDIO bus layer to read the 
+PHYSID1/PHYSID2 registers in order to match your PHY device with its 
+driver. You indicated that the PHYs "won't appear in mdio bus scan" 
+unless that sequence is implemented. How would they currently respond 
+given the example?
 
-> +
-> +		return;
-> +	}
-> +
-> +	loop_count_on_same_ip = 0;
-> +	last_trap_ip = ctx->uc_mcontext.gregs[REG_IP];
-> +	printf("trapped on %016lx\n", last_trap_ip);
-> +}
-> +
-> +int main(int argc, char *argv[])
-> +{
-> +	sethandler(SIGTRAP, sigtrap, 0);
-> +
+If you can involve the boot loader, you can create a compatible string 
+for your PHY of the form:
 
-I would suggest a comment here to explain what the following assembly
-code is supposed to do. It isn't obvious from a cursory look.
+compatible = "ethernet-phy-idae02.5090"
 
-> +	asm volatile(
-> +#ifdef __x86_64__
-> +		/* Avoid clobbering the redzone */
-> +		"sub $128, %rsp\n\t"
-> +#endif
-> +		"push $0x302\n\t"
-> +		"popf\n\t"
-> +		"nop\n\t"
-> +		"nop\n\t"
-> +		"push $0x202\n\t"
-> +		"popf\n\t"
-> +#ifdef __x86_64__
-> +		"add $128, %rsp\n\t"
-> +#endif
-> +	);
-> +
-> +	printf("test passed\n");
-> +	return 0;
-> +}
-> 
-> base-commit: 485d11d84a2452ac16466cc7ae041c93d38929bc
+that includes the PHY OUI, and that will tell the OF MDIO bus code to 
+bind the PHY device with the driver specified in the compatible string 
+without reading the PHYSID1/PHYSID2 registers. Since you can detect the 
+boards variants, you could do that.
 
+It then becomes highly desirable to have a "dedicated" (as opposed to 
+using the "Generic PHY") driver that within the .probe function can take 
+care of putting the PHY in a working state.
+-- 
+Florian
