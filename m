@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 718D079D0;
-	Sat, 31 May 2025 15:29:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63BB323E330
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 15:30:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748705386; cv=none; b=ZGwaCDQTNt3LW42QrmzDviXjJMI1rz3OpKFW9zSZfbIK5zSh2Ut7nYTyS9XvqngwZyIvTN7W+vEHoWWIWEKNUgU0Fnn+LQm3uoQjjT3QHKgMrmDJOMDwrmXadKpqAjj8WK2PgvpFZ3gFn2wY0SaBDljj+8ZDzKPNCf7af6wtqgI=
+	t=1748705411; cv=none; b=RLAsNHTDNh7mWRmxFIFFxdMDnRp59aZrwEU+pXr0HDIF0B0kx9UdkFI6xds8l3Rck3wFktas5HGUclVWcPgALIBCyyM/5MhQcFo0raa7tEhOVYw2Q86J4R65dAYYRDjIeA9+FVQQ+RR0NfUdfBdTgs7+NFfp+4GrejJghTrCb3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748705386; c=relaxed/simple;
-	bh=faSEr/ZDlFC0XgCH0YCQ45nbWzlbbpXlLkx4FVTW9ow=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=AjsCOlgrEySlZuGEyUnpIS5d+e3Z9iWNsqLYHYU1xgn+TynkY/6ZwJ+wB5ThrLkoHQSOxCwlgVyZDwag8FD/avYD5HPJqLRZpiyI7AmplR9z4D/s+HwJR+gf7dUvpPZcExg7WdHKItFvVu93sdhHapae6nSH/bozW4EoLBzDQKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IVF4UGyj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748705411; c=relaxed/simple;
+	bh=8WIVGSreGVenL0bh0jXMVo9HrtbPl5Nlrt4rMb9d1TY=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=TnSGrXX+JoWtqJlBhsPQVlsBSBsWqLffMdR7rut1MQIu7z4dB4oOPXNFWf/c6ipODwpuD4lkNBjtKNXrKXLMSdwTgnTgrzCr/rc81+LFfr+zFung5+aWxhhqMCthla+9GFK0HANQLsEqGCB+iQUBdL9jH9rACN2HCZxTS5uHssI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZYQHXFBi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IVF4UGyj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 474D2C4CEE3;
-	Sat, 31 May 2025 15:29:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZYQHXFBi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4496CC4CEE3;
+	Sat, 31 May 2025 15:30:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748705386;
-	bh=faSEr/ZDlFC0XgCH0YCQ45nbWzlbbpXlLkx4FVTW9ow=;
+	s=k20201202; t=1748705411;
+	bh=8WIVGSreGVenL0bh0jXMVo9HrtbPl5Nlrt4rMb9d1TY=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=IVF4UGyjqp38xG73gTpKgMsAM0G+XV0xRgm9aflQKAULcw8EEQvLGdwteSBlNasDk
-	 E0DIC3YVvveVp1q07UWoIpgEk6ZW4GmcD3Pt/3I7YvBgjbcF1Tyw6f2FUfmQaOrLi1
-	 O4J4Jz8K0HsFTy/T+k2R8nOu4SgBrlUUDh0xhvNRiPMin/2pwfzAQSv0Pw1p12gtYr
-	 ET6dPdHl/QTJz9tnhSt+PDCDB0oAjpXnj11qRUIUsgolJ7TwJCiJbxN8DGJFDtvD6v
-	 dH0pNTXVUh6JLdWl9tiofV/SIeQBj+kv7SssnEtT8cmXtIUkzCxS6aOcWRnMAloTGi
-	 Dfbl96mgzChsA==
+	b=ZYQHXFBis5MrCEFvmspre2o1A/Wr1MlyK+yKuLroLE/GyZm7aDRSa+yziMTA4KCvO
+	 CWeY997jWXmdviOKS2uciZ9Enfi0I1olM9R/S5O/gSPcyvRsD6NWwecirbL+Jh83sC
+	 ICPNJXjS0PZB46Vwt8SuQ7tFlwknPC2tpaWUdLtEjqDG3EEuYhWy1dOS2pjInXVqy+
+	 b3kIcntxkXM09oVRaUNgDf4swtgsTMzZXaDXddwh0UeHBxyPPNUU3nM3TQ9WqhO46j
+	 +wGk4GTSMhePYqO+nvpxvthw0URGJrk6W6kyqbNtAGEg16jUurh/lCO3lss18vZzxx
+	 WBpRcIBojihRA==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE38C380AA70;
-	Sat, 31 May 2025 15:30:20 +0000 (UTC)
-Subject: Re: [GIT PULL] require gcc-8 and binutils-2.30
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE04A380AA70;
+	Sat, 31 May 2025 15:30:45 +0000 (UTC)
+Subject: Re: [GIT PULL] arch/microblaze patches for 6.16-rc1
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <feab370a-3857-4ae9-a22d-1ab6d992c73c@app.fastmail.com>
-References: <feab370a-3857-4ae9-a22d-1ab6d992c73c@app.fastmail.com>
-X-PR-Tracked-List-Id: <linux-kbuild.vger.kernel.org>
-X-PR-Tracked-Message-Id: <feab370a-3857-4ae9-a22d-1ab6d992c73c@app.fastmail.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic.git tags/gcc-minimum-version-6.16
-X-PR-Tracked-Commit-Id: 582847f9702461b0a1cba3efdb2b8135bf940d53
+In-Reply-To: <379179de-2d0f-4a0a-9534-46b10d254e40@monstr.eu>
+References: <379179de-2d0f-4a0a-9534-46b10d254e40@monstr.eu>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <379179de-2d0f-4a0a-9534-46b10d254e40@monstr.eu>
+X-PR-Tracked-Remote: git://git.monstr.eu/linux-2.6-microblaze.git tags/microblaze-v6.16
+X-PR-Tracked-Commit-Id: 52b70e5b605c38996b74788a140702e69f34d2e1
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: dee264c16a6334dcdbea5c186f5ff35f98b1df42
-Message-Id: <174870541922.163157.8980112873932103512.pr-tracker-bot@kernel.org>
-Date: Sat, 31 May 2025 15:30:19 +0000
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>, linux-kbuild@vger.kernel.org, Kees Cook <kees@kernel.org>, x86@kernel.org, linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org
+X-PR-Merge-Commit-Id: 03ebff0c837b3636f0a33901e9b2cd66a13f5f3b
+Message-Id: <174870544425.163157.17780236236108380821.pr-tracker-bot@kernel.org>
+Date: Sat, 31 May 2025 15:30:44 +0000
+To: Michal Simek <monstr@monstr.eu>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Sat, 31 May 2025 11:09:53 +0200:
+The pull request you sent on Fri, 30 May 2025 08:10:25 +0200:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic.git tags/gcc-minimum-version-6.16
+> git://git.monstr.eu/linux-2.6-microblaze.git tags/microblaze-v6.16
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/dee264c16a6334dcdbea5c186f5ff35f98b1df42
+https://git.kernel.org/torvalds/c/03ebff0c837b3636f0a33901e9b2cd66a13f5f3b
 
 Thank you!
 
