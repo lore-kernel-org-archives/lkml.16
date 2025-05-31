@@ -1,107 +1,280 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE1B18D63A;
-	Sat, 31 May 2025 22:09:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E60118DF89
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 22:10:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748729395; cv=none; b=UlfUd04KMImV+5cg+zRkNc4XbIRWADzs7RdsWGBfNjOZrJ6Q/Sn6VJ03AEiRymU7SmPmGUK6bl900f6XVIPZZElYikeIj5Y3H1MjCuxHEgTbo18/kHmueh6BJQjQY6r9sTrE7MZdxrgqbk2h1FS3xp8lcNSwRgB7+qeg4+3fRf8=
+	t=1748729428; cv=none; b=n9EkJfgIfMAnMBeQhv4CHADwYhfstiYyYimqLTdJHbaSUgxn7cEcq2mnAL/YLAnMT+fIMVxOmEdPSyjsce8EB9ymUcsmZNnRbGQT6Lzpt4cqeMJKBmmL1Ab1eQS9nlf2J/4ytJkVmDkXXRSXubHvYcWXjrmjmN1eJDkfqkm58eE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748729395; c=relaxed/simple;
-	bh=qD9FC1vyMvm89EJTpfDitWPr5e5+DYZUgCl7MfyLMWU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YsLqKlmS+6G0h2+WfmQnBkx+7wDeV1Ui1J4FMnx7m6tvJ+7Bv0dIpnYzprWKLCcLRAafnSfGZONxBtvqRVwpZL7bfyUtvg5ceDAChfsG6P7G4p0eGHQZnvFyaQ5WchSZ6jcLM7xViKrn2pQ5Adl91cIQl5ALtsUwN+Ku+/2mNsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EWW4WThU; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EWW4WThU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748729394; x=1780265394;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qD9FC1vyMvm89EJTpfDitWPr5e5+DYZUgCl7MfyLMWU=;
-  b=EWW4WThU2SxjUnbrlIRpZXbwrVYm7IgOxQuO3SlYTcIQQZFOLSNG8RZc
-   ourq7WUj8Et6OdcvFMU54eeOn9v4ffwDALy8nTPA/PYZ/FJFzUPVPYqj7
-   qXIjTtDf7ogEEWGZnNt6SVipx1hPIhvTYNiM15ea7wapRMyqxoGGkqkPT
-   IW8WMfDs3Kk33KF9XSXWGxLomb1lvfzys5ESk1kQXh+jM+v8+E1OAHGj3
-   NxKOoUhRYMjUYNB0QSrdMercbXrpDtB/hd0t8pVPkMpwEeNYn5K1Ho21C
-   i319SYQ6m6AVTLl5Imt+iqVVSs4TZSgRKWWurGRht1iDI3UcdRDVjWIUa
-   Q==;
-X-CSE-ConnectionGUID: 1AtnRWTTT7yjTs5oZH46IQ==
-X-CSE-MsgGUID: jm+e6CDJQKGjWc38Nc3uCw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11450"; a="62187627"
-X-IronPort-AV: E=Sophos;i="6.16,199,1744095600"; 
-   d="scan'208";a="62187627"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2025 15:09:53 -0700
-X-CSE-ConnectionGUID: DR2wqyAZQZGWq35UX2HHTQ==
-X-CSE-MsgGUID: Kjbyv2bSSkWJOLFCgt4FuQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,199,1744095600"; 
-   d="scan'208";a="167378829"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 31 May 2025 15:09:51 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uLUOi-000Yfg-2v;
-	Sat, 31 May 2025 22:09:48 +0000
-Date: Sun, 1 Jun 2025 06:09:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: Christian Lamparter <chunkeey@gmail.com>, linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v1] spi: push HAS_IOMEM dependency down to the drivers
-Message-ID: <202506010509.Ln1e8D4u-lkp@intel.com>
-References: <20250530234941.950431-1-chunkeey@gmail.com>
+	s=arc-20240116; t=1748729428; c=relaxed/simple;
+	bh=oIifjk9L5QF7cdQ+XWkmh2JHuGfNZAgRYDBR5Us6Z2w=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=sHizMVZm/4GpnxFkO+H4B00xjlQM27+ChoY7iuuQPbGgmMvWlTfDbJSyaaZoqBpU+HlWaZAtsoc5j9kQDt2AU93dDPrTaiMX+wIfrTkkowasiYoIjqyvZDQ7fCM2qTs5QuRJZxgaNVo9hDlvZxcT/3edp6rfByjTNmTszHR/dSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3dda50c4072so6309125ab.3
+        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 15:10:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748729425; x=1749334225;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+hXfmHIYcMulUPoPBdwKUNqqRuhUli24eZSQwojohek=;
+        b=vp/q0gE2rxBxxA8BYO20YwGLw6ygGphaAVTqE3kWuoLDVZ5a2I5K4CgP6Usqetn7Qt
+         KBufmD2CTMpJr2ePVhOjSErBf3em9zqDg00R9LpFSHUUIabNgnlWFyzR/MJtZlM4kDXk
+         wpnGe1bUv95cNE3rtGa4Jbgh2Qs4vBq4BU0Ubb5+WfjC3e+psiKoi3n1GEk6MPgHzdcv
+         2bUNrrs93LapY/rX+YN0lecVyfP+yiiDonhx9fTltY4P3BAI+RNfAnh/hr50BS0aqvjZ
+         Q6SamKxv3EKL0SWyMxD7ofivz+fDsq0WIoDDg3yI8qaFQ+fHhduwdGUSh+beeFFNNZzR
+         7vGw==
+X-Forwarded-Encrypted: i=1; AJvYcCXS/AZuiprOStpiDEoDbeLTDzv/W1D+ZgDb1hP8u44goDxMghxlnnBL94Wp9Qg8nh0syrlwiqOIccDXzfU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSARj2RcV79iEsVce5EeZxQ4SGEJJlBobjjJ6nsPUMuy4i1yLN
+	ivrezG6BAw9MGCJ3l3MBF13CQZcCR8Vlk6eSmWbO61yO19+DTJ5vEHOo5cifMoTsLOYJHYab+5n
+	u2cN5a8uMzG/QkkqBZzJpwWRfL7ophOYwwyslF1XRx4Gk3TefluOJXOKHOFI=
+X-Google-Smtp-Source: AGHT+IEHzVR4yywyPwb1N0XQ9c7DucpF5p9l3koGqXg1enSSKId02DM0DHi3akeMAEjdCYjSYaRZXXICCywXQN/doBFV6ZAyx4z6
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250530234941.950431-1-chunkeey@gmail.com>
+X-Received: by 2002:a05:6e02:1687:b0:3db:7c22:303c with SMTP id
+ e9e14a558f8ab-3dd9c9936d5mr70331245ab.8.1748729425643; Sat, 31 May 2025
+ 15:10:25 -0700 (PDT)
+Date: Sat, 31 May 2025 15:10:25 -0700
+In-Reply-To: <683447f8.a70a0220.29d4a0.0803.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <683b7e51.a70a0220.1a6ae.000e.GAE@google.com>
+Subject: Re: [syzbot] [bcachefs?] possible deadlock in start_poll_synchronize_rcu_expedited
+From: syzbot <syzbot+cbc79a37b5fa23efd23b@syzkaller.appspotmail.com>
+To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Christian,
+syzbot has found a reproducer for the following issue on:
 
-kernel test robot noticed the following build warnings:
+HEAD commit:    0f70f5b08a47 Merge tag 'pull-automount' of git://git.kerne..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17ea200c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=22765942f2e2ebcf
+dashboard link: https://syzkaller.appspot.com/bug?extid=cbc79a37b5fa23efd23b
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=134b1970580000
 
-[auto build test WARNING on broonie-spi/for-next]
-[also build test WARNING on linus/master next-20250530]
-[cannot apply to v6.15]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/4af859a809ab/disk-0f70f5b0.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/d3df10c6aa23/vmlinux-0f70f5b0.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/3a2d5f44d739/bzImage-0f70f5b0.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/f623992a9c46/mount_0.gz
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Christian-Lamparter/spi-push-HAS_IOMEM-dependency-down-to-the-drivers/20250531-075211
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
-patch link:    https://lore.kernel.org/r/20250530234941.950431-1-chunkeey%40gmail.com
-patch subject: [PATCH v1] spi: push HAS_IOMEM dependency down to the drivers
-config: s390-kismet-CONFIG_MDIO_MSCC_MIIM-CONFIG_NET_DSA_MSCC_OCELOT_EXT-0-0 (https://download.01.org/0day-ci/archive/20250601/202506010509.Ln1e8D4u-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20250601/202506010509.Ln1e8D4u-lkp@intel.com/reproduce)
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+cbc79a37b5fa23efd23b@syzkaller.appspotmail.com
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506010509.Ln1e8D4u-lkp@intel.com/
+ODEBUG: object ffffc90003387b90 is on stack ffffc90003380000, but NOT annotated.
+======================================================
+WARNING: possible circular locking dependency detected
+6.15.0-syzkaller-09161-g0f70f5b08a47 #0 Not tainted
+------------------------------------------------------
+bch-copygc/loop/6108 is trying to acquire lock:
+ffffffff8e130e00 (console_owner){....}-{0:0}, at: console_trylock_spinning kernel/printk/printk.c:2048 [inline]
+ffffffff8e130e00 (console_owner){....}-{0:0}, at: vprintk_emit+0x444/0x7a0 kernel/printk/printk.c:2449
 
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for MDIO_MSCC_MIIM when selected by NET_DSA_MSCC_OCELOT_EXT
-   WARNING: unmet direct dependencies detected for MFD_OCELOT
-     Depends on [n]: HAS_IOMEM [=n] && SPI_MASTER [=y]
-     Selected by [y]:
-     - NET_DSA_MSCC_OCELOT_EXT [=y] && NETDEVICES [=y] && NET_DSA [=y] && SPI [=y] && NET_VENDOR_MICROSEMI [=y] && PTP_1588_CLOCK_OPTIONAL [=y]
-   
-   WARNING: unmet direct dependencies detected for MDIO_MSCC_MIIM
-     Depends on [n]: NETDEVICES [=y] && MDIO_DEVICE [=y] && MDIO_BUS [=y] && HAS_IOMEM [=n] && REGMAP_MMIO [=y]
-     Selected by [y]:
-     - NET_DSA_MSCC_OCELOT_EXT [=y] && NETDEVICES [=y] && NET_DSA [=y] && SPI [=y] && NET_VENDOR_MICROSEMI [=y] && PTP_1588_CLOCK_OPTIONAL [=y]
+but task is already holding lock:
+ffffffff99c79a98 (&obj_hash[i].lock){-.-.}-{2:2}, at: __debug_object_init+0x85/0x3c0 lib/debugobjects.c:741
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #4 (&obj_hash[i].lock){-.-.}-{2:2}:
+       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
+       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+       _raw_spin_lock_irqsave+0xa7/0xf0 kernel/locking/spinlock.c:162
+       debug_object_activate+0xbb/0x420 lib/debugobjects.c:818
+       debug_work_activate kernel/workqueue.c:664 [inline]
+       insert_work+0x35/0x330 kernel/workqueue.c:2180
+       __queue_work+0xcfc/0xfe0 kernel/workqueue.c:2341
+       queue_work_on+0x181/0x270 kernel/workqueue.c:2392
+       queue_work include/linux/workqueue.h:662 [inline]
+       start_poll_synchronize_rcu_expedited+0xfc/0x140 kernel/rcu/tree_exp.h:1075
+       rcu_init+0x108/0x160 kernel/rcu/tree.c:4854
+       start_kernel+0x1fb/0x500 init/main.c:990
+       x86_64_start_reservations+0x24/0x30 arch/x86/kernel/head64.c:307
+       x86_64_start_kernel+0x143/0x1c0 arch/x86/kernel/head64.c:288
+       common_startup_64+0x13e/0x147
+
+-> #3 (&pool->lock){-.-.}-{2:2}:
+       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
+       __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
+       _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
+       __queue_work+0x7b0/0xfe0 kernel/workqueue.c:-1
+       queue_work_on+0x181/0x270 kernel/workqueue.c:2392
+       queue_work include/linux/workqueue.h:662 [inline]
+       rpm_suspend+0xe54/0x1720 drivers/base/power/runtime.c:673
+       __pm_runtime_idle+0x12f/0x1a0 drivers/base/power/runtime.c:1112
+       pm_runtime_put include/linux/pm_runtime.h:470 [inline]
+       __device_attach+0x342/0x400 drivers/base/dd.c:1047
+       bus_probe_device+0x185/0x260 drivers/base/bus.c:537
+       device_add+0x7b6/0xb50 drivers/base/core.c:3692
+       serial_base_port_add+0x2f2/0x430 drivers/tty/serial/serial_base_bus.c:179
+       serial_core_port_device_add drivers/tty/serial/serial_core.c:3342 [inline]
+       serial_core_register_port+0x367/0x2700 drivers/tty/serial/serial_core.c:3381
+       serial8250_register_8250_port+0x16dc/0x2050 drivers/tty/serial/8250/8250_core.c:822
+       serial_pnp_probe+0x527/0x790 drivers/tty/serial/8250/8250_pnp.c:480
+       pnp_device_probe+0x30b/0x4c0 drivers/pnp/driver.c:111
+       call_driver_probe drivers/base/dd.c:-1 [inline]
+       really_probe+0x26a/0x9a0 drivers/base/dd.c:657
+       __driver_probe_device+0x18c/0x2f0 drivers/base/dd.c:799
+       driver_probe_device+0x4f/0x430 drivers/base/dd.c:829
+       __driver_attach+0x452/0x700 drivers/base/dd.c:1215
+       bus_for_each_dev+0x230/0x2b0 drivers/base/bus.c:370
+       bus_add_driver+0x345/0x640 drivers/base/bus.c:678
+       driver_register+0x23a/0x320 drivers/base/driver.c:249
+       serial8250_init+0xc2/0x1c0 drivers/tty/serial/8250/8250_platform.c:315
+       do_one_initcall+0x233/0x820 init/main.c:1257
+       do_initcall_level+0x137/0x1f0 init/main.c:1319
+       do_initcalls+0x69/0xd0 init/main.c:1335
+       kernel_init_freeable+0x3d9/0x570 init/main.c:1567
+       kernel_init+0x1d/0x1d0 init/main.c:1457
+       ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+-> #2 (&dev->power.lock){-.-.}-{3:3}:
+       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
+       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+       _raw_spin_lock_irqsave+0xa7/0xf0 kernel/locking/spinlock.c:162
+       __pm_runtime_resume+0x10f/0x180 drivers/base/power/runtime.c:1179
+       pm_runtime_get include/linux/pm_runtime.h:418 [inline]
+       __uart_start+0x171/0x440 drivers/tty/serial/serial_core.c:148
+       uart_write+0x278/0xa40 drivers/tty/serial/serial_core.c:635
+       process_output_block drivers/tty/n_tty.c:561 [inline]
+       n_tty_write+0xd32/0x11d0 drivers/tty/n_tty.c:2377
+       iterate_tty_write drivers/tty/tty_io.c:1015 [inline]
+       file_tty_write+0x4fe/0x990 drivers/tty/tty_io.c:1090
+       new_sync_write fs/read_write.c:593 [inline]
+       vfs_write+0x54b/0xa90 fs/read_write.c:686
+       ksys_write+0x145/0x250 fs/read_write.c:738
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+-> #1 (&port_lock_key){-.-.}-{3:3}:
+       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
+       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+       _raw_spin_lock_irqsave+0xa7/0xf0 kernel/locking/spinlock.c:162
+       uart_port_lock_irqsave include/linux/serial_core.h:715 [inline]
+       serial8250_console_write+0x17e/0x1ba0 drivers/tty/serial/8250/8250_port.c:3415
+       console_emit_next_record kernel/printk/printk.c:3138 [inline]
+       console_flush_all+0x728/0xc40 kernel/printk/printk.c:3226
+       __console_flush_and_unlock kernel/printk/printk.c:3285 [inline]
+       console_unlock+0xc4/0x270 kernel/printk/printk.c:3325
+       vprintk_emit+0x5b7/0x7a0 kernel/printk/printk.c:2450
+       _printk+0xcf/0x120 kernel/printk/printk.c:2475
+       register_console+0xa8b/0xf90 kernel/printk/printk.c:4125
+       univ8250_console_init+0x52/0x90 drivers/tty/serial/8250/8250_core.c:513
+       console_init+0x1a1/0x670 kernel/printk/printk.c:4323
+       start_kernel+0x2cc/0x500 init/main.c:1034
+       x86_64_start_reservations+0x24/0x30 arch/x86/kernel/head64.c:307
+       x86_64_start_kernel+0x143/0x1c0 arch/x86/kernel/head64.c:288
+       common_startup_64+0x13e/0x147
+
+-> #0 (console_owner){....}-{0:0}:
+       check_prev_add kernel/locking/lockdep.c:3168 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3287 [inline]
+       validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3911
+       __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5240
+       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
+       console_trylock_spinning kernel/printk/printk.c:2048 [inline]
+       vprintk_emit+0x460/0x7a0 kernel/printk/printk.c:2449
+       _printk+0xcf/0x120 kernel/printk/printk.c:2475
+       debug_object_is_on_stack lib/debugobjects.c:-1 [inline]
+       lookup_object_or_alloc lib/debugobjects.c:688 [inline]
+       __debug_object_init+0x2c8/0x3c0 lib/debugobjects.c:743
+       rhashtable_init_noprof+0x7c0/0xbb0 lib/rhashtable.c:1085
+       bch2_copygc_thread+0x116/0xdc0 fs/bcachefs/movinggc.c:355
+       kthread+0x711/0x8a0 kernel/kthread.c:464
+       ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+other info that might help us debug this:
+
+Chain exists of:
+  console_owner --> &pool->lock --> &obj_hash[i].lock
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&obj_hash[i].lock);
+                               lock(&pool->lock);
+                               lock(&obj_hash[i].lock);
+  lock(console_owner);
+
+ *** DEADLOCK ***
+
+1 lock held by bch-copygc/loop/6108:
+ #0: ffffffff99c79a98 (&obj_hash[i].lock){-.-.}-{2:2}, at: __debug_object_init+0x85/0x3c0 lib/debugobjects.c:741
+
+stack backtrace:
+CPU: 1 UID: 0 PID: 6108 Comm: bch-copygc/loop Not tainted 6.15.0-syzkaller-09161-g0f70f5b08a47 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+ print_circular_bug+0x2ee/0x310 kernel/locking/lockdep.c:2046
+ check_noncircular+0x134/0x160 kernel/locking/lockdep.c:2178
+ check_prev_add kernel/locking/lockdep.c:3168 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3287 [inline]
+ validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3911
+ __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5240
+ lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
+ console_trylock_spinning kernel/printk/printk.c:2048 [inline]
+ vprintk_emit+0x460/0x7a0 kernel/printk/printk.c:2449
+ _printk+0xcf/0x120 kernel/printk/printk.c:2475
+ debug_object_is_on_stack lib/debugobjects.c:-1 [inline]
+ lookup_object_or_alloc lib/debugobjects.c:688 [inline]
+ __debug_object_init+0x2c8/0x3c0 lib/debugobjects.c:743
+ rhashtable_init_noprof+0x7c0/0xbb0 lib/rhashtable.c:1085
+ bch2_copygc_thread+0x116/0xdc0 fs/bcachefs/movinggc.c:355
+ kthread+0x711/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 6108 at lib/debugobjects.c:655 debug_object_is_on_stack lib/debugobjects.c:655 [inline]
+WARNING: CPU: 1 PID: 6108 at lib/debugobjects.c:655 lookup_object_or_alloc lib/debugobjects.c:688 [inline]
+WARNING: CPU: 1 PID: 6108 at lib/debugobjects.c:655 __debug_object_init+0x2c9/0x3c0 lib/debugobjects.c:743
+Modules linked in:
+CPU: 1 UID: 0 PID: 6108 Comm: bch-copygc/loop Not tainted 6.15.0-syzkaller-09161-g0f70f5b08a47 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+RIP: 0010:debug_object_is_on_stack lib/debugobjects.c:655 [inline]
+RIP: 0010:lookup_object_or_alloc lib/debugobjects.c:688 [inline]
+RIP: 0010:__debug_object_init+0x2c9/0x3c0 lib/debugobjects.c:743
+Code: cc cc cc 41 ff c7 44 89 3d 14 aa 17 15 48 c7 c1 00 9b e1 8b 48 c7 c7 60 9b e1 8b 84 c0 48 0f 45 f9 48 89 de e8 48 e5 68 fc 90 <0f> 0b 90 e9 c0 fe ff ff e8 3a 1c 00 00 8b 05 8c f3 cc 09 3b 05 8a
+RSP: 0018:ffffc900033876e0 EFLAGS: 00010046
+RAX: 0000000000000050 RBX: ffffc90003387b90 RCX: f040b7745b5f4c00
+RDX: 0000000000000000 RSI: 0000000080000001 RDI: 0000000000000000
+RBP: ffff88802c68bc20 R08: ffffffff8e130da3 R09: 1ffffffff1c261b4
+R10: dffffc0000000000 R11: fffffbfff1c261b5 R12: 0000000000000040
+R13: ffff8880622786c8 R14: dffffc0000000000 R15: 0000000000000001
+FS:  0000000000000000(0000) GS:ffff888125d99000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fbb648c56d0 CR3: 000000007f3f6000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ rhashtable_init_noprof+0x7c0/0xbb0 lib/rhashtable.c:1085
+ bch2_copygc_thread+0x116/0xdc0 fs/bcachefs/movinggc.c:355
+ kthread+0x711/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
