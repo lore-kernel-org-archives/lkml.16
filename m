@@ -1,142 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB8011185;
-	Sat, 31 May 2025 15:12:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A18DDCD
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 15:14:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748704352; cv=none; b=PKhORr0D6HJzLDF7oOPIa79JQCeCHZzRnqvJHEJ5TcePdHDY10n5CzYxDO2MRIlYKqZqn3KGxQccjOOAiKbRYNuHS/4aPN3fH/IrTkabCiBViJLU0hycmJMymsrlcijtVhL4Q0ZCD41YHIfqLaK7l5AtPtTjG/DGrL1C1tIyiHc=
+	t=1748704470; cv=none; b=qjLh/UGgqIzO79LFeDW5v8YvPuy/PCL7Zh/XitXBvogar8uNiPUucP1yznEZWwKPv9AlJGv/6XTAjUwaT7yZml5z701IPKj2C5689hh99s103MehSt+CVVC0laIKtAztIpbuTueabeitkSyFBrXho+euGthPios4AYpt6NI9hhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748704352; c=relaxed/simple;
-	bh=a/CYO3EFHzzYEb/19ljV50AWmmdfszpreES9zq3QWTk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uVP9wWQB4Kuz4kR5hFOOU2FyYL67HlCQjed2s0StoifEMw5BhZ6mtP8QT8UmIF4OH9ZEqHqZwWnbe+75BGc32xZU5RI0yzUa4tPRAFr6jQTGqzjM0ykum9n+RvBv+N4mAAEXwaQARUCxTNXEyvzElltHFbAiskSoecKMjhid4x8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eFgV0h6j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748704470; c=relaxed/simple;
+	bh=T1nOel4UvVfsq0pDQKlA8OugRmHexP8T6OeA7iXIDdQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=M5XdNngdTzeSSrt4cTTdsBLx16fzu9HStca6P9aZBlUsu0JMkW4VIRLXs+KxZi+Ka2DcjBhggkOdA8rdsKH2XzyYOFxLUpu9RdW4rnmo6BFYFX/ws5sEsshdwyWNFcc3ucCUfkfWATDh9KVtvvtayIKrT8oaSYkSkpL7eLoJWB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=RJ3aU8yr; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eFgV0h6j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F3FAC4CEE3;
-	Sat, 31 May 2025 15:12:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748704352;
-	bh=a/CYO3EFHzzYEb/19ljV50AWmmdfszpreES9zq3QWTk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=eFgV0h6jx3RLbFFKtVT34IJ34cVcSLqGfjbcJffl9lFMn4DFd0KqlOASUUHC42vj/
-	 dCxibdSYzWoygv/myAsin7K5ECjOkBFNIzjkk4NT8RQPNflhBMYVnPZ7OR0Y+zUmsm
-	 4RA9VMdwvs1rWC8ZNbL5L2IZgVnHgrV0Bx3NGuiqqGgrYcfF91UNAF8urwoPBLl4in
-	 JEw68aeeUIggCe8OlvdQS0o2IkTC5y/iKxu0kyDQUs+91c+H1vYV2JXq19GkI9BbNa
-	 pHryHHjelNMHkimyQv5yvX0ovQdqGmzFk1KRTJ3+5s/gUovtE4MKPAXG/X9LGFJX97
-	 dpTSU5t+2parw==
-Date: Sat, 31 May 2025 16:12:25 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Waqar Hameed <waqar.hameed@axis.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Haibo Chen <haibo.chen@nxp.com>,
- <kernel@axis.com>, <linux-iio@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/4] iio: Clean up macro definitions
-Message-ID: <20250531161225.5c9658e9@jic23-huawei>
-In-Reply-To: <cover.1748356671.git.waqar.hameed@axis.com>
-References: <cover.1748356671.git.waqar.hameed@axis.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="RJ3aU8yr"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ad8a6c202ffso567169666b.3
+        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 08:14:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1748704466; x=1749309266; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=lSSawh4TJNRt/0sWPEPpqG3dCXsETs6+b32NUQaU2jQ=;
+        b=RJ3aU8yrGpjNYmv9AHpESofl+dBvgfx62FPcETkNiy3+OsgaLfC0G7DXa604GO40Z2
+         TdhczAjue2BLGrVc4LwSNDbUPQFNEjD4v4DlpaYsM5E6Gytmq/gahLM+r8v/4tqcpLQ7
+         aqgjlPkeSfj7sym6CsNWwnGN3+vsbg3XdpG+4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748704466; x=1749309266;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lSSawh4TJNRt/0sWPEPpqG3dCXsETs6+b32NUQaU2jQ=;
+        b=MJBnzECpKSaTjRSCvWp0ri9+N9/5m2qhfB4kTvPEUYuwBuHRRA3dR6OVlWfQlcppc6
+         w+l37p+IOAKRC37Ie242t2NWd5rgso1A0OwrVm9QunJOSDFVbSCzaLHDoUJUWRwxYK/q
+         DrwYtBOnOiQDDrC7JxhpySg9B1DG4eoDOUmKYw0J77PdK9PDUIbUaou+j7p1hHunQH77
+         dMu+nJViM/0tAjaCeRNMYE+sOAYuMWBOg8z+FyOsJye+9WQeGWBmsW4Pw984J3hB0d7z
+         38ik09Oax1xRyPWqNOjPuiASdA7gJSxoTCF8vmkhu4zaJ1BZxwoWmJRJAKUvzmrtDrpl
+         bjeA==
+X-Forwarded-Encrypted: i=1; AJvYcCUyst9n86KQveacbQx66fE9i1YG9EID7jafw5vrlvKV3VMf3LyAK94fc2N2zJKlhpcwM3cCYCnHonJWjKs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyra/fiibR5dZLxDososydI0SzzU6hMDlA6ewKpXbTq4l23reXc
+	Rm2a+ZByopXs3ribnXKpy8Nbb3Am5TdNbIQkQRbBF7CRa7tYx4kkfDgoqc88uPj5P/rycufWUyV
+	fwX6ImfU=
+X-Gm-Gg: ASbGncu3vCwWI9Yj0OiSWoxEXb5ydiyaeLlTXiJ39d8dr4f2cv3utjzV1Lq3to815tG
+	j8wtaM/fEye0UWgTnvlXNTrbn1aR6KERy9LSCKaltuTc0lKicXnAGQqXR1oy+fkKNjq+PSgkKjx
+	5Oz7iidPIVue/RcUnsz6rO3TU/8xg4vawcvQiDjY5az88IEnk/UT2DzXOeURJwC9xKci7NOFCVH
+	P8OUGPSdCHC+ugLBZbnLmtMQRQWIK9q6zk5Hau7QgpuxBcjl3G4ZDQ+0Uq6YmJyV6XwjkVxIog9
+	gN0/t+F6mchkEf9pLz8O7bESCLsKt0c6J2MVI8UY3YFMlv+J9hs1VKSUIKVGnyjEFvpKg7GJh8V
+	4FQeEjJRh3OsB+OnmqIftE7vDhQ==
+X-Google-Smtp-Source: AGHT+IH9vckQUJER7cQpyOzte7YD49iPuuICHtwcmk0ahSJRi5tUurwhV/4RhJX0OPmzOt5ZRv9Fyg==
+X-Received: by 2002:a17:907:d8b:b0:ad2:48f4:5968 with SMTP id a640c23a62f3a-adb4940d70fmr198544766b.25.1748704466168;
+        Sat, 31 May 2025 08:14:26 -0700 (PDT)
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com. [209.85.208.52])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada6ad39f08sm513991066b.144.2025.05.31.08.14.24
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 31 May 2025 08:14:24 -0700 (PDT)
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-604e2a2f200so5601205a12.1
+        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 08:14:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV1TRpR3ZF+Db7iSUpjyKJQz8U2Uc6s2IwnY7ewW6lFHIamiH+mBun0+usByMu6N+bwwJLlilkeJmTFsuw=@vger.kernel.org
+X-Received: by 2002:a05:6402:42cb:b0:601:dc49:a99f with SMTP id
+ 4fb4d7f45d1cf-605b7748f23mr2083379a12.18.1748704464453; Sat, 31 May 2025
+ 08:14:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <28a4c0cf-7978-4547-bf89-42804975c848@app.fastmail.com> <ae82a64f-fe42-4abc-b298-1570ed17771e@app.fastmail.com>
+In-Reply-To: <ae82a64f-fe42-4abc-b298-1570ed17771e@app.fastmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sat, 31 May 2025 08:14:07 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgHeidY7Y65-4N9AJEy69jEJRo1S9yQzEJ7_J6jpJMfVg@mail.gmail.com>
+X-Gm-Features: AX0GCFuT43-u4qtV8M_qs-fcu_pSqgRGcd6qMnD3Ro4tTsTKzf_cc8MjRwFbJzA
+Message-ID: <CAHk-=wgHeidY7Y65-4N9AJEy69jEJRo1S9yQzEJ7_J6jpJMfVg@mail.gmail.com>
+Subject: Re: [GIT PULL 4/5] soc: devicetree updates for 6.16
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: soc@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 27 May 2025 16:45:41 +0200
-Waqar Hameed <waqar.hameed@axis.com> wrote:
+On Sat, 31 May 2025 at 02:07, Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> There are 11 newly supported SoCs [...]
 
-> Currently there are a bunch of drivers using macro definitions for
-> string literals that are only used once. There seem to be a "style
-> guide" to not do this, and this is often mentioned during the reviews
-> (if caught). And since developers most often look at other drivers for
-> inspiration (or just trying to figure out the "style guide") when
-> writing a new one, it is desirable to have some consistency.
-> 
-> In this patch series we identify the drivers that have macro definitions
-> for string literals that are only used once. The most common one is the
-> driver name. These can be identified by
-> 
->   rgrep -A 10 "\.driver" drivers/iio/ | grep "\.name" | grep -v '"'
-> 
-> And then count the number of occurrences of the particular macro
-> definition (e.g. with `grep -c`). Most drivers use these macro
-> definitions for `.name` in `struct device_driver` and `indio_dev->name`
-> (which could be justified with a macro definition). However, the ones
-> with only one occurrence are identified and removed in this patch
-> series.
-> 
-> There are also drivers that have a mixture, e.g. macro definition for
-> `indio_dev->name` but in-line string literal for `.name` in `struct
-> device_driver`). The following have therefore not been touched (but
-> should maybe use the macro definition for both places):
-> 
->   drivers/iio/accel/stk8ba50.c
->   drivers/iio/accel/mma7660.c
->   drivers/iio/humidity/am2315.c
->   drivers/iio/light/stk3310.c
-> 
-> Likewise, there are drivers that only use `KBUILD_MODNAME` in one place.
-> These have also been left for the same reasons.
-> 
-> Finally, while cleaning up these ones, other similar macro definitions
-> could be identified with the same "style guide" issue: macro definitions
-> for IRQ name and `regmap` name. There are even unused macro definitions.
-> All of these are also addressed in this patch series.
+.. and then you go on to list ten of them. Or 12 if you count Amlogic
+S6/S7/S7D individually.
 
-Thanks for tidying all these up!
-Applied to the testing branch of iio.git which will be rebased on rc1
-once available.
+Just checking that I'm awake?
 
-Jonathan
-
-> 
-> Waqar Hameed (4):
->   iio: Remove single use of macro definition for driver name
->   iio: Remove single use of macro definition for IRQ name
->   iio: Remove single use of macro definition for regmap name
->   iio: Remove unused macro definition for driver and IRQ name
-> 
->  drivers/iio/accel/bma180.c             | 3 ---
->  drivers/iio/accel/bmc150-accel-core.c  | 5 +----
->  drivers/iio/accel/kxcjk-1013.c         | 7 ++-----
->  drivers/iio/accel/mma9551.c            | 6 ++----
->  drivers/iio/accel/mma9553.c            | 7 ++-----
->  drivers/iio/accel/mxc4005.c            | 6 ++----
->  drivers/iio/accel/mxc6255.c            | 3 +--
->  drivers/iio/accel/sca3300.c            | 4 +---
->  drivers/iio/accel/stk8312.c            | 3 +--
->  drivers/iio/accel/stk8ba50.c           | 3 +--
->  drivers/iio/adc/hi8435.c               | 4 +---
->  drivers/iio/adc/max9611.c              | 4 +---
->  drivers/iio/adc/vf610_adc.c            | 5 +----
->  drivers/iio/chemical/atlas-sensor.c    | 3 +--
->  drivers/iio/dac/max517.c               | 4 +---
->  drivers/iio/dac/mcp4725.c              | 4 +---
->  drivers/iio/gyro/bmg160_core.c         | 4 +---
->  drivers/iio/health/max30100.c          | 3 +--
->  drivers/iio/health/max30102.c          | 3 +--
->  drivers/iio/humidity/dht11.c           | 4 +---
->  drivers/iio/imu/kmx61.c                | 7 ++-----
->  drivers/iio/light/adux1020.c           | 3 +--
->  drivers/iio/light/apds9160.c           | 4 +---
->  drivers/iio/light/apds9300.c           | 3 +--
->  drivers/iio/light/apds9960.c           | 3 +--
->  drivers/iio/light/jsa1212.c            | 3 +--
->  drivers/iio/light/ltr501.c             | 8 ++------
->  drivers/iio/light/rpr0521.c            | 6 ++----
->  drivers/iio/light/stk3310.c            | 6 ++----
->  drivers/iio/light/vcnl4035.c           | 6 ++----
->  drivers/iio/magnetometer/bmc150_magn.c | 5 +----
->  drivers/iio/magnetometer/mmc35240.c    | 3 +--
->  drivers/iio/proximity/sx9500.c         | 3 +--
->  drivers/iio/resolver/ad2s1200.c        | 3 +--
->  34 files changed, 42 insertions(+), 106 deletions(-)
-> 
-> 
-> base-commit: 914873bc7df913db988284876c16257e6ab772c6
-
+           Linus
