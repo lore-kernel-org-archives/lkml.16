@@ -1,63 +1,63 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C76A23E347;
-	Sat, 31 May 2025 10:13:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1DBA241664;
+	Sat, 31 May 2025 10:13:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748686409; cv=none; b=Sg8ixCs+IofpJXf5KV34LecfszvbRb3O+zKMHi5rK5lnp3JGy8v8RrxH8pnoXkZ7CwmbI1uvWA23IgxZ6pDjPEgB5Xo3VppsWrqaOIxL3QJzcLxEYHljy40dZJtP8AMBBawxOScHKIvO6iCrYw3QJNMdWo9c7NqXZ0uORJc+A8k=
+	t=1748686411; cv=none; b=Y6lUfuHelDD5P1qhSlhYf2V4vx7ao5mhetKp4wpsjEWIc2VssA5xpi7soDYo9J9pyUA8GR8xc1349+vObzn+mAB+iyw1RKEga20LAaAjHfOjPM/jPvIJrzOVlO1s672KlOmKCmofGQS1XdWx7NANzmJ1lcsLEWDNN1r8nHPBHnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748686409; c=relaxed/simple;
-	bh=bD4v3rEjOHD7pBG0pLzi4E/mT/KKCwu/auYMdQPIe/o=;
+	s=arc-20240116; t=1748686411; c=relaxed/simple;
+	bh=LS49dlVCVfhP+stRhRD81356ZmEOJJqyVMdjDTH3+Bs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZBuQCkn/x7UbP6JHgEmzZI0PQynceWD58nKS5uhjDC5Txhim9VFOOZmsxZEIBW3hbljsSvwIMy7M4+TIoBkcWpsFhv3lf/ab6JJx8xRku7S7TPY7n/73VV5Wjx+5LoQVwjQ2DQ0EYrFRyA2aY3VfbmQkG/ux2B2jsIZt4/qmdWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ViTUJIq7; arc=none smtp.client-ip=209.85.221.52
+	 MIME-Version:Content-Type; b=rRQeSnvYjK2fDlpZNi5j9mLmdDovs7JIfNBq6RusAdzngcAGh5sJh2SZbCAEd/8xcUwxqcL6NVf+/w38bE/MIR9I+j7bERXELWgDb0CAX/8LxgM9inObVtLLuaw4efqtMBKi9/bPxBGo4l3MHsfMQ2eYZyIRJKVzAb3eLoAx4O4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xkp0Bo2y; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ViTUJIq7"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a375888297so1662956f8f.1;
-        Sat, 31 May 2025 03:13:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xkp0Bo2y"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a36748920cso3102246f8f.2;
+        Sat, 31 May 2025 03:13:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748686405; x=1749291205; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748686408; x=1749291208; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zx4iJkMCoRJ2ebLIbOi4KlVLh5jV2VPfAaSVfx0MI7k=;
-        b=ViTUJIq7aUz+bfbL7ehCEljMZw/bfIojsyIcTWQBus/7NPll5Dt5vGncKaTm/TUHK2
-         /HyGDx/Z7lzd80s2GZeYV7amcoODFjlMr2HywIf4r/j7ia/BbPleh1JJqg+x5AZVFvs5
-         1/95HhXoWOAjxHzol2OGX4FbSBXnbZ4GFvJVf+0Z6PmT0FGtL5SsGlomrRzEntfpFTeS
-         M9tEzdJRQV3rZ3tSc0I//99ovCDBHugXf4oiJhkHalqWKBr8Q/gicEPqIzvqQTgktKEs
-         VlGHTEOoXmOdNIzucCH6Cf2lhUChzQZ/obxzR0HwV02NS/fHTkiIq58EUHgQ+TK9cCRb
-         cnZw==
+        bh=tq1QgWecPXKEOWBa1UyGhmKV+AVmn4AYKr6Ka0MIC54=;
+        b=Xkp0Bo2yNFf/3upmTCzF9bVz3/Vofy2VJokUf2xsrWUheOgwf/uixRKmfFhRyyMgLZ
+         uhSN2ijd7DMDyRkaorbTrux9QVFl4rx6xaG0HxDh9MgoKV5xTtexYRqr1gmx4kTGnA8J
+         ZQQKUZjaBWdOmxtGVkvdFwKZAt7zyoIWa1qzJpCD1gzs3jkPnCkX0HmOW4I1Mm5em5HJ
+         sNw8T1G8Ark4NPEmy8E/fILA5oyDrm0ULCoS+9ZUoHqu3YbTxuZXSmSWTnjBBmJiwLJg
+         znauhsu9X8BpaAaPcGhIGUKedJ9Sg8kQ4NKxVoJ4AuLPuLmZheUjaKQk/5z4uT5jXcuU
+         nl4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748686405; x=1749291205;
+        d=1e100.net; s=20230601; t=1748686408; x=1749291208;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zx4iJkMCoRJ2ebLIbOi4KlVLh5jV2VPfAaSVfx0MI7k=;
-        b=Y9NLjpZHbAeTf3/FTA1tQWxmPyNfu9BooCcNpButYeMdBbxl4sFVz0ANb6Sz6olMb1
-         EDslFzByUO0ET1IhjfiS6QRmhLlSgOzFR35l1lfVf9BQQdnplVDzqDyFQpxOieDqa7+5
-         Q8YFdRZfMMeRI4m5Qf4aoLThvdINxgJk7hWbWpsKm6G7ClJP0ZVywuw25bQ4YHMO4Rn9
-         9oFyX/jmtAFNbPv9o4fe6IKc/kdOWpWlnEdSeQLYhLZDHNI+15DxRkuruZRwrJmdjDAm
-         cqotSZ14GJ7QQfWiz1CK1Rl4KLA9zM+HEsr1MGHUCdATD8+P9EtTMl26+D7Hu0SSedIl
-         IYjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUNTseXOUk+Bd98JJkCAIZCZ8uNaaYQ94BuNxhgaiB6PreWqrLvy8zZK+L9Xm7cQdKH/LfGLe6C@vger.kernel.org, AJvYcCX+aq5ho/PKrTpE2TdRCHW4t31pn1ETmDf5/n82gdrM+KNWZZnEOF8/TPnmjzj9svU9Liy1P5l9OGbXhYw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZUCB/uHh/T6ewFG+AefbwFox9DBKfzh65Ux2dGYiXE6C7Acfq
-	C9xVNKiJNMZMu1V2NbEZ1kf4BL1nqzeh0kFXMGjlRKlKpL3inqSIyMeY
-X-Gm-Gg: ASbGnctjOCt2dl1yiSzqjYv6+qjZ0Qx3O0x7FiKYA0tSc016DJS5sj4+/kmBPZFhcwp
-	aMV/UOMalxbwYgJIHNnt2etmFSt1P/+YWqrk/NwCzwc+3rNmH48LIyZkU5YFqenZUTnBo2rOQx/
-	/4QRWhorLFS4kZpDHp43YU51d+DVNGNg5ln2eInU3GkUWSJ01A/8fC7J7EAHnC/njy2At4L8nCB
-	L5Ep4kui3saFecW5gvvx+AaTCbSXdY2xnadMLLyPcP+244nppHpLxm9ZKR99h5YlrZnJljlTfIP
-	DgIm4fonb2Q1Qq9ggmTlQzKRwzaZtOe6WPvbtSEQIdmhDVpVttf3rfLz/UKb/KpGnr9uZnaKfL2
-	BdPwniM6RBLp1O3St5N7uU3Z4k1GJLwQiyrQUxjkbaibqaOnsmypDDttSGWitCxw=
-X-Google-Smtp-Source: AGHT+IGXWYOmOy4eaq+vw7hMeYOgIea4+jZ3G2ejxJrvD3nHs321mTWGMsM/ADWz9C53sBJ8lJSIpA==
-X-Received: by 2002:a05:6000:18a2:b0:3a3:70ab:b274 with SMTP id ffacd0b85a97d-3a4eed99115mr9109768f8f.12.1748686405345;
-        Sat, 31 May 2025 03:13:25 -0700 (PDT)
+        bh=tq1QgWecPXKEOWBa1UyGhmKV+AVmn4AYKr6Ka0MIC54=;
+        b=QISP05l9e7jVCLXHDOYDTVeNtRXeMdCo9Vl+KvOm/1o+TFWurqjjSo5Lcyz/oje2Ap
+         l/hmKI1Jq5xdGKwKBcAocy4ajVf288Ml38YOtLA4n9SY/AFNtJpowkjIRBXK/2pxQNwN
+         A0kuKHw/ta1siNLE/H3n43jLc7xxHHgj2vqkQfiy15mArbRXxuDN2I3SgRz603YxoeWq
+         hMevm5oucyuCeKd8GnjkXmlVWRVL+LBO/pMH+6QoPiRhguPk02neN3UeyoNG6POaOq01
+         wlDBQBdONaZv5dOCg/9MQNdfisJK/avAhfW2h/XrJn4tM0aGtdKkEAW/FacreS19FXts
+         gabQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUk+wkJQB24VN41Mk7uQGWYmQLnXXlCs65OFZ3Y4dSWiZ2ISoTiURz8eYCx37/Mg2Kl49pnNSZ3NFZ0Ivo=@vger.kernel.org, AJvYcCVy1DPCW00tj5slDCactmm6h5u9TGwUCDWx9TikGni8WKhEzuN3fsSeseH65J+GYrIHFTX9ML9X@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFd4bJq742bGEe/MS8OE2A+QQzeU8Q85Tv9EpE29hUUeZtt9jV
+	Wc+Ohh4yvi3cEg6c8Vj4T3SkXJRYrYxu1amfHKOspmY9JllLmrt+lcgc
+X-Gm-Gg: ASbGncsMn80vWaMWCrN+a3q93TxkoFRdcnCXA+F+nRjYNI9fe4syL8RnPHt8yp6jRsX
+	hBmSPx3HK9wO7YVSC2qUEt5I1s/Esz30FnXfJibLjZTirXZ+nV9ubqI9ICueXXxDI+bNK5HYkq4
+	8lT8vuM5SdURkbYJZf166il2T7vwdpZ2jrn6BoweTDTaOCDJgE6Un0aS0kuOTtOe7Fc5TjoDxrV
+	SKhta/xuJDVXaz23PoofWQ92TpdkoMho8ElG7biMLSfmz2+QyMU/hIlycGfr6yiuyK5VbDwpjPY
+	j8T0AyaevmjaRf4mp05hIADx26z+xzt2YQCTtZ/n1j0OBxA+m7cA8TYyt9VjYmUW21wlWQtiiZ/
+	W0mtO5WWyRDV1yjyEKC2XA7Y4muP80tBe6torVZo3FmWsf2i5egxK
+X-Google-Smtp-Source: AGHT+IFq1s/33PU9NhVhaQIXLsSfqaM0L5mQsKy1IdijhQBIKAlU8lKlp8Te8KHbzSrKWn4AeqH/9A==
+X-Received: by 2002:a05:6000:2dc6:b0:3a4:dc32:6cbb with SMTP id ffacd0b85a97d-3a4f89cd26dmr4137946f8f.31.1748686407933;
+        Sat, 31 May 2025 03:13:27 -0700 (PDT)
 Received: from skynet.lan (2a02-9142-4580-1200-0000-0000-0000-0008.red-2a02-914.customerbaf.ipv6.rima-tde.net. [2a02:9142:4580:1200::8])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d8000d5dsm44500205e9.26.2025.05.31.03.13.24
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d8000d5dsm44500205e9.26.2025.05.31.03.13.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 May 2025 03:13:24 -0700 (PDT)
+        Sat, 31 May 2025 03:13:27 -0700 (PDT)
 From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
 To: jonas.gorski@gmail.com,
 	florian.fainelli@broadcom.com,
@@ -72,9 +72,9 @@ To: jonas.gorski@gmail.com,
 	linux-kernel@vger.kernel.org,
 	dgcbueu@gmail.com
 Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
-Subject: [RFC PATCH 08/10] net: dsa: b53: fix unicast/multicast flooding on BCM5325
-Date: Sat, 31 May 2025 12:13:06 +0200
-Message-Id: <20250531101308.155757-9-noltari@gmail.com>
+Subject: [RFC PATCH 10/10] net: dsa: b53: ensure BCM5325 PHYs are enabled
+Date: Sat, 31 May 2025 12:13:08 +0200
+Message-Id: <20250531101308.155757-11-noltari@gmail.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250531101308.155757-1-noltari@gmail.com>
 References: <20250531101308.155757-1-noltari@gmail.com>
@@ -87,191 +87,28 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-BCM5325 doesn't implement UC_FLOOD_MASK, MC_FLOOD_MASK and IPMC_FLOOD_MASK
-registers.
-This has to be handled differently with other pages and registers.
+According to the datasheet, BCM5325 uses B53_PD_MODE_CTRL_25 register to
+disable clocking to individual PHYs.
 
-Fixes: a8b659e7ff75 ("net: dsa: act as passthrough for bridge port flags")
 Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 ---
- drivers/net/dsa/b53/b53_common.c | 85 +++++++++++++++++++++++++-------
- drivers/net/dsa/b53/b53_regs.h   | 38 ++++++++++++++
- 2 files changed, 105 insertions(+), 18 deletions(-)
+ drivers/net/dsa/b53/b53_common.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
-index 387e1e7ec749..d5216ea2c984 100644
+index 802020eaea44..7b786d0d14cd 100644
 --- a/drivers/net/dsa/b53/b53_common.c
 +++ b/drivers/net/dsa/b53/b53_common.c
-@@ -560,12 +560,36 @@ static void b53_port_set_ucast_flood(struct b53_device *dev, int port,
- {
- 	u16 uc;
+@@ -1299,6 +1299,9 @@ static int b53_setup(struct dsa_switch *ds)
  
--	b53_read16(dev, B53_CTRL_PAGE, B53_UC_FLOOD_MASK, &uc);
--	if (unicast)
--		uc |= BIT(port);
--	else
--		uc &= ~BIT(port);
--	b53_write16(dev, B53_CTRL_PAGE, B53_UC_FLOOD_MASK, uc);
-+	if (is5325(dev)) {
-+		u8 rc;
-+
-+		if (port == B53_CPU_PORT_25)
-+			port = B53_CPU_PORT;
-+
-+		b53_read16(dev, B53_IEEE_PAGE, B53_IEEE_UCAST_DLF, &uc);
-+		if (unicast)
-+			uc |= BIT(port) | B53_IEEE_UCAST_DROP_EN;
-+		else
-+			uc &= ~BIT(port);
-+		b53_write16(dev, B53_IEEE_PAGE, B53_IEEE_UCAST_DLF, uc);
-+
-+		if (port >= B53_CPU_PORT_25)
-+			return;
-+
-+		b53_read8(dev, B53_RATE_CTL_PAGE, B53_RATE_CONTROL(port), &rc);
-+		if (unicast)
-+			rc |= (RC_DLF_EN | RC_BKT_SIZE_8K | RC_PERCENT_40);
-+		else
-+			rc &= ~(RC_DLF_EN);
-+		b53_write8(dev, B53_RATE_CTL_PAGE, B53_RATE_CONTROL(port), rc);
-+	} else {
-+		b53_read16(dev, B53_CTRL_PAGE, B53_UC_FLOOD_MASK, &uc);
-+		if (unicast)
-+			uc |= BIT(port);
-+		else
-+			uc &= ~BIT(port);
-+		b53_write16(dev, B53_CTRL_PAGE, B53_UC_FLOOD_MASK, uc);
-+	}
- }
+ 	b53_reset_mib(dev);
  
- static void b53_port_set_mcast_flood(struct b53_device *dev, int port,
-@@ -573,19 +597,44 @@ static void b53_port_set_mcast_flood(struct b53_device *dev, int port,
- {
- 	u16 mc;
- 
--	b53_read16(dev, B53_CTRL_PAGE, B53_MC_FLOOD_MASK, &mc);
--	if (multicast)
--		mc |= BIT(port);
--	else
--		mc &= ~BIT(port);
--	b53_write16(dev, B53_CTRL_PAGE, B53_MC_FLOOD_MASK, mc);
-+	if (is5325(dev)) {
-+		u8 rc;
- 
--	b53_read16(dev, B53_CTRL_PAGE, B53_IPMC_FLOOD_MASK, &mc);
--	if (multicast)
--		mc |= BIT(port);
--	else
--		mc &= ~BIT(port);
--	b53_write16(dev, B53_CTRL_PAGE, B53_IPMC_FLOOD_MASK, mc);
-+		if (port == B53_CPU_PORT_25)
-+			port = B53_CPU_PORT;
++	if (is5325(dev))
++		b53_write8(dev, B53_CTRL_PAGE, B53_PD_MODE_CTRL_25, 0);
 +
-+		b53_read16(dev, B53_IEEE_PAGE, B53_IEEE_MCAST_DLF, &mc);
-+		if (multicast)
-+			mc |= BIT(port) | B53_IEEE_MCAST_DROP_EN;
-+		else
-+			mc &= ~BIT(port);
-+		b53_write16(dev, B53_IEEE_PAGE, B53_IEEE_MCAST_DLF, mc);
-+
-+		if (port >= B53_CPU_PORT_25)
-+			return;
-+
-+		b53_read8(dev, B53_RATE_CTL_PAGE, B53_RATE_CONTROL(port), &rc);
-+		if (multicast)
-+			rc |= (RC_BCAST_EN | RC_MCAST_EN | RC_BKT_SIZE_8K |
-+			       RC_PERCENT_40);
-+		else
-+			rc &= ~(RC_BCAST_EN | RC_MCAST_EN);
-+		b53_write8(dev, B53_RATE_CTL_PAGE, B53_RATE_CONTROL(port), rc);
-+	} else {
-+		b53_read16(dev, B53_CTRL_PAGE, B53_MC_FLOOD_MASK, &mc);
-+		if (multicast)
-+			mc |= BIT(port);
-+		else
-+			mc &= ~BIT(port);
-+		b53_write16(dev, B53_CTRL_PAGE, B53_MC_FLOOD_MASK, mc);
-+
-+		b53_read16(dev, B53_CTRL_PAGE, B53_IPMC_FLOOD_MASK, &mc);
-+		if (multicast)
-+			mc |= BIT(port);
-+		else
-+			mc &= ~BIT(port);
-+		b53_write16(dev, B53_CTRL_PAGE, B53_IPMC_FLOOD_MASK, mc);
-+	}
- }
- 
- static void b53_port_set_learning(struct b53_device *dev, int port,
-diff --git a/drivers/net/dsa/b53/b53_regs.h b/drivers/net/dsa/b53/b53_regs.h
-index ab15f36a135a..b0a7ba3d9b65 100644
---- a/drivers/net/dsa/b53/b53_regs.h
-+++ b/drivers/net/dsa/b53/b53_regs.h
-@@ -29,6 +29,7 @@
- #define B53_ARLIO_PAGE			0x05 /* ARL Access */
- #define B53_FRAMEBUF_PAGE		0x06 /* Management frame access */
- #define B53_MEM_ACCESS_PAGE		0x08 /* Memory access */
-+#define B53_IEEE_PAGE			0x0a /* IEEE 802.1X */
- 
- /* PHY Registers */
- #define B53_PORT_MII_PAGE(i)		(0x10 + (i)) /* Port i MII Registers */
-@@ -47,6 +48,9 @@
- /* VLAN Registers */
- #define B53_VLAN_PAGE			0x34
- 
-+/* Rate Control Registers */
-+#define B53_RATE_CTL_PAGE		0x35
-+
- /* Jumbo Frame Registers */
- #define B53_JUMBO_PAGE			0x40
- 
-@@ -368,6 +372,18 @@
- #define B53_ARL_SRCH_RSTL_MACVID(x)	(B53_ARL_SRCH_RSTL_0_MACVID + ((x) * 0x10))
- #define B53_ARL_SRCH_RSTL(x)		(B53_ARL_SRCH_RSTL_0 + ((x) * 0x10))
- 
-+/*************************************************************************
-+ * IEEE 802.1X Registers
-+ *************************************************************************/
-+
-+/* Multicast DLF Drop Control register (16 bit) */
-+#define B53_IEEE_MCAST_DLF		0x94
-+#define B53_IEEE_MCAST_DROP_EN		BIT(11)
-+
-+/* Unicast DLF Drop Control register (16 bit) */
-+#define B53_IEEE_UCAST_DLF		0x96
-+#define B53_IEEE_UCAST_DROP_EN		BIT(11)
-+
- /*************************************************************************
-  * Port VLAN Registers
-  *************************************************************************/
-@@ -478,6 +494,28 @@
- /* VLAN Port Default Tag (16 bit) */
- #define B53_VLAN_PORT_DEF_TAG(i)	(0x10 + 2 * (i))
- 
-+/*************************************************************************
-+ * Rate Control Page Registers
-+ *************************************************************************/
-+
-+#define B53_RATE_CONTROL(i)		(0x00 + (i))
-+#define   RC_PERCENT_S			0
-+#define   RC_PERCENT_10			(0 << RC_PERCENT_S)
-+#define   RC_PERCENT_20			(1 << RC_PERCENT_S)
-+#define   RC_PERCENT_30			(2 << RC_PERCENT_S)
-+#define   RC_PERCENT_40			(3 << RC_PERCENT_S)
-+#define   RC_PERCENT_MASK		(3 << RC_PERCENT_S)
-+#define   RC_BKT_SIZE_S			2
-+#define   RC_BKT_SIZE_2K		(0 << RC_BKT_SIZE_S)
-+#define   RC_BKT_SIZE_4K		(1 << RC_BKT_SIZE_S)
-+#define   RC_BKT_SIZE_6K		(2 << RC_BKT_SIZE_S)
-+#define   RC_BKT_SIZE_8K		(3 << RC_BKT_SIZE_S)
-+#define   RC_BKT_SIZE_MASK		(3 << RC_BKT_SIZE_S)
-+#define   RC_DLF_EN			BIT(4)
-+#define   RC_BCAST_EN			BIT(5)
-+#define   RC_MCAST_EN			BIT(6)
-+#define   RC_DROP_FRAME			BIT(7)
-+
- /*************************************************************************
-  * Jumbo Frame Page Registers
-  *************************************************************************/
+ 	ret = b53_apply_config(dev);
+ 	if (ret) {
+ 		dev_err(ds->dev, "failed to apply configuration\n");
 -- 
 2.39.5
 
