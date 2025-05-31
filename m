@@ -1,207 +1,240 @@
-Received: from PNZPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19011039.outbound.protection.outlook.com [52.103.68.39])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3ED20EB;
-	Sat, 31 May 2025 02:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.39
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748659812; cv=fail; b=hIZ9YTe/bjNWVAlfPwL5jFslAMgp56OCfh49G0LjAEgKshkjxkFejk/q+lmIBqx++YjShRHYKaweWhjoUBrr7/+sjOJq05fE7cOWD8ZVg26iEWixvblWPqfJT73qWWQWBIq3Sy1/kvcg0DZupv1S+X3O7uBA3irZ9uM7KngwtqM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748659812; c=relaxed/simple;
-	bh=X2samiggE2166+XeFOi/06bda9q6eKEC3AKmIuggmKQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=g22CqsKpw4byAVvOk53lT6fg0fK5ZHa3Vuidpi8NgwFBhN64S6QJ1DdRP5RPA90r4TilE4czvYK6PXLSqbTbI/KodxgSZ0k2HAu41ejsdbp7ofo+ctpfN404BcPNOC72MGMV6enF5dyVKE8LNV+JOlSlitDhLZlDaZooCpqTJTo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Dw1rDYfs; arc=fail smtp.client-ip=52.103.68.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17DD210E4
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 02:54:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748660080; cv=none; b=uCzsrF1Km03T0thOWVXMam+5o7sOf622YIjtSYDuMBhptU2EDgt3YgDQpTYrrYCb1ZDbYOtp1HCaHNxvQIQA/MuX7yCod4647ngsXJq/13FEDZxPDgJ8YaS/c0xOS+cZhdBKKr5POzyW+zOLFISLN6ENYgYdesi9MhuA3w/v+u4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748660080; c=relaxed/simple;
+	bh=40L5BE0Zh2QvgZzx1WSNHLyoFA+imT4Mq21GuRxB+jk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mRB4oeDN21uJzuTDBZycXVF5yCJ9WypcmV2j9rJVPBYg/OeLLOC7jGXsQzDTNj4nWOJ5q0/OYUtfSiSf/eW+T7nhNN6e2eLu1mdhYIqUCUq6r8kqGdm3u3rRZfeGZDuYng3fpaDazX7z5PfkQsWK9eWOXqdA7BXVtvvIPvO777Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Kwq5mRlD; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Dw1rDYfs"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fkLL6+9y+ZioJyIpeoGGtY9YyflRdhg2bnjtZuDNku03YviX518jXbj2Oir7wUxQnPfwZBcd8LwVXqv3jbxmXnWT8BTDZCbTO3iPzw9tXmXuj+NXRkw08kzz6WAVVfMuW57rS9/vhPHq4ilywpkcwE9LIbUw0LS4iVy9PY+JQXSOW+C8Dj3VNwYhbISdywn2RGWJcnUMMrspLQy8x4xXzR+bP1/ra7Dhj3UDUKkdN68sVv2Hu0T4f0tBO8J1/PXVltc74l3AnRWLhjjsAOn2VZAotYhB/v++oyyi8oDvdEDqTeTkMVHLgF+BzTkQv5/EGFwtFGSpaxJkSs65y30Cqg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ucgg4cKgP7e8iXvxtmSJcx6Z3CitFhsVwp6QTRyuVWo=;
- b=gcSqrLnsV+bg9jbyvFkzODv1pBi7CvLryhsc1sKwqhrbeHaFSKNT36744VDixWJg30q7kuHJuuDV57cJvZkMpDP46Eb7QOIWV5TVIR2PO22p6KDUGjLqPNDQg2cQbW05FZi/tMpYD2KgS9Olp4+V9S4Y7VlTGfSf5FMXQKNtpzLsf9iz5Q5cdtHyGUPAjggxGXzCL2SwUHnQiKUo9MDb2B/vcdyut4fX5wRraSSYtOrurO4WBFse8xEIEEWn08sy6OfhlJ/9LykdzeRqKECCFvlcaoYejDkfYE9zu6Eb84rHBlLxQ40Wo7/Z4SRVsCy6axABLlFGErtnjfb6vJ1APw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ucgg4cKgP7e8iXvxtmSJcx6Z3CitFhsVwp6QTRyuVWo=;
- b=Dw1rDYfsrFQUZHacPOEaWLCRf9uuGuFjrrh8BOINOK/ebHw7PLB+RdueejRZ2wf+I9CAct3s5qDaZ2pbCxExyuVih4QfF9c4PFZ3ZMg6CRkTAM7Sgu0kh3RFM5HqKRkhkFBgwHaElQcuTmaxt/vQY8v9HD6beyoLDmbZQS6RXi8vrheDGdYKENIDuROvpb/q8sfo0TK1TYq6eG5O+ZzWj5Ptpu4jFiXYaBZiWTR5X8phHeS+7BR86B02ebouzvC0UnYh8k3zj0SGn4ruLUbYBUj3Zs6BnQ2+0Cb9mmyy2wGOHMlFcwFUOCk5H1rWS+CtVYh5nimWXCihLTuLqPQDfw==
-Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:100::6)
- by PN3PPFD6B622E24.INDP287.PROD.OUTLOOK.COM (2603:1096:c04:1::d6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.35; Sat, 31 May
- 2025 02:50:02 +0000
-Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
- ([fe80::ca81:3600:b1e4:fcf4]) by MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
- ([fe80::ca81:3600:b1e4:fcf4%5]) with mapi id 15.20.8769.033; Sat, 31 May 2025
- 02:50:02 +0000
-Message-ID:
- <MA0P287MB226230791E82A7A4D566C224FE60A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
-Date: Sat, 31 May 2025 10:49:58 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] riscv: dts: sophgo: add zfh for sg2042
-To: Inochi Amaoto <inochiama@gmail.com>, Han Gao <rabenda.cn@gmail.com>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, linux-riscv@lists.infradead.org,
- sophgo@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <cover.1747235487.git.rabenda.cn@gmail.com>
- <104dde6002c268a39fab6fcf469adc26d49ba364.1747235487.git.rabenda.cn@gmail.com>
- <MA0P287MB226290B908D3209E5C890BFAFE90A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
- <CAAT7Ki-33DcA7xeBzzv1hm0wR_ebcVdux5fQxGVrLs45RbGM9A@mail.gmail.com>
- <MA0P287MB226265FFA15A808221629848FE64A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
- <4vuneynwhmsyokkuw3wlabxij6kobl6j7bbbcymlcmsdc2hhb7@u5mhb7je74km>
-From: Chen Wang <unicorn_wang@outlook.com>
-In-Reply-To: <4vuneynwhmsyokkuw3wlabxij6kobl6j7bbbcymlcmsdc2hhb7@u5mhb7je74km>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: TYAPR01CA0215.jpnprd01.prod.outlook.com
- (2603:1096:404:29::35) To MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a01:100::6)
-X-Microsoft-Original-Message-ID:
- <da4385b0-4c32-4c4f-9b35-fe6f5442fcd2@outlook.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kwq5mRlD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748660076;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4qsLu0lHA7bFYOFOBNnyYxJ9GC4MiYfojGvHdjpDapg=;
+	b=Kwq5mRlDybTwh4W3iTipb9Hg9VhScRflRdwd37Xs2FgeOBeDYkXFJYetA0pId2juudFdna
+	Aojvf6Wk5nb6+K+eQxWIboo1pFwEiks1ttMStEBWttjzRgxUjc15MVUB7i6MzJqG2TO7uH
+	3FcANuVegpXjU9SAq2irvjtfRJmpuYg=
+Received: from mail-vs1-f71.google.com (mail-vs1-f71.google.com
+ [209.85.217.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-492-j20TbdLoOXavxfg5PFkbXQ-1; Fri, 30 May 2025 22:54:35 -0400
+X-MC-Unique: j20TbdLoOXavxfg5PFkbXQ-1
+X-Mimecast-MFC-AGG-ID: j20TbdLoOXavxfg5PFkbXQ_1748660074
+Received: by mail-vs1-f71.google.com with SMTP id ada2fe7eead31-4e1060d40f4so600880137.0
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 19:54:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748660074; x=1749264874;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4qsLu0lHA7bFYOFOBNnyYxJ9GC4MiYfojGvHdjpDapg=;
+        b=noUsYzNIceKWtzkdOFsd7cgVmzRuc7YjPz1oS0FDlWfIcRcY/9CKxqpKWNmfBhe8En
+         U9UK1GtlgO07b1uhNEzoVfzUPHOOgMKW8+AS/zxFXONyxhjFi4i0bIauijEjp/hK8Y2s
+         X1TvMUwBP/j2/9KFWdrHLAzT4PnFqWfcrafREHU5FTl8AJSEOt0wI3kKPzlnV6Yo8Sw4
+         UjRDcHEi57efDrJ1tFSj/+qdYbgdgDjQHru3RipOUE7WuMOJWk/thMfiRoai/2LWT7Li
+         0xifW4Flu/6+g3BuZUYs+0WfHrXdzybWv83WIqhFMHKKYl7PoCnfb2wQudKegi9Ck+ob
+         sJtQ==
+X-Gm-Message-State: AOJu0YxWQNu0PJk7fQbZ7UYH7kUv8WT4scN7BufMzRNi1FMXbkrM1Pr8
+	jbenN6190hX3ny3lMjXtf9UyI5+h5ahtsTSbvE7R0CfZUQCHpLUc5vUXkpTsZPLKAYRqeiUPdUS
+	MN56G9zIrpUYY1FD5xWbRGTv+ZLuDmUI1z76KIH91wafZDHlswp9gxMAkRBW7hU6ePo1A5jGzbE
+	c86cqbko20QlgcqDma3ooNGEcTBJ8uA3zE1YJ4MzJn8Y8n0ucMSq4+MA==
+X-Gm-Gg: ASbGncu4DRSo7Ap6FhTs7sO5Oiorx8deTVsnOUgzEdecv3bOYzvJsv/rNrbaHNRNDKD
+	GngOzXcbm7GS9/M2n5eEIEVyndQl3rTvJGACw/ZTUpJjzGe1bqIiTlrpRKjZxw2HOqqM=
+X-Received: by 2002:a05:6122:17a0:b0:530:7ab8:49ab with SMTP id 71dfb90a1353d-53093308211mr348054e0c.0.1748660074503;
+        Fri, 30 May 2025 19:54:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGHcGwqJFNf5deKBMtLwQtfyTH+MhR9a8ovR3jKJ2pIlVWWhPNfkdppfZjC2sxSJINu81RBblF+tPuimE1o5hY=
+X-Received: by 2002:a05:6122:17a0:b0:530:7ab8:49ab with SMTP id
+ 71dfb90a1353d-53093308211mr348047e0c.0.1748660074155; Fri, 30 May 2025
+ 19:54:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MA0P287MB2262:EE_|PN3PPFD6B622E24:EE_
-X-MS-Office365-Filtering-Correlation-Id: 79c4c5c1-e98d-45b7-e3c6-08dd9fedd6eb
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|8060799009|7092599006|15080799009|19110799006|5072599009|6090799003|461199028|3412199025|440099028|10035399007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bkpHa2hKSUx1eXZwWGEyTGV5b1I1Y256WHJPTlZTOWJrT1gySTFXOWtxN2pr?=
- =?utf-8?B?SWlWR3luK2Z4YXRidmhucFVyb2VHM01PellNM0VxWUl6RUhoNWRCMUoxN1Bs?=
- =?utf-8?B?WG5zbWVxTWNYZnFhWlFCcExQaXc1cmlUbTB4ajFoNkVWY2hZei9PYUh2U3E4?=
- =?utf-8?B?M1U3TVYxUTA4MnJJUGdJdDdDNERnTFlBdVUvaWEvZG1vTVh2ai80RzZXeU84?=
- =?utf-8?B?bHdUVzcySndJK1Q5S1lsR3FsV3ZwSmxzcDk1eTMyanUwSms0YkoxZFdPRWQx?=
- =?utf-8?B?bXB5MEMrWWlJTmZ1TGp6L2xkN0JPWmx0dEE2T0xuQittbld0YUxjc05MdmF6?=
- =?utf-8?B?allkenBaeFRJN05FVVBrVHhScEFpejNPaUE0TXFObmlLdGRrdFUvZWlBR2E2?=
- =?utf-8?B?Mk1CZDkvMVZQS0Rxa0xkRFNqRC9keGJKSVJmTXovT0FvYTNNRlRlWk9ncUUy?=
- =?utf-8?B?dytZZFpkRktvK3ZIaXpWQzBCS3FQYXFkSklVSTl0Tlh5RVVhcHAyVk4xMnlp?=
- =?utf-8?B?OFBIalYvenU2SGQxeTNXdWlPVlltV1YyeUVjYnYvaWVKeEJ3RVhhTmQ1UGlt?=
- =?utf-8?B?MlB0eE05WWhGVmVIKy9CYWFybVZyY2d6Z2h1c1R2Z1NlTEhKUmhob25OS2h5?=
- =?utf-8?B?NUNIcG8vTWhRZFBURFh5cERoU0xqaVRqRUcxdWltNkgzdGxieUMwV1BxZWdB?=
- =?utf-8?B?TFUvQjQxc2dLeHQ2RVJzSThVOWNKVGhZUjFIOVo0Z2k4RzMvWFNCUXYrT0h0?=
- =?utf-8?B?cEc4Ly83RVlCSnpWK1B2SlpvMWZhV01FNnFPM1REMGovbjZ4S0Y1N1RwcUFi?=
- =?utf-8?B?Z1RDUVRuTFdScmw5LzZqRTkwdExXNXovZXEyaWN1eDZZU3loK0ROSEhFYjgr?=
- =?utf-8?B?V0xGTzE5RFMxOWFJZTFub2twdkpaYmZDSDFsdDRXYkFUSkYrMXp2WFdtVzRj?=
- =?utf-8?B?cDVmdGkrWnFJWWFLeUQyWGJ0SDRMdVlzbXlGVHc4bUlNRGtINVYyY1llOGtC?=
- =?utf-8?B?bUxwbDVwdmxmbUNCRTkxaWxtNGc5Nk9Nb2I5VVFzL0JKMWR6cm5wejZaMHdx?=
- =?utf-8?B?TUQ5TTNlclkvV0tsZmdVWmV3Ymw5b2dxMkdlUDNMemQzaVMvT1FQU0MrWFNG?=
- =?utf-8?B?cGovVU9STlgxSmhLQUhPTk5Yck11bVJ5YVFNR3ZQVDlJdjNUL1ozR2RveHBh?=
- =?utf-8?B?QzZGTnozVjloZloyQloralFjbXBjQ1dYZDhsU1NOZm9rbjBYYWtuMzZlVzFp?=
- =?utf-8?B?ZFZZWWdTcjdOM0swK3Evdy8xUVZaS1JmZ3RjM3FYc1pmZ3BnejNrcVdhS3h3?=
- =?utf-8?B?b3ZnN2kxa2sxWmxJU2RYYnJ0eTlHL3dPbHRsNEgyY0Ria0hrQ1FzWFFxSkhy?=
- =?utf-8?B?V0RiVWR3M1RueGdiellqWlUvUk1LVjlZQlFJdE53VWE0QnlXR2dwQ2tVQmRK?=
- =?utf-8?B?K2hBZ1Y4TUpyWjJlTm1qS3dzd3hEdnhIWU92bHl0eEtvaEtsbHRWRUl5MmRt?=
- =?utf-8?B?RkZRWnRPRnprbkRFQVZmNEkvenhkL0o0UVFyWlVDcWN0TS9uZ1B4aTNOSXcr?=
- =?utf-8?Q?lDtAU5/mhzCqn2ODTHJ+6jOJF8o9WC8e0HigXjOW+sUXO0?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QVFsTWxJamNhUTBEa21zakRHUUpIaHpSU0ZmZEl3KzZtNnF4M1lVbTV1dzgv?=
- =?utf-8?B?Q2dGR3M0c3Z4Q2VheHZTSEpmV3dSd242VGsxc3hxTWJGV0xZRVBpZGlKWVB3?=
- =?utf-8?B?ME5NL1FiZE83NUdoeE1EWTVSM0phcmtaQlhWUGtxYmR5bjJNUGpUY3dnOVM4?=
- =?utf-8?B?d1E2eWQwQk5pUDlIa1ZaY0ZnVHlZYkJjUzFHaExhMjBIOFhCSmdaYVgwUmJC?=
- =?utf-8?B?ZHRUcnBFRlllMnNSdUF5OUczUitxUVNjdFQxTnhJSVArbUZBdjFXMjJYMjVH?=
- =?utf-8?B?ZGs2Y1VHTFA4VTZNbVVHRXFnSVZKYWgzZDYxSHVCOEhFdGxYWi9lRXZ2ZXBi?=
- =?utf-8?B?ZHh3NWhxYnQ3VFRvMlZPWUs0eHVKYzhuTG92QUdkM0JvdVhMWmVuUzFLRnhp?=
- =?utf-8?B?ZytVbDZHM1J4bjNmWGpxLzBZK1FSRFROQ2I1ZnhCc1k4b09GeHJ3azlvbkh0?=
- =?utf-8?B?ZTNBYTdrNzFwUW53UUlCaWNhU3R5U2dJb0MxVHJLUHBXNkdKeWJtei94Wm5k?=
- =?utf-8?B?YzUxSDJvb2xUSTVyNUVuNHpOMEtFUmoxQ3U2TFpYdkJTU243cCsxbFBjajVi?=
- =?utf-8?B?L084aENCZXJ3cEZhV0ViZUFabFgrT1d5NjVHZFgyMm5JNW53Y2VDd2NzT3Q1?=
- =?utf-8?B?TWEyeGhVcDlMd0dCOTYya0hDNXBLbCtZaVBmM00zbDZwTU1kbmFXQ2F4VmVF?=
- =?utf-8?B?TnhrV25XYlJPUjREZGtFQ0o5NGJYeTdxM0dNQVZCMUkySzFMWHpMMXNXNFpw?=
- =?utf-8?B?OENiVDFYTUhxVC9OUzFpM1NNNWJzVFNudXdDeVhGcHY3U0lwM25KTUpROGV6?=
- =?utf-8?B?aDFaSGtNYTFiSk5WMTlwOTZFYVB2dEgvbFhuWFF3OW12ZVdVaEFXTDhNNEJL?=
- =?utf-8?B?aGd6TmxIQ0RBaVZHbmNDRzYzb1g5TXhUZ3BDQ2VYVWdaUFJ2MWF3bVpaNzlJ?=
- =?utf-8?B?NWZlRUJIMGZLS0RYMU50aytjUnlscjhYRlJCVHUvM05lVVp3UzdTRFJ6VnJX?=
- =?utf-8?B?Nk1SNVBGcjBSWEd6U1ljUkJJdHBFYTYwTVRDKzhWc2hicjdpZHZITVlHMkVK?=
- =?utf-8?B?WmFxbHp1M0NoR3FKbEh4OUdzMXVpc3cwRkxtNVlVNHlkU3Q5WVFKOEg5ZXB1?=
- =?utf-8?B?QVhoK0svcTZ4OVIrRDd5bXVQRU1CSkZIbEVtNVBpNlkzTXZoQzdxU0s3dTBv?=
- =?utf-8?B?ck1pM1RsbHdYSm1jUjJ6Vi9lUytZZjZITWZFREJ5SmYxcXZZc05NZDdBcW5a?=
- =?utf-8?B?ZkRyUGtWdTFsVHh5QTF1cldrUDBTSW9KNVVScUp5OTFQZHhxdFgxVS9vTkVZ?=
- =?utf-8?B?SVRXU3JlTFFNYkdCbkM3cXdSdk1KQnZpb20wc2lEMjIwamR1NXpUNGk4T0M4?=
- =?utf-8?B?QlA2OWRpRHlGZDhnaklmU1pwUHdXVEZWY0hzakNvMUt6dEdOa0tHOWg1TG5C?=
- =?utf-8?B?bXk4cHNNOGxudGJYazFISVBFSmtOVW43NzFXWDNOTysxNzIxRzN1MDBDNWw2?=
- =?utf-8?B?bnBHWHZxajNmbk9Kb0xJUHhUT2duVk1IVjlucHNwUS9CVTJEWUVvb1djSTVQ?=
- =?utf-8?B?MmVBNzgzT0tENUtPZkk1aklJQ2tpcG5NVE1ROUJzUzJWMkdYMURGM0NmREJL?=
- =?utf-8?B?WWtmaUhkYU0zeGU4N0RpbE5hOTBOTThvZWViNU56Wms2aE4rNUZwdHArNWlD?=
- =?utf-8?B?QTNXWlN3ZmN2UXN2SDJGSDZMcWYwTXFnRzE1TXFKcWwzczdmeE5YQ2tQTVN1?=
- =?utf-8?Q?En2jMeo5Oj+SVrx6bahq6b7HCl35s2vVVsKUmUn?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 79c4c5c1-e98d-45b7-e3c6-08dd9fedd6eb
-X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2025 02:50:02.1295
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN3PPFD6B622E24
+References: <20250530211422.784415-1-cmirabil@redhat.com> <20250530211422.784415-2-cmirabil@redhat.com>
+ <aDpq7kqJUyAjad9F@ghost>
+In-Reply-To: <aDpq7kqJUyAjad9F@ghost>
+From: Charles Mirabile <cmirabil@redhat.com>
+Date: Fri, 30 May 2025 22:54:23 -0400
+X-Gm-Features: AX0GCFu8cygWIhwriOzSHAzT63d4ZkJQlHOU6N0ITQKTtG-BnG0LOa7a0z-wsGw
+Message-ID: <CABe3_aF0U5ej6ctQ0TQzecZ+ayaRSzJPTv5zf6kcD9U95rQXxw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] riscv: fix runtime constant support for nommu kernels
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: linux-kernel@vger.kernel.org, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, 
+	"open list:RISC-V ARCHITECTURE" <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 2025/5/31 9:34, Inochi Amaoto wrote:
-> On Tue, May 27, 2025 at 06:22:05PM +0800, Chen Wang wrote:
->> On 2025/5/27 17:34, Han Gao wrote:
->>> On Thu, May 15, 2025 at 9:33 AM Chen Wang <unicorn_wang@outlook.com> wrote:
->>>> On 2025/5/14 23:15, Han Gao wrote:
->>>>> sg2042 support Zfh ISA extension [1].
->>>>>
->>>>> Link: https://occ-oss-prod.oss-cn-hangzhou.aliyuncs.com/resource//1737721869472/%E7%8E%84%E9%93%81C910%E4%B8%8EC920R1S6%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C%28xrvm%29_20250124.pdf [1]
->>>>>
->>>>> Signed-off-by: Han Gao <rabenda.cn@gmail.com>
->>>>> ---
->>>>>     arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi | 256 ++++++++++----------
->>>>>     1 file changed, 128 insertions(+), 128 deletions(-)
->>>>>
->>>>> diff --git a/arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi b/arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi
->>>>> index f483f62ab0c4..8dd1a3c60bc4 100644
->>>>> --- a/arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi
->>>>> +++ b/arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi
->>>>> @@ -256,11 +256,11 @@ core3 {
->>>>>                 cpu0: cpu@0 {
->>>>>                         compatible = "thead,c920", "riscv";
->>>>>                         device_type = "cpu";
->>>>> -                     riscv,isa = "rv64imafdc";
->>>>> +                     riscv,isa = "rv64imafdc_zfh";
->>>> Need not touch this. "riscv,isa" is deprecated and replaced by
->>>> "riscv,isa-base" & "riscv,isa-extensions".
->>>>
->>>> And only adding zfh for this looks a bit werid.
->>>>
->>>> Actually, I plan to remove "riscv,isa" later, so please don't touch this
->>>> from now on.
->>> I think that since the linux kernel is the upstream for devicetree, it
->>> cannot yet remove riscv, isa needs to maintain compatibility.
->> OK, maybe it's not good to remove "riscv,isa".
->>
->> Can this patch not modify "riscv,isa", but only add something for
->> "riscv,isa-extensions"?
->>
-> I can remove this while merging the patch, is it OK for you?
+On Fri, May 30, 2025 at 10:35=E2=80=AFPM Charlie Jenkins <charlie@rivosinc.=
+com> wrote:
 >
-> Regards,
-> Inochi
-
-@Inochi,
-
-Han does not want to remove this "riscv,isa"，he said some other 
-components, such as u-boot may have dependency on this.
-
-@Han, please provide more info if needed.
-
-Thanks,
-
-Chen
+> On Fri, May 30, 2025 at 05:14:22PM -0400, Charles Mirabile wrote:
+> > the `__runtime_fixup_32` function does not handle the case where `val` =
+is
+> > zero correctly (as might occur when patching a nommu kernel and referri=
+ng
+> > to a physical address below the 4GiB boundary whose upper 32 bits are a=
+ll
+> > zero) because nothing in the existing logic prevents the code from taki=
+ng
+> > the `else` branch of both nop-checks and emitting two `nop` instruction=
+s.
+> >
+> > This leaves random garbage in the register that is supposed to receive =
+the
+> > upper 32 bits of the pointer instead of zero that when combined with th=
+e
+> > value for the lower 32 bits yields an invalid pointer and causes a kern=
+el
+> > panic when that pointer is eventually accessed.
+> >
+> > The author clearly considered the fact that if the `lui` is converted i=
+nto
+> > a `nop` that the second instruction needs to be adjusted to become an `=
+li`
+> > instead of an `addi`, hence introducing the `addi_insn_mask` variable, =
+but
+> > didn't follow that logic through fully to the case where the `else` bra=
+nch
+> > executes. To fix it just adjust the logic to ensure that the second `el=
+se`
+> > branch is not taken if the first instruction will be patched to a `nop`=
+.
+>
+> You have an accurate assesment here, I missed the zero case :/.
+> Thank you for fixing the issue!
+>
+> >
+> > Fixes: a44fb5722199 ("riscv: Add runtime constant support")
+> >
+> > Signed-off-by: Charles Mirabile <cmirabil@redhat.com>
+> > ---
+> >  arch/riscv/include/asm/runtime-const.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/riscv/include/asm/runtime-const.h b/arch/riscv/includ=
+e/asm/runtime-const.h
+> > index 451fd76b8811..d766e2b9e6df 100644
+> > --- a/arch/riscv/include/asm/runtime-const.h
+> > +++ b/arch/riscv/include/asm/runtime-const.h
+> > @@ -206,7 +206,7 @@ static inline void __runtime_fixup_32(__le16 *lui_p=
+arcel, __le16 *addi_parcel, u
+> >               addi_insn_mask &=3D 0x07fff;
+> >       }
+> >
+> > -     if (lower_immediate & 0x00000fff) {
+> > +     if (lower_immediate & 0x00000fff || lui_insn =3D=3D RISCV_INSN_NO=
+P4) {
+>
+> This comment is borderline too nitpicky so feel free to dismiss it :).
+> It's slightly wasteful to have this check right after the if-statement
+I agree. Your patch definitely works, but the complexity starts to get
+kind of hairy though to handle it correctly. Especially given this is
+the patching code that only runs once and is not in the hot path.
+> that sets it. I am not sure what the most readable way of doing this is
+> though. What would you think about a patch like the following instead?
+>
+> From 1c56536c1e338735140c9090f06da49a3d245a61 Mon Sep 17 00:00:00 2001
+> From: Charlie Jenkins <charlie@rivosinc.com>
+> Date: Fri, 30 May 2025 19:25:13 -0700
+> Subject: [PATCH] alternate fix
+>
+> ---
+>  arch/riscv/include/asm/runtime-const.h | 23 +++++++++++------------
+>  1 file changed, 11 insertions(+), 12 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/runtime-const.h b/arch/riscv/include/=
+asm/runtime-const.h
+> index 451fd76b8811..085a0bb26fbb 100644
+> --- a/arch/riscv/include/asm/runtime-const.h
+> +++ b/arch/riscv/include/asm/runtime-const.h
+> @@ -179,12 +179,9 @@ static inline void __runtime_fixup_caches(void *wher=
+e, unsigned int insns)
+>  static inline void __runtime_fixup_32(__le16 *lui_parcel, __le16 *addi_p=
+arcel, unsigned int val)
+>  {
+>         unsigned int lower_immediate, upper_immediate;
+> -       u32 lui_insn, addi_insn, addi_insn_mask;
+> +       u32 lui_insn, addi_insn;
+>         __le32 lui_res, addi_res;
+>
+> -       /* Mask out upper 12 bit of addi */
+> -       addi_insn_mask =3D 0x000fffff;
+> -
+>         lui_insn =3D (u32)le16_to_cpu(lui_parcel[0]) | (u32)le16_to_cpu(l=
+ui_parcel[1]) << 16;
+>         addi_insn =3D (u32)le16_to_cpu(addi_parcel[0]) | (u32)le16_to_cpu=
+(addi_parcel[1]) << 16;
+>
+> @@ -195,6 +192,15 @@ static inline void __runtime_fixup_32(__le16 *lui_pa=
+rcel, __le16 *addi_parcel, u
+>                 /* replace upper 20 bits of lui with upper immediate */
+>                 lui_insn &=3D 0x00000fff;
+>                 lui_insn |=3D upper_immediate & 0xfffff000;
+> +
+> +               if (lower_immediate & 0x00000fff) {
+> +                       /* replace upper 12 bits of addi with lower 12 bi=
+ts of val */
+> +                       addi_insn &=3D 0x000fffff;
+> +                       addi_insn |=3D (lower_immediate & 0x00000fff) << =
+20;
+> +               } else {
+> +                       /* replace addi with nop if lower_immediate is em=
+pty */
+> +                       addi_insn =3D RISCV_INSN_NOP4;
+> +               }
+>         } else {
+>                 /* replace lui with nop if immediate is small enough to f=
+it in addi */
+>                 lui_insn =3D RISCV_INSN_NOP4;
+> @@ -203,16 +209,9 @@ static inline void __runtime_fixup_32(__le16 *lui_pa=
+rcel, __le16 *addi_parcel, u
+>                  * is performed by adding with the x0 register. Setting r=
+s to
+>                  * zero with the following mask will accomplish this goal=
+.
+>                  */
+> -               addi_insn_mask &=3D 0x07fff;
+> -       }
+> -
+> -       if (lower_immediate & 0x00000fff) {
+> +               addi_insn &=3D 0x07fff;
+>                 /* replace upper 12 bits of addi with lower 12 bits of va=
+l */
+> -               addi_insn &=3D addi_insn_mask;
+>                 addi_insn |=3D (lower_immediate & 0x00000fff) << 20;
+> -       } else {
+> -               /* replace addi with nop if lower_immediate is empty */
+> -               addi_insn =3D RISCV_INSN_NOP4;
+>         }
+>
+>         addi_res =3D cpu_to_le32(addi_insn);
+> --
+> 2.43.0
+>
+> Let me know what you think!
+Frankly, I wonder whether this whole optimization of replacing `lui` or
+`addiw` with `nop` is even worth it. This isn't like linker relaxation
+where we can actually change the amount of code by eliding an instruction.
+Is `nop` actually that much faster to execute than `lui` or `addiw` to
+justify the complexity?
+>
+> - Charlie
+>
+Best - Charlie
 
