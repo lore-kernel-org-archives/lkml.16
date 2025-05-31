@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C405023BCEE;
-	Sat, 31 May 2025 13:37:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F876ADD;
+	Sat, 31 May 2025 13:39:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748698675; cv=none; b=GSip/NGcLZy/3aJFZJauZUeGj0/d0ENXMcJLZ3akIIFdcgja6nPuK+JuFw75i9pJaqxrOXTtSg9YKZOjDMPqH4gU8uS5SuX5L6fbUMJDsIQNLjrZjtrLcLAtGgsaTx/92J2IV8hT+5fbww/clcHpLm3RECpUMlemWIXASzTi5q4=
+	t=1748698800; cv=none; b=KhitqpzODet0kgvZmxoSdu46Ps7qD/VSE6us6VK5bvJjinGPEcXrqk/5YtSA7jjDcBLNBQLjn3h2Hft09d9gLL6YEs7sytSeJ2g6qrumoQ4TyOrkgH5P7z8ykUFNaRPdzWLPjDZ96h+/Ha2OjguFmAoFBFH0pfQQ6U4vU9jn878=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748698675; c=relaxed/simple;
-	bh=rjjPu5dGr9a4QbxmvBYD88SkS3ybRl9lB9DXA1praDY=;
+	s=arc-20240116; t=1748698800; c=relaxed/simple;
+	bh=RyP8MxcAjStXqK5TBc4mN3vd2YK/1GreKNWYk8YXfZI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZCXeJHE7Fs1qenr5qEfgn6iVx6VhCLFkRXgN2b1Lshx7sMJujth/bj7+g03GVhMECzm3Dw9REHQ6gzmRXzlp7g6NQoPa81QxzYGsGfcJwEJBylvCgHL9djejSKrlhYM+8hxBtVTukbkmjOugLhp4hDCZCwhtsxFIJC14OGgkVsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QShM57XW; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=H/lkWVpw7Jw9ga39SeTzrX4y1dvRVO/BJUEC9vhkWh+Vhwvga4QBMd3IoagILEU0q7Ui2QggbTuc1wM2xAyil/pYWtbFNrsP/YqVwfSCeI7yxehkyjbt7IAwhzQ9N639I2rPv603lw1uiXaN9ZWPeUtVyk/a7srTjYgXeRMOX8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U+5pLDPm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QShM57XW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47108C4CEE3;
-	Sat, 31 May 2025 13:37:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U+5pLDPm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E830EC4CEE3;
+	Sat, 31 May 2025 13:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748698675;
-	bh=rjjPu5dGr9a4QbxmvBYD88SkS3ybRl9lB9DXA1praDY=;
+	s=k20201202; t=1748698799;
+	bh=RyP8MxcAjStXqK5TBc4mN3vd2YK/1GreKNWYk8YXfZI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QShM57XWoybn8l3OYli3gqLxJFW5KgQD4J6QwBBUl3BNEWvCwztNCm83q20kV2xuU
-	 pUq8TOg91vwsuwbmixnozAk3JVkOfCxzKU7E8ZeSzJp0SQppa0Ow7HrxDvyX/+MCEd
-	 jz6iuX4vfeOCRDj9EWVrmGmWZNko56P0QbVfmAmmNbvmdHjwE8FodGxG4aw32I3i8I
-	 +JFcir7m6jEPKMAsc1rYkhnYBsn4NlKiLh/eTgCd/KjZOTvLThe60zXB9S5LqVDSTT
-	 37oz3u9j5lCofwPwefDeJjwT6WhGuGQs0j2VbHXvTljxLhko0pdJ+IIS43Wmii6ICz
-	 n843TBylT/+jA==
-Message-ID: <fc418c21-00aa-4cdb-91e9-c86f3121b837@kernel.org>
-Date: Sat, 31 May 2025 15:37:51 +0200
+	b=U+5pLDPmNlxYoSIeUrF6sFVa6lzw9JaJSmlldotouFY3vAWB6dNvtCmwzng7E/R7V
+	 VXGy3bY5dwX0aEbBqaGEWvxXUbxfs6SqoyDfCrU+tuwT+6nU9CMlHaooiYTbmvJFOI
+	 YazyjkgV34/h6bNighng8JSXSwT+31ATdU13JTbFgL/PuUeo9356AS0pahF2zOLvac
+	 fBG7Aun9yab1mXnPg2s80YEatf/o1Ttvz3Z90VP4tMfQvhWSWyrVl81sAqpjllUUnL
+	 iCG5D/y8ZsUUKJ8avxirH27kC1qfe0tLExfFUAjNtNuJa2CODJcAfyZhGK9WGGCRwu
+	 SazfMtG2/ZEbQ==
+Message-ID: <ead6711d-8e38-43b7-bc50-bcc3f7cddb70@kernel.org>
+Date: Sat, 31 May 2025 15:39:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,13 +35,16 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] MAINTAINERS: Add entry for ST M24LR control driver
-To: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, arnd@arndb.de,
- gregkh@linuxfoundation.org
-References: <20250531081159.2007319-1-abd.masalkhi@gmail.com>
- <20250531081159.2007319-4-abd.masalkhi@gmail.com>
+Subject: Re: pmdomain: renesas: rcar: Use str_on_off() helper in
+ rcar_sysc_power() and rcar_gen4_sysc_power()
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: shao.mingyin@zte.com.cn, ulf.hansson@linaro.org, magnus.damm@gmail.com,
+ linux-pm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yang.yang29@zte.com.cn, xu.xin16@zte.com.cn,
+ yang.tao172@zte.com.cn, ye.xingchen@zte.com.cn
+References: <20250529101305686S2ehGmiFg5bnKwSa__96W@zte.com.cn>
+ <6eca9bc9-ac12-4aec-85c7-66397f70fca0@kernel.org>
+ <CAMuHMdVojqSZVg9xCQBUaonTsaDZ5ORsh_ttueOrhKgr10omiw@mail.gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -87,37 +90,35 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250531081159.2007319-4-abd.masalkhi@gmail.com>
+In-Reply-To: <CAMuHMdVojqSZVg9xCQBUaonTsaDZ5ORsh_ttueOrhKgr10omiw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 31/05/2025 10:11, Abd-Alrhman Masalkhi wrote:
-> Add a MAINTAINERS entry for the newly introduced sysfs control driver
-> supporting STMicroelectronics M24LR series RFID/NFC EEPROM chips.
+On 30/05/2025 10:07, Geert Uytterhoeven wrote:
+> Hi Krzysztof,
 > 
-> This entry includes the driver source, Device Tree binding, and assigns
-> maintainership to the original contributor.
+> On Thu, 29 May 2025 at 08:41, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>> On 29/05/2025 04:13, shao.mingyin@zte.com.cn wrote:
+>>> From: Shao Mingyin <shao.mingyin@zte.com.cn>
+>>>
+>>> Remove hard-coded strings by using the str_on_off() helper function.
+>>>
+>>> Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
+>>> ---
+>>>  drivers/pmdomain/renesas/rcar-gen4-sysc.c | 3 ++-
+>>>  drivers/pmdomain/renesas/rcar-sysc.c      | 3 ++-
+>>
+>> Stop sending such trivial patches one driver per patch, but entire
+>> subsystem in one patch. That's a lot of churn, considering this was
+>> rejected:
 > 
-> Signed-off-by: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-> ---
->  MAINTAINERS | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> Was it? I only see my Rb, and a review comment asking for more...
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index eb11c6f57500..f08975ac4d9f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -23017,6 +23017,14 @@ W:	http://www.st.com/
->  F:	Documentation/devicetree/bindings/iio/imu/st,lsm6dsx.yaml
->  F:	drivers/iio/imu/st_lsm6dsx/
->  
-> +ST M24LR CONTROL DRIVER
-> +M:	Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-> +L:	linux-kernel@vger.kernel.org
-> +L:	devicetree@vger.kernel.org
-
-No, drop. There are no entries like that.
-
+>> https://lore.kernel.org/all/20250114203547.1013010-1-krzysztof.kozlowski@linaro.org/
+Indeed this one was not, but my other patchsets were - several
+subsystems clearly expressed that this is just a churn. So if doing
+this, because you do not consider it a churn, do it all at once to, not
+line by line.
 
 Best regards,
 Krzysztof
