@@ -1,130 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CA49DF49;
-	Sat, 31 May 2025 13:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 181604C80
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 13:32:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748698230; cv=none; b=GHYY8itIWqpG8JqUJO4rFZw+Z3eFL6y6Ch6pJdV2JN7b/BvbRHYhJc/UCTObU6zlVM8ReDDDxmRVZA1sN2qQ/NA2M5VVKhw3fQLy61t6bLOlo5Dr9rCtEXoMwf+Wat3nTQYQ4AlaxjKaaVcYPttHX/0VAawaXvhD4QHV7oHYR4A=
+	t=1748698364; cv=none; b=ovHBndNuT7vcaWPWznfsVuKv11oTwYJoEmZHP4ky7ies3cjojRLTr9eSInSGExpBBfYzIBOFCfGz6QJ9NCssyFx9KypkIdh1U9qQ/DserH8r7ratAqL7CMvoD5Trnpv5cErYGqLHH+D6Vlx+cbiv7u5+C842mQRkE7wivTgSDT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748698230; c=relaxed/simple;
-	bh=zj+WBrSuNwFmmoBsrUNBJ+MTo+uK/TgeY97Q8lyyqDY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SRH7FvEnnl+hd5UY8ngSyw0MfwzDnm7DuPccWqVyrosI3eKaQXwMeW1I/GcSiN5PKtDh437R5RqQJJVMNOYjy3nSCxlBGfacHD6WjPoFXZ8wIjx5SPmapgDgL77HxxSNFtmVwB5JzRQrOzbwVoI0YMEBw8RUWhlttEjzjMjwpdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=t9uq+fwv; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="t9uq+fwv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CF31C4CEE3;
-	Sat, 31 May 2025 13:30:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1748698229;
-	bh=zj+WBrSuNwFmmoBsrUNBJ+MTo+uK/TgeY97Q8lyyqDY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=t9uq+fwvwNpBw6Zg2xtaPoeEFzwPv9A8f3nSC3OswmaWszFXpX2ocYpIg57T2Pjzp
-	 QcYk5a8k10SRBZ5to1ZIUd3i/q9wIdRQ2WDh9x5Qr8sY9bhaAKzvQ5tIo48Jme/24f
-	 x196EAAskCHYpb5/Gk4Cyd0NMbxdE/sS4k+XByWA=
-Date: Sat, 31 May 2025 15:30:26 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Timur Tabi <timur@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
-	John Hubbard <jhubbard@nvidia.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH] rust: add basic ELF sections parser
-Message-ID: <2025053117-snowy-tradition-eb9e@gregkh>
-References: <2025052932-pyramid-unvisited-68f7@gregkh>
- <DA935OIFBM1H.3CMSHQ46LLG4P@nvidia.com>
- <2025053047-theology-unsaid-d6ac@gregkh>
- <DA9AU3OBT29Z.3CX827C91I3IH@nvidia.com>
- <2025053050-maggot-landfall-d5eb@gregkh>
- <DA9KIGDH4IF6.2T383ZVLTJN0G@nvidia.com>
- <2025053039-reselect-thinness-e0a2@gregkh>
- <CAOZdJXVvmDro0Mv36grqQ6LB_1O5GzwPx+Dde+wsfu9Cu_me7A@mail.gmail.com>
- <2025053148-gore-badass-1d1d@gregkh>
- <DAACKTM8B9A1.3SI9LRGNMSBH3@nvidia.com>
+	s=arc-20240116; t=1748698364; c=relaxed/simple;
+	bh=oloUOBeG/cmfjpJKwirGN+A9VCP2ftNPG2HJGL2IJtY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cdJIssm+ovpxyFprct+9dJLwdIpK3NaUOMFWUQFlNk5pyoNh6rf3lnq/GeRoIrtRMJE22A/3FS7tsWCGCsFNcocWWHuV4Rf1a4hf0eBq3pkZt5Ze0NQvI2DqIue5Z9ff6l24i/P8GkznqVKtkTbIlwuP3fdNmVJJspaMojmiEeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 380464316C;
+	Sat, 31 May 2025 13:32:38 +0000 (UTC)
+Message-ID: <1aefb8dc-9145-4cee-b262-7d4212159444@ghiti.fr>
+Date: Sat, 31 May 2025 15:32:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] riscv: misaligned: fix misaligned accesses handling
+ in put/get_user()
+To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+References: <20250530205658.624195-1-cleger@rivosinc.com>
+Content-Language: en-US
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250530205658.624195-1-cleger@rivosinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <DAACKTM8B9A1.3SI9LRGNMSBH3@nvidia.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdefvddtfeculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhepieffvdeiveeuhfegvddvuefhveejhfffudffhfdufeeuudegtdfguddthfetledvnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmegrfedtkeemieelledtmedvjehfsgemlegrtggrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmegrfedtkeemieelledtmedvjehfsgemlegrtggrpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmegrfedtkeemieelledtmedvjehfsgemlegrtggrngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeeipdhrtghpthhtoheptghlvghgvghrsehrihhvohhsihhntgdrtghomhdprhgtphhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfr
+ hgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoheprghouhesvggvtghsrdgsvghrkhgvlhgvhidrvgguuh
+X-GND-Sasl: alex@ghiti.fr
 
-On Sat, May 31, 2025 at 09:33:38PM +0900, Alexandre Courbot wrote:
-> Hi Greg,
-> 
-> On Sat May 31, 2025 at 2:45 PM JST, Greg KH wrote:
-> > On Fri, May 30, 2025 at 01:10:50PM -0500, Timur Tabi wrote:
-> >> On Fri, May 30, 2025 at 10:42 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >> >
-> >> > On Fri, May 30, 2025 at 11:34:02PM +0900, Alexandre Courbot wrote:
-> >> > > So to try to answer your question, I am not disagreeing that userspace
-> >> > > is capable of doing what we currently do in the kernel. My follow-up
-> >> > > questions to that are: how do we command userspace to do that work for
-> >> > > us when we request the firmware, how do we provide the result to the
-> >> > > kernel, and is this something that distros can adopt easily? I'm happy
-> >> > > to consider doing things this way, but would need a few pointers to look
-> >> > > into.
-> >> >
-> >> > Again, look at how your firmware for your devices in your laptop are
-> >> > loaded today.
-> >
-> > Note, I am talking about non-gpu firmare images here (wifi, usb
-> > controllers, etc.) that are using the firmware download subsystem for
-> > ages as examples of what to look at as to how to trigger a firmware
-> > image to be loaded by userspace into the device.
-> 
-> I would really appreciate it if you could point me precisely to one
-> example (a link, a function, a file) of what you are describing because
-> I'm starting to wonder whether we are talking about the same thing.
-> 
-> Previously I mentioned udev and CONFIG_FW_LOADER_USER_HELPER, but you
-> haven't confirmed whether that was what you had in mind or not. Assuming
-> that udev is involved, I tried to snoop events while a
-> `request_firwmare` call is performed using `udevadm monitor`, but that
-> revealed no event related to firmware loading. Then looking deeper into
-> the kernel documentation confirmed that the kernel does indeed a direct
-> filesystem lookup in request_firmware [1]. IOW, the kernel looks for the
-> requested file, and if it cannot find it it's game over. This matches my
-> observations with udevadm, as I tried requesting a non-existing file and
-> no uevent was generated. I don't see what user-space can do here.
-> 
-> I also tried to look up this "firmware download subsystem" you
-> mentioned, but couldn't find anything under that name - I suspect you
-> are talking about the sysfs loading mechanism, but AFAIU this depends on 
-> CONFIG_FW_LOADER_USER_HELPER which doesn't seem to be widely enabled
-> (not on my distro at least).
+On 5/30/25 22:56, Clément Léger wrote:
+> While debugging a few problems with the misaligned access kselftest,
+> Alexandre discovered some crash with the current code. Indeed, some
+> misaligned access was done by the kernel using put_user(). This
+> was resulting in trap and a kernel crash since. The path was the
+> following:
+> user -> kernel -> access to user memory -> misaligned trap -> trap ->
+> kernel -> misaligned handling -> memcpy -> crash due to failed page fault
+> while in interrupt disabled section.
+>
+> Last discussion about kernel misaligned handling and interrupt reenabling
+> were actually not to reenable interrupt when handling misaligned access
+> being done by kernel. The best solution being not to do any misaligned
+> accesses to userspace memory, we considered a few options:
+>
+> - Remove any call to put/get_user() potientally doing misaligned
+>    accesses
+> - Do not do any misaligned accesses in put/get_user() itself
+>
+> The second solution was the one chosen as there are too many callsite to
+> put/get_user() that could potentially do misaligned accesses. We tried
+> two approaches for that, either split access in two aligned accesses
+> (and do RMW for put_user()) or call copy_from/to_user() which does not
+> do any misaligned accesses. The later one was the simpler to implement
+> (although the performances are probably lower than split aligned
+> accesses but still way better than doing misaligned access emulation)
+> and allows to support what we wanted.
+>
+> These commits are based on top of Alex dev/alex/get_user_misaligned_v1
+> branch.
+>
+> Clément Léger (2):
+>    riscv: process: use unsigned int instead of unsigned long for
+>      put_user()
+>    riscv: uaccess: do not do misaligned accesses in get/put_user()
+>
+>   arch/riscv/include/asm/uaccess.h | 28 ++++++++++++++++++++++------
+>   arch/riscv/kernel/process.c      |  2 +-
+>   2 files changed, 23 insertions(+), 7 deletions(-)
 
-Yes, that is what I am referring to, as you all seem to want to do
-"complex things without a specific filename choosen".  Look at
-Documentation/driver-api/firmware/fallback-mechanisms.rst for the
-details there.
 
-Or, better yet, just have your driver name all of the individual files
-that must be loaded and then no userspace things are needed.  That "big"
-firmware file will have already been split up into the different parts
-when you write it out to the filesystem, so no need to parse anything.
+We also need to prevent unsafe routines to trigger misaligned accesses, 
+I have a patch for this here 
+https://github.com/linux-riscv/linux/commit/7c172121aeb235dedeb6f5e06740527530edd6af
 
-If this isn't going to work for some reason, I think we need a better
-"this is EXACTLY what we need to send to the hardware for the firmware
-image(s) it requires" as I'm totally confused based on the different
-people talking on this thread about totally different hypotheticals
-(i.e. 12 line elf parsers in C vs. a giant elf parser in rust, random
-hypothetical hardware values that userspace "can not know", pointing at
-obsolete crazy interfaces like remoteproc that just happen to do crazy
-things, etc.)
+Clément, can you add this one to the series please?
 
-So step back, come up with a solid design document, and let's start over
-please.
+I have just  triggered a CI with those fixes on top of my sbi 3.0 branch.
 
-thanks,
+Thanks,
 
-greg k-h
+Alex
+
+
