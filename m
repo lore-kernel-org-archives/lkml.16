@@ -1,102 +1,70 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 020AA18C91F;
-	Sat, 31 May 2025 23:31:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86722286A9
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 23:42:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748734322; cv=none; b=vCFb5ZltCZGFp4+M/o9ByEBhF24GrqOdxscc/GTkRoF1qpYtsQh2jX3EigapNWWsFqgKs0GKzi4CFR5YyRPWQOMatK6WvZr51sAff4N1EIzdCRvRZzpxLY5Fm7kqlkldwOHwrIX5SmBGA277TAJhMNgaRMFToUoTqwW8fzs+1nA=
+	t=1748734925; cv=none; b=GBmY7cr9rqlaqfECKO1uJrial0x4iAjsObQ+rbd2MkhN+w1h31llyoCMVnj121kF/lCPLPw1GzLVhMMHITi9gw0h+ga9LUfI/dOKdthLOLJQYjNgkSFsXgwwAthAKq3kxng7ikq0sN2HiCdv1lo8QMRNpQN+wmOHbBA86Mx71V4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748734322; c=relaxed/simple;
-	bh=l/6JWtbuEjpEYr0d5Qx0p0ETOLprUagjTTOYMllVTmM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qagYOOoTj5uNtWjgSv+MoTJQAtRdJMVv43XkxDyfEitcaCDdy8GK9wE102BKrjkD3Be+Y8T7g5TCSn0GyWovT1sMz3GExa/mXmlUm1ydOg0MF60Fcy57DBBUH1OBXaNHT5HrQWymnJ/GCYmspP6VANOBuEmGIXeAhNNfDMUNHyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OaAyU7yD; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OaAyU7yD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748734320; x=1780270320;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=l/6JWtbuEjpEYr0d5Qx0p0ETOLprUagjTTOYMllVTmM=;
-  b=OaAyU7yDLs7lPlx6t5L5d1gqLEe2i3Wz9+vPhKfd3PN0tZQYEuqWLhE0
-   k0m1GfMLOL4+sNdgIV26R41VkbCmBHSwwb94poxRO9yeQSEQ6stwNq7BQ
-   UD8tfxsBIf5oH94A63Oi8Nh06qhyh9M286S6laYQmNEStYM/02q6KILfA
-   yTAtcnn7FQQiunEIEHfle0S8Txy+N0BG63irOCwj2oVOgodsNG+rBec7q
-   KSudWIbURKKAl485vGI2K/uWjeXkE5d7kPNx9Zm3b5J5Fx7nZnAMfnrFi
-   4x1nTo6FSN8F9QW11V4Y6SiiW9skSD8audXLomxjEC1TFQImjZbQT6n8+
-   Q==;
-X-CSE-ConnectionGUID: nOgROSGeToiaOdPre/9+/g==
-X-CSE-MsgGUID: 62fJM+7sRSu99jrJwq5ECw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11450"; a="50711541"
-X-IronPort-AV: E=Sophos;i="6.16,199,1744095600"; 
-   d="scan'208";a="50711541"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2025 16:31:59 -0700
-X-CSE-ConnectionGUID: /h+kF7heR8C0mmFRf2NNvQ==
-X-CSE-MsgGUID: i8uZgsDoT2aSoq8+NoX0WQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,199,1744095600"; 
-   d="scan'208";a="144224192"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 31 May 2025 16:31:57 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uLVgA-000YhA-2z;
-	Sat, 31 May 2025 23:31:54 +0000
-Date: Sun, 1 Jun 2025 07:31:07 +0800
-From: kernel test robot <lkp@intel.com>
-To: Christian Lamparter <chunkeey@gmail.com>, linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v1] spi: push HAS_IOMEM dependency down to the drivers
-Message-ID: <202506010734.yl1PFBaA-lkp@intel.com>
-References: <20250530234941.950431-1-chunkeey@gmail.com>
+	s=arc-20240116; t=1748734925; c=relaxed/simple;
+	bh=XA5ccVvBU42B3XXffnEKJx5bp4upK1dgbXChsasQ4Pc=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=itI0Y7SNQ0KvTISH8iiTDMRuVbXs7N6pqP8uPekO+6Rszm6lx+BYm6aadCIIuJAfKveZQBL7JlkuJzTbFMaD7MXfcZIRVaNdqiaTvbL+C9+KCGxATEwt6ADTr4iGj6rFCfXFgLNKEhj6AHcqtcxeCoanMW/yTwja4Udoqe6ak5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3dc6a403d77so76698365ab.0
+        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 16:42:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748734922; x=1749339722;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=R503OpfKpfF+sLpKYVoRo68saoo9i5snzFIhDjGqVYw=;
+        b=Q1ARd9e/b7RT4b5vZM+GUODPgCGHfAkJbaMoLfpyrVeCOP29zgSOQkNKtLWreAeuVE
+         ISlW3IF/TaQ5eoH+nI+GSbzneEhW0Fl0ReB7EbO7BNaAjDRscxSylvPSDGXFhIBtODEz
+         iAXJ/NqekUti56rPe2fKJDs2XXOgBNA1fSbASGOJ+AGAjKD04/VvXpRm97TIPblJB6Tw
+         hEJj4VrnnMHIDq6wkB2+Suj/fRQo0DUCCndnHc/S0ajzldaXnO3KyfnYw023bJXSpGTt
+         ZPIu1ALHRFvYxmWB+g97hUis1DpHpGYVMx9FFUh9IBX2yz5vTExRbL0xXn6s0Tu77D85
+         SAdg==
+X-Forwarded-Encrypted: i=1; AJvYcCUg4URkxnvcvBhTLVvAErCfOKh9cwqAtkUcKAx1puy/d8/cMxgc01CpgsJtOgWkbhKUthkG5oGVARUYUmk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2+HVC+zIl+oJcmc5yuL5O3ZHVpq0D+kYB1oeBBlqBiKvxkzrP
+	WTFdCI1iWq4QpTNnlgBty9eddC0b9O/RPrQMOGKyH2O/G8GM4YzwzBc1cPiEvtAvTcGbqeMrTIr
+	8nl/vaUlnReCMUoVzhEuK3Kd2bwNc550vgyMXKUSFOwsOpGMpLW1ew5PxTok=
+X-Google-Smtp-Source: AGHT+IFmLXZzFgKwwCPS0gCpwjjC1hi6jYBuXR3UWmswAC7/4dYfpL5MoZuy040fv90JM9mQxAJayQgx7YZ6bm87tvkgZj6X0WNo
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250530234941.950431-1-chunkeey@gmail.com>
+X-Received: by 2002:a05:6e02:194b:b0:3dc:787f:2bc8 with SMTP id
+ e9e14a558f8ab-3dda3363f25mr31810095ab.12.1748734922581; Sat, 31 May 2025
+ 16:42:02 -0700 (PDT)
+Date: Sat, 31 May 2025 16:42:02 -0700
+In-Reply-To: <20250531232348.2486-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <683b93ca.a00a0220.d8eae.0021.GAE@google.com>
+Subject: Re: [syzbot] [bcachefs?] possible deadlock in start_poll_synchronize_rcu_expedited
+From: syzbot <syzbot+cbc79a37b5fa23efd23b@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Christian,
+Hello,
 
-kernel test robot noticed the following build warnings:
+syzbot tried to test the proposed patch but the build/boot failed:
 
-[auto build test WARNING on broonie-spi/for-next]
-[also build test WARNING on linus/master next-20250530]
-[cannot apply to v6.15]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+lib/rhashtable.c:1085:6: error: call to undeclared function 'object_is_on_stack'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Christian-Lamparter/spi-push-HAS_IOMEM-dependency-down-to-the-drivers/20250531-075211
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
-patch link:    https://lore.kernel.org/r/20250530234941.950431-1-chunkeey%40gmail.com
-patch subject: [PATCH v1] spi: push HAS_IOMEM dependency down to the drivers
-config: s390-kismet-CONFIG_MFD_CORE-CONFIG_IIO_SSP_SENSORHUB-0-0 (https://download.01.org/0day-ci/archive/20250601/202506010734.yl1PFBaA-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20250601/202506010734.yl1PFBaA-lkp@intel.com/reproduce)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506010734.yl1PFBaA-lkp@intel.com/
+Tested on:
 
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for MFD_CORE when selected by IIO_SSP_SENSORHUB
-   WARNING: unmet direct dependencies detected for MFD_CORE
-     Depends on [n]: HAS_IOMEM [=n]
-     Selected by [y]:
-     - IIO_SSP_SENSORHUB [=y] && IIO [=y] && SPI [=y]
+commit:         4cb6c8af selftests/filesystems: Fix build of anon_inod..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=22765942f2e2ebcf
+dashboard link: https://syzkaller.appspot.com/bug?extid=cbc79a37b5fa23efd23b
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=15e9d00c580000
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
