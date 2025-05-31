@@ -1,220 +1,140 @@
-Received: from out.smtpout.orange.fr (out-68.smtpout.orange.fr [193.252.22.68])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29EDB156F28;
-	Sat, 31 May 2025 08:25:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22C7235063;
+	Sat, 31 May 2025 08:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748679914; cv=none; b=pgy78RSIwktjBGyeM9pnC746juHofKCVMtWlxwlSowZe1Wq9DmvnpdctvJ9vPH4iIoFWmt3C2JBA8kjWiGJeE91lkeI2oSJTxDKHEHCyahbIGx+SH5HsecM7CBJGwfeh12zzLbE4i6oCjD2iZcS/3BdRBxZZBD2V7TTVJXbv6kc=
+	t=1748679916; cv=none; b=VNBaCfmyXV/jte8lpuxvt3xGrzFMPODhV7cUuVU9i95gCg8TTvSoPfzshiw0CLJN/0sofgLFRtq/xuFKu2hOwKQ/ZAqD7aN/CRSF4UXc273MOCRuM9sZsGHt8CtDVoyVMx/8uxoVxwgEeJet5igy9S8rnq4xj5SPyjLjRfnoxSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748679914; c=relaxed/simple;
-	bh=MjVWmkwHnmmJoIjCB1pi36wZ5EN1mRelCrY/of1Y8Zo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pF8071ebZNmVdNPDjbldiXALCiq1P7BzEycUCuw+Jj2PJZi0Q19Vai/GjXvqqTYwgu2XsBWrG21EUKYEait/DO2J1VIRJTuU6ngnu5xj42jEiMvlnlbF9vId6uZHB2fvmGY+I/L1rxLP5X+Qwvl0+zLU/4DOjdNBzLUeEx0hsx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=O1YaF8uH; arc=none smtp.client-ip=193.252.22.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1748679916; c=relaxed/simple;
+	bh=S281ecTmyndUMmjUYK2jNjX+90LVDd4UGPaTkJIYADk=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=Tf7ouqxEyGrNtwjMX2cUwGWZ1Ic2PwnDAM5syGiTgtyR6JyRg3At63+wm/noitGSH2mMVfuyUYU62HjQ/aKrGwtUMiVKWLNnFrlkqyY4L8jHil4e8xTKV3aAbMG9Q0uhyYPjLVbUR+LkvZzuQrvCYsck9fq2tCXz6FOzo+6aKkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iZEMTPPi; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IaLvCFRC; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="O1YaF8uH"
-Received: from [172.16.82.72] ([124.33.176.97])
-	by smtp.orange.fr with ESMTPA
-	id LHWVuydzdyzRELHWWuLXT6; Sat, 31 May 2025 10:25:02 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1748679902;
-	bh=2UxUsLSI9cJnAR9lAWYLYOx2TiTSnICm96fYVIit21k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=O1YaF8uH8KMmQL8HJjbQO/2aipJ//smiKL0+vM2wf3cW3QdSrisft6Oh7elCmy9Sd
-	 accSbF8BRyxbg32gAJAghDsmclcieke7o5kWWJAxp5Z6GHHhU4MJEd66Yl5YF1FjBZ
-	 NuKweDCtBAFn5bVoMR5LWJv/33Za/W5dpV6gN4lkhNcfyKh8PeMASLrudi1ENMUZPA
-	 vnoBR6RtXTybzsQlC4rhN+mlbpr+0Jxluo1vhi0d1LW/AH8sA6kFjFAXqTeOJYaQ1K
-	 hGab/SegtEMaRU9+lrTv9vp/oRSA92Ryi8M3hbMdIrZWhZ8aLVzK1N9ULcEll0Ik3+
-	 ceZFtSmOKCQ7w==
-X-ME-Helo: [172.16.82.72]
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 31 May 2025 10:25:02 +0200
-X-ME-IP: 124.33.176.97
-Message-ID: <10ed3ec2-ac66-494a-9d3f-bf2df459ebc0@wanadoo.fr>
-Date: Sat, 31 May 2025 17:24:58 +0900
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iZEMTPPi";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IaLvCFRC"
+Date: Sat, 31 May 2025 08:25:11 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1748679912;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WWdp9jVmfLleahcnLH0hvf9/lXuG1BJJk6Y02LkIsCA=;
+	b=iZEMTPPi8IS/JexYkwaO0k/RZOG8FevOPZeswhwlsf4K2jyd7Zo9pS81V9tYfQuNNq6RI8
+	oQvLZEB0j3BEEYL/61bs+TFDGdUPd5caHW4DDS1y1WMgkUKrSdqZAQMKDh9CNTBny5xp+S
+	q1qyUXThoIwEBhi8BXxl92wwLUjxZl9WOdFx8PNLzxYYuA3/wgZCxoj5krgs42/8N7W/69
+	dt/Jq61AvJA619KcFtzn64TACNxPxI/gMuhezpW23ab/+gM3PObmhErAtkGHeSowhmB9zX
+	Za5dCAkPD83wkUJKj/omUgXmbGzrkNElzq60gT9mQ70Qk3zgRQjGbsu/EyuGVw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1748679912;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WWdp9jVmfLleahcnLH0hvf9/lXuG1BJJk6Y02LkIsCA=;
+	b=IaLvCFRC80vDrXDqYcFNCZvHmlxqSx1eQaip0y+FlOqn+JdePFymNplwQQ1meenWI6V6DD
+	dMKbeFN5ku2CFiCA==
+From: "tip-bot2 for Dapeng Mi" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] perf/x86/intel: Fix incorrect MSR index
+ calculations in intel_pmu_config_acr()
+Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, Ingo Molnar <mingo@kernel.org>,
+ Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250529080236.2552247-2-dapeng1.mi@linux.intel.com>
+References: <20250529080236.2552247-2-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 4/6] can: netlink: add interface for CAN-FD Transmitter
- Delay Compensation (TDC)
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>, linux-can@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- =?UTF-8?Q?Stefan_M=C3=A4tje?= <Stefan.Maetje@esd.eu>
-References: <20210918095637.20108-1-mailhol.vincent@wanadoo.fr>
- <20210918095637.20108-5-mailhol.vincent@wanadoo.fr>
- <CAMuHMdVEBLoG084rhBtELcFO+3cA9_UrZrUfspOeLNo80zyb9g@mail.gmail.com>
-Content-Language: en-US
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
- GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
- bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
- BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
- 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
- yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
- CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
- ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <CAMuHMdVEBLoG084rhBtELcFO+3cA9_UrZrUfspOeLNo80zyb9g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-ID: <174867991161.406.9289935407362158037.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hi Geert,
+The following commit has been merged into the perf/urgent branch of tip:
 
-On 30/05/2025 at 20:44, Geert Uytterhoeven wrote:
-> Hi Vincent,
-> 
-> Thanks for your patch, which is now commit d99755f71a80df33
-> ("can: netlink: add interface for CAN-FD Transmitter Delay
-> Compensation (TDC)") in v5.16.
-> 
-> On Sat, 18 Sept 2021 at 20:23, Vincent Mailhol
-> <mailhol.vincent@wanadoo.fr> wrote:
->> Add the netlink interface for TDC parameters of struct can_tdc_const
->> and can_tdc.
->>
->> Contrary to the can_bittiming(_const) structures for which there is
->> just a single IFLA_CAN(_DATA)_BITTMING(_CONST) entry per structure,
->> here, we create a nested entry IFLA_CAN_TDC. Within this nested entry,
->> additional IFLA_CAN_TDC_TDC* entries are added for each of the TDC
->> parameters of the newly introduced struct can_tdc_const and struct
->> can_tdc.
->>
->> For struct can_tdc_const, these are:
->>         IFLA_CAN_TDC_TDCV_MIN
->>         IFLA_CAN_TDC_TDCV_MAX
->>         IFLA_CAN_TDC_TDCO_MIN
->>         IFLA_CAN_TDC_TDCO_MAX
->>         IFLA_CAN_TDC_TDCF_MIN
->>         IFLA_CAN_TDC_TDCF_MAX
->>
->> For struct can_tdc, these are:
->>         IFLA_CAN_TDC_TDCV
->>         IFLA_CAN_TDC_TDCO
->>         IFLA_CAN_TDC_TDCF
->>
->> This is done so that changes can be applied in the future to the
->> structures without breaking the netlink interface.
->>
->> The TDC netlink logic works as follow:
->>
->>  * CAN_CTRLMODE_FD is not provided:
->>     - if any TDC parameters are provided: error.
->>
->>     - TDC parameters not provided: TDC parameters unchanged.
->>
->>  * CAN_CTRLMODE_FD is provided and is false:
->>      - TDC is deactivated: both the structure and the
->>        CAN_CTRLMODE_TDC_{AUTO,MANUAL} flags are flushed.
->>
->>  * CAN_CTRLMODE_FD provided and is true:
->>     - CAN_CTRLMODE_TDC_{AUTO,MANUAL} and tdc{v,o,f} not provided: call
->>       can_calc_tdco() to automatically decide whether TDC should be
->>       activated and, if so, set CAN_CTRLMODE_TDC_AUTO and uses the
->>       calculated tdco value.
-> 
-> This is not reflected in the code (see below).
+Commit-ID:     86aa94cd50b138be0dd872b0779fa3036e641881
+Gitweb:        https://git.kernel.org/tip/86aa94cd50b138be0dd872b0779fa3036e641881
+Author:        Dapeng Mi <dapeng1.mi@linux.intel.com>
+AuthorDate:    Thu, 29 May 2025 08:02:36 
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sat, 31 May 2025 10:05:16 +02:00
 
-Let me first repost what I wrote but this time using numerals and letters
-instead of the bullet points:
+perf/x86/intel: Fix incorrect MSR index calculations in intel_pmu_config_acr()
 
-  The TDC netlink logic works as follow:
+The MSR offset calculations in intel_pmu_config_acr() are buggy.
 
-   1. CAN_CTRLMODE_FD is not provided:
-      a) if any TDC parameters are provided: error.
+To calculate fixed counter MSR addresses in intel_pmu_config_acr(),
+the HW counter index "idx" is subtracted by INTEL_PMC_IDX_FIXED.
 
-      b) TDC parameters not provided: TDC parameters unchanged.
+This leads to the ACR mask value of fixed counters to be incorrectly
+saved to the positions of GP counters in acr_cfg_b[], e.g.
 
-   2. CAN_CTRLMODE_FD is provided and is false:
-      a) TDC is deactivated: both the structure and the
-         CAN_CTRLMODE_TDC_{AUTO,MANUAL} flags are flushed.
+For fixed counter 0, its ACR counter mask should be saved to
+acr_cfg_b[32], but it's saved to acr_cfg_b[0] incorrectly.
 
-   3. CAN_CTRLMODE_FD provided and is true:
-      a) CAN_CTRLMODE_TDC_{AUTO,MANUAL} and tdc{v,o,f} not provided: call
-         can_calc_tdco() to automatically decide whether TDC should be
-         activated and, if so, set CAN_CTRLMODE_TDC_AUTO and uses the
-         calculated tdco value.
+Fix this issue.
 
-      b) CAN_CTRLMODE_TDC_AUTO and tdco provided: set
-         CAN_CTRLMODE_TDC_AUTO and use the provided tdco value. Here,
-         tdcv is illegal and tdcf is optional.
+[ mingo: Clarified & improved the changelog. ]
 
-      c) CAN_CTRLMODE_TDC_MANUAL and both of tdcv and tdco provided: set
-         CAN_CTRLMODE_TDC_MANUAL and use the provided tdcv and tdco
-         value. Here, tdcf is optional.
+Fixes: ec980e4facef ("perf/x86/intel: Support auto counter reload")
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/20250529080236.2552247-2-dapeng1.mi@linux.intel.com
+---
+ arch/x86/events/intel/core.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-      d) CAN_CTRLMODE_TDC_{AUTO,MANUAL} are mutually exclusive. Whenever
-         one flag is turned on, the other will automatically be turned
-         off. Providing both returns an error.
-
-      e) Combination other than the one listed above are illegal and will
-         return an error.
-
-You can double check that it is the exact same as before.
-
-> By default, a CAN-FD interface comes up in TDC-AUTO mode (if supported),
-> using a calculated tdco value.  However, enabling "tdc-mode auto"
-> explicitly from userland requires also specifying an explicit tdco
-> value.  I.e.
-> 
->     ip link set can0 type can bitrate 500000 dbitrate 8000000 fd on
-                                                                ^^^^^
-Here:
-
-  - CAN_CTRLMODE_FD provided and is true: so we are in close 3.
-
-  - CAN_CTRLMODE_TDC_{AUTO,MANUAL} and tdc{v,o,f} not provided: so we *are* in
-    sub-clause a)
-
-3.a) tells that the framework will decide whether or not TDC should be
-activated, and if activated, will set the TDCO.
-
-> gives "can <FD,TDC-AUTO>" and "tdcv 0 tdco 3", while
-
-Looks perfectly coherent with 3.a)
-
-Note that with lower data bitrate, the framework might have decided to set TDC off.
-
->     ip link set can0 type can bitrate 500000 dbitrate 8000000 fd on
-> tdc-mode auto
-
-This time:
-
-  - CAN_CTRLMODE_FD provided and is true: so we are in close 3.
-
-  - CAN_CTRLMODE_TDC_AUTO is provided, we are *not* in sub-clause a)
-
-  - tdco is not provided.
-
-No explicit clauses matches this pattern so it defaults to the last
-sub-clause: e), which means an error.
-
-> gives:
-> 
->     tdc-mode auto: RTNETLINK answers: Operation not supported
-
-Looks perfectly coherent with 3.e)
-
-> unless I add an explicit "tdco 3".
-
-Yes, if you provide tcdo 3, then you are under 3.b).
-
-> According to your commit description, this is not the expected behavior?
-> Thanks!
-
-Looking back to my commit, I admit that the explanation is convoluted and could
-be hard to digest, but I do not see a mismatch between the description and the
-behaviour.
-
-
-Yours sincerely,
-Vincent Mailhol
-
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 4662833..741b229 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -2900,6 +2900,7 @@ static void intel_pmu_config_acr(int idx, u64 mask, u32 reload)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 	int msr_b, msr_c;
++	int msr_offset;
+ 
+ 	if (!mask && !cpuc->acr_cfg_b[idx])
+ 		return;
+@@ -2907,19 +2908,20 @@ static void intel_pmu_config_acr(int idx, u64 mask, u32 reload)
+ 	if (idx < INTEL_PMC_IDX_FIXED) {
+ 		msr_b = MSR_IA32_PMC_V6_GP0_CFG_B;
+ 		msr_c = MSR_IA32_PMC_V6_GP0_CFG_C;
++		msr_offset = x86_pmu.addr_offset(idx, false);
+ 	} else {
+ 		msr_b = MSR_IA32_PMC_V6_FX0_CFG_B;
+ 		msr_c = MSR_IA32_PMC_V6_FX0_CFG_C;
+-		idx -= INTEL_PMC_IDX_FIXED;
++		msr_offset = x86_pmu.addr_offset(idx - INTEL_PMC_IDX_FIXED, false);
+ 	}
+ 
+ 	if (cpuc->acr_cfg_b[idx] != mask) {
+-		wrmsrl(msr_b + x86_pmu.addr_offset(idx, false), mask);
++		wrmsrl(msr_b + msr_offset, mask);
+ 		cpuc->acr_cfg_b[idx] = mask;
+ 	}
+ 	/* Only need to update the reload value when there is a valid config value. */
+ 	if (mask && cpuc->acr_cfg_c[idx] != reload) {
+-		wrmsrl(msr_c + x86_pmu.addr_offset(idx, false), reload);
++		wrmsrl(msr_c + msr_offset, reload);
+ 		cpuc->acr_cfg_c[idx] = reload;
+ 	}
+ }
