@@ -1,189 +1,343 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8629913635E
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 08:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D891E521;
+	Sat, 31 May 2025 08:05:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748678632; cv=none; b=drUH/rZonpFgm5iYHEPB8hhePaj9H9m/wuzIoiSBaASDBIhUalPbi7TRiLB630EtAIjC7CFFFdwWHglRJP4GMqNV2kBXem4Smuv10pzJGP2hX9XRutLqHy1/uMvK+VyQVDv21G9SEGo6J01GqmRWOawDIzc+j7X71Vqyi6I/+3A=
+	t=1748678733; cv=none; b=cpneVBDHvehFcR5sgDnBjc9q0WGSDIuk5c1If9iSoyS9udaa6Vj4hEnCYFOjt4aPy8r7kBQ6dXS6t9KHtRWBKBqEQdYOxUz+1u7bwld6tUA7Mp8ztQsioos+fkVQXBTktNIDoiCRhaOOQkkw24HslrBRSFrefpVC4K/fsry2efA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748678632; c=relaxed/simple;
-	bh=+OSHIvM7vjrRqEFHX70aF++PhNnu1uaitgh47TkZO7k=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=mYcIny1u4l3C97bt90kp3sn2qRrNWcNnOCLPE4GO0Tdagf46CxnLX+TPfm7h4RewjUMX+Y/WecngUfCbCce3337FYLXs0fK6Y6AUTiR8UV4i3SWGL6Gb62ac3xNinmPGZrDIpNUsej8Uv8s/wZL8H20FUR5cxtoWSTnO49Jciz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CUUUdlZo; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748678733; c=relaxed/simple;
+	bh=F5r43w35NHKTlsrYLQ9a3zkaYnsz4VCUfbpL1mD1jqk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=Umhtzxvs4SrjD02XBSkdSJD5A/5tea/f+aSHyHkMCLLM6uSpskqDrNnJh1A2FwKdD0YXkPvp5vPOGsf1564bMQtkrpxUjHfZzxBA7SexlI1krTLQllzN/aM1A9LIyf0/Fb1Hpg7hovE0dpWwrTHF/k0gQrLyt0TLQ/YiUhHDZv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jWpJcNER; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CUUUdlZo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748678629; x=1780214629;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=+OSHIvM7vjrRqEFHX70aF++PhNnu1uaitgh47TkZO7k=;
-  b=CUUUdlZo0+u+G68+iS31vsiR64/nDYm9SGBudyBZmry1abZINcVBy2hq
-   MUSHBKvLSocAmShm9VcmLOIOm4oIZPggXw5WY8BZIsM8uCrlgvcLcQlSx
-   mJS1lwqbXZWJ7cgBnFuXXiTvQclweu4+FCh5yOu1B+bVQjsMOn0J2m1fm
-   D/twGD3gEI/I6bm2/8VDanMzHtrGa+1CT1USihbRgabx6RFtnXuQVOBgk
-   6gxddhSRCMHbylrYDRXiLDLaqW8U3xoGykO1ocpdWv9xR9f/OhylRqJ5S
-   wyMdzG5tqPnPyWqdKMaEdAUqH6SCLLkDzzC3Q5QWWAofOsm3gNesd6uau
-   w==;
-X-CSE-ConnectionGUID: fSgr8HZZT2mfjFewABqNlA==
-X-CSE-MsgGUID: j4GD3ZTdQLaoG8Wafx0j6w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="50915926"
-X-IronPort-AV: E=Sophos;i="6.16,198,1744095600"; 
-   d="scan'208";a="50915926"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2025 01:03:49 -0700
-X-CSE-ConnectionGUID: lr2XGZ8pRoSDlkR97JCqkA==
-X-CSE-MsgGUID: 9twQd524TnuUtcAbEplYdg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,198,1744095600"; 
-   d="scan'208";a="144055189"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 31 May 2025 01:03:47 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uLHBw-000YHi-2i;
-	Sat, 31 May 2025 08:03:44 +0000
-Date: Sat, 31 May 2025 16:03:36 +0800
-From: kernel test robot <lkp@intel.com>
-To: Chaoyi Chen <chaoyi.chen@rock-chips.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	"Rob Herring (Arm)" <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>
-Subject: arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb: dp@fec00000
- (rockchip,rk3399-cdn-dp): ports: 'port@0' is a required property
-Message-ID: <202505311543.03VDPaOD-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jWpJcNER"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 550FBC4CEE3;
+	Sat, 31 May 2025 08:05:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748678733;
+	bh=F5r43w35NHKTlsrYLQ9a3zkaYnsz4VCUfbpL1mD1jqk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jWpJcNEROKLWBSr/EfNTY7zodcFW+1saU83FFPZR7/ZSTVkbWutNcdRfC5O3FDY/+
+	 QqnV3JyXEMKuQwjN2byxzMvyviQtRWAI4IGa7UQsGAxVUD0oGZSYSh1uMLfIAY+laq
+	 s80GNoothsPukagokK+lOBCBFm1J+L3tCEwyREIwLrtWF2Y+ntSnAjgJdMWYpACWkX
+	 WlDBxithuREh7De/6XoJUiOpJUeKMR8if2huQ4I8BK0PCcEL3GaFHyncRzluaCE5Jj
+	 B8BYWMAdTLlmt9abfZCTcXb2yMtCtAXDrka1yRM1t6asYjIufRhiUiohRdXsCyMsGc
+	 MzsV3BPNYLclQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 31 May 2025 10:05:28 +0200
+Message-Id: <DAA6VHUTDC13.3FLLGNXYINO9I@kernel.org>
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>
+Cc: <gregkh@linuxfoundation.org>, <rafael@kernel.org>, <ojeda@kernel.org>,
+ <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
+ <bjorn3_gh@protonmail.com>, <benno.lossin@proton.me>,
+ <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
+ <chrisi.schrefl@gmail.com>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 5/7] rust: miscdevice: properly support device drivers
+X-Mailer: aerc 0.20.1
+References: <20250530142447.166524-1-dakr@kernel.org>
+ <20250530142447.166524-6-dakr@kernel.org>
+ <DA9RLBPS7QKE.3CGXHMYG1CDOU@kernel.org> <aDouYRU-xSjfgMzJ@pollux>
+In-Reply-To: <aDouYRU-xSjfgMzJ@pollux>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   0f70f5b08a47a3bc1a252e5f451a137cde7c98ce
-commit: 70a299ed2e03e7ef26e5be7889bab1a47960ed25 dt-bindings: display: rockchip: Convert cdn-dp-rockchip.txt to yaml
-date:   9 days ago
-config: arm64-randconfig-052-20250529 (https://download.01.org/0day-ci/archive/20250531/202505311543.03VDPaOD-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-dtschema version: 2025.3.dev27+g32749b3
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250531/202505311543.03VDPaOD-lkp@intel.com/reproduce)
+On Sat May 31, 2025 at 12:17 AM CEST, Danilo Krummrich wrote:
+> On Fri, May 30, 2025 at 10:06:55PM +0200, Benno Lossin wrote:
+>> On Fri May 30, 2025 at 4:24 PM CEST, Danilo Krummrich wrote:
+>> > @@ -40,44 +41,43 @@ pub const fn into_raw<T: MiscDevice>(self) -> bind=
+ings::miscdevice {
+>> >      }
+>> >  }
+>> > =20
+>> > -/// A registration of a miscdevice.
+>> > -///
+>> >  /// # Invariants
+>> >  ///
+>> > -/// `inner` is a registered misc device.
+>> > +/// - `inner` is a registered misc device,
+>> > +/// - `data` is valid for the entire lifetime of `Self`.
+>> >  #[repr(C)]
+>> >  #[pin_data(PinnedDrop)]
+>> > -pub struct MiscDeviceRegistration<T: MiscDevice> {
+>> > +struct RawDeviceRegistration<T: MiscDevice> {
+>> >      #[pin]
+>> >      inner: Opaque<bindings::miscdevice>,
+>> > -    #[pin]
+>> > -    data: Opaque<T::RegistrationData>,
+>> > +    data: NonNull<T::RegistrationData>,
+>> >      _t: PhantomData<T>,
+>>=20
+>> You shouldn't need the `PhantomData` here.
+>>=20
+>> Also, do we need to ask for `T: MiscDevice` here? Could we instead have
+>> just `T` and then below you write
+>> `RawDeviceRegistration<T::RegistrationData>` instead? (`new` of course
+>> needs to have a new generic: `U: MiscDevice<RegistrationData =3D T>`)
+>
+> Sure, is there any advantage? Your proposal seems more complicated at a f=
+irst
+> glance.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505311543.03VDPaOD-lkp@intel.com/
+It would make `RawDeviceRegistration` simpler, but maybe it's not worth
+it.
 
-dtcheck warnings: (new ones prefixed by >>)
-   arch/arm64/boot/dts/rockchip/rk3399-base.dtsi:2180.20-2182.6: Warning (graph_child_address): /dp@ff970000/ports/port@1: graph node has single child node 'endpoint@0', #address-cells/#size-cells are not necessary
-   arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb: pcie@0,0: wifi@0,0:interrupts:0:0: 8 is not one of [1, 2, 3, 4]
-   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb: pcie@0,0: wifi@0,0:interrupts:0: [8, 8] is too long
-   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb: usb@fe800000 (rockchip,rk3399-dwc3): 'extcon' does not match any of the regexes: '^pinctrl-[0-9]+$', '^usb@'
-   	from schema $id: http://devicetree.org/schemas/usb/rockchip,rk3399-dwc3.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb: usb@fe900000 (rockchip,rk3399-dwc3): 'extcon' does not match any of the regexes: '^pinctrl-[0-9]+$', '^usb@'
-   	from schema $id: http://devicetree.org/schemas/usb/rockchip,rk3399-dwc3.yaml#
->> arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb: dp@fec00000 (rockchip,rk3399-cdn-dp): ports: 'port@0' is a required property
-   	from schema $id: http://devicetree.org/schemas/display/rockchip/rockchip,rk3399-cdn-dp.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb: dp@fec00000 (rockchip,rk3399-cdn-dp): ports: 'port@1' is a required property
-   	from schema $id: http://devicetree.org/schemas/display/rockchip/rockchip,rk3399-cdn-dp.yaml#
->> arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb: dp@fec00000 (rockchip,rk3399-cdn-dp): Unevaluated properties are not allowed ('ports' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/display/rockchip/rockchip,rk3399-cdn-dp.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb: /syscon@ff770000/pcie-phy: failed to match any schema with compatible: ['rockchip,rk3399-pcie-phy']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb: /phy@ff7c0000: failed to match any schema with compatible: ['rockchip,rk3399-typec-phy']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb: /phy@ff800000: failed to match any schema with compatible: ['rockchip,rk3399-typec-phy']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb: /sound: failed to match any schema with compatible: ['rockchip,rk3399-gru-sound']
---
-   arch/arm64/boot/dts/rockchip/rk3399-base.dtsi:2180.20-2182.6: Warning (graph_child_address): /dp@ff970000/ports/port@1: graph node has single child node 'endpoint@0', #address-cells/#size-cells are not necessary
-   arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb: pcie@0,0: wifi@0,0:interrupts:0:0: 8 is not one of [1, 2, 3, 4]
-   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb: pcie@0,0: wifi@0,0:interrupts:0: [8, 8] is too long
-   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb: usb@fe800000 (rockchip,rk3399-dwc3): 'extcon' does not match any of the regexes: '^pinctrl-[0-9]+$', '^usb@'
-   	from schema $id: http://devicetree.org/schemas/usb/rockchip,rk3399-dwc3.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb: usb@fe900000 (rockchip,rk3399-dwc3): 'extcon' does not match any of the regexes: '^pinctrl-[0-9]+$', '^usb@'
-   	from schema $id: http://devicetree.org/schemas/usb/rockchip,rk3399-dwc3.yaml#
->> arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb: dp@fec00000 (rockchip,rk3399-cdn-dp): ports: 'port@0' is a required property
-   	from schema $id: http://devicetree.org/schemas/display/rockchip/rockchip,rk3399-cdn-dp.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb: dp@fec00000 (rockchip,rk3399-cdn-dp): ports: 'port@1' is a required property
-   	from schema $id: http://devicetree.org/schemas/display/rockchip/rockchip,rk3399-cdn-dp.yaml#
->> arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb: dp@fec00000 (rockchip,rk3399-cdn-dp): Unevaluated properties are not allowed ('ports' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/display/rockchip/rockchip,rk3399-cdn-dp.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb: /syscon@ff770000/pcie-phy: failed to match any schema with compatible: ['rockchip,rk3399-pcie-phy']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb: /phy@ff7c0000: failed to match any schema with compatible: ['rockchip,rk3399-typec-phy']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb: /phy@ff800000: failed to match any schema with compatible: ['rockchip,rk3399-typec-phy']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb: /sound: failed to match any schema with compatible: ['rockchip,rk3399-gru-sound']
---
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-dumo.dtb: pcie@0,0: wifi@0,0:reg: [[0, 0, 0, 0, 0], [50331664, 0, 0, 0, 2097152]] is too long
-   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-dumo.dtb: wifi@0,0 (qcom,ath10k): reg: [[0, 0, 0, 0, 0], [50331664, 0, 0, 0, 2097152]] is too long
-   	from schema $id: http://devicetree.org/schemas/net/wireless/qcom,ath10k.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-dumo.dtb: usb@fe3a0000 (generic-ohci): bluetooth@1:compatible: ['usbcf3,e300', 'usb4ca,301a'] is too long
-   	from schema $id: http://devicetree.org/schemas/usb/generic-ohci.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-dumo.dtb: usb@fe3a0000 (generic-ohci): Unevaluated properties are not allowed ('#address-cells', '#size-cells', 'bluetooth@1' were unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-ohci.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-dumo.dtb: usb@fe800000 (rockchip,rk3399-dwc3): 'extcon' does not match any of the regexes: '^pinctrl-[0-9]+$', '^usb@'
-   	from schema $id: http://devicetree.org/schemas/usb/rockchip,rk3399-dwc3.yaml#
->> arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-dumo.dtb: dp@fec00000 (rockchip,rk3399-cdn-dp): ports: 'port@0' is a required property
-   	from schema $id: http://devicetree.org/schemas/display/rockchip/rockchip,rk3399-cdn-dp.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-dumo.dtb: dp@fec00000 (rockchip,rk3399-cdn-dp): ports: 'port@1' is a required property
-   	from schema $id: http://devicetree.org/schemas/display/rockchip/rockchip,rk3399-cdn-dp.yaml#
->> arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-dumo.dtb: dp@fec00000 (rockchip,rk3399-cdn-dp): Unevaluated properties are not allowed ('ports' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/display/rockchip/rockchip,rk3399-cdn-dp.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-dumo.dtb: /syscon@ff770000/pcie-phy: failed to match any schema with compatible: ['rockchip,rk3399-pcie-phy']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-dumo.dtb: /phy@ff7c0000: failed to match any schema with compatible: ['rockchip,rk3399-typec-phy']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-dumo.dtb: /phy@ff800000: failed to match any schema with compatible: ['rockchip,rk3399-typec-phy']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-dumo.dtb: panel@0 (innolux,p097pfg): 'ports' does not match any of the regexes: '^pinctrl-[0-9]+$'
-   	from schema $id: http://devicetree.org/schemas/display/panel/innolux,p097pfg.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-dumo.dtb: /sound: failed to match any schema with compatible: ['rockchip,rk3399-gru-sound']
---
-   arch/arm64/boot/dts/rockchip/rk3399-base.dtsi:2104.26-2144.4: Warning (avoid_unnecessary_addr_size): /dsi@ff968000: unnecessary #address-cells/#size-cells without "ranges", "dma-ranges" or child "reg" property
-   arch/arm64/boot/dts/rockchip/rk3399-base.dtsi:1947.9-1956.5: Warning (graph_child_address): /isp0@ff910000/ports: graph node has single child node 'port@0', #address-cells/#size-cells are not necessary
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-inx.dtb: usb@fe3a0000 (generic-ohci): bluetooth@1:compatible: ['usbcf3,e300', 'usb4ca,301a'] is too long
-   	from schema $id: http://devicetree.org/schemas/usb/generic-ohci.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-inx.dtb: usb@fe3a0000 (generic-ohci): Unevaluated properties are not allowed ('#address-cells', '#size-cells', 'bluetooth@1' were unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-ohci.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-inx.dtb: usb@fe800000 (rockchip,rk3399-dwc3): 'extcon' does not match any of the regexes: '^pinctrl-[0-9]+$', '^usb@'
-   	from schema $id: http://devicetree.org/schemas/usb/rockchip,rk3399-dwc3.yaml#
->> arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-inx.dtb: dp@fec00000 (rockchip,rk3399-cdn-dp): ports: 'port@0' is a required property
-   	from schema $id: http://devicetree.org/schemas/display/rockchip/rockchip,rk3399-cdn-dp.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-inx.dtb: dp@fec00000 (rockchip,rk3399-cdn-dp): ports: 'port@1' is a required property
-   	from schema $id: http://devicetree.org/schemas/display/rockchip/rockchip,rk3399-cdn-dp.yaml#
->> arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-inx.dtb: dp@fec00000 (rockchip,rk3399-cdn-dp): Unevaluated properties are not allowed ('ports' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/display/rockchip/rockchip,rk3399-cdn-dp.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-inx.dtb: /syscon@ff770000/pcie-phy: failed to match any schema with compatible: ['rockchip,rk3399-pcie-phy']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-inx.dtb: /phy@ff7c0000: failed to match any schema with compatible: ['rockchip,rk3399-typec-phy']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-inx.dtb: /phy@ff800000: failed to match any schema with compatible: ['rockchip,rk3399-typec-phy']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-inx.dtb: panel@0 (innolux,p097pfg): 'ports' does not match any of the regexes: '^pinctrl-[0-9]+$'
-   	from schema $id: http://devicetree.org/schemas/display/panel/innolux,p097pfg.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-inx.dtb: /sound: failed to match any schema with compatible: ['rockchip,rk3399-gru-sound']
---
-   arch/arm64/boot/dts/rockchip/rk3399-base.dtsi:2104.26-2144.4: Warning (avoid_unnecessary_addr_size): /dsi@ff968000: unnecessary #address-cells/#size-cells without "ranges", "dma-ranges" or child "reg" property
-   arch/arm64/boot/dts/rockchip/rk3399-base.dtsi:1947.9-1956.5: Warning (graph_child_address): /isp0@ff910000/ports: graph node has single child node 'port@0', #address-cells/#size-cells are not necessary
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-kd.dtb: usb@fe3a0000 (generic-ohci): bluetooth@1:compatible: ['usbcf3,e300', 'usb4ca,301a'] is too long
-   	from schema $id: http://devicetree.org/schemas/usb/generic-ohci.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-kd.dtb: usb@fe3a0000 (generic-ohci): Unevaluated properties are not allowed ('#address-cells', '#size-cells', 'bluetooth@1' were unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-ohci.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-kd.dtb: usb@fe800000 (rockchip,rk3399-dwc3): 'extcon' does not match any of the regexes: '^pinctrl-[0-9]+$', '^usb@'
-   	from schema $id: http://devicetree.org/schemas/usb/rockchip,rk3399-dwc3.yaml#
->> arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-kd.dtb: dp@fec00000 (rockchip,rk3399-cdn-dp): ports: 'port@0' is a required property
-   	from schema $id: http://devicetree.org/schemas/display/rockchip/rockchip,rk3399-cdn-dp.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-kd.dtb: dp@fec00000 (rockchip,rk3399-cdn-dp): ports: 'port@1' is a required property
-   	from schema $id: http://devicetree.org/schemas/display/rockchip/rockchip,rk3399-cdn-dp.yaml#
->> arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-kd.dtb: dp@fec00000 (rockchip,rk3399-cdn-dp): Unevaluated properties are not allowed ('ports' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/display/rockchip/rockchip,rk3399-cdn-dp.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-kd.dtb: /syscon@ff770000/pcie-phy: failed to match any schema with compatible: ['rockchip,rk3399-pcie-phy']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-kd.dtb: /phy@ff7c0000: failed to match any schema with compatible: ['rockchip,rk3399-typec-phy']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-kd.dtb: /phy@ff800000: failed to match any schema with compatible: ['rockchip,rk3399-typec-phy']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-kd.dtb: panel@0 (kingdisplay,kd097d04): 'ports' does not match any of the regexes: '^pinctrl-[0-9]+$'
-   	from schema $id: http://devicetree.org/schemas/display/panel/panel-simple-dsi.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-kd.dtb: /sound: failed to match any schema with compatible: ['rockchip,rk3399-gru-sound']
+>> >  }
+>> > =20
+>> > -// SAFETY:
+>> > -// - It is allowed to call `misc_deregister` on a different thread fr=
+om where you called
+>> > -//   `misc_register`.
+>> > -// - Only implements `Send` if `MiscDevice::RegistrationData` is also=
+ `Send`.
+>> > -unsafe impl<T: MiscDevice> Send for MiscDeviceRegistration<T> where T=
+::RegistrationData: Send {}
+>> > -
+>> > -// SAFETY:
+>> > -// - All `&self` methods on this type are written to ensure that it i=
+s safe to call them in
+>> > -//   parallel.
+>> > -// - `MiscDevice::RegistrationData` is always `Sync`.
+>> > -unsafe impl<T: MiscDevice> Sync for MiscDeviceRegistration<T> {}
+>> > -
+>> > -impl<T: MiscDevice> MiscDeviceRegistration<T> {
+>> > -    /// Register a misc device.
+>> > -    pub fn register(
+>> > +impl<T: MiscDevice> RawDeviceRegistration<T> {
+>> > +    fn new<'a>(
+>> >          opts: MiscDeviceOptions,
+>> > -        data: impl PinInit<T::RegistrationData, Error>,
+>> > -    ) -> impl PinInit<Self, Error> {
+>> > +        parent: Option<&'a Device<Bound>>,
+>> > +        data: &'a T::RegistrationData,
+>> > +    ) -> impl PinInit<Self, Error> + 'a
+>> > +    where
+>> > +        T: 'a,
+>> > +    {
+>> >          try_pin_init!(Self {
+>> > -            data <- Opaque::pin_init(data),
+>> > +            // INVARIANT: `Self` is always embedded in a `MiscDeviceR=
+egistration<T>`, hence `data`
+>> > +            // is guaranteed to be valid for the entire lifetime of `=
+Self`.
+>> > +            data: NonNull::from(data),
+>>=20
+>> Both the argument in the INVARIANT comment and way this works are a bit
+>> flawed.
+>
+> Why is the argument flawed? Let's say we go with your proposal below, wha=
+t would
+> the safety requirement for RawDeviceRegistration::new and the invariant o=
+f
+> RawDeviceRegistration look like? Wouldn't it be the exact same argument?
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+So what I write below it not really true. But the argument relies on the
+fact that `data` is pointing to a value that will stay alive for the
+duration of the existence of `self`. That should be a safety requirement
+of `new` (even if we take a reference as an argument).
+
+>> Instead, I'd recommend directly taking the `NonNull` as a
+>> parameter. Yes the function will need to be `unsafe`, but the lifetime
+>> that you're creating below only lives for `'a`, but the object might
+>> live much longer. You might still be fine, but I'd just recommend
+>> staying in raw pointer land (or in this case `NonNull`).
+
+>> > @@ -108,6 +108,108 @@ pub fn device(&self) -> &Device {
+>> >          unsafe { Device::as_ref((*self.as_raw()).this_device) }
+>> >      }
+>> > =20
+>> > +    fn data(&self) -> &T::RegistrationData {
+>> > +        // SAFETY: The type invariant guarantees that `data` is valid=
+ for the entire lifetime of
+>> > +        // `Self`.
+>> > +        unsafe { self.data.as_ref() }
+>> > +    }
+>> > +}
+>> > +
+>> > +#[pinned_drop]
+>> > +impl<T: MiscDevice> PinnedDrop for RawDeviceRegistration<T> {
+>> > +    fn drop(self: Pin<&mut Self>) {
+>> > +        // SAFETY: We know that the device is registered by the type =
+invariants.
+>> > +        unsafe { bindings::misc_deregister(self.inner.get()) };
+>> > +    }
+>> > +}
+>> > +
+>> > +#[expect(dead_code)]
+>> > +enum DeviceRegistrationInner<T: MiscDevice> {
+>> > +    Raw(Pin<KBox<RawDeviceRegistration<T>>>),
+>> > +    Managed(Devres<RawDeviceRegistration<T>>),
+>>=20
+>> These two names could be shortened (`DeviceRegistrationInner` and
+>> `RawDeviceRegistration`) as they are only implementation details of this
+>> file. How about `InnerRegistration` and `RawRegistration`? Or maybe
+>> something even shorter.
+>
+> There's a reason why I keep them something with "DeviceRegistration" ever=
+ywhere,
+> which is to make it clear that it's both a device instance *and* a regist=
+ration,
+> which is actually rather uncommon and caused by the fact that device crea=
+tion
+> and registration needs to be done under the misc_mtx in misc_register().
+>
+> This is also the reason for those data structures to be a bit complicated=
+; it
+> would be much simpler if device creation and registration would be indepe=
+ndent
+> things.
+
+Then keep the longer names.
+
+>> > +}
+>> > +
+>> > +/// A registration of a miscdevice.
+>> > +#[pin_data(PinnedDrop)]
+>> > +pub struct MiscDeviceRegistration<T: MiscDevice> {
+>> > +    inner: DeviceRegistrationInner<T>,
+>> > +    #[pin]
+>> > +    data: Opaque<T::RegistrationData>,
+>>=20
+>> Why is it necessary to store `data` inside of `Opaque`?
+>
+> It was UnsafePinned before, but Alice proposed to go with Opaque for the
+> meantime. Anyways, this is not introduced by this patch, it comes from
+> Christians patch adding T::RegistrationData.
+
+Ah then I'll re-read that discussion.
+
+>> > +    this_device: ARef<Device>,
+>> > +    _t: PhantomData<T>,
+>> > +}
+
+>> > +            inner: {
+>> > +                // SAFETY:
+>> > +                //   - `this` is a valid pointer to `Self`,
+>> > +                //   - `data` was properly initialized above.
+>> > +                let data =3D unsafe { &*(*this.as_ptr()).data.get() }=
+;
+>>=20
+>> As mentioned above, this creates a reference that is valid for this
+>> *block*. So its lifetime will end after the `},` and before
+>> `this_device` is initialized.
+>>=20
+>> It *might* be ok to turn it back into a raw pointer in
+>> `RawDeviceRegistration::new`, but I wouldn't bet on it.
+>
+> Why? The reference is still valid in RawDeviceRegistration::new, no?
+
+Yes the reference is still valid in the `new` function call. I was under
+the impression that the pointer created in `new` would get invalidated,
+because the struct would get reborrowed in the meantime, but that's not
+the case, since this pointer is obtained by `get`. So you should be
+good.
+
+>> > +
+>> > +                let raw =3D RawDeviceRegistration::new(opts, parent, =
+data);
+>> > +
+>> > +                // FIXME: Work around a bug in rustc, to prevent the =
+following warning:
+>> > +                //
+>> > +                //   "warning: value captured by `dev` is never read.=
+"
+>> > +                //
+>> > +                // Link: https://github.com/rust-lang/rust/issues/141=
+615
+>>=20
+>> Note that the bug is that the compiler complains about the wrong span.
+>> The original value of `dev` is `None` and that value is never used, so
+>> the warning is justified. So this `let _ =3D dev;` still needs to stay
+>> until `pin-init` supports accessing previously initialized fields (now
+>> I'm pretty certain that I will implement that soon).
+>
+> Do you want to propose an alternative comment about this?
+
+I think we don't need a comment here.
+
+>> > +                let _ =3D dev;
+>> > +
+>> > +                if let Some(parent) =3D parent {
+>> > +                    let devres =3D Devres::new(parent, raw, GFP_KERNE=
+L)?;
+>> > +
+>> > +                    dev =3D Some(devres.access(parent)?.device().into=
+());
+>> > +                    DeviceRegistrationInner::Managed(devres)
+>> > +                } else {
+>> > +                    let boxed =3D KBox::pin_init(raw, GFP_KERNEL)?;
+>> > +
+>> > +                    dev =3D Some(boxed.device().into());
+>> > +                    DeviceRegistrationInner::Raw(boxed)
+>> > +                }
+>> > +            },
+>> > +            // Cache `this_device` within `Self` to avoid having to a=
+ccess `Devres` in the managed
+>> > +            // case.
+>> > +            this_device: {
+>> > +                // SAFETY: `dev` is guaranteed to be set in the initi=
+alizer of `inner` above.
+>> > +                unsafe { dev.unwrap_unchecked() }
+>> > +            },
+>>=20
+>> No need for the extra block, just do:
+>>=20
+>>     // Cache `this_device` within `Self` to avoid having to access `Devr=
+es` in the managed
+>>     // case.
+>>     // SAFETY: `dev` is guaranteed to be set in the initializer of `inne=
+r` above.
+>>     this_device: unsafe { dev.unwrap_unchecked() },
+>
+> Yes, I know, but I found the above a bit cleaner -- I don't mind changing=
+ it
+> though.
+>
+>> I'm also pretty sure that the compiler would optimize `.take().unwrap()`
+>> and also this is only executed once per `MiscDeviceRegistration`, so
+>> even if it isn't it wouldn't really matter. So I'd prefer if we don't
+>> use `unsafe` here even if it is painfully obvious (if I'm fast enough
+>> with implementing, you can rebase on top before you merge and then this
+>> will be gone anyways :)
+>
+> Sounds good! :)
+>
+> But I think that unsafe is better than unwrap() in such cases; unsafe req=
+uires
+> us to explain why it's OK to do it, which makes it less likely to create =
+bugs.
+
+That's not exactly how I would think about it, but your argument makes
+sense.
+
+> (Just recently I wrote some code, hit the need for unsafe and, while writ=
+ing up
+> the safety comment, I had to explain to myself, why the way I was about t=
+o
+> implement this was pretty broken.)
+
+That's great :)
+
+> unwrap() on the other hand, doesn't require any explanation, but panics t=
+he
+> kernel in the worst case.
+
+Yeah that is true. Ultimately for this case it won't matter, since I'll
+just implement the access thing in pin-init.
+
+It'll still take a while, because it will touch several parts that other
+patches also touch. Thus I prefer to first pick the patches already on
+the list, but for that I'll wait until the merge window closes.
+
+---
+Cheers,
+Benno
