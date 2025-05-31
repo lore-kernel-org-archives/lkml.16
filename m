@@ -1,35 +1,35 @@
 Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6D5B239562
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 12:07:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522FA237163
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 12:09:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748693281; cv=none; b=WVOkCWp7Ql2LLzanjeSLEUfWyB0VPWSXBWA8wJ/I+hynsqag5nSIj6SwBllC6WISXs3QRLdpOyytRIiv9p2KMDgMQQO/ErPHOiIEVaNCDkT0wQ+wqMue7H93+y+SMYWV/v04i+Nn8TdmN47DDy5m3HOzpJPKMxjm0trhws28Eac=
+	t=1748693368; cv=none; b=VDoVUtaU/XGdtS8MGxkaAba3k4onaqaR15TX/RkJqLJ+2tcRbxbjBD7KB7w36xAowbGCfctOInW2B4pd+BoEsdK+Gper3lQZCEnWTw94+cZcXtWxXI+ndVDe9yz1GJxIS16saUmm4677Oq6VZqZ899AGo5SPq6sZqmU3bzMde5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748693281; c=relaxed/simple;
-	bh=gLOQ2DwfSyVePBI9ROyu+NVZLusRuXyZQM6iHg2ADxY=;
+	s=arc-20240116; t=1748693368; c=relaxed/simple;
+	bh=n7wWJCased/X6Q4yYoEfM4pu56HoohPkE1nQd/iu6QM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kO+/xS/0HDfQahnCH1qSWcG+rwo/du1ym1irKw8o/hGMwEhMcap7gXtoUUN3K/UZcwiqNOeYtf2nXwF2C0yiAlmwGaaXkN/+DoG+CgcAcpWke6DoFdsvmUmF0ZP/TBHWALqf6t0xGm6PRmn4RxbKyl6oPQWcQUaAnqTh9NNl4Zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=XVfN13Ry; arc=none smtp.client-ip=194.117.254.33
+	 Content-Type:Content-Disposition:In-Reply-To; b=OMMyPkwJWT4qDTRCwxc1fkcPjYTcm8O425AFakfpOp3tr92F2NszYQPfWaBBqIybv23SUsfKpz66tIGMlzd/9ZKmFPbs6LiF4xtzyTh8Wsi4QorIo028A4pSlyzUbZVWdve318TJlCrXVC6ds4R7PXKmbWsnk24ciB0MViJybB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=Z78M1p4V; arc=none smtp.client-ip=194.117.254.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="XVfN13Ry"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="Z78M1p4V"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=gLOQ
-	2DwfSyVePBI9ROyu+NVZLusRuXyZQM6iHg2ADxY=; b=XVfN13RyoO0iXW3iBQDE
-	PQcTO8X1CHnDhXGvif4cq0j+6eGV7wIJUmA4nJwmpuAaa260udtRGiCqhL3jUDyR
-	GZO3nPS3jsGQaiHeyPqCAKxKWQImidDPgvIKBGmJ/Yfr82wqC/1xABM4TptpVQyb
-	4YeHomxLv30+aHuPu312g6D/GXcR841Aq+UeJXlmuHE75fh7sJ7BgbjpK9P2a87S
-	MNhoEcgOH8PH65w/5tq5xdZjkFqp+VA9fqkYTwXsVqUHmyh5OtnH9A1FY+X8B3Ok
-	XcjPr7oWLVZTMnVzfENCFCscwnRu9muOVZVXWEk39nTZiKJqFoqkTg3bi06luJ2K
-	Xw==
-Received: (qmail 2657188 invoked from network); 31 May 2025 14:07:51 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 31 May 2025 14:07:51 +0200
-X-UD-Smtp-Session: l3s3148p1@2pM+YW02a2FtKPEF
-Date: Sat, 31 May 2025 14:07:50 +0200
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=n7wW
+	JCased/X6Q4yYoEfM4pu56HoohPkE1nQd/iu6QM=; b=Z78M1p4VzQPxgoadfkJS
+	IzsLN9NTqJMqTMHnHBLngmDg7fu6EDcNFAJGFkTsCIILhDGk+MlB+S94//xHll3Z
+	0nBkQGx1JlLjdrr3bcNo2fhiugFb52VYfI0CmYoQuTs5rmI4UbOkUBHvoxVfYvm3
+	Xk+s3vUHQlTgrGby7Sf6ZgN7884+mDKSoPbYJCrM+ekyh71DRxQ/6iH8V4bXz5d/
+	mNrE78nzeuGViqowtse+/ntdO/GLkwQTtfJ85ioPuMvyN9B63NQ/qkBjk/UBK3ek
+	Fu5QK6dOo7odpDaql+hsmMzPEBiJrPozUFi/RejAbtd/yhdDlpUrIK1EtlvGR0IK
+	NQ==
+Received: (qmail 2657626 invoked from network); 31 May 2025 14:09:19 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 31 May 2025 14:09:19 +0200
+X-UD-Smtp-Session: l3s3148p1@Mdh4Zm02biVtKPEF
+Date: Sat, 31 May 2025 14:09:17 +0200
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: Prabhakar <prabhakar.csengg@gmail.com>
 Cc: Chris Brandt <chris.brandt@renesas.com>,
@@ -44,9 +44,9 @@ Cc: Chris Brandt <chris.brandt@renesas.com>,
 	Biju Das <biju.das.jz@bp.renesas.com>,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 2/6] dt-bindings: i2c: renesas,riic: Document RZ/T2H
+Subject: Re: [PATCH 3/6] dt-bindings: i2c: renesas,riic: Document RZ/N2H
  support
-Message-ID: <aDrxFkvydIFa5Ph_@shikoro>
+Message-ID: <aDrxbYDvyWXkXQlE@shikoro>
 Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
 	Prabhakar <prabhakar.csengg@gmail.com>,
 	Chris Brandt <chris.brandt@renesas.com>,
@@ -62,7 +62,7 @@ Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20250530143135.366417-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250530143135.366417-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250530143135.366417-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,53 +70,47 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="8QgkULBUQ4eMwb6i"
+	protocol="application/pgp-signature"; boundary="bBxDD11VtxK9pPgH"
 Content-Disposition: inline
-In-Reply-To: <20250530143135.366417-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250530143135.366417-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
 
 
---8QgkULBUQ4eMwb6i
+--bBxDD11VtxK9pPgH
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 30, 2025 at 03:31:31PM +0100, Prabhakar wrote:
+On Fri, May 30, 2025 at 03:31:32PM +0100, Prabhakar wrote:
 > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >=20
 > Document support for the I2C Bus Interface (RIIC) found on the Renesas
-> RZ/T2H (R9A09G077) SoC. The RIIC IP on this SoC is similar to that on
-> the RZ/V2H(P) SoC but supports fewer interrupts, lacks FM+ support and
-> does not require resets. Due to these differences, add a new compatible
-> string `renesas,riic-r9a09g077` for the RZ/T2H SoC.
->=20
-> Unlike earlier SoCs that use eight distinct interrupts, the RZ/T2H uses
-> only four, including a combined error/event interrupt. Update the binding
-> schema to reflect this interrupt layout and skip the `resets` property
-> check, as it is not required on these SoCs.
+> RZ/N2H (R9A09G087) SoC. The RIIC IP on this SoC is identical to that on
+> the RZ/T2H SoC so `renesas,riic-r9a09g077` will be used as a fallback
+> compatible.
 >=20
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
 Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
 
---8QgkULBUQ4eMwb6i
+--bBxDD11VtxK9pPgH
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmg68RYACgkQFA3kzBSg
-Kbb1ZQ//aCSbFLJpI8qGDzC4KOVv3Gjfob3dJHLozemoZZNMsTZNA8SBtKqqKfXk
-DH7sNlpuvYLCdXIH853wh2m/JnlxYoXcNMV6rON/bMEu9VIvEOGqEKwh1FasKIZQ
-dKqdtQkVWEHBH/tg3Aqb+NamZEVdPMp/6S+EiDY6Hhx1xtJgPYB/0B+VSW1R8K/z
-7pe+crv+/qSo2MfqA0S8MjaWV1gynhcEufhh6nviRfAIsJEb485sW0UtF2ts0iZu
-dEU/vJsteCT0BbXgzWBBgVZd6k5PB0+Uc9SsuJLlmJed3uwUnt1xJgFB8aGtB+ak
-klPp0l7/yxx8GpzLeAOgvMJZjtX64aB47RuSDevOO32G3WesCTZ3kf80JiEUqKCt
-xiqxlBzq0jz3ubzwOcQex0JPSzj4FI/pDEwhkjHejpPh7qE03+AX1Ozx3oJt1tRF
-fL6fUjvdxYYEgCL/tY3r6Vsh7yT3NoVwHLY8N+HyGdijc4qcZw9UjhHnDcp5NdZM
-imsr1NxXw+0A/CuZ9D7hdBuQBdvg1RMxmWVYp0bdaX02hZO5fnugzwCVNHfqMcKE
-GJpx6UrGWVfH/AZ0pCsLJ/Jkc20CexG42/3cqi9dIc+mkUMZforGDVOf3KizPMG5
-kFovqaIDW21JNYT+1u3TD22GUsKkpJW+3TG5Hg7UAy5sMQfTJGY=
-=Q3Jo
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmg68W0ACgkQFA3kzBSg
+KbYUZBAAjdkeYP0JYQbYhVU+p2o9rq42ciltQR8VxNq5h2rVMh1DYf5TgXmTDPoF
+jrr6OB49bS8RM0O10t73VSFTrTlRcpI3QWwxeU7AB4rVCZNukaTMQpoOGjjJJuQL
+3aynlNVudceKVHJPws9RhTZh7u8ZnWzZ44wIvc4R3PDWgu8zEFCnmI4GiFYviddR
+lNrwpuPJnH7SMwPsNkYqIcDKFC2M1X7z3WVgYrwr3+wuvGGLY4SvDzkIgWw3eLja
+b9dtwFQl8AGINas3Je6jDhtRYe869SuerwO5n8SPmjmYneYZ4wvyLOOH0wqkdr7J
++gaOBErHVLEjOPw8gFBeEEKOKczvGawzaYCgIIq0Nlb+oKEbIoZG41g8uYuAK5sQ
+H9WATkHbiq8u7cTGRolD5SN9QN69Nb/Dxj7aLH+x7gOA5NFzY6ItOKnP/k+RsH+C
+WyQk2BHwMOhp0QXofTIFhKbYCyvng7hpoG/kAHKNA+pX1VYeNq2/dhBZqHlbSC+l
+u4DKNT/9gIPWYR5kqHh2lH3nlL8ZOO5i31NRoOmb5GmvcPPzZIHnQt/dsLYBqt+/
+BoqixJ7SKWbvfLLLjsITmgMrPkvaLDiUrEW31S3C0jZDs6Y1XGg+drhATJS7BwF5
+LElu7HNimtV1mVPuExPYrt/5YcpB5pBVpbLLyX3hVx8x9T3MBLc=
+=GG8A
 -----END PGP SIGNATURE-----
 
---8QgkULBUQ4eMwb6i--
+--bBxDD11VtxK9pPgH--
