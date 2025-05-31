@@ -1,130 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C7D423E33F;
-	Sat, 31 May 2025 12:27:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D1F239E69;
+	Sat, 31 May 2025 12:27:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748694474; cv=none; b=eZI2zPs8PkejcCuTGa/r9gh416pcmwVENgwoAbqCYPuQaLXngspmI5dkn4y6k+hhJKRNm04w/QzXh/lWG61pmQcp6psAQ5u8UFJIYD3PMtgqaZApZiJ0NrqeKaajVuzofNVdy2PE8hq1k4QxZxs3Jg4DbwydeKC+gcA4JP2MIA0=
+	t=1748694478; cv=none; b=DpZZ6wQuW+7XqXAWr6cwzBoXbrgGfDL258RamJY6GfYEbbzhi580OxjAWHsAGjwnZd2u2oI3wDx9B58v6jnuXs3WD6nRdb+nShR3m2FCv+NxNbaKODNsPIXeMSogPtEgtPWlRIY4iDOHsnY9cU6WxWCSFWezMaiJrHiiGdqAczc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748694474; c=relaxed/simple;
-	bh=yZCnkZU4ApKN5ABAVzdggfWG88h4Av5rhIP1C5RtxMQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Yva04WRJjlEN5alwFLEZoT7EF1MlmEsTF8Bu2BxTp2JlkGIG1WhB62WCExonj5v9FyZeYMekvuIhYUVWR7htUVPNOkj/30tU7eeXe9DiKzL97CjkwnFdK5Qb5gK7SSUEJUFvog8Ck6/efnc95QWPxkc67Iwtv0EUYmkzmpvYGwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EESB5qZl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748694478; c=relaxed/simple;
+	bh=IByZ6WlZPwSQbjO0sWO/Yd7IpGttC7CWHDcGNpgLAHQ=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=tgzXiL991xeQsXhFsPsZwHg1PKv3vXZmizjrgwpj9pHrgG2u0pLzzWQGXMAXLWxdrLhTnmQBCNeZG91joy6FryRNE2Zz3TYZQpdKosp2L1pjAg7ZoRSlfchZiMkSxrXpujnz04d1aGyc9xhLG+ITjS5R0zp1eCixtobZlECjhj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QY8XYYPo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EESB5qZl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 917EBC4CEE3;
-	Sat, 31 May 2025 12:27:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QY8XYYPo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AA81C4CEE7;
+	Sat, 31 May 2025 12:27:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748694474;
-	bh=yZCnkZU4ApKN5ABAVzdggfWG88h4Av5rhIP1C5RtxMQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=EESB5qZlGX7+MBpm+om4DGAc83HtkvRB64LD3wqh543iIpT4+Ekz/x8bdH3OR5yzl
-	 oOnJVqCKmEpqIhxkZVpHevrsqN1ImUSUZktNBbiqsTI+Gzyzi4gETpQCgPXMzdTgc9
-	 +4T7g0RBdXFSCRSwKckl/v1+EVONXkzvqUtlZUwTd4l5TjLZ7mGWqBubUWvM8OiLpC
-	 1VZQI7VC0MELf6eHQuNOZW9uEWszLivLkODWEqQ7IGtREcYZew1xY8g4/z8Xy3Yean
-	 fdYsR6xcSm8DeP+CzykO/up0F9mSTfIWjqsIzU3igH5vqpAQ1w11TXoB7/xqgxDar7
-	 +bd7qqvRnpfHw==
-From: Konrad Dybcio <konradybcio@kernel.org>
-Date: Sat, 31 May 2025 14:27:23 +0200
-Subject: [PATCH 5/5] arm64: dts: qcom: sdm845: Fix Venus OPP entries
+	s=k20201202; t=1748694477;
+	bh=IByZ6WlZPwSQbjO0sWO/Yd7IpGttC7CWHDcGNpgLAHQ=;
+	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
+	b=QY8XYYPoDuFzVv7+ImEgRXg/Iw4+7BLUQmjYZHVmLkoU+368yc1XiUb+/HRbja4l4
+	 ln2HXMXxYAf+3YOyoaS/C9NnZ2yHZ7XyYNF09NsWBkcxZEIRmWTcn5NOdqN+YhfGs7
+	 jHoAKeS2R6UrrS58KKgwg+Tcwhme5Re9hx2tuKx3JC6ryl1NHIOYaNQCwMBjlPJ6es
+	 bD6r37B+amwm+5PGX+PDRs4eErkM9FHwgXogo17AzI2WCCF/8xjJcyEIMiD+C7K+Gy
+	 IEsYJhafuMqZ01/JqnLcBneEM6DmhSQyxcIWZIm57mnBgrEY08MUu8uuc9r0vk6eO+
+	 QledHNfwXlKHA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250531-topic-venus_opp_arm64-v1-5-54c6c417839f@oss.qualcomm.com>
-References: <20250531-topic-venus_opp_arm64-v1-0-54c6c417839f@oss.qualcomm.com>
-In-Reply-To: <20250531-topic-venus_opp_arm64-v1-0-54c6c417839f@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Rajendra Nayak <quic_rjendra@quicinc.com>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748694448; l=1835;
- i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=JNLJKtc4vkDuPecJfLPup7DizZnsmi2MGVgJWaXnqo0=;
- b=XARFExLx3TQAx3luuiRIL2X52D0ZkWmIdiTAKOCCDzn0XdwPXKy5c19RphKBtigsrpIaqLWNq
- 7O1Z+bgivL3A8lspKqYQnFcOYU9lIf4aTZbxXaSR1Vy4d1yJRo6XEZt
-X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 31 May 2025 14:27:52 +0200
+Message-Id: <DAACGEDVW8D4.66KOF7PWD1I0@kernel.org>
+To: "Christian Schrefl" <chrisi.schrefl@gmail.com>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Arnd Bergmann" <arnd@arndb.de>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Lee Jones" <lee@kernel.org>, "Daniel
+ Almeida" <daniel.almeida@collabora.com>
+Cc: =?utf-8?q?Gerald_Wisb=C3=B6ck?= <gerald.wisboeck@feather.ink>,
+ <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 3/3] rust: miscdevice: adjust the rust_misc_device
+ sample to use RegistrationData.
+From: "Benno Lossin" <lossin@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250530-b4-rust_miscdevice_registrationdata-v4-0-d313aafd7e59@gmail.com> <20250530-b4-rust_miscdevice_registrationdata-v4-3-d313aafd7e59@gmail.com>
+In-Reply-To: <20250530-b4-rust_miscdevice_registrationdata-v4-3-d313aafd7e59@gmail.com>
 
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+On Fri May 30, 2025 at 10:46 PM CEST, Christian Schrefl wrote:
+> Add a second mutex to the RustMiscDevice, which is shared between all
+> instances of the device using an Arc and the RegistrationData of
+> MiscDeviceRegistration.
+>
+> This is mostly to demonstrate the capability to share data in this way.
+>
+> Signed-off-by: Christian Schrefl <chrisi.schrefl@gmail.com>
 
-Make them aligned with both the Venus and clock drivers. The existing
-ones seem to have been based on data for the non-final SKU.
+Two nits below, with those fixed:
 
-Take the liberty to move the opp table subnode to retain alphabetical
-order while at it.
+Reviewed-by: Benno Lossin <lossin@kernel.org>
 
-Fixes: 137154871cf4 ("arm64: dts: qcom: sdm845: Add OPP tables and power-domains for venus")
-Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> @@ -94,7 +152,6 @@
+>  //!   return 0;
+>  //! }
+>  //! ```
+> -
+
+Let's keep this newline.
+
+>  use core::pin::Pin;
+> =20
+>  use kernel::{
+
+> @@ -193,7 +263,6 @@ fn ioctl(me: Pin<&RustMiscDevice>, _file: &File, cmd:=
+ u32, arg: usize) -> Result
+>          Ok(0)
+>      }
+>  }
+> -
+
+This one too.
+
 ---
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+Cheers,
+Benno
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 3bc8471c658bda987d6fcff3359d63b367148e89..7d22ecb908cd4dd792a36beaee0ede061c5abd0f 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -4254,14 +4254,6 @@ venus: video-codec@aa00000 {
- 
- 			status = "disabled";
- 
--			video-core0 {
--				compatible = "venus-decoder";
--			};
--
--			video-core1 {
--				compatible = "venus-encoder";
--			};
--
- 			venus_opp_table: opp-table {
- 				compatible = "operating-points-v2";
- 
-@@ -4275,13 +4267,13 @@ opp-200000000 {
- 					required-opps = <&rpmhpd_opp_low_svs>;
- 				};
- 
--				opp-320000000 {
--					opp-hz = /bits/ 64 <320000000>;
-+				opp-330000000 {
-+					opp-hz = /bits/ 64 <330000000>;
- 					required-opps = <&rpmhpd_opp_svs>;
- 				};
- 
--				opp-380000000 {
--					opp-hz = /bits/ 64 <380000000>;
-+				opp-404000000 {
-+					opp-hz = /bits/ 64 <404000000>;
- 					required-opps = <&rpmhpd_opp_svs_l1>;
- 				};
- 
-@@ -4295,6 +4287,14 @@ opp-533000097 {
- 					required-opps = <&rpmhpd_opp_turbo>;
- 				};
- 			};
-+
-+			video-core0 {
-+				compatible = "venus-decoder";
-+			};
-+
-+			video-core1 {
-+				compatible = "venus-encoder";
-+			};
- 		};
- 
- 		videocc: clock-controller@ab00000 {
-
--- 
-2.49.0
-
+>  #[pinned_drop]
+>  impl PinnedDrop for RustMiscDevice {
+>      fn drop(self: Pin<&mut Self>) {
+> @@ -204,7 +273,7 @@ fn drop(self: Pin<&mut Self>) {
+>  impl RustMiscDevice {
+>      fn set_value(&self, mut reader: UserSliceReader) -> Result<isize> {
+>          let new_value =3D reader.read::<i32>()?;
+> -        let mut guard =3D self.inner.lock();
+> +        let mut guard =3D self.unique.lock();
+> =20
+>          dev_info!(
+>              self.dev,
