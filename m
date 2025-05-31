@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B663E23E331
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 15:30:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC33E23E340;
+	Sat, 31 May 2025 15:30:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748705413; cv=none; b=pzVIPWt9VNrJEhgja2Sj4KfCWdPT5xQAP9fAJ9BHl3QulkweZRbSB6Ng5h9Wp9RMcF1AQzAjzlqPI7ZGmXx5YV60d5AaG/qHuIssOtszQoJPdKBg0L7R/AfLjzcftBckPulgXa0bfvxiPjbdbySUr1X+wxJDyTMRzQ2xtmbWHeg=
+	t=1748705416; cv=none; b=YFWQaYyInyGfUjayF07+P/IbaWAdp/q3HStknxHVMgIZ8180V3dmhpoi9MBRwId26d8RRStkouCok6Gkly7z5LNrhnRAz0uOQtDqA6ykCUyar+W/OBZNwspRKcen27mVkrxKkmxEA6dnMCzGGNLg6sFs6LfW93m7NEFHjDjH/Y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748705413; c=relaxed/simple;
-	bh=f3w/QKfVhdsdgVV46mtMyXteNTwc3yYGGi0cwy8wT20=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=QfxgkBzjtuFR9yqkPkCVvsdM9msJiJYLL8Pfdr5FaJAg9VZNX4RgYqvTib3Ex/9tfyIlkr4XA9G0dFyCbiC7VO5R8O/Sd8fbN9yu3AcKMziGk+NVOao4tFNrdek0vGNOy3dLYm/CvKXjA2HT5xL2FjDINGNniBunfjeOAVYMsJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bCCzJvuy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748705416; c=relaxed/simple;
+	bh=QZs8cZpTJY2GYyXFmJ1cbxgzHKLLlva4Qev0J55Op7s=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Z1gXPOu7ag9s7OGoDjar0jYfQS/lnabFwIFO9dJ1DAeng3xg8/KH5YQxgzBMhUTwFx6eP2KO4cuvTGNPeT5t9BHdeeMgsRVO7AMn88XuB8d5B8JEAOYWqxHXKkxMgALlAWMbs7UNM7/8DByi/TT3+j1qdpYuQ9KtW9vTp6b2UPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kr+NmFCM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bCCzJvuy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B693C4CEEE;
-	Sat, 31 May 2025 15:30:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kr+NmFCM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFDFFC4CEE3;
+	Sat, 31 May 2025 15:30:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748705413;
-	bh=f3w/QKfVhdsdgVV46mtMyXteNTwc3yYGGi0cwy8wT20=;
+	s=k20201202; t=1748705415;
+	bh=QZs8cZpTJY2GYyXFmJ1cbxgzHKLLlva4Qev0J55Op7s=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=bCCzJvuyQN4euZR1QohjTvRJ3ZHnEEcDgFWi2ktMAKD+JE/wRUdi/1crkNcIYj/bc
-	 l/kaJSnt2Er8z1tVI/Bccy9CpxvKhkdN0ib29zLC67EFIvbi6ss7p8k/OPogEB26vO
-	 qTtSMfOOvjPiWB6JGdsOhRy4E6ZdrxlIT/cW5fqfyyzgmTHQGa8/6LSNPEZ+9aeyNf
-	 aimj0dXlW6p13sitm5ujTlpNUP2/SPBk+aS0yosoQeI+1eDEDPNzX37v4PoD7abMPj
-	 tedh1KD+z5M4Ywz2dkVXxV7hW0yoN0Y9YD0Fkt9WL3edWRRIjW5GGe9kkrbXkyUNI+
-	 fbLYgKTaAKCbA==
+	b=kr+NmFCMehV0biK5Tk/hYTvrUWCfaRfbB6pR2M32fEEPwPKGvlv5SQnUk78m/VKMM
+	 NR8bnHd47rrCysdN57DkNNPiQv4l9HN/jIVpskyTJaBuo8FqIfghcUf0hj2yAkODZB
+	 XIB8nOGwyR2Ts1l86LvrBMRLrhNnxYzz8vWfhD2ZZz54cjjMy5gUOPyhQrdFohoVeE
+	 yqpoEtTBNDalgh5++XtYpBS7E7fZeMeMqHMCLI9Hf4KGbV7r+Bi+dAGKykOrrU71s0
+	 mVU64Kg9RwXkMSJCn+Jvj5/8wzpHXos2ecwthnyH+NdgPANq9VoN/a9VWKzX2yaCyn
+	 w80lDZYDzXBgA==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB035380AA70;
-	Sat, 31 May 2025 15:30:47 +0000 (UTC)
-Subject: Re: [GIT PULL] ring-buffer: Updates for v6.16
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33DFD380AA70;
+	Sat, 31 May 2025 15:30:50 +0000 (UTC)
+Subject: Re: [GIT PULL 1/5] soc: drivers for 6.16
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250530095958.494ad94e@gandalf.local.home>
-References: <20250530095958.494ad94e@gandalf.local.home>
+In-Reply-To: <f44d3ad7-b518-4679-8f7b-949680b26ef7@app.fastmail.com>
+References: <28a4c0cf-7978-4547-bf89-42804975c848@app.fastmail.com> <f44d3ad7-b518-4679-8f7b-949680b26ef7@app.fastmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250530095958.494ad94e@gandalf.local.home>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git trace-ringbuffer-v6.16
-X-PR-Tracked-Commit-Id: 99d232804405e35d7a9af1536a057578a1442e81
+X-PR-Tracked-Message-Id: <f44d3ad7-b518-4679-8f7b-949680b26ef7@app.fastmail.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/soc-drivers-6.16
+X-PR-Tracked-Commit-Id: 5963edd98a2159f2114b08e402a7341c1e7dd293
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8bf722c684b31368a6f1fba7abcffb0da99722ed
-Message-Id: <174870544645.163157.10514516245822097116.pr-tracker-bot@kernel.org>
-Date: Sat, 31 May 2025 15:30:46 +0000
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+X-PR-Merge-Commit-Id: 297d9111e9fcf47dd1dcc6f79bba915f35378d01
+Message-Id: <174870544866.163157.4319179356868633377.pr-tracker-bot@kernel.org>
+Date: Sat, 31 May 2025 15:30:48 +0000
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, soc@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri, 30 May 2025 09:59:58 -0400:
+The pull request you sent on Sat, 31 May 2025 11:01:20 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git trace-ringbuffer-v6.16
+> https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/soc-drivers-6.16
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8bf722c684b31368a6f1fba7abcffb0da99722ed
+https://git.kernel.org/torvalds/c/297d9111e9fcf47dd1dcc6f79bba915f35378d01
 
 Thank you!
 
