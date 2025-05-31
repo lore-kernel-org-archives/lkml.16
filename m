@@ -1,116 +1,144 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A1DEAD0;
-	Sat, 31 May 2025 09:37:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A2BBE5E
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 09:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748684275; cv=none; b=QD4+JDTt+LvxxutB8s9SnZ98vExL8/Jo3MkxwXsfdVbdOGWrSVk+67zl7JwaBgVVT/M1lADWt/rIYgyMqJOdGXy2vWLPqaghhjzoiSVzVquoPmQ7NTKqcZIacczm3wWXiONvRxXXzvlyfSMGfPx9xwrAFfr/uZns9iSUexGCCrE=
+	t=1748685115; cv=none; b=R6m82srqexxRcXmPji1atUILBT9eRWbC69WSPPtfbCVWXcbD8S0JRmgGx7vQYr6KrD9CJNi2ync2u/nh920DqdRRbzWThuLbo3n0qtY8vJlS23s8Qok+IJpV/BjA2Sq/5aWffYxMJRT+OHC0mgVY56O02jVnjgcd1gdStD4FuVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748684275; c=relaxed/simple;
-	bh=iYoiiZF3675d1cOL29QNB0MBlhtJ9YHSUGYiAeQGfuY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=fmHH3tgarXXdGF/nvo1G23SKfdERjmFtasbrpvPAiLCKSGrtywjuFqDBbCNWrBmWY//BO7R0OE732DYwk1WKD6vkYB0wlY2SK5m+lbxeMHUwC8g6Pp7pZfao0Otzo2soiHk14OiUSpJNyVYTb+DYWD9WSgVqVdFORNamO7KAGAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=c3M4svPN; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1748685115; c=relaxed/simple;
+	bh=4DiOTn78rjZ6cFjchF613JePfpJ9oQFvNLTjXqBGvrw=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WF7WfyVe/3SGX4NERIQuV9NYo0b5ByHmebqofHOJNx08fABfzWqWPplNE3b3FCKrcKJadhv+A9D8dIonxfRNjL0MKNZyyxBASrRa6ZIKZp6NSYs/vQurGdK0YfVXLY3Mj7/VN2pRR/d2COjoRAlw5/75beH5u9pQwyWsxwrU9T4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T7kBy6U7; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="c3M4svPN"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54V9bKUs2857327;
-	Sat, 31 May 2025 04:37:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1748684240;
-	bh=YCcKjdVOPE9WOzG8bceQSsuc4dKtSsVhhPh6vA/1a2g=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=c3M4svPNv/Svq3T8GOw8MFg7jOOkg2aAesUEjQWtoJEBv+DFpkRGCRkK0VNVE4ZSt
-	 JTIRisJBwJITO1fdnrN0GII/v7HohiIOmQ7x7jOpfp4pzru/Rikr1lmGAOgSu8jQMj
-	 h/508I1o80c235jqEi8bUROXyB6KmoLXKBkGhqnQ=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54V9bKSF1469677
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Sat, 31 May 2025 04:37:20 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 31
- May 2025 04:37:20 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sat, 31 May 2025 04:37:19 -0500
-Received: from [10.250.148.85] ([10.250.148.85])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 54V9bFxL146542;
-	Sat, 31 May 2025 04:37:16 -0500
-Message-ID: <7024867d-91ac-40eb-b41f-eed811032f95@ti.com>
-Date: Sat, 31 May 2025 15:07:14 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T7kBy6U7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748685111;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=jJyUMglAGJzwPtxv28dkdLEq4lYUgcqEQo++4faeYEU=;
+	b=T7kBy6U7FDoe7uuD0gHx0Mn+cR5Gg+eYp/9J5CWPnJoRZIme14ZGpYP+oPPXDrNSCp/gkh
+	0i+UJ1aTuuuhzex7n7605OFQl5fKIc+Oue5oIvHcb2bEewTJWv9cj6jUMxk8vnyY9Gbdbe
+	es3JYNw/1d1+jSmnfYPCKBX+jmagD/Q=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-204-_KqNT3NVM1WQp95UgT3aQA-1; Sat,
+ 31 May 2025 05:51:49 -0400
+X-MC-Unique: _KqNT3NVM1WQp95UgT3aQA-1
+X-Mimecast-MFC-AGG-ID: _KqNT3NVM1WQp95UgT3aQA_1748685108
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 702E71800360;
+	Sat, 31 May 2025 09:51:48 +0000 (UTC)
+Received: from server.redhat.com (unknown [10.72.112.30])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 23C03180049D;
+	Sat, 31 May 2025 09:51:43 +0000 (UTC)
+From: Cindy Lu <lulu@redhat.com>
+To: lulu@redhat.com,
+	jasowang@redhat.com,
+	mst@redhat.com,
+	michael.christie@oracle.com,
+	sgarzare@redhat.com,
+	linux-kernel@vger.kernel.org,
+	virtualization@lists.linux-foundation.org,
+	netdev@vger.kernel.org
+Subject: [PATCH v10 0/3] vhost: Add support of kthread API
+Date: Sat, 31 May 2025 17:47:02 +0800
+Message-ID: <20250531095135.159582-1-lulu@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 0/2] Extend mmio-mux driver to configure mux with
- new DT property
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Conor Dooley <conor+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>, Peter Rosin
-	<peda@axentia.se>,
-        <s-vadapalli@ti.com>, <danishanwar@ti.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Vignesh
- Raghavendra <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>,
-        Thomas Gleixner
-	<tglx@linutronix.de>
-References: <20250304102306.2977836-1-c-vankar@ti.com>
- <f844e44e-6b71-442a-ae3c-7bbe74a908af@ti.com>
- <2e80f6bc-2fb0-4f0d-9450-cbcf4dddca66@ti.com>
- <2025053128-profound-importer-8436@gregkh>
-Content-Language: en-US
-From: "Vankar, Chintan" <c-vankar@ti.com>
-In-Reply-To: <2025053128-profound-importer-8436@gregkh>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Hello Greg,
+In commit 6e890c5d5021 ("vhost: use vhost_tasks for worker threads"),   
+the vhost now uses vhost_task and operates as a child of the   
+owner thread. This aligns with containerization principles.   
+However, this change has caused confusion for some legacy   
+userspace applications. Therefore, we are reintroducing   
+support for the kthread API. 
 
-On 5/31/2025 11:22 AM, Greg Kroah-Hartman wrote:
-> On Fri, May 30, 2025 at 10:35:24PM +0530, Vankar, Chintan wrote:
->> Hello Greg,
->>
->> I have tried to implement Timesync Router node to the suitable
->> Subsystems (Interrupt controller and Mux-controller). Thomas
->> has provided a feedback with a reason why Timesync Router is not
->> suitable for irqchip. But I didn't get a proper feedback for mux-
->> controller subsystem.
-> 
-> What do you mean "proper feedback"?
-> 
+In this series, a new UAPI is implemented to allow   
+userspace applications to configure their thread mode.
 
-By proper feedback, I meant, from the comments I was not able to figure
-out whether Timesync Router will be acceptable in the "mux-controller"
-subsystem or not.
+Changelog v2:
+ 1. Change the module_param's name to enforce_inherit_owner, and the default value is true.
+ 2. Change the UAPI's name to VHOST_SET_INHERIT_FROM_OWNER.
 
->> Can you please help me deciding in which subsystem I should implement
->> it, if not mux-controller can it go in drivers/misc ?
-> 
-> Why not mux?  What's preventing that from happening?  Why would misc be
-> better?
-> 
+Changelog v3:
+ 1. Change the module_param's name to inherit_owner_default, and the default value is true.
+ 2. Add a structure for task function; the worker will select a different mode based on the value inherit_owner.
+ 3. device will have their own inherit_owner in struct vhost_dev
+ 4. Address other comments
 
-Sure, if mux-controller subsystem is acceptable, I will implement the
-Timesync Router with that and post a series.
+Changelog v4:
+ 1. remove the module_param, only keep the UAPI
+ 2. remove the structure for task function; change to use the function pointer in vhost_worker
+ 3. fix the issue in vhost_worker_create and vhost_dev_ioctl
+ 4. Address other comments
 
-I thought of misc, when mux-controller subsystem is not acceptable and I
-could not find any other subsystem which is suitable for Timesync
-Router.
+Changelog v5:
+ 1. Change wakeup and stop function pointers in struct vhost_worker to void.
+ 2. merging patches 4, 5, 6 in a single patch
+ 3. Fix spelling issues and address other comments.
 
-Regards,
-Chintan.
+Changelog v6:
+ 1. move the check of VHOST_NEW_WORKER from vhost_scsi to vhost
+ 2. Change the ioctl name VHOST_SET_INHERIT_FROM_OWNER to VHOST_FORK_FROM_OWNER
+ 3. reuse the function __vhost_worker_flush
+ 4. use a ops sturct to support worker relates function
+ 5. reset the value of inherit_owner in vhost_dev_reset_owner.
+ 
+Changelog v7: 
+ 1. add a KConfig knob to disable legacy app support
+ 2. Split the changes into two patches to separately introduce the ops and add kthread support.
+ 3. Utilized INX_MAX to avoid modifications in __vhost_worker_flush
+ 4. Rebased on the latest kernel
+ 5. Address other comments
+ 
+Changelog v8: 
+ 1. Rebased on the latest kernel
+ 2. Address some other comments 
+ 
+Changelog v9:
+ 1. Rebased on the latest kernel. 
+ 2. Squashed patches 6‑7. 
+ 3. Squashed patches 2‑4. 
+ 4. Minor fixes in commit log
+ 
+ 
+Changelog v10:
+ 1.Add support for the module_param.
+ 2.Squash patches 3 and 4.
+ 3.Make minor fixes in the commit log.
+ 4.Fix the mismatched tabs in Kconfig.
+ 5.Rebase on the latest kernel.
 
-> thanks,
-> 
-> greg k-h
+Tested with QEMU with kthread mode/task mode/kthread+task mode
+
+Cindy Lu (3):
+  vhost: Add a new modparam to allow userspace select kthread
+  vhost: Reintroduce kthread mode support in vhost
+  vhost: Add new UAPI to select kthread mode and KConfig to enable this
+    IOCTL
+
+ drivers/vhost/Kconfig      |  13 +++
+ drivers/vhost/vhost.c      | 223 +++++++++++++++++++++++++++++++++----
+ drivers/vhost/vhost.h      |  22 ++++
+ include/uapi/linux/vhost.h |  16 +++
+ 4 files changed, 255 insertions(+), 19 deletions(-)
+
+-- 
+2.45.0
+
