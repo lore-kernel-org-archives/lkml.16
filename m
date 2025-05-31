@@ -1,127 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 524E242AA6;
-	Sat, 31 May 2025 12:47:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6828A22DFB5
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 12:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748695626; cv=none; b=HTbQeC7x51Z6yvG9LRxdDtx2YbZ59FYIgAw+pm3G5l4srI2MyEhJj7IuGMCGXykIHeCCxDwlHgfSsKwdJ4UymJVLfQofJHAX4OAprvjdmkp6e7Yh5GLsPtCVwhPFUmEq4NMxnVOPf4kLRwfQk+/JnuGrjfTUJ+8Ad+dlGoFXOkI=
+	t=1748696055; cv=none; b=kCXoqvwXPCMHObCVFIo0ZTO8jb4wZ4gPiLQVcRow5DzEwyCizp148FGi8eX3HZEHqrlwQMvL0D8F66VrNLytwjDMCQ0QS1zrZzuO++bu9NiEmmGQ4+z0n3Y1OqpvacP56Uhs09qbwFtMHBWmf/LSyrdMvLeJwBsLyhC3I13lAtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748695626; c=relaxed/simple;
-	bh=dNuv/8Q/+MpCzVJGAmYAa2z15t50v7g6RAPYjtxmSG8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SUSPAC/Q589YvJY5ex8cDF/JGQvkK2S8D6oCBvdFBeIsaxTEcuOgfZ5HgVuyXPEiRaDU2+uSXbtQV+XCVO17LT28ta9RBTCtca1X0aIgsTz5HHU/hoIKJrPoLMTQdM5TWhFJgHGByR/8BRN/xI2RzZDN8Yuq0UZk4XivpmisVmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YtPNB8Nc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748696055; c=relaxed/simple;
+	bh=+EmJmBR4BbbJOaqh99VTAFfhrshaX7fqFFRRNgGBdFs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AHQcoxz4AGgDMQW6f20b3kI2dq+cW5X+6nlz7h9sAwD4J0l7Z+h7KYqKtEl4nk0uQzsKgqQrJSyXxDtrZCi2ODxe5SjbkAr8fvGURn3hPM6Uqkv93x/DBMFNckHoHWTRnIF+uwyTfIdOvGwDQOdQL/Cq0MRvr5YFKCnp2nubHyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C6E0wcYt; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YtPNB8Nc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D340C4CEE3;
-	Sat, 31 May 2025 12:47:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748695625;
-	bh=dNuv/8Q/+MpCzVJGAmYAa2z15t50v7g6RAPYjtxmSG8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YtPNB8NcThT6CtGiCQVyD+tA2X+Ztn5KZseEOGXbS8XFkPAnrWfOw4aT4PfLyo2zx
-	 /KTxtQcR+UK8k575BTm8vCkl9Cl7IIkoomiKHMC+wcpI2WWZyDvWw+y6tlNQh7jKvc
-	 so7j2M0wil/Pm8X8UKxB5cvPLQw2m7mH/Q/hV8kkLT4vlub/vtAcaRqShtRJq8JgUU
-	 9v4awH1Nx19mnoLKdvcKUMurXbVtVa5/mdBCl1/OlyGBBikX2D5A2yra0e+ilJeD9U
-	 Xl8klhDiRHDa5QL6TxpJIDmYe9F96q4uMK86Y3PvyZp/LairzN+KlfIJJvm9JRXYm1
-	 pTM7K7rh5l78w==
-Message-ID: <1caebcc8-8c4a-4a83-9e68-f59b92ca7bab@kernel.org>
-Date: Sat, 31 May 2025 14:47:01 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C6E0wcYt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748696053; x=1780232053;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+EmJmBR4BbbJOaqh99VTAFfhrshaX7fqFFRRNgGBdFs=;
+  b=C6E0wcYtyZorg1gtXDrLXta+9pJZkyYOyLSE3B8/+ZadxnVUH2ZUD7Ap
+   UlKEE7k39lOBWatX6ObP1QBf+2I3vOdyBmAlwa9O5U+F0r59CmsaKFvs9
+   izcHpM6PltMu7sN8b164/hSRbXasnYwKf+EerJRj1utpccf+ws1wt5gYQ
+   6K9osRPJmzKSF17HgSS/xBwiVtQheasQogRpdc6ofCc/3+PqWTmqQPMfR
+   uq0ocUs9ChfjrM49fIo2w9c2ALClBIdqDsRhZVI9fiw4WHzeHBCcgPcKF
+   GCAro3Q00eUoYW6JOdeXRw2bpVD59wleY6IMq/Q6zH3tUx301To4YCqaE
+   Q==;
+X-CSE-ConnectionGUID: GcrjoB4qQaO7tmMp2SEwqg==
+X-CSE-MsgGUID: jI2ozdRLQqWzh+QQgmJD2g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11450"; a="61398425"
+X-IronPort-AV: E=Sophos;i="6.16,198,1744095600"; 
+   d="scan'208";a="61398425"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2025 05:54:13 -0700
+X-CSE-ConnectionGUID: CBk3yu9jQiKyfvTpCjuIcg==
+X-CSE-MsgGUID: ByTmpPphRiSlFVKyMFfvbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,198,1744095600"; 
+   d="scan'208";a="145093181"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 31 May 2025 05:54:10 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uLLix-000YPY-2T;
+	Sat, 31 May 2025 12:54:07 +0000
+Date: Sat, 31 May 2025 20:53:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>, Lee Jones <lee@kernel.org>,
+	Corey Minyard <minyard@acm.org>
+Cc: oe-kbuild-all@lists.linux.dev, Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net, jeffbai@aosc.io,
+	kexybiscuit@aosc.io, wangyao@lemote.com,
+	Chong Qiao <qiaochong@loongson.cn>
+Subject: Re: [PATCH v3 2/3] ipmi: Add Loongson-2K BMC support
+Message-ID: <202505312022.QmFmGE1F-lkp@intel.com>
+References: <01805f8d1b9c8e6564a2d6d83964f78ed29b8f1f.1748505446.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] dt-bindings: leds: Add new as3668 support
-To: Lukas Timmermann <linux@timmermann.space>, lee@kernel.org,
- pavel@kernel.org
-Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
- Lukas Timmermann <lukas@timmermann.space>
-References: <20250531120715.302870-4-linux@timmermann.space>
- <20250531120715.302870-8-linux@timmermann.space>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250531120715.302870-8-linux@timmermann.space>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <01805f8d1b9c8e6564a2d6d83964f78ed29b8f1f.1748505446.git.zhoubinbin@loongson.cn>
 
-On 31/05/2025 14:07, Lukas Timmermann wrote:
-> From: Lukas Timmermann <lukas@timmermann.space>
-> 
-> Document Osram as3668 LED driver devicetree bindings.
+Hi Binbin,
 
-Please run scripts/checkpatch.pl on the patches and fix reported
-warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
-patches and (probably) fix more warnings. Some warnings can be ignored,
-especially from --strict run, but the code here looks like it needs a
-fix. Feel free to get in touch if the warning is not clear.
+kernel test robot noticed the following build errors:
 
-<form letter>
-Please use scripts/get_maintainers.pl to get a list of necessary people
-and lists to CC. It might happen, that command when run on an older
-kernel, gives you outdated entries. Therefore please be sure you base
-your patches on recent Linux kernel.
+[auto build test ERROR on 08effa6b77f7dbb4727f811daef0f6085c0d63c8]
 
-Tools like b4 or scripts/get_maintainer.pl provide you proper list of
-people, so fix your workflow. Tools might also fail if you work on some
-ancient tree (don't, instead use mainline) or work on fork of kernel
-(don't, instead use mainline). Just use b4 and everything should be
-fine, although remember about `b4 prep --auto-to-cc` if you added new
-patches to the patchset.
+url:    https://github.com/intel-lab-lkp/linux/commits/Binbin-Zhou/mfd-ls2kbmc-Introduce-Loongson-2K-BMC-core-driver/20250529-202628
+base:   08effa6b77f7dbb4727f811daef0f6085c0d63c8
+patch link:    https://lore.kernel.org/r/01805f8d1b9c8e6564a2d6d83964f78ed29b8f1f.1748505446.git.zhoubinbin%40loongson.cn
+patch subject: [PATCH v3 2/3] ipmi: Add Loongson-2K BMC support
+config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20250531/202505312022.QmFmGE1F-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250531/202505312022.QmFmGE1F-lkp@intel.com/reproduce)
 
-You missed at least devicetree list (maybe more), so this won't be
-tested by automated tooling. Performing review on untested code might be
-a waste of time.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505312022.QmFmGE1F-lkp@intel.com/
 
-Please kindly resend and include all necessary To/Cc entries.
-</form letter>
+All errors (new ones prefixed by >>):
+
+>> drivers/char/ipmi/ipmi_si_ls2k.c:180:6: error: redefinition of 'ipmi_si_ls2k_init'
+     180 | void ipmi_si_ls2k_init(void)
+         |      ^~~~~~~~~~~~~~~~~
+   In file included from drivers/char/ipmi/ipmi_si_ls2k.c:17:
+   drivers/char/ipmi/ipmi_si.h:108:20: note: previous definition of 'ipmi_si_ls2k_init' with type 'void(void)'
+     108 | static inline void ipmi_si_ls2k_init(void) { }
+         |                    ^~~~~~~~~~~~~~~~~
+>> drivers/char/ipmi/ipmi_si_ls2k.c:186:6: error: redefinition of 'ipmi_si_ls2k_shutdown'
+     186 | void ipmi_si_ls2k_shutdown(void)
+         |      ^~~~~~~~~~~~~~~~~~~~~
+   drivers/char/ipmi/ipmi_si.h:109:20: note: previous definition of 'ipmi_si_ls2k_shutdown' with type 'void(void)'
+     109 | static inline void ipmi_si_ls2k_shutdown(void) { }
+         |                    ^~~~~~~~~~~~~~~~~~~~~
 
 
-Best regards,
-Krzysztof
+vim +/ipmi_si_ls2k_init +180 drivers/char/ipmi/ipmi_si_ls2k.c
+
+   179	
+ > 180	void ipmi_si_ls2k_init(void)
+   181	{
+   182		platform_driver_register(&ipmi_ls2k_platform_driver);
+   183		ls2k_registered = true;
+   184	}
+   185	
+ > 186	void ipmi_si_ls2k_shutdown(void)
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
