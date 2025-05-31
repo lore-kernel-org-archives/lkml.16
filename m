@@ -1,103 +1,107 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0E528CF6D
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 04:57:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA69528F3;
+	Sat, 31 May 2025 05:07:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748667476; cv=none; b=PvKoqy65H9MLiEupuG+YkhhkXYZbhTn6T3rfO6QoRyEGffVhHn5EhFGZFScUArcF3HJ57iZ2poqIzhS46VXgJIsJs3VHtvDpxzCZkj9qb/bMEGjguRtqj34nyCqqbwkUf5i/7Yvi/HiwQU4u6O/G6cyAfuZEZrH/PtUiEoPeoIw=
+	t=1748668028; cv=none; b=fnAnMyi9lHLXC6iPDwVknNdoMCMnNZJzWkZ8OgY9Lz+Czk6IwNuWgB2ltXTfbb7o7CUB8kCucOZxOcnTudUq3pdnv4Y+BBt2mFhxNf+JQA3aIqKVoo0e0n1ALpb4D9IGxm1hUrWrl1CCG5Xc2G2edS7RHdCpoGGvFwA2dp+mqiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748667476; c=relaxed/simple;
-	bh=8K3tn6cFhZLTgoSBk3aO4SLumHWKsqeM5XcaTpuz+eE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YCiuM2oxlPMJJeUTanc8tvXMfbP/8aJGoXuI35u7ZADwRey7a9VfFEfQqxGb6W+5aPgw2G0DKANMGtuCd3KWcdSUjOl5eaSquVdSkjtT7iXN7G7zCbtHGxamkW0nyuSsVkJDUKhvsPDji3RaKXOL0985G4dVbxgTLaK5QzCBb6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=huffjJIX; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1748668028; c=relaxed/simple;
+	bh=YZ4ML5dpAImMlPisgbvtvk3ijEN6nlptoNCtSdJvkHo=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=tKx7oRLNnx3y3/zYwMQMOIkBcVLRY8DUzPWPM6fGK93KHoCys77CB4D2wEaBQ40dyKsVvVHpzbW4t92UVO8qtCgk0YUOz34QV5PmJUHUhY/ZnT0kQA5eskY1Hg4n1AnasiyiauyRdl7g5+BQff9FuS5lFsvnDgteVnMJytMbo0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FEYqfL1u; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="huffjJIX"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-60461fc88d7so5089698a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 21:57:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1748667473; x=1749272273; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=NSpiWOEvMO3N5M8jkH7wtrupzevXtJYKexVa9S/kUp0=;
-        b=huffjJIX66Q/sorYYxI1icI2y9otzuqrYBn8kt1hARNUOu3052oKEgL6gPv6YZ2v0P
-         BlR0UcA2zkdgfKiYd+9xk7Dn0A3WPL6AUFx5Anja1kqTwoaih5X9QTDroUuNg/mOw/k2
-         fk7rWBeD+5u6bVeYltiG46SqhCVkWCMZaWVvg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748667473; x=1749272273;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NSpiWOEvMO3N5M8jkH7wtrupzevXtJYKexVa9S/kUp0=;
-        b=GnRTqttcIPIJPBfs0GyNBJEjcmyd5shmXsfiSp2nCxDNh/snJL1Cb/7gUuQYP0Hkkk
-         RwtMsGTBH2ROBEgYd0FVwjLMD8msKsVofPwDRzhUr4qTnsziA2D0OaLlnHmduaY3jOHN
-         mUIe+W0roRU/uPzCEUNPLbUDKlaGmnHDJLHqV1a/W5ravDuM2fqewSM+c7pvfr3T5v9a
-         XmE4OtAn8XzgV+3azRBpQUOMA+kQfNoc/vk4g6IVAHg1KNH2L2uE5RdfAAhq7pyShNJo
-         CShl2KmlE1Y/NTX0922/KMrvJveWlSoiqVwN/nqNxHyIWF/h4aPrmybP4A4RRQRkZyqC
-         NG2A==
-X-Forwarded-Encrypted: i=1; AJvYcCVRYmWkbBddHLCJE4mcsMmwc1j7RuIdJoYMRofVRp/948xWeTckghspixjC8/jCKKYBi76aDJdllpbdxWA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmFN5HXKBLqbiDtLSqgRD4GkmVcQ0sh4wMruQCOke8Hl5KhApe
-	TPFwEwH2K8symvyGmuew4T0y2GgnWszQf9rrf/DQCrcHU+MUyvyzwweewdDd7q8byMAlm0UWVS3
-	kiDywMeo=
-X-Gm-Gg: ASbGncs/DqKvrSEfFV4tZuP1V5yTX00wapSywrRG/i3WV3S3/FdfmrxFmEDy66snBnZ
-	LnuQSzb0qwvs93nxlM0L7HQp9XgehmBS8aCAUBaZy6AYIArMuY5nCLSk/minkvOOB2gjAA18OrH
-	5RtlWzu6/C6D/fJc2+yXm1MQxisgSNZGse+Sh6wetrQYje5HYpajNBjw99HCCxI5Bm1AieXH0tO
-	s2W3Kk2KUEZKzGhW11+Z1trsFnkPkY68V+p3YjcKFpb1BU1fAPHiwS9sbBV3Su9igK4WyoDan+Y
-	0kX3qgKkFqynYbzApEEHjvunvsQCiKAp6XAhOQRHAmZbpVz7dJSxzXNRU8rkugX60EhwYvzepoj
-	exjCKh4Kvgb04ogFaAQgpHuKueeaW9DTMlIIO
-X-Google-Smtp-Source: AGHT+IHFxge5zDpNf6R50662CSi4rBJNXi9NZ+vjISmycvhHWbTRyrchxQ3WHVXj2+CPSCB/YLBd2g==
-X-Received: by 2002:a05:6402:13c5:b0:601:9dc3:2795 with SMTP id 4fb4d7f45d1cf-6056dd31f11mr5654935a12.7.1748667472565;
-        Fri, 30 May 2025 21:57:52 -0700 (PDT)
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com. [209.85.208.46])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6059b007c66sm1362164a12.62.2025.05.30.21.57.51
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 May 2025 21:57:52 -0700 (PDT)
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-60461fc88d7so5089671a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 21:57:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWeiLY6ko2f3dWoenaOpzKKHWimPY5ozyFU0stBQbpkdDw7DqzKQ7PM9WmOv4MLpRaro+mfytYTaIbFREE=@vger.kernel.org
-X-Received: by 2002:a05:6402:2747:b0:600:e549:3c19 with SMTP id
- 4fb4d7f45d1cf-6056dd32172mr4701465a12.1.1748667470987; Fri, 30 May 2025
- 21:57:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FEYqfL1u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748668027; x=1780204027;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=YZ4ML5dpAImMlPisgbvtvk3ijEN6nlptoNCtSdJvkHo=;
+  b=FEYqfL1uoUPxXNCxOed+dzDP4jTslKLP00wqaOPTQOqugJWo+h6lTuz+
+   hxdjCLQiRZMxD+baDbBLbEc3+yaqhUj9bXrh2Q1a81RK9V5uhO7M+rYbT
+   pQeleThfvOaMSI3m5Jo+ZKMM282Hwz+HT4cdAjdrDznC+P3UBUOZsqIKB
+   gy9lDtYIzjukkjuDhrQZud9i1L6C0wAwFj6moadoCqHmOXwhEwWyTBeMn
+   E2qqLUn8/6dbJs5KMtEPBYAgGLBiJUW5INICw08VNS+Q2PX4c3cQ6hHDZ
+   5PWg0YWVgUewcDR5BR21YSv5l6a7yBQgJaEiIFsSA/yReCMeTjeHRIE0z
+   Q==;
+X-CSE-ConnectionGUID: 4SzFpBmvT9yJDBhBRKEmJg==
+X-CSE-MsgGUID: 2BPMkLD0RI+mAgpdg2vThg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="50630679"
+X-IronPort-AV: E=Sophos;i="6.16,197,1744095600"; 
+   d="scan'208";a="50630679"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 22:07:06 -0700
+X-CSE-ConnectionGUID: dlpNWuiMScSMGuHnvpv8LA==
+X-CSE-MsgGUID: WQiGyPnJRWG08nLsqGv4bQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,197,1744095600"; 
+   d="scan'208";a="144030782"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.71])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 22:07:01 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Sat, 31 May 2025 08:06:58 +0300 (EEST)
+To: Pratap Nirujogi <pratap.nirujogi@amd.com>
+cc: rdunlap@infradead.org, Hans de Goede <hdegoede@redhat.com>, 
+    sfr@canb.auug.org.au, linux-next@vger.kernel.org, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    benjamin.chan@amd.com, bin.du@amd.com, gjorgji.rosikopulos@amd.com, 
+    king.li@amd.com, dantony@amd.com
+Subject: Re: [PATCH 2/3] i2c: amd-isp: Initialize unique adpater name
+In-Reply-To: <20250530200234.1539571-3-pratap.nirujogi@amd.com>
+Message-ID: <8670fa5f-5bf6-7dfe-1ec7-5cd1ec4472aa@linux.intel.com>
+References: <20250530200234.1539571-1-pratap.nirujogi@amd.com> <20250530200234.1539571-3-pratap.nirujogi@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aDmght5YpHmJ6qZ2@8bytes.org>
-In-Reply-To: <aDmght5YpHmJ6qZ2@8bytes.org>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 30 May 2025 21:57:34 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wguPX5w3UVmQpOk+v1ahJwRzRNXKHUJB92cwJfNpMU4ZA@mail.gmail.com>
-X-Gm-Features: AX0GCFtMpDskWfc2_AvCLjHC4dHVHudEo-Xx4HYHew7xlRDeRM-eGMEdr31NwII
-Message-ID: <CAHk-=wguPX5w3UVmQpOk+v1ahJwRzRNXKHUJB92cwJfNpMU4ZA@mail.gmail.com>
-Subject: Re: [git pull] IOMMU Updates for Linux v6.16
-To: Joerg Roedel <joro@8bytes.org>
-Cc: Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org, iommu@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 
-On Fri, 30 May 2025 at 05:11, Joerg Roedel <joro@8bytes.org> wrote:
->
->           - SMMUv3:
+Hi Pratap,
 
-Bah. This seems very broken.
+Please send the next version(s) to all relevant people as indicated by 
+scripts/get_maintainer.pl.
 
-I haven't bisected it, but my arm64 build - which I sadly didn't end
-up doing earlier today - breaks with modpost errors:
+On Fri, 30 May 2025, Pratap Nirujogi wrote:
 
-   ERROR: modpost: "arm_smmu_make_cdtable_ste"
-[drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
+> Initialize unique name for amdisp i2c adapter, which is used
+> in the platform driver to detect the matching adapter for
+> i2c_client creation.
+> 
+> Fixes: 90b85567e457 ("platform/x86: Add AMD ISP platform config for OV05C10")
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Link: https://lore.kernel.org/all/04577a46-9add-420c-b181-29bad582026d@infradead.org
+> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
+> ---
+>  drivers/i2c/busses/i2c-designware-amdisp.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/i2c/busses/i2c-designware-amdisp.c b/drivers/i2c/busses/i2c-designware-amdisp.c
+> index ad6f08338124..e8cb3785c740 100644
+> --- a/drivers/i2c/busses/i2c-designware-amdisp.c
+> +++ b/drivers/i2c/busses/i2c-designware-amdisp.c
+> @@ -62,6 +62,8 @@ static int amd_isp_dw_i2c_plat_probe(struct platform_device *pdev)
+>  
+>  	adap = &isp_i2c_dev->adapter;
+>  	adap->owner = THIS_MODULE;
+> +	snprintf(adap->name, sizeof(adap->name),
+> +		 "AMDISP DesignWare I2C adapter");
 
-(and the same error then repeated for arm_smmu_make_s2_domain_ste /
-arm_smmu_make_s1_cd / arm_smmu_make_bypass_ste /
-arm_smmu_make_abort_ste / arm_smmu_make_sva_cd / arm_smmu_get_ste_used
-/ arm_smmu_write_entry / arm_smmu_get_cd_used).
+scnprintf() is preferrable over snprintf(). Even if you don't use the 
+return value here, eventually somebody will want to get rid of snprintf() 
+entirely so lets try not add new ones.
 
-I assume it's some obvious D'oh moment to whoever changed things to
-cause this, but the cause isn't immediately obvious to me.
+>  	ACPI_COMPANION_SET(&adap->dev, ACPI_COMPANION(&pdev->dev));
+>  	adap->dev.of_node = pdev->dev.of_node;
+>  	/* use dynamically allocated adapter id */
+> 
 
-             Linus
+-- 
+ i.
+
