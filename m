@@ -1,179 +1,254 @@
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D126B1411DE;
-	Sat, 31 May 2025 04:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.166.238
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748664230; cv=fail; b=c1laiyB3oZVu1xT3gu6JjnODSFhTC17VEWhCmwzoyjTqUDbgKSzutxx9GkFEHweE+0OtEypkbXqywOXtvuOTRj0Jo9ELr+nKQKY+4+JJsRBBNNSxYlWvH8D2v2uDSN29HgtHgzffRIbMdrvr4eFiXtU4pVgU3AVfHx1u9bY60VE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748664230; c=relaxed/simple;
-	bh=n3NDQGvcW4Sr3pvVHK5HwltiI5F7+hTaMM7HfQWgP6g=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=iAE9ht9p7FmalFzSelembN0B621ErfxHq67pGJuVGOTzbuwH6HfejHMxGwJ6xPXb+AnNsH+8ne83IqijEZYlGRi9goe6YCQWQ24YEwOYsCyhADznDiFLY9aJHHk1G8Yt0SRGmdZyoWLlxAtU9gJ/aPkWIlKfO18g0NsjyWZwdq4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=fail smtp.client-ip=205.220.166.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54V3wmJd009166;
-	Fri, 30 May 2025 21:03:00 -0700
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12on2044.outbound.protection.outlook.com [40.107.237.44])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 46udmm70qk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 30 May 2025 21:03:00 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=v5BGL57UPzfrr2W3WdVQth7wN09dwurm0sjJhiIyhKM0l3qbjSG/URfsNy//jxKQtqYJqRg/i+nyg6ATvLUDJ4hPdgbGhEKu31kHej0TIBktcd6hZDpco5z09SmzgX/hdaqf3QMh22dw/9tFcb21BUMznf1fviAuFkoYqThjKhGux+bPcUvSvHI8/xAiyivVpEKCCLdICCV/9n07tc65DoaAaDtJ6IHv82kFpN2Ss0J7HWX1kN27w8vJMOry+VimV36L1nIGN2xN3KGk2NGaiYbSz5mtbZBeH3Kb82xPoKxTwqCeBVUoTHzU4VIq+luamP4EYE9NJZFz+Gm8CoJkNw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8YA/qhqtUXSORRCARfmPN4FgPW0oxKtQ7Lvi7bo7D9I=;
- b=bmgqdDFqwTqvR4hy9IOr8Ei0tne1SQsOz6KE3Ygr9QVippokPH4BaQgeX4LMHL6Ij+lTFp1FvYZKOWEWyEVuzAtfQrfamdb65wliZd5rlqxP2rkH4iZ9IZbEZ5YM6uS9g/7TjAL6ZIUBOMLAieWYimvfsnRHSj9/JFk7PTkdxYvuyz+KBATK4u0QTbg/NKJAcshca4ID5QZA5yU1FiMyPd2ChCpPav9CpOqWlsZBflgE5uYnPgZgj3+ZxfphUxNC9aia2ghzrFrLTTQ3vwRKNKGa3dBf56izPu4IUOV8n986+/4wLCQQ80HqXzaK/RWmKmuctE7s8UwJ/K3lOB3nGQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-Received: from DS0PR11MB8763.namprd11.prod.outlook.com (2603:10b6:8:1bb::12)
- by PH0PR11MB7587.namprd11.prod.outlook.com (2603:10b6:510:26d::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Sat, 31 May
- 2025 04:02:55 +0000
-Received: from DS0PR11MB8763.namprd11.prod.outlook.com
- ([fe80::efb3:ec61:3036:be3]) by DS0PR11MB8763.namprd11.prod.outlook.com
- ([fe80::efb3:ec61:3036:be3%7]) with mapi id 15.20.8769.025; Sat, 31 May 2025
- 04:02:53 +0000
-From: Meng Li <Meng.Li@windriver.com>
-To: imx@lists.linux.dev, linux-watchdog@vger.kernel.org, festevam@gmail.com,
-        kernel@pengutronix.de, s.hauer@pengutronix.de, wim@linux-watchdog.org,
-        linux@roeck-us.net, shawnguo@kernel.org, robh@kernel.org,
-        conor+dt@kernel.org, Frank.Li@nxp.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, meng.li@windriver.com
-Subject: [v2 PATCH 0/3] create patches for nxp-ls1046a platform watchdog feature
-Date: Sat, 31 May 2025 12:02:10 +0800
-Message-Id: <20250531040213.2589292-1-Meng.Li@windriver.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TYCPR01CA0183.jpnprd01.prod.outlook.com
- (2603:1096:400:2b0::19) To DS0PR11MB8763.namprd11.prod.outlook.com
- (2603:10b6:8:1bb::12)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5028D28BAA1;
+	Sat, 31 May 2025 04:04:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748664278; cv=none; b=EAVXQ/WQqgLNCc0Hg2gl5BTO6PZDRpsMlbxPxZ9f9AzkmwkoJRK+tgb2/pANbwsrXfe8oB87yQ2Bs1uCHjq0vXAWZyXXtusmxXiO2KBrz11XUNUm1KOUWRZWBquxR0u3JqCEZqohW+YLnQD+cjRWuCbCef8outDdem5ccwLrFOY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748664278; c=relaxed/simple;
+	bh=YCeO0F+RUKzNa0Jf9Wd6Z3HXEOdDeIYhoeloLH7bkRs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CFbWWEJkTMDYtlEMP22FLOaPDTc4Xv0TDNeOL20ouaGv4YHU+/z7ilR6GQq1QXWUtNf4sr5W+4NUFddepiaDr3rsA2A2FkmXNEiAm4uCWzoReXkzgCHVKddUl2e5aZ2gBUzQhRj9xhEIW4xifD0HlT44jFKosyZkqda3XZQpm1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J1hwh6BZ; arc=none smtp.client-ip=209.85.217.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J1hwh6BZ"
+Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4e58d270436so852501137.3;
+        Fri, 30 May 2025 21:04:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748664275; x=1749269075; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nS5pE0o8S+sA9vSGdXa1WZSHPdE9yG19o8VINjXy5hc=;
+        b=J1hwh6BZdrQPcjHRyWwkUWCQ1JtUUcrPvuqaH/qZJ8aCO8fXK6KteOLUwAzSmH1NwI
+         HNGuWua5CQC6IcoifoQG5tcixuGy2NWZOiJZp6Qlv0X+UtJL8rKyJGwIlQFpfZXt5W2S
+         oZb/aVoixH/q7MWDSzZ/nHz9daOIdGluMDTkP5v4gyfZVfj8/MSvB6xtzb0NtwT5ZJNi
+         60oZcL/E7JrizTaNm6fhK+WX1rBoJbW7H6IqHbKCsbHMWouPr5GPocLiMRCDTTA7YMnB
+         UbN68cf8e42aH85ouFCC1OZ/Y1sEgRJfasM/ZBR1pw0TDsJy2TdgEQLxrBIMT0rxNsAI
+         g3Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748664275; x=1749269075;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nS5pE0o8S+sA9vSGdXa1WZSHPdE9yG19o8VINjXy5hc=;
+        b=osW0VvAaMWvf3csLBDLV+HaRh7sVjmQfBNDT/1Dxf6sx3XohpP3nb5GgdDphMVspn7
+         +W6BzkMdMGmLdaF/74xzSHytgqFD+LZwpBZ1GmHj/VMsQ0aCQ6mELbtsPzgvmEYVNN0K
+         DgjGCcARRdP5eABQ0NELY+tkdzT0C8nlE2tX/NxEgzjoj4CUCDlq/1gUaFjXizfRYH3U
+         8osvivkzsOFJM42EM554u0MsnGYd6tgypa4Lh1jK2aZryAZQgs1YqSXKdnKJDXNIGvDG
+         Y0+VoUwGdhVK2fPKY9cwYybQOLBLtjdcRDWyhAK+rLI4ZQ4+FhWyw/QcM++/CrFH3lta
+         F4YQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUrYMyVFQ8UzIztdDDNMz6WI91ZeQqIUIyN61xfIj3gksHl38Rl91lpwa9owdJFQ7+gzjUBhYx1@vger.kernel.org, AJvYcCWmyKFFBftivJ6+1KndiCZZWbcH9SvSTPsxo1JWQY30Dp7G35lxWDZjvpfk722i91cvsDV8yezVOCcr1j0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5qh/sXVVSNxm9dFsWkHAK/4d8vSGQ9E7VrxuF6iWLS0P3iwR7
+	5OfE3lQ9e00KZDLfP3iL3we6lVHs0BbGGQhjzbnrlx/B8L1E3HGXaU8J7ovJgffqzO/mE5Zc6LT
+	uh7OQ12Vpi3qsXSKqt7wk1Aaodc2cL/o=
+X-Gm-Gg: ASbGncsyjrAtY6YetbQaalb69ZdcYjDEKiSmbSg47a1yBgUFAngbCveOfrqA+xa+eHc
+	l8hUvL+HfcgG7TSAymkoF6dp0pMtxHlz3Ees1egauSm/ThvN9Etfo3yPh0Xs+SLlL3coLPGOZwA
+	YxH6VZhnoZ/nUZ1+gBRr9I1OJZEpLXBXWSjw==
+X-Google-Smtp-Source: AGHT+IHIKNydtAt4W0TBhkJoaIkTJR5s9EqiEIjLFeZby8tWyvq4kiBnHdPvnCyp44lvW7H/Gde1X8aDqKUixQwPWJQ=
+X-Received: by 2002:a05:6102:3a0f:b0:4e5:babd:310b with SMTP id
+ ada2fe7eead31-4e6e40f5bd4mr6051531137.10.1748664274957; Fri, 30 May 2025
+ 21:04:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR11MB8763:EE_|PH0PR11MB7587:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6919c1db-9181-4872-e2bc-08dd9ff803c6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|7416014|52116014|376014|366016|921020|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?qCjZ6SK1LWpINy3i+Zzx18mDCEAhNprdqRozEsm93AjjN/myp6GIaKOOHVCJ?=
- =?us-ascii?Q?CQgs54aUPciXRSoKva0aKt3VA7E9gczSR8lojKgwIrK/F4nu4x/RNrNz9dxd?=
- =?us-ascii?Q?cBBDKVHUM+sTAqmUgxDDWpFWU03N+0yj4gclXRD98olAC+VfRHydmfHBagwZ?=
- =?us-ascii?Q?hCIFPTQunzD2B7lije8oHWAF6l7nyFwAmiVQ9cVFO7TJgVBt5sz5LbsPFfsh?=
- =?us-ascii?Q?bEL13CbNrejbPtWPGsxoqFHi8BriJRHbNdFBoNBiys0PrBSN/IwOvm4L1KA7?=
- =?us-ascii?Q?Wv+xRiRMjaTigsW8ARfI+75UHDFYVsd96VdOOUmnuHucn/ITI0O+l73Auakt?=
- =?us-ascii?Q?pz4NUFS6Xk11QB5K9dPB41Qlw5W+XCihG+pb4lJ3HBrTG3FUYSs+YUosHIze?=
- =?us-ascii?Q?GFyONZ+X8ZQwOQDXnu5b2bBkB6coFeThBgFhOxPa1NlGsv/6uON+QRdWy2wi?=
- =?us-ascii?Q?u6aR5kp+WVT4nX8tJw3DrYoUcG9TCh966hwxMALy/4xiViMnQWwu1sZqtbk4?=
- =?us-ascii?Q?oMB4PqLPojLm/BCdkepMt4NeQfCSttJejcL9XcGYECi1wT638+fZUHsyWqvi?=
- =?us-ascii?Q?BMEuRhzhwfskIDIxlNXN7cYxGjz6SC0woMaEx0stVFIwIEZ2KmTWVi5ScRzo?=
- =?us-ascii?Q?dVpkiaoaCWfYFq8zp55gmoriQVgEHVjgmqCZApZVH4EFYTP0kNL7T1qGkgyx?=
- =?us-ascii?Q?EnT4emYsuRpCPlLU82qG0K8HAv5LYoUfMxaPf6I8pu8M6peMPfxNW1v1Ndiu?=
- =?us-ascii?Q?5uky+hRBbNL+KHxbeCQG8mpjoIrTow1LemSqqfJn1iS91xlPhMD3njcY+irp?=
- =?us-ascii?Q?32pqAmK4rwC3f+xeKSFlpA8cPJvmZGhuA8xYqjauaN15n3CEmzE93tvmqOhF?=
- =?us-ascii?Q?cRnCYOefPHJA/t/Qfnt2lWbI9BVTmOnyHqmtDhqOA1iotE8AzuNefK6HJj0R?=
- =?us-ascii?Q?5naqr+hBJjQFi80qq32hddoXkkKXL+HNFF8vF2PjEOvZwRSlG/5XqTwtZ5WI?=
- =?us-ascii?Q?s080NRVuGKcd8uLRZ2/OcHAJo+XcRi/X8GOa29zk6vrYm2SXm3TLvBKuCj0b?=
- =?us-ascii?Q?nHJLe3qnFRWgtOo+Au6OXsK3XmlXt/sdPx6spRPLx+XhSATbUjhkLDlYsoJA?=
- =?us-ascii?Q?dMfTGXH/epYX6YOcn+qlu1E8JnWVzh75Yw5qq9FPWn123LZbQbv96MY/lEt7?=
- =?us-ascii?Q?4uUMwlUhQAaQIChJxtSgWpZUmQV85PWolptseibev8J416Sl4djNUHrAAZSe?=
- =?us-ascii?Q?oJQEc3MwVOjTL48UQhR7Id3fx4SS5B4auAMahDlXJqy7mF7s2/Dbz/ey5dmj?=
- =?us-ascii?Q?jCjURnxcRGrzx79Rk4gZhy3YYHxooJy0NC7dshzISeHY0BYPOu8hToI2ydEI?=
- =?us-ascii?Q?cXZv2SdIvRNCxbwhYjRDb2BejFTuIPStrHudaCxjTFhJ989SJF7s4TRDBYdh?=
- =?us-ascii?Q?P+V9nS1ZE1BaXYJq8i78C8smi/VOH4Pb8/HJaUu5uVtnEiONW7BJLkIOeZ7g?=
- =?us-ascii?Q?juESdtq+ekOu+7g=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB8763.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(52116014)(376014)(366016)(921020)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?UICNLCDMVCmpoal9bUe75LurhdJ/45ozsQqDBguywOqV0SIGTilHk18YvSxH?=
- =?us-ascii?Q?RDi39m4/05cOW02zTgtFDwbOMsrwH8c+Wj6GUQbbLWbS07Nfic6B/13qzE1T?=
- =?us-ascii?Q?hJddgd3wqZWqSoixhVM/Z9n3UHNmSPaKdSZ4vyVV0HlNgyhTUfgmj5TzSjf5?=
- =?us-ascii?Q?0bfPtBw9myFHbksDO6+9h5lkaaqWp3UbUMkKJSkKdnqG9hH8sYs7U0msh8Vd?=
- =?us-ascii?Q?z2BO1AFW+RLyAcYd9CM8fwcYjwHWVRJ+9wNq+QPn7ycaHOsDLC4gFQ37aoeN?=
- =?us-ascii?Q?yq+0SjiV8GIsmm9mEIONdpnm0Y5HA16JxkgMrio2Kc9TGUbYSN7E6KLvxnoE?=
- =?us-ascii?Q?a377jmeV3RHyCGdhw704Fp+VVbR0OX5yGoOSs9bcb8J4V4aU6jxE5XHxI4e/?=
- =?us-ascii?Q?Kto9iWyoUW3qawvFX/poqy8aMORX/9MMt7agXuF5Di79JXJaCaoLzrvxdw2O?=
- =?us-ascii?Q?wDjtebBDHycx80ri27dS/9MF9TpxNHAZg3fAcf6gdLPqslfLVtrVgcZ+3w7j?=
- =?us-ascii?Q?DnSkQDttN/t7eck7gUY+JmAMomJhmZpP5PoYm956Bje2cOHBtzP5yPivvWtH?=
- =?us-ascii?Q?N/oss0P7n3O8jjQyneyUqdqpraNlQCdK5e81SE7vylXC1DpfeqqEadx+asNN?=
- =?us-ascii?Q?Y6nUfCqv8nLPxg/pa64tzNjAoZMXtVvkM44bpiKS93accW+p6BR092akR644?=
- =?us-ascii?Q?gPJ+ewCcAyiPS+bXzj7Sqjv6cYRwl5ctpDVQUm5db1RRHYZ1wCySzDY+9fR1?=
- =?us-ascii?Q?rPSaEq/a6vrEPyOU+6u4RjdcsuyVKEvskgD/IDcGvsLF1D8AExbfPNfAJm0J?=
- =?us-ascii?Q?E27H25sMdz8ZdbnNVxaCOMdaFF7QKFctgUh79BoRJziFgK7vBxQ3vAcboQva?=
- =?us-ascii?Q?2jH2t0BKx1u+Tn5IQ2ZlUX+BjVyTAFlDin3Y4f5R+O5M5qL84Ssx95IHhMlV?=
- =?us-ascii?Q?m8Ih93q3ZNFL6gtEiX2K/OstCg+bJZkHuk588/9wjaMNvXwb4scPTgk5mibw?=
- =?us-ascii?Q?sCkARa8VbOLaANRyaH5IACOftPGFcslJRgx0pX0PaoAROhkYyQOXIbGizpaa?=
- =?us-ascii?Q?TofXQsv8BiShFYwhN90Twry3XZVuV7lCIF+jpovfeF1SqjHH9wfWagrTA83U?=
- =?us-ascii?Q?ygVSAB+ay3kiVhTaPLrUtffivKCLkvA4GD/FqBObVR6WMS8b4PCQfUNtjHiF?=
- =?us-ascii?Q?r/l8XAFdgQekiJ7MGsCbwzMvc1sTdv5KbuPk6PFPjenSkURtNn9LtXVciZK4?=
- =?us-ascii?Q?fFQAjk9H20cM6AjXTrhnny/PkGVBpOOthFWInWVuArxh4qe9a1FbBbl3inRl?=
- =?us-ascii?Q?Kqwzzhs2SD/rJovgUYy/JxkCGKwkH53ILb4wVm9MbgFjZk6VTOxCA5/Oxmd5?=
- =?us-ascii?Q?H+X6mJZ+6NIE6oYWOSWtcJmNjCO9ZoBSs+5fifS3HIxKdR10q3STRlD3qsKt?=
- =?us-ascii?Q?CuTzWmEtU5VVEMSlImBBmvuzQMyvLfNQuwUHvt2+anePe4Qj42q9WmfKWYNI?=
- =?us-ascii?Q?1znfFQymQpEFZ6XTEaRWl1t1xwtgVrCtP6YpSdAhJ3saBsT6K4kGpWc4GAha?=
- =?us-ascii?Q?K2gi27zJYyK6EtSx0fXzgA/CVIV79sZvGJpCLSic?=
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6919c1db-9181-4872-e2bc-08dd9ff803c6
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB8763.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2025 04:02:53.0841
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YSJSt6K5QLHov4THq5rzxb+suAAt6Nj9hBP73TkO+2i45Cma8SQe9ywwKfFV3I+vLPcIJAICGuNB2gGSLTFTLw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB7587
-X-Authority-Analysis: v=2.4 cv=WpErMcfv c=1 sm=1 tr=0 ts=683a7f74 cx=c_pps a=I/sNV8c+47LP+h3jbQsb/Q==:117 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
- a=xqWC_Br6kY4A:10 a=dt9VzEwgFbYA:10 a=HMR1gXRALbDY60pjgc8A:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMxMDAzMSBTYWx0ZWRfXxY9tkUp/cios 8Wy5aVGLmwR1uvpfPJ0GpnT8ZNoKMUQkHBJ7vrQSHfdNrrHg9pak3AiU0bUh/OPdkQuVdmAODeO MzkgJEwwN+4G5o/+8JbI8JTlIX8MJHpd47I/6ar4LzOW2ceOOCclgeoynIi/KMjt4MB0ZJrYMUj
- /X9hsPP0dNwx2jD27PFjtmoiaN9ohJ/+toAOnyp2UVY3k9pgnAEZz112Nbjp5ktoLh1YTfDWEB8 2hLh1tkDrI2Eq6DCEOzpSUtjqvwPbKD5Oxk2p9OIsFCm2VgwMbec08iW4a/kQgZEHpORNXjcw5I s5XU2P2WEsetWaKiRjSQyluAn1rn5ccoOW4ALAW2WDxoJMjleXDdDNqRwFq7+ume7o8D6KCOawt
- lwh6sHPeVvgLQmxR2UEViLh8L+Yo7hdTYgyzv1mTBfp8kV48IhozFzo2DQrd1HXvQEEULIuF
-X-Proofpoint-ORIG-GUID: rU2rfHmIUxLM_pl-RnTiMNSPdNPbMl4G
-X-Proofpoint-GUID: rU2rfHmIUxLM_pl-RnTiMNSPdNPbMl4G
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-31_02,2025-05-30_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=771 clxscore=1011
- mlxscore=0 bulkscore=0 malwarescore=0 phishscore=0 adultscore=0
- impostorscore=0 priorityscore=1501 lowpriorityscore=0 suspectscore=0
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.21.0-2505160000
- definitions=main-2505310031
+References: <20250530201710.81365-1-ryncsn@gmail.com>
+In-Reply-To: <20250530201710.81365-1-ryncsn@gmail.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Sat, 31 May 2025 16:04:24 +1200
+X-Gm-Features: AX0GCFskxNAvcUu96I0HwtH4Vknv2CO5MuXPf8gnIuGqNINOVuNLXEaUl6id648
+Message-ID: <CAGsJ_4wBMxQSeoTwpKoWwEGRAr=iohbYf64aYyJ55t0Z11FkwA@mail.gmail.com>
+Subject: Re: [PATCH] mm: userfaultfd: fix race of userfaultfd_move and swap cache
+To: Kairui Song <kasong@tencent.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Peter Xu <peterx@redhat.com>, Suren Baghdasaryan <surenb@google.com>, 
+	Andrea Arcangeli <aarcange@redhat.com>, David Hildenbrand <david@redhat.com>, 
+	Lokesh Gidra <lokeshgidra@google.com>, stable@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-v1:
- - create patch 0001-arch-arm64-dts-add-big-endian-property-back-into-wat.patch
- 
-v2:
- - improve the commit log of patch 0001
- - add another 2 patches to fix below warning
- arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dtb: watchdog@2ad0000(fsl,imx21-wdt): big-endian: False schema does not allow True
+On Sat, May 31, 2025 at 8:17=E2=80=AFAM Kairui Song <ryncsn@gmail.com> wrot=
+e:
+>
+> From: Kairui Song <kasong@tencent.com>
+>
+> On seeing a swap entry PTE, userfaultfd_move does a lockless swap cache
+> lookup, and try to move the found folio to the faulting vma when.
+> Currently, it relies on the PTE value check to ensure the moved folio
+> still belongs to the src swap entry, which turns out is not reliable.
+>
+> While working and reviewing the swap table series with Barry, following
+> existing race is observed and reproduced [1]:
+>
+> ( move_pages_pte is moving src_pte to dst_pte, where src_pte is a
+>  swap entry PTE holding swap entry S1, and S1 isn't in the swap cache.)
+>
+> CPU1                               CPU2
+> userfaultfd_move
+>   move_pages_pte()
+>     entry =3D pte_to_swp_entry(orig_src_pte);
+>     // Here it got entry =3D S1
+>     ... < Somehow interrupted> ...
+>                                    <swapin src_pte, alloc and use folio A=
+>
+>                                    // folio A is just a new allocated fol=
+io
+>                                    // and get installed into src_pte
+>                                    <frees swap entry S1>
+>                                    // src_pte now points to folio A, S1
+>                                    // has swap count =3D=3D 0, it can be =
+freed
+>                                    // by folio_swap_swap or swap
+>                                    // allocator's reclaim.
+>                                    <try to swap out another folio B>
+>                                    // folio B is a folio in another VMA.
+>                                    <put folio B to swap cache using S1 >
+>                                    // S1 is freed, folio B could use it
+>                                    // for swap out with no problem.
+>                                    ...
+>     folio =3D filemap_get_folio(S1)
+>     // Got folio B here !!!
+>     ... < Somehow interrupted again> ...
+>                                    <swapin folio B and free S1>
+>                                    // Now S1 is free to be used again.
+>                                    <swapout src_pte & folio A using S1>
+>                                    // Now src_pte is a swap entry pte
+>                                    // holding S1 again.
+>     folio_trylock(folio)
+>     move_swap_pte
+>       double_pt_lock
+>       is_pte_pages_stable
+>       // Check passed because src_pte =3D=3D S1
+>       folio_move_anon_rmap(...)
+>       // Moved invalid folio B here !!!
+>
+> The race window is very short and requires multiple collisions of
+> multiple rare events, so it's very unlikely to happen, but with a
+> deliberately constructed reproducer and increased time window, it can be
+> reproduced [1].
+>
+> It's also possible that folio (A) is swapped in, and swapped out again
+> after the filemap_get_folio lookup, in such case folio (A) may stay in
+> swap cache so it needs to be moved too. In this case we should also try
+> again so kernel won't miss a folio move.
+>
+> Fix this by checking if the folio is the valid swap cache folio after
+> acquiring the folio lock, and checking the swap cache again after
+> acquiring the src_pte lock.
+>
+> SWP_SYNCRHONIZE_IO path does make the problem more complex, but so far
+> we don't need to worry about that since folios only might get exposed to
+> swap cache in the swap out path, and it's covered in this patch too by
+> checking the swap cache again after acquiring src_pte lock.
+>
+> Fixes: adef440691ba ("userfaultfd: UFFDIO_MOVE uABI")
+> Closes: https://lore.kernel.org/linux-mm/CAMgjq7B1K=3D6OOrK2OUZ0-tqCzi+EJ=
+t+2_K97TPGoSt=3D9+JwP7Q@mail.gmail.com/ [1]
+> Signed-off-by: Kairui Song <kasong@tencent.com>
+> ---
+>  mm/userfaultfd.c | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>
+> diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+> index bc473ad21202..a1564d205dfb 100644
+> --- a/mm/userfaultfd.c
+> +++ b/mm/userfaultfd.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/mmu_notifier.h>
+>  #include <linux/hugetlb.h>
+>  #include <linux/shmem_fs.h>
+> +#include <linux/delay.h>
+>  #include <asm/tlbflush.h>
+>  #include <asm/tlb.h>
+>  #include "internal.h"
+> @@ -1086,6 +1087,8 @@ static int move_swap_pte(struct mm_struct *mm, stru=
+ct vm_area_struct *dst_vma,
+>                          spinlock_t *dst_ptl, spinlock_t *src_ptl,
+>                          struct folio *src_folio)
+>  {
+> +       swp_entry_t entry;
+> +
+>         double_pt_lock(dst_ptl, src_ptl);
+>
+>         if (!is_pte_pages_stable(dst_pte, src_pte, orig_dst_pte, orig_src=
+_pte,
+> @@ -1102,6 +1105,19 @@ static int move_swap_pte(struct mm_struct *mm, str=
+uct vm_area_struct *dst_vma,
+>         if (src_folio) {
+>                 folio_move_anon_rmap(src_folio, dst_vma);
+>                 src_folio->index =3D linear_page_index(dst_vma, dst_addr)=
+;
+> +       } else {
+> +               /*
+> +                * Check again after acquiring the src_pte lock. Or we mi=
+ght
+> +                * miss a new loaded swap cache folio.
+> +                */
+> +               entry =3D pte_to_swp_entry(orig_src_pte);
+> +               src_folio =3D filemap_get_folio(swap_address_space(entry)=
+,
+> +                                             swap_cache_index(entry));
+> +               if (!IS_ERR_OR_NULL(src_folio)) {
+> +                       double_pt_unlock(dst_ptl, src_ptl);
+> +                       folio_put(src_folio);
+> +                       return -EAGAIN;
+> +               }
+>         }
 
+step 1: src pte points to a swap entry without swapcache
+step 2: we call move_swap_pte()
+step 3: someone swap-in src_pte by swap_readhead() and make src_pte's swap =
+entry
+have swapcache again - for non-sync/non-zRAM swap device;
+step 4: move_swap_pte() gets ptl, move src_pte to dst_pte and *clear* src_p=
+te;
+step 5: do_swap_page() for src_pte holds the ptl and found pte has
+been cleared in
+            step 4; pte_same() returns false;
+step 6: do_swap_page() won't map src_pte to the new swapcache got from step=
+ 3;
+            if the swapcache folio is dropped, it seems everything is fine.
 
-Meng Li (3):
-  arch: arm64: dts: add big-endian property back into watchdog node
-  arm64: dts: layerscape: add platform special compatible string for
-    watchdog
-  dt-bindings: watchdog: fsl-imx-wdt: enable 'big-endian' property for
-    NXP ls1046a platform
+So the real issue is that do_swap_page() doesn=E2=80=99t drop the new swapc=
+ache
+even when pte_same() returns false? That means the dst_pte swap-in
+can still hit the swap cache entry brought in by the src_pte's swap-in?
 
- Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml | 2 ++
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi              | 3 ++-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+>
+>         orig_src_pte =3D ptep_get_and_clear(mm, src_addr, src_pte);
+> @@ -1409,6 +1425,16 @@ static int move_pages_pte(struct mm_struct *mm, pm=
+d_t *dst_pmd, pmd_t *src_pmd,
+>                                 folio_lock(src_folio);
+>                                 goto retry;
+>                         }
+> +                       /*
+> +                        * Check if the folio still belongs to the target=
+ swap entry after
+> +                        * acquiring the lock. Folio can be freed in the =
+swap cache while
+> +                        * not locked.
+> +                        */
+> +                       if (unlikely(!folio_test_swapcache(folio) ||
+> +                                    entry.val !=3D folio->swap.val)) {
+> +                               err =3D -EAGAIN;
+> +                               goto out;
+> +                       }
+>                 }
+>                 err =3D move_swap_pte(mm, dst_vma, dst_addr, src_addr, ds=
+t_pte, src_pte,
+>                                 orig_dst_pte, orig_src_pte, dst_pmd, dst_=
+pmdval,
+> --
+> 2.49.0
+>
 
--- 
-2.34.1
-
+Thanks
+Barry
