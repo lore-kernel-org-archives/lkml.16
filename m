@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8425823C8A8;
-	Sat, 31 May 2025 15:23:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D997523C8AA;
+	Sat, 31 May 2025 15:24:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748704985; cv=none; b=WMbezWbeDyVnC8EDOluZ7lWXZ7COB9evV8oJbHbaarMxalp8Eak/3vcKkWqpVnY1maOdhySvHlgb1DT3IJyV6Calbgnbyh0h8zayBTlLTUT/jH8Bo7YHRRDhTc2HN8+D4jXpudyu/X+jyCj8aLE46r9uyT+nkvNjZjNyu79/FpE=
+	t=1748705082; cv=none; b=jZ9GX5i4dHdQV0B078YNBgI7InffijS9wHqhw/NTNaFVgtg3OxGukNOp97uUDe5XXDejqR1C4YrtsgWAerAcgMl+gYkNxaE79qGVaGQMehs2uNfawT1/qCJbp2h/Er0yEySOQEsfv0DkI+WPBpFPYvKXqXDjcXmYdlt+r4X0UQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748704985; c=relaxed/simple;
-	bh=zwHQVI0/pNMJZ1ybXwmumUWIVKyedXJpst3QJjnQhyA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=K4q+RTXIloVuNZG1PC3KdSF36BLZKkPZOlMQlLjO7MdkQdSz43I3KM/TEPRJMOtl3l4g+hH0qEOxM/uS1hr4z+9MrUU1v34hs/eJJ5wkgN4SW1W0hr4wOECYc5Xg4TA9hmjDRFVMhcGt2WKOi/gzA47XnJV5F+oEOXKIOoMietg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pK3SqPfy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748705082; c=relaxed/simple;
+	bh=yd4Pp8qjfcD/sAUM0i3LEQZurmg2V7XgoLJekg3Orj0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=qQGwSoR8kNRTckEE7rIsaLNRdTeYKXr5UWX1AWGlEh5xOAzM1m7ipRkTmhErqM4nXp/Vp9OcdQ+WetItDF94XXZuoL+sxkHa0XPsGLV5D5jOEClUlbMbU7Znlasiz1EU3zxz0NlX9sCkC2rXvKFNaYB6QGtKX7TgzrZBgx+UDao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=agO2V/6f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pK3SqPfy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BA65C4CEEF;
-	Sat, 31 May 2025 15:23:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="agO2V/6f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01574C4CEE3;
+	Sat, 31 May 2025 15:24:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748704985;
-	bh=zwHQVI0/pNMJZ1ybXwmumUWIVKyedXJpst3QJjnQhyA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pK3SqPfyN04F2RHqC3No94VNlAPN2UTUJ1KbiwRWxZ0atA7I4BTNFqBpXPFdijCy3
-	 S0JLKi4FVlTuw9uDGGkJB6Bq677Wh7X8z7vzKnTe0CSPBj0AoofJ6lSu9914537EW8
-	 NDf2z5JblYWNYCZNrZsWHML0IpYP7ybuPzDtmIRjCz+5h/cjrJyYptbh0toCVj5swD
-	 fFc9Gtbd4J7w+tN1CxxQrvMEkuPWZrh79Lp7RKIGFD9MbpXT2myX/VCOFipyNjHUfG
-	 NuD7n6A36UqnDhjrr+SSqx8RPNy1c+WvkS3txsgeM597FRfKbT+WP2pnHtMMwN/3Ew
-	 C10QkZP9dFG9Q==
+	s=k20201202; t=1748705082;
+	bh=yd4Pp8qjfcD/sAUM0i3LEQZurmg2V7XgoLJekg3Orj0=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=agO2V/6fRY1XWP94nVkXBvN2DhBauOPIah8KJAaCsThsapwPzCh1c4iTbq9SejxJm
+	 d0RMFWsAHYO/v/OnqtodeV2JfpegB0iDCjmN8WWQe2JMSf7BbbmWaM1+CPK5VgLxMz
+	 qMGnS4HaHGFSYgvrzuzQ0Y80VrdrLABL+EoJS1OWDXUniB5NhQqxm9Cg5aEAauV11U
+	 4NWoAPm5UzJP/uhM+ryZg2B5tRwhQsuxt4FJv6+RxVBSwQqLHK44+Cci6NC55NCs8m
+	 5jXBSFdBl9+NBaj7TW51JiRuQ4oeRKIdAZ2E64/uuk81EBsdKMZChIa0yOd6zswJFh
+	 H/YiBAYUvs9fw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,63 +34,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Sat, 31 May 2025 17:23:00 +0200
-Message-Id: <DAAG6HNJ42IJ.1AWL4SUJDUGO5@kernel.org>
+Date: Sat, 31 May 2025 17:24:38 +0200
+Message-Id: <DAAG7QOYXDFA.37VBAYSFJYJCF@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Andrew Morton"
+ <akpm@linux-foundation.org>, "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 1/2] uaccess: rust: add strncpy_from_user
 From: "Benno Lossin" <lossin@kernel.org>
-To: "Danilo Krummrich" <dakr@kernel.org>
-Cc: <gregkh@linuxfoundation.org>, <rafael@kernel.org>, <ojeda@kernel.org>,
- <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
- <bjorn3_gh@protonmail.com>, <benno.lossin@proton.me>,
- <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
- <chrisi.schrefl@gmail.com>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 6/7] rust: miscdevice: expose the parent device as
- &Device<Bound>
+To: "Alice Ryhl" <aliceryhl@google.com>
 X-Mailer: aerc 0.20.1
-References: <20250530142447.166524-1-dakr@kernel.org>
- <20250530142447.166524-7-dakr@kernel.org>
- <DAA7CJOUJPNL.F7UH9KD8JANF@kernel.org> <aDreGUcvyR4kjMGl@pollux>
- <DAAC2TIAOAEY.16STTUX7D2UNR@kernel.org> <aDr4ZUjBX9q1c89S@pollux>
-In-Reply-To: <aDr4ZUjBX9q1c89S@pollux>
+References: <20250527-strncpy-from-user-v4-0-82168470d472@google.com>
+ <20250527-strncpy-from-user-v4-1-82168470d472@google.com>
+ <DA9P6CSP6563.1OYPZXIP5S7N1@kernel.org>
+ <CAH5fLgjoX5AEO8NvDdj+05HUtpoVUPpOa7ri5UG6Djp98vQDxQ@mail.gmail.com>
+In-Reply-To: <CAH5fLgjoX5AEO8NvDdj+05HUtpoVUPpOa7ri5UG6Djp98vQDxQ@mail.gmail.com>
 
-On Sat May 31, 2025 at 2:39 PM CEST, Danilo Krummrich wrote:
-> On Sat, May 31, 2025 at 02:10:08PM +0200, Benno Lossin wrote:
->> On Sat May 31, 2025 at 12:46 PM CEST, Danilo Krummrich wrote:
->> > But, I agree that we should not name it `Ptr`, probably should never h=
-ave been
->> > named `Ptr`, but `Data`, `Private` or similar.
->> >
->> >> Would that also make sense to use as a general change? So don't store
->> >> `Self::Ptr`, but `Self` directly?
->> >
->> > I think it can't be `Self`, see above.
->>=20
->> The rust_misc_device example would still work if we changed this to
->> `Self`. Now it's not a complicated user of the API and someone might
->> want to store `Self` in an `Arc` and then store that as the private
->> data, as the MiscDevice is also referenced from somewhere else. But I
->> don't know if that is common or an intended use-case :)
->>=20
->> For simple use-cases however, I think that `Self` definitely is the
->> right choice (as opposed to `Pin<KBox<Self>>` for example, as that has
->> an extra allocation :)
+On Sat May 31, 2025 at 3:27 PM CEST, Alice Ryhl wrote:
+> On Fri, May 30, 2025 at 8:13=E2=80=AFPM Benno Lossin <lossin@kernel.org> =
+wrote:
+>> On Tue May 27, 2025 at 2:34 PM CEST, Alice Ryhl wrote:
+>> > +#[inline]
+>> > +#[expect(dead_code)]
+>> > +fn raw_strncpy_from_user(dst: &mut [MaybeUninit<u8>], src: UserPtr) -=
+> Result<usize> {
+>> > +    // CAST: Slice lengths are guaranteed to be `<=3D isize::MAX`.
+>> > +    let len =3D dst.len() as isize;
+>> > +
+>> > +    // SAFETY: `dst` is valid for writing `dst.len()` bytes.
+>> > +    let res =3D unsafe {
+>> > +        bindings::strncpy_from_user(dst.as_mut_ptr().cast::<c_char>()=
+, src as *const c_char, len)
+>> > +    };
+>> > +
+>> > +    if res < 0 {
+>> > +        return Err(Error::from_errno(res as i32));
+>> > +    }
+>> > +
+>> > +    #[cfg(CONFIG_RUST_OVERFLOW_CHECKS)]
+>> > +    assert!(res <=3D len);
+>> > +
+>> > +    Ok(res as usize)
+>>
+>> We probably should add a `GUARANTEES` comment here, no?
 >
-> The data returned by open() can be anything. It can also be some arbitrar=
-y
-> Arc<T> that already exists and is looked up in open(). It can also be som=
-ething
-> new that is created within open() and requires in-place initialization.
->
-> So, if we want to change this, we could return an `impl PinInit<Self, Err=
-or>` as
-> you suggest above and initialize it in-place in
-> `RawDeviceRegistration::private`.
->
-> I agree that this is the correct thing to do, but that really sounds like=
- a
-> subsequent patch.
+> I can see the idea behind such comments, but I do not believe we've
+> used them so far.
 
-Sounds good.
+Yes, but we also haven't really used `# Guarantees` all that often.
 
 ---
 Cheers,
