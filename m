@@ -1,153 +1,112 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92108645;
-	Sat, 31 May 2025 18:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58CE4645;
+	Sat, 31 May 2025 18:01:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748714485; cv=none; b=DY/LEKEB/ELqGuIJQ9PfPeHwCtbzKippam+AMRVeox540RRexzj0sYpGzQmTfcY9YDBggAQFkn7t7fcxp3WF+J/2r92o1VHi6enQavPi2gUN+dccEkSEVD9aQ9Ih1rOrCvSA9NdsKXiJUtKtso9AAxKsu0rlqq+Y4oUTeQQ/7lU=
+	t=1748714490; cv=none; b=YwHaicY7brWzbOaCDHwLj78Ioeal3GZ7MDGpJOolDxKNsrfmexmDWX3HJFhwC14rkUBXNXYHCgYJBUR/VgOiTwLhfz27jS8nx7YaQn0SdhUqBm4VP+FTv57MTZZJDVo/FGn7fh3mw8QH0xfSCHHdxN6v0+SVNBEgU5O82z0TcUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748714485; c=relaxed/simple;
-	bh=IIO2ZrW4hMoB/RO3YoS7t7jsG6uwCicCIHFVETR/btE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:Content-Type:
-	 MIME-Version; b=qClIo2OcFLiG9CcjbYd9FaDjmFZ7YJEptgqe6qQdyGFP1BqcYZ6G6lWQKHjOYhPbzPul2K083h+Y5gLKYRNThFmPm0gAttZnsFwToB2TMSMUn8lUSERhmQm4Q3RK8wmepzxahK+S0F1XXOS02IgEM3sNTVJb30DqQgPtdxVMVP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FVbaKFug; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748714490; c=relaxed/simple;
+	bh=3f5z1sc5+Pgcw89xps+F1E5eYIZX9QvaPM8JVy0CBG0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QXGei8tZ0Od19twH72pYV7iDAt8nrmclB3C/GHdpoXnCs6pTStnddW1lrYMMM7E/9Ty6pWinZzPsTpdze38kaPlracvjAL9QMNqjX3LL7WRraSADcvL8hA6uydjZ2wM3ZX8/G+lvM2aKfJy761J5sCYuhDc9HNe+fXqtiCzWu9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NJr++5aH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FVbaKFug"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-450df5d7b9fso5021495e9.1;
-        Sat, 31 May 2025 11:01:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748714481; x=1749319281; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:in-reply-to:date
-         :cc:to:from:subject:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=y7N23WPiWeZX7wNDy0YIlIArv1JuPRPe0Q6JS06wayU=;
-        b=FVbaKFugZBaNwAwQQveVKCtPvIQH826ffFDv1gN1mycTn5PDz+vZ+GbVYMDVKfxCk+
-         nZG7zypPhwZvcM6maL9mDAOz7L2fMW3LIoTVnOv1Ew4GamLl2lKiCfaeFL9gRRslXBv6
-         N0ctcCC4eS6op5XpBtHwZV9MwWTGSA0oXm4m9McuqyaLZwFy8duGTrheIcaLnlydgHUH
-         KEJUMGMlQE6xHyyJ1YklfZ1iPpB0D9jlKrvC7hm/faDcUm3013gIgoTLKOb5zLZfu0Ap
-         eOwvn5IYRvlKuIMnQ5KxK3L1PXyg/pseHlufCfpDd43p1CBTLfUcplleUqXdkaQmZKAr
-         T9NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748714481; x=1749319281;
-        h=mime-version:user-agent:content-transfer-encoding:in-reply-to:date
-         :cc:to:from:subject:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=y7N23WPiWeZX7wNDy0YIlIArv1JuPRPe0Q6JS06wayU=;
-        b=aLKZVc0sX3cYb1IVr5eSC982pt09Ot++AUhAuf3lOMus+bbZTja+qkFGjw+nEVy9JJ
-         h+fQm2K4YgrQYCUpuxiM6Hvj1r+3HVCX8EXe+fSKBYg6AAIDK30nhXUKkL+YRcDwfYxL
-         gjmGJuIOtzFRzFsTp8IgFohZZIEFTr73aLEW0llw4B+dUIZXcBP36/Mb8ojy3Sd0967Q
-         tdyd+ztPD/HU4iiVbxTamJ1P6L9xPpl8ewHQ1HNrZziE91GIidYUixjGTUAFGSSEcP7N
-         MWxnROiIi65CA4LKJqPtRZouYzM+mIEYDeNaNqF/g2YOAtC0BPp/a12ToOe+qLwNDce8
-         m+Lg==
-X-Forwarded-Encrypted: i=1; AJvYcCUuSh+I2Q8h8zRA3kxlLz0PJHa1PkruHQS6xZClcmelt7OX355I1lLTaZB61qpKzYSRGRtiu5o52+XKREtV@vger.kernel.org, AJvYcCWBzUatT0W62l86kvnbMrFMddzYPehEu5sllsqX88hPV1jeumJ0q39JHaA/4+Ex9vNdZms=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDUqy1/y9EYCGN0NPMfi4vtvpualG2unzbZOuJpBER5ArihbJR
-	brf2gRl0meurjQUc5gOBeaIlCkNhcLQytPLxr7t2FSFx8IoQ3e03EO4t
-X-Gm-Gg: ASbGncueNeAmazSH1RK/QJDBLHroxk4Aj+Br85Ha7BvkwNVBUx8eigqdUQeR8GLhk4q
-	3zNJHPzRJ6ToSUA3/fz8nuPrzRHwW3EBUvwpVXvYmz8C/VFjid5uC+JzbGu/3+wVMZKt88YY+iu
-	ZaeLrDQjfbj04ezB4VBwFqYVk1zoIByDAaKE9e/+NfJGdZSxwHkF2o2NNRiFHEq3NUPBPJ6XZ1r
-	UzhDARfvC770DndH0742VpCdVfBigK3SyBt52V6bmIAVJ5Uzu+/P5fHLiWw4B+5v8Fc8/qoThD1
-	fU/vRyxPf7GgfGIA+/Wo/rZCczL0RS53FAU+7ZqkLF76EmYKp7BzTRC/m/aNWzwUK2R4Bby9wta
-	lO2xnjL92+q28oDrZbNqlM69C+P48e0O/
-X-Google-Smtp-Source: AGHT+IGow34iFFc5A3PtRC3U9gzX+qOmKMUGQmeKxZjFz5/C983xaeQUZnyV5p0/lrZD5A++twH+Cg==
-X-Received: by 2002:a05:600c:1c08:b0:442:f861:3536 with SMTP id 5b1f17b1804b1-450d6b59b03mr67320495e9.7.1748714480425;
-        Sat, 31 May 2025 11:01:20 -0700 (PDT)
-Received: from ?IPv6:2001:b07:5d29:f42d:5c69:6d03:309e:bc47? ([2001:b07:5d29:f42d:5c69:6d03:309e:bc47])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f0097205sm8774995f8f.79.2025.05.31.11.01.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 May 2025 11:01:20 -0700 (PDT)
-Message-ID: <e5e1fb2715a98f24ba69cc4da5c30777633f6f62.camel@gmail.com>
-Subject: Re: [PATCH 17/28] KVM: SVM: Manually recalc all MSR intercepts on
- userspace MSR filter change
-From: Francesco Lavra <francescolavra.fl@gmail.com>
-To: seanjc@google.com
-Cc: bp@alien8.de, chao.gao@intel.com, dapeng1.mi@linux.intel.com, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, pbonzini@redhat.com, 
-	xin@zytor.com
-Date: Sat, 31 May 2025 20:01:18 +0200
-In-Reply-To: <20250529234013.3826933-18-seanjc@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NJr++5aH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1760C4CEEA;
+	Sat, 31 May 2025 18:01:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748714489;
+	bh=3f5z1sc5+Pgcw89xps+F1E5eYIZX9QvaPM8JVy0CBG0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=NJr++5aH7UJJjE0f90S3etJRSC5oJu8UkgXzrGT2Ri/wcXOGXBr0fMKO23d5mLk2O
+	 MatmIbDbHcuMiyAEK/DuzTEaxNQEMIFZYysnJfwJdI/fg5S1O+A2I9J0P6yNtPy1PI
+	 njapoMUaUV87WAHvlK1E76M/4OPYspyWv67nZENVWqLMX9/d0e82fGFl3n/Pb3Tsg3
+	 Qtsdr//+iboafqJop1GIpzUzX3RvcJ94f6jj0wrONd3Yy8a5sewRJCkz+/6OJ/iBrm
+	 R3bOyuFAhhV8uL7JXTYfU29Dm+SMGNKlgLOqZwI+7KlHMeLfZIv5HmUtfJrwWoyUKP
+	 aJcOUQRslvJ2A==
+Date: Sat, 31 May 2025 19:01:24 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Gyeyoung Baek <gye976@gmail.com>
+Cc: David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 2/9] iio: consumer: Define timestamp-related
+ structures and constants
+Message-ID: <20250531190124.30704d19@jic23-huawei>
+In-Reply-To: <20250519-timestamp-v1-2-fcb4f6c2721c@gmail.com>
+References: <20250519-timestamp-v1-0-fcb4f6c2721c@gmail.com>
+	<20250519-timestamp-v1-2-fcb4f6c2721c@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 2025-05-29 at 23:40, Sean Christopherson wrote:
-> @@ -81,70 +79,6 @@ static uint64_t osvw_len =3D 4, osvw_status;
-> =20
->  static DEFINE_PER_CPU(u64, current_tsc_ratio);
-> =20
-> -static const u32 direct_access_msrs[] =3D {
-> -	MSR_STAR,
-> -	MSR_IA32_SYSENTER_CS,
-> -	MSR_IA32_SYSENTER_EIP,
-> -	MSR_IA32_SYSENTER_ESP,
-> -#ifdef CONFIG_X86_64
-> -	MSR_GS_BASE,
-> -	MSR_FS_BASE,
-> -	MSR_KERNEL_GS_BASE,
-> -	MSR_LSTAR,
-> -	MSR_CSTAR,
-> -	MSR_SYSCALL_MASK,
-> -#endif
-> -	MSR_IA32_SPEC_CTRL,
-> -	MSR_IA32_PRED_CMD,
-> -	MSR_IA32_FLUSH_CMD,
-> -	MSR_IA32_DEBUGCTLMSR,
-> -	MSR_IA32_LASTBRANCHFROMIP,
-> -	MSR_IA32_LASTBRANCHTOIP,
-> -	MSR_IA32_LASTINTFROMIP,
-> -	MSR_IA32_LASTINTTOIP,
-> -	MSR_IA32_XSS,
-> -	MSR_EFER,
-> -	MSR_IA32_CR_PAT,
-> -	MSR_AMD64_SEV_ES_GHCB,
-> -	MSR_TSC_AUX,
-> -	X2APIC_MSR(APIC_ID),
-> -	X2APIC_MSR(APIC_LVR),
-> -	X2APIC_MSR(APIC_TASKPRI),
-> -	X2APIC_MSR(APIC_ARBPRI),
-> -	X2APIC_MSR(APIC_PROCPRI),
-> -	X2APIC_MSR(APIC_EOI),
-> -	X2APIC_MSR(APIC_RRR),
-> -	X2APIC_MSR(APIC_LDR),
-> -	X2APIC_MSR(APIC_DFR),
-> -	X2APIC_MSR(APIC_SPIV),
-> -	X2APIC_MSR(APIC_ISR),
-> -	X2APIC_MSR(APIC_TMR),
-> -	X2APIC_MSR(APIC_IRR),
-> -	X2APIC_MSR(APIC_ESR),
-> -	X2APIC_MSR(APIC_ICR),
-> -	X2APIC_MSR(APIC_ICR2),
-> -
-> -	/*
-> -	 * Note:
-> -	 * AMD does not virtualize APIC TSC-deadline timer mode, but it
-> is
-> -	 * emulated by KVM. When setting APIC LVTT (0x832) register bit
-> 18,
-> -	 * the AVIC hardware would generate GP fault. Therefore, always
-> -	 * intercept the MSR 0x832, and do not setup direct_access_msr.
-> -	 */
-> -	X2APIC_MSR(APIC_LVTTHMR),
-> -	X2APIC_MSR(APIC_LVTPC),
-> -	X2APIC_MSR(APIC_LVT0),
-> -	X2APIC_MSR(APIC_LVT1),
-> -	X2APIC_MSR(APIC_LVTERR),
-> -	X2APIC_MSR(APIC_TMICT),
-> -	X2APIC_MSR(APIC_TMCCT),
-> -	X2APIC_MSR(APIC_TDCR),
-> -};
-> -
-> -static_assert(ARRAY_SIZE(direct_access_msrs) =3D=3D
-> -	      MAX_DIRECT_ACCESS_MSRS - 6 * !IS_ENABLED(CONFIG_X86_64));
-> -#undef MAX_DIRECT_ACCESS_MSRS
+On Mon, 19 May 2025 23:25:54 +0900
+Gyeyoung Baek <gye976@gmail.com> wrote:
 
-The MAX_DIRECT_ACCESS_MSRS define should now be removed from
-arch/x86/kvm/svm/svm.harch/x86/kvm/svm/svm.h, since it's no longer used.
+> Define the required constants and structures on the consumer side.
+> 
+> The `timestamp_enabled` indicates whether a timestamp is grabbed or not.
+> This is passed to `iio_triggered_buffer_setup_new()` as an argument.
+> 
+> The `timestamp_type` indicates which handler grabs the timestamp.
+> This value is set by `iio_poll_func_register()`.
+> 
+> Signed-off-by: Gyeyoung Baek <gye976@gmail.com>
+> ---
+>  include/linux/iio/trigger_consumer.h | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/include/linux/iio/trigger_consumer.h b/include/linux/iio/trigger_consumer.h
+> index 2c05dfad88d7..5e6ff8738386 100644
+> --- a/include/linux/iio/trigger_consumer.h
+> +++ b/include/linux/iio/trigger_consumer.h
+> @@ -13,6 +13,13 @@
+>  struct iio_dev;
+>  struct iio_trigger;
+>  
+> +enum iio_timestamp_type {
+> +	IIO_TIMESTAMP_TYPE_NONE,
+> +	IIO_TIMESTAMP_TYPE_CONSUMER_TOP_HALF,
+> +	IIO_TIMESTAMP_TYPE_CONSUMER_BOTTOM_HALF,
+> +	IIO_TIMESTAMP_TYPE_TRIGGER,
+> +};
+
+This needs documentation. I'm struggling even with the series in front of me
+to understand what each of these means. The comment below helps somewhat
+but we should have it alongside the enum.
+
+> +
+>  /**
+>   * struct iio_poll_func - poll function pair
+>   *
+> @@ -26,7 +33,10 @@ struct iio_trigger;
+>   * @timestamp:			some devices need a timestamp grabbed as soon
+>   *				as possible after the trigger - hence handler
+>   *				passes it via here.
+> + * @timestamp_type:		indicates which handler grabs the timestamp.
+> + * @timestamp_enabled:		if true, automatically grabs the timestamp.
+>   **/
+> +
+>  struct iio_poll_func {
+>  	struct iio_dev *indio_dev;
+>  	irqreturn_t (*h)(int irq, void *p);
+> @@ -35,6 +45,9 @@ struct iio_poll_func {
+>  	char *name;
+>  	int irq;
+>  	s64 timestamp;
+> +
+> +	enum iio_timestamp_type timestamp_type;
+> +	bool timestamp_enabled;
+>  };
+>  
+>  
+> 
+
