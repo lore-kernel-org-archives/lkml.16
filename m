@@ -1,122 +1,215 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79D7723A989
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 12:12:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748693527; cv=none; b=AL3yhWDfEhV+5ezWSNdiP4+fhMgiwnd+jmJWO8U9CI2w3stMb6Pof4VNO277BhsON9NSzmhsbvgFmLo0U/mtIYxldcHhZJTFscXIvz9kx2JxucF0pyK/No1j5B4TzVBEpexyN11vY1TZrni/YWCW+2SapgVDMPPsTIJ/htwOoYw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748693527; c=relaxed/simple;
-	bh=OooTgLOVDQGkTRpdrKb/JRSw1Klfe+kWwo2Ioe9HmYY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ASLIi8xIJIuDkCeJUXFaT9/vFdXDLfmvgCBXFMhzGnC/Iu2rmULqJdOrzAYVy/wedvK/7JXnGpb6qXUxq68QvBoD2jz1K7cjrNh+S2QTDmvc1BxCUX+VFZubrhVDkonjkMPFTpOpwIJ/SnQrTdde/IAKFgvIWhHmDya7G0Dwcpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=W996xeIM; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A7C237A3B
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 12:12:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748693547; cv=pass; b=XsrC1UfUYADEjFSE1hiCBlK5kS9yZbvmoVgcrT3bPc6deq/XDaazF3527+9FHtdXbkQfK4KTju98nis55d0zXOeAfhJPN9qPJh4VndzBEOrQI1+EX58sH+E/m7+1lDsvCniiJoqHoPtcKzwdYPK/4mN+jdVLa8CK+XJb5X3AVjQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748693547; c=relaxed/simple;
+	bh=50DqJ3xUiixaRqJKJj8lkIXYqReB0hVRTI46Qo3uIU8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eDJoR6zxwzoaIKYvDMwcR32Yz0kwB6xTQhHOk23LAk83WO9s4J8rNi8+JceuJXqBDLOecBluZzhAiYCUayT6LqrUNJhrAQecBoAEiu8rrItxKpDq0zILKnoizFWWxF6eX0Bn3E6ZBqOZo8LQqUI3/haN0cHSRoowcQyCjCbKu8I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=TXPlul1F; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="W996xeIM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=OooT
-	gLOVDQGkTRpdrKb/JRSw1Klfe+kWwo2Ioe9HmYY=; b=W996xeIMRsgxLU6ataq+
-	WEmLoWaH81yeK+oWg3KBzslt6q/TwqaurH9CCVFk3tAXNCv1c74ZiOMkjFIGFt42
-	CIzTyEE9oU9ouREwLWS/GaXuSUn5zn9AH4EEsdEvw1gPZLdrykgyaEvMZ1vG8gxh
-	wL4xH1fQ0lkWFyf5sALsD7fNfTAexznzuVK47rVPdJgFDKG3aVBx+dYqr0jYiUXf
-	hT4gkvl36vhU3+xHhv8z4FB8d+U9Oh9PuDAbIv8LcM25bYv2TDotTs4PBEKDknhf
-	Umh5gLF4Wb0BkxF5JAmzMrTBSG6ZIGe9ei/haSYS7l9LKT2wtAmbzEE3PJKBz3W3
-	bQ==
-Received: (qmail 2658426 invoked from network); 31 May 2025 14:12:02 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 31 May 2025 14:12:02 +0200
-X-UD-Smtp-Session: l3s3148p1@1okqcG02iTFtKPEF
-Date: Sat, 31 May 2025 14:12:01 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Chris Brandt <chris.brandt@renesas.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 4/6] i2c: riic: Pass IRQ desc array as part of OF data
-Message-ID: <aDryEVl4VtZZqUdK@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Chris Brandt <chris.brandt@renesas.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250530143135.366417-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250530143135.366417-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="TXPlul1F"
+ARC-Seal: i=1; a=rsa-sha256; t=1748693519; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=NQFC0AIUY23FUQjQz62ed9qK5rpwaVURBiwk3dkDm82WhPJGCOJKKbfcP+vlRPBS/1DU/WCh4gWSA6UK9wlX4uSl9ZvSShgsKqW+NTtFDvtuxzxNAUAm5UpwjNfkOCck0MBxrR3b2cFFjN3mO2JC/xb2NgqZp74gv1mzdgzLhII=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1748693519; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=NYhJiwF0tBtC7BJnrVq4lhX1cQwG9XLjgrh95lCEAF8=; 
+	b=R39n6y6IEwGkmMkC+XD7su8I642KC2vuar7b3J8ErQo9niEVyq/jjWv8mz13LmOYs+9/ksnm3lxpaqhDiz+WyKAo1uXvBNL2WAZFXMTsR0SIdQmDThbYAuNrCSw9FqX/ImDTNCQDux+Ocs+NKt/hAR9vVAlofEJ+MDqJgLKsj7Y=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=icenowy.me;
+	spf=pass  smtp.mailfrom=uwu@icenowy.me;
+	dmarc=pass header.from=<uwu@icenowy.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1748693519;
+	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=NYhJiwF0tBtC7BJnrVq4lhX1cQwG9XLjgrh95lCEAF8=;
+	b=TXPlul1F6op3zLbL2y6z9iqPSXYOMf1WvhOe25kxqDfE72r6pspOW89nHTzBaI01
+	7+KUoAX8KN+lmxDkRFyx3t+4a/fqTxGj4gCvrhmTs7sDhgX6JIghMuWcUcNyfHfrccb
+	pDN7a/Fg4NJDBg08WhNoIZVWGrk5icvYU1dIdY0i5JGzDHZMTNbc02NwwVrcrOjrfsu
+	S6zyJtNrwZ6dlY7A8PQrXktKqw5tUtnwH/HnurkA6i+2DCNFNJVnmFfA7JpMYCKAyZQ
+	5RWarM3/2N9QwVNiLWKLWuCmIBrCiRcrpjDVMCwh6qdhwchqP0RYiiRp/nJ4Y5lVvIO
+	+h8QjqcBiQ==
+Received: by mx.zohomail.com with SMTPS id 1748693516762703.3998524129344;
+	Sat, 31 May 2025 05:11:56 -0700 (PDT)
+From: Icenowy Zheng <uwu@icenowy.me>
+To: Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Justin Green <greenjustin@chromium.org>
+Cc: dri-devel@lists.freedesktop.org,
+	linux-mediatek@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Icenowy Zheng <uwu@icenowy.me>
+Subject: [PATCH] drm/mediatek: only announce AFBC if really supported
+Date: Sat, 31 May 2025 20:11:40 +0800
+Message-ID: <20250531121140.387661-1-uwu@icenowy.me>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="a+76YYJ21yRC+UGR"
-Content-Disposition: inline
-In-Reply-To: <20250530143135.366417-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
+X-ZohoMail-Owner: <20250531121140.387661-1-uwu@icenowy.me>+zmo_0_
 
+Currently even the SoC's OVL does not declare the support of AFBC, AFBC
+is still announced to the userspace within the IN_FORMATS blob, which
+breaks modern Wayland compositors like KWin Wayland and others.
 
---a+76YYJ21yRC+UGR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Gate passing modifiers to drm_universal_plane_init() behind querying the
+driver of the hardware block for AFBC support.
 
-On Fri, May 30, 2025 at 03:31:33PM +0100, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->=20
-> In preparation for adding support for Renesas RZ/T2H and RZ/N2H SoCs,
-> which feature a combined error interrupt instead of individual error
-> interrupts per condition, update the driver to support configurable IRQ
-> layouts via OF data.
->=20
-> Introduce a new `irqs` field and `num_irqs` count in `riic_of_data` to
-> allow future SoCs to provide a custom IRQ layout. This patch is a
-> non-functional change for existing SoCs and maintains compatibility with
-> the current `riic_irqs` array.
->=20
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Fixes: c410fa9b07c3 ("drm/mediatek: Add AFBC support to Mediatek DRM driver")
+Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
+---
+Patch tested on MT8183, on which KWin Wayland 5.27.12 is fixed.
 
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+In addition, I tried to fake supports_afbc in mt8183_ovl_driver_data and
+mt8183_ovl_2l_driver_data, then KWin Wayland gets broken again and
+modetest also shows the AFBC modifier in IN_FORMATS.
 
-Did you test this on RZ/A1? I could do so next week?
+ drivers/gpu/drm/mediatek/mtk_crtc.c     | 3 ++-
+ drivers/gpu/drm/mediatek/mtk_ddp_comp.c | 1 +
+ drivers/gpu/drm/mediatek/mtk_ddp_comp.h | 9 +++++++++
+ drivers/gpu/drm/mediatek/mtk_disp_drv.h | 1 +
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 7 +++++++
+ drivers/gpu/drm/mediatek/mtk_plane.c    | 7 +++++--
+ drivers/gpu/drm/mediatek/mtk_plane.h    | 3 ++-
+ 7 files changed, 27 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/gpu/drm/mediatek/mtk_crtc.c b/drivers/gpu/drm/mediatek/mtk_crtc.c
+index 8f6fba4217ece..53359c2465b65 100644
+--- a/drivers/gpu/drm/mediatek/mtk_crtc.c
++++ b/drivers/gpu/drm/mediatek/mtk_crtc.c
+@@ -930,7 +930,8 @@ static int mtk_crtc_init_comp_planes(struct drm_device *drm_dev,
+ 				mtk_ddp_comp_supported_rotations(comp),
+ 				mtk_ddp_comp_get_blend_modes(comp),
+ 				mtk_ddp_comp_get_formats(comp),
+-				mtk_ddp_comp_get_num_formats(comp), i);
++				mtk_ddp_comp_get_num_formats(comp),
++				mtk_ddp_comp_is_afbc_supported(comp), i);
+ 		if (ret)
+ 			return ret;
+ 
+diff --git a/drivers/gpu/drm/mediatek/mtk_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_ddp_comp.c
+index edc6417639e64..ac6620e10262e 100644
+--- a/drivers/gpu/drm/mediatek/mtk_ddp_comp.c
++++ b/drivers/gpu/drm/mediatek/mtk_ddp_comp.c
+@@ -366,6 +366,7 @@ static const struct mtk_ddp_comp_funcs ddp_ovl = {
+ 	.get_blend_modes = mtk_ovl_get_blend_modes,
+ 	.get_formats = mtk_ovl_get_formats,
+ 	.get_num_formats = mtk_ovl_get_num_formats,
++	.is_afbc_supported = mtk_ovl_is_afbc_supported,
+ };
+ 
+ static const struct mtk_ddp_comp_funcs ddp_postmask = {
+diff --git a/drivers/gpu/drm/mediatek/mtk_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_ddp_comp.h
+index 39720b27f4e9e..7289b3dcf22f2 100644
+--- a/drivers/gpu/drm/mediatek/mtk_ddp_comp.h
++++ b/drivers/gpu/drm/mediatek/mtk_ddp_comp.h
+@@ -83,6 +83,7 @@ struct mtk_ddp_comp_funcs {
+ 	u32 (*get_blend_modes)(struct device *dev);
+ 	const u32 *(*get_formats)(struct device *dev);
+ 	size_t (*get_num_formats)(struct device *dev);
++	bool (*is_afbc_supported)(struct device *dev);
+ 	void (*connect)(struct device *dev, struct device *mmsys_dev, unsigned int next);
+ 	void (*disconnect)(struct device *dev, struct device *mmsys_dev, unsigned int next);
+ 	void (*add)(struct device *dev, struct mtk_mutex *mutex);
+@@ -294,6 +295,14 @@ size_t mtk_ddp_comp_get_num_formats(struct mtk_ddp_comp *comp)
+ 	return 0;
+ }
+ 
++static inline bool mtk_ddp_comp_is_afbc_supported(struct mtk_ddp_comp *comp)
++{
++	if (comp->funcs && comp->funcs->is_afbc_supported)
++		return comp->funcs->is_afbc_supported(comp->dev);
++
++	return false;
++}
++
+ static inline bool mtk_ddp_comp_add(struct mtk_ddp_comp *comp, struct mtk_mutex *mutex)
+ {
+ 	if (comp->funcs && comp->funcs->add) {
+diff --git a/drivers/gpu/drm/mediatek/mtk_disp_drv.h b/drivers/gpu/drm/mediatek/mtk_disp_drv.h
+index 04217a36939cd..679d413bf10be 100644
+--- a/drivers/gpu/drm/mediatek/mtk_disp_drv.h
++++ b/drivers/gpu/drm/mediatek/mtk_disp_drv.h
+@@ -106,6 +106,7 @@ void mtk_ovl_disable_vblank(struct device *dev);
+ u32 mtk_ovl_get_blend_modes(struct device *dev);
+ const u32 *mtk_ovl_get_formats(struct device *dev);
+ size_t mtk_ovl_get_num_formats(struct device *dev);
++bool mtk_ovl_is_afbc_supported(struct device *dev);
+ 
+ void mtk_ovl_adaptor_add_comp(struct device *dev, struct mtk_mutex *mutex);
+ void mtk_ovl_adaptor_remove_comp(struct device *dev, struct mtk_mutex *mutex);
+diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+index d0581c4e3c999..e0236353d4997 100644
+--- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
++++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+@@ -236,6 +236,13 @@ size_t mtk_ovl_get_num_formats(struct device *dev)
+ 	return ovl->data->num_formats;
+ }
+ 
++bool mtk_ovl_is_afbc_supported(struct device *dev)
++{
++	struct mtk_disp_ovl *ovl = dev_get_drvdata(dev);
++
++	return ovl->data->supports_afbc;
++}
++
+ int mtk_ovl_clk_enable(struct device *dev)
+ {
+ 	struct mtk_disp_ovl *ovl = dev_get_drvdata(dev);
+diff --git a/drivers/gpu/drm/mediatek/mtk_plane.c b/drivers/gpu/drm/mediatek/mtk_plane.c
+index 655106bbb76d3..e08b771bc25e9 100644
+--- a/drivers/gpu/drm/mediatek/mtk_plane.c
++++ b/drivers/gpu/drm/mediatek/mtk_plane.c
+@@ -321,7 +321,8 @@ static const struct drm_plane_helper_funcs mtk_plane_helper_funcs = {
+ int mtk_plane_init(struct drm_device *dev, struct drm_plane *plane,
+ 		   unsigned long possible_crtcs, enum drm_plane_type type,
+ 		   unsigned int supported_rotations, const u32 blend_modes,
+-		   const u32 *formats, size_t num_formats, unsigned int plane_idx)
++		   const u32 *formats, size_t num_formats,
++		   bool supports_afbc, unsigned int plane_idx)
+ {
+ 	int err;
+ 
+@@ -332,7 +333,9 @@ int mtk_plane_init(struct drm_device *dev, struct drm_plane *plane,
+ 
+ 	err = drm_universal_plane_init(dev, plane, possible_crtcs,
+ 				       &mtk_plane_funcs, formats,
+-				       num_formats, modifiers, type, NULL);
++				       num_formats,
++				       supports_afbc ? modifiers : NULL,
++				       type, NULL);
+ 	if (err) {
+ 		DRM_ERROR("failed to initialize plane\n");
+ 		return err;
+diff --git a/drivers/gpu/drm/mediatek/mtk_plane.h b/drivers/gpu/drm/mediatek/mtk_plane.h
+index 3b13b89989c7e..95c5fa5295d8a 100644
+--- a/drivers/gpu/drm/mediatek/mtk_plane.h
++++ b/drivers/gpu/drm/mediatek/mtk_plane.h
+@@ -49,5 +49,6 @@ to_mtk_plane_state(struct drm_plane_state *state)
+ int mtk_plane_init(struct drm_device *dev, struct drm_plane *plane,
+ 		   unsigned long possible_crtcs, enum drm_plane_type type,
+ 		   unsigned int supported_rotations, const u32 blend_modes,
+-		   const u32 *formats, size_t num_formats, unsigned int plane_idx);
++		   const u32 *formats, size_t num_formats,
++		   bool supports_afbc, unsigned int plane_idx);
+ #endif
+-- 
+2.49.0
 
---a+76YYJ21yRC+UGR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmg68hEACgkQFA3kzBSg
-KbaQlg//QdyeM2ClWC9AmzDt40mA5yIlIkcwx6FQQEZ0spn/rqxgzwGIhLsxR6lw
-XKBC6wSBLEbr7B2DCDhe1ctOTOPsCRzJQQLmG3ItfPJ9Kb7ba5NH9amsmy8wO1eW
-XON1ubpJ5tu0/o8ej6LvFxTKSLs6MhH2laizAtLTaWe6dHz/rppYxc1A3FWwC4m3
-0+PtntEoFFbFYRI9LRmCDJRpI0mSJwy7XP99Qwk4+n50u0yFs56E9nN9RNN/kOpO
-SnKH4rsaEyiszJ9Rk2Y2fwoVolP25XXueyd6MX7wMgY/6iaxJYEcbelWbA6PSk5w
-0U9+kcdhjmrSZPgiRiMq+v0UkvqJHT+lrfML/rD2FUfxZ6kJDAHPJkPDFY3JvCpG
-Wsql15pVY7qigs8/1nKcrKSygJk01/HgC0vE30xU87ZGXg7shpkJv+9994X3h9dK
-tIwSalxD2Zqy+vzEbSzbz1YE6TW4CSaSyD33/FcAH0rZq8SmhPvoqAusYcK9ORIv
-U6mBfakTvPKp2JaQAuqZLLm9L4Ey7RPhspay5h0DzlMK/BJEA0C4N6HOF9fdSKCu
-yHheO64PFKUS4AlRQB8d25y66oH+zWWrsONle+wAT2cN032XVwFTK34lqC6GtVPI
-uZDah3UNktajyoIVEFqMOyBmt6zdOsyCL73/badvPUVSLRXB27U=
-=NUkM
------END PGP SIGNATURE-----
-
---a+76YYJ21yRC+UGR--
