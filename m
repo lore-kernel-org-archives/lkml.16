@@ -1,135 +1,201 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03E42E628
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 06:12:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143DE2E628;
+	Sat, 31 May 2025 06:14:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748671967; cv=none; b=iMkGokIqLHLO/YXgM9KnGHoPClo2QjfWRuEVx+FzkV8kAcCwfwGF9UOaJigih2xm2TBmxup28ZpWSr2Jy0y74DUQdH+rVu/CGd3oGjmYjYGIoRuhXTuATfoLbhQrYeLNYlGHfo+GIXKX9VFR0Z9fe9leep1f+K1T7orqLQkN77s=
+	t=1748672053; cv=none; b=k1ShI9MViGXBGe4BJ//65btguJwbR+28Q9elbcqrWfgF/KfP6epESP2sdycbPHRe+cWL1P87F99nzrYpnRkLYAT6C2Trgvxn7ULKBMRKuH88gOKaSOSH1aaJ5MUHGhQSjZ+hW/cKlfNCG4p2lITR81YUwgJ/DjiiO2D4OrxUvhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748671967; c=relaxed/simple;
-	bh=MEGvhQbfx24jqEUxzb4zffirI9T8WQoQbGUFkkAFR7o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uQuVVEpBsSnW3NT4OcRQdUx1JkR0SV72dZOhKvfKmMnHwB/FCuy6liyJXmWQtQPP8eus32Dn0VbQ++845r7eu6gDJzmGgLSfkzWllxEaMcEfo48XM6rUHYfT1OnNIxA+HFVbZFLBzxUJcB1/hNkh3iJl/MDLnnC9HZolD9PU6HA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rde4H29J; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748672053; c=relaxed/simple;
+	bh=bqi6rJ0hiVr8slNOa6h3sST0DYxL7m3H/YQ3HcJjmhU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=X4blWRPMl8InCGvqO31UfsTw+JLUqZJd9VYzlIzHZ45iC8FG3Cb2hK1BFaZYRW5Xy9VvVbxhi20wWNqcwaYPcl1n7iqjT5yJp140ocDHB1/AD777xMxtg0kKdHIMqLlLCGzTi57kAg7m1Jo7JAa40ZUG5q0eKurE9nZ3BNKw7NY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Szt+Gcdq; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rde4H29J"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7399838db7fso2545529b3a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 23:12:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748671965; x=1749276765; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=0xC9CFEE+YUx312k0/EiyveI/Q/YMtl8Jwd16dQuFXI=;
-        b=rde4H29JXUZYkCwRkFh5YqmlKNfFikJlrTG0pImauIaN28Q/wO4BpvfqecpxTl7dsV
-         gVtq+WsB4PLRbyk/5hVxBl7h00LnGZjJN+3RW9+Jb3HG8fbFF5PNi0fKP/FNjEqWHA4R
-         0TxU5oNqF/m+IKkZJlH4v/TUpTKuEwlGnkG/WtAAbEedt3bChxh9TKKnnO3f4HSUs3Fw
-         wCV/9RlkoIX0sj3kNzLaT52zGDxCGnDWXiDBGmSC4ehl2HO+jJ/oovYALztMWRyOvafz
-         ZZEYCphEZDMwcSlIQnpbKV3SRP8nnYvnqzmg8Q/1qj8/lih8W1WI9evIPBTW9f8WryNf
-         R6Ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748671965; x=1749276765;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0xC9CFEE+YUx312k0/EiyveI/Q/YMtl8Jwd16dQuFXI=;
-        b=pUatgwGWCh36VAh8f5CesUas0wlvvYHAHjxVSBB6UsYMjmKV4GIgo+GyXHiodkXbiJ
-         iCnxJf+XyIJRLs49yRPWaXin/aOybTwoHZsFUYgke0LpyRSeok31YIdllrvqOX6kM2Py
-         /Q19QgoajYI3AOzHQ1jHr+PHTeeacJORgrGQZyJIyEADdKQLt+j78AsQ/F5dgQFZ5733
-         2O3zw0Q8FMq9QSzT61Z2dNh6n5NrmkyN+8rZIvTZ29rRuSeZiX6PeDca7JkLsDL4wBVX
-         nBkiCerGBgHb5F4+zKCbZOLNdUjV7FoRv6F0rhdFlYL8erE4sixiIf7BN5VE52FOHp6B
-         th3w==
-X-Forwarded-Encrypted: i=1; AJvYcCVTo5XU/B5fwR7GuLEvwxDfQFDdBXpd05Ft8A7cdKrGdwF+8d90+MbfFfRef1Q+8fEBZliuUwBIjdqENGI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+SVpnV7Ba8Uq1vfZp3BYx/ryetA1ZlrRmYv/Em/Tqpn4duWHY
-	6DNvHb5OeX3YdsswNyj76CiJz4Pd4EfeOpmwFGCAwx/J4d0wk9ENRm9o8tT7zzRHZH63MYamvJH
-	nKo4=
-X-Gm-Gg: ASbGncsYfeQ5p0La2qBHJToBbFLIPYy9tgAgCnbzWqk+BH90S8yYSkrMFgM+qbCDS/e
-	YUwQxlvlj5y0PGtABrKHrn/BcorIUr4RW3Vm+uWZpZRtzaNdiN/n5mpKTK7knDO1XKT4Mxc93hi
-	qJT4NLh93PNfISP4xD1y7SlIxfQO0tljKPD6pq0rSBZ3MjCiobvijtifVLDXLmq4nrGEc7nmLYI
-	Z6vie1nmBw/JBgWWVD5Wly7S83j//C+G/hL6jZC8jw6l3FID0NWyCoUcOL6v+QkBoZQNsS8TqZI
-	04iote4o1E2dsE7Cj7YvFg3vSOegDXVrqCFrGNJssH/xx5eQFLnRUPThriW/cT9droXxliB9
-X-Google-Smtp-Source: AGHT+IE96H8U8bWE8z0seGlz+ce1VhCU9n8V1B9SIIp0uy/rKpHh593gOPlHdV8KFu0tdA5IB8EsVg==
-X-Received: by 2002:a05:6a00:8b09:b0:736:4c3d:2cba with SMTP id d2e1a72fcca58-747ad757dc4mr9023047b3a.9.1748671965098;
-        Fri, 30 May 2025 23:12:45 -0700 (PDT)
-Received: from thinkpad ([120.56.204.95])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747affcf4c5sm3950187b3a.124.2025.05.30.23.12.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 May 2025 23:12:44 -0700 (PDT)
-Date: Sat, 31 May 2025 11:42:40 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: shawn.lin@rock-chips.com, lpieralisi@kernel.org, kw@linux.com, 
-	bhelgaas@google.com, heiko@sntech.de, robh@kernel.org, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v2 0/3] Fix interrupt log message
-Message-ID: <hjckb2qsdz5atx5occqv7m6syg4fnilxhmn4zeq4y5yoqkmdjf@66gudl2chlgk>
-References: <20250516145544.110516-1-18255117159@163.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Szt+Gcdq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748672051; x=1780208051;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=bqi6rJ0hiVr8slNOa6h3sST0DYxL7m3H/YQ3HcJjmhU=;
+  b=Szt+GcdqjnF/v8/IqrJT10YH79e8Xfvvm/qcf6QQ8HMfHVWk3eGHgIsK
+   cuk2wTgweD8nXsL3HUOYPWgS56DvOxxpp/5GAdueOqVPkYprz5hEbdM9X
+   6Mzs1XZrhht1CIu7qFk3oysh70knsdYTRBNJhvWrYJxNFAHFH/QxscubE
+   X5JrgwIybzVMflDhWsvZKJviZla9RY5Cd3XAczvJqb1HAmhtMlsWOBQpE
+   tpdSxeQRsmZ4dwfMiy92Ug9d6Xg+Ne+91bx+Ke9ZVVxB5dym8s9I2LmfT
+   KMObahQD6glgIQMTpfNk52kURMDp0cJ77ttU36z1HR6MnsuaOnCynHln7
+   Q==;
+X-CSE-ConnectionGUID: g3AVgr+tQrSNQrz/s1Kdsg==
+X-CSE-MsgGUID: HJlWUEPJSSiSXgO55qFOAg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="54429665"
+X-IronPort-AV: E=Sophos;i="6.16,197,1744095600"; 
+   d="scan'208";a="54429665"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 23:14:10 -0700
+X-CSE-ConnectionGUID: zk+4zkahSJioxj5UcKUAKg==
+X-CSE-MsgGUID: vHJUI23TQWCCrPFGUJPBIQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,197,1744095600"; 
+   d="scan'208";a="144038811"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.71])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 23:14:03 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Sat, 31 May 2025 09:14:00 +0300 (EEST)
+To: Derek John Clark <derekjohn.clark@gmail.com>, 
+    Luc Van Oostenryck <luc.vanoostenryck@gmail.com>, 
+    linux-sparse@vger.kernel.org
+cc: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>, 
+    Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>, 
+    Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>, 
+    Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>, 
+    "Cody T . -H . Chiu" <codyit@gmail.com>, 
+    John Martens <johnfanv2@gmail.com>, Kurt Borja <kuurtb@gmail.com>, 
+    platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v11 0/6] platform/x86: Add Lenovo WMI Gaming Series
+ Drivers
+In-Reply-To: <CAFqHKTnp2zMTAfdYBpxestSErpsgwSf_TmkLjjU0W5HOFiC9bA@mail.gmail.com>
+Message-ID: <e98eccf5-1006-3d1b-d2fb-783637807ac7@linux.intel.com>
+References: <20250522015350.471070-1-derekjohn.clark@gmail.com> <2972c4c6-7080-e058-ec39-b8c1dc603f7a@linux.intel.com> <2c7ffaa6-e639-e215-42d0-78a2b185ad45@linux.intel.com> <CAFqHKTnp2zMTAfdYBpxestSErpsgwSf_TmkLjjU0W5HOFiC9bA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250516145544.110516-1-18255117159@163.com>
+Content-Type: multipart/mixed; BOUNDARY="8323328-43950218-1748671245=:937"
+Content-ID: <8ecdec3f-fb03-044b-ec92-17e1a21e1ebd@linux.intel.com>
 
-On Fri, May 16, 2025 at 10:55:41PM +0800, Hans Zhang wrote:
-> Dear Maintainers,
-> 
-> Detailed descriptions of interrupts can be seen from RK3399 TRM doc.
-> I found two errors and cleaned up the driver by the way.
-> 
-> This patch series improves the logging accuracy and code cleanliness of
-> the Rockchip PCIe host controller driver:
-> 
-> Log Message Clarifications
-> 
-> Patch 1 fixes a misleading debug message for the PCIE_CORE_INT_UCR
-> interrupt, replacing a duplicated "malformed TLP" message with "Unexpected
-> Completion" to reflect the actual error condition.
-> 
-> Patch 2 corrects the terminology for non-fatal errors, renaming "no fatal
-> error" to "non fatal error interrupt received" to align with PCIe interrupt
-> semantics.
-> 
-> Code Cleanup
-> 
-> Patch 3 removes redundant header includes (e.g., unused clock/reset
-> headers) to streamline the driver and reduce build dependencies.
-> 
-> These changes enhance debug log reliability, eliminate ambiguity for
-> developers.
-> 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+--8323328-43950218-1748671245=:937
+Content-Type: text/plain; CHARSET=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <f0193626-50b6-a117-7794-a28eb0b5443e@linux.intel.com>
 
-- Mani
++ Cc sparse people.
 
-> ---
-> Changes for v2:
-> - Drop patch [v1 3/4].
-> - The other patches have not been modified.
-> ---
-> 
-> Hans Zhang (3):
->   PCI: rockchip-host: Fix "Unexpected Completion" log message
->   PCI: rockchip-host: Correct non-fatal error log message
->   PCI: rockchip-host: Remove unused header includes
-> 
->  drivers/pci/controller/pcie-rockchip-host.c | 13 ++-----------
->  1 file changed, 2 insertions(+), 11 deletions(-)
-> 
-> 
-> base-commit: 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3
-> -- 
-> 2.25.1
-> 
+On Fri, 30 May 2025, Derek John Clark wrote:
 
--- 
-மணிவண்ணன் சதாசிவம்
+> On Sun, May 25, 2025 at 2:42=E2=80=AFPM Ilpo J=C3=A4rvinen
+> <ilpo.jarvinen@linux.intel.com> wrote:
+> >
+> > On Mon, 26 May 2025, Ilpo J=C3=A4rvinen wrote:
+> >
+> > > On Wed, 21 May 2025, Derek J. Clark wrote:
+> > >
+> > > > Adds support for the Lenovo "Gaming Series" of laptop hardware that=
+ use
+> > > > WMI interfaces that control various power settings. There are multi=
+ple WMI
+> > > > interfaces that work in concert to provide getting and setting valu=
+es as
+> > > > well as validation of input. Currently only the "Gamezone", "Other
+> > > > Mode", and "LENOVO_CAPABILITY_DATA_01" interfaces are implemented, =
+but
+> > > > I attempted to structure the driver so that adding the "Custom Mode=
+",
+> > > > "Lighting", and other data block interfaces would be trivial in lat=
+er
+> > > > patches.
+> > > >
+> > > > This driver attempts to standardize the exposed sysfs by mirroring =
+the
+> > > > asus-armoury driver currently under review. As such, a lot of
+> > > > inspiration has been drawn from that driver.
+> > > > https://lore.kernel.org/platform-driver-x86/20250319065827.53478-1-=
+luke@ljones.dev/#t
+> > > >
+> > > > The drivers have been tested by me on the Lenovo Legion Go and Legi=
+on Go
+> > > > S.
+> > > >
+> > > > Suggested-by: Mario Limonciello <superm1@kernel.org>
+> > > > Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> > > > Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> > > > ---
+> > > > v11:
+> > > >   - Fix formmating issues.
+> > >
+> > > Thanks for the update, I've applied this now into the review-ilpo-nex=
+t
+> > > branch. BUT, this is very late in the cycle now and if there's a buil=
+d
+> > > issue (or LKP doesn't build test it in reasonable time), I'll have to=
+ drop
+> > > this series and postpone it into the next cycle as I don't want to de=
+lay
+> > > the main PR to Linus too long.
+> > >
+> > > But lets hope for the best, I think some depends on issues were fixed
+> > > earlier (IIRC), so hopefully it works good enough now. :-)
+> >
+> > Hmpf, these give me a few new warnings related to this series:
+> >
+> > make W=3D1 drivers/platform/x86/
+> > make C=3D2 drivers/platform/x86/
+>=20
+> When I use scoped_guard the warnings go away.
+
+Okay, not that it helps much because the implementation of guard() and=20
+scoped_guard() is dramatically different.
+
+> It seems to be a
+> limitation of sparse in that its not correctly identifying the guard
+> will be unlocked on the return perhaps?
+
+It's odd because we'd have those warnings all over the place if it would=20
+be general thing for sparse to not understand how guard() works. Maybe=20
+sparse people have some idea what's so special here?
+
+To give context to sparse people, this patch triggers two false=20
+positives in sparse:
+
+https://lore.kernel.org/platform-driver-x86/20250522015350.471070-6-derekjo=
+hn.clark@gmail.com/
+
+$ make C=3D2 drivers/platform/x86/lenovo-wmi-gamezone.o
+  CHECK   scripts/mod/empty.c
+  CALL    scripts/checksyscalls.sh
+  DESCEND objtool
+  INSTALL libsubcmd_headers
+  CHECK   drivers/platform/x86/lenovo-wmi-gamezone.c
+drivers/platform/x86/lenovo-wmi-gamezone.c:155:12: warning: context=20
+imbalance in 'lwmi_gz_profile_get' - different lock contexts for basic=20
+block
+drivers/platform/x86/lenovo-wmi-gamezone.c:206:12: warning: context=20
+imbalance in 'lwmi_gz_profile_set' - different lock contexts for basic=20
+block
+
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.=
+git/tree/drivers/platform/x86/lenovo-wmi-gamezone.c?h=3Dreview-ilpo-next#n1=
+90
+
+(That code link is just for convinience, it's not a perma one, I'll be=20
+overwriting that branch eventually once the merge window is over, if not=20
+sooner.)
+
+> In any case, if you're okay
+> with a scoped guard here (matches both other invocations) I'll send it
+> up.
+
+I'd prefer to keep using guard() for now as this looks clearly a false=20
+positive from sparse, not a problem in your code.
+
+> I also took care of the warnings for W=3D1.
+
+Thanks.
+
+> > ...I really don't know why sparse complains about the lock context
+> > imbalance though, those functions use guard().
+
+--=20
+ i.
+--8323328-43950218-1748671245=:937--
