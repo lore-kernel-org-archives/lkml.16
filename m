@@ -1,109 +1,124 @@
-Received: from out03.mta.xmission.com (out03.mta.xmission.com [166.70.13.233])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90FF421CA0F
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 11:41:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B93156F28;
+	Sat, 31 May 2025 11:44:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748691698; cv=none; b=Jm7Jm6X6rF7L7QaU5W5tluqiVzjCwBZNFpKeYY64tcysa/7albPZ3ge+bbgyedZb4PxAOJVm5r+aXexLck5IV2D70wAuJUrcGIcqHiellnjcJBFm7M//N4jC+p7byQrSA8igky3WAcZ7zXfUJerF3RcYFRyF7f9gP+dts29BQeA=
+	t=1748691843; cv=none; b=qitgJJH/cK7i2ZADnOA0LrOgKLZMrnlNKvjyv+78tcUN62dPRO/iAy1owaLd0r7MF1BPkfWj38vLoXXE9529NyDQmWIvBKK7u2cYhbRX1/O30Kc40lXeV5xOyXtOohqQFVCU/J/EqLTx0b1EctpioxhGqVAiiSm70Ek28pl01cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748691698; c=relaxed/simple;
-	bh=PJYUmQnYqamUhWh7o7uxI5LCMCjqaXJ/8M6Z+95fw5M=;
-	h=From:To:Cc:In-Reply-To:References:Date:Message-ID:MIME-Version:
-	 Content-Type:Subject; b=QVUWCHVOgdUFprQKnUhE8Uk/GBIn1+55qo+jYUwOUNEiRZLPsHpXAQwi6ZEDy2Gf1fjmnGctYbQv5VM3fYjuIGJqPOptJB6ZCEDWz+DIKtoyLB06EWLwtno9N8vsByNFyE/B5INTx0qcFte0AL/eyyx6mkkR/8GN9S9O7x02GY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
-Received: from in02.mta.xmission.com ([166.70.13.52]:36380)
-	by out03.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1uLK3s-0072Zk-6z; Sat, 31 May 2025 05:07:36 -0600
-Received: from ip72-198-198-28.om.om.cox.net ([72.198.198.28]:36250 helo=email.froward.int.ebiederm.org.xmission.com)
-	by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1uLK3r-002sts-8B; Sat, 31 May 2025 05:07:35 -0600
-From: "Eric W. Biederman" <ebiederm@xmission.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,  Andrew Morton
- <akpm@linux-foundation.org>
-In-Reply-To: <aDqq4rg9rTKRur8Y@gondor.apana.org.au> (Herbert Xu's message of
-	"Sat, 31 May 2025 15:08:18 +0800")
-References: <aDlty06JvlGwTfKk@gondor.apana.org.au>
-	<87ldqegrf1.fsf@email.froward.int.ebiederm.org>
-	<aDqq4rg9rTKRur8Y@gondor.apana.org.au>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
-Date: Sat, 31 May 2025 06:07:20 -0500
-Message-ID: <877c1xghsn.fsf@email.froward.int.ebiederm.org>
+	s=arc-20240116; t=1748691843; c=relaxed/simple;
+	bh=DkqS88KswCE6eElc0WJt9rrEpqfehV3SZ4pLuufurPI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JpAddcVGHOG+yzXJ/RF56hTTAAlvO4z7dUjZwEyws2nW6ji0ELVaU0JYyvUeRkoagwX6iDZcKZoSQN15BMDd0FFwUAa/5G9vMMxmfOFrQItOHe0hh+hfxNwjKJejPNyjDm5WXGaAGYR4o1MzyKi3cHO/8mid2/yf0j1ZvgHXLcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=mioBR5A9; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mioBR5A9"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54VBNo6n012581;
+	Sat, 31 May 2025 11:43:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=t9bZw8QZfqhGsbVSOQB67yk33BS8b
+	HKTYP3OGG3cT+w=; b=mioBR5A94gnt/OVhg5v0U2kCpmrwX2dX3bMacS6AEEsDW
+	Z78tIHxgz+2eUBl0bppOW3gCsamjCWhgcwVJ7/nonhVTUSlMwAdp3L8H/kcCrGju
+	NH/fDtxLyuDQXYJATKac1XqQlFOj0xfFOSXaSb/YuJqmWgCShQSVeqfsIS3mg8E2
+	QxYe0oDEbgwv29gg2m11ls2Sww+IeENYIpVzR+7K3fJVlmTFmpGt6KnJaEniclo0
+	7eDpigepSCtSlBv3brCGBMWX5ZjFce2DtxakiUUu/JfW53YnaS05RO8XOJ/l46Qk
+	Sdy7VGfroq4r9vIkmM0I09zY6v7Cq+NzjW0okGxQg==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46ytawg7p4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 31 May 2025 11:43:49 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54V6eVKe030620;
+	Sat, 31 May 2025 11:43:48 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46yr76gace-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 31 May 2025 11:43:48 +0000
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 54VBhlI3024372;
+	Sat, 31 May 2025 11:43:48 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 46yr76ga9m-1;
+	Sat, 31 May 2025 11:43:47 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+        alison.schofield@intel.com, vishal.l.verma@intel.com,
+        ira.weiny@intel.com, dan.j.williams@intel.com, shiju.jose@huawei.com,
+        viro@zeniv.linux.org.uk, Smita.KoralahalliChannabasappa@amd.com,
+        fabio.m.de.francesco@linux.intel.com, linux-cxl@vger.kernel.org
+Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org,
+        darren.kenny@oracle.com
+Subject: [PATCH] cxl/trace: Fix typo in macro and spec reference
+Date: Sat, 31 May 2025 04:41:58 -0700
+Message-ID: <20250531114317.3341757-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1uLK3r-002sts-8B;;;mid=<877c1xghsn.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=72.198.198.28;;;frm=ebiederm@xmission.com;;;spf=pass
-X-XM-AID: U2FsdGVkX19vJFQhYd6rvInd2nAfpwQNCWGGf0wsLGw=
-X-Spam-Level: 
-X-Spam-Virus: No
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-	*      [score: 0.5000]
-	*  0.7 XMSubLong Long Subject
-	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
-	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
-	*      [sa01 1397; Body=1 Fuz1=1 Fuz2=1]
-	*  0.0 T_TooManySym_01 4+ unique symbols in subject
-X-Spam-DCC: XMission; sa01 1397; Body=1 Fuz1=1 Fuz2=1 
-X-Spam-Combo: ;Herbert Xu <herbert@gondor.apana.org.au>
-X-Spam-Relay-Country: 
-X-Spam-Timing: total 395 ms - load_scoreonly_sql: 0.03 (0.0%),
-	signal_user_changed: 3.6 (0.9%), b_tie_ro: 2.4 (0.6%), parse: 0.95
-	(0.2%), extract_message_metadata: 13 (3.2%), get_uri_detail_list: 1.09
-	(0.3%), tests_pri_-2000: 14 (3.5%), tests_pri_-1000: 3.1 (0.8%),
-	tests_pri_-950: 1.65 (0.4%), tests_pri_-900: 1.06 (0.3%),
-	tests_pri_-90: 62 (15.7%), check_bayes: 61 (15.4%), b_tokenize: 4.2
-	(1.1%), b_tok_get_all: 6 (1.4%), b_comp_prob: 1.30 (0.3%),
-	b_tok_touch_all: 47 (11.9%), b_finish: 0.59 (0.2%), tests_pri_0: 285
-	(72.1%), check_dkim_signature: 0.36 (0.1%), check_dkim_adsp: 3.2
-	(0.8%), poll_dns_idle: 1.80 (0.5%), tests_pri_10: 1.70 (0.4%),
-	tests_pri_500: 6 (1.5%), rewrite_mail: 0.00 (0.0%)
-Subject: Re: [PATCH] userns: Add forward declaration of struct seq_file in
- user_namespace.h
-X-SA-Exim-Connect-IP: 166.70.13.52
-X-SA-Exim-Rcpt-To: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, herbert@gondor.apana.org.au
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-X-SA-Exim-Scanned: No (on out03.mta.xmission.com); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-31_05,2025-05-30_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
+ suspectscore=0 phishscore=0 adultscore=0 spamscore=0 mlxlogscore=999
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505160000 definitions=main-2505310105
+X-Proofpoint-GUID: vKQCz9NXjdTzJ8VHZUALbYJ0OE25nivm
+X-Proofpoint-ORIG-GUID: vKQCz9NXjdTzJ8VHZUALbYJ0OE25nivm
+X-Authority-Analysis: v=2.4 cv=ctObk04i c=1 sm=1 tr=0 ts=683aeb76 b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=dt9VzEwgFbYA:10 a=yPCof4ZbAAAA:8 a=2xcyL-vh7mIpikw6uGIA:9 cc=ntf awl=host:14714
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMxMDEwNSBTYWx0ZWRfX+e6tEKsjte02 YLSBrXA5sAah8HWMCpAVwOfi9UlppxmrE2pHdd8Z1jSfzEYcVt1XjgNbNsFgp/i1/POSsf2jPKG KKV6IKJ6ok0Kozxmo8l8gTQAu6C6UnBv3O8bjm2KJw0waacrTZXiigiWmfUTGotYvylL9CJh84q
+ LMKL6iNtYgJUfptPoYmbVXbBqfC7XC+JTKk+PlxmyDEXoHpR8QtdeGpjSRt4nBMM2RzrvwSSQMQ 9yocQEnMXaT4W5DEL162LmhBImnKQD16Sv8nWohEhxNWk8VkDVFl/ifboX1BDTpXmK2YJLMxILc IQAtjCYRDN9xg/oUlw8XDFdH2khkqxbUZsh/Tu+QBdCtZ0yDR07TdabZnw/tmCed8l2zeCvZpBA
+ scxrbetKC1adgVjYCQfrAeoqMAhuGOvmXH5teLBfnWQmMPwn/+pWSv/xJG+CITq8uqOF7AlR
 
-Herbert Xu <herbert@gondor.apana.org.au> writes:
+- Corrects a typo in the macro name: CXL_RAS_CE_RETRY_THRESH
+was previously misspelled as CLX_RAS_CE_RETRY_THRESH.
 
-> On Fri, May 30, 2025 at 08:27:14AM -0500, Eric W. Biederman wrote:
->>
->> That description seems to be lacking something.  The code as has been
->> fine since 2014 and there is no conditional compilation involved.
->
-> I'm happy to drop the fixes header.  There is no need to backport
-> this.
+- fixes a typo in a spec reference from "res" to "rev"
+in the CXL spec reference: "CXL rev 3.1 section 8.2.9.2.1.3"
 
-The fixes tag isn't wrong.
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+---
+ drivers/cxl/core/trace.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
->> Did some other change cause a declaration of seq_file not to be present?
->> Did user_namespace.h get included somewhere new and that new location
->> doesn't wind up declaring seq_file?
->
-> The seq_file forward declaration is currently being provided by
-> linux/sched.h.  I tried removing it and found this issue.
-
-Thanks.
-
-That is the interesting information that I would appreciate to see
-in the change log.
-
-If someone has to play code archaeologist and has to look at the
-history, this is exactly the information that is needed to understand
-why the change was made.
-
-Eric
+diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+index 25ebfbc1616c..de0712a31d96 100644
+--- a/drivers/cxl/core/trace.h
++++ b/drivers/cxl/core/trace.h
+@@ -109,7 +109,7 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
+ #define CXL_RAS_CE_CACHE_DATA_ECC	BIT(0)
+ #define CXL_RAS_CE_MEM_DATA_ECC		BIT(1)
+ #define CXL_RAS_CE_CRC_THRESH		BIT(2)
+-#define CLX_RAS_CE_RETRY_THRESH		BIT(3)
++#define CXL_RAS_CE_RETRY_THRESH		BIT(3)
+ #define CXL_RAS_CE_CACHE_POISON		BIT(4)
+ #define CXL_RAS_CE_MEM_POISON		BIT(5)
+ #define CXL_RAS_CE_PHYS_LAYER_ERR	BIT(6)
+@@ -118,7 +118,7 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
+ 	{ CXL_RAS_CE_CACHE_DATA_ECC, "Cache Data ECC Error" },			\
+ 	{ CXL_RAS_CE_MEM_DATA_ECC, "Memory Data ECC Error" },			\
+ 	{ CXL_RAS_CE_CRC_THRESH, "CRC Threshold Hit" },				\
+-	{ CLX_RAS_CE_RETRY_THRESH, "Retry Threshold" },				\
++	{ CXL_RAS_CE_RETRY_THRESH, "Retry Threshold" },				\
+ 	{ CXL_RAS_CE_CACHE_POISON, "Received Cache Poison From Peer" },		\
+ 	{ CXL_RAS_CE_MEM_POISON, "Received Memory Poison From Peer" },		\
+ 	{ CXL_RAS_CE_PHYS_LAYER_ERR, "Received Error From Physical Layer" }	\
+@@ -684,7 +684,7 @@ TRACE_EVENT(cxl_dram,
+ /*
+  * Memory Module Event Record - MMER
+  *
+- * CXL res 3.1 section 8.2.9.2.1.3; Table 8-47
++ * CXL rev 3.1 section 8.2.9.2.1.3; Table 8-47
+  */
+ #define CXL_MMER_HEALTH_STATUS_CHANGE		0x00
+ #define CXL_MMER_MEDIA_STATUS_CHANGE		0x01
+-- 
+2.47.1
 
