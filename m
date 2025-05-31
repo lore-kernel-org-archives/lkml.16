@@ -1,125 +1,115 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C02E23A9AE
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 15:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5751623A9AE;
+	Sat, 31 May 2025 15:10:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748704172; cv=none; b=LnSDXuIjOebxsTuIhqJSjeSikOl4Q3pdUhx2R9YVZfljMPppj14sOT9YeZO2wJDSCOsajuki7Rt0ax0BoX+LgvIud4GlCUsJZCMY97FUkIfBVPxDb0rtGIV+SeFKkZq3fJki6NfYSam5sjd7/a7BO9UemQZEytWuobjACweTidA=
+	t=1748704236; cv=none; b=bwPFAaZIennr5eTJyuNmlixmgwcTgFHhMQePcUzAdJQDO28cnlkCAjx2ECNOvaENs8td8/txsw3s6jm4cutMxLCTIUQrkIYUwm9F4lb0qXo4L1Csf2PUEOOY30MEvo2LDS3INBFSVeKjsFpi63Ww5ulqCWoEKlxKlf1yMNyw3rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748704172; c=relaxed/simple;
-	bh=93CTDjAEeete/R0+aItsc4Xp81vKNUARVLfomt68FpE=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=sxneRMX/PXyldTJC230t6vgNr52ocZTKZoL3HvpdMht+cpDAuaCtLvHrefyznLYQdFtbtZKHGPQU+LwVCMCOarpEwGAJufwiD8k4Mlq67mc4eIgOFjLb31Ef8ovw5i+TurrslA/jxtBLkZj4NzyYg2YC8O9+XuBvjofHQrrZ1/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3da644c8ffeso37636035ab.1
-        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 08:09:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748704169; x=1749308969;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WE8P8A1gyjt3ODkAsUD5vrdPdzj1YbuWYd41n4eMzfE=;
-        b=d+i50H35j9vS+SC4FqeMqVqg3nFP8h+UnUypWNaNf1TwNOv+qlvR7RJBwIjGaILi3U
-         zWqBPUHeUVCGbCcAIdiO0NDHgjAOBSeTEDEAxDT7Vaqqw8jIIOQ/Kb+Xgdz657mpkCN1
-         reuqkmZIg3Oa2jZWXtJ7AJo1nklNB1BRw2gcWwWEgt1LE9sz9A9IFqMaqajRictQLPNQ
-         kWYY8iCmEBEgjhirPg7/FqI0omP78jXTUdi/GUWnTcIaGoxbP5vcyJMZK2GrEs0DpNRB
-         gnzMTEKRejGcnd9ByLcai9pxVtersRX4WtD8Ogyz+z/3lR58qAHtaXoaCSJ1+HGnOb4l
-         UhBA==
-X-Forwarded-Encrypted: i=1; AJvYcCXZVryPdkXDdJKkseWTvod5ApWxy4Nxg140w6Bw798b1wVTxqWlvdajM+yXfEKNgEjaBSRvaLzTycUgXys=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/5TbPrMA02UpQyVf+Pp7E62qH5zWbrKZz778+f+DNvwchBSHS
-	c56jkYsJ4r8OczB/b2ZMnH+Flm+DrgnqxjMvqpRD88E2pw4uU04nk1XYiq99JWlS5vFDPuSP31v
-	AWd2vkyVh/Xt/Aw4GlYyH0sTOaXS/pEDXpprU3WWGg+mmL6MXVSp0VAgbNto=
-X-Google-Smtp-Source: AGHT+IEd4aWdUvLJ1nbpNE26CWMzem3tFRHP4TBrQsPrEiC3oXuUjUoGfMZUsrttt+HTz5aHYPZyIAlRB+xgYKhDWGpU697gfhT0
+	s=arc-20240116; t=1748704236; c=relaxed/simple;
+	bh=ZMHrF29e4Q0OwlSJeMtEVlrgKuLi7VCVY7xQQc19E3o=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jI6yXtxPf9sGERITRRXzf8eBciCC77so9Mxj6lvN9vLUvQ11meIadfEydw/bMNgXfyOjDZAUjRIeUUnbzxj7aT81vOmu+diObGb23TYRfwaU05aZR+i7+8zd+cR8wB/mj0txN6HwfzM1cS/lTMriApuBSrfAfnNVmkl6DupIVgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QNWGX2Tk; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QNWGX2Tk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEC8DC4CEE3;
+	Sat, 31 May 2025 15:10:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748704235;
+	bh=ZMHrF29e4Q0OwlSJeMtEVlrgKuLi7VCVY7xQQc19E3o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=QNWGX2TkEuQg0+tuSvottoUNgI4LinPejvb+o22rbtBIAKxj2kLhM9ywJzv+ynB4R
+	 Hxn6a/nbz804MIbdCwQgReiLhwcsYORmarTB6MTQ3yMQ/X/poMg4cierNCxSX6IU5A
+	 DIO2D1eBq5fcjUwvC28zz0yg3VND7wqwRGOlxBd7eFu3dgc/PLMMcqd/mDsHq8i1sA
+	 rH4q8dQQYzOAQGpePt3k9y1weDiOFIRmHYq9ZocoRJYv/NuocesRLdqX8o1JSxOud+
+	 ll7MwGSHMj3DM5MzlvV7EhaMdg2LY0n5kq8Q0bCo4wdVthhgQG+rDKwLsVusPM3JmE
+	 6NiYGYVe1cDdQ==
+Date: Sat, 31 May 2025 16:10:29 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Waqar Hameed <waqar.hameed@axis.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, <kernel@axis.com>,
+ <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH 3/3] iio: Add driver for Nicera D3-323-AA PIR sensor
+Message-ID: <20250531161029.4010a3d6@jic23-huawei>
+In-Reply-To: <pndecwa85z5.fsf@axis.com>
+References: <cover.1746802541.git.waqar.hameed@axis.com>
+	<c5184074d85b68ca35ccb29ab94d774203b93535.1746802541.git.waqar.hameed@axis.com>
+	<20250511131432.1c6e381c@jic23-huawei>
+	<pndldqwiihi.fsf@axis.com>
+	<20250518183852.7e9afdac@jic23-huawei>
+	<pndo6vnfrnp.fsf@axis.com>
+	<20250525103019.3773be94@jic23-huawei>
+	<pndecwa85z5.fsf@axis.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1fef:b0:3dd:792d:ce42 with SMTP id
- e9e14a558f8ab-3dd9c738eb3mr60576285ab.0.1748704169599; Sat, 31 May 2025
- 08:09:29 -0700 (PDT)
-Date: Sat, 31 May 2025 08:09:29 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <683b1ba9.a00a0220.d8eae.0019.GAE@google.com>
-Subject: [syzbot] [bcachefs?] WARNING in lookup_object_or_alloc
-From: syzbot <syzbot+88e6a26b68fb670364e1@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On Tue, 27 May 2025 16:48:30 +0200
+Waqar Hameed <waqar.hameed@axis.com> wrote:
 
-syzbot found the following issue on:
+> On Sun, May 25, 2025 at 10:30 +0100 Jonathan Cameron <jic23@kernel.org> wrote:
+> 
+> > On Tue, 20 May 2025 13:27:54 +0200
+> > Waqar Hameed <waqar.hameed@axis.com> wrote:
+> >  
+> >> On Sun, May 18, 2025 at 18:38 +0100 Jonathan Cameron <jic23@kernel.org> wrote:
+> >>   
+> >> >> >> +#define D3323AA_DRV_NAME "d3323aa"      
+> >> >> >
+> >> >> > Put that inline where used.  A define like this both implies that various values
+> >> >> > must be the same when they need not be and means that we have to go find the
+> >> >> > define to fine out what they are set to.  Just setting the strings directly
+> >> >> > tends to end up more readable.      
+> >> >> 
+> >> >> Sure, we can do that. (There are a bunch of IIO-drivers doing this, so I
+> >> >> just thought that was the "convention".)    
+> >> >
+> >> > I'm sometimes in less fussy mood.  One day I might just clean those up
+> >> > so there is nothing to copy into new drivers!    
+> >> 
+> >> A quick search tells that there are (at least) 105 of those:
+> >> 
+> >>   rgrep -A 30 "\.driver" drivers/iio/ | grep "\.name" | grep -v '"'
+> >>   
+> >> I was just about to write a small Python script to fix those, but just
+> >> wanted to confirm with you before spending more time on this. So if you
+> >> don't want to do this yourself, I can help your here :)  
+> >
+> > It's probably not worth the churn on the ones that have the string repeated
+> > multiple times.  However, perhaps any that are only using it for .name would
+> > be good to tidy up?  Those are less a case of it being 'taste' vs it being silly
+> > to have a define!  
+> 
+> I think if you use it in multiple places, it should definitively be a
+> macro definition. I just sent some patches for those that only used it
+> once (I didn't include those with `KBUILD_MODNAME`. We can discuss if we
+> should also address those in that thread).
 
-HEAD commit:    015a99fa7665 Merge tag 'nolibc-20250526-for-6.16-1' of git..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16fcedf4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=231a962e5fdb804b
-dashboard link: https://syzkaller.appspot.com/bug?extid=88e6a26b68fb670364e1
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+I would disagree slightly.  If it is used in multiple places because there
+is some inherent reason they should have same string then I absolutely agree.
+If it's just because it's a convenient string that is used twice in places
+that could have had different string then not so much.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+> 
+> However, there are a bunch of drivers that _only_ use a macro definition
+> in `.name` and `indio_dev->name`, including this one. That _is_ more
+> than one place, so we should actually leave it? Or do you still think we
+> should have the same string literal in both places, as you originally
+> commented above?
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/f68bd0ec2940/disk-015a99fa.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/8c78735943b8/vmlinux-015a99fa.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/7d9332085f01/bzImage-015a99fa.xz
+I'd prefer that for new code, but it is a less clear cut case than the ones
+you have tidied up, so not worth the churn of tidying up unless people
+are otherwise working on the relevant drivers.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+88e6a26b68fb670364e1@syzkaller.appspotmail.com
+Jonathan
 
-ODEBUG: object ffffc9000d537a98 is on stack ffffc9000d530000, but NOT annotated.
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 16496 at lib/debugobjects.c:655 debug_object_is_on_stack lib/debugobjects.c:655 [inline]
-WARNING: CPU: 1 PID: 16496 at lib/debugobjects.c:655 lookup_object_or_alloc.part.0+0x2b1/0x590 lib/debugobjects.c:688
-Modules linked in:
-CPU: 1 UID: 0 PID: 16496 Comm: bch-copygc/loop Not tainted 6.15.0-syzkaller-02443-g015a99fa7665 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:debug_object_is_on_stack lib/debugobjects.c:655 [inline]
-RIP: 0010:lookup_object_or_alloc.part.0+0x2b1/0x590 lib/debugobjects.c:688
-Code: 0e 48 8d 7d 20 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 58 02 00 00 48 8b 55 20 4c 89 e6 48 c7 c7 c0 07 f5 8b e8 60 ff bf fc 90 <0f> 0b 90 48 83 c4 18 48 89 d8 5b 5d 41 5c 41 5d 41 5e 41 5f e9 b1
-RSP: 0018:ffffc9000d5377b0 EFLAGS: 00010086
-RAX: 0000000000000050 RBX: ffff8880347347a8 RCX: ffffffff819a71b9
-RDX: 0000000000000000 RSI: ffffffff819af046 RDI: 0000000000000005
-RBP: ffff88801f7e3c00 R08: 0000000000000005 R09: 0000000000000000
-R10: 0000000080000001 R11: 0000000000002be0 R12: ffffc9000d537a98
-R13: ffff88801f7e3c00 R14: 0000000000000000 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff888124aaa000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fdb0980f000 CR3: 0000000030dfd000 CR4: 0000000000350ef0
-Call Trace:
- <TASK>
- lookup_object_or_alloc lib/debugobjects.c:665 [inline]
- __debug_object_init+0x2a9/0x3d0 lib/debugobjects.c:743
- __init_work+0x4c/0x60 kernel/workqueue.c:677
- rhashtable_init_noprof+0x49f/0x7e0 lib/rhashtable.c:1085
- bch2_copygc_thread+0xf6/0xdd0 fs/bcachefs/movinggc.c:355
- kthread+0x3c5/0x780 kernel/kthread.c:464
- ret_from_fork+0x5d7/0x6f0 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
+> 
 
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
