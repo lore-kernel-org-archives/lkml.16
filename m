@@ -1,189 +1,155 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15EBA610D;
-	Sat, 31 May 2025 00:00:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C3A8195;
+	Sat, 31 May 2025 00:03:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748649651; cv=none; b=TUp/5A6lTdfGaK4ERIWLEcH/DDCibRXnYg16hLxllOxAMYQZ7XRvLxidTalfbuGefQtkr2aszfnu9bUY+CCMnVEVE6QUeMKlbUDxJdB4zfy57HTT4LxcWmrOK06ZBbx1e++FhBfQlxxbxOBlI+9OOSb+xtvPneDKfwYrwZJtq04=
+	t=1748649792; cv=none; b=QlSbh2BUEZWqKywOh0LbzTP2N1KhDi8QsP6QkN549PERpVeZ1BNYFZQcWcBkWQ2sZ+ZaVgefUtN4MvqFNvzzJ77ifFYqTVKGdbTXVPeY5zBkQoqiJ9sIT0/hLGp69EEMGCNSmEBUvxthTHfm2RVRV5nDvV8mNSp59Hc1Ai68Chs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748649651; c=relaxed/simple;
-	bh=cIU4rJEV3PzYfeAvMqrDFhPSSw49dpItRym8Lmw7BVE=;
+	s=arc-20240116; t=1748649792; c=relaxed/simple;
+	bh=w/dKbBbIAJRxT8vr39V0wwDize8rkJ2vri92QYY0yFU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YESixz7PaL/a9/5h1hR1eG0PR0jXdUVy537Nve8c+41Z+BfWH11VPe+UI4yWzdjVYRSJNwhReOU2Ra5L20wyIOFAmAiACwB91E/U9KE0Ny3swOYPFk68cxuXiCGuFZ57ZTKRjRKylSKoUkVHClu4E7asMtHDuG06kZIIka/rpVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MB+139uo; arc=none smtp.client-ip=209.85.128.179
+	 To:Cc:Content-Type; b=gC7xZNL1qimZdOc0B9YcmTNEAOGIijIY+Y2xacVR93GzemICp8sTOIP0Y8qnVAjd25G2U7ngUu7WjEKztnhGk1txMVnBZNaSkXLtabKXDPuJn+72rDxFshu8yzFJMlTb7UJqourC7jwj2wXOlDswfZQuub0Def/iLwuSUIQC8NY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iJoVWst3; arc=none smtp.client-ip=209.85.222.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MB+139uo"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-70e5e6ab7b8so24452957b3.1;
-        Fri, 30 May 2025 17:00:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iJoVWst3"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7c559b3eb0bso167380485a.1;
+        Fri, 30 May 2025 17:03:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748649649; x=1749254449; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748649789; x=1749254589; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VPJb86Hq4WNDSKvt4LG+mezjyW3VTAGngdOKgYawd4E=;
-        b=MB+139uo8ofSIMpwsNQhWaOLeMmTN8c9ItalTKNzKhcKsu813pAVIcQ2mEEgR2o1z9
-         k8CgOL95kcjOPhAyBH45t/qf9OEZJglTS3Rey6B8W7V/WHw1j1uu+xYBD/qSI4pD7rHj
-         e4s2RKfcYv6JFCSKdQnNqH8RxEvPPgsUMpNPSF47JPZKwO6YOk/qg+vtN8DXe1V10HUv
-         9jfYWoJFRGXI3dRlPs8Mzp3WNAxQfErkFP5dZeHxnO6WeXHEBLMzESqGUG9my/LQKxj/
-         RmZxTZysyci23Lq5hhi1UOhXNw9Rcc9esQPJkxyFjQHqYaFocECp+55cRIR6sbbjutmT
-         FYpQ==
+        bh=w/dKbBbIAJRxT8vr39V0wwDize8rkJ2vri92QYY0yFU=;
+        b=iJoVWst3BaY/sY8bswmnLJvIIkoDYJ060iS3JEcScBoYKmsGYNtQYjax8jbEEODB91
+         CbJXioMLP8w/SY8iwYVA9Nsn0cqJ2cOcKNQJQXGC2GLTrRgIQoZP8/OLj0Nuy6bd7NCR
+         6n9Cu2FOBTS8uAUsPyzHLY9iiEEq1Xxes9FPCElDYe8RTbtiwlS0IA2tWYC4ManqSnHd
+         j5iuiB/tgLXlcTeKDtBk7xgmqljSgUIULMQbGk/aAebPiWjH/TJuCRuUInakUFp7tUmc
+         ida2nslWgHQphRHgVCYoiqDeuYsdhiZGF0N+fXt9B8AmUwFkUO8eqaG7opJKu5UBmmHb
+         kJJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748649649; x=1749254449;
+        d=1e100.net; s=20230601; t=1748649789; x=1749254589;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VPJb86Hq4WNDSKvt4LG+mezjyW3VTAGngdOKgYawd4E=;
-        b=tPLnBnKC57Lb1t5M5pUCjLi+XHwNq/mMnzIf/fkeSSsGDGsN18ZZQ+ZqqCa1PW2nI3
-         NWJJeW24OE2EUzlG10rk7rQXwSe2Nt6c8uDxKfGw0lSGkb7N4BqJbOQVI8XG9xf4LD1P
-         c0OXLBLJb7ySO7em4JAyVjDcw2bZdG6wHST1DT3wC6l7cTy5/dfu+sb5MvyvIUXdFAyW
-         0KSBXrUyzmHLB6pKC61olyqbHhGZ+lh6g6mrhDhEbBlInIw3sdg4ZI8Jrzhw2Y7gFWsc
-         S8eg4gYG9SpD04lpvSX1MlwjEc4XYEJtHMg+iCnRKI2Svg/bN+di797o2VQE4xn+iRYp
-         +TOw==
-X-Forwarded-Encrypted: i=1; AJvYcCVSBhW9Jfh+S0QsrIs6g9ANAF2LarjPOsj39XdBMKYOiBEsf5gEBr+NvNczq5Fsu7OPi5Y0Yaa+fVZVJA+XL9ePTw==@vger.kernel.org, AJvYcCXG2v+SLpmmCZdnmhMlEgB9oaXimk9d98X2JlHuVA5XOiTx0geL9Jy91+dpRsD+FFYWfI0rdrnCGOtKbmc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/oQVOp7vpD9BsJ888/0yQt4ab+Rf51ZmTQBqNnIdmK9wqnMJq
-	AVwTTXXzB3KysN1bJABAhX4X28V23RNoolhaGfbNxyDybgW0in24wvr1evsxfQoH/Xy7zXU4ibn
-	04tfGTrPsv76Vtt7F67Yq3ik9fV85yfg=
-X-Gm-Gg: ASbGncvE2g17VJdY15Hgxy3Y1cqWDtki0aygsEhZnynVfMDzh5X8PEeRxA1BRiDBpNJ
-	y6ugCegSk10sZObBf1TLQDi70HHAFbAk1S8z97QrNjNUtr3GVkaTsPyJiLCzvPsYSXubMeF91YU
-	0oU8e4c5cZCciY23jRxEoi9nqDrn2iFOW/1CdZdEEJsQ==
-X-Google-Smtp-Source: AGHT+IEPyuLhSLHkXG6WJzCAeyG/vrZUuV9j9e4k4Y81H5Z0PDz8DOepANj0Ak33uPiNDbMk60z4rZx65swrJndifNU=
-X-Received: by 2002:a05:690c:c0b:b0:70e:2a04:c768 with SMTP id
- 00721157ae682-70f97e9b96cmr78339537b3.14.1748649648856; Fri, 30 May 2025
- 17:00:48 -0700 (PDT)
+        bh=w/dKbBbIAJRxT8vr39V0wwDize8rkJ2vri92QYY0yFU=;
+        b=i+K438gZkQdoy5/7CKheKY7h1QLRPxRQW4W52GUKsb5pi8l6HYdsKS6qaZGsbQrvl+
+         gd0WUeTvRz5GiszFNH9dZYk+nFTI+O6d0IfUP4LIoCjKXMfpP+ntrZbgFaJzQqeUDP+E
+         ew72yIKdH8a/6bQzFt+K4yIAlTJtYsKWKgMLW8quct43Z+hKu3R9qWvXFmTQVWJWU2PC
+         qNapBUgP9VdgByFmVDpy//4rxs+WggnkrM5JBiNjaAyhBjk7TxbsD4FShIGvYxnd50X7
+         pugHg+bGlZNM8Hlh8dWJ/D5tMdJtSylDIXCwfT7AKYvIKw+DFGPlFPZtNbcUYgMinppY
+         SmZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW9SKlfxXsc/4VMktD6KqLxFoNaaOQHZMM/h/6fijKfIi504E9oxWtQo5cbSfVICotiCE6rvmra@vger.kernel.org, AJvYcCXvgzgLXdpmOUc4DRAVbSgSs9DMK5+J+zyuOIAtTk/HsOeBucf6uC+EKjtFNnYkeHtBi3i2C83aLCrFsk0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIKmcz2puT/aXeZoftXiig5KDtUwe4DQc3A2cC+LyNF+kvmyni
+	n28WJdWAqgG0GnF6drjk4Y40d/fkUFwONaOqk0CKwbpBD8dCuauqGWer6icrPcJOTCz2pssTYsT
+	n3jC1+2Sw6mLlIS86ZSFWinzO9qgsDSI=
+X-Gm-Gg: ASbGnctmWhXe28Kfpge8QEqI5e5ap2MfaxC+Q4vKkvbVqPXEatC/LFTm47IJ8TsJA6+
+	d5V4FtmRbjPDopGDLyL+pOm6YJEGRfrbPyroMv7LZIgSc9vo07V6EApUJtk+cbtObqOx5MhBevl
+	mN2XjhZGSgRvCyHrfbztmJ32aDZOz/7/7pfg==
+X-Google-Smtp-Source: AGHT+IHYyJlGTtpjLfDS2korruhddZalmtfRzHquW+3WyYzNkhp5Cmo7Al9su+C9WS0W0IHm4jkhbhjqHsgACCoVWZw=
+X-Received: by 2002:a05:620a:4508:b0:7ce:f58e:7e9c with SMTP id
+ af79cd13be357-7d0eac3dc9bmr54414885a.7.1748649789320; Fri, 30 May 2025
+ 17:03:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250529065537.529937-1-howardchu95@gmail.com> <aDpBTLoeOJ3NAw_-@google.com>
-In-Reply-To: <aDpBTLoeOJ3NAw_-@google.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Fri, 30 May 2025 17:00:38 -0700
-X-Gm-Features: AX0GCFsCmdUxSSdrpaZTMmTf7Dx-dvC86JWXGqYw0M3vC6ZjScciY6SKcijK2Lc
-Message-ID: <CAH0uvojGoLX6mpK9wA1cw-EO-y_fUmdndAU8eZ1pa70Lc_rvvw@mail.gmail.com>
-Subject: Re: [RFC PATCH v1] perf trace: Mitigate failures in parallel perf
- trace instances
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, acme@kernel.org, 
-	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	peterz@infradead.org, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Song Liu <song@kernel.org>
+References: <20250527175558.2738342-1-james.hilliard1@gmail.com>
+ <631ed4fe-f28a-443b-922b-7f41c20f31f3@lunn.ch> <CADvTj4rGdb_kHV_gjKTJNkzYEPMzqLcHY_1xw7wy5r-ryqDfNQ@mail.gmail.com>
+ <fe8fb314-de99-45c2-b71e-5cedffe590b0@lunn.ch> <CADvTj4posNXP4FCXPqABtP0cMD1dPUH+hXcRQnetZ65ReKjOKQ@mail.gmail.com>
+ <e1f4e2b7-edf9-444c-ad72-afae6e271e36@gmail.com>
+In-Reply-To: <e1f4e2b7-edf9-444c-ad72-afae6e271e36@gmail.com>
+From: James Hilliard <james.hilliard1@gmail.com>
+Date: Fri, 30 May 2025 18:02:58 -0600
+X-Gm-Features: AX0GCFszR54VKhpbiCp7QT24c4JTQPW5wRggeGSsldqyRuwmihD2lRx7cFJ2K-I
+Message-ID: <CADvTj4oSbYLy3-w7m19DP-p0vwaJ8swNhoOFjOQiPFA24JKfMQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] net: stmmac: allow drivers to explicitly select
+ PHY device
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org, linux-sunxi@lists.linux.dev, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Russell King <linux@armlinux.org.uk>, 
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, Furong Xu <0x1207@gmail.com>, 
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello Namhyung,
-
-On Fri, May 30, 2025 at 4:37=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+On Fri, May 30, 2025 at 5:56=E2=80=AFPM Florian Fainelli <f.fainelli@gmail.=
+com> wrote:
+>
+> On 5/30/25 16:46, James Hilliard wrote:
+> > On Tue, May 27, 2025 at 2:02=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wr=
+ote:
+> >>
+> >> On Tue, May 27, 2025 at 01:21:21PM -0600, James Hilliard wrote:
+> >>> On Tue, May 27, 2025 at 1:14=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> =
 wrote:
+> >>>>
+> >>>> On Tue, May 27, 2025 at 11:55:54AM -0600, James Hilliard wrote:
+> >>>>> Some devices like the Allwinner H616 need the ability to select a p=
+hy
+> >>>>> in cases where multiple PHY's may be present in a device tree due t=
+o
+> >>>>> needing the ability to support multiple SoC variants with runtime
+> >>>>> PHY selection.
+> >>>>
+> >>>> I'm not convinced about this yet. As far as i see, it is different
+> >>>> variants of the H616. They should have different compatibles, since
+> >>>> they are not actually compatible, and you should have different DT
+> >>>> descriptions. So you don't need runtime PHY selection.
+> >>>
+> >>> Different compatibles for what specifically? I mean the PHY compatibl=
+es
+> >>> are just the generic "ethernet-phy-ieee802.3-c22" compatibles.
+> >>
+> >> You at least have a different MTD devices, exporting different
+> >> clocks/PWM/Reset controllers. That should have different compatibles,
+> >> since they are not compatible. You then need phandles to these
+> >> different clocks/PWM/Reset controllers, and for one of the PHYs you
+> >> need a phandle to the I2C bus, so the PHY driver can do the
+> >> initialisation. So i think in the end you know what PHY you have on
+> >> the board, so there is no need to do runtime detection.
+> >
+> > Hmm, thinking about this again, maybe it makes sense to just
+> > do the runtime detection in the MFD driver entirely, as it turns
+> > out the AC300 initialization sequence is largely a subset of the
+> > AC200 initialization sequence(AC300 would just not need any
+> > i2c part of the initialization sequence). So if we use the same
+> > MFD driver which internally does autodetection then we can
+> > avoid the need for selecting separate PHY's entirely. This at
+> > least is largely how the vendor BSP driver works at the moment.
+> >
+> > Would this approach make sense?
 >
-> Hello,
->
-> (Adding tracing folks)
+> This has likely been discussed, but cannot you move the guts of patch #2
+> into u-boot or the boot loader being used and have it patch the PHY
+> Device Tree node's "reg" property accordingly before handing out the DTB
+> to the kernel?
 
-(That's so convenient wow)
+No, that's not really the issue, the "reg" property can actually be
+the same for both the AC200 and AC300 phy's, both support using
+address 0, the AC200 additionally supports address 1. In my example
+they are different simply so that they don't conflict in the device tree.
 
->
-> On Wed, May 28, 2025 at 11:55:36PM -0700, Howard Chu wrote:
-> > perf trace utilizes the tracepoint utility, the only filter in perf
-> > trace is a filter on syscall type. For example, if perf traces only
-> > openat, then it filters all the other syscalls, such as readlinkat,
-> > readv, etc.
-> >
-> > This filtering is flawed. Consider this case: two perf trace
-> > instances are running at the same time, trace instance A tracing
-> > readlinkat, trace instance B tracing openat. When an openat syscall
-> > enters, it triggers both BPF programs (sys_enter) in both perf trace
-> > instances, these kernel functions will be executed:
-> >
-> > perf_syscall_enter
-> >   perf_call_bpf_enter
-> >     trace_call_bpf
-> >       bpf_prog_run_array
-> >
-> > In bpf_prog_run_array:
-> > ~~~
-> > while ((prog =3D READ_ONCE(item->prog))) {
-> >       run_ctx.bpf_cookie =3D item->bpf_cookie;
-> >       ret &=3D run_prog(prog, ctx);
-> >       item++;
-> > }
-> > ~~~
-> >
-> > I'm not a BPF expert, but by tinkering I found that if one of the BPF
-> > programs returns 0, there will be no tracepoint sample. That is,
-> >
-> > (Is there a sample?) =3D ProgRetA & ProgRetB & ProgRetC
-> >
-> > Where ProgRetA is the return value of one of the BPF programs in the BP=
-F
-> > program array.
-> >
-> > Go back to the case, when two perf trace instances are tracing two
-> > different syscalls, again, A is tracing readlinkat, B is tracing openat=
-,
-> > when an openat syscall enters, it triggers the sys_enter program in
-> > instance A, call it ProgA, and the sys_enter program in instance B,
-> > ProgB, now ProgA will return 0 because ProgA cares about readlinkat onl=
-y,
-> > even though ProgB returns 1; (Is there a sample?) =3D ProgRetA (0) &
-> > ProgRetB (1) =3D 0. So there won't be a tracepoint sample in B's output=
-,
-> > when there really should be one.
->
-> Sounds like a bug.  I think it should run bpf programs attached to the
-> current perf_event only.  Isn't it the case for tracepoint + perf + bpf?
+The actual issue is that they have differing initialization sequences and
+won't appear in mdio bus scans until after the initialization is complete.
 
-I really can't answer that question.
+> Another way to address what you want to do is to remove the "reg"
+> property from the Ethernet PHY node and just let of_mdiobus_register()
+> automatically scan, you have the advantage of having the addresses
+> consecutive so this won't dramatically increase the boot time... I do
+> that on the boards I suppose that have a removable mezzanine card that
+> includes a PHY address whose address is dictated by straps so we don't
+> want to guess, we let the kernel auto detect instead.
 
->
-> >
-> > I also want to point out that openat and readlinkat have augmented
-> > output, so my example might not be accurate, but it does explain the
-> > current perf-trace-in-parallel dilemma.
-> >
-> > Now for augmented output, it is different. When it calls
-> > bpf_perf_event_output, there is a sample. There won't be no ProgRetA &
-> > ProgRetB... thing. So I will send another RFC patch to enable
-> > parallelism using this feature. Also, augmented_output creates a sample
-> > on it's own, so returning 1 will create a duplicated sample, when
-> > augmented, just return 0 instead.
->
-> Yes, it's bpf-output and tracepoint respectively.  Maybe we should
-> always return 1 not to drop syscalls unintentionally and perf can
-> discard duplicated samples.
-
-I like this.
-
->
-> Another approach would be return 0 always and use bpf-output for
-> unaugmented syscalls too.  But I'm afraid it'd affect other perf tools
-> using tracepoints.
-
-Yep.
-
->
-> >
-> > Is this approach perfect? Absolutely not, there will likely be some
-> > performance overhead on the kernel side. It is just a quick dirty fix
-> > that makes perf trace run in parallel without failing. This patch is an
-> > explanation on the reason of failures and possibly, a link used in a
-> > nack comment.
->
-> Thanks for your work, but I'm afraid it'd still miss some syscalls as it
-> returns 0 sometimes.
-
-My bad... For example this:
-
-if (pid_filter__has(&pids_filtered, getpid()))
-   return 0;
-
-This patch is practically meaningless, but it passes the parallel tests.
-
-Thanks,
-Howard
+Yeah, I noticed this, but it doesn't really help since it's not the address
+that's incompatible but the reset sequence, I'm having trouble finding
+examples for mdio based reset drivers in the kernel however.
