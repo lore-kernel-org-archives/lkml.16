@@ -1,37 +1,37 @@
 Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509DD21CA0F
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 11:39:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D7523A563;
+	Sat, 31 May 2025 11:39:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748691558; cv=none; b=Hr0y+yMgvzjL3Zpv20mhnYybbrXA76DgO7D8mMcPxVOy96a2k9PDf6QCO9Cy4IU/OBDPEBnx+PB7xwtOoTVgER+4CxXhq/xEZnOePhJMNnL0tXlqn2yIWNP8ucAPXLpTur7p4XrdfYqebQ+QcFe5NpuBOnM9hvxGqtqeN5tvx1s=
+	t=1748691560; cv=none; b=HycAevO7XXXDik+le+PdZ9cmj46GI3z38a/XbcXBs/LMSnfwjpOnIFjZC7IHACF3Rd0AXStZIQytzfcZXiBXGOzgPsHkOP6aMZdmLQSkR85KTOeYaX2nnsYOZ2ORFqWm6QyLS5qbXfPVwgqGvPXT477rSU7zRSSvhdi35zW2z6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748691558; c=relaxed/simple;
-	bh=m65zYeSVVsi7UqG52q+jGdWxFXgZln5/FXtFQtDgwvY=;
+	s=arc-20240116; t=1748691560; c=relaxed/simple;
+	bh=erN5D2e7bDlphwtOAn+dkHFnD3yn45/VsLbboj6zrxI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h2BSoM6uHCme0VlcbQ7kJrU76/60uyRNYY7iJU/uEOwBGufOLhwOBtbhn+LloFtPdexTwM8V+sTdnCoLC/pav1rnJ+gW1yAz1JZLXYd4D9Xr9Jjq33NJWNjYGj8etTW+TDK2NtrjqDGPVZzKYOIprbriJpkl3NHMoR9P7DBP/yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=d2v/VAyH; arc=none smtp.client-ip=178.21.23.139
+	 MIME-Version; b=kKoGeiuOT9/Ay44rg+Ef498uHhUaCXlydPqbXZp4FJNQjeNZP3A0ZBUz8DFVyKF/6v07EOiqEwv/hl6ezU0UE77xAAzAVOd/oq/BcJoIL1WD6ph2z2glYmRD+0ZYHHth54IMNjK/WTAB9JU0CIvVlqI89Eot25Rucz2KZGPaZmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=coKGkj2E; arc=none smtp.client-ip=178.21.23.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="d2v/VAyH"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="coKGkj2E"
 Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id A654D26082;
-	Sat, 31 May 2025 13:39:14 +0200 (CEST)
+	by disroot.org (Postfix) with ESMTP id C383D25DDA;
+	Sat, 31 May 2025 13:39:10 +0200 (CEST)
 X-Virus-Scanned: SPAM Filter at disroot.org
 Received: from layka.disroot.org ([127.0.0.1])
  by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id rG_HP7124bMt; Sat, 31 May 2025 13:39:13 +0200 (CEST)
+ id d_qvBswCBNzt; Sat, 31 May 2025 13:39:10 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1748691553; bh=m65zYeSVVsi7UqG52q+jGdWxFXgZln5/FXtFQtDgwvY=;
+	t=1748691550; bh=erN5D2e7bDlphwtOAn+dkHFnD3yn45/VsLbboj6zrxI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=d2v/VAyH7QNvCtMsgYGlucRpVqiGaFGMUaXWP6g8Y3lfPmZGjBppnppFiBQadgOnC
-	 UweEN3t6/0nO+PKcS+hWszcStqnxgfYEgnCr7H2BNGMpLJ6zT+vSpPuljZKRaErJLq
-	 AZSF5Jy27K4wJNL8XOxfGc6NBp8Ik5QoRjaEC5JsCOtH5TsV7WYvv3P1HtdioaSGH0
-	 TWwDGPP8SJnXBxANE9Pu/GoHGCnFDgyBr1dZEGjpe9mCR4zRkysv2T8tB3swxjhCMn
-	 UP6MTO25EKdlh56E2lvgup9OQiOnztxjJHrjrcxvAmmZW6egGUSYOVGnf/E0Tg6HKp
-	 JpzNJau5eMu0Q==
+	b=coKGkj2EGAeXZzXzQthnKgSaBjMzg9y7BE4++nvKXRygjTM46d95x+NEpCDSJybNP
+	 eXFrIcFlVCD4d8rOBjWZDgpZRfGW4DK64ixxiszauNvfwklr2cQ120uEFh0QtcIt25
+	 EjyKZ9IbZRZ1wJHZ4GXhU4ezg6OkHWn9pmlg0W4nIciDWm81fGhQeGJhkK8kimt4mU
+	 HxaU/jUvl9aQkCCHZ/MhdsV8ojzcvDC+v8dN8KxzVzN9aG798humwNhAX1x+iyQ/B4
+	 Q2oKPP9OiOWVJjpT1OZi1ObEhZokJ0VvbrHUtQgjT627Q6FOuMWSzVXd5W4VzChK4u
+	 SByg+BrwAaiVg==
 From: Yao Zi <ziyao@disroot.org>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Jianmin Lv <lvjianmin@loongson.cn>,
@@ -40,10 +40,11 @@ Cc: linux-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	Mingcong Bai <jeffbai@aosc.io>,
 	Kexy Biscuit <kexybiscuit@aosc.io>,
-	Yao Zi <ziyao@disroot.org>
-Subject: [PATCH 2/2] platform/loongarch: laptop: Support backlight power control
-Date: Sat, 31 May 2025 11:38:51 +0000
-Message-ID: <20250531113851.21426-3-ziyao@disroot.org>
+	Yao Zi <ziyao@disroot.org>,
+	stable@vger.kernel.org
+Subject: [PATCH 1/2] platform/loongarch: laptop: Get brightness setting from EC on probe
+Date: Sat, 31 May 2025 11:38:50 +0000
+Message-ID: <20250531113851.21426-2-ziyao@disroot.org>
 In-Reply-To: <20250531113851.21426-1-ziyao@disroot.org>
 References: <20250531113851.21426-1-ziyao@disroot.org>
 Precedence: bulk
@@ -54,112 +55,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-loongson_laptop_turn_{on,off}_backlight() are designed for controlling
-power of the backlight, but they aren't really used in the driver
-previously.
+Previously 1 is unconditionally taken as current brightness value. This
+causes problems since it's required to restore brightness settings on
+resumption, and a value that doesn't match EC's state before suspension
+will cause surprising changes of screen brightness.
 
-Unify these two functions since they only differ in arguments passed to
-ACPI method, and wire up loongson_laptop_backlight_update() to update
-power state of the backlight as well. Tested on TongFang L860-T2 3A5000
-laptop.
+Let's get brightness from EC and take it as the current brightness on
+probe of the laptop driver to avoid the surprising behavior. Tested on
+TongFang L860-T2 3A5000 laptop.
 
+Cc: stable@vger.kernel.org
+Fixes: 6246ed09111f ("LoongArch: Add ACPI-based generic laptop driver")
 Signed-off-by: Yao Zi <ziyao@disroot.org>
 ---
- drivers/platform/loongarch/loongson-laptop.c | 53 +++++++-------------
- 1 file changed, 19 insertions(+), 34 deletions(-)
+ drivers/platform/loongarch/loongson-laptop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/platform/loongarch/loongson-laptop.c
-index 828bd62e3596..f01e53b1c84d 100644
+index 99203584949d..828bd62e3596 100644
 --- a/drivers/platform/loongarch/loongson-laptop.c
 +++ b/drivers/platform/loongarch/loongson-laptop.c
-@@ -56,8 +56,6 @@ static struct input_dev *generic_inputdev;
- static acpi_handle hotkey_handle;
- static struct key_entry hotkey_keycode_map[GENERIC_HOTKEY_MAP_MAX];
- 
--int loongson_laptop_turn_on_backlight(void);
--int loongson_laptop_turn_off_backlight(void);
- static int loongson_laptop_backlight_update(struct backlight_device *bd);
- 
- /* 2. ACPI Helpers and device model */
-@@ -354,6 +352,22 @@ static int ec_backlight_level(u8 level)
- 	return level;
- }
- 
-+static int ec_backlight_set_power(bool state)
-+{
-+	int status;
-+	union acpi_object arg0 = { ACPI_TYPE_INTEGER };
-+	struct acpi_object_list args = { 1, &arg0 };
-+
-+	arg0.integer.value = state;
-+	status = acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
-+	if (ACPI_FAILURE(status)) {
-+		pr_info("Loongson lvds error: 0x%x\n", status);
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
- static int loongson_laptop_backlight_update(struct backlight_device *bd)
- {
- 	int lvl = ec_backlight_level(bd->props.brightness);
-@@ -363,6 +377,8 @@ static int loongson_laptop_backlight_update(struct backlight_device *bd)
- 	if (ec_set_brightness(lvl))
+@@ -392,7 +392,7 @@ static int laptop_backlight_register(void)
+ 	if (!acpi_evalf(hotkey_handle, &status, "ECLL", "d"))
  		return -EIO;
  
-+	ec_backlight_set_power(bd->props.power == BACKLIGHT_POWER_ON ? true : false);
-+
- 	return 0;
- }
- 
-@@ -394,6 +410,7 @@ static int laptop_backlight_register(void)
- 
- 	props.brightness = ec_get_brightness();
+-	props.brightness = 1;
++	props.brightness = ec_get_brightness();
  	props.max_brightness = status;
-+	props.power = BACKLIGHT_POWER_ON;
  	props.type = BACKLIGHT_PLATFORM;
  
- 	backlight_device_register("loongson_laptop",
-@@ -402,38 +419,6 @@ static int laptop_backlight_register(void)
- 	return 0;
- }
- 
--int loongson_laptop_turn_on_backlight(void)
--{
--	int status;
--	union acpi_object arg0 = { ACPI_TYPE_INTEGER };
--	struct acpi_object_list args = { 1, &arg0 };
--
--	arg0.integer.value = 1;
--	status = acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
--	if (ACPI_FAILURE(status)) {
--		pr_info("Loongson lvds error: 0x%x\n", status);
--		return -ENODEV;
--	}
--
--	return 0;
--}
--
--int loongson_laptop_turn_off_backlight(void)
--{
--	int status;
--	union acpi_object arg0 = { ACPI_TYPE_INTEGER };
--	struct acpi_object_list args = { 1, &arg0 };
--
--	arg0.integer.value = 0;
--	status = acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
--	if (ACPI_FAILURE(status)) {
--		pr_info("Loongson lvds error: 0x%x\n", status);
--		return -ENODEV;
--	}
--
--	return 0;
--}
--
- static int __init event_init(struct generic_sub_driver *sub_driver)
- {
- 	int ret;
 -- 
 2.49.0
 
