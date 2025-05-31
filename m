@@ -1,103 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64C0328CF4C;
-	Sat, 31 May 2025 05:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41554191F91
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 05:19:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748668504; cv=none; b=XwAozSl9u7rSf/We1G3CbqDwmUY+4ncyszpcTAY9aIsy7MmAb1bL6puwBUKV7dJdOjVlej+14f0m6JYnOhCGqZJ5W0UKH+R6Vl5i8LPA6qBffHIELlRmhKsVydXoTHb3pjx8Mc/LhpGFqg/hWGhT4JwD2mC33gK0WL/Jq9bZSGY=
+	t=1748668797; cv=none; b=D8aMOPf4l1asVlT817jz0XrOl7Vv3CM3n8zMC4OHWbUC+XAIiW3P/1D9Sevy6ELplWP5rsFkgYr7/a+jDE5jqQyHQx0zwLr2DS/M427c6NoE2VTI+AWt1soU/WBqYRQwg4yQ43U+1eKM0Iam89UrH2ADvoeCNvGFEP1PwBx6uwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748668504; c=relaxed/simple;
-	bh=ov2RyoyGWZ9CUaKx1R+A9gSrh0GTb1Lv9Uc4r1MDsHc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=fEJZnQKBl3vl1trOogM7n6eN7dyR7+fwwMuWwNkx5bVh12MCn2fGDnOcGdlFb4zvSYL1FT7elFLbe7VtkVeD75Asf71kr2FcGycui9FUtiN8+4NK/BuXYkcZbVp6fxUUKMmECYMCRqlcr2/c2LV91UEx+XQLGZlLrD6Y0uzMVVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FdeU0Wq+; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748668797; c=relaxed/simple;
+	bh=ezSk1AScLKA5gqQ1etOOqZ8zKztgHmnwelpnkUWYS0k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kh7qn9Lk8UOlUy36yOlEahF103FRfPkD1REhZE1TjSAX7nzdy7PHKJif+TG09WBQeriK9anmRXVpZpPAsewb5yI4DAl2/YjzmyDQJrCv7pDBjTZ8bP0kLLfVcWYDtYE4lLR2ptCAXYgQ3KBSzJzKgFGG6EEvrCPMFGHfu7O4WPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=G9lhgLDJ; arc=none smtp.client-ip=85.214.250.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FdeU0Wq+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748668502; x=1780204502;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ov2RyoyGWZ9CUaKx1R+A9gSrh0GTb1Lv9Uc4r1MDsHc=;
-  b=FdeU0Wq+AW8+2kWbWy/EyNcdgLwi9O/ZOGbs1e5q9UrTUn9JBB/vTtt+
-   Y79OuWDRB5Lyx8r3eD7aTMBfBLVXbDUVEdz99s1vVMYHGaL+WxoDrPqFd
-   v70bKJuXfOxfuB+i8IglqZ4gEz7TMrat42Cf9hVgvEwNipoVa6qLmuKVv
-   the3BgcqTLDe02C07zK5J+AGr2oaKoeu1qamoyjXQbumagRfe6JvKxrO/
-   lpKXn7US8pAjqQEj7FgzzQXwlYvNbVu1Kk4PMwiuNXOfZGFMamWohdqQN
-   VCJT5Mk+vK7fDF/QApgNwESie58YQZz0DvklJ2oUsMrg5Ta++Ol6xuE17
-   w==;
-X-CSE-ConnectionGUID: Ag6r+IQ1QnCGaClWWBZhAg==
-X-CSE-MsgGUID: zqX30EUFSd2dx6Hpl4QvfA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="38388614"
-X-IronPort-AV: E=Sophos;i="6.16,197,1744095600"; 
-   d="scan'208";a="38388614"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 22:15:02 -0700
-X-CSE-ConnectionGUID: cMrtS6uQRyCXosT/QY4O4g==
-X-CSE-MsgGUID: o0rFZUSPQ7ymTJug2gUg7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,197,1744095600"; 
-   d="scan'208";a="144083942"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.71])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 22:14:57 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Sat, 31 May 2025 08:14:53 +0300 (EEST)
-To: Pratap Nirujogi <pratap.nirujogi@amd.com>
-cc: rdunlap@infradead.org, Hans de Goede <hdegoede@redhat.com>, 
-    sfr@canb.auug.org.au, linux-next@vger.kernel.org, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    benjamin.chan@amd.com, bin.du@amd.com, gjorgji.rosikopulos@amd.com, 
-    king.li@amd.com, dantony@amd.com
-Subject: Re: [PATCH 1/3] i2c: designware: Initialize adapter name only when
- not set
-In-Reply-To: <20250530200234.1539571-2-pratap.nirujogi@amd.com>
-Message-ID: <e75a0e17-8a1b-14f0-a33d-e59c0f692651@linux.intel.com>
-References: <20250530200234.1539571-1-pratap.nirujogi@amd.com> <20250530200234.1539571-2-pratap.nirujogi@amd.com>
+	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="G9lhgLDJ"
+Received: from 8bytes.org (p4ffe03ae.dip0.t-ipconnect.de [79.254.3.174])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.8bytes.org (Postfix) with ESMTPSA id E17F64C65E;
+	Sat, 31 May 2025 07:19:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
+	s=default; t=1748668792;
+	bh=ezSk1AScLKA5gqQ1etOOqZ8zKztgHmnwelpnkUWYS0k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G9lhgLDJFvR5tpEy12C9Lm0lQXRGrjrbpqUUZXr4hy5K8JDFMS5oGbPjS1raLyAxR
+	 9wtGAtVpqRxGKYWaoMHv99FcR5wmRa5vtVtvvqptFkydPEJ2dLoN6pXEBr4J+856w7
+	 0VpV5kgustMmnWJ8YlCznY6qmPSjIEWOa0KqgSRol5Jpu+bAgNTE9RHXV8nlFWBzJh
+	 mPEYZk+UYrrnATLmY6SM4dHWKRtKJ64xTpngcqKwvbXjFuUA1woOm/twizf4qDGTX+
+	 i4gkWq0ADdtKKLTCDXScPVZl6liRoFfNngK68aUIg8EKhHlmh6VO/XU/04YcszRVjh
+	 sEYZsHp5wo14Q==
+Date: Sat, 31 May 2025 07:19:51 +0200
+From: Joerg Roedel <joro@8bytes.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev
+Subject: Re: [git pull] IOMMU Updates for Linux v6.16
+Message-ID: <aDqRd6Nh7iwnFvmw@8bytes.org>
+References: <aDmght5YpHmJ6qZ2@8bytes.org>
+ <CAHk-=wguPX5w3UVmQpOk+v1ahJwRzRNXKHUJB92cwJfNpMU4ZA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wguPX5w3UVmQpOk+v1ahJwRzRNXKHUJB92cwJfNpMU4ZA@mail.gmail.com>
 
-On Fri, 30 May 2025, Pratap Nirujogi wrote:
-
-> Check if the adapter name is already set in the driver prior
-> to initializing with generic name in i2c_dw_probe_master().
+On Fri, May 30, 2025 at 09:57:34PM -0700, Linus Torvalds wrote:
+> On Fri, 30 May 2025 at 05:11, Joerg Roedel <joro@8bytes.org> wrote:
+> >
+> >           - SMMUv3:
 > 
-> Fixes: 90b85567e457 ("platform/x86: Add AMD ISP platform config for OV05C10")
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Link: https://lore.kernel.org/all/04577a46-9add-420c-b181-29bad582026d@infradead.org
-> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
-> ---
->  drivers/i2c/busses/i2c-designware-master.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+> Bah. This seems very broken.
 > 
-> diff --git a/drivers/i2c/busses/i2c-designware-master.c b/drivers/i2c/busses/i2c-designware-master.c
-> index c5394229b77f..ab03943d6aaf 100644
-> --- a/drivers/i2c/busses/i2c-designware-master.c
-> +++ b/drivers/i2c/busses/i2c-designware-master.c
-> @@ -1042,8 +1042,9 @@ int i2c_dw_probe_master(struct dw_i2c_dev *dev)
->  	if (ret)
->  		return ret;
->  
-> -	snprintf(adap->name, sizeof(adap->name),
-> -		 "Synopsys DesignWare I2C adapter");
-> +	if (!adap->name[0])
-> +		snprintf(adap->name, sizeof(adap->name),
-> +			 "Synopsys DesignWare I2C adapter");
+> I haven't bisected it, but my arm64 build - which I sadly didn't end
+> up doing earlier today - breaks with modpost errors:
+> 
+>    ERROR: modpost: "arm_smmu_make_cdtable_ste"
+> [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
+> 
+> (and the same error then repeated for arm_smmu_make_s2_domain_ste /
+> arm_smmu_make_s1_cd / arm_smmu_make_bypass_ste /
+> arm_smmu_make_abort_ste / arm_smmu_make_sva_cd / arm_smmu_get_ste_used
+> / arm_smmu_write_entry / arm_smmu_get_cd_used).
 
-I'd convert this to scnprintf() here as well and add to the changelog:
+Gah, sorry for that. I didn't see it in my testing, but have seen a
+similar problem related to iommufd which was fixed by removing the
+iommufd part of this patch-set:
 
-While at it, convert to scnprintf() that is preferred over snprintf().
+	https://lore.kernel.org/all/1926170.CQOukoFCf9@devpool92.emlix.com/
 
-As with the other patch, this too is missing receipients (as indicated 
-by the get_maintainers script).
+So maybe it is worth a try reverting the arm-smmu part of this series as
+well:
 
--- 
- i.
+	e436576b0231542f6f233279f0972989232575a8
 
+Regards,
+
+	Joerg
