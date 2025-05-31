@@ -1,141 +1,258 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC8FF9CB;
-	Sat, 31 May 2025 07:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A162232376
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 07:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748677951; cv=none; b=GnhtavdedCsJQ8h+zLjI/nKrisVmYukiCBMA8z4z9Q8nF4JJ7SiCDNntU/3XamOrw8D/8lssjEDRPUjc0lbKM3DqzIiLLrPfL6nct2RqCGtGK2C+vBxu4H3vrRs1w1lJorfF81BsBrlqCyshe7CEvmvvduF22I0I8qcbA3FNRiU=
+	t=1748677986; cv=none; b=TzzXNE3/+4UoQXdceEdCL5BQ7KWMA0d63+mNk1jnYERRL5vfLPK3K4pbEwXjQBEuM5ch9m6yXzWV2xvkCqL2HLa4B+iknbQ5qrLge9adho7VjvfgmxSBsq2KOxeMtoBzci4p/1oaXT5VkZEKJ7H/BBfCaujGs5lUvBzF86uMPNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748677951; c=relaxed/simple;
-	bh=tHojx3WnGS7eQ0SzezEGkt1EjWAPJ30dI6MnJxTgjM8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iftYM6jbtrFs4Disz+2086oHuKguKmhlN6JyEoBM4lvnlp9mt9uBP2zzpT5hQH6O5CYTrMhzGPh52ZrI1xVF5elXkqkRudoXZDcoRvF9SpJswiX3SZJYsOI5wNrf39Jknw/R2WDPE2DPBFndiqitN9AE31PJaCZZXeP+1C0qgcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=fQn2Dy7d; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1748677986; c=relaxed/simple;
+	bh=gi33k+BwXBcmYBnpVFvtvjKKqtQOvvRzm/GhWc+31uQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SRKs5WEHKYJS6mzvwL5twMXLmNZbXXJEt+q+BWO+2fudG+ScLYLwOuvuebRPls2EdMMhP/A0ZUM1P60zMbEYhanrbvRu5DnPF7OEBCnF+SdrI6LSImWB2eEbgRvQERfk/1w2yw6ADf+WyKAJlkRlZf4fwI95P7AHBR/qfvqCkj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LaCzPK7E; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fQn2Dy7d"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54V5F2C4012423;
-	Sat, 31 May 2025 07:52:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=corp-2025-04-25; bh=U/de0sLPbqSCHnDWBPAZlkOrRjPwz
-	POr/jCBm6y14z4=; b=fQn2Dy7dU/Mwi6+5/HaZVdFRdHhvS8obRHMsitkIQ89KR
-	5XKRAcm6cVDhNh29WVRlyTF54A3f6RshKJTGLdDOIY6JVmFZh9eXM1rmGcnyc20s
-	IDv1EBT5fFV/H9VZZsKxw+mg7CYRayC92YNa3k920zHubF8p/2a2DNZmNU1lR3FK
-	EuCbw3nQhVsC1PABb15d0aEFENbIOuskoBc4pYoWzpPyrP/P1wvUEZP6XBbp+4GG
-	cIMaALAaKkJhgbGYzf8bB//TAZnax7OaWT5ebg7F1aLwUzey3KYeAL1hw9AfA7RL
-	TS0t87y8JAKXUHW0SMxSz5/m/SDQeMvNHmWZ82nXA==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46yrpe05rv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 31 May 2025 07:52:15 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54V6VD7F040698;
-	Sat, 31 May 2025 07:52:14 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46yr76n6nw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 31 May 2025 07:52:14 +0000
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 54V7qDZX009425;
-	Sat, 31 May 2025 07:52:13 GMT
-Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 46yr76n6nq-1;
-	Sat, 31 May 2025 07:52:13 +0000
-From: Alok Tiwari <alok.a.tiwari@oracle.com>
-To: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
-        alison.schofield@intel.com, vishal.l.verma@intel.com,
-        ira.weiny@intel.com, dan.j.williams@intel.com, corbet@lwn.net,
-        linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org,
-        darren.kenny@oracle.com
-Subject: [PATCH] Documentation: cxl: fix typos and improve clarity in memory-devices.rst
-Date: Sat, 31 May 2025 00:51:58 -0700
-Message-ID: <20250531075209.3334261-1-alok.a.tiwari@oracle.com>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LaCzPK7E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748677983;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ohg5fHfGT0uyzMgKziJAeADzuAKD9RxJfWVtgxptZlg=;
+	b=LaCzPK7EXSESs7qF/PxlGwtJ1DP4qZOlbTzKmglU/uZ3jAoUb8zZ36P3u1QAM3xIBgH9qy
+	eTqZHYC0EP9+3W8OxtZrDSaOYSQgIV2QfflOV0lsatZpaRJHEDlRpT6VtAuFaFp6CbF5aM
+	9QNUcSmlu0eek1DcgPWZzGU1cuKe8dY=
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
+ [209.85.215.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-650-aU4wOQm8P_6N86rlSLM42g-1; Sat, 31 May 2025 03:53:01 -0400
+X-MC-Unique: aU4wOQm8P_6N86rlSLM42g-1
+X-Mimecast-MFC-AGG-ID: aU4wOQm8P_6N86rlSLM42g_1748677980
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-b2eb60594e8so1705281a12.1
+        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 00:53:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748677980; x=1749282780;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ohg5fHfGT0uyzMgKziJAeADzuAKD9RxJfWVtgxptZlg=;
+        b=fpSVXytCt1HWrdoK2gXBHlJFF/SliLOiSPhWY7YYzzgUsmVIgVGdHFNWiNO8p1rrfs
+         T0OPWg4ILW7peNni0MveYxitul0atuv8FnY/dtLiG5RpfKEx3c8Aj4IrGr6GSOLy35FC
+         oIzf3++cqHPGU4Eo22Krq5Mt/dnKKM1tucXhR+LhXbWPNcynw4MMJd2S6IURStl4TZC6
+         p61AxOTF7jRLyTcAz/bOxeHeCbMn5h6nFthq1F4OS3AKrfDFjng65dDwYkeBdkhrsTDz
+         tI1SvfP26VObmbk04d9o191ryMiA2tYyaiSH7NnvpKErnZRqDLzpFnGQFSCahxD7mRXy
+         yi5A==
+X-Forwarded-Encrypted: i=1; AJvYcCX7+/ZT0TaS2Z7pFQed5blUhFUOsTSS8GNXJPrhMtgk1ZzhNsudr2UdX2HxlRWQM8ODeeDCCRtdI4WH738=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrP1oC0p5Qai1B2kf+68pRU8xCphrIjY41Aq3CEFP1SXr+sOxz
+	kUPo1jdTTaa0Pv8YEOg2jIazTTTyPhnTpu2PYCb3q/KK+D0SYadpFCcFVM1oorEmY0KgeYs2sUS
+	P0/P9RncqkMTt2f2OJKYggEO5lhmOeMduQZKXnDrMa1JiwUkc7G3UopvNwCJX79H7S2kbA0U6W5
+	9m9SRrg3LXdo8CjqcR4GR231xF7mVPeCcEDjkFTNZI
+X-Gm-Gg: ASbGncuVkWlWAXFal1DQDi51lrpF7y4YrlAQZqe7RtzlNPYCPjJgTrvOI0OqHpUWS4J
+	gVo52ROiwTwTA9ovPL7nLCaPoMqc5wWB99CuaG0TTRKB28hsKCdvwGYf6P0c10eeoDKY=
+X-Received: by 2002:a17:90b:1646:b0:312:959:dc49 with SMTP id 98e67ed59e1d1-3127c6c6ac5mr1874355a91.13.1748677979875;
+        Sat, 31 May 2025 00:52:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEwPb15HB+x5LlixDkbF7gwe9jHKDNEMcaqP3sUfYw07TfO/w5/C6AzdnYsr2gdlgDJLMrrXiAq57x6HSqDjjw=
+X-Received: by 2002:a17:90b:1646:b0:312:959:dc49 with SMTP id
+ 98e67ed59e1d1-3127c6c6ac5mr1874323a91.13.1748677979477; Sat, 31 May 2025
+ 00:52:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-31_03,2025-05-30_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 malwarescore=0
- phishscore=0 mlxscore=0 mlxlogscore=999 suspectscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2505310067
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMxMDA2OCBTYWx0ZWRfX9mSvu23lUmTe ZEzKciV+C8x+RSIB47ibN8EU/YW05929zCa3L5CST2XJh7slNIjWTOVCMa98skM8ZOj6Hc+Z1Dz nlt+AtrV/I1XHlrAOdBKV7RkBQ4jJGIPftK+9KgUKS/9TlsXzZ6B9LKZd3M/E1EqzbmVtAeVLGs
- lCJow/hf1y3CtrIHm6LlfgCEsQMk8QGSs89VPvtGYg7YHWdZVwGiOF7qApaAb1+icsSKsndv+P+ e6NLxcdsxivXKBVN09o6pSRI1VLTeAoBE5tlrli8RDNy1sBUjo+QeY+pV1zauWtPak4huSFbDSi LM7Rh7hlNN9p+4ug0752ZLN1EKI+2Y/yXKFBh6/lDT8EchHDAUAmMyMOXQpTLTHLX3CkNNHbzyg
- BJr9eSQvvNirIGUhytaeQQzIDIsvIit8DT4t1SG1ROB4wRRh6FPPMnepO97LYeIWxa85mb+F
-X-Authority-Analysis: v=2.4 cv=NN7V+16g c=1 sm=1 tr=0 ts=683ab52f b=1 cx=c_pps a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17 a=dt9VzEwgFbYA:10 a=yPCof4ZbAAAA:8 a=434jntuLdbThvQkW9cEA:9 cc=ntf awl=host:13206
-X-Proofpoint-GUID: tY2p2HxlxCnsdj_N1alDJ5HSJN6OP0_w
-X-Proofpoint-ORIG-GUID: tY2p2HxlxCnsdj_N1alDJ5HSJN6OP0_w
+References: <20250526132755.166150-1-acarmina@redhat.com> <20250526132755.166150-2-acarmina@redhat.com>
+ <20250529090129.GZ24938@noisy.programming.kicks-ass.net> <CAGegRW76X8Fk_5qqOBw_aqBwAkQTsc8kXKHEuu9ECeXzdJwMSw@mail.gmail.com>
+ <20250530140140.GE21197@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250530140140.GE21197@noisy.programming.kicks-ass.net>
+From: Alessandro Carminati <acarmina@redhat.com>
+Date: Sat, 31 May 2025 09:52:47 +0200
+X-Gm-Features: AX0GCFvDRExJEUZAsyc3Pz18fgK0YsOWafT6qSf9X6kJzNpcf_7G6rLG7qkegQQ
+Message-ID: <CAGegRW5phz1L7WF478jssaxhv4XDrH1H6wYer_MhU_h8gWQdfg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/5] bug/kunit: Core support for suppressing warning backtraces
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kselftest@vger.kernel.org, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Kees Cook <keescook@chromium.org>, Daniel Diaz <daniel.diaz@linaro.org>, 
+	David Gow <davidgow@google.com>, Arthur Grillo <arthurgrillo@riseup.net>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, Naresh Kamboju <naresh.kamboju@linaro.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Maxime Ripard <mripard@kernel.org>, 
+	Ville Syrjala <ville.syrjala@linux.intel.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Guenter Roeck <linux@roeck-us.net>, Alessandro Carminati <alessandro.carminati@gmail.com>, 
+	Jani Nikula <jani.nikula@intel.com>, Jeff Johnson <jeff.johnson@oss.qualcomm.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Linux Kernel Functional Testing <lkft@linaro.org>, dri-devel@lists.freedesktop.org, 
+	kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
+	Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This patch corrects several typographical issues and improves phrasing
-in memory-devices.rst:
+Hello Peter,
+thanks for the clear explanation.
+I finally understand what was bothering you, it wasn=E2=80=99t the __bug_ta=
+ble
+size or the execution time overhead, but the code size itself.
 
-- Fixes duplicate word ("1 one") and adjusts phrasing for clarity.
-- Adds missing hyphen in "on-device".
-- Corrects "a give memory device" to "a given memory device".
-- fix singular/plural "decoder resource" -> "decoder resources".
-- Clarifies "spans to Host Bridges" -> "spans two Host Bridges".
+On Fri, May 30, 2025 at 4:02=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+>
+> +Mark because he loves a hack :-)
+>
+> On Thu, May 29, 2025 at 12:36:55PM +0200, Alessandro Carminati wrote:
+>
+> > > Like I said before; you need to do this on the report_bug() size of
+> > > things.
+> > >
+> > I fully understand your concerns, and I truly appreciate both yours
+> > and Josh=E2=80=99s feedback on this matter.
+> > Please rest assured that I took your suggestions seriously and
+> > carefully evaluated the possibility of consolidating all related logic
+> > within the exception handler.
+> > After a thorough investigation, however, I encountered several
+> > limitations that led me to maintain the check in the macro.
+> > I=E2=80=99d like to share the rationale behind this decision:
+>
+> > * In the case of WARN() messages, part of the output, the
+> > user-specified content, is emitted directly by the macro, prior to
+> > reaching the exception handler [1].
+> >   Moving the check solely to the exception handler would not prevent
+> > this early output.
+>
+> Yeah, this has been really annoying me for a long while. WARN() code gen
+> is often horrible crap because of that.
+>
+> Everything I've tried so far is worse though :/ So in the end I try to
+> never use WARN(), its just not worth it.
+>
+> ... /me goes down the rabbit-hole again, because well, you can't let
+> something simple like this defeat you ;-)
+>
+> Results of today's hackery below. It might actually be worth cleaning
+> up.
+>
+> > * Unless we change the user-facing interface that allows suppression
+> > based on function names, we still need to work with those names at
+> > runtime.
+>
+> I'm not sure I understand this. What interface and what names? This is a
+> new feature, so how can there be an interface that needs to be
+> preserved?
+>
+> > * This leaves us with two main strategies: converting function names
+> > to pointers (e.g., via kallsyms) or continuing to work with names.
+> >   The former requires name resolution at suppression time and pointer
+> > comparison in the handler, but function names are often altered by the
+> > compiler due to inlining or other optimizations[2].
+> >   Some WARN() sites are even marked __always_inline[3], making it
+> > difficult to prevent inlining altogether.
+>
+> Arguably __func__ should be the function name of the function you get
+> inlined into. C inlining does not preserve the sequence point, so there
+> is absolutely no point in trying to preserve the inline name.
+>
+> I'm again confused though; [2] does not use __func__ at all.
+>
+> Anyway, when I do something like:
+>
+> void __attribute__((__always_inline__)) foo(void)
+> {
+>         puts(__func__);
+> }
+>
+> void bar(void)
+> {
+>         foo();
+> }
+>
+> it uses a "foo" string, which IMO is just plain wrong. Anyway, do both
+> compilers guarantee it will always be foo? I don't think I've seen the
+> GCC manual be explicit about this case.
+On this point:
+even if not explicitly stated, __func__ will always be "foo" in your exampl=
+e.
+I=E2=80=99m confident in this because, according to the GCC manual[1],
+__func__ is inserted into the source as:
+static const char __func__[] =3D "function-name";
+At that point, the compiler doesn't yet know what the final code will
+look like or whether it will be inlined.
+I=E2=80=99m not a compiler expert, but this definition doesn=E2=80=99t leav=
+e much room
+for alternative interpretations.
 
-These changes improve readability and accuracy of the documentation.
+>
+> > * An alternative is to embed function names in the __bug_table.
+> >   While potentially workable, this increases the size of the table and
+> > requires attention to handle position-independent builds
+> > (-fPIC/-fPIE), such as using offsets relative to __start_rodata.
+> >
+> > However, the central challenge remains: any logic that aims to
+> > suppress WARN() output must either move the entire message emission
+> > into the exception handler or accept that user-specified parts of the
+> > message will still be printed.
+>
+> Well, we can set suppress_printk and then all is quiet :-) Why isn't
+> this good enough?
+>
+> > As a secondary point, there are also less common architectures where
+> > it's unclear whether suppressing these warnings is a priority, which
+> > might influence how broadly the effort is applied.
+> > I hoped to have addressed the concern of having faster runtime, by
+> > exposing a counter that could skip the logic.
+> > Kess suggested using static branching that would make things even bette=
+r.
+> > Could Kess' suggestion mitigate your concern on this strategy?
+> > I=E2=80=99m absolutely open to any further thoughts or suggestions you =
+may
+> > have, and I appreciate your continued guidance.
+>
+> I'm not really concerned with performance here, but more with the size
+> of the code emitted by WARN_ONCE(). There are a *ton* of WARN sites,
+> while only one report_bug() and printk().
+>
+> The really offensive thing is that this is for a feature most nobody
+> will ever need :/
+>
+>
+>
+> The below results in:
+>
+> 03dc  7ac:      48 c7 c0 00 00 00 00    mov    $0x0,%rax        7af: R_X8=
+6_64_32S       .rodata.str1.1+0x223
+> 03e3  7b3:      ba 2a 00 00 00          mov    $0x2a,%edx
+> 03e8  7b8:      48 0f b9 d0             ud1    %rax,%rdx
+>
+> And it even works :-)
+>
+> Hmm... I should try and stick the format string into the __bug_table,
+> its const after all. Then I can get 2 arguments covered.
+>
+> ---
+> diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
+> index f0e9acf72547..88b305d49f35 100644
+> --- a/arch/x86/include/asm/bug.h
+> +++ b/arch/x86/include/asm/bug.h
+The rework is impressive.
+I=E2=80=99m not in a position to judge, but for what it=E2=80=99s worth, yo=
+u have my admiration.
 
-Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
----
- Documentation/driver-api/cxl/memory-devices.rst | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+That said, I see a problem, the same I faced when embedding __func__
+in the bug table.
+__func__, and I believe also printk fmt, are constants, but their
+pointers might not be, especially in position-independent code.
+This causes issues depending on the compiler.
+For example, my tests worked fine with recent GCC on x86_64, but
+failed with Clang.
+Changing architecture complicates things further, GCC added support
+for this only in newer versions.
+I ran into this in v3 when the s390x build failed[2].
 
-diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
-index d732c42526df..e9e2952a967d 100644
---- a/Documentation/driver-api/cxl/memory-devices.rst
-+++ b/Documentation/driver-api/cxl/memory-devices.rst
-@@ -29,8 +29,8 @@ Platform firmware enumerates a menu of interleave options at the "CXL root port"
- (Linux term for the top of the CXL decode topology). From there, PCIe topology
- dictates which endpoints can participate in which Host Bridge decode regimes.
- Each PCIe Switch in the path between the root and an endpoint introduces a point
--at which the interleave can be split. For example platform firmware may say at a
--given range only decodes to 1 one Host Bridge, but that Host Bridge may in turn
-+at which the interleave can be split. For example, platform firmware may say at a
-+given range only decodes to one Host Bridge, but that Host Bridge may in turn
- interleave cycles across multiple Root Ports. An intervening Switch between a
- port and an endpoint may interleave cycles across multiple Downstream Switch
- Ports, etc.
-@@ -187,7 +187,7 @@ decodes them to "ports", "ports" decode to "endpoints", and "endpoints"
- represent the decode from SPA (System Physical Address) to DPA (Device Physical
- Address).
- 
--Continuing the RAID analogy, disks have both topology metadata and on device
-+Continuing the RAID analogy, disks have both topology metadata and on-device
- metadata that determine RAID set assembly. CXL Port topology and CXL Port link
- status is metadata for CXL.mem set assembly. The CXL Port topology is enumerated
- by the arrival of a CXL.mem device. I.e. unless and until the PCIe core attaches
-@@ -197,7 +197,7 @@ the Linux PCI core to tear down switch-level CXL resources because the endpoint
- ->remove() event cleans up the port data that was established to support that
- Memory Expander.
- 
--The port metadata and potential decode schemes that a give memory device may
-+The port metadata and potential decode schemes that a given memory device may
- participate can be determined via a command like::
- 
-     # cxl list -BDMu -d root -m mem3
-@@ -249,8 +249,8 @@ participate can be determined via a command like::
- ...which queries the CXL topology to ask "given CXL Memory Expander with a kernel
- device name of 'mem3' which platform level decode ranges may this device
- participate". A given expander can participate in multiple CXL.mem interleave
--sets simultaneously depending on how many decoder resource it has. In this
--example mem3 can participate in one or more of a PMEM interleave that spans to
-+sets simultaneously depending on how many decoder resources it has. In this
-+example mem3 can participate in one or more of a PMEM interleave that spans two
- Host Bridges, a PMEM interleave that targets a single Host Bridge, a Volatile
- memory interleave that spans 2 Host Bridges, and a Volatile memory interleave
- that only targets a single Host Bridge.
--- 
-2.47.1
+As mentioned in the patchset cover letter, my solution to avoid
+copying the strings into the bug table is to store their pointer as an
+offset from __start_rodata.
+[1]. https://gcc.gnu.org/onlinedocs/gcc/Function-Names.html
+[2]. https://lore.kernel.org/all/202503200847.LbkIJIXa-lkp@intel.com/
 
