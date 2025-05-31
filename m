@@ -1,296 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E922907;
-	Sat, 31 May 2025 18:16:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0382915E97
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 18:20:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748715420; cv=none; b=kcnq555hB8Jndy1yzUbgfwxZOEeLAikOdJ15v3PtlRGGqKRPnL8lgbsR+1SHS7tyOpU7wFfEMlbP2s9kVgSybshxOJ1DgLxgoDd7P/dMmySz/mTNcxIC4uhvaNObajMPSwU3y1oZ6+ogt9bumxALk2NBAco3XWxQx+kz70Lvb2k=
+	t=1748715643; cv=none; b=BAmSQ/X+/+EAj63XTi4ml5102VrckjEH4MpKOqvZ41cGXgK7RupvlsVtAvtXs+jyQaODmJGBoLiaGDBV2Q5Q2Nl3UiNFkXEqjatfbrBD7Glx+Fr6JK1E52OZPk9DXGTWpE34IeTorRTAFgJnrMNOldmYPx/Jw4T7Oehos9XgE8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748715420; c=relaxed/simple;
-	bh=FzAtl4E/kjariHEmYDAKBVDCXj0UnW3tqyh8pyA7pfc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NeL1roo6WIMy3nE93Gt1HzBIeyeNPPdSl/7WNJ0Cvl5nRvi80QR58JdgxiCS8du+xNf3ltrebK+L2myv68MzEU651W2ZQMslvkjGPI7Q5+UdK7XLlgJGA6z3LsnJ/IQ+DOByAC37H2ZnHHra2aUUeMM7rxxm/JubO66qb1sDop4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U7kEA2CN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748715643; c=relaxed/simple;
+	bh=g1YXaWkHeBBoh5aON1H/wkbwtxVq56hqXg0PL20DN6k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NpOjKiPD3CRuDQCRQ1Yfq7qXHhKiUtAi8V1F9Wy3DnUvz7Mc5NLoX4WzgX+UjAXnTdkKsswZOGwHlejs7OgYhGrj6KInvlReYSwVek0Br50UJqvP/hPUhe2k3laOAtph0PCRDdgBYZIwzPgy9Mx0hg6Nby7pN6OQBujY8ldbwPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=QpXbdA1M; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U7kEA2CN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E8FAC4CEE3;
-	Sat, 31 May 2025 18:16:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748715419;
-	bh=FzAtl4E/kjariHEmYDAKBVDCXj0UnW3tqyh8pyA7pfc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=U7kEA2CNs8rb7hTj2WFBORGxIvXq9nJgZvtImNnTI4lfjzsZ7bnMhjw15+Z3wM85T
-	 lN2wwjvCUMR3f7kwPrPecCsrhj9atWNQSuVHSLjR/+uSIVLHui7D0hIGiaI6WkDQBQ
-	 WrL4QkWmEJAM0fwAY1EPEOb8FoeZoFvCeVMvFRv8cUZ3+JauOgXu6ATggOsE8kVTZ4
-	 rFK4IBUozp/3zGGWQEuYPzJ5wJm2ypftwCtxOZydO/DTux7vocbFN8/P1a96DAxj74
-	 WgvauYglNIL0CbEH/MlmEahUamAXNaNGT1tVToNGfTVN3+xJK97wldf+TVNAB/DxFA
-	 Iyg5mzmWTuCvw==
-Date: Sat, 31 May 2025 19:16:52 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Gyeyoung Baek <gye976@gmail.com>
-Cc: David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 3/9] iio: consumer: Add new APIs of
- triggered_buffer_setup() family
-Message-ID: <20250531191652.488ff1b6@jic23-huawei>
-In-Reply-To: <20250519-timestamp-v1-3-fcb4f6c2721c@gmail.com>
-References: <20250519-timestamp-v1-0-fcb4f6c2721c@gmail.com>
-	<20250519-timestamp-v1-3-fcb4f6c2721c@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="QpXbdA1M"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-acacb8743a7so550277366b.1
+        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 11:20:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1748715639; x=1749320439; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3TCK79rzW2CQXkeBe174A4ly8q1x+sDUlP4xsDI45wY=;
+        b=QpXbdA1MQvmHhY2XKJ2Xd7JCdgGbx1fzT+iwMbtlnOB3iMABoPqwtvLLTeDjGQdAkY
+         wDxzRh4XEZWYwNDO8gouJCWfOmXr0FZEursOcG8bAhUwUiLV32lRhl+cWW6Ica149Fck
+         v76JTh8K1F2U99umvOc2Wp5LZxpH3eoI3kx1g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748715639; x=1749320439;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3TCK79rzW2CQXkeBe174A4ly8q1x+sDUlP4xsDI45wY=;
+        b=gx8EdC7R/pMfu3nS9fbT40LiUpmvsKWPBiVYxU/seIIYQYeKjujBtuAAhpcnZJS1w4
+         VgaDwX/JzPNEkk0CnRaQrbyHG5XlflTKeN1WNYPVeEFEXd3Ze4Zy0+DYZ37Vnc1/w28G
+         8cXQLdXy+ecLdX9/gxoYTTFM/biLk6MkM1Uzb8etnJUrxFCxwUVjeUTY/KdIXX/JU0Qa
+         AfSeZ0PBsKbrrpde7u7KRX1qNd62wZhgHsLv9LdUvhufMF3mx7+0WCFpfV23sZKABHmu
+         qtPxqs+BnUOcawUTnRuine/9Y6IgzLyGpDXdiHWbv3VFeRrITyaeywaD/Pbw7oXes0Bm
+         A6Ig==
+X-Gm-Message-State: AOJu0YxBHtAZ0df8Wf8mNMNe+JpkORGZpT8uX+gN723/ZR4rDcgeVzZZ
+	1QSfKa7ZTvP2Uf4DsOe2hMoyP5Oih52/P/4A8SB02KJ7AWlZS1/LQ5yDQicdacDoMR9Jsp6NdeB
+	URsa6t30=
+X-Gm-Gg: ASbGncuaIAWWu+JrLTEo1qE8WJ9v3O3iWMQ+smkGhzcuLHLirSO6L/7+aUYaFbh9hp6
+	FdzazJgL3Gwp+r8/6qaPB5ETp2kFTKCsoeBJk9T10tbXYqOTpR4YAKMv6uYgGpWIv0fasB/rXsr
+	vmH/y/lQ7rEcln0QRYWD0LZ2FW0X6Kctq7c3wPPcirh6eSHsYqik1tp0SGXADLiZj9rcpONGFzN
+	a/RnyrXfknrAMEn5wA6BDsiKyLOpefy2/LV/ejJsF1lN9Z+cRgIbYgH8ieQJzcXseuf9L32X36O
+	ZNKhWZatEAiiQdsEkN2oBQR5gZNYf56HLhWMqY+lIb33CyjZE2F6HyW+mrGvQHOTT97KrNtbMLV
+	a2Y7MAI29UW33QQySqNfwfZ3Psw==
+X-Google-Smtp-Source: AGHT+IHIIDs5U40cJEIfvXiVPKEy5PruHRglH6qtdvM7/LbBZpU5PDl/0MLLC78+JIeEgcHg9N9Atw==
+X-Received: by 2002:a17:906:c10e:b0:ad5:6258:996f with SMTP id a640c23a62f3a-ad8b0e38931mr986712566b.19.1748715639026;
+        Sat, 31 May 2025 11:20:39 -0700 (PDT)
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com. [209.85.208.52])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada6ad6aa17sm535369866b.175.2025.05.31.11.20.37
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 31 May 2025 11:20:37 -0700 (PDT)
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-6020ff8d35dso1069003a12.0
+        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 11:20:37 -0700 (PDT)
+X-Received: by 2002:a05:6402:13c2:b0:5f4:8c80:77d with SMTP id
+ 4fb4d7f45d1cf-6056f2dcee6mr7392841a12.6.1748715637006; Sat, 31 May 2025
+ 11:20:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <202505310759.3A40AD051@keescook>
+In-Reply-To: <202505310759.3A40AD051@keescook>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sat, 31 May 2025 11:20:20 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wj4a_CvL6-=8gobwScstu-gJpX4XbX__hvcE=e9zaQ_9A@mail.gmail.com>
+X-Gm-Features: AX0GCFsw0RakLu4NbgZH60L9hc3sRPVu3EiOps6PGFrH5DreN9vxerKDG8IrIHM
+Message-ID: <CAHk-=wj4a_CvL6-=8gobwScstu-gJpX4XbX__hvcE=e9zaQ_9A@mail.gmail.com>
+Subject: Re: [GIT PULL] hardening fixes for v6.16-rc1
+To: Kees Cook <kees@kernel.org>, Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>, 
+	Ingo Saitz <ingo@hannover.ccc.de>, kernel test robot <oliver.sang@intel.com>, 
+	Marco Elver <elver@google.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Thiago Jung Bauermann <thiago.bauermann@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 19 May 2025 23:25:55 +0900
-Gyeyoung Baek <gye976@gmail.com> wrote:
+On Sat, 31 May 2025 at 08:00, Kees Cook <kees@kernel.org> wrote:
+>
+> Please pull this small handful of hardening fixes for v6.16-rc1.
 
-> Add new versions of the `iio_triggered_buffer_setup_ext()` APIs.
-> (API names are tentative)
-> 	iio_triggered_buffer_setup_new
-> 	iio_triggered_buffer_setup_ext_new
-> 	devm_iio_triggered_buffer_setup_new
-> 	devm_iio_triggered_buffer_setup_ext_new
-> 	iio_alloc_pollfunc_new
-> these APIs take a bool parameter named `timestamp_enabled`.
-> 
-> Signed-off-by: Gyeyoung Baek <gye976@gmail.com>
+WTF, Kees?
 
-See if you can find a way (probably a common shared function) to make it
-more obvious that these are very nearly the same as the existing code.
+You seem to have actively maliciously modified your tree completely.
 
-Right now it is harder than I'd like to spot the differences.
+There are completely crazy commits in there that are entirely fake.
 
+You have this: f8b59a0f90a2 Merge tag 'driver-core-6.16-rc1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/driver-core/driver-core
 
-> ---
->  drivers/iio/buffer/industrialio-triggered-buffer.c | 82 ++++++++++++++++++++++
->  drivers/iio/industrialio-trigger.c                 | 33 +++++++++
->  include/linux/iio/trigger_consumer.h               |  7 ++
->  include/linux/iio/triggered_buffer.h               | 25 +++++++
->  4 files changed, 147 insertions(+)
-> 
-> diff --git a/drivers/iio/buffer/industrialio-triggered-buffer.c b/drivers/iio/buffer/industrialio-triggered-buffer.c
-> index 9bf75dee7ff8..9b99bf884ccb 100644
-> --- a/drivers/iio/buffer/industrialio-triggered-buffer.c
-> +++ b/drivers/iio/buffer/industrialio-triggered-buffer.c
-> @@ -14,6 +14,68 @@
->  #include <linux/iio/triggered_buffer.h>
->  #include <linux/iio/trigger_consumer.h>
->  
-> +int iio_triggered_buffer_setup_ext_new(struct iio_dev *indio_dev,
-> +					irqreturn_t (*thread)(int irq, void *p),
-> +					bool timestamp_enabled,
-> +					enum iio_buffer_direction direction,
-> +					const struct iio_buffer_setup_ops *setup_ops,
-> +					const struct iio_dev_attr **buffer_attrs)
-> +{
-> +	struct iio_buffer *buffer;
-> +	int ret;
-> +
-> +	/*
-> +	 * iio_triggered_buffer_cleanup() assumes that the buffer allocated here
-> +	 * is assigned to indio_dev->buffer but this is only the case if this
-> +	 * function is the first caller to iio_device_attach_buffer(). If
-> +	 * indio_dev->buffer is already set then we can't proceed otherwise the
-> +	 * cleanup function will try to free a buffer that was not allocated here.
-> +	 */
-> +	if (indio_dev->buffer)
-> +		return -EADDRINUSE;
-> +
-> +	buffer = iio_kfifo_allocate();
-> +	if (!buffer) {
-> +		ret = -ENOMEM;
-> +		goto error_ret;
-> +	}
-> +
-> +	indio_dev->pollfunc = iio_alloc_pollfunc_new(thread,
-> +							timestamp_enabled,
-> +							IRQF_ONESHOT,
-> +							indio_dev,
-> +							"%s_consumer%d",
-> +							indio_dev->name,
-> +							iio_device_id(indio_dev));
-> +	if (indio_dev->pollfunc == NULL) {
-> +		ret = -ENOMEM;
-> +		goto error_kfifo_free;
-> +	}
-> +
-> +	/* Ring buffer functions - here trigger setup related */
-> +	indio_dev->setup_ops = setup_ops;
-> +
-> +	/* Flag that polled ring buffering is possible */
-> +	indio_dev->modes |= INDIO_BUFFER_TRIGGERED;
-> +
-> +	buffer->direction = direction;
-> +	buffer->attrs = buffer_attrs;
-> +
-> +	ret = iio_device_attach_buffer(indio_dev, buffer);
-> +	if (ret < 0)
-> +		goto error_dealloc_pollfunc;
-> +
-> +	return 0;
-> +
-> +error_dealloc_pollfunc:
-> +	iio_dealloc_pollfunc(indio_dev->pollfunc);
-> +error_kfifo_free:
-> +	iio_kfifo_free(buffer);
-> +error_ret:
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL(iio_triggered_buffer_setup_ext_new);
-> +
->  /**
->   * iio_triggered_buffer_setup_ext() - Setup triggered buffer and pollfunc
->   * @indio_dev:		IIO device structure
-> @@ -114,6 +176,26 @@ static void devm_iio_triggered_buffer_clean(void *indio_dev)
->  	iio_triggered_buffer_cleanup(indio_dev);
->  }
->  
-> +int devm_iio_triggered_buffer_setup_ext_new(struct device *dev,
-> +						struct iio_dev *indio_dev,
-> +						irqreturn_t (*thread)(int irq, void *p),
-> +						bool timestamp_enabled,
-> +						enum iio_buffer_direction direction,
-> +						const struct iio_buffer_setup_ops *ops,
-> +						const struct iio_dev_attr **buffer_attrs)
-> +{
-> +	int ret;
-> +
-> +	ret = iio_triggered_buffer_setup_ext_new(indio_dev, thread, timestamp_enabled, direction,
-> +						     ops, buffer_attrs);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return devm_add_action_or_reset(dev, devm_iio_triggered_buffer_clean,
-> +					indio_dev);
-> +}
-> +EXPORT_SYMBOL_GPL(devm_iio_triggered_buffer_setup_ext_new);
-> +
->  int devm_iio_triggered_buffer_setup_ext(struct device *dev,
->  					struct iio_dev *indio_dev,
->  					irqreturn_t (*h)(int irq, void *p),
-> diff --git a/drivers/iio/industrialio-trigger.c b/drivers/iio/industrialio-trigger.c
-> index 54416a384232..527c3cf84be0 100644
-> --- a/drivers/iio/industrialio-trigger.c
-> +++ b/drivers/iio/industrialio-trigger.c
-> @@ -361,6 +361,39 @@ irqreturn_t iio_pollfunc_store_time(int irq, void *p)
->  }
->  EXPORT_SYMBOL(iio_pollfunc_store_time);
->  
-> +struct iio_poll_func
-> +*iio_alloc_pollfunc_new(irqreturn_t (*thread)(int irq, void *p),
-> +			bool timestamp_enabled,
-> +			int type,
-> +			struct iio_dev *indio_dev,
-> +			const char *fmt,
-> +			...)
-> +{
-> +	va_list vargs;
-> +	struct iio_poll_func *pf;
-> +
-> +	pf = kmalloc(sizeof(*pf), GFP_KERNEL);
-> +	if (!pf)
-> +		return NULL;
-> +	va_start(vargs, fmt);
-> +	pf->name = kvasprintf(GFP_KERNEL, fmt, vargs);
-> +	va_end(vargs);
-> +	if (pf->name == NULL) {
-> +		kfree(pf);
-> +		return NULL;
-> +	}
-> +	pf->timestamp_enabled = timestamp_enabled;
-> +	pf->h = NULL;
-> +	pf->thread = thread;
-> +	pf->type = type;
-> +	pf->indio_dev = indio_dev;
-> +
-> +	pf->timestamp = 0;
-> +	pf->timestamp_type = 0;
-> +	return pf;
-> +}
-> +EXPORT_SYMBOL_GPL(iio_alloc_pollfunc_new);
-> +
->  struct iio_poll_func
->  *iio_alloc_pollfunc(irqreturn_t (*h)(int irq, void *p),
->  		    irqreturn_t (*thread)(int irq, void *p),
-> diff --git a/include/linux/iio/trigger_consumer.h b/include/linux/iio/trigger_consumer.h
-> index 5e6ff8738386..213cd8560518 100644
-> --- a/include/linux/iio/trigger_consumer.h
-> +++ b/include/linux/iio/trigger_consumer.h
-> @@ -50,6 +50,13 @@ struct iio_poll_func {
->  	bool timestamp_enabled;
->  };
->  
-> +__printf(5, 6) struct iio_poll_func
-> +*iio_alloc_pollfunc_new(irqreturn_t (*thread)(int irq, void *p),
-> +			bool timestamp_enabled,
-> +			int type,
-> +			struct iio_dev *indio_dev,
-> +			const char *fmt,
-> +			...);
->  
->  __printf(5, 6) struct iio_poll_func
->  *iio_alloc_pollfunc(irqreturn_t (*h)(int irq, void *p),
-> diff --git a/include/linux/iio/triggered_buffer.h b/include/linux/iio/triggered_buffer.h
-> index 29e1fe146879..5648c382a506 100644
-> --- a/include/linux/iio/triggered_buffer.h
-> +++ b/include/linux/iio/triggered_buffer.h
-> @@ -9,6 +9,13 @@ struct iio_dev;
->  struct iio_dev_attr;
->  struct iio_buffer_setup_ops;
->  
-> +int iio_triggered_buffer_setup_ext_new(struct iio_dev *indio_dev,
-> +	irqreturn_t (*thread)(int irq, void *p),
-> +	bool timestamp_enabled,
-> +	enum iio_buffer_direction direction,
-> +	const struct iio_buffer_setup_ops *setup_ops,
-> +	const struct iio_dev_attr **buffer_attrs);
-> +
->  int iio_triggered_buffer_setup_ext(struct iio_dev *indio_dev,
->  	irqreturn_t (*h)(int irq, void *p),
->  	irqreturn_t (*thread)(int irq, void *p),
-> @@ -17,11 +24,24 @@ int iio_triggered_buffer_setup_ext(struct iio_dev *indio_dev,
->  	const struct iio_dev_attr **buffer_attrs);
->  void iio_triggered_buffer_cleanup(struct iio_dev *indio_dev);
->  
-> +#define iio_triggered_buffer_setup_new(indio_dev, h, timestamp_enabled, setup_ops)	\
-> +	iio_triggered_buffer_setup_ext_new((indio_dev), (h), (timestamp_enabled),	\
-> +					IIO_BUFFER_DIRECTION_IN, (setup_ops),		\
-> +					NULL)
-> +
->  #define iio_triggered_buffer_setup(indio_dev, h, thread, setup_ops)		\
->  	iio_triggered_buffer_setup_ext((indio_dev), (h), (thread),		\
->  					IIO_BUFFER_DIRECTION_IN, (setup_ops),	\
->  					NULL)
->  
-> +int devm_iio_triggered_buffer_setup_ext_new(struct device *dev,
-> +					struct iio_dev *indio_dev,
-> +					irqreturn_t (*thread)(int irq, void *p),
-> +					bool timestamp_enabled,
-> +					enum iio_buffer_direction direction,
-> +					const struct iio_buffer_setup_ops *ops,
-> +					const struct iio_dev_attr **buffer_attrs);
-> +
->  int devm_iio_triggered_buffer_setup_ext(struct device *dev,
->  					struct iio_dev *indio_dev,
->  					irqreturn_t (*h)(int irq, void *p),
-> @@ -30,6 +50,11 @@ int devm_iio_triggered_buffer_setup_ext(struct device *dev,
->  					const struct iio_buffer_setup_ops *ops,
->  					const struct iio_dev_attr **buffer_attrs);
->  
-> +#define devm_iio_triggered_buffer_setup_new(dev, indio_dev, thread, timestamp_enabled, setup_ops)	\
-> +	devm_iio_triggered_buffer_setup_ext_new((dev), (indio_dev), (thread), (timestamp_enabled),	\
-> +					    IIO_BUFFER_DIRECTION_IN,					\
-> +					    (setup_ops), NULL)
-> +
->  #define devm_iio_triggered_buffer_setup(dev, indio_dev, h, thread, setup_ops)	\
->  	devm_iio_triggered_buffer_setup_ext((dev), (indio_dev), (h), (thread),	\
->  					    IIO_BUFFER_DIRECTION_IN,		\
-> 
+which *claims* to be from me, and committed by me, but is very much
+not. It's some garbage you have entirely made up.
 
+Yes, there is a real commit like that, but it's has the SHA1 ID of
+9d230d500b0e.
+
+And this isn't some kind of innocent rebasing mistake, because this
+actively lies about who committed it.
+
+This is completely unacceptable.
+
+I will now refuse to pull *anything* from you until you explain what
+the f&*^ you have been up to, because this looks like you have been
+doing actively bad things.
+
+You need to nuke that tree, and come up with a good explanation for
+this kind of shit.
+
+I'm cc'ing Konstantin, because I really think these kinds of games are
+COMPLETELY UNACCEPTABLE, and this is not the kind of behavior we can
+have on kernel.org accounts.
+
+Konstantin - please disable Kees' account immediately until this is
+cleared up. Because this looks *malicious*.
+
+                 Linus
