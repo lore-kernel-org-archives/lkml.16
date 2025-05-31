@@ -1,107 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA69528F3;
-	Sat, 31 May 2025 05:07:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2AAC28CF59;
+	Sat, 31 May 2025 05:10:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748668028; cv=none; b=fnAnMyi9lHLXC6iPDwVknNdoMCMnNZJzWkZ8OgY9Lz+Czk6IwNuWgB2ltXTfbb7o7CUB8kCucOZxOcnTudUq3pdnv4Y+BBt2mFhxNf+JQA3aIqKVoo0e0n1ALpb4D9IGxm1hUrWrl1CCG5Xc2G2edS7RHdCpoGGvFwA2dp+mqiE=
+	t=1748668213; cv=none; b=uROFDq+kesNM7LPv3MM+13z9lbUHMKpjEemYMFRoY3d526182eMLpasLL3UBenL51rERvZURpl7D8X5JIETSdb6OD/HO8ryN2TUS54QvOo40kH9xKi9KRmCqJl8ICd8PaVoZDY4+prKeTTPtPMzCPnvhd8LQwU1q3xs6o17NWAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748668028; c=relaxed/simple;
-	bh=YZ4ML5dpAImMlPisgbvtvk3ijEN6nlptoNCtSdJvkHo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=tKx7oRLNnx3y3/zYwMQMOIkBcVLRY8DUzPWPM6fGK93KHoCys77CB4D2wEaBQ40dyKsVvVHpzbW4t92UVO8qtCgk0YUOz34QV5PmJUHUhY/ZnT0kQA5eskY1Hg4n1AnasiyiauyRdl7g5+BQff9FuS5lFsvnDgteVnMJytMbo0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FEYqfL1u; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748668213; c=relaxed/simple;
+	bh=uL+BKZu6kDrl8m5sy72o33sP2MBjksLZumY0/hHgMps=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=hG0IonEbazqO4IJO6E86yjhBAfUWCaeho6zOEhiMYLdXAUVS6y2Ft8L6z3BjD5fBxjObxqetc1cyDBI5Wla8M70tp5tGG8LaDdGLSPyrGyRCZ8HThZTKrg37nXr229KAlidDTTCuWS1QvZ/NrwYBvH+mEnIc8Lno57uWt5sN6Fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ChbudPE6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FEYqfL1u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748668027; x=1780204027;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=YZ4ML5dpAImMlPisgbvtvk3ijEN6nlptoNCtSdJvkHo=;
-  b=FEYqfL1uoUPxXNCxOed+dzDP4jTslKLP00wqaOPTQOqugJWo+h6lTuz+
-   hxdjCLQiRZMxD+baDbBLbEc3+yaqhUj9bXrh2Q1a81RK9V5uhO7M+rYbT
-   pQeleThfvOaMSI3m5Jo+ZKMM282Hwz+HT4cdAjdrDznC+P3UBUOZsqIKB
-   gy9lDtYIzjukkjuDhrQZud9i1L6C0wAwFj6moadoCqHmOXwhEwWyTBeMn
-   E2qqLUn8/6dbJs5KMtEPBYAgGLBiJUW5INICw08VNS+Q2PX4c3cQ6hHDZ
-   5PWg0YWVgUewcDR5BR21YSv5l6a7yBQgJaEiIFsSA/yReCMeTjeHRIE0z
-   Q==;
-X-CSE-ConnectionGUID: 4SzFpBmvT9yJDBhBRKEmJg==
-X-CSE-MsgGUID: 2BPMkLD0RI+mAgpdg2vThg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="50630679"
-X-IronPort-AV: E=Sophos;i="6.16,197,1744095600"; 
-   d="scan'208";a="50630679"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 22:07:06 -0700
-X-CSE-ConnectionGUID: dlpNWuiMScSMGuHnvpv8LA==
-X-CSE-MsgGUID: WQiGyPnJRWG08nLsqGv4bQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,197,1744095600"; 
-   d="scan'208";a="144030782"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.71])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 22:07:01 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Sat, 31 May 2025 08:06:58 +0300 (EEST)
-To: Pratap Nirujogi <pratap.nirujogi@amd.com>
-cc: rdunlap@infradead.org, Hans de Goede <hdegoede@redhat.com>, 
-    sfr@canb.auug.org.au, linux-next@vger.kernel.org, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    benjamin.chan@amd.com, bin.du@amd.com, gjorgji.rosikopulos@amd.com, 
-    king.li@amd.com, dantony@amd.com
-Subject: Re: [PATCH 2/3] i2c: amd-isp: Initialize unique adpater name
-In-Reply-To: <20250530200234.1539571-3-pratap.nirujogi@amd.com>
-Message-ID: <8670fa5f-5bf6-7dfe-1ec7-5cd1ec4472aa@linux.intel.com>
-References: <20250530200234.1539571-1-pratap.nirujogi@amd.com> <20250530200234.1539571-3-pratap.nirujogi@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ChbudPE6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70119C4CEE3;
+	Sat, 31 May 2025 05:10:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748668213;
+	bh=uL+BKZu6kDrl8m5sy72o33sP2MBjksLZumY0/hHgMps=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=ChbudPE6kmY4/3YOEolvt7DlvOHxpw6Tt6E9jnB8i0Lb7bhRG15EJiN9qjaVSskzh
+	 rshvnh2rjKhodkAhJKN7McTm5buTU9yh+2JzQoP0AaNwzR+cyp4BcUF+hH9PQJC2a+
+	 kO7iXg21mW+k/4NQ364m2fi+lZr9qUg9ExlnC5PeFnnlSptnqS91d8Yzs9pt/YktAG
+	 zd71IWbc5keU8SImNDd0am3g4HwepyowevzjB7W05wj0b0qfvC5Wxvih8myur58VGy
+	 IZWtD2ZPSg+FdSAr9RtB33SyX/KUVXXMKm4kGmjgyEvzBZ1z81ecVgK/CH/DMYqAh5
+	 9ACVpTobtCgdg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB09D39F1DF3;
+	Sat, 31 May 2025 05:10:47 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v4 0/2] net: stmmac: prevent div by 0
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174866824674.44670.9404709509125224265.git-patchwork-notify@kernel.org>
+Date: Sat, 31 May 2025 05:10:46 +0000
+References: <20250529-stmmac_tstamp_div-v4-0-d73340a794d5@bootlin.com>
+In-Reply-To: <20250529-stmmac_tstamp_div-v4-0-d73340a794d5@bootlin.com>
+To: =?utf-8?q?Alexis_Lothor=C3=A9_=3Calexis=2Elothore=40bootlin=2Ecom=3E?=@aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org
+Cc: alexandre.torgue@foss.st.com, joabreu@synopsys.com, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ mcoquelin.stm32@gmail.com, richardcochran@gmail.com, preid@electromag.com.au,
+ thomas.petazzoni@bootlin.com, maxime.chevallier@bootlin.com,
+ netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Jose.Abreu@synopsys.com, si.yanteng@linux.dev
 
-Hi Pratap,
+Hello:
 
-Please send the next version(s) to all relevant people as indicated by 
-scripts/get_maintainer.pl.
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-On Fri, 30 May 2025, Pratap Nirujogi wrote:
-
-> Initialize unique name for amdisp i2c adapter, which is used
-> in the platform driver to detect the matching adapter for
-> i2c_client creation.
+On Thu, 29 May 2025 11:07:22 +0200 you wrote:
+> Hello,
+> this small series aims to fix a small splat I am observing on a STM32MP157
+> platform at boot (see commit 1) due to a division by 0.
+> There is no functional change in this revision, this has just been
+> rebased on top of net/main.
 > 
-> Fixes: 90b85567e457 ("platform/x86: Add AMD ISP platform config for OV05C10")
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Link: https://lore.kernel.org/all/04577a46-9add-420c-b181-29bad582026d@infradead.org
-> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
-> ---
->  drivers/i2c/busses/i2c-designware-amdisp.c | 2 ++
->  1 file changed, 2 insertions(+)
+> Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
 > 
-> diff --git a/drivers/i2c/busses/i2c-designware-amdisp.c b/drivers/i2c/busses/i2c-designware-amdisp.c
-> index ad6f08338124..e8cb3785c740 100644
-> --- a/drivers/i2c/busses/i2c-designware-amdisp.c
-> +++ b/drivers/i2c/busses/i2c-designware-amdisp.c
-> @@ -62,6 +62,8 @@ static int amd_isp_dw_i2c_plat_probe(struct platform_device *pdev)
->  
->  	adap = &isp_i2c_dev->adapter;
->  	adap->owner = THIS_MODULE;
-> +	snprintf(adap->name, sizeof(adap->name),
-> +		 "AMDISP DesignWare I2C adapter");
+> [...]
 
-scnprintf() is preferrable over snprintf(). Even if you don't use the 
-return value here, eventually somebody will want to get rid of snprintf() 
-entirely so lets try not add new ones.
+Here is the summary with links:
+  - [v4,1/2] net: stmmac: make sure that ptp_rate is not 0 before configuring timestamping
+    https://git.kernel.org/netdev/net/c/030ce919e114
+  - [v4,2/2] net: stmmac: make sure that ptp_rate is not 0 before configuring EST
+    https://git.kernel.org/netdev/net/c/cbefe2ffa778
 
->  	ACPI_COMPANION_SET(&adap->dev, ACPI_COMPANION(&pdev->dev));
->  	adap->dev.of_node = pdev->dev.of_node;
->  	/* use dynamically allocated adapter id */
-> 
-
+You are awesome, thank you!
 -- 
- i.
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
