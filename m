@@ -1,126 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5936279D0
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 13:56:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19F623C50F;
+	Sat, 31 May 2025 14:00:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748699780; cv=none; b=urappcCCpls+JSiU0FnuHuIp9+g9+tGDAyOTcoINRFwFXP9A2NrPIuyyYORwFu4jXQ0jzOhFPQKr+2HG7+kchy9NJz6d/2szMAkPhCM2wbHQq0JbVYc+42igwnaseYjwKJM+KG+QVCU74duMsUV75ET5fAK2lBsvNjdyGsQztFw=
+	t=1748700002; cv=none; b=qDKcMlNX5BnzDavUpL3frdSa+yf9/Gy6uLTsO4NDsAWVppzl4GkTnjv8IgOfUtOBcCudXoXGu4IB+4lNlNla6a9FkCr72D9DHI+B0ikFVHzK8vjOoLETzz4IgsqgP8y9d8U/VEhzhTIZ2+M4eMvjvTBErbSlDUymZjixvL4GChw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748699780; c=relaxed/simple;
-	bh=xc/jaFtGUdS9VtsThMr6l64Wu8Kp6Q3DfbpAKtANsIA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BOWcg/B7jt/jTBgE0HNuWTrNrT2f2KFbMjeCTuKXcZuKk0J6CPc1UiTuMaakzzRAHqqq6V9YZctZaYMj12L1aEQrbxyhiEe/nJQYdnPtfbvur0wM8hkGbLjbo+YKnZ6TJWxNhMb51F59ZfMvCLprZIO/sYlsng07t0QLQIDXM2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gN6kXzDG; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748700002; c=relaxed/simple;
+	bh=w40llQNqhsUdvYKnHf7RQNenStlQPIZxcEYBgaiNGT0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LfDdQDVPbYPuC6nUu0ICA3xFX4bu1wf1CqG5LwBy5LubTNMw2k7FkWelr/Hq6MMh+Qn576rCDC9God6OweVQwA8eFZatMPZJnBIuJK6SKSQSQSErqoFKM7lEPYJEKiCKG5D1T6EOPa9u2uFG+aP/CNs5oYNrd4z4l4RbB43eQPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c9y+vgDO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gN6kXzDG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748699778; x=1780235778;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xc/jaFtGUdS9VtsThMr6l64Wu8Kp6Q3DfbpAKtANsIA=;
-  b=gN6kXzDGoglLCsX+VCukvQR2a5ZVIyPoYwJrVL3h3k86B3hYgr++UtSr
-   Urz/TLwzk4bHBlZtYaKdVGpyY/AO9EkgLJKohpVcY+K6Pe/jSLdNZem8y
-   g+ygH8MZFwTGaruuabhjNx8R9fztqBSnF5gqi8LLv3JtXthEuzxM/Ol86
-   jol5Lpdo0FHx9UvebHPXrAcWaGKx+D3/1ibrXobIOm8JqdibvpmsS36IU
-   QriFZ8seNI7x2xxQG0z7wN0aOXokqjRYKh4yomRrCsU32fQkEoWwePCSs
-   9crxVrc1IuZsKh79/EdzNfHKWfcCj2jWNu2QO0LxoL/2DBLWy0K5StCIN
-   A==;
-X-CSE-ConnectionGUID: Mv8J/4SjTdWj7P1oYI/nfA==
-X-CSE-MsgGUID: evXEn8c4RY+ATmlIrQEmTg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11450"; a="62174504"
-X-IronPort-AV: E=Sophos;i="6.16,198,1744095600"; 
-   d="scan'208";a="62174504"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2025 06:56:17 -0700
-X-CSE-ConnectionGUID: q7bPbGEoSpyff7xrJgoRbQ==
-X-CSE-MsgGUID: PNhqCaQqR/WwEs0XsP3beA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,198,1744095600"; 
-   d="scan'208";a="144034593"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 31 May 2025 06:56:15 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uLMh2-000YQu-0S;
-	Sat, 31 May 2025 13:56:12 +0000
-Date: Sat, 31 May 2025 21:55:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: Qingfang Deng <dqfext@gmail.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH] riscv: use generic MMIO accessors
-Message-ID: <202505312115.47xDnzAe-lkp@intel.com>
-References: <20250530032252.3092502-1-dqfext@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c9y+vgDO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ADCCC4AF09;
+	Sat, 31 May 2025 14:00:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748700002;
+	bh=w40llQNqhsUdvYKnHf7RQNenStlQPIZxcEYBgaiNGT0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=c9y+vgDO3M+HaixqZ9knl1SuKVQeqlvh9hJLLO6/b585GVWD+FQ3U1gUujDPCDsxJ
+	 2q7N6bmPkBFmFcgiBie3AmA/wzy0mDmz4JsILePcffCGjoZjbh1FLP3ZP1GaJ9ajTw
+	 cTeYxWpP3ObfWU+sSFF2jdQblkIhEESRPGrbrgxTsvnzpeMauF8IR2ann0B8vA612y
+	 HvWzSmKpPiPUG+TUdl0WDVvHbE8aLe3OeV/J54Sb4E5R9+y/1cty6v5tM+O/8OydfF
+	 4yiwzlPkBu9RZyDPzR3h1G6+PWTvX1mPsAHEcBFwmLlglmwgLgYDLxR2Sw4IBxP7NQ
+	 LjkTzUpqJ2A/w==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54b0d638e86so4462955e87.1;
+        Sat, 31 May 2025 07:00:01 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV2Z5jEWc2E0YY6IynVNw5mRgmpPhRhRRAGB78fb+C5J+KOET8a9i+7HqcjNJaLgV6sqPnE2FJLyjgEvzhs@vger.kernel.org, AJvYcCXBCmEzbpK5GKF/798T42Xpkpb+7FPvMuvYMcXkKT+pQEjwt84vn6xze1juYTC6HjZp0hBacxiE9JGze98=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFSdECdtqind/8xw7+eXVNyFapT37rs8Fi+b59FQtgGwXu646V
+	XSl3lPwMNqPX12nFVzxncXqhys6GB1RxttJLGiaH75VaTSIUochrFjE7cHVTZ9xVuyEhpTFQHz6
+	lX+pTZ7et9s8YHPJFTYUmj/jdlDQui5c=
+X-Google-Smtp-Source: AGHT+IEizyomkzm+23rhwY3vKDd+/vm3NmPAc9IXAQOQp1ZWvNb6EzU9xDKlHySNB2sc4OMypej4gnIGzM74DTKuE7Y=
+X-Received: by 2002:a05:6512:31c7:b0:553:3665:366d with SMTP id
+ 2adb3069b0e04-5533d15e1a0mr1717573e87.21.1748700000764; Sat, 31 May 2025
+ 07:00:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250530032252.3092502-1-dqfext@gmail.com>
+References: <20250527142318.14175-1-petr.pavlu@suse.com>
+In-Reply-To: <20250527142318.14175-1-petr.pavlu@suse.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sat, 31 May 2025 22:59:24 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR_-2rpXDk_ago9_6au8rWZMBvkzZtS4Oq75n+8CF9_iA@mail.gmail.com>
+X-Gm-Features: AX0GCFtev1wM929Q59RImdEEe0W-fcfzTqH403kvyFaFiGjZwB3L7UUerqa1nKs
+Message-ID: <CAK7LNAR_-2rpXDk_ago9_6au8rWZMBvkzZtS4Oq75n+8CF9_iA@mail.gmail.com>
+Subject: Re: [PATCH] genksyms: Fix enum consts from a reference affecting new values
+To: Petr Pavlu <petr.pavlu@suse.com>
+Cc: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Qingfang,
+On Tue, May 27, 2025 at 11:23=E2=80=AFPM Petr Pavlu <petr.pavlu@suse.com> w=
+rote:
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.15]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Qingfang-Deng/riscv-use-generic-MMIO-accessors/20250530-112455
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250530032252.3092502-1-dqfext%40gmail.com
-patch subject: [PATCH] riscv: use generic MMIO accessors
-config: riscv-allmodconfig (https://download.01.org/0day-ci/archive/20250531/202505312115.47xDnzAe-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250531/202505312115.47xDnzAe-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505312115.47xDnzAe-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/gpu/drm/omapdrm/dss/dispc.c:4720:27: warning: stack frame size (2304) exceeds limit (2048) in 'dispc_runtime_suspend' [-Wframe-larger-than]
-    4720 | static __maybe_unused int dispc_runtime_suspend(struct device *dev)
-         |                           ^
-   drivers/gpu/drm/omapdrm/dss/dispc.c:4735:27: warning: stack frame size (2432) exceeds limit (2048) in 'dispc_runtime_resume' [-Wframe-larger-than]
-    4735 | static __maybe_unused int dispc_runtime_resume(struct device *dev)
-         |                           ^
-   2 warnings generated.
+> @@ -225,6 +221,23 @@ static struct symbol *__add_symbol(const char *name,=
+ enum symbol_type type,
+>                         return NULL;
+>         }
+>
+> +       return defn;
+> +}
+> +
+> +static struct symbol *__add_symbol(const char *name, enum symbol_type ty=
+pe,
+> +                           struct string_list *defn, int is_extern,
+> +                           int is_reference)
+> +{
+> +       unsigned long h;
+> +       struct symbol *sym;
+> +       enum symbol_status status =3D STATUS_UNCHANGED;
+> +
+> +       if ((type =3D=3D SYM_ENUM_CONST || type =3D=3D SYM_ENUM) && !is_r=
+eference) {
+> +               defn =3D process_enum(name, type, defn);
 
 
-vim +/dispc_runtime_suspend +4720 drivers/gpu/drm/omapdrm/dss/dispc.c
+process_enum() is only called when type is SYM_ENUM_CONST
+or SYM_ENUM.
 
-060b6d9cbab03f drivers/video/omap2/dss/dispc.c     Senthilvadivu Guruswamy 2011-01-24  4719  
-d6c75c295f67b2 drivers/gpu/drm/omapdrm/dss/dispc.c Arnd Bergmann           2021-12-05 @4720  static __maybe_unused int dispc_runtime_suspend(struct device *dev)
-4fbafaf371be78 drivers/video/omap2/dss/dispc.c     Tomi Valkeinen          2011-05-27  4721  {
-1f6b6b6267ebe6 drivers/gpu/drm/omapdrm/dss/dispc.c Laurent Pinchart        2018-02-13  4722  	struct dispc_device *dispc = dev_get_drvdata(dev);
-1f6b6b6267ebe6 drivers/gpu/drm/omapdrm/dss/dispc.c Laurent Pinchart        2018-02-13  4723  
-1f6b6b6267ebe6 drivers/gpu/drm/omapdrm/dss/dispc.c Laurent Pinchart        2018-02-13  4724  	dispc->is_enabled = false;
-0925afc9a4851c drivers/video/omap2/dss/dispc.c     Tomi Valkeinen          2014-04-11  4725  	/* ensure the dispc_irq_handler sees the is_enabled value */
-0925afc9a4851c drivers/video/omap2/dss/dispc.c     Tomi Valkeinen          2014-04-11  4726  	smp_wmb();
-0925afc9a4851c drivers/video/omap2/dss/dispc.c     Tomi Valkeinen          2014-04-11  4727  	/* wait for current handler to finish before turning the DISPC off */
-1f6b6b6267ebe6 drivers/gpu/drm/omapdrm/dss/dispc.c Laurent Pinchart        2018-02-13  4728  	synchronize_irq(dispc->irq);
-0925afc9a4851c drivers/video/omap2/dss/dispc.c     Tomi Valkeinen          2014-04-11  4729  
-1f6b6b6267ebe6 drivers/gpu/drm/omapdrm/dss/dispc.c Laurent Pinchart        2018-02-13  4730  	dispc_save_context(dispc);
-4fbafaf371be78 drivers/video/omap2/dss/dispc.c     Tomi Valkeinen          2011-05-27  4731  
-4fbafaf371be78 drivers/video/omap2/dss/dispc.c     Tomi Valkeinen          2011-05-27  4732  	return 0;
-4fbafaf371be78 drivers/video/omap2/dss/dispc.c     Tomi Valkeinen          2011-05-27  4733  }
-4fbafaf371be78 drivers/video/omap2/dss/dispc.c     Tomi Valkeinen          2011-05-27  4734  
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+process_enum()
+{
+        if (type =3D=3D SYM_ENUM_CONST) {
+                ...
+        } else if (type =3D=3D SYM_ENUM) {
+                ...
+        }
+}
+
+
+can be sampled into:
+
+
+
+process_enum()
+{
+        if (type =3D=3D SYM_ENUM_CONST) {
+                ...
+        } else {
+                ...
+        }
+}
+
+
+The other parts look good to me.
+
+
+
+
+> +               if (defn =3D=3D NULL)
+> +                       return NULL;
+> +       }
+> +
+>         h =3D crc32(name);
+>         hash_for_each_possible(symbol_hashtable, sym, hnode, h) {
+>                 if (map_to_ns(sym->type) !=3D map_to_ns(type) ||
+>
+> base-commit: 914873bc7df913db988284876c16257e6ab772c6
+> --
+> 2.43.0
+>
+
+
+--
+Best Regards
+Masahiro Yamada
