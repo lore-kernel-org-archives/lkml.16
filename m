@@ -1,82 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C63ABE46;
-	Sat, 31 May 2025 07:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44EBA143736;
+	Sat, 31 May 2025 07:46:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748677092; cv=none; b=EiZB+3Jld+OawiXPYtYpRmZsQApBSoTPcavpU8yfa5e3hrl940sZWsIqzdmniiF/pUHcKr6RPrKbQPddLfz6e5fq7wYzvhsGG7E2MAcifwxEJxGOW9/L8SpTTqKKdaiLCUj+ABmoM2F5eHlW5zq73E+yftVZ4SFdBwmSlIVC2Bo=
+	t=1748677600; cv=none; b=LWWZrVP22+0wTDI8aEsqdCwaAlgsgCD1Ig+aAoxb1lCF3cU3Z8/ScfVM9gS3mmgW9YQbuORg2EDMbflO8CoXMwwJpd27bL3swyC9HVMxW+KT2Tcs2AOpLdXx0+QN485rtTy7gEIFc5XzeXgRHnCvJ4xAiMC8FHWToRCKnXhKY3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748677092; c=relaxed/simple;
-	bh=sOSwqv8iikuP9e7lDjX6UD+qNQoBTAK/pKuD3jZ//KY=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=GSp6mO9FVOzo7VbPhD/gMybEurLSBooeKsOOqTxoLXuqhLzps4mbRhuKTkFGeg87DnWA8n9u2KNuNyx0HnLzk2E19kV3ald0hN1fF6ADdV5GrrXXUOWU1TSzAmfsareuD+Scrn6qKFkTzOUjTDrxDlPv7IWdLKFo6V8sPyBSj10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N/3FjNM9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748677600; c=relaxed/simple;
+	bh=PHXwHYatlzqnT0bA0XszBShyk4bieDVek0aNBqNmvIQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CJs7XCINXfTNhqOORWy+9wnvTjdQWS4AgkveJdaToTTlErVzsky8tRiPppf3CcPlkL91rsVAuS34Iko1B36jn82I0xuRCCSfOTAanuPwDHoasuzXyX4e2B/4dgfdCXQDo6NG4g1yOwUUbUV+UFYunDkg3+k8m97f/AgBoGgBsIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=t1+DShEQ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N/3FjNM9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FFB0C4CEE3;
-	Sat, 31 May 2025 07:38:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748677090;
-	bh=sOSwqv8iikuP9e7lDjX6UD+qNQoBTAK/pKuD3jZ//KY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N/3FjNM9jAjzMYG5+ce6LfBiY+E6Yir+b2VSv4x8lOTBiSEz9oiIWi36zxJiZXSHV
-	 2K05+jPMli7x/uFzbB3gQ3DT9fBFpCNcBYSmXZly9553FocdCBhR5qdl36KvAtQ0d6
-	 HKvSiG6wbh2A67qa4sDS5HcJBuwE1WWoCOemFQy1geJytG4S2L6dkIVZ22GzkRnGMW
-	 dVt8GweELAgKOWh+ALOJ3gaCgIbY5uZ00F8dMMZaDWDl1lcDBKdqE1mPsjNjJ9kLV/
-	 baiZfKFes5vdPzcoxEhzdlStewwAeIUfpAZ8S0YROFjzvGiRT25ZQZ9KrSgYucDA42
-	 bAyhcTE6IeosA==
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t1+DShEQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=vHtJ0rUGHhX/CQdQbU6ZDVMIjLovSJXXeNJdF3gZOCs=; b=t1+DShEQzcDn5LQT0aspjXhRf/
+	7RxT5oLc5jrneWc82F5Dr0LTy9I3aEPpiNWX6OuKSE7V6wdElpBM9sLNZO07JvGZ8xu3M40Aztr+g
+	CdiSLVamsrgUoitOH+D6cqsxC5TFsyukFy41zbubp8nmarAGtLnLXy/eUJ8u/+JI6QIhDI9dBbNxK
+	8SU8A//s9ARGQlqB8IHniHCMIntW60Jmt1CEgjep0QI/z5ooPeFd54sk+QO7hQsRwm5nO2M05MMGb
+	TK9kIerCSNvF9Vm1IlYV+Yc7uIKodSbWa6akTkgN5bvH9zMXLs5j8Id5y2HtLRzABaHUzH4SaG5ou
+	HEh/X2zQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uLGv2-0000000Gb56-0pYT;
+	Sat, 31 May 2025 07:46:16 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 90FE1300787; Sat, 31 May 2025 09:46:15 +0200 (CEST)
+Date: Sat, 31 May 2025 09:46:15 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Alessandro Carminati <acarmina@redhat.com>
+Cc: linux-kselftest@vger.kernel.org,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Kees Cook <keescook@chromium.org>,
+	Daniel Diaz <daniel.diaz@linaro.org>,
+	David Gow <davidgow@google.com>,
+	Arthur Grillo <arthurgrillo@riseup.net>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Ville Syrjala <ville.syrjala@linux.intel.com>,
+	Daniel Vetter <daniel@ffwll.ch>, Guenter Roeck <linux@roeck-us.net>,
+	Alessandro Carminati <alessandro.carminati@gmail.com>,
+	Jani Nikula <jani.nikula@intel.com>,
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Linux Kernel Functional Testing <lkft@linaro.org>,
+	dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v5 1/5] bug/kunit: Core support for suppressing warning
+ backtraces
+Message-ID: <20250531074615.GA19817@noisy.programming.kicks-ass.net>
+References: <20250526132755.166150-1-acarmina@redhat.com>
+ <20250526132755.166150-2-acarmina@redhat.com>
+ <20250529090129.GZ24938@noisy.programming.kicks-ass.net>
+ <CAGegRW76X8Fk_5qqOBw_aqBwAkQTsc8kXKHEuu9ECeXzdJwMSw@mail.gmail.com>
+ <20250530140140.GE21197@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 31 May 2025 09:38:05 +0200
-Message-Id: <DAA6AJ0N7JAA.WCEOCHKVFLDD@kernel.org>
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Sai Vishnu" <saivishnu725@gmail.com>, "Miguel Ojeda"
- <miguel.ojeda.sandonis@gmail.com>
-Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <ojeda@kernel.org>, <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>,
- <gary@garyguo.net>, <bjorn3_gh@protonmail.com>, <a.hindborg@kernel.org>,
- <aliceryhl@google.com>, <tmgross@umich.edu>, <dakr@kernel.org>,
- <gregkh@linuxfoundation.org>, <daniel.almeida@collabora.com>,
- <me@kloenk.dev>
-Subject: Re: [PATCH] rust: doc: Clean up formatting in io.rs
-X-Mailer: aerc 0.20.1
-References: <20250530123129.31505-2-saivishnu725@gmail.com>
- <DA9QL5A8747E.17QE50WBD6JOT@kernel.org>
- <CANiq72npoVzz01syorhUcED=tcs9FJf8bFHthFrUQ-bE-AXJ8Q@mail.gmail.com>
- <CAFttn54qYu3ajcBPWWnhjAS-6pQ8Ox3ujbTF6D=Q_BOMkTLq6g@mail.gmail.com>
-In-Reply-To: <CAFttn54qYu3ajcBPWWnhjAS-6pQ8Ox3ujbTF6D=Q_BOMkTLq6g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250530140140.GE21197@noisy.programming.kicks-ass.net>
 
-On Sat May 31, 2025 at 4:57 AM CEST, Sai Vishnu wrote:
-> On Sat, May 31, 2025 at 1:09=E2=80=AFAM Miguel Ojeda
-> <miguel.ojeda.sandonis@gmail.com> wrote:
->>
->> We should also probably add "region" there, after "memory", or
->> similar, especially if we remove the second part.
->
-> Thanks for the feedback! I=E2=80=99ve decided to update the comment to ju=
-st:
->
-> /// IO-mapped memory
->
-> I=E2=80=99m new to kernel development. Should I just share the updated pa=
-tch
-> here or send a v2 that refers to this one? Thanks!
+On Fri, May 30, 2025 at 04:01:40PM +0200, Peter Zijlstra wrote:
 
-Normally, you send a v2 with a changelog and a link to each previous
-version. For patch series with a cover letter it is often placed there.
-Since you don't need one, you should put the changelog after the `---`
-(anything that isn't a diff there will be ignored by git when applying).
+> I'm not really concerned with performance here, but more with the size
+> of the code emitted by WARN_ONCE(). There are a *ton* of WARN sites,
+> while only one report_bug() and printk().
 
-I'd give others a few more days to review. (this patch there most likely
-won't be any additional comments, but it also doesn't hurt)
+We need a new and stronger unlikely(), resulting in the compiler being
+forced to split a .cold sub-function/part which lives in .text.unlikely
 
----
-Cheers,
-Benno
+At that point it becomes less of a concern I suppose. 
+
+AFAIK the only means of achieving that with the current compilers is
+doing a manual function split and marking the part __cold -- which is
+unfortunate.
+
+At some point GCC explored label attributes, and we were able to mark
+labels with cold, but that never really worked / went anywhere.
