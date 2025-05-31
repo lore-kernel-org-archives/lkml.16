@@ -1,109 +1,109 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DEC117E0;
-	Sat, 31 May 2025 16:18:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F02117A31D;
+	Sat, 31 May 2025 16:18:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748708323; cv=none; b=RBsj6Kts9bANKdLiVW/Q+SLOsd8JciFW1qF2DcQDPhS06QvUrm9rY5dWAZ4Dvf2NRXHHEDEcG6elrn/j4Qx1baoID8kWDPk9hwFX7MxuERIGsRqLvFeH7FxxgjVh7OdjK2Kaln1OT8ZOwNpXgnZndaTiz2Lm2Rm3vxIwJU0YwuU=
+	t=1748708324; cv=none; b=DSwXZWzekZb2ISc88T7+esSANWodto0QUkXF4bcpGpVTXVOQ49vdBhw02/+FvuacqTzk1eOUz7VnjA3drSMCEnJQFrG1wxiPyeNtj+jpe2khPmqNlNcDHpGmn81ejld41dxLyvCivMFJENYFOXuftnZepnU8zVqTVibs8jfDoP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748708323; c=relaxed/simple;
-	bh=pWx0JtByz5bQLz9/8RlWnYuB53qfTidcpdVzrM66O4A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pQGbqLZjrZ8V+ZfcsD8ijrw8gCk8ads0qyCrvtHnvazUFRCNvhzfCaPU0UfeYevB3QqVAXAxBfU1evobWcNgYKNkvDXirLMWlXALdCN8EHu0wBgu+rBomo9L61BiBGo+EpksHv9gAKuO+fx5ij8rHKi3yx+i7yTgGr0+u7UFSvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IVSQ+vYl; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748708324; c=relaxed/simple;
+	bh=6XW6rvHYYe6NmPi1aP+xp49GhLfblEpiI49g8P2fQCo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dbc01hiSYuyMcEuDYY3PmblwFW6dzogW42UMgxtlNIxRUa22qLNcRy/THk6cZDr9KY6RNBU0LXnseXwPVbyQxVUQCwOILZLhQG0PqneUToLKVhBHUZ1FfXKjPlWmubwHSdVlvUK6K1eLD9veDT45X/S7rTCPE+T5qCJJ/y8YNwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W+CRmwRm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IVSQ+vYl"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a4ebfaa623so415002f8f.1;
-        Sat, 31 May 2025 09:18:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748708319; x=1749313119; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7amG+fgm0XQ6pvWnBFAM72MHD6qJuia+zLfGed4C86Q=;
-        b=IVSQ+vYlcFg3eyhB+sCJuyWO+BE4vtXbGja140pTM/IShoctUALwd/roFZggtRMgMB
-         tXnRvwo02iM7iQfi0ryO4Vo2tIIM/SZIfaG4a+foU9mgMdwrQ9Ar66yEEelq1/O6+p79
-         i/qgx3lZXTzMmw5NbzUrksee9Jhzl/e+j1za0lysgLmylIWHlebNePTwWI4F4GaYs6JE
-         2JpJy437F1Tw8K0Qq3Htje8ILSop80yQtnUM5weSVx3iVc8GKACAdLC0d+vBxks3uy7k
-         p3YSt+4N9dnAUMVpYI0AkQoucFjQ0EqD6yBogfBNDBkpz86pFRKj6JuWAcXcur6nNwJG
-         UQUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748708319; x=1749313119;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7amG+fgm0XQ6pvWnBFAM72MHD6qJuia+zLfGed4C86Q=;
-        b=FAY3yFSScX2ei4PzEAct8OkdmRxFa5XH40bTwYuQdhXD5CPmI93++5xDSA0dVGvpEd
-         OB1yNEMRzfkLFhE6QLdKebOHgyw5D6js7mlLEmWhLjESnEkiaXeZxZ5JjuqPs4wOYAqz
-         gg/4edWww5LhEJvtYiAA9Y4OMFeY3k5P7W4/W0ZvIxM81kZbDsQt1mptSKwgr43HEeUs
-         GtY31r51w5jVAMDbqb6iMoplNaF1QDyvJor3RXRKP3Xv4hGGVv4XcxN8jIc9bnlJgodg
-         6U03bBpHZyV3KF3ISoGcKXVrWfOVR3axOha2p2VHnNI48Hr57aiXcWrnG+IQRv97GR98
-         AytA==
-X-Forwarded-Encrypted: i=1; AJvYcCWfMizWRoI86dxSY0fm3WIWX3iAVYnKDAoTfHxlOgJ87dPAc4sf6pcz9S4bHdc1bl0xDdc=@vger.kernel.org, AJvYcCXbz7ZdCyo1c9EAhePWV+nMBm7p4L/2irOx5jv3gi3HP0zbX5qf6E8lNctasMOP/e3pdjb5uGhmok0vyfJF@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz16GcTPR/kOQw3s/BQCZNpydtY1RKsZ0PsxASo0FjsoNwC0eTq
-	kgBo0GD9cPsMrAMTgnNsiGar0HO1lJZ4SHtKbLkWv+RFSETsMbfa5VM=
-X-Gm-Gg: ASbGncududfVtxTxOZBmgJlBFnuHP7xhrtp3lSdXdCfgGvJD6eZd3c51dthBIVfQGoU
-	9XS7WbIp6d2k2WVxLNLYmPBuThhPHJUnH0cJDj0xDpU1n3B4K6xX5/KJtMcJ43hz61jOoccPvPy
-	pfr2CUmN95SRXAdeBHzsMOzpMUYP9sNK1IU4kJ++yezbPOjhEXYnMq8RrOVYs9RZq45vu2sGz5m
-	HrOSoytR3oVgELCKzPfkcBr///JNIKE4N7OIrHIB3XV7Yv+T/7wRR/byXmpLkzFSaXb+5Wm230Y
-	hsXtEfZnmpcp7+LABhJ3qppzDTS6xuRU7tvezR8oDtoZjMkdFCztP6AftI7K4i+oJIJ/sQxl6ZZ
-	NHcIQLfp7M93P44k=
-X-Google-Smtp-Source: AGHT+IF9bBR1PKckeUO+MJfzEpp1rgDSET7GZgiUK6KY0LN83z9QYZ1kxXD3RKW2wAP2M4isY2TISA==
-X-Received: by 2002:a5d:64ed:0:b0:3a4:e8c8:fba1 with SMTP id ffacd0b85a97d-3a4f897ee54mr1918196f8f.10.1748708319258;
-        Sat, 31 May 2025 09:18:39 -0700 (PDT)
-Received: from localhost (131.red-80-39-31.staticip.rima-tde.net. [80.39.31.131])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe73f22sm8367944f8f.43.2025.05.31.09.18.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 May 2025 09:18:37 -0700 (PDT)
-From: Xose Vazquez Perez <xose.vazquez@gmail.com>
-To: 
-Cc: Xose Vazquez Perez <xose.vazquez@gmail.com>,
-	Kirti Wankhede <kwankhede@nvidia.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	KVM ML <kvm@vger.kernel.org>,
-	KERNEL ML <linux-kernel@vger.kernel.org>
-Subject: [PATCH] samples: vfio-mdev: mtty.c: delete MODULE_VERSION
-Date: Sat, 31 May 2025 18:18:36 +0200
-Message-ID: <20250531161836.102346-1-xose.vazquez@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+CRmwRm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83D69C4CEE3;
+	Sat, 31 May 2025 16:18:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748708324;
+	bh=6XW6rvHYYe6NmPi1aP+xp49GhLfblEpiI49g8P2fQCo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=W+CRmwRmFU8uaIsjGDgRT3CVvlci4orRZbUsCVLLv/nq+AVeNNNXsXNA32r+/UoLr
+	 leYRBoJYCcVYBNrUO2eQ/u5nNwemPFAOtf12IdRAZZqFAtdFg2oHc5juFotn7OZUXI
+	 7rSwyC8ui515g9fTbBUmsKJKK954HwLPS6qVp8ebF7gJIqXU2AbDrFkUkNnp/BZOYk
+	 K3FsuRC88S+mQuzUID9CbeclTTtz9PV0okK+Z0jOJYJPzcLeFYK8UHxb3UazFy5MLl
+	 27Mt8gc1pcU6dOjPM8sQwY9+PK8k2HfCM7+2T6ugxAnPpRaU9igsmcgNwYflAcm8mD
+	 9AFu3YnX7iWEA==
+Date: Sat, 31 May 2025 17:18:37 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>, Angelo Dureghello
+ <adureghello@baylibre.com>, Guillaume Stols <gstols@baylibre.com>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+Subject: Re: [PATCH v2] iio: adc: adi-axi-adc: fix ad7606_bus_reg_read()
+Message-ID: <20250531171837.1490051a@jic23-huawei>
+In-Reply-To: <20250530-iio-adc-adi-axi-adc-fix-ad7606_bus_reg_read-v2-1-ad2dfc0694ce@baylibre.com>
+References: <20250530-iio-adc-adi-axi-adc-fix-ad7606_bus_reg_read-v2-1-ad2dfc0694ce@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Reminiscence of ancient times when modules were developed outside the kernel.
+On Fri, 30 May 2025 16:50:14 -0500
+David Lechner <dlechner@baylibre.com> wrote:
 
-Cc: Kirti Wankhede <kwankhede@nvidia.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: KVM ML <kvm@vger.kernel.org>
-Cc: KERNEL ML <linux-kernel@vger.kernel.org>
----
- samples/vfio-mdev/mtty.c | 2 --
- 1 file changed, 2 deletions(-)
+> Mask the value read before returning it. The value read over the
+> parallel bus via the AXI ADC IP block contains both the address and
+> the data, but callers expect val to only contain the data.
+> 
+> axi_adc_raw_write() takes a u32 parameter, so addr was the wrong type.
+> This wasn't causing any issues but is corrected anyway since we are
+> touching the same line to add a new variable.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 79c47485e438 ("iio: adc: adi-axi-adc: add support for AD7606 register writing")
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+I've applied this to my temporary fixes-togreg-for-6.16 branch for now.
+That will get rebased on rc1 once available.  As such I'm fine adding
+tags or indeed dropping it again if others have feedback!
 
-diff --git a/samples/vfio-mdev/mtty.c b/samples/vfio-mdev/mtty.c
-index 59eefe2fed10..f9f7472516c9 100644
---- a/samples/vfio-mdev/mtty.c
-+++ b/samples/vfio-mdev/mtty.c
-@@ -35,7 +35,6 @@
-  * #defines
-  */
- 
--#define VERSION_STRING  "0.1"
- #define DRIVER_AUTHOR   "NVIDIA Corporation"
- 
- #define MTTY_CLASS_NAME "mtty"
-@@ -2057,5 +2056,4 @@ module_exit(mtty_dev_exit)
- 
- MODULE_LICENSE("GPL v2");
- MODULE_DESCRIPTION("Test driver that simulate serial port over PCI");
--MODULE_VERSION(VERSION_STRING);
- MODULE_AUTHOR(DRIVER_AUTHOR);
--- 
-2.49.0
+Jonathan
+
+> ---
+> Changes in v2:
+> - Use ADI_AXI_REG_VALUE_MASK instead of hard-coding 0xFF.
+> - Introduce local variable and use FIELD_PREP() instead of modifying val.
+> - Link to v1: https://lore.kernel.org/r/20250530-iio-adc-adi-axi-adc-fix-ad7606_bus_reg_read-v1-1-ce8f7cb4d663@baylibre.com
+> ---
+>  drivers/iio/adc/adi-axi-adc.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/adi-axi-adc.c b/drivers/iio/adc/adi-axi-adc.c
+> index cf942c043457ccea49207c3900153ee371b3774f..fc745297bcb82cf2cf7f30c7fcf9bba2d861a48c 100644
+> --- a/drivers/iio/adc/adi-axi-adc.c
+> +++ b/drivers/iio/adc/adi-axi-adc.c
+> @@ -445,7 +445,7 @@ static int axi_adc_raw_read(struct iio_backend *back, u32 *val)
+>  static int ad7606_bus_reg_read(struct iio_backend *back, u32 reg, u32 *val)
+>  {
+>  	struct adi_axi_adc_state *st = iio_backend_get_priv(back);
+> -	int addr;
+> +	u32 addr, reg_val;
+>  
+>  	guard(mutex)(&st->lock);
+>  
+> @@ -455,7 +455,9 @@ static int ad7606_bus_reg_read(struct iio_backend *back, u32 reg, u32 *val)
+>  	 */
+>  	addr = FIELD_PREP(ADI_AXI_REG_ADDRESS_MASK, reg) | ADI_AXI_REG_READ_BIT;
+>  	axi_adc_raw_write(back, addr);
+> -	axi_adc_raw_read(back, val);
+> +	axi_adc_raw_read(back, &reg_val);
+> +
+> +	*val = FIELD_GET(ADI_AXI_REG_VALUE_MASK, reg_val);
+>  
+>  	/* Write 0x0 on the bus to get back to ADC mode */
+>  	axi_adc_raw_write(back, 0);
+> 
+> ---
+> base-commit: 7cdfbc0113d087348b8e65dd79276d0f57b89a10
+> change-id: 20250530-iio-adc-adi-axi-adc-fix-ad7606_bus_reg_read-f2bbb503db8b
+> 
+> Best regards,
 
