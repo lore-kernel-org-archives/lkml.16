@@ -1,60 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E154F2F30
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 19:57:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653CE2F30;
+	Sat, 31 May 2025 19:58:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748721452; cv=none; b=HmuXhHDVZEIdlfxdXu2pvJu1DD/Rb63h43LXpDcg5Ei2Op5X56mssCRKReoM2fJxvKrniVpp5LzZEGTge6ACWGgfigGWceelmAYxR5BTb57bPHQukLn8AJwAtsgpoALHITmwBU7mbNlP7hFejBaDGHIemKbOjFqz2ESrWXEygWg=
+	t=1748721490; cv=none; b=CGLYjLz2OL8k1OoohISBPV5sbyQBRhp0CVm3Tj3KJBUHUV/KyWwsls3mHjJttvumVOC37ogSeKCkRh05FWrFFEAcIE+/osRa3ik2o2n2tpalR+WeSQ5tPYXjoyNciLCuOAmnWnj+AwapRBiLKSdgE34ZVs5+O+X/qd6zm+rB3YM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748721452; c=relaxed/simple;
-	bh=M3i+4OcDsZH71nEu3YTnsxuCeQlL0OwHKJ/yMTCoIY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LDxpWZ1XQTnfbLwZoi50iWav5k4AlDd2owzpORnHHdYrpdDmYChAhw+J74z933U8qzTlMcuCfQhP+kC3P0TV3c/6ukxuwY4TwfpQzKyQMTNIcWO8+YZh0ls5x5ik2tjeuWi5gsnEvg2lfVl8SVkZnU+txR/iOFanyfgpG3vjm6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=MFk95CpK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748721490; c=relaxed/simple;
+	bh=cS6RetvDrJ54xQiduwGgcXfUkVI+OytEPSdpzia4usM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=n0kcw3FjCXvxtIE4fEEwTM1s/+cZNAWrhxa4Erc36TVxDnfUvQfbvk2wpZV0i+k9hJIoW+sRtpwJFWLpbxpOBSdoJ9Nr5s9ux1kDKT5GNlTivt2/N7fKJeHRGqfPKslmovyazMbuhbUSiEz+F6UbPEFCjOp2z0gRO6cuUhK65t8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kgg4qCxf; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="MFk95CpK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A1BAC4CEE3;
-	Sat, 31 May 2025 19:57:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1748721451;
-	bh=M3i+4OcDsZH71nEu3YTnsxuCeQlL0OwHKJ/yMTCoIY8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MFk95CpKgXK8bS8jOnInI0OtUUkCtqVgUF3SK6RafmggS8SGtVFYV2oD8R0UfUnP+
-	 g/aQMtiEI7xoh0q8C6mI5ydeeJB3I25Q/P7AuCnGWynHNuztljalPvItH9lMVr/P3J
-	 cKBczeEA0W5aNUDEJ/z7/L6RwzNSOWFixMvHah8g=
-Date: Sat, 31 May 2025 15:57:28 -0400
-From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Kees Cook <kees@kernel.org>, linux-kernel@vger.kernel.org, 
-	Eric Biggers <ebiggers@kernel.org>, Ingo Saitz <ingo@hannover.ccc.de>, 
-	kernel test robot <oliver.sang@intel.com>, Marco Elver <elver@google.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Thiago Jung Bauermann <thiago.bauermann@linaro.org>
-Subject: Re: [GIT PULL] hardening fixes for v6.16-rc1
-Message-ID: <20250531-evasive-sensible-malkoha-a98b40@lemur>
-References: <202505310759.3A40AD051@keescook>
- <CAHk-=wj4a_CvL6-=8gobwScstu-gJpX4XbX__hvcE=e9zaQ_9A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kgg4qCxf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748721488; x=1780257488;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=cS6RetvDrJ54xQiduwGgcXfUkVI+OytEPSdpzia4usM=;
+  b=Kgg4qCxfvwcoLKLPqSbOEKKuzZ39zvHUeVPljDaH55WjAIDL2KZh8H5K
+   0ngfZLAHPdUrFYX92c5KgVvujS4Mwia+gS7JEVlEGH1mc6S39d5ZR2NO1
+   DTDdjBaYMl3jtO0TeApZl9eyBUYILWgQIPgLaaHPzWiyxUdNLcqUbcnbS
+   K5M5ebESCqbFVtgCttfAtTqQtYLMnUGLGDRrtJcfbcDyq9M3LgPYQ6/T9
+   5oZMVej6bK0y0TjlrkyEJn9fUdPXQ7CLTKkCoXPynqByDofV4mMX3VqvM
+   UQ0GvUUOuDH1QXDpi5ikoVg9t8Le3IuJeMn2z1Wqu0lJwFUd1ud6hjUkt
+   g==;
+X-CSE-ConnectionGUID: CM264ZbCTZWZXTqq9U8nww==
+X-CSE-MsgGUID: ax6bk0HqQ8SB8OyLDTIntA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11450"; a="50886635"
+X-IronPort-AV: E=Sophos;i="6.16,199,1744095600"; 
+   d="scan'208";a="50886635"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2025 12:58:07 -0700
+X-CSE-ConnectionGUID: ID8IbQcyS6mUPVmjLVGCAw==
+X-CSE-MsgGUID: u0QZIVftRym/cWNTh1o1xQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,199,1744095600"; 
+   d="scan'208";a="149455595"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa005.jf.intel.com with ESMTP; 31 May 2025 12:58:06 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 04616386; Sat, 31 May 2025 22:58:04 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v1 2/2] gpiolib: Move GPIO_DYNAMIC_* constants to its only user
+Date: Sat, 31 May 2025 22:55:44 +0300
+Message-ID: <20250531195801.3632110-3-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250531195801.3632110-1-andriy.shevchenko@linux.intel.com>
+References: <20250531195801.3632110-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wj4a_CvL6-=8gobwScstu-gJpX4XbX__hvcE=e9zaQ_9A@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Sat, May 31, 2025 at 11:20:20AM -0700, Linus Torvalds wrote:
-> You have this: f8b59a0f90a2 Merge tag 'driver-core-6.16-rc1' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/driver-core/driver-core
+There is no need to export GPIO_DYNAMIC_* constants, especially via
+legacy header which is subject to remove. Move the mentioned constants
+to its only user, i.e. gpiolib.c.
 
-For the record, this object came in through this push:
-https://git.kernel.org/pub/scm/infra/transparency-logs/gitolite/git/1.git/plain/m?id=7df025cb5c2a034128abf8b6d064c4c17cddff65
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/gpio/gpiolib.c | 13 +++++++++++++
+ include/linux/gpio.h   | 13 -------------
+ 2 files changed, 13 insertions(+), 13 deletions(-)
 
-There is a push signature on it, which does verify:
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 839948b859e3..85296419a514 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -74,6 +74,19 @@ static const struct bus_type gpio_bus_type = {
+ 	.match = gpio_bus_match,
+ };
+ 
++/*
++ * At the end we want all GPIOs to be dynamically allocated from 0.
++ * However, some legacy drivers still perform fixed allocation.
++ * Until they are all fixed, leave 0-512 space for them.
++ */
++#define GPIO_DYNAMIC_BASE	512
++/*
++ * Define the maximum of the possible GPIO in the global numberspace.
++ * While the GPIO base and numbers are positive, we limit it with signed
++ * maximum as a lot of code is using negative values for special cases.
++ */
++#define GPIO_DYNAMIC_MAX	INT_MAX
++
+ /*
+  * Number of GPIOs to use for the fast path in set array
+  */
+diff --git a/include/linux/gpio.h b/include/linux/gpio.h
+index 1893e5d4c0c9..d105a207eaa2 100644
+--- a/include/linux/gpio.h
++++ b/include/linux/gpio.h
+@@ -45,19 +45,6 @@ static inline bool gpio_is_valid(int number)
+  * extra memory (for code and for per-GPIO table entries).
+  */
+ 
+-/*
+- * At the end we want all GPIOs to be dynamically allocated from 0.
+- * However, some legacy drivers still perform fixed allocation.
+- * Until they are all fixed, leave 0-512 space for them.
+- */
+-#define GPIO_DYNAMIC_BASE	512
+-/*
+- * Define the maximum of the possible GPIO in the global numberspace.
+- * While the GPIO base and numbers are positive, we limit it with signed
+- * maximum as a lot of code is using negative values for special cases.
+- */
+-#define GPIO_DYNAMIC_MAX	INT_MAX
+-
+ /* Always use the library code for GPIO management calls,
+  * or when sleeping may be involved.
+  */
+-- 
+2.47.2
 
-    gpg: Signature made Sat 31 May 2025 11:04:02 AM EDT
-    gpg:                using EDDSA key 523E475E4448ED8757479D21362B0BDE39E424BB
-    gpg: Good signature from "Kees Cook <kees@outflux.net>"
-
--K
