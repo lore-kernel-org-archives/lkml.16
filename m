@@ -1,100 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5924320A5E5;
-	Sat, 31 May 2025 10:12:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4FCFEAF9;
+	Sat, 31 May 2025 10:13:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748686351; cv=none; b=sUTVfOzYSYe8KcFeS9kurZ5SiXov3XR6HaW57BjnxccrKHTCHqOODGjmS3Wrhazsdd/ic72aQcPWNk+OKGGLpzgIXPSoi35wdZY4gytu74NbfRat7/EBohsewnrh9s080DnC3TbVs9P7XH1/xKHkFMl/ImeonpFBCNQ1HtkUZGc=
+	t=1748686395; cv=none; b=O3HUJDEhdK537li17zgtEP/2BPAQaUe8UluZj39Nz2VKI9RkkDVa2CZLJXhFLYJujxYh/Yr+9KmG9UWGPc2CyN4rKgkQxXEpu5Hf40UW7X4fV5DOX6JEyhkkwmww5EwRdeFi4P6jPlc/giEOQ1u/6L7o9JKZRwO2Ca5qd6hrAjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748686351; c=relaxed/simple;
-	bh=mJ5Rl0qcXcb/5doOfmKI8NZWnM2jDWsTV88Tpvy+T6s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DhaPc27K/6T1dsgbbtHcfF4/SWE3OKx3/yrm/RHY3Ll30FvDJRuLaHBz9Y2tuWO92u4gaqCwjGYOSjQ/0Zmo6a+nluGw2/jldNdx4KWM5YIHvMrcuvq6wvjU48N7U/mgvF/mrZpdzpuhfAKLJQ97wxmZKmkPChMJgCirhGhNX5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rt4BfImM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748686395; c=relaxed/simple;
+	bh=fE9rjcOe73GczV4f3iFeM7TbM1yMFp+vz1ozRku4LIE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=HzrzQWHVXq5udoZAULST08WNHLT4MEEFhgzM65dJNTCgfWZReN48uwchakGLbKo+wwZ3O+k75d6bv4fP+5HRnKBgNtEKTD7V4uVg3rK+Qbd6VAWLdZmGfv/V6gMXPJQ48R4GJYvU0Beg05kseZ83Uhxpl3KH2Jxyf2egJtP79T4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KI2i9ajm; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rt4BfImM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A432FC4CEE3;
-	Sat, 31 May 2025 10:12:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748686350;
-	bh=mJ5Rl0qcXcb/5doOfmKI8NZWnM2jDWsTV88Tpvy+T6s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Rt4BfImM1YnVSBaYAS8IPRSbIwVj91TOQs/cl8Z1bnYBr/N6Fv7DHQ0QXrIju/zH2
-	 3KIR7O72VXDYNvAiGdgSk6uFDG0eDFqvc+71AGa9oNbt3zCDnn9yLmKFl6zr/3mwcT
-	 +L4JlOPWEI+RnNOrxiAabvouK7Fqy8ILsp/WDxJgbd9MFkVaeHyjMxPde71iBI6bSi
-	 Ra3H/Yct21uXvydBCuMsp+CSs0BrPmIY1Q3fiQta4UY3qoTec85Ehmo6hZEwGet1Gv
-	 V9Y8M93PnQtD7LG60jPc73TJyN1W0YcJncvHea25CsX/TA9WtsUGbw5ViKac/sJSAy
-	 tCt1TzdGST2aQ==
-Date: Sat, 31 May 2025 12:12:24 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Igor Korotin <igor.korotin.linux@gmail.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	linux-acpi@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rust: acpi: add `acpi::DeviceId` abstraction
-Message-ID: <aDrWCBAxPnu7VY0P@pollux>
-References: <20250530123815.1766726-1-igor.korotin.linux@gmail.com>
- <aDnD_Bb3l6GiI_8K@cassiopeiae>
- <CAG7QV92rtk7NUKzUoApkopv1LF2WVjqyNA9hPt=yCuEvdJjoCA@mail.gmail.com>
- <2025053111-anteater-balsamic-8d01@gregkh>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KI2i9ajm"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-450cfb79177so13474085e9.0;
+        Sat, 31 May 2025 03:13:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748686392; x=1749291192; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rQyDzOUbw+LDtAyftP1KtxZK0csZCuFuzRG5f8sdr2M=;
+        b=KI2i9ajm5fonXYMYcOdLHRK44umKBiKvpQOf23Dmv8jsqOJoz03XL8qGzlMEVc5zAJ
+         DF1KH5uXFcseLljjnNMqZnkw1fyPYaq3CYzu47Fp2A1WjChE+ib2uy3m2H+QTIVrKziB
+         ilF070weQEArj3g9E70sAd+zMjpvXJpCgD6hjOn03XvYqNkMel6G03YOSure6mTzPeq/
+         2t8G0QFAG6IOI1LqiF2UaqGVxJ5VlJASoqAenjk1bydQfpG+jz4htOl55aqOwVXe5qnc
+         r0uls/Sc9iw6kYDAX9FplX9jQz1KO7tDtx4Fqqf8UMfRNsRBpv8bZbzpxjm2lPiFnm8A
+         AClg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748686392; x=1749291192;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rQyDzOUbw+LDtAyftP1KtxZK0csZCuFuzRG5f8sdr2M=;
+        b=oP+VCzWNCLsW3msDUH2BUeZrlMnT7bWrc1fS/WtHjpEg0E9N8gohrNiur98ZaBRoyx
+         CnRdU7j16OGTBjksPtqm/GSYXnwg/Cam6XHIcGBC5VsWTWpcqGUunSWLqsJW0qA3HEX/
+         Lxu4t8c5X57j48oenPLCjl0EkCcyHs6F/bT7iNFcwTyPEqODW4RBXaCLv0jXY1IucMdW
+         Jxa+T4RGZGPmDb8hb1RcxnWOqGEOkUn9QfiScGFUPi+3J9SlpVQWgWSIY0/ahFPlKdQV
+         kmp5s17JLkyz++Hp7Ja9uKVYxxAvSdqwozSeJm/7IfJ+X+lnrc/uE+1sFw4hgFtGrjn2
+         fs+g==
+X-Forwarded-Encrypted: i=1; AJvYcCUMVt3ks9ZWQz/pfqw99QaM5putf7pMa/T2AY8NJtfxqp1n+ZfA5hEJYykwh+4iswe6D0Hi7o+0@vger.kernel.org, AJvYcCWmU8xMsto1WLx7n8GHOHesFQUBim/65BHRSI+fCWvKvbq0l/vrWaiEKv3Vk8HuLatFqsc8v2j4E1iEG7g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywi8hem4d1QFNMatNPCT97BOWW+8eLwCi5NZsG/dzaUH4syc0rY
+	/qNe/uuO2/hdjauaeN6MoYta9T5GAGRWR1Mb7VSnj4yjHYjZO/Top9kH
+X-Gm-Gg: ASbGncvRKDdX3cwW6UsfGChtouEsLzzSAv8Lkx850LEB6SpCR4jYy5k408eZPVi7BIb
+	BelVRL7TxTkHxJP7qliNNctlV+juVk/C50FBTR6EytgkyKRm2kmy9IuPccBQB/9qmifpCW8gFT/
+	h2B2HuOfZ9zBJQOCePiAYjnYZM+Ns2nwekBUp/DA/C197C8DCisZoaSxGs9qaZZxlIpskKwdc+f
+	Lk2Vj3qWIT+HreA2VMFKpwp1OnX9F61CXuX3b6a2aGgWJL18YGw7dTuyOmI2S0pOTYSOIgvAeBC
+	0CUIFqjjrzRvoHmwcVayw075qMMPrzJJD2JI7sUvi/4+yF64iB83coSsHdx7QRwC8srUu9XkLER
+	l0hsNcKQOQIbVnPd7ex/vR96pRlyOZ1YKSIfXWblATJQyrh+aPM3TOVKWvVuoEY0=
+X-Google-Smtp-Source: AGHT+IH8gXomumzVn3X1fOVNK/UdIN3tXAOtzUrIbf95bqUOQc8bsc17bEKmD7i5aHj0OIc3P580Ag==
+X-Received: by 2002:a05:600c:46c7:b0:450:d019:263 with SMTP id 5b1f17b1804b1-450d886f76amr53507445e9.18.1748686391844;
+        Sat, 31 May 2025 03:13:11 -0700 (PDT)
+Received: from skynet.lan (2a02-9142-4580-1200-0000-0000-0000-0008.red-2a02-914.customerbaf.ipv6.rima-tde.net. [2a02:9142:4580:1200::8])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d8000d5dsm44500205e9.26.2025.05.31.03.13.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 31 May 2025 03:13:11 -0700 (PDT)
+From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
+To: jonas.gorski@gmail.com,
+	florian.fainelli@broadcom.com,
+	andrew@lunn.ch,
+	olteanv@gmail.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	vivien.didelot@gmail.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dgcbueu@gmail.com
+Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
+Subject: [RFC PATCH 00/10] net: dsa: b53: fix BCM5325 support
+Date: Sat, 31 May 2025 12:12:58 +0200
+Message-Id: <20250531101308.155757-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <2025053111-anteater-balsamic-8d01@gregkh>
 
-On Sat, May 31, 2025 at 07:49:46AM +0200, Greg KH wrote:
-> On Fri, May 30, 2025 at 05:11:29PM +0100, Igor Korotin wrote:
-> > On Fri, May 30, 2025 at 3:43 PM Danilo Krummrich <dakr@kernel.org> wrote:
-> > >
-> > > On Fri, May 30, 2025 at 01:38:06PM +0100, Igor Korotin wrote:
-> > > > `acpi::DeviceId` is an abstraction around `struct acpi_device_id`.
-> > > >
-> > > > This is used by subsequent patches, in particular the i2c driver
-> > > > abstractions, to create ACPI device ID tables.
-> > > >
-> > > > Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
-> > >
-> > > As Greg mentioned it would be nice to see the subsequent patches.
-> > 
-> > Ok. There's a little misunderstanding from my side. I'm in the
-> > progress of implementation
-> > of I2C driver abstractions. I2C drivers can use either "of" or "acpi".
-> > The idea was to push this
-> > change first, because:
-> >  - It's quite standalone one.
-> >  - I'm not sure how much time it will take me to finalize I2C drivers
-> > abstractions.
-> 
-> If you don't need it now, then there's no rush to get it merged now :)
-> 
-> > If it is not appropriate way of commits, I'll then keep it until all is done.
-> 
-> We would like to see it be used first, to ensure that the code is
-> actually correct.
+These patches get the BCM5325 switch working with b53.
 
-Alternatively, if you want to upstream this dependency already you can send the
-following patches:
+There are still some sporadic errors related to FDB, but at least the
+switch is working now:
+bcm53xx fffe4800.ethernet-mii:1e: port 0 failed to add d6:67:0c:XX:XX:XX vid 1 to fdb: -28
+bcm53xx fffe4800.ethernet-mii:1e: port 0 failed to add 5c:4c:a9:XX:XX:XX vid 0 to fdb: -28
+bcm53xx fffe4800.ethernet-mii:1e: port 0 failed to add 5c:4c:a9:XX:XX:XX vid 1 to fdb: -28
+bcm53xx fffe4800.ethernet-mii:1e: port 0 failed to delete d6:67:0c:XX:XX:XX vid 1 from fdb: -2
 
-  - this acpi::DeviceId abstraction
-  - the glue code for the generic adapter trait in rust/kernel/driver.rs
-  - use this glue code in the platform abstraction
-  - add acpi support to the platform sample driver
+I'm not really sure that everything here is correct since I don't work for
+Broadcom and all this is based on the public datasheet available for the
+BCM5325 and my own experiments with a Huawei HG556a (BCM6358).
 
-This way we can already validate that the code works correctly. All this is
-required anyways if the I2C device you write a driver for is on the platform
-bus.
+Florian Fainelli (1):
+  net: dsa: b53: add support for FDB operations on 5325/5365
+
+Álvaro Fernández Rojas (9):
+  net: dsa: b53: prevent FAST_AGE access on BCM5325
+  net: dsa: b53: prevent SWITCH_CTRL access on BCM5325
+  net: dsa: b53: fix IP_MULTICAST_CTRL on BCM5325
+  net: dsa: b53: prevent DIS_LEARNING access on BCM5325
+  net: dsa: b53: prevent BRCM_HDR access on BCM5325
+  net: dsa: b53: prevent GMII_PORT_OVERRIDE_CTRL access on BCM5325
+  net: dsa: b53: fix unicast/multicast flooding on BCM5325
+  net: dsa: b53: fix b53_imp_vlan_setup for BCM5325
+  net: dsa: b53: ensure BCM5325 PHYs are enabled
+
+ drivers/net/dsa/b53/b53_common.c | 213 +++++++++++++++++++++++--------
+ drivers/net/dsa/b53/b53_priv.h   |  57 ++++++---
+ drivers/net/dsa/b53/b53_regs.h   |  47 ++++++-
+ 3 files changed, 246 insertions(+), 71 deletions(-)
+
+-- 
+2.39.5
+
