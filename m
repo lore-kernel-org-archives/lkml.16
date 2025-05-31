@@ -1,94 +1,100 @@
-Received: from dvalin.narfation.org (dvalin.narfation.org [213.160.73.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86EEE238C39;
-	Sat, 31 May 2025 09:59:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.160.73.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5924320A5E5;
+	Sat, 31 May 2025 10:12:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748685561; cv=none; b=UtNfnA3gyLrmZal63m7s0B4Z7Md3AjiIPpimxBlRRolBVR7HwiDdgLMa33+LsuV4lBM4nQTfEfqaBQGofm2NwrkNVSh35aGqlJL/6nomYICRT6D+Sn7Gb+CbAN8bs9wO9xMO4webMWvnMvSQS3HgOAGs5GuSovSCvhZMJ08A8ms=
+	t=1748686351; cv=none; b=sUTVfOzYSYe8KcFeS9kurZ5SiXov3XR6HaW57BjnxccrKHTCHqOODGjmS3Wrhazsdd/ic72aQcPWNk+OKGGLpzgIXPSoi35wdZY4gytu74NbfRat7/EBohsewnrh9s080DnC3TbVs9P7XH1/xKHkFMl/ImeonpFBCNQ1HtkUZGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748685561; c=relaxed/simple;
-	bh=jHNdXiEkBPD/4hRFb5+gNLCWyeacWlbbq8GE5s0EJU0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H8+YxsjEtu68uPHeQj/ZrOZZ2adoYj7By6NRTIqbv0Ncge0PcCkFlcpl+1JMWm+Q/xMy6b8NESLczH2qVQRkNub/tyfXtgI4c7UvzWdj4itRHDwvbR3TL39l3iISmqbluJZlQ1Dwe+JjR8oogdHNh+fu8ZvWguYcTeRlq7ZCIF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org; spf=pass smtp.mailfrom=narfation.org; dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b=s4JsNElf; arc=none smtp.client-ip=213.160.73.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=narfation.org
+	s=arc-20240116; t=1748686351; c=relaxed/simple;
+	bh=mJ5Rl0qcXcb/5doOfmKI8NZWnM2jDWsTV88Tpvy+T6s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DhaPc27K/6T1dsgbbtHcfF4/SWE3OKx3/yrm/RHY3Ll30FvDJRuLaHBz9Y2tuWO92u4gaqCwjGYOSjQ/0Zmo6a+nluGw2/jldNdx4KWM5YIHvMrcuvq6wvjU48N7U/mgvF/mrZpdzpuhfAKLJQ97wxmZKmkPChMJgCirhGhNX5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rt4BfImM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="s4JsNElf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
-	s=20121; t=1748685555;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F28uW/kKPBc+Y8EedF7wmeIStqF2kUtY2XQ+UTLAn34=;
-	b=s4JsNElftbgemCahvFHM5i7zibfPVAa5C95dnFlArOQD1Ow2PQokjqH5SBAe2F/rh5pjeT
-	9j9QS8md8jV5P3yncFR4uWkilj0xYGUNNEfnBhCVfHoZwdnjk/P0MnK0PhDMV63TYuAKgO
-	c72/3fSlpryMdWVFR03RgP4eMzXPEvk=
-From: Sven Eckelmann <sven@narfation.org>
-To: Marek Lindner <marek.lindner@mailbox.org>,
- Simon Wunderlich <sw@simonwunderlich.de>,
- Antonio Quartulli <antonio@mandelbit.com>,
- Matthias Schiffer <mschiffer@universe-factory.net>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Matthias Schiffer <mschiffer@universe-factory.net>
-Subject:
- Re: [PATCH batadv 5/5] batman-adv: move hardif generation counter into
- batadv_priv
-Date: Sat, 31 May 2025 11:59:12 +0200
-Message-ID: <15478494.dW097sEU6C@sven-desktop>
-In-Reply-To:
- <fd475dcf9ceaa7d14e4f0b4dca668f93e704f370.1747687504.git.mschiffer@universe-factory.net>
-References:
- <0b26554afea5203820faef1dfb498af7533a9b5d.1747687504.git.mschiffer@universe-factory.net>
- <fd475dcf9ceaa7d14e4f0b4dca668f93e704f370.1747687504.git.mschiffer@universe-factory.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rt4BfImM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A432FC4CEE3;
+	Sat, 31 May 2025 10:12:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748686350;
+	bh=mJ5Rl0qcXcb/5doOfmKI8NZWnM2jDWsTV88Tpvy+T6s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Rt4BfImM1YnVSBaYAS8IPRSbIwVj91TOQs/cl8Z1bnYBr/N6Fv7DHQ0QXrIju/zH2
+	 3KIR7O72VXDYNvAiGdgSk6uFDG0eDFqvc+71AGa9oNbt3zCDnn9yLmKFl6zr/3mwcT
+	 +L4JlOPWEI+RnNOrxiAabvouK7Fqy8ILsp/WDxJgbd9MFkVaeHyjMxPde71iBI6bSi
+	 Ra3H/Yct21uXvydBCuMsp+CSs0BrPmIY1Q3fiQta4UY3qoTec85Ehmo6hZEwGet1Gv
+	 V9Y8M93PnQtD7LG60jPc73TJyN1W0YcJncvHea25CsX/TA9WtsUGbw5ViKac/sJSAy
+	 tCt1TzdGST2aQ==
+Date: Sat, 31 May 2025 12:12:24 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Igor Korotin <igor.korotin.linux@gmail.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	linux-acpi@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rust: acpi: add `acpi::DeviceId` abstraction
+Message-ID: <aDrWCBAxPnu7VY0P@pollux>
+References: <20250530123815.1766726-1-igor.korotin.linux@gmail.com>
+ <aDnD_Bb3l6GiI_8K@cassiopeiae>
+ <CAG7QV92rtk7NUKzUoApkopv1LF2WVjqyNA9hPt=yCuEvdJjoCA@mail.gmail.com>
+ <2025053111-anteater-balsamic-8d01@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart26338690.ouqheUzb2q";
- micalg="pgp-sha512"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2025053111-anteater-balsamic-8d01@gregkh>
 
---nextPart26338690.ouqheUzb2q
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Sven Eckelmann <sven@narfation.org>
-Date: Sat, 31 May 2025 11:59:12 +0200
-Message-ID: <15478494.dW097sEU6C@sven-desktop>
-MIME-Version: 1.0
+On Sat, May 31, 2025 at 07:49:46AM +0200, Greg KH wrote:
+> On Fri, May 30, 2025 at 05:11:29PM +0100, Igor Korotin wrote:
+> > On Fri, May 30, 2025 at 3:43 PM Danilo Krummrich <dakr@kernel.org> wrote:
+> > >
+> > > On Fri, May 30, 2025 at 01:38:06PM +0100, Igor Korotin wrote:
+> > > > `acpi::DeviceId` is an abstraction around `struct acpi_device_id`.
+> > > >
+> > > > This is used by subsequent patches, in particular the i2c driver
+> > > > abstractions, to create ACPI device ID tables.
+> > > >
+> > > > Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
+> > >
+> > > As Greg mentioned it would be nice to see the subsequent patches.
+> > 
+> > Ok. There's a little misunderstanding from my side. I'm in the
+> > progress of implementation
+> > of I2C driver abstractions. I2C drivers can use either "of" or "acpi".
+> > The idea was to push this
+> > change first, because:
+> >  - It's quite standalone one.
+> >  - I'm not sure how much time it will take me to finalize I2C drivers
+> > abstractions.
+> 
+> If you don't need it now, then there's no rush to get it merged now :)
+> 
+> > If it is not appropriate way of commits, I'll then keep it until all is done.
+> 
+> We would like to see it be used first, to ensure that the code is
+> actually correct.
 
-On Monday, 19 May 2025 22:46:32 CEST Matthias Schiffer wrote:
-> The counter doesn't need to be global.
+Alternatively, if you want to upstream this dependency already you can send the
+following patches:
 
-Yes, with the changes from 
-[PATCH batadv 1/5] batman-adv: store hard_iface as iflink private data
+  - this acpi::DeviceId abstraction
+  - the glue code for the generic adapter trait in rust/kernel/driver.rs
+  - use this glue code in the platform abstraction
+  - add acpi support to the platform sample driver
 
-
-Acked-by: Sven Eckelmann <sven@narfation.org>
-
-Kind regards,
-	Sven
-
---nextPart26338690.ouqheUzb2q
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQS81G/PswftH/OW8cVND3cr0xT1ywUCaDrS8AAKCRBND3cr0xT1
-y6P6AP9KRnJJUPOIrj7VPA28oI+6BCBzSpYDpPYREKPl1twT1gD/R6ggdPQFEeRJ
-rWPV5+4jwZmGS4UipJNC3BrNZrs8UA8=
-=f/dy
------END PGP SIGNATURE-----
-
---nextPart26338690.ouqheUzb2q--
-
-
-
+This way we can already validate that the code works correctly. All this is
+required anyways if the I2C device you write a driver for is on the platform
+bus.
