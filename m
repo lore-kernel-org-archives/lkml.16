@@ -1,155 +1,218 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C3A8195;
-	Sat, 31 May 2025 00:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D61D2380;
+	Sat, 31 May 2025 00:06:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748649792; cv=none; b=QlSbh2BUEZWqKywOh0LbzTP2N1KhDi8QsP6QkN549PERpVeZ1BNYFZQcWcBkWQ2sZ+ZaVgefUtN4MvqFNvzzJ77ifFYqTVKGdbTXVPeY5zBkQoqiJ9sIT0/hLGp69EEMGCNSmEBUvxthTHfm2RVRV5nDvV8mNSp59Hc1Ai68Chs=
+	t=1748649967; cv=none; b=C7+fj+58RUUU/zuy0q84oAnfRzj1Z06gzgLlMORQxbxZ+kE8sg1oS5m6sXuL0o5kOdmlM3+l2385xboMkF3OGRg8h7+p+Y367KEkajTKer01K1v7UTzc289pT+mNOGT3fy9zbfXF6W/XCvZo6krViHkrOztlhAaq37q2NLIIefo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748649792; c=relaxed/simple;
-	bh=w/dKbBbIAJRxT8vr39V0wwDize8rkJ2vri92QYY0yFU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gC7xZNL1qimZdOc0B9YcmTNEAOGIijIY+Y2xacVR93GzemICp8sTOIP0Y8qnVAjd25G2U7ngUu7WjEKztnhGk1txMVnBZNaSkXLtabKXDPuJn+72rDxFshu8yzFJMlTb7UJqourC7jwj2wXOlDswfZQuub0Def/iLwuSUIQC8NY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iJoVWst3; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748649967; c=relaxed/simple;
+	bh=maPMN0hwCsVwCdykQCAgvH+exXadABZJV0ZSv74sBLc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Home0Lsub8HORU1+1n8Obp0i3phs2JfyZKuZusy3Q6p/sug38nl5LmShS3xUkjfZ4qIa5+OL7kKEor7s93gXCa2kL8pmcONaGV5n2hAz7AhcVX5v1uFOgwhu+Aa5nYEv0S23Hb7hE3rkL8Zg8OteZYb9nvDttlpEtcucHTuyvSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=n55ufTL7; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iJoVWst3"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7c559b3eb0bso167380485a.1;
-        Fri, 30 May 2025 17:03:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748649789; x=1749254589; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w/dKbBbIAJRxT8vr39V0wwDize8rkJ2vri92QYY0yFU=;
-        b=iJoVWst3BaY/sY8bswmnLJvIIkoDYJ060iS3JEcScBoYKmsGYNtQYjax8jbEEODB91
-         CbJXioMLP8w/SY8iwYVA9Nsn0cqJ2cOcKNQJQXGC2GLTrRgIQoZP8/OLj0Nuy6bd7NCR
-         6n9Cu2FOBTS8uAUsPyzHLY9iiEEq1Xxes9FPCElDYe8RTbtiwlS0IA2tWYC4ManqSnHd
-         j5iuiB/tgLXlcTeKDtBk7xgmqljSgUIULMQbGk/aAebPiWjH/TJuCRuUInakUFp7tUmc
-         ida2nslWgHQphRHgVCYoiqDeuYsdhiZGF0N+fXt9B8AmUwFkUO8eqaG7opJKu5UBmmHb
-         kJJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748649789; x=1749254589;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w/dKbBbIAJRxT8vr39V0wwDize8rkJ2vri92QYY0yFU=;
-        b=i+K438gZkQdoy5/7CKheKY7h1QLRPxRQW4W52GUKsb5pi8l6HYdsKS6qaZGsbQrvl+
-         gd0WUeTvRz5GiszFNH9dZYk+nFTI+O6d0IfUP4LIoCjKXMfpP+ntrZbgFaJzQqeUDP+E
-         ew72yIKdH8a/6bQzFt+K4yIAlTJtYsKWKgMLW8quct43Z+hKu3R9qWvXFmTQVWJWU2PC
-         qNapBUgP9VdgByFmVDpy//4rxs+WggnkrM5JBiNjaAyhBjk7TxbsD4FShIGvYxnd50X7
-         pugHg+bGlZNM8Hlh8dWJ/D5tMdJtSylDIXCwfT7AKYvIKw+DFGPlFPZtNbcUYgMinppY
-         SmZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW9SKlfxXsc/4VMktD6KqLxFoNaaOQHZMM/h/6fijKfIi504E9oxWtQo5cbSfVICotiCE6rvmra@vger.kernel.org, AJvYcCXvgzgLXdpmOUc4DRAVbSgSs9DMK5+J+zyuOIAtTk/HsOeBucf6uC+EKjtFNnYkeHtBi3i2C83aLCrFsk0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIKmcz2puT/aXeZoftXiig5KDtUwe4DQc3A2cC+LyNF+kvmyni
-	n28WJdWAqgG0GnF6drjk4Y40d/fkUFwONaOqk0CKwbpBD8dCuauqGWer6icrPcJOTCz2pssTYsT
-	n3jC1+2Sw6mLlIS86ZSFWinzO9qgsDSI=
-X-Gm-Gg: ASbGnctmWhXe28Kfpge8QEqI5e5ap2MfaxC+Q4vKkvbVqPXEatC/LFTm47IJ8TsJA6+
-	d5V4FtmRbjPDopGDLyL+pOm6YJEGRfrbPyroMv7LZIgSc9vo07V6EApUJtk+cbtObqOx5MhBevl
-	mN2XjhZGSgRvCyHrfbztmJ32aDZOz/7/7pfg==
-X-Google-Smtp-Source: AGHT+IHYyJlGTtpjLfDS2korruhddZalmtfRzHquW+3WyYzNkhp5Cmo7Al9su+C9WS0W0IHm4jkhbhjqHsgACCoVWZw=
-X-Received: by 2002:a05:620a:4508:b0:7ce:f58e:7e9c with SMTP id
- af79cd13be357-7d0eac3dc9bmr54414885a.7.1748649789320; Fri, 30 May 2025
- 17:03:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="n55ufTL7"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54UJQZ1V008586;
+	Sat, 31 May 2025 00:05:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	P9Ik7JrFGgye6zMwZK1N8RpHNmN/mOfsQyHvJj3bO/Q=; b=n55ufTL7hgr/DqVi
+	3H5+oGOuNbnAUuexz858VKjF7Sk+QwxUmBi0KnAN8IOCDrdAuDUuQCqfzoWME7Xc
+	sx4w/DyVZNopUmanLmJwiwyNHVy1iKBQxxvy1ForEbo9HOAldhw4kFO+V+hwEXKS
+	yd0VgEOxA6uuQmI7N3vQTPOGG87IlkGV7w4olF65IsounReNjRZOxomXdvv+WL/M
+	zpwHzrWSU2qvNNM0gBm6mcPG1CWtp3ELcSxDcdDka67XOaLLHvKfR5p+8DzyRppN
+	EBtiaw3odP6Bpt4XmPbVHyuHymaOZv4/l4B2gGbetus0Mn2wmJauP1zYr/Yppdy6
+	s9gJ9g==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46w992vwww-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 31 May 2025 00:05:56 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54V05uLx011386
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 31 May 2025 00:05:56 GMT
+Received: from [10.253.36.123] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 30 May
+ 2025 17:05:51 -0700
+Message-ID: <285cae4a-219c-4514-818f-34c8225529de@quicinc.com>
+Date: Sat, 31 May 2025 08:05:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250527175558.2738342-1-james.hilliard1@gmail.com>
- <631ed4fe-f28a-443b-922b-7f41c20f31f3@lunn.ch> <CADvTj4rGdb_kHV_gjKTJNkzYEPMzqLcHY_1xw7wy5r-ryqDfNQ@mail.gmail.com>
- <fe8fb314-de99-45c2-b71e-5cedffe590b0@lunn.ch> <CADvTj4posNXP4FCXPqABtP0cMD1dPUH+hXcRQnetZ65ReKjOKQ@mail.gmail.com>
- <e1f4e2b7-edf9-444c-ad72-afae6e271e36@gmail.com>
-In-Reply-To: <e1f4e2b7-edf9-444c-ad72-afae6e271e36@gmail.com>
-From: James Hilliard <james.hilliard1@gmail.com>
-Date: Fri, 30 May 2025 18:02:58 -0600
-X-Gm-Features: AX0GCFszR54VKhpbiCp7QT24c4JTQPW5wRggeGSsldqyRuwmihD2lRx7cFJ2K-I
-Message-ID: <CADvTj4oSbYLy3-w7m19DP-p0vwaJ8swNhoOFjOQiPFA24JKfMQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] net: stmmac: allow drivers to explicitly select
- PHY device
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org, linux-sunxi@lists.linux.dev, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Russell King <linux@armlinux.org.uk>, 
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, Furong Xu <0x1207@gmail.com>, 
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 0/3] media: venus: enable venus on qcs615
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Dikshita Agarwal
+	<quic_dikshita@quicinc.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Nicolas Dufresne
+	<nicolas.dufresne@collabora.com>
+References: <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
+ <wmri66tkksq6i3hfyoveedq5slghnnpozjzx6gck5r3zsiwsg6@xevgh54rnlqd>
+Content-Language: en-US
+From: Renjiang Han <quic_renjiang@quicinc.com>
+In-Reply-To: <wmri66tkksq6i3hfyoveedq5slghnnpozjzx6gck5r3zsiwsg6@xevgh54rnlqd>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMwMDIxNiBTYWx0ZWRfXwps808KuKuMe
+ YsiCzwDseIf2KUyHQmldaOB3a8VBXVr4AW/X7dvJ7ufYP4Fn6CJUzi9mr3HMABn8XddVrAhU48n
+ d/E+476b7MyKxeCFQE+TWMDKx2zNVbmtEXrxnOB4CT7+Cs11S0gnNYKshbL7pMrqFUTZCs0gxkc
+ arAt30Mao82iG8siRfGZ628uy/Z2OxKxq+1alhzwuFJtPcAkUBr7wHjzomCYEXzsFX4D827oHBZ
+ UKxwKFvW+Crj5Kg0XtSeIN3n2Wa7aMfcg5T0/9OCAkH6o9CURnT4d/xT4l4d4KmADKnrmHxd6KU
+ d02qqw+Ed4hPaUEylxQebv23nOmemmG8DsY+3lwqX+aQqTHD+1gv64lGMxGYYWuhZLvLsUmRyBd
+ ebvsd+ZDQ0Z2qgpfrI9pt3VAw0eMrvZYfJ4WW62CH6H0TVxawpREdr7ftR3CkgwAO6br3KYa
+X-Authority-Analysis: v=2.4 cv=Fes3xI+6 c=1 sm=1 tr=0 ts=683a47e4 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=7oLazzdPkbqr2a_El7wA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: hA1IsPqSYjYSRtValUFsCcCCCuzFPCZz
+X-Proofpoint-ORIG-GUID: hA1IsPqSYjYSRtValUFsCcCCCuzFPCZz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-30_10,2025-05-30_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 malwarescore=0 impostorscore=0 phishscore=0 clxscore=1015
+ lowpriorityscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=999 spamscore=0
+ adultscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505300216
 
-On Fri, May 30, 2025 at 5:56=E2=80=AFPM Florian Fainelli <f.fainelli@gmail.=
-com> wrote:
+
+On 5/31/2025 4:27 AM, Dmitry Baryshkov wrote:
+> On Fri, May 30, 2025 at 09:32:12AM +0530, Renjiang Han wrote:
+>> QCS615 uses the same video core as SC7180, so reuse the same resource
+>> data of SC7180 for QCS615 to enable video functionality.
+>>
+>> There are no resources for the video-decoder and video-encoder nodes
+>> in the device tree, so remove these two nodes from the device tree. In
+>> addition, to ensure that the video codec functions properly, use [3]
+>> to add encoder and decoder node entries in the venus driver.
+>>
+>> Validated this series on QCS615 and SC7180.
+>>
+>> Note:
+>> This series consist of DT patches and a venus driver patch. The patch
+>> 1/3, which is venus driver patch, can be picked independently without
+>> having any functional dependency. But patch 2/3 & patch 3/3, which are
+>> DT patches, still depend on [1].
+> I'd say 2/3 and 3/3 still depend on 1/3, otherwise we can get video core
+> on QCS615 over(?)clocked.
+Agree, so we need to make sure that the driver patch is not picked after 
+the DT patch.
 >
-> On 5/30/25 16:46, James Hilliard wrote:
-> > On Tue, May 27, 2025 at 2:02=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wr=
-ote:
-> >>
-> >> On Tue, May 27, 2025 at 01:21:21PM -0600, James Hilliard wrote:
-> >>> On Tue, May 27, 2025 at 1:14=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> =
-wrote:
-> >>>>
-> >>>> On Tue, May 27, 2025 at 11:55:54AM -0600, James Hilliard wrote:
-> >>>>> Some devices like the Allwinner H616 need the ability to select a p=
-hy
-> >>>>> in cases where multiple PHY's may be present in a device tree due t=
-o
-> >>>>> needing the ability to support multiple SoC variants with runtime
-> >>>>> PHY selection.
-> >>>>
-> >>>> I'm not convinced about this yet. As far as i see, it is different
-> >>>> variants of the H616. They should have different compatibles, since
-> >>>> they are not actually compatible, and you should have different DT
-> >>>> descriptions. So you don't need runtime PHY selection.
-> >>>
-> >>> Different compatibles for what specifically? I mean the PHY compatibl=
-es
-> >>> are just the generic "ethernet-phy-ieee802.3-c22" compatibles.
-> >>
-> >> You at least have a different MTD devices, exporting different
-> >> clocks/PWM/Reset controllers. That should have different compatibles,
-> >> since they are not compatible. You then need phandles to these
-> >> different clocks/PWM/Reset controllers, and for one of the PHYs you
-> >> need a phandle to the I2C bus, so the PHY driver can do the
-> >> initialisation. So i think in the end you know what PHY you have on
-> >> the board, so there is no need to do runtime detection.
-> >
-> > Hmm, thinking about this again, maybe it makes sense to just
-> > do the runtime detection in the MFD driver entirely, as it turns
-> > out the AC300 initialization sequence is largely a subset of the
-> > AC200 initialization sequence(AC300 would just not need any
-> > i2c part of the initialization sequence). So if we use the same
-> > MFD driver which internally does autodetection then we can
-> > avoid the need for selecting separate PHY's entirely. This at
-> > least is largely how the vendor BSP driver works at the moment.
-> >
-> > Would this approach make sense?
->
-> This has likely been discussed, but cannot you move the guts of patch #2
-> into u-boot or the boot loader being used and have it patch the PHY
-> Device Tree node's "reg" property accordingly before handing out the DTB
-> to the kernel?
+>> [1] https://lore.kernel.org/all/20250119-qcs615-mm-v2-dt-nodes-v2-0-c46ab4080989@quicinc.com
+>>
+>> Signed-off-by: Renjiang Han <quic_renjiang@quicinc.com>
+>> ---
+>> Changes in v8:
+>> - 1. Add missing tags.
+>> - 2. Fix the dependency to point to videoCC series alone.
+>> - 3. Fix review comments from Konrad.
+>> - Link to v7: https://lore.kernel.org/r/20250527-add-venus-for-qcs615-v7-0-cca26e2768e3@quicinc.com
+>>
+>> Changes in v7:
+>> - 1. Update devicetree patch to fix the cherry-pick patch conflict issue.
+>> - 2. Remove dt-bindings patch from this patch series due to it has been
+>> picked.
+>> - Link to v6: https://lore.kernel.org/r/20241219-add-venus-for-qcs615-v6-0-e9a74d3b003d@quicinc.com
+>>
+>> Changes in v6:
+>> - 1. Remove video-decoder and video-encoder nodes from the device tree
+>> - 2. Add a new dependency.
+>> - 3. Fix missing tag.
+>> - 4. Update commit message.
+>> - Link to v5: https://lore.kernel.org/r/20241217-add-venus-for-qcs615-v5-0-747395d9e630@quicinc.com
+>>
+>> Changes in v5:
+>> - 1. Remove extra blank lines in yaml files.
+>> - 2. Add new variables in the driver while keeping the order of the
+>> original variables. And remove unnecessary variable initialization.
+>> - 3. Update commit message.
+>> - 4. Update the order of nodes in the device tree.
+>> - Link to v4: https://lore.kernel.org/r/20241213-add-venus-for-qcs615-v4-0-7e2c9a72d309@quicinc.com
+>>
+>> Changes in v4:
+>> - 1. Remove qcom,qcs615-venus.yaml and use qcom,sc7180-venus.yaml for
+>> qcs615 dt-bindings.
+>> - 2. Add "qcom,qcs615-venus" compatible into qcom,sc7180-venus.yaml.
+>> - 3. Remove qcs615 resource from the driver and use sc7180 resource for
+>> the qcs615.
+>> - 4. Use the frequency in the opp-table in devicetree for the driver.
+>> For compatibility, if getting data from the opp table fails, the data
+>> in the frequency table will be used.
+>> - 5. Keep the reverse Christmas tree order coding style.
+>> - 6. Add "qcom,sc7180-venus" compatible in devicetree.
+>> - 7. Update cover letter message.
+>> - Link to v3: https://lore.kernel.org/r/20241125-add-venus-for-qcs615-v3-0-5a376b97a68e@quicinc.com
+>>
+>> Changes in v3:
+>> - 1. Remove the ‘|’ after 'description' in the qcom,qcs615-venus.yaml.
+>> - 2. Add a blank line before 'opp-table' in the qcom,qcs615-venus.yaml.
+>> - 3. Put ‘additionalProperties’ before ‘properties’ in the
+>> qcom,qcs615-venus.yaml.
+>> - 4. Update the subject of qcom,qcs615-venus.yaml patch.
+>> - Link to v2: https://lore.kernel.org/r/20241112-add-venus-for-qcs615-v2-0-e67947f957af@quicinc.com
+>>
+>> Changes in v2:
+>> - 1. The change-id of DT and driver are removed.
+>> - 2. Add qcom,qcs615-venus.yaml files to explain DT.
+>> - 3. The order of driver's commit and DT's commit is adjusted. Place the
+>> driver's commit before the DT's commit.
+>> - 4. Extends driver's commit message.
+>> - 5. Split DT's commit into two commits. Add the venus node to the
+>> qcs615.dtsi file. Then in the qcs615-ride.dts file enable the venus node.
+>> - 6. Modify alignment, sort, upper and lower case letters issue.
+>> - 7. Update cover letter message description.
+>> - Link to v1: https://lore.kernel.org/r/20241008-add_qcs615_video-v1-0-436ce07bfc63@quicinc.com
+>>
+>> ---
+>> Renjiang Han (3):
+>>        media: venus: pm_helpers: use opp-table for the frequency
+>>        arm64: dts: qcom: qcs615: add venus node to devicetree
+>>        arm64: dts: qcom: qcs615-ride: enable venus node to initialize video codec
+>>
+>>   arch/arm64/boot/dts/qcom/qcs615-ride.dts       |  4 ++
+>>   arch/arm64/boot/dts/qcom/qcs615.dtsi           | 78 ++++++++++++++++++++++++++
+>>   drivers/media/platform/qcom/venus/pm_helpers.c | 53 ++++++++++++-----
+>>   3 files changed, 121 insertions(+), 14 deletions(-)
+>> ---
+>> base-commit: 176e917e010cb7dcc605f11d2bc33f304292482b
+>> change-id: 20250526-add-venus-for-qcs615-a547540656d1
+>> prerequisite-message-id: <20250119-qcs615-mm-v2-dt-nodes-v2-0-c46ab4080989@quicinc.com>
+>> prerequisite-patch-id: afd2dce9e6066b1f6ce0b41ceafe0dd47ad97c40
+>> prerequisite-patch-id: f8d64c8cf6cd883dc7bbb2a4ed6d5a4db85c536d
+>>
+>> Best regards,
+>> -- 
+>> Renjiang Han <quic_renjiang@quicinc.com>
+>>
+-- 
+Best Regards,
+Renjiang
 
-No, that's not really the issue, the "reg" property can actually be
-the same for both the AC200 and AC300 phy's, both support using
-address 0, the AC200 additionally supports address 1. In my example
-they are different simply so that they don't conflict in the device tree.
-
-The actual issue is that they have differing initialization sequences and
-won't appear in mdio bus scans until after the initialization is complete.
-
-> Another way to address what you want to do is to remove the "reg"
-> property from the Ethernet PHY node and just let of_mdiobus_register()
-> automatically scan, you have the advantage of having the addresses
-> consecutive so this won't dramatically increase the boot time... I do
-> that on the boards I suppose that have a removable mezzanine card that
-> includes a PHY address whose address is dictated by straps so we don't
-> want to guess, we let the kernel auto detect instead.
-
-Yeah, I noticed this, but it doesn't really help since it's not the address
-that's incompatible but the reset sequence, I'm having trouble finding
-examples for mdio based reset drivers in the kernel however.
