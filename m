@@ -1,261 +1,266 @@
-Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11011068.outbound.protection.outlook.com [40.107.74.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2BA9EAD0;
-	Sat, 31 May 2025 06:35:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748673324; cv=fail; b=JfdIx99K30flwRXGTy/3+w+f/kHDvobq/aAgeiE2vJtnO5Tl2x/VlmMCjut+Nb2jOSsXE1eteex6eFtezRtkoODOI9f9TY42cnLr8s+crxv35VMMxOGkGcLedqL8Yw5QgNKdIgZkXdRTaiRsJmShxBR+1aAtZ6ct/XkHKn0iteM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748673324; c=relaxed/simple;
-	bh=wXySHxIb9xtVuElqlxSylzAF0O2VsgmS9HBJSSwJeHQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=aH2TdRl4sexFkxmPRv0oUZrbkLnqz7KTH7ImfmJWFj78TctdsKDWl15M0BzDiPBSkiYetkkA6CmS2sOjElA/yOy/VW36f7aC4gYLIVpzKs+/733wuFLPL9FkBxfh2RHhtBPKUjrsnKWYwg5HdAfxdYnOgu9HaOyqeEqv6VJNIJA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=Ue4ggBgz; arc=fail smtp.client-ip=40.107.74.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E500619F10A;
+	Sat, 31 May 2025 06:36:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748673368; cv=none; b=ls6vCi6LNGbM+EqBeIc/xtkGMPSw5ahwcoqvEvrbu6fCvvycka4ikhYY5CrEOUhjYHCm5QK2w9o3LisZq1LirEBPKhyE0qWRXAV3Vfvwy5MBJ5sK0lebM42YoJMq3+Yv+kSr6+f5uyhjBtWbIleIYpucYmoM+qr3O5SLst8kTRI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748673368; c=relaxed/simple;
+	bh=YXwmW+GZn5Xltkq0Z7L3gYqPS8LV1nBKKs0Ek1z/X/k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B3JKrGqVFG/BZiQq1rYPwl9oj2Yuv/lne0q+D3/PlQYK5H+k3cLNrEBZSrfsr+zXvYu28I5tnualfB9LrNPgIR0n3lfvCaX0B36HChybluu3BEbnw43kciLbdQFO9ozzaHESUDVBkqYRYJ7W2MlWoRuVtZOjopWQwkrt5bSlsKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bYMFUwwz; arc=none smtp.client-ip=209.85.221.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="Ue4ggBgz"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SNDS3zLs3qsT0a6gFF8RdFWOPgE2vcAcS/eJLOLYcxHv5Ej4dehHkkweqjbZcL/zduNBTTzBCAD4De0j2AREBrPit0jeRNOVgbbAj4mkoTykdj7Yh7x+jQiMycKP/1LSveFi05ZH0eznq/o0cJAPCOgxCjk2NOUIb+L8Y/gb+2m+QykY5LNe51A8ErhECIyOTAwYjCvqlKnGp2ycIw/ZbcefdYLjJfzSYmL8fO3yZsN95WOUchWBb9tTCsZPxaWjDKgIb2BrBBg6m6GJRMleUlWjYtgyNDvuWoPRzISdsTV/QJsxNPgLUIFkfm3KVLa/U9YYxBbkWqt+VkvjGmryoQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3o1eXXXEzgmjkkz0QQ4tu+n+yAb8Jo4eWICx6MDW458=;
- b=MVWe/xokoGnngRGx5k9M4DfMdihSoQHQGDv3zOycXA9jbjtDkrYatCy7v+UGufBOZhWinLGkzqZ3aH7Ql/RvxMX3qk/JQ77QmLfW5DcQDB42mhc9vgt/zJia//hs+5EhcIgWZkPb7cwhHPxIyU0DVfKxRBXND/hq7oeG2coFV74LKa7rcAy2Bl8dvx3cJUDUrNrtLSKKuixUijMjPRvs/SIOiZ3SThI3VbsKprE4WgIo9hjI9DuYfUYsO8X5RK2P8hCt17vVbndjSH8MGCOLV9qsBeLoOy9RwdkQIuqX2xuud3SxD7EQMpI3CAmNo/+YDSOzdbwuUa4VbnJkR+Bceg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3o1eXXXEzgmjkkz0QQ4tu+n+yAb8Jo4eWICx6MDW458=;
- b=Ue4ggBgzMonyAkbXe3wA8w60ynVWuOs6jd0mS39P0EQFR1p5sHuZB+96lT6dc9jYJBh3ipDnDmngZaYHKWanWzXDv+8Hc1dZaOSK6GoFySi+idTFVBeY8pzPuW1SxLxv9Jbr61R87K6/DBSwP+9+wX1UWUXYj8ZgZttkQXQl8l4=
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
- by OSCPR01MB13441.jpnprd01.prod.outlook.com (2603:1096:604:334::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.36; Sat, 31 May
- 2025 06:35:17 +0000
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::86ef:ca98:234d:60e1]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::86ef:ca98:234d:60e1%5]) with mapi id 15.20.8769.033; Sat, 31 May 2025
- 06:35:12 +0000
-From: Biju Das <biju.das.jz@bp.renesas.com>
-To: Prabhakar <prabhakar.csengg@gmail.com>, Laurent Pinchart
-	<laurent.pinchart+renesas@ideasonboard.com>, Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Philipp
- Zabel <p.zabel@pengutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>
-CC: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Fabrizio
- Castro <fabrizio.castro.jz@renesas.com>, Prabhakar Mahadev Lad
-	<prabhakar.mahadev-lad.rj@bp.renesas.com>, Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>
-Subject: RE: [PATCH v6 01/12] dt-bindings: display: renesas,rzg2l-du: Add
- support for RZ/V2H(P) SoC
-Thread-Topic: [PATCH v6 01/12] dt-bindings: display: renesas,rzg2l-du: Add
- support for RZ/V2H(P) SoC
-Thread-Index: AQHb0YQus2i1gP2rdEqMdB2TnhipsrPsSNYw
-Date: Sat, 31 May 2025 06:35:12 +0000
-Message-ID:
- <TY3PR01MB11346CF2602E4EE4E85657C868660A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-References: <20250530165906.411144-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250530165906.411144-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250530165906.411144-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|OSCPR01MB13441:EE_
-x-ms-office365-filtering-correlation-id: 1f0c641c-7add-4c07-046d-08dda00d4bfa
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|376014|7416014|38070700018|921020;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?ktJ874odaynwpKS8G1Zu186IDFuhGtF3s7d4GNsKxOyjdtga+wtpfIoilB6d?=
- =?us-ascii?Q?6q4soZy2N2yhWm245oTA451tXybmRurQUQedVwDPYnIxNp3LTnkRqTNSeYOT?=
- =?us-ascii?Q?dAhaf/NS1DCjzpmr3Eq1pCO1FMp7/7+G/CT6VtfIltjGx6pOABLiq2bQJ4Vc?=
- =?us-ascii?Q?Il/vVDBzftkIJUKJZXJLYqZe+aWhKRSl4lTnHB37OtWEUn/NXeHccbuzlx8d?=
- =?us-ascii?Q?esSbjQAq8J8XPkBMGZ70OSPzpSSBN/rTg99LzXqjVqDSLhd0kq9VHrAcG68p?=
- =?us-ascii?Q?SfqR9MJwDy+9Jqxdce6zAyuh0aO1+V4MdJ6WQIS3IRXYyNEEfAxSro1RmW8z?=
- =?us-ascii?Q?fqXVqNquWEkX/bhLNcJVJj90cv1dIkZB48k5Yp4re8scZXZQ/NXcd9C4oCNN?=
- =?us-ascii?Q?mF7OY39fdqGO9/T+4DRQxsgNB922QYSU9pQB5kNePXdjYfsBYTU+px1q07Al?=
- =?us-ascii?Q?Glvu/Cc4c7Ht+pn25L/5lK4w/X7NtsWPV2UCL7rYh638FduWJRV5vYZiMy/k?=
- =?us-ascii?Q?xEKUgckrsFlbgqRjxcEaJKSBj7Lpjglw3uimqh7JNwqFR8TUUAOrCqoktfWA?=
- =?us-ascii?Q?DLcXEpiC1Uu/+0SdgkKe+jnPeFovKM4F2xyn5ohodK0NNFIYwTIjsVu/G9a1?=
- =?us-ascii?Q?deyiIkPLa3PkFJfLERFemgt4B6hDjoI9h3AaE7Pn9PNj6h52mUd6CrgcCIXD?=
- =?us-ascii?Q?hABrYd7c1q8sngEcAv0q05BSWDGwtpKDp1TnE4U9tXuZNVhYgISumvh3orUD?=
- =?us-ascii?Q?/gcfElvKqAIBDG3aEhJM1Up0X3A3OSLa0fDAfl5e5SpoIribe087vO3ZATtb?=
- =?us-ascii?Q?wmT8EtkSqKa3we8hMUQX18D/t2xAR+6obCRAg0iJ0EsgIP74kGS8wJsoZ7vP?=
- =?us-ascii?Q?Fsghqdg1HDOrl9XScOkJ26IeJW7LXwhDubE5t5DL+irIK0vUAa44TMDaWyMh?=
- =?us-ascii?Q?KZyqileWfbza4FkX8r9mN5N4DVkhIhVs5tj2hgeJIzxdmAUebA+SVhDsLsoi?=
- =?us-ascii?Q?+jED0Ytx/UBn97Fc35P2x3Aw32epQfUTppJTJMX69ApbyBFkO1Ao1mPlF9vi?=
- =?us-ascii?Q?JUFKwNKXTsK7z4BzaXNA8Q5Zm289jhnMYlZETIBMgZhvXcggA8hovtGCNsFi?=
- =?us-ascii?Q?M9nyCVL7cRqZP5UUplUlKuV0k9xYJWdhx/p9Ij+zLoC6avvuC+u7AwuuGsOq?=
- =?us-ascii?Q?qPcxHy02AHzawRD61Tu1g3dF1XFkyNSqE4NZ32xbnuhFHUGVXMmN1zdD47rF?=
- =?us-ascii?Q?nXXDTAJDbSy7925TG6FLK5TfFnPAPlTx6+9tHYwu++MzBHmKgyhmtpiiWaOJ?=
- =?us-ascii?Q?XI5l1tBk4PEix8l7dys4qTKzuCRsiXcr8yRmQzoKqwn23DDiMl3irP+1En7W?=
- =?us-ascii?Q?WXaq5p5WTByuz/Gd/E7CXKsO/nsdAPeB/COKTnlO3hv+fefee0NARGYx00xU?=
- =?us-ascii?Q?7wi+mpU5uOaM4aXm9zGCHzARskJwI8kF?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(38070700018)(921020);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?QjqLnN2H2BkeFU0HTiCgxgGsTMctp3hbGOKNfAd2XU/ew9J8mqsAWgclsi/C?=
- =?us-ascii?Q?TAk2w6dDgIn5XwyEdEo3ruA/9kxEnTNkw5aEuVJtAneBdzBon1Vlud+931nQ?=
- =?us-ascii?Q?OPZk6ImylXv+7wmI7CEASFw8cUVWSmbxcCMj7fC0F9a3/YvbJLL0mJAwqree?=
- =?us-ascii?Q?rsirGu0QHXWw2buwbU+k3P57MB5ecCdZwY7RPsIudgktJ+QA7JP55UahG0ZE?=
- =?us-ascii?Q?WA8XeN1zoC+fLneGVa2o0oPCNg/cXNucB2lWjbNkqedigJg4qu5ZQ7jhf8c0?=
- =?us-ascii?Q?wDRtCZvL4Z+iH4KEc9N+bODmgrhQhIloWnh6K/FkvCgKdwPHnlXl2OAAhwL6?=
- =?us-ascii?Q?9g2FwwcXEPnCoZ+RvsjCZZkYq9dkFDkH6pJwbxiPCwAviE5hRONm2cyYc7qu?=
- =?us-ascii?Q?d08cwSnjCezXkEdgmovaHjbmI8VBK1W4GTvUczdt4SGQzOOVDAMaok2Er2Vm?=
- =?us-ascii?Q?NyiPQj2y01GY58VO6UdhFApCX+LrPj50XMr5mb+UE9KA7ZtZYzfdkD8vgyH6?=
- =?us-ascii?Q?T9gT1WHItipnxpdjB8bId8rulS4/POGaZ2nSP5bXMps8y8cXj1oLmrXHwbrI?=
- =?us-ascii?Q?0N7uLZlLBCGhLiHU+XkzLjB9sA+SEQdH0HKBRuqvBBrCP32wVILBZCoJA54K?=
- =?us-ascii?Q?lI+1ZDxIsgaEUF8LejVbkSG8LdJBV/A0UhaGBdSIABeW2TX8Zpl6pZ6TPoZJ?=
- =?us-ascii?Q?Ug1TpyxRI3h3S5XxUpW1LKAPvrMqy285socvEC+3IcVovoB37wC+ze/Qt6kr?=
- =?us-ascii?Q?MnqjS1pyCK7pubnxVKgIXZI9uAVw2V1IlbhZfeJE3fCtbNtNwi5q6smVnQA8?=
- =?us-ascii?Q?Y1mpxS0K4h7JtE+uUYnJgS63HhTi79bq8TdW2ld7/7XdOcvzFEI72LIBGaO3?=
- =?us-ascii?Q?kZfuMWJWPn7cpEgeTY/RtOkj8NGdZ5h50+DcK7TTG1asGE/CkNEWrd3qxlmS?=
- =?us-ascii?Q?1L77OWjZzCIlrQH/yrjrNLVFO0yLc0OJmwTs/Uf+1Kp/ODyWcJlLrxopgt/A?=
- =?us-ascii?Q?60aZ0Rfd7M4LmPmy44x7yU3cCdoW03aCgHz6KTwAdy5L8UOs/1JPmeVuBnSn?=
- =?us-ascii?Q?CbmwtfcYXDPGNJ26rZPZUBn4h61enOC34zNbqkQVV5Va/SU4QjShKvkwaGXk?=
- =?us-ascii?Q?1BmA3oTy+0ImvH1KbhGpsVIrcafWb4A8uLY58Dj26X0nvx+KimZf9tG5YlQ2?=
- =?us-ascii?Q?4pV7W82d0gvKktbX195d693zILXZJjqIWKn09DBOWxBslCHcjZMdp5jSDodc?=
- =?us-ascii?Q?tqKv6voFrku96VO2RzYckMh5ZzdsTHxQDhjezclKGP0mPtZMQu2N9yyOiK7p?=
- =?us-ascii?Q?ZlBkNhILxbDzWShKd5artqoxeAXI+EYJOc4k+PvyU0bHJ7t6R6iU+JplrApp?=
- =?us-ascii?Q?6VCtKg2Og1q47oGI43hHXOr1wO2NkiFH8KP76cb8W0ds8E360J/+Uqr8roPb?=
- =?us-ascii?Q?c27+j6ygJv/uhbp54KhBVbT85zfaXqZv36DX1kT1HFideflR2q9FePcjw9B2?=
- =?us-ascii?Q?D33j42/v6XhrrRU87g6ECSQu6BIEYUz2TN9l7vWE1zMI5GOn9HunRsFMqazp?=
- =?us-ascii?Q?tTpwBX0uxNr1Z/Sxl7JRyIC2mv/aaXzuUsjmXsbV6y93XHYdnU6RksN2Umah?=
- =?us-ascii?Q?dA=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bYMFUwwz"
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-530807a8691so567609e0c.0;
+        Fri, 30 May 2025 23:36:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748673366; x=1749278166; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qxAnNwf04k1daTyHuUhp/+U0tlJ5knXJTN7hN8ijbm4=;
+        b=bYMFUwwzfmHYOOv/dL1UknTx9JG3VD0DXl6xnYN2mE0aWBEqPu/At4KCkRI6JMzbPH
+         bcExQyjg45hBpbIEGKs3OHWsjngILVHqGvAYX/xwDSty3NBvMMYKb8/QaIwdZr5iiXXF
+         5vV4JkSSml3qsfH8JfQOQUdSjGbyG4oxZDnTeIt/WAs0xxC1j0kCnZFwrd2dbAtFngo3
+         PAjI/0uKR2PI6XU5luxq1Ps5D7sb0697i1IZHeGMNqfvO4OCMSm2X0q3uHmTkFyGfqrW
+         Hcmhhwp8CJGmxXCxwzabc8niaRnyfQ56j58srvyGFbrwOsdHyEJbWjKKo9doFrQx0/0f
+         uJUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748673366; x=1749278166;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qxAnNwf04k1daTyHuUhp/+U0tlJ5knXJTN7hN8ijbm4=;
+        b=g9I358XMBMrXWB0JIHOTusd/gIB9ldmc/ndWLXiipHHwwLn6jVQIP1jN4lYJW45pTU
+         Dya1tUXncXLEbyZgs2otbVvV2M+ClvJ+XAGC9KF+ZH4amRWKsgOMmtU/UTlqRrfksPRW
+         tFG49UYHnQ/9boOu0k241ybRkSD0Kk4QcfAr6wWWU44uVwe7gdGzk7oa1+tc3u2ge8yx
+         KIHt7b2yH5vus3YuoYwlMU7upbWgrcLwIDObUb2V2KPTQfJN9XMaSjGclO2xUfLu63sR
+         B5GUL4hKVEVYP+/ZJcepBlnrRhFSJZ4PYHXlp7t1O55InPoctg90t0qFrUPk7jYZ4+OB
+         ZW+g==
+X-Forwarded-Encrypted: i=1; AJvYcCU50m0D6/g8CoFlU69SvEJjqWs5xVccnRT7/sEJc2w+QDsBudJvELNtdEGV4AKVQwmx3LVvBaZK2GrhI0U=@vger.kernel.org, AJvYcCXg2elqT43UkRma6kFZIhe6xmsBNhr8rZRfPl0v/ZspofgtQ1WkyEJ1yUBS5hre1APLHGN6MkiE@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfGHpKUj64TgGTNdv+AEdMw0qbs9K4t/lN4aWYBNxi3ZOuk5EY
+	A6IbjO/UE2HvQZLCuJhHwmptPIq/zaVl91LsV01aQsTdSoObvwtMAg7n0RLw6AALghDByGuhGXU
+	v+gFdGV9W7gg2ZRtxlh7AdOfXuf0lf/U=
+X-Gm-Gg: ASbGncuyyYooIgCeJ7gzQo2X/JLUY9Tma4lbg/wb0isdEhPa3Y3ky7+GrOmM3HeJTkU
+	SNPWxzRKMPmp9dJAL/nEShJ808lwpLJvcdkc1rcH8bMF6KKyhXOKLy5ehBpwM+RZKxKV6/9Vojs
+	2Qz3QLR2lWeGtH3zX3Vnz3+hBBcQG5sU9Pmg==
+X-Google-Smtp-Source: AGHT+IFoFH9kRyoo67Aj4j7sLe/VRhCJ+NyYgJ+kdpibA364NNkrfUx+kDIf2nV6F+Nf9J3DCvPMTi+MJfD/icdKAsE=
+X-Received: by 2002:a05:6102:6d2:b0:4df:8259:eaa with SMTP id
+ ada2fe7eead31-4e701bae8a0mr364647137.5.1748673365645; Fri, 30 May 2025
+ 23:36:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1f0c641c-7add-4c07-046d-08dda00d4bfa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2025 06:35:12.6025
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ygYCEy6izST1/IUm59cDLGoai0bgZeX3xvanyf8yuEhWa9t79otAf4n/4zUV01grZuEEwyHZNO8Y5n8+hwSK/FPW7e5MwEzI9+ziYQn92Lw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSCPR01MB13441
+References: <20250530201710.81365-1-ryncsn@gmail.com> <CA+EESO4-L5sOTgsTE1txby9f3a3_W49tSnkufzVnJhnR809zRQ@mail.gmail.com>
+ <CAGsJ_4wkY8UcyU3LnNc1a55AvjYsVjBiST=Dy07UiaH8MU5-yg@mail.gmail.com> <CAMgjq7CFhboj1qDjdzwb2_vWKpzSzY5d0s-kWmE2ZYDDJ4s-JQ@mail.gmail.com>
+In-Reply-To: <CAMgjq7CFhboj1qDjdzwb2_vWKpzSzY5d0s-kWmE2ZYDDJ4s-JQ@mail.gmail.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Sat, 31 May 2025 18:35:54 +1200
+X-Gm-Features: AX0GCFsKja1UXSjAtb35_iM4kGOhGAzatuZyI2XERD_MsOjTIh0b4SoyXztRzgA
+Message-ID: <CAGsJ_4yJhJBo16XhiC-nUzSheyX-V3-nFE+tAi=8Y560K8eT=A@mail.gmail.com>
+Subject: Re: [PATCH] mm: userfaultfd: fix race of userfaultfd_move and swap cache
+To: Kairui Song <ryncsn@gmail.com>
+Cc: Lokesh Gidra <lokeshgidra@google.com>, linux-mm@kvack.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Peter Xu <peterx@redhat.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Andrea Arcangeli <aarcange@redhat.com>, 
+	David Hildenbrand <david@redhat.com>, stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Prabhakar,
+On Sat, May 31, 2025 at 6:25=E2=80=AFPM Kairui Song <ryncsn@gmail.com> wrot=
+e:
+>
+> On Sat, May 31, 2025 at 11:39=E2=80=AFAM Barry Song <21cnbao@gmail.com> w=
+rote:
+> >
+> > On Sat, May 31, 2025 at 11:40=E2=80=AFAM Lokesh Gidra <lokeshgidra@goog=
+le.com> wrote:
+> > >
+> > > On Fri, May 30, 2025 at 1:17=E2=80=AFPM Kairui Song <ryncsn@gmail.com=
+> wrote:
+> > > >
+> > > > From: Kairui Song <kasong@tencent.com>
+> > > >
+> > > > On seeing a swap entry PTE, userfaultfd_move does a lockless swap c=
+ache
+> > > > lookup, and try to move the found folio to the faulting vma when.
+> > > > Currently, it relies on the PTE value check to ensure the moved fol=
+io
+> > > > still belongs to the src swap entry, which turns out is not reliabl=
+e.
+> > > >
+> > > > While working and reviewing the swap table series with Barry, follo=
+wing
+> > > > existing race is observed and reproduced [1]:
+> > > >
+> > > > ( move_pages_pte is moving src_pte to dst_pte, where src_pte is a
+> > > >  swap entry PTE holding swap entry S1, and S1 isn't in the swap cac=
+he.)
+> > > >
+> > > > CPU1                               CPU2
+> > > > userfaultfd_move
+> > > >   move_pages_pte()
+> > > >     entry =3D pte_to_swp_entry(orig_src_pte);
+> > > >     // Here it got entry =3D S1
+> > > >     ... < Somehow interrupted> ...
+> > > >                                    <swapin src_pte, alloc and use f=
+olio A>
+> > > >                                    // folio A is just a new allocat=
+ed folio
+> > > >                                    // and get installed into src_pt=
+e
+> > > >                                    <frees swap entry S1>
+> > > >                                    // src_pte now points to folio A=
+, S1
+> > > >                                    // has swap count =3D=3D 0, it c=
+an be freed
+> > > >                                    // by folio_swap_swap or swap
+> > > >                                    // allocator's reclaim.
+> > > >                                    <try to swap out another folio B=
+>
+> > > >                                    // folio B is a folio in another=
+ VMA.
+> > > >                                    <put folio B to swap cache using=
+ S1 >
+> > > >                                    // S1 is freed, folio B could us=
+e it
+> > > >                                    // for swap out with no problem.
+> > > >                                    ...
+> > > >     folio =3D filemap_get_folio(S1)
+> > > >     // Got folio B here !!!
+> > > >     ... < Somehow interrupted again> ...
+> > > >                                    <swapin folio B and free S1>
+> > > >                                    // Now S1 is free to be used aga=
+in.
+> > > >                                    <swapout src_pte & folio A using=
+ S1>
+> > > >                                    // Now src_pte is a swap entry p=
+te
+> > > >                                    // holding S1 again.
+> > > >     folio_trylock(folio)
+> > > >     move_swap_pte
+> > > >       double_pt_lock
+> > > >       is_pte_pages_stable
+> > > >       // Check passed because src_pte =3D=3D S1
+> > > >       folio_move_anon_rmap(...)
+> > > >       // Moved invalid folio B here !!!
+> > > >
+> > > > The race window is very short and requires multiple collisions of
+> > > > multiple rare events, so it's very unlikely to happen, but with a
+> > > > deliberately constructed reproducer and increased time window, it c=
+an be
+> > > > reproduced [1].
+> > >
+> > > Thanks for catching and fixing this. Just to clarify a few things
+> > > about your reproducer:
+> > > 1. Is it necessary for the 'race' mapping to be MAP_SHARED, or
+> > > MAP_PRIVATE will work as well?
+> > > 2. You mentioned that the 'current dir is on a block device'. Are you
+> > > indicating that if we are using zram for swap then it doesn't
+> > > reproduce?
+> > >
+> > > >
+> > > > It's also possible that folio (A) is swapped in, and swapped out ag=
+ain
+> > > > after the filemap_get_folio lookup, in such case folio (A) may stay=
+ in
+> > > > swap cache so it needs to be moved too. In this case we should also=
+ try
+> > > > again so kernel won't miss a folio move.
+> > > >
+> > > > Fix this by checking if the folio is the valid swap cache folio aft=
+er
+> > > > acquiring the folio lock, and checking the swap cache again after
+> > > > acquiring the src_pte lock.
+> > > >
+> > > > SWP_SYNCRHONIZE_IO path does make the problem more complex, but so =
+far
+> > > > we don't need to worry about that since folios only might get expos=
+ed to
+> > > > swap cache in the swap out path, and it's covered in this patch too=
+ by
+> > > > checking the swap cache again after acquiring src_pte lock.
+> > > >
+> > > > Fixes: adef440691ba ("userfaultfd: UFFDIO_MOVE uABI")
+> > > > Closes: https://lore.kernel.org/linux-mm/CAMgjq7B1K=3D6OOrK2OUZ0-tq=
+Czi+EJt+2_K97TPGoSt=3D9+JwP7Q@mail.gmail.com/ [1]
+> > > > Signed-off-by: Kairui Song <kasong@tencent.com>
+> > > > ---
+> > > >  mm/userfaultfd.c | 26 ++++++++++++++++++++++++++
+> > > >  1 file changed, 26 insertions(+)
+> > > >
+> > > > diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+> > > > index bc473ad21202..a1564d205dfb 100644
+> > > > --- a/mm/userfaultfd.c
+> > > > +++ b/mm/userfaultfd.c
+> > > > @@ -15,6 +15,7 @@
+> > > >  #include <linux/mmu_notifier.h>
+> > > >  #include <linux/hugetlb.h>
+> > > >  #include <linux/shmem_fs.h>
+> > > > +#include <linux/delay.h>
+> > > I guess you mistakenly left it from your reproducer code :)
+> > > >  #include <asm/tlbflush.h>
+> > > >  #include <asm/tlb.h>
+> > > >  #include "internal.h"
+> > > > @@ -1086,6 +1087,8 @@ static int move_swap_pte(struct mm_struct *mm=
+, struct vm_area_struct *dst_vma,
+> > > >                          spinlock_t *dst_ptl, spinlock_t *src_ptl,
+> > > >                          struct folio *src_folio)
+> > > >  {
+> > > > +       swp_entry_t entry;
+> > > > +
+> > > >         double_pt_lock(dst_ptl, src_ptl);
+> > > >
+> > > >         if (!is_pte_pages_stable(dst_pte, src_pte, orig_dst_pte, or=
+ig_src_pte,
+> > > > @@ -1102,6 +1105,19 @@ static int move_swap_pte(struct mm_struct *m=
+m, struct vm_area_struct *dst_vma,
+> > > >         if (src_folio) {
+> > > >                 folio_move_anon_rmap(src_folio, dst_vma);
+> > > >                 src_folio->index =3D linear_page_index(dst_vma, dst=
+_addr);
+> > > > +       } else {
+> > > > +               /*
+> > > > +                * Check again after acquiring the src_pte lock. Or=
+ we might
+> > > > +                * miss a new loaded swap cache folio.
+> > > > +                */
+> > > > +               entry =3D pte_to_swp_entry(orig_src_pte);
+> > > > +               src_folio =3D filemap_get_folio(swap_address_space(=
+entry),
+> > > > +                                             swap_cache_index(entr=
+y));
+> > >
+> > > Given the non-trivial overhead of filemap_get_folio(), do you think i=
+t
+> > > will work if filemap_get_filio() was only once after locking src_ptl?
+> > > Please correct me if my assumption about the overhead is wrong.
+> >
+> > not quite sure as we have a folio_lock(src_folio) before move_swap_pte(=
+).
+> > can we safely folio_move_anon_rmap + src_folio->index while not holding
+> > folio lock?
+>
+> I think no, we can't even make sure the folio is still in the swap
+> cache, so it can be a freed folio that does not belong to any VMA
+> while not holding the folio lock.
 
-> -----Original Message-----
-> From: Prabhakar <prabhakar.csengg@gmail.com>
-> Sent: 30 May 2025 17:59
-> Subject: [PATCH v6 01/12] dt-bindings: display: renesas,rzg2l-du: Add sup=
-port for RZ/V2H(P) SoC
->=20
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->=20
-> The DU block on the RZ/V2H(P) SoC is identical to the one found on the RZ=
-/G2L SoC. However, it only
-> supports the DSI interface, whereas the RZ/G2L supports both DSI and DPI =
-interfaces.
->=20
-> Due to this difference, a SoC-specific compatible string 'renesas,r9a09g0=
-57-du' is added for the
-> RZ/V2H(P) SoC.
->=20
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Right, but will the following be sufficient, given that we don=E2=80=99t re=
+ally
+care about the folio=E2=80=94only whether there=E2=80=99s new cache?
 
-This patch is already applied in drm-misc-next [1]
-[1] https://cgit.freedesktop.org/drm/drm-misc/commit/?id=3Ded6a6d63513ee519=
-9841c0a0dc2772ad944e63ee
+if (READ_ONCE(si->swap_map[offset]) & SWAP_HAS_CACHE) {
+             double_pt_unlock(dst_ptl, src_ptl);
+             return -EAGAIN;
+}
 
-> ---
-> v5->v6:
-> - Added reviewed tag from Laurent
->=20
-> v4->v5:
-> - Added reviewed tag from Biju
->=20
-> v3->v4:
-> - No changes
->=20
-> v2->v3:
-> - Collected reviewed tag from Krzysztof
->=20
-> v1->v2:
-> - Kept the sort order for schema validation
-> - Added  `port@1: false` for RZ/V2H(P) SoC
-> ---
->  .../bindings/display/renesas,rzg2l-du.yaml    | 23 ++++++++++++++++++-
->  1 file changed, 22 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/display/renesas,rzg2l-du.y=
-aml
-> b/Documentation/devicetree/bindings/display/renesas,rzg2l-du.yaml
-> index 95e3d5e74b87..1e32d14b6edb 100644
-> --- a/Documentation/devicetree/bindings/display/renesas,rzg2l-du.yaml
-> +++ b/Documentation/devicetree/bindings/display/renesas,rzg2l-du.yaml
-> @@ -20,6 +20,7 @@ properties:
->        - enum:
->            - renesas,r9a07g043u-du # RZ/G2UL
->            - renesas,r9a07g044-du # RZ/G2{L,LC}
-> +          - renesas,r9a09g057-du # RZ/V2H(P)
->        - items:
->            - enum:
->                - renesas,r9a07g054-du    # RZ/V2L
-> @@ -101,7 +102,12 @@ allOf:
->=20
->            required:
->              - port@0
-> -    else:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: renesas,r9a07g044-du
-> +    then:
->        properties:
->          ports:
->            properties:
-> @@ -113,6 +119,21 @@ allOf:
->            required:
->              - port@0
->              - port@1
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: renesas,r9a09g057-du
-> +    then:
-> +      properties:
-> +        ports:
-> +          properties:
-> +            port@0:
-> +              description: DSI
-> +            port@1: false
-> +
-> +          required:
-> +            - port@0
->=20
->  examples:
->    # RZ/G2L DU
-> --
-> 2.49.0
-
+Thanks
+Barry
