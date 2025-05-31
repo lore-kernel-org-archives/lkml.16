@@ -1,102 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CEBD23BCF7;
-	Sat, 31 May 2025 13:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5936279D0
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 13:56:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748699514; cv=none; b=rKm+GzyFDTbAef8XxJkNZOjuxZOY+zM67jqPaXpvWEvLPjJ5ORypsmkK85Rx8DszVkw0x5orpbtcOedM4vKr8cOKyBcs4LkQ+r5ZUaeI8iOomLUklph4riN4IYA6NJbANtLmK+BOXKsGOitomMnlcJRiSr6QbXj2XSUHbi+MHVo=
+	t=1748699780; cv=none; b=urappcCCpls+JSiU0FnuHuIp9+g9+tGDAyOTcoINRFwFXP9A2NrPIuyyYORwFu4jXQ0jzOhFPQKr+2HG7+kchy9NJz6d/2szMAkPhCM2wbHQq0JbVYc+42igwnaseYjwKJM+KG+QVCU74duMsUV75ET5fAK2lBsvNjdyGsQztFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748699514; c=relaxed/simple;
-	bh=TjkQgG4bvyolCjKm8gpgiWDCkKosYaVkELekZFpxnvY=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=Ztk8AzWxSGNwWcA1DHmpXA2MFao6QVGNEjCEX6cCpHe8ncK3cmGxjckg5Fz2LiRsnTkCpgOHmxl41cPUY37FgHFBPpoXjkx8EcWgxRUgILHRX2Yw7b5KNQPHIVFblsoNIsHcTKdFMvxf1gpUJGfsDnRZUAThYEb43LWTIsPTmBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SH5ih7RK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748699780; c=relaxed/simple;
+	bh=xc/jaFtGUdS9VtsThMr6l64Wu8Kp6Q3DfbpAKtANsIA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BOWcg/B7jt/jTBgE0HNuWTrNrT2f2KFbMjeCTuKXcZuKk0J6CPc1UiTuMaakzzRAHqqq6V9YZctZaYMj12L1aEQrbxyhiEe/nJQYdnPtfbvur0wM8hkGbLjbo+YKnZ6TJWxNhMb51F59ZfMvCLprZIO/sYlsng07t0QLQIDXM2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gN6kXzDG; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SH5ih7RK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B74DFC4CEEF;
-	Sat, 31 May 2025 13:51:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748699513;
-	bh=TjkQgG4bvyolCjKm8gpgiWDCkKosYaVkELekZFpxnvY=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=SH5ih7RKSdqexXT5A8Sic37lsM0a8noboX5JnN+uGHXoUwZGIHVW4K843gW0HQge1
-	 Zjbyg2QGUa4wU7ow6xYB3H8jG/m+j0mxPJAKyf9b0Cr0aaC2IBLayCioPH4suhqbyF
-	 b1RB/0v6SaOPntHrLJ7Ct804Rfw6rmUvGkxDJWW01c4sY3Atw0s3d/cruXQEYIODIH
-	 GPytMwaL8xaoHz3is0J/TtVbjJX5RHzwbq3U7UH3L+pV77zI5CuYipGpbHHXhcvwlx
-	 gN0ia2vxUfI5nlhmIpybV/v+K6r8IR8IPBymXStVpKAZSqp2jpsCm5ZB+qIsGdrnSv
-	 62Ywf2OFX5sIA==
-Date: Sat, 31 May 2025 06:51:50 -0700
-From: Kees Cook <kees@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-CC: Alessandro Carminati <acarmina@redhat.com>, linux-kselftest@vger.kernel.org,
- Dan Carpenter <dan.carpenter@linaro.org>,
- Daniel Diaz <daniel.diaz@linaro.org>, David Gow <davidgow@google.com>,
- Arthur Grillo <arthurgrillo@riseup.net>,
- Brendan Higgins <brendan.higgins@linux.dev>,
- Naresh Kamboju <naresh.kamboju@linaro.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Maxime Ripard <mripard@kernel.org>,
- Ville Syrjala <ville.syrjala@linux.intel.com>,
- Daniel Vetter <daniel@ffwll.ch>, Guenter Roeck <linux@roeck-us.net>,
- Alessandro Carminati <alessandro.carminati@gmail.com>,
- Jani Nikula <jani.nikula@intel.com>,
- Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
- Linux Kernel Functional Testing <lkft@linaro.org>,
- dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
- linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v5_1/5=5D_bug/kunit=3A_Core_sup?=
- =?US-ASCII?Q?port_for_suppressing_warning_backtraces?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250531102304.GF21197@noisy.programming.kicks-ass.net>
-References: <20250526132755.166150-1-acarmina@redhat.com> <20250526132755.166150-2-acarmina@redhat.com> <20250529090129.GZ24938@noisy.programming.kicks-ass.net> <CAGegRW76X8Fk_5qqOBw_aqBwAkQTsc8kXKHEuu9ECeXzdJwMSw@mail.gmail.com> <20250530140140.GE21197@noisy.programming.kicks-ass.net> <202505301037.D816A49@keescook> <20250531102304.GF21197@noisy.programming.kicks-ass.net>
-Message-ID: <8C5E309E-03E5-4353-8515-67A53EC6C9E3@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gN6kXzDG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748699778; x=1780235778;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xc/jaFtGUdS9VtsThMr6l64Wu8Kp6Q3DfbpAKtANsIA=;
+  b=gN6kXzDGoglLCsX+VCukvQR2a5ZVIyPoYwJrVL3h3k86B3hYgr++UtSr
+   Urz/TLwzk4bHBlZtYaKdVGpyY/AO9EkgLJKohpVcY+K6Pe/jSLdNZem8y
+   g+ygH8MZFwTGaruuabhjNx8R9fztqBSnF5gqi8LLv3JtXthEuzxM/Ol86
+   jol5Lpdo0FHx9UvebHPXrAcWaGKx+D3/1ibrXobIOm8JqdibvpmsS36IU
+   QriFZ8seNI7x2xxQG0z7wN0aOXokqjRYKh4yomRrCsU32fQkEoWwePCSs
+   9crxVrc1IuZsKh79/EdzNfHKWfcCj2jWNu2QO0LxoL/2DBLWy0K5StCIN
+   A==;
+X-CSE-ConnectionGUID: Mv8J/4SjTdWj7P1oYI/nfA==
+X-CSE-MsgGUID: evXEn8c4RY+ATmlIrQEmTg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11450"; a="62174504"
+X-IronPort-AV: E=Sophos;i="6.16,198,1744095600"; 
+   d="scan'208";a="62174504"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2025 06:56:17 -0700
+X-CSE-ConnectionGUID: q7bPbGEoSpyff7xrJgoRbQ==
+X-CSE-MsgGUID: PNhqCaQqR/WwEs0XsP3beA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,198,1744095600"; 
+   d="scan'208";a="144034593"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 31 May 2025 06:56:15 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uLMh2-000YQu-0S;
+	Sat, 31 May 2025 13:56:12 +0000
+Date: Sat, 31 May 2025 21:55:17 +0800
+From: kernel test robot <lkp@intel.com>
+To: Qingfang Deng <dqfext@gmail.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH] riscv: use generic MMIO accessors
+Message-ID: <202505312115.47xDnzAe-lkp@intel.com>
+References: <20250530032252.3092502-1-dqfext@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250530032252.3092502-1-dqfext@gmail.com>
+
+Hi Qingfang,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.15]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Qingfang-Deng/riscv-use-generic-MMIO-accessors/20250530-112455
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250530032252.3092502-1-dqfext%40gmail.com
+patch subject: [PATCH] riscv: use generic MMIO accessors
+config: riscv-allmodconfig (https://download.01.org/0day-ci/archive/20250531/202505312115.47xDnzAe-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250531/202505312115.47xDnzAe-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505312115.47xDnzAe-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/gpu/drm/omapdrm/dss/dispc.c:4720:27: warning: stack frame size (2304) exceeds limit (2048) in 'dispc_runtime_suspend' [-Wframe-larger-than]
+    4720 | static __maybe_unused int dispc_runtime_suspend(struct device *dev)
+         |                           ^
+   drivers/gpu/drm/omapdrm/dss/dispc.c:4735:27: warning: stack frame size (2432) exceeds limit (2048) in 'dispc_runtime_resume' [-Wframe-larger-than]
+    4735 | static __maybe_unused int dispc_runtime_resume(struct device *dev)
+         |                           ^
+   2 warnings generated.
 
 
+vim +/dispc_runtime_suspend +4720 drivers/gpu/drm/omapdrm/dss/dispc.c
 
-On May 31, 2025 3:23:04 AM PDT, Peter Zijlstra <peterz@infradead=2Eorg> wr=
-ote:
->On Fri, May 30, 2025 at 10:48:47AM -0700, Kees Cook wrote:
->> On Fri, May 30, 2025 at 04:01:40PM +0200, Peter Zijlstra wrote:
->> > I'm not really concerned with performance here, but more with the siz=
-e
->> > of the code emitted by WARN_ONCE()=2E There are a *ton* of WARN sites=
-,
->> > while only one report_bug() and printk()=2E
->> >=20
->> > The really offensive thing is that this is for a feature most nobody
->> > will ever need :/
->>=20
->> Well, it won't be enabled often -- this reminds me of ftrace: it needs
->> to work, but it'll be off most of the time=2E
->
->Well, ftrace is useful, but when would I *ever* care about this stuff? I
->can't operate kunit, don't give a crap about kunit, and if I were to
->magically run it, I would be more than capable of ignoring WARNs=2E
+060b6d9cbab03f drivers/video/omap2/dss/dispc.c     Senthilvadivu Guruswamy 2011-01-24  4719  
+d6c75c295f67b2 drivers/gpu/drm/omapdrm/dss/dispc.c Arnd Bergmann           2021-12-05 @4720  static __maybe_unused int dispc_runtime_suspend(struct device *dev)
+4fbafaf371be78 drivers/video/omap2/dss/dispc.c     Tomi Valkeinen          2011-05-27  4721  {
+1f6b6b6267ebe6 drivers/gpu/drm/omapdrm/dss/dispc.c Laurent Pinchart        2018-02-13  4722  	struct dispc_device *dispc = dev_get_drvdata(dev);
+1f6b6b6267ebe6 drivers/gpu/drm/omapdrm/dss/dispc.c Laurent Pinchart        2018-02-13  4723  
+1f6b6b6267ebe6 drivers/gpu/drm/omapdrm/dss/dispc.c Laurent Pinchart        2018-02-13  4724  	dispc->is_enabled = false;
+0925afc9a4851c drivers/video/omap2/dss/dispc.c     Tomi Valkeinen          2014-04-11  4725  	/* ensure the dispc_irq_handler sees the is_enabled value */
+0925afc9a4851c drivers/video/omap2/dss/dispc.c     Tomi Valkeinen          2014-04-11  4726  	smp_wmb();
+0925afc9a4851c drivers/video/omap2/dss/dispc.c     Tomi Valkeinen          2014-04-11  4727  	/* wait for current handler to finish before turning the DISPC off */
+1f6b6b6267ebe6 drivers/gpu/drm/omapdrm/dss/dispc.c Laurent Pinchart        2018-02-13  4728  	synchronize_irq(dispc->irq);
+0925afc9a4851c drivers/video/omap2/dss/dispc.c     Tomi Valkeinen          2014-04-11  4729  
+1f6b6b6267ebe6 drivers/gpu/drm/omapdrm/dss/dispc.c Laurent Pinchart        2018-02-13  4730  	dispc_save_context(dispc);
+4fbafaf371be78 drivers/video/omap2/dss/dispc.c     Tomi Valkeinen          2011-05-27  4731  
+4fbafaf371be78 drivers/video/omap2/dss/dispc.c     Tomi Valkeinen          2011-05-27  4732  	return 0;
+4fbafaf371be78 drivers/video/omap2/dss/dispc.c     Tomi Valkeinen          2011-05-27  4733  }
+4fbafaf371be78 drivers/video/omap2/dss/dispc.c     Tomi Valkeinen          2011-05-27  4734  
 
-It's not for you, then=2E :) I can't operate ftrace, but I use kunit almos=
-t daily=2E Ignoring WARNs makes this much nicer, and especially for CIs=2E
-
->Cleaned it up a little bit=2E=2E=2E I'll add some comments on later :-)
->
->I also need to go fix WARN_ONCE(), at least for the n<=3D2 cases that can
->use BUGFLAG_ONCE now=2E
-
-Cool! I'll expand the WARN tests in LKDTM so we can get wider behavioral a=
-nd architectural coverage=2E
-
--Kees
-
-
---=20
-Kees Cook
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
