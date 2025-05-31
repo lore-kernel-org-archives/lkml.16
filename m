@@ -1,130 +1,169 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A1286323;
-	Sat, 31 May 2025 16:57:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0DF5187876;
+	Sat, 31 May 2025 16:59:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748710669; cv=none; b=uqCXoxe+nNF/QDrQTkLPvA3i4ZcJpX2F8VbsyBQ0fD/hQQfEOetCfDN5Qg9PwFoDQw5z0JSD6V6x2CRTlQsN+U+GFiScc/eXXfg8jyDhVkrKPpxbl4ZWd6xApxHietEaNavUz8J4f7EGKgFkdIdpauvICdqZzMarPcxzib4YBKQ=
+	t=1748710763; cv=none; b=h29teyGpqzs6C1/AToUTBTAqd83zbDwSTDqcS/P26zn+pAu+SdQuk4MzsGGG6NfTkHPs+GWY57UKwEB6Du77PaJqs+tSvu8HmWP9gx+PUNjW0igp+5JglMaCJiJBO85LbWPtNvgtCyWGK9gQA7S1YVsQSRezQJJsp2wyi1nTkqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748710669; c=relaxed/simple;
-	bh=MeOtkIrLMT6IjO2sNqCraauEVwJylK9XitUYKe63gT8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=unA6m2RlPdjgUUSv9MIJz4e9+eWINhvLyA9PltHqcFhtAbmk67y/eaQSZQlIhRFaWNtAWT/zji7UulsdesASdT6oRh6o2oAXn/7G3NUGQSfyeEu2MJCR610pqwr1ul8iDgnsk/3uQwFYyhJJ1VEwsQwDOitMwtABekPaibnN/e4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=vS4O4fxK; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1748710763; c=relaxed/simple;
+	bh=020HNIG7VGv4tWglrR3QM9zbyoK4KILepGoPbR3KKYo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sq9mt2PVf+TXHi6ksZaf3HkhyXzyp+15ZCyLlBse1vxsPpPsb+1XaMpHpfp5MdkIx3lRcsv1pgWpo7SxplWNI8kiD35fk6HcBE1AC74i6ukvc+eRRfJdG+1gyYsD3EKXrw92p4VStp1zAuk2VlbkFosyS9G0A+BYF3+kSGe8lMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ceM3X11a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vS4O4fxK"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=Otdj8ujGAF2QmUcG8kvdd7R/HPnA2c9NJiQzWXZJi3w=; b=vS4O4fxKFnEbTgQGKLGoqXmXFL
-	pLw/6RbtSBMAcyaOmCL9SyDQyJT2ezrbf66EvB6gpih7lKsflY9guCr6t35Dd3RCytIftnY3yx9Mo
-	PmiX9J/GpezlJwXgaILEElJs8AuCyhOPZdcpXCjaD5X9rExWbdGu5zpmcWuI9XhCdMamMgOY0r7w/
-	UkAV0NBMfkL8HeCKdlSeVLpYKHNrwMyJTrC67HmQc+gEPv17L5mTCeMnVEXRpgMO72tlAUL/Gxmbm
-	MZDIkw4seT4zOei06JtMBdQyWJvKI7TSDKWhL5kQm3/SSEY54/v57Yd1WqYER0U35gnS5Sxpw8UwX
-	QLTICNAQ==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uLPWa-0000000Gvr7-41Bt;
-	Sat, 31 May 2025 16:57:37 +0000
-Message-ID: <863ff758-d9a1-4800-8746-ee63ee2a4e63@infradead.org>
-Date: Sat, 31 May 2025 09:57:33 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ceM3X11a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECFB6C4CEE3;
+	Sat, 31 May 2025 16:59:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748710762;
+	bh=020HNIG7VGv4tWglrR3QM9zbyoK4KILepGoPbR3KKYo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ceM3X11ayXqkmDcFAw3UJfnl2nF43MG7ei8iTLYD7TLfUJ7byPXpdGkuh3vNXvavC
+	 0WtgSPcGjJFRqc1xtVrhjp1ogdKWeZas7Zk2Oomz+qcdn4Yu/IlGVQMyRTkOCOqnIi
+	 l0UaB8D/nMcmPRI5C24/gOqwTcycjE7ifiq3qG9/LVodanzD5g70CdyBrIAXlzFegR
+	 rWDuhGP4/EublgUfn4P6CzvB0YHMw3P3lbL+ZST+iBod7tnuz2ZIyjlCAhExcc9x0b
+	 WW+YHMvBNBOieV2Zl/Us4b8ZzYIj6U7nHvZSZiII4FKlkkPZbEwZPHWE4GOTptrAY/
+	 uBwQPZbBN02Xw==
+Date: Sat, 31 May 2025 17:59:13 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Denis Benato <benato.denis96@gmail.com>
+Cc: David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
+ <nuno.sa@analog.com>, Alex Lanzano <lanzano.alex@gmail.com>, Andy
+ Shevchenko <andy@kernel.org>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=
+ <u.kleine-koenig@pengutronix.de>, Peter Zijlstra <peterz@infradead.org>,
+ Danila Tikhonov <danila@jiaxyga.com>, Greg KH <gregkh@linuxfoundation.org>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>, Philip =?UTF-8?B?TcO8bGxl?=
+ =?UTF-8?B?cg==?= <philm@manjaro.org>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Justin Weiss <justin@justinweiss.com>
+Subject: Re: [PATCH v2 1/2] iio: bmi270: suspend and resume triggering on
+ relevant pm operations
+Message-ID: <20250531175913.251d64d3@jic23-huawei>
+In-Reply-To: <20250525142530.71955-2-benato.denis96@gmail.com>
+References: <20250525142530.71955-1-benato.denis96@gmail.com>
+	<20250525142530.71955-2-benato.denis96@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Documentation: cxl: fix typos and improve clarity in
- memory-devices.rst
-Content-Language: en-US
-To: Alok Tiwari <alok.a.tiwari@oracle.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, dave.jiang@intel.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- dan.j.williams@intel.com, corbet@lwn.net, linux-cxl@vger.kernel.org,
- linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, darren.kenny@oracle.com
-References: <20250531075209.3334261-1-alok.a.tiwari@oracle.com>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250531075209.3334261-1-alok.a.tiwari@oracle.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Sun, 25 May 2025 16:25:29 +0200
+Denis Benato <benato.denis96@gmail.com> wrote:
 
-
-On 5/31/25 12:51 AM, Alok Tiwari wrote:
-> This patch corrects several typographical issues and improves phrasing
-> in memory-devices.rst:
+> Prevent triggers from stop working after the device has entered sleep:
+> use iio_device_suspend_triggering and iio_device_resume_triggering helpers.
 > 
-> - Fixes duplicate word ("1 one") and adjusts phrasing for clarity.
-> - Adds missing hyphen in "on-device".
-> - Corrects "a give memory device" to "a given memory device".
-> - fix singular/plural "decoder resource" -> "decoder resources".
-> - Clarifies "spans to Host Bridges" -> "spans two Host Bridges".
+> Closes: https://lore.kernel.org/all/31d7f7aa-e834-4fd0-a66a-e0ff528425dc@gmail.com
+
+This is a tag, so no blank line here.
+
+I've fixed this in both patches and applied them to the to testing branch of iio.
+Currently I'm not planning to rush these in but I could treat them as fixes if
+general view is that I should.
+
 > 
-> These changes improve readability and accuracy of the documentation.
-> 
-> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
-
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-
-Thanks.
-
-(This time not in html.)
-
-
+> Signed-off-by: Denis Benato <benato.denis96@gmail.com>
+> Tested-by: Justin Weiss <justin@justinweiss.com>
 > ---
->  Documentation/driver-api/cxl/memory-devices.rst | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+>  drivers/iio/imu/bmi270/bmi270.h      |  2 ++
+>  drivers/iio/imu/bmi270/bmi270_core.c | 20 ++++++++++++++++++++
+>  drivers/iio/imu/bmi270/bmi270_i2c.c  |  2 ++
+>  drivers/iio/imu/bmi270/bmi270_spi.c  |  2 ++
+>  4 files changed, 26 insertions(+)
 > 
-> diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
-> index d732c42526df..e9e2952a967d 100644
-> --- a/Documentation/driver-api/cxl/memory-devices.rst
-> +++ b/Documentation/driver-api/cxl/memory-devices.rst
-> @@ -29,8 +29,8 @@ Platform firmware enumerates a menu of interleave options at the "CXL root port"
->  (Linux term for the top of the CXL decode topology). From there, PCIe topology
->  dictates which endpoints can participate in which Host Bridge decode regimes.
->  Each PCIe Switch in the path between the root and an endpoint introduces a point
-> -at which the interleave can be split. For example platform firmware may say at a
-> -given range only decodes to 1 one Host Bridge, but that Host Bridge may in turn
-> +at which the interleave can be split. For example, platform firmware may say at a
-> +given range only decodes to one Host Bridge, but that Host Bridge may in turn
->  interleave cycles across multiple Root Ports. An intervening Switch between a
->  port and an endpoint may interleave cycles across multiple Downstream Switch
->  Ports, etc.
-> @@ -187,7 +187,7 @@ decodes them to "ports", "ports" decode to "endpoints", and "endpoints"
->  represent the decode from SPA (System Physical Address) to DPA (Device Physical
->  Address).
+> diff --git a/drivers/iio/imu/bmi270/bmi270.h b/drivers/iio/imu/bmi270/bmi270.h
+> index d94525f6aee8..a6c4204032fc 100644
+> --- a/drivers/iio/imu/bmi270/bmi270.h
+> +++ b/drivers/iio/imu/bmi270/bmi270.h
+> @@ -20,4 +20,6 @@ struct device;
+>  int bmi270_core_probe(struct device *dev, struct regmap *regmap,
+>  		      const struct bmi270_chip_info *chip_info);
 >  
-> -Continuing the RAID analogy, disks have both topology metadata and on device
-> +Continuing the RAID analogy, disks have both topology metadata and on-device
->  metadata that determine RAID set assembly. CXL Port topology and CXL Port link
->  status is metadata for CXL.mem set assembly. The CXL Port topology is enumerated
->  by the arrival of a CXL.mem device. I.e. unless and until the PCIe core attaches
-> @@ -197,7 +197,7 @@ the Linux PCI core to tear down switch-level CXL resources because the endpoint
->  ->remove() event cleans up the port data that was established to support that
->  Memory Expander.
+> +extern const struct dev_pm_ops bmi270_core_pm_ops;
+> +
+>  #endif  /* BMI270_H_ */
+> diff --git a/drivers/iio/imu/bmi270/bmi270_core.c b/drivers/iio/imu/bmi270/bmi270_core.c
+> index 2e4469f30d53..b54658f972ad 100644
+> --- a/drivers/iio/imu/bmi270/bmi270_core.c
+> +++ b/drivers/iio/imu/bmi270/bmi270_core.c
+> @@ -982,6 +982,7 @@ int bmi270_core_probe(struct device *dev, struct regmap *regmap,
+>  	indio_dev->available_scan_masks = bmi270_avail_scan_masks;
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
+>  	indio_dev->info = &bmi270_info;
+> +	dev_set_drvdata(data->dev, indio_dev);
 >  
-> -The port metadata and potential decode schemes that a give memory device may
-> +The port metadata and potential decode schemes that a given memory device may
->  participate can be determined via a command like::
+>  	ret = bmi270_trigger_probe(data, indio_dev);
+>  	if (ret)
+> @@ -997,6 +998,25 @@ int bmi270_core_probe(struct device *dev, struct regmap *regmap,
+>  }
+>  EXPORT_SYMBOL_NS_GPL(bmi270_core_probe, "IIO_BMI270");
 >  
->      # cxl list -BDMu -d root -m mem3
-> @@ -249,8 +249,8 @@ participate can be determined via a command like::
->  ...which queries the CXL topology to ask "given CXL Memory Expander with a kernel
->  device name of 'mem3' which platform level decode ranges may this device
->  participate". A given expander can participate in multiple CXL.mem interleave
-> -sets simultaneously depending on how many decoder resource it has. In this
-> -example mem3 can participate in one or more of a PMEM interleave that spans to
-> +sets simultaneously depending on how many decoder resources it has. In this
-> +example mem3 can participate in one or more of a PMEM interleave that spans two
->  Host Bridges, a PMEM interleave that targets a single Host Bridge, a Volatile
->  memory interleave that spans 2 Host Bridges, and a Volatile memory interleave
->  that only targets a single Host Bridge.
+> +static int bmi270_core_runtime_suspend(struct device *dev)
+> +{
+> +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+> +
+> +	return iio_device_suspend_triggering(indio_dev);
+> +}
+> +
+> +static int bmi270_core_runtime_resume(struct device *dev)
+> +{
+> +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+> +
+> +	return iio_device_resume_triggering(indio_dev);
+> +}
+> +
+> +const struct dev_pm_ops bmi270_core_pm_ops = {
+> +	RUNTIME_PM_OPS(bmi270_core_runtime_suspend, bmi270_core_runtime_resume, NULL)
+> +};
+> +EXPORT_SYMBOL_NS_GPL(bmi270_core_pm_ops, "IIO_BMI270");
+> +
+>  MODULE_AUTHOR("Alex Lanzano");
+>  MODULE_DESCRIPTION("BMI270 driver");
+>  MODULE_LICENSE("GPL");
+> diff --git a/drivers/iio/imu/bmi270/bmi270_i2c.c b/drivers/iio/imu/bmi270/bmi270_i2c.c
+> index 44699ab58909..c77839b03a96 100644
+> --- a/drivers/iio/imu/bmi270/bmi270_i2c.c
+> +++ b/drivers/iio/imu/bmi270/bmi270_i2c.c
+> @@ -4,6 +4,7 @@
+>  #include <linux/iio/iio.h>
+>  #include <linux/module.h>
+>  #include <linux/mod_devicetable.h>
+> +#include <linux/pm.h>
+>  #include <linux/regmap.h>
+>  
+>  #include "bmi270.h"
+> @@ -52,6 +53,7 @@ static const struct of_device_id bmi270_of_match[] = {
+>  static struct i2c_driver bmi270_i2c_driver = {
+>  	.driver = {
+>  		.name = "bmi270_i2c",
+> +		.pm = pm_ptr(&bmi270_core_pm_ops),
+>  		.acpi_match_table = bmi270_acpi_match,
+>  		.of_match_table = bmi270_of_match,
+>  	},
+> diff --git a/drivers/iio/imu/bmi270/bmi270_spi.c b/drivers/iio/imu/bmi270/bmi270_spi.c
+> index 88a77aba5e4f..19dd7734f9d0 100644
+> --- a/drivers/iio/imu/bmi270/bmi270_spi.c
+> +++ b/drivers/iio/imu/bmi270/bmi270_spi.c
+> @@ -3,6 +3,7 @@
+>  #include <linux/iio/iio.h>
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/module.h>
+> +#include <linux/pm.h>
+>  #include <linux/regmap.h>
+>  #include <linux/spi/spi.h>
+>  
+> @@ -79,6 +80,7 @@ static const struct of_device_id bmi270_of_match[] = {
+>  static struct spi_driver bmi270_spi_driver = {
+>  	.driver = {
+>  		.name = "bmi270",
+> +		.pm = pm_ptr(&bmi270_core_pm_ops),
+>  		.of_match_table = bmi270_of_match,
+>  	},
+>  	.probe = bmi270_spi_probe,
 
--- 
-~Randy
