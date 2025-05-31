@@ -1,122 +1,164 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B16F20F081;
-	Sat, 31 May 2025 08:52:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 087C722D9E0
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 08:59:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748681528; cv=none; b=fB8NVB7wjKfDRAf7imm7S/RP+z/BOb4w7EScoe2v+4eBvVt5NIW1qDgvxF3B0Ke7lwcRhTIZTHszaa7SMznCEAnkr+WL0te99ZKaaaN0NP/uiB+xb6SDIsBPvEiB76j14baH/okzaT91yL7Galvc8tvAOX6k/WD2/DHQlum+8dU=
+	t=1748681979; cv=none; b=cQhNnoVvpnMWAzGzDEKE3A2YOaGwqPB1B2mUHxkyfqwicj/FzOxaw/fKHSc/51zH20tAGrf+teQBPUht3m13LLMMtQQA4WZidMW8Hp1qB8gLD5XqGubYIiIqZ8X5esDgCyq336cJQrMTW2vCP0CtxuMvLS8c7eoAMcjvqruYPX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748681528; c=relaxed/simple;
-	bh=REe60zlbqeu01BOJVePubuQZLx8kofDHdn8NxkEDkks=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Vblc3wbrUEjjHjqzV0r1WzwN+Y04r5kHgA7p1rpgEGfALyDD48/6jV5Myyh12mZ2vckt07UartyglysDrMVQ9vsSW/SIDfUHdTRTLkMvzULWzmcviqeaybNt3KzaEZ+JAhDBiMBENdYcXg7EORI2DSuOecixdJpJe8UnhPo9vwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OfGgbmJX; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748681979; c=relaxed/simple;
+	bh=7QsAYNa0feJJA5pQUSGqVFl/a3ERsItjJkFJ74hyHJ0=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:Subject:Content-Type; b=HFm2AOvxIE9o8v/jaQcktxKO6Jz0ffcDvpXKsYKWu8RC0cvJDjle8+X0zA+K21NjmY+b2pQCX5Lwx9iimLTAmLM2nDqSuvWse2f1AG/jfEJh6LocCeJTeCuzIGJ42s5c732AJ0q/isr4VoRNeLEqketN61nOKDE+KDag4DMppnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=3bWKtsEC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=KkwGW0n1; arc=none smtp.client-ip=103.168.172.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OfGgbmJX"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-747abb3cd0bso2271810b3a.1;
-        Sat, 31 May 2025 01:52:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748681526; x=1749286326; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=REe60zlbqeu01BOJVePubuQZLx8kofDHdn8NxkEDkks=;
-        b=OfGgbmJXuMm78Aj4iSx6+p9leW+M+/20Imo7fyu9h5grrRJQGMyvrSu27mzEPEeJvI
-         VaC1+o3Yxu8JAA3GK2DDXcAC7Yb6NsvikX+krkuFi1a/vmXs4U0YlOJhO2z2vjVbIOtk
-         DBTpCMqE+DzNIWOYC5/5whoK5SFkcFuYDZVqYCwbpw6Yce1WJpG6o+verNUaXTE9nz33
-         3ShA0cfM4XqNyKbAC7cJc9tFPA8O90kT0tXoclQkFSH9XTEFFpWnnwDYV0ag78gYQ5BS
-         EghIYqx7y+J8dNBj4bRTlH+PxXMlACtzn/KOXBOvBqsL37JmlvyGHTpyo7vhSlu1xyLw
-         gP1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748681526; x=1749286326;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=REe60zlbqeu01BOJVePubuQZLx8kofDHdn8NxkEDkks=;
-        b=iJvlp402iaAbL+80dN4DcdB+Zh3EA2A7KQP6lFqqkBClhqWG85/whBGgexqyrp4Br4
-         I5Ndy6EpkxAFI9IpQauggCUdoetyb6JTIMxVbJJDQhdbv1vu4/bbquDf04ST8pby2rXu
-         6fy8PrjyjD+qGDWc1jZ+Efr1ASkNiDa3FIWAsasj+fSyUSynePvKoHWDTEx5S4zt+jyF
-         VkqWoUp+WYC5zePNVQgedWVGroXUIL8c8anLEx/KjOWMH5XKoFG1RRwqEOjbH2/qbmkZ
-         Yv1MQzKNoUsjXwbtkcGD3WsDrQZSAoX3T3gZNcTcyJPnwcLk1Q9lAZ0usa89I+byuMQm
-         D0mQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVKpWehzOVBvFXctH/1P+wU/oTGWz52v2QNhdR7ecT3uwlmo4kEC1x4JLju7JilWP9yYY8=@vger.kernel.org, AJvYcCVsgL/LP2e6Cj3eaKEo8IEBOMirbOgg/hkkpLk3S8RoZqhYyLUpHJZ+2uMxao3ZkMrvQnn9Vbhe0/4MYoRJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywt73fvdcFU73J7YW2qQwRucRFBBSaDAyrFmcGdBj5jT/PHitHR
-	PWbnHGZzVBPu76pVrDOXVGQzalCrYk5LotzbgKQEb/cT6bIgTah96JYH
-X-Gm-Gg: ASbGnctsX+3POIXwDxLtWP552ax8BTj54CDhc7DvUVvLNCU8LLRxvZCu33WYUOptsq8
-	YOSXBx5Z6bc3nC5XmKM8HbEEmaLqUOtqZlJt+qUzXKDMbt+HWG3yX2IWGsj4Eu2UCNUr5VfKGmL
-	k3X7ekkl9D0J8ZLF1f2dlNi20f/gU4tPXE9YdYm0BJIp27FMM4P3J4ygpj5+f2mNe+0tVhDIHd2
-	tuWJWAHnBiHWf1MFJqLEtsviMkLwOwazJyaPL3x5Md9K75ZwGnEh/JSc9qPgq8EDL+zXOrHFXtV
-	SfNCqz09hDLr33FhP4b2841CeelhenzPYsc5g011PnbH7xMAv+RfR3KTtkS2tSMjrkvR3ObDbE4
-	t721rVXI9FZ4JmH8/+y03nqGG/AThdzbwYDcnZslb
-X-Google-Smtp-Source: AGHT+IFrK8g6/dGJ+qH8DK2puY7/mPl63dYSmPTZk3WE+0FNPHkZ94c11mvWpcO4rQ5k5aBxw+s1VQ==
-X-Received: by 2002:a17:903:1a0b:b0:234:71c1:d34f with SMTP id d9443c01a7336-234f67a7c06mr152428215ad.8.1748681525735;
-        Sat, 31 May 2025 01:52:05 -0700 (PDT)
-Received: from ?IPV6:2001:ee0:4f0e:fb30:af83:9564:6a79:4f18? ([2001:ee0:4f0e:fb30:af83:9564:6a79:4f18])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cd362fsm39298485ad.116.2025.05.31.01.52.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 31 May 2025 01:52:05 -0700 (PDT)
-Message-ID: <ef4ac528-3f91-4004-b47b-e758a5712d28@gmail.com>
-Date: Sat, 31 May 2025 15:51:57 +0700
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="3bWKtsEC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KkwGW0n1"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.phl.internal (Postfix) with ESMTP id 013441380333;
+	Sat, 31 May 2025 04:59:36 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Sat, 31 May 2025 04:59:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm3; t=1748681975; x=1748768375; bh=p2
+	OWAw12JJ0u5E469a4fqtcOE7dGCErKVTCQFCBSYSA=; b=3bWKtsECNZBBINyxHb
+	Yg/af0K6EOmegEQ00ktZZ6d+Cd8S9KN6wOmQq0SZsMSbUzIWkjgSOMxDaXs8fbct
+	KqbkrgugaDLcU0rBOqr8/B+Q5RnSzOXNQMfP0wOZ7Zec8nufmNMpBS23OVC8NxWL
+	+4QDygZVvLjRReCRqfqddUcYR/eAHVjtvo4/pP7AJxBX+gMMnzdjFepj0Og/qgyE
+	mW9pBOuSr4NE+cQwQrSnWjyy+bLyuLAbxjMsJG983dCkiGezgCoIzkVP36v/72O/
+	21ugfkBmL2IQN2NToXykdep47JxI/BSpmt5vBjbyjYIvkz0aKMZz4TvOrEyyNvKR
+	2jYA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1748681975; x=1748768375; bh=p2OWAw12JJ0u5E469a4fqtcOE7dG
+	CErKVTCQFCBSYSA=; b=KkwGW0n1jMpMmFnUOjY+0uzOUboxNjb2ruo1iPJARwwB
+	V2hlovINQUzE8pcqt4KDIoHyJs/Osg3XYuM2Wrqs8s4UuHWPefewrXS+zyUTwYRI
+	bYsbI5spawBiNfPOx0oMBtON4+9STpxEoFpgpGLmFJLDdwWsY4aSYtwAWQz5accd
+	6EpnPWXjB0eRVAO1Qe+Ar1REsdnWfGeFHyqFgsIJcB10IS81vniGExSseMWYdMKQ
+	K0UFkjfC4mc6VHzGgTgYSirpeFt4wGMB4KJZ5uN3jhjhjZ4+QUuD//0jJ7rJEutQ
+	xDZzXjxaoCABu7Lv4CqWqowu+gxgf1hEkSwQTwws7Q==
+X-ME-Sender: <xms:98Q6aO8_CPwKy7ijfKw5fcwP8BDfRBXoLPBSPImaUEho1ks_Dns4GQ>
+    <xme:98Q6aOsOPjPqhPJ2DobMEtRLpxhGsOW1ySduX0zUYvcATZ4z-WxxOPcFIUGYiiI6a
+    JmJQ2VR7DpkBXZWvd0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdefudegleculddtuddrgeefvddrtd
+    dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
+    fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
+    dtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefk
+    ufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoe
+    grrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrhhnpeffffffheeugfefhfdu
+    vefgleeijeektdfffeeijedthfevgfeiieevjeeuteefvdenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhn
+    sggprhgtphhtthhopeegpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehtohhrvh
+    grlhgusheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhi
+    nhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpd
+    hrtghpthhtohepshhotgeslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehl
+    ihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:98Q6aEDU1xSi2iUqgjUyh1SNtfZKhy5BDS5m6FnHWeICol_AGRK4VQ>
+    <xmx:98Q6aGdLejjtIVQbHd0d0Xix2qtJzDwsHa8vwwBSIwMCLiCowy3pDQ>
+    <xmx:98Q6aDNpCP1tVUgKZzbtgAv4Upz2kCKwkCL8bT_jlY4UgEPSYqB07g>
+    <xmx:98Q6aAk5AwFW4HkJkPDX_e-Tjv6Z1vTHa6akHrCjSGlVMOXq89p_fA>
+    <xmx:98Q6aHG5AhKlmrby7wrWsywVVqiGioZSh3eq7qVwbIIEKAt3GPFvU-lI>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 5BB54700060; Sat, 31 May 2025 04:59:35 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH net-next v2 2/2] selftests: net: add XDP socket tests
- for virtio-net
-To: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
-Cc: netdev@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
- Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>, virtualization@lists.linux.dev,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-References: <20250527161904.75259-1-minhquangbui99@gmail.com>
- <20250527161904.75259-3-minhquangbui99@gmail.com> <aDhCfxHo3M5dxlpH@boxer>
- <fe162eed-fd44-4c18-a541-8243ccfc4252@gmail.com> <aDmaT1cmoRa6PaqK@boxer>
-Content-Language: en-US
-From: Bui Quang Minh <minhquangbui99@gmail.com>
-In-Reply-To: <aDmaT1cmoRa6PaqK@boxer>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Date: Sat, 31 May 2025 10:59:15 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Linus Torvalds" <torvalds@linux-foundation.org>
+Cc: soc@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Message-Id: <28a4c0cf-7978-4547-bf89-42804975c848@app.fastmail.com>
+Subject: [GIT PULL 0/5] soc: updates for 6.16
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-On 5/30/25 18:45, Maciej Fijalkowski wrote:
-> On Thu, May 29, 2025 at 09:29:14PM +0700, Bui Quang Minh wrote:
->> On 5/29/25 18:18, Maciej Fijalkowski wrote:
->>> On Tue, May 27, 2025 at 11:19:04PM +0700, Bui Quang Minh wrote:
->>>> This adds a test to test the virtio-net rx when there is a XDP socket
->>>> bound to it. There are tests for both copy mode and zerocopy mode, both
->>>> cases when XDP program returns XDP_PASS and XDP_REDIRECT to a XDP socket.
->>>>
->>>> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
->>> Hi Bui,
->>>
->>> have you considered adjusting xskxceiver for your needs? If yes and you
->>> decided to go with another test app then what were the issues around it?
->>>
->>> This is yet another approach for xsk testing where we already have a
->>> test framework.
->> Hi,
->>
->> I haven't tried much hard to adapt xskxceiver. I did have a look at
->> xskxceiver but I felt the supported topology is not suitable for my need. To
->> test the receiving side in virtio-net, I use Qemu to set up virtio-net in
->> the guest and vhost-net in the host side. The sending side is in the host
->> and the receiving is in the guest so I can't figure out how to do that with
->> xskxceiver.
-> I see - couldn't the python side be executing xdpsock then instead of your
-> own app?
+This is a fairly large update for the soc tree with 1125 patches,
+mainly because a large part of the qualcomm changes came too late
+last time. Other than that, there is not much interesting going
+on. There are 65 new dts files for additional machines and 12 new
+SoCs that are all similar to already supported ones. The sophgo
+SG2044 SoC support comes in a separate branch to avoid a backmerge,
+but it's also the largest one of the new chips.
 
-I'm not aware of xdpsock. Could you give the path to that file?
+The summarized dirstat is
 
-> I wouldn't like to end up with several xsk tools for testing data path on
-> different environments.
+   0.5% Documentation/devicetree/bindings/arm/
+   1.6% Documentation/devicetree/bindings/
+   0.4% arch/arm/boot/dts/broadcom/
+   0.7% arch/arm/boot/dts/microchip/
+   1.2% arch/arm/boot/dts/nvidia/
+   0.7% arch/arm/boot/dts/qcom/
+   0.4% arch/arm/boot/dts/renesas/
+   1.3% arch/arm/boot/dts/st/
+   1.2% arch/arm/boot/dts/
+   1.2% arch/arm/mach-davinci/
+   2.0% arch/arm64/boot/dts/allwinner/
+   1.1% arch/arm64/boot/dts/amlogic/
+   4.4% arch/arm64/boot/dts/exynos/
+  15.7% arch/arm64/boot/dts/freescale/
+   7.9% arch/arm64/boot/dts/mediatek/
+   0.4% arch/arm64/boot/dts/nvidia/
+  24.3% arch/arm64/boot/dts/qcom/
+   2.4% arch/arm64/boot/dts/renesas/
+  10.2% arch/arm64/boot/dts/rockchip/
+   0.3% arch/arm64/boot/dts/st/
+   6.6% arch/arm64/boot/dts/ti/
+   1.2% arch/arm64/boot/dts/
+   4.1% arch/riscv/boot/dts/sophgo/
+   0.3% arch/
+   2.6% drivers/firmware/arm_scmi/vendors/imx/
+   0.7% drivers/firmware/arm_scmi/
+   0.7% drivers/firmware/
+   0.6% drivers/memory/
+   0.5% drivers/platform/cznic/
+   0.4% drivers/reset/
+   0.6% drivers/soc/amlogic/
+   0.6% drivers/soc/qcom/
+   0.9% drivers/soc/
+ 939 files changed, 79999 insertions(+), 11861 deletions(-)
+
+We had 264 contributors this time, and the most active ones
+by number of patches are
+
+     72 Krzysztof Kozlowski
+     38 Dmitry Baryshkov
+     30 Luca Weiss
+     29 Konrad Dybcio
+     24 Stephan Gerhold
+     23 Wolfram Sang
+     23 Neil Armstrong
+     22 Heiko Stuebner
+     19 Johan Hovold
+     18 Rob Herring (Arm)
+     17 Primoz Fiser
+     16 Siddharth Vadapalli
+     14 Francesco Dolcini
+     14 Andre Przywara
+     13 Chukun Pan
+     13 Biju Das
+     13 AngeloGioacchino Del Regno
+     12 Judith Mendez
+     12 Inochi Amaoto
+     12 Dzmitry Sankouski
+     12 Alexander Stein
+     12 Abel Vesa
+     12 Aaron Kling
+     11 Adam Ford
+
+One simple merge conflict came up in the drivers branch, where
+a bunch of updates to the MAINTAINERS file clashed.
+
+     Arnd
