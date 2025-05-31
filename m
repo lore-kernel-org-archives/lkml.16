@@ -1,109 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F02117A31D;
-	Sat, 31 May 2025 16:18:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C688222094
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 16:20:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748708324; cv=none; b=DSwXZWzekZb2ISc88T7+esSANWodto0QUkXF4bcpGpVTXVOQ49vdBhw02/+FvuacqTzk1eOUz7VnjA3drSMCEnJQFrG1wxiPyeNtj+jpe2khPmqNlNcDHpGmn81ejld41dxLyvCivMFJENYFOXuftnZepnU8zVqTVibs8jfDoP0=
+	t=1748708404; cv=none; b=HfH4pGQG2kA4mD7tmTkNE7eQXCVcmmjU/0HXOxhS8L3mHI79de4kSmfQ+52uZEMsxq9D00uZUlRLG3blMnH4isILIPczTGzWGAp32Vrj5r0gXE8lL8HSZ0g1REHKhEa+jtlaQ/5mTTdLxf8IH/g/jiBxqFCBXnoNW7WYLqbXeAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748708324; c=relaxed/simple;
-	bh=6XW6rvHYYe6NmPi1aP+xp49GhLfblEpiI49g8P2fQCo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dbc01hiSYuyMcEuDYY3PmblwFW6dzogW42UMgxtlNIxRUa22qLNcRy/THk6cZDr9KY6RNBU0LXnseXwPVbyQxVUQCwOILZLhQG0PqneUToLKVhBHUZ1FfXKjPlWmubwHSdVlvUK6K1eLD9veDT45X/S7rTCPE+T5qCJJ/y8YNwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W+CRmwRm; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+CRmwRm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83D69C4CEE3;
-	Sat, 31 May 2025 16:18:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748708324;
-	bh=6XW6rvHYYe6NmPi1aP+xp49GhLfblEpiI49g8P2fQCo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=W+CRmwRmFU8uaIsjGDgRT3CVvlci4orRZbUsCVLLv/nq+AVeNNNXsXNA32r+/UoLr
-	 leYRBoJYCcVYBNrUO2eQ/u5nNwemPFAOtf12IdRAZZqFAtdFg2oHc5juFotn7OZUXI
-	 7rSwyC8ui515g9fTbBUmsKJKK954HwLPS6qVp8ebF7gJIqXU2AbDrFkUkNnp/BZOYk
-	 K3FsuRC88S+mQuzUID9CbeclTTtz9PV0okK+Z0jOJYJPzcLeFYK8UHxb3UazFy5MLl
-	 27Mt8gc1pcU6dOjPM8sQwY9+PK8k2HfCM7+2T6ugxAnPpRaU9igsmcgNwYflAcm8mD
-	 9AFu3YnX7iWEA==
-Date: Sat, 31 May 2025 17:18:37 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Michael Hennerich <Michael.Hennerich@analog.com>, Angelo Dureghello
- <adureghello@baylibre.com>, Guillaume Stols <gstols@baylibre.com>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Subject: Re: [PATCH v2] iio: adc: adi-axi-adc: fix ad7606_bus_reg_read()
-Message-ID: <20250531171837.1490051a@jic23-huawei>
-In-Reply-To: <20250530-iio-adc-adi-axi-adc-fix-ad7606_bus_reg_read-v2-1-ad2dfc0694ce@baylibre.com>
-References: <20250530-iio-adc-adi-axi-adc-fix-ad7606_bus_reg_read-v2-1-ad2dfc0694ce@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1748708404; c=relaxed/simple;
+	bh=sgPA9Q230YlwYNsgLsUAGT+EIJ3MJXCV8CkuV+njEC8=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=h++K/4vpIsvYxikqgHRuSKSL0BaOQGLUGXCSsWkLQB3Eiq/92MlvaQXyNMwlvfLdB5/qZiUtnC1q916U6noZAfNnIkjUDcKI2mjjyLRZcVcwOY+JsN7HXhc8/HCfnTKA3WbX/Q8O+ncaNMufKhF6h2MV+yZaWBqhIorK4Thk9KQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3dc9cd70437so37060045ab.1
+        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 09:20:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748708402; x=1749313202;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jOT3+3dtKmIMbjiKp4WKPYIYOuy19lzYdhT8ETpxuvo=;
+        b=qVeGp8fJwHgX4Xc+8c0MNs9aM8bT/eVBzO0sTE9uUCKnRpK4qXzvWy09HalvurNBOp
+         CXILtdgktLlxken89yQ7eNV33Zd6O661Edum5Aii0wLkyJfEDZpCJE1Xhib/F5mKXc53
+         HlBYwtXWgIH9d8QfHQqVqMAxakhHb5JUiesmg+qXRRX7WOWwTsE400U8aQf07K48BdFa
+         3x6LknYWySmfRb2DA1FdjlEYSeYpij0RUUKocw0PHX10g8bBIXz6CB/6dLGIHr9OAiFU
+         zU2porlUtLuYRCAxHQVHoyNdlfeawqfexS5VaFq0D2foO3BP00Wgk6O1LOJjSRTiOc3H
+         +Prg==
+X-Forwarded-Encrypted: i=1; AJvYcCXSWM9uZJxxKeVYSvjFcQ3FFzunKOtgj2LG6De7rwoArmHxtK3/YTSnRN9aP4VrHikZOKLlMwwf5aGLXLA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjDSUHmQQ3OkgaOWwVlhVJGFlu4SwsU0zznlN7ZP2WPUf32dkR
+	Ehit3DrVCGIkpi85j7gkX2Wsqd3D9dSfRQe3WMxLecrSwR8QTRG4OjRkxy1F4pME9RnZ1ZS9AP1
+	Rai3kkyN/RE8cFQNWgqzYJDi1v+LQlmIv/YeytroHyJlvEV+/7YaT5mVrdvI=
+X-Google-Smtp-Source: AGHT+IGdap3ueor/+dC4QVfuI3dEjhxnuRezgHUx4IFWYUjshQSu+2Ssy2m7Z8B44GaIOMUzHwVmDX58Z5+KnBdSnlu+zMS+qDxq
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:1568:b0:3dd:8a06:4db3 with SMTP id
+ e9e14a558f8ab-3dda339232emr19169295ab.19.1748708401944; Sat, 31 May 2025
+ 09:20:01 -0700 (PDT)
+Date: Sat, 31 May 2025 09:20:01 -0700
+In-Reply-To: <000000000000ec1f6b061ba43f7d@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <683b2c31.a00a0220.d8eae.001b.GAE@google.com>
+Subject: Re: [syzbot] [smc?] possible deadlock in smc_switch_to_fallback (2)
+From: syzbot <syzbot+bef85a6996d1737c1a2f@syzkaller.appspotmail.com>
+To: agordeev@linux.ibm.com, alibuda@linux.alibaba.com, davem@davemloft.net, 
+	edumazet@google.com, guwen@linux.alibaba.com, horms@kernel.org, 
+	jaka@linux.ibm.com, kuba@kernel.org, kuniyu@amazon.com, 
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, 
+	linux-s390@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com, tonylu@linux.alibaba.com, 
+	wenjia@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 30 May 2025 16:50:14 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+syzbot suspects this issue was fixed by commit:
 
-> Mask the value read before returning it. The value read over the
-> parallel bus via the AXI ADC IP block contains both the address and
-> the data, but callers expect val to only contain the data.
-> 
-> axi_adc_raw_write() takes a u32 parameter, so addr was the wrong type.
-> This wasn't causing any issues but is corrected anyway since we are
-> touching the same line to add a new variable.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 79c47485e438 ("iio: adc: adi-axi-adc: add support for AD7606 register writing")
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-I've applied this to my temporary fixes-togreg-for-6.16 branch for now.
-That will get rebased on rc1 once available.  As such I'm fine adding
-tags or indeed dropping it again if others have feedback!
+commit 752e2217d789be2c6a6ac66554b981cd71cd9f31
+Author: Kuniyuki Iwashima <kuniyu@amazon.com>
+Date:   Mon Apr 7 17:03:17 2025 +0000
 
-Jonathan
+    smc: Fix lockdep false-positive for IPPROTO_SMC.
 
-> ---
-> Changes in v2:
-> - Use ADI_AXI_REG_VALUE_MASK instead of hard-coding 0xFF.
-> - Introduce local variable and use FIELD_PREP() instead of modifying val.
-> - Link to v1: https://lore.kernel.org/r/20250530-iio-adc-adi-axi-adc-fix-ad7606_bus_reg_read-v1-1-ce8f7cb4d663@baylibre.com
-> ---
->  drivers/iio/adc/adi-axi-adc.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/adi-axi-adc.c b/drivers/iio/adc/adi-axi-adc.c
-> index cf942c043457ccea49207c3900153ee371b3774f..fc745297bcb82cf2cf7f30c7fcf9bba2d861a48c 100644
-> --- a/drivers/iio/adc/adi-axi-adc.c
-> +++ b/drivers/iio/adc/adi-axi-adc.c
-> @@ -445,7 +445,7 @@ static int axi_adc_raw_read(struct iio_backend *back, u32 *val)
->  static int ad7606_bus_reg_read(struct iio_backend *back, u32 reg, u32 *val)
->  {
->  	struct adi_axi_adc_state *st = iio_backend_get_priv(back);
-> -	int addr;
-> +	u32 addr, reg_val;
->  
->  	guard(mutex)(&st->lock);
->  
-> @@ -455,7 +455,9 @@ static int ad7606_bus_reg_read(struct iio_backend *back, u32 reg, u32 *val)
->  	 */
->  	addr = FIELD_PREP(ADI_AXI_REG_ADDRESS_MASK, reg) | ADI_AXI_REG_READ_BIT;
->  	axi_adc_raw_write(back, addr);
-> -	axi_adc_raw_read(back, val);
-> +	axi_adc_raw_read(back, &reg_val);
-> +
-> +	*val = FIELD_GET(ADI_AXI_REG_VALUE_MASK, reg_val);
->  
->  	/* Write 0x0 on the bus to get back to ADC mode */
->  	axi_adc_raw_write(back, 0);
-> 
-> ---
-> base-commit: 7cdfbc0113d087348b8e65dd79276d0f57b89a10
-> change-id: 20250530-iio-adc-adi-axi-adc-fix-ad7606_bus_reg_read-f2bbb503db8b
-> 
-> Best regards,
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13833ed4580000
+start commit:   47e55e4b410f openvswitch: fix lockup on tx to unregisterin..
+git tree:       net
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4ef22c4fce5135b4
+dashboard link: https://syzkaller.appspot.com/bug?extid=bef85a6996d1737c1a2f
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14832cb0580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17e17218580000
 
+If the result looks correct, please mark the issue as fixed by replying with:
+
+#syz fix: smc: Fix lockdep false-positive for IPPROTO_SMC.
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
