@@ -1,131 +1,177 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3404C74;
-	Sat, 31 May 2025 17:13:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4CFCD299;
+	Sat, 31 May 2025 17:20:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748711616; cv=none; b=BWdKxaYVNEOVw1MgvwkA208RSg5eBO3b6+R0ezpfuJiBTO7t/d9y76+M73XAmfMtoJcUCywWEPyBcytu1areBIoEn6VLxJuaRG3rROB34zcqdeBN1fssHeOSI8LhuotpU2C8QlRIu3tTZMXCQ8PX4pH0ECUNcUwRq8yYbzevYR4=
+	t=1748712040; cv=none; b=CiXuR7yuP0THD27sMKFQgQHOpaU034QqQ/d6lOmOxa762gX1tI16N5CB8vC/cHYLvhA3/erMuH1Mn8ibaii6nkUb8q26o5gK7Dq7oz+3eGKbEgHXLSZjisKz/Gz6kqpiWYtKCk7D+KGErY8SCtJiDSme09jCgvIlaFa+9glT+Ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748711616; c=relaxed/simple;
-	bh=WlJNuiE+C9mhjb6dd0QzBTMplOmQ0UM3DzsGqoxwTyE=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=J9nBj+PIsEkk96Fd5CxTHoYH1jomDaBGiQe/mi3TLt2LtUR4iq7QKZs9/cMB4+sXGsvBHZsYfGnyOzsavVghV6XPWW9xKnwucenoqF608PMp7HsBIAfDBy/fCeJWJbMF1MZZgBR5GuKB5MF8kWUZ0q4JPmygTBzdDWGCTzIZpJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JgQd6BcD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748712040; c=relaxed/simple;
+	bh=1EDss7/Ay/i1p27ZciMHXO4Rvu9BaVSbs48i//gkFgc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lGkgpb8cVcSxyO7TFy4WCAS3SDUhV7QA5xgWXSMWOlZ2TljAtdyQwQ2vFZ2cZYHFENXfNINQz0c/jW+5CKLPkpPR2YzvcFbwAG6lFVTT4wN5Nr9R7il2lMKxrm9uCf2QFWOIjtBbIVFK81e791UZsYX2g31PTcXMJ0OhOtyTlzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mJgEF4I4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JgQd6BcD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A448C4CEE3;
-	Sat, 31 May 2025 17:13:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mJgEF4I4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CF31C4CEF1;
+	Sat, 31 May 2025 17:20:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748711615;
-	bh=WlJNuiE+C9mhjb6dd0QzBTMplOmQ0UM3DzsGqoxwTyE=;
-	h=Date:From:To:Subject:From;
-	b=JgQd6BcDzdLrL6qzYhrttppJeaI0GY/PdGr8PBpKyN0HXXNL8MFk25yHN1bIpDBmU
-	 33UJYBOdeJugeHPrNul0ZQ3Qb9rpqqhAHpuWtSW/J0cH3B/nE1b8+M6CmLEf0zPFUs
-	 wuXMko98VD3gDbaVGplhWRhB7ATqfoYvCBv4Q5NFvOaN2WewfjhB72Lk7aZwz/ayPD
-	 TmLy0gVTP3uheYOtQHInDlTbE+zYeDRpYxewAThmj2qiQ9CnpKpcB3Iqp+2S6jf28r
-	 tU2LcKa85PdqGUE5N6+fuQh+IKraFjneu1Fd0H7A/ivCDKDXp3YIU2jORyiwVXkz5l
-	 MXIOkvlPNuoRg==
-Date: Sat, 31 May 2025 19:13:31 +0200
-From: Helge Deller <deller@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Subject: [GIT PULL] fbdev updates for v6.16-rc1
-Message-ID: <aDs4uwcxU_M4mpVE@carbonx1>
+	s=k20201202; t=1748712040;
+	bh=1EDss7/Ay/i1p27ZciMHXO4Rvu9BaVSbs48i//gkFgc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=mJgEF4I4K68oYDlLRwi0ws0xjYgVej9CL94HG2mmcH90WoNkZtUuJerFwDEcpPXX9
+	 gMhvyvuA+w52V88lzV7XK2PhA35C0AWvLeC86LIIlRsFAAnV+VWFjWgWXqbdOPVDSM
+	 lFTY2lV86tx6J5yDNVpv8Xl1/rVNB3b9hzum8NYcizR7uceM2k78WcX+ygUnr0D4u0
+	 YsywmgL/JFBAhGh0kvEzKOZItAe+I3COS15tRqGJRr8HiX3vhKIOgkRz7CktTlKVvk
+	 46A9j8DG60i5RKfHZlJo/aU4rJHhz7QJAjfDoMs88yVkSjG6UU7pHDAePi+EBDZgV0
+	 cVvmKNcYL0w6Q==
+Date: Sat, 31 May 2025 18:20:31 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andreas Klinger <ak@it-klinger.de>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ lars@metafoo.de, javier.carrasco.cruz@gmail.com, mazziesaccount@gmail.com,
+ andriy.shevchenko@linux.intel.com, arthur.becker@sentec.com,
+ perdaniel.olsson@axis.com, mgonellabolduc@dimonoff.com,
+ muditsharma.info@gmail.com, clamor95@gmail.com, emil.gedenryd@axis.com,
+ devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] iio: light: add support for veml6046x00 RGBIR
+ color sensor
+Message-ID: <20250531182031.453ca161@jic23-huawei>
+In-Reply-To: <20250526085041.9197-3-ak@it-klinger.de>
+References: <20250526085041.9197-1-ak@it-klinger.de>
+	<20250526085041.9197-3-ak@it-klinger.de>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Linus,
+On Mon, 26 May 2025 10:50:40 +0200
+Andreas Klinger <ak@it-klinger.de> wrote:
 
-please pull the fbdev fixes and updates for 6.16-rc1:
+> Add Vishay VEML6046X00 high accuracy RGBIR color sensor.
+> 
+> This sensor provides three colour (red, green and blue) as well as one
+> infrared (IR) channel through I2C.
+> 
+> Support direct and buffered mode.
+> 
+> An optional interrupt for signaling green colour threshold underflow or
+> overflow is not supported so far.
+> 
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
 
-Many small but important fixes for special cases in the fbdev, fbcon and vgacon
-code, some smaller code cleanups in the nvidiafb, arkfb, atyfb and viafb drivers
-and two spelling fixes.
+Hi Andreas,
 
-Thanks!
-Helge
+I missed a channel type issue. See below.
 
-PS: All patches have been sitting in for-next for at least two days (the
-majority of patches since weeks). I did a rebase because fast-forward merging
-with head didn't work.
+> diff --git a/drivers/iio/light/veml6046x00.c b/drivers/iio/light/veml6046x00.c
+> new file mode 100644
+> index 000000000000..9972eeb57fd2
+> --- /dev/null
+> +++ b/drivers/iio/light/veml6046x00.c
+> @@ -0,0 +1,1007 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * VEML6046X00 High Accuracy RGBIR Color Sensor
+> + *
+> + * Copyright (c) 2025 Andreas Klinger <ak@it-klinger.de>
+> + */
 
-----------------------------------------------------------------
-The following changes since commit 0f70f5b08a47a3bc1a252e5f451a137cde7c98ce:
+> +static const struct iio_chan_spec veml6046x00_channels[] = {
+> +	{
+> +		.type = IIO_LIGHT,
 
-  Merge tag 'pull-automount' of git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs (2025-05-30 15:38:29 -0700)
+Sorry - I've been half asleep on earlier versions or maybe we discussed this
+before and I've forgotten.  IIO_LIGHT is for illuminance with units of lux.
 
-are available in the Git repository at:
+How does that apply to a colour channel given it's a measure of a specific
+sensitivity curve for the human eye and such a thing only applies to 'whiteish'
+light.
 
-  http://git.kernel.org/pub/scm/linux/kernel/git/deller/linux-fbdev.git tags/fbdev-for-6.16-rc1
+Normally we cover colour channels as IIO_INTENSITY which doesn't have
+strong rules for scaling - so lets us get away with the many weird and wonderful
+ideals different sensor manufacturers have of what RED / GREEN / BLUE
+mean.  (There is an oddity for historical reasons IIRC of an IR light channel
+but don't use that for new code).
 
-for you to fetch changes up to 05f6e183879d9785a3cdf2f08a498bc31b7a20aa:
+So basically the request is to use .type = IIO_INTENSITY for these
 
-  fbdev: Fix fb_set_var to prevent null-ptr-deref in fb_videomode_to_var (2025-05-31 10:24:02 +0200)
-
-----------------------------------------------------------------
-fbdev fixes and updates for 6.16-rc1:
-
-Various bug fixes for corner cases which were found with Syzkaller,
-Svace and other tools by various people and teams (e.g. Linux Verification Center):
-    fbdev: Fix do_register_framebuffer to prevent null-ptr-deref in fb_videomode_to_var [Murad Masimov]
-    fbdev: Fix fb_set_var to prevent null-ptr-deref in fb_videomode_to_var [Murad Masimov]
-    fbdev: core: fbcvt: avoid division by 0 in fb_cvt_hperiod() [Sergey Shtylyov]
-    fbcon: Make sure modelist not set on unregistered console [Kees Cook]
-    vgacon: Add check for vc_origin address range in vgacon_scroll() [GONG Ruiqi]
-
-Minor coding fixes in:
-    nvidiafb, arkfb, atyfb, viafb.
-
-Spelling fixes in:
-    sstfb.rst and carminefb.
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      fbdev: atyfb: Remove unused PCI vendor ID
-
-Bartosz Golaszewski (1):
-      fbdev: via: use new GPIO line value setter callbacks
-
-Colin Ian King (1):
-      fbdev: carminefb: Fix spelling mistake of CARMINE_TOTAL_DIPLAY_MEM
-
-GONG Ruiqi (1):
-      vgacon: Add check for vc_origin address range in vgacon_scroll()
-
-Kees Cook (2):
-      fbdev: arkfb: Cast ics5342_init() allocation type
-      fbcon: Make sure modelist not set on unregistered console
-
-Murad Masimov (2):
-      fbdev: Fix do_register_framebuffer to prevent null-ptr-deref in fb_videomode_to_var
-      fbdev: Fix fb_set_var to prevent null-ptr-deref in fb_videomode_to_var
-
-Rujra Bhatt (1):
-      fbdev: sstfb.rst: Fix spelling mistake
-
-Sergey Shtylyov (1):
-      fbdev: core: fbcvt: avoid division by 0 in fb_cvt_hperiod()
-
-Zijun Hu (1):
-      fbdev: nvidiafb: Correct const string length in nvidiafb_setup()
-
- Documentation/fb/sstfb.rst          |  2 +-
- drivers/video/console/vgacon.c      |  2 +-
- drivers/video/fbdev/arkfb.c         |  5 +++--
- drivers/video/fbdev/carminefb.c     |  8 ++++----
- drivers/video/fbdev/carminefb.h     |  2 +-
- drivers/video/fbdev/core/fbcon.c    |  7 ++++++-
- drivers/video/fbdev/core/fbcvt.c    |  2 +-
- drivers/video/fbdev/core/fbmem.c    | 22 ++++++++++++++--------
- drivers/video/fbdev/nvidia/nvidia.c |  2 +-
- drivers/video/fbdev/via/via-gpio.c  | 10 +++++-----
- include/video/mach64.h              |  3 ---
- 11 files changed, 37 insertions(+), 28 deletions(-)
+> +		.address = VEML6046X00_REG_R,
+> +		.modified = 1,
+> +		.channel2 = IIO_MOD_LIGHT_RED,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> +		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_INT_TIME) |
+> +					   BIT(IIO_CHAN_INFO_SCALE),
+> +		.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_INT_TIME) |
+> +						     BIT(IIO_CHAN_INFO_SCALE),
+> +		.scan_index = VEML6046X00_SCAN_R,
+> +		.scan_type = {
+> +			.sign = 'u',
+> +			.realbits = 16,
+> +			.storagebits = 16,
+> +			.endianness = IIO_LE,
+> +		},
+> +	},
+> +	{
+> +		.type = IIO_LIGHT,
+> +		.address = VEML6046X00_REG_G,
+> +		.modified = 1,
+> +		.channel2 = IIO_MOD_LIGHT_GREEN,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> +		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_INT_TIME) |
+> +					   BIT(IIO_CHAN_INFO_SCALE),
+> +		.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_INT_TIME) |
+> +						     BIT(IIO_CHAN_INFO_SCALE),
+> +		.scan_index = VEML6046X00_SCAN_G,
+> +		.scan_type = {
+> +			.sign = 'u',
+> +			.realbits = 16,
+> +			.storagebits = 16,
+> +			.endianness = IIO_LE,
+> +		},
+> +	},
+> +	{
+> +		.type = IIO_LIGHT,
+> +		.address = VEML6046X00_REG_B,
+> +		.modified = 1,
+> +		.channel2 = IIO_MOD_LIGHT_BLUE,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> +		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_INT_TIME) |
+> +					   BIT(IIO_CHAN_INFO_SCALE),
+> +		.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_INT_TIME) |
+> +						     BIT(IIO_CHAN_INFO_SCALE),
+> +		.scan_index = VEML6046X00_SCAN_B,
+> +		.scan_type = {
+> +			.sign = 'u',
+> +			.realbits = 16,
+> +			.storagebits = 16,
+> +			.endianness = IIO_LE,
+> +		},
+> +	},
+> +	{
+> +		.type = IIO_LIGHT,
+> +		.address = VEML6046X00_REG_IR,
+> +		.modified = 1,
+> +		.channel2 = IIO_MOD_LIGHT_IR,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> +		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_INT_TIME) |
+> +					   BIT(IIO_CHAN_INFO_SCALE),
+> +		.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_INT_TIME) |
+> +						     BIT(IIO_CHAN_INFO_SCALE),
+> +		.scan_index = VEML6046X00_SCAN_IR,
+> +		.scan_type = {
+> +			.sign = 'u',
+> +			.realbits = 16,
+> +			.storagebits = 16,
+> +			.endianness = IIO_LE,
+> +		},
+> +	},
+> +	IIO_CHAN_SOFT_TIMESTAMP(VEML6046X00_SCAN_TIMESTAMP),
+> +};
