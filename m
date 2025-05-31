@@ -1,193 +1,172 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2125.outbound.protection.outlook.com [40.107.223.125])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C799C148
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 02:35:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748658931; cv=none; b=gUnYoKna5294JD4Yr2h1ciqPZZfhgQHdXdr3/YlnaFUIHWWQlpRF4mZRHb0R9uShPTvhnqp8s9aNQAoXvdY20+qFHbp/QHq/AirkvUNJpVgJe5w9nYEn+Nn1mo+oVbh1w3kObVqTFFGaS6d0KpeA711ImRGFV6FjxqGunATo4nw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748658931; c=relaxed/simple;
-	bh=fEFh6qMs3PDPwgQuBcPKSPmvXa44/VszgzP11i1a5uM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B7FzppVyDdS1Nzp2LQYALkxEh6Jk7qzGdIpyVdfjq3NZayaZ0vqYtxuRwNwNujuVwwqLWXU7uem6delF2E5bdHjra81LHWUWEFbSH4qFROt01c5fOoIdVm7P0fGa+nGAwOen+i18+c/kdc6HoIMzxpXzlztYzI+7VjCd3AlmeGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=1VGOrbMt; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02C5C20EB
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 02:46:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.125
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748659585; cv=fail; b=ClSGId7gThGVHFC/zdGFvMqOBEgFcbYegNgh6x4tEwpmQTRtGJqQONpcs4a1wbfPNF5MX1IBiCj8wXd0taLTi+3BWHKHmup7hkDr89xy+NXwC3/is4bD2MHLpZQYYOOlcJYt3pyrQQ9MIhu3/5NX4G1vfR8xsngy2lASaXZoC3s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748659585; c=relaxed/simple;
+	bh=62APer/11vCcYnwmOd2GVWQYl12Whta79lUzjVFsarE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=JLDd4s43pgU/ws8jAY/Syqj2F9zSv7E8vYKiuxKTOLUxxVRUZJ7Z/3J5KGe01MUelkaLAiCjSCgCFr35u6czUhMwbRs1oU2lhQsZDHqMASka4OQwbOuXJT1zlCkDwFvzX1xcOXuykWTIxzChBEhol88LjqOl7AF+UuKm6vNcExY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=c9y9RJ9h; arc=fail smtp.client-ip=40.107.223.125
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="1VGOrbMt"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2351ffb669cso19486015ad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 19:35:29 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="c9y9RJ9h"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cMU1lo8LTTxD1Y127ea4u2VYG2Mh6i1fjfmJ9mG9MlmNkX+7y+cVmGHv9H/i6LIO6TXL28PPp2FWc/rU16xKk5BYusX8G4T5ZnE7jk41kMDPhUmY1HEc9JwbQF/KU2VaylisQOmtpe8adCue3UnOe9SWkJTKZcAOUum+uhQSVK+8Qqtwm5OZmmPCo8NJE9PSkACmDjN+b732quV28RGs505IKCbm3Xw8rI7+zZUWaXKURwDq05k9aFPHWEs+XT3mp1KKIzwCo/NKUNnVG8iDeDhKXG8pHvacXPfi+vWxt/f/JewyVW17wOT1DGm5VwIm+2zFvVuJeK9i55Jhaa8UPA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SOM3Ls3n7MIJAl/Jog+tWTcFCZakeDrJw68tj5/D+Vc=;
+ b=rqjhe4B2DGloGlmcyTeO6O3Xnxbc/U+CF3uYJ9QQyKOxlR8XEYor2v6uozvywIGU4OGZtdPeO1bBPpwBkR+iHAYZ96dNfyUieeENSNTA6m7n0SLT5Z1g+dPF1zz+gM3gDL9ZEObPCxAxvCdlB9fldx+h7S3U2XD/mVVsT3oYQnJSmiExyKiK4Us/qHVGsQ4T2LgsaNyRiWqjt+d3SS+kviNWPKOowjqn9f24hA/t6uNrXZMEdR2H3+4YC5ocB8fzNUuhWWwZI2gBHK0W/NaB50i1rVssTFL4JyxrF6HS0cVyRsIguuwlKY0xa75M51aWqZ3YN7/3ANlnLv03cqZCqQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1748658928; x=1749263728; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eE5K0L5UOR+5JNlQQlydEE5dD8CmoS7RK8fJs2wf7f4=;
-        b=1VGOrbMtJwPbbgVUHtQyzHBnh2kpPLWEBu2EidXFwVqvL5vkYqd1yNXqQvYkxVr2FJ
-         D3jK7dkyqiRYDNV9wvFG9+Gxol+Wbt48fio36+AZgo6Uw4amAjrK2jmP/tNGk71JAjZ2
-         uLo40Es7I7NXZ5yrCvJtKMCeq1dvMqG8MP7i3E8id74B5zCR1GcxcgAjw/oel+iwn04C
-         vqIl9fQeV+aa4gl0Gn/z+YZWhH/0y+ylOsMp9cgPnoewW2r9/LjvegBy1kJ4TE9nxnrZ
-         9pMlRlQgJKsznlCoC+aHD/RN2FPBrPN8DwRwHKh939q7Vlqa+vRorSq/w5WHjOAe2Jy8
-         7Kkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748658928; x=1749263728;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eE5K0L5UOR+5JNlQQlydEE5dD8CmoS7RK8fJs2wf7f4=;
-        b=qNjM9UutksXK0MuAtBo+bGZKg/hgiLQpREYwS2ApP5YVWKIvOxiOebP4NjcljwN83t
-         +UstnzzjBaASFBvxrjDm8D0Wtc7InO0VjoQ7QQwqLS5Gx98SIfIAhPi5xsxNmT5EudGR
-         B8plb10ojUXIOQzAsTxYDyIxaSCFjCScJ3tWLmfvdawlRveinJZ+FgJE6psKd7QGPpvR
-         LllP2FcD9A3na56gOLipXMtxRjxlz4dIfnAvXmH3RUFBvOulDgBtsOIs8Qad8lNpT13W
-         WF0Dhgxfg0F3M8VCCA0m0vnRvkaKRC7HV9TUI8rGDnJzOHoz4GRAiomuweuV6bBVn9kH
-         Opow==
-X-Gm-Message-State: AOJu0YxomNVkeIZxq/pP2f9zpjt+EgAAEwXE2d7EA8fm71RjHEfdi+Y0
-	O+oI4h5RWqVucF/UOFUr8CwC3aJ50TRyHHOZbjTOJQ7Hug5nuTYV55jQCs0rZpGuVF8=
-X-Gm-Gg: ASbGncsJ41ZjzF7F7P4GP2WHeNtxlqkZmboK1Mwne6xW4K6VR93CFwY7JU9ADm0i365
-	nzshmcu01++SVJ4mzeCIMeixMxEe+2aYaMTpaZAR0IAH7Cvy7+cB3Ldfb+DRT68ndsNTiQbRxU0
-	/AVyY7S5rt3Osuy3c+60LC4nPKbuPUHK/92MfkIBpvsMJ/3E1rUh2cxmmU1sx7k4LE+kBpPJ2F5
-	T54hax/5fCs3e37nM2v7KlJ4CGnF22QR6NC0o655rFqVCt6MVrYFV997WfUhWPXBR1+lRCSqUOs
-	RMWlb05f5YY1L2OAMsw51Ie48C0DmUEdojpcLa/NBbUcuXzUglPISr2+9cDfzUM=
-X-Google-Smtp-Source: AGHT+IGW8UsS10oKPpjE1xfc7ciibqabZN7gXwU4acZF+4/I7AVDG1ffygZZnG/vME8UIUnKm+s1oQ==
-X-Received: by 2002:a17:903:41d0:b0:234:f182:a734 with SMTP id d9443c01a7336-2355f74fdeamr6962905ad.31.1748658928518;
-        Fri, 30 May 2025 19:35:28 -0700 (PDT)
-Received: from ghost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2eceb049e4sm2146976a12.6.2025.05.30.19.35.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 May 2025 19:35:28 -0700 (PDT)
-Date: Fri, 30 May 2025 19:35:26 -0700
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Charles Mirabile <cmirabil@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	"open list:RISC-V ARCHITECTURE" <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH v1 1/1] riscv: fix runtime constant support for nommu
- kernels
-Message-ID: <aDpq7kqJUyAjad9F@ghost>
-References: <20250530211422.784415-1-cmirabil@redhat.com>
- <20250530211422.784415-2-cmirabil@redhat.com>
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SOM3Ls3n7MIJAl/Jog+tWTcFCZakeDrJw68tj5/D+Vc=;
+ b=c9y9RJ9hUknRBLQ3cZ02PvQ9Bezoltb9XrgfozQP2qa6peUMsaVB0D/Gq/yepZWk3ZfFRvTONI6LszJcnNcef7fIVDRB0iOqOZsiatDT1NqRxUuGZ283kyasl8NwE0lBidhpHq+brbIVaZ/QIhRcxpbyeHl/9qjoC7iu1ZyY4b4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from CH0PR01MB6873.prod.exchangelabs.com (2603:10b6:610:112::22) by
+ LV2PR01MB7551.prod.exchangelabs.com (2603:10b6:408:17d::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8769.26; Sat, 31 May 2025 02:46:21 +0000
+Received: from CH0PR01MB6873.prod.exchangelabs.com
+ ([fe80::3850:9112:f3bf:6460]) by CH0PR01MB6873.prod.exchangelabs.com
+ ([fe80::3850:9112:f3bf:6460%6]) with mapi id 15.20.8769.029; Sat, 31 May 2025
+ 02:46:21 +0000
+From: Yang Shi <yang@os.amperecomputing.com>
+To: ryan.roberts@arm.com,
+	will@kernel.org,
+	catalin.marinas@arm.com,
+	Miko.Lenczewski@arm.com,
+	dev.jain@arm.com,
+	scott@os.amperecomputing.com,
+	cl@gentwo.org
+Cc: yang@os.amperecomputing.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/4] arm64: cpufeature: add AmpereOne to BBML2 allow list
+Date: Fri, 30 May 2025 19:41:51 -0700
+Message-ID: <20250531024545.1101304-2-yang@os.amperecomputing.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250531024545.1101304-1-yang@os.amperecomputing.com>
+References: <20250531024545.1101304-1-yang@os.amperecomputing.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: CY5PR22CA0079.namprd22.prod.outlook.com
+ (2603:10b6:930:80::26) To CH0PR01MB6873.prod.exchangelabs.com
+ (2603:10b6:610:112::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250530211422.784415-2-cmirabil@redhat.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH0PR01MB6873:EE_|LV2PR01MB7551:EE_
+X-MS-Office365-Filtering-Correlation-Id: eed7c664-9a5f-46cd-ad6a-08dd9fed5356
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|52116014|376014|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?LTua0J4o3oT6EedLalv9WuEgb8JgnrhOZ/Cn9VGsL6jGccspn/S/u/n2zu/2?=
+ =?us-ascii?Q?c7Yy3oaKQFkfQ2K9v3dVNcOYKEDTeOVv1ybu8fJY9tL57ksCNJx/K64wkRUY?=
+ =?us-ascii?Q?kK4r4D5+HPl4a0Xz88IMGWpzW6frbUJhXBjsYHo5x9+XjIBx2HBQN6qYQ7dU?=
+ =?us-ascii?Q?sRB4k5z7C2yTzt02NzUo0ZsB/sJXxuArVbI9+kQYhEfJJpMoB/XUqzjxZhwO?=
+ =?us-ascii?Q?tVcKwdotFjNm8H1lL0W2L26c1yBUWzcQ6hbI47RltHzTtpepLIQnxXyjNa6h?=
+ =?us-ascii?Q?i7IYf+4H7kScp3+xhloCvfclS7Xj6HBlIxjWfE4XxDBc+z8pTpoikNSK7h4v?=
+ =?us-ascii?Q?xWSjN67dKEaHv7anAG8Pd4N6EAmIqfGjvEc+a2Zk3Yg/GuFtUoKgW0M6M49J?=
+ =?us-ascii?Q?y8VsG7b7SCj5n5Shsp7DjItPRRbMhIVmvh6eSof6uVypak/REbZBwKliyzgJ?=
+ =?us-ascii?Q?vkmuuVaeTOVa5J8HDct1JV5pLKO1PyXzCUuQ0XD2uAW8aq6N9zK1Dq1L+rhs?=
+ =?us-ascii?Q?UuIBJHrd/WaZsBDUXbOyWxLmRy0/p6IPkig8JIa5cyvsbb3olrfR0gzrUOy5?=
+ =?us-ascii?Q?NWZkuhORIMC79rWxVw0qA8iJdJ0Oc8dOuSrY2xsOyIF3tqCRHbcbBvuoGbem?=
+ =?us-ascii?Q?uQn4596FxGOuYap/xlLQLsorNTppVoX+gYhjZCQXcyYBJF/Epj4U1wUyDVs+?=
+ =?us-ascii?Q?J0iBQ7w+X8kYZUDvHG70Z1X1BJKzb53SbMR2PIcGDmteCaxl+VkpdQpnjMbj?=
+ =?us-ascii?Q?5/PnWeesztPjpI0LamKSguFOv6wzv5k6OKIpfllbz/HcR+GCh4Os9MuUMbbx?=
+ =?us-ascii?Q?KLiO4lrsNf5/ER+zlT7pHU7L2s4UivcfICuQtk4oZQ/jUMa9XsNzFB/FKR0P?=
+ =?us-ascii?Q?ZOVbotXKiyOOVq62BjalGkR8WqtVDXFcNYgq6zdfhLoYcfadpl78238UV/Ue?=
+ =?us-ascii?Q?tCyY3VR1FHyx7g2psJ32k5lzo3oUrQb4iMdkXYjGOYSl2TnKV6lGWQUIhUpJ?=
+ =?us-ascii?Q?82oqyZOCfSGcSV4tO8x7kWrtrP6ufy7mp8VUUQvYjfxENzFyB2KXPdlBwt6d?=
+ =?us-ascii?Q?O6ii1wIMTWeHKx/WYB+dwhSZuK4AuzUH4Z/UG2RjsPCGdqFqjK65hGJPhKgT?=
+ =?us-ascii?Q?mrJZXDNRiIdDufU4897QlOaDZz2n7pDxuzcHvuxYBfkk6Yd30JxXsWzApHkT?=
+ =?us-ascii?Q?lAEkqRWBUEGN+c2QQ7QoCocogNBvCHVh584M+4w9ziXgHk9P3I1HltRJC8B8?=
+ =?us-ascii?Q?ry+d15pdyLZjv30GkAOzuyrM//z+8l4gEfHK1ynsgJQoYNPtYjShvtUFeTwc?=
+ =?us-ascii?Q?yVAzDdBuGUNJAKV7RlYKLw6buBDUESQoCXVIFM8AsMC/4gdzhPs1R+k0uCFy?=
+ =?us-ascii?Q?BzwvoVaTG/FMx75TfC5zHLcFRAbUKB3VNrVHuUnnht0KfeTH8LPgxIakMiR7?=
+ =?us-ascii?Q?EgE/2k4bKHAIS6P8McOzLLagRQzE+6s+pPeiJg5gPOXkUKmuYmyF3Q=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR01MB6873.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(376014)(366016)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?wGxSPUSaNxqpTFBr67xBNIG4AeQYK+jdxOgF91tG0BinxkXzufJQmuWXPC4/?=
+ =?us-ascii?Q?JMXaNEkPc5RNKqGqhkuf+QcZ5H2Uur/e9H7Zw7XdLiYgve4C/ahfd2BgIGtY?=
+ =?us-ascii?Q?TS3PuVWLnvpJMkU2VX2rQ9TMCXOEqUtz8N3Ei8XsFzDGtk9mMCmReVoM+Y/S?=
+ =?us-ascii?Q?5XvWzJym5MqLUfYeX/Ngyph5wA4XTtDbSxncS1km1Q1ICe7pXZuWSOH7O8Ww?=
+ =?us-ascii?Q?0A1cDIjBDQawCvuAcUX2kNwwORZlKWFX+YyJIDRVd010rmQZwHNb/stH78TX?=
+ =?us-ascii?Q?ZRndijt4n6YPnpHTfDKBiYw5hB52a5eFnOMcVs1g35Fe1ZblxJHL9MCe4bfB?=
+ =?us-ascii?Q?w8gH2IsgZ0N4b6yA/z64Xzhf+Fwd3Ddr0xfSyFwdwNMpoRcWSx6J8Mj6YCmf?=
+ =?us-ascii?Q?ufjhYuYZJrTWWlVrI/FHoUQR2xOWWTz1SH5mWhtX8LEfjVSa2LhUZfZL91nJ?=
+ =?us-ascii?Q?2zSCs9g4pNdSzKTOU+LB9GJIiCX/v5FnylAja39gh4z5MvXkPELJOBMb7eF7?=
+ =?us-ascii?Q?CaJhRxgT5bEGdswTkw4KL95YCaNLBbLaY4MilDwg5Swzz4yjrIKsPJs8Bk4F?=
+ =?us-ascii?Q?o9G56btMpzWYkGKR4FngO3sGW+WM6+gup9s5FH/B72xXHOaMYWuLkIwXow5Z?=
+ =?us-ascii?Q?TisyKxm82v7Oni73pG0rm1QOAwr5G2CG+II2idkJzYlmWNfVZACK7lYD0Itc?=
+ =?us-ascii?Q?o6E14tAksnepO4mzqpkYnJ2IypOQGi+H9U0CPXkImONS0UTxpUDd+bQ1MNvv?=
+ =?us-ascii?Q?/11vxHt4RhhVOOgBX4t5/z4kxCKzBx+dh1x20hXt9N0RUpCT172M7MOedvND?=
+ =?us-ascii?Q?moM3TGEpECk+pdopViBX8zHVCRWYI4lfKA4ucilwy/qMoXP6ChKVox8QKDy8?=
+ =?us-ascii?Q?XHmqfsxCb9wLFuk94PHbIT/qZq8fEzK0g0M9TLu82Tq79+Fx7fN5yfYH6W1D?=
+ =?us-ascii?Q?ZyYTxNZpiXGrm/dTMqpsNwVHeloU1Lf49ovvwasUBbFFmnoLJgl7G9sP2zSl?=
+ =?us-ascii?Q?k1EkL8Eq/TGebSOnsJnKdMLTuj34uBDG2v3TS7dQhyaPr2nEJ7msOOuGOfkN?=
+ =?us-ascii?Q?BmkUjxeWaHc8twY1gkh1H6wv7JXk5LiId5yxO+Yhy1d6SI/fzX1Yf5SHVJz6?=
+ =?us-ascii?Q?U5aB2woVqopXft9zAqzj4pQ1qMMWmMU9IilRtt7Rt/Fm0wjA0sI73Rj4vKtm?=
+ =?us-ascii?Q?t9qtfsr2KjenFkt6aYdoHlxLEasWlJ+MIiRp+9fyLm3kly4Icg9vFXAz1grk?=
+ =?us-ascii?Q?wgqZ0pmj6Zh3njFfaDgMcbUm0fIUzKP4ZB/13Fk8H3zA7ZVUSZBXJuVf4Kvi?=
+ =?us-ascii?Q?ul9wLBmRUDu128dNt4vFAokcOPuJ8NeCWOCBmmuyjcVrXl0eS6kTW3YKGeSt?=
+ =?us-ascii?Q?DnvdLY9eHBz3p//8qBuVKZTFr0mA8JKUTxHoqa9YXVH21cOrIG8u6202oEEh?=
+ =?us-ascii?Q?wmEy3HevoaiKZ99zhGZkrlBNA7541cnOToFxXkEryG1CTvLoV68FDHOeX3Me?=
+ =?us-ascii?Q?5GuyYUqkTwYWBCOj9ygcjB+CoNB348jYHxF+b2LsCo+gxmYUWJ2qpKSJCH+g?=
+ =?us-ascii?Q?OQ6FNmgBf9sn7Gd8Wr2CqqOOdhqHrwwM4Yr0aWZTK9mOt+AT/Vr/F6NmYCin?=
+ =?us-ascii?Q?EfBgmyJJAHR9zZIRUSGsKmo=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eed7c664-9a5f-46cd-ad6a-08dd9fed5356
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR01MB6873.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2025 02:46:21.3435
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0QkEkHXxlaOx2aHIsu3pBe7CssTPwscKkBmwJHzv1Us82BSb9UU7EGR9lcvZHJrpVYxcg9kQFbUZFd6u3te5vGkvRRw2bQK5R5isAjjz4Uw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR01MB7551
 
-On Fri, May 30, 2025 at 05:14:22PM -0400, Charles Mirabile wrote:
-> the `__runtime_fixup_32` function does not handle the case where `val` is
-> zero correctly (as might occur when patching a nommu kernel and referring
-> to a physical address below the 4GiB boundary whose upper 32 bits are all
-> zero) because nothing in the existing logic prevents the code from taking
-> the `else` branch of both nop-checks and emitting two `nop` instructions.
-> 
-> This leaves random garbage in the register that is supposed to receive the
-> upper 32 bits of the pointer instead of zero that when combined with the
-> value for the lower 32 bits yields an invalid pointer and causes a kernel
-> panic when that pointer is eventually accessed.
-> 
-> The author clearly considered the fact that if the `lui` is converted into
-> a `nop` that the second instruction needs to be adjusted to become an `li`
-> instead of an `addi`, hence introducing the `addi_insn_mask` variable, but
-> didn't follow that logic through fully to the case where the `else` branch
-> executes. To fix it just adjust the logic to ensure that the second `else`
-> branch is not taken if the first instruction will be patched to a `nop`.
+AmpereOne supports BBML2 without conflict abort, add to the allow list.
 
-You have an accurate assesment here, I missed the zero case :/.
-Thank you for fixing the issue!
-
-> 
-> Fixes: a44fb5722199 ("riscv: Add runtime constant support")
-> 
-> Signed-off-by: Charles Mirabile <cmirabil@redhat.com>
-> ---
->  arch/riscv/include/asm/runtime-const.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/riscv/include/asm/runtime-const.h b/arch/riscv/include/asm/runtime-const.h
-> index 451fd76b8811..d766e2b9e6df 100644
-> --- a/arch/riscv/include/asm/runtime-const.h
-> +++ b/arch/riscv/include/asm/runtime-const.h
-> @@ -206,7 +206,7 @@ static inline void __runtime_fixup_32(__le16 *lui_parcel, __le16 *addi_parcel, u
->  		addi_insn_mask &= 0x07fff;
->  	}
->  
-> -	if (lower_immediate & 0x00000fff) {
-> +	if (lower_immediate & 0x00000fff || lui_insn == RISCV_INSN_NOP4) {
-
-This comment is borderline too nitpicky so feel free to dismiss it :).
-It's slightly wasteful to have this check right after the if-statement
-that sets it. I am not sure what the most readable way of doing this is
-though. What would you think about a patch like the following instead?
-
-From 1c56536c1e338735140c9090f06da49a3d245a61 Mon Sep 17 00:00:00 2001
-From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Fri, 30 May 2025 19:25:13 -0700
-Subject: [PATCH] alternate fix
-
+Signed-off-by: Yang Shi <yang@os.amperecomputing.com>
 ---
- arch/riscv/include/asm/runtime-const.h | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+ arch/arm64/kernel/cpufeature.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/riscv/include/asm/runtime-const.h b/arch/riscv/include/asm/runtime-const.h
-index 451fd76b8811..085a0bb26fbb 100644
---- a/arch/riscv/include/asm/runtime-const.h
-+++ b/arch/riscv/include/asm/runtime-const.h
-@@ -179,12 +179,9 @@ static inline void __runtime_fixup_caches(void *where, unsigned int insns)
- static inline void __runtime_fixup_32(__le16 *lui_parcel, __le16 *addi_parcel, unsigned int val)
- {
- 	unsigned int lower_immediate, upper_immediate;
--	u32 lui_insn, addi_insn, addi_insn_mask;
-+	u32 lui_insn, addi_insn;
- 	__le32 lui_res, addi_res;
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index 327eeabbb449..25e1fbfab6a3 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -2224,6 +2224,8 @@ static bool cpu_has_bbml2_noabort(unsigned int cpu_midr)
+ 	static const struct midr_range supports_bbml2_noabort_list[] = {
+ 		MIDR_REV_RANGE(MIDR_CORTEX_X4, 0, 3, 0xf),
+ 		MIDR_REV_RANGE(MIDR_NEOVERSE_V3, 0, 2, 0xf),
++		MIDR_ALL_VERSIONS(MIDR_AMPERE1),
++		MIDR_ALL_VERSIONS(MIDR_AMPERE1A),
+ 		{}
+ 	};
  
--	/* Mask out upper 12 bit of addi */
--	addi_insn_mask = 0x000fffff;
--
- 	lui_insn = (u32)le16_to_cpu(lui_parcel[0]) | (u32)le16_to_cpu(lui_parcel[1]) << 16;
- 	addi_insn = (u32)le16_to_cpu(addi_parcel[0]) | (u32)le16_to_cpu(addi_parcel[1]) << 16;
- 
-@@ -195,6 +192,15 @@ static inline void __runtime_fixup_32(__le16 *lui_parcel, __le16 *addi_parcel, u
- 		/* replace upper 20 bits of lui with upper immediate */
- 		lui_insn &= 0x00000fff;
- 		lui_insn |= upper_immediate & 0xfffff000;
-+
-+		if (lower_immediate & 0x00000fff) {
-+			/* replace upper 12 bits of addi with lower 12 bits of val */
-+			addi_insn &= 0x000fffff;
-+			addi_insn |= (lower_immediate & 0x00000fff) << 20;
-+		} else {
-+			/* replace addi with nop if lower_immediate is empty */
-+			addi_insn = RISCV_INSN_NOP4;
-+		}
- 	} else {
- 		/* replace lui with nop if immediate is small enough to fit in addi */
- 		lui_insn = RISCV_INSN_NOP4;
-@@ -203,16 +209,9 @@ static inline void __runtime_fixup_32(__le16 *lui_parcel, __le16 *addi_parcel, u
- 		 * is performed by adding with the x0 register. Setting rs to
- 		 * zero with the following mask will accomplish this goal.
- 		 */
--		addi_insn_mask &= 0x07fff;
--	}
--
--	if (lower_immediate & 0x00000fff) {
-+		addi_insn &= 0x07fff;
- 		/* replace upper 12 bits of addi with lower 12 bits of val */
--		addi_insn &= addi_insn_mask;
- 		addi_insn |= (lower_immediate & 0x00000fff) << 20;
--	} else {
--		/* replace addi with nop if lower_immediate is empty */
--		addi_insn = RISCV_INSN_NOP4;
- 	}
- 
- 	addi_res = cpu_to_le32(addi_insn);
 -- 
-2.43.0
-
-Let me know what you think!
-
-- Charlie
+2.48.1
 
