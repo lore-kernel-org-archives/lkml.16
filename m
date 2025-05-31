@@ -1,63 +1,63 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F2A723D2B5;
-	Sat, 31 May 2025 10:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4982A23F405;
+	Sat, 31 May 2025 10:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748686407; cv=none; b=frwrSn82fMpBhSoF4SJ0/58PAQxw5kCw6krHxXp3c4nNQcX+Tq4k30nruw0CMqpRWxtQ597VP+3x75RGlF7hBsegNHk9U50uAgLL8whF69Qnn2EK+jXM2BekAIHW9M28VZindGurzv5UXvtWWfJAx81Y6a+UUy0Zn1aQbY+SgHY=
+	t=1748686409; cv=none; b=aXswev9tVTF0uoYNGmR7WXeTcRCBnht+/sHomYSI9bnZLEe14zJ4z6GJfBMLNY9dYRTq2mof04XpruJyC1TT6GCznDPqA1tdJRapy5UCfhZV4KDEJu4ZFhBYsM71P1Qzi1WXqX/KVogXdquW/T6Y4cLmwT2VcUcl9laFoSZRyyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748686407; c=relaxed/simple;
-	bh=UPogUaLI9GrsYx9+mRcPUzXyxH5KbPYf6iaCZrW/0jM=;
+	s=arc-20240116; t=1748686409; c=relaxed/simple;
+	bh=UpNy+T/jEeXU+1/iDHTBtU2p5viCTPkkNk3fmI9mJGc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ARITbzg9duGIX+Ou43eG3Ea8aOC7JBnJT1J93dj8fNtT26VYai8Mf/qal3tWaAi93N/x3z0qTWSi3ovFmC7s004JvprRilSEtRCIvWFakPw3sLRRwkHO+i1anT8Mztw1yws1hXZviDIsttihGe2jtGNr3jcv0s8E/CzXYMbJKs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gwcmad6X; arc=none smtp.client-ip=209.85.128.50
+	 MIME-Version:Content-Type; b=q+M7QC5ypCxXHCIxQQ4U04VN+8Vgy0dwZ8McCWykApu16BpYnJIzp7Z8oJjdTbc7R0kXjbLN4jNAW1tM1SuSp1JfvXMqOhMYobUsYxYI7IIRnr1L2un55aUnRN1Y1NeEgY3am0q33x/2Xv2/Cshy4VvWOUAV+oa5yxHNvQ8IUt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N2E846Cn; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gwcmad6X"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-451d3f72391so225495e9.3;
-        Sat, 31 May 2025 03:13:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N2E846Cn"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4508287895dso21790455e9.1;
+        Sat, 31 May 2025 03:13:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748686404; x=1749291204; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748686407; x=1749291207; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zFjP+Zg2G7kOQyTgmLTCQiSpHEqYR0UFFWfR0NRaGZ8=;
-        b=Gwcmad6XjjRsW14e/rITfMYfuN2ph3Jc/E7isE+JS0oqcuftMbpI11Hv6VQhS628+K
-         KQOngNrk13AQL1TnNJB2qL9pXkax47rdyDuLkRstGRhW0V2CSulrHFgeeFly24504jU8
-         gL4jk3XcVd9W/8uimcXX0x2h/v1DeHHc6JGNAW5H2V+ooXJWUjdtlv8GFU2oaCAXAMYH
-         qwcqXGji28TPTIxlpcKb80oTRSu+mWCFYKZzA6r8q/eH+RPvAFGPYjxuM+78K4QspE5X
-         n/RFdTxykJ1QJ/UTd/iubFD/jr2XCMHpi/5cfb3C3iADH3lpiAc3Oqx2S/TgfTZdCF26
-         7r+Q==
+        bh=/UR8qDTsnmdHS6jO91Tr00ab8YJ0mbEjDWTOADy+HJM=;
+        b=N2E846CnP+xfAb1q9MHYWY/VdOlKwVJSq7TUYJIBXebcq+Tj6UrMOAvLBJDyRqx2Y9
+         XwIxEbqsrZ8u7hrwr6/UtSJWHdnVjpX2bpRFwzU6TkvO/yHwH6SK31RYoctcDmgKkgfl
+         BBjmqtCGRaBDTLaRmCQRjtZdH+mrAZaGr5msjoRfiSuQyRcKl6z6/3FHi3HWnf7Gb+fo
+         HFoi6RNyOhETwv+96Gk7p02fDOKGmVfKM5cN9utl0P1YCh5XJsII2m4zCLFd91MBOf7w
+         pCIVQecIXl9qMfOJDCnVgyGBSVldQ+qXrOYR5YcNNeu9MUMMeyYbZutBxx7pAUEO6y6o
+         mAUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748686404; x=1749291204;
+        d=1e100.net; s=20230601; t=1748686407; x=1749291207;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zFjP+Zg2G7kOQyTgmLTCQiSpHEqYR0UFFWfR0NRaGZ8=;
-        b=nr9qY339rAb43xUrzVcQB/XJIwfv5M5mV3Tb+2CaryhlwW9Nq/uQs4p6ulnVkkUnDW
-         WLCVdA5m/zVygWqkTyT+UJ4+meshpUtISabRGX6jBoMPYqoUguvwUx8t/vU7yxBGsu2L
-         BkYhCaANSwQcMahWeAkbQlWbN7UIqq+2L73Te4pPfOlX2gF7cK0h7LWtYYjLtUbuPenc
-         +1JrM6IVGO1bw/iimp97BgkbeJeSitAmCTusQCoi68Y0O0690Xxc+1O+7IDtrh07oRt9
-         m5A16QQWqjY/3MnZj0nkPJmMvhgFWHeNyMaDMhJh6KiKRX/pqh8lXwvAuAdSNpY+riLZ
-         /SSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUmviKpqpCvoTx0CJjSuPvKaqTU3XSwVXgeaJB8+SCuBMCYuoV4jUod6P8YNKEXK/tQxRC+5pKTz827+PQ=@vger.kernel.org, AJvYcCW8WBRVYv2etEGDOVzzlAZ3t8PfYXrk+NCRKEOfWJ60WnqsZv7XNR/TXcPz7cdmNMdcoiUu1XNp@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOKsVNS+si6klrxR3Qm08WoVmHo3lQlRymknks1ynKlzsY6KHr
-	4XYU0RxdNXpyj2PsDnfanrpfuoymVXjzbfprb5yM51fSy/e27f3e3wS95CJ5+g==
-X-Gm-Gg: ASbGnctls9CaG1MDsUISsQ7kSORftadx4eb+YbVrFVQSnUf1SQfTnnUk6GRq0VioLWx
-	wfV5fM4Gb3Yio3r4heVPMRyqNr/6Z0JaoBUqF6ch1xbopFG8e8+A97EYA0JRr5alhW6WjdoNofg
-	8vXdgeaK4Lnc3pWbYXNFPHN+EnLpQ7SHoH4/fYtdphuG9HXIRJ3DvuZxxTv6wvtuffCjfWFEitT
-	t4qM5Hn2H1+TNIG80reHo/CRyjl/p7RWTBM557VDcj5R7Nxt6Ugbh6nHC0K2q6gNTYJ9DYIetTu
-	jyvMVAsPvZPRieXutR3V9a8L9+hWKUNuSBErGQeRfysgW+/69v9qZVcdDrhXg4AXzNFnu4X50l9
-	J4ckQ3+UeaMzonleLgWX5j4ROz9ql9TyoPz+gJIpKj5YnLNZIeh6r
-X-Google-Smtp-Source: AGHT+IEOdLROqZFhvh5vTjcQwbtV3FTLF/vN2D5rahFk2RZc1AswBX2qrnbhU0CeB+VezLLn39NS5g==
-X-Received: by 2002:a05:600c:8206:b0:441:d437:e3b8 with SMTP id 5b1f17b1804b1-450d8867115mr44456465e9.23.1748686404015;
-        Sat, 31 May 2025 03:13:24 -0700 (PDT)
+        bh=/UR8qDTsnmdHS6jO91Tr00ab8YJ0mbEjDWTOADy+HJM=;
+        b=hT36wL9L9E+ullw1lwJYax+YAPHLvtWrPW6J0HUgcSIyZZjwlsB7MkrSNJiTI0iRYZ
+         3H/Hf3UCmdnFDO+ueuRjzJRooGE/Am00HVLEdw/oej+gY/qsasG7PjhPY4IOh4CySECz
+         hh5UgYbE+S0PIjLfW++B+0G9EnFtvtsTVZRuDDCH7eyhqa5Nnfk3nPGuGB1dSD14HygB
+         Mq76MXJdr4bKiLJfWRAp5sPdttP4QaoRT1Objzzt4a34jmcCryxiBKOLpZnAV8D7T9DL
+         fM6b139huoEVBLu9emMG9NAQ5uwTr2Ab+Ztjq/U2OvpUIlwGgGFUPcV1yYda+lsR6mpu
+         HQYg==
+X-Forwarded-Encrypted: i=1; AJvYcCUvYIpxdWXHwjNzpoqzcFMK9zwxgMP5p62xVTZxDp2u1/6foDe5+EA4qdWrd3lFG0KfNcQCtPaw@vger.kernel.org, AJvYcCW+Mps6qb7/7x/Q8TspWSsJvSHdj8vhVvvsFqbVxD4qa2/CdYmNWMIJs2qen2ZGHdZDJTPHVsRUJzdWcqw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+TRjau3zQqNIbQJ/5S+YRkgMqh98GW2Hj5m4Fv/LTr+M+lOzS
+	BI+XbeMFf/dA1Ze8O8nB78If05OKI5PLUXlgkJZBqCzisBszTAnLR8K+
+X-Gm-Gg: ASbGnctiq6qyOuBUvR/dlaRyfz4pAkb7l+ooAV40vTT6Kze3BH8FGuBLwTlRTuhYD+O
+	mn0DnfxYzEBgpfsHc1E3EPP91dIEJr00WFVGt6rpfIXk7YmyTmVGkNN7zhHEyYS7ZMu49W70oG6
+	ssgtrickSY5l3+gU+/ybqmmGLiahTHwITn8pNR46isiS8jAf4QFw5qqHgnfaRfi5AOuy3H4A9aq
+	xQ966kCSScICIvoiVHIBUfc5P5eEa0M7dfQ0hD8uGqbqEvRm1xK+1OwzPSV/66PIm54xU7sLXFD
+	73gbgv5PR4QIOhAL5HiNMtBLKe+2JQhUxUjiwGQXq/8NTzQ0hRtMJK20PBbieuSRqJG70Cnh7D4
+	ZpdTqsM/72gUm5XeEvZY8D2zO0QP+sDl6Pz2AVxQgn8dWIPKHicgS
+X-Google-Smtp-Source: AGHT+IHu7dyYTJKj8oSLt/gG35ZMcoa2d/i2amrHpzYkdvrMMnM30Dnc/vOgmcQTBNRJdZD/kUDOXw==
+X-Received: by 2002:adf:b356:0:b0:3a4:e238:6496 with SMTP id ffacd0b85a97d-3a4eedb8aabmr6875064f8f.18.1748686406581;
+        Sat, 31 May 2025 03:13:26 -0700 (PDT)
 Received: from skynet.lan (2a02-9142-4580-1200-0000-0000-0000-0008.red-2a02-914.customerbaf.ipv6.rima-tde.net. [2a02:9142:4580:1200::8])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d8000d5dsm44500205e9.26.2025.05.31.03.13.22
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d8000d5dsm44500205e9.26.2025.05.31.03.13.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 May 2025 03:13:23 -0700 (PDT)
+        Sat, 31 May 2025 03:13:26 -0700 (PDT)
 From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
 To: jonas.gorski@gmail.com,
 	florian.fainelli@broadcom.com,
@@ -72,9 +72,9 @@ To: jonas.gorski@gmail.com,
 	linux-kernel@vger.kernel.org,
 	dgcbueu@gmail.com
 Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
-Subject: [RFC PATCH 07/10] net: dsa: b53: prevent GMII_PORT_OVERRIDE_CTRL access on BCM5325
-Date: Sat, 31 May 2025 12:13:05 +0200
-Message-Id: <20250531101308.155757-8-noltari@gmail.com>
+Subject: [RFC PATCH 09/10] net: dsa: b53: fix b53_imp_vlan_setup for BCM5325
+Date: Sat, 31 May 2025 12:13:07 +0200
+Message-Id: <20250531101308.155757-10-noltari@gmail.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250531101308.155757-1-noltari@gmail.com>
 References: <20250531101308.155757-1-noltari@gmail.com>
@@ -87,76 +87,30 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-BCM5325 doesn't implement GMII_PORT_OVERRIDE_CTRL register so we should
-avoid reading or writing it.
-PORT_OVERRIDE_RX_FLOW and PORT_OVERRIDE_TX_FLOW aren't defined on BCM5325
-and we should use PORT_OVERRIDE_LP_FLOW_25 instead.
+CPU port should be B53_CPU_PORT instead of B53_CPU_PORT_25 for
+B53_PVLAN_PORT_MASK register.
 
-Fixes: 5e004460f874 ("net: dsa: b53: Add helper to set link parameters")
+Fixes: ff39c2d68679 ("net: dsa: b53: Add bridge support")
 Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 ---
- drivers/net/dsa/b53/b53_common.c | 21 +++++++++++++++++----
- drivers/net/dsa/b53/b53_regs.h   |  1 +
- 2 files changed, 18 insertions(+), 4 deletions(-)
+ drivers/net/dsa/b53/b53_common.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
-index fd0752100df8..387e1e7ec749 100644
+index d5216ea2c984..802020eaea44 100644
 --- a/drivers/net/dsa/b53/b53_common.c
 +++ b/drivers/net/dsa/b53/b53_common.c
-@@ -1278,6 +1278,8 @@ static void b53_force_link(struct b53_device *dev, int port, int link)
- 	if (port == dev->imp_port) {
- 		off = B53_PORT_OVERRIDE_CTRL;
- 		val = PORT_OVERRIDE_EN;
-+	} else if (is5325(dev)) {
-+		return;
- 	} else {
- 		off = B53_GMII_PORT_OVERRIDE_CTRL(port);
- 		val = GMII_PO_EN;
-@@ -1302,6 +1304,8 @@ static void b53_force_port_config(struct b53_device *dev, int port,
- 	if (port == dev->imp_port) {
- 		off = B53_PORT_OVERRIDE_CTRL;
- 		val = PORT_OVERRIDE_EN;
-+	} else if (is5325(dev)) {
-+		return;
- 	} else {
- 		off = B53_GMII_PORT_OVERRIDE_CTRL(port);
- 		val = GMII_PO_EN;
-@@ -1332,10 +1336,19 @@ static void b53_force_port_config(struct b53_device *dev, int port,
- 		return;
- 	}
+@@ -543,6 +543,10 @@ void b53_imp_vlan_setup(struct dsa_switch *ds, int cpu_port)
+ 	unsigned int i;
+ 	u16 pvlan;
  
--	if (rx_pause)
--		reg |= PORT_OVERRIDE_RX_FLOW;
--	if (tx_pause)
--		reg |= PORT_OVERRIDE_TX_FLOW;
-+	if (rx_pause) {
-+		if (is5325(dev))
-+			reg |= PORT_OVERRIDE_LP_FLOW_25;
-+		else
-+			reg |= PORT_OVERRIDE_RX_FLOW;
-+	}
++	/* BCM5325 CPU port is at 8 */
++	if ((is5325(dev) || is5365(dev)) && cpu_port == B53_CPU_PORT_25)
++		cpu_port = B53_CPU_PORT;
 +
-+	if (tx_pause) {
-+		if (is5325(dev))
-+			reg |= PORT_OVERRIDE_LP_FLOW_25;
-+		else
-+			reg |= PORT_OVERRIDE_TX_FLOW;
-+	}
- 
- 	b53_write8(dev, B53_CTRL_PAGE, off, reg);
- }
-diff --git a/drivers/net/dsa/b53/b53_regs.h b/drivers/net/dsa/b53/b53_regs.h
-index 896684d7f594..ab15f36a135a 100644
---- a/drivers/net/dsa/b53/b53_regs.h
-+++ b/drivers/net/dsa/b53/b53_regs.h
-@@ -95,6 +95,7 @@
- #define   PORT_OVERRIDE_SPEED_10M	(0 << PORT_OVERRIDE_SPEED_S)
- #define   PORT_OVERRIDE_SPEED_100M	(1 << PORT_OVERRIDE_SPEED_S)
- #define   PORT_OVERRIDE_SPEED_1000M	(2 << PORT_OVERRIDE_SPEED_S)
-+#define   PORT_OVERRIDE_LP_FLOW_25	BIT(3) /* BCM5325 only */
- #define   PORT_OVERRIDE_RV_MII_25	BIT(4) /* BCM5325 only */
- #define   PORT_OVERRIDE_RX_FLOW		BIT(4)
- #define   PORT_OVERRIDE_TX_FLOW		BIT(5)
+ 	/* Enable the IMP port to be in the same VLAN as the other ports
+ 	 * on a per-port basis such that we only have Port i and IMP in
+ 	 * the same VLAN.
 -- 
 2.39.5
 
