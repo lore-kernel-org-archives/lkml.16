@@ -1,116 +1,160 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522FA237163
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 12:09:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676627260A;
+	Sat, 31 May 2025 12:10:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748693368; cv=none; b=VDoVUtaU/XGdtS8MGxkaAba3k4onaqaR15TX/RkJqLJ+2tcRbxbjBD7KB7w36xAowbGCfctOInW2B4pd+BoEsdK+Gper3lQZCEnWTw94+cZcXtWxXI+ndVDe9yz1GJxIS16saUmm4677Oq6VZqZ899AGo5SPq6sZqmU3bzMde5M=
+	t=1748693413; cv=none; b=GFSyk/6GSSZbDreYTGZoDI3NtlL4cj3JDVJMEy83JOfLrzrosXK2utBZJn7Zn2FgNemafgnvTSpqAOTHx/ibNXH5aeZHe96hbvHPdjj8i1UIwQM47linSa0hTmV/pQkJkRbllNzG2iuDzw483P639xr7w+yNbLL6cDu+3xBj+wI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748693368; c=relaxed/simple;
-	bh=n7wWJCased/X6Q4yYoEfM4pu56HoohPkE1nQd/iu6QM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OMMyPkwJWT4qDTRCwxc1fkcPjYTcm8O425AFakfpOp3tr92F2NszYQPfWaBBqIybv23SUsfKpz66tIGMlzd/9ZKmFPbs6LiF4xtzyTh8Wsi4QorIo028A4pSlyzUbZVWdve318TJlCrXVC6ds4R7PXKmbWsnk24ciB0MViJybB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=Z78M1p4V; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1748693413; c=relaxed/simple;
+	bh=edR2Sg60IDTAJd9y49ifvck9u5o43rpFtj/a1phDKnU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=ZjPA19OqjzOwRHSlDjKxyMxVT22RsrmeNQBDfvSw7L3hND/H9NdvpTZet/IYa/hffo879SG96uXkdcLxEO04VakuTQQXTPfzVVsV7C+7fH5s2KRu5ELeF0Rqo8H5A4an3j0QQtg2dv+eVqXCKaaadiFMuaUUX2Cd5cuua0tSKTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s2lo5/yV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="Z78M1p4V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=n7wW
-	JCased/X6Q4yYoEfM4pu56HoohPkE1nQd/iu6QM=; b=Z78M1p4VzQPxgoadfkJS
-	IzsLN9NTqJMqTMHnHBLngmDg7fu6EDcNFAJGFkTsCIILhDGk+MlB+S94//xHll3Z
-	0nBkQGx1JlLjdrr3bcNo2fhiugFb52VYfI0CmYoQuTs5rmI4UbOkUBHvoxVfYvm3
-	Xk+s3vUHQlTgrGby7Sf6ZgN7884+mDKSoPbYJCrM+ekyh71DRxQ/6iH8V4bXz5d/
-	mNrE78nzeuGViqowtse+/ntdO/GLkwQTtfJ85ioPuMvyN9B63NQ/qkBjk/UBK3ek
-	Fu5QK6dOo7odpDaql+hsmMzPEBiJrPozUFi/RejAbtd/yhdDlpUrIK1EtlvGR0IK
-	NQ==
-Received: (qmail 2657626 invoked from network); 31 May 2025 14:09:19 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 31 May 2025 14:09:19 +0200
-X-UD-Smtp-Session: l3s3148p1@Mdh4Zm02biVtKPEF
-Date: Sat, 31 May 2025 14:09:17 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Chris Brandt <chris.brandt@renesas.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 3/6] dt-bindings: i2c: renesas,riic: Document RZ/N2H
- support
-Message-ID: <aDrxbYDvyWXkXQlE@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Chris Brandt <chris.brandt@renesas.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250530143135.366417-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250530143135.366417-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s2lo5/yV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3519C4CEE3;
+	Sat, 31 May 2025 12:10:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748693412;
+	bh=edR2Sg60IDTAJd9y49ifvck9u5o43rpFtj/a1phDKnU=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=s2lo5/yV8L1MdzxV6i+KTg7CjrN6u6q7afEoin8eBHaZR+Pz33o1zZOiJ5H0ERjQ5
+	 hHO3uJ7kbzA+9dww4dmY+oJqgpCrG7IVXVHZh6tEnTXiIjYhURhbq3+lMvYLfLWkn+
+	 0s73VHRnC5yhFWAljLcsF6g50vV96vbwdtxscfg1ukSdrAjACY2m9Vk1OLW4mOOhKu
+	 D5/yobhDgcesmRPZCPMjkOEgWIQjImPvdx8dorlaDz4rfNl9/jPE7/GOyDWRni+//n
+	 KcYpXdcsMZshTWURyQkC5GYUDjllGkOwXyrPi9L1nhjhSNbeH1YFRW92safsN2rj9N
+	 CYkCXOFUNmnrA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bBxDD11VtxK9pPgH"
-Content-Disposition: inline
-In-Reply-To: <20250530143135.366417-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-
-
---bBxDD11VtxK9pPgH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 31 May 2025 14:10:08 +0200
+Message-Id: <DAAC2TIAOAEY.16STTUX7D2UNR@kernel.org>
+Cc: <gregkh@linuxfoundation.org>, <rafael@kernel.org>, <ojeda@kernel.org>,
+ <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
+ <bjorn3_gh@protonmail.com>, <benno.lossin@proton.me>,
+ <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
+ <chrisi.schrefl@gmail.com>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 6/7] rust: miscdevice: expose the parent device as
+ &Device<Bound>
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250530142447.166524-1-dakr@kernel.org>
+ <20250530142447.166524-7-dakr@kernel.org>
+ <DAA7CJOUJPNL.F7UH9KD8JANF@kernel.org> <aDreGUcvyR4kjMGl@pollux>
+In-Reply-To: <aDreGUcvyR4kjMGl@pollux>
 
-On Fri, May 30, 2025 at 03:31:32PM +0100, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->=20
-> Document support for the I2C Bus Interface (RIIC) found on the Renesas
-> RZ/N2H (R9A09G087) SoC. The RIIC IP on this SoC is identical to that on
-> the RZ/T2H SoC so `renesas,riic-r9a09g077` will be used as a fallback
-> compatible.
->=20
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Sat May 31, 2025 at 12:46 PM CEST, Danilo Krummrich wrote:
+> On Sat, May 31, 2025 at 10:27:44AM +0200, Benno Lossin wrote:
+>> On Fri May 30, 2025 at 4:24 PM CEST, Danilo Krummrich wrote:
+>> > @@ -227,11 +229,21 @@ fn drop(self: Pin<&mut Self>) {
+>> >      }
+>> >  }
+>> > =20
+>> > +/// The arguments passed to the file operation callbacks of a [`MiscD=
+eviceRegistration`].
+>> > +pub struct MiscArgs<'a, T: MiscDevice> {
+>> > +    /// The [`Device`] representation of the `struct miscdevice`.
+>> > +    pub device: &'a Device,
+>> > +    /// The parent [`Device`] of [`Self::device`].
+>> > +    pub parent: Option<&'a Device<Bound>>,
+>> > +    /// The `RegistrationData` passed to [`MiscDeviceRegistration::re=
+gister`].
+>> > +    pub data: &'a T::RegistrationData,
+>>=20
+>> Here I would also just use `T`, remove the `MiscDevice` bound and then
+>> use `MiscArgs<'_, Self::RegistrationData>` below.
+>
+> It has the disadvantage that the documentation of the `data` field above =
+needs
+> to be much more vague, since we can't claim that it's the `RegistrationDa=
+ta`
+> passed to `MiscDeviceRegistration::register` anymore -- given that, I'm n=
+ot sure
+> it's worth changing.
 
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Yeah that's not ideal... Then keep it this way.
 
+>> > +}
+>> > +
+>> >  /// Trait implemented by the private data of an open misc device.
+>> >  #[vtable]
+>> >  pub trait MiscDevice: Sized {
+>> >      /// What kind of pointer should `Self` be wrapped in.
+>> > -    type Ptr: ForeignOwnable + Send + Sync;
+>> > +    type Ptr: Send + Sync;
+>>=20
+>> There is no info about this change in the commit message. Why are we
+>> changing this? This seems a bit orthogonal to the other change, maybe do
+>> it in a separate patch?
+>
+> It's a consequence of the implementation:
+>
+> A `Ptr` instance is created in the misc device's file operations open() c=
+allback
+> and dropped in the fops release() callback.
+>
+> Previously, this was stored in the private data pointer of the struct fil=
+e that
+> is passed for every file operation in open().
+>
+> Also note that when open is called the private data pointer in a struct f=
+ile
+> points to the corresponding struct miscdevice.
+>
+> With this patch, we keep the pointer to the struct miscdevice in the priv=
+ate
+> data pointer of struct file, but instead store the `Ptr` instance in
+> `RawDeviceRegistration::private`.
+>
+> Subsequently, ForeignOwnable is not a required trait anymore.
 
---bBxDD11VtxK9pPgH
-Content-Type: application/pgp-signature; name="signature.asc"
+That's true, but it also wouldn't hurt to keep it for this patch and do
+the change in a separate one. Or mention it in the commit message :)
 
------BEGIN PGP SIGNATURE-----
+> We need this in order to keep access to the `RawDeviceRegistration` throu=
+ghout
+> file operations to be able to pass the misc device's parent as &Device<Bo=
+und>
+> through the `MiscArgs` above.
+>
+>> Also `Ptr` doesn't make much sense for the name, since now that the
+>> `ForeignOwnable` bound is gone, I could set this to `Self` and then have
+>> access to `&Self` in the callbacks.
+>
+> We can't make it `Self`, it might still be some pointer type, require pin=
+-init,
+> etc. So, it has to be a generic type.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmg68W0ACgkQFA3kzBSg
-KbYUZBAAjdkeYP0JYQbYhVU+p2o9rq42ciltQR8VxNq5h2rVMh1DYf5TgXmTDPoF
-jrr6OB49bS8RM0O10t73VSFTrTlRcpI3QWwxeU7AB4rVCZNukaTMQpoOGjjJJuQL
-3aynlNVudceKVHJPws9RhTZh7u8ZnWzZ44wIvc4R3PDWgu8zEFCnmI4GiFYviddR
-lNrwpuPJnH7SMwPsNkYqIcDKFC2M1X7z3WVgYrwr3+wuvGGLY4SvDzkIgWw3eLja
-b9dtwFQl8AGINas3Je6jDhtRYe869SuerwO5n8SPmjmYneYZ4wvyLOOH0wqkdr7J
-+gaOBErHVLEjOPw8gFBeEEKOKczvGawzaYCgIIq0Nlb+oKEbIoZG41g8uYuAK5sQ
-H9WATkHbiq8u7cTGRolD5SN9QN69Nb/Dxj7aLH+x7gOA5NFzY6ItOKnP/k+RsH+C
-WyQk2BHwMOhp0QXofTIFhKbYCyvng7hpoG/kAHKNA+pX1VYeNq2/dhBZqHlbSC+l
-u4DKNT/9gIPWYR5kqHh2lH3nlL8ZOO5i31NRoOmb5GmvcPPzZIHnQt/dsLYBqt+/
-BoqixJ7SKWbvfLLLjsITmgMrPkvaLDiUrEW31S3C0jZDs6Y1XGg+drhATJS7BwF5
-LElu7HNimtV1mVPuExPYrt/5YcpB5pBVpbLLyX3hVx8x9T3MBLc=
-=GG8A
------END PGP SIGNATURE-----
+`MiscDevice::open` could return an `impl PinInit<Self, Error>` :)
 
---bBxDD11VtxK9pPgH--
+> But, I agree that we should not name it `Ptr`, probably should never have=
+ been
+> named `Ptr`, but `Data`, `Private` or similar.
+>
+>> Would that also make sense to use as a general change? So don't store
+>> `Self::Ptr`, but `Self` directly?
+>
+> I think it can't be `Self`, see above.
+
+The rust_misc_device example would still work if we changed this to
+`Self`. Now it's not a complicated user of the API and someone might
+want to store `Self` in an `Arc` and then store that as the private
+data, as the MiscDevice is also referenced from somewhere else. But I
+don't know if that is common or an intended use-case :)
+
+For simple use-cases however, I think that `Self` definitely is the
+right choice (as opposed to `Pin<KBox<Self>>` for example, as that has
+an extra allocation :)
+
+---
+Cheers,
+Benno
