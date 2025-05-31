@@ -1,89 +1,89 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D7523A563;
-	Sat, 31 May 2025 11:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F479238C2A
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 11:40:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748691560; cv=none; b=HycAevO7XXXDik+le+PdZ9cmj46GI3z38a/XbcXBs/LMSnfwjpOnIFjZC7IHACF3Rd0AXStZIQytzfcZXiBXGOzgPsHkOP6aMZdmLQSkR85KTOeYaX2nnsYOZ2ORFqWm6QyLS5qbXfPVwgqGvPXT477rSU7zRSSvhdi35zW2z6A=
+	t=1748691624; cv=none; b=E1pci2O4ryk8XV7PE6tD2LH23vfzAlnotZJjufq1oi6IaeXjiRCtuNzK8ko27K/LrBdsrzLaqCGC22CkCA620qBzJKaZcgTitbPH8wfBdqX5qc/RUmJ60EbTKnfEmqcD9su1Ukilyb3fxmpdsiuOt/uIJmGB8GmzJp26I7ISuLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748691560; c=relaxed/simple;
-	bh=erN5D2e7bDlphwtOAn+dkHFnD3yn45/VsLbboj6zrxI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kKoGeiuOT9/Ay44rg+Ef498uHhUaCXlydPqbXZp4FJNQjeNZP3A0ZBUz8DFVyKF/6v07EOiqEwv/hl6ezU0UE77xAAzAVOd/oq/BcJoIL1WD6ph2z2glYmRD+0ZYHHth54IMNjK/WTAB9JU0CIvVlqI89Eot25Rucz2KZGPaZmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=coKGkj2E; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1748691624; c=relaxed/simple;
+	bh=QmBowPy2XocnfyrqUSljY0nK1UfcMM28v5fKuvkAQHo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jq60WC8jrcIiXAIq3XwZZ3isNSzOr5lBhwBbU2BXCVoZu6zmRI+hgHv98QVvesLsC+hhNdiFH9f3AK1CIw05FzoCZ4j7p0i2X1GCjRK4ShXn2fXV8zvpKKwZEtcOqi6V/+nbR7pOujSAi/e3SlBpXfwsdBcv/t3r+ahUpmqco8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de; spf=pass smtp.mailfrom=t-8ch.de; dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b=fSI6RidY; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-8ch.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="coKGkj2E"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id C383D25DDA;
-	Sat, 31 May 2025 13:39:10 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id d_qvBswCBNzt; Sat, 31 May 2025 13:39:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1748691550; bh=erN5D2e7bDlphwtOAn+dkHFnD3yn45/VsLbboj6zrxI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=coKGkj2EGAeXZzXzQthnKgSaBjMzg9y7BE4++nvKXRygjTM46d95x+NEpCDSJybNP
-	 eXFrIcFlVCD4d8rOBjWZDgpZRfGW4DK64ixxiszauNvfwklr2cQ120uEFh0QtcIt25
-	 EjyKZ9IbZRZ1wJHZ4GXhU4ezg6OkHWn9pmlg0W4nIciDWm81fGhQeGJhkK8kimt4mU
-	 HxaU/jUvl9aQkCCHZ/MhdsV8ojzcvDC+v8dN8KxzVzN9aG798humwNhAX1x+iyQ/B4
-	 Q2oKPP9OiOWVJjpT1OZi1ObEhZokJ0VvbrHUtQgjT627Q6FOuMWSzVXd5W4VzChK4u
-	 SByg+BrwAaiVg==
-From: Yao Zi <ziyao@disroot.org>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>,
-	Yao Zi <ziyao@disroot.org>,
-	stable@vger.kernel.org
-Subject: [PATCH 1/2] platform/loongarch: laptop: Get brightness setting from EC on probe
-Date: Sat, 31 May 2025 11:38:50 +0000
-Message-ID: <20250531113851.21426-2-ziyao@disroot.org>
-In-Reply-To: <20250531113851.21426-1-ziyao@disroot.org>
-References: <20250531113851.21426-1-ziyao@disroot.org>
+	dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b="fSI6RidY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
+	t=1748691613; bh=QmBowPy2XocnfyrqUSljY0nK1UfcMM28v5fKuvkAQHo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fSI6RidYQ1iOYn1EHMbWUgNl4KFV3576+zpMGLfy+nAbpGB+5WyV3WuWFHUCCihMh
+	 GSeovPhYQmXKjKBjcuQcdzigFnUwxf70Rq6DTMAyO542ln6y/qI7IgFmrbGR+DWmQq
+	 LrRkjENCJyxS6NMY2Lm5iU/rnk71604f+LcIW6q8=
+Date: Sat, 31 May 2025 13:40:13 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] Driver core changes for 6.16-rc1
+Message-ID: <39eaf3d6-3c69-4e06-a61e-cccc7aad578d@t-8ch.de>
+References: <aDcyRMojWUbAllVX@kroah.com>
+ <35e4b33f-d9e4-41d6-8a47-644fda5b1b7f@t-8ch.de>
+ <2025052822-cavity-mortality-07d2@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <2025052822-cavity-mortality-07d2@gregkh>
 
-Previously 1 is unconditionally taken as current brightness value. This
-causes problems since it's required to restore brightness settings on
-resumption, and a value that doesn't match EC's state before suspension
-will cause surprising changes of screen brightness.
+(trimmed the CC-list)
 
-Let's get brightness from EC and take it as the current brightness on
-probe of the laptop driver to avoid the surprising behavior. Tested on
-TongFang L860-T2 3A5000 laptop.
+Hi Greg,
 
-Cc: stable@vger.kernel.org
-Fixes: 6246ed09111f ("LoongArch: Add ACPI-based generic laptop driver")
-Signed-off-by: Yao Zi <ziyao@disroot.org>
----
- drivers/platform/loongarch/loongson-laptop.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 2025-05-28 18:29:20+0200, Greg KH wrote:
+> On Wed, May 28, 2025 at 06:16:21PM +0200, Thomas Weißschuh wrote:
+> > On 2025-05-28 17:56:52+0200, Greg KH wrote:
 
-diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/platform/loongarch/loongson-laptop.c
-index 99203584949d..828bd62e3596 100644
---- a/drivers/platform/loongarch/loongson-laptop.c
-+++ b/drivers/platform/loongarch/loongson-laptop.c
-@@ -392,7 +392,7 @@ static int laptop_backlight_register(void)
- 	if (!acpi_evalf(hotkey_handle, &status, "ECLL", "d"))
- 		return -EIO;
- 
--	props.brightness = 1;
-+	props.brightness = ec_get_brightness();
- 	props.max_brightness = status;
- 	props.type = BACKLIGHT_PLATFORM;
- 
--- 
-2.49.0
+<snip>
 
+> > > Here are the driver core / kernfs changes for 6.16-rc1.
+> > > 
+> > > Not a huge number of changes this development cycle, here's the summary
+> > > of what is included in here:
+> > >   - kernfs locking tweaks, pushing some global locks down into a per-fs
+> > >     image lock
+> > >   - rust driver core and pci device bindings added for new features.
+> > 
+> > >   - sysfs const work for bin_attributes.  This churn should now be
+> > >     completed for those types of attributes
+> > 
+> > This is missing the switch away and removal of the transitional
+> > struct members, "read_new", "write_new" and "bin_attrs_new".
+> > These are the actually churny changes.
+
+<snip>
+
+> > Do you want me to resubmit it to you? Now or shortly before the end of
+> > the merge window?
+> 
+> Ah, yes, those are still in my "to apply after -rc1 is out" queue, sorry
+> about that.  And yes, I'll be glad to take updated versions as things
+> have changed.
+
+In case you don't see patches submitted during the merge window,
+here is the updated series:
+
+https://lore.kernel.org/lkml/20250530-sysfs-const-bin_attr-final-v3-0-724bfcf05b99@weissschuh.net/
+
+Based on linux-next to make sure that all changes that could go into the
+merge window are accounted for.
+
+
+Thomas
