@@ -1,133 +1,148 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C2D71624DF
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 18:48:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82DC21A288;
+	Sat, 31 May 2025 19:16:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748717328; cv=none; b=kXccMGytgZHqptbGDpVDmFxRh+TPtalYZwP/P9Obzx9uBLuDz00Bc3FzbjZ+4fB1fRGLntbP2cTLQEJfOOnNgg9099CI7O750WDrz5j0TzIR82pvc9Wv2ZtwFnqdfHIwkbf2BLnM7C5cxBBrBC5b7GZniJ7xfquXmvLevCtqKKw=
+	t=1748718987; cv=none; b=X9h4UMa4Lz5rNEVLzVBTX8MxVJVJtcdYl7fPzAWF3Bfo2GOZAt0hDNXtzy6ZdjDkzitwgC1/gsi1r4E+PsPXX5tOP9uDOe9Hu3wZXffyTdUv9EenBs0JK5xI/SCBYyN8YEJaRey8T56VujSwSvGlzq7yxcg/DWqJ8JvDkfjNaQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748717328; c=relaxed/simple;
-	bh=twnMRSAjtTxRsTLOV3TBRxjz+geOQMUR7QVp+z8lBDY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hv2vdTHugPWXxZsRlcH3cHRmW/4jsl/Yyz/LR4MgRUaZKT41nSwil7iWFTREbBl3HYB3Y2j7R9gM2eGG7VMcykOTkTge30K+d09VkxLImpV9OcucAWWdb6RbHW0Zq05eu/IxOnFyLVMQipS9yoZaXilpMXwKLucQGFkNCI1UCl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=JnZK+hfy; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1748718987; c=relaxed/simple;
+	bh=9z5f32YIThyjeERpUHPDhcWPSC16ORf2Hbk+NhjEWKk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Iw4CGlMHv3o0sMosza7m+7bVmKRgKiZ3wkVADxjcNpIJF1NQ4InkCYyUWmOtMlqpKU1Cl7Ps0BNFyfWrGDXTD6tKyko3yLNTnDEtFyBl/5/pM4AkoEP76fOyUDcCdsjaFXbe6TQPofVVSnjt9v/XS31KNyTbotUMqMUYv7b2vFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m5PpyCzh; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="JnZK+hfy"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54VF97QF009209
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 18:48:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	fq6UVpWTFma51ctoNBqE7AuMMwmya04U5DV/dQ3iAq8=; b=JnZK+hfyv1XyuO4x
-	5QKELThanYZBqy59WIWL1V8nS2NJ147LveHw+6bJ7QutoL+kEqsqNzaleLRzpqFm
-	/oAepbXDPLK5Xl6gHfRVnGij5W2VJn1QPY0TUmF2s0rlm1lpzVb4nqtwSLndkvYg
-	B3hWGLJfteLFuEjt0ZJ65U7FfiMJsd7WZHOushh1sup2Ck/eB2rG0jsPgDZDkhys
-	y2iZLOkitIUEvMUzFzhZJqmKRBWF+BL5pRlSxvI63EESPg5T3l+pVaj2WU2G/U4w
-	0LbyDISVPzIbsADafH6OooG/BcyLRcEpggYdCHrmWGrWrDMiXWOUxdKx9wFq1nMf
-	jyOfHA==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46ytkw97e3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 18:48:46 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4a42d2df3b5so5930771cf.2
-        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 11:48:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m5PpyCzh"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a4f78ebec8so1089290f8f.0;
+        Sat, 31 May 2025 12:16:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748718984; x=1749323784; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ba8Ewaax3skZGpn2w/AasFrW04rf1D6XoW4B0rxSXrM=;
+        b=m5PpyCzhZNOANKExZeXoesLzv30SxfXBNvyIH6efZv703QOAMJ3RGUjE6qp3LDSgUM
+         B4kiR9xUPiMcVrC5v/S9YKwnV9APchX+Djdx+a21SHqQlWWArp5ScMLuFDpF2uNccxus
+         QjibrQZ7P7pibrLZmkxcMnU+wVDU3h6bqTm1R/tNkXOhc1IzGKPw/75Xjtd7kQGeHy6/
+         3e5/vtDc0PJu+rqlwUWm86LWbL5Q76CRs4aE1nmRXaRinHNkvoXI2VcVJhw+CjSnfTLj
+         wvC7NvvosqpZs4hoQ+Hudc4oCouG3B3WSSs2s7V43Uz7DPVI7KSj6xxMsboYst4vWAss
+         T/lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748717311; x=1749322111;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1748718984; x=1749323784;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fq6UVpWTFma51ctoNBqE7AuMMwmya04U5DV/dQ3iAq8=;
-        b=qcxV/5a3fQoWVu8LaZP3/Jxul+6EtV3mNA5HWhsJ08kLpmkDtozwHVaLLqu4vURs7N
-         6E/7XYHk+1s0x9raqr+dIGUUCcr3VKOnFl0h1DANFR81Gh7RkzdV5hITBESGCSxVFMRd
-         2VxTLes4MBa0GevrPE9oQSr3EONTKKAsl3Fh23a6FPWO/d8RMWj/D6BvP+SNZz382BTA
-         eY4wM4dRVH1z8OSp12PjkSajP2zRQMOdf7+K3B8ZhTMUKemhtI5nC0NOGQO58pBrokWs
-         fzWcw7f36HllQ52JaJun1wVnBmJVleL16wzYSTpGIp24UwLMnMopw5wBvkAQcAvl9Va7
-         EuIg==
-X-Gm-Message-State: AOJu0YyxO3pimSoHH4+7oMALqmBdAFERSu0D0hQfw0gE3bB2YQwSWy+/
-	SFyGH7LVyBSuJGzbfZDBoNoTTd25+SvJ+FPSIEmm4SHfxEa/LfgYa6eOOfXc2IFlj/tz6CWlA5r
-	PSpUxC8h8Sf00ODGKuErnBagFl26WbLjuFIp5l0bIHW5pJCDQdK6BzkffOL4W9t3pDfE=
-X-Gm-Gg: ASbGncv/CR9e726E9WvfixGFgUh9m+ZaLRMtXHll8sFNMTAkazMffodxpkgTgMUfCCc
-	3J/sOh0NgB4ijbF0v9RMGn13hiRd7AhJT7HTOtSdlorXGfGEcVjH9XKafZ0TSj81Bl5tLn9DdsT
-	p/tv12u688uM907ORkWKW+Z/rwm79voeVHRpzpuQ1aXM1EeIUpQ/5w0wH+LwAt5zyLD+iTXt4TU
-	bz1DEXtkLwV6rruNyRj/96p6Gu1sKnuvXdVLZUIYr9sLzZdfyVzpsSObCRb0QdB8hFrwUZyt3KQ
-	sckF2twjrNbiQfTC4+wQgDQCOxkGwSlymP+kiFL2Ra/Dcu2n3+1MO7VsQmL/BdIdVw==
-X-Received: by 2002:a05:622a:44b:b0:475:820:9f6f with SMTP id d75a77b69052e-4a44315f061mr44406901cf.9.1748717310676;
-        Sat, 31 May 2025 11:48:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFS50jxW6Qje29AU0C9sBepph7zG42LOAm/3jLmwP8x0sfmPiEZkOM44vaelCgiKPREG+C6ew==
-X-Received: by 2002:a05:622a:44b:b0:475:820:9f6f with SMTP id d75a77b69052e-4a44315f061mr44406631cf.9.1748717310234;
-        Sat, 31 May 2025 11:48:30 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60566c756d2sm3678883a12.43.2025.05.31.11.48.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 31 May 2025 11:48:28 -0700 (PDT)
-Message-ID: <4b4925ce-3a01-4295-9864-a43c65aab530@oss.qualcomm.com>
-Date: Sat, 31 May 2025 20:48:25 +0200
+        bh=ba8Ewaax3skZGpn2w/AasFrW04rf1D6XoW4B0rxSXrM=;
+        b=Rk8PrC1Q/1c/XeHhBDMMh5HjWvzDr8TXaBdF3KU6HJSbnvxrwx7iEYXxKBQCEUwg4d
+         MtagDBZkbiAGH5Ur4L2U4fKnZ9cdFIHaRr9P5k80AfDsSumu6lsHGLVECtbmbk57frRY
+         KnB1HuRrQH2Rbm7XyvUbHSPD+nBS7WD3+SkDOp8NvuwTSLiYfttINAPSPVgAbpzRq/kt
+         odb7GVaMrB+cV8E0m13tckuT4c0Fy6vYSS0tmTIomuvnF51lWGn4eQc5wscSuMjx2dyy
+         amIVrvOBz57kFrdT1g/6LrtZrrHz4T/sY01UAICcN7jsyDbAXPnOtt7ZLURZd5dRWsgK
+         mBMw==
+X-Forwarded-Encrypted: i=1; AJvYcCVKBcxT4191gePfMHUK84Mbf7MvyIUWVBc4c77um1HwPHNskVPE9rtmGqQlDgLpgLArRKynYhEvL4UrHHM=@vger.kernel.org, AJvYcCW/PwGupWAPhtA+O1wdtSYVt+sSZ/HehudOoOu6Vke6lPJ7xFY/QCW8QSqvgmdNYaKeb9eI3cSmuSBg@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0ehvzR0BwjqAKgwGWVPFJCnkwkO32TZzhpqoWyENlHlpkkumK
+	0d4RlUReEo3oPtYay98wV93YNu6BZpem2+Dsj4/8mzTLZt9yULE3Oxf1
+X-Gm-Gg: ASbGncsdsAHbja1Na9aNAvDo/r5fdP9w0vjyzvqSZT1tqTIZfOgmjc/2JBhqo7wk9yr
+	+HbXgFtBRKEEo+hQznbAM+BEePp/HIm6HJYYdXQzMFaB+DZ/KFNhQ6+jQ4QqHUNoZiF+EINY6n/
+	p72/uIRjewZI0GexHFSelYlzhAHF1DR7FTKSC4MX17EfBn+TppvDAoph2NW4w/+jxOjsDYLkuHJ
+	VRIcFHUbjaKYdvD4IPl39y0scGISEAP2+BogxkrFsqf+F4TcKcn4+LWAd3H3DOI2FN//r3xs4Zd
+	1HDfzPPBKOwJWzrFDWQPx4nb6cUOFhaslkiZtz0s8ngi/TGjpMqwHtyU7K5tP6JwnC6xWVWAt30
+	=
+X-Google-Smtp-Source: AGHT+IGaDqOsLAEEskaF2msEBC2HTgDRmrS8aWEIGjvPriuNLUkbzs9Pp0q/ZA+X4ZybR45ggCs+AQ==
+X-Received: by 2002:a05:6000:2082:b0:3a3:7987:945f with SMTP id ffacd0b85a97d-3a4f89e24e4mr5529224f8f.57.1748718983546;
+        Sat, 31 May 2025 12:16:23 -0700 (PDT)
+Received: from debian.local ([2a0a:ef40:eaf:3101:2d68:caee:7294:3fe1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-44fcd135f6bsm103309015e9.3.2025.05.31.12.16.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 31 May 2025 12:16:22 -0700 (PDT)
+Date: Sat, 31 May 2025 20:16:20 +0100
+From: Chris Bainbridge <chris.bainbridge@gmail.com>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+	linux-rtc@vger.kernel.org,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Mateusz =?utf-8?Q?Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
+	lkml <linux-kernel@vger.kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] timekeeping: Add a lockdep override in tick_freeze().
+Message-ID: <aDtVhPJD43DKNG3A@debian.local>
+References: <20250330113202.GAZ-krsjAnurOlTcp-@fat_crate.local>
+ <87sempv17b.ffs@tglx>
+ <20250403135031.giGKVTEO@linutronix.de>
+ <20250403193659.hhUTgJLH@linutronix.de>
+ <87r029uh3j.ffs@tglx>
+ <20250404133429.pnAzf-eF@linutronix.de>
+ <aDtJ92foPUYmGheF@debian.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] arm64: dts: qcom: msm8939: Add camss and cci
-To: vincent.knecht@mailoo.org, Robert Foss <rfoss@kernel.org>,
-        Todor Tomov <todor.too@gmail.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        =?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>,
-        phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-References: <20250530-camss-8x39-vbif-v3-0-fc91d15bb5d6@mailoo.org>
- <20250530-camss-8x39-vbif-v3-4-fc91d15bb5d6@mailoo.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250530-camss-8x39-vbif-v3-4-fc91d15bb5d6@mailoo.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=JIE7s9Kb c=1 sm=1 tr=0 ts=683b4f0e cx=c_pps
- a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=TqukyxIwAAAA:8 a=EUspDBNiAAAA:8
- a=siKOB1rTJ_YAM3DqF24A:9 a=QEXdDO2ut3YA:10 a=dawVfQjAaf238kedN5IG:22
- a=e_wvXvRcY2B3oMitRgDS:22
-X-Proofpoint-GUID: JTL8jiRlBsdop6fGUEiPFswFQ-7E7ANp
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMxMDE3MiBTYWx0ZWRfX7mZw+6asgQFt
- okYMYdLeLshr+Z3J3ZHyQN0tkiM0JkWSVNTXGdSAJE5UqCIsVvEWfUg5/C77ZnrOqKpSkqFmyHj
- crugNYiWGVwHWLByA9dqqlAneUq1UCpE+utj/q40Js2hlF8+7Uumb7LLbUbZnIgnSCNb/t0jzeY
- EyGqPBIZjF83UJg04C5TU/Ex6FLKdMMVtdCMYQq4ZxTGRUWp5fwij205W+h1dpA7OTvV7wxLqD1
- s3OhuLSbTaYwtxMll5Haz3Eld4kzxZ3sT5nAZkIstcAmsKeGzBfCSSIM4aUSw44sRNOSUxLOGky
- vj+WMcsI+sHyB9HAa6tmy/kJf7p688Mm/iGgn9o+hdLwUSYJvDg9Y0SuTHzrnmSetkDfQYeJkzS
- xRICzwcN51sZ/G5TuqaBtb91Wv27Y+KATvQZ+6jHUGlxvQvXLwhYkbfHRZPMW9pt8wanLkZx
-X-Proofpoint-ORIG-GUID: JTL8jiRlBsdop6fGUEiPFswFQ-7E7ANp
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-31_09,2025-05-30_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=759 priorityscore=1501 suspectscore=0 adultscore=0 phishscore=0
- spamscore=0 impostorscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0
- mlxscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505310172
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aDtJ92foPUYmGheF@debian.local>
 
-On 5/30/25 11:00 AM, Vincent Knecht via B4 Relay wrote:
-> From: Vincent Knecht <vincent.knecht@mailoo.org>
+On Sat, May 31, 2025 at 07:27:03PM +0100, Chris Bainbridge wrote:
+> Hi,
 > 
-> Add the camera subsystem and CCI used to interface with cameras on the
-> Snapdragon 615.
+> I'm getting "WARNING: inconsistent lock state" on resume with this
+> commit (92e250c624ea37fde64bfd624fd2556f0d846f18):
 > 
-> Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
-> ---
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Further testing shows there are some required conditions for this
+warning to be shown. The suspend must be of a short enough duration that
+it does "not reach hardware sleep state" (according to amd_s2idle.py).
 
-Konrad
+Also the warning is only shown once, I don't know if this is because the
+conditions for the warning only occur once, or if there is log limit
+somewhere that prevents it from being logged more than once.
+
+I can reliably reproduce the warning by running amd_s2idle.py and
+waiting for the automatic resume:
+
+# ./amd_s2idle.py --log log --duration 5 --wait 4 --count 1
+Debugging script for s2idle on AMD systems
+💻 HP HP Pavilion Aero Laptop 13-be0xxx (103C_5335KV HP Pavilion) running BIOS 15.17 (F.17) released 12/18/2024 and EC 79.31
+🐧 Debian GNU/Linux trixie/sid
+🐧 Kernel 6.15.0-rc1-00002-g92e250c624ea
+🔋 Battery BAT0 (313-27-3C-A PC03043XL) is operating at 100.00% of design
+Checking prerequisites for s2idle
+✅ Logs are provided via systemd
+✅ AMD Ryzen 7 5800U with Radeon Graphics (family 19 model 50)
+✅ SMT enabled
+✅ LPS0 _DSM enabled
+✅ ACPI FADT supports Low-power S0 idle
+✅ HSMP driver `amd_hsmp` not detected (blocked: False)
+✅ PMC driver `amd_pmc` loaded (Program 0 Firmware 64.73.0)
+✅ GPU driver `amdgpu` bound to 0000:03:00.0
+✅ System is configured for s2idle
+✅ NVME Intel Corporation SSD 670p Series [Keystone Harbor] is configured for s2idle in BIOS
+✅ GPIO driver `pinctrl_amd` available
+🚦 Device firmware checks unavailable without fwupd gobject introspection
+Started at 2025-05-31 19:46:33.911590 (cycle finish expected @ 2025-05-31 19:46:42.911616)
+Results from last s2idle cycle
+○ Suspend count: 1
+○ Hardware sleep cycle count: 1
+○ Wakeup triggered from IRQ 9: ACPI SCI
+○ Woke up from IRQ 9: ACPI SCI
+○ gpe03 increased from 140 to 148
+✅ Userspace suspended for 0:00:08.256333
+❌ Did not reach hardware sleep state
+
+If the duration arg is 6 or higher, then amd_s2idle.py reports that the
+hardware sleep state was entered, and the "inconsistent lock state"
+warning does not appear. If the duration is too low (e.g. 1 second),
+then the laptop does not wake up automatically, and upon pressing a
+keyboard key, the amdgpu driver will report an error resuming the GPU,
+and the GPU will not be working. (I don't think the amdgpu problem is
+related to the lock state warning, I'm just mentioning it for
+completeness). It is the state between these two cases, where the laptop
+does suspend and resume correctly, but the suspend is too short to enter
+a hardware sleep state, where the problem occurs.
