@@ -1,48 +1,45 @@
 Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EBFB3398B
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 07:08:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0883398B;
+	Sat, 31 May 2025 07:09:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748675307; cv=none; b=ZcL8oHrojaWLaK5g9CCJOkeqzVFrpxWUOBlRT78X+aU+GsamlTK88Uiua45kmMvfexK0ocsIhMRGB6cRgkh1emgtlZcFcaqCB01ldoEJPBHFdNv/J/FbyBeVMMxcMW+d53jrapWFcQCR3e+yc6/5DrGnUepV8JyxNqy0G+SdAdM=
+	t=1748675384; cv=none; b=iFrthjAdEfdyWyYvTUIMld8oteA4YlIRW6Ao0OgHWHIhKhWe9s5BjXQDEXDnuVIaQUcxJnukhXYaD5CUO7i69GarcQ8VSrLJYYNTzD50mmJYr65bwK8ntjJ4vVavao324ohnBkzjPgZQfpYJJRlrKVIfOJ9jZf+XzFGdXB2j0AA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748675307; c=relaxed/simple;
-	bh=3iv8tjgA6PQWzf83ghqnVbIpO85Y32KhCeYeRAz0230=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UmBgU6HY/ck3PB4oXRHJyOjYEnYzfQ8XDat4bHBudO59LIzTA0tnx2hkrEQMJxPLkdxHjooctBWflsr/iwfvN6k0PmArAuhRdHWyFPrb/0wvv1yBpxvKB5232ZJtyRhuB6bzQ1G6+T481z0MhRPMFnDvwyV3Utix/4Bv6HPnD04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=h9U02AGT; arc=none smtp.client-ip=144.6.53.87
+	s=arc-20240116; t=1748675384; c=relaxed/simple;
+	bh=Z6Gq/f1CXcmVRhtyrER6YQ7RRt58OkBNZhatJf0kqsk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=TSw2XJQhk1Q2cbccRiFkOj9NQ/vcHhpgUoAFUISZT4eRyE+5hRkm8+eLYFI8lcsRHHKrlvUA24BT2m2CaGW4QVaH/uuSPJ2ugMh6Umq8O1cuT4QHLu17ovvBCnkoL85HSixn5Tj2n+rTAEC6FJviJjDROtmKVBRZvmYIWgAuY6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=HkNkU3iT; arc=none smtp.client-ip=144.6.53.87
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="h9U02AGT"
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="HkNkU3iT"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:Message-ID:Subject:Cc:To:
+	From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=Kj6igAYGrkkdzGQffS7B/xzIRhHcDJxtG3KLUNcCcqw=; b=h9U02AGTFjGVZEVshIuun0zH/F
-	qB+WcCCtvQUq6DbyIQiIdBlrvm6Vw+oYB4hibfaDHSy0wa8TTa14HpkPYZZn+nQHTdV7FppHGMfOu
-	PS4Qg04GhnQBgLxWM/ohCj9lhdAq0Kg4V7GrX23RQwmqgkuG1GfEptgLZ4NBIjFDrsFZpYOfaNc5A
-	+rcQ8E6UN2lSZ9gutisNbIKiEPc2gs55Ctu6Rse8fLMPqD8Fj7WHKiHnm7cOhhnK+BnRcarx1wpDc
-	bXhxqvABSm6NrWS/VZDh1Z2kwCOw7JFD8DlXASylXKgziEmBiigQQc+bnUbs9jz1gqggnzuiZK2Vn
-	WLfskK5A==;
+	:Resent-Message-ID:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=J4azc6Yc11qa1ew19drbL2Y4D35dU0pLMu0fayd2zss=; b=HkNkU3iT2eSSAZDrHi2ryfKxDf
+	iVgXCFBlMaUCtaxGpurRMrC6H/aiLTJwmDdN0VdoQbV1D5ktvUB8Ji5L7lzxSYqKqT9wRgF01RW7Y
+	gqipYkYp5/N6+/xhpsepYToWxTtR+0F53z6M4VNEGo/wqfUnFbjrfbcPRGTpFO8OHzl4G63c/H1V1
+	0r1EqrGjoGKjoUna3xAUduwR9tuj7lNmGjY22JDNaQ6o624I8k0rNJPIfP6zetqs2HXNHI4xPySBh
+	GIPnWon+021UmWXeAb6sF1U84u5pbLobCX5TCyxZhTROs7yMQzgdonibY9n2U94dqXTSdlh6bij+v
+	+UBI/CYw==;
 Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
 	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uLGKI-009woI-2o;
-	Sat, 31 May 2025 15:08:19 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sat, 31 May 2025 15:08:18 +0800
-Date: Sat, 31 May 2025 15:08:18 +0800
+	id 1uLGLZ-009woT-0b;
+	Sat, 31 May 2025 15:09:38 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sat, 31 May 2025 15:09:37 +0800
+Date: Sat, 31 May 2025 15:09:37 +0800
 From: Herbert Xu <herbert@gondor.apana.org.au>
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] userns: Add forward declaration of struct seq_file in
- user_namespace.h
-Message-ID: <aDqq4rg9rTKRur8Y@gondor.apana.org.au>
-References: <aDlty06JvlGwTfKk@gondor.apana.org.au>
- <87ldqegrf1.fsf@email.froward.int.ebiederm.org>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+	ardb@kernel.org
+Subject: Re: [PATCH] crypto/crc32: register only one shash_alg
+Message-ID: <aDqrMb7U18DcMSRl@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,22 +48,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87ldqegrf1.fsf@email.froward.int.ebiederm.org>
+In-Reply-To: <20250530160940.12761-1-ebiggers@kernel.org>
+X-Newsgroups: apana.lists.os.linux.cryptoapi,apana.lists.os.linux.kernel
 
-On Fri, May 30, 2025 at 08:27:14AM -0500, Eric W. Biederman wrote:
->
-> That description seems to be lacking something.  The code as has been
-> fine since 2014 and there is no conditional compilation involved.
+Eric Biggers <ebiggers@kernel.org> wrote:
+> From: Eric Biggers <ebiggers@google.com>
+> 
+> Stop unnecessarily registering a "crc32-generic" shash_alg when a
+> "crc32-$(ARCH)" shash_alg is registered too.
+> 
+> While every algorithm does need to have a generic implementation to
+> ensure uniformity of support across platforms, that doesn't mean that we
+> need to make the generic implementation available through crypto_shash
+> when an optimized implementation is also available.
+> 
+> Registering the generic shash_alg did allow users of the crypto_shash or
+> crypto_ahash APIs to request the generic implementation specifically,
+> instead of an optimized one.  However, the only known use case for that
+> was the differential fuzz tests in crypto/testmgr.c.  Equivalent test
+> coverage is now provided by crc_kunit.
+> 
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> ---
+> 
+> I'm planning to take this through the crc tree.
+> 
+> crypto/crc32.c | 69 ++++++++------------------------------------------
+> 1 file changed, 11 insertions(+), 58 deletions(-)
 
-I'm happy to drop the fixes header.  There is no need to backport
-this.
-
-> Did some other change cause a declaration of seq_file not to be present?
-> Did user_namespace.h get included somewhere new and that new location
-> doesn't wind up declaring seq_file?
-
-The seq_file forward declaration is currently being provided by
-linux/sched.h.  I tried removing it and found this issue.
+Please don't do this without first removing all drivers providing
+"crc32" as otherwise their test coverge will be reduced.
 
 Cheers,
 -- 
