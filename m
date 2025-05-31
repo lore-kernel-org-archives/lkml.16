@@ -1,92 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.cs.ucla.edu (mail.cs.ucla.edu [131.179.128.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D997523C8AA;
-	Sat, 31 May 2025 15:24:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C6ADDAD;
+	Sat, 31 May 2025 15:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.179.128.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748705082; cv=none; b=jZ9GX5i4dHdQV0B078YNBgI7InffijS9wHqhw/NTNaFVgtg3OxGukNOp97uUDe5XXDejqR1C4YrtsgWAerAcgMl+gYkNxaE79qGVaGQMehs2uNfawT1/qCJbp2h/Er0yEySOQEsfv0DkI+WPBpFPYvKXqXDjcXmYdlt+r4X0UQ4=
+	t=1748705117; cv=none; b=Ab5yTWP4WS1PrRKqSgQqcHbDLsbsgO0YpY1dvJVdhK+AItW5jQQ35f4e5/mKMkkl13VbrRl4EZ4A4rl/4gTSI7d/ON90mQtb1QmEbV1OWlsKItbP2/6TKby7Kk97mwgVikq2zHauYMLeLf6cc3rXwTw7cVwgviqcBtYGvIMKaLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748705082; c=relaxed/simple;
-	bh=yd4Pp8qjfcD/sAUM0i3LEQZurmg2V7XgoLJekg3Orj0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=qQGwSoR8kNRTckEE7rIsaLNRdTeYKXr5UWX1AWGlEh5xOAzM1m7ipRkTmhErqM4nXp/Vp9OcdQ+WetItDF94XXZuoL+sxkHa0XPsGLV5D5jOEClUlbMbU7Znlasiz1EU3zxz0NlX9sCkC2rXvKFNaYB6QGtKX7TgzrZBgx+UDao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=agO2V/6f; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748705117; c=relaxed/simple;
+	bh=9nQXULhGaUY3fT+0057uy4rFTlDoovaGBf5GLq37yzc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cXoM5pPLlKX9jLZbXSFuv/JWq2iY5Zwv3RIm4M1yGjVfVo/P6MehwoMenxaf/rJntnLsfcK+9ipsmh7mu5lefwekplbGoDxwxG4GRWKyA0Vx2IvAmCG20MDa59kIUdoActdWgkTdTQ9JTdFMjf1S+acVFC3AwEuUkRU8Cscod10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cs.ucla.edu; spf=pass smtp.mailfrom=cs.ucla.edu; dkim=pass (2048-bit key) header.d=cs.ucla.edu header.i=@cs.ucla.edu header.b=AMpsqAdj; arc=none smtp.client-ip=131.179.128.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cs.ucla.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cs.ucla.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="agO2V/6f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01574C4CEE3;
-	Sat, 31 May 2025 15:24:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748705082;
-	bh=yd4Pp8qjfcD/sAUM0i3LEQZurmg2V7XgoLJekg3Orj0=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=agO2V/6fRY1XWP94nVkXBvN2DhBauOPIah8KJAaCsThsapwPzCh1c4iTbq9SejxJm
-	 d0RMFWsAHYO/v/OnqtodeV2JfpegB0iDCjmN8WWQe2JMSf7BbbmWaM1+CPK5VgLxMz
-	 qMGnS4HaHGFSYgvrzuzQ0Y80VrdrLABL+EoJS1OWDXUniB5NhQqxm9Cg5aEAauV11U
-	 4NWoAPm5UzJP/uhM+ryZg2B5tRwhQsuxt4FJv6+RxVBSwQqLHK44+Cci6NC55NCs8m
-	 5jXBSFdBl9+NBaj7TW51JiRuQ4oeRKIdAZ2E64/uuk81EBsdKMZChIa0yOd6zswJFh
-	 H/YiBAYUvs9fw==
+	dkim=pass (2048-bit key) header.d=cs.ucla.edu header.i=@cs.ucla.edu header.b="AMpsqAdj"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.cs.ucla.edu (Postfix) with ESMTP id 3C6E13C010860;
+	Sat, 31 May 2025 08:25:08 -0700 (PDT)
+Received: from mail.cs.ucla.edu ([127.0.0.1])
+ by localhost (mail.cs.ucla.edu [127.0.0.1]) (amavis, port 10032) with ESMTP
+ id OU7HBfK13_e8; Sat, 31 May 2025 08:25:08 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.cs.ucla.edu (Postfix) with ESMTP id 10EAB3C0149D7;
+	Sat, 31 May 2025 08:25:08 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.cs.ucla.edu 10EAB3C0149D7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cs.ucla.edu;
+	s=9D0B346E-2AEB-11ED-9476-E14B719DCE6C; t=1748705108;
+	bh=9nQXULhGaUY3fT+0057uy4rFTlDoovaGBf5GLq37yzc=;
+	h=Message-ID:Date:MIME-Version:To:From;
+	b=AMpsqAdj5fMZEDTVG6PjdjtR/ph15+glOYhRx/z/MfWcLAg1W8ATvjgbUCNePSRNy
+	 Fqq5iwmVB23cEj7qemKjJXOW9mnitb1XNaVloBM2su9isYX6E5V5L2IU8uIsQZ6h0u
+	 TIxJq4NRfaXFWO5EYvSFAIRrCCSio2N9NyuThLjfRYdyDKdZIC+tjd6c+oMcm7MW2f
+	 aNvuLYLOHQU4zQbW7n/CoQC19mZe4NW8TH07w30bRJ5bnQEnx86y1blrLwli5JKlDb
+	 30f2Ey4G/px1mr4qL+hXZ6htzpOQz7tVXgV/IoAZ6OvuiYZmHZ0+YNH+73qo3bJnlw
+	 e/KJ5qxgipkNw==
+X-Virus-Scanned: amavis at mail.cs.ucla.edu
+Received: from mail.cs.ucla.edu ([127.0.0.1])
+ by localhost (mail.cs.ucla.edu [127.0.0.1]) (amavis, port 10026) with ESMTP
+ id OCT5IDQ-QFp4; Sat, 31 May 2025 08:25:07 -0700 (PDT)
+Received: from penguin.cs.ucla.edu (unknown [47.143.215.226])
+	by mail.cs.ucla.edu (Postfix) with ESMTPSA id DF1053C010860;
+	Sat, 31 May 2025 08:25:07 -0700 (PDT)
+Message-ID: <be46b324-db6c-4ebb-96c3-0280d32aac66@cs.ucla.edu>
+Date: Sat, 31 May 2025 08:25:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: bug#77597: listxattr() should return ENOTSUP for sysfs / tmpfs
+ entries, not 0
+To: =?UTF-8?Q?P=C3=A1draig_Brady?= <P@draigBrady.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ linux-security-module@vger.kernel.org,
+ Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc: 77597@debbugs.gnu.org, Rahul Sandhu <nvraxn@gmail.com>
+References: <D8Z6FP3UZG2G.I8H42ZV6DM08@gmail.com>
+ <41067aa3-0e72-456f-b3f2-7bd713242457@cs.ucla.edu>
+ <c7d16a13-79c9-4e81-996a-0f32bcff79cc@draigBrady.com>
+ <2e24f40d-b475-4199-b53b-e4c266d0d314@cs.ucla.edu>
+ <60b2252d-9295-4d03-921e-a596444da960@draigBrady.com>
+ <64b14829-381d-4295-8878-f6b06906ef3c@draigBrady.com>
+ <c0a1f475-b973-40a8-a7cc-6947791af38a@draigBrady.com>
+Content-Language: en-US
+From: Paul Eggert <eggert@cs.ucla.edu>
+Organization: UCLA Computer Science Department
+In-Reply-To: <c0a1f475-b973-40a8-a7cc-6947791af38a@draigBrady.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 31 May 2025 17:24:38 +0200
-Message-Id: <DAAG7QOYXDFA.37VBAYSFJYJCF@kernel.org>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Andrew Morton"
- <akpm@linux-foundation.org>, "Alexander Viro" <viro@zeniv.linux.org.uk>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
- <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 1/2] uaccess: rust: add strncpy_from_user
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Alice Ryhl" <aliceryhl@google.com>
-X-Mailer: aerc 0.20.1
-References: <20250527-strncpy-from-user-v4-0-82168470d472@google.com>
- <20250527-strncpy-from-user-v4-1-82168470d472@google.com>
- <DA9P6CSP6563.1OYPZXIP5S7N1@kernel.org>
- <CAH5fLgjoX5AEO8NvDdj+05HUtpoVUPpOa7ri5UG6Djp98vQDxQ@mail.gmail.com>
-In-Reply-To: <CAH5fLgjoX5AEO8NvDdj+05HUtpoVUPpOa7ri5UG6Djp98vQDxQ@mail.gmail.com>
 
-On Sat May 31, 2025 at 3:27 PM CEST, Alice Ryhl wrote:
-> On Fri, May 30, 2025 at 8:13=E2=80=AFPM Benno Lossin <lossin@kernel.org> =
-wrote:
->> On Tue May 27, 2025 at 2:34 PM CEST, Alice Ryhl wrote:
->> > +#[inline]
->> > +#[expect(dead_code)]
->> > +fn raw_strncpy_from_user(dst: &mut [MaybeUninit<u8>], src: UserPtr) -=
-> Result<usize> {
->> > +    // CAST: Slice lengths are guaranteed to be `<=3D isize::MAX`.
->> > +    let len =3D dst.len() as isize;
->> > +
->> > +    // SAFETY: `dst` is valid for writing `dst.len()` bytes.
->> > +    let res =3D unsafe {
->> > +        bindings::strncpy_from_user(dst.as_mut_ptr().cast::<c_char>()=
-, src as *const c_char, len)
->> > +    };
->> > +
->> > +    if res < 0 {
->> > +        return Err(Error::from_errno(res as i32));
->> > +    }
->> > +
->> > +    #[cfg(CONFIG_RUST_OVERFLOW_CHECKS)]
->> > +    assert!(res <=3D len);
->> > +
->> > +    Ok(res as usize)
->>
->> We probably should add a `GUARANTEES` comment here, no?
->
-> I can see the idea behind such comments, but I do not believe we've
-> used them so far.
+On 2025-05-23 04:38, P=C3=A1draig Brady wrote:
+> FYI this should be addressed with:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
+it/?id=3D8b0ba61d
 
-Yes, but we also haven't really used `# Guarantees` all that often.
+Thanks for letting me know, as this led me to further testing that found=20
+some other kernel bugs in this area, possibly introduced by that kernel=20
+commit. Please see:
 
----
-Cheers,
-Benno
+"flistxattr with right size wrongly fails with ERANGE, breaking 'cp -a'=20
+etc" <https://bugzilla.redhat.com/show_bug.cgi?id=3D2369561>
+
+The email thread starting at "[PATCH] Fix listxattr-related races and=20
+stack overflows"=20
+<https://lists.nongnu.org/archive/html/acl-devel/2025-05/msg00003.html>.
