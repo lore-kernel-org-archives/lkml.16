@@ -1,131 +1,289 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD381D52B;
-	Sat, 31 May 2025 01:35:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532C729D19
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 01:36:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748655307; cv=none; b=iMzqAyEAb8gvz/IbRaE0Y8K21B7P116gsRwYb9eBck6EWCaq0rfOysxRpsao1dyAjLDaV9fFXU0L9gHM6fdbbymVEYEC3898pmQ2mgo53BWcOzgYnyLVF0uWy6VtWe+uK3dAJoFz7hAMe/8zI59T/JxIXCjfpIZ+UHQUKQIvsa4=
+	t=1748655400; cv=none; b=I2UyRV6/By+Ls5Dor3T8G7Ai9nBvpevfmZw5xHDFZM2uksupl0vB6FtwL98IoYSXPcdxARLCkWjjQ/d8enEUUqprea6T17uLJdGsjshp+3iw15KW/NGILNXvVEHBKh0/A7BJBQJUMYVJ7w2DaMBnG3zX8r+6kr2AgKy/TPHLvtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748655307; c=relaxed/simple;
-	bh=1No1ni139Z7Dl+HzW13tFqEt2OLr/EgM5MD5+3+FOso=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VYi/lMzB8AWHubhB3q70Ls5SeyTHr+XbjARxnHQHFxDh4BDShKjJfoguWpJ8CNMjSQ62TnIY1+6B3GM6Jmtd2LZ0Ks+30pgLPwPNTDfarS6NzX5BwevkAlV8fNskZo2k2g4bFMW47h2Uj2BDBtj3HD9qBjBB56fw2aU/GCtKVlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SPkGIz2r; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SPkGIz2r"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6f0ad74483fso26769836d6.1;
-        Fri, 30 May 2025 18:35:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748655304; x=1749260104; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=TEpkKf/rbRGMaCZnUiCqTPwyLbk3NZOTi/tOjvkQknU=;
-        b=SPkGIz2rREinEqqLfdTUWIritInO+YX28gsnKltTdPZLXGkrejV/fVmhVXsx/oPz/C
-         Yx5qabGqkFi2YsrU11vEktfZRUa2UlKyAp8tFiigD1Yhio8wanzD3h50CFoAVGkFq+fw
-         TiIQKF8ZOGlA9/KFUendFoWXXF2ti0+FXVeS0DggxBLJPTZx8yuK17vHzHwXao0Ki9Z4
-         CwvWUh0nZql19uVmINp7NTW988L/2JpuTjVLg8uMG3Zbw/BW4IRTGzatQ+LoBhr010yJ
-         mNprvnxlFjHJ0R6fCQl9AUA6O3023Sl2+OgoqnR1R+Bi3IPhECIwpKQ89ZpcprXoQS+1
-         Rfgw==
+	s=arc-20240116; t=1748655400; c=relaxed/simple;
+	bh=NDbcqiotW/Z0gxJopkCIMaEX69V/79WqKi4k5TSIVBY=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=BuEUuEmkhwG8xFsRE2KcpiUIKTtw2TRIob0YmjiPZonXEwpjCTiAbT/+umHKbJBcjCZDqT1QLF22274wbJApzqaVmumVv5iCFL57QbN6ZINHLPJNx8z+27l4srQTcS0M2TAWSdrxC7OwyQapC8MMmD9tTtEyuOagG4O8KeDXMts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-86d0bac7afbso90137439f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 18:36:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748655304; x=1749260104;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TEpkKf/rbRGMaCZnUiCqTPwyLbk3NZOTi/tOjvkQknU=;
-        b=D2BLvDFol5W/19bBdSgL7dPLcgs59B25ZHkMQ/BD8o2WkUoLC1SbFlFrBxNa/HBJp/
-         WMdnLJjVZAxoN7ozuCplbRR+9T07T29K5hh+nI8r/4wwv2hq8DvXzgixfRWfKGseciwK
-         k8NvCRXtx4XlshCD4QKHHYB61wk2H461impXPr+L5MeReFSOnXk0sHifvj4mWaW9W+75
-         u5fSoJ2HK45J+Fm0gNvKZTETy21ILNGWG0+dDhPd8Re01xfnisGL2ct/wzCuh58FxrH9
-         LujeuZJITgOPGiS/Kfi3zLYHW9itQdzg2IQ4CTDFDZwEhVe27Mm82h/eoOK+DYVviFkE
-         FKFg==
-X-Forwarded-Encrypted: i=1; AJvYcCW+UxTacwHrgtR3+LWHfg6kRrw3VqatZqDRMCncpE8yQL5UXUxgQ7lOAxnARC0dbIwxsdaXeGfzrDJ7NPQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzpR22tbg1bSPeknlhvF5/B9QB966tLH9vlACqlUZ+f9qyZ1FT
-	8xLBlIWueQ+cqWBD8uD8p4o9LwcrhBSRKIg2LuL1cvzUKf2432mtPEW0
-X-Gm-Gg: ASbGncsppswBxvIU9Zgras2311BxgCeodtpVtQvLfUHvreaOYQXBuwfQ9JC57ELxCtG
-	8KksUzi/56wAxa1OiBW+2LSimkl0X98Wif6ve0arValdLazZBrRU18Uh7QIUkZJLuITdOSwD50D
-	ii+jxg1BVaNnY5wuPBoBGtjiTTVeuB7DFyp5O9LLzcKUI6+bg+Voi7OaMgSTHUQVSsFCW3dwv3J
-	5RxtWgi5I4TKeee8hK4+/Wk5s8CYMTWKpd+HDj0CwVvdLJrt2SYbNoO1rydjFoyMw2/z5AOK7eb
-	PgGFdH6vGrsaIAW+CQNb+QBxn7tV5boNYlVpWw==
-X-Google-Smtp-Source: AGHT+IFzbQoEp2+Ph+a2o8b88ePR2Du44O7ta02t6SISNBZax8aMd+4dqDWmuWAErYq9CBhmxc893Q==
-X-Received: by 2002:a05:6214:d02:b0:6fa:c5be:dac7 with SMTP id 6a1803df08f44-6facebcf4bdmr111200496d6.18.1748655304161;
-        Fri, 30 May 2025 18:35:04 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7d09a1a793esm324888785a.111.2025.05.30.18.35.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 May 2025 18:35:03 -0700 (PDT)
-Date: Sat, 31 May 2025 09:34:10 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Chen Wang <unicorn_wang@outlook.com>, Han Gao <rabenda.cn@gmail.com>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Inochi Amaoto <inochiama@gmail.com>, linux-riscv@lists.infradead.org, sophgo@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] riscv: dts: sophgo: add zfh for sg2042
-Message-ID: <4vuneynwhmsyokkuw3wlabxij6kobl6j7bbbcymlcmsdc2hhb7@u5mhb7je74km>
-References: <cover.1747235487.git.rabenda.cn@gmail.com>
- <104dde6002c268a39fab6fcf469adc26d49ba364.1747235487.git.rabenda.cn@gmail.com>
- <MA0P287MB226290B908D3209E5C890BFAFE90A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
- <CAAT7Ki-33DcA7xeBzzv1hm0wR_ebcVdux5fQxGVrLs45RbGM9A@mail.gmail.com>
- <MA0P287MB226265FFA15A808221629848FE64A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+        d=1e100.net; s=20230601; t=1748655397; x=1749260197;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=glgCJaTFbFLoXNg9qggTj7EXnYTQ0NdygohSikmt3oY=;
+        b=uIFmLLtJCoWoST/VscQDpxgo7w96ovjdBHp/STE5BrkkEqeMkgLvu6dn0gZ2dYflGo
+         OQ0pxNHP3MMLQLDZ+7Z/6jC/XDBi44ubfE4zokdOt2Zur8AYOq/KZv6a29ujyfbQyDsi
+         ui+H4ldSHhoIL3djNKIIcnTaGDLlGqJOsJwnqwXSQOKKDmbcE8RDic2Pc29EEND4qKWq
+         AyzOaZT5PzRLKQlyYAkramt8nEamKLsGAviolLQnZ/MaeeqOzNfomF+jnYwPi2Qhf/6E
+         AO/ffmSHLbiXrDNZPrJvSPjmbKwT8EgV5eGOJahudiO6MeYzHwyKJiuiUck6eNQWIUeV
+         Ge3w==
+X-Forwarded-Encrypted: i=1; AJvYcCVBbp5gT4w9B2Vjd1OE0cIz9nE4Al2bFJXS8NrP45Qcdv3WPrG/qTTxfUiwVG+ptmDqKpkDouYvV3nXsBs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhT26+Iks/jwQ2GOLHnKivySMaltV+11rvBbwzNAgtPRwSatmi
+	UkBu0MdyLzLQ6vfsFcB6+YIZGVtTni6Chnq28BFRinosdHb/yzjKx7LS03zdpzALtBFYgjU/JPB
+	Ayiovjy//unV2XfNwgEVvR7jEgMUuXXdKx/6gua7CBEbJW4PO9IhBgFEhbAE=
+X-Google-Smtp-Source: AGHT+IFRhMxJeWZGKpLKfEoXgRotd0us3i4+zShDoeEGLUBYz4xz/GhOCEy2hiMBTXHGkSmyMyAarjxK2+Tn6QGkkLsZmchh3HFF
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <MA0P287MB226265FFA15A808221629848FE64A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+X-Received: by 2002:a05:6e02:3810:b0:3dc:90fc:282d with SMTP id
+ e9e14a558f8ab-3dd9cbd3f78mr38787245ab.16.1748655397360; Fri, 30 May 2025
+ 18:36:37 -0700 (PDT)
+Date: Fri, 30 May 2025 18:36:37 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <683a5d25.a00a0220.68b4a.0002.GAE@google.com>
+Subject: [syzbot] [block?] possible deadlock in elevator_change
+From: syzbot <syzbot+ccae337393ac17091c34@syzkaller.appspotmail.com>
+To: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, May 27, 2025 at 06:22:05PM +0800, Chen Wang wrote:
-> 
-> On 2025/5/27 17:34, Han Gao wrote:
-> > On Thu, May 15, 2025 at 9:33 AM Chen Wang <unicorn_wang@outlook.com> wrote:
-> > > 
-> > > On 2025/5/14 23:15, Han Gao wrote:
-> > > > sg2042 support Zfh ISA extension [1].
-> > > > 
-> > > > Link: https://occ-oss-prod.oss-cn-hangzhou.aliyuncs.com/resource//1737721869472/%E7%8E%84%E9%93%81C910%E4%B8%8EC920R1S6%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C%28xrvm%29_20250124.pdf [1]
-> > > > 
-> > > > Signed-off-by: Han Gao <rabenda.cn@gmail.com>
-> > > > ---
-> > > >    arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi | 256 ++++++++++----------
-> > > >    1 file changed, 128 insertions(+), 128 deletions(-)
-> > > > 
-> > > > diff --git a/arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi b/arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi
-> > > > index f483f62ab0c4..8dd1a3c60bc4 100644
-> > > > --- a/arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi
-> > > > +++ b/arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi
-> > > > @@ -256,11 +256,11 @@ core3 {
-> > > >                cpu0: cpu@0 {
-> > > >                        compatible = "thead,c920", "riscv";
-> > > >                        device_type = "cpu";
-> > > > -                     riscv,isa = "rv64imafdc";
-> > > > +                     riscv,isa = "rv64imafdc_zfh";
-> > > Need not touch this. "riscv,isa" is deprecated and replaced by
-> > > "riscv,isa-base" & "riscv,isa-extensions".
-> > > 
-> > > And only adding zfh for this looks a bit werid.
-> > > 
-> > > Actually, I plan to remove "riscv,isa" later, so please don't touch this
-> > > from now on.
-> > I think that since the linux kernel is the upstream for devicetree, it
-> > cannot yet remove riscv, isa needs to maintain compatibility.
-> 
-> OK, maybe it's not good to remove "riscv,isa".
-> 
-> Can this patch not modify "riscv,isa", but only add something for
-> "riscv,isa-extensions"?
-> 
+Hello,
 
-I can remove this while merging the patch, is it OK for you?
+syzbot found the following issue on:
 
-Regards,
-Inochi
+HEAD commit:    785cdec46e92 Merge tag 'x86-core-2025-05-25' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10d026d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d7ed3189f3c3d3f3
+dashboard link: https://syzkaller.appspot.com/bug?extid=ccae337393ac17091c34
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=156e7882580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=101c3170580000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/af5446d375b0/disk-785cdec4.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/eb59d48f91fb/vmlinux-785cdec4.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/188617605a08/bzImage-785cdec4.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+ccae337393ac17091c34@syzkaller.appspotmail.com
+
+======================================================
+WARNING: possible circular locking dependency detected
+6.15.0-syzkaller-01958-g785cdec46e92 #0 Not tainted
+------------------------------------------------------
+syz-executor347/5865 is trying to acquire lock:
+ffff888142f38fa8 (&q->elevator_lock){+.+.}-{4:4}, at: elevator_change+0x103/0x400 block/elevator.c:677
+
+but task is already holding lock:
+ffff888142f38a70 (&q->q_usage_counter(io)#55){++++}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x15/0x20 block/blk-mq.c:205
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #3 (&q->q_usage_counter(io)#55){++++}-{0:0}:
+       blk_alloc_queue+0x619/0x760 block/blk-core.c:461
+       blk_mq_alloc_queue+0x175/0x290 block/blk-mq.c:4396
+       __blk_mq_alloc_disk+0x29/0x120 block/blk-mq.c:4443
+       nbd_dev_add+0x4a0/0xbc0 drivers/block/nbd.c:1933
+       nbd_init+0x181/0x320 drivers/block/nbd.c:2670
+       do_one_initcall+0x120/0x6e0 init/main.c:1257
+       do_initcall_level init/main.c:1319 [inline]
+       do_initcalls init/main.c:1335 [inline]
+       do_basic_setup init/main.c:1354 [inline]
+       kernel_init_freeable+0x5c2/0x900 init/main.c:1567
+       kernel_init+0x1c/0x2b0 init/main.c:1457
+       ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:148
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+-> #2 (fs_reclaim){+.+.}-{0:0}:
+       __fs_reclaim_acquire mm/page_alloc.c:4060 [inline]
+       fs_reclaim_acquire+0x102/0x150 mm/page_alloc.c:4074
+       might_alloc include/linux/sched/mm.h:318 [inline]
+       prepare_alloc_pages+0x162/0x610 mm/page_alloc.c:4742
+       __alloc_frozen_pages_noprof+0x18b/0x23f0 mm/page_alloc.c:4963
+       __alloc_pages_noprof+0xb/0x1b0 mm/page_alloc.c:5008
+       __alloc_pages_node_noprof include/linux/gfp.h:284 [inline]
+       alloc_pages_node_noprof include/linux/gfp.h:311 [inline]
+       pcpu_alloc_pages mm/percpu-vm.c:95 [inline]
+       pcpu_populate_chunk+0x110/0xb00 mm/percpu-vm.c:285
+       pcpu_alloc_noprof+0x86a/0x1470 mm/percpu.c:1870
+       xt_percpu_counter_alloc+0x13e/0x1b0 net/netfilter/x_tables.c:1931
+       find_check_entry.constprop.0+0xbc/0x9b0 net/ipv4/netfilter/ip_tables.c:526
+       translate_table+0xc98/0x1720 net/ipv4/netfilter/ip_tables.c:716
+       ipt_register_table+0x102/0x430 net/ipv4/netfilter/ip_tables.c:1742
+       iptable_raw_table_init+0x63/0x90 net/ipv4/netfilter/iptable_raw.c:49
+       xt_find_table_lock+0x2e1/0x520 net/netfilter/x_tables.c:1260
+       xt_request_find_table_lock+0x28/0xf0 net/netfilter/x_tables.c:1285
+       get_info+0x190/0x610 net/ipv4/netfilter/ip_tables.c:963
+       do_ipt_get_ctl+0x169/0xa10 net/ipv4/netfilter/ip_tables.c:1659
+       nf_getsockopt+0x7c/0xe0 net/netfilter/nf_sockopt.c:116
+       ip_getsockopt+0x18c/0x1e0 net/ipv4/ip_sockglue.c:1777
+       tcp_getsockopt+0x9e/0x100 net/ipv4/tcp.c:4727
+       do_sock_getsockopt+0x3ff/0x800 net/socket.c:2357
+       __sys_getsockopt+0x123/0x1b0 net/socket.c:2386
+       __do_sys_getsockopt net/socket.c:2393 [inline]
+       __se_sys_getsockopt net/socket.c:2390 [inline]
+       __x64_sys_getsockopt+0xbd/0x160 net/socket.c:2390
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xcd/0x230 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+-> #1 (pcpu_alloc_mutex){+.+.}-{4:4}:
+       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
+       __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:746
+       pcpu_alloc_noprof+0xb4a/0x1470 mm/percpu.c:1782
+       init_alloc_hint lib/sbitmap.c:16 [inline]
+       sbitmap_init_node+0x2fd/0x770 lib/sbitmap.c:126
+       sbitmap_queue_init_node+0x41/0x560 lib/sbitmap.c:438
+       bt_alloc block/blk-mq-tag.c:542 [inline]
+       blk_mq_init_tags+0x12d/0x2b0 block/blk-mq-tag.c:565
+       blk_mq_alloc_rq_map block/blk-mq.c:3538 [inline]
+       blk_mq_alloc_map_and_rqs+0x237/0xf60 block/blk-mq.c:4094
+       blk_mq_sched_alloc_map_and_rqs block/blk-mq-sched.c:386 [inline]
+       blk_mq_init_sched+0x30c/0x610 block/blk-mq-sched.c:485
+       elevator_switch+0x1e1/0x7f0 block/elevator.c:595
+       elevator_change+0x2ac/0x400 block/elevator.c:679
+       elevator_set_default+0x292/0x320 block/elevator.c:737
+       blk_register_queue+0x393/0x4f0 block/blk-sysfs.c:879
+       __add_disk+0x74a/0xf00 block/genhd.c:524
+       add_disk_fwnode+0x13f/0x5d0 block/genhd.c:593
+       add_disk include/linux/blkdev.h:764 [inline]
+       nbd_dev_add+0x791/0xbc0 drivers/block/nbd.c:1963
+       nbd_init+0x181/0x320 drivers/block/nbd.c:2670
+       do_one_initcall+0x120/0x6e0 init/main.c:1257
+       do_initcall_level init/main.c:1319 [inline]
+       do_initcalls init/main.c:1335 [inline]
+       do_basic_setup init/main.c:1354 [inline]
+       kernel_init_freeable+0x5c2/0x900 init/main.c:1567
+       kernel_init+0x1c/0x2b0 init/main.c:1457
+       ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:148
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+-> #0 (&q->elevator_lock){+.+.}-{4:4}:
+       check_prev_add kernel/locking/lockdep.c:3168 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3287 [inline]
+       validate_chain kernel/locking/lockdep.c:3911 [inline]
+       __lock_acquire+0x126f/0x1c90 kernel/locking/lockdep.c:5240
+       lock_acquire kernel/locking/lockdep.c:5871 [inline]
+       lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5828
+       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
+       __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:746
+       elevator_change+0x103/0x400 block/elevator.c:677
+       elv_iosched_store+0x2eb/0x3a0 block/elevator.c:792
+       queue_attr_store+0x276/0x320 block/blk-sysfs.c:805
+       sysfs_kf_write+0xf2/0x150 fs/sysfs/file.c:145
+       kernfs_fop_write_iter+0x354/0x510 fs/kernfs/file.c:334
+       iter_file_splice_write+0x91c/0x1150 fs/splice.c:738
+       do_splice_from fs/splice.c:935 [inline]
+       direct_splice_actor+0x18f/0x6c0 fs/splice.c:1158
+       splice_direct_to_actor+0x342/0xa30 fs/splice.c:1102
+       do_splice_direct_actor fs/splice.c:1201 [inline]
+       do_splice_direct+0x174/0x240 fs/splice.c:1227
+       do_sendfile+0xb06/0xe50 fs/read_write.c:1370
+       __do_sys_sendfile64 fs/read_write.c:1431 [inline]
+       __se_sys_sendfile64 fs/read_write.c:1417 [inline]
+       __x64_sys_sendfile64+0x1d8/0x220 fs/read_write.c:1417
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xcd/0x230 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+other info that might help us debug this:
+
+Chain exists of:
+  &q->elevator_lock --> fs_reclaim --> &q->q_usage_counter(io)#55
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&q->q_usage_counter(io)#55);
+                               lock(fs_reclaim);
+                               lock(&q->q_usage_counter(io)#55);
+  lock(&q->elevator_lock);
+
+ *** DEADLOCK ***
+
+6 locks held by syz-executor347/5865:
+ #0: ffff8880365d0428 (sb_writers#7){.+.+}-{0:0}, at: splice_direct_to_actor+0x342/0xa30 fs/splice.c:1102
+ #1: ffff8880694ac488 (&of->mutex){+.+.}-{4:4}, at: kernfs_fop_write_iter+0x28f/0x510 fs/kernfs/file.c:325
+ #2: ffff888141f30b48 (kn->active#59){.+.+}-{0:0}, at: kernfs_fop_write_iter+0x2b2/0x510 fs/kernfs/file.c:326
+ #3: ffff888026444188 (&set->update_nr_hwq_lock){.+.+}-{4:4}, at: elv_iosched_store+0x337/0x3a0 block/elevator.c:790
+ #4: ffff888142f38a70 (&q->q_usage_counter(io)#55){++++}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x15/0x20 block/blk-mq.c:205
+ #5: ffff888142f38aa8 (&q->q_usage_counter(queue)#7){+.+.}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x15/0x20 block/blk-mq.c:205
+
+stack backtrace:
+CPU: 1 UID: 0 PID: 5865 Comm: syz-executor347 Not tainted 6.15.0-syzkaller-01958-g785cdec46e92 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_circular_bug+0x275/0x350 kernel/locking/lockdep.c:2046
+ check_noncircular+0x14c/0x170 kernel/locking/lockdep.c:2178
+ check_prev_add kernel/locking/lockdep.c:3168 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3287 [inline]
+ validate_chain kernel/locking/lockdep.c:3911 [inline]
+ __lock_acquire+0x126f/0x1c90 kernel/locking/lockdep.c:5240
+ lock_acquire kernel/locking/lockdep.c:5871 [inline]
+ lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5828
+ __mutex_lock_common kernel/locking/mutex.c:601 [inline]
+ __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:746
+ elevator_change+0x103/0x400 block/elevator.c:677
+ elv_iosched_store+0x2eb/0x3a0 block/elevator.c:792
+ queue_attr_store+0x276/0x320 block/blk-sysfs.c:805
+ sysfs_kf_write+0xf2/0x150 fs/sysfs/file.c:145
+ kernfs_fop_write_iter+0x354/0x510 fs/kernfs/file.c:334
+ iter_file_splice_write+0x91c/0x1150 fs/splice.c:738
+ do_splice_from fs/splice.c:935 [inline]
+ direct_splice_actor+0x18f/0x6c0 fs/splice.c:1158
+ splice_direct_to_actor+0x342/0xa30 fs/splice.c:1102
+ do_splice_direct_actor fs/splice.c:1201 [inline]
+ do_splice_direct+0x174/0x240 fs/splice.c:1227
+ do_sendfile+0xb06/0xe50 fs/read_write.c:1370
+ __do_sys_sendfile64 fs/read_write.c:1431 [inline]
+ __se_sys_sendfile64 fs/read_write.c:1417 [inline]
+ __x64_sys_sendfile64+0x1d8/0x220 fs/read_write.c:1417
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x230 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f705a0b5f59
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 c1 1f 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffc11bbeec8 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f705a0b5f59
+RDX: 0000000000000000 RSI: 0000000000000003 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 00007ffc11bbea30 R09: 00007ffc11bbea30
+R10: 0000000000000003 R11: 0000000000000246 R12: 0000000000000003
+R13: 00007ffc11bbef00 R14: 00007ffc11bbef40 R15: 0000000000000000
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
