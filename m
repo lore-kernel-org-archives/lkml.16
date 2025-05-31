@@ -1,213 +1,119 @@
-Received: from dvalin.narfation.org (dvalin.narfation.org [213.160.73.56])
+Received: from smtp-190b.mail.infomaniak.ch (smtp-190b.mail.infomaniak.ch [185.125.25.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742AE22D4EB;
-	Sat, 31 May 2025 08:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.160.73.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A94A3BE5E
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 08:47:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748680883; cv=none; b=LYcX+zbmTU/XI01QkuCk/mtMTQMd6SE02ZjMgM4l40KSpH6+tOgI0NlpZhSn+mMoy4FLKdQ59wbqhGOKJV2vlKzJWshBLYJF1j87OjAiXrdrjuGEPT1Pqz0aYjaKHmSDjwK0kzWRQrsic2Y3bhRZA9Yl+mxTNNKt2jjyKqA8meM=
+	t=1748681245; cv=none; b=uWZzl84LWdKg+TqxSqbyLGbbq1evhgMwzl9kg2mMlscKdG6wSFyxMJe9lKL6NZQ6wZDBmOu8c/eimVwY5egk22YC4w60jHa9g5WenjOu1MaQr035QA1u48dtvs6k0cw0DEz73RsqspTPgooHsRXQLWk/CMlc2sisM7brfM8S2KI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748680883; c=relaxed/simple;
-	bh=799jq6gFPy5XEnSwpA8+a+qrM154nWLIKmOn7fwmLLM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=vBHrfle7UTf4/JkvtUqgrc7tDTMJ6iTcunmLxGe473WcQm/rYTGYgxAvT3aVJ8vYtBW6GztZSZyJmxika86wHXVT5erekiYyfbLo/ehRPSqGgspf5GqNe1pSJnaMaJzdhwKohQjH/pp/3898xncUhSBzGa81ELV3+W/AhCjlR6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org; spf=pass smtp.mailfrom=narfation.org; dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b=i3bZKa+/; arc=none smtp.client-ip=213.160.73.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=narfation.org
+	s=arc-20240116; t=1748681245; c=relaxed/simple;
+	bh=sYZi93/yPJO5ZF2q+Up42YMESADN6on5s2Xc31n4Fx0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J3scparPV9psH4VK/gFpXyT6BijmREzo0CbDgllWsAGNb9K5Qyn0pNiDrSzg24A87GYZe1SdlkAqvX39OG1ZhESy0ZzoPNPefhOEAtv32hYqFmEf19j56FbY2bwNNucDncoQfaWBBmp2YYeXKxxCtiNLYrCscEVIVsKmhVULs48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=MHgeFy2R; arc=none smtp.client-ip=185.125.25.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="i3bZKa+/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
-	s=20121; t=1748680271;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jll3XeKX99pWqsCTGFwx78r84HFnraGM4zNForfuar4=;
-	b=i3bZKa+/0lAKv8gR00vmayeK2aJiwvdrqTxJxAaXTEBLkXOwvbc+zORX/B0oIwems0YMAN
-	tu5Sv+Sn0Pl2VSVzj8GwBCls8lvt8IS8RO+QwBCo8vYYPt+Ib5EHQmEFIACe0fAeXvF+NY
-	oiW/bKeKsUqSJdNcoLoAa9ErZ/nl78A=
-From: Sven Eckelmann <sven@narfation.org>
-To: Marek Lindner <marek.lindner@mailbox.org>,
- Simon Wunderlich <sw@simonwunderlich.de>,
- Antonio Quartulli <antonio@mandelbit.com>,
- Matthias Schiffer <mschiffer@universe-factory.net>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH batadv 1/5] batman-adv: store hard_iface as iflink private data
-Date: Sat, 31 May 2025 10:31:07 +0200
-Message-ID: <4075596.ElGaqSPkdT@sven-desktop>
-In-Reply-To:
- <0b26554afea5203820faef1dfb498af7533a9b5d.1747687504.git.mschiffer@universe-factory.net>
-References:
- <0b26554afea5203820faef1dfb498af7533a9b5d.1747687504.git.mschiffer@universe-factory.net>
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="MHgeFy2R"
+Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4b8YRt6G19zLCp;
+	Sat, 31 May 2025 10:39:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1748680746;
+	bh=y9YddgqwimNGVoqG1X5gr78LYtkCAqMi4STBWfmUjbE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MHgeFy2RsPFQaevV4qfTD4etw8+KjwqF5O9K9KIIRslX+FZuZZL3A9ukvGh6Sir6L
+	 qf7IXhkZ+lyJSXGs18geyFYGwx1uF7GnNXGjrRJu83/2+pIHjk2XWGJOjH1aXmou6h
+	 EwTkDw21Ciw/s8+snsFhgd/2UysyFgtH7Q+rFTRM=
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4b8YRs69dkz43W;
+	Sat, 31 May 2025 10:39:05 +0200 (CEST)
+Date: Sat, 31 May 2025 10:39:02 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Song Liu <song@kernel.org>, Jan Kara <jack@suse.cz>, 
+	bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, 
+	ast@kernel.org, daniel@iogearbox.net, martin.lau@linux.dev, brauner@kernel.org, 
+	kpsingh@kernel.org, mattbobrowski@google.com, amir73il@gmail.com, repnop@google.com, 
+	jlayton@kernel.org, josef@toxicpanda.com, gnoack@google.com, 
+	Tingmao Wang <m@maowtm.org>
+Subject: Re: [PATCH bpf-next 3/4] bpf: Introduce path iterator
+Message-ID: <20250531.nie3chiew9Nu@digikod.net>
+References: <20250529183536.GL2023217@ZenIV>
+ <CAPhsuW7LFP0ddFg_oqkDyO9s7DZX89GFQBOnX=4n5mV=VCP5oA@mail.gmail.com>
+ <20250529201551.GN2023217@ZenIV>
+ <CAPhsuW5DP1x_wyzT1aYjpj3hxUs4uB8vdK9iEp=+i46QLotiOg@mail.gmail.com>
+ <20250529214544.GO2023217@ZenIV>
+ <CAPhsuW5oXZVEaMwNpSF74O7wZ_f2Qr_44pu9L4_=LBwdW5T9=w@mail.gmail.com>
+ <20250529231018.GP2023217@ZenIV>
+ <CAPhsuW6-J+NUe=jX51wGVP=nMFjETu+1LUTsWZiBa1ckwq7b+w@mail.gmail.com>
+ <20250530.euz5beesaSha@digikod.net>
+ <20250530184348.GQ2023217@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart6691312.GXAFRqVoOG";
- micalg="pgp-sha512"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250530184348.GQ2023217@ZenIV>
+X-Infomaniak-Routing: alpha
 
---nextPart6691312.GXAFRqVoOG
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Sven Eckelmann <sven@narfation.org>
-Date: Sat, 31 May 2025 10:31:07 +0200
-Message-ID: <4075596.ElGaqSPkdT@sven-desktop>
-MIME-Version: 1.0
-
-On Monday, 19 May 2025 22:46:28 CEST Matthias Schiffer wrote:
-> By passing the hard_iface to netdev_master_upper_dev_link() as private
-> data, we can iterate over hardifs of a mesh interface more efficiently
-> using netdev_for_each_lower_private*() (instead of iterating over the
-> global hardif list). In addition, this will enable resolving a hardif
-> from its netdev using netdev_lower_dev_get_private() and getting rid of
-> the global list altogether in the following patches.
+On Fri, May 30, 2025 at 07:43:48PM +0100, Al Viro wrote:
+> On Fri, May 30, 2025 at 02:20:39PM +0200, Mickaël Salaün wrote:
 > 
-> A similar approach can be seen in the bonding driver.
+> > Without access to mount_lock, what would be the best way to fix this
+> > Landlock issue while making it backportable?
+> > 
+> > > 
+> > > If we update path_parent in this patchset with choose_mountpoint(),
+> > > and use it in Landlock, we will close this race condition, right?
+> > 
+> > choose_mountpoint() is currently private, but if we add a new filesystem
+> > helper, I think the right approach would be to expose follow_dotdot(),
+> > updating its arguments with public types.  This way the intermediates
+> > mount points will not be exposed, RCU optimization will be leveraged,
+> > and usage of this new helper will be simplified.
 > 
-> Signed-off-by: Matthias Schiffer <mschiffer@universe-factory.net>
-> ---
->  net/batman-adv/bat_algo.h       |  1 -
->  net/batman-adv/bat_iv_ogm.c     | 25 +++++++--------------
->  net/batman-adv/bat_v.c          |  6 ++---
->  net/batman-adv/bat_v_elp.c      |  7 ++----
->  net/batman-adv/bat_v_ogm.c      | 12 ++++------
->  net/batman-adv/hard-interface.c | 39 ++++++++++++---------------------
->  net/batman-adv/main.c           |  6 ++---
->  net/batman-adv/mesh-interface.c |  6 ++---
->  net/batman-adv/multicast.c      |  6 ++---
->  net/batman-adv/netlink.c        |  6 ++---
->  net/batman-adv/originator.c     |  6 ++---
->  net/batman-adv/send.c           |  6 ++---
->  12 files changed, 43 insertions(+), 83 deletions(-)
+> IMO anything that involves struct nameidata should remain inside
+> fs/namei.c - something public might share helpers with it, but that's
+> it.  We had more than enough pain on changes in there, and I'm pretty
+> sure that we are not done yet; in the area around atomic_open, but not
+> only there.  Parts of that are still too subtle, IMO - it got a lot
+> better over the years, but I would really prefer to avoid the need
+> to bring more code into analysis for any further massage.
+> 
+> Are you sure that follow_dotdot() behaviour is what you really want?
+> 
+> Note that it's not quite how the pathname resolution works.  There we
+> have the result of follow_dotdot() fed to step_into(), and that changes
+> things.  Try this:
+> 
+> mkdir /tmp/foo
+> mkdir /tmp/foo/bar
+> cd /tmp/foo/bar
+> mount -t tmpfs none /tmp/foo
+> touch /tmp/foo/x
+> ls -Uldi . .. /tmp/foo ../.. /tmp ../x
+> 
+> and think about the results.  Traversing .. is basically "follow_up as much
+> as possible, then to parent, then follow_down as much as possible" and
+> the last part (../x) explains why we do it that way.
+> 
+> Which objects would you want to iterate through when dealing with the
+> current directory in the experiment above?  Simulation of pathwalk
+> would have the root of overmounting filesystem as the second object
+> visited; follow_dotdot() would yield the directory overmounted by
+> that instead.
+> 
+> I'm not saying that either behaviour is right for your case - just that
+> they are not identical and it's something that needs to be consciously
+> chosen.
 
-Looks mostly good - I just want to modify the includes slightly (if it is ok for you):
-
-index c165dede..ba5bea4c 100644
---- a/net/batman-adv/bat_algo.c
-+++ b/net/batman-adv/bat_algo.c
-@@ -14,6 +14,7 @@
- #include <linux/skbuff.h>
- #include <linux/stddef.h>
- #include <linux/string.h>
-+#include <linux/types.h>
- #include <net/genetlink.h>
- #include <net/netlink.h>
- #include <uapi/linux/batman_adv.h>
-diff --git a/net/batman-adv/bat_algo.h b/net/batman-adv/bat_algo.h
-index 898c71b5..cdd1ccfe 100644
---- a/net/batman-adv/bat_algo.h
-+++ b/net/batman-adv/bat_algo.h
-@@ -11,7 +11,6 @@
-
- #include <linux/netlink.h>
- #include <linux/skbuff.h>
--#include <linux/types.h>
-
- extern char batadv_routing_algo[];
-
-diff --git a/net/batman-adv/bat_v_elp.c b/net/batman-adv/bat_v_elp.c
-index 56b6216f..8df2dcc2 100644
---- a/net/batman-adv/bat_v_elp.c
-+++ b/net/batman-adv/bat_v_elp.c
-@@ -35,7 +35,6 @@
- #include <net/cfg80211.h>
- #include <uapi/linux/batadv_packet.h>
-
--#include "bat_algo.h"
- #include "bat_v_ogm.h"
- #include "hard-interface.h"
- #include "log.h"
-diff --git a/net/batman-adv/bat_v_ogm.c b/net/batman-adv/bat_v_ogm.c
-index 5c955ac2..cab83d37 100644
---- a/net/batman-adv/bat_v_ogm.c
-+++ b/net/batman-adv/bat_v_ogm.c
-@@ -22,7 +22,6 @@
- #include <linux/mutex.h>
- #include <linux/netdevice.h>
- #include <linux/random.h>
--#include <linux/rculist.h>
- #include <linux/rcupdate.h>
- #include <linux/skbuff.h>
- #include <linux/slab.h>
-@@ -33,7 +32,6 @@
- #include <linux/workqueue.h>
- #include <uapi/linux/batadv_packet.h>
-
--#include "bat_algo.h"
- #include "hard-interface.h"
- #include "hash.h"
- #include "log.h"
-diff --git a/net/batman-adv/main.c b/net/batman-adv/main.c
-index af1e644b..d41ce799 100644
---- a/net/batman-adv/main.c
-+++ b/net/batman-adv/main.c
-@@ -27,7 +27,6 @@
- #include <linux/module.h>
- #include <linux/netdevice.h>
- #include <linux/printk.h>
--#include <linux/rculist.h>
- #include <linux/rcupdate.h>
- #include <linux/skbuff.h>
- #include <linux/slab.h>
-diff --git a/net/batman-adv/netlink.c b/net/batman-adv/netlink.c
-index 35d7ecee..5afb1b70 100644
---- a/net/batman-adv/netlink.c
-+++ b/net/batman-adv/netlink.c
-@@ -20,7 +20,6 @@
- #include <linux/if_vlan.h>
- #include <linux/init.h>
- #include <linux/limits.h>
--#include <linux/list.h>
- #include <linux/minmax.h>
- #include <linux/netdevice.h>
- #include <linux/netlink.h>
-diff --git a/net/batman-adv/originator.c b/net/batman-adv/originator.c
-index 5e4168f8..c13e05d3 100644
---- a/net/batman-adv/originator.c
-+++ b/net/batman-adv/originator.c
-@@ -29,7 +29,6 @@
- #include <linux/workqueue.h>
- #include <uapi/linux/batadv_packet.h>
-
--#include "bat_algo.h"
- #include "distributed-arp-table.h"
- #include "fragmentation.h"
- #include "gateway_client.h"
-diff --git a/net/batman-adv/send.c b/net/batman-adv/send.c
-index 788fcfd1..a9929948 100644
---- a/net/batman-adv/send.c
-+++ b/net/batman-adv/send.c
-@@ -21,7 +21,6 @@
- #include <linux/list.h>
- #include <linux/netdevice.h>
- #include <linux/printk.h>
--#include <linux/rculist.h>
- #include <linux/rcupdate.h>
- #include <linux/skbuff.h>
- #include <linux/slab.h>
-
-Thanks,
-	Sven
---nextPart6691312.GXAFRqVoOG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQS81G/PswftH/OW8cVND3cr0xT1ywUCaDq+SwAKCRBND3cr0xT1
-y3drAQC++qUIxjP/5zx4qVUE0mPTESzY622rxoVLLdoMxpjWmwEAxQfC0Aj4rQZN
-/JLZqkC1kiWXGPIigQVmK6Q+O3cnYQw=
-=0ODT
------END PGP SIGNATURE-----
-
---nextPart6691312.GXAFRqVoOG--
-
-
-
+Thanks, this helps. I didn't though about this semantic difference.  We
+don't want the handle_dots() semantic (which call follow_dotdot() and
+step_into()), only the (backward) pathwalk one which is equivalent to
+follow_dotdot().  I'll add Landlock tests for this specific scenario.
