@@ -1,63 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02661242900;
-	Sat, 31 May 2025 15:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A979C238D32
+	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 15:39:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748705425; cv=none; b=MBGcmmZ0sFrVCjRF85xXQuimiUPvzphvgpZ8VANXVOD+1hsZyquCOB9Kk0V/a5E2zLefsl4bTj25N/qgSrlRbpR8th12fg9yEVkeFSyqNFHvphTmi0F5jcUWcdrAdEw58JyKWRynivzIKr76nMf3e6+oHrupEQOw3RUJ2v6034M=
+	t=1748705990; cv=none; b=J99EpzkeY/TO1TwLWZpgPtWljlyRPlM2H2/2Pf10D4b1KnQAVBcpsaqsTCH143VhEUircQ/kLrP5fbWQ2FhAtF9FX1JW9rsCgQsezWbQp7qo/tZQnQmSABglx/ujpUgviSMCxx7SYXvBG7xO/RhztD/dntJgYQUNorRZng2AtA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748705425; c=relaxed/simple;
-	bh=iiL5VxW3Twj1IIHwwMPR65Wl/S/cUTQU/lOhciGZy9g=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Qj7Mr5v6dZI1XmxzLmHXkYr/GfRbBs11QINzvlV4qGGCPoZaLSG4KI3GMg1GzL87VyZvwBJxMKbsLtWoccysrmMozgUWE52yc5ZD1WtjjFlVo6Mx6aO5YbP2d8EEZ0jFJRkhGv/y2eBvDr/LXRnFXwWruskCkqau3OMf68fItlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=khq+2SyK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748705990; c=relaxed/simple;
+	bh=gU9laCodEqgFk7Nl1GeUd8LpwRSNdhguSR7gzLHmTs0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ek092yNYZPcOXIqvCzomo9oW5qkPmLn/pbQZ5aU76muIiSr66gDVPfAi74WdAMyMZvtl1w1DhF7O1TJ6Gy0XEdVVjvTLNAwZRWMDXGnCTpNO3fqTcS+51mrpCwV1lcSHOeZ3Ipd5Zv90p9aYyO3uvvBThmiKwC1JTOJJHi42VLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mXXYUSuY; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="khq+2SyK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EB99C4CEE3;
-	Sat, 31 May 2025 15:30:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748705424;
-	bh=iiL5VxW3Twj1IIHwwMPR65Wl/S/cUTQU/lOhciGZy9g=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=khq+2SyKs9dPTLUaY0jJZzmH8OgkAySXMuGx6bADtwkTT42aUJ45lNIUMS8N/jgGC
-	 sWHt0Hcel+D3jGA34xiAlh2jRJdZ3iiMai+5pSbkUKt/b4OQhligXaK+N0grYy0ZUm
-	 5JNcMxZdnxE2HX5vAm1DMUytk73mdRtZo3ebmcmc36bqDUH3YVD+MChBiG+Ey930O+
-	 xUmXq4frg1BsGB/jmM1nWNh22UvJL5SIh+R3kw/LRNGXIH49nJ5fhRItkIUgCsZYbW
-	 8oG110uWvjIHjSl9DwzZqxXe9vejnYnIFrHfZXUPzKU75XpVtrXdmeDhyeyo0lnwBf
-	 kmi9x5DQ3t5QQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAAE5380AA70;
-	Sat, 31 May 2025 15:30:58 +0000 (UTC)
-Subject: Re: [GIT PULL 5/5] soc: sophgo devicetree updates for 6.16
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <d98adabb-a26a-4962-af9d-5707e1cb3715@app.fastmail.com>
-References: <28a4c0cf-7978-4547-bf89-42804975c848@app.fastmail.com> <d98adabb-a26a-4962-af9d-5707e1cb3715@app.fastmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <d98adabb-a26a-4962-af9d-5707e1cb3715@app.fastmail.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/soc-newsoc-6.16
-X-PR-Tracked-Commit-Id: 9bba618694cc905b898661c18e3e40955573ef5e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 31848987f177a6c0944fd0254a55ffd7c52a8c50
-Message-Id: <174870545744.163157.4670024390186583728.pr-tracker-bot@kernel.org>
-Date: Sat, 31 May 2025 15:30:57 +0000
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, soc@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mXXYUSuY"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-30eccc61f96so507300a91.2
+        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 08:39:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748705988; x=1749310788; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gU9laCodEqgFk7Nl1GeUd8LpwRSNdhguSR7gzLHmTs0=;
+        b=mXXYUSuYU9GuWW6woMg48mjSjP8zTHYwerlqjn9GdM+EOT/AUHCl7dhSk4tscVRerm
+         e/lq9pyv5IC0o6h+uqH9n8Q70bFKrgdqh4ttJMuiwd0rdL0qrcEbLKZ/G93knKalr9tk
+         GMUzB5JCUBp6RhzvzZIMVgmauaDQzuTw3GK/s2klvfpA9ozf6WqwlgyNq+ro5pHnmNnH
+         G4ZLakf7d0udoDed/oHTmWieNk7ZLRHR91f2h22fE2MSdsyOdeMKvlzG6u9EnYbbRDLe
+         wdi04VVBSctMUInvwtFRo73Diu6d4DkcJFS97l6w8ZkDEh34dQQ6Q/DAkKp40eaLvuTL
+         mrTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748705988; x=1749310788;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gU9laCodEqgFk7Nl1GeUd8LpwRSNdhguSR7gzLHmTs0=;
+        b=q/Y+NEy74Mnrf9dH5o9gn9f6LZ2vn5SLMJZXC/nrc8EF7IG2mdS/ML/BjBn2/Y/8jJ
+         HVH1p9H073ktr5nBruzdBESjRrSf+spLngc5vPc7+EFr/xIXv5SLNVc5uqF2nsA7ekRh
+         ZqyKxcnQawvSDTW1ibsmiBQN1EHxuR8RhPu+S193puRbF2mpxsVnBTVRCmhyVGBGcWpb
+         BK1yulGKcNgq2spy6t+U7spfqmeBwMI31cKBCxDaF99BD7YsshkqY3igUZ6QyuyPDsSb
+         zKsQ9XiZLC52WWdszw+D5VVU6HuTI4eojyfVohlIXZzam876aCzh6IVR8ph4ckT7Zp6o
+         nVMw==
+X-Forwarded-Encrypted: i=1; AJvYcCVKoCFaPSiAmd1OzzncIUIGRg2lsYJC0JnTZ2jjrtdapb4yC6CKaNCittMuBxNudkgZabq/2C3dF6wVeao=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNb9yZrKsBatEdUuTdnzBY60zodUbB5uMjnT/deDECx4dW6/as
+	B5exlKVmc+SM6XeHIXc8rug1AqDXuTPcEKwBbf3kuL/KZNyYukL8/ZoHDpIbHuJfJEtkFWM1Yye
+	12OFYuYK3vQM14IeMMDbVbww5LfkzPe0=
+X-Gm-Gg: ASbGnct6uInScQsjqHuIsZot5SOo9TeMUB4R9bA6xV0PNPJYo6GHuMJcPSORa9D5PIa
+	/PCauGrTYJ0c4013fMt5Tca434tZjBJmtWzQoJFn3tmwMwnkRikzhJow7ag/shOQ/Hm5XenN31W
+	4HC8MkENsFf3kHSQ4PSSZ/y8WrRnQ81TI3wJ1Au3YFpKE=
+X-Google-Smtp-Source: AGHT+IHl6zouE4LWARtWKof5FoX2/BnOqPpqC+poFZfUJPlE46SCdWhcUwZ/kirEdrkRwdjAkYmAGKCIoWWAMRBa2wc=
+X-Received: by 2002:a17:90b:4f4d:b0:310:8d79:dfe4 with SMTP id
+ 98e67ed59e1d1-31241849819mr4211406a91.4.1748705987877; Sat, 31 May 2025
+ 08:39:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250529002509.GA161456@ax162>
+In-Reply-To: <20250529002509.GA161456@ax162>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sat, 31 May 2025 17:39:35 +0200
+X-Gm-Features: AX0GCFvKLgSzAfNJ19aRo-_vAJqqHWKC-i3DNuV70pOA1O5Q3qSVFZf8BAgbIoM
+Message-ID: <CANiq72mbAvxhT37xQFAPur_vfpDN7ufbtPeyF+UnU3f7i5sRkg@mail.gmail.com>
+Subject: Re: Prebuilt LLVM 20.1.6 uploaded
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: llvm@lists.linux.dev, linux-kernel@vger.kernel.org, ojeda@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The pull request you sent on Sat, 31 May 2025 11:07:48 +0200:
+On Thu, May 29, 2025 at 2:25=E2=80=AFAM Nathan Chancellor <nathan@kernel.or=
+g> wrote:
+>
+> I have built and uploaded LLVM 20.1.6 to
+> https://mirrors.edge.kernel.org/pub/tools/llvm/.
+>
+> If there are any issues found, please let us know via email or
+> https://github.com/ClangBuiltLinux/linux/issues/new, so that we have an
+> opportunity to get them fixed in main and backported before the 20.x
+> series is no longer supported.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/soc-newsoc-6.16
+As usual, thanks! The combined package works for a x86_64 Rust enabled buil=
+d:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/31848987f177a6c0944fd0254a55ffd7c52a8c50
+Tested-by: Miguel Ojeda <ojeda@kenel.org>
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Cheers,
+Miguel
