@@ -1,56 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 381B0257451;
-	Sun,  1 Jun 2025 23:24:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB74F25B69B;
+	Sun,  1 Jun 2025 23:25:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748820300; cv=none; b=aXpjLKXKxzPRbU0RNrnRrhPPngSSV0LgvKAacoHWvcoSAuYJtS5FNUZisK/9PMXWIVxF5yPcV4Adey/ul1AAqL43H7yxrQtjW5KlB/SJK9JyFpEjrabRuHW1+MBlj+XJ1bDFNPicCF1RfyKKCKN3i7DS318uP95Vld7yvYGditw=
+	t=1748820309; cv=none; b=UvQlGCuTiIeUlIuiYSlkR1r/MZPB1keT8hRjXL50E57H/O1bYZzHuB2mcAJuGu9Dfb/Ec5yDLUijVvDxqYuzfL6o7TQ68ZOHOUe4p1EiqsY9bSrQvXvDGwDodWzoKuy9tFmi4T0c94czt5IkWLdAPsrr6jOii0RMsCOqu/17yBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748820300; c=relaxed/simple;
-	bh=QZFDa7bYCggNE+YvuxSeXpMMdvPHtdpdYuAPi17x5QU=;
+	s=arc-20240116; t=1748820309; c=relaxed/simple;
+	bh=GiYCrizsrKN545MGTSBwfZOQIIeFBROdVl53qwGBfw0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uenMyeN4j7UiSfW80X+mr3levnpquLtik8GI3VEkY04cFikTzO3BZHBIgE/j0HjCv7ifDEhlqyGxHgepna7gxUs51Zpr0NbO946OHMR786Cd8Xq5LmSYqpZmm4FTyqZHdEkc03lmvgUWse+O1Tuh7kslOpraIO5zZtzBbLHSF7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=URc9jV5p; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=YInNYmIP/FpdnxVfi+sH1XFCxbe4NACd1sWh+6VjP+Ql52bcnm0X2gPAKIU8iaOBtvcE2gbOYKyginJV4S6kUOWKqThdtSJ7iN6z4QgWGzQ1jk04/sbJlCWA0P+4qTOYpXHe7vibLvl/D4MPPQKmgzn6HsLBv+6EjfbFOVxjxBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AYs8fDiL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="URc9jV5p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86A49C4CEE7;
-	Sun,  1 Jun 2025 23:24:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AYs8fDiL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93A31C4CEEE;
+	Sun,  1 Jun 2025 23:25:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748820299;
-	bh=QZFDa7bYCggNE+YvuxSeXpMMdvPHtdpdYuAPi17x5QU=;
+	s=k20201202; t=1748820308;
+	bh=GiYCrizsrKN545MGTSBwfZOQIIeFBROdVl53qwGBfw0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=URc9jV5pqfL2eAT/a5plf0MmpSOzcZX1/tHAo+HheitZuoVMIznInLZSHfsWAhYq8
-	 rAyUbxUrMCrcTfBhTn1jTNB/HcnzmKsQ20RtrvZMHw515FMAfihLtzXMkdlnZIJ7wG
-	 GSRhwCzM7jSgjBcBwKTJ/BGhrUbuPbd//DXSBfbG4ukwVeAvhlv1YY3A+2rmpt+ogt
-	 6iXdmKaNrLtdM4f7rJRNuSIwNMCwWvMfZ6szf6dRPkfMraLrlmeJgitGSGQuQIqJOL
-	 duiqR1mpBNbhyfsIeuo8ws3UjDCHJ+r7WKYx0YL1lbKIvcCmKdL1SzhO9oOO8/YkIG
-	 1m5B+SJnA3hMA==
+	b=AYs8fDiL9d6g8mVOqub+B0T1rvdqeuJ12ZUJm7INwqSUwom7DfHnEYc35GjXx/iU0
+	 8RkBMpani3SUR4mfyufLk8014wPQdQDXjr/x+UtE3AF+RqO6qUPRqOqGcFRTVDQSoq
+	 UosqY0sYVascO5JZLYWj+PLUY2Kc2r5eh/0ZHva0NpTN+ZKDMWkInX4LykxAcfayhd
+	 r3M1QJBiILkAaz939ZpCLbs3vtjBGNc+dcrqWA+VGW41agAPkSN+N4oP5A3gogNouw
+	 e++Qm1Geish1jlKivivRrwyQbCtKPwPckzIWIFhUwxDGvxvg1kgVqWAe1qJpLhJ0qe
+	 k4fgoN4SMedpg==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: "Jesse.Zhang" <Jesse.Zhang@amd.com>,
-	Jesse Zhang <jesse.zhang@amd.com>,
-	"Shaoyun . liu" <Shaoyun.liu@amd.com>,
-	Prike Liang <Prike.Liang@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: Damon Ding <damon.ding@rock-chips.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
 	Sasha Levin <sashal@kernel.org>,
-	christian.koenig@amd.com,
+	andrzej.hajda@intel.com,
+	neil.armstrong@linaro.org,
+	rfoss@kernel.org,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
 	airlied@gmail.com,
 	simona@ffwll.ch,
-	sunil.khatri@amd.com,
-	Jack.Xiao@amd.com,
-	srinivasan.shanmugam@amd.com,
-	shaoyun.liu@amd.com,
-	Jiadong.Zhu@amd.com,
-	Hawking.Zhang@amd.com,
-	michael.chen@amd.com,
-	amd-gfx@lists.freedesktop.org,
+	l.stach@pengutronix.de,
+	bivvy.bi@rock-chips.com,
 	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.15 008/110] drm/amdgpu: Fix API status offset for MES queue reset
-Date: Sun,  1 Jun 2025 19:22:50 -0400
-Message-Id: <20250601232435.3507697-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.15 011/110] drm/bridge: analogix_dp: Add irq flag IRQF_NO_AUTOEN instead of calling disable_irq()
+Date: Sun,  1 Jun 2025 19:22:53 -0400
+Message-Id: <20250601232435.3507697-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250601232435.3507697-1-sashal@kernel.org>
 References: <20250601232435.3507697-1-sashal@kernel.org>
@@ -63,93 +60,89 @@ MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.15
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: "Jesse.Zhang" <Jesse.Zhang@amd.com>
+From: Damon Ding <damon.ding@rock-chips.com>
 
-[ Upstream commit ad7c088e31f026d71fe87fd09473fafb7d6ed006 ]
+[ Upstream commit efab13e7d13a641a22c7508cde6e1a5285161944 ]
 
-The mes_v11_0_reset_hw_queue and mes_v12_0_reset_hw_queue functions were
-using the wrong union type (MESAPI__REMOVE_QUEUE) when getting the offset
-for api_status. Since these functions handle queue reset operations, they
-should use MESAPI__RESET union instead.
+The IRQF_NO_AUTOEN can be used for the drivers that don't want
+interrupts to be enabled automatically via devm_request_threaded_irq().
+Using this flag can provide be more robust compared to the way of
+calling disable_irq() after devm_request_threaded_irq() without the
+IRQF_NO_AUTOEN flag.
 
-This fixes the polling of API status during hardware queue reset operations
-in the MES for both v11 and v12 versions.
-
-Signed-off-by: Jesse Zhang <jesse.zhang@amd.com>
-Reviewed-By: Shaoyun.liu <Shaoyun.liu@amd.com>
-Reviewed-by: Prike Liang <Prike.Liang@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Suggested-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Damon Ding <damon.ding@rock-chips.com>
+Link: https://lore.kernel.org/r/20250310104114.2608063-2-damon.ding@rock-chips.com
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
 **YES** This commit should be backported to stable kernel trees based on
-the following analysis: ## Bug Analysis The commit fixes a clear
-functional bug where `mes_v11_0_reset_hw_queue()` and
-`mes_v12_0_reset_hw_queue()` functions were using the wrong union type
-(`MESAPI__REMOVE_QUEUE`) to get the API status offset for polling
-completion. Since these functions handle **reset** operations, they
-should use the `MESAPI__RESET` union instead. ## Code Changes Assessment
-1. **Small and contained**: The fix changes only 2 lines across 2 files:
-- `mes_v11_0.c:480`: `offsetof(union MESAPI__REMOVE_QUEUE, api_status)`
-→ `offsetof(union MESAPI__RESET, api_status)` - `mes_v12_0.c:500`: Same
-change 2. **Logical correctness**: The functions create `union
-MESAPI__RESET mes_reset_queue_pkt` packets but were polling using the
-wrong union offset. This is a clear mismatch that could cause incorrect
-polling behavior. 3. **No architectural changes**: This is purely a bug
-fix that aligns the API status polling with the correct packet type. ##
-Impact Assessment - **Affects GPU queue management**: MES (Micro Engine
-Scheduler) queue reset is a critical operation for AMD GPUs -
-**Potential for silent failures**: Wrong offset polling could lead to
-improper completion detection - **User-visible impact**: Could cause GPU
-hangs or incorrect queue state management - **Low regression risk**: The
-fix aligns the code with its intended design ## Comparison with Similar
-Commits All 5 provided similar commits were marked "NO" for backporting
-because they: - Added new APIs/features (commits #1, #2) - Made
-functional changes to queue reset behavior (commits #3, #4, #5) In
-contrast, this commit: - Fixes an existing bug without adding features -
-Maintains existing behavior while correcting implementation - Follows
-the stable tree rule of "important bugfixes with minimal risk" ## Stable
-Tree Criteria Met ✅ **Important bugfix**: Fixes incorrect API status
-polling in GPU queue reset ✅ **Minimal risk**: Two-line change with
-clear logic ✅ **No new features**: Pure correctness fix ✅ **Contained
-change**: Limited to MES driver subsystem ✅ **Clear side effects**:
-Improves reliability of queue reset operations This commit represents
-exactly the type of focused bug fix that stable trees are designed to
-include.
+the following analysis: ## Code Change Analysis The commit makes a
+simple, targeted fix to address a race condition in interrupt handling:
+1. **Line 1639**: Changes `irq_flags = IRQF_TRIGGER_RISING |
+IRQF_TRIGGER_FALLING;` to `irq_flags = IRQF_TRIGGER_RISING |
+IRQF_TRIGGER_FALLING | IRQF_NO_AUTOEN;` 2. **Line 1642**: Changes
+`irq_flags = 0;` to `irq_flags = IRQF_NO_AUTOEN;` 3. **Line 1659**:
+Removes the `disable_irq(dp->irq);` call that was previously needed
+after `devm_request_threaded_irq()` ## Backport Suitability Assessment
+**Matches Stable Tree Criteria:** 1. **Fixes an Important Bug**: The
+commit addresses a race condition where interrupts can fire between
+`devm_request_threaded_irq()` and `disable_irq()`, which could cause
+system instability or unexpected behavior. 2. **Small and Contained
+Change**: The modification is minimal (3 lines changed) and affects only
+the interrupt setup logic in `analogix_dp_core.c:1608-1659`. 3. **Low
+Risk of Regression**: The change uses a well-established kernel pattern
+(IRQF_NO_AUTOEN) that's been proven safe across multiple subsystems. 4.
+**Clear Technical Merit**: As noted in the commit message, using
+`IRQF_NO_AUTOEN` is "more robust compared to the way of calling
+disable_irq() after devm_request_threaded_irq()". **Strong Precedent
+from Similar Commits:** The analysis shows **ALL** similar commits in
+the provided reference set have "Backport Status: YES": -
+`drm/msm/adreno: Use IRQF_NO_AUTOEN flag in request_irq()` - **YES** -
+`drm/imx/dcss: Use IRQF_NO_AUTOEN flag in request_irq()` (both
+instances) - **YES** - `drm/imx/ipuv3: Use IRQF_NO_AUTOEN flag in
+request_irq()` - **YES** - `drm/exynos: move to use request_irq by
+IRQF_NO_AUTOEN flag` - **YES** **Additional Context from Kernel
+Repository:** Examination of `/home/sasha/linux/drivers/gpu/drm/bridge/a
+nalogix/analogix_dp_core.c:1659` confirms this follows the exact same
+pattern as other successful backports - replacing the `request_irq()` +
+`disable_irq()` sequence with `IRQF_NO_AUTOEN` flag usage. This is a
+textbook example of a stable tree candidate: it fixes a real race
+condition bug with minimal, proven-safe code changes that follow
+established kernel patterns.
 
- drivers/gpu/drm/amd/amdgpu/mes_v11_0.c | 2 +-
- drivers/gpu/drm/amd/amdgpu/mes_v12_0.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/mes_v11_0.c b/drivers/gpu/drm/amd/amdgpu/mes_v11_0.c
-index ef9538fbbf537..480283da18454 100644
---- a/drivers/gpu/drm/amd/amdgpu/mes_v11_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/mes_v11_0.c
-@@ -480,7 +480,7 @@ static int mes_v11_0_reset_hw_queue(struct amdgpu_mes *mes,
+diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+index 071168aa0c3bd..9270253058859 100644
+--- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
++++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+@@ -1625,10 +1625,10 @@ analogix_dp_probe(struct device *dev, struct analogix_dp_plat_data *plat_data)
+ 		 * that we can get the current state of the GPIO.
+ 		 */
+ 		dp->irq = gpiod_to_irq(dp->hpd_gpiod);
+-		irq_flags = IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING;
++		irq_flags = IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING | IRQF_NO_AUTOEN;
+ 	} else {
+ 		dp->irq = platform_get_irq(pdev, 0);
+-		irq_flags = 0;
++		irq_flags = IRQF_NO_AUTOEN;
+ 	}
  
- 	return mes_v11_0_submit_pkt_and_poll_completion(mes,
- 			&mes_reset_queue_pkt, sizeof(mes_reset_queue_pkt),
--			offsetof(union MESAPI__REMOVE_QUEUE, api_status));
-+			offsetof(union MESAPI__RESET, api_status));
- }
+ 	if (dp->irq == -ENXIO) {
+@@ -1645,7 +1645,6 @@ analogix_dp_probe(struct device *dev, struct analogix_dp_plat_data *plat_data)
+ 		dev_err(&pdev->dev, "failed to request irq\n");
+ 		goto err_disable_clk;
+ 	}
+-	disable_irq(dp->irq);
  
- static int mes_v11_0_map_legacy_queue(struct amdgpu_mes *mes,
-diff --git a/drivers/gpu/drm/amd/amdgpu/mes_v12_0.c b/drivers/gpu/drm/amd/amdgpu/mes_v12_0.c
-index e6ab617b9a404..624c6b4e452c8 100644
---- a/drivers/gpu/drm/amd/amdgpu/mes_v12_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/mes_v12_0.c
-@@ -500,7 +500,7 @@ static int mes_v12_0_reset_hw_queue(struct amdgpu_mes *mes,
+ 	return dp;
  
- 	return mes_v12_0_submit_pkt_and_poll_completion(mes, pipe,
- 			&mes_reset_queue_pkt, sizeof(mes_reset_queue_pkt),
--			offsetof(union MESAPI__REMOVE_QUEUE, api_status));
-+			offsetof(union MESAPI__RESET, api_status));
- }
- 
- static int mes_v12_0_map_legacy_queue(struct amdgpu_mes *mes,
 -- 
 2.39.5
 
