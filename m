@@ -1,158 +1,168 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4539D40849
-	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 06:11:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC1618DB2B
+	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 06:41:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748758294; cv=none; b=F/7YNB1ScZqTbJ3wzHFZ79Qf36zrFetxiljdCg4zGupYsyjqYZPtsUafQBR1WwsUPub61iM5AHZ2DvxupaaOJBwC2N5CnLz4EPKVwOO4awVs9DQcqCPvEWCHVsAZuXdh0Sfv+AFJFYT8TpdeC4vuGZcwL34erkkCXMXxuoifmng=
+	t=1748760083; cv=none; b=eORXzlGOUDVSwvWC72rD/T1YnDC4hI26Svz1rhKjzebXm7Nx59h7tS7PKNQhQwIKasQxmd1Bb6DecOQveuFdSvRsonDkQL/i49qPnQPuau7Etn5PrSUOo8IGk/SFtnu79WpwuW0lsEuSMw2empdyptmhOu76CUeKDOtqNagfXoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748758294; c=relaxed/simple;
-	bh=pyYX3C8LRSCyKiZKrsYikOuwL0FXhAHaGB3wCJUs2gI=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Z8v9wrONJCUlRYX+9rHvYG4f5z2VuhP2W6hUV3EagGabKMss7renjWPxzqU3mzWg+q9/Jt+taAjrBvrQQvfqWhI2IQBe6amuGmF92daO3Vzlm0a9vg2UEV8SP8CRcvMSMX4irAluPReLWxVgSX9BV84wO6dqR+EsXWaefK2CuCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3dc9c1970daso34179925ab.1
-        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 23:11:33 -0700 (PDT)
+	s=arc-20240116; t=1748760083; c=relaxed/simple;
+	bh=7nIuduBZSDN8yG4gI1AL7If3QAxZl6VdPtjos3S82gY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LjgL5f+Qs9HLaGRKBBkvAiO36jc7I+ySsV0rQHjhBp4k2bv2EJm3h2pzwfBRvrywvJDX1Ogn61F5HFivqW/KaNEZEHBpRXjBWKzsVWBxxqAyT8ti01QtivobFNq4BQ6Fbq6+AIlKlW8cU6JW7C0vENQ71OMCA0Glq4Z31R9Q+Lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=tomeuvizoso.net; dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b=Iv91YkLV; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tomeuvizoso.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b="Iv91YkLV"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-70e447507a0so27150817b3.0
+        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 23:41:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tomeuvizoso-net.20230601.gappssmtp.com; s=20230601; t=1748760078; x=1749364878; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CDv2NwLqpacBBYcKaq5onzHq7Gle/gc1PiMFPCdKyB0=;
+        b=Iv91YkLVutRzPUJt7I5MEKsmYl4bqFiausDX1QTkkNJJKMrplETK1xNBQtirXsbS7C
+         Rh/+LiXzgBmZz/gKbyFX/opx09kF6Qy6IYcs/T5tI4l6ADh1zufSdIKl9UPtTAlFuc4x
+         /dz1WQWCdStLmkv/Dwg//TNjPeExY6OkJfRv/ty5c6NDgkXbxBL73ehtB58PEZfqJWd4
+         TcNb+RokOzJYIP/a+qBaq9nNmT7NswFl9zBCl7Htx5ena49a7Gl+/vpI6OqNwOSz10Uy
+         MXz59/Wu7MrZEKYKc5S2Pj+wmS1jRP18QlOlNgMM1djtUWMNEnbmCL2o0ZrUbbTmr0r0
+         V65Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748758292; x=1749363092;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uKbrcYgaP0mV7rHUaP9NAXtsAF8fMuJ66KpOzH9NbFY=;
-        b=RlQ86YDnY4p6ER8q5to5p7a3vAP1dPpLVK5gk0wgaEO+cO2oap+59DyR0yW5fXuB4U
-         XuEzUR8ib9qRSpZVCjamIi9ey7l89JxjcvXyJgY+tAgCiJkpw3fYIDRRaw6872rn0VMu
-         zZdKE0L0ZuKHdLVqjH9sHGyzBAV/7UrsrkaJdkDq2UU7cdUlDeWka2odrBWH/wAH9ZEd
-         Vtnz9Fcgkfx0KahMrxBoVnqji089+snkPzlP/XvudNjE1VGHvaFH1Tin9Bohcb7ibCm5
-         C/HVYhfXTKAA2TIMwRSEK9I9cPPd9Z+iAwGB/R/Mh8NSGnpgmSiVThvdgwVktI+EQP5W
-         sBrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUlmTmo5IZcsIrH0nxdU56eK0ieNCrZLLxfQwI1vGCjHpFRunJgf1gmUXQscLM+348PXxuGfPrrPIVpVn0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywkk7G1euhovrlIcyLybo3Z6Bc2zdhGzNlQOV5sFn3+ffPUmVb/
-	2KBUI9ut9tN70OHpPhaSUN6jyeV2NtDr67Abnljyo5vDv0A1BcNgy5BqHWlcAqfdkmu+A+Xa/D+
-	XmQU0S7OLD6OeKOGXv9dBgdZmhD51NWj6VgChRaKjmVkmsE2Uzs46GrQAiaI=
-X-Google-Smtp-Source: AGHT+IGEB48SJoEvUugDnc6WtVV9IlSJIaZN9+CA2+QdNtOFbh4pJR020KDj1Q+gI/oLXRZ4FCx2C8FoQ0usKzovONWdH2MVE1yN
+        d=1e100.net; s=20230601; t=1748760078; x=1749364878;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CDv2NwLqpacBBYcKaq5onzHq7Gle/gc1PiMFPCdKyB0=;
+        b=UyYBRU4o9//OoVLRYEoh/y8Wdj1aNqJgiwZ4WCYLHc33xqX6c9uxXtXgMUBRDqDGgU
+         eln8P1z8cPaK6rib9XmiTRwQrD3zLsxjndcCe8RRThAuXGKBvBDQXc5Vc0ycHsm3Yibe
+         klD0sUhZ4+Z6YHbd/VHeE4cTPT4AlZUnMfzc+l4Hbba5t0+kxlAnW2P2FJdHojvlMYgn
+         Rf0uZz6xbRMWbtQs85hHgvSD7+s2TzeBqPbe/jCmLs4AuSbTV5xNO24CdQiC6cg2IHPC
+         UfDXRo+BQeHNDBuVRKMc3GrFscZnZqMa8kVhFkQTXSk+PafpcnsaHJDv16D1whIxG3En
+         WNiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU/Ydttz7z3j3amKDtXYhcMojso0hajg8p441PLKUZDFQ+g9CO2db4HfUCP2RFfAUGd5fUlrTdTSXorgPU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMsVW7h53JqnE9KcDfMW4L13SjYgWTwKw5rH9iPL+olkRrjHEy
+	ZtSE921K5c2zhBJ7C4RXMtk1WGO4b4lmr7710UlNTb5gg/r11PwgePmt1Si2SLaZYsE=
+X-Gm-Gg: ASbGnctahXKxwDcUgnJgrs2JvroT/cBhiRmPW3ceJbKiRZX7SDFJ4oLyY3oKon6xPtD
+	S0tP7LnVmCk3g3tB40yxPLpJ8kE54dGOcMJG9KiXU7LyLMVVR+pDgUSTA2iu6gOEXFHxypX/wDe
+	9gcIxdZpvuSWo4pL0OmI1QUTQoIEhXksDuMgAWtbThPwZ4xlSK5//GWEhZGpj4X4FnyKSO8HFaJ
+	jwQE0YQH+tAF9DgiV1mlGS9dypa3pVL0ysk8n9AQpRucMgu8THjh5JaBH/CEDUqosEajyNkHSgB
+	UHUgbLKbtkgt9Fon6VInSKy1lx1Oil85XIICbhA4M2haeQFpvspw1X0mhz/xuOIJg7el6UrtMLH
+	FrZfzI3oa4WYOsefuCJarOBHmQYbxGw==
+X-Google-Smtp-Source: AGHT+IG7QFqS1UaU0YMRasbmTCx1Tr0K8NUXc+2x5saWfwUXHo9/8qNmSBwBg1YWxFL8D3/84TKyfg==
+X-Received: by 2002:a05:690c:7401:b0:70d:ee83:373b with SMTP id 00721157ae682-71057c05dd7mr113923437b3.13.1748760078191;
+        Sat, 31 May 2025 23:41:18 -0700 (PDT)
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com. [209.85.219.173])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-70f8ac10d35sm15501757b3.67.2025.05.31.23.41.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 31 May 2025 23:41:17 -0700 (PDT)
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e7c5d4709caso3232886276.1;
+        Sat, 31 May 2025 23:41:17 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW4CqoNp0vHiwKvDuqV0KtmBY2XYHHgJyx+5Gq+J8ez1ZNP2C9aMyyN0jMKwjErhfEYnPYAF3iWApP6@vger.kernel.org, AJvYcCWMGkuKj8wCKudYlGU09Qx4Uydj1hSG+b8WKrXjEKqC1BZb7ThBqdCha69v2qI6+zzSUqQA7OMv089H@vger.kernel.org, AJvYcCWhKMFiaj17hJMlx25KDCb6MEpqA5JKWJeuTDEuYynugfChPlKrZURQyA6jza5g52L0UEHPqMvCCe2WHVE=@vger.kernel.org, AJvYcCXKCe8Gq6wVcYEHQk8NEE7lrF49TP+G4tqbFEOgss6RMXmQq9cBkroYcNV7lUD5whPzeUSgfgudB+HHPKgC@vger.kernel.org
+X-Received: by 2002:a05:6902:1245:b0:e7d:c51d:4b17 with SMTP id
+ 3f1490d57ef6-e7fec876436mr9326569276.8.1748760077303; Sat, 31 May 2025
+ 23:41:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:972:b0:3dd:a270:37b2 with SMTP id
- e9e14a558f8ab-3dda27037cbmr30509905ab.1.1748758292411; Sat, 31 May 2025
- 23:11:32 -0700 (PDT)
-Date: Sat, 31 May 2025 23:11:32 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <683bef14.a70a0220.1a6ae.0011.GAE@google.com>
-Subject: [syzbot] [ocfs2?] kernel BUG in ocfs2_remove_extent
-From: syzbot <syzbot+8882b2f5f48a7170a726@syzkaller.appspotmail.com>
-To: jlbec@evilplan.org, joseph.qi@linux.alibaba.com, 
-	linux-kernel@vger.kernel.org, mark@fasheh.com, ocfs2-devel@lists.linux.dev, 
-	syzkaller-bugs@googlegroups.com
+References: <20250519-6-10-rocket-v4-0-d6dff6b4c0ae@tomeuvizoso.net> <CA+VMnFzisyMFzze52RRf6=Gstq29jmukrPSfqXfBWrVw0a7k1Q@mail.gmail.com>
+In-Reply-To: <CA+VMnFzisyMFzze52RRf6=Gstq29jmukrPSfqXfBWrVw0a7k1Q@mail.gmail.com>
+From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Date: Sun, 1 Jun 2025 08:41:06 +0200
+X-Gmail-Original-Message-ID: <CAAObsKDhjkQ_wVcOiVsGPB6QPuWkKPrWEGd-6Oq7BgjX9NhTJA@mail.gmail.com>
+X-Gm-Features: AX0GCFuCkivNAaBx7rL3ymXj2J3pJIXqNYSSzMxHaNqO3jwK8nThi-KXGe-k1Hs
+Message-ID: <CAAObsKDhjkQ_wVcOiVsGPB6QPuWkKPrWEGd-6Oq7BgjX9NhTJA@mail.gmail.com>
+Subject: Re: [PATCH v4 00/10] New DRM accel driver for Rockchip's RKNN NPU
+To: Jagan Teki <jagan@edgeble.ai>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Oded Gabbay <ogabbay@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Sebastian Reichel <sebastian.reichel@collabora.com>, 
+	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, Jeff Hugo <jeff.hugo@oss.qualcomm.com>, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Fri, May 30, 2025 at 8:50=E2=80=AFPM Jagan Teki <jagan@edgeble.ai> wrote=
+:
+>
+> On Mon, 19 May 2025 at 19:14, Tomeu Vizoso <tomeu@tomeuvizoso.net> wrote:
+> >
+> > This series adds a new driver for the NPU that Rockchip includes in its
+> > newer SoCs, developed by them on the NVDLA base.
+> >
+> > In its current form, it supports the specific NPU in the RK3588 SoC.
+> >
+> > The userspace driver is part of Mesa and an initial draft can be found =
+at:
+> >
+> > https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/29698
+> >
+> > Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> > ---
+> > Changes in v4:
+> > - Several fixes to DT bindings.
+> > - Link to v3: https://lore.kernel.org/r/20250516-6-10-rocket-v3-0-7051a=
+c9225db@tomeuvizoso.net
+> >
+> > Changes in v3:
+> > - Reference in the device tree only the register blocks that are
+> >   actually used.
+> > - Several style and robustness fixes suggested in the mailing list.
+> > - Added patches from Nicolas Frattaroli that add support to the NPU for
+> >   the Rock 5B board.
+> > - Link to v2: https://lore.kernel.org/r/20250225-6-10-rocket-v2-0-d4dbc=
+fafc141@tomeuvizoso.net
+> >
+> > Changes in v2:
+> > - Drop patch adding the rk3588 compatible to rockchip-iommu (Sebastian =
+Reichel)
+> > - Drop patch adding support for multiple power domains to rockchip-iomm=
+u (Sebastian Reichel)
+> > - Link to v1: https://lore.kernel.org/r/20240612-6-10-rocket-v1-0-060e4=
+8eea250@tomeuvizoso.net
+> >
+> > ---
+> > Nicolas Frattaroli (2):
+> >       arm64: dts: rockchip: add pd_npu label for RK3588 power domains
+> >       arm64: dts: rockchip: enable NPU on ROCK 5B
+> >
+> > Tomeu Vizoso (8):
+> >       dt-bindings: npu: rockchip,rknn: Add bindings
+> >       arm64: dts: rockchip: Add nodes for NPU and its MMU to rk3588s
+> >       arm64: dts: rockchip: Enable the NPU on quartzpro64
+> >       accel/rocket: Add registers header
+> >       accel/rocket: Add a new driver for Rockchip's NPU
+> >       accel/rocket: Add IOCTL for BO creation
+> >       accel/rocket: Add job submission IOCTL
+> >       accel/rocket: Add IOCTLs for synchronizing memory accesses
+>
+> Can this be possible to infer yolov8/10? Do we need to convert PT/ONNX
+> to any other common format's unlike rknn?
 
-syzbot found the following issue on:
+Both considerations are entirely dependent on the userspace driver.
+This kernel driver should be able to support a userspace driver that
+accelerates any YOLO version. Should also be able to support without
+changes a userspace driver that implements execution of ONNX, PyTorch
+models, etc. With or without conversion to an intermediate model
+format.
 
-HEAD commit:    c89756bcf406 Merge tag 'pm-6.16-rc1' of git://git.kernel.o..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15fae6d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ded97a85afe9a6c8
-dashboard link: https://syzkaller.appspot.com/bug?extid=8882b2f5f48a7170a726
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+Regarding the particular userspace driver that has been submitted for
+review to Mesa, you can put questions and comments at:
 
-Unfortunately, I don't have any reproducer for this issue yet.
+https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/29698
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-c89756bc.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/b21d74e73303/vmlinux-c89756bc.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/b778ededeb75/bzImage-c89756bc.xz
+Thanks,
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+8882b2f5f48a7170a726@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-kernel BUG at fs/ocfs2/alloc.c:5581!
-Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
-CPU: 0 UID: 0 PID: 5320 Comm: syz.0.0 Not tainted 6.15.0-syzkaller-03478-gc89756bcf406 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:ocfs2_remove_extent+0x1ecf/0x2020 fs/ocfs2/alloc.c:5581
-Code: fa ff ff 48 8b 4c 24 08 80 e1 07 fe c1 38 c1 0f 8c 95 fa ff ff 48 8b 7c 24 08 e8 4c e8 8f fe e9 86 fa ff ff e8 22 08 2d fe 90 <0f> 0b f3 0f 1e fa 44 89 6c 24 10 65 8b 1d f3 25 06 0f bf 07 00 00
-RSP: 0018:ffffc9000d3ee980 EFLAGS: 00010287
-RAX: ffffffff8392ea2e RBX: ffffc9000d3ef178 RCX: 0000000000100000
-RDX: ffffc9000ee94000 RSI: 000000000004f2da RDI: 000000000004f2db
-RBP: ffffc9000d3eecd0 R08: ffff88803c8c4880 R09: 0000000000000006
-R10: 00000000fffffffc R11: 0000000000000002 R12: 1ffff1100abcf048
-R13: 0000000000000007 R14: ffff888055e78240 R15: dffffc0000000000
-FS:  00007f98ae9896c0(0000) GS:ffff88808d28f000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fb0dc3a17e0 CR3: 000000003e12a000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- ocfs2_remove_btree_range+0xdef/0x1540 fs/ocfs2/alloc.c:5778
- ocfs2_commit_truncate+0xb64/0x21d0 fs/ocfs2/alloc.c:7373
- ocfs2_truncate_file+0xca2/0x1420 fs/ocfs2/file.c:509
- ocfs2_setattr+0x1520/0x1b40 fs/ocfs2/file.c:1212
- notify_change+0xb33/0xe40 fs/attr.c:552
- do_truncate+0x1a4/0x220 fs/open.c:68
- handle_truncate fs/namei.c:3508 [inline]
- do_open fs/namei.c:3891 [inline]
- path_openat+0x306c/0x3830 fs/namei.c:4046
- do_filp_open+0x1fa/0x410 fs/namei.c:4073
- do_sys_openat2+0x121/0x1c0 fs/open.c:1437
- do_sys_open fs/open.c:1452 [inline]
- __do_sys_creat fs/open.c:1530 [inline]
- __se_sys_creat fs/open.c:1524 [inline]
- __x64_sys_creat+0x8f/0xc0 fs/open.c:1524
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f98adb8e969
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f98ae989038 EFLAGS: 00000246 ORIG_RAX: 0000000000000055
-RAX: ffffffffffffffda RBX: 00007f98addb6160 RCX: 00007f98adb8e969
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000200000000040
-RBP: 00007f98adc10ab1 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f98addb6160 R15: 00007ffd2df48568
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:ocfs2_remove_extent+0x1ecf/0x2020 fs/ocfs2/alloc.c:5581
-Code: fa ff ff 48 8b 4c 24 08 80 e1 07 fe c1 38 c1 0f 8c 95 fa ff ff 48 8b 7c 24 08 e8 4c e8 8f fe e9 86 fa ff ff e8 22 08 2d fe 90 <0f> 0b f3 0f 1e fa 44 89 6c 24 10 65 8b 1d f3 25 06 0f bf 07 00 00
-RSP: 0018:ffffc9000d3ee980 EFLAGS: 00010287
-RAX: ffffffff8392ea2e RBX: ffffc9000d3ef178 RCX: 0000000000100000
-RDX: ffffc9000ee94000 RSI: 000000000004f2da RDI: 000000000004f2db
-RBP: ffffc9000d3eecd0 R08: ffff88803c8c4880 R09: 0000000000000006
-R10: 00000000fffffffc R11: 0000000000000002 R12: 1ffff1100abcf048
-R13: 0000000000000007 R14: ffff888055e78240 R15: dffffc0000000000
-FS:  00007f98ae9896c0(0000) GS:ffff88808d28f000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffcc92d0d90 CR3: 000000003e12a000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Tomeu
