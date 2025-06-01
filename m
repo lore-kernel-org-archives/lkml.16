@@ -1,173 +1,133 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 717696FBF;
-	Sun,  1 Jun 2025 22:18:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B4E1AA786
+	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 22:25:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748816334; cv=none; b=AU8ZGPZ/Jad7WtF3b1liwgq952N4O8kU2JkOH5ZEE/iC3082YAIslwyRweUO9S+ReUZYy8XisuTbV6VpnxKcW3c+ysUm6urXiKedJPeN8EVeuQcbE1nG2gOVTC9BLEo0Y5MoZ/YI3QueBGV3lGyUgLOjZz3ORDmxfGO/5MdPDpU=
+	t=1748816722; cv=none; b=AnHSOUBOvSOORy/DaofI3epJ5V/vuRZDLm11eJCjlP6q68yet/xXDMctiRgdhXpQaSdOEm2jNtgvyIW666myw1yxa0hsJ6jou3VmpNJDD19XrqpAeN991891oGE5h7XTzwII0vKwQh55W3nXi48GjI2CMda33X6/OHUlr34giWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748816334; c=relaxed/simple;
-	bh=q5bj5dHeAF0jw1D9B79SOZIYQ/2vhai+oYehV5QXNxk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=LuYjIsMRH6ugs7Sn5wSJ+pWaI7I4kOh4oausenIUpZzniNI4OsZ7Pd++Nyot0er9fyB+oe+Q3KA02gyqjQ6/5fFX8PLrmhho+M4oewE33jdNoNZG2u+eHFgfCLXfTgu1INDK6y0EQWi7cgR2wXKuYuj8cqcQQ6SRUVT1zvkRMqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fandLP8Q; arc=none smtp.client-ip=209.85.222.182
+	s=arc-20240116; t=1748816722; c=relaxed/simple;
+	bh=UQMEiCY4uH1jwQAuC/8hK5QUoRl/PDIjkY4Qa7RtvhU=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=mIX3YkE9jLdzcplljyRx02j4dg9GnWVhEyn/5VS0olNNe1V8ZRNNJmWkhalUnwfsmRdMNnj/MJm+9Xiqc6rC2tItzN6TlZaBeoQ8MhmSr9x3yqWd+SHKp14zV2Ve9iiofTWs6cJE/Zwt9fzCtGeHArTaOS9T0dy+XavyLfF040A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fx7SWbaT; arc=none smtp.client-ip=209.85.167.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fandLP8Q"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7d0976776dcso355116185a.2;
-        Sun, 01 Jun 2025 15:18:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fx7SWbaT"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-4067106dd56so2319548b6e.3
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Jun 2025 15:25:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748816331; x=1749421131; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ASuAMgM5DsTFJTj9WldWE2aobhWhSAfKBSNCSHlRwfs=;
-        b=fandLP8QL8Z87QpfDJQiUUuOV3AGQf3IxmE+XZZSTbkgZSXZrPEv8mDIoYDkzQqThl
-         rW9hj41AnVlNAIKY22V/ztnMWWERGKVKCd8oXR+NFXNzbKs0q2XwZpiYDADGCz6Tq7rV
-         G0uZ7JgJpFDRd4B5GcJM9pK+S0YUjV2FvRDkERhxMawLN1q75itxlIrSe8T+jlR7ofrV
-         QwzSgWlt5kdWhlY2DgIRP0tntNwdmYu8ea+dtMgsnFsT05PMWq6zokbewAb6AkyFq2M+
-         jPDISeSY2+EHokAfJXzSnAwDsRIh4y9kD+5x28yPSJ3r5nQffL/V1nE/uSXQMCvaO8YA
-         5BRQ==
+        d=gmail.com; s=20230601; t=1748816719; x=1749421519; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bQBtyBckoPpDZJKoZg4EzGegksEO0utLn/9XYWq5qDM=;
+        b=Fx7SWbaTOsXycGGkqD++vFMTa0Kd8ncIKnbIAZphPl5zzSkATzkaOCkMzEQ6IpcH9e
+         dDP7dlaY3weE0PoOtJ3jUbgzHnltF3cqH2dtqJihPQ+IxbrCJ1/JJsqY3FZGD1hN9em1
+         XXHi09/G+sTg9sGvS5NFqZOUZvBu2RkZr6/ouNJQL5HBG89tDFamew8PMH6gt+PUdug7
+         SVf910SyMPYtgS1VVCP3INVBfs/AZ+okpe9Lo+oqmy955JnPaDh+bAPnmfW78i72RpuF
+         gqDSwa+CpF9NJAy1Y7hXOFJyKjEnpRjbi4VysVPUSHV3HxH8PhB3GxewDbg9dZkwdHsT
+         3mKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748816331; x=1749421131;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ASuAMgM5DsTFJTj9WldWE2aobhWhSAfKBSNCSHlRwfs=;
-        b=eJ+Je7ECkOIqZ0hpfRwqwn9KmG2AH8dTUFdMtuRf8iUCDbOLLBTvYBr6AqGnrZyal7
-         XKL6fe2B5e/vPkVfoQgrRhdl1zT8C8XhOnpQGwTRdr3TFxGPEIFMl3DWr+L8DS+Gf9KB
-         ziB5M7v22G5okdPqyPw+aicJ92NGl926ccQACinb79ZQNQAb7StFoQ9PIwpsmk70Yjh5
-         W2cuGsb1TIVzKg9gpWmVOgtced+ebXt4+ftZpQnBxgCGgb1YAYLfhMPe8w9I3lrmzXiu
-         GmDpuM4PFk0Qai5l+WLlVVAIMNtiBY467Fz4TRfF5mccDq0jOWsVzm+nGe27arG0MbcJ
-         xP5A==
-X-Forwarded-Encrypted: i=1; AJvYcCUyxHH2YJbgwoooIcfJtu0bZ205h44BI/OCNWnr6EwSdgKkiGrVpOwEPiZsSUbU3zottuyTIKmP27g=@vger.kernel.org, AJvYcCVSt83SrcntSsk5PAu3esYW3uPmzq8B55rFEQZ7VDpbukHjJnwqaX3Bs5v/No9Y2xEbTsWQSK50/UdABUM/@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyU6SponIBU/JxkTsCOSOliPQmXwzAGHXw0FjKblhfMV06uT9D
-	BhMhvtc2mk0tQ8OH8yGqdnYg5rkF3p1R7FEyafkfkZFIwo2LIE9cA1lP
-X-Gm-Gg: ASbGncs6q6pu4abQfYMi0uW6n2yrxSXtciQzyd43vDgI4eFzRLlPgE1gsxZYt1W90Dv
-	anXkoYKXxK8krGUmsiVHUsukH9TOqCVvQRGjY/yA/U/3PkhaJS9CI+hXRT096RKdeiwuabkWErh
-	jDmuueATmmdEqwvffWf6P9IyMQ8t3lWYDYyIrxGXb9Zq76+QJWyHG/QhR23Xw7iUDBX58MZGmcj
-	XXkhqwNZnawGQYIQ7rMeJEEmCWoQQS6NCVHybMJ/I/FATkfwcd7hv1CPrGQarx0W0jzKwKJ6jFA
-	pSq5Vw2P9pB7YpE1zF91ILQRLSe0DGwsg1tc/oDY0uFSpfZO6Q9rWlh2mTxptVbtAA==
-X-Google-Smtp-Source: AGHT+IFvrmdqb1Jbez/1pqAFUzOD1aoANA/UWpASTj5vWXRE59vvCBBQj7T26GKh6jtI6UAtH/NggQ==
-X-Received: by 2002:a05:620a:458b:b0:7c5:65ab:5002 with SMTP id af79cd13be357-7d0eaccf947mr1097655685a.49.1748816331192;
-        Sun, 01 Jun 2025 15:18:51 -0700 (PDT)
-Received: from [10.0.0.88] ([2607:fea8:bad7:5400:5458:c6fd:17d9:9820])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d09a1951casm536030285a.68.2025.06.01.15.18.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Jun 2025 15:18:49 -0700 (PDT)
-From: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>
-Date: Sun, 01 Jun 2025 18:18:47 -0400
-Subject: [PATCH v4] drm: add overview diagram for drm stack
+        d=1e100.net; s=20230601; t=1748816719; x=1749421519;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bQBtyBckoPpDZJKoZg4EzGegksEO0utLn/9XYWq5qDM=;
+        b=OT7rVsXxy8eEckuX7ox9pnwvJjThZtQJQybBHmWGd9H2DHclx6QDvtK73UN26RVkWg
+         qGJyCHnzVel8wMtYiFq2+yOYmQa63gzRXY9Z9uuNpUV1MA3xpGy0P5q8J0YulxlGiV6e
+         VTvl5r444lhphz9kwtNqxrylXAVJ3T8/bEVKl3fAsS27Z1JoeFJuEPA9J+c40/yNegYo
+         Z0/JkcD5l8CGzR04AGBawIgjci8oF7JUTxkOqNrJ0PTaw5vDMGE6iMCHErBcPRd5yuBI
+         1cH7lf9/QkqnR/1PMJ7Dx0OBW7ASq+xLfoWVjPGAT6Nc8qDN2guZwlaGKoE6QLTCjtVc
+         lwhQ==
+X-Gm-Message-State: AOJu0YxJGVtU/sFrHQQQI1phrHorQR1Ky7Ht275tcrO/J2K3B2VAgBym
+	3Vu3/lK4x829bV2ZfV9+Z6T1+jhbK+eQIcxttHL2gXfirMv3kRB+Bfv0qzfSsUOZVE6Ohoh/CY/
+	0y4i/VXrOctESkeiHNDiXAgR33CQOp1TEhnni
+X-Gm-Gg: ASbGncst63JJ8SniWCmpRISodCkOyF28ceV8E9VtdRR4ic2M3qZa0wqKrAP8F1aPB/N
+	0HUiLWpiZl8LmNwGMEcW79EmJtNxL7WlnQvOqbqbJ9UYvC92s6OnJu7f3UW6viBc3dqiLW5WD2J
+	onmcIzYfeR56aY9zLuAvvtDMxTBKLdYibTxA==
+X-Google-Smtp-Source: AGHT+IG8h84cnoDGmPM2wUQp8K6n6nIRYzYCfzkJFo5ukI7macMT7pJZL3QEYaCjlzX/N63TOTdFmooErb/s7w5n5MU=
+X-Received: by 2002:a05:6808:1d02:b0:406:7704:b2e9 with SMTP id
+ 5614622812f47-4067e550230mr5491095b6e.9.1748816718917; Sun, 01 Jun 2025
+ 15:25:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250601-drm-doc-updates-v4-1-e7c46821e009@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAMbRPGgC/3XNwQ6CMBAE0F8hPbum3VJAT/6H8YDsFpqIkBaJh
- vDvFk5E4nEmeTOTCOwdB3FOJuF5dMF1zxjSQyKqpnzWDI5iFijRSIMI5FugroJXT+XAAXRWZDa
- jtFCIIqres3XvdfF6i7lxYej8Zz0Y1dL+3xoVKCDFlkyap/JOl7ot3eNYda1Ytkbcer33CBLYq
- JysMljZ7Nfrrc/3Xsd/U/ApLwutSOqtn+f5CyLdqyguAQAA
-X-Change-ID: 20250522-drm-doc-updates-3686f6d48122
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Jonathan Corbet <corbet@lwn.net>
-Cc: dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748816329; l=3417;
- i=abdulrasaqolawani@gmail.com; s=20250522; h=from:subject:message-id;
- bh=q5bj5dHeAF0jw1D9B79SOZIYQ/2vhai+oYehV5QXNxk=;
- b=sjsMrBAa7gu2PoEDTIe+RBXPWGT4CuRLEafyGtWYHvOlDONiQzwpYYmo5l0FI/+XGq+fkjsus
- pSEv0WevVJoBsq2PwUBQZtAeEHuTadQ3flbJV7IY2822TGRCzWuLpqn
-X-Developer-Key: i=abdulrasaqolawani@gmail.com; a=ed25519;
- pk=LCvBseqd+rEj8B1vNEnSSfNcqQwMsfWx1DGDT1LYddo=
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Date: Sun, 1 Jun 2025 17:25:07 -0500
+X-Gm-Features: AX0GCFsDsAzayrx7tSJWlDUSaooEVCAH1bhCRroOmZTwTH6Zg-oJiU1qWyBmMac
+Message-ID: <CABb+yY0mDQrYH0Z6=kRyCft5DXgUmhT2X-trRfs+PPd8i8ppbg@mail.gmail.com>
+Subject: [GIT PULL] Mailbox changes for v6.16
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Add an overview diagram of Linux DRM architecture for
-graphics and compute to introduction.rst
+Hi Linus,
 
-Signed-off-by: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>
----
-Changes in v4:
-- Ensure patch description describe diff adding overview diagram.
-- Link to v3: https://lore.kernel.org/r/20250527-drm-doc-updates-v3-1-58e97a831d03@gmail.com
+The following changes since commit a5806cd506af5a7c19bcd596e4708b5c464bfd21:
 
-Changes in v3:
-- revert the promotion of the overview diagram header
-- Link to v2: https://lore.kernel.org/r/20250523-drm-doc-updates-v2-0-e517df152cf6@gmail.com
+  Linux 6.15-rc7 (2025-05-18 13:57:29 -0700)
 
-Changes in v2:
-- Update the overview diagram to display correctly by putting in a literal block.
-- Also update the overview section diagram to a higher order.
-- Ensured docs are successfully rendering by building for htmldocs and pdfdocs.
-- Rendered pages are okay on html and pdf.
-- Link to v1: https://lore.kernel.org/r/20250522-drm-doc-updates-v1-1-d1efd54740bd@gmail.com
----
- Documentation/gpu/introduction.rst | 40 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 39 insertions(+), 1 deletion(-)
+are available in the Git repository at:
 
-diff --git a/Documentation/gpu/introduction.rst b/Documentation/gpu/introduction.rst
-index 3cd0c8860b949408ed570d3f9384edd5f03df002..a8d3f953a470180b395ec52a45d0f3f4561424e0 100644
---- a/Documentation/gpu/introduction.rst
-+++ b/Documentation/gpu/introduction.rst
-@@ -14,7 +14,45 @@ including the TTM memory manager, output configuration and mode setting,
- and the new vblank internals, in addition to all the regular features
- found in current kernels.
- 
--[Insert diagram of typical DRM stack here]
-+Overview of the Linux DRM Architecture
-+--------------------------------------
-+::
-+
-+        +-----------------------------+
-+        |     User-space Apps         |
-+        | (Games, Browsers, ML, etc.) |
-+        +-----------------------------+
-+                      |
-+                      v
-+        +---------------------------------------+
-+        |    Graphics APIs   |   Compute APIs   |
-+        |  (OpenGL, Vulkan)  |  (OpenCL, CUDA)  |
-+        +---------------------------------------+
-+                |                   |
-+                v                   v
-+        +---------------------+  +-----------------------+
-+        |  User-space Driver  |  |    Compute Runtime    |
-+        |  (Mesa, AMD/NVIDIA) |  |  (OpenCL, CUDA, ROCm) |
-+        +---------------------+  +-----------------------+
-+                |                   |
-+                +--------+----------+
-+                         |
-+                         v
-+                +-----------------------+
-+                |   libdrm (DRM API)    |
-+                +-----------------------+
-+                          |
-+                          v
-+        +-------------------------------------------+
-+        |     Kernel DRM/KMS Driver (i915, amdgpu,  |
-+        |     nouveau, etc.)                        |
-+        +-------------------------------------------+
-+                |                       |
-+                v                       v
-+        +----------------+     +-------------------+
-+        | GPU Display HW |     | GPU Compute Units |
-+        +----------------+     +-------------------+
-+
- 
- Style Guidelines
- ================
+  git://git.kernel.org/pub/scm/linux/kernel/git/jassibrar/mailbox.git
+tags/mailbox-v6.16
 
----
-base-commit: 4d07f5440d7afee27dada528aaf5230e760531cb
-change-id: 20250522-drm-doc-updates-3686f6d48122
+for you to fetch changes up to d0b497df02e9b2ebcb5771c7b16e424c0614a366:
 
-Best regards,
--- 
-Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>
+  mailbox: qcom-apcs-ipc: Assign OF node to clock controller child
+device (2025-05-29 10:01:35 -0500)
 
+----------------------------------------------------------------
+sophgo: add driver for CV18XX series
+mailbox core: misc cleanup
+qcom: add SM7150 APCS compatible
+      apcs: added separate clock node
+imx: fix tx doorbell send
+microchip: misc compile option fix
+mediatek: Refine GCE_GCTL_VALUE setting
+
+----------------------------------------------------------------
+David Wronek (1):
+      dt-bindings: mailbox: qcom: Add the SM7150 APCS compatible
+
+Jason-JH Lin (1):
+      mailbox: mtk-cmdq: Refine GCE_GCTL_VALUE setting
+
+Peng Fan (7):
+      mailbox: imx: Fix TXDB_V2 sending
+      mailbox: Use dev_err when there is error
+      mailbox: Not protect module_put with spin_lock_irqsave
+      mailbox: Propagate correct error return value
+      mailbox: Remove devm_mbox_controller_unregister
+      mailbox: Use guard/scoped_guard for con_mutex
+      mailbox: Use guard/scoped_guard for spinlock
+
+Stephan Gerhold (2):
+      dt-bindings: mailbox: qcom,apcs: Add separate node for clock-controller
+      mailbox: qcom-apcs-ipc: Assign OF node to clock controller child device
+
+Yue Haibing (1):
+      mailbox: mchp-ipc-sbi: Fix COMPILE_TEST build error
+
+Yuntao Dai (2):
+      dt-bindings: mailbox: add Sophgo CV18XX series SoC
+      mailbox: sophgo: add mailbox driver for CV18XX series SoC
+
+ .../bindings/mailbox/qcom,apcs-kpss-global.yaml    | 170 +++++++++++-----
+ .../bindings/mailbox/sophgo,cv1800b-mailbox.yaml   |  60 ++++++
+ drivers/mailbox/Kconfig                            |  14 +-
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/cv1800-mailbox.c                   | 220 +++++++++++++++++++++
+ drivers/mailbox/imx-mailbox.c                      |  21 +-
+ drivers/mailbox/mailbox.c                          | 199 +++++++------------
+ drivers/mailbox/mtk-cmdq-mailbox.c                 |  51 +++--
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c            |  16 +-
+ include/linux/mailbox_controller.h                 |   3 -
+ 10 files changed, 536 insertions(+), 220 deletions(-)
+ create mode 100644
+Documentation/devicetree/bindings/mailbox/sophgo,cv1800b-mailbox.yaml
+ create mode 100644 drivers/mailbox/cv1800-mailbox.c
