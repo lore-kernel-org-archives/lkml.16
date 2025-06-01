@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4830198A1A;
-	Sun,  1 Jun 2025 06:53:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0BF19E98B;
+	Sun,  1 Jun 2025 06:53:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748760784; cv=none; b=FfT8I/0EsohUXYpjSwuZvqys2Ta+uAy7WNkCi6wFRTjyMdclNW74U8NTgluaOAeURbo8vkvPVVClRydob7oF5Tzh4vbp3lB6M77hG+GbKpTIdNSH6s/Uh5dUa13Hpwh/9O46jpXojpEDntS4/rsSGO8nYO0xWkc5HUmbjA8b52s=
+	t=1748760785; cv=none; b=cGjvcuS3qtp7TiHGWLYUT0YxeEqJGY6lsvAQrMW1arwGCSysW3d9q2KcHLl5D7vrygsb9dFC2u6yl98hrfvf1c/thrxqcRl6C4BfDOwLliq6Svg4EUSsH/TXIKSoq5mD11s4V2SDyOgXh5F0fSlttngo5yOvUeB1BvcyjI7pMVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748760784; c=relaxed/simple;
-	bh=3mjIs8R0jw2Lh21XJ+qjluJ9Sq4LcsMQd8WZ6SX5HRw=;
+	s=arc-20240116; t=1748760785; c=relaxed/simple;
+	bh=HkrML6il0hnxClDP7JZCCS/zpvPHPDWqmrLKm9GftDM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Wc3SLFSngYJf2ejUvW0zFfFHq6E2DoLsffzmSd9SGwq7CTQfPyK/YOexudv9HvfouhAqAOidQ9ybm4DDfn0M7MjggjhKBMfD/dG+PIAf7/2VGEmzP+HRm8eKWUtz3xi+nmb8vOF/XTTSBvMC43YmXnGbozh07nnvwGH1Lg76os0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JAsdsMDP; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=FmM7soK33oOTE7KEFaXOAYCi5K8vLGnogzKRV7dRy8bpXPmcCfG1nT1pEc+86Pq8H40NeYgLsPLuh3hL2MzkLwJUkCAzQ/EpsoZDfX6NGZeqwYwjU+W3mqX+DS6vvSsjNcRmm7bNx9V19HpbTsQ9EkEMyLW7jH08CVtRbI8ufTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s4tyEcVA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JAsdsMDP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4EE3C4CEF5;
-	Sun,  1 Jun 2025 06:53:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s4tyEcVA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA4A7C4CEFE;
+	Sun,  1 Jun 2025 06:53:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748760784;
-	bh=3mjIs8R0jw2Lh21XJ+qjluJ9Sq4LcsMQd8WZ6SX5HRw=;
+	s=k20201202; t=1748760785;
+	bh=HkrML6il0hnxClDP7JZCCS/zpvPHPDWqmrLKm9GftDM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JAsdsMDPB/KPr/zCjoIaZGE9/7nSR0Ic817sjYVXz0kOWLD8HLqH+o/uNxEqgznlj
-	 KFndYzVwYRF85nuhBHbXJ0C/jBP+oG0UIYynq6ZNRMJ+vv/unERfOXJGpbb1M2jtHZ
-	 joaKs0uIrZnEA1fKbNDkczOd4WKtLMlgyzEpsDB4uJy59Xj3K4m2Yf2sZYw2J0VNVc
-	 MbCPuNjfu7qmH/O/qq9Aq2pIGvafsJnvdde4KzZIyr6Uhf1GbTsoWxQrOhKn96z8Q+
-	 FVtFDrxMdfGFOavHgP+itEf7FY+FOTdNCXHxFhyjnL5Gut/8H3brQLSRIqMCfTnY7F
-	 uwWgP51aFZAbA==
+	b=s4tyEcVAhcMmHuOsU8A7b+6dwSEEjvhcnDUD3DhfrBigvrYSVxsZjHZ8Aqyn7UVFN
+	 GJriLaxAwraND468br0b5qBz4I2VRb1VDFqAKBwnJqEi6zfbw9/KJEorKyo30LVL67
+	 8NnzH1d6awHF3iJrhJ+SuyFynv8uTTwXdPMPgsPD6DxY3CrZDyJkk4kuJ3OqHjajgy
+	 l8HO6ekNfs9+6a7DJWcv82HTzrdF/iCpbdw19+xy+1mzO8K3df92zDTeBCAk95Ani1
+	 o51aoCCim7lrdZ+kE8KO0T0IQQqzRPyyHHW32C2+r/T7t6KuXoDpdg6g80J62nQrP3
+	 v7fA26/YbVKPg==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -37,9 +37,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Subject: [PATCH 2/6] perf annotate: Remove __annotation_line__write()
-Date: Sat, 31 May 2025 23:52:58 -0700
-Message-ID: <20250601065302.12531-3-namhyung@kernel.org>
+Subject: [PATCH 4/6] perf annotate: Simplify width calculation in annotation_line__write()
+Date: Sat, 31 May 2025 23:53:00 -0700
+Message-ID: <20250601065302.12531-5-namhyung@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250601065302.12531-1-namhyung@kernel.org>
 References: <20250601065302.12531-1-namhyung@kernel.org>
@@ -51,100 +51,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Get rid of the internal function and convert function arguments into
-local variables if they are used more then twice.
+The width is updated after each part is printed.  It can skip the output
+processing if the total printed size is bigger than the width.
+
+No function changes intended.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/annotate.c | 49 ++++++++++++++++----------------------
- 1 file changed, 20 insertions(+), 29 deletions(-)
+ tools/perf/util/annotate.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 264a212b47df850c..48fac08c4c9502b1 100644
+index 7df726b99541a571..94f73c8944cde519 100644
 --- a/tools/perf/util/annotate.c
 +++ b/tools/perf/util/annotate.c
-@@ -1934,24 +1934,25 @@ int annotation_br_cntr_entry(char **str, int br_cntr_nr,
- 	return -ENOMEM;
- }
- 
--static void __annotation_line__write(struct annotation_line *al, struct annotation *notes,
--				     bool first_line, bool current_entry, bool change_color, int width,
--				     void *obj, unsigned int percent_type,
--				     int  (*obj__set_color)(void *obj, int color),
--				     void (*obj__set_percent_color)(void *obj, double percent, bool current),
--				     int  (*obj__set_jumps_percent_color)(void *obj, int nr, bool current),
--				     void (*obj__printf)(void *obj, const char *fmt, ...),
--				     void (*obj__write_graph)(void *obj, int graph))
--
--{
--	double percent_max = annotation_line__max_percent(al, percent_type);
--	int pcnt_width = annotation__pcnt_width(notes),
--	    cycles_width = annotation__cycles_width(notes);
-+void annotation_line__write(struct annotation_line *al, struct annotation *notes,
-+			    struct annotation_write_ops *wops)
-+{
-+	bool current_entry = wops->current_entry;
-+	double percent_max = annotation_line__max_percent(al, annotate_opts.percent_type);
-+	int width = wops->width;
-+	int pcnt_width = annotation__pcnt_width(notes);
-+	int cycles_width = annotation__cycles_width(notes);
- 	bool show_title = false;
- 	char bf[256];
- 	int printed;
--
--	if (first_line && (al->offset == -1 || percent_max == 0.0)) {
-+	void *obj = wops->obj;
-+	int  (*obj__set_color)(void *obj, int color) = wops->set_color;
-+	void (*obj__set_percent_color)(void *obj, double percent, bool current) = wops->set_percent_color;
-+	int  (*obj__set_jumps_percent_color)(void *obj, int nr, bool current) = wops->set_jumps_percent_color;
-+	void (*obj__printf)(void *obj, const char *fmt, ...) = wops->printf;
-+	void (*obj__write_graph)(void *obj, int graph) = wops->write_graph;
-+
-+	if (wops->first_line && (al->offset == -1 || percent_max == 0.0)) {
- 		if (notes->branch && al->cycles) {
- 			if (al->cycles->ipc == 0.0 && al->cycles->avg == 0)
- 				show_title = true;
-@@ -1965,7 +1966,8 @@ static void __annotation_line__write(struct annotation_line *al, struct annotati
- 		for (i = 0; i < al->data_nr; i++) {
- 			double percent;
- 
--			percent = annotation_data__percent(&al->data[i], percent_type);
-+			percent = annotation_data__percent(&al->data[i],
-+							   annotate_opts.percent_type);
- 
- 			obj__set_percent_color(obj, percent, current_entry);
- 			if (symbol_conf.show_total_period) {
-@@ -2101,10 +2103,10 @@ static void __annotation_line__write(struct annotation_line *al, struct annotati
- 			}
+@@ -1991,6 +1991,7 @@ void annotation_line__write(struct annotation_line *al, struct annotation *notes
+ 					   symbol_conf.show_nr_samples ? "Samples" : "Percent");
  		}
+ 	}
++	width -= pcnt_width;
  
--		if (change_color)
-+		if (wops->change_color)
- 			color = obj__set_color(obj, HE_COLORSET_ADDR);
+ 	if (notes->branch) {
+ 		if (al->cycles && al->cycles->ipc)
+@@ -2054,11 +2055,12 @@ void annotation_line__write(struct annotation_line *al, struct annotation *notes
+ 			obj__printf(obj, "%*s", ANNOTATION__AVG_IPC_WIDTH, bf);
+ 		}
+ 	}
++	width -= cycles_width;
+ 
+ 	obj__printf(obj, " ");
+ 
+ 	if (!*al->line)
+-		obj__printf(obj, "%-*s", width - pcnt_width - cycles_width, " ");
++		obj__printf(obj, "%-*s", width, " ");
+ 	else if (al->offset == -1) {
+ 		if (al->line_nr && annotate_opts.show_linenr)
+ 			printed = scnprintf(bf, sizeof(bf), "%-*d ",
+@@ -2067,7 +2069,7 @@ void annotation_line__write(struct annotation_line *al, struct annotation *notes
+ 			printed = scnprintf(bf, sizeof(bf), "%-*s  ",
+ 					    notes->src->widths.addr, " ");
  		obj__printf(obj, bf);
--		if (change_color)
-+		if (wops->change_color)
+-		obj__printf(obj, "%-*s", width - printed - pcnt_width - cycles_width + 1, al->line);
++		obj__printf(obj, "%-*s", width - printed + 1, al->line);
+ 	} else {
+ 		u64 addr = al->offset;
+ 		int color = -1;
+@@ -2110,9 +2112,11 @@ void annotation_line__write(struct annotation_line *al, struct annotation *notes
+ 		if (wops->change_color)
  			obj__set_color(obj, color);
  
++		width -= printed + 3;
++
  		disasm_line__write(disasm_line(al), notes, obj, bf, sizeof(bf), obj__printf, obj__write_graph);
-@@ -2114,17 +2116,6 @@ static void __annotation_line__write(struct annotation_line *al, struct annotati
  
- }
+-		obj__printf(obj, "%-*s", width - pcnt_width - cycles_width - 3 - printed, bf);
++		obj__printf(obj, "%-*s", width, bf);
  
--void annotation_line__write(struct annotation_line *al, struct annotation *notes,
--			    struct annotation_write_ops *wops)
--{
--	__annotation_line__write(al, notes, wops->first_line, wops->current_entry,
--				 wops->change_color, wops->width, wops->obj,
--				 annotate_opts.percent_type,
--				 wops->set_color, wops->set_percent_color,
--				 wops->set_jumps_percent_color, wops->printf,
--				 wops->write_graph);
--}
--
- int symbol__annotate2(struct map_symbol *ms, struct evsel *evsel,
- 		      struct arch **parch)
- {
+ 		(void)apd;
+ 	}
 -- 
 2.49.0
 
