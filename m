@@ -1,68 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638C725743B;
-	Sun,  1 Jun 2025 23:32:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5382951B3;
+	Sun,  1 Jun 2025 23:33:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748820780; cv=none; b=fMSEZRIJm/RWj13jhiZxRvYDteG4KejVKb3ysq5PZ0JtCMdh5r/v4TcedWSqNFIEbqMHr55NC4dteSPO3pWy/vZJuljZY6sRhKOJnlx2kCL5ndAGcLpznLz2OznyMtHYVyuZKSlehF6NSPk5dPGi7eyWLHOQEX5UTWLO0gkJ0O0=
+	t=1748820784; cv=none; b=gsEya6JIKfZdquS7/Tku/p0H71+7WriGBeV0kmKJCHrRCMcG6VJWXPLlvQ5vvEgMZsVEsjMCBQRAwRyu6OWqWduWhkQBwRgCN5//TD+x/xgc1Dq/Zp4vmdBUfkittKUn5h0vKSPLrVFDv1ZomaueTRnSXMp7FCW2sMLcbcApx5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748820780; c=relaxed/simple;
-	bh=9LJ04HyoMnN2g3Btc3qQEPrQbViWnJRomMRMYFmSxLU=;
+	s=arc-20240116; t=1748820784; c=relaxed/simple;
+	bh=2nRHleqRzl2LUYPthqvJkUKGeYt0sWo8+rtDYATE/kk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HIoqFlt9YfZgePxzIbzo3wo8WSM6UdzQbVgdESFuiUDVq8jVzPR55qS3Y74F5NnYvTRh/hOGHC+xdN/NfbHPi+I+4O6GibdIO/yoAsO6SIOBE2VAXjv1XqKVsDoJQYENNCSEGFKoWkOfLZAvEhWFLp55NdjI4hJs4epyuOTI8Hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I7SSkTWM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=lR94OSNtgpsNyjE7ZNSE3UKEOueCPtjV+E06qEhts7OdBgXTKC1+CjQi2yw3Mp25UDyoIRh6/diDWPExRPD3AVOLdaJi2xSqVrS5oC/xAVtBI0M2P4sdSjdIKlToa1OjvdS9sDsCJA/a5kcc0gTjIT3Jmum7VRwv4qeAwcWuE5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FZJP8CPl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I7SSkTWM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97291C4CEE7;
-	Sun,  1 Jun 2025 23:32:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FZJP8CPl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA750C4CEEE;
+	Sun,  1 Jun 2025 23:33:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748820778;
-	bh=9LJ04HyoMnN2g3Btc3qQEPrQbViWnJRomMRMYFmSxLU=;
+	s=k20201202; t=1748820784;
+	bh=2nRHleqRzl2LUYPthqvJkUKGeYt0sWo8+rtDYATE/kk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=I7SSkTWMVlb7sPO/TBj8jsl+pn+R7lcNfrc/WgLestshH1nlaiU0IDJswCJMXrMXp
-	 W1kn0lzUsFgk4MOD5C05dGljKYGUpLygGideWwt3bhtO6nlE1AzMz2+8wpT90i1Msa
-	 fxLFFODddAp5KhyOvZHpYcEtS8gSv9UoJhs9yF+nWOVi9YbrY4hgZwUVUh2UJ2hpuN
-	 RubzurOEIjA1z/yeVIuZxEBligxBJILQ3dLPm83WwT9AH2VXhT8w+7e8wJF6Q88c4g
-	 mup0xx10nrBDwkkf6e+o0hgaq3kMwarI8fWunF4rN9bY3TEkxU3onYuwVZUHTZiDa0
-	 fc5MIlCwfiLfA==
+	b=FZJP8CPlR9kRTDtaGycCnteXdhoAabdleGn+4yRK3gzzfyTCEcWhPOouubxGnXajM
+	 LMGqZKvaX7YBerWmYVwno8szCe7F/6HNO/W6joi+622iReq3yBqszAGH1EVFE1pyNu
+	 6vWlbypYS1qpJmGA9QLU2tGZec5CrWOtrVlaiDMfJ1v4/RxMv+yWZAmwV7uO0/v8kC
+	 FJQs6N+w4Py2Wu0iL8u0iSgk/q6GzHHWuVuTUo/4/8igmRAX5vaMvP3yLdMICmR/tL
+	 w/HNKJ0haAzBKyUinJLwgBrjtXxsp+BMmdlNRACyI5fIWO9Z8udaZL45vc37tmi2yo
+	 Ew/t+0GQ3NaDg==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Victor Skvortsov <victor.skvortsov@amd.com>,
-	Zhigang Luo <Zhigang.luo@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: Antonin Godard <antonin.godard@bootlin.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Louis Chauvet <louis.chauvet@bootlin.com>,
 	Sasha Levin <sashal@kernel.org>,
-	christian.koenig@amd.com,
+	neil.armstrong@linaro.org,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
 	airlied@gmail.com,
 	simona@ffwll.ch,
-	lijo.lazar@amd.com,
-	Hawking.Zhang@amd.com,
-	Feifei.Xu@amd.com,
-	rajneesh.bhardwaj@amd.com,
-	le.ma@amd.com,
-	shiwu.zhang@amd.com,
-	YiPeng.Chai@amd.com,
-	Emily.Deng@amd.com,
-	Vignesh.Chander@amd.com,
-	Yunxiang.Li@amd.com,
-	Tony.Yi@amd.com,
-	yunru.pan@amd.com,
-	srinivasan.shanmugam@amd.com,
-	Shravankumar.Gande@amd.com,
-	wangyuli@uniontech.com,
-	tao.zhou1@amd.com,
-	kevinyang.wang@amd.com,
-	Harish.Kasiviswanathan@amd.com,
-	xiang.liu@amd.com,
-	Masha.Grinman@amd.com,
-	Tim.Huang@amd.com,
-	amd-gfx@lists.freedesktop.org,
 	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 070/102] drm/amdgpu: Add indirect L1_TLB_CNTL reg programming for VFs
-Date: Sun,  1 Jun 2025 19:29:02 -0400
-Message-Id: <20250601232937.3510379-70-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.14 073/102] drm/panel: simple: Add POWERTIP PH128800T004-ZZA01 panel entry
+Date: Sun,  1 Jun 2025 19:29:05 -0400
+Message-Id: <20250601232937.3510379-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250601232937.3510379-1-sashal@kernel.org>
 References: <20250601232937.3510379-1-sashal@kernel.org>
@@ -77,315 +58,100 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.14.9
 Content-Transfer-Encoding: 8bit
 
-From: Victor Skvortsov <victor.skvortsov@amd.com>
+From: Antonin Godard <antonin.godard@bootlin.com>
 
-[ Upstream commit 0c6e39ce6da20104900b11bad64464a12fb47320 ]
+[ Upstream commit 6374a1005f20c1c2f7bbcc1bc735c2be4910a685 ]
 
-VFs on some IP versions are unable to access this register directly.
+Add support for the POWERTIP PH128800T004-ZZA01 10.1" (1280x800)
+LCD-TFT panel. Its panel description is very much like the POWERTIP
+PH128800T006-ZHC01 configured below this one, only its timings are
+different.
 
-This register must be programmed before PSP ring is setup,
-so use PSP VF mailbox directly. PSP will broadcast the register
-value to all VF assigned instances.
-
-Signed-off-by: Victor Skvortsov <victor.skvortsov@amd.com>
-Reviewed-by: Zhigang Luo <Zhigang.luo@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
+Reviewed-by: Dmitry Baryshkov <lumag@kernel.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20250311-add-powertip-ph128800t004-v1-2-7f95e6984cea@bootlin.com
+Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
-Based on my analysis of the commit and the comprehensive repository
-context, my recommendation is: **YES** This commit should be backported
-to stable kernel trees as it addresses a functional limitation for AMD
-GPU Virtual Functions (VFs) in SR-IOV environments. ## Detailed
-Analysis: ### Nature of the Change This is **primarily a functional
-fix** rather than a new feature. The commit addresses a hardware
-limitation where VFs on certain AMD GPU IP versions cannot directly
-access the `MC_VM_MX_L1_TLB_CNTL` register due to L1 policy
-restrictions. ### Technical Context 1. **Established Pattern**: The
-commit follows a well-established pattern for indirect register
-programming in AMD GPU SR-IOV environments. Similar infrastructure
-already exists for `IH_RB_CNTL` registers (PSP_REG_IH_RB_CNTL) and MMHUB
-registers via RLCG. 2. **Mature Infrastructure**: The SR-IOV and PSP
-infrastructure used by this commit is mature and stable, dating back to
-2016-2018. The PSP v13.0 implementation is well-established. 3.
-**Hardware Compatibility Issue**: The commit message clearly states this
-is needed for VFs that "are unable to access this register directly" on
-"some IP versions," indicating this addresses a hardware compatibility
-requirement. ### Code Quality Assessment 1. **Clean Implementation**:
-The changes are well-structured and non-invasive: - Adds new enum value
-`PSP_REG_MMHUB_L1_TLB_CNTL = 25` - Adds feature flag
-`AMDGIM_FEATURE_L1_TLB_CNTL_PSP_EN` - Implements conditional logic that
-falls back to direct access when indirect is not available 2. **Proper
-Integration**: The commit properly integrates with existing code paths:
-- Uses established `amdgpu_sriov_reg_indirect_l1_tlb_cntl()` pattern -
-Implements both enable and disable paths (`mmhub_v1_8_disable_l1_tlb()`)
-- Maintains backward compatibility 3. **Low Risk**: Changes are
-contained within SR-IOV-specific code paths and only activate when the
-feature flag is set by the hypervisor. ### Comparison with Similar
-Commits Looking at the reference commits provided, this follows the same
-pattern as Similar Commit #2 (marked as "YES" for backport), which also
-addressed PSP security concerns for VF operations. Both commits: - Fix
-functional issues in VF environments - Use established PSP
-infrastructure - Have minimal risk of regression - Address hardware-
-specific limitations ### Functional Impact Without this change, VFs on
-affected hardware likely cannot properly initialize L1 TLB settings,
-which could result in: - VM initialization failures - Memory access
-issues - Degraded or non-functional VF operation ### Risk Assessment
-**LOW RISK** for backporting: - Only affects VF operation when feature
-flag is enabled - Falls back to existing direct register access when not
-needed - Uses mature, well-tested code paths - No architectural changes
-to core driver logic This commit represents a necessary hardware
-compatibility fix that enables proper VF functionality on newer AMD GPU
-hardware where direct register access has been restricted by hardware
-policy.
+NO This commit should NOT be backported to stable kernel trees based on
+the following analysis: **Commit Classification**: This is a new
+hardware support addition, not a bug fix. **Analysis of the commit**: 1.
+**Nature of Change**: The commit adds support for a brand new panel
+variant (POWERTIP PH128800T004-ZZA01) to the panel-simple driver. This
+is purely additive functionality for new hardware. 2. **Code Changes
+Review**: - Adds a new `powertip_ph128800t004_zza01_mode` structure with
+display timing parameters - Adds a new `powertip_ph128800t004_zza01`
+panel descriptor - Adds a new device tree compatible string entry in the
+`platform_of_match` table - The changes are isolated and only add new
+entries without modifying existing functionality 3. **Reference to
+Similar Commits**: All the provided historical examples of panel
+additions (Similar Commits #1, #2, #5) were marked as "Backport Status:
+NO", indicating that new panel support commits are typically not
+backported. 4. **Stable Tree Criteria Violation**: - This is new feature
+addition, not a bug fix - It doesn't address any existing user-affecting
+issues - It enables support for hardware that previously wasn't
+supported at all - No indication of fixing broken functionality 5.
+**Exception Analysis**: The only similar commit marked "YES" (Similar
+Commit #4) was specifically fixing missing display mode flags for an
+existing panel, which was a clear bug fix with a "Fixes:" tag. This
+current commit has no such characteristics. 6. **Risk Assessment**:
+While the change is low-risk and isolated, it doesn't meet the
+fundamental criteria for stable backporting as it's new hardware
+enablement rather than fixing existing functionality. The stable tree
+policy specifically excludes new hardware support unless it fixes
+existing broken functionality, which this commit does not do.
 
- drivers/gpu/drm/amd/amdgpu/amdgpu_psp.h     | 10 ++++
- drivers/gpu/drm/amd/amdgpu/amdgpu_virt.h    | 12 +++-
- drivers/gpu/drm/amd/amdgpu/amdgv_sriovmsg.h |  9 +--
- drivers/gpu/drm/amd/amdgpu/mmhub_v1_8.c     | 63 ++++++++++++++++-----
- drivers/gpu/drm/amd/amdgpu/psp_v13_0.c      | 20 +++++++
- 5 files changed, 93 insertions(+), 21 deletions(-)
+ drivers/gpu/drm/panel/panel-simple.c | 29 ++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.h
-index 8d5acc415d386..dcf5e8e0b9e3e 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.h
-@@ -107,6 +107,7 @@ enum psp_reg_prog_id {
- 	PSP_REG_IH_RB_CNTL        = 0,  /* register IH_RB_CNTL */
- 	PSP_REG_IH_RB_CNTL_RING1  = 1,  /* register IH_RB_CNTL_RING1 */
- 	PSP_REG_IH_RB_CNTL_RING2  = 2,  /* register IH_RB_CNTL_RING2 */
-+	PSP_REG_MMHUB_L1_TLB_CNTL = 25,
- 	PSP_REG_LAST
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index cf9ab2d1f1d2a..8fdc0aba82081 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -3739,6 +3739,32 @@ static const struct panel_desc pda_91_00156_a0  = {
+ 	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
  };
  
-@@ -142,6 +143,8 @@ struct psp_funcs {
- 	bool (*get_ras_capability)(struct psp_context *psp);
- 	bool (*is_aux_sos_load_required)(struct psp_context *psp);
- 	bool (*is_reload_needed)(struct psp_context *psp);
-+	int (*reg_program_no_ring)(struct psp_context *psp, uint32_t val,
-+				   enum psp_reg_prog_id id);
- };
- 
- struct ta_funcs {
-@@ -475,6 +478,10 @@ struct amdgpu_psp_funcs {
- #define psp_is_aux_sos_load_required(psp) \
- 	((psp)->funcs->is_aux_sos_load_required ? (psp)->funcs->is_aux_sos_load_required((psp)) : 0)
- 
-+#define psp_reg_program_no_ring(psp, val, id) \
-+	((psp)->funcs->reg_program_no_ring ? \
-+	(psp)->funcs->reg_program_no_ring((psp), val, id) : -EINVAL)
++static const struct drm_display_mode powertip_ph128800t004_zza01_mode = {
++	.clock = 71150,
++	.hdisplay = 1280,
++	.hsync_start = 1280 + 48,
++	.hsync_end = 1280 + 48 + 32,
++	.htotal = 1280 + 48 + 32 + 80,
++	.vdisplay = 800,
++	.vsync_start = 800 + 9,
++	.vsync_end = 800 + 9 + 8,
++	.vtotal = 800 + 9 + 8 + 6,
++	.flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
++};
 +
- extern const struct amd_ip_funcs psp_ip_funcs;
- 
- extern const struct amdgpu_ip_block_version psp_v3_1_ip_block;
-@@ -569,5 +576,8 @@ bool amdgpu_psp_get_ras_capability(struct psp_context *psp);
- int psp_config_sq_perfmon(struct psp_context *psp, uint32_t xcp_id,
- 	bool core_override_enable, bool reg_override_enable, bool perfmon_override_enable);
- bool amdgpu_psp_tos_reload_needed(struct amdgpu_device *adev);
-+int amdgpu_psp_reg_program_no_ring(struct psp_context *psp, uint32_t val,
-+				   enum psp_reg_prog_id id);
++static const struct panel_desc powertip_ph128800t004_zza01 = {
++	.modes = &powertip_ph128800t004_zza01_mode,
++	.num_modes = 1,
++	.bpc = 8,
++	.size = {
++		.width = 216,
++		.height = 135,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH,
++	.connector_type = DRM_MODE_CONNECTOR_LVDS,
++};
 +
- 
- #endif
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_virt.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_virt.h
-index 0f3ccae5c1ab3..1285b3e1b1a0c 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_virt.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_virt.h
-@@ -144,11 +144,13 @@ enum AMDGIM_FEATURE_FLAG {
- 
- enum AMDGIM_REG_ACCESS_FLAG {
- 	/* Use PSP to program IH_RB_CNTL */
--	AMDGIM_FEATURE_IH_REG_PSP_EN     = (1 << 0),
-+	AMDGIM_FEATURE_IH_REG_PSP_EN      = (1 << 0),
- 	/* Use RLC to program MMHUB regs */
--	AMDGIM_FEATURE_MMHUB_REG_RLC_EN  = (1 << 1),
-+	AMDGIM_FEATURE_MMHUB_REG_RLC_EN   = (1 << 1),
- 	/* Use RLC to program GC regs */
--	AMDGIM_FEATURE_GC_REG_RLC_EN     = (1 << 2),
-+	AMDGIM_FEATURE_GC_REG_RLC_EN      = (1 << 2),
-+	/* Use PSP to program L1_TLB_CNTL*/
-+	AMDGIM_FEATURE_L1_TLB_CNTL_PSP_EN = (1 << 3),
- };
- 
- struct amdgim_pf2vf_info_v1 {
-@@ -322,6 +324,10 @@ struct amdgpu_video_codec_info;
- (amdgpu_sriov_vf((adev)) && \
- 	((adev)->virt.reg_access & (AMDGIM_FEATURE_GC_REG_RLC_EN)))
- 
-+#define amdgpu_sriov_reg_indirect_l1_tlb_cntl(adev) \
-+(amdgpu_sriov_vf((adev)) && \
-+	((adev)->virt.reg_access & (AMDGIM_FEATURE_L1_TLB_CNTL_PSP_EN)))
-+
- #define amdgpu_sriov_rlcg_error_report_enabled(adev) \
-         (amdgpu_sriov_reg_indirect_mmhub(adev) || amdgpu_sriov_reg_indirect_gc(adev))
- 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgv_sriovmsg.h b/drivers/gpu/drm/amd/amdgpu/amdgv_sriovmsg.h
-index b4f9c2f4e92cc..1f4b6dbce45dc 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgv_sriovmsg.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgv_sriovmsg.h
-@@ -108,10 +108,11 @@ union amd_sriov_msg_feature_flags {
- 
- union amd_sriov_reg_access_flags {
- 	struct {
--		uint32_t vf_reg_access_ih	: 1;
--		uint32_t vf_reg_access_mmhub	: 1;
--		uint32_t vf_reg_access_gc	: 1;
--		uint32_t reserved		: 29;
-+		uint32_t vf_reg_access_ih		: 1;
-+		uint32_t vf_reg_access_mmhub		: 1;
-+		uint32_t vf_reg_access_gc		: 1;
-+		uint32_t vf_reg_access_l1_tlb_cntl	: 1;
-+		uint32_t reserved			: 28;
- 	} flags;
- 	uint32_t all;
- };
-diff --git a/drivers/gpu/drm/amd/amdgpu/mmhub_v1_8.c b/drivers/gpu/drm/amd/amdgpu/mmhub_v1_8.c
-index ce013a715b864..f1b567a1bfa7b 100644
---- a/drivers/gpu/drm/amd/amdgpu/mmhub_v1_8.c
-+++ b/drivers/gpu/drm/amd/amdgpu/mmhub_v1_8.c
-@@ -30,6 +30,7 @@
- #include "soc15_common.h"
- #include "soc15.h"
- #include "amdgpu_ras.h"
-+#include "amdgpu_psp.h"
- 
- #define regVM_L2_CNTL3_DEFAULT	0x80100007
- #define regVM_L2_CNTL4_DEFAULT	0x000000c1
-@@ -192,10 +193,8 @@ static void mmhub_v1_8_init_tlb_regs(struct amdgpu_device *adev)
- 	uint32_t tmp, inst_mask;
- 	int i;
- 
--	/* Setup TLB control */
--	inst_mask = adev->aid_mask;
--	for_each_inst(i, inst_mask) {
--		tmp = RREG32_SOC15(MMHUB, i, regMC_VM_MX_L1_TLB_CNTL);
-+	if (amdgpu_sriov_reg_indirect_l1_tlb_cntl(adev)) {
-+		tmp = RREG32_SOC15(MMHUB, 0, regMC_VM_MX_L1_TLB_CNTL);
- 
- 		tmp = REG_SET_FIELD(tmp, MC_VM_MX_L1_TLB_CNTL, ENABLE_L1_TLB,
- 				    1);
-@@ -209,7 +208,26 @@ static void mmhub_v1_8_init_tlb_regs(struct amdgpu_device *adev)
- 				    MTYPE, MTYPE_UC);/* XXX for emulation. */
- 		tmp = REG_SET_FIELD(tmp, MC_VM_MX_L1_TLB_CNTL, ATC_EN, 1);
- 
--		WREG32_SOC15(MMHUB, i, regMC_VM_MX_L1_TLB_CNTL, tmp);
-+		psp_reg_program_no_ring(&adev->psp, tmp, PSP_REG_MMHUB_L1_TLB_CNTL);
-+	} else {
-+		inst_mask = adev->aid_mask;
-+		for_each_inst(i, inst_mask) {
-+			tmp = RREG32_SOC15(MMHUB, i, regMC_VM_MX_L1_TLB_CNTL);
-+
-+			tmp = REG_SET_FIELD(tmp, MC_VM_MX_L1_TLB_CNTL, ENABLE_L1_TLB,
-+					    1);
-+			tmp = REG_SET_FIELD(tmp, MC_VM_MX_L1_TLB_CNTL,
-+					    SYSTEM_ACCESS_MODE, 3);
-+			tmp = REG_SET_FIELD(tmp, MC_VM_MX_L1_TLB_CNTL,
-+					    ENABLE_ADVANCED_DRIVER_MODEL, 1);
-+			tmp = REG_SET_FIELD(tmp, MC_VM_MX_L1_TLB_CNTL,
-+					    SYSTEM_APERTURE_UNMAPPED_ACCESS, 0);
-+			tmp = REG_SET_FIELD(tmp, MC_VM_MX_L1_TLB_CNTL,
-+					    MTYPE, MTYPE_UC);/* XXX for emulation. */
-+			tmp = REG_SET_FIELD(tmp, MC_VM_MX_L1_TLB_CNTL, ATC_EN, 1);
-+
-+			WREG32_SOC15(MMHUB, i, regMC_VM_MX_L1_TLB_CNTL, tmp);
-+		}
- 	}
- }
- 
-@@ -454,6 +472,30 @@ static int mmhub_v1_8_gart_enable(struct amdgpu_device *adev)
- 	return 0;
- }
- 
-+static void mmhub_v1_8_disable_l1_tlb(struct amdgpu_device *adev)
-+{
-+	u32 tmp;
-+	u32 i, inst_mask;
-+
-+	if (amdgpu_sriov_reg_indirect_l1_tlb_cntl(adev)) {
-+		tmp = RREG32_SOC15(MMHUB, 0, regMC_VM_MX_L1_TLB_CNTL);
-+		tmp = REG_SET_FIELD(tmp, MC_VM_MX_L1_TLB_CNTL, ENABLE_L1_TLB, 0);
-+		tmp = REG_SET_FIELD(tmp, MC_VM_MX_L1_TLB_CNTL,
-+				    ENABLE_ADVANCED_DRIVER_MODEL, 0);
-+		psp_reg_program_no_ring(&adev->psp, tmp, PSP_REG_MMHUB_L1_TLB_CNTL);
-+	} else {
-+		inst_mask = adev->aid_mask;
-+		for_each_inst(i, inst_mask) {
-+			tmp = RREG32_SOC15(MMHUB, i, regMC_VM_MX_L1_TLB_CNTL);
-+			tmp = REG_SET_FIELD(tmp, MC_VM_MX_L1_TLB_CNTL, ENABLE_L1_TLB,
-+					    0);
-+			tmp = REG_SET_FIELD(tmp, MC_VM_MX_L1_TLB_CNTL,
-+					    ENABLE_ADVANCED_DRIVER_MODEL, 0);
-+			WREG32_SOC15(MMHUB, i, regMC_VM_MX_L1_TLB_CNTL, tmp);
-+		}
-+	}
-+}
-+
- static void mmhub_v1_8_gart_disable(struct amdgpu_device *adev)
- {
- 	struct amdgpu_vmhub *hub;
-@@ -467,15 +509,6 @@ static void mmhub_v1_8_gart_disable(struct amdgpu_device *adev)
- 		for (i = 0; i < 16; i++)
- 			WREG32_SOC15_OFFSET(MMHUB, j, regVM_CONTEXT0_CNTL,
- 					    i * hub->ctx_distance, 0);
--
--		/* Setup TLB control */
--		tmp = RREG32_SOC15(MMHUB, j, regMC_VM_MX_L1_TLB_CNTL);
--		tmp = REG_SET_FIELD(tmp, MC_VM_MX_L1_TLB_CNTL, ENABLE_L1_TLB,
--				    0);
--		tmp = REG_SET_FIELD(tmp, MC_VM_MX_L1_TLB_CNTL,
--				    ENABLE_ADVANCED_DRIVER_MODEL, 0);
--		WREG32_SOC15(MMHUB, j, regMC_VM_MX_L1_TLB_CNTL, tmp);
--
- 		if (!amdgpu_sriov_vf(adev)) {
- 			/* Setup L2 cache */
- 			tmp = RREG32_SOC15(MMHUB, j, regVM_L2_CNTL);
-@@ -485,6 +518,8 @@ static void mmhub_v1_8_gart_disable(struct amdgpu_device *adev)
- 			WREG32_SOC15(MMHUB, j, regVM_L2_CNTL3, 0);
- 		}
- 	}
-+
-+	mmhub_v1_8_disable_l1_tlb(adev);
- }
- 
- /**
-diff --git a/drivers/gpu/drm/amd/amdgpu/psp_v13_0.c b/drivers/gpu/drm/amd/amdgpu/psp_v13_0.c
-index afdf8ce3b4c59..f5f616ab20e70 100644
---- a/drivers/gpu/drm/amd/amdgpu/psp_v13_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/psp_v13_0.c
-@@ -858,6 +858,25 @@ static bool psp_v13_0_is_reload_needed(struct psp_context *psp)
- 	return false;
- }
- 
-+static int psp_v13_0_reg_program_no_ring(struct psp_context *psp, uint32_t val,
-+					 enum psp_reg_prog_id id)
-+{
-+	struct amdgpu_device *adev = psp->adev;
-+	int ret = -EOPNOTSUPP;
-+
-+	/* PSP will broadcast the value to all instances */
-+	if (amdgpu_sriov_vf(adev)) {
-+		WREG32_SOC15(MP0, 0, regMP0_SMN_C2PMSG_101, GFX_CTRL_CMD_ID_GBR_IH_SET);
-+		WREG32_SOC15(MP0, 0, regMP0_SMN_C2PMSG_102, id);
-+		WREG32_SOC15(MP0, 0, regMP0_SMN_C2PMSG_103, val);
-+
-+		ret = psp_wait_for(psp, SOC15_REG_OFFSET(MP0, 0, regMP0_SMN_C2PMSG_101),
-+				   0x80000000, 0x80000000, false);
-+	}
-+
-+	return ret;
-+}
-+
- static const struct psp_funcs psp_v13_0_funcs = {
- 	.init_microcode = psp_v13_0_init_microcode,
- 	.wait_for_bootloader = psp_v13_0_wait_for_bootloader_steady_state,
-@@ -884,6 +903,7 @@ static const struct psp_funcs psp_v13_0_funcs = {
- 	.get_ras_capability = psp_v13_0_get_ras_capability,
- 	.is_aux_sos_load_required = psp_v13_0_is_aux_sos_load_required,
- 	.is_reload_needed = psp_v13_0_is_reload_needed,
-+	.reg_program_no_ring = psp_v13_0_reg_program_no_ring,
- };
- 
- void psp_v13_0_set_psp_funcs(struct psp_context *psp)
+ static const struct drm_display_mode powertip_ph128800t006_zhc01_mode = {
+ 	.clock = 66500,
+ 	.hdisplay = 1280,
+@@ -5090,6 +5116,9 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "pda,91-00156-a0",
+ 		.data = &pda_91_00156_a0,
++	}, {
++		.compatible = "powertip,ph128800t004-zza01",
++		.data = &powertip_ph128800t004_zza01,
+ 	}, {
+ 		.compatible = "powertip,ph128800t006-zhc01",
+ 		.data = &powertip_ph128800t006_zhc01,
 -- 
 2.39.5
 
