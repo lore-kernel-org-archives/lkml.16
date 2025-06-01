@@ -1,87 +1,118 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B292DCC00;
-	Sun,  1 Jun 2025 16:50:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 101B32DCC00;
+	Sun,  1 Jun 2025 16:52:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748796631; cv=none; b=NrWv3NE2Xe+7FTTtXPgRQr8knzERk5Po0039LHRUg+oBkAtFjEcIXL/hBVcXtRfZYnl6hNLK/7Z+SamsVPUKwKF1jgY05DkZdm2xayl15KX8lkd9U1ZwO0T8fxmzKGfq7q2rLUU1T9kHJhfBX+hYAR3KgSdiBRg3i+v2l5QSVao=
+	t=1748796726; cv=none; b=sja6l/aOsmjqADcewC6tf4W0ck/p9XsW6PorRb97fi9JeIv1t+wmyctfrKimhgQUfur5EvL+TK0Rg6lg6Nse6IjklpQmOgGYFJBWZxijidRxdWw96g7VLwwjMjnE9KXWApH/PlJGggLD924v+J0Z7pIV7CHTFof4KaMlLbE9CMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748796631; c=relaxed/simple;
-	bh=XtyfWp/wwepmMnTH8hcfXlMPyhZQfBLz8v8PdbI0e80=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kbtagzmxGSIGKPLSPs/jjjGXoq4tuCwbdj2J/+NlqCA/IWZ86TndUiQjTcTn2cVF591ZXBR7s+T39GTf7Godj/qjWzVZm//FbCzttr833VdcKoojLm5NiQKONfK+HX3mEgNkNmXxKbsEbPLFb7cMZJGs0sAhxjZlSghdGpA5k4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VxwUlgTR; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1748796726; c=relaxed/simple;
+	bh=UbnRKOIb8R4X34xidCbuV+vQdzZLrArWOaKM9rS04wg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P2zjg7PJRncxwGyOFbg/ymmmtD/CUJ4x806+7G9YMerxOeGlT364d6JsVmDHCMfErH3a4uX5FCSbh/1yUDdVnonE/5SmXwM1/mzC/EK5opCodPnYgAfsACfhXEAXkiWGMCZZzpSFOapXzKcKREjBvB6rAJMnxS9RQqc4OAQ62eE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lddbf6S/; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VxwUlgTR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=yCslynMl/1e9xhbSijf5k3MejTUp+QTHpISTVQ74ygs=; b=VxwUlgTRkSEATSb1syYPMdoPW6
-	vObTUxo7gkUnbAt0VnjpcUbQyTs8k4qqXyRn+QIbnBe+8GY1AJ2kuCUgHWDt/UNxhvhARlKrTEaA6
-	IQETfR2Uw4yzHYiiZuENI9io4KIuwQl5uXmq3LFQMu/KaPSz218dUmUPE0OlUiQEzyhg1LbfZMeQk
-	cV4XO9e0nogpGfAtnJTMjlti89Gz1yRqufF+FqFusIfH6F/qF2io0ZbTrERp2lrjbiuOIM2iNXIyZ
-	bc8JzDcyHEDYXnNSWipDr+rJqLnNtOdBj0hpzQ0Kfr58eegLTXnhpDbXJk29xRq6FDLqH7SXP1OLf
-	Ak41X0bg==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uLlt2-00000000Uf1-26ss;
-	Sun, 01 Jun 2025 16:50:17 +0000
-Message-ID: <f882f6d9-c914-48af-97b7-0aad6d995819@infradead.org>
-Date: Sun, 1 Jun 2025 09:50:14 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lddbf6S/"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22e331215dbso32853235ad.1;
+        Sun, 01 Jun 2025 09:52:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748796724; x=1749401524; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wbak7H6pr/6hIm/LiGFHyNHZ2+qK0IK8bgGbAXQNjAg=;
+        b=Lddbf6S/rftdxN2gMKP0SSeldZMBQwz0v5uTXL6VujaYdKccWN803zvWMlGGpwzB63
+         wEjrqxvejgvha9msj7NlGKj14AkKKvwpkYNfMb7SZfasb3meMbKdtU4QD7xk+ldInvxc
+         31JsoAjD4J8UDWroNC6lCy2acMdCUjIiMHrzbh0CQnH7O1JWIir8kJC6CZSAGPKwmbVF
+         VSkYdMi68uvdzeLFglvejI8aGSW+yHRpsca/dfqxMFeRwpqsn+uX9ifAT7Tvz/SUz1Fl
+         glTvaIti3XP2pJTjcf1X41oQfkfITJtaUfmzDKDs6AKk4K1AGQjvgvEH1SAMVCBQqIfj
+         YRcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748796724; x=1749401524;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wbak7H6pr/6hIm/LiGFHyNHZ2+qK0IK8bgGbAXQNjAg=;
+        b=i9onbAjyVSCYpJWIze4/Da/ab8OkYLxGBOyeTY2IrgKrQwtMqjx+TEUJ2rSU6X/JES
+         kqeoP3WRa6qhsxn/IqaK9jSI7fpZ+eolgU0JQ2AHqXjAZcVYVYGLXEJ9AA5k55VM7pgK
+         0mR3J5IuSX3FhgqUUUajtmZOjNwwFeFwws1odHNj2/chcQRmuANdxE21ZNDgBf8Vq8j8
+         FA7BU4Fa2YSfLWWQccELfl/XQ0w8riTrkXoNfzFeWiiCvfq6mHpBPJfhjPl6pQzFks50
+         1bqO0vzLDhj/52R8DuEBgjSS16HHQix1c79Bkq7fUyW8mr29yuIW30YEP9O7S1/PKbid
+         64VQ==
+X-Gm-Message-State: AOJu0Yx2lS+r7DGYRo2FboEm2Y6rsSWmciAYp6MiCrxNnHLVmRSyq3zS
+	AVG1c8U5Wrti7QJ3aUiyPKhRi4ANvuMbXCIO0f8h5G80GKy2jDcrcHjLPjuULKjy5AzmV/7A
+X-Gm-Gg: ASbGncvj3q3JFkm0OeM4frYkKugbsHGiN/we4xWNybLhXQGTp3rzrhRtgJPTIjx4Dwe
+	IQnoQNgHWuARYUWmv7rs865iXEIgEWjt1O4LLSVRJ5rLItzuEok40mv8hxRgjNIIeJnr+M5I6gP
+	8CL+1wZXdzjyLBNe/zW84y1nHoR5NufgIBi9KpqmxFuBMTFR5ncc1xT5WimrEzyP5prh+SZ28D7
+	vtvFjel/5xItF9hNlCTZmW+6PTMqGriADcg+AUlsDH1SwpLRqMxI9sjNohaGYzBG90Lif3A/D0m
+	THVZKP46v1XhqKn5vCwbvUd1kjFpO7ET3gNOLKecb+t+JfI345A29Q+xdWNPWAlP4jUv3Ps=
+X-Google-Smtp-Source: AGHT+IGeDJjrbwzyS1Wg772RHmi9rPI6nbhOAVh2yaUOVAlwrPukrsS4oGt1w0FBAXCeHYoCM5v5CA==
+X-Received: by 2002:a17:902:f650:b0:215:a303:24e9 with SMTP id d9443c01a7336-2352af0b242mr166372125ad.3.1748796724045;
+        Sun, 01 Jun 2025 09:52:04 -0700 (PDT)
+Received: from localhost.localdomain ([2409:40f2:11ab:2cf2:10cd:85bd:e95:5230])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bd92f8sm57211115ad.88.2025.06.01.09.51.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Jun 2025 09:52:03 -0700 (PDT)
+From: saivishnu725@gmail.com
+To: rust-for-linux@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	lossin@kernel.org,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dakr@kernel.org,
+	gregkh@linuxfoundation.org,
+	daniel.almeida@collabora.com,
+	me@kloenk.dev,
+	Sai Vishnu M <saivishnu725@gmail.com>
+Subject: [PATCH v2] rust: doc: Clean up formatting in io.rs
+Date: Sun,  1 Jun 2025 22:19:40 +0530
+Message-ID: <20250601164939.5306-2-saivishnu725@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Documentation: Add a source tree map overview
-To: William Raezer <wraezer@gmail.com>, linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, corbet@lwn.net
-References: <CAKg96b=n1pZi4FUBqe+puUJo9ndRfU8npvo9w6fE6Enshe73Hg@mail.gmail.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <CAKg96b=n1pZi4FUBqe+puUJo9ndRfU8npvo9w6fE6Enshe73Hg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Sai Vishnu M <saivishnu725@gmail.com>
 
-On 6/1/25 9:22 AM, William Raezer wrote:
-> Hello,
-> 
+Reported-by: Miguel Ojeda <ojeda@kernel.org>
+Closes: https://github.com/Rust-for-Linux/linux/issues/1167
+Signed-off-by: Sai Vishnu M <saivishnu725@gmail.com>
+---
+ rust/kernel/io.rs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Please wrap email lines at around 72-75 characters each.
-
-> My name is William Raezer, and this is my first contribution to the Linux kernel. I'm submitting a simple but hopefully helpful addition: a high-level map of the Linux kernel source tree as a new document in `Documentation/source-map.rst`.
-
-This looks somewhat useful, although I was expecting more of a graphic presentation
-of the tree structure. But that would cause trouble with the role of each subdirectory.
-(and one can always use `tree` for that)
-
-> As someone beginning to explore the internals of the Linux kernel, I noticed that while there is some documentation available that describes the subsystems in principle, there's no centralized overview of the source tree structure itself. This patch adds a basic source map that describes the role of each top-level directory in the kernel source.
-> 
-> The goal is to assist both myself and others in navigating the codebase, especially new contributors who may be overwhelmed by the kernel's size and complexity. As a follow-up, I plan to add subsystem-level maps for key directories such as `kernel/`, `mm/`, and `fs/`.
-> 
-> I hope this addition is seen as a positive and useful step, and I’m open to feedback or suggestions to improve it.
-
-Patches should generally be inline as email text, not as attachments.
-This is up to the maintainer to decide about...
-and gmail is not good as maintaining whitespace in emails.
-(I don't see any whitespace problems in the current patch.)
-
-I get a warning when building with this patch applied:
-
-Documentation/source-map.rst: WARNING: document isn't included in any toctree [toc.not_included]
-
-Also, when I look at source-map.html with a web browser, no parts of
-the source-map are shown. (tested with multiple browsers)
-
-Thanks.
+diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
+index 92bc4e3cd8ec..41404c1e17b3 100644
+--- a/rust/kernel/io.rs
++++ b/rust/kernel/io.rs
+@@ -43,7 +43,7 @@ pub fn maxsize(&self) -> usize {
+     }
+ }
+ 
+-/// IO-mapped memory, starting at the base address `addr` and spanning `maxlen` bytes.
++/// IO-mapped memory region.
+ ///
+ /// The creator (usually a subsystem / bus such as PCI) is responsible for creating the
+ /// mapping, performing an additional region request etc.
 -- 
-~Randy
+
+v1: Edit the doc comment for `IoMem` to remove the usage of
+`@` for parameters and replace them with backticks.
+Link to v1: https://lkml.org/lkml/2025/5/30/550
+v2: Removed reference to internal variables altogether.
+
+Thanks!
+
+2.49.0
 
