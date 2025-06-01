@@ -1,107 +1,160 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9F112F5A5
-	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 19:49:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E76140E30;
+	Sun,  1 Jun 2025 19:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748807371; cv=none; b=W/CLIUH5SlA88vZbxcXU8vBV3MtgzxS0AzgQN7VxSzYblwcYpmV2vdji9h8polWiBtYSJ7hak+hU3xrcHQGggHRocXyUfGML1tpbhhM0BbA9kGszBO1eik0rK4XGMN185zIGC/0xIwF8WcEiToyRwl8jq5RLJBwF5+Ato8+tc64=
+	t=1748807664; cv=none; b=Be1FEc0bo3fxVnegS/vCJW0dWUSttnlwIhRsoMPEU4ZAsl4yhb68+8B15bRf3VkBD6QLoRPReFLwznSJ/oA8sQdleNeOi9noHH3DcVAGOHB5ZYgHi84CGK0ZVi/cyseukF02Yzg/dB7Ki+MdaCDGS2y2nnAK0ah+L9RBtErEB4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748807371; c=relaxed/simple;
-	bh=OA6gnjPmGrHTq6uMjAd4+9GuNtdx+SupMKZyX9oyrQU=;
+	s=arc-20240116; t=1748807664; c=relaxed/simple;
+	bh=okmqYDFYTj0N8/RbvtxGNYxNglDX9bIPQed8iT5MgSg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uiFv/0oc/x7R7lg5dZW8k8jQDMPDztvAMzHQuhWWopRgDPYAPmh91PFHUi3xhZM79Mq4Zp8D/MAN0ywkS+dSjUSkjBXbm0f84y1FB1V1WJZjQKZcL5KmKjrtT5vETtYG7EexlYIb3LAqU7I25mYNP4S8ln6Ywu4qIo+82bR2MB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x877uQBK; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=Dc+p0EYek7ytmgEtZwBz7b/hD7hTNQuVfR45jw56qe7u7r3GNEc2FIUMQjq/ODVJaBV0YMnOPRthiUbbWvQ72mz24opko8lzk1kWIQVpxK7V7xCUi/BXTtE/vzJHcBCDe7yC9RDJGl74fD+0pbZsPqASArskVF/We4Qr91OE1JQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P0r6DrPA; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x877uQBK"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2357c61cda7so125245ad.1
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Jun 2025 12:49:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P0r6DrPA"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-60497d07279so7859373a12.3;
+        Sun, 01 Jun 2025 12:54:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748807369; x=1749412169; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748807660; x=1749412460; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OA6gnjPmGrHTq6uMjAd4+9GuNtdx+SupMKZyX9oyrQU=;
-        b=x877uQBKt6Z89z/I7xaEt0rKdGbBrlP7i9Ge8lnBJpz/pmxxoSmKjMz0mOZOd77Tfu
-         dtg9McayivDTDhygj/57mB6WregKQsdTYPGTn0zlcuOuPMjwWqd6q8pSVsUq3mFcXEwo
-         7Pkw1M1ls2XK2OHAjoF0qp/IzCBOIraFjklF/azMmjy0GE7uVO84B3gvZPmGyKfnmlk5
-         KiGj7rC7jX76AZXg+8j7EIJg3RJjTYVIN9RBmjACJtJX0Y5TgskkfrjSHTDMkSqzKgPr
-         k3wN8xw7PKrjdq2vF0nh+IiiJWDtYMs9kvHkSydf+WXUDz6v2inpXXhir02SN88cn4of
-         yK0Q==
+        bh=BeF/949IPaTKS3FEiz0D2QNOdvwROIAr78Br60q0vkc=;
+        b=P0r6DrPA0dBZ4Y5aUzeuXixv6GpFjZ6Cddfnsv4kx8Zc2iC3/hUu0YkiZ0jUXmNZuM
+         cy9Mwto1yN062byy55kYA5lGhHIcKOfFiohR0pvajiLYsTZ+jOcoQFaEAKvbHV3F2h4j
+         949xOhzIFNPW/A4q6sD8tGbPxjueYTLiMSG75fOqS/B7t0Ee53A7BYQgud27snzTvLcH
+         fIzesaEXKx/B4IazASg42kpHHKDM7W+5wp8gh4nDNM40MzKKOmixDbal0llYb08MiCtB
+         g8dd09yVXxJHYntk586+fEvG1EYdOrom9+lkQrchkR3D9fekWXQh7ML/WM0mFztl0Trr
+         n2IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748807369; x=1749412169;
+        d=1e100.net; s=20230601; t=1748807660; x=1749412460;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OA6gnjPmGrHTq6uMjAd4+9GuNtdx+SupMKZyX9oyrQU=;
-        b=D0zRKsxg4kz9QiG1n6umRp4C71HI1GDnVTR+vSoZfYFsrChxMsXZzCYFT/JDyFsCAR
-         PTrN7oucpQ4gAgz49k7roP3YrV+oziDJlt9FIMrVaAYYRYfuHKvdA0p0SjdalaAxakYZ
-         NlcPrkGSzbzhhfu+zixG2SBqJho1C5/rHLhbhSZB2onY1hRARH8hybWtAA5Qk/XvskXl
-         4zl/cHtyXl8yzn+yh0qVJdOHQ76IgW3DkCu4cWnR8+9VfvrNHK1gDoclCL/Tp/LMf8Qa
-         ODfC4k3zen4oDYCaCWtvBUQPo5Bll5V8vjGJhBHH2nFRRWNNIaBG/g/pRgJqEuQaAtrm
-         DMCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUDnB2O3Tmkd4nGtGplqh88qqS6MwzkoXHIbzf9I8u1mVCVCcjm5cfR0lFk8yxwHwj7hRGnpijd1Cd6d1I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyK1OkBlKbfPFdjOxi9IPjtgoN66yz6WLXpc1lfQmgimeM1Cfj4
-	t8YQ6RQdJATwizxGGiK9fzq86fpbmGnL/2ZOZbKKdMgtFpSpinYKv/KcFBX/3QlkoJVLXsz7xsw
-	NyxQDwVBWmoI/MfP0fNH/aTOYvusa8lRTK3uX6M8T
-X-Gm-Gg: ASbGncs0oHKGnwZNu1XQSlsmEo55jfE40Wf0VLRdhnxkuqp0tlRutMAPN9jvhTV5jDo
-	ytiZTgYiCzC4Z1lPJAWtpJYOYU5vLvXo4XBRBGsmpdTw3Yz7OCc19bJKmW8meObFJc9JW1NtDEy
-	xAG8O75ocO/eJPBWO9uudnVnK3m3O6ncpdtAFyIc5wpJLu
-X-Google-Smtp-Source: AGHT+IGuKYuACePHASwBc1caQn32lBjaqHshQBYH/h8PHU3WssUdv4MSjw2rLAjB+qZQfYRgGCCIAw3qrXEIS+kGKHg=
-X-Received: by 2002:a17:902:f651:b0:234:a734:4ab9 with SMTP id
- d9443c01a7336-235568f2761mr2930795ad.20.1748807369084; Sun, 01 Jun 2025
- 12:49:29 -0700 (PDT)
+        bh=BeF/949IPaTKS3FEiz0D2QNOdvwROIAr78Br60q0vkc=;
+        b=gr/dNQhMzqR9in+TvTvqnVG1BkHWW1jHStyy1voQv2CmVlsKOeJRODoYpt9KZvR+uI
+         Bd1VThWU+Y5KIg0Giun4ZGPgsy07NVdgYq+5EmWLefUcP/hHbNHkJ2zpiDcaLfQLD1l3
+         Ta27qGpAkviZneBvA5JM2Ztoe+hm1CHEP901fdoT08eoX8vzAknlj1ReDrU+HXzyjb68
+         vCx4cjmzGXBVVLXyk1vyBNQORh3sbK3sUPHcgFoghmj4XTUT1eFoskiHWKt1Q9YdmGqL
+         FMqgzo8Mrq1KeGuZXNJqDXWJCpmAS1NbNqqjF+Nr/WHtbcMTwsYMhedbr7jaQ2xGc7he
+         vRdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVvZOX+Zw3UgAClwjQrh0zBFCZIUIRgWacO++aHC7sxUSKpLu3pA/H026pIuzOwlIPDftsRNjm+KxU=@vger.kernel.org, AJvYcCWibdqAz/IajWYRptHKEg9z9aKtUB/DDOEsz0rCc7C0bkwF1pdp+L0JiRu1uLmYifwYE0wTTu/0EvSQ@vger.kernel.org, AJvYcCXu1JvRwqhiqppDISKgqFMglQj1dJMUwUMlg3gV4GgvxN3mKi4laA4Cg3uL7WlkznK7W1XaTJcrK3jG1T31@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmHS8gOgQnIHJxICUVLOLS1KDsGHxuG4hPBg4L+KWDKEovpeT1
+	mfnQFISy3FuT3r1+B+mZe13Gyn7WTybThqxquz/fWKEogxB7GlUg0M4Rnbteqboy+Ts8HrHURfj
+	er18asl7Gts6YPvOcdb87hPhKbh9dsnc=
+X-Gm-Gg: ASbGnct8tbzOUQ1lHYKtd+whahjwFTlEs4kiYqBANZZPvpQNeTCH40WXO6EtfZMzVBr
+	227gpLpikPO2ny031axEXsDmY5NlB57YrvWvPjvAIkhMjFOPxfHcmNP522RlpU88APHozKxPCOQ
+	McSGn6E+gKdfzZIb4UMqclebDD8jlmz/l0
+X-Google-Smtp-Source: AGHT+IFeiRxISUrPSwHaJZo2F9AfzgmgvdlWWkKx8O60ki8IaOmiTIlD2glCFQ04x3ZnrEYWSt5aIWE5XAIJX5ob2VY=
+X-Received: by 2002:a17:907:2d9e:b0:ad8:ac7e:eead with SMTP id
+ a640c23a62f3a-adb36be22a1mr872958566b.39.1748807659567; Sun, 01 Jun 2025
+ 12:54:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250601193428.3388418-1-alok.a.tiwari@oracle.com>
-In-Reply-To: <20250601193428.3388418-1-alok.a.tiwari@oracle.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Sun, 1 Jun 2025 12:49:15 -0700
-X-Gm-Features: AX0GCFsq2stzgpUbglrlQlKkYoMupX3j2X7PTQqh_PILem3fYMMDPTQUNWueH7k
-Message-ID: <CAHS8izOqWWdsEheAFSwOtzPM98ZudP7gKZMECWUhcU1NCLnwHA@mail.gmail.com>
-Subject: Re: [PATCH] gve: add missing NULL check for gve_alloc_pending_packet()
- in TX DQO
-To: Alok Tiwari <alok.a.tiwari@oracle.com>
-Cc: bcf@google.com, joshwash@google.com, willemb@google.com, 
-	pkaligineedi@google.com, pabeni@redhat.com, kuba@kernel.org, 
-	jeroendb@google.com, hramamurthy@google.com, andrew+netdev@lunn.ch, 
-	davem@davemloft.net, edumazet@google.com, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, darren.kenny@oracle.com
+References: <20250601172139.59156-1-l.rubusch@gmail.com> <20250601172139.59156-11-l.rubusch@gmail.com>
+In-Reply-To: <20250601172139.59156-11-l.rubusch@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sun, 1 Jun 2025 22:53:43 +0300
+X-Gm-Features: AX0GCFtzLuDg3Z8rNDToVIodY39D5KaVGPsm9B3o6B-8A-k8SanEKJlCDCWwF5Q
+Message-ID: <CAHp75Ve+f4c-aVD3vMfi1NP7vohJWDFFO+F4ckYCKkw2iYDsFw@mail.gmail.com>
+Subject: Re: [PATCH v4 10/11] iio: accel: adxl313: add AC coupled
+ activity/inactivity events
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com, 
+	andy@kernel.org, corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de, 
+	Michael.Hennerich@analog.com, bagasdotme@gmail.com, linux-iio@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jun 1, 2025 at 12:34=E2=80=AFPM Alok Tiwari <alok.a.tiwari@oracle.c=
-om> wrote:
+On Sun, Jun 1, 2025 at 8:22=E2=80=AFPM Lothar Rubusch <l.rubusch@gmail.com>=
+ wrote:
 >
-> gve_alloc_pending_packet() can return NULL, but gve_tx_add_skb_dqo()
-> did not check for this case before dereferencing the returned pointer.
+> Add AC coupling activity and inactivity as MAG_ADAPTIVE events. This adds
+> up an additional set of threshold and period handles, verifies matching
+> disabling functionality and extends setting the link bit to complementary
+> event configurations.
 >
-> Add a missing NULL check to prevent a potential NULL pointer
-> dereference when allocation fails.
+> This means, e.g. either ACTIVITY or ACTIVITY_AC can be enabled. The most
+> recent set will remain configured. Disabling ACTIVITY where ACTIVITY_AC w=
+as
+> enabled is ignored, since it does not match (should be disabling
+> ACTIVITY_AC). When INACTIVITY or INACTIVITY_AC is also enabled, the link
+> bit will be set. Note, having the link bit and auto-sleep in place activi=
+ty
+> and inactivity indicate the power save state change and thus will only be
+> triggered once a state transition occurs. Since there is a separate AC bi=
+t
+> for ACTIVITY and for INACTIVITY, events can be linked independently from
+> each other i.e. ACTIVITY can be linked to INACTIVITY_AC for instance.
 >
-> This improves robustness in low-memory scenarios.
->
-> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+> When one of both is disabled, the link bit will be removed. Hence, the
+> remaining event will not indicate a plain state change anymore, but occur
+> as a periodically triggered inactivity event or for each activity event
+> above the threshold.
 
-Patch itself looks good to me, but if you can, please designate it to
-the net tree by prefixing the patch with `[PATCH net v2]` as mentioned
-in our docs:
+...
 
-https://docs.kernel.org/process/maintainer-netdev.html
+> +/**
+> + * adxl313_is_act_inact_ac() - Check if AC coupling is enabled.
 
-Also, if possible, add `Fixes: commit a57e5de476be ("gve: DQO: Add TX
-path")` to give it a chance to get picked up by stable trees.
+> + *
 
-With that:
+Unneeded blank line.
 
-Reviewed-by: Mina Almasry <almasrymina@google.com>
+> + * @data: The device data.
+> + * @type: The activity or inactivity type.
+> + *
+> + * Provide a type of activity or inactivity, combined with either AC cou=
+pling
+> + * set, or default to DC coupling. This function verifies, if the combin=
+ation is
+> + * currently enabled or not.
+> + *
+> + * Return if the provided activity type has AC coupling enabled or a neg=
+ative
+> + * error value.
+
+Missing Return section. Always try kernel-doc validation when adding
+new kernel-doc descriptions.
+
+> + */
+
+...
+
+>         unsigned int regval;
+> +       int coupling;
+
+Why? Doesn't 'ret' suffice?
+
+>         int axis_en, int_en, ret;
+
+...
+
+> -       int act_en, inact_en;
+> -       bool en;
+> +       int act_en, inact_en, act_ac_en, inact_ac_en;
+> +       bool en, act_inact_ac;
+>         int ret;
+
+For all your patches: try really hard to avoid the ping-pong coding,
+i.e. when you add something in one patch in the series and change in
+the other for no reason. I.o.w. when the initial code may be written
+already in a form that doesn't need further changes (e.g., switch-case
+vs. if).
+
+This patch is *very* noisy due to the above. So, just slow down, try a
+new approach that you have less '-' lines in the diff:s all over the
+code.
 
 --=20
-Thanks,
-Mina
+With Best Regards,
+Andy Shevchenko
