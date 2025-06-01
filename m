@@ -1,116 +1,180 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5552238C3A;
-	Sun,  1 Jun 2025 19:43:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D65383;
+	Sun,  1 Jun 2025 19:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748806991; cv=none; b=QyBx692S1Up3QjBEJV8nfuUaDCNIs2QYLAhKzvNKYU5UMcpJUS51r/12f5lUy4r16p0kwyISXW/3cxtsA8X3YuXbGjLbjL3cI2IabL0oGBeATetxT5vhZFcv+cq+4z4xDHcrdvmq7rBwBf+y6+a7qF2684Mo2M31v4gi7GcofZM=
+	t=1748807169; cv=none; b=B1Tf3WAV1py39dARieHU6dvGO5vo0HEkLdVjsYlXqq7OUHektFeZx1KKR07T0nGqohsP8GHFT7kthUb1STTi5SW5ggXXXHnFdquch5IOExMG63FPgf4lVMea7dRUaq1m8trHNt4Yx/Hi1/Kmbc8XAPInRoUi7OFXMD496fJMXt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748806991; c=relaxed/simple;
-	bh=zlttJep6rq3I8+o8EQ7DmNCSKFq6mJq8IUZsLPjanpw=;
+	s=arc-20240116; t=1748807169; c=relaxed/simple;
+	bh=yA9Q212Lf05WBc2PH4G49tMKxCEGyBSZ9pEkU+MwG90=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B2PTK5G1eNNnh0FyOPGL5z5AsfEqH2BeehgVbEB2ICByL8THO4Psirm3c5xMG69WuystQAUN050HFl8dTb+eXeOQPhXtBIpdT+aFYmfDBY77sK1IcZPd60o99/Gps9jzn9DHx20RiXIi3Hd6wl9OFn0MY6LH7Xl/Cj5MfNjOdh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ie0EZrth; arc=none smtp.client-ip=209.85.167.49
+	 To:Cc:Content-Type; b=ZAGh1/LgGLsisNTTEXY3Os3WS3EwCffMnAodjs2jl6QKOPgxJDXXXPBjlriUbW2x2cop2cSNiqVB976nu3VzXByC+/+xuVEx+vsSxLvVlz5ce2789piqVi1oQGHPA7qhk66Yba4gpehCFrSggIaerzRsdfLmkkVAQnYL7Pth/pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FEPfzgdv; arc=none smtp.client-ip=209.85.218.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ie0EZrth"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54998f865b8so3542983e87.3;
-        Sun, 01 Jun 2025 12:43:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FEPfzgdv"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ad572ba1347so555722066b.1;
+        Sun, 01 Jun 2025 12:46:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748806988; x=1749411788; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748807166; x=1749411966; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zlttJep6rq3I8+o8EQ7DmNCSKFq6mJq8IUZsLPjanpw=;
-        b=ie0EZrth6Xrw3SRY3IovDnAxP5/8MKvP/wdwqtNhLD7rmDiMkiE52HyumbdFzKKCJP
-         uiUyUJMkpwyTeSsywi0gJZEc0Dx5Tu+JeSNiufvQO0Q82EeGQAfyM5gHU5swleGDyV6j
-         uMoPEenULYCL8SzmWizE+J0ysuqiOdF916vmmSP0RH9cC9DYLaye5SBnrQRQrV1ZmGyh
-         lkTWGcZ3i28fc09A7yIDXCrKVCRcFHIdRsvQnw+HAzdjnJjxQFh090NI1jJk1rnfRz72
-         tICek6z5ngtGQMmeZekfZCXzJUOcniZU83EKlcZxdRJMgMeRsjaiNwBlviP0aH5Zyimv
-         bSVQ==
+        bh=ZkRn9YZ0Rm8OZGEegaym0YxIYoFsgbWeEIqOP9jK7OE=;
+        b=FEPfzgdvn15QIaFck+WCOpexfVmfqwZtIFMWe/GgOtPQRIB2wUu/bFOuW7tlHDW8Xm
+         DT2mXVxG7fWX2X2xA+5PsjhvSjjFLYXF/0Fp7D65NtfZkTzgbESXlY2jihfidUs3A4Oa
+         S//4oNKD/GyW3sZX+/zdsnSzjNGVlSiBr7q9uqniUaL0hza+re3nwGsH411tgMbBcGWP
+         bxbbpHKqm8RfU45jSn8J0Bx0yAzInLuTFWE/onhHMya4SayZmlc4azG4NtDHjRNPQERj
+         KE6QVN6pbqIA/FLAeW7s/xIAhxZAu33tddyIsVdGg8fpL2QAItf9DaKjcaDEt8M0prdA
+         jH3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748806988; x=1749411788;
+        d=1e100.net; s=20230601; t=1748807166; x=1749411966;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zlttJep6rq3I8+o8EQ7DmNCSKFq6mJq8IUZsLPjanpw=;
-        b=QzggFh93VWlxDjq0w/bxUAab4t8MRQOvQlJzA++4VOq1fbsEJTQSpa4QGkO75txepF
-         0gtWBU8d7ILJE6lX3lmVkD8QTXVzkW/23Uosp432S5pcm0Tm4d7ZVx6J8Wa4qHKM6d0Q
-         z5ZdKpNFsW9+muiGef3jkNYR0squ2PDsDphsIs9oHFA0/ylsavdze3rzixoBBB4btlKh
-         d3FNYO+bT4487NtrrpQ6nhvyHeVNqd7kJYwNGda/TMHsjvWbiju/r7Y8lS9Kzo+5pSW0
-         pR0Fdjm3I+FsOF+x7lB46TAODLxMqzVMoywcmm/ct5vk27iNJZfkm2EZt9JKZpZwoTTC
-         ls8w==
-X-Forwarded-Encrypted: i=1; AJvYcCUFVscBmsfCU4TGjPmjlBcPpNj0F2suUpRqjVnxqTyBeMZ7Zj+VggBIbDKyzNndN/5WFl2G+EbX5f6/ID3HlwM=@vger.kernel.org, AJvYcCUI/MBiZhDSb/7R/b4n927i3DliqynnFjc1Y3HyWYPdTjQ9zm2tfLEJaNuZXtWUgcs2f6n77GZO/low@vger.kernel.org, AJvYcCUgcV9cURi0e2o/vJjlbtOBNxtNuGGEL1gsN3Gp7LSLDypbKIc+ZbuahKciukEuQ78Cqdudw5y8zKpE2WZCj3zf@vger.kernel.org, AJvYcCUzbFr25PyfIcDR+HfH1ZpJmNyZIIPkROycxeiKpFFtGP8ou/1LCiSeCi0jiMyjw41BxK44RphB@vger.kernel.org, AJvYcCVPp0Fk2zxjUsyHlXnWWersiPvpfzSAwlmbC/AEEausubQwTtAfNXRWkSNsNg1qF7KPSSbX2Qnz4pv5DT+m@vger.kernel.org, AJvYcCVxojdwRqCMVmuGvTDYlENB+vNiQj7rs9F/A9WGOMj09/Fwz/Iczm+lne4Tdkfnw2vmPi0SrvPjyO5jrnk=@vger.kernel.org, AJvYcCXFLVP20TJ2byEqjH5p1zl6sonEy4K3aGYMmtBA3VmeOWniWx49LxEXG4PsfMs5snHYVLKknTVkfvhR@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4KajWt0RL5va2yEg/rt7QWQqGxkubMeno7P8XVpUFXEnZ4lAK
-	JsrEUn7HbI285N0T7PWMFUS9SbeEO9VfY1/gwZOZOp9f7nTzEvAm10rNjv9Svqq9XWlKn4IUGnq
-	hMtCMD6qOoKA8uXPFwy5JfuhJm/BFHHE=
-X-Gm-Gg: ASbGncuMBIrsUMA6fMeqqDTSLBYGAxtJ7F73pHn/aDh/TedNlU6eMBnLm0vlMf0Dn2F
-	jm7b8RAhxIeJovalYZI6K+SIe6N295rlNygI+3DxGlk2ZzI3SbS+Ugj+0DTt6rZ+3Dnh72zDQA/
-	a5VPGd5JBL4xDx7IhK3Rh7+ehJXvKBBWTyhH7p5Gh8VLs+EOWgZ/spKjEzklw/QRdBVEY=
-X-Google-Smtp-Source: AGHT+IHtRgXkoammUnbUpN1dYXGck9bKGEUGn5GT5cV3fPbuB+pGOqAmc7vwPC05DiWkj0JlBHypesZfOXv6vLdnG6Q=
-X-Received: by 2002:a05:6512:3d28:b0:553:2c58:f967 with SMTP id
- 2adb3069b0e04-5533b93b8f9mr3282822e87.56.1748806987505; Sun, 01 Jun 2025
- 12:43:07 -0700 (PDT)
+        bh=ZkRn9YZ0Rm8OZGEegaym0YxIYoFsgbWeEIqOP9jK7OE=;
+        b=f5mmdTuQ4pdZ00N4QrbkqOA556X+EjsjKXS3SSHKC3mCWe+jqPgGP2qTnHlPaxpI3V
+         Hl8PxWHJN07itCpApPmR3UU8LiqZB/4ZHPX45rF3gznMEafdvPWNAIeTOsXIBqb7ZGKW
+         vFcWBkN/B9baoseGoS2oTos/JAFRymtKne2wh0iTFxNcje75x+RgUi+olWEfYC5eB0nB
+         d5vlaF0RVR95B3TIdiirzulatTHl4thg305lBY7UAkWBy6/gnQsy4j9TOUk1LQJQiHCO
+         wcQOo3fqBWVmMkL7CQjFa4eRiw4OEvYC8FX1ji/0i4eXTqDKpa3IdTgfvzuIs03PKO5J
+         eH8g==
+X-Forwarded-Encrypted: i=1; AJvYcCVYaiAJA0xwfnhFEVrSWGdP0RUYA7Y7/KYdzR2M8o1k9CBPwDlbfOQmxYv3X/ST2UNY48L5H+prfI8=@vger.kernel.org, AJvYcCW8sp3Tkp0CW79iolo96YMEgLn5954qF9rt6IhewZEXkHU/g3KA5lLCg7oneKeb1Qn40tGD8Owlq4ZT@vger.kernel.org, AJvYcCX2A4l5cD/LjaBzTbvGVKK/h2cakGmvJi99vspWbfvPeTBGW8LsCrN5D/tQU7535Mre6knjvmIE4N3xtrXM@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz25QiyZaa66mtt5Z127I1MpoVV/94j8neOFBuxD2isjY4J8sYZ
+	xIvIqqHV+OTZi+DROk3sTitNPLpYxcJEwydNFmpMCg9QxGsiRMJsIbFhHrZDwXouBc47SwMYuWE
+	9VKUeG/sA1LgV/uyO3poRZzVAMAGw/Fs=
+X-Gm-Gg: ASbGncvpHZ4VgO/u/+5jDF6PkkrSO3cR8Y13RqrUCqgMRcBgZCJGY83h+IsRAziUQxv
+	fLPC8gVaRp9k+V3cXmThXXxyk7BEWBFtOu99HCw4wwjlPftTONfDGH3JUdqEphUfhWaLpaEyn2U
+	VSOUc1FdhZVOupgwfur9/5HMCctVuyhxuI
+X-Google-Smtp-Source: AGHT+IGx7OWgE1wYNxbtfmiIWIk2xFK/qPfS/f0C8s3grU1lDP21eeKQSHvw8AslmPTVvJGMsRzso2JOjfFF8D0K/DU=
+X-Received: by 2002:a17:907:2cc3:b0:adb:449c:7621 with SMTP id
+ a640c23a62f3a-adb494bd297mr593554166b.29.1748807166361; Sun, 01 Jun 2025
+ 12:46:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530-cstr-core-v11-0-cd9c0cbcb902@gmail.com>
- <20250530-cstr-core-v11-1-cd9c0cbcb902@gmail.com> <DABC3ZAQ01GG.1VT5NL7PIMTEO@kernel.org>
-In-Reply-To: <DABC3ZAQ01GG.1VT5NL7PIMTEO@kernel.org>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Sun, 1 Jun 2025 15:42:30 -0400
-X-Gm-Features: AX0GCFsKjS9hgEwmEsRuHll_MOXzoBWv1p_-8FxpcxZc3tsgxztATvJimliHSmg
-Message-ID: <CAJ-ks9=awTggTjr-_dkaWLQRkQVwkBQKiJzdP9dA7_=zFKRY+g@mail.gmail.com>
-Subject: Re: [PATCH v11 1/5] rust: macros: reduce collections in `quote!` macro
-To: Benno Lossin <lossin@kernel.org>
-Cc: Michal Rostecki <vadorovsky@protonmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
-	Danilo Krummrich <dakr@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, 
-	devicetree@vger.kernel.org, llvm@lists.linux.dev, linux-pci@vger.kernel.org, 
-	nouveau@lists.freedesktop.org, linux-block@vger.kernel.org
+References: <20250601172139.59156-1-l.rubusch@gmail.com> <20250601172139.59156-9-l.rubusch@gmail.com>
+In-Reply-To: <20250601172139.59156-9-l.rubusch@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sun, 1 Jun 2025 22:45:29 +0300
+X-Gm-Features: AX0GCFtrQnvSTrb8q81asRvJW99c-SqRvuCmLXgOGMcJoj3XT2THj_0aho1nY24
+Message-ID: <CAHp75Vd=mzfVN_UBUHAkTyj2Ap_tz76AB0LtKEz28pR=WmNzog@mail.gmail.com>
+Subject: Re: [PATCH v4 08/11] iio: accel: adxl313: add inactivity sensing
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com, 
+	andy@kernel.org, corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de, 
+	Michael.Hennerich@analog.com, bagasdotme@gmail.com, linux-iio@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jun 1, 2025 at 12:24=E2=80=AFPM Benno Lossin <lossin@kernel.org> wr=
-ote:
+On Sun, Jun 1, 2025 at 8:22=E2=80=AFPM Lothar Rubusch <l.rubusch@gmail.com>=
+ wrote:
 >
-> On Fri May 30, 2025 at 2:27 PM CEST, Tamir Duberstein wrote:
-> > Remove a handful of unncessary intermediate vectors and token streams;
-> > mainly the top-level stream can be directly extended with the notable
-> > exception of groups.
->
-> What's the motivation for this?
+> Extend the interrupt handler to process interrupts as inactivity events.
+> Add functions to set threshold and period registers for inactivity. Add
+> functions to enable / disable inactivity. Extend the fake iio channel to
 
-I was squinting at the macro to understand how it worked and spotted
-these oddities.
+IIO
 
-> I wouldn't spend much effort on this file, as it'll go away when we add t=
-he `quote` crate.
+> deal with inactivity events on x, y and z combined with AND.
 
-Eh, this seems to be in the "I'll believe it when I see it" category.
+...
+
+> +static int adxl313_set_inact_time_s(struct adxl313_data *data,
+> +                                   unsigned int val_s)
+> +{
+> +       unsigned int max_boundary =3D 255;
+
+This is unclear how it's defined. What is the limit behind? Size of a
+bit field? Decimal value from the datasheet?
+
+The forms of (BIT(8) - 1) or GENMASK(7, 0) may be better depending on
+the answers to the above questions.
+
+> +       unsigned int val =3D min(val_s, max_boundary);
+> +
+> +       return regmap_write(data->regmap, ADXL313_REG_TIME_INACT, val);
+> +}
+
+...
+
+> -       axis_en =3D FIELD_GET(ADXL313_ACT_XYZ_EN, axis_ctrl);
+> +       if (type =3D=3D ADXL313_ACTIVITY)
+> +               axis_en =3D FIELD_GET(ADXL313_ACT_XYZ_EN, axis_ctrl);
+> +       else
+> +               axis_en =3D FIELD_GET(ADXL313_INACT_XYZ_EN, axis_ctrl);
+
+Even with this change my previous comment stays.
+
+...
+
+> +       en =3D cmd_en && threshold;
+> +       if (type =3D=3D ADXL313_INACTIVITY) {
+> +               ret =3D regmap_read(data->regmap, ADXL313_REG_TIME_INACT,=
+ &inact_time_s);
+> +               if (ret)
+> +                       return ret;
+> +
+> +               en =3D en && inact_time_s;
+> +       }
+
+...
+
+> -       if (info !=3D IIO_EV_INFO_VALUE)
+> -               return -EINVAL;
+> -
+> -       /* Scale factor 15.625 mg/LSB */
+> -       regval =3D DIV_ROUND_CLOSEST(MICRO * val + val2, 15625);
+> -       switch (dir) {
+> -       case IIO_EV_DIR_RISING:
+> -               ret =3D regmap_write(data->regmap,
+> -                                  adxl313_act_thresh_reg[ADXL313_ACTIVIT=
+Y],
+> -                                  regval);
+
+Hmm... This was added by the previous patches, right? Why can't it be
+done as a switch case to begin with? I remember one of the previous
+versions had some nested switch-cases, perhaps you need to rethink on
+how to split the code between functions to avoid too much nesting (add
+some helper functions?).
+
+> +       switch (info) {
+> +       case IIO_EV_INFO_VALUE:
+> +               /* Scale factor 15.625 mg/LSB */
+> +               regval =3D DIV_ROUND_CLOSEST(MICRO * val + val2, 15625);
+> +               switch (dir) {
+> +               case IIO_EV_DIR_RISING:
+> +                       ret =3D regmap_write(data->regmap,
+> +                                          adxl313_act_thresh_reg[ADXL313=
+_ACTIVITY],
+> +                                          regval);
+> +                       if (ret)
+> +                               return ret;
+> +                       return adxl313_set_measure_en(data, true);
+> +               case IIO_EV_DIR_FALLING:
+> +                       ret =3D regmap_write(data->regmap,
+> +                                          adxl313_act_thresh_reg[ADXL313=
+_INACTIVITY],
+> +                                          regval);
+> +                       if (ret)
+> +                               return ret;
+> +                       return adxl313_set_measure_en(data, true);
+> +               default:
+> +                       return -EINVAL;
+> +               }
+> +       case IIO_EV_INFO_PERIOD:
+> +               ret =3D adxl313_set_inact_time_s(data, val);
+>                 if (ret)
+>                         return ret;
+>                 return adxl313_set_measure_en(data, true);
+
+--=20
+With Best Regards,
+Andy Shevchenko
