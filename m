@@ -1,101 +1,815 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from sonic311-30.consmr.mail.ne1.yahoo.com (sonic311-30.consmr.mail.ne1.yahoo.com [66.163.188.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7002D19994F
-	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 18:10:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C0C238152
+	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 18:18:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.188.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748801412; cv=none; b=Suzn77Zv0qFDRRkzc/dPqzLuzYcd3i/4PL9T4+SI7kfLjq6gMXAuZA9C22Dg29HSrl+++PLzAngEyrWJ3aENWJJl89XPA0xMbA2zfo9nyjQ6+fxZ2eTfMIcejVV1rEjJNCoDdOHKkSq83fynbdHIZiIo7OeaS8GVTVcU9T1h06c=
+	t=1748801933; cv=none; b=RObwMLBwo3qtlhHocXJchoESCPdYnIoOUHK3VIpCgwMtPzXAVYjWt3EDEOau7ZMqiqFHd8Bbpg8p2epkLLsQkfEPDGDclW2VG/wJv6c9JKPHHldPb59BaHEn2vnkq/QWN7Q19u44XheDbmZSo75AGCkY3KNIpO6NvXEdELTPhKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748801412; c=relaxed/simple;
-	bh=pVepWIaCEzIeGRFQaZcmBLWWt1ncE0szpJw0yCvelIM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jQMlZiriePmBBMfoIE+shGPUwyVvTLguAqYsebaaW/pl6HFULUqIWyG0zt39HgPAtpuLiggQBshJZxD/Hi7L0vY6SUNDJExEfLow9gAEu37ieWs14xVlAbk7Q6UO328Tr6sReByyhqwyY83rMZp7Bd5tClJAkkzZTAa/EkneeFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=Vzpbs2RB; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
+	s=arc-20240116; t=1748801933; c=relaxed/simple;
+	bh=WuDY0OySF7BdBM49NzP+uPZV19MDCVmPPhZFaoDLJYs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nhTBTojnSppcVpwppcXjl/ELWW+XJ5ctzN7RmNnHpvoPll6DifVEEWwmKQOk8mxrEIH+sCT70dsUu72vijNXurkFOQI9rHVIDsY6nsUupjuEauZDx8L7Qm9cIl7KWrOd9u8hGZuHWvvDgVEySxrRXph9lCSXyN+i+7gYljqwHfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=jB03YYaL; arc=none smtp.client-ip=66.163.188.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="Vzpbs2RB"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso4606841b3a.2
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Jun 2025 11:10:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1748801411; x=1749406211; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sU9tdqLEYldteiJ8zq2UvA8WAxhWduR9ZKzVOtxtP6A=;
-        b=Vzpbs2RB5WIKiCwQH87/lXeXDlQukhgvt27PcvTt3isUhtPlEJqJTaRhic8oGfG0JR
-         rd7r+Hm+2zJyIL9KZZx6LMezNcTibnFGlbVdivVPheUTAZiu4EIA1N24EB+YnWVmleCv
-         Q1aakhSWpEIS/kGyT4H2yzeJS4cmyqi4ssn9/4/zJLzfldZaTZ+6lQSjkAgcKtZbDgos
-         /MVo388RNU1rULW+kt46STOpR3GAiTbOeIpa67PbqsjN7c7cWaHJv6dsJC9ELKA/JFKg
-         AIGaIokKEBx4DyFACBupzTtDvCninTZki+DZjty1AQyGzGtsjA+ndx9Mavm7aIkKjppU
-         F91A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748801411; x=1749406211;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sU9tdqLEYldteiJ8zq2UvA8WAxhWduR9ZKzVOtxtP6A=;
-        b=EFJ8Hu8GukQPZRekvgfZOz6Kp0X1XPqPLzdI5lKwoM1UaNm8m5ZxsZ6mKBt2BBQFB9
-         LOLQGeFlaC5OrerYsfC5Sbyz5aYzj3l4AXBV8QyNIFaYWjbnueWgVXEwbNeMFdu4KwMA
-         MUSuLCqkyvKGl5dghCwxUlVVvP7pb8H6qg6AtgoiIKuu16pzOiLIlR8ZfngylEvzJqDs
-         h4sfqXJwq3PyQVe8zb/dK2nCPFRNrc0mm8UKliKtqcImw9o7ymctkFX5DJNC6GWj5tvu
-         lrvD4QUpPT4c8DgSXLwgZkVN04wYrGM8/NDApz9bRkYM6LB0gig05iJbvWoNBvyy1e39
-         vqgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWlzcvb3yFVGCLqasFz7AhHTcxuow2uN/KHYzqeUgz/4E8k0kJt+bxoOM7zx1l3BPlobvISbc+3cLxDc6E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywl7DZvQywFLGAp+3nPcBPVEGK2WUG7s5t1KCysmuDZ0KPLsvc/
-	XvGBW0vwgwTBsPuVchXnkzDyPpZy9K8stTF7sy9Bl5JLekrPJYLXlFcybKbJRctJdsE=
-X-Gm-Gg: ASbGncszsIQKDZam/CYQ1HazSUB15cLFubvAmtO5lrb/ehY/pvFy2ybroNkUDEyn2xa
-	2vw95fy28ShZaSypTd8fsDf9HsgkpPV9ayunVKUdA2qDocDRabOdKYz8MvpYXW/WwfjhgKMdd7g
-	SHegHN3Hr+g0/rkqzY3FmquAK5I9TCS8htFt4p9pRMAJ/uNMVeW/d9V0WOckTZIW0PVMhiD2knn
-	dtl6EyNAusdYr7gbwAtKSsnXEGTg3NC8MgTX4DbBbhAFkFIO9RsVkYHGMdHBnYTeWWy+PgBJQeR
-	mAgotRZWserrW4pacH6l3OBY06nmhVuFRmGPrVp8Uoo1/0LJ9k0Y+8Fkykw=
-X-Google-Smtp-Source: AGHT+IHSEupw3IYJm7DRT6ZTLRx1Z/wZrEOvicGQApG9PBcuNBfCuSfdvpZ56SLAnppMJUQR6LpXXw==
-X-Received: by 2002:a05:6a20:d497:b0:21a:da9d:e970 with SMTP id adf61e73a8af0-21ae00895a7mr15679779637.22.1748801410665;
-        Sun, 01 Jun 2025 11:10:10 -0700 (PDT)
-Received: from thelio.tailc1103.ts.net ([97.120.245.255])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afeade44sm6169945b3a.70.2025.06.01.11.10.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Jun 2025 11:10:10 -0700 (PDT)
-From: Drew Fustini <drew@pdp7.com>
-To: Philipp Zabel <p.zabel@pengutronix.de>,
-	Michal Wilczynski <m.wilczynski@samsung.com>,
-	linux-kernel@vger.kernel.org
-Cc: Drew Fustini <drew@pdp7.com>
-Subject: [PATCH] reset: thead: Fix TH1520 typo
-Date: Sun,  1 Jun 2025 11:08:26 -0700
-Message-ID: <20250601181000.166088-1-drew@pdp7.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="jB03YYaL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1748801923; bh=XEdFOAxo7Ix9ZlscuZG5EZR04Xlxo/Q1+44saHO6Rtg=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=jB03YYaLSFS9OovlwzG43z1x1wvRaSiBDYdP9iwpRoq5KnOlogsmHldbctbZYGKRhnZFs/g9D62avCXvKJiuROfXBLTNnUM+eq/kdBefFHxunr0/oQZY868YhREAk0zrVWM/mtKuhIHPF0KB4C/Sfyfy0oj1QqvKT4Z8vAOpZDCwzznr72yaSKIxtix4M/ygwMCPSkzEBKr033gEOYV+cgCh5wTAByXmeiCH5L3zwmge+XdceeSvnldAg2j4eA8MIqi7M3Qv+Mb2XoLgg2L12+cUwr0fhGPisrtCqad3pQZkgmwhYF/9DpdyjCQ2tfbkWZEUsvJTbQW6mndGnHSlWw==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1748801923; bh=91pvgFJp51JFBPsrYfK5aUzkNWNovBWg11D6lKb1xxg=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=SfldityPIX0rK3MOH4s59ZdRt8L+/sDca5x6o39HHPUD90bUe1l+d5n+p50REQvTB48iCSYi20Bl17mGDLvgqpSgtf/dCPQVXYLNL5sYQgBpSC79DR5e+jXvJAf6zycI4Y4/phG2i6vMVf3CTrZbULKMakuAhOBKQPcWJiIl7zuEL2sZQ8cxbTGhMe02nOEmf6jnAL/67NQVCkkR3qwlrJZUJXSFGpzApoD0INQF5G00AzBnrVIGJZYS6XrMGrb7A4+bBP6sPMwx73d+0AksFRJUwJQdmUVwJzUdK9jZPj+slCzUySvjLwvCpUWgN+0Kg9i9lH+PSG78aK58f7sfng==
+X-YMail-OSG: 7qQl.NwVM1l26dp1.vAvxooeya08.UtbQ1F4BNpZrAWSKqTrclTSyNqVSsno2jL
+ R7n0vdIYaBc8NFbjyUTLG1PTuKuOfGBQLhDiFdPQyqfh5NFLQGPpG32rbiV9Sg_GUtO20KDWpXag
+ 5m39c2fx8v7gmjG7GCjO3jW29u5uafMe_PiOFzQ8wyXjjxA66xRHvJziiR_h4mUQNbzVHuyLhoth
+ CyLSxNUmRX_5nuKW5qxCTHUnNh3U0ci0tFi5fEb891uYicidWzBxWmCDXIP3c3oOX6kn4Qpgy_cd
+ xxl7DXdQettrx.7X.VZpPYYe9z_Mr52L2IJR8_XsrvgvqMSLHVC5Miv3s3PRX97IBp9c3_mfzrZm
+ DNqyH9ksiZm4jOR3ugAV_IB3KAKuuc0aaKBkEtxYi3rfhd67aL2p3x32qYIcRSodFaN04aeL2vc4
+ llnN59HY_Jn1Qs473Y.NICCeUbaSThpz_V72OO2YpHnX.2KkWF97Vq1wCdAW2nzPsU7b_wp8RBXo
+ kLSlFdp.kJ7FT.pUDz7e6dmeJv3a..dWwKHJBGi0LdQw.Z6.euowZ.9oHLtsbhOPusnfJE5TCk.N
+ gp6.Xt51QNQMFqUdKy8onhoNjy_0ZzTmXo3SzeakYk7dfjPwcpiN0jIRmxoCBGC2SXtDHhNLTGcJ
+ UemtLX64R9JHYSZcfnTH9hFmgKK_P0fTKCju5_LzFvTwUUpzfmTiODbijIgSv_A1XxARxodZZQ0X
+ lWxc.L3E.A8C5NoA.Mf5x8CqVX7vOnoRxaZAWYMcu7mcEClNmjZrrhxYSOF5OZn.Z3JVxITscZza
+ ocCtSP4vvLQGOvI2LnybvYnak2HXGijUEKuEqvtI4mIO1q.L_BNGD59G2dikH_HM87gJfjwuABbJ
+ 7FPtr.VQZP1UiTUvOMfxqEmq_7kK2CWRqVz5q5ujTrCoW.h7SGv1Lga6eGdY4rOFjg1.ryKEyIVc
+ RlY_cWI6LZkR49B8zT1RGdlhV15w1M26wr8.jkpUfiE91RaPgn8nZf1Gy5AjBcD0k36eahmUyfUM
+ O9t6t0oq_Q2wjqtwG9slhdKui6c_5utzswi0dgbFShR5euLVQv8bOdS.O.XrBz3NvHAYDemMw2Wn
+ DfO0uJ77AFTEQGQz_W3.BQCTUpRGSXwf987ks2FgKbItLnROvs4A6GHIqeuu72sdFbYoTvyrsYXz
+ Q8_VQb9vVT1SGkp5nXrOIAlPpws6B_b1jWAzVFREgTNzLrlaIHo6eJTte6Mkw1IH9JumbxdJjDn_
+ KowrAlkj5RUaXcnBSoY6jmqLHVf5G5Y58vi4SmBKJmMwNJnPXs2jhs8ej5TAIm2Eck_wnyJjCZky
+ 6rpwv4fHzbH8rCXXH22kdlPjAgyyDOECQNz3C3e0s1hhIWFtEpc.nhM9IYP5pJD8hoE81.qhnWES
+ hOM4jZopkj3eLvdh_6BKwmjGc8shv3uUJMkCJ4oZVjOUZPF2E7V77SwxIPt9F2f7B9GV.GoTwveJ
+ dali2U8fGZShKUrqUArhgzyTfYJ5h03RFYLZDZEfGT9AT8lcUvhmO9ePxGLXIoNhg4F.KNPXLJuH
+ WIvTfigIhhphLmRcI5sAnrd_KnIdsACxP5jdrVN3Ae.5PXu7LCFL2YlU4A.6pf3FGBLJnfIEP1g0
+ VqF8k6YL3S_vL23wDcTNZ8E1D6NMC7hWQMxfVG5yFySViRTfl84HYlW00IsFLVrKRkdPqv92lfpT
+ RUypFh62o0PE0i.e.nOoapa0nXFMuaLahdhUSjXmL45eDjy2I.W.6V4Nxr375yv8F6Y1jqCXD9sF
+ b97m7M3KQossWfnIYyfwJ.JIBUy8LlBaOjxZ8M6TC7ZY1.awKcORLruC_BUK3_4OJp4EVFN9MQfT
+ _RshdmyiBEjTdg_EO3gNU81.JMCHqkwVqFHUjWyzYpz2csrrp2MKsrW7RhUDyE4S_hHLWgSKOw7D
+ BuInu.wq5936qitB2f_oJ3MhFzwR0rPCK616IMlz8HMDjjXzB8G6BZ4pbaFCU1x1eQumSO7Zmut7
+ 1TdFyqr2n7poWnzIJtgxySf90KwXjVrc45m7Lhgjk_o4Nopw2F8Cu8laueuOmf6jrAqbnFaLzQq0
+ UmanO67AbUCAg_JtxyvYKhULh_dphMeySMTzWNpvfCNSq0VCvSDBckMnaqb_8b94pg2TgUWOoOV4
+ odlrovDuhTWlIJ.8Qx4rRN5sANBRA4QjB534ATrBj7SgDSYRYOl.iSMefesyncKgWyUmvwixD7Nl
+ mtNg7Xzj9KAHL9ogsJBoHHUE6ZK6Ih6wy1Mv3mx4CKVWhTy1yRFjVDmQbT8DNO20sSFz79JlYvwx
+ _SugRDJgeLY2tLPEc4kNwpqVinRmoaW7u8VfcgQ--
+X-Sonic-MF: <casey@schaufler-ca.com>
+X-Sonic-ID: 9712f74f-be1b-4525-b3f4-7f57a9300175
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic311.consmr.mail.ne1.yahoo.com with HTTP; Sun, 1 Jun 2025 18:18:43 +0000
+Received: by hermes--production-gq1-74d64bb7d7-rstz2 (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 7c5ad7edf4b620b53d443be3a880f0a8;
+          Sun, 01 Jun 2025 18:18:40 +0000 (UTC)
+Message-ID: <e07cf640-ecf9-4cc6-9cd5-cc06fb6c818a@schaufler-ca.com>
+Date: Sun, 1 Jun 2025 11:18:39 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] security: add Lilium - Linux Integrity Lock-In User
+ Module
+To: =?UTF-8?B?4oSw8J2Tg/Cdk4/ihLQg4oSx8J2TivCdk4DihK8=?=
+ <milesonerd@outlook.com>, "serge@hallyn.com" <serge@hallyn.com>
+Cc: "linux-security-module@vger.kernel.org"
+ <linux-security-module@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Casey Schaufler <casey@schaufler-ca.com>
+References: <SCYP152MB62611CB2B296124E47CB1C7CB063A@SCYP152MB6261.LAMP152.PROD.OUTLOOK.COM>
+Content-Language: en-US
+From: Casey Schaufler <casey@schaufler-ca.com>
+In-Reply-To: <SCYP152MB62611CB2B296124E47CB1C7CB063A@SCYP152MB6261.LAMP152.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Mailer: WebService/1.1.23884 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-Fix trivial typo in the Kconfig entry for RESET_TH1520.
+On 5/31/2025 6:04 PM, ℰ𝓃𝓏ℴ ℱ𝓊𝓀ℯ wrote:
+> From f34a53c7e615fb6e60b21bdcb5b1979edaf52088 Mon Sep 17 00:00:00 2001
+> From: Enzo Fuke <milesonerd@outlook.com>
+> Date: Sun, 1 Jun 2025 00:26:43 +0000
+> Subject: [PATCH] Lilium LSM
 
-Fixes: 4a65326311ab ("reset: thead: Add TH1520 reset controller driver")
-Signed-off-by: Drew Fustini <drew@pdp7.com>
----
-Philipp - do you prefer for me to have a thead reset tree and send pull
-requests to you? I currently do this for thead clk and thead dts.
+You need a patch description here. Please run scripts/checkpatch.pl
+on all your patches. If they do not pass they will not be accepted,
+regardless of any value there may be in the code.
 
- drivers/reset/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> ---
+>  security/lilium/Kconfig         |  82 ++++++
+>  security/lilium/Makefile        |  10 +
+>  security/lilium/lilium_config.h |  24 ++
+>  security/lilium/lilium_lsm.c    | 468 ++++++++++++++++++++++++++++++++
+>  security/lilium/lilium_rust.rs  |  83 ++++++
+>  5 files changed, 667 insertions(+)
+>  create mode 100644 security/lilium/Kconfig
+>  create mode 100644 security/lilium/Makefile
+>  create mode 100644 security/lilium/lilium_config.h
+>  create mode 100644 security/lilium/lilium_lsm.c
+>  create mode 100644 security/lilium/lilium_rust.rs
+>
+> diff --git a/security/lilium/Kconfig b/security/lilium/Kconfig
+> new file mode 100644
+> index 0000000..3072964
+> --- /dev/null
+> +++ b/security/lilium/Kconfig
+> @@ -0,0 +1,82 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +# Lilium (Linux Integrity Lock-In User Module)
+> +# Copyright (C) 2025 Enzo Fuke
+> +#
+> +config SECURITY_LILIUM
+> +   bool "Lilium (Linux Integrity Lock-In User Module) Support"
+> +   depends on SECURITY
+> +   help
+> +     This enables the Lilium Linux Security Module, which provides
+> +     modular security mechanisms for restricting various system
+> +     operations including ptrace, mmap/mprotect with PROT_EXEC,
+> +     kexec_load, clone/unshare, module management, and file operations.
+> +    
+> +     All security mechanisms are disabled by default and can be
+> +     enabled individually through sysctl.
+> +    
+> +     If you are unsure how to answer this question, answer N.
+> +
+> +config SECURITY_LILIUM_PTRACE
+> +   bool "Lilium ptrace restrictions"
+> +   depends on SECURITY_LILIUM
+> +   default n
+> +   help
+> +     This enables ptrace access restrictions in Lilium.
+> +    
+> +     If you are unsure how to answer this question, answer N.
+> +
+> +config SECURITY_LILIUM_MPROTECT
+> +   bool "Lilium mmap/mprotect restrictions"
+> +   depends on SECURITY_LILIUM
+> +   default n
+> +   help
+> +     This enables mmap/mprotect with PROT_EXEC restrictions in Lilium.
+> +    
+> +     If you are unsure how to answer this question, answer N.
+> +
+> +config SECURITY_LILIUM_KEXEC
+> +   bool "Lilium kexec_load restrictions"
+> +   depends on SECURITY_LILIUM
+> +   default n
+> +   help
+> +     This enables kexec_load restrictions in Lilium.
+> +    
+> +     If you are unsure how to answer this question, answer N.
+> +
+> +config SECURITY_LILIUM_CLONE
+> +   bool "Lilium clone/unshare restrictions"
+> +   depends on SECURITY_LILIUM
+> +   default n
+> +   help
+> +     This enables clone and unshare restrictions in Lilium.
+> +    
+> +     If you are unsure how to answer this question, answer N.
+> +
+> +config SECURITY_LILIUM_MODULE
+> +   bool "Lilium module management restrictions"
+> +   depends on SECURITY_LILIUM
+> +   default n
+> +   help
+> +     This enables module loading/unloading restrictions in Lilium.
+> +    
+> +     If you are unsure how to answer this question, answer N.
+> +
+> +config SECURITY_LILIUM_OPEN
+> +   bool "Lilium file open restrictions"
+> +   depends on SECURITY_LILIUM
+> +   default n
+> +   help
+> +     This enables open/openat restrictions in Lilium.
+> +    
+> +     If you are unsure how to answer this question, answer N.
+> +
+> +config SECURITY_LILIUM_IOCTL
+> +   bool "Lilium ioctl restrictions"
+> +   depends on SECURITY_LILIUM
+> +   default n
+> +   help
+> +     This enables ioctl restrictions in Lilium.
+> +    
+> +     If you are unsure how to answer this question, answer N.
+> +
+> diff --git a/security/lilium/Makefile b/security/lilium/Makefile
+> new file mode 100644
+> index 0000000..17aeb04
+> --- /dev/null
+> +++ b/security/lilium/Makefile
+> @@ -0,0 +1,10 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +# Lilium (Linux Integrity Lock-In User Module)
+> +# Copyright (C) 2025 Enzo Fuke
+> +#
+> +obj-$(CONFIG_SECURITY_LILIUM) += lilium.o
+> +
+> +lilium-y := lilium_lsm.o
+> +lilium-$(CONFIG_RUST) += lilium_rust.o
+> +
+> diff --git a/security/lilium/lilium_config.h b/security/lilium/lilium_config.h
+> new file mode 100644
+> index 0000000..1633c7e
+> --- /dev/null
+> +++ b/security/lilium/lilium_config.h
+> @@ -0,0 +1,24 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Lilium (Linux Integrity Lock-In User Module)
+> + * Copyright (C) 2025 Enzo Fuke
+> + */
+> +
+> +#ifndef _SECURITY_LILIUM_CONFIG_H
+> +#define _SECURITY_LILIUM_CONFIG_H
+> +
+> +/* Default disabled state for all Lilium features */
+> +#define LILIUM_FEATURE_DISABLED 0
+> +#define LILIUM_FEATURE_ENABLED  1
+> +
+> +/* Feature control flags - all disabled by default */
+> +#define LILIUM_DEFAULT_PTRACE   LILIUM_FEATURE_DISABLED
+> +#define LILIUM_DEFAULT_MPROTECT LILIUM_FEATURE_DISABLED
+> +#define LILIUM_DEFAULT_KEXEC    LILIUM_FEATURE_DISABLED
+> +#define LILIUM_DEFAULT_CLONE    LILIUM_FEATURE_DISABLED
+> +#define LILIUM_DEFAULT_MODULE   LILIUM_FEATURE_DISABLED
+> +#define LILIUM_DEFAULT_OPEN     LILIUM_FEATURE_DISABLED
+> +#define LILIUM_DEFAULT_IOCTL    LILIUM_FEATURE_DISABLED
 
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index d85be5899da6..2330c420a1c6 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -287,7 +287,7 @@ config RESET_SUNXI
- 	  This enables the reset driver for Allwinner SoCs.
- 
- config RESET_TH1520
--	tristate "T-HEAD 1520 reset controller"
-+	tristate "T-HEAD TH1520 reset controller"
- 	depends on ARCH_THEAD || COMPILE_TEST
- 	select REGMAP_MMIO
- 	help
--- 
-2.43.0
+This is an unconventional way to achieve this end.
 
+> +
+> +#endif /* _SECURITY_LILIUM_CONFIG_H */
+> +
+> diff --git a/security/lilium/lilium_lsm.c b/security/lilium/lilium_lsm.c
+> new file mode 100644
+> index 0000000..82bac41
+> --- /dev/null
+> +++ b/security/lilium/lilium_lsm.c
+> @@ -0,0 +1,468 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Lilium (Linux Integrity Lock-In User Module)
+> + * Copyright (C) 2025 Enzo Fuke
+> + */
+> +
+> +#include <linux/lsm_hooks.h>
+> +#include <linux/ptrace.h>
+> +#include <linux/prctl.h>
+> +#include <linux/ratelimit.h>
+> +#include <linux/workqueue.h>
+> +#include <linux/string_helpers.h>
+> +#include <linux/task_work.h>
+> +#include <linux/sched.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/module.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/file.h>
+> +#include <linux/fs.h>
+> +#include <linux/mman.h>
+> +#include <linux/kexec.h>
+> +#include <linux/slab.h>
+> +#include <linux/nsproxy.h>
+> +#include <linux/security.h>
+> +#include <linux/kobject.h>
+> +#include <linux/sysfs.h>
+> +#include <uapi/linux/lsm.h>
+> +
+> +#include "lilium_config.h"
+> +
+> +/* Feature control variables - all disabled by default */
+> +static int lilium_ptrace_enabled = LILIUM_DEFAULT_PTRACE;
+> +static int lilium_mprotect_enabled = LILIUM_DEFAULT_MPROTECT;
+> +static int lilium_kexec_enabled = LILIUM_DEFAULT_KEXEC;
+> +static int lilium_clone_enabled = LILIUM_DEFAULT_CLONE;
+> +static int lilium_module_enabled = LILIUM_DEFAULT_MODULE;
+> +static int lilium_open_enabled = LILIUM_DEFAULT_OPEN;
+> +static int lilium_ioctl_enabled = LILIUM_DEFAULT_IOCTL;
+> +
+> +/* Kobject for Lilium sysfs interface */
+> +static struct kobject *lilium_kobj;
+> +
+> +/* Sysfs attribute show/store functions */
+> +static ssize_t ptrace_enabled_show(struct kobject *kobj,
+> +                 struct kobj_attribute *attr, char *buf)
+> +{
+> +   return sysfs_emit(buf, "%d\n", lilium_ptrace_enabled);
+
+Kernel coding style uses tab8. Please review the kernel coding
+guidelines before your next submission.
+
+> +}
+> +
+> +static ssize_t ptrace_enabled_store(struct kobject *kobj,
+> +                  struct kobj_attribute *attr,
+> +                  const char *buf, size_t count)
+> +{
+> +   int ret, val;
+> +
+> +   ret = kstrtoint(buf, 10, &val);
+> +   if (ret < 0)
+> +       return ret;
+> +
+> +   if (val != 0 && val != 1)
+> +       return -EINVAL;
+> +
+> +   lilium_ptrace_enabled = val;
+> +   return count;
+> +}
+> +
+> +static ssize_t mprotect_enabled_show(struct kobject *kobj,
+> +                   struct kobj_attribute *attr, char *buf)
+> +{
+> +   return sysfs_emit(buf, "%d\n", lilium_mprotect_enabled);
+> +}
+> +
+> +static ssize_t mprotect_enabled_store(struct kobject *kobj,
+> +                    struct kobj_attribute *attr,
+> +                    const char *buf, size_t count)
+> +{
+> +   int ret, val;
+> +
+> +   ret = kstrtoint(buf, 10, &val);
+> +   if (ret < 0)
+> +       return ret;
+> +
+> +   if (val != 0 && val != 1)
+> +       return -EINVAL;
+> +
+> +   lilium_mprotect_enabled = val;
+> +   return count;
+> +}
+> +
+> +static ssize_t kexec_enabled_show(struct kobject *kobj,
+> +                struct kobj_attribute *attr, char *buf)
+> +{
+> +   return sysfs_emit(buf, "%d\n", lilium_kexec_enabled);
+> +}
+> +
+> +static ssize_t kexec_enabled_store(struct kobject *kobj,
+> +                 struct kobj_attribute *attr,
+> +                 const char *buf, size_t count)
+> +{
+> +   int ret, val;
+> +
+> +   ret = kstrtoint(buf, 10, &val);
+> +   if (ret < 0)
+> +       return ret;
+> +
+> +   if (val != 0 && val != 1)
+> +       return -EINVAL;
+> +
+> +   lilium_kexec_enabled = val;
+> +   return count;
+> +}
+> +
+> +static ssize_t clone_enabled_show(struct kobject *kobj,
+> +                struct kobj_attribute *attr, char *buf)
+> +{
+> +   return sysfs_emit(buf, "%d\n", lilium_clone_enabled);
+> +}
+> +
+> +static ssize_t clone_enabled_store(struct kobject *kobj,
+> +                 struct kobj_attribute *attr,
+> +                 const char *buf, size_t count)
+> +{
+> +   int ret, val;
+> +
+> +   ret = kstrtoint(buf, 10, &val);
+> +   if (ret < 0)
+> +       return ret;
+> +
+> +   if (val != 0 && val != 1)
+> +       return -EINVAL;
+> +
+> +   lilium_clone_enabled = val;
+> +   return count;
+> +}
+> +
+> +static ssize_t module_enabled_show(struct kobject *kobj,
+> +                 struct kobj_attribute *attr, char *buf)
+> +{
+> +   return sysfs_emit(buf, "%d\n", lilium_module_enabled);
+> +}
+> +
+> +static ssize_t module_enabled_store(struct kobject *kobj,
+> +                  struct kobj_attribute *attr,
+> +                  const char *buf, size_t count)
+> +{
+> +   int ret, val;
+> +
+> +   ret = kstrtoint(buf, 10, &val);
+> +   if (ret < 0)
+> +       return ret;
+> +
+> +   if (val != 0 && val != 1)
+> +       return -EINVAL;
+> +
+> +   lilium_module_enabled = val;
+> +   return count;
+> +}
+> +
+> +static ssize_t open_enabled_show(struct kobject *kobj,
+> +               struct kobj_attribute *attr, char *buf)
+> +{
+> +   return sysfs_emit(buf, "%d\n", lilium_open_enabled);
+> +}
+> +
+> +static ssize_t open_enabled_store(struct kobject *kobj,
+> +                struct kobj_attribute *attr,
+> +                const char *buf, size_t count)
+> +{
+> +   int ret, val;
+> +
+> +   ret = kstrtoint(buf, 10, &val);
+> +   if (ret < 0)
+> +       return ret;
+> +
+> +   if (val != 0 && val != 1)
+> +       return -EINVAL;
+> +
+> +   lilium_open_enabled = val;
+> +   return count;
+> +}
+> +
+> +static ssize_t ioctl_enabled_show(struct kobject *kobj,
+> +                struct kobj_attribute *attr, char *buf)
+> +{
+> +   return sysfs_emit(buf, "%d\n", lilium_ioctl_enabled);
+> +}
+> +
+> +static ssize_t ioctl_enabled_store(struct kobject *kobj,
+> +                 struct kobj_attribute *attr,
+> +                 const char *buf, size_t count)
+> +{
+> +   int ret, val;
+> +
+> +   ret = kstrtoint(buf, 10, &val);
+> +   if (ret < 0)
+> +       return ret;
+> +
+> +   if (val != 0 && val != 1)
+> +       return -EINVAL;
+> +
+> +   lilium_ioctl_enabled = val;
+> +   return count;
+> +}
+> +
+> +/* Define sysfs attributes */
+> +static struct kobj_attribute ptrace_attr =
+> +   __ATTR(ptrace_enabled, 0644, ptrace_enabled_show, ptrace_enabled_store);
+> +static struct kobj_attribute mprotect_attr =
+> +   __ATTR(mprotect_enabled, 0644, mprotect_enabled_show, mprotect_enabled_store);
+> +static struct kobj_attribute kexec_attr =
+> +   __ATTR(kexec_enabled, 0644, kexec_enabled_show, kexec_enabled_store);
+> +static struct kobj_attribute clone_attr =
+> +   __ATTR(clone_enabled, 0644, clone_enabled_show, clone_enabled_store);
+> +static struct kobj_attribute module_attr =
+> +   __ATTR(module_enabled, 0644, module_enabled_show, module_enabled_store);
+> +static struct kobj_attribute open_attr =
+> +   __ATTR(open_enabled, 0644, open_enabled_show, open_enabled_store);
+> +static struct kobj_attribute ioctl_attr =
+> +   __ATTR(ioctl_enabled, 0644, ioctl_enabled_show, ioctl_enabled_store);
+> +
+> +/* Attribute group */
+> +static struct attribute *lilium_attrs[] = {
+> +   &ptrace_attr.attr,
+> +   &mprotect_attr.attr,
+> +   &kexec_attr.attr,
+> +   &clone_attr.attr,
+> +   &module_attr.attr,
+> +   &open_attr.attr,
+> +   &ioctl_attr.attr,
+> +   NULL,
+> +};
+> +
+> +static struct attribute_group lilium_attr_group = {
+> +   .attrs = lilium_attrs,
+> +};
+> +
+> +/* LSM Hook Implementations */
+> +
+> +static int lilium_ptrace_access_check(struct task_struct *child,
+> +                    unsigned int mode)
+> +{
+> +   if (!lilium_ptrace_enabled)
+> +       return 0;
+> +
+> +   /* Implement contextual logic for ptrace restrictions */
+> +   if (mode & PTRACE_MODE_ATTACH) {
+> +       /* Allow if caller has CAP_SYS_PTRACE */
+> +       if (capable(CAP_SYS_PTRACE))
+> +           return 0;
+> +      
+> +       /* Deny ptrace access */
+> +       return -EPERM;
+> +   }
+
+	if ((mode & PTRACE_MODE_ATTACH) && !capable(CAP_SYS_PTRACE))
+		return -EPERM;
+
+> +
+> +   return 0;
+> +}
+> +
+> +static int lilium_file_mprotect(struct vm_area_struct *vma,
+> +                  unsigned long reqprot,
+> +                  unsigned long prot)
+> +{
+> +   if (!lilium_mprotect_enabled)
+> +       return 0;
+> +
+> +   /* Implement contextual logic for mprotect restrictions */
+> +   if ((prot & PROT_EXEC) && !(vma->vm_flags & VM_EXEC)) {
+> +       /* Allow if caller has CAP_SYS_ADMIN */
+> +       if (capable(CAP_SYS_ADMIN))
+> +           return 0;
+> +      
+> +       /* Deny making non-executable memory executable */
+> +       return -EPERM;
+> +   }
+> +
+> +   return 0;
+> +}
+> +
+> +static int lilium_mmap_file(struct file *file, unsigned long reqprot,
+> +              unsigned long prot, unsigned long flags)
+> +{
+> +   if (!lilium_mprotect_enabled)
+> +       return 0;
+> +
+> +   /* Implement contextual logic for mmap restrictions */
+> +   if ((prot & PROT_EXEC) && (flags & MAP_ANONYMOUS)) {
+> +       /* Allow if caller has CAP_SYS_ADMIN */
+> +       if (capable(CAP_SYS_ADMIN))
+> +           return 0;
+> +      
+> +       /* Deny executable anonymous mappings */
+> +       return -EPERM;
+> +   }
+> +
+> +   return 0;
+> +}
+> +
+> +static int lilium_task_create(struct task_struct *task,
+> +                struct task_struct *child)
+> +{
+> +   if (!lilium_clone_enabled)
+> +       return 0;
+> +
+> +   /* Implement contextual logic for clone restrictions */
+> +   /* This is a placeholder - actual implementation would check
+> +    * specific clone flags or namespace creation
+> +    */
+> +  
+> +   return 0;
+> +}
+> +
+> +static int lilium_task_fix_setuid(struct task_struct *task,
+> +                struct cred *new,
+> +                const struct cred *old,
+> +                int flags)
+> +{
+> +   if (!lilium_clone_enabled)
+> +       return 0;
+> +
+> +   /* Implement contextual logic for unshare restrictions */
+> +   /* This is a placeholder - actual implementation would check
+> +    * specific unshare flags or namespace creation
+> +    */
+> +  
+> +   return 0;
+> +}
+> +
+> +static int lilium_kernel_module_request(char *kmod_name)
+> +{
+> +   if (!lilium_module_enabled)
+> +       return 0;
+> +
+> +   /* Implement contextual logic for module loading restrictions */
+> +   /* Allow if caller has CAP_SYS_MODULE */
+> +   if (capable(CAP_SYS_MODULE))
+> +       return 0;
+> +  
+> +   /* Deny module loading */
+> +   return -EPERM;
+> +}
+> +
+> +static int lilium_kernel_module_from_file(struct file *file)
+> +{
+> +   if (!lilium_module_enabled)
+> +       return 0;
+> +
+> +   /* Implement contextual logic for module loading restrictions */
+> +   /* Allow if caller has CAP_SYS_MODULE */
+> +   if (capable(CAP_SYS_MODULE))
+> +       return 0;
+> +  
+> +   /* Deny module loading */
+> +   return -EPERM;
+> +}
+> +
+> +static int lilium_file_open(struct file *file)
+> +{
+> +   if (!lilium_open_enabled)
+> +       return 0;
+> +
+> +   /* Implement contextual logic for file open restrictions */
+> +   /* This is a placeholder - actual implementation would check
+> +    * specific file paths or attributes
+> +    */
+> +  
+> +   return 0;
+> +}
+> +
+> +static int lilium_file_ioctl(struct file *file, unsigned int cmd,
+> +               unsigned long arg)
+> +{
+> +   if (!lilium_ioctl_enabled)
+> +       return 0;
+> +
+> +   /* Implement contextual logic for ioctl restrictions */
+> +   /* This is a placeholder - actual implementation would check
+> +    * specific ioctl commands
+> +    */
+> +  
+> +   return 0;
+> +}
+> +
+> +static int lilium_sb_mount(const char *dev_name, const struct path *path,
+> +             const char *type, unsigned long flags, void *data)
+> +{
+> +   if (!lilium_open_enabled)
+> +       return 0;
+> +
+> +   /* Implement contextual logic for mount restrictions */
+> +   /* This is a placeholder - actual implementation would check
+> +    * specific mount flags or filesystem types
+> +    */
+> +  
+> +   return 0;
+> +}
+> +
+> +static int lilium_kexec_kernel_load(struct kimage *image)
+> +{
+> +   if (!lilium_kexec_enabled)
+> +       return 0;
+> +
+> +   /* Implement contextual logic for kexec_load restrictions */
+> +   /* Allow if caller has CAP_SYS_BOOT */
+> +   if (capable(CAP_SYS_BOOT))
+> +       return 0;
+> +  
+> +   /* Deny kexec_load */
+> +   return -EPERM;
+> +}
+> +
+> +/* LSM Hook Definitions */
+> +static struct security_hook_list lilium_hooks[] = {
+> +   LSM_HOOK_INIT(ptrace_access_check, lilium_ptrace_access_check),
+> +   LSM_HOOK_INIT(file_mprotect, lilium_file_mprotect),
+> +   LSM_HOOK_INIT(mmap_file, lilium_mmap_file),
+> +   LSM_HOOK_INIT(task_create, lilium_task_create),
+> +   LSM_HOOK_INIT(task_fix_setuid, lilium_task_fix_setuid),
+> +   LSM_HOOK_INIT(kernel_module_request, lilium_kernel_module_request),
+> +   LSM_HOOK_INIT(kernel_module_from_file, lilium_kernel_module_from_file),
+> +   LSM_HOOK_INIT(file_open, lilium_file_open),
+> +   LSM_HOOK_INIT(file_ioctl, lilium_file_ioctl),
+> +   LSM_HOOK_INIT(sb_mount, lilium_sb_mount),
+> +   LSM_HOOK_INIT(kexec_kernel_load, lilium_kexec_kernel_load),
+> +};
+> +
+> +static const struct lsm_id lilium_lsmid = {
+> +   .name = "lilium",
+> +   .id = LSM_ID_MAJOR_MAX,
+> +};
+> +
+> +static void lilium_exit(void)
+> +{
+> +   if (lilium_kobj) {
+> +       sysfs_remove_group(lilium_kobj, &lilium_attr_group);
+> +       kobject_put(lilium_kobj);
+> +   }
+> +}
+> +
+> +static int __init lilium_init(void)
+> +{
+> +   int ret;
+> +
+> +   /* Create sysfs interface */
+> +   lilium_kobj = kobject_create_and_add("lilium", kernel_kobj);
+> +   if (!lilium_kobj)
+> +       return -ENOMEM;
+> +
+> +   ret = sysfs_create_group(lilium_kobj, &lilium_attr_group);
+> +   if (ret) {
+> +       kobject_put(lilium_kobj);
+> +       return ret;
+> +   }
+> +
+> +   /* Register LSM hooks */
+> +   security_add_hooks(lilium_hooks, ARRAY_SIZE(lilium_hooks), &lilium_lsmid);
+> +
+> +   pr_info("Lilium: Linux Integrity Lock-In User Module initialized\n");
+> +   return 0;
+> +}
+> +
+> +security_initcall(lilium_init);
+> +module_exit(lilium_exit);
+> +
+> +MODULE_DESCRIPTION("Lilium (Linux Integrity Lock-In User Module)");
+> +MODULE_AUTHOR("Enzo Fuke");
+> +MODULE_LICENSE("GPL v2");
+> +
+> diff --git a/security/lilium/lilium_rust.rs b/security/lilium/lilium_rust.rs
+> new file mode 100644
+> index 0000000..7901d9d
+> --- /dev/null
+> +++ b/security/lilium/lilium_rust.rs
+> @@ -0,0 +1,83 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Lilium (Linux Integrity Lock-In User Module)
+> + * Copyright (C) 2025 Enzo Fuke
+> + */
+> +
+> +
+> +use kernel::prelude::*;
+> +use kernel::security;
+> +use kernel::file::File;
+> +use kernel::task::Task;
+> +use kernel::cred::Credential;
+> +
+> +const LILIUM_FEATURE_DISABLED: i32 = 0;
+> +const LILIUM_FEATURE_ENABLED: i32 = 1;
+> +
+> +extern "C" {
+> +    static lilium_ptrace_enabled: i32;
+> +    static lilium_mprotect_enabled: i32;
+> +    static lilium_kexec_enabled: i32;
+> +    static lilium_clone_enabled: i32;
+> +    static lilium_module_enabled: i32;
+> +    static lilium_open_enabled: i32;
+> +    static lilium_ioctl_enabled: i32;
+> +}
+> +
+> +pub struct LiliumOps;
+> +
+> +impl security::SecurityHooks for LiliumOps {
+> +    fn ptrace_access_check(
+> +        &self,
+> +        child: &Task,
+> +        mode: u32,
+> +    ) -> Result<security::SecurityHookResult> {
+> +        if unsafe { lilium_ptrace_enabled } == LILIUM_FEATURE_DISABLED {
+> +            return Ok(security::SecurityHookResult::Default);
+> +        }
+> +
+> +        if mode & security::PTRACE_MODE_ATTACH != 0 {
+> +            if kernel::current_cred().has_capability(kernel::CAP_SYS_PTRACE) {
+> +                return Ok(security::SecurityHookResult::Default);
+> +            }
+> +            
+> +            return Ok(security::SecurityHookResult::Reject);
+> +        }
+> +
+> +        Ok(security::SecurityHookResult::Default)
+> +    }
+> +
+> +    fn file_mprotect(
+> +        &self,
+> +        vma: &kernel::mm::VirtualMemoryArea,
+> +        reqprot: u64,
+> +        prot: u64,
+> +    ) -> Result<security::SecurityHookResult> {
+> +        if unsafe { lilium_mprotect_enabled } == LILIUM_FEATURE_DISABLED {
+> +            return Ok(security::SecurityHookResult::Default);
+> +        }
+> +
+> +        if (prot & kernel::mm::PROT_EXEC) != 0 && (vma.flags() & kernel::mm::VM_EXEC) == 0 {
+> +            if kernel::current_cred().has_capability(kernel::CAP_SYS_ADMIN) {
+> +                return Ok(security::SecurityHookResult::Default);
+> +            }
+> +            
+> +            return Ok(security::SecurityHookResult::Reject);
+> +        }
+> +
+> +        Ok(security::SecurityHookResult::Default)
+> +    }
+> +
+> +    fn file_open(
+> +        &self,
+> +        file: &File,
+> +    ) -> Result<security::SecurityHookResult> {
+> +        if unsafe { lilium_open_enabled } == LILIUM_FEATURE_DISABLED {
+> +            return Ok(security::SecurityHookResult::Default);
+> +        }
+> +
+> +
+> +        Ok(security::SecurityHookResult::Default)
+> +    }
+> +}
+> +
+> --
+> 2.49.0
