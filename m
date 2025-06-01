@@ -1,76 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6356E81749
-	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 17:58:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D5F8233701
+	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 18:07:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748800709; cv=none; b=r1rdp1ZyF9TE68g2M1HnQJeK6oRFQjbF6Db4l1hy7G5eax7O6eRHgf7XhTma0F3JtceYWUxEU3jFF4aKOsVw1X571HyEzzWajWt2zTYB1WvrwcHtIoJw51gux76xLXwWP7oPJPC+JkRGmIgZPeldRQfWQP3fRZ6i8G7G/LWzZy8=
+	t=1748801225; cv=none; b=tp7HYZntxp6bAputAa2pPtJfGmNgTb8kPPpLevMKIBM0jPlhsZZluHPvbRaJuHEXVvbrDSrYkCJnCWojFzSOpAn+cwyWBqhpny+Wv0JNzUMHlnSOGVi8DwTgLOVbrpNDzQGptCXkSkifRMOiTRRErwz2SgP6/8QOnt0JQqqNZmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748800709; c=relaxed/simple;
-	bh=cA569BPCjFunk07O8huSU8zvqfYvcHXxLn18zxeoVGo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pGoJAWjOY93E9WbCBzUNcIJLNtBOyLpXbSe/aa20bF6C+elUwTkPCviyPX6ycPiGWj4RFwY/vNX0ePI+3vPEt9DvPSK92OTvDJJEOyx3LTJbQJy1d5UT43pkEGtojfMR6Ke0PJwxpMvYmXxAjtRpLGgVoaBWeVQAxLgvckQbRRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ThzHBIFk; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ThzHBIFk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60956C4CEE7;
-	Sun,  1 Jun 2025 17:58:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1748800708;
-	bh=cA569BPCjFunk07O8huSU8zvqfYvcHXxLn18zxeoVGo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ThzHBIFk/ma+B0/K9vYSkOXKEGtz8xSLFshAWKIPSoDfWNXd04d8o4DZiNF7d+lkb
-	 Z9TVcYXizxtlTF6WQ2Tlgtioxw8TRmJl06/KWmUD4QcgpZGYZcpZ4aTMpEki+GofE+
-	 P7kHu3LNSmQxbY7qRLgGSqdQHK3KFW37gVO49hB0=
-Date: Sun, 1 Jun 2025 13:58:27 -0400
-From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	linux-kernel@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>, 
-	Ingo Saitz <ingo@hannover.ccc.de>, kernel test robot <oliver.sang@intel.com>, 
-	Marco Elver <elver@google.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Thiago Jung Bauermann <thiago.bauermann@linaro.org>
-Subject: Re: [GIT PULL] hardening fixes for v6.16-rc1
-Message-ID: <20250601-electric-olivine-wren-d8c5ca@lemur>
-References: <202505310759.3A40AD051@keescook>
- <CAHk-=wj4a_CvL6-=8gobwScstu-gJpX4XbX__hvcE=e9zaQ_9A@mail.gmail.com>
- <156567EE-E5BB-43C4-B5A6-439D83FF387D@kernel.org>
- <CAHk-=wjktqa94u_=++YX7XxUr57iLAs1GqtHPOY-o-N0z7wyeA@mail.gmail.com>
- <202505312300.95D7D917@keescook>
- <20250601-pony-of-imaginary-chaos-eaa59e@lemur>
- <202506010833.A33888CC@keescook>
+	s=arc-20240116; t=1748801225; c=relaxed/simple;
+	bh=4wULl+5RvIxm65tgsYk25Tb3WtkIkAmkkUbhv3DxiIg=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=egDrunYEza6Lu9FlanS10qmcv7xVJV8iLEHqm9B0FMMRhCRSTu0hXQoBU7uNkg30hr8tx6A4S1PFOq+GPR+6Q5AFjC81p7MzUegQsDxokOvGouA2+kQ0GLPKriQlpZ79Ll6NkIZ9mIsK322knZhK0DV83XZmtJvwoaGPWzq7NMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-8649be94fa1so601060739f.0
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Jun 2025 11:07:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748801223; x=1749406023;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MNH+e2wBF7Xg3jnLnbLmzq10vNKY3b0x8+Cx5vnhySs=;
+        b=hONcHkxdmJJ1p+B2zGWM4vVrtQ6r3MCMBUFpbfAAqAJYabKg6ZfaL96ZM0YA41lFft
+         JJo7ROdr3cxRwPVF6o5b66fA1s1hshygC+fw8hNOCsliIZvtQxXeR7VC+mhCaMne+9Jw
+         nA/JYG1hGEQkalf86fVjsIu3TUiLx1AUhkoRPECq+UvBEx+Xjgi6or9LVfa4SvCRjMCJ
+         xPlN+0X9i6/wPMQ72NQlCX05Dm82lDT9BwQPuJBnhZx/8Cs015qtz6o4CeJwSRCMJ2ns
+         fex72Y+B/iFaoxXtXlR8d+ohlijuQ6fIdV9CpcrGW+sEHKLGtFm33ScYxSkREPl+amf/
+         admw==
+X-Forwarded-Encrypted: i=1; AJvYcCXYJTy98DvrJydhe7+loGb33QCJCSaCPMweySbSAB81QVW1PiEpVYS5AczTFw+VNCLDQts+7XvsABHMeDo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyH+Mbc6oCNpaxKLX7EtkO3BqQ+Ms5aUoTZtpJTzR8Ht4JMDpw/
+	WPwYTd2QMnIL4tkBcQrkj8CybZ1p8qeZYrKs1KScMFYuVxt8VXW9I03MYpu17NNoBblBdNRreMa
+	roRXssGS9Nv4MB30+gO9aGU0WIydA82250oJRc+CoZodCVR4eTuiwDEwv09c=
+X-Google-Smtp-Source: AGHT+IEMWdDsR32/1HHtiM30II6+NDaNfaUq6pMIFs8bj1cefae93/pi9JC4HZPpn87MXCCPym1NDyWJ7SYtMnsq4bAnkbxdG0lU
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202506010833.A33888CC@keescook>
+X-Received: by 2002:a05:6e02:1488:b0:3dc:7a9a:44d5 with SMTP id
+ e9e14a558f8ab-3dd99c8bb62mr137174545ab.22.1748801223138; Sun, 01 Jun 2025
+ 11:07:03 -0700 (PDT)
+Date: Sun, 01 Jun 2025 11:07:03 -0700
+In-Reply-To: <683bede4.a00a0220.d8eae.002a.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <683c96c7.a00a0220.d8eae.0033.GAE@google.com>
+Subject: Re: [syzbot] [bcachefs?] BUG: unable to handle kernel NULL pointer
+ dereference in mempool_alloc_noprof (2)
+From: syzbot <syzbot+56edda805363e0a093b8@syzkaller.appspotmail.com>
+To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, Jun 01, 2025 at 08:38:10AM -0700, Kees Cook wrote:
-> > I don't yet know why it wants to rewrite 39 commits when we're updating a
-> > commit that's only 3 away from the tip. If you manage to rerun this with b4 -d
-> > and send me the output, I will be glad to look at it. Alternatively, if you
-> > can let me know the steps to get my tree in the same state as yours, I can run
-> > it locally.
-> 
-> This shows the same problem (using Linus's tree and linux-next):
-> 
-> $ git checkout 9d230d500b0e -b test/repro/before
-> $ git cherry-pick 368556dd234d
-> $ git cherry-pick eef1355c269b
-> $ b4 trailers -u https://lore.kernel.org/all/CANpmjNPpyJn++DVZmO89ms_HkJ0OvQzkps0GjCFbWkk0F+_8Xg@mail.gmail.com
+syzbot has bisected this issue to:
 
-Thanks, I was able to recreate it and will use it as my test case. I suggest
-that until I have a fix in place, that you always use `br trailers -u` with a
-`--since-commit` flag, to restrict the range we're looking at. The solution
-I'll work on is to iterate the range of commits we get back and further
-restrict it to just the contiguous range matching the current committer, going
-backwards from the HEAD. This would have avoided the problem by restricting
-the commits being considered to just the handful that were cherry-picked on
-top of the latest merges from Linus.
+commit d4d71b58e5139afc5f9bda0139b99404eb216d8a
+Author: Kent Overstreet <kent.overstreet@linux.dev>
+Date:   Sat Apr 5 21:36:04 2025 +0000
 
--K
+    bcachefs: RO mounts now use less memory
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10914c82580000
+start commit:   4cb6c8af8591 selftests/filesystems: Fix build of anon_inod..
+git tree:       upstream
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=12914c82580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=14914c82580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e413b6de2bc0230
+dashboard link: https://syzkaller.appspot.com/bug?extid=56edda805363e0a093b8
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11dd7ed4580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=113f9970580000
+
+Reported-by: syzbot+56edda805363e0a093b8@syzkaller.appspotmail.com
+Fixes: d4d71b58e513 ("bcachefs: RO mounts now use less memory")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
