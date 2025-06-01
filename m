@@ -1,319 +1,234 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406D12DCC09;
-	Sun,  1 Jun 2025 15:08:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3711DF757
+	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 15:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748790500; cv=none; b=igfQiUQ2ciUEdLRX/BbDYIwRWGLvkr/kXdekbSNj7+4dipeuH5vVOnOLgcygFomwQhyAxn+T8qNrmcwCAbI2UeRNa4nvSJ6uMucLq6DQ1WZywbrwRWFBy53bhIYFDWdwKAKa0m7ecmiNxG5tjOYls7cFgACJ2yAHh5BR+IOCoOM=
+	t=1748791328; cv=none; b=u4piyWu7918QNg9M4v9sNAJJg1sVPCZUFWFqBrJB71mDZkjt05SQiGl/oticbvdpP2loKe2EVgOn3WfhK1HW6aDHN7/kKdETIL2phNCzmAxuoVlA7p/fVr9ugEfhrjWPLk3Wy4niymQ/MO4Paahq2Agpa7RnqZ9R6GnVue4DIY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748790500; c=relaxed/simple;
-	bh=XcjtFPcb6aPylZHVSaNqWbVqbXWvaGDNoEwVoVyk6uw=;
+	s=arc-20240116; t=1748791328; c=relaxed/simple;
+	bh=ZWlsEbLLjAaCv4BuA8/UppFHgvPukzjx4SMXwLnm5Zs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iHePdsI65zv2BCygfQYT4x1/wgQ7a7bSRKTi1Cf9f7WS9v1Q7lJ6WY2VKAzqRe5HSexLY3do0v8/4YdBiDkRNr0zzo9gzf1sZy0RmhFUZ38IS0RJ78wDHKLclCgbgFQSSTjpjxljGpd87aVb2SsaFac9QQfnJtKsGg7RWnm3v2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jhLElKtj; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=NJrOsY0Ghokfi4GT6MJT662xEgWMPRdlpTY44umoQ9JF1kbXJ5M9Y0APFLuCxe4qZBCT0C7ajIWFxs4/p6FBhiHk4LIq8VWsfgaoCVCTFPjrH6yNpovuMIQpBgbi0afKWGa/7x/PCp/hMERtnStCoBeLcRYZMxNsvwlDLqBhlks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DoMgpcIr; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jhLElKtj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748790498; x=1780326498;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XcjtFPcb6aPylZHVSaNqWbVqbXWvaGDNoEwVoVyk6uw=;
-  b=jhLElKtjS9ur4Nik1CZFuXTXLxeCOyloDeAenfq8B5V2dENogVdZNWqX
-   zCKD+S9XJ8c2/VEihYdocw3UkWeGG56dULZZ3WBN8sw4P/WgNnf6RVmVc
-   tJ6JVaECCYVLqWfZBOSM+cPdcw7eM8rPRQvyCdwtz+RJ/BqmQXJ/NsUrG
-   4FRthAXNaZaJ23hc89Y9Xl9JNCbwHmg7ODHDhUXX2t+pjJ3m2XRA55WoE
-   YrGa9MYqQ+FmATgLBhSSLaW7N9PDa2H0Rfv2rmWIGls75Ld2uZoe4H3CK
-   oTkYJzRvnQsGs1ebOUSCYkb7qTRc5bDg7GnOIc/SWs7jE0plpLeCLmYgD
-   A==;
-X-CSE-ConnectionGUID: DcPYil3SQ+yiUDGn3lifXg==
-X-CSE-MsgGUID: +v7rYJIcTgasEoE+eB0DfA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11450"; a="49936920"
-X-IronPort-AV: E=Sophos;i="6.16,201,1744095600"; 
-   d="scan'208";a="49936920"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2025 08:08:17 -0700
-X-CSE-ConnectionGUID: MKA503UtTzeupO4TU3swVw==
-X-CSE-MsgGUID: fXDRWmWlQoai33kFy7Mm+Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,201,1744095600"; 
-   d="scan'208";a="149107716"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa003.jf.intel.com with ESMTP; 01 Jun 2025 08:08:09 -0700
-Date: Sun, 1 Jun 2025 23:01:36 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Nava kishore Manne <nava.kishore.manne@amd.com>
-Cc: mdf@kernel.org, hao.wu@intel.com, yilun.xu@intel.com, trix@redhat.com,
-	robh@kernel.org, saravanak@google.com, linux-fpga@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	git@amd.com
-Subject: Re: [RFC v3 1/1] fpga-region: Introduce ConfigFS interface for
- runtime FPGA configuration
-Message-ID: <aDxrUD9YjnFkWy3M@yilunxu-OptiPlex-7050>
-References: <20250519033950.2669858-1-nava.kishore.manne@amd.com>
- <20250519033950.2669858-2-nava.kishore.manne@amd.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DoMgpcIr"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-234fcadde3eso43191875ad.0
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Jun 2025 08:22:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748791325; x=1749396125; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=eXW1/YM5zz+CF3xJy+mpJXWMMDbrJMLFqUUrCR702J4=;
+        b=DoMgpcIr3+j9jveptIHnnmhjxXlkroqXJsX5WHePW9RilVbjMJXQzeZq9W6MmNURQT
+         bHN8OBFkR5IZvBHHQHPp/8GHUllsV1xnG9jx84vBntsyRA2KUgJenoFQswm/JolTCIQe
+         8s/6T0PMBiqrsR1Hh7yc4mgQf67HRvW0pYu5m54Q4RB/9XlqUaWxUFQNeZ4HDqnmQhyr
+         lSFZfbLCOlpAOzcGG0Ydis21FhvGjcUuBQ0g09cTKGyyq22spNX1TZT3/5cVxpioZ8hP
+         ZoBXeGlu2XNNBKWiwYgrmRgH34s3eWeygnHbbTOSoQ3TRfDG5WTHrM1GJlCcJZe1ETLy
+         79oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748791325; x=1749396125;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eXW1/YM5zz+CF3xJy+mpJXWMMDbrJMLFqUUrCR702J4=;
+        b=LMpn1nJqzIzHAT/7Mi7ucX0946PD/txEElAJY3/ZbpT20naWyQ18u1F7/XVQKp49hJ
+         XfcG3r8JfdhjRIr0qzpPbfugi1FImrvGLE6EGpEVBeaxlyyeafjLXAHSQws4DYXyttFd
+         wKDtsxZ1ciw7nvkqy8H6ga6XRmCxPzwnJ2vU6pvWbQTg2UqF+5hL01s1j2FGsCfBerKu
+         BqtuEPpn/0n3aHcI4wOiHbK0qK9eooTUU35NjHuk0R7lHm1EkjbC5p0U3r/UaL+VNXP3
+         yRP1eXuD8ayi55LaItO/kxCh3y8nq6yifgD/RXJnmpXvP+TOdMha9NQXQyh4b94wdGiG
+         /6nA==
+X-Forwarded-Encrypted: i=1; AJvYcCXPutERhxXRzqB5iEjkUA3rPZ4DoiMtkOc3fl7h2KdayyZeBjRZMStTqIzTCl3O678AekHEzUkOfvDS5EU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRy7oJ9lSzMH+FoZdVtsQ+y2FewLdEqWF0jyPhKMz3kmQz6SI8
+	8JsZtxdtdJ7pRFfXD0uQFHyvy6O1AnbJ3aPoiN4MQbTfdYPmvGDsyVhgyi22E1/62Q==
+X-Gm-Gg: ASbGncvvCBda7dGd9X+soskaZy1R7P6pK2joEz/Az+JQmvzTH/Is+yN4v8DlFIdRwTt
+	NvxUaSWqqtsPKxei9JGO7a87mvrNZw3nTT+uFXobvToC9/srRyHfBcAHkKaL2nvaR8HHCoUGk0t
+	gE6JtIai7UYijeDu/H45ij+RlI+bTHHDJzFFFLeo57JcD1oBQAzt2ryZhmv2AdSU1/VhrUU6qgO
+	2eV4UMUsRCBklGrKJ8Uss5YAvWTPNmUpDv5B2RLECX8WkCYeBdT/wy23427itdaAUePiQ+6y8tM
+	Gd+cBLhIdIQB6XHWqCz5AXqhLavUEIBw46AJUBkLZbX/pJayKI4LvJoCIUrMzE4=
+X-Google-Smtp-Source: AGHT+IEJfc8pHNvgATHLpZnaIzj8JyRGFCc9pjej88kFaniJEBRrgyJVFmdFH5e4bqy8CSn/z6tt1w==
+X-Received: by 2002:a17:902:ec90:b0:234:be9b:539a with SMTP id d9443c01a7336-2355f9ef410mr75898605ad.40.1748791325354;
+        Sun, 01 Jun 2025 08:22:05 -0700 (PDT)
+Received: from thinkpad ([120.56.205.120])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506d21f4bsm56574435ad.250.2025.06.01.08.22.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Jun 2025 08:22:04 -0700 (PDT)
+Date: Sun, 1 Jun 2025 20:51:59 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	cros-qcom-dts-watchers@chromium.org, Bjorn Helgaas <bhelgaas@google.com>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
+Subject: Re: [PATCH v2 2/2] PCI: Add support for PCIe wake interrupt
+Message-ID: <543ocn4vecyjej26ynjggm6zwj7bmn27rd6c4foo36gvxeltma@6d5dfdoscxwm>
+References: <20250419-wake_irq_support-v2-0-06baed9a87a1@oss.qualcomm.com>
+ <20250419-wake_irq_support-v2-2-06baed9a87a1@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250519033950.2669858-2-nava.kishore.manne@amd.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250419-wake_irq_support-v2-2-06baed9a87a1@oss.qualcomm.com>
 
-On Mon, May 19, 2025 at 09:09:37AM +0530, Nava kishore Manne wrote:
-> Introduces an ConfigFS interface within the fpga-region subsystem,
-> providing a generic and standardized mechanism for configuring (or)
-> reprogramming FPGAs during runtime. The newly added interface supports
-> both OF (Open Firmware) and non-OF devices, leveraging vendor-specific
-> callbacks (e.g., pre_config, post_config, removal, and status) to
-> accommodate a wide range of device specific configurations.
+On Sat, Apr 19, 2025 at 11:13:04AM +0530, Krishna Chaitanya Chundru wrote:
+
+Subject prefix should be 'PCI/portdrv'
+
+> PCIe wake interrupt is needed for bringing back PCIe device state
+> from D3cold to D0.
 > 
-> The ConfigFS interface ensures compatibility with both OF and non-OF
-> devices, allowing for seamless FPGA reprogramming across diverse
-> platforms.
+> Implement new functions, of_pci_setup_wake_irq() and
+> of_pci_teardown_wake_irq(), to manage wake interrupts for PCI devices
+> using the Device Tree.
 > 
-> Vendor-specific callbacks are integrated into the interface, enabling
-> custom FPGA pre_config, post_config, removal, and status reporting
-> mechanisms, ensuring flexibility for vendor implementations.
+> From the port bus driver call these functions to enable wake support
+> for bridges.
 > 
-> This solution enhances FPGA runtime management, supporting various device
-> types and vendors, while ensuring compatibility with the current FPGA
-> configuration flow.
-> 
-> Signed-off-by: Nava kishore Manne <nava.kishore.manne@amd.com>
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 > ---
-> Changes for v3:
->  - As discussed with Yilun, the implementation continues to use a callback-based
->  approach to seamlessly support both OF (Open Firmware) and non-OF devices via
->  vendor-specific hooks. Additionally, the earlier IOCTL-based interface has been
->  replaced with a more suitable ConfigFS-based mechanism to enable runtime FPGA
->  configuration.
+>  drivers/pci/of.c           | 60 ++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/pci/pci.h          |  6 +++++
+>  drivers/pci/pcie/portdrv.c | 12 +++++++++-
+>  3 files changed, 77 insertions(+), 1 deletion(-)
 > 
-> Changes for v2:
->  - As discussed with Yilun, the implementation has been modified to utilize a
->  callback approach, enabling seamless handling of both OF and non-OF devices.
-> 
->  - As suggested by Yilun in the POC code, we have moved away from using  void *args
->  as a parameter for ICOTL inputs to obtain the required user inputs. Instead, we are
->  utilizing the fpga_region_config_info structure to gather user inputs. Currently,
->  this structure is implemented to support only OF devices, but we intend to extend
->  it by incorporating new members to accommodate non-OF devices in the future.
-> 
->  drivers/fpga/fpga-region.c       | 196 +++++++++++++
->  drivers/fpga/of-fpga-region.c    | 474 +++++++++++++++++--------------
->  include/linux/fpga/fpga-region.h |  34 +++
->  3 files changed, 493 insertions(+), 211 deletions(-)
-> 
-> diff --git a/drivers/fpga/fpga-region.c b/drivers/fpga/fpga-region.c
-> index 753cd142503e..d583fc22955b 100644
-> --- a/drivers/fpga/fpga-region.c
-> +++ b/drivers/fpga/fpga-region.c
-> @@ -5,6 +5,7 @@
->   *  Copyright (C) 2013-2016 Altera Corporation
->   *  Copyright (C) 2017 Intel Corporation
->   */
-> +#include <linux/configfs.h>
->  #include <linux/fpga/fpga-bridge.h>
->  #include <linux/fpga/fpga-mgr.h>
->  #include <linux/fpga/fpga-region.h>
-> @@ -180,6 +181,158 @@ static struct attribute *fpga_region_attrs[] = {
->  };
->  ATTRIBUTE_GROUPS(fpga_region);
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index ab7a8252bf4137a17971c3eb8ab70ce78ca70969..13623797c88a03dfb9d9079518d87a5e1e68df38 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -7,6 +7,7 @@
+>  #define pr_fmt(fmt)	"PCI: OF: " fmt
 >  
-> +static struct fpga_region *item_to_fpga_region(struct config_item *item)
-> +{
-> +	return container_of(to_configfs_subsystem(to_config_group(item)),
-> +			    struct fpga_region, subsys);
-> +}
-> +
-> +/**
-> + * fpga_region_image_store - Set firmware image name for FPGA region
-> + * This function sets the firmware image name for an FPGA region through configfs.
-> + * @item: Configfs item representing the FPGA region
-> + * @buf: Input buffer containing the firmware image name
-> + * @count: Size of the input buffer
-> + *
-> + * Return: Number of bytes written on success, or negative errno on failure.
-> + */
-> +static ssize_t fpga_region_image_store(struct config_item *item, const char *buf, size_t count)
-> +{
-> +	struct fpga_region *region = item_to_fpga_region(item);
-> +	struct device *dev = &region->dev;
-> +	struct fpga_image_info *info;
-> +	char firmware_name[NAME_MAX];
-> +	char *s;
-> +
-> +	if (region->info) {
-> +		dev_err(dev, "Region already has already configured.\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	info = fpga_image_info_alloc(dev);
-> +	if (!info)
-> +		return -ENOMEM;
-> +
-> +	/* copy to path buffer (and make sure it's always zero terminated */
-> +	count = snprintf(firmware_name, sizeof(firmware_name) - 1, "%s", buf);
-> +	firmware_name[sizeof(firmware_name) - 1] = '\0';
-> +
-> +	/* strip trailing newlines */
-> +	s = firmware_name + strlen(firmware_name);
-> +	while (s > firmware_name && *--s == '\n')
-> +		*s = '\0';
-> +
-> +	region->firmware_name = devm_kstrdup(dev, firmware_name, GFP_KERNEL);
-> +	if (!region->firmware_name)
-> +		return -ENOMEM;
-> +
-> +	region->info = info;
-> +
-> +	return count;
-> +}
-> +
-> +/**
-> + * fpga_region_config_store - Trigger FPGA configuration via configfs
-> + * @item: Configfs item representing the FPGA region
-> + * @buf: Input buffer containing the configuration command (expects "1" to program, "0" to remove)
-> + * @count: Size of the input buffer
-> + *
-> + * If the input is "1", this function performs:
-> + *   1. region_pre_config() (if defined)
-
-Please define explicit workflow, and explicit expectation for each
-callback, or this framework makes no sense. From your of-fpga-region
-implementation, seems pre_config() means "parse image", post_config()
-means "populate devices".
-
-> + *   2. Bitstream programming via fpga_region_program_fpga() (unless external config flag is set)
-> + *   3. region_post_config() (if defined)
-> + *
-> + * If the input is "0", it triggers region_remove() (if defined).
-> + *
-> + * Return: Number of bytes processed on success, or negative errno on failure.
-
-Please put the uAPI description in Documentation/ABI/testing. Then we
-could know the file path layout from userspace POV.
-
-> + */
-> +static ssize_t fpga_region_config_store(struct config_item *item,
-> +					const char *buf, size_t count)
-> +{
-> +	struct fpga_region *region = item_to_fpga_region(item);
-> +	int config_value, ret = 0;
-> +
-> +	/* Parse input: must be "0" or "1" */
-> +	if (kstrtoint(buf, 10, &config_value) || (config_value != 0 && config_value != 1))
-> +		return -EINVAL;
-> +
-> +	/* Ensure fpga_image_info is available */
-> +	if (!region->info)
-> +		return -EINVAL;
-> +
-> +	if (config_value == 1) {
-> +		/* Pre-config */
-> +		if (region->region_ops->region_pre_config) {
-> +			ret = region->region_ops->region_pre_config(region);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +
-> +		/* Program bitstream if not external */
-> +		if (!(region->info->flags & FPGA_MGR_EXTERNAL_CONFIG)) {
-> +			ret = fpga_region_program_fpga(region);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +
-> +		/* Post-config */
-> +		if (region->region_ops->region_post_config) {
-> +			ret = region->region_ops->region_post_config(region);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +
-> +	} else {
-> +		/* Remove configuration */
-> +		if (region->region_ops->region_remove) {
-> +			ret = region->region_ops->region_remove(region);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +	}
-> +
-> +	return count;
-> +}
-> +
-> +/* Define Attributes */
-> +CONFIGFS_ATTR_WO(fpga_region_, image);
-> +CONFIGFS_ATTR_WO(fpga_region_, config);
-> +
-> +/* Attribute List */
-> +static struct configfs_attribute *fpga_region_config_attrs[] = {
-> +	&fpga_region_attr_image,
-> +	&fpga_region_attr_config,
-> +	NULL,
-> +};
-> +
-> +/* ConfigFS Item Type */
-> +static const struct config_item_type fpga_region_item_type = {
-> +	.ct_attrs = fpga_region_config_attrs,
-> +	.ct_owner = THIS_MODULE,
-> +};
-
-I think this is still the sysfs methodology. My understanding from configfs.rst
-is, use userspace interfaces to control the lifecycle of a kernel object.
-
-Now for existing kernel reprogramming flow, the image object for
-fpga_region is the struct fpga_image_info. We need to associate the
-struct with a config_item: alloc the struct fpga_image_info instance by
-mkdir, expose necessary fields (enable_timeout_us, disable_timeout_us,
-firmware_name, and the most important for of-fpga-region - overlay blob ...)
-for user to fill/query via configfs attributes. And finally use a writeable
-attribute (e.g. load) to trigger fpga_region_program_fpga().
-
-> +
-> +static int fpga_region_configfs_register(struct fpga_region *region)
-> +{
-> +	struct configfs_subsystem *subsys = &region->subsys;
-> +
-> +	snprintf(subsys->su_group.cg_item.ci_namebuf,
-> +		 sizeof(subsys->su_group.cg_item.ci_namebuf),
-> +		 "%s", dev_name(&region->dev));
-> +
-> +	subsys->su_group.cg_item.ci_type = &fpga_region_item_type;
-> +
-> +	config_group_init(&subsys->su_group);
-
-I think we'd better make a root "fpga_region" group to include all
-regions.
-
-> +
-> +	return configfs_register_subsystem(subsys);
-> +}
-> +
-> +static void fpga_region_configfs_unregister(struct fpga_region *region)
-> +{
-> +	struct configfs_subsystem *subsys = &region->subsys;
-> +
-> +	configfs_unregister_subsystem(subsys);
-> +}
-
-[...]
-
->  static void __exit of_fpga_region_exit(void)
->  {
->  	platform_driver_unregister(&of_fpga_region_driver);
-> -	of_overlay_notifier_unregister(&fpga_region_of_nb);
+>  #include <linux/cleanup.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/irqdomain.h>
+>  #include <linux/kernel.h>
+>  #include <linux/pci.h>
+> @@ -15,6 +16,7 @@
+>  #include <linux/of_address.h>
+>  #include <linux/of_pci.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pm_wakeirq.h>
+>  #include "pci.h"
+>  
+>  #ifdef CONFIG_PCI
+> @@ -966,3 +968,61 @@ u32 of_pci_get_slot_power_limit(struct device_node *node,
+>  	return slot_power_limit_mw;
 >  }
+>  EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
+> +
+> +/**
+> + * of_pci_setup_wake_irq - Set up wake interrupt for PCI device
 
-Sorry, it is really hard to review if all the changes are mess up
-together. Maybe I'll revisit it later. But next time please split
-the patches to produce some readable diff.
+This function is for setting up the wake interrupt for slot, not for endpoint
+devices, isn't it? Then it should be named as such:
 
-Thanks,
-Yilun
+	of_pci_slot_setup_wake_irq()
+
+> + * @pdev: The PCI device structure
+> + *
+> + * This function sets up the wake interrupt for a PCI device by getting the
+> + * corresponding GPIO pin from the device tree, and configuring it as a
+
+s/GPIO pin/WAKE# GPIO
+
+> + * dedicated wake interrupt.
+> + *
+> + * Return: 0 if the wake gpio is not available or successfully parsed else
+
+s/wake gpio/WAKE# GPIO
+
+> + * errno otherwise.
+> + */
+> +int of_pci_setup_wake_irq(struct pci_dev *pdev)
+> +{
+> +	struct gpio_desc *wake;
+> +	struct device_node *dn;
+> +	int ret, wake_irq;
+> +
+> +	dn = pci_device_to_OF_node(pdev);
+> +	if (!dn)
+> +		return 0;
+> +
+> +	wake = devm_fwnode_gpiod_get(&pdev->dev, of_fwnode_handle(dn),
+> +				     "wake", GPIOD_IN, NULL);
+> +	if (IS_ERR(wake)) {
+> +		dev_warn(&pdev->dev, "Cannot get wake GPIO\n");
+
+WAKE# is an optional GPIO. So the driver should not warn users if it is not
+defined in the root port node. It should however print the error log and return
+errno, if the API returns other than -ENOENT.
+
+> +		return 0;
+> +	}
+> +
+> +	wake_irq = gpiod_to_irq(wake);
+> +	device_init_wakeup(&pdev->dev, true);
+> +
+> +	ret = dev_pm_set_dedicated_wake_irq(&pdev->dev, wake_irq);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "Failed to set wake IRQ: %d\n", ret);
+> +		device_init_wakeup(&pdev->dev, false);
+> +		return ret;
+> +	}
+> +	irq_set_irq_type(wake_irq, IRQ_TYPE_EDGE_FALLING);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(of_pci_setup_wake_irq);
+> +
+> +/**
+> + * of_pci_teardown_wake_irq - Teardown wake interrupt setup for PCI device
+
+Same comment as above.
+
+> + *
+> + * @pdev: The PCI device structure
+> + *
+> + * This function tears down the wake interrupt setup for a PCI device,
+> + * clearing the dedicated wake interrupt and disabling device wake-up.
+> + */
+> +void of_pci_teardown_wake_irq(struct pci_dev *pdev)
+> +{
+> +	dev_pm_clear_wake_irq(&pdev->dev);
+> +	device_init_wakeup(&pdev->dev, false);
+> +}
+> +EXPORT_SYMBOL_GPL(of_pci_teardown_wake_irq);
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index b81e99cd4b62a3022c8b07a09f212f6888674487..b2f65289f4156fa1851c2d2f20c4ca948f36258f 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -888,6 +888,9 @@ void pci_release_of_node(struct pci_dev *dev);
+>  void pci_set_bus_of_node(struct pci_bus *bus);
+>  void pci_release_bus_of_node(struct pci_bus *bus);
+>  
+> +int of_pci_setup_wake_irq(struct pci_dev *pdev);
+> +void of_pci_teardown_wake_irq(struct pci_dev *pdev);
+> +
+>  int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge *bridge);
+>  bool of_pci_supply_present(struct device_node *np);
+>  
+> @@ -931,6 +934,9 @@ static inline int devm_of_pci_bridge_init(struct device *dev, struct pci_host_br
+>  	return 0;
+>  }
+>  
+> +static int of_pci_setup_wake_irq(struct pci_dev *pdev) { return 0; }
+> +static void of_pci_teardown_wake_irq(struct pci_dev *pdev) { }
+> +
+
+Provide stub for these APIs if CONFIG_OF is not enabled.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
