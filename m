@@ -1,156 +1,194 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-24427.protonmail.ch (mail-24427.protonmail.ch [109.224.244.27])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF25929D0E
-	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 04:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF41B18E20
+	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 04:56:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748753679; cv=none; b=HNE2HhHwpCr+oBnKFh5XTY221DDKNzCH7V7K4JmpJaqMQ04zlohOBur2If9c48CWBAVoAJu/b6yS6IEaExysb1REaOmab5LJtgdcs3RZI07qU1ti8OdE4jCTzWkIZLHZDwjqBQW7B2cbL6kX7foDEuIsO4elySpnDw4FpsyB24g=
+	t=1748753811; cv=none; b=p4rrMUAemrcqX8loZZlrdNAT3pTjKh8IF3iBNa3a4Abe9Hxj+TUqm3R+xzAenUtQlDyyOXP97dqGIfyMizv00/JTzElhcLCoR8WIQ2Q4MnJlaW7k312sIJxlJml5KVwCf1h+M/oPT3W+m9Op0v74to/5eYZNxYuXzfu0JXOAjlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748753679; c=relaxed/simple;
-	bh=qHEqHIgRcmAPeu0jPrUbfuslBZ5Cj/TfGeW8xZ8TNQU=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=aVduRMaTngCMDmi31m0ephgCemvh3Q7O5o1e2H+QmQg8ej1HSBy1l0NKVxercP56jVaNzz+OD4KGq+dN4Kl6sC61pxz0aS7/+WBvxHjZUMaK1kyMZZTw+bF/HPAploDnCG0j0NIV2QQjv6fZHa6b4WV90RpyBpSHviThviEr+SQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-86cf8ce80e4so191176739f.3
-        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 21:54:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748753677; x=1749358477;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+8qegP7nG4ylERrKp9Olu0X9clu/U8M9idwqPn1t/fc=;
-        b=PdFfgYgonz0tatCiOKWzWU3RKPOBz+KCla/Vl0kv4TQu6k7VrTmhSm2dA5vI0AA61b
-         OUMlicNhoTuScbVXYgb1VX5kCbZk6XNpBKCF+1lCXFtBjXh6JivQzwD2/ZRlzqn+DsF0
-         Exi9JA4TuphApYss4ev2gKQLUy9KDdORtBtVqfLtDv2OGWje8O7dQOjI31Pegzwov8Fl
-         cPMQfxP92HJjsJ2v/+0B7o4Q9pic9WhL3PoBJBH2JdrHKuLSD2NTGpEeYP0HvJ4jNfVi
-         UZyjfJAdnF1jaisimzKmr3dS5BaLxcA2PWrsVESa4pZ0szzY8v+5VauQ/LUw8iBwBwdF
-         DTAA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+pQVzEN3sSfwOMPO9SeOgIg4NXfdeKo+fE/HNBoj3lGMXYglPLq88ZjNVw/43fFAg2od+LzWFAK/giQE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeAdzRMo+bSCmWjysnkh9/ZPI8B/XwIt0hUco5+Yr2IcToKKoo
-	Wl5JdySBo77rvNDcJEI8O3hpyeItPNmfqT/ucJA5pMO5UjcM1vzx/NFBUmqxUYJBX/COsA9SOqV
-	w++yqVVwppKPD1ZFaw70qnHS7JltLdkO80ctlYExEM0VWiNfNi0/gdVdDznE=
-X-Google-Smtp-Source: AGHT+IEePnUSWW4j6v3h2tb3cxHJXga/PTaDbhqI+uUU3lWikyUSq4jz5Xlmk02Ja6N2iPJteyApPFmjmll0j1eKL+k3nLY4VE+b
+	s=arc-20240116; t=1748753811; c=relaxed/simple;
+	bh=1f3OagmzEZG8vztNo7su1/gNeBHaGLoRzxkZWbbweS4=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=BtoMFhGO+34TVxQl0utxJ4PQMcOTf6d8Cf4/vTyUiC3gb4AoPdWZavFm1AFCAni1XRdnbAh9GpKzRdBto0dFLoHuTQgjcc76NOqcgBlheVLgVwYkZFWO/LB/XAgbV6VTYU8Mo539OQzqDtogFDHL6RMZs7QvV7BnBPNR39wY4CQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=muzHpFMN; arc=none smtp.client-ip=109.224.244.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="muzHpFMN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1748753801; x=1749013001;
+	bh=1f3OagmzEZG8vztNo7su1/gNeBHaGLoRzxkZWbbweS4=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
+	 List-Unsubscribe:List-Unsubscribe-Post;
+	b=muzHpFMND29eRe8z3CwvlVBKsg4pjU1zLmRBH2UzKTmvNMWjfPa5JT2YYP1koshSP
+	 9Jvhen5CrMmXKvEe1jN63LHOIalHkGmXIjIgK/SpCYzGwUQywLHH7e0mvpiIKCDGjV
+	 1WlAaJlqEOG48Chz91mbC/DvZGf0akIdkRBAxdbDOwZFDTUbe0vqiSmUjZh5ZA49p+
+	 Xpt2UxeMl1zpVWVNr4AArfBoIayhj3XAbB0WweO2qYzuEfXOyw/rQH75ha0rMsOxIc
+	 LV3Wuzi15+JtDC8dhjus/48eMXIpymQ9Ei9I6FZ22YHe2kpCys0sr082ebaOnQQBtx
+	 oe0cF2VTiglcw==
+Date: Sun, 01 Jun 2025 04:56:37 +0000
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Turritopsis Dohrnii Teo En Ming <teo.en.ming@protonmail.com>
+Cc: "ceo@teo-en-ming-corp.com" <ceo@teo-en-ming-corp.com>
+Subject: [1st Jun 2025 Update] Activities of Singapore Government hackers inside Teo En Ming's Android (Linux) phone - 28 May 2025 Report
+Message-ID: <iAOnSlW1d69Q1ctZSZNq284Fl_TLuGdkxI4Io32HkKFno1QquMhxMZDX8rcMXkuHK3EuMgf_y1CKFto5-7Xw-WiK1XHVZGyr9ZTd4M3WRpQ=@protonmail.com>
+Feedback-ID: 39510961:user:proton
+X-Pm-Message-ID: 3754d800035d0569f1890c75685d61b149cfd546
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a6b:b0:3dc:8a5f:7cc1 with SMTP id
- e9e14a558f8ab-3dd99bd0075mr97088195ab.3.1748753677041; Sat, 31 May 2025
- 21:54:37 -0700 (PDT)
-Date: Sat, 31 May 2025 21:54:37 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <683bdd0d.a00a0220.d8eae.0027.GAE@google.com>
-Subject: [syzbot] [bcachefs?] WARNING in bch2_alloc_sectors_start_trans
-From: syzbot <syzbot+23573dac1278bb26916d@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Subject: [1st Jun 2025 Update] Activities of Singapore Government hackers i=
+nside Teo En Ming's Android (Linux) phone - 28 May 2025 Report
 
-syzbot found the following issue on:
+Good day from Singapore,
 
-HEAD commit:    c89756bcf406 Merge tag 'pm-6.16-rc1' of git://git.kernel.o..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12297170580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ded97a85afe9a6c8
-dashboard link: https://syzkaller.appspot.com/bug?extid=23573dac1278bb26916d
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16297170580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=166666d4580000
+I recall 1-2 years ago, Singapore Government hackers deleted 2 selfie photo=
+s I took with celebrities/artistes from my vivo V25 Pro 5G Android (Linux) =
+phone. I had to restore the deleted selfie photos from the "Recently delete=
+d" folder.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-c89756bc.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/b21d74e73303/vmlinux-c89756bc.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/b778ededeb75/bzImage-c89756bc.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/f56f82635bb3/mount_2.gz
+On 7 March 2025, Singapore Government hackers changed the name of my phone =
+contact from "Michael Chen Photographer" to "Michen Chen Photographer".
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+23573dac1278bb26916d@syzkaller.appspotmail.com
+Inside the WhatsApp messages that I had sent to myself, dated 3 April 2022,=
+ I think "Michael Chen" was also changed to "Michen Chen" by Singapore Gove=
+rnment hackers.
 
-bcachefs (loop0): snapshot points to missing/incorrect tree:
-  u64s 8 type snapshot 0:4294967295:0 len 0 ver 0: subvol parent          0 children          0          0 subvol 1 tree 0, fixing
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 5305 at fs/bcachefs/btree_iter.c:3132 __bch2_trans_kmalloc+0x5fb/0xc80 fs/bcachefs/btree_iter.c:3132
-Modules linked in:
-CPU: 0 UID: 0 PID: 5305 Comm: syz-executor289 Not tainted 6.15.0-syzkaller-03478-gc89756bcf406 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:__bch2_trans_kmalloc+0x5fb/0xc80 fs/bcachefs/btree_iter.c:3132
-Code: 00 e8 d9 e2 33 00 48 c7 c3 74 f7 ff ff 48 89 d8 48 83 c4 58 5b 41 5c 41 5d 41 5e 41 5f 5d e9 8c 9e 3e 07 cc e8 b6 ad 9d fd 90 <0f> 0b 90 e9 f0 fa ff ff 48 89 df e8 75 cc 02 00 43 80 7c 35 00 00
-RSP: 0018:ffffc9000d24e2b0 EFLAGS: 00010293
-RAX: ffffffff8422449a RBX: ffff88804ac38000 RCX: ffff8880002c2440
-RDX: 0000000000000000 RSI: 0000000000020000 RDI: 0000000000010000
-RBP: ffffc9000d24e568 R08: ffffc9000d24e7b0 R09: 0000000000000001
-R10: ffffc9000d24e6c0 R11: fffff52001a49ca5 R12: 0000000000000011
-R13: 1ffff11009587000 R14: dffffc0000000000 R15: 0000000000020000
-FS:  0000555591a7f380(0000) GS:ffff88808d28f000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f8c1260c000 CR3: 00000000350fa000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- bch2_trans_kmalloc_nomemzero_ip fs/bcachefs/btree_iter.h:586 [inline]
- bch2_trans_kmalloc_nomemzero fs/bcachefs/btree_iter.h:621 [inline]
- bch2_alloc_sectors_start_trans+0x254b/0x26a0 fs/bcachefs/alloc_foreground.c:1253
- __bch2_btree_node_alloc fs/bcachefs/btree_update_interior.c:321 [inline]
- bch2_btree_reserve_get+0x641/0x1810 fs/bcachefs/btree_update_interior.c:535
- bch2_btree_update_start+0x10ff/0x1480 fs/bcachefs/btree_update_interior.c:1255
- bch2_btree_split_leaf+0x14b/0x8e0 fs/bcachefs/btree_update_interior.c:1886
- bch2_trans_commit_error+0x1a8/0x1100 fs/bcachefs/btree_trans_commit.c:910
- __bch2_trans_commit+0x1cee/0x8820 fs/bcachefs/btree_trans_commit.c:1084
- bch2_trans_commit fs/bcachefs/btree_update.h:232 [inline]
- bch2_check_snapshots+0x5b3/0x1f20 fs/bcachefs/snapshot.c:863
- bch2_run_recovery_pass fs/bcachefs/recovery_passes.c:415 [inline]
- __bch2_run_recovery_passes+0x382/0x10b0 fs/bcachefs/recovery_passes.c:470
- bch2_run_recovery_passes+0x184/0x210 fs/bcachefs/recovery_passes.c:541
- bch2_fs_recovery+0x2617/0x3970 fs/bcachefs/recovery.c:974
- bch2_fs_start+0xa43/0xd30 fs/bcachefs/super.c:1206
- bch2_fs_get_tree+0xbfc/0x15f0 fs/bcachefs/fs.c:2479
- vfs_get_tree+0x92/0x2b0 fs/super.c:1809
- do_new_mount+0x24a/0xa40 fs/namespace.c:3882
- do_mount fs/namespace.c:4222 [inline]
- __do_sys_mount fs/namespace.c:4433 [inline]
- __se_sys_mount+0x317/0x410 fs/namespace.c:4410
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f8e37c74f6a
-Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 5e 04 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffebaab1338 EFLAGS: 00000282 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007ffebaab1350 RCX: 00007f8e37c74f6a
-RDX: 00002000000000c0 RSI: 0000200000000080 RDI: 00007ffebaab1350
-RBP: 0000200000000080 R08: 00007ffebaab1390 R09: 0000000000005963
-R10: 0000000000818001 R11: 0000000000000282 R12: 00002000000000c0
-R13: 0000000000000004 R14: 0000000000000003 R15: 00007ffebaab1390
- </TASK>
+Then on 10 May 2025, Singapore Government hackers changed the name of my ph=
+one contact from "Hairy Ted Events" to "Hairy Ted Ted Events".
+
+I have no idea what else Singapore Government hackers have changed on my An=
+droid (Linux) phone.
+
+Yesterday 27 May 2025 Tuesday, I had visited my mother at IMH from 3.00 PM =
+to 6.00 PM.
+
+While visiting my mother at IMH, I checked through my Singtel mobile phone =
+bills from April 2025 to May 2025.
+
+To my surprise, I discovered that Singapore Government hackers had made an =
+unauthorized long distance IDD 001 call from Singapore to Germany in my Apr=
+il 2025 Singtel mobile phone bill.
+
+Details of the long distance IDD 001 call are as follows:
+
+Date: 3 April 2025
+Time: 7.31 am
+Country: Germany
+Called No.: 4989262034700
+Duration: 5.0 Min(s)
+Charges: SGD$5.25
+
+Singtel mobile phone bill ID: 000173084076
+
+I remember 3 Apr 2025 very vividly. 3 Apr 2025 is my last day of service wi=
+th SBS Transit Ltd as Network Operations Engineer/IT Infrastructure Special=
+ist.
+
+On the morning of 3 Apr 2025, Singapore Government hackers had corrupted th=
+e Android (Linux) operating system on my vivo V25 Pro 5G Android (Linux) ph=
+one.
+
+In the afternoon of 3 Apr 2025 the same day, I had sent my vivo phone to Vi=
+vo Service Center at International Plaza in Singapore for servicing.
+
+Vivo Service Center technicians acknowledged that my Android (Linux) phone =
+had been hacked/compromised.
+
+They proceeded to erase/format my vivo phone and re-install the Android (Li=
+nux) operating system from scratch.
+
+Even ***AFTER*** Vivo Service Center technicians had erased/formatted my vi=
+vo phone and reinstalled the Android (Linux) operating system from scratch,=
+ Singapore Government hackers still managed to hack into my Android (Linux)=
+ phone AGAIN, very very quickly. I think within 1-2 hours. How many times m=
+ust I send my Android (Linux) phone to Vivo Service Center to reinstall the=
+ Android (Linux) operating system from scratch? 10,000 times? 10 billion ti=
+mes? 100 trillion times?
+
+I do not remember making long distance IDD 001 call from Singapore to Germa=
+ny on 3 Apr 2025.
+
+I repeat.
+
+I do not remember making long distance IDD 001 call from Singapore to Germa=
+ny on 3 Apr 2025.
+
+Hence, Singapore Government hackers must have made the unauthorized long di=
+stance IDD 001 call from Singapore to Germany on 3 April 2025.
+
+Now, I have a habit of sending WhatsApp messages to MYSELF to record inform=
+ation such as what time I sleep, what time I wake up, what time I take sema=
+glutide 7 mg (weight loss medication), what time I take the morning medicat=
+ion, what time I take the night medication and of course various other info=
+rmation I keep to myself.
+
+Since 26 May 2025, I discovered that some WhatsApp messages that I had sent=
+ to MYSELF were mysteriously missing and/or were deleted.
+
+Needless to say, Singapore Government hackers must have deleted some of my =
+WhatsApp messages.
+
+Back dating to 26 MARCH 2025, Singapore Government hackers had sent a messa=
+ge to Meta AI on my WhatsApp app on my Android (Linux) phone. The message g=
+oes: "I need help finding a job".
+
+I do not recall asking Meta AI on WhatsApp app such a message. Hence, Singa=
+pore Government hackers must have sent that message without my knowledge.
+
+Singapore Government hackers can easily hack into my Android (Linux) phone =
+and maintain ABSOLUTE and TOTAL control over my Android (Linux) phone. Sing=
+apore Government hackers can do practically ANYTHING inside my Android (Lin=
+ux) phone, since they have UNFETTERED access to my Android (Linux) phone.
+
+According to my notes, I bought my Vivo V25 Pro 5G Android (Linux) phone on=
+ 15 Sep 2023. This means that the phone battery is more than 1 year and 8 m=
+onths old. For the past several months, there were rapid battery drain ever=
+y day. After I could not endure it any more, I finally replaced the phone b=
+attery for SGD$40 at Sim Lim Square level 1 on 21 May 2025 Wednesday. This =
+is a brand new OEM phone battery. The model of the phone battery is B-W2. E=
+ven after replacing the old phone battery with a brand new OEM phone batter=
+y, there is still rapid battery drain. This goes to show that Singapore Gov=
+ernment hackers are constantly inside my Vivo V25 Pro 5G Android (Linux) ph=
+one 24x7 every day. Singapore Government hackers are monitoring and control=
+ling my vivo V25 Pro 5G Android (Linux) phone 24x7 every day. Which of cour=
+se explains the rapid battery drain even after I have replaced with a new o=
+ne.
+
+As of 1st June 2025, thousands of folders are missing from Internal Storage=
+/Android/data and Internal Storage/Android/obb folders, according to Google=
+ Files app. According to File Manager Plus app, it has no permission to acc=
+ess thousands of folders inside Internal Storage/Android/data and Internal =
+Storage/Android/obb folders. What have the Singapore Government hackers don=
+e to my Android (Linux) phone?
+
+I am still wondering why Android (Linux) phones are so easy for Singapore G=
+overnment hackers to hack into. Why? Why? Why?
+
+Is there any way that Linux kernel developers can improve the security of A=
+ndroid (Linux) phones so that government hackers won't be able to hack into=
+ Android (Linux) phones so easily? Perhaps increased collaboration with var=
+ious Android phone manufacturers to improve their security?? Are there any =
+good and effective security apps that I can install to block Singapore Gove=
+rnment hackers on my Android (Linux) phone, so that they will never come in=
+ uninvited again?
+
+Thank you very much.
+
+Regards,
+
+Mr. Turritopsis Dohrnii Teo En Ming
+Targeted Individuals in Singapore
+GIMP =3D Government-Induced Medical Problems
+28 May 2025 Wednesday 6.41 PM
+Updated 1st June 2025 Sunday 12.55 PM
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
