@@ -1,217 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E6C117ADF8;
-	Sun,  1 Jun 2025 07:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D72C635893;
+	Sun,  1 Jun 2025 07:31:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748762856; cv=none; b=poxcV19rJZREf0gSooEmnOUogLfMLqbhN4k0L29Fvs8p5SBHM8oeRxYRlOcDRIsTaNaloygGDG9zTJ/kJrTWAa7Z34/QcJcSNt34SehOZJ3LSwat8GT7xrbjPvHqtOA/4Rc0XXgcHMjSIh+9Kt29UwUrJvuNKLX1VcInd7mLCG8=
+	t=1748763112; cv=none; b=Z0Vdda3ho8IFsfHS2DMYn7kq6J7qc3wOGzcbG5MyZj/yzCY3Of5Brv2S4JUywT1qsSEJBwMjaK3zJYuHdj0RQAh21v4EpJphGgc7m6NR/YZOvMqBVbWUyGu2fwXCWcKTpWCQVB6HHZhpJStu6hKQgEaKLZd50qtHTk+c+N9exF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748762856; c=relaxed/simple;
-	bh=TSIGAsRYaW85cdl+wamftWOl+ellU2bWsRYBQ2l+1+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dMX8bBp/jpV7zViBK18usfWj+AGGBX2qOtuhB9SwUeAGc7wvcSXV1ALb615TaIW7BHDXqdUUFj2lxIT32k4UZWZDLiwTJd73kPY+w/Fa0mvL4oZRH6e33XkWdUcaE7LLZsJk9sTSufzVOgGO7PKXc2VAHdrDNWYO6tXuTEF988I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ass8kz2I; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748763112; c=relaxed/simple;
+	bh=6Gr5EoWy8Ket1um+xPQqA9JTH1/mAj6D3EPFq8+6IzQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=h3pds7pbFw+phjuxJxv6uLsaywc5ANkknqCWrx3FXqvti78MzfxwXCOb24eQ/Yxu6rrEL6tugkY+aeBMEsOewPpAnav7ImTYibjrBAKchC4VXF+xg2P+YwkLnw2EnV2dUZEoLinUUzoDaSLmzLbOhC2DOY/FT5swyMERJ7A/U20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NQPfjXeR; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ass8kz2I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748762853; x=1780298853;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=TSIGAsRYaW85cdl+wamftWOl+ellU2bWsRYBQ2l+1+c=;
-  b=Ass8kz2IIx14w6CZ1t3ucdNID2Ko2rVLdBscQ78Vd24c/HSbIkxjDTDH
-   mRJnHPfd0THzpSq6KnQ90Dbk4Wv0LlGty3PArRKdKWxJ2MQ/PFDiuqSg/
-   kfiHypaWh5d3vijTHBpdcQN4Ge2wilXHpLGqjZMne1YyF9m+4YqLMMh92
-   9C6iNHVDjCzbXhb+amhq/gw4HUGcAw/1OLEZrCQ5HKHIqVCgdcWo+utrU
-   4m72nmSbYveRmDl4fEZrB6iZgUupNCRvdpA0zKrol3kLKtZs9croyI5ZY
-   yge/ode41phmQMhuRUHdEXBGG9xnbAgMHwoReeW7BRFYEwPg71DHQGwNU
-   A==;
-X-CSE-ConnectionGUID: jgxUAdFBTeqTUPUdRP49aQ==
-X-CSE-MsgGUID: qeuMTRbeRraQPCpS4c8kFA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11450"; a="50672997"
-X-IronPort-AV: E=Sophos;i="6.16,200,1744095600"; 
-   d="scan'208";a="50672997"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2025 00:27:33 -0700
-X-CSE-ConnectionGUID: 9Ot9ppksRUCULTzU/oFn4w==
-X-CSE-MsgGUID: tFsjKZ0IQYChMml0V9Ujqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,200,1744095600"; 
-   d="scan'208";a="149296680"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 01 Jun 2025 00:27:31 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uLd6O-000Yqm-38;
-	Sun, 01 Jun 2025 07:27:28 +0000
-Date: Sun, 1 Jun 2025 15:27:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>
-Subject: Re: [PATCH 2/3] scripts/misc-check: check missing #include
- <linux/export.h>
-Message-ID: <202506011554.4QOxHuBb-lkp@intel.com>
-References: <20250531183217.3844357-2-masahiroy@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NQPfjXeR"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac3eb3fdd2eso635083966b.0;
+        Sun, 01 Jun 2025 00:31:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748763109; x=1749367909; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6Gr5EoWy8Ket1um+xPQqA9JTH1/mAj6D3EPFq8+6IzQ=;
+        b=NQPfjXeRPC5sBZ4MBbHSwbHIGL2mvv/cN0CiqNwUWs8nbJR7U5I0Uy0Du1T2l4ATRF
+         +b8Jx/S+BIuZpkV/ZTLoRWAJeFU4t1nDHQABa1YvE3wg2UQ2sVa0KUAOqCLpJD7t4l87
+         mOlM0CG0DMUD1XjkR0OYp1+KJEzzVARq9FFazpO/bkiBFeqpnqcAan5GyZ+aoxip1w7J
+         xPVVymNEUWmGw19zObnMqiMUbvINqhEp/OqOUGRKFNYBPisMIM/kdnK131omzXbOmDbS
+         mmYVZxgrxd93cqJWzsevO7iMEErcsz2/PzXIY+2NWLxB7xTEKKFt6SgmHkD9/nxJ4gw8
+         +iAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748763109; x=1749367909;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6Gr5EoWy8Ket1um+xPQqA9JTH1/mAj6D3EPFq8+6IzQ=;
+        b=g8VdKE2kh3tnvEaNHQ4ZEqUv/7n4hwX9nDIfrtmBIwZwQ1mSc3+kAvEYVBJxD5qA6Y
+         XSR+yZO0ZYg8E0PVa1mZ03LLOWpgXazloEgLWdxl5PZxvWP40CG4qv3d1992OS3ueqUm
+         EOvZkzdDbKpelb5LUEfabPFPfUfa8bjJk6TyErFnzXRXaaZwN4ResxzL75kBYDK4Rbl1
+         cgTh5f2dIHhO/iQS4wEzOa7Im2X1U0RPC+XHPG+VZ63GIULCDPKTWCkWsLtAf+9zwn5d
+         W8A4RciYc2vgOo7530z8abJ4NMQTJ2y/RtnVNWWrY92ZWrlCTJLz++Vsg50cpeHbvjRu
+         8cow==
+X-Forwarded-Encrypted: i=1; AJvYcCUMe8S6M+iQivJwzYY32ItozfqRQfufOxtJeW64k1/PSZ+TiJ7QR4L5vS3Ji0xPHvwfY/ZcvyfUGLyjjVg7@vger.kernel.org, AJvYcCWqWz0YNQ6Uo6PogGwA9x+xQqku3zZMpHF2BT+g3mAQ31Q5Z7Wq02JkQREPZ4biOfIpT1zAbHBBgXLh@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxQzHZk3OVxUyTEwqGCBCJUI+v+PIxS6sRgzaSpbiEJaAVuREV
+	a0LhggUJ2MTIDwn6fqDd6qovIUXH2BUpk0S/qlGeAct3FHoPztjxEuVT
+X-Gm-Gg: ASbGncvwaKxCQ3nJbRkzYjpoklPt52WNELD30wkOI06Ztdpv77YQqW66f15Fqia3cau
+	wMCktvkWh0BQkulaDyKAISTDBXB3iGZo7lJfeiP+CizU8hcR/9JnjCtQ4QUzKZrTYcYgp2dnS3N
+	q2Alwtn5fos0HLgk31/QaYw5GpNmcqvEiVcw5dympjrpf2cHKBmmRMbAFCwJQEF/dk+L3/9IkfQ
+	I/P0FpNyzkO+e6dk34jeeTlJIJXmDzv/xD98uUIivzMKUVOxgr2AfghVF5NlwQia8tnvWzYxXzo
+	PuN+utb1cP/wDF3nJ7n3bAVkOHiQ/fi41QtJwCRmosyqt1Hk3yoV5V2AFLZ3mdgkStvLHxNbe0X
+	qpSMEEqbEgyE=
+X-Google-Smtp-Source: AGHT+IEK3eTk+q+PoPcU1IXXHMfkiGqGbhaaAt6oJvDPx3en+jI7h9Nk9omjEYfcZvi3il8Vv3uy8w==
+X-Received: by 2002:a17:907:da5:b0:ad8:af1f:938d with SMTP id a640c23a62f3a-adb3242e54dmr807905866b.37.1748763108917;
+        Sun, 01 Jun 2025 00:31:48 -0700 (PDT)
+Received: from masalkhi.. (ip-109-43-112-27.web.vodafone.de. [109.43.112.27])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5d82e846sm609267466b.70.2025.06.01.00.31.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Jun 2025 00:31:48 -0700 (PDT)
+From: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
+To: krzk@kernel.org
+Cc: abd.masalkhi@gmail.com,
+	arnd@arndb.de,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	gregkh@linuxfoundation.org,
+	krzk+dt@kernel.org,
+	linux-kernel@vger.kernel.org,
+	robh@kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: Add Device Tree binding for ST M24LR control interface
+Date: Sun,  1 Jun 2025 07:31:47 +0000
+Message-ID: <20250601073147.2019266-1-abd.masalkhi@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <852ef4fd-6c26-4f79-a1d4-b3e37926ed7a@kernel.org>
+References: <852ef4fd-6c26-4f79-a1d4-b3e37926ed7a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250531183217.3844357-2-masahiroy@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-Hi Masahiro,
+Hi Krzysztof,
 
-kernel test robot noticed the following build errors:
+Thank you for your review.
 
-[auto build test ERROR on masahiroy-kbuild/for-next]
-[also build test ERROR on masahiroy-kbuild/fixes linus/master v6.15 next-20250530]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> Drop quotes. So this is I2C mux or EEPROM?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Masahiro-Yamada/scripts-misc-check-check-missing-include-linux-export-h/20250601-023341
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git for-next
-patch link:    https://lore.kernel.org/r/20250531183217.3844357-2-masahiroy%40kernel.org
-patch subject: [PATCH 2/3] scripts/misc-check: check missing #include <linux/export.h>
-config: sh-allyesconfig (https://download.01.org/0day-ci/archive/20250601/202506011554.4QOxHuBb-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250601/202506011554.4QOxHuBb-lkp@intel.com/reproduce)
+The system parameter sector and the EEPROM do not share a continuous address
+space, each starts at address 0 and spans its own internal region. This
+overlapping addressing creates ambiguity if treated as a single memory space.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506011554.4QOxHuBb-lkp@intel.com/
+Additionally, there's a synchronization issue: during multi-page writes to
+the EEPROM, if a control command (e.g., a lock) is issued mid-operation,
+it may result in partial or inconsistent writes.
 
-All error/warnings (new ones prefixed by >>):
+To address both challenges, the driver uses a mux-based design:
 
->> grep: arch/alpha/kernel/core_irongate.c: No such file or directory
->> grep: arch/alpha/kernel/core_marvel.c: No such file or directory
->> grep: arch/alpha/kernel/core_titan.c: No such file or directory
->> grep: arch/alpha/kernel/core_tsunami.c: No such file or directory
->> grep: arch/alpha/kernel/io.c: No such file or directory
->> grep: arch/alpha/kernel/irq_alpha.c: No such file or directory
->> grep: arch/alpha/kernel/machvec_impl.h: No such file or directory
->> grep: arch/alpha/kernel/pci.c: No such file or directory
->> grep: arch/alpha/kernel/pci_iommu.c: No such file or directory
->> grep: arch/alpha/kernel/process.c: No such file or directory
->> grep: arch/alpha/kernel/setup.c: No such file or directory
->> grep: arch/alpha/kernel/smp.c: No such file or directory
->> grep: arch/alpha/kernel/time.c: No such file or directory
->> grep: arch/alpha/kernel/traps.c: No such file or directory
->> grep: arch/alpha/lib/checksum.c: No such file or directory
->> grep: arch/alpha/lib/csum_partial_copy.c: No such file or directory
->> grep: arch/alpha/lib/fls.c: No such file or directory
->> grep: arch/alpha/lib/fpreg.c: No such file or directory
->> grep: arch/alpha/lib/memcpy.c: No such file or directory
->> grep: arch/alpha/lib/udelay.c: No such file or directory
-   grep: arch/arc/kernel/arcksyms.c: No such file or directory
-   grep: arch/arc/kernel/intc-compact.c: No such file or directory
-   grep: arch/arc/kernel/process.c: No such file or directory
-   grep: arch/arc/kernel/reset.c: No such file or directory
-   grep: arch/arc/kernel/smp.c: No such file or directory
-   grep: arch/arc/kernel/stacktrace.c: No such file or directory
-   grep: arch/arc/kernel/unwind.c: No such file or directory
-   grep: arch/arc/mm/cache.c: No such file or directory
-   grep: arch/arc/mm/init.c: No such file or directory
-   grep: arch/arc/mm/ioremap.c: No such file or directory
-   grep: arch/arm/common/bL_switcher.c: No such file or directory
-   grep: arch/arm/common/krait-l2-accessors.c: No such file or directory
-   grep: arch/arm/common/locomo.c: No such file or directory
-   grep: arch/arm/common/mcpm_entry.c: No such file or directory
-   grep: arch/arm/common/sa1111.c: No such file or directory
-   grep: arch/arm/common/scoop.c: No such file or directory
-   grep: arch/arm/common/sharpsl_param.c: No such file or directory
-   grep: arch/arm/crypto/aes-cipher-glue.c: No such file or directory
-   grep: arch/arm/crypto/blake2s-glue.c: No such file or directory
-   grep: arch/arm/crypto/chacha-glue.c: No such file or directory
-   grep: arch/arm/crypto/curve25519-glue.c: No such file or directory
-   grep: arch/arm/crypto/poly1305-glue.c: No such file or directory
-   grep: arch/arm/crypto/sha1_glue.c: No such file or directory
-   grep: arch/arm/crypto/sha256_glue.c: No such file or directory
-   grep: arch/arm/kernel/armksyms.c: No such file or directory
-   grep: arch/arm/kernel/bios32.c: No such file or directory
-   grep: arch/arm/kernel/cacheinfo.c: No such file or directory
-   grep: arch/arm/kernel/dma.c: No such file or directory
-   grep: arch/arm/kernel/elf.c: No such file or directory
-   grep: arch/arm/kernel/fiq.c: No such file or directory
-   grep: arch/arm/kernel/io.c: No such file or directory
-   grep: arch/arm/kernel/opcodes.c: No such file or directory
-   grep: arch/arm/kernel/process.c: No such file or directory
-   grep: arch/arm/kernel/reboot.c: No such file or directory
-   grep: arch/arm/kernel/return_address.c: No such file or directory
-   grep: arch/arm/kernel/setup.c: No such file or directory
-   grep: arch/arm/kernel/stacktrace.c: No such file or directory
-   grep: arch/arm/kernel/tcm.c: No such file or directory
-   grep: arch/arm/kernel/time.c: No such file or directory
-   grep: arch/arm/kernel/traps.c: No such file or directory
-   grep: arch/arm/kernel/unwind.c: No such file or directory
-   grep: arch/arm/lib/crc-t10dif-glue.c: No such file or directory
-   grep: arch/arm/lib/crc32-glue.c: No such file or directory
-   grep: arch/arm/lib/delay.c: No such file or directory
-   grep: arch/arm/lib/xor-neon.c: No such file or directory
-   grep: arch/arm/mach-at91/pm.c: No such file or directory
-   grep: arch/arm/mach-davinci/common.c: No such file or directory
-   grep: arch/arm/mach-davinci/sram.c: No such file or directory
-   grep: arch/arm/mach-footbridge/common.c: No such file or directory
-   grep: arch/arm/mach-footbridge/netwinder-hw.c: No such file or directory
-   grep: arch/arm/mach-imx/cpu-imx25.c: No such file or directory
-   grep: arch/arm/mach-imx/cpu-imx27.c: No such file or directory
-   grep: arch/arm/mach-imx/cpu-imx31.c: No such file or directory
-   grep: arch/arm/mach-imx/cpu-imx35.c: No such file or directory
-   grep: arch/arm/mach-imx/cpu-imx5.c: No such file or directory
-   grep: arch/arm/mach-imx/cpuidle-imx6q.c: No such file or directory
-   grep: arch/arm/mach-imx/irq-common.c: No such file or directory
-   grep: arch/arm/mach-imx/ssi-fiq-ksym.c: No such file or directory
-   grep: arch/arm/mach-lpc32xx/common.c: No such file or directory
-   grep: arch/arm/mach-lpc32xx/serial.c: No such file or directory
-   grep: arch/arm/mach-mmp/common.c: No such file or directory
-   grep: arch/arm/mach-omap1/board-sx1.c: No such file or directory
-   grep: arch/arm/mach-omap1/id.c: No such file or directory
-   grep: arch/arm/mach-omap1/io.c: No such file or directory
-   grep: arch/arm/mach-omap1/mux.c: No such file or directory
-   grep: arch/arm/mach-omap1/ocpi.c: No such file or directory
-   grep: arch/arm/mach-omap1/omap-dma.c: No such file or directory
-   grep: arch/arm/mach-omap2/id.c: No such file or directory
-   grep: arch/arm/mach-pxa/generic.c: No such file or directory
-   grep: arch/arm/mach-pxa/pm.c: No such file or directory
-   grep: arch/arm/mach-pxa/pxa27x.c: No such file or directory
-   grep: arch/arm/mach-rpc/ecard.c: No such file or directory
-   grep: arch/arm/mach-s3c/dev-audio-s3c64xx.c: No such file or directory
-   grep: arch/arm/mach-s3c/gpio-samsung.c: No such file or directory
-   grep: arch/arm/mach-sa1100/assabet.c: No such file or directory
-   grep: arch/arm/mach-sa1100/jornada720_ssp.c: No such file or directory
-   grep: arch/arm/mach-sa1100/neponset.c: No such file or directory
-   grep: arch/arm/mach-sa1100/ssp.c: No such file or directory
-   grep: arch/arm/mach-zynq/platsmp.c: No such file or directory
-   grep: arch/arm/mm/dma-mapping.c: No such file or directory
-   grep: arch/arm/mm/flush.c: No such file or directory
-   grep: arch/arm/mm/init.c: No such file or directory
-   grep: arch/arm/mm/iomap.c: No such file or directory
-   grep: arch/arm/mm/ioremap.c: No such file or directory
-   grep: arch/arm/mm/mmu.c: No such file or directory
-   grep: arch/arm/mm/nommu.c: No such file or directory
-   grep: arch/arm/mm/physaddr.c: No such file or directory
-   grep: arch/arm/mm/proc-syms.c: No such file or directory
-   grep: arch/arm/plat-orion/gpio.c: No such file or directory
-   grep: arch/arm/probes/decode-arm.c: No such file or directory
-   grep: arch/arm/probes/decode-thumb.c: No such file or directory
-   grep: arch/arm/vfp/vfpmodule.c: No such file or directory
-   grep: arch/arm/xen/enlighten.c: No such file or directory
-   grep: arch/arm/xen/p2m.c: No such file or directory
-   grep: arch/arm64/crypto/aes-ce-glue.c: No such file or directory
-   grep: arch/arm64/crypto/aes-glue.c: No such file or directory
-   grep: arch/arm64/crypto/chacha-neon-glue.c: No such file or directory
-   grep: arch/arm64/crypto/poly1305-glue.c: No such file or directory
-   grep: arch/arm64/crypto/sha256-glue.c: No such file or directory
-   grep: arch/arm64/crypto/sha512-glue.c: No such file or directory
+1- The m24lr_ctl driver acts as a gate for EEPROM access.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2- It provides exclusive, serialized access and handles the control interface.
+
+3- The EEPROM itself is exposed as a child node using the standard at24 driver.
+
+This separation ensures reliable operation and a clean, maintainable
+architecture.
+
+> That's not a misc device, but eeprom. Place it in appropriate directory.
+
+Given the above, I'm unsure if placing it under eeprom/ is the best choice.
+Would you suggest still placing it eeprom or under somewhere else maybe i2c/
+(e.g., i2c/i2c-mux-stm24lr.yaml)?
+
+Best regards,
+Abd-Alrhman Masalkhi
