@@ -1,190 +1,116 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17B22DCC01;
-	Sun,  1 Jun 2025 19:38:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5552238C3A;
+	Sun,  1 Jun 2025 19:43:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748806721; cv=none; b=pcgw1Ym/uIkbGEea2aOndCansrgO/DKReWlCmvIDDFc2TUZwwKEpSV+kR9Ch6zT7OK9TnSoqTbeZZ+nI4UYHtQTj9ifDy5Jeeen+ZmXnOsWiTJ1uD97LC+VYS0yiWHwmLWGdexywPbwrTRPQlwCxBype5UuxLKD+gPCEZs3d0uw=
+	t=1748806991; cv=none; b=QyBx692S1Up3QjBEJV8nfuUaDCNIs2QYLAhKzvNKYU5UMcpJUS51r/12f5lUy4r16p0kwyISXW/3cxtsA8X3YuXbGjLbjL3cI2IabL0oGBeATetxT5vhZFcv+cq+4z4xDHcrdvmq7rBwBf+y6+a7qF2684Mo2M31v4gi7GcofZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748806721; c=relaxed/simple;
-	bh=IeG8UKCg4lvF/tYhYOPRz/Q1JPgIutr1oWCut5JjwBg=;
+	s=arc-20240116; t=1748806991; c=relaxed/simple;
+	bh=zlttJep6rq3I8+o8EQ7DmNCSKFq6mJq8IUZsLPjanpw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j6R6VVYtt7ZhQwu6mWWm9irVoXXQN1XgFzV9tAYMsEjtHCI9YBtk9yYXXQO/+ozaIuH0rhQcrcIVl8CpbPruxJcJ/SawKHFBXp13u+7nPYNesioafSNBADY0Tk0cdKSHN8sEubxpC8XqnsgrELhURfE5U/akr8dstg9azkiCnEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f/Re1fE6; arc=none smtp.client-ip=209.85.218.43
+	 To:Cc:Content-Type; b=B2PTK5G1eNNnh0FyOPGL5z5AsfEqH2BeehgVbEB2ICByL8THO4Psirm3c5xMG69WuystQAUN050HFl8dTb+eXeOQPhXtBIpdT+aFYmfDBY77sK1IcZPd60o99/Gps9jzn9DHx20RiXIi3Hd6wl9OFn0MY6LH7Xl/Cj5MfNjOdh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ie0EZrth; arc=none smtp.client-ip=209.85.167.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f/Re1fE6"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-adb4e36904bso232390166b.1;
-        Sun, 01 Jun 2025 12:38:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ie0EZrth"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54998f865b8so3542983e87.3;
+        Sun, 01 Jun 2025 12:43:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748806718; x=1749411518; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748806988; x=1749411788; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=B11mIr/s1+fKxEHSw/QmoGkOx26Vq2+vDkpLrQaTVx4=;
-        b=f/Re1fE6aTUYVbQ0IJbpA2USQOBBnCrBhGWx/dFhPuX3J6zVRwBjUlW6gGsG1+xINt
-         8bbHDckfNOMCBthLCrRSMLSMMFUZpQci2XUFZEuwXDScK4zZsS2A2+Bxo2FJ0HzPEY13
-         ebtI7WQqPLDH9UM+zmwVHbFcGvyb3fcc0iMeEmm0OqyhXZyyqJ7kLHY2xA5kokT0TLzo
-         T/SA87123tULwkPFV5cE4q75fOYYMuxYgSRAN4Q1TtyGooSYF4wcLmIH6tobFV2Yszhs
-         Xha8yd+nglrLDAIKOF3fcOoh6OY0a9DRD3QhhzyFLiWsA3/G9kBC8qqM8fgZw/UhFvaD
-         XVXw==
+        bh=zlttJep6rq3I8+o8EQ7DmNCSKFq6mJq8IUZsLPjanpw=;
+        b=ie0EZrth6Xrw3SRY3IovDnAxP5/8MKvP/wdwqtNhLD7rmDiMkiE52HyumbdFzKKCJP
+         uiUyUJMkpwyTeSsywi0gJZEc0Dx5Tu+JeSNiufvQO0Q82EeGQAfyM5gHU5swleGDyV6j
+         uMoPEenULYCL8SzmWizE+J0ysuqiOdF916vmmSP0RH9cC9DYLaye5SBnrQRQrV1ZmGyh
+         lkTWGcZ3i28fc09A7yIDXCrKVCRcFHIdRsvQnw+HAzdjnJjxQFh090NI1jJk1rnfRz72
+         tICek6z5ngtGQMmeZekfZCXzJUOcniZU83EKlcZxdRJMgMeRsjaiNwBlviP0aH5Zyimv
+         bSVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748806718; x=1749411518;
+        d=1e100.net; s=20230601; t=1748806988; x=1749411788;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=B11mIr/s1+fKxEHSw/QmoGkOx26Vq2+vDkpLrQaTVx4=;
-        b=JQy9MVB+dInRCtZckfrGYWOKxKizaWVA6DGC6V3/y7i6Um8shcVUH4FzgFGy7RAdvJ
-         /Vn6WRHyMXgKswEkTXiPMhHXH4jPhEtXIZ/4e1bzm6zoKZvk8hOdmhF7n1QuJXEQti5U
-         UeZrsjN0YH8QtfdVGqu8sxJLoqjxNHrYKFbzz4v24jrBGNK6AdNqDE8DFydwUmZmq/0J
-         oHy5/6U4FHhZJ/Zw8JBqFXQPXTIfvPH7RUPNply5rEPVg1f2FmYujB0+YK54PVLA0HQK
-         jxrA3By4rGRwsND1bh7JilJi4GEEtMw1EN+N9UeAk0R+SphBneoCj1r1dFAnTne1jUsv
-         1ygg==
-X-Forwarded-Encrypted: i=1; AJvYcCVxpDxxzaUUBFKOckY07CxXh6WND5GP4zYMnMKjYcG/EU5kyxfBJnXbl1MPsfPeY7coV1EZcqFc/Ao=@vger.kernel.org, AJvYcCWJej44rkhE37xZ+9s9BQu+GGNp54ESUvjvyjD5tLc6Ap0kXaiTlqBeLy8wpOpd4ejp5Nw8f3A0EZAz@vger.kernel.org, AJvYcCXV2f4DAUOdHP9D54go8f6ny9G/5saGVpy7G1HJuGgUqgnMubmhR8putoCyNCh2sDXwovdYW3cz9afqFyQA@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz978LOoCllwiS/uEf2RHs+Kl9K3hFcqFqcretlXOZWonzB/MAm
-	LkKW0gtC04LVsJZAwGWQ6G1/O/1Lhe/ZuhVowtE4oZRTtJFUOjkvjRb8ZZZC75Qx96/F3amN30V
-	Dm/yd4OFOYK5Tc1vuqLDTf2T0ETH1sFk=
-X-Gm-Gg: ASbGnctNLXPwRWpFejJGDhbyWt0impTXPapkZkcpiczhBjPj5VpTjzcLa+tucMPt3JY
-	9HfG/l/fiN76cOUqTPSlTQTyhkvHMfZbijlVOigQi6Y5fH/I6bq0qxshU2EYBrK9GUPbsL5WzXv
-	aKNElEhrUgU+c5ZuP1vSby5d6GBg5Xj60q/jUnlm01lxI=
-X-Google-Smtp-Source: AGHT+IEqDt9KECAGnDpIRfjKZd/9Tuo1/lahFMEac0foWC/x+1y5j8HG4Ba0gnqpHlOPs6kVPE8N32+n6BYylslE2dA=
-X-Received: by 2002:a17:907:9450:b0:ad8:9e5b:9217 with SMTP id
- a640c23a62f3a-adb36bfb683mr906120166b.45.1748806718050; Sun, 01 Jun 2025
- 12:38:38 -0700 (PDT)
+        bh=zlttJep6rq3I8+o8EQ7DmNCSKFq6mJq8IUZsLPjanpw=;
+        b=QzggFh93VWlxDjq0w/bxUAab4t8MRQOvQlJzA++4VOq1fbsEJTQSpa4QGkO75txepF
+         0gtWBU8d7ILJE6lX3lmVkD8QTXVzkW/23Uosp432S5pcm0Tm4d7ZVx6J8Wa4qHKM6d0Q
+         z5ZdKpNFsW9+muiGef3jkNYR0squ2PDsDphsIs9oHFA0/ylsavdze3rzixoBBB4btlKh
+         d3FNYO+bT4487NtrrpQ6nhvyHeVNqd7kJYwNGda/TMHsjvWbiju/r7Y8lS9Kzo+5pSW0
+         pR0Fdjm3I+FsOF+x7lB46TAODLxMqzVMoywcmm/ct5vk27iNJZfkm2EZt9JKZpZwoTTC
+         ls8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUFVscBmsfCU4TGjPmjlBcPpNj0F2suUpRqjVnxqTyBeMZ7Zj+VggBIbDKyzNndN/5WFl2G+EbX5f6/ID3HlwM=@vger.kernel.org, AJvYcCUI/MBiZhDSb/7R/b4n927i3DliqynnFjc1Y3HyWYPdTjQ9zm2tfLEJaNuZXtWUgcs2f6n77GZO/low@vger.kernel.org, AJvYcCUgcV9cURi0e2o/vJjlbtOBNxtNuGGEL1gsN3Gp7LSLDypbKIc+ZbuahKciukEuQ78Cqdudw5y8zKpE2WZCj3zf@vger.kernel.org, AJvYcCUzbFr25PyfIcDR+HfH1ZpJmNyZIIPkROycxeiKpFFtGP8ou/1LCiSeCi0jiMyjw41BxK44RphB@vger.kernel.org, AJvYcCVPp0Fk2zxjUsyHlXnWWersiPvpfzSAwlmbC/AEEausubQwTtAfNXRWkSNsNg1qF7KPSSbX2Qnz4pv5DT+m@vger.kernel.org, AJvYcCVxojdwRqCMVmuGvTDYlENB+vNiQj7rs9F/A9WGOMj09/Fwz/Iczm+lne4Tdkfnw2vmPi0SrvPjyO5jrnk=@vger.kernel.org, AJvYcCXFLVP20TJ2byEqjH5p1zl6sonEy4K3aGYMmtBA3VmeOWniWx49LxEXG4PsfMs5snHYVLKknTVkfvhR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4KajWt0RL5va2yEg/rt7QWQqGxkubMeno7P8XVpUFXEnZ4lAK
+	JsrEUn7HbI285N0T7PWMFUS9SbeEO9VfY1/gwZOZOp9f7nTzEvAm10rNjv9Svqq9XWlKn4IUGnq
+	hMtCMD6qOoKA8uXPFwy5JfuhJm/BFHHE=
+X-Gm-Gg: ASbGncuMBIrsUMA6fMeqqDTSLBYGAxtJ7F73pHn/aDh/TedNlU6eMBnLm0vlMf0Dn2F
+	jm7b8RAhxIeJovalYZI6K+SIe6N295rlNygI+3DxGlk2ZzI3SbS+Ugj+0DTt6rZ+3Dnh72zDQA/
+	a5VPGd5JBL4xDx7IhK3Rh7+ehJXvKBBWTyhH7p5Gh8VLs+EOWgZ/spKjEzklw/QRdBVEY=
+X-Google-Smtp-Source: AGHT+IHtRgXkoammUnbUpN1dYXGck9bKGEUGn5GT5cV3fPbuB+pGOqAmc7vwPC05DiWkj0JlBHypesZfOXv6vLdnG6Q=
+X-Received: by 2002:a05:6512:3d28:b0:553:2c58:f967 with SMTP id
+ 2adb3069b0e04-5533b93b8f9mr3282822e87.56.1748806987505; Sun, 01 Jun 2025
+ 12:43:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250601172139.59156-1-l.rubusch@gmail.com> <20250601172139.59156-8-l.rubusch@gmail.com>
-In-Reply-To: <20250601172139.59156-8-l.rubusch@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sun, 1 Jun 2025 22:38:01 +0300
-X-Gm-Features: AX0GCFvqz6k77Rudh7415Hm0JJsDqI38u-Cisvz1_GqJgo6zEIT4Nkzp4fjjzko
-Message-ID: <CAHp75VemOXhpRp2hfDhvzi3y5j5oL-_0xMmWRWkwEtX7Ks5nMQ@mail.gmail.com>
-Subject: Re: [PATCH v4 07/11] iio: accel: adxl313: add activity sensing
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com, 
-	andy@kernel.org, corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de, 
-	Michael.Hennerich@analog.com, bagasdotme@gmail.com, linux-iio@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250530-cstr-core-v11-0-cd9c0cbcb902@gmail.com>
+ <20250530-cstr-core-v11-1-cd9c0cbcb902@gmail.com> <DABC3ZAQ01GG.1VT5NL7PIMTEO@kernel.org>
+In-Reply-To: <DABC3ZAQ01GG.1VT5NL7PIMTEO@kernel.org>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Sun, 1 Jun 2025 15:42:30 -0400
+X-Gm-Features: AX0GCFsKjS9hgEwmEsRuHll_MOXzoBWv1p_-8FxpcxZc3tsgxztATvJimliHSmg
+Message-ID: <CAJ-ks9=awTggTjr-_dkaWLQRkQVwkBQKiJzdP9dA7_=zFKRY+g@mail.gmail.com>
+Subject: Re: [PATCH v11 1/5] rust: macros: reduce collections in `quote!` macro
+To: Benno Lossin <lossin@kernel.org>
+Cc: Michal Rostecki <vadorovsky@protonmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, llvm@lists.linux.dev, linux-pci@vger.kernel.org, 
+	nouveau@lists.freedesktop.org, linux-block@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jun 1, 2025 at 8:22=E2=80=AFPM Lothar Rubusch <l.rubusch@gmail.com>=
- wrote:
+On Sun, Jun 1, 2025 at 12:24=E2=80=AFPM Benno Lossin <lossin@kernel.org> wr=
+ote:
 >
-> Add possibilities to set a threshold for activity sensing. Extend the
-> interrupt handler to process activity interrupts. Provide functions to se=
-t
-> the activity threshold and to enable/disable activity sensing. Further ad=
-d
-> a fake channel for having x, y and z axis anded on the iio channel.
-
-IIO
-
-And what does the 'anded' mean?
-
-> This is a preparatory patch. Some of the definitions and functions are
-> supposed to be extended for inactivity later on.
-
-...
-
-> +static int adxl313_is_act_inact_en(struct adxl313_data *data,
-> +                                  enum adxl313_activity_type type)
-> +{
-> +       unsigned int axis_ctrl;
-> +       unsigned int regval;
-> +       int axis_en, int_en, ret;
-> +
-> +       ret =3D regmap_read(data->regmap, ADXL313_REG_ACT_INACT_CTL, &axi=
-s_ctrl);
-> +       if (ret)
-> +               return ret;
-> +
-> +       /* Check if axis for activity are enabled */
-> +       if (type !=3D ADXL313_ACTIVITY)
-> +               return 0;
-> +
-> +       axis_en =3D FIELD_GET(ADXL313_ACT_XYZ_EN, axis_ctrl);
-
-If it's false, it will be false anyway. No need to defer the check:
-
-  if (!axis_en)
-    return false;
-
-> +       /* The axis are enabled, now check if specific interrupt is enabl=
-ed */
-> +       ret =3D regmap_read(data->regmap, ADXL313_REG_INT_ENABLE, &regval=
-);
-> +       if (ret)
-> +               return ret;
-> +
-> +       int_en =3D adxl313_act_int_reg[type] & regval;
-> +
-> +       return axis_en && int_en;
-
-  return ... & regval;
-
-> +}
-
-I have already commented on this a couple of times.
-
-...
-
-> +       /* Scale factor 15.625 mg/LSB */
-> +       regval =3D DIV_ROUND_CLOSEST(MICRO * val + val2, 15625);
-
-I would rather do
-
-val * MICRO + val2
-
-which is read more naturally (we will easily get that the expression
-uses MICRO scale).
-
-...
-
-> +       int ret =3D -ENOENT;
-> +
-> +       if (FIELD_GET(ADXL313_INT_ACTIVITY, int_stat)) {
-> +               ret =3D iio_push_event(indio_dev,
-> +                                    IIO_MOD_EVENT_CODE(IIO_ACCEL, 0,
-> +                                                       IIO_MOD_X_OR_Y_OR=
-_Z,
-> +                                                       IIO_EV_TYPE_MAG,
-> +                                                       IIO_EV_DIR_RISING=
-),
-> +                                    ts);
-> +               if (ret)
-> +                       return ret;
-> +       }
+> On Fri May 30, 2025 at 2:27 PM CEST, Tamir Duberstein wrote:
+> > Remove a handful of unncessary intermediate vectors and token streams;
+> > mainly the top-level stream can be directly extended with the notable
+> > exception of groups.
 >
->         if (FIELD_GET(ADXL313_INT_WATERMARK, int_stat)) {
->                 samples =3D adxl313_get_samples(data);
->                 if (samples < 0)
->                         return samples;
->
-> -               return adxl313_fifo_push(indio_dev, samples);
-> +               ret =3D adxl313_fifo_push(indio_dev, samples);
+> What's the motivation for this?
 
-This is not needed...
+I was squinting at the macro to understand how it worked and spotted
+these oddities.
 
->         }
->
->         /* Return error if no event data was pushed to the IIO channel. *=
-/
-> -       return -ENOENT;
-> +       return ret;
+> I wouldn't spend much effort on this file, as it'll go away when we add t=
+he `quote` crate.
 
-...and this looks wrong.
-
-Before the case was clear, if we have no respective bit set in the
-int_stat, we return ENOENT. Now it depends on the other bit. If this
-is correct behaviour, it needs a comment.
-
---=20
-With Best Regards,
-Andy Shevchenko
+Eh, this seems to be in the "I'll believe it when I see it" category.
