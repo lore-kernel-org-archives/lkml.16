@@ -1,99 +1,133 @@
-Received: from dvalin.narfation.org (dvalin.narfation.org [213.160.73.56])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31B61A3165;
-	Sun,  1 Jun 2025 13:36:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.160.73.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 587F238B;
+	Sun,  1 Jun 2025 14:05:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748785012; cv=none; b=kh6ievWR2y/t0NXRM7EXoRFt5ri2ctZ+8Iq1QDonynuTH7LlRH6tDehpNR0OhhoA4gzKOgwmNRBPGkle+OgGIGSpxoZDOR4yNKeo7LoBcX1Hvx9/Mc1KTMpIpxPEhl4jGA3k49y+V0c1llb1VNjmciq/H+w0TsCnG5YNg9swCDc=
+	t=1748786739; cv=none; b=bKaJxPKywxOfP8uu93/3Bi9ebOakdAyOBaUbGL5I2nrSQYtGhT1YCO1Oyr4doXT/7MXtDQznGJoKUlw6SuLHkGnd5MZbh3xcssBDBNkzyhUMx1x3IZzSnqwkhpgS6kkET3XtckrDjylujtm6q/CD5kq6kjfQ2hpZbCyAXkkkRf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748785012; c=relaxed/simple;
-	bh=Jk5TbG+9N2LPBYT3NISet3CftSkW8GLO4G4VeN2btd4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b/HwEW9b6ilOPbg+iucu/+8WTSZ85evth8uF52NV3eAg/3uygpRebM8HOtVBDtu0XFVDEDJDKtzJ6to3mSlTxcoS50QHvRHszVGl24XMY39AzTIb8Zp04y0FpiwhZXfS1fmF3nasQdwzmz389qMWqxFZ7/38awe158+fYJYSzmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org; spf=pass smtp.mailfrom=narfation.org; dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b=rLoCL4a+; arc=none smtp.client-ip=213.160.73.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=narfation.org
+	s=arc-20240116; t=1748786739; c=relaxed/simple;
+	bh=WhfDJtq/dbYmES+d0rmtU87xA5m3o34KlR6tEJwZQcg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=DNZZmOUN5PbYE3uRrTd/Cdhaz2x6atl5K5XagTfLmlDBkmiqOmF57ZJrA/9EyBhXuZZUv7l2400AJwHzLnSdzkT+c28hmDlwjfVarSb5QSiUKkbMDJQTzUDojWjfsRuURueev0ZcGXOPGjPbDTAdJwsogQ9UOWlfFmIkT4ZBaWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eriQVstk; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="rLoCL4a+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
-	s=20121; t=1748785008;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6zILuC+fJQ0XHCp2HcwA6LIeh6l7/8sDjGhWTTsieFE=;
-	b=rLoCL4a+u7rcjzVNw7BOCDOPvSFqyKolol1d+Mr+uoLOS29EN8Toga/dII26130TqLW4my
-	ZifdsG6Yn4ghya8OZFqIegcRPSCTqDslap5P/cNs/Pl//ZCOv/C+0+CKjtb7C0xeBE4Sxa
-	9VQRx75GMoUqLn4XbMSfBk1Jo0Wa2gI=
-From: Sven Eckelmann <sven@narfation.org>
-To: Marek Lindner <marek.lindner@mailbox.org>,
- Simon Wunderlich <sw@simonwunderlich.de>,
- Antonio Quartulli <antonio@mandelbit.com>,
- Matthias Schiffer <mschiffer@universe-factory.net>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH batadv 4/5] batman-adv: remove global hardif list
-Date: Sun, 01 Jun 2025 15:36:44 +0200
-Message-ID: <2767731.Lt9SDvczpP@sven-l14>
-In-Reply-To: <3742218.iIbC2pHGDl@sven-l14>
-References:
- <0b26554afea5203820faef1dfb498af7533a9b5d.1747687504.git.mschiffer@universe-factory.net>
- <bb85858d-b123-45ce-8fae-9658e13b822c@universe-factory.net>
- <3742218.iIbC2pHGDl@sven-l14>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eriQVstk"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 551CKuv7021873;
+	Sun, 1 Jun 2025 14:05:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	89x+R7zFivRRPUo2Mvk2FJglEWdtEImvfuYhqr094GY=; b=eriQVstkR2zn6XaG
+	nJn9noUe4YFzsuVIHTrVcjZ6K0BGC17SwXiVh25JtETDH50rO8w3u11T9jjDQPq7
+	4LSB77S4yOqCMWRjDfWWs/xGyxrYZfgJ2C4FLVF9IgCrFi5jygn4JMefaD5fEcza
+	QDiDqHrnyqBXmz6YR0egF74k68w7EdF/UJihCkAqRXhdet4xMxmubZHkMrv+Fsig
+	ENrQJ5oZ5KE4qlehyMN5yOgi4ilfHVyZBUWQMVNEnWL0InOylrS7Qu1SZEoU81jM
+	e2+Fe83uHe4f+hQNmVb540NY5XyHKqkmOaLdPgbyndrRJZTHu7jTUlGVRhFZ0po1
+	ag3iqQ==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46ytsdtctd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 01 Jun 2025 14:05:30 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 551E5Tl8023997
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 1 Jun 2025 14:05:29 GMT
+Received: from [10.216.12.79] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 1 Jun 2025
+ 06:02:02 -0700
+Message-ID: <5b28e37d-6d46-472a-9aef-d2d86ea8f04b@quicinc.com>
+Date: Sun, 1 Jun 2025 18:31:59 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart4541340.ejJDZkT8p0";
- micalg="pgp-sha512"; protocol="application/pgp-signature"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/8] Enable audio on qcs6490-RB3Gen2 and qcm6490-idp
+ boards
+To: Alexey Klimov <alexey.klimov@linaro.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Srinivas Kandagatla <srini@kernel.org>,
+        Liam Girdwood
+	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>
+CC: <cros-qcom-dts-watchers@chromium.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-sound@vger.kernel.org>,
+        <kernel@oss.qualcomm.com>, Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+References: <20250527111227.2318021-1-quic_pkumpatl@quicinc.com>
+ <DA70A4LOJ57L.1RTX2K0Z6PU0L@linaro.org>
+Content-Language: en-US
+From: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+In-Reply-To: <DA70A4LOJ57L.1RTX2K0Z6PU0L@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: jrGSH_MBfjAsi_PGH4R4kZtC8OiIsDQt
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAxMDEyMSBTYWx0ZWRfX9VFzjqMRJEkP
+ 9d3497I3yqmx0Y56W0oeTCFtkU1rJZa4VNLK8lSjPMp76g7G5tWRdnVT2hYMmpHNd8xsLhWAKJI
+ npLYb2GK6fgJdl6MuKUQilq+EEXbvKARfmZn561rdbsq7cV9D32wemtLI1ssYgpTw4GjAKssGzY
+ o/6L2gKkH27PIgD5EHhML7Buh2lkoM+bb6KGiUOGz/j22v5ebFo/obejWN27RfX0OKQYTmC0bXY
+ QZsQidSAqAqsXbu/fl4FOdTlclirOH6ZCnxQ9BfKJD5QA6BY0lOaUz+xq1GbsvWXTkZ/PAMyQjE
+ HpOMu1KOYdUA9zSnRBF4tKP/8Q2q0/qrU1NA1ctWInHo0BA7eBu9fd2s4Og4McJdCXPGWlDsqEx
+ +VXjdJ7DVo18YgYn2dF0iOeXGkTHf0Nb7AW5/h088iQVaWGdCqLzKzkxel05YaPy+68OQwYO
+X-Proofpoint-GUID: jrGSH_MBfjAsi_PGH4R4kZtC8OiIsDQt
+X-Authority-Analysis: v=2.4 cv=bYJrUPPB c=1 sm=1 tr=0 ts=683c5e2a cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=NEAV23lmAAAA:8
+ a=COk6AnOGAAAA:8 a=qDtY4pz1xn7LEzqzeq8A:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-01_06,2025-05-30_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 clxscore=1015 spamscore=0 mlxscore=0 impostorscore=0
+ malwarescore=0 adultscore=0 phishscore=0 bulkscore=0 lowpriorityscore=0
+ mlxlogscore=989 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2506010121
 
---nextPart4541340.ejJDZkT8p0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Sven Eckelmann <sven@narfation.org>
-Subject: Re: [PATCH batadv 4/5] batman-adv: remove global hardif list
-Date: Sun, 01 Jun 2025 15:36:44 +0200
-Message-ID: <2767731.Lt9SDvczpP@sven-l14>
-In-Reply-To: <3742218.iIbC2pHGDl@sven-l14>
-MIME-Version: 1.0
-
-On Sunday, 1 June 2025 15:10:50 CEST Sven Eckelmann wrote:
-> So, even getting the parent (see `ASSERT_RTNL` in 
-> `netdev_master_upper_dev_get`) of the lower interface is a no-go at that 
-> point.
-
-I didn't want to say here that this specific operation is necessary here. Just 
-wanted to point out that operating on these data structures might not always 
-be possible at that point. This is why I tried to point out that it might be 
-better to have something "good enough" using RCU which is managed outside this 
-context (write-only protected using rtnl_lock).
-
-The idea of having something specific to meshif that still manages to detect 
-(beforehand) if there's a path to `batadv_interface_tx` - while `skb_iif` 
-remains set to a specific interface along the way - sounds like an 
-implementation nightmare to me.
-
-Kind regards,
-	Sven
---nextPart4541340.ejJDZkT8p0
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQS81G/PswftH/OW8cVND3cr0xT1ywUCaDxXbAAKCRBND3cr0xT1
-y2B/AQCJ/7bJD+rjoCQmz2lOKcFzS3+eddnIoXgnTHyC5k6TaQD/c6W7fxCqe45U
-ceQ+DuoPPWrCN6EyZMeEMSJ88E1M0AE=
-=njVk
------END PGP SIGNATURE-----
-
---nextPart4541340.ejJDZkT8p0--
 
 
+On 5/27/2025 7:47 PM, Alexey Klimov wrote:
+> On Tue May 27, 2025 at 12:12 PM BST, Prasad Kumpatla wrote:
+>> From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+>>
+>> Audio support is now enabled on the qcs6490-RB3Gen2 and qcm6490-idp boards.
+>> The updates include adding the necessary audio device tree support and the required
+>> dependencies.
+> 
+> Do you have topology file and mixers commands (or UCM profile) to test this?
+> 
+> I already asked but I don't see any replies. How this can be tested?
+
+please use these below UCM config files
+https://github.com/mohsRafi/alsa-ucm-conf/blob/qcs6490_qcm6490_hifi/ucm2/Qualcomm/qcs6490/QCS6490-RB3Gen2/HiFi.conf
+
+https://github.com/mohsRafi/alsa-ucm-conf/blob/qcs6490_qcm6490_hifi/ucm2/Qualcomm/qcm6490/QCM6490-IDP/HiFi.conf
+
+Thanks,
+Prasad
+
+> 
+> Thanks,
+> Alexey
 
