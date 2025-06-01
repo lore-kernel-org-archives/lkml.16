@@ -1,170 +1,304 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2053.outbound.protection.outlook.com [40.107.223.53])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C43218E1F;
-	Sun,  1 Jun 2025 03:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748747208; cv=fail; b=QBlKQK6GNtvklur6FPQfH8uYd5D77M/odxoWHBUGJtxNbIyGanpJGPVQ7hEQ1mPKecAM3hpc6EcdiGnlERX3LhegBlQ1AB5alB8X/pG0T8KQlmQqhKB8L7+zxsaiAajrDBEBMj38mQyupEJxwVihYYWeKjGkNssSDZmeLO/ENyw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748747208; c=relaxed/simple;
-	bh=kahWh17QwnLhDp7NEAlS5hFMYEIQYkR0LCz3qFR9vWM=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
-	 In-Reply-To:MIME-Version; b=FlAaRSReG/EENg34Y6mWDBxrpsz6D4SfjSejG6E1h+MNz/fmjRb1c3aclhREV904t4vlvU9TF/MSsYwJ8UdgFgtXOSkVw5mXLhnSctPK9WsEFmX6e694Zvsm8K97UQmi/yZs7elR9N5ejSX+Vm96lQFPCenXjrU1wOlZEuoXEWk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=UmqTZM01; arc=fail smtp.client-ip=40.107.223.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DE0C13D;
+	Sun,  1 Jun 2025 03:22:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748748139; cv=none; b=qjWPx1IC7myLPVfA81vNuDDREu5YB2E2iy/GYS8XDnizBDFCf9YW0w+QQrTZiKNY7zFijmIizm4gxlF5v6xRvNv5P8JJyIrdevHzTcpgQ4bko5kxlYIDXCIQ7vWlUQyRRewu2bdmpAoMkIk1vmj6YkeO185mZyk66tV5eAige5o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748748139; c=relaxed/simple;
+	bh=KfwXt46ouribwDJftzP3infZzJnhzn+1maJuukJ238s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pf01a5Vq9ePqwayoIeuDB+WwleIqXHf7+ykLmA/NY0+xSZciiAPHOBIksB+z+Grm40/qnqO9flV3VZJpNRJPgWSaIXrsoG/bASMkvYV9gKxeW+zZoIEjQ2NbXaEI7Debzo8RrBDSSGYxuH5BizNYu/owtI2X38ef2cDvZoYVBwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aBDVm75f; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="UmqTZM01"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xm6iIXHThxxBXbiO9Q681O/yQZFXluWOdOcYzJEPJ015bYuEzLJYywQZ/Zz2y6N5US3g8aB8QaTmmsYkzzn1Vk38QAuwYB/iyqAWQMUA0POTKMb+Q4i4nkcGjXgiaEfgIsyIzsqQcE68j/kGPhoHLpahpbjuL2wNSqvCDGggqE1FwOfNfuZDD0TKsJLZuqarmi01v/121q+XBsUjRkRJ6OinqxVSNRgxh3s9sW6TmhL/PArNITXbJAE8muj6KEsKyK73JAcwfOh91nUyi4on61jGiuAVvq9It0V8Zs3QETSqh4J2kFwu8JXMMcDtRBTLt1b9uHrB7M3oM0vk4XMylg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kahWh17QwnLhDp7NEAlS5hFMYEIQYkR0LCz3qFR9vWM=;
- b=V/MIW+kKJDiBgc60aGXcbI+NMtq0xM+j5NaVqlgNUMkeK3NGy5hkRtaYw3RlHyHjWxZMLvo1iosGlXOzZj6b1iSKlPxvYps9EA2crQ60rdnjFSj5IILs8nZSBYySLTXlnjfiYJOE91klwm6zM2oHanl0K5X/SjfOHUR038yYmgzVeoSZ34YXSyz0fyvqDwzm77R1UrWHoC6jMlcJnwtjBDkwbzBSxH2X94iYK3N02Kn9HDXDBWbGgkIdtpGc2h1NyIdh+gI+Z//FRIonyZWI5FvnIch+yZ/Iy1maOagMMzr/mmu/g50KOS2hracyetuuXan8ZFiwuEpaAO0Apjnitg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kahWh17QwnLhDp7NEAlS5hFMYEIQYkR0LCz3qFR9vWM=;
- b=UmqTZM01A6FkBOyVd0XWWG7HkyI2cTnq44mJvtLGJB+oIwAsq2T2VwjeO/CYJ3VszRjab+jxFYUR9ybF77hDndBfS5o6VW1FziRE1frRGowIsOK75nj6vK6B2czGSxjsKCK4MsSJd50utaXpqfKGwJzfrzem1p7Y0GJ50ihnnDLVVeTzss8UuqR4aLGATRIU4gRqBV5ri7XEXz0Pe4et1roK568+7yMZWUKm3jrr/m/+uuAlvlu9Kg/UEibMQLrKAQEGm9wxPHrRcOSOUMwR1uepfDurwyklmsHNGbzdfclyNEcpPaJ1Qt8Rbgnx3puoSIkeIGyPlq8tLzOdS5dd4g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
- by SN7PR12MB8604.namprd12.prod.outlook.com (2603:10b6:806:273::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.24; Sun, 1 Jun
- 2025 03:06:44 +0000
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99%5]) with mapi id 15.20.8769.029; Sun, 1 Jun 2025
- 03:06:43 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 01 Jun 2025 12:06:40 +0900
-Message-Id: <DAAV5979EOWO.37D9QE70YWR4Z@nvidia.com>
-Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/4] rust: alloc: implement `Borrow` and `BorrowMut` for
- `Arc` types
-From: "Alexandre Courbot" <acourbot@nvidia.com>
-To: "Alexandre Courbot" <acourbot@nvidia.com>, "Danilo Krummrich"
- <dakr@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <lossin@kernel.org>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
- "Trevor Gross" <tmgross@umich.edu>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250601-borrow_impls-v1-0-e1caeb428db4@nvidia.com>
- <20250601-borrow_impls-v1-2-e1caeb428db4@nvidia.com>
-In-Reply-To: <20250601-borrow_impls-v1-2-e1caeb428db4@nvidia.com>
-X-ClientProxiedBy: TYBP286CA0021.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:404:ce::33) To CH2PR12MB3990.namprd12.prod.outlook.com
- (2603:10b6:610:28::18)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aBDVm75f"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748748137; x=1780284137;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KfwXt46ouribwDJftzP3infZzJnhzn+1maJuukJ238s=;
+  b=aBDVm75fWJXkQ7+gsOthbCzfA7k5RZHMNPtDn4/hFWBq2US7flXM+VOD
+   bjD1LJajMkXrGzAHwivAz0R3dbGVG3A61+DvnUFFIe8O/kVd0+/U9PPbr
+   cK8AOBrHJnQ7e55+A24UpsuX4kFoRqlTX99o2RJ1N90Sq/RBiHS6v9llt
+   G3gbjcLd6NQcXtzbqGUwWdLcv40yHYo8f1U/mqhEFdG+CHjzJiqdojXT+
+   QVoxmo/WOVDzdpJcZ4RdOPLEYN5wCvVCc9lHXi7WDByF+pfh3MxJq+rcw
+   7FslKOcSpwC3eiahRKDQKX8i+AfWufQtx5cMRES8XUOoMsG/h72gee88D
+   Q==;
+X-CSE-ConnectionGUID: X0eYd+9aR96lHaEoXGbgwQ==
+X-CSE-MsgGUID: YcUD9mV2RVOos/Zofi12qQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11450"; a="61056170"
+X-IronPort-AV: E=Sophos;i="6.16,200,1744095600"; 
+   d="scan'208";a="61056170"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2025 20:22:16 -0700
+X-CSE-ConnectionGUID: d7B4zYg5QCyazhpeoVfGkw==
+X-CSE-MsgGUID: MkfM99tQSsumMvxoXuSsUg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,200,1744095600"; 
+   d="scan'208";a="149390657"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 31 May 2025 20:22:14 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uLZH1-000Ymm-2p;
+	Sun, 01 Jun 2025 03:22:11 +0000
+Date: Sun, 1 Jun 2025 11:21:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, arnd@arndb.de,
+	gregkh@linuxfoundation.org, abd.masalkhi@gmail.com
+Subject: Re: [PATCH 2/3] misc: add sysfs control driver for ST M24LR series
+ RFID/NFC chips
+Message-ID: <202506011126.RpYXQiPu-lkp@intel.com>
+References: <20250531081159.2007319-3-abd.masalkhi@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|SN7PR12MB8604:EE_
-X-MS-Office365-Filtering-Correlation-Id: a17a3e14-9a54-4b93-1d2c-08dda0b95658
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|366016|7416014|10070799003|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YkwyZXhZZjJKKzIxQUpUYU9UTmtFRTVadDRJV01Wamp5ZnRVOFdyNDVyTGhS?=
- =?utf-8?B?Nk1maFR0ZTUyWVVUckcyRVE2U1hBT01PMXNtb0FhVHhKSzJEaTNkZWJGWU9Y?=
- =?utf-8?B?T1F4RDQ4S2Z3b2pYZ0RMUnRHc3pDbFU3UlkwMlUzbmM3SU9GQW1OaXk4Q0JS?=
- =?utf-8?B?Q2FZU0o1TE5lQTNWdGlKYW52aXhTNEo2dlZSL2E3TjlBd3RZVklrZWgxa2pa?=
- =?utf-8?B?V3QxWWVpd1Z3Unp5L1hOOFpHVll5Nk1zbSt3TFZPSGp4eVZadXVGeXBNaVpO?=
- =?utf-8?B?VFpOaHBhRDZlcjk2RU1ObVZtZGVuZ050dDc1aVdqZ1c5YjN0TTFYK3JJY0hh?=
- =?utf-8?B?dnpRQkRxVlNqcGVPbjRTYXhVeXNXTGZqeWpoeFZyM3NtLy96YXlQRjRNNDh5?=
- =?utf-8?B?N1NDZE5IN1E0YTd3MUQrb1lsOHF2WmdxYno2cjd0R01VUEZTVmJVMTNMQjJj?=
- =?utf-8?B?YVNieTdONkRWdGJYV3JyQWloOUlYZyt4cnRPT3E1am8yWFdIT09kdlJmVjYy?=
- =?utf-8?B?UldYbUVVTXpLdjZkeGhlbjlDbFUyc0ViemhCeWJHMlJlZ1NNODJCUk9Pa3Fu?=
- =?utf-8?B?MmtyZVEwUVJDL3NZQ2h1ZFpKNTgvUndyM0U2YkN5d0hCZXdxRW9tNVRwa0J3?=
- =?utf-8?B?U2dNdjFGMGZHdUgwOFdwUU9EYTgxV3k5WlFSbHpLZXpnUVlKcFdjSFBHL1Jv?=
- =?utf-8?B?cTZIelJSU3RpeCt3WHBOT0hwRnNVaGVWYk9Beis3alBFazZjTGZkUmRiQkd2?=
- =?utf-8?B?L1NtQ2wzR2RkYmc2aXlnRU1WeWYxclVQdTVBQTZkTWs5KzRmeWVRVlVXWkZN?=
- =?utf-8?B?TzJ2UWQ1RHI1WG1yOG1xZ2xMMFRwZmg4WHBQcUUxOGJGWTZwYkJxaFdmYzFw?=
- =?utf-8?B?TWYwVmFLZTFNdVNSVHQxRVhVbUN1RWFDUWpiVEVOdUk1WkpXMXRidzhCRGRJ?=
- =?utf-8?B?NjdLRkVsQUE2bFFsK0tlMmxSWG1lSXEwZUhWSy8ySGF2ZlBRSWdOb1ZGUGRZ?=
- =?utf-8?B?QXBGdUprQ0x4dmtTTGU3aVkvRmNsUjJOR0hMRlUwVWw3WUtMdVZGeFJWZUlL?=
- =?utf-8?B?OGx6WkVLa2dSSU9yL3BKRExSWVFRUlZvcHZEUVVOcTJXZUhXYUVtc0JrZU9R?=
- =?utf-8?B?QXJkSURPdHROR3FFalNrK1kvdmpGenhtZlRTbU00bGNIREhXUTJaYUNmdmtL?=
- =?utf-8?B?Mnl2d0JVOVhySlpNclNmb3BkMVlkNWNjc3lXN3hjU01reEN5Ti95aEZqMld2?=
- =?utf-8?B?ZVlFT0VpaUNJZXdObFBlbjAwNG5abDl0TEFBTVBhMUNDY1hyaEs5eUhadUFm?=
- =?utf-8?B?SWtSYTB5aVMxL3Rua2ZLWXM2M1NDdENoMGpBYTRnSmZIbmRPMXZ5cWVrVDc3?=
- =?utf-8?B?YWE1Q3pEelBQOG1JU3ZGd1U1K29JQXpQbjlMYU5DdWZMbyt5bGVVdkh6eTU1?=
- =?utf-8?B?NURyZ1hMSDRMUVR1WGFseW84RE1kTXUzTHU0djJVOHRYbWUzK0FMRlcvOHhT?=
- =?utf-8?B?eFFiWm5vRSthS3plVnFWT3RzZWxicWFLRnF6cGRmTTVvYk5wODBUTWZ4VmRB?=
- =?utf-8?B?UGI3Wm5rQXNXS3JhT0ZhUWZrUmY1UlNvOCtRNjZLMUs3emU2N1gwcTk5ZEFt?=
- =?utf-8?B?Q2hmdUR2MGtmYWNzYWM0bmsxWE5OaTNtN21RS214enJwTlVPK1lHRnNFNVBN?=
- =?utf-8?B?eld3Y244RHczZ0grV3Juc0RWZll0dU9LU0xsbW1ZK2tiUHFEWVlKNUpucmND?=
- =?utf-8?B?ZkdpTWtFSldCZWdmQk1BQ0NHck45NWN6STB2ckp6WVNXVTFCWFg4REtXcWo4?=
- =?utf-8?B?MDBQalRqZVFpV2hnMnMyeFlZUWJzanliaDVhUlp1YnUwK0Q0VVhvTVA5K2NY?=
- =?utf-8?B?ZWwxL3RjTFM4dDNLTHFLVlJEamsxUEltNjZoVXljeHNWNEFKc2NlR29XNlNP?=
- =?utf-8?B?VFIxVFBoaGg1UWZnd2JaaEcweUppdzV4cW5qNGlRS1FTeEljbWxUSWloRkp4?=
- =?utf-8?B?V1V0WTA5aGNRPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7416014)(10070799003)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aFhBbFROU0kxTms2OGdkRlJFZzAxQVAwUDBmRlZMWFR2b0tHZUFEZk5hdUR1?=
- =?utf-8?B?UE92c0xOdlpaQWFMcjh5TGRqcFpkV05QQW5IbzF2dDhBbzB0Q1U4SDRDV0Rn?=
- =?utf-8?B?bEhoOWNIc2F0R2FZVXNKblo4Y1lJTkdLK2VmWUR0QUh2azhoSWZrUk9EQTRz?=
- =?utf-8?B?TmNTYWtyUlBLb2dJU01UZ1huQzNZclg2Njc1aUJzajFGZWF5dWdlQkw0THVq?=
- =?utf-8?B?M2Z1M3QxWFV3dFpKdXpWWmVBNyt0YW9WbWhqc0tZciswSWRwNnc3REQ0dnRH?=
- =?utf-8?B?QUEwMVp4cU8xYWZOb0NlSkRDSTJNbEhZN0pwemF3M3BvTm5MK0NKek14OUN2?=
- =?utf-8?B?QXpDVnh4ZkE3QUpkcDNvT2oySGI3Q1ZieVRDV3k2eU5OTXoyRWFnY1ErYTAw?=
- =?utf-8?B?NnBVd0d2MytxU3Z5MU9JS21keDVVZitFdEpHVi8vNWkyUm9aM0U3cEdvZWNa?=
- =?utf-8?B?T3JNMUdpQ0FFaU5RYUJ4Ull3Q25DV3pZaWpZcEhPNHNHYnNndHk3OW9iSnI3?=
- =?utf-8?B?RkpUWE1VcUJONGQ1d1dheUlyOFpzQUxQVldtL3N6Y3BDVkkzQnVVMHZmRW9p?=
- =?utf-8?B?USt5V1NEZ3JqdmpLZ1JyWG1EQ3pDM0ZlYlNpVTUxRmhtUkI5SUJ6RGxGc04x?=
- =?utf-8?B?SXNHVkFiNkJHWmRJcFpLRTVGZVZWN1Vha1QvbUkwK3RocDJ5ZlFnV04zSDcx?=
- =?utf-8?B?UnVwKzlxNXpjMVZiTDl5c0FFUHlXRTJ6anB2MU9vMVhOYXpkc29YODhjNVdZ?=
- =?utf-8?B?ZUZTRWNBaFA2cjJ5b09MYUw4c1RrRE5ia1lHWTVjRU5xRjNlRE0yV0xHSVZi?=
- =?utf-8?B?OGNwaTZiZHkyQ1kwcDNmZE1tSUs4S1d4N1dFN0x1V3VoT0cvWkdIMzRpRS8x?=
- =?utf-8?B?T3FIZy9rdVoyQlZqc0VBUWVNbEphbXo3N1FuU1dqeTJsNEw4dUI0QTh6UzVn?=
- =?utf-8?B?M1loLzZaT244T3JQQml1eGZZMzdVNlJoL1Q1RGVSTnZwMDFiaHlCaDlHOUlR?=
- =?utf-8?B?enBDd3p6cS9GVGNNUWJRS2dIM1ZXY1FTcHNSYUV6TVRZYlhKOEZobWhSNHIx?=
- =?utf-8?B?eWRiZWZzZHdiZzhkcmxFYzEvTjRnSkxadkJZWEpFVXdZRnJQS2c1SHdoVmd3?=
- =?utf-8?B?YzVmdS9icndja01rU0NCTmZoOCt5ZVJBUStOcHMxUXp0SUVySkNnSjZwSGNK?=
- =?utf-8?B?WUFIdmFxT1hoVXYyanlpUjRSN3N2Wkpxcm9KU0lMZ1NDdEFOZERrS1VJUy9D?=
- =?utf-8?B?eWRTSEFnbnlFVVBEQ2NmcW9YR3lqSy9XcmxqeURvUjV6SVdUNUc0QVBIbUN4?=
- =?utf-8?B?bnc3SFN5TkF6OCtCYzdqVW5md2pIMTJSdjFWZFFQVHNvdzZFSGlGYnZRWjFi?=
- =?utf-8?B?ZC9tSUJaYXJ3MHk4TXFBSkxKVG8zUkYvMkQ3YUxiNENrSy82ZnAxdHA4MVpi?=
- =?utf-8?B?VjlJcnJ2enFSNUZ5RXJkY285V0tRNlZVUGpNNDVGMEgvZjhSUCt5NFd0SU5N?=
- =?utf-8?B?d29BS0o4THF4dytQUkU5UCtLQ1B2WUFybUxwTnh3azNhSzdXUWRHKzlKMW91?=
- =?utf-8?B?K25NSTZKL3UzamZpaXU0STJBWkZtN3A1SFRPWFVCNkpBUUovZU90dVpFVWp4?=
- =?utf-8?B?N3lMakZPWjdUdm1rQU1QaDJzYm5QZlF1QUZMTlRIK0t0NHA3a2Exd1IyM1Nr?=
- =?utf-8?B?ZE1ncDBaM3l6a0JsZlNNN09oV09xSDJEc3JEa0hUd3MrbEYwTDFxVUlkYlZM?=
- =?utf-8?B?Y0NMZW1vc2JyaUs1UzZkTUE2aUs3L1NmelJxY2NpeVRCK2hRVkRhNklMVDIr?=
- =?utf-8?B?MXRhMkh6QW1BazRSOSt1b2FqZ0FYSVcyUkpiTllVY3NzUG44TkJuTEVHSC9r?=
- =?utf-8?B?bDNzYzJKMG53TjNzTDFHVWhwK0grK2tRQllJRHpYQXJBdWRKb3k4TmhWc2hq?=
- =?utf-8?B?Qy85RnZybDZ1WWhIV21pcU9zbzFLYi9Ea3o1ZTdDL2dUTkVrQXhhNmkvcGF4?=
- =?utf-8?B?aDNrcmlwT043K29ZNU5DL29DSktPYlJqdDBqdDJuNm9KMEhYUDdvWWllTGJN?=
- =?utf-8?B?MHJVZGtidFBtTFhRR1ZFTUlJSm90NlowejU5dE5kQnd4cENONGVpT004YTNB?=
- =?utf-8?B?ZXRwVGptSW4xSnpOKzhKaHZsS3lsNFFwUHpXSWhQL3haYUs0Y0lJbDFaeUFL?=
- =?utf-8?Q?IxtWMPqpgxvDeD07fZA7Wf/0OUbXfMIFsqtiZTUkgUxu?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a17a3e14-9a54-4b93-1d2c-08dda0b95658
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jun 2025 03:06:43.5592
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UuaFjYdarHZIemQRbNdduAzyyfah315BjfHpEn15LUamyixxDvjiNaw9togE40eCoLvk8UWYIuz6xRwg6Jw8gg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8604
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250531081159.2007319-3-abd.masalkhi@gmail.com>
 
-Typical noticed-as-I-sent mistake: the prefix should be "rust: sync:",
-not "rust: alloc:" (also wrong on patch 4). Not resending just for that,
-will fix for v2.
+Hi Abd-Alrhman,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on char-misc/char-misc-linus]
+[also build test ERROR on robh/for-next soc/for-next linus/master v6.15]
+[cannot apply to char-misc/char-misc-testing char-misc/char-misc-next next-20250530]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Abd-Alrhman-Masalkhi/dt-bindings-misc-Add-binding-for-ST-M24LR-control-interface/20250531-161342
+base:   char-misc/char-misc-linus
+patch link:    https://lore.kernel.org/r/20250531081159.2007319-3-abd.masalkhi%40gmail.com
+patch subject: [PATCH 2/3] misc: add sysfs control driver for ST M24LR series RFID/NFC chips
+config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20250601/202506011126.RpYXQiPu-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250601/202506011126.RpYXQiPu-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506011126.RpYXQiPu-lkp@intel.com/
+
+All error/warnings (new ones prefixed by >>):
+
+>> drivers/misc/m24lr_ctl.c:378:7: warning: cast to 'void *' from smaller integer type 'int' [-Wint-to-void-pointer-cast]
+     378 |                 if (IS_ERR_VALUE(err)) {
+         |                     ^~~~~~~~~~~~~~~~~
+   include/linux/err.h:28:49: note: expanded from macro 'IS_ERR_VALUE'
+      28 | #define IS_ERR_VALUE(x) unlikely((unsigned long)(void *)(x) >= (unsigned long)-MAX_ERRNO)
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler.h:77:42: note: expanded from macro 'unlikely'
+      77 | # define unlikely(x)    __builtin_expect(!!(x), 0)
+         |                                             ^
+   drivers/misc/m24lr_ctl.c:499:6: warning: cast to 'void *' from smaller integer type 'int' [-Wint-to-void-pointer-cast]
+     499 |         if (IS_ERR_VALUE(ret))
+         |             ^~~~~~~~~~~~~~~~~
+   include/linux/err.h:28:49: note: expanded from macro 'IS_ERR_VALUE'
+      28 | #define IS_ERR_VALUE(x) unlikely((unsigned long)(void *)(x) >= (unsigned long)-MAX_ERRNO)
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler.h:77:42: note: expanded from macro 'unlikely'
+      77 | # define unlikely(x)    __builtin_expect(!!(x), 0)
+         |                                             ^
+>> drivers/misc/m24lr_ctl.c:590:23: warning: data argument not used by format string [-Wformat-extra-args]
+     589 |                                  "Failed to create sysfs entry '%s'\n",
+         |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     590 |                                  attr->attr.name, err);
+         |                                                   ^
+   include/linux/dev_printk.h:156:70: note: expanded from macro 'dev_warn'
+     156 |         dev_printk_index_wrap(_dev_warn, KERN_WARNING, dev, dev_fmt(fmt), ##__VA_ARGS__)
+         |                                                                     ~~~     ^
+   include/linux/dev_printk.h:110:23: note: expanded from macro 'dev_printk_index_wrap'
+     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+         |                              ~~~    ^
+   drivers/misc/m24lr_ctl.c:614:13: warning: data argument not used by format string [-Wformat-extra-args]
+     613 |                                          "Failed to create sysfs entry '%s'\n",
+         |                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     614 |                                          name, err);
+         |                                                ^
+   include/linux/dev_printk.h:156:70: note: expanded from macro 'dev_warn'
+     156 |         dev_printk_index_wrap(_dev_warn, KERN_WARNING, dev, dev_fmt(fmt), ##__VA_ARGS__)
+         |                                                                     ~~~     ^
+   include/linux/dev_printk.h:110:23: note: expanded from macro 'dev_printk_index_wrap'
+     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+         |                              ~~~    ^
+   drivers/misc/m24lr_ctl.c:642:6: warning: cast to 'void *' from smaller integer type 'int' [-Wint-to-void-pointer-cast]
+     642 |         if (IS_ERR_VALUE(err))
+         |             ^~~~~~~~~~~~~~~~~
+   include/linux/err.h:28:49: note: expanded from macro 'IS_ERR_VALUE'
+      28 | #define IS_ERR_VALUE(x) unlikely((unsigned long)(void *)(x) >= (unsigned long)-MAX_ERRNO)
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler.h:77:42: note: expanded from macro 'unlikely'
+      77 | # define unlikely(x)    __builtin_expect(!!(x), 0)
+         |                                             ^
+>> drivers/misc/m24lr_ctl.c:645:40: error: too many arguments to function call, expected 3, have 4
+     645 |         err = i2c_mux_add_adapter(muxc, 0, 0, 0);
+         |               ~~~~~~~~~~~~~~~~~~~             ^
+   include/linux/i2c-mux.h:58:5: note: 'i2c_mux_add_adapter' declared here
+      58 | int i2c_mux_add_adapter(struct i2c_mux_core *muxc,
+         |     ^                   ~~~~~~~~~~~~~~~~~~~~~~~~~~
+      59 |                         u32 force_nr, u32 chan_id);
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/misc/m24lr_ctl.c:669:14: error: incompatible function pointer types initializing 'int (*)(struct i2c_client *)' with an expression of type 'int (struct i2c_client *, const struct i2c_device_id *)' [-Wincompatible-function-pointer-types]
+     669 |         .probe    = m24lr_ctl_probe,
+         |                     ^~~~~~~~~~~~~~~
+>> drivers/misc/m24lr_ctl.c:670:14: error: incompatible function pointer types initializing 'void (*)(struct i2c_client *)' with an expression of type 'int (struct i2c_client *)' [-Wincompatible-function-pointer-types]
+     670 |         .remove   = remove,
+         |                     ^~~~~~
+   5 warnings and 3 errors generated.
+
+
+vim +645 drivers/misc/m24lr_ctl.c
+
+   539	
+   540	static int m24lr_ctl_probe(struct i2c_client *client,
+   541				   const struct i2c_device_id *id)
+   542	{
+   543		struct regmap *regmap;
+   544		struct m24lr_ctl *ctl;
+   545		struct i2c_mux_core *muxc;
+   546		const struct m24lr_ctl_chip *chip;
+   547		struct m24lr_sys_entry *sss = NULL;
+   548		unsigned int page_size;
+   549		unsigned int n_sss;
+   550		int i, err;
+   551		u8 test;
+   552		struct device *dev = &client->dev;
+   553	
+   554		if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
+   555			return -EOPNOTSUPP;
+   556	
+   557		chip = m24lr_ctl_get_chip(dev);
+   558		if (!chip)
+   559			return -ENODEV;
+   560	
+   561		ctl = devm_kzalloc(dev, sizeof(struct m24lr_ctl), GFP_KERNEL);
+   562		if (!ctl)
+   563			return -ENOMEM;
+   564	
+   565		err = device_property_read_u32(dev, "pagesize", &page_size);
+   566		if (!err) {
+   567			if (!is_power_of_2(page_size)) {
+   568				dev_warn(dev,
+   569					 "Invalid pagesize lenngth %d (not power of 2); using default %d byte\n",
+   570					 page_size, M24LR_CTL_PAGESIZE_DEFAULT);
+   571				page_size = M24LR_CTL_PAGESIZE_DEFAULT;
+   572			}
+   573			if (page_size > M24LR_CTL_PAGESIZE_LIMIT) {
+   574				dev_info(dev,
+   575					 "pagesize %d exceeds limit; rounded down to %d\n",
+   576					 page_size, M24LR_CTL_PAGESIZE_LIMIT);
+   577				page_size = M24LR_CTL_PAGESIZE_LIMIT;
+   578			}
+   579		} else { /* use the default */
+   580			page_size = M24LR_CTL_PAGESIZE_DEFAULT;
+   581		}
+   582	
+   583		for (i = 0; i < chip->n_entries; i++) {
+   584			const struct device_attribute *attr = &chip->entries[i].attr;
+   585	
+   586			err = device_create_file(dev, attr);
+   587			if (err)
+   588				dev_warn(dev,
+   589					 "Failed to create sysfs entry '%s'\n",
+ > 590					 attr->attr.name, err);
+   591		}
+   592	
+   593		n_sss = chip->n_sss_entries;
+   594		if (n_sss) {
+   595			sss = devm_kzalloc(dev, n_sss * sizeof(struct m24lr_sys_entry),
+   596					   GFP_KERNEL);
+   597			if (!sss)
+   598				return -ENOMEM;
+   599	
+   600			for (i = 0; i < n_sss; i++) {
+   601				char *name = kasprintf(GFP_KERNEL, "sss%02d", i);
+   602	
+   603				sss[i].reg_size = 1;
+   604				sss[i].reg_addr = i;
+   605				sss[i].attr.attr.name = name;
+   606				sss[i].attr.attr.mode = 0600;
+   607				sss[i].attr.show = m24lr_ctl_show;
+   608				sss[i].attr.store = m24lr_ctl_store;
+   609	
+   610				err = device_create_file(dev, &sss[i].attr);
+   611				if (err)
+   612					dev_warn(dev,
+   613						 "Failed to create sysfs entry '%s'\n",
+   614						 name, err);
+   615			}
+   616		}
+   617	
+   618		regmap = devm_regmap_init_i2c(client, &m24lr_ctl_regmap_conf);
+   619		if (IS_ERR(regmap)) {
+   620			err = PTR_ERR(regmap);
+   621			dev_err(dev, "Failed to init regmap (error: %d)\n", err);
+   622			return err;
+   623		}
+   624	
+   625		muxc = i2c_mux_alloc(client->adapter, &client->dev, 1, 0, I2C_MUX_GATE,
+   626				     m24lr_ctl_gate_select, m24lr_ctl_gate_deselect);
+   627		if (!muxc)
+   628			return -ENOMEM;
+   629	
+   630		muxc->priv = ctl;
+   631	
+   632		mutex_init(&ctl->gate_lock);
+   633		ctl->page_size = page_size;
+   634		ctl->regmap = regmap;
+   635		ctl->muxc = muxc;
+   636		ctl->n_sss_entries = n_sss;
+   637		ctl->sss_entries = sss;
+   638	
+   639		i2c_set_clientdata(client, ctl);
+   640	
+   641		err = m24lr_ctl_read(ctl, &test, 1, 0);
+   642		if (IS_ERR_VALUE(err))
+   643			return -ENODEV;
+   644	
+ > 645		err = i2c_mux_add_adapter(muxc, 0, 0, 0);
+   646		if (err)
+   647			return err;
+   648	
+   649		dev_info(&client->dev, "control interface initialized for %s\n",
+   650			 client->name);
+   651	
+   652		return 0;
+   653	}
+   654	
+   655	static int remove(struct i2c_client *client)
+   656	{
+   657		struct m24lr_ctl *ctl = i2c_get_clientdata(client);
+   658	
+   659		i2c_mux_del_adapters(ctl->muxc);
+   660	
+   661		return 0;
+   662	}
+   663	
+   664	static struct i2c_driver m24lr_ctl_driver = {
+   665		.driver = {
+   666			.name = "m24lr_ctl",
+   667			.of_match_table = m24lr_ctl_of_match,
+   668		},
+ > 669		.probe    = m24lr_ctl_probe,
+ > 670		.remove   = remove,
+   671		.id_table = m24lr_ctl_ids,
+   672	};
+   673	module_i2c_driver(m24lr_ctl_driver);
+   674	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
