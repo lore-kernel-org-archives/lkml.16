@@ -1,77 +1,101 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D5F8233701
-	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 18:07:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7002D19994F
+	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 18:10:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748801225; cv=none; b=tp7HYZntxp6bAputAa2pPtJfGmNgTb8kPPpLevMKIBM0jPlhsZZluHPvbRaJuHEXVvbrDSrYkCJnCWojFzSOpAn+cwyWBqhpny+Wv0JNzUMHlnSOGVi8DwTgLOVbrpNDzQGptCXkSkifRMOiTRRErwz2SgP6/8QOnt0JQqqNZmU=
+	t=1748801412; cv=none; b=Suzn77Zv0qFDRRkzc/dPqzLuzYcd3i/4PL9T4+SI7kfLjq6gMXAuZA9C22Dg29HSrl+++PLzAngEyrWJ3aENWJJl89XPA0xMbA2zfo9nyjQ6+fxZ2eTfMIcejVV1rEjJNCoDdOHKkSq83fynbdHIZiIo7OeaS8GVTVcU9T1h06c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748801225; c=relaxed/simple;
-	bh=4wULl+5RvIxm65tgsYk25Tb3WtkIkAmkkUbhv3DxiIg=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=egDrunYEza6Lu9FlanS10qmcv7xVJV8iLEHqm9B0FMMRhCRSTu0hXQoBU7uNkg30hr8tx6A4S1PFOq+GPR+6Q5AFjC81p7MzUegQsDxokOvGouA2+kQ0GLPKriQlpZ79Ll6NkIZ9mIsK322knZhK0DV83XZmtJvwoaGPWzq7NMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-8649be94fa1so601060739f.0
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Jun 2025 11:07:03 -0700 (PDT)
+	s=arc-20240116; t=1748801412; c=relaxed/simple;
+	bh=pVepWIaCEzIeGRFQaZcmBLWWt1ncE0szpJw0yCvelIM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jQMlZiriePmBBMfoIE+shGPUwyVvTLguAqYsebaaW/pl6HFULUqIWyG0zt39HgPAtpuLiggQBshJZxD/Hi7L0vY6SUNDJExEfLow9gAEu37ieWs14xVlAbk7Q6UO328Tr6sReByyhqwyY83rMZp7Bd5tClJAkkzZTAa/EkneeFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=Vzpbs2RB; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="Vzpbs2RB"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso4606841b3a.2
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Jun 2025 11:10:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1748801411; x=1749406211; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sU9tdqLEYldteiJ8zq2UvA8WAxhWduR9ZKzVOtxtP6A=;
+        b=Vzpbs2RB5WIKiCwQH87/lXeXDlQukhgvt27PcvTt3isUhtPlEJqJTaRhic8oGfG0JR
+         rd7r+Hm+2zJyIL9KZZx6LMezNcTibnFGlbVdivVPheUTAZiu4EIA1N24EB+YnWVmleCv
+         Q1aakhSWpEIS/kGyT4H2yzeJS4cmyqi4ssn9/4/zJLzfldZaTZ+6lQSjkAgcKtZbDgos
+         /MVo388RNU1rULW+kt46STOpR3GAiTbOeIpa67PbqsjN7c7cWaHJv6dsJC9ELKA/JFKg
+         AIGaIokKEBx4DyFACBupzTtDvCninTZki+DZjty1AQyGzGtsjA+ndx9Mavm7aIkKjppU
+         F91A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748801223; x=1749406023;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MNH+e2wBF7Xg3jnLnbLmzq10vNKY3b0x8+Cx5vnhySs=;
-        b=hONcHkxdmJJ1p+B2zGWM4vVrtQ6r3MCMBUFpbfAAqAJYabKg6ZfaL96ZM0YA41lFft
-         JJo7ROdr3cxRwPVF6o5b66fA1s1hshygC+fw8hNOCsliIZvtQxXeR7VC+mhCaMne+9Jw
-         nA/JYG1hGEQkalf86fVjsIu3TUiLx1AUhkoRPECq+UvBEx+Xjgi6or9LVfa4SvCRjMCJ
-         xPlN+0X9i6/wPMQ72NQlCX05Dm82lDT9BwQPuJBnhZx/8Cs015qtz6o4CeJwSRCMJ2ns
-         fex72Y+B/iFaoxXtXlR8d+ohlijuQ6fIdV9CpcrGW+sEHKLGtFm33ScYxSkREPl+amf/
-         admw==
-X-Forwarded-Encrypted: i=1; AJvYcCXYJTy98DvrJydhe7+loGb33QCJCSaCPMweySbSAB81QVW1PiEpVYS5AczTFw+VNCLDQts+7XvsABHMeDo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyH+Mbc6oCNpaxKLX7EtkO3BqQ+Ms5aUoTZtpJTzR8Ht4JMDpw/
-	WPwYTd2QMnIL4tkBcQrkj8CybZ1p8qeZYrKs1KScMFYuVxt8VXW9I03MYpu17NNoBblBdNRreMa
-	roRXssGS9Nv4MB30+gO9aGU0WIydA82250oJRc+CoZodCVR4eTuiwDEwv09c=
-X-Google-Smtp-Source: AGHT+IEMWdDsR32/1HHtiM30II6+NDaNfaUq6pMIFs8bj1cefae93/pi9JC4HZPpn87MXCCPym1NDyWJ7SYtMnsq4bAnkbxdG0lU
+        d=1e100.net; s=20230601; t=1748801411; x=1749406211;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sU9tdqLEYldteiJ8zq2UvA8WAxhWduR9ZKzVOtxtP6A=;
+        b=EFJ8Hu8GukQPZRekvgfZOz6Kp0X1XPqPLzdI5lKwoM1UaNm8m5ZxsZ6mKBt2BBQFB9
+         LOLQGeFlaC5OrerYsfC5Sbyz5aYzj3l4AXBV8QyNIFaYWjbnueWgVXEwbNeMFdu4KwMA
+         MUSuLCqkyvKGl5dghCwxUlVVvP7pb8H6qg6AtgoiIKuu16pzOiLIlR8ZfngylEvzJqDs
+         h4sfqXJwq3PyQVe8zb/dK2nCPFRNrc0mm8UKliKtqcImw9o7ymctkFX5DJNC6GWj5tvu
+         lrvD4QUpPT4c8DgSXLwgZkVN04wYrGM8/NDApz9bRkYM6LB0gig05iJbvWoNBvyy1e39
+         vqgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWlzcvb3yFVGCLqasFz7AhHTcxuow2uN/KHYzqeUgz/4E8k0kJt+bxoOM7zx1l3BPlobvISbc+3cLxDc6E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywl7DZvQywFLGAp+3nPcBPVEGK2WUG7s5t1KCysmuDZ0KPLsvc/
+	XvGBW0vwgwTBsPuVchXnkzDyPpZy9K8stTF7sy9Bl5JLekrPJYLXlFcybKbJRctJdsE=
+X-Gm-Gg: ASbGncszsIQKDZam/CYQ1HazSUB15cLFubvAmtO5lrb/ehY/pvFy2ybroNkUDEyn2xa
+	2vw95fy28ShZaSypTd8fsDf9HsgkpPV9ayunVKUdA2qDocDRabOdKYz8MvpYXW/WwfjhgKMdd7g
+	SHegHN3Hr+g0/rkqzY3FmquAK5I9TCS8htFt4p9pRMAJ/uNMVeW/d9V0WOckTZIW0PVMhiD2knn
+	dtl6EyNAusdYr7gbwAtKSsnXEGTg3NC8MgTX4DbBbhAFkFIO9RsVkYHGMdHBnYTeWWy+PgBJQeR
+	mAgotRZWserrW4pacH6l3OBY06nmhVuFRmGPrVp8Uoo1/0LJ9k0Y+8Fkykw=
+X-Google-Smtp-Source: AGHT+IHSEupw3IYJm7DRT6ZTLRx1Z/wZrEOvicGQApG9PBcuNBfCuSfdvpZ56SLAnppMJUQR6LpXXw==
+X-Received: by 2002:a05:6a20:d497:b0:21a:da9d:e970 with SMTP id adf61e73a8af0-21ae00895a7mr15679779637.22.1748801410665;
+        Sun, 01 Jun 2025 11:10:10 -0700 (PDT)
+Received: from thelio.tailc1103.ts.net ([97.120.245.255])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afeade44sm6169945b3a.70.2025.06.01.11.10.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Jun 2025 11:10:10 -0700 (PDT)
+From: Drew Fustini <drew@pdp7.com>
+To: Philipp Zabel <p.zabel@pengutronix.de>,
+	Michal Wilczynski <m.wilczynski@samsung.com>,
+	linux-kernel@vger.kernel.org
+Cc: Drew Fustini <drew@pdp7.com>
+Subject: [PATCH] reset: thead: Fix TH1520 typo
+Date: Sun,  1 Jun 2025 11:08:26 -0700
+Message-ID: <20250601181000.166088-1-drew@pdp7.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1488:b0:3dc:7a9a:44d5 with SMTP id
- e9e14a558f8ab-3dd99c8bb62mr137174545ab.22.1748801223138; Sun, 01 Jun 2025
- 11:07:03 -0700 (PDT)
-Date: Sun, 01 Jun 2025 11:07:03 -0700
-In-Reply-To: <683bede4.a00a0220.d8eae.002a.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <683c96c7.a00a0220.d8eae.0033.GAE@google.com>
-Subject: Re: [syzbot] [bcachefs?] BUG: unable to handle kernel NULL pointer
- dereference in mempool_alloc_noprof (2)
-From: syzbot <syzbot+56edda805363e0a093b8@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-syzbot has bisected this issue to:
+Fix trivial typo in the Kconfig entry for RESET_TH1520.
 
-commit d4d71b58e5139afc5f9bda0139b99404eb216d8a
-Author: Kent Overstreet <kent.overstreet@linux.dev>
-Date:   Sat Apr 5 21:36:04 2025 +0000
+Fixes: 4a65326311ab ("reset: thead: Add TH1520 reset controller driver")
+Signed-off-by: Drew Fustini <drew@pdp7.com>
+---
+Philipp - do you prefer for me to have a thead reset tree and send pull
+requests to you? I currently do this for thead clk and thead dts.
 
-    bcachefs: RO mounts now use less memory
+ drivers/reset/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10914c82580000
-start commit:   4cb6c8af8591 selftests/filesystems: Fix build of anon_inod..
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=12914c82580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=14914c82580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e413b6de2bc0230
-dashboard link: https://syzkaller.appspot.com/bug?extid=56edda805363e0a093b8
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11dd7ed4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=113f9970580000
+diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+index d85be5899da6..2330c420a1c6 100644
+--- a/drivers/reset/Kconfig
++++ b/drivers/reset/Kconfig
+@@ -287,7 +287,7 @@ config RESET_SUNXI
+ 	  This enables the reset driver for Allwinner SoCs.
+ 
+ config RESET_TH1520
+-	tristate "T-HEAD 1520 reset controller"
++	tristate "T-HEAD TH1520 reset controller"
+ 	depends on ARCH_THEAD || COMPILE_TEST
+ 	select REGMAP_MMIO
+ 	help
+-- 
+2.43.0
 
-Reported-by: syzbot+56edda805363e0a093b8@syzkaller.appspotmail.com
-Fixes: d4d71b58e513 ("bcachefs: RO mounts now use less memory")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
