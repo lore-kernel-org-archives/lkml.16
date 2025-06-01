@@ -1,90 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dvalin.narfation.org (dvalin.narfation.org [213.160.73.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E5AB1E521A;
-	Sun,  1 Jun 2025 13:32:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31B61A3165;
+	Sun,  1 Jun 2025 13:36:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.160.73.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748784760; cv=none; b=XNGPZiwUYZe5ggT/uuwPHRMDIJmSo/yiK2Tw0Q8C5BkLG0thrnuBm+iRkvE+a/ID7l22RrzFurmLIF9v5dnYscZysnhf7VFEvn9RD9LYoqLNnWxZL8kjeEShPLd2VNV/8HMfrlCQoV92uQvgF2o6G+7PbC+YUK4mjAmNbFAa52U=
+	t=1748785012; cv=none; b=kh6ievWR2y/t0NXRM7EXoRFt5ri2ctZ+8Iq1QDonynuTH7LlRH6tDehpNR0OhhoA4gzKOgwmNRBPGkle+OgGIGSpxoZDOR4yNKeo7LoBcX1Hvx9/Mc1KTMpIpxPEhl4jGA3k49y+V0c1llb1VNjmciq/H+w0TsCnG5YNg9swCDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748784760; c=relaxed/simple;
-	bh=KeYNjcq+qNyuO2w+gkHkDffK7iSVaqq1T1+cH1wLvM8=;
+	s=arc-20240116; t=1748785012; c=relaxed/simple;
+	bh=Jk5TbG+9N2LPBYT3NISet3CftSkW8GLO4G4VeN2btd4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G3RmzSbc1nY3+U++siqct/BsjmKsILvko249v5myMIDV0VTkaGi3DOFq7sI1aBMId9bPGW0ZzJ6jRDSeaFEjNeLCz123FBfm5CD55k1qCDQ30zRu99xfzh1A3AEqRaQspMoR20U1Loiv0aebMKUyPXdvkUO5tiMeEnXptDcBu5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l/H6gDu4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=b/HwEW9b6ilOPbg+iucu/+8WTSZ85evth8uF52NV3eAg/3uygpRebM8HOtVBDtu0XFVDEDJDKtzJ6to3mSlTxcoS50QHvRHszVGl24XMY39AzTIb8Zp04y0FpiwhZXfS1fmF3nasQdwzmz389qMWqxFZ7/38awe158+fYJYSzmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org; spf=pass smtp.mailfrom=narfation.org; dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b=rLoCL4a+; arc=none smtp.client-ip=213.160.73.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=narfation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l/H6gDu4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7299C4CEF3;
-	Sun,  1 Jun 2025 13:32:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748784759;
-	bh=KeYNjcq+qNyuO2w+gkHkDffK7iSVaqq1T1+cH1wLvM8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=l/H6gDu4jOv8qrsEWyFHujFqqiCbxOvW1og4uEzrhHtDqQ3khTS/p+Ion+Zo+ipg1
-	 iIOfE+lDeXxBSNtV6ejNJ2oG5jdB+EkAg/yZkKxZtdlTLnweFdod3sN4U+hTamMUPH
-	 Gve9Sr+XOkypef28cId0rU+zfRkVtZaLo/jccTREcgYNYW2X9FzF9MzYu/df5e4DJq
-	 6fJ9O8BqT8ZlzGiio5iMuUF8Od1SKBfoNbIKIT9WawYhF3QbxT3NlvK0L9sWAb1uY0
-	 BBdm4F7V9PqCA8RjmObRK85War1sESb+YoCv0W4uH0LtxlZ+j7ndZhfnUdEq0POGci
-	 393BrLD7di+sQ==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH v2 4/4] scripts/misc-check: check unnecessary #include <linux/export.h> when W=1
-Date: Sun,  1 Jun 2025 22:31:30 +0900
-Message-ID: <20250601133230.4085512-4-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250601133230.4085512-1-masahiroy@kernel.org>
-References: <20250601133230.4085512-1-masahiroy@kernel.org>
+	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="rLoCL4a+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
+	s=20121; t=1748785008;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6zILuC+fJQ0XHCp2HcwA6LIeh6l7/8sDjGhWTTsieFE=;
+	b=rLoCL4a+u7rcjzVNw7BOCDOPvSFqyKolol1d+Mr+uoLOS29EN8Toga/dII26130TqLW4my
+	ZifdsG6Yn4ghya8OZFqIegcRPSCTqDslap5P/cNs/Pl//ZCOv/C+0+CKjtb7C0xeBE4Sxa
+	9VQRx75GMoUqLn4XbMSfBk1Jo0Wa2gI=
+From: Sven Eckelmann <sven@narfation.org>
+To: Marek Lindner <marek.lindner@mailbox.org>,
+ Simon Wunderlich <sw@simonwunderlich.de>,
+ Antonio Quartulli <antonio@mandelbit.com>,
+ Matthias Schiffer <mschiffer@universe-factory.net>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH batadv 4/5] batman-adv: remove global hardif list
+Date: Sun, 01 Jun 2025 15:36:44 +0200
+Message-ID: <2767731.Lt9SDvczpP@sven-l14>
+In-Reply-To: <3742218.iIbC2pHGDl@sven-l14>
+References:
+ <0b26554afea5203820faef1dfb498af7533a9b5d.1747687504.git.mschiffer@universe-factory.net>
+ <bb85858d-b123-45ce-8fae-9658e13b822c@universe-factory.net>
+ <3742218.iIbC2pHGDl@sven-l14>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="nextPart4541340.ejJDZkT8p0";
+ micalg="pgp-sha512"; protocol="application/pgp-signature"
 
-Another issue with <linux/export.h> is that it is sometimes included
-even when EXPORT_SYMBOL() is not used at all.
+--nextPart4541340.ejJDZkT8p0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: Sven Eckelmann <sven@narfation.org>
+Subject: Re: [PATCH batadv 4/5] batman-adv: remove global hardif list
+Date: Sun, 01 Jun 2025 15:36:44 +0200
+Message-ID: <2767731.Lt9SDvczpP@sven-l14>
+In-Reply-To: <3742218.iIbC2pHGDl@sven-l14>
+MIME-Version: 1.0
 
-Some headers (e.g. include/linux/linkage.h>) cannot be fixed for now
-for the reason described in the previous commit.
+On Sunday, 1 June 2025 15:10:50 CEST Sven Eckelmann wrote:
+> So, even getting the parent (see `ASSERT_RTNL` in 
+> `netdev_master_upper_dev_get`) of the lower interface is a no-go at that 
+> point.
 
-This commit adds a warning for *.c files that include <linux/export.h>
-but do not use EXPORT_SYMBOL() when the kernel is built with W=1.
+I didn't want to say here that this specific operation is necessary here. Just 
+wanted to point out that operating on these data structures might not always 
+be possible at that point. This is why I tried to point out that it might be 
+better to have something "good enough" using RCU which is managed outside this 
+context (write-only protected using rtnl_lock).
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-eries-changes: 2
- - Fix out-of-tree build
----
+The idea of having something specific to meshif that still manages to detect 
+(beforehand) if there's a path to `batadv_interface_tx` - while `skb_iif` 
+remains set to a specific interface along the way - sounds like an 
+implementation nightmare to me.
 
-(no changes since v1)
+Kind regards,
+	Sven
+--nextPart4541340.ejJDZkT8p0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
- scripts/misc-check | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/scripts/misc-check b/scripts/misc-check
-index edc0e44d96de..f3b6bdce5fa2 100755
---- a/scripts/misc-check
-+++ b/scripts/misc-check
-@@ -51,5 +51,17 @@ check_missing_include_linux_export_h () {
- 	xargs printf "%s: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing\n" >&2
- }
- 
-+# If you do not use EXPORT_SYMBOL(), please do not include <linux/export.h>.
-+# Currently, this is checked for *.c files, but not for *.h files, because some
-+# *.c files rely on <linux/export.h> being included indirectly.
-+check_unnecessary_include_linux_export_h () {
-+
-+	git -C "${srctree:-.}" grep --files-with-matches '#include[[:space:]]*<linux/export\.h>' \
-+	    -- '*.[c]' :^tools/ |
-+	xargs git -C "${srctree:-.}" grep --files-without-match -E 'EXPORT_SYMBOL((_NS)?(_GPL)?|_GPL_FOR_MODULES)\(.*\)' |
-+	xargs printf "%s: warning: EXPORT_SYMBOL() is not used, but #include <linux/export.h> is present\n" >&2
-+}
-+
- check_tracked_ignored_files
- check_missing_include_linux_export_h
-+check_unnecessary_include_linux_export_h
--- 
-2.43.0
+iHUEABYKAB0WIQS81G/PswftH/OW8cVND3cr0xT1ywUCaDxXbAAKCRBND3cr0xT1
+y2B/AQCJ/7bJD+rjoCQmz2lOKcFzS3+eddnIoXgnTHyC5k6TaQD/c6W7fxCqe45U
+ceQ+DuoPPWrCN6EyZMeEMSJ88E1M0AE=
+=njVk
+-----END PGP SIGNATURE-----
+
+--nextPart4541340.ejJDZkT8p0--
+
+
 
