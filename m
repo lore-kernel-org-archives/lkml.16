@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304CF17BD9;
-	Sun,  1 Jun 2025 11:09:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2E717BD9;
+	Sun,  1 Jun 2025 11:11:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748776171; cv=none; b=RiIysVHt/RdS+jeAnarUOp4MWRVdnz8YKNRg9vkH7ydGnh77VN47qmSi7LcZ9mbWRJJTf7uS9h5FiD6LTbXOTqtQSrqHgkL6BLvF5pWCU5vcHXCY1i+qtpAnV2eoxq4YNVKGzo1AabaaPBUR/xxmxLQP5ZOlNa9lzxVhtEpiDwk=
+	t=1748776284; cv=none; b=XB94iNwHrHBsM0WF/F6/HSsGZpjeU8/9Q0YpuXKJ5nwF8OurKmkEz0yFsvV3dOtq19P+mIN391wLZxuA8ze+S5/gn4eLkvuqgg7SrJTIbfzZq9mT0WIzjY8YR6JoV/xEcIpB0GMFklKd/+L2p9q8fjrkLPr5eBYbH1aCsFYGfL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748776171; c=relaxed/simple;
-	bh=mvq2HtKxL9Djp8aYgx6tbEmtPeVkOO+xhOisSP5eRXg=;
+	s=arc-20240116; t=1748776284; c=relaxed/simple;
+	bh=CsKtKjy2VZl4a3WGzF4q9MTCWACsbPMydfnfJN381Jg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fPSwQ4vkOxqDKyL844MenQxoh36/1Wb1I41il/4AXpN7TIVp9Tg/amOaVYk2I+8DDbUL6ah2OjzxBl0mAOSuz+7dRZuNNXZn54ryMws6CKh+jG2+i8iJIZ8T5KXNITpAeNnGUN2QSvVIS7rt2cQYFkwB53iS3oAUJkGEGqy/C80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LQiBx5Uj; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=kSrCo9PsbJ1VdXiumf/KH7fiDWH1I1FhfJiKHpafPxoIGtukR4YDDzEKSTyad2oL5l83adb+uGOf8JZgTELHcLK2U0IdBef/R/f5ZGvGpatCQW4tjeSm4/2I5ZIJJsbWJGv+AyhrXRQPbNuVUyHzLaugXIZUOf9kLtU4jSpcnCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=exiX0NUf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LQiBx5Uj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2BB3C4CEE7;
-	Sun,  1 Jun 2025 11:09:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="exiX0NUf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44C55C4CEE7;
+	Sun,  1 Jun 2025 11:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748776170;
-	bh=mvq2HtKxL9Djp8aYgx6tbEmtPeVkOO+xhOisSP5eRXg=;
+	s=k20201202; t=1748776284;
+	bh=CsKtKjy2VZl4a3WGzF4q9MTCWACsbPMydfnfJN381Jg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=LQiBx5Uje8/tpMzCWvBg7oOD/QkD/nS3QMIL0RMDYA3BS5ZKk37XzG2BiBBl0QWvr
-	 fUyheV7kYqiNXWb6CSi9hntuJF8mDTQY2FGcCkJ5cNHTIyysrtdc53xJKzubm2MtGp
-	 cbsQ11qHoV3s0YOY9Wr5OF5jl81QVVKd324CcZ1lw7dLtGDPVda2esoUXtNIIRKgFL
-	 J1ZStTfp3gDzFFK3r4ocUk3oDVBxjKNwRLLZTKn8YIJHNsyfbaY0fuGomYvwIU/5RK
-	 dE0vLHjm82ybKZMrYQ7XWa3a3wrLOykFZwKvuo3ZuuQ0TDdVBgjaugX0sQA85oEBox
-	 qiZlo7WVlLBMA==
-Message-ID: <3dd0f1dc-441c-47e7-bfe5-bd2791c87895@kernel.org>
-Date: Sun, 1 Jun 2025 13:09:22 +0200
+	b=exiX0NUfbT98F+74O8RgoZot8C82b303RQi9/qaMViBipaZThB/p+D8OWds9ojYaP
+	 oJ7boDG25sXqP9tZBvsS9RVw17hfOg7ExuqgTpJT40BWYpCLFRvpeZTqSZmL7JjJ04
+	 2YoVdguThQ55B+mVCU/j0Ipiab5gaVckai+ipl2HEo68qXcSFoco619nR1M1JUZPtp
+	 pBamJW/TZRjd/10zbbW9D6fGNdkxH8RSVRa2eybhrQ+dbk3CxAvASybXgfo4hBffCr
+	 ODpw0ukfR69VEZD30dHZCej+9a8QOwVwTNCs2FW6qUQs9jtWQMaSvREU7wpMorenIZ
+	 1/TkAPTHaUJoA==
+Message-ID: <f4d38bb8-f17f-464c-b406-b1fb908a975b@kernel.org>
+Date: Sun, 1 Jun 2025 13:11:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,25 +35,21 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] drm/bridge: ti-sn65dsi86: Add HPD for DisplayPort
- connector type
-To: Geert Uytterhoeven <geert@linux-m68k.org>,
- Jayesh Choudhary <j-choudhary@ti.com>
-Cc: dianders@chromium.org, andrzej.hajda@intel.com,
- neil.armstrong@linaro.org, rfoss@kernel.org,
- Laurent.pinchart@ideasonboard.com, dri-devel@lists.freedesktop.org,
- tomi.valkeinen@ideasonboard.com, max.krummenacher@toradex.com,
- ernestvanhoecke@gmail.com, jonas@kwiboo.se, jernej.skrabec@gmail.com,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- airlied@gmail.com, simona@ffwll.ch, kieran.bingham+renesas@ideasonboard.com,
- linux-kernel@vger.kernel.org, max.oss.09@gmail.com, devarsht@ti.com,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>
-References: <20250529110418.481756-1-j-choudhary@ti.com>
- <2baf3c31-3edf-4c26-bd44-1d0560134871@ti.com>
- <CAMuHMdUi7pf1YfKRjMv_7VuKwjR5XekRXfcEzuPScGzHraGjyQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: Add no-hpd property for all ti-sn65dsi86
+ bridge consumers
+To: Jayesh Choudhary <j-choudhary@ti.com>, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, neil.armstrong@linaro.org,
+ khilman@baylibre.com, devicetree@vger.kernel.org
+Cc: jbrunet@baylibre.com, martin.blumenstingl@googlemail.com,
+ shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+ festevam@gmail.com, cros-qcom-dts-watchers@chromium.org,
+ andersson@kernel.org, konradybcio@kernel.org, geert+renesas@glider.be,
+ magnus.damm@gmail.com, linux-arm-kernel@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, imx@lists.linux.dev,
+ linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ dianders@chromium.org, linux-kernel@vger.kernel.org,
+ max.krummenacher@toradex.com, ernestvanhoecke@gmail.com
+References: <20250529112423.484232-1-j-choudhary@ti.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -99,62 +95,25 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <CAMuHMdUi7pf1YfKRjMv_7VuKwjR5XekRXfcEzuPScGzHraGjyQ@mail.gmail.com>
+In-Reply-To: <20250529112423.484232-1-j-choudhary@ti.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 30/05/2025 09:55, Geert Uytterhoeven wrote:
-> Hi Jayesh,
+On 29/05/2025 13:24, Jayesh Choudhary wrote:
+> In the SN65DSI86 DSI-2-eDP bridge, HPD is not supported as of now.
+> But DisplayPort connector_type usecases does need hpd to be enabled.
+> In order not to break any platform from those driver changes, add
+> "no-hpd" property to all the existing sn65dsi86 nodes (that don't
+> have it already) as hpd is not being used there anyways.
 > 
-> CC devicetree
+> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+> ---
 > 
-> On Fri, 30 May 2025 at 04:54, Jayesh Choudhary <j-choudhary@ti.com> wrote:
->> On 29/05/25 16:34, Jayesh Choudhary wrote:
->>> By default, HPD was disabled on SN65DSI86 bridge. When the driver was
->>> added (commit "a095f15c00e27"), the HPD_DISABLE bit was set in pre-enable
->>> call which was moved to other function calls subsequently.
->>> Later on, commit "c312b0df3b13" added detect utility for DP mode. But with
->>> HPD_DISABLE bit set, all the HPD events are disabled[0] and the debounced
->>> state always return 1 (always connected state).
->>>
->>> Set HPD_DISABLE bit conditionally based on "no-hpd" property.
->>> Since the HPD_STATE is reflected correctly only after waiting for debounce
->>> time (~100-400ms) and adding this delay in detect() is not feasible
->>> owing to the performace impact (glitches and frame drop), remove runtime
->>> calls in detect() and add hpd_enable()/disable() bridge hooks with runtime
->>> calls, to detect hpd properly without any delay.
->>>
->>> [0]: <https://www.ti.com/lit/gpn/SN65DSI86> (Pg. 32)
->>>
->>> Fixes: c312b0df3b13 ("drm/bridge: ti-sn65dsi86: Implement bridge connector operations for DP")
->>> Cc: Max Krummenacher <max.krummenacher@toradex.com>
->>> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
->>> ---
->>>
->>> Changelog v2->v3:
->>> - Change conditional based on no-hpd property to address [1]
->>> - Remove runtime calls in detect() with appropriate comments
->>> - Add hpd_enable() and hpd_disable() in drm_bridge_funcs
->>> - Not picking up "Tested-by" tag as there are new changes
->>>
->>> v2 patch link:
->>> <https://lore.kernel.org/all/20250508115433.449102-1-j-choudhary@ti.com/>
->>>
->>> [1]: <https://lore.kernel.org/all/mwh35anw57d6nvre3sguetzq3miu4kd43rokegvul7fk266lys@5h2euthpk7vq/>
-> 
-> Thanks for your patch!
-> 
->>> This would also require dts changes in all the nodes of sn65dsi86
->>> to ensure that they have no-hpd property.
->>
->> DTS patch is posted now:
->> <https://lore.kernel.org/all/20250529112423.484232-1-j-choudhary@ti.com/>
+> Upcoming driver changes that will break platforms if we do not have this
+> property in all the existing sn65dsi86 nodes that assumes hpd is disabled:
+> <https://lore.kernel.org/all/20250529110418.481756-1-j-choudhary@ti.com/>
 
-
-This does not work like that. You cannot change DTS in other projects,
-other users of this ABI. What's more, you cannot change old DTS, unless
-you have a time machine.
-
+That's obviously a NAK.
 
 Best regards,
 Krzysztof
