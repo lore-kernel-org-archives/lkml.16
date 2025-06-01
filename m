@@ -1,122 +1,226 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21FEF2DCC01
-	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 15:38:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C602DCC01;
+	Sun,  1 Jun 2025 15:42:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748792294; cv=none; b=Hz3VpjPouJNcEhp3mUtAYe8mJ+W2yK9GDSNK0lSMJO/CYYxrPaadbjhgnXxqY3nxFbD7UkZYMad2b+WVxFp8mAKsAe3hnY5lL1lbb6S9boSUweHOgXbz/Ru2cgVcMt9WE+M0OklXs3c2g+lJOb875cL3KieXe6TSCal5S0M+oLg=
+	t=1748792568; cv=none; b=snHgIkSjMoSjV7w79Dn9AT0jVnG523JsbN0dFCf8VSZ8HkIg+lHKguQdqYHYS6dY9Ufg8L2XfyEd8xxfvadxNFzW0HPrWKmwwkoAXgEvxyVeqDYjtioqx6i1DWaquD6iRsTZFPLkUMf1IIasI9Fr5/M25SVcddsez0C8qVLwp4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748792294; c=relaxed/simple;
-	bh=r/EOLHKSI8F0VRAetCQJgG2X0nEnR1wxPP54NOIl96o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AezQ53cU5fvEFb/3ud4v9BmWOZ8Mm6LyBcuViR/Vc2x+G+cfQIaHbYqBB3KeObJTphJ4j3HlIxAjwS1ZHXBwxyYGac32qjUybUDjjH9rngdnWA6d7Vcb/Nk03TAe4IbkHnhwP55ZfzDUOqT+BC/eCvbzn6oKjkCbBNOEI5uLNjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p+WJZ8od; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748792568; c=relaxed/simple;
+	bh=NyzbhwD6gDnNChnaAlCQzvKWRByDWtrfLcm615+QxPY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S3uiL2gxPUVdeCVOsJVdISOzBXxJZNH8/NQ7x7b0bxeO6LpiNqeThgriRlxvNtPYFj7XiJQVgQYqrX79YUN6Bjrz0ptzlakh7RWeE0Buwt5xcgPE6tm1XksOdZ7icuHIfkDTd5OeHyXeXCmO+11P0TUTF6kWSwUS2Yz7IcepA9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p7SACl/+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p+WJZ8od"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90BEDC4CEE7;
-	Sun,  1 Jun 2025 15:38:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p7SACl/+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AF4BC4CEE7;
+	Sun,  1 Jun 2025 15:42:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748792293;
-	bh=r/EOLHKSI8F0VRAetCQJgG2X0nEnR1wxPP54NOIl96o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p+WJZ8odtZErNxH17IQAl/swbtDf61oD0+KD6wz+hJqOZ2BwKrMEqgFV+JOfHK8py
-	 4FR1N+wgU9FmNxTfQ+nMggs9SkQyEpnMmd71oZ+Pm18sfojoQsxLGcQ9tdb96woapu
-	 dD+tKCmogqpufd4BK2WnEjrpQ036mjHBqRzqgRZcit5uMUq6AiRU9C4eM8tY8MBfQK
-	 JxUh2stc5w/av2xB/vM62BLGKSgkb/PS9hzomb+Nym9FtFr7hc6K+zFx955QwbH771
-	 /yCS6l2myksgZJ3ddj9BO1uaOMsvq7VxpfDGDXs89LJhkER+VbavrK1FYq/NHdx1HM
-	 3Uo/LjnkDW2bw==
-Date: Sun, 1 Jun 2025 08:38:10 -0700
-From: Kees Cook <kees@kernel.org>
-To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>,
-	Ingo Saitz <ingo@hannover.ccc.de>,
-	kernel test robot <oliver.sang@intel.com>,
-	Marco Elver <elver@google.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Thiago Jung Bauermann <thiago.bauermann@linaro.org>
-Subject: Re: [GIT PULL] hardening fixes for v6.16-rc1
-Message-ID: <202506010833.A33888CC@keescook>
-References: <202505310759.3A40AD051@keescook>
- <CAHk-=wj4a_CvL6-=8gobwScstu-gJpX4XbX__hvcE=e9zaQ_9A@mail.gmail.com>
- <156567EE-E5BB-43C4-B5A6-439D83FF387D@kernel.org>
- <CAHk-=wjktqa94u_=++YX7XxUr57iLAs1GqtHPOY-o-N0z7wyeA@mail.gmail.com>
- <202505312300.95D7D917@keescook>
- <20250601-pony-of-imaginary-chaos-eaa59e@lemur>
+	s=k20201202; t=1748792567;
+	bh=NyzbhwD6gDnNChnaAlCQzvKWRByDWtrfLcm615+QxPY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=p7SACl/+Q7aKsQGdUJ0rxIXofHNBx/1fEiVH8w17OLr4DQRaZzEI2raFHSeA32vFn
+	 QTwbuTFG8l3J2ldun+F0aJkDPcEMFX7P7FCxsxNNQTBbDWA8Bj46anwFsKOtNyfBX5
+	 8a9HZo97mSh8QwNZ1pLOSCroP1eivLbG0rfDaBOUrYOIhzOdpALdLNZevepFTOtyRr
+	 vwNgem3JEr+zsFgpgcCRmTSkJV90XQewY/XMPcwm8y5hnsde28j8jSg+1BY5l9q864
+	 aGihJj0+U9y73CH+5NlmCI8+lb/irwOp2VV2ftvbWuACba/gpxIkpGreCtxyhCMAT0
+	 qq98oM0a906dg==
+Message-ID: <be95cc2d-f548-4c71-a57b-8107009b8776@kernel.org>
+Date: Sun, 1 Jun 2025 17:42:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250601-pony-of-imaginary-chaos-eaa59e@lemur>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] dt-bindings: eeprom: Add ST M24LR control
+ interface
+To: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: arnd@arndb.de, gregkh@linuxfoundation.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org
+References: <20250601153022.2027919-1-abd.masalkhi@gmail.com>
+ <20250601153022.2027919-2-abd.masalkhi@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250601153022.2027919-2-abd.masalkhi@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jun 01, 2025 at 10:40:18AM -0400, Konstantin Ryabitsev wrote:
-> On Sun, Jun 01, 2025 at 12:42:14AM -0700, Kees Cook wrote:
-> > Okay, reproducing the "b4 trailers" steps:
-> > 
-> > #### start from known good tree
-> > $ git checkout 62329e859b25 -b test/wreckage/before
-> > $ l
-> > 62329e859b25 (HEAD -> test/wreckage/before, dev/v6.16-rc1-pre/-Wunterminated-string-initialization) [DUP]
-> > 9a7d4e791037 crypto: Annotate crypto strings with nonstring
-> > b080c44c4d69 kbuild: Re-enable -Wunterminated-string-initialization
-> > 8c2bb7d12601 ubsan: integer-overflow: depend on BROKEN to keep this out of CI
-> > b9dbd69a32e3 wifi: iwlwifi: mld: Work around Clang loop unrolling bug
-> > 9d230d500b0e Merge tag 'driver-core-6.16-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/driver-core/driver-core
-> > bf373e4c786b Merge tag 'devicetree-for-6.16' of git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux
-> > 8ca154e4910e Merge tag 'for_linus' of git://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost
-> > 43db11110730 Merge tag 'for-linus' of git://git.kernel.org/pub/scm/virt/kvm/kvm
-> > 12e9b9e5223b Merge tag 'ipe-pr-20250527' of git://git.kernel.org/pub/scm/linux/kernel/git/wufan/ipe
-> > 90b83efa6701 (stable/master) Merge tag 'bpf-next-6.16' of git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next
-> > 1b98f357dadd Merge tag 'net-next-6.16' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
-> > ...
-> > ### Try to update 8c2bb7d12601 with the Acked-by from the list...
-> > $ b4 trailers -u https://lore.kernel.org/all/CANpmjNPpyJn++DVZmO89ms_HkJ0OvQzkps0GjCFbWkk0F+_8Xg@mail.gmail.com
-> > Finding code-review trailers for 39 commits...
+On 01/06/2025 17:30, Abd-Alrhman Masalkhi wrote:
+> Add support for the control interface of STMicroelectronics M24LR
+> RFID/NFC EEPROM chips.
 > 
-> Yeah, this is danger territory, because you're asking to update a random
-> commit in the tree history. Without passing --since, we're looking at raw git
-> history in the current branch as far as 1 month back to try to figure out the
-> range of commits that we should work with:
+> Signed-off-by: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
+> ---
+>  .../devicetree/bindings/eeprom/st,m24lr.yaml  | 72 +++++++++++++++++++
 
-Yeah, my SSD glitches were a red-herring -- they happened before the
-"known good state" sfr pointed out (so, yay, I did fix my trees from
-that).
+Do not send next version while the discussion is still happening.
 
-My mistakes were:
+>  1 file changed, 72 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/eeprom/st,m24lr.yaml
 
-- not noticing the "39 commits" warning
+I still do not understand what is this device exactly. You said this is
+not EEPROM, so my advice of putting this in eeprom seems not correct.
 
-- overriding my push sanity checks
-
-Sorry about all the noise and confusion!
-
-> https://git.kernel.org/pub/scm/utils/b4/b4.git/tree/src/b4/ez.py#n1048
 > 
-> I don't yet know why it wants to rewrite 39 commits when we're updating a
-> commit that's only 3 away from the tip. If you manage to rerun this with b4 -d
-> and send me the output, I will be glad to look at it. Alternatively, if you
-> can let me know the steps to get my tree in the same state as yours, I can run
-> it locally.
+> diff --git a/Documentation/devicetree/bindings/eeprom/st,m24lr.yaml b/Documentation/devicetree/bindings/eeprom/st,m24lr.yaml
+> new file mode 100644
+> index 000000000000..6d72325865d6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/eeprom/st,m24lr.yaml
+> @@ -0,0 +1,72 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/eeprom/st,m24lr.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: STMicroelectronics M24LR Series NFC/RFID EEPROM Control Interface
+> +
+> +maintainers:
+> +  - Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
+> +
+> +description: |
 
-This shows the same problem (using Linus's tree and linux-next):
+Do not need '|' unless you need to preserve formatting.
 
-$ git checkout 9d230d500b0e -b test/repro/before
-$ git cherry-pick 368556dd234d
-$ git cherry-pick eef1355c269b
-$ b4 trailers -u https://lore.kernel.org/all/CANpmjNPpyJn++DVZmO89ms_HkJ0OvQzkps0GjCFbWkk0F+_8Xg@mail.gmail.com
+> +  STMicroelectronics M24LR series are dual-interface (RF + I2C)
+> +  EEPROM chips. These devices support I2C-based access to both
+> +  memory and a system area that controls authentication and configuration.
+> +  They expose two I2C addresses: one for EEPROM memory and one for the
+> +  system control area (e.g., UID, password management).
 
-> Thanks for looking into this. Linus, this is accurate and I am 100% convinced
-> that there was no malicious intent. My apologies for being part of the mess
-> through the tooling.
-> 
-> I will reinstate Kees's account so he can resume his work.
+e.g., -> e.g.
 
-Thank you! I will now *very carefully* construct a v2 PR...
+> +
+> +allOf:
+> +  - $ref: ../i2c/i2c-mux.yaml#
 
--- 
-Kees Cook
+Full path, so /schemas/i2c/i2c-mux.... but this is not an i2c mux, at
+least not in your description, so something feels incomplete or incorrect.
+
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - st,m24lr04e-r
+> +      - st,m24lr16e-r
+> +      - st,m24lr64e-r
+
+What does "r" stand for?
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  pagesize:
+> +    enum: [1, 4, 8, 16, 32, 64, 128, 256]
+> +    default: 1
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: >
+
+Do not need '>' unless you need to preserve formatting.
+
+> +      Maximum number of bytes that can be written in one I2C transaction.
+> +      the default is 1.
+
+Don't repeat constraints in free form text. I already asked for this.
+
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      i2cmux@57 {
+
+Nothing in commit msg or binding description explained why this is
+i2c-mux.  i2c-mux is not an eeprom. Exposing two I2C addresses also does
+not mean it is mux - we already have such devices and they were never
+called mux.
+
+> +        compatible = "st,m24lr04e-r";
+> +        reg = <0x57>;
+
+Where is the second address? It is supposed to be here.
+
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        i2c@0 {
+> +          reg = <0x0>;
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +
+> +          eeprom@53 {
+> +            compatible = "atmel,24c04";
+
+
+And even if there was a mux here, then where is the second device?
+
+> +            reg = <0x53>;
+> +            address-width = <16>;
+> +            pagesize = <4>;
+> +          };
+> +        };
+> +      };
+> +    };
+> +...
+
+
+Best regards,
+Krzysztof
