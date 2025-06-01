@@ -1,171 +1,99 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A6A319F101;
-	Sun,  1 Jun 2025 13:29:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8854F4A32;
+	Sun,  1 Jun 2025 13:32:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748784558; cv=none; b=oOs9u9ULWwriOpmtAWaIF4NtR32H41NIUIHs/x3Gi7Qh5GpQIk/mlKGJpSP0IaI1StIlDPFqNeyjg86d2P+mec55G9OSFqX+A+n+H2LbpMAgbDcZFw4/8fDCUmVBEuUoqT8q89u+sIwPRptLYRPBb6zGbXxysQYk3VlVdO8/HS4=
+	t=1748784756; cv=none; b=iHyA6Yjta5GiCsqrazOnywP9XpyUFlNYt+oRY7pgL/fXb3Dto3XfO2gGbSxwgs+6p6LzIrQItjCBrzDpkQY3qT83qG13WZSTi5d3e3aZ2QzMU2yxtfkWrUU5LvBmLRUu/tehSFVSO52FR0BhNAwkjczmIaquuNHwhNEyB30ivLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748784558; c=relaxed/simple;
-	bh=gjZ/qzWcb5zr/7Enq5pBkOGZcqOD4uwtJyTQVIwKVr4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=TdQQbtzYjZD3WNZOMqbeLae/pD+iIDW5FIvoscrEe51G3wA9hIK8iThgsIu0rvaHkioYL54BPXOmO8w3FDV5CwL/nJW51j8c6vGTCLI4XR5qS+tO2gBwH+rmAVnC8qyfgj29LwyNK/dnPFy5VZV/imixjXRGgUmodyEma4j6dgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hEohhef6; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1748784756; c=relaxed/simple;
+	bh=RR/bpKyYPlC/Fpcz2O0j5WyOlN1NdNHd+82GDdJ+gdg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cZYx8sRx8ibdZgqjrG3KvBL9YY9AQVvTDfqOvTqWYyk7Gkp4lgsoSoaPXNrIsJQLIcoF5KIvjNEtOY0T9H5QiF6NtdTzhi2uG0my7mn3lK85gmsbtzZpnpWr7icWN27B2L2ZNAE/IcBhnf1oSuijahAtOp+LCbRZR9Ay/M+HlXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A8hF7X8O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hEohhef6"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 551DOYHY003659;
-	Sun, 1 Jun 2025 13:29:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	RkQxlpFdXZp2KugpRTbmYcvIhJMud/OtxDtMupzy1xg=; b=hEohhef6h7/KU2ZZ
-	tPEnqnesAOAKUYr6bU/G2UfH467fyLbSGqbQRTNuafgCrPK5c/+MW+AG8VpqRs1h
-	ecSx9ldKsZY3r+3epQ/KBoDGjZNgs9CqoNHaXvJ5e3buNRMhWbqmLJkwyVAROG2o
-	QB9DYNMgbU3mKGuSe+okXrjwk2FAxEN0fGHrItf3t7CorFw+lhPNgU8ICbLRevds
-	g5/cS81jhYXK5gsNgrHDPQhlqXMj4nR50Ji30jGO4pGPbs+adyAxCvPQmQG0qQis
-	Id1yYQi+Izz8zfmIH5eH76ku/4iQp6GkUAI85p8hXB0SQWKQDLUrpiAYk9i582K4
-	p4CGqA==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46ytkr2cjw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 01 Jun 2025 13:29:12 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 551DTBep023446
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 1 Jun 2025 13:29:11 GMT
-Received: from [10.216.12.79] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 1 Jun 2025
- 05:58:59 -0700
-Message-ID: <5ffadce9-7121-465d-ad41-81cf9f626019@quicinc.com>
-Date: Sun, 1 Jun 2025 18:28:56 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A8hF7X8O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A93EC4CEE7;
+	Sun,  1 Jun 2025 13:32:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748784756;
+	bh=RR/bpKyYPlC/Fpcz2O0j5WyOlN1NdNHd+82GDdJ+gdg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=A8hF7X8OG0sRc0pZN56HD8oM8f/X36hsuVBYm66oJrOwXaeIib6oDBj1/x+QRmoWI
+	 ikdGFX8Z23ek2oaRkzG2GtevVpFCES5hXKGTMeSek3FiPRz6ESYVYQIjtaJU/hx+UD
+	 AYx+SrFXMbv48o+A7ao8qHzi+syKVDB/NFEYdgsWMEAlfsUPwsNtPeR+ulxL5DVBMF
+	 PEVZcos4T4P467fALaylJw1B3VasOjWW1WU1dfjCPu/rFUrD+L25basunfF1MBdadD
+	 XJaqhm5DozkMkdWHgHLhJW0UST9wHtyyNktjcfyTo/HWv4b3vgvyNjFMhBqd7Y4ZYu
+	 A6xkIs3bC/95Q==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>
+Subject: [PATCH v2 1/4] kbuild: move W=1 check for scripts/misc-check to top-level Makefile
+Date: Sun,  1 Jun 2025 22:31:27 +0900
+Message-ID: <20250601133230.4085512-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 7/8] arm64: dts: qcom: qcm6490-idp: Add WSA8830
- speakers and WCD9370 headset codec
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Srinivas Kandagatla <srini@kernel.org>,
-        Liam Girdwood
-	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>
-CC: <cros-qcom-dts-watchers@chromium.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-sound@vger.kernel.org>,
-        <kernel@oss.qualcomm.com>, Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-References: <20250527111227.2318021-1-quic_pkumpatl@quicinc.com>
- <20250527111227.2318021-8-quic_pkumpatl@quicinc.com>
- <43581d09-4e30-42bc-9c5f-9c40f5d2cb39@oss.qualcomm.com>
-Content-Language: en-US
-From: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-In-Reply-To: <43581d09-4e30-42bc-9c5f-9c40f5d2cb39@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: SnL27D-yV1HKe25yc8ZoHoA6M4y55ON4
-X-Authority-Analysis: v=2.4 cv=OMMn3TaB c=1 sm=1 tr=0 ts=683c55a8 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=EkdEwCnvp131_jYCVQ4A:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: SnL27D-yV1HKe25yc8ZoHoA6M4y55ON4
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAxMDExNSBTYWx0ZWRfX86PIR1pPBo/u
- kbuNUB6CebRGjEpBU30N6etSw1yDx+YPUq720qn+0MoQXt+ghJMfaf2lKZ2NVB5ywdGOmf2LMo+
- 302ohlhFM8j5a52ZDDYiaxQz6ismBMyxFwbMNs994B8oJ1x0rfUdh3PCl5UQwG/+os2RNhxz6gS
- UUyfJt/AWAwGcuK6/uB1m9oyZVPP+m16XeehQd6zvCw9nzagsl7vmLv64aR+AMiPwb2uHoDZzwA
- 1N/UzbG2zebSfJFSbQbS/iydi1r+1g3HBjmhphSs2cMWNvTWDmlKiJEnx2SNuEM4UNZmNRiMQVA
- EAh6qWKjTTUxDma5I5kgolLp/o1FVC0aG0YGya+kNLnFPGj02HY79//dI/f8ABR+uaKyB7O7cNm
- cfhM5f++Z4aD9Vrz2Pwe/VS3Mt1rdq66B1CbtzvuWGXoOacEDbel9oeqysSwr22YuMaquGqp
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-01_05,2025-05-30_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 spamscore=0 lowpriorityscore=0 suspectscore=0 mlxlogscore=682
- malwarescore=0 adultscore=0 clxscore=1015 priorityscore=1501 mlxscore=0
- bulkscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2506010115
+Content-Transfer-Encoding: 8bit
 
+This script is executed only when ${KBUILD_EXTRA_WARN} contains 1.
+Move this check to the top-level Makefile to allow more checks to be
+easily added to this script.
 
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-On 5/31/2025 6:05 PM, Konrad Dybcio wrote:
-> On 5/27/25 1:12 PM, Prasad Kumpatla wrote:
->> From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
->>
->> Add nodes for WSA8830 speakers and WCD9370 headset codec
->> on qcm6490-idp board.
->>
->> Enable lpass macros along with audio support pin controls.
->>
->> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
->> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
->> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
->> ---
-> 
-> [...]
-> 
->>   &uart5 {
->> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi b/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
->> index 542a39ca72bb..2e75e7706fb4 100644
->> --- a/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
->> @@ -29,6 +29,30 @@ &lpass_dmic23_data {
->>   	bias-pull-down;
->>   };
->>   
->> +&lpass_rx_swr_clk {
->> +	drive-strength = <2>;
->> +	slew-rate = <1>;
->> +	bias-disable;
->> +};
->> +
->> +&lpass_rx_swr_data {
->> +	drive-strength = <2>;
->> +	slew-rate = <1>;
->> +	bias-bus-hold;
->> +};
->> +
->> +&lpass_tx_swr_clk {
->> +	drive-strength = <2>;
->> +	slew-rate = <1>;
->> +	bias-disable;
->> +};
->> +
->> +&lpass_tx_swr_data {
->> +	drive-strength = <2>;
->> +	slew-rate = <1>;
->> +	bias-bus-hold;
->> +};
-> 
-> All other DTs that overwrite these pins seem to be setting the
-> exact same settings.. And given this pin is connected to an on-SoC
-> peripheral, I think it would make sense to consolidate these in
-> sc7280.dtsi
+(no changes since v1)
 
-Ack
+ Makefile           | 3 +++
+ scripts/misc-check | 9 +--------
+ 2 files changed, 4 insertions(+), 8 deletions(-)
 
-Thanks,
-Prasad
-
-> 
-> Konrad
+diff --git a/Makefile b/Makefile
+index 61f4e7662192..7a52be3a4b80 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1824,9 +1824,12 @@ rustfmtcheck: rustfmt
+ # Misc
+ # ---------------------------------------------------------------------------
+ 
++# Run misc checks when ${KBUILD_EXTRA_WARN} contains 1
+ PHONY += misc-check
++ifneq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
+ misc-check:
+ 	$(Q)$(srctree)/scripts/misc-check
++endif
+ 
+ all: misc-check
+ 
+diff --git a/scripts/misc-check b/scripts/misc-check
+index d40d5484e0c5..f37b2f6931cc 100755
+--- a/scripts/misc-check
++++ b/scripts/misc-check
+@@ -3,15 +3,8 @@
+ 
+ set -e
+ 
+-# Detect files that are tracked but ignored by git. This is checked only when
+-# ${KBUILD_EXTRA_WARN} contains 1, git is installed, and the source tree is
+-# tracked by git.
++# Detect files that are tracked but ignored by git.
+ check_tracked_ignored_files () {
+-	case "${KBUILD_EXTRA_WARN}" in
+-	*1*) ;;
+-	*) return;;
+-	esac
+-
+ 	git -C ${srctree:-.} ls-files -i -c --exclude-per-directory=.gitignore 2>/dev/null |
+ 		sed 's/$/: warning: ignored by one of the .gitignore files/' >&2
+ }
+-- 
+2.43.0
 
