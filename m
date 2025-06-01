@@ -1,141 +1,85 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B183D1386C9
-	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 07:51:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A833C13D;
+	Sun,  1 Jun 2025 08:28:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748764265; cv=none; b=Ih7dPpdp/+1RBlZp9hPIZwEgvfJONG6F+sS7u/kzszHamRla5cFsTsEMEwAguVQ0gMP7wWSWK8h/LoW3vE2Tk6KX+Bb3HrL688lCkH0irsaOUc5QytbesBJHnGJUygt1WzS4vw2e09x97W46de4x4bDOUHGMdqitB38WQzGHGmg=
+	t=1748766506; cv=none; b=Ql83jY291PrKD6wD8DzEiAJOgXFkiRErGz88E3Bsl/xqoU7gR7dJJeWtYlUg0bHmG/Prq34CNUtpuSIkslwR1BSCyMuPh00nM7KLNAfvZomBMvzK/cxtEqvMXGtJTJCl5JGa7I9GWufjUq0vuMccFo/+wPtL03SQMFaaIBqIZNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748764265; c=relaxed/simple;
-	bh=5+6yz3aoyJHNsZavcO9AiQGNcAcAlecdhe/eFl9wu9w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=asLQ45q6Igu/D/iyQJz7dPnijsyRo64/4VnvZSwgiZ4HWlt1AQ6RHTWf1kE8FoiqSxccDAGMaDc4dnQcsIX09St/YiFHsWJPJAmSsKfH3kARStyFIIO6ShUKkKpTvi3vYm89TN9Mg58TaLHfymBFASQfj7C/DHBVlHrbc8WWrAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=UGCFgDVR; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1748766506; c=relaxed/simple;
+	bh=2nMCDnnj7b/KOI3Q1YHtXMMRmZlQZLomTLpuClHmhQI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=HzpkvH9iA/eBfYG33/NIIHThuqm0Y6XFo/AYLNJ3S0Mz2sAeaGcp1mJLe1R9uEbF8SwqLWr7EvjxzSOyMLquCIWhM3Q/hDv7PLj8UxwI+Sq7jLPxDjQq8ivs7PEoifgXRQjaEK0jBcQP+JxWkbnXXktxOzQstz+I1IfVJwJONCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=FPHOI3FB; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UGCFgDVR"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250601075055euoutp02922123dd1984f48797d9b99ba5a2ab72~E29McgoNi2236422364euoutp02I
-	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 07:50:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250601075055euoutp02922123dd1984f48797d9b99ba5a2ab72~E29McgoNi2236422364euoutp02I
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1748764255;
-	bh=hqMY6JBjFHLi1UGuQGIN1VxhuxOXkbW6BShlkS0Hdbw=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=UGCFgDVRJfMsNd/HFXPrc3FxhgoON0esubBU904ELGdFgoc5nag30aAx/Zq6I6Anq
-	 wU81Hq0tIJkAqltlzi08+tzT/6bx9zT4Xg5krOQ6NwdpjEagLv6hDb7i0fNyU8I7Bo
-	 aJU1ON/FyAqKxKsp6hdOAPnSeEr8mfb6diXcIBC0=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250601075053eucas1p1a6f3d7c11210b61ea1d0c62f7f52cabd~E29LH_2j60784107841eucas1p1m;
-	Sun,  1 Jun 2025 07:50:53 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250601075052eusmtip272f1587c5683112656d6389dcaa6908e~E29KC_7vN1949419494eusmtip2B;
-	Sun,  1 Jun 2025 07:50:52 +0000 (GMT)
-Message-ID: <61eecafb-8ad1-4306-88cb-a032eefb2e48@samsung.com>
-Date: Sun, 1 Jun 2025 09:50:52 +0200
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FPHOI3FB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1748766498;
+	bh=nDgHRsCwb4BH1XlBRAPbTDeHH+3VXFA6uH3PCQJlarQ=;
+	h=Date:From:To:Cc:Subject:From;
+	b=FPHOI3FBSTL0LSIILQp+E6KZOQYZLNOwO7GsFrxEhN21C6krNkHAeyvrlif8zJEdJ
+	 2AacSqIc0f0eh+Hxyl9fvIdN71newKY0OtrRbf9pjo9tC73w89Lbnqz86J5uy6fHEN
+	 JP+AIcKGhsggH8/G+p6lZuRdbadJGqQUSSVppav3tGLb+etJihDjfKnyM8k2QveIEP
+	 RbjCpo8jhNY9Zu1gtyRuJy7Pu3bfYA+2rawZ2WAt/ADCgwzOuVg15GqVdIqnkP7mgD
+	 ESDZkF2bwECgu1QplBP9VcRGkK7ofEqB2CgQAfi/aOJ90KuXuvLQSzLmzWz/iomujp
+	 tAd5KZx0C89lQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b998x70RCz4x5Z;
+	Sun,  1 Jun 2025 18:28:17 +1000 (AEST)
+Date: Sun, 1 Jun 2025 18:27:44 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
+ <kwilczynski@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the pci tree
+Message-ID: <20250601182744.534dbe5b@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 5/6] riscv: dts: thead: Add PVT node
-To: Drew Fustini <drew@pdp7.com>
-Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Miguel Ojeda
-	<ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng
-	<boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin
-	<benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice
-	Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo
-	Krummrich <dakr@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei
-	<wefu@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Paul Walmsley
-	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Marek Szyprowski
-	<m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <aDVxDJi0KkWXiPCK@x1>
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250601075053eucas1p1a6f3d7c11210b61ea1d0c62f7f52cabd
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250524211525eucas1p244963b69e0531c95a9052e4a7a1d1e01
-X-EPHeader: CA
-X-CMS-RootMailID: 20250524211525eucas1p244963b69e0531c95a9052e4a7a1d1e01
-References: <20250524-rust-next-pwm-working-fan-for-sending-v1-0-bdd2d5094ff7@samsung.com>
-	<CGME20250524211525eucas1p244963b69e0531c95a9052e4a7a1d1e01@eucas1p2.samsung.com>
-	<20250524-rust-next-pwm-working-fan-for-sending-v1-5-bdd2d5094ff7@samsung.com>
-	<aDVxDJi0KkWXiPCK@x1>
+Content-Type: multipart/signed; boundary="Sig_/tYMMhm/v_iklDRquV3K+I4E";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_/tYMMhm/v_iklDRquV3K+I4E
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 5/27/25 10:00, Drew Fustini wrote:
-> On Sat, May 24, 2025 at 11:14:59PM +0200, Michal Wilczynski wrote:
->> Add PVT DT node for thermal sensor.
->>
->> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
->> ---
->>  arch/riscv/boot/dts/thead/th1520.dtsi | 11 +++++++++++
->>  1 file changed, 11 insertions(+)
->>
->> diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
->> index f24e12d7259fabcfbdc2dfa966d759db06684ab4..faf5c3aaf209b24cd99ddc377a88e08a8cce24fe 100644
->> --- a/arch/riscv/boot/dts/thead/th1520.dtsi
->> +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
->> @@ -648,6 +648,17 @@ padctrl_aosys: pinctrl@fffff4a000 {
->>  			thead,pad-group = <1>;
->>  		};
->>  
->> +		pvt: pvt@fffff4e000 {
->> +			compatible = "moortec,mr75203";
->> +			reg = <0xff 0xfff4e000 0x0 0x80>,
->> +			      <0xff 0xfff4e080 0x0 0x100>,
->> +			      <0xff 0xfff4e180 0x0 0x680>,
->> +			      <0xff 0xfff4e800 0x0 0x600>;
->> +			reg-names = "common", "ts", "pd", "vm";
->> +			clocks = <&aonsys_clk>;
->> +			#thermal-sensor-cells = <1>;
->> +		};
->> +
->>  		gpio@fffff52000 {
->>  			compatible = "snps,dw-apb-gpio";
->>  			reg = <0xff 0xfff52000 0x0 0x1000>;
->>
->> -- 
->> 2.34.1
->>
-> 
-> I found that on my lpi4a that boot while hang after applying this patch.
-> I think that it is related to clocks as boot finished okay when using
-> clk_ignore_unused on the kernel cmdline. Do you happen have that in your
-> kernel cmdline?
-> 
-> I need to investigate further to understand which clocks are causing the
-> problem.
-> 
-> Thanks,
-> Drew
-> 
+Commit
 
-Thanks for your earlier message. I've investigated, and you were right
-about the clocks – the specific one causing the hang is CLK_CPU2AON_X2H.
+  1dcbee3cb18e ("PCI: cadence: Add support to build pcie-cadence library as=
+ a kernel module")
 
-This appears to be an AHB bus clock required for CPU access to the AON
-domain. My proposed solution is to make the pvt node a child of a new
-parent bus node in the Device Tree. This new "AON bus" node would then
-explicitly request and manage CLK_CPU2AON_X2H, ensuring it's enabled
-when its children are accessed.
+is missing a Signed-off-by from its committer.
 
-What are your thoughts on this approach?
+--=20
+Cheers,
+Stephen Rothwell
 
-Best regards,
--- 
-Michal Wilczynski <m.wilczynski@samsung.com>
+--Sig_/tYMMhm/v_iklDRquV3K+I4E
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg8DwEACgkQAVBC80lX
+0GzI9AgAgENBWJexHzqP5wrPCyxp8prcSTTgsXBuYSKGfaPWYhgd2XCv3rP+ZHb7
+lwMeNoGqgg75198njh9lojEIh0Sekwk393nI0Hmoh6swp6KqIFWRtpJoy6jQ15t4
+CmsKChwWLERebcag/fN2Un6Qkel+J/ID/C4CblodHGzmtuiOP0Rxh6PGVb+RewHn
+1kEBCC2LJBJpgHooeSfihJxfj1RVrdFJ9c79VuUxy+mwg/6bvFROO2Gw5DBKXUaC
+tdDWiB5jRnmsrTccK2cjCjzLvtm4bxaefgPsrt1bavGizDClTee14wkm/d33Oe/X
+HYUA7YSjrrt+ar4wggjUeCcWyX1aWg==
+=vzPH
+-----END PGP SIGNATURE-----
+
+--Sig_/tYMMhm/v_iklDRquV3K+I4E--
