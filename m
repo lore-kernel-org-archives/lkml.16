@@ -1,186 +1,376 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3468D13D539
-	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 05:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE582CCC9
+	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 05:27:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748754856; cv=none; b=f9BtBQLObL5s5qx5BXRt1A3dz84yhhBdceWyETd5N761Q/j4t+0Qi7kh6NvrvB9wTXIte7xxQ72xq1uncxwICz3fFdlDMkh0qy9T/tXfgAn3GoO+Q5iM/IKj061dx8nsCkyK0WnLxBivUbnP/XdIwlj0hcm413fDFpnZ6GTJgJM=
+	t=1748755656; cv=none; b=Hd/I6rbhL4R10Emy8yAliv6JLkCExwjmcIFsSZj40ElpZ/opnK88mauxi9bHIOn0BGTMwRERxWOF+paO3XV65RjOG+5f2kIoMaUR3HZVZiszJRIFWLP6/D1iyWUmkmHb8jacmSjGwy73UTQjR+KMGsFUnjzugEaqVT84ATAOdlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748754856; c=relaxed/simple;
-	bh=dRgmJvopJbBd3GURbX7nf9+Ap3zhAqIMndBocYjajiw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hL6TuMub92bKZFUnVtzQ4Cqh/YuYzs9aYvUofjL7Nf+Jg6gf+3ZoTn1pCCGdEUwCVlBfmNssBK+pYb1yKnNq1Ko+c6La7XYZrAyaAyG0wFhKK0y2xJozznF9/LpeuX2KQ5M68xwuH9/LNpROE9qn3bXNPrfqZbtz8BGk/5QtRXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=W84WOE9k; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W84WOE9k"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7399838db7fso2958360b3a.0
-        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 22:14:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748754853; x=1749359653; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=F3iHR1+Hq48gmHp3Xsuk/NPR6eCILhzOir2aolffJTM=;
-        b=W84WOE9k9r56UKVQUbZt6FKdfZqfboEmSIefue9E/1sxMV/GANlKWjOSn89NaspnwK
-         EgCH25lbZMwzGyP7ckVIvhCNDVGw9ZKNxVdYVB6vxdoo9N3KcseTqAveK8rrTZtUpgwc
-         3hGIR5U424fVK6/eopUyPV39hGCGYoXQ5SHFzWoSndPptl8h8KRGX1lphPcw1DW4m7e7
-         ewBIi77Z136yKpZS5UyMFyuzVQFXzGTJ80oVQ4XhN7QIbeY2oFVQY8j8UvZ4mR03puTM
-         QrauI1JqHdvcI99hw36bcYPRZR5woyV8Vwr5MedUcll8Xr8WTKWo+Z1DAPGCr0J+dgYk
-         p5eA==
+	s=arc-20240116; t=1748755656; c=relaxed/simple;
+	bh=5oL7JEJREKVDZw3q7k4dZ4QhpO+WpYVESdwffC6f5oI=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=E8CxtDeodkb7yNgr16W/43AOOISZHm4E79o0dtI4JfA+SpLL8CYbeVDgbDMgMzs2meHuuwVJ0n9GcQrprUF6C0PkhNHa9o7qobVjPC9jGFGBdbClBFmNBySslTMdJ8VQTDZVqx6ffP3esilD4st68m0ahmmvbHKbJbrrB7mV5Uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3dc8ab29f1eso42136655ab.2
+        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 22:27:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748754853; x=1749359653;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=F3iHR1+Hq48gmHp3Xsuk/NPR6eCILhzOir2aolffJTM=;
-        b=N/N0sSXs7jFykf13BUuldSjCvlyxy1VZG7Ujck6wb9/Fhn1sPRzFR7jMgiLCD2QjlL
-         ZGyPkfKmNPSS2ASiCRb9qj77zhb4Y40ZTHMiJaaXmm6mNBh6qaZXWRAoi381+kfvAz8s
-         loSWnyOyaTXaeDQDz3CBM0fip31mWpahspQU24rWcZu99w9NczjxCbNx01ia/ReU6Kw4
-         FkfXO2u+AzFwF5cQmZcMmj02bYFXnmaxReZpihZjLh0FDZ7vtKQ8uCyMXzlVFLR/Di25
-         zj3W3rCHiAaNMCUO/9RXGht2FEr670bACorGJLSaKVTVtejpewsOGo533LsphByYaYMC
-         3nPg==
-X-Forwarded-Encrypted: i=1; AJvYcCU0FKslKHFgBtf2DyzJRBo0odzcWyPZu1/G350I/oP8fQF0mtah8yH4ffPhxOLTPz+vOoQTFB+K1LNTiYs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyM7PP3cgW2CenimUhlO75soE+uuCKnhH4PIBykM+wbjzD3Pgei
-	gMLCkFoNOJ9n1uWmD3HsJhEh/JaqW73nO5n6lVCKQpAntijuItvILB3BaOZxiHsZUw==
-X-Gm-Gg: ASbGncuOUr5XhRzqET77EKjCIKmrOflry339Sxauyg/arNT/Q0fYjlmW69OQTpCYaF/
-	j6EAxEUBXs7+dQrw2ac2NxM6i6gepj5GKSHf4Ll87okVrPzfY+o5U8DK2MsNHBAj3PFZhmrx4bR
-	vQwtdFmgTsHgcIVeFhWl9kZBnEwhS0tm8a8+Ouuh8gPLnP2R88mJo+80TdNTeFINWAIiBAOWWTb
-	GWpxJBs/d3dEajh2LFhF+FSbsdlAbHCijU2CsIJSaIvKdxLRQxuxQvS5KkS2tUAX7jbEz2/GNiO
-	iYTbZBod+jeEQKCCaKzeOW/I6z6KCVWj9HZLMX2xi7Ud9ccYcgLnmXHQYRTiMrw=
-X-Google-Smtp-Source: AGHT+IF6r3vNa5E6r8x7FtbP8W3yKXdO1fzktH/mCY0g6TJuRN3aLD1QXNmF0vDauUcI5P4CHml2bQ==
-X-Received: by 2002:a05:6a00:2301:b0:744:a240:fb1b with SMTP id d2e1a72fcca58-747bdd02e5fmr13050309b3a.5.1748754853400;
-        Sat, 31 May 2025 22:14:13 -0700 (PDT)
-Received: from thinkpad ([120.56.205.120])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afe96852sm5424190b3a.9.2025.05.31.22.14.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 May 2025 22:14:12 -0700 (PDT)
-Date: Sun, 1 Jun 2025 10:44:07 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
-Subject: Re: [PATCH v3 1/3] dt-bindings: PCI: qcom: Move phy, wake & reset
- gpio's to root port
-Message-ID: <dwxdtigcj7jwy4gyiwnwkzxoshvisrocxbz2sfywofcoia3tdf@tq45ajnuctyj>
-References: <20250419-perst-v3-0-1afec3c4ea62@oss.qualcomm.com>
- <20250419-perst-v3-1-1afec3c4ea62@oss.qualcomm.com>
+        d=1e100.net; s=20230601; t=1748755653; x=1749360453;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xhaz7c8Ohx3uimT7eQ+45HbdR02cDIa2AQKiCPMYoL4=;
+        b=IGKLLGMT6+C/GN5SAxwrnEYJz0lPPYBid/FuT/yifvqKqAokkfo7Pt6hjeCyCsyLFi
+         IIELWG6M3JnQYWZmBitTYcWkcuk5qFqIDmg95QmljJCQ/t4M8qpVnw7CpzFZf6mvDwbw
+         3UCKNqeioo6Zdbe1N3PeotxsgClj4JBUzP6nXh6aXGFDCkkIr6uZvX1EVKEtnyeA0sBs
+         F8o4u9FMz/4r9SS9kwgM8mmNlQwhvKGPg2n+I8tMzh52lLnsUiAU5r9IMHRSs407UG8R
+         1Bzqp7w3Fsbw2U8kS8/o5ga2stEROqPuijhHhEAncO/fTYp5FaM/VFVfz8T2Ka83VLdU
+         YZaw==
+X-Forwarded-Encrypted: i=1; AJvYcCVjucA/En+1ZUC1BsbUxVkquVRCCM+if0AlbNDfBeTRmlxMvaX5gz7sPB3qqCKXjmBQ89JIHR1o1CW/k3w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuLpk0zGCXrqegWjxwLPpJen3UoTjAECs6bK/dGvZjo8sbZMl4
+	CRTFLq5trWEP3yB+XVOLRCtW/PecwYlnnNjjYS8z7MJStlQFI+vmOqmAhYdMWpkzHwzAzzLPlj9
+	600RhOzUuEdfdnKUDSoLJWISdppC/ZjEvk3LcaB17Dbet6l5iTM2/vz7/ec4=
+X-Google-Smtp-Source: AGHT+IGi/gyEf4DMw+FzEMKQjOH4vXvqvVJzPKkapkIP5lPSMqoB4BRhEHNI9ye2b5BSP43oLhamCJ74rttIpVjQ/b9SDde+QdBs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250419-perst-v3-1-1afec3c4ea62@oss.qualcomm.com>
+X-Received: by 2002:a05:6e02:16c7:b0:3dc:868e:dae7 with SMTP id
+ e9e14a558f8ab-3dda33d3149mr32072895ab.15.1748755653503; Sat, 31 May 2025
+ 22:27:33 -0700 (PDT)
+Date: Sat, 31 May 2025 22:27:33 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <683be4c5.a00a0220.d8eae.0028.GAE@google.com>
+Subject: [syzbot] [dri?] possible deadlock in drm_mode_setcrtc
+From: syzbot <syzbot+9f17e6387907dc224b18@syzkaller.appspotmail.com>
+To: airlied@gmail.com, dri-devel@lists.freedesktop.org, 
+	hamohammed.sa@gmail.com, linux-kernel@vger.kernel.org, 
+	louis.chauvet@bootlin.com, maarten.lankhorst@linux.intel.com, 
+	melissa.srw@gmail.com, mripard@kernel.org, simona@ffwll.ch, 
+	syzkaller-bugs@googlegroups.com, tzimmermann@suse.de
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Apr 19, 2025 at 10:49:24AM +0530, Krishna Chaitanya Chundru wrote:
-> Move the phy, phy-names, wake-gpio's to the pcie root port node instead of
-> the bridge node, as agreed upon in multiple places one instance is[1].
+Hello,
 
-s/instead of the bridge node/from host bridge node/g
+syzbot found the following issue on:
 
-> 
-> Update the qcom,pcie-common.yaml to include the phy, phy-names, and
-> wake-gpios properties in the root port node. There is already reset-gpios
-> defined for PERST# in pci-bus-common.yaml, start using that property
-> instead of perst-gpio.
-> 
-> For backward compatibility, do not remove any existing properties in the
-> bridge node.
+HEAD commit:    d7fa1af5b33e Merge branch 'for-next/core' into for-kernelci
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=10597170580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=89c13de706fbf07a
+dashboard link: https://syzkaller.appspot.com/bug?extid=9f17e6387907dc224b18
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+userspace arch: arm64
 
-... Hence mark them as 'deprecated'.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-> 
-> [1] https://lore.kernel.org/linux-pci/20241211192014.GA3302752@bhelgaas/
-> 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->  .../devicetree/bindings/pci/qcom,pcie-common.yaml  | 36 ++++++++++++++++++++--
->  .../devicetree/bindings/pci/qcom,pcie-sc7280.yaml  | 16 +++++++---
->  2 files changed, 46 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-> index 0480c58f7d998adbac4c6de20cdaec945b3bab21..e5f60faa18ad68a29900a66fbfcba3d4f8e88e7b 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-> @@ -51,10 +51,18 @@ properties:
->  
->    phys:
->      maxItems: 1
-> +    deprecated: true
-> +    description:
-> +      This property is deprecated, instead of referencing this property from
-> +      the controller node, use the property from the PCIe root port node.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/da97ad659b2c/disk-d7fa1af5.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/659e123552a8/vmlinux-d7fa1af5.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/6ec5dbf4643e/Image-d7fa1af5.gz.xz
 
-s/controller/host bridge
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+9f17e6387907dc224b18@syzkaller.appspotmail.com
 
-Here and below.
+======================================================
+WARNING: possible circular locking dependency detected
+6.15.0-rc7-syzkaller-gd7fa1af5b33e #0 Not tainted
+------------------------------------------------------
+syz.0.268/7988 is trying to acquire lock:
+ffff0000d5c9c5d0 (&mm->mmap_lock){++++}-{4:4}, at: __might_fault+0x9c/0x124 mm/memory.c:7150
 
->  
->    phy-names:
->      items:
->        - const: pciephy
-> +    deprecated: true
-> +    description:
-> +      Phandle to the register map node. This property is deprecated, and not
-> +      required to add in the root port also, as the root port has only one phy.
->  
->    power-domains:
->      maxItems: 1
-> @@ -71,12 +79,18 @@ properties:
->      maxItems: 12
->  
->    perst-gpios:
-> -    description: GPIO controlled connection to PERST# signal
-> +    description: GPIO controlled connection to PERST# signal. This property is
-> +      deprecated, instead of referencing this property from the controller node,
-> +      use the reset-gpios property from the root port node.
->      maxItems: 1
-> +    deprecated: true
->  
->    wake-gpios:
-> -    description: GPIO controlled connection to WAKE# signal
-> +    description: GPIO controlled connection to WAKE# signal. This property is
-> +      deprecated, instead of referencing this property from the controller node,
-> +      use the property from the PCIe root port node.
->      maxItems: 1
-> +    deprecated: true
->  
->    vddpe-3v3-supply:
->      description: PCIe endpoint power supply
-> @@ -85,6 +99,24 @@ properties:
->    opp-table:
->      type: object
->  
-> +patternProperties:
-> +  "^pcie@":
-> +    type: object
-> +    $ref: /schemas/pci/pci-pci-bridge.yaml#
-> +
-> +    properties:
-> +      reg:
-> +        maxItems: 1
-> +
-> +      phys:
-> +        maxItems: 1
-> +
-> +      wake-gpios:
-> +        description: GPIO controlled connection to WAKE# signal
-> +        maxItems: 1
+but task is already holding lock:
+ffff80009ce07948 (crtc_ww_class_mutex){+.+.}-{4:4}, at: drm_mode_setcrtc+0x3e4/0x182c drivers/gpu/drm/drm_crtc.c:730
 
-Shouldn't 'wake-gpios' be part of the pci-bus-common.yaml?
+which lock already depends on the new lock.
 
-- Mani
 
--- 
-மணிவண்ணன் சதாசிவம்
+the existing dependency chain (in reverse order) is:
+
+-> #7 (crtc_ww_class_mutex){+.+.}-{4:4}:
+       ww_acquire_init include/linux/ww_mutex.h:162 [inline]
+       drm_modeset_acquire_init+0x1d8/0x374 drivers/gpu/drm/drm_modeset_lock.c:250
+       drmm_mode_config_init+0xb0c/0x10d8 drivers/gpu/drm/drm_mode_config.c:462
+       vkms_modeset_init drivers/gpu/drm/vkms/vkms_drv.c:146 [inline]
+       vkms_create drivers/gpu/drm/vkms/vkms_drv.c:207 [inline]
+       vkms_init+0x2c0/0x5ac drivers/gpu/drm/vkms/vkms_drv.c:242
+       do_one_initcall+0x250/0x990 init/main.c:1257
+       do_initcall_level+0x154/0x214 init/main.c:1319
+       do_initcalls+0x84/0xf4 init/main.c:1335
+       do_basic_setup+0x8c/0xa0 init/main.c:1354
+       kernel_init_freeable+0x2dc/0x444 init/main.c:1567
+       kernel_init+0x24/0x1dc init/main.c:1457
+       ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
+
+-> #6 (crtc_ww_class_acquire){+.+.}-{0:0}:
+       ww_acquire_init include/linux/ww_mutex.h:161 [inline]
+       drm_modeset_acquire_init+0x1b8/0x374 drivers/gpu/drm/drm_modeset_lock.c:250
+       drm_client_modeset_commit_atomic+0xcc/0x6ac drivers/gpu/drm/drm_client_modeset.c:1018
+       drm_client_modeset_commit_locked+0xd0/0x4a0 drivers/gpu/drm/drm_client_modeset.c:1182
+       drm_client_modeset_commit+0x50/0x7c drivers/gpu/drm/drm_client_modeset.c:1208
+       __drm_fb_helper_restore_fbdev_mode_unlocked+0x94/0x198 drivers/gpu/drm/drm_fb_helper.c:237
+       drm_fb_helper_set_par+0xa4/0x108 drivers/gpu/drm/drm_fb_helper.c:1359
+       fbcon_init+0xe4c/0x1d18 drivers/video/fbdev/core/fbcon.c:1112
+       visual_init+0x27c/0x540 drivers/tty/vt/vt.c:1011
+       do_bind_con_driver+0x7b8/0xdd8 drivers/tty/vt/vt.c:3831
+       do_take_over_console+0x824/0x97c drivers/tty/vt/vt.c:4397
+       do_fbcon_takeover+0x158/0x25c drivers/video/fbdev/core/fbcon.c:548
+       do_fb_registered drivers/video/fbdev/core/fbcon.c:2989 [inline]
+       fbcon_fb_registered+0x354/0x4c8 drivers/video/fbdev/core/fbcon.c:3009
+       do_register_framebuffer drivers/video/fbdev/core/fbmem.c:449 [inline]
+       register_framebuffer+0x44c/0x5ec drivers/video/fbdev/core/fbmem.c:515
+       __drm_fb_helper_initial_config_and_unlock+0x103c/0x159c drivers/gpu/drm/drm_fb_helper.c:1851
+       drm_fb_helper_initial_config+0x3c/0x58 drivers/gpu/drm/drm_fb_helper.c:1916
+       drm_fbdev_client_hotplug+0x154/0x22c drivers/gpu/drm/clients/drm_fbdev_client.c:52
+       drm_client_register+0x13c/0x1d4 drivers/gpu/drm/drm_client.c:140
+       drm_fbdev_client_setup+0x194/0x3d0 drivers/gpu/drm/clients/drm_fbdev_client.c:159
+       drm_client_setup+0x78/0x140 drivers/gpu/drm/clients/drm_client_setup.c:39
+       vkms_create drivers/gpu/drm/vkms/vkms_drv.c:218 [inline]
+       vkms_init+0x4b8/0x5ac drivers/gpu/drm/vkms/vkms_drv.c:242
+       do_one_initcall+0x250/0x990 init/main.c:1257
+       do_initcall_level+0x154/0x214 init/main.c:1319
+       do_initcalls+0x84/0xf4 init/main.c:1335
+       do_basic_setup+0x8c/0xa0 init/main.c:1354
+       kernel_init_freeable+0x2dc/0x444 init/main.c:1567
+       kernel_init+0x24/0x1dc init/main.c:1457
+       ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
+
+-> #5 (&client->modeset_mutex){+.+.}-{4:4}:
+       __mutex_lock_common+0x1d0/0x2190 kernel/locking/mutex.c:601
+       __mutex_lock kernel/locking/mutex.c:746 [inline]
+       mutex_lock_nested+0x2c/0x38 kernel/locking/mutex.c:798
+       drm_client_modeset_probe+0x2f0/0x4e88 drivers/gpu/drm/drm_client_modeset.c:843
+       __drm_fb_helper_initial_config_and_unlock+0xf0/0x159c drivers/gpu/drm/drm_fb_helper.c:1828
+       drm_fb_helper_initial_config+0x3c/0x58 drivers/gpu/drm/drm_fb_helper.c:1916
+       drm_fbdev_client_hotplug+0x154/0x22c drivers/gpu/drm/clients/drm_fbdev_client.c:52
+       drm_client_register+0x13c/0x1d4 drivers/gpu/drm/drm_client.c:140
+       drm_fbdev_client_setup+0x194/0x3d0 drivers/gpu/drm/clients/drm_fbdev_client.c:159
+       drm_client_setup+0x78/0x140 drivers/gpu/drm/clients/drm_client_setup.c:39
+       vkms_create drivers/gpu/drm/vkms/vkms_drv.c:218 [inline]
+       vkms_init+0x4b8/0x5ac drivers/gpu/drm/vkms/vkms_drv.c:242
+       do_one_initcall+0x250/0x990 init/main.c:1257
+       do_initcall_level+0x154/0x214 init/main.c:1319
+       do_initcalls+0x84/0xf4 init/main.c:1335
+       do_basic_setup+0x8c/0xa0 init/main.c:1354
+       kernel_init_freeable+0x2dc/0x444 init/main.c:1567
+       kernel_init+0x24/0x1dc init/main.c:1457
+       ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
+
+-> #4 (&helper->lock){+.+.}-{4:4}:
+       __mutex_lock_common+0x1d0/0x2190 kernel/locking/mutex.c:601
+       __mutex_lock kernel/locking/mutex.c:746 [inline]
+       mutex_lock_nested+0x2c/0x38 kernel/locking/mutex.c:798
+       __drm_fb_helper_restore_fbdev_mode_unlocked+0x74/0x198 drivers/gpu/drm/drm_fb_helper.c:228
+       drm_fb_helper_set_par+0xa4/0x108 drivers/gpu/drm/drm_fb_helper.c:1359
+       fbcon_init+0xe4c/0x1d18 drivers/video/fbdev/core/fbcon.c:1112
+       visual_init+0x27c/0x540 drivers/tty/vt/vt.c:1011
+       do_bind_con_driver+0x7b8/0xdd8 drivers/tty/vt/vt.c:3831
+       do_take_over_console+0x824/0x97c drivers/tty/vt/vt.c:4397
+       do_fbcon_takeover+0x158/0x25c drivers/video/fbdev/core/fbcon.c:548
+       do_fb_registered drivers/video/fbdev/core/fbcon.c:2989 [inline]
+       fbcon_fb_registered+0x354/0x4c8 drivers/video/fbdev/core/fbcon.c:3009
+       do_register_framebuffer drivers/video/fbdev/core/fbmem.c:449 [inline]
+       register_framebuffer+0x44c/0x5ec drivers/video/fbdev/core/fbmem.c:515
+       __drm_fb_helper_initial_config_and_unlock+0x103c/0x159c drivers/gpu/drm/drm_fb_helper.c:1851
+       drm_fb_helper_initial_config+0x3c/0x58 drivers/gpu/drm/drm_fb_helper.c:1916
+       drm_fbdev_client_hotplug+0x154/0x22c drivers/gpu/drm/clients/drm_fbdev_client.c:52
+       drm_client_register+0x13c/0x1d4 drivers/gpu/drm/drm_client.c:140
+       drm_fbdev_client_setup+0x194/0x3d0 drivers/gpu/drm/clients/drm_fbdev_client.c:159
+       drm_client_setup+0x78/0x140 drivers/gpu/drm/clients/drm_client_setup.c:39
+       vkms_create drivers/gpu/drm/vkms/vkms_drv.c:218 [inline]
+       vkms_init+0x4b8/0x5ac drivers/gpu/drm/vkms/vkms_drv.c:242
+       do_one_initcall+0x250/0x990 init/main.c:1257
+       do_initcall_level+0x154/0x214 init/main.c:1319
+       do_initcalls+0x84/0xf4 init/main.c:1335
+       do_basic_setup+0x8c/0xa0 init/main.c:1354
+       kernel_init_freeable+0x2dc/0x444 init/main.c:1567
+       kernel_init+0x24/0x1dc init/main.c:1457
+       ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
+
+-> #3 (console_lock){+.+.}-{0:0}:
+       console_lock+0x194/0x1ec kernel/printk/printk.c:2849
+       __bch2_print_string_as_lines fs/bcachefs/util.c:267 [inline]
+       bch2_print_string_as_lines+0x34/0x150 fs/bcachefs/util.c:286
+       bucket_ref_update_err+0x1c8/0x21c fs/bcachefs/buckets.c:417
+       bch2_bucket_ref_update+0x3d8/0x888 fs/bcachefs/buckets.c:-1
+       __mark_pointer fs/bcachefs/buckets.c:572 [inline]
+       bch2_trigger_pointer fs/bcachefs/buckets.c:618 [inline]
+       __trigger_extent+0xd90/0x35fc fs/bcachefs/buckets.c:763
+       bch2_trigger_extent+0x3e4/0x78c fs/bcachefs/buckets.c:881
+       run_one_trans_trigger fs/bcachefs/btree_trans_commit.c:-1 [inline]
+       bch2_trans_commit_run_triggers fs/bcachefs/btree_trans_commit.c:550 [inline]
+       __bch2_trans_commit+0x7e8/0x62d0 fs/bcachefs/btree_trans_commit.c:990
+       bch2_trans_commit fs/bcachefs/btree_update.h:195 [inline]
+       bch2_extent_update+0x2d8/0x7e8 fs/bcachefs/io_write.c:353
+       bch2_fpunch_at+0x4dc/0x98c fs/bcachefs/io_misc.c:187
+       __bchfs_fallocate+0xe80/0x1080 fs/bcachefs/fs-io.c:749
+       bchfs_fallocate+0x28c/0x538 fs/bcachefs/fs-io.c:789
+       bch2_fallocate_dispatch+0x344/0x4e0 fs/bcachefs/fs-io.c:836
+       vfs_fallocate+0x5cc/0x73c fs/open.c:338
+       ioctl_preallocate fs/ioctl.c:290 [inline]
+       file_ioctl fs/ioctl.c:-1 [inline]
+       do_vfs_ioctl+0x1d4c/0x2218 fs/ioctl.c:885
+       __do_sys_ioctl fs/ioctl.c:904 [inline]
+       __se_sys_ioctl fs/ioctl.c:892 [inline]
+       __arm64_sys_ioctl+0xe4/0x1c4 fs/ioctl.c:892
+       __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+       invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
+       el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
+       do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
+       el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
+       el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
+       el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+
+-> #2 (bcachefs_btree){+.+.}-{0:0}:
+       trans_set_locked+0x94/0x200 fs/bcachefs/btree_locking.h:198
+       bch2_trans_begin+0x6f8/0xa40 fs/bcachefs/btree_iter.c:3288
+       bch2_read_err_msg_trans+0x64/0x298 fs/bcachefs/io_read.c:346
+       __bch2_read_extent+0x21fc/0x3694 fs/bcachefs/io_read.c:975
+       bch2_read_extent fs/bcachefs/io_read.h:140 [inline]
+       bchfs_read+0x1178/0x17dc fs/bcachefs/fs-io-buffered.c:226
+       bch2_read_single_folio+0x498/0x6e4 fs/bcachefs/fs-io-buffered.c:360
+       bch2_read_folio+0x40/0x84 fs/bcachefs/fs-io-buffered.c:378
+       filemap_read_folio+0xec/0x2f8 mm/filemap.c:2401
+       filemap_fault+0xd48/0x1278 mm/filemap.c:3495
+       bch2_page_fault+0x2cc/0x700 fs/bcachefs/fs-io-pagecache.c:594
+       __do_fault+0xf8/0x498 mm/memory.c:5098
+       do_shared_fault mm/memory.c:5582 [inline]
+       do_fault mm/memory.c:5656 [inline]
+       do_pte_missing mm/memory.c:4160 [inline]
+       handle_pte_fault mm/memory.c:5997 [inline]
+       __handle_mm_fault mm/memory.c:6140 [inline]
+       handle_mm_fault+0x1a08/0x4d18 mm/memory.c:6309
+       do_page_fault+0x598/0x1554 arch/arm64/mm/fault.c:690
+       do_translation_fault+0xc4/0x114 arch/arm64/mm/fault.c:783
+       do_mem_abort+0x70/0x194 arch/arm64/mm/fault.c:919
+       el0_da+0x64/0x160 arch/arm64/kernel/entry-common.c:627
+       el0t_64_sync_handler+0x84/0x108 arch/arm64/kernel/entry-common.c:789
+       el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+
+-> #1 (mapping.invalidate_lock#3){.+.+}-{4:4}:
+       down_read+0x58/0x2f8 kernel/locking/rwsem.c:1524
+       filemap_invalidate_lock_shared include/linux/fs.h:922 [inline]
+       filemap_fault+0x564/0x1278 mm/filemap.c:3391
+       bch2_page_fault+0x2cc/0x700 fs/bcachefs/fs-io-pagecache.c:594
+       __do_fault+0xf8/0x498 mm/memory.c:5098
+       do_read_fault mm/memory.c:5518 [inline]
+       do_fault mm/memory.c:5652 [inline]
+       do_pte_missing mm/memory.c:4160 [inline]
+       handle_pte_fault mm/memory.c:5997 [inline]
+       __handle_mm_fault mm/memory.c:6140 [inline]
+       handle_mm_fault+0x2cb0/0x4d18 mm/memory.c:6309
+       faultin_page mm/gup.c:1193 [inline]
+       __get_user_pages+0x1dd4/0x30d8 mm/gup.c:1491
+       populate_vma_page_range+0x218/0x2e8 mm/gup.c:1929
+       __mm_populate+0x208/0x330 mm/gup.c:2032
+       mm_populate include/linux/mm.h:3487 [inline]
+       vm_mmap_pgoff+0x378/0x43c mm/util.c:584
+       ksys_mmap_pgoff+0x394/0x5b8 mm/mmap.c:607
+       __do_sys_mmap arch/arm64/kernel/sys.c:28 [inline]
+       __se_sys_mmap arch/arm64/kernel/sys.c:21 [inline]
+       __arm64_sys_mmap+0xf8/0x110 arch/arm64/kernel/sys.c:21
+       __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+       invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
+       el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
+       do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
+       el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
+       el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
+       el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+
+-> #0 (&mm->mmap_lock){++++}-{4:4}:
+       check_prev_add kernel/locking/lockdep.c:3166 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
+       validate_chain kernel/locking/lockdep.c:3909 [inline]
+       __lock_acquire+0x1728/0x3058 kernel/locking/lockdep.c:5235
+       lock_acquire+0x14c/0x2e0 kernel/locking/lockdep.c:5866
+       __might_fault+0xc4/0x124 mm/memory.c:7151
+       drm_mode_setcrtc+0xdc0/0x182c drivers/gpu/drm/drm_crtc.c:840
+       drm_ioctl_kernel+0x238/0x310 drivers/gpu/drm/drm_ioctl.c:796
+       drm_ioctl+0x65c/0xa5c drivers/gpu/drm/drm_ioctl.c:893
+       vfs_ioctl fs/ioctl.c:51 [inline]
+       __do_sys_ioctl fs/ioctl.c:906 [inline]
+       __se_sys_ioctl fs/ioctl.c:892 [inline]
+       __arm64_sys_ioctl+0x14c/0x1c4 fs/ioctl.c:892
+       __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+       invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
+       el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
+       do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
+       el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
+       el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
+       el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+
+other info that might help us debug this:
+
+Chain exists of:
+  &mm->mmap_lock --> crtc_ww_class_acquire --> crtc_ww_class_mutex
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(crtc_ww_class_mutex);
+                               lock(crtc_ww_class_acquire);
+                               lock(crtc_ww_class_mutex);
+  rlock(&mm->mmap_lock);
+
+ *** DEADLOCK ***
+
+2 locks held by syz.0.268/7988:
+ #0: ffff80009ce07920 (crtc_ww_class_acquire){+.+.}-{0:0}, at: drm_mode_setcrtc+0x3e4/0x182c drivers/gpu/drm/drm_crtc.c:730
+ #1: ffff80009ce07948 (crtc_ww_class_mutex){+.+.}-{4:4}, at: drm_mode_setcrtc+0x3e4/0x182c drivers/gpu/drm/drm_crtc.c:730
+
+stack backtrace:
+CPU: 1 UID: 0 PID: 7988 Comm: syz.0.268 Not tainted 6.15.0-rc7-syzkaller-gd7fa1af5b33e #0 PREEMPT 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Call trace:
+ show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:466 (C)
+ __dump_stack+0x30/0x40 lib/dump_stack.c:94
+ dump_stack_lvl+0xd8/0x12c lib/dump_stack.c:120
+ dump_stack+0x1c/0x28 lib/dump_stack.c:129
+ print_circular_bug+0x324/0x32c kernel/locking/lockdep.c:2079
+ check_noncircular+0x154/0x174 kernel/locking/lockdep.c:2211
+ check_prev_add kernel/locking/lockdep.c:3166 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3285 [inline]
+ validate_chain kernel/locking/lockdep.c:3909 [inline]
+ __lock_acquire+0x1728/0x3058 kernel/locking/lockdep.c:5235
+ lock_acquire+0x14c/0x2e0 kernel/locking/lockdep.c:5866
+ __might_fault+0xc4/0x124 mm/memory.c:7151
+ drm_mode_setcrtc+0xdc0/0x182c drivers/gpu/drm/drm_crtc.c:840
+ drm_ioctl_kernel+0x238/0x310 drivers/gpu/drm/drm_ioctl.c:796
+ drm_ioctl+0x65c/0xa5c drivers/gpu/drm/drm_ioctl.c:893
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl fs/ioctl.c:892 [inline]
+ __arm64_sys_ioctl+0x14c/0x1c4 fs/ioctl.c:892
+ __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+ invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
+ el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
+ do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
+ el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
+ el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
+ el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
