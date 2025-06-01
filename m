@@ -1,152 +1,63 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED0A1BC2A;
-	Sun,  1 Jun 2025 19:27:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D74F9C1
+	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 19:32:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748806043; cv=none; b=elvbgK54EaCNZ+SUpXryKX3eLJXs3jpnxhCHtNv2m86PtWEsnQ/qNcj+Yw1EGaP2qvM+3VWFvg8xFI8oCd96zKT6GWh7fBN0QQkTss7gO8Gfk14uE1jefhm0XzmdIE4yj3/bweu64o6FY1rh9xaEXkfWM5RUMxnAvxE3BXlGW6E=
+	t=1748806328; cv=none; b=rwx/eM3cOn0K/yHA7yfvXErmL8zQCVDzIWnjLWN4+cOFCgXarH5FhsbB27V7s6PJZbZ/9SPreNirkikna4gAKoJIW/mAzOidB4FA/hZUBFYDBiE6vLGfttUltCaREGsZowqz38/O4V+uZJ/KPVEJsYGFf8EDoyBGG+/zw0qQOk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748806043; c=relaxed/simple;
-	bh=ScLkdUn4PMY6wgYArU7L6vbvveEf7NzRCheQBOeVmFw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CGX6aIPmN5ikm52ypeKzo/dm1faO6IniHqIWUKkAX70839K97vlCHFbnQNrVNZOgqMV2MhCSqIuXpcDXlcr0/Z0mTI393clXpkDThK8I+DgxuiD9sz2M0cDHNxG8w1hLQ/rVIkmN2mUN6YhQ7jMfzR4/4zScu9y4D/kwScJEVVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IniqD/X9; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748806328; c=relaxed/simple;
+	bh=gpvzqNklNb8nCNrLYT2pUjeONmaSUhjAguqAQr+N9k8=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=DlX1XFQkqLTqUjUZeHTHddf3JI3vU3OHmjd+rkEOsX6oV3bcoVbnjyfWaAbVH6UgYZMlTTne5SnQYmYGfclUaxRmhxPLXt1SOV9Z/jOyLf1QlULkAuejPI64Itqqwu34h2kmsyzfTQMBDWVsBFQ9mbI6hdeAt02lisZsSNGjNog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M/V7yqIx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IniqD/X9"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ad883afdf0cso714940766b.0;
-        Sun, 01 Jun 2025 12:27:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748806040; x=1749410840; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jc/k+pCtYU6pJW7Wb+/1+zZ1iirP7vqOl4NvXjjQC0s=;
-        b=IniqD/X95HbctEkenWGYZF4HF8bb2Wa9zY0ZE3NWxDT0MusbNrPXW1pnXNK/R676Kq
-         TiQ4TiXipuE5cw5LB8QBzPugG8VGrzA7a8g7FDYjcWMZtNQUJ46d2x0zVHzThAiuRF83
-         IHm1fZenRbCNAM/8WGJbKDhbXRPcFFuF1X3WEmIzCbxxUlkK8SduwsHrgdEovmXUk3d+
-         QMfU44SonFtORIDVDWuF1LgRPv2a9CTrRM90znQfUOgQr5iUOVa/Iw5kg0IDaCxy3DS5
-         ejWFuYSy2vznL59Jlp3TptotrDc1V3f6AaGv1U5MSnU53LT3ifSOy5gxt5m8OPUJFNxv
-         VJ8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748806040; x=1749410840;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jc/k+pCtYU6pJW7Wb+/1+zZ1iirP7vqOl4NvXjjQC0s=;
-        b=UqPZrnKcy5gMgj5I9wEm1lK4itxxWbld+pr9lDqdqwlJ4vvk0M4rw0eUt5zDU7skTK
-         EfA+ZlzVmy7Px+vu0t8C14PkL1e/YyW9yTizUPw/5V/AdFkvFYaKD+NTvVEjbjlDSnI2
-         7rej+wmAlvtPW+m1vOE/0/PMHIFtNkEVMYQEu1/nA8t2snXF/vpmbt13TMwwa4SFC2Va
-         bOX66084h/NtQacw8BKLd1cMvifny/dlm7wzQ02dg15sqlH7nLMo2n1/yXzCD6pOFh7p
-         9ban8z18rpS1gdqY5MXi2xMum57kHJS8msgJMaof18/cXsb0MaMWsyhS5cehjr91OQDz
-         6eNg==
-X-Forwarded-Encrypted: i=1; AJvYcCVz0uY1V9Owo/+hP4wIgjKfTDJeT4M3CeFvtsxmfz9bQoyOm0/mtJ5BiuzbbsgE59RtcewJR7VlxXo=@vger.kernel.org, AJvYcCWrh6noaxrblxFDbFghhfFZ77XYmUjs9bmt22qCVh807bKVHkChQCaFKojyqaHX3npZoysM2XjJlHnq@vger.kernel.org, AJvYcCWzGSmTTm0F3RqBNAeVI5Fm9eC5ao+5gs0bzODDCp6AiU6euuijIeV15/su3lfQZW/Jt3ST/tGMIPwjL+iL@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZrkyDh02sQ6C2QtQN8ZEGDPFkL1m2SSjGMWbfRsgK5YRliInQ
-	utwNlie+eYeJUzWBUJ8rjwiicigN2aqURAIHFSm4vFvS4JsDAeT7HOkwqyVZ42JPEzSc23Rqs2+
-	AUfskxGN4mDhGvTLmTxbZfyx6XKb7wltH+gwU
-X-Gm-Gg: ASbGnctuoiE09w9m2+tSlMzJtcflYkLTyKiEep15EVGuziWDzrm8+Z1+zUSloPSGsbz
-	2gP+ksYK5V4BBd+yC/Oq+K4SIhUgifjU3xMfN11RJ8ivqNU0ZjL0UzF1gPiomuwUfuf56Cx1H25
-	4lDmtpVcWxMEsQfSdKOALaZzeOMcoVYMjA
-X-Google-Smtp-Source: AGHT+IF5k4C0Bcd/ybdwcDgzNvrtEuVO9s6UNeWqrxE1lZmbP2mEABJ4x2uUF7W2NDX83BWL074nNz2nhmj1l9D+9sw=
-X-Received: by 2002:a17:906:a996:b0:ad8:9909:20aa with SMTP id
- a640c23a62f3a-adb36bee594mr719706466b.40.1748806039692; Sun, 01 Jun 2025
- 12:27:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M/V7yqIx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D938BC4CEE7;
+	Sun,  1 Jun 2025 19:32:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748806327;
+	bh=gpvzqNklNb8nCNrLYT2pUjeONmaSUhjAguqAQr+N9k8=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=M/V7yqIxyS4UPlSjGPwjpiz+tgGipEBaNK2czNFMnDjqE715ix0rpqPFq41mKYieh
+	 1pGT3JybbQpkOw/eVu9ZdAN8I3os30pSoGRjhcaG6E3qko+zfTMDDtuCiC9Os2nj6R
+	 OXG2S6LH0OP6vCk1KLZ9cR+m07g5mcgVmAvgSKpE7iYu3QzSnSt3cs9PFkP7Ejbwky
+	 cZmADn6KBUb3+MBt58fZPPEVValcT/iRQKchvD0UfgzQR5xNKblxUpzllMvHwcfJhL
+	 5jme3J8J1aI30VB2HZIA8wituSzBXbU5MicR/QKHL+dWpwZoMnuOLxG+CWwBvjxLCP
+	 8PeqPmSM1gIJA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB2BA380AA7C;
+	Sun,  1 Jun 2025 19:32:41 +0000 (UTC)
+Subject: Re: [GIT PULL] hardening fixes for v6.16-rc1 (take 2)
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <202506010901.522039FEAC@keescook>
+References: <202506010901.522039FEAC@keescook>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <202506010901.522039FEAC@keescook>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.16-rc1-fix1-take2
+X-PR-Tracked-Commit-Id: f39f18f3c3531aa802b58a20d39d96e82eb96c14
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: cd2e103d57e5615f9bb027d772f93b9efd567224
+Message-Id: <174880636043.488739.8459408347229112041.pr-tracker-bot@kernel.org>
+Date: Sun, 01 Jun 2025 19:32:40 +0000
+To: Kees Cook <kees@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>, Ingo Saitz <ingo@hannover.ccc.de>, Kees Cook <kees@kernel.org>, kernel test robot <oliver.sang@intel.com>, Marco Elver <elver@google.com>, Nathan Chancellor <nathan@kernel.org>, Thiago Jung Bauermann <thiago.bauermann@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250601172139.59156-1-l.rubusch@gmail.com> <20250601172139.59156-7-l.rubusch@gmail.com>
-In-Reply-To: <20250601172139.59156-7-l.rubusch@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sun, 1 Jun 2025 22:26:42 +0300
-X-Gm-Features: AX0GCFupdY86AmtyRSyHYdTfVMRHIiwnj_7rlmrr-KRB-HeB42H8neEe03J_my0
-Message-ID: <CAHp75Ve6nifph44F-_sOwqSBBy_Ay5BeH9QxWMmMUNR1N7wUzQ@mail.gmail.com>
-Subject: Re: [PATCH v4 06/11] iio: accel: adxl313: add basic interrupt
- handling for FIFO watermark
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com, 
-	andy@kernel.org, corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de, 
-	Michael.Hennerich@analog.com, bagasdotme@gmail.com, linux-iio@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jun 1, 2025 at 8:22=E2=80=AFPM Lothar Rubusch <l.rubusch@gmail.com>=
- wrote:
->
-> Prepare the interrupt handler. Add register entries to evaluate the
-> incoming interrupt. Add functions to clear status registers and reset the
-> FIFO.
->
-> Add FIFO watermark configuration and evaluation. Let a watermark to be
-> configured. Evaluate the interrupt accordingly. Read out the FIFO content
-> and push the values to the IIO channel.
+The pull request you sent on Sun, 1 Jun 2025 09:34:02 -0700:
 
-...
+> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.16-rc1-fix1-take2
 
-> +static int adxl313_set_watermark(struct iio_dev *indio_dev, unsigned int=
- value)
-> +{
-> +       struct adxl313_data *data =3D iio_priv(indio_dev);
-> +       const unsigned int fifo_mask =3D 0x1f, interrupt_mask =3D 0x02;
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/cd2e103d57e5615f9bb027d772f93b9efd567224
 
-GENMASK()
-BIT()
+Thank you!
 
-> +       int ret;
-> +
-> +       value =3D min(value, ADXL313_FIFO_SIZE - 1);
-> +
-> +       ret =3D regmap_update_bits(data->regmap, ADXL313_REG_FIFO_CTL,
-> +                                fifo_mask, value);
-> +       if (ret)
-> +               return ret;
-> +
-> +       data->watermark =3D value;
-> +
-> +       return regmap_update_bits(data->regmap, ADXL313_REG_INT_ENABLE,
-> +                                 interrupt_mask, ADXL313_INT_WATERMARK);
-> +}
-
-...
-
-> +static int adxl313_get_samples(struct adxl313_data *data)
-> +{
-> +       unsigned int regval =3D 0;
-
-Useless assignment.
-
-> +       int ret;
-> +
-> +       ret =3D regmap_read(data->regmap, ADXL313_REG_FIFO_STATUS, &regva=
-l);
-> +       if (ret)
-> +               return ret;
-> +
-> +       return FIELD_GET(ADXL313_REG_FIFO_STATUS_ENTRIES_MSK, regval);
-> +}
-
-...
-
-> +               ret =3D devm_request_threaded_irq(dev, irq, NULL,
-> +                                               &adxl313_irq_handler,
-> +                                               IRQF_SHARED | IRQF_ONESHO=
-T,
-> +                                               indio_dev->name, indio_de=
-v);
-> +               if (ret)
-> +                       return ret;
-
-Now I see the first user of 'irq'. Logically these two patches may not
-be split. Or split should be made differently, let's say IRQ type
-holding variable + switch case can go in the first preparatory patch
-(however it will make a little sense without real users, as it is/will
-be a dead code).
-
---=20
-With Best Regards,
-Andy Shevchenko
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
