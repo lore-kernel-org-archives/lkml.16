@@ -1,139 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0692A10957;
-	Sun,  1 Jun 2025 14:50:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2EA410957
+	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 14:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748789431; cv=none; b=YvrEeQ5YIAkYSxL1QCRtby17Mcfxe14qXbt9+GhWv616dt3PsOHfcQv24TUSW81ls+VmvfVujKKdW+FlYpwRJxT39XJOXQJml59mCRBbdORGvMVQGGYxC94CSvhcZBYZq5YfWWuygeVon4G+pWiAA2fd9j5gxWlSGX7PVvVjBR8=
+	t=1748789660; cv=none; b=PFInshVcLUMD6pCdpzHv4WwaWCfyk+I2JJSJoInR543n+noO5TbOgAZAqlfp3P8dq4O2fhXn083ydpeTDCCo8LS5k96nR6TiVGoRg9OcAyOOVeWcbGWceb2/GvcB8zROJICFJimElxwOXoZh/0R7HMMFmfik0mC3JRVxh5RMNLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748789431; c=relaxed/simple;
-	bh=ixaLK9WLy2mg4Der0wkQr0lj50YXHQCYJP5mQDMQsPo=;
+	s=arc-20240116; t=1748789660; c=relaxed/simple;
+	bh=pAsAKxToGmEVd3RIVnzdeeufEYuTCSyv5WEoqg6uhl8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cT2LawE8GOSI68ygY4EuZXRZpvf9QOtOiiRbTAILzhjD7izRQ1z29HKVGMhMCjzpAK7DvXGqVDT8zMWrUrgz+0ACZJSh9HJujVLDZkrMtxtVNs8LMVZCbHIiM2qInCEiMJ26KMpoHhr7YIdyRXKLLZ4vjFNadi1WQXLkavHOrbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n8267VD6; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=MWw+CvgFKuj1a9GMEjgj+dqV+lWy9lynNue/MG8c3QM2Itffs+3BUzJ5N6edItZ9LmchAaO9pNLpu2IVnhnCKM+UjN+CsAtQ6NhRQ929g1+1ym9t5fHv3yd8L5T+oXMNWUAsdztbPaUgr/ovk1GQYB0zEfO8v2pFpvUbvLjQqgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=c5w1BAxt; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n8267VD6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EB0AC4CEE7;
-	Sun,  1 Jun 2025 14:50:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748789430;
-	bh=ixaLK9WLy2mg4Der0wkQr0lj50YXHQCYJP5mQDMQsPo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=n8267VD6l0Hdov05vJEg+Y+QeLEiCiDc63+XSPyLjRrURLyEFd7hZuaZVP82F+jX/
-	 M95haVXVWkOs+yTXceBeYdPR4OG68bDCDTGG+l8+2Hi1tkLqM2wkveG44K1penUobi
-	 avUHWFfAyRWBanjtLVut076KC6Sh4GGzO+FB26WXePgf4SJDuppsC1d54Yk+9bNiff
-	 uwl+f+y2bu+4FG/KwIr5pcBdv2hLFHxQ0GLw0OCpHx6gF6xITFOrnz2uBZ33PTr5Np
-	 RqIbAkOlkub240lzvR3/g1a1FewX/u4L9nqrQwBU1s/8zCbBSbKxy9oz1U/2+QbP7w
-	 cumE8QqvDsiEg==
-Message-ID: <a126ee43-3e2e-4cbf-9c36-c41415df78af@kernel.org>
-Date: Sun, 1 Jun 2025 16:50:24 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="c5w1BAxt"
+Message-ID: <83244641-8fab-4f05-9d31-c5881fa1660c@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748789653;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lOAhBl1Qhlq6wH2PH80gzRHGRgdy1O7aBgxLtbf1Yvc=;
+	b=c5w1BAxtYORCvEZoUtLIKVfUN0MKQgkVrFsOrwv0Zm73CWxGdO/mJV3n1432IKIxiIh2KN
+	yBIDnMbDLwSonNWt0ItBnisw9me9S+Oz0nYupaVp09WJN3kzH1k7nn0QDRrkWk3YpHnDBz
+	Si22yGpyvte1D9UyxJX3dg/Nux+Kq4M=
+Date: Sun, 1 Jun 2025 16:53:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/8] ASoC: dt-bindings: qcom: Manage clock settings for
- ADSP solution
-To: Prasad Kumpatla <quic_pkumpatl@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Srinivas Kandagatla <srini@kernel.org>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
- kernel@oss.qualcomm.com, Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-References: <20250527111227.2318021-1-quic_pkumpatl@quicinc.com>
- <20250527111227.2318021-3-quic_pkumpatl@quicinc.com>
- <171b980d-9c50-4891-86dc-e30d712f5384@kernel.org>
- <13b9cbec-3d7a-4deb-b356-685e73fdf2f1@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <13b9cbec-3d7a-4deb-b356-685e73fdf2f1@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v4 0/5] Allow dyn MSI-X vector allocation of MANA
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>,
+ Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Bjorn Helgaas <bhelgaas@google.com>,
+ Rob Herring <robh@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=EF=BF=BD=7EDski?= <kw@linux.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+ Wei Liu <wei.liu@kernel.org>, Haiyang Zhang <haiyangz@microsoft.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Konstantin Taranov <kotaranov@microsoft.com>, Simon Horman
+ <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
+ Maxim Levitsky <mlevitsk@redhat.com>,
+ Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+ Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
+ linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
+ Shradha Gupta <shradhagupta@microsoft.com>
+References: <1748361453-25096-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <1748361453-25096-1-git-send-email-shradhagupta@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 01/06/2025 14:45, Prasad Kumpatla wrote:
->>>         properties:
->>>           clocks:
->>> -          maxItems: 1
->>> +          minItems: 1
->>> +          maxItems: 3
->>>           clock-names:
->>> -          items:
->>> -            - const: mclk
->>> +          oneOf:
->>> +            - items:   # for ADSP based platforms
->>> +                - const: mclk
->>> +                - const: macro
->>> +                - const: dcodec
->>> +            - items:   # for ADSP bypass based platforms
->>> +                - const: mclk
->>
->> This device always receives same amount of clocks. Hardware is not
->> different if you decide to not use ADSP.
-> for sc7280 clock handling only supports non-DSP based solution, macro
+在 2025/5/27 17:57, Shradha Gupta 写道:
+> In this patchset we want to enable the MANA driver to be able to
+> allocate MSI-X vectors in PCI dynamically.
+> 
+> The first patch exports pci_msix_prepare_desc() in PCI to be able to
+> correctly prepare descriptors for dynamically added MSI-X vectors.
+> 
+> The second patch adds the support of dynamic vector allocation in
+> pci-hyperv PCI controller by enabling the MSI_FLAG_PCI_MSIX_ALLOC_DYN
+> flag and using the pci_msix_prepare_desc() exported in first patch.
+> 
+> The third patch adds a detailed description of the irq_setup(), to
+> help understand the function design better.
+> 
+> The fourth patch is a preparation patch for mana changes to support
+> dynamic IRQ allocation. It contains changes in irq_setup() to allow
+> skipping first sibling CPU sets, in case certain IRQs are already
+> affinitized to them.
+> 
+> The fifth patch has the changes in MANA driver to be able to allocate
+> MSI-X vectors dynamically. If the support does not exist it defaults to
+> older behavior.
+> ---
+>   Change in v4
+>   * add a patch describing the functionality of irq_setup() through a
+>     comment
+>   * In irq_setup(), avoid using a label next_cpumask:
+>   * modify the changes in MANA patch about restructuring the error
+>     handling path in mana_gd_setup_dyn_irqs()
+>   * modify the mana_gd_setup_irqs() to simplify handling around
+>     start_irq_index
+>   * add warning if an invalid gic is returned
+>   * place the xa_destroy() cleanup in mana_gd_remove
+> ---
+>   Changes in v3
+>   * split the 3rd patch into preparation patch around irq_setup() and
+>     changes in mana driver to allow dynamic IRQ allocation
+>   * Add arm64 support for dynamic MSI-X allocation in pci_hyperv
+>     controller
+> ---
+>   Changes in v2
+>   * split the first patch into two(exporting the preapre_desc
+>     func and using the function and flag in pci-hyperv)
+>   * replace 'pci vectors' by 'MSI-X vectors'
+>   * Change the cover letter description to align with changes made
+> ---
+> 
+> Shradha Gupta (5):
+>    PCI/MSI: Export pci_msix_prepare_desc() for dynamic MSI-X allocations
+>    PCI: hv: Allow dynamic MSI-X vector allocation
+>    net: mana: explain irq_setup() algorithm
+>    net: mana: Allow irq_setup() to skip cpus for affinity
+>    net: mana: Allocate MSI-X vectors dynamically
 
-ONLY?
+In this patchset, base-commit seems missing.
 
-> and dcodec votes are placed using CPU-Powerdomains. Which are not under
-> clocking properties. In ADSP based platforms macro and dcodec votes 
-> should be placed from ADSP.>
+Please see this link:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.15#n868
 
-I don't understand this, that's barely a sentence. Anyway if that's
-ONLY, then seems pretty fixed and I don't get why you make it flexible.
+"
+When you open ``outgoing/0000-cover-letter.patch`` for editing, you will
+notice that it will have the ``base-commit:`` trailer at the very
+bottom, which provides the reviewer and the CI tools enough information
+to properly perform ``git am`` without worrying about conflicts::
+"
 
-Expressing clocks as CPU powerdomains is not really correct.
+When creating patches:
+"
+git format-patch --base=main origin/main
+"
 
+This will include a base-commit: line in each patch file:
 
+"
+base-commit: abcdef1234567890...
+"
 
-Best regards,
-Krzysztof
+This is useful when submitting patches to mailing lists or other tooling.
+
+Please follow the submitting-patches.rst to add base-commit.
+
+Best Regards,
+Zhu Yanjun
+
+> 
+>   .../net/ethernet/microsoft/mana/gdma_main.c   | 356 ++++++++++++++----
+>   drivers/pci/controller/pci-hyperv.c           |   5 +-
+>   drivers/pci/msi/irqdomain.c                   |   5 +-
+>   include/linux/msi.h                           |   2 +
+>   include/net/mana/gdma.h                       |   8 +-
+>   5 files changed, 293 insertions(+), 83 deletions(-)
+> 
+
