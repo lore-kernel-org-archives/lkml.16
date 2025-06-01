@@ -1,124 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0FBB28C5B0;
-	Sun,  1 Jun 2025 23:30:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B9F528C2C6
+	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 23:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748820651; cv=none; b=NCMDr4Bx4T6KvvBG1eKRHOT+QtZBRc4LLDoXz4L9kVZm2bHm4Se7XGfpA0EZRB5EDjKpx8KXlhPk8m0ee1hgbAgD4p8V5Oj11L7etesf+lYFQKzWAK7JFfuJ8DWtLede0u5nD6HiS+dfV066WuPMKQade1wgnTTHYgVKQxZ5qWk=
+	t=1748820651; cv=none; b=rIPt7tsNs0vrFP91erN9Lzro4xRdoSMOIy4ORsaJnzEWNL2VDa4YFVgujP4CViTFRCVRbUZ/ydccDU56IssjzrHL3LKGMxxw1B4G4gpx7JoL7SlqX5YX8SVp3dirgI452uJkVMtQG+nOPbEiNvSPSOmgatpU3deq/X3Jeu86bBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748820651; c=relaxed/simple;
-	bh=LVXBbKR8ncPzNFowKEp48fVuiS+MuCGt8umKkfuRD+M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U/3U8YLGykF/nWbdlNJ0xv6ru1Y/ky5xxBFnMh3Knx6ragC9Y4RAmIlTheuCOXo7RWCCJdWZpUF3OzImauBdOu9EhJYxV+mDSG2Sam5eDUkO4drBejKhoz7XxtEybYnzWk+6mC1FNx+NpeprKvU/tsPbY/7DCWCckMjDxHbA+VY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qrfTKczY; arc=none smtp.client-ip=10.30.226.201
+	bh=SSGlRVBX7Ip3ay6aSI5KJLngtv0nEq6HZf42gbzA32M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZO5gbEtmPGXzaWjcF633qNK+Ipn1t3eONMlz3SDZCst3vNUkbh98KYxB53RQX9IuaMdCzSb1yfE90JKy+vbQKGO/sFbSjgEI48XtK/iTbGaLqr+n/Nxciwszat8twKaBZB84IhHWXu/1EVYekwmHqwj1TsNd80fXvICo7qMeUOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=ALjex9gR; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qrfTKczY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60142C4CEE7;
-	Sun,  1 Jun 2025 23:30:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748820650;
-	bh=LVXBbKR8ncPzNFowKEp48fVuiS+MuCGt8umKkfuRD+M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qrfTKczYvLhl/EcmcApcJegXpw6sbKfe/mlUBX3G+1BDqA0Amecey1YohQGdWQJyD
-	 eCVFwvpigf4sK+ezNj8yDf8Vy1QiCPqcTh59rK75Z785lSR1vTO+EMhYkbzorm8va8
-	 4O1E6T5MHMV51mD/fqoH/xcWpdMQytrcITzpiwXAxw1OPoibYXgv4daoKzlpGgbM6D
-	 hLPN73P8w+iihV52g9Gq6YzoVzZYiuEV2LvFsYIimhmPNHRJshPZmWuhNg7hAtxTNT
-	 394Fq89rEZ0QY27K/vcqPZ3uDF4QUDY6Q2TNba8zx+zYOfa3VKJCmuSGykOiKpokJz
-	 QGYSykkDI7DgA==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Nas Chung <nas.chung@chipsnmedia.com>,
-	Sebastian Fricke <sebastian.fricke@collabora.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Sasha Levin <sashal@kernel.org>,
-	mchehab@kernel.org,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 028/102] media: uapi: v4l: Fix V4L2_TYPE_IS_OUTPUT condition
-Date: Sun,  1 Jun 2025 19:28:20 -0400
-Message-Id: <20250601232937.3510379-28-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250601232937.3510379-1-sashal@kernel.org>
-References: <20250601232937.3510379-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="ALjex9gR"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4947635914aso40355791cf.3
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Jun 2025 16:30:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1748820647; x=1749425447; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z3ahtq5iYBzerYLsn2L4RRjLdCR+uk5v7bMh9egaPjI=;
+        b=ALjex9gRMTmQ50it4soOyvAbAxZmVhMqeTenLVUSlJgmgg2i436msWqW7NPxB+PcGz
+         8E71fLpVjbn7fnG32k8Cd33Im37uQienEuVV5aZKfwwRJH/g2N4N0WSPUcHv/YJVB7Me
+         vUCq1fJJRACnOIOO82ys7g6agTDGMGelgnXRZMkBRCPcyTJgNNyyNPL4QORouDo0bsWf
+         LuiaONA3E5+LirJ8+frAHn94QnCaeSXPMS6UcWmmIxfgNPZMKmu1tTd1z2XgaaH2ZLfK
+         s+wdNie7dcETYVAw3m7HcYLpI70eH6OKE/gT4ftKWRzPf9MJRXa9tWRLAiVM0w8zarNq
+         p++Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748820647; x=1749425447;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z3ahtq5iYBzerYLsn2L4RRjLdCR+uk5v7bMh9egaPjI=;
+        b=no+3jOAPLfhmraJenrHvdN3LLnaGwVV+WzZLbBP2ptytYY/tM68Wor/IwObvfGMlNd
+         J/GTV9+n0F30LYL0cyQ4LNLMfJ3+IRJ2WQgE1n5RjRE31xvi2KNvIG1eCMXAQxqsdIrj
+         9W7whFMRlTZwV+Aenk9Y1gLCP0OXtNSgNiTsOPLAi6xu5jSOx2r4IHnv5q+5HJCEdTYd
+         2r+vpdnMqUWx1akAc4LVtfb1DzxN5Lo1gf4RJxLaFLzqzWIAs7zEeyTKvvaOy8oCPHZQ
+         7cdh9+OOE9tabz9Ne74oj3MYcEOAsqa5eHFFe7j1XYfN8BqfMpPQJO9pumiTENuRQM0o
+         0zIA==
+X-Forwarded-Encrypted: i=1; AJvYcCXO0fyHKczAtcwm0p27wbG/9sBMJiAC+09IVo2O523EUvIJjpQLzE2uC62YWuGP8bn5rJXaMbGZmrIngd8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/UoHxOMEaBXzGPIE/RDbNd5VpsvWSFoPrCvsjwzKGmEPJTV6L
+	6HWXxG3O27/MyiGiOkaOAAu9V/uQN/3xHrawC7Y9SSVkj9SCtg72PKAKJ9i9+mjGQ5Q=
+X-Gm-Gg: ASbGncsAw1wwaCGHuB3xoswxU1RIdNXCS5sDJj112q65ZC/+6QwkYSWy9cYzDc4Ile4
+	II4r0P1zJ+szjrai+ScCPTzQsaM+0qrpolIgN/EAzRpiJRJYYHVCU5bdyXszxq9Td6eEF3MrpTz
+	P9q8fRUVM+FS3+sjNPlSPNf6iXi/Ag5CZyJUoLcbNKcDGVUI9DKY4/YWb7viNfSdTanWx37vkMB
+	NIPJ/QoAWEAMOE9P/tf8HEPn8x1QRsxvMvO6MPu2qIdkPqJEMwMHD4MUBqRaxtSugW/xGPwPaF5
+	sdoQ1GZIncsd7yZcBKV4z7uT+kzRpEImtVDr6fOzXtCHrXkxPRjsCh3ie2zbis7HBkib6GPU+nH
+	EY6FYLeG4pttWsdfWBrBmrsY1FTGIIJA=
+X-Google-Smtp-Source: AGHT+IHAt46IPZ2ZNZ13vLsgj7LdizYMg33TCIokRzOtUXTMz4rVh+t4qoD51lnIbRNNJhpIDOFVlg==
+X-Received: by 2002:a05:620a:1a93:b0:7c5:49b7:237c with SMTP id af79cd13be357-7d0a1fb77c1mr1867411185a.27.1748820647265;
+        Sun, 01 Jun 2025 16:30:47 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fac6e00cebsm52506366d6.73.2025.06.01.16.30.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Jun 2025 16:30:46 -0700 (PDT)
+Date: Sun, 1 Jun 2025 19:30:44 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Alok Tiwari <alok.a.tiwari@oracle.com>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com, corbet@lwn.net,
+	linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, darren.kenny@oracle.com
+Subject: Re: [PATCH] Documentation: cxl: fix typos and improve clarity in
+ memory-devices.rst
+Message-ID: <aDzipGmldaeje43H@gourry-fedora-PF4VCD3F>
+References: <20250531075209.3334261-1-alok.a.tiwari@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14.9
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250531075209.3334261-1-alok.a.tiwari@oracle.com>
 
-From: Nas Chung <nas.chung@chipsnmedia.com>
+On Sat, May 31, 2025 at 12:51:58AM -0700, Alok Tiwari wrote:
+> This patch corrects several typographical issues and improves phrasing
+> in memory-devices.rst:
+> 
+> - Fixes duplicate word ("1 one") and adjusts phrasing for clarity.
+> - Adds missing hyphen in "on-device".
+> - Corrects "a give memory device" to "a given memory device".
+> - fix singular/plural "decoder resource" -> "decoder resources".
+> - Clarifies "spans to Host Bridges" -> "spans two Host Bridges".
+> 
+> These changes improve readability and accuracy of the documentation.
+> 
+> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+> ---
+>  Documentation/driver-api/cxl/memory-devices.rst | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
+> index d732c42526df..e9e2952a967d 100644
+> --- a/Documentation/driver-api/cxl/memory-devices.rst
+> +++ b/Documentation/driver-api/cxl/memory-devices.rst
+> @@ -29,8 +29,8 @@ Platform firmware enumerates a menu of interleave options at the "CXL root port"
+>  (Linux term for the top of the CXL decode topology). From there, PCIe topology
+>  dictates which endpoints can participate in which Host Bridge decode regimes.
+>  Each PCIe Switch in the path between the root and an endpoint introduces a point
+> -at which the interleave can be split. For example platform firmware may say at a
+> -given range only decodes to 1 one Host Bridge, but that Host Bridge may in turn
+> +at which the interleave can be split. For example, platform firmware may say at a
+                                                                                ^^^^
+If you wouldn't mind, can you also change:                           "at a"  - >  "a"
 
-[ Upstream commit f81f69a0e3da141bdd73a16b8676f4e542533d87 ]
+Otherwise
 
-V4L2_TYPE_IS_OUTPUT() returns true for V4L2_BUF_TYPE_VIDEO_OVERLAY
-which definitely belongs to CAPTURE.
-
-Signed-off-by: Nas Chung <nas.chung@chipsnmedia.com>
-Signed-off-by: Sebastian Fricke <sebastian.fricke@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
-
-**YES** This commit should be backported to stable kernel trees.
-**Detailed Analysis:** **1. Nature of the Bug:** The commit fixes a
-fundamental logic error in the `V4L2_TYPE_IS_OUTPUT` macro that has
-existed since 2012 (commit 607ca46e97a1b). The macro incorrectly
-classifies `V4L2_BUF_TYPE_VIDEO_OVERLAY` as an OUTPUT buffer type when
-it should be classified as a CAPTURE type. This is a clear logical bug
-in a core V4L2 API macro. **2. Code Impact Analysis:** The fix removes
-this line from the macro: ```c || (type) == V4L2_BUF_TYPE_VIDEO_OVERLAY
-``` My investigation shows the macro is used in critical V4L2 core
-functions, particularly in: - **Crop/Selection handling**
-(`drivers/media/v4l2-core/v4l2-ioctl.c:2517, 2547, 2597`): The macro
-determines whether to use `V4L2_SEL_TGT_COMPOSE` (for output) vs
-`V4L2_SEL_TGT_CROP` (for capture) targets - **Parameter handling**
-(`drivers/media/v4l2-core/v4l2-ioctl.c:2269`): Affects how output vs
-capture parameters are processed - **Buffer management** in videobuf2
-framework: Affects buffer direction logic **3. User Impact:**
-Applications using video overlay functionality have been subject to
-incorrect behavior where: - Overlay buffers were processed with output
-buffer logic instead of capture buffer logic - Wrong selection targets
-were used for crop operations on overlay devices - Parameter handling
-followed the wrong code paths **4. Risk Assessment:** - **Low regression
-risk**: The fix corrects clearly wrong behavior - there's no valid use
-case where VIDEO_OVERLAY should be treated as OUTPUT - **Contained
-scope**: Only affects the classification logic for one specific buffer
-type - **Clear correctness**: The fix aligns the code with the V4L2
-specification and logical expectations **5. Comparison with Similar
-Commits:** Looking at the historical commits provided, while they show
-refactoring and API improvements that were not backported, this commit
-fixes a fundamental logical bug in core API behavior, which is different
-from cosmetic or enhancement changes. **6. Backport Suitability:** This
-meets all stable backport criteria: - ✅ Fixes a clear bug affecting
-users - ✅ Small, contained change with minimal risk - ✅ No new features
-or architectural changes - ✅ Affects core V4L2 functionality that could
-cause incorrect application behavior - ✅ Logic error that has persisted
-for over a decade The fix should be backported to ensure VIDEO_OVERLAY
-applications work correctly across all supported kernel versions.
-
- include/uapi/linux/videodev2.h | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-index e7c4dce390074..8130b899bd1bc 100644
---- a/include/uapi/linux/videodev2.h
-+++ b/include/uapi/linux/videodev2.h
-@@ -164,7 +164,6 @@ enum v4l2_buf_type {
- #define V4L2_TYPE_IS_OUTPUT(type)				\
- 	((type) == V4L2_BUF_TYPE_VIDEO_OUTPUT			\
- 	 || (type) == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE		\
--	 || (type) == V4L2_BUF_TYPE_VIDEO_OVERLAY		\
- 	 || (type) == V4L2_BUF_TYPE_VIDEO_OUTPUT_OVERLAY	\
- 	 || (type) == V4L2_BUF_TYPE_VBI_OUTPUT			\
- 	 || (type) == V4L2_BUF_TYPE_SLICED_VBI_OUTPUT		\
--- 
-2.39.5
-
+Reviewed-by: Gregory Price <gourry@gourry.net>
