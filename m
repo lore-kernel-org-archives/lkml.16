@@ -1,164 +1,117 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EAFE1F09B4
-	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 17:22:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFD929D0E;
+	Sun,  1 Jun 2025 17:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748798543; cv=none; b=aqwnwohEn/ASH8oGGFi7VPeZV2MGrK5KWdgoV/s9bjBxEELUiJib+q2z2tfY/jJoegFQB5EwARiX/H7T3bcOmdS5PtQJHfX041NZ1XJIi0zAvvIKxf/KKVHTVbPEShXIU5+ocO5o0o/LhBQ9y3RrVsPznVNfUckL/wk8k6CmlFw=
+	t=1748798839; cv=none; b=FgpdceX/9gsymX3XtQdmNQ8hhSTCwLWVxOTGHJ40KmrBkGxxcGIgb0BiZ7Ii032qC6KNU6wG/FYhoXKYmZcyaHIxguqjp/k1bJrDCmZRkPivDGBwPp+3BtRrykm9lFDzHvu4QgqlwR/CtdDL0XIp6EtnjaVthqnSGVKUTdy3S6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748798543; c=relaxed/simple;
-	bh=XYtZ8hPVoS36618hvMJTxFasWcg1vgDTWrPXxNncnDY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C/efMdrhef0CHYj3LmpSNcU2efyyCZUWbDi97xAavi589xZTEqXROMqwl9fpsrzxe4y8i6L5/WTqefD+Hk3eI7RpbAwt263tzWmeKwafwfmA/f18WiqvdhAftVFGJotEOeFmYApsiv9EyO2rNosJTIxFJY7dddoKjQvSOnrCDVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Cz7ytJx5; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748798839; c=relaxed/simple;
+	bh=0JIw9pnhtVwSmprjc3gPKxQnCvRU3b0Jw7lMThUT+j4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l01VM6lkrXrGZCUXnWsytele2JiupYVQJZCmRfNC//onXVzViUB5O5rvi3J69RDePbQoUck9ZIJn1EhmpD0CkgTOWBu63q/2xa7to/Tjo7vfokq+BYRA1WH/SBInvUq+siwE4S81hyrxvUZv4sFnOD3kelQvWiaOr7mk0NzR5bM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CFEpT9b7; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cz7ytJx5"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22c336fcdaaso30535105ad.3
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Jun 2025 10:22:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CFEpT9b7"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-742c9907967so3814642b3a.1;
+        Sun, 01 Jun 2025 10:27:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748798541; x=1749403341; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3PGxl3SxA+FXcctq4t0AyhynMTiv9JReGhiddIeNQLY=;
-        b=Cz7ytJx5Aro1Vs5c1ZTgu9PsamiRHvvu5l2DtZ9GZRwrJx3mruGfxVgD5PtA7Yz7W/
-         KWyH/NOnQu+xmK04v0OJzGS/gm2Qv/nhRzIE0c3A0Psu7e1CY0lQDEY65TNeOVjhWW5u
-         udaKaWrkNBHwcPH+jB7HJyzO4OoYLBFgAU0MamrJRw1Evy9uYnUHqwdzQXusbwd69fz1
-         ga93ZG63Vkp3uWbQCqqtjm/ejE1VACtPaDAS/TqN3mDfLQRDPPGqFFbVSeMKkFJxklzp
-         3YFd5h67U2w7oqAVD4k6BS6SAU80GY3vtF+QQlIrhXrD9QN1Va/5aiQSYXegiSNDEf01
-         1HQA==
+        d=gmail.com; s=20230601; t=1748798836; x=1749403636; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qvHjG4CO77bT7r3bkmdR5FN9ms4HdQC9iQON6aBJJ4Q=;
+        b=CFEpT9b75UdfoZ6WWASGwSe7wIwqkQ+lCD6RLcQL2nj8w1sZLF1+crkClWmwNlqBRA
+         nEcZziO+vadd9kRTrJoueRgw8209mWdWETWEqgvQu7memO0bo3y2sWSdOE/N0JCYATWE
+         sUd28aHQJpal2uyhJyknHiHVY/wcucMsvBSoCqifcFmtVsQpqLc1nH71NBPAHZdPbAiR
+         rc74+uv7wx2Q0NMKwptZDzl4Gn8pqZ3jBF/yZvoUwElI1bdFBjl74JpvTQg4xUysQm/n
+         4O+zAyPa1up6NzSgsx2b9W5borFSqBtEZXvsb+YNTWr030IWGLuxdBK9r0QKJacuM1V8
+         2tWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748798541; x=1749403341;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3PGxl3SxA+FXcctq4t0AyhynMTiv9JReGhiddIeNQLY=;
-        b=rQM6B4UiHeuD/vaasJSQE4YGH3cORKgGUX4vjY6jLmf89R9R+mYkXTZ6cc/jW8UrLt
-         cpPaVWqvlqAD06JYFfrZPn7Knry12l+i5P2s+XAd5LZdEpebYAL3NeEaWxZLK+enluFG
-         Qagjve9p20cF0bHT2wettCvzYW84qeNfV850JEHJfxQcE1jYOhN+cIhFdBGW7tfVp5Rj
-         d6tRRAL2G9C2gUvGNEZX1boNtqwn+NLVKni0vN4Pt0+yGPCZoK0jonLDYw/Y/Pf0smVS
-         beMLLlER3GqXEdM/Xry5PC/yxZZUUX5eXNwtlKXtZaEC9ykSSFvKhZobfjtO4dlRhQ8+
-         XcbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXwK2RdHz4EUekh5NU5814G1WuP+88CMOshviZmfWZZ1cx0yDaTPysz6HHHll1SEr1EtTUV6GAcEBDr+BY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/NUQPLcW2Y2UJXE1uzLOz4jcZbMOnj+Q9EGtBTBNZ0u/zLGgU
-	0jcw9Whq7GYszUMFsDSjouiIy5yS47uN8gntrHvaBe/BtgBHPIeRBJsBl0uSX+V19g==
-X-Gm-Gg: ASbGncsVxQTkgZYntTdQixdOeBKU81d1BBZ+lzWj42AvfayRk+Yt6h55o9qWBeCzOAL
-	u4vu3PjFyoZ5dN2jDF1U0CRcCNd0bOShzaxRyiI+kq9MUiVW+vFKiFpajBYqsBULsTdD+NijSBu
-	WQdcHKsakaZ6yU7C+r7J8m4jm7FrEBnuEI8SBsUY+93N3oxga+FaSHOh7koQkauk40j7y6w+ty/
-	vLlruy9EImGASg7F7PQqlVYUOswMfUbe/2qdRHxu5pbVkHl41iDGrxehHL+iwHYX13ugxARiL6Q
-	sSdX5k9t2th2fiVv0RGxct9uKwlUu86ZYyjSQKaFeUOAxm1W38GsaWRJ8whpKe8=
-X-Google-Smtp-Source: AGHT+IGdEN2qeOOmEA0WZo8jBXGtNuiq7nSp1+snxKHmbj3Hsef5BBzeQGzwQjQ8QwS6UwQ7OVWKYw==
-X-Received: by 2002:a17:903:22c4:b0:220:d257:cdbd with SMTP id d9443c01a7336-2355f783273mr80408645ad.48.1748798540641;
-        Sun, 01 Jun 2025 10:22:20 -0700 (PDT)
-Received: from thinkpad ([120.56.205.120])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bc8a56sm57346635ad.20.2025.06.01.10.22.16
+        d=1e100.net; s=20230601; t=1748798836; x=1749403636;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qvHjG4CO77bT7r3bkmdR5FN9ms4HdQC9iQON6aBJJ4Q=;
+        b=W3tzKeqgEtyGWmEGKMBOkqZBWEwVNIVj2dz3W9wf3dOy9Nj7yiIfGvlJV2M28oC+Jd
+         QGRBtNocdXiSehwC9dowzOtssFLLeckq7OSx/Wo8OvqE+MIs8KDbcJg91miQqV+AR1vD
+         3D87kJetkdDnsrrEbXu5FlVdLT0s0/fJWpnGVe0DR+gqcATiloEvU7G7qirdjHKACH3X
+         Tcp7aP/liQOuLMX6vnLEGCzBR7ieOoPrcBNd176PZ110jhKnwAxVUEViwIYGHBnHc+rn
+         lA2R3ACd+THbATwnOyV30RNaToe0/sfPXO6mezCt3iMr+61XD284HhAZ66KCHiYvKlQo
+         dKyw==
+X-Forwarded-Encrypted: i=1; AJvYcCU8ZfBXTnf0Or5NfaGImU9OeUXdSZTkziq9ksKpmEbN4goBpAK8+chaXLiE7M/ZtjkWfcLW+etG5bhRQak=@vger.kernel.org, AJvYcCV+fuGkvUFKmke1Mm2D684ZHQ8K5Evus5ws3qCBdInJ7IETyDXDaGagn/lzEhUWYnSlDrCoHryE8oKRmiNmV3UZjA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz00SAMyWflv63Bn5I+rvgAqFQmopP8izvJaV/xn9IckJZgLbzB
+	vIAHBXMoPcXO2VnGON2JQkLv1qk4Z3BoBIZ3Y2uT8ushpqm2CPuv5EGU
+X-Gm-Gg: ASbGnctoqD1dqi1bymFaWJtbFyMzt9DiJWZGFvlcQulJFQdE2j4NzD6mTswxo2oRlBV
+	+H2q1KBNWGtJDBeS9+XWymOa39BZaqmEvtXY6ALuA9+W7cJYslxD9cUFDulj+cawpfhg+SXkjWu
+	kmmNwJOqigRkxhRPEOom0ItAZ/YIXfI1TVP54NuvR27IUVN9hgwK58C2URicWmPGJjyhDv8WbVK
+	F/71i9viBe5xAaNOVvSAr9bM4Z2/hkc4g37y4pRaAWS4uAKBGpFh60ATw1/wLzytX1W+HfkeFBv
+	/NopKEDWX1CU5edvj5bCj5VWCER/XzhrhgotIpAlH8n54fCcpkPnCu+NBGQlTcX6kO81yP7tSkm
+	M1cfhWWFtntSwdWh213FCdN2kkwsxJi+C/RGuAE1Apw==
+X-Google-Smtp-Source: AGHT+IF1PiEGfKnZbZ92ZYamfQLHjj5IrW00BlwLQgui6Z4Bza85MSb7padK61VHTmmtCZM56IKM0g==
+X-Received: by 2002:a05:6a00:2301:b0:736:35d4:f03f with SMTP id d2e1a72fcca58-747d1835b73mr6725109b3a.6.1748798836019;
+        Sun, 01 Jun 2025 10:27:16 -0700 (PDT)
+Received: from howard-ubuntu.lan (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afe963cdsm6168675b3a.23.2025.06.01.10.27.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Jun 2025 10:22:20 -0700 (PDT)
-Date: Sun, 1 Jun 2025 22:52:15 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, 
-	Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] PCI: Add Extended Tag + MRRS quirk for Xeon 6
-Message-ID: <xwcoamcgyprdiru3z3qyamqxjmolis23vps4axzkpesgjrag4p@wnp63ospijyw>
-References: <20250422130207.3124-1-ilpo.jarvinen@linux.intel.com>
+        Sun, 01 Jun 2025 10:27:15 -0700 (PDT)
+From: Howard Chu <howardchu95@gmail.com>
+To: acme@kernel.org
+Cc: mingo@redhat.com,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	peterz@infradead.org,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [PATCH] perf doc trace: Remove --map-dump documentation
+Date: Sun,  1 Jun 2025 10:27:11 -0700
+Message-ID: <20250601172711.714695-1-howardchu95@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250422130207.3124-1-ilpo.jarvinen@linux.intel.com>
 
-On Tue, Apr 22, 2025 at 04:02:07PM +0300, Ilpo Järvinen wrote:
-> When bifurcated to x2, Xeon 6 Root Port performance is sensitive to the
-> configuration of Extended Tags, Max Read Request Size (MRRS), and 10-Bit
-> Tag Requester (note: there is currently no 10-Bit Tag support in the
-> kernel). While those can be configured to the recommended values by FW,
-> kernel may decide to overwrite the initial values.
-> 
-> Unfortunately, there is no mechanism for FW to indicate OS which parts
-> of PCIe configuration should not be altered. Thus, the only option is
-> to add such logic into the kernel as quirks.
-> 
-> There is a pre-existing quirk flag to disable Extended Tags. Depending
-> on CONFIG_PCIE_BUS_* setting, MRRS may be overwritten by what the
-> kernel thinks is the best for performance (the largest supported
-> value), resulting in performance degradation instead with these Root
-> Ports. (There would have been a pre-existing quirk to disallow
-> increasing MRRS but it is not identical to rejecting >128B MRRS.)
-> 
-> Add a quirk that disallows enabling Extended Tags and setting MRRS
-> larger than 128B for devices under Xeon 6 Root Ports if the Root Port is
-> bifurcated to x2. Reject >128B MRRS only when it is going to be written
-> by the kernel (this assumes FW configured a good initial value for MRRS
-> in case the kernel is not touching MRRS at all).
-> 
-> It was first attempted to always write MRRS when the quirk is needed
-> (always overwrite the initial value). That turned out to be quite
-> invasive change, however, given the complexity of the initial setup
-> callchain and various stages returning early when they decide no changes
-> are necessary, requiring override each. As such, the initial value for
-> MRRS is now left into the hands of FW.
-> 
-> Link: https://cdrdv2.intel.com/v1/dl/getContent/837176
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> ---
-> 
-> v2:
-> - Explain in changelog why FW cannot solve this on its own
-> - Moved the quirk under arch/x86/pci/
-> - Don't NULL check value from pci_find_host_bridge()
-> - Added comment above the quirk about the performance degradation
-> - Removed all setup chain 128B quirk overrides expect for MRRS write
->   itself (assumes a sane initial value is set by FW)
-> 
->  arch/x86/pci/fixup.c | 30 ++++++++++++++++++++++++++++++
->  drivers/pci/pci.c    | 15 ++++++++-------
->  include/linux/pci.h  |  1 +
->  3 files changed, 39 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-> index efefeb82ab61..aa9617bc4b55 100644
-> --- a/arch/x86/pci/fixup.c
-> +++ b/arch/x86/pci/fixup.c
-> @@ -294,6 +294,36 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_MCH_PB1,	pcie_r
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_MCH_PC,	pcie_rootport_aspm_quirk);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_MCH_PC1,	pcie_rootport_aspm_quirk);
->  
-> +/*
-> + * PCIe devices underneath Xeon6 PCIe Root Port bifurcated to 2x have slower
-> + * performance with Extended Tags and MRRS > 128B. Workaround the performance
-> + * problems by disabling Extended Tags and limiting MRRS to 128B.
-> + *
-> + * https://cdrdv2.intel.com/v1/dl/getContent/837176
-> + */
-> +static void quirk_pcie2x_no_tags_no_mrrs(struct pci_dev *pdev)
-> +{
-> +	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
-> +	u32 linkcap;
-> +
-> +	pcie_capability_read_dword(pdev, PCI_EXP_LNKCAP, &linkcap);
-> +	if (FIELD_GET(PCI_EXP_LNKCAP_MLW, linkcap) != 0x2)
-> +		return;
-> +
-> +	bridge->no_ext_tags = 1;
-> +	bridge->only_128b_mrrs = 1;
+The --map-dump option was removed in (5e6da6be3082: "perf trace: Migrate
+BPF augmentation to use a skeleton"), this patch removes its remaining
+documentation.
 
-My 2 cents here. Wouldn't it work if you hardcode MRRS to 128 in PCI_EXP_DEVCTL
-here and then set pci_host_bridge::no_inc_mrrs to 1? This would avoid
-introducing an extra flag and also serve the same purpose.
+Fixes: (5e6da6be3082: "perf trace: Migrate BPF augmentation to use a skeleton")
 
-- Mani
+Signed-off-by: Howard Chu <howardchu95@gmail.com>
+---
+ tools/perf/Documentation/perf-trace.txt | 8 --------
+ 1 file changed, 8 deletions(-)
 
+diff --git a/tools/perf/Documentation/perf-trace.txt b/tools/perf/Documentation/perf-trace.txt
+index c1fb6056a0d3..973fede403a0 100644
+--- a/tools/perf/Documentation/perf-trace.txt
++++ b/tools/perf/Documentation/perf-trace.txt
+@@ -238,14 +238,6 @@ the thread executes on the designated CPUs. Default is to monitor all CPUs.
+ 	the same beautifiers used in the strace-like enter+exit lines to augment the
+ 	tracepoint arguments.
+ 
+---map-dump::
+-	Dump BPF maps setup by events passed via -e, for instance the augmented_raw_syscalls
+-	living in tools/perf/examples/bpf/augmented_raw_syscalls.c. For now this
+-	dumps just boolean map values and integer keys, in time this will print in hex
+-	by default and use BTF when available, as well as use functions to do pretty
+-	printing using the existing 'perf trace' syscall arg beautifiers to map integer
+-	arguments to strings (pid to comm, syscall id to syscall name, etc).
+-
+ --force-btf::
+ 	Use btf_dump to pretty print syscall argument data, instead of using hand-crafted pretty
+ 	printers. This option is intended for testing BTF integration in perf trace. btf_dump-based
 -- 
-மணிவண்ணன் சதாசிவம்
+2.45.2
+
