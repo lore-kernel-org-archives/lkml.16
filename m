@@ -1,95 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD72199BC
-	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 18:57:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E91F1214811;
+	Sun,  1 Jun 2025 18:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748804223; cv=none; b=AAHckK/nnDi7dbUteWoZ683EIKLpF28OKvzMnyLQCH5XoR4tTEFM8QxBFIFaDS017gjIrEwQIay14B0ZwQLJ1CHrwAVt+T8Ys2sTx++d3sLacVmkt2AekliC0Olg8Yu3DkR2jeZpK2bkf/2UtsjtrPX3YiNu7u6weAOELp3awCc=
+	t=1748804380; cv=none; b=ZCO7BfG0Q5+9ia1LizEy00SGKpJl74XBYegFk20fjPsshlrSZ/gJEpXE21H8AsFCTKDDlGImOw6wxQ/jyDGFWwa5ORfrYD8dUtE2GX7vIrc9oOoFZBrRFtzsmiC1rjo5o3uv+3RApQoZjM/wuEpwYxg44OsrP7jTcoFzMMJS1tM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748804223; c=relaxed/simple;
-	bh=MIMYywNVcI819AtSgNn5olntXGqWsyjspYZRhWjZJu0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mpcPg1npQCi+P+Ay+o2wL2Q1oRdlllp6CKOdE3eyCKxCJde/wR0OAM9DntMOAorsyz88MzU2CV9uSLe4EsblPJyYsASeyPjwfWEZkMNVuRDiBOPM1mYR1npU19IB4qXSbiRYtbsVTTdpEqXCMwhRvwvOmjVKdJTXCTLBmFJ9B0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TNCTb4R2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748804380; c=relaxed/simple;
+	bh=CYLV8wcogXdtY6I8xKrSP6yV3kKGzgHfcr3A9i96Yx8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rzVPZWdAJgy+mkzzFEU9RdKYhZ6181RiGuuYoHP09Og9dBUSLiAaTNdSiBZyKhftihLYkGEL2rkNKgj63AVMGxFwF0qAiuxfw0QwrTtn4Unf+HOuUe6KiHhYInp9tIaD6AfhfVNRwQUiJmeKtM4phHpj+fHBRCRcuXzeT0KG1nQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lpnu88Io; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TNCTb4R2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B32BFC4CEE7;
-	Sun,  1 Jun 2025 18:57:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748804222;
-	bh=MIMYywNVcI819AtSgNn5olntXGqWsyjspYZRhWjZJu0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TNCTb4R2RzZ/KfBhKn0POEx5q1fblEWS+lpbe7QINESwU8s+hXswzZjOKxZAbc7YJ
-	 mzhOoYEmrEZBHjen4f0NWyO7V7P+JlaftlHKugyikrZD3cq1si0i6xtWRFOwA3J8VV
-	 2GxenzrIFRcxnxHiMYD5kCZAwTAAfeKGSgckrCXNaHWVA/SxFZFKWrfuu4D4+kVkeh
-	 WGWpn0Rt9TzQVjx+/ulaj1OB+TiRDdLRIz8A9i8lF72vF80VdFgbpwXqXNALhny40a
-	 i15NToevtfRzUGR+wKS3RWkfGubU5stXkzwZ+NCBXbEyChrXXoEjx28kTZVjZAWdWn
-	 Or222WnQz9r8A==
-Date: Sun, 1 Jun 2025 11:56:59 -0700
-From: Kees Cook <kees@kernel.org>
-To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>,
-	Ingo Saitz <ingo@hannover.ccc.de>,
-	kernel test robot <oliver.sang@intel.com>,
-	Marco Elver <elver@google.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Thiago Jung Bauermann <thiago.bauermann@linaro.org>
-Subject: Re: [GIT PULL] hardening fixes for v6.16-rc1
-Message-ID: <202506011152.6D1E4F33B@keescook>
-References: <202505310759.3A40AD051@keescook>
- <CAHk-=wj4a_CvL6-=8gobwScstu-gJpX4XbX__hvcE=e9zaQ_9A@mail.gmail.com>
- <156567EE-E5BB-43C4-B5A6-439D83FF387D@kernel.org>
- <CAHk-=wjktqa94u_=++YX7XxUr57iLAs1GqtHPOY-o-N0z7wyeA@mail.gmail.com>
- <202505312300.95D7D917@keescook>
- <20250601-pony-of-imaginary-chaos-eaa59e@lemur>
- <202506010833.A33888CC@keescook>
- <20250601-electric-olivine-wren-d8c5ca@lemur>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lpnu88Io"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-601f278369bso7801325a12.1;
+        Sun, 01 Jun 2025 11:59:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748804377; x=1749409177; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OIzFU3oveHSb3b2sYKrjUAfhi3Wxf+qS7iSQYpFodfw=;
+        b=Lpnu88IocyLWUAlXdtXCpePK2YemWqhcbfPJGEOKqNCnfbnrGiQER7kYnAw2erw7uv
+         VriGzTueIVwE9BicjFUhpY+kAJLkYEAsSBbcDbkLTyc6lIj1lLZ5AJ0LyBtP1I7NIlSI
+         Gw8hGm/Nyoz30EZidkQn+Iz+R4tYobFK5qBR2FPmT2eaPrDbDK837HVYiBD+KUdprIkK
+         KZWjN+B3ZSc3NNtolmVCZWIyzTwwSQ2d2gPrKJm1AIvm3RzwJq/C4cfooHDl/C1abQw9
+         Yrqcae4Q1pSNnrnDj66uqIsqU4IFgplYCOasvrbNo0gV9BNS2HtnxnUl+peM7O7L/Y3w
+         JG/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748804377; x=1749409177;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OIzFU3oveHSb3b2sYKrjUAfhi3Wxf+qS7iSQYpFodfw=;
+        b=PvtPm08A6j1AP0qfrkV/gCX6zGMT1DpXEso606QBQjydaLJLl0hrCt3g5R5eXDWW23
+         YTRpxrEXwLhvLwTQiKvqMj8Nsr5Qo4kFYW1uZHbYnPYZ66LX7APojOSpTN6qIOWukyMr
+         9qimiLuTiFX0jRI4d3LXgJTeLQ83jXBvylmKCdzfcgN4s0qdENbAyot+b3DZtSFKsdrU
+         U5DOcbJX0O5ZW7tsNymLlkdDrZuwTWFrZkwXcXSpP8BbE95/kcbRRG3v6//jdskUqgba
+         4OALNewa2sWayTD/zVSqTqHmuJgOnzCHslKHBY4Ko7REt9TjQmb38fR3c439x3yi8DKW
+         8lcg==
+X-Forwarded-Encrypted: i=1; AJvYcCUXKORM8H5wsCscR+ZgxZ5NWYJFDbMmjGwRKkW6GpeLxy45t6D1AWmNy0bTYDiLbjxr40LwmrRwZU51@vger.kernel.org, AJvYcCVUGROQKpyu+uf/TThEdrmzwR3HIntt//LgO9+/GI/ZwAaUEQTYtN3KvnuYdJIGPm61WuCoI4fWNlavXd2t@vger.kernel.org, AJvYcCW/7XcCmNlVU9Xwnfjka8MPnqv+sekQ9hoLD2VVJ+mQ7x30xIxFXexB40JbvXiPmxgikYZaQQhk/m2ZIx/G0WU0QA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhPGlPbDaYnT9N1ZYMIRFqkSXjbzSPo+1VBDKewnZMg0oock47
+	dYy0oNPKtbIE3s6FdCVXYqemv4/Mg6mtSzQAE52Vfd82NeJlRBgDqshH
+X-Gm-Gg: ASbGncv2NvfedNUCBf6AOCpJQ8rdxdagrLH4lkOGLp3wRSAuCYLMCjJ5WuFNzUhmz4w
+	Ij5a1JE0iQNbSun1lLdHb93T/ch4x7gxbAC20zEkW+dzB+T1cs6ya77hY7D4P/Btz6P1c1JTMnr
+	uIS6wm0/NPJPzvzNng/hGB2vfPh3hJrHK+TTS3mrl8T5HdhrkMIiB9OQt+oiv2wR4V3hZLrNySI
+	iqFCaS0N0koqvxezaBe5mQErVw6MEX56lJVyp284FkvJr5Jc39hA9juiNDsTsG53TziaZtMC0hf
+	dnqUGIzbg4LZJ5aMCSW7lntpbtM8A2yrcrqpcKL29DNBH0B9mQRPXRsmECJIUVda9YefWvLkqVC
+	LUMrK/qEh4iFatyX/+VsX87jgtrEqhw==
+X-Google-Smtp-Source: AGHT+IEP2x5ZAxqIc1gsA4YFDwl3131Qs5D19FYWLp46cTsFeKuOi08zZGcuKt6dA7kp1G6jlmOOpw==
+X-Received: by 2002:a05:6402:90e:b0:601:a35e:6dd1 with SMTP id 4fb4d7f45d1cf-6056ef00a9amr8866615a12.21.1748804377131;
+        Sun, 01 Jun 2025 11:59:37 -0700 (PDT)
+Received: from [192.168.1.105] (91-139-201-119.stz.ddns.bulsat.com. [91.139.201.119])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-605ae6eb0e2sm3059856a12.3.2025.06.01.11.59.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 01 Jun 2025 11:59:36 -0700 (PDT)
+Message-ID: <8d14bc8d-6a29-4317-9ee6-143a2919d17b@gmail.com>
+Date: Sun, 1 Jun 2025 21:59:35 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250601-electric-olivine-wren-d8c5ca@lemur>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 11/21] drivers/perf: apple_m1: Add Apple A10/A10X/T2
+ Support
+Content-Language: en-US
+To: Nick Chan <towinchenmi@gmail.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>,
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>
+Cc: Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org,
+ asahi@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250510-apple-cpmu-v7-0-bd505cb6c520@gmail.com>
+ <20250510-apple-cpmu-v7-11-bd505cb6c520@gmail.com>
+From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+In-Reply-To: <20250510-apple-cpmu-v7-11-bd505cb6c520@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jun 01, 2025 at 01:58:27PM -0400, Konstantin Ryabitsev wrote:
-> On Sun, Jun 01, 2025 at 08:38:10AM -0700, Kees Cook wrote:
-> > > I don't yet know why it wants to rewrite 39 commits when we're updating a
-> > > commit that's only 3 away from the tip. If you manage to rerun this with b4 -d
-> > > and send me the output, I will be glad to look at it. Alternatively, if you
-> > > can let me know the steps to get my tree in the same state as yours, I can run
-> > > it locally.
-> > 
-> > This shows the same problem (using Linus's tree and linux-next):
-> > 
-> > $ git checkout 9d230d500b0e -b test/repro/before
-> > $ git cherry-pick 368556dd234d
-> > $ git cherry-pick eef1355c269b
-> > $ b4 trailers -u https://lore.kernel.org/all/CANpmjNPpyJn++DVZmO89ms_HkJ0OvQzkps0GjCFbWkk0F+_8Xg@mail.gmail.com
-> 
-> Thanks, I was able to recreate it and will use it as my test case. I suggest
+On 5/10/25 18:10, Nick Chan wrote:
+> Add support for the CPU PMU found in the Apple A10, A10X, T2 SoCs.
+>
+> Signed-off-by: Nick Chan <towinchenmi@gmail.com>
 
-Okay, great.
+Tested-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
 
-> that until I have a fix in place, that you always use `br trailers -u` with a
-> `--since-commit` flag, to restrict the range we're looking at. The solution
-> I'll work on is to iterate the range of commits we get back and further
-> restrict it to just the contiguous range matching the current committer, going
-> backwards from the HEAD. This would have avoided the problem by restricting
-> the commits being considered to just the handful that were cherry-picked on
-> top of the latest merges from Linus.
+> ---
+>  drivers/perf/apple_m1_cpu_pmu.c | 127 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 127 insertions(+)
+...
+>  static int m1_pmu_ice_init(struct arm_pmu *cpu_pmu)
+>  {
+>  	cpu_pmu->name = "apple_icestorm_pmu";
+> @@ -1155,6 +1281,7 @@ static const struct of_device_id m1_pmu_of_device_ids[] = {
+>  	{ .compatible = "apple,blizzard-pmu",	.data = m2_pmu_blizzard_init, },
+>  	{ .compatible = "apple,icestorm-pmu",	.data = m1_pmu_ice_init, },
+>  	{ .compatible = "apple,firestorm-pmu",	.data = m1_pmu_fire_init, },
+> +	{ .compatible = "apple,fusion-pmu",	.data = a10_pmu_fusion_init, },
+>  	{ .compatible = "apple,twister-pmu",	.data = a9_pmu_twister_init, },
+>  	{ .compatible = "apple,typhoon-pmu",	.data = a8_pmu_typhoon_init, },
+>  	{ .compatible = "apple,cyclone-pmu",	.data = a7_pmu_cyclone_init, },
+>
 
-Yeah, that would solve my use-case entirely. I actually thought that's
-roughly how it was already working, and it has worked for me fine before
-this, so I'm not sure what was different here for it.
-
-Thank you!
-
--Kees
-
--- 
-Kees Cook
