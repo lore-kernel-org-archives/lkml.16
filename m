@@ -1,146 +1,122 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 630DE1E0DE3
-	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 15:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 908CA23CE;
+	Sun,  1 Jun 2025 15:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748791432; cv=none; b=aW0t0PTDNCfOX2xN/MBla8J/NcXyH8It23uQgAKYbTUN1xABfTbF6JOZoclRmbMIsO4JprS+AIBWMVJ8FGqlgN6DSJVO5SoKuh3jmYdw8zyPXcKu4+cFiRhz2nBEimo+mElwp44j0Az2zY9UQDx7zw1xgIf/aiSO1m7rqb7Sy1k=
+	t=1748791831; cv=none; b=lmVLJHUODFGePsYX2yytiouf+U6PpJ/atWUCHXn2g08oaDBzf5zH6jy20i5iJQ6KtFfzdKdpuNmfZf2ESw/hNZ2YxKk9StdhSh4tVii9E0TBQbqOmH4eO/nzk5UImVFbuI61NKWVl9WCjZhoCLkdm4H+cqY3BfYkAjVKhUmHeHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748791432; c=relaxed/simple;
-	bh=awDyxNK92htKl6XKtbeqgZ2v4gNXbHrZXkiiIbRovzQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WMEvDQMFBIkdyDNzD+fsuSj3fnEPoQc6n0kU0C3UPjc2Kvs7SRusVDb03VU4DfDa22bxiRH4vpLwIUak8Rpdo+jIzQIzxEr7qdOIOc35/F74jbKySnBs+3xOUMgCR5v6yQLB1PmdC+LsJEXCk1y1DMV0D/zmUW8D/x6T8dBn374=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AeS/IFUm; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748791831; c=relaxed/simple;
+	bh=Hb6o0ccxWzXHTO6c+n9JpnzMCaGhphZV0oUFYf61xNw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kKnHTapLDFSn3onOGHFne4y5PRvD7af40mTSxwVsThWgDB3V3wu2P0taYTrNQ02B4pnTuJxaPbl80hm35axKTz9MRF0qqAZzAxyWL+nr/Rp7K4sOpOUHWwddUuC4vee38iocETpQsgjDKycdDOUmOmw4gMvJuWuixzLlt9qS5Uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BL/V6vUZ; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AeS/IFUm"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-234d366e5f2so46551105ad.1
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Jun 2025 08:23:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BL/V6vUZ"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-45024721cbdso28032605e9.2;
+        Sun, 01 Jun 2025 08:30:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748791429; x=1749396229; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=/HdCnbvcFFV1hX8QFWwdms9CXcq6ISLWHzT3pbdzBT4=;
-        b=AeS/IFUmW15Eq65Yq8GWUwbfEHdZCgE0VOxnWyr4zkQ38LBSL3lP7gcM7729kDz5PG
-         CdJsGxMcRkmVLtAZAogouKe1nb6gRZgx01xH2dHuHuFXwjlBEVO4LjZDXQeF7Jx4XPF3
-         Y4cBQ0y1S9vW4iF7xOhlojfuiSn6oAIGT5PVLzgJfth4Q5skwgrgDiasfuekl6uAHSP6
-         DGLz1GUZ7u192gDlg30fjBZHokXL01ajwe3o5STl6tetMvD6/qqMJgmc6GKKBXCl7LCk
-         Q5G01VI4T3p4eYaoQP9VN46WOZMvSlmpf9QGNA/vgDx/zcH1nQJ9RsPuPXUBFfeTZOac
-         p/KQ==
+        d=gmail.com; s=20230601; t=1748791828; x=1749396628; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CNUQ8alZZyPEopmGs1jmwHY+Y0x3dDOgFkHsTDFu+M8=;
+        b=BL/V6vUZyavBP2CISKfPprjog7obs8wOxiPBZcYRgEO/8Oqnn5koHXUopAWCbVs6/4
+         5LPRxJNqecL2LBfFWLYJ/dkA/jS2loR8+NJpGz6CxAoG55d9WWtqgF7Bp1J387IaM1rN
+         kSqBZdtS/AH3jMrVgtwqyb65bTFmj3Fp/+1X7E8OcwqazkybVdD2tyAawzPdbdYnMu5c
+         B+TYMIad0+E8tffiq4T79ExxNA8WADfnhZzPF8fDApk2IWPd1nV8By65YyNUOR5rdaDJ
+         efrnikpP5G+1gOB5WI7hhcLDW1M0SQtqH5b/+tbEWUSeoq7uZyrzvresAImz/qY0w87F
+         pN9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748791429; x=1749396229;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/HdCnbvcFFV1hX8QFWwdms9CXcq6ISLWHzT3pbdzBT4=;
-        b=j3VAlYxUFbEQegfqiG82pOIUU/UxrBafp94jkw+c01nqLy9SxUpR8Ant+Wox2TGbsP
-         MwHr/G1r29yTDVxe+inquBQKXozYwEplVO2hv8DT7280py+YO+Yg3uM1F1n1JZJ/i2qW
-         mIRy0hw4qDjBofCPbTpuigixK+cJs41g0r6mYVXgSUZEHpb4wSCO5K2Xai+AiutN3uDP
-         mCRotBdV7XYESZH6DzM0nQGw+2G7E1hrHNM/B7D77Li6hfaZlLYbJK2vb4VEDt2QWfGt
-         0wvAse4si54o15HIYbH8sHT3JsygcYZ0O/gBk2h+0HCw3XsBM0dr5TMdRI64TnCVUGv1
-         wGuA==
-X-Forwarded-Encrypted: i=1; AJvYcCWha+8+DKM6WCUlQJUup9uYqU+p2Oop07f1X6HVpAE4sowqYJVmiKiKWem7GMbERJULUXoF9yN7ETY7qio=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzR+2+sxmLNxpwv91SZmi74OsaPC4mKuE4biHZ4fhr2sIXSdS1j
-	c7k/J8eqEStVf+7d3aDxTYWVaZYAjWblVsMVy4wKNYBOebbq59zG5Dg/9Qv4qZc6nA==
-X-Gm-Gg: ASbGncvG5epxevJp0Z0FqQq6E9Qx7UiRlXM3+e3h01sDQyQRM6lGsKf8Yq7Uh7ScZ6e
-	Z00IIDDX52TPdjwuOUy8UtLsnIcSZ+0hKzn4kkIGp9C+cY+NQbOFS14uL29WIVIjcI7Vy3l5gxY
-	zIoujXj/QUoTokSASXyxrd70kXXhJg5AL6NateijXFX8vvuEWJImQcfsLvinEXbp8+nf6jeZcaA
-	OT3k0XiaE4w9QCCZC93y1BmFvu04c8EDQJiaPNzRvnEkEfLruYif/IG0BpvSkfVmHmWj7TynxsU
-	mb2TD16Rmzi29QF75st1KeOapN6kHXrHI8tELSrYe/CXUqA8jahdKCxlb+azYIqQWQ0z+UjyMw=
-	=
-X-Google-Smtp-Source: AGHT+IGUdxmEKcnjoqEdCbuH6KK9aWHG/KH7U1DjnF6q5AY9MZlPYni+3+TOgk8U92OpiYvQCGwyQA==
-X-Received: by 2002:a17:902:e842:b0:234:9670:cc8a with SMTP id d9443c01a7336-2355f9dca47mr79764925ad.24.1748791428646;
-        Sun, 01 Jun 2025 08:23:48 -0700 (PDT)
-Received: from thinkpad ([120.56.205.120])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cf53a9sm56361895ad.196.2025.06.01.08.23.44
+        d=1e100.net; s=20230601; t=1748791828; x=1749396628;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CNUQ8alZZyPEopmGs1jmwHY+Y0x3dDOgFkHsTDFu+M8=;
+        b=owy9AbYHcRETewFmbRaVA+inxKnxAS+moHFN8h/Lwlc+ceIudkSLOmwLvCTm3Gj+zF
+         Tox3IkR0nGqQKymsxjmyN5oTGdkmfIeGXAX+QH9QscHOvgVEmwEaN+6UuF6+Y8T4w1X0
+         X6gOvHe3lAz1fmJuEeoIvMnkAwGcezLTANDMUoENaYk6kOvW35gTjvQhs629YYNbQBzq
+         lCTD3mDkjSTAgrEkMDyDKM60xm7EdiBj8AcSOpkPcA3hjDoj3DY+pBiLM+ixqFjJBsVT
+         MpXE05SlwtI6x+V5vdf9LKJpjn7QBXteK+oTBMztfkXQK0ttc1IWuubVh/cqhPvzLSXb
+         Axhg==
+X-Forwarded-Encrypted: i=1; AJvYcCWadPEZ9QjH30JeqCdGceT85nLkFKF87833jsr4UMRRFZeXp0X2QogqUaPyP44fldwwZ9F5HB1jJOjt@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVcN2FHCtX938GfdXHTBT2OdTd+ZNgUszM62GyDTmzLvIWwSuM
+	OCWBM66iYWQgEYrgXgbIH8oGEUlrNKK1fTamv/MbNuwBr6MmHCQEjqYV0HV4Ax/F
+X-Gm-Gg: ASbGncubhR8fkEeSjYK5j1ukfR7bq6abKzZgJIN6U2C3vhAVKfA3DLVleb6IgImXFSw
+	IrRDTvQgCjAcAkgOOGcEpH81Pc9dDmKdmAzmMxHcPbpzxUBnitz/FUpbF5D3rB/ZtC3S99CMlQ8
+	X3Pa+/yDuFHn/gvoQIEeo0AvgXTLhiGeKU0eFghXU+blk3EvGlRhBQzWHaJ2BJBSu/UzByLNsAU
+	lqD0olF6R1Zl44Bu7RNWSMvJmnUxRBFJYCifJX8rwIQoiAZN3LvO9/ZESg7rMaRI6ZSwqhuVy9g
+	JblczHwLDdX/FCZv/HoVayGeAMIJKziXebT2KFqS7rJXnkupiDa36txeP/Prupf06ieFSeink55
+	ngnPHBFx0cZJ16a0j6HF/mQ==
+X-Google-Smtp-Source: AGHT+IHM2il1Wmej5P+2/rFFm9ssBYJr/Sr5YeiktbFrYfI24cee6q5AJo5ROsfEIACMi0us/Oj1Fg==
+X-Received: by 2002:a05:600c:620f:b0:442:e9eb:cba2 with SMTP id 5b1f17b1804b1-450d6452cadmr116440765e9.0.1748791827469;
+        Sun, 01 Jun 2025 08:30:27 -0700 (PDT)
+Received: from masalkhi.. (ip-109-43-115-37.web.vodafone.de. [109.43.115.37])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d800671csm88780205e9.30.2025.06.01.08.30.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Jun 2025 08:23:48 -0700 (PDT)
-Date: Sun, 1 Jun 2025 20:53:42 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	cros-qcom-dts-watchers@chromium.org, Bjorn Helgaas <bhelgaas@google.com>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
-Subject: Re: [PATCH v2 1/2] arm64: dts: qcom: sc7280: Add wake GPIO
-Message-ID: <wjduwhkgroqvzo25dwcspgrogz3orqab4tjosamxodvye47i4a@vd6cgknvx4nh>
-References: <20250419-wake_irq_support-v2-0-06baed9a87a1@oss.qualcomm.com>
- <20250419-wake_irq_support-v2-1-06baed9a87a1@oss.qualcomm.com>
+        Sun, 01 Jun 2025 08:30:26 -0700 (PDT)
+From: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Cc: arnd@arndb.de,
+	gregkh@linuxfoundation.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	abd.masalkhi@gmail.com
+Subject: [PATCH v2 0/3] Add control driver for ST M24LR RFID/NFC EEPROM chips
+Date: Sun,  1 Jun 2025 15:30:18 +0000
+Message-ID: <20250601153022.2027919-1-abd.masalkhi@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250419-wake_irq_support-v2-1-06baed9a87a1@oss.qualcomm.com>
 
-On Sat, Apr 19, 2025 at 11:13:03AM +0530, Krishna Chaitanya Chundru wrote:
-> Add wake gpio which is needed to bring PCIe device state from D3cold to D0.
+This patch series adds support for the control interface of STMicroelectronics 
+M24LR RFID/NFC EEPROM devices, such as the M24LR04E-R. The chip exposes two 
+I2C addresses and two distinct address spaces: one for the system parameter 
+sector and another for the EEPROM memory. These address spaces overlap (both
+start at address 0). Due to this overlap, the chip cannot be represented by a
+single Device Tree node and handled by the standard at24 driver.
 
-WAKE# GPIO
+While it might be possible to model the system parameter sector and EEPROM
+as two separate DT nodes, each handled by the standard at24 driver, this
+leads to synchronization problems. For example, if a multi-page EEPROM write
+is in progress and a control command (e.g., a i2c write lock) is issued
+concurrently, it can result in incomplete or inconsistent writeing.
 
-> 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+To overcome these issues, while maintaining a clean architecture and ensuring
+synchronization, the chip is managed by two drivers:
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+1- The first driver exposes the system parameter sector and acts as an I2C mux
+   (gate) for EEPROM access. Using an I2C mux solves the synchronization issue.
+   This patch series implements this driver.
+2- The second is the standard at24 driver, which handles the EEPROM.
 
-- Mani
+Tested on: M24LR04E-R using Yocto on Raspberry Pi 4
 
-> ---
->  arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts   | 1 +
->  arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi | 1 +
->  arch/arm64/boot/dts/qcom/sc7280-idp.dtsi       | 1 +
->  3 files changed, 3 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-> index f54db6345b7af6f77bde496d4a07b857bf9d5f6e..ebfe2c5347be02ea730039e61401633fa49479d2 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-> +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-> @@ -711,6 +711,7 @@ &mdss_edp_phy {
->  
->  &pcieport1 {
->  	reset-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
-> +	wake-gpios = <&tlmm 3 GPIO_ACTIVE_LOW>;
->  };
->  
->  &pcie1 {
-> diff --git a/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi b/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
-> index 60b3cf50ea1d61dd5e8b573b5f1c6faa1c291eee..d435db860625d52842bf8e92d6223f67343121db 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
-> @@ -477,6 +477,7 @@ &pcie1 {
->  
->  &pcieport1 {
->  	reset-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
-> +	wake-gpios = <&tlmm 3 GPIO_ACTIVE_LOW>;
->  };
->  
->  &pm8350c_pwm {
-> diff --git a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
-> index 19910670fc3a74628e6def6b8faf2fa17991d576..e107ae0d62460d0d0909c7351c17b0b15f99a235 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
-> @@ -416,6 +416,7 @@ &lpass_va_macro {
->  
->  &pcieport1 {
->  	reset-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
-> +	wake-gpios = <&tlmm 3 GPIO_ACTIVE_LOW>;
->  };
->  
->  &pcie1 {
-> 
-> -- 
-> 2.34.1
-> 
-> 
+Signed-off-by: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
+
+Abd-Alrhman Masalkhi (3):
+  dt-bindings: eeprom: Add ST M24LR control interface
+  misc: add sysfs control driver for ST M24LR series RFID/NFC chips
+  ABI: sysfs: document control attributes for ST M24LR
+
+ .../testing/sysfs-bus-i2c-devices-m24lr_ctl   |  96 +++
+ .../devicetree/bindings/eeprom/st,m24lr.yaml  |  72 ++
+ drivers/misc/Kconfig                          |  15 +
+ drivers/misc/Makefile                         |   1 +
+ drivers/misc/m24lr_ctl.c                      | 677 ++++++++++++++++++
+ 5 files changed, 861 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-m24lr_ctl
+ create mode 100644 Documentation/devicetree/bindings/eeprom/st,m24lr.yaml
+ create mode 100644 drivers/misc/m24lr_ctl.c
 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.43.0
+
