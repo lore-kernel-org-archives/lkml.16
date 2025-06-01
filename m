@@ -1,63 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D74F9C1
-	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 19:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D88EACE;
+	Sun,  1 Jun 2025 19:34:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748806328; cv=none; b=rwx/eM3cOn0K/yHA7yfvXErmL8zQCVDzIWnjLWN4+cOFCgXarH5FhsbB27V7s6PJZbZ/9SPreNirkikna4gAKoJIW/mAzOidB4FA/hZUBFYDBiE6vLGfttUltCaREGsZowqz38/O4V+uZJ/KPVEJsYGFf8EDoyBGG+/zw0qQOk0=
+	t=1748806496; cv=none; b=LuCwUwpoB9ntOl8TmeBKCp2+LAT2RfWg+KDHGL75DBskPsFN63K8p6/qLKS1u3JcpMtd1eq/9Pd6ZsQCLrq80mYpMK9vd92Vn0+6duQGs4egiWVMJ3pzmyvmly1XtzNW0g1mhEyi4iaPZlp8QRaPAq++tFR5bBQLD4xOvyXzysM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748806328; c=relaxed/simple;
-	bh=gpvzqNklNb8nCNrLYT2pUjeONmaSUhjAguqAQr+N9k8=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=DlX1XFQkqLTqUjUZeHTHddf3JI3vU3OHmjd+rkEOsX6oV3bcoVbnjyfWaAbVH6UgYZMlTTne5SnQYmYGfclUaxRmhxPLXt1SOV9Z/jOyLf1QlULkAuejPI64Itqqwu34h2kmsyzfTQMBDWVsBFQ9mbI6hdeAt02lisZsSNGjNog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M/V7yqIx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748806496; c=relaxed/simple;
+	bh=NTFQkyNqsHcrn8lkGwZ6RLpnzzc1CI6S3pitnpH7D0o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V4Mil+AuKqEi9aoyrv+ti56BJ1VU+FwEnTZ7r6FG5aAiDsvQHPtPZCrJ3OiAmIEAqqk0BEL/nvrxxWzD8UzMJFUJyAwz6YdOkWW0yR/Z/ygXPOnJg5IaSPBSoKLnhwqNlGyzmV0B1Na4J48xkX14kWfZAgGa7bVuuYfBOWIlQKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=LO8ePrat; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M/V7yqIx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D938BC4CEE7;
-	Sun,  1 Jun 2025 19:32:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748806327;
-	bh=gpvzqNklNb8nCNrLYT2pUjeONmaSUhjAguqAQr+N9k8=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=M/V7yqIxyS4UPlSjGPwjpiz+tgGipEBaNK2czNFMnDjqE715ix0rpqPFq41mKYieh
-	 1pGT3JybbQpkOw/eVu9ZdAN8I3os30pSoGRjhcaG6E3qko+zfTMDDtuCiC9Os2nj6R
-	 OXG2S6LH0OP6vCk1KLZ9cR+m07g5mcgVmAvgSKpE7iYu3QzSnSt3cs9PFkP7Ejbwky
-	 cZmADn6KBUb3+MBt58fZPPEVValcT/iRQKchvD0UfgzQR5xNKblxUpzllMvHwcfJhL
-	 5jme3J8J1aI30VB2HZIA8wituSzBXbU5MicR/QKHL+dWpwZoMnuOLxG+CWwBvjxLCP
-	 8PeqPmSM1gIJA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB2BA380AA7C;
-	Sun,  1 Jun 2025 19:32:41 +0000 (UTC)
-Subject: Re: [GIT PULL] hardening fixes for v6.16-rc1 (take 2)
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <202506010901.522039FEAC@keescook>
-References: <202506010901.522039FEAC@keescook>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <202506010901.522039FEAC@keescook>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.16-rc1-fix1-take2
-X-PR-Tracked-Commit-Id: f39f18f3c3531aa802b58a20d39d96e82eb96c14
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: cd2e103d57e5615f9bb027d772f93b9efd567224
-Message-Id: <174880636043.488739.8459408347229112041.pr-tracker-bot@kernel.org>
-Date: Sun, 01 Jun 2025 19:32:40 +0000
-To: Kees Cook <kees@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>, Ingo Saitz <ingo@hannover.ccc.de>, Kees Cook <kees@kernel.org>, kernel test robot <oliver.sang@intel.com>, Marco Elver <elver@google.com>, Nathan Chancellor <nathan@kernel.org>, Thiago Jung Bauermann <thiago.bauermann@linaro.org>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LO8ePrat"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 551JI6uE018270;
+	Sun, 1 Jun 2025 19:34:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=4fjYtSkV1aKAUXwE9/z/l+vMRbRYw
+	tV8rj2AbMaSrzo=; b=LO8ePratAEbM4rCMMf/Z57BqSKK8gpoYkZ97vgcbwaFYt
+	76IwfNUTad18nuyXqgPF0v5qaWf8sXTNLPKsesEFxoySK7VMKk0fTn3+q+hc/TcI
+	3lMyjT09w2J/+AhVYsnrkcZW8roEbxKVJhCoxHQMzTNHJogdnl8sJumS5tiZXx+y
+	0zAtvkQ2sA/lTDV8ZO2hM2bShqd6iiYPhbiSsbZt5ckXxs2bi03tVOGOISZuBfLg
+	WMgeHZzmnVioUgUmq48s17bUuzblT8MzMRK351LE6TY3HvOkoD/11DOQ3NSIVw9S
+	DvDWdlqSkciWVEDGqxpSHukmlCDH8sve+mv2PLl1A==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46yrc41f7x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 01 Jun 2025 19:34:34 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 551IopRU034484;
+	Sun, 1 Jun 2025 19:34:32 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46yr77800a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 01 Jun 2025 19:34:32 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 551JYWL0006407;
+	Sun, 1 Jun 2025 19:34:32 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 46yr778002-1;
+	Sun, 01 Jun 2025 19:34:32 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: almasrymina@google.com, bcf@google.com, joshwash@google.com,
+        willemb@google.com, pkaligineedi@google.com, pabeni@redhat.com,
+        kuba@kernel.org, jeroendb@google.com, hramamurthy@google.com,
+        andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+        netdev@vger.kernel.org
+Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org,
+        darren.kenny@oracle.com
+Subject: [PATCH] gve: add missing NULL check for gve_alloc_pending_packet() in TX DQO
+Date: Sun,  1 Jun 2025 12:34:21 -0700
+Message-ID: <20250601193428.3388418-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-01_08,2025-05-30_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 bulkscore=0
+ mlxscore=0 phishscore=0 suspectscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2506010170
+X-Proofpoint-GUID: Ts8SNxs-Syt6Dtjmiw4sv12qblDvpBOl
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAxMDE3MCBTYWx0ZWRfXwQsgLaJ5TLSa 3NRHqngJQQxFU+E4pErICUbAFAbOWArVKWbbpmWQ+iPpUFU1Zy+2HLO9mRkZ8jkqcZZlcTHdeGI ubi05/QQ3XG2JZzNCcYXmAoEUB47kKhKVNEKGJiPUC/8zXoAM1dNwLejB506+KfGhjtub4tSEMy
+ 5ad01a75mPxr9AqwPqAkU1vkG3KQQWfTvVGc+CJkd0F7lqUiGBoQyg4V3VMCOtLfbVDPFrCPJTw k4RzniQvStW96+bGYUy/himo86C3PAJswotm6/5j+Suma0dU9yPd+0LYsFN/SyySYmnXCPiJAJC W854vHcCJrvQBW84xrcOuGR3J6mpREe9tFOm0QwGA5tRxfbUAP/OM4pfmSKKmyKOjc+iSfC4ODG
+ 0UvRxmbDmTxxU/EPVnNXhT//TN4JpgAqd4n9/Pgf7BQIeA/GEpUQhe6Vjek23M/VhjInsf9h
+X-Proofpoint-ORIG-GUID: Ts8SNxs-Syt6Dtjmiw4sv12qblDvpBOl
+X-Authority-Analysis: v=2.4 cv=RPSzH5i+ c=1 sm=1 tr=0 ts=683cab4a b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=dI2OP5g5qT_45olihkAA:9 cc=ntf awl=host:13207
 
-The pull request you sent on Sun, 1 Jun 2025 09:34:02 -0700:
+gve_alloc_pending_packet() can return NULL, but gve_tx_add_skb_dqo()
+did not check for this case before dereferencing the returned pointer.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.16-rc1-fix1-take2
+Add a missing NULL check to prevent a potential NULL pointer
+dereference when allocation fails.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/cd2e103d57e5615f9bb027d772f93b9efd567224
+This improves robustness in low-memory scenarios.
 
-Thank you!
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+---
+ drivers/net/ethernet/google/gve/gve_tx_dqo.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
+diff --git a/drivers/net/ethernet/google/gve/gve_tx_dqo.c b/drivers/net/ethernet/google/gve/gve_tx_dqo.c
+index a27f1574a733..9d705d94b065 100644
+--- a/drivers/net/ethernet/google/gve/gve_tx_dqo.c
++++ b/drivers/net/ethernet/google/gve/gve_tx_dqo.c
+@@ -764,6 +764,9 @@ static int gve_tx_add_skb_dqo(struct gve_tx_ring *tx,
+ 	s16 completion_tag;
+ 
+ 	pkt = gve_alloc_pending_packet(tx);
++	if (!pkt)
++		return -ENOMEM;
++
+ 	pkt->skb = skb;
+ 	completion_tag = pkt - tx->dqo.pending_packets;
+ 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.47.1
+
