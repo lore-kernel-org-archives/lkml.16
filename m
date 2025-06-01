@@ -1,248 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18BF23C38;
-	Sun,  1 Jun 2025 09:04:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1EFA79C0;
+	Sun,  1 Jun 2025 09:19:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748768652; cv=none; b=Gla+oIHQcakXuxqfQvx7geWGGE+Z/adOnCkXgg9a9jRT0uEL3wh2P/M3pwsXDGQKXFayKnV3oNT2cLthMASAWsiiDapTAZDWwzt91ru1U8C3V5buTsQsM7G1g4eIMH7JRSYk3CChJzuAowiFQ6Bnm18aglHsok67AejeipUWUF8=
+	t=1748769584; cv=none; b=BdXS1tTCDs57daoZF0QeNscIJ/yYPYEyeovYoaXgoe1BrXo2tD3EQHtr1fn/XChImIjAGPUCPLTqeNveCYrHjFuwH/bfC8Y2PSJBxlRGTYINdDW+w3Jb48sxe7MKrsGicUxqXjd0YOpY79yaASWyDm9xQGrw3l8c/0aVrIEj+Yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748768652; c=relaxed/simple;
-	bh=1FBnoHXzf/SEJxTiJtrawhxy4l2suncrfen4dm5fUdY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S6LmgXVbJ9WVH2V/X0m2+eWhr2NJYCluO/GF3oMzntWxsT5Y+R499hgsEdBOv/+5SkAWMcJbSE5DbQ9lZVYhToO17B2dkp0foUnFgpX3Eq1S+1JsGIzIfkHmInB2XdlyQYEuFQSSqx75FSVlttDotoNZ0BePHdCYKNBl6dnzrpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ss65yud7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748769584; c=relaxed/simple;
+	bh=b5N1y/m9Kj02uZmYFS8J+6nzkQrSosO020jsf8DYUmo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sSRA2TOi5BJS+wm0Bm3D+NwvND/zJalfz2eNGAm8rg+vJ49ZtOt7nwVdti2cGJKfNtdnu2IEIFDKqLJBhE9dkIZ1JlNjZb+AdiNwmmnOd3NM7Tv3rL/8b6mIpwm1VSXSsKfNZx+VNuCHawBNBixhYiA7o92oC+G+25yMdHNVAiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hoeVqEND; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ss65yud7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E4BCC4CEE7;
-	Sun,  1 Jun 2025 09:04:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748768651;
-	bh=1FBnoHXzf/SEJxTiJtrawhxy4l2suncrfen4dm5fUdY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ss65yud7rC3zuf/5+t1tFq6gQQJ8vR+V/75+pGdhTc0oxERZ83IrerZyJKXpJjCey
-	 nZsAMVQ0kBCxTBO8VtdhRpeUCqWhbuf6AtZr/okPYtcaPur1FS3BiesJ8ZY2tAqkhT
-	 BYs7TzW77QG/WISB5sZzQghwviKZvJSoAvXS8ftmRmIQkhfjL3qlUJb7BE8PSQlbQ5
-	 usbzefh5LQCR/rGMC0ZgpPPezsj/pbMOFErAvHy0w4E1Sg1xRVSYNjhwnVCSkcP3LI
-	 ik0dcKF5nQDKZcyRCpuGddIuBb+WalwQDJnlg7NrO/SbaGhlAgXsa9WqPPhyuELUHO
-	 ozjixbh9vY7QQ==
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5532f6d184eso4407204e87.0;
-        Sun, 01 Jun 2025 02:04:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWxQzsD1IfbOee8Gx2NC0GZd6v0oVZji0Riabp2UhUme0vXZ8kDr70ZrAotHvCqoFezqGe8tJXR6k6MPP0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsZa33bSQ+jYRfB6v5P5k8+TJujxbNaym4Svyia7tfb1vmRxrT
-	dQEjerXBY8G+4GRB1BkC+L3F5UcrIFRLHPlr4d6p/BOzBLtrcXDnSzhpxEWngLUJVljA/KuXPLG
-	0k1HOu9KjWeHMfocVWl3apffEjHxN7l8=
-X-Google-Smtp-Source: AGHT+IFsqHn50uNK88yIcMCHj/JEuHNgrQxZpabdILktqXtb0RaHLaHUTVaNSZMFoAQAI/WyKODH1bNdklza46wlQa8=
-X-Received: by 2002:a05:6512:1328:b0:54e:81ec:2c83 with SMTP id
- 2adb3069b0e04-5533b8f412cmr2974471e87.18.1748768649922; Sun, 01 Jun 2025
- 02:04:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hoeVqEND"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748769583; x=1780305583;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=b5N1y/m9Kj02uZmYFS8J+6nzkQrSosO020jsf8DYUmo=;
+  b=hoeVqEND+/akPbV7n01iC/zul8hW6kxFs8gIpSVQECc3O2mMVn0Myttu
+   ez/f/ZwBu+ptTdQ0RTTv/Z1IiiUDW+pdDYQPUMPzCF6iNJJDR0tqgGC4B
+   k2O2G5F0ErAYy2jXRrLPZo0Po11M24t06fP4fUoFusIH3060wffG9gzNU
+   eCbYq2z6cDDJ1yJ0XlvbvZfLby7zum1AhnFb7J9NOIKjeZJJdbkoWxTQF
+   /5lt1epUjeIizkjZY4lcZ7g8KawK17ThVLhi4XKdRhsA1FZoChrpq2dr1
+   q3I6kSM6fdpwuNeFznpL4ng7CTWmkpz13vjmnVyt1XzorU/+BaYp/f2w/
+   g==;
+X-CSE-ConnectionGUID: A8n4DxWYT0iU82t2kxpHcw==
+X-CSE-MsgGUID: gT1YOZ+cSy2tjPhc2+U2Og==
+X-IronPort-AV: E=McAfee;i="6700,10204,11450"; a="76195004"
+X-IronPort-AV: E=Sophos;i="6.16,200,1744095600"; 
+   d="scan'208";a="76195004"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2025 02:19:42 -0700
+X-CSE-ConnectionGUID: i3Sx3aFOT12D+hxT/eXBUQ==
+X-CSE-MsgGUID: rbKEEwOPRKm6/djWPvCtbw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,200,1744095600"; 
+   d="scan'208";a="144254398"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 01 Jun 2025 02:19:41 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uLeqw-000Ysq-20;
+	Sun, 01 Jun 2025 09:19:38 +0000
+Date: Sun, 1 Jun 2025 17:19:22 +0800
+From: kernel test robot <lkp@intel.com>
+To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>
+Subject: Re: [PATCH 3/3] scripts/misc-check: check unnecessary #include
+ <linux/export.h>
+Message-ID: <202506011712.L8Jfbz6T-lkp@intel.com>
+References: <20250531183217.3844357-3-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250531204244.24648-1-ebiggers@kernel.org>
-In-Reply-To: <20250531204244.24648-1-ebiggers@kernel.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Sun, 1 Jun 2025 11:03:57 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGf6op6TRcK7w2xQV9aUQzydRd0dfxFmsMDXqpTNB9PbA@mail.gmail.com>
-X-Gm-Features: AX0GCFsHFCEGM3SUNSEb9ExS7v0xYIcT9gbNqz7vVj7N_YYnyVSMKLBfD2LtMrg
-Message-ID: <CAMj1kXGf6op6TRcK7w2xQV9aUQzydRd0dfxFmsMDXqpTNB9PbA@mail.gmail.com>
-Subject: Re: [PATCH] crypto: inside-secure - remove crc32 support
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	Antoine Tenart <atenart@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250531183217.3844357-3-masahiroy@kernel.org>
 
-On Sat, 31 May 2025 at 22:43, Eric Biggers <ebiggers@kernel.org> wrote:
->
-> From: Eric Biggers <ebiggers@google.com>
->
-> The crc32 acceleration in the inside-secure driver is accessible only as
-> an asynchronous hash.  However, there seems to be no corresponding user
-> of crc32 in the kernel that supports asynchronous hashes.  Therefore,
-> this code seems to be unused.
->
-> The patch that added this code provided no justification for its
-> inclusion.  All devicetree bindings for this accelerator are for arm64;
-> arm64 CPUs often have CRC or PMULL instructions, which already
-> accelerate crc32 very well.  And these actually work with the crc32
-> users in the kernel, unlike this driver which doesn't.
->
+Hi Masahiro,
 
-CRC instructions are mandatory in the ARM architecture revision v8.1,
-and the only known core that does not implement them is the long
-obsolete APM X-Gene.
+kernel test robot noticed the following build warnings:
 
-> Remove this unnecessary code.
->
-> Cc: Antoine Tenart <atenart@kernel.org>
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
+[auto build test WARNING on masahiroy-kbuild/for-next]
+[also build test WARNING on masahiroy-kbuild/fixes linus/master v6.15 next-20250530]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+url:    https://github.com/intel-lab-lkp/linux/commits/Masahiro-Yamada/scripts-misc-check-check-missing-include-linux-export-h/20250601-023341
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git for-next
+patch link:    https://lore.kernel.org/r/20250531183217.3844357-3-masahiroy%40kernel.org
+patch subject: [PATCH 3/3] scripts/misc-check: check unnecessary #include <linux/export.h>
+config: sh-allyesconfig (https://download.01.org/0day-ci/archive/20250601/202506011712.L8Jfbz6T-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250601/202506011712.L8Jfbz6T-lkp@intel.com/reproduce)
 
-> ---
->
-> I'm planning to take this patch via the crc tree.
->
->  drivers/crypto/inside-secure/safexcel.c      |  1 -
->  drivers/crypto/inside-secure/safexcel.h      |  1 -
->  drivers/crypto/inside-secure/safexcel_hash.c | 92 +-------------------
->  3 files changed, 2 insertions(+), 92 deletions(-)
->
-> diff --git a/drivers/crypto/inside-secure/safexcel.c b/drivers/crypto/inside-secure/safexcel.c
-> index 9ca80d082c4fb..c3b2b22934b7e 100644
-> --- a/drivers/crypto/inside-secure/safexcel.c
-> +++ b/drivers/crypto/inside-secure/safexcel.c
-> @@ -1216,11 +1216,10 @@ static struct safexcel_alg_template *safexcel_algs[] = {
->         &safexcel_alg_authenc_hmac_sha384_ctr_aes,
->         &safexcel_alg_authenc_hmac_sha512_ctr_aes,
->         &safexcel_alg_xts_aes,
->         &safexcel_alg_gcm,
->         &safexcel_alg_ccm,
-> -       &safexcel_alg_crc32,
->         &safexcel_alg_cbcmac,
->         &safexcel_alg_xcbcmac,
->         &safexcel_alg_cmac,
->         &safexcel_alg_chacha20,
->         &safexcel_alg_chachapoly,
-> diff --git a/drivers/crypto/inside-secure/safexcel.h b/drivers/crypto/inside-secure/safexcel.h
-> index 0c79ad78d1c0a..0f27367a85fa2 100644
-> --- a/drivers/crypto/inside-secure/safexcel.h
-> +++ b/drivers/crypto/inside-secure/safexcel.h
-> @@ -957,11 +957,10 @@ extern struct safexcel_alg_template safexcel_alg_authenc_hmac_sha256_ctr_aes;
->  extern struct safexcel_alg_template safexcel_alg_authenc_hmac_sha384_ctr_aes;
->  extern struct safexcel_alg_template safexcel_alg_authenc_hmac_sha512_ctr_aes;
->  extern struct safexcel_alg_template safexcel_alg_xts_aes;
->  extern struct safexcel_alg_template safexcel_alg_gcm;
->  extern struct safexcel_alg_template safexcel_alg_ccm;
-> -extern struct safexcel_alg_template safexcel_alg_crc32;
->  extern struct safexcel_alg_template safexcel_alg_cbcmac;
->  extern struct safexcel_alg_template safexcel_alg_xcbcmac;
->  extern struct safexcel_alg_template safexcel_alg_cmac;
->  extern struct safexcel_alg_template safexcel_alg_chacha20;
->  extern struct safexcel_alg_template safexcel_alg_chachapoly;
-> diff --git a/drivers/crypto/inside-secure/safexcel_hash.c b/drivers/crypto/inside-secure/safexcel_hash.c
-> index d2b632193bebb..fd34dc8f5707d 100644
-> --- a/drivers/crypto/inside-secure/safexcel_hash.c
-> +++ b/drivers/crypto/inside-secure/safexcel_hash.c
-> @@ -287,18 +287,12 @@ static int safexcel_handle_req_result(struct safexcel_crypto_priv *priv,
->
->                         *should_complete = false; /* Not done yet */
->                         return 1;
->                 }
->
-> -               if (unlikely(sreq->digest == CONTEXT_CONTROL_DIGEST_XCM &&
-> -                            ctx->alg == CONTEXT_CONTROL_CRYPTO_ALG_CRC32)) {
-> -                       /* Undo final XOR with 0xffffffff ...*/
-> -                       *(__le32 *)areq->result = ~sreq->state[0];
-> -               } else {
-> -                       memcpy(areq->result, sreq->state,
-> -                              crypto_ahash_digestsize(ahash));
-> -               }
-> +               memcpy(areq->result, sreq->state,
-> +                      crypto_ahash_digestsize(ahash));
->         }
->
->         cache_len = safexcel_queued_len(sreq);
->         if (cache_len)
->                 memcpy(sreq->cache, sreq->cache_next, cache_len);
-> @@ -1879,92 +1873,10 @@ struct safexcel_alg_template safexcel_alg_hmac_md5 = {
->                         },
->                 },
->         },
->  };
->
-> -static int safexcel_crc32_cra_init(struct crypto_tfm *tfm)
-> -{
-> -       struct safexcel_ahash_ctx *ctx = crypto_tfm_ctx(tfm);
-> -       int ret = safexcel_ahash_cra_init(tfm);
-> -
-> -       /* Default 'key' is all zeroes */
-> -       memset(&ctx->base.ipad, 0, sizeof(u32));
-> -       return ret;
-> -}
-> -
-> -static int safexcel_crc32_init(struct ahash_request *areq)
-> -{
-> -       struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(areq));
-> -       struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
-> -
-> -       memset(req, 0, sizeof(*req));
-> -
-> -       /* Start from loaded key */
-> -       req->state[0]   = cpu_to_le32(~ctx->base.ipad.word[0]);
-> -       /* Set processed to non-zero to enable invalidation detection */
-> -       req->len        = sizeof(u32);
-> -       req->processed  = sizeof(u32);
-> -
-> -       ctx->alg = CONTEXT_CONTROL_CRYPTO_ALG_CRC32;
-> -       req->digest = CONTEXT_CONTROL_DIGEST_XCM;
-> -       req->state_sz = sizeof(u32);
-> -       req->digest_sz = sizeof(u32);
-> -       req->block_sz = sizeof(u32);
-> -
-> -       return 0;
-> -}
-> -
-> -static int safexcel_crc32_setkey(struct crypto_ahash *tfm, const u8 *key,
-> -                                unsigned int keylen)
-> -{
-> -       struct safexcel_ahash_ctx *ctx = crypto_tfm_ctx(crypto_ahash_tfm(tfm));
-> -
-> -       if (keylen != sizeof(u32))
-> -               return -EINVAL;
-> -
-> -       memcpy(&ctx->base.ipad, key, sizeof(u32));
-> -       return 0;
-> -}
-> -
-> -static int safexcel_crc32_digest(struct ahash_request *areq)
-> -{
-> -       return safexcel_crc32_init(areq) ?: safexcel_ahash_finup(areq);
-> -}
-> -
-> -struct safexcel_alg_template safexcel_alg_crc32 = {
-> -       .type = SAFEXCEL_ALG_TYPE_AHASH,
-> -       .algo_mask = 0,
-> -       .alg.ahash = {
-> -               .init = safexcel_crc32_init,
-> -               .update = safexcel_ahash_update,
-> -               .final = safexcel_ahash_final,
-> -               .finup = safexcel_ahash_finup,
-> -               .digest = safexcel_crc32_digest,
-> -               .setkey = safexcel_crc32_setkey,
-> -               .export = safexcel_ahash_export,
-> -               .import = safexcel_ahash_import,
-> -               .halg = {
-> -                       .digestsize = sizeof(u32),
-> -                       .statesize = sizeof(struct safexcel_ahash_export_state),
-> -                       .base = {
-> -                               .cra_name = "crc32",
-> -                               .cra_driver_name = "safexcel-crc32",
-> -                               .cra_priority = SAFEXCEL_CRA_PRIORITY,
-> -                               .cra_flags = CRYPTO_ALG_OPTIONAL_KEY |
-> -                                            CRYPTO_ALG_ASYNC |
-> -                                            CRYPTO_ALG_ALLOCATES_MEMORY |
-> -                                            CRYPTO_ALG_KERN_DRIVER_ONLY,
-> -                               .cra_blocksize = 1,
-> -                               .cra_ctxsize = sizeof(struct safexcel_ahash_ctx),
-> -                               .cra_init = safexcel_crc32_cra_init,
-> -                               .cra_exit = safexcel_ahash_cra_exit,
-> -                               .cra_module = THIS_MODULE,
-> -                       },
-> -               },
-> -       },
-> -};
-> -
->  static int safexcel_cbcmac_init(struct ahash_request *areq)
->  {
->         struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(areq));
->         struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
->
->
-> base-commit: 4cb6c8af8591135ec000fbe4bb474139ceec595d
-> --
-> 2.49.0
->
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506011712.L8Jfbz6T-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   grep: net/wireless/util.c: No such file or directory
+   grep: net/wireless/wext-compat.c: No such file or directory
+   grep: net/wireless/wext-core.c: No such file or directory
+   grep: net/wireless/wext-sme.c: No such file or directory
+   grep: net/x25/x25_proc.c: No such file or directory
+   grep: net/xfrm/xfrm_proc.c: No such file or directory
+   grep: net/xfrm/xfrm_replay.c: No such file or directory
+   grep: rust/exports.c: No such file or directory
+   grep: security/integrity/evm/evm_crypto.c: No such file or directory
+   grep: security/integrity/ima/ima_mok.c: No such file or directory
+   grep: security/integrity/platform_certs/platform_keyring.c: No such file or directory
+   grep: security/keys/encrypted-keys/ecryptfs_format.c: No such file or directory
+   grep: security/keys/key.c: No such file or directory
+   grep: security/keys/keyring.c: No such file or directory
+   grep: security/keys/permission.c: No such file or directory
+   grep: security/keys/request_key.c: No such file or directory
+   grep: security/keys/user_defined.c: No such file or directory
+   grep: security/lockdown/lockdown.c: No such file or directory
+   grep: security/security.c: No such file or directory
+   grep: security/selinux/hooks.c: No such file or directory
+   grep: security/selinux/netlink.c: No such file or directory
+   grep: sound/core/ctljack.c: No such file or directory
+   grep: sound/core/device.c: No such file or directory
+   grep: sound/core/info_oss.c: No such file or directory
+   grep: sound/core/isadma.c: No such file or directory
+   grep: sound/core/memory.c: No such file or directory
+   grep: sound/core/misc.c: No such file or directory
+   grep: sound/core/pcm_drm_eld.c: No such file or directory
+   grep: sound/core/pcm_iec958.c: No such file or directory
+   grep: sound/core/pcm_lib.c: No such file or directory
+   grep: sound/core/pcm_memory.c: No such file or directory
+   grep: sound/core/pcm_misc.c: No such file or directory
+   grep: sound/core/seq/oss/seq_oss_init.c: No such file or directory
+   grep: sound/core/seq/seq_clientmgr.c: No such file or directory
+   grep: sound/core/seq/seq_info.c: No such file or directory
+   grep: sound/core/seq/seq_lock.c: No such file or directory
+   grep: sound/core/seq/seq_memory.c: No such file or directory
+   grep: sound/core/seq/seq_system.c: No such file or directory
+   grep: sound/core/sound_oss.c: No such file or directory
+   grep: sound/core/ump.c: No such file or directory
+   grep: sound/core/ump_convert.c: No such file or directory
+   grep: sound/core/vmaster.c: No such file or directory
+   grep: sound/drivers/opl3/opl3_oss.c: No such file or directory
+   grep: sound/drivers/opl3/opl3_synth.c: No such file or directory
+   grep: sound/drivers/opl4/opl4_proc.c: No such file or directory
+   grep: sound/firewire/iso-resources.c: No such file or directory
+   grep: sound/firewire/packets-buffer.c: No such file or directory
+   grep: sound/hda/hda_bus_type.c: No such file or directory
+   grep: sound/hda/hdac_bus.c: No such file or directory
+   grep: sound/hda/hdac_controller.c: No such file or directory
+   grep: sound/hda/hdac_device.c: No such file or directory
+   grep: sound/hda/hdac_regmap.c: No such file or directory
+   grep: sound/hda/hdac_stream.c: No such file or directory
+   grep: sound/hda/intel-sdw-acpi.c: No such file or directory
+   grep: sound/isa/gus/gus_volume.c: No such file or directory
+   grep: sound/isa/msnd/msnd_midi.c: No such file or directory
+   grep: sound/isa/msnd/msnd_pinnacle_mixer.c: No such file or directory
+   grep: sound/isa/sb/emu8000.c: No such file or directory
+   grep: sound/isa/sb/emu8000_callback.c: No such file or directory
+   grep: sound/pci/ac97/ac97_pcm.c: No such file or directory
+   grep: sound/pci/au88x0/au88x0_game.c: No such file or directory
+   grep: sound/pci/cs46xx/cs46xx_lib.c: No such file or directory
+   grep: sound/pci/emu10k1/emu10k1_callback.c: No such file or directory
+   grep: sound/pci/emu10k1/io.c: No such file or directory
+   grep: sound/pci/emu10k1/memory.c: No such file or directory
+   grep: sound/pci/emu10k1/voice.c: No such file or directory
+   grep: sound/pci/hda/hda_auto_parser.c: No such file or directory
+   grep: sound/pci/hda/hda_beep.c: No such file or directory
+   grep: sound/pci/hda/hda_bind.c: No such file or directory
+   grep: sound/pci/hda/hda_generic.c: No such file or directory
+   grep: sound/pci/hda/hda_jack.c: No such file or directory
+   grep: sound/pci/hda/hda_sysfs.c: No such file or directory
+   grep: sound/pci/oxygen/oxygen_io.c: No such file or directory
+   grep: sound/pci/trident/trident_main.c: No such file or directory
+   grep: sound/soc/amd/acp/acp-legacy-common.c: No such file or directory
+   grep: sound/soc/amd/acp/amd-sdw-acpi.c: No such file or directory
+   grep: sound/soc/amd/ps/ps-common.c: No such file or directory
+   grep: sound/soc/atmel/sam9x5_wm8731.c: No such file or directory
+   grep: sound/soc/codecs/lpass-macro-common.c: No such file or directory
+   grep: sound/soc/codecs/sigmadsp-i2c.c: No such file or directory
+   grep: sound/soc/codecs/sigmadsp-regmap.c: No such file or directory
+   grep: sound/soc/codecs/wm5100.c: No such file or directory
+   grep: sound/soc/qcom/lpass-cdc-dma.c: No such file or directory
+   grep: sound/soc/qcom/lpass-platform.c: No such file or directory
+   grep: sound/soc/soc-ac97.c: No such file or directory
+   grep: sound/soc/soc-acpi.c: No such file or directory
+   grep: sound/soc/soc-jack.c: No such file or directory
+   grep: sound/soc/soc-pcm.c: No such file or directory
+   grep: sound/soc/soc-topology.c: No such file or directory
+   grep: sound/soc/soc-utils.c: No such file or directory
+   grep: sound/soc/sof/intel/icl.c: No such file or directory
+   grep: sound/soc/sof/stream-ipc.c: No such file or directory
+   grep: sound/soc/tegra/tegra_asoc_machine.c: No such file or directory
+   grep: sound/synth/emux/emux_oss.c: No such file or directory
+   grep: sound/synth/emux/emux_synth.c: No such file or directory
+   grep: sound/synth/emux/soundfont.c: No such file or directory
+   grep: sound/usb/line6/driver.c: No such file or directory
+   grep: sound/usb/line6/midi.c: No such file or directory
+   grep: sound/usb/line6/pcm.c: No such file or directory
+   grep: virt/kvm/irqchip.c: No such file or directory
+>> : warning: EXPORT_SYMBOL() is not used, but #include <linux/export.h> is present
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
