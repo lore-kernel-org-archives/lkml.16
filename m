@@ -1,124 +1,152 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2739D15E96;
-	Sun,  1 Jun 2025 05:50:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF17C13D
+	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 06:06:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748757039; cv=none; b=DjTngn9EGOl2tcNfoaKNTyrCqCKK9hZ8nhwH0xTI4W0kCq/ZWZUbUd9PHnzWndtBGY7uB5rHgPK2HMOQKebcUuj/5Kf0cmUurqlaohvGu71fb4pyAtvB2N6TSX9QjkA376jBLU19NBLnV+a8TqQL214EXYMgI0HAbIATJYt3b8k=
+	t=1748757990; cv=none; b=Kdx8HiCW5uSetCUONZkHKhxmy6Dxm9SnfeUDCRbEO4y08Ht1SMOO/PNnpXVXbUj9tdOtr6OqEZSxd2xvAwFbfA0XrPQoopd9U46Cn+Y7bm+A62quVk3zwHab8YEnUhBhBrtNxnBFn7vB8tUxWW54XkE5ZG6qGbVzYNMrUUcp8u0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748757039; c=relaxed/simple;
-	bh=ziibf4sLXY9QYfeQsq+F7s4Q/U5BplryJ9V+6T5yZAY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WmjIda974jjhlQBGZ7mDp/lFJVO++dB3jdn6MMM66JOn/q2IzBPs6zyFsREgYU8ifDcH2bLXubPiKFZFda3ST2K0qmgny+JVxjvCKvd3MCGm8truoR4yu7z8ZaTr1p3KtTBjDzBUW0m2Fs10/de4vg9AeGz1XfQxgpZuOjoDPLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XHqKRdTf; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XHqKRdTf"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-311da0bef4aso3630085a91.3;
-        Sat, 31 May 2025 22:50:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748757037; x=1749361837; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TDAGXeqXBL9QqLktRVbnmbiTE/ZSUhZC1jkXPDdNOIk=;
-        b=XHqKRdTfP9xQDX9c5cO4koe5GsVeMMhCcANqDQsDiga9TwMcHsWjYp+AM34pDBtgl8
-         KncOO9dQfha9Sbr2HmM5peg/qhkygC3ZwAdUH4nRLvBalG9hcHR76t6iMZxtXkRE061g
-         tYNhKD3YcIvWxRFwRWQeOQPKK3z1H2iHzT3lIsMLjn80z5jRaUb6RH/IiXbrN+qUQroW
-         ZoDudnZCXQQEz/l7/SsLyFl33SjuA5p89e7p9CZy/c3356DzNWk9qQWpONohFe2HrAcd
-         bKlxX0/H1WT8X+HvOTnKaYmUQvL8ksiUpv2GagSBt3go5XGLL2PB+PdzydJ/RUv1gz5F
-         B3aA==
+	s=arc-20240116; t=1748757990; c=relaxed/simple;
+	bh=p4EpFZAyDWxU/aeNsGjxVz0cZ/jPMNVBlfnChRuUv1s=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=I0RoOE5GOSZzxnvMeA5UM+i4k113/H8dUAld76/i9gn/P6vIAjC1h3MWDgbZWUXABmr8esn+N3AWIfeOCDK1h9tsqJoheL/8pJnfITyH+gCZ286gb1aCMGICMrA72LFQBX1xRYVSScbyPiKrSECYvI0kObZ0XollpC9r4nPoH8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3dda4148039so12906585ab.0
+        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 23:06:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748757037; x=1749361837;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TDAGXeqXBL9QqLktRVbnmbiTE/ZSUhZC1jkXPDdNOIk=;
-        b=JowRhIZQbOXLGPD3wu4hU0GK1ybBzYHFxnyC87I2DhDcbd9Rzs7DfQJpt5RxgnZqLg
-         ygZhenOkSpUFm5RYlqdHN2wY/2wx1DqlKwy/96MUzvWOv7dDnyYrNSt8VHthHA1Gqxlf
-         43HRh6CEBLQqSPz3aHoMaYitZK0hxDDVv4S+YbQKrCf2hVEqpTkPNn1/ZKdwW5Q15R5o
-         GnYS8BBPs5YyZHtu3YqfTtd4I5+J7GDc9H4CdDoMLsUlfb61F50uSbdIa4K0iMl2mRd8
-         m7WtD55EBE7/8BPouCJ3dMGw8xRle+RHAf5KSqyQgWWYXke571NTHTG03aIw747k+dDg
-         980g==
-X-Forwarded-Encrypted: i=1; AJvYcCVgR6Q+i+0Rgk4V9fe+FgCfScfkxzRw7kAR1u9SdnxduN9A8MpOjhgHEGrdRwi15jFO0aH6LKg+j2Bmb3pIMSc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMRnOwm3+swT+g/mCsJQJ1Oe+BaqWPna4CzNhSA4fSoVCs7Z2C
-	PYSveOvNjsamdMTlUm0x+nInKwZ2JJjEIkg09QqhWxjVDJBAV1AwROGMSgrVPA==
-X-Gm-Gg: ASbGnctMpEghJ39X8rN8mPHWNZ20H/C7XRd0NSbg+oGAPZcLMmwH3rbCagNRplbfj2b
-	K01iXbnIqnNUnrIIfGKVwGhAII2e1e+XjtBBSvkqo896TZsz5zd6UjAmWHttDcWuxIhi3RbEMYA
-	uDmHWARGTOqE2hTe8nMVHIGBA8y4Vos+EgxpVYyfMQ8aSDIYzOAsO5n5RLf0tbyyxbmMHuE2C5I
-	jOGaeuCs4N7H7sgHS9HdXfEYtgJRhv9LsRn1687ar/Z9aGfft1oTp2Rp5zdcO3lNmNf3jYlsu8K
-	v4IVSckFvSp5fwA5VAQNjmYv6qGJoXRix3kkYgntnqg6H0kRy4grm8l+365koy5uAReHAxFkxHs
-	/42nJVWqRGQJY+FRouLb1535C/yzkx1djqyYTJA==
-X-Google-Smtp-Source: AGHT+IH+aRspy/krYFsFMAI2O4WjR38wC8YIQMhOOHCMZ2rwFeCvyAiJp7iRLyPtec4QfVQqYO4GFA==
-X-Received: by 2002:a17:90a:e7cb:b0:311:9c9a:58e3 with SMTP id 98e67ed59e1d1-3127c6d713cmr6234141a91.10.1748757037083;
-        Sat, 31 May 2025 22:50:37 -0700 (PDT)
-Received: from localhost.localdomain (69-172-146-21.cable.teksavvy.com. [69.172.146.21])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e3c0db6sm3889756a91.34.2025.05.31.22.50.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 May 2025 22:50:36 -0700 (PDT)
-From: Tony Ambardar <tony.ambardar@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-debuggers@vger.kernel.org
-Cc: Tony Ambardar <tony.ambardar@gmail.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Kieran Bingham <kbingham@kernel.org>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Christian Brauner <brauner@kernel.org>
-Subject: [PATCH v1] scripts/gdb: fix parsing of MNT_* constants
-Date: Sat, 31 May 2025 22:50:27 -0700
-Message-Id: <20250601055027.3661480-1-tony.ambardar@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1748757988; x=1749362788;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Kabmbo8phJB46YgVpQXJIaqZwVULOZk2uHf/LD/syXQ=;
+        b=bezR61YN4HyAzYOLNRBRT1eoIBVD4DBE6uUOPXTeFpq/Wz1IC97HWinBCo4YD0+dtI
+         NnwBwQ0kNosr+/fWrkFZQ7VXwyLsu3D8wBqvTqITjKCKLdHovD81CKdzec0WONkjVuDQ
+         chUcz00W+4omGKDHiccNKK6CZpqWOwevdaEFz6DamScFUS/LebjlfesloPRIS38vRHFc
+         tDy9od9FYtT5VmwjGprIyM61LFkQ/F/4JqfH3nCKD9DS3GiXp7swlvvIUl2qVv83Gu7F
+         a/gleLMS4IVm+ENF0miZpCe7qLhb5kRwNG2b90rvvpfyn8dUeBzQ/EK/sWpoW2eZTMoV
+         hwsw==
+X-Forwarded-Encrypted: i=1; AJvYcCVclzsYdDIugAsPv2p28UbmIJ/iTzWga8l/07RpPtsOojB3thS/9awnb2A/xPwUmViJkpzttzTWZWgRdsQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFTkO0g8az2IFWMnLVY85hs/vtz6f4Wvl7xFQY7U1tkTThXoXG
+	DqmrmUCFNeeufFtmnpLZREzoJnjvvtNdHHrEX4FDEc6JhCBbEzEl8A7J/kye1zyoLLlOUomnir2
+	lGk8ll8MaKuVX99l6+aKb6BpYcXj2hMXcik9VTlMxmUk+PnFBE5XMHg8yLqc=
+X-Google-Smtp-Source: AGHT+IGG+J265gMQ/sp7rKTTgnO1EgW1mLGrm4DQ1bu7tp2Ku0gcRG5YqbK9+zbiJoZ0AihVfdo6RFeTIQr1LUdOxXHOXsHeBv56
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1a01:b0:3dc:7bc9:5058 with SMTP id
+ e9e14a558f8ab-3dd9c9936bemr84598425ab.7.1748757988285; Sat, 31 May 2025
+ 23:06:28 -0700 (PDT)
+Date: Sat, 31 May 2025 23:06:28 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <683bede4.a00a0220.d8eae.002a.GAE@google.com>
+Subject: [syzbot] [bcachefs?] BUG: unable to handle kernel NULL pointer
+ dereference in mempool_alloc_noprof (2)
+From: syzbot <syzbot+56edda805363e0a093b8@syzkaller.appspotmail.com>
+To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Recently, constants in linux/mount.h were changed from integer macros
-parsable by LX_VALUE() to enums which are not, thus breaking gdb python
-scripts:
+Hello,
 
-  Reading symbols from vmlinux...
-  Traceback (most recent call last):
-    File ".../linux/vmlinux-gdb.py", line 25, in <module>
-      import linux.constants
-    File ".../linux/scripts/gdb/linux/constants.py", line 19, in <module>
-      LX_MNT_NOSUID = MNT_NOSUID
-  NameError: name 'MNT_NOSUID' is not defined
+syzbot found the following issue on:
 
-Update to parse with LX_GDBPARSED(), which correctly handles enums.
+HEAD commit:    4cb6c8af8591 selftests/filesystems: Fix build of anon_inod..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16a8a00c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=43b7075a5c42ffca
+dashboard link: https://syzkaller.appspot.com/bug?extid=56edda805363e0a093b8
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11c67ed4580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=147a300c580000
 
-Fixes: 101f2bbab541 ("fs: convert mount flags to enum")
-Signed-off-by: Tony Ambardar <tony.ambardar@gmail.com>
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-4cb6c8af.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/91b28032d866/vmlinux-4cb6c8af.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/7cf2a9f8c096/bzImage-4cb6c8af.xz
+mounted in repro #1: https://storage.googleapis.com/syzbot-assets/9c0eef7ba9b5/mount_0.gz
+mounted in repro #2: https://storage.googleapis.com/syzbot-assets/0c5386ea7a4e/mount_4.gz
+  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=12a8a00c580000)
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+56edda805363e0a093b8@syzkaller.appspotmail.com
+
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+#PF: supervisor instruction fetch in kernel mode
+#PF: error_code(0x0010) - not-present page
+PGD 0 P4D 0 
+Oops: Oops: 0010 [#1] SMP KASAN NOPTI
+CPU: 0 UID: 0 PID: 5317 Comm: syz-executor257 Not tainted 6.15.0-syzkaller-10402-g4cb6c8af8591 #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:0x0
+Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+RSP: 0018:ffffc9000d3fedb8 EFLAGS: 00010246
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffff888044583ee8
+RDX: 1ffff110088b07dd RSI: 0000000000000000 RDI: 0000000000092800
+RBP: ffffc9000d3fef10 R08: ffffc9000d3fee87 R09: 0000000000000000
+R10: ffffc9000d3fee60 R11: 0000000000000000 R12: 1ffff92001a7fdc8
+R13: ffff888044583ee8 R14: 0000000000092c40 R15: 0000000000092800
+FS:  0000000000000000(0000) GS:ffff88808d265000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffffd6 CR3: 0000000042a6b000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ mempool_alloc_noprof+0x1a7/0x510 mm/mempool.c:402
+ bch2_btree_update_start+0x549/0x1480 fs/bcachefs/btree_update_interior.c:1194
+ bch2_btree_node_rewrite+0x17e/0x1120 fs/bcachefs/btree_update_interior.c:2208
+ bch2_move_btree+0x6f0/0xc70 fs/bcachefs/move.c:1093
+ bch2_scan_old_btree_nodes+0x95/0x240 fs/bcachefs/move.c:1215
+ bch2_data_job+0x646/0x910 fs/bcachefs/move.c:1354
+ bch2_data_thread+0x8f/0x1d0 fs/bcachefs/chardev.c:315
+ kthread+0x711/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Modules linked in:
+CR2: 0000000000000000
+---[ end trace 0000000000000000 ]---
+RIP: 0010:0x0
+Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+RSP: 0018:ffffc9000d3fedb8 EFLAGS: 00010246
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffff888044583ee8
+RDX: 1ffff110088b07dd RSI: 0000000000000000 RDI: 0000000000092800
+RBP: ffffc9000d3fef10 R08: ffffc9000d3fee87 R09: 0000000000000000
+R10: ffffc9000d3fee60 R11: 0000000000000000 R12: 1ffff92001a7fdc8
+R13: ffff888044583ee8 R14: 0000000000092c40 R15: 0000000000092800
+FS:  0000000000000000(0000) GS:ffff88808d265000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffffd6 CR3: 0000000042a6b000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
- scripts/gdb/linux/constants.py.in | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/scripts/gdb/linux/constants.py.in b/scripts/gdb/linux/constants.py.in
-index fd6bd69c5096..d5e3069f42a7 100644
---- a/scripts/gdb/linux/constants.py.in
-+++ b/scripts/gdb/linux/constants.py.in
-@@ -73,12 +73,12 @@ if IS_BUILTIN(CONFIG_MODULES):
-     LX_GDBPARSED(MOD_RO_AFTER_INIT)
- 
- /* linux/mount.h */
--LX_VALUE(MNT_NOSUID)
--LX_VALUE(MNT_NODEV)
--LX_VALUE(MNT_NOEXEC)
--LX_VALUE(MNT_NOATIME)
--LX_VALUE(MNT_NODIRATIME)
--LX_VALUE(MNT_RELATIME)
-+LX_GDBPARSED(MNT_NOSUID)
-+LX_GDBPARSED(MNT_NODEV)
-+LX_GDBPARSED(MNT_NOEXEC)
-+LX_GDBPARSED(MNT_NOATIME)
-+LX_GDBPARSED(MNT_NODIRATIME)
-+LX_GDBPARSED(MNT_RELATIME)
- 
- /* linux/threads.h */
- LX_VALUE(NR_CPUS)
--- 
-2.34.1
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
