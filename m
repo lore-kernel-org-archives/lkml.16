@@ -1,115 +1,180 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B9F528C2C6
-	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 23:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2568628C2C6;
+	Sun,  1 Jun 2025 23:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748820651; cv=none; b=rIPt7tsNs0vrFP91erN9Lzro4xRdoSMOIy4ORsaJnzEWNL2VDa4YFVgujP4CViTFRCVRbUZ/ydccDU56IssjzrHL3LKGMxxw1B4G4gpx7JoL7SlqX5YX8SVp3dirgI452uJkVMtQG+nOPbEiNvSPSOmgatpU3deq/X3Jeu86bBQ=
+	t=1748820655; cv=none; b=pGLcaZ/+LjWd0FWeYjh1LHd6PyRmImyQ8LCClwHcgNK4q2ECDZVBapDq6hLMdfA30ZhomIrLgPuuHWwjFFRMZYDy7FXp/HG0KbkhEbWmavbMOKEJgSRaxs5Tbdlmkkuo1SeJ+Yy9Kg+K/vLZ4bY+NvwOExK2yioZOLhTvQOfgko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748820651; c=relaxed/simple;
-	bh=SSGlRVBX7Ip3ay6aSI5KJLngtv0nEq6HZf42gbzA32M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZO5gbEtmPGXzaWjcF633qNK+Ipn1t3eONMlz3SDZCst3vNUkbh98KYxB53RQX9IuaMdCzSb1yfE90JKy+vbQKGO/sFbSjgEI48XtK/iTbGaLqr+n/Nxciwszat8twKaBZB84IhHWXu/1EVYekwmHqwj1TsNd80fXvICo7qMeUOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=ALjex9gR; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1748820655; c=relaxed/simple;
+	bh=9og2VsVFLO1WyGW2P38xeU+fq8zDJRoN5UfjuKK17NI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PuCXYHxBCyhIUXmvyFa5ZgnSccFXeyYbSgQAUGSU9bOT8RsfgliBFNK6GzDHjBOrOBT9jjFJEefh0rjm847aaJowLKfnfdz8qYTZCHnIuSfUmEp3P8yswH5kxSu/hhDQJ2fIfJ9vnnd+E643R6QKbMIN6gsUeFPVS0v7tpBjO98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LOTwwJb2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="ALjex9gR"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4947635914aso40355791cf.3
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Jun 2025 16:30:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1748820647; x=1749425447; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z3ahtq5iYBzerYLsn2L4RRjLdCR+uk5v7bMh9egaPjI=;
-        b=ALjex9gRMTmQ50it4soOyvAbAxZmVhMqeTenLVUSlJgmgg2i436msWqW7NPxB+PcGz
-         8E71fLpVjbn7fnG32k8Cd33Im37uQienEuVV5aZKfwwRJH/g2N4N0WSPUcHv/YJVB7Me
-         vUCq1fJJRACnOIOO82ys7g6agTDGMGelgnXRZMkBRCPcyTJgNNyyNPL4QORouDo0bsWf
-         LuiaONA3E5+LirJ8+frAHn94QnCaeSXPMS6UcWmmIxfgNPZMKmu1tTd1z2XgaaH2ZLfK
-         s+wdNie7dcETYVAw3m7HcYLpI70eH6OKE/gT4ftKWRzPf9MJRXa9tWRLAiVM0w8zarNq
-         p++Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748820647; x=1749425447;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z3ahtq5iYBzerYLsn2L4RRjLdCR+uk5v7bMh9egaPjI=;
-        b=no+3jOAPLfhmraJenrHvdN3LLnaGwVV+WzZLbBP2ptytYY/tM68Wor/IwObvfGMlNd
-         J/GTV9+n0F30LYL0cyQ4LNLMfJ3+IRJ2WQgE1n5RjRE31xvi2KNvIG1eCMXAQxqsdIrj
-         9W7whFMRlTZwV+Aenk9Y1gLCP0OXtNSgNiTsOPLAi6xu5jSOx2r4IHnv5q+5HJCEdTYd
-         2r+vpdnMqUWx1akAc4LVtfb1DzxN5Lo1gf4RJxLaFLzqzWIAs7zEeyTKvvaOy8oCPHZQ
-         7cdh9+OOE9tabz9Ne74oj3MYcEOAsqa5eHFFe7j1XYfN8BqfMpPQJO9pumiTENuRQM0o
-         0zIA==
-X-Forwarded-Encrypted: i=1; AJvYcCXO0fyHKczAtcwm0p27wbG/9sBMJiAC+09IVo2O523EUvIJjpQLzE2uC62YWuGP8bn5rJXaMbGZmrIngd8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/UoHxOMEaBXzGPIE/RDbNd5VpsvWSFoPrCvsjwzKGmEPJTV6L
-	6HWXxG3O27/MyiGiOkaOAAu9V/uQN/3xHrawC7Y9SSVkj9SCtg72PKAKJ9i9+mjGQ5Q=
-X-Gm-Gg: ASbGncsAw1wwaCGHuB3xoswxU1RIdNXCS5sDJj112q65ZC/+6QwkYSWy9cYzDc4Ile4
-	II4r0P1zJ+szjrai+ScCPTzQsaM+0qrpolIgN/EAzRpiJRJYYHVCU5bdyXszxq9Td6eEF3MrpTz
-	P9q8fRUVM+FS3+sjNPlSPNf6iXi/Ag5CZyJUoLcbNKcDGVUI9DKY4/YWb7viNfSdTanWx37vkMB
-	NIPJ/QoAWEAMOE9P/tf8HEPn8x1QRsxvMvO6MPu2qIdkPqJEMwMHD4MUBqRaxtSugW/xGPwPaF5
-	sdoQ1GZIncsd7yZcBKV4z7uT+kzRpEImtVDr6fOzXtCHrXkxPRjsCh3ie2zbis7HBkib6GPU+nH
-	EY6FYLeG4pttWsdfWBrBmrsY1FTGIIJA=
-X-Google-Smtp-Source: AGHT+IHAt46IPZ2ZNZ13vLsgj7LdizYMg33TCIokRzOtUXTMz4rVh+t4qoD51lnIbRNNJhpIDOFVlg==
-X-Received: by 2002:a05:620a:1a93:b0:7c5:49b7:237c with SMTP id af79cd13be357-7d0a1fb77c1mr1867411185a.27.1748820647265;
-        Sun, 01 Jun 2025 16:30:47 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fac6e00cebsm52506366d6.73.2025.06.01.16.30.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Jun 2025 16:30:46 -0700 (PDT)
-Date: Sun, 1 Jun 2025 19:30:44 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Alok Tiwari <alok.a.tiwari@oracle.com>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com, corbet@lwn.net,
-	linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, darren.kenny@oracle.com
-Subject: Re: [PATCH] Documentation: cxl: fix typos and improve clarity in
- memory-devices.rst
-Message-ID: <aDzipGmldaeje43H@gourry-fedora-PF4VCD3F>
-References: <20250531075209.3334261-1-alok.a.tiwari@oracle.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LOTwwJb2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B6B8C4CEF2;
+	Sun,  1 Jun 2025 23:30:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748820654;
+	bh=9og2VsVFLO1WyGW2P38xeU+fq8zDJRoN5UfjuKK17NI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=LOTwwJb2NsvIiUx/vWj8XOiV1c5j0u5ZS15OGNMN6szTUrLrtpUC5Lo4tonY+23PQ
+	 eCwdjEl5RCzO/X6rsZLjMOjC3hro/qlhKEDCTx/x+4vrNpyiYVzgdySiCuwX5zxOIA
+	 I967ALr62iKqmKwDCAFcGVi2T9XokPuOKuwnf5pK5cyAqGeUGJZaTxySc1EvAFZEAY
+	 QrVzy0PJbL5GHJlrfk/mFNt3LEdxG68RSBE70hVxns8CNlb7Su3iBWN3f8iUDgOooa
+	 mGvzwd4iojDoZFMMwnUwWcDWOW/zAmZf7Qb3cqaOIS1NjNh491YeBCIAN/3eXmWXJu
+	 s8ahBsa2lpIVA==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
+	Harry Wentland <harry.wentland@amd.com>,
+	Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+	Tom Chung <chiahsuan.chung@amd.com>,
+	Roman Li <roman.li@amd.com>,
+	Alex Hung <alex.hung@amd.com>,
+	Aurabindo Pillai <aurabindo.pillai@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Sasha Levin <sashal@kernel.org>,
+	sunpeng.li@amd.com,
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	mario.limonciello@amd.com,
+	Wayne.Lin@amd.com,
+	dominik.kaszewski@amd.com,
+	mwen@igalia.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.14 029/102] drm/amd/display: Add NULL pointer checks in dm_force_atomic_commit()
+Date: Sun,  1 Jun 2025 19:28:21 -0400
+Message-Id: <20250601232937.3510379-29-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250601232937.3510379-1-sashal@kernel.org>
+References: <20250601232937.3510379-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250531075209.3334261-1-alok.a.tiwari@oracle.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.14.9
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sat, May 31, 2025 at 12:51:58AM -0700, Alok Tiwari wrote:
-> This patch corrects several typographical issues and improves phrasing
-> in memory-devices.rst:
-> 
-> - Fixes duplicate word ("1 one") and adjusts phrasing for clarity.
-> - Adds missing hyphen in "on-device".
-> - Corrects "a give memory device" to "a given memory device".
-> - fix singular/plural "decoder resource" -> "decoder resources".
-> - Clarifies "spans to Host Bridges" -> "spans two Host Bridges".
-> 
-> These changes improve readability and accuracy of the documentation.
-> 
-> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
-> ---
->  Documentation/driver-api/cxl/memory-devices.rst | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
-> index d732c42526df..e9e2952a967d 100644
-> --- a/Documentation/driver-api/cxl/memory-devices.rst
-> +++ b/Documentation/driver-api/cxl/memory-devices.rst
-> @@ -29,8 +29,8 @@ Platform firmware enumerates a menu of interleave options at the "CXL root port"
->  (Linux term for the top of the CXL decode topology). From there, PCIe topology
->  dictates which endpoints can participate in which Host Bridge decode regimes.
->  Each PCIe Switch in the path between the root and an endpoint introduces a point
-> -at which the interleave can be split. For example platform firmware may say at a
-> -given range only decodes to 1 one Host Bridge, but that Host Bridge may in turn
-> +at which the interleave can be split. For example, platform firmware may say at a
-                                                                                ^^^^
-If you wouldn't mind, can you also change:                           "at a"  - >  "a"
+From: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
 
-Otherwise
+[ Upstream commit 3f397cd203f247879c2f1a061e90d4c8d23655de ]
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
+This commit updates the dm_force_atomic_commit function to replace the
+usage of PTR_ERR_OR_ZERO with IS_ERR for checking error states after
+retrieving the Connector (drm_atomic_get_connector_state), CRTC
+(drm_atomic_get_crtc_state), and Plane (drm_atomic_get_plane_state)
+states.
+
+The function utilized PTR_ERR_OR_ZERO for error checking. However, this
+approach is inappropriate in this context because the respective
+functions do not return NULL; they return pointers that encode errors.
+
+This change ensures that error pointers are properly checked using
+IS_ERR before attempting to dereference.
+
+Cc: Harry Wentland <harry.wentland@amd.com>
+Cc: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Cc: Tom Chung <chiahsuan.chung@amd.com>
+Cc: Roman Li <roman.li@amd.com>
+Cc: Alex Hung <alex.hung@amd.com>
+Cc: Aurabindo Pillai <aurabindo.pillai@amd.com>
+Signed-off-by: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
+Reviewed-by: Aurabindo Pillai <aurabindo.pillai@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+
+Based on my analysis, here's my assessment: **YES** This commit should
+be backported to stable kernel trees. Here's my detailed analysis: ##
+Commit Analysis **1. Bug Fix Nature:** This commit fixes a clear
+programming error where `PTR_ERR_OR_ZERO()` was incorrectly used to
+check error pointers returned by `drm_atomic_get_connector_state()`,
+`drm_atomic_get_crtc_state()`, and `drm_atomic_get_plane_state()`. The
+commit message clearly states these functions "do not return NULL; they
+return pointers that encode errors." **2. Specific Code Issues Fixed:**
+- **Before:** Used `PTR_ERR_OR_ZERO(conn_state)` which is inappropriate
+since these functions never return NULL - **After:** Uses
+`IS_ERR(conn_state)` followed by `PTR_ERR(conn_state)` which is the
+correct pattern for error pointer checking **3. Comparison with Similar
+Commits:** Looking at the provided examples, this commit closely matches
+**Similar Commit #4 (Status: YES)** which also: - Adds null pointer
+checks for proper error handling - Fixes potential crashes from
+dereferencing error pointers - Is a small, contained bug fix - Addresses
+static analysis findings (Coverity-style issues) **4. Risk Assessment:**
+- **Low Risk:** The change is minimal and only affects error handling
+paths - **No Architectural Changes:** This is purely a bug fix with no
+feature additions - **Contained Impact:** Only affects the
+`dm_force_atomic_commit()` function in AMD display driver - **Improves
+Stability:** Prevents potential kernel crashes from dereferencing error
+pointers **5. Stable Tree Criteria Met:** - ✅ Fixes an important bug
+(potential crash) - ✅ Small and contained change - ✅ No new features
+introduced - ✅ Minimal regression risk - ✅ Clear fix for incorrect API
+usage **6. Critical System Impact:** The DRM subsystem is critical for
+display functionality, and improper error handling in atomic commits
+could lead to: - Kernel oops/crashes during display mode changes -
+System instability during hotplug events - Potential security
+implications from dereferencing invalid pointers The fix ensures proper
+error propagation in the display driver's atomic commit path, which is
+essential for system stability.
+
+ .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c  | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 1a7bfc548d702..2cd7adea178d5 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -10382,16 +10382,20 @@ static int dm_force_atomic_commit(struct drm_connector *connector)
+ 	 */
+ 	conn_state = drm_atomic_get_connector_state(state, connector);
+ 
+-	ret = PTR_ERR_OR_ZERO(conn_state);
+-	if (ret)
++	/* Check for error in getting connector state */
++	if (IS_ERR(conn_state)) {
++		ret = PTR_ERR(conn_state);
+ 		goto out;
++	}
+ 
+ 	/* Attach crtc to drm_atomic_state*/
+ 	crtc_state = drm_atomic_get_crtc_state(state, &disconnected_acrtc->base);
+ 
+-	ret = PTR_ERR_OR_ZERO(crtc_state);
+-	if (ret)
++	/* Check for error in getting crtc state */
++	if (IS_ERR(crtc_state)) {
++		ret = PTR_ERR(crtc_state);
+ 		goto out;
++	}
+ 
+ 	/* force a restore */
+ 	crtc_state->mode_changed = true;
+@@ -10399,9 +10403,11 @@ static int dm_force_atomic_commit(struct drm_connector *connector)
+ 	/* Attach plane to drm_atomic_state */
+ 	plane_state = drm_atomic_get_plane_state(state, plane);
+ 
+-	ret = PTR_ERR_OR_ZERO(plane_state);
+-	if (ret)
++	/* Check for error in getting plane state */
++	if (IS_ERR(plane_state)) {
++		ret = PTR_ERR(plane_state);
+ 		goto out;
++	}
+ 
+ 	/* Call commit internally with the state we just constructed */
+ 	ret = drm_atomic_commit(state);
+-- 
+2.39.5
+
