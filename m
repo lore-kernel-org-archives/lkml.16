@@ -1,234 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42B519F40B;
-	Sun,  1 Jun 2025 06:53:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CDBE9460;
+	Sun,  1 Jun 2025 06:54:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748760786; cv=none; b=PT7EsvieW3zs1zVrkphsRemHauiM8YcAvF+7QrXYyLbCml0a9QXJ46raDvD70TrEGww2kbs+jBCfnbeGXezgPfO8JXNAc0V+uPuxrZ09sGrOWF1G9gcGp0wkhbxlNAP28xPGXxLVaCia8bQx4EILDnbpuu/awXk8ayIT+Mv4528=
+	t=1748760866; cv=none; b=Kb4XRgXChXg9Y738rMOmxS6HsvN0Y9Up4qesITm8Jss8LEbMW54uXLipSvlNdLh2RXHf/PO3A23kYtB4UxoJqkQwpo1f+t8iAPHsC6hPHTCf+f9fwBRy8vwUb4xfwrK39yUSW4J9ZNcS/EfjWT1xG8aRRXysCNLw8sc69cdRf2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748760786; c=relaxed/simple;
-	bh=+cfucBX5cy1DW4FpLSQqN4Bp+xknd+/eBxoN/P9e848=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fvB1I5OEsuTd1N7VZab6goTPgWXMq31BtR/hMWmH0QiCR6xEtWMcqa3w6BR5k+7lgK4LGvWqQ3H6su2l7AQKKlAZRjVAmSgj3IWs7iO2o956/L5EIaamqdVhY+uTHc5j6/JSRG59QDtmoklk/j754jl/Uu2uKZPf9OqO1owINQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EMGydDoh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748760866; c=relaxed/simple;
+	bh=F3oXdP3aGJdqdV9ToT9ZMcwFwuEYVxAdznWXmx05go4=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=jvonGgFdKS0ysTEZD9I63NI2XKRwVV/7dTtadJFilPSQzxXrwqKDV0OeTGw5xXhnHsmFpSmVibURdR/y50SJpsC6RhnZnZ1q42TZWcXaYYok4bGStX2719hY+FH3zvDwapA3zxFSwPjZXMolXrDKmo1ghuGQrAV0mPxszCw44O4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=ZUlNNePj; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EMGydDoh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 711CFC4CEE7;
-	Sun,  1 Jun 2025 06:53:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748760785;
-	bh=+cfucBX5cy1DW4FpLSQqN4Bp+xknd+/eBxoN/P9e848=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EMGydDohWxSpv7s1Asy4FPasgWad8N63Liap9Vr0PwzoqftasFVhuvpSyhD2z0jDa
-	 bT5D6jEzO2RiY0DKdE8sS2kTYqwn6b+JP6vmhx5mkY7tdYm7dn3xn1NP6X/nrJM0pz
-	 Tuu099sHyXrgPYRB62H5AwBWy9gJ6il9AFMb9JAauemw5FBdYF5b2BBDAE2xApk6HK
-	 eXED5aktYN6/PDPMThBVoGSLGVdhPeYKB4Q+1xzi/b7N3urW2oPWOYKNgs9jaY2e6E
-	 BxeriQvESDs3bCukR8LZjUIvUvUpENpLqFbtnCwMwe/O4vWX9KJcz86b4I+rYUcZYC
-	 i7b3urd8/F+Ig==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Subject: [PATCH 5/6] perf annotate: Add --code-with-type support for TUI
-Date: Sat, 31 May 2025 23:53:01 -0700
-Message-ID: <20250601065302.12531-6-namhyung@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250601065302.12531-1-namhyung@kernel.org>
-References: <20250601065302.12531-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="ZUlNNePj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1748760861; x=1749365661; i=deller@gmx.de;
+	bh=sLgU7wMMAZhRNYBk/+571d7I3Sezhl/v9JsMnf0efxc=;
+	h=X-UI-Sender-Class:Date:From:To:Subject:Message-ID:MIME-Version:
+	 Content-Type:cc:content-transfer-encoding:content-type:date:from:
+	 message-id:mime-version:reply-to:subject:to;
+	b=ZUlNNePjP7IHnCJoC/N/NggZmt2Gp11jiMEPZcX446WtRd543fWVp37KqiRQd9ta
+	 HiWaalm55B/cs3TGoSlrL76Tq3W9oOsbCGdHZy2cJN66P9ZrHO0tPqUGg8ZGMULdO
+	 43J1nedGhNCIZrp+pJHvvzgiCNDasAyWHiVZ26NRqN4aYvJM6j+KxpPWiK5YpZeCd
+	 R6flUKqmjbpl3S8Vn7C+g06JTBOpwwvK7qbteJpFZ5iTX9Qys7ZDO7xqI8b3BUKu9
+	 wEgJJsXKgGClrDn9LnIkdkeyDeX5BqcakWPTphK2jvo0TiquukeYGkGeFv3zJ8OVl
+	 +fk1NZJIqT1dBZLR5A==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from p100 ([109.250.63.171]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MacOW-1urvSp0b86-00bZd5; Sun, 01
+ Jun 2025 08:54:21 +0200
+Date: Sun, 1 Jun 2025 08:54:19 +0200
+From: Helge Deller <deller@gmx.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org
+Subject: [GIT PULL] parisc architecture fixes and updates for v6.16-rc1
+Message-ID: <aDv5G-QGm102O5nO@p100>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Provags-ID: V03:K1:AOW/k/9GNYcnSuDIYhqT1SQZmXzfYzCUIc0rHMsQPqPOZlghcYe
+ ut7k56lAjqv9MHc2Kyi+xYs+Ye3Y/1Np/czEOes4VLFM3CIj5vpVyiMuRIhhlbgUhe8XJDD
+ TDaFukhu7SUBCd7/ERV243u/D2PfxLm13wE+zmC3nBaJhzv49mnoC864rSH468GqG+3KtdG
+ qHoe7wKRJnPfxluecNxLg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:DVVL+LGQTfE=;IVUVs3sppapO2C94T/OognzbP1f
+ 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
+ fbn1LfkUEStZ8KygjTFhXoxcZ
 
-Until now, the --code-with-type option is available only on stdio.
-But it was an artifical limitation because of an implemention issue.
+Hi Linus,
 
-Implement the same logic in annotation_line__write() for stdio2/TUI.
-Make disasm_line__write() return the number of printed characters so
-that it can skip unnecessary operations when the screen is full.
+Please pull the patches for the parisc architecture for this merge window.
+Nothing exiting this time:
+header cleanups, a printk formatting fix and enablement of building with gcc-15.
 
-Remove the limitation and update the man page.
+Thanks!
+Helge
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/Documentation/perf-annotate.txt |  1 -
- tools/perf/builtin-annotate.c              |  5 --
- tools/perf/ui/browsers/annotate.c          |  6 +++
- tools/perf/util/annotate.c                 | 61 +++++++++++++++++++---
- 4 files changed, 61 insertions(+), 12 deletions(-)
+----------------------------------------------------------------
+The following changes since commit b4432656b36e5cc1d50a1f2dc15357543add530e:
 
-diff --git a/tools/perf/Documentation/perf-annotate.txt b/tools/perf/Documentation/perf-annotate.txt
-index 46090c5b42b4762f..547f1a2680185e3c 100644
---- a/tools/perf/Documentation/perf-annotate.txt
-+++ b/tools/perf/Documentation/perf-annotate.txt
-@@ -170,7 +170,6 @@ include::itrace.txt[]
- 
- --code-with-type::
- 	Show data type info in code annotation (for memory instructions only).
--	Currently it only works with --stdio option.
- 
- 
- SEE ALSO
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 9833c2c82a2fee46..6debd725392db4a4 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -917,11 +917,6 @@ int cmd_annotate(int argc, const char **argv)
- 		symbol_conf.annotate_data_sample = true;
- 	} else if (annotate_opts.code_with_type) {
- 		symbol_conf.annotate_data_member = true;
--
--		if (!annotate.use_stdio) {
--			pr_err("--code-with-type only works with --stdio.\n");
--			goto out_delete;
--		}
- 	}
- 
- 	setup_browser(true);
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 0057fb485e85aaaf..686fa54e545e275c 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -4,6 +4,7 @@
- #include "../ui.h"
- #include "../../util/annotate.h"
- #include "../../util/debug.h"
-+#include "../../util/debuginfo.h"
- #include "../../util/dso.h"
- #include "../../util/hist.h"
- #include "../../util/sort.h"
-@@ -1021,6 +1022,9 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
- 
- 	ui_helpline__push("Press ESC to exit");
- 
-+	if (annotate_opts.code_with_type)
-+		browser.dbg = debuginfo__new(dso__long_name(dso));
-+
- 	browser.b.width = notes->src->widths.max_line_len;
- 	browser.b.nr_entries = notes->src->nr_entries;
- 	browser.b.entries = &notes->src->source;
-@@ -1031,6 +1035,8 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
- 
- 	ret = annotate_browser__run(&browser, evsel, hbt);
- 
-+	if (annotate_opts.code_with_type)
-+		debuginfo__delete(browser.dbg);
- 	if(not_annotated)
- 		annotated_source__purge(notes->src);
- 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 94f73c8944cde519..bf480f5b87eedd50 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1362,6 +1362,11 @@ static int symbol__annotate_fprintf2(struct symbol *sym, FILE *fp,
- 	};
- 	struct annotation_line *al;
- 
-+	if (annotate_opts.code_with_type) {
-+		evsel__get_arch(apd->evsel, &apd->arch);
-+		apd->dbg = debuginfo__new(dso__long_name(map__dso(apd->he->ms.map)));
-+	}
-+
- 	list_for_each_entry(al, &notes->src->source, node) {
- 		if (annotation_line__filter(al))
- 			continue;
-@@ -1370,6 +1375,9 @@ static int symbol__annotate_fprintf2(struct symbol *sym, FILE *fp,
- 		wops.first_line = false;
- 	}
- 
-+	if (annotate_opts.code_with_type)
-+		debuginfo__delete(apd->dbg);
-+
- 	return 0;
- }
- 
-@@ -1742,7 +1750,7 @@ static double annotation_line__max_percent(struct annotation_line *al,
- 	return percent_max;
- }
- 
--static void disasm_line__write(struct disasm_line *dl, struct annotation *notes,
-+static int disasm_line__write(struct disasm_line *dl, struct annotation *notes,
- 			       void *obj, char *bf, size_t size,
- 			       void (*obj__printf)(void *obj, const char *fmt, ...),
- 			       void (*obj__write_graph)(void *obj, int graph))
-@@ -1770,8 +1778,8 @@ static void disasm_line__write(struct disasm_line *dl, struct annotation *notes,
- 		obj__printf(obj, "  ");
- 	}
- 
--	disasm_line__scnprintf(dl, bf, size, !annotate_opts.use_offset,
--			       notes->src->widths.max_ins_name);
-+	return disasm_line__scnprintf(dl, bf, size, !annotate_opts.use_offset,
-+				      notes->src->widths.max_ins_name);
- }
- 
- static void ipc_coverage_string(char *bf, int size, struct annotation *notes)
-@@ -2114,11 +2122,52 @@ void annotation_line__write(struct annotation_line *al, struct annotation *notes
- 
- 		width -= printed + 3;
- 
--		disasm_line__write(disasm_line(al), notes, obj, bf, sizeof(bf), obj__printf, obj__write_graph);
-+		printed = disasm_line__write(disasm_line(al), notes, obj, bf, sizeof(bf),
-+					     obj__printf, obj__write_graph);
-+
-+		obj__printf(obj, "%s", bf);
-+		width -= printed;
-+
-+		if (annotate_opts.code_with_type && apd->dbg) {
-+			struct annotated_data_type *data_type;
-+			int offset = 0;
-+
-+			data_type = __hist_entry__get_data_type(apd->he, apd->arch,
-+								apd->dbg,
-+								disasm_line(al),
-+								&offset);
-+			if (data_type && data_type != NO_TYPE) {
-+				char member[256];
-+
-+				printed = scnprintf(bf, sizeof(bf),
-+						    "\t\t# data-type: %s",
-+						    data_type->self.type_name);
- 
--		obj__printf(obj, "%-*s", width, bf);
-+				if (data_type != &stackop_type &&
-+				    data_type != &canary_type &&
-+				    sizeof(bf) > (size_t)printed) {
-+					printed += scnprintf(bf + printed,
-+							     sizeof(bf) - printed,
-+							     " +%#x", offset);
-+				}
-+
-+				if (annotated_data_type__get_member_name(data_type,
-+									 member,
-+									 sizeof(member),
-+									 offset) &&
-+				    sizeof(bf) > (size_t)printed) {
-+					printed += scnprintf(bf + printed,
-+							     sizeof(bf) - printed,
-+							     " (%s)", member);
-+				}
- 
--		(void)apd;
-+				obj__printf(obj, "%-*s", width, bf);
-+			} else {
-+				obj__printf(obj, "%-*s", width, " ");
-+			}
-+		} else {
-+			obj__printf(obj, "%-*s", width, " ");
-+		}
- 	}
- 
- }
--- 
-2.49.0
+  Linux 6.15-rc4 (2025-04-27 15:19:23 -0700)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git tags/parisc-for-6.16-rc1
+
+for you to fetch changes up to 213205889d5ffc19cb8df06aa6778b2d4724c887:
+
+  parisc/unaligned: Fix hex output to show 8 hex chars (2025-05-31 16:50:39 +0200)
+
+----------------------------------------------------------------
+parisc architecture updates for kernel v6.16-rc1:
+
+Fix building with gcc-15, formatting fix on unaligned warnings
+and replace __ASSEMBLY__ with __ASSEMBLER__ in headers.
+
+----------------------------------------------------------------
+Arnd Bergmann (1):
+      parisc: fix building with gcc-15
+
+Helge Deller (1):
+      parisc/unaligned: Fix hex output to show 8 hex chars
+
+Thomas Huth (2):
+      parisc: Replace __ASSEMBLY__ with __ASSEMBLER__ in uapi headers
+      parisc: Replace __ASSEMBLY__ with __ASSEMBLER__ in non-uapi headers
+
+ arch/parisc/boot/compressed/Makefile     | 1 +
+ arch/parisc/include/asm/alternative.h    | 4 ++--
+ arch/parisc/include/asm/assembly.h       | 4 ++--
+ arch/parisc/include/asm/barrier.h        | 4 ++--
+ arch/parisc/include/asm/cache.h          | 4 ++--
+ arch/parisc/include/asm/current.h        | 4 ++--
+ arch/parisc/include/asm/dwarf.h          | 4 ++--
+ arch/parisc/include/asm/fixmap.h         | 4 ++--
+ arch/parisc/include/asm/ftrace.h         | 4 ++--
+ arch/parisc/include/asm/jump_label.h     | 4 ++--
+ arch/parisc/include/asm/kexec.h          | 4 ++--
+ arch/parisc/include/asm/kgdb.h           | 2 +-
+ arch/parisc/include/asm/linkage.h        | 4 ++--
+ arch/parisc/include/asm/page.h           | 6 +++---
+ arch/parisc/include/asm/pdc.h            | 4 ++--
+ arch/parisc/include/asm/pdcpat.h         | 4 ++--
+ arch/parisc/include/asm/pgtable.h        | 8 ++++----
+ arch/parisc/include/asm/prefetch.h       | 4 ++--
+ arch/parisc/include/asm/processor.h      | 8 ++++----
+ arch/parisc/include/asm/psw.h            | 4 ++--
+ arch/parisc/include/asm/signal.h         | 4 ++--
+ arch/parisc/include/asm/smp.h            | 4 ++--
+ arch/parisc/include/asm/spinlock_types.h | 4 ++--
+ arch/parisc/include/asm/thread_info.h    | 4 ++--
+ arch/parisc/include/asm/traps.h          | 2 +-
+ arch/parisc/include/asm/unistd.h         | 4 ++--
+ arch/parisc/include/asm/vdso.h           | 4 ++--
+ arch/parisc/include/uapi/asm/pdc.h       | 4 ++--
+ arch/parisc/include/uapi/asm/signal.h    | 4 ++--
+ arch/parisc/kernel/unaligned.c           | 2 +-
+ 30 files changed, 61 insertions(+), 60 deletions(-)
