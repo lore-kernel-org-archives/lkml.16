@@ -1,146 +1,349 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD444A06
-	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 00:30:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748737833; cv=none; b=p/o9KdCn5eHpF5QRLQn3aOVijJzZNh3XV8naWrCGlNRgd8HNNRy2XCVUNwRo3tWBsMbtd2RNSNU3gRwJZk+OXY9QQtX4TD5xyByTeY+Tos0OGemsqwC/d8mwNJ2OjVAeHGKE6sH4pUnPV7jp9ngUC4C5YJuu7oTqOkDX7US9eGs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748737833; c=relaxed/simple;
-	bh=tTCbf1SIgIEMyJqaa/91N7xl7SCBcwIB2zIAEZjdPUA=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=kNvjDx4lqK7e/e58jOfarO5VPqQaQtWanRS2DopfnkwrooS/22FP7s38lljUhBItuowLBOOTuqbK2rJC7WzCTRHaiBukewIQowU/yZmuxE+dF5UzWk+ka0BgVyNGV0dz9qkmjDwOxnf5emWCbolRCYcxmnoCCkP18G7TnZU8pME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-86cc7cdb86fso282400539f.1
-        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 17:30:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748737831; x=1749342631;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=e5fa6Bx1fxUvTdQ0LMroNmNiZrTxPWOsUPhI543mCWE=;
-        b=Pt/okpszCUktr+bTxrdVHynWixulmw7RtKH5d7rL0TgGDOyaME4dODUKVeYbVD+9YO
-         K3s+bQY4DGWglwGgrogELWbLGqbnGKakaZTcib1GcmxdArMVo+JQQAp084yizUst1z/V
-         Kv73Bjj89JaA+MM7fPp72voutHj5mEKNY3+43QD97G4ri84dfcBQkHnt4sZQhvv9bTT5
-         YTQD0jPs6xeI0R5DNK3X6O+Kkygg6CukEIeB8HZuCp4sN3ioKo7JkbJe1TlKILOn3FyZ
-         Pe/VVVUbH24LihBvUBgWA9wwp0C6ftj6O5FFZXBRQG3LCu/lOn7lTv/FfjAL3a9KoPNH
-         cZvA==
-X-Forwarded-Encrypted: i=1; AJvYcCWkLxtB722wK9DOyDFH7G00+4dkdCRtC5VqG0W7epDwANpCaAmA6ld3C3aZFG9YWdLQlyvsP0NajdcC7GA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuuhQLUEm6Yy2DticzAxxHypIMVeGZva3iXD4Jc196bAincJsV
-	ww5Z/4UsVVrUGYjOLGb5dSN32Q5QvxKQBm7b/5v3uoFUAKgeVPgKtPAZ1XsDcYZSjda+psnRsf0
-	aTTUEwp2RHyGBGOor8Si7dX6NFLBMcp2Pf/3yAMmPcVc8zpEhWdoAbR8zYPU=
-X-Google-Smtp-Source: AGHT+IEHez9TbSKXapQ329l8kU5B+0NFBSLaa89pk/FwR/50ylMo+qwfMpJV3BJ0QijmT5XPKHuf3Cob+jYrkQvJkRH+tgohRcrX
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93FB0137E;
+	Sun,  1 Jun 2025 00:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748738285; cv=fail; b=sKauq8V7FWR5/n8neLvxpcbtQQtYVa6Qqasz+EdnwbkVUdMXOLIGA88J6xKMwxv74NFGJeZNyYmuHRtZzffGh1ldGmrkSnN50Gj5u95pLL0CPlTRJgkO0GDkOfOn4uVvKWxB09U+smbZ1sB7lcspEtta/yhqsLcxB/T08o6P5cY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748738285; c=relaxed/simple;
+	bh=Op+PCINUiYWr0go2R8+fSCn3kqv+LynPCX1Yo2YYke4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=aW7S33G3wpBD3EgtkF4PszaLdBHrVI6hhXulK/Ce9jLdofzbHLQkZxBWCe76l8/6e5QJUwjHQ1GRIBiqsg9p4CAeB2OjRX0WIQwjAEBory2LuQpajp/EV9+B5INmojdLsN65egm4DDp7d2MI3sAjLhIrhVpMwRm6lA8R8tJiRoI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L3zNnUbS; arc=fail smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L3zNnUbS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748738283; x=1780274283;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=Op+PCINUiYWr0go2R8+fSCn3kqv+LynPCX1Yo2YYke4=;
+  b=L3zNnUbSQrnXKGWt2PDmHgPAnSBbJUnv3/zZSbwnWTHjKXPK5UXorKrF
+   +FeBX/XUwAZtIDBchwTsuFbSA1qDevO6e62vk2V1/0Hiei4hQjUA4UcXl
+   Q/Fmoj3tM2+V4xIzJichVqMmBAZOzurPHQqCSNxwbMzc6KQPi7mLgZntP
+   5A005VwM8M7o7xzElwb/tz2ga3e/08cJIrRf6LoE01mz7XVhNe4BLPuVl
+   Y8T0QW2EphtmwALfglUXJS59IxvGFZ3u0ceYZuu9sNsa10spCE3U88+oW
+   qT6ibPjrT3HQGpHo4n5U5Gm0Nf09ejplxkOc0Bs4WrTOsmeKwxhSl/Qny
+   g==;
+X-CSE-ConnectionGUID: khSpHDSfR8uwL6zkQrxiGQ==
+X-CSE-MsgGUID: rMFmg/llTzyfz3+65ir2aQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11450"; a="62142158"
+X-IronPort-AV: E=Sophos;i="6.16,200,1744095600"; 
+   d="scan'208";a="62142158"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2025 17:38:01 -0700
+X-CSE-ConnectionGUID: zpaIxgRqTcW4Cpn099WpYQ==
+X-CSE-MsgGUID: jO9aj1laRGSoBbIlyESvNA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,200,1744095600"; 
+   d="scan'208";a="144532409"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2025 17:37:59 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Sat, 31 May 2025 17:37:59 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Sat, 31 May 2025 17:37:59 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (40.107.243.58)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.55; Sat, 31 May 2025 17:37:59 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=tOPfrmcCpr+RgknlKK1osi38o5ZqqxHriUqufIciHbx45N7qq9Ph3AFx2BcoRw1sWv58f6cLwi+NE2Phi+TqS6C5SqUr0nJuJ8TRKSHvYY5OFA98T7Ls7oLQ0MGWnko9J1hMTF4Ae9phYJQfP23NXj4dHdva4ZFsOkPnM1LzGQAudFgns3nyhnGWIa7BPlNCt9JtJVyc8vvJb16n3UXjjC0iQwurjtuAuGj2iobzFwR4nb/MYXxeGDKdvSU3RMcdlmOICTngkPBkb3xE+G1T6uxuxX6pf4hJwixXCl+cUWU7oQRIUgNdih/38cQ3hC5ElSesbs1MaDIsjY+M07ZRsg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=otFFrhabfW9QxezSUL7NDo+N97ojwJYNKzu5v7ipvUE=;
+ b=hS6wz50K1QUWdFnzxs4MPhitEfg7Eb0moX2gwbRNHa8dIfwR4d99NjLSfhB9zqknS40Zl9ml2XHEuEJbwYHfG99DEI0XfzdXlAZNgHU9vtt7eZQzNVkuvTDRxRoTn3fQx/m295CnNFxJFxS6tEwBBalDfZQz+blBX3xoLkYGssTMojt2cb51JnjampM/wmyNNjLa2SS70wfhK+BHx2uKA2KDz1hSRz+IUr4RcX4BC1TvuVgud3Kxlpmyq7PEgKOEzkdgt9piRoT6QucPZGIIuVQj5SJTWdjTcVBnlSYq7Se6gSZvkBKDMUUuAETsMcWhJaDGCkmROX9ter7t7L8jzQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH3PPF9E162731D.namprd11.prod.outlook.com
+ (2603:10b6:518:1::d3c) by SJ0PR11MB5151.namprd11.prod.outlook.com
+ (2603:10b6:a03:2ac::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.31; Sun, 1 Jun
+ 2025 00:37:42 +0000
+Received: from PH3PPF9E162731D.namprd11.prod.outlook.com
+ ([fe80::d013:465c:f0c4:602]) by PH3PPF9E162731D.namprd11.prod.outlook.com
+ ([fe80::d013:465c:f0c4:602%5]) with mapi id 15.20.8769.022; Sun, 1 Jun 2025
+ 00:37:42 +0000
+Date: Sat, 31 May 2025 19:38:22 -0500
+From: Ira Weiny <ira.weiny@intel.com>
+To: Ackerley Tng <ackerleytng@google.com>, <kvm@vger.kernel.org>,
+	<linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+	<linux-fsdevel@vger.kernel.org>
+CC: <ackerleytng@google.com>, <aik@amd.com>, <ajones@ventanamicro.com>,
+	<akpm@linux-foundation.org>, <amoorthy@google.com>,
+	<anthony.yznaga@oracle.com>, <anup@brainfault.org>, <aou@eecs.berkeley.edu>,
+	<bfoster@redhat.com>, <binbin.wu@linux.intel.com>, <brauner@kernel.org>,
+	<catalin.marinas@arm.com>, <chao.p.peng@intel.com>, <chenhuacai@kernel.org>,
+	<dave.hansen@intel.com>, <david@redhat.com>, <dmatlack@google.com>,
+	<dwmw@amazon.co.uk>, <erdemaktas@google.com>, <fan.du@intel.com>,
+	<fvdl@google.com>, <graf@amazon.com>, <haibo1.xu@intel.com>,
+	<hch@infradead.org>, <hughd@google.com>, <ira.weiny@intel.com>,
+	<isaku.yamahata@intel.com>, <jack@suse.cz>, <james.morse@arm.com>,
+	<jarkko@kernel.org>, <jgg@ziepe.ca>, <jgowans@amazon.com>,
+	<jhubbard@nvidia.com>, <jroedel@suse.de>, <jthoughton@google.com>,
+	<jun.miao@intel.com>, <kai.huang@intel.com>, <keirf@google.com>,
+	<kent.overstreet@linux.dev>, <kirill.shutemov@intel.com>,
+	<liam.merwick@oracle.com>, <maciej.wieczor-retman@intel.com>,
+	<mail@maciej.szmigiero.name>, <maz@kernel.org>, <mic@digikod.net>,
+	<michael.roth@amd.com>, <mpe@ellerman.id.au>, <muchun.song@linux.dev>,
+	<nikunj@amd.com>, <nsaenz@amazon.es>, <oliver.upton@linux.dev>,
+	<palmer@dabbelt.com>, <pankaj.gupta@amd.com>, <paul.walmsley@sifive.com>,
+	<pbonzini@redhat.com>, <pdurrant@amazon.co.uk>, <peterx@redhat.com>,
+	<pgonda@google.com>, <pvorel@suse.cz>, <qperret@google.com>,
+	<quic_cvanscha@quicinc.com>, <quic_eberman@quicinc.com>,
+	<quic_mnalajal@quicinc.com>, <quic_pderrin@quicinc.com>,
+	<quic_pheragu@quicinc.com>, <quic_svaddagi@quicinc.com>,
+	<quic_tsoni@quicinc.com>, <richard.weiyang@gmail.com>,
+	<rick.p.edgecombe@intel.com>, <rientjes@google.com>, <roypat@amazon.co.uk>,
+	<rppt@kernel.org>, <seanjc@google.com>, <shuah@kernel.org>,
+	<steven.price@arm.com>, <steven.sistare@oracle.com>,
+	<suzuki.poulose@arm.com>, <tabba@google.com>, <thomas.lendacky@amd.com>,
+	<usama.arif@bytedance.com>, <vannapurve@google.com>, <vbabka@suse.cz>,
+	<viro@zeniv.linux.org.uk>, <vkuznets@redhat.com>, <wei.w.wang@intel.com>,
+	<will@kernel.org>, <willy@infradead.org>, <xiaoyao.li@intel.com>,
+	<yan.y.zhao@intel.com>, <yilun.xu@intel.com>, <yuzenghui@huawei.com>,
+	<zhiquan1.li@intel.com>
+Subject: Re: [RFC PATCH v2 23/51] mm: hugetlb: Refactor out
+ hugetlb_alloc_folio()
+Message-ID: <683ba0fe64dd5_13031529421@iweiny-mobl.notmuch>
+References: <cover.1747264138.git.ackerleytng@google.com>
+ <bdd00f8a1919794da94ba366529756bd6b925ade.1747264138.git.ackerleytng@google.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <bdd00f8a1919794da94ba366529756bd6b925ade.1747264138.git.ackerleytng@google.com>
+X-ClientProxiedBy: MW4PR04CA0083.namprd04.prod.outlook.com
+ (2603:10b6:303:6b::28) To MW4PR11MB6739.namprd11.prod.outlook.com
+ (2603:10b6:303:20b::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:276a:b0:867:237f:381e with SMTP id
- ca18e2360f4ac-86d2d072dd0mr268960439f.2.1748737831060; Sat, 31 May 2025
- 17:30:31 -0700 (PDT)
-Date: Sat, 31 May 2025 17:30:31 -0700
-In-Reply-To: <000000000000ae4aa90614a58d7b@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <683b9f27.a00a0220.d8eae.0022.GAE@google.com>
-Subject: Re: [syzbot] [usb?] [input?] WARNING in cm109_input_open/usb_submit_urb
- (3)
-From: syzbot <syzbot+ac0f9c4cc1e034160492@syzkaller.appspotmail.com>
-To: dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH3PPF9E162731D:EE_|SJ0PR11MB5151:EE_
+X-MS-Office365-Filtering-Correlation-Id: 36a3867e-d009-4061-5f06-08dda0a48371
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?k/EGfBEnkiAUd2KS1kl7uYzfmNbC2qRUjtRZ++Ur6jGNTuucKTj9GUqP+mGc?=
+ =?us-ascii?Q?3aStdr8Bncazf78vPKpI2m2qMOellYCcmOWKtznRhY4iKHG+V+II0JUSWFn8?=
+ =?us-ascii?Q?+on6LzlxVxbnvaZ7cFnzF5QXp/qgQq8m0eJaIeJ7W3IgxzquX5vw+YSkwP2F?=
+ =?us-ascii?Q?m4hUhIskExJx6cJCvECg4w0Rx6DnlPl4M5Y3+0r/QfG4SG9u5eM0kq5BnsfK?=
+ =?us-ascii?Q?BhrrNJsnFGDHb7FmhHawT9J6O82z52cHtcRVrlGainduY9zoF3lzXf+Ze165?=
+ =?us-ascii?Q?5orPH7w7U7c+NfX9oD9vbqcCWaIq4l0REYkurB3S0U5ywvYMuby8xYUkVX36?=
+ =?us-ascii?Q?iJCxdePGk22uoYKcqqkmpHl756bjJV1Vng2RRmyWwlV5EAoTg4PXBt4lFBAy?=
+ =?us-ascii?Q?LCBl2fmHQQz9oUVEE3McJNceJ9RXU4OI23cIoKw1haB6Cjnwce6DQMdlqkv4?=
+ =?us-ascii?Q?utPlrlf5EaFuHVgqD+6yxT16MHfkWyhk8TntxJ/8e/DYZw/uqba/QpONxFAO?=
+ =?us-ascii?Q?8Q/1eJMvW/YoJZ9ql54H60hv4VcdD44rnkxFWHRWew2iGZXo9Rdl9d7wgsuF?=
+ =?us-ascii?Q?WBuqVXjemO0coDaZtHoE7tQvAHVR+B1xLrhXgcbAzC9MiJAFq0sCMJg7RB5f?=
+ =?us-ascii?Q?3KZxwDUAgVCZz3SpZ8TtAYAUED6BrmPCymETPDHeBpWQ5329TE/op1THZ/CR?=
+ =?us-ascii?Q?KkbD6uI7g354DyV+2l+hxEqmKTroNXckx+PDRRmmWxpPHvvFnpP7jbcMz4r5?=
+ =?us-ascii?Q?NCwDHj3ld9IVlWDh0TDos+scmEbXTCkwGqOLdtju01Yg3AMUzTr53r8ZNw5R?=
+ =?us-ascii?Q?opgYFyIebGd7TMp/k46dpSx60Jg0jx06oPBGoBZjysH6WQXbTtx3BQhiCyxs?=
+ =?us-ascii?Q?Sipfl0K0G123svJ0iTxybjiPDNTyo9oOR40ZePbnzx8AvDcDPFEmvpz/wonC?=
+ =?us-ascii?Q?V88j4L6J6HDzI1EXFfQCEngTbhM1kW9g4OpCfzxdR1ko/tldCAWAletyrbke?=
+ =?us-ascii?Q?JdLOMu2MhBqumKe/WhTbjtX/gY/kLgVkP1LSsruW4itbVoD7+QzegTGLNzI4?=
+ =?us-ascii?Q?NAlYrN0QgtXsBNiKeNk4oP7zPVArGquGmR3gp1jNQpxMVjprV/+w0YKVtvx4?=
+ =?us-ascii?Q?n64NxU1YU2yfogi5ODnfl+eukqqj7UPD1u2Ekk7KH5z6FwPOqI+Sc8sNTrsV?=
+ =?us-ascii?Q?/dHDdjto0gWkFchRGBo7gsCwe4eutfH2nj95EwI7Xzrq72NPbGlBM89diDof?=
+ =?us-ascii?Q?MhnlYTXM7OKB/yHfW8ejSZvbIT1e1BHaxnE4oE7Bxgyf4nmZDDuJLO+bI8Lr?=
+ =?us-ascii?Q?NqvdD6yWhXZtwI2URZzBrDWz0esQ5OcJT912BFcJBFKmIRcs/fPlmK83y7Pm?=
+ =?us-ascii?Q?9HrRbUiyAM0ZIgUVMRIY67DxsfyzGzM8wNDQC7njzSU380zYUQ=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH3PPF9E162731D.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?lXgYrU9xyW1Dz/XuARyVbKXs8DC/W9zyDK/S4sjvM3Yju7YfdxtKk7aFAgag?=
+ =?us-ascii?Q?WjpjEGyZ97B2JGwLhVyOSbocSYodcj+zmvHgIHf9pdOqrmDF68vdihWEVVgy?=
+ =?us-ascii?Q?Jj26vK2+b2Duw+nT8IHMSJug2nG1PRyz7uBowNWW8joqkPytPXoGbN+9hm2b?=
+ =?us-ascii?Q?HUcQEhILgD4Sx5zNZ2tJcMu5ZBvKrpIJCo+prO/dwOIVYjGDMoHYRyK1gsVZ?=
+ =?us-ascii?Q?bZaO0JTUd+GRt0yte010Kb1y6KlTGcThtGJVV/YJK1r9nw9BVPsOOnvbAER8?=
+ =?us-ascii?Q?H9iueXV7Lm4yQeC81t3GXCGNXIaqaKW/OOtiw8nJQyX+2kVH5oYJbV2nb4J7?=
+ =?us-ascii?Q?X2QXUgXIydpOhEGvtMQfXlQ3EX905XL2TVDT3/ExidRJzynZLJ0iK4FG0IAX?=
+ =?us-ascii?Q?xy+i6aTSs0tV5s83DEwB8Mo6ErIAzpYkE+J5JCEFUlK4euhzibUQLMZkz/1W?=
+ =?us-ascii?Q?srF3IpDG04U2iL62mehwJcLdMrIAD6qbHVjn2+4GbyLI23khZJ/RWHUWouN0?=
+ =?us-ascii?Q?GSZ0koWlZmQozOA69qsiU7WE8acUxIS/esuyPkMojWWnEaUH4LpTXsMNy0vT?=
+ =?us-ascii?Q?L7EPHaMC/XFm+MMZwdrv2XBQ/qXSdrp++l8lgcB2SNjoJZ86HsVFpxmBfFat?=
+ =?us-ascii?Q?y2YGQjHGr1JHNnrGd1+hnF5l7tFbOjz22+CXCOdDBajz6kA0YcBTVomW2+zI?=
+ =?us-ascii?Q?roiCw2UTqHYRcqTMtliWzJHaOyU+wAAs45lAkMzmDYRkmC+ZN4ereJBX1ABx?=
+ =?us-ascii?Q?7Al8y7vQNm6JzJlHGuiQLsjDGRBJ9WGpqet307uYfiIvU/iS2/aax1Ef95md?=
+ =?us-ascii?Q?wzoPdwe05X+utRCP3rMHFmjY96Q7K3D5gZX0Q/MKtP1ahEdhogjSAPw+AQUR?=
+ =?us-ascii?Q?BYNe4hyDF5QQo2cls7bgs57eERkUtLwrHhxR98Eqo23LXKVjmJYUU7KWEdDg?=
+ =?us-ascii?Q?DOuBOGD6UF45HT8vkY4lbJ1S5QiYSWGsczVbkH2vv0OGbzeuwUaE6ve2ru6y?=
+ =?us-ascii?Q?jpszR1feDg+BxzLWggls4mOjpywcXgV4hKmygQO3m1V/y5Ce1LWfRkNujmx4?=
+ =?us-ascii?Q?Xcli5SEqYhceqWBYIT8/R45rYrQk/Oj7eNsLY0cSPPuij4dfgpRWeIeUgX6G?=
+ =?us-ascii?Q?vkAjA+0IJoB0Cg83HE3CtPzF+Te/d1IgPeYUuKVNPZ/oEbJ0rH7mR6BZfx8E?=
+ =?us-ascii?Q?947EQmGzvir0IBARPC/mKzUul6u+UnokZTCGlYvOXxUicvLTnnxdEFwwd1lJ?=
+ =?us-ascii?Q?Z0+xIxpogkvG9tgVHp3Z0qvdibobK/acAVIhYLPmxyO+Y4h5oOA+ekjLaHaV?=
+ =?us-ascii?Q?ndKOUABksi/7zVl0JifamRaPZzuJleXBLB26Czj/8BvbTbgCb7xLISC+OPLn?=
+ =?us-ascii?Q?9lYi1Z/CYMxH7mfSbr/QA1XEFu05Y14YucepvdXAYliXE449OsSFOuB9EOyc?=
+ =?us-ascii?Q?DEFXfvPQkRf6VgmzHUu+ciDJip49zmgU5msKGOmTj7ejTry1wydIFDC5mDVW?=
+ =?us-ascii?Q?xPGgWDRMVoF4DTowBHP8KEhzXnRyod21cS7l363BBZPrYCJx/A0afl6xpy22?=
+ =?us-ascii?Q?yRWCFUE3hj47cUHM0mVajlQGrVzi7EfxqLDIwU7h?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 36a3867e-d009-4061-5f06-08dda0a48371
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR11MB6739.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jun 2025 00:37:42.3187
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SfG0ZEhR5HJufNrrkpWu4PywYkDn659hZl3mikH98Q6cfBDDmQ0mZQ0P+lY5mI6161cDHZFen1dYXMkd+7xsgw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5151
+X-OriginatorOrg: intel.com
 
-syzbot has found a reproducer for the following issue on:
+Ackerley Tng wrote:
+> Refactor out hugetlb_alloc_folio() from alloc_hugetlb_folio(), which
+> handles allocation of a folio and cgroup charging.
+> 
+> Other than flags to control charging in the allocation process,
+> hugetlb_alloc_folio() also has parameters for memory policy.
+> 
+> This refactoring as a whole decouples the hugetlb page allocation from
+> hugetlbfs, (1) where the subpool is stored at the fs mount, (2)
+> reservations are made during mmap and stored in the vma, and (3) mpol
+> must be stored at vma->vm_policy (4) a vma must be used for allocation
+> even if the pages are not meant to be used by host process.
+> 
+> This decoupling will allow hugetlb_alloc_folio() to be used by
+> guest_memfd in later patches. In guest_memfd, (1) a subpool is created
+> per-fd and is stored on the inode, (2) no vma-related reservations are
+> used (3) mpol may not be associated with a vma since (4) for private
+> pages, the pages will not be mappable to userspace and hence have to
+> associated vmas.
+> 
+> This could hopefully also open hugetlb up as a more generic source of
+> hugetlb pages that are not bound to hugetlbfs, with the complexities
+> of userspace/mmap/vma-related reservations contained just to
+> hugetlbfs.
+> 
+> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+> Change-Id: I60528f246341268acbf0ed5de7752ae2cacbef93
+> ---
+>  include/linux/hugetlb.h |  12 +++
+>  mm/hugetlb.c            | 192 ++++++++++++++++++++++------------------
+>  2 files changed, 118 insertions(+), 86 deletions(-)
+> 
 
-HEAD commit:    0f70f5b08a47 Merge tag 'pull-automount' of git://git.kerne..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=150e0c82580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=22765942f2e2ebcf
-dashboard link: https://syzkaller.appspot.com/bug?extid=ac0f9c4cc1e034160492
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=103dbed4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=130e0c82580000
+[snip]
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/f091df6896fd/disk-0f70f5b0.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/978b2a8699d8/vmlinux-0f70f5b0.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/b6e13557ddc0/bzImage-0f70f5b0.xz
+>  
+> +/**
+> + * hugetlb_alloc_folio() - Allocates a hugetlb folio.
+> + *
+> + * @h: struct hstate to allocate from.
+> + * @mpol: struct mempolicy to apply for this folio allocation.
+> + * @ilx: Interleave index for interpretation of @mpol.
+> + * @charge_cgroup_rsvd: Set to true to charge cgroup reservation.
+> + * @use_existing_reservation: Set to true if this allocation should use an
+> + *                            existing hstate reservation.
+> + *
+> + * This function handles cgroup and global hstate reservations. VMA-related
+> + * reservations and subpool debiting must be handled by the caller if necessary.
+> + *
+> + * Return: folio on success or negated error otherwise.
+> + */
+> +struct folio *hugetlb_alloc_folio(struct hstate *h, struct mempolicy *mpol,
+> +				  pgoff_t ilx, bool charge_cgroup_rsvd,
+> +				  bool use_existing_reservation)
+> +{
+> +	unsigned int nr_pages = pages_per_huge_page(h);
+> +	struct hugetlb_cgroup *h_cg = NULL;
+> +	struct folio *folio = NULL;
+> +	nodemask_t *nodemask;
+> +	gfp_t gfp_mask;
+> +	int nid;
+> +	int idx;
+> +	int ret;
+> +
+> +	idx = hstate_index(h);
+> +
+> +	if (charge_cgroup_rsvd) {
+> +		if (hugetlb_cgroup_charge_cgroup_rsvd(idx, nr_pages, &h_cg))
+> +			goto out;
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+ac0f9c4cc1e034160492@syzkaller.appspotmail.com
+Why not just return here?
+			return ERR_PTR(-ENOSPC);
 
-cm109 2-1:0.8: invalid payload size 1024, expected 4
-input: CM109 USB driver as /devices/platform/dummy_hcd.1/usb2/2-1/2-1:0.8/input/input551
-------------[ cut here ]------------
-URB ffff88814caed700 submitted while active
-WARNING: CPU: 0 PID: 6321 at drivers/usb/core/urb.c:379 usb_submit_urb+0xfa8/0x1870 drivers/usb/core/urb.c:379
-Modules linked in:
+> +	}
+> +
+> +	if (hugetlb_cgroup_charge_cgroup(idx, nr_pages, &h_cg))
+> +		goto out_uncharge_cgroup_reservation;
+> +
+> +	gfp_mask = htlb_alloc_mask(h);
+> +	nid = policy_node_nodemask(mpol, gfp_mask, ilx, &nodemask);
+> +
+> +	spin_lock_irq(&hugetlb_lock);
+> +
+> +	if (use_existing_reservation || available_huge_pages(h))
+> +		folio = dequeue_hugetlb_folio(h, gfp_mask, mpol, nid, nodemask);
+> +
+> +	if (!folio) {
+> +		spin_unlock_irq(&hugetlb_lock);
+> +		folio = alloc_surplus_hugetlb_folio(h, gfp_mask, mpol, nid, nodemask);
+> +		if (!folio)
+> +			goto out_uncharge_cgroup;
+> +		spin_lock_irq(&hugetlb_lock);
+> +		list_add(&folio->lru, &h->hugepage_activelist);
+> +		folio_ref_unfreeze(folio, 1);
+> +		/* Fall through */
+> +	}
+> +
+> +	if (use_existing_reservation) {
+> +		folio_set_hugetlb_restore_reserve(folio);
+> +		h->resv_huge_pages--;
+> +	}
+> +
+> +	hugetlb_cgroup_commit_charge(idx, nr_pages, h_cg, folio);
+> +
+> +	if (charge_cgroup_rsvd)
+> +		hugetlb_cgroup_commit_charge_rsvd(idx, nr_pages, h_cg, folio);
+> +
+> +	spin_unlock_irq(&hugetlb_lock);
+> +
+> +	gfp_mask = htlb_alloc_mask(h) | __GFP_RETRY_MAYFAIL;
+> +	ret = mem_cgroup_charge_hugetlb(folio, gfp_mask);
+> +	/*
+> +	 * Unconditionally increment NR_HUGETLB here. If it turns out that
+> +	 * mem_cgroup_charge_hugetlb failed, then immediately free the page and
+> +	 * decrement NR_HUGETLB.
+> +	 */
+> +	lruvec_stat_mod_folio(folio, NR_HUGETLB, pages_per_huge_page(h));
+> +
+> +	if (ret == -ENOMEM) {
+> +		free_huge_folio(folio);
+> +		return ERR_PTR(-ENOMEM);
+> +	}
+> +
+> +	return folio;
+> +
+> +out_uncharge_cgroup:
+> +	hugetlb_cgroup_uncharge_cgroup(idx, nr_pages, h_cg);
+> +out_uncharge_cgroup_reservation:
+> +	if (charge_cgroup_rsvd)
+> +		hugetlb_cgroup_uncharge_cgroup_rsvd(idx, nr_pages, h_cg);
 
-CPU: 0 UID: 0 PID: 6321 Comm: kworker/0:8 Not tainted 6.15.0-syzkaller-09161-g0f70f5b08a47 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Workqueue: usb_hub_wq hub_event
-RIP: 0010:usb_submit_urb+0xfa8/0x1870 drivers/usb/core/urb.c:379
-Code: 00 eb 5c e8 0a 68 a8 fa e9 09 f1 ff ff e8 00 68 a8 fa c6 05 f0 aa 71 08 01 90 48 c7 c7 00 5a 32 8c 48 89 de e8 a9 41 6c fa 90 <0f> 0b 90 90 e9 d0 f0 ff ff e8 da 67 a8 fa eb 11 e8 d3 67 a8 fa bd
-RSP: 0018:ffffc9000d02eb38 EFLAGS: 00010246
-RAX: a79c1e2737f67a00 RBX: ffff88814caed700 RCX: ffff88801e3f0000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000002
-RBP: 000000000000000f R08: ffffffff8f9f7ff7 R09: 1ffffffff1f3effe
-R10: dffffc0000000000 R11: fffffbfff1f3efff R12: 1ffff1100234820a
-R13: dffffc0000000000 R14: ffff88814caed708 R15: 0000000000000cc0
-FS:  0000000000000000(0000) GS:ffff888125c99000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00005555851e6da8 CR3: 000000002fb48000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- cm109_input_open+0x1fb/0x460 drivers/input/misc/cm109.c:566
- input_open_device+0x1c5/0x360 drivers/input/input.c:600
- kbd_connect+0xed/0x140 drivers/tty/vt/keyboard.c:1591
- input_attach_handler drivers/input/input.c:993 [inline]
- input_register_device+0xcee/0x10b0 drivers/input/input.c:2412
- cm109_usb_probe+0x118c/0x1690 drivers/input/misc/cm109.c:797
- usb_probe_interface+0x641/0xbc0 drivers/usb/core/driver.c:396
- call_driver_probe drivers/base/dd.c:-1 [inline]
- really_probe+0x26a/0x9a0 drivers/base/dd.c:657
- __driver_probe_device+0x18c/0x2f0 drivers/base/dd.c:799
- driver_probe_device+0x4f/0x430 drivers/base/dd.c:829
- __device_attach_driver+0x2ce/0x530 drivers/base/dd.c:957
- bus_for_each_drv+0x251/0x2e0 drivers/base/bus.c:462
- __device_attach+0x2b8/0x400 drivers/base/dd.c:1029
- bus_probe_device+0x185/0x260 drivers/base/bus.c:537
- device_add+0x7b6/0xb50 drivers/base/core.c:3692
- usb_set_configuration+0x1a87/0x20e0 drivers/usb/core/message.c:2210
- usb_generic_driver_probe+0x8d/0x150 drivers/usb/core/generic.c:250
- usb_probe_device+0x1c4/0x390 drivers/usb/core/driver.c:291
- call_driver_probe drivers/base/dd.c:-1 [inline]
- really_probe+0x26a/0x9a0 drivers/base/dd.c:657
- __driver_probe_device+0x18c/0x2f0 drivers/base/dd.c:799
- driver_probe_device+0x4f/0x430 drivers/base/dd.c:829
- __device_attach_driver+0x2ce/0x530 drivers/base/dd.c:957
- bus_for_each_drv+0x251/0x2e0 drivers/base/bus.c:462
- __device_attach+0x2b8/0x400 drivers/base/dd.c:1029
- bus_probe_device+0x185/0x260 drivers/base/bus.c:537
- device_add+0x7b6/0xb50 drivers/base/core.c:3692
- usb_new_device+0xa39/0x16c0 drivers/usb/core/hub.c:2663
- hub_port_connect drivers/usb/core/hub.c:5531 [inline]
- hub_port_connect_change drivers/usb/core/hub.c:5671 [inline]
- port_event drivers/usb/core/hub.c:5831 [inline]
- hub_event+0x2941/0x4a00 drivers/usb/core/hub.c:5913
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xade/0x17b0 kernel/workqueue.c:3321
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
- kthread+0x711/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
+I find the direct copy of the unwind logic from alloc_hugetlb_folio()
+cumbersome and it seems like a good opportunity to clean it up.
 
+> +out:
+> +	folio = ERR_PTR(-ENOSPC);
+> +	goto out;
 
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+Endless loop?
+
+Ira
+
+[snip]
