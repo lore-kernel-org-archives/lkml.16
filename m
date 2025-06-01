@@ -1,99 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56C72BD11;
-	Sun,  1 Jun 2025 16:24:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 946E22DCC01;
+	Sun,  1 Jun 2025 16:33:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748795072; cv=none; b=Blqcyl0AQa4S2kpAEN7hcQl5GYxP1qhKpbIiwWcWksymffqGY/Gi8r383anyEnDesw92Gb6SHJ2+41BeZytuFZCRDKp40TznnM/b9izfI+GBPxB1BEsf0zCN9QMzbi0bODV92MZjIL1M8tluWQUAMi3a1kvIKD6adPz2mCS42Do=
+	t=1748795601; cv=none; b=Yei1vfHF0nsaqbOnR/TBnoYBq8O/TvwPzkPtz9NI6BWw1xftD+dot0XrRkZW3e3k/x7I7zcA6wuA0arnNbtz8RIC6fYZHwNpTiwGfasUn/JsXpyGq++funfTnhUsOEmIe7P+AHjvNUqscsfPpZVupNoCIj12Bod55qN01NuddGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748795072; c=relaxed/simple;
-	bh=PMAkhQy/Nj8Qt7aS/e+j9Xv4t7buO1RGFex1w+i2gQo=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=f03FB8NvQFzHf8HUFxW9cAoW1Y5rxgsrZIOPy6dFcvNfxlUsS5x0OL915mcowajxNFUazWyjE2/BnPiN/f3KDqv2VsbOmRkHFZaIKi+b9Jp2jNkj8dIxo6XCzLHY0FpUVTyKGzVlgz9Y9IKp5l8oEnQg0lQx8anychF1jSO/+SQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BdDYm3ma; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748795601; c=relaxed/simple;
+	bh=xSmHgAGZ7sO7lCniEOnA8Fn1fFrbUT/yauBSSc903sM=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=fHIqJiEOASND+8SpGT4yUKtLR310kI/9e0GqPrbwidB4LjSIgA63U2HEwqC1ou10O1/sM8dHhvs1PXx2UWR3b5WHzPOk8Qvf4FVqXxY1T3GIuDWYhcCDhiezRYYd5c9Oa9pyahKbfxr6aICZ5xlJiMyd2Qpecbxp21gslb67K2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=coVpVsad; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BdDYm3ma"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0113C4CEE7;
-	Sun,  1 Jun 2025 16:24:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="coVpVsad"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7EF5C4CEE7;
+	Sun,  1 Jun 2025 16:33:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748795071;
-	bh=PMAkhQy/Nj8Qt7aS/e+j9Xv4t7buO1RGFex1w+i2gQo=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=BdDYm3makofis/Ax9rM0GzHSjQ+tNLU+f0PbFUOY9BF9dLvdOuyAKODKHjXLDjvbP
-	 5lIXeyJX1Xl+VIqXf9pDgFbbwa+bXMlhD/l8wRETbbNVaTT0/++1IFmhMG/96JI24o
-	 cNiilVHw+p2wn++Q3SnqEDr8/FVMKw5nODG2riXGlUux6OwYxsqNRKvlhJsCDxkYzF
-	 ssijqz3/s6CQP9JL+AzW9YgvNLlsseQ8OJKw+7qVKg+DVx3cTb2bFgptyZfSejssMM
-	 uW5xwVxTdstNKC4LvO4wJIsDsux0vx/2U2FLofXrHXcGfGKkW/IeXYjmdwSCap6h7B
-	 mPzWDuxHoh+Qw==
+	s=k20201202; t=1748795601;
+	bh=xSmHgAGZ7sO7lCniEOnA8Fn1fFrbUT/yauBSSc903sM=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=coVpVsadMvAf4p0RHZYzaU/GBsx7PeqDtEhAztvB3uFLpRUpoIbOFkrzOKVBnY3w0
+	 w9AVXr1KsM6k2Dif+wSUfmujSdLEZ5ZO1zjr/l1NcgNTWvXWM3rW0j0K2C1BkRLHhP
+	 jO82EgAhYTow7KqGIKFGwVSc2lDRWs7Z2cvkadBJUK2aYCPGAOktePoFcHRWHR4vKt
+	 +vRHBqlxsduMGsMeAG5Qf5lOQi4uxllWeSRj17I3vTZD+lCf6tKqRUDDRDeh4AM/Xg
+	 ErBpzD/jxtjcSjD2/f26HxYAMisXmyz+Ckt+J+DuO+fuol98XCUb7nBT28wWRsV9Dq
+	 99Sr6X8yLNZog==
+Date: Sun, 01 Jun 2025 11:33:19 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 01 Jun 2025 18:24:19 +0200
-Message-Id: <DABC3ZAQ01GG.1VT5NL7PIMTEO@kernel.org>
-Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-kselftest@vger.kernel.org>, <kunit-dev@googlegroups.com>,
- <dri-devel@lists.freedesktop.org>, <netdev@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <llvm@lists.linux.dev>,
- <linux-pci@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
- <linux-block@vger.kernel.org>
-Subject: Re: [PATCH v11 1/5] rust: macros: reduce collections in `quote!`
- macro
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Tamir Duberstein" <tamird@gmail.com>, "Michal Rostecki"
- <vadorovsky@protonmail.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex
- Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary
- Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Brendan Higgins" <brendan.higgins@linux.dev>, "David Gow"
- <davidgow@google.com>, "Rae Moar" <rmoar@google.com>, "Danilo Krummrich"
- <dakr@kernel.org>, "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
- "Maxime Ripard" <mripard@kernel.org>, "Thomas Zimmermann"
- <tzimmermann@suse.de>, "David Airlie" <airlied@gmail.com>, "Simona Vetter"
- <simona@ffwll.ch>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, "Luis Chamberlain"
- <mcgrof@kernel.org>, "Russ Weight" <russ.weight@linux.dev>, "FUJITA
- Tomonori" <fujita.tomonori@gmail.com>, "Rob Herring" <robh@kernel.org>,
- "Saravana Kannan" <saravanak@google.com>, "Peter Zijlstra"
- <peterz@infradead.org>, "Ingo Molnar" <mingo@redhat.com>, "Will Deacon"
- <will@kernel.org>, "Waiman Long" <longman@redhat.com>, "Nathan Chancellor"
- <nathan@kernel.org>, "Nick Desaulniers" <nick.desaulniers+lkml@gmail.com>,
- "Bill Wendling" <morbo@google.com>, "Justin Stitt"
- <justinstitt@google.com>, "Andrew Lunn" <andrew@lunn.ch>, "Heiner Kallweit"
- <hkallweit1@gmail.com>, "Russell King" <linux@armlinux.org.uk>, "David S.
- Miller" <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Bjorn
- Helgaas" <bhelgaas@google.com>, "Arnd Bergmann" <arnd@arndb.de>, "Jens
- Axboe" <axboe@kernel.dk>, =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
- <kwilczynski@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250530-cstr-core-v11-0-cd9c0cbcb902@gmail.com>
- <20250530-cstr-core-v11-1-cd9c0cbcb902@gmail.com>
-In-Reply-To: <20250530-cstr-core-v11-1-cd9c0cbcb902@gmail.com>
+MIME-Version: 1.0
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ krzk+dt@kernel.org, gregkh@linuxfoundation.org, conor+dt@kernel.org, 
+ arnd@arndb.de
+To: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
+In-Reply-To: <20250601153022.2027919-2-abd.masalkhi@gmail.com>
+References: <20250601153022.2027919-1-abd.masalkhi@gmail.com>
+ <20250601153022.2027919-2-abd.masalkhi@gmail.com>
+Message-Id: <174879559905.2719478.15392001971491179573.robh@kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: eeprom: Add ST M24LR control
+ interface
 
-On Fri May 30, 2025 at 2:27 PM CEST, Tamir Duberstein wrote:
-> Remove a handful of unncessary intermediate vectors and token streams;
-> mainly the top-level stream can be directly extended with the notable
-> exception of groups.
 
-What's the motivation for this? I wouldn't spend much effort on this
-file, as it'll go away when we add the `quote` crate.
-
----
-Cheers,
-Benno
-
-> Remove an unnecessary `#[allow(dead_code)]` added in commit dbd5058ba60c
-> ("rust: make pin-init its own crate").
->
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+On Sun, 01 Jun 2025 15:30:19 +0000, Abd-Alrhman Masalkhi wrote:
+> Add support for the control interface of STMicroelectronics M24LR
+> RFID/NFC EEPROM chips.
+> 
+> Signed-off-by: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
 > ---
->  rust/macros/quote.rs | 104 ++++++++++++++++++++++++---------------------=
-------
->  1 file changed, 49 insertions(+), 55 deletions(-)
+>  .../devicetree/bindings/eeprom/st,m24lr.yaml  | 72 +++++++++++++++++++
+>  1 file changed, 72 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/eeprom/st,m24lr.yaml
+> 
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/eeprom/st,m24lr.example.dtb: eeprom@53 (atmel,24c04): pagesize: 4 is not one of [1, 8, 16, 32, 64, 128, 256]
+	from schema $id: http://devicetree.org/schemas/eeprom/at24.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/eeprom/st,m24lr.example.dtb: eeprom@53 (atmel,24c04): Unevaluated properties are not allowed ('pagesize' was unexpected)
+	from schema $id: http://devicetree.org/schemas/eeprom/at24.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250601153022.2027919-2-abd.masalkhi@gmail.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
