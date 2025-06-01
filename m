@@ -1,204 +1,214 @@
-Received: from outbound.pv.icloud.com (p-west1-cluster6-host6-snip4-6.eps.apple.com [57.103.67.79])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BBD417BD9
-	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 10:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.67.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E52D17DA66;
+	Sun,  1 Jun 2025 10:45:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748773849; cv=none; b=mToeiT0mGwrBcZl5cAJSBDP5Xv5vqN69LhUtYe1WHgSVGIh5h4wp6TT86MYB6mOVF5oSKUEPwuCNLIl1VZ6NkRB4IJeGVHqN/WJAcu1qb0y+HpP2+of4/Ohvwvupeh7ZV5pghxza5tSTVmDbg9Nj3TfVq4bnzvb1vOYdOXBcZhs=
+	t=1748774746; cv=none; b=Ugfpw/hgy5dkHWrtKgc61CZfviDwCPhMmh7Ov+aKPTcohRE/LX1vrI8IOHqng5ppRzNB4sdBe13LLDz/qnUUYvTmYX6iGVnTBPhHWeVjXRhQ56rOuFQpDX/k18fC0+bWBiL9Pd3r2RW3wHDCx6Ft61cC9rGYPY1FqcEY+IQa/A4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748773849; c=relaxed/simple;
-	bh=54QW2Pqp72E0556XnENy/LwdykaqxRDqqyViFp1dgTk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=heRVDnxw+YXMc43ngSIlHkCo1qW3vxWUMHJ+bmi4wRPZMeseI9TeX4fRgmLXtj0WfWDsPZ7gHjbpfX43Xi4fT7R7AFDOUDW19MZtt+02cqDPb4gmSUx7fAKM0H3AICdrcmGxF4birT3tHxRNsdvlyqZChF8hqa4m7UTROR8WgfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=Z8JpKT0F; arc=none smtp.client-ip=57.103.67.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1748774746; c=relaxed/simple;
+	bh=knDZgzB0R6dEpWPhQ7xIaO+LHFR6wi+XZqOGDMJ/B0w=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=FthLmwVD6K/JEGR68OFMve7n9MmIOF410LZ+UTc3wgqDuM2PcnC+o9/+cTTdaQq+eiXEdDM8U++ZTjC+rTdPQRgVeKoUiCXpS2TpOl/nFC67F2Oi59f7fK+fLAShWHfrQIhmFcSR8h5UU36QRH5xq3RFR44eYW+cZsuwc0kDZms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qDYV1/ZA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="Z8JpKT0F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=ePts62dk6SIVCfGxWE1N8RmUpSKvT+XKHWvpF6Tas+0=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type:x-icloud-hme;
-	b=Z8JpKT0FaFDU5zy+JbnbdFZQMHFroqPcEWtW22IKTR57HQ7qbnkhollrizTYDvmm6
-	 YY3b83umjXWyEPokrV2FQiz4fW9hAhpYvSvVFRjZUbg3bESSt+TpC1LbjdyzKa55F4
-	 7Z4StpidHgeCnDvjorAGaJIVgCbFfdc8yngldn8D4wKSuJvlvtzkFDohYGWMfceKFv
-	 bvMC/QNdZd8GgI96Ym4xnRTEQ+HGoLKc/InO3qj/8kHLO3eXsSr1uzG+skTvELPZq1
-	 5fqsfph3z2k7Vs7PsdR5ULjtiKOUY8NSOSY9r0QlgQ6z5CgHUOkq0p8jVAUEryKuU5
-	 xfnqPCDzls4DQ==
-Received: from outbound.pv.icloud.com (localhost [127.0.0.1])
-	by outbound.pv.icloud.com (Postfix) with ESMTPS id 01CCC18003B7;
-	Sun,  1 Jun 2025 10:30:45 +0000 (UTC)
-Received: from dedsec-amd0.tail874668.ts.net (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
-	by outbound.pv.icloud.com (Postfix) with ESMTPSA id 4FA18180038B;
-	Sun,  1 Jun 2025 10:30:43 +0000 (UTC)
-From: Yulong Han <wheatfox17@icloud.com>
-To: chenhuacai@kernel.org
-Cc: kernel@xen0n.name,
-	broonie@kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Yulong Han <wheatfox17@icloud.com>
-Subject: [PATCH] LoongArch: Add numa_add_reserved_memblk() support in numa
-Date: Sun,  1 Jun 2025 18:29:24 +0800
-Message-Id: <20250601102924.2417248-1-wheatfox17@icloud.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qDYV1/ZA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C73FC4CEE7;
+	Sun,  1 Jun 2025 10:45:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748774745;
+	bh=knDZgzB0R6dEpWPhQ7xIaO+LHFR6wi+XZqOGDMJ/B0w=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=qDYV1/ZAycrdKvqDBdRG18s72KjUVe1utEyYr/NWAvvRLiRpjj/EBvjGqxUkYxBc9
+	 5x2s3Z6wQm87Uqy4ekxSFAj6UeNcohh5VOsC8TP2dS5WqYvlV5lrNmU5gLPFBhqCw9
+	 1Q/8/QBKQSXyfxk9GsA1FNMKeNCTuuUojMDBd/c7FV1vTtZjb6wCZyl+X8FCk16/v+
+	 xP5yeouaAVK5TT5TRkyZ3Gkrdn2CbPJkMjJLE/TWcnD9eXCnUb7tqIxmDlA3e7c4fj
+	 Hl7zyUiXQUEGRHrd6c9q5jweG0Ck/87xImFcW4s+4EfdqM57o+nW0XIkgpJpoPfn4T
+	 6Maoj+pH2Rttw==
+X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Xu Yilun <yilun.xu@linux.intel.com>, kvm@vger.kernel.org,
+	sumit.semwal@linaro.org, christian.koenig@amd.com,
+	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
+	jgg@nvidia.com, dan.j.williams@intel.com, aik@amd.com,
+	linux-coco@lists.linux.dev
+Cc: dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, vivek.kasireddy@intel.com,
+	yilun.xu@intel.com, yilun.xu@linux.intel.com,
+	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
+	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
+	zhenzhong.duan@intel.com, tao1.su@intel.com,
+	linux-pci@vger.kernel.org, zhiw@nvidia.com, simona.vetter@ffwll.ch,
+	shameerali.kolothum.thodi@huawei.com, iommu@lists.linux.dev,
+	kevin.tian@intel.com
+Subject: Re: [RFC PATCH 19/30] vfio/pci: Add TSM TDI bind/unbind IOCTLs for
+ TEE-IO support
+In-Reply-To: <20250529053513.1592088-20-yilun.xu@linux.intel.com>
+References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
+ <20250529053513.1592088-20-yilun.xu@linux.intel.com>
+Date: Sun, 01 Jun 2025 16:15:32 +0530
+Message-ID: <yq5aplfn210z.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: 0N0PwfQUetrud7knm1Y84oDuFzQJJjTs
-X-Proofpoint-ORIG-GUID: 0N0PwfQUetrud7knm1Y84oDuFzQJJjTs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-01_04,2025-05-30_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0
- mlxlogscore=999 clxscore=1011 adultscore=0 suspectscore=0 phishscore=0
- bulkscore=0 spamscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.22.0-2503310001 definitions=main-2506010088
+Content-Type: text/plain
 
-This patch fixes the error below when compiling kernel with
-loongarch's loongson3_defconfig:
+Xu Yilun <yilun.xu@linux.intel.com> writes:
 
-drivers/acpi/numa/srat.c: In function ‘acpi_parse_cfmws’:
-drivers/acpi/numa/srat.c:467:13: error: implicit declaration of function
-‘numa_add_reserved_memblk’ [-Werror=implicit-function-declaration]
-  467 |         if (numa_add_reserved_memblk(node, start, end) < 0) {
+> Add new IOCTLs to do TSM based TDI bind/unbind. These IOCTLs are
+> expected to be called by userspace when CoCo VM issues TDI bind/unbind
+> command to VMM. Specifically for TDX Connect, these commands are some
+> secure Hypervisor call named GHCI (Guest-Hypervisor Communication
+> Interface).
+>
+> The TSM TDI bind/unbind operations are expected to be initiated by a
+> running CoCo VM, which already have the legacy assigned device in place.
+> The TSM bind operation is to request VMM make all secure configurations
+> to support device work as a TDI, and then issue TDISP messages to move
+> the TDI to CONFIG_LOCKED or RUN state, waiting for guest's attestation.
+>
+> Do TSM Unbind before vfio_pci_core_disable(), otherwise will lead
+> device to TDISP ERROR state.
+>
 
-The error is caused by the missing the newly added 
-numa_add_reserved_memblk (under include/linux/numa_memblks.h) definition
-inside loongarch's numa related code.
+Any reason these need to be a vfio ioctl instead of iommufd ioctl?
+For ex: https://lore.kernel.org/all/20250529133757.462088-3-aneesh.kumar@kernel.org/
 
-The commit's code(style) was formatted by ./scripts/checkpatch.pl
+>
+> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: Wu Hao <hao.wu@intel.com>
+> Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
+> ---
+>  drivers/vfio/iommufd.c           | 22 ++++++++++
+>  drivers/vfio/pci/vfio_pci_core.c | 74 ++++++++++++++++++++++++++++++++
+>  include/linux/vfio.h             |  7 +++
+>  include/linux/vfio_pci_core.h    |  1 +
+>  include/uapi/linux/vfio.h        | 42 ++++++++++++++++++
+>  5 files changed, 146 insertions(+)
+>
+> diff --git a/drivers/vfio/iommufd.c b/drivers/vfio/iommufd.c
+> index 3441d24538a8..33fd20ffaeee 100644
+> --- a/drivers/vfio/iommufd.c
+> +++ b/drivers/vfio/iommufd.c
+> @@ -297,3 +297,25 @@ void vfio_iommufd_emulated_detach_ioas(struct vfio_device *vdev)
+>  	vdev->iommufd_attached = false;
+>  }
+>  EXPORT_SYMBOL_GPL(vfio_iommufd_emulated_detach_ioas);
+> +
+> +int vfio_iommufd_tsm_bind(struct vfio_device *vdev, u32 vdevice_id)
+> +{
+> +	lockdep_assert_held(&vdev->dev_set->lock);
+> +
+> +	if (WARN_ON(!vdev->iommufd_device))
+> +		return -EINVAL;
+> +
+> +	return iommufd_device_tsm_bind(vdev->iommufd_device, vdevice_id);
+> +}
+> +EXPORT_SYMBOL_GPL(vfio_iommufd_tsm_bind);
+> +
+> +void vfio_iommufd_tsm_unbind(struct vfio_device *vdev)
+> +{
+> +	lockdep_assert_held(&vdev->dev_set->lock);
+> +
+> +	if (WARN_ON(!vdev->iommufd_device))
+> +		return;
+> +
+> +	iommufd_device_tsm_unbind(vdev->iommufd_device);
+> +}
+> +EXPORT_SYMBOL_GPL(vfio_iommufd_tsm_unbind);
+> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> index 116964057b0b..92544e54c9c3 100644
+> --- a/drivers/vfio/pci/vfio_pci_core.c
+> +++ b/drivers/vfio/pci/vfio_pci_core.c
+> @@ -692,6 +692,13 @@ void vfio_pci_core_close_device(struct vfio_device *core_vdev)
+>  #if IS_ENABLED(CONFIG_EEH)
+>  	eeh_dev_release(vdev->pdev);
+>  #endif
+> +
+> +	if (vdev->is_tsm_bound) {
+> +		vfio_iommufd_tsm_unbind(&vdev->vdev);
+> +		pci_release_regions(vdev->pdev);
+> +		vdev->is_tsm_bound = false;
+> +	}
+> +
+>  	vfio_pci_core_disable(vdev);
+>  
+>  	vfio_pci_dma_buf_cleanup(vdev);
+> @@ -1447,6 +1454,69 @@ static int vfio_pci_ioctl_ioeventfd(struct vfio_pci_core_device *vdev,
+>  				  ioeventfd.fd);
+>  }
+>  
+> +static int vfio_pci_ioctl_tsm_bind(struct vfio_pci_core_device *vdev,
+> +				   void __user *arg)
+> +{
+> +	unsigned long minsz = offsetofend(struct vfio_pci_tsm_bind, vdevice_id);
+> +	struct vfio_pci_tsm_bind tsm_bind;
+> +	struct pci_dev *pdev = vdev->pdev;
+> +	int ret;
+> +
+> +	if (copy_from_user(&tsm_bind, arg, minsz))
+> +		return -EFAULT;
+> +
+> +	if (tsm_bind.argsz < minsz || tsm_bind.flags)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&vdev->vdev.dev_set->lock);
+> +
+> +	/* To ensure no host side MMIO access is possible */
+> +	ret = pci_request_regions_exclusive(pdev, "vfio-pci-tsm");
+> +	if (ret)
+> +		goto out_unlock;
+>
 
-Signed-off-by: Yulong Han <wheatfox17@icloud.com>
----
- arch/loongarch/include/asm/numa.h | 13 +++++++------
- arch/loongarch/kernel/numa.c      | 31 ++++++++++++++++++++++++++++---
- 2 files changed, 35 insertions(+), 9 deletions(-)
+This should be part of pci_tsm_bind() ? 
 
-diff --git a/arch/loongarch/include/asm/numa.h b/arch/loongarch/include/asm/numa.h
-index b5f9de9f102e4..dc35d20914c82 100644
---- a/arch/loongarch/include/asm/numa.h
-+++ b/arch/loongarch/include/asm/numa.h
-@@ -28,17 +28,18 @@ struct numa_memblk {
- 	int			nid;
- };
- 
--#define NR_NODE_MEMBLKS		(MAX_NUMNODES*2)
-+#define NR_NODE_MEMBLKS		(MAX_NUMNODES * 2)
- struct numa_meminfo {
- 	int			nr_blks;
- 	struct numa_memblk	blk[NR_NODE_MEMBLKS];
- };
- 
--extern int __init numa_add_memblk(int nodeid, u64 start, u64 end);
-+int __init numa_add_memblk(int nodeid, u64 start, u64 end);
-+int __init numa_add_reserved_memblk(int nid, u64 start, u64 end);
- 
--extern void __init early_numa_add_cpu(int cpuid, s16 node);
--extern void numa_add_cpu(unsigned int cpu);
--extern void numa_remove_cpu(unsigned int cpu);
-+void __init early_numa_add_cpu(int cpuid, s16 node);
-+void numa_add_cpu(unsigned int cpu);
-+void numa_remove_cpu(unsigned int cpu);
- 
- static inline void numa_clear_node(int cpu)
- {
-@@ -49,7 +50,7 @@ static inline void set_cpuid_to_node(int cpuid, s16 node)
- 	__cpuid_to_node[cpuid] = node;
- }
- 
--extern int early_cpu_to_node(int cpu);
-+int early_cpu_to_node(int cpu);
- 
- #else
- 
-diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
-index 30a72fd528c0e..0185a9a609897 100644
---- a/arch/loongarch/kernel/numa.c
-+++ b/arch/loongarch/kernel/numa.c
-@@ -31,6 +31,7 @@ unsigned char node_distances[MAX_NUMNODES][MAX_NUMNODES];
- EXPORT_SYMBOL(node_distances);
- 
- static struct numa_meminfo numa_meminfo;
-+static struct numa_meminfo numa_reserved_meminfo;
- cpumask_t cpus_on_node[MAX_NUMNODES];
- cpumask_t phys_cpus_on_node[MAX_NUMNODES];
- EXPORT_SYMBOL(cpus_on_node);
-@@ -136,12 +137,14 @@ void __init early_numa_add_cpu(int cpuid, s16 node)
- void numa_add_cpu(unsigned int cpu)
- {
- 	int nid = cpu_to_node(cpu);
-+
- 	cpumask_set_cpu(cpu, &cpus_on_node[nid]);
- }
- 
- void numa_remove_cpu(unsigned int cpu)
- {
- 	int nid = cpu_to_node(cpu);
-+
- 	cpumask_clear_cpu(cpu, &cpus_on_node[nid]);
- }
- 
-@@ -155,7 +158,7 @@ static int __init numa_add_memblk_to(int nid, u64 start, u64 end,
- 	/* whine about and ignore invalid blks */
- 	if (start > end || nid < 0 || nid >= MAX_NUMNODES) {
- 		pr_warn("NUMA: Warning: invalid memblk node %d [mem %#010Lx-%#010Lx]\n",
--			   nid, start, end - 1);
-+			nid, start, end - 1);
- 		return 0;
- 	}
- 
-@@ -187,6 +190,28 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
- 	return numa_add_memblk_to(nid, start, end, &numa_meminfo);
- }
- 
-+/**
-+ * numa_add_reserved_memblk - Add one numa_memblk to numa_reserved_meminfo
-+ * @nid: NUMA node ID of the new memblk
-+ * @start: Start address of the new memblk
-+ * @end: End address of the new memblk
-+ *
-+ * Add a new memblk to the numa_reserved_meminfo.
-+ *
-+ * Usage Case: numa_cleanup_meminfo() reconciles all numa_memblk instances
-+ * against memblock_type information and moves any that intersect reserved
-+ * ranges to numa_reserved_meminfo. However, when that information is known
-+ * ahead of time, we use numa_add_reserved_memblk() to add the numa_memblk
-+ * to numa_reserved_meminfo directly.
-+ *
-+ * RETURNS:
-+ * 0 on success, -errno on failure.
-+ */
-+int __init numa_add_reserved_memblk(int nid, u64 start, u64 end)
-+{
-+	return numa_add_memblk_to(nid, start, end, &numa_reserved_meminfo);
-+}
-+
- static void __init node_mem_init(unsigned int node)
- {
- 	unsigned long start_pfn, end_pfn;
-@@ -194,7 +219,7 @@ static void __init node_mem_init(unsigned int node)
- 
- 	node_addrspace_offset = nid_to_addrbase(node);
- 	pr_info("Node%d's addrspace_offset is 0x%lx\n",
--			node, node_addrspace_offset);
-+		node, node_addrspace_offset);
- 
- 	get_pfn_range_for_nid(node, &start_pfn, &end_pfn);
- 	pr_info("Node%d: start_pfn=0x%lx, end_pfn=0x%lx\n",
-@@ -285,7 +310,7 @@ static void __init init_node_memblock(void)
- 		case EFI_MEMORY_MAPPED_IO:
- 		case EFI_MEMORY_MAPPED_IO_PORT_SPACE:
- 			pr_info("Resvd: mem_type:%d, mem_start:0x%llx, mem_size:0x%llx Bytes\n",
--					mem_type, mem_start, mem_size);
-+				mem_type, mem_start, mem_size);
- 			break;
- 		}
- 	}
--- 
-2.39.5
+> +
+> +	ret = vfio_iommufd_tsm_bind(&vdev->vdev, tsm_bind.vdevice_id);
+> +	if (ret)
+> +		goto out_release_region;
+> +
+> +	vdev->is_tsm_bound = true;
+> +	mutex_unlock(&vdev->vdev.dev_set->lock);
+> +
+> +	return 0;
+> +
+> +out_release_region:
+> +	pci_release_regions(pdev);
+> +out_unlock:
+> +	mutex_unlock(&vdev->vdev.dev_set->lock);
+> +	return ret;
+> +}
+> +
+> +static int vfio_pci_ioctl_tsm_unbind(struct vfio_pci_core_device *vdev,
+> +				     void __user *arg)
+> +{
+> +	unsigned long minsz = offsetofend(struct vfio_pci_tsm_unbind, flags);
+> +	struct vfio_pci_tsm_unbind tsm_unbind;
+> +	struct pci_dev *pdev = vdev->pdev;
+> +
+> +	if (copy_from_user(&tsm_unbind, arg, minsz))
+> +		return -EFAULT;
+> +
+> +	if (tsm_unbind.argsz < minsz || tsm_unbind.flags)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&vdev->vdev.dev_set->lock);
+> +
+> +	if (!vdev->is_tsm_bound)
+> +		return 0;
+> +
+> +	vfio_iommufd_tsm_unbind(&vdev->vdev);
+> +	pci_release_regions(pdev);
+> +	vdev->is_tsm_bound = false;
+> +	mutex_unlock(&vdev->vdev.dev_set->lock);
+> +
+> +	return 0;
+> +}
+> +
 
+
+-aneesh
