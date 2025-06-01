@@ -1,391 +1,172 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E25193436
-	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 11:30:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+Received: from www.linux-watchdog.org (www.linux-watchdog.org [185.87.125.42])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D58011993BD;
+	Sun,  1 Jun 2025 12:08:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.87.125.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748777428; cv=none; b=GlldhTosdKTifN+9O5VA3gF66y/Saoe0EjxB0R+WCnDZioSeDWnHPhsYMdai4ihB8uV6FT4ERDqICkJlrmxy3cKJO+g2Pyti6FSbEHmFnq1t6s2o6nPY3a2Q068WGJZC+9iZxhcwYSo+Rbgmr0U6fQuzO8sgeTBtYTmQJlRKIEQ=
+	t=1748779686; cv=none; b=Teisl4dxuLJ5U9B4IOQbmwXbUrvXWN/P8z4+3TzIhzDcfNPxMFfk/gBjTF5UWmcOKJp7/z9+NCw6UwBIR6+e6oDDwWsRubkG1emKwsPqgijMmUbUQKAensASMXIBD1rhKpDp1oRV39dRYPjwxQG07wr2593LNgjuF1ooG/vafx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748777428; c=relaxed/simple;
-	bh=kM/hMvRoLNe5BYf+9nZ/GlRh7kY6Z29eG8m/ng1O9R4=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=j1rGtNZptbQtVCtDNZTceFxRGJ0rg12AlLx20xmMKn49A1fVC/NvuD/Y7gX+YViHExg57g27pIw2qe6g4pb8j+YEh3LOTCu8mclwlf0+X/GFe06Qekkvmox/NFDD7PCeQd1nwekX+TFDzP7JncQd0HhO89zWN9sjaj6Ur4CCI3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3dcd10297d5so54341915ab.2
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Jun 2025 04:30:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748777426; x=1749382226;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/PcWsAS8mvD70pRt4tMmjNydUnj8bEix14q9ZMXZJCI=;
-        b=BtflfZp3GWDnONikizDn2o3YFERDiLskk3dpPiK2dm9xLSB6OrU4sOjlOleCzR8RCJ
-         MbnpZp2UncQX78h1pGKs8u9wjLG8mBH6+QM6JylQ0kaOep2UgJM8HrCpSzNroNnA0E7N
-         /WIGaic31lSEQSOBzC+6TYREnDku/AY9USjAzppvxWUeLFWMeLpZ5wuFLjsWLObZmBs/
-         lZuHkl+FW2aKtFYFNo6fDpy0E0o8MAIHoDAqhXENuS53yvs2TF0mbrH3J6WLiuzyqjeT
-         TKX1TcK94MyhTPX4XF0C6YE1O9cd9FaEFFCQxomiXRwMOHGlu6seYmm3tWCaSEW6OVxc
-         yJuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXQ+VFSYQPVBbcbL1GiZoa8RHIydS1rpNjFVtQDHwiVr2CNGfc5/OP2L6YSwz17Gwn8zxZaSDKJcOJKZD8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4S+ihnhlu6Lgoap1TYwA+YmVfxFJ5G3PXIVsO9BPyJGA/FWen
-	7uCY922EAXN1PUk9Dh3lb69c9bjKnxMhzWBKkQz8eHcDBQX62pebSjvFNZyYbalFSUzLbokJhYu
-	gDVuhF8lyo/We3+tvvHYW6ZD+Jsf8nmVBvORzkYDNOJ+svD5pqb4mrTRMu9k=
-X-Google-Smtp-Source: AGHT+IHUPbSRqgVpEv4vFrGFwCU0drv7cJLZHCVgyjn3TSXt8rtorobOrb+u1q0oMPQ9suhj0Rt0wyJiOSM2SyBy9HdipxUG8OZj
+	s=arc-20240116; t=1748779686; c=relaxed/simple;
+	bh=2GdmBCH71pREFcVk7mC6hOy10fz7iBChE5PhaQXBYoY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=X/8jbqUvMKbipZgDtJMWK8HlYQ/cehMunaFAKSfaxXEvitvFy8Zidh2Z3XZXzmIXWaPYRMiejfxz0ZL8Jl7FTrgb94vGpjZx2iRtTri492VJb7S7sXzsK6oCG0HyqXvEui80JAJltfqfd1+vO3n7QxIskjhNsbhF6lUKZnkckMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=linux-watchdog.org; spf=pass smtp.mailfrom=linux-watchdog.org; dkim=pass (2048-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b=KCmewacW; arc=none smtp.client-ip=185.87.125.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=linux-watchdog.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux-watchdog.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b="KCmewacW"
+Received: by www.linux-watchdog.org (Postfix, from userid 500)
+	id 22F1840A00; Sun,  1 Jun 2025 13:29:01 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 www.linux-watchdog.org 22F1840A00
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-watchdog.org;
+	s=odk20250313; t=1748777341;
+	bh=2GdmBCH71pREFcVk7mC6hOy10fz7iBChE5PhaQXBYoY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=KCmewacWKK5jvu9EHGoMEPQ4ROpuRSa3chiiyaV6vBEpw/gn5RLAyyLU/kvqcp7X6
+	 cH2t0QbfoJ1YCqi4AQ9jfRizwHEBCA71daJtr496lc/xKxdPI+d9QvKWwhJEQ+FPVe
+	 5lUz0Gqc1NQOI6IFewH3eqyRThelTM0n7X5fe2icnVI0eW8hHX2kHbz7OmOjWlcWKH
+	 D8zZeB9MEH9YAYSMeFkYR+8kjgxHIQW4yl4pQ1LcG4VSZsl7PTj17C1S9ENkGjinHK
+	 +x1a7Pbk3YUNuqZ6RXQ1SV98fCSFIpgGpT3yqsk5Bzjf11p7E2cIvznYr5y1ztGt7T
+	 pCTzwROaHVVvQ==
+Date: Sun, 1 Jun 2025 13:29:00 +0200
+From: Wim Van Sebroeck <wim@linux-watchdog.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Antonio Borneo <antonio.borneo@foss.st.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Diogo Ivo <diogo.ivo@siemens.com>, Florian Klink <flokli@flokli.de>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Henry Martin <bsdhenrymartin@gmail.com>,
+	Igor Belwon <igor.belwon@mentallysanemainliners.org>,
+	Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Marcus Folkesson <marcus.folkesson@gmail.com>,
+	Thomas Richard <thomas.richard@bootlin.com>,
+	Ziyan Fu <fuzy5@lenovo.com>
+Subject: [GIT PULL REQUEST] watchdog - v6.16 release cycle.
+Message-ID: <20250601112900.GA6378@www.linux-watchdog.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1fc4:b0:3dc:7a6d:1e28 with SMTP id
- e9e14a558f8ab-3dd99be4e04mr113465315ab.7.1748777425784; Sun, 01 Jun 2025
- 04:30:25 -0700 (PDT)
-Date: Sun, 01 Jun 2025 04:30:25 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <683c39d1.a70a0220.1a6ae.0012.GAE@google.com>
-Subject: [syzbot] [dri?] possible deadlock in drm_mode_obj_get_properties_ioctl
- (2)
-From: syzbot <syzbot+c92b251aa29955173d9f@syzkaller.appspotmail.com>
-To: airlied@gmail.com, dri-devel@lists.freedesktop.org, 
-	hamohammed.sa@gmail.com, linux-kernel@vger.kernel.org, 
-	louis.chauvet@bootlin.com, maarten.lankhorst@linux.intel.com, 
-	melissa.srw@gmail.com, mripard@kernel.org, simona@ffwll.ch, 
-	syzkaller-bugs@googlegroups.com, tzimmermann@suse.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.20 (2009-12-10)
 
-Hello,
+Hi Linus,
 
-syzbot found the following issue on:
+Please pull following watchdog changes for the v6.16 release cycle.
 
-HEAD commit:    d7fa1af5b33e Merge branch 'for-next/core' into for-kernelci
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=126e4482580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=89c13de706fbf07a
-dashboard link: https://syzkaller.appspot.com/bug?extid=c92b251aa29955173d9f
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-userspace arch: arm64
+This series contains:
+* Add Watchdog Timer for the NXP S32 platform
+* Add driver for Intel OC WDT
+* Add exynos990-wdt
+* Various other fixes and improvements
 
-Unfortunately, I don't have any reproducer for this issue yet.
+The output from git request-pull:
+----------------------------------------------------------------
+The following changes since commit 4856ebd997159f198e3177e515bda01143727463:
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/da97ad659b2c/disk-d7fa1af5.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/659e123552a8/vmlinux-d7fa1af5.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/6ec5dbf4643e/Image-d7fa1af5.gz.xz
+  Merge tag 'drm-fixes-2025-05-24' of https://gitlab.freedesktop.org/drm/kernel (2025-05-23 15:17:55 -0700)
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+c92b251aa29955173d9f@syzkaller.appspotmail.com
+are available in the git repository at:
 
-======================================================
-WARNING: possible circular locking dependency detected
-6.15.0-rc7-syzkaller-gd7fa1af5b33e #0 Not tainted
-------------------------------------------------------
-syz.6.225/8293 is trying to acquire lock:
-ffff0000c2a81b50 (&mm->mmap_lock){++++}-{4:4}, at: __might_fault+0x9c/0x124 mm/memory.c:7150
+  git://www.linux-watchdog.org/linux-watchdog.git tags/linux-watchdog-6.16-rc1
 
-but task is already holding lock:
-ffff80009b5b7938 (crtc_ww_class_mutex){+.+.}-{4:4}, at: drm_mode_obj_get_properties_ioctl+0x190/0x4e8 drivers/gpu/drm/drm_mode_object.c:447
+for you to fetch changes up to 158f9f2f71523bab787f4fa7a7a1f390524350ca:
 
-which lock already depends on the new lock.
+  watchdog: iTCO_wdt: Update the heartbeat value after clamping timeout (2025-06-01 13:16:37 +0200)
 
+----------------------------------------------------------------
+linux-watchdog 6.16-rc1 tag
 
-the existing dependency chain (in reverse order) is:
+----------------------------------------------------------------
+Antonio Borneo (1):
+      watchdog: arm_smc_wdt: get wdt status through SMCWD_GET_TIMELEFT
 
--> #7 (crtc_ww_class_mutex){+.+.}-{4:4}:
-       ww_acquire_init include/linux/ww_mutex.h:162 [inline]
-       drm_modeset_acquire_init+0x1d8/0x374 drivers/gpu/drm/drm_modeset_lock.c:250
-       drmm_mode_config_init+0xb0c/0x10d8 drivers/gpu/drm/drm_mode_config.c:462
-       vkms_modeset_init drivers/gpu/drm/vkms/vkms_drv.c:146 [inline]
-       vkms_create drivers/gpu/drm/vkms/vkms_drv.c:207 [inline]
-       vkms_init+0x2c0/0x5ac drivers/gpu/drm/vkms/vkms_drv.c:242
-       do_one_initcall+0x250/0x990 init/main.c:1257
-       do_initcall_level+0x154/0x214 init/main.c:1319
-       do_initcalls+0x84/0xf4 init/main.c:1335
-       do_basic_setup+0x8c/0xa0 init/main.c:1354
-       kernel_init_freeable+0x2dc/0x444 init/main.c:1567
-       kernel_init+0x24/0x1dc init/main.c:1457
-       ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
+Daniel Lezcano (2):
+      dt-bindings: watchdog: Add NXP Software Watchdog Timer
+      watchdog: Add the Watchdog Timer for the NXP S32 platform
 
--> #6 (crtc_ww_class_acquire){+.+.}-{0:0}:
-       ww_acquire_init include/linux/ww_mutex.h:161 [inline]
-       drm_modeset_acquire_init+0x1b8/0x374 drivers/gpu/drm/drm_modeset_lock.c:250
-       drm_client_modeset_commit_atomic+0xcc/0x6ac drivers/gpu/drm/drm_client_modeset.c:1018
-       drm_client_modeset_commit_locked+0xd0/0x4a0 drivers/gpu/drm/drm_client_modeset.c:1182
-       drm_client_modeset_commit+0x50/0x7c drivers/gpu/drm/drm_client_modeset.c:1208
-       __drm_fb_helper_restore_fbdev_mode_unlocked+0x94/0x198 drivers/gpu/drm/drm_fb_helper.c:237
-       drm_fb_helper_set_par+0xa4/0x108 drivers/gpu/drm/drm_fb_helper.c:1359
-       fbcon_init+0xe4c/0x1d18 drivers/video/fbdev/core/fbcon.c:1112
-       visual_init+0x27c/0x540 drivers/tty/vt/vt.c:1011
-       do_bind_con_driver+0x7b8/0xdd8 drivers/tty/vt/vt.c:3831
-       do_take_over_console+0x824/0x97c drivers/tty/vt/vt.c:4397
-       do_fbcon_takeover+0x158/0x25c drivers/video/fbdev/core/fbcon.c:548
-       do_fb_registered drivers/video/fbdev/core/fbcon.c:2989 [inline]
-       fbcon_fb_registered+0x354/0x4c8 drivers/video/fbdev/core/fbcon.c:3009
-       do_register_framebuffer drivers/video/fbdev/core/fbmem.c:449 [inline]
-       register_framebuffer+0x44c/0x5ec drivers/video/fbdev/core/fbmem.c:515
-       __drm_fb_helper_initial_config_and_unlock+0x103c/0x159c drivers/gpu/drm/drm_fb_helper.c:1851
-       drm_fb_helper_initial_config+0x3c/0x58 drivers/gpu/drm/drm_fb_helper.c:1916
-       drm_fbdev_client_hotplug+0x154/0x22c drivers/gpu/drm/clients/drm_fbdev_client.c:52
-       drm_client_register+0x13c/0x1d4 drivers/gpu/drm/drm_client.c:140
-       drm_fbdev_client_setup+0x194/0x3d0 drivers/gpu/drm/clients/drm_fbdev_client.c:159
-       drm_client_setup+0x78/0x140 drivers/gpu/drm/clients/drm_client_setup.c:39
-       vkms_create drivers/gpu/drm/vkms/vkms_drv.c:218 [inline]
-       vkms_init+0x4b8/0x5ac drivers/gpu/drm/vkms/vkms_drv.c:242
-       do_one_initcall+0x250/0x990 init/main.c:1257
-       do_initcall_level+0x154/0x214 init/main.c:1319
-       do_initcalls+0x84/0xf4 init/main.c:1335
-       do_basic_setup+0x8c/0xa0 init/main.c:1354
-       kernel_init_freeable+0x2dc/0x444 init/main.c:1567
-       kernel_init+0x24/0x1dc init/main.c:1457
-       ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
+Diogo Ivo (1):
+      watchdog: Add driver for Intel OC WDT
 
--> #5 (&client->modeset_mutex){+.+.}-{4:4}:
-       __mutex_lock_common+0x1d0/0x2190 kernel/locking/mutex.c:601
-       __mutex_lock kernel/locking/mutex.c:746 [inline]
-       mutex_lock_nested+0x2c/0x38 kernel/locking/mutex.c:798
-       drm_client_modeset_probe+0x2f0/0x4e88 drivers/gpu/drm/drm_client_modeset.c:843
-       __drm_fb_helper_initial_config_and_unlock+0xf0/0x159c drivers/gpu/drm/drm_fb_helper.c:1828
-       drm_fb_helper_initial_config+0x3c/0x58 drivers/gpu/drm/drm_fb_helper.c:1916
-       drm_fbdev_client_hotplug+0x154/0x22c drivers/gpu/drm/clients/drm_fbdev_client.c:52
-       drm_client_register+0x13c/0x1d4 drivers/gpu/drm/drm_client.c:140
-       drm_fbdev_client_setup+0x194/0x3d0 drivers/gpu/drm/clients/drm_fbdev_client.c:159
-       drm_client_setup+0x78/0x140 drivers/gpu/drm/clients/drm_client_setup.c:39
-       vkms_create drivers/gpu/drm/vkms/vkms_drv.c:218 [inline]
-       vkms_init+0x4b8/0x5ac drivers/gpu/drm/vkms/vkms_drv.c:242
-       do_one_initcall+0x250/0x990 init/main.c:1257
-       do_initcall_level+0x154/0x214 init/main.c:1319
-       do_initcalls+0x84/0xf4 init/main.c:1335
-       do_basic_setup+0x8c/0xa0 init/main.c:1354
-       kernel_init_freeable+0x2dc/0x444 init/main.c:1567
-       kernel_init+0x24/0x1dc init/main.c:1457
-       ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
+Florian Klink (1):
+      watchdog: apple: set max_hw_heartbeat_ms instead of max_timeout
 
--> #4 (&helper->lock){+.+.}-{4:4}:
-       __mutex_lock_common+0x1d0/0x2190 kernel/locking/mutex.c:601
-       __mutex_lock kernel/locking/mutex.c:746 [inline]
-       mutex_lock_nested+0x2c/0x38 kernel/locking/mutex.c:798
-       __drm_fb_helper_restore_fbdev_mode_unlocked+0x74/0x198 drivers/gpu/drm/drm_fb_helper.c:228
-       drm_fb_helper_set_par+0xa4/0x108 drivers/gpu/drm/drm_fb_helper.c:1359
-       fbcon_init+0xe4c/0x1d18 drivers/video/fbdev/core/fbcon.c:1112
-       visual_init+0x27c/0x540 drivers/tty/vt/vt.c:1011
-       do_bind_con_driver+0x7b8/0xdd8 drivers/tty/vt/vt.c:3831
-       do_take_over_console+0x824/0x97c drivers/tty/vt/vt.c:4397
-       do_fbcon_takeover+0x158/0x25c drivers/video/fbdev/core/fbcon.c:548
-       do_fb_registered drivers/video/fbdev/core/fbcon.c:2989 [inline]
-       fbcon_fb_registered+0x354/0x4c8 drivers/video/fbdev/core/fbcon.c:3009
-       do_register_framebuffer drivers/video/fbdev/core/fbmem.c:449 [inline]
-       register_framebuffer+0x44c/0x5ec drivers/video/fbdev/core/fbmem.c:515
-       __drm_fb_helper_initial_config_and_unlock+0x103c/0x159c drivers/gpu/drm/drm_fb_helper.c:1851
-       drm_fb_helper_initial_config+0x3c/0x58 drivers/gpu/drm/drm_fb_helper.c:1916
-       drm_fbdev_client_hotplug+0x154/0x22c drivers/gpu/drm/clients/drm_fbdev_client.c:52
-       drm_client_register+0x13c/0x1d4 drivers/gpu/drm/drm_client.c:140
-       drm_fbdev_client_setup+0x194/0x3d0 drivers/gpu/drm/clients/drm_fbdev_client.c:159
-       drm_client_setup+0x78/0x140 drivers/gpu/drm/clients/drm_client_setup.c:39
-       vkms_create drivers/gpu/drm/vkms/vkms_drv.c:218 [inline]
-       vkms_init+0x4b8/0x5ac drivers/gpu/drm/vkms/vkms_drv.c:242
-       do_one_initcall+0x250/0x990 init/main.c:1257
-       do_initcall_level+0x154/0x214 init/main.c:1319
-       do_initcalls+0x84/0xf4 init/main.c:1335
-       do_basic_setup+0x8c/0xa0 init/main.c:1354
-       kernel_init_freeable+0x2dc/0x444 init/main.c:1567
-       kernel_init+0x24/0x1dc init/main.c:1457
-       ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
+Guenter Roeck (1):
+      watchdog: iTCO: Drop driver-internal locking
 
--> #3 (console_lock){+.+.}-{0:0}:
-       console_lock+0x194/0x1ec kernel/printk/printk.c:2849
-       __bch2_print_string_as_lines fs/bcachefs/util.c:267 [inline]
-       bch2_print_string_as_lines+0x34/0x150 fs/bcachefs/util.c:286
-       bucket_ref_update_err+0x1c8/0x21c fs/bcachefs/buckets.c:417
-       bch2_bucket_ref_update+0x3d8/0x888 fs/bcachefs/buckets.c:-1
-       __mark_pointer fs/bcachefs/buckets.c:572 [inline]
-       bch2_trigger_pointer fs/bcachefs/buckets.c:618 [inline]
-       __trigger_extent+0xd90/0x35fc fs/bcachefs/buckets.c:763
-       bch2_trigger_extent+0x3e4/0x78c fs/bcachefs/buckets.c:881
-       run_one_trans_trigger fs/bcachefs/btree_trans_commit.c:-1 [inline]
-       bch2_trans_commit_run_triggers fs/bcachefs/btree_trans_commit.c:550 [inline]
-       __bch2_trans_commit+0x7e8/0x62d0 fs/bcachefs/btree_trans_commit.c:990
-       bch2_trans_commit fs/bcachefs/btree_update.h:195 [inline]
-       bch2_extent_update+0x2d8/0x7e8 fs/bcachefs/io_write.c:353
-       bch2_fpunch_at+0x4dc/0x98c fs/bcachefs/io_misc.c:187
-       __bch2_resume_logged_op_truncate+0x340/0x4b4 fs/bcachefs/io_misc.c:265
-       bch2_truncate+0x144/0x1e4 fs/bcachefs/io_misc.c:300
-       bchfs_truncate+0x648/0xa70 fs/bcachefs/fs-io.c:509
-       bch2_setattr+0x198/0x20c fs/bcachefs/fs.c:1245
-       notify_change+0x9a4/0xc50 fs/attr.c:552
-       do_truncate+0x178/0x1f0 fs/open.c:65
-       do_ftruncate+0x3bc/0x458 fs/open.c:192
-       do_sys_ftruncate fs/open.c:207 [inline]
-       __do_sys_ftruncate fs/open.c:212 [inline]
-       __se_sys_ftruncate fs/open.c:210 [inline]
-       __arm64_sys_ftruncate+0x90/0xe8 fs/open.c:210
-       __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
-       invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
-       el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
-       do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
-       el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
-       el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
-       el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+Gustavo A. R. Silva (1):
+      watchdog: cros-ec: Avoid -Wflex-array-member-not-at-end warning
 
--> #2 (bcachefs_btree){+.+.}-{0:0}:
-       trans_set_locked+0x94/0x200 fs/bcachefs/btree_locking.h:198
-       bch2_trans_begin+0x6f8/0xa40 fs/bcachefs/btree_iter.c:3288
-       bch2_read_err_msg_trans+0x64/0x298 fs/bcachefs/io_read.c:346
-       __bch2_read_extent+0x21fc/0x3694 fs/bcachefs/io_read.c:975
-       bch2_read_extent fs/bcachefs/io_read.h:140 [inline]
-       bchfs_read+0x1178/0x17dc fs/bcachefs/fs-io-buffered.c:226
-       bch2_read_single_folio+0x498/0x6e4 fs/bcachefs/fs-io-buffered.c:360
-       bch2_read_folio+0x40/0x84 fs/bcachefs/fs-io-buffered.c:378
-       filemap_read_folio+0xec/0x2f8 mm/filemap.c:2401
-       filemap_fault+0xd48/0x1278 mm/filemap.c:3495
-       bch2_page_fault+0x2cc/0x700 fs/bcachefs/fs-io-pagecache.c:594
-       __do_fault+0xf8/0x498 mm/memory.c:5098
-       do_read_fault mm/memory.c:5518 [inline]
-       do_fault mm/memory.c:5652 [inline]
-       do_pte_missing mm/memory.c:4160 [inline]
-       handle_pte_fault mm/memory.c:5997 [inline]
-       __handle_mm_fault mm/memory.c:6140 [inline]
-       handle_mm_fault+0x2cb0/0x4d18 mm/memory.c:6309
-       faultin_page mm/gup.c:1193 [inline]
-       __get_user_pages+0x1dd4/0x30d8 mm/gup.c:1491
-       populate_vma_page_range+0x218/0x2e8 mm/gup.c:1929
-       __mm_populate+0x208/0x330 mm/gup.c:2032
-       mm_populate include/linux/mm.h:3487 [inline]
-       vm_mmap_pgoff+0x378/0x43c mm/util.c:584
-       ksys_mmap_pgoff+0x394/0x5b8 mm/mmap.c:607
-       __do_sys_mmap arch/arm64/kernel/sys.c:28 [inline]
-       __se_sys_mmap arch/arm64/kernel/sys.c:21 [inline]
-       __arm64_sys_mmap+0xf8/0x110 arch/arm64/kernel/sys.c:21
-       __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
-       invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
-       el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
-       do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
-       el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
-       el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
-       el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+Henry Martin (1):
+      watchdog: lenovo_se30_wdt: Fix possible devm_ioremap() NULL pointer dereference in lenovo_se30_wdt_probe()
 
--> #1 (mapping.invalidate_lock#8){.+.+}-{4:4}:
-       down_read+0x58/0x2f8 kernel/locking/rwsem.c:1524
-       filemap_invalidate_lock_shared include/linux/fs.h:922 [inline]
-       filemap_fault+0x564/0x1278 mm/filemap.c:3391
-       bch2_page_fault+0x2cc/0x700 fs/bcachefs/fs-io-pagecache.c:594
-       __do_fault+0xf8/0x498 mm/memory.c:5098
-       do_read_fault mm/memory.c:5518 [inline]
-       do_fault mm/memory.c:5652 [inline]
-       do_pte_missing mm/memory.c:4160 [inline]
-       handle_pte_fault mm/memory.c:5997 [inline]
-       __handle_mm_fault mm/memory.c:6140 [inline]
-       handle_mm_fault+0x2cb0/0x4d18 mm/memory.c:6309
-       faultin_page mm/gup.c:1193 [inline]
-       __get_user_pages+0x1dd4/0x30d8 mm/gup.c:1491
-       populate_vma_page_range+0x218/0x2e8 mm/gup.c:1929
-       __mm_populate+0x208/0x330 mm/gup.c:2032
-       mm_populate include/linux/mm.h:3487 [inline]
-       vm_mmap_pgoff+0x378/0x43c mm/util.c:584
-       ksys_mmap_pgoff+0x394/0x5b8 mm/mmap.c:607
-       __do_sys_mmap arch/arm64/kernel/sys.c:28 [inline]
-       __se_sys_mmap arch/arm64/kernel/sys.c:21 [inline]
-       __arm64_sys_mmap+0xf8/0x110 arch/arm64/kernel/sys.c:21
-       __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
-       invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
-       el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
-       do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
-       el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
-       el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
-       el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+Igor Belwon (2):
+      dt-bindings: watchdog: samsung-wdt: Add exynos990-wdt compatible
+      watchdog: s3c2410_wdt: Add exynos990-wdt compatible data
 
--> #0 (&mm->mmap_lock){++++}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3166 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
-       validate_chain kernel/locking/lockdep.c:3909 [inline]
-       __lock_acquire+0x1728/0x3058 kernel/locking/lockdep.c:5235
-       lock_acquire+0x14c/0x2e0 kernel/locking/lockdep.c:5866
-       __might_fault+0xc4/0x124 mm/memory.c:7151
-       drm_mode_object_get_properties+0x1f0/0x524 drivers/gpu/drm/drm_mode_object.c:407
-       drm_mode_obj_get_properties_ioctl+0x2a0/0x4e8 drivers/gpu/drm/drm_mode_object.c:459
-       drm_ioctl_kernel+0x238/0x310 drivers/gpu/drm/drm_ioctl.c:796
-       drm_ioctl+0x65c/0xa5c drivers/gpu/drm/drm_ioctl.c:893
-       vfs_ioctl fs/ioctl.c:51 [inline]
-       __do_sys_ioctl fs/ioctl.c:906 [inline]
-       __se_sys_ioctl fs/ioctl.c:892 [inline]
-       __arm64_sys_ioctl+0x14c/0x1c4 fs/ioctl.c:892
-       __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
-       invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
-       el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
-       do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
-       el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
-       el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
-       el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+Kathiravan Thirumoorthy (1):
+      watchdog: qcom: introduce the device data for IPQ5424 watchdog device
 
-other info that might help us debug this:
+Kever Yang (1):
+      dt-bindings: watchdog: Add rk3562 compatible
 
-Chain exists of:
-  &mm->mmap_lock --> crtc_ww_class_acquire --> crtc_ww_class_mutex
+Krzysztof Kozlowski (3):
+      watchdog: Do not enable by default during compile testing
+      watchdog: stm32: Fix wakeup source leaks on device unbind
+      watchdog: Correct kerneldoc warnings
 
- Possible unsafe locking scenario:
+Lad Prabhakar (1):
+      dt-bindings: watchdog: renesas,wdt: Document RZ/V2N (R9A09G056) support
 
-       CPU0                    CPU1
-       ----                    ----
-  lock(crtc_ww_class_mutex);
-                               lock(crtc_ww_class_acquire);
-                               lock(crtc_ww_class_mutex);
-  rlock(&mm->mmap_lock);
+Marcus Folkesson (4):
+      watchdog: da9052_wdt: add support for nowayout
+      watchdog: da9052_wdt: use timeout value from external inputs
+      watchdog: da9052_wdt: do not disable wdt during probe
+      watchdog: da9052_wdt: respect TWDMIN
 
- *** DEADLOCK ***
+Thomas Richard (1):
+      dt-bindings: watchdog: fsl,scu-wdt: Document imx8qm
 
-2 locks held by syz.6.225/8293:
- #0: ffff80009b5b7910 (crtc_ww_class_acquire){+.+.}-{0:0}, at: drm_mode_obj_get_properties_ioctl+0x190/0x4e8 drivers/gpu/drm/drm_mode_object.c:447
- #1: ffff80009b5b7938 (crtc_ww_class_mutex){+.+.}-{4:4}, at: drm_mode_obj_get_properties_ioctl+0x190/0x4e8 drivers/gpu/drm/drm_mode_object.c:447
+Ziyan Fu (1):
+      watchdog: iTCO_wdt: Update the heartbeat value after clamping timeout
 
-stack backtrace:
-CPU: 0 UID: 0 PID: 8293 Comm: syz.6.225 Not tainted 6.15.0-rc7-syzkaller-gd7fa1af5b33e #0 PREEMPT 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call trace:
- show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:466 (C)
- __dump_stack+0x30/0x40 lib/dump_stack.c:94
- dump_stack_lvl+0xd8/0x12c lib/dump_stack.c:120
- dump_stack+0x1c/0x28 lib/dump_stack.c:129
- print_circular_bug+0x324/0x32c kernel/locking/lockdep.c:2079
- check_noncircular+0x154/0x174 kernel/locking/lockdep.c:2211
- check_prev_add kernel/locking/lockdep.c:3166 [inline]
- check_prevs_add kernel/locking/lockdep.c:3285 [inline]
- validate_chain kernel/locking/lockdep.c:3909 [inline]
- __lock_acquire+0x1728/0x3058 kernel/locking/lockdep.c:5235
- lock_acquire+0x14c/0x2e0 kernel/locking/lockdep.c:5866
- __might_fault+0xc4/0x124 mm/memory.c:7151
- drm_mode_object_get_properties+0x1f0/0x524 drivers/gpu/drm/drm_mode_object.c:407
- drm_mode_obj_get_properties_ioctl+0x2a0/0x4e8 drivers/gpu/drm/drm_mode_object.c:459
- drm_ioctl_kernel+0x238/0x310 drivers/gpu/drm/drm_ioctl.c:796
- drm_ioctl+0x65c/0xa5c drivers/gpu/drm/drm_ioctl.c:893
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl fs/ioctl.c:892 [inline]
- __arm64_sys_ioctl+0x14c/0x1c4 fs/ioctl.c:892
- __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
- el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
- el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
- el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+ .../devicetree/bindings/watchdog/fsl,scu-wdt.yaml  |   1 +
+ .../bindings/watchdog/nxp,s32g2-swt.yaml           |  54 ++++
+ .../devicetree/bindings/watchdog/renesas,wdt.yaml  |   4 +-
+ .../devicetree/bindings/watchdog/samsung-wdt.yaml  |  11 +-
+ .../devicetree/bindings/watchdog/snps,dw-wdt.yaml  |   1 +
+ drivers/watchdog/Kconfig                           |  26 +-
+ drivers/watchdog/Makefile                          |   2 +
+ drivers/watchdog/apple_wdt.c                       |   7 +-
+ drivers/watchdog/arm_smc_wdt.c                     |  17 +-
+ drivers/watchdog/cros_ec_wdt.c                     |  30 +-
+ drivers/watchdog/da9052_wdt.c                      |  27 +-
+ drivers/watchdog/iTCO_wdt.c                        |  25 +-
+ drivers/watchdog/intel_oc_wdt.c                    | 233 +++++++++++++++
+ drivers/watchdog/lenovo_se30_wdt.c                 |   2 +
+ drivers/watchdog/pcwd_usb.c                        |   6 +-
+ drivers/watchdog/pretimeout_noop.c                 |   2 +-
+ drivers/watchdog/pretimeout_panic.c                |   2 +-
+ drivers/watchdog/qcom-wdt.c                        |   7 +
+ drivers/watchdog/s32g_wdt.c                        | 315 +++++++++++++++++++++
+ drivers/watchdog/s3c2410_wdt.c                     |  39 ++-
+ drivers/watchdog/stm32_iwdg.c                      |   2 +-
+ drivers/watchdog/wdt_pci.c                         |   2 +-
+ 22 files changed, 749 insertions(+), 66 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/nxp,s32g2-swt.yaml
+ create mode 100644 drivers/watchdog/intel_oc_wdt.c
+ create mode 100644 drivers/watchdog/s32g_wdt.c
+----------------------------------------------------------------
 
+Kind regards,
+Wim.
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
