@@ -1,65 +1,146 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDBF2184E;
-	Sun,  1 Jun 2025 00:26:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD444A06
+	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 00:30:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748737584; cv=none; b=exF+f9RhDZGNqKAQec3vnWpYYvIRtIOqwCoDlcvE1Sj34mEP+0IdBl3+hSVhXZMcdwA6SvcmDXyDhXQNdp5v6qXfQ8n2E9hQn8BTI0989jRe2SoIszYpNAirMiH1DEQLFo5923MMeod0U2TIeXgp4+YKnZJNa/SIWw99GCgPnns=
+	t=1748737833; cv=none; b=p/o9KdCn5eHpF5QRLQn3aOVijJzZNh3XV8naWrCGlNRgd8HNNRy2XCVUNwRo3tWBsMbtd2RNSNU3gRwJZk+OXY9QQtX4TD5xyByTeY+Tos0OGemsqwC/d8mwNJ2OjVAeHGKE6sH4pUnPV7jp9ngUC4C5YJuu7oTqOkDX7US9eGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748737584; c=relaxed/simple;
-	bh=wnjlPLdQigk8QgUrIHw5yk6jJrpMJY8IJU4pMMPHFAo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i26LlqxtT0Tah+IlIFtIWUrN2l59c4D+DTf399S0S+NfsswwVXKYeVLXFqjRNgFwOdgwffCOvNtkofkVDlj4k4X+/kp96IEMnOgFlKPvaeTyO7gu6ZGv43dU53nmrPc4hIo+D/pMBOTD1upbCFYy4TiwV5Xx9RMZrOD85FO4WSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Exm/mE4p; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Exm/mE4p"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=5rMEOV3KLFf+UgtAPaHUd4YMhA+OdnA8tVR26hQhvHY=; b=Exm/mE4p4ROy2CB3jVoyT30S5s
-	CZwAD3td2DHQhuXhoNsMlrGr6/4Fu+gZ5ZMxz3isum/jvx6wHBpY/HqfHzfV8O8mVca0YnPZdt0Ii
-	TJUAhCQVf3ONs1apHQXVDwdA6Ki+CaSqyYrYQBREpHRyNGbOWuLG3w0EmHYmCd45IDdeLz7JWpHAB
-	FLns5ip5T1x8h6GjA/YCEPKY0ADhUW2iKpDn/DXGLgnfRH6o/41Dh6L6PMlJ4l2kNcdWNaeQnWMlm
-	4PTfCEflJTI5RzsbFZWtiB1H08ys0qYjSRqA+4DSIuhNZmLy2gJ9Qm1HjVY9ggkhrfUOA9LJA16NN
-	Ds2tp2tg==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uLWWa-0000000HB4K-15Hx;
-	Sun, 01 Jun 2025 00:26:04 +0000
-Date: Sun, 1 Jun 2025 01:26:04 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: syzbot <syzbot+c0dc46208750f063d0e0@syzkaller.appspotmail.com>
-Cc: asmadeus@codewreck.org, chao@kernel.org, dhowells@redhat.com,
-	hch@lst.de, hdanton@sina.com, jaegeuk@kernel.org,
-	jlayton@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	netfs@lists.linux.dev, syzkaller-bugs@googlegroups.com,
-	v9fs@lists.linux.dev
-Subject: Re: [syzbot] [netfs?] kernel BUG in folio_unlock (3)
-Message-ID: <aDueHCMDLPs2UtY2@casper.infradead.org>
-References: <67b75198.050a0220.14d86d.02e2.GAE@google.com>
- <683b8ea2.a00a0220.d8eae.0020.GAE@google.com>
+	s=arc-20240116; t=1748737833; c=relaxed/simple;
+	bh=tTCbf1SIgIEMyJqaa/91N7xl7SCBcwIB2zIAEZjdPUA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=kNvjDx4lqK7e/e58jOfarO5VPqQaQtWanRS2DopfnkwrooS/22FP7s38lljUhBItuowLBOOTuqbK2rJC7WzCTRHaiBukewIQowU/yZmuxE+dF5UzWk+ka0BgVyNGV0dz9qkmjDwOxnf5emWCbolRCYcxmnoCCkP18G7TnZU8pME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-86cc7cdb86fso282400539f.1
+        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 17:30:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748737831; x=1749342631;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=e5fa6Bx1fxUvTdQ0LMroNmNiZrTxPWOsUPhI543mCWE=;
+        b=Pt/okpszCUktr+bTxrdVHynWixulmw7RtKH5d7rL0TgGDOyaME4dODUKVeYbVD+9YO
+         K3s+bQY4DGWglwGgrogELWbLGqbnGKakaZTcib1GcmxdArMVo+JQQAp084yizUst1z/V
+         Kv73Bjj89JaA+MM7fPp72voutHj5mEKNY3+43QD97G4ri84dfcBQkHnt4sZQhvv9bTT5
+         YTQD0jPs6xeI0R5DNK3X6O+Kkygg6CukEIeB8HZuCp4sN3ioKo7JkbJe1TlKILOn3FyZ
+         Pe/VVVUbH24LihBvUBgWA9wwp0C6ftj6O5FFZXBRQG3LCu/lOn7lTv/FfjAL3a9KoPNH
+         cZvA==
+X-Forwarded-Encrypted: i=1; AJvYcCWkLxtB722wK9DOyDFH7G00+4dkdCRtC5VqG0W7epDwANpCaAmA6ld3C3aZFG9YWdLQlyvsP0NajdcC7GA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuuhQLUEm6Yy2DticzAxxHypIMVeGZva3iXD4Jc196bAincJsV
+	ww5Z/4UsVVrUGYjOLGb5dSN32Q5QvxKQBm7b/5v3uoFUAKgeVPgKtPAZ1XsDcYZSjda+psnRsf0
+	aTTUEwp2RHyGBGOor8Si7dX6NFLBMcp2Pf/3yAMmPcVc8zpEhWdoAbR8zYPU=
+X-Google-Smtp-Source: AGHT+IEHez9TbSKXapQ329l8kU5B+0NFBSLaa89pk/FwR/50ylMo+qwfMpJV3BJ0QijmT5XPKHuf3Cob+jYrkQvJkRH+tgohRcrX
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <683b8ea2.a00a0220.d8eae.0020.GAE@google.com>
+X-Received: by 2002:a05:6602:276a:b0:867:237f:381e with SMTP id
+ ca18e2360f4ac-86d2d072dd0mr268960439f.2.1748737831060; Sat, 31 May 2025
+ 17:30:31 -0700 (PDT)
+Date: Sat, 31 May 2025 17:30:31 -0700
+In-Reply-To: <000000000000ae4aa90614a58d7b@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <683b9f27.a00a0220.d8eae.0022.GAE@google.com>
+Subject: Re: [syzbot] [usb?] [input?] WARNING in cm109_input_open/usb_submit_urb
+ (3)
+From: syzbot <syzbot+ac0f9c4cc1e034160492@syzkaller.appspotmail.com>
+To: dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, May 31, 2025 at 04:20:02PM -0700, syzbot wrote:
-> syzbot has bisected this issue to:
-> 
-> commit 80f31d2a7e5f4efa7150c951268236c670bcb068
-> Author: Christoph Hellwig <hch@lst.de>
-> Date:   Thu May 8 05:14:32 2025 +0000
+syzbot has found a reproducer for the following issue on:
 
-That's not possible; this commit is after the original report.
+HEAD commit:    0f70f5b08a47 Merge tag 'pull-automount' of git://git.kerne..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=150e0c82580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=22765942f2e2ebcf
+dashboard link: https://syzkaller.appspot.com/bug?extid=ac0f9c4cc1e034160492
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=103dbed4580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=130e0c82580000
 
-That said, there _is_ a double folio_unlock() in this patch, which
-I'm about to send a fix for.  It's just not fixing the original report.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/f091df6896fd/disk-0f70f5b0.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/978b2a8699d8/vmlinux-0f70f5b0.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/b6e13557ddc0/bzImage-0f70f5b0.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+ac0f9c4cc1e034160492@syzkaller.appspotmail.com
+
+cm109 2-1:0.8: invalid payload size 1024, expected 4
+input: CM109 USB driver as /devices/platform/dummy_hcd.1/usb2/2-1/2-1:0.8/input/input551
+------------[ cut here ]------------
+URB ffff88814caed700 submitted while active
+WARNING: CPU: 0 PID: 6321 at drivers/usb/core/urb.c:379 usb_submit_urb+0xfa8/0x1870 drivers/usb/core/urb.c:379
+Modules linked in:
+
+CPU: 0 UID: 0 PID: 6321 Comm: kworker/0:8 Not tainted 6.15.0-syzkaller-09161-g0f70f5b08a47 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:usb_submit_urb+0xfa8/0x1870 drivers/usb/core/urb.c:379
+Code: 00 eb 5c e8 0a 68 a8 fa e9 09 f1 ff ff e8 00 68 a8 fa c6 05 f0 aa 71 08 01 90 48 c7 c7 00 5a 32 8c 48 89 de e8 a9 41 6c fa 90 <0f> 0b 90 90 e9 d0 f0 ff ff e8 da 67 a8 fa eb 11 e8 d3 67 a8 fa bd
+RSP: 0018:ffffc9000d02eb38 EFLAGS: 00010246
+RAX: a79c1e2737f67a00 RBX: ffff88814caed700 RCX: ffff88801e3f0000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000002
+RBP: 000000000000000f R08: ffffffff8f9f7ff7 R09: 1ffffffff1f3effe
+R10: dffffc0000000000 R11: fffffbfff1f3efff R12: 1ffff1100234820a
+R13: dffffc0000000000 R14: ffff88814caed708 R15: 0000000000000cc0
+FS:  0000000000000000(0000) GS:ffff888125c99000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00005555851e6da8 CR3: 000000002fb48000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ cm109_input_open+0x1fb/0x460 drivers/input/misc/cm109.c:566
+ input_open_device+0x1c5/0x360 drivers/input/input.c:600
+ kbd_connect+0xed/0x140 drivers/tty/vt/keyboard.c:1591
+ input_attach_handler drivers/input/input.c:993 [inline]
+ input_register_device+0xcee/0x10b0 drivers/input/input.c:2412
+ cm109_usb_probe+0x118c/0x1690 drivers/input/misc/cm109.c:797
+ usb_probe_interface+0x641/0xbc0 drivers/usb/core/driver.c:396
+ call_driver_probe drivers/base/dd.c:-1 [inline]
+ really_probe+0x26a/0x9a0 drivers/base/dd.c:657
+ __driver_probe_device+0x18c/0x2f0 drivers/base/dd.c:799
+ driver_probe_device+0x4f/0x430 drivers/base/dd.c:829
+ __device_attach_driver+0x2ce/0x530 drivers/base/dd.c:957
+ bus_for_each_drv+0x251/0x2e0 drivers/base/bus.c:462
+ __device_attach+0x2b8/0x400 drivers/base/dd.c:1029
+ bus_probe_device+0x185/0x260 drivers/base/bus.c:537
+ device_add+0x7b6/0xb50 drivers/base/core.c:3692
+ usb_set_configuration+0x1a87/0x20e0 drivers/usb/core/message.c:2210
+ usb_generic_driver_probe+0x8d/0x150 drivers/usb/core/generic.c:250
+ usb_probe_device+0x1c4/0x390 drivers/usb/core/driver.c:291
+ call_driver_probe drivers/base/dd.c:-1 [inline]
+ really_probe+0x26a/0x9a0 drivers/base/dd.c:657
+ __driver_probe_device+0x18c/0x2f0 drivers/base/dd.c:799
+ driver_probe_device+0x4f/0x430 drivers/base/dd.c:829
+ __device_attach_driver+0x2ce/0x530 drivers/base/dd.c:957
+ bus_for_each_drv+0x251/0x2e0 drivers/base/bus.c:462
+ __device_attach+0x2b8/0x400 drivers/base/dd.c:1029
+ bus_probe_device+0x185/0x260 drivers/base/bus.c:537
+ device_add+0x7b6/0xb50 drivers/base/core.c:3692
+ usb_new_device+0xa39/0x16c0 drivers/usb/core/hub.c:2663
+ hub_port_connect drivers/usb/core/hub.c:5531 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5671 [inline]
+ port_event drivers/usb/core/hub.c:5831 [inline]
+ hub_event+0x2941/0x4a00 drivers/usb/core/hub.c:5913
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xade/0x17b0 kernel/workqueue.c:3321
+ worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
+ kthread+0x711/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
