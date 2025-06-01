@@ -1,113 +1,97 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF6B199BC;
-	Sun,  1 Jun 2025 18:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C273199BC
+	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 18:56:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748804111; cv=none; b=VNl3DtMbXocUDjBLtn0QV6x+FsuJ9a3xjkWjg363prUOJKnFy/N/SRCTc8CTq/vH1p/ee5djrOaDipL9H8rqO2WIXnJkk4HOQgba8ucb+ArltgDh04VOl7AF4EbJRJ2b96KTjsGNd3ohaHYAGPnalHgbpwKsPp02uRvsB26M/0E=
+	t=1748804187; cv=none; b=I9X8GYQ31FKl/kNxHcb9F2xCv64D+pxl29Hjiqg9KirIa2v0xYmp7t3rGEQvhTNtiJzeiDEvjL2KC6I7Y40qm+RWmUNETZI1pXxxp8ExvDhtAwMTnwmYiSk1q0pN9PMpxMfVdi5xIvxC8aCbgJ7dgL8omY4JW2QSS9dPOkf+feg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748804111; c=relaxed/simple;
-	bh=OX4yvUON3tISGUsgbOemPrVvgvCC4QWKwQAy9TZhFdo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CCy0nIUaiJEgRhTLH60PfvlQ34mBLXsAxDGjCT4gMFSZSgjgrRTSy5M+iZEfWEi+/KSm2S/W/0CNR9HdoDfJPXoH4htTjdR0fb0Z/VAnG9H5RK6WP8mpYtuqdCF8tIYXKSVaxZUeDj9hrc6F0yDdsV2xV5YWSxogT7ZqHSACguY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A1BRP2b5; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748804187; c=relaxed/simple;
+	bh=yKnYzLcAwbSM+H0DAr4L+rSEPNniOcTWOxLYiYmCBtw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u8iEkM0wqMrCUCLAITLUOYYeddWLFnyNuojHjQ5DE4IpZmZ8/ERggn0/qB6dAQ5rCL1vncE/8ZA2QGt32Dj50Pz3rKHIMcfiCcrT6xxPSC4cDlOftC3XQXZeEUqNs+M9G9/THIjQTEg2m4t7g4QRPLuDKNqg9Z7k7ROWZGXUw/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KHmRVDnE; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A1BRP2b5"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-6049431b409so6550143a12.3;
-        Sun, 01 Jun 2025 11:55:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KHmRVDnE"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-32918fe5334so36026711fa.1
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Jun 2025 11:56:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748804108; x=1749408908; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=g+rZXeg2h8FFJjzzSKXnu2tsAZmNScsbIa1AmfrMPH8=;
-        b=A1BRP2b566xKrxpSyegbyIO/gyNWsL2vG10MYaR0S2S6IO7AMJuq9I2j34Rcs2f908
-         THGDIbiduFmTTTR/GvPej83WVkLRP1xqPIGYcOzQX2JBCU9j/aodh4e96OnNJjFaNDxI
-         Y3Lnknj1hSzwSL5al+LCSWk6QL5vYJYRja6adjwdHsKId6A3t6RL/Kd7iC85/SPat6QI
-         cIrB2edngE27ehIhL+F0i4MLLIkonDuEXwLbEOqLrt6/ZfTz+12I6mwP8O8frlmVK8kC
-         KxiBAT5CWj4Jd7lYkZzrE7bbICcb5oHD0IAruEOH88+ljHZGyOoFylFhbV0qg7lGraTS
-         Fgag==
+        d=linaro.org; s=google; t=1748804184; x=1749408984; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yKnYzLcAwbSM+H0DAr4L+rSEPNniOcTWOxLYiYmCBtw=;
+        b=KHmRVDnE5BFNv6flLMNgKKB2PfKVdpnBOFP4NbIHyu0KPRCtrUIHHfvGX0shCoJ/ke
+         UflGVBH/T8rPJpFK8OQVp9lVz2bbhSeNlI6Sr74SgPOjSv5tCNtiMUoE9It7eAf7ZjVu
+         cIm633vgQkiOR8B0Qf0cN/YSb4+FCulV4JFJx5eGaMPiPI4dfcqBg9/qM1u551wtnwfI
+         /fZxBeQeuDvJ4vS3pvYAPVxXbDJTr19TVhBe3PZGZRAAreLiwIAXRw8njdWMo7VNMJgu
+         gylEKz/4B3Ei9OMztM6GafDf3ZSwfVO0XaUWRoaZ6O3wDarmKmo5B/I7R/UEzzaMO93a
+         4aVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748804108; x=1749408908;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g+rZXeg2h8FFJjzzSKXnu2tsAZmNScsbIa1AmfrMPH8=;
-        b=N8uCJypWyu2hUUwZvuduxwpYjAWgcFrGlc9/mOn9jkhhEuUmFDQtwnkP61R+kQE3Sl
-         XhP3huFXlpRXB+Murjw7qCx25jju7e0NEuNeMPqxtaoJ1CtDq0T0yynRL+X9/inYMbyu
-         oqxz9emI03uSKteWH73uv9rZQQofjBUB1f6qZKToGJSlIMaR0Q3YP7oCkVOvhRJIrH9k
-         jif92Nmg4R39pQPvKOMPP5QtyLgOfqpKowHaHCNUK1GA3VuqSIB0XVkvoeBZ0jTl8zqD
-         vWxqo6PlGqtK99drlrHK1CKBoBuGW53tO+Kfyu9ldpJmYphPQ63f6UwKTkVDbkjB31sM
-         ViIg==
-X-Forwarded-Encrypted: i=1; AJvYcCV45bTxWOJPQeOQedaYHzaS9yOBsPpWqKMOWGMW/upxn7ORE3cODWzSdQcUNIuwLsVP2PJowqdUqLfO@vger.kernel.org, AJvYcCXPVfAfdnv9UBlNaTawKEkWp/p/8xMIdJ6ve8BG4s+l6P05tq80A6iKWL7Fpv+s+a7jW+Z1aJL0fV+r3+Ad@vger.kernel.org, AJvYcCXqHVQNsFA30Aiu6LMxFu0scJrWr0mtbZWXWJGMZIMM25ACE0kPvL89jh1ZWu95sDVfpvbA9P5bKq9qAbGbmsLuFA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyzn47x6lpd+pSVagUVUknOvDWOHed9m3sGrZAM1xPQgaZoRHTE
-	dDOVa6MSDvRB8akuB2+gwgbZs5mueHyOANL6q0G2Da4DFo3vU8EZDrdA
-X-Gm-Gg: ASbGncv2oSV7RYSwHD1zQQKZ63kVC4Ecuq4qX2H0pD5YMVp9AYYXDrzeIfNEIZbkmqC
-	L+Wxz0fIDT6Ra5TXc2T7jNUj1kXDlgUuymMv0spaVnZ0GrMSd0nCzV//rLWZN4TOM3xsxOHzkkJ
-	Hdvuv9O5TLeRktzo20GquQ/gdQSq/DPmcdtC999ZVJb+XVi46ugvJtLosUFVlMMWBxARt3h1ohV
-	bXuo5zUho3Tykym/sMYSovE4LXmpr5Qo5FWCcmOsUnTHmdNcquL01RzqOAsi4/KZfzQSa7IYTV+
-	XnIhnvHUU/G8um5vi23b/AqfZNjenl2EDbzrdqVlYsMi7o5WNzmgCpvs7OPo3ccBlnoJwYwaRYB
-	SOZIZRPP58SBxUHQfP28UCnfwJ3QPjQ==
-X-Google-Smtp-Source: AGHT+IFp/ARVXyjA6tzOC4tGnmBvidx5QlpVw7FOMafdXAdEPbHMfgPxKJm7amG7iCl+8q+ttzGUoQ==
-X-Received: by 2002:a17:907:7f93:b0:ad8:976e:533e with SMTP id a640c23a62f3a-adb494bd4demr514846066b.34.1748804107861;
-        Sun, 01 Jun 2025 11:55:07 -0700 (PDT)
-Received: from [192.168.1.105] (91-139-201-119.stz.ddns.bulsat.com. [91.139.201.119])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5d7fee1esm682786366b.25.2025.06.01.11.55.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 01 Jun 2025 11:55:07 -0700 (PDT)
-Message-ID: <c27311d7-8fa3-4ee2-a751-154517cf7d68@gmail.com>
-Date: Sun, 1 Jun 2025 21:55:05 +0300
+        d=1e100.net; s=20230601; t=1748804184; x=1749408984;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yKnYzLcAwbSM+H0DAr4L+rSEPNniOcTWOxLYiYmCBtw=;
+        b=Lb+EPsbeUFwcDJ2s8AJkL9FvRF8YrdZEFZxbjYcFoWbDVWr0ABc35kMFT6AwM00ZNO
+         1j+0TRC4FC4RakQBDJjzLRe9Em2ZWK5RVGnoFYEXCZs8aQbJ+HmaWhyGunYT1lraAOp3
+         DMP3BQJL4badzLNhuW8+8Rkshqmps76p3AEiY+OzQRCE209HEFfscmIzmhDh3O2PA8Aw
+         7kPuuW8COlSGH9RxPSOHcza12F++Nn2QJpRjYER3AyyUXm4GZIPiwHnMFKGXYu9FH5QL
+         u1gFJwpB6IsMEVuSZsBsYgzjbE1avd6s4wUZ5i7R5GLsX4LavdlTUHTBhYB3rx6OqnbH
+         Q/Cg==
+X-Forwarded-Encrypted: i=1; AJvYcCW9sP02ALOh3uOCvT+res5Jl5A4jvZwjpO9ISTGPO6WBHpZuQf1HC7np5ZAFwWEKuJTsDTqJADZ8HoKJDs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5Zc9NdsGko1BhuUbcAqY58OYuAMW0S9f3d2gKw18DsD8dRRPv
+	Bv9MYuMInHtdhCe+3xID3mOXxaxKtuYGezS3VaBNm+Ha23rfXYpaxN6EFytmsm3qFW6zdr5JAd5
+	yKBOTILQiJMLw57tUgMIrLtxBeKd8r1QF+JQY98ovtA==
+X-Gm-Gg: ASbGncu7tZTpMKpM4dor8vYIbL3r9HeR3YV/0nR1kK21lo4ngQ5ztj9RpdFvBbTnf4n
+	hDRAxBGTv4UX11DXQLFE2ylDooBtzI5JrR0yQvg+h13XvmNB2GjWYrvClNfJ34C0vvo/vcDNIig
+	Tnofo7FBeX95rGNkSJcQD0L/WarNUUWqEr
+X-Google-Smtp-Source: AGHT+IHWugAFf+Ripj3VUOZJLnmt498bht889QVB6ArTYpEoG3QYd+TfDIDQfLIYoH9of2fvyyRVVS47ydzCrnVNivA=
+X-Received: by 2002:a05:651c:1441:b0:32a:8591:66a0 with SMTP id
+ 38308e7fff4ca-32a8cd2ea22mr42333001fa.1.1748804183642; Sun, 01 Jun 2025
+ 11:56:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 09/21] drivers/perf: apple_m1: Add Apple A8/A8X support
-Content-Language: en-US
-To: Nick Chan <towinchenmi@gmail.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>,
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>
-Cc: Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org,
- asahi@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250510-apple-cpmu-v7-0-bd505cb6c520@gmail.com>
- <20250510-apple-cpmu-v7-9-bd505cb6c520@gmail.com>
-From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-In-Reply-To: <20250510-apple-cpmu-v7-9-bd505cb6c520@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250527111353.71540-1-brgl@bgdev.pl>
+In-Reply-To: <20250527111353.71540-1-brgl@bgdev.pl>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Sun, 1 Jun 2025 20:56:12 +0200
+X-Gm-Features: AX0GCFsnhGQ89VhgXgySprlvtnrpAVgiC01-8pycRScH7HJ4gi-FEvnTKbvX_3k
+Message-ID: <CACRpkda5UOqav7Ew-UJ4zPH6xpmrDNg4GmHawKfNr8Cf2rJANA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: TODO: add a task for removing MMIO-specific fields
+ from gpio_chip
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/10/25 18:10, Nick Chan wrote:
-> Add support for the CPU PMU found on the Apple A8, A8X SoCs.
+On Tue, May 27, 2025 at 1:14=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> Signed-off-by: Nick Chan <towinchenmi@gmail.com>
-> ---
-
-Tested-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-
->  drivers/perf/apple_m1_cpu_pmu.c | 124 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 124 insertions(+)
+> Currently for CONFIG_GPIO_GENERIC=3Dy each struct gpio_chip object
+> contains the fields relevant only for gpio-mmio users. It's not an
+> insignificant number either as it's several pointers and integers.
 >
-...
-> +
->  static int m1_pmu_ice_init(struct arm_pmu *cpu_pmu)
->  {
->  	cpu_pmu->name = "apple_icestorm_pmu";
-> @@ -912,6 +1035,7 @@ static const struct of_device_id m1_pmu_of_device_ids[] = {
->  	{ .compatible = "apple,blizzard-pmu",	.data = m2_pmu_blizzard_init, },
->  	{ .compatible = "apple,icestorm-pmu",	.data = m1_pmu_ice_init, },
->  	{ .compatible = "apple,firestorm-pmu",	.data = m1_pmu_fire_init, },
-> +	{ .compatible = "apple,typhoon-pmu",	.data = a8_pmu_typhoon_init, },
->  	{ .compatible = "apple,cyclone-pmu",	.data = a7_pmu_cyclone_init, },
->  	{ },
->  };
+> It makes sense to remove these fields from struct gpio_chip into a
+> dedicated structure but this is not trivial due to how the bgpio_init()
+> function is implemented.
 >
+> Add a task for tracking this rework.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
+That's a good TODO.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
