@@ -1,79 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0E654BC6;
-	Sun,  1 Jun 2025 22:53:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261EE190696;
+	Sun,  1 Jun 2025 23:00:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748818397; cv=none; b=BYI5xstAd2gLZbW+Hn7tbMzSOLGa3LVk4VnYtZzL6UpdyiKRv3tYrNE1zwRXoURAH06vlH5+6BwMJDT8uHTILKa9RjrgXzWcplFxQ3c4CBWWzzvWcdRybK4+9gAeGIKfugUIgoOTnnLap/wV/aBB5hc0vBY0ONnFisB1NVe+yn0=
+	t=1748818836; cv=none; b=Hzi7BbTPXekyFGIG3Y/Hsh85Tlitt3JZN9bO2ffT/k1J/ZAszndm+26nK3jLyGUERuwxyx75nXGJJ4ZeVO+K2Ihzs2gPadu3cFznmq4bTASn8SXYdneJjgKUi5Hi80nfVWTCjZnf18ciFOG02g1C4Ya6evA2h3h309I8BMuG3qE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748818397; c=relaxed/simple;
-	bh=6B7ojTrk+HfM/GDPnZpaemDeDbUdMUSyW94J63Wet5I=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=dKlmA4JHXJ0UEeJWzBbIDEe3P6pe1pNdUcs8izA914OWwIMD7gFRUjoWLyqbqu/W8+tdgei2DCApvrH8ESe5SyjirGXolYmus1KTaCbnwoJ0vzpA+vOftr30pokmz6HkrJ4aTCq2+Mdh4JA98pQubExLq52VzR97NlwQ3zoZyxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB230C4CEE7;
-	Sun,  1 Jun 2025 22:53:13 +0000 (UTC)
-Message-ID: <992c6488-4089-4e0c-96cf-70e8d18b4986@linux-m68k.org>
-Date: Mon, 2 Jun 2025 08:53:11 +1000
+	s=arc-20240116; t=1748818836; c=relaxed/simple;
+	bh=9iuAqFgWuAM8zbaClmJE1PWkDiz9aDszJI49BnUralg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GkV/L9mOeKnECfMVYjcgH2DpCnOQ/iOCbx1SwZHNmPRFVwPfHP0JoJwQ2OmWOUYs6xEMP/BRxXaM5GBKHtFw7MelaX/tgp5ylhkA0yBSTEVHXVSH7TlT8JHQ/JMRonxJTsAtePzc3XSyuznFmz4ThijOhrriVXwoXf3ELvdM4WE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vHFxc2VE; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vHFxc2VE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14CC5C4CEE7;
+	Sun,  1 Jun 2025 23:00:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748818833;
+	bh=9iuAqFgWuAM8zbaClmJE1PWkDiz9aDszJI49BnUralg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vHFxc2VElAHlFA2+p6pUxtFWEe5J4xv+o56KAxPCmT8t7sop9JD+tvRSV5M6+149b
+	 3yslurmUrK9306e+AjqkjU66ZE4+J12qO4pfC9GKOwcLYIKirbFU/Rg2oRbbVA43ns
+	 5uDfSlrlHs9e9hvwYN9GazeDaNtZ3XeMSpkJHQHb3lkfbDihKnyqOzItzJyKZ/V5SA
+	 kll91RZkjqNe9evwrPUGhmeKBh/iuKFMYirrTrajg0Qa5HWH48c/p5D7scSRNhf3bP
+	 g9JW0K0QMuooWlvxhFXufeAQiYS/ENsn141k7rnLZBFnOMguZuObdXNfv/1/r4saJT
+	 S2ckVl3S2NSgA==
+Date: Sun, 1 Jun 2025 16:00:14 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Alex Williamson <alex.williamson@redhat.com>,
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, sparclinux@vger.kernel.org,
+	linux-s390@vger.kernel.org, x86@kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Jason A . Donenfeld" <Jason@zx2c4.com>
+Subject: Re: [PATCH v4 08/13] crypto: s390/sha256 - implement library instead
+ of shash
+Message-ID: <20250601230014.GB1228@sol>
+References: <20250428170040.423825-1-ebiggers@kernel.org>
+ <20250428170040.423825-9-ebiggers@kernel.org>
+ <20250529110526.6d2959a9.alex.williamson@redhat.com>
+ <20250529173702.GA3840196@google.com>
+ <CAHk-=whCp-nMWyLxAot4e6yVMCGANTUCWErGfvmwqNkEfTQ=Sw@mail.gmail.com>
+ <20250529211639.GD23614@sol>
+ <CAHk-=wh+H-9649NHK5cayNKn0pmReH41rvG6hWee+oposb3EUg@mail.gmail.com>
+ <20250530001858.GD3840196@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Greg Ungerer <gerg@linux-m68k.org>
-Subject: [git pull] m68knommu changes for v6.16
-To: torvalds@linux-foundation.org
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Linux/m68k <linux-m68k@vger.kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>, gerg@kernel.org
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250530001858.GD3840196@google.com>
 
-Hi Linus,
+On Fri, May 30, 2025 at 12:18:58AM +0000, Eric Biggers wrote:
+> On Thu, May 29, 2025 at 04:54:34PM -0700, Linus Torvalds wrote:
+> > On Thu, 29 May 2025 at 14:16, Eric Biggers <ebiggers@kernel.org> wrote:
+> > >
+> > > So using crc32c() + ext4 + x86 as an example (but SHA-256 would be very
+> > > similar), the current behavior is that ext4.ko depends on the crc32c_arch()
+> > > symbol.
+> > 
+> > Yes, I think that's a good example.
+> > 
+> > I think it's an example of something that "works", but it certainly is
+> > a bit hacky.
+> > 
+> > Wouldn't it be nicer if just plain "crc32c()" did the right thing,
+> > instead of users having to do strange hacks just to get the optimized
+> > version that they are looking for?
+> 
+> For crc32c() that's exactly how it works (since v6.14, when I implemented it).
+> The users call crc32c() which is an inline function, which then calls
+> crc32c_arch() or crc32c_base() depending on the kconfig.  So that's why I said
+> the symbol dependency is currently on crc32c_arch.  Sorry if I wasn't clear.
+> The SHA-256, ChaCha, and Poly1305 library code now has a similar design too.
+> 
+> If we merged the arch and generic modules together, then the symbol would become
+> crc32c.  But in either case crc32c() is the API that all the users call.
+> 
+> - Eric
+> 
 
-Please pull the m68knommu git tree changes for v6.16.
+I implemented my proposal, for lib/crc first, in
+https://lore.kernel.org/lkml/20250601224441.778374-1-ebiggers@kernel.org.
+I think it's strictly better than the status quo, and once applied to lib/crypto
+it will solve some of the problems we've been having there too.  But let me know
+if you still have misgivings.
 
-A couple of changes for v6.16. Use new GPIO line setting values for
-local gpio driver. Make more use of strscpy().
-
-Regards
-Greg
-
-
-
-
-The following changes since commit a5806cd506af5a7c19bcd596e4708b5c464bfd21:
-   
-   Linux 6.15-rc7 (2025-05-18 13:57:29 -0700)
-
-are available in the Git repository at:
-   
-   git://git.kernel.org/pub/scm/linux/kernel/git/gerg/m68knommu.git tags/m68knommu-for-v6.16
-
-for you to fetch changes up to eb43efd062d10bacdf6b50df0e300a7049474e51:
-   
-   m68k: Replace memcpy() + manual NUL-termination with strscpy() (2025-05-19 08:54:30 +1000)
-
-----------------------------------------------------------------
-m68knommu: updates and fixes for v6.16
-
-. use new gpio line value settings
-. use strscpy() more
-
-----------------------------------------------------------------
-Bartosz Golaszewski (1):
-       m68k: coldfire: gpio: use new line value setter callbacks
-
-Mohammad Mahdi Anbaraki (1):
-       m68k/kernel: replace strncpy() with strscpy()
-
-Thorsten Blum (1):
-       m68k: Replace memcpy() + manual NUL-termination with strscpy()
-  
-  arch/m68k/coldfire/gpio.c   | 8 +++++---
-  arch/m68k/kernel/setup_no.c | 3 +--
-  arch/m68k/kernel/uboot.c    | 2 +-
-  3 files changed, 7 insertions(+), 6 deletions(-)
+- Eric
