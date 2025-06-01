@@ -1,40 +1,77 @@
-Received: from mail-24427.protonmail.ch (mail-24427.protonmail.ch [109.224.244.27])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF41B18E20
-	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 04:56:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3468D13D539
+	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 05:14:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748753811; cv=none; b=p4rrMUAemrcqX8loZZlrdNAT3pTjKh8IF3iBNa3a4Abe9Hxj+TUqm3R+xzAenUtQlDyyOXP97dqGIfyMizv00/JTzElhcLCoR8WIQ2Q4MnJlaW7k312sIJxlJml5KVwCf1h+M/oPT3W+m9Op0v74to/5eYZNxYuXzfu0JXOAjlo=
+	t=1748754856; cv=none; b=f9BtBQLObL5s5qx5BXRt1A3dz84yhhBdceWyETd5N761Q/j4t+0Qi7kh6NvrvB9wTXIte7xxQ72xq1uncxwICz3fFdlDMkh0qy9T/tXfgAn3GoO+Q5iM/IKj061dx8nsCkyK0WnLxBivUbnP/XdIwlj0hcm413fDFpnZ6GTJgJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748753811; c=relaxed/simple;
-	bh=1f3OagmzEZG8vztNo7su1/gNeBHaGLoRzxkZWbbweS4=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=BtoMFhGO+34TVxQl0utxJ4PQMcOTf6d8Cf4/vTyUiC3gb4AoPdWZavFm1AFCAni1XRdnbAh9GpKzRdBto0dFLoHuTQgjcc76NOqcgBlheVLgVwYkZFWO/LB/XAgbV6VTYU8Mo539OQzqDtogFDHL6RMZs7QvV7BnBPNR39wY4CQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=muzHpFMN; arc=none smtp.client-ip=109.224.244.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	s=arc-20240116; t=1748754856; c=relaxed/simple;
+	bh=dRgmJvopJbBd3GURbX7nf9+Ap3zhAqIMndBocYjajiw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hL6TuMub92bKZFUnVtzQ4Cqh/YuYzs9aYvUofjL7Nf+Jg6gf+3ZoTn1pCCGdEUwCVlBfmNssBK+pYb1yKnNq1Ko+c6La7XYZrAyaAyG0wFhKK0y2xJozznF9/LpeuX2KQ5M68xwuH9/LNpROE9qn3bXNPrfqZbtz8BGk/5QtRXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=W84WOE9k; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="muzHpFMN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1748753801; x=1749013001;
-	bh=1f3OagmzEZG8vztNo7su1/gNeBHaGLoRzxkZWbbweS4=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=muzHpFMND29eRe8z3CwvlVBKsg4pjU1zLmRBH2UzKTmvNMWjfPa5JT2YYP1koshSP
-	 9Jvhen5CrMmXKvEe1jN63LHOIalHkGmXIjIgK/SpCYzGwUQywLHH7e0mvpiIKCDGjV
-	 1WlAaJlqEOG48Chz91mbC/DvZGf0akIdkRBAxdbDOwZFDTUbe0vqiSmUjZh5ZA49p+
-	 Xpt2UxeMl1zpVWVNr4AArfBoIayhj3XAbB0WweO2qYzuEfXOyw/rQH75ha0rMsOxIc
-	 LV3Wuzi15+JtDC8dhjus/48eMXIpymQ9Ei9I6FZ22YHe2kpCys0sr082ebaOnQQBtx
-	 oe0cF2VTiglcw==
-Date: Sun, 01 Jun 2025 04:56:37 +0000
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From: Turritopsis Dohrnii Teo En Ming <teo.en.ming@protonmail.com>
-Cc: "ceo@teo-en-ming-corp.com" <ceo@teo-en-ming-corp.com>
-Subject: [1st Jun 2025 Update] Activities of Singapore Government hackers inside Teo En Ming's Android (Linux) phone - 28 May 2025 Report
-Message-ID: <iAOnSlW1d69Q1ctZSZNq284Fl_TLuGdkxI4Io32HkKFno1QquMhxMZDX8rcMXkuHK3EuMgf_y1CKFto5-7Xw-WiK1XHVZGyr9ZTd4M3WRpQ=@protonmail.com>
-Feedback-ID: 39510961:user:proton
-X-Pm-Message-ID: 3754d800035d0569f1890c75685d61b149cfd546
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W84WOE9k"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7399838db7fso2958360b3a.0
+        for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 22:14:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748754853; x=1749359653; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=F3iHR1+Hq48gmHp3Xsuk/NPR6eCILhzOir2aolffJTM=;
+        b=W84WOE9k9r56UKVQUbZt6FKdfZqfboEmSIefue9E/1sxMV/GANlKWjOSn89NaspnwK
+         EgCH25lbZMwzGyP7ckVIvhCNDVGw9ZKNxVdYVB6vxdoo9N3KcseTqAveK8rrTZtUpgwc
+         3hGIR5U424fVK6/eopUyPV39hGCGYoXQ5SHFzWoSndPptl8h8KRGX1lphPcw1DW4m7e7
+         ewBIi77Z136yKpZS5UyMFyuzVQFXzGTJ80oVQ4XhN7QIbeY2oFVQY8j8UvZ4mR03puTM
+         QrauI1JqHdvcI99hw36bcYPRZR5woyV8Vwr5MedUcll8Xr8WTKWo+Z1DAPGCr0J+dgYk
+         p5eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748754853; x=1749359653;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=F3iHR1+Hq48gmHp3Xsuk/NPR6eCILhzOir2aolffJTM=;
+        b=N/N0sSXs7jFykf13BUuldSjCvlyxy1VZG7Ujck6wb9/Fhn1sPRzFR7jMgiLCD2QjlL
+         ZGyPkfKmNPSS2ASiCRb9qj77zhb4Y40ZTHMiJaaXmm6mNBh6qaZXWRAoi381+kfvAz8s
+         loSWnyOyaTXaeDQDz3CBM0fip31mWpahspQU24rWcZu99w9NczjxCbNx01ia/ReU6Kw4
+         FkfXO2u+AzFwF5cQmZcMmj02bYFXnmaxReZpihZjLh0FDZ7vtKQ8uCyMXzlVFLR/Di25
+         zj3W3rCHiAaNMCUO/9RXGht2FEr670bACorGJLSaKVTVtejpewsOGo533LsphByYaYMC
+         3nPg==
+X-Forwarded-Encrypted: i=1; AJvYcCU0FKslKHFgBtf2DyzJRBo0odzcWyPZu1/G350I/oP8fQF0mtah8yH4ffPhxOLTPz+vOoQTFB+K1LNTiYs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyM7PP3cgW2CenimUhlO75soE+uuCKnhH4PIBykM+wbjzD3Pgei
+	gMLCkFoNOJ9n1uWmD3HsJhEh/JaqW73nO5n6lVCKQpAntijuItvILB3BaOZxiHsZUw==
+X-Gm-Gg: ASbGncuOUr5XhRzqET77EKjCIKmrOflry339Sxauyg/arNT/Q0fYjlmW69OQTpCYaF/
+	j6EAxEUBXs7+dQrw2ac2NxM6i6gepj5GKSHf4Ll87okVrPzfY+o5U8DK2MsNHBAj3PFZhmrx4bR
+	vQwtdFmgTsHgcIVeFhWl9kZBnEwhS0tm8a8+Ouuh8gPLnP2R88mJo+80TdNTeFINWAIiBAOWWTb
+	GWpxJBs/d3dEajh2LFhF+FSbsdlAbHCijU2CsIJSaIvKdxLRQxuxQvS5KkS2tUAX7jbEz2/GNiO
+	iYTbZBod+jeEQKCCaKzeOW/I6z6KCVWj9HZLMX2xi7Ud9ccYcgLnmXHQYRTiMrw=
+X-Google-Smtp-Source: AGHT+IF6r3vNa5E6r8x7FtbP8W3yKXdO1fzktH/mCY0g6TJuRN3aLD1QXNmF0vDauUcI5P4CHml2bQ==
+X-Received: by 2002:a05:6a00:2301:b0:744:a240:fb1b with SMTP id d2e1a72fcca58-747bdd02e5fmr13050309b3a.5.1748754853400;
+        Sat, 31 May 2025 22:14:13 -0700 (PDT)
+Received: from thinkpad ([120.56.205.120])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afe96852sm5424190b3a.9.2025.05.31.22.14.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 31 May 2025 22:14:12 -0700 (PDT)
+Date: Sun, 1 Jun 2025 10:44:07 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
+Subject: Re: [PATCH v3 1/3] dt-bindings: PCI: qcom: Move phy, wake & reset
+ gpio's to root port
+Message-ID: <dwxdtigcj7jwy4gyiwnwkzxoshvisrocxbz2sfywofcoia3tdf@tq45ajnuctyj>
+References: <20250419-perst-v3-0-1afec3c4ea62@oss.qualcomm.com>
+ <20250419-perst-v3-1-1afec3c4ea62@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,153 +79,108 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250419-perst-v3-1-1afec3c4ea62@oss.qualcomm.com>
 
-Subject: [1st Jun 2025 Update] Activities of Singapore Government hackers i=
-nside Teo En Ming's Android (Linux) phone - 28 May 2025 Report
+On Sat, Apr 19, 2025 at 10:49:24AM +0530, Krishna Chaitanya Chundru wrote:
+> Move the phy, phy-names, wake-gpio's to the pcie root port node instead of
+> the bridge node, as agreed upon in multiple places one instance is[1].
 
-Good day from Singapore,
+s/instead of the bridge node/from host bridge node/g
 
-I recall 1-2 years ago, Singapore Government hackers deleted 2 selfie photo=
-s I took with celebrities/artistes from my vivo V25 Pro 5G Android (Linux) =
-phone. I had to restore the deleted selfie photos from the "Recently delete=
-d" folder.
+> 
+> Update the qcom,pcie-common.yaml to include the phy, phy-names, and
+> wake-gpios properties in the root port node. There is already reset-gpios
+> defined for PERST# in pci-bus-common.yaml, start using that property
+> instead of perst-gpio.
+> 
+> For backward compatibility, do not remove any existing properties in the
+> bridge node.
 
-On 7 March 2025, Singapore Government hackers changed the name of my phone =
-contact from "Michael Chen Photographer" to "Michen Chen Photographer".
+... Hence mark them as 'deprecated'.
 
-Inside the WhatsApp messages that I had sent to myself, dated 3 April 2022,=
- I think "Michael Chen" was also changed to "Michen Chen" by Singapore Gove=
-rnment hackers.
+> 
+> [1] https://lore.kernel.org/linux-pci/20241211192014.GA3302752@bhelgaas/
+> 
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> ---
+>  .../devicetree/bindings/pci/qcom,pcie-common.yaml  | 36 ++++++++++++++++++++--
+>  .../devicetree/bindings/pci/qcom,pcie-sc7280.yaml  | 16 +++++++---
+>  2 files changed, 46 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
+> index 0480c58f7d998adbac4c6de20cdaec945b3bab21..e5f60faa18ad68a29900a66fbfcba3d4f8e88e7b 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
+> @@ -51,10 +51,18 @@ properties:
+>  
+>    phys:
+>      maxItems: 1
+> +    deprecated: true
+> +    description:
+> +      This property is deprecated, instead of referencing this property from
+> +      the controller node, use the property from the PCIe root port node.
 
-Then on 10 May 2025, Singapore Government hackers changed the name of my ph=
-one contact from "Hairy Ted Events" to "Hairy Ted Ted Events".
+s/controller/host bridge
 
-I have no idea what else Singapore Government hackers have changed on my An=
-droid (Linux) phone.
+Here and below.
 
-Yesterday 27 May 2025 Tuesday, I had visited my mother at IMH from 3.00 PM =
-to 6.00 PM.
+>  
+>    phy-names:
+>      items:
+>        - const: pciephy
+> +    deprecated: true
+> +    description:
+> +      Phandle to the register map node. This property is deprecated, and not
+> +      required to add in the root port also, as the root port has only one phy.
+>  
+>    power-domains:
+>      maxItems: 1
+> @@ -71,12 +79,18 @@ properties:
+>      maxItems: 12
+>  
+>    perst-gpios:
+> -    description: GPIO controlled connection to PERST# signal
+> +    description: GPIO controlled connection to PERST# signal. This property is
+> +      deprecated, instead of referencing this property from the controller node,
+> +      use the reset-gpios property from the root port node.
+>      maxItems: 1
+> +    deprecated: true
+>  
+>    wake-gpios:
+> -    description: GPIO controlled connection to WAKE# signal
+> +    description: GPIO controlled connection to WAKE# signal. This property is
+> +      deprecated, instead of referencing this property from the controller node,
+> +      use the property from the PCIe root port node.
+>      maxItems: 1
+> +    deprecated: true
+>  
+>    vddpe-3v3-supply:
+>      description: PCIe endpoint power supply
+> @@ -85,6 +99,24 @@ properties:
+>    opp-table:
+>      type: object
+>  
+> +patternProperties:
+> +  "^pcie@":
+> +    type: object
+> +    $ref: /schemas/pci/pci-pci-bridge.yaml#
+> +
+> +    properties:
+> +      reg:
+> +        maxItems: 1
+> +
+> +      phys:
+> +        maxItems: 1
+> +
+> +      wake-gpios:
+> +        description: GPIO controlled connection to WAKE# signal
+> +        maxItems: 1
 
-While visiting my mother at IMH, I checked through my Singtel mobile phone =
-bills from April 2025 to May 2025.
+Shouldn't 'wake-gpios' be part of the pci-bus-common.yaml?
 
-To my surprise, I discovered that Singapore Government hackers had made an =
-unauthorized long distance IDD 001 call from Singapore to Germany in my Apr=
-il 2025 Singtel mobile phone bill.
+- Mani
 
-Details of the long distance IDD 001 call are as follows:
-
-Date: 3 April 2025
-Time: 7.31 am
-Country: Germany
-Called No.: 4989262034700
-Duration: 5.0 Min(s)
-Charges: SGD$5.25
-
-Singtel mobile phone bill ID: 000173084076
-
-I remember 3 Apr 2025 very vividly. 3 Apr 2025 is my last day of service wi=
-th SBS Transit Ltd as Network Operations Engineer/IT Infrastructure Special=
-ist.
-
-On the morning of 3 Apr 2025, Singapore Government hackers had corrupted th=
-e Android (Linux) operating system on my vivo V25 Pro 5G Android (Linux) ph=
-one.
-
-In the afternoon of 3 Apr 2025 the same day, I had sent my vivo phone to Vi=
-vo Service Center at International Plaza in Singapore for servicing.
-
-Vivo Service Center technicians acknowledged that my Android (Linux) phone =
-had been hacked/compromised.
-
-They proceeded to erase/format my vivo phone and re-install the Android (Li=
-nux) operating system from scratch.
-
-Even ***AFTER*** Vivo Service Center technicians had erased/formatted my vi=
-vo phone and reinstalled the Android (Linux) operating system from scratch,=
- Singapore Government hackers still managed to hack into my Android (Linux)=
- phone AGAIN, very very quickly. I think within 1-2 hours. How many times m=
-ust I send my Android (Linux) phone to Vivo Service Center to reinstall the=
- Android (Linux) operating system from scratch? 10,000 times? 10 billion ti=
-mes? 100 trillion times?
-
-I do not remember making long distance IDD 001 call from Singapore to Germa=
-ny on 3 Apr 2025.
-
-I repeat.
-
-I do not remember making long distance IDD 001 call from Singapore to Germa=
-ny on 3 Apr 2025.
-
-Hence, Singapore Government hackers must have made the unauthorized long di=
-stance IDD 001 call from Singapore to Germany on 3 April 2025.
-
-Now, I have a habit of sending WhatsApp messages to MYSELF to record inform=
-ation such as what time I sleep, what time I wake up, what time I take sema=
-glutide 7 mg (weight loss medication), what time I take the morning medicat=
-ion, what time I take the night medication and of course various other info=
-rmation I keep to myself.
-
-Since 26 May 2025, I discovered that some WhatsApp messages that I had sent=
- to MYSELF were mysteriously missing and/or were deleted.
-
-Needless to say, Singapore Government hackers must have deleted some of my =
-WhatsApp messages.
-
-Back dating to 26 MARCH 2025, Singapore Government hackers had sent a messa=
-ge to Meta AI on my WhatsApp app on my Android (Linux) phone. The message g=
-oes: "I need help finding a job".
-
-I do not recall asking Meta AI on WhatsApp app such a message. Hence, Singa=
-pore Government hackers must have sent that message without my knowledge.
-
-Singapore Government hackers can easily hack into my Android (Linux) phone =
-and maintain ABSOLUTE and TOTAL control over my Android (Linux) phone. Sing=
-apore Government hackers can do practically ANYTHING inside my Android (Lin=
-ux) phone, since they have UNFETTERED access to my Android (Linux) phone.
-
-According to my notes, I bought my Vivo V25 Pro 5G Android (Linux) phone on=
- 15 Sep 2023. This means that the phone battery is more than 1 year and 8 m=
-onths old. For the past several months, there were rapid battery drain ever=
-y day. After I could not endure it any more, I finally replaced the phone b=
-attery for SGD$40 at Sim Lim Square level 1 on 21 May 2025 Wednesday. This =
-is a brand new OEM phone battery. The model of the phone battery is B-W2. E=
-ven after replacing the old phone battery with a brand new OEM phone batter=
-y, there is still rapid battery drain. This goes to show that Singapore Gov=
-ernment hackers are constantly inside my Vivo V25 Pro 5G Android (Linux) ph=
-one 24x7 every day. Singapore Government hackers are monitoring and control=
-ling my vivo V25 Pro 5G Android (Linux) phone 24x7 every day. Which of cour=
-se explains the rapid battery drain even after I have replaced with a new o=
-ne.
-
-As of 1st June 2025, thousands of folders are missing from Internal Storage=
-/Android/data and Internal Storage/Android/obb folders, according to Google=
- Files app. According to File Manager Plus app, it has no permission to acc=
-ess thousands of folders inside Internal Storage/Android/data and Internal =
-Storage/Android/obb folders. What have the Singapore Government hackers don=
-e to my Android (Linux) phone?
-
-I am still wondering why Android (Linux) phones are so easy for Singapore G=
-overnment hackers to hack into. Why? Why? Why?
-
-Is there any way that Linux kernel developers can improve the security of A=
-ndroid (Linux) phones so that government hackers won't be able to hack into=
- Android (Linux) phones so easily? Perhaps increased collaboration with var=
-ious Android phone manufacturers to improve their security?? Are there any =
-good and effective security apps that I can install to block Singapore Gove=
-rnment hackers on my Android (Linux) phone, so that they will never come in=
- uninvited again?
-
-Thank you very much.
-
-Regards,
-
-Mr. Turritopsis Dohrnii Teo En Ming
-Targeted Individuals in Singapore
-GIMP =3D Government-Induced Medical Problems
-28 May 2025 Wednesday 6.41 PM
-Updated 1st June 2025 Sunday 12.55 PM
-
-
-
+-- 
+மணிவண்ணன் சதாசிவம்
