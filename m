@@ -1,62 +1,47 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FFD626AE4
-	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 05:35:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1237CA935
+	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 05:42:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748756129; cv=none; b=du1Xh0Hl46NqTQUO5qOQWIxhlXstA2rzP7HwMwqKFC3AJO4zJ7+NvK/n91+FbfJmQ9o8NXPep3sSEpRqZVp/d/js64JlixBurzKIBtaD2SovsrD38szwvoLdAhocHsryXo3ws4rch+WIzJeIMd3e7FuK5SSpK/hudSIm4RTEpAM=
+	t=1748756560; cv=none; b=P2vEiY3xM6FBrjwL04C4UX9lzYjZokozkUtMpRvhvVqpuGFuXx56i1y3qILfHA8ZdGMD2SiD94JB8Y+yzl0bJBcWAWZHRC0c3IqB+MH7ibVkr66N0naLG2bLxC0y/wQNemjtcXvgEN34DOcytiCuEkMFn4e8GpNQb8PX5eiGTDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748756129; c=relaxed/simple;
-	bh=FFUPbQkhbDf3Pei6LzsEqJ9ilaES8CirMabm4FvkECI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=CNX8091LQtq9I0ka/m1HZASEhLhklBl/TohTfdS/iWatmidM6oqE2mndeUw94OyfgDJ5eOsdIPtd/XH2laXokMvWOOYhMWOvF/+cXon7SOuCG5vbG5xl6fbjBB63GQ4AJInr8fmFolqlfbCMHKv/qNbcLhgEUXDs0Fi9UkH6E3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nJIVSjaC; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748756560; c=relaxed/simple;
+	bh=vhOM7AVoN1u0Xpu7kHuwRl7GU9jtI4fWMup5Mie84jU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fwzHaAgNYfqLwVxCnDHxaNdcVpJoSFM6vlh1j9KchG7XeK+4vq88Vh3XaDqqELYUapSXiCtZYO5YYIziMa5uvYlHtRh4PAIann83JrG9CqrGZxHLY6ORGe7YGS4nHtppIFbq6LtAg4OmsEkxGLsu2VopL8oKrqd2svlJWYgq3xI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mZLyvUL7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nJIVSjaC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748756126; x=1780292126;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=FFUPbQkhbDf3Pei6LzsEqJ9ilaES8CirMabm4FvkECI=;
-  b=nJIVSjaCbcSL/Ko6S6DuFlOSzu1QJDJH9dCr7d/Jp07igLysXcHjQZg6
-   t8kjH/4Ok/gyh5SZ4Y+C7gVY8Iakqkr+xiGD8BLEzyBSJ9I1m5lUMNEOH
-   917fKV8qSCX0KTswKd/zy41Ol8l2bCMPjhWnr1MdC37MsvCwVKDq6QV34
-   PrGzNogBkaGehQFvZYuImc70H+3K1NOpw0bMbe8Rsf0JXlgegV8hm5c6L
-   gQfR9eBc7RXOf3418UQnJYZdX4nGm5FG1XiZEVRoZBsD6fowPalDLvE0z
-   h76Y0XPmEEqMpwLCo3a9gc34w7OLBXy86fbifobQBSCWO5zA4ulL1VDQa
-   w==;
-X-CSE-ConnectionGUID: LwyNcaVyQjC12Rg+Y3859A==
-X-CSE-MsgGUID: kt0GynaaRGaHyCADCr5l1w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11450"; a="54599962"
-X-IronPort-AV: E=Sophos;i="6.16,200,1744095600"; 
-   d="scan'208";a="54599962"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2025 22:35:25 -0700
-X-CSE-ConnectionGUID: /OgQQFawTnaDAmqpT5DHwQ==
-X-CSE-MsgGUID: bEsIARWKR/W5YpysdNBvLQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,200,1744095600"; 
-   d="scan'208";a="144221702"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 31 May 2025 22:35:24 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uLbLt-000Yow-0v;
-	Sun, 01 Jun 2025 05:35:21 +0000
-Date: Sun, 1 Jun 2025 13:34:46 +0800
-From: kernel test robot <lkp@intel.com>
-To: Joshua Hahn <joshua.hahnjy@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	Gregory Price <gourry@gourry.net>, Harry Yoo <harry.yoo@oracle.com>,
-	Huang Ying <ying.huang@linux.alibaba.com>,
-	Honggyu Kim <honggyu.kim@sk.com>
-Subject: mm/mempolicy.c:3719:1-6: ERROR: invalid free of structure field
-Message-ID: <202506011545.Fduxqxqj-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mZLyvUL7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D197C4CEED;
+	Sun,  1 Jun 2025 05:42:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748756559;
+	bh=vhOM7AVoN1u0Xpu7kHuwRl7GU9jtI4fWMup5Mie84jU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mZLyvUL7TbMMOM1qu57wM8rNsYKmffgAKLY3xbxxOmjdrsOjDpzwXzt8/jQrc5BTp
+	 +Hj2D9fxsU86df+/I/sqAr8Eu81rZtmO0X1HKvWmdc7JGU5Uti8iHqjnsgkRkioqrj
+	 LLprd2e4g0ZddNynbAXJfVMzEv8q8HGzyFli0qz7uEnTW/MCJQPIlUFivhWsLto2v2
+	 IYOETKXCCW2NpERLY9BrtSoUrKf7sve0vX1/Rse+zwJ0uY7vd6SLPNTLb8A0FAXh1l
+	 eY+Sg8lPy7tKBlGkoWxZvPFeFjXva+O9QRseU83z3BDYFhXDWBmzzG/3mcDwwDNJ1/
+	 LZX2KCY4hu4IQ==
+Date: Sat, 31 May 2025 22:42:36 -0700
+From: Kees Cook <kees@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>,
+	Ingo Saitz <ingo@hannover.ccc.de>,
+	kernel test robot <oliver.sang@intel.com>,
+	Marco Elver <elver@google.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Thiago Jung Bauermann <thiago.bauermann@linaro.org>
+Subject: Re: [GIT PULL] hardening fixes for v6.16-rc1
+Message-ID: <202505312229.DE917E6D@keescook>
+References: <202505310759.3A40AD051@keescook>
+ <CAHk-=wj4a_CvL6-=8gobwScstu-gJpX4XbX__hvcE=e9zaQ_9A@mail.gmail.com>
+ <156567EE-E5BB-43C4-B5A6-439D83FF387D@kernel.org>
+ <CAHk-=wjktqa94u_=++YX7XxUr57iLAs1GqtHPOY-o-N0z7wyeA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,47 +50,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CAHk-=wjktqa94u_=++YX7XxUr57iLAs1GqtHPOY-o-N0z7wyeA@mail.gmail.com>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   7d4e49a77d9930c69751b9192448fda6ff9100f1
-commit: e341f9c3c8412e57fe0042a33a2640245ecdf619 mm/mempolicy: Weighted Interleave Auto-tuning
-date:   11 days ago
-config: loongarch-randconfig-r054-20250601 (https://download.01.org/0day-ci/archive/20250601/202506011545.Fduxqxqj-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 15.1.0
+On Sat, May 31, 2025 at 07:35:45PM -0700, Linus Torvalds wrote:
+> On Sat, 31 May 2025 at 18:06, Kees Cook <kees@kernel.org> wrote:
+> >
+> > I have no idea. I had noticed a bunch of my trees were refusing to have sane merges.
+> 
+> The rebased history would explain that, but the reason I'm upset about
+> it is that I don't even see how that rebasing could possibly happen
+> "by mistake".
+> 
+> Any normal git merge rebasing should re-write the committer. So to get
+> the kinds of rewritten history that I saw, it almost has to be
+> intentional. I don't see how that has happened by mistake.
+> 
+> At a minimum there is some truly effed up scripting going on.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506011545.Fduxqxqj-lkp@intel.com/
+Well, I didn't do it on purpose. I think I have an established track
+record of asking you first before I intentionally do stupid things with
+git (like the recent prefix collision PoC[1] that I privately emailed
+you about).
 
-cocci warnings: (new ones prefixed by >>)
->> mm/mempolicy.c:3719:1-6: ERROR: invalid free of structure field
+I'm trying to figure it out now. I must have shot myself in the foot
+somewhere, since I had a number of "by hand" things going on this week.
+My current guess (while AFK) was that something went sideways while
+trying to rebase my for-next/hardening vs my for-linus/hardening trees,
+since I had, at one point, based my for-next on
+9d7a0577c9db35c4cc52db90bc415ea248446472 (1 commit past v6.15-rc3) since
+I was still working on -Wunterminated-string-initialization patches.
+(Normally I exclusively base on -rc2.) Then I had my SSD failure, but
+things seemed okay after that, but then when I built the
+for-linus/hardening tree I rebased patches that were on top of for-next
+over on to latest "master" because basing it on 1 past rc3 seemed weird.
+It was around here that I started having problems.
 
-vim +3719 mm/mempolicy.c
+But like I said, I'll see if I can reproduce it. I have a lot of
+scripting to sanity check my pushes, and I (stupidly) overrode them
+because normally they get angry when I'm not basing on rc2, etc. But
+I've never had anything like this happen.
 
-  3700	
-  3701	static void wi_state_free(void)
-  3702	{
-  3703		struct weighted_interleave_state *old_wi_state;
-  3704	
-  3705		mutex_lock(&wi_state_lock);
-  3706	
-  3707		old_wi_state = rcu_dereference_protected(wi_state,
-  3708				lockdep_is_held(&wi_state_lock));
-  3709		if (!old_wi_state) {
-  3710			mutex_unlock(&wi_state_lock);
-  3711			goto out;
-  3712		}
-  3713	
-  3714		rcu_assign_pointer(wi_state, NULL);
-  3715		mutex_unlock(&wi_state_lock);
-  3716		synchronize_rcu();
-  3717		kfree(old_wi_state);
-  3718	out:
-> 3719		kfree(&wi_group->wi_kobj);
-  3720	}
-  3721	
+-Kees
+
+[1] https://people.kernel.org/kees/colliding-with-the-sha-prefix-of-linuxs-initial-git-commit
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Kees Cook
