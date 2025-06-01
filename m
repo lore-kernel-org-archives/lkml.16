@@ -1,239 +1,213 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA54242A92;
-	Sun,  1 Jun 2025 20:40:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748810434; cv=fail; b=put+AoFbT3RbmRP7UtCUxMelrGnHEyz3MSB2sntcGgKcMu4fm/SRutwU3uZuShYHUEM7KamYM23IuRUx63om+39dpQe5ikG6jhwRnP9MGiI+CAnbyQOb8Akq0meOrnkyYzO2zgslcvSacauXeoWawa+jBTmzmNDuV2e324fW6Uw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748810434; c=relaxed/simple;
-	bh=3lXE33DoeJGJ7liioKo/efVFhqBKJ/FjtqRXuI40BOs=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=fOkZraM9Lmq+Fjnvx3UoO28Xx5IWSJbUW36DZexoLUwaNQsRoay9gTtgJzllp435xReGLNt6ZdDGfKd55HSH9bN4GhkM9WHDlqM6lRft4m22paUZGfKXElbk2gAUdGSKpShXfOAdgtYTKZeH4dwncPgcQc6wBO9pjlkfS8IvZqQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=i7U2d3HX; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=dL4mO5sc; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AC1F2A1CA;
+	Sun,  1 Jun 2025 21:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748812116; cv=none; b=nbyJt6cjbF3+Rv0d3RkMrpjm0VArIvJ0tN4DvMUIOuacKQJheQhv2aM8oVUoKMcjdCXQTMt9IMmDgWAEZ5ATBa63TSGMKmYvjwyYEqiwR7THcUYEYzPJJ668etlgphERiT9mB3uoMrQAUw55nUHgHHQBW4bKb37xsHGdoYSJ0hs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748812116; c=relaxed/simple;
+	bh=+HqRsySLHHpU+vcsNbaQE3x/QwlJPhhRzshUpkjA/mo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WJyMhhnKsuhJvaB42P+WEAty/RtoInCO8+x8K4Pt3FUlZRGeC9QY7LGPC/58s4wWoC0MO5Vtm0KvWhJoQN7qIPrLjtfyN2nGPRe87nptUIhFPZj5/mG0aZznA0nDF0utXxZzIBDHnlJkbw5TGhcRsoHidFQj54GfcEoa4yPW+IA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WI1fO+NK; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="i7U2d3HX";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="dL4mO5sc"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 551FCkXh032189;
-	Sun, 1 Jun 2025 19:52:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=W0W+rtllHIJWIoXeCEQs0knlT0GpMXVgLIfEd4zAlLY=; b=
-	i7U2d3HXATcRfyhj0/0s2BQGMPsNlFXxMmv0W7ejm7MfhqhfCVnlxnk+Bb3jkt11
-	5oGepYEtN/nDxpKq7hM5vISUsKa7ycA/ugAWZf0N9+ViosZKr8ehI2lgJDmpU92W
-	mLPZP9ZGSfnHhcGEW199X974SWgZQi7Oc2fqWCHCCLxDrtwU9KQdtzVAv8vAvHyc
-	aiZ0+A6x9ThCVNU3EJGxB2xwLZiOXSFdyWU7zj3/4yksmLLTDfQdcD+7RRy/9Hu5
-	TwVagD/Ig1ezRFAlIvSOGiM3eE25IblMcD1Lw673mybSOqLhSh6zpb+v97fpxksu
-	/371OFcyoiEMIJ4Crkov9g==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46ystesey0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 01 Jun 2025 19:52:00 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 551IYTfH035005;
-	Sun, 1 Jun 2025 19:51:59 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11on2072.outbound.protection.outlook.com [40.107.236.72])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46yr77g5ut-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 01 Jun 2025 19:51:59 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mIcPHYf7UC2X3jXJ/UHZpb8BAPDub8LTDL4CgUwm1Hb6C7HrsY5dcDvzRMH2jMoHY9xdBuZDhzTFZEoam+a4RQhcdZTc22zDrZjQNMf59Ml2a/JjR8EWU6tyEWyzGe9NGPpFE8W/juh8aYuZGwcxTxw2FzsW1V1LdJgRJq/xD7GzvN8b94sAwnpN+nEQa39kWsXiZ4Y/gVPVQgQJhblDjHyTFOuIIYaWuFnnrKJN1SIB4h1vtX6UC3y2/UqlON6hSrhuI0T+B4z0IZBcTEgjNxVoZsODojPhrxoy0eXAWWH1aUCjkS2HsFnWZFdRZm8McIdVkAbis2QcyvJxH7pqqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=W0W+rtllHIJWIoXeCEQs0knlT0GpMXVgLIfEd4zAlLY=;
- b=PtjqIJinmV7GNPhTgEe8MnK9vsKywqJZnHwOpilONZriNrXMs94vfdtLkyS8YPHaoN4ctL1ouSsriSPVmtCxWs9m0xHXzBubddvO3sHu8j351rUjbRlwiP9Nre9SL2SiG/dziSb5FFqR4vdagqyLx7fjaW4+yXRqQCg3zAw1m+LwGCi2PxpYFFqsXXkizfIW4oxZD90ug3UMsFjQnCkANAVTTK9FSqp6177sSJFxdFAApv5tWp45I0DIHsBdzZVzBkR/G48ShE2TR5NAnZ/93dVQF0/trDSXjl51Q4Zk5PdqepAIBORPLZ9FyzTzlcQHtftIODMTdP8t+YpndlJ5VA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WI1fO+NK"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7cadd46ea9aso483671985a.1;
+        Sun, 01 Jun 2025 14:08:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W0W+rtllHIJWIoXeCEQs0knlT0GpMXVgLIfEd4zAlLY=;
- b=dL4mO5sc/P8pTDm53t4bX9MRAtIcUNxpkgFkXR0SFI4YRlT4PntIkcLo8qmlqHQyM0OeRz0Sq3olaLocFVmEIcym4oT1JHhe4yacKHL/RzOV0wg3D0RyHZcXq054oGfxlaD1fVLhntwvLDlyMeve3FeTphoWoIIoifsU2EM5hTo=
-Received: from DS7PR10MB5328.namprd10.prod.outlook.com (2603:10b6:5:3a6::12)
- by BLAPR10MB5058.namprd10.prod.outlook.com (2603:10b6:208:320::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.40; Sun, 1 Jun
- 2025 19:51:56 +0000
-Received: from DS7PR10MB5328.namprd10.prod.outlook.com
- ([fe80::ea13:c6c1:9956:b29c]) by DS7PR10MB5328.namprd10.prod.outlook.com
- ([fe80::ea13:c6c1:9956:b29c%2]) with mapi id 15.20.8746.035; Sun, 1 Jun 2025
- 19:51:55 +0000
-Message-ID: <cc05cbf5-0b59-4442-9585-9658d67f9059@oracle.com>
-Date: Mon, 2 Jun 2025 01:21:48 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [External] : [PATCH] gve: add missing NULL check for
- gve_alloc_pending_packet() in TX DQO
-To: Mina Almasry <almasrymina@google.com>
-Cc: bcf@google.com, joshwash@google.com, willemb@google.com,
-        pkaligineedi@google.com, pabeni@redhat.com, kuba@kernel.org,
-        jeroendb@google.com, hramamurthy@google.com, andrew+netdev@lunn.ch,
-        davem@davemloft.net, edumazet@google.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, darren.kenny@oracle.com
-References: <20250601193428.3388418-1-alok.a.tiwari@oracle.com>
- <CAHS8izOqWWdsEheAFSwOtzPM98ZudP7gKZMECWUhcU1NCLnwHA@mail.gmail.com>
-Content-Language: en-US
-From: ALOK TIWARI <alok.a.tiwari@oracle.com>
-In-Reply-To: <CAHS8izOqWWdsEheAFSwOtzPM98ZudP7gKZMECWUhcU1NCLnwHA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SG3P274CA0005.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:be::17)
- To DS7PR10MB5328.namprd10.prod.outlook.com (2603:10b6:5:3a6::12)
+        d=gmail.com; s=20230601; t=1748812113; x=1749416913; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9NoP05Qsq2uZudieJiCRentyec71gQ2RU6SK/0NLWW0=;
+        b=WI1fO+NK7YW8yVoXpkfemzG3sKkmnMo25SV8VhSINFRmNYyhFV6DnCYHXm20qlylcK
+         jLSq7R82LP95J5LfnARFWufkjQUVw/kftZijsNW1qhk3DkuIT6blnecKCy8U/FPIAJVv
+         vF5bPUELGER9T2A14R26r65Um7trypYHr3BV9tBeXuVZ0KPgG2Zp3JLmQ6U76ZuqkNc8
+         kVoZXSVm34BhyA3N/WNeyHYOXBiUhLmwoPon59PhzBx30FgvNoTbA/xObnkm5l0c3ThJ
+         xTNa2YTikEuOrxGebynFEx4NQa79+Y5th7WXPFJUw2HB7dwK/QYwvxqYZ/gxTaKlZB7A
+         Z1jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748812113; x=1749416913;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9NoP05Qsq2uZudieJiCRentyec71gQ2RU6SK/0NLWW0=;
+        b=plp/b51S6v5Zwb+DeHReurekQAGVeJXs53acaQTKiO3RLqfa1HH2JLbKJjqawqiZEn
+         y/bnFIDvRSl8d/RThEh+JcCDBs1bJmNOR2aA10GJuBvmfmj5q8SMfIXWYLpn37BvhWca
+         bWH8X35KTFRRSrR2m9Go5rIAvuPKMmTQO7MPb2BbJBtsmHZUB9WTkUmGkzSzvudU2k5T
+         V0eBZFl/tQCB41kwBFtJngbud9207QHwtRxxk3pMM9q+bw8NDhwhkCh6GeZwyyUY6lYz
+         QqlgjWrt1oo+8UbPuPWR/BrC0kVhv+7vWEeAej2jVyY69G8sKu4argDj2hU2eDkzsCMm
+         LBbA==
+X-Forwarded-Encrypted: i=1; AJvYcCUdqDzRAexd+bnMe2l8do5WWV06tYeCTkLEmEmxqiJp2G1Xv7jthB7u8NtJaFsuC6+q+ukUU7xppYO4GQo2@vger.kernel.org, AJvYcCVNt/jBeB12NNAeJBcAbzAfvO5kFfMZ3XGvEDvWgkwIisks10uzEvrqXQQpViF9zVNRsP9IYsN+@vger.kernel.org, AJvYcCVmjtlmlT88fMOeCjlI7MgDrTgAsIKXrNecXKbTQFYd4bR7k6yCHsGe0xEcjT7el5CXxkNyBJRgBes=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXkfyza9xhA47O4xwXPXvS3OPvzGebRxgLokrf/Gyt5snDRj6S
+	kVZfLg6eAXTVPZNzdmWmVUR70y2AepYOK2t6ZK8VUfE22MDATXQsbGvW+pg3tM9mF/x4LEbRjqn
+	aFO8HzkgAFP16Cz/l8p8grkNJHkwKmvM=
+X-Gm-Gg: ASbGncuG7AR9qolTGFWBxs3IW9DdypTYbL14CtjdolNqp7vWwqwJWhrqukRGwpRF91A
+	RTCZYrtuBrXqQmOGQT0FTeZapcdPB4t9UKnkDV74slrwPkeLNtFV5zyLXXiTr46Rc+iq6/bW4DL
+	Z/lsyr7Hv9I/ULyX97nm27k2JcKRNAyXSBPA==
+X-Google-Smtp-Source: AGHT+IHxlNiEI48RrXYIzjtR+5FeE3qMDaF/VMFFLOZ37w2QgHT7hJKBRJx5ce9frjNKjtzDZPYHRGlUZGA6Q/zDpDE=
+X-Received: by 2002:a05:620a:2a01:b0:7c7:827b:46bf with SMTP id
+ af79cd13be357-7d0a4e3cc82mr1374737285a.39.1748812113011; Sun, 01 Jun 2025
+ 14:08:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR10MB5328:EE_|BLAPR10MB5058:EE_
-X-MS-Office365-Filtering-Correlation-Id: a03eb219-7f86-45e7-9545-08dda145c311
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|366016|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Z3BQSmdsdW5SRkhDUHo0QkphN2t4amVUem1LMFk4Zm5oV0ppWEE5dWpLbnJ0?=
- =?utf-8?B?UDVkQWZaWTVOOHhsTWkrSHBqZitPMUEzUmVDQ01TbkZwbEVKd3E4WFJXaTkz?=
- =?utf-8?B?UFc3OC9HZkhYbjU0NFlVQkRDV2d6LzVCc3lwUnF2aWNtd1B4S0VnMWhhcDM5?=
- =?utf-8?B?ZGVvMHErdzBITnBrbmRqVmxlNlVwOHprQTBGVGNlZW0yekVBektqalJLOVhH?=
- =?utf-8?B?anM2Tnd0RkZPK2NuVmM1U2dKbXk2STlmcU04R3FoOEZxam1zWHBoTmZ6ZURS?=
- =?utf-8?B?MzZxcEtrbTQrVmdWdjhDcUhoUlRRNzEzNHJnaGtkOHRiVWtQZTRBbFZaaHQy?=
- =?utf-8?B?ampmeWtweHgzamlydnpnR3BPV0hVdWV4Q25pUkpEOTJXL2dDaGd0V0hzemp6?=
- =?utf-8?B?eVZjQlVHTDFPK0Y3bEZ6V2hSTDNlQ2VFMUlmcll3NkJzZWI4SUlPYTdMSjVo?=
- =?utf-8?B?QU9mUXRTZ3BwSENuRTVBY0ppbXcxQnpkUVpTb1Z2KzZZRG9sQmlzQXZUbm9K?=
- =?utf-8?B?bVRINzBSR2QyZ2tIU2VuZ1d3TVZhQnJnTEN6eTR1SVd2Yzd5endTeUQzSkRC?=
- =?utf-8?B?L21qaDlicGRIR0I4a3U2Z3dGeUxGUmF3MVMrME5VbXBIUzdJVk9OZnZjQU9G?=
- =?utf-8?B?Z21FaEt4MVBkNzJyZUpVdXl6OE16V1I5VG9aT2tVUVJsVm9pMFdRajRTaDZW?=
- =?utf-8?B?Z3RyT1FEUnczYVZFbjQ4YXM0ODE0eDVuUEgvckNodmRVcXVSUHd1dFJUNWw0?=
- =?utf-8?B?VjVVanI5NW1CUEZCdDJZWWVpeTE1NzcyVGdQNTV6VzUzVTkvODYwamZ4UFhq?=
- =?utf-8?B?eGxKSFR6Tk4veEQxQjdDUVJjWUZ0VWdqOGw0Uks4clFKRGNya2pPcnRtTFhK?=
- =?utf-8?B?STdSaVlOdm90ZjFkaVpDUFkzUGhtTkNoVVIzYm1yT3ZuWUZCYWdFOTNEbFlm?=
- =?utf-8?B?c2k0a2UyeHFZOFRxNnBHL0RGRHVlSnY2OTlzS2ErT09ZMDZWdUhqZ051Ymg2?=
- =?utf-8?B?RlhPN1FyRHMzUFl3NmtRcHFlNFBDK2RFdm5pQVBKbGs4Ny9jOFJlZmI0ek5P?=
- =?utf-8?B?TzhZWFQxMzVnNm8vdTJETDV3bmIya2lMNE12SW5NQ0xOa2FwV1JOWmxrc0pk?=
- =?utf-8?B?dnBpTE9YQjQ5bUZTampxNXYydVN5bDBNQzhJTnUwSkljTXJDWUJZU2FiTjJN?=
- =?utf-8?B?WEVPdTJOUHJJL3VDNVFxQml2UkpBdzdOaGhQbVlYd3dBemR5UEFqaVRUSFYx?=
- =?utf-8?B?S3BoNDZtd0JTQ1dSMGRhQnJ3TEExbHhReUpVOGNTc1JXQm5obkdLSjU2SlFv?=
- =?utf-8?B?eGlhYnBoaHpycURsRGdRM09ha21vaksyZ3VEVVEyV2RRcUVKVnF3MXY1akJY?=
- =?utf-8?B?bnQ0ZmpYVmVtenZGS0g5Y0tTcXBMeDNwOHZZWkhETEdSSHg2MXN6Uk1PUnlK?=
- =?utf-8?B?dGF1SzdDcVcrVkRPVjJLNEhvN0R1SXpBejNaQll0OG5HeVpEMDdvajZNVmZw?=
- =?utf-8?B?R2VvSjZnWXZOSXJNVjk2STBjRmFLbDBKMmkreVJSako0cmJ6QlNBd0M0RDJS?=
- =?utf-8?B?MXpyd0packdEQzdLZUZzVENQQlBlZVg0LytHa3BFeFA4YlJrNUdFd2FVVWRC?=
- =?utf-8?B?Q1hQL2J2QkZBeDVYUGFHMEN0WEYvQ29TNVphaEFzU01WMWFhdGhqYU1ERE9o?=
- =?utf-8?B?SlMxRFFudkptT0RHTGY3R0JXeWk5ZVhPczJXSWtoRUVwNkRkN29Vd1RWL1Fz?=
- =?utf-8?B?NGxZSWtRcXZrNGg4dVc1dGdUR1pRRWhpNzZCMWFVUmpTVW9SbHowc2psTVRG?=
- =?utf-8?B?WHRPdytIS0dJSGsxRTNlb0RjS2dSdFMzRzhWVTVMUFY0RHNwelA4K3llOUla?=
- =?utf-8?B?a3g1WnhsTjNPWDlaZ1dTTnlRM2g3aWRWNklvUkhDNjdKUll1NWUvSTYxc1M5?=
- =?utf-8?Q?2dWxaSg8zMw=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR10MB5328.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dFQ1cTZvWDZuK04zMUs0c2lOVXNaQzVHWUlyWXlGS3B0UEh4U3N0MWY4bTl0?=
- =?utf-8?B?Sm1SaTZuKzFZS1J4a0VtL3lqWXRvNTBWVlpQSnY0NjNtSXFEOTZCbVlVUi9K?=
- =?utf-8?B?ZUI0NHMwVXYyYjJPU3AzVlBDa1pvQll5UGJOM2c4dlkrVHNlY05tV0gvL3h0?=
- =?utf-8?B?SWhXWjk4MUZVT2I5RFVrRjBrZVJBRmZtRFZ6RHZjYkJBMHEzUnRtVEtyem50?=
- =?utf-8?B?Q2V5ZWcycVkrckk1YzF1TU5hL25CL3FKK2lTdFdsSlRoanVQazJQWDMxbnpZ?=
- =?utf-8?B?M0JmbDEyZ1JVVE80WUJYeDJFQTZuTmdPUE0zeFdSYkNING5pT0dOcUd6S0Jq?=
- =?utf-8?B?cnhGdTA1TXpCTTdCTndlTEZaTUtCVFVFdVI1enFTNzVpZ3ZaUUhYTjN6VldX?=
- =?utf-8?B?Sm1YLzVvYkE4VGIyR1d6R2hLWjg2ZXZTWFZBSjdYOUtnVTlZS1dpc3NScGR3?=
- =?utf-8?B?T3lCbEd1c1hEcEkzMERaOXhMdjJWYXhLSnNUdmZXQmxZOVVPSEMyOHZhenRZ?=
- =?utf-8?B?NzZnSTB1SytHM1F1ejZja3IrT1NXUWRraHJvbXkzQ2E1dEw4aERrVmdnTGNW?=
- =?utf-8?B?NlBYVHdrV3kvVTFBcytsUHZydHYyQnczaVVHR3RDZDQzbnlmbGhJdkRLREJZ?=
- =?utf-8?B?N3RMNWg0bTczRG1zbFJiS1BtcnRHd21nV0VFK1B2RXNOSEkwbTYwNUdMTEZh?=
- =?utf-8?B?Ky9tNXpmM25OaW96QWxMeUJncVoyanBHS0xFdTgxRGhReW1nSkhEdUtvN3ZV?=
- =?utf-8?B?V3VZMVRrS3N4MEZ2TlRKNnNpR1JNZUM4NUV3MUoxdTYvR2hJQzUya3h1eVNq?=
- =?utf-8?B?dTFzQWM4a0xyK0pCTzRoTm84VUI3b0h5S0ZRaHI1U0tlTmtnTUJUblluOEha?=
- =?utf-8?B?OGFtZkJXWXF1SGhBVERGMTAwcFJSc3Y2VUJhUThOYWtRNzk1ZUxtaG5XVGxk?=
- =?utf-8?B?Z0RvRndyT3k2dlpVZk5PdVp0aXhzemY2Q1lGenVWcGd0N0tLSHJjZXNObnMr?=
- =?utf-8?B?dHVkcHFhS0JpMnU1dm5BemNFOHpZdmU3RDVsdUlkT21KWThZdnFBQ1M1QmpC?=
- =?utf-8?B?ZEszQXM5M2JlOE4zUlJMVnZibkZEcEUvL1lpN1FGQzl3Z3YxVDNJSE9WbUd5?=
- =?utf-8?B?L0dkSk1vc2I0aVpXUGxoWVRoQ1hxRzNxT2lEU3pFRS9rVlU1UGZpVFJqYjZz?=
- =?utf-8?B?UWhPZ1lrblFDaTlpOVNsRy9ZN1c2K1hnN2ZadDdrWVdiWjJQSk1TV2lxSTJp?=
- =?utf-8?B?a296K2xJWTQ4Q3ZwaTM1a1h6VzRpV0RIVkUyMVRnMERNTnBtaHlRK1hSTGNl?=
- =?utf-8?B?YTN4dlFiM042cjEzMitGUlN6a0dXRkZEKzVoYmtFaWpzaW5Pa0QrUjZVY1Vo?=
- =?utf-8?B?L05taEEybjkzUGFMYjZOQ3NsTGIwSjAwVXZ0SWdmU0JVZllTU3dvZ0hkZ2Qy?=
- =?utf-8?B?bUZ2RFp4QnF5b3RkTzRzN1hpZWNpYUxUR1RCTzNPZExsUWRkd1A3all2Qkk4?=
- =?utf-8?B?VVl3dEt5NGV4aGFya0NhYVRvaEJjTHlSZ05mMk0zSTdBQnZ6dTkyVW9xZU9M?=
- =?utf-8?B?blpuVTMrT3RPR1pYNVNHbjJxNElsT0xxTkE3L3hTV3BFa1FQOVNTc2hSTHkz?=
- =?utf-8?B?YTNXbUN5Tk1mTm9HaG5VU3BkMWRhWm9rRFU0VU9UUmU2MmN3SUM2VnJ4OG1h?=
- =?utf-8?B?dThCOEhrdWxvTlZ0Sk9sMDEvaUIxUkVvTi96aStSVjdBWmpDYjBLUG9YTnBE?=
- =?utf-8?B?N245QTBEZldiVURILzlTdXNJaUZ0VjVxbDdrSThHS3UxbVVmeEpXVTBNZlhX?=
- =?utf-8?B?MU5CVVdMY0Q1bXpiQytmZWpnQWl0Z0wrVHh0ZndMblBJUkh3SmdrVzY5cVRx?=
- =?utf-8?B?VkF3MGVNY285bmZRcEFZMmE0Q0RjSkF5eFVRVEphNWlXczFCS25BcTNoU3RV?=
- =?utf-8?B?cS93Ym1Ca0JSSkpLQ2d2SWpkOEN6Rmh2ZDk2cE1DOUFrZHZUSkxIamRBRVlw?=
- =?utf-8?B?QjhtRG5INjNJZ0dIN2NvbDkwNk9nK1pPZExDTnZFUUhhRmttWlR2VkhHd1cz?=
- =?utf-8?B?REVkTzdSc0Jic3BNbzNpVmRlV2tUN1FSQWxrWno5QXZnbVZFWjhMTG1XSUNH?=
- =?utf-8?B?eDZqS21nOG9BZEVacTN2QkFVVGx0YnlmUmZiNkxmZUlLcjhXVlVwZHNHRGxu?=
- =?utf-8?B?SXc9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	qzkA+7spswzH/0TnJHENu14yrtd4LWj1zikZJyaXEc+hqcVy/Dk4lMnGQM3bcW9a4xEr6E3yY8XztSTYHiKUi2pXvr+vpzniZCOtkaFwzEVhq1xfVFFSWhYIunQJJK9Z5MUyaY6NoZJ3qRqmHNwiZq7YfVY/Lo4513r6QbQBorq+n1FfMfXTi+/TXQIE6/Y7HrS5v7VmZH72qVk++bKpXkHX8ir8GffqPRakHzF/14NG5+QM/CImKAnhBTw2U8SF6wF8dwctfihwKC79eHu82Zbqu1kZVB3AMJPpLeynb2I6u5GogzRADk6UiCusIUXceJ651HD7PNDODuBGRS/7LfXzm6jHbaDC5fLih4Tm9N/FihE3JeJmAuKYcLIoTPvq/iaTk15VQoUSUTxfPMRDYJDlYbDjV8B8Ta0DP+nz5nBlVcmEwCW6vjlAG9wug/s1QuISz8d2oBkfUZ3cus/htB3ZPqFRmJBoAk/gTkgk+yyBs8HO0BW6V8PKExLc4WexFhlsYkKuf+HYYU2sdScW0wu/tQHy/qTKu6531w+/NzBk6JoMABMFokJ7ywXXTEGf9vvfufWYwm9YnplqCk2OwvaA6L4i1QezWglCed62QoY=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a03eb219-7f86-45e7-9545-08dda145c311
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR10MB5328.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jun 2025 19:51:55.8509
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Y9byUiTWirc2VqKdDYAcpdV7JfWsdT8xZP2HR13yngqNWwy1l9r7cwZPQdFyuIvq20zmBQ+GgjJmbOktgbCNW4V7+QtR9umgLGB7W8ZNrOs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR10MB5058
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-01_09,2025-05-30_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999
- bulkscore=0 spamscore=0 suspectscore=0 malwarescore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2505160000 definitions=main-2506010173
-X-Proofpoint-ORIG-GUID: 2LfOxwLYBBa6imKeEZxZFh_sqoV2eG3c
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAxMDE3MyBTYWx0ZWRfX2gOcFTcuos3Y Veaq7rDQcwzSGyspyXw9pcjvu46tjutggcMIRGfKt7RoGVWwdqsAhA+YjwUsdG2T3S2QAV9RgCX NjF7SSfguosR4F4IkOCoGX1TCbG8FQCXFK2uLLckWnkH4DoSgCaRZp9aZFOxaWY8g3YV6s2odgm
- XGTjVGU0mePWvN+8E47kiWl/YTkrpqUWmVM82delabxDWgUTfweOxiKyAe15qIYJic8F+2jkpk5 kZa5EidbdCitcIpDU5m8IaadSu9GtHlq+LBa8U6JGBG/H33U3hTDMG92VBycvA4F7FTJvS1q5OZ aTxVUUkIkmU0Kz+mtVEvslc9FktGUTRyvNIFSGwiEPo//s1TvCX43Jg5PI+x+EZfosuutlJPDqT
- 5LrlvQVh07/ona0pvlFEQJhwHv2OJyXIuikoZYJM7nJ8gZkyey+YZYECPYypGZ88RRqH5Wto
-X-Proofpoint-GUID: 2LfOxwLYBBa6imKeEZxZFh_sqoV2eG3c
-X-Authority-Analysis: v=2.4 cv=XpX6OUF9 c=1 sm=1 tr=0 ts=683caf61 b=1 cx=c_pps a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=VwQbUJbxAAAA:8 a=yPCof4ZbAAAA:8 a=1XWaLZrsAAAA:8 a=E8e6kc4AU0M9f4V3sIsA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=1oIdJCuH23UA:10
+References: <20250429233848.3093350-1-nphamcs@gmail.com> <aDlUgVFdA7rCUvHx@yjaykim-PowerEdge-T330>
+ <CAKEwX=MjyEsoyDmMBCRr0QnBfgkTA5bfrshPbfSgNp887zaxVw@mail.gmail.com> <aDxN6oz86TD5H4IL@yjaykim-PowerEdge-T330>
+In-Reply-To: <aDxN6oz86TD5H4IL@yjaykim-PowerEdge-T330>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Sun, 1 Jun 2025 14:08:22 -0700
+X-Gm-Features: AX0GCFtF6d0uXcv46vS-wy8bPQYtvuz0ynLLrUw6yssIOl32RhKsTE62_m874IM
+Message-ID: <CAKEwX=NFrWyFkyd5XhXEb_qYtWBk4yPUMPPJN0qHPAvzPUq_Dg@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 00/18] Virtual Swap Space
+To: YoungJun Park <youngjun.park@lge.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hannes@cmpxchg.org, 
+	hughd@google.com, yosry.ahmed@linux.dev, mhocko@kernel.org, 
+	roman.gushchin@linux.dev, shakeel.butt@linux.dev, muchun.song@linux.dev, 
+	len.brown@intel.com, chengming.zhou@linux.dev, kasong@tencent.com, 
+	chrisl@kernel.org, huang.ying.caritas@gmail.com, ryan.roberts@arm.com, 
+	viro@zeniv.linux.org.uk, baohua@kernel.org, osalvador@suse.de, 
+	lorenzo.stoakes@oracle.com, christophe.leroy@csgroup.eu, pavel@kernel.org, 
+	kernel-team@meta.com, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
+	linux-pm@vger.kernel.org, peterx@redhat.com, gunho.lee@lge.com, 
+	taejoon.song@lge.com, iamjoonsoo.kim@lge.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sun, Jun 1, 2025 at 5:56=E2=80=AFAM YoungJun Park <youngjun.park@lge.com=
+> wrote:
+>
+> On Fri, May 30, 2025 at 09:52:42AM -0700, Nhat Pham wrote:
+> > On Thu, May 29, 2025 at 11:47=E2=80=AFPM YoungJun Park <youngjun.park@l=
+ge.com> wrote:
+> > >
+> > > On Tue, Apr 29, 2025 at 04:38:28PM -0700, Nhat Pham wrote:
+> > > > Changelog:
+> > > > * v2:
+> > > >       * Use a single atomic type (swap_refs) for reference counting
+> > > >         purpose. This brings the size of the swap descriptor from 6=
+4 KB
+> > > >         down to 48 KB (25% reduction). Suggested by Yosry Ahmed.
+> > > >       * Zeromap bitmap is removed in the virtual swap implementatio=
+n.
+> > > >         This saves one bit per phyiscal swapfile slot.
+> > > >       * Rearrange the patches and the code change to make things mo=
+re
+> > > >         reviewable. Suggested by Johannes Weiner.
+> > > >       * Update the cover letter a bit.
+> > >
+> > > Hi Nhat,
+> > >
+> > > Thank you for sharing this patch series.
+> > > I=E2=80=99ve read through it with great interest.
+> > >
+> > > I=E2=80=99m part of a kernel team working on features related to mult=
+i-tier swapping,
+> > > and this patch set appears quite relevant
+> > > to our ongoing discussions and early-stage implementation.
+> >
+> > May I ask - what's the use case you're thinking of here? Remote swappin=
+g?
+> >
+>
+> Yes, that's correct.
+> Our usage scenario includes remote swap,
+> and we're experimenting with assigning swap tiers per cgroup
+> in order to improve specific scene of our target device performance.
 
+Hmm, that can be a start. Right now, we have only 2 swap tiers
+essentially, so memory.(z)swap.max and memory.zswap.writeback is
+usually sufficient to describe the tiering interface. But if you have
+an alternative use case in mind feel free to send a RFC to explore
+this!
 
-On 02-06-2025 01:19, Mina Almasry wrote:
-> On Sun, Jun 1, 2025 at 12:34 PM Alok Tiwari <alok.a.tiwari@oracle.com> wrote:
->>
->> gve_alloc_pending_packet() can return NULL, but gve_tx_add_skb_dqo()
->> did not check for this case before dereferencing the returned pointer.
->>
->> Add a missing NULL check to prevent a potential NULL pointer
->> dereference when allocation fails.
->>
->> This improves robustness in low-memory scenarios.
->>
->> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
-> 
-> Patch itself looks good to me, but if you can, please designate it to
-> the net tree by prefixing the patch with `[PATCH net v2]` as mentioned
-> in our docs:
-> 
-> https://urldefense.com/v3/__https://docs.kernel.org/process/maintainer-netdev.html__;!!ACWV5N9M2RV99hQ!JPpnRT9itx84rhzAaeGelVD-bnJR8vFksx2OjGzAKZWf_A6o8hEY0CUMMUO_NuSStcCyBGnvhoJAJlADszR4D_aj$
-> 
-> Also, if possible, add `Fixes: commit a57e5de476be ("gve: DQO: Add TX
-> path")` to give it a chance to get picked up by stable trees.
-> 
-> With that:
-> 
-> Reviewed-by: Mina Almasry <almasrymina@google.com>
-> 
+>
+> We=E2=80=99ve explored several approaches and PoCs around this,
+> and in the process of evaluating
+> whether our direction could eventually be aligned
+> with the upstream kernel,
+> I came across your patchset and wanted to ask whether
+> similar efforts have been discussed or attempted before.
 
+I think it is occasionally touched upon in discussion, but AFAICS
+there has not been really an actual upstream patch to add such an
+interface.
 
-Thanks for your review.
+>
+> > >
+> > > I had a couple of questions regarding the future direction.
+> > >
+> > > > * Multi-tier swapping (as mentioned in [5]), with transparent
+> > > >   transferring (promotion/demotion) of pages across tiers (see [8] =
+and
+> > > >   [9]). Similar to swapoff, with the old design we would need to
+> > > >   perform the expensive page table walk.
+> > >
+> > > Based on the discussion in [5], it seems there was some exploration
+> > > around enabling per-cgroup selection of multiple tiers.
+> > > Do you envision the current design evolving in a similar direction
+> > > to those past discussions, or is there a different direction you're a=
+iming for?
+> >
+> > IIRC, that past design focused on the interface aspect of the problem,
+> > but never actually touched the mechanism to implement a multi-tier
+> > swapping solution.
+> >
+> > The simple reason is it's impossible, or at least highly inefficient
+> > to do it in the current design, i.e without virtualizing swap. Storing
+>
+> As you pointed out, there are certainly inefficiencies
+> in supporting this use case with the current design,
+> but if there is a valid use case,
+> I believe there=E2=80=99s room for it to be supported in the current mode=
+l
+> =E2=80=94possibly in a less optimized form=E2=80=94
+> until a virtual swap device becomes available
+> and provides a more efficient solution.
+> What do you think about?
 
-I will send v2 and add Fixes tag.
-Thanks,
-Alok
+Which less optimized form are you thinking of?
+
+>
+> > the physical swap location in PTEs means that changing the swap
+> > backend requires a full page table walk to update all the PTEs that
+> > refer to the old physical swap location. So you have to pick your
+> > poison - either:
+> > 1. Pick your backend at swap out time, and never change it. You might
+> > not have sufficient information to decide at that time. It prevents
+> > you from adapting to the change in workload dynamics and working set -
+> > the access frequency of pages might change, so their physical location
+> > should change accordingly.
+> >
+> > 2. Reserve the space in every tier, and associate them with the same
+> > handle. This is kinda what zswap is doing. It is space efficient, and
+> > create a lot of operational issues in production.
+> >
+> > 3. Bite the bullet and perform the page table walk. This is what
+> > swapoff is doing, basically. Raise your hands if you're excited about
+> > a full page table walk every time you want to evict a page from zswap
+> > to disk swap. Booo.
+> >
+> > This new design will give us an efficient way to perform tier transfer
+> > - you need to figure out how to obtain the right to perform the
+> > transfer (for now, through the swap cache - but you can perhaps
+> > envision some sort of locks), and then you can simply make the change
+> > at the virtual layer.
+> >
+>
+> One idea that comes to mind is whether the backend swap tier for
+> a page could be lazily adjusted at runtime=E2=80=94either reactively
+> or via an explicit interface=E2=80=94before the tier changes.
+> Alternatively, if it's preferable to leave pages untouched
+> when the tier configuration changes at runtime,
+> perhaps we could consider making this behavior configurable as well.
+>
+
+I don't quite understand - could you expand on this?
