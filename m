@@ -1,77 +1,89 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB4428EC;
-	Sun,  1 Jun 2025 22:26:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE94E1A01C6;
+	Sun,  1 Jun 2025 22:42:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748816768; cv=none; b=ul98VfOseW4R2/B9YaKi6AlDazzuQR5MLyL5f/YBs7lViXHpIZ/zFHQOvaDLwA6FHvd75mddbmiGb9KaWnrVZrHk4MPOuOKMseWLgytufGDpJsBId8QYKfe6/mqihflQz8EBcIfsRKBqX/Vfn+fDCZhgHu9SKX/fwRoPVIhnmrE=
+	t=1748817768; cv=none; b=PLkgUC3GOyrZYUaP0Ow8+U5YqqaPqvKyf49CIFG2z/mxDNlPK9yb1tuWpTgaDiaKKOnsvQrHYcI95eLx8RQZxbnTiCB4yOUocA9IrpmDkddbsUZ+YVhCGwDxqOSyXddt9tkeHDP43bUET/R9EeRNWXw8tdrhFAAk9KgCm+g/Pb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748816768; c=relaxed/simple;
-	bh=A+7040m0+SoBFHSOiDUQanhyf7+8+i/99VbayHPtBDA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U6E2hw/zL7nVmXhbjOSjdGjXdEqsqGtgVNRaMUZTI8/xtpkajnG/yjl8yGVDy2Xtc/7L+WyhHi4LwjO7w7yLbTn/3hAqtjDQWOPYGlpuWryIKH24SPjInrv9gHR6748KvhmNlLzJ2Z1APmk6RnDXc9EYieJZ44d+GbzYDZZmOb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=egUJasPs; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1748817768; c=relaxed/simple;
+	bh=fSUbC8ue5xuoYsPPCkrjhijoX9CUVHnmAfX71mfqU94=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KMO1sZh1cIiiVs1BGBck/2t+nypS5oW3qF7DLNFmN4mQoTtW00B5B3gVGgV+GLwNK4KF0HSgB9WzcpgwA3Gn2k/lu3u96GvZVkPZnfpGBhKpY03EXk45bnMrHYL0+oh/+MMgIlhtZ+VH08mGA2gblGR+A5xvQtNNHIEGFQYkv0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UlvQivT4; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="egUJasPs"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B3764432FA;
-	Sun,  1 Jun 2025 22:25:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1748816756;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g9XdcBVBnhp8c8ZBsriCHLzr8nNacrDzZNd3KKWw4W8=;
-	b=egUJasPsaefuid6MU0YZfsaXVy9wCo6z0IX5RgBCW7xW5LFbOYx/w/uXQ98qKu62jowkRc
-	Sq6dxkuNutMbtl2vWqt2OucUB22bvNkvB9NQiPJTbT8x3r353bAKKL4K9X7cg2JggADzL/
-	jqUTrs9z+W1C9Zmhr10DUVmcw6JYWj1SCmOl9v6DktnVsCtbbSUd5jkDGRd+oU+cHdp8Ga
-	ByIoEyA2gOOfv6uoBCRxK0a6G8KQlCCVC9uSf+HrTCyPTVV1pxeHee6kiI7xdApUd0FVa/
-	GD+YsF652mX0khfIY9rLEFrcIgRJChf4SppnNcwCJMJLU7aGPijpvl0aahpaEQ==
-Date: Mon, 2 Jun 2025 00:25:54 +0200
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Eddie Huang <eddie.huang@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Alexandre Mergnat <amergnat@baylibre.com>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UlvQivT4"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-451d54214adso6825985e9.3;
+        Sun, 01 Jun 2025 15:42:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748817765; x=1749422565; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SF7cA4E9BN3hkPat2YYsHMJ+T/3Iu8BTo2+5VoN0ds8=;
+        b=UlvQivT4UHQsaol9ylnCFJhDUFHlaFBiivLP0v3fNNfCynIyvKvsuZjwZJv8ZwOV3A
+         VxoUXXB6+9JAZPIn8pWXyn2nxOQ2pGRoH8wdospIA4kxiPtiQsVvIfqQDWKVf90lw71F
+         m216vSGPh5idJWpn6hsZ0rcE0O13FGP9CgJ3GnGjy1paOIFEbyOwd0h9v7O+95WXOsHl
+         1IuDqCQV7PwSvUQNsbb04KyUdm/OsW8v1pTEbPo5b0GosE7h1Oj5+u+SJrSKhuNYTZne
+         w1ByzMDrbhNZFZFpHOcUxsawoRqSZ+MkhwWk6MeS9ptdJa4q7ItPxbtFvCTLuyqBmCv8
+         pCCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748817765; x=1749422565;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SF7cA4E9BN3hkPat2YYsHMJ+T/3Iu8BTo2+5VoN0ds8=;
+        b=Crrs8nLPuAwEJOjM9fAgSya793xh+GRzwwE2Fz5rejWVUXDEOT3UWbmR/cR6pCvuHu
+         ruhhdWKDPyxogyg11Eq/lOJ8LSSlTSYQsKPOw8t2N3ibxB8ZbbLe1ELa7UsR/OiRqJA4
+         Ygkw6RcudIr8LfuGWk4No/Gf0W6Z4dK+E7OjmJD+P4Sc6HqEAdAe8kIcuPoJtfqru8Ty
+         zACbwCFC61GT4nakibRoutsBea4P9bMBjgWsG+Zn7Qow6Sl/PfjbZac+7hTnmtSMcgVF
+         5sMQYdcvkJlI1yJo6Z2JqOdyQ5CBYhwuNiUhDBAw1leXufv76eOrC+/pWl6gqh/nWfqq
+         /5Fw==
+X-Forwarded-Encrypted: i=1; AJvYcCUGZMK74TZNoIEjxYT2DN9YpeKK/Z/sq2I/JBQslSXYkQDv4jPPQoFIsch3AmX/VNENJmqkkBCIXqO0xe9t@vger.kernel.org, AJvYcCUJM1wzoP1mSBZ7DNOKWpmc1P2DdB5GcpTP6W2DJQLQsoAtqUs7IMkcr12LHdLX8bMENOJZE6jWeKox8cfJ9A==@vger.kernel.org, AJvYcCWfJwjc29hUfOmOmnxyiJkfV1vAzLJo4Oj/+Yx2zHpg8YWcmhrCB1TNsGA4uCH9pzjb1rbFKkX9TDo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzecPG7nOYt826GQ4FA2MImS/W1t4cyUR7cCkkWmdztuYphC36j
+	QWuh1hNJxYziFhgzts4gHVPYNKDSRLMc7nDnsLyEb3+jIjD605glSx4b
+X-Gm-Gg: ASbGnctgk8pbVCwJTUOWSZJJi5cmXnCuSzZe4oJkA33Tf05Q0OpYj46xLtEJCkfRTN5
+	9HCc0U0PbbuhUGtQiE2MXem5dr1t74vuAO8i0Oqbd6mu+LJXTaNBUVdtaDtptEQB+2AnPQ8mVW2
+	7WTUV/hwDiWvSb8v05Z3CBrej8Ir837AcXFtjKV+xLA0UjH25BfUp+UPg/ApCuQk5w1ejQ5106B
+	nnrJ64jjKbCbdc9UsRCi3qY4mcuuouq39fiHjT1s9/zJC69mSMOOYRa7hfCGMG0imz3T2/RxDRZ
+	dh240kqSbDz0KwU0Gk9NxFAuC9z6+p+ftRUAcXiZN39LrKyu6mtd
+X-Google-Smtp-Source: AGHT+IG3zYFoACQN9M5H7HAo4tuvdifGw7budMeC1WAUHcB3EAdv/pcs7cNuCuhFCjbc82yl1vfYew==
+X-Received: by 2002:a05:600c:8207:b0:450:6b55:cf91 with SMTP id 5b1f17b1804b1-450d64c1bd9mr91267365e9.6.1748817764868;
+        Sun, 01 Jun 2025 15:42:44 -0700 (PDT)
+Received: from qasdev.Home ([2a02:c7c:6696:8300:4518:757b:6751:290f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe74165sm12916554f8f.53.2025.06.01.15.42.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Jun 2025 15:42:43 -0700 (PDT)
+From: Qasim Ijaz <qasdev00@gmail.com>
+To: Sinan Kaya <okaya@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
 	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-rtc@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rtc: mt6359: Add mt6357 support
-Message-ID: <174881674471.460857.8494829036544139744.b4-ty@bootlin.com>
-References: <20250428-rtc-mt6357-v1-1-31f673b0a723@baylibre.com>
+Cc: Qasim Ijaz <qasdev00@gmail.com>
+Subject: [PATCH 0/2] dmaengine: qcom_hidma: fix memory leak issues
+Date: Sun,  1 Jun 2025 23:42:29 +0100
+Message-Id: <20250601224231.24317-1-qasdev00@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250428-rtc-mt6357-v1-1-31f673b0a723@baylibre.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdefheelkeculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomheptehlvgigrghnughrvgcuuegvlhhlohhnihcuoegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeijeefhfffkeejueehveeuveejvdelveejteduffehuedtffdufeejudffuedvtdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemvgdtrgemvdgumeeifeejtdemjeekvgdtmegttdgvkeemvdektdeimeekrggtieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemvdgumeeifeejtdemjeekvgdtmegttdgvkeemvdektdeimeekrggtiedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepvgguughivgdrhhhurghnghesmhgvughirghtvghkrdgtohhmpdhrtghpthhtohepshgvrghnrdifrghnghesm
- hgvughirghtvghkrdgtohhmpdhrtghpthhtohepmhgrthhthhhirghsrdgsghhgsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnghgvlhhoghhiohgrtggthhhinhhordguvghlrhgvghhnohestgholhhlrggsohhrrgdrtghomhdprhgtphhtthhopegrmhgvrhhgnhgrthessggrhihlihgsrhgvrdgtohhmpdhrtghpthhtohepuhdrkhhlvghinhgvqdhkohgvnhhighessggrhihlihgsrhgvrdgtohhmpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqmhgvughirghtvghksehlihhsthhsrdhinhhfrhgruggvrggurdhorhhg
-X-GND-Sasl: alexandre.belloni@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-On Mon, 28 Apr 2025 16:29:55 +0200, Alexandre Mergnat wrote:
-> The MT6357 PMIC contains the same RTC as MT6358 which allows to add
-> support for it trivially by just complementing the list of compatibles.
-> 
-> 
+fix a few memory leak issues.
 
-Applied, thanks!
+Qasim Ijaz (2):
+  fix memory leak on probe failure
+  fix handoff FIFO memory leak on driver removal
 
-[1/1] rtc: mt6359: Add mt6357 support
-      https://git.kernel.org/abelloni/c/3d8b44b104fb
-
-Best regards,
+ drivers/dma/qcom/hidma_ll.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 -- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.39.5
+
