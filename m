@@ -1,116 +1,121 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849D12E403;
-	Sun,  1 Jun 2025 15:50:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AFAD1E379B;
+	Sun,  1 Jun 2025 15:51:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748793024; cv=none; b=k2J2AdSU4aF+pjuLziLw+jC7ikvw7MfYlEM2Abvg0oJbkjGX5pGPmO8XkevzE/DrnBF76IRtuv/vRTmzgqoCBSbr/Vie9lp7nS8I/uQgYEleEGPev9pb8Hw0Iuq45HGbSrCoxqaLrdb8TxeozZwjGZcsrs6HkOU3zTBoe1AIwN4=
+	t=1748793097; cv=none; b=Z2J8NDxyTTRnWWtCFS2GpIV6+nMgNlwAJ82MpsHKtuCc6VWDvZtQGpmGpeYVpjXz10wuAS3lMNb9lQpeC7iMtsEMA13+Zenav8SycDrUdF2LbxHXpp/Nm30EkAwBYRNhHcVHlSTFNn8ifZT7Thczzdh879zdON6OLG997vx1oKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748793024; c=relaxed/simple;
-	bh=hejXRJNQ1k7b8RshQgCr/Kt+JdsgfhgO5GvA7uBuh4o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y0YUrOIBO6mWSF8goovCICuYrn97UFwlzDWysvhbEhOg66nBgBwMxz1VWYG5fleoJKmQ20nMqF4mG720Zt4rZX5R9pjQFgtOMe6BckPbgTwBysepvTqwtwBdguRazGBEQz++ZDK+tQUuZpED0oczyp8TbHukneZ2141M64y1vyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=z3yVYMWL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748793097; c=relaxed/simple;
+	bh=naNQobQIAcV4yzUQ/8fl7vINIpbLGV8itOmTVCmbNzQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ig+O/lUeJyYCD9KboW5TJYsu9o7NjwgZ24m2OGzh60qb+tsfTm3gTvg6pUetpKmJZf6eLAwWzRc17biWBZ7fLDdcoSASLVshYmZRIheriU91GnEcwNq6iPxGX1X3uMZ6YAcy5paWCb5LxrTvxBr7ITv1WarfDEl5wg4IFH7pthA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PaWK+gDd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="z3yVYMWL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF8F2C4CEE7;
-	Sun,  1 Jun 2025 15:50:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1748793024;
-	bh=hejXRJNQ1k7b8RshQgCr/Kt+JdsgfhgO5GvA7uBuh4o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=z3yVYMWLmFi/6YtEYobMeAHLqfiWlVHo1TfUmJm1b8nixgMiKrvw7s7LumDTR0kNY
-	 SyqfN/J2M7kLU/h3Y6tkApY4eThOoBfppdusZvrE4GiUT3rwriLTXvU6Cm6kNy4PQA
-	 /YSwns/K/X3VJ4jiCw+rb6/EbfQXv9zyoYgciy1U=
-Date: Sun, 1 Jun 2025 17:50:20 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
-Subject: Re: [PATCH v2 0/3] Add control driver for ST M24LR RFID/NFC EEPROM
- chips
-Message-ID: <2025060109-renderer-revisable-a135@gregkh>
-References: <20250601153022.2027919-1-abd.masalkhi@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PaWK+gDd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFAA5C4CEE7;
+	Sun,  1 Jun 2025 15:51:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748793097;
+	bh=naNQobQIAcV4yzUQ/8fl7vINIpbLGV8itOmTVCmbNzQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PaWK+gDd5HG8uNa+0VIra44f5OA52tkK9otthw/6DD8535q9DHXjuXkgRXHxm/T7c
+	 gWq1A3CWL7x50qyGL4pfuNnVnsi6qyBn5+edoiMyBHcCjA3tsNjt0QWcExth38UvGA
+	 d99EKBJDK1NyslKUzMPU7RLppq/ceGRc6lu6wxEjx6TCT5/RcKff15KbXtXpCRiB3Z
+	 o88KM4jviC+gpGMdZul7rTmh0FoQABakcbgsTIFyKmP9J3nz8K/JXF1qpNAEnqVRTx
+	 D0lQDVt2XphGrubifIYlVhmfnWX0VqCHawUvzQn8rxpURHzb2zaLxNUj7Gh96NyZAr
+	 FB9U4xipROHAQ==
+Message-ID: <680316ba-5e28-42f2-9e83-8c48af78b785@kernel.org>
+Date: Sun, 1 Jun 2025 17:51:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250601153022.2027919-1-abd.masalkhi@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/5] dt-bindings: watchdog: qcom-wdt: Document
+ qcom,imem property
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck
+ <linux@roeck-us.net>, Rajendra Nayak <quic_rjendra@quicinc.com>,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+References: <20250519-wdt_reset_reason-v4-0-d59d21275c75@oss.qualcomm.com>
+ <20250519-wdt_reset_reason-v4-3-d59d21275c75@oss.qualcomm.com>
+ <20250520-portable-anteater-of-respect-c7be5c@kuoka>
+ <37bd619d-242e-4488-8d45-c2c85612bee9@oss.qualcomm.com>
+ <b8003fdf-66a1-47e1-8c78-069f0739ea37@kernel.org>
+ <85e30c0c-ea77-47da-9fd9-4293c7a78c75@oss.qualcomm.com>
+ <8efa9abd-bf7d-4f9d-969b-70c0452fc2b5@oss.qualcomm.com>
+ <41ee75df-2244-45ad-956c-e17ea5804dbe@oss.qualcomm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <41ee75df-2244-45ad-956c-e17ea5804dbe@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jun 01, 2025 at 03:30:18PM +0000, Abd-Alrhman Masalkhi wrote:
-> This patch series adds support for the control interface of STMicroelectronics 
-> M24LR RFID/NFC EEPROM devices, such as the M24LR04E-R. The chip exposes two 
-> I2C addresses and two distinct address spaces: one for the system parameter 
-> sector and another for the EEPROM memory. These address spaces overlap (both
-> start at address 0). Due to this overlap, the chip cannot be represented by a
-> single Device Tree node and handled by the standard at24 driver.
+On 28/05/2025 19:16, Konrad Dybcio wrote:
+>> Krzysztof, Based on the discussions from the previous versions, I have made the changes. Can you help to guide me on how to handle this? Should I just name the property as "sram" and point to the sub block in the IMEM region like how it is done at [1][2], which is more or like similar to what I have submitted in V1 of this series[3] Or is the current approach acceptable? Or some other way to handle this?
+>>
+>> [1] https://lore.kernel.org/linux-arm-msm/20250523-topic-ipa_imem-v1-1-b5d536291c7f@oss.qualcomm.com/T/#u
+>>
+>> [2] https://lore.kernel.org/linux-arm-msm/20250523-topic-ipa_imem-v1-2-b5d536291c7f@oss.qualcomm.com/T/#u
+>>
+>> [3] https://lore.kernel.org/linux-arm-msm/20250408-wdt_reset_reason-v1-0-e6ec30c2c926@oss.qualcomm.com/
 > 
-> While it might be possible to model the system parameter sector and EEPROM
-> as two separate DT nodes, each handled by the standard at24 driver, this
-> leads to synchronization problems. For example, if a multi-page EEPROM write
-> is in progress and a control command (e.g., a i2c write lock) is issued
-> concurrently, it can result in incomplete or inconsistent writeing.
+> Let's go with desired-value-in-dt here.. I don't trust the firmware
+> to never change. `sram` is prooobably fine, let's hear from Krzysztof
 > 
-> To overcome these issues, while maintaining a clean architecture and ensuring
-> synchronization, the chip is managed by two drivers:
-> 
-> 1- The first driver exposes the system parameter sector and acts as an I2C mux
->    (gate) for EEPROM access. Using an I2C mux solves the synchronization issue.
->    This patch series implements this driver.
-> 2- The second is the standard at24 driver, which handles the EEPROM.
-> 
-> Tested on: M24LR04E-R using Yocto on Raspberry Pi 4
-> 
-> Signed-off-by: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-> 
-> Abd-Alrhman Masalkhi (3):
->   dt-bindings: eeprom: Add ST M24LR control interface
->   misc: add sysfs control driver for ST M24LR series RFID/NFC chips
->   ABI: sysfs: document control attributes for ST M24LR
-> 
->  .../testing/sysfs-bus-i2c-devices-m24lr_ctl   |  96 +++
->  .../devicetree/bindings/eeprom/st,m24lr.yaml  |  72 ++
->  drivers/misc/Kconfig                          |  15 +
->  drivers/misc/Makefile                         |   1 +
->  drivers/misc/m24lr_ctl.c                      | 677 ++++++++++++++++++
->  5 files changed, 861 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-m24lr_ctl
->  create mode 100644 Documentation/devicetree/bindings/eeprom/st,m24lr.yaml
->  create mode 100644 drivers/misc/m24lr_ctl.c
-> 
-> -- 
-> 2.43.0
-> 
+I propose to go with 'sram' property.
 
-Hi,
-
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
-
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- This looks like a new version of a previously submitted patch, but you
-  did not list below the --- line any changes from the previous version.
-  Please read the section entitled "The canonical patch format" in the
-  kernel file, Documentation/process/submitting-patches.rst for what
-  needs to be done here to properly describe this.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
+Best regards,
+Krzysztof
