@@ -1,45 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA60726B2D8;
-	Sun,  1 Jun 2025 23:37:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 181A5305139;
+	Sun,  1 Jun 2025 23:37:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748821032; cv=none; b=jpQagdzNGwlBg4bui6mr4e/5jd0aZVSP8sZy94YEyWkRUbk29HVPAMmzAa8QYhq9lfSOgYWPOL4Jql5xr1lgsWlh6ZqpzA19/SSzKuUbYFj0Bi3UDgim8JgEAD8nkh1GcTck3I1lfWySHEcfxXKWKUqfFwgQ4rmQayBZjL37UIc=
+	t=1748821038; cv=none; b=estysvHCulwFmav6w8KZwHdxTf/BpDU9X8k0cJK8a15i+5QHGFRpFavdiuKat2E6KgHyKAEadH87u/+ZNbdYq03PpKLRXZOrloo1uZ6bzkyNTo1hxRqLnvzynXekGXoppGtkSeSA56hctSBnhOWpxPdfB2HKyHniKoQt86eJTOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748821032; c=relaxed/simple;
-	bh=Wi53jX2L/TldZvoGPWPBZ9JyVI1vbaWititpwhg7F9g=;
+	s=arc-20240116; t=1748821038; c=relaxed/simple;
+	bh=hA5zra00rW5RJQOJ7G/k/ozubQUPYz5/Rv/wh5CMMQY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gimUUVh18/yl056jJHaQwkE9p6AnnP5U2la1w2FPoWcl6CrhjE2wXpzYOyUi4EUgDaTptuLs0v+gP6ghHWEJiHHJLWD3FDu/bjzKvod+GqswVfVHxeAkny0+jcTYrlz/YC22P9RX3XjbsoxpsGTqDIX9dn4cvB+Sbs4YigY/Pao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=juf+zGuh; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mXkp/THx+QrfOa0IDafdiKaOqUQzlxYP+bTMufgMq8EBGJU0EYre3R0ZL2TVS6N7wir8tHateOiw248PC+Uvl+wM19xeQG9KPa8cUhyfa/NyrXUjkgIWGHG7RQwF1mhkTusjYk0+t9IznI5zM+bA84OsUlA2oaeBWKy9WxhRXhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E9PPozUn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="juf+zGuh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E1DEC4CEEE;
-	Sun,  1 Jun 2025 23:37:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E9PPozUn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72395C4CEEE;
+	Sun,  1 Jun 2025 23:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748821031;
-	bh=Wi53jX2L/TldZvoGPWPBZ9JyVI1vbaWititpwhg7F9g=;
+	s=k20201202; t=1748821038;
+	bh=hA5zra00rW5RJQOJ7G/k/ozubQUPYz5/Rv/wh5CMMQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=juf+zGuhaL5knXMP/t1pItjBDFFIM03VWq6FBDc50bOefie8zdFX/mjUum5tj1Jsf
-	 wOw9rI11UEEeSeveGafihLoWxdhN3m8CZjTvJYqNjTv85gb1/jvY6ZP/hYwh28pWEd
-	 0TOr68mb4Tm4QfeHV8qnCvRNlvDI7ZgYsaOXeoLA/1tK2T6K/ueJ7KLhURtCUf5p/H
-	 8X2MLO0Dghs29fVZXtu+7PRSTz3/0+fX2/uMmgpyNKK90bqfDZNmBhAguyR6AT9g6+
-	 ErxLNga5mQOiOB1KZ/y2FQgBiZWT7hqQhKqo9YcPkeJybfBfa8KgGeoYIG+7p7FyMe
-	 Jgb5G7qU2GslQ==
+	b=E9PPozUne78+brNB5Cberl+SouHz8wnh9n6IHTWDiGJopGSeh6SEqtYP0mB01MSBp
+	 2geh6w1DJR6sdAuVAS3X8T86JE1j5ekWlB2IMuqOEVCiX7q3S4HaLYdyByvHfw8pcX
+	 1jzTfEKEXI1/PY9RqtURfb7Ez31gLykbue+vQxKyzH1zjjJrTiaSnzJ6zENbuG1SV9
+	 shQZI72BBke4Wv1eSUFZvmRTglmAxhejfNREfkievWMgjyMvRRswGW+MXznPsw7ggB
+	 YX1kVPbGWIpRz9wAcfyiuTMRbe2r6XgrT3LKvol5Bb4/gi60E+djfkFpkCg0SwblC/
+	 E3FfWccDfeUkQ==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Brian Norris <briannorris@chromium.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
+Cc: Erick Shepherd <erick.shepherd@ni.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
 	Sasha Levin <sashal@kernel.org>,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.12 78/93] genirq: Retain disable depth for managed interrupts across CPU hotplug
-Date: Sun,  1 Jun 2025 19:33:45 -0400
-Message-Id: <20250601233402.3512823-78-sashal@kernel.org>
+	avri.altman@wdc.com,
+	keita.aihara@sony.com,
+	dsimic@manjaro.org,
+	jonathan@raspberrypi.com,
+	wsa+renesas@sang-engineering.com,
+	cw9316.lee@samsung.com,
+	linux-mmc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 80/93] mmc: Add quirk to disable DDR50 tuning
+Date: Sun,  1 Jun 2025 19:33:47 -0400
+Message-Id: <20250601233402.3512823-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250601233402.3512823-1-sashal@kernel.org>
 References: <20250601233402.3512823-1-sashal@kernel.org>
@@ -52,330 +56,176 @@ MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.31
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Brian Norris <briannorris@chromium.org>
+From: Erick Shepherd <erick.shepherd@ni.com>
 
-[ Upstream commit 788019eb559fd0b365f501467ceafce540e377cc ]
+[ Upstream commit 9510b38dc0ba358c93cbf5ee7c28820afb85937b ]
 
-Affinity-managed interrupts can be shut down and restarted during CPU
-hotunplug/plug. Thereby the interrupt may be left in an unexpected state.
-Specifically:
+Adds the MMC_QUIRK_NO_UHS_DDR50_TUNING quirk and updates
+mmc_execute_tuning() to return 0 if that quirk is set. This fixes an
+issue on certain Swissbit SD cards that do not support DDR50 tuning
+where tuning requests caused I/O errors to be thrown.
 
- 1. Interrupt is affine to CPU N
- 2. disable_irq() -> depth is 1
- 3. CPU N goes offline
- 4. irq_shutdown() -> depth is set to 1 (again)
- 5. CPU N goes online
- 6. irq_startup() -> depth is set to 0 (BUG! driver expects that the interrupt
-    		     	      	        still disabled)
- 7. enable_irq() -> depth underflow / unbalanced enable_irq() warning
-
-This is only a problem for managed interrupts and CPU hotplug, all other
-cases like request()/free()/request() truly needs to reset a possibly stale
-disable depth value.
-
-Provide a startup function, which takes the disable depth into account, and
-invoked it for the managed interrupts in the CPU hotplug path.
-
-This requires to change irq_shutdown() to do a depth increment instead of
-setting it to 1, which allows to retain the disable depth, but is harmless
-for the other code paths using irq_startup(), which will still reset the
-disable depth unconditionally to keep the original correct behaviour.
-
-A kunit tests will be added separately to cover some of these aspects.
-
-[ tglx: Massaged changelog ]
-
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250514201353.3481400-2-briannorris@chromium.org
+Signed-off-by: Erick Shepherd <erick.shepherd@ni.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Link: https://lore.kernel.org/r/20250331221337.1414534-1-erick.shepherd@ni.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
-Based on my analysis of the commit and the current kernel code, here is
-my assessment: **YES** This commit should be backported to stable kernel
-trees. Here's my extensive analysis: ## Bug Analysis The commit fixes a
-critical bug in the interrupt subsystem's CPU hotplug handling that
-affects affinity-managed interrupts. The bug manifests as follows: 1.
-**Problem Scenario**: When a managed interrupt is disabled (depth=1),
-then its CPU goes offline causing `irq_shutdown()`, and later the CPU
-comes back online triggering `irq_startup()`, the disable depth
-accounting becomes corrupted. 2. **Current Broken Behavior** (from
-existing kernel code): - `irq_shutdown()` sets `desc->depth = 1`
-unconditionally (line seen in grep output) - `irq_startup()` sets
-`desc->depth = 0` unconditionally - This overwrites any previous disable
-state, violating the disable/enable balance 3. **User-Visible Impact**:
-The bug causes: - Unbalanced `enable_irq()` warnings - Interrupts being
-unexpectedly enabled during CPU hotplug - Potential system instability
-or incorrect device behavior ## Code Changes Analysis The fix makes
-surgical changes to preserve disable depth: ### 1. **irq_shutdown()
-Change** (kernel/irq/chip.c): ```c - desc->depth = 1; + /bin /bin.usr-
-is-merged /boot /dev /etc /home /init /lib /lib.usr-is-merged /lib64
-/lost+found /media /mnt /opt /proc /root /run /sbin /sbin.usr-is-merged
-/snap /srv /sys /tmp /usr /var +
-amd_display_timing_generator_analysis.md
-amd_doorbell_analysis_framework.md
-amd_gpu_documentation_backport_analysis.md amd_si_chip_analysis.md
-amdgpu_csb_analysis.md amdgpu_mqd_prop_backport_analysis.md
-analogix_dp_backport_analysis.md cgroup_rstat_analysis.sh
-cgroup_rstat_analysis_guide.md cpuset_comment_fix_backport_analysis.md
-csiphy_x1e80100_backport_analysis.md
-dcn315_smu_indirect_register_access_analysis.md
-drm_dp_helper_dpcd_refactoring_backport_analysis.md
-drm_format_helper_generic_8bit_conversion_backport_analysis.md
-es8375_codec_driver_backport_analysis.md expected_findings_summary.md
-hdmi_read_request_analysis.md kernel_analysis_commands.sh
-kselftest_harness_teardown_metadata_backport_analysis.md linux-kernel
-mediatek_vcodec_h264_backport_analysis.md
-pidfd_open_kselftest_harness_compatibility_analysis.md
-qualcomm_camss_bus_type_backport_analysis.md
-selftests_harness_libatomic_backport_analysis.md
-sphinx_version_compatibility_backport_analysis.md
-spi_sh_msiof_grpmask_backport_analysis.md
-spi_sh_msiof_sitmdr2_sirmdr2_bitfield_conversion_backport_analysis.md
-sta2x11_removal_analysis.md test_unused_param.c test_unused_param.o
-ti_bridge_encoder_crtc_refactoring_backport_analysis.md
-xe_driver_flr_vf_restriction_analysis.md
-xe_firmware_per_gt_backport_analysis.md
-xe_sriov_logging_backport_analysis.md Increment disable depth, so that a
-managed shutdown on + amd_display_timing_generator_analysis.md
-amd_doorbell_analysis_framework.md
-amd_gpu_documentation_backport_analysis.md amd_si_chip_analysis.md
-amdgpu_csb_analysis.md amdgpu_mqd_prop_backport_analysis.md
-analogix_dp_backport_analysis.md cgroup_rstat_analysis.sh
-cgroup_rstat_analysis_guide.md cpuset_comment_fix_backport_analysis.md
-csiphy_x1e80100_backport_analysis.md
-dcn315_smu_indirect_register_access_analysis.md
-drm_dp_helper_dpcd_refactoring_backport_analysis.md
-drm_format_helper_generic_8bit_conversion_backport_analysis.md
-es8375_codec_driver_backport_analysis.md expected_findings_summary.md
-hdmi_read_request_analysis.md kernel_analysis_commands.sh
-kselftest_harness_teardown_metadata_backport_analysis.md linux-kernel
-mediatek_vcodec_h264_backport_analysis.md
-pidfd_open_kselftest_harness_compatibility_analysis.md
-qualcomm_camss_bus_type_backport_analysis.md
-selftests_harness_libatomic_backport_analysis.md
-sphinx_version_compatibility_backport_analysis.md
-spi_sh_msiof_grpmask_backport_analysis.md
-spi_sh_msiof_sitmdr2_sirmdr2_bitfield_conversion_backport_analysis.md
-sta2x11_removal_analysis.md test_unused_param.c test_unused_param.o
-ti_bridge_encoder_crtc_refactoring_backport_analysis.md
-xe_driver_flr_vf_restriction_analysis.md
-xe_firmware_per_gt_backport_analysis.md
-xe_sriov_logging_backport_analysis.md CPU hotunplug preserves the actual
-disabled state when the + amd_display_timing_generator_analysis.md
-amd_doorbell_analysis_framework.md
-amd_gpu_documentation_backport_analysis.md amd_si_chip_analysis.md
-amdgpu_csb_analysis.md amdgpu_mqd_prop_backport_analysis.md
-analogix_dp_backport_analysis.md cgroup_rstat_analysis.sh
-cgroup_rstat_analysis_guide.md cpuset_comment_fix_backport_analysis.md
-csiphy_x1e80100_backport_analysis.md
-dcn315_smu_indirect_register_access_analysis.md
-drm_dp_helper_dpcd_refactoring_backport_analysis.md
-drm_format_helper_generic_8bit_conversion_backport_analysis.md
-es8375_codec_driver_backport_analysis.md expected_findings_summary.md
-hdmi_read_request_analysis.md kernel_analysis_commands.sh
-kselftest_harness_teardown_metadata_backport_analysis.md linux-kernel
-mediatek_vcodec_h264_backport_analysis.md
-pidfd_open_kselftest_harness_compatibility_analysis.md
-qualcomm_camss_bus_type_backport_analysis.md
-selftests_harness_libatomic_backport_analysis.md
-sphinx_version_compatibility_backport_analysis.md
-spi_sh_msiof_grpmask_backport_analysis.md
-spi_sh_msiof_sitmdr2_sirmdr2_bitfield_conversion_backport_analysis.md
-sta2x11_removal_analysis.md test_unused_param.c test_unused_param.o
-ti_bridge_encoder_crtc_refactoring_backport_analysis.md
-xe_driver_flr_vf_restriction_analysis.md
-xe_firmware_per_gt_backport_analysis.md
-xe_sriov_logging_backport_analysis.md CPU comes back online. See
-irq_startup_managed(). + linux-kernel/ + desc->depth++; ``` This
-preserves the original disable state instead of overwriting it. ### 2.
-**New irq_startup_managed() Function**: ```c +void
-irq_startup_managed(struct irq_desc *desc) +{ + /bin /bin.usr-is-merged
-/boot /dev /etc /home /init /lib /lib.usr-is-merged /lib64 /lost+found
-/media /mnt /opt /proc /root /run /sbin /sbin.usr-is-merged /snap /srv
-/sys /tmp /usr /var + amd_display_timing_generator_analysis.md
-amd_doorbell_analysis_framework.md
-amd_gpu_documentation_backport_analysis.md amd_si_chip_analysis.md
-amdgpu_csb_analysis.md amdgpu_mqd_prop_backport_analysis.md
-analogix_dp_backport_analysis.md cgroup_rstat_analysis.sh
-cgroup_rstat_analysis_guide.md cpuset_comment_fix_backport_analysis.md
-csiphy_x1e80100_backport_analysis.md
-dcn315_smu_indirect_register_access_analysis.md
-drm_dp_helper_dpcd_refactoring_backport_analysis.md
-drm_format_helper_generic_8bit_conversion_backport_analysis.md
-es8375_codec_driver_backport_analysis.md expected_findings_summary.md
-hdmi_read_request_analysis.md kernel_analysis_commands.sh
-kselftest_harness_teardown_metadata_backport_analysis.md linux-kernel
-mediatek_vcodec_h264_backport_analysis.md
-pidfd_open_kselftest_harness_compatibility_analysis.md
-qualcomm_camss_bus_type_backport_analysis.md
-selftests_harness_libatomic_backport_analysis.md
-sphinx_version_compatibility_backport_analysis.md
-spi_sh_msiof_grpmask_backport_analysis.md
-spi_sh_msiof_sitmdr2_sirmdr2_bitfield_conversion_backport_analysis.md
-sta2x11_removal_analysis.md test_unused_param.c test_unused_param.o
-ti_bridge_encoder_crtc_refactoring_backport_analysis.md
-xe_driver_flr_vf_restriction_analysis.md
-xe_firmware_per_gt_backport_analysis.md
-xe_sriov_logging_backport_analysis.md Only start it up when the disable
-depth is 1, so that a disable, +
-amd_display_timing_generator_analysis.md
-amd_doorbell_analysis_framework.md
-amd_gpu_documentation_backport_analysis.md amd_si_chip_analysis.md
-amdgpu_csb_analysis.md amdgpu_mqd_prop_backport_analysis.md
-analogix_dp_backport_analysis.md cgroup_rstat_analysis.sh
-cgroup_rstat_analysis_guide.md cpuset_comment_fix_backport_analysis.md
-csiphy_x1e80100_backport_analysis.md
-dcn315_smu_indirect_register_access_analysis.md
-drm_dp_helper_dpcd_refactoring_backport_analysis.md
-drm_format_helper_generic_8bit_conversion_backport_analysis.md
-es8375_codec_driver_backport_analysis.md expected_findings_summary.md
-hdmi_read_request_analysis.md kernel_analysis_commands.sh
-kselftest_harness_teardown_metadata_backport_analysis.md linux-kernel
-mediatek_vcodec_h264_backport_analysis.md
-pidfd_open_kselftest_harness_compatibility_analysis.md
-qualcomm_camss_bus_type_backport_analysis.md
-selftests_harness_libatomic_backport_analysis.md
-sphinx_version_compatibility_backport_analysis.md
-spi_sh_msiof_grpmask_backport_analysis.md
-spi_sh_msiof_sitmdr2_sirmdr2_bitfield_conversion_backport_analysis.md
-sta2x11_removal_analysis.md test_unused_param.c test_unused_param.o
-ti_bridge_encoder_crtc_refactoring_backport_analysis.md
-xe_driver_flr_vf_restriction_analysis.md
-xe_firmware_per_gt_backport_analysis.md
-xe_sriov_logging_backport_analysis.md hotunplug, hotplug sequence does
-not end up enabling it during + amd_display_timing_generator_analysis.md
-amd_doorbell_analysis_framework.md
-amd_gpu_documentation_backport_analysis.md amd_si_chip_analysis.md
-amdgpu_csb_analysis.md amdgpu_mqd_prop_backport_analysis.md
-analogix_dp_backport_analysis.md cgroup_rstat_analysis.sh
-cgroup_rstat_analysis_guide.md cpuset_comment_fix_backport_analysis.md
-csiphy_x1e80100_backport_analysis.md
-dcn315_smu_indirect_register_access_analysis.md
-drm_dp_helper_dpcd_refactoring_backport_analysis.md
-drm_format_helper_generic_8bit_conversion_backport_analysis.md
-es8375_codec_driver_backport_analysis.md expected_findings_summary.md
-hdmi_read_request_analysis.md kernel_analysis_commands.sh
-kselftest_harness_teardown_metadata_backport_analysis.md linux-kernel
-mediatek_vcodec_h264_backport_analysis.md
-pidfd_open_kselftest_harness_compatibility_analysis.md
-qualcomm_camss_bus_type_backport_analysis.md
-selftests_harness_libatomic_backport_analysis.md
-sphinx_version_compatibility_backport_analysis.md
-spi_sh_msiof_grpmask_backport_analysis.md
-spi_sh_msiof_sitmdr2_sirmdr2_bitfield_conversion_backport_analysis.md
-sta2x11_removal_analysis.md test_unused_param.c test_unused_param.o
-ti_bridge_encoder_crtc_refactoring_backport_analysis.md
-xe_driver_flr_vf_restriction_analysis.md
-xe_firmware_per_gt_backport_analysis.md
-xe_sriov_logging_backport_analysis.md hotplug unconditionally. + linux-
-kernel/ + desc->depth--; + if (!desc->depth) + irq_startup(desc,
-IRQ_RESEND, IRQ_START_COND); +} ``` This provides proper depth-aware
-startup specifically for managed interrupts. ### 3. **IRQ_STARTUP_ABORT
-Case Update**: ```c case IRQ_STARTUP_ABORT: + desc->depth = 1;
-irqd_set_managed_shutdown(d); return 0; ``` Ensures consistent depth
-handling in abort cases. ### 4. **CPU Hotplug Integration**
-(kernel/irq/cpuhotplug.c): ```c - irq_startup(desc, IRQ_RESEND,
-IRQ_START_COND); + irq_startup_managed(desc); ``` Uses the new depth-
-aware function for managed interrupt restoration. ## Backport
-Suitability Assessment **Meets All Stable Criteria:** 1. **Fixes
-Important Bug**: ✅ Corrects interrupt enable/disable balance corruption
-2. **Small & Contained**: ✅ Minimal changes confined to IRQ subsystem 3.
-**Low Regression Risk**: ✅ Only affects managed interrupts during CPU
-hotplug 4. **No New Features**: ✅ Pure bug fix, no architectural changes
-5. **Critical Subsystem**: ✅ IRQ handling is fundamental to system
-stability **Similar Pattern Match**: This closely resembles Similar
-Commit #3 and #5 (both marked YES) which also fix managed interrupt CPU
-hotplug issues with surgical changes to preserve state across hotplug
-events. **Real-World Impact**: The bug can cause: - Server/datacenter
-systems using CPU hotplug for power management to experience interrupt
-handling issues - Multi-queue device drivers to malfunction after CPU
-hotplug cycles - Unbalanced IRQ state leading to system instability The
-fix is well-contained, addresses a clear functional bug with user-
-visible symptoms, and follows established patterns for stable backports
-in the IRQ subsystem.
+**YES** This commit should be backported to stable kernel trees based on
+the following detailed analysis: ## Critical Hardware Compatibility Fix
+The commit addresses a specific and serious hardware compatibility issue
+where certain Swissbit SD cards (series S46-u, manufactured 01/2019)
+throw I/O errors during DDR50 tuning requests, particularly on Bay Trail
+host controllers. This represents a real-world deployed hardware issue
+that causes system instability. ## Code Analysis - Low Risk, High Impact
+**1. Minimal and Targeted Changes:** - Adds a single quirk bit
+(`MMC_QUIRK_NO_UHS_DDR50_TUNING`) in `include/linux/mmc/card.h` -
+Introduces a simple helper function `mmc_card_no_uhs_ddr50_tuning()` in
+`drivers/mmc/core/card.h` - Adds one specific quirk entry for the
+problematic Swissbit cards in `drivers/mmc/core/quirks.h` - Modifies the
+tuning logic in `drivers/mmc/core/sd.c` to respect the new quirk **2.
+Functional Impact Analysis:** The key change is in the
+`mmc_sd_use_tuning()` function where DDR50 tuning can now be disabled:
+```c case MMC_TIMING_UHS_DDR50: return
+!mmc_card_no_uhs_ddr50_tuning(card); ``` This change ensures that: -
+DDR50 mode still functions normally - Only the tuning optimization is
+disabled - Cards fall back to fixed sampling clock (still functional) -
+No loss of core functionality, only slight performance optimization loss
+**3. Risk Assessment:** - **Very Low Risk**: The quirk only disables
+tuning optimization, not DDR50 functionality itself - **Highly
+Targeted**: Affects only very specific cards (Swissbit 0016G,
+manufactured 2019/01) - **Maintains Compatibility**: Cards remain fully
+functional in DDR50 mode without tuning - **No Regression Potential**:
+Other cards are completely unaffected ## Alignment with Stable Backport
+Criteria **1. Important Bugfix**: Resolves I/O errors and system
+instability on deployed hardware **2. Minimal Risk**: Only disables
+optimization feature, maintains full functionality **3. Small and
+Contained**: Changes are isolated to the MMC quirk system **4. No
+Architectural Changes**: Uses existing quirk infrastructure **5. Clear
+User Impact**: Fixes real-world hardware compatibility issues ##
+Historical Pattern Consistency This commit follows the same pattern as
+other successful stable backports in the MMC subsystem (like Similar
+Commit #2 and #5 marked "YES"), which address specific hardware quirks
+with minimal, targeted fixes that resolve compatibility issues without
+introducing new functionality or architectural changes. The commit
+represents exactly the type of hardware compatibility fix that stable
+kernel trees are designed to accommodate - resolving real issues on
+deployed hardware with minimal risk and maximal benefit.
 
- kernel/irq/chip.c       | 22 +++++++++++++++++++++-
- kernel/irq/cpuhotplug.c |  2 +-
- kernel/irq/internals.h  |  1 +
- 3 files changed, 23 insertions(+), 2 deletions(-)
+ drivers/mmc/core/card.h   |  6 ++++++
+ drivers/mmc/core/quirks.h | 10 ++++++++++
+ drivers/mmc/core/sd.c     | 32 ++++++++++++++++++++++++--------
+ include/linux/mmc/card.h  |  1 +
+ 4 files changed, 41 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-index 271e9139de77f..1d090536de34e 100644
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -223,6 +223,19 @@ __irq_startup_managed(struct irq_desc *desc, const struct cpumask *aff,
- 		return IRQ_STARTUP_ABORT;
- 	return IRQ_STARTUP_MANAGED;
+diff --git a/drivers/mmc/core/card.h b/drivers/mmc/core/card.h
+index 3205feb1e8ff6..9cbdd240c3a7d 100644
+--- a/drivers/mmc/core/card.h
++++ b/drivers/mmc/core/card.h
+@@ -89,6 +89,7 @@ struct mmc_fixup {
+ #define CID_MANFID_MICRON       0x13
+ #define CID_MANFID_SAMSUNG      0x15
+ #define CID_MANFID_APACER       0x27
++#define CID_MANFID_SWISSBIT     0x5D
+ #define CID_MANFID_KINGSTON     0x70
+ #define CID_MANFID_HYNIX	0x90
+ #define CID_MANFID_KINGSTON_SD	0x9F
+@@ -294,4 +295,9 @@ static inline int mmc_card_broken_sd_poweroff_notify(const struct mmc_card *c)
+ 	return c->quirks & MMC_QUIRK_BROKEN_SD_POWEROFF_NOTIFY;
  }
-+
-+void irq_startup_managed(struct irq_desc *desc)
+ 
++static inline int mmc_card_no_uhs_ddr50_tuning(const struct mmc_card *c)
 +{
-+	/*
-+	 * Only start it up when the disable depth is 1, so that a disable,
-+	 * hotunplug, hotplug sequence does not end up enabling it during
-+	 * hotplug unconditionally.
-+	 */
-+	desc->depth--;
-+	if (!desc->depth)
-+		irq_startup(desc, IRQ_RESEND, IRQ_START_COND);
++	return c->quirks & MMC_QUIRK_NO_UHS_DDR50_TUNING;
 +}
 +
- #else
- static __always_inline int
- __irq_startup_managed(struct irq_desc *desc, const struct cpumask *aff,
-@@ -275,6 +288,7 @@ int irq_startup(struct irq_desc *desc, bool resend, bool force)
- 			ret = __irq_startup(desc);
- 			break;
- 		case IRQ_STARTUP_ABORT:
-+			desc->depth = 1;
- 			irqd_set_managed_shutdown(d);
- 			return 0;
- 		}
-@@ -307,7 +321,13 @@ void irq_shutdown(struct irq_desc *desc)
- {
- 	if (irqd_is_started(&desc->irq_data)) {
- 		clear_irq_resend(desc);
--		desc->depth = 1;
-+		/*
-+		 * Increment disable depth, so that a managed shutdown on
-+		 * CPU hotunplug preserves the actual disabled state when the
-+		 * CPU comes back online. See irq_startup_managed().
-+		 */
-+		desc->depth++;
+ #endif
+diff --git a/drivers/mmc/core/quirks.h b/drivers/mmc/core/quirks.h
+index 89b512905be14..7f893bafaa607 100644
+--- a/drivers/mmc/core/quirks.h
++++ b/drivers/mmc/core/quirks.h
+@@ -34,6 +34,16 @@ static const struct mmc_fixup __maybe_unused mmc_sd_fixups[] = {
+ 		   MMC_QUIRK_BROKEN_SD_CACHE | MMC_QUIRK_BROKEN_SD_POWEROFF_NOTIFY,
+ 		   EXT_CSD_REV_ANY),
+ 
++	/*
++	 * Swissbit series S46-u cards throw I/O errors during tuning requests
++	 * after the initial tuning request expectedly times out. This has
++	 * only been observed on cards manufactured on 01/2019 that are using
++	 * Bay Trail host controllers.
++	 */
++	_FIXUP_EXT("0016G", CID_MANFID_SWISSBIT, 0x5342, 2019, 1,
++		   0, -1ull, SDIO_ANY_ID, SDIO_ANY_ID, add_quirk_sd,
++		   MMC_QUIRK_NO_UHS_DDR50_TUNING, EXT_CSD_REV_ANY),
 +
- 		if (desc->irq_data.chip->irq_shutdown) {
- 			desc->irq_data.chip->irq_shutdown(&desc->irq_data);
- 			irq_state_set_disabled(desc);
-diff --git a/kernel/irq/cpuhotplug.c b/kernel/irq/cpuhotplug.c
-index 15a7654eff684..3ed5b15927355 100644
---- a/kernel/irq/cpuhotplug.c
-+++ b/kernel/irq/cpuhotplug.c
-@@ -219,7 +219,7 @@ static void irq_restore_affinity_of_irq(struct irq_desc *desc, unsigned int cpu)
- 		return;
+ 	END_FIXUP
+ };
  
- 	if (irqd_is_managed_and_shutdown(data))
--		irq_startup(desc, IRQ_RESEND, IRQ_START_COND);
-+		irq_startup_managed(desc);
+diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
+index 63915541c0e49..916ae9996e9d7 100644
+--- a/drivers/mmc/core/sd.c
++++ b/drivers/mmc/core/sd.c
+@@ -613,6 +613,29 @@ static int sd_set_current_limit(struct mmc_card *card, u8 *status)
+ 	return 0;
+ }
  
- 	/*
- 	 * If the interrupt can only be directed to a single target
-diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
-index a29df4b02a2ed..f5adb480fe11c 100644
---- a/kernel/irq/internals.h
-+++ b/kernel/irq/internals.h
-@@ -87,6 +87,7 @@ extern void __enable_irq(struct irq_desc *desc);
- extern int irq_activate(struct irq_desc *desc);
- extern int irq_activate_and_startup(struct irq_desc *desc, bool resend);
- extern int irq_startup(struct irq_desc *desc, bool resend, bool force);
-+extern void irq_startup_managed(struct irq_desc *desc);
++/*
++ * Determine if the card should tune or not.
++ */
++static bool mmc_sd_use_tuning(struct mmc_card *card)
++{
++	/*
++	 * SPI mode doesn't define CMD19 and tuning is only valid for SDR50 and
++	 * SDR104 mode SD-cards. Note that tuning is mandatory for SDR104.
++	 */
++	if (mmc_host_is_spi(card->host))
++		return false;
++
++	switch (card->host->ios.timing) {
++	case MMC_TIMING_UHS_SDR50:
++	case MMC_TIMING_UHS_SDR104:
++		return true;
++	case MMC_TIMING_UHS_DDR50:
++		return !mmc_card_no_uhs_ddr50_tuning(card);
++	}
++
++	return false;
++}
++
+ /*
+  * UHS-I specific initialization procedure
+  */
+@@ -656,14 +679,7 @@ static int mmc_sd_init_uhs_card(struct mmc_card *card)
+ 	if (err)
+ 		goto out;
  
- extern void irq_shutdown(struct irq_desc *desc);
- extern void irq_shutdown_and_deactivate(struct irq_desc *desc);
+-	/*
+-	 * SPI mode doesn't define CMD19 and tuning is only valid for SDR50 and
+-	 * SDR104 mode SD-cards. Note that tuning is mandatory for SDR104.
+-	 */
+-	if (!mmc_host_is_spi(card->host) &&
+-		(card->host->ios.timing == MMC_TIMING_UHS_SDR50 ||
+-		 card->host->ios.timing == MMC_TIMING_UHS_DDR50 ||
+-		 card->host->ios.timing == MMC_TIMING_UHS_SDR104)) {
++	if (mmc_sd_use_tuning(card)) {
+ 		err = mmc_execute_tuning(card);
+ 
+ 		/*
+diff --git a/include/linux/mmc/card.h b/include/linux/mmc/card.h
+index eb67d3d5ff5b2..2e455b20c37c2 100644
+--- a/include/linux/mmc/card.h
++++ b/include/linux/mmc/card.h
+@@ -295,6 +295,7 @@ struct mmc_card {
+ #define MMC_QUIRK_BROKEN_SD_CACHE	(1<<15)	/* Disable broken SD cache support */
+ #define MMC_QUIRK_BROKEN_CACHE_FLUSH	(1<<16)	/* Don't flush cache until the write has occurred */
+ #define MMC_QUIRK_BROKEN_SD_POWEROFF_NOTIFY	(1<<17) /* Disable broken SD poweroff notify support */
++#define MMC_QUIRK_NO_UHS_DDR50_TUNING	(1<<18) /* Disable DDR50 tuning */
+ 
+ 	bool			written_flag;	/* Indicates eMMC has been written since power on */
+ 	bool			reenable_cmdq;	/* Re-enable Command Queue */
 -- 
 2.39.5
 
