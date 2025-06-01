@@ -1,96 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4463D15C0
-	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 00:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDBF2184E;
+	Sun,  1 Jun 2025 00:26:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748737144; cv=none; b=Zf7kTAvyC20k1Da598ZmUrxZAjXG9d2uHoIJYZAwcndLOwJCHVdhHdxvMVCX5Yxff5egNE+qCHNGvMRQJDADUn4hfe3S8nDw7m4nDj/bP5+ZzWz6r7VVrlL+vbJa8WpIP+VdBt8w/Dnw9ZMCV8g2E11RL0ZBfV6fbAmFyJnYXXo=
+	t=1748737584; cv=none; b=exF+f9RhDZGNqKAQec3vnWpYYvIRtIOqwCoDlcvE1Sj34mEP+0IdBl3+hSVhXZMcdwA6SvcmDXyDhXQNdp5v6qXfQ8n2E9hQn8BTI0989jRe2SoIszYpNAirMiH1DEQLFo5923MMeod0U2TIeXgp4+YKnZJNa/SIWw99GCgPnns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748737144; c=relaxed/simple;
-	bh=6rqgU3ufqMzgcBrgD7+OzjtiUznYwOA8sM7QfD5ZILM=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=u6iRuRh3vgJBC702448I/Zc4fhQwqPuN9opi/JUjF/M6CeT0Swu7d/KoqOkKJ5ChHsLdFV43fmECtAM1jjm6GgjSOQtuA9sRmBve0ErRhzuN2dsX8t6nc6vWhEr0WNV2osuLy3xwSmpjvYLzNaqK/TUjXA57sZzlUQyjp1OVxow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ddx6m2Bo; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748737584; c=relaxed/simple;
+	bh=wnjlPLdQigk8QgUrIHw5yk6jJrpMJY8IJU4pMMPHFAo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i26LlqxtT0Tah+IlIFtIWUrN2l59c4D+DTf399S0S+NfsswwVXKYeVLXFqjRNgFwOdgwffCOvNtkofkVDlj4k4X+/kp96IEMnOgFlKPvaeTyO7gu6ZGv43dU53nmrPc4hIo+D/pMBOTD1upbCFYy4TiwV5Xx9RMZrOD85FO4WSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Exm/mE4p; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ddx6m2Bo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748737142; x=1780273142;
-  h=date:from:to:cc:subject:message-id;
-  bh=6rqgU3ufqMzgcBrgD7+OzjtiUznYwOA8sM7QfD5ZILM=;
-  b=Ddx6m2Boa5zu1uPfGszYF085YAIuxlua+6LLLzGmqZfxC6nrB7o82D27
-   7gaGK1jiGEm4T75x1x9xCek5lNhz1QHy8C2l91FbeS+vmvYY77BqVlL8w
-   i/xnbUnw9jlg802v19TiNdXehBa6Q5KP0ePK4msyl5R01PA06JjMO9TY6
-   90xW+vOzyvRDh4IT5Lb3VvPpSeTXd0ODu24//vfXmGtgzzb8C8IYmQCJS
-   UitXTxLODP1Vedt8jkds+mz+7Kyz8fwQFymQfiXzUYeBaHcHvX1SVG0ym
-   cW5i5rNDNRPmQHBl7sltLxkyl8u6uAjT7eQe+KAmZA1Nta7az09Sxoqrv
-   Q==;
-X-CSE-ConnectionGUID: nGF8dZTtTDCQC3HTAprQdA==
-X-CSE-MsgGUID: L2eBj5ZCSAiCs6fLZL5Wnw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11450"; a="76179463"
-X-IronPort-AV: E=Sophos;i="6.16,200,1744095600"; 
-   d="scan'208";a="76179463"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2025 17:19:02 -0700
-X-CSE-ConnectionGUID: kxXM3Y6ITHKg+Ec2jv0Udw==
-X-CSE-MsgGUID: lu7oqScjSjiYsae/ozpVQg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,200,1744095600"; 
-   d="scan'208";a="149486823"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 31 May 2025 17:19:00 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uLWPi-000Yi8-1y;
-	Sun, 01 Jun 2025 00:18:58 +0000
-Date: Sun, 01 Jun 2025 08:18:07 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:tip/urgent] BUILD SUCCESS
- 8b999395e29ef0184cfa6dbbacd1b1ab92bba560
-Message-ID: <202506010857.OB5JB9ZR-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Exm/mE4p"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=5rMEOV3KLFf+UgtAPaHUd4YMhA+OdnA8tVR26hQhvHY=; b=Exm/mE4p4ROy2CB3jVoyT30S5s
+	CZwAD3td2DHQhuXhoNsMlrGr6/4Fu+gZ5ZMxz3isum/jvx6wHBpY/HqfHzfV8O8mVca0YnPZdt0Ii
+	TJUAhCQVf3ONs1apHQXVDwdA6Ki+CaSqyYrYQBREpHRyNGbOWuLG3w0EmHYmCd45IDdeLz7JWpHAB
+	FLns5ip5T1x8h6GjA/YCEPKY0ADhUW2iKpDn/DXGLgnfRH6o/41Dh6L6PMlJ4l2kNcdWNaeQnWMlm
+	4PTfCEflJTI5RzsbFZWtiB1H08ys0qYjSRqA+4DSIuhNZmLy2gJ9Qm1HjVY9ggkhrfUOA9LJA16NN
+	Ds2tp2tg==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uLWWa-0000000HB4K-15Hx;
+	Sun, 01 Jun 2025 00:26:04 +0000
+Date: Sun, 1 Jun 2025 01:26:04 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: syzbot <syzbot+c0dc46208750f063d0e0@syzkaller.appspotmail.com>
+Cc: asmadeus@codewreck.org, chao@kernel.org, dhowells@redhat.com,
+	hch@lst.de, hdanton@sina.com, jaegeuk@kernel.org,
+	jlayton@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	netfs@lists.linux.dev, syzkaller-bugs@googlegroups.com,
+	v9fs@lists.linux.dev
+Subject: Re: [syzbot] [netfs?] kernel BUG in folio_unlock (3)
+Message-ID: <aDueHCMDLPs2UtY2@casper.infradead.org>
+References: <67b75198.050a0220.14d86d.02e2.GAE@google.com>
+ <683b8ea2.a00a0220.d8eae.0020.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <683b8ea2.a00a0220.d8eae.0020.GAE@google.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tip/urgent
-branch HEAD: 8b999395e29ef0184cfa6dbbacd1b1ab92bba560  Merge branch into tip/master: 'x86/urgent'
+On Sat, May 31, 2025 at 04:20:02PM -0700, syzbot wrote:
+> syzbot has bisected this issue to:
+> 
+> commit 80f31d2a7e5f4efa7150c951268236c670bcb068
+> Author: Christoph Hellwig <hch@lst.de>
+> Date:   Thu May 8 05:14:32 2025 +0000
 
-elapsed time: 904m
+That's not possible; this commit is after the original report.
 
-configs tested: 19
-configs skipped: 127
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-i386                         allmodconfig    gcc-12
-i386                          allnoconfig    gcc-12
-i386                         allyesconfig    gcc-12
-i386    buildonly-randconfig-001-20250531    gcc-12
-i386    buildonly-randconfig-002-20250531    gcc-12
-i386    buildonly-randconfig-003-20250531    gcc-12
-i386    buildonly-randconfig-004-20250531    clang-20
-i386    buildonly-randconfig-005-20250531    clang-20
-i386    buildonly-randconfig-006-20250531    clang-20
-i386                            defconfig    clang-20
-x86_64                        allnoconfig    clang-20
-x86_64  buildonly-randconfig-001-20250531    clang-20
-x86_64  buildonly-randconfig-002-20250531    gcc-12
-x86_64  buildonly-randconfig-003-20250531    gcc-12
-x86_64  buildonly-randconfig-004-20250531    gcc-12
-x86_64  buildonly-randconfig-005-20250531    clang-20
-x86_64  buildonly-randconfig-006-20250531    clang-20
-x86_64                          defconfig    gcc-11
-x86_64                      rhel-9.4-rust    clang-18
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+That said, there _is_ a double folio_unlock() in this patch, which
+I'm about to send a fix for.  It's just not fixing the original report.
