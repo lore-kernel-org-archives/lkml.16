@@ -1,107 +1,125 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78C01494D9
-	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 18:24:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACBAA1F1512
+	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 18:36:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748802296; cv=none; b=PkMhCIpyRPjHTz3flvBoQdld3JNj0pbsd7DTGSKKSGo7pky3RkchgwppZ4hxF3n+4HT9MVo+7yfWP+Ve7IoUTTA4aSJJ3ZkwpThxzgseKmWObuFWmucn5fl61dguE6fFOFf0uY3mLBrjRu2qqhxX4TrrlPtMwH/8N4KthrI7118=
+	t=1748803015; cv=none; b=hyWLkBkvkhKY3TLIGLchl5uDIxCPhtCAdmVuG8Xz4BOX012cYXBjD3zk3TSaRb3X8I3/79BVk30W3Ogz+WB/sZt84My6R2II4r3dYa/ADT07U29glR0iGjqKogIEw/o/dxKR70ZL9Wyu5k4Z9CA2IQ4CsX3AKi8pmQWBLC7+eN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748802296; c=relaxed/simple;
-	bh=E7bwHh9p+dUTMO7XySu0qQWXdGU/h7KsM45BflHLm6s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cS08++rRzI/HXwYJ54MjW1yNYWDIeiz6X0r3OIzogiAb/f1lwS1T9Xsd97miFewdSNn1Sq0z+9lHqbPZ4ldTMvZwfJ09hz9EcmoI2GTGy2IIFQ66ZVW1xI9wcLTz+RACYrXLAzJdxWlBaFyGRib8CKD4y22JVIgs0cXq/nEc6Gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=OylNe5YI; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="OylNe5YI"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ad89d8a270fso994090266b.1
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Jun 2025 11:24:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1748802293; x=1749407093; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y/+1k67xEa7gHDAXY8Ae12RvGRIx4eE9l9TBw8KyJWk=;
-        b=OylNe5YIcnEx9WLzXyR3m22n4QW4iBP5dz1+9x46roMsen04jsXVugwZjQAc3k99vf
-         mxjCBpq1ovJeb9b2aw+0bUOSbGv5nWzgVthD4GFHl3Kf2371AZfxWlJAoYB/8zPtSmsA
-         hvkRqkHH2NR/UQOT17a5Cgz2WgZGeqFDtcpFc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748802293; x=1749407093;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Y/+1k67xEa7gHDAXY8Ae12RvGRIx4eE9l9TBw8KyJWk=;
-        b=GMjSnKCjZuRXI86LOw9n9Xg5UoCqRIRfc9W8ZHXmGbVrttgKpzOwvHVoWBPU/JB3t3
-         0Dp/jWnU/eEJM/BQmMHh77QSpsBH2qxLY8Pf+xoVnuy+cHB4KlGgHEtxxoXD87USVWdm
-         PdHm7IZHkUxktadFhfY5Xlha8I4yQzOLg7C3evyYQ1j8qGoAaj0oD1+XH5/IJEmOjhzA
-         UoFqzrPZvKALT/GYj06dGEthrMkyiT4TkHcObWsxr/macZubHeWQ9er2JGq4J72wKrV2
-         PX01kR5esdY4Jb68I5rEZ2gUOG4atIe+Me42sNfJOWeEcBN3hnw5u4Hb/O5V8JXRYIq4
-         5WaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUlyl0nzYAgbSbfxyBwODTzstpLmh2w5k41H4z5SnrQLIYN0tShpkdsjbaZLKJfoYaBHpaVMwYB0ELYgjc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFChfj8/I3xQrsLO7URPwBheiOuf2CyNOyc+8heuZtHorighV1
-	P63q7Y2mJE3gpzDjEWCYwOSgEzv0YjHd/hnmGVfbUqwm/zizsodHC65YFpsih9RSbHu0XHm/HhB
-	AAnfBp84=
-X-Gm-Gg: ASbGncuIVlE5mep+i7keNhG5YiJK4MnAVoGpnDWYjZNNBziWlOqA8Q01c6NXquCp6zv
-	G0Wb3wQ7KyJWHjPkvSNd45Hjkq+VP8Z+LLT4xuoJ0k4xcXARrALm3vvngJqtFe2zh2TK0yI2oeF
-	lDk8t9F7mNk3M2PaQH5ynkc/13vRK1ivWSbUalyEkOgIyl1VbiuWbzqR39+hR6W6/B/LZCCaddN
-	jhS3Q6Pn0U0hTjWP9V0rF2N8xggSpC/Hv7HZUX6W10Upf+4h/Nfe/sfmCLpdwXWkMuh5fuoEgHY
-	WWzJ4wnKxnAVbGenqbhAlCySIbGZ2gk86HssDmcVR7L059MHDgHakZC6y3BQAjp2R2rXUxLIoqZ
-	HffBfxDbPUdT/anZb8S+8vfz7kg==
-X-Google-Smtp-Source: AGHT+IEVN+/gqCQhhroSXWDef4SAUXz5cZdRaYtAdG0lTMF7WIB6YN4e4bLczH+POTpr+bJT3fGZEw==
-X-Received: by 2002:a17:907:3e23:b0:ad8:6dae:11e6 with SMTP id a640c23a62f3a-adb3277a38cmr1088717066b.0.1748802292760;
-        Sun, 01 Jun 2025 11:24:52 -0700 (PDT)
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com. [209.85.208.49])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5d82e838sm676425166b.72.2025.06.01.11.24.51
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 01 Jun 2025 11:24:51 -0700 (PDT)
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-602c4eae8d5so2207293a12.1
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Jun 2025 11:24:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWNwJZ2MRsheNxFePvP5wl42Rf+QSrQY82IL01P3YxbpgdalRtMdNo5WKiTs4gyEFE1pdDl2szbOReuHNI=@vger.kernel.org
-X-Received: by 2002:aa7:d7d8:0:b0:605:ff84:375b with SMTP id
- 4fb4d7f45d1cf-605ff8437b0mr1509408a12.16.1748802291155; Sun, 01 Jun 2025
- 11:24:51 -0700 (PDT)
+	s=arc-20240116; t=1748803015; c=relaxed/simple;
+	bh=qB68moaf2z4UHO5qciY2ecC4TUzkvVRoY3kaZnwYhpA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fGcBcTV0SP29JXvrrE8e832b507dMiMIooBifuT3JtZRViHAxtd8EX//8LtdrNnj529LocDO1b+DV+9YdZPgCjA/bCgK7C4VljgpayBwH6nF1z6kDDRuyTqgF3WnxqOgwRCMAazJD10GpiKwauTfH+FoZ0zz2Yn18bzBDS0jzrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uLnXh-0000Ae-4Q; Sun, 01 Jun 2025 20:36:21 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uLnXg-001KWO-1K;
+	Sun, 01 Jun 2025 20:36:20 +0200
+Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uLnXg-004iLc-0o;
+	Sun, 01 Jun 2025 20:36:20 +0200
+Date: Sun, 1 Jun 2025 20:36:20 +0200
+From: Marco Felsch <m.felsch@pengutronix.de>
+To: Adam Ford <aford173@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, aford@beaconembedded.com,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] arm64: dts: imx8mp: Configure VPU clocks for
+ overdrive
+Message-ID: <20250601183620.npuicmipv6kv54z6@pengutronix.de>
+References: <20250530221713.54804-1-aford173@gmail.com>
+ <20250530221713.54804-5-aford173@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202505310759.3A40AD051@keescook> <CAHk-=wj4a_CvL6-=8gobwScstu-gJpX4XbX__hvcE=e9zaQ_9A@mail.gmail.com>
- <156567EE-E5BB-43C4-B5A6-439D83FF387D@kernel.org> <CAHk-=wjktqa94u_=++YX7XxUr57iLAs1GqtHPOY-o-N0z7wyeA@mail.gmail.com>
- <202505312300.95D7D917@keescook> <20250601-pony-of-imaginary-chaos-eaa59e@lemur>
- <CAHk-=wgcQdD0UzMJrNhQuYAC2wgGtfrCry_iokswaEE5j7W9YA@mail.gmail.com> <20250601-wandering-graceful-crane-ffc0b7@lemur>
-In-Reply-To: <20250601-wandering-graceful-crane-ffc0b7@lemur>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 1 Jun 2025 11:24:34 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiQLG6n97zuW3p_N_jTDtG-xWJDNGDAgvmjtwd5GYET4A@mail.gmail.com>
-X-Gm-Features: AX0GCFtWDwqJnX0nDqQTH4OnllRkMXJFyd2lEiVDJ0ByDevZhMRMbJW7i9e519M
-Message-ID: <CAHk-=wiQLG6n97zuW3p_N_jTDtG-xWJDNGDAgvmjtwd5GYET4A@mail.gmail.com>
-Subject: Re: [GIT PULL] hardening fixes for v6.16-rc1
-To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc: Kees Cook <kees@kernel.org>, linux-kernel@vger.kernel.org, 
-	Eric Biggers <ebiggers@kernel.org>, Ingo Saitz <ingo@hannover.ccc.de>, 
-	kernel test robot <oliver.sang@intel.com>, Marco Elver <elver@google.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Thiago Jung Bauermann <thiago.bauermann@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250530221713.54804-5-aford173@gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Sun, 1 Jun 2025 at 10:49, Konstantin Ryabitsev
-<konstantin@linuxfoundation.org> wrote:
->
-> It's working as designed, I'm afraid -- git-filter-repo is a powerful tool
-> for rewriting git history and will happily fire off even when you are pointing
-> it at your own two feet.
+Hi Adam,
 
-Yeah, well, it's designed for rewriting the repo.
+thanks for the patch.
 
-But it most certainly can also rewrite the committer name, email and date.
+On 25-05-30, Adam Ford wrote:
+> The defaults for this SoC are configured for overdrive mode, but
+> the VPU clocks are currently configured for nominal mode.
+> Increase VPU_G1_CLK_ROOT to 800MHZ from 600MHz,
+> Increase VPU_G2_CLK_ROOT to 700MHZ from 500MHz, and
+> Increase VPU_BUS_CLK_ROOT to 800MHz from 600MHz.
+> 
+> This requires adjusting the clock parents. Since there is already
+> 800MHz clock references, move the VPU_BUS and G1 clocks to it.
+> This frees up the VPU_PLL to be configured at 700MHz to run
+> the G2 clock at 700MHz.
+> 
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> index 909555a5da4b..848b25c9b752 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> @@ -2256,8 +2256,8 @@ vpu_g1: video-codec@38300000 {
+>  			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+>  			clocks = <&clk IMX8MP_CLK_VPU_G1_ROOT>;
+>  			assigned-clocks = <&clk IMX8MP_CLK_VPU_G1>;
+> -			assigned-clock-parents = <&clk IMX8MP_VPU_PLL_OUT>;
+> -			assigned-clock-rates = <600000000>;
+> +			assigned-clock-parents = <&clk IMX8MP_SYS_PLL1_800M>;
+> +			assigned-clock-rates = <800000000>;
+>  			power-domains = <&vpumix_blk_ctrl IMX8MP_VPUBLK_PD_G1>;
+>  		};
+>  
+> @@ -2267,8 +2267,8 @@ vpu_g2: video-codec@38310000 {
+>  			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+>  			clocks = <&clk IMX8MP_CLK_VPU_G2_ROOT>;
+>  			assigned-clocks = <&clk IMX8MP_CLK_VPU_G2>;
+> -			assigned-clock-parents = <&clk IMX8MP_SYS_PLL2_1000M>;
+> -			assigned-clock-rates = <500000000>;
+> +			assigned-clock-parents = <&clk IMX8MP_VPU_PLL_OUT>;
+> +			assigned-clock-rates = <700000000>;
+>  			power-domains = <&vpumix_blk_ctrl IMX8MP_VPUBLK_PD_G2>;
+>  		};
+>  
+> @@ -2284,8 +2284,8 @@ vpumix_blk_ctrl: blk-ctrl@38330000 {
+>  				 <&clk IMX8MP_CLK_VPU_VC8KE_ROOT>;
+>  			clock-names = "g1", "g2", "vc8000e";
+>  			assigned-clocks = <&clk IMX8MP_VPU_PLL>, <&clk IMX8MP_CLK_VPU_BUS>;
+> -			assigned-clock-parents = <0>, <&clk IMX8MP_VPU_PLL_OUT>;
+> -			assigned-clock-rates = <600000000>, <600000000>;
+> +			assigned-clock-parents = <0>, <&clk IMX8MP_SYS_PLL1_800M>;
+> +			assigned-clock-rates = <700000000>, <800000000>;
 
-And I do think that even if you check that the committer doesn't
-change, you *should* make it rewrite the commit date, so that people
-see when the thing was used to rebase commits.
+I think we can drop the "assigned-clocks = <&clk IMX8MP_VPU_PLL>" part
+completely.
 
-Afaik, that's as easy as just setting the 'committer_date' member in
-the commit callback. No?
+Before your patch the IMX8MP_VPU_PLL_OUT was used as clock-parent for
+the IMX8MP_CLK_VPU_BUS. With yout patch IMX8MP_SYS_PLL1_800M is used.
 
-           Linus
+Regards,
+  Marco
