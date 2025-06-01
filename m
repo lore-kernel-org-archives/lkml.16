@@ -1,119 +1,185 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DAF813AA2E;
-	Sun,  1 Jun 2025 17:32:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F71F1EF37A
+	for <linux-kernel@vger.kernel.org>; Sun,  1 Jun 2025 17:33:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748799177; cv=none; b=NLqeC13An8ei3iWEXm2VvJV52b6OBj4X4KotxJqGnqqQ+2W9k/8blJfJavwBjgcz9bR2YlLL2hH/1+/fB8/0UN9QJci1aLMCSJbViNA7QsUIVpqzoTjXF0U4DhWWE0CPommV5erwwCZ9vI4pQrIGEVPBp/c8rDuWQY0Ug5FC/w0=
+	t=1748799184; cv=none; b=lRzsgrMA8SpG7mp0KmfGorvA9N1mapVMTQ29fFwH/d4hOkh8jeCGrc39sIFHawZcRgRSutx+PoyormH6xy4M103Oc7HCaZQBtjznaHvLkIHqqH/PVw3ejjmMyb8KseZNWHopUGMgUS8lPBZTJ2xP1NIxn41GX+RrY1+J1ejFnTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748799177; c=relaxed/simple;
-	bh=CXCDkqc3HY6PJJ55Qx1TyU2PeMArvJtCEHSeg/VHZMM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q7g2gxnjCo6YZ24vDU3oRz5yTx7mviuuAX0bWM+i6Vgrubvy5KDBd4xi09xy9aVS+U/fZ9WPCg3BCPZ5DQKXTmVDHVtRl3AzQJfiv++7N3vBakmULeTUY2q7ka7Q9C+K5VqMMoru/8+zVu9EFtKPHiJGnzv4WVyqaMsz6HwP/78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ihyLVks9; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748799184; c=relaxed/simple;
+	bh=Tf6XZkcBqvxDyqizynEKPAXVxWTJTm0KhepyjlqrXQY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cZIE72CR6j6WzBHwKEL1OjwEuxxvOuzlhsL4QFrP+GXhJI6s26wVBTEnYFaQ/X5gfgBX+uc8upG/igSZEt7KA7HEwH8gUXxh1UiuHUgSxx1o3Sj77EG1LrivZsTVrsLilZYqmOjFIMkG5bcTiQlAPuJR8HikiqXeRjHPM69P8Rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=2+a295+D; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ihyLVks9"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-7fd581c2bf4so2421234a12.3;
-        Sun, 01 Jun 2025 10:32:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="2+a295+D"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2349f096605so45071135ad.3
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Jun 2025 10:33:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748799175; x=1749403975; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=o1+o6RtULl3mTWS1CrGZdbkjEyWAPKzUw62Egq5PIGE=;
-        b=ihyLVks9S1jDo5dZkr99gLRHR5XNSSuKqiq6L9HsKImxVGCxyP22GhTI0KDjmY37ib
-         XUcbzf2ARdulGdt820x2OkrLaOVOfIFNjbH17CGS/VVbOx6STr9eXxvRA/r6CQzAr5Sa
-         j8C1YupRykW1uhZ92fHPyUCUIHMdnPnmO+4/y1HkNXZbkMqF5CU4u+0sU6OR4TefHEo0
-         MWMKOJqwwK/vJn2upM/OTZp6OAR2rEt4GtKJOHs5g5/GjfrhPl2RUbcg/sFZgSZ7LEDC
-         +iO9EY2BeOfvacsqVwoJcBwC+NvXP6Yh4IuSXyiHQP8jrg9oVwWeojQLnfAlMT1df+zU
-         hxSw==
+        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1748799180; x=1749403980; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KwxqXGlyR2Fx/nGgiKLqYKrCCGLZKVDH93SX+seqRzQ=;
+        b=2+a295+DSIjAVvgCaNDx2Xu7HiTlY5SDhPGGNHmli0QYMz9NCzJFipbQ2y22gUirwh
+         gX5FUAX+jqRDNepWW9FhsBXUsHXyUAu3BlVO0sJI0JmNVT6InBPx+nEPHiIhNz3p5hXn
+         61TuhljiZn71B2NiaB4Dee+5MQ+pXJ6ik3UE5j1LOyQ9NiUIV6fO1+0R1Ubr1enbaCMi
+         nXrTBmo3dcFOMfxv3T+LTlXBukSLoT2Dr5haSNuhjW06ti3JSzVgBpxcdpvfNZAS+1N7
+         wvjnZlEM4PfOXgOq8bjL6PegjrlrgDjW8SyWCL1S92jWKiACQgpkXBvBcmrIncs6S5vU
+         xJsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748799175; x=1749403975;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=o1+o6RtULl3mTWS1CrGZdbkjEyWAPKzUw62Egq5PIGE=;
-        b=cqqzWuhplTYG9ifJPHbUqSMz6v9jHizw6gCGMO/5zGGQ+wfeiZR12l0A4H0WPuQnRI
-         lv0UjM5vB66TIi0kwg0q7L0UBpRFQO87+EW3RYsohdMRP6noqUUbF3lyT/yMiZwDavCE
-         IG8gaebDx1hXk/yHQAcvK0ULp9ECZoZvLQdCnAmZfyWbv6nQ7IPOVxYvu3ahC/BDe30m
-         MEmNASb9FZMMA8C3ECm6J+OYz1t2UaDHj4Q59q6ECSkotA0nh/RKcFt1a15T+DKGAEO1
-         myJbBUQGymUu/5Q6Cd6K31h4XzdNU/OzNwCloN/V2FUeMJMKlzeHsmfJ5L7ZRThODCeb
-         xuOA==
-X-Forwarded-Encrypted: i=1; AJvYcCWZGoM4ce6v5R3tPJMvvHgdpX2p7m9BafMr+RKVYJvDAXViMezlngJIeYAlCgI7LurUU/KDFM+/tFgndOA=@vger.kernel.org, AJvYcCXghCWJmScBoaU/fhPq1h4KrT9Ha2EA9esqP5sKaVwbrvzvNA0vK7IouhyIcwC89P9S9PVzfVcZ/UjKXOp8YGNvBQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzG0TZ5aB3y7hlVr3JFLlkUu8wKzlA1hRwnATcGZyj53v/liG/u
-	g8NzKTzADQwctu/BmhU7QfX9/xAJmvT12kCbHPvf4XGi32t5o1HhAP7m
-X-Gm-Gg: ASbGncvadhfp+ZS5LFW8eziPzHoWbkjwXyGdNvAsIlU3bHbxzGzAkR5oYDnwtI/mLTU
-	dnl31aKHytI3JIYXkcckpXbPBSXk2fZHMtzlUyh5j36uIVGLNI3TTwKNaMERzO4S4/vns4rJx03
-	t7xb9VrDPukA1uu+fd3W4RO0yIV8o9Cn0TjvgCKmEDpD0O8YVY7jpgj+cs8I3qm0ByPQdbfT0Nf
-	vlhF2AXkFHTeUUFN8/rSTPh3DE3q+uNcl0KWFQZnGDsoH1NnLCBLNx6KJ7yCjwT6MWZLQEOeSlE
-	9cvlaTL/ZpVXvYcpYlOXi1un7jJ2I0wobgLlZvPt/JPlLM9ApNXZuJRjMZlBI2sR6uCvkVUWQm3
-	U2uU9k01jXy305BWGirF1
-X-Google-Smtp-Source: AGHT+IGpWuebZEN8XIRXmDyaNBUyrPUAgC66ultV2VrLU7U9h1pAbJdpOORsPz+ia37EPuJEtEJ46Q==
-X-Received: by 2002:a17:90b:3e84:b0:311:e8cc:424e with SMTP id 98e67ed59e1d1-3127c74306dmr9167596a91.24.1748799175535;
-        Sun, 01 Jun 2025 10:32:55 -0700 (PDT)
-Received: from howard-ubuntu.lan (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e3327b4sm4232625a91.48.2025.06.01.10.32.54
+        d=1e100.net; s=20230601; t=1748799180; x=1749403980;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KwxqXGlyR2Fx/nGgiKLqYKrCCGLZKVDH93SX+seqRzQ=;
+        b=pUvA4fnGpneJ66Ax4NHvOVlz3NSOtR97Ismqx88oXdZAno/cdlqSkl7Okvreybf5rt
+         JCqOzq4XplDKedohw9cjIRfATxp56WpItLqRSyWoLp7P/11l2Mf8jBX4gvV+XeVRDGhr
+         KM6/m1Wg2LiO/dOSEFNko4AZSutjHJoVEl8FZaib+49It8zoihkHURrKs4sxC6BmSJzt
+         6tR71DBtds5PBB/i1xietOajn54QHdHOCr0a6cyIXWeFcwfVAl9rh06P7MCZNYqjZG9t
+         0uv1cDChcU5i5A202JuV5lmN/GWuZdSllcaavSvCgi4PDfIOrSJCUROkEs4exIJB+uMI
+         Wgrw==
+X-Forwarded-Encrypted: i=1; AJvYcCWc1bR+FG/LV84PsKWr7fRAKVAkc8OUSdfttf2UW6KtqpOb2KA2rTrb276pfEo3XWcRXTfguuJzQsx+E3Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJjIDmClCR6UGDZNnorU4PGy4u8snUCsapRd73VpdGq1wVBvTU
+	/buNqHDVL5MpEzI0Fd/CIO14NsEJslvPwbxscNdmq4hF+21fzY6qUw9hdi3tXpOVBVc=
+X-Gm-Gg: ASbGncsNkN5cTGAhca7d26i3NliH//XISzGXHaDsINBruBUn/ctpRRkjgQJdM4jbJMm
+	vJiq/c7or/6eU0weF8Mp7rcIcq0yAzKdaqMNEAdhcnLWGab0Ji1v7Oea5C4KG6EysB1RgODn+ya
+	Ap39KigCqqPuDjtPUjyPNnUEhuXPwZwrljT5fn8tGvmDAdtOpdEY3jjcQ+sLtRbuVSn70vfkhrJ
+	Ac6VsVQfy3pOlNksIdFv+yoN+sOjZLS06uEYiF5fAom98i/BWytrfW65D/Lyr19gNnSa3VsvzOh
+	NEkmFH56y24rDNoUyWWD8BQPSiuwJOfwF8UsTttBgrY=
+X-Google-Smtp-Source: AGHT+IHrFx7wYIOsRR7w+nhhaUaBjBPFlogADiEeijaQ54Eff3trva8IRdJ651TwtDaee4aD84OUNA==
+X-Received: by 2002:a17:902:c952:b0:235:2799:634 with SMTP id d9443c01a7336-2355f763a5amr61139085ad.8.1748799180449;
+        Sun, 01 Jun 2025 10:33:00 -0700 (PDT)
+Received: from x1 ([97.120.245.255])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cd372esm57224935ad.128.2025.06.01.10.32.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Jun 2025 10:32:55 -0700 (PDT)
-From: Howard Chu <howardchu95@gmail.com>
-To: acme@kernel.org
-Cc: mingo@redhat.com,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	peterz@infradead.org,
-	kan.liang@linux.intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Howard Chu <howardchu95@gmail.com>
-Subject: [PATCH v2] perf doc trace: Remove --map-dump documentation
-Date: Sun,  1 Jun 2025 10:32:52 -0700
-Message-ID: <20250601173252.717780-1-howardchu95@gmail.com>
-X-Mailer: git-send-email 2.45.2
+        Sun, 01 Jun 2025 10:33:00 -0700 (PDT)
+Date: Sun, 1 Jun 2025 10:32:58 -0700
+From: Drew Fustini <drew@pdp7.com>
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, Guo Ren <guoren@kernel.org>,
+	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH RFC 5/6] riscv: dts: thead: Add PVT node
+Message-ID: <aDyOyg6eqDEFg2ua@x1>
+References: <20250524-rust-next-pwm-working-fan-for-sending-v1-0-bdd2d5094ff7@samsung.com>
+ <CGME20250524211525eucas1p244963b69e0531c95a9052e4a7a1d1e01@eucas1p2.samsung.com>
+ <20250524-rust-next-pwm-working-fan-for-sending-v1-5-bdd2d5094ff7@samsung.com>
+ <aDVxDJi0KkWXiPCK@x1>
+ <61eecafb-8ad1-4306-88cb-a032eefb2e48@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <61eecafb-8ad1-4306-88cb-a032eefb2e48@samsung.com>
 
-The --map-dump option was removed in 5e6da6be3082 ("perf trace: Migrate
-BPF augmentation to use a skeleton"), this patch removes its remaining
-documentation.
+On Sun, Jun 01, 2025 at 09:50:52AM +0200, Michal Wilczynski wrote:
+> 
+> 
+> On 5/27/25 10:00, Drew Fustini wrote:
+> > On Sat, May 24, 2025 at 11:14:59PM +0200, Michal Wilczynski wrote:
+> >> Add PVT DT node for thermal sensor.
+> >>
+> >> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+> >> ---
+> >>  arch/riscv/boot/dts/thead/th1520.dtsi | 11 +++++++++++
+> >>  1 file changed, 11 insertions(+)
+> >>
+> >> diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
+> >> index f24e12d7259fabcfbdc2dfa966d759db06684ab4..faf5c3aaf209b24cd99ddc377a88e08a8cce24fe 100644
+> >> --- a/arch/riscv/boot/dts/thead/th1520.dtsi
+> >> +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
+> >> @@ -648,6 +648,17 @@ padctrl_aosys: pinctrl@fffff4a000 {
+> >>  			thead,pad-group = <1>;
+> >>  		};
+> >>  
+> >> +		pvt: pvt@fffff4e000 {
+> >> +			compatible = "moortec,mr75203";
+> >> +			reg = <0xff 0xfff4e000 0x0 0x80>,
+> >> +			      <0xff 0xfff4e080 0x0 0x100>,
+> >> +			      <0xff 0xfff4e180 0x0 0x680>,
+> >> +			      <0xff 0xfff4e800 0x0 0x600>;
+> >> +			reg-names = "common", "ts", "pd", "vm";
+> >> +			clocks = <&aonsys_clk>;
+> >> +			#thermal-sensor-cells = <1>;
+> >> +		};
+> >> +
+> >>  		gpio@fffff52000 {
+> >>  			compatible = "snps,dw-apb-gpio";
+> >>  			reg = <0xff 0xfff52000 0x0 0x1000>;
+> >>
+> >> -- 
+> >> 2.34.1
+> >>
+> > 
+> > I found that on my lpi4a that boot while hang after applying this patch.
+> > I think that it is related to clocks as boot finished okay when using
+> > clk_ignore_unused on the kernel cmdline. Do you happen have that in your
+> > kernel cmdline?
+> > 
+> > I need to investigate further to understand which clocks are causing the
+> > problem.
+> > 
+> > Thanks,
+> > Drew
+> > 
+> 
+> Thanks for your earlier message. I've investigated, and you were right
+> about the clocks – the specific one causing the hang is CLK_CPU2AON_X2H.
 
-Change in v2:
-- Correct the commit log format
+Thanks for tracking down the clk causing the hang. I can confirm that
+this fixes the boot hang:
 
-Fixes: 5e6da6be3082 ("perf trace: Migrate BPF augmentation to use a skeleton")
-Signed-off-by: Howard Chu <howardchu95@gmail.com>
----
- tools/perf/Documentation/perf-trace.txt | 8 --------
- 1 file changed, 8 deletions(-)
+diff --git a/drivers/clk/thead/clk-th1520-ap.c b/drivers/clk/thead/clk-th1520-ap.c
+index ebfb1d59401d..4d0179b8c17c 100644
+--- a/drivers/clk/thead/clk-th1520-ap.c
++++ b/drivers/clk/thead/clk-th1520-ap.c
+@@ -792,7 +792,7 @@ static CCU_GATE(CLK_AON2CPU_A2X, aon2cpu_a2x_clk, "aon2cpu-a2x", axi4_cpusys2_ac
+                0x134, BIT(8), 0);
+ static CCU_GATE(CLK_X2X_CPUSYS, x2x_cpusys_clk, "x2x-cpusys", axi4_cpusys2_aclk_pd,
+                0x134, BIT(7), 0);
+-static CCU_GATE(CLK_CPU2AON_X2H, cpu2aon_x2h_clk, "cpu2aon-x2h", axi_aclk_pd, 0x138, BIT(8), 0);
++static CCU_GATE(CLK_CPU2AON_X2H, cpu2aon_x2h_clk, "cpu2aon-x2h", axi_aclk_pd, 0x138, BIT(8), CLK_IGNORE_UNUSED);
+ static CCU_GATE(CLK_CPU2PERI_X2H, cpu2peri_x2h_clk, "cpu2peri-x2h", axi4_cpusys2_aclk_pd,
+                0x140, BIT(9), CLK_IGNORE_UNUSED);
+ static CCU_GATE(CLK_PERISYS_APB1_HCLK, perisys_apb1_hclk, "perisys-apb1-hclk", perisys_ahb_hclk_pd,
 
-diff --git a/tools/perf/Documentation/perf-trace.txt b/tools/perf/Documentation/perf-trace.txt
-index c1fb6056a0d3..973fede403a0 100644
---- a/tools/perf/Documentation/perf-trace.txt
-+++ b/tools/perf/Documentation/perf-trace.txt
-@@ -238,14 +238,6 @@ the thread executes on the designated CPUs. Default is to monitor all CPUs.
- 	the same beautifiers used in the strace-like enter+exit lines to augment the
- 	tracepoint arguments.
- 
----map-dump::
--	Dump BPF maps setup by events passed via -e, for instance the augmented_raw_syscalls
--	living in tools/perf/examples/bpf/augmented_raw_syscalls.c. For now this
--	dumps just boolean map values and integer keys, in time this will print in hex
--	by default and use BTF when available, as well as use functions to do pretty
--	printing using the existing 'perf trace' syscall arg beautifiers to map integer
--	arguments to strings (pid to comm, syscall id to syscall name, etc).
--
- --force-btf::
- 	Use btf_dump to pretty print syscall argument data, instead of using hand-crafted pretty
- 	printers. This option is intended for testing BTF integration in perf trace. btf_dump-based
--- 
-2.45.2
+> 
+> This appears to be an AHB bus clock required for CPU access to the AON
+> domain. My proposed solution is to make the pvt node a child of a new
+> parent bus node in the Device Tree. This new "AON bus" node would then
+> explicitly request and manage CLK_CPU2AON_X2H, ensuring it's enabled
+> when its children are accessed.
+> 
+> What are your thoughts on this approach?
 
+I think that is a good approach. The alternative would be to just add
+CLK_IGNORE_UNUSED like above. I've done it before but it is a bit of a
+hack.
+
+Thanks,
+Drew
