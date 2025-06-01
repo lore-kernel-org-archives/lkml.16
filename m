@@ -1,91 +1,117 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551931537C6;
-	Sun,  1 Jun 2025 09:39:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4405B2AF14;
+	Sun,  1 Jun 2025 09:42:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748770792; cv=none; b=E4u+9dAeNyxpGbPpioExslDC9+wE9cCG24kqDOV4kjDzfonBDZnc/RInwKGmA1MuJFfFIDqNk+dzPnE7d7I/u9E971dD5i2RFEoXPqGmAncKRediSbM4krT7z8GHpldqrbgKeOTUAbQCp+l/QhSZVPtXlYtV9C38/fznENgfxOk=
+	t=1748770967; cv=none; b=huuFTsoUqQj+39O2OE6vXg91mLn73t2zUupLG5cQMIGcE9TW6h5vUgtIKM6yQMLrSoOcNgfGTob/X0hSuDUvM7WDCHTrzvV7cJ1gV3VPZhqfS72Em/gDoBrbYsgdtZoeEn/Fi1fhwgl6OzDc9knHzGpT2lP7UzrR4TeTsvZfxP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748770792; c=relaxed/simple;
-	bh=zhnLAjkDLdQPDGGvHLx808PY+0LFjWMMUUAJu368LkE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rd1jEDdZ505uVjY5B0f3Q3icyesz5yBiU8byjSTCzIdlX9DkMVfyMO/uWXtWsFjXr82kMXpPkN3xJli9aWV6WC3QtVU1B2kt7D8TOd3pwLxQ3x2ugf4900nVQDrUfGVc1QTRusjyESHVrHXf2rA4hz9FqyTK2Z8tGB61I5PFV/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=gJKAYSlX; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1748770967; c=relaxed/simple;
+	bh=eDEyj7O0DXxrQ8H0lcHGd7ocPN07l4RbXQMbW2am0+U=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=rU1/e1Ky2fuqAXJkDj8AmI1JeRwSTGSM2MIAmGigDxPeXUuHOPOCufZQihObQ4WjHbwzA9OCvKFH6YCOxHgOD8LEQAidxgQS6GTKJzyuvyc2iOKk+wrSXQOv6/SquJcS+XA5jevHITefYo6LVVmiTgVYGCqLGIhjNJcU7Y5G7os=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nL+3lrQl; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="gJKAYSlX"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 2DBFA40E01B0;
-	Sun,  1 Jun 2025 09:39:48 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id fihqgO0-ENMQ; Sun,  1 Jun 2025 09:39:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1748770784; bh=eeW/IR2znoSmGbeMAE4zO02Cqc0ZKtkTmQClsKZFXt8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gJKAYSlX3LYCmdMdqii3+t9RE7jDtbK8VuIsiqPNo/n2EgSQ9nK51nX8ZWScqjM9S
-	 76D7fPWEdeobVxesdfPdegFzx1QIVs7GD+dhE4e/MYHsxVe7dG5e3B6LxJvkimIgq7
-	 X+d/T2fDZYTF2tr2Lw9pG4lEBrqXkkVCYwof6GWJH8i/OnlKJ2DfZaWxDk3nHDlMBF
-	 8X2o/bxJ68YCIJk/BbAZ3CG7tI944XNTmrKWFtdTuApOHzOyrLluCNbDMb2pVIerqZ
-	 pFu28B6PUUQWy7/gm1TvS9uEDXVItmhTYoDssLD+5lTmHqXOFRv6JkhgKCfCWtCPdF
-	 t22Hll3/oGsdyNSUFQcyJ4p2gtGeVU+vnFslnRIdIhHhFwetdH5jg5w9pii2HmPXO4
-	 Pb44WR+IBi5qH3OObpupWpJdUP/5Rm2LzwVYHitZBwx6bbN64RtoHKZho+o9hvkkJE
-	 LVimQz7zuLKK1V/5pH5IfvQeylvDftUCQmvLgFV8wpUIA5riPXD7zvYVKBvrLY+7Nv
-	 wyCm4gmtSq0WeVJf+Di/ORFmAQ+QZnvPtMJKdl/KYWtkj5DxOZ8wMfKDnEwU3aKoSz
-	 OkGXtTYBNpP4ob1SJ7VdzEsFNmSX3ZSVxC7K0UNKLbDHeCpBZlR6D4iA8ZpkhX4n4/
-	 9FV4X5tI2rArDjestPRFv//o=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A9A8240E015D;
-	Sun,  1 Jun 2025 09:39:35 +0000 (UTC)
-Date: Sun, 1 Jun 2025 11:39:35 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, x86@kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Dionna Amalie Glaze <dionnaglaze@google.com>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [RFT PATCH v3 20/21] x86/boot: Revert "Reject absolute
- references in .head.text"
-Message-ID: <20250601093935.GCaDwf17sb5j7a99Qq@fat_crate.local>
-References: <20250512190834.332684-23-ardb+git@google.com>
- <20250512190834.332684-43-ardb+git@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nL+3lrQl"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-450ce671a08so21347645e9.3;
+        Sun, 01 Jun 2025 02:42:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748770964; x=1749375764; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=k07lU4HYaGQ7czfdPqx1uX0xnZzdxn8nnvAUd6IQVT0=;
+        b=nL+3lrQloZiEt3n2ldn7d/L33x8fv0MplePHH+/9o8P98+g/LqQWLyyUwKq0JY4EI8
+         ThH5j3aAppiCbIWoztf35t+PQTd7gkMglRhm0jZUpeT6ToRlh/UM1Met2dEoMjookvZb
+         MG9TX1+mZ37A7EHIVCCz1pX4MC6iSjjO2fP4XslsepCyVTmwwbIH2ag8amtJyK3xbgSd
+         mzC1gODJz/d3r1JYSRJk3Ucrh3PEz/qACqbqaRZf5q5LPk7yvx30IZnAaKyqpZu1MYjg
+         QXQ4bA8EEWuHdG8LfC5B6q+6Bz3uSj08Uh57t8RURN+eI+2z92Ev+tO3FKsGVZmuQJ12
+         s4CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748770964; x=1749375764;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=k07lU4HYaGQ7czfdPqx1uX0xnZzdxn8nnvAUd6IQVT0=;
+        b=EEZIo3hBZr2wyi7Hp3mAH+khPVjhciVIO5CU/priwNz9b++22OJUcd6P0zDEXMJ5VE
+         RO2LUhnPYUC3pPuICbrrmIRtcOjog2AHEnwDbKD+ft9KmGeBcZBVE0+HisMinqcqQgdU
+         zyLZsXUuDi3hffkIPDYsbTJbPWWdP2Oc+ELZPuKfFALtsyw77F+bhmLopBcmfrt57Qn+
+         l9oQkEV4UWxbZ1vvHBRPp69TgHvNGKywklfPPxOKnrdJcwVoGUyCbCgkUA3JS2F9aYKH
+         APaThFi5/3KXkOsiclKfnUTQA+1n1MpdOVqZMyloy49Jqrdn/F222xn5Jcd/F+w/pND0
+         NATw==
+X-Forwarded-Encrypted: i=1; AJvYcCWJYizqADbS79+AVF47aj3VlJmKYnjlJpFjVW50NBuzp5M0s67NB3nkUW3aM8K0pcGlb8DwMUwr17QOSeo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzX271rDi8inryXRIU6Z/+jGbUiWavmaEhlUpnODsxjCL0e+Z3Q
+	ppKCDDgfoFIMv+Gd2aD6a6r8Vep+m80SasGvmrDmJuHEIt0tHakQ7GkbMb9QDA==
+X-Gm-Gg: ASbGncvKUot7eNW3cfiNY0Ysm66t22NzdRXqb1z3GfUXkxrNNxZgERpcdoTbv4cl1wA
+	X7cRynVC+Pkm3wvUbTkzcDxMsvC8VUivqDq/wLFhQAOMrQZCOvNAVODVpuYmVwcFZzqUl4Ubsn5
+	ZSkXlfszG3Wd9bC9up3+/OhzccBVZ2TYQ/tfOmc2MVl1GlEUJX9cTt689SjdbcvqRzbVPxoKxEY
+	+Fi/3SlbV+RHkG47wYcdYY+j5YZsukelUE3C/GfBNf/XXE96mi0bWKW1osTrYP2q0SIQr5IvvvL
+	ESgEhOQK7Jrlas6LRzJJ2mCWY3I7c1eV9KKA2W6md8hGNStvz08YOtk+08wK67xQrKogRfRJnEw
+	5ygfy/mqjS10PFlo=
+X-Google-Smtp-Source: AGHT+IEKvrUBq7vAuqxc1b8RpAVLQzGgnBtqTRUmTUOlFAfmKzSgtoNHxVcCjpQ7zUI9oTOYsrMYDw==
+X-Received: by 2002:a05:600c:500e:b0:43d:db5:7af8 with SMTP id 5b1f17b1804b1-4511edd5e6fmr35593875e9.21.1748770964291;
+        Sun, 01 Jun 2025 02:42:44 -0700 (PDT)
+Received: from localhost (cpc1-brnt4-2-0-cust862.4-2.cable.virginm.net. [86.9.131.95])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7fc24d7sm80284705e9.36.2025.06.01.02.42.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Jun 2025 02:42:43 -0700 (PDT)
+Date: Sun, 1 Jun 2025 10:42:42 +0100
+From: Stafford Horne <shorne@gmail.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux OpenRISC <linux-openrisc@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] OpenRISC updates for 6.16
+Message-ID: <aDwgkjzeTVNUs1Ee@antec>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250512190834.332684-43-ardb+git@google.com>
 
-On Mon, May 12, 2025 at 09:08:55PM +0200, Ard Biesheuvel wrote:
-> From: Ard Biesheuvel <ardb@kernel.org>
-> 
-> This reverts commit faf0ed487415f76fe4acf7980ce360901f5e1698.
+Hello Linus,
 
-Let's make that pretty:
+Please consider for pull,
 
-faf0ed487415 ("x86/boot: Reject absolute references in .head.text")
+The following changes since commit 92a09c47464d040866cf2b4cd052bc60555185fb:
 
-Other than that, I guess the changes look ok modulo the comments I've made.
+  Linux 6.15-rc5 (2025-05-04 13:55:04 -0700)
 
-You could send a new version once the dust settles so that Tom and I can run
-them on everything.
+are available in the Git repository at:
 
-Thx.
+  https://github.com/openrisc/linux.git tags/for-linus
 
--- 
-Regards/Gruss,
-    Boris.
+for you to fetch changes up to f698ee1f40030118e3ae1af1a02fa76f79452b5c:
 
-https://people.kernel.org/tglx/notes-about-netiquette
+  dt-bindings: interrupt-controller: Convert openrisc,ompic to DT schema (2025-05-07 06:14:30 +0100)
+
+----------------------------------------------------------------
+OpenRISC updates for 6.16
+
+Just a few documentation updates from the community.
+
+ - Device tree documentation conversion from txt to yaml.
+ - Documentation addition to help users getting started with initramfs
+   on OpenRISC.
+
+----------------------------------------------------------------
+Ann Yun (1):
+      Documentation:openrisc: Add build instructions with initramfs
+
+Rob Herring (Arm) (2):
+      dt-bindings: interrupt-controller: Convert opencores,or1k-pic to DT schema
+      dt-bindings: interrupt-controller: Convert openrisc,ompic to DT schema
+
+ Documentation/arch/openrisc/openrisc_port.rst      |  6 +++
+ .../interrupt-controller/opencores,or1k-pic.txt    | 23 -----------
+ .../interrupt-controller/opencores,or1k-pic.yaml   | 38 ++++++++++++++++++
+ .../interrupt-controller/openrisc,ompic.txt        | 22 -----------
+ .../interrupt-controller/openrisc,ompic.yaml       | 45 ++++++++++++++++++++++
+ 5 files changed, 89 insertions(+), 45 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/opencores,or1k-pic.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/opencores,or1k-pic.yaml
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.yaml
