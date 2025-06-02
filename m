@@ -1,82 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F27841E0083;
-	Mon,  2 Jun 2025 10:55:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69CED2040AB
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 10:55:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748861755; cv=none; b=FKYbsvG3aH3db8Zya3HWUZr+ta1IsjiyBeVj1WOrzRgeSPmHsmzmHZeDr861XADFpckgiMMZYdZx6L/UCS5NsQgu1kTbpJPCFdmg2NBFb8TsmjlqWq4iRFv3DsiUve8Y02T2dNRV1t7dyQ7oWDr+KFaodljd95yPSh8Zu4OSAjE=
+	t=1748861755; cv=none; b=qtCK13nt70fnt5uhcNloic4jRCNT85p7VGUDtyWLXIjInfwLDGPeuYzmyB20tg3F2l0TXpTgnZmz8Mp4mM+2HRFACc5lg7swN7uEN20cIEzW5b/UHRG4merTIyovYNud5rcjHekwFSBp5AENSEUNbZNjVKgn9Q51zBdXVOWg6JM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748861755; c=relaxed/simple;
-	bh=diBNoycsWZbCPBMZfTRaPIyrQ7LdBRUIphqw7oH8gMA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G2wO5SKDjGUr9wn5aieWOcomPx+czBOE77lOnibXB23kwuPAW8thhmsKL0gLXuaUi2i4Ce8mBu/y5/HtM/CNmf3lb2I0fD1uuNyZ5BmqtSjQgiUfNUKSlR8gAZivtKXxcaocb+fUGl9a5D50cjcP33lRnyWWi+dzM7iDf5AxoOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WiUdmHzH; arc=none smtp.client-ip=10.30.226.201
+	bh=7bGWWs+4p6un8NiBop/oIcpkSO5yAebwvmB4QV/UllA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pgVhHOHdDhiuw3zDxVWaFWmXqibNgD3pE/e4uEpw4TLjhY/83ObDdEj8XHR5rjnRTDkzF787IO9XeGv8/cBF5vabM6OzQnFUC1FJHQkAeh+H1yfWaKDhF2Mohlv8yf96LlPThbGaVfh+VHH9geSYGoMetPIoqd0xFoG3CvMABQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=jlIOAseB; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WiUdmHzH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FE6BC4CEF1;
-	Mon,  2 Jun 2025 10:55:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748861754;
-	bh=diBNoycsWZbCPBMZfTRaPIyrQ7LdBRUIphqw7oH8gMA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=WiUdmHzHMnlzDKAatkPMxSfGyT1+SVwfSelfW5s4tOZPTI4F22FTo/Hwo91tS+lps
-	 K+M/M6VYUhmL+8R4irbKwgMLTnh1Jf5SRj1y1pHxVVaI6AbHI1HvRGvnEFs/GKQgZY
-	 H6spbHBOCQ1gT6QnJ7B6Knl8d/NzqT7PqFqpQbWiiOhIUaqIcxg4rOF0tog4dtcd49
-	 SFZUe3NA5NyUwAdvPS8EhaS0wSwTmUSRNGDUxLLnxn/JEIEysrb/3UqTwCmRVaDY3N
-	 Hg0arEASBkTbc8GTYh7fQ0lOmDUG2m9IEIGSUBYZiVWMzDD4B7kHW5jdWSA67WdNEV
-	 sE7u3/bcFgkDg==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	linux-modules@vger.kernel.org
-Subject: [PATCH] module: make __mod_device_table__* symbols static
-Date: Mon,  2 Jun 2025 19:55:36 +0900
-Message-ID: <20250602105539.392362-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="jlIOAseB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=7bGW
+	Ws+4p6un8NiBop/oIcpkSO5yAebwvmB4QV/UllA=; b=jlIOAseB7DdMStRY8VgH
+	C15JPBolMF0nkwF4a+PiPtPyTeilwvWlVUuyDCZBuUhOUSar2SyAV3ryHgwgA91S
+	Zg8OWU2wuR3Vb20cHUnE3+eCHedI9MdmxTc5GCx2uMsO+CLmmIbTTqt0TJfrWxb7
+	dEau4XWW3cnsVSmiGQP1g++GB94ZPXt+Di0hAy2AGZhPF+WyTe0cACgAgDw9uIlt
+	u4wfNF+r5hBgAuLKB5AQLcOivcjnTeQQc6jPrMRIR1o1JJrnTuUhI+C8ezGzBKlY
+	u7lG3dxiyoAN6C++1/+4XGLm/wwCSjQfJ+tvh5UWL4GHE+WYAyajDQMh658G9UKH
+	SQ==
+Received: (qmail 3354533 invoked from network); 2 Jun 2025 12:55:49 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 2 Jun 2025 12:55:49 +0200
+X-UD-Smtp-Session: l3s3148p1@mepLm5Q24AptKPMO
+Date: Mon, 2 Jun 2025 12:55:48 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Chris Brandt <chris.brandt@renesas.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH 4/6] i2c: riic: Pass IRQ desc array as part of OF data
+Message-ID: <aD2DNNhG9_Bj58Yn@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Chris Brandt <chris.brandt@renesas.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20250530143135.366417-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250530143135.366417-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="p0TvijFoPYANqdUd"
+Content-Disposition: inline
+In-Reply-To: <20250530143135.366417-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-The __mod_device_table__* symbols are only parsed by modpost to generate
-MODULE_ALIAS() entries from MODULE_DEVICE_TABLE().
 
-Therefore, these symbols do not need to be globally visible, or globally
-unique.
+--p0TvijFoPYANqdUd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If they are in the global scope, we would worry about the symbol
-uniqueness, but modpost is fine with parsing multiple symbols with the
-same name.
+On Fri, May 30, 2025 at 03:31:33PM +0100, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>=20
+> In preparation for adding support for Renesas RZ/T2H and RZ/N2H SoCs,
+> which feature a combined error interrupt instead of individual error
+> interrupts per condition, update the driver to support configurable IRQ
+> layouts via OF data.
+>=20
+> Introduce a new `irqs` field and `num_irqs` count in `riic_of_data` to
+> allow future SoCs to provide a custom IRQ layout. This patch is a
+> non-functional change for existing SoCs and maintains compatibility with
+> the current `riic_irqs` array.
+>=20
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com> # on RZ/A1
 
- include/linux/module.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/module.h b/include/linux/module.h
-index 8050f77c3b64..92e1420fccdf 100644
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -249,8 +249,8 @@ struct module_kobject *lookup_or_create_module_kobject(const char *name);
- #ifdef MODULE
- /* Creates an alias so file2alias.c can find device table. */
- #define MODULE_DEVICE_TABLE(type, name)					\
--extern typeof(name) __mod_device_table__##type##__##name		\
--  __attribute__ ((unused, alias(__stringify(name))))
-+static typeof(name) __mod_device_table__##type##__##name		\
-+  __attribute__ ((used, alias(__stringify(name))))
- #else  /* !MODULE */
- #define MODULE_DEVICE_TABLE(type, name)
- #endif
--- 
-2.43.0
+--p0TvijFoPYANqdUd
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmg9gzAACgkQFA3kzBSg
+KbbxBg//SKzq7Y2TbgrcFY02e2zmA+f//ngSVsdGATypJihKvqsS/tkgLhZu4uI1
+IgOvpXZTGbExw/0q7uFbNWQ+k7Fm7pIQmJWcqDMFy0hCJu9Hnq38vE7S/5a3il9q
+1GvFIVTK9OfHe9eaa3mqOGk1ZusP8JA6ocpWAE6Y9aldJhj2PSliIiXryBnQttua
+0hdUe2QK8e5Y1/3nwADEkd2WAY1d0CEakeahjy9H+xGAQXC51zYHUC2xUnAkjZj3
+wYrpqde/aHdWm5P+M+uDpw21F5jSZKF/yRTT/DWDEN+fZy11UKG4KHIobyvk7ig8
+utKdcmo4mAXPOQntYhTCK7iiDLO1Cw5cnJhUs9JnygZh5Qb1+ZbRfZSi8OIPVXMM
+QEYWCVlxPKlQzxYCX/7nYbUDkNRdaqpu/AUXFBzalYo8avmEbnxPjsTdkGeSHQMR
+HcIuUhvXdfZu4tmESYb/5C6HaTOcrVy1t3ffO08JMZugRpw4pe3eUmcAWHdyS4Y1
+OqSKQ4NdkPwyLcJwsnkpHM/7HTb5g3gqxKDKq0XKizSInYVjKIFQhHTbVSKH7/gl
+ZVEA0pi/ozXeDIkQSi2rt5rjFChO3Fgp12UQM4dJo7GYmELAsNuZZKHn/p2c7jVj
+1ODtLVOrp5687Yfirx26se489MeUffNYqltp4/CUFyWZSdD4WMc=
+=w+mr
+-----END PGP SIGNATURE-----
+
+--p0TvijFoPYANqdUd--
