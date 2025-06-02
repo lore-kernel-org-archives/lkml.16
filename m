@@ -1,146 +1,143 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB64EAF9;
-	Mon,  2 Jun 2025 17:02:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 371F8EAF9;
+	Mon,  2 Jun 2025 17:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748883739; cv=none; b=YloYAcMDnHRAazjl1DbX9bzrSOkUNq7/XuaIfv4G4JzaKsIwxQbBNrEB/gExvCMkrWdTUlgoJ/jRrWdxHGqPvAIwnQkVbpBtLqFO35d3YPAxxEaRRr/CpVBLMrTRC7lYnH4PrGSYwvvb6gxKvp9Lmip/KrXroQ74rmoN38NiFJY=
+	t=1748883820; cv=none; b=czRr6C0CbWUgtM/ucOY61wIK24LIhmPIfbOTELwVQ5ErQfKaxggFtIt31zc1AwaOtDobA67M17BWRffEfRhhdKAVuLp2fyKxaUtTHqZiZzg6WX9dMUwV5FCcncC5o8qjMGkxQfWoTe4e+CttbLKUKqmx+ren5E7ievg49u4o1MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748883739; c=relaxed/simple;
-	bh=PAm0qcVMccKzdp3fnXKmqZ+vGp/mrw6+rOYNaWYB160=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FZymTehWtHv8AYXurRPDH+XpHB5BokG+12ZusqnWmQ8zwjqGgVCvzzs6jiGA2wTTEPNLXIp7HViq4Su2+EmejT2Kpgm0uSURwDscN9fsM+/CS8XRS6DW0mj1/aRkjs7mjGCV+y9Xt1ns3Dwn+AJ/Rk9pt1oeVWIxUOYzqD3XQEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VYFZTPPh; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748883820; c=relaxed/simple;
+	bh=VMaer+x2LjRkIyNhCPgGhMCgkxjOf58plLCkqARWbt8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U90tW7FjXllosUO5JhBWIyT5P8EjNa9SAKov0J2DPPSWg3V8K3rV9hcjvcttz2MTzroN1XnX9Nu/Ce74zKrWzWrqDBwk9sD0WCUl01+gxbHeP1UB8q9E4e7dLeCUL0MXINypm6IC/RzxtROHkyOfYdq1MnBqGKebXmRYou+ZZwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QVgnPAAt; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VYFZTPPh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748883738; x=1780419738;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=PAm0qcVMccKzdp3fnXKmqZ+vGp/mrw6+rOYNaWYB160=;
-  b=VYFZTPPhKiBC/Sb/trqgppHvCfCTCvHE0aM6AE5jhRhwGTG9hloTN2UC
-   5Q8Pqbcfz6ldGmodh71fJB9piXu/4oIsrO/tx2bAuw2jMfMNW8xoFWT45
-   y8hytDNy8kwxAg4M+UPLG2E5253MPCWfghjQxPMtzSFS0wFQmLy1PGWSK
-   Tn9geGBehI7yk/dt5j/7TUYRlEeLkjPwhNRtXae7pBQ5Kll4q/GuwtjnG
-   me/PLHb7cKEJwYtnWhxKvPIG8zV5csT8n/trrqsmEBspXWNqJvEEkkelu
-   7g8YTDWr2zoMcJ3sd7UGRzS9OwJfkLHD/K/zuMRZjjgwjGNasobFr4hY2
-   g==;
-X-CSE-ConnectionGUID: FVMqi/LnTAWDDBGtGiNEYA==
-X-CSE-MsgGUID: O4AEIlrfRqSBJXxBFiIyZA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="51045532"
-X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
-   d="scan'208";a="51045532"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 10:02:17 -0700
-X-CSE-ConnectionGUID: z/pjBT1NRjuZhrsoXUAvOw==
-X-CSE-MsgGUID: z/gChtcpR1WIx6vBj/unYw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
-   d="scan'208";a="148451524"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 10:02:16 -0700
-Date: Mon, 2 Jun 2025 10:02:15 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Zaid Alali <zaidal@os.amperecomputing.com>, rafael@kernel.org,
-	lenb@kernel.org, james.morse@arm.com, robert.moore@intel.com,
-	Jonathan.Cameron@huawei.com, ira.weiny@intel.com,
-	Benjamin.Cheatham@amd.com, dan.j.williams@intel.com, arnd@arndb.de,
-	Avadhut.Naik@amd.com, john.allen@amd.com,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	acpica-devel@lists.linux.dev
-Subject: Re: [PATCH v7 9/9] ACPI: APEI: EINJ: Update the documentation for
- EINJv2 support
-Message-ID: <aD3ZFyBW4SCyaGI9@agluck-desk3>
-References: <20250506213814.2365788-1-zaidal@os.amperecomputing.com>
- <20250506213814.2365788-10-zaidal@os.amperecomputing.com>
- <20250530102711.GAaDmH_1O7lc6kuveY@fat_crate.local>
- <aDoal24J-BMTIBCq@agluck-desk3>
- <20250531092050.GBaDrJ8iw7cNcpOKeA@fat_crate.local>
- <aDuBjopy_nE9A-ph@agluck-desk3>
- <20250601102554.GAaDwqsgCODzEne7Ow@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QVgnPAAt"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso3535208b3a.2;
+        Mon, 02 Jun 2025 10:03:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748883818; x=1749488618; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=fll3hWF4pol/LM2L7XdwKp07jcPy9V6QGOSoLodOnKA=;
+        b=QVgnPAAt6Yw9NL3+h4RIeqglZwxmjc683wyWtAcIULyKTLE1j1LV7q9+HOzdwkVYsT
+         y4i+jgBi92MBeUlSBN4wfAgmTiW0AgKNUtXQq1jYWqDdVVEvuEuOLp5/yh2diuVCjwEP
+         YLiJPQHPOjqumrmAV/HLQYn2dL4qocdJv13ltUY2D3epI3s7aKbHPxLNUab3MSTjBVkT
+         QFI3ZEBPk8U6Wno2le81agGceJfOK9BcTyPK4DWgwJ8L4geEvhTNxqG/hhanMQLvSV4e
+         aWsDWHXCcsAFkEOvOhue810518TsHP6+SEgo87anTg0nUkC4HWCijl+37O3KlRESTa12
+         pE8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748883818; x=1749488618;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fll3hWF4pol/LM2L7XdwKp07jcPy9V6QGOSoLodOnKA=;
+        b=gUxpyXPQloZgHR9Rdr1svTvy3fWHByy/txIufBKwM+hAfKY6wRAdRGUhbcmyzgFSUn
+         5tck5JHTP+a6Qly/fAxjPtmrg0Wm/Qn8wUtuy/bXGV1uwfUJ9ZmLmcbtS2hpY/Yz551J
+         aTOJM+EO3Uvn3+h5Nwkg16h6cBOBWB4817U1FS2vJhKviEp+RFLwPfD2zcEPMxnaGQCU
+         qgLZA+wrZWyeQK2ac4wbfSkrK1hizyjMLFYeR39IGvryUlEFTxZuYvRVGAISQ0h6qpPy
+         ntsmLGHzlbGPCls7EhJF7rL4XS+XdPgNqoP5cgP5fRztc8VGrSR9cur4xf6PfiyyY4l/
+         lXLg==
+X-Forwarded-Encrypted: i=1; AJvYcCVeSJQqAJ4CgB3vkIsMxEFJInJaFnUiJsxYh4ehoWcxSXZI9qsS6Cd7jpHc8bRJ2eGSiJOLApE5@vger.kernel.org, AJvYcCVnq5+8v26uMCi+q1tx2/KzGgjJGGUI2JZqnB9mSh6Cbox0C36TRfsgV/BF3TMpIwVSNnTdctP8kRaWZZY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgKNJU2V37f1vHhqBvShXeFGUrI7+N7MffBC9sR7sG8cef3Czm
+	rqnXlTjyB0IIw6K8dROF2d3GzIa3qG34s9aTAuOeyr2aRmEcLwCnSwZWqE7aRHyS
+X-Gm-Gg: ASbGnctvl0DRqDrxhlywambPv8u9UpcATZea+fXOYI6I3U1qjfx/1J4cGx8eThYMI1W
+	yf4ZzBVyWvkKS0o7Twm0DdLZrj9s/0zO6D8QNMXyXnaATZmx9ZJ6lxmFoghS/O9zpzdS0rC5UsO
+	3mJmiixJM2NB7NxKT586sqRnYj/RC6Ipe2xpCKlvVDpne9zgGHrbfBcz2l1giNFWASSpxKA5xK8
+	R12vEJY1imbKZa8wjnhr/iHPCAddeErvRXOxpCpvWX9pF/0blYNAdvV2WoVAjOr7Xw7b7vIiWn2
+	xj+d3uuFAEsv7tZ0BFJnstdq5lRPAW+wWosXX/ybH6Uqt6sqTMz86y+5wt4M81v1fWO6NcRrtyF
+	I6sw=
+X-Google-Smtp-Source: AGHT+IHFSNHnyO+CDl/RuvZSWW0apRaWa2HraPjvF6RPXFQovk1bTYvNCry87zOPF++XkqEjDNbdxQ==
+X-Received: by 2002:a05:6a21:9998:b0:215:e9aa:7fff with SMTP id adf61e73a8af0-21ae00b198cmr22928496637.31.1748883818354;
+        Mon, 02 Jun 2025 10:03:38 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afeb2bc1sm7874247b3a.47.2025.06.02.10.03.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Jun 2025 10:03:37 -0700 (PDT)
+Message-ID: <50d6ee44-f7c7-4fe7-848d-dc31cddc19f9@gmail.com>
+Date: Mon, 2 Jun 2025 10:03:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250601102554.GAaDwqsgCODzEne7Ow@fat_crate.local>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5.15 000/207] 5.15.185-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250602134258.769974467@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250602134258.769974467@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jun 01, 2025 at 12:25:54PM +0200, Borislav Petkov wrote:
-> Some questions inline...
+On 6/2/25 06:46, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.15.185 release.
+> There are 207 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> On Sat, May 31, 2025 at 03:24:14PM -0700, Luck, Tony wrote:
-> > EINJ V2 allows the user to perform multiple injections together.
-> > 
-> > The component_idN/component_syndromeN pairs of files direct the
-> > "where" and the "what" of each injection.
-> > 
-> > But the kernel needs to know how many of these pairs to use
-> > for an injection (to fill in a field in the structure passed
-> > to the BIOS).
+> Responses should be made by Wed, 04 Jun 2025 13:42:20 +0000.
+> Anything received after that time might be too late.
 > 
-> The kernel could realloc on each write. Or we could allocate the struct to max
-> elems and trim it before passing it down to BIOS.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.185-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-The actual structure passed to BIOS is the same each time. Just the
-set_error_type_with_address::einjv2_struct::component_arr_count
-changed to indicate how many errors to inject.  In theory the
-driver could allocate and copy a correctly sized structure, but
-Zaid's code here is simpler, an this is hardly a critical path.
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
-> > User interface options:
-> > 
-> > 1) User can zero out the component_idN/component_syndromeN pairs
-> > that they don't need and have the kernel count how many injections
-> > are requested by looping to find the zero terminator.
-> > 
-> > 2) Kernel could zero all pairs after an injection to make the user
-> > explicitly set the list of targets each time.
-> > 
-> > 3) User provides the count vis the nr_components file (perhaps
-> > needs a better name?)
-> 
-> Yap, agree that the name is not optimal.
-
-It can be dropped if we make the user zap previously supplied
-component_idN/component_syndromeN pairs that are no longer
-wanted.
-> 
-> User can inject into each component pairs file and the kernel can put that in
-> the tracking struct. So you have:
-> 
-> # echo 4 > component_id0
-> # echo A5A5A5A5 > component_syndrome0
-> ... set other files and finish with usual
-> # echo 1 > error_inject
-> 
-> <--- here, it goes through each component pair and builds the structure to
-> pass down the BIOS.
-> 
-> And you track valid component pairs by setting the IDs to -1 or something else
-> invalid.
-
-This is just an improvement on my "option 1" (improved because all-ones
-for the component ID is going to be invalid for sure, while all zeroes
-could be a valid component).
-> 
-> All those component IDs which have remained invalid after the error_inject
-> write happens, get ignored - you gather only those which are valid and inject.
-
-Or just stop collecting on the first invalid one.
-
-> And this way you can keep the old values too and gather them again and inject
-> again, over and over again.
-> 
-> Right?
-
-Yup.
-
--Tony
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
