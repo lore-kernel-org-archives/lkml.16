@@ -1,140 +1,205 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10EDB23183A
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 14:50:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394D2231C87;
+	Mon,  2 Jun 2025 14:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748875831; cv=none; b=frl84mAaFILm5rKRzmUTY141hUfmJ5vmPngxjiV0Pi5/3ZtW9/uLVWP5/hsANTfK6RweyihRVNtSR/skFvsTFyNw0s3yVbNaQQLrr3yeNeqUQqGMQBF+TA/3VWW0Zez5r5EStfcocuttSdedNeF2/Y9KTok+QMX04vcjqlOFHzo=
+	t=1748875839; cv=none; b=QugAXskoUdlVX0Zok5GPAbic1uABWipBpraotpqsXFUcheSrB8heSRMm9bBemhbfcaxQNj1czC/lpfgPWZplQVtxBM4TAidkGFPG3tj1+t3AyF8O57LJ3YxHYzAPr9Jtoa1Sfi56ufhGJyZbRWPsK/vaRR9V0JSNF/EjjE7c7OU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748875831; c=relaxed/simple;
-	bh=cD4utyu5riOW/V88wiSLFky7g7XfLN/qhdRlEyPH7cQ=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D5/u/ppqKf1IRrfT7qI1W4ZxunwHelTi/pgIle51vhgyYEsyHvP/h56/ByrBekuO8YDlPAkIX6BV5PfGsnb8xkzVzQYJDVhsSJF3NbtvE2g83bNeN/AD6tclfQRX6Zjq1fJ1HIIZT4Foh9OHDwuwo/M8X0t3bxYnjn+zw+FtzvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0riFQfn/; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VvDhAlkd; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0riFQfn/; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VvDhAlkd; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1748875839; c=relaxed/simple;
+	bh=gvltXEjxatA7cwXbM1ySU6qvzw0guFizH5e5rJ906Jg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IKCfVUdZiMe18+TtAoepz4+Ug90Zc+TeLuL4VOT5f3BuNGTh5tqa+g9dULfPxvBbszwje2XpGCI/KRwje75CHNm2q7ONU53ts1TuD9A+rvzxYiVaIhGISjQwAtTf2LFOOdDsnaU1YuSu/2yUHCnpULiT9IIeg8GCVHHkFmwCOhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gAxGSIiR; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0riFQfn/";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VvDhAlkd";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0riFQfn/";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VvDhAlkd"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 134CB219DF;
-	Mon,  2 Jun 2025 14:50:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1748875828; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7yRG/WBt5KTJudP/SPS57xZI3pNN4+BeO93PpMIaodY=;
-	b=0riFQfn/O6vo82Ugquo9J2M404GjVS4vWwWrpFG4/oajj+58OCkKwjZrNxMgkfSvZZHHCD
-	99SREuYjabMfSVmiI2cBPpndw0Eag+4VWtLEKTfpiwU5rvFEuZVetZnolrVcZKj/xVKJCS
-	xJA6Nbl/D3SsPgXetrROMnS4HaGNHhc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1748875828;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7yRG/WBt5KTJudP/SPS57xZI3pNN4+BeO93PpMIaodY=;
-	b=VvDhAlkdD/zqyARal94gTpiTwPKf9mGGs2cVwn0/n/55qnj5ks3Yxvz1/ZxsVhusslI4C3
-	T6BIehk82DSnOyBQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="0riFQfn/";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=VvDhAlkd
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1748875828; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7yRG/WBt5KTJudP/SPS57xZI3pNN4+BeO93PpMIaodY=;
-	b=0riFQfn/O6vo82Ugquo9J2M404GjVS4vWwWrpFG4/oajj+58OCkKwjZrNxMgkfSvZZHHCD
-	99SREuYjabMfSVmiI2cBPpndw0Eag+4VWtLEKTfpiwU5rvFEuZVetZnolrVcZKj/xVKJCS
-	xJA6Nbl/D3SsPgXetrROMnS4HaGNHhc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1748875828;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7yRG/WBt5KTJudP/SPS57xZI3pNN4+BeO93PpMIaodY=;
-	b=VvDhAlkdD/zqyARal94gTpiTwPKf9mGGs2cVwn0/n/55qnj5ks3Yxvz1/ZxsVhusslI4C3
-	T6BIehk82DSnOyBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CB70313AE0;
-	Mon,  2 Jun 2025 14:50:27 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id vfLxLzO6PWgGXwAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 02 Jun 2025 14:50:27 +0000
-Date: Mon, 02 Jun 2025 16:50:27 +0200
-Message-ID: <87plfmxkng.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: "David Heimann" <d@dmeh.net>
-Cc: tiwai@suse.com,
-	perex@perex.cz,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: usb-audio: Add implicit feedback quirk for RODE AI-1
-In-Reply-To: <084dc88c-1193-4a94-a002-5599adff936c@app.fastmail.com>
-References: <084dc88c-1193-4a94-a002-5599adff936c@app.fastmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gAxGSIiR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748875837; x=1780411837;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=gvltXEjxatA7cwXbM1ySU6qvzw0guFizH5e5rJ906Jg=;
+  b=gAxGSIiRmPNfF74z2v8p2uVMdrDvB4Jsrq8ai5zQsR3qVdx0+/uPq/Mt
+   GBDj5QJNgPR2vrvyfmggDnZrV9zJODB3shZWed6D32t/XVl55+bhylPaZ
+   wZAp1xnOOe8qMqLneoPW9lZKWGCQ2/25KeRXi5lUMrvSUGe4/vCuTkJtR
+   xQGaXzZAvA8LjKP+0mEu1VF1gviAgLn6FwJGrTD/w2tViWVAjMYLq0O/b
+   zqOiH82efqUBRaFhBUCWqbU/8sZE07+rrXcMSpAPvT2B17Yi3Y45FNLt5
+   BW2ok61D1J1aIyKeh0xaXPF2N8lL/l3wRGnzU1MKiOZdget/V+kKInIRP
+   A==;
+X-CSE-ConnectionGUID: bONEmGf5SUC+7oJCVuxPAw==
+X-CSE-MsgGUID: u2QuODLRRcCkredeVqk/lw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="68435605"
+X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
+   d="scan'208";a="68435605"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 07:50:36 -0700
+X-CSE-ConnectionGUID: bSyumsRCQFaHieW5WnNEIw==
+X-CSE-MsgGUID: ORB/JHGpRB2A/q6o48Pqug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
+   d="scan'208";a="144592177"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa009.jf.intel.com with ESMTP; 02 Jun 2025 07:50:30 -0700
+Date: Mon, 2 Jun 2025 22:43:59 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+Cc: kvm@vger.kernel.org, sumit.semwal@linaro.org, christian.koenig@amd.com,
+	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
+	jgg@nvidia.com, dan.j.williams@intel.com, aik@amd.com,
+	linux-coco@lists.linux.dev, dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	vivek.kasireddy@intel.com, yilun.xu@intel.com,
+	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
+	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
+	zhenzhong.duan@intel.com, tao1.su@intel.com,
+	linux-pci@vger.kernel.org, zhiw@nvidia.com, simona.vetter@ffwll.ch,
+	shameerali.kolothum.thodi@huawei.com, iommu@lists.linux.dev,
+	kevin.tian@intel.com
+Subject: Re: [RFC PATCH 19/30] vfio/pci: Add TSM TDI bind/unbind IOCTLs for
+ TEE-IO support
+Message-ID: <aD24r44v0g1NgeZs@yilunxu-OptiPlex-7050>
+References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
+ <20250529053513.1592088-20-yilun.xu@linux.intel.com>
+ <yq5aplfn210z.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,suse.de:mid];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 134CB219DF
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -3.51
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <yq5aplfn210z.fsf@kernel.org>
 
-On Sun, 01 Jun 2025 18:41:16 +0200,
-David Heimann wrote:
+On Sun, Jun 01, 2025 at 04:15:32PM +0530, Aneesh Kumar K.V wrote:
+> Xu Yilun <yilun.xu@linux.intel.com> writes:
 > 
-> The RODE AI-1 audio interface requires implicit feedback sync between playback endpoint 0x03 and feedback endpoint 0x84 on interface 3, but doesn't advertise this in its USB descriptors.
+> > Add new IOCTLs to do TSM based TDI bind/unbind. These IOCTLs are
+> > expected to be called by userspace when CoCo VM issues TDI bind/unbind
+> > command to VMM. Specifically for TDX Connect, these commands are some
+> > secure Hypervisor call named GHCI (Guest-Hypervisor Communication
+> > Interface).
+> >
+> > The TSM TDI bind/unbind operations are expected to be initiated by a
+> > running CoCo VM, which already have the legacy assigned device in place.
+> > The TSM bind operation is to request VMM make all secure configurations
+> > to support device work as a TDI, and then issue TDISP messages to move
+> > the TDI to CONFIG_LOCKED or RUN state, waiting for guest's attestation.
+> >
+> > Do TSM Unbind before vfio_pci_core_disable(), otherwise will lead
+> > device to TDISP ERROR state.
+> >
 > 
-> Without this quirk, the device receives audio data but produces no output.
-> 
-> Signed-off-by: David Heimann <d@dmeh.net>
-> ---
-> Tested using module parameter:
->   options snd-usb-audio implicit_fb=1:19f7:000a
-> 
-> This device previously worked but stopped producing audio output (possibly after a kernel or audio subsystem update). This quirk restores functionality.
-> 
-> This resolves audio output on the RODE AI-1 which otherwise receives audio data but produces no sound.
+> Any reason these need to be a vfio ioctl instead of iommufd ioctl?
+> For ex: https://lore.kernel.org/all/20250529133757.462088-3-aneesh.kumar@kernel.org/
 
-Applied now.  Thanks.
+A general reason is, the device driver - VFIO should be aware of the
+bound state, and some operations break the bound state. VFIO should also
+know some operations on bound may crash kernel because of platform TSM
+firmware's enforcement. E.g. zapping MMIO, because private MMIO mapping
+in secure page tables cannot be unmapped before TDI STOP [1].
 
+Specifically, for TDX Connect, the firmware enforces MMIO unmapping in
+S-EPT would fail if TDI is bound. For AMD there seems also some
+requirement about this but I need Alexey's confirmation.
 
-Takashi
+[1] https://lore.kernel.org/all/aDnXxk46kwrOcl0i@yilunxu-OptiPlex-7050/
+
+> 
+> >
+> > Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+> > Signed-off-by: Wu Hao <hao.wu@intel.com>
+> > Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
+> > ---
+> >  drivers/vfio/iommufd.c           | 22 ++++++++++
+> >  drivers/vfio/pci/vfio_pci_core.c | 74 ++++++++++++++++++++++++++++++++
+> >  include/linux/vfio.h             |  7 +++
+> >  include/linux/vfio_pci_core.h    |  1 +
+> >  include/uapi/linux/vfio.h        | 42 ++++++++++++++++++
+> >  5 files changed, 146 insertions(+)
+> >
+> > diff --git a/drivers/vfio/iommufd.c b/drivers/vfio/iommufd.c
+> > index 3441d24538a8..33fd20ffaeee 100644
+> > --- a/drivers/vfio/iommufd.c
+> > +++ b/drivers/vfio/iommufd.c
+> > @@ -297,3 +297,25 @@ void vfio_iommufd_emulated_detach_ioas(struct vfio_device *vdev)
+> >  	vdev->iommufd_attached = false;
+> >  }
+> >  EXPORT_SYMBOL_GPL(vfio_iommufd_emulated_detach_ioas);
+> > +
+> > +int vfio_iommufd_tsm_bind(struct vfio_device *vdev, u32 vdevice_id)
+> > +{
+> > +	lockdep_assert_held(&vdev->dev_set->lock);
+> > +
+> > +	if (WARN_ON(!vdev->iommufd_device))
+> > +		return -EINVAL;
+> > +
+> > +	return iommufd_device_tsm_bind(vdev->iommufd_device, vdevice_id);
+> > +}
+> > +EXPORT_SYMBOL_GPL(vfio_iommufd_tsm_bind);
+> > +
+> > +void vfio_iommufd_tsm_unbind(struct vfio_device *vdev)
+> > +{
+> > +	lockdep_assert_held(&vdev->dev_set->lock);
+> > +
+> > +	if (WARN_ON(!vdev->iommufd_device))
+> > +		return;
+> > +
+> > +	iommufd_device_tsm_unbind(vdev->iommufd_device);
+> > +}
+> > +EXPORT_SYMBOL_GPL(vfio_iommufd_tsm_unbind);
+> > diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> > index 116964057b0b..92544e54c9c3 100644
+> > --- a/drivers/vfio/pci/vfio_pci_core.c
+> > +++ b/drivers/vfio/pci/vfio_pci_core.c
+> > @@ -692,6 +692,13 @@ void vfio_pci_core_close_device(struct vfio_device *core_vdev)
+> >  #if IS_ENABLED(CONFIG_EEH)
+> >  	eeh_dev_release(vdev->pdev);
+> >  #endif
+> > +
+> > +	if (vdev->is_tsm_bound) {
+> > +		vfio_iommufd_tsm_unbind(&vdev->vdev);
+> > +		pci_release_regions(vdev->pdev);
+> > +		vdev->is_tsm_bound = false;
+> > +	}
+> > +
+> >  	vfio_pci_core_disable(vdev);
+> >  
+> >  	vfio_pci_dma_buf_cleanup(vdev);
+> > @@ -1447,6 +1454,69 @@ static int vfio_pci_ioctl_ioeventfd(struct vfio_pci_core_device *vdev,
+> >  				  ioeventfd.fd);
+> >  }
+> >  
+> > +static int vfio_pci_ioctl_tsm_bind(struct vfio_pci_core_device *vdev,
+> > +				   void __user *arg)
+> > +{
+> > +	unsigned long minsz = offsetofend(struct vfio_pci_tsm_bind, vdevice_id);
+> > +	struct vfio_pci_tsm_bind tsm_bind;
+> > +	struct pci_dev *pdev = vdev->pdev;
+> > +	int ret;
+> > +
+> > +	if (copy_from_user(&tsm_bind, arg, minsz))
+> > +		return -EFAULT;
+> > +
+> > +	if (tsm_bind.argsz < minsz || tsm_bind.flags)
+> > +		return -EINVAL;
+> > +
+> > +	mutex_lock(&vdev->vdev.dev_set->lock);
+> > +
+> > +	/* To ensure no host side MMIO access is possible */
+> > +	ret = pci_request_regions_exclusive(pdev, "vfio-pci-tsm");
+> > +	if (ret)
+> > +		goto out_unlock;
+> >
+> 
+> This should be part of pci_tsm_bind() ? 
+
+I'm not quite sure. My feelig is this method is specific for VFIO
+driver. Many other drivers just request regions on probe(), they can
+never bind successfully if pci tsm hide this implementation internally.
+
+Thanks,
+Yilun
