@@ -1,201 +1,213 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2066.outbound.protection.outlook.com [40.107.22.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE7D12D1F1;
-	Mon,  2 Jun 2025 22:19:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748902775; cv=fail; b=Dj/ds2JKszFUmMMn/Mo6DRNxeL/DHAwx27jYeNLAhXk4X1DJtEG5Z4viCigcYh1ZZ9Y8RuqeW/Ecxvib/7yMy4nPmK2+JKGCBOX/2So5yHmKuUfsbCTqztlJJB7Gei2exkeZfH86uhJrPdH87iJUmomiSc67pv+NORWnliBmy1M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748902775; c=relaxed/simple;
-	bh=nhnxXQT8XLoEzmnKSquaf/sprzlIhuMv6+tN4pEhyuw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=YM5O6wPKO/ZpBNgA/tEDrdDZvsxGAiAzDGRBhD02pYWrdkV3QrXR8VYNK5qh/Ss7F2snCeqPniuV8vGz/YX5cm9pV2dTkTK5cqhQEgI4O5uorq4tnS4b3Qf16QhSfcf39C3Ce3efGKA7gcpcaEFUDi66ZlYEbt5/AudHNITM47A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Lvrm+iZl; arc=fail smtp.client-ip=40.107.22.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9234219CCEC
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 22:20:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748902858; cv=none; b=PUZnkKNSZTki+NrIej00DRcKxVW6tcKPLP7Qq11CjHeiieu7yKbUnclwkgRMJQLshoP4gae2QXG1Fy8jiidtx3mnJVGnNFlwc6+y/s0cnArKbrTH2g+f7y4qj1NTTaViaNZNdXWVMwBQVrVG/VUHZoN5inOOZbhnKqxe69T4fC8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748902858; c=relaxed/simple;
+	bh=buK+1F3NaFpvUqF1f/dexBsXuVQl3hByz1baHK1TnX4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Bx5RKV8e3jjXQpy9+0+4b8EkQPpd9Q3XUWH8AIUuwP42rNlcJtsUxKQ9FWz11LDkCW1ODJYeYbQvoyLDLJV5WCGxCOnrpYYRv1yURTkfbdQUqyO/ByiId02ym6g0HffZ1crTvNsighVMal3H5W/1+9T6dE+QGV4oHIBgBkKdf4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wzk5FhLD; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Lvrm+iZl"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rryzzcqHGx+Bc637uQYSjJ9m3Rh5aWYF37/cRjfSmpln5O5LgRxdKU0gJQhGOsD/Xuvh3xyyXj2GUS02ylU8LU0FP5tbcSF8XMwgX1TAJQlYBwUz5c5tnqp1/Ts0tNfbmp3jg+ghTujvcfc86ei2xGysaCCwwC/X+ZOQdvpn/9ZN3Hm4OZhxh06cee6Rfk5ONd52XeruWh/Ia6Si/HqXpIltkur5f9mWhs1uQ4KfGQRHSx4QxRlJNjT2PQHEHHXnaCpOr9vSVlhn2Zniv9mfBF7M0YoJqUpsAGOjAgF52RanmkgQCwbrm55LgIZyKZ7vlZWyd9gS0a/S/8tkuK+9ig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZeDTaG1eubiLNZ9ntQF1GrxJcR2HS8tkS3LQfZVRu04=;
- b=rFkyV4b8/pHlfvyBztcMKj4dNRHzEXG2xHD514qujt5yY2DTbzOIAg03Q1JeGq0G+e4YIr7t6Ud2reEQwPAi86e+/IJdzBhEJrNOXLjTWuMJnYd2oNseB2Y5ZXWS5Rik+y5mE6on4paHoc8APCNpb8M4y8/zDbsf8k3d6tLxv+Eowr8Fh8IOvuNcS3SoDTJFRdnB60hYxHKhUAJlJdnOdL2OEx091MKdcW1G/MYNkbZO2SqzlNg7gkEIC/g3einv1tK+FymG1lGHW84v25QhR09/ZrFGQbfeMzIAPJDr1vU9XnDj2qOPyOqD4h8aevCEUZqU47sI6PUZRYdH6Pfi8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZeDTaG1eubiLNZ9ntQF1GrxJcR2HS8tkS3LQfZVRu04=;
- b=Lvrm+iZlhgMd6aYFSMSnO3vRHrRoX8eM3VxlXf7WwQnfXdunNaYcj1ouoUnMjgCCgo8x0brDwmL8YAb0hdMDi2Fcpn//l7GBBevq/XWTqg1i0kWfzH6C0+5wIaDkGPgwWHo+yPpCdH3Hl+rJ9tvKGU8SVZ5mERSlOpgo32638pVWtwxKpbUQhhsM1hGOk7iTwe26VgS+NYpPHfN82j+vouEyVnO14zMdwcVCPy3DNRQyW2V+sKjCSba1LWfShF+hk7CMUb6/KYkTNX5DZRmSmeAHxPFvJplgt32kDBgeJAYSx/SVJobhClDO794sHGOh12KBmJlbSPrISkwa7pk0aA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DU6PR04MB11231.eurprd04.prod.outlook.com (2603:10a6:10:5c3::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.34; Mon, 2 Jun
- 2025 22:19:28 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%6]) with mapi id 15.20.8769.025; Mon, 2 Jun 2025
- 22:19:28 +0000
-Date: Mon, 2 Jun 2025 18:19:19 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Marek Vasut <marex@denx.de>, Peng Fan <peng.fan@nxp.com>,
-	Michael Walle <mwalle@kernel.org>, Fabio Estevam <festevam@denx.de>,
-	Markus Niebel <Markus.Niebel@tq-group.com>,
-	Frieder Schrempf <frieder.schrempf@kontron.de>,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	Max Merchel <Max.Merchel@ew.tq-group.com>,
-	Tim Harvey <tharvey@gateworks.com>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-Subject: Re: [PATCH 1/1] dt-bindings: arm: lpc: add missed lpc43xx board
-Message-ID: <aD4jZ3QrOS4fM99s@lizhi-Precision-Tower-5810>
-References: <20250602140613.940785-1-Frank.Li@nxp.com>
- <5014a8ff-aa91-4ea4-81c5-7aeafc13b330@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5014a8ff-aa91-4ea4-81c5-7aeafc13b330@kernel.org>
-X-ClientProxiedBy: BY3PR05CA0057.namprd05.prod.outlook.com
- (2603:10b6:a03:39b::32) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wzk5FhLD"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-6024087086dso4249a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 15:20:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748902855; x=1749507655; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j1xJTVZ+8VUHzYi2jE7W4PW0S8Hr18XnGfWfY1LLxTU=;
+        b=wzk5FhLDjnMhQStLCnK6zR1e4AdgnxcpwxCDZpuF6sN7Eh/8qac+F95wd9+Wir8Qj3
+         KQ3D9Q0w3dRKOfABiSoG6eECQ4ooV4H9qe9QpBQvRIEo8kzUXDYGtRiSSbywM3UD5kbY
+         JO/Xuy6Q5+4RsMyr22JA6i4f5nnu4qZyxhEFKC4EsGGiKyTQ43x012yzEBZrDbSJ6OKb
+         VPRfyVo8zZeaEcIVp2jCEzRHcwsOtFgdEZ6B7eylGU/FY5PE0pk5DG7lu2JU/kiKuB6m
+         ClZLp3eoUu+zQvg/h6ykoRu+Z1QdoXpqP17a4lV6iF4+SDvwHvKQUDIQgxBa5wUCkiS8
+         gwnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748902855; x=1749507655;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j1xJTVZ+8VUHzYi2jE7W4PW0S8Hr18XnGfWfY1LLxTU=;
+        b=OGjjJxlUhC4b9oMo/i3cKr7eCDhTx5jVpywOvyqio4S850+OcUWQ5itKAjFcX79eL3
+         F4OM1DLw1Vtua9WxaYKesHtCqcZdCAebfEVjDPkx2xWkI5qOonjXmbZTyO/iKeBdCtwC
+         Pf92EHVHcv8yU7OL3VNxk7C65Y/BZgFJIbzFn2/+MOtjjE69bExN9p2U6SkSIhuqLXiO
+         FGASgyb9IkxvixXZNtM7VuS4MTSXYgHSiNxeatz+gPYQvWqO7u4b8Q86vJJOxPcBm1cd
+         J98dy4J4xUe8sMAk2KSGgP0KH+9wVWlaWdRztDle5va/9WTUVIqBjeFXD4UAVa4m0HWo
+         Thfg==
+X-Forwarded-Encrypted: i=1; AJvYcCUEOUnNUwVfKg6gIM2VaAnQdD79iwakSf+unJXxX5/f8RTf3nGmJ3jFTUEU3Id/qi5wa+UZAKq+BNaD8NI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxC5QyS6ZluC1KmyTDFT7BigFtIaeBaeVsZisnKezIUryWJVg4w
+	Wz4q4YjHCzVuMzywqNmzmPu8vwpetzxrMiVv/oVuJYGYHdpzkLnHKGB6J3Ya+q2YROJ7IKoLLf0
+	w7IvTbP6VGThyRHfNrPk9dELHk75VsoEeBShtybfG
+X-Gm-Gg: ASbGncu1zi1gHvMBieKnsS6GiMKrxybq7IbBGQmRQpcyk/ZMj0lKpHp3LkX0gPLxZkM
+	Wln6j89gGzekd2AeCDuRru1qpe+X0EmLcFDrF/RODh4hoEfLJCTNPSQALreecwh0D+NRJrh+ABh
+	dx05NtsEIEy3K0coRf9bBJRJZHHc75Zb5Vrwds6Nmu2D6RVj0v91LQ3J9Lgfe6eEFc4jM2Dg/qW
+	A==
+X-Google-Smtp-Source: AGHT+IH/yk/xxbcx7hiUJfIuDl7hBIatmBZMmWU0cKeVYadUWiet4CoRFpyYhJCer92dBzh0suixw0aQHaSXmbnMaAM=
+X-Received: by 2002:aa7:c558:0:b0:602:3bf:ce71 with SMTP id
+ 4fb4d7f45d1cf-606afa10584mr12099a12.3.1748902854672; Mon, 02 Jun 2025
+ 15:20:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DU6PR04MB11231:EE_
-X-MS-Office365-Filtering-Correlation-Id: 27924aad-bb12-4840-3fcc-08dda2238a0b
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
- BCL:0;ARA:13230040|366016|1800799024|52116014|7416014|376014|38350700014;
-X-Microsoft-Antispam-Message-Info:
- =?us-ascii?Q?KRKe329A7TFmmti9puOMFm1cbFAJ8+R2TT4dmwwcvsvLSc5yGP1advwZWEYj?=
- =?us-ascii?Q?XGhaKiYXsvM+b5IU390ZuA3jzkbl37MtVg66PSDkK1qOWGyfIZbGEGNtlHIw?=
- =?us-ascii?Q?NSVm57rJ4/bry6zCUWttVY8EOcOeu3mO4PGCjh9nSE/RsgnGUmIx90spIaCw?=
- =?us-ascii?Q?T8IAxk+gHhb0M96YM5nwXCOooPGVCfSyjo3dCoaULhAoXhcOAnVvJ7Kp9Gbl?=
- =?us-ascii?Q?CxcL/Y1Wjj8nEdKcLuaiXH2scu81iaxqUq413vsIyhoZU8agYtoCedDtxtxz?=
- =?us-ascii?Q?BxQEOFyFbb5Z4uNR1A5/A0PNNeVJYYJDjD05QPlAzBC7Vk/VbR1ESl3aPdDK?=
- =?us-ascii?Q?j4kzvgmqhfUAqoElnPEfh1byxVrvW/lpGAo9f2Rr8NRn/Orfh/EaX1hVGC1x?=
- =?us-ascii?Q?rRPeAhuyvm1jcVkZ6UmzdbhvLzDPwgFrGuYv4/xrn9hcNvYqXgLjbII5/1q/?=
- =?us-ascii?Q?ParCQlU/bAwUmHE+HqKoQldMouRSFnTYo8Y2zxfQF4VnWOvct1BqJLEf0wez?=
- =?us-ascii?Q?SSBbwajVY8BrXD/qavQIJ7HaT0mgh19qOFNNMTkxWF4TO3ZmW7Y+WcVhecd0?=
- =?us-ascii?Q?aZFdqPvBD3EQBjcPm/LbHB2nTFtnQMPfYhkWkCbr7S8uhq+5ZCj+VNpaUiBK?=
- =?us-ascii?Q?EbIVBuskIssZC7kx0Nhu1XbdfDuYyKdRMIKNMAwwlDL8sYzjMA9wTfq65Yhc?=
- =?us-ascii?Q?hUb0zqvWTZ/IX2DqNinLZuyIERcf9GCmydIQctGNeV6oLLeWIGnwoTOcUEbz?=
- =?us-ascii?Q?+QCd12MJsAnp+q2JErgyJiXMX/sQhAgF1ExXV88lahjClRXAP3GsF2WMg0dY?=
- =?us-ascii?Q?7RkpPSytiEvia4kRXtRNxRDyxQe83gig26gIppkjRbVJQUz8cOtzZxtRUebI?=
- =?us-ascii?Q?dmet9NqdJkMdCvEE9hLKIOU+wsY7sLskI2VpCjOb/ykOYw9Uuonyj4QgQMHP?=
- =?us-ascii?Q?RKP4pKOg6BoHXBgVp+Wk1wei0rKU5SPrBj4djD3DDJme67OQfmpaO2u7luNE?=
- =?us-ascii?Q?i82EAZEuWAvIhbCTu/tkJvB6B2XmircP95lhcLnaqoZ8dhagDeL5WZYq/BGv?=
- =?us-ascii?Q?ny3QTHEDnLi0LAVsw6KBwV0ywAGXx4JHyk5Q6J8oknjr7rW1bsuQiEdjNo6L?=
- =?us-ascii?Q?E3pduzuzMCduKmHBY9Vv/QYkmNRqzbumBkCESaA5MhRa3TGsvZvzWT0DQHcy?=
- =?us-ascii?Q?qlRiBekYQ4SrNRjT+4IZyn6Et8WAx4ulzRipIAFS+WVCbpCMsxG1EDa/LIcS?=
- =?us-ascii?Q?UKdXheKG+gE9jzgnjKCKnFLsn3Tx5HztzdOpuNOphld4QszKLlHQL1QkxrMA?=
- =?us-ascii?Q?85+ywDezxs4ImZtrZI1zDnBxBDtj1XGOmXM12hZAvKl5X6ZUZ6UCioXq+qzq?=
- =?us-ascii?Q?R4xhjvMlV5rvhvVV5XMtZpSssQACxkClEUzywLzM8ZJcPz+wQIjbY1/BHeDi?=
- =?us-ascii?Q?NrFXOlFAUquS5GZ7AzL8KDQCWceAsTDlR5rbA+Kaabu5MgWtY+IY6Q=3D=3D?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(7416014)(376014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?us-ascii?Q?kVssl+0tmfDs3BiPiKpZGDKwZr3BMBAEgfFGqP5iRuPUu/yohsZH8n6vDDsL?=
- =?us-ascii?Q?U3QYKbh4RS1doL2sxMuGKlrUmYsv90DonAn3rIPebcufVAn41sKqr0/K3sy+?=
- =?us-ascii?Q?ajM6s4JBfu/ZJf6iYXEiE6Q8JSyfmvPXoyA+xjhMwog0WXk19ot59frePGeh?=
- =?us-ascii?Q?vY9D14emtT/5+XHvTRQoSNnj8nltfJXH9Uq6OAEjk4tgZnZvopXYuArFV6OM?=
- =?us-ascii?Q?0Sq8i6mQ4WOYQeNjl6pIvmq6da19zf1Nqu277fZoUacw/oB4hcdBOBXAf4y4?=
- =?us-ascii?Q?8gEfgGVw7Ehmw54kDl3QgKkoEK6MINTQ9GlMDvJHXuoOHZrWGx1bkGFEYJmI?=
- =?us-ascii?Q?1B+sDVHQ/XtTngPueh35fH3AoAwWBU3ynCore5Up72w4u+KnfD+caGB4+kvR?=
- =?us-ascii?Q?UTycDKssdcL4rEkW+qX8fnlebdXSOL0ZWSamYMaVZ6t0ofe8HXM0TAtqSD9N?=
- =?us-ascii?Q?nApZAb+mcMcagkL81Pj8a1+mXorgV4pjr/SNbRl+IziIXVmUq/9unFIGV73v?=
- =?us-ascii?Q?A9qvSbopzjEb//L8o/ss4BogfLPhQ2aN2pt1KNJIL3VJdqowFoVdPrGqozC0?=
- =?us-ascii?Q?w2b8+Q9aW5PT9+v22qFFnSCWAoCql0rFjel7G7OZpYjKedWbg1BBGHiR6SGL?=
- =?us-ascii?Q?s+FPXdCrmlqoGBI0qIs/HKycDBQzJW34yscvbqH9f5R6zljWyGmWVcXcrYqb?=
- =?us-ascii?Q?HA+r64KspcUr0TGh0zUNYwNUNpfwAUOzDykeGxG9ASca/2aUUxlaOFUqKZ0G?=
- =?us-ascii?Q?9PwvSNQN2SOpJglPNnlPZbXEfj6VGtoRteqtzzFYHwuLpkCaCo1Qu/PFZviA?=
- =?us-ascii?Q?j9qoD5iY/M2yckdsWqxlpMON6zn1jT8/z4Tkmhs+OcP/9MltzZ0M1/2bAl9/?=
- =?us-ascii?Q?Xy1uuKV+AA5VH01Pk39zH/SOJs14lOMOi366/7xPSq1H2J9ngHsSov87iw8C?=
- =?us-ascii?Q?hf24usOz7SIO7x505/9MStF6bKNp6o6R77S6nv3ST8DAwXburoqnUnra9LRr?=
- =?us-ascii?Q?DteZQfzuZUE3oBjVrLtLyuXuG1mP7DI4NoC1Yu0rximZsgHe4yrqSUqEK0IL?=
- =?us-ascii?Q?KQTjnzU5Wdxi5moH8bWKdrjq8euts7SkvbrvDKRNyTP4eHAWCfXZAjnGLYlq?=
- =?us-ascii?Q?KxjwkDpInVkjkCIxeDx9TtVMZlSEZ/F8k9mGG0R3h4apH2V0iEXYmJAn+uKU?=
- =?us-ascii?Q?Bs16Kje3IxuxMLMWZ1+uiE50ja6pR9bTl419Pme6yZB0L2qzFndqyfoExKHs?=
- =?us-ascii?Q?kURWCt2jBOtI77Z2uKqLhSUAapKbZuXHcDQSepHpMjSzc0NB+8rKdPRAay+y?=
- =?us-ascii?Q?TcXpuNh72qpPlLZZG/Qjj+iid3apwyG2S1yUkwBjgpZEECfKOuMlqYjtx0th?=
- =?us-ascii?Q?6W0zxPLn2FJG8Po5WBIMrzNrBInB03nIzU4ojzBXNjGnuw1d5Td06CUg6WUi?=
- =?us-ascii?Q?ReG75mfOwu/LnSEKCRBcK221F5XxgMswLKAamTU7c0jPoQ9SCU9zDk6reJ63?=
- =?us-ascii?Q?ydkgG90zu7xWNFoNK6RZv3DUrD9+ziiWpWbXww9pl1XdWduQlMl3qVQ/Gity?=
- =?us-ascii?Q?24BqPWW3wPME2WdRAZHddodLwu/4FmFr9IkudefS?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27924aad-bb12-4840-3fcc-08dda2238a0b
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2025 22:19:28.2033
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KN5O8ofFL1Bp7DGWjAJ/jDoA1T1tkYxLIoW/Gy88S0qnchT2ctLGmWdtowIQTnKSVDdubXJLlL4S7ZU56jjg4Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU6PR04MB11231
+References: <20250521213534.3159514-1-xur@google.com> <CAK7LNAS4Ys-ekzjrRdfwKh5tEU=FKe1tE2-orj6LTs7EknZCZg@mail.gmail.com>
+ <CAF1bQ=QSBOdvqqBPPv70z1hLX4echmfzBDCu5o4LtKrZEaAJUw@mail.gmail.com> <CAK7LNAThpMaDDfBD6jQzPZ==X-EngwoirFy9AAML9se-36L3ig@mail.gmail.com>
+In-Reply-To: <CAK7LNAThpMaDDfBD6jQzPZ==X-EngwoirFy9AAML9se-36L3ig@mail.gmail.com>
+From: Rong Xu <xur@google.com>
+Date: Mon, 2 Jun 2025 15:20:42 -0700
+X-Gm-Features: AX0GCFuuBOfRY_aGdJBgegCkRithTC4t0CA1KQhT2h01WgJiTD2lJJwDngovyHU
+Message-ID: <CAF1bQ=Rb=0Etk2GLaWR+dXtMG00NhVYcHwx-E0=2FYu4mE1B_A@mail.gmail.com>
+Subject: Re: [PATCH v3] kbuild: distributed build support for Clang ThinLTO
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>, Eric Naim <dnaim@cachyos.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Alice Ryhl <aliceryhl@google.com>, 
+	Sami Tolvanen <samitolvanen@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>, 
+	Rafael Aquini <aquini@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Stafford Horne <shorne@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Teresa Johnson <tejohnson@google.com>, linux-kernel@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 02, 2025 at 06:17:49PM +0200, Krzysztof Kozlowski wrote:
-> On 02/06/2025 16:06, Frank Li wrote:
-> > Add missed legancy lpc43xx board compatible string to fix below CHECK_DTB
+On Fri, May 30, 2025 at 11:48=E2=80=AFPM Masahiro Yamada <masahiroy@kernel.=
+org> wrote:
 >
-> typo: legacy
->
-> > warnings:
-> > arch/arm/boot/dts/nxp/lpc/lpc4337-ciaa.dtb: /: failed to match any schema with compatible: ['ciaa,lpc4337', 'nxp,lpc4337', 'nxp,lpc4350']
->
->
+> On Wed, May 28, 2025 at 6:05=E2=80=AFAM Rong Xu <xur@google.com> wrote:
 > >
-> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > ---
-> >  .../devicetree/bindings/arm/fsl.yaml          | 23 +++++++++++++++++++
-> >  1 file changed, 23 insertions(+)
+> > On Mon, May 26, 2025 at 6:12=E2=80=AFAM Masahiro Yamada <masahiroy@kern=
+el.org> wrote:
+> > >
+> > > On Thu, May 22, 2025 at 6:35=E2=80=AFAM <xur@google.com> wrote:
+> > > >
+> > > > From: Rong Xu <xur@google.com>
+> > > >
+> > > > Add distributed ThinLTO build support for the Linux kernel.
+> > > > This new mode offers several advantages: (1) Increased
+> > > > flexibility in handling user-specified build options.
+> > > > (2) Improved user-friendliness for developers. (3) Greater
+> > > > convenience for integrating with objtool and livepatch.
+> > > >
+> > > > Note that "distributed" in this context refers to a term
+> > > > that differentiates in-process ThinLTO builds by invoking
+> > > > backend compilation through the linker, not necessarily
+> > > > building in distributed environments.
+> > > >
+> > > > Distributed ThinLTO is enabled via the
+> > > > `CONFIG_LTO_CLANG_THIN_DIST` Kconfig option. For example:
+> > > >  > make LLVM=3D1 defconfig
+> > > >  > scripts/config -e LTO_CLANG_THIN_DIST
+> > > >  > make LLVM=3D1 oldconfig
+> > > >  > make LLVM=3D1 vmlinux -j <..>
+> > > >
+> > > > The implementation changes the top-level Makefile with a
+> > > > macro for generating `vmlinux.o` for distributed ThinLTO
+> > > > builds. It uses the existing Kbuild infrastructure to
+> > > > perform two recursive passes through the subdirectories.
+> > > > The first pass generates LLVM IR object files, similar to
+> > > > in-process ThinLTO. Following the thin-link stage, a second
+> > > > pass compiles these IR files into the final native object
+> > > > files. The build rules and actions for this two-pass process
+> > > > are primarily implemented in `scripts/Makefile.build`.
+> > > >
+> > > > Currently, this patch focuses on building the main kernel
+> > > > image (`vmlinux`) only. Support for building kernel modules
+> > > > using this method is planned for a subsequent patch.
+> > > >
+> > > > Tested on the following arch: x86, arm64, loongarch, and
+> > > > riscv.
+> > > >
+> > > > Some implementation details can be found here:
+> > > > https://discourse.llvm.org/t/rfc-distributed-thinlto-build-for-kern=
+el/85934
+> > > >
+> > > > Signed-off-by: Rong Xu <xur@google.com>
+> > > > ---
+> > > > Changelog since v1:
+> > > > - Updated the description in arch/Kconfig based on feedback
+> > > >   from Nathan Chancellor
+> > > > - Revised file suffixes: .final_o -> .o.thinlto.native, and
+> > > >   .final_a -> .a.thinlto.native
+> > > > - Updated list of ignored files in .gitignore
+> > > >
+> > > > Changelog since v2:
+> > > > - Changed file suffixes: .o.thinlto.native -> .o_thinlto_native,
+> > > >   and .a.thinlto.native -> .a_thinlto_native so that basename
+> > > >   works as intended.
+> > > > - Tested the patch with AutoFDO and Propeller.
+> > > > ---
+> > > >  .gitignore                        |  3 ++
+> > > >  MAINTAINERS                       |  5 +++
+> > > >  Makefile                          | 40 ++++++++++++++++++++---
+> > > >  arch/Kconfig                      | 19 +++++++++++
+> > > >  scripts/Makefile.build            | 52 +++++++++++++++++++++++++++=
+---
+> > > >  scripts/Makefile.lib              |  7 +++-
+> > > >  scripts/Makefile.vmlinux_o        | 16 +++++++---
+> > > >  scripts/Makefile.vmlinux_thinlink | 53 +++++++++++++++++++++++++++=
+++++
+> > > >  scripts/head-object-list.txt      |  1 +
+> > > >  9 files changed, 181 insertions(+), 15 deletions(-)
+> > > >  create mode 100644 scripts/Makefile.vmlinux_thinlink
+> > >
+> > > I re-implemented the Makefiles to avoid
+> > > the second recursion and hacky ifdefs.
+> > > Attached.
+> > >
+> > > The topic branch is available in
+> > >
+> > > git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.=
+git
+> > > thinlto-dist-refactor
+> > >
+> > > I only compile and boot tested on x86 QEMU.
+> > This implementation does look cleaner. But with one issue: it has a
+> > unified cflags for
+> > all the BE compilations. This means per-file flags, such as
+> > CFLAGS_fork.o =3D -fabc,
+> > are lost during the BE compilation for fork.thinlto_native.o.
 > >
-> > diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> > index d3b5e6923e416..75e46ffe9ba8c 100644
-> > --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> > +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> > @@ -1711,6 +1711,29 @@ properties:
-> >                - traverse,ten64            # Ten64 Networking Appliance / Board
-> >            - const: fsl,ls1088a
-> >
-> > +      - description: lpc based Boards
-> > +        items:
-> > +          - enum:
-> > +              - ea,lpc4357-developers-kit
-> > +              - ciaa,lpc4337
-> > +          - enum:
-> > +              - nxp,lpc4337
-> > +              - nxp,lpc4357
+> > This exact issue was what I aimed to prevent with the two-recursion app=
+roach.
+> > If we must avoid two recursions, perhaps we could leverage the saved pe=
+r-file
+> > pre-link commands (i.e., .*.o.cmd)?
 >
-> This feels wrong. Why 4337-based board is compatible with 4357 SoC? If
-> this was intentional either DTS is wrong or commit msg needs explanation.
-
-I think it is that legacy board dts mess up. I am okay to fix boards's dts.
-but I have not hardware to test such changes. There are some risk to toggle
-such old boards, such as the uboot may check these comaptible string to do
-some fixup. Anyways, these boards is too old.
-
-Do you think it worth to fix dts by take some little risk.
-
-Frank
+> How important is this?
+It is one of the main reasons for using distributed mode. For example,
+for some source, the user chooses to use -O1 (or disable some loop
+transformations), there is no way to do this with one-unified options.
 
 >
-> > +          - const: nxp,lpc4350
-> > +
-> Best regards,
-> Krzysztof
+> I do not know which compiler flags are consumed in the
+> distributed thin lto stage.
+>
+> Are only compiler flags starting "-f" relevant?
+All the flags that have impact on BE compilation need to pass to BE.
+Yes, usually most -f flags are relevant, all the internal options,
+like -mllvm -foo need
+to be passed to BE. -D, -i, -include are OK to filter.
+
+>
+> In your implementation, you filter-out many compiler flags.
+These are flags for the compiler front-end (clang). They don't have impact =
+on
+BE compilation.
+
+>
+>
+> --
+> Best Regards
+> Masahiro Yamada
