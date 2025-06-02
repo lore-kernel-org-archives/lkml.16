@@ -1,125 +1,123 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773261474DA;
-	Mon,  2 Jun 2025 08:34:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486581474DA;
+	Mon,  2 Jun 2025 08:36:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748853288; cv=none; b=cb59rBC3vWStf81ys0YDz/1Qx9HuKUfJy9n6Bu++CGRso96nu2JCS47hT9cjZGOT2lbMlfMp77z1EnXna0FR5LwAwASWZ995cWIE79Tr6DN8Itkc0zptWSrFI2y/gTbRF6Rsy/imO+A4A3ImEHxafgc+T5UaAjLgGmDm7gqQ7JE=
+	t=1748853370; cv=none; b=n0i8B0AtPHkFiTyWunH5InPFT8PI21+mDhLpFASeMA9Qi1GKYRGcAnqT2MSQ7o4vK6K2i5fPMlUgn9SRg3UgMSpOfWt9f4+asNID4PjhN7mIyHNDhJ0Ql23pjW70obxAnYg7jskswpHJgca9wXr+iwDvnbmDWaM80LUfEAbaCGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748853288; c=relaxed/simple;
-	bh=J0M3jyHJqytQ2fRxhIn0EzqB+KBXvL25DDYU1JG4HoA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=muI5LP3KeaW1KDN7FzAA2yKpCZVe3ln+E4sMdZZLg47IIlAmDbvdHsDKvJ2RUR4LIMycPAWiEcOCsIC6+W9Du8c4tY8vzrug+tKLO02rJWTnr2P+hxSWJr15IXkz0ylU3TOvtYuYp7UpdbvCSJvU33tLZ5J253ZoVZJS9xWBkfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=izVHQ4IU; arc=none smtp.client-ip=209.85.210.174
+	s=arc-20240116; t=1748853370; c=relaxed/simple;
+	bh=ReE2S4t4eNnXYC4QcPdCyI65wJEE6x8E+xUxw2N25lk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uhuaBVt1cftExv2UZLFUYFPzYI+u/v932PBHz7uR60iGKOxDE1Y+DmNqSRke1J3RQ7QuAw8y0Kr2uijQ900fQ3d3UDtCzCrXo/UzdTWrnkFno1c3lE/2XMd/T2eJwBVmJdlDXSSnjfHTC8X7TGyzmXef9jZOSCbOw2mjpfFj+0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ql6VNaH+; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="izVHQ4IU"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso5208193b3a.2;
-        Mon, 02 Jun 2025 01:34:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ql6VNaH+"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-451d7b50815so7250085e9.2;
+        Mon, 02 Jun 2025 01:36:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748853286; x=1749458086; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uk1R1JyhCIe/fQRvoiM0DWTwBgVcs7kTPMVdocZRyaM=;
-        b=izVHQ4IU6ttTXwkDqtXrJlVtvMXzgw6ZaYzxdBgffrmHIXsiWBBXss1HqjeqTEUHSl
-         QxKYH2ciN+rJ9pyTsz7Yadi0nEdwmuTFg03Ton6W9FJOePf7tWCkaXPcKywk3izK7rrB
-         kvdEL5z62SMxRMFlefdGOlzDbe7qd8G0M8WVGakvcaQ0ljV/YXKcg4SODdtNmABnKGss
-         0jS+mgHBsht77afKEznC7ZJ6BygPaXQZ2cn/GSzqN2174A5K3Fy4yIwPBqiz2Eqz58vs
-         9XnKs1r6ghyqayRjg848NUBvpxWXHwldtTBw9D0dGGyCqkTbXDy+jHprgULKYGztnL4y
-         fMJQ==
+        d=gmail.com; s=20230601; t=1748853366; x=1749458166; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ReE2S4t4eNnXYC4QcPdCyI65wJEE6x8E+xUxw2N25lk=;
+        b=Ql6VNaH+d2JFXP/02fFFFZSstTTwnw1PDQgzTaFpSTu9brJhFTn364UwaOtHELSRPa
+         4VQD9LxOMgPU2m+sA95YOmKMnoJ2aVqaj+LeOS5H+C08X1W9u2dZje6LrKP0gHIA603k
+         D/V0KcQQjzn3ROxlHdhypRDSklwpEfBxUB8YR30yQO0KCPnirTVjbp7XMHny0Bd21dbv
+         cifzAI5asKBe6Um7Irw6H2Fvd7wLhF19ZnHW5KzLsYKEBWAhATWqzX+EExMlKWFjCdZE
+         V6HJYfKBbHPX6jV6CDJtT1MXUT+kXjPh6SoGLw71sifS8NCLNrRS84wiMMICB7G10Fvt
+         ZnFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748853286; x=1749458086;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uk1R1JyhCIe/fQRvoiM0DWTwBgVcs7kTPMVdocZRyaM=;
-        b=r5Yb+gBfk5ZehW/A9YnB/taE4EbceVOxPbqPcXyuYWKneiV7+soUB3OY9BnoU3OXcm
-         +VF1+60vUGcxa/QgULyH02DNm2QSFn2tQ7s5jzc7R12oOdyVDtrkLUIvwgk6rv+1Ade7
-         byrjIjWZPbJcRh0QOg4dl+5wVR86SnwVHbVJLH/Haw9rhWfbXUQOJpvH52IxPAlc8JnH
-         TqmEqe6qFV0+3GtDbpI1viRz95Cy/pHxNHYQsajQnrXUDhy5q8IJDaBROhp2YPHT9DQz
-         WR+41NIJLLi7UTKXkIKIPcH/RyGi0/oh3O+14MLzvH9lh2NZw2fhKgEX0FjH+ZyjMC38
-         0p2w==
-X-Gm-Message-State: AOJu0YxV7ZaUwXLACERxZdXKeKSQ5XKTXogdBVlilu8N3a4RyiCQQj7j
-	8AAFEYG7fsMyM7FExmVajUoeyOGlV2BNFmdSDufegQxhGgdE+aUpMVvXH+1aUmlQYP8Iig==
-X-Gm-Gg: ASbGncs5U91Oir9oYrmlMhAUa7l7oJHQf3BOoPZOby0oVbodh+xhukw6IK7+ChTsyZ/
-	vBW+kWyqaMgbLTjsbWZ5H1hLXcHsgooZXMdBvOtYhPlmOzLc667yFSH3XBb8bArUi3plGuWLngn
-	lr2RVEwd0B1sIoUfKFDAT3PJcSBCkbib1Gu/xdJ55UqA8kZf69HQ2+k+AUE37YbHTkHmsMLk1dR
-	vEK5O8sg8+RLp/c95r49/hcaBrqWZY9po/5ReSQHU1f1GNPN/MLr/0y/LFqPzp1W8rW2cCfw8b0
-	5HzzqQfsqD5fsw2HSw8Y2CD6/xvCJWH1pOiDUxaytw==
-X-Google-Smtp-Source: AGHT+IEbVb5ocQumAcWvPMi4UZGbZ15BBhbTJ6hJC2hPqqZwe3KERujm/wa0uH1aU67X+MCsr1/tIw==
-X-Received: by 2002:a05:6a00:148d:b0:747:bd28:1ca1 with SMTP id d2e1a72fcca58-747c1a1f6fdmr16951983b3a.3.1748853286529;
-        Mon, 02 Jun 2025 01:34:46 -0700 (PDT)
-Received: from localhost.localdomain ([2409:40f2:11ab:2cf2:10cd:85bd:e95:5230])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afed33casm7099687b3a.73.2025.06.02.01.34.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 01:34:45 -0700 (PDT)
-From: Sai Vishnu M <saivishnu725@gmail.com>
-X-Google-Original-From: Sai Vishnu M
-To: rust-for-linux@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	lossin@kernel.org,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	dakr@kernel.org,
-	gregkh@linuxfoundation.org,
-	daniel.almeida@collabora.com,
-	me@kloenk.dev,
-	Sai Vishnu M <saivishnu725@gmail.com>
-Subject: [PATCH v3] rust: doc: Clean up formatting in io.rs
-Date: Mon,  2 Jun 2025 14:01:20 +0530
-Message-ID: <20250602083119.17752-2-saivishnu725@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1748853366; x=1749458166;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ReE2S4t4eNnXYC4QcPdCyI65wJEE6x8E+xUxw2N25lk=;
+        b=DX1/SRF7v6bWsw1bnDk1shQ5Co2fznD54CLvbxmwrs9IWRy4mQpFPy9Jg9cCyRvc1y
+         kFP1NjAdKmK6/MCLP9bJPy6CpGdizOVQtytBLof283uMWU31E+d1zgmriRO1dnvEA5dR
+         qcrf8RaPdSuWeGG6SSeIQpO2b+TAE64eG5pIe30C9guOoqFxmIEd0LvOIiY2RQvGhvD+
+         smBrniGFBmw24nuNoDvi0OuEb62ynETJx1i0IBJlSzl+nWWnVDqbYjA6WGahdV3TJDRU
+         Mlqiwdpt6kqJtOPlm4fO7JvxygDHLKADXn2usQ/r8MnxDvxhKpatIN0iJUqz9rTfedB6
+         Ovfw==
+X-Forwarded-Encrypted: i=1; AJvYcCURXgUIPm8YD5BFZac9bFAlAYIzRfwuYAb0kKlY0fPG8gkKp4B3n5y8ZiFGXogKOl9If6iVTYNoqVbp@vger.kernel.org, AJvYcCVd9aE8VOyICsJUAXKyzbl/VF6QgvOG9I/JfPWsLX6Umf0TUIgDKies7QrxYR7fxMOZvhJTnZLs6olMRMNFXuKO5mQ=@vger.kernel.org, AJvYcCXa1lIa+ueR61eQCC3oRxxlnoyy8LzJVKh/IPhmUPd1sLAZq8mwcRsgBlkbmCsd8ceHJOGb4uQoWPhm4k9U@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8B+mSMtWvNDeeImki/T8Fj2fkH1d+nH8+ZeUkyQXtVKGuQhyB
+	eqJleH4Wgcbll/Dv3AOYXa+Ne5M/kitZLEjComVDDxjAsDFd+0ZEbG9CcxPp8X7RQiKSs2VlqCD
+	cIDeWXFnKG26ilLYwUrftBv+072jk6Ac=
+X-Gm-Gg: ASbGncvGVQx8dTZ8kRmtNGQtvm+jUXJqhlAiZoHAnDyNTjiTwwftopBaGiyeMyVN9UV
+	lm2L6EE1tsSY+h2bz6tLHzYKCZ18qQk3SGgj/Db6wdNHMIHS8YewDGiGUEg9lqTZgX19zjEdwgb
+	gEQZwmW7gSW/p3MxYimp9cyZLgFIvAu4RDQ19P+bi4yd0t2FmZMmukxeT/H4NSSsvDDg==
+X-Google-Smtp-Source: AGHT+IG69W12ZGCu5Ibciyi2Few70A36JIuKBZMWYr79JALU3NtHlWhrRdJTCqzf2SQLeYSHqe3MtZ5/V8bjZkDa+Eg=
+X-Received: by 2002:a05:600c:1553:b0:442:f482:c42d with SMTP id
+ 5b1f17b1804b1-450d884316fmr106851685e9.9.1748853366163; Mon, 02 Jun 2025
+ 01:36:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250530165906.411144-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250530165906.411144-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <TY3PR01MB11346CF2602E4EE4E85657C868660A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY3PR01MB11346CF2602E4EE4E85657C868660A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Mon, 2 Jun 2025 09:35:40 +0100
+X-Gm-Features: AX0GCFsFXa2JOBjYEpsHfPlVUmvrmRBndrkCsSDYAoOZHvKxkEjaIaPstCsLrCA
+Message-ID: <CA+V-a8tXt+ky-gSPN-mthkj2rcX4q86QbF_Bm409_rSAmdsYgg@mail.gmail.com>
+Subject: Re: [PATCH v6 01/12] dt-bindings: display: renesas,rzg2l-du: Add
+ support for RZ/V2H(P) SoC
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Magnus Damm <magnus.damm@gmail.com>, 
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Sai Vishnu M <saivishnu725@gmail.com>
+On Sat, May 31, 2025 at 7:35=E2=80=AFAM Biju Das <biju.das.jz@bp.renesas.co=
+m> wrote:
+>
+> Hi Prabhakar,
+>
+> > -----Original Message-----
+> > From: Prabhakar <prabhakar.csengg@gmail.com>
+> > Sent: 30 May 2025 17:59
+> > Subject: [PATCH v6 01/12] dt-bindings: display: renesas,rzg2l-du: Add s=
+upport for RZ/V2H(P) SoC
+> >
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > The DU block on the RZ/V2H(P) SoC is identical to the one found on the =
+RZ/G2L SoC. However, it only
+> > supports the DSI interface, whereas the RZ/G2L supports both DSI and DP=
+I interfaces.
+> >
+> > Due to this difference, a SoC-specific compatible string 'renesas,r9a09=
+g057-du' is added for the
+> > RZ/V2H(P) SoC.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.co=
+m>
+>
+> This patch is already applied in drm-misc-next [1]
+> [1] https://cgit.freedesktop.org/drm/drm-misc/commit/?id=3Ded6a6d63513ee5=
+199841c0a0dc2772ad944e63ee
+>
+Thanks Biju.
 
-Removed reference to internal variables in the comment of `IoMem`
-This avoids using private variable names in public documentation.
-
-Reported-by: Miguel Ojeda <ojeda@kernel.org>
-Closes:  https://github.com/Rust-for-Linux/linux/issues/1167
-
-Signed-off-by: Sai Vishnu M <saivishnu725@gmail.com>
----
- rust/kernel/io.rs | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
-index 72d80a6f131e..41404c1e17b3 100644
---- a/rust/kernel/io.rs
-+++ b/rust/kernel/io.rs
-@@ -43,7 +43,7 @@ pub fn maxsize(&self) -> usize {
-     }
- }
- 
--/// IO-mapped memory, starting at the base address @addr and spanning @maxlen bytes.
-+/// IO-mapped memory region.
- ///
- /// The creator (usually a subsystem / bus such as PCI) is responsible for creating the
- /// mapping, performing an additional region request etc.
-
-v1: Used backticks instead of `@` for parameters
-link: https://lore.kernel.org/rust-for-linux/20250530123129.31505-2-saivishnu725@gmail.com/
-
-v2: removed reference to the variable entirely.
-link: https://lore.kernel.org/rust-for-linux/20250601164939.5306-2-saivishnu725@gmail.com/
-
-v3: Moved changelog to commit message. Used the proper parent commit.
-
-base-commit: 7a17bbc1d952057898cb0739e60665908fbb8c72
--- 
-2.49.0
-
+Cheers,
+Prabhakar
