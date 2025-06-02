@@ -1,359 +1,163 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C0D1231CB0
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 15:05:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846BB22A4F6;
+	Mon,  2 Jun 2025 15:06:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748876754; cv=none; b=fjV35YYawy3O3H+pQh6ji5gYQhphvBOL7EdbLOFzFrITSUBMMsT73faNuobSkiKqI+gZzLUGIwaTmlsrWDJT4bKGO7IbB7Rh0YYhI6kGxjovCuO+EggRNjn1su96/YNdvWlQCVmfDQd135oNMw6CKbEqcm+NBsyovsC2TqbckzU=
+	t=1748876802; cv=none; b=SOeGdG1Y3hejKEP3GKzaVJq8jxUwtjeEdEGwNLQB/+Bmiw+WQJTDTu2u+xP1+rPVHva/GwLJddPw/40F1SU2UeYIOGoD9LL3hP+1eWreuTxZ0Tpb0iNKpixQsg7zyMcuSFmhoLpA24ySVCxK2WzG3ZQuc622YlPRCMbXb8/3uB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748876754; c=relaxed/simple;
-	bh=H5kHUSGNewKk+2DnnUpNcNHbHQNuSxBdvQMugCJHy+I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cb5q3qx4+u6AgmLqaSrWx5R1ktVo/khB6ft9pU4GTXYZjFEVLBts2xbxKj+FYjKReoKQdl/0Y6qQcNIoJ0F+yDNE+gsBWLyvfybwwCq62y3FYt+rZkVje3NaaWn7YN6Zx0pd1ITr8VYphbYG+vUy3swa15+qNJ0W7Vm0FfwBTok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eh3vdhQB; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748876802; c=relaxed/simple;
+	bh=WREH288by42fntfZNOyvljZvH6LrThAC2JpHsElT6OM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oJpQCsyxtc5OQ3D3ZH+614HVyZwI3aOr8TTygGTsNIJf6jH02huTkrwWNE/w0reVmvgQiF7Tgguqx425sxHWgTQ23Vb6PG03k6SNGea2+6bsa9vUUsBeFcAeZS+yZCq+TphH7/MkkCegS1cAxkR+EWHvfs2hVewg2dsS1z63uv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UgFik8T2; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eh3vdhQB"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3da76aea6d5so354925ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 08:05:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UgFik8T2"
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6fabb948e5aso48903836d6.1;
+        Mon, 02 Jun 2025 08:06:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748876751; x=1749481551; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1748876799; x=1749481599; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=I2dfgUrLyGgIpbCKR2W/UpAQPOS9BKojbb73ls2Lb5w=;
-        b=eh3vdhQB7JWjRTfb7+UVIyoHGxop+f54QgWEAhxQFM8anPceWOb/16YyJi2HW5r59q
-         iXupIW11Cqk7IL4Br09CbZeSNxAkQBot89orli0nPudQnwLisgH+jj2ti87HnoXfbTOP
-         88eY/vSF2FZENmPg2+Xv4nYvGAURoW1cG3DHuqtZxTLMI5ArnaGRW8KzaEmnnGDAn3wY
-         YgWrgM7guyWpFOUNDJGNkhXMbf0Jg32r8seVXkKvyaWLybDe/i+lnAUPJX47vAD1r0Sk
-         rHOHxy8dTC9Ls6q+9dp5Lu18aihDjIbCrrlAjJDjUBlBGLIwvnikn1megGXpZZKfIxyL
-         y+bw==
+        bh=XVefjSAXWWzcvPrC3apQTPaGnK+2wyIAwOCbqvveL8E=;
+        b=UgFik8T2Yhj96FGHdy4Q/OfGFexTFLY3fhnjV0JeI5gs3hUNyKuc/VUu24xC6/QIMx
+         4qjgTDXld4GU0Mszm0lLkEsNU8bfK9PtmFUtcIJO+h4SNpl0yRIKYCvKbZ/LrEIePfz7
+         hO4f01FVgtyaE3AaOARyX6cPRn3E7iQPNqCTdeWJUU5D+lpqc0xEmNb0k2S/WsUNg5QF
+         ignfIrca6TxwFUUHeU8gXB1Y0R6s2P3b5AAXB67gtJ9Q7HlcJaUsYLceTml3jQ+jD5/r
+         yGpkZOrBczc/pG5qjQm0EEnyOqKsXS4LYC/xYoHiPB8BEiX1G5kA/vrOmHVb5T9VNrx0
+         7Biw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748876751; x=1749481551;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1748876799; x=1749481599;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=I2dfgUrLyGgIpbCKR2W/UpAQPOS9BKojbb73ls2Lb5w=;
-        b=NpaxhoSfteJ52WhdmwyBH8ni3IHmJBrrFq6YIF25uHCrdzeKKFAkDNLWyceIjT++B+
-         LKxFYNZpxRvPEWcT2/wz2nbxBh1LcfBg/O5CwaNG3XbbIEcSlv9vOw9OU3pYUg0lL1QP
-         HLSbSbHtIB9oAGhpGvVx4L3JiX/9KeIDs3k1eY+BzTcmiJnPzTnNfzs2g1rDtQeQnMS+
-         nKzSQGI5vxOZm+vir+d/aghTrLGQCX6n1txDT5mbAGLzoOZ7UHvFzoeu+5d36Nlbd8k0
-         fOJdjCJx03iZy3mJ/sMp7BxOgG6GizezFbaWRBVoJlmou6wUcB53g1DNPYbv74JlkyiM
-         l5kA==
-X-Forwarded-Encrypted: i=1; AJvYcCXb+bcHuDGX/nD51ZSafUxNSlQNUTmj2gvPe3xsP5hryjlmyJgN9/ME/19g2rt9aQmc1hBh/lApuZgK80U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3/PVZ7VDjI2lq4sVLGo9bGF/aCl+fkrSLA1jBd0k2+ykdzTzj
-	03wRLVsDLTaQ0xV/xH3I+njmyCeCIsFAfiE08V/gsvvuQzb00RvTyLLdxm9gba9w1DyZhlbvMIL
-	mYn9dAM82BIc55zD6tvuIB5xhZeku/fLtITTJd0NO
-X-Gm-Gg: ASbGncsuOC5m8q6/M0T5oEyddZLNwAh8xPbO2SOdwr6UX8n2CqYEpBIaC92n+bdnGzM
-	CSEtrI2Ee9PLSvhaGpEi1sdRvZ5gyJoJKZKHZzNbTCdUwtmK4SN9E8/sz7uD9MwqBBthb8jihSh
-	uL7vJ91kgDLBY0SR7a4rf1k6RHqANNCdqvkYJCP770MwWGABXffPN3kREwvZY7xhkFznEd96ipx
-	nITjLY+gyQ=
-X-Google-Smtp-Source: AGHT+IF6m7o0fdDRx3Vbhw/MpD28hZ96bYJtWMuRMvo6m8wCfHK7XogY8w4GxWbIA7d+1VodLKqlSwUOffaJcO0Ko7U=
-X-Received: by 2002:a05:6e02:180b:b0:3dd:a7a1:9ee8 with SMTP id
- e9e14a558f8ab-3dda7a1a195mr3484305ab.24.1748876751219; Mon, 02 Jun 2025
- 08:05:51 -0700 (PDT)
+        bh=XVefjSAXWWzcvPrC3apQTPaGnK+2wyIAwOCbqvveL8E=;
+        b=btHid7yftSkTCf0PpCKzbyaQQ0jM51K2U+ZPqQN3h4DW56wfJ2hnAJSdf+/VDj+3Hv
+         Q4Yt3vY9dgVmKLCHg7hD9nqTVgvPr0hxditukP4PmtrF1BisbVh203j7LoEi30SNxTCD
+         53ab8QV6j7btcgGe93VHPbsifa9iiwcam7qV2wzTQ0G/DKcfkC7+kanrWViiytMmJr+4
+         mdIWnKYdW6KpKD5iF1QIZE2d87W5AYuCw/Ntlo3joyQKu8ZdWIL2vvVMevvObMVt/QSw
+         ETlJwP4fLXdIGXI76DhX7utOXk+3BAxA+HCqYqeW4ZreO2/Tfr1O9YMolVAx6/mYNW4B
+         jBtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQoKtfKcQlkYnWCOQecCQKQ6PhH/vOKS+rxvtAJrOaz6sN/S9qSzeftui65gRRMoESAJOIBEZ4iTnVXaU=@vger.kernel.org, AJvYcCUnnlBYnpc105AkY2SnRhqzBJ7h3x5RBgztQXefQCsh6B3/Z7ydjUrQZk1WoYt0Wc+VM7ABmTdMDKAe1mcaDEk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjFx0bsIUOPITpazpx6k0M9V5zdEgnyB4+O1qRVbxATDMTmc0W
+	voKAQK6TxUelMvvGjaGndWNqsJiA7y3kpYkMvkt+67MHn2t6aXNetk2Y
+X-Gm-Gg: ASbGnctRkojBvlRUG9ESjvH+PMuz3MD0TVxiHGejNUxM1SaHNjN71OHl2DORZ9Qvtn4
+	Bm9eyxjim1vGDpHdbLRYTxj/ab261dsp57nNsAvoOzswgyIEui4OrQ/anPTsPH9wTT7uOPXZrdv
+	QgLMkZ/YWO4e0b88UifPW9bl/deUrEG5DiQcVGJFumxOgnatxhPp9R/wcTlLGLjMl+TrR+F+cF9
+	ydIlLtGEDisSZJjID/Rn5750vuG3Ktc7KRkQFqwc95HPO6Wuvv+DysGuv22vvRB3Y3cMEQYy7QS
+	lPj0yQ5LMTA9a7xFFnxJ9rlqbprJyFnqsbLn3VOhd+pRRFhY4po4dJfviIDF55bEjdVua23vdfH
+	NOvZCGhC77Wy8pP0T4ZAwsVLM90s/ehlAj+UrhKAtdT1TRnzR8bie
+X-Google-Smtp-Source: AGHT+IEaoleIGduB98ZHMbQsSiMSdeVv1JbuOBtKz/UgK2XHzzFObKzgA16rxspYoGkHfdWnMfI+Hg==
+X-Received: by 2002:ad4:5ba5:0:b0:6e8:9e9c:d20f with SMTP id 6a1803df08f44-6fad913b474mr136386906d6.21.1748876799104;
+        Mon, 02 Jun 2025 08:06:39 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fac6d34931sm61807986d6.6.2025.06.02.08.06.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Jun 2025 08:06:38 -0700 (PDT)
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfauth.phl.internal (Postfix) with ESMTP id ED4B41200069;
+	Mon,  2 Jun 2025 11:06:37 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-04.internal (MEProxy); Mon, 02 Jun 2025 11:06:37 -0400
+X-ME-Sender: <xms:_b09aBXl199WSelYfafL-SZQSn36SvLclbH617Msiq62_k1peZk5xA>
+    <xme:_b09aBmED_SawMT6cTa3Q_0GzD-dEmHTb3E9KOEqfpOt830K0uvI9xQgm-oiuBzm0
+    viMKx9PtUDNq0SLtw>
+X-ME-Received: <xmr:_b09aNYMtkcNp9ZY5ZM2tkNSJDYq5o0HeQJbxo0y4jSj2oWXoCIHsTptaw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdefjeelleculddtuddrgeefvddrtd
+    dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
+    fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
+    dtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhf
+    gggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquh
+    hnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvghrnhephedugfduffff
+    teeutddvheeuveelvdfhleelieevtdeguefhgeeuveeiudffiedvnecuvehluhhsthgvrh
+    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhp
+    rghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsg
+    hoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggp
+    rhgtphhtthhopedufedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprggtohhurh
+    gsohhtsehnvhhiughirgdrtghomhdprhgtphhtthhopehlohhsshhinheskhgvrhhnvghl
+    rdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhope
+    hojhgvuggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhr
+    sehgmhgrihhlrdgtohhmpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpd
+    hrtghpthhtohepsghjohhrnhefpghghhesphhrohhtohhnmhgrihhlrdgtohhmpdhrtghp
+    thhtoheprgdrhhhinhgusghorhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlh
+    hitggvrhihhhhlsehgohhoghhlvgdrtghomh
+X-ME-Proxy: <xmx:_b09aEUnN8YSLv4wnd-mtg1FPYB-HsfMi9pKxM_sfLQyKD_8jwdpkQ>
+    <xmx:_b09aLl6ozhcoM9MTqcfuKS3WmKNg4AKHYpXjKrNjILkqkOnJ9eXZg>
+    <xmx:_b09aBcTUA_z4RE2Hv3e3YQ5BamecbkkQg0JQVZLtSJbX_XLrMlQBA>
+    <xmx:_b09aFFcEHSUEXtJrS2l1mhG5V_zQBjuK63qyjC_keWbrIC_6MFxAA>
+    <xmx:_b09aFnhRH9xsswMulJwCDmtUQq5W2e5yZiz_AhwdhBPQr-AFR-F_mXp>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 2 Jun 2025 11:06:37 -0400 (EDT)
+Date: Mon, 2 Jun 2025 08:06:36 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Benno Lossin <lossin@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] rust: alloc: implement `Borrow` and `BorrowMut` for
+ `Vec`
+Message-ID: <aD29_GfdV02X4q5N@Mac.home>
+References: <20250601-borrow_impls-v1-0-e1caeb428db4@nvidia.com>
+ <20250601-borrow_impls-v1-1-e1caeb428db4@nvidia.com>
+ <DABBUFXP4O5X.1JG9O6Z2BRAQX@kernel.org>
+ <DABND24P80ZZ.NLCKU3AYPN4X@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250531072031.2263491-1-blakejones@google.com> <CAADnVQJv_FVciT9LC+W=sVtWAt9oXeAACzmTHzyqY-2svi4ugA@mail.gmail.com>
-In-Reply-To: <CAADnVQJv_FVciT9LC+W=sVtWAt9oXeAACzmTHzyqY-2svi4ugA@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 2 Jun 2025 08:05:38 -0700
-X-Gm-Features: AX0GCFss5TTU-FIMe9bH8z4GTz9-CpAC3L2v9sZZ6MQmhvIXr3LieJYQucQLd8w
-Message-ID: <CAP-5=fWADfh9WNXgUOhXYW5hZWk-FZL1oJTdaDgq8Hqr8_Fd0g@mail.gmail.com>
-Subject: Re: [PATCH] libbpf: add support for printing BTF character arrays as strings
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Blake Jones <blakejones@google.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	Ihor Solodrai <ihor.solodrai@linux.dev>, Namhyung Kim <namhyung@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DABND24P80ZZ.NLCKU3AYPN4X@nvidia.com>
 
-On Sat, May 31, 2025 at 11:20=E2=80=AFAM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Sat, May 31, 2025 at 12:20=E2=80=AFAM Blake Jones <blakejones@google.c=
-om> wrote:
+On Mon, Jun 02, 2025 at 10:13:22AM +0900, Alexandre Courbot wrote:
+> Hi Benno,
+> 
+> On Mon Jun 2, 2025 at 1:11 AM JST, Benno Lossin wrote:
+> > On Sun Jun 1, 2025 at 5:00 AM CEST, Alexandre Courbot wrote:
+> >> Implement these two common traits, which allow generic types to store
+> >> either an owned value or a reference to it.
 > >
-> > The BTF dumper code currently displays arrays of characters as just tha=
-t -
-> > arrays, with each character formatted individually. Sometimes this is w=
-hat
-> > makes sense, but it's nice to be able to treat that array as a string.
-> >
-> > This change adds a special case to the btf_dump functionality to allow
-> > arrays of single-byte integer values to be printed as character strings=
-.
-> > Characters for which isprint() returns false are printed as hex-escaped
-> > values. This is enabled when the new ".print_strings" is set to 1 in th=
-e
-> > btf_dump_type_data_opts structure.
-> >
-> > As an example, here's what it looks like to dump the string "hello" usi=
-ng
-> > a few different field values for btf_dump_type_data_opts (.compact =3D =
-1):
-> >
-> > - .print_strings =3D 0, .skip_names =3D 0:  (char[6])['h','e','l','l','=
-o',]
-> > - .print_strings =3D 0, .skip_names =3D 1:  ['h','e','l','l','o',]
-> > - .print_strings =3D 1, .skip_names =3D 0:  (char[6])"hello"
-> > - .print_strings =3D 1, .skip_names =3D 1:  "hello"
-> >
-> > Here's the string "h\xff", dumped with .compact =3D 1 and .skip_names =
-=3D 1:
-> >
-> > - .print_strings =3D 0:  ['h',-1,]
-> > - .print_strings =3D 1:  "h\xff"
-> >
-> > Signed-off-by: Blake Jones <blakejones@google.com>
-> > ---
-> >  tools/lib/bpf/btf.h                           |   3 +-
-> >  tools/lib/bpf/btf_dump.c                      |  51 ++++++++-
-> >  .../selftests/bpf/prog_tests/btf_dump.c       | 102 ++++++++++++++++++
-> >  3 files changed, 154 insertions(+), 2 deletions(-)
->
-> Please split selftests vs main libbpf parts.
->
-> > diff --git a/tools/lib/bpf/btf.h b/tools/lib/bpf/btf.h
-> > index 4392451d634b..be8e8e26d245 100644
-> > --- a/tools/lib/bpf/btf.h
-> > +++ b/tools/lib/bpf/btf.h
-> > @@ -326,9 +326,10 @@ struct btf_dump_type_data_opts {
-> >         bool compact;           /* no newlines/indentation */
-> >         bool skip_names;        /* skip member/type names */
-> >         bool emit_zeroes;       /* show 0-valued fields */
-> > +       bool print_strings;     /* print char arrays as strings */
-> >         size_t :0;
-> >  };
-> > -#define btf_dump_type_data_opts__last_field emit_zeroes
-> > +#define btf_dump_type_data_opts__last_field print_strings
-> >
-> >  LIBBPF_API int
-> >  btf_dump__dump_type_data(struct btf_dump *d, __u32 id,
-> > diff --git a/tools/lib/bpf/btf_dump.c b/tools/lib/bpf/btf_dump.c
-> > index 460c3e57fadb..a07dd5accdd8 100644
-> > --- a/tools/lib/bpf/btf_dump.c
-> > +++ b/tools/lib/bpf/btf_dump.c
-> > @@ -75,6 +75,7 @@ struct btf_dump_data {
-> >         bool is_array_member;
-> >         bool is_array_terminated;
-> >         bool is_array_char;
-> > +       bool print_strings;
->
-> Looks useful, but make sure to add a feature detection
-> to perf, since it has to work with old and new libbpf.
+> > I don't understand the second part of the sentence.
+> 
+> I want to say that Borrow allows you to do something like:
+> 
+>     struct Foo<B: Borrow<u32>>(B);
+> 
+>     // `foo1` owns its value...
+>     let foo1 = Foo(0x12);
+> 
+>     let i = 0x24;
+>     // ... but `foo2` just borrows it, subject to the lifetime of `i`.
+>     let foo2 = Foo(&i);
+> 
+> And the implementations in this series also let you do:
+> 
+>     // `foo3`'s value is owned, but heap-allocated
+>     let foo3 = Arc::new(KBox::new(0x56, GFP_KERNEL)?);
+> 
+>     let j = Arc::new(0x78, GFP_KERNEL)?;
+>     // `foo4`'s value is shared and its lifetime runtime-managed.
+>     let foo4 = Foo(j.clone());
 
-Just for clarity on this. We'll need a "libbpf-strings" feature like
-the existing "libbpf" one:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/build/feature/test-libbpf.c?h=3Dperf-tools-next
+Maybe you could put these in the "# Examples" section before impl
+blocks. E.g
 
-Currently these features are only used if perf is built with
-LIBBPF_DYNAMIC=3D1 as part of the build arguments (ie its not the
-default):
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/Makefile.config?h=3Dperf-tools-next#n580
+	/// # Examples
+	/// ```
+	/// <you case above>
+	/// ```
+	impl<T, A> Borrow<[T]> for Vec<T, A> ...
 
-If no suitable libbpf is detected then the build will error out. I
-guess if feature-libbpf is present but not feature-libbpf-strings then
-we'll need a perf #define so that the string feature won't cause
-perf's build to fail. We could make it so that perf's build fails if
-feature-libbpf and feature-libbpf-strings are missing, but that's
-likely too much for people using LIBBPF_DYNAMIC=3D1 today.
-
-Thanks,
-Ian
-
-> >  };
-> >
-> >  struct btf_dump {
-> > @@ -2028,6 +2029,50 @@ static int btf_dump_var_data(struct btf_dump *d,
-> >         return btf_dump_dump_type_data(d, NULL, t, type_id, data, 0, 0)=
-;
-> >  }
-> >
-> > +static int btf_dump_string_data(struct btf_dump *d,
-> > +                               const struct btf_type *t,
-> > +                               __u32 id,
-> > +                               const void *data)
-> > +{
-> > +       const struct btf_array *array =3D btf_array(t);
-> > +       __u32 i;
-> > +
-> > +       if (!btf_is_int(skip_mods_and_typedefs(d->btf, array->type, NUL=
-L)) ||
-> > +           btf__resolve_size(d->btf, array->type) !=3D 1 ||
-> > +           !d->typed_dump->print_strings) {
-> > +               pr_warn("unexpected %s() call for array type %u\n",
-> > +                       __func__, array->type);
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       btf_dump_data_pfx(d);
-> > +       btf_dump_printf(d, "\"");
-> > +
-> > +       for (i =3D 0; i < array->nelems; i++, data++) {
-> > +               char c;
-> > +
-> > +               if (data >=3D d->typed_dump->data_end)
-> > +                       return -E2BIG;
-> > +
-> > +               c =3D *(char *)data;
-> > +               if (c =3D=3D '\0') {
-> > +                       /* When printing character arrays as strings, N=
-UL bytes
-> > +                        * are always treated as string terminators; th=
-ey are
-> > +                        * never printed.
-> > +                        */
->
-> Please use normal kernel style comments.
-> We're gradually getting away from networking style.
->
-> > +                       break;
-> > +               }
-> > +               if (isprint(c))
-> > +                       btf_dump_printf(d, "%c", c);
-> > +               else
-> > +                       btf_dump_printf(d, "\\x%02x", *(__u8 *)data);
-> > +       }
-> > +
-> > +       btf_dump_printf(d, "\"");
-> > +
-> > +       return 0;
-> > +}
-> > +
-> >  static int btf_dump_array_data(struct btf_dump *d,
-> >                                const struct btf_type *t,
-> >                                __u32 id,
-> > @@ -2055,8 +2100,11 @@ static int btf_dump_array_data(struct btf_dump *=
-d,
-> >                  * char arrays, so if size is 1 and element is
-> >                  * printable as a char, we'll do that.
-> >                  */
-> > -               if (elem_size =3D=3D 1)
-> > +               if (elem_size =3D=3D 1) {
-> > +                       if (d->typed_dump->print_strings)
-> > +                               return btf_dump_string_data(d, t, id, d=
-ata);
-> >                         d->typed_dump->is_array_char =3D true;
-> > +               }
-> >         }
-> >
-> >         /* note that we increment depth before calling btf_dump_print()=
- below;
-> > @@ -2544,6 +2592,7 @@ int btf_dump__dump_type_data(struct btf_dump *d, =
-__u32 id,
-> >         d->typed_dump->compact =3D OPTS_GET(opts, compact, false);
-> >         d->typed_dump->skip_names =3D OPTS_GET(opts, skip_names, false)=
-;
-> >         d->typed_dump->emit_zeroes =3D OPTS_GET(opts, emit_zeroes, fals=
-e);
-> > +       d->typed_dump->print_strings =3D OPTS_GET(opts, print_strings, =
-false);
-> >
-> >         ret =3D btf_dump_dump_type_data(d, NULL, t, id, data, 0, 0);
-> >
-> > diff --git a/tools/testing/selftests/bpf/prog_tests/btf_dump.c b/tools/=
-testing/selftests/bpf/prog_tests/btf_dump.c
-> > index c0a776feec23..70e51943f148 100644
-> > --- a/tools/testing/selftests/bpf/prog_tests/btf_dump.c
-> > +++ b/tools/testing/selftests/bpf/prog_tests/btf_dump.c
-> > @@ -879,6 +879,106 @@ static void test_btf_dump_var_data(struct btf *bt=
-f, struct btf_dump *d,
-> >                           "static int bpf_cgrp_storage_busy =3D (int)2"=
-, 2);
-> >  }
-> >
-> > +/*
-> > + * String-like types are generally not named, so they need to be
-> > + * found this way rather than via btf__find_by_name().
-> > + */
->
-> This is the correct style of comments.
->
-> > +static int find_char_array_type(struct btf *btf, int nelems)
-> > +{
-> > +       const int nr_types =3D btf__type_cnt(btf);
-> > +       const int char_type =3D btf__find_by_name(btf, "char");
-> > +
-> > +       for (int i =3D 1; i < nr_types; i++) {
-> > +               const struct btf_type *t;
-> > +               const struct btf_array *at;
-> > +
-> > +               t =3D btf__type_by_id(btf, i);
-> > +               if (btf_kind(t) !=3D BTF_KIND_ARRAY)
-> > +                       continue;
-> > +
-> > +               at =3D btf_array(t);
-> > +               if (at->nelems =3D=3D nelems && at->type =3D=3D char_ty=
-pe)
-> > +                       return i;
-> > +       }
-> > +
-> > +       return -ENOENT;
-> > +}
-> > +
-> > +static int btf_dump_string_data(struct btf *btf, struct btf_dump *d,
-> > +                               char *str, struct btf_dump_type_data_op=
-ts *opts,
-> > +                               char *ptr, size_t ptr_sz,
-> > +                               const char *expected_val)
-> > +{
-> > +       char name[64];
-> > +       size_t type_sz;
-> > +       int type_id;
-> > +       int ret =3D 0;
-> > +
-> > +       snprintf(name, sizeof(name), "char[%zu]", ptr_sz);
-> > +       type_id =3D find_char_array_type(btf, ptr_sz);
-> > +       if (!ASSERT_GE(type_id, 0, "find type id"))
-> > +               return -ENOENT;
-> > +       type_sz =3D btf__resolve_size(btf, type_id);
-> > +       str[0] =3D '\0';
-> > +       ret =3D btf_dump__dump_type_data(d, type_id, ptr, ptr_sz, opts)=
-;
-> > +       if (type_sz <=3D ptr_sz) {
-> > +               if (!ASSERT_EQ(ret, type_sz, "failed/unexpected type_sz=
-"))
-> > +                       return -EINVAL;
-> > +       } else {
-> > +               if (!ASSERT_EQ(ret, -E2BIG, "failed to return -E2BIG"))
-> > +                       return -EINVAL;
-> > +       }
-> > +       if (!ASSERT_STREQ(str, expected_val, "ensure expected/actual ma=
-tch"))
-> > +               return -EFAULT;
-> > +       return 0;
-> > +}
-> > +
-> > +static void test_btf_dump_string_data(struct btf *btf, struct btf_dump=
- *d,
-> > +                                     char *str)
-> > +{
-> > +       DECLARE_LIBBPF_OPTS(btf_dump_type_data_opts, opts);
-> > +
-> > +       opts.compact =3D true;
-> > +       opts.emit_zeroes =3D false;
-> > +       opts.print_strings =3D true;
-> > +
-> > +       opts.skip_names =3D false;
-> > +       btf_dump_string_data(btf, d, str, &opts, "foo", 4,
-> > +               "(char[4])\"foo\"");
->
-> we allow up to 100 char per line.
-> Don't split it that short.
->
-> pw-bot: cr
+Regards,
+Boqun
