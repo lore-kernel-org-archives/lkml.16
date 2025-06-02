@@ -1,308 +1,161 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2046.outbound.protection.outlook.com [40.107.101.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A98822D7BF;
-	Mon,  2 Jun 2025 13:06:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748869582; cv=fail; b=DOQvElERcCLrpzIYhlEJU/girkSvxYZKLD2yZy2h83de7a4bUs+D37A2mOSp8wNZknsGgyLfNx0ZUjzJQqY1DwGlvfByiwyVmLMl5X2o3665758TVAJiu/Fr01OVRKZ6rYDJiNpM+8LWPop4HqfBS3/ysl3XrFczLV8Z0RXsuis=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748869582; c=relaxed/simple;
-	bh=2WQn0y2rZ+SdCwUQ5XF7JLOcqNtla8AQAcRFLpKHOGQ=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
-	 In-Reply-To:MIME-Version; b=uSDi1mdCAdTMbGBR15RErVpPwvwvw+B1G40w3kaqliu76W233RMrvorPND15+kWc1AQm1ge+QrNWdo511Ma8qO6a4r6KJFqE7ORS9ilBvociJuQHMfFCAegIqDPCfje/Wa5ppN+ink3NWSPmKOYl+0PlOFaCL3QWfv1q+ct56pE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=bkNOyjuF; arc=fail smtp.client-ip=40.107.101.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 753A721C9F8
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 13:06:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748869586; cv=none; b=hamxkD4AB6vetmZvM+RRGN8KvQia7TA4BV7/DTXYJvAPC6WPMatNkaGLIvWlAW/gOqJYsQgIVGGZ0hbuK5DVRCfuAQU36gwle4sYmIbx7jkX6MIKYhcfOspoXShVvsTvkz0VxzLEElN4n1Rbv9uPZYnxkPbNgioxjmYaDysO5Hw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748869586; c=relaxed/simple;
+	bh=B0jNGSufNvPJuCam1LbtuPADRfe/FotYKW4NrWm/oXQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=C/wID6o3F2SH0cWnWkPPF3UkyDGgXKaR69DC1d1EJfJtSC2UTWqOrGxDVlqd+LYaHoLyGS3WUWe++ky73T9xaSKlUbeUfsRfKZu5suTaCf6HXg4AWAbwY3ovbo/o5ZqHmrNB9vkpKAW37EAWGd95lIKTNbwNK9oU3Xe334S8IXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NFMry7eB; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="bkNOyjuF"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wf/iOxOCDVwjiQLsajOmtzpiWdeH+swbRmuNqBMLp3dTTEkMsJ06LnvDbNn78uGL7lMPHWjRhg4yCmU0VJDZI///n7mBc3c6uBfIEIKC1WDO8Z5nwfvWFm8WhDrAFv9WHF4WnlLQ7BXp3+O6QNOWGzA3M9m4fLRAy5ZNTBXj1Lsm1Cu6Bt8F0EtZZmXCvkMXsBg9u/L2Gh67TrC6DtCo4gFzDRj2sGORDLpAUYQLHbwGy8jdlGeOKirQ9drR0PUidpjfypLgS9f5lU3pbNgP8vebtIww55lM5fEHZsB6PCjYpJAxRgRqwNL3nLAGVifXATzDRwllIPzZOBIf18T/Tg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Rn8hokviY+4Lwy/I5e7uW6cKdFvZGhZ+wuewoYBB2zQ=;
- b=GUxNnR+3PsPnTaeBD7+e2adMSzBNtKAu37LqAUtcq236avGHTtSXCEe9NCr8tLpOUnqTrIuarc68BRuJ9Xyw7Bi/Spzl67/h/MR5t7PWxYleqvQG+qfTJg6QjFA31+JV/lDIaeLccOU1lpqF/FnLLirQIgytkw63zjlF7XlbTwcdMt8bCB/Vf3zNc28XQJAOZ4Isk4/+BUTf0d5xWQHgjytykdph8UeIQyVX4N+f3x4aGXVapk9Fg1HHvKnAaeMMbCALH1/F6dK780D91Xmeh/9ZU4eW7IVGYv4VSfhbQRKXnuqtbbg5lRebHnCsV/gEMx5Gwmj5Z39izU7CMD1w6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Rn8hokviY+4Lwy/I5e7uW6cKdFvZGhZ+wuewoYBB2zQ=;
- b=bkNOyjuFVJVdtsRuVOj8Ko07A/yF9JVjHzkilZ7xmVxON5R8xNHDCsZv7nmSItUa8y0bXSG3v300xiSFOcTpDbdQv7qzU6SMdQCPITuGQrrWN2w8zvx18PB2iAR1YnbcePF4NTVGUtkOTkCcxJ26iBCDjrrjDrTXIilELtiNEbgdy4e8CcXmLZlGXpwf55ImzgtIHdQbyVB5E9mnPcgfmdteKQd4Yx6nlJvieXZCHG0MUm30qyjEX2+NfFBc/vGrI310TME0TwgMvHg/TX+v/zBNE8vdnDMmebZq1B8c9zDBmJ7LYn2WNAFavHFidev3EBB+LRBlQgI4ptM1LYSzsA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
- by IA0PPF1D04084C7.namprd12.prod.outlook.com (2603:10b6:20f:fc04::bca) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.33; Mon, 2 Jun
- 2025 13:06:18 +0000
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8769.037; Mon, 2 Jun 2025
- 13:06:17 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 02 Jun 2025 22:05:53 +0900
-Message-Id: <DAC2ILD2DSIZ.3TF8W39X5DDH8@nvidia.com>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
- <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Valentin Obst"
- <kernel@valentinobst.de>, "open list" <linux-kernel@vger.kernel.org>,
- "Marek Szyprowski" <m.szyprowski@samsung.com>, "Robin Murphy"
- <robin.murphy@arm.com>, <airlied@redhat.com>,
- <rust-for-linux@vger.kernel.org>, "open list:DMA MAPPING HELPERS"
- <iommu@lists.linux.dev>, "Petr Tesarik" <petr@tesarici.cz>, "Andrew Morton"
- <akpm@linux-foundation.org>, "Herbert Xu" <herbert@gondor.apana.org.au>,
- "Sui Jingfeng" <sui.jingfeng@linux.dev>, "Randy Dunlap"
- <rdunlap@infradead.org>, "Michael Kelley" <mhklinux@outlook.com>
-Subject: Re: [PATCH v4 3/3] rust: dma: add as_slice/write functions for
- CoherentAllocation
-From: "Alexandre Courbot" <acourbot@nvidia.com>
-To: "Abdiel Janulgue" <abdiel.janulgue@gmail.com>, <dakr@kernel.org>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250602085444.1925053-1-abdiel.janulgue@gmail.com>
- <20250602085444.1925053-4-abdiel.janulgue@gmail.com>
-In-Reply-To: <20250602085444.1925053-4-abdiel.janulgue@gmail.com>
-X-ClientProxiedBy: TYCP286CA0315.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:38b::9) To CH2PR12MB3990.namprd12.prod.outlook.com
- (2603:10b6:610:28::18)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NFMry7eB"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-552206ac67aso4945660e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 06:06:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1748869582; x=1749474382; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZuqigEavLUIFRcdMGWtAXF6BHoROJfpc2OWkY3rCm9o=;
+        b=NFMry7eB4quU+U/sDxCTUOFwUd9gMeCrCsLaSwOt3jDQxkfe1qna/ZEeruxb95TK92
+         Q/n57AfXYRka3bOOkGlYEsW5PNHQLLIf+ECF9DRTP+TC9cPDliFT5sF//9MeOFAxsNUm
+         E7AHgabTfrlrrUjcyyzoE8xBGT6EBg0WYgX9I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748869582; x=1749474382;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZuqigEavLUIFRcdMGWtAXF6BHoROJfpc2OWkY3rCm9o=;
+        b=FtgHAN6hZ28CCg2GhQNB+ODDcWiC7N609ADJG8glZF2dbtwKcMJ70ucCT4n71DyQxI
+         FPVEkzpjYq1PfFek7mChA9qEtrF1gyjJXzocQvXVmmgtFduKqIq2dxKAnoEhZBFnGCjH
+         nbh+mq8QEv/y1aBGXE6swcRpyT7A8UKl3y/cHHPvSKDLwVNWvzD/coWLUKtf3OqreH6d
+         Wt+ekVdP7eNeEaOQSOG/skTBHmyiab9uNs/A3bXrBYshivZnkpYKVloPAL5/ad4EgP8m
+         5abPbXB2k5MrIFSnv2BfU9AQy8bXoRdZIdx7eEB3UZuaUaDRU5tquDzH+tGo0DcsrQ3K
+         TKcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVN3bWUHPAvub8+vI9jicRRhzQDYoTlKvGcegEVdVeqrd9Eu/QTpKF07hoSERokCcQ0237XcxbAXmG8sYg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWiPOvVYTI3VSEaZLw7NIhlEb/5eNH65De140qsdxOiBwxLHU+
+	kygUZEXi5WiOgy2x2LPgWYMiZ5nOGfq2PXm4bROX0FGnO/ipvG2e9KH881ZxYXPk/Q==
+X-Gm-Gg: ASbGncvwyPi4skzwOhcymdoUEYG+BQHyKABELCeUtFSTOGjN9HvflOwYhWm+FNIXgh+
+	m7PBK4xwskYW9L+/YCju2fJOwmhgruIjB9EEvtOX+uYFjUDHwx+k5Vuo3Yo5iLoNQPi0VcamE0S
+	k1mqYT64Dd711s5/y9b7+sJGFypXL56g7mIHVMHj3b0jvghsGKVr+zD/0HHMunm8XL1F4ZB8yQD
+	WjP2u72GixOsxqGdXHMeMj4jouyMnB7huDbC4bV6+2aYHG0dcaLyzNDHC5yAS4Ive9cr+sVMPu0
+	JHD8l1XlcYoAk5tgzVtSLqPo6rsXlw3cY/5rAx1jr+A+UMrRh0UwXrFlVWvbIObqp4hfYnw4ei2
+	2M7ii+zxXIgsdiIzUPpRhSN3Clw==
+X-Google-Smtp-Source: AGHT+IHMoONe8Ln9wE6PiwlQI0iQHuL4cC9FaE/WPx3vc4gsLClIVg9hP9Y5j+IWRY92Ncews+799A==
+X-Received: by 2002:ac2:4c46:0:b0:553:3432:33ac with SMTP id 2adb3069b0e04-5533d1b7683mr4006496e87.43.1748869582193;
+        Mon, 02 Jun 2025 06:06:22 -0700 (PDT)
+Received: from ribalda.c.googlers.com (90.52.88.34.bc.googleusercontent.com. [34.88.52.90])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5533787d26esm1590160e87.41.2025.06.02.06.06.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Jun 2025 06:06:20 -0700 (PDT)
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Mon, 02 Jun 2025 13:06:14 +0000
+Subject: [PATCH v2 2/9] media: uvcvideo: Refactor uvc_v4l2_compat_ioctl32
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|IA0PPF1D04084C7:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7bb1046a-9e84-41c1-b6f5-08dda1d64318
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|10070799003|366016|1800799024|376014|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NFNCZjc4Z0Nyd1hpaHlvM2gwYWo1MUhSSGczbjlkQ3lnNERaUlZWZ2srQ2Vr?=
- =?utf-8?B?R1BNbVNYR1VnREJmeTAwWmhaT0F5TUlQZlNGNjZzTzhVQ3Azc1NvSXlYN2Uz?=
- =?utf-8?B?WUxtYkVGYmdKNWtiYUhPUjJxcnNuR0pWWWJseURlVUdBdUs3U01zaFk3OHhX?=
- =?utf-8?B?QVlKSnBXeUFIZXlRMDJnc1ROQUJCSFlSMisxSEZBbUpaZUg4eDBHUlZienJk?=
- =?utf-8?B?Qjg1bDZ0U2ZveE9MMEZlcG5jWXZ6MGdleEhDM3NuSHZFUk1hQkRyWDUvaS94?=
- =?utf-8?B?STg5SmhSdS9iVCtaME5wQXJxRXFPSVVycjA5TXFHZUN4eXB5QmhtcldvN2Vz?=
- =?utf-8?B?UFBYQnVXU1IyZTk4QktGUlZUS2xhMm4xQm44eWdzTm94Q284RGQ1WUx1dHFs?=
- =?utf-8?B?Q0RGOHpYVjRibGdLc0VPbGE1RnhqYSs5UjZYRnlHY2ZzaVh4Mk0za0pQVUdV?=
- =?utf-8?B?SVpvNUlpUHA2ZHpYQXJvaVcwY2Y1Wi9PNGdMdUpKRnBEWm55TGowNERBLyty?=
- =?utf-8?B?NHRpQStYeXVlU3llVUVOODRNdlR5VmgxUnVjWklSekRlcjVZcVM1SXVwYURI?=
- =?utf-8?B?cSsvSVNRSXNKajJJNkhqRGJJYzRRQTJSRGN3d09GL1ppUHBsQWUwZmdLRXFH?=
- =?utf-8?B?a2tzUFVTUmxRN3prczBsVzRPcjVvOEw4WnhoYndrSDhKNUl6MWpLeXBscTRQ?=
- =?utf-8?B?RnYwbDdyZ3dZL3Rwc0FEZUdEa1dNQW1wb1Ztejc5KzhVaEZDVHhZcUl4bmJy?=
- =?utf-8?B?dHRaREpxWVp3eEZRdmxHZHJIa3hHcmx5VTNZaU5qaDdyOTN6ZkFUY2lpUjI3?=
- =?utf-8?B?MEZaLzdSNEhUSkN2L0txSjJnUzJFU0tHWnNoUDlEZ29DUU9BRU9vb0l1NjRr?=
- =?utf-8?B?a0RCdFdRa1ZTRU9YR2ZGVVlFUDQ3Nk1SRlU0RXFMT2wvd2RGdlpjdHR1TUNo?=
- =?utf-8?B?VS9aTmczRjliZklhTWVCUjhYalUxd1AvQ3Fkc2pYUGg5aTJZSWl4bW8rSEhW?=
- =?utf-8?B?MkVWWWRFWlhscy9qZit3VllOQ0huTVdoZDh4ZTc0RFVwQjgvaHRxdktOLzlt?=
- =?utf-8?B?M0tNMjJ6RldGb0xEVmltZSttZ0ltejYyMEdyYTdrOEgrMTc4WGlEWHhDc0pN?=
- =?utf-8?B?RU9CcXdvS01TTFNGYnM1RVVCR1FGeXpJQWFiQUo0WEpFK3B4RzlCTFo0SzhO?=
- =?utf-8?B?aTZUa0RYTkx6dGNjazdMWnU2SlVuUlBpMGxjSlg2OHdkRlBFc2FzMEwzQTl1?=
- =?utf-8?B?UmgySi9CWGNTTlE1ZnB1bis3b0hwektvTlNlZStkbmRGU3FpMng2WmtlbHYx?=
- =?utf-8?B?Q1pUV2FMMnoxaFgvMHB6bFdHZUQ0Y0Mzbk1DNEljb1hiREJNalhlUXo0Qmd4?=
- =?utf-8?B?bFNjbXQvMC9NTndubitRS3NFSTVBTXRMTjU1TmZUcFMyL0tDSGh6NXZFeFFR?=
- =?utf-8?B?elRNNDlNalZra0s2ZDhUZzBLV283aVo5WlV1dVRVVWtqTlk3QnZCeEdPNVNX?=
- =?utf-8?B?bVhUd1JVNU8xWWhHK1p1SDZqWGJiUmNndWhCWXNxQkRWZFk2bFpjUU9pQXZJ?=
- =?utf-8?B?WVNUMXhlaGtRbGlxcmZSamw0Nzgzb0pUT2xCdDJFenkyN0JadU9ON0tlNlJP?=
- =?utf-8?B?NU5BYVhKYXgvbmdIZEpYN1N1cC95Rmd0cTI4TFZaelhNM0hMcExYTVJhWjBH?=
- =?utf-8?B?RWJPalQ3TVRtU01QNmFpK0hhcFNBNTBGZCt5Wkh4OTZWa21rQk5YdU1kZDY3?=
- =?utf-8?B?eHFhZGtiNGFlTU53U2FZN1pyRHU2NnBJaE40TEtneXNjc1FLOEFXbDFlTVcr?=
- =?utf-8?B?emlQMy9BYlNLVFMrTTNLY0plMzJHcTBVSjE1Z0QxK2loY2I4YXBoTjB0RXMv?=
- =?utf-8?B?eGJUV1ROVHVxNldzREM0VFlDdGRDdnpvb3BJb25KNTRsUENrdUpVS2ZBWlRI?=
- =?utf-8?Q?MARfcxeFdUI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(366016)(1800799024)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OVplRTF4SjM3elpveCt2UWVjT2EvQ0FtUlpKUS91OWxuU3AzWGZOdS8vajdE?=
- =?utf-8?B?cTdsUjUwTjAvM1pkZG1oczBNalB2cUIvMUxsTjhJQ0RlalFXak5VT1VVdmJP?=
- =?utf-8?B?OExCTzk3aEdNMllLUFFlY3lKcmNVYndkZnFLMzV1bVpSb2M1b3lac09XU2g1?=
- =?utf-8?B?MDNSYXNDQm9UMnFSL1lrNHNLdmpXWEpMYkNqeFdDV1l2MHJNY1BhNzhsZXpx?=
- =?utf-8?B?VW5XOUF6VFozeExYc0lMMWoxMEI2eDF4aGRaQTdQL2tDc1hFZnhXNVlsdVZH?=
- =?utf-8?B?UzJJMkpsT3lCOXk2aGRnSnRkZWZUei9VZlBOSVMzVVEvVy9VaThhQStPUHdw?=
- =?utf-8?B?TmE0Y2RjTWl4WERlSDMrR25qa0VudWNmMnFhRFQxQ2JkRUJaRkNiL2E0K3Bl?=
- =?utf-8?B?SzFzcHR1eHJtcFJQbEJTS1BObHl1TTkybUhkMmttVitYK0RYN25ibXZBMS8y?=
- =?utf-8?B?Yk1va2NBbW44SFZUVFd2TW9zWGFWT2IxS3JicXlpSUV6ZDVnckdGcGxzaW45?=
- =?utf-8?B?QmpEbUlrL0N2YnRrMk0zeUQ2VUkrY1NyRC80SVhJVU1WdzlBQUVobHI5WWda?=
- =?utf-8?B?dWxHYXEzTlFYenFrSCtQZksya2pYZE5Gc0dGWi9pZlVSeHpZcmNEYWo0RGFr?=
- =?utf-8?B?TUVUdFFMR2x1ZnVjU2NzaThSSWovMGpaY3huUTVBY2U5dExlZ2VJWXNPakhJ?=
- =?utf-8?B?N21UL2htVHpGeXZuTXZ1YkhOWXN2Z2JNQUgvUWlqTk5vcndiN1NFbjRKMUdp?=
- =?utf-8?B?UmdNL1F5UzBHbUFKcHdVODZDYUVkTk82RkgwY0hiSE05L2hZTGtadGJWd2FK?=
- =?utf-8?B?WURick1QdTFIMngwTkVLOGNubzNSMDVYN2ppRXR1SFFEaktWV0RpYmFTcjZH?=
- =?utf-8?B?Unhjd3VhazZaU21aZjR6cnl3RDNTYU5UcVNrbGxSUnNLT3Rna1dRRTZZSDFh?=
- =?utf-8?B?ZHcyQm1EYnF1dDlHdE5tYWllN0FEWTlNWHdJYkdPc1lCZEc2NDlsMm03LzMv?=
- =?utf-8?B?UkhnTVgwT1NoWkN0enBnS2NuaXBITGZSYVBZM1NVYVB0RGRHejZWRUtpaFl4?=
- =?utf-8?B?VXl3WjFPd1gzVTVMSGdhMitwNStYaDdwdm80bGx6dW4rTll0eHZyaVd5SGdu?=
- =?utf-8?B?WlNBTlhuaDZRemJldjRKQm9OT3VDbDQ5cHBSQU04RUYvS2tFZXpVLzJpcSsy?=
- =?utf-8?B?S2Q1ZW5PWjBYb0lTQVBGUHpWRUV1M3FvZFgvbElBTExvbzYyUXYzVkpKRWo4?=
- =?utf-8?B?dmMvby9RSCs3MWppdE0rdXJEcEF2a3RHU0hFbkh1cTNPc0FHUlFLRWVtSDE2?=
- =?utf-8?B?bGN6L3oyY082bWxzaFBWUkJGTlo2VGk3aXBYcWZ1S3E5MzRsZmNYNDNTeTV1?=
- =?utf-8?B?MkxzN3pGSFd5NHhncmpGblRLNTQwcmtwUUFBUEdzckZYT2g0V1ViYi9OTDRE?=
- =?utf-8?B?QVljOVFLYU5OYTZYdUx5ajdWaVdydUFYRThjWkJudXk5RmpNM3Zrc2sxcU9M?=
- =?utf-8?B?NlRuZ0FNWmJ5NzRXR2wvQ3VSNEZHaTNNWXRRc1Z3bDl1RWtkNTJobGhtV2Qy?=
- =?utf-8?B?M3JMMkRxZ1FHL1REci8yRXdQUmR2OUMyNWNKNlZ6bVJtbThGR0Q0WHRaTzR3?=
- =?utf-8?B?Wkg2UVhsVkt4WDIxd2Z1Y0tVOUI3R3doNktUamtrbVFidjVJRjV1M0YxQURr?=
- =?utf-8?B?YVVmSGRtRGRHN1JDbjVEcy9RcnFpNW4yN2dxSHNENm5EaVZ1emlYQnNLdklw?=
- =?utf-8?B?aTViT3ZjTHg1RmgrRVUwMHF0ekVIeVp1S0lvNzhjY1M2VTZlbHIvRDR6ZzlN?=
- =?utf-8?B?Nm52SkZpay9TYWQ3VVBsK3BRNGRJdU1uRjdoL2psTTlpdi9xTGloWnpyUnpK?=
- =?utf-8?B?enpucm9YUURvb25oUUs1OVlzZW9TTEdOSkVDQW9mL3MzYWRXTHp3N09UQ21a?=
- =?utf-8?B?VTdWS1JMR1ZnMk1ET1A5WC9PdGlYRXE2MFJTaUY3c3RVZ2RSeFRxT00yUGJn?=
- =?utf-8?B?MkpoRlFwNUI5THh0bER1UllhL0RqWU9JU3FSblRqdWFjZVEwTmtSQVhrMzk2?=
- =?utf-8?B?T0h5amZhRURYNStoSGJIS3FkZStyRjJrYXA5cXRTZjVsa25vZWMreXJ2dWZC?=
- =?utf-8?B?OTBIckU0TkZ3Ylc0dDRUcHcwL0g0U0ZnbFdBbjhQcEhUdmt1b3VjbXJham9U?=
- =?utf-8?Q?ELSDKzDW9Rgba+tWdjS8NE2Bj+hqTpujVAPYFEZ927VI?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7bb1046a-9e84-41c1-b6f5-08dda1d64318
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2025 13:06:17.8935
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JAVH2hu8nmXRbnMVG8vTNNPLNz2sX70PcM3Jq0u3QGaYJXdFFtO0EpL+kLopvSgHvCLOSGAcB9Eh8Ww0iisRiw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PPF1D04084C7
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250602-uvc-grannular-invert-v2-2-c871934ad880@chromium.org>
+References: <20250602-uvc-grannular-invert-v2-0-c871934ad880@chromium.org>
+In-Reply-To: <20250602-uvc-grannular-invert-v2-0-c871934ad880@chromium.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Hans de Goede <hdegoede@redhat.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Hans Verkuil <hverkuil@xs4all.nl>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Ricardo Ribalda <ribalda@chromium.org>
+X-Mailer: b4 0.14.2
 
-On Mon Jun 2, 2025 at 5:53 PM JST, Abdiel Janulgue wrote:
-> Add unsafe accessors for the region for reading or writing large
-> blocks of data.
->
-> Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
-> Signed-off-by: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+Declaring a variable for doing automatic cleanup is not a very common
+pattern. Replace the cleanup macro with manual cleanup to make the code
+simpler.
 
-A couple remaining nits/questions below, but FWIW:
+Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Link: https://lore.kernel.org/r/20250509-uvc-followup-v1-3-73bcde30d2b5@chromium.org
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+ drivers/media/usb/uvc/uvc_v4l2.c | 22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
-Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
+diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+index 862b4e34e5b629cf324479a9bb59ebe8784ccd5d..1abdf1ea39956bbbadd3f166f37bdac518068648 100644
+--- a/drivers/media/usb/uvc/uvc_v4l2.c
++++ b/drivers/media/usb/uvc/uvc_v4l2.c
+@@ -1382,11 +1382,9 @@ static int uvc_v4l2_put_xu_query(const struct uvc_xu_control_query *kp,
+ #define UVCIOC_CTRL_MAP32	_IOWR('u', 0x20, struct uvc_xu_control_mapping32)
+ #define UVCIOC_CTRL_QUERY32	_IOWR('u', 0x21, struct uvc_xu_control_query32)
+ 
+-DEFINE_FREE(uvc_pm_put, struct uvc_device *, if (_T) uvc_pm_put(_T))
+ static long uvc_v4l2_compat_ioctl32(struct file *file,
+ 		     unsigned int cmd, unsigned long arg)
+ {
+-	struct uvc_device *uvc_device __free(uvc_pm_put) = NULL;
+ 	struct uvc_fh *handle = file->private_data;
+ 	union {
+ 		struct uvc_xu_control_mapping xmap;
+@@ -1399,38 +1397,38 @@ static long uvc_v4l2_compat_ioctl32(struct file *file,
+ 	if (ret)
+ 		return ret;
+ 
+-	uvc_device = handle->stream->dev;
+-
+ 	switch (cmd) {
+ 	case UVCIOC_CTRL_MAP32:
+ 		ret = uvc_v4l2_get_xu_mapping(&karg.xmap, up);
+ 		if (ret)
+-			return ret;
++			break;
+ 		ret = uvc_ioctl_xu_ctrl_map(handle->chain, &karg.xmap);
+ 		if (ret)
+-			return ret;
++			break;
+ 		ret = uvc_v4l2_put_xu_mapping(&karg.xmap, up);
+ 		if (ret)
+-			return ret;
+-
++			break;
+ 		break;
+ 
+ 	case UVCIOC_CTRL_QUERY32:
+ 		ret = uvc_v4l2_get_xu_query(&karg.xqry, up);
+ 		if (ret)
+-			return ret;
++			break;
+ 		ret = uvc_xu_ctrl_query(handle->chain, &karg.xqry);
+ 		if (ret)
+-			return ret;
++			break;
+ 		ret = uvc_v4l2_put_xu_query(&karg.xqry, up);
+ 		if (ret)
+-			return ret;
++			break;
+ 		break;
+ 
+ 	default:
+-		return -ENOIOCTLCMD;
++		ret = -ENOIOCTLCMD;
++		break;
+ 	}
+ 
++	uvc_pm_put(handle->stream->dev);
++
+ 	return ret;
+ }
+ #endif
 
-> ---
->  rust/kernel/dma.rs | 86 ++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 86 insertions(+)
->
-> diff --git a/rust/kernel/dma.rs b/rust/kernel/dma.rs
-> index 5a690e5f1e66..b486f63c1d3a 100644
-> --- a/rust/kernel/dma.rs
-> +++ b/rust/kernel/dma.rs
-> @@ -218,6 +218,92 @@ pub fn dma_handle(&self) -> bindings::dma_addr_t {
->          self.dma_handle
->      }
-> =20
-> +    /// Common helper to validate a range applied from the allocated reg=
-ion in the CPU's virtual
-> +    /// address space.
-> +    fn validate_range(&self, offset: usize, count: usize) -> Result
-> +    {
-> +        if offset.checked_add(count).ok_or(EOVERFLOW)? > self.count {
-> +            return Err(EINVAL);
-> +        }
-> +        Ok(())
-> +    }
-> +
-> +    /// Returns the data from the region starting from `offset` as a sli=
-ce.
-> +    /// `offset` and `count` are in units of `T`, not the number of byte=
-s.
-> +    ///
-> +    /// For ringbuffer type of r/w access or use-cases where the pointer=
- to the live data is needed,
-> +    /// [`CoherentAllocation::start_ptr`] or [`CoherentAllocation::start=
-_ptr_mut`] could be used instead.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// * Callers must ensure that the device does not read/write to/fro=
-m memory while the returned
-> +    ///   slice is live.
-> +    /// * Callers must ensure that this call does not race with a write =
-to the same region while
-> +    ///   the returned slice is live.
-> +    pub unsafe fn as_slice(&self, offset: usize, count: usize) -> Result=
-<&[T]> {
-> +        self.validate_range(offset, count)?;
-> +        // SAFETY:
-> +        // - The pointer is valid due to type invariant on `CoherentAllo=
-cation`,
-> +        //   we've just checked that the range and index is within bound=
-s. The immutability of the
-> +        //   data is also guaranteed by the safety requirements of the f=
-unction.
-> +        // - `offset + count` can't overflow since it is smaller than `s=
-elf.count` and we've checked
-> +        //   that `self.count` won't overflow early in the constructor.
-> +        Ok(unsafe { core::slice::from_raw_parts(self.cpu_addr.add(offset=
-), count) })
-> +    }
-> +
-> +    /// Performs the same functionality as [`CoherentAllocation::as_slic=
-e`], except that a mutable
-> +    /// slice is returned.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// * Callers must ensure that the device does not read/write to/fro=
-m memory while the returned
-> +    ///   slice is live.
-> +    /// * Callers must ensure that this call does not race with a read o=
-r write to the same region
-> +    ///   while the returned slice is live.
-> +    pub unsafe fn as_slice_mut(&self, offset: usize, count: usize) -> Re=
-sult<&mut [T]> {
-> +        self.validate_range(offset, count)?;
-> +        // SAFETY:
-> +        // - The pointer is valid due to type invariant on `CoherentAllo=
-cation`,
-> +        //   we've just checked that the range and index is within bound=
-s. The immutability of the
-> +        //   data is also guaranteed by the safety requirements of the f=
-unction.
-> +        // - `offset + count` can't overflow since it is smaller than `s=
-elf.count` and we've checked
-> +        //   that `self.count` won't overflow early in the constructor.
-> +        Ok(unsafe { core::slice::from_raw_parts_mut(self.cpu_addr.add(of=
-fset), count) })
-> +    }
-> +
-> +    /// Writes data to the region starting from `offset`. `offset` is in=
- units of `T`, not the
-> +    /// number of bytes.
-
-Reading this sentence it occured to me that `offset` may be ambiguous
-here, as in my mind it rings as being in bytes unit. How about using
-`index` throughout the file?
-
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// * Callers must ensure that the device does not read/write to/fro=
-m memory while the returned
-> +    ///   slice is live.
-> +    /// * Callers must ensure that this call does not race with a read o=
-r write to the same region
-> +    ///   that overlaps with this write.
-> +    ///
-> +    /// # Examples
-> +    ///
-> +    /// ```
-> +    /// # fn test(alloc: &mut kernel::dma::CoherentAllocation<u8>) -> Re=
-sult {
-> +    /// let somedata: [u8; 4] =3D [0xf; 4];
-> +    /// let buf: &[u8] =3D &somedata;
-> +    /// // SAFETY: No hw operation on the device and no other r/w access=
- to the region at this point.
-> +    /// unsafe { alloc.write(buf, 0)?; }
-> +    /// # Ok::<(), Error>(()) }
-> +    /// ```
-> +    pub unsafe fn write(&self, src: &[T], offset: usize) -> Result {
-
-Can this function be written by leveraging `as_slice_mut` and
-`clone_from_slice`? But doing so might require `T` to implement Clone,
-so maybe not a good idea (OTOH, aren't types implementing `AsBytes`
-implicitly Cloneable?)
+-- 
+2.49.0.1266.g31b7d2e469-goog
 
