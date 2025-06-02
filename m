@@ -1,187 +1,200 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 387B4F9D6;
-	Mon,  2 Jun 2025 06:28:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB23419924E
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 06:29:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748845717; cv=none; b=j653wkDEjxr9g2IwUhffWN79XojuX4SLOjgt8N4G9eqzD/HhJ5UTQphn1mZBsj0pPJeSzNbU0xjqDq3IrHGvvlnJJzmx/B89CBrgkxjbYUij5TQJLViaerNiCUdY1wtffUEjLJ7wvXQPSU3Hv4N2QXXBFrLqWR55pZpBLO+TpY0=
+	t=1748845760; cv=none; b=jOIzRyOMitiEApCTK/BbDJEOv7AtyNHKQRf64V2HfUkF9mHGd1cwg92Hz3zzPI599MV+m7s1yJNd0JQ6YdCDQkze0osjB/vv5AfEGeKHjaXef/FyG8tisXxwXRqSp4TV7JEE/F5rZqxiRimXhMG/kICNzk6SRqcrafbi7DJMPPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748845717; c=relaxed/simple;
-	bh=RFHiCis3XLUYAf7ZTf9arM1h+xYK03arKw9lLjLfuzs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uURQZ2r6asVTTIkyegTOwm70IvDrJltBumN19AlqNUmLS6F9R8a6qdCE+1MShjPd6M+8awQFQYcYacDCFN/g27BVHR0CatQ+T/60oi6YCu9HmbB8CybmdZdoBjVOvtV4eAmolCdbLd2QLvViyQk4jBdh/UGrCF27SEkpxKk29MI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G5Osrdge; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748845760; c=relaxed/simple;
+	bh=E+SQoAnccRz/KoH4Y5O3thh2KGLR0mDj1gtwthOEJy4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UdDsiW3zQnmngAmMLTPy/KxrtfmAY//2CdKWdUdmaFYOadiE2pV++8tOjorVPEgzPvRZNwUQ7MXB7gJK/whbu5mSm6GUpRtZD9kHihBAb/Uf4txNxwEVlxqVAqnLQ9FojDo8GCA/Q4QAqdZH7i23nOZQRCZ0B6HzCpmtWEJMla0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GH5ssrUm; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G5Osrdge"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFEB4C4CEEB;
-	Mon,  2 Jun 2025 06:28:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748845716;
-	bh=RFHiCis3XLUYAf7ZTf9arM1h+xYK03arKw9lLjLfuzs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=G5OsrdgeThAZ+e7cIqd3PVzpc6j03ZzmstEuZRjOJdxb5sjdV4UESGsHRRJAkBVPZ
-	 MKwqoLO24x11KpDDbrm6Ri/HfEjWSjavpx5aLASJ9YKH8MFe6J7x+/cIAwypNjdVcv
-	 vEs/cD3YDr+yeHT218GLlkS6HvUO7JQmj897UHrkI8HvP+yH/H9b423/zihAFnII0v
-	 0OKePy7d8FavHbWn+7NDAB4ARgpN3efgCmkGQckoSTPVft/gE7mnESjqqMuKwpOp/a
-	 xP0G7j98eG2vyqMobkkzlMS4DqhiRwHMUQXcWaqhRIFP2e6/54ftAp1uk8M4qFhLEJ
-	 YwVCjuU2QLvYg==
-Message-ID: <3c49628c-00b0-488d-a660-4b904febca1e@kernel.org>
-Date: Mon, 2 Jun 2025 08:28:32 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GH5ssrUm"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-234d366e5f2so51810665ad.1
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Jun 2025 23:29:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748845756; x=1749450556; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=jlrRp4TuMS0KMF0pTkra7PYNbVvzO12XDEsiGsNU3Vk=;
+        b=GH5ssrUmkvvzN7/RmL0IbbkHtDFuI8iQ3JCd/v50brjatmnm9ibsJnTo2GFpdAWBde
+         gl79NLrmSCSkjds0Q1OpmYJpmTIKxjJrdQR9gYaZEXmd6wJh5yZjoOyx/5B/YuwT4koL
+         V9yQG8DK8KOqYaAjPuV0Bvjcfb1DyoXLp6tCtT+1njHr8y2h6EUnG01aw3pYEyyEUvns
+         iC6M/+U0ljKS7+3BHFk5pP4hwvw6dKWFaPBEFojofrFSqBFAfT/d1AFrPb94fKEMmlmG
+         uEor/F6TkLxn2SVMlCkVJz3s4dmheFYRZH+ZURNlQ+yMSuziHp63wpFW7JVWpur+0evs
+         TAVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748845756; x=1749450556;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jlrRp4TuMS0KMF0pTkra7PYNbVvzO12XDEsiGsNU3Vk=;
+        b=jIJl4sgqmTk5l6QeOVGxPKSzwyf8LU6bxte1V3StpDBFj9e85Q6rrSu5u/XnAclHdP
+         fglqg9nnEqtJDtCmlDwwR8c7aRP1u3RGA0F13QOxxyfaSxY0PpjwTlxrf9BS+dRI7hXw
+         jrxHILW4kb/OAwy8+bqI8L6eVERU6wlZSmwmjDv62Pm6y/AILK+RXa2nCu/DFHRmx6Zx
+         +hAT0kcwUz21D6JEATgVZZTjqkKUWSPSG4soQEcoeD9lV1RfNZ61R8a32xNqMJ1laFGk
+         8xkS4V/uIlBpvRIq2WyxsuM+0cFfefAx9CxnbnObQ7uPyfdD1f7IG42LwPhtIy0xfUjw
+         K8IA==
+X-Forwarded-Encrypted: i=1; AJvYcCU3okSdjiPDC/uFufypiDf+B3bJqX7PFVp7osLJpsvnJ5RseY0PCm3pvQdy13bvJSNX/A+mll8e3Fca1u8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwM22xRuWn26ocASlCHNKD4PFDmzsipIDgWAtxRYjnlAldrxvrk
+	lcX77KanpZt5KfIP/CL8pYetCtEJGn1Uy6Wpw+RvsW+CyXNYkq2fDw67AGsFPWx4Ag==
+X-Gm-Gg: ASbGncuuyeBiDyOvNeZOWqaIyGryqMOFr1ulvD0ELqxQUG9cpJDa5aidR0sG0uY/BHF
+	FqhuHAe6Wnqy/IuBPLCnNGPAm1EeMPiG7td3FuBMh2ycZq/16nmbZrBmPEdH5mfBV1yyltMB39r
+	uO4zWkfUXbNHO/BF7ZMmGvDQIcjn/KDq2RP70qEIzGMfZmSLn6yAG7GJCoMtIDvi1xhXzKPwWZl
+	ybnMNzgeYbhAt/iEcocnGHqpV9fJk/hyit7Bwl1wRG0LnEuUwGFSZ4FvJe216/bWMlz9IXkxeyG
+	GNkSVHrUbYZ2yXxIcTE6WBV4MRr7UQtNwTaK09P8i8yv+7QGDQKr33tKKktYdfG/FgafgDhk
+X-Google-Smtp-Source: AGHT+IEGUkykHIXPq8r3wZozZPyQxM0wbptjLj0o40QPDDSWAMj26UWcej7zbg4yqxmWIQ2cKGSbHQ==
+X-Received: by 2002:a17:90a:da8f:b0:312:1b53:5e9f with SMTP id 98e67ed59e1d1-3127c850853mr11447234a91.24.1748845756106;
+        Sun, 01 Jun 2025 23:29:16 -0700 (PDT)
+Received: from thinkpad ([120.56.204.55])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e3d8dfcsm4904950a91.49.2025.06.01.23.29.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Jun 2025 23:29:15 -0700 (PDT)
+Date: Mon, 2 Jun 2025 11:59:09 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, 
+	Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/1] PCI: Add Extended Tag + MRRS quirk for Xeon 6
+Message-ID: <6t4ahnarwfa6xzhmdnhv2tzwrd6w7lincrjfwwwpr7xcpvityd@g7ypm4olmk7n>
+References: <20250422130207.3124-1-ilpo.jarvinen@linux.intel.com>
+ <xwcoamcgyprdiru3z3qyamqxjmolis23vps4axzkpesgjrag4p@wnp63ospijyw>
+ <45809733-1e02-0109-a929-3cdd6c960646@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: Add Device Tree binding for ST M24LR
- control interface
-To: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-Cc: arnd@arndb.de, conor+dt@kernel.org, devicetree@vger.kernel.org,
- gregkh@linuxfoundation.org, krzk+dt@kernel.org,
- linux-kernel@vger.kernel.org, robh@kernel.org
-References: <be95cc2d-f548-4c71-a57b-8107009b8776@kernel.org>
- <20250602034817.2028695-1-abd.masalkhi@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250602034817.2028695-1-abd.masalkhi@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <45809733-1e02-0109-a929-3cdd6c960646@linux.intel.com>
 
-On 02/06/2025 05:48, Abd-Alrhman Masalkhi wrote:
-> Hi Krzysztof,
+On Mon, Jun 02, 2025 at 08:10:42AM +0300, Ilpo Järvinen wrote:
+> On Sun, 1 Jun 2025, Manivannan Sadhasivam wrote:
 > 
-> Thank you for the detailed feedback.
+> > On Tue, Apr 22, 2025 at 04:02:07PM +0300, Ilpo Järvinen wrote:
+> > > When bifurcated to x2, Xeon 6 Root Port performance is sensitive to the
+> > > configuration of Extended Tags, Max Read Request Size (MRRS), and 10-Bit
+> > > Tag Requester (note: there is currently no 10-Bit Tag support in the
+> > > kernel). While those can be configured to the recommended values by FW,
+> > > kernel may decide to overwrite the initial values.
+> > > 
+> > > Unfortunately, there is no mechanism for FW to indicate OS which parts
+> > > of PCIe configuration should not be altered. Thus, the only option is
+> > > to add such logic into the kernel as quirks.
+> > > 
+> > > There is a pre-existing quirk flag to disable Extended Tags. Depending
+> > > on CONFIG_PCIE_BUS_* setting, MRRS may be overwritten by what the
+> > > kernel thinks is the best for performance (the largest supported
+> > > value), resulting in performance degradation instead with these Root
+> > > Ports. (There would have been a pre-existing quirk to disallow
+> > > increasing MRRS but it is not identical to rejecting >128B MRRS.)
+> > > 
+> > > Add a quirk that disallows enabling Extended Tags and setting MRRS
+> > > larger than 128B for devices under Xeon 6 Root Ports if the Root Port is
+> > > bifurcated to x2. Reject >128B MRRS only when it is going to be written
+> > > by the kernel (this assumes FW configured a good initial value for MRRS
+> > > in case the kernel is not touching MRRS at all).
+> > > 
+> > > It was first attempted to always write MRRS when the quirk is needed
+> > > (always overwrite the initial value). That turned out to be quite
+> > > invasive change, however, given the complexity of the initial setup
+> > > callchain and various stages returning early when they decide no changes
+> > > are necessary, requiring override each. As such, the initial value for
+> > > MRRS is now left into the hands of FW.
+> > > 
+> > > Link: https://cdrdv2.intel.com/v1/dl/getContent/837176
+> > > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> > > ---
+> > > 
+> > > v2:
+> > > - Explain in changelog why FW cannot solve this on its own
+> > > - Moved the quirk under arch/x86/pci/
+> > > - Don't NULL check value from pci_find_host_bridge()
+> > > - Added comment above the quirk about the performance degradation
+> > > - Removed all setup chain 128B quirk overrides expect for MRRS write
+> > >   itself (assumes a sane initial value is set by FW)
+> > > 
+> > >  arch/x86/pci/fixup.c | 30 ++++++++++++++++++++++++++++++
+> > >  drivers/pci/pci.c    | 15 ++++++++-------
+> > >  include/linux/pci.h  |  1 +
+> > >  3 files changed, 39 insertions(+), 7 deletions(-)
+> > > 
+> > > diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
+> > > index efefeb82ab61..aa9617bc4b55 100644
+> > > --- a/arch/x86/pci/fixup.c
+> > > +++ b/arch/x86/pci/fixup.c
+> > > @@ -294,6 +294,36 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_MCH_PB1,	pcie_r
+> > >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_MCH_PC,	pcie_rootport_aspm_quirk);
+> > >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_MCH_PC1,	pcie_rootport_aspm_quirk);
+> > >  
+> > > +/*
+> > > + * PCIe devices underneath Xeon6 PCIe Root Port bifurcated to 2x have slower
+> > > + * performance with Extended Tags and MRRS > 128B. Workaround the performance
+> > > + * problems by disabling Extended Tags and limiting MRRS to 128B.
+> > > + *
+> > > + * https://cdrdv2.intel.com/v1/dl/getContent/837176
+> > > + */
+> > > +static void quirk_pcie2x_no_tags_no_mrrs(struct pci_dev *pdev)
+> > > +{
+> > > +	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
+> > > +	u32 linkcap;
+> > > +
+> > > +	pcie_capability_read_dword(pdev, PCI_EXP_LNKCAP, &linkcap);
+> > > +	if (FIELD_GET(PCI_EXP_LNKCAP_MLW, linkcap) != 0x2)
+> > > +		return;
+> > > +
+> > > +	bridge->no_ext_tags = 1;
+> > > +	bridge->only_128b_mrrs = 1;
+> > 
+> > My 2 cents here. Wouldn't it work if you hardcode MRRS to 128 in PCI_EXP_DEVCTL
+> > here and then set pci_host_bridge::no_inc_mrrs to 1? This would avoid
+> > introducing an extra flag and also serve the same purpose.
 > 
->> Do not send next version while the discussion is still happening.
+> Hi Mani,
 > 
-> You're right, I sent the updated version too early while discussion was
-> still ongoing. I'll hold off on sending further revisions until the current
-> points are fully resolved.
+> Thanks for the suggestion but it won't work because this is the Root Port. 
+> The devices underneath it need this setting so we cannot set them to 128B 
+> reliable here (is there anything that guarantees those devices have been 
+> enumerated at this point?).
 > 
->> Full path, so /schemas/i2c/i2c-mux.... but this is not an i2c mux, at
->> least not in your description, so something feels incomplete or incorrect.
-> 
-> A Brief Overview of the Device:
-> 
-> The M24LR series is a dual-interface EEPROM with both I2C and ISO/IEC 15693
-> RF support. While it is technically an EEPROM, it also exposes a control
-> interface over I2C via a second address, which is used to manage features
-> such as password protection, energy harvesting configuration, and UID access.
-> This secondary interface is not memory-mapped like traditional EEPROMs, which
-> is why I initially considered separating the control aspect in the software.
-> 
-> How to Access the EEPROM and the System Parameter Sector?
-> 
-> According to the datasheet for the M24LR04E-R, the E2 bit must be set
-> appropriately in the I2C device select code to distinguish between EEPROM
-> access and control access.
-> 
-> What is E2?
-> E2 is a bit in the I2C device select code. It determines which internal
-> function of the chip is being accessed.
-> 
-> Device Select Code Format:
-> Bit:                b7  b6  b5  b4  b3  b2  b1  b0
-> Value:              1   0   1   0   E2  1   1   R/W
-> 
-> To access the EEPROM memory, E2 (b3) should be 0:
-> 
-> Device Select Code Format:
-> Bit:                b7  b6  b5  b4  b3  b2  b1  b0
-> Value:              1   0   1   0   0  1   1   R/W
-> 
-> To access the system control interface, E2 (b3) should be 1:
 
-So these are just two different addresses. I already commented on this.
-This is not I2C mux but a device with two addresses.
+I was under assumption that the kernel would honor the Root Port MRRS value
+while setting the device MRRS, but I was wrong. Kernel just takes the MPS
+value (but that considers the Root Port's MPS) for MRRS and scales it down if
+the hardware doesn't support it.
 
-> 
-> Device Select Code Format:
-> Bit:                b7  b6  b5  b4  b3  b2  b1  b0
-> Value:              1   0   1   0   0  1   1   R/W
-> 
-> Is This a Gate?
-> Correct me if I'm wrong, but to me this behavior resembles a form of gate,
-> instead of using a separate hardware pin to access the EEPROM, the chip
-> encodes this selection in the I2C device address. However, the datasheet
-> does not explicitly mention anything about a "gate" or "mux," which is
-> why I've been careful to not label it as an I2C gate in the binding.
-> 
-> That said, I see it as a kind of implicit I2C mux (of type gate), where
-> the chip use the 0x57 address as in the example and to select the internal
-> EEPROM we just reset the b3 in the device select code.
-> 
-> Why This View Matters in my driver design:
+So yes, setting the Root Port's MRRS would have no effect in limiting the device
+MRRS. And I believe, Xeon6 Root Ports doesn't suffer from same 128B MRRS
+limitation for MPS, otherwise, you could just set Root Port MPS to 128B and it
+will make sure that both MPS and MRRS of endpoint devices will be capped to this
+value. 
 
-We do not talk here about driver design but bindings.
+> I've v3 already prepared which uses the enable device hook as suggested by 
+> Lukas. I'll send it soon.
+> 
 
-> 
-> Looking at the device from this perspective has helped me keep the driver
-> design cleaner while keeping the synchronization issue in mind:
-> 
-> 1- Avoiding code duplication (such as rewriting parts of the at24 driver).
-> 2- Ensuring concurrent access to EEPROM and control areas is properly
->    handled and isolated.
-> 3- Representing the dual-role nature of the chip more explicitly.
-> 
->> What does "r" stand for?
-> 
-> The r in st,m24lr04e-r stands for RF, these are the RF-enabled variants
-> of the M24LR series, as specified by STMicroelectronics.
+The callback is supposed to be used for performing enablement steps required by
+the *Host Bridge* devices, not Root Ports. So I do have a concern to use it to
+address the Root Port quirks. That's why I thought of limiting it to the PCI
+quirks.
 
-It's fine.
+But feel free to submit the patch. Let's see what Bjorn and others feel about
+it.
 
-> 
->> Do not need '>' unless you need to preserve formatting.
-> 
-> I'll remove the | and > where formatting preservation is not needed.
+- Mani
 
-Respond inline, not by removing entire context.
-
-Best regards,
-Krzysztof
+-- 
+மணிவண்ணன் சதாசிவம்
