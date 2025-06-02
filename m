@@ -1,108 +1,159 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4374F224AFC;
-	Mon,  2 Jun 2025 17:25:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9001E1C8629;
+	Mon,  2 Jun 2025 17:27:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748885147; cv=none; b=CG8uvAMCA3psn2Bs0tR4iSkF1Niu67FZrRgaybSZ3PUw8HZymKgFtNb+GPYpzlCEg63wpF+xKgm5h1R10R1GToFAq9nsTPN94ewtmhqcQGUSFUrP/8P8XuDXnX8uvXKXg8i2yHJY68/Y5WvqVAJbHBTlngObyjkwmR7+476SwiQ=
+	t=1748885256; cv=none; b=gtIrxU+LGaNr/1J/5WZRBYX3NTA9L9fmc9+qsw9kVbagGZNK/l0HlIOTAyHSQ5+ODrkSK8o6JBiH4CJeMfgZL2Ad3nDuTlGvkY0R11spmgAMPuj4vYzQ/SAMRPSdB5r/o1NNHPK4pG3YC7sY19HJ0c8YM1HkG2KWlDirFHjij90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748885147; c=relaxed/simple;
-	bh=YfXGAwKO9Hp9sS3kUPLXOoBb62icCKPXTFupZoW5qiA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d2yFFDuURKgnkTbQXoUGaCNcBptvg4DbO7UQsrJARsmtsIPjYpNis9Q5Q78NC+5uEU0JNxYcR3Xve0rR4Bvb+sfkTZlfST1gU9IoqeC2Q80+qK7wuaCZsTxB+kEP19hHfwftsakbUKbkeCeIU7G5BeecYCSy3D62FH/JgMjWwJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=N7OdBEWJ; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1748885256; c=relaxed/simple;
+	bh=tusFr6vqIW4SyQkabsISqQQ1/RpKHpF913C78L81Pys=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ggF3KUhoO4gmDc6V2W4Wh2ywvkg4/I7YGX7PKSGMdUFe/E4JhOS/xzjlRrgd8iZAWfS5V9tDkZHOn+GXRn4VgsJgN8tceUOzbDv7kemIBatK6Jt7aZwMevwQjLJyH07LC8yHUDbzQFlD34WQod5fOG4C7a1NeVUJgUBVXPzy28k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BL6i4uQH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="N7OdBEWJ"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a36efcadb8so4101579f8f.0;
-        Mon, 02 Jun 2025 10:25:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1748885144; x=1749489944; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1S+RpxvxyphSVE8B8fHLWbnA8TTbuz2RmjgMW6z0rDE=;
-        b=N7OdBEWJFVjoP83gg2ynyBCpnj64bNOjwRZP0xYIpqY/HndTzVaZvAe+WkAe867J2K
-         STW841h3+PfRxVIujO38spb9ubq9WHfo+skg8dWUg2ROoJsifm5YLU5TgBIbv4qLauL8
-         YT85vCf2PPyncUaCdJdJRqZgktGZE1P4bqS6AHudpq9Fp0PkiINCj85rP+7BShpsAdB8
-         gdJkZffpchqUFY0/7+2VK36lwDMNnrDZD92WZOLe3VYjfDtCeBVMcRZXewHIkO0qhUiN
-         SEWmes+zO21gOox9qUp0fhNrHzMoiBeuwNygE7gj1x5+Yl7/l19Do0/PYAwIOGybTeG6
-         7cIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748885144; x=1749489944;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1S+RpxvxyphSVE8B8fHLWbnA8TTbuz2RmjgMW6z0rDE=;
-        b=wsCXNrzrFTLeQSooeAUpn63ky/qcSpbq/H54GBAgUu6XjRZ4qcFzgjEs3bk2OLOSZp
-         wOF9gQxcEbxoJK4u8FSvG+31jBjQMK4xqlJ40XiPg3EHmI8mXJqn2sNYHc4dTZTYpZr9
-         2+HyVgDXMVGoeH/Vgw9kWBkfUd98yuEkp8KofJU3AMPrmEhfPfH8dvQIu/Tgq/AsNelM
-         wc8YCcElqm5xj0Y1cohOiLUCmBzsXjafGGAh+0moI8plw5EEwoW6UUWGpKToA7unFWab
-         3mtHQMyBAIToqRu0v1DXuyX1HAfjwTt5eWJEM0vVIONCOcnad3vGg/UBPEh+kecEemu+
-         jhBA==
-X-Forwarded-Encrypted: i=1; AJvYcCUoUf78wpjf1rG+QHAfTAd2QDowlMjNk+1VLJQuUdC8aI+r2HWVvsFBEHsHtp+fgPAh4MTXUBwr@vger.kernel.org, AJvYcCX8TXkmIERfpLx4/FJgKxw4lbOCjTfy3UoOVM4lPjf9Woe4E6yp5GBVtZQZ/omJrXtWfsnh7Z4gQrGEW9Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysXqyu5ILdQe9eVHEbC3npwPjEZLpVX3a6IHuldAr7rbnZOUX/
-	dVKt+cVd09sr8LgG+veLd2Bt0HEtcaD47Osg2t1O2iKDS30fggzFrCE=
-X-Gm-Gg: ASbGnct4tbtHR02dzXMuM9n4ZdkJqKyY9Ml8tkwqrVN6Jf6fZlaFrHxaV65wPDsgAwl
-	y+sSVCKZV8qXINPzNjixryIj0JgyPm0yl/Uq0u1EDUst5j8Vx/geuSDTxgSXusmapj4XOBa8pP0
-	lAVOJSPbsrS91vSvQIgK/SVmRnIKiFxCHqAqxFkuRqiPxExvvcDtVb64HtjXycBECtI7RS1WiQx
-	BsBKqsrA6Jo7rjpUbuAv3dfonrk3y/9t1ALufAYPwo+xpPz1oBnVuQxydeudlQJf72aoiK5+Lvq
-	iwdcIe3KOp8oK6Fp/L43FmxEYk2bANAVJkqUo1WyhL+HMjMfQtgZNy7AvmtfeIfnpN6B85YQ5G2
-	SVNOV8aHBlGFPWIlndoyOleSVB6Y=
-X-Google-Smtp-Source: AGHT+IEik8+s+HEIkjVI2p4vsVV/U7psFNK5HwtqnPw+czPQPwWPwcWIW7xERKd82VU4BHsRIw1WQg==
-X-Received: by 2002:a05:6000:2c0d:b0:3a3:7115:5e7a with SMTP id ffacd0b85a97d-3a4f7a9d5e8mr10728344f8f.42.1748885144432;
-        Mon, 02 Jun 2025 10:25:44 -0700 (PDT)
-Received: from [192.168.1.3] (p5b057d53.dip0.t-ipconnect.de. [91.5.125.83])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe5b89dsm15756966f8f.19.2025.06.02.10.25.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Jun 2025 10:25:43 -0700 (PDT)
-Message-ID: <5d3aa166-c713-44b8-8552-0992b2febb85@googlemail.com>
-Date: Mon, 2 Jun 2025 19:25:42 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BL6i4uQH"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EBAF9C4CEEB;
+	Mon,  2 Jun 2025 17:27:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748885256;
+	bh=tusFr6vqIW4SyQkabsISqQQ1/RpKHpF913C78L81Pys=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=BL6i4uQHaOIc7/IKHElWCtNY2uNf2dwHwqRNtBMKLY/JMCXLkbeB/oFeeYZOU1FYd
+	 xW5Fe9fL/Y+PggZMp8pkGfr9uMOXwyQXY9trnuLy0ylsxfWLYYEd011a4chyGhO0SE
+	 g7whqdazHS1IaoquSFvJPeXTuFt9uUptQicPG5BkYee7D04uFa0PWwT3X13MhuWjbK
+	 arsIRZ6Mxjg6reNup/B2DUzMQ0AUxu5ZBeRQOoOrjVJYfoTvLIyOYE0z7JbfUUJClH
+	 QGfaERwqwEGD4HrstKWPQlzgUu+0onn7fOGQHZWx6YfUUOWUYSuj/AoyHvbfJo2/1O
+	 01YsY4n9XcmPQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DA2C5AD49;
+	Mon,  2 Jun 2025 17:27:35 +0000 (UTC)
+From: Vincent Knecht via B4 Relay <devnull+vincent.knecht.mailoo.org@kernel.org>
+Subject: [PATCH v4 0/4] CAMSS support for MSM8939
+Date: Mon, 02 Jun 2025 19:27:26 +0200
+Message-Id: <20250602-camss-8x39-vbif-v4-0-32c277d8f9bf@mailoo.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.6 000/444] 6.6.93-rc1 review
-Content-Language: de-DE
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250602134340.906731340@linuxfoundation.org>
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250602134340.906731340@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAP7ePWgC/23OSw6CMBCA4auQrq3pgwHqynsYF6UPaCLUtKbBE
+ O5uIS4wuPwnmW9mRtEEZyK6FDMKJrno/JijPBVI9XLsDHY6N2KEAQFaYyWHGHEzcYFT6ywWNVg
+ LDRVUNChvPYOxbtrE2z137+LLh/d2INF1+rUYOViJYoIlZUpXhFTSiusg3cP7sw8dWrHE9gAcA
+ ZaBSnMNCqQtoToAfAfwPx/wDFglqKbQtqB/gWVZPoZh4WExAQAA
+X-Change-ID: 20250517-camss-8x39-vbif-975ff5819198
+To: Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
+ phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
+ Vincent Knecht <vincent.knecht@mailoo.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748885254; l=3491;
+ i=vincent.knecht@mailoo.org; s=20250414; h=from:subject:message-id;
+ bh=tusFr6vqIW4SyQkabsISqQQ1/RpKHpF913C78L81Pys=;
+ b=CtN63Fz0a4w/C6OpUXiNhepIpVTVRQhV29+1YLr9zR9PJ/u/SC5stRtQcILD9q0zerTS75ynf
+ MnXruY3VRnbBOA/zGLiBDwRdS7sE8XjgP9Hu3DkLmuO/7oJV3piC/UG
+X-Developer-Key: i=vincent.knecht@mailoo.org; a=ed25519;
+ pk=MFCVQkhL3+d3NHDzNPWpyZ4isxJvT+QTqValj5gSkm4=
+X-Endpoint-Received: by B4 Relay for vincent.knecht@mailoo.org/20250414
+ with auth_id=377
+X-Original-From: Vincent Knecht <vincent.knecht@mailoo.org>
+Reply-To: vincent.knecht@mailoo.org
 
-Am 02.06.2025 um 15:41 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.6.93 release.
-> There are 444 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+This series adds CAMSS support for MSM8939.
+It's mostly identical to MSM8916, except for some clocks
+and an additional CSI.
 
-Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
-oddities or regressions found.
+To fix black stripes across sensor output, and garbage in
+CSID TPG output, 2 VFE VBIF register settings are needed.
+So the 1st patch adds helper functions to do just that.
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+Patch 1: adds helper for VFE VBIF settings
+Patch 2: adds CAMSS_8x39 version in CAMSS driver
+Patch 3: documents qcom,msm8939-camss DT bindings
+Patch 4: adds camss and cci in msm8939.dtsi
 
+Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
+---
+Changes in v4:
+- Picked up tags
+- Patch 1:
+  - Fix alignment to match opening parenthesis (Bryan)
+- Patch 2: no change
+- Patch 3:
+  - Wrap line at 80 chars (Krzysztof)
+- Patch 4: no change
+- Link to v3: https://lore.kernel.org/r/20250530-camss-8x39-vbif-v3-0-fc91d15bb5d6@mailoo.org
 
-Beste Grüße,
-Peter Schneider
+Changes in v3:
+- Patch 1:
+  - Use braces around multiline (Bryan)
+  - Rename vfe_vbif_reg_write to vfe_vbif_write_reg (Bryan)
+  - Get rid of switch block on CAMSS version (Bryan)
+- Patch 2:
+  - Get rid of switch block on CAMSS version (Bryan)
+- Patch 3: no change
+- Patch 4: no change
+  - Tried to get rid of CCI camss_ahb but this resulted in device
+    freeze+reboot (Konrad)
+- Link to v2: https://lore.kernel.org/r/20250525-camss-8x39-vbif-v2-0-6d3d5c5af456@mailoo.org
 
+Changes in v2:
+- Patch 1:
+  - Fix devm_platform_ioremap_resource_byname line to not end with
+    opening parenthesis (media-ci/1-checkpatch)
+  - Move camss-vfe-4-1.c handling of VBIF previously in patch 2 here
+    (Dmitry)
+- Patch 2:
+  - Declare regulators in PHY entries, not CSID ones (Bryan)
+- Patch 3: (bindings)
+  - Fix bindings checks for new errors (Rob)
+  - Fix properties ordering, code-style and example (Krzysztof)
+  - Sort reg-names, clock-names and interrupt-names alphanumerically (Bryan)
+- Patch 4: (dtsi)
+  - Move #address/#size cells before status (Konrad)
+  - Aligned CCI with msm8916, thus removing ispif_ahb mention (Konrad)
+    If "camss_ahb should be unnecessary", it's still required by qcom,i2c-cci.yaml
+- Link to v1: https://lore.kernel.org/r/20250520-camss-8x39-vbif-v1-0-a12cd6006af9@mailoo.org
+
+---
+Vincent Knecht (4):
+      media: qcom: camss: vfe: Add VBIF setting support
+      media: qcom: camss: Add support for MSM8939
+      media: dt-bindings: Add qcom,msm8939-camss
+      arm64: dts: qcom: msm8939: Add camss and cci
+
+ .../bindings/media/qcom,msm8939-camss.yaml         | 254 +++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/msm8939-pm8916.dtsi       |   4 +
+ arch/arm64/boot/dts/qcom/msm8939.dtsi              | 146 ++++++++++++
+ drivers/media/platform/qcom/camss/Makefile         |   1 +
+ drivers/media/platform/qcom/camss/camss-csiphy.c   |   1 +
+ drivers/media/platform/qcom/camss/camss-ispif.c    |   8 +-
+ drivers/media/platform/qcom/camss/camss-vfe-4-1.c  |  12 +
+ drivers/media/platform/qcom/camss/camss-vfe-vbif.c |  31 +++
+ drivers/media/platform/qcom/camss/camss-vfe-vbif.h |  19 ++
+ drivers/media/platform/qcom/camss/camss-vfe.c      |  10 +
+ drivers/media/platform/qcom/camss/camss-vfe.h      |   3 +
+ drivers/media/platform/qcom/camss/camss.c          | 157 +++++++++++++
+ drivers/media/platform/qcom/camss/camss.h          |   1 +
+ 13 files changed, 645 insertions(+), 2 deletions(-)
+---
+base-commit: 8566fc3b96539e3235909d6bdda198e1282beaed
+change-id: 20250517-camss-8x39-vbif-975ff5819198
+
+Best regards,
 -- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
+Vincent Knecht <vincent.knecht@mailoo.org>
 
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
+
