@@ -1,377 +1,255 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD1912CDA5;
-	Mon,  2 Jun 2025 05:36:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C692C3254;
+	Mon,  2 Jun 2025 05:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748842582; cv=none; b=Vd7JrQIaWNdyMZ9Zt24jhP0WcREjdEqtBPEOYExu0Ceg44aj4bZA6X2dtaU/Ywg0rt6hcEeUp7bNCknANRP9lTTlE2d6vOlK031njfSoRy66A7ll3ziP6F5XUNJky2/aZxv/I86D4+GPXu2X59Q22C/WhOU7karxP6II6g9sOM4=
+	t=1748843268; cv=none; b=Ytqr6TX8FdUW09bWTU5AG7hrjHrlsbfVIzx2yBwsBKriiFftUgSzU07yd514ZCi4j3CGOcejW/ncWeq7np2U5uTqYf9Bvwp2d4QWaE+b6bZXC+vGeyLNGtcvbb44FToz3VNN3OAXzsQGtZ9t3lrGQrA3wTTlJIY78DeudchMNEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748842582; c=relaxed/simple;
-	bh=3ioeH4uZthb19qLI5wYUgUMeD1rXLddPSxLk4rAXdQs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uPnKHz0T4MZMmjucAhSDz258CqrkQCHlbvH3FQbdBrfJAqWBwOToNB/anxatKabQ/53I+wtV/ALImTFViQF9kjWUM3JZrfQye+tN4VupvVImmq+GYNZ5hAvzbEp3aFvNygUKOaIsBbvRWHJ4NiQzydFMtJsEgQgR5DAxMqdI79U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=OUkIlmX5; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1748843268; c=relaxed/simple;
+	bh=rTZOLnGna9H5UpXIFrB5N1YfCOUWcX803oZwA8ZZs6Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bYNhEleyqVvgp/DwmgH0LYVfHUVFB4jPsJAbOjQ8tS8v3sFSMllOdAjuArh/Z/G/ozZSsT056uXickdJdXRXrLPIIFXT2tEmQ9qkQZEQMilhVrDyOnZuRSwQWJVI84KQDgQIsqWSdHgwsTXAxfhgxSBnfL+JHzrbrM0LITKbwl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fNiFnuMX; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="OUkIlmX5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1748842580; x=1780378580;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=3ioeH4uZthb19qLI5wYUgUMeD1rXLddPSxLk4rAXdQs=;
-  b=OUkIlmX5MU+CvalB5YDpEmqZd159UGmlrxzkueqh2njuocni+s6FB81Y
-   +5dWFBl/VVPWaQtXY4eQOH1QC3o/9+m6ZOA0MgBjF5Ra65IlJtf21mbDK
-   LWPUaEWyDl1LhMiIG4YHCy3yhw9ZwtUMNhaOtcECNEqkIgzu4KezhC1Dq
-   oP1Pr7nf1HC3rxeVuMxnx7+qiGuDGgJ6M4G6JjM7y9DwjZhVYRvcFupL3
-   PxvI4EvvBN4zNien3oal1odKMc7wxqA6zSQjP3yeADc9hiSJ/DvAFJCJ/
-   40yXeIr/1IxwkCyVrvRmqG2zySFqx2F+O/GaAyyDQBfxu2dbhLVUwfqJa
-   A==;
-X-CSE-ConnectionGUID: eittDR1XTzS4g4o2E6Cy1A==
-X-CSE-MsgGUID: I26Y8WSTRZ6VKcdOtra8SA==
-X-IronPort-AV: E=Sophos;i="6.16,202,1744095600"; 
-   d="scan'208";a="42865345"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 01 Jun 2025 22:36:17 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Sun, 1 Jun 2025 22:35:47 -0700
-Received: from che-lt-i64410lx.microchip.com (10.10.85.11) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.44 via Frontend Transport; Sun, 1 Jun 2025 22:35:40 -0700
-From: Balamanikandan Gunasundar <balamanikandan.gunasundar@microchip.com>
-To: <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
-	<robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>, <krzysztof.kozlowski+dt@linaro.org>
-CC: <linux-mtd@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	Balamanikandan Gunasundar <balamanikandan.gunasundar@microchip.com>
-Subject: [PATCH v3 3/4] dt-bindings: mtd: atmel-nand: add legacy nand controllers
-Date: Mon, 2 Jun 2025 11:05:06 +0530
-Message-ID: <20250602053507.25864-4-balamanikandan.gunasundar@microchip.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250602053507.25864-1-balamanikandan.gunasundar@microchip.com>
-References: <20250602053507.25864-1-balamanikandan.gunasundar@microchip.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fNiFnuMX"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-3292aad800aso43521191fa.0;
+        Sun, 01 Jun 2025 22:47:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748843263; x=1749448063; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ETNvbGvKme7nAnnmtzIyBdJn/0gcb2FNly7MRGQKSjA=;
+        b=fNiFnuMX5hO7IRHVZeQ+qAR3PKAYtZ5voC/Eyuuyjjq8iUbyULpi00x1iTiLGGdGAE
+         pNfiBhhWbS1AUXWeR5fd3vDwZjT2Hya70MttzLbzN/AmHYSMckEH8YC40ef+D6ZNFzS7
+         c/xyKghRnxsl/HDrYJ+65x5mmlWnaEI7LtqOyHrSDRueNXadvDcivP13l9ucp2WA58h1
+         C++EKORmUZsk6QMs5izgUGVWK5aIiib0dCf+1UniasgWVuuoUwH3AvjAdyZbUcn3NZeO
+         5StW1DLumf0PWZNV5HaXlFkp6o4UfIB3Bo9HeU7TIUsc2fkYLM8pmub32D7nIJGqutgQ
+         7ibA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748843263; x=1749448063;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ETNvbGvKme7nAnnmtzIyBdJn/0gcb2FNly7MRGQKSjA=;
+        b=XPWqk0bSfOT78YWBrR45D/AYX+1l/qjmrGI2dP47eVBI6c0Eg5BLlMsMsRPOYU3oru
+         arafm4jptNH+sman0M4gKaK2yEllFQh35yRzjgbRkW/XRbmv2i2VdozY6w0rTzkP6lN1
+         WyrXAxuAZ1WSQ7QTdLB+as9MZeBrrLPPKccXU4Gs7Nky7b28vIUBLe62fIPU2CnubsY+
+         HSs8z4LSghJW9VHDt7Ed5GmcQF8SD5gjhmQMDMrB8Sc1LwTrKminZ+RzTwlRZSFypEyX
+         A8QmQh2gLrADLE1c/1xtePdcq2i9p/Def7WeKPv2WggklyC6t3k5gO9i5YEs4XyGB/xV
+         sk9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWnHkPZGGM5TvYamAqoluFvYb4d1SgT0xHOhTEY64S4aV1S2zkYkx+oecRvN0K5V5gx+a09aDyC@vger.kernel.org, AJvYcCXMG6h9LwlsYc8gs5Uu1aAMxaCW5Fr/EuXCNXPMemGmzb0M6sIFVGgTYMmijZl/W8MSHBK/b83qzVdMW6g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNvZiXYeYAUos3TYJUeIi1UvRVsxUz586qzAgImZ8Iekx4Lbcp
+	lSZmfA9Rbx+wkmt7J9NvtUkEBpQsRSNyVoLSKBMNeYG+/QVsdXhEE/ZLPPQKotAPXXyDgl/v96a
+	6CWETHl7NmPkftHFesbsb0vZD5k7V+uc=
+X-Gm-Gg: ASbGncsfizYOBW7WdOLGBkJ5qyezZVsgvy4TCm0/AJWd/csD03/fvI2Q+35P8iEFHxC
+	GAu/UHbI7p+yYi4Qcb+oJtOiDolVPGBd7UA6CjY8l3Mo7nm0jMyLHCGh3iL3a+oaHhgv94e9UDT
+	b8ZV+TbvrEnzP7RGF1HmoeTKzqkuxKHTjZ
+X-Google-Smtp-Source: AGHT+IHn3wg4wsWomGqU6A+Vt+xO9VDpV33AKxJYrE+LY2QPQSH7NokQuVYb4n+7SLmsmZzmi7hGLdX1i5AVlVWIpxM=
+X-Received: by 2002:a05:651c:1b0f:b0:326:e449:3442 with SMTP id
+ 38308e7fff4ca-32a8db5e104mr31375631fa.10.1748843263104; Sun, 01 Jun 2025
+ 22:47:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <20250601200108.23186-1-ryncsn@gmail.com> <CA+EESO5DWB1C3ggH53n=DQL6xNz1bU+NWh7C7_ao=o9NGLvQ4w@mail.gmail.com>
+In-Reply-To: <CA+EESO5DWB1C3ggH53n=DQL6xNz1bU+NWh7C7_ao=o9NGLvQ4w@mail.gmail.com>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Mon, 2 Jun 2025 13:47:24 +0800
+X-Gm-Features: AX0GCFt6pHbMLecqqaWvuLEmwvQs6hTTd2T2X3d9RZidCJA-txiQGEkBEO3RMJg
+Message-ID: <CAMgjq7Ds9zQVoxWw_mkFuKTWqr5Jvd50Ek-W7YRgkKCbsdS55g@mail.gmail.com>
+Subject: Re: [PATCH v2] mm: userfaultfd: fix race of userfaultfd_move and swap cache
+To: Lokesh Gidra <lokeshgidra@google.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Barry Song <21cnbao@gmail.com>, Peter Xu <peterx@redhat.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Andrea Arcangeli <aarcange@redhat.com>, 
+	David Hildenbrand <david@redhat.com>, stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add support for atmel legacy nand controllers. These bindings should not be
-used with the new device trees.
+On Mon, Jun 2, 2025 at 9:43=E2=80=AFAM Lokesh Gidra <lokeshgidra@google.com=
+> wrote:
+>
+> On Sun, Jun 1, 2025 at 1:01=E2=80=AFPM Kairui Song <ryncsn@gmail.com> wro=
+te:
+> >
+> > From: Kairui Song <kasong@tencent.com>
+> >
+> > On seeing a swap entry PTE, userfaultfd_move does a lockless swap cache
+> > lookup, and try to move the found folio to the faulting vma when.
+> > Currently, it relies on the PTE value check to ensure the moved folio
+> > still belongs to the src swap entry, which turns out is not reliable.
+> >
+> > While working and reviewing the swap table series with Barry, following
+> > existing race is observed and reproduced [1]:
+> >
+> > ( move_pages_pte is moving src_pte to dst_pte, where src_pte is a
+> >  swap entry PTE holding swap entry S1, and S1 isn't in the swap cache.)
+> >
+> > CPU1                               CPU2
+> > userfaultfd_move
+> >   move_pages_pte()
+> >     entry =3D pte_to_swp_entry(orig_src_pte);
+> >     // Here it got entry =3D S1
+> >     ... < Somehow interrupted> ...
+> >                                    <swapin src_pte, alloc and use folio=
+ A>
+> >                                    // folio A is just a new allocated f=
+olio
+> >                                    // and get installed into src_pte
+> >                                    <frees swap entry S1>
+> >                                    // src_pte now points to folio A, S1
+> >                                    // has swap count =3D=3D 0, it can b=
+e freed
+> >                                    // by folio_swap_swap or swap
+> >                                    // allocator's reclaim.
+> >                                    <try to swap out another folio B>
+> >                                    // folio B is a folio in another VMA=
+.
+> >                                    <put folio B to swap cache using S1 =
+>
+> >                                    // S1 is freed, folio B could use it
+> >                                    // for swap out with no problem.
+> >                                    ...
+> >     folio =3D filemap_get_folio(S1)
+> >     // Got folio B here !!!
+> >     ... < Somehow interrupted again> ...
+> >                                    <swapin folio B and free S1>
+> >                                    // Now S1 is free to be used again.
+> >                                    <swapout src_pte & folio A using S1>
+> >                                    // Now src_pte is a swap entry pte
+> >                                    // holding S1 again.
+> >     folio_trylock(folio)
+> >     move_swap_pte
+> >       double_pt_lock
+> >       is_pte_pages_stable
+> >       // Check passed because src_pte =3D=3D S1
+> >       folio_move_anon_rmap(...)
+> >       // Moved invalid folio B here !!!
+> >
+> > The race window is very short and requires multiple collisions of
+> > multiple rare events, so it's very unlikely to happen, but with a
+> > deliberately constructed reproducer and increased time window, it can b=
+e
+> > reproduced [1].
+> >
+> > It's also possible that folio (A) is swapped in, and swapped out again
+> > after the filemap_get_folio lookup, in such case folio (A) may stay in
+> > swap cache so it needs to be moved too. In this case we should also try
+> > again so kernel won't miss a folio move.
+> >
+> > Fix this by checking if the folio is the valid swap cache folio after
+> > acquiring the folio lock, and checking the swap cache again after
+> > acquiring the src_pte lock.
+> >
+> > SWP_SYNCRHONIZE_IO path does make the problem more complex, but so far
+> > we don't need to worry about that since folios only might get exposed t=
+o
+> > swap cache in the swap out path, and it's covered in this patch too by
+> > checking the swap cache again after acquiring src_pte lock.
+> >
+> > Testing with a simple C program to allocate and move several GB of memo=
+ry
+> > did not show any observable performance change.
+> >
+> > Cc: <stable@vger.kernel.org>
+> > Fixes: adef440691ba ("userfaultfd: UFFDIO_MOVE uABI")
+> > Closes: https://lore.kernel.org/linux-mm/CAMgjq7B1K=3D6OOrK2OUZ0-tqCzi+=
+EJt+2_K97TPGoSt=3D9+JwP7Q@mail.gmail.com/ [1]
+> > Signed-off-by: Kairui Song <kasong@tencent.com>
+> >
+> > ---
+> >
+> > V1: https://lore.kernel.org/linux-mm/20250530201710.81365-1-ryncsn@gmai=
+l.com/
+> > Changes:
+> > - Check swap_map instead of doing a filemap lookup after acquiring the
+> >   PTE lock to minimize critical section overhead [ Barry Song, Lokesh G=
+idra ]
+> >
+> >  mm/userfaultfd.c | 27 +++++++++++++++++++++++++--
+> >  1 file changed, 25 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+> > index bc473ad21202..a74ede04996c 100644
+> > --- a/mm/userfaultfd.c
+> > +++ b/mm/userfaultfd.c
+> > @@ -1084,8 +1084,11 @@ static int move_swap_pte(struct mm_struct *mm, s=
+truct vm_area_struct *dst_vma,
+> >                          pte_t orig_dst_pte, pte_t orig_src_pte,
+> >                          pmd_t *dst_pmd, pmd_t dst_pmdval,
+> >                          spinlock_t *dst_ptl, spinlock_t *src_ptl,
+> > -                        struct folio *src_folio)
+> > +                        struct folio *src_folio,
+> > +                        struct swap_info_struct *si)
+> >  {
+> > +       swp_entry_t entry;
+> > +
+> >         double_pt_lock(dst_ptl, src_ptl);
+> >
+> >         if (!is_pte_pages_stable(dst_pte, src_pte, orig_dst_pte, orig_s=
+rc_pte,
+> > @@ -1102,6 +1105,16 @@ static int move_swap_pte(struct mm_struct *mm, s=
+truct vm_area_struct *dst_vma,
+> >         if (src_folio) {
+> >                 folio_move_anon_rmap(src_folio, dst_vma);
+> >                 src_folio->index =3D linear_page_index(dst_vma, dst_add=
+r);
+> > +       } else {
+> > +               /*
+> > +                * Check if the swap entry is cached after acquiring th=
+e src_pte
+> > +                * lock. Or we might miss a new loaded swap cache folio=
+.
+> > +                */
+> > +               entry =3D pte_to_swp_entry(orig_src_pte);
+>
+> Can we pass this also from move_pages_pte()? It would be great to
+> minimize PTL critical section.
 
-Signed-off-by: Balamanikandan Gunasundar <balamanikandan.gunasundar@microchip.com>
----
- .../devicetree/bindings/mtd/atmel-nand.txt    | 116 ------------
- .../devicetree/bindings/mtd/atmel-nand.yaml   | 167 ++++++++++++++++++
- 2 files changed, 167 insertions(+), 116 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mtd/atmel-nand.txt
- create mode 100644 Documentation/devicetree/bindings/mtd/atmel-nand.yaml
+I checked the objdump output. It seems the compiler is doing a good
+job on optimizing all the overhead off since it's an inlined macro,
+but I can pass it in too, just in case.
 
-diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-deleted file mode 100644
-index 1934614a9298..000000000000
---- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-+++ /dev/null
-@@ -1,116 +0,0 @@
--Deprecated bindings (should not be used in new device trees):
--
--Required properties:
--- compatible: The possible values are:
--	"atmel,at91rm9200-nand"
--	"atmel,sama5d2-nand"
--	"atmel,sama5d4-nand"
--- reg : should specify localbus address and size used for the chip,
--	and hardware ECC controller if available.
--	If the hardware ECC is PMECC, it should contain address and size for
--	PMECC and PMECC Error Location controller.
--	The PMECC lookup table address and size in ROM is optional. If not
--	specified, driver will build it in runtime.
--- atmel,nand-addr-offset : offset for the address latch.
--- atmel,nand-cmd-offset : offset for the command latch.
--- #address-cells, #size-cells : Must be present if the device has sub-nodes
--  representing partitions.
--
--- gpios : specifies the gpio pins to control the NAND device. detect is an
--  optional gpio and may be set to 0 if not present.
--
--Optional properties:
--- atmel,nand-has-dma : boolean to support dma transfer for nand read/write.
--- nand-ecc-mode : String, operation mode of the NAND ecc mode, soft by default.
--  Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob_first",
--  "soft_bch".
--- atmel,has-pmecc : boolean to enable Programmable Multibit ECC hardware,
--  capable of BCH encoding and decoding, on devices where it is present.
--- atmel,pmecc-cap : error correct capability for Programmable Multibit ECC
--  Controller. Supported values are: 2, 4, 8, 12, 24. If the compatible string
--  is "atmel,sama5d2-nand", 32 is also valid.
--- atmel,pmecc-sector-size : sector size for ECC computation. Supported values
--  are: 512, 1024.
--- atmel,pmecc-lookup-table-offset : includes two offsets of lookup table in ROM
--  for different sector size. First one is for sector size 512, the next is for
--  sector size 1024. If not specified, driver will build the table in runtime.
--- nand-bus-width : 8 or 16 bus width if not present 8
--- nand-on-flash-bbt: boolean to enable on flash bbt option if not present false
--
--Nand Flash Controller(NFC) is an optional sub-node
--Required properties:
--- compatible : "atmel,sama5d3-nfc".
--- reg : should specify the address and size used for NFC command registers,
--        NFC registers and NFC SRAM. NFC SRAM address and size can be absent
--        if don't want to use it.
--- clocks: phandle to the peripheral clock
--Optional properties:
--- atmel,write-by-sram: boolean to enable NFC write by SRAM.
--
--Examples:
--nand0: nand@40000000,0 {
--	compatible = "atmel,at91rm9200-nand";
--	#address-cells = <1>;
--	#size-cells = <1>;
--	reg = <0x40000000 0x10000000
--	       0xffffe800 0x200
--	      >;
--	atmel,nand-addr-offset = <21>;	/* ale */
--	atmel,nand-cmd-offset = <22>;	/* cle */
--	nand-on-flash-bbt;
--	nand-ecc-mode = "soft";
--	gpios = <&pioC 13 0	/* rdy */
--		 &pioC 14 0 	/* nce */
--		 0		/* cd */
--		>;
--	partition@0 {
--		...
--	};
--};
--
--/* for PMECC supported chips */
--nand0: nand@40000000 {
--	compatible = "atmel,at91rm9200-nand";
--	#address-cells = <1>;
--	#size-cells = <1>;
--	reg = < 0x40000000 0x10000000	/* bus addr & size */
--		0xffffe000 0x00000600	/* PMECC addr & size */
--		0xffffe600 0x00000200	/* PMECC ERRLOC addr & size */
--		0x00100000 0x00100000	/* ROM addr & size */
--		>;
--	atmel,nand-addr-offset = <21>;	/* ale */
--	atmel,nand-cmd-offset = <22>;	/* cle */
--	nand-on-flash-bbt;
--	nand-ecc-mode = "hw";
--	atmel,has-pmecc;	/* enable PMECC */
--	atmel,pmecc-cap = <2>;
--	atmel,pmecc-sector-size = <512>;
--	atmel,pmecc-lookup-table-offset = <0x8000 0x10000>;
--	gpios = <&pioD 5 0	/* rdy */
--		 &pioD 4 0	/* nce */
--		 0		/* cd */
--		>;
--	partition@0 {
--		...
--	};
--};
--
--/* for NFC supported chips */
--nand0: nand@40000000 {
--	compatible = "atmel,at91rm9200-nand";
--	#address-cells = <1>;
--	#size-cells = <1>;
--	ranges;
--        ...
--        nfc@70000000 {
--		compatible = "atmel,sama5d3-nfc";
--		#address-cells = <1>;
--		#size-cells = <1>;
--		clocks = <&hsmc_clk>
--		reg = <
--			0x70000000 0x10000000	/* NFC Command Registers */
--			0xffffc000 0x00000070	/* NFC HSMC regs */
--			0x00200000 0x00100000	/* NFC SRAM banks */
--		>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.yaml b/Documentation/devicetree/bindings/mtd/atmel-nand.yaml
-new file mode 100644
-index 000000000000..a437d40a523f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/atmel-nand.yaml
-@@ -0,0 +1,167 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mtd/atmel-nand.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Atmel NAND flash controller
-+
-+maintainers:
-+  - Balamanikandan Gunasundar <balamanikandan.gunasundar@microchip.com>
-+
-+description:
-+  Atmel nand flash controller. These are legacy bindings and
-+  deprecated. Find the latest in microchip,nand-controller.yaml
-+
-+properties:
-+  $nodename:
-+    pattern: "^nand(@.*)?"
-+
-+  compatible:
-+    enum:
-+      - atmel,at91rm9200-nand
-+      - atmel,sama5d2-nand
-+      - atmel,sama5d4-nand
-+
-+  reg:
-+    description:
-+      The localbus address and size used for the chip, and hardware ECC
-+      controller if available. If the hardware ECC is PMECC, it should
-+      contain address and size for PMECC and PMECC Error Location
-+      controller. The PMECC lookup table address and size in ROM is
-+      optional. If not specified, driver will build it in runtime.
-+
-+  nand-on-flash-bbt:
-+    description:
-+      enable on flash bbt option if not present false
-+    $ref: /schemas/types.yaml#/definitions/flag
-+
-+  nand-ecc-mode:
-+    description:
-+      operation mode of the NAND ecc
-+    enum:
-+      [none, soft, hw, hw_syndrome, hw_oob_first, soft_bch]
-+    default: soft
-+    $ref: /schemas/types.yaml#/definitions/string
-+
-+  nand-bus-width:
-+    description:
-+      nand bus width
-+    enum:
-+      [8, 16]
-+    default: 8
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 1
-+
-+  gpios:
-+    minItems: 2
-+    items:
-+      - description: Ready/Busy
-+      - description: Chip Enable
-+      - description: Optional Card detect GPIO; can be 0 if unused
-+
-+  atmel,nand-addr-offset:
-+    description:
-+      offset for the address latch.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 0
-+    maximum: 31
-+
-+  atmel,nand-cmd-offset:
-+    description:
-+      offset for the command latch.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 0
-+    maximum: 31
-+
-+  atmel,nand-has-dma:
-+    description:
-+      support dma transfer for nand read/write.
-+    $ref: /schemas/types.yaml#/definitions/flag
-+
-+  atmel,has-pmecc:
-+    description:
-+      enable Programmable Multibit ECC hardware, capable of BCH encoding
-+      and decoding, on devices where it is present.
-+    $ref: /schemas/types.yaml#/definitions/flag
-+
-+  atmel,pmecc-cap:
-+    description:
-+      error correct capability for Programmable Multibit ECC Controller.
-+    enum:
-+      [2, 4, 8, 12, 24, 32]
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  atmel,pmecc-sector-size:
-+    description:
-+      sector size for ECC computation.
-+    enum:
-+      [512, 1024]
-+    default: 512
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+
-+  atmel,pmecc-lookup-table-offset:
-+    description:
-+      Two offsets of lookup table in ROM for different sector size. First
-+      one is for sector size 512, the next is for sector size 1024. If not
-+      specified, driver will build the table in runtime.
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    default: 512
-+
-+required:
-+  - compatible
-+  - reg
-+  - atmel,nand-addr-offset
-+  - atmel,nand-cmd-offset
-+  - "#address-cells"
-+  - "#size-cells"
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    nand@40000000 {
-+        compatible = "atmel,at91rm9200-nand";
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        reg = <0x40000000 0x10000000
-+               0xffffe800 0x200>;
-+        atmel,nand-addr-offset = <21>;	/* ale */
-+        atmel,nand-cmd-offset = <22>;	/* cle */
-+        nand-on-flash-bbt;
-+        nand-ecc-mode = "soft";
-+        gpios = <&pioC 13 0	/* rdy */
-+                 &pioC 14 0     /* nce */
-+                 0		/* cd */
-+                >;
-+    };
-+  - |
-+    /* for PMECC supported chips */
-+    nand@40000000 {
-+        compatible = "atmel,at91rm9200-nand";
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        reg = <0x40000000 0x10000000	/* bus addr & size */
-+               0xffffe000 0x00000600	/* PMECC addr & size */
-+               0xffffe600 0x00000200	/* PMECC ERRLOC addr & size */
-+               0x00100000 0x00100000>;	/* ROM addr & size */
-+
-+        atmel,nand-addr-offset = <21>;	/* ale */
-+        atmel,nand-cmd-offset = <22>;	/* cle */
-+        nand-on-flash-bbt;
-+        nand-ecc-mode = "hw";
-+        atmel,has-pmecc;	/* enable PMECC */
-+        atmel,pmecc-cap = <2>;
-+        atmel,pmecc-sector-size = <512>;
-+        atmel,pmecc-lookup-table-offset = <0x8000 0x10000>;
-+        gpios = <&pioD 5 0	/* rdy */
-+                 &pioD 4 0	/* nce */
-+                 0		/* cd */
-+                >;
-+    };
--- 
-2.34.1
+>
+> > +               if (si->swap_map[swp_offset(entry)] & SWAP_HAS_CACHE) {
+> > +                       double_pt_unlock(dst_ptl, src_ptl);
+> > +                       return -EAGAIN;
+> > +               }
+> >         }
+> >
+> >         orig_src_pte =3D ptep_get_and_clear(mm, src_addr, src_pte);
+> > @@ -1409,10 +1422,20 @@ static int move_pages_pte(struct mm_struct *mm,=
+ pmd_t *dst_pmd, pmd_t *src_pmd,
+> >                                 folio_lock(src_folio);
+> >                                 goto retry;
+> >                         }
+> > +                       /*
+> > +                        * Check if the folio still belongs to the targ=
+et swap entry after
+> > +                        * acquiring the lock. Folio can be freed in th=
+e swap cache while
+> > +                        * not locked.
+> > +                        */
+> > +                       if (unlikely(!folio_test_swapcache(folio) ||
+> > +                                    entry.val !=3D folio->swap.val)) {
+> > +                               err =3D -EAGAIN;
+> > +                               goto out;
+> > +                       }
+>
+> This check will get skipped if the folio was locked by folio_lock()
+> rather than folio_trylock(). It seems to me that the correct way to do
+> this is to check outside this if block (right before calling
+> move_swap_pte()) and with 'src_folio' instead of 'folio'. Even better,
+> if you pass 'entry' as well to move_swap_pte() as per my previous
+> comment, then you can move this check also in move_swap_pte().
 
+Good catch, let me move it into move_swap_pte then, it's much easier
+to follow that way.
