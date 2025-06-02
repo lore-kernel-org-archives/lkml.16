@@ -1,78 +1,81 @@
-Received: from www74.your-server.de (www74.your-server.de [213.133.104.74])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 667B77485;
-	Mon,  2 Jun 2025 12:19:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CA37485;
+	Mon,  2 Jun 2025 12:19:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748866745; cv=none; b=kB3UZIbak4t7KGzBJ9S4NI48hQKjSw/lpjLJw++CDgl2S5coKijQCeU1W2BcMFvyJwV9uFtZoYCN1VFVYBow7qgbWmj213wRSApf6WV0mB/57m+vRNGbaj6iLjsyheDTLp9fmNvdh8aho9ZcwPuD2i9ysV+atyWdV8qkCieqRDM=
+	t=1748866791; cv=none; b=kWoIuxJUJeK2yyDlj6GkAop7Z79reX/4HePHVjugTPFN5wKmn5FPc2JZ7HNCkH2ucNQ0QWBoJlaXGw+ykvhUFDJdpu69FodQzvc5RoZXbsE+yXlgvZ6M+8hAUERIQtIvwavq7tiH/B4g2NqpD7+fqORhd2RNBnkHIHU1oaC152s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748866745; c=relaxed/simple;
-	bh=4HLmLTMARyB7KtbrHmZBJRg4FNgQ4KLk9AMW9sOYazA=;
-	h=Message-ID:Date:MIME-Version:To:From:Cc:Subject:Content-Type; b=Yg+wjpoWI3ODNA6bOs7Vtf2yTXsTbWTGWJFwMBelUlUyOAxr1Mk3TiatzubWc31woR5mgYX40PCA5OaLh2T/xpKx7GbpulWQ6jIl2zz08jtQ6oGM7KdpiZXCvPUTm9bXU5CqCSedaZuubDUXxvUKvFd10QUp+eGDvEa3yMGmBUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=computerix.info; spf=pass smtp.mailfrom=computerix.info; dkim=pass (2048-bit key) header.d=computerix.info header.i=@computerix.info header.b=JA5Jigpd; arc=none smtp.client-ip=213.133.104.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=computerix.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=computerix.info
+	s=arc-20240116; t=1748866791; c=relaxed/simple;
+	bh=hYGbZ3dbO6ZoP7QIgrKOPGiWVeikFH6C7J7ujKVsfYA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=EwofNr/8he6TX+Kh/YD3v2qxPcwIxWbMzhGhdDmzGBfBMC2sMIlJ31qZFlNdoawiXw+vw7FK0PFOckhHDjpNASyckVuq/PpYMByF3WoTChUznG/TtB4nbw8vFvBRZz9a94XJqjIIoVANNzDb74Af0RGCj2iFMvTwKQYd7N3qjPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GUgRIhQ5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=computerix.info header.i=@computerix.info header.b="JA5Jigpd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=computerix.info; s=default2306; h=Content-Transfer-Encoding:Content-Type:
-	Subject:Cc:From:To:MIME-Version:Date:Message-ID:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References;
-	bh=MtFBjO8nI0ag1cv5f0yZXu05Kzu7DXddOKwGEQm7YZc=; b=JA5JigpdjnLZG0yt9qv3FWLqi4
-	LpMeG2I+WDQGQ3kiTCHj1tVKpD6iipG8nr1v5toHTklPUqYH+OYm3EsUrqnrmY/Er6L3KklUxmjXv
-	zhYbLPQXKpgH9fpdeqxPXV11/gv30/olr4cwGhIC+aYj+nkfNaZzxgcML81NDAqso3d8gpgtE7Abz
-	4hBqsV5xU4KputARibgGEPt8jRQMk3bNnIRl18y0QUn8KrMt2RSg0aIFS4GhKUFXKYyIq91WY4jfr
-	XJW+rrhyPwveEcq9JYzbySofRplc8zsoIq4Iij/zOuJNIPvIbj2KGTwvwT03zhdPtAmv/sHm3NpaJ
-	lFyZWVIw==;
-Received: from sslproxy07.your-server.de ([78.47.199.104])
-	by www74.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <klaus.kusche@computerix.info>)
-	id 1uM47w-000GCU-3C;
-	Mon, 02 Jun 2025 14:18:53 +0200
-Received: from localhost ([127.0.0.1])
-	by sslproxy07.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <klaus.kusche@computerix.info>)
-	id 1uM47w-000ILr-1E;
-	Mon, 02 Jun 2025 14:18:52 +0200
-Message-ID: <d3876ed6-669f-4647-a742-0aae59989e0f@computerix.info>
-Date: Mon, 2 Jun 2025 14:18:52 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GUgRIhQ5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6096DC4CEEB;
+	Mon,  2 Jun 2025 12:19:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748866790;
+	bh=hYGbZ3dbO6ZoP7QIgrKOPGiWVeikFH6C7J7ujKVsfYA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=GUgRIhQ57+n/rSC1MPGY9crMDlvPjKnRRBomt0rMuD9m7KrNKrd+tz8BsfXG71FRR
+	 vIfVGtl7zG11/taOSwb+da/pYjbNqkfIQh1smqhJmRcnVl5qad0gfiTcdPa6iqPY+6
+	 x0LkUvayA+fQ9CdSyBfKahmqBSFOYijlzwFTFyI7DP3sWQZJLDU0D07RK8LJra3QsJ
+	 Im1nKknxDK/t8W6eCOtvPoUeS9HBie9luFK0/SJuno2IHXsafZEKcmR21sHHmoliQb
+	 KEO84CbCvRb1cFKNc8wxEbdPKKDzAUJAVWJEpwzNhA34ZZx19AT9kx0TWMA2+stig9
+	 +vT3JAXVm5wfg==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Alice Ryhl" <aliceryhl@google.com>
+Cc: "FUJITA Tomonori" <fujita.tomonori@gmail.com>,
+  <rust-for-linux@vger.kernel.org>,  <boqun.feng@gmail.com>,
+  <frederic@kernel.org>,  <lyude@redhat.com>,  <tglx@linutronix.de>,
+  <anna-maria@linutronix.de>,  <jstultz@google.com>,  <sboyd@kernel.org>,
+  <ojeda@kernel.org>,  <alex.gaynor@gmail.com>,  <gary@garyguo.net>,
+  <bjorn3_gh@protonmail.com>,  <benno.lossin@proton.me>,
+  <tmgross@umich.edu>,  <dakr@kernel.org>,  <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 1/5] rust: time: Change Delta methods to take &self
+ instead of self
+In-Reply-To: <aD1fgizC4FPT07vt@google.com> (Alice Ryhl's message of "Mon, 02
+	Jun 2025 08:23:30 +0000")
+References: <20250504045959.238068-1-fujita.tomonori@gmail.com>
+	<20250504045959.238068-2-fujita.tomonori@gmail.com>
+	<Mt0LwmRyNV7VeUvIiRpECX8VzX1D-BG2wI48N58jht_p7RwsCKlrAM1nXjlqUdVIe3cXdhia_xjlVOav1TikdA==@protonmail.internalid>
+	<aD1fgizC4FPT07vt@google.com>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Mon, 02 Jun 2025 14:19:38 +0200
+Message-ID: <87cybm72ud.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Nathan Chancellor <nathan@kernel.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>
-From: Klaus Kusche <klaus.kusche@computerix.info>
-Cc: peterz@infradead.org, linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: 6.15.0: objtool "unexpected end of section" errors with clang 20.1.5,
- and lto
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: klaus.kusche@computerix.info
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27656/Mon Jun  2 10:34:16 2025)
+Content-Type: text/plain
+
+"Alice Ryhl" <aliceryhl@google.com> writes:
+
+> On Sun, May 04, 2025 at 01:59:54PM +0900, FUJITA Tomonori wrote:
+>> Change several methods of the `Delta` type in Rust to take `&self`
+>> instead of `self`. These methods do not mutate or consume the `Delta`
+>> value and are more idiomatically expressed as taking a shared
+>> reference. This change improves consistency with common Rust practice
+>> and allows calling these methods on references without requiring an
+>> explicit copy or move of the value.
+>
+> For small values that can be freely copied, I actualy think that using
+> `self` is more common Rust practice.
+
+Besides best practice, the value will pass in a register. There is no
+benefit at all from passing a reference here and no improved ergonomics
+from using a reference.
 
 
-Sorry, resending my message dated 2025-05-29, no idea why 
-that message was appended to a 5 month old dead thread
-instead of starting a new thread...
+Best regards,
+Andreas Hindborg
 
 
-Hello,
 
-Compiling 6.15.0 with clang 20.1.5 and full lto, 
-I got several error messages "unexpected end of section".
 
-See https://bugzilla.kernel.org/show_bug.cgi?id=220174
-
-(kernel .config attached to bugzilla bug)
-
-Klaus Kusche
 
