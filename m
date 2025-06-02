@@ -1,180 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8FA05695;
-	Mon,  2 Jun 2025 05:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37D244C63
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 05:11:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748841054; cv=none; b=oOZmZMfMAg5JgnzWIYgpA6c9L8KmPl9FeQjY9JlX33xLzqp0biGtsYKGvtNipHNpmPEnfLrDZBE33RWcHp1+w/nAh/gcpKFnHkifTCQAeLXvfurPLqHfjyf16eniEocoi8+LbRs4AXKtXxH0rFHo0AKYciaFZHPLbBwXqXYCh0o=
+	t=1748841097; cv=none; b=M5v6eDRFFNsBmx84GKSbFW7BId95Tfj8SYBHQKAwcvAOTz/u70qQQLM3nC56YgShDqi5gN2WVscGx48EbV2NpxbfIzi7CVMUNfqrs8d3u2tCuckTUbjq586dxd36dM6AfuCmosdPQ9IJCQqBHrMoQzOq+7Do/kvfaVET37Tyv/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748841054; c=relaxed/simple;
-	bh=fxDosPY8Wny75hKwXSp7HiD2ycgAdMQx1mnEg0e7Xco=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=LAA9xatP8Ppwplogz1Sio1Skf91eZUwYmzznW2kP41DZJiyzIGP2fBLDA/yL7xcHZNW1Kz0uKzXC9ZG4a1Kx0dFUqfpwUog9wH5/Ymb+noc/oziAs1qKiyEaLAkstCv14A416c2r7Nn20AxGQEQbJEhanQuQ0jbZH7Qf4UB3eks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PvWliMUS; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748841097; c=relaxed/simple;
+	bh=oZuMIrB48TQVZ267SzyqqFKk1A27pKuXp9Tsyg4Y0LA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Uc7okPnqqDDHhSpqzClhda5k729Nyh262Ut2WI3sJlxSXgx30VnQg81wfRzyagXcAmeJ2ualrykaRttN3zO/Z74rgSkXmivUwnTJ9VsWzQro6KPqJUSmQ9jy7AoqZ3wOW4m0T0KnTQevZQoP4zLoVAOWzmkrl2XVa+4vYHdDw3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=inventec.com; spf=pass smtp.mailfrom=inventec.com; dkim=pass (2048-bit key) header.d=inventec.com header.i=@inventec.com header.b=ESo8aTvD; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=inventec.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inventec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PvWliMUS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748841052; x=1780377052;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=fxDosPY8Wny75hKwXSp7HiD2ycgAdMQx1mnEg0e7Xco=;
-  b=PvWliMUSA3lGVmY1/4f8QFrjQxu963ILr4lXLPS+GJHjsYnqXyC40D7y
-   omPrY0tnHcBDQOiyJgcOmpfNRrT0csNWjoxf2ki4ro8AutWv2N9bUbp5O
-   iPk7PJ2EXk8khvXDjVpV+0gay54szolJDR90Fq3Iz70bXHVmACseRXDi/
-   mfmohLDDYXpHZZDKduAGQs37PbUuHjxlNBBWSxwQHchK2o0GLUKeWjrZO
-   WKjFM4pt487+KJoWxBe7EyaOjs9beoBhYKEoh9u1quK+BJgcdecOAtsXG
-   navSoSb+ItaM3qFc2bgosWsSsiaeAsoQCt4xX4BbDEEW1G3UMQXHxnxIs
-   A==;
-X-CSE-ConnectionGUID: FX9W3Kn9Q9mc0zL4t69Akw==
-X-CSE-MsgGUID: BkCCyqZiQOmUZbXFAq2vYQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11450"; a="68396905"
-X-IronPort-AV: E=Sophos;i="6.16,202,1744095600"; 
-   d="scan'208";a="68396905"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2025 22:10:51 -0700
-X-CSE-ConnectionGUID: cCOHNwErSH+NtylyeCcbaQ==
-X-CSE-MsgGUID: b99YSdCfQQO4vQ0vfIUCVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,202,1744095600"; 
-   d="scan'208";a="181622455"
-Received: from vpanait-mobl.ger.corp.intel.com (HELO localhost) ([10.245.245.134])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2025 22:10:46 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 2 Jun 2025 08:10:42 +0300 (EEST)
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-cc: Dan Williams <dan.j.williams@intel.com>, Lukas Wunner <lukas@wunner.de>, 
-    Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, 
-    Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-    Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-    "H. Peter Anvin" <hpa@zytor.com>, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/1] PCI: Add Extended Tag + MRRS quirk for Xeon 6
-In-Reply-To: <xwcoamcgyprdiru3z3qyamqxjmolis23vps4axzkpesgjrag4p@wnp63ospijyw>
-Message-ID: <45809733-1e02-0109-a929-3cdd6c960646@linux.intel.com>
-References: <20250422130207.3124-1-ilpo.jarvinen@linux.intel.com> <xwcoamcgyprdiru3z3qyamqxjmolis23vps4axzkpesgjrag4p@wnp63ospijyw>
+	dkim=pass (2048-bit key) header.d=inventec.com header.i=@inventec.com header.b="ESo8aTvD"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-311c95ddfb5so2742862a91.2
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Jun 2025 22:11:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=inventec.com; s=google; t=1748841094; x=1749445894; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tUG2mfGbVlQP6aOBxscXOizK60ki2GEc4gRzXvccP38=;
+        b=ESo8aTvDOPTwuZy+ulOvoOopFLjXd/L73VlkR/cgGVw2CAUhN4+OkraTN6IUSK1hIZ
+         SVho4AbUMAjI6UsAXgan47DRKiS8429xLF9apDP0pDCWi9pQyRPDB78Y2RfsMQ940q6+
+         lIhqcIP16kxcur69agg63p3RjdBTglWihGjbXdzwYNCsItVd/dSUVv8pKVUCB/lGWTu1
+         W45B/fkbSsAk8IYdNmKnYaMuNpaz3pW0KofqQE3JuOA5YucA4XbwYajwFSDh5YTGhJkm
+         CSvxJdOpTNgZa4ebwwoA+B82jX89pgBPSnyHRfNIZTGvsdMc+aihc9TpFlq5xSUgEmA+
+         ck1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748841094; x=1749445894;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tUG2mfGbVlQP6aOBxscXOizK60ki2GEc4gRzXvccP38=;
+        b=LlHoDyRkKvRIsT3ZY9B9yEchXwd654j58ggT+PBGMt2oUOBaHe0gHjUH+PqoxyhbKb
+         GwRU8KL+sws4OmUq3QGO76ttdj6ozBPA0cZ2EtS0NKD7zaTDdU73aG61/GMw6Oz2saUI
+         Dmt9WdqR04qRhjip+/Jwf0dOvUShH2RCmpykkjsEeBC8oaNd6WWtmrrrnacEtLnVrY1F
+         51okw1gM7fl7uZE21NvFckCVOWLWhszvsGPJsxke/cP/qzIeFpRd+dwbeoAifA7N/mPI
+         htKfstjUPadXpuzS3g9nJwcd/g/OK4oqm6cnmfA/MpwQ+pwZ8ZmMf6OUK+LpMnuBeXGT
+         GOog==
+X-Forwarded-Encrypted: i=1; AJvYcCU5H3LUxZEGSJySSfTCCV/xzkjjuf6+FxDpqWSaQoNjRGUa2sqlJwZTgEJUs1ls6e0hp7KgaG7vnVLr4G0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzb+EsO9qcMbylFnG8Wa8PiLbR6GW5ny8k7XBzsA2D88srXGWdg
+	/7tjLgQe3BxQtiUPbYCOO7agOjcm1X6cNvQGCWtLReVynhHSwMq1D17WsU/PMMO2CssrYj7cWxn
+	RGu1M
+X-Gm-Gg: ASbGncuQrtaOAXqBjpKWkjx7xH0h2euOlJOexPTP6MADoTP+hGhQDoPdcUDxui5TbvN
+	NHaNdLpFBPlfkERDvk5q+Ih7CfARO7MxRjWFgmQFZg/EVGOP0HpUE0zBluZhJqNZjPNDYgpttoL
+	iL+b+gFH64occc6EafzQIeDVxszH8RXyJQD7qWZXHRzW6d7EO9M5PjXLQUrIUjzjBm8ylMzerSm
+	U/pxtQlZdx0O6NL2W2Dht2QGjOoVUiqO847u7je64P5Z5H6PpuL5f8bcQD4wggINEvkUKKKS8ui
+	571nFCpE2lZB+jdRn0GGYFI1vrMMyMPbII3yB+H4nxsZuVL2oEhk/+cHlB/tTa4nfQPNqHx+pnK
+	vLrmV+V8=
+X-Google-Smtp-Source: AGHT+IH15jahMcfNNWPkxUhg7yjgT+AT6xissa4av5uh34InGjeBLrUD+mSsSG/ZR/48e5BFYwDQwg==
+X-Received: by 2002:a17:90b:3a0e:b0:311:e8cc:425e with SMTP id 98e67ed59e1d1-312504914b4mr15268598a91.31.1748841094114;
+        Sun, 01 Jun 2025 22:11:34 -0700 (PDT)
+Received: from localhost.localdomain ([123.51.235.216])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bc85fcsm62709085ad.38.2025.06.01.22.11.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Jun 2025 22:11:33 -0700 (PDT)
+From: Chiang Brian <chiang.brian@inventec.com>
+To: jdelvare@suse.com,
+	linux@roeck-us.net,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	geert+renesas@glider.be,
+	grant.peltier.jg@renesas.com
+Cc: linux-hwmon@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Chiang Brian <chiang.brian@inventec.com>
+Subject: [PATCH v4 0/2] Add support for RAA229621
+Date: Mon,  2 Jun 2025 13:04:13 +0800
+Message-Id: <20250602050415.848112-1-chiang.brian@inventec.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1642513350-1748841042=:1085"
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+The RAA229621 is a digital dual output multiphase
+(X+Y <= 8) PWM controller designed to be compliant
+with AMD SVI3 specifications, targeting
+VDDCR_CPU and VDDCR_SOC rails.
 
---8323328-1642513350-1748841042=:1085
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Add support for it to the isl68137 driver.
 
-On Sun, 1 Jun 2025, Manivannan Sadhasivam wrote:
+---
+v3 -> v4:
+- Add Changelog
+- Remove unnecessary "From" tag
+- Add the compatible of raa229621 into dt-bindings
+- Link to v3: https://lore.kernel.org/all/20250303083537.3312250-1-chiang.brian@inventec.corp-partner.google.com/
 
-> On Tue, Apr 22, 2025 at 04:02:07PM +0300, Ilpo J=C3=A4rvinen wrote:
-> > When bifurcated to x2, Xeon 6 Root Port performance is sensitive to the
-> > configuration of Extended Tags, Max Read Request Size (MRRS), and 10-Bi=
-t
-> > Tag Requester (note: there is currently no 10-Bit Tag support in the
-> > kernel). While those can be configured to the recommended values by FW,
-> > kernel may decide to overwrite the initial values.
-> >=20
-> > Unfortunately, there is no mechanism for FW to indicate OS which parts
-> > of PCIe configuration should not be altered. Thus, the only option is
-> > to add such logic into the kernel as quirks.
-> >=20
-> > There is a pre-existing quirk flag to disable Extended Tags. Depending
-> > on CONFIG_PCIE_BUS_* setting, MRRS may be overwritten by what the
-> > kernel thinks is the best for performance (the largest supported
-> > value), resulting in performance degradation instead with these Root
-> > Ports. (There would have been a pre-existing quirk to disallow
-> > increasing MRRS but it is not identical to rejecting >128B MRRS.)
-> >=20
-> > Add a quirk that disallows enabling Extended Tags and setting MRRS
-> > larger than 128B for devices under Xeon 6 Root Ports if the Root Port i=
-s
-> > bifurcated to x2. Reject >128B MRRS only when it is going to be written
-> > by the kernel (this assumes FW configured a good initial value for MRRS
-> > in case the kernel is not touching MRRS at all).
-> >=20
-> > It was first attempted to always write MRRS when the quirk is needed
-> > (always overwrite the initial value). That turned out to be quite
-> > invasive change, however, given the complexity of the initial setup
-> > callchain and various stages returning early when they decide no change=
-s
-> > are necessary, requiring override each. As such, the initial value for
-> > MRRS is now left into the hands of FW.
-> >=20
-> > Link: https://cdrdv2.intel.com/v1/dl/getContent/837176
-> > Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> > ---
-> >=20
-> > v2:
-> > - Explain in changelog why FW cannot solve this on its own
-> > - Moved the quirk under arch/x86/pci/
-> > - Don't NULL check value from pci_find_host_bridge()
-> > - Added comment above the quirk about the performance degradation
-> > - Removed all setup chain 128B quirk overrides expect for MRRS write
-> >   itself (assumes a sane initial value is set by FW)
-> >=20
-> >  arch/x86/pci/fixup.c | 30 ++++++++++++++++++++++++++++++
-> >  drivers/pci/pci.c    | 15 ++++++++-------
-> >  include/linux/pci.h  |  1 +
-> >  3 files changed, 39 insertions(+), 7 deletions(-)
-> >=20
-> > diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-> > index efefeb82ab61..aa9617bc4b55 100644
-> > --- a/arch/x86/pci/fixup.c
-> > +++ b/arch/x86/pci/fixup.c
-> > @@ -294,6 +294,36 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,=09PCI=
-_DEVICE_ID_INTEL_MCH_PB1,=09pcie_r
-> >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,=09PCI_DEVICE_ID_INTEL_MCH=
-_PC,=09pcie_rootport_aspm_quirk);
-> >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,=09PCI_DEVICE_ID_INTEL_MCH=
-_PC1,=09pcie_rootport_aspm_quirk);
-> > =20
-> > +/*
-> > + * PCIe devices underneath Xeon6 PCIe Root Port bifurcated to 2x have =
-slower
-> > + * performance with Extended Tags and MRRS > 128B. Workaround the perf=
-ormance
-> > + * problems by disabling Extended Tags and limiting MRRS to 128B.
-> > + *
-> > + * https://cdrdv2.intel.com/v1/dl/getContent/837176
-> > + */
-> > +static void quirk_pcie2x_no_tags_no_mrrs(struct pci_dev *pdev)
-> > +{
-> > +=09struct pci_host_bridge *bridge =3D pci_find_host_bridge(pdev->bus);
-> > +=09u32 linkcap;
-> > +
-> > +=09pcie_capability_read_dword(pdev, PCI_EXP_LNKCAP, &linkcap);
-> > +=09if (FIELD_GET(PCI_EXP_LNKCAP_MLW, linkcap) !=3D 0x2)
-> > +=09=09return;
-> > +
-> > +=09bridge->no_ext_tags =3D 1;
-> > +=09bridge->only_128b_mrrs =3D 1;
->=20
-> My 2 cents here. Wouldn't it work if you hardcode MRRS to 128 in PCI_EXP_=
-DEVCTL
-> here and then set pci_host_bridge::no_inc_mrrs to 1? This would avoid
-> introducing an extra flag and also serve the same purpose.
+v2 -> v3: 
+- Fix the corrupted patch by sending plain text email
+- Link to v2: https://lore.kernel.org/all/CAJCfHmWJ9N1R8x6ikU02_RYq9ieq6yWY7CGdfvc4hRqHnX5szg@mail.gmail.com/
 
-Hi Mani,
+v1 -> v2: 
+- Modify subject and description to meet requirements and remove the override of
+  isl68137_probe, and add the of_match between raa229621 and  raa_dmpvr2_2rail
+- Link to v1: https://lore.kernel.org/all/CAJCfHmXcrr_si4HLLCrXskuZ4aYmqAh0SFXNSkeL78d2qX2Qcg@mail.gmail.com/
 
-Thanks for the suggestion but it won't work because this is the Root Port.=
-=20
-The devices underneath it need this setting so we cannot set them to 128B=
-=20
-reliable here (is there anything that guarantees those devices have been=20
-enumerated at this point?).
+---
+Chiang Brian (2):
+  dt-bindings: hwmon: (pmbus/isl68137) Add RAA229621 support
+  hwmon: (pmbus/isl68137) Add support for RAA229621
 
-I've v3 already prepared which uses the enable device hook as suggested by=
-=20
-Lukas. I'll send it soon.
 
---=20
- i.
+ .../devicetree/bindings/hwmon/pmbus/isil,isl68137.yaml         | 1 +
+ drivers/hwmon/pmbus/isl68137.c                                 | 3 +++
+ 2 files changed, 4 insertions(+)
 
---8323328-1642513350-1748841042=:1085--
+-- 
+2.43.0
+
