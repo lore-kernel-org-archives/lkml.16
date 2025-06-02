@@ -1,197 +1,182 @@
-Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5062F189BB5;
-	Mon,  2 Jun 2025 18:35:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A983EA98;
+	Mon,  2 Jun 2025 18:39:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748889305; cv=none; b=fXxVQq9RJuzPp3IfhQgl3ENKqdB0eYS+LnYQ1JVFrMh5xDvFCtHobr0wyg94AKQ3rmX0UaO7Tn+HJIyq29NqljoBfwiioGmc1pz+WFt862rOndiOtyp8PhDZBqYdg0aKJmO0AbEpk3RDzxSyDwwAlq0c3q4lmjFHbyDPhX6uaRg=
+	t=1748889563; cv=none; b=X9YSFRpLyAsa7xVGwQhXj6k9Khc+0Y1wnNfrmXYnOGrT+GO/uzZk6t2XNFmM0W9ngkzKY9vK/+ju3P9TDUQGoUxi9CVWCdirkftFZrnTFpvyh1xms8AlOoTMzFrkk4/zXqFjwR0eFNXLSHSc3NXJKPBmGYWMZCTSydfnJcGTwJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748889305; c=relaxed/simple;
-	bh=iHlLB+RmFUnxHCi50zvVGUkC472y6iP0nCH5Al9LE14=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WudtD1fT/An6COUZDFzVfDnMwUVpJ0AagF32DD+hPmd+ood/dWWcpIH6E9iyJuCB/Nqcpk587692RPeH82KC0Ikwqv9C3ypSD1OiHqe+LZv9Xvp+uZWdNmfSrVw5ponZdDi1Qi4gpHde3m0TpF0VhFQ/S6mPcXgZ8/2G2OraSqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=weUB4Ryr; arc=none smtp.client-ip=198.37.111.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+	s=arc-20240116; t=1748889563; c=relaxed/simple;
+	bh=bGGkzeql+kLBnwAhHz5NwSXdhWSCN087guRy3TwIvTs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PlEvW+XAOGDYMHpax6eNERQq9bUF0hMdMEgCz3E4z4uCR7LO5JTEvtsbp0r1C+AMjyBIuB9JI6H1EQ5Dwp5eWNzRAtvdfplWZin4yWJfdGX5oWZHQrovCsqDENa2K3iT6LaoK2Q+7cwYaCYdm9TptaTx95eijR5g6d6wb8TQlpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B7KQriAP; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="weUB4Ryr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1748889300;
-	bh=iHlLB+RmFUnxHCi50zvVGUkC472y6iP0nCH5Al9LE14=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=weUB4Ryr3sGuns0Rk7aUUZLyTNpMn9bsofd/bfDsjpPh/qukFAhK2F+dXCsw73+Qd
-	 vp7FP/v/fe5jqy/JjZEmMWGHcsfE9JaLINY9LW/LJEZ/1Tno/mOVAmyWYnO3PRDK0S
-	 cjcoBBMyDGTvG5dLQHddIS54301yAhLBnh+sZTw8=
-Received: from [IPv6:2601:5c4:4302:c21::a774] (unknown [IPv6:2601:5c4:4302:c21::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id BB70C1C032D;
-	Mon, 02 Jun 2025 14:34:59 -0400 (EDT)
-Message-ID: <948f5567fe4d9ae39aa2528965f123e42bf82b46.camel@HansenPartnership.com>
-Subject: Re: [PATCH RFC 1/1] module: Make use of platform keyring for module
- signature verify
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org, 
-	linux-modules@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
- keyrings@vger.kernel.org, David Howells <dhowells@redhat.com>, David
- Woodhouse <dwmw2@infradead.org>, Jonathan Corbet <corbet@lwn.net>, Luis
- Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami
- Tolvanen <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>,
- Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu <roberto.sassu@huawei.com>,
- Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Eric Snowberg
- <eric.snowberg@oracle.com>, Paul Moore <paul@paul-moore.com>, James Morris
- <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Peter Jones
- <pjones@redhat.com>, Robert Holmes <robeholmes@gmail.com>, Jeremy Cline
- <jcline@redhat.com>, Coiby Xu <coxu@redhat.com>, Gerd Hoffmann
- <kraxel@redhat.com>
-Date: Mon, 02 Jun 2025 14:34:58 -0400
-In-Reply-To: <20250602132535.897944-2-vkuznets@redhat.com>
-References: <20250602132535.897944-1-vkuznets@redhat.com>
-	 <20250602132535.897944-2-vkuznets@redhat.com>
-Autocrypt: addr=James.Bottomley@HansenPartnership.com;
- prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B7KQriAP"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a36efcadb8so4169820f8f.0;
+        Mon, 02 Jun 2025 11:39:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748889559; x=1749494359; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p4EJ/bNdkxlN82qnQqNLj+AZOld+xZ2/fvExor8dpnA=;
+        b=B7KQriAPfJc/bCpO2Y0q5W7M6ABYLfIKKYmLnIPBqGqVqTp4B4gV073J5XRWLxVr5g
+         Ur6GTbO1OOPtW3wDwzn7HTQ8RK82wfXC8AYqZ85bBPtofP+1AFg8tGyK7XxDiIqMzX4x
+         GCYThM0LCtP7AJ0X4BnksMWOFpECeShYba/eN2goEVtbXTWTmDyAfK/kBsOyBkFuQ8OT
+         cTP4Ng+NwLacgAx7z+MKqxOKyTsixIqbrndCnptI65tz5eI+NueNe8YDijWix0HYCZ5y
+         yGeGTZEhstoWJ5orJ/OEW7elP2kX8JBOMpK3NnNhd5FqOFG5gxoY2x/zHltcFxiPVBpg
+         AMQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748889559; x=1749494359;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=p4EJ/bNdkxlN82qnQqNLj+AZOld+xZ2/fvExor8dpnA=;
+        b=rZPmejEBxaGZ/WZh6fvlBHbOMHrPSGUYRcnjB24RdZfAv7XRW2JoFM+KSwIYMFhaNt
+         hloS6FnDd0x7HWohFwmsUoMtaX17GvgNsMy7JH6iIqCw5N4lmV447PHncm+tK/LWO0Gu
+         WnJH1Jhx7GNs006u02KpHXh0YxJAO1bPGkxr+OsXxrgs8SCmVBiviWacEZVVgJC58VR4
+         DQ4/cOIQBV59UOrD+OpLVURVOyx7gi/GIm6n2+jXshZsXiedLHYPRk1z0L0q4PRjIlv+
+         2oKDQ3NUOeR6ldnTzMi9zRS6pnmp0Dx0UXOT68DudYLsLaVTtctN8c4xZsfKQ9ap5e/9
+         DwAw==
+X-Forwarded-Encrypted: i=1; AJvYcCUzN2CkoSTzVybjVNOENNA8N0d9OeWm/S4Fi7oBZ6fKVO6+Qpdt+GP2nGiIjtEkGkwX6G0=@vger.kernel.org, AJvYcCVlUF3kzAsny5M6BUXtMPmGv7ImeDUOmvYJiCSUDJwiT4eO8gsSu/G5d72VCf31AXyeJlRtEnzPJeD2956Mfl/w@vger.kernel.org, AJvYcCXsOmy+S76kcEn9Sfo+I2iX1Z+eGHflwpxejn170EsxPLsNciga/WhMI+NnKZGZUewOciaynxNo3BjXdP3n@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz++2myKrZ4bFNfqj5yXDm/wzUztIqkbp8m81sHvsCBBDyssGgW
+	IBB5vYLxN6QF4lK1cW6jkJ4cwbuIRmV3y1RTH7M/K+VAG4mMUo4rmAtkXvHXQ3PUrLirrIbTtdO
+	nVk552JpnWIO/HD7C8gOqH2TtTiaFguM=
+X-Gm-Gg: ASbGncs2KObI/28uN1ITVsPUcs3vsBkGydjWUxNPE+sGHVkHaJiZZ+WPVFkHCO/tkc6
+	7zTqJkq0qBXdcFl/fC1WjjItZWWF5Qkdg+WySJkWDcY6HN6NUWTwmVs4NJt6GYh9SkEB1MbwgTG
+	xerYarZcuKAWlyIZdJEKFgiBrO7VztqnNpq0D1EfiGfDYmQI9oTnhcWD6WO3lCteTWGedyGg==
+X-Google-Smtp-Source: AGHT+IHUqx+mgL8hi72589JB27VJBUMwBIp9UzNzlH5b5s1OhLB/pURvh6gvJXZGV2bvvKk9RnNCYMD8HuP9sRI3DPU=
+X-Received: by 2002:a05:6000:3112:b0:3a0:7f9c:189a with SMTP id
+ ffacd0b85a97d-3a4f799acd4mr11273853f8f.0.1748889559007; Mon, 02 Jun 2025
+ 11:39:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250531072031.2263491-1-blakejones@google.com>
+ <CAADnVQJv_FVciT9LC+W=sVtWAt9oXeAACzmTHzyqY-2svi4ugA@mail.gmail.com> <CAP-5=fWADfh9WNXgUOhXYW5hZWk-FZL1oJTdaDgq8Hqr8_Fd0g@mail.gmail.com>
+In-Reply-To: <CAP-5=fWADfh9WNXgUOhXYW5hZWk-FZL1oJTdaDgq8Hqr8_Fd0g@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Mon, 2 Jun 2025 11:39:07 -0700
+X-Gm-Features: AX0GCFtiw9IZLAsO114ncb1PisrfRk2ajYyxEUOp4PqScN6vm6DijNlIQ-pyHHA
+Message-ID: <CAADnVQKeJUdvJ7tKhpdatL-A5zDi9DXKFun8fwM2e7Bynd5FDg@mail.gmail.com>
+Subject: Re: [PATCH] libbpf: add support for printing BTF character arrays as strings
+To: Ian Rogers <irogers@google.com>
+Cc: Blake Jones <blakejones@google.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	Ihor Solodrai <ihor.solodrai@linux.dev>, Namhyung Kim <namhyung@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2025-06-02 at 15:25 +0200, Vitaly Kuznetsov wrote:
-> This patch complements commit 278311e417be ("kexec, KEYS: Make use of
-> platform keyring for signature verify") and commit 6fce1f40e951
-> ("dm verity: add support for signature verification with platform
-> keyring")
-> and allows for signing modules using keys from SecureBoot 'db'. This
-> may
-> come handy when the user has control over it, e.g. in a virtualized
-> or a
-> cloud environment.
->=20
-> Suggested-by: Robert Holmes <robeholmes@gmail.com>
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
-> =C2=A0Documentation/admin-guide/module-signing.rst |=C2=A0 6 ++++++
-> =C2=A0kernel/module/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 | 11 +++++++++++
-> =C2=A0kernel/module/signing.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0 9 ++++++++-
-> =C2=A0security/integrity/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=
-=A0 2 +-
-> =C2=A04 files changed, 26 insertions(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/admin-guide/module-signing.rst
-> b/Documentation/admin-guide/module-signing.rst
-> index a8667a777490..44ed93e586b9 100644
-> --- a/Documentation/admin-guide/module-signing.rst
-> +++ b/Documentation/admin-guide/module-signing.rst
-> @@ -118,6 +118,12 @@ This has a number of options available:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 additional certificates which will be incl=
-uded in the system
-> keyring by
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 default.
-> =C2=A0
-> + (5) :menuselection:`Use .platform keyring for verifying kernel
-> modules signatures`
-> +=C2=A0=C2=A0=C2=A0=C2=A0 (``CONFIG_MODULE_SIG_PLATFORM``)
-> +
-> +=C2=A0=C2=A0=C2=A0=C2=A0 This option additionally allows modules to be s=
-igned with a key
-> present
-> +=C2=A0=C2=A0=C2=A0=C2=A0 in ``.platform`` keyring, e.g. a SecureBoot 'db=
-' key.
-> +
-> =C2=A0Note that enabling module signing adds a dependency on the OpenSSL
-> devel
-> =C2=A0packages to the kernel build processes for the tool that does the
-> signing.
-> =C2=A0
-> diff --git a/kernel/module/Kconfig b/kernel/module/Kconfig
-> index 39278737bb68..f1b85c14548a 100644
-> --- a/kernel/module/Kconfig
-> +++ b/kernel/module/Kconfig
-> @@ -340,6 +340,17 @@ config MODULE_SIG_HASH
-> =C2=A0	default "sha3-384" if MODULE_SIG_SHA3_384
-> =C2=A0	default "sha3-512" if MODULE_SIG_SHA3_512
-> =C2=A0
-> +config MODULE_SIG_PLATFORM
-> +	bool "Use .platform keyring for verifying kernel modules
-> signatures"
-> +	depends on INTEGRITY_PLATFORM_KEYRING
-> +	depends on MODULE_SIG
-> +	help
-> +	=C2=A0 When selected, keys from .platform keyring can be used for
-> verifying
-> +	=C2=A0 modules signatures. In particular, this allows to use UEFI
-> SecureBoot
-> +	=C2=A0 'db' for verification.
-> +
-> +	=C2=A0 If unsure, say N.
-> +
-> =C2=A0config MODULE_COMPRESS
-> =C2=A0	bool "Module compression"
-> =C2=A0	help
-> diff --git a/kernel/module/signing.c b/kernel/module/signing.c
-> index a2ff4242e623..3327e7243211 100644
-> --- a/kernel/module/signing.c
-> +++ b/kernel/module/signing.c
-> @@ -61,10 +61,17 @@ int mod_verify_sig(const void *mod, struct
-> load_info *info)
-> =C2=A0	modlen -=3D sig_len + sizeof(ms);
-> =C2=A0	info->len =3D modlen;
-> =C2=A0
-> -	return verify_pkcs7_signature(mod, modlen, mod + modlen,
-> sig_len,
-> +	ret =3D verify_pkcs7_signature(mod, modlen, mod + modlen,
-> sig_len,
-> =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 VERIFY_USE_SECONDARY_KEYRING,
-> =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 VERIFYING_MODULE_SIGNATURE,
-> =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 NULL, NULL);
-> +	if (ret =3D=3D -ENOKEY &&
-> IS_ENABLED(CONFIG_MODULE_SIG_PLATFORM)) {
-> +		ret =3D verify_pkcs7_signature(mod, modlen, mod +
-> modlen, sig_len,
-> +				VERIFY_USE_PLATFORM_KEYRING,
-> +				VERIFYING_MODULE_SIGNATURE,
-> +				NULL, NULL);
-> +	}
-> +	return ret;
-> =C2=A0}
+On Mon, Jun 2, 2025 at 8:05=E2=80=AFAM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> On Sat, May 31, 2025 at 11:20=E2=80=AFAM Alexei Starovoitov
+> <alexei.starovoitov@gmail.com> wrote:
+> >
+> > On Sat, May 31, 2025 at 12:20=E2=80=AFAM Blake Jones <blakejones@google=
+.com> wrote:
+> > >
+> > > The BTF dumper code currently displays arrays of characters as just t=
+hat -
+> > > arrays, with each character formatted individually. Sometimes this is=
+ what
+> > > makes sense, but it's nice to be able to treat that array as a string=
+.
+> > >
+> > > This change adds a special case to the btf_dump functionality to allo=
+w
+> > > arrays of single-byte integer values to be printed as character strin=
+gs.
+> > > Characters for which isprint() returns false are printed as hex-escap=
+ed
+> > > values. This is enabled when the new ".print_strings" is set to 1 in =
+the
+> > > btf_dump_type_data_opts structure.
+> > >
+> > > As an example, here's what it looks like to dump the string "hello" u=
+sing
+> > > a few different field values for btf_dump_type_data_opts (.compact =
+=3D 1):
+> > >
+> > > - .print_strings =3D 0, .skip_names =3D 0:  (char[6])['h','e','l','l'=
+,'o',]
+> > > - .print_strings =3D 0, .skip_names =3D 1:  ['h','e','l','l','o',]
+> > > - .print_strings =3D 1, .skip_names =3D 0:  (char[6])"hello"
+> > > - .print_strings =3D 1, .skip_names =3D 1:  "hello"
+> > >
+> > > Here's the string "h\xff", dumped with .compact =3D 1 and .skip_names=
+ =3D 1:
+> > >
+> > > - .print_strings =3D 0:  ['h',-1,]
+> > > - .print_strings =3D 1:  "h\xff"
+> > >
+> > > Signed-off-by: Blake Jones <blakejones@google.com>
+> > > ---
+> > >  tools/lib/bpf/btf.h                           |   3 +-
+> > >  tools/lib/bpf/btf_dump.c                      |  51 ++++++++-
+> > >  .../selftests/bpf/prog_tests/btf_dump.c       | 102 ++++++++++++++++=
+++
+> > >  3 files changed, 154 insertions(+), 2 deletions(-)
+> >
+> > Please split selftests vs main libbpf parts.
+> >
+> > > diff --git a/tools/lib/bpf/btf.h b/tools/lib/bpf/btf.h
+> > > index 4392451d634b..be8e8e26d245 100644
+> > > --- a/tools/lib/bpf/btf.h
+> > > +++ b/tools/lib/bpf/btf.h
+> > > @@ -326,9 +326,10 @@ struct btf_dump_type_data_opts {
+> > >         bool compact;           /* no newlines/indentation */
+> > >         bool skip_names;        /* skip member/type names */
+> > >         bool emit_zeroes;       /* show 0-valued fields */
+> > > +       bool print_strings;     /* print char arrays as strings */
+> > >         size_t :0;
+> > >  };
+> > > -#define btf_dump_type_data_opts__last_field emit_zeroes
+> > > +#define btf_dump_type_data_opts__last_field print_strings
+> > >
+> > >  LIBBPF_API int
+> > >  btf_dump__dump_type_data(struct btf_dump *d, __u32 id,
+> > > diff --git a/tools/lib/bpf/btf_dump.c b/tools/lib/bpf/btf_dump.c
+> > > index 460c3e57fadb..a07dd5accdd8 100644
+> > > --- a/tools/lib/bpf/btf_dump.c
+> > > +++ b/tools/lib/bpf/btf_dump.c
+> > > @@ -75,6 +75,7 @@ struct btf_dump_data {
+> > >         bool is_array_member;
+> > >         bool is_array_terminated;
+> > >         bool is_array_char;
+> > > +       bool print_strings;
+> >
+> > Looks useful, but make sure to add a feature detection
+> > to perf, since it has to work with old and new libbpf.
+>
+> Just for clarity on this. We'll need a "libbpf-strings" feature like
+> the existing "libbpf" one:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
+git/tree/tools/build/feature/test-libbpf.c?h=3Dperf-tools-next
+>
+> Currently these features are only used if perf is built with
+> LIBBPF_DYNAMIC=3D1 as part of the build arguments (ie its not the
+> default):
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
+git/tree/tools/perf/Makefile.config?h=3Dperf-tools-next#n580
+>
+> If no suitable libbpf is detected then the build will error out. I
+> guess if feature-libbpf is present but not feature-libbpf-strings then
+> we'll need a perf #define so that the string feature won't cause
+> perf's build to fail.
 
-I don't think this is the correct way to do it.  If, as you say, db is
-controlled by the end user and therefore has trusted contents, then I
-think you want to update certs/system_keyring.c to link the platform
-keyring into the secondary trusted one (like it does today for the
-machine keyring), so it can be used by *every* application that checks
-keyrings rather than just modules.
-
-Also, are you sure a config option is the right thing?  Presumably Red
-Hat wants to limit its number of kernels and the design of just linking
-the machine keyring (i.e. MoK) was for the use case where trust is
-being pivoted away from db by shim, so users don't want to trust the db
-keys they don't control.  If the same kernel gets used for both
-situations (trusted and untrusted db) you might want a runtime means to
-distinguish them.
-
-Regards,
-
-James
-
+Yes. Something like this.
+It will also allow libbpf and perf patches to land in parallel.
