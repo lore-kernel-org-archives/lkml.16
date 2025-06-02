@@ -1,154 +1,188 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778B86ADD
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 06:16:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E993F81720
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 06:17:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748844976; cv=none; b=MXQ+dInkppAnASLtZmIOex/4jK8okZtIVJiZcLnEFBu1eOoJQzsggHC5uNp7EADx4/sVvM0wQ7e3GRytnz11GIP3lk5TQ683BHqJjPabjpvjqnwTstwugFbdcMLUn0i/Qbrc65VmwtlO007phu7hOk+WYJlC9mhHl0y50xenksY=
+	t=1748845034; cv=none; b=jtvYKWkNgYOFD8pDWnNlv1O7+YuR15cFE9sEGvpfIid2doZuEBYR0hr1L/yqvUWRjVjjh8SBtoGcZT3vkNSy4iV2GIhEEopuc1Y+/h8mtyY+1EVMzY59OI2hvTwjVhLFNWqI5AqcBFNJUaUJaXV7J0hdQ9q2egfXcCXkJYevjns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748844976; c=relaxed/simple;
-	bh=FQm3i5fnr8FfnwJ1MJZ34CB/0ROk4/mP7E//KPV+hdg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pY8lPzMSk/pEmvQ4abifnDKmOsrC4//CeqyrWgxsFlilMvF61YggNIPOiI7Wt27c+n70soGaUSuj6nsZnXe5fdB6PxN2Vuk73T/AVPKfoX60gauslPyMIbLmci6DrRPrGaPgYwukAj8aS0DXTPUPHUDAV+YH3abj/m7jAixqwbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=DBkgBfp5; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1748845034; c=relaxed/simple;
+	bh=xdoLc9XoaXK8M0XbS9PhopfYff7oTgRwR4OLTqlt5Oo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NprPLjd8mKJv9PUph+BASylJQTmXQ5q0DewP6ovUE98iEjaL04SBInUaPsCpdz56oMOKtio4ZkOSxzGuT6ZG8LW9WAVqz90PGHYOw6/51ZBDyv0uGEzyggQBjGtmVGlQXgmybSA+0xkn32SNo3TbKNtmZTdTwQqZMlPzyecFw/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=HTIcvhB3; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DBkgBfp5"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-311ea13388fso684680a91.2
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Jun 2025 23:16:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1748844974; x=1749449774; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kg+fzmBmJzpfowpLETdoRjYjZL+2Q+5MM7s/tg0DnuI=;
-        b=DBkgBfp5RA+SOWPQCIhEcAHmQwgtnzi24tp9F/b0x01J7RKhcYJX4Y4s/kZAGgUNGS
-         O8iMIKGPJREuSmYVjzSwnnczPgPmpSEn+qfCjV95jerlxwwrlHwsii7iBkHnaYVrkEmZ
-         XtOf50t4hObCs1ycTy1PDZryRIXucQ8xaZLgs=
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="HTIcvhB3"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5521jPH8018560
+	for <linux-kernel@vger.kernel.org>; Mon, 2 Jun 2025 06:17:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=2KsyhDG7BdkTTvHo4/rBMgEo
+	RCi0WrKaizdzWoGZ+sc=; b=HTIcvhB3RPxriA+15Gfp6+IwwllYm5luw6HAwP61
+	rTz4vIOi+lsgOoEP23Bx9SjOi+VbU809Dw/ynYYs2D7D58dtp+gTsaHq2rlWMOJR
+	AysKL2+lxR2ZrlYe6q34I5cy3o4luLk71qF9ryrMXpq+A1xZnMVEd5/ryhWtpSKI
+	o7IjS0CpcmPqADUCGK663uzdLv2yCiBcYObUCQYUm1yvx0KNfBUDrGAtQYx2ZH4+
+	BQh1tv5Ch7pZa73RmW0PykqWSuN5n8YPrp/Q4V5nQM8OW4UKI1b5TWUNePqQvnDf
+	hXfC4GU/FRRGlrca0QNR8uB4/jf9X0Q9PcWvyxs3/XsTAQ==
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46yu2a3heg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 06:17:10 +0000 (GMT)
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4a42c569a9aso77526991cf.0
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Jun 2025 23:17:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748844974; x=1749449774;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kg+fzmBmJzpfowpLETdoRjYjZL+2Q+5MM7s/tg0DnuI=;
-        b=uBlVVtkY7Je21RUQXl6tUDUDjhEE6JuT2gyVxyV50SRYZeYEaH3EQKqoQthokZtpiO
-         vIleiRg5+x7kxUxLNYLWwSL8tLepqQyRJtzO7cm+yLXjwLZsr2AC7/HSiovHNri/niHq
-         bhu9X62E6tA50mxd+vbKveObplBWHFeXDJ+DvFhGDKfpR4S+pFRrboMVBdaUAOaGzUld
-         SSNl6uDsyIdh14iUDonbfuz9Knvfr/7M0jT6ZshixjFgP5TmBArx5ZRxohI6ziiqVV0Q
-         JfBXVbMoAp16S1/tE7RhW3vUhegP91kRNIiGyROf9U7gWed5+qgsn3VFPcZIPsMK9S1t
-         d2GQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXO+wuDKdexLQ+cEt5qfrqZl8jD2Qhqoj6m03aUlKaCYxPK6au2TtlF/WOAXH/h6lYu/7ybA5lsdmtXFFg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyvmMD1D5MTlN3woXeud00lftY6ZGcza9rGGnzFDkAo+Jf9ucM
-	8+U0BOg3lfKV772mjMIlf9XbOuLUBP/Dp/erl5hw2cVf7QSfYmWYirF7QuFWyTpG0uYWG6KtpRc
-	RSjqQCYbkU8F4ciERz8vgHJ6tqHMCfr9HT7GD+10+
-X-Gm-Gg: ASbGncv3Zt2onyBAmd7K6/avJZQYw+1N1ql+suElZSY3Zh8DT/UEl8TLi2QuwdUG/nZ
-	Ub2KRf6XS/HfoDOAyN2kxtYtifFcsKrCx1xHZfAZFthCDbhimRdEUvcRjF24TJN66yLcVkSkOpY
-	uzSxeTOwJ1/UTNpviLcXvFpSuTNE18TS/Yx32e6psXaSO9
-X-Google-Smtp-Source: AGHT+IFMlfQUD7moOpfg4aT4yDgNNHn2G/ju7GUIqlBaYZ8TuXzg41PK7q+ydNibjtimH5jvesqqedaYEBQfto0+oXM=
-X-Received: by 2002:a17:90b:384e:b0:312:639:a06d with SMTP id
- 98e67ed59e1d1-3124db30c05mr6707357a91.5.1748844973604; Sun, 01 Jun 2025
- 23:16:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748845029; x=1749449829;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2KsyhDG7BdkTTvHo4/rBMgEoRCi0WrKaizdzWoGZ+sc=;
+        b=HBHtCX6TG7TEDrlGd61IuellpWL6jMsMKyIpm5XN6mC5AmbMP3o4/CrZhXBx6tByVa
+         GtSGFYENj18dN4Sfeiv80hkFxuP6owHhlRysPrFdV5cXOrAr3MF0B34SzMvLDCD2I92T
+         Yrckd2q/teo2fLaRqcL2eegPmtzKSzD+NqzRZdGlECL/3v3hkiNCu/KItzFc6wBrnb0/
+         OwUtjvJvMMvNcIsLibPh/SAb5nvo84tN+yiAtHAojPBvf6uhEhl2aQG37To/EuGORPOw
+         F5n2YBI49TB5P4Hvwnv2l7ykc2ygaH1r4XE0452I+H8kXB0WMcwergiZhq05K1Bmu16O
+         SpYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWAoAi7Wtn0SLZxYO0wTDvIwXxECm/Lta2Qw9aqYzidG2CiJYD493E+nP2O8e/7YSaJq4V1yTmTDJkLXS0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywb9JkLMPZfbrogxxMkqCC86Rl4aynqDJOd3wJ/pwSUTacjdwjK
+	+OfPeLyxKqX5RxdEgFcsCQJcZrNfkX4WAib6IqyPhVE98rtE/ceO7+Wp0v4Y8Fm/W7eNaas8ouo
+	WPyOE/Ws+x47PB+YRFm39O+rn3qLAKTia8CWx0onCzoUIGA1NFfjHhLt1f45Za8Uje7s=
+X-Gm-Gg: ASbGncsAzCLhFpPEbutkm8JF4Nmr2Tbtl3GG3+JpRUEsAZ78SDYjqStvCrsyeqrb0fp
+	8LUSNuB6ANBPkjl5v9geRU82nBgULoaiuOXK27GXfPzLh7WR66k1yFDba15PjUf7KbgxGlnD/LS
+	k5jH51f9PaLgRyylXk1jUEr+ZCmG8HyKhlmQogBBzJtytO1uEbaeoNcLztfqR6+2Mm/KnHn7Xrm
+	EhdRooe6+gQVG+KbXvL4U/gz+XfmIN/+pfnLo2ob2lpQzjHGN3MRHQdBR7eukZKdMz0Qw7+wFBY
+	MxMJWM3bk/dOUVJFP/+c7Kxe4GSn1PNI2dDCIxlQdQEnbhvFc9a9HUouHjkwQCOKYWjGyoWk9Eo
+	=
+X-Received: by 2002:a05:620a:24c7:b0:7cb:de0d:ba59 with SMTP id af79cd13be357-7d09879d98dmr2538881585a.17.1748845029569;
+        Sun, 01 Jun 2025 23:17:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGSdGsGDCqj3qNFWw0eKZ+nQWqakHUuPqz0KDPEOWNeJVqgCsioBRM8H9Z1LzwjXuRTHL7kyw==
+X-Received: by 2002:a05:620a:24c7:b0:7cb:de0d:ba59 with SMTP id af79cd13be357-7d09879d98dmr2538878885a.17.1748845029212;
+        Sun, 01 Jun 2025 23:17:09 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55337937786sm1489417e87.227.2025.06.01.23.17.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Jun 2025 23:17:08 -0700 (PDT)
+Date: Mon, 2 Jun 2025 09:17:05 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: fenglin.wu@oss.qualcomm.com
+Cc: Sebastian Reichel <sre@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Subbaraman Narayanamurthy <subbaraman.narayanamurthy@oss.qualcomm.com>,
+        David Collins <david.collins@oss.qualcomm.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, kernel@oss.qualcomm.com,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH v2 2/8] power: supply: core: Add state_of_health power
+ supply property
+Message-ID: <6oixvnhihgjucqaovkayzm6cpi35jfmtwmm67wa6h4nlmhr6w5@ggb7auvjzos2>
+References: <20250530-qcom_battmgr_update-v2-0-9e377193a656@oss.qualcomm.com>
+ <20250530-qcom_battmgr_update-v2-2-9e377193a656@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530034713.4165309-1-dregan@broadcom.com> <CAOiHx=nzNZiOiBKUVqpTA5S8uY+ZNdPpLpEQGGDN9jP2-4Lj8Q@mail.gmail.com>
-In-Reply-To: <CAOiHx=nzNZiOiBKUVqpTA5S8uY+ZNdPpLpEQGGDN9jP2-4Lj8Q@mail.gmail.com>
-From: David Regan <dregan@broadcom.com>
-Date: Sun, 1 Jun 2025 23:16:01 -0700
-X-Gm-Features: AX0GCFuVyL7dDgRdoT4ePcHrZD_g_s6cPa8iqimsPGxMvpcaZjE13ahnxTwc0SY
-Message-ID: <CAA_RMS5xf7fmMWp_a0Jy_4Sd365gH=MBjS6bi4o7ocx43M61rA@mail.gmail.com>
-Subject: Re: [PATCH] mtd: nand: brcmnand: fix mtd corrected bits stat
-To: Jonas Gorski <jonas.gorski@gmail.com>
-Cc: David Regan <dregan@broadcom.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-mtd@lists.infradead.org, 
-	bcm-kernel-feedback-list@broadcom.com, 
-	William Zhang <william.zhang@broadcom.com>, Anand Gore <anand.gore@broadcom.com>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Kamal Dasu <kamal.dasu@broadcom.com>, 
-	Dan Beygelman <dan.beygelman@broadcom.com>, Miquel Raynal <miquel.raynal@bootlin.com>, 
-	=?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>, 
-	rafal@milecki.pl, computersforpeace@gmail.com, frieder.schrempf@kontron.de, 
-	Vignesh Raghavendra <vigneshr@ti.com>, Richard Weinberger <richard@nod.at>, 
-	Boris Brezillon <bbrezillon@kernel.org>, kdasu.kdev@gmail.com, 
-	JaimeLiao <jaimeliao.tw@gmail.com>, Adam Borowski <kilobyte@angband.pl>, dgcbueu@gmail.com, 
-	dregan@mail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250530-qcom_battmgr_update-v2-2-9e377193a656@oss.qualcomm.com>
+X-Proofpoint-GUID: GWXPLsfGoOaDvIthgDOXerpMBOlI_H3P
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAyMDA1MiBTYWx0ZWRfXxqT3PA2qp/5W
+ qG08rHmn4WdrLB+Aon/4b/sxfdYnUbLFCxN8S994/YcHOADcJWLchdjsMymb1q9PsfnOus0eFDy
+ DzyLVHN7H5qYlRouIhJts6ND1maarZSJSzQv4Gi5N5ZQZnEVkJfOFezbYrcpm+FPSIjbaN8NuEd
+ JhhHertKE3OVW0sjapJKPldIU5Zv1in/G1rFFEacPGj4HwhuyvMIK/wf+mqGZdsaA4Y0v0IajxF
+ gOSYR+oeiN/BAQJKHb18UOI1E9pORfTOsUI1kfEQ3O6SnmYAHVCXv9WzaG2vbPlBbanvS8AhlPj
+ FKTpHoUta5yJFpbZeZBQ6hqsB9wgHhA35oHvNuqKrY/p9OPaYYhF7EAa4sixggsyCy8bBzdQ60B
+ JLSMKWNntUE4gKUaKN4MVTtBhCrFGdTx4OXb6X5JuNiDBs7k7e6QCW40QcYNJxkxei3a/Xqz
+X-Proofpoint-ORIG-GUID: GWXPLsfGoOaDvIthgDOXerpMBOlI_H3P
+X-Authority-Analysis: v=2.4 cv=WYIMa1hX c=1 sm=1 tr=0 ts=683d41e6 cx=c_pps
+ a=JbAStetqSzwMeJznSMzCyw==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8 a=EyRF99YuA1x6hCxG0qEA:9
+ a=CjuIK1q_8ugA:10 a=uxP6HrT_eTzRwkO_Te1X:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-02_02,2025-05-30_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 clxscore=1015 suspectscore=0 phishscore=0 malwarescore=0
+ spamscore=0 mlxscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
+ lowpriorityscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2506020052
 
-Hi Jonas,
+On Fri, May 30, 2025 at 03:35:07PM +0800, Fenglin Wu via B4 Relay wrote:
+> From: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
+> 
+> Add state_of_health power supply property to represent battery
+> health percentage.
+> 
+> Signed-off-by: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
+> ---
+>  Documentation/ABI/testing/sysfs-class-power | 10 ++++++++++
+>  drivers/power/supply/power_supply_sysfs.c   |  1 +
+>  include/linux/power_supply.h                |  1 +
+>  3 files changed, 12 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
+> index 22a565a6a1c509461b8c483e12975295765121d6..74e0d4d67467500c3cd62da3ae0b2e4a67e77680 100644
+> --- a/Documentation/ABI/testing/sysfs-class-power
+> +++ b/Documentation/ABI/testing/sysfs-class-power
+> @@ -562,6 +562,16 @@ Description:
+>  
+>  		Valid values: Represented in microohms
+>  
+> +What:		/sys/class/power_supply/<supply_name>/state_of_health
+> +Date:		May 2025
+> +Contact:	linux-arm-msm@vger.kernel.org
+> +Description:
+> +		Reports battery power supply state of health in percentage.
+> +
+> +		Access: Read
+> +
+> +		Valid values: 0 - 100 (percent)
 
-On Fri, May 30, 2025 at 1:27=E2=80=AFAM Jonas Gorski <jonas.gorski@gmail.co=
-m> wrote:
->
-> Hi,
->
-> On Fri, May 30, 2025 at 5:48=E2=80=AFAM David Regan <dregan@broadcom.com>=
- wrote:
-> >
-> > Currently we attempt to get the amount of flipped bits from a hardware
-> > location which is reset on every subpage. Instead obtain total flipped
-> > bits stat from hardware accumulator. In addition identify the correct
-> > maximum subpage corrected bits.
-> >
-> > Signed-off-by: David Regan <dregan@broadcom.com>
-> > Reviewed-by: William Zhang <william.zhang@broadcom.com>
-> > Reviewed-by: Kamal Dasu <kamal.dasu@broadcom.com>
-> > ---
-> >  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 48 ++++++++++++++++++------
-> >  1 file changed, 37 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nan=
-d/raw/brcmnand/brcmnand.c
-> > index 62bdda3be92f..43ab4aedda55 100644
-> > --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> > +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> > @@ -361,6 +361,7 @@ enum brcmnand_reg {
-> >         BRCMNAND_CORR_COUNT,
-> >         BRCMNAND_CORR_EXT_ADDR,
-> >         BRCMNAND_CORR_ADDR,
-> > +       BRCMNAND_READ_ERROR_COUNT,
-> >         BRCMNAND_UNCORR_EXT_ADDR,
-> >         BRCMNAND_UNCORR_ADDR,
-> >         BRCMNAND_SEMAPHORE,
-> > @@ -389,6 +390,7 @@ static const u16 brcmnand_regs_v21[] =3D {
-> >         [BRCMNAND_CORR_THRESHOLD_EXT]   =3D     0,
-> >         [BRCMNAND_UNCORR_COUNT]         =3D     0,
-> >         [BRCMNAND_CORR_COUNT]           =3D     0,
-> > +       [BRCMNAND_READ_ERROR_COUNT]     =3D     0,
-> >         [BRCMNAND_CORR_EXT_ADDR]        =3D  0x60,
-> >         [BRCMNAND_CORR_ADDR]            =3D  0x64,
-> >         [BRCMNAND_UNCORR_EXT_ADDR]      =3D  0x68,
-> > @@ -419,6 +421,7 @@ static const u16 brcmnand_regs_v33[] =3D {
-> >         [BRCMNAND_CORR_THRESHOLD_EXT]   =3D     0,
-> >         [BRCMNAND_UNCORR_COUNT]         =3D     0,
-> >         [BRCMNAND_CORR_COUNT]           =3D     0,
-> > +       [BRCMNAND_READ_ERROR_COUNT]     =3D     0,
-> >         [BRCMNAND_CORR_EXT_ADDR]        =3D  0x70,
-> >         [BRCMNAND_CORR_ADDR]            =3D  0x74,
-> >         [BRCMNAND_UNCORR_EXT_ADDR]      =3D  0x78,
-> > @@ -449,6 +452,7 @@ static const u16 brcmnand_regs_v50[] =3D {
-> >         [BRCMNAND_CORR_THRESHOLD_EXT]   =3D     0,
-> >         [BRCMNAND_UNCORR_COUNT]         =3D     0,
-> >         [BRCMNAND_CORR_COUNT]           =3D     0,
-> > +       [BRCMNAND_READ_ERROR_COUNT]     =3D     0,
->
-> I see this register in BCM63268's NAND controller at 0x80, which is a
-> v4.x one, so I'm surprised v5.0 doesn't have it. Or does it not work
-> there? I don't know if v3.3 also has it or if using this on v4.x would
-> require a separate brcmnand_regs entry.
+What does it mean that battery has 77% of health?
 
-Thank you for pointing this out, I did just verify the register at offset
-0x80 does appear to work correctly on my 63268. I'll put some update
-in the next patch revision to reflect this.
+> +
+>  **USB Properties**
+>  
+>  What:		/sys/class/power_supply/<supply_name>/input_current_limit
+> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+> index dd829148eb6fda5dcd7eab53fc70f99081763714..12af0d0398822ff23d8970f6bdc8e3ef68081a1d 100644
+> --- a/drivers/power/supply/power_supply_sysfs.c
+> +++ b/drivers/power/supply/power_supply_sysfs.c
+> @@ -221,6 +221,7 @@ static struct power_supply_attr power_supply_attrs[] __ro_after_init = {
+>  	POWER_SUPPLY_ATTR(MANUFACTURE_MONTH),
+>  	POWER_SUPPLY_ATTR(MANUFACTURE_DAY),
+>  	POWER_SUPPLY_ATTR(RESISTANCE),
+> +	POWER_SUPPLY_ATTR(STATE_OF_HEALTH),
+>  	/* Properties of type `const char *' */
+>  	POWER_SUPPLY_ATTR(MODEL_NAME),
+>  	POWER_SUPPLY_ATTR(MANUFACTURER),
+> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+> index de3e88810e322546470b21258913abc7707c86a7..dd0108940231352ac6c6f0fa962d1ea904d81c7a 100644
+> --- a/include/linux/power_supply.h
+> +++ b/include/linux/power_supply.h
+> @@ -175,6 +175,7 @@ enum power_supply_property {
+>  	POWER_SUPPLY_PROP_MANUFACTURE_MONTH,
+>  	POWER_SUPPLY_PROP_MANUFACTURE_DAY,
+>  	POWER_SUPPLY_PROP_RESISTANCE,
+> +	POWER_SUPPLY_PROP_STATE_OF_HEALTH,
+>  	/* Properties of type `const char *' */
+>  	POWER_SUPPLY_PROP_MODEL_NAME,
+>  	POWER_SUPPLY_PROP_MANUFACTURER,
+> 
+> -- 
+> 2.34.1
+> 
+> 
 
->
-> Can't really comment on the remaining changes.
->
-> Regards,
-> Jonas
-
--Dave
+-- 
+With best wishes
+Dmitry
