@@ -1,108 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DF17485;
-	Mon,  2 Jun 2025 12:23:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 959E620DD75;
+	Mon,  2 Jun 2025 12:23:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748866982; cv=none; b=aqVQJimT1I9pVdYoaxORxmAy7/5nIaLpaifpla2N0tBmuKmD1uT/CP/aWEbNvqoXmmrqvMMhdLm/dPcXf4ioED48TK3+hPA6V4a+JMOWYW4fFaUOW1lfg5xLKOZtfH08MWkcpMfIUPxtWRPD/78orl9FyLh+kq/+Cu5vsJq1qbg=
+	t=1748867002; cv=none; b=CnoA7IO+jesuAUSoHtXysj0OTH85O6vJkgBnvTqY8Oj5v0KxsXsT30iL/WeCreLNsucJhIvOB7ii5yleCh87seNVej21wpZoY1+LSQfElFyPukClcHcGb3jHj3DwQpUUVUAD437v1iplgRcRxhGF2Q4Y0kxLbG8kxDt3ctz5VcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748866982; c=relaxed/simple;
-	bh=LrpYnWwRqQ2fm/LULB92EX1rn4RlP8w3zOCG97Ytfb0=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=q+M99lU5sLzCuutkg5EI0Kx0OJke8xL8eEJmHIPKMZa9kSQRBHkHMxWvUhM8FHs3aRxkWam0jd+fTAmdo6XEt5Py6b0jjSw1bDPh6U+MxdglX50Mu/qL1BynPAGSvAcO6b2UGy8BHe2Gu5yIIYr+H2vDE+B0C6hEQOfTn5XXF7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XH8P+s/6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748867002; c=relaxed/simple;
+	bh=bnYqW+P7cHwEMYJ6/COYnVOE3rPjRiNjIFyIgadqvFI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=RWTpVJ76Co8UDXN1dRiumclPUBR/opVQ/i5cOlUf8MO8kWU2PiT2efAaLTVYc71W/N1bks0k/YKlShhbTJqvZ7EeHBqK3ONyqWoPoTA0PXXBGT9XAWAp1JkLWi6a37FZP9B/qItyzxj/TWXnQKUxqIMBpfpxnBmDnZsaSDBJRkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=gX8sxzd1; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XH8P+s/6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5406C4CEF1;
-	Mon,  2 Jun 2025 12:23:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748866981;
-	bh=LrpYnWwRqQ2fm/LULB92EX1rn4RlP8w3zOCG97Ytfb0=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=XH8P+s/6uHV0G/AUxM/CUAKy1Bx8y4n7STCn3MNsw0QSUv7jbkKemEwBZHZLi7GSe
-	 dlBoxSiFnVxEJxMXlnIOQ73bJK7QkaF6ZL8Q01gt9h2Mp0QOr0w39M74LrRKT9LWeF
-	 kWdtqAuYJWRLUFLiy756cCW0xwmRbgxuBGhrZzFo12EiMtp+hke6HR0iDxp0KeoYPN
-	 ytVlyyppkVOJVfXlmaEAdzFEVANeiRL85qP+GI8FBfFgdtHju/rCyQTPAJLov/5ftD
-	 iF/Qmg50PcpKbL1xXRbdSoDLZYSfkj7dr4c+rJrEFiwXlIBYpHbwup1VzlLVP99Uo8
-	 MZ6ZTPKpkE04A==
-Date: Mon, 02 Jun 2025 07:23:00 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="gX8sxzd1"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 552AAQX9025592;
+	Mon, 2 Jun 2025 14:22:56 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	IgxTZBT25twzbM3wpJ4isoQbEkFyGOclWHPMbqKTDj0=; b=gX8sxzd1EhfGsaL1
+	pz55+EN38mX+Hl3Ppsu2B+tH0dxwDT0bNdAaVFAww4LC4tQj1kS3C6Zna2nn6DRw
+	sh1t4tICsLNQkABqsJB0km0YZiO+qU7zLS6P8pcG1DLF5KkEnMoIoPiOFlODBM1s
+	gLb/o5SOB04mnjCaAbeBa9OkrgRewTVRFMQsx8HUw0Y3K71tUg/w7T3jKgqBa02i
+	vf65BZoGJtyeXudtHM86O225e6LgJCvVMJUxcOTGX0Hlz2Cq5LhIlYBp8J6mMb+D
+	vKDcHwk9QcNvaVOZ71E60x4oGFy7zj+EhK8jhFiBvrxeU6yIckgC5wzOD9rVqTvA
+	Fm8pIQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46yrngxjw3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 02 Jun 2025 14:22:56 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5DA1F40054;
+	Mon,  2 Jun 2025 14:21:40 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D5DB3B3327A;
+	Mon,  2 Jun 2025 14:19:40 +0200 (CEST)
+Received: from localhost (10.48.87.146) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 2 Jun
+ 2025 14:19:40 +0200
+From: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
+Date: Mon, 2 Jun 2025 14:19:39 +0200
+Subject: [PATCH v4 3/3] dt-bindings: stm32: cosmetic fixes for STM32MP25
+ clock and reset bindings
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: nuno.sa@analog.com, andy@kernel.org, linus.walleij@linaro.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Michael.Hennerich@analog.com, conor+dt@kernel.org, 
- linux-iio@vger.kernel.org, brgl@bgdev.pl, dlechner@baylibre.com, 
- lars@metafoo.de, marcelo.schmitt1@gmail.com, jic23@kernel.org, 
- krzk+dt@kernel.org, linux-gpio@vger.kernel.org
-To: Marcelo Schmitt <marcelo.schmitt@analog.com>
-In-Reply-To: <187e038cb9e7dbe3991149885cb0a4b30376660c.1748829860.git.marcelo.schmitt@analog.com>
-References: <cover.1748829860.git.marcelo.schmitt@analog.com>
- <187e038cb9e7dbe3991149885cb0a4b30376660c.1748829860.git.marcelo.schmitt@analog.com>
-Message-Id: <174886697998.948762.16527380744873036141.robh@kernel.org>
-Subject: Re: [PATCH v4 01/11] dt-bindings: iio: adc: Add AD4170
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250602-upstream_rcc_mp21-v4-3-336b4278136a@foss.st.com>
+References: <20250602-upstream_rcc_mp21-v4-0-336b4278136a@foss.st.com>
+In-Reply-To: <20250602-upstream_rcc_mp21-v4-0-336b4278136a@foss.st.com>
+To: Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd
+	<sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+CC: <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Gabriel Fernandez <gabriel.fernandez@foss.st.com>,
+        Conor Dooley
+	<conor.dooley@microchip.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-02_05,2025-05-30_01,2025-03-28_01
 
+- drop minItems from access-controllers
+- remove rcc label from example
+- fixes typos
+- remove double '::' from 'See also::'
 
-On Mon, 02 Jun 2025 08:36:24 -0300, Marcelo Schmitt wrote:
-> Add device tree documentation for AD4170 and similar sigma-delta ADCs.
-> The AD4170 is a 24-bit, multichannel, sigma-delta ADC.
-> 
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-> ---
-> Change log v3 -> v4
-> - Dropped sensor-node and most of defs.
-> - Updated external sensor props to have similar name and type of adi,ad4130 ones.
-> - Added constraints to properties related to external bridge sensor excitation.
-> 
-> Some explanation about the constraints to weigh scale sensor types.
-> 
-> The predefined ACX1, ACX1 negated, ACX2, and ACX2 negated signals are used to AC
-> excite external bridge circuits and are output on GPIO2, GPIO0, GPIO3, and
-> GPIO1, respectively. If only two pins are specified for AC excitation, only ACX1
-> and ACX2 (GPIO2 and GPIO3) are used. Because of that, if AC excitation is
-> specified/requested, then those specific GPIO pins must be used with the bridge.
-> Otherwise, the bridge won't get properly excited and we also cannot guarantee to
-> avoid short-circuit conditions since the level set to GPIOs to DC excite the
-> bridge depends on the GPIO number. See AD4170 datasheet Figure 113 Weigh Scale
-> (AC Excitation) for the reference circuit diagram.
-> Link: https://www.analog.com/media/en/technical-documentation/data-sheets/ad4170-4.pdf#unique_149_Connect_42_ID10354
-> 
->  .../bindings/iio/adc/adi,ad4170.yaml          | 543 ++++++++++++++++++
->  MAINTAINERS                                   |   7 +
->  2 files changed, 550 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
-> 
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
+---
+ .../devicetree/bindings/clock/st,stm32mp25-rcc.yaml         | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-My bot found errors running 'make dt_binding_check' on your patch:
+diff --git a/Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml b/Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml
+index 88e52f10d1ecc68e818cd7d8cb1ca39dceb7a494..1e3b5d218bb01acb247d27bc6902be821cabd98c 100644
+--- a/Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml
++++ b/Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml
+@@ -11,9 +11,9 @@ maintainers:
+ 
+ description: |
+   The RCC hardware block is both a reset and a clock controller.
+-  RCC makes also power management (resume/supend).
++  RCC makes also power management (resume/suspend).
+ 
+-  See also::
++  See also:
+     include/dt-bindings/clock/st,stm32mp25-rcc.h
+     include/dt-bindings/reset/st,stm32mp25-rcc.h
+ 
+@@ -38,7 +38,7 @@ properties:
+       - description: CK_SCMI_MSI Low Power Internal oscillator (~ 4 MHz or ~ 16 MHz)
+       - description: CK_SCMI_LSE Low Speed External oscillator (32 KHz)
+       - description: CK_SCMI_LSI Low Speed Internal oscillator (~ 32 KHz)
+-      - description: CK_SCMI_HSE_DIV2 CK_SCMI_HSE divided by 2 (coud be gated)
++      - description: CK_SCMI_HSE_DIV2 CK_SCMI_HSE divided by 2 (could be gated)
+       - description: CK_SCMI_ICN_HS_MCU High Speed interconnect bus clock
+       - description: CK_SCMI_ICN_LS_MCU Low Speed interconnect bus clock
+       - description: CK_SCMI_ICN_SDMMC SDMMC interconnect bus clock
+@@ -108,15 +108,14 @@ properties:
+       - description: CK_SCMI_ICN_APB2 Peripheral bridge 2
+       - description: CK_SCMI_ICN_APB3 Peripheral bridge 3
+       - description: CK_SCMI_ICN_APB4 Peripheral bridge 4
+-      - description: CK_SCMI_ICN_APBDBG Peripheral bridge for degub
++      - description: CK_SCMI_ICN_APBDBG Peripheral bridge for debug
+       - description: CK_SCMI_TIMG1 Peripheral bridge for timer1
+       - description: CK_SCMI_TIMG2 Peripheral bridge for timer2
+       - description: CK_SCMI_PLL3 PLL3 clock
+       - description: clk_dsi_txbyte DSI byte clock
+ 
+   access-controllers:
+-    minItems: 1
+-    maxItems: 2
++    maxItems: 1
+ 
+ required:
+   - compatible
+@@ -131,7 +130,7 @@ examples:
+   - |
+     #include <dt-bindings/clock/st,stm32mp25-rcc.h>
+ 
+-    rcc: clock-controller@44200000 {
++    clock-controller@44200000 {
+         compatible = "st,stm32mp25-rcc";
+         reg = <0x44200000 0x10000>;
+         #clock-cells = <1>;
 
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml: properties:interrupt-names: 'enum' should not be valid under {'enum': ['const', 'enum', 'exclusiveMaximum', 'exclusiveMinimum', 'minimum', 'maximum', 'multipleOf', 'pattern']}
-	hint: Scalar and array keywords cannot be mixed
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/187e038cb9e7dbe3991149885cb0a4b30376660c.1748829860.git.marcelo.schmitt@analog.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+-- 
+2.25.1
 
