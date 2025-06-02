@@ -1,150 +1,120 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6FF6101F2
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 04:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706AE2C3244
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 04:32:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748838361; cv=none; b=sBzJyz/2OSyF/H8bJsBY3wv5N5VQqG0rxrI2NjysoePuJ56zi8543lGPMLlu/mP4xsXHkD30zm2HYA79OF/RTAfaZuVOOVHI4tRXtdyY82coAXHOzITLPNhRQcbakHPb4cMfaNVpVNHgmCvRQppRPRiI6Q6z2zmhgxrt5IbvHxw=
+	t=1748838756; cv=none; b=DkVhh7vlZiwSxPmNqluL12haziLL1gAF1FcrX0jk+t+MysDa/xiPX9UkD/IKDnslETCIZ1sSnfnM9lyirgRt4wD5Hn9cuYukmiBcN8X77qLjusnwp3fCzwCmBWpPGQbD4bBOJcwzUyq1PA6tis9eu6PrNzhvQ9YN5CT/cZryixI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748838361; c=relaxed/simple;
-	bh=UvTEUnaqQjpZm5WXOnHUTKWF6hbCE/V2vfgao7XKhaI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=CWd75z4leW++cRPrWfIzP/UzgvniIa+9cA9Ag4YFo0UV/w992YzQ8wSOOzc0NqGvnuiAnJg5hOK6Hqsu6iPSJd7AoRU0xlFKeiz7PUcwmATN9FhvFm2zOl8KugZ7TyAFA9eeUDTlyvdInuikmisp6d9eFHbWn8cpf/L9z4byx3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GD0JwAES; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1748838756; c=relaxed/simple;
+	bh=yFUrBBSl9D7yxoSth936zMXfdxoF0Zzyhq+QKaWpWrI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=HFLge1VKXP+EqDoRSWFgB0r/bt5J2IpS038Bw3Er86HGEpjcDMYV7PuewtWcjEmlRN5kr4I0VmlbZt6nS3ZLW7XR8DoE/oidftJ9yJy3JlHg4D52rsyBrID2e0p8qKgjxS0KnpF8CrfzWQDPrVGs/UFpzr2ku58/5VuZ1z4jV4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=inventec.com; spf=pass smtp.mailfrom=inventec.com; dkim=pass (2048-bit key) header.d=inventec.com header.i=@inventec.com header.b=FqsuPl/q; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=inventec.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inventec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GD0JwAES"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 551LHjR2009549;
-	Mon, 2 Jun 2025 04:25:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=LaNED7
-	PqF1qyB92brBr7HqFgwAMpN5WHze6i/RCLsUM=; b=GD0JwAESDoK24kIYOQXqGk
-	JCL2yFuDG/3xf/IqugRt90V83sUFIG64U/vbexscon8tTvw3Nc2mpA+BkxIP8Uu6
-	LximVOMW3OY1juSOh+8oentHYHd7bLmv02QzspcvxAhZwkVV4gF/Y0t7f2YicvwV
-	FXlxBA1wx9Zwe0YAiRLObmnGnKhFvz8b7CiWO833/cO4thpbKWNIw4jwu19Y/BSF
-	SdiXZFGHsGOu+snN3n8YTITwtMcUevAS0zJGnTWCFJdwu2YvwYi6CE7ZUhsu5TYW
-	qwUwtQNPo5Uel96+XJTRaQxpEE8nk2BdycQhPxyuCs2+Fb5CiV7n0+AMomS8A7VA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46yq6sybe1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 02 Jun 2025 04:25:35 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5524LJb6014246;
-	Mon, 2 Jun 2025 04:25:35 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46yq6sybdv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 02 Jun 2025 04:25:35 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55209qGo020553;
-	Mon, 2 Jun 2025 04:25:34 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 470et2498b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 02 Jun 2025 04:25:34 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5524PURl12714412
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 2 Jun 2025 04:25:30 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B9E482004B;
-	Mon,  2 Jun 2025 04:25:30 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DD6F420043;
-	Mon,  2 Jun 2025 04:25:27 +0000 (GMT)
-Received: from [9.109.215.252] (unknown [9.109.215.252])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  2 Jun 2025 04:25:27 +0000 (GMT)
-Message-ID: <27865aa8-71b9-4ddc-b3be-312e4ac3814a@linux.ibm.com>
-Date: Mon, 2 Jun 2025 09:55:27 +0530
+	dkim=pass (2048-bit key) header.d=inventec.com header.i=@inventec.com header.b="FqsuPl/q"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7398d65476eso2729572b3a.1
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Jun 2025 21:32:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=inventec.com; s=google; t=1748838751; x=1749443551; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tJq78wY/crLkQo2Nn6KYgcryTBZ4RoIazEZoxMRMUE8=;
+        b=FqsuPl/qmUuHRGhI1nBasZZmRz9pm76Mw28/+O3Yv15+t4GSNjw1MNPWFTJ+TBZEKl
+         Rqjeb6bZ3NE/+l0gw7460RpjcwZR7ZQP15KNdPDbbDrPa/jjAiruR3QQG5Uu0QVILDYe
+         x9zhREMM8IpKFgTQgKqZVsW47g84Jf2jdoj8W1c7yqnVUK/KQ/yYFEKkqo6hhKdL0XiS
+         LUbjxktwr9Ve9x6BPG4NRT/3xb0/LFXXIptmAKYoK5opxWc4uUN6S3afURfOgv5N47t3
+         gUATKH5SnL0HQg+jTc8Z3xnRwzrSMAozWLSnkjkipKJTa7lEzSIOI7K6qlPdIR7mwh08
+         7R3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748838751; x=1749443551;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tJq78wY/crLkQo2Nn6KYgcryTBZ4RoIazEZoxMRMUE8=;
+        b=JMX/WW+L5qpiwJ0UP8uhK9m8H2NoEZpqGdLU4pARqvrQhwjIYy46I/IffR3NUjP4GD
+         gs0jQokyUCvEeiL+kEn69PGA/ei8Hhz2hyEWIEbGn3U8Smjzc5HJiBvrd59O74etkyUk
+         qTaIbZfGfmvCdOVk7qUZZ4l3GMM4IdHReHhA76/LP5qtiWQnxnEJ0xDmEZww7FowZ/GF
+         JLVW4xTy7oj3dt7LHinv7Z8F/aCQFI2cTHyRdiUiYsLKhtDG0m3WHKB0l3W9Fpcr6TUD
+         7r8WaGJ43iU1enlWbBkR36ZQ9sCdlnpil9wONCI6Bhf3SeNPkPbga6l7wpOC78AvWDvJ
+         Vncw==
+X-Forwarded-Encrypted: i=1; AJvYcCW+xgMgqVdxMYHuHeQ7yliH4yB9lLjMEbyR1QpmQ4a4idIXERf451BFr7Un9/sQJe4jP1Gk5qunXCFlB9M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0DGE7fxqPvCSX+DuhkjcayIpkstwur8sEHNNqRg+qZr2UyHLa
+	DQ1QdovbBCf5COMpNQqxJhzqa5q6tonvpyHk5AfnukWIJ+GAL090u1NuDRFy+zMRl8U=
+X-Gm-Gg: ASbGncsbgbWyP/ozlVLYUBV9HtXMS+XDwS6l6T/L9fSZsCdE9Qj3PMzbvjGpYg5l8gc
+	MD4UcOTCqIB/JKFcM4HmPW3E5ks1OHdqj73xoeJf5XTKs2uk7DeepilgMOHpSw/xciOqTTAddcf
+	dcF6P1xH/DSmIMtb4K4TbVOR+a6KYUW6SwAyDiC2BD7RfTy75ptMUFLiC+74bL/H7Hc4NCApPXx
+	bukCxl5J49Q+0dk5sukkrlgjMTkg050IXFQFNrYpz8XLPtR2G3eWcWOkxfG/3Bn3kVsH4NFvSP8
+	giea2o7lkc+4hK+fB0iiHs0fdlN7n8RJeKyQGSq/hs1VG8KZZYVLbsNyKdk4f7WmhYn5Id5h
+X-Google-Smtp-Source: AGHT+IFpbhiwxpJDD+phaJIWCFI5dOn68UTJQSMnHJdP1ZxwrJ5R91lg0I+EYR1aQexHnsVAbNnQLQ==
+X-Received: by 2002:a05:6a00:a90:b0:742:aed4:3e1 with SMTP id d2e1a72fcca58-747ad443d05mr22354742b3a.2.1748838750635;
+        Sun, 01 Jun 2025 21:32:30 -0700 (PDT)
+Received: from localhost.localdomain ([123.51.235.216])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afeab743sm6887118b3a.54.2025.06.01.21.32.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Jun 2025 21:32:30 -0700 (PDT)
+From: Chiang Brian <chiang.brian@inventec.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Chiang Brian <chiang.brian@inventec.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v8 1/2] dt-bindings: trivial: Add tps53685 support
+Date: Mon,  2 Jun 2025 12:24:53 +0800
+Message-Id: <20250602042454.184643-2-chiang.brian@inventec.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250602042454.184643-1-chiang.brian@inventec.com>
+References: <20250602042454.184643-1-chiang.brian@inventec.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/5] sched: cpu parked and push current task mechanism
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-To: Yury Norov <yury.norov@gmail.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        tglx@linutronix.de, maddy@linux.ibm.com, vschneid@redhat.com,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, jstultz@google.com,
-        kprateek.nayak@amd.com, huschle@linux.ibm.com, srikar@linux.ibm.com,
-        linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk
-References: <20250523181448.3777233-1-sshegde@linux.ibm.com>
- <20250527151020.GV24938@noisy.programming.kicks-ass.net>
- <aDXelhCbIvKjZyqG@yury> <f6f122cf-daf4-4e31-af42-4f12761aa1da@linux.ibm.com>
-Content-Language: en-US
-In-Reply-To: <f6f122cf-daf4-4e31-af42-4f12761aa1da@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Fo0F/3rq c=1 sm=1 tr=0 ts=683d27bf cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=sZj7IcCAvcMJORwBWfYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: ShvfOZ2OTIxWkPzkaR96F6tsl9kHobjV
-X-Proofpoint-ORIG-GUID: FJBjf765ikJS1vLlAv_NN19SWWGyKLhW
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAyMDAzMCBTYWx0ZWRfXzKPgYpGEdo6h NxJMXrlFlafxHGbfoU4/vlWQZntmdkaH/1mXpIn/KCj120+I0Sn4bSwxxZOsM+OpbY6rixAIkXE aI9JiOhQJrj70GtLkNmMaBTUIGrrDEPVPo2aGTq7ZOC2Lo0Ytt+yqAFQlNPVl4kRbE28hR7jb1T
- H9o7CU3/sDO32lwkj/HYIyWkBQ40idLBflf0N8ky4lO0PR7OhBzmXHDndqf8zsQmnH9iAe90+Pl VrqTFgYnb7TMwXWEsTx08tut0fGVwv1hZiyGzuXOsJsjQtbyg/z49PL4GABMb5UtVdxxr3E806W M0C2UMcHSgGtHXEhk3l1HpsWIVSZYQIuYcH+5+ukkR0oUgV1fTTJ4njKJPMqWJSRDPzYtWmKBki
- 2mPGHK6gI4uO3P5/nZ4EqahbVP18YmlgV3wrNlY548tiFQIhfg5ef8SKY7QOmX32iuh1saOq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-02_01,2025-05-30_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- mlxlogscore=709 impostorscore=0 spamscore=0 clxscore=1015
- priorityscore=1501 lowpriorityscore=0 mlxscore=0 suspectscore=0
- phishscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2506020030
+
+Add device type support for tps53685
+
+Signed-off-by: Chiang Brian <chiang.brian@inventec.com>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+
+v3 -> v8:
+  1. No code changed, included Acked-by tag from v2 review
+  2. Patch kept in sync with series version
+  - Link to v3: https://lore.kernel.org/all/20250515081449.1433772-2-chiang.brian@inventec.com/
+
+v2 -> v3:
+	1. Fix the order of patches
+	- Link to v2: https://lore.kernel.org/all/20250424132538.2004510-3-chiang.brian@inventec.corp-partner.google.com/
+
+v1 -> v2:
+	1. Correct the subject and commit message
+	- Link to v1: https://lore.kernel.org/all/20250314032802.3187097-1-chiang.brian@inventec.com/
 
 
+ Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Hi.
+diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
+index 8da408107e55..e0017ba594dd 100644
+--- a/Documentation/devicetree/bindings/trivial-devices.yaml
++++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+@@ -392,6 +392,8 @@ properties:
+           - ti,tps53679
+             # TI Dual channel DCAP+ multiphase controller TPS53681
+           - ti,tps53681
++            # TI Dual channel DCAP+ multiphase controller TPS53685 with AMD-SVI3
++          - ti,tps53685
+             # TI Dual channel DCAP+ multiphase controller TPS53688
+           - ti,tps53688
+             # TI DC-DC converters on PMBus
+-- 
+2.43.0
 
-> 
-> ----------------------------
-> 
-> vCPU - Virtual CPUs - CPU in VM world.
-> pCPU - Physical CPUs - CPU in baremetal world.
-> 
-> A hypervisor is managing these vCPUs from different VMs. When a vCPU 
-> requests for CPU, hypervisor does the job
-> of scheduling them on a pCPU.
-> 
-> So this issue occurs when there are more vCPUs(combined across all VMs) 
-> than the pCPU. So when *all* vCPUs are
-> requesting for CPUs, hypervisor can only run a few of them and remaining 
-> will be preempted(waiting for pCPU).
-> 
-> 
-> If we take two VM's, When hypervisor preempts vCPU from VM1 to run vCPU 
-> from VM2, it has to do
-> save/restore VM context.Instead if VM's can co-ordinate among each other 
-> and request for *limited*  vCPUs,
-> it avoids the above overhead and there is context switching within 
-> vCPU(less expensive). Even if hypervisor
-> is preempting one vCPU to run another withing the same VM, it is still 
-> more expensive than the task preemption within
-> the vCPU. So *basic* aim to avoid vCPU preemption.
-> 
-> 
-> So to achieve this, use this parking(we need better name for sure) 
-> concept, where it is better
-> if workloads avoid some vCPUs at this moment. (vCPUs stays online, we 
-> don't want the overhead of sched domain rebuild).
-> 
-> 
-> contention is dynamic in nature. When there is contention for pCPU is to 
-> be detected and determined
-> by architecture. Archs needs to update the mask regularly.
-> 
-> When there is contention, use limited vCPUs as indicated by arch.
-> When there is no contention, use all vCPUs.
-> 
-
-I hope this helped to set the problem context. I am trying to get feedback if the approach makes sense.
-I will go through other push mechanism we have (example in rt/dl).
