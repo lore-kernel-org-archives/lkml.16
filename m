@@ -1,237 +1,242 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ADE0143736
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 07:22:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2CFD143736;
+	Mon,  2 Jun 2025 07:23:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748848977; cv=none; b=HALGL0WJo3hLXmxPWOylH/kxlQJAjejcIO5+RNogkpCQBzueKf5s30pLIbMncW2boNxV0oE6JjTm41a+GTB2qhyJ+Ebz6UxU9r5k7Cx+mxpSZxTv5XHUp59/8fepCZJ4qzXAo9DF2DBea2g4XhudydNAw+diXY0xm89n5d9/m7U=
+	t=1748849017; cv=none; b=g12pq+zklsHnjsdECv1Y9dn9pdFguTd50hWyRqqihTIOt+hlii+YDREesVj43GMdIJpIlFYwQnYePliAgdTt6QZsDmdRxeVOEaRHe9fzeGQFE4gy74jHkusHsxH+QrNocmeKERRrSbs61YzRHpBTQUdyXM7vdYWsDb2//V8x67I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748848977; c=relaxed/simple;
-	bh=YipdcxQH1pzFKp0XSfiAlEWx63pP4ChCpiJDCVFgkFc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KE3/v3ld3cATJnc6YqxZPxWXGM4vukQo3TPy40KPPFVXfUn07MA0ElxvyWz3PHGEfCtR4/VOlzGKwTud8j6iRRentuIZqVkcw9nr0qX+pmMAeAxr7MBmdliQGcPKwijGOdrNnqQR4caS57kzYuVUKXf2rXAGAeQe1HxFbFeoR5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=Nqrnfaz6; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Nqrnfaz6"
-X-UUID: 62718eda3f8211f082f7f7ac98dee637-20250602
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=x5kqMG56SWDQsrMynXSFFFcF3tBs6H1f9+/5qrqftM8=;
-	b=Nqrnfaz6e9bWE2zQTT4lWua5+fcRLyF5E3DVxC2MMYyPTdgjPiV8MhyocbeH9udWoSgKgmbPlQy+qPzMbfxq2ZD1uTZtyyTlpdsRA1V8REAIznSoi2xol8tm8KZOfg9wDVHQc6tqNBf3SeWiCyVh0FTUVrvwC/p/QJaMJwmIxPc=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:939cfe4f-e523-4a6d-b76e-4420d9ce701e,IP:0,UR
-	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-25
-X-CID-META: VersionHash:0ef645f,CLOUDID:f3375c59-eac4-4b21-88a4-d582445d304a,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
-	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 62718eda3f8211f082f7f7ac98dee637-20250602
-Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw02.mediatek.com
-	(envelope-from <kuyo.chang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1494710666; Mon, 02 Jun 2025 15:22:47 +0800
-Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
- mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Mon, 2 Jun 2025 15:22:45 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Mon, 2 Jun 2025 15:22:45 +0800
-From: Kuyo Chang <kuyo.chang@mediatek.com>
-To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
-	<vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel
- Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, Matthias
- Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>
-CC: kuyo chang <kuyo.chang@mediatek.com>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
-Subject: [PATCH 1/1] sched/core: Fix migrate_swap() vs. hotplug
-Date: Mon, 2 Jun 2025 15:22:13 +0800
-Message-ID: <20250602072242.1839605-1-kuyo.chang@mediatek.com>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1748849017; c=relaxed/simple;
+	bh=aMkjYDfS4hKBq4E8F8Ko1Lj7bLsFOrFanKHtkT5UWGQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PaxfJbixe0ve1Q/JyW6aAZpZTKgj85ZqUZrr2+4PgnV+GIjMgRs3ivbFD0Yop0UZx/YUmETW4P9BspxNJumKoFr4R6BTC4wrpB8hpLUqix8FWtpWH+FRIOvKurk40NrhFHlwqyvkkLPtqk2FtKY4ni08gN/gzCzrAqikBrwMQt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4c9cea30173so1278247137.3;
+        Mon, 02 Jun 2025 00:23:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748849013; x=1749453813;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=o9BTeLSuqq/rx8xkHWscFhlPkXYJse76ozXbRV6bBME=;
+        b=chPOQRKEMuHCdy1kjMnddTxbJ10SBJwVeocgmT6w+xfk08uFgppGUUw74JGkkU6QdD
+         NbRfjR/Dvhjmo8JMaUbpssNEkIC0afX4yx4whhj9PJA9XqXQKnNXeN7sQWBPXMrDXqoH
+         pwbNeQRS/yW3+Gj5NMRZ0YVFIU/7g/TvWJGbjfYlzzY5tN1N62zsKU7361AUIdW4djm2
+         yVKuZjF95pi1iZJyRY0KafhqnBETE9u3+71Ccs1UgNbHRhwzTK3pqpOrdZo7Jg0wY28u
+         vQl5uenYWV0YRCnVLSr8u0JJmj4tatClOAgNwqdYMJD/YcDHt4wCOXXOOGnA3dgJc9EI
+         hkDw==
+X-Forwarded-Encrypted: i=1; AJvYcCUl6UB+uXWvvozlidGxfBmn2tGgGd9AJuwKXGmtRM6PlTnBcvGCLY7ABw8+5W9JBp5V7ER+7A1Srz3mFyBs@vger.kernel.org, AJvYcCWFqYvj6b9O3ciMK2jQvPe7fpYkF150WWCMVq93aTBE8k2fyPYNYTrBWiCfsj6ORa7cLa4A+YwZnH4=@vger.kernel.org, AJvYcCXDe8RRphmnwHxGYkoCYcFO/qKXLIYbdjWSygnaKkNcvQ6P5gGTAmYD8mTdEaXqgKQh2i7R6H5g@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzIoyT9sDu+7rZCBnhDx31CeW2G+zrdXQimCPyv+qWyyc9bIh9
+	nnXspw/Dtnlyuz7FJaiZskbLdup4TTFiT+RlUO4x8u5YPVTBYBJN3/35j3QNSGaC
+X-Gm-Gg: ASbGncuEcel6X/paADAiThUyym8dt1kGgdulDtn8L85HX+BNcwQYozilV/pudzJSSJo
+	9PA30LDTqZQQqwe5G++xbSkQWn7h9PsinoouIaZhMega4rGKnmY8twYCaljkdrn8Psa5SQ8PGae
+	316dsp6GDh7sslBJOvSlx4GvWq0q5TrBUcQKxSpp0akJj2gGbKxQy/X93GMzaclc5KuV2Ame7c+
+	fRIybXDsSaPKSpbf0hyXirOs2DxONJi9NC2ehVWFq/WO7Zt0c0VsaVJKDDb26NwPtKaRY0VnUFJ
+	cslQ9dkcuOllLYWI+A9ZN9Qq+HARt4fVELMIJ7ogLQPhbOSJj4QcdQ0MIr89gSz59BOOu3MlrC4
+	V59L0cnsl3l/ncA==
+X-Google-Smtp-Source: AGHT+IGlxGHtSFHEPHPgyRPGRqlkW4+lRzlOdAz8TDWmyfbTUfAQFa3z8EH8IkORSAFAzeFHY0dtcw==
+X-Received: by 2002:a05:6102:3751:b0:4e5:a67d:92a6 with SMTP id ada2fe7eead31-4e6e410d895mr8750020137.14.1748849012988;
+        Mon, 02 Jun 2025 00:23:32 -0700 (PDT)
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4e64e9f7ff2sm6621922137.27.2025.06.02.00.23.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Jun 2025 00:23:31 -0700 (PDT)
+Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4e2b5ffb932so1454662137.0;
+        Mon, 02 Jun 2025 00:23:31 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVioNEWTaAC7CwrtFkSTgW3IfGAzJc4etHmT5Kdz9TaAPEhIGEmmAPXM9mweSTQjN715PUoLtKtfhMZfhRC@vger.kernel.org, AJvYcCWf8YGxgVniegxAFvksF39WRZwoova57o8v7LwaoeGdk5yRUI26Na9juvahr7AYuysMH8vtH9jU+ZY=@vger.kernel.org, AJvYcCX6piSUVfc1UeVYqzf97s53Lv/pWPN7V+9btlVbK1Hp58AeFV/LN84Lpf5LlidCVjgNwlrfKHKF@vger.kernel.org
+X-Received: by 2002:a05:6102:949:b0:4e2:955a:b12f with SMTP id
+ ada2fe7eead31-4e6e40d8cc2mr10526652137.3.1748849011142; Mon, 02 Jun 2025
+ 00:23:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+References: <20210918095637.20108-1-mailhol.vincent@wanadoo.fr>
+ <20210918095637.20108-5-mailhol.vincent@wanadoo.fr> <CAMuHMdVEBLoG084rhBtELcFO+3cA9_UrZrUfspOeLNo80zyb9g@mail.gmail.com>
+ <10ed3ec2-ac66-494a-9d3f-bf2df459ebc0@wanadoo.fr>
+In-Reply-To: <10ed3ec2-ac66-494a-9d3f-bf2df459ebc0@wanadoo.fr>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 2 Jun 2025 09:23:19 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWDUpkwPVCm2Dha04F59MES4QvKFUVfvg70x5GPZHsxDA@mail.gmail.com>
+X-Gm-Features: AX0GCFvuHoKAt7ecSBaNwjIw6CAOIDvkHYg2PitGrYaCrTuLaODgZOujsJnxogU
+Message-ID: <CAMuHMdWDUpkwPVCm2Dha04F59MES4QvKFUVfvg70x5GPZHsxDA@mail.gmail.com>
+Subject: Re: [PATCH v6 4/6] can: netlink: add interface for CAN-FD Transmitter
+ Delay Compensation (TDC)
+To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, =?UTF-8?Q?Stefan_M=C3=A4tje?= <Stefan.Maetje@esd.eu>
+Content-Type: text/plain; charset="UTF-8"
 
-From: kuyo chang <kuyo.chang@mediatek.com>
+Hi Vincent,
 
-It encounters sporadic failures during CPU hotplug stress test.
+On Sat, 31 May 2025 at 10:25, Vincent Mailhol
+<mailhol.vincent@wanadoo.fr> wrote:
+> On 30/05/2025 at 20:44, Geert Uytterhoeven wrote:
+> > Thanks for your patch, which is now commit d99755f71a80df33
+> > ("can: netlink: add interface for CAN-FD Transmitter Delay
+> > Compensation (TDC)") in v5.16.
+> >
+> > On Sat, 18 Sept 2021 at 20:23, Vincent Mailhol
+> > <mailhol.vincent@wanadoo.fr> wrote:
+> >> Add the netlink interface for TDC parameters of struct can_tdc_const
+> >> and can_tdc.
+> >>
+> >> Contrary to the can_bittiming(_const) structures for which there is
+> >> just a single IFLA_CAN(_DATA)_BITTMING(_CONST) entry per structure,
+> >> here, we create a nested entry IFLA_CAN_TDC. Within this nested entry,
+> >> additional IFLA_CAN_TDC_TDC* entries are added for each of the TDC
+> >> parameters of the newly introduced struct can_tdc_const and struct
+> >> can_tdc.
+> >>
+> >> For struct can_tdc_const, these are:
+> >>         IFLA_CAN_TDC_TDCV_MIN
+> >>         IFLA_CAN_TDC_TDCV_MAX
+> >>         IFLA_CAN_TDC_TDCO_MIN
+> >>         IFLA_CAN_TDC_TDCO_MAX
+> >>         IFLA_CAN_TDC_TDCF_MIN
+> >>         IFLA_CAN_TDC_TDCF_MAX
+> >>
+> >> For struct can_tdc, these are:
+> >>         IFLA_CAN_TDC_TDCV
+> >>         IFLA_CAN_TDC_TDCO
+> >>         IFLA_CAN_TDC_TDCF
+> >>
+> >> This is done so that changes can be applied in the future to the
+> >> structures without breaking the netlink interface.
+> >>
+> >> The TDC netlink logic works as follow:
+> >>
+> >>  * CAN_CTRLMODE_FD is not provided:
+> >>     - if any TDC parameters are provided: error.
+> >>
+> >>     - TDC parameters not provided: TDC parameters unchanged.
+> >>
+> >>  * CAN_CTRLMODE_FD is provided and is false:
+> >>      - TDC is deactivated: both the structure and the
+> >>        CAN_CTRLMODE_TDC_{AUTO,MANUAL} flags are flushed.
+> >>
+> >>  * CAN_CTRLMODE_FD provided and is true:
+> >>     - CAN_CTRLMODE_TDC_{AUTO,MANUAL} and tdc{v,o,f} not provided: call
+> >>       can_calc_tdco() to automatically decide whether TDC should be
+> >>       activated and, if so, set CAN_CTRLMODE_TDC_AUTO and uses the
+> >>       calculated tdco value.
+> >
+> > This is not reflected in the code (see below).
+>
+> Let me first repost what I wrote but this time using numerals and letters
+> instead of the bullet points:
+>
+>   The TDC netlink logic works as follow:
+>
+>    1. CAN_CTRLMODE_FD is not provided:
+>       a) if any TDC parameters are provided: error.
+>
+>       b) TDC parameters not provided: TDC parameters unchanged.
+>
+>    2. CAN_CTRLMODE_FD is provided and is false:
+>       a) TDC is deactivated: both the structure and the
+>          CAN_CTRLMODE_TDC_{AUTO,MANUAL} flags are flushed.
+>
+>    3. CAN_CTRLMODE_FD provided and is true:
+>       a) CAN_CTRLMODE_TDC_{AUTO,MANUAL} and tdc{v,o,f} not provided: call
+>          can_calc_tdco() to automatically decide whether TDC should be
+>          activated and, if so, set CAN_CTRLMODE_TDC_AUTO and uses the
+>          calculated tdco value.
+>
+>       b) CAN_CTRLMODE_TDC_AUTO and tdco provided: set
+>          CAN_CTRLMODE_TDC_AUTO and use the provided tdco value. Here,
+>          tdcv is illegal and tdcf is optional.
+>
+>       c) CAN_CTRLMODE_TDC_MANUAL and both of tdcv and tdco provided: set
+>          CAN_CTRLMODE_TDC_MANUAL and use the provided tdcv and tdco
+>          value. Here, tdcf is optional.
+>
+>       d) CAN_CTRLMODE_TDC_{AUTO,MANUAL} are mutually exclusive. Whenever
+>          one flag is turned on, the other will automatically be turned
+>          off. Providing both returns an error.
+>
+>       e) Combination other than the one listed above are illegal and will
+>          return an error.
+>
+> You can double check that it is the exact same as before.
+>
+> > By default, a CAN-FD interface comes up in TDC-AUTO mode (if supported),
+> > using a calculated tdco value.  However, enabling "tdc-mode auto"
+> > explicitly from userland requires also specifying an explicit tdco
+> > value.  I.e.
+> >
+> >     ip link set can0 type can bitrate 500000 dbitrate 8000000 fd on
+>                                                                 ^^^^^
+> Here:
+>
+>   - CAN_CTRLMODE_FD provided and is true: so we are in close 3.
+>
+>   - CAN_CTRLMODE_TDC_{AUTO,MANUAL} and tdc{v,o,f} not provided: so we *are* in
+>     sub-clause a)
+>
+> 3.a) tells that the framework will decide whether or not TDC should be
+> activated, and if activated, will set the TDCO.
+>
+> > gives "can <FD,TDC-AUTO>" and "tdcv 0 tdco 3", while
+>
+> Looks perfectly coherent with 3.a)
+>
+> Note that with lower data bitrate, the framework might have decided to set TDC off.
 
-[Syndrome]
-The kernel log shows list add fail as below.
+Yes, that case is fine for sure.
 
-kmemleak: list_add corruption.
-prev->next should be next (ffffff82812c7a00),
-but was 0000000000000000. (prev=ffffff82812c3208).
+> >     ip link set can0 type can bitrate 500000 dbitrate 8000000 fd on
+> > tdc-mode auto
+>
+> This time:
+>
+>   - CAN_CTRLMODE_FD provided and is true: so we are in close 3.
+>
+>   - CAN_CTRLMODE_TDC_AUTO is provided, we are *not* in sub-clause a)
+>
+>   - tdco is not provided.
+>
+> No explicit clauses matches this pattern so it defaults to the last
+> sub-clause: e), which means an error.
+>
+> > gives:
+> >
+> >     tdc-mode auto: RTNETLINK answers: Operation not supported
+>
+> Looks perfectly coherent with 3.e)
 
-kmemleak: kernel BUG at lib/list_debug.c:34!
-kmemleak: Call trace:
-kmemleak:  __list_add_valid_or_report+0x11c/0x144
-kmemleak:  cpu_stop_queue_work+0x440/0x474
-kmemleak:  stop_one_cpu_nowait+0xe4/0x138
-kmemleak:  balance_push+0x1f4/0x3e4
-kmemleak:  __schedule+0x1adc/0x23bc
-kmemleak:  preempt_schedule_common+0x68/0xd0
-kmemleak:  preempt_schedule+0x60/0x80
-kmemleak:  _raw_spin_unlock_irqrestore+0x9c/0xa0
-kmemleak:  scan_gray_list+0x220/0x3e4
-kmemleak:  kmemleak_scan+0x410/0x740
-kmemleak:  kmemleak_scan_thread+0xb0/0xdc
-kmemleak:  kthread+0x2bc/0x494
-kmemleak:  ret_from_fork+0x10/0x20
+Thanks, I misread this as clause 3.a being applicable (hasn't NOT a
+higher precedence than AND? ;-)
 
-[Analysis]
-In the failure case, by memory dump, we find
-cpu_stopper.enabled = TRUE
-but the wakeq is empty(the migrate/1 is at another wakeq)
-static bool cpu_stop_queue_work(...)
-{
-...
-..
-	enabled = stopper->enabled;
-	if (enabled)
-		__cpu_stop_queue_work(stopper, work, &wakeq);
-...
-...
-	wake_up_q(&wakeq);  -> wakeq is empty !!
-	preempt_enable();
-	return enabled;
-}
+> > unless I add an explicit "tdco 3".
+>
+> Yes, if you provide tcdo 3, then you are under 3.b).
+>
+> > According to your commit description, this is not the expected behavior?
+> > Thanks!
+>
+> Looking back to my commit, I admit that the explanation is convoluted and could
+> be hard to digest, but I do not see a mismatch between the description and the
+> behaviour.
 
-Through analysis of the CPU0 call trace and memory dump
+OK, so the description and the behaviour do match.
 
-   CPU0: migration/0, pid: 43, priority: 99
-   Native callstack:
-	vmlinux  __kern_my_cpu_offset()           <arch/arm64/include/asm/percpu.h:40>
-	vmlinux  ct_state_inc(incby=8)            <include/linux/context_tracking.h:137>
-	vmlinux  rcu_momentary_eqs() + 72         <kernel/rcu/tree.c:375>
-	vmlinux  multi_cpu_stop() + 316           <kernel/stop_machine.c:278>
-	vmlinux  cpu_stopper_thread() + 676       <kernel/stop_machine.c:563>
-	vmlinux  smpboot_thread_fn(data=0) + 1188 <kernel/smpboot.c:164>
-	vmlinux  kthread() + 696                  <kernel/kthread.c:389>
-	vmlinux  0xFFFFFFC08005941C()             <arch/arm64/kernel/entry.S:845>
+However, I still find it a bit counter-intuitive that
+CAN_CTRLMODE_TDC_AUTO is not fully automatic, but automatic-with-one-
+manual-knob.
 
-  (struct migration_swap_arg *)0xFFFFFFC08FF87A40 (
-    src_task = 0xFFFFFF80FF519740 ,
-    dst_task = 0xFFFFFF802A579740 ,
-    src_cpu = 0x0,
-    dst_cpu = 0x1)
+Gr{oetje,eeting}s,
 
-  (struct multi_stop_data)*    0xFFFFFFC08FF87930 = (
-    fn = 0xFFFFFFC0802657F4 = migrate_swap_stop,
-    data = 0xFFFFFFC08FF87A40
-    num_threads = 0x2,
-    active_cpus = cpu_bit_bitmap[1] -> (
-      bits = (0x2)),
-    state = MULTI_STOP_PREPARE = 0x1,
-    thread_ack = (
-      counter = 0x1))
+                        Geert
 
-By cpu mask memory dump:
-  ((const struct cpumask *)&__cpu_online_mask) (
-    bits = (0xFF))
-  ((const struct cpumask *)&__cpu_dying_mask)  (
-    bits = (0x2))
-  ((const struct cpumask *)&__cpu_active_mask)(
-    bits = (0xFD))
-  ((const struct cpumask *)&__cpu_possible_mask) (
-    bits = (0xFF))
-->Imply cpu1 is dying & non-active
-
-So, the potential race scenario is:
-
-	CPU0							CPU1
-	// doing migrate_swap(cpu0/cpu1)
-	stop_two_cpus()
-							  ...
-							 // doing _cpu_down()
-							      sched_cpu_deactivate()
-								set_cpu_active(cpu, false);
-								balance_push_set(cpu, true);
-	cpu_stop_queue_two_works
-	    __cpu_stop_queue_work(stopper1,...);
-	    __cpu_stop_queue_work(stopper2,..);
-	stop_cpus_in_progress -> true
-		preempt_enable();
-								...
-							1st balance_push
-							stop_one_cpu_nowait
-							cpu_stop_queue_work
-							__cpu_stop_queue_work
-							list_add_tail  -> 1st add push_work
-							wake_up_q(&wakeq);  -> "wakeq is empty.
-										This implies that the stopper is at wakeq@migrate_swap."
-	preempt_disable
-	wake_up_q(&wakeq);
-	        wake_up_process // wakeup migrate/0
-		    try_to_wake_up
-		        ttwu_queue
-		            ttwu_queue_cond ->meet below case
-		                if (cpu == smp_processor_id())
-			         return false;
-			ttwu_do_activate
-			//migrate/0 wakeup done
-		wake_up_process // wakeup migrate/1
-	           try_to_wake_up
-		    ttwu_queue
-			ttwu_queue_cond
-		        ttwu_queue_wakelist
-			__ttwu_queue_wakelist
-			__smp_call_single_queue
-	preempt_enable();
-
-							2nd balance_push
-							stop_one_cpu_nowait
-							cpu_stop_queue_work
-							__cpu_stop_queue_work
-							list_add_tail  -> 2nd add push_work, so the double list add is detected
-							...
-							...
-							cpu1 get ipi, do sched_ttwu_pending, wakeup migrate/1
-
-[Solution]
-Fix this race condition by adding cpus_read_lock/cpus_read_unlock around stop_two_cpus().
-This ensures that no CPUs can come up or go down during this operation.
-
-Signed-off-by: kuyo chang <kuyo.chang@mediatek.com>
----
- kernel/sched/core.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 62b3416f5e43..1b371575206f 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3441,6 +3441,8 @@ int migrate_swap(struct task_struct *cur, struct task_struct *p,
- 		.dst_cpu = target_cpu,
- 	};
- 
-+	/* Make sure no CPUs can come up or down */
-+	cpus_read_lock();
- 	if (arg.src_cpu == arg.dst_cpu)
- 		goto out;
- 
-@@ -3461,6 +3463,7 @@ int migrate_swap(struct task_struct *cur, struct task_struct *p,
- 	ret = stop_two_cpus(arg.dst_cpu, arg.src_cpu, migrate_swap_stop, &arg);
- 
- out:
-+	cpus_read_unlock();
- 	return ret;
- }
- #endif /* CONFIG_NUMA_BALANCING */
 -- 
-2.45.2
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
