@@ -1,42 +1,35 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394EE20FAA8;
-	Mon,  2 Jun 2025 11:59:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC59E2144C7;
+	Mon,  2 Jun 2025 11:59:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748865561; cv=none; b=t4SJ7FfThkMSzDj2Bny37L1n5fm+pECpfaXS8gfG5CLde33kFsI4Iay/M34jxAQwlaCDRZXafll7N3ogQSc5WtYm0z4Hysb7HJb9Y4Qx6K4fZ74vXRovggPdgE2MzyX2FOJfzIM7NZ3UFHZvSiVW+2jjUWY92duPzWyRF9qnJoE=
+	t=1748865567; cv=none; b=SajHsmrofuskEIOU9R51WwkrU0rp2WvXx4iAbsVoMdrNN37HrH4HO30TdaJciiIwU4qdo2kWU7QkT7EccI4ugY3dYICX/Z3FQBHLgwmO7pfPProANHoSO/FoeB9XyqwSjJSf1qzqbrSH/OwqoJsOihmnFJF1z9P15mAtz0OwZFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748865561; c=relaxed/simple;
-	bh=v4VP9unh12AL136UdUGxszRm8EB2W+tnWbUHeEwMpKs=;
+	s=arc-20240116; t=1748865567; c=relaxed/simple;
+	bh=QKYhjdgz2i0aSyodXmoReRggatM/g2F1A8cEcmxYHBY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H2pKhJUyYL6+AuclKFrGolOPTwI2tKOvJIoJ5UCwG2uPMx7BNGih2aEpIdIcO+dpam/iyTvjSQqE8W002gjx+vglAzjwcYIiYWzY3i3VQD1M0Wb3p0wt+gPhTI+Y4wQopSqJ+rQbK4iokZldddIl9JDBUAc3/7Kf0Dh+tI2L3IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=m0yTtOvn; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="m0yTtOvn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3054EC4CEEB;
-	Mon,  2 Jun 2025 11:59:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1748865560;
-	bh=v4VP9unh12AL136UdUGxszRm8EB2W+tnWbUHeEwMpKs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m0yTtOvnx+eMOPqsN2iw5RBQBIHdSS4WCQQOBN5WJIG24H0DAnC6Y3XiAXKqqkRy+
-	 Hkj1arRfFgEzGPb0vgD/5vAZi41qMPpXkRrgtqiuJWHt4za6iY5TBKtNpB1p2OM47y
-	 V+J2qS3pA9W4oHJ2lCSfQyx2igzrh+9OrGhazVlc=
-Date: Mon, 2 Jun 2025 13:59:17 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Sai Vishnu <saivishnu725@gmail.com>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Miguel Ojeda <ojeda@kernel.org>, alex.gaynor@gmail.com,
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	Benno Lossin <lossin@kernel.org>, a.hindborg@kernel.org,
-	aliceryhl@google.com, tmgross@umich.edu, dakr@kernel.org,
-	daniel.almeida@collabora.com, me@kloenk.dev
-Subject: Re: [PATCH v3] rust: doc: Clean up formatting in io.rs
-Message-ID: <2025060238-vanilla-cardboard-eb74@gregkh>
-References: <20250602083119.17752-2-saivishnu725@gmail.com>
- <2025060244-dragster-unknowing-23f0@gregkh>
- <CAFttn56vNVcE=pcGgxGrSZf=r=h_ceFwEf+D71yc9GnANww5Aw@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=P0vZJ+oTajuv5dpGMah/eKRtHcraXSOrBb4HCbEMtuW9Sl5no2DFghkzGSd4pNrCjoNcEk418Cq3uFU/TVrF8rt1MlS1IkVOzKPMuauUAbvV12IgBn+01OOdMVpqiIXqxN6pC+8ZHVwypZnlM4IeFtvJjMBtUAhbFTsY3Yat9pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+	by vmicros1.altlinux.org (Postfix) with ESMTP id 8D3F772C8CC;
+	Mon,  2 Jun 2025 14:59:24 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+	id 3CCEA7CCB3A; Mon,  2 Jun 2025 14:59:24 +0300 (IDT)
+Date: Mon, 2 Jun 2025 14:59:24 +0300
+From: "Dmitry V. Levin" <ldv@strace.io>
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>, Shuah Khan <shuah@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>, strace-devel@lists.strace.io,
+	linux-kselftest@vger.kernel.org, linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] selftests/ptrace/get_syscall_info: fix for MIPS n32
+Message-ID: <20250602115924.GB329@strace.io>
+References: <20250115233747.GA28541@strace.io>
+ <0262acf1-4d3f-471b-bd56-4ddf8a2bc1a3@linuxfoundation.org>
+ <20250329124856.GA1356@strace.io>
+ <alpine.DEB.2.21.2503291345580.47733@angie.orcam.me.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,37 +38,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFttn56vNVcE=pcGgxGrSZf=r=h_ceFwEf+D71yc9GnANww5Aw@mail.gmail.com>
+In-Reply-To: <alpine.DEB.2.21.2503291345580.47733@angie.orcam.me.uk>
 
-On Mon, Jun 02, 2025 at 04:41:20PM +0530, Sai Vishnu wrote:
-> > below the first --- line
+On Sat, Mar 29, 2025 at 02:02:28PM +0000, Maciej W. Rozycki wrote:
+> On Sat, 29 Mar 2025, Dmitry V. Levin wrote:
 > 
-> Is it the one below the Signed off by line? To get the complete picture:
-> 1. commit title
-> 2. commit message
-> 3. signed off and other tags
-> ---
-> 4. The version log or any other necessary comments
-> 5. actual diff
-> ---
+> > > > +#if defined(_MIPS_SIM) && _MIPS_SIM == _MIPS_SIM_NABI32
+> > > > +/*
+> > > > + * MIPS N32 is the only architecture where __kernel_ulong_t
+> > > > + * does not match the bitness of syscall arguments.
+> > > > + */
+> > > > +typedef unsigned long long kernel_ulong_t;
+> > > > +#else
+> > > > +typedef __kernel_ulong_t kernel_ulong_t;
+> > > > +#endif
+> > > > +
+> > > 
+> > > What's the reason for adding these typedefs? checkpatch should
+> > > have warned you about adding new typedefs.
+> > > 
+> > > Also this introduces kernel_ulong_t in user-space test code.
+> > > Something to avoid.
+> > 
+> > There has to be a new type for this test, and the natural way to do this
+> > is to use typedef.  The alternative would be to #define kernel_ulong_t
+> > which is ugly.  By the way, there are quite a few typedefs in selftests,
+> > and there seems to be given no rationale why adding new types in selftests
+> > is a bad idea.
 > 
-> Additionally, I suppose the `base-commit` tag should also be placed in
-> 3 (above/below Signed-off-by), as it was added to the very end by
-> `git` when generating the patch.
+>  FWIW I agree, and I fail to see a reason why this would be a problem in a 
+> standalone test program where the typedef does not propagate anywhere.  
+> 
+>  The only potential issue I can identify would be a namespace clash, so 
+> perhaps the new type could have a name prefix specific to the test, but it 
+> doesn't appear to me a widespread practice across our selftests and then
+> `kernel_' ought to be pretty safe against ISO C or POSIX, so perhaps let's 
+> leave the things alone?
 
-No, that is fine.
+Another similar test I authored (selftests/ptrace/set_syscall_info) has
+been merged, so there are two similar tests in the tree now, but only
+one of them is permitted to use this approach, creating inconsistency.
 
-> I am sincerely apologizing for taking at least 4 versions for a simple
-> fix, but I am trying to figure out how to properly create and send
-> patches.
-> This clearly explains what you meant:
-> https://www.kernel.org/doc/html/latest/process/submitting-patches.html#commentary
+Taking all of the above into consideration, please approve this fix.
 
-Yes, that is what you should be reading.
 
-Also see the thousands of examples of good patches on the mailing lists
-for real-world examples.
-
-thanks,
-
-greg k-h
+-- 
+ldv
