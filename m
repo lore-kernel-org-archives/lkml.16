@@ -1,103 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f68.google.com (mail-ej1-f68.google.com [209.85.218.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6813F4F1;
-	Mon,  2 Jun 2025 07:53:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45EA81AC891
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 07:55:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748850794; cv=none; b=Uoefkxdhlo1c/jO6SQl9IgktfkCHzwS9w9BfVIFPfozmMZ0iyi3gCWkRkuAWJnmkpXbvpBxHJ+N9At7PCxRGYS1I2NRFBp5QIu+6C7fh7L1ASznVd8T0SBOQ+/L28w8wLBcjxHXLS8E1kf3KLfAPpSk8tW5OadqMyuAhhNwJRvk=
+	t=1748850904; cv=none; b=iPUDoeySNueBjFIvVbWc+Ydm65lY7D+NFvOQgOaogGn3UxSNc8YFPUo+IA26T/nYJqY6DTr9eDp1tbDBwx+5pzaUoKQlM8MNb2v92tAzR0xur2h45ncLzRBuVVby8N1fjiEbC7pvWEI782bt9voeVPKcc+tdwbVoVwrxwH1rcnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748850794; c=relaxed/simple;
-	bh=/rJBYGBscvluJvJ9wRw39FEpgeLiRZYfywd1G8dpbXU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NpJ0OECKPvm3U0GnyMRzMr+AZz4IT45r7csc8BmDjqh8toqlJbz4qanNK1ybhvCvkQBeP+Mlk2YKxwoHlH7G0otxC28z6+WeOgzpXsr5X5YGSmhMIjJqOb8rtODuGdosMWScq7Rr+OR89CKVzi2KwhSynlXyOys+6SWb6oMBsO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gj+9cT8G; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748850904; c=relaxed/simple;
+	bh=/eCRwbS/rN2ZWoD/Lu11QTQjPmNCmF14z0tboBkD57o=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rroLuWKNhfm32lX/MB+nztsY+x2a3dNLRNSHvLVsnblkqQbVIxeonAa1LXKCWg4CvKo4UL2Uqki+fNmHztP1SuAxOv0WHiwwhXCA2OdKNWu4HSpeszzm9nsCxPI/6o3xN4K4LqISCJO2Iwlo/mZ/glY1husETfGy6kH7Rz8ELsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=RaOXfqCB; arc=none smtp.client-ip=209.85.218.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gj+9cT8G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 171F1C4CEF3;
-	Mon,  2 Jun 2025 07:53:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748850794;
-	bh=/rJBYGBscvluJvJ9wRw39FEpgeLiRZYfywd1G8dpbXU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=gj+9cT8GYb0SjjrEuboE+A78RfRblG1M+OzkjpTvaas4oTu1rjpBK9gTpRHZHvQh8
-	 yLfKNJUDtZNiX66KGqLo5Yv0Pg7sbJCyVW1T2lps7eXJ+/5ZwD09NlAghY+fr52naU
-	 yVTcm3uAJYvaLCQjOzk+x14djv/Lf8BN23keQEJCUemRCy6IQEeXvlWrexZ7Ug4AkC
-	 H5BxCz94fuSePFTPRo4dReXN3R+PewnOC3UPJILJ5DWLnEWRcgc7d0zGUjQQyDK1+F
-	 20DbXsymhhF//rMPK5R7Cmwe4PN0Bqnjq+GFqLzydOnz6Sn3NvwXeaeTHFq1PQ5sOF
-	 t5ZTkfnhTnEcQ==
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-553245cad29so4292830e87.1;
-        Mon, 02 Jun 2025 00:53:13 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVrlw6mJdBDcF5jeXoGQ4vfI5m3YuibJbFXf9oxKCNbm3zwQYc3oJvVEgnTagMfla1+ZE940exyXtGw+nY=@vger.kernel.org, AJvYcCWfckKudZOZbjHiQmxOwzNSMtmXr+nrZSYZm2SIZj66KmhNwA99x36gkQze9aSSJbWuVfzLAK8kdcDaBgl//w==@vger.kernel.org, AJvYcCXpROGIqpzL/Ho0DRlmZ26lzfxNpCd2dqXA2umk7WefGixts873xaOPCjXrPoR68XBMXYzikO+4rQapU0+S@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmY7yHMINB85jiATCSkeDQeecpJbbgUDPy3do9zzKt3o+vQ+mQ
-	IZZnD6wbGxUf2Pzh8NID12fVLkPPmn99h7HxfBK8k2hGfT43nL/Gh+9CP3UNltTOQEXH6scECWz
-	j8cilZx7UGx2bOqyOR5V1XLX7zvLnoqw=
-X-Google-Smtp-Source: AGHT+IHrzP5vCzNBO8rsuuZc4MUBn4InHXHGM1Mh7yraHQYlpwpZQVqX7n/e+bDSzixs4WpA9pChtdNeV8Vm7GHzUZA=
-X-Received: by 2002:a05:6512:138b:b0:553:2bf2:e303 with SMTP id
- 2adb3069b0e04-5533d1ad7f8mr3217556e87.30.1748850792779; Mon, 02 Jun 2025
- 00:53:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="RaOXfqCB"
+Received: by mail-ej1-f68.google.com with SMTP id a640c23a62f3a-addda47ebeaso26267266b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 00:55:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1748850900; x=1749455700; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pw+Y5BshWhNb94U5zV1jdIqM6Bb94uu0DoTvWRycrlQ=;
+        b=RaOXfqCBEFW13E47e6E6zE4xdki3YIJFWC4NEPVDyuFCCw/2yhDOFcZxkN438eveoQ
+         aTW3XtIUCK9jUWT/cBy6QAfOVsMGagaWd9ZKUxRl4CqyBDSb0Un4SZcIF9aTRUJKMa+D
+         bfxwvEW4YvALnZIXWYithVRASjMllUUSnlBhHP0qMhj9ODbeLHV9nC6bGJ1EaoqDmDDR
+         5PlPT83YmflW0D1RmSXAOkp37Oqf8aONdsI4kD7AlzpJhnB9FVGpxcPqcCKvFeNKtbMH
+         57WbTEBBxJio47Xu2DwJLZD401he5r1/ODrfxNilpoBz8k2VyB+JvvwdCEgZN9aeDByR
+         jW5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748850900; x=1749455700;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pw+Y5BshWhNb94U5zV1jdIqM6Bb94uu0DoTvWRycrlQ=;
+        b=B6nL1Yqxx03+OUWCkP3bmwUt9k8O53c15Vl2uIvyO3Kug1CCIQBqn440rH1BBericT
+         //Hj96jhqUjgN0UGD37lzJ7an8NyiZgniE6LNv4lwU2W2VTiKwbSIWyqN8Azf9CJ/py3
+         CIP0cEdXSfETyJuaiPy5fkuTk9wLIBJBJ6hcCaKhA+ei/n78rsd3aE9RadMt1gCvoMcV
+         iNODicfFScj9YepMSPKN788MTCA2yDUMmAtb2H0wiMVtlBL3t5AetPP9Fcvh0yachpI2
+         aiNvnF2JWgU2J/MIeZILZduunxOwzE1wKbhz/yIV+ZNoDsRoQBG0Az6Hkd70L5ibz3rq
+         qleA==
+X-Forwarded-Encrypted: i=1; AJvYcCVI4EsGcOXLi6N+1+PstMYl2A/4h6ikiDO3e4GS73oBj9vYsBBbh62DWJVwyW/i43ygrQ4zXjPai2vrQvo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8GvyunXC3ljELkyxgdCIDNYtQPHvqetpIeSdxDXOelTE3cT5s
+	J4h7IcyDrXkZc9TGU7ZW75BNM3+A+Ola28AFMEguTzJpI6sfFAX3lZmPrQaspqUwf1g=
+X-Gm-Gg: ASbGnctOh/NGv0Yk8likDY09oun6ZjKLYlTD+Ls7fDsZ/uEY5YJN4saLlPH2reJfgLX
+	aDiQpGM/TUTjzKnW3KBzVTmDpBDMhylDmy9u0OXvFBWOKwX5Z1NdP5p/QoW8yTpHooLtcemTzOx
+	U3nI8sh4R5xVrMQ7Kn/Ni5QZg2/XuRu+BNNsYjv9M8DvsQmXmcQzS+G7JBtQerErEqT3qmHRySm
+	aR5BhUgazK/GFttwUJTOIafVTa9De+kXx9d0ibF/rIrwalgILk29hmCdizmM36VcUyiDtABkDBM
+	HHQw+TJZhRuqLk4EbKY8vu3Ut85NA0NRfPb/yy6Tj7mGmEP4F3z7NY74mho6BrOTh0LNzA9lc7q
+	4PqFak6b5qm1n17S4nEs3Yg==
+X-Google-Smtp-Source: AGHT+IHF9M9iH6tYPPh5MIhkY3Ci/eDAulcraBxUrXh9olFXnZZZyiItNIM7oMxNMVOCoyclD4K34g==
+X-Received: by 2002:a17:907:d8f:b0:ad8:8eb7:1c7a with SMTP id a640c23a62f3a-adb36c0767emr1041585566b.52.1748850900474;
+        Mon, 02 Jun 2025 00:55:00 -0700 (PDT)
+Received: from localhost (host-87-21-228-106.retail.telecomitalia.it. [87.21.228.106])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5dd045bbsm749892766b.118.2025.06.02.00.54.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Jun 2025 00:55:00 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Mon, 2 Jun 2025 09:56:36 +0200
+To: Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	"derek.kiernan@amd.com" <derek.kiernan@amd.com>,
+	"dragan.cvetic@amd.com" <dragan.cvetic@amd.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	kernel-list@raspberrypi.com, Matthias Brugger <mbrugger@suse.com>
+Subject: Re: [PATCH v12 0/13] Add support for RaspberryPi RP1 PCI device
+ using a DT overlay
+Message-ID: <aD1ZNAeB4tpMNTGZ@apocalypse>
+References: <cover.1748526284.git.andrea.porta@suse.com>
+ <0580b026-5139-4079-b1a7-464224a7d239@kernel.org>
+ <aDholLnKwql-jHm1@apocalypse>
+ <7934ae2a-3fc5-4ea2-b79a-ecbe668fd032@app.fastmail.com>
+ <0e154ae3-e0ab-4a4e-aa39-999ea1c720ed@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1748335606.git.legion@kernel.org> <ecf0ebdda5bcf82464ed1cebbf50afdcd8b5b23a.1748335606.git.legion@kernel.org>
-In-Reply-To: <ecf0ebdda5bcf82464ed1cebbf50afdcd8b5b23a.1748335606.git.legion@kernel.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Mon, 2 Jun 2025 16:52:36 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARm1+L0CrE8TYrFaipfOX4pjEJ7Uz7dn=3g+26PER6jNg@mail.gmail.com>
-X-Gm-Features: AX0GCFtkjb31-WAYHWscWDXqBhwu5LeuN-xEm1GdcdTfFK0q6AEDTTpEFsEdaEc
-Message-ID: <CAK7LNARm1+L0CrE8TYrFaipfOX4pjEJ7Uz7dn=3g+26PER6jNg@mail.gmail.com>
-Subject: Re: [PATCH v3 3/6] modpost: Make mod_device_table aliases more unique
-To: Alexey Gladkov <legion@kernel.org>
-Cc: Petr Pavlu <petr.pavlu@suse.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0e154ae3-e0ab-4a4e-aa39-999ea1c720ed@broadcom.com>
 
-On Tue, May 27, 2025 at 6:08=E2=80=AFPM Alexey Gladkov <legion@kernel.org> =
-wrote:
->
-> In order to avoid symbol conflicts if they appear in the same binary, a
-> more unique alias identifier can be generated.
->
-> Signed-off-by: Alexey Gladkov <legion@kernel.org>
-> Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
-> ---
->  include/linux/module.h   | 14 ++++++++++++--
->  scripts/mod/file2alias.c | 18 ++++++++++++++----
->  2 files changed, 26 insertions(+), 6 deletions(-)
->
-> diff --git a/include/linux/module.h b/include/linux/module.h
-> index 88048561360f..e7506684069d 100644
-> --- a/include/linux/module.h
-> +++ b/include/linux/module.h
-> @@ -249,10 +249,20 @@ struct module_kobject *lookup_or_create_module_kobj=
-ect(const char *name);
->  /* What your module does. */
->  #define MODULE_DESCRIPTION(_description) MODULE_INFO(description, _descr=
-iption)
->
-> +/* Format: __mod_device_table__<counter>__kmod_<modname>__<type>__<name>=
- */
+Hi Florian,
 
-This format relies on module-name mangling, but
-I hope we will be able to stop doing it some day.
+On 16:46 Fri 30 May     , Florian Fainelli wrote:
+> On 5/29/25 23:03, Arnd Bergmann wrote:
+> > On Thu, May 29, 2025, at 16:00, Andrea della Porta wrote:
+> > > Hi Krzysztof,
+> > > 
+> > > On 15:50 Thu 29 May     , Krzysztof Kozlowski wrote:
+> > > > On 29/05/2025 15:50, Andrea della Porta wrote:
+> > > > > *** RESENDING PATCHSET AS V12 SINCE LAST ONE HAS CLOBBERED EMAIL Message-Id ***
+> > > > > 
+> > > > Can you slow down please? It's merge window and you keep sending the
+> > > > same big patchset third time today.
+> > > 
+> > > Sorry for that, I was sending it so Florian can pick it up for this
+> > > merge window, and I had some trouble with formatting. Hopefully
+> > > this was the last one.
+> > 
+> > That's not how the merge window works, you missed 6.16 long ago:
+> > 
+> > Florian sent his pull requests for 6.16 in early may, see
+> > https://lore.kernel.org/linux-arm-kernel/20250505165810.1948927-1-florian.fainelli@broadcom.com/
+> > 
+> > and he needed time to test the contents before sending them to me.
+> > 
+> > If the driver is ready to be merged now, Florian can pick it up
+> > after -rc1 is out, and then include it in the 6.17 pull requests
+> > so I can include them in the next merge window.
+> 
+> I have applied all of the patches in the respective branch as we had
+> discussed with Andrea and also merged all of the branches into my "next"
+> branch so we can give this some proper soak testing. Once 6.16-rc1 is
+> available, all those branches (devicetree/next, defconfig-arm64/next,
+> drivers/next, etc.) will be rebased against that tag such that the patches
+> that are already included will be dropped, and only this patch set plus what
+> I have accumulated will be applied on top (if that makes sense).
+> 
+> As Arnd says though, this is too late for 6.16 so this would be included in
+> 6.17. Andrea, thank you very much for your persistence working on this patch
+> series, and sorry that the request to merge those patches came in during a
+> time where I was away. The good news is that I am not doing that again
+> anytime soon.
 
-Can we come up with a different idea
-in case <modname> contains hyphens?
+It was a pleasure, and many thanks for your patience too.
 
+Andrea
 
-
-
-
-
-
-
---
-Best Regards
-Masahiro Yamada
+> 
+> Thank you!
+> -- 
+> Florian
