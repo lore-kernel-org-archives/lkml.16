@@ -1,127 +1,98 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F365A46B8;
-	Mon,  2 Jun 2025 23:02:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EED91684AC
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 23:03:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748905355; cv=none; b=TNnu2gerJth5inq0xv2G7Wvi8a3ij3UcmWeud8hi6xQtMgse6WbTBZooQGD39A273vw6I8mWPGxx7jo6SLZAQvDQNNgT1rEjSG1OsAuYSSNsw8Q7UtIerD5kaS5bLXq8ksP0OFHHj5zJYP+kIkoZo/RpNJUV4/tGRMdZSxBAkDc=
+	t=1748905405; cv=none; b=AonpRXKvthyd6F+kkBUZd3dlGlBD/Ii/dPWcgmqy/O/lqHLo5kujEEesak5CXvD7c0s+WMThLwrTn+O62TSI4Mpp6DUFScSJgRoPBKkokMx1MbIUljxxYwF4F6+FNDt/rc+u0YUKcnaUGSiYMHL81h5h5ZtFxnlBBfxqkJlQ8X0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748905355; c=relaxed/simple;
-	bh=EuU7Nk52QaXjNeRIg8mFrtnjex8rj8W0B73rS4gnfTg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q1ZvFogW2iV8F/Twj1cbJ2glXNVDLrVErt0vA78duFOnMn2fFtT2dGreEsioDaqaxTJDBH1NqFPI/Tz8QH9gAV+J5e731UFDKaLcERsYBasJPCIun79V6WdOyRj5Ju9pFUIPux5LFkpzw4zZM9K+2EEx4yslVfpiXDWNyogKA9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=BX3lHaSL; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1748905405; c=relaxed/simple;
+	bh=++szFMEtgyqwwYz0D+PwSonYFKpvE5qF2EiDkDJfZzU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QVipQhsmUTUMWBfVhfWssPGqKx9fZ8QGVK0uLrUNLhBSPR0pf+3516IzUqWsCvFx1yx7eGr3agr7HKsmZdM993mDMjwCUCQGk09fpQdMobcP/ciJgdQxFbpwVGFU0b9jQjF226hTvXJMylvoB814pishd+tJpdVaeEG0itAuXbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=cYreCx9b; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BX3lHaSL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1748905348;
-	bh=NNMNvDaAbtHcCJXvJF2SIMbojQ1ZHQxBohSo5UTT5mE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=BX3lHaSLZTwF//4Rob/drrCvMX/c7LecvpXGTY8HZR1rQLKPY88E1XnfCGFp4q185
-	 3B+Gy+ANfg8GbH2Af8NkHpnmFZa/6UDRGEuqwKzD4DdfCqJNsqO3WYJOldnztPBlMa
-	 UMbw0tB+7Jl1MF4a6kiNtkj7MMEhgQCiV3rsN8UAgqKrdYoK+SmimYIg4Nw3VaUQFc
-	 jf2sHe0XL+iNZZwJPKrkaTEEKqefvf8Mzu+gWfz3PoAwxtmO6x+8qJbtvmi/CyB1ZY
-	 lplxmr6zRO4HTDeiGNbOcSZPgSBcy7qnF8C9YGaokCe5Wj1HF5WCG8ehEg7CfAptvk
-	 3LoEWAZkf1QZg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bB8W76yRqz4x07;
-	Tue,  3 Jun 2025 09:02:27 +1000 (AEST)
-Date: Tue, 3 Jun 2025 09:02:26 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Joanne Koong
- <joannelkoong@gmail.com>, Kairui Song <kasong@tencent.com>, Linux Kernel
- Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Miklos Szeredi <mszeredi@redhat.com>
-Subject: Re: linux-next: manual merge of the fuse tree with the mm-unstable
- tree
-Message-ID: <20250603090226.4bf0162e@canb.auug.org.au>
-In-Reply-To: <20250514105313.5e2c367a@canb.auug.org.au>
-References: <20250514105313.5e2c367a@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="cYreCx9b"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-604e2a2f200so9584823a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 16:03:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1748905402; x=1749510202; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=7f60M5hYbeRCzldPkBmcnfnzcWSP10+sVHiJXwkVxp4=;
+        b=cYreCx9bW7WngsCxJWcewL0auRG94kbPb512YwN/ssiGgdK319jFSlUM+LSN0QGRV1
+         hSi3hdaNKrwGyByEG8u/YpHtWsrrCaZesgsLlMkMfk01imkfY0z19Bm2ksGzvFsdAtHl
+         imeGe+OQglb5CXv7x0M/QZbaV0btZqeTyWozs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748905402; x=1749510202;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7f60M5hYbeRCzldPkBmcnfnzcWSP10+sVHiJXwkVxp4=;
+        b=M+Fn1FatWYA8xmIQ5tZcq540+r/M2luiHPiVuOIa5C0P4IQ6tVZ7d5sjQ3oFK8/y8z
+         52GqPmM4hVcEXz7AudYqsPABEGF57Xm6UqGsbYGXYrYna030ymFeee3PN+Hg5olarDkp
+         5Ksp4qhHWDeSjQtGZUsgVMysI6/lOpK8cmZ1G4XW6U3ouTWU7OEyaONtZgH9FjJcMVv1
+         4VZkxZw1j1dMhkMZ+aivXSt1V/URc2OqvkTKWK2cgqhOoS3KP8Yp7NcB2zpqY+ZsA6VZ
+         uOuUTBQaYmNteEqBzT4SSqYn/yv/rHTDeUPMi4BkvQjS2aQlRXAHT1WkWDXPz1QanPfV
+         XAmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXm37sRePQGr3V6DEawP/tbU3f3E1/SfP2nOWEKT3DYXpztA5jS9DYVGPLYdlouvdocYwhE7R+jSjFTmHI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQiOJeaDhFIZQuUERwrB4/28Wn0RldpCSkqqaCouVyqSUIDkJy
+	wGuk9ImtF633Sbx3Z1FQTwJoOlLqKKSc4OFI8/Tn7th5qKTrK/YhZKhs1vl5kbql8RyRf3sV+rL
+	AqChUtLHqsA==
+X-Gm-Gg: ASbGncvo8yra3XvAOMWCaP1QuOWB0QsgVC+qx+xYPguAxyzMc/ee2vx7TKklSmUU3tZ
+	/f/Qqof2/uSqgkxgrtYyJg479UlT9toJppMRm+X9apOrj4mTHluj5olYmhM9pr56F03aKkQowE1
+	6NSN1r9n7GYnaJL1rIeGlZMh6dm+BkItrkbuo+/wq0jel9DfSDX0uwESR4v0zDMOMrAhmrxd2Fj
+	G9Isg/elaQHtqeXgO1+aahEznxYaUaNPxi2fRwVX7hD4uBSvUyU9/FwPsUjF9Tqi+X5UjQ6Ilgm
+	lSuE+TFu6s1nLo1X3JjY4L9OBVph084qowEYtTGH6ha/hW6CRVcqgEmZ0OcGC4vgPv8+KU/0k2x
+	rqCY+E4CYp+yBdHEvFMGomRAGfg==
+X-Google-Smtp-Source: AGHT+IEYXN9p3EWI9+LKmpO5q/Qz7z+O2A2iH6rTMatYpacNFKNWCyGnX3tvywJRAGaZ0c6ORmhwag==
+X-Received: by 2002:a05:6402:1e92:b0:606:4802:2c47 with SMTP id 4fb4d7f45d1cf-60648022fcdmr4311892a12.24.1748905401500;
+        Mon, 02 Jun 2025 16:03:21 -0700 (PDT)
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com. [209.85.208.42])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60566c5b69asm6677152a12.22.2025.06.02.16.03.19
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Jun 2025 16:03:20 -0700 (PDT)
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-602c3f113bbso9668306a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 16:03:19 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV9JVLwxwpGufXHsOny4K9XPuX0nYnkeVPjN/n8UfVdE1j6Yjd9fCaduvD3HjQTdl9gRxbDvh6xxRmX6aU=@vger.kernel.org
+X-Received: by 2002:a05:6402:518a:b0:5ff:f524:90e0 with SMTP id
+ 4fb4d7f45d1cf-605b751baf6mr9475234a12.11.1748905399615; Mon, 02 Jun 2025
+ 16:03:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/fzBhaylT+LmG+8Wi3/v1ZEe";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20250601151222.60ead71e7d8492a18c711a05@linux-foundation.org> <aD29wnb5zR-afWpM@casper.infradead.org>
+In-Reply-To: <aD29wnb5zR-afWpM@casper.infradead.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 2 Jun 2025 16:03:03 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjtk+LLCWt9JLGip+qb2Vksq727V6anKg2gN2Z1npO+GA@mail.gmail.com>
+X-Gm-Features: AX0GCFuFKxyTIMjLhDG9GgQUaYyPLSKJxQy9zCek0XFUSfqYyE2N5joutpwyQnw
+Message-ID: <CAHk-=wjtk+LLCWt9JLGip+qb2Vksq727V6anKg2gN2Z1npO+GA@mail.gmail.com>
+Subject: Re: [GIT PULL] Additional MM updates for 6.16-rc1
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+	mm-commits@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
---Sig_/fzBhaylT+LmG+8Wi3/v1ZEe
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Wed, 14 May 2025 10:53:13 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
+On Mon, 2 Jun 2025 at 08:05, Matthew Wilcox <willy@infradead.org> wrote:
 >
-> Today's linux-next merge of the fuse tree got a conflict in:
->=20
->   fs/fuse/file.c
->=20
-> between commit:
->=20
->   04a1473f8ff0 ("fuse: drop usage of folio_index")
->=20
-> from the mm-unstable tree and commits:
->=20
->   0c58a97f919c ("fuse: remove tmp folio for writebacks and internal rb tr=
-ee")
->   3a7d67252c63 ("fuse: support large folios for writeback")
->=20
-> from the fuse tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
->=20
-> diff --cc fs/fuse/file.c
-> index 6f19a4daa559,b27cdbd4bffe..000000000000
-> --- a/fs/fuse/file.c
-> +++ b/fs/fuse/file.c
-> @@@ -2349,7 -2145,7 +2145,7 @@@ static bool fuse_writepage_need_send(st
->   		return true;
->  =20
->   	/* Discontinuity */
-> - 	if (data->orig_folios[ap->num_folios - 1]->index + 1 !=3D folio->index)
->  -	if (folio_next_index(ap->folios[ap->num_folios - 1]) !=3D folio_index(=
-folio))
-> ++	if (folio_next_index(ap->folios[ap->num_folios - 1]) !=3D folio->index)
->   		return true;
->  =20
->   	/* Need to grow the pages array?  If so, did the expansion fail? */
+> A word of warning for Linus since he wouldn't've been cc'd on the
+> earlier email.  This branch is based on v6.15-rc6 but contains a
+> commit which depends on 97dfbbd135cb which was merged during the
+> current merge window.  You might want to do a rebase or ask Andrew to
+> do it in order to prevent a bisection hazard.
 
-This is now a conflict between the fuse tree and Linus' tree.
+Gah.
 
---=20
-Cheers,
-Stephen Rothwell
+If I rebase the thing, I lose the pgp signature.
 
---Sig_/fzBhaylT+LmG+8Wi3/v1ZEe
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+This is not optimal, but let's hope nobody hits the bisect issue.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg+LYIACgkQAVBC80lX
-0GyeBQf/YAAjzloyk67TVVK2Y/ADgd152IuvIo//1NFGjxOeykn9YlBR/+cGiqCf
-Z2HOe7+VdMGM/GS5ebXHWXu5B3qLdSWB+UgsP/UVzp3NjCsIdzMvB3yGfTqwIcji
-NXWvag26ojmb8TDSrSyyBsOcpQl0jNbj0EUCv0IBz2VrY+Si9GyM+OC4c5Bu1IeH
-tUxgA/Enrqv7gLnk6nPenH525RYEoblxrm49t4BIid4BWyxjV7NH/FXNaX7dkZoO
-XgXPUbOVsItQzAmsBfIwX7O53F57S4yF6fZmlBhyGxCeBzlfurEVmvpLqGFdH8Vk
-piKXbs+Yko38d4JllrUh0M9ExgK5eA==
-=4L4+
------END PGP SIGNATURE-----
-
---Sig_/fzBhaylT+LmG+8Wi3/v1ZEe--
+            Linus
