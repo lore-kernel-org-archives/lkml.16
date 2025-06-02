@@ -1,100 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A3B23CE;
-	Mon,  2 Jun 2025 20:21:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408A21A0B0E;
+	Mon,  2 Jun 2025 20:21:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748895679; cv=none; b=tvq6Q/A5LrcACQiS1PBrwDet5dmAdLlgZL+Ss3NDRKBLZaXw284d9jdflNBo/81L09bemiVYiUlvpEkk2X0jQyTqSXoFzgOx4qxIkF2VeRcJT7MvNRsI7Iuj9xs1AsSApxLInzn4DDYfJ2ssK0ugjYnO237BVXEDYiKxjG5+MU4=
+	t=1748895696; cv=none; b=T5mu5QFkDwzXmcQxQuHdcUlfQHGnrvIhy6c/2lOFT2BkRgY65yySHA/2d6rMa5SvfRycBgyaSknwlffmRhTg+BaTj01RaC58R3I1BnFN1W0yjmJEHRBjGBm9cvtc1r4kwgaq+37IrUOn87C/YVdLYpRUMuJ26QdZVGjzhjIolwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748895679; c=relaxed/simple;
-	bh=AbAA39BeBTC8EmhrmyqS8RkGk6nWxaurq2Bfwb7Nqnk=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=DVlvvM/WXmD7f9Gwe22ZdCGSK56/uz2nDh4PRjarLSLY5ajY30wh19WRcR9Ta8FOtSOVXntEhcL+2m4HL7KR7w1uJ2YND4gvDL+yDKS+p4dvmlrmLlAwepXLNBCfG4qlbc7JFwP+tNhd48sgFp++fuPADD5gJwwMjRUCuEDSK7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AEtJU/A1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748895696; c=relaxed/simple;
+	bh=45kyHYFtVOmCzOXkmZsN5HFLVcfy5uBjhoBGeod/eR4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kXJwalxrgY2bJDccCWuF1mHQVta/rbS3XlojYic4MWo7hs4W2oMz8KwaVSLR/alBdf/pPmSQdlP+p6P40sgGCW/s8Ecj9CToTbz+fWU2o/7/O9WKY3rzvrOPvxlv/fmp/7EEYAThgRy9nH2Tv9fbkqPX0NJZbZoLQlZORyZM4T8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iYBACmDM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AEtJU/A1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB4C2C4CEEB;
-	Mon,  2 Jun 2025 20:21:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iYBACmDM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E5FAC4CEEB;
+	Mon,  2 Jun 2025 20:21:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748895677;
-	bh=AbAA39BeBTC8EmhrmyqS8RkGk6nWxaurq2Bfwb7Nqnk=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=AEtJU/A1P3nHbXf7T19nOoS/9Gz0iXSgES9cbwE/ydWE4+1GVegRqPp9VHlBuyYyE
-	 NL9+Krh0dS1mY7x0BI4dcETR1MSZUlJUjJbpnnja/wCFn2+X9itn4AqqoL37mMBEBp
-	 hzUqD4XQUwM9nwUzlKqWHY3KjrIenpKQsfEfBUZnFCKk728z6EZGcXFSP6o6i+c4JC
-	 LtsQ0E/9h/KEsTGQ9pTcloF0Y3oxy3n5zqHQzBAnvcFgsfP+JMccppi++Um6tGxmPH
-	 ALx/gJgm72fT6urXkoXH21NzH3lxnZg+MkbMpgrwGKvHvL4HzwwpowfpoPbiFrpeV1
-	 0c0lFx6g3K8Eg==
+	s=k20201202; t=1748895696;
+	bh=45kyHYFtVOmCzOXkmZsN5HFLVcfy5uBjhoBGeod/eR4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=iYBACmDMVgt7jMqAjZeFQzqU2Fb1djvm/1k37Dzq5hHkeRZdGxi9d8HnmLBqJJrS8
+	 U/rJFQ+9w3SKlrxUaIN2TWPU1gWdW1aWO55+rd7K+jA3O1EUDJ0AMrcE9yckTo5MmI
+	 ON8LiaU60SfT0iqG+KOogCP/6urIKVHP1/hF+K1Es3RKfZbBwcSUPKMjBh1kBk9uQf
+	 pujTh3kj5tOqZpoR7DpG3uVUAs0dPOTm25aOmhi80cGF5Oruev7yqgWRYY/MenjDOf
+	 X8rWPfNx5LO2pPkAL/b5xoidWeWhIxpU51REOhv+q8cDfUSS2/11rzmvF8b/Br3HYB
+	 y7qRRvSlWEdnA==
+Message-ID: <ef00a8e6-4121-42d2-a752-a3dbd7244f16@kernel.org>
+Date: Mon, 2 Jun 2025 22:21:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] dt-bindings: net: convert qca,qca7000.txt yaml format
+To: Frank Li <Frank.li@nxp.com>, Stefan Wahren <wahrenst@gmx.net>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ imx@lists.linux.dev
+References: <20250529191727.789915-1-Frank.Li@nxp.com>
+ <047fb49e-1ca8-43a6-b122-0d6fa9a61c74@gmx.net>
+ <aD3E2ONB6Ay1wwmk@lizhi-Precision-Tower-5810>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <aD3E2ONB6Ay1wwmk@lizhi-Precision-Tower-5810>
 Content-Type: text/plain; charset=UTF-8
-Date: Mon, 02 Jun 2025 22:21:12 +0200
-Message-Id: <DACBRWLT0TOK.3BLVIST5ICH36@kernel.org>
-Cc: "Danilo Krummrich" <dakr@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>,
- "Alex Gaynor" <alex.gaynor@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
- "Trevor Gross" <tmgross@umich.edu>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/4] rust: alloc: implement `Borrow` and `BorrowMut` for
- `Vec`
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Boqun Feng" <boqun.feng@gmail.com>, "Alexandre Courbot"
- <acourbot@nvidia.com>
-X-Mailer: aerc 0.20.1
-References: <20250601-borrow_impls-v1-0-e1caeb428db4@nvidia.com>
- <20250601-borrow_impls-v1-1-e1caeb428db4@nvidia.com>
- <DABBUFXP4O5X.1JG9O6Z2BRAQX@kernel.org>
- <DABND24P80ZZ.NLCKU3AYPN4X@nvidia.com> <aD29_GfdV02X4q5N@Mac.home>
-In-Reply-To: <aD29_GfdV02X4q5N@Mac.home>
+Content-Transfer-Encoding: 7bit
 
-On Mon Jun 2, 2025 at 5:06 PM CEST, Boqun Feng wrote:
-> On Mon, Jun 02, 2025 at 10:13:22AM +0900, Alexandre Courbot wrote:
->> On Mon Jun 2, 2025 at 1:11 AM JST, Benno Lossin wrote:
->> > On Sun Jun 1, 2025 at 5:00 AM CEST, Alexandre Courbot wrote:
->> >> Implement these two common traits, which allow generic types to store
->> >> either an owned value or a reference to it.
->> >
->> > I don't understand the second part of the sentence.
->>=20
->> I want to say that Borrow allows you to do something like:
->>=20
->>     struct Foo<B: Borrow<u32>>(B);
->>=20
->>     // `foo1` owns its value...
->>     let foo1 =3D Foo(0x12);
->>=20
->>     let i =3D 0x24;
->>     // ... but `foo2` just borrows it, subject to the lifetime of `i`.
->>     let foo2 =3D Foo(&i);
->>=20
->> And the implementations in this series also let you do:
->>=20
->>     // `foo3`'s value is owned, but heap-allocated
->>     let foo3 =3D Arc::new(KBox::new(0x56, GFP_KERNEL)?);
->>=20
->>     let j =3D Arc::new(0x78, GFP_KERNEL)?;
->>     // `foo4`'s value is shared and its lifetime runtime-managed.
->>     let foo4 =3D Foo(j.clone());
->
-> Maybe you could put these in the "# Examples" section before impl
-> blocks. E.g
->
-> 	/// # Examples
-> 	/// ```
-> 	/// <you case above>
-> 	/// ```
-> 	impl<T, A> Borrow<[T]> for Vec<T, A> ...
+On 02/06/2025 17:35, Frank Li wrote:
+> 
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    const: qca,qca7000
+>>> +
+>>> +  reg:
+>>> +    maxItems: 1
+>>> +
+>>> +  interrupts:
+>>> +    maxItems: 1
+>>> +
+>>> +  spi-cpha: true
+>>> +
+>>> +  spi-cpol: true
+>> In case of a SPI setup these properties should be required. Unfortunately
+>> i'm not sure how to enforce this. Maybe depending on the presence of "reg"?
+> 
+> But It think depend on reg is not good idea, which too obscure. Ideally it
+> should be use two compatible strings. It should treat as two kinds device.
+> It is really old devices and not worth to update compatible string.
+> 
+> Maybe some one in dt team can provide suggestion!
+> 
+> Rob and Krzysztof Kozlowski:
+>   any idea about this?
+You can check for reg and require these, e.g.:
+https://elixir.bootlin.com/linux/v6.4-rc7/source/Documentation/devicetree/bindings/net/qcom,ipa.yaml#L191
 
-Does that get rendered in the docs? If not, I don't think we should do
-it.
+See also for very similar case:
+Documentation/devicetree/bindings/net/dsa/realtek.yaml
 
----
-Cheers,
-Benno
+However for multi-bus devices we usually do not code such constraints.
+Partially because of typical cases - i2c and spi - it would not be possible.
+
+
+Best regards,
+Krzysztof
