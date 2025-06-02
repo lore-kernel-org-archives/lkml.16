@@ -1,102 +1,108 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBF21805A;
-	Mon,  2 Jun 2025 02:09:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FFA2C325F;
+	Mon,  2 Jun 2025 02:49:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748830166; cv=none; b=TOCqE97Vc8KOeQj/c4MSbpieJn2OJh+s0msr+qpZN/+oBxk8pYleaEJ8Okjo9bF3GPidVV8ser37dEZLxJuFix0rY1WpiYtduNg9JozeU3XMusA3ksHxbVRcA4QolYAtBBJ/9elVJXme6aTILhceraamDLVtPuuZImCw5e6rUB4=
+	t=1748832570; cv=none; b=AyHB5+JWjE3aHvsfIch5Z9HI8qsBfWHiySTl/2rd2Z/8oa9RLhCOjnI8RbgVD7w6VTlxkxQmWrowhLTIEjTAWAcFumHdoEN3E5HPhNjLgrEBg39jgUj8ENVdvJVPjrzOSzPJXFqwIBaMeEKPjPGW2EyQBiB6vmTuCJXtXv49lGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748830166; c=relaxed/simple;
-	bh=Des96kx03dqeUX3f6uVZx5O0Xl0Hv4pcKQ7YRSzBaKM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ih1ed/iXonAi3CMm5jW1jrvJtvY3MShy3RnvL1wNIHiG0BlxfDqrf6g8spZJzLeOs9y01LdPkuLYYMuTC/3Oa210SZUI2l2ZdMzJXGkNtTnkxn4Ypbnx7WN8Ec/qS+rEz5nxo/XEGvg4w65NOmRXJMw/l73iu6DaKOTIlKIm/NY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=uSz9ekKV; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1748832570; c=relaxed/simple;
+	bh=7jtOMQnE4k7Ptb1rOSgSxx3tJE8kSt7sImdIjPXZZ0M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lKX+EY5H0jmAxNDv8/5SxAA2EnWC1hMlix8ngylj6dGKKbvBnR/bGnjBIXYthUI3UNuDMa5dLyDzJwnd2pxnAc6KWz7dpfg0xjdQ5CC/zuCNpAEEHg4Q1Inq57rtTbfmJONAIHZqiXbNf7ugSSaQj9091X4jn7LR/g0EZJLqDjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kJMUxVer; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="uSz9ekKV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=d1ICQTT0Rg5TH6VqXWjJIx5h6SXfLiF2uQPFAA/zAgM=; b=uS
-	z9ekKVA1+8dCedTF/EeSwI2lQx7MPHqdYeB0SO68ckLK9NFGwbh4CISZ2FuLJoXu7Zj2IH1BvIv70
-	3D4WZzR7ovjqTenu3t1Cvo7+Slb/Ho6/acontFtxtmhm327klwlQ2mSMG3k9mrutK1LP9YnXRA7c2
-	nk1F6b4/n54tpzE=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uLubr-00ETbT-6u; Mon, 02 Jun 2025 04:09:07 +0200
-Date: Mon, 2 Jun 2025 04:09:07 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Christoph Stoidner <C.Stoidner@phytec.de>
-Cc: Stefan Wahren <wahrenst@gmx.net>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"upstream@lists.phytec.de" <upstream@lists.phytec.de>
-Subject: Re: [PATCH v3] arm64: dts: freescale: imx93-phycore-som: Delay the
- phy reset by a gpio
-Message-ID: <8e448625-b4ad-4bf1-8930-6fecdedb1d8d@lunn.ch>
-References: <20250524112315.695376-1-c.stoidner@phytec.de>
- <047c963e-f24d-4995-aea0-4a8cf8e343f5@lunn.ch>
- <b2ea6b7f-3623-4486-82a0-cab97053a53e@gmx.net>
- <34a4441d4b4ed8db7cac585ce93ec2357738cc11.camel@phytec.de>
- <7f6d7199-0a20-4370-a8b0-1d05326af052@gmx.net>
- <bf0eb48fc72f4b0abbf62077c2f1fe4438579746.camel@phytec.de>
- <967484d9-4165-4b75-bbb7-a203c36e8beb@gmx.net>
- <517be266ebc3b55da53372a76a139245f8945cd8.camel@phytec.de>
- <5afa6d62-4a3f-4c28-8165-363075ac36d8@lunn.ch>
- <a948b903766a82897e5fc17a840ab40e29f5eda4.camel@phytec.de>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kJMUxVer"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=sR0r0ubGCSVcvnMxMB6zdK1pyNoMsW+qrdvloib0VMg=; b=kJMUxVerQGn+6t5BoPSzjjZvEx
+	Fa7l6xpdBugk/YctOzx7zaQNuEF4ZCNKps52crZm74CcduywrKbtVeBfHDpRo+Xy97seLQQcAa7FR
+	/dclnz5OUJUEFoPalXRyYLPAr5MCIbn/c6ZYb8AtfeDq7nQG+Md/xueBwcWKPxaCGv0uTGNYBBpI5
+	ffVI130IUIMQcG57r12rwhbsTxe4oCJDkR2eiHq8ZetMO6dIkxd+DC+ySBseCbh0nt2TTwV5evDLV
+	gHbLg8YSytYJ3DLfV0mESmJ0PGdu8ibWY8S3VpjfGi3A5HyIW968xEKz1/mnetsLKCZvP23reAe/n
+	D6+sNOqA==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uLvEc-00000000Zzi-3ovo;
+	Mon, 02 Jun 2025 02:49:19 +0000
+Message-ID: <6459566b-bf9f-4e07-9290-41853cdee9ec@infradead.org>
+Date: Sun, 1 Jun 2025 19:49:08 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Documentation: Add a source tree map overview
+To: Bagas Sanjaya <bagasdotme@gmail.com>, William Raezer <wraezer@gmail.com>,
+ linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, corbet@lwn.net
+References: <CAKg96b=n1pZi4FUBqe+puUJo9ndRfU8npvo9w6fE6Enshe73Hg@mail.gmail.com>
+ <f882f6d9-c914-48af-97b7-0aad6d995819@infradead.org>
+ <aDz92QNc3ZSVkdx3@archie.me>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <aDz92QNc3ZSVkdx3@archie.me>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a948b903766a82897e5fc17a840ab40e29f5eda4.camel@phytec.de>
 
-On Fri, May 30, 2025 at 01:40:38PM +0000, Christoph Stoidner wrote:
-> 
-> 
-> On Mi, 2025-05-28 at 21:29 +0200, Andrew Lunn wrote:
-> > > Yes, that's what I measured. For analysis, I added some
-> > > debug outputs
-> > > to
-> > > the phy reset and the 1st phy register access. And as I can see,
-> > > the
-> > > phy register access happens when userland sets up the network:
-> > 
-> > Please repeat the measurements with NFS root.
-> > 
-> > You will find that the kernel brings the interface up right have
-> > register_netdev() is called, and starts transmitting. It can happen
-> > before register_netdev() even returns.
-> 
-> Thanks for that hint. As you said, with nfs root the register access
-> happens much earlier. I measured:
-> 
->        [   1.713185] DEB-PHY: mdio reset exeucted
->        ...
->        ...
->        ...
->        [   2.672892] DEB-PHY: register access
-> 
-> However, the delta time of 0.959707s (9597ms) still meets the T2
-> ("prior to MDC preamble for register access") that is defined in the
-> PHY's datasheet with 2ms.
 
-I agree it is long enough, but i'm also surprised how slow the kernel
-was. Are you using a fixed IP address, or dhcp?
 
-	Andrew
+On 6/1/25 6:26 PM, Bagas Sanjaya wrote:
+> On Sun, Jun 01, 2025 at 09:50:14AM -0700, Randy Dunlap wrote:
+>> Hi,
+>>
+>> On 6/1/25 9:22 AM, William Raezer wrote:
+>>> Hello,
+>>>
+>>
+>> Please wrap email lines at around 72-75 characters each.
+>>
+>>> My name is William Raezer, and this is my first contribution to the Linux kernel. I'm submitting a simple but hopefully helpful addition: a high-level map of the Linux kernel source tree as a new document in `Documentation/source-map.rst`.
+>>
+>> This looks somewhat useful, although I was expecting more of a graphic presentation
+>> of the tree structure. But that would cause trouble with the role of each subdirectory.
+>> (and one can always use `tree` for that)
+> 
+> I was expecting tree output either.
+> 
+>>
+>>> As someone beginning to explore the internals of the Linux kernel, I noticed that while there is some documentation available that describes the subsystems in principle, there's no centralized overview of the source tree structure itself. This patch adds a basic source map that describes the role of each top-level directory in the kernel source.
+>>>
+>>> The goal is to assist both myself and others in navigating the codebase, especially new contributors who may be overwhelmed by the kernel's size and complexity. As a follow-up, I plan to add subsystem-level maps for key directories such as `kernel/`, `mm/`, and `fs/`.
+>>>
+>>> I hope this addition is seen as a positive and useful step, and Iâ€™m open to feedback or suggestions to improve it.
+>>
+>> Patches should generally be inline as email text, not as attachments.
+>> This is up to the maintainer to decide about...
+>> and gmail is not good as maintaining whitespace in emails.
+>> (I don't see any whitespace problems in the current patch.)
+> 
+> tl;dr: see Documentation/process/submitting-patches.rst.
+> 
+>>
+>> I get a warning when building with this patch applied:
+>>
+>> Documentation/source-map.rst: WARNING: document isn't included in any toctree [toc.not_included]
+> 
+> make htmldocs.
+> 
+>>
+>> Also, when I look at source-map.html with a web browser, no parts of
+>> the source-map are shown. (tested with multiple browsers)
+
+No, I mean that what I see is mostly a blank/empty page.
+Other that the sidebar, it only contains this line:
+
+Â©The kernel development community. | Powered by Sphinx 8.2.3 & Alabaster 1.0.0 | Page source
+
+
+-- 
+~Randy
+
