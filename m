@@ -1,69 +1,82 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4DE019E98B;
-	Mon,  2 Jun 2025 12:12:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA80210184;
+	Mon,  2 Jun 2025 12:14:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748866366; cv=none; b=YiHsfvQBTUbB+OKKHqq2lMqeV5Vsr+PjJ0WHB+TKFf/L1vLWm1ZD6LmJ+cVQdvnVP+Hf5p3Sc0vpYZjQYZSHurjLUkb+B+mlJwkAOt6foacp92gOHU9YDhZY1AevlhDzDw1x4dv6JQgefScH1L/6P6vtSm/ak1OVp25AzU9gWxo=
+	t=1748866496; cv=none; b=XEr5w8Vz1BWzh/J+qpKw87eTvKFlVCnQv1+KzORnYNcMDhu+p5xYaTLz5FVpDAv5vdtvUad0sISKkSPnIaS7sIFcfYEmSQ0GQx5jIYRWVbcb77DuD3j/c0tWbSCKbvVGbafoMCoNYc9z0lMZPHn5Lig6lM9LTBb89SaInvqeIrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748866366; c=relaxed/simple;
-	bh=a3IUPscg9/bFaevNAy73AAOq9/dPj1GJfTvG4TKmNjw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OWZc9cXJx2xY9pds6eySxlpTPSsIG4Crw0U6AIDTOE2HczKmbecOFd8pkNvmOC4xCL+rNITNS+g/KKAN9EoyWuRTUHzfmp0VL5rEYmpa/905t6mhhZrL5Yil5R0g00KsB3lQkmu7VNd2cc8UKKua4i4BEmiyBMFw1VJ9YMcLOKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 326AA12FC;
-	Mon,  2 Jun 2025 05:12:27 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3AA313F59E;
-	Mon,  2 Jun 2025 05:12:42 -0700 (PDT)
-Date: Mon, 2 Jun 2025 13:12:39 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Will Deacon <will@kernel.org>, Qu Wenruo <wqu@suse.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
-	rafael.j.wysocki@intel.com, jonathanh@nvidia.com,
-	ulf.hansson@linaro.org
-Subject: Re: Kernel crash on boot, arm64 VM
-Message-ID: <20250602-solid-coot-of-karma-cfea5e@sudeepholla>
-References: <17fc594b-b80b-4918-8945-4aef35dc9c94@suse.com>
- <20250602103521.GA1134@willie-the-truck>
+	s=arc-20240116; t=1748866496; c=relaxed/simple;
+	bh=4Ul8K3x8UQ2RkZ/IVbXwniJH9SavwdqncKIw/+W0l/8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IUxow8ySLt4zGzpqAUvJ1f/Qyab1r/4Ufp964nPzINjLWVTTKhWE+P2stRJ2P0gio/vpaHJACPfJ2dpsSahSgxQjkDI/ta2rqSg+qrYs2XSOKvv/nnm4nxJVy4uTVBUXkFHocjD2HLHUNDPBAMxhNfVBBnEJdcjrY8QlWcNeYIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AApXLK/y; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AApXLK/y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CCF1C4CEED;
+	Mon,  2 Jun 2025 12:14:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748866495;
+	bh=4Ul8K3x8UQ2RkZ/IVbXwniJH9SavwdqncKIw/+W0l/8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=AApXLK/yjuQD9NOnNYZyFiU7JsMSnS00XWgULmm/6SFZlNW70nOV98PRCf5CHcWDH
+	 O4fWkGBlVFDvZuMsfcrgYw3IPMbuZTDRntrK1+V0Qz/zYNdfd3Rffgls6jvN/1dZ3r
+	 6bWfKLTf3pnPDmGm1vjduTucbORZAS48syrc3BBQ2FqWvSBW3DpMyzgdoRx7FePsf3
+	 b38PaYJBD0DvGRWU3xm0KTjQXJg1ilFKtd9wq1z8GphsZKbSeTVGWJs6/UwSYAWcEn
+	 BGLq6hoTL6mRClRgMV4f8joIdGrUODSxuSnAGRP+DCKQpo4e0exhHxC6yRWITtKZrV
+	 Cz9VM+JzWQM+Q==
+From: Christian Brauner <brauner@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Alexander Aring <alex.aring@gmail.com>
+Subject: Re: [PATCH] filelock: add new locks_wake_up_waiter() helper
+Date: Mon,  2 Jun 2025 14:14:43 +0200
+Message-ID: <20250602-unstimmigkeiten-schimpansen-fe4ff1b32156@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250602-filelock-6-16-v1-1-7da5b2c930fd@kernel.org>
+References: <20250602-filelock-6-16-v1-1-7da5b2c930fd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250602103521.GA1134@willie-the-truck>
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1228; i=brauner@kernel.org; h=from:subject:message-id; bh=4Ul8K3x8UQ2RkZ/IVbXwniJH9SavwdqncKIw/+W0l/8=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWTYTt0ls8c9Kq1Bx+y+SkJq49tJqbHtvxb9LWNctSsxX 3BW9q73HaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABM5cJKR4W/xGrHT3UXa8067 fd7eWLlsdecXK+HKCRzlJg9fzsvUyGZk+G2gLL0r0+qdKddpq8CbEz+r9D7amzF7Z4BK277mXaw 6DAA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 02, 2025 at 11:35:22AM +0100, Will Deacon wrote:
-> [+Sudeep]
+On Mon, 02 Jun 2025 07:58:54 -0400, Jeff Layton wrote:
+> Currently the function that does this takes a struct file_lock, but
+> __locks_wake_up_blocks() deals with both locks and leases. Currently
+> this works because both file_lock and file_lease have the file_lock_core
+> at the beginning of the struct, but it's fragile to rely on that.
 > 
-
-Thanks for adding me.
-
-> On Mon, Jun 02, 2025 at 10:00:38AM +0930, Qu Wenruo wrote:
-> > It looks like there is a regression related to the device tree/acpi parsing
-> > in the latest upstream kernel branch.
+> Add a new locks_wake_up_waiter() function and call that from
+> __locks_wake_up_blocks().
 > 
-> I've kept the crash log below, but I suspect this is due to the __free()
-> cleanup path in dt_idle_state_present(), introduced recently by
-> 5836ebeb4a2b ("cpuidle: psci: Avoid initializing faux device if no DT
-> idle states are present").
->
+> [...]
 
-Hi Qu,
+Applied to the vfs-6.17.misc branch of the vfs/vfs.git tree.
+Patches in the vfs-6.17.misc branch should appear in linux-next soon.
 
-Do you also have this commit ?
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-39cdf87a97fd ("cpuidle: psci: Fix uninitialized variable in dt_idle_state_present()")
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-Just trying to see if it is same issue or if this something else even
-with the above commit included.
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
--- 
-Regards,
-Sudeep
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-6.17.misc
+
+[1/1] filelock: add new locks_wake_up_waiter() helper
+      https://git.kernel.org/vfs/vfs/c/cc69995fd8e9
