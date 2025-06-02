@@ -1,129 +1,96 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6027322A4DB;
-	Mon,  2 Jun 2025 14:57:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748876233; cv=pass; b=BLNuEX0vVgET4fysWzh45Czew6J6Af8Lq19iYX+opUe6mic2alMYSlyggzImmQwYcAWtemw5osOUQaBHa+GmwTIRCyjCu7g6gpiEY3BnfyPLWMpxRq/EToVTRwImwKRymsmf7sp0V4IxB6FT4IBNoD9/kar3eGGRupDVCJOE+Gs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748876233; c=relaxed/simple;
-	bh=fqmaKdL6+SP2p0NooH1UzlIgSWoHuY1uQbCgGLpfntQ=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=kZ21UBY7bo+ZdScufVw8L1ManfKf0YSst66JRRUlLAS45gR2EcAOJNpuL/h8jOxr46jTtR0ZQPjSIY8ja1EbnygLKN4kS3Gftu47zMrr20ItBmcO3hRQ5pWUxJekpze4QfSpk+4Q9of8wkp0Ffi8dAjIXcaTrRQlaxldEMcVrcQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=IcL/sGjB; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7BBB22A7E7;
+	Mon,  2 Jun 2025 14:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748876269; cv=none; b=qgEZ6q+g6sDhE/L4GcQ50YzIZ1df96EuoEnwA4XbhXOlMSWbaQOoSK5KFxcf+5SZckFnQ8rM69c7ngHNDXruDPIlQYw/jjipN2MabBX88b4lgCWepHT0V1sTE48xO4GBa77biIyXcPPa+VYxf9evbaFUfxvM1QhOy+FQid1cPR4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748876269; c=relaxed/simple;
+	bh=7/GwFnUoybapJR599zoM5MB4TOiyfiBtcDw/J/8MSmo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oGzJWkhRTcyld3OaNiRSLDcggp/XSHeKDdIfRtDJZsbHbKPDQC5o94OfJwFmkvbXe7jJahKXPqvHsxys0TEGPY1QnDt53tmau9ayluTte/49dDVw8V5pHylKq2r2FE1wELUo4Afl0JDlA5zbBz4WRx5HW7vhpnf7GtBXmBrFL38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FOtXMxjN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="IcL/sGjB"
-ARC-Seal: i=1; a=rsa-sha256; t=1748876207; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=XmfrqtlhlnldH4kwzX4xslwYHfQBNdHqcBelQXZ6Lrcg7iHEviQmrTe484+B/xbtqKltYjBoA7hv30bsOrW5l+9qFgt5w63z3CLt7Ic4BG9A6qlvwb6xLgm2N/tI8KTnV4yxABMuhHgBBMqrkLAfJn2UzOztNkd0zECYmwQNmaY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1748876207; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=3qYcFLdgo7IjTr+AbRql4HwQ6X5sGT8wD6ZLBAhVXkw=; 
-	b=V2Pgs07EDkFlFzQZYf8C2Eu8sLYTW4UkxbSudhkqHGH2B+lucnObRvfhD2J29nmrUPus6qYkq3KfZDcAw4T2IBh5EapHUv/O3uL+MGLhLW8RJSt4/JONbADXfG+5m9HO/o96xTZQ8u69OtgK9awa3NLDBz/URPSXisDM5PWsWU4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1748876207;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=3qYcFLdgo7IjTr+AbRql4HwQ6X5sGT8wD6ZLBAhVXkw=;
-	b=IcL/sGjBT3DRi2YktskR8cKL3Je68UDw+2KjwU3PSWChgPgVgG/dBjRUtXJTCKJC
-	Evu8mwiN6SMxFkupAvGNr8utQwkAxrKvaBB185mzeVeb+yeQ5ZeYiiKQUDwLggDrUOs
-	PU/A8XS18f+meXanq4e42XbngvGHl8exX2QywJIw=
-Received: by mx.zohomail.com with SMTPS id 1748876204841691.2107514249591;
-	Mon, 2 Jun 2025 07:56:44 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FOtXMxjN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38107C4CEEE;
+	Mon,  2 Jun 2025 14:57:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748876268;
+	bh=7/GwFnUoybapJR599zoM5MB4TOiyfiBtcDw/J/8MSmo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=FOtXMxjNqidmvV5l1IZT/jKSFalSgXfIiBmU1qww2nUxJU3a2IrLLW37w5mQUwBc0
+	 om3LXLou1Ks79KyuOO98VTP0vWd7h1nPu284l2KXaZ2YxkNR7uOL7Gzva0A9Og4lZ7
+	 JdilPQYiar0U/MiuFEPq89clqDTU9GFliG3oVHNuRiWWsSLZ+IcBojP61u+MuGkq1G
+	 XAlSQTt0EDb3mU6BovKT3loZUNbEvTfHSXgPNBFWRtheybXD0xktVcGobRrNjiw0aU
+	 Hv9JEJZXEEE/jiHHuf1Rc2F9mmX3yaJEWmgqqzozIHLa1aFAcIrJaZlVmTxpNXASfj
+	 RHhDs63c1vu5w==
+Date: Mon, 2 Jun 2025 07:57:47 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Tejun Heo <tj@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>,
+ horms@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ gustavold@gmail.com, Usama Arif <usamaarif642@gmail.com>,
+ linux-kselftest@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH net-next v2 0/4] netconsole: Optimize console
+ registration and improve testing
+Message-ID: <20250602075747.5e659655@kernel.org>
+In-Reply-To: <20250602-netcons_ext-v2-0-ef88d999326d@debian.org>
+References: <20250602-netcons_ext-v2-0-ef88d999326d@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH v3 2/2] rust: platform: add irq accessors
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <aCsK7s0qepzIiA-l@pollux>
-Date: Mon, 2 Jun 2025 11:56:28 -0300
-Cc: Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <CA34AB78-D9DC-433A-B6DF-663849A07370@collabora.com>
-References: <20250514-topics-tyr-request_irq-v3-0-d6fcc2591a88@collabora.com>
- <20250514-topics-tyr-request_irq-v3-2-d6fcc2591a88@collabora.com>
- <aCsK7s0qepzIiA-l@pollux>
-To: Danilo Krummrich <dakr@kernel.org>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Danilo,
+On Mon, 02 Jun 2025 03:34:40 -0700 Breno Leitao wrote:
+> During performance analysis of console subsystem latency, I discovered that
+> netconsole registers console handlers even when no active targets exist.
+> These orphaned console handlers are invoked on every printk() call, get
+> the lock, iterate through empty target lists, and consume CPU cycles
+> without performing any useful work.
+> 
+> This patch series addresses the inefficiency by:
+> 
+> 1. Implementing dynamic console registration/unregistration based on target
+>    availability, ensuring console handlers are only active when needed
+> 2. Adding automatic cleanup of unused console registrations when targets
+>    are disabled or removed
+> 3. Extending the selftest suite to cover non-extended console format,
+>    which was previously untested
+> 
+> The optimization reduces printk() overhead by eliminating unnecessary
+> function calls and list traversals when netconsole targets are not
+> configured, improving overall system performance during heavy logging
+> scenarios.
 
-[=E2=80=A6]
+Ah, I wasn't very clear, full form letter at the end.
 
->> +
->> +    /// Same as [`Self::irq_by_name`] but does not print an error =
-message if an IRQ
->> +    /// cannot be obtained.
->> +    pub fn optional_irq_by_name(&self, name: &CStr) -> Result<u32> {
->> +        // SAFETY: `self.as_raw` returns a valid pointer to a =
-`struct platform_device`.
->> +        let res =3D unsafe {
->> +            =
-bindings::platform_get_irq_byname_optional(self.as_raw(), =
-name.as_char_ptr())
->> +        };
->> +
->> +        if res < 0 {
->> +            return Err(Error::from_errno(res));
->> +        }
->> +
->> +        Ok(res as u32)
->> +    }
->=20
-> I don't like the indirection of claiming a u32 representing the IRQ =
-number from
-> a bus device and stuffing it into an irq::Registration.
->=20
-> It would be better we we'd make it impossible (or at least harder) for =
-a driver
-> to pass the wrong number to irq::Registration.
->=20
-> I see two options:
->=20
->  1) Make the platform::Device accessors themselves return an
->     irq::Registration.
->=20
->  2) Make the platform::Device accessors return some kind of =
-transparent cookie,
->     that drivers can't create themselves that can be fed into the
->     irq::Registration.
->=20
-> My preference would be 1) if there's no major ergonomic issue with =
-that.
+But also the tests seem to have failed now:
+https://netdev.bots.linux.dev/contest.html?branch=net-next-2025-06-02--12-00&executor=vmksft-net-drv&pw-n=0&pass=0
 
-Isn=E2=80=99t 1 way more cluttered?
 
-That's because the accessors would have to forward all of the arguments =
-(i.e.:
-currently 4) to register().
+## Form letter - net-next-closed
 
-Going with approach 2 lets us keep the two APIs distinct, we'd only have =
-to
-take in the cookie in place of the u32, of course.
+Linus has already merged our PR with features for v6.16.
+net-next is closed for new drivers, features, code refactoring and
+optimizations for the remained for the merge window.
 
-=E2=80=94 Daniel=
+Please repost when net-next reopens after June 9th.
+
+RFC patches sent for review only are obviously welcome at any time.
+
+See:
+https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#development-cycle
+-- 
+pw-bot: defer
+pv-bot: closed
+
+
