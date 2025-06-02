@@ -1,74 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A5B1E32D5;
-	Mon,  2 Jun 2025 09:44:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCEB820DF4
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 09:45:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748857475; cv=none; b=FbU9LeI05MRK+R2pI+ELp8sog9krw93UUEQ1ZlWueHSB7Xns6C2A5N0H4LrjZBoO86+WZlQQDEunYSatDhUKRMuwfvXVOfNb2gri7Ml9cFRRUE1MwPeggHmw+gzTC5CN0mcAQu7fiZ9VH22JD/esvRGMMULi7QzyjcpOtPiajdw=
+	t=1748857533; cv=none; b=ksZCyIomTY07fejJzO51y34mbnRhFSlAVoIMXn8dRnrZ/SwLyl//zPDGRbVGbyjXnSTI6cKIRK8dC9UZfJJeO3RMoGDWOh4owdoYVizu34Qx3tnksZF+iDnjxjfwrYmC8zvI1C811jqlujcMctMq6mbh3AxAE+xuicsX6LR5tvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748857475; c=relaxed/simple;
-	bh=Ku8Z0uwEL+JP5dU+wMkvW77sU9CsV6zZejCoPGfn1Dc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rwV5+Ssdwkc5qRz/OXo38toRlN6bQlbXH29GAhX7Ot7dmLIrvNBgyKNEVBBqjZ+FzvACUEe8RA5sbHHL/Z8pzkvx53CAStVa7LU4AI1ZE0/O4Omac32xj8zFMkymKhcs/MiRnI4Va8s3mWVtqYEByRd/4BKh9h3uF1pvSQuqHUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VsW3D9D2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748857533; c=relaxed/simple;
+	bh=Nn+ovUN+eo2RAdkKZosYkpGwR94TOa708SfgIOsgDbU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EFoJakXsUHvrOJmIO78zg3gRf4AFOhwpRpLtTwx/LsMSRUz1/fG+VSsPaORtff2L7HJPk4iHhOmtSpDCLZpXV9aR5Tn84fGPD1/1aaiUOb/TF5nyq8uD8MYdOYAAE+HqlRf1RdxeUGgAr8svxZK/Qu5In7190IalU8heGuVK+jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=i1vYtOdE; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VsW3D9D2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C24BC4CEEB;
-	Mon,  2 Jun 2025 09:44:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748857474;
-	bh=Ku8Z0uwEL+JP5dU+wMkvW77sU9CsV6zZejCoPGfn1Dc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VsW3D9D23VCaynChA+/KmUA1pZ2iiivTCCc3yQWi8PS2aRTOxab7bWV1VrMpv2lge
-	 mIK+abLR+Id9c7sC1pz/T76McXXemoZBqjd6MK9ox7G2MYYJQgvUHibi5zhCRrW6pI
-	 6laDODTqXzOG9oXxxSQV4vSrAYAiL+3If7viuQA3yg1VVLeON6E0zoeCWLLT7smvBR
-	 7TICpBkO2Ip7RFh2QCTOid87lzngGFpfoTIzLGg/s+rVL9WY3eHX4G2TjCpA6rTtud
-	 3ZfjjcSBecH4zUsk5JLy2fEgNDUkiCcBRgl46pl/8rRjTm1fMZW8O/g7uFoaRnavgK
-	 YIeEn9+ULjMcA==
-From: Christian Brauner <brauner@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] fs/read_write: Fix spelling typo
-Date: Mon,  2 Jun 2025 11:44:20 +0200
-Message-ID: <20250602-ziffer-anpreisen-6a220b0e9828@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250530173204.3611576-1-andriy.shevchenko@linux.intel.com>
-References: <20250530173204.3611576-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i1vYtOdE"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a4ef2c2ef3so3368763f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 02:45:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748857530; x=1749462330; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xbKU9W5xheDX9GZKVqgHJ+55CDve1/9ll10Ovwv/o7A=;
+        b=i1vYtOdEZmAEXSy1DxBkRf8BLFvbQyxa91vzcAUpVl77qrELZtkJBqH2BIV36fafsX
+         MwtpgsDaBIAX0hSiK1RkVTnwiLlc3APsc2lg/VHLH8l1mPcc2MobfOEQ26J7ieQvIDHD
+         gGMGV68CaL2a0DTyMNmy6ou2ogLrEszit7ucY6hAOHaBMhTLI2mDGhLUfEx17u1wBdg/
+         EqkwevOwQ382bz++1TRAcv48RffpdJ4+fJ2BrZ4D8F6cp8T/TgWxRTRHaLUUZ8T1Bs5F
+         R7TyPy5SnPnnfEgIIUYQjPqVse3oMQIykAhZT7ucEO5E3GR36JFFtOJR2UhgpfaZgAw8
+         xLkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748857530; x=1749462330;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xbKU9W5xheDX9GZKVqgHJ+55CDve1/9ll10Ovwv/o7A=;
+        b=ZP1cMs6qEYNyEC5cLHm1AswLyhdrj1ax7y7a1+ap5J145cIY/w5s6Xw6oX21Iao481
+         ncAMyODkW4jupox+qWQYfLcSrIN6dgq330TrBh7X1dAnEswqkl0IbKKbtkg5jbxSYY9+
+         7mgbrpELeX3PlhzFpGAxjLp94aC/c2ycTIMm3QNg40mvmiEuOf+DRsgKkz9SSUwpnPc3
+         N2GuSEwOWbOWS+AGQnf1bPTr9weRUtWTc4W7h2xPkQqDNIdPvkbFO7XIylz2gBGOLwRB
+         8kpaFdcCM/WF3zRDsMDhObnM0ZWF69/ocMwUd7K0Qfx8HPrp44+PzD10KHwCKMVuVSaj
+         P8yA==
+X-Forwarded-Encrypted: i=1; AJvYcCVvewtlodo1plzh+mWIyjQqeXX2pwqRdmNb5y1M95tUTdVPCktntXYZpeYC4nfhz299yqF4PNoKWpmLB7E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybO7+Kxc5M5aZ3tY0izUP4N9LbeYa9yrE5a715jqyHDX7sG9e4
+	Wchqhdqkxyb47TmkkUIXI7CXg04JWdHL6xXKL40ORBkUmqyT3FJApAwS1rdTAHVLeCL3XeJOpD8
+	Rq5Wx
+X-Gm-Gg: ASbGncuHnrjTWeXEp97GB/rAJxV5J/o1WcreeJvjKeze4PKGfGf27ANRO9VnbgU/26v
+	l83mpexjamq4ryBMuO+7txr+Zd5J7zUjclcLpVRHIWnn6hbnuNqsBOIZGvuoO9yX3rdSK0HQQOk
+	KD6cmEjiLcGMxMC3CYeyyzn9yyLZlLUeDAoPglYs7qKUR8aPPrdraJT56KnakipDxTkKzVrVnx2
+	B9p13hMh9MzObCuYLKquS0RwQbbpHuOqhbPH/AqtHUCeZCNpS26C2LLgXR368cCz53dmsEMt7xt
+	zcI3A49q254SWJKElZJHelDGBWtfAthZtqzw8Gt1ZpSGVR60jQ8u/kg=
+X-Google-Smtp-Source: AGHT+IHPnVtWrDel++vKl3QQEDHSr/37CxtTyJhCw23iebOkRyXNSgDsVfvNb1+gbFuTQxbT8lg0KQ==
+X-Received: by 2002:a05:6000:25c4:b0:3a3:648d:aa84 with SMTP id ffacd0b85a97d-3a4fe154c68mr6288485f8f.5.1748857529926;
+        Mon, 02 Jun 2025 02:45:29 -0700 (PDT)
+Received: from localhost ([41.210.143.146])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-450d7fc1a84sm117403015e9.35.2025.06.02.02.45.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Jun 2025 02:45:29 -0700 (PDT)
+Date: Mon, 2 Jun 2025 12:45:25 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Raju Rangoju <Raju.Rangoju@amd.com>
+Cc: broonie@kernel.org, linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, miquel.raynal@bootlin.com,
+	Krishnamoorthi M <krishnamoorthi.m@amd.com>,
+	Akshata MukundShetty <akshata.mukundshetty@amd.com>, cve@kernel.org,
+	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+Subject: Re: [PATCH] spi: spi-mem: Add fix to avoid divide error
+Message-ID: <aD1ytV8kiWP9ssuv@stanley.mountain>
+References: <20250424121333.417372-1-Raju.Rangoju@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=868; i=brauner@kernel.org; h=from:subject:message-id; bh=Ku8Z0uwEL+JP5dU+wMkvW77sU9CsV6zZejCoPGfn1Dc=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWTYFtVcv++2hYuNYdX296+ja7Ufhu3MO/if5/uvJt7/z W6zbu1r7ShlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAZjI61kM/3Q4ss9I7u8Kum2j vPzsLvP9sikmntner5bO9HDf/aXMLpKR4cFT0dWZP6sXdMavub6vYyunYc2FwpvlF4/sTuHe+kb /Fz8A
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424121333.417372-1-Raju.Rangoju@amd.com>
 
-On Fri, 30 May 2025 20:32:04 +0300, Andy Shevchenko wrote:
-> 'implemenation' --> 'implementation'.
+On Thu, Apr 24, 2025 at 05:43:33PM +0530, Raju Rangoju wrote:
 > 
+> Fixes: 226d6cb3cb79 ("spi: spi-mem: Estimate the time taken by operations")
+> Suggested-by: Krishnamoorthi M <krishnamoorthi.m@amd.com>
+> Co-developed-by: Akshata MukundShetty <akshata.mukundshetty@amd.com>
+> Signed-off-by: Akshata MukundShetty <akshata.mukundshetty@amd.com>
+> Signed-off-by: Raju Rangoju <Raju.Rangoju@amd.com>
+> ---
+>  drivers/spi/spi-mem.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
+> diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
+> index a31a1db07aa4..5db0639d3b01 100644
+> --- a/drivers/spi/spi-mem.c
+> +++ b/drivers/spi/spi-mem.c
+> @@ -596,7 +596,11 @@ u64 spi_mem_calc_op_duration(struct spi_mem_op *op)
+>  	ns_per_cycles = 1000000000 / op->max_freq;
+>  	ncycles += ((op->cmd.nbytes * 8) / op->cmd.buswidth) / (op->cmd.dtr ? 2 : 1);
+>  	ncycles += ((op->addr.nbytes * 8) / op->addr.buswidth) / (op->addr.dtr ? 2 : 1);
+> -	ncycles += ((op->dummy.nbytes * 8) / op->dummy.buswidth) / (op->dummy.dtr ? 2 : 1);
+> +
+> +	/* Dummy bytes are optional for some SPI flash memory operations */
+> +	if (op->dummy.nbytes)
+> +		ncycles += ((op->dummy.nbytes * 8) / op->dummy.buswidth) / (op->dummy.dtr ? 2 : 1);
+> +
 
-Applied to the vfs-6.17.misc branch of the vfs/vfs.git tree.
-Patches in the vfs-6.17.misc branch should appear in linux-next soon.
+Hi,
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+We were reviewing "CVE-2025-37896: spi: spi-mem: Add fix to avoid divide
+error" which was issued for this patch, but this patch is a no-op.
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+If op->dummy.nbytes is zero then the original code does:
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
+	ncycles += 0;
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs-6.17.misc
+We don't divide by op->dummy.nbytes.  Was something else intended?
 
-[1/1] fs/read_write: Fix spelling typo
-      https://git.kernel.org/vfs/vfs/c/28b65351df00
+regards,
+dan carpenter
+
+>  	ncycles += ((op->data.nbytes * 8) / op->data.buswidth) / (op->data.dtr ? 2 : 1);
+>  
+>  	return ncycles * ns_per_cycles;
+> -- 
+> 2.34.1
+> 
