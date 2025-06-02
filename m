@@ -1,67 +1,66 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 593421537C6;
-	Mon,  2 Jun 2025 12:36:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79CAD1537C6
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 12:37:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748867807; cv=none; b=oVqrQO7UruCuZR/YJRzLUpybVe0JoOwZlk9PQoe99JG+NxOdl8uKpDfW74HCGPsA9EdlAPYVru1TellMnoV1eimd5F5J+mvMCufCSMqcdDx9PljL9T483jh0To/3g0P0tjadnGiDgbTYjbdGwmsUg/235KcRNX0AZMdKJO5P3Hw=
+	t=1748867850; cv=none; b=qFORlJ83jlWfE6A7WX4rMUpG3QwqxYJPwI4MYJq/PIN3c+uXYCnSln9F40YU02CFPBCyVC/N5axlrSa76YP9QWLoUUgU6y1iwnz1MxJOh5IXq7FTujm/rsM35sT6SczBljuL4e933/+Y7ENsuzQQ4CdnJUKCxSMY46Ild2F8s38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748867807; c=relaxed/simple;
-	bh=TqMTTrbGOKHDd5+iY3zu2is/Du2epZyfArzWRQ1XwSw=;
+	s=arc-20240116; t=1748867850; c=relaxed/simple;
+	bh=YKDeW11AafSvP1S5bLtUU51PrNmu8k4AtC4aRRuU9aY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oUnYh/d7gyODi6aFdlPAro+mqcdn+tKlUeE73k/eLamcGINsWoIBdIwQreRlt+nAMqRZNR/JdezEzTrzFbqzueMeAArdLEzPTfgUX3Qw+02QyBEdsALqeo4/P0VcotVL/kWq26lIYzLPDeHz77QWLFNAAXnwd1wLi5CC3qeb+n0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=O6KSrwJm; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=YKj38MnE2zFxFM2foP73UQetGhJrTJ0mwXbTAKns65cU0INOG077bE4kRZJYZkXGteO953Zo8va6lPsCjyBOO6gCG6QH5N0kkuWsvcPB5oOqtGg6o4yHqpxikSukcZc3N07lLfnZIQXrLIoDEAwkEwghSfXOdqh28Wu4Fjd6Ul8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=GqmMFWJe; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="O6KSrwJm"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5529lJgq021647;
-	Mon, 2 Jun 2025 12:36:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=hn7jsk
-	sEFOxj2EbB5fkqijs0r3shX82Lm3/fAvKOU4A=; b=O6KSrwJmP+UPYZHE+k6f13
-	HlrJB+tojXWxi1scbBdQ3vMMScN4x4+hVDUI+3IQSiHyqi/g51AD8rgAXsWVMRCk
-	tSNPIQiWvLMtWrnhFrja6bN08xcIyXwpkDagSexTII0jVEjEva+Tm/KOgr7Bu5Df
-	hebKoRjjWf9PTwKUl+cBANsme3zYabEMmDtoXyNR53LnbIz1d+eo/MXEfqNIsFvu
-	QDedgF0k3BtTNrMapY+/OE7EoCSMVwrBA0jOv7MEpA+1GLQ0gym4jew8AdL3iKdX
-	P9yIGgKRPqiPIiPJPChyGRnusc+iplHdeTDUpIHBKUPGQKs/WaxLl9XZ01nCaxfA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ysgd15rc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 02 Jun 2025 12:36:26 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 552CMUwY007231;
-	Mon, 2 Jun 2025 12:36:26 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ysgd15r7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 02 Jun 2025 12:36:26 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 552AgJWO012517;
-	Mon, 2 Jun 2025 12:36:25 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 470et25ujp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 02 Jun 2025 12:36:25 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 552CaJqA18809124
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 2 Jun 2025 12:36:19 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 204492004D;
-	Mon,  2 Jun 2025 12:36:19 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 88DA220040;
-	Mon,  2 Jun 2025 12:36:16 +0000 (GMT)
-Received: from [9.43.59.52] (unknown [9.43.59.52])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  2 Jun 2025 12:36:16 +0000 (GMT)
-Message-ID: <f3c4356c-666d-4fe4-b8fd-da3037ed5976@linux.ibm.com>
-Date: Mon, 2 Jun 2025 18:06:15 +0530
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="GqmMFWJe"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a50fc819f2so351461f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 05:37:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1748867847; x=1749472647; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=9yVw6Fc7CS6YcqGAaLjq3r7AkWte6A3trEa+uiPIbmA=;
+        b=GqmMFWJeuKTnKSm0MdpivAe0Ih/tVYJVVvkUn1JEgFdfP/VocFY2/rsHQHmqhem0uA
+         EHdhmDTpRaNgo4wsVdJIxcuGSCmbq0fdWt+8BwbEfKasWKf5pvGskIdS93nyqdYhkNTv
+         SgUhZMyHj3ea1AAtJPtRuMzKqbRXNRIksjOq/z0posFZUcStzpz2MbPSeCVqtZjcchcA
+         Hb4KiO+jQZnlN43BGz0DRXgEibb1pAI5/sNkC1ukxDpNUUfEo46c1fwvEYAZwHoRXD8R
+         NNlR6mzUUJlEublHnXufJEWSiU5lTIHBvibkEzNoEIv/jFaXmZeP3nwNV6/CKnat8YFa
+         mYmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748867847; x=1749472647;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9yVw6Fc7CS6YcqGAaLjq3r7AkWte6A3trEa+uiPIbmA=;
+        b=VkKB3DUG9OQwgUMgIBjrbY95YU4tQH1G9nBOBlHALZ5swv3HksFK6Iq5s3S80LDHPh
+         bkyFv6yJDxYfOri4ax5t5Abuqzx0oOhR7tgbkaMGUaDe99F3Yfh/7MwHugR3bNTDCMoG
+         tJndMs+539IW1QPQ11dc1Ww08bEW9BoqOOPxm7JqWRnAdcsEYVHo7MvedXV4UAQUJweH
+         JnvWGys2ncWNcWrXkN6lKTs35VXu2GLtnUgYB0+SHK1vp0/cQPs/Sy9ZLf3P9eNSC910
+         4HILLFCFaUicWXb50xGWt4yv8B9sYYUNpxVOF5AFD44g+n458Tb1xb3iCT5KKO3UqYEj
+         RlYw==
+X-Forwarded-Encrypted: i=1; AJvYcCVIJcnclGrviEdq71wYuatWIkVoGCaNSL+IgjQH+G277bydRChMMAEgBYyR5ttPSMJYwXAW5gASjzf4fzw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvtkrUVsM2t0kLBwaLP175utMi8Xy/Xgq/rElxQ+pGgv5YT+ae
+	jUxeLTQduu1SysAuZA4J4R1tkVfMrwDYhBW3RosglYfEBHMmuKEClHbPwtA5mE5il8PMS6i7VCm
+	XbMBB
+X-Gm-Gg: ASbGncucllwH4hA3JnhR3VYXQXUGXO2UPTnkQvhZ5SmoAvk+UuA16E8YLYuTrh4yQ4n
+	yhaoT/1B7hhjdjzWXm3sxPHHb5OK8vWjpSZIMQti/IYQBJPNzh1OtvKMHpiWbUawQao5RFcwKzi
+	2lR1d8su2CMWzX856LmM2HjeIdNu4OgGdXqKEUdvzusq9RAyA6xWfZVqsYKdQGr7FpfxLPbFkjR
+	puoEYGsZOw5SsKJdg6hveDf4m0QO0MChV1fcb804/X0UqZwAN2iPPHB+mKwrs1+rRWR5EjJ8RKL
+	DSaVLKcqs+4MdFqhV0HvyEGmBiiPuPFQJfhxAkdIjeMQ+d1yZApaldv9
+X-Google-Smtp-Source: AGHT+IGKZSaPNp1H1mkb24jR8DlLHDZ5hTvjRfceqNO28U0fg5tpUTq2P39z9z8g/eq2AXuuVMPlzw==
+X-Received: by 2002:a05:6000:144f:b0:3a3:65b5:51d7 with SMTP id ffacd0b85a97d-3a4f7a72d8bmr10334197f8f.26.1748867846661;
+        Mon, 02 Jun 2025 05:37:26 -0700 (PDT)
+Received: from [192.168.0.20] ([212.21.159.167])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe7414fsm15077252f8f.55.2025.06.02.05.37.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Jun 2025 05:37:25 -0700 (PDT)
+Message-ID: <451ac5ab-b5e6-4c01-89d8-4044d0cbc912@suse.com>
+Date: Mon, 2 Jun 2025 15:37:24 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,179 +68,104 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] powerpc/ftrace: support CONFIG_FUNCTION_GRAPH_RETVAL
-To: Aditya Bodkhe <adityab1@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
-        christophe.leroy@csgroup.eu, rostedt@goodmis.org, mhiramat@kernel.org,
-        mark.rutland@arm.com, Aditya Bodkhe <aditya.b1@linux.ibm.com>
-References: <20250528134820.74121-1-adityab1@linux.ibm.com>
+Subject: Re: [PATCH 17/32] x86/boot/e820: Standardize e820 table index
+ variable names under 'idx'
+To: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andy@kernel.org>, Arnd Bergmann <arnd@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Juergen Gross <jgross@suse.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Mike Rapoport <rppt@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
+ David Woodhouse <dwmw@amazon.co.uk>
+References: <20250515120549.2820541-1-mingo@kernel.org>
+ <20250515120549.2820541-18-mingo@kernel.org>
+From: Nikolay Borisov <nik.borisov@suse.com>
 Content-Language: en-US
-From: Hari Bathini <hbathini@linux.ibm.com>
-In-Reply-To: <20250528134820.74121-1-adityab1@linux.ibm.com>
+Autocrypt: addr=nik.borisov@suse.com; keydata=
+ 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
+In-Reply-To: <20250515120549.2820541-18-mingo@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=GdwXnRXL c=1 sm=1 tr=0 ts=683d9aca cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=GVWLqetRcDZtiWko8XAA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: 1h9eOEtw4XS8OmNcFYYnvUBdRPiJtwTC
-X-Proofpoint-ORIG-GUID: 9brDj5LJoIhQM1rXpA-BdHPY7e2ekXHS
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAyMDEwNiBTYWx0ZWRfXyxa6mk/eVEvF Cc0prlkmHuxSx2FZCNZSitHX2LtpupUyhpDO9qQM95M6/8xd2XY7mqtTYAP0d7K9P2w6CPiFoTF 8TNFu98e/nPSmkFvr/KwvnCLwewnCDWQPgjY4gO1r1aG7foWLV1y41oNxv4dyH+jQjvJWwj/dBv
- rWpH/X21SeurzzdAdcKmDUEWJacCuntXgegUG9cDYqqPiQ93hn0y9tTVTAa+3SBNdo9GdBQtHlH fQK/Gqi6f8yUCEHszsMTthjqb2WYp0yFT0ptqAx0kPanbSRSefWILZN3ciIhe02NDP6b+RqYLay OXsOYsES6jAiVM0EQ4A8PB4Fs/czcWQL0TKK7ZG31TfU7TAwmEPAMbtf/28N0WXd8HNA6N/joen
- ZYjF+WCG/n4uVutbEXRvV1vt8uAta9q6s7rx73wdBrEmtz/rKz5wmhwfNZVS2XXZJBhH1qkz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-02_05,2025-05-30_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- lowpriorityscore=0 suspectscore=0 spamscore=0 malwarescore=0 clxscore=1015
- mlxscore=0 impostorscore=0 priorityscore=1501 adultscore=0 bulkscore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2506020106
 
 
 
-On 28/05/25 7:18 pm, Aditya Bodkhe wrote:
-> From: Aditya Bodkhe <aditya.b1@linux.ibm.com>
-> 
-> commit a1be9ccc57f0 ("function_graph: Support recording and printing the
-> return value of function") introduced support for function graph return
-> value tracing.
-> 
-> Additionally, commit a3ed4157b7d8 ("fgraph: Replace fgraph_ret_regs with
-> ftrace_regs") further refactored and optimized the implementation,
-> making `struct fgraph_ret_regs` unnecessary.
-> 
-> This patch enables the above modifications for powerpc64, ensuring that
-> function graph return value tracing is available on this architecture.
-> 
-> After this patch, v6.14+ kernel can also be built with FPROBE on powerpc
-> but there are a few other build and runtime dependencies for FPROBE to
-> work properly. The next patch addresses them.
-> 
-> Signed-off-by: Aditya Bodkhe <aditya.b1@linux.ibm.com>
-
-Except for a couple of minor nits below..
-
-Reviewed-by: Hari Bathini <hbathini@linux.ibm.com>
-
+On 5/15/25 15:05, Ingo Molnar wrote:
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> Cc: Andy Shevchenko <andy@kernel.org>
+> Cc: Arnd Bergmann <arnd@kernel.org>
+> Cc: David Woodhouse <dwmw@amazon.co.uk>
+> Cc: H. Peter Anvin <hpa@zytor.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Mike Rapoport (Microsoft) <rppt@kernel.org>
 > ---
->   arch/powerpc/Kconfig                     |  1 +
->   arch/powerpc/include/asm/ftrace.h        | 15 +++++++++
->   arch/powerpc/kernel/trace/ftrace_entry.S | 41 ++++++++++++++----------
->   3 files changed, 40 insertions(+), 17 deletions(-)
+>   arch/x86/kernel/e820.c | 114 ++++++++++++++++++++++++-------------------------
+>   1 file changed, 57 insertions(+), 57 deletions(-)
 > 
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index c3e0cc83f120..9163521bc4b9 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -250,6 +250,7 @@ config PPC
->   	select HAVE_FUNCTION_ARG_ACCESS_API
->   	select HAVE_FUNCTION_DESCRIPTORS	if PPC64_ELF_ABI_V1
->   	select HAVE_FUNCTION_ERROR_INJECTION
-> +	select HAVE_FUNCTION_GRAPH_FREGS
->   	select HAVE_FUNCTION_GRAPH_TRACER
->   	select HAVE_FUNCTION_TRACER		if !COMPILE_TEST && (PPC64 || (PPC32 && CC_IS_GCC))
->   	select HAVE_GCC_PLUGINS			if GCC_VERSION >= 50200   # plugin support on gcc <= 5.1 is buggy on PPC
-> diff --git a/arch/powerpc/include/asm/ftrace.h b/arch/powerpc/include/asm/ftrace.h
-> index 82da7c7a1d12..6ffc9c9cf4e3 100644
-> --- a/arch/powerpc/include/asm/ftrace.h
-> +++ b/arch/powerpc/include/asm/ftrace.h
-> @@ -50,6 +50,21 @@ static __always_inline struct pt_regs *arch_ftrace_get_regs(struct ftrace_regs *
->   		asm volatile("mfmsr %0" : "=r" ((_regs)->msr));	\
->   	} while (0)
+> diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+> index 806d69ca09af..3ee266673fee 100644
+> --- a/arch/x86/kernel/e820.c
+> +++ b/arch/x86/kernel/e820.c
+> @@ -75,10 +75,10 @@ EXPORT_SYMBOL(pci_mem_start);
+>   static bool _e820__mapped_any(struct e820_table *table,
+>   			      u64 start, u64 end, enum e820_type type)
+>   {
+> -	int i;
+> +	int idx;
 >   
-> +#undef ftrace_regs_get_return_value
-> +static __always_inline unsigned long
-> +ftrace_regs_get_return_value(const struct ftrace_regs *fregs)
-> +{
-> +	return arch_ftrace_regs(fregs)->regs.gpr[3];
-> +}
-> +#define ftrace_regs_get_return_value ftrace_regs_get_return_value
-> +
-> +#undef ftrace_regs_get_frame_pointer
-> +static __always_inline unsigned long
-> +ftrace_regs_get_frame_pointer(const struct ftrace_regs *fregs)
-> +{
-> +	return arch_ftrace_regs(fregs)->regs.gpr[1];
-> +}
-> +
->   static __always_inline void
->   ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs,
->   				    unsigned long ip)
-> diff --git a/arch/powerpc/kernel/trace/ftrace_entry.S b/arch/powerpc/kernel/trace/ftrace_entry.S
-> index 3565c67fc638..eafbfb7584ed 100644
-> --- a/arch/powerpc/kernel/trace/ftrace_entry.S
-> +++ b/arch/powerpc/kernel/trace/ftrace_entry.S
-> @@ -409,23 +409,30 @@ EXPORT_SYMBOL(_mcount)
->   _GLOBAL(return_to_handler)
->   	/* need to save return values */
->   #ifdef CONFIG_PPC64
-> -	std	r4,  -32(r1)
-> -	std	r3,  -24(r1)
-> +	stdu	r1, -SWITCH_FRAME_SIZE(r1)
-> +	std	r4, GPR4(r1)
-> +	std	r3, GPR3(r1)
+> -	for (i = 0; i < table->nr_entries; i++) {
+> -		struct e820_entry *entry = &table->entries[i];
+> +	for (idx = 0; idx < table->nr_entries; idx++) {
+> +		struct e820_entry *entry = &table->entries[idx];
 
-> +  /* Save previous stack pointer (r1) */
+nit: Since the kernel supports gnu11 since e8c07082a810f what's your 
+take on defining the variables inside the for loop?
 
-Please use tab instead of "  " before the comment.
-
-> +	addi	r3, r1, SWITCH_FRAME_SIZE
-> +	std	r3, GPR1(r1)
->   	/* save TOC */
-> -	std	r2,  -16(r1)
-> -	std	r31, -8(r1)
-> +	std	r2,  24(r1)
-> +	std	r31, 32(r1)
->   	mr	r31, r1
-> -	stdu	r1, -112(r1)
-> -
-> +  /* pass ftrace_regs/pt_regs to ftrace_return_to_handler */
-> +	addi	r3,  r1, STACK_INT_FRAME_REGS
-
-Have a newline here
-
->   	/*
->   	 * We might be called from a module.
->   	 * Switch to our TOC to run inside the core kernel.
->   	 */
->   	LOAD_PACA_TOC()
->   #else
-> -	stwu	r1, -16(r1)
-> -	stw	r3, 8(r1)
-> -	stw	r4, 12(r1)
-> +	stwu	r1, -SWITCH_FRAME_SIZE(r1)
-> +	stw	r4, GPR4(r1)
-> +	stw	r3, GPR3(r1)
-> +	addi	r3, r1, SWITCH_FRAME_SIZE
-> +	stw	r3, GPR1(r1)
-> +	addi	r3, r1, STACK_INT_FRAME_REGS
->   #endif
 >   
->   	bl	ftrace_return_to_handler
-> @@ -435,15 +442,15 @@ _GLOBAL(return_to_handler)
->   	mtlr	r3
->   
->   #ifdef CONFIG_PPC64
-> -	ld	r1, 0(r1)
-> -	ld	r4,  -32(r1)
-> -	ld	r3,  -24(r1)
-> -	ld	r2,  -16(r1)
-> -	ld	r31, -8(r1)
-> +	ld	r4,  GPR4(r1)
-> +	ld	r3,  GPR3(r1)
-> +	ld	r2,  24(r1)
-> +	ld	r31, 32(r1)
-> +	ld	r1,  0(r1)
->   #else
-> -	lwz	r3, 8(r1)
-> -	lwz	r4, 12(r1)
-> -	addi	r1, r1, 16
-> +	lwz	r3, GPR3(r1)
-> +	lwz	r4, GPR4(r1)
-> +	addi	r1, r1, SWITCH_FRAME_SIZE
->   #endif
->   
->   	/* Jump back to real return address */
+>   		if (type && entry->type != type)
+>   			continue;
 
-- Hari
+<snip>
+
