@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ED6F255E4E
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 22:12:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A129C2561B3;
+	Mon,  2 Jun 2025 22:12:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748902334; cv=none; b=bLpRIIT7msGYRp/BFn5VswMOMXhmpCXia/dLnzgVk6IADbm0P07mEZIl91nnNaDjpzFWH09SLJYQ8+mEMlrr3RYCrGY/CEHqRCoJmBFQeT3iIjSyYWIBFIqG9+05f/ShcpGsUJ0frZfYDILeycuTGs8SMypydsFtLk1Z7B8D73g=
+	t=1748902336; cv=none; b=Y7WPplkR3HQdkxInL3qncO/y7KVtZCkwRFHD82vywcWz8wiEw8PT3PTKA6XtELLOVLltWm9UAcvjSHmm4gCxYeHkIcsNmary3umvI2jAT4OrqLtBrFHZhlxtWMRLn3IyrC5NtUDm1dTgnifx/gg1xgJik42Jpudm22s4iWnSdPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748902334; c=relaxed/simple;
-	bh=mnMBuXPc2ZQFw3argKuVRCHSdMH2r8EVc5rT2Tz2hRY=;
+	s=arc-20240116; t=1748902336; c=relaxed/simple;
+	bh=soT7jJUaFNYS9Uh3l2z7LkH2EvguZZgThBpUjJD8exw=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=mRJIdTAvU7eh3CGD00yhatpn7xw1mJnLVj0UB084/Nvx3I+T1SV4LNnuQ0k5XI2GZlkBG+aR8gAMiUUQUqBgi5k5cu3XwEPL/+VpHeJmATJDh5P3T0KdHi/ca9QW9cg5VHW3+8KTU6arU21z2zYHqzj4HObAPjAtgcSibp1mtvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=reKmYbUX; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=oJLr0lPyQV59LVRNlGrhaSDctdtjegv6wovVhNZD7RsQRfHltYgXEOfbJstdklMXwtJUZS8X8BW/8PHo0DRIpW5gjQFG3XRwVXk4wnaVN12TBr9yRZp7sXxGTBVvWwG3jn4hfgVrIx3vT0ykRTKtbVqcYplTGuR/BWfdw4cbYPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oP3wV572; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="reKmYbUX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A307C4CEEB;
-	Mon,  2 Jun 2025 22:12:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oP3wV572"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AC39C4CEEB;
+	Mon,  2 Jun 2025 22:12:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748902333;
-	bh=mnMBuXPc2ZQFw3argKuVRCHSdMH2r8EVc5rT2Tz2hRY=;
+	s=k20201202; t=1748902335;
+	bh=soT7jJUaFNYS9Uh3l2z7LkH2EvguZZgThBpUjJD8exw=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=reKmYbUXF9j28zyl2c7Q/9//n7V4xK/4Coo/W/hzAvJPrf0ORw0BQlsHauVn/0zyE
-	 XwY5lmrm7vc644GWrKGnTLME2QBQh+JR3U+l35NKi0YL50UHgoSz1yuVdUnaZTqB3L
-	 /b4UTQVNblan8RaLS4sTAg13GjH/8g8o85eKfNQpB8VABlkghAWSKCFXSLdZkyOLSk
-	 032+0NfHSWUvvBQjvKTnuv5tePxMd3PvDYaNlQhEfrPWI7++yNrFjUiQXz571wLz24
-	 W8yipZwo2JbbfA1y7fodKIN0w+st6jrAgRQ3WSFmBjup2WPdxqQvtidlJwLj2NWs5X
-	 xd7PEQKPqVn8g==
+	b=oP3wV572UGXiy4aMjgtspjktZ/tYOpVbUYxwQYelZoa3bz0HHRfXJ6flQ+CJcsBR/
+	 5aFxl3I/p8MZ/kJ3gb5GxVpYKHgpyEMTQFb+jjMGy7vwoueg1IdlZIxJC6OnE6TJP/
+	 HZ4Fdc8rRsIbeW5DufRikZllHeI3uVew9sMBrvOxtY2dn+MuZj9I3b/iDLFsSIUAXT
+	 ci3DGspHBXIryaPPiEYDiFMW2g8cx3PKF0KGY3MXMSwbpGzYgf9819MKAdOYb/bJ+u
+	 8FPl57tFxI+NzxaoNIfdTRhVrtoaolvnKCxLMaD8hFLPBaOZMRx2LcFFcyKNWWQGCh
+	 iFETEHn2imxtw==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 71209380AAD0;
-	Mon,  2 Jun 2025 22:12:47 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAF32380AAD0;
+	Mon,  2 Jun 2025 22:12:48 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,39 +37,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] riscv/kexec_file: Fix comment in purgatory relocator
+Subject: Re: [PATCH] perf symbols: Ignore mapping symbols on riscv
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <174890236599.925497.11306329780731063365.git-patchwork-notify@kernel.org>
-Date: Mon, 02 Jun 2025 22:12:45 +0000
-References: <20250326073450.57648-2-ziyao@disroot.org>
-In-Reply-To: <20250326073450.57648-2-ziyao@disroot.org>
-To: Yao Zi <ziyao@disroot.org>
-Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
- ajones@ventanamicro.com, sunying@isrc.iscas.ac.cn, arnd@arndb.de,
- kent.overstreet@linux.dev, lizhengyu3@huawei.com,
- linux-kernel@vger.kernel.org
+ <174890236756.925497.6881050930768049358.git-patchwork-notify@kernel.org>
+Date: Mon, 02 Jun 2025 22:12:47 +0000
+References: <20250409025202.201046-1-haibo1.xu@intel.com>
+In-Reply-To: <20250409025202.201046-1-haibo1.xu@intel.com>
+To: Haibo Xu <haibo1.xu@intel.com>
+Cc: linux-riscv@lists.infradead.org, xiaobo55x@gmail.com,
+ peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ alex@ghiti.fr, stephen.s.brennan@oracle.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 
 Hello:
 
 This patch was applied to riscv/linux.git (for-next)
-by Alexandre Ghiti <alexghiti@rivosinc.com>:
+by Palmer Dabbelt <palmer@dabbelt.com>:
 
-On Wed, 26 Mar 2025 07:34:51 +0000 you wrote:
-> Apparently sec_base doesn't mean relocated symbol value, which seems a
-> copy-pasting error in the comment. Assigned with the address of section
-> indexed by sym->st_shndx, it should represent base address of the
-> relevant section. Let's fix the comment to avoid possible confusion.
+On Wed,  9 Apr 2025 10:51:56 +0800 you wrote:
+> RISCV ELF use mapping symbols with special names $x, $d to
+> identify regions of RISCV code or code with different ISAs[1].
+> These symbols don't identify functions, so will confuse the
+> perf output.
 > 
-> Fixes: 838b3e28488f ("RISC-V: Load purgatory in kexec_file")
-> Signed-off-by: Yao Zi <ziyao@disroot.org>
+> The patch filters out these symbols at load time, similar to
+> "4886f2ca perf symbols: Ignore mapping symbols on aarch64".
 > 
 > [...]
 
 Here is the summary with links:
-  - riscv/kexec_file: Fix comment in purgatory relocator
-    https://git.kernel.org/riscv/c/0f6edcccfbd8
+  - perf symbols: Ignore mapping symbols on riscv
+    https://git.kernel.org/riscv/c/e4c39a45a0ea
 
 You are awesome, thank you!
 -- 
