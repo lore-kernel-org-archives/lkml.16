@@ -1,73 +1,63 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74141CA81
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 20:33:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CBC0226D08
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 20:33:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748896383; cv=none; b=pYh6V32pwBmZBsVGr8HtKwZt9rmbdAjdX1iy8uDTmlx7y7+SnvCr2b39vRLcZVO8YfkoNh/h9HG0XkdSdnAWliI5Zyklj2fs3pCI5XQGXeWtzdzqg+NncUBDQsFQV3j5j5mgZw+otK2bPww7ND/f834wTX16iowGoOzFkIU4iiE=
+	t=1748896386; cv=none; b=Rr4EIldBHJYBL0VpvGhsefq3Zg0Vcx7IIpfY/wO/nT0lsFq8fC56GfxycgwPuZy5HDc71e+/nSl2GcJWpob0NXRRIcSvmeRSDHNUhYnWZpCJKknqfYi386hZJFTgt6SvnenrW8wtb9EuZnmTuFH7gr3pffjhZ7GLZbW47EOBbM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748896383; c=relaxed/simple;
-	bh=LdiIhh93dXCCm2PcWMurrWqKc4LYxFEu5GqgNS9PHno=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=CFJXDh0iBM5mtdvX3skIFxCIQHXUykzovzGJhBk166JwheUy/F1wSuCJlZ8IVYr6taOjCSYdnf8DibX7DdcDNBwVZhgb1HPMH2pJNJtgLWglLw816e7OWxnoEAVDRGZGdbP3z6+Fw7Bh8R66oZWfpiG2Iq+pxc/m9l90HB92t6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q/iZFO5R; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748896386; c=relaxed/simple;
+	bh=1igCTBg9M81etI/7/Mz0eq6DzBa8ui/fcMAMLIQ4xMI=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=N8LfwawdOZPvAPkcSW/IsbC/e2XOoZneR6bqfz9/IrsaxRrcdFR+C+WFNMuvywI6sRUcsoMl+wUAvQLSij2yfDyoEsx17xbHUsTfclzWQYUqxpK9s7j5HRZ044c7Zq8UyqC5538Fkpxo1Lxkk4OfEavn5sx2p8HgykeXJHdCKgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=TZ2O+KIk; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q/iZFO5R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748896380;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=rV/xn46OPX4p3xq3mkWtZ8NGtbJKFadJJeI/QsB8Plk=;
-	b=Q/iZFO5Rc4J+/fMsTK6L1ltAI3X0BdozH5RZJHjdBdQGqdOj+ETc021foyXwf0lLCo3UtZ
-	gAf+MtAP+Iw9ptPWU2T5jAv7BH6N6CdaOZFUnfWbchBj5Gqt+BalhewyqBqYWkdiWyN99X
-	DHFh92PwTx9m6ZPdoeW4ibfWZsMu0AE=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-306-76clD6tQM0y_bI5ptJWcCA-1; Mon, 02 Jun 2025 16:32:59 -0400
-X-MC-Unique: 76clD6tQM0y_bI5ptJWcCA-1
-X-Mimecast-MFC-AGG-ID: 76clD6tQM0y_bI5ptJWcCA_1748896378
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4ff581df3so1076378f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 13:32:59 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="TZ2O+KIk"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a375e72473so2813746f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 13:33:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=citrix.com; s=google; t=1748896382; x=1749501182; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:subject:references:cc:to:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=1igCTBg9M81etI/7/Mz0eq6DzBa8ui/fcMAMLIQ4xMI=;
+        b=TZ2O+KIksRGjRtvkO/Ln6aTJxDb7SunEX1vso66rsihUyrP//M9pbaZiZRIDM/H9Ip
+         GEVNqG2vsLqJ0FhxhEkax/+utF2K+cVgGUf6ni+zmfAnAD0cNsMtcx9R+OCPukWDe9B7
+         yO6aj8OGs9sV99BeIx5a0bsUFP2WQ5dPTHgeo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748896378; x=1749501178;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:from:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=rV/xn46OPX4p3xq3mkWtZ8NGtbJKFadJJeI/QsB8Plk=;
-        b=N+I+eoiiAhsTAFfGc7kc2LyzPvhAjvNtdIWkmpJCxu7If0JJ71EP1ckZ5kY6zgW4w4
-         6S0b/6X4xDyyliO043FvPHJ3qvgFj99N0nBmH+L/EHagWRcYNu/H2j4t9QLM+Omh3q9Y
-         i1MEi4kSjBP9t1YsTbN6oJOvhd7S5yfIR7Ra1kN5TpEJOpxZrC/m49joxCD3y+iaGVjA
-         2/iN5tEHfzXS2dUOgk4LN6HuGkAALzBbDLsVquljFLZTxjLVyxM9SpoTioJwMHehRGar
-         STvKs8xcUbp939vbkvmhHsfLxKc35WSVQ7iBqAx42+GGtVe/g7xbxUUJD8o6tKAsaOqD
-         mu8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVbCSdbclp3ztGALFo+Ox+QZ8LLQ2QRF6Qz6OxgtKdie6V+lDF09wT8UfaOekeU1EdiiVHaKQPZqPVPJMU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHT+XuD52P1M6kaw+O9DxDfBpw88pQF5bt5ixmSYPFf+/78MVT
-	4dFs3YJzSmry//rilKy1Jrz5RH/Mj6Rcg+YDKXfKXQUG021ppgJIa+Y4Mg9pcc2aaifX61Xgvqg
-	R/QNC34Us7hOaajCZJDcNbPx5ygT6HAgdOTeOlFlV/wuuJuZvjid04geVMAWn6hk2Ow==
-X-Gm-Gg: ASbGncuGYnDavZcB0C7z+P5EEvH9upEEYIlu/ajrrN1DdI2rYKt46vma1n+lGX0n4YM
-	Se3SINdKDayj5yAj/+rwwmpwrq6OnOAVsZjN7+xwkA9Q172LCG6VoHUpXM9ec5rwD0hi3T4iebJ
-	K944xxl+R8QF9f7D6Sh9kSkoLVLtc6SoniImFPh84x0sTxEfEz9UJPEKnh/eQWDqycwe+XwH57D
-	n35pgqIh/on94fT/tfIxI+z7ZncC50G4CfZyUDgQFEr4/J6KA9iPEovHxUHbBzC2tZwRVMIIDHe
-	JnsL4K0A13+Pw8bDjitEnEYv1WkNILADp03Ymedwfk8EL1mQohNG+eQJb1qm+NhDzfO1rC2wElE
-	LHHdcEMmwRKfbG+6GelrIpPM+l/IOIUaE05HrZ0s=
-X-Received: by 2002:a05:6000:2507:b0:3a4:f7e7:3630 with SMTP id ffacd0b85a97d-3a51419e594mr6704f8f.15.1748896378414;
-        Mon, 02 Jun 2025 13:32:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGKGMuCXnK5YSdjQL2VvSTmgIciOLzGBriUAeXPzCZMHVa3TD18rFDC3ib6WqfRPIEUfRZ+WA==
-X-Received: by 2002:a05:6000:2507:b0:3a4:f7e7:3630 with SMTP id ffacd0b85a97d-3a51419e594mr6658f8f.15.1748896377906;
-        Mon, 02 Jun 2025 13:32:57 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f34:a300:1c2c:f35e:e8e5:488e? (p200300d82f34a3001c2cf35ee8e5488e.dip0.t-ipconnect.de. [2003:d8:2f34:a300:1c2c:f35e:e8e5:488e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe73f83sm15508352f8f.49.2025.06.02.13.32.56
+        d=1e100.net; s=20230601; t=1748896382; x=1749501182;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:subject:references:cc:to:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1igCTBg9M81etI/7/Mz0eq6DzBa8ui/fcMAMLIQ4xMI=;
+        b=ouOGr3BA+W/lgVx3428xKI4T1gL1AtXtv8Tb1eCVPwHWlFddOVLt9EwDHy1A4gB41t
+         ffnGYOTZazkvzMAmUsEZrEZZODKhMVY4FEm5/Pkhb1/yTwR1dshwtx4kz9hCXqI0qz5U
+         GEcO1LvMH0f3UwNtoYQpwDDdQ+BawRSosidnf00mk/3pbre2p7vyk0Qwo9+igPVr/kbt
+         eX2W0SM3/DBuMA3L1KUbNCjfW/sCBBzoZcAK6YeT9sqIrwAZcM6XcbN5jM3YTimGdkd5
+         wnOp9IidhAMPDGeR/pyZ50805RElv5pxO53tsNXUelMESMm4c/aT+pJXAOacbFus5zZy
+         44dQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV4txIuqVa0it1gQm6e6sBuJrpgc5+s8EQlKdV8np6zjqi2WNVhQLVUY6SceIWbU6e4yTPW+FxnBWLP1Ww=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFz80D+gp+hGOMfW7dbNbXMoYXnNOwSYnlOKWXjBWbqWsVXf8R
+	8WukgogzqpqkJORo7gxB+NMl5VpqkZ2J0L9SIpqpNDFg7UHMbR/JSSQTGvy4VzD3+S8=
+X-Gm-Gg: ASbGnctnlbn9d8HSnzKw/3nzfYHJg/X7U8mJDLZX7AhcDHsi617AXR8jXvHpJZcK6t2
+	w6VzBybHz/sdI/UvTUMc0Vk9vtWu0BEnxs0yECMIhtCMQKlxU7zbW89YbY7+62X1tnycJ8BBGU6
+	54CLCTMHSCvcwl8kdUeuhgrgK/HyGHf5u02Q0zI2xH4EYab26W+7l6VdYiHJ8cfvNNBTZ6u0+1X
+	i6pfdwc47qh7ie0J63s96SOUvr6APFn0U1s4ovHF7kGHsVFvsSLwluHguK3Ag8ErL9SIcVRkT99
+	K/jbJKqMWyhNhs5NguyA7AKZqJ9OFUKGBIKvAR+KLuQ0H4164QH9J8GqC9g3eCpob+IRckoFDDq
+	dpATuaJikai0BQPPd
+X-Google-Smtp-Source: AGHT+IGOvpazNhuZMWJQ17+Yy/GhcjW53zYX10UajG+DWN0YUyI16gKxZfI2YhIPBmqpryYnvC8fCw==
+X-Received: by 2002:a5d:584a:0:b0:3a4:cfbf:5197 with SMTP id ffacd0b85a97d-3a4f7a1c629mr10706766f8f.18.1748896382549;
+        Mon, 02 Jun 2025 13:33:02 -0700 (PDT)
+Received: from [192.168.1.183] (host-92-26-98-202.as13285.net. [92.26.98.202])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7f90c40sm136392385e9.2.2025.06.02.13.33.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Jun 2025 13:32:57 -0700 (PDT)
-Message-ID: <842b8b5f-fe0b-436b-b8d7-64b215bdf9d9@redhat.com>
-Date: Mon, 2 Jun 2025 22:32:55 +0200
+        Mon, 02 Jun 2025 13:33:02 -0700 (PDT)
+Message-ID: <4e592449-7abb-4d41-992b-7fe25f667691@citrix.com>
+Date: Mon, 2 Jun 2025 21:33:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,105 +65,68 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 2/3] mm: add STATIC_PMD_ZERO_PAGE config option
-From: David Hildenbrand <david@redhat.com>
-To: Pankaj Raghav <kernel@pankajraghav.com>, Christoph Hellwig <hch@lst.de>,
- Pankaj Raghav <p.raghav@samsung.com>
-Cc: Suren Baghdasaryan <surenb@google.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Vlastimil Babka <vbabka@suse.cz>,
- Baolin Wang <baolin.wang@linux.alibaba.com>, Borislav Petkov <bp@alien8.de>,
- Ingo Molnar <mingo@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>,
- Zi Yan <ziy@nvidia.com>, Mike Rapoport <rppt@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>, Michal Hocko <mhocko@suse.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Thomas Gleixner <tglx@linutronix.de>, Nico Pache <npache@redhat.com>,
- Dev Jain <dev.jain@arm.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-block@vger.kernel.org, willy@infradead.org,
- x86@kernel.org, linux-fsdevel@vger.kernel.org,
- "Darrick J . Wong" <djwong@kernel.org>, mcgrof@kernel.org,
- gost.dev@samsung.com
-References: <20250527050452.817674-1-p.raghav@samsung.com>
- <20250527050452.817674-3-p.raghav@samsung.com>
- <20250602050307.GC21716@lst.de>
- <aa6fcbdd-5b1f-412c-a5db-f503f8a7af72@pankajraghav.com>
- <04a27029-df1e-43a7-8642-15f351121438@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <04a27029-df1e-43a7-8642-15f351121438@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To: jpoimboe@kernel.org
+Cc: acarmina@redhat.com, kees@kernel.org, linux-kernel@vger.kernel.org,
+ mark.rutland@arm.com, peterz@infradead.org, torvalds@linuxfoundation.org,
+ x86@kernel.org
+References: <fm4xl3yt26xbqq3oczrlbbo6ot5t6nelxweuscrbkcialcz6sp@zx57t3jh463g>
+Subject: Re: [RFC 6/8] x86_64/bug: Implement __WARN_printf()
+Content-Language: en-GB
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
+ 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
+ 6+ahAA==
+In-Reply-To: <fm4xl3yt26xbqq3oczrlbbo6ot5t6nelxweuscrbkcialcz6sp@zx57t3jh463g>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 02.06.25 22:28, David Hildenbrand wrote:
-> On 02.06.25 16:49, Pankaj Raghav wrote:
->> On 6/2/25 07:03, Christoph Hellwig wrote:
->>> Should this say FOLIO instead of PAGE in the config option to match
->>> the symbol protected by it?
->>>
->> I am still discussing how the final implementation should be with David. But I will
->> change the _PAGE to _FOLIO as that is what we would like to expose at the end.
-> 
-> It's a huge page, represented internally as a folio. No strong opinion,
-> as ...
-> 
-> MMF_HUGE_ZERO_PAGE vs. mm_get_huge_zero_folio vs. get_huge_zero_page vs
-> ... :)
+> Yeah, IIRC, the problem I ran into was that clang doesn't allow defining
+> asm macros in global asm().
 
-Just to add, the existing one is exposed (configurable) to the user through
+Macros in global asm was fixed in Clang 6. 
+https://bugs.llvm.org/show_bug.cgi?id=36110
 
-/sys/kernel/mm/transparent_hugepage/use_zero_page
+But https://github.com/llvm/llvm-project/issues/60792 is still unfixed
+and waiting to trip people up.
 
-combined with the implicit size through
-
-/sys/kernel/mm/transparent_hugepage/hpage_pmd_size
-
--- 
-Cheers,
-
-David / dhildenb
-
+~Andrew
