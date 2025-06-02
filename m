@@ -1,161 +1,158 @@
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC4B1E25F2;
-	Mon,  2 Jun 2025 09:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32BD01E3790
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 09:48:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748857721; cv=none; b=TfjSWfJIFHUjT1QmlhyWdF7sZp+W0ROpQe59a2MRlkr5r+3jDMioQ+/QyWt+BoOgplNLRQHPVpJVvvnTkzbFe4z46C/HJUbKvhWpQe/wx9y2KNTCKVa2A/8Y9nDwfUYdc19tb+WHEqDt1T1EUJe2DNpPRudOsHsF0DiRRg2IDIc=
+	t=1748857728; cv=none; b=Y+W9ekpgswcFxNdLrgOYMwFuaUoSIpdi8kRiLDB21m6WUDuRnXr1Fur3jQofA4zLbBe+Zkj0gTTp44KHG/ry5HPxYcsShfmrBVVQ3yvu6ANO0ho5q6KckutY2SMoQxoh+cJjuc/CaEf8GLekY9UvMJhGIUT67khZAoRQuQGVLRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748857721; c=relaxed/simple;
-	bh=OKeStrGIby2EGi8mJ3mXl/AW4GYR762m/+3o9JFp7m0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=srR8ox2jMJ2RA1fT5bwBwHRcLOQBbL+DGE0RTZ6d5RDdMGHxsf6iUZKwESAgSeVj/iVdZOe6Pwbt36J5kTelMypTygsPQYXnf8jkirdJc/GeOAZFQhkL6YcSA0aoKwrV1zqtK0a4nvxplrlmbUWmlrgki7URzWQuCpfuYZpuf9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W0K0/FwT; arc=none smtp.client-ip=209.85.222.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748857728; c=relaxed/simple;
+	bh=ZqAe0XxBRYxYACmyGo/2UtIEvjApYGwR2wXetHXMxwI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AT91SeNdja+m9jM0H/mde+PxuQMaw7JggCHXultdihJhQ0R+et/RVieb0vzb6y8pyfbNcH8RhoZ7wQ3FaxWbpq4WQSFkg8lVQZdTMHNULl4lqKN8buOQhD1kRWW2exgFtQYa8yY/dKVoODjpZClt5ys9mt73QPadI7P3QTV96sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=NnyhKqcG; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W0K0/FwT"
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-87dfeb9d0c9so611657241.3;
-        Mon, 02 Jun 2025 02:48:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="NnyhKqcG"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54998f865b8so3963328e87.3
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 02:48:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748857719; x=1749462519; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Cu1Khd9CgiQKdcwgPbMeK/RzLAfO2doPW3CBZFxJfBM=;
-        b=W0K0/FwTY/FI3dhB1dRqeX9HO10RtYiWsZNFLGKDUeV7Nb0sfMwVH6gHnRqminVh7j
-         OG38Al6BxYl0L0UrkB2+hb+IDovEf82zStSj7jIfy3Kzm7RMQmEnq393SLQW3tz1JyRQ
-         ormguJK24PSTHzqS7WSj7Ya+UVN0rkytz1dT/lPnS6c75LijoP6HCn5dFtEY0JejGMx7
-         AseLdx0i2h6i3Maqstu/tDGqmKwuqxGKOljoQc9GL6TGZlgMAARvjSlYI5q/k9Jk2No4
-         kWpp9njx94fogbqooahy/5KeqkDnkLVoBOXtioeaORutwk76jn7rHOIkeMlABm+f5y3A
-         TKbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748857719; x=1749462519;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1748857724; x=1749462524; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Cu1Khd9CgiQKdcwgPbMeK/RzLAfO2doPW3CBZFxJfBM=;
-        b=qRBzKh31BPXh4m/gGrvEhr6XuBAo5Pi3wBOHxbcCllC+EQEZBs2N1IYZVPPCbgi3vK
-         IkF+diTgglQ3ikeuEW1ebM8oWuQ9m1u+lRVQ11Gzi6/ylU8jZVEXons/ECHm2YgsptMm
-         BHW5vltP6OWo0yiMkuHPem6p/tqvv7L9LYXD0ZBjvuAxT3ELUxbro3igUH2jN6AAJzek
-         I2WyH3XaJRpR2d+64cOyo8rlT1VgENYNd9t5cwrQOSCij3LnMwvq7KM8IOosObtdYF8d
-         qYSp6pmUS/ILuxl3RYiIg9oIkiMqEeQWrwryKWHYUqf/25/GwzLMlxKNT8q1wsB8zKxl
-         yfkA==
-X-Forwarded-Encrypted: i=1; AJvYcCV4RnEe2qHphy59ky2TQakL+EhzsilyhFN7nSMR8Ijgoc00ZisbnWnHHeijg6M6Y1cENtZpDqo/XfZV@vger.kernel.org, AJvYcCV8jny1Pn1oOO25ONgTMdUCyImcgKCfAEAi8MXmet0jYPTHjPE1Ht6aTihCL5EO0nX9cZryjJM8S5jm03ws@vger.kernel.org, AJvYcCVDMQfKKS7uairob+6P6sXalcjSHLGqzuP5A+QC/IOS/WV1nRgjUaJdyRTdSPRjEWo1KLtwTCACvmb2@vger.kernel.org, AJvYcCVJoJOVRJqbnCNM+zqdcgZO7GGwS5I3N8nKgT1ynVqBQimBMudBFr+49thaZzlmA3oasRQaec00GY6+@vger.kernel.org, AJvYcCX99jt1x4FLP6iK5MbItUgs4QxHwmd5cxjc5Mh19y9+cMEa3Ukg0488OoZDOii0V8KgBBkRzP2ZtPw8@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3lDdtrtA8VcdTqlgp9DY9K5y9W3HvitDNaWbEF4vRB05hB3px
-	HR4nyiMfDrq/VsQbIWqEcWo+Ld6XUgCZYDyCj+8m+jJvJnsyL09Ra29W
-X-Gm-Gg: ASbGncs21CfoO8PPnEU0eFlOq3CqD67baqMhm/5Ra6T2wnieLc5rxBZeMWzNdNPBwbj
-	lL+l8PACgKTGGqJ4DAN4MJ0qyCH2xUlD1EAQqWpTAG76RKY96DZviZ6dT6KRRRonCRoNNPRldCw
-	IHnz5K8HX+7+XgowOZhyPmkonpPA8/Fk2+devVC2NTPD7GfbjCTAeuH1ovj8iVzy6+qqxbaA13E
-	9GvrB92qbcJuWrwNlLIwbsXNWPzZGl2dOWvWgDbp/4qeza9ueJdd8zfGKz15BLXuIRUCZr3bRqT
-	6G7y9fG1MquyzldzxICMSy5ZbcFLl0NAMXbQQyM91TbR2e5iH0AJ0eNKucsjjXJ3EOifQhzKXZ+
-	C
-X-Google-Smtp-Source: AGHT+IHuPPrU0h5hoopFKW1BD5CeygjjdtkEywfgREUczufl9/6ic34e8Vw+3bJZzrWb+kOFlgD1xg==
-X-Received: by 2002:a05:6102:949:b0:4e6:f7e9:c4a5 with SMTP id ada2fe7eead31-4e701ccd25emr4346427137.22.1748857718821;
-        Mon, 02 Jun 2025 02:48:38 -0700 (PDT)
-Received: from HYB-DlYm71t3hSl.ad.analog.com ([2001:a61:1225:ec01:ecf2:8e21:9f0f:159e])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87e2a3b63besm6069305241.30.2025.06.02.02.48.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 02:48:38 -0700 (PDT)
-Date: Mon, 2 Jun 2025 11:48:26 +0200
-From: Jorge Marques <gastmaier@gmail.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Jorge Marques <jorge.marques@analog.com>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	David Lechner <dlechner@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] iio: code: mark iio_dev as const in
- iio_buffer_enabled
-Message-ID: <o5uaw756dho7v76pzvkn7ukfpsam4vmaryzvmtxmfehu7hnqa7@ppasiqfu44rq>
-References: <20250422-iio-driver-ad4052-v2-0-638af47e9eb3@analog.com>
- <20250422-iio-driver-ad4052-v2-2-638af47e9eb3@analog.com>
- <20250426164524.166ce3c8@jic23-huawei>
+        bh=zpFde9Lqa/a3If18OyyVampcrtgmxniT0nRXi/1rUjE=;
+        b=NnyhKqcGdgqJiuzWDZuWt0uXApqdK3tuwbusZBdhwyJpJknXlsQSQLLB4vSNQJlLJy
+         i1LgyR6I8guGipeYZKzux8SPqevjx/cLktdmqXPbyTOi+f0SqzLvlLQMmiGsO1rA1WJa
+         f6gtWXeqFdh9bkvirtPiGaeDaG5oi/qyTQbcJlzZwnVQBs8wSyjlzgPrqsoDFNy1WZej
+         z71KFOQ2FWCzy50PhnNjyMFe2Q18FAXOXBQefA0mMdIGTcq20AL0wNhAhoFp7HkOoV0V
+         llRKsZpfWTVzHKYAslL9aOlT39OIeD9sbMnea6biDm8rVTrC0g6QAkRQ7sKbWj4g29k8
+         qhoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748857724; x=1749462524;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zpFde9Lqa/a3If18OyyVampcrtgmxniT0nRXi/1rUjE=;
+        b=VecIf8JOQlJ0dnq7LMkcejqHaSlIVwVNthyYdJy+uhoDUf7lOC6zCfxw1uHHsTFwVG
+         kAN9wDRLD3DnnaJpPWiZUx6opWF40TfWkoLmYohnQww7F95RfKHRrutq+2XCmbIe6u0g
+         +70ZFGEY9WT/1AoVLUO7Q1e+EHEvjvSFElSVvZSt2iCZTUm0tRyNrP1VRSA8MlFT2FOd
+         Rq866QqK50u6DuhUCiYbAXJ4K3qOyHNlpB0idQsihoDsh6QBuiCq+/D1s8u0AeWE6a5a
+         YY6/1fwcl+hO2HtTUlJ2y9cdoOP3DZOfl9c9u+IlkdM7zO+DP/zBUhe9E/BERJ5qMb5l
+         T15w==
+X-Forwarded-Encrypted: i=1; AJvYcCU28YqEo1JplAtjh1bOej+xbWtSw21cWgiTbFbAS7gdiOuFavvLIKQVMSnHbQR5K+gHzd+HUXnTAMOcRiA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbY4Ngr1+9l807W0GG4NDxAePR4yFJe0udST7od8RrVy1Yktpl
+	vThMORuCAHB9e8T7Z3Q+JCmpeNSrDg0ikktXC/q5U2PggbeCJNEvOWre74QMimgeG9Ub6G067Qm
+	77x5AHxwPa9Aa+nUk8ITxib/Qk8BmUwLeCiQXVZIydg==
+X-Gm-Gg: ASbGncsTuwQ/De+ue0+bUD5lA/abvId9LFXxVcW6BWYACGQGM5QtOVg3kR19rTDUXFZ
+	IdU0V3oulpd1fzM/e5jhsjIVclN2wcw1SlprmNbTgZfuCfExcc5kLOYuNeH2MGjCPYTWnevfBUF
+	+C05PGwbvyjAuKtUbj7UqxlLu1XBYFI06zQuq17ujzVKpteYR39adubyB2UilbDKX9
+X-Google-Smtp-Source: AGHT+IHu6LRM/rAlao7v5WhiyZHb32X4y+4RMYsF+bArPMNjiiqB+mqgfQKEsN6bAuhhQzHwTmuEp3BH5GI+EqJoEdU=
+X-Received: by 2002:a05:6512:3d28:b0:553:2c58:f967 with SMTP id
+ 2adb3069b0e04-5533b93b8f9mr3820418e87.56.1748857724100; Mon, 02 Jun 2025
+ 02:48:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250426164524.166ce3c8@jic23-huawei>
+References: <20250522-gpio-palmas-gpio-v2-1-89f209d4a949@gmail.com>
+In-Reply-To: <20250522-gpio-palmas-gpio-v2-1-89f209d4a949@gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 2 Jun 2025 11:48:33 +0200
+X-Gm-Features: AX0GCFtddofCDjgZ5DIeg4B0vNuU-cCbYFWXjGMtM5hdIOhc8iwC4AUoKRGZuts
+Message-ID: <CAMRc=Mdwa=DuubA6P+EnjUAQE8XupYsbo=3LuH-jYEBttREGqg@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: palmas: Allow building as a module
+To: webgeek1234@gmail.com, Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 26, 2025 at 04:45:24PM +0100, Jonathan Cameron wrote:
-> On Tue, 22 Apr 2025 13:34:47 +0200
-> Jorge Marques <jorge.marques@analog.com> wrote:
-> 
-> > The iio_dev struct is never modified inside the method, mark it as
-> > const.
-> > This allows to be called from get_current_scan_type, and is useful
-> > when the scan_type depends on the buffer state.
-> Now I'm confused.   scan type is only relevant when the buffer is enabled
-> so how can it change as a result of that action?
-> 
-> Maybe all will become clear in later patches!
-> 
-> Jonathan
+On Fri, May 23, 2025 at 12:22=E2=80=AFAM Aaron Kling via B4 Relay
+<devnull+webgeek1234.gmail.com@kernel.org> wrote:
+>
+> From: Aaron Kling <webgeek1234@gmail.com>
+>
+> The driver works fine as a module, so allowing building as such. This
+> drops the driver specific init in favor of the module macro which does
+> the same, plus handling exit.
+>
+> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> ---
+> Changes in v2:
+> - Drop module alias and add module device table
+> - Link to v1: https://lore.kernel.org/r/20250522-gpio-palmas-gpio-v1-1-d6=
+b1a3776ef5@gmail.com
+> ---
+>  drivers/gpio/Kconfig       |  2 +-
+>  drivers/gpio/gpio-palmas.c | 10 +++++-----
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index f2c39bbff83a33dcb12b2d32aa3ebc358a0dd949..be5d823516d0e2bff4b4231da=
+c6a82bf10887118 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -1464,7 +1464,7 @@ config GPIO_MAX77650
+>           These chips have a single pin that can be configured as GPIO.
+>
+>  config GPIO_PALMAS
+> -       bool "TI PALMAS series PMICs GPIO"
+> +       tristate "TI PALMAS series PMICs GPIO"
+>         depends on MFD_PALMAS
+>         help
+>           Select this option to enable GPIO driver for the TI PALMAS
+> diff --git a/drivers/gpio/gpio-palmas.c b/drivers/gpio/gpio-palmas.c
+> index 28dba7048509a3ef9c7972c1be53ea30adddabb0..eaef29f59292de5281f31e196=
+961d90974e65b75 100644
+> --- a/drivers/gpio/gpio-palmas.c
+> +++ b/drivers/gpio/gpio-palmas.c
+> @@ -140,6 +140,7 @@ static const struct of_device_id of_palmas_gpio_match=
+[] =3D {
+>         { .compatible =3D "ti,tps80036-gpio", .data =3D &tps80036_dev_dat=
+a,},
+>         { },
+>  };
+> +MODULE_DEVICE_TABLE(of, of_palmas_gpio_match);
+>
+>  static int palmas_gpio_probe(struct platform_device *pdev)
+>  {
+> @@ -191,9 +192,8 @@ static struct platform_driver palmas_gpio_driver =3D =
+{
+>         .driver.of_match_table =3D of_palmas_gpio_match,
+>         .probe          =3D palmas_gpio_probe,
+>  };
+> +module_platform_driver(palmas_gpio_driver);
+>
+> -static int __init palmas_gpio_init(void)
+> -{
+> -       return platform_driver_register(&palmas_gpio_driver);
+> -}
+> -subsys_initcall(palmas_gpio_init);
 
-Hi Jonathan, you are right, this commit will be dropped in v3. The
-driver scan type depends on oversampling value, so it has an
-has_ext_scan_type, and is only relevant for buffer readings.
+This being put into an earlier initcall than device_initcall() makes
+me think, someone had a reason for it and this change can break this.
+I'm Cc'ing the original author who seems to still be active in the
+kernel.
 
-My mistake came to fruition from the fact the tool libiio at any context
-but local does not support changes to /sys /dev, including scan_type
-changes (it scans once at service start), so I kept getting odd
-behaviour that led me to the wrong solution.
+Laxman: can you verify that this can be safely moved to module_initcall()?
 
-So, in summary for V3, the widths are set as follows:
+Bartosz
 
-* spi_transfer.bits_per_word = scan_type.realbits
-* spi_transfer.len = scan_type.realbits == 24 ? 4 : 2
-* scan_type.storagebits = 32: Used by tools, such as libiio, to compute
-  number of samples.
-
-This ensures the minimum number of bytes transferred in the SPI bus, to
-optimize speed, while respecting SPI Engine Limitation of a fixed width
-(generally 32-bits). Similar to commit
-ce45446e520c85db022 (iio: adc: ad4000: Avoid potential double data word read)
-
-Regards,
-Jorge
-
-> 
-> > 
-> > Signed-off-by: Jorge Marques <jorge.marques@analog.com>
-> > ---
-> >  drivers/iio/industrialio-core.c | 2 +-
-> >  include/linux/iio/iio.h         | 2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-> > index 178e99b111debc59a247fcc3a6037e429db3bebf..bc6a2ac6415eccf201e148ea98c0b5982787eb6d 100644
-> > --- a/drivers/iio/industrialio-core.c
-> > +++ b/drivers/iio/industrialio-core.c
-> > @@ -212,7 +212,7 @@ EXPORT_SYMBOL_GPL(iio_device_id);
-> >   *
-> >   * Returns: True, if the buffer is enabled.
-> >   */
-> > -bool iio_buffer_enabled(struct iio_dev *indio_dev)
-> > +bool iio_buffer_enabled(const struct iio_dev *indio_dev)
-> >  {
-> >  	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
-> >  
-> > diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-> > index 638cf2420fbd85cf2924d09d061df601d1d4bb2a..88569e1a888bde4d2bfb5b9f030096af1c15d68d 100644
-> > --- a/include/linux/iio/iio.h
-> > +++ b/include/linux/iio/iio.h
-> > @@ -629,7 +629,7 @@ struct iio_dev {
-> >  
-> >  int iio_device_id(struct iio_dev *indio_dev);
-> >  int iio_device_get_current_mode(struct iio_dev *indio_dev);
-> > -bool iio_buffer_enabled(struct iio_dev *indio_dev);
-> > +bool iio_buffer_enabled(const struct iio_dev *indio_dev);
-> >  
-> >  const struct iio_chan_spec
-> >  *iio_find_channel_from_si(struct iio_dev *indio_dev, int si);
-> > 
-> 
+> +MODULE_DESCRIPTION("TI PALMAS series GPIO driver");
+> +MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
+> +MODULE_LICENSE("GPL");
+>
+> ---
+> base-commit: b36ddb9210e6812eb1c86ad46b66cc46aa193487
+> change-id: 20250520-gpio-palmas-gpio-a99fc046dc7f
+>
+> Best regards,
+> --
+> Aaron Kling <webgeek1234@gmail.com>
+>
+>
