@@ -1,163 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D24212D8A;
-	Mon,  2 Jun 2025 15:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B70E1C245C
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 15:37:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748878633; cv=none; b=AkGpfB4Qm1d0RejuwftvgVgW67udqQZWReD3a3u0yp26JeqRvBv6NeewgvZHW41K9wEJkgUCjKhYA3sN9+xh7sOLvoKN5OtMuymUwfP+nNQKM9DkzyUcqeo1KzZisBM9oz0blG/0KXbtPDvOQHDkm1HVizC5YF/1bprzu8bOd3I=
+	t=1748878681; cv=none; b=Taus3iN4cYyjOCJVB5CKkoH7tt2qNeD5aBwzRcwVas8Qm0JLeljfw8o3WAbVDU5T55eeoBisPgc9nPQDgGMyTbYrWeSni3YBU11+7HzcgMfPHXWniVSylDbIbRCTgbRz/F1VlbF3nGhxyXULtk0jqGXqfR6DUf1JE6xwwNp2keM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748878633; c=relaxed/simple;
-	bh=iLVn1HXm8BcU24Gao1meuqf82wyqfJbGKL+FZ3VLebU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f1NBTg0LCdMPE174DKPsUoslZy+xSWUfuMN8Ctd2Q3d6KeeQ37zet2NUszIo/Ymind2xD+zEJJRLdxHjJE6/Wu135ngq9Hch7pb5UBMGOeFdbAM/dRZNaprOHW9qfbV0yDIWRNcHU5sf8Olh4z1ZXNv3n0VRxGJWz20yN5TasyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cmsD1JiB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748878681; c=relaxed/simple;
+	bh=46RA2zg9WevoEZjwKKYlv3xRBsM9MZ2ghSOKjuqtL64=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=mhAPYh/4kFo8ogY06QUOYsNg7BiLxAKnxn8ddbAtrezHeAAM8LOZbtbkczAffZ1tWkCMUehBrEkUtDPIUNf3bkrWeCaWiLxDLXpm865NNIAXzWFh2EboJNUwYnlDayQBJOSpR/6ioY2todjPnnasqY5SzHR1i63sYBJcgUMf31M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ndufresne.ca; spf=pass smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=G3wPYItD; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ndufresne.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cmsD1JiB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47782C4CEEB;
-	Mon,  2 Jun 2025 15:37:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748878633;
-	bh=iLVn1HXm8BcU24Gao1meuqf82wyqfJbGKL+FZ3VLebU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=cmsD1JiBvgSUCl64K3XoVRxIYSXXof9N126xrp4lmYP6vyFS2X7HZAL4TwPc2hJRW
-	 q0KlV/Tzg1RM1/d8uqw1VQAqNTy1zGmQ7hFgBpEu/atBT8MGTjWEASL6BTJmTF6JJ9
-	 XApzlsxKq64pwQ31PLkT+5kyGCNv9eokEXTIr2ThrltJegWIWAgH9CnL5sAs22/Y7S
-	 PZgOtMQ8tYzhwAl7HTHGwOfN1e9VoyGvvn/qGsBETg9qxTjnYOymSVL/HAAtNonI9Q
-	 uxG7AQmIilXkZ2fH+AsbEoeNA3rPDcQo18BCI1ltuLM4UYCYtdxdZWd1yf07Jy7ETS
-	 9G7n2/A/4tcyA==
-From: Bjorn Andersson <andersson@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-remoteproc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Beleswar Padhi <b-padhi@ti.com>,
-	Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Xiaolei Wang <xiaolei.wang@windriver.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Iuliana Prodan <iuliana.prodan@nxp.com>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Tanmay Shah <tanmay.shah@amd.com>
-Subject: [GIT PULL] remoteproc updates for v6.16
-Date: Mon,  2 Jun 2025 10:37:09 -0500
-Message-ID: <20250602153710.3447-1-andersson@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="G3wPYItD"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4a44b9b2af8so17356981cf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 08:37:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1748878678; x=1749483478; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=x1dHqucytNvJE5sOBJHQ1JgixIBWN/66qkZtbhARHsQ=;
+        b=G3wPYItDtNQPMB7L8VdHb9an4fLg1TqZ9cugyafGcfmJ5bXSTU5fxvDneyxFAFGUA8
+         4+dT08njpHTAT4RaE7ch+V4PgQBKr5Cyba2zljN59hSmRTGmPPQ7afNh8lwNIP0LZgSc
+         1QcIkDJ75qmvkcKGKjIxJ3D0lMwkYWL13UstteynaAGSVvhxdY2eI3X8b1VP56zebBd6
+         UmO39SISNXkkKZ4tESBDcaPCWT5qolCsOqk/QZRfxysEHNAaMocQjFtnlFYZL7L0m2pg
+         h6UMGbTknV/F6mzSXRncBu1KqNUmiLubh1wm6w8/1vO6WzzhGFAY5yUUNoyCcI6kZvUH
+         P41A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748878678; x=1749483478;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=x1dHqucytNvJE5sOBJHQ1JgixIBWN/66qkZtbhARHsQ=;
+        b=AFlCrNcDxoyB8S/GwwSzDAzIUCrrapcVn6iGxlKw4ObHBJhRcSQWFHjXK3hCpRW5SI
+         x6iQ5UeOBO3rfDLR/WtbwE+1oD+f/v+jyrACynjVJKYWwa3zI5uGXiOWoirT6xAaw5tk
+         e1oZjQ23cYaIbjBKzSkQxNLCJSqqhs5u+0luflbRJAuGYclmIbVv76GCylQwNv0WIQvM
+         nPzakrlGeEtzyofvfDlbW0EugEDbCJI0eAFRoR0Z0z+RTyvHKPC2jJ5Qnu9TfGyXEOGl
+         b7yxhPUqFC8hXvZGV6DTqmN3q7xdvAnoj0P+JrLmMHh5SP3JR2dP5fTvZCpL6vatnuA8
+         +wgw==
+X-Forwarded-Encrypted: i=1; AJvYcCWUJhPpNOxo/6xHIdSV/8BIUNNcJaSJhtIz/a2Pe49O2Y4jh4/IXQGnWoxD4BGArnHUklPSE861vDPR+gs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4o6Pn8vQcDdOxjQiUEKX6EzWktDbeMXd0hNDGXL/X6uj6Y0jn
+	41ZE2yZGvGnermNgE33tMDYSuBDNaos/B/r0V1+RsHUtLHrl/gsALJFDEBGanmvjZkk=
+X-Gm-Gg: ASbGncsLvPyQfiiCwTWVZ4idE06CSENruzjs5F+0tXz22YCybz1oq4eEHdQHts/459y
+	fY0lRPYqnzTwe2bPfw1E5TObjqzcRjKeBSz5W/qLxLBM20YEXWc7kyX+UYXGYazoU18t6rRnZKW
+	WK6FbvKedSkA2QyOuYfdHS1hD4HDw/Kqygour1N+wVtDsLHYL+4tpL7+krvltbvjWpFgxRPGkrB
+	nAg4FMLiQDxwb1lQYKCRM+lPv51iJTCGXMSaMTdfNBlWv/BwCBvNHCgfpEfm/vInviFtZdnjZJj
+	wVyLM4Ey3HGAk+VCu0vr/GFyTh3E9xMCBpAvH0VZ34iTV2hXYuyqKY1H
+X-Google-Smtp-Source: AGHT+IFAxvbyts/4W1PU88jgJRJyPWsVyM/w1Qedjlhc5oIe8j+5+JXf7JzKMu2VMp0D7TLMJ22XCQ==
+X-Received: by 2002:a05:622a:5598:b0:4a4:3d27:77a0 with SMTP id d75a77b69052e-4a4a5ec583fmr144502391cf.2.1748878677932;
+        Mon, 02 Jun 2025 08:37:57 -0700 (PDT)
+Received: from ?IPv6:2606:6d00:10:5285::5ac? ([2606:6d00:10:5285::5ac])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a435772fb1sm56762721cf.8.2025.06.02.08.37.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Jun 2025 08:37:57 -0700 (PDT)
+Message-ID: <01ee4dbe14917dff1e0d256dde6724f81a23ba4b.camel@ndufresne.ca>
+Subject: Re: [PATCH v6 17/20] media: platform: mtk-mdp3: Use
+ cmdq_pkt_jump_rel() without shift_pa
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+To: Jason-JH Lin <jason-jh.lin@mediatek.com>, Rob Herring <robh@kernel.org>,
+  Krzysztof Kozlowski	 <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jassi Brar	 <jassisinghbrar@gmail.com>, Chun-Kuang
+ Hu <chunkuang.hu@kernel.org>,  AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Nancy Lin	
+ <nancy.lin@mediatek.com>, Singo Chang <singo.chang@mediatek.com>, Paul-PL
+ Chen	 <paul-pl.chen@mediatek.com>, Moudy Ho <moudy.ho@mediatek.com>, Xavier
+ Chang	 <xavier.chang@mediatek.com>, Xiandong Wang
+ <xiandong.wang@mediatek.com>,  Sirius Wang <sirius.wang@mediatek.com>, Fei
+ Shao <fshao@chromium.org>, Chen-yu Tsai <wenst@chromium.org>, 
+	Project_Global_Chrome_Upstream_Group@mediatek.com,
+ devicetree@vger.kernel.org, 	linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, 	linux-mediatek@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, 	linux-media@vger.kernel.org
+Date: Mon, 02 Jun 2025 11:37:56 -0400
+In-Reply-To: <20250601173355.1731140-18-jason-jh.lin@mediatek.com>
+References: <20250601173355.1731140-1-jason-jh.lin@mediatek.com>
+	 <20250601173355.1731140-18-jason-jh.lin@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
+Hi,
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+Le lundi 02 juin 2025 =C3=A0 01:31 +0800, Jason-JH Lin a =C3=A9crit=C2=A0:
+> With the removal of the shift_pa parameter, cmdq_pkt_jump_rel_temp()
+> can be replaced by the new cmdq_pkt_jump_rel() without shift_pa.
+>=20
+> Then, remove the cmdq_shift_pa variable in the mdp_dev structure for
+> each mbox client.
+>=20
+> Fixes: ade176534112 ("soc: mediatek: cmdq: Add parameter shift_pa to cmdq=
+_pkt_jump()")
+> Signed-off-by: Jason-JH Lin <jason-jh.lin@mediatek.com>
+> ---
+> =C2=A0drivers/media/platform/mediatek/mdp3/mtk-mdp3-cmdq.c | 2 +-
+> =C2=A0drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.c | 2 --
+> =C2=A0drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.h | 1 -
+> =C2=A03 files changed, 1 insertion(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-cmdq.c b/drive=
+rs/media/platform/mediatek/mdp3/mtk-mdp3-
+> cmdq.c
+> index 7575ec376367..c35fe0e3a4d5 100644
+> --- a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-cmdq.c
+> +++ b/drivers/media/platform/mediatek/mdp3/mtk-mdp3-cmdq.c
+> @@ -638,7 +638,7 @@ static struct mdp_cmdq_cmd *mdp_cmdq_prepare(struct m=
+dp_dev *mdp,
+> =C2=A0		goto err_free_path;
+> =C2=A0	}
+> =C2=A0	cmdq_pkt_eoc(&cmd->pkt);
+> -	cmdq_pkt_jump_rel_temp(&cmd->pkt, CMDQ_INST_SIZE, mdp->cmdq_shift_pa[pp=
+_idx]);
+> +	cmdq_pkt_jump_rel(&cmd->pkt, CMDQ_INST_SIZE);
 
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+Did I miss something or this reverts the change made in 15/20 ? I'm also
+unsure if its correct to ask for backports of this with Fixes tag. Isn't th=
+is
+for MT8196, a new board ?
 
-are available in the Git repository at:
+Nicolas
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/remoteproc/linux.git tags/rproc-v6.16
-
-for you to fetch changes up to 5779f6f9a64ffc3e002a37ab1f78521d9a5c0100:
-
-  remoteproc: k3: Refactor release_tsp() functions into common driver (2025-05-20 11:19:12 -0600)
-
-----------------------------------------------------------------
-remoteproc updates for v6.16
-
-Fix resource cleanup in the remoteproc attach error handling code paths.
-
-Refactor the various TI K3 drivers to extract and reuse common code
-between them.
-
-Add support in the i.MX remoteproc driver for determining from the
-firmware if Linux should wait on a "firmware ready" signal at startup.
-
-Improve the Xilinx R5F power down mechanism to handle use cases where
-this is shared with other entities in the system.
-
-----------------------------------------------------------------
-Arnaud Pouliquen (2):
-      dt-bindings: remoteproc: stm32-rproc: Add firmware-name property
-      remoteproc: stm32_rproc: Allow to specify firmware default name
-
-Beleswar Padhi (34):
-      remoteproc: k3-r5: Refactor sequential core power up/down operations
-      remoteproc: k3-m4: Don't assert reset in detach routine
-      remoteproc: k3-r5: Re-order internal memory initialization functions
-      remoteproc: k3-r5: Re-order k3_r5_release_tsp() function
-      remoteproc: k3-r5: Refactor Data Structures to Align with DSP and M4
-      remoteproc: k3-r5: Use k3_r5_rproc_mem_data structure for memory info
-      remoteproc: k3-{m4/dsp}: Add a void ptr member in rproc internal struct
-      remoteproc: k3-m4: Add pointer to rproc struct within k3_m4_rproc
-      remoteproc: k3-m4: Use k3_rproc_mem_data structure for memory info
-      remoteproc: k3: Refactor shared data structures
-      remoteproc: k3: Refactor mailbox rx_callback functions into common driver
-      remoteproc: k3: Refactor .kick rproc ops into common driver
-      remoteproc: k3-dsp: Correct Reset logic for devices without lresets
-      remoteproc: k3-m4: Introduce central function to put rproc into reset
-      remoteproc: k3: Refactor rproc_reset() implementation into common driver
-      remoteproc: k3-dsp: Correct Reset deassert logic for devices w/o lresets
-      remoteproc: k3-m4: Introduce central function to release rproc from reset
-      remoteproc: k3: Refactor rproc_release() implementation into common driver
-      remoteproc: k3-m4: Ping the mbox while acquiring the channel
-      remoteproc: k3: Refactor rproc_request_mbox() implementations into common driver
-      remoteproc: k3-dsp: Don't override rproc ops in IPC-only mode
-      remoteproc: k3-dsp: Assert local reset during .prepare callback
-      remoteproc: k3: Refactor .prepare rproc ops into common driver
-      remoteproc: k3: Refactor .unprepare rproc ops into common driver
-      remoteproc: k3: Refactor .start rproc ops into common driver
-      remoteproc: k3: Refactor .stop rproc ops into common driver
-      remoteproc: k3: Refactor .attach rproc ops into common driver
-      remoteproc: k3: Refactor .detach rproc ops into common driver
-      remoteproc: k3: Refactor .get_loaded_rsc_table ops into common driver
-      remoteproc: k3: Refactor .da_to_va rproc ops into common driver
-      remoteproc: k3: Refactor of_get_memories() functions into common driver
-      remoteproc: k3: Refactor mem_release() functions into common driver
-      remoteproc: k3: Refactor reserved_mem_init() functions into common driver
-      remoteproc: k3: Refactor release_tsp() functions into common driver
-
-Bjorn Andersson (1):
-      Revert "remoteproc: core: Clear table_sz when rproc_shutdown"
-
-Dan Carpenter (1):
-      remoteproc: qcom_wcnss_iris: Add missing put_device() on error in probe
-
-Iuliana Prodan (1):
-      remoteproc: imx_dsp_rproc: Add support for DSP-specific features
-
-Konrad Dybcio (1):
-      dt-bindings: remoteproc: qcom,sm8350-pas: Add SC8280XP
-
-Krzysztof Kozlowski (1):
-      dt-bindings: remoteproc: qcom,sm8150-pas: Add missing SC8180X compatible
-
-Siddharth Vadapalli (2):
-      remoteproc: k3-r5: Drop check performed in k3_r5_rproc_{mbox_callback/kick}
-      remoteproc: k3-dsp: Drop check performed in k3_dsp_rproc_{mbox_callback/kick}
-
-Tanmay Shah (1):
-      remoteproc: xlnx: Avoid RPU force power down
-
-Xiaolei Wang (2):
-      remoteproc: core: Cleanup acquired resources when rproc_handle_resources() fails in rproc_attach()
-      remoteproc: core: Release rproc->clean_table after rproc_attach() fails
-
- .../bindings/remoteproc/qcom,sm8150-pas.yaml       |    3 +
- .../bindings/remoteproc/qcom,sm8350-pas.yaml       |   54 +-
- .../bindings/remoteproc/st,stm32-rproc.yaml        |    4 +
- drivers/remoteproc/Makefile                        |    6 +-
- drivers/remoteproc/imx_dsp_rproc.c                 |   98 +-
- drivers/remoteproc/qcom_wcnss_iris.c               |    2 +
- drivers/remoteproc/remoteproc_core.c               |    7 +-
- drivers/remoteproc/stm32_rproc.c                   |    8 +-
- drivers/remoteproc/ti_k3_common.c                  |  551 +++++++++++
- drivers/remoteproc/ti_k3_common.h                  |  118 +++
- drivers/remoteproc/ti_k3_dsp_remoteproc.c          |  616 +-----------
- drivers/remoteproc/ti_k3_m4_remoteproc.c           |  583 +----------
- drivers/remoteproc/ti_k3_r5_remoteproc.c           | 1018 +++++++-------------
- drivers/remoteproc/xlnx_r5_remoteproc.c            |   34 +-
- 14 files changed, 1266 insertions(+), 1836 deletions(-)
- create mode 100644 drivers/remoteproc/ti_k3_common.c
- create mode 100644 drivers/remoteproc/ti_k3_common.h
+> =C2=A0
+> =C2=A0	for (i =3D 0; i < num_comp; i++) {
+> =C2=A0		s32 inner_id =3D MDP_COMP_NONE;
+> diff --git a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.c b/drive=
+rs/media/platform/mediatek/mdp3/mtk-mdp3-
+> core.c
+> index 8de2c8e4d333..2f8147481bd6 100644
+> --- a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.c
+> +++ b/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.c
+> @@ -293,8 +293,6 @@ static int mdp_probe(struct platform_device *pdev)
+> =C2=A0			ret =3D PTR_ERR(mdp->cmdq_clt[i]);
+> =C2=A0			goto err_mbox_destroy;
+> =C2=A0		}
+> -
+> -		mdp->cmdq_shift_pa[i] =3D cmdq_get_shift_pa(mdp->cmdq_clt[i]->chan);
+> =C2=A0	}
+> =C2=A0
+> =C2=A0	init_waitqueue_head(&mdp->callback_wq);
+> diff --git a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.h b/drive=
+rs/media/platform/mediatek/mdp3/mtk-mdp3-
+> core.h
+> index 05cade1d098e..430251f63754 100644
+> --- a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.h
+> +++ b/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.h
+> @@ -126,7 +126,6 @@ struct mdp_dev {
+> =C2=A0	u32					id_count;
+> =C2=A0	struct ida				mdp_ida;
+> =C2=A0	struct cmdq_client			*cmdq_clt[MDP_PP_MAX];
+> -	u8					cmdq_shift_pa[MDP_PP_MAX];
+> =C2=A0	wait_queue_head_t			callback_wq;
+> =C2=A0
+> =C2=A0	struct v4l2_device			v4l2_dev;
