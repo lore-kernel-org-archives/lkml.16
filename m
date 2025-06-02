@@ -1,141 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f193.google.com (mail-pg1-f193.google.com [209.85.215.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB61722A4E1;
-	Mon,  2 Jun 2025 21:39:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3ACC19F48D
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 21:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748900398; cv=none; b=ci3uEDl/VyOby/CV8vIOi6Vo03fCi9KoBbHysSgoDcSIbrTpTujOYUjZyhiC4L9p9XPhyA3OPqF66/8f+LfyuLMKV6s1K6izxQUL2W9M4ipdz/9flUwibdiFJfflCJLLaCJdyMiV5gYDxBqoBMoH0b2PaO6zpwJ8k35fJW4QfXM=
+	t=1748900446; cv=none; b=S2J5959w8IWkXcC5Vx27RwKDnmI7jHWpaUwoUg5KQRlolF7XzeQceUD9F3Sm5I117DVA2XdTWJNl1gggCujA/R1ulDBYMh+Z7xYUaHQ/wVL/cz7t5/aojP/a1xk4PSCMCHDvm9IDuvwj6r7Gifu2Ot+Z+XQH2mktzfVVjo3tYUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748900398; c=relaxed/simple;
-	bh=D5rMwgMuw7vFEBLzBjHtdZTfsg5qAmhgT0qIubto9J4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RQv02A9q7Fh9She5cofbobYrg2P9mC163sdWSkvZ1Y1xa71Xmu2eSBWl1+bIashl2ppSMRbLoTStetbgKbZbYR4HnQi0EvD9GElVjFQe6dZmS9/9hOnj5mGF+5Koo6me8XEr16shIRYSpgCKKgVWZBK6IlJvhTkvzaVKXYSrXPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HLKRAjGi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748900446; c=relaxed/simple;
+	bh=MD3Hx0PsLVPvqYbI5JUFbtzTS2HGAC1XfOCDTE1J6NA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XTVQ7frJ2NWTLA13SaFxVHpiINQgNlAUDnnxJIB2PU1s3zy8CuTmIPLDfb3B706JY+02VClV/UdIex/1Atccz0cNfhVP9VLEOBsMKfU5AukhdhC64QTTQPMlOXISZLyPV7uqLegLh/aTM3TUSGDGXIC+ySwQDGFC6rn7349M+SQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=eDdGO8kC; arc=none smtp.client-ip=209.85.215.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HLKRAjGi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3251BC4CEF9;
-	Mon,  2 Jun 2025 21:39:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748900398;
-	bh=D5rMwgMuw7vFEBLzBjHtdZTfsg5qAmhgT0qIubto9J4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=HLKRAjGigSWDLuFnxM8vofEHocn+JaqHR5pGIkrgYeAW9be3PE/2mdjXlbixptb1b
-	 +cczS7ulkWOezL95LKGr+vc7fxZvxUSTB8TjnAW6Dns7BujG4ebPMBc2orA0uVW/8V
-	 rPoHCnWMnbRUE7wqBffUXbNgFxj3ELkLnjOjAojnaqmmcqN9/ASdBGrFxCZV7vBLwR
-	 qv3aQ6dXZSfZ6qEgo1ishXxI1LPnExdY3nQ3wW4kX8EkRAfCsubEzqg0YNJbYwVkWu
-	 dZ0TXpJLBMduAS2nqLZqwITfT6HsO6xv9E+3PmeM137n683ixBcQZyjRhUvZ0w9har
-	 enoLdX9N4N7ig==
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4a56cc0def0so37242801cf.3;
-        Mon, 02 Jun 2025 14:39:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUNVHiAu7LWdfaxaglj5qLv88bNA+MgkqknGfbmVnRANrvssnfDcSny5yGAHxXgLNdWNY/8vsu3wDquXPlUxk6ZqZbzEVz6@vger.kernel.org, AJvYcCVu7CQalzFvMl7wdmaULg/Oc2UDMGGe7HHAudyO3mUfInmPb29E99sd/lEe7MFNfaL8CF8=@vger.kernel.org, AJvYcCWC9tlzIqAOPkaze1xpuN6vR/UwA/9D+6AdUjOLPI1JgmRSUOUy5sd9A3fCg4FVr0t0n6ej3vcLLvzyYfNc@vger.kernel.org, AJvYcCXf8q8HZdk7kA/5BAPuWmpEq57S1ds9U1xXfhDr30QzJor0VLYnd4nm4App55o6+bc2y8e3lWEUx5i3cKGrdw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJq6YHQR17zggIjERDTpOJc7dNTTrESVBpR/ye4CilillTM1zA
-	P4+9rIx+2cEfnHAJQMIyhC3GhgjsclHt66QwyCsmpTC4CcAVvwhUhRKjmFuCW7L9yCdm+1Xn59U
-	+HJ96hiiA3Q5lphcQ0OKJNzdOwCWSOVM=
-X-Google-Smtp-Source: AGHT+IEl19xYKphp6ScpotIBp7vISmshyLgOHscf74bsxVvcAveqQtSi4J8d9EExxhp1QPyLAmlOFMD+xXrQ1asLmnM=
-X-Received: by 2002:a05:622a:8ca:b0:4a4:31e2:2e77 with SMTP id
- d75a77b69052e-4a4aed6d87fmr194893451cf.50.1748900397157; Mon, 02 Jun 2025
- 14:39:57 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="eDdGO8kC"
+Received: by mail-pg1-f193.google.com with SMTP id 41be03b00d2f7-b13e0471a2dso3176438a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 14:40:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1748900444; x=1749505244; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=3Wfcsct/RbfXh9gBujyvXqCMpWoxkItE4xZpRwa3uYM=;
+        b=eDdGO8kCGRnHf+4hY+M3kQGJkLUcLBaq09qD82AsJyno5mtQQT/SrBM8NSgmigj4yh
+         XDZeMZ3f6K+beQkBaC7BxKDEHR1tTisONXeH4Zjs1SCO2GCh6c6Th1lDw+HLloldhrOE
+         uAvelT8Q27I1MHZMq0h6OaLfHxTDYjCoNaWUI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748900444; x=1749505244;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3Wfcsct/RbfXh9gBujyvXqCMpWoxkItE4xZpRwa3uYM=;
+        b=kdBh6q6/QETJDQOZxWmfulnVzLcj3ye6M1c0k2gQ/hUj9OoLhvoV/bo/7Cz0l3hDzZ
+         yBr3UeB6Lx2SW7Fa7Mddx597dtMsNclY2MfG+2aIW3KPLSKwn/cOUxgivavu+6ewgVJF
+         mCXN7T+WgcdhSe7DD45/CH/uGfVaenXrgkrPhu1HQ2S64XybFrbgsPn55Ml49ROx/TmG
+         ptP68N7g6D8iYdMmjFqXGtZ3EZfWUstOQ+SxKWo9nOVx9Hp3o6q1GPIYjv+wgK10WkQf
+         G4Wk/fCNKTX+6oQmWYTYd2CsbbbmSzK/gEbFYlpbXPSr6y7Q76x6NwHwpqY8nwlV2Hqz
+         Db2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX6kCEkCZ90db5jWz2rn32ZnpAUQccOq4OAQebe1oSkOKvnYWUgOH/jtMITHqSPZYDwmp2w0zI5cXGB7Ew=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxtEmi18sIIaeWx5SsExAqLPlSrBeh4VdnvRwuIRCvpzCD0Gvm
+	htIjqlM5TgRDfo9tv6kQyUXCtfSZZvCKhMvjYIpE1q9SsO9itNI66HPfX9kuDKUBFqpF9wOkQ7W
+	JdHe1MzloTJs=
+X-Gm-Gg: ASbGnctX3A86eruK8Pw/x99N0RBFmCLiq9t7khwAWaTvxZCiP3jF7eJnxZE2cmcP+8a
+	bU2tqwmYYO4xZ4QWwhtU9cv0bZaaNaWmfZqTmYYsbKCuckW84qIWsDI2lVnXLepbDz79oLy6RRK
+	6OhJOYM4kxD+WHIHPvPcIV96zsATho2qKFqvxdu10YQluTYfAVdW/2EVWoLYeC02NknDzGa/OBp
+	ye7G6bWkZMUTg6CtQgCYIEfcsxxWb/Uujv2b6gPImamxMEFY1cLu912nc0OZoCbQD33vXsVX5mQ
+	XuZQJ5VTmqM4kt64gSOZ99Emi6bn1ZYFcr/zpZBwiPz+QcRyz5hZriSheQiB5UUenxrs4PGiEZK
+	dEXIjlIaMEjFk59Y=
+X-Google-Smtp-Source: AGHT+IHqurbVLLDjA6j+ImMIOr7ckqg42bZY6z4nAYJoikFjcwuKdDkolbzpzGkMXD95DZcen89etQ==
+X-Received: by 2002:a17:90a:1508:b0:312:d8f4:e91c with SMTP id 98e67ed59e1d1-312d8f4eb87mr2091011a91.25.1748900444161;
+        Mon, 02 Jun 2025 14:40:44 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-312e741433bsm82628a91.9.2025.06.02.14.40.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Jun 2025 14:40:43 -0700 (PDT)
+Message-ID: <c1c3b951-19b8-462a-9dee-a1b893251d6f@broadcom.com>
+Date: Mon, 2 Jun 2025 14:40:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528222623.1373000-1-song@kernel.org> <20250528222623.1373000-4-song@kernel.org>
- <20250528223724.GE2023217@ZenIV> <yti2dilasy7b3tu6iin5pugkn6oevdswrwoy6gorudb7x2cqhh@nqb3gcyxg4by>
- <CAPhsuW4tg+bXU41fhAaS0n74d_a_KCFGvy_vkQOj7v4VLie2wg@mail.gmail.com>
- <20250529173810.GJ2023217@ZenIV> <CAPhsuW5pAvH3E1dVa85Kx2QsUSheSLobEMg-b0mOdtyfm7s4ug@mail.gmail.com>
- <20250602-lustig-erkennbar-7ef28fa97e20@brauner> <CAPhsuW7ogestn8Cc2jac2O0fnWcH_w=HuZQiSOx0umM4uT6Whg@mail.gmail.com>
- <CAADnVQ+_T2UTVQA9XXew26XR8zqhNpwX33Uy_pVW0_7s-bexLg@mail.gmail.com>
-In-Reply-To: <CAADnVQ+_T2UTVQA9XXew26XR8zqhNpwX33Uy_pVW0_7s-bexLg@mail.gmail.com>
-From: Song Liu <song@kernel.org>
-Date: Mon, 2 Jun 2025 14:39:43 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW4JRgWDJNp5yysH1xNvaXCLg3c_QEHAMiuCwzbZ7e-hhQ@mail.gmail.com>
-X-Gm-Features: AX0GCFskcyFCGev_LYvQ3JP4unXF6FRY_i6cg5E06f6c2dBU7o8khi7-pZnJUk0
-Message-ID: <CAPhsuW4JRgWDJNp5yysH1xNvaXCLg3c_QEHAMiuCwzbZ7e-hhQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 3/4] bpf: Introduce path iterator
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	bpf <bpf@vger.kernel.org>, Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	LSM List <linux-security-module@vger.kernel.org>, Kernel Team <kernel-team@meta.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard <eddyz87@gmail.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Matt Bobrowski <mattbobrowski@google.com>, Amir Goldstein <amir73il@gmail.com>, repnop@google.com, 
-	Jeff Layton <jlayton@kernel.org>, Josef Bacik <josef@toxicpanda.com>, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net v2 5/5] net: dsa: b53: do not touch DLL_IQQD on
+ bcm53115
+To: Jonas Gorski <jonas.gorski@gmail.com>,
+ Florian Fainelli <florian.fainelli@broadcom.com>,
+ Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Vivien Didelot <vivien.didelot@gmail.com>,
+ =?UTF-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250602193953.1010487-1-jonas.gorski@gmail.com>
+ <20250602193953.1010487-6-jonas.gorski@gmail.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250602193953.1010487-6-jonas.gorski@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 2, 2025 at 8:40=E2=80=AFAM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Mon, Jun 2, 2025 at 6:27=E2=80=AFAM Song Liu <song@kernel.org> wrote:
-> >
-> > On Mon, Jun 2, 2025 at 2:27=E2=80=AFAM Christian Brauner <brauner@kerne=
-l.org> wrote:
-> > >
-> > > On Thu, May 29, 2025 at 11:00:51AM -0700, Song Liu wrote:
-> > > > On Thu, May 29, 2025 at 10:38=E2=80=AFAM Al Viro <viro@zeniv.linux.=
-org.uk> wrote:
-> > > > >
-> > > > > On Thu, May 29, 2025 at 09:53:21AM -0700, Song Liu wrote:
-> > > > >
-> > > > > > Current version of path iterator only supports walking towards =
-the root,
-> > > > > > with helper path_parent. But the path iterator API can be exten=
-ded
-> > > > > > to cover other use cases.
-> > > > >
-> > > > > Clarify the last part, please - call me paranoid, but that sounds=
- like
-> > > > > a beginning of something that really should be discussed upfront.
-> > > >
-> > > > We don't have any plan with future use cases yet. The only example
-> > > > I mentioned in the original version of the commit log is "walk the
-> > > > mount tree". IOW, it is similar to the current iterator, but skips =
-non
-> > > > mount point iterations.
-> > > >
-> > > > Since we call it "path iterator", it might make sense to add ways t=
-o
-> > > > iterate the VFS tree in different patterns. For example, we may
-> > >
-> > > No, we're not adding a swiss-army knife for consumption by out-of-tre=
-e
-> > > code. I'm not opposed to adding a sane iterator for targeted use-case=
-s
-> > > with a clear scope and internal API behavior as I've said multiple ti=
-mes
-> > > already on-list and in-person.
-> > >
-> > > I will not merge anything that will endup exploding into some fancy
-> > > "walk subtrees in any order you want".
-> >
-> > We are not proposing (and AFAICT never proposed) to have a
-> > swiss-army knife that "walk subtrees in any order you want". Instead,
-> > we are proposing a sane iterator that serves exactly one use case
-> > now. I guess the concern is that it looks extensible. However, I made
-> > the API like this so that it can be extended, with thorough reviews, to
-> > cover another sane use case. If there is still concern with this. We
-> > sure can make current code not extensible. In case there is a
-> > different sane use case, we will introduce another iterator after
-> > thorough reviews.
->
-> It's good that the iterator is extensible, but to achieve that
-> there is no need to introduce "enum bpf_path_iter_mode"
-> which implies some unknown walk patterns.
-> Just add "u64 flags" to bpf_iter_path_new() and
-> if (!flags) return -EINVAL;
-> Then we'll have a way to extend that kfunc if really necessary.
-> Deleting and introducing new kfuncs/iterators is not a big deal,
-> but reserving 'flags' as an option for extension is almost
-> always a good backup.
+On 6/2/25 12:39, Jonas Gorski wrote:
+> According to OpenMDK, bit 2 of the RGMII register has a different
+> meaning for BCM53115 [1]:
+> 
+> "DLL_IQQD         1: In the IDDQ mode, power is down0: Normal function
+>                    mode"
+> 
+> Configuring RGMII delay works without setting this bit, so let's keep it
+> at the default. For other chips, we always set it, so not clearing it
+> is not an issue.
+> 
+> One would assume BCM53118 works the same, but OpenMDK is not quite sure
+> what this bit actually means [2]:
+> 
+> "BYPASS_IMP_2NS_DEL #1: In the IDDQ mode, power is down#0: Normal
+>                      function mode1: Bypass dll65_2ns_del IP0: Use
+>                      dll65_2ns_del IP"
+> 
+> So lets keep setting it for now.
+> 
+> [1] https://github.com/Broadcom-Network-Switching-Software/OpenMDK/blob/master/cdk/PKG/chip/bcm53115/bcm53115_a0_defs.h#L19871
+> [2] https://github.com/Broadcom-Network-Switching-Software/OpenMDK/blob/master/cdk/PKG/chip/bcm53118/bcm53118_a0_defs.h#L14392
+> 
+> Fixes: 967dd82ffc52 ("net: dsa: b53: Add support for Broadcom RoboSwitch")
+> Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+> ---
+> v1 -> v2:
+> * new patch
+> 
+>   drivers/net/dsa/b53/b53_common.c | 8 +++++---
+>   1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
+> index be4493b769f4..862bdccb7439 100644
+> --- a/drivers/net/dsa/b53/b53_common.c
+> +++ b/drivers/net/dsa/b53/b53_common.c
+> @@ -1354,8 +1354,7 @@ static void b53_adjust_531x5_rgmii(struct dsa_switch *ds, int port,
+>   	 * tx_clk aligned timing (restoring to reset defaults)
+>   	 */
+>   	b53_read8(dev, B53_CTRL_PAGE, off, &rgmii_ctrl);
+> -	rgmii_ctrl &= ~(RGMII_CTRL_DLL_RXC | RGMII_CTRL_DLL_TXC |
+> -			RGMII_CTRL_TIMING_SEL);
+> +	rgmii_ctrl &= ~(RGMII_CTRL_DLL_RXC | RGMII_CTRL_DLL_TXC);
 
-Sounds good! I will prepare v2 with a flags field.
+Are not we missing a:
 
-Thanks,
-Song
+if (dev->chip_id != BCM53115_DEVICE_ID)
+	rgmii_ctrl &= ~RGMII_CTRL_TIMING_SEL;
+
+here to be strictly identical before/after?
+
+>   
+>   	/* PHY_INTERFACE_MODE_RGMII_TXID means TX internal delay, make
+>   	 * sure that we enable the port TX clock internal delay to
+> @@ -1375,7 +1374,10 @@ static void b53_adjust_531x5_rgmii(struct dsa_switch *ds, int port,
+>   		rgmii_ctrl |= RGMII_CTRL_DLL_TXC;
+>   	if (interface == PHY_INTERFACE_MODE_RGMII)
+>   		rgmii_ctrl |= RGMII_CTRL_DLL_TXC | RGMII_CTRL_DLL_RXC;
+> -	rgmii_ctrl |= RGMII_CTRL_TIMING_SEL;
+> +
+> +	if (dev->chip_id != BCM53115_DEVICE_ID)
+> +		rgmii_ctrl |= RGMII_CTRL_TIMING_SEL;
+> +
+>   	b53_write8(dev, B53_CTRL_PAGE, off, rgmii_ctrl);
+>   
+>   	dev_info(ds->dev, "Configured port %d for %s\n", port,
+
+-- 
+Florian
+
