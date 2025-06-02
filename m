@@ -1,29 +1,29 @@
-Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013019.outbound.protection.outlook.com [52.101.72.19])
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013009.outbound.protection.outlook.com [40.107.159.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C85F17BBF
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 14:33:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8072222582
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 14:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.9
 ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748874840; cv=fail; b=KKWRXarC8kep+caS4nW2T7jrlWCzN3asUBZIZJhLzGZPgRi3YeI0tTqYwvbvPnTq9q8j2SQh2/w2eFdbHKtCRZqus6ZL7rUNHsO7cfnG1Oj4gv2ZNn9vmH0yHioqPbrmgjzfDCqzsZZMMbaR4ot8HIA9XkTJLV0LKD4bOyJXJv0=
+	t=1748874841; cv=fail; b=b9a3u7egghudEE5AjWdAhuJzeTghz66mg7Je/gY0IsimtEZlXocfIJr6bLsw9zsAkxPqH/Rj3Ga+iaLVbeQJo7ib1Zb6AuDmfZ/tco+LMhh72UZP1iwkHdYHsBYcKoGQuXQzcxDK/ZGGSFvZOfM/abFtd5QVYGcwXucrItDfssw=
 ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748874840; c=relaxed/simple;
-	bh=n8Kw4ysoxQ18cBDDo5xiIZ/hMcESe7A0L1cx6FpkmQg=;
+	s=arc-20240116; t=1748874841; c=relaxed/simple;
+	bh=OdgPsmJShLMqy6CEmWOAgAuD5BM2smBCJIb5RP83EZA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gHhTYQRRu2lPwzGBWexoZ8zM/7xjchh0jHyJ2v2+4Xti6WriFzLuQqNm3N7kDd8A51lygJm7sqfiP909gNjM7B7hpsTUM+rbHQXsaHs/qmhES92aNWfHtfqoVtsYKDLD0j5mICUsnMOWz/Kx0Jdx6Al2J2ovJTePd1En7GRMcVo=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=B7LH8wj8; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=B7LH8wj8; arc=fail smtp.client-ip=52.101.72.19
+	 Content-Type:MIME-Version; b=Sv3NAo392ymRuSQYtW9sRpefnYzUhAQolzErPXv8zxAdGm2rX3XT3ScTekX25401uRl9rp2S6G/2eaAdBhq+Ep/lOrFG475wBqB67vcJF6/P0U5vx2UK9jhZe2n7crWA+yE/nKjhmnNfQVcdjW2Iv101y9MWbX1j/JILcxEqWpw=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=MoRaI0yl; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=MoRaI0yl; arc=fail smtp.client-ip=40.107.159.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="B7LH8wj8";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="B7LH8wj8"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="MoRaI0yl";
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="MoRaI0yl"
 ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=p68q5kADRCBzcEd5mqG0fqWTwjQRU1Dwa4TyIbg3jdNjtlPTqKFrPTeomkYOR4THVNIcY7+a3rievMUMGxc/cNj0e6nnkLuwolvD/pWhK2WnHfoPBCsU78ZQhhywrF6aTqohKNo2+Yu567bZdW9xx3n/a/oS4PleBOWsOmiD4Xk8qWV/L8t6TNsm/WIZeOoWhUKkbjiW6ovnUD6QDE+0WlnSdr0poQWHyfEY4QxWOPCgDFm5Emey2hQ0gI+k6jT/G7LChiAWiGDy/iOpZd9+nXRfjvhNxJCNrZY9U8xJnU+HB2Dup98AFmsODX+SCJ7rO+Xg0CS14gxlR+GteSWatA==
+ b=JK1Jb8uQi3EFwws2Uw5Dkx7oKT5YKEBB4argIqITtrDBj17hq2zaUm4xqI/PgWJ+xBW96dlMJBtW9sQlCFAIJwINXmHFYAuPSzgONeH6/XONMMqZXOeC11jAzOpSU+n7cjgLrKMv0llZEtzSgttCfMns8UYDEfExBf4rd1DlQyYMT2BHtTOtGPjd2HN4nNDnRyhIV5RYb6MPNVzCN0MnOZMtJawgcYeG9Lf1E7Y2CoyYSCbgHBt1vlG98qfUsjCdeoQc9W2NUksJeBtj5Hu2X1NQsPam6Cj79rOr/7UZSZoyjqDYskbrKCRLVjZ7QJoFa0u0UZlgLluy0yeVoK7oIQ==
 ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7rDGmSdfteGoIfKuzX5uIALrHmiyn7prJje3zFECTP4=;
- b=fbasL7Q7iRq4cJsATU10zukgPCR6rbKRNx9iZ37fXOYGjpcNVvX0S6R7KgYC956xfrYdpMLkObLZd+zC7garJDslwRnSBohvrCLSMR4IYOdZ/D6JdVH/5n04BgxgR3Za8HdhcFeB12NU7IiISIojHa4+XOQ6rVwueIgrt79Rtg5JVaDl5u2cqJBGvSkYhh2W0g5aWLsptQfxMJIjCrrPSxW8Xb930a61ULCsio+RoMZB3wJo+7Dv5C9kBgtsTn5OwGkWuPEoTrnCt/faQ7tehn7xWEE0APwuqBUO3oQ8hwZ60LGznMABPFsW4w3T9YZuq4809Xdy1g8y0rY3fr49sQ==
+ bh=JVVLrqVeaW6kxWoPxTsHJPkp4beyND9FA1VU9K1vj6A=;
+ b=MTvJGlZWYgw8hFkwgC9umimk3BnBHWpQPZeI7BEOLXMH33eMu6X5/HifjVi7sbKUv7vXFInOhr5x2Za+OPjQga/8+le/VB0ZuuPULYpk1ebE1ib0awdtlv2bXNtt75PbG5asFxIcF89BYYDxje+qiTcCkPut5LQ4G5OgCl0+Fri4iEypczb6CVBlSGaQEO4eqMw969ATiSxIuA9VYemvdoEu5UDxYAlpCf2GFKiYZJwRNVOLiT3uzwz1rVEQjwDTz5ZjGOA6SdekJo8uCzL3ttGN3PbW4JcOgSlTH4UKd3B85Pz3Mu5xoO3ZW8JSQe2kVMlRqI+UQFEeYngpzTqsdA==
 ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
  4.158.2.129) smtp.rcpttodomain=lists.freedesktop.org smtp.mailfrom=arm.com;
  dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
@@ -32,18 +32,18 @@ ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
  dmarc=[1,1,header.from=arm.com])
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7rDGmSdfteGoIfKuzX5uIALrHmiyn7prJje3zFECTP4=;
- b=B7LH8wj8Pbl2xxrnC+hL1m79OkLSQ8N+y4joKe+fx5FkNe15YAlkKYu+5GP8RQcRixkzv/IFzvWe6qm6R2TMUXjVRZ6iZOL3Cyp6+WxtPSVO93DBkCxWFFV4M8VDVwmJ76i8dUSnK0rOEcF24xxniLvtAfi/3DulPxPqi7++e8o=
-Received: from CWLP123CA0102.GBRP123.PROD.OUTLOOK.COM (2603:10a6:401:5f::18)
- by PA6PR08MB10442.eurprd08.prod.outlook.com (2603:10a6:102:3c6::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Mon, 2 Jun
- 2025 14:33:53 +0000
-Received: from AM2PEPF0001C70D.eurprd05.prod.outlook.com
- (2603:10a6:401:5f:cafe::25) by CWLP123CA0102.outlook.office365.com
- (2603:10a6:401:5f::18) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.23 via Frontend Transport; Mon,
- 2 Jun 2025 14:33:51 +0000
+ bh=JVVLrqVeaW6kxWoPxTsHJPkp4beyND9FA1VU9K1vj6A=;
+ b=MoRaI0ylmmY2HYc32GyLaXlrKTUrBpufWfy6O6RW6IL+9rrY3ZjqU1pLK4Jd5WHVQe3yo0sinRmNj8yRqwXYiAPwnA6QfGztV3rpRR1yYYRaHF/t6/gMqk6Pmwd8d0OYf9/IBXeZvtzz3Ji6rjkhtV6jCVuHL4KIjGH+NbNnEqw=
+Received: from DUZPR01CA0100.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:4bb::8) by AM8PR08MB6450.eurprd08.prod.outlook.com
+ (2603:10a6:20b:317::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.37; Mon, 2 Jun
+ 2025 14:33:54 +0000
+Received: from DU2PEPF00028D0C.eurprd03.prod.outlook.com
+ (2603:10a6:10:4bb:cafe::d8) by DUZPR01CA0100.outlook.office365.com
+ (2603:10a6:10:4bb::8) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.29 via Frontend Transport; Mon,
+ 2 Jun 2025 14:33:54 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
  smtp.mailfrom=arm.com; dkim=pass (signature was verified)
  header.d=arm.com;dmarc=pass action=none header.from=arm.com;
@@ -51,34 +51,34 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  4.158.2.129 as permitted sender) receiver=protection.outlook.com;
  client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
 Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- AM2PEPF0001C70D.mail.protection.outlook.com (10.167.16.201) with Microsoft
+ DU2PEPF00028D0C.mail.protection.outlook.com (10.167.242.20) with Microsoft
  SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.29
- via Frontend Transport; Mon, 2 Jun 2025 14:33:49 +0000
+ via Frontend Transport; Mon, 2 Jun 2025 14:33:53 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HchyYc+1WrvFZGMKEg99DD/KLFeHJMpe9rO2YHmSI683NKlKmHqpY32KFmErX9ibpG6R9/pAzA2SjcxAEDsoKQEMRI09URA+/Jw69nCIrJm27g2u+fc7MXtdYEQ/tUSreosQ7m7PTtX8/CceWAlqOKrkzSfZ3BcrhHqiD2XKaEF6wRH1kWhVp12g/GSvVi5FvPjIbrvggm5Ud4hgQFwhtR7/QxEpW3tgym5IB1oha92m1vMXjZL/PJXv3Di3lJ/AvqnWXAJZ3I8gI7G7i2tjqjXBTo0wxViNigmoHbJQf40Uujb0HKVOzW9wS+vCIAW8HlKQxqbXV0ClQXJG0wJ0tw==
+ b=o4KB/rdzWJQwqCFsklKqbMzszdoOXp+LIEIHb4iZ7o5MAM3YF57qCpo14jEm1Y9WLtOyTZuP+PFiQGcnUwf/TtYVSvQ40+gbA9DTbNRCA9NTe3rGTDVJREgMaBhS5r4slTlQyvPeYMeQc22/4ezph0+Fe+1p+qFW1kwDu5zBi9sXr9X76Giw7mrIlFWV3vCyFceMvdhDtuu61naTnwbRcIlK25HjThGees2A0gzvpmSNemknvcTVj120VRHd1PwWfpJltRj12hsIS9LhRIib+wam1or6bwspj4J+DU1JqAs8Ab0vVc1RAk+deH2Ry3ucigHKbUI9YGj/DgW+J8O1Uw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7rDGmSdfteGoIfKuzX5uIALrHmiyn7prJje3zFECTP4=;
- b=Vd7LtyNjPfnKkfExrSVpwRsM+/oLsqyocW65HFVWP3RY0GsB0KEw1TDNa+ymJf1bJ6Q/RmeMlFg4ASEIMBPRMuFBwnpXA56WhtJZX1QpRi6UX/YN88WkEcwQ/onwq/vcRW2yba+U0JvfePxKE+f1Sa2DaRpTOjtfSnyg1JsXW6i5hSY5xXWDjimBLtr6x1zbo6+2ZdyA4G97oDBjMTuxW3tF9Si9L2+6xtJ733CUZqxTQIxPv9i/FRuzZd9fhIJ72JdRnbEdH+4hz+UEwX0tXIqDJSXwL3ckr4OaoBO7Scs1vKpkPSMkf5hafs0ZDtam84SwlXG6phcPAA5f4hJd7Q==
+ bh=JVVLrqVeaW6kxWoPxTsHJPkp4beyND9FA1VU9K1vj6A=;
+ b=ME1mYIB7P73O6G7Fpi0pIeqSVkykolOAy8oj0PjsOERezV4n9D8cLchSas28OI6JhCBvizBFRCy1HGUBrcvUZuDeG7yvHl4vxYv7NMj3sEy4HtehZIa4WLj6T5XsYV8Ir1c82crHrfYCrsUfhfDigND8gfPgQjG95WykBCmUqFDTmzWC131wccK8eOGGqM0WBf4+39vt1JvfCLK/G5ySQqFJ8aRPrZD5XYqvh1XaBzBfrIXeQVOr3gxPtAi7vA6AZXFu6Fc9hScm9wi6jlTllHTJcC9Z6fdi3RU2uUN7+TcSVSKQMT0/yJjeQprBVmYsHdPrFnjfi7ItVe0l8btc5g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7rDGmSdfteGoIfKuzX5uIALrHmiyn7prJje3zFECTP4=;
- b=B7LH8wj8Pbl2xxrnC+hL1m79OkLSQ8N+y4joKe+fx5FkNe15YAlkKYu+5GP8RQcRixkzv/IFzvWe6qm6R2TMUXjVRZ6iZOL3Cyp6+WxtPSVO93DBkCxWFFV4M8VDVwmJ76i8dUSnK0rOEcF24xxniLvtAfi/3DulPxPqi7++e8o=
+ bh=JVVLrqVeaW6kxWoPxTsHJPkp4beyND9FA1VU9K1vj6A=;
+ b=MoRaI0ylmmY2HYc32GyLaXlrKTUrBpufWfy6O6RW6IL+9rrY3ZjqU1pLK4Jd5WHVQe3yo0sinRmNj8yRqwXYiAPwnA6QfGztV3rpRR1yYYRaHF/t6/gMqk6Pmwd8d0OYf9/IBXeZvtzz3Ji6rjkhtV6jCVuHL4KIjGH+NbNnEqw=
 Authentication-Results-Original: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=arm.com;
 Received: from VI0PR08MB11200.eurprd08.prod.outlook.com
- (2603:10a6:800:257::18) by GVXPR08MB10809.eurprd08.prod.outlook.com
- (2603:10a6:150:158::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.37; Mon, 2 Jun
- 2025 14:33:11 +0000
+ (2603:10a6:800:257::18) by PAWPR08MB9640.eurprd08.prod.outlook.com
+ (2603:10a6:102:2ec::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.30; Mon, 2 Jun
+ 2025 14:33:20 +0000
 Received: from VI0PR08MB11200.eurprd08.prod.outlook.com
  ([fe80::d594:64a:dfc:db74]) by VI0PR08MB11200.eurprd08.prod.outlook.com
  ([fe80::d594:64a:dfc:db74%7]) with mapi id 15.20.8746.041; Mon, 2 Jun 2025
- 14:33:11 +0000
+ 14:33:19 +0000
 From: Karunika Choo <karunika.choo@arm.com>
 To: dri-devel@lists.freedesktop.org
 Cc: nd@arm.com,
@@ -91,16 +91,16 @@ Cc: nd@arm.com,
 	David Airlie <airlied@gmail.com>,
 	Simona Vetter <simona@ffwll.ch>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 4/7] drm/panthor: Add support for Mali-G710, Mali-G510 and Mali-G310
-Date: Mon,  2 Jun 2025 15:32:12 +0100
-Message-ID: <20250602143216.2621881-5-karunika.choo@arm.com>
+Subject: [PATCH v4 6/7] drm/panthor: Support GPU_CONTROL cache flush based on feature bit
+Date: Mon,  2 Jun 2025 15:32:14 +0100
+Message-ID: <20250602143216.2621881-7-karunika.choo@arm.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250602143216.2621881-1-karunika.choo@arm.com>
 References: <20250602143216.2621881-1-karunika.choo@arm.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: AM0PR10CA0037.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:20b:150::17) To VI0PR08MB11200.eurprd08.prod.outlook.com
+X-ClientProxiedBy: LO3P265CA0031.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:387::20) To VI0PR08MB11200.eurprd08.prod.outlook.com
  (2603:10a6:800:257::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -109,130 +109,206 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-TrafficTypeDiagnostic:
-	VI0PR08MB11200:EE_|GVXPR08MB10809:EE_|AM2PEPF0001C70D:EE_|PA6PR08MB10442:EE_
-X-MS-Office365-Filtering-Correlation-Id: 13cdcafa-046a-4691-8fb1-08dda1e27d86
+	VI0PR08MB11200:EE_|PAWPR08MB9640:EE_|DU2PEPF00028D0C:EE_|AM8PR08MB6450:EE_
+X-MS-Office365-Filtering-Correlation-Id: 897fe687-6346-4c50-131e-08dda1e27fb9
 X-LD-Processed: f34e5979-57d9-4aaa-ad4d-b122a662184d,ExtAddr,ExtAddr
 x-checkrecipientrouted: true
 NoDisclaimer: true
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Untrusted: BCL:0;ARA:13230040|1800799024|366016|376014;
 X-Microsoft-Antispam-Message-Info-Original:
- =?us-ascii?Q?096xOTEMfFVf0yslrAuPNyUFc5ijeU0DQ1OSy+uaKNNcEbjHfzbxOx/qLZmR?=
- =?us-ascii?Q?F2U54N6gEnjAkVNQmJFSvIHGH9fXOaAyVlPs0O8VVd+OeUuqszzAM4AdoDSl?=
- =?us-ascii?Q?RxFXhxVhTigCpKKAnz7eo5U54e+hw0RLBBWdT3gBUqZeZ+xwZNKS+I09hF+d?=
- =?us-ascii?Q?CqjERJ6c/Dtn8yUhY4Q9T6p2n5uUd9zQene7hgHHjmkhxKBmJqjIOqZvKeDH?=
- =?us-ascii?Q?/6LBOetg9fPuT9zgxUPjxyiCee+aNL90v6PK+yx+4y8Dl6LR7E3njzY7hy1J?=
- =?us-ascii?Q?GL3f4SRE7PiaE+cHa+nNWEZvLnhuLUg4agJzG9KjT2JGgQm2BVwKoMeU5s/m?=
- =?us-ascii?Q?4y+7AmIv6KVavlcmlKUE+V3OodcepTi7cxdD/S0hGisEUrMpRTFAbK3hHQU3?=
- =?us-ascii?Q?/pzarpxl56nqD9kFeREu8ORAWvE/FeQVeAoGTLpSKiZowTGOc2oXP1WY7udU?=
- =?us-ascii?Q?pdIssUm1mhdqlodoiwKcLtMyKaSQYEiFUVJTESHieUPM5czQtUL8SIyy8oCh?=
- =?us-ascii?Q?8wzr9v1aPQ+EwYaWvxnmmt/dfcmei9H9e+finGL6K5nZnAtN6eIz8kwP4HWq?=
- =?us-ascii?Q?pKZqwv4G4mpOh/KbYFt0Q41+4SEMcvToFURLOcdS4CZPTaNAzH1QlSy3Prjc?=
- =?us-ascii?Q?Rouh0/IxUkGuyjNtUCpbhMAw7UfNgrxRd0SU8PlfHjTxsUAheCdDWtO4dPpP?=
- =?us-ascii?Q?aXWGJaxxIo8w7ldmavagGH5YN3CK2mHw8IGn0oSFX9cqUiwkmBsCD3lqSqGx?=
- =?us-ascii?Q?jrPpAKZ6senS/3cgv/d8n7+NTTYMmhTo8yKvVDzu2qqH4w7AxM0mV6TlJYgZ?=
- =?us-ascii?Q?pXaF80DvVz3JvVjWYU/I1RLIueSprq9qx5vrcnm6pf7DCflu1SD+t8HMYLta?=
- =?us-ascii?Q?8cHSg4sBCwGG3L10LxZFCtqgh1Lb7Ixemp1JRTpPKtb5BjDH4hcr2kOtAlIK?=
- =?us-ascii?Q?6qF5FbfsbHIfjuvMOIU5A5p4b1sDmToQtxQCxW7tsv/G/RqL72tn0JiYkMbD?=
- =?us-ascii?Q?1LH3FJ25wqPK7JYNNvPTixkYqH8NSbnnktbFlP6kdmBfZ/HkZaLjBdtqoMx1?=
- =?us-ascii?Q?dKS4Y2EPqqCcDSOEfvnyNNoMPsIcWXYdw7hd6+ZHzH92S/QzctIPko7ZKar2?=
- =?us-ascii?Q?e+izPnAXcWLAvhs4v9iOgbh+gmXKZRRnsItUl2teyBeVmWKWWMUZF8J8EY1Z?=
- =?us-ascii?Q?D1SK9dTwOmHU0Ho4qm9Lcab+y4ZI946DMfFQN4m8ziRODUPE8iU1cSbmt037?=
- =?us-ascii?Q?9pVcrGhgR5l+z0vBNUfvIZKRztOy0sVeuyIOUGa7dAxP/kq2zge8nNOZlP3v?=
- =?us-ascii?Q?2CogifAsr/5T9VoHya9YVrWHAEHByeepaLgj4hlmnj3DINBtzJ9pDfDYDHiE?=
- =?us-ascii?Q?CoxJqJsQomnLpS8gP1ULsj8LxhLrdwzWQMPbrv3ELdJAlvuFqVHfbAWetcjm?=
- =?us-ascii?Q?tDIFccBmbZQ=3D?=
+ =?us-ascii?Q?clmMWHYMDPTEaIYFw63IAIP+Ya8vLM3NOKNdcNvjg1NIUvRNyVuMytMTaMpD?=
+ =?us-ascii?Q?QyQQ2CH9ZJNkTdXNCy/WjFWIBIx4uUfQK42wQLPl3KQOfV9QLoewzTEJ7PoS?=
+ =?us-ascii?Q?H+1+MLDUViLUefRqaWoHIkRyFX4LG7O18yty3WXjq1HuXaX56dBt/FdwIsaW?=
+ =?us-ascii?Q?MtAvs95HOX9JejQ6Y1Xpp3xTyka2mgnob3/BtCrMkdxtbBA3KC1gsNQCGuCB?=
+ =?us-ascii?Q?0N4XrVgZ9SjXGdbKMgSt4TbNdTNeNNgHqpOx/xT7wnT9Por4fzV65SVhmDOT?=
+ =?us-ascii?Q?MLN8Q2hzZRz/02t4cLitCb0CMPoGZIBGegQCr/44gZOyu/R0k286SubFvSJo?=
+ =?us-ascii?Q?FOwhqUR3uck1qRaZknXTQoc+FU7/QkNE2OPHwqwuBk/vFEhy51ovA9DMvNNe?=
+ =?us-ascii?Q?fidWtebrbr7kwdRmKj0jl/pTEUD01790CGfGTyqGI+5TQuXb1WVko1p7EHfT?=
+ =?us-ascii?Q?aebI5ifWtVpWGhFcN8sGiIZGl6KnLQRaW3MXjcMKqgZ2TH9U8uYL9PrP5ZwH?=
+ =?us-ascii?Q?QgcI1D1AbOPqHUgeN5AipG1psAbhH4dZmg+nzhTd4X5E7Ka9YZ5qm/6yGlPd?=
+ =?us-ascii?Q?89D3esFenBZ3gVP1ewhLer348/D4SVwIHvIydkduXxlann3Scnqf9ei9UWad?=
+ =?us-ascii?Q?ryCqZjRI1OZgYnckWuthSOXt3dp4hzkFar0+wAoKf3T02wwZl6HgIFChocCU?=
+ =?us-ascii?Q?xHR19TvS/sRVpsX8zChGatMwgBD/YjzyS8zbi6TxU2a31ibKkg+BEUqXU9eS?=
+ =?us-ascii?Q?MnPOapQAgmOJU9i/E3hUX59GBaaVTBIIudOiclonXFSeqOLZMGz/k3dgRhRN?=
+ =?us-ascii?Q?yZYoqGvjnhPChC7pQVD6LIzgTBt7Gd+YG572xZ/XqHnxsd6DPAblcvyvg43w?=
+ =?us-ascii?Q?8UI8tlPXfAbsU6Cwv1gIzrw/vAltd7d9i6HYzKtZ520EcNSZ4paWKXlElAEE?=
+ =?us-ascii?Q?Wa16iyyNS7uB/YxT4d71efKury2LWwTTdlmIm9oRO8e30pJt6omXKTHoW02m?=
+ =?us-ascii?Q?Fw3U3APWJlaYsGka3yuHr+1YqG0FgRvukuvBJHpTaGRYfjSEXimDsbXe2J71?=
+ =?us-ascii?Q?hFLaRacUNrW0xCRLhHC3a7tC2DXKnKJjRNEV+YdJbXepFEgcrdJuKRg4KDWV?=
+ =?us-ascii?Q?N1mbu8lyEYashM7ju+74nFQCB/T8GFQ4uHDcnCXtB8Tn6a/6AcakqG+eU+Jd?=
+ =?us-ascii?Q?Kvltj0PtM0kytq40ecTCTdmR8uC/Bfm85UGgt2SMbir+7fR/sGCCOfgAfM//?=
+ =?us-ascii?Q?qckK1J1rnsHtKLJv/Zn44uTFHR4fl52yIr+uYMxslqpRvVOYJLedpBwjjH8A?=
+ =?us-ascii?Q?FCajpuh0gTK88fNMrbqZJ555IwlzbHoharOsvSR28tRAs1Xwr/iTsW7QmLIg?=
+ =?us-ascii?Q?I3u+J80sJZKAJTEcJjbhiTl5htpJg6VG/qwr6vCf16pAw3XwTNWwcGPLCB68?=
+ =?us-ascii?Q?p4MJDPOQra0=3D?=
 X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI0PR08MB11200.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR08MB10809
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI0PR08MB11200.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR08MB9640
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- AM2PEPF0001C70D.eurprd05.prod.outlook.com
+ DU2PEPF00028D0C.eurprd03.prod.outlook.com
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	4d806adb-380b-4950-10e8-08dda1e2664c
+	fd8c531d-330c-4964-4a89-08dda1e26ba4
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|14060799003|1800799024|35042699022|376014|82310400026;
+	BCL:0;ARA:13230040|35042699022|14060799003|36860700013|376014|82310400026|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?izNvmQXs0l8SR1f5Qvabj5t2/qCUkl73K3gUUD5IC4MuFfZ2AvmG+Onmh+Oc?=
- =?us-ascii?Q?d0Q2Dd76cJuBFNZ93XY2nHIyzPOWuGo1hoVMudhLK67ffoJgvlY5KjY0x53y?=
- =?us-ascii?Q?NIe+WplFrCKcFYM1QtvzlWZf+EFncz79qZUrry0a5tbRyHR5M49JG966f4Oe?=
- =?us-ascii?Q?6dMuPaKjRMwUkopVnXBAoHiogzAon0Ov9sfpIROzRgJzPLCYsXP7JXC81k/R?=
- =?us-ascii?Q?Ij5fZpUY1A2MKcok45W0Jkpn3gsgojOERl5MzlDpYXFGwRpEeuryhbyrSMZb?=
- =?us-ascii?Q?FSiM5OxdBs1Qv48P5u17H0FoB/lU9/V8U1Tyd0cxl3Nks7Ypk9u442uc+tTW?=
- =?us-ascii?Q?sshiX+dMD6YDsMxnMatna/iFCE1W2NYomduT9S2SlNRxCta5466aqB8jQ4YP?=
- =?us-ascii?Q?TWH/opooDSciuMa/ik/oKlfSa0Ku5IjkcNvT1DRtpUwsfF8raUEbQUEFRlbQ?=
- =?us-ascii?Q?tFXL0s+PIYlQoXIlpgBe1/ded9DZuoc3nS2Am3DP1w1n97bEQYlU0Eo52mY1?=
- =?us-ascii?Q?ZfD30r6GKwCc1dr9GqP2TlijnGv26is9ETYm7ZNfmtDIouhh4zNjQgzFgYRI?=
- =?us-ascii?Q?6akkq5atAoUPlXUbhSwKRh4R2T5XbS+l2vdyYxhBmXoe/u4cUzs3DzqT+JN6?=
- =?us-ascii?Q?5RSc/0esYDnhX8Vzgm1eMBtCZIPJsIxpS8NLngwmKT5Ui98mlHNfHojetrIK?=
- =?us-ascii?Q?FmVbCooMcbi+IN4OLdyhp6MGf8X4PyZviiNrH8VxoU8rXdr1qku4fdt3MPNA?=
- =?us-ascii?Q?dZfSu9+JPyo44SZxnZ5m2s33dBPR+vr226sVmAlIGnpmy0KLNZQm1Kvhfych?=
- =?us-ascii?Q?iva7XOOTPYehBWsQx0xn1gF50C09QRTHlic0F0Xzj4wgucmF0ero/KnFPa+w?=
- =?us-ascii?Q?uDUYaj27UXx+ulb14Xcbvyq5+8j0tgJFY7S72ZLsbTdoEL7HW1fT+NdKi3iP?=
- =?us-ascii?Q?pb4eT+5ilkbwzSYN9QpyU8juJKXIFGE5wPbo8QxjfNoDKcfyooy51DFSuYBW?=
- =?us-ascii?Q?u1k+9oGeYo58O+efRrjbAJh6uIwSR1KNramM9FdATP/kh8xj4lErfKwS6L8T?=
- =?us-ascii?Q?9cx+1BPXlwlvppn+X6DtOGfA+Lbonf7R297Fnc0yfslNj5201dxGhVhpkpyJ?=
- =?us-ascii?Q?UTY3MQs/0GwSM7m8S0IlWHDF4O+It5S0PDw0BJ0HGVfGwbd26tuxOzXIbwY+?=
- =?us-ascii?Q?DNCSk7Fkdbcx976HJqSDi8xSOkrycTs8bJSA5LrHjlcZjMT1RsSZjzuizveo?=
- =?us-ascii?Q?HVOHdt9dB69jpBRVev62mpRWeowK+b1pcwvv2l9kjBNTNsNdjtNz+ohVXy3v?=
- =?us-ascii?Q?n4NZey0KLrICRVYlz7/2DrZPSAelDQSCLfDFT33ciXMM6py4QOMPVmgBLifO?=
- =?us-ascii?Q?Y7TuLV0CbfqzgESkL6lqBuYJnOFx/9RoatXjGElQYWBl+yqEV1QXfB8EJDHj?=
- =?us-ascii?Q?OVwEzTYjHWsnRBP6/QuyJcZz1xoPRve4d0WLRnGMCUHv8KJvZX+5cX5ZfoBj?=
- =?us-ascii?Q?2vdkzU31naZ176nEpEUXMaPtwlQpj1lmYng/?=
+	=?us-ascii?Q?4pXUnabyA3w/ge4pW5oUE0VTdthW+Qp7NX/H9RE9tVQRPs6E0oabQJmHQuhx?=
+ =?us-ascii?Q?B7terS0R9OtV2VgX+GdmjyJ9d22Mp0QAP4diEsW2w9f0gcXsFunIsljOfVOq?=
+ =?us-ascii?Q?YpltPe2MGICf9FxKfWC3AHG/hMjvtJzRoV6aInVntXKXQALXTizFmKi9I/DL?=
+ =?us-ascii?Q?raegUOgRYUf2wGI6DzAs0d2f1rFpEYM7c7BocJj1Z70tp5jrK18IheYKItAY?=
+ =?us-ascii?Q?f5jTnmLsZVbT8hZl5eeUJUHXDHXqno4BV1hJ44m7mkx5Y9XIF1hr/agoytUy?=
+ =?us-ascii?Q?0sgOH6J/l7mgla+UAbp3xxNR2GJAoOJdT1pU7o6HklvDaHr/S02LyggkGRqC?=
+ =?us-ascii?Q?3BGd0X6/VaBc4hAAy3Sb1rGY9AueHBCI/Q0z9F04lDA6mEejKrY/ZY8eYry4?=
+ =?us-ascii?Q?xZ2WFbste6eJ6qYlM7qs2iLY+zCn3BSMwl4ajrZPNo7B07ST7B2m/BGYMWz8?=
+ =?us-ascii?Q?MB+zp6ibXzMrVd8QOyepHE+InCzeeBsC8JCbglg+RRrK++2lespa8OiD+uts?=
+ =?us-ascii?Q?r39rW5gj2AOwbZBCa32mHP5CKEj5amtScxXZRUZ7FZ3jog10TBGoIBCB6pzd?=
+ =?us-ascii?Q?Cwc1LZApoApTq37komypYQG4mJpDMYmEMrSDJvgWSe9Q5hLPq8EDPUJz3cVw?=
+ =?us-ascii?Q?JKmgUiCQlyKUdqEyJ0wTbVbcajZMgMPUz83uC8rT57ObUfSSOV47kbRbBWq/?=
+ =?us-ascii?Q?wXzsusK2A0chdW32XB+rmQ1gQ9B3LKiZgRzxyWoDQ0bwNO4Pyc3arh8e3VSx?=
+ =?us-ascii?Q?sbAnLOYyYaA4QkZwfLA71ulw4727vyIU5m/j7eX4EH2fg/tKQwf56zaWxyaJ?=
+ =?us-ascii?Q?tj8VLwFfKXbqNfJzna0lhLP9EnC2OUtxYzxqFW+EOHR54oJ0r7br6bVEHTe8?=
+ =?us-ascii?Q?MJFV2bzhdTgpRZsvSmXtPXDrkWQANNCaOs0qWMHKuxJNB8SY3pHtt5xhHLT5?=
+ =?us-ascii?Q?H5tEAD08ypK0V2G7NtcBV4G69utKRR4svziMfu9r8p0nPa5TQtVFpRco7ssZ?=
+ =?us-ascii?Q?u1rCl9Jimy/f+jWJE91/mCTrcCKJPVvWrQNRyaNr3Kawd91UaFIrF+s4y/Tx?=
+ =?us-ascii?Q?VI+dEhBvOf3kuQ5RD5+iEBSsoxEFB/hv8JXR+S02huAtGYfjcWAwdir4q4Wr?=
+ =?us-ascii?Q?k1H3xrCZKnXUwdAIrGVKHMrXJSE1rC80yqNgDKNTv2duE8L6Y3NP9JIrn2VZ?=
+ =?us-ascii?Q?GL61vg6ER0lSdaCBpjS9oD8nIGSDLXQVsMOwf16I0b5kJQyZzzbHDzmoVIK+?=
+ =?us-ascii?Q?Z65aqeYmbwuNVwup+Obb984UXkRElUytpl0dytZBxqs9fEHi6jAuzzD7MY9R?=
+ =?us-ascii?Q?2cZEuGGCP6pkvhecqYZJSDG8+FWR81KTzw6Sl0IVICkIr2ef+cId9J+8icN0?=
+ =?us-ascii?Q?89AqfPQS8VrNn2gMQ1ocv8RTwFc5O5vWsU2ye3CVjEMdkSB0ZqVAD4irlx1m?=
+ =?us-ascii?Q?vifqnqwICKUhFwNjRKmxr7DC05PlNmL174a5dk/6a5nm9hV4IqaAqbQlxZMD?=
+ =?us-ascii?Q?gwvj4gfnGzR+LJsITLkiauxsAFjgHslNhRnQ?=
 X-Forefront-Antispam-Report:
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(14060799003)(1800799024)(35042699022)(376014)(82310400026);DIR:OUT;SFP:1101;
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(35042699022)(14060799003)(36860700013)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2025 14:33:49.6243
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2025 14:33:53.2804
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 13cdcafa-046a-4691-8fb1-08dda1e27d86
+X-MS-Exchange-CrossTenant-Network-Message-Id: 897fe687-6346-4c50-131e-08dda1e27fb9
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	AM2PEPF0001C70D.eurprd05.prod.outlook.com
+	DU2PEPF00028D0C.eurprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA6PR08MB10442
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR08MB6450
 
-This patch adds GPU model name and FW binary support for Mali-G710,
-Mali-G510, and Mali-G310.
+As the FLUSH_MEM and FLUSH_PT commands are deprecated in GPUs from
+Mali-Gx20 onwards, this patch adds support for performing cache
+maintenance via the FLUSH_CACHES command in GPU_CONTROL, in place of
+FLUSH_MEM and FLUSH_PT based on PANTHOR_HW_FEATURE_GPU_CTRL_CACHE_FLUSH
+feature bit.
+
+This patch also enables cache maintenance via GPU_CONTROL for Mali-Gx10
+and Mali-Gx15 GPUs for consistency.
 
 Signed-off-by: Karunika Choo <karunika.choo@arm.com>
 ---
- drivers/gpu/drm/panthor/panthor_fw.c | 2 ++
- drivers/gpu/drm/panthor/panthor_hw.c | 6 ++++++
- 2 files changed, 8 insertions(+)
+ drivers/gpu/drm/panthor/panthor_hw.c  |  6 +++++
+ drivers/gpu/drm/panthor/panthor_hw.h  |  6 +++++
+ drivers/gpu/drm/panthor/panthor_mmu.c | 35 +++++++++++++++++++++++++++
+ 3 files changed, 47 insertions(+)
 
-diff --git a/drivers/gpu/drm/panthor/panthor_fw.c b/drivers/gpu/drm/panthor/panthor_fw.c
-index 36f1034839c2..b7b454d16f12 100644
---- a/drivers/gpu/drm/panthor/panthor_fw.c
-+++ b/drivers/gpu/drm/panthor/panthor_fw.c
-@@ -1402,3 +1402,5 @@ int panthor_fw_init(struct panthor_device *ptdev)
- }
- 
- MODULE_FIRMWARE("arm/mali/arch10.8/mali_csffw.bin");
-+MODULE_FIRMWARE("arm/mali/arch10.10/mali_csffw.bin");
-+MODULE_FIRMWARE("arm/mali/arch10.12/mali_csffw.bin");
 diff --git a/drivers/gpu/drm/panthor/panthor_hw.c b/drivers/gpu/drm/panthor/panthor_hw.c
-index 421f84fde7d0..5e423122cd4e 100644
+index f5127a4b02dc..5ec9d7f28368 100644
 --- a/drivers/gpu/drm/panthor/panthor_hw.c
 +++ b/drivers/gpu/drm/panthor/panthor_hw.c
-@@ -38,8 +38,14 @@ static char *get_gpu_model_name(struct panthor_device *ptdev)
- 						GPU_PROD_MAJOR(gpu_id));
+@@ -99,9 +99,15 @@ static void panthor_hw_info_init(struct panthor_device *ptdev)
+ static struct panthor_hw panthor_hw_devices[] = {
+ 	{
+ 		.arch_major = 10,
++		.features = {
++			BIT(PANTHOR_HW_FEATURE_GPU_CTRL_CACHE_FLUSH)
++		},
+ 	},
+ 	{
+ 		.arch_major = 11,
++		.features = {
++			BIT(PANTHOR_HW_FEATURE_GPU_CTRL_CACHE_FLUSH)
++		},
+ 	},
+ };
  
- 	switch (product_id) {
-+	case GPU_PROD_ID_MAKE(10, 2):
-+		return "Mali-G710";
- 	case GPU_PROD_ID_MAKE(10, 7):
- 		return "Mali-G610";
-+	case GPU_PROD_ID_MAKE(10, 3):
-+		return "Mali-G510";
-+	case GPU_PROD_ID_MAKE(10, 4):
-+		return "Mali-G310";
- 	}
+diff --git a/drivers/gpu/drm/panthor/panthor_hw.h b/drivers/gpu/drm/panthor/panthor_hw.h
+index 1a3cbc5589fd..2bb372fe9d4d 100644
+--- a/drivers/gpu/drm/panthor/panthor_hw.h
++++ b/drivers/gpu/drm/panthor/panthor_hw.h
+@@ -16,6 +16,12 @@ struct panthor_device;
+  * New feature flags will be added with support for newer GPU architectures.
+  */
+ enum panthor_hw_feature {
++	/**
++	 * @PANTHOR_HW_FEATURE_GPU_CTRL_CACHE_FLUSH: Perform cache maintenance
++	 * via GPU_CONTROL.
++	 */
++	PANTHOR_HW_FEATURE_GPU_CTRL_CACHE_FLUSH,
++
+ 	/** @PANTHOR_HW_FEATURES_END: Must be last. */
+ 	PANTHOR_HW_FEATURES_END
+ };
+diff --git a/drivers/gpu/drm/panthor/panthor_mmu.c b/drivers/gpu/drm/panthor/panthor_mmu.c
+index b39ea6acc6a9..f9ccc8627032 100644
+--- a/drivers/gpu/drm/panthor/panthor_mmu.c
++++ b/drivers/gpu/drm/panthor/panthor_mmu.c
+@@ -29,7 +29,9 @@
  
- 	return "(Unknown Mali GPU)";
+ #include "panthor_device.h"
+ #include "panthor_gem.h"
++#include "panthor_gpu.h"
+ #include "panthor_heap.h"
++#include "panthor_hw.h"
+ #include "panthor_mmu.h"
+ #include "panthor_regs.h"
+ #include "panthor_sched.h"
+@@ -568,6 +570,35 @@ static void lock_region(struct panthor_device *ptdev, u32 as_nr,
+ 	write_cmd(ptdev, as_nr, AS_COMMAND_LOCK);
+ }
+ 
++static int mmu_hw_do_flush_on_gpu_ctrl(struct panthor_device *ptdev, int as_nr,
++				       u32 op)
++{
++	const u32 l2_flush_op = CACHE_CLEAN | CACHE_INV;
++	u32 lsc_flush_op = 0;
++	int ret;
++
++	if (op == AS_COMMAND_FLUSH_MEM)
++		lsc_flush_op = CACHE_CLEAN | CACHE_INV;
++
++	ret = wait_ready(ptdev, as_nr);
++	if (ret)
++		return ret;
++
++	ret = panthor_gpu_flush_caches(ptdev, l2_flush_op, lsc_flush_op, 0);
++	if (ret)
++		return ret;
++
++	/*
++	 * Explicitly unlock the region as the AS is not unlocked automatically
++	 * at the end of the GPU_CONTROL cache flush command, unlike
++	 * AS_COMMAND_FLUSH_MEM or AS_COMMAND_FLUSH_PT.
++	 */
++	write_cmd(ptdev, as_nr, AS_COMMAND_UNLOCK);
++
++	/* Wait for the unlock command to complete */
++	return wait_ready(ptdev, as_nr);
++}
++
+ static int mmu_hw_do_operation_locked(struct panthor_device *ptdev, int as_nr,
+ 				      u64 iova, u64 size, u32 op)
+ {
+@@ -585,6 +616,10 @@ static int mmu_hw_do_operation_locked(struct panthor_device *ptdev, int as_nr,
+ 	if (op != AS_COMMAND_UNLOCK)
+ 		lock_region(ptdev, as_nr, iova, size);
+ 
++	if (panthor_hw_supports(ptdev,PANTHOR_HW_FEATURE_GPU_CTRL_CACHE_FLUSH))
++		if (op == AS_COMMAND_FLUSH_MEM || op == AS_COMMAND_FLUSH_PT)
++			return mmu_hw_do_flush_on_gpu_ctrl(ptdev, as_nr, op);
++
+ 	/* Run the MMU operation */
+ 	write_cmd(ptdev, as_nr, op);
+ 
 -- 
 2.49.0
 
