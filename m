@@ -1,201 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E166EAF9;
-	Mon,  2 Jun 2025 18:11:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E882253AE
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 18:11:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748887872; cv=none; b=Iw1PfzlIpbWW2nq5xiVxGssu64okMRlooilb/nE7/vGv8CS1a13VMVVdwP2cKQyB27G4Y5/08p/DxJ6gjnVvu6wW9dySlaLjemU5rkZKCVJctHYelYv6Lz7hZn+lWqPSF1F2tN+yzUgchAVXDIqnx+E1oNy/eHMIqD41bmOcpqM=
+	t=1748887873; cv=none; b=k1bnu6O/ifGvukj1l7F/1MtcRgiH5JesTA4EIFZHdZqnM8ca19t4S2Ly4HQ3jJXmoWf7jMXhB6+9xbcr9oIDdejzqobDQJpwq5F0iMH2bR3ysaV77jnvBpegZZzTXUfbFWhoV68sFWKKbhOPT7C11zwQ1LYUcJTVGtJe3dsjmjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748887872; c=relaxed/simple;
-	bh=30U5FrzZe477PkMourbldSSCDpz4fRDaC700uOnf3C0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FV1qs+I8v7408En5xYve6KejJtMYw+9+POj8dNFMRQW4y6WF9pyoo1N5DCYVvjOMcA0ny2OjXaJNUPhWubN/QcCiDXj3ECj34ZrtUSKChyUfRZkkABwPd/I2xJ7WE12BT22832FNpYWPY0Xv4XA+dx60MEmMf/6GvCUYdvI1o0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fmSQW/5Z; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748887873; c=relaxed/simple;
+	bh=IQOXj2mWKxG4LnCPYqu20JJu5cF3ESUvUmGZOG1GktI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=hkn/n1YB21dKoapQPjo21GdoJP6lycCyGaBY+hGgoRpHXojo8T/KWuU0hshK5b3K60DwC1y897u6iXX5mA6PEwgGfuniHhpKZRrBgax/FqMhEbVyza/vJSzA/vRfImb5Jw8IK3FQcio2zvpEjCFqFf+FC/WrdYEGmGzxnVMUs9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=R30Ml5Vx; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fmSQW/5Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748887871; x=1780423871;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=30U5FrzZe477PkMourbldSSCDpz4fRDaC700uOnf3C0=;
-  b=fmSQW/5ZVmnMp5slep4QinOaqcZjzpm4c4TKX1SinJezIVG/Z/aOJJZW
-   C3k0xzSKuvArrDK70JCWs4AXwUdRd7GGqCULxHnjs0xzX5+a+DvbegBuC
-   JpK1tTojevQjKbi070x6IXBqxLcD7ZMmWqWQ+53Nn/BVjj/+CrRo4KRp9
-   lZGHi0Bbn5z8viq+1BsxZQhNXck99FQ8heEvzyL6CAV9itYegZ74l1JR3
-   zDZfHc7rqhBdmu2DUEXd7jxZQ7W0cG75UWk/baTbLBHhNegXoIeW757mx
-   O/MH/BCtyYsSnAO7m+XOanmOt2M9XkWSxvqe9HDWLjgnZKUzHNji3zH8j
-   g==;
-X-CSE-ConnectionGUID: DFLFctPOQiSFkgCBQxHYnA==
-X-CSE-MsgGUID: X6wdajwUS/yz3qxThmtmtQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="50770704"
-X-IronPort-AV: E=Sophos;i="6.16,204,1744095600"; 
-   d="scan'208";a="50770704"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 11:11:10 -0700
-X-CSE-ConnectionGUID: rmcKHSDgT8WBm+xG+YxC8w==
-X-CSE-MsgGUID: OZrs+IS/S4yOMpwDesH9+Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,204,1744095600"; 
-   d="scan'208";a="148467703"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.244])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 11:11:04 -0700
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
- linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-cxl@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-pci@vger.kernel.org, linux-edac@vger.kernel.org
-Subject: Re: [PATCH 4/4 v2] ACPI: extlog: Trace CPER CXL Protocol Errors
-Date: Mon, 02 Jun 2025 20:06:28 +0200
-Message-ID: <2947754.vYhyI6sBWr@fdefranc-mobl3>
-In-Reply-To: <20250429182055.GB76257@yaz-khff2.amd.com>
-References:
- <20250429172109.3199192-1-fabio.m.de.francesco@linux.intel.com>
- <20250429172109.3199192-5-fabio.m.de.francesco@linux.intel.com>
- <20250429182055.GB76257@yaz-khff2.amd.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="R30Ml5Vx"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-231e8553248so45561235ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 11:11:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1748887871; x=1749492671; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=SdBSPm4lDSqUwft73VRA8JaXXCTN7tMlvEeCqjJoyCc=;
+        b=R30Ml5Vxf6rhGxrCDDbedqC9xKzO/VxhfAKDyjqwKdGaIXxzPUaaOsl0p/GxtN4gGS
+         kjR4ZO6xi3T2k6wV4gTzye06wq/cE4pjB5bQYVO41OXH/ode5TupmHj4Zw8JysgMObY0
+         JFvaG2VgjgHrAzVbK/SKLz4GPiZPFWlLy6WHI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748887871; x=1749492671;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SdBSPm4lDSqUwft73VRA8JaXXCTN7tMlvEeCqjJoyCc=;
+        b=LVUP+gNEG9BHyFukdAMt2HMix0OSD7+0KGJqTPKvR7r1hkyRVyv9tdZ3SYDzghqutU
+         ypMI59MoIbDlyALyXKA4rtkpJCj0jYC45yRVOWvawwT6pOpYn5IhhGPZcSwD8E44YA+v
+         1tc/2I0g9FPPcF7qtngjZ7tY/M80znQbteWon1tnh7bFbYwpon6r/o8QR4R/Wah7JAlK
+         duIuoj6NXkKSPobIDU/057LVUMi6tXv6AsbKry+PP0Gw8w7PgFPmPMcc/XLYnL/VxpA4
+         Ti624eU2ak9q1OnHp32jemaJBwD662yZOG1yi7t8IXT7k5EiC4vG8PSl5jcLoun1xtuL
+         QLXg==
+X-Forwarded-Encrypted: i=1; AJvYcCXn8aD9wxnH+H4Y11McqFNVarB8dz2NX9G1Xa0vtfIZWv4go/grN1mWPkrkZH7rzeUrUv+Xpg+8K+epSI8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQACAhuMbePuwVtbmfyYqai4beNOxpTnQzfaS6/ZBJNne/U/ke
+	NMsFccZ2ZjPAp4znFtqBo5lBv24t3j1kqOeY2sNe17+Njll8grxyamUirZ6JWZesXw==
+X-Gm-Gg: ASbGncuvetneMl5M6ZjtXFxtKJwdRkTnZOQ7iKfGpKEhD3/nSwX1yoLdqdJVgYm7sEs
+	kqbUFxDkKmsLGiBAMfB5FvOGx8nyhHx+dvIZZ5IY/z8vXTMewPP6y1bsD0rjgCeZeLFab/9+lhc
+	Zm8EB2ymBfY9LwDTm1+qaZZaxAn3jLBWmBNzxJunF0DVePryRwpCvamTG7td4XSkGAm//DhWHmE
+	EHykSJu7NH/IScAWaJMWVDK7qpvZGiqnyr4zKdNwVX45K1uu1cLE2m+P1AAe8os7uo/5HOopVr2
+	esN+TRJ9hZ+HMWrJLhiKJOvqeEPLeuBNL2oJjSn4mYCxrW1IsANVHJ5Z2gqPeueE5EuHd3IYvl8
+	3BJIJbBC8Wz8M6Qw=
+X-Google-Smtp-Source: AGHT+IEVGZpn/uowa+A9bLOJ5UPLni0Ixvp7UMIIwF6/riHxJPgzKmIY82bGmKK9D5Cn48v+Sho0jQ==
+X-Received: by 2002:a17:903:1787:b0:234:d7b2:2ac5 with SMTP id d9443c01a7336-235395bfa8bmr204925465ad.21.1748887871182;
+        Mon, 02 Jun 2025 11:11:11 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506d14ddasm73795265ad.251.2025.06.02.11.11.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Jun 2025 11:11:10 -0700 (PDT)
+Message-ID: <455d5122-7716-4323-b712-9a7d84063c0c@broadcom.com>
+Date: Mon, 2 Jun 2025 11:11:08 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 09/10] net: dsa: b53: fix b53_imp_vlan_setup for
+ BCM5325
+To: =?UTF-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>,
+ jonas.gorski@gmail.com, andrew@lunn.ch, olteanv@gmail.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, vivien.didelot@gmail.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dgcbueu@gmail.com
+References: <20250531101308.155757-1-noltari@gmail.com>
+ <20250531101308.155757-10-noltari@gmail.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250531101308.155757-10-noltari@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tuesday, April 29, 2025 8:20:55=E2=80=AFPM Central European Summer Time =
-Yazen Ghannam wrote:
-> On Tue, Apr 29, 2025 at 07:21:09PM +0200, Fabio M. De Francesco wrote:
-> > When Firmware First is enabled, BIOS handles errors first and then it
-> > makes them available to the kernel via the Common Platform Error Record
-> > (CPER) sections (UEFI 2.10 Appendix N). Linux parses the CPER sections
-> > via one of two similar paths, either ELOG or GHES.
-> >=20
-> > Currently, ELOG and GHES show some inconsistencies in how they report to
-> > userspace via trace events.
-> >=20
-> > Therfore make the two mentioned paths act similarly by tracing the CPER
-> > CXL Protocol Error Section (UEFI v2.10, Appendix N.2.13) signaled by the
-> > I/O Machine Check Architecture and reported by BIOS in FW-First.
-> >=20
-> > Cc: Dan Williams <dan.j.williams@intel.com>
-> > Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.=
-com>
-> > ---
-> >  drivers/acpi/acpi_extlog.c | 60 ++++++++++++++++++++++++++++++++++++++
-> >  drivers/cxl/core/ras.c     |  6 ++++
-> >  include/cxl/event.h        |  2 ++
-> >  3 files changed, 68 insertions(+)
-> >=20
-> > diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-> > index 7d7a813169f1..8f2ff3505d47 100644
-> > --- a/drivers/acpi/acpi_extlog.c
-> > +++ b/drivers/acpi/acpi_extlog.c
-> > @@ -12,6 +12,7 @@
-> >  #include <linux/ratelimit.h>
-> >  #include <linux/edac.h>
-> >  #include <linux/ras.h>
-> > +#include <cxl/event.h>
-> >  #include <acpi/ghes.h>
-> >  #include <asm/cpu.h>
-> >  #include <asm/mce.h>
-> > @@ -157,6 +158,60 @@ static void extlog_print_pcie(struct cper_sec_pcie=
- *pcie_err,
-> >  	}
-> >  }
-> > =20
-> > +static void
-> > +extlog_cxl_cper_handle_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-> > +				int severity)
-> > +{
-> > +#ifdef CONFIG_ACPI_APEI_PCIEAER
->=20
-> Why not apply this check on the function prototype?
->=20
-This function is static.
->
-> Reference: Documentation/process/coding-style.rst
-> 	   Section 21) Conditional Compilation
->=20
-> > +	struct cxl_cper_prot_err_work_data wd;
-> > +	u8 *dvsec_start, *cap_start;
-> > +
-> > +	if (!(prot_err->valid_bits & PROT_ERR_VALID_AGENT_ADDRESS)) {
-> > +		pr_err_ratelimited("CXL CPER invalid agent type\n");
-> > +		return;
-> > +	}
-> > +
-> > +	if (!(prot_err->valid_bits & PROT_ERR_VALID_ERROR_LOG)) {
-> > +		pr_err_ratelimited("CXL CPER invalid protocol error log\n");
-> > +		return;
-> > +	}
-> > +
-> > +	if (prot_err->err_len !=3D sizeof(struct cxl_ras_capability_regs)) {
-> > +		pr_err_ratelimited("CXL CPER invalid RAS Cap size (%u)\n",
-> > +				   prot_err->err_len);
-> > +		return;
-> > +	}
-> > +
-> > +	if (!(prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER))
-> > +		pr_warn(FW_WARN "CXL CPER no device serial number\n");
->=20
-> Is this a requirement (in the spec) that we should warn users about?
->=20
-> The UEFI spec says that serial number is only used if "CXL agent" is a
-> "CXL device".
->=20
-> "CXL ports" won't have serial numbers. So this will be a false warning
-> for port errors.
->=20
-I'll add a test and print that warning only if agent is a device (RCD,
-DEVICE, LD, FMLD).
->
-> > +
-> > +	switch (prot_err->agent_type) {
-> > +	case RCD:
-> > +	case DEVICE:
-> > +	case LD:
-> > +	case FMLD:
-> > +	case RP:
-> > +	case DSP:
-> > +	case USP:
-> > +		memcpy(&wd.prot_err, prot_err, sizeof(wd.prot_err));
-> > +
-> > +		dvsec_start =3D (u8 *)(prot_err + 1);
-> > +		cap_start =3D dvsec_start + prot_err->dvsec_len;
-> > +
-> > +		memcpy(&wd.ras_cap, cap_start, sizeof(wd.ras_cap));
-> > +		wd.severity =3D cper_severity_to_aer(severity);
-> > +		break;
-> > +	default:
-> > +		pr_err_ratelimited("CXL CPER invalid agent type: %d\n",
->=20
-> "invalid" is too harsh given that the specs may be updated. Maybe say
-> "reserved" or "unknown" or "unrecognized" instead.
->=20
-> Hopefully things will settle down to where a user will be able to have a
-> system with newer CXL "agents" without *requiring* a kernel update. :)
->
-I'll replace "invalid" with "unknown".
->=20
-> Thanks,
-> Yazen
->=20
-Thanks,
+On 5/31/25 03:13, Álvaro Fernández Rojas wrote:
+> CPU port should be B53_CPU_PORT instead of B53_CPU_PORT_25 for
+> B53_PVLAN_PORT_MASK register.
+> 
+> Fixes: ff39c2d68679 ("net: dsa: b53: Add bridge support")
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> ---
+>   drivers/net/dsa/b53/b53_common.c | 4 ++++
+>   1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
+> index d5216ea2c984..802020eaea44 100644
+> --- a/drivers/net/dsa/b53/b53_common.c
+> +++ b/drivers/net/dsa/b53/b53_common.c
+> @@ -543,6 +543,10 @@ void b53_imp_vlan_setup(struct dsa_switch *ds, int cpu_port)
+>   	unsigned int i;
+>   	u16 pvlan;
+>   
+> +	/* BCM5325 CPU port is at 8 */
+> +	if ((is5325(dev) || is5365(dev)) && cpu_port == B53_CPU_PORT_25)
+> +		cpu_port = B53_CPU_PORT;
 
-=46abio
-
-
-
+Don't we get to that point only if we have invalid Device Tree settings? 
+In which case wouldn't a WARN_ON() be more adequate?
+-- 
+Florian
