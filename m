@@ -1,224 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B3C2343D4;
-	Mon,  2 Jun 2025 14:03:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D449F239567;
+	Mon,  2 Jun 2025 14:03:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748872984; cv=none; b=Vdq0H/xcWe/Q1EQthZtLAkYpnEXqPLl7lsAToGQ/B74JpEZhgOWKo9Hp2GdIDotru8RwQL6KbyEioOKReenEoxjMlK6opGmb6EpwmeNxGnzDiw2zb1JJTjNhaithc3MsD1/F4uPPe8Elzo8dZGlqpUrcMFYrPb1gBKYfOS4Z3PE=
+	t=1748872986; cv=none; b=fpXfjwbGQeavwBUjtQLHTaWrbUutsnLceGCyZ7Cz7U6hVFrDT5KdGf49pXsNO41docPFB4vvTwi6Yh+Fgf3XO/04d65Xy6Ku48TGdBxSiL0+EUcD7s3M/zG/c2lO9a5MQvLcBaJbYh233JPpmOt2x6ZtbdOKUtsagXB4nDI3bMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748872984; c=relaxed/simple;
-	bh=FLY8rXV/wMLxhZlXAViF34cDRZWKhFotP2CxFgwxkmk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GSaVzKHApfwF0RbDyhkx70xoz2KSItYjaazTdeQD9N86t7M9WI0clnvOxlrlISZxVOiODPds5yCIkrk7yv4kRoIBP4MZvYFf64O+9mXoW9WlsJ626mQ4zgC/XnXFBG6jozgUxtiA2lR/rDUhU/M9H3JVrs5lV8GQNKGbGfoNyBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hDvYfMZ7; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748872986; c=relaxed/simple;
+	bh=x1o0Ihmm4BVt5ZC6hQAevJ2br6+2hL/MI5r9KqN/NNw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=lZBZ/n62ibmrov/oYy0agCE+cdgicbo2bmZHAvVLpAbc0NBeFQXa+YktbdivCa3NjrO+ruz5ba8uzQ8/tqEMs/N91hd96QY66+gsk93Deir9mQEWROTEdcCmSb4MWCrWvUItyCI/yrOmt2ILyfUpFHTuuvrzry9VD15NPQynXZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YsLYoqQW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hDvYfMZ7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748872982; x=1780408982;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=FLY8rXV/wMLxhZlXAViF34cDRZWKhFotP2CxFgwxkmk=;
-  b=hDvYfMZ73RVsVrdVGGJ2f9bHYeSalJ4m9EYcuaC0K7jWIVtY0E8xurkx
-   goQiZsXtpReds5cZ7KwXW+fPEHWmjOhx5lBfOVCgcMycmN2FB2CrIsx5O
-   eMspGYKXUbRrM+JZpcJoiisEyr/GCiXCYIJMHjG7rmI1El59Xjl6KurOK
-   Af3lvxfCqHno0SienmucwXrM56iTp66/XIJ3fsWRcfJOR1WFn5Ul6UgAT
-   YOjzv6dtYnFHUuNdFZlrgf+3I4Rm1OO5dn2Jv51RhkwgW9Ypav9jTDUfr
-   tq4xe4fmSscuh2gVzElWkbr7UMDyW77maWcqlSh8wWoAnTFoh51OyW4Hd
-   g==;
-X-CSE-ConnectionGUID: vRih7ekhQy6Jm/rScjjT/A==
-X-CSE-MsgGUID: uWPB6l0FTzCpr4xm9I28jg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="50937096"
-X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
-   d="scan'208";a="50937096"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 07:03:01 -0700
-X-CSE-ConnectionGUID: 4aYjc9MNSNmAc1o1IuJCGw==
-X-CSE-MsgGUID: VUHNjsVZRI+VLiCrPqDFCA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
-   d="scan'208";a="181716728"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa001.jf.intel.com with ESMTP; 02 Jun 2025 07:02:55 -0700
-Date: Mon, 2 Jun 2025 21:56:25 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: kvm@vger.kernel.org, sumit.semwal@linaro.org, christian.koenig@amd.com,
-	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
-	jgg@nvidia.com, dan.j.williams@intel.com, aik@amd.com,
-	linux-coco@lists.linux.dev, dri-devel@lists.freedesktop.org,
-	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-	vivek.kasireddy@intel.com, yilun.xu@intel.com,
-	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
-	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
-	zhenzhong.duan@intel.com, tao1.su@intel.com,
-	linux-pci@vger.kernel.org, zhiw@nvidia.com, simona.vetter@ffwll.ch,
-	shameerali.kolothum.thodi@huawei.com, iommu@lists.linux.dev,
-	kevin.tian@intel.com
-Subject: Re: [RFC PATCH 20/30] vfio/pci: Do TSM Unbind before zapping bars
-Message-ID: <aD2ticKyMxxMXzZ+@yilunxu-OptiPlex-7050>
-References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
- <20250529053513.1592088-21-yilun.xu@linux.intel.com>
- <yq5a34cilnxw.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YsLYoqQW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6F21C4CEEB;
+	Mon,  2 Jun 2025 14:03:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748872986;
+	bh=x1o0Ihmm4BVt5ZC6hQAevJ2br6+2hL/MI5r9KqN/NNw=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=YsLYoqQW5Hhlb2D2ckZkD6c/4IyvIKoYrf27/Yq57Kcoa2bi1S6Iz+6lNWKqPwkha
+	 UuwJt/f/3+P7VHseotyV8M0fCmrJOZZYZMREZdBwr9hnIB62nDJVvdwJNb5bqZ10Q2
+	 3+cxc6aDE0lJf7LBx5QqrRVMjOnz5R3wbc0mv2G/646TJZoLoSkUJbPNHMEgUCdhoo
+	 q4UVtOSArgpNApBT3TkqaD6zWte/ci3JogL8GF5bbLFCJdZ1+D8SEUe4NmkUSSIiOt
+	 RGf6gntioX3oRbO6HjX8SEN9BgydRmJK/x2McPFUrn5kZ28rit1peJrpIffJiQphf3
+	 51T28tXpuzdPg==
+From: Jeff Layton <jlayton@kernel.org>
+Date: Mon, 02 Jun 2025 10:02:04 -0400
+Subject: [PATCH RFC v2 21/28] fsnotify: export fsnotify_recalc_mask()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yq5a34cilnxw.fsf@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250602-dir-deleg-v2-21-a7919700de86@kernel.org>
+References: <20250602-dir-deleg-v2-0-a7919700de86@kernel.org>
+In-Reply-To: <20250602-dir-deleg-v2-0-a7919700de86@kernel.org>
+To: Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+ Chuck Lever <chuck.lever@oracle.com>, 
+ Alexander Aring <alex.aring@gmail.com>, 
+ Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>, 
+ Ronnie Sahlberg <ronniesahlberg@gmail.com>, 
+ Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, 
+ Bharath SM <bharathsm@microsoft.com>, NeilBrown <neil@brown.name>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Amir Goldstein <amir73il@gmail.com>, 
+ Miklos Szeredi <miklos@szeredi.hu>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
+ samba-technical@lists.samba.org, linux-doc@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=753; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=x1o0Ihmm4BVt5ZC6hQAevJ2br6+2hL/MI5r9KqN/NNw=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBoPa7pfOaDl5D8IUu3Zh9z/dAF7GZkLHCc/cGwt
+ tkaZ2PJF5aJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaD2u6QAKCRAADmhBGVaC
+ FbhgEACWbSTkaxvAegVDzQuZYFsLQb8pnSrkPTuqXzRpePBGVdykoJdXrH6HntRb9iUx1PJuaVj
+ PKp4IsKLlg5SebxTEeYQPuEOC4q5aaDObvFQJg+mXt5vpQ6pFiVd8R6Rpgpujb3AlI/qQ9Ye70J
+ JXdL5NzcdBlxk8f+sxK29NGNJ4ISvnlQBFIDHXrB2IDl/H6NkKpNWt/hx+vXk4fEj8XAoJ7LU7Y
+ K5BLzc/GHENujpMuZhDAw416cLBIrVY44a9qXoTNCgpqB9vKSev0EInZjPJzKFuwVa9uAVkOdnp
+ gz4Y69ZjSFrF/i/5GQLyJDE805cq2H+tOD+eil5QkMBFkfRvuaNMHUtiBKN3LeUbANyQtkMTVYM
+ zi6akgLPnib5fQ6Fgc15gBf5SyUvsTlMPJovAwbLBd/G/GbczFoEOwYN3Ocu5pEXDb2TL6ifBlf
+ 4tdTuFBozBlQ/hISmeKTJqgDhzdVo/LGk19NtD9JPAUGlhTwRBL0tEdDjbSJiP8QhBmzzAsdp3x
+ JhEd1t3J9V27WEqw46/2J+pgsnyZS0Emn6JB3e576fUDOQuGnLqTwm9RBULMZYCmTE4V/5H4Q2S
+ Flpr95jfb2MBhrD6bQivvFwfC3R4nxrma0JMd0Lp5LtZZdWJ2crVQ0hrjQLsVhuooUOG41YQrq7
+ SZ2rN5pPtEaR7Uw==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Mon, Jun 02, 2025 at 10:50:11AM +0530, Aneesh Kumar K.V wrote:
-> Xu Yilun <yilun.xu@linux.intel.com> writes:
-> 
-> > When device is TSM Bound, some of its MMIO regions are controlled by
-> > secure firmware. E.g. TDX Connect would require these MMIO regions
-> > mappeed in S-EPT and never unmapped until device Unbound. Zapping bars
-> > irrespective of TSM Bound state may cause unexpected secure firmware
-> > errors. It is always safe to do TSM Unbind first, transiting the device
-> > to shared, then do whatever needed as before.
-> >
-> > Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
-> > ---
-> >  drivers/vfio/pci/vfio_pci_config.c |  4 +++
-> >  drivers/vfio/pci/vfio_pci_core.c   | 41 +++++++++++++++++++-----------
-> >  drivers/vfio/pci/vfio_pci_priv.h   |  3 +++
-> >  3 files changed, 33 insertions(+), 15 deletions(-)
-> >
-> > diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-> > index 7ac062bd5044..4ffe661c9e59 100644
-> > --- a/drivers/vfio/pci/vfio_pci_config.c
-> > +++ b/drivers/vfio/pci/vfio_pci_config.c
-> > @@ -590,6 +590,7 @@ static int vfio_basic_config_write(struct vfio_pci_core_device *vdev, int pos,
-> >  		new_mem = !!(new_cmd & PCI_COMMAND_MEMORY);
-> >  
-> >  		if (!new_mem) {
-> > +			vfio_pci_tsm_unbind(vdev);
-> >  			vfio_pci_zap_and_down_write_memory_lock(vdev);
-> >  			vfio_pci_dma_buf_move(vdev, true);
-> >
-> 
-> Don't we need to re-bind the vdev with tsm_bind for the continued use of TDI?
+nfsd needs to call this when new directory delegations are set or unset.
 
-I choose not to re-bind because host basically cannot recover
-everything. The guest does 'bind', 'attest', 'accept' to make a trusted
-device, but for this series VFIO is only aware of 'bind' and can only
-recover 'bind', which doesn't make much sense.  So I think just make
-guest fully aware of TDISP rules, guest should expect writing MSE breaks
-private state, and should do 'bind', 'attest', 'accept' again for
-recovery if it wants to.
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+ fs/notify/mark.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> 
-> >  		} else {
-> > @@ -712,6 +713,7 @@ static void vfio_lock_and_set_power_state(struct vfio_pci_core_device *vdev,
-> >  					  pci_power_t state)
-> >  {
-> >  	if (state >= PCI_D3hot) {
-> > +		vfio_pci_tsm_unbind(vdev);
-> >  		vfio_pci_zap_and_down_write_memory_lock(vdev);
-> >  		vfio_pci_dma_buf_move(vdev, true);
-> >  	} else {
-> > @@ -907,6 +909,7 @@ static int vfio_exp_config_write(struct vfio_pci_core_device *vdev, int pos,
-> >  						 &cap);
-> >  
-> >  		if (!ret && (cap & PCI_EXP_DEVCAP_FLR)) {
-> > +			vfio_pci_tsm_unbind(vdev);
-> >  			vfio_pci_zap_and_down_write_memory_lock(vdev);
-> >  			vfio_pci_dma_buf_move(vdev, true);
-> >  			pci_try_reset_function(vdev->pdev);
-> > @@ -992,6 +995,7 @@ static int vfio_af_config_write(struct vfio_pci_core_device *vdev, int pos,
-> >  						&cap);
-> >  
-> >  		if (!ret && (cap & PCI_AF_CAP_FLR) && (cap & PCI_AF_CAP_TP)) {
-> > +			vfio_pci_tsm_unbind(vdev);
-> >  			vfio_pci_zap_and_down_write_memory_lock(vdev);
-> >  			vfio_pci_dma_buf_move(vdev, true);
-> >  			pci_try_reset_function(vdev->pdev);
-> > diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-> > index 92544e54c9c3..a8437fcecca1 100644
-> > --- a/drivers/vfio/pci/vfio_pci_core.c
-> > +++ b/drivers/vfio/pci/vfio_pci_core.c
-> > @@ -286,6 +286,7 @@ static int vfio_pci_runtime_pm_entry(struct vfio_pci_core_device *vdev,
-> >  	 * The vdev power related flags are protected with 'memory_lock'
-> >  	 * semaphore.
-> >  	 */
-> > +	vfio_pci_tsm_unbind(vdev);
-> >  	vfio_pci_zap_and_down_write_memory_lock(vdev);
-> >  	vfio_pci_dma_buf_move(vdev, true);
-> >  
-> > @@ -693,11 +694,7 @@ void vfio_pci_core_close_device(struct vfio_device *core_vdev)
-> >  	eeh_dev_release(vdev->pdev);
-> >  #endif
-> >  
-> > -	if (vdev->is_tsm_bound) {
-> > -		vfio_iommufd_tsm_unbind(&vdev->vdev);
-> > -		pci_release_regions(vdev->pdev);
-> > -		vdev->is_tsm_bound = false;
-> > -	}
-> > +	__vfio_pci_tsm_unbind(vdev);
-> >  
-> >  	vfio_pci_core_disable(vdev);
-> >  
-> > @@ -1222,6 +1219,7 @@ static int vfio_pci_ioctl_reset(struct vfio_pci_core_device *vdev,
-> >  	if (!vdev->reset_works)
-> >  		return -EINVAL;
-> >  
-> > +	vfio_pci_tsm_unbind(vdev);
-> >  	vfio_pci_zap_and_down_write_memory_lock(vdev);
-> >  
-> >  	/*
-> > @@ -1491,12 +1489,32 @@ static int vfio_pci_ioctl_tsm_bind(struct vfio_pci_core_device *vdev,
-> >  	return ret;
-> >  }
-> >  
-> > +void __vfio_pci_tsm_unbind(struct vfio_pci_core_device *vdev)
-> > +{
-> > +	struct pci_dev *pdev = vdev->pdev;
-> > +
-> > +	lockdep_assert_held(&vdev->vdev.dev_set->lock);
-> > +
-> > +	if (!vdev->is_tsm_bound)
-> > +		return;
-> > +
-> > +	vfio_iommufd_tsm_unbind(&vdev->vdev);
-> > +	pci_release_regions(pdev);
-> > +	vdev->is_tsm_bound = false;
-> >
-> 
-> Do we really need to check vdev->is_tsm_bound? The tsm_ops lock already
-> ensures that concurrent TSM operations can't happen, and repeated calls
-> to bind()/unbind() seem to be handled safely by pci_tsm_bind and pci_tsm_unbind.
+diff --git a/fs/notify/mark.c b/fs/notify/mark.c
+index 798340db69d761dd05c1b361c251818dee89b9cf..ff21409c3ca3ad948557225afc586da3728f7cbe 100644
+--- a/fs/notify/mark.c
++++ b/fs/notify/mark.c
+@@ -308,6 +308,7 @@ void fsnotify_recalc_mask(struct fsnotify_mark_connector *conn)
+ 	if (update_children)
+ 		fsnotify_conn_set_children_dentry_flags(conn);
+ }
++EXPORT_SYMBOL_GPL(fsnotify_recalc_mask);
+ 
+ /* Free all connectors queued for freeing once SRCU period ends */
+ static void fsnotify_connector_destroy_workfn(struct work_struct *work)
 
-It is mainly for pci_release_regions(). I remember there is a concern
-about whether pci_request/release_region() should be in VFIO driver,
-maybe lets solve that concern first in that thread.
+-- 
+2.49.0
 
-> 
-> > +}
-> > +
-> > +void vfio_pci_tsm_unbind(struct vfio_pci_core_device *vdev)
-> > +{
-> > +	mutex_lock(&vdev->vdev.dev_set->lock);
-> > +	__vfio_pci_tsm_unbind(vdev);
-> > +	mutex_unlock(&vdev->vdev.dev_set->lock);
-> > +}
-> >
-> 
-> If is_tsm_bound is no longer needed, and pci_release_regions /
-> request_region_exclusive are now handled within pci_tsm_unbind / bind,
-> do we still need mutex_lock() to guard this path?
-
-We may still need the dev_set->lock. The vfio_pci/iommufd_device_tsm_bind()
-not only does pci_tsm_bind(), but also secure IOMMU setup which affects
-all devices in the dev_set.
-
-Maybe I worried too much, I doesn't know there exists a real secure device
-set.
-
-Thanks,
-Yilun
