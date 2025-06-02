@@ -1,242 +1,85 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91082221FCA;
-	Mon,  2 Jun 2025 13:49:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F90F21FF39
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 13:52:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748872178; cv=none; b=k3K80/XGgXpfsyOsEJKwEAhB2vfcAPgxkjcV8ui5BmK2qurNp4PbulVtdsoLSoE2lRQrzICHaRzPVf75ddUIxRVdYDeNhkg9g1SvEPKwaOxIHEo/388iyB10cQWbaigPzpGKYkylwLG6q2o/j6CM58WqvRiZ7kt9/L0T/+OeGQs=
+	t=1748872341; cv=none; b=R3JjxIbdvfOLuH4UxNHisp9U/rfYTNXfBy/Sd1zNfr7RUuFBkbeBe3s3L5TIqb17W1z2JpxfOw7H5rOAeEB+cOampKKtSTvbPjBhoritjQz64YSXR1gnOa0SzuE9jRACgsE73zw8JDKLz2uteQy8p8s4VxKbZsYf1T5kbl4r3II=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748872178; c=relaxed/simple;
-	bh=fEgCmJn14YCLg4Nbmc/Dmo0gdmseyNkH1UNBp79XPPo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZrKLS4QJQ00hjw4Ulv5zBF+bZBrG5+TFQd+8dB6n36yh8+tODeE5Nh3CBLkZ54Smh9mQFASIfQ3UM9weyTWVDP9cQKm4A8xfpX5ksEUsTFJhaFuohYa1CdV2ksNb3s0bwBQunfOjX4uD2ClLTPlKvS2aMXbA85scRCU8xFa5izU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=oA+w3gT6; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1748872341; c=relaxed/simple;
+	bh=VX+brQuLSUXwQnFa2cZROecstwOgBVT7lgDrOyMrLEw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lBpY4wvkTO4d7SKR6DkauTBt/gfkRXPiH3J8nZI2q59ffiGDHt0RJOEUhhu2cGXoym1Lf0PE2wZidEMR0LlQTPRkBI2JWl90cCReGsrM1A5jI2lns2b6N2RJyz8XpuStEpJxrM/4Wc4iuY0/jM++QeQLTwclEy4Rv+SbIf/IRUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=cUy3PkhE; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="oA+w3gT6"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3413FC9;
-	Mon,  2 Jun 2025 15:49:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1748872173;
-	bh=fEgCmJn14YCLg4Nbmc/Dmo0gdmseyNkH1UNBp79XPPo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oA+w3gT6dezzAvebr9CuEBqd7//cajhNEmJ38RUlrN5c+4KVeRL0VydPKmm/aVKiV
-	 jUQvB8g8FbQoQm1LQoU9jUso+G6InD25uGH2Yw7wYRz/Sua20s92vdlVn9mDkQ02I/
-	 9ZB0HvXevDwwWVWi9T7zJkn1dToivRIqEldIo1jg=
-Date: Mon, 2 Jun 2025 16:49:26 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-Cc: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="cUy3PkhE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=wT0xSehkFMhJxM+xwntmgLgxS4/GaYJns88pyew5XvY=; b=cUy3PkhEzwaHIpJh
+	yNau8oXC45In7BO2agAsQL74YVhi0KL9Umvwelib+DDtsn5Jltc9cT8pqSu7zBxilhOj1wexRc1bR
+	rxiAZ+opCmk5DH+60yk8KSUq2kT4w6ZcjrjjnbgG9SUJuHfUTthE9abrOR7/9/piAMzjGFe4MMa8I
+	ZcKurPhecFDpjsvGsrl/NCOb09JB8k5FOJz7Tya7m+NI+ZqQx1PkJ5yw+breQXoEoPXgXU8EN4ucI
+	mikjq1+s1O0LbNYnEaGJ8qUwO3q//nWhCfh6KpOW1ysJvzj/dR2eKFeqNAw1nXXS0FkXRTKuYpDyi
+	F/qZFSpigHhyMoS2Pg==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1uM5a9-007CLX-1W;
+	Mon, 02 Jun 2025 13:52:05 +0000
+From: linux@treblig.org
+To: dmitry.baryshkov@oss.qualcomm.com,
+	lumag@kernel.org,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch
+Cc: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
-	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-Subject: Re: [PATCH v3 13/15] media: rcar-csi2: Call get_frame_desc to find
- out VC & DT (Gen3)
-Message-ID: <20250602134926.GB23515@pendragon.ideasonboard.com>
-References: <20250530-rcar-streams-v3-0-026655df7138@ideasonboard.com>
- <20250530-rcar-streams-v3-13-026655df7138@ideasonboard.com>
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH v3 0/3] DRM deadcode
+Date: Mon,  2 Jun 2025 14:51:58 +0100
+Message-ID: <20250602135201.207466-1-linux@treblig.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250530-rcar-streams-v3-13-026655df7138@ideasonboard.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Tomi,
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Thank you for the patch.
+This is simply a rebased repost of v2 which was posted
+in October 2024 and had a Review-by on the last patch by
+Dmitry, but otherwise hasn't moved.
 
-On Fri, May 30, 2025 at 04:50:42PM +0300, Tomi Valkeinen wrote:
-> Call get_frame_desc to find out VC & DT, for Gen3 platforms, instead of
-> hardcoding the VC routing and deducing the DT based on the mbus format.
-> 
-> If the source subdevice doesn't implement .get_frame_desc, we use a
-> fallback case where we assume there's a single stream with VC = 0 and DT
-> based on the mbus format.
-> 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-> ---
->  drivers/media/platform/renesas/rcar-csi2.c | 113 +++++++++++++++++++----------
->  1 file changed, 76 insertions(+), 37 deletions(-)
-> 
-> diff --git a/drivers/media/platform/renesas/rcar-csi2.c b/drivers/media/platform/renesas/rcar-csi2.c
-> index b9f83aae725a..8f708196ef49 100644
-> --- a/drivers/media/platform/renesas/rcar-csi2.c
-> +++ b/drivers/media/platform/renesas/rcar-csi2.c
-> @@ -71,10 +71,7 @@ struct rcar_csi2;
->  #define FLD_REG				0x1c
->  #define FLD_FLD_NUM(n)			(((n) & 0xff) << 16)
->  #define FLD_DET_SEL(n)			(((n) & 0x3) << 4)
-> -#define FLD_FLD_EN4			BIT(3)
-> -#define FLD_FLD_EN3			BIT(2)
-> -#define FLD_FLD_EN2			BIT(1)
-> -#define FLD_FLD_EN			BIT(0)
-> +#define FLD_FLD_EN(ch)			BIT(ch)
->  
->  /* Automatic Standby Control */
->  #define ASTBY_REG			0x20
-> @@ -1066,52 +1063,94 @@ static int rcsi2_calc_mbps(struct rcar_csi2 *priv,
->  static int rcsi2_start_receiver_gen3(struct rcar_csi2 *priv,
->  				     struct v4l2_subdev_state *state)
->  {
-> -	const struct rcar_csi2_format *format;
-> -	u32 phycnt, vcdt = 0, vcdt2 = 0, fld = 0;
-> -	const struct v4l2_mbus_framefmt *fmt;
-> +	u32 phycnt, vcdt = 0, vcdt2 = 0;
-> +	u32 fld = FLD_DET_SEL(1);
-> +	struct v4l2_mbus_frame_desc source_fd;
-> +	struct v4l2_subdev_route *route;
->  	unsigned int lanes;
-> -	unsigned int i;
->  	int mbps, ret;
-> +	u8 ch = 0;
->  
-> -	/* Use the format on the sink pad to compute the receiver config. */
-> -	fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK, 0);
-> +	ret = v4l2_subdev_call(priv->remote, pad, get_frame_desc,
-> +			       priv->remote_pad, &source_fd);
-> +	if (ret && ret != -ENOIOCTLCMD) {
-> +		return ret;
-> +	} else if (ret == -ENOIOCTLCMD) {
+The only change is of the order of the commit message
+in the Revert, as commented on by Dmitry.
 
-	if (ret && ret != -ENOIOCTLCMD)
-		return ret;
+The original v2 thread is:
+  https://lore.kernel.org/all/20241029234706.285087-1-linux@treblig.org/
+Dave
 
-	if (ret == -ENOIOCTLCMD) {
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 
-> +		/* Create a fallback source_fd */
-> +		struct v4l2_mbus_frame_desc *fd = &source_fd;
-> +		const struct rcar_csi2_format *format;
-> +		struct v4l2_mbus_framefmt *fmt;
->  
-> -	dev_dbg(priv->dev, "Input size (%ux%u%c)\n",
-> -		fmt->width, fmt->height,
-> -		fmt->field == V4L2_FIELD_NONE ? 'p' : 'i');
-> +		fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK, 0);
-> +		if (!fmt)
-> +			return -EINVAL;
->  
-> -	/* Code is validated in set_fmt. */
-> -	format = rcsi2_code_to_fmt(fmt->code);
-> -	if (!format)
-> -		return -EINVAL;
-> +		format = rcsi2_code_to_fmt(fmt->code);
-> +		if (!format)
-> +			return -EINVAL;
->  
-> -	/*
-> -	 * Enable all supported CSI-2 channels with virtual channel and
-> -	 * data type matching.
-> -	 *
-> -	 * NOTE: It's not possible to get individual datatype for each
-> -	 *       source virtual channel. Once this is possible in V4L2
-> -	 *       it should be used here.
-> -	 */
-> -	for (i = 0; i < priv->info->num_channels; i++) {
-> +		memset(fd, 0, sizeof(*fd));
-> +
-> +		fd->num_entries = 1;
-> +		fd->type = V4L2_MBUS_FRAME_DESC_TYPE_CSI2;
-> +		fd->entry[0].stream = 0;
-> +		fd->entry[0].pixelcode = fmt->code;
-> +		fd->entry[0].bus.csi2.vc = 0;
-> +		fd->entry[0].bus.csi2.dt = format->datatype;
-> +	}
-> +
-> +	for_each_active_route(&state->routing, route) {
-> +		struct v4l2_mbus_frame_desc_entry *source_entry = NULL;
 
-const
+Dr. David Alan Gilbert (3):
+  drm: Remove unused drm_atomic_helper_commit_planes_on_crtc
+  drm/sysfs: Remove unused drm_class_device_(un)register
+  Revert "drm/client: Add drm_client_modeset_check()"
 
-> +		const struct v4l2_mbus_framefmt *fmt;
-> +		const struct rcar_csi2_format *format;
-> +		unsigned int i;
-> +		u8 vc, dt;
->  		u32 vcdt_part;
->  
-> -		if (priv->channel_vc[i] < 0)
-> -			continue;
-> +		for (i = 0; i < source_fd.num_entries; i++) {
-> +			if (source_fd.entry[i].stream == route->sink_stream) {
-
-No need to check the pad ?
-
-> +				source_entry = &source_fd.entry[i];
-> +				break;
-> +			}
-> +		}
-> +
-> +		if (!source_entry) {
-> +			dev_err(priv->dev,
-> +				"Failed to find stream from source frame desc\n");
-> +			return -EPIPE;
-> +		}
->  
-> -		vcdt_part = VCDT_SEL_VC(priv->channel_vc[i]) | VCDT_VCDTN_EN |
-> -			VCDT_SEL_DTN_ON | VCDT_SEL_DT(format->datatype);
-> +		vc = source_entry->bus.csi2.vc;
-> +		dt = source_entry->bus.csi2.dt;
-> +
-> +		vcdt_part = VCDT_SEL_VC(vc) | VCDT_VCDTN_EN |
-> +			VCDT_SEL_DTN_ON | VCDT_SEL_DT(dt);
-
-I would drop the vc and dt variables and write
-
-		vcdt_part = VCDT_SEL_VC(source_entry->bus.csi2.vc)
-			  | VCDT_VCDTN_EN | VCDT_SEL_DTN_ON
-			  | VCDT_SEL_DT(source_entry->bus.csi2.dt);
-
->  
->  		/* Store in correct reg and offset. */
-> -		if (i < 2)
-> -			vcdt |= vcdt_part << ((i % 2) * 16);
-> +		if (ch < 2)
-> +			vcdt |= vcdt_part << ((ch % 2) * 16);
->  		else
-> -			vcdt2 |= vcdt_part << ((i % 2) * 16);
-> -	}
-> +			vcdt2 |= vcdt_part << ((ch % 2) * 16);
-> +
-> +		fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK,
-> +						   route->sink_stream);
-> +		if (!fmt)
-> +			return -EINVAL;
-> +
-> +		dev_dbg(priv->dev, "Input size (%ux%u%c)\n",
-> +			fmt->width, fmt->height,
-> +			fmt->field == V4L2_FIELD_NONE ? 'p' : 'i');
->  
-> -	if (fmt->field == V4L2_FIELD_ALTERNATE)
-> -		fld = FLD_DET_SEL(1) | FLD_FLD_EN4 | FLD_FLD_EN3 | FLD_FLD_EN2
-> -			| FLD_FLD_EN;
-> +		/* Code is validated in set_fmt. */
-
-Then why don't you drop the !format check ?
-
-> +		format = rcsi2_code_to_fmt(fmt->code);
-> +		if (!format)
-> +			return -EINVAL;
-> +
-> +		if (fmt->field == V4L2_FIELD_ALTERNATE)
-> +			fld |= FLD_FLD_EN(ch);
-> +
-> +		ch++;
-> +	}
->  
->  	/*
->  	 * Get the number of active data lanes inspecting the remote mbus
+ drivers/gpu/drm/drm_atomic_helper.c  | 72 ----------------------------
+ drivers/gpu/drm/drm_client_modeset.c | 35 ++------------
+ drivers/gpu/drm/drm_sysfs.c          | 32 -------------
+ include/drm/drm_atomic_helper.h      |  1 -
+ include/drm/drm_client.h             |  1 -
+ include/drm/drm_sysfs.h              |  4 --
+ 6 files changed, 4 insertions(+), 141 deletions(-)
 
 -- 
-Regards,
+2.49.0
 
-Laurent Pinchart
