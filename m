@@ -1,255 +1,163 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF55A188907
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 15:36:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D24212D8A;
+	Mon,  2 Jun 2025 15:37:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748878621; cv=none; b=Z2YpfQRuV8iT4Q1tKn2Uf34TaOpcU7NnnjmjkLblOuug5M8X7iG5S4EhT/oRm7G+UOTeT6qOIG8Qzqh5yeieW6PNtZE5XTovsDGbNkzRudkknz3oLXEHe0zDUc+KRAt2yoG8oo4Oycaw/2Ye7Rxscfk9nag0rXE/A9mqe0farGo=
+	t=1748878633; cv=none; b=AkGpfB4Qm1d0RejuwftvgVgW67udqQZWReD3a3u0yp26JeqRvBv6NeewgvZHW41K9wEJkgUCjKhYA3sN9+xh7sOLvoKN5OtMuymUwfP+nNQKM9DkzyUcqeo1KzZisBM9oz0blG/0KXbtPDvOQHDkm1HVizC5YF/1bprzu8bOd3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748878621; c=relaxed/simple;
-	bh=3pVngmV9mQTMkPWE3piKLOBdpJ4NfJJcPoFfSAWhpeo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ILShDEeT91Nh0wHc1C/5cieoDa3fLwgpMZ72qQtW+2IHCMI98i9z9v6jpvXrEEl5dMmcvZ1yf/cmF1FflhOy392sUfxxDG+HFpqbi31zE2WWi/b0MDcDpx2J1DU+VRZD5sxNu9we8JSxQgv0g4XRH3TKP3ZU4bqUXRYTdUEykEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Ws5S/c5L; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1748878633; c=relaxed/simple;
+	bh=iLVn1HXm8BcU24Gao1meuqf82wyqfJbGKL+FZ3VLebU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f1NBTg0LCdMPE174DKPsUoslZy+xSWUfuMN8Ctd2Q3d6KeeQ37zet2NUszIo/Ymind2xD+zEJJRLdxHjJE6/Wu135ngq9Hch7pb5UBMGOeFdbAM/dRZNaprOHW9qfbV0yDIWRNcHU5sf8Olh4z1ZXNv3n0VRxGJWz20yN5TasyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cmsD1JiB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Ws5S/c5L"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-32aabfd3813so11906211fa.3
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 08:36:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1748878618; x=1749483418; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9QK6b48IzoYZ1czrVDC4E9lcyQE5tyMzcuV+x/G4A10=;
-        b=Ws5S/c5Lz6cu7Acwy1SUC9IpArUBWF+CY11rQ4lMCI9gY/rs5i2n+Uwf34a9eFPcQg
-         jwNFx+RboazEc323Am4fjIDvCrCfMaafWxxY5KIAMN34HiZEIGE/xLGOLbPkecoOu3Fx
-         cMCSGdBYsYUmXHLKqpfqn6B2e428C18ex5hv0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748878618; x=1749483418;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9QK6b48IzoYZ1czrVDC4E9lcyQE5tyMzcuV+x/G4A10=;
-        b=OEqQRhpOyjHzajlzZpoKJOB4oVH3Dhh5Z811/B6e/fWkgRTlmYLcVk0V8KGSQfXB8Q
-         /Hi8BDYJ4pwkYW33mkZaB6ZR/inhIn9qTF11RXdlCwaG1DUapPuQz3qm31XYQGjHOrEB
-         oQKrjF/jnjZgq28AE/nDpVdD+zeMXvexU8H1v+u08fcCRoU9klF1jeEBVThaN9HF1VCn
-         TbQDZbOQ3x0d38O323htB0icpgxPse338qO4G9fD5vqwF5+WvPZYX4C+UQeuNFR5C7Lk
-         ymBzRMEKZvBbgFekq7dsfxdXNx3oTpRE9B+gEuhAeJWJA6w/uJpEOINRPLxDD4A7cZ4l
-         3Xkw==
-X-Forwarded-Encrypted: i=1; AJvYcCVkEQPWH1qApR1ZVg4kCwEpsTrFLmU+bC0Pc9N3tpug/CS70iUSLCdPTvPSE8FCdQo4h0/tRVZdJu8jwXA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7HT7pkPEJt/03DucPrB7oTB0Di+zhlHQ2HEzC7UNtVDDSIcgI
-	k4jkXlMgZqZGs7L3n+DhyJnIKLBq5rO9T7so4fbnFz+NHU9cWIDzgtKmJY4yHd0AqYHTjwmvEIS
-	OOtOIZjofWLIl7j1QTfXRnIVh3y7U91Y8qGp9b25z
-X-Gm-Gg: ASbGnct5qkifZN1nVjmIKM/PP7dQDgD8JrFsVeggTPph73bzXXv86ujWlBxd1FTV0n6
-	snroBm8L9fr5u7YkrDKygpt5AvlN3ZfSEXPzXItpuQalHsJGHFGn9/Y7K6mkUiRX//ASyA1zxne
-	p5lTMG2CCq3oX9Y4q+vUXw6k1hXsAAlsS9rg==
-X-Google-Smtp-Source: AGHT+IGVdqEkKnUyCTSFT+9+5Aa03z5mtKupyjnf1plFynTemOAfSu/8mZNsQ15tprQhbCLpstHUfH+3BYqpCdCELEM=
-X-Received: by 2002:a2e:a9a7:0:b0:32a:885b:d0f with SMTP id
- 38308e7fff4ca-32a907b5ffemr33324241fa.24.1748878617891; Mon, 02 Jun 2025
- 08:36:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cmsD1JiB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47782C4CEEB;
+	Mon,  2 Jun 2025 15:37:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748878633;
+	bh=iLVn1HXm8BcU24Gao1meuqf82wyqfJbGKL+FZ3VLebU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=cmsD1JiBvgSUCl64K3XoVRxIYSXXof9N126xrp4lmYP6vyFS2X7HZAL4TwPc2hJRW
+	 q0KlV/Tzg1RM1/d8uqw1VQAqNTy1zGmQ7hFgBpEu/atBT8MGTjWEASL6BTJmTF6JJ9
+	 XApzlsxKq64pwQ31PLkT+5kyGCNv9eokEXTIr2ThrltJegWIWAgH9CnL5sAs22/Y7S
+	 PZgOtMQ8tYzhwAl7HTHGwOfN1e9VoyGvvn/qGsBETg9qxTjnYOymSVL/HAAtNonI9Q
+	 uxG7AQmIilXkZ2fH+AsbEoeNA3rPDcQo18BCI1ltuLM4UYCYtdxdZWd1yf07Jy7ETS
+	 9G7n2/A/4tcyA==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-remoteproc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Beleswar Padhi <b-padhi@ti.com>,
+	Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Xiaolei Wang <xiaolei.wang@windriver.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Iuliana Prodan <iuliana.prodan@nxp.com>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Tanmay Shah <tanmay.shah@amd.com>
+Subject: [GIT PULL] remoteproc updates for v6.16
+Date: Mon,  2 Jun 2025 10:37:09 -0500
+Message-ID: <20250602153710.3447-1-andersson@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530224035.41886-1-james.quinlan@broadcom.com>
- <20250530224035.41886-3-james.quinlan@broadcom.com> <g5rhfbvlx77imub6nn2bx2q6zest3hgsmssjdjrpwqhs2wuan5@uo2ca5asxbpe>
-In-Reply-To: <g5rhfbvlx77imub6nn2bx2q6zest3hgsmssjdjrpwqhs2wuan5@uo2ca5asxbpe>
-From: Jim Quinlan <james.quinlan@broadcom.com>
-Date: Mon, 2 Jun 2025 11:36:45 -0400
-X-Gm-Features: AX0GCFvQM320POU3IkAr8ibVY9VrUJrRaRz6J6JSXGjCiwYnJUu3TuOgVjnkxwo
-Message-ID: <CA+-6iNxioAQH8vsdPxhjP6gHzhzy3EAKtgOCMncCqgMSMZNRPg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] PCI: brcmstb: Use "num-lanes" DT property if present
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
-	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000cd212306369888c5"
+Content-Transfer-Encoding: 8bit
 
---000000000000cd212306369888c5
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 31, 2025 at 2:34=E2=80=AFAM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
->
-> On Fri, May 30, 2025 at 06:40:33PM -0400, Jim Quinlan wrote:
-> > By default, we use automatic HW negotiation to ascertain the number of
-> > lanes of the PCIe connection.  If the "num-lanes" DT property is presen=
-t,
-> > assume that the chip's built-in capability information is incorrect or
-> > undesired, and use the specified value instead.
-> >
-> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > ---
-> >  drivers/pci/controller/pcie-brcmstb.c | 26 +++++++++++++++++++++++++-
-> >  1 file changed, 25 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/contro=
-ller/pcie-brcmstb.c
-> > index e19628e13898..79fc6d00b7bc 100644
-> > --- a/drivers/pci/controller/pcie-brcmstb.c
-> > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> > @@ -46,6 +46,7 @@
-> >  #define  PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK   0xffffff
-> >
-> >  #define PCIE_RC_CFG_PRIV1_LINK_CAPABILITY                    0x04dc
-> > +#define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_MAX_LINK_WIDTH_MASK       0=
-x1f0
-> >  #define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK 0xc00
-> >
-> >  #define PCIE_RC_CFG_PRIV1_ROOT_CAP                   0x4f8
-> > @@ -55,6 +56,9 @@
-> >  #define PCIE_RC_DL_MDIO_WR_DATA                              0x1104
-> >  #define PCIE_RC_DL_MDIO_RD_DATA                              0x1108
-> >
-> > +#define PCIE_RC_PL_REG_PHY_CTL_1                     0x1804
-> > +#define  PCIE_RC_PL_REG_PHY_CTL_1_REG_P2_POWERDOWN_ENA_NOSYNC_MASK   0=
-x8
-> > +
-> >  #define PCIE_RC_PL_PHY_CTL_15                                0x184c
-> >  #define  PCIE_RC_PL_PHY_CTL_15_DIS_PLL_PD_MASK               0x400000
-> >  #define  PCIE_RC_PL_PHY_CTL_15_PM_CLK_PERIOD_MASK    0xff
-> > @@ -1072,7 +1076,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie=
-)
-> >       void __iomem *base =3D pcie->base;
-> >       struct pci_host_bridge *bridge;
-> >       struct resource_entry *entry;
-> > -     u32 tmp, burst, aspm_support;
-> > +     u32 tmp, burst, aspm_support, num_lanes, num_lanes_cap;
-> >       u8 num_out_wins =3D 0;
-> >       int num_inbound_wins =3D 0;
-> >       int memc, ret;
-> > @@ -1180,6 +1184,26 @@ static int brcm_pcie_setup(struct brcm_pcie *pci=
-e)
-> >               PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
-> >       writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
-> >
-> > +     /* 'tmp' still holds the contents of PRIV1_LINK_CAPABILITY */
-> > +     num_lanes_cap =3D u32_get_bits(tmp, PCIE_RC_CFG_PRIV1_LINK_CAPABI=
-LITY_MAX_LINK_WIDTH_MASK);
-> > +     num_lanes =3D 0;
-> > +     /*
-> > +      * Use automatic num-lanes HW negotiation by default.  If the
->
-> "Use hardware negotiated Max Link Width value by default."
->
-> > +      * "num-lanes" DT property is present, assume that the chip's
-> > +      * built-in link width capability information is
-> > +      * incorrect/undesired and use the specified value instead.
-> > +      */
-> > +     if (!of_property_read_u32(pcie->np, "num-lanes", &num_lanes) &&
-> > +         num_lanes && num_lanes <=3D 4 && num_lanes_cap !=3D num_lanes=
-) {
->
-> I think you should drop the 'num_lanes && num_lanes <=3D 4' check since t=
-he DT
-> binding should take care of that. Otherwise, once link width gets increas=
-ed, you
-> need to update both binding and the driver, which is redundant.
-Not all Linux release configuration systems run a comprehensive DT
-validator  before execution.  Our bootloader modifies the DT blob on
-the fly and also permits -- with restrictions -- customers to modify
-the DT at the bootloader command line.  Yes, we can do partial a
-priori DT validation, but there is still value to checking the params
-in the driver code, at least for us.
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
->
-> - Mani
->
-> --
-> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
-=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
-=E0=AF=8D
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
 
---000000000000cd212306369888c5
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+are available in the Git repository at:
 
-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
-mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
-uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
-AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
-c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
-AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
-TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
-bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
-L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
-BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
-VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
-z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
-b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
-+R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
-AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
-75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICYDCC
-AlwCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
-AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
-MA0GCWCGSAFlAwQCAQUAoIHHMC8GCSqGSIb3DQEJBDEiBCB7fVqOARSYGFt2JOOBULuds9u54j59
-wPH4/m0Ve3sFcTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNTA2
-MDIxNTM2NThaMFwGCSqGSIb3DQEJDzFPME0wCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
-hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0B
-AQEFAASCAQAcSVt7SZZrW+HiQeZds/0lPTeAtCri8ow40DfjvJbKFB1/fjYMndPw4T/ZnxD5tfeI
-aFVUUta6+mKhmy6lUr/q94j9tZYnwtDOjy85kH+C3HqvSCgwia+gcDaWqrbitA1rcCO9Yga+8oXV
-0nITDsnxVcaMDQjJDk8JBsPW+XBITPk7KKo5WA6+zgB6UWEihgnp458SJuc7zsu28sEVHX2cuKS8
-R8CtOELzXAlvn3Ge0Et9isrNGpLd6eMMgSn9NhuI3fm/DzH5Sm5nSO2vlBqGQKr8td1hI2pazqPp
-LzlVN6EvXb9toNIu7AwvADS1BgdSWGiPfbJy+Mc7IfI4NULN
---000000000000cd212306369888c5--
+  https://git.kernel.org/pub/scm/linux/kernel/git/remoteproc/linux.git tags/rproc-v6.16
+
+for you to fetch changes up to 5779f6f9a64ffc3e002a37ab1f78521d9a5c0100:
+
+  remoteproc: k3: Refactor release_tsp() functions into common driver (2025-05-20 11:19:12 -0600)
+
+----------------------------------------------------------------
+remoteproc updates for v6.16
+
+Fix resource cleanup in the remoteproc attach error handling code paths.
+
+Refactor the various TI K3 drivers to extract and reuse common code
+between them.
+
+Add support in the i.MX remoteproc driver for determining from the
+firmware if Linux should wait on a "firmware ready" signal at startup.
+
+Improve the Xilinx R5F power down mechanism to handle use cases where
+this is shared with other entities in the system.
+
+----------------------------------------------------------------
+Arnaud Pouliquen (2):
+      dt-bindings: remoteproc: stm32-rproc: Add firmware-name property
+      remoteproc: stm32_rproc: Allow to specify firmware default name
+
+Beleswar Padhi (34):
+      remoteproc: k3-r5: Refactor sequential core power up/down operations
+      remoteproc: k3-m4: Don't assert reset in detach routine
+      remoteproc: k3-r5: Re-order internal memory initialization functions
+      remoteproc: k3-r5: Re-order k3_r5_release_tsp() function
+      remoteproc: k3-r5: Refactor Data Structures to Align with DSP and M4
+      remoteproc: k3-r5: Use k3_r5_rproc_mem_data structure for memory info
+      remoteproc: k3-{m4/dsp}: Add a void ptr member in rproc internal struct
+      remoteproc: k3-m4: Add pointer to rproc struct within k3_m4_rproc
+      remoteproc: k3-m4: Use k3_rproc_mem_data structure for memory info
+      remoteproc: k3: Refactor shared data structures
+      remoteproc: k3: Refactor mailbox rx_callback functions into common driver
+      remoteproc: k3: Refactor .kick rproc ops into common driver
+      remoteproc: k3-dsp: Correct Reset logic for devices without lresets
+      remoteproc: k3-m4: Introduce central function to put rproc into reset
+      remoteproc: k3: Refactor rproc_reset() implementation into common driver
+      remoteproc: k3-dsp: Correct Reset deassert logic for devices w/o lresets
+      remoteproc: k3-m4: Introduce central function to release rproc from reset
+      remoteproc: k3: Refactor rproc_release() implementation into common driver
+      remoteproc: k3-m4: Ping the mbox while acquiring the channel
+      remoteproc: k3: Refactor rproc_request_mbox() implementations into common driver
+      remoteproc: k3-dsp: Don't override rproc ops in IPC-only mode
+      remoteproc: k3-dsp: Assert local reset during .prepare callback
+      remoteproc: k3: Refactor .prepare rproc ops into common driver
+      remoteproc: k3: Refactor .unprepare rproc ops into common driver
+      remoteproc: k3: Refactor .start rproc ops into common driver
+      remoteproc: k3: Refactor .stop rproc ops into common driver
+      remoteproc: k3: Refactor .attach rproc ops into common driver
+      remoteproc: k3: Refactor .detach rproc ops into common driver
+      remoteproc: k3: Refactor .get_loaded_rsc_table ops into common driver
+      remoteproc: k3: Refactor .da_to_va rproc ops into common driver
+      remoteproc: k3: Refactor of_get_memories() functions into common driver
+      remoteproc: k3: Refactor mem_release() functions into common driver
+      remoteproc: k3: Refactor reserved_mem_init() functions into common driver
+      remoteproc: k3: Refactor release_tsp() functions into common driver
+
+Bjorn Andersson (1):
+      Revert "remoteproc: core: Clear table_sz when rproc_shutdown"
+
+Dan Carpenter (1):
+      remoteproc: qcom_wcnss_iris: Add missing put_device() on error in probe
+
+Iuliana Prodan (1):
+      remoteproc: imx_dsp_rproc: Add support for DSP-specific features
+
+Konrad Dybcio (1):
+      dt-bindings: remoteproc: qcom,sm8350-pas: Add SC8280XP
+
+Krzysztof Kozlowski (1):
+      dt-bindings: remoteproc: qcom,sm8150-pas: Add missing SC8180X compatible
+
+Siddharth Vadapalli (2):
+      remoteproc: k3-r5: Drop check performed in k3_r5_rproc_{mbox_callback/kick}
+      remoteproc: k3-dsp: Drop check performed in k3_dsp_rproc_{mbox_callback/kick}
+
+Tanmay Shah (1):
+      remoteproc: xlnx: Avoid RPU force power down
+
+Xiaolei Wang (2):
+      remoteproc: core: Cleanup acquired resources when rproc_handle_resources() fails in rproc_attach()
+      remoteproc: core: Release rproc->clean_table after rproc_attach() fails
+
+ .../bindings/remoteproc/qcom,sm8150-pas.yaml       |    3 +
+ .../bindings/remoteproc/qcom,sm8350-pas.yaml       |   54 +-
+ .../bindings/remoteproc/st,stm32-rproc.yaml        |    4 +
+ drivers/remoteproc/Makefile                        |    6 +-
+ drivers/remoteproc/imx_dsp_rproc.c                 |   98 +-
+ drivers/remoteproc/qcom_wcnss_iris.c               |    2 +
+ drivers/remoteproc/remoteproc_core.c               |    7 +-
+ drivers/remoteproc/stm32_rproc.c                   |    8 +-
+ drivers/remoteproc/ti_k3_common.c                  |  551 +++++++++++
+ drivers/remoteproc/ti_k3_common.h                  |  118 +++
+ drivers/remoteproc/ti_k3_dsp_remoteproc.c          |  616 +-----------
+ drivers/remoteproc/ti_k3_m4_remoteproc.c           |  583 +----------
+ drivers/remoteproc/ti_k3_r5_remoteproc.c           | 1018 +++++++-------------
+ drivers/remoteproc/xlnx_r5_remoteproc.c            |   34 +-
+ 14 files changed, 1266 insertions(+), 1836 deletions(-)
+ create mode 100644 drivers/remoteproc/ti_k3_common.c
+ create mode 100644 drivers/remoteproc/ti_k3_common.h
