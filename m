@@ -1,72 +1,108 @@
-Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com [209.85.161.70])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DBC2226D0E
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 18:45:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB481426C;
+	Mon,  2 Jun 2025 18:46:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748889917; cv=none; b=isZns04ICLHAC8RMz/oy/1UrLccOj+g6TTthgDoMJW4w0J/NZqc6T5REROoqWfPY35gNXOOCnRKkV+HU+VBalLplI3UtxPII7z3XBMFvuGtkF/EnRbh3vlbiLAGcoFWSx3ELQgtufYxYbhEs3TNSRyZ2gC8otLOVKKh74DYmbGM=
+	t=1748889985; cv=none; b=ACdrcDTh0hwfMxF63JqXSnzh0TpM/9iQYkqRU60VLlrJOjQM4fpzKdshYRzoHOOBb5Xqg2NMCEthuoUCXYXk8I2iuwfjbt2mDGX0rfr0DrI2ikRn7/FPkZkIpzWeTW2mxV7hPgA8ZkC4ZnfMDMv+O5X+qrhTcxemxAjFP598uDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748889917; c=relaxed/simple;
-	bh=nCMsFN8oTx80uExI2Hj+P94osR9oKDrBZu3hkWWuIB0=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=ptRhE8gAjWaUTggdXkiThvnO8G82WP6e3ImJEZioJVS6tdPU1DYaG/OSIJfPu8RmCCT9PWlzjoKEjn80E/0l4awbdaZ4lyVlHPrCavH0AxDaYK3oUvnUmZan12ouy3H4xwATc73/scRfYYT8Sl0vCD7PRX0FJyiNfMl9oCMvlhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.161.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-oo1-f70.google.com with SMTP id 006d021491bc7-60ed4f6a523so1648728eaf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 11:45:15 -0700 (PDT)
+	s=arc-20240116; t=1748889985; c=relaxed/simple;
+	bh=t7PWQIROnj9O2Qd2473xwHXz1p4C86Pcz4bK/Kwvu5g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L9OUh3AvAMxum3XZjY3/VcqqOetI1f99epIlBlq7E2qVT0/bLocaZuBtQM/lwWX1/71ap46ebkInvplJsYCOchEPy7MkdZzdEeBDKHHreRLu3vTna6JIjoD140Zos4I05lumuXO0XchN82Un9oHrKalRW/KRNu656xRlWhjo69Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=Sl9D9LRC; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Sl9D9LRC"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-450cd6b511cso29094905e9.2;
+        Mon, 02 Jun 2025 11:46:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1748889982; x=1749494782; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DQgE/th7Y6NmSXgegzh7ifR88rjm7OtqqOUWoV4+ZsE=;
+        b=Sl9D9LRClXNBLsyGWKwuZKW3ejEqD9QRD3nN2/31sQje2ytpOiC+7o9JUV8weptya9
+         zs2npqKMLZf3FXn2HDB7db8jD+ysgdzCEvAt1p/3kcZn7kNj1X14dja4H7H9HBWO3MdH
+         XNSj9+HGynSe3cFDRj65Xjx2oMcsVtbS8RbzVnhCPpzZawmSFLbMy9sVXREwRIHur84E
+         7RvPGXaETnqEjrEAmZUQfRKgajp9nwU3NJrEb0jzizbxEAIM+OjCw9ujjqPDDEXv6DVM
+         bDL/gGu4WY2hpaNR81fR3QWvbV1zo67emu2FEeEbmCGtBeiNp/rcUYob5IgmYuVwEGF7
+         JyJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748889914; x=1749494714;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
+        d=1e100.net; s=20230601; t=1748889982; x=1749494782;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eUEmtxYV1w54nNVGfGVE4jJmPzNAYr0Q5jVsL47OXN4=;
-        b=X/LCjBo5qv8ESOu4s1PTqFzR3nS/JOfvNnD2fACFT4L0PVmgg9eyTy2fx39jesrfmO
-         t2XyD+YD/UywQcVlrkVc3lBfeIrcJJOTaSjgXMwvQqd/5NW+6idrsEVPsrJJKFTvj8oc
-         1Q66YFCELhqcof0t47aheaQBkaAHKh5U50RqvCc0/3B4iybguwKtfs2NoWDShXSnvFg6
-         YZ5tn3wDacoRHjqXSH7bOh1M3KeYFFgzz+Dn3LkjX3ZY7wBSXjYQfjY7qcAnQLlVDPa/
-         +5Et1geJboLYFYroBZ6HraRl+hqJwNODgt5xUl2eZJlLg+fd1WAzQ6dyL6pcUqqSFm83
-         dZoA==
-X-Gm-Message-State: AOJu0YxodrGdYG4Btydv694OM0d1uyiozA6RAgd7iSq27KSdMvRR4Tbs
-	7LKaN9YolxWP6Vt308kJPF3mjg/bNXaYSH+Sgtbag3IHx6Uze5yHTSw0jD6R71WR4Oy7lke4vqI
-	AIyGdrR9g2wa+ZTimlC8UNaqzc2mM8uIExVUl32jGCk8eCO/4I+0fCqWEDK8=
-X-Google-Smtp-Source: AGHT+IF59xx/MQm8sra/dokQqvMIfISszKLW33sBgm1uIK835IQG+0BGE64NYLuPnRy90qoQzKDYF+1MyPKbDBcLYtycrnhEgty4
+        bh=DQgE/th7Y6NmSXgegzh7ifR88rjm7OtqqOUWoV4+ZsE=;
+        b=WCyA/CByp7btLDJwnSmMHEWjyudNUBEROxpYm7uYS/Oot/NYRBBTyvnhuMENVW/ji+
+         GQdjUgouuZUGR7/ngXfB8Htyis2uxhzvW5LfPE7etjPfyuqc+TUT7wUtwIo6xlRyoX1M
+         84r/kqWUM+0mAWuhc3CA64sRcThF3vsZtFBN3kmpn0u5s5YJ4gfUrtQ1wDU76i6k48AN
+         etd85CO45pJcjjaicM5n917JFT/ayqXA7Y9IRrxqkf14S4IISz7xUbCXpPBbd+TaudxW
+         T5ADlReo6ba2XM7X+3G14sUjluJgajGhcTOL6QsKUrba8aonxjyUnZ3JFUTBAd/V30gS
+         pGBg==
+X-Forwarded-Encrypted: i=1; AJvYcCWFwMkLG0hCu0yzu8EqE24gn/I9gWZjl6wgkhuLzcQNS1lvXs/mLUpd2IvP6oipgJFKJJ55yZGLHPWfST0=@vger.kernel.org, AJvYcCXGnOxjhXpk9izGgus4YKpR5d2pjC9frCuJpUJJjkxjRTlbvhiBccSee8MEv9G0QWSq359j6weA@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuUU+5Cxg7nkW4ZUZm3NUnVfohHLTMocBKoKtiTHeYJCnFMXTX
+	Qc9/H5R/ibCXcAHRiMw3z23UQoz50jCx96PMvPV+EmbLh5PLDHZ+LHU=
+X-Gm-Gg: ASbGncsJED9tV8UaBDj3U5NS0q+Pob7u1JrRB9q+4fZuOHfCoYU/T4qhPicpyGJIIQQ
+	AvUpdAB8pNBlot1NrLKWD7nkhPQ8wBojGM+BPRHo1ttaLWMzTxH6WAzLqbPmjBORNUnfmY1KhHy
+	j90PYyNkZ/JmodfC0faOKIGrn0QDrGnFTbGyRht63BifTWrXA6Ahs2z9eXmA8NoKma6m5sMSRra
+	yFFtD13cm35vpGVOMilWezz9VZKzOuSIQQI5RdaEizkQEvaDXfTLIMXokSn01evuCJ/kVnNhnk3
+	kgrhCGs7wl5pB2Fqk8ICCXDIhZLCz/JTgEFEPd30dIDEtORjG8lRorTm+zo9bph5uHSPdF5TSHm
+	leGkeSlqlrzk36PxtLyMStb7vnTM3K43AgN0DnzKQmwKfC5E0
+X-Google-Smtp-Source: AGHT+IHJw1q7LezGoIk9SASABKd0sGNN76oputOfkAU4vVCaSWWo33UrhTOa7JcV5gOvreKvCke50g==
+X-Received: by 2002:a05:600c:3542:b0:43c:e478:889 with SMTP id 5b1f17b1804b1-450d64366a0mr153427605e9.0.1748889981690;
+        Mon, 02 Jun 2025 11:46:21 -0700 (PDT)
+Received: from [192.168.1.3] (p5b057d53.dip0.t-ipconnect.de. [91.5.125.83])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe6c738sm15366037f8f.24.2025.06.02.11.46.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Jun 2025 11:46:21 -0700 (PDT)
+Message-ID: <6117e660-bcba-4767-ae98-60c71e422169@googlemail.com>
+Date: Mon, 2 Jun 2025 20:46:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:1516:b0:864:a228:92b4 with SMTP id
- ca18e2360f4ac-86d051b08dcmr1488629639f.7.1748889903576; Mon, 02 Jun 2025
- 11:45:03 -0700 (PDT)
-Date: Mon, 02 Jun 2025 11:45:03 -0700
-In-Reply-To: <CABBYNZLxjLiJSDOQfMqGDz5X48KSb4MuJQRKh9+F2u3PxLdvtg@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <683df12f.a00a0220.d8eae.0058.GAE@google.com>
-Subject: Re: [syzbot] [bluetooth?] KASAN: slab-use-after-free Read in hci_sock_get_channel
-From: syzbot <syzbot+0a7039d5d9986ff4ecec@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.14 00/73] 6.14.10-rc1 review
+Content-Language: de-DE
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250602134241.673490006@linuxfoundation.org>
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250602134241.673490006@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Am 02.06.2025 um 15:46 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.14.10 release.
+> There are 73 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
-Reported-by: syzbot+0a7039d5d9986ff4ecec@syzkaller.appspotmail.com
-Tested-by: syzbot+0a7039d5d9986ff4ecec@syzkaller.appspotmail.com
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
-Tested on:
 
-commit:         d7fa1af5 Merge branch 'for-next/core' into for-kernelci
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=136aac82580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=89c13de706fbf07a
-dashboard link: https://syzkaller.appspot.com/bug?extid=0a7039d5d9986ff4ecec
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-userspace arch: arm64
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1442ac82580000
+Beste Grüße,
+Peter Schneider
 
-Note: testing is done by a robot and is best-effort only.
+-- 
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
+
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
