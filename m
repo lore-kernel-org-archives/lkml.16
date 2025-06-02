@@ -1,40 +1,40 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 237DA23A563
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B6723A578
 	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 14:50:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748875846; cv=none; b=mnDV6jJ/ueTHZ02kniRygpualPlr//Gg0nC41/gP8xVddhJPBPPXnNfWY3TpxQrdg+hkP/37drwkOOWqbyHwop0gXSZ5QrER00TzuMDyIjIWNNzgyLgzmU0sHK8ZRIdH8QYFGsoyjQ+PArn12PwVFa0X2pU28fcmXUXgWCxeOZc=
+	t=1748875846; cv=none; b=Jfll/rl1/2MbI5dqpeKUT54kdKAehHpZm9ojj0eXV1ojJiqHhOyEwqwgrSXUcIdlX99Kj5mEmO8YnFXEVsJXX7aBpONK+dDxu450HEORqAr4JoaSu8S/NxxIQac/RF44DptaFpNdhCf2r10gUPSoRWmR5TYoAexoQjYHAqj2B3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748875846; c=relaxed/simple;
-	bh=ZBz5QvEz+12dQjO6oD9ugRiWPAe9RqXA9VqmCk3NIZA=;
+	bh=iws5S7pat0zz/LR9v/TjCKdALYQwvsfWLSEuW0M8rMk=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=UlvVoHIG2uC3mrVOVheMlcN4uPRd82B+CAbxFKczRC3lKf6ziIPpNOJC/3+il/sgryeNzcgTxm7Is+uCCkrRkIt2lXV6m6r7ECA+nv6VYdlihHdLYJH8S0SMPbOeCjhN02ZpzTakQ++YKGE81dLD49KyF/9ZjEh8G1oqeAGbTeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=swj7ZRcS; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type; b=HfPw7HOb3U2RKKuSWYHPsVhNE85EBnxCmYd31jxtaR4XAkDQRpvN6eNNkvjpkyS6DYiWdn4gCfD/Oz3YBHuYUyMUaS5ZLqIIlCcXv/6cqvUxszZo6zJw2Lsdxj5KPsibCx1GZYHReSzd54XT+4tfMbjhgXnmH/nvkFAPgdQbhbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GRyYtFVj; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="swj7ZRcS"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GRyYtFVj"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=/BnzbZewuJowStjNBBWDV4qAQq+n+zc+/95pnGIzIL0=; b=swj7ZRcSogAfSES7mGimNVmXGB
-	Itg/w2bwFsgTDdu/7v/PjuCx/Zs52PAeEyDJ3he2DUoe9Jxy2Z4fVmXxVI1r+RWHH2SqPt4D6FAeY
-	JjszsoueoXJK8O7LtY+jw0dM4BkhhUOBETK6w3QOeWo6y2uoXWdsGFPoUCZcO62sFrQXh7r5LKSFl
-	Y9JOfFtfGx+ViiWM1QLGc4TYVgjwYD05cFMQuTf3Rv1Z6Ck+qWJjwcKN7YCc/Aa27q82Q8x829Kz4
-	XRR8lvWLr6O1xhx+XHWgURxPYw9uHN45/ad76cgMxrw6NYK4NVn3LIX/01IooKu/1hzdp0N5c6DQc
-	s/pzc4zA==;
+	bh=OStL3zggcD6pgJqSYbkKyooYuBuqpBbUVM9TPqFQoVQ=; b=GRyYtFVjzR/0aeMSUTkAItNGSO
+	AqMTbWVHnZb/4G6d1Wly6LRJC1Jb8+j9M2VCRW/TSvZwFU0YgrBrf2+byK0KygcJ5PtdruXqSdC0c
+	4HvrPO6mibsbX20DZ0+C0BnarUSwFiypSk0M5gBuLMWf9KeP7nO6S5K+boMJJ0zHqlJGyVeXnodSv
+	4Cduo1trG9oYXED2lmX+lxi1W/atuwbzGs0Usd9/63uQEqJkE3AqW1lJInKRx7Fl8NtbAX45vRCsa
+	yuPWQqUGIvsZYbd2SntADvBRuwTdjSEu7MWoyi8kth0/mljYO9hX8xo1ApQsgcPP99sLZhbSTZU/w
+	ApbqQxoA==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uM6Ul-000000011N9-3Q4Y;
+	id 1uM6Ul-000000011NB-3WpN;
 	Mon, 02 Jun 2025 14:50:35 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
-	id 0A63E300F1D; Mon,  2 Jun 2025 16:50:35 +0200 (CEST)
-Message-ID: <20250602144755.319275437@infradead.org>
+	id 0E7CF301150; Mon,  2 Jun 2025 16:50:35 +0200 (CEST)
+Message-ID: <20250602144755.436183368@infradead.org>
 User-Agent: quilt/0.66
-Date: Mon, 02 Jun 2025 16:42:02 +0200
+Date: Mon, 02 Jun 2025 16:42:03 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -44,7 +44,7 @@ Cc: linux-kernel@vger.kernel.org,
  jpoimboe@kernel.org,
  mark.rutland@arm.com,
  torvalds@linuxfoundation.org
-Subject: [RFC 1/8] x86: Provide assembly __bug_table helpers
+Subject: [RFC 2/8] bug: Add BUGFLAG_FORMAT infrastructure
 References: <20250602144201.301974933@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -55,86 +55,81 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-Bad-Reply: References but no 'Re:' in Subject.
 
-Rework the __bug_table helpers such that usage from assembly becomes
-possible.
+Add BUGFLAG_FORMAT; an architecture opt-in feature that allows adding
+the WARN_printf() format string to the bug_entry table.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/x86/include/asm/bug.h |   54 ++++++++++++++++++++-------------------------
- 1 file changed, 24 insertions(+), 30 deletions(-)
+ include/asm-generic/bug.h |    8 ++++++++
+ lib/bug.c                 |   20 ++++++++++++++++++++
+ 2 files changed, 28 insertions(+)
 
---- a/arch/x86/include/asm/bug.h
-+++ b/arch/x86/include/asm/bug.h
-@@ -32,46 +32,40 @@
- #ifdef CONFIG_GENERIC_BUG
- 
- #ifdef CONFIG_X86_32
--# define __BUG_REL(val)	".long " __stringify(val)
-+#define ASM_BUG_REL(val)	.long val
- #else
--# define __BUG_REL(val)	".long " __stringify(val) " - ."
-+#define ASM_BUG_REL(val)	.long val - .
+--- a/include/asm-generic/bug.h
++++ b/include/asm-generic/bug.h
+@@ -13,6 +13,7 @@
+ #define BUGFLAG_ONCE		(1 << 1)
+ #define BUGFLAG_DONE		(1 << 2)
+ #define BUGFLAG_NO_CUT_HERE	(1 << 3)	/* CUT_HERE already sent */
++#define BUGFLAG_FORMAT		(1 << 4)
+ #define BUGFLAG_TAINT(taint)	((taint) << 8)
+ #define BUG_GET_TAINT(bug)	((bug)->flags >> 8)
  #endif
- 
- #ifdef CONFIG_DEBUG_BUGVERBOSE
-+#define ASM_BUGTABLE_VERBOSE(file, line)				\
-+	ASM_BUG_REL(file) ;						\
-+	.word line
-+#define ASM_BUGTABLE_VERBOSE_SIZE	6 /* sizeof(file) + sizeof(line) */
-+#else
-+#define ASM_BUGTABLE_VERBOSE(file, line)
-+#define ASM_BUGTABLE_VERBOSE_SIZE	0
-+#endif
- 
--#define _BUG_FLAGS(ins, flags, extra)					\
--do {									\
--	asm_inline volatile("1:\t" ins "\n"				\
--		     ".pushsection __bug_table,\"aw\"\n"		\
--		     "2:\t" __BUG_REL(1b) "\t# bug_entry::bug_addr\n"	\
--		     "\t"  __BUG_REL(%c0) "\t# bug_entry::file\n"	\
--		     "\t.word %c1"        "\t# bug_entry::line\n"	\
--		     "\t.word %c2"        "\t# bug_entry::flags\n"	\
--		     "\t.org 2b+%c3\n"					\
--		     ".popsection\n"					\
--		     extra						\
--		     : : "i" (__FILE__), "i" (__LINE__),		\
--			 "i" (flags),					\
--			 "i" (sizeof(struct bug_entry)));		\
--} while (0)
-+#define ASM_BUGTABLE_BASE_SIZE		6 /* sizeof(bug_addr) + sizeof(flags) */
- 
--#else /* !CONFIG_DEBUG_BUGVERBOSE */
-+#define ASM_BUGTABLE_FLAGS(at, file, line, flags)			\
-+	.pushsection __bug_table, "aw" ;				\
-+	123:	ASM_BUG_REL(at) ;					\
-+	ASM_BUGTABLE_VERBOSE(file, line) ;				\
-+	.word	flags ;							\
-+	.org 123b + ASM_BUGTABLE_BASE_SIZE + ASM_BUGTABLE_VERBOSE_SIZE ;\
-+	.popsection
- 
--#define _BUG_FLAGS(ins, flags, extra)					\
-+#define _BUG_FLAGS(insn, flags, extra)					\
- do {									\
--	asm_inline volatile("1:\t" ins "\n"				\
--		     ".pushsection __bug_table,\"aw\"\n"		\
--		     "2:\t" __BUG_REL(1b) "\t# bug_entry::bug_addr\n"	\
--		     "\t.word %c0"        "\t# bug_entry::flags\n"	\
--		     "\t.org 2b+%c1\n"					\
--		     ".popsection\n"					\
--		     extra						\
--		     : : "i" (flags),					\
--			 "i" (sizeof(struct bug_entry)));		\
-+	asm_inline volatile("1:\t" insn "\n"				\
-+	    __stringify(ASM_BUGTABLE_FLAGS(1b, %c[file], %c[line], %c[fl])) "\n" \
-+			    extra					\
-+		     : : [file] "i" (__FILE__), [line] "i" (__LINE__),	\
-+			 [fl] "i" (flags));				\
- } while (0)
- 
--#endif /* CONFIG_DEBUG_BUGVERBOSE */
--
+@@ -36,6 +37,13 @@ struct bug_entry {
  #else
+ 	signed int	bug_addr_disp;
+ #endif
++#ifdef HAVE_ARCH_BUG_FORMAT
++#ifndef CONFIG_GENERIC_BUG_RELATIVE_POINTERS
++	const char	*format;
++#else
++	signed int	format_disp;
++#endif
++#endif
+ #ifdef CONFIG_DEBUG_BUGVERBOSE
+ #ifndef CONFIG_GENERIC_BUG_RELATIVE_POINTERS
+ 	const char	*file;
+--- a/lib/bug.c
++++ b/lib/bug.c
+@@ -139,6 +139,19 @@ void bug_get_file_line(struct bug_entry
+ #endif
+ }
  
- #define _BUG_FLAGS(ins, flags, extra)  asm volatile(ins)
++static const char *bug_get_format(struct bug_entry *bug)
++{
++	const char *format = NULL;
++#ifdef HAVE_ARCH_BUG_FORMAT
++#ifdef CONFIG_GENERIC_BUG_RELATIVE_POINTERS
++	format = (const char *)&bug->format_disp + bug->format_disp;
++#else
++	format = bug->format;
++#endif
++#endif
++	return format;
++}
++
+ struct bug_entry *find_bug(unsigned long bugaddr)
+ {
+ 	struct bug_entry *bug;
+@@ -150,6 +163,10 @@ struct bug_entry *find_bug(unsigned long
+ 	return module_find_bug(bugaddr);
+ }
+ 
++#ifndef __warn_printf
++#define __warn_printf(...)
++#endif
++
+ static enum bug_trap_type __report_bug(unsigned long bugaddr, struct pt_regs *regs)
+ {
+ 	struct bug_entry *bug;
+@@ -190,6 +207,9 @@ static enum bug_trap_type __report_bug(u
+ 	if ((bug->flags & BUGFLAG_NO_CUT_HERE) == 0)
+ 		printk(KERN_DEFAULT CUT_HERE);
+ 
++	if (bug->flags & BUGFLAG_FORMAT)
++		__warn_printf(bug_get_format(bug), regs);
++
+ 	if (warning) {
+ 		/* this is a WARN_ON rather than BUG/BUG_ON */
+ 		__warn(file, line, (void *)bugaddr, BUG_GET_TAINT(bug), regs,
 
 
