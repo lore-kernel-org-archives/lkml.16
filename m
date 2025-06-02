@@ -1,268 +1,238 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8AB7165F16
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 21:14:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFBECF9D6;
+	Mon,  2 Jun 2025 21:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748898888; cv=none; b=PSV0Mi2QdDjRf3FhLPlYap8jKv7iy3BjZKSNvUZ3oTDdpDLeIxW6tQFlGF6KB7Czwrp6Fa3+AXUjBjYtcTrRFFfthHOs1+AIeqkUo2qGmMpZ8yzZD306FKtDuVbhtHsl1zCWPQdtwX/aiLVwPtbh31dgxgA70F1hM0mMHFLcrdY=
+	t=1748898999; cv=none; b=Sp2ddJwG/rOcxZCQLksOTa6G6mwlh/wBiqCyrlpOsl3ZstURhELqqPv+Se3ATto8sZ8bYQ9hVmHVHKh4bumtgFlISJpl0gzm1oA+WEvyLNJcdS6qzHkN1bPgbXoQbwwSkVTO6LA86V6FK+M0oD7UqZYNQMuKeE68C4QuplJ7sAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748898888; c=relaxed/simple;
-	bh=ZeXrkIjyPgFTvd4aFSLXeU04UHGtJ1bsQeI2z6Dvnbs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OldEfwK14rr7bTS1UhndQeszsftwWH3UsiBsvnejschrvtHSRRs5oj9625FLm+EusyWX14//6gTZ1QyyhdBcpkCBUhJFWIqMxtOkqt22hgHEv6GWQryCC+QMqgf1c5xZngloYqvVdYp+HToWiMmtQtBnOWcPhQwFNTbTogDr2+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nzjB7JAg; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748898999; c=relaxed/simple;
+	bh=eGDgTGRDk+6qjZJu1WX/uStB+XPGGuUNfmY60eILhds=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GrmGYhzehHMo2dlvb8MtsaFsnG0D8mlWxHuCV95OEXkrq3vTdHyvy1ahh96682wBFiGAMw1XlTykB8ILot0glXByJTDQBWCidHZi3+OK7H3QwloLG1qaoouVi3mLigLeqdALm7HCLzNEkMBm9qabVxsgrc2+5w1k5C0pe3D8Kxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=boZ/eOQT; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nzjB7JAg"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ad89f9bb725so991957766b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 14:14:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="boZ/eOQT"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-6055f106811so6827492a12.0;
+        Mon, 02 Jun 2025 14:16:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748898885; x=1749503685; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m8ftkWSSIMy816Jx/bO3t4iajWSXp+7OOwQXgXhutgE=;
-        b=nzjB7JAgG9+odwpyIzDSHk4A8o1xUeF2EdVj2TemJhCSrvWm2ZuFJo2vmWORS2KIEC
-         liFrNGSZIRelUDiWugqGnfRVKjSTdDTo3oOjpSvlFH+CtXgl5vmINm47xmPCOmTtaPTo
-         YPEGOnLVH+g64/34dmT/DBbvKyvNBD+1CUgsbIfoEGnWONNO5NJCCHFYkJRfg51Wn+zi
-         D6Xuiu3drfTlpjqNwUMma+MOKTqywxG3i5Y4xR5M+Mv2hgsvGcFrsp1WieH+fDyf3FEk
-         QkJ2jtaAWkRMxKpcCmYmjSoFgbuP9Qc5Zg5HGZpsrHD0246tMHNOh3A5BDC876ODW0aj
-         qq6A==
+        d=gmail.com; s=20230601; t=1748898996; x=1749503796; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5M7ySNofisoGQzkwRVQf/8TxfSImFbr6tb2heb2I308=;
+        b=boZ/eOQTUjzC4G8wKN5Q+oYU4T+yaKHnHzhw0tXa3Ap0Rshfs9dLfXVvRx2pe1PjWM
+         8P0I2VQSQ9Ld3hfkzLgxaGtDLSQuHeEH4hO+rCLOX+Tyf75atIJQOHfxZdGx3WwMrXNm
+         qOYtgz8jVCrUAlMNgoO1Y/2HIQdLmhk10iofBC+0+ZjxU++XX3Z3XC70JBSuR2R570of
+         iPVfVMoEXylDFgow3tILCKVd56jAsISYlGeHQ5P/+zMB/Oomg5xaGOVlf1fLmAzU+eK5
+         jslWhaDTjsC7jp8dGsylIE3dheixzkGx4nQ57Gd7FS6cT2OGRwqnGcLhYnANd7s2Q3Wt
+         u5gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748898885; x=1749503685;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=m8ftkWSSIMy816Jx/bO3t4iajWSXp+7OOwQXgXhutgE=;
-        b=CWMK2jwbCAH2//0ENKAWqEjkTsgl9+rhPzaIn/RoDgKpaTEmzgpjKTvX8b1sMfXQSO
-         Atyl5+HJatAPLeh0ejmqVpdgNujRxsF2HU7/8keCpbXs8fV2mm1zRu4dJgE0nTINHRjn
-         kArQpPI+5ztUwdut437cQwY+LvAgQBTyQqGTsLXrzxd/toALzJXHL74aMGHQfe3C3+31
-         XlnCqaVW68ZAFxDtdDpBIAAOH+DulS6LMvq/8KbPWoXDZeDWNkNNUFZkjtWxzaO+39jQ
-         RDdcAQFAPizgzsI1K1cOuvJQ4gbkNuYhN83OaczlGE2dwBQBTGqeW6JVxEVA0VHdiet5
-         x4ig==
-X-Forwarded-Encrypted: i=1; AJvYcCWIJyFOAG2P/s4XWJVWs4GGLym7S1oHQ5uJnLYwbOUo9L29FuY+hspGQF8h52P75d6Z78FaCu9fnEkJCis=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8qD1i5D7wF4cn2WG1azgKhEK5xqXXOAhCKKpIx4meAguikR71
-	2Z8Bjk3iWyGmP3jIi+QBt7NyWOa1RkQVkOlfFIxdgYMHxzms84HPBdunYYYOOabvXW2fqzAMsC9
-	uyt1s5pdObqBziS8TvySnW9rlVfO1RTTcqa54iGT2CaaYExwHsdw55wpuFw==
-X-Gm-Gg: ASbGncuee6EdDv6LTGzmhm/mIB2W2rjbhiS0Fqve3io1u5Rqdwo2ggx+8ldeF6Vc1tP
-	0M691CEMAxn6esZytDWqp0qqUitxCseaHmxS1uW5Vlhcw20hZZUKGaskq3iBXEOJ2gnb1rYDzvK
-	a+lT8F3iXCRxHqWPcfLwX3y+PZCuQQZ1zWNlVPG37q
-X-Google-Smtp-Source: AGHT+IE+VipmkuZVXa5mLje8ADCcdaLzWX984KOU6BVdodEOK1iXNGSSjRNrCQhzWlytHUaZkqqZXjWCZ4J4ABYdziQ=
-X-Received: by 2002:a17:907:3d02:b0:ad8:9c30:b66 with SMTP id
- a640c23a62f3a-adb36b31a52mr1209293266b.18.1748898884874; Mon, 02 Jun 2025
- 14:14:44 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748898996; x=1749503796;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5M7ySNofisoGQzkwRVQf/8TxfSImFbr6tb2heb2I308=;
+        b=W/etDeOmDchHpcMBrsUYnIYHIqAUFQQ/peBp8gEPKYKS3sYLS2VivgGTPah7Eb//SN
+         4hxhzhflaiffylz/bZi0H7GdEoloOK4xoqZsgx3TYhc/04t6GiyeCiKRurN5AWQsiZ6X
+         L2+3R4XF4g01pU5tCCndDO0N4oT2mP9W9Jsbeu0r9rZ5yKj4hfOGSWRu/9PhhMHaH5H3
+         5BaES6GcXFT3epLhLPkfjf0EExnUEJ1TBLz/0aRNAY5CvoSuB6RGvVgOIAwzLJqhA9OG
+         cIQ+g+isaw78cZtZ/UTseS0SX6X3fA09GQwK88uctFWlVKyeYNigCRUV2tMtYevYoSED
+         YKKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUtHv/DNL4w2CNU8VJHa7+Xh40eCFu2Vioohdh46EAgXQYvKmFMa5+71RARYIVVn1X3W6RmyY/76XHtB2CT8jA=@vger.kernel.org, AJvYcCVPGn6DflpncShHBWcwGHkdtYOErvoWMreJ/Ww5DhDqyXBD8SbtD5ernYCRZ252igBy+Np+sgxrMShGP3Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7ssxpuI+569YDbVdTfIf3pyu8DCYaSPxyxJDmeN3xIsB9g8OE
+	2hS7AtE2gDiLEiOu6ZgDwld6phsEOvVsQJT7AfbYMWz2rRPYKZofMl46
+X-Gm-Gg: ASbGnctK/eWbTJeUKVBUQ8zFYz2EMwgzl+YFlOJlXAa/N7e/4S1dJT/Mvbreb2j/btK
+	inH5WhXcog0Bgl5u3nyzJKXwp4ikgKS/xluDyKde30r4DPnnQ19RvQhyEfPVNHLviNF+u64lBdE
+	O8n8lBPESr82em3WDkr6W0QDXwpF74oyWzku96dN+84VZx6LpKifA6UQb6ucmnyNwxs5UVC/9Hy
+	ndl6pneXIPmBy0L52lLOO7XnYg8oayn8UmEcycjGKY4cTmkQ2HMhcOK44YTvTrYQJS97bXZWkFi
+	l9mze3ZCsORTaiiZ1ZxylzjcjUI08fp9sw/Ypypx7TeFwdah8wln0vf76w/As+k0
+X-Google-Smtp-Source: AGHT+IGsJ/GPggh+wuIs6f6L2emwjU5o5gztY4UR8qEvjw+hT23jpsPlExcD7pCBA87JwVvt9sB9iw==
+X-Received: by 2002:a05:6402:348f:b0:602:e863:3a9e with SMTP id 4fb4d7f45d1cf-605b7721dfbmr8776425a12.15.1748898995931;
+        Mon, 02 Jun 2025 14:16:35 -0700 (PDT)
+Received: from ?IPV6:2001:871:22a:cd68::171c? ([2001:871:22a:cd68::171c])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60566c5c8easm6567046a12.28.2025.06.02.14.16.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Jun 2025 14:16:35 -0700 (PDT)
+Message-ID: <3eef5777-9190-4782-8433-7b6ad4b9acd3@gmail.com>
+Date: Mon, 2 Jun 2025 23:16:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250602102825-42aa84f0-23f1-4d10-89fc-e8bbaffd291a@linutronix.de>
- <20250602193718.GA915101@ax162>
-In-Reply-To: <20250602193718.GA915101@ax162>
-From: Bill Wendling <morbo@google.com>
-Date: Mon, 2 Jun 2025 14:14:28 -0700
-X-Gm-Features: AX0GCFsc2RMXbkJa80qarC-w9TN9ynL07wJ6BL7h65giiVy6nAFWHenYNCMcLgY
-Message-ID: <CAGG=3QVoa=v0wdG64m5HT+TEj+Epg-zKcgJjTA+A+hUia84oUw@mail.gmail.com>
-Subject: Re: [BUG?] clang miscompilation of inline ASM with overlapping
- input/output registers
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Justin Stitt <justinstitt@google.com>, 
-	llvm@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/3] rust: miscdevice: add additional data to
+ MiscDeviceRegistration
+To: Benno Lossin <lossin@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
+ Danilo Krummrich <dakr@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lee Jones <lee@kernel.org>,
+ Daniel Almeida <daniel.almeida@collabora.com>
+Cc: =?UTF-8?Q?Gerald_Wisb=C3=B6ck?= <gerald.wisboeck@feather.ink>,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250530-b4-rust_miscdevice_registrationdata-v4-0-d313aafd7e59@gmail.com>
+ <20250530-b4-rust_miscdevice_registrationdata-v4-2-d313aafd7e59@gmail.com>
+ <DAACCYW3QRQE.1O75L2SHJYVPM@kernel.org>
+Content-Language: en-US, de-DE
+From: Christian Schrefl <chrisi.schrefl@gmail.com>
+In-Reply-To: <DAACCYW3QRQE.1O75L2SHJYVPM@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 2, 2025 at 12:37=E2=80=AFPM Nathan Chancellor <nathan@kernel.or=
-g> wrote:
->
-> Hi Thomas,
->
-> On Mon, Jun 02, 2025 at 10:29:30AM +0200, Thomas Wei=C3=9Fschuh wrote:
-> > I observed a surprising behavior of clang around inline assembly and re=
-gister
-> > variables, differing from GCC.
-> >
-> > Consider the following snippet:
-> >
-> >       $ cat repro.c
-> >       int main(void)
-> >       {
-> >               register long in asm("eax");
-> >               register long out asm("eax");
-> >
-> >               in =3D 0;
-> >               asm volatile("nop" : "+r" (out) : "r" (in));
-> >
-> >               return out;
-> >       }
-> >
-> > The relevant part is that the inline ASM has input and output register
-> > variables both using the same register and the input one is assigned to=
-.
-> >
-> >
-> > Compile with clang (19.1.7, tested on godbolt.org with trunk):
-> >
-> >       $ clang -O2 repro.c
-> >       $ llvm-objdump --disassemble-symbols=3Dmain a.out
-> >       0000000000001120 <main>:
-> >           1120: 90                            nop
-> >           1121: c3                            retq
-> >
-> > The store of the variable "in" has been optimized away.
-> >
-> >
-> > Compile with gcc (15.1.1, also tested on godbolt.org with trunk):
-> >
-> >       $ gcc -O2 repro.c
-> >       $ llvm-objdump --disassemble-symbols=3Dmain a.out
-> >       0000000000001020 <main>:
-> >           1020: 31 c0                         xorl    %eax, %eax
-> >           1022: 90                            nop
-> >           1023: c3                            retq
-> >           1024: 66 2e 0f 1f 84 00 00 00 00 00 nopw    %cs:(%rax,%rax)
-> >           102e: 66 90                         nop
-> >
-> > The store to "eax" is preserved.
-> >
-> >
-> > As far as I can see gcc is correct here. As the variable is used as an =
-input to
-> > ASM the compiler can not optimize away.
-> > On other architectures the same effect can be observed.
-> >
-> >
-> > The real kernel example for this issue is in the loongarch vDSO code fr=
-om
-> > arch/loongarch/include/asm/vdso/gettimeofday.h:
-> >
-> >       static __always_inline long clock_gettime_fallback(
-> >                                               clockid_t _clkid,
-> >                                               struct __kernel_timespec =
-*_ts)
-> >       {
-> >               register clockid_t clkid asm("a0") =3D _clkid;
-> >               register struct __kernel_timespec *ts asm("a1") =3D _ts;
-> >               register long nr asm("a7") =3D __NR_clock_gettime;
-> >               register long ret asm("a0");
-> >
-> >               asm volatile(
-> >               "       syscall 0\n"
-> >               : "+r" (ret)
-> >               : "r" (nr), "r" (clkid), "r" (ts)
-> >               : "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7",
-> >                "$t8", "memory");
-> >
-> >               return ret;
-> >       }
-> >
-> > Here both "clkid" and "ret" are stored in "a0". I can't point to the co=
-ncrete
-> > disassembly here because it is inlined into a much larger block of code
-> > and removing the inlining hides the bug.
+On 31.05.25 2:23 PM, Benno Lossin wrote:
+> On Fri May 30, 2025 at 10:46 PM CEST, Christian Schrefl wrote:
+>> @@ -45,32 +46,46 @@ pub const fn into_raw<T: MiscDevice>(self) -> bindings::miscdevice {
+>>  /// # Invariants
+>>  ///
+>>  /// `inner` is a registered misc device.
+>> -#[repr(transparent)]
+>> +#[repr(C)]
+> 
+> Why do we need linear layout? `container_of!` also works with the `Rust`
+> layout.
 
-Hi Thomas,
+That was a leftover from a previous version, fixed.
 
-To help find a random inline assembly in your code, place comments
-within the ASM block. Something like:
+> 
+>>  #[pin_data(PinnedDrop)]
+>> -pub struct MiscDeviceRegistration<T> {
+>> +pub struct MiscDeviceRegistration<T: MiscDevice> {
+>>      #[pin]
+>>      inner: Opaque<bindings::miscdevice>,
+>> +    #[pin]
+>> +    data: Opaque<T::RegistrationData>,
+>>      _t: PhantomData<T>,
+> 
+> No need to keep the `PhantomData` field around, since you're using `T`
+> above.
+> 
 
-asm volatile(
-  "# HEY! I'M RIGHT HERE\n\t"
-  "syscall 0\n"
-...
+Fixed.
 
-You can then search the assembly for that to see what's generated.
+>>  }
+>>  
+>> -// SAFETY: It is allowed to call `misc_deregister` on a different thread from where you called
+>> -// `misc_register`.
+>> -unsafe impl<T> Send for MiscDeviceRegistration<T> {}
+>> -// SAFETY: All `&self` methods on this type are written to ensure that it is safe to call them in
+>> -// parallel.
+>> -unsafe impl<T> Sync for MiscDeviceRegistration<T> {}
+>> +// SAFETY:
+>> +// - It is allowed to call `misc_deregister` on a different thread from where you called
+>> +//   `misc_register`.
+>> +// - Only implements `Send` if `MiscDevice::RegistrationData` is also `Send`.
+>> +unsafe impl<T: MiscDevice> Send for MiscDeviceRegistration<T> where T::RegistrationData: Send {}
+>> +
+>> +// SAFETY:
+>> +// - All `&self` methods on this type are written to ensure that it is safe to call them in
+>> +//   parallel.
+>> +// - `MiscDevice::RegistrationData` is always `Sync`.
+>> +unsafe impl<T: MiscDevice> Sync for MiscDeviceRegistration<T> {}
+> 
+> I would feel better if we still add the `T::RegistrationData: Sync`
+> bound here even if it is vacuous today.
 
-> > Also in my tests the bug only manifests for "_clkid" in the interval [1=
-6, 23].
-> > Other values work by chance.
-> > Removing the aliasing by dropping "ret" and using "clkid" for both inpu=
-t and
-> > output produces correct results.
-> >
-> > Is this a clang bug, is the code broken or am I missing something?
->
-> For the record, inline assembly semantics are a little out of my
-> wheelhouse. Bill can probably comment more on what might be happening
-> internally within clang/LLVM here but it does seem like there could be a
-> clang code generation bug. Looking at the example you provided and GCC's
-> assembly and local register documentation, which has a very similar
-> example, it looks like the issue disappears when using "=3Dr" for the
-> output constaint instead of "+r".
->
-> https://godbolt.org/z/jo3T8o3hj
->
-> Looking at the constraint string in both the unoptimized and optimized
-> IR, it looks like eax appears an input twice in the list for broken(),
-> likely because "+r" was internally expanded to "=3Dr" for the output and
-> "r" for the input. In the optimized IR, we can see that the first eax
-> will be the 2 that was assigned but the second eax is "undef"
-> (undefined), which follows from the unoptimized IR. What I am guessing
-> happens based on my investigation with '-mllvm -opt-bisect-limit=3D' on
-> x86 is the second eax "wins" over the first one that has the actual
-> value. Using an undef value is UB so the backend removes the initial
-> write to eax altogether.
->
-> It definitely seems like this could be handled better on the clang side
-> but I do think that switching the constraints to "=3Dr" would be a proper
-> fix, as "+r" is really an overspecification and that matches an almost
-> identical example in the GCC local register documentation:
->
-> https://gcc.gnu.org/onlinedocs/gcc-15.1.0/gcc/Local-Register-Variables.ht=
-ml
->
-[+Ian because he also knows inline assembly]
+Since a reference the `MiscDeviceRegistration` struct is an
+argument to the open function this struct must always be Sync,
+so adding bounds here doesn't make much sense.
 
-This might be a Clang bug, as it's well known that Clang's support of
-GCC's extended asm is lacking in key areas...especially with regards
-to local register variables.
+I'll add this a safety comment in `MiscdeviceVTable::open`
+about this.
 
-I'm not confident I completely understand the documentation Nathan
-pointed out. It states that the only supported use is for input and
-output to extended asm, but then goes on to show an example where they
-initialize a variable. (??)
+Is there a good way to assert this at build to avoid regessions?
+> 
+>>  impl<T: MiscDevice> MiscDeviceRegistration<T> {
+>>      /// Register a misc device.
+>> -    pub fn register(opts: MiscDeviceOptions) -> impl PinInit<Self, Error> {
+>> +    pub fn register(
+>> +        opts: MiscDeviceOptions,
+>> +        data: impl PinInit<T::RegistrationData, Error>,
+>> +    ) -> impl PinInit<Self, Error> {
+>>          try_pin_init!(Self {
+>> +            data <- Opaque::pin_init(data),
+>>              inner <- Opaque::try_ffi_init(move |slot: *mut bindings::miscdevice| {
+>>                  // SAFETY: The initializer can write to the provided `slot`.
+>>                  unsafe { slot.write(opts.into_raw::<T>()) };
+>>  
+>> -                // SAFETY: We just wrote the misc device options to the slot. The miscdevice will
+>> -                // get unregistered before `slot` is deallocated because the memory is pinned and
+>> -                // the destructor of this type deallocates the memory.
+>> +                // SAFETY:
+>> +                // * We just wrote the misc device options to the slot. The miscdevice will
+>> +                //   get unregistered before `slot` is deallocated because the memory is pinned and
+>> +                //   the destructor of this type deallocates the memory.
+>> +                // * `data` is Initialized before `misc_register` so no race with `fops->open()`
+>> +                //   is possible.
+>>                  // INVARIANT: If this returns `Ok(())`, then the `slot` will contain a registered
+>>                  // misc device.
+>>                  to_result(unsafe { bindings::misc_register(slot) })
+>> @@ -93,13 +108,24 @@ pub fn device(&self) -> &Device {
+>>          // before the underlying `struct miscdevice` is destroyed.
+>>          unsafe { Device::as_ref((*self.as_raw()).this_device) }
+>>      }
+>> +
+>> +    /// Access the additional data stored in this registration.
+>> +    pub fn data(&self) -> &T::RegistrationData {
+>> +        // SAFETY:
+>> +        // * No mutable reference to the value contained by `self.data` can ever be created.
+>> +        // * The value contained by `self.data` is valid for the entire lifetime of `&self`.
+> 
+> Please add type invariants for these two requirements.
+> 
+>> +        unsafe { &*self.data.get() }
+>> +    }
+>>  }
+>>  
+>>  #[pinned_drop]
+>> -impl<T> PinnedDrop for MiscDeviceRegistration<T> {
+>> +impl<T: MiscDevice> PinnedDrop for MiscDeviceRegistration<T> {
+>>      fn drop(self: Pin<&mut Self>) {
+>>          // SAFETY: We know that the device is registered by the type invariants.
+>>          unsafe { bindings::misc_deregister(self.inner.get()) };
+>> +
+>> +        // SAFETY: `self.data` is valid for dropping and nothing uses it anymore.
+> 
+> Ditto.
 
-Looking at this a bit closer, the LLVM IR initially generated by the
-front end is this for the "+r" version (it's verbose, but not to
-worry):
+I'm not quite sure how to formulate these, what do you think of:
 
- 1. %in =3D alloca i64, align 8
- 2. %out =3D alloca i64, align 8
- 3. store i32 0, ptr %retval, align 4
- 4. store i64 0, ptr %in, align 8, !dbg !19
- 5. %0 =3D load i64, ptr %out, align 8, !dbg !26
- 6. %1 =3D load i64, ptr %in, align 8, !dbg !27
- 7. %2 =3D call i64 asm sideeffect "nop",
-"=3D{eax},{eax},{eax},~{dirflag},~{fpsr},~{flags}"(i64 %1, i64 %0) #2,
-!dbg !26
- 8. store i64 %2, ptr %out, align 8, !dbg !26
+/// - `inner` is a registered misc device.
+/// - `data` contains a valid `T::RegistrationData` for the whole lifetime of [`MiscDeviceRegistration`]
+/// - `data` must be usable until `misc_deregister` (called when dropped) has returned.
+/// - no mutable references to `data` may be created.
 
-Notice instructions (1), (2), (5), and (6). Instructions (1) and (2)
-are simply a way for LLVM to indicate that these are variables and are
-64-bits in size. The "%in" variable is assigned the value "0" (zero)
-with the "store" in (4), but notice that "%out" never has a value
-assigned to it. The assembly block indicated that it *should* have a
-value, because of the '+' modifier. This means that once all of the
-stores and loads are reduced by later passes the "%out" variable will
-have an undefined value.
+> 
+>> +        unsafe { core::ptr::drop_in_place(self.data.get()) };
+>>      }
+>>  }
+>>  
+>> @@ -109,6 +135,13 @@ pub trait MiscDevice: Sized {
+>>      /// What kind of pointer should `Self` be wrapped in.
+>>      type Ptr: ForeignOwnable + Send + Sync;
+>>  
+>> +    /// The additional data carried by the [`MiscDeviceRegistration`] for this [`MiscDevice`].
+>> +    /// If no additional data is required than the unit type `()` should be used.
+>> +    ///
+>> +    /// This data can be accessed in [`MiscDevice::open()`] using
+>> +    /// [`MiscDeviceRegistration::data()`].
+>> +    type RegistrationData: Sync;
+> 
+> Why do we require `Sync` here?
 
-One could argue that it *does* have a value, because it's in the same
-register as "%in", but LLVM's middle end doesn't work like that. It
-only sees two variables, not that they're in the same register. So
-that's what adds the 'undef' that Nathan pointed out.. In Clang terms,
-"undef" can mean "undefined behavior" (like here) and may elide code
-that exhibits it.
+Needed for `MiscDeviceRegistration` to be `Send`, see response above.
 
-One way you could resolve this is to say that the "out" variable has
-an early clobber:
+> 
+> We might want to give this a shorter name?
 
-  : "+&r"(out)
+I think its fine, but I am open to Ideas.
 
-This tells the compiler that the value is written before being read.
-Therefore, the compiler won't assume that it has no value.
-
--bw
+Cheers
+Christian
