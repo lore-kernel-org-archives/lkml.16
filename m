@@ -1,63 +1,63 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95D7E1DE4EC;
-	Mon,  2 Jun 2025 08:54:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1211DEFDD;
+	Mon,  2 Jun 2025 08:54:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748854496; cv=none; b=Po50qCq2qD/xJoI7+qny+jq+d4OFQLDqovnvmvQHYjq11zo8NFP3IxSmwWvTjx6k21UE1qIzJxtZFC1wjo1775sgc9WYyBZW5CwLs+f0rEH4KXrdky04t2fgL4+1hOGfS1gnzbmn/n9+l1dcicVBM99NdxwJbfKWqi5AnUZRx1w=
+	t=1748854497; cv=none; b=rM/lnpqkEUlBDn5OOCv1u+JItC21k0zdf5FWZUrfFQEzmccyt7PWicdfZlKLBUQtrkZz5Tf8jjLxpXlvI0L5E2Uk4eNLziTvH1Y1wI6pxPbZIX6IabPIXcFQocOv6cmfqOdnHSriDWthYvSP0SLif1DTHgwCa4UohlSsz7KMQDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748854496; c=relaxed/simple;
-	bh=aVxlq706IujBRj+HiQ3ah/IIAv77R+CvWdXj/E/ybvI=;
+	s=arc-20240116; t=1748854497; c=relaxed/simple;
+	bh=N7DR+bUmuN4+fswwjtPRhudtA1jd7yX7JIbNPakSJqg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uaGNWmzmHTgwicPQZu4sZO6qER71jZ+9MHc5KCgc+vfCQRCnt3AmdY5ZqTjxLfroQgNtvs5F9FZlSxiGRWEdIfYeoaFW5vznA4P3AAQO5SMo4yVw0h8UF1vpyP2d2eA0Ur1E1iPm6GN8UNl4AI4q1QQCvFKIL1Wh/KIZx+WDo9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AFLxrG2B; arc=none smtp.client-ip=209.85.167.46
+	 MIME-Version; b=TLThK+fybBsLNVvdzhYcMDGWi5wz/hyPQ+++waRWpk7iXTdu32QpdP1Vj3BndpwNzTKHSPNl91GyI2hcW7oBoG53UBf8dUZe+GwLHJwPTaYhyf5GA0vwKKnUJ8z/3H5LdHm6ojpkKoM/DOwCk8npD0JMIFy4lW9kGqS4BYcmf6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q2ZS50pW; arc=none smtp.client-ip=209.85.167.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AFLxrG2B"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5532f6d184eso5252381e87.0;
-        Mon, 02 Jun 2025 01:54:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q2ZS50pW"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54b09cb06b0so5512300e87.1;
+        Mon, 02 Jun 2025 01:54:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20230601; t=1748854493; x=1749459293; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oRX6ycinlDpWw2cKVx7yjaGxT6xMop9u+LnJF5PNiJQ=;
-        b=AFLxrG2BCpV/8CuShJOahxs9CEC64nryKEr5/8YbkmpucZ/Q7dA4jMj7QmlwO2x9eo
-         t9mY0gqkltnyu37OY+wSKMtEYofTt+ZKQsKSSXEAoFRzQNJ2t2icGXIwMJPlrDkYtVzp
-         oVioK1eIW6aY5YkeMCWyqsLW9/wRV7i3aBCQK9CbxZftATTcPGFZZF69hP0AanggkuB7
-         moLKnPyA3NLarQ1QcUL0hreaMb0q4LeYNK5nKmPmL8QudMFbJ02JgEKRv6/IbDuNQdJD
-         LjTXVbXnLVdWz8Ll75EHcBDOs7gWvvehQ0xVbB+rRDFfgbXk0W+SXk6+VamrtTMeZNGr
-         /YNg==
+        bh=eNjzh0lCljAImtPQH0yiCxzp0Zoe2cG4gqiqoZ8GiaA=;
+        b=Q2ZS50pWMZYAImdErYVKlTyH3V0y5f2v7hn5WcLgCtgM8fuuyLblNqxTyHSsN2e68O
+         7qD8DAW932eFSFWf3LXMq3kTQW/zPzLhlb3TbqW01ltRyFuPUfZfQGy/Xgwj+t+5XfdV
+         /aH1lYxfo0GSHBdgKKTeInLU2/1XDQ/iLwqzElJy0QqYymrwI0i7rFtbXEo0lXxQwg7t
+         1XL6PIb1aDK4UkD6sh8pLIoZ+WzpvGJu7bj0Elhn+b0gArg9UzMPwMJOQ0iddZSo5hoN
+         Xv1a4AR9e3N0kegyAnQZJcsr9dgEpdt9nfrgkwrjEBJOZJbOFtjWEHJ/vLzkLLtARRsu
+         0fHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1748854493; x=1749459293;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oRX6ycinlDpWw2cKVx7yjaGxT6xMop9u+LnJF5PNiJQ=;
-        b=mIt8n8mWlWuwzWy/uKP+6y53B970/0UGXjlt+tRTWPkh6E9CFjik1/fqrLNhj6IN7t
-         mVH0nQ5uqe2AGVrCJ/AsDJFPxP/xMT9IByu8tExUDTJINJVXMvSq4Qlhw1JNqumrTXOJ
-         O5wWRXfHRkR7fpE1aVMzyonppIiWNpAv1vTyl+tUDAYBgfJOFBTewgALk6AXQ/zPjCXh
-         8t1s3oaD3P8CqIn69asymMEY3pB7tnjZv2un+vzuimt/UL9YmI3pfnd6Eq+IJggr3QqT
-         jMYXmuNU5LP/dTmlIPgDvESZ/uEqTTybpAKzv9rmlaKVJDMyxWzGP6N5XIH+Vt30DOhW
-         o8vw==
-X-Forwarded-Encrypted: i=1; AJvYcCVn21Q/bDJNkD/fiedgMROT6OPSUYkMh+uCyswyfSHRStu+vRplOwc4b36CliQ6vcqGsZ//DQe3Wdao6nmmNQ0=@vger.kernel.org, AJvYcCWsVerTo19/2tYp56Da6QV9+G/rK2kJaOvwD+BG7u9CFzk4Byp6+fZnYMXrNoyNF5r/IfemOtoxpcMY+DM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxF9smeQX0WNbfOJaJexXYKkEdtiOtMonUwHew+0s6BHO9wYIXO
-	AuO5ibLTAzlJwDCPK1YfYMuyZG8nuLT0++IMaMwV50pEkQ3WnJ8z7N2K
-X-Gm-Gg: ASbGncvBQRjpcWpJmTIPv0YPm6Tnbh7UWitPIZQCKuq0FcTObUvUn83P1F3KYEZhqgz
-	0PCYFyheCs9ueb0N9SnbDrgrj0cHEbRpU6cW2kAQrFq1wAjzwUvgoPdaTMlxr6MtDEvpy5she0T
-	HgxsJTCo+TIAlsMoEAWvrBzjzzjhcnESsTUoAWkAyp/DaRGRdde7rsOJu3e+ntOLejQ1fOJxh9Z
-	Qwtzf2myJ32DRO5kMxh/rZkqMBQ6oDWax9URNspZf2ew3XCGLC/LipZgzyceYd5DG8652Nkhrfg
-	VqDZL7CnWo6SJF/3jQEicv4t/EGszgGYUplJv253rK3iqVo6d4666fV4LnCTjRgyLfmf3MmWZ/b
-	228PzkaOYhUIcHjAluiJb8LeHqT4V
-X-Google-Smtp-Source: AGHT+IG2LmHus1rr8ydQkHeOUpuq/nYTVQnVNjpmNMi+kbH3v2KVxyMZpriwJL9CZN4aoHvOpzgf9A==
-X-Received: by 2002:a05:6512:1328:b0:54e:81ec:2c83 with SMTP id 2adb3069b0e04-5533b8f412cmr3757007e87.18.1748854492276;
-        Mon, 02 Jun 2025 01:54:52 -0700 (PDT)
+        bh=eNjzh0lCljAImtPQH0yiCxzp0Zoe2cG4gqiqoZ8GiaA=;
+        b=sBrvTdlyHtUNI1HoCySOQfYuIYjduz8sSvCJo/qtPBNLLYwtiaXZnrRU4GHZSLUwd6
+         04ATbNb9SLrB0eUcGPJ+xeQae2HUmddYOhkw0gB0qb73GmQwQ0CBXuURLCUrGzJ9crMJ
+         LmLjTUJFIdwlLZV6Bl+ncBWpSYn476NuwDQBzqGP2qYsMeBvtqkEBIlSYrmAbsdi/DcS
+         Y77YKO5Q4s3wYEoA2OdzBXKU4qqad9eXfWn2SRXyiZb5YIf3dKFmRRbEHiJDDFa0MCFO
+         fQzXPh/VMIrBSNEfsVecjqirWTxuF0zSZ8Pys2bPI3KKa6Okr5eKfeJ8qtr1kdsaefw7
+         Zkqg==
+X-Forwarded-Encrypted: i=1; AJvYcCVB20W/Y9vPCqBUILrg0m0Ji+uQwBVUVF3gbd5hUoyzKVliECM8BhLjdEkBo2iMLGKL67HpD0z66jcKlkmCgFI=@vger.kernel.org, AJvYcCVtDVRL+c+Qn3+6oXthOjE9EtmrsV2279ZQWPMZB4pgwz9qW8JJp8MLoyBtH3tqyQSjsGEpSLvPgjvxamw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypxLlKOCuC2sZYcu3piZmulLoPzJppscocmF1wEx2gkiCubFxA
+	aitMTAdG2JEBesDZ/AhTHbZg2RF1QKR7IAWU3SHL7L1zvxHl+1vlVuE0
+X-Gm-Gg: ASbGncuEOXDb2exJJSI47BOsqEbPeQbkxYvVFofREUsz8ojjdR9MQx0zsW4sIxd28JE
+	vIzEFpqDcaAzJ+MWnt8mtRwrahNic4QYpydk7ct8Snvvh1I9OhjQTAT5xyXh5jgSjWI+wKswOEu
+	ysT+XOj4kZqvuvu+EZxwdWiYZiEATXjH0ftZQf1JHzeszGYTtQ6RqsuCTmJ2v50Yi9+Efcq/jF8
+	EV0dBl2NP+gkH6G9OBIg0wCXmykxRFOyIYQ0XG6G7PM03wRxepfsVMnJilM/F6rRxnUNuoGq7rr
+	ak/69abZHa8pqis2O9duzbHy6lOP298s1jBhD7+F/DftRmwOdxL1Xwbsn2OqOSZ3gfrbZRJsPBQ
+	3bWa/F9awBjmCsdZajL0bqMKgcmtm
+X-Google-Smtp-Source: AGHT+IENRfJOf3u52FspEjXhewCzmDRxrviHPyUYBNoN+lgkyQ/r5Trmcti6p6EUjGTFWv55XZjmlQ==
+X-Received: by 2002:a05:6512:23a6:b0:553:2f33:ac0e with SMTP id 2adb3069b0e04-55343190b94mr1983224e87.41.1748854493216;
+        Mon, 02 Jun 2025 01:54:53 -0700 (PDT)
 Received: from abj-NUC9VXQNX.. (dsl-hkibng22-54f8dc-251.dhcp.inet.fi. [84.248.220.251])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553378a13basm1524325e87.81.2025.06.02.01.54.51
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553378a13basm1524325e87.81.2025.06.02.01.54.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 01:54:51 -0700 (PDT)
+        Mon, 02 Jun 2025 01:54:52 -0700 (PDT)
 From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
 To: acourbot@nvidia.com,
 	dakr@kernel.org
@@ -84,9 +84,9 @@ Cc: Miguel Ojeda <ojeda@kernel.org>,
 	Randy Dunlap <rdunlap@infradead.org>,
 	Michael Kelley <mhklinux@outlook.com>,
 	Abdiel Janulgue <abdiel.janulgue@gmail.com>
-Subject: [PATCH v4 2/3] rust: dma: convert the read/write macros to return Result
-Date: Mon,  2 Jun 2025 11:53:12 +0300
-Message-ID: <20250602085444.1925053-3-abdiel.janulgue@gmail.com>
+Subject: [PATCH v4 3/3] rust: dma: add as_slice/write functions for CoherentAllocation
+Date: Mon,  2 Jun 2025 11:53:13 +0300
+Message-ID: <20250602085444.1925053-4-abdiel.janulgue@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250602085444.1925053-1-abdiel.janulgue@gmail.com>
 References: <20250602085444.1925053-1-abdiel.janulgue@gmail.com>
@@ -98,148 +98,112 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-We could do better here by having the macros return `Result`,
-so that we don't have to wrap these calls in a closure for
-validation which is confusing.
+Add unsafe accessors for the region for reading or writing large
+blocks of data.
 
-Co-developed-by: Andreas Hindborg <a.hindborg@kernel.org>
-Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
-Link: https://lore.kernel.org/rust-for-linux/87h63qhz4q.fsf@kernel.org/
 Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
 Signed-off-by: Abdiel Janulgue <abdiel.janulgue@gmail.com>
 ---
- rust/kernel/dma.rs       | 54 +++++++++++++++++++++++-----------------
- samples/rust/rust_dma.rs | 28 +++++++++++----------
- 2 files changed, 46 insertions(+), 36 deletions(-)
+ rust/kernel/dma.rs | 86 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 86 insertions(+)
 
 diff --git a/rust/kernel/dma.rs b/rust/kernel/dma.rs
-index c3fe39e7eb0b..5a690e5f1e66 100644
+index 5a690e5f1e66..b486f63c1d3a 100644
 --- a/rust/kernel/dma.rs
 +++ b/rust/kernel/dma.rs
-@@ -328,20 +328,22 @@ unsafe impl<T: AsBytes + FromBytes + Send> Send for CoherentAllocation<T> {}
- #[macro_export]
- macro_rules! dma_read {
-     ($dma:expr, $idx: expr, $($field:tt)*) => {{
--        let item = $crate::dma::CoherentAllocation::item_from_index(&$dma, $idx)?;
--        // SAFETY: `item_from_index` ensures that `item` is always a valid pointer and can be
--        // dereferenced. The compiler also further validates the expression on whether `field`
--        // is a member of `item` when expanded by the macro.
--        unsafe {
--            let ptr_field = ::core::ptr::addr_of!((*item) $($field)*);
--            $crate::dma::CoherentAllocation::field_read(&$dma, ptr_field)
--        }
-+        (|| -> ::core::result::Result<_, $crate::error::Error> {
-+            let item = $crate::dma::CoherentAllocation::item_from_index(&$dma, $idx)?;
-+            // SAFETY: `item_from_index` ensures that `item` is always a valid pointer and can be
-+            // dereferenced. The compiler also further validates the expression on whether `field`
-+            // is a member of `item` when expanded by the macro.
-+            unsafe {
-+                let ptr_field = ::core::ptr::addr_of!((*item) $($field)*);
-+                ::core::result::Result::Ok($crate::dma::CoherentAllocation::field_read(&$dma, ptr_field))
-+            }
-+        })()
-     }};
-     ($dma:ident [ $idx:expr ] $($field:tt)* ) => {
--        $crate::dma_read!($dma, $idx, $($field)*);
-+        $crate::dma_read!($dma, $idx, $($field)*)
-     };
-     ($($dma:ident).* [ $idx:expr ] $($field:tt)* ) => {
--        $crate::dma_read!($($dma).*, $idx, $($field)*);
-+        $crate::dma_read!($($dma).*, $idx, $($field)*)
-     };
- }
- 
-@@ -368,24 +370,30 @@ macro_rules! dma_read {
- #[macro_export]
- macro_rules! dma_write {
-     ($dma:ident [ $idx:expr ] $($field:tt)*) => {{
--        $crate::dma_write!($dma, $idx, $($field)*);
-+        $crate::dma_write!($dma, $idx, $($field)*)
-     }};
-     ($($dma:ident).* [ $idx:expr ] $($field:tt)* ) => {{
--        $crate::dma_write!($($dma).*, $idx, $($field)*);
-+        $crate::dma_write!($($dma).*, $idx, $($field)*)
-     }};
-     ($dma:expr, $idx: expr, = $val:expr) => {
--        let item = $crate::dma::CoherentAllocation::item_from_index(&$dma, $idx)?;
--        // SAFETY: `item_from_index` ensures that `item` is always a valid item.
--        unsafe { $crate::dma::CoherentAllocation::field_write(&$dma, item, $val) }
-+        (|| -> ::core::result::Result<_, $crate::error::Error> {
-+            let item = $crate::dma::CoherentAllocation::item_from_index(&$dma, $idx)?;
-+            // SAFETY: `item_from_index` ensures that `item` is always a valid item.
-+            unsafe { $crate::dma::CoherentAllocation::field_write(&$dma, item, $val) }
-+            ::core::result::Result::Ok(())
-+        })()
-     };
-     ($dma:expr, $idx: expr, $(.$field:ident)* = $val:expr) => {
--        let item = $crate::dma::CoherentAllocation::item_from_index(&$dma, $idx)?;
--        // SAFETY: `item_from_index` ensures that `item` is always a valid pointer and can be
--        // dereferenced. The compiler also further validates the expression on whether `field`
--        // is a member of `item` when expanded by the macro.
--        unsafe {
--            let ptr_field = ::core::ptr::addr_of_mut!((*item) $(.$field)*);
--            $crate::dma::CoherentAllocation::field_write(&$dma, ptr_field, $val)
--        }
-+        (|| -> ::core::result::Result<_, $crate::error::Error> {
-+            let item = $crate::dma::CoherentAllocation::item_from_index(&$dma, $idx)?;
-+            // SAFETY: `item_from_index` ensures that `item` is always a valid pointer and can be
-+            // dereferenced. The compiler also further validates the expression on whether `field`
-+            // is a member of `item` when expanded by the macro.
-+            unsafe {
-+                let ptr_field = ::core::ptr::addr_of_mut!((*item) $(.$field)*);
-+                $crate::dma::CoherentAllocation::field_write(&$dma, ptr_field, $val)
-+            }
-+            ::core::result::Result::Ok(())
-+        })()
-     };
- }
-diff --git a/samples/rust/rust_dma.rs b/samples/rust/rust_dma.rs
-index 874c2c964afa..9e05d5c0cdae 100644
---- a/samples/rust/rust_dma.rs
-+++ b/samples/rust/rust_dma.rs
-@@ -54,13 +54,9 @@ fn probe(pdev: &pci::Device<Core>, _info: &Self::IdInfo) -> Result<Pin<KBox<Self
-         let ca: CoherentAllocation<MyStruct> =
-             CoherentAllocation::alloc_coherent(pdev.as_ref(), TEST_VALUES.len(), GFP_KERNEL)?;
- 
--        || -> Result {
--            for (i, value) in TEST_VALUES.into_iter().enumerate() {
--                kernel::dma_write!(ca[i] = MyStruct::new(value.0, value.1));
--            }
--
--            Ok(())
--        }()?;
-+        for (i, value) in TEST_VALUES.into_iter().enumerate() {
-+            kernel::dma_write!(ca[i] = MyStruct::new(value.0, value.1))?;
-+        }
- 
-         let drvdata = KBox::new(
-             Self {
-@@ -78,13 +74,19 @@ impl Drop for DmaSampleDriver {
-     fn drop(&mut self) {
-         dev_info!(self.pdev.as_ref(), "Unload DMA test driver.\n");
- 
--        let _ = || -> Result {
--            for (i, value) in TEST_VALUES.into_iter().enumerate() {
--                assert_eq!(kernel::dma_read!(self.ca[i].h), value.0);
--                assert_eq!(kernel::dma_read!(self.ca[i].b), value.1);
-+        for (i, value) in TEST_VALUES.into_iter().enumerate() {
-+            let val0 = kernel::dma_read!(self.ca[i].h);
-+            let val1 = kernel::dma_read!(self.ca[i].b);
-+            assert!(val0.is_ok());
-+            assert!(val1.is_ok());
-+
-+            if let Ok(val0) = val0 {
-+                assert_eq!(val0, value.0);
-+            }
-+            if let Ok(val1) = val1 {
-+                assert_eq!(val1, value.1);
-             }
--            Ok(())
--        }();
-+        }
+@@ -218,6 +218,92 @@ pub fn dma_handle(&self) -> bindings::dma_addr_t {
+         self.dma_handle
      }
- }
  
++    /// Common helper to validate a range applied from the allocated region in the CPU's virtual
++    /// address space.
++    fn validate_range(&self, offset: usize, count: usize) -> Result
++    {
++        if offset.checked_add(count).ok_or(EOVERFLOW)? > self.count {
++            return Err(EINVAL);
++        }
++        Ok(())
++    }
++
++    /// Returns the data from the region starting from `offset` as a slice.
++    /// `offset` and `count` are in units of `T`, not the number of bytes.
++    ///
++    /// For ringbuffer type of r/w access or use-cases where the pointer to the live data is needed,
++    /// [`CoherentAllocation::start_ptr`] or [`CoherentAllocation::start_ptr_mut`] could be used instead.
++    ///
++    /// # Safety
++    ///
++    /// * Callers must ensure that the device does not read/write to/from memory while the returned
++    ///   slice is live.
++    /// * Callers must ensure that this call does not race with a write to the same region while
++    ///   the returned slice is live.
++    pub unsafe fn as_slice(&self, offset: usize, count: usize) -> Result<&[T]> {
++        self.validate_range(offset, count)?;
++        // SAFETY:
++        // - The pointer is valid due to type invariant on `CoherentAllocation`,
++        //   we've just checked that the range and index is within bounds. The immutability of the
++        //   data is also guaranteed by the safety requirements of the function.
++        // - `offset + count` can't overflow since it is smaller than `self.count` and we've checked
++        //   that `self.count` won't overflow early in the constructor.
++        Ok(unsafe { core::slice::from_raw_parts(self.cpu_addr.add(offset), count) })
++    }
++
++    /// Performs the same functionality as [`CoherentAllocation::as_slice`], except that a mutable
++    /// slice is returned.
++    ///
++    /// # Safety
++    ///
++    /// * Callers must ensure that the device does not read/write to/from memory while the returned
++    ///   slice is live.
++    /// * Callers must ensure that this call does not race with a read or write to the same region
++    ///   while the returned slice is live.
++    pub unsafe fn as_slice_mut(&self, offset: usize, count: usize) -> Result<&mut [T]> {
++        self.validate_range(offset, count)?;
++        // SAFETY:
++        // - The pointer is valid due to type invariant on `CoherentAllocation`,
++        //   we've just checked that the range and index is within bounds. The immutability of the
++        //   data is also guaranteed by the safety requirements of the function.
++        // - `offset + count` can't overflow since it is smaller than `self.count` and we've checked
++        //   that `self.count` won't overflow early in the constructor.
++        Ok(unsafe { core::slice::from_raw_parts_mut(self.cpu_addr.add(offset), count) })
++    }
++
++    /// Writes data to the region starting from `offset`. `offset` is in units of `T`, not the
++    /// number of bytes.
++    ///
++    /// # Safety
++    ///
++    /// * Callers must ensure that the device does not read/write to/from memory while the returned
++    ///   slice is live.
++    /// * Callers must ensure that this call does not race with a read or write to the same region
++    ///   that overlaps with this write.
++    ///
++    /// # Examples
++    ///
++    /// ```
++    /// # fn test(alloc: &mut kernel::dma::CoherentAllocation<u8>) -> Result {
++    /// let somedata: [u8; 4] = [0xf; 4];
++    /// let buf: &[u8] = &somedata;
++    /// // SAFETY: No hw operation on the device and no other r/w access to the region at this point.
++    /// unsafe { alloc.write(buf, 0)?; }
++    /// # Ok::<(), Error>(()) }
++    /// ```
++    pub unsafe fn write(&self, src: &[T], offset: usize) -> Result {
++        self.validate_range(offset, src.len())?;
++        // SAFETY:
++        // - The pointer is valid due to type invariant on `CoherentAllocation`
++        //   and we've just checked that the range and index is within bounds.
++        // - `offset + count` can't overflow since it is smaller than `self.count` and we've checked
++        //   that `self.count` won't overflow early in the constructor.
++        unsafe {
++            core::ptr::copy_nonoverlapping(src.as_ptr(), self.cpu_addr.add(offset), src.len())
++        };
++        Ok(())
++    }
++
+     /// Returns a pointer to an element from the region with bounds checking. `offset` is in
+     /// units of `T`, not the number of bytes.
+     ///
 -- 
 2.43.0
 
