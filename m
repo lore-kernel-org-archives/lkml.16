@@ -1,63 +1,63 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD3022D9E6
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 15:19:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 246DC22CBD9
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 15:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748877544; cv=none; b=C2+Z4Mgo+wFeBNKiOfmz/JvNSeTNgP0Bk9mUASc/kxZIFZ0fEPuhcpPFUeqPAJCDy7lrsbYsLJTrrQ1HIyp+Q4+bVcy1V6GZOg/mjSz9LnkerQ1h6u4wkGH8p4a+Hggf12qdSYo1XVXJfq6pnjjBHWq6zAMzyko+g/QSqA+yV0M=
+	t=1748877545; cv=none; b=Bk9wiHvUJa300IRkrwTORhlzzH4JYjSDI2SZyr7FAZRLIMnX+aER+I588dF3s6E76wzwWj3eIwCtD6RXHdu0wDqqtoxH+2IJUY3nTVbwZ+5foRbSRbZnHDD4mWcVdeo9tK1O9gFo5ohrKorYOKmozhm3a5LyOWWznmN4q3mzrGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748877544; c=relaxed/simple;
-	bh=fAaZ3L9vEbtazUSHdMUtxxloxioTW1ggL5LaUshczj8=;
+	s=arc-20240116; t=1748877545; c=relaxed/simple;
+	bh=06sqAxtbKKs7o6LiAk2AbUdTVmELzxncQQECi88QF6U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B8bwZPtjgwwTrttj3uCcaop6zbrai4VNVy2dy+hMXls8e7qNm/ReXYVGqANnqonnK5kPOgiRduqqQt+6XUddLMFV7TLrWBbJUEKhskD7c9UjIsvM+eMVXYKxGYdZizXpn/4jSbpgarLvdr1gIYvxHjMCtA12wMdEj/7vIyouRVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=F91URjb/; arc=none smtp.client-ip=209.85.128.52
+	 MIME-Version; b=fsVAlLPpYPyFRg3GiISKW3+iZZy6T3zsThlDqMsvLIeJvglt06eUjWm3Ex7D1TA9BYcCNM2Mu92Xup/wPcIyMXnFUP3SR0cmADWXDR89wIAzneh37Vzt1oNbqgFwX7s9paJw5UgxGk0nvN9f3UZD88BFwC3l3HSDN5wZinBuOnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qCwPtLrM; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F91URjb/"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-450ce671a08so28506605e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 08:19:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qCwPtLrM"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a36e090102so2601615f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 08:19:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748877541; x=1749482341; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1748877542; x=1749482342; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=j2bXZElBrRwneMKewEI3S9wHUbgph+s2MD8uEMc202U=;
-        b=F91URjb/WGSoAqAcBC8zFjUfDp1lz/YszN3KYCr6bGO0Tp8Rga+s+biUpF0AE/DMqQ
-         7KAny3x/t60b65aHrC1KflTYMQG6Dh+ECjxWv4dNSQDeuz6WRSdEoFbsWdgY8BuASXrm
-         FrSg82I2BQyGnCx6i29qgDNZA/9AquaSKRlR4AHcNndnd3iasRf3G49QgWunnFqN63h0
-         q8RA0zbRyPQPtau6MCMrSxJ2znqryoKBFe5n8y1aPh5WN8Q6QH5WGfNcHdZoZYJMDUS7
-         CAcMEVGskAO3EnDB1GEtLzbGMlHGH3BRfhPWxuXtEaLgork/ASe0y1fUIg9ndRzzbvit
-         Vwwg==
+        bh=c3ov+Lh/6++7opN5JtzuefcSmMhE81eYS7f93OD6TWo=;
+        b=qCwPtLrMEa9XfIe28rpNV8P/HEmu1A37O8hO7Hd01kAMcadJp7ZKZwhLGkWJr4zaUX
+         y6Kxo/6/Ra0Xn2JQUmXI5Oh8FF50vCmgAK+lM2ItUUNqDJwsPnAWkeSZCzSmufUDWm+P
+         QAn/8FDu+3EbiluQPa17SfT5d2z7dwyV8ceb3k17Te0EO+E477mt/Y8Zl5LODjxB7LeA
+         Z6MThAB55xSVYl+JSk754nE593kradugbtqeeab9nctLwSGII/zcsY1jx2Q7byyLmNiZ
+         jk5oAVpY2H5QhrZZz8/nJKlk8wrqNXeSiXfdUlgSa51nsqUfP17AoIYRbGBKUiivsVor
+         fjlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748877541; x=1749482341;
+        d=1e100.net; s=20230601; t=1748877542; x=1749482342;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=j2bXZElBrRwneMKewEI3S9wHUbgph+s2MD8uEMc202U=;
-        b=n2ha29ImNUpRwCYV++xjK6IBdptdlP0D5Wbd1uE9ApplNR91WMLZfkbF1jmW6XeSJa
-         9kcO48M/OEcARgSdpQvA8P+U7sUlF6E9qEiB5GJHNpmegWQ0vfSKTDzk3jZkS0xzogqC
-         XSXI5eMdSOIsp3W3FwXPYskLhP8XGWZ4Fp/aWW5tfkjMoLfGqExuA2iroVUj7w4jp2X1
-         BX4njKvGKfymEkOs1ag+0FvaEX6xvJotdURAZQqWZAKyXfLlgIhcMXfBcg+RCkNf7b1g
-         wcZT/D0QHT3ahtJ1I1e+hsNVJbtZMaYBeyOs6tj5aCX1F2jMpFzulGBy/IiVOR2twazg
-         rhvw==
-X-Forwarded-Encrypted: i=1; AJvYcCXLyrU+rsAqtgnwVLT/XUb/TvpcTyccZPpKm8c8Nb5d9xPU/PE8TCufDfhfDBqo5anqQ74a33s+NoLdYuo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyT0fFTDXlmqcq/FZ43jUd4s+P9CPGYfdoyI0kkyYv0tc7+jhHS
-	i5wA6UHtxIn/DykKrrwKQPRbrW4nf68vAzyaZOPeioIxR94m9WQMTpQdTsPEfb6T60w=
-X-Gm-Gg: ASbGncujQzHDQue90oFrxpZLODVJtols1/jFpxz7PodrSelYBTTDnqDVGDKupICLuXl
-	0k/DC7DEGm+RxsYRCpzE0v35ULSzw0SHO5eQN19+LlsCLOmaCHTGRMKw6MmZQhuFILE+JP2x3Ww
-	tK4Oebf/OyBLUL5iHpBkHToL0jcvUCly2Xt8ZQmIieX4LZ9U4D2ZUkaIyNL6ZDy7XZHQIkWbDMr
-	0cdDZXLGdZoFbSK/vPi9HvzsnlTM4XfkIOGa19JQqmLiZinss6cOkxOrLbCrU844ymtO0aS3T16
-	ChsceLL95VHltSG6JGbtT6Xp9LXzD3RjZfHwhTGFzwPjChg3WNDY94cpXQ1lViFMTsfQi85B/I2
-	Y7KOZc0vE0QvS
-X-Google-Smtp-Source: AGHT+IGm8o6nqRRjiZlM8OEtcH7Giz5iqVqvOKIqNhMfKW6+DVKKTld7vkKIltD7iNqNITzYzwGGxA==
-X-Received: by 2002:a5d:5c84:0:b0:3a3:7ba5:960e with SMTP id ffacd0b85a97d-3a4fe3a8214mr6931603f8f.59.1748877541180;
-        Mon, 02 Jun 2025 08:19:01 -0700 (PDT)
+        bh=c3ov+Lh/6++7opN5JtzuefcSmMhE81eYS7f93OD6TWo=;
+        b=ok7Pv+Srz6TKq8PpIJT7qCAgLYf9P1pr2r/pIU8W1e5pEMZMj7nUJeDZAqdgRwJmSC
+         sNPk/FOHXmTHlqgzEaD8EA14QcOlmhRin7FjUgtOxJm/IySzILEDJe36bAyYTPsBHxa7
+         sFp3jGNmTVnsehDYQAmghF3Omukl84CShX/3nE+cdxsK5l4aO8mFoTiPW0sK2D5/kyGR
+         fKSvr39BCkkUGyucB2R1zj5ptDT3tTi73fzyn8lEVV2lbxlMfxtJK/Xpo5uxCbLH6TAe
+         a3GLhCC5H8JJ+eHqGfVeb18PEcemDIA7Rgh7Ay5UvvilapoVGpzXy7YAzCazTRG26Z3k
+         I9nw==
+X-Forwarded-Encrypted: i=1; AJvYcCXjEQ82yztsw9XhOcrddQ/wfjT967GYv7DIYL0pfbWeWG2re94tY3hUK+3vr1Bhw3Rfh+TVpqNNN1KZtkk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRvgg2jz2tIomwwNznOKXgHBvjjMOFhoMA5eifXDaZWklWLePU
+	qfA2QY8aOs302WMDob0T6b27DCP36Svs+23++h82tFNOh9j761Agmi9UE88f7Hm1NEs=
+X-Gm-Gg: ASbGnctp2A3uYQ9cJVq9+gobxIrFY59BMT+iCd3J1b0BgRfCZYAnCrwvtc8rq3Ii2Qi
+	ODDWxy7gHkCcJj2qmIMzcsYwgKulFTdL1WBsDhe0GkrlGt25jTEIzLrGDPDUtFP9F/hgMsy5wj6
+	xHTc07qRtoQhNvgC+kU77bYXg8cbGiH8B5Buuzzn65A64w3YwSFGz3ll8Wfl+N2PJaIiVq7ahzi
+	C3XzTOd4nQEF5bV5L2BRKs0wNUyy4wa54hAXbdCYEwh2wDj/m5oPfm8RxFqgpMeNqoQBumL6n/B
+	pdhD5dneonMeRiMNTjsRarYedMe+RruAniTFHtQL0OZEwk+qgQ4Ox5LF4ny5t8+Jio9BszFhsYL
+	cOcHi08Yi02OxAVOll9DjTd4=
+X-Google-Smtp-Source: AGHT+IHj81bY8BwahqqDfoqRAaq8f0rnARhmXR6p0QX+Wj5JW6k3OiLTjugCeEjr1Ne+gZ4EEgbmkg==
+X-Received: by 2002:a05:6000:2906:b0:3a4:e2f4:a86b with SMTP id ffacd0b85a97d-3a4f7a6d22emr10375633f8f.37.1748877542385;
+        Mon, 02 Jun 2025 08:19:02 -0700 (PDT)
 Received: from mai.. (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe74111sm15619844f8f.56.2025.06.02.08.19.00
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe74111sm15619844f8f.56.2025.06.02.08.19.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 08:19:00 -0700 (PDT)
+        Mon, 02 Jun 2025 08:19:02 -0700 (PDT)
 From: Daniel Lezcano <daniel.lezcano@linaro.org>
 To: daniel.lezcano@linaro.org,
 	tglx@linutronix.de
@@ -81,9 +81,9 @@ Cc: Jim Cromie <jim.cromie@gmail.com>,
 	Will McVicker <willmcvicker@google.com>,
 	Peter Griffin <peter.griffin@linaro.org>,
 	Saravan Kanna <saravanak@google.com>
-Subject: [PATCH v1 3/7] clocksource/drivers/sun5i: Add module owner
-Date: Mon,  2 Jun 2025 17:18:47 +0200
-Message-ID: <20250602151853.1942521-4-daniel.lezcano@linaro.org>
+Subject: [PATCH v1 4/7] clocksource/drivers/tegra186: Add module owner
+Date: Mon,  2 Jun 2025 17:18:48 +0200
+Message-ID: <20250602151853.1942521-5-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250602151853.1942521-1-daniel.lezcano@linaro.org>
 References: <20250602151853.1942521-1-daniel.lezcano@linaro.org>
@@ -109,29 +109,37 @@ module.
 
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- drivers/clocksource/timer-sun5i.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/clocksource/timer-tegra186.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/clocksource/timer-sun5i.c b/drivers/clocksource/timer-sun5i.c
-index 6b48a9006444..f827d3f98f60 100644
---- a/drivers/clocksource/timer-sun5i.c
-+++ b/drivers/clocksource/timer-sun5i.c
-@@ -185,6 +185,7 @@ static int sun5i_setup_clocksource(struct platform_device *pdev,
- 	cs->clksrc.read = sun5i_clksrc_read;
- 	cs->clksrc.mask = CLOCKSOURCE_MASK(32);
- 	cs->clksrc.flags = CLOCK_SOURCE_IS_CONTINUOUS;
-+	cs->clksrc.owner = THIS_MODULE;
+diff --git a/drivers/clocksource/timer-tegra186.c b/drivers/clocksource/timer-tegra186.c
+index e5394f98a02e..56a5342bcf78 100644
+--- a/drivers/clocksource/timer-tegra186.c
++++ b/drivers/clocksource/timer-tegra186.c
+@@ -373,6 +373,7 @@ static int tegra186_timer_tsc_init(struct tegra186_timer *tegra)
+ 	tegra->tsc.read = tegra186_timer_tsc_read;
+ 	tegra->tsc.mask = CLOCKSOURCE_MASK(56);
+ 	tegra->tsc.flags = CLOCK_SOURCE_IS_CONTINUOUS;
++	tegra->tsc.owner = THIS_MODULE;
  
- 	ret = clocksource_register_hz(&cs->clksrc, rate);
- 	if (ret) {
-@@ -214,6 +215,7 @@ static int sun5i_setup_clockevent(struct platform_device *pdev,
- 	ce->clkevt.rating = 340;
- 	ce->clkevt.irq = irq;
- 	ce->clkevt.cpumask = cpu_possible_mask;
-+	ce->clkevt.owner = THIS_MODULE;
+ 	return clocksource_register_hz(&tegra->tsc, 31250000);
+ }
+@@ -392,6 +393,7 @@ static int tegra186_timer_osc_init(struct tegra186_timer *tegra)
+ 	tegra->osc.read = tegra186_timer_osc_read;
+ 	tegra->osc.mask = CLOCKSOURCE_MASK(32);
+ 	tegra->osc.flags = CLOCK_SOURCE_IS_CONTINUOUS;
++	tegra->osc.owner = THIS_MODULE;
  
- 	/* Enable timer0 interrupt */
- 	val = readl(base + TIMER_IRQ_EN_REG);
+ 	return clocksource_register_hz(&tegra->osc, 38400000);
+ }
+@@ -411,6 +413,7 @@ static int tegra186_timer_usec_init(struct tegra186_timer *tegra)
+ 	tegra->usec.read = tegra186_timer_usec_read;
+ 	tegra->usec.mask = CLOCKSOURCE_MASK(32);
+ 	tegra->usec.flags = CLOCK_SOURCE_IS_CONTINUOUS;
++	tegra->usec.owner = THIS_MODULE;
+ 
+ 	return clocksource_register_hz(&tegra->usec, USEC_PER_SEC);
+ }
 -- 
 2.43.0
 
