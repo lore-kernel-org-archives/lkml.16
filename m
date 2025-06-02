@@ -1,115 +1,139 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8414BDDAB;
-	Mon,  2 Jun 2025 18:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2643B221FCA
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 18:43:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748889756; cv=none; b=KzEO/ODompL0g1DiPqf9XWii96R1AHugjePP5SlY1nedgopsyGEUzaQaXxmXNuSDxbKsuFENsJ01N7Izpocj/kFLW6Ju8wmmtwCsCcaXYCKdkdyS6MMaKAyIELpWJXSFTN5ASxtXMvU7wxahqo+V4i3xUu3v1aHvL5CipDxzAl0=
+	t=1748889784; cv=none; b=V6fxcjUhiaBNablnnoXHxmhX8HY2TN39gynhEw4Iy9KWGaXbxBcj7/k/q9O0WS8GOz2H57kKAtdNu6uWjH853ZkYBzLuRThBAt8xiRXzJxkGcQnOjAdI4PHxduZaqiCVj4bM2+ZNl6cuXIFXpJDP+/vH4pjb9SAa0nMY1QdtT64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748889756; c=relaxed/simple;
-	bh=JXUGtBxMmZ3qxADNC8z55VEIcDThXMmxnX/W1hjZciU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GN5R64Uba+f0/qHU6NWBp6QkPvU1upfZ7lbwSj/ku1PeKb+XnuaKP55s1Hk7VNonKUDaSd+2XVocH2cWD9/0Vgv1ndB3TWvmt/E2/xwLZrt27DgHzU/1SjFmhOy7cK2ev7cwysLzhDPVv1nMAY8Hgo/zSBDCO43AG1teMux94TA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 04D801424;
-	Mon,  2 Jun 2025 11:42:17 -0700 (PDT)
-Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3B0073F59E;
-	Mon,  2 Jun 2025 11:42:31 -0700 (PDT)
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	mingo@kernel.org,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	leo.yan@arm.com,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yeoreum Yun <yeoreum.yun@arm.com>,
-	David Wang <00107082@163.com>
-Subject: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
-Date: Mon,  2 Jun 2025 19:40:49 +0100
-Message-Id: <20250602184049.4010919-1-yeoreum.yun@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1748889784; c=relaxed/simple;
+	bh=p+wD3zMTOWI0HISbGROLTVC+KJOh+kfgMSn79zqvOmY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LgzFIQRtr6/u3AuwW7LVBhXTnV8dp1jpPff+Zu1SqZll5yog+X0lNVTmcnpxnWzt5LKuUnPFnA/GrqB1D/cLYZqYVEJ3jr8napjvqRj/jY8KqBGMkFcxqtkq3bW2BIWEiqR0yEmq6PX6lR9VSIxLMA1vql7xOJlUZgD5ZeaYnOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uYHS+K1o; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uYHS+K1o"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-604533a2f62so9315953a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 11:43:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748889780; x=1749494580; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vnvUjNE/+RVrDDbHkhezYePJuDWmPp+oybHgIE8H+Rg=;
+        b=uYHS+K1oj0WgCIk3e8h0ncTbqM/HGd7x87OL/eqkSN4YZxLu5FFKF5qhbv4F12f7VN
+         oozntXURwdyt56jNvro+rTuLDlYnqQ1Cl3tSwvvsZEcsqcaQDX9pD9KsEDv4V1zfid2r
+         SrQakZkxhUczy3nKekQwv96mFQ1lm2iXOtXF7+KJZRm3D47+GLyW1RLtlGsGOmdQuxig
+         G60I4VxRmNEMiGtg9p7zTSw52jsAMGwShefVjDgSYrV/vVkcyXwQ2VTiXivJC4iDNhvQ
+         LyAjTiIXWuk/jn2wPAf5ePTlXSZVIf6zb8wlrtgt++ayO2Yle4Q0GDnGIYlOLrzsuzXB
+         3dAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748889780; x=1749494580;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vnvUjNE/+RVrDDbHkhezYePJuDWmPp+oybHgIE8H+Rg=;
+        b=IOxPhMDmfifY6QJ1mTPRgnxC08pOXhQae5MnaQzrrLGHdtgAwsjip04bfQfAg1TTPE
+         a7y9OO89k+I0ks+W3omR+bCv1WvcGpSb0M1qb5Yhj7fY1wcWKY4pgwKWtHvgYNii1JNT
+         3DBb6Sk0DoteGJQMtlvz0dYJW9Dg4u+srSp5FZHJlCcCuzGehSbWNXUlJ5KgPOBD75oX
+         4NIDOzoqWQ3plhJyhM3s1pljdScMLLb550V0JWzPikMBTU0MERLqZ+IMq7WB+ztV5esp
+         RDQJIIrBk6VGNbWahbSYaG7zxLVTDrpvqhgvRu3DVR5MabCZ6SL8ZvPH5P/eag69u4dc
+         ynKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVAdRhFmzFUm3ZiMoYh3TDVzGGBTVTcfrGOGIpNrlx8mc1nagJnWxeccKjEvSLQmRI5MQtGYpujn6+IDHI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZc4M/9pmGzDVFnkgB4f9Tp1F4Bf1yXEdV1SDTPFfb7yP8QopG
+	Iyl7k7d0lt16Uze1e8PxOH1NqCGGiIBwB2OM91nHHKi+yFb51vISuAHU7hrZpFhjvzk=
+X-Gm-Gg: ASbGncuiblcElbCO/q+M3kAut0CUKEAkaCtxcqjDVu92OQOk9qQo0IFVk0yr3Jf5hen
+	1MFx/Cti6K6d/hw5umZ0Fqe7mkb1yJHneqrAgPHVwCet3HSXtc1TVrObsKQb5LQsQFI9AzM5H07
+	H6pCDj34G5iP0YYaWTL1SrVLBBsI5efa4okGHaUvBhLSHYHXpk3KNVVqeqBEhw4AoD5B4mxQuPd
+	7KW1LntDZVBwz951DDONY1UdmMTKWYmW23YbOVbZuH1cmm7NrslGVl9DOiCfw3w2KDU9B4Phu03
+	MpL59rMAR8HhylxcxP2UkwlXynBRtTOtV0Xjag6tiQRGpgAYZ7NCa/Wq5rfhoI9FipXBS6H1hAp
+	0Rr4o
+X-Google-Smtp-Source: AGHT+IFJ/fmPqlLI1xs1kQIdWrguQXYZLNV4oahPunuD+7Yh+pew/6do8m1nbzlvPSYYP3h1lQd2KQ==
+X-Received: by 2002:a05:6402:26c9:b0:602:3e4:54de with SMTP id 4fb4d7f45d1cf-605b751ac19mr9468088a12.10.1748889780341;
+        Mon, 02 Jun 2025 11:43:00 -0700 (PDT)
+Received: from [192.168.0.14] ([79.115.63.75])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5d84e76csm828077866b.86.2025.06.02.11.42.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Jun 2025 11:42:59 -0700 (PDT)
+Message-ID: <f2d149c6-41a4-4a9a-9739-1ea1c4b06f4b@linaro.org>
+Date: Mon, 2 Jun 2025 19:42:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
+ in sync
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+ =?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>,
+ Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ William McVicker <willmcvicker@google.com>
+References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
+ <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com>
+ <5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org>
+ <8f281667-b4ef-9385-868f-93893b9d6611@linux.intel.com>
+ <3a47fc82-dc21-46c3-873d-68e713304af3@linaro.org>
+ <f6ee05f7-174b-76d4-3dbe-12473f676e4d@linux.intel.com>
+ <867e47dc-9454-c00f-6d80-9718e5705480@linux.intel.com>
+ <a56284a4-755d-4eb4-ba77-9ea30e18d08f@linaro.org>
+ <7e882cfb-a35a-bab0-c333-76a4e79243b6@linux.intel.com>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <7e882cfb-a35a-bab0-c333-76a4e79243b6@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-commit a3c3c6667("perf/core: Fix child_total_time_enabled accounting bug at task exit")
-changes the event->state update before list_del_event().
-This change prevents calling perf_cgroup_event_disable() as a result,
-cpuctx->cgrp can't be cleared properly and point to dangling point of cgroup.
 
-Because of this problem, some machin meets the below panic[0]:
 
-863.881960] sysved_call_function_sing le+0x4c/0xc0
-863.881301] asm_sysvec_call_function_single+0x16/0x20
-869.881344] RIP: 0633:0x7f9alcea3367
-663.681373] Code: 00 66 99 b8 ff ff ff ff c3 66 ....
-863.881524] RSP: 002b:00007fffa526fcf8 EFLAGS: 00000246
-869.881567] RAX: 0000562060c962d0 RBX: 0000000000000002 RCX: 00007f9a1cff1c60
-863.881625] RDX: 00007f9a0c000030 RSI: 00007f9alcff1c60 RDI: 00007f9a1ca91c20
-863.081682] RBP: 0000000000000001 R08: 0000000000000000 R09: 00007f9a1d6217a0
-869.881740] R10: 00007f9alca91c10 R11: 0000000000000246 R12: 00007f9a1d70c020
-869.881798] R13: 00007fffa5270030 R14: 00007fffa526fd00 R15: 0000000000000000
-863.881860] </TASK>
-863.881876) Modules linked in: snd_seq_dummy (E) snd_hrtimer (E)...
-...
-863.887142] button (E)
-863.912127] CR2: ffffe4afcc079650
-863.914593] --- [ end trace 0000000000000000 1--
-864.042750] RIP: 0010:ctx_sched_out+0x1ce/0x210
-864.045214] Code: 89 c6 4c 8b b9 de 00 00 00 48 ...
-864.050343] RSP: 0000:ffffaa4ec0f3fe60 EFLAGS: 00010086
-864.052929] RAX: 0000000000000002 RBX: ffff8e8eeed2a580 RCX: ffff8e8bded9bf00
-864.055518] RDX: 000000c92340b051 RSI: 000000c92340b051 RDI: ffff
-864.058093] RBP: 0000000000000000 R08: 0000000000000002 R09: 00
-864.060654] R10: 0000000000000000 R11: 0000000000000000 R12: 000
-864.063183] R13: ffff8e8eeed2a580 R14: 0000000000000007 R15: ffffe4afcc079650
-864.065729] FS: 00007f9a1ca91940 (0000) GS:ffff8e8f6b1c3000(0000) knIGS:0000000000000000
-864.068312] CS: 0010 DS: 0000 ES: 0000 CRO: 0000000080050033
-864.070898] CR2: ffffe4afcc079650 CR3: 00000001136d8000 CR4: 0000000000350ef0
-864.673523] Kernel panic - not syncing: Fatal exception in interrupt
-864.076410] Kernel Offset: 0xc00000 from 0xffffffff81000000 (relocation range: 0xff
-864.205401] --- [ end Kernel panic - not syncing: Fatal exception in interrupt ]---
+On 6/2/25 4:08 PM, Ilpo Järvinen wrote:
+>>> I think I figured out more about the reason. It's not related to that 
+>>> bridge window resource.
+>>>
+>>> pbus_size_mem() will add also that ROM resource into realloc_head 
+>>> as it is considered (intentionally) optional after the optional change
+>>> (as per "tudor: 2:" line). And that resource is never assigned because 
 
-To address this call the perf_cgroup_event_disable() properly before
-list_del_event() in __perf_remove_from_context().
+cut
 
-Link: https://lore.kernel.org/all/aD2TspKH%2F7yvfYoO@e129823.arm.com/ [0]
-Fixes: a3c3c6667("perf/core: Fix child_total_time_enabled accounting bug at task exit")
-Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
-Tested-by: David Wang <00107082@163.com>
----
- kernel/events/core.c | 4 ++++
- 1 file changed, 4 insertions(+)
+>>> pdev_sort_resources() didn't pick it up into the head list. The next 
+>>> question is why the ROM resource isn't in the head list.
+>>>
+>> It seems the ROM resource is skipped at:
+>> https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-
+>> next.git/tree/drivers/pci/setup-bus.c#n175
+>>
+>> tudor: pdev_sort_resources: ROM [??? 0x00000000 flags 0x0] resource
+>> skipped due to !(r->flags) || r->parent
+> I don't see the device in this print, hope it is for the same device.
+> 
+> In any case, I don't understand what reset resource's flags in between 
+> pbus_size_mem() and pdev_sort_resources(), or alternative, why type 
+> checking in pbus_size_mem() matches if flags == 0 at that point.
+> 
+> Those two functions should work on the same resources, if one skips 
+> something, the other should too. Disparity between them can cause issues, 
+> but despite reading the code multiple times, I couldn't figure out how 
+> that disparity occurs (except for the !pdev_resources_assignable() case).
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index f34c99f8ce8f..909b9d5a65c1 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2498,6 +2498,10 @@ __perf_remove_from_context(struct perf_event *event,
- 		state = PERF_EVENT_STATE_DEAD;
- 	}
- 	event_sched_out(event, ctx);
-+
-+	if (event->state > PERF_EVENT_STATE_OFF)
-+		perf_cgroup_event_disable(event, ctx);
-+
- 	perf_event_set_state(event, min(event->state, state));
- 
- 	if (flags & DETACH_GROUP)
--- 
-LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+cut
 
+> It is of interest to know why the same resource is treated differently.
+> So what were the resource flags, type* args when it's processed by
+> pbus_size_mem()? If resource's flags are zero at that point but it matches 
+
+This is the full output: https://termbin.com/mn1x
+for the following prints: https://termbin.com/q57h
+
+It seems ROM resource is of type 2 at pbus_size_mem() time.
+
+> one of the types, that would be a bug.
+
+I'll give another try tomorrow. Thanks,
+ta
