@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF92231849;
-	Mon,  2 Jun 2025 14:02:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B183233710;
+	Mon,  2 Jun 2025 14:02:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748872972; cv=none; b=Ll/PDhLjj+b4TwWQfCNCEiJpW4vUrYmAKGKaOe+/RHdYLLca1uA0H+o2Z4A43dtul0rnWifzLJbvHH98DjV8z9XiY82kPUBnPzla/zWaEs9McVAH1UVzugUgLBFoirgYTQSq8hxnHls4ludUxTkgUgv+KGqcZ8JeYAOrMDkoPz4=
+	t=1748872976; cv=none; b=fQT2KD/melh4wsFRjEHXhK/RcE/6zp2ZOUPSFQyPKinAyT13c+7copugD1Hr28rfcvbv49r0RZOi4FBvz/Kj7tzCbixz+gLNOv+Ebxgp54p2hnh2nSNJsbR+wT2LKPlVXEelUjqwDcsczLBiA4znvl2MMA4Q3buNlFG6hxWH+cA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748872972; c=relaxed/simple;
-	bh=mSZ+Tq+Scvh8C9wum7JJA/yZBWRfnRsmhQedhLJ+MMs=;
+	s=arc-20240116; t=1748872976; c=relaxed/simple;
+	bh=l1z9iLUkJ0KvsPge0I8LFG6jb0PtwW40TMKjx9uD3Ls=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mW70TKdYASiaj0nlYk+RGGa21d6/insb3g7LL1qU4g5xuz4pVWS1JIIPw15xYsq0NsOjKP9aLzkudv19IprMIdk0aPCgUhQSbE5FwjoUAgi5pB/Bwh5M7mbX02QjdXHH+eICgqcVz7sJ8niJ/Mpq2swzCJf+oD6xQsXTso8lC+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K9ffYvv3; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=sk4XAuY6QGUyvNLLeOYjGTzr8Y+gu08SJsXJNFAcpHlUksOr9eNd4i1zS5k2Z+yTDkBM0wmPtnm1zz0HIujs7DSfS+vsjQFc/xa0T/+3vBc3lTEdcVw7loNpuYL4LLRlqQ1Db60j6Cxcoyf9UsFHcgU3wMK+cMW1OiYTdBlSAwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xc/dEgij; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K9ffYvv3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1ABAC4CEF2;
-	Mon,  2 Jun 2025 14:02:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xc/dEgij"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C752C4CEEB;
+	Mon,  2 Jun 2025 14:02:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748872971;
-	bh=mSZ+Tq+Scvh8C9wum7JJA/yZBWRfnRsmhQedhLJ+MMs=;
+	s=k20201202; t=1748872976;
+	bh=l1z9iLUkJ0KvsPge0I8LFG6jb0PtwW40TMKjx9uD3Ls=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=K9ffYvv3xQe4fdSRA0UFPMZm3dYPB26TXTOYHwDQ5GbGwrrEExeOgjrs8Fu4fEAlC
-	 Bu0ltIJkFtJgtZ70uLp3azfK4yHC+P/LGA5h9yv2S+UkEyaxMPMWt2oRDD8R3ithT6
-	 Lzi4EMA4CDadXlzn67OY2vxAowL4n9BhzNJN8u/meKBDlOn3FVmdzAIRZqGG2+gVs2
-	 ZL3L0x5zUB0QoDM8VV1tGqADiJTvvEq1qeBLyx/kKln3Df8LmOH81M7v+d36cFCVIr
-	 tfz01P5uURxRvzZPA3BlfKczhCfCOCBLkbTo5gMJmGB4VfNOd2UwrS7MUJIoxPNn1d
-	 PYsYexGrJOIcg==
+	b=Xc/dEgijwM+KWINT6xRSiuECZeDVQa0/hGg9S2z7Lavf06L2SOITTHzCRWLUYtXW5
+	 p1Vw9s5OeYlBmJNQwaiY/biiyl/RaVNGllgCoCgZsLv+V893IpaFu1ux63LdWlXf3R
+	 2YLf589SghXRJ53zrZy0kOUe6dRoMuo4T3X6+50KoLM2hKPaaOWZo9M6Kme1+LVpNg
+	 ewDy2ZEBzw9dc8OLtdIu8cix3iaRC6D2uSX7xXVva+6zk2sOf7bfP0FE1PLFnfzsnl
+	 iEnTuGhsBDqMLkk/lRWi4EDYjKosyY8pQZMg6amiZk5efmz8gsCQiy54I5FXUQphwu
+	 o+C4eoWzvdKNQ==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 02 Jun 2025 10:01:57 -0400
-Subject: [PATCH RFC v2 14/28] filelock: rework the __break_lease API to use
- flags
+Date: Mon, 02 Jun 2025 10:01:59 -0400
+Subject: [PATCH RFC v2 16/28] filelock: add support for ignoring deleg
+ breaks for dir change events
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250602-dir-deleg-v2-14-a7919700de86@kernel.org>
+Message-Id: <20250602-dir-deleg-v2-16-a7919700de86@kernel.org>
 References: <20250602-dir-deleg-v2-0-a7919700de86@kernel.org>
 In-Reply-To: <20250602-dir-deleg-v2-0-a7919700de86@kernel.org>
 To: Alexander Viro <viro@zeniv.linux.org.uk>, 
@@ -58,215 +58,166 @@ Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
  samba-technical@lists.samba.org, linux-doc@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7075; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=mSZ+Tq+Scvh8C9wum7JJA/yZBWRfnRsmhQedhLJ+MMs=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBoPa7ne7oHoBM+qhMZ3CaFsqLNTMCpC2dhUeaad
- JMhCmVDb1mJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaD2u5wAKCRAADmhBGVaC
- FetPEACOJPiOO1361MaUQCwy4nzClqOvT5QLoeMe/g1JBE5ZcO8uf6Fr9OZnsIEfDWR297Ef8Px
- gu+5BBdWCIOoDvPi9XmiQCBGWdlIXjV1uVr8KGIzHJ6sikPM17ePimWx/eWNtyyY2Laer2piKMW
- FjyoL3wNb+zxV8ZgvoXmiHT7DjlCHXeQQ3T6F4lEwYW8J2B/D2QMjIbz1IxccH/h4CljZ1FGwC+
- pWsAEgdiDrc3lnj+QMIo+hVvZ5f97qCyplbN7U/WtqXvQ+sKUGZ87crY2cnsB+dVMYXS/iBoqyT
- Q7rwbBXhMXb7cTbi/720XvzcTdnBcb24joHv4+ZMcW0xu02oawvo57OHqPgEAb3tXyKeU0qBqtc
- UgSGsv41xZBKPhVIJ4DSgjSlrEYFSWOCRphNvxQBI+utalonG17PRF7BXDo2+OhteXhMrR8aYyn
- rDCnJ8rlZMjbX8chaW2lSM7BLgv76VzUhSIYPMZZpXEMhMAd6F0U8mn3tXIx9vyDsP24JwrbD0r
- tkqVBsmzke0zlX+Nqw6nYeaKmWgGrqiYj/EVthHLfwX4qnKiX4X9Jb6Ngz3/3YsD9ogK0JnUvAz
- 5r1k/AyfhyrPqKGHyzBKAbVRgD+HLBqddQ9CwAs9+MG4w8bhgjVz0y389HHRWYNGDzZJjaWR0co
- 8KvYn/51pVA04iA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5743; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=l1z9iLUkJ0KvsPge0I8LFG6jb0PtwW40TMKjx9uD3Ls=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBoPa7n5joJeAiGMTeYtl2VHuJMTpkez3iSh3Rzg
+ ovZBrIcu4qJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaD2u5wAKCRAADmhBGVaC
+ Fbu/EADE42Xwa7/1tThWNVhEe1pk7DYQS7gD89WSuvz+X9VFYW3asu8vEwNYZtDIaAKLZuOXpe5
+ AIhsDQjYIyktimSQdiSNF7K7AAjqSXxlSMSxbhHqRXBTw5CjDXfvKFYfIwQTOaRR7RdVwnptDvH
+ ym+9xf3SWSjfJQ4PdvJ+DG6QRwcdKWGUg0lInh0jKU8Vkoc6sq2zYYaAaGTFei+CWctQtDkVaa5
+ mAMmoeBbTcIwkcvzeLAoM/2+qaXhj9bxe0pu9MObJsCBRcdjsqpdGURzmd4SFfdGyfwqLf43dkR
+ IEpr8W0FtOIvz0/7LwB/xgk5hMvsJ+YM6wOY1kXByQK/6FKoMlDDEzI+U5k8Rnl0nvDgBvvb6Wm
+ k0lK+Hg3LIrbPSJzv03sN9s7vtmsXcVAWs7C01j6xsBgES8bHjGwBbvOlDodu+3u3sxCPJyWB6J
+ Oci+B5ZNXrDxXLL1lK5xjh19Kp6sdnYHrJxco1hrzHqzHHopS8GoGaSVliuVPUF/ak6Ogoj9SZP
+ WnbuOFu3LtVwbX3yAGEXsLoDhGplKSA0IQeVTVlOcm0YbabD2VogWHR0uC+QsEhGGoakJNRgdFa
+ TXoeulGoY3NzuFiS2bTDNw9xBucW13BK+KBvbBLsrQjtGJ/GZGUTSRZgOi75PAb6KOyQ9sI6ebY
+ 1PxaHINBn5WSMvQ==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Declare a set of LEASE_BREAK_* flags that can be used to control how
-lease breaks work instead of requiring a type and an openmode.
+If a NFS client requests a directory delegation with a notification
+bitmask covering directory change events, the server shouldn't recall
+the delegation. Instead the client will be notified of the change after
+the fact.
+
+Add a support for ignoring lease breaks on directory changes.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/locks.c               | 30 +++++++++++++++++-----------
- include/linux/filelock.h | 52 +++++++++++++++++++++++++++++++++++-------------
- 2 files changed, 56 insertions(+), 26 deletions(-)
+ fs/locks.c               | 56 ++++++++++++++++++++++++++++++++++++++++--------
+ include/linux/filelock.h | 29 ++++++++++++++-----------
+ 2 files changed, 63 insertions(+), 22 deletions(-)
 
 diff --git a/fs/locks.c b/fs/locks.c
-index 82a1b528dc9dae8c1f3a81084072e649d481e8f1..6e46176d1e00962904f03c151500e593f410e4c6 100644
+index 6e46176d1e00962904f03c151500e593f410e4c6..95270a1fab4a1792a6fcad738cc9d937d99ad2af 100644
 --- a/fs/locks.c
 +++ b/fs/locks.c
-@@ -1529,29 +1529,35 @@ any_leases_conflict(struct inode *inode, struct file_lease *breaker)
- /**
-  *	__break_lease	-	revoke all outstanding leases on file
-  *	@inode: the inode of the file to return
-- *	@mode: O_RDONLY: break only write leases; O_WRONLY or O_RDWR:
-- *	    break all leases
-- *	@type: FL_LEASE: break leases and delegations; FL_DELEG: break
-- *	    only delegations
-+ *	@flags: LEASE_BREAK_* flags
-  *
-  *	break_lease (inlined for speed) has checked there already is at least
-  *	some kind of lock (maybe a lease) on this file.  Leases are broken on
-- *	a call to open() or truncate().  This function can sleep unless you
-- *	specified %O_NONBLOCK to your open().
-+ *	a call to open() or truncate().  This function can block waiting for the
-+ *	lease break unless you specify LEASE_BREAK_NONBLOCK.
-  */
--int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
-+int __break_lease(struct inode *inode, unsigned int flags)
- {
--	int error = 0;
--	struct file_lock_context *ctx;
- 	struct file_lease *new_fl, *fl, *tmp;
-+	struct file_lock_context *ctx;
- 	unsigned long break_time;
--	int want_write = (mode & O_ACCMODE) != O_RDONLY;
- 	LIST_HEAD(dispose);
-+	bool want_write = !(flags & LEASE_BREAK_OPEN_RDONLY);
-+	int error = 0;
-+
+@@ -1526,15 +1526,52 @@ any_leases_conflict(struct inode *inode, struct file_lease *breaker)
+ 	return false;
+ }
  
++static bool
++ignore_dir_deleg_break(struct file_lease *fl, unsigned int flags)
++{
++	if ((flags & LEASE_BREAK_DIR_CREATE) && (fl->c.flc_flags & FL_IGN_DIR_CREATE))
++		return true;
++	if ((flags & LEASE_BREAK_DIR_DELETE) && (fl->c.flc_flags & FL_IGN_DIR_DELETE))
++		return true;
++	if ((flags & LEASE_BREAK_DIR_RENAME) && (fl->c.flc_flags & FL_IGN_DIR_RENAME))
++		return true;
++
++	return false;
++}
++
++static bool
++visible_leases_remaining(struct inode *inode, unsigned int flags)
++{
++	struct file_lock_context *ctx = locks_inode_context(inode);
++	struct file_lease *fl;
++
++	lockdep_assert_held(&ctx->flc_lock);
++
++	if (list_empty(&ctx->flc_lease))
++		return false;
++
++	if (!S_ISDIR(inode->i_mode))
++		return true;
++
++	list_for_each_entry(fl, &ctx->flc_lease, c.flc_list) {
++		if (!ignore_dir_deleg_break(fl, flags))
++			return true;
++	}
++	return false;
++}
++
+ /**
+- *	__break_lease	-	revoke all outstanding leases on file
+- *	@inode: the inode of the file to return
+- *	@flags: LEASE_BREAK_* flags
++ * __break_lease	-	revoke all outstanding leases on file
++ * @inode: the inode of the file to return
++ * @flags: LEASE_BREAK_* flags
+  *
+- *	break_lease (inlined for speed) has checked there already is at least
+- *	some kind of lock (maybe a lease) on this file.  Leases are broken on
+- *	a call to open() or truncate().  This function can block waiting for the
+- *	lease break unless you specify LEASE_BREAK_NONBLOCK.
++ * break_lease (inlined for speed) has checked there already is at least
++ * some kind of lock (maybe a lease) on this file. Leases and Delegations
++ * are broken on a call to open() or truncate(). Delegations are also
++ * broken on any event that would change the ctime. Directory delegations
++ * are broken whenever the directory changes (unless the delegation is set
++ * up to ignore the event). This function can block waiting for the lease
++ * break unless you specify LEASE_BREAK_NONBLOCK.
+  */
+ int __break_lease(struct inode *inode, unsigned int flags)
+ {
+@@ -1545,7 +1582,6 @@ int __break_lease(struct inode *inode, unsigned int flags)
+ 	bool want_write = !(flags & LEASE_BREAK_OPEN_RDONLY);
+ 	int error = 0;
+ 
+-
  	new_fl = lease_alloc(NULL, want_write ? F_WRLCK : F_RDLCK);
  	if (IS_ERR(new_fl))
  		return PTR_ERR(new_fl);
--	new_fl->c.flc_flags = type;
-+
-+	if (flags & LEASE_BREAK_LEASE)
-+		new_fl->c.flc_flags = FL_LEASE;
-+	else if (flags & LEASE_BREAK_DELEG)
-+		new_fl->c.flc_flags = FL_DELEG;
-+	else if (flags & LEASE_BREAK_LAYOUT)
-+		new_fl->c.flc_flags = FL_LAYOUT;
-+	else
-+		return -EINVAL;
+@@ -1584,6 +1620,8 @@ int __break_lease(struct inode *inode, unsigned int flags)
+ 	list_for_each_entry_safe(fl, tmp, &ctx->flc_lease, c.flc_list) {
+ 		if (!leases_conflict(&fl->c, &new_fl->c))
+ 			continue;
++		if (S_ISDIR(inode->i_mode) && ignore_dir_deleg_break(fl, flags))
++			continue;
+ 		if (want_write) {
+ 			if (fl->c.flc_flags & FL_UNLOCK_PENDING)
+ 				continue;
+@@ -1599,7 +1637,7 @@ int __break_lease(struct inode *inode, unsigned int flags)
+ 			locks_delete_lock_ctx(&fl->c, &dispose);
+ 	}
  
- 	/* typically we will check that ctx is non-NULL before calling */
- 	ctx = locks_inode_context(inode);
-@@ -1596,7 +1602,7 @@ int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
- 	if (list_empty(&ctx->flc_lease))
+-	if (list_empty(&ctx->flc_lease))
++	if (!visible_leases_remaining(inode, flags))
  		goto out;
  
--	if (mode & O_NONBLOCK) {
-+	if (flags & LEASE_BREAK_NONBLOCK) {
- 		trace_break_lease_noblock(inode, new_fl);
- 		error = -EWOULDBLOCK;
- 		goto out;
+ 	if (flags & LEASE_BREAK_NONBLOCK) {
 diff --git a/include/linux/filelock.h b/include/linux/filelock.h
-index 60c76c8fb4dfdcaaa2cfa3f41f0f26ffcb3db29f..0fe368060781d0b22f735c2cfb8d8c1a6a238290 100644
+index f2b2d1e1d1ab08671895c3bfe398e5bba02353d8..32b30c14f5fd52727b1a18957e9dbc930c922941 100644
 --- a/include/linux/filelock.h
 +++ b/include/linux/filelock.h
-@@ -221,7 +221,14 @@ int locks_lock_inode_wait(struct inode *inode, struct file_lock *fl);
- void locks_init_lease(struct file_lease *);
- void locks_free_lease(struct file_lease *fl);
- struct file_lease *locks_alloc_lease(void);
--int __break_lease(struct inode *inode, unsigned int flags, unsigned int type);
-+
-+#define LEASE_BREAK_LEASE		BIT(0)	// break leases and delegations
-+#define LEASE_BREAK_DELEG		BIT(1)	// break delegations only
-+#define LEASE_BREAK_LAYOUT		BIT(2)	// break layouts only
-+#define LEASE_BREAK_NONBLOCK		BIT(3)	// non-blocking break
-+#define LEASE_BREAK_OPEN_RDONLY		BIT(4)	// readonly open event
-+
-+int __break_lease(struct inode *inode, unsigned int flags);
- void lease_get_mtime(struct inode *, struct timespec64 *time);
- int generic_setlease(struct file *, int, struct file_lease **, void **priv);
- int kernel_setlease(struct file *, int, struct file_lease **, void **);
-@@ -376,7 +383,7 @@ static inline int locks_lock_inode_wait(struct inode *inode, struct file_lock *f
- 	return -ENOLCK;
- }
+@@ -4,19 +4,22 @@
  
--static inline int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
-+static inline int __break_lease(struct inode *inode, unsigned int flags)
- {
- 	return 0;
- }
-@@ -437,6 +444,17 @@ static inline int locks_lock_file_wait(struct file *filp, struct file_lock *fl)
- }
+ #include <linux/fs.h>
  
- #ifdef CONFIG_FILE_LOCKING
-+static inline unsigned int openmode_to_lease_flags(unsigned int mode)
-+{
-+	unsigned int flags = 0;
-+
-+	if ((mode & O_ACCMODE) == O_RDONLY)
-+		flags |= LEASE_BREAK_OPEN_RDONLY;
-+	if (mode & O_NONBLOCK)
-+		flags |= LEASE_BREAK_NONBLOCK;
-+	return flags;
-+}
-+
- static inline int break_lease(struct inode *inode, unsigned int mode)
- {
- 	struct file_lock_context *flctx;
-@@ -452,11 +470,11 @@ static inline int break_lease(struct inode *inode, unsigned int mode)
- 		return 0;
- 	smp_mb();
- 	if (!list_empty_careful(&flctx->flc_lease))
--		return __break_lease(inode, mode, FL_LEASE);
-+		return __break_lease(inode, LEASE_BREAK_LEASE | openmode_to_lease_flags(mode));
- 	return 0;
- }
+-#define FL_POSIX	1
+-#define FL_FLOCK	2
+-#define FL_DELEG	4	/* NFSv4 delegation */
+-#define FL_ACCESS	8	/* not trying to lock, just looking */
+-#define FL_EXISTS	16	/* when unlocking, test for existence */
+-#define FL_LEASE	32	/* lease held on this file */
+-#define FL_CLOSE	64	/* unlock on close */
+-#define FL_SLEEP	128	/* A blocking lock */
+-#define FL_DOWNGRADE_PENDING	256 /* Lease is being downgraded */
+-#define FL_UNLOCK_PENDING	512 /* Lease is being broken */
+-#define FL_OFDLCK	1024	/* lock is "owned" by struct file */
+-#define FL_LAYOUT	2048	/* outstanding pNFS layout */
+-#define FL_RECLAIM	4096	/* reclaiming from a reboot server */
++#define FL_POSIX		BIT(0)	/* POSIX lock */
++#define FL_FLOCK		BIT(1)	/* BSD lock */
++#define FL_LEASE		BIT(2)	/* file lease */
++#define FL_DELEG		BIT(3)	/* NFSv4 delegation */
++#define FL_LAYOUT		BIT(4)	/* outstanding pNFS layout */
++#define FL_ACCESS		BIT(5)	/* not trying to lock, just looking */
++#define FL_EXISTS		BIT(6)	/* when unlocking, test for existence */
++#define FL_CLOSE		BIT(7)	/* unlock on close */
++#define FL_SLEEP		BIT(8)	/* A blocking lock */
++#define FL_DOWNGRADE_PENDING	BIT(9)	/* Lease is being downgraded */
++#define FL_UNLOCK_PENDING	BIT(10) /* Lease is being broken */
++#define FL_OFDLCK		BIT(11) /* POSIX lock "owned" by struct file */
++#define FL_RECLAIM		BIT(12) /* reclaiming from a reboot server */
++#define FL_IGN_DIR_CREATE	BIT(13) /* ignore DIR_CREATE events */
++#define FL_IGN_DIR_DELETE	BIT(14) /* ignore DIR_DELETE events */
++#define FL_IGN_DIR_RENAME	BIT(15) /* ignore DIR_RENAME events */
  
--static inline int break_deleg(struct inode *inode, unsigned int mode)
-+static inline int break_deleg(struct inode *inode, unsigned int flags)
- {
- 	struct file_lock_context *flctx;
+ #define FL_CLOSE_POSIX (FL_POSIX | FL_CLOSE)
  
-@@ -470,8 +488,10 @@ static inline int break_deleg(struct inode *inode, unsigned int mode)
- 	if (!flctx)
- 		return 0;
- 	smp_mb();
--	if (!list_empty_careful(&flctx->flc_lease))
--		return __break_lease(inode, mode, FL_DELEG);
-+	if (!list_empty_careful(&flctx->flc_lease)) {
-+		flags |= LEASE_BREAK_DELEG;
-+		return __break_lease(inode, flags);
-+	}
- 	return 0;
- }
- 
-@@ -479,7 +499,7 @@ static inline int try_break_deleg(struct inode *inode, struct inode **delegated_
- {
- 	int ret;
- 
--	ret = break_deleg(inode, O_WRONLY|O_NONBLOCK);
-+	ret = break_deleg(inode, LEASE_BREAK_NONBLOCK);
- 	if (ret == -EWOULDBLOCK && delegated_inode) {
- 		*delegated_inode = inode;
- 		ihold(inode);
-@@ -491,7 +511,7 @@ static inline int break_deleg_wait(struct inode **delegated_inode)
- {
- 	int ret;
- 
--	ret = break_deleg(*delegated_inode, O_WRONLY);
-+	ret = break_deleg(*delegated_inode, 0);
- 	iput(*delegated_inode);
- 	*delegated_inode = NULL;
- 	return ret;
-@@ -500,20 +520,24 @@ static inline int break_deleg_wait(struct inode **delegated_inode)
- static inline int break_layout(struct inode *inode, bool wait)
- {
- 	smp_mb();
--	if (inode->i_flctx && !list_empty_careful(&inode->i_flctx->flc_lease))
--		return __break_lease(inode,
--				wait ? O_WRONLY : O_WRONLY | O_NONBLOCK,
--				FL_LAYOUT);
-+	if (inode->i_flctx && !list_empty_careful(&inode->i_flctx->flc_lease)) {
-+		unsigned int flags = LEASE_BREAK_LAYOUT;
-+
-+		if (!wait)
-+			flags |= LEASE_BREAK_NONBLOCK;
-+
-+		return __break_lease(inode, flags);
-+	}
- 	return 0;
- }
- 
- #else /* !CONFIG_FILE_LOCKING */
--static inline int break_lease(struct inode *inode, unsigned int mode)
-+static inline int break_lease(struct inode *inode, bool wait)
- {
- 	return 0;
- }
- 
--static inline int break_deleg(struct inode *inode, unsigned int mode)
-+static inline int break_deleg(struct inode *inode, unsigned int flags)
- {
- 	return 0;
- }
 
 -- 
 2.49.0
