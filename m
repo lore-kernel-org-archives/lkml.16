@@ -1,213 +1,190 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2059.outbound.protection.outlook.com [40.107.94.59])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927BC1537C6
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 12:32:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748867560; cv=none; b=e/meywVOVF+kmkTRHGJFlsKz4aYl/yV0tEFFC7clWmxeHJQ8DpILqVJLkodAaBSvSczIIzZeEvJsV3NIsvn331TQ5ny1gRKz/uBJ2wS4/nnDBD4SJvWAN60ywIxhyr+GYi98yNcPGAv01WZuyoOmRjZoCNr6la2Z6vR5Ee32QZM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748867560; c=relaxed/simple;
-	bh=Fw4N7iX6m0ldEG5hd1LcGLRXQoTg7QP3sJF8fiBpSz0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ghz5GBfpnkA98tMTxAPJwgKehGACoRv1hukKG4a3Td7+nE++aNA4S8I7BtJD0+gkXYyQBqNNSt3LKqmwyET9+lRYP0Duh5PZTm6HuDZu59RkBdMc8BVsGhglaMoFSxsmnt9mmn1Fdsuneacq2PhVcCUWIS3L9mJD2jqTPHTzuvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RM92tU9m; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3381C32;
+	Mon,  2 Jun 2025 12:34:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748867649; cv=fail; b=NJ3oT4dv97CyEohDYggS8ZcDYJeeRXwkwNp2crwCUPcwHwSr4zm5O3+c8Cmg70DJ6ViCmXL/vGTrJjR4fCB6hqMbZeO9HL4t4JWHGxXpslFJuPhrZeTTtzxaieAxFkY/1Wiec1EbWYk+7BHCuY4aHmyJvgwP9snksJeSEYEJBZg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748867649; c=relaxed/simple;
+	bh=fnd1BEpffQmaA++UCs5P/S3DrCBGaNYVkSNJ4yv+gnM=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=QJfOWNnZL1Ikba8ndcoc11p60CDtmAER2Ilab+SzhZXQmXErpWVYyacd6L21kkiQwPuGLPl3GrN8Vpwaa2zzNXK5oAENg+ef/xAWf1gi10tYvOH56wP/f04LO2rlyqiw9SmE4C0NtR55AtZOruhozAFtFFFIAEI7CW67JjANOM0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=tpy5EAJV; arc=fail smtp.client-ip=40.107.94.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RM92tU9m"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ad88d77314bso783526666b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 05:32:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748867557; x=1749472357; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qNmR2LVDrZBvYOssuTfD9LAdBgszcoMj02H+hU1ZLVM=;
-        b=RM92tU9m4cZs4TB7V7eXdOsT2lXBKtM6uf14sXdnvYuMbhs8OYczhFra07ySewJ3LB
-         vb0OV9aU0Q2qSp+JHbHKmG4T4469LwUKw/XM8+eRT1+MZ7WAB4Uh61E/wPbEBwyk5WXP
-         H1Ye8rLyHu+vyyAw/3bnx0l9SVJwgcp1jNHSS6ELN5XitJ1ASyih8A/UrmhS6jCj8/0+
-         oszqWdBL5p/qgVs8uBBs1tRvuIlxtBwT3guwoFKoM5bwSKO3dD49klJ0FOHRPpfUSz3G
-         UPsCX0vLKLgVqq5O2krkRqQpF/rPpEmn3V8ZjH7DoHvqcItXV5+vS1IbxgLxIr6gTYhx
-         eTVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748867557; x=1749472357;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qNmR2LVDrZBvYOssuTfD9LAdBgszcoMj02H+hU1ZLVM=;
-        b=kzRnD5bzsqdf82DTCNLPN0E/fPw/FrkE+VdN41zs9ZjIdYch5VqmWzMVvwuIl+wvPG
-         I4noK7XkDqxIxgFQarm/fXusuauDvTAvnlC9oWfRy+uIROa2vem65gwqwuFgz8npRGM/
-         6rNZSxbnhDpIZzO1GgAbwosAkzbpMK5ByT0SfXbnCSmzXCOo3OPBzie+T3AuApl1rqzx
-         GMKiZb67+NMe1jhflYhPylXaJRwZciPXBbReEklzb3QZPjhRvMH4Kuynb1uOs1I/v/QV
-         oKklWSbRXaWUT9WNVcjI5V2KpHqE/7XtPry0Q3tBzky8toGLVOULda58S4BvDShOPiqH
-         gRfw==
-X-Forwarded-Encrypted: i=1; AJvYcCVjHPT7KuADNFmrgLxuzytYUbn29fwdMQ2inTl1pAGKeWuODfpz5mxOgiRK1gujHPqa/fcjglwvPgJwVLU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5mp/KuSdI6zqN8IhzFZ8jtcM4GRsRamBbPoXpCUaaFt/tdsCp
-	mxhNNXszELbtFlwnyZF8QIz0+2kHBDIh7OOQ66o1+Ujl5H1ZFSrWSHFenIbaZmzQWnc=
-X-Gm-Gg: ASbGnctPUEs3IwspVGgGfk/WrfRR9GzvnJq3GjTOh4QJX+0P2vduqA7LgMGjfJ46aE8
-	PU+p8b7R6NvtGlABnVjfXr81lbJeEVg//HqUCdX5QGy+wo5ieKOCfbrm0iqWSwHq0Br3p4wP84a
-	7FUF/4gca0TMY6pjxa+yJONapeFpJSYo/GUF47MKYjpEzYtMjKFPNMbaY8EXttTNmVgu5MLXZfV
-	skQjBFOJCWPBTRdLVPWnYD93C8OUTLpzY9HlluwOa42wjX/lESwi3m4/11iZgAyOzdz+6jAAiUM
-	3Bh3OHzvnVQVWGfkF4oHc1/FgYTDgReChVCjkObgZC6ahfYRhTAYnPH7uPPN5Pdpj5eO5Q==
-X-Google-Smtp-Source: AGHT+IHiS9U+zqDmnEMCHR70yLzS187TrGBDgjrasVug7mewsFtHLYtqg30afGkuc6JWczlwMXtlqA==
-X-Received: by 2002:a17:907:2d13:b0:ad8:9b23:16d9 with SMTP id a640c23a62f3a-adb322a4025mr1152616266b.34.1748867556771;
-        Mon, 02 Jun 2025 05:32:36 -0700 (PDT)
-Received: from [192.168.0.14] ([79.115.63.75])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5d7fed53sm787352866b.27.2025.06.02.05.32.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Jun 2025 05:32:36 -0700 (PDT)
-Message-ID: <86a58291-b7f7-477d-89b5-39690b9ef371@linaro.org>
-Date: Mon, 2 Jun 2025 13:32:34 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="tpy5EAJV"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xSiH1JVwenGAc2Rbn9tT9eqzAUoMxNJQkw3GoGD8SKE2fAsG2CaJrXrud1IXW3KyQX/Z6ZmCj6Ngno7eBXfttOv08qQM5lNMCRVH3MHCdNxttcsFKwHjO1l6V4voNg2YNNHyPUV4Tt3FvsuofF6MSauPB5Qt9AwZemE1+RZ1i0sa38RCcbRm7B48T7/sjXGfXSMXuHpSPF4YYJ2JuyApaiaEa3MAXtgK84N4P4bPGY5rfSxWB+T71OFmVTe0Uw3YcXA9P89f/YBl+vCoZSj6a9xG9libCdlG3Mayfk2tg+pDCo9sEGHS21eU32sta3bmeBnFmhcsxbhoQwmXYbboJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1IzTjhHKkt9y2+0ujG+2aCtodJ8h0pX95XSA0CRrark=;
+ b=dsEihLW1G2yQv9xs8qBTfoNVsE+sT57+2rVMANyJSg1phFTt0Bm8OxUxXmyzbW/CSaxRCPFDlINlHLUwZh8nxA7dLGi5NrIJHOr8Bz4+i6IpIfzZTDaLjuR55f+aPQoLeA5iYSOYFFuLIEqITJTz1mA0MIXdrJxAyAdaHoOI5zSND64kcH4jFQ8anf8NC8tLb7EIV9ZfWYhL9omq6f435A00yixcDzy2Eme4bUbAL0oIYHnaFubzS8D8WmjcigA6PQHwD54vt8nWbdztAc1wjsDyyWwF4mCSN+1wcwePlqk1odVa2sSQFYpNv9A9/VdXrDcGVvTlvemv3pIJaplFxw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1IzTjhHKkt9y2+0ujG+2aCtodJ8h0pX95XSA0CRrark=;
+ b=tpy5EAJVhJWk30z7kjeOxGYaX99zYmSH1cPKksbCs4c4QAqKI8TAfTJJyMYX1e8Zc/PJcG31hgYMbKNM8H/3azLh2muxrZuheGssLCHvxl3MukueJrNzc8NUUK+bLfoZYL9o4px45QhBrSeCNqfq/oZ6laPj9mpYoX+aVkCyKIs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by SA1PR12MB9472.namprd12.prod.outlook.com (2603:10b6:806:45b::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.32; Mon, 2 Jun
+ 2025 12:34:05 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5%7]) with mapi id 15.20.8722.031; Mon, 2 Jun 2025
+ 12:34:05 +0000
+Message-ID: <81bbe3d3-668b-4bf9-b4c4-a71b3b12c26c@amd.com>
+Date: Mon, 2 Jun 2025 14:33:59 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dma-buf: Add forward declaration of struct seq_file in
+ dma-fence.h
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Sumit Semwal <sumit.semwal@linaro.org>, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+References: <aDlu5TGyA1WuMsvw@gondor.apana.org.au>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <aDlu5TGyA1WuMsvw@gondor.apana.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MN2PR06CA0011.namprd06.prod.outlook.com
+ (2603:10b6:208:23d::16) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
- in sync
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
- =?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>,
- Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- William McVicker <willmcvicker@google.com>
-References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
- <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com>
- <5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org>
- <8f281667-b4ef-9385-868f-93893b9d6611@linux.intel.com>
- <3a47fc82-dc21-46c3-873d-68e713304af3@linaro.org>
- <f6ee05f7-174b-76d4-3dbe-12473f676e4d@linux.intel.com>
-Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <f6ee05f7-174b-76d4-3dbe-12473f676e4d@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|SA1PR12MB9472:EE_
+X-MS-Office365-Filtering-Correlation-Id: 00fef4e2-7e16-47f3-f57e-08dda1d1c338
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MGc3WjdkQVFqd24wTnFuUGdvcGcralpvZUxZMmhScXVGNzBPUFlkTXRQd0hU?=
+ =?utf-8?B?SzNnQ1NhSGNSNm1JU00yOU5mWFMydkhQVlh2dHNLM0pOWnhaN2ZsVmxlUG5v?=
+ =?utf-8?B?YWZlR1JobHlvZDBCcFlBSTdsQUFiL0wrZzFBdGNlSFB1NnlCREJNNjUyMTlj?=
+ =?utf-8?B?Z3VUVFJScXpuc2d6RnQrS2RabU8rMGtmVVE4clhTYWxEdFZNZ3J6UUJCSnU0?=
+ =?utf-8?B?LzRza3pLS0NiL00rVy9oWWpCSUtQUG5VY01NSkRMbGZySHpLYVp2RGwzYjdQ?=
+ =?utf-8?B?bW1VNDZrck9jT3BRSDJTWHJ3Ykp2Vm1ISjI4YjJub2poWldob09RRDFJRXBF?=
+ =?utf-8?B?VEJ0OWJEMEhDMkg2cTNyWVFMWWFHVkNZT3cvZlJZRkxQdU5abzFkc25MeTRk?=
+ =?utf-8?B?SlRFdzJJb2x5N1pVUThQVDJLNFp0R21HcjlON3NXeUpjdjNPVzd6QkZpN1JE?=
+ =?utf-8?B?alh1MnVibW9IWHNmeExEQVZOMlQxMDFwbFE0VVNHT0Q4c1B1SGFPK2dGY2tv?=
+ =?utf-8?B?L1dPVzRPMm9keTFNb2JXUGRMbGpSd1RCQ1ltRjRqQWFZYm9jV2loREF4VDJO?=
+ =?utf-8?B?dWg1VXFOb2FMNXo5aldQMlRIVjdUc0VLdEpZemFRMmZ2MmgrQ3o4Z05wRUFM?=
+ =?utf-8?B?UGpFd3E3ZlJmQlhVV3lvTGhlVy83NW41LytKdTBXZmR6a0prU3EwSTI0K1pt?=
+ =?utf-8?B?SWRIZVVBUUZvRVlpMWd0VlJicDVlRGMwdDUzb2VjMG1YanZpRVBzWU5yV0g5?=
+ =?utf-8?B?OXoxZXBJMkZ3eklrYmJPSFh2allxTHR4cG80cG80TUxmYkJwS3lwNE0xOVRt?=
+ =?utf-8?B?MlQ4eUZnWnZOZGpKY0x3QnoyUEFKNHAxQ2lwZlZLUWJEMHh2VmF5VFQ2cXY1?=
+ =?utf-8?B?d0RVb3dkN1h2NmpKeDFITjM5NTdPelRhRWxuWEIxdkxpUWdRSHNWQld2QnRL?=
+ =?utf-8?B?MjVBS0JYdkVjdG1hL1E0L294dURmc1d0S2ZYYnhIZEo0M3grT3kwRitxVlJ1?=
+ =?utf-8?B?QUhBWDlVeGJKa3VWbFBxd2FvTFlUNStOZFpRTTliaFUreWdlb2RCRXk0UjlH?=
+ =?utf-8?B?cUpxa3E1ZDk1NVc0cFRZanpCejQ4emNCaHhmWG9sQzVjTW1zQTQzeGNvdE9N?=
+ =?utf-8?B?a3FFeTBJTkxVU0krUDFTQWZQZjBRem0vbklCV3dmR3JsampscUZldUwxSmZO?=
+ =?utf-8?B?cEdqalpGL2xld1dWNjBPNWFpWmFxRUxsSHlVUm9CRUtheHpNbWdJOFJDSVFq?=
+ =?utf-8?B?RDlQSmQrUEErTXRRemZ0akFlMzI4anF2VFJyU0hqQzM0WE1kVG92NjdWNFhL?=
+ =?utf-8?B?cDdseEpNaElmSFdpcnFkM0RodmFmQk1DWDVxZFZwQXRiUTJnbXJ1azJqR2l3?=
+ =?utf-8?B?ZDY0QUUyOXNWdTkyMkljUi9zQ2swcCtYZHZMWnE1TkZqdHc3dnpabW1hMm80?=
+ =?utf-8?B?ZEhoY0FFRmc4bEkxcVNHcWFyQmxMbExQS1JRQ3I2VlR0R1VTVEx0ZyswTzA0?=
+ =?utf-8?B?SXVkeVB1ZHE0cUV6ZHNRUWM3dE1Eb0dzRWRwM1Bod3UxZXcvRmFFN2VPUy9i?=
+ =?utf-8?B?UTdjVjc4RE9wZDU3OVZwanJKZC9OMndIeUphOGYxYStYQjlhYVBWZ3o3d0xJ?=
+ =?utf-8?B?VFM0VHk0N2p2QnpUSGtSbHFZck56dFQ5K0x4TW1lVHorZll2Sk1Vc2V4d0lJ?=
+ =?utf-8?B?elh3YXdsWS8zQ2hCTkNCcFJ6WnkxZVZLSml1cGZxaXBKWCtGb1BOZmZUd2kz?=
+ =?utf-8?B?dlZ3RWVNVllReEg3K2FyOGN6MVpJTU5sRkpTNkwwcDVuU0ZHRnhYcGhSWTdj?=
+ =?utf-8?B?Z1ZycmxDS2dzcERWZGxwMEJyYS9sZ1VHTEdYYmw3anhOQTBHTmdPS0JrYllJ?=
+ =?utf-8?B?QlRIeHZ2MlRYbkJMTGJNR3JyaExpU2VzWUhzUUpXbDFaa2N0eUN5TjFUWWtJ?=
+ =?utf-8?Q?awyHA1DLUOw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZEFFdmdKY0YwY2gvV3FuQjdIMFpoYlFsZjExS0wwd0xiazVZcTZwUFBkNHk5?=
+ =?utf-8?B?MUpleWxvK09uR0h5MXVvbGExMTFEY21UcVBPcDFGalYvakd0Zk1iQkR6MHBU?=
+ =?utf-8?B?Y0xJOU1CSllzcHRwcUJnc3dIR0xnWTJqZk9ZdEJaOFNLRm44MXhHQk1zMVNB?=
+ =?utf-8?B?Vnlnc09EWFpKMmp3bHFHa0ZIcHFSU1lPT2tldDhaWXAxdEQvWlJnZStaaU1x?=
+ =?utf-8?B?K0RkMFduWWJQMzFMY2ZYTUJmZ1Frb280RGF6a2VQL1JZZ09SYWpTNi92eVAx?=
+ =?utf-8?B?cGNoUnNVamcxMENDNlhPTmJyTFJpQU5JbVZmRkI2cmVnMWpZc1hVRE4rTE9o?=
+ =?utf-8?B?MlFQK05Td1o2aEV1UFRYbFlwY3NHMkdaRmRyVzZ5aU5VY3d2SWZZaUxnd3Rp?=
+ =?utf-8?B?djFrVTlFd2JoZXFqWmtpdGxqejVQbTgwdjEwWXIwcnpGc0l2TWcwZnNhZCtz?=
+ =?utf-8?B?b2JZZEdvYVp6MldOaGdwSzN5VWxPY2cyNEw3Z29CQmQ3bzVQd2tlWSt2bHNt?=
+ =?utf-8?B?UUZqVUpUaXpnUzRHSjJFRXNnc3pva2xYNFdTcHR4dnZua3U2dVNORGdOcGZX?=
+ =?utf-8?B?SDk1aDZWY3VNNHpKWHJpcWRCNlJpOGJtNjZkOUVhMkw3c0lNUUxGVGtpYTdF?=
+ =?utf-8?B?TGpiMlVzNG4vSi91ZmY3WjMwcVJKYlNvZFVXdlRmT3B3MVRTcG5rTGRFaU1J?=
+ =?utf-8?B?SnFyZXJRcFo5Y0ZqWlVDSlZ2bGFSRUVtbUtwWjcvak16QVVQenh2NVRINXZ6?=
+ =?utf-8?B?WjMySUhhMWRDUDI0OVpoaVgyYTRDaG9iNmVpcElNTnpRanlFMFJGRnp3N09h?=
+ =?utf-8?B?eUFFWUNhcFJJbU5zWGdUandRUUs4WWtZaGdUN21ZTEZ4MDZhZzQwWUk1Z1dn?=
+ =?utf-8?B?S0RjM1NqWkREamovR010U0dPd0tEeE02ck9BRnAwK3RLSDJ6dktmSDF6SkNW?=
+ =?utf-8?B?ODdNRXJnRXVjdnQ5L2xpakZ0Lzh3Zit1SkdLTXFyM1ZESEx3N29KQnhhOHJr?=
+ =?utf-8?B?V3VpN1k4QkpESDZ4VEtXUXF5NG1SSEZVT1hsODl1bTVaa0c3ZnRuK3hoVS9X?=
+ =?utf-8?B?a2lHdy82M2JuZXpFRHZwL1FHVFpHVmJIWVNaWGM3NmNENEZVb0lkY0tXbW1i?=
+ =?utf-8?B?ZmF0dHRaV0hIV3JBM3dUUVRnZEZFdkRTWkVHaWdNaERnSjZ6QzdoQitmNVlO?=
+ =?utf-8?B?VVB5a0hxbm5sWDlCdzJGWWtXQlQwK1FBRnN4RFl3cnRmU3l4RSs4Ry93M3RL?=
+ =?utf-8?B?MEY4cE42cTI4dGl3RGRNZFA3bVJkRGxIY1ZCN1BaMGt5N3hORGpkdTJYbmNW?=
+ =?utf-8?B?S014eVFDamVQMGs5Y3dXdmQ1UVRxYWcxb3k2SUtOemZSSDcrSHpTUjJaTnhl?=
+ =?utf-8?B?ZjZmeFZZS0ZtdE1udUdLYmkwekVsSGwwaUdZdnRzaCtTQWNMN1ZuTlUrUjFB?=
+ =?utf-8?B?RTBEeEFSQ0FDUExMMDJEWE0zU0V6eDVLRk1oWEltVy84NlN4eGxneitYWVVa?=
+ =?utf-8?B?REJ2WHRRbU96bGxYei9OcENaeEo0SHBwUy81QStqNTdXRWxQTWJtRU5aU25n?=
+ =?utf-8?B?ZE9RVytWZWg3cUxrMDJGNG4xNHdlazh4UnVpaWcxUCtjNWlHVUlpdm5jS1Z6?=
+ =?utf-8?B?R01YU2ZGbmhqN2lUUTUzSkZZQmVzYlJ3VS9aZnJDSzFyK2lmWGtLYzlYWjI1?=
+ =?utf-8?B?TnpDclFEa2pwN0l5d3RYcEMvWURwTkJjNEdINm44U3JuVXMvZ0s0b1d6Qkda?=
+ =?utf-8?B?ZXBuZlQ3cW9ZU1dHTWF4Y09kblBFY1JnUUNDc1VyaHF3U0VxemhKRWVJRG9O?=
+ =?utf-8?B?alZkZVNDQndOeGI5R0ZuZ0JyTTQzN09NU2M2TzJxWVVVZS9xYko1a1pmTkhF?=
+ =?utf-8?B?OWJBbzVjbEkrZ2Nrb2wxTnBtV0VOMGp6MVFpK2tFbUJ5eGhaYVBLZlhkcTJW?=
+ =?utf-8?B?MEwzSWllak5nOUJoY3I5ZzFRcjBnQzV4TlVZVksyVXNWUUtIbEd6aksvV1ov?=
+ =?utf-8?B?UFdDUER4bjlXYnpyemMvVHhiakRIZEc0VGpmdS85QzhhRW16STYvazlaNXRq?=
+ =?utf-8?B?VXAwa1kwbkRYK2MzdmxRRnh1Z0hMNVk3c1pHbDIyakFJMEEyQzBBY1RKSW9B?=
+ =?utf-8?Q?F1IfHhsNpq7GIIrGkvOh1TBgV?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00fef4e2-7e16-47f3-f57e-08dda1d1c338
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2025 12:34:05.4269
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: A8koZ9tmvHbUhrM9f+Sd20MfhfJ1e9bkf/4LCLIo3IARJTsVAohnNejd7AfZ/rAr
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB9472
 
-
-On 5/30/25 7:38 AM, Ilpo Järvinen wrote:
-
-cut
-
->>>> Reverting the following patches fixes the problem:
->>>> a34d74877c66 PCI: Restore assigned resources fully after release
->>>> 2499f5348431 PCI: Rework optional resource handling
->>>> 96336ec70264 PCI: Perform reset_resource() and build fail list in sync
->>>
->>> So it's confirmed that you needed to revert also this last commit 
->>> 96336ec70264, not just the rework change?
->>
->> I needed to revert 96336ec70264 as well otherwise the build fails.
+On 5/30/25 10:40, Herbert Xu wrote:
+> Add forward declaration of struct seq_file before using it in
+> function prototype.
 > 
-> Hi again,
+> Fixes: a25efb3863d0 ("dma-buf: add dma_fence_describe and dma_resv_describe v2")
 
-Hi!
+I've removed this fixes tag since this is basically just a cleanup and not really a bug fix.
 
-cut
+If compilation would have failed we would have noticed that much earlier.
 
+Added my rb and pushed the result to drm-misc-next.
+
+Thanks,
+Christian.
+
+
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 > 
-> The missing helper is basically this:
-
-cut
-I used the following:
-
-+static bool pci_resource_is_disabled_rom(const struct resource *res,
-int resno)
-+{
-+       return resno == PCI_ROM_RESOURCE && !(res->flags &
-IORESOURCE_ROM_ENABLE);
-+}
-
-> 
-> Because of this, the actual culprit could be in 2499f5348431, not it 
-> 96336ec70264 (which would make more sense as it does significant rework 
-> on the assignment algorithm).
-
-I confirm with the above that the problem is in 2499f5348431 indeed.
-
-cut
-
->> I added the suggested prints
->> (https://paste.ofcode.org/DgmZGGgS6D36nWEzmfCqMm) on top of v6.15 with
->> the downstream PCIe pixel driver and I obtain the following. Note that
->> all added prints contain "tudor" for differentiation.
->>
->> [   15.211179][ T1107] pci 0001:01:00.0: [144d:a5a5] type 00 class
->> 0x000000 PCIe Endpoint
->> [   15.212248][ T1107] pci 0001:01:00.0: BAR 0 [mem
->> 0x00000000-0x000fffff 64bit]
->> [   15.212775][ T1107] pci 0001:01:00.0: ROM [mem 0x00000000-0x0000ffff
->> pref]
->> [   15.213195][ T1107] pci 0001:01:00.0: enabling Extended Tags
->> [   15.213720][ T1107] pci 0001:01:00.0: PME# supported from D0 D3hot
->> D3cold
->> [   15.214035][ T1107] pci 0001:01:00.0: 15.752 Gb/s available PCIe
->> bandwidth, limited by 8.0 GT/s PCIe x2 link at 0001:00:00.0 (capable of
->> 31.506 Gb/s with 16.0 GT/s PCIe x2 link)
->> [   15.222286][ T1107] pci 0001:01:00.0: tudor: 1: pbus_size_mem: BAR 0
->> [mem 0x00000000-0x000fffff 64bit] list empty? 1
->> [   15.222813][ T1107] pci 0001:01:00.0: tudor: 1: pbus_size_mem: ROM
->> [mem 0x00000000-0x0000ffff pref] list empty? 1
->> [   15.224429][ T1107] pci 0001:01:00.0: tudor: 2: pbus_size_mem: ROM
->> [mem 0x00000000-0x0000ffff pref] list empty? 0
->> [   15.224750][ T1107] pcieport 0001:00:00.0: bridge window [mem
->> 0x00100000-0x001fffff] to [bus 01-ff] add_size 100000 add_align 100000
->>
->> [   15.225393][ T1107] tudor : pci_assign_unassigned_bus_resources:
->> before __pci_bus_assign_resources -> list empty? 0
->> [   15.225594][ T1107] pcieport 0001:00:00.0: tudor:
->> pdev_sort_resources: bridge window [mem 0x00100000-0x001fffff] resource
->> added in head list
->> [   15.226078][ T1107] pcieport 0001:00:00.0: bridge window [mem
->> 0x40000000-0x401fffff]: assigned
-> 
-> So here it ends up assigning the resource here I think.
-> 
-> 
-> That print isn't one of yours in reassign_resources_sorted() so the 
-> assignment must have been made in assign_requested_resources_sorted(). But 
-> then nothing is printed out from reassign_resources_sorted() so I suspect 
-> __assign_resources_sorted() has short-circuited.
-> 
-> We know that realloc_head is not empty, so that leaves the goto out from 
-> if (list_empty(&local_fail_head)), which kind of makes sense, all 
-> entries on the head list were assigned. But the code there tries to remove 
-> all head list resources from realloc_head so why it doesn't get removed is 
-> still a mystery. assign_requested_resources_sorted() doesn't seem to 
-> remove anything from the head list so that resource should still be on the 
-> head list AFAICT so it should call that remove_from_list(realloc_head, 
-> dev_res->res) for it.
-> 
-> So can you see if that theory holds water and it short-circuits without 
-> removing the entry from realloc_head?
-> 
-
-cut. I saw your other reply. Will check a bit both and respond there
-directly.
-
->>
->>> In any case, that BUG_ON() seems a bit drastic action for what might be 
->>> just a single resource allocation failure so it should be downgraded to:
->>>
->>> if (WARN_ON(!list_empty(&add_list))
->>> 	free_list(&add_list);
->>> 	
->>> ... or WARN_ON_ONCE().
->>
->> I saw your patch doing this, the phone now boots, but obviously I still
->> see the WARN, so maybe there's still something to be fixed.
-> 
-cut
-
-> Now that it boots, can you please check if /proc/iomem is the same both in 
-> the non-working and working config. If that resource got assigned 
-> successfully, it might well be there is no actual differences in the 
-> assigned resources (which again doesn't mean there wouldn't be a bug in 
-> the logic as discussed above).
-
-I confirm /proc/iomem is identical when comparing the no revert and the
-WARN_ON_ONCE() case, and when reverting the blamed commit case.
-
+> diff --git a/include/linux/dma-fence.h b/include/linux/dma-fence.h
+> index e7ad819962e3..b751ae49d007 100644
+> --- a/include/linux/dma-fence.h
+> +++ b/include/linux/dma-fence.h
+> @@ -26,6 +26,7 @@
+>  struct dma_fence;
+>  struct dma_fence_ops;
+>  struct dma_fence_cb;
+> +struct seq_file;
+>  
+>  /**
+>   * struct dma_fence - software synchronization primitive
 
