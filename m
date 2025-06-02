@@ -1,123 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE0B1A3165;
-	Mon,  2 Jun 2025 08:27:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6192C3240
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 08:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748852879; cv=none; b=G0Anduv+6wJlxrb2ME7kcJa06bLYZ7ecy86lmV6dOPu9Fj/7OGmlSyzQLubEEJGuFwTDnlPTWXYCguo1Xpyrj6qRYqhk0picndcN1GfW8OxTNQBwQiUiopGCRdHx8nxMndP4lsYpGPBDgewLMjYRcwiFKh3sWg2usQPwb18EbW0=
+	t=1748852972; cv=none; b=ZL8bpI2WNYtdqpVwpSReG3m74bZMutk9YoAM5xXZMyRqlNMQUQJejcfqIhCF6HNcGC7lP9J5bLxtizx2kA9py9+QAD0exDij3N/WdCqPSpw+Uc9Vs58JFhwDo46Q56Y9vIWxhDSxovvsyv1r2ltz8RJDw2LzU6y76jgSSuGLZkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748852879; c=relaxed/simple;
-	bh=IMyckCdMv8xdu/2QCx1QFRlSZv0f/kbr95lp0eIMQ54=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RiJFHIUDo3ux0svt7mdxpAEgdjczmLEppDksEb9ZXkbyz+VIA/vpBezTiPGiIetZhGK8dtEXEFGODi7pnMC5jJwll7jHIvaiUjOI5zQEf1MHFmwsuVO614K7uupcAw8MngwC3jENtmmYIBrRMl5nfCLXVNpB+8hYpVb25fNUJPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tGuyP7dy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748852972; c=relaxed/simple;
+	bh=tfq+oFb0HlgMyr/raKYVwTlerX3E5/qx2jk3UWH/zxw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=M1GgxdyYQphHjxiQPoWXesAl3sYVZAnKXP+VPHzz06ZbzpFwHtn70l2zeYoIwa6vtODFW2SsNNba0006dskLe51g+2DPm6fWorstTs35MFh+lgYyo0QHo+bR3ut+djQ9Pli7tWXVPDUpoGxfCn3qNfeTPW3xdCZDHA/B3B9dlc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mhHBmA3i; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tGuyP7dy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82018C4CEEB;
-	Mon,  2 Jun 2025 08:27:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748852878;
-	bh=IMyckCdMv8xdu/2QCx1QFRlSZv0f/kbr95lp0eIMQ54=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tGuyP7dyeSXcKrg6ulBcpi4RLyZ0zfsU/k9GMnyB1pFw/KuoERUFxhzZfsidqAGst
-	 90JGaKulKdHmuMTU36HrAwxKu4gf+u46XlDQITKDKmWQ83fdBqhb45XznfAk14G+X6
-	 3CSpIq148tQ3502/TzbAiIyEwvmxKK2ZE6GOGyKiujIuvP3iyRF/nF3v4C9Nl5t09R
-	 nPNpkOZjRtHMSVxkIi53smgccil2BoTTx3/LI/gvEbkfGFAIne2EpYVNtLICZd+W6N
-	 l5Hsj/bUnHaF124sXalLd0UOB4xny+mJNyRbkAFcJ6+RpbJIlN1VJY5/EQKaV5ztWw
-	 0Mwk+vvjF5Jhg==
-Message-ID: <466ee887-cbea-434d-8599-3a8966b08c2a@kernel.org>
-Date: Mon, 2 Jun 2025 10:27:53 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mhHBmA3i"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-450dada0f83so18373805e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 01:29:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748852968; x=1749457768; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZbpJCV8zQjR5DojHMaY/jEI40JXedsZY/k7Ga4GE9fA=;
+        b=mhHBmA3ijD+Lj8bV+GihwOUhiyrmnydLgVn+apeqK732gYaJlabIgUxDoG5uhGmxN1
+         d1jn1C4nNpQNR6cvt4FJwoW/6H2APdEpqDDmfYd6PkSvXzLB84WRHqm7F+FFgy8hNDZe
+         Pe91SpmJ+9pgKFEaph282tlhPHa+OEQbNFEHTWPpohiTAsy7piAm3/gw17Zrt9t5tA9Z
+         lV2B+L7QGBc2hNmN0oU+tIknwohCAsRoroyy+JDrSz1wA4aSKiasOGs/cfveW1UT9sf0
+         o/5RdZURLslmvphsWkkxlwxf/haIRWaMR7TqRK04qmhIO3hcXFIFxVOQe072qwmXkgZv
+         Moug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748852968; x=1749457768;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZbpJCV8zQjR5DojHMaY/jEI40JXedsZY/k7Ga4GE9fA=;
+        b=pE5NFXBGoAjSNXIcGxs1OyHsibpniBpCBgUekaLFd/dhWoouDQgSKfDxkPsyxlpzZG
+         i2nECD9fQ5RfX7qaIzD/i57QyaxiOmg43ZFafE1fwbIQ7JUJbP6G0LrrJp6S3HvGmR75
+         C/2nC7LMgvQCJ62tBNKb7Ou1ihXWLeV3CuJNqRdv4nAtD3FZgzhmxFWAyvSrcVTaAFav
+         sVlVSjUVZBUU9NFc2+gIWhmQ4mBAffV9YKMsN7P5c9RFlkzIXbxHkKGMA9/TroEW/QIp
+         dDFSDW557rizXqI2foIkOfBgxYP2sH5PXQyhFBaM/7X9/XoUr89J7x8ESVXWTPzW7Aei
+         mrgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWWRS7DDl4S/Ut09w1i45dQ5JLbUiUft4/rWiqX3t1pCChY5F6xXbYBaprzj+cbZjd6xqCtQEIbizqnsQY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+xdY5hY7xxz8z0ozO9Isc3AeM2YLdubkq35vPzkb/h7TXHysR
+	dCQz1xS4kHeILCGgjr9//XxbiDpx1/omsJyvEaahOmpaqkg5CcdGpjmi/mTgykYAJcB39rNEz7P
+	5lM1kpsgXa/ZVdQ/R0A==
+X-Google-Smtp-Source: AGHT+IEYL7osQ39DZQWSxjkteIgaxCeOKxb7imH7KmQjn71xdjWPClNvGxRadK2XafQ3SYOwC0XxYFDSYVTD7Rw=
+X-Received: from wmbfp6.prod.google.com ([2002:a05:600c:6986:b0:450:ce9d:a742])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:6219:b0:43c:ec97:75db with SMTP id 5b1f17b1804b1-4511ecc3e06mr62032565e9.11.1748852968229;
+ Mon, 02 Jun 2025 01:29:28 -0700 (PDT)
+Date: Mon, 2 Jun 2025 08:29:26 +0000
+In-Reply-To: <DA9GNN7GH1VE.2NDPJZLNHAUP4@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] arm64: dts: qcom: support sound on Asus Vivobook S15
-To: binarycraft007 <elliot.huang.signed@gmail.com>, andersson@kernel.org
-Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, johan@kernel.org,
- konrad.dybcio@oss.qualcomm.com, konradybcio@kernel.org, krzk+dt@kernel.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- lumag@kernel.org, maud_spierings@hotmail.com, robh@kernel.org
-References: <174770727723.36693.13352978360096773573.b4-ty@kernel.org>
- <20250602081638.51724-1-elliot.huang.signed@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250602081638.51724-1-elliot.huang.signed@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250527-strncpy-from-user-v4-0-82168470d472@google.com>
+ <20250527-strncpy-from-user-v4-1-82168470d472@google.com> <DA9GNN7GH1VE.2NDPJZLNHAUP4@kernel.org>
+Message-ID: <aD1g5jFOrMUXeHhM@google.com>
+Subject: Re: [PATCH v4 1/2] uaccess: rust: add strncpy_from_user
+From: Alice Ryhl <aliceryhl@google.com>
+To: Benno Lossin <lossin@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On 02/06/2025 10:16, binarycraft007 wrote:
-> From: Elliot Huang <elliot.huang.signed@gmail.com>
+On Fri, May 30, 2025 at 01:32:44PM +0200, Benno Lossin wrote:
+> On Tue May 27, 2025 at 2:34 PM CEST, Alice Ryhl wrote:
+> > This patch adds a direct wrapper around the C function of the same name.
+> > It's not really intended for direct use by Rust code since
+> > strncpy_from_user has a somewhat unfortunate API where it only
+> > nul-terminates the buffer if there's space for the nul-terminator. This
+> > means that a direct Rust wrapper around it could not return a &CStr
+> > since the buffer may not be a cstring. However, we still add the method
+> > to build more convenient APIs on top of it, which will happen in
+> > subsequent patches.
+> >
+> > Reviewed-by: Danilo Krummrich <dakr@kernel.org>
+> > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 > 
-> This adds sound support for vivobook s15, tested:
-> - 2 speakers.
-> - 2 dmics
-> - headset with mic(distorted).
+> Reviewed-by: Benno Lossin <lossin@kernel.org>
+
+Thanks!
+
+> > +/// Reads a nul-terminated string into `dst` and returns the length.
+> > +///
+> > +/// This reads from userspace until a NUL byte is encountered, or until `dst.len()` bytes have been
+> > +/// read. Fails with [`EFAULT`] if a read happens on a bad address (some data may have been
+> > +/// copied). When the end of the buffer is encountered, no NUL byte is added, so the string is
+> > +/// *not* guaranteed to be NUL-terminated when `Ok(dst.len())` is returned.
+> > +///
+> > +/// # Guarantees
+> > +///
+> > +/// When this function returns `Ok(len)`, it is guaranteed that the first `len` bytes of `dst` are
+> > +/// initialized and non-zero. Furthermore, if `len < dst.len()`, then `dst[len]` is a NUL byte.
+> > +/// Unsafe code may rely on these guarantees.
+> > +#[inline]
+> > +#[expect(dead_code)]
+> > +fn raw_strncpy_from_user(dst: &mut [MaybeUninit<u8>], src: UserPtr) -> Result<usize> {
 > 
-> Signed-off-by: Elliot Huang <elliot.huang.signed@gmail.com>
+> We could also return `&[u8]` here instead of the size. Would that
+> improve the users of this API?
 
-Do not attach (thread) your patchsets to some other threads (unrelated
-or older versions). This buries them deep in the mailbox and might
-interfere with applying entire sets.
+Beyond what Greg says, convenience of use is not a goal *at all* of this
+function. It's purpose is to faithfully wrap the C function and match
+its semantics exactly. Ease of use is taken care of by patch 2 of this
+series.
 
-Please version your patches correctly, e.g. use b4 or git format-patch
--vX, and add changelog in cover letter or under '---' of individual
-patches describing changes from previous version.
-
-Please use subject prefixes matching the subsystem. You can get them for
-example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
-your patch is touching. For bindings, the preferred subjects are
-explained here:
-https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
-
-Do not send new versions while the discussion is still going.
-
-
-Best regards,
-Krzysztof
+Alice
