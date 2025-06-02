@@ -1,163 +1,138 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACBA920E026;
-	Mon,  2 Jun 2025 11:43:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F454A0F;
+	Mon,  2 Jun 2025 11:43:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748864588; cv=none; b=XKel3mYHxB85rYwSXV3t+nirK1l4X3aTrTUoKDpe1aXe/93U284IWdmBrRmAjLhwI2AME1Frs2mbGOpQqbbKZbfRw1KdZrbJkVv1YGdqd8RwPlYiXSFEM2YyrAxN6i9M9g8KTdpJhiFjk+KmesP+UDObQ3SFFD3xOBaCZd4wRgA=
+	t=1748864634; cv=none; b=VaSfN7yafrIkWeA4Qk41nLFnNtKAf+FuaMiyW065oFjBshSMe2XTW5gUVqnyeudwe0Ahbr25MG6ydDdWoWSpokZaVrQxCsrfLM553z7Ib+QRB3OpZjbf6SjNoCHEnKxi+b3yfWyAaEq6DzpFBI/a0mzxosE1stblopIkmJm/wAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748864588; c=relaxed/simple;
-	bh=JVLrJ8f5yXPr+YmPDvTTlCVB2/YsXVgAn6ZIZWWwEK8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MMS4EN8ooWv3ni4ACEx1YnuR+1ya59pgEtHDZFGlJfsfTfjAkbQj4zpyLI3hjvzOOAVPmcjrCt1dSGqWSY7B0sUU799/g44qWMnrQOfj4mZ+q8rGbLv8RgkvGNOlx9dDTupYhy0zEAfGRhK3eHbocoQvkhH2q4nFzYq/77UHpB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ktnscg/Z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748864634; c=relaxed/simple;
+	bh=l3/2Fh7F1pQtWmjuYMcKP5otHEjexAq08ZOrM1rZRDg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cSqJk5iSO529xvbnlu+WXYYmdorrKZSO8n6KK6F9VwjcuYIV/A5ei5stkDEtzsIRZYvyJFag+y48OI3dHS5fVsNiJLVnNrilSbqSZgZ6npPAjdgaB80UMgsNhzfoIIQeE4MPjdx8BYNbh/LGKmhHZGiuzBoVDWygJloMflhanrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CHpjELVj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ktnscg/Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 887A4C4CEEB;
-	Mon,  2 Jun 2025 11:43:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CHpjELVj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD5A7C4CEEB;
+	Mon,  2 Jun 2025 11:43:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748864588;
-	bh=JVLrJ8f5yXPr+YmPDvTTlCVB2/YsXVgAn6ZIZWWwEK8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ktnscg/Zhp3zYbKj1e7OO3r01c47xlv8I3Bs3zBlVAVwH/5yLROvizAO4RmjxSFdy
-	 KTeQNPVtk4i3h9f4gGH3uh/tAHM4ct7t4u4EvXYCQUdI201286Rv9Gh71i7DYONZ/B
-	 HFSYTJwCTZq2cRPxc2esqnyLP6yovolPXIFxzTnhPOpYEGx4lZl5gLgekH0Qr9NdPt
-	 68PJ5dzwJjpQ6377uMa/dJxTLxaHWVSqLOelD5BjPOAhAmDxg90uOmpUg1xCoyZNLd
-	 KgcenC7U5gpXnhj+WeVCRTptbKrH5t4YrnQaH16kjz9Ml7g/NnICEjs3BCOKepbbIn
-	 IWbaxOUkpNDog==
-Message-ID: <3022f455-f6f4-470b-9989-e37b2f8a0b51@kernel.org>
-Date: Mon, 2 Jun 2025 13:43:04 +0200
+	s=k20201202; t=1748864634;
+	bh=l3/2Fh7F1pQtWmjuYMcKP5otHEjexAq08ZOrM1rZRDg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CHpjELVjDRGvZAylEFZHufGSGD8PLh+PVGUgY6O+ym3daYnOZFHC3gglK0aRPjjaP
+	 cxJr3U2IAgtyQgOru8qQcjCh+nx6GRGegnpO38Ujg9VF8gyDVbBND8I1oQn7XajsqP
+	 +zkjAeUiRWkFZCkYGTNtIy2ADFd2mVs7ncT4XcQujMuDw+c+RiYQ8G5qjFrgXaqW0Q
+	 g9/YB3gbQFz9bibWoJTO/TrZT6ykxYGG/uz5b0Idbj9wSRh5lWiuGeyQTb4ysLlpdP
+	 HJHnxuvuGWkrX2jKsfFONN2rWHyUZg1GRqCzsIrLAyMC3TaIRR6N0fawRmq+6go3Iu
+	 PHTMIMoKo4q4A==
+Date: Mon, 2 Jun 2025 12:43:49 +0100
+From: Will Deacon <will@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Ard Biesheuvel <ardb+git@google.com>,
+	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+	nathan@kernel.org
+Subject: Re: [PATCH] arm64: Disable LLD linker ASSERT()s for the time being
+Message-ID: <20250602114348.GA1227@willie-the-truck>
+References: <20250529073507.2984959-2-ardb+git@google.com>
+ <20250530133811.GB30622@willie-the-truck>
+ <CAMj1kXHypqdC9O+8WH7n1=aDOySMScZc2y526S3gc_-QNpqO=w@mail.gmail.com>
+ <20250602100932.GA919@willie-the-truck>
+ <CAMj1kXEKMyR0PoQnY2zvQ=BVPJfEb4EO9HCUWKURUW+_Dj5h4w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 9/9] media: uvcvideo: Support granular power saving for
- compat syscalls
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
- <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250528-uvc-grannular-invert-v1-0-d01581f9cc25@chromium.org>
- <20250528-uvc-grannular-invert-v1-9-d01581f9cc25@chromium.org>
- <34d9f779-987f-4e2c-b046-5dc15641547c@kernel.org>
- <CANiDSCtrG59QX-R0YcS+G9HmG5oE8LwiXdm_NKuCbNmHp8aeTQ@mail.gmail.com>
- <b88a8847-6e19-4d5e-a847-5deee69ab7b4@kernel.org>
- <CANiDSCsXNu2xa_ATGUJbKY_t7xxXgSGdpZMf+P4LT+x3qcP1tg@mail.gmail.com>
- <69885612-75ea-422c-ba13-07eaf4325005@kernel.org>
- <CANiDSCtSKCn+mx8pGwuYCre9Wb7gONJYjLqc6tYLWQL3YXBmrw@mail.gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <CANiDSCtSKCn+mx8pGwuYCre9Wb7gONJYjLqc6tYLWQL3YXBmrw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXEKMyR0PoQnY2zvQ=BVPJfEb4EO9HCUWKURUW+_Dj5h4w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hi,
-
-On 2-Jun-25 13:40, Ricardo Ribalda wrote:
-> Hi Hans
+On Mon, Jun 02, 2025 at 12:18:33PM +0200, Ard Biesheuvel wrote:
+> On Mon, 2 Jun 2025 at 12:09, Will Deacon <will@kernel.org> wrote:
+> >
+> > On Fri, May 30, 2025 at 04:23:16PM +0200, Ard Biesheuvel wrote:
+> > > On Fri, 30 May 2025 at 15:38, Will Deacon <will@kernel.org> wrote:
+> > > >
+> > > > On Thu, May 29, 2025 at 09:35:08AM +0200, Ard Biesheuvel wrote:
+> > > > > From: Ard Biesheuvel <ardb@kernel.org>
+> > > > >
+> > > > > It turns out that the way LLD handles ASSERT()s in the linker script can
+> > > > > result in spurious failures, so disable them for the newly introduced
+> > > > > BSS symbol export checks.
+> > > > >
+> > > > > Link: https://github.com/ClangBuiltLinux/linux/issues/2094
+> > > > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> > > > > ---
+> > > > >  arch/arm64/kernel/image-vars.h | 6 ++++++
+> > > > >  1 file changed, 6 insertions(+)
+> > > > >
+> > > > > diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
+> > > > > index c5266430284b..86f088a16147 100644
+> > > > > --- a/arch/arm64/kernel/image-vars.h
+> > > > > +++ b/arch/arm64/kernel/image-vars.h
+> > > > > @@ -10,6 +10,10 @@
+> > > > >  #error This file should only be included in vmlinux.lds.S
+> > > > >  #endif
+> > > > >
+> > > > > +#if defined(CONFIG_LD_IS_LLD) && CONFIG_LLD_VERSION < 210000
+> > > > > +#define ASSERT(...)
+> > > > > +#endif
+> > > > > +
+> > > > >  #define PI_EXPORT_SYM(sym)           \
+> > > > >       __PI_EXPORT_SYM(sym, __pi_ ## sym, Cannot export BSS symbol sym to startup code)
+> > > > >  #define __PI_EXPORT_SYM(sym, pisym, msg)\
+> > > > > @@ -142,4 +146,6 @@ KVM_NVHE_ALIAS(kvm_protected_mode_initialized);
+> > > > >  _kernel_codesize = ABSOLUTE(__inittext_end - _text);
+> > > > >  #endif
+> > > > >
+> > > > > +#undef ASSERT
+> > > >
+> > > > What about the ASSERT()s at the end of vmlinux.lds.S? Are they not
+> > > > affected by the bug, for some reason?
+> > > >
+> > > > Also, even with this patch applied, I still see a link failure:
+> > > >
+> > > >   | ld.lld: error: assignment to symbol __init_end does not converge
+> > > >
+> > > > with the .config you sent me off-list.
+> > > >
+> > >
+> > > That is a different error that has been lurking for a while now; Arnd
+> > > occasionally hits it but I haven't seen any other reports of it. AIUI,
+> > > the issue is that INIT_IDMAP_DIR_PAGES and INIT_DIR_SIZE are defined
+> > > in terms of (_end - KIMAGE_VADDR), resulting in a circular dependency.
+> >
+> > Ok, I'll ignore that one for the moment, then...
+> >
+> > > The config in the kernel test robot's report [0] appears to build fine
+> > > with this patch applied.
+> > >
+> > >
+> > > [0] https://lore.kernel.org/all/202505261019.OUlitN6m-lkp@intel.com/T/#u
+> >
+> > ... but I'm still not sure why the ASSERT()s in vmlinux.lds.S are not
+> > affected. Is it just that we've not hit a .config which breaks with
+> > those yet, or is it something more fundamental than that?
 > 
-> On Mon, 2 Jun 2025 at 13:24, Hans de Goede <hansg@kernel.org> wrote:
->>
->> On 2-Jun-25 13:11, Ricardo Ribalda wrote:
->>> On Mon, 2 Jun 2025 at 13:07, Hans de Goede <hansg@kernel.org> wrote:
->>>>
->>>> Hi Ricardo,
->>>>
->>>> On 2-Jun-25 12:27, Ricardo Ribalda wrote:
->>>>> Hi Hans
->>>>>
->>>>> On Mon, 2 Jun 2025 at 12:11, Hans de Goede <hansg@kernel.org> wrote:
->>>>>>
->>>>>> Hi Ricardo,
->>>>>>
->>>>>> On 28-May-25 19:58, Ricardo Ribalda wrote:
->>>>>>> Right now we cannot support granular power saving on compat syscalls
->>>>>>> because the VIDIOC_*32 NRs defines are not accessible to drivers.
->>>>>>>
->>>>>>> Use the video_translate_cmd() helper to convert the compat syscall NRs
->>>>>>> into syscall NRs.
->>>>>>>
->>>>>>> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
->>>>>>> ---
->>>>>>>  drivers/media/usb/uvc/uvc_v4l2.c     | 9 ++-------
->>>>>>>  drivers/media/v4l2-core/v4l2-ioctl.c | 3 ++-
->>>>>>>  include/media/v4l2-ioctl.h           | 1 +
->>>>>>>  3 files changed, 5 insertions(+), 8 deletions(-)
->>>>>>>
->>>>>>> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
->>>>>>> index fcb1b79c214849ce4da96a86a688d777b32cc688..048ee7e01808c8944f9bd46e5df2931b9c146ad5 100644
->>>>>>> --- a/drivers/media/usb/uvc/uvc_v4l2.c
->>>>>>> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
->>>>>>> @@ -1282,15 +1282,10 @@ static long uvc_v4l2_pm_ioctl(struct file *file,
->>>>>>>  static long uvc_v4l2_unlocked_ioctl(struct file *file,
->>>>>>>                                   unsigned int cmd, unsigned long arg)
->>>>>>>  {
->>>>>>> -     /*
->>>>>>> -      * For now, we do not support granular power saving for compat
->>>>>>> -      * syscalls.
->>>>>>> -      */
->>>>>>> -     if (in_compat_syscall())
->>>>>>> -             return uvc_v4l2_pm_ioctl(file, cmd, arg);
->>>>>>> +     unsigned int converted_cmd = video_translate_cmd(cmd);
->>>>>>
->>>>>> It looks like something went wrong here and you did not test-compile this?
->>>>>> video_translate_cmd() is private to drivers/media/v4l2-core/v4l2-ioctl.c
->>>>>> so this should not compile.
->>>>>
->>>>> Hmm... Actually I am pretty sure that I tested it on real hardware.
->>>>>
->>>>> Did you miss the EXPORT_SYMBOL() on the patch?
->>>>
->>>> Ah yes I did miss that, sorry.
->>>
->>> My bad, I doubt it till the last second if I should split it or not :)
->>>
->>>>
->>>> For the next time please split core changes out into their own
->>>> separate patches.
->>>>
->>>> In this case I think the core changes are not necessary instead
->>>> you can just do:
->>>>
->>>>         unsigned int converted_cmd = cmd;
->>>>
->>>> #ifdef CONFIG_COMPAT
->>>>         converted_cmd = v4l2_compat_translate_cmd(cmd);
->>>> #endif
->>>
->>> I believe this should work as well:
->>>
->>> unsigned int converted_cmd = cmd;
->>> if (in_compat_syscall())
->>>   converted_cmd = v4l2_compat_translate_cmd(cmd);
->>>
->>> the compiler knows that CONFIG_COMPAT=n means in_compat_syscall() will
->>> be always fails.
->>>
->>> If it is ok with you (and it actually works :) ) I will use this version.
->>
->> I agree that that is cleaner/better and I also think it should work,
->> so lets go with that.
+> The former, as far as I can tell. The BSS patch just adds a fair
+> amount of ASSERT()s so the attack surface has become larger. And
+> perhaps those checks are more susceptible due to the fact that they
+> compare symbols living in different sections? But that is just
+> conjecture.
 > 
-> Actually, v4l2_compat_translate_cmd() does not seem to be EXPORT_SYMBOL()ed
+> > I'd have
+> > thought we'd need to so something like below (on top of your patch) to
+> > fix this issue properly.
+> >
 > 
-> So I still need to do some changes in the core.
-> (It also does not handle COMPAT_32BIT_TIME... but in this case it
-> seems to be the same).
-> 
-> 
-> Any preference between what to use: v4l2_compat_translate_cmd() vs
-> video_translate_cmd()?
+> Yes, it is the more thorough fix, but we'd lose coverage for those
+> ASSERT()s which are arguably more important than the ones I added.
 
-v4l2_compat_translate_cmd() is already exposed in include/media/v4l2-ioctl.h
-so I think it is best to go with that function.
+Alright, thanks. Let's go with what you have and I'll try to stick some
+of this rationale in the commit message.
 
-Regards,
-
-Hans
-
+Will
