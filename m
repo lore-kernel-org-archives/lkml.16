@@ -1,153 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19FDF2405FD;
-	Mon,  2 Jun 2025 14:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A3E2C324D;
+	Mon,  2 Jun 2025 14:03:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748873002; cv=none; b=TIoc6I/ZzqkYEKwje6n3Cz1wbi7ayECZmVejbztFer6fZFwy4cJJIcevudxMdr248sGx6bj9gH16sXsXJavgTOA7uQMbtkI70oTwJEf8LJZK3GPTKarBRbXyzlb45s5XsSQeUoWqRlRo11Cn8/xghapa0smATkGgNkvHMOvEer4=
+	t=1748873026; cv=none; b=Sm8ReNzmddVMAb8g7lXdFdw0L3XzaLlCqTCqaLHhLiaotwGS18Fxi1KyH6GorwVIJV9n3GS6izqjHlR0+9De3k9uq4sUvcRPwWzRQ29JJnS1/cRNGd3//h1dGVtrmAEXGFhpbeAU9h3VjzfDzWLRIEktUUFgnJ3cQrcR1ZS0ZDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748873002; c=relaxed/simple;
-	bh=WRTUFe5zAa4ehyUDpuZU2A396vCsORsejbqIXvfw4eM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Nb4VGUEJAOHQsg0VsNjeVJzcSPxpOMThnFWWyHJPBYLXv0wejvSm86t9Qig5FEpSPbY0i2Ddx2eYsMUPzS9h61h+o+TV04cVaV8MUVcz+wlIj1ZGvExfvk8A5auFY3hl9bmHLtdG0uyr+DsxbinAAHR9BtfEGn7t8TedRlu/Rns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d4O0muln; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748873026; c=relaxed/simple;
+	bh=b9nNn1ev6SAyx3B5wbNrYPZbZwaMytwqSzGjwZ2HvqE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rG+odd3CDAXEtGgIb5lDVhZcYns7KlbvzbzHa8GCGatecNMzkxO5Xr5Cx+9EotP2Y+tt5/VsZb663XVr4TyGAoJdvMLaKHu3KKlVu6zkU2xvPj6KJgEnXfhXlVVoBrq6mLPdtgaRlsC7zOJJWz4pic+8OCr9LcAgicJfIy4PP04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=fFumch0n; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d4O0muln"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A54F5C4CEF6;
-	Mon,  2 Jun 2025 14:03:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748873001;
-	bh=WRTUFe5zAa4ehyUDpuZU2A396vCsORsejbqIXvfw4eM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=d4O0mulna5zpsC6abaqW7ZzC6op2McHxHnBQVPqnQwhFOlxMsWRGVVWKLUXcf8a9c
-	 ohFTvdxrxc7Mw85ldB9a5qQBhmlJxwyhnI3A2zQS2IwOxh1AqxlItPsdXlfHF9ulzu
-	 yZjj/k8bPLr0m9dlKgzUOFoIHWUg7nPX5mPdQam6R5qUbEsyJjbdzRH7Kd5fCmDO1g
-	 ImOxd8OSI1VJKt5JelTrmpxO82lN+wO7Ddskf308gJgCtkZWMUf40TMHO5LBvSdWXa
-	 n88yEb3aCDXEDuEH26sbPdu8rmrtCoVVIHmhmaMURopXs2VOEuq283oc1xJH5V32Yj
-	 8ardsieZOx80w==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 02 Jun 2025 10:02:11 -0400
-Subject: [PATCH RFC v2 28/28] nfsd: add support for NOTIFY4_RENAME_ENTRY
- events
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="fFumch0n"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 60B32379;
+	Mon,  2 Jun 2025 16:03:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1748873021;
+	bh=b9nNn1ev6SAyx3B5wbNrYPZbZwaMytwqSzGjwZ2HvqE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fFumch0nweuTJnUb+hETViXzaiV1f273dnizHkNDKJyNmfWU4u4V3l8Mb0vPssbBI
+	 ZDCeRHLXjEdkn0BaBQhKb8FH4v9CNFEXzPqnnvhyhLt7xWTekHc3ON6dAVg1PR1+mT
+	 GK0BDR8rCFeLrE8LgcJf8GLkBiCVuoxgWl7PBQn0=
+Date: Mon, 2 Jun 2025 17:03:34 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+Cc: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Subject: Re: [PATCH v3 05/15] media: rcar-csi2: Move rcar2_calc_mbps()
+Message-ID: <20250602140334.GF11750@pendragon.ideasonboard.com>
+References: <20250530-rcar-streams-v3-0-026655df7138@ideasonboard.com>
+ <20250530-rcar-streams-v3-5-026655df7138@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250602-dir-deleg-v2-28-a7919700de86@kernel.org>
-References: <20250602-dir-deleg-v2-0-a7919700de86@kernel.org>
-In-Reply-To: <20250602-dir-deleg-v2-0-a7919700de86@kernel.org>
-To: Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- Chuck Lever <chuck.lever@oracle.com>, 
- Alexander Aring <alex.aring@gmail.com>, 
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
- Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>, 
- Ronnie Sahlberg <ronniesahlberg@gmail.com>, 
- Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, 
- Bharath SM <bharathsm@microsoft.com>, NeilBrown <neil@brown.name>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Jonathan Corbet <corbet@lwn.net>, Amir Goldstein <amir73il@gmail.com>, 
- Miklos Szeredi <miklos@szeredi.hu>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
- samba-technical@lists.samba.org, linux-doc@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2877; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=WRTUFe5zAa4ehyUDpuZU2A396vCsORsejbqIXvfw4eM=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBoPa7rYWh5WPyBqmd/mpYouoAaeCmO7iYpghNrL
- 2FZXSv49syJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaD2u6wAKCRAADmhBGVaC
- FRLAD/9Nrz7K/6BZh3J7GzB7TSD3Iu8DHCsSAkiig2bJ4KYuyJdr/v9vr7B1pSdCR+UN7OFPToX
- Cm6Lbv3HaVp1569JJ5aYfDQoaZhxDg0IQIajjWvorce9w+r9GbvoOvWAAe5BWBJugD1asZSxQqI
- wiB9z2fvE0r2MQwvvooV7GfDANY0anAIEkbYzEWIN4fecGqDWn9Frk/3sichSwRgrrOQuYz+o5d
- zVb+QPivMvVfFmkfe9v8NbGkSFuB40v84Ab3uWvui0QTRbag79oAdWGoo+EYsACgW8fPGxMiPad
- byakNt0nXAuGnwBKf8zV3emFCUt/PcIcK7soVpY1b5UAXn7lJ2Rn3TKIORKcLJEtIZwXmRxG78a
- WzbYtyBOGJie63ytKV43ixhN0S8UghXP0Spi7OB2nn7NxwqjT3E52Cb23yNABtf4fbkVKqd0aMm
- GEnYGTeTvDnC6gzAOYqd0lBVRwPURcrqbWe1kKqJ8fqTjRjJNTJQYtpEyKGWwGrsdpYMtG0AaFj
- QxE+AnC27WCcQlSJ6dk00isFmg8Sl9aFtZ/anoVk75oIoztNAr+3gbhRNzEs/XNEQV5iIfwWD07
- P4nOoepshUDmBrvKd/rsdpJLAH/J8sdZqByh/vnJfaGnhpB5RhXUSakmBErmo95bsnfmRExVT1j
- IS0rm0gaUtKGXmA==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250530-rcar-streams-v3-5-026655df7138@ideasonboard.com>
 
-Add support for RENAME events. Marshal the event into the notifylist4
-buffer and kick the callback handler.
+Hi Tomi,
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfsd/nfs4proc.c  |  2 +-
- fs/nfsd/nfs4state.c | 39 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 40 insertions(+), 1 deletion(-)
+Thank you for the patch.
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index a2996343fa0db33e014731f62aaa4e7c72506a76..4573c0651aa49df6089bcc4e5d40f45d46b1c499 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -2292,7 +2292,7 @@ nfsd4_verify(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	return status == nfserr_same ? nfs_ok : status;
- }
- 
--#define SUPPORTED_NOTIFY_MASK BIT(NOTIFY4_REMOVE_ENTRY|NOTIFY4_ADD_ENTRY)
-+#define SUPPORTED_NOTIFY_MASK BIT(NOTIFY4_REMOVE_ENTRY|NOTIFY4_ADD_ENTRY|NOTIFY4_RENAME_ENTRY)
- 
- static __be32
- nfsd4_get_dir_delegation(struct svc_rqst *rqstp,
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 9dc607e355d5839d80946d4983205c15ece6a71e..6333e95c075259af0c160eb130149c776e55f5a8 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -9722,6 +9722,45 @@ nfsd_handle_dir_event(u32 mask, const struct inode *dir, const void *data,
- 			ent->notify_vals.data = p;
- 			++nns->nns_idx;
- 		}
-+		if (mask & FS_RENAME) {
-+			struct dentry *new_dentry = fsnotify_data_dentry(data, data_type);
-+			static uint32_t notify_rename_bitmap = BIT(NOTIFY4_RENAME_ENTRY);
-+			struct notify4 *ent = &nns->nns_ent[nns->nns_idx];
-+			struct notify_rename4 nr = { };
-+			u8 *p = (u8 *)(stream->p);
-+			struct name_snapshot n;
-+			bool ret;
-+
-+			if (!(flc->flc_flags & FL_IGN_DIR_RENAME))
-+				continue;
-+
-+			/* FIXME: warn? */
-+			if (!new_dentry)
-+				continue;
-+
-+			nr.nrn_old_entry.nrm_old_entry.ne_file.len = name->len;
-+			nr.nrn_old_entry.nrm_old_entry.ne_file.data = (char *)name->name;
-+			nr.nrn_old_entry.nrm_old_entry.ne_attrs.attrmask.count = 1;
-+			nr.nrn_old_entry.nrm_old_entry.ne_attrs.attrmask.element = &zerobm;
-+			take_dentry_name_snapshot(&n, new_dentry);
-+			nr.nrn_new_entry.nad_new_entry.ne_file.len = n.name.len;
-+			nr.nrn_new_entry.nad_new_entry.ne_file.data = (char *)n.name.name;
-+			nr.nrn_new_entry.nad_new_entry.ne_attrs.attrmask.count = 1;
-+			nr.nrn_new_entry.nad_new_entry.ne_attrs.attrmask.element = &zerobm;
-+			ret = xdrgen_encode_notify_rename4(stream, &nr);
-+			release_dentry_name_snapshot(&n);
-+			if (!ret) {
-+				pr_warn("nfsd: unable to marshal notify_rename4 to xdr stream\n");
-+				continue;
-+			}
-+
-+			/* grab a notify4 in the buffer and set it up */
-+			ent->notify_mask.count = 1;
-+			ent->notify_mask.element = &notify_rename_bitmap;
-+			ent->notify_vals.len = (u8 *)stream->p - p;
-+			ent->notify_vals.data = p;
-+			++nns->nns_idx;
-+		}
- 
- 		if (nns->nns_idx)
- 			nfsd4_run_cb_notify(ncn);
+On Fri, May 30, 2025 at 04:50:34PM +0300, Tomi Valkeinen wrote:
+> Move the function so that it can call rcsi2_get_active_lanes() in the
+> following patch.
+
+I would add "No functional change intended." or something similar.
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+> ---
+>  drivers/media/platform/renesas/rcar-csi2.c | 66 +++++++++++++++---------------
+>  1 file changed, 33 insertions(+), 33 deletions(-)
+> 
+> diff --git a/drivers/media/platform/renesas/rcar-csi2.c b/drivers/media/platform/renesas/rcar-csi2.c
+> index 698eb0e60f32..8aca35096408 100644
+> --- a/drivers/media/platform/renesas/rcar-csi2.c
+> +++ b/drivers/media/platform/renesas/rcar-csi2.c
+> @@ -951,39 +951,6 @@ static int rcsi2_set_phypll(struct rcar_csi2 *priv, unsigned int mbps)
+>  	return 0;
+>  }
+>  
+> -static int rcsi2_calc_mbps(struct rcar_csi2 *priv, unsigned int bpp,
+> -			   unsigned int lanes)
+> -{
+> -	struct media_pad *remote_pad;
+> -	struct v4l2_subdev *source;
+> -	s64 freq;
+> -	u64 mbps;
+> -
+> -	if (!priv->remote)
+> -		return -ENODEV;
+> -
+> -	source = priv->remote;
+> -	remote_pad = &source->entity.pads[priv->remote_pad];
+> -
+> -	freq = v4l2_get_link_freq(remote_pad, bpp, 2 * lanes);
+> -	if (freq < 0) {
+> -		int ret = (int)freq;
+> -
+> -		dev_err(priv->dev, "failed to get link freq for %s: %d\n",
+> -			source->name, ret);
+> -
+> -		return ret;
+> -	}
+> -
+> -	mbps = div_u64(freq * 2, MEGA);
+> -
+> -	/* Adjust for C-PHY, divide by 2.8. */
+> -	if (priv->cphy)
+> -		mbps = div_u64(mbps * 5, 14);
+> -
+> -	return mbps;
+> -}
+> -
+>  static int rcsi2_get_active_lanes(struct rcar_csi2 *priv,
+>  				  unsigned int *lanes)
+>  {
+> @@ -1031,6 +998,39 @@ static int rcsi2_get_active_lanes(struct rcar_csi2 *priv,
+>  	return 0;
+>  }
+>  
+> +static int rcsi2_calc_mbps(struct rcar_csi2 *priv, unsigned int bpp,
+> +			   unsigned int lanes)
+> +{
+> +	struct media_pad *remote_pad;
+> +	struct v4l2_subdev *source;
+> +	s64 freq;
+> +	u64 mbps;
+> +
+> +	if (!priv->remote)
+> +		return -ENODEV;
+> +
+> +	source = priv->remote;
+> +	remote_pad = &source->entity.pads[priv->remote_pad];
+> +
+> +	freq = v4l2_get_link_freq(remote_pad, bpp, 2 * lanes);
+> +	if (freq < 0) {
+> +		int ret = (int)freq;
+> +
+> +		dev_err(priv->dev, "failed to get link freq for %s: %d\n",
+> +			source->name, ret);
+> +
+> +		return ret;
+> +	}
+> +
+> +	mbps = div_u64(freq * 2, MEGA);
+> +
+> +	/* Adjust for C-PHY, divide by 2.8. */
+> +	if (priv->cphy)
+> +		mbps = div_u64(mbps * 5, 14);
+> +
+> +	return mbps;
+> +}
+> +
+>  static int rcsi2_start_receiver_gen3(struct rcar_csi2 *priv,
+>  				     struct v4l2_subdev_state *state)
+>  {
 
 -- 
-2.49.0
+Regards,
 
+Laurent Pinchart
