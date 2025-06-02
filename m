@@ -1,238 +1,118 @@
-Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE54F21CA07
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 13:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B3519049B
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 13:12:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748869791; cv=none; b=Ik+xOdmtQp+mlx6MX13TUMwG01G48AJkzR4Ue/DUgr2JZ5IE3xcwMZr5fd0UmxjJCLbZYiWCjI6y3DTPhVAkv5fgJVXJWem7w5EEMM3oblMz3qMZDAVtdiq2HJTX/Tttf5mBQrrAY6cQwuHtPS4DccVecDrD0t75t+uVL6nLQ2M=
+	t=1748869924; cv=none; b=UQpI1v9l0KPivLen34HF1Z4qNPRHk41PDwm/HZYWgvH+y4XOK70NKIZpaVqAj070Ps8l+tJymswRLa1S+RVI5deClOE+EImcFxOhQDJ117vzeUkyTZuNgaUHfZXTMf3kNqQesiK33Z+qiDE23K6maCAiDwdFQgM3qSDaVafoNyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748869791; c=relaxed/simple;
-	bh=vzGBuCdfihg9w75hcf5Ev8vk+5pHu1WmF8As3yQt7gE=;
+	s=arc-20240116; t=1748869924; c=relaxed/simple;
+	bh=CX/1iDHPVy0wwNWQINXFXHbW7tkxcP7a0WOFWuDfRgY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WIxIK/fAKcvQcFSNrh7uF8YbMqx/I9/8mODxRTFFhqdT2/brXO5MJ7PXfB+6oz21/EVMoKXeg0vhFs0G3k3E6eJVnFDvuPE5ERZi+Cq3VIbma9zwGHl1O/eQM0NGC4bjcQK0SYF5VboJ0CQWOYaw34wMq/Cp//Zo6pt2J34u7TU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EbNA6a/I; arc=none smtp.client-ip=209.85.161.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=DZvGCGjYf32hryi5Bk8uJRsW+uUWKqW+2SBsYWBNDYVTsmXp7UbFFQOf9s9iPOpw+HC1FrHY5Gt8GHvMW6X3TNbNHS3y4w8okgsj1O6Wr2ZyW1LxkEJ36ymWl+taf5s2TnQsOnedBxV/cUiBrlFiqeTgrF7wkgxloQ3Tjs5P84A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FKGNOYzF; arc=none smtp.client-ip=209.85.210.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EbNA6a/I"
-Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-6060167af73so2937425eaf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 06:09:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FKGNOYzF"
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-735a9e65471so2649398a34.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 06:12:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748869788; x=1749474588; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748869921; x=1749474721; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=r/Jz2vE9PVNcBTZfUPANqH9BqmezRo4SDyod1ybA4Vo=;
-        b=EbNA6a/IbuncncrP001PINU0TraByiDw6PPFow4W4voMlvyGOvVSvMaZ0Czp5MH8RF
-         pT8dmBoASQTM5EgvPi0dxF3IJoswR3sxbZ2NDfGFM1J/OmyK7seW7IXhlJ8j5bnLhYJN
-         sjgA8euCtAOg/2tWXZm0cEMYkVkIIO6XZFI6psQ1ZdkKPL9MJaGOadFG7LoMzOyafId9
-         VjmNGD2QybmHtbv2hon6FFX8lPiZm6k3dQyFF29LGVPKOGt/b+JHzEanPmZZTGkWdwoL
-         M4/TeO5PXqcXWHJou9WBaaCNSuhcFzGuatygFhQWjpYn3QV3jSIV9lqsVPM1xoCbGGHv
-         7OSw==
+        bh=CX/1iDHPVy0wwNWQINXFXHbW7tkxcP7a0WOFWuDfRgY=;
+        b=FKGNOYzFxWSD8eO+5/EEi2aq04AxbBY0foZDHshun7bGXVSRUaOgkBLNgzi8dBSeVv
+         duXUyiEcGz1iR8wMFkM8QLP6vOSWakVhlM1ay7dotKKYmIp+II3l4CmNqC6wWEhnMZaJ
+         KGBE+cgGcb+GWYstbLV2rDN2rpBJkK9Mrvp72rmL7g7T7KIAb+KXsB4RQV8C4JGFB6zq
+         BYgHheyywqyGTR6cftiNW9ASpTyPMLgB0FaFy0mkQ9U9u2tqjZLEUWX0SfguWkdsNf8/
+         +KJAQt4hMYvcYyv8A7sA3hWUasFYFsf8cIEK4s/GNBxzwJjeylppS2FTQsokB3WDvC57
+         c6aQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748869788; x=1749474588;
+        d=1e100.net; s=20230601; t=1748869921; x=1749474721;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=r/Jz2vE9PVNcBTZfUPANqH9BqmezRo4SDyod1ybA4Vo=;
-        b=Pl6k7FW5NQcBDZ/WJcuHGPvHaLsTwRjCSX8uEUPSErBQfnEPbRsFP77FF/1GMUVJma
-         mdWoPpXpBF/d2k9WvECfsipr79GXbUAuwzjZc0sT4COvDX78dD3m9cbSxfUlkMSqSrP+
-         znws32z6QqU7xxJEhyVAbEy3Srh3H/s1vr4SVJhC7juTWwSqUFDQ7Q1zA2z+cbr0BqS2
-         fabSjsTjrJq2lbLd8+38OEizMpSqXZdc7MDQyndJdu3Vi9MlvpRoLpNRaZGI5TYFdXw4
-         PUvTqDss6WJba75O2x+WoGLBsFqzFUqcgC7oY1lG4TDV9ZkF1xL9DX375wur2iJKPwTZ
-         dWUw==
-X-Gm-Message-State: AOJu0YzB/vm6w0ltaMLW6cYlCSO8pv777Za4QDktNc5IKv7WoBJjHXKE
-	LBkMxi3gCulk0y+QLjQnkv3NNkzNMDzVizy6A0IcvwmwCiVeTYcd5obs73iNkFF/x2f/EYqkbJF
-	gI3RyRuKm5BIEJvnh5LP2sF+tgxCFL8Hudnbr5o7szutyGW0AO/O9JDo=
-X-Gm-Gg: ASbGncuLtplOZsEpU2sSReXz1qoxOkDTpa3NaU0ZOLucRnMwevxI7h74ZXUzLENiM/u
-	PAK9Egx67EJLHj03v7P42ElG8PRN4GSjrC5OMeqQQXYqHhHKYBa1lEvAESbO58/hD7YCKfVn8N2
-	MFRKmxj36KuKwfwm5ZKG7M9z0JKCKJpwcY25HwaqkDqIxP
-X-Google-Smtp-Source: AGHT+IHTjNSdjeXDfvmEB3lwO3Jgq/sm+fHVDUnof7ctPCj/IJHQJL4Bs6nWj0e4owqqx+Bh20vn5ZIiuDseUBkWHDE=
-X-Received: by 2002:a05:6820:1b13:b0:60e:d57b:ecc3 with SMTP id
- 006d021491bc7-60ed57c0312mr3586678eaf.0.1748869787784; Mon, 02 Jun 2025
- 06:09:47 -0700 (PDT)
+        bh=CX/1iDHPVy0wwNWQINXFXHbW7tkxcP7a0WOFWuDfRgY=;
+        b=ICJL8OP7qcEmXcgZnX6H7hoZc9lVvbBkxb7iqrd1RbLr8G3uk4WdQ8aEsOs5YW43g7
+         hXEya0wY8h6ImVVT7Eef1krw5Qri3mRDcmUUS5cTKOQTzEQBVvlX86KVOioFR6Yd5KFp
+         QJJWOwyJ1JQrIAjzOSqBSI2ToXDQelDb1dSU14cLKCsxWHZ1KD/BKWWlNjiZ8QQtVGeB
+         78E2AGf9UAffyEK3n2jzAibrMfB7/+dpKbZ6RFQ24PwppgkmFX8BeEjB+DEXCGrkdI4P
+         jyZS24VNZ8s7jxxSxUkiQCsvfT3RztzGSRWsxFxFilaHaJKIt2RjjG15RgipBulBy+cb
+         FRHw==
+X-Forwarded-Encrypted: i=1; AJvYcCW3URyTDK7Wso7qpaNoo6Ox3nEFgzR0n3eWAc/lU1yVSkEzyBgYM1RHwVGqtaIv+k1WkjpSe/l7cqNa2mc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywlzgaxv2A08q0kXQ/8yXsnYICD94ze4cEUxrvHyQFGvJqMIsat
+	FrjQyqQ9Au4XYIBJtmyGgZU2tOWxUWGXpzR8kiVQBiByG9OtZEtGRH1YEM0BYN7kMRSqSSBnY5h
+	HlZBagLXKMb6ARQwZghS+7Mn384e+0uWPDa4vLEcm
+X-Gm-Gg: ASbGncsqde47gp8dZY8ViiAeuDEEr+9TGtNc39bRarw4LS9NPCZIOF5VdYGNS+eQ16K
+	mkiCQ18i0PdfpkliViHqbAbx1iboH1+H/M2L/C1YHayM5CjPMLCIG6qpqQQf3SJhF7MmwOaKrzV
+	WbrzKSaAKoXdrhSJIgi1+Vu3MmRH7710WbpoyZvI3mFhl41qJZ9lnAIBBV1x8d8NPLDFHUo8iEF
+	w==
+X-Google-Smtp-Source: AGHT+IEK3NdAWPeTFVYBHSzHkCcveg60NzsP17so1/Ky5+fflhuk++j9utkshWE8HYwfmNNUeec1s+X9NdKXYBaSM/4=
+X-Received: by 2002:a05:6871:7288:b0:2e4:140:4b1f with SMTP id
+ 586e51a60fabf-2e9212bf665mr7498721fac.17.1748869921028; Mon, 02 Jun 2025
+ 06:12:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250602120452.2507084-1-jens.wiklander@linaro.org>
-In-Reply-To: <20250602120452.2507084-1-jens.wiklander@linaro.org>
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Date: Mon, 2 Jun 2025 15:09:35 +0200
-X-Gm-Features: AX0GCFupjJsZcZO2k5M59kOiSK2QNXg0EFsJQ9rIsXUhBmuRxKZl8Nat8RoQym0
-Message-ID: <CAHUa44F3a+iWYy2+uKasc7ob-6rbUojQe1GJmmVCtfWrPMTT7Q@mail.gmail.com>
-Subject: Re: [PATCH] optee: ffa: fix sleep in atomic context
-To: linux-kernel@vger.kernel.org, op-tee@lists.trustedfirmware.org
-Cc: Jerome Forissier <jerome.forissier@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>, 
-	Sumit Garg <sumit.garg@kernel.org>
+References: <20250526150141.3407433-1-bqe@google.com> <20250526150141.3407433-3-bqe@google.com>
+ <6835eaa4.c80a0220.2baf57.d14b@mx.google.com>
+In-Reply-To: <6835eaa4.c80a0220.2baf57.d14b@mx.google.com>
+From: Burak Emir <bqe@google.com>
+Date: Mon, 2 Jun 2025 15:11:48 +0200
+X-Gm-Features: AX0GCFtdTIfbdTAKN2zMtULvGWz-LoXbR6AP_RXTCxaczWNvuvasR0DxMgkYtdo
+Message-ID: <CACQBu=XJ+21amU2tEkDYFO00RWt8PvOXsU173ZO_y3u9xmWUHw@mail.gmail.com>
+Subject: Re: [PATCH v9 2/5] rust: add bindings for bitops.h
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-[CC Sumit Garg <sumit.garg@kernel.org>]
+On Tue, May 27, 2025 at 6:39=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
+rote:
+>
+> On Mon, May 26, 2025 at 03:01:31PM +0000, Burak Emir wrote:
+> > --- /dev/null
+> > +++ b/rust/helpers/bitops.c
+> > @@ -0,0 +1,23 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +#include <linux/bitops.h>
+> > +
+> > +void rust_helper___set_bit(unsigned int nr, unsigned long *addr)
+>
+> Why "unsigned int" instead of "unsigned long"? The C API uses
+> "unsigned long" and in the Rust API, you uses "usize" for `nbits` and
+> `index`s, therefore using "unsigned int" only introduces unnecessary "as
+> u32" casting IMO, am I missing something here?
 
-Cheers,
-Jens
+This is certainly a bit confusing to me.
 
-On Mon, Jun 2, 2025 at 2:05=E2=80=AFPM Jens Wiklander <jens.wiklander@linar=
-o.org> wrote:
->
-> The OP-TEE driver registers the function notif_callback() for FF-A
-> notifications. However, this function is called in an atomic context
-> leading to errors like this when processing asynchronous notifications:
->
->  | BUG: sleeping function called from invalid context at kernel/locking/m=
-utex.c:258
->  | in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 9, name: kworke=
-r/0:0
->  | preempt_count: 1, expected: 0
->  | RCU nest depth: 0, expected: 0
->  | CPU: 0 UID: 0 PID: 9 Comm: kworker/0:0 Not tainted 6.14.0-00019-g65753=
-6ebe0aa #13
->  | Hardware name: linux,dummy-virt (DT)
->  | Workqueue: ffa_pcpu_irq_notification notif_pcpu_irq_work_fn
->  | Call trace:
->  |  show_stack+0x18/0x24 (C)
->  |  dump_stack_lvl+0x78/0x90
->  |  dump_stack+0x18/0x24
->  |  __might_resched+0x114/0x170
->  |  __might_sleep+0x48/0x98
->  |  mutex_lock+0x24/0x80
->  |  optee_get_msg_arg+0x7c/0x21c
->  |  simple_call_with_arg+0x50/0xc0
->  |  optee_do_bottom_half+0x14/0x20
->  |  notif_callback+0x3c/0x48
->  |  handle_notif_callbacks+0x9c/0xe0
->  |  notif_get_and_handle+0x40/0x88
->  |  generic_exec_single+0x80/0xc0
->  |  smp_call_function_single+0xfc/0x1a0
->  |  notif_pcpu_irq_work_fn+0x2c/0x38
->  |  process_one_work+0x14c/0x2b4
->  |  worker_thread+0x2e4/0x3e0
->  |  kthread+0x13c/0x210
->  |  ret_from_fork+0x10/0x20
->
-> Fix this by adding work queue to process the notification in a
-> non-atomic context.
->
-> Fixes: d0476a59de06 ("optee: ffa_abi: add asynchronous notifications")
-> Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
-> ---
->  drivers/tee/optee/ffa_abi.c       | 41 ++++++++++++++++++++++++-------
->  drivers/tee/optee/optee_private.h |  2 ++
->  2 files changed, 34 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/tee/optee/ffa_abi.c b/drivers/tee/optee/ffa_abi.c
-> index f3af5666bb11..f9ef7d94cebd 100644
-> --- a/drivers/tee/optee/ffa_abi.c
-> +++ b/drivers/tee/optee/ffa_abi.c
-> @@ -728,12 +728,21 @@ static bool optee_ffa_exchange_caps(struct ffa_devi=
-ce *ffa_dev,
->         return true;
->  }
->
-> +static void notif_work_fn(struct work_struct *work)
-> +{
-> +       struct optee_ffa *optee_ffa =3D container_of(work, struct optee_f=
-fa,
-> +                                                  notif_work);
-> +       struct optee *optee =3D container_of(optee_ffa, struct optee, ffa=
-);
-> +
-> +       optee_do_bottom_half(optee->ctx);
-> +}
-> +
->  static void notif_callback(int notify_id, void *cb_data)
->  {
->         struct optee *optee =3D cb_data;
->
->         if (notify_id =3D=3D optee->ffa.bottom_half_value)
-> -               optee_do_bottom_half(optee->ctx);
-> +               queue_work(optee->ffa.notif_wq, &optee->ffa.notif_work);
->         else
->                 optee_notif_send(optee, notify_id);
->  }
-> @@ -817,9 +826,11 @@ static void optee_ffa_remove(struct ffa_device *ffa_=
-dev)
->         struct optee *optee =3D ffa_dev_get_drvdata(ffa_dev);
->         u32 bottom_half_id =3D optee->ffa.bottom_half_value;
->
-> -       if (bottom_half_id !=3D U32_MAX)
-> +       if (bottom_half_id !=3D U32_MAX) {
->                 ffa_dev->ops->notifier_ops->notify_relinquish(ffa_dev,
->                                                               bottom_half=
-_id);
-> +               destroy_workqueue(optee->ffa.notif_wq);
-> +       }
->         optee_remove_common(optee);
->
->         mutex_destroy(&optee->ffa.mutex);
-> @@ -835,6 +846,13 @@ static int optee_ffa_async_notif_init(struct ffa_dev=
-ice *ffa_dev,
->         u32 notif_id =3D 0;
->         int rc;
->
-> +       INIT_WORK(&optee->ffa.notif_work, notif_work_fn);
-> +       optee->ffa.notif_wq =3D create_workqueue("optee_notification");
-> +       if (!optee->ffa.notif_wq) {
-> +               rc =3D -EINVAL;
-> +               goto err;
-> +       }
-> +
->         while (true) {
->                 rc =3D ffa_dev->ops->notifier_ops->notify_request(ffa_dev=
-,
->                                                                 is_per_vc=
-pu,
-> @@ -851,19 +869,24 @@ static int optee_ffa_async_notif_init(struct ffa_de=
-vice *ffa_dev,
->                  * notifications in that case.
->                  */
->                 if (rc !=3D -EACCES)
-> -                       return rc;
-> +                       goto err_wq;
->                 notif_id++;
->                 if (notif_id >=3D OPTEE_FFA_MAX_ASYNC_NOTIF_VALUE)
-> -                       return rc;
-> +                       goto err_wq;
->         }
->         optee->ffa.bottom_half_value =3D notif_id;
->
->         rc =3D enable_async_notif(optee);
-> -       if (rc < 0) {
-> -               ffa_dev->ops->notifier_ops->notify_relinquish(ffa_dev,
-> -                                                             notif_id);
-> -               optee->ffa.bottom_half_value =3D U32_MAX;
-> -       }
-> +       if (rc < 0)
-> +               goto err_rel;
-> +
-> +       return 0;
-> +err_rel:
-> +       ffa_dev->ops->notifier_ops->notify_relinquish(ffa_dev, notif_id);
-> +err_wq:
-> +       destroy_workqueue(optee->ffa.notif_wq);
-> +err:
-> +       optee->ffa.bottom_half_value =3D U32_MAX;
->
->         return rc;
->  }
-> diff --git a/drivers/tee/optee/optee_private.h b/drivers/tee/optee/optee_=
-private.h
-> index dc0f355ef72a..9526087f0e68 100644
-> --- a/drivers/tee/optee/optee_private.h
-> +++ b/drivers/tee/optee/optee_private.h
-> @@ -165,6 +165,8 @@ struct optee_ffa {
->         /* Serializes access to @global_ids */
->         struct mutex mutex;
->         struct rhashtable global_ids;
-> +       struct workqueue_struct *notif_wq;
-> +       struct work_struct notif_work;
->  };
->
->  struct optee;
-> --
-> 2.43.0
->
+As Jann points out here [1] the expand to asm macros arch___set_bit,
+where `nr` is indeed unsigned long.
+
+There is also the constraint that a bitmap's length must be shorter
+than INT32_MAX bits, but that does not matter.
+
+Being consistent with the C API, including parameter names, is what we
+should do, so fixing this.
+I found the underlying C API is just hard to find for these macros.
+Thanks for catching.
+
+cheers
+- Burak
+
+[1] https://lore.kernel.org/rust-for-linux/CAG48ez1NM7B8Vk7GOwhsitCipmfHi9e=
+K6JNb3ve8aR4m8Cj0gA@mail.gmail.com/
