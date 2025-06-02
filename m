@@ -1,204 +1,167 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80142C324F
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 18:23:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80CDD17B402
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 18:26:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748888584; cv=none; b=gFRiOZ9Z2nEudsxG4egbpw9fsLts20u3c9djQWQBOqqwhFawB3Dea/TGRNtROnwdXNdqwoeDHegE3SbcbjzbkwIgUmtxSYhAi82X/WqT333ram5yt6ptAv2jv+Ke+ZvkQzKEs+njXzmXUA3fc86TPP7PCJ0agujKJxOwWQ3svYo=
+	t=1748888802; cv=none; b=eIeMstjtQX6qYAcrU+4sne2fnnej42uYQzaqxWJmTLotvqH3iZqxiAQjY5Y1MEeUspe9HlUCeik6YiYILsmn1MpQfb8JrAQsx1zmJjowBBhitI5VXXhOjiKNl/JKNIMeC5uIyiJ14VVRjvHkSbhs7HPSNYkaNEH2o3dbVVQ1cAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748888584; c=relaxed/simple;
-	bh=SkR42VDx2Oy80BQJXmYk3c4VR1efkcht6Jf1+Jj8/jA=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=KKqG2PbCgNTVriHUbupejDptgK/59kQyKXt31r5QyqUnqRok9l5bxwaj7mRLZD62q0zMMSzf1PQMOV68lCMPUAuYWKhofWT9aG6DrGOCARL9e7pzoP5oGSnx/HebYZElfkLcLaXWwmlvtZwSw7wrGcUV9FgYvOhuQxPuxMkLTsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3dda4148039so35578655ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 11:23:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748888582; x=1749493382;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8a1j4nUpgHbZez4/dz7WcDR7zyX2DRy99D/9giKR994=;
-        b=No9SffA7VK2w8C4mD/q4mGc0LwxUvcBWPEu4Z4c7M2quOdM2xPRf5A+AFrC/OkuGE6
-         VjT2wMMKtS7CMFbCpOirpCYllAQcN9vd/wv/e7i4CcaX4FMPbOrEY1nlJmVg6omO1bKi
-         pbqPnSuJjDMVrfdquVCqBx+a796v4Alu1jD2gWwfadeaw86+HYEZ522k283mtZzPqtKB
-         mA69c2UPDh18T8uLbrmywSt/q8MJlvAVT0gy8cf2ZUNK/K5/dvJUsx3dy7Dz7F60ysew
-         ct3Zm+6rYTcYY9rmA30CNp8BheJx3zjaEl4bmIoA80AL3mi7kChZXPvh6v5sTYHyf/MR
-         uDoQ==
-X-Gm-Message-State: AOJu0Yz0GrRXSuFoDACUu2PmPu1ggdp1R+GavmPw6N9ywyEn5v1x4R9P
-	PSfCHAY7i2LSCUY9NNGLI8of6KQoAtQ240mHTKOx8O8FfPrC0+boI+VQmWv8ayUFK3dPc7ky5jC
-	HcN4lPi1X0ijfDDs1PrZUjFyKVsKqJhMCBjmXoA30AaL6a3/GMuXuNp5IreI=
-X-Google-Smtp-Source: AGHT+IFClhG1MCPE8k+gdayp03dJmcIzXu1R42iaGg8kaQv1Kk+/7pu+ULx0cjCC2cBPDyaVRfzYft3TtYrn6fip84cRUx0JTnt0
+	s=arc-20240116; t=1748888802; c=relaxed/simple;
+	bh=0kJ2WRrP/CIxdNzwnMJMxwH/M4XiX0kPqYG+skLGwx8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=J3MfPWYJA1jfh6eF9id+V31qPfescP5hH5slRJV6Z+/Ij+foBbROZ9RhmVfij+XagX+7DcOzzDDhHXs+R0nYSxW66BINtsJKo947sTmenocsOZmOPwPFcew3Fx/nlspdidygnePvyHugktopl6HNzGwieXxtfjlAdXD/33553Iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=sDZBrXrk; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="sDZBrXrk"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id D4E95240028
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 20:26:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1748888790; bh=0kJ2WRrP/CIxdNzwnMJMxwH/M4XiX0kPqYG+skLGwx8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:Message-Id:To:Cc:From;
+	b=sDZBrXrkwhjYUQAtZBla/ETKw+3nqv8/GGtM1IICEpOfXHI5VEHK24AVWJIE4/ukd
+	 UxRqNKrxIozPMMsj8wnCjUwcZKnQIamaQFyiZkV/SIzsCybINecq3UQbpwcNRP0o24
+	 orXTWXI+iLzV6144vAtSAuBU6IXPXXivQaGd5M3UDya3b6PbRDu93CbpGEjVgitQK4
+	 opCA+uM6GHu+wECj8GAQwHSJjrSAETumP1ZQHuypnBWQCu7qSwnSDA5BFUA5lS2Y6M
+	 jcVCdgh/w5iTs5/bZeU9YxSIt+jD85WznjgJseYyA3A8XjD7C/zcpr8zuBFI+A2CNp
+	 EBRiOIz4TqnDw==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4bB2Nj5PdSz9rxR;
+	Mon,  2 Jun 2025 20:26:29 +0200 (CEST)
+From: Charalampos Mitrodimas <charmitro@posteo.net>
+Date: Mon, 02 Jun 2025 18:26:17 +0000
+Subject: [PATCH] usb: misc: apple-mfi-fastcharge: Make power supply names
+ unique
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:b43:b0:3dc:875e:ed7e with SMTP id
- e9e14a558f8ab-3dd9cacc9f8mr152830915ab.12.1748888581971; Mon, 02 Jun 2025
- 11:23:01 -0700 (PDT)
-Date: Mon, 02 Jun 2025 11:23:01 -0700
-In-Reply-To: <CABBYNZLftvChUK9dnrKdMscHHguTxjf-EZLf_=r-_QsDokH11A@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <683dec05.a00a0220.d8eae.0057.GAE@google.com>
-Subject: Re: [syzbot] [bluetooth?] KASAN: slab-use-after-free Read in
- mgmt_remove_adv_monitor_complete (3)
-From: syzbot <syzbot+feb0dc579bbe30a13190@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250602-apple-mfi-fastcharge-duplicate-sysfs-v1-1-5d84de34fac6@posteo.net>
+X-B4-Tracking: v=1; b=H4sIAMjsPWgC/x2NQQqDQAwAvyI5G1jXKuJXioetJhpQu2y2pSL+v
+ cHjwDBzglISUuiLExJ9ReW9G1RlAeMS9plQJmPwzjeudR5DjCvhxoIcNJuTzJk+cZUxZEI9lBU
+ dcd21j5evuANLxUQsv3vzHK7rDwlAdCt2AAAA
+X-Change-ID: 20250602-apple-mfi-fastcharge-duplicate-sysfs-0ef3864b21f8
+To: Bastien Nocera <hadess@hadess.net>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Alan Stern <stern@rowland.harvard.edu>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Charalampos Mitrodimas <charmitro@posteo.net>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748888780; l=3417;
+ i=charmitro@posteo.net; s=20250526; h=from:subject:message-id;
+ bh=0kJ2WRrP/CIxdNzwnMJMxwH/M4XiX0kPqYG+skLGwx8=;
+ b=1pF/mprj1Qox2fiDlRv8AmhHjDakDfBE0ewmUKN6MVze2/fPeTZen3GPaDphlbZ7baNuGvWcH
+ ndneKFKcKZIDSd0cUk1AcVS4n5aCqMYhQgLlt7LdBBVdFw1rocG9Xcz
+X-Developer-Key: i=charmitro@posteo.net; a=ed25519;
+ pk=PNHEh5o1dcr5kfKoZhfwdsfm3CxVfRje7vFYKIW0Mp4=
 
-Hello,
+When multiple Apple devices are connected concurrently, the
+apple-mfi-fastcharge driver fails to probe the subsequent devices with
+the following error:
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-KASAN: slab-use-after-free Read in mgmt_remove_adv_monitor_complete
+    sysfs: cannot create duplicate filename '/class/power_supply/apple_mfi_fastcharge'
+    apple-mfi-fastcharge 5-2.4.3.3: probe of 5-2.4.3.3 failed with error -17
 
-Bluetooth: hci0: unexpected cc 0x0c23 length: 249 > 4
-Bluetooth: hci0: unexpected cc 0x0c38 length: 249 > 2
-==================================================================
-BUG: KASAN: slab-use-after-free in mgmt_remove_adv_monitor_complete+0xe5/0x5a0 net/bluetooth/mgmt.c:5399
-Read of size 8 at addr ffff8880115a3aa0 by task kworker/u5:4/5846
+This happens because the driver uses a fixed power supply name
+("apple_mfi_fastcharge") for all devices, causing a sysfs name
+conflict when a second device is connected.
 
-CPU: 0 UID: 0 PID: 5846 Comm: kworker/u5:4 Not tainted 6.15.0-syzkaller-gcd2e103d57e5-dirty #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: hci0 hci_cmd_sync_work
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0xd2/0x2b0 mm/kasan/report.c:521
- kasan_report+0x118/0x150 mm/kasan/report.c:634
- mgmt_remove_adv_monitor_complete+0xe5/0x5a0 net/bluetooth/mgmt.c:5399
- hci_cmd_sync_work+0x261/0x3a0 net/bluetooth/hci_sync.c:334
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xade/0x17b0 kernel/workqueue.c:3321
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
- kthread+0x711/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
+Fix this by generating unique names using the USB bus and device
+number (e.g., "apple_mfi_fastcharge_5-12"). This ensures each
+connected device gets a unique power supply entry in sysfs.
 
-Allocated by task 13316:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
- poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
- __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:394
- kasan_kmalloc include/linux/kasan.h:260 [inline]
- __kmalloc_cache_noprof+0x230/0x3d0 mm/slub.c:4358
- kmalloc_noprof include/linux/slab.h:905 [inline]
- kzalloc_noprof include/linux/slab.h:1039 [inline]
- mgmt_pending_new+0x65/0x1e0 net/bluetooth/mgmt_util.c:269
- mgmt_pending_add+0x35/0x140 net/bluetooth/mgmt_util.c:296
- remove_adv_monitor+0x103/0x1b0 net/bluetooth/mgmt.c:5447
- hci_mgmt_cmd+0x9c9/0xef0 net/bluetooth/hci_sock.c:1719
- hci_sock_sendmsg+0x6ca/0xef0 net/bluetooth/hci_sock.c:1839
- sock_sendmsg_nosec net/socket.c:712 [inline]
- __sock_sendmsg+0x219/0x270 net/socket.c:727
- sock_write_iter+0x258/0x330 net/socket.c:1131
- new_sync_write fs/read_write.c:593 [inline]
- vfs_write+0x54b/0xa90 fs/read_write.c:686
- ksys_write+0x145/0x250 fs/read_write.c:738
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+The change requires storing a copy of the power_supply_desc structure
+in the per-device mfi_device struct, since the name pointer needs to
+remain valid for the lifetime of the power supply registration.
 
-Freed by task 13322:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
- kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:576
- poison_slab_object mm/kasan/common.c:247 [inline]
- __kasan_slab_free+0x62/0x70 mm/kasan/common.c:264
- kasan_slab_free include/linux/kasan.h:233 [inline]
- slab_free_hook mm/slub.c:2380 [inline]
- slab_free mm/slub.c:4642 [inline]
- kfree+0x18e/0x440 mm/slub.c:4841
- mgmt_pending_free net/bluetooth/mgmt_util.c:311 [inline]
- mgmt_pending_foreach+0x30d/0x380 net/bluetooth/mgmt_util.c:257
- mgmt_index_removed+0x112/0x2f0 net/bluetooth/mgmt.c:9359
- hci_sock_bind+0xbe9/0x1000 net/bluetooth/hci_sock.c:1314
- __sys_bind_socket net/socket.c:1810 [inline]
- __sys_bind+0x2c6/0x3e0 net/socket.c:1841
- __do_sys_bind net/socket.c:1846 [inline]
- __se_sys_bind net/socket.c:1844 [inline]
- __x64_sys_bind+0x7a/0x90 net/socket.c:1844
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Fixes: 249fa8217b84 ("USB: Add driver to control USB fast charge for iOS devices")
+Signed-off-by: Charalampos Mitrodimas <charmitro@posteo.net>
+---
+ drivers/usb/misc/apple-mfi-fastcharge.c | 24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
-The buggy address belongs to the object at ffff8880115a3a80
- which belongs to the cache kmalloc-96 of size 96
-The buggy address is located 32 bytes inside of
- freed 96-byte region [ffff8880115a3a80, ffff8880115a3ae0)
+diff --git a/drivers/usb/misc/apple-mfi-fastcharge.c b/drivers/usb/misc/apple-mfi-fastcharge.c
+index ac8695195c13c8752076e4391ac81a9da3780c44..8e852f4b8262e6e8fcd33883be8c5696f19b9ee9 100644
+--- a/drivers/usb/misc/apple-mfi-fastcharge.c
++++ b/drivers/usb/misc/apple-mfi-fastcharge.c
+@@ -44,6 +44,7 @@ MODULE_DEVICE_TABLE(usb, mfi_fc_id_table);
+ struct mfi_device {
+ 	struct usb_device *udev;
+ 	struct power_supply *battery;
++	struct power_supply_desc battery_desc;
+ 	int charge_type;
+ };
+ 
+@@ -178,6 +179,7 @@ static int mfi_fc_probe(struct usb_device *udev)
+ {
+ 	struct power_supply_config battery_cfg = {};
+ 	struct mfi_device *mfi = NULL;
++	char *battery_name;
+ 	int err;
+ 
+ 	if (!mfi_fc_match(udev))
+@@ -187,23 +189,38 @@ static int mfi_fc_probe(struct usb_device *udev)
+ 	if (!mfi)
+ 		return -ENOMEM;
+ 
++	battery_name = kasprintf(GFP_KERNEL, "apple_mfi_fastcharge_%d-%d",
++				 udev->bus->busnum, udev->devnum);
++	if (!battery_name) {
++		err = -ENOMEM;
++		goto err_free_mfi;
++	}
++
++	mfi->battery_desc = apple_mfi_fc_desc;
++	mfi->battery_desc.name = battery_name;
++
+ 	battery_cfg.drv_data = mfi;
+ 
+ 	mfi->charge_type = POWER_SUPPLY_CHARGE_TYPE_TRICKLE;
+ 	mfi->battery = power_supply_register(&udev->dev,
+-						&apple_mfi_fc_desc,
++						&mfi->battery_desc,
+ 						&battery_cfg);
+ 	if (IS_ERR(mfi->battery)) {
+ 		dev_err(&udev->dev, "Can't register battery\n");
+ 		err = PTR_ERR(mfi->battery);
+-		kfree(mfi);
+-		return err;
++		goto err_free_name;
+ 	}
+ 
+ 	mfi->udev = usb_get_dev(udev);
+ 	dev_set_drvdata(&udev->dev, mfi);
+ 
+ 	return 0;
++
++err_free_name:
++	kfree(battery_name);
++err_free_mfi:
++	kfree(mfi);
++	return err;
+ }
+ 
+ static void mfi_fc_disconnect(struct usb_device *udev)
+@@ -213,6 +230,7 @@ static void mfi_fc_disconnect(struct usb_device *udev)
+ 	mfi = dev_get_drvdata(&udev->dev);
+ 	if (mfi->battery)
+ 		power_supply_unregister(mfi->battery);
++	kfree(mfi->battery_desc.name);
+ 	dev_set_drvdata(&udev->dev, NULL);
+ 	usb_put_dev(mfi->udev);
+ 	kfree(mfi);
 
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x115a3
-ksm flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 00fff00000000000 ffff88801a441280 ffffea0000681b00 dead000000000003
-raw: 0000000000000000 0000000000200020 00000000f5000000 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 0, migratetype Unmovable, gfp_mask 0x252800(GFP_NOWAIT|__GFP_NORETRY|__GFP_COMP|__GFP_THISNODE), pid 5851, tgid 5851 (syz-executor), ts 158761816277, free_ts 158220175343
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x240/0x2a0 mm/page_alloc.c:1704
- prep_new_page mm/page_alloc.c:1712 [inline]
- get_page_from_freelist+0x21e4/0x22c0 mm/page_alloc.c:3669
- __alloc_pages_slowpath+0x2fe/0xce0 mm/page_alloc.c:4490
- __alloc_frozen_pages_noprof+0x319/0x370 mm/page_alloc.c:4972
- alloc_slab_page mm/slub.c:2452 [inline]
- allocate_slab+0x65/0x3b0 mm/slub.c:2618
- new_slab mm/slub.c:2672 [inline]
- ___slab_alloc+0xbfc/0x1480 mm/slub.c:3858
- __slab_alloc mm/slub.c:3948 [inline]
- __slab_alloc_node mm/slub.c:4023 [inline]
- slab_alloc_node mm/slub.c:4184 [inline]
- __kmalloc_cache_node_noprof+0x29a/0x3d0 mm/slub.c:4366
- kmalloc_node_noprof include/linux/slab.h:928 [inline]
- alloc_node_nr_active kernel/workqueue.c:4874 [inline]
- __alloc_workqueue+0x6a4/0x1b70 kernel/workqueue.c:5728
- alloc_workqueue+0xd4/0x210 kernel/workqueue.c:5788
- ieee80211_register_hw+0x2c5f/0x4120 net/mac80211/main.c:1491
- mac80211_hwsim_new_radio+0x2f0e/0x5340 drivers/net/wireless/virtual/mac80211_hwsim.c:5565
- hwsim_new_radio_nl+0xea4/0x1b10 drivers/net/wireless/virtual/mac80211_hwsim.c:6249
- genl_family_rcv_msg_doit+0x215/0x300 net/netlink/genetlink.c:1115
- genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
- genl_rcv_msg+0x60e/0x790 net/netlink/genetlink.c:1210
- netlink_rcv_skb+0x205/0x470 net/netlink/af_netlink.c:2534
- genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
-page last free pid 5977 tgid 5977 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1248 [inline]
- __free_frozen_pages+0xc71/0xe70 mm/page_alloc.c:2706
- vfree+0x25a/0x400 mm/vmalloc.c:3426
- delayed_vfree_work+0x55/0x80 mm/vmalloc.c:3345
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xade/0x17b0 kernel/workqueue.c:3321
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
- kthread+0x711/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+---
+base-commit: cd2e103d57e5615f9bb027d772f93b9efd567224
+change-id: 20250602-apple-mfi-fastcharge-duplicate-sysfs-0ef3864b21f8
 
-Memory state around the buggy address:
- ffff8880115a3980: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
- ffff8880115a3a00: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
->ffff8880115a3a80: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
-                               ^
- ffff8880115a3b00: 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc
- ffff8880115a3b80: 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc
-==================================================================
-
-
-Tested on:
-
-commit:         cd2e103d Merge tag 'hardening-v6.16-rc1-fix1-take2' of..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1032ac82580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6acfdd5e5c8ef3d0
-dashboard link: https://syzkaller.appspot.com/bug?extid=feb0dc579bbe30a13190
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1182ac82580000
+Best regards,
+-- 
+Charalampos Mitrodimas <charmitro@posteo.net>
 
