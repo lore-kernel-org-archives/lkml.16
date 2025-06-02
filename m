@@ -1,103 +1,82 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91730232392;
-	Mon,  2 Jun 2025 14:19:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B25620E6E3
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 14:19:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748873950; cv=none; b=kpx4SizjdPF/xrroRV+p3F7yScQCihxD2waJuZozmdbDZ5VolebOQ4/ZeBisgvaZZqTK88IX7Bo8jT3R2QB7hAVVFjUMdWAKLchm2rmYoo/6QohQ7ma5UbC2Z3jQoQ31okoLXSHehBlxAF3fvMikkoy0gPRVUMIqzk/LpYphPKM=
+	t=1748873987; cv=none; b=m4I0AJGbaP6WJOsMSsY5VawpbVZ040iBeCBkJBwNHXP2VGEagNu9c7BXyUBy5yFHRSHAI0/BAWGi3FwAaSRFBNThsnQ/siA6Z/sgOxszI0owxqbG1zk+uLfz/ThcP/NEGfv6KIhYNOhxj0fnr6qfGxC6+IKER6K0wqYo1ANR1Xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748873950; c=relaxed/simple;
-	bh=4r5kVS0cVcftYfc+NQooxIRzaDVLwYDBfYMx1CRa7dI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D+LfmB9WddfgpVeJ/pC0SN9EAgYfE9PEC/HEgKbwYEL4+C7ECLPRO6xBKSK0SeP9fi7sXv+Dn3wMfM7wldJ8mQdUauTDxvj683q6g9BRBDx82ruLFJc8KKH8dCK2r/o7tjfNhoIuzDdGzosCrfiKueXjyV/WLlUE3yY74qYTTDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D24PmkGa; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748873987; c=relaxed/simple;
+	bh=Ev6iNL22PFHIL/H7k7mv5eeLl0WdLTXXN8qyBlvf9KQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=hs0uB05DJ0wZJqRkaLEM6+1xDigNuAaBWalCM75k9dSBqlXprWfCobbgFbycOo6XbmXoQ7mvsU0ALTwsrzT6K2pDL8cbFor9et2NaKUKSjGe7/6TkBU5vGqh+oSestGJONtBSGFtmgwE3uRd/+23J0gzdGQXTeiin8wGs2lp+zI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Yhcjc4Dx; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D24PmkGa"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-309f26c68b8so630540a91.2;
-        Mon, 02 Jun 2025 07:19:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748873948; x=1749478748; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4r5kVS0cVcftYfc+NQooxIRzaDVLwYDBfYMx1CRa7dI=;
-        b=D24PmkGa71DbYYwF8A26zUM8LBs/9OAa7vw8OsILmgSXhq7jZ04zNngKptdNH2J36h
-         Wh3QmMsrYxxve6HCnOkPdsFLfjWatR3x8Gi4L2OPJthKRI6Iot5SbULYt9Q2omPdNB1b
-         vzQ4Z98zRppB/RT9lsJjvDKVX4VQqptMuRHxSRQgmQjk3IaANuN1/U/yLAsEN4VWH4Fb
-         ZZdIkEomv9Mat6GgdMN+UYGgzRQ/MzMmKEq9Yb/ffoaAAozgLKvy9hKFVAnuia5SImT8
-         6Alzy+OWWrD+ksmZu/Fb74BJQvAnaWLRXuFLufsxl7egDbB6rw47fPW1GwQ1Qdx1q+ud
-         hW2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748873948; x=1749478748;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4r5kVS0cVcftYfc+NQooxIRzaDVLwYDBfYMx1CRa7dI=;
-        b=b9PS0hm1AUjPjH1svXSzIGKtjAGr4a8hTR40vh3NyIqa9efj0qqw52R1ZraGAiHKas
-         QSd0FZFD4fAbkeRR1JPNOZXP5wdwsLNzp2M29oVVtZv0ANJg4upIx8SEur85F2rh584g
-         wdiId7r+raIQJDj3Yc8GFCHjqORrWgPc7iZMJXohUN/tlMlRrbMCbF5FCv4F8rRpTVnE
-         CE17Ic9kGVpeg7tbryIuInkvfbGt6SX1WKB93Z/KeUkNdvRAFTS98eOfj6cgiDb6bC/5
-         PEBRgHQUbxwak9fIvHLeDfh5/ZALRrA+zxYZcP+orZd9Dok7LWVmDVvbrjJ5ovsypIST
-         6dAA==
-X-Forwarded-Encrypted: i=1; AJvYcCU8D8riZldFeFH8HEbZSP9+0N1dFJnw/VLDG7DthW/yKNum0jqzS5RiCa8IXwJyJS7+Ll2Bzt8l4SovWDI=@vger.kernel.org, AJvYcCU8ICVbVgpTZPf/LZIJKpC35QPDpxtg7RPLM0YBX0rxLmyvmIS7PJBnJUf3MGTxMZrFNplXoi5Tw8VUlckdqYw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeXFq1bF1pU6bENNjIw4QnVM4WWhMd49t/rI3Sp2Uk2F8qtrSC
-	3ZJDUIIDQNiFh/3Y09m19Jz+Yn6VxowtqxtnYBJODi2ajhBf0FlM30wdP9ExGNDGF3LrL3mQ2f8
-	/rOplKv5Wd1yOYc8iNJcnjn9uWCMP7DI=
-X-Gm-Gg: ASbGncuWT7bExFb+TnaUC5xKwxNhFB4bUmdeKb3RwZFmPms29pluSKHti8QoER/JfQ7
-	nI0gppPz2WLIe387uvrILS2NARNwkXEHdSGHKVKxqQbsTVLcdw7G6rpxIWAq2TBLeFn5fAQx+bw
-	31G0B33jEcDTExUNTDFk07O0Sqy5HIyFft
-X-Google-Smtp-Source: AGHT+IEehKRNHyVZe47z7GmYH67BYU3GNY9rA5Q2JBwitGzadJzgij5rgUglQAP1qA85fQsMaX3yjcM0LxU7QFqsBwg=
-X-Received: by 2002:a17:90b:51c8:b0:312:e9d:3fff with SMTP id
- 98e67ed59e1d1-3124d47f2cemr7334931a91.1.1748873947655; Mon, 02 Jun 2025
- 07:19:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Yhcjc4Dx"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 98B1143917;
+	Mon,  2 Jun 2025 14:19:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1748873977;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ev6iNL22PFHIL/H7k7mv5eeLl0WdLTXXN8qyBlvf9KQ=;
+	b=Yhcjc4DxVpktZG2sfeGOKAu/dtCMwVl5FNgFFfgFjN3slTiJUtJJF+ikpi/fX3QH+OYtKA
+	9KL9rvadfV5+7ugK0PxfdB8Zj8yPYzfxIQ3WbjmPn8JeJCRXuvq0c5Ret7yYt95QYsuny3
+	0uemBmiFPhwloDZrclMZfGRm5HEvxyzHIiFB2rp4ltO2HWaSMYUuPvPLdh6FXpDq3EQf/u
+	UCT/Ywvwgng4Z8SP13e8Qf98i9yx7h8bvtyu9NOV3ZGqviB/DVS4Ez7+7SeuOf1LqJmpaE
+	sHxb7/R1CrfVnwTbNR7+YL/TftLazYh+CdIOLXUQ3sEcjmSiK02soKfLrKvkfQ==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: David Regan <dregan@broadcom.com>
+Cc: linux-kernel@vger.kernel.org,  linux-mtd@lists.infradead.org,
+  bcm-kernel-feedback-list@broadcom.com,  william.zhang@broadcom.com,
+  anand.gore@broadcom.com,  florian.fainelli@broadcom.com,
+  kamal.dasu@broadcom.com,  dan.beygelman@broadcom.com,  =?utf-8?Q?=C3=81l?=
+ =?utf-8?Q?varo_Fern=C3=A1ndez?=
+ Rojas <noltari@gmail.com>,  rafal@milecki.pl,
+  computersforpeace@gmail.com,  frieder.schrempf@kontron.de,
+  vigneshr@ti.com,  richard@nod.at,  bbrezillon@kernel.org,
+  kdasu.kdev@gmail.com,  jaimeliao.tw@gmail.com,  kilobyte@angband.pl,
+  jonas.gorski@gmail.com,  dgcbueu@gmail.com,  dregan@mail.com
+Subject: Re: [PATCH] mtd: nand: brcmnand: fix mtd corrected bits stat
+In-Reply-To: <20250530034713.4165309-1-dregan@broadcom.com> (David Regan's
+	message of "Thu, 29 May 2025 20:46:59 -0700")
+References: <20250530034713.4165309-1-dregan@broadcom.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Mon, 02 Jun 2025 16:19:35 +0200
+Message-ID: <87ecw2ns3s.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250602083119.17752-2-saivishnu725@gmail.com>
- <2025060244-dragster-unknowing-23f0@gregkh> <CAFttn56vNVcE=pcGgxGrSZf=r=h_ceFwEf+D71yc9GnANww5Aw@mail.gmail.com>
-In-Reply-To: <CAFttn56vNVcE=pcGgxGrSZf=r=h_ceFwEf+D71yc9GnANww5Aw@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 2 Jun 2025 16:18:55 +0200
-X-Gm-Features: AX0GCFuppXAemaebYLnxsfdRmc91qdrOD2uS-fFCwrVLewW12z3GlU_HdN4YZiA
-Message-ID: <CANiq72ncQxzmQkOVo9sNcLvZEWiN5GFOS4Yg6w6NUKMrtX2AVw@mail.gmail.com>
-Subject: Re: [PATCH v3] rust: doc: Clean up formatting in io.rs
-To: Sai Vishnu <saivishnu725@gmail.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>, alex.gaynor@gmail.com, 
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	Benno Lossin <lossin@kernel.org>, a.hindborg@kernel.org, aliceryhl@google.com, 
-	tmgross@umich.edu, dakr@kernel.org, daniel.almeida@collabora.com, 
-	me@kloenk.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdefjeeltdculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffeghfejtdefieeguddukedujeektdeihfelleeuieeuveehkedvleduheeivdefnecukfhppedvuddvrddutdehrdduhedtrddvhedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdduvddruddthedrudehtddrvdehvddphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddvpdhrtghpthhtohepughrvghgrghnsegsrhhorggutghomhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhmthgusehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepsggtmhdqkhgvrhhnvghlqdhfvggvuggsrggtkhdqlhhishhtsegsr
+ hhorggutghomhdrtghomhdprhgtphhtthhopeifihhllhhirghmrdiihhgrnhhgsegsrhhorggutghomhdrtghomhdprhgtphhtthhopegrnhgrnhgurdhgohhrvgessghrohgruggtohhmrdgtohhmpdhrtghpthhtohepfhhlohhrihgrnhdrfhgrihhnvghllhhisegsrhhorggutghomhdrtghomhdprhgtphhtthhopehkrghmrghlrdgurghsuhessghrohgruggtohhmrdgtohhm
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Mon, Jun 2, 2025 at 1:11=E2=80=AFPM Sai Vishnu <saivishnu725@gmail.com> =
-wrote:
->
-> Is it the one below the Signed off by line? To get the complete picture:
+On 29/05/2025 at 20:46:59 -07, David Regan <dregan@broadcom.com> wrote:
 
-Yes, after that and before the diffstat -- please check some examples
-in the list as Greg suggests.
+> Currently we attempt to get the amount of flipped bits from a hardware
+> location which is reset on every subpage. Instead obtain total flipped
+> bits stat from hardware accumulator. In addition identify the correct
+> maximum subpage corrected bits.
 
-> Additionally, I suppose the `base-commit` tag should also be placed in
-> 3 (above/below Signed-off-by), as it was added to the very end by
-> `git` when generating the patch.
+This change does not feel correct. We gather two statistics:
+- the maximum number of bitflips corrected in a single ECC chunk
+- the total number of bitflips among the whole page
 
-Where Git adds it should be fine :)
+The most important one is the former, because it may trigger wear
+levelling from the top layer (UBI, usually). It feels like you are
+breaking this, am I wrong? Would you mind to be more explicit otherwise?
 
-In fact, if you have a good Git commit, and you use the right flags,
-then Git can take care of essentially everything for you, i.e. you
-should not generally need to edit much (or anything at all), though
-you may or may not want to use some of its features, e.g. notes and
-branch descriptions. Please take a look at `man git-format-patch`.
-
-Thanks!
-
-Cheers,
-Miguel
+Thanks,
+Miqu=C3=A8l
