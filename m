@@ -1,150 +1,169 @@
-Received: from mail-pj1-f66.google.com (mail-pj1-f66.google.com [209.85.216.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBEF4A02
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 19:00:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A523F19B3EE;
+	Mon,  2 Jun 2025 19:01:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748890844; cv=none; b=Ew1jckpRZh/WDlVGD0J8zEOwyi1H6t1kvN6TbeDC+9vaJMBLMEFt1CJzck0CP8ZvFX80TjKgOLbiOLnEXS+wpOaIbygirlqT3M+Tn+iad8nnvJIObnPvrytSepSMb2sZitPHGJequo59Y43I+aml2dZ0ez4mA6dfjwTs/tezIK0=
+	t=1748890868; cv=none; b=lsfWlzns2OvPnmb54nGKm/K+Xanfk4b181UR2xa3dgCN8PUQk7wyhSLeI3KYo/+utOyfp1PT1uB/gXfcegZ+oX7scWcXTXXxiTmPUqLj6/PsbNAhaiRR5CdVuAl4QKq2aoe9NrFb6FYJzmHzRgjRCEo4Oi07nB0KRpyfmgCVXCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748890844; c=relaxed/simple;
-	bh=WTzrwAL3v0QbUCxwUDRBQYjEh6Ha0q2pUIzeniOkvU0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=cpA6UEIITnOBpoL9a9xD3AZhBTBLIzFf2JSPFr3n5J+lO3+xA0SMueiovTRANsmWQvVduFWF/0JG5X1/91/k7C+9lZaCHDafuQZQjTUg7zMhCCLB62Aka3MrQ47orqEsuDS/9hK08CfsorTYrmfjB0thjlsD2yXKNsbO/rKj+3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=GWFmNgou; arc=none smtp.client-ip=209.85.216.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1748890868; c=relaxed/simple;
+	bh=YxAIIEqrvalJpraYDwrR/Jv08dcEQhmUG4FTOhbLtvA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uX/n8xrQbYSz9RdRiUskSBYNIffJVoKjjhVck4dUmQP2Ohx0m5Lyqe6hFRq6j7nYKW3cBajOcrer/7as7zwU4ZmrxP+K+din9urf/FfozIhngJRPfFjJJuFsT6MYIXWjxPwiasDsRXZ+n+KUdHJHUAzsj+fIwqOetDxy/2/H8+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=azkYICkZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="GWFmNgou"
-Received: by mail-pj1-f66.google.com with SMTP id 98e67ed59e1d1-311d27eb8bdso2898564a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 12:00:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1748890842; x=1749495642; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=GcH20JTNBaY4y9WzIt8drFwfFqd3EprUGDsBzYEQ4V0=;
-        b=GWFmNgouELc3vo61GoOOb7aPfDIpnoUyL1bAyI5EL5GmPaAAUCFD7fzNzlo61o8PSG
-         CuoB9UPxxDE557XbNj5K45cf5UPzrVwIcz9sLOLZDHBAvyzC70fnfaObk26ipc6HNNmK
-         QNB1Qa/hjqx0JD1oz893vxym+pRGZFu2nKrk0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748890842; x=1749495642;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GcH20JTNBaY4y9WzIt8drFwfFqd3EprUGDsBzYEQ4V0=;
-        b=ip0NyCEkUMp5skUpOD9Fu54H0VtshTqkPXIYblXqLrz7/g56AU18jUS7dbe/kDZgsE
-         IX1KOcsuc88rDaTacFbGqNgHUqp6+PC+sEVYAH/D1ihWx++JreaNCawmT4/fp53m+NyR
-         j88MiH98fWIJNn0SD9MN5ikYCiHQOKWyFcH0rf8IFSzfDfyAEgQ81/HwBC7AI0EkGPRn
-         ksbffg2Uy/zhiF131F4WZcaYt+jX6R4AFC0goBFn93FeAFTm5hDJ00uqZO5Fa5PnOVUd
-         Ebdxxbhyg9oa4ahYBJcG2+6zu8VdkS0CAlsXi5Mi/H9t3ptOizanVNaN1TASvS7RPTX5
-         yrxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWUYipqmhCb8qHgLuTmAdkCIMKCWXlX115rvbDqEfEZcpYISRSwdQOn56y+LMPTAqAn8W7im3vXxzV13wQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySPRIIdOaHWpVMm8kirFLZzngesf2TGAFoZPkQ9XEhGd65fkmR
-	xoNbZ4sat4nIqTmolTXFt19IgocRd90+yGQ0Ll77cRLETy09wg5D5lITcbRCr3jfBg==
-X-Gm-Gg: ASbGncvswqbTNxw4Q/x/qL0PP4nUlz01JcMd9rhcg9HnkGSdlNQLPTl+evx0gVeofKc
-	2wL5R6trI5TxBetsMFcoNCZSbvvBOQ8WLHoHdJfyJCUG0knUsnycfWre4zHggorR/E9P+Vrnee3
-	I9s7vJdgcCUBI/pMUUa2aPoDXiK170QzaCyvSeEECRbTmkOsj8oULhrLsAejxVdadruRUDpdMUy
-	62BIza68F3Q8/G8CVp/5R+l3lLKkCVBj2cK+Qdj62NtP5N92Wkgv6qcC76jIDZYHbK2VRTlWSu5
-	Ww5morhvz+Ol4+TtSSPLT4Ad+Vtks5LFDvQrQ8CSo0Vvln3kY1eU2jSq7WIRudrtINA4gHW0y43
-	3m4YW5ValItNrsDPWhyP+c1N7Jw==
-X-Google-Smtp-Source: AGHT+IHIrpvkNgSlMz38q6LQHuGQWpTAX7KFlJgjFpEk9HBf0Ufg3NNhVVaSy4N30OgFCMqDHFsaDw==
-X-Received: by 2002:a17:90b:3b90:b0:311:eb85:96df with SMTP id 98e67ed59e1d1-31241531935mr25379469a91.17.1748890841545;
-        Mon, 02 Jun 2025 12:00:41 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e3221a4sm5923401a91.42.2025.06.02.12.00.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Jun 2025 12:00:40 -0700 (PDT)
-Message-ID: <53748db9-2efb-4e8b-9583-5fe21fc4b993@broadcom.com>
-Date: Mon, 2 Jun 2025 12:00:39 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="azkYICkZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06AA0C4CEF4;
+	Mon,  2 Jun 2025 19:01:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748890868;
+	bh=YxAIIEqrvalJpraYDwrR/Jv08dcEQhmUG4FTOhbLtvA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=azkYICkZlQ5ql7NykpA+R78old0/NerqQNfG8LRiB9X/ZgddrvbuoZOcQvZCYQ4Op
+	 Wu++QpGyok4B4WoNOfYugmcWnr0ZtQ+gWmrukxzFhFlGyNqtL2V6BvAyTMxYddT8p0
+	 1jdxnxLpEN3BfizlufMyFHONIH0N9UyrXx5aTpRP8yYVSdTxy2MOFkHQz70RFAVufL
+	 Ct3Wjtj/jLazs0lV2y7vF7cDX3cvM1hohk1p+eVfNYELHkS9HtBjbALnxVVz1aB5Ow
+	 0RXEY142WSimh9c8ftaJJ+GiavkOFZ5q+UeGmIpzR9iK30wLTxM1vhwwUw1zcYIIhk
+	 RZCKawqQpr5sQ==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5532f9ac219so5464672e87.1;
+        Mon, 02 Jun 2025 12:01:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWq6Kekdz/tdlJcvutT9WiEeSWh8C7BuAcRvNJm0ImRytVjn8CYC/b79r2pTmE/gr0NHzxDFR5wsPZKqtlz@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5n92+aEsoHwMqe4ihP89kMiXzsy5rr/0wnbV0kQ/QK9Xg4xCv
+	jCwIQ/MkL+loCDTK2Kxeul7T3awm3l1uAfkBtKeZ2kwZV/PnpLQ6ZaRFWQFJOJUX/OCnmMM6T5A
+	77DkAiZxgTAVkqa3/YyFz1Lc+Ud695e8=
+X-Google-Smtp-Source: AGHT+IEP9e7Bpuwqds9sFw3Aiv2WxrKc7K+TA6TYOkLWb3q58bdth2n5EggvyYF7ux3Zm6WAnpfFKnO9m6KzrByFzek=
+X-Received: by 2002:a05:6512:1051:b0:553:2ef3:f72d with SMTP id
+ 2adb3069b0e04-5533b9080bamr4311815e87.28.1748890866590; Mon, 02 Jun 2025
+ 12:01:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/2] net: bcmgenet: add support for GRO software
- interrupt coalescing
-To: Zak Kemble <zakkemble@gmail.com>, Doug Berger <opendmb@gmail.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250531224853.1339-1-zakkemble@gmail.com>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20250531224853.1339-1-zakkemble@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250602130609.402581-1-masahiroy@kernel.org>
+In-Reply-To: <20250602130609.402581-1-masahiroy@kernel.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Tue, 3 Jun 2025 04:00:30 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATBCmhf_yT+1nkULwRZgQ3QJ6PDbUSWAPOvYZT478M07A@mail.gmail.com>
+X-Gm-Features: AX0GCFtsggFfXeaX3Ol5SttNYUFE9YlQfIaR15VSe7V-T65Ig-aR4_3I6582Pqg
+Message-ID: <CAK7LNATBCmhf_yT+1nkULwRZgQ3QJ6PDbUSWAPOvYZT478M07A@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: stop module name mangling
+To: linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Lucas De Marchi <lucas.de.marchi@gmail.com>, Daniel Gomez <da.gomez@samsung.com>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, Petr Pavlu <petr.pavlu@suse.com>, 
+	Sami Tolvanen <samitolvanen@google.com>, linux-modules@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Zak,
+On Mon, Jun 2, 2025 at 10:06=E2=80=AFPM Masahiro Yamada <masahiroy@kernel.o=
+rg> wrote:
+>
+> In the old days, KBUILD_MODNAME was passed to C without double quotes,
+> and then handled by __stringify() on the C side. This was the reason
+> why KBUILD_MODNAME was mangled: characters such as commas (,) and
+> hyphens (-) are not allowed in C identifiers, so they were replaced
+> with underscores (_) in Kbuild.
+>
+> Since commit f83b5e323f57 ("kbuild: set correct KBUILD_MODNAME when
+> using well known kernel symbols as module names"), KBUILD_MODNAME has
+> been passed to C as a string literal, which allows any characters.
+>
+> Aside from this historical behavior in the build system, there is no
+> longer a reason for mangling. In fact, it is rather annoying, as we
+> now need to convert between hyphens and underscores in some places,
+> but not in others. See commit 0267cbf297bf ("module: Account for the
+> build time module name mangling").
+>
+> This commit eliminates that oddity, so the module name will now match
+> the filename. For example, the module name of "foo-bar.ko" will be
+> "foo-bar", not "foo_bar".
+>
+> However, this oddity persisted for so long and also affected the
+> userspace. To adapt to this behavior, when a user runs "rmmod foo-bar",
+> kmod converts hyphens to underscores, and passes "foo_bar" to the
+> delete_module syscall.
 
-On 5/31/25 15:48, Zak Kemble wrote:
-> Hey, these patches enable support for software IRQ coalescing and GRO
-> aggregation and applies conservative defaults which can help improve
-> system and network performance by reducing the number of hardware
-> interrupts and improving GRO aggregation ratio.
+Hmm. That was modprobe/rmmod from busybox.
 
-Without this patch, seeing the following with an iperf3 server running 
-at a gigabit link:
+kmod tries to open /sys/module/*, and
+hyphen/underscore conversion happens everywhere.
 
-00:18:19     CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal 
-  %guest   %idle
-00:18:20     all    0.53    0.00    9.36    0.00    8.56   18.98    0.00 
-    0.00   62.57
+libkmod: ERROR ../libkmod/libkmod-module.c:2039
+kmod_module_get_holders: could not open '/sys/module/fo_o/holders': No
+such file or directory
 
-and with your patches applied:
+So, we may need to carry this forever...
 
-00:00:56     CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal 
-  %guest   %idle
-00:00:57     all    0.00    0.00    3.29    0.00    1.01    7.34    0.00 
-    0.00   88.35
 
-so definitively helping, thanks!
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+>
+> Therefore, the mod_strncmp() needs to remain in find_module_all(),
+> otherwise, we cannot unload modules.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+>
+>  kernel/module/main.c | 8 ++++++--
+>  scripts/Makefile.lib | 4 ++--
+>  2 files changed, 8 insertions(+), 4 deletions(-)
+>
+> diff --git a/kernel/module/main.c b/kernel/module/main.c
+> index b8440b0887e3..1fa90a95e0c5 100644
+> --- a/kernel/module/main.c
+> +++ b/kernel/module/main.c
+> @@ -410,7 +410,11 @@ struct module *find_module_all(const char *name, siz=
+e_t len,
+>                                 lockdep_is_held(&module_mutex)) {
+>                 if (!even_unformed && mod->state =3D=3D MODULE_STATE_UNFO=
+RMED)
+>                         continue;
+> -               if (strlen(mod->name) =3D=3D len && !memcmp(mod->name, na=
+me, len))
+> +               /*
+> +                * For historical reasons, kmod passes a module name with
+> +                * a hyphen replaced with an underscore.
+> +                */
+> +               if (!mod_strncmp(mod->name, name, len))
+>                         return mod;
+>         }
+>         return NULL;
+> @@ -1135,7 +1139,7 @@ static bool module_match(const char *modname, const=
+ char *patterns)
+>                 if (*sep)
+>                         sep++;
+>
+> -               if (mod_strncmp(patterns, modname, len) =3D=3D 0 && (glob=
+ || len =3D=3D modlen))
+> +               if (strncmp(patterns, modname, len) =3D=3D 0 && (glob || =
+len =3D=3D modlen))
+>                         return true;
+>         }
+>
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 336fb0d763c7..e37e2db5f528 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -18,8 +18,8 @@ target-stem =3D $(basename $(patsubst $(obj)/%,%,$@))
+>  # end up in (or would, if it gets compiled in)
+>  name-fix-token =3D $(subst $(comma),_,$(subst -,_,$1))
+>  name-fix =3D $(call stringify,$(call name-fix-token,$1))
+> -basename_flags =3D -DKBUILD_BASENAME=3D$(call name-fix,$(basetarget))
+> -modname_flags  =3D -DKBUILD_MODNAME=3D$(call name-fix,$(modname)) \
+> +basename_flags =3D -DKBUILD_BASENAME=3D$(call stringify,$(basetarget))
+> +modname_flags  =3D -DKBUILD_MODNAME=3D$(call stringify,$(modname)) \
+>                  -D__KBUILD_MODNAME=3Dkmod_$(call name-fix-token,$(modnam=
+e))
+>  modfile_flags  =3D -DKBUILD_MODFILE=3D$(call stringify,$(modfile))
+>
+> --
+> 2.43.0
+>
 
-You will have to repost once net-next opens though:
 
-https://patchwork.hopto.org/net-next.html
-
-Thanks!
--- 
-Florian
+--=20
+Best Regards
+Masahiro Yamada
