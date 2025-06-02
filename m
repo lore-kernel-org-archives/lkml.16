@@ -1,160 +1,247 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EB6233CFC;
-	Mon,  2 Jun 2025 12:34:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 593421537C6;
+	Mon,  2 Jun 2025 12:36:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748867652; cv=none; b=KPZrbNylHVW/GZih5hN7tSBfRGWZN8VcipKOAm9v9Qdk1C6PFmiwgD7rrAWZln/2xeRne07ShCv6CU0d2Gcq/O26lKg/G9Q04alZDiERBoOMoZiGM6gedd2C3AViN4D0uFXYTy1bbm028S/BEMkERHALWy3uPeayDPx/XkM4Zns=
+	t=1748867807; cv=none; b=oVqrQO7UruCuZR/YJRzLUpybVe0JoOwZlk9PQoe99JG+NxOdl8uKpDfW74HCGPsA9EdlAPYVru1TellMnoV1eimd5F5J+mvMCufCSMqcdDx9PljL9T483jh0To/3g0P0tjadnGiDgbTYjbdGwmsUg/235KcRNX0AZMdKJO5P3Hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748867652; c=relaxed/simple;
-	bh=cRQXcU2Ra7nEta5mNo/E/pC3EOrS0rm0kWNFyZCJqmk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=JJobhjuU7luULmjMwgyvoyPT4zCRqn+DV3YqnnsofMivdTPx1I/mO0BMKzVhJ4UWxC5MgnK3B/RYQ9jyLYidJi0uIsZeijSGNVulX2x/svwgo/te02bIBZFam5ylUgwUioo4aA225xlMfUI3ISIEBC+X3la0MKg+BUL47xt9/HA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=oQWZB2k1 reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1748867807; c=relaxed/simple;
+	bh=TqMTTrbGOKHDd5+iY3zu2is/Du2epZyfArzWRQ1XwSw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oUnYh/d7gyODi6aFdlPAro+mqcdn+tKlUeE73k/eLamcGINsWoIBdIwQreRlt+nAMqRZNR/JdezEzTrzFbqzueMeAArdLEzPTfgUX3Qw+02QyBEdsALqeo4/P0VcotVL/kWq26lIYzLPDeHz77QWLFNAAXnwd1wLi5CC3qeb+n0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=O6KSrwJm; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="oQWZB2k1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=EztYNPtjzWxGg2uPLBCx4cP2YXMaV72XRRVDsDC69zI=; b=o
-	QWZB2k1cET5yzYTRIkfGMzelYK5y46HoTmyC2b1lIlf9f/kuPHUZkJPlAJUfxrqe
-	GDolBB8G9p4RE8SZzs94mMyQeJxRR9zBh15uI4GnUEQNj+1AdGXriYTMCIWvurze
-	TXYoeiXv6/CpyJzFEW1DF4gU8PbySYPFxXBoca4nmY=
-Received: from 00107082$163.com ( [111.35.189.95] ) by
- ajax-webmail-wmsvr-40-142 (Coremail) ; Mon, 2 Jun 2025 20:33:37 +0800 (CST)
-Date: Mon, 2 Jun 2025 20:33:37 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: yeoreum.yun@arm.com
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, mingo@kernel.org, yeoreum.yun@arm.com,
-	leo.yan@arm.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [BUG][6.15][perf] Kernel panic not syncing: Fatal exception in
- interrupt
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <aD2TspKH/7yvfYoO@e129823.arm.com>
-References: <aD2TspKH/7yvfYoO@e129823.arm.com>
-X-NTES-SC: AL_Qu2fCvSduE4q4SCbY+kXn0oTju85XMCzuv8j3YJeN500uCbQ9wsdeXBGOVjmwcO0BiGtvxeOewJn7vxgdq9CXJwJ7UJTt+S1JWBrHbGbBKdO
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="O6KSrwJm"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5529lJgq021647;
+	Mon, 2 Jun 2025 12:36:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=hn7jsk
+	sEFOxj2EbB5fkqijs0r3shX82Lm3/fAvKOU4A=; b=O6KSrwJmP+UPYZHE+k6f13
+	HlrJB+tojXWxi1scbBdQ3vMMScN4x4+hVDUI+3IQSiHyqi/g51AD8rgAXsWVMRCk
+	tSNPIQiWvLMtWrnhFrja6bN08xcIyXwpkDagSexTII0jVEjEva+Tm/KOgr7Bu5Df
+	hebKoRjjWf9PTwKUl+cBANsme3zYabEMmDtoXyNR53LnbIz1d+eo/MXEfqNIsFvu
+	QDedgF0k3BtTNrMapY+/OE7EoCSMVwrBA0jOv7MEpA+1GLQ0gym4jew8AdL3iKdX
+	P9yIGgKRPqiPIiPJPChyGRnusc+iplHdeTDUpIHBKUPGQKs/WaxLl9XZ01nCaxfA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ysgd15rc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 02 Jun 2025 12:36:26 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 552CMUwY007231;
+	Mon, 2 Jun 2025 12:36:26 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ysgd15r7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 02 Jun 2025 12:36:26 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 552AgJWO012517;
+	Mon, 2 Jun 2025 12:36:25 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 470et25ujp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 02 Jun 2025 12:36:25 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 552CaJqA18809124
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 2 Jun 2025 12:36:19 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 204492004D;
+	Mon,  2 Jun 2025 12:36:19 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 88DA220040;
+	Mon,  2 Jun 2025 12:36:16 +0000 (GMT)
+Received: from [9.43.59.52] (unknown [9.43.59.52])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  2 Jun 2025 12:36:16 +0000 (GMT)
+Message-ID: <f3c4356c-666d-4fe4-b8fd-da3037ed5976@linux.ibm.com>
+Date: Mon, 2 Jun 2025 18:06:15 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <83b4d26.3362.19730a21115.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:jigvCgD3Hykimj1oeiISAA--.19002W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0hhgqmg9jvGL1wADs1
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] powerpc/ftrace: support CONFIG_FUNCTION_GRAPH_RETVAL
+To: Aditya Bodkhe <adityab1@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
+        christophe.leroy@csgroup.eu, rostedt@goodmis.org, mhiramat@kernel.org,
+        mark.rutland@arm.com, Aditya Bodkhe <aditya.b1@linux.ibm.com>
+References: <20250528134820.74121-1-adityab1@linux.ibm.com>
+Content-Language: en-US
+From: Hari Bathini <hbathini@linux.ibm.com>
+In-Reply-To: <20250528134820.74121-1-adityab1@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=GdwXnRXL c=1 sm=1 tr=0 ts=683d9aca cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=GVWLqetRcDZtiWko8XAA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: 1h9eOEtw4XS8OmNcFYYnvUBdRPiJtwTC
+X-Proofpoint-ORIG-GUID: 9brDj5LJoIhQM1rXpA-BdHPY7e2ekXHS
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAyMDEwNiBTYWx0ZWRfXyxa6mk/eVEvF Cc0prlkmHuxSx2FZCNZSitHX2LtpupUyhpDO9qQM95M6/8xd2XY7mqtTYAP0d7K9P2w6CPiFoTF 8TNFu98e/nPSmkFvr/KwvnCLwewnCDWQPgjY4gO1r1aG7foWLV1y41oNxv4dyH+jQjvJWwj/dBv
+ rWpH/X21SeurzzdAdcKmDUEWJacCuntXgegUG9cDYqqPiQ93hn0y9tTVTAa+3SBNdo9GdBQtHlH fQK/Gqi6f8yUCEHszsMTthjqb2WYp0yFT0ptqAx0kPanbSRSefWILZN3ciIhe02NDP6b+RqYLay OXsOYsES6jAiVM0EQ4A8PB4Fs/czcWQL0TKK7ZG31TfU7TAwmEPAMbtf/28N0WXd8HNA6N/joen
+ ZYjF+WCG/n4uVutbEXRvV1vt8uAta9q6s7rx73wdBrEmtz/rKz5wmhwfNZVS2XXZJBhH1qkz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-02_05,2025-05-30_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ lowpriorityscore=0 suspectscore=0 spamscore=0 malwarescore=0 clxscore=1015
+ mlxscore=0 impostorscore=0 priorityscore=1501 adultscore=0 bulkscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2506020106
 
-CgpBdCAyMDI1LTA2LTAyIDIwOjA2OjEwLCAiWWVvcmV1bSBZdW4iIDw+IHdyb3RlOgo+U29ycnkg
-dG8gbWFrZSBub2lzZSBhbGwuCj5JJ3ZlIGZvcmdvdHRlbiB0byBjYyBtYWlsaW5nIGxpc3QuCj5J
-ZiB5b3UgcmVjZWl2ZSBkdXBsaWNhdGUgbWFpbCwgU29ycnkgYWdhaW4uLi4KPgo+PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQo+SGkgRGF2aWQsCj4K
-Pj4gSGksCj4+Cj4+IENhdWdodCBhIGtlcm5lbCBwYW5pYyB3aGVuIHJlYm9vdGluZywgc3lzdGVt
-IHN0dWNrIHVudGlsIHByZXNzaW5nIHBvd2VyIGJ1dHRvbi4KPj4gSSBoYXZlIG9ubHkgYSBzY3Jl
-ZW5zaG90IHdoZW4gaXQgaGFwcGVucywgZm9sbG93aW5nIGxvZ3Mgd2VyZSBleHRyYWN0ZWQgZnJv
-bSBhCj4+IGNhcHR1cmVkIHBpY3R1cmUuCj4+Cj4+IDg2My44ODE5NjBdIHN5c3ZlZF9jYWxsX2Z1
-bmN0aW9uX3NpbmcgbGUrMHg0Yy8weGMwCj4+IDg2My44ODEzMDFdIGFzbV9zeXN2ZWNfY2FsbF9m
-dW5jdGlvbl9zaW5nbGUrMHgxNi8weDIwCj4+IDg2OS44ODEzNDRdIFJJUDogMDYzMzoweDdmOWFs
-Y2VhMzM2Nwo+PiA2NjMuNjgxMzczXSBDb2RlOiAwMCA2NiA5OSBiOCBmZiBmZiBmZiBmZiBjMyA2
-NiAuLi4uCj4+IDg2My44ODE1MjRdIFJTUDogMDAyYjowMDAwN2ZmZmE1MjZmY2Y4IEVGTEFHUzog
-MDAwMDAyNDYKPj4gODY5Ljg4MTU2N10gUkFYOiAwMDAwNTYyMDYwYzk2MmQwIFJCWDogMDAwMDAw
-MDAwMDAwMDAwMiBSQ1g6IDAwMDA3ZjlhMWNmZjFjNjAKPj4gODYzLjg4MTYyNV0gUkRYOiAwMDAw
-N2Y5YTBjMDAwMDMwIFJTSTogMDAwMDdmOWFsY2ZmMWM2MCBSREk6IDAwMDA3ZjlhMWNhOTFjMjAK
-Pj4gODYzLjA4MTY4Ml0gUkJQOiAwMDAwMDAwMDAwMDAwMDAxIFIwODogMDAwMDAwMDAwMDAwMDAw
-MCBSMDk6IDAwMDA3ZjlhMWQ2MjE3YTAKPj4gODY5Ljg4MTc0MF0gUjEwOiAwMDAwN2Y5YWxjYTkx
-YzEwIFIxMTogMDAwMDAwMDAwMDAwMDI0NiBSMTI6IDAwMDA3ZjlhMWQ3MGMwMjAKPj4gODY5Ljg4
-MTc5OF0gUjEzOiAwMDAwN2ZmZmE1MjcwMDMwIFIxNDogMDAwMDdmZmZhNTI2ZmQwMCBSMTU6IDAw
-MDAwMDAwMDAwMDAwMDAKPj4gODYzLjg4MTg2MF0gPC9UQVNLPgo+PiA4NjMuODgxODc2KSBNb2R1
-bGVzIGxpbmtlZCBpbjogc25kX3NlcV9kdW1teSAoRSkgc25kX2hydGltZXIgKEUpLi4uCj4+IC4u
-Lgo+PiA4NjMuODg3MTQyXSBidXR0b24gKEUpCj4+IDg2My45MTIxMjddIENSMjogZmZmZmU0YWZj
-YzA3OTY1MAo+PiA4NjMuOTE0NTkzXSAtLS0gWyBlbmQgdHJhY2UgMDAwMDAwMDAwMDAwMDAwMCAx
-LS0KPj4gODY0LjA0Mjc1MF0gUklQOiAwMDEwOmN0eF9zY2hlZF9vdXQrMHgxY2UvMHgyMTAKPj4g
-ODY0LjA0NTIxNF0gQ29kZTogODkgYzYgNGMgOGIgYjkgZGUgMDAgMDAgMDAgNDggLi4uCj4+IDg2
-NC4wNTAzNDNdIFJTUDogMDAwMDpmZmZmYWE0ZWMwZjNmZTYwIEVGTEFHUzogMDAwMTAwODYKPj4g
-ODY0LjA1MjkyOV0gUkFYOiAwMDAwMDAwMDAwMDAwMDAyIFJCWDogZmZmZjhlOGVlZWQyYTU4MCBS
-Q1g6IGZmZmY4ZThiZGVkOWJmMDAKPj4gODY0LjA1NTUxOF0gUkRYOiAwMDAwMDBjOTIzNDBiMDUx
-IFJTSTogMDAwMDAwYzkyMzQwYjA1MSBSREk6IGZmZmYKPj4gODY0LjA1ODA5M10gUkJQOiAwMDAw
-MDAwMDAwMDAwMDAwIFIwODogMDAwMDAwMDAwMDAwMDAwMiBSMDk6IDAwCj4+IDg2NC4wNjA2NTRd
-IFIxMDogMDAwMDAwMDAwMDAwMDAwMCBSMTE6IDAwMDAwMDAwMDAwMDAwMDAgUjEyOiAwMDAKPj4g
-ODY0LjA2MzE4M10gUjEzOiBmZmZmOGU4ZWVlZDJhNTgwIFIxNDogMDAwMDAwMDAwMDAwMDAwNyBS
-MTU6IGZmZmZlNGFmY2MwNzk2NTAKPj4gODY0LjA2NTcyOV0gRlM6IDAwMDA3ZjlhMWNhOTE5NDAg
-KDAwMDApIEdTOmZmZmY4ZThmNmIxYzMwMDAoMDAwMCkga25JR1M6MDAwMDAwMDAwMDAwMDAwMAo+
-PiA4NjQuMDY4MzEyXSBDUzogMDAxMCBEUzogMDAwMCBFUzogMDAwMCBDUk86IDAwMDAwMDAwODAw
-NTAwMzMKPj4gODY0LjA3MDg5OF0gQ1IyOiBmZmZmZTRhZmNjMDc5NjUwIENSMzogMDAwMDAwMDEx
-MzZkODAwMCBDUjQ6IDAwMDAwMDAwMDAzNTBlZjAKPj4gODY0LjY3MzUyM10gS2VybmVsIHBhbmlj
-IC0gbm90IHN5bmNpbmc6IEZhdGFsIGV4Y2VwdGlvbiBpbiBpbnRlcnJ1cHQKPj4gODY0LjA3NjQx
-MF0gS2VybmVsIE9mZnNldDogMHhjMDAwMDAgZnJvbSAweGZmZmZmZmZmODEwMDAwMDAgKHJlbG9j
-YXRpb24gcmFuZ2U6IDB4ZmYKPj4gODY0LjIwNTQwMV0gLS0tIFsgZW5kIEtlcm5lbCBwYW5pYyAt
-IG5vdCBzeW5jaW5nOiBGYXRhbCBleGNlcHRpb24gaW4gaW50ZXJydXB0IF0tLS0KPj4KPj4gVGhp
-cyBoYXBwZW5zIGV2ZXIgc2luY2UgNi4xNS1yYzEsIGZyb20gdGltZSB0byB0aW1lLCBJIHdvdWxk
-IGdldCBrZXJuZWwgcGFuaWMgd2hlbgo+PiByZWJvb3Q7IGl0IGlzIG9ubHkgcmVjZW50bHkgdGhh
-dCBJIGZpZ3VyZWQgb3V0IGEgcHJlY2VkdXJlIHJlcHJvZHVjaW5nCj4+IHRoaXMgd2l0aCAqaGln
-aCogcHJvYmFiaWxpdHk6Cj4+Cj4+IDEuIGNyZWF0ZSBhIGNncm91cC4KPj4gMi4gcGVyZl9ldmVu
-dF9vcGVuKFBFUkZfRkxBR19GRF9DTE9FWEVDfFBFUkZfRkxBR19QSURfQ0dST1VQKSBmb3IgZWFj
-aCBjcHUgd2l0aCBmb2xsb3dpbmcgYXR0cnM6Cj4+IAlhdHRyLnR5cGUgPSBQRVJGX1RZUEVfU09G
-VFdBUkU7Cj4+IAlhdHRyLnNpemUgPSBzaXplb2YoYXR0cik7Cj4+IAlhdHRyLmNvbmZpZyA9IFBF
-UkZfQ09VTlRfU1dfQ1BVX0NMT0NLOwo+PiAJYXR0ci5zYW1wbGVfZnJlcSA9IDk5OTk7Cj4+IAlh
-dHRyLmZyZXEgPSAxOwo+PiAJYXR0ci53YWtldXBfZXZlbnRzID0gMTY7Cj4+IAlhdHRyLnNhbXBs
-ZV90eXBlID0gUEVSRl9TQU1QTEVfQ0FMTENIQUlOOwo+PiAJYXR0ci5zYW1wbGVfbWF4X3N0YWNr
-ID0gMzI7Cj4+IAlhdHRyLmV4Y2x1ZGVfY2FsbGNoYWluX3VzZXIgPSAxOwo+PiAzLiBjbG9zZSBh
-bGwgcGVyZl9ldmVudF9vcGVuIGFmdGVyIHNldmVyYWwgbWludXRlcwo+PiA0LiByZWJvb3QKPj4K
-Pj4gQW5kIGFmdGVyIGFuIGV4aGF1c3RpbmcgYmlzZWN0IG9uIGV2ZW50cy9jb3JlLmMsIChJIG5l
-ZWQgNSByb3VuZHMgdG8gY29uY2x1ZGUgYSBnb29kIGJpc2VjdCkKPj4gSSB0aGluayBJIHJlYWNo
-IHRoZSBjb25jbHVzaW9uLCB3aXRoIHZlcnkgaGlnaCBwcm9iYWJpbGl0eSwgdGhhdCB0aGlzIGlz
-IGNhdXNlZCBieQo+Pgo+PiBjb21taXQgYTNjM2M2NjY3MGNlZTExZWIxM2FhNDM5MDU5MDRiZjI5
-Y2I5MmQzMgo+PiBBdXRob3I6IFllb3JldW0gWXVuIDx5ZW9yZXVtLnl1bkBhcm0uY29tPgo+PiBE
-YXRlOiAgIFdlZCBNYXIgMjYgMDg6MjA6MDMgMjAyNSArMDAwMAo+Pgo+PiAgICBwZXJmL2NvcmU6
-IEZpeCBjaGlsZF90b3RhbF90aW1lX2VuYWJsZWQgYWNjb3VudGluZyBidWcgYXQgdGFzayBleGl0
-Cj4+Cj4+IFJldmVydGluZyB0aGlzIGNhbiBmaXggaXQ6IEkgcnVuIHRoZSB0ZXN0IDEwIHJvdW5k
-cywgbm8ga2VybmVsIHBhbmljIG9ic2VydmVkLgo+Pgo+PiBUaGUgY2hhbmdlcyBtYWRlIHRvIF9f
-cGVyZl9yZW1vdmVfZnJvbV9jb250ZXh0IGJ5IGNvbW1pdCBhM2MzYzY2NjcoInBlcmYvY29yZToK
-Pj4gRml4IGNoaWxkX3RvdGFsX3RpbWVfZW5hYmxlZCBhY2NvdW50aW5nIGJ1ZyBhdCB0YXNrIGV4
-aXQiKSBoYXMgd2lkZXIgZWZmZWN0Cj4+IHRoYW4gdGhlIGNhbGxjaGFpbiBtZW50aW9uZWQgaW4g
-Y29tbWl0IG1lc3NhZ2UsIGFuZCBJIHRoaW5rIGFuIGVzYXkgZml4IHdvdWxkCj4+IGJlIGp1c3Qg
-cmVzdHJpY3RpbmcgdGhlIGVmZmVjdCB0byB0aGF0IGNhbGxjaGFpbiBvbmx5LCBhbmQgcmVzdG9y
-ZSBvdGhlciBjaGFuZ2VzIGJhY2suCj4+Cj4+IEkgaGF2ZSB0ZXN0IHRoZSBwYXRjaCBiZWxvdyBz
-ZXZlcmFsIHJvdW5kcywgYW5kIHNvIGZhciBzbyBnb29kLCBhbmQgSSB3aWxsIGhhdmUKPj4gbW9y
-ZSB0ZXN0cyBvbiBpdC4KPj4KPj4gU2lnbmVkLW9mZi1ieTogRGF2aWQgV2FuZyA8MDAxMDcwODJA
-MTYzLmNvbT4KPgo+VGhhbmtzIGZvciB5b3VyIHJlcG9ydGluZyBhbmQgU29ycnkgZm9yIG15IGJh
-ZC4KPkJ5IG15IGNoYW5nZSwgdGhlIHRyYWNraW5nIG5yX2Nnb3J1cHMgaXMgYnJva2VuIHdoaWNo
-IGNvdWxkIG1ha2UgYSBkYW5nbGluZwo+cG9pbnRlciBmb3IgY3B1Y3R4LT5jZ3JwLgo+Cj5Db3Vs
-ZCB5b3UgdGVzdCB3aXRoIGJlbG93IGNoYW5nZSBwbGVhc2U/Cj4KPmRpZmYgLS1naXQgYS9rZXJu
-ZWwvZXZlbnRzL2NvcmUuYyBiL2tlcm5lbC9ldmVudHMvY29yZS5jCj5pbmRleCA5NWU3MDM4OTFi
-MjQuLmQwYTkwOTY3MzViOSAxMDA2NDQKPi0tLSBhL2tlcm5lbC9ldmVudHMvY29yZS5jCj4rKysg
-Yi9rZXJuZWwvZXZlbnRzL2NvcmUuYwo+QEAgLTIxMTYsMTggKzIxMTYsNiBAQCBsaXN0X2RlbF9l
-dmVudChzdHJ1Y3QgcGVyZl9ldmVudCAqZXZlbnQsIHN0cnVjdCBwZXJmX2V2ZW50X2NvbnRleHQg
-KmN0eCkKPiAgICAgICAgaWYgKGV2ZW50LT5ncm91cF9sZWFkZXIgPT0gZXZlbnQpCj4gICAgICAg
-ICAgICAgICAgZGVsX2V2ZW50X2Zyb21fZ3JvdXBzKGV2ZW50LCBjdHgpOwo+Cj4tICAgICAgIC8q
-Cj4tICAgICAgICAqIElmIGV2ZW50IHdhcyBpbiBlcnJvciBzdGF0ZSwgdGhlbiBrZWVwIGl0Cj4t
-ICAgICAgICAqIHRoYXQgd2F5LCBvdGhlcndpc2UgYm9ndXMgY291bnRzIHdpbGwgYmUKPi0gICAg
-ICAgICogcmV0dXJuZWQgb24gcmVhZCgpLiBUaGUgb25seSB3YXkgdG8gZ2V0IG91dAo+LSAgICAg
-ICAgKiBvZiBlcnJvciBzdGF0ZSBpcyBieSBleHBsaWNpdCByZS1lbmFibGluZwo+LSAgICAgICAg
-KiBvZiB0aGUgZXZlbnQKPi0gICAgICAgICovCj4tICAgICAgIGlmIChldmVudC0+c3RhdGUgPiBQ
-RVJGX0VWRU5UX1NUQVRFX09GRikgewo+LSAgICAgICAgICAgICAgIHBlcmZfY2dyb3VwX2V2ZW50
-X2Rpc2FibGUoZXZlbnQsIGN0eCk7Cj4tICAgICAgICAgICAgICAgcGVyZl9ldmVudF9zZXRfc3Rh
-dGUoZXZlbnQsIFBFUkZfRVZFTlRfU1RBVEVfT0ZGKTsKPi0gICAgICAgfQo+LQo+ICAgICAgICBj
-dHgtPmdlbmVyYXRpb24rKzsKPiAgICAgICAgZXZlbnQtPnBtdV9jdHgtPm5yX2V2ZW50cy0tOwo+
-IH0KPkBAIC0yNDcxLDYgKzI0NTksMTYgQEAgX19wZXJmX3JlbW92ZV9mcm9tX2NvbnRleHQoc3Ry
-dWN0IHBlcmZfZXZlbnQgKmV2ZW50LAo+Cj4gICAgICAgIGN0eF90aW1lX3VwZGF0ZShjcHVjdHgs
-IGN0eCk7Cj4KPisgICAgICAgLyoKPisgICAgICAgICogSWYgZXZlbnQgd2FzIGluIGVycm9yIHN0
-YXRlLCB0aGVuIGtlZXAgaXQKPisgICAgICAgICogdGhhdCB3YXksIG90aGVyd2lzZSBib2d1cyBj
-b3VudHMgd2lsbCBiZQo+KyAgICAgICAgKiByZXR1cm5lZCBvbiByZWFkKCkuIFRoZSBvbmx5IHdh
-eSB0byBnZXQgb3V0Cj4rICAgICAgICAqIG9mIGVycm9yIHN0YXRlIGlzIGJ5IGV4cGxpY2l0IHJl
-LWVuYWJsaW5nCj4rICAgICAgICAqIG9mIHRoZSBldmVudAo+KyAgICAgICAgKi8KPisgICAgICAg
-aWYgKGV2ZW50LT5zdGF0ZSA+IFBFUkZfRVZFTlRfU1RBVEVfT0ZGKQo+KyAgICAgICAgICAgICAg
-IHBlcmZfY2dyb3VwX2V2ZW50X2Rpc2FibGUoZXZlbnQsIGN0eCk7Cj4rCj4gICAgICAgIC8qCj4g
-ICAgICAgICAqIEVuc3VyZSBldmVudF9zY2hlZF9vdXQoKSBzd2l0Y2hlcyB0byBPRkYsIGF0IHRo
-ZSB2ZXJ5IGxlYXN0Cj4gICAgICAgICAqIHRoaXMgYXZvaWRzIHJhaXNpbmcgcGVyZl9wZW5kaW5n
-X3Rhc2soKSBhdCB0aGlzIHRpbWUuCj4KPlRoYW5rcwo+Cj4KPi0tCj5TaW5jZXJlbHksCj5ZZW9y
-ZXVtIFl1bgoKQmVmb3JlIEkgc3RhcnQgdGVzdGluZywgSSBmZWVsIGNvbmNlcm5lZCBhYm91dCBm
-b2xsb3dpbmcgY2hhaW46CgouL2tlcm5lbC9mb3JrLmM6CmJhZF9mb3JrX2NsZWFudXBfcGVyZjoK
-ICAgIHBlcmZfZXZlbnRfZnJlZV90YXNrKCkgCiAgICAgICAgcGVyZl9mcmVlX2V2ZW50KCkKICAg
-ICAgICAgICAgbGlzdF9kZWxfZXZlbnQoKQoKVGhpcyBwYXRjaCBzZWVtcyBjaGFuZ2VzIHRoZSBi
-ZWhhdmlvciBpbiB0aGlzIGNhbGxjaGFpbi4KV291bGQgdGhpcyBoYXZlIG90aGVyIHNpZGUtZWZm
-ZWN0PwoKCkRhdmlkCg==
+
+
+On 28/05/25 7:18 pm, Aditya Bodkhe wrote:
+> From: Aditya Bodkhe <aditya.b1@linux.ibm.com>
+> 
+> commit a1be9ccc57f0 ("function_graph: Support recording and printing the
+> return value of function") introduced support for function graph return
+> value tracing.
+> 
+> Additionally, commit a3ed4157b7d8 ("fgraph: Replace fgraph_ret_regs with
+> ftrace_regs") further refactored and optimized the implementation,
+> making `struct fgraph_ret_regs` unnecessary.
+> 
+> This patch enables the above modifications for powerpc64, ensuring that
+> function graph return value tracing is available on this architecture.
+> 
+> After this patch, v6.14+ kernel can also be built with FPROBE on powerpc
+> but there are a few other build and runtime dependencies for FPROBE to
+> work properly. The next patch addresses them.
+> 
+> Signed-off-by: Aditya Bodkhe <aditya.b1@linux.ibm.com>
+
+Except for a couple of minor nits below..
+
+Reviewed-by: Hari Bathini <hbathini@linux.ibm.com>
+
+> ---
+>   arch/powerpc/Kconfig                     |  1 +
+>   arch/powerpc/include/asm/ftrace.h        | 15 +++++++++
+>   arch/powerpc/kernel/trace/ftrace_entry.S | 41 ++++++++++++++----------
+>   3 files changed, 40 insertions(+), 17 deletions(-)
+> 
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index c3e0cc83f120..9163521bc4b9 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -250,6 +250,7 @@ config PPC
+>   	select HAVE_FUNCTION_ARG_ACCESS_API
+>   	select HAVE_FUNCTION_DESCRIPTORS	if PPC64_ELF_ABI_V1
+>   	select HAVE_FUNCTION_ERROR_INJECTION
+> +	select HAVE_FUNCTION_GRAPH_FREGS
+>   	select HAVE_FUNCTION_GRAPH_TRACER
+>   	select HAVE_FUNCTION_TRACER		if !COMPILE_TEST && (PPC64 || (PPC32 && CC_IS_GCC))
+>   	select HAVE_GCC_PLUGINS			if GCC_VERSION >= 50200   # plugin support on gcc <= 5.1 is buggy on PPC
+> diff --git a/arch/powerpc/include/asm/ftrace.h b/arch/powerpc/include/asm/ftrace.h
+> index 82da7c7a1d12..6ffc9c9cf4e3 100644
+> --- a/arch/powerpc/include/asm/ftrace.h
+> +++ b/arch/powerpc/include/asm/ftrace.h
+> @@ -50,6 +50,21 @@ static __always_inline struct pt_regs *arch_ftrace_get_regs(struct ftrace_regs *
+>   		asm volatile("mfmsr %0" : "=r" ((_regs)->msr));	\
+>   	} while (0)
+>   
+> +#undef ftrace_regs_get_return_value
+> +static __always_inline unsigned long
+> +ftrace_regs_get_return_value(const struct ftrace_regs *fregs)
+> +{
+> +	return arch_ftrace_regs(fregs)->regs.gpr[3];
+> +}
+> +#define ftrace_regs_get_return_value ftrace_regs_get_return_value
+> +
+> +#undef ftrace_regs_get_frame_pointer
+> +static __always_inline unsigned long
+> +ftrace_regs_get_frame_pointer(const struct ftrace_regs *fregs)
+> +{
+> +	return arch_ftrace_regs(fregs)->regs.gpr[1];
+> +}
+> +
+>   static __always_inline void
+>   ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs,
+>   				    unsigned long ip)
+> diff --git a/arch/powerpc/kernel/trace/ftrace_entry.S b/arch/powerpc/kernel/trace/ftrace_entry.S
+> index 3565c67fc638..eafbfb7584ed 100644
+> --- a/arch/powerpc/kernel/trace/ftrace_entry.S
+> +++ b/arch/powerpc/kernel/trace/ftrace_entry.S
+> @@ -409,23 +409,30 @@ EXPORT_SYMBOL(_mcount)
+>   _GLOBAL(return_to_handler)
+>   	/* need to save return values */
+>   #ifdef CONFIG_PPC64
+> -	std	r4,  -32(r1)
+> -	std	r3,  -24(r1)
+> +	stdu	r1, -SWITCH_FRAME_SIZE(r1)
+> +	std	r4, GPR4(r1)
+> +	std	r3, GPR3(r1)
+
+> +  /* Save previous stack pointer (r1) */
+
+Please use tab instead of "  " before the comment.
+
+> +	addi	r3, r1, SWITCH_FRAME_SIZE
+> +	std	r3, GPR1(r1)
+>   	/* save TOC */
+> -	std	r2,  -16(r1)
+> -	std	r31, -8(r1)
+> +	std	r2,  24(r1)
+> +	std	r31, 32(r1)
+>   	mr	r31, r1
+> -	stdu	r1, -112(r1)
+> -
+> +  /* pass ftrace_regs/pt_regs to ftrace_return_to_handler */
+> +	addi	r3,  r1, STACK_INT_FRAME_REGS
+
+Have a newline here
+
+>   	/*
+>   	 * We might be called from a module.
+>   	 * Switch to our TOC to run inside the core kernel.
+>   	 */
+>   	LOAD_PACA_TOC()
+>   #else
+> -	stwu	r1, -16(r1)
+> -	stw	r3, 8(r1)
+> -	stw	r4, 12(r1)
+> +	stwu	r1, -SWITCH_FRAME_SIZE(r1)
+> +	stw	r4, GPR4(r1)
+> +	stw	r3, GPR3(r1)
+> +	addi	r3, r1, SWITCH_FRAME_SIZE
+> +	stw	r3, GPR1(r1)
+> +	addi	r3, r1, STACK_INT_FRAME_REGS
+>   #endif
+>   
+>   	bl	ftrace_return_to_handler
+> @@ -435,15 +442,15 @@ _GLOBAL(return_to_handler)
+>   	mtlr	r3
+>   
+>   #ifdef CONFIG_PPC64
+> -	ld	r1, 0(r1)
+> -	ld	r4,  -32(r1)
+> -	ld	r3,  -24(r1)
+> -	ld	r2,  -16(r1)
+> -	ld	r31, -8(r1)
+> +	ld	r4,  GPR4(r1)
+> +	ld	r3,  GPR3(r1)
+> +	ld	r2,  24(r1)
+> +	ld	r31, 32(r1)
+> +	ld	r1,  0(r1)
+>   #else
+> -	lwz	r3, 8(r1)
+> -	lwz	r4, 12(r1)
+> -	addi	r1, r1, 16
+> +	lwz	r3, GPR3(r1)
+> +	lwz	r4, GPR4(r1)
+> +	addi	r1, r1, SWITCH_FRAME_SIZE
+>   #endif
+>   
+>   	/* Jump back to real return address */
+
+- Hari
