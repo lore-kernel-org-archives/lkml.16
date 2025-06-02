@@ -1,198 +1,350 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2074.outbound.protection.outlook.com [40.107.100.74])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16197219A70;
-	Mon,  2 Jun 2025 12:42:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748868131; cv=fail; b=A9i+/qlTAT6iGgtUpcSKqDh+9a9X+pppXiyOWkX7Nf0F3z82X08UEtDUGaM5pJ8vtS1WfCHaWEhd7iOGCtAjajz6hwCszxvdKKCuZWNIXMLtVqPtcjr/DVvLb62ICwof58+6LeX+OlaiVMFzWjmWp+fnnYI5Ih+bAOLwrMdCq2A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748868131; c=relaxed/simple;
-	bh=o19kDZ/5lbDOG+xQItLHswA5uCFHnp+HBrwO5NGS5Yg=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
-	 In-Reply-To:MIME-Version; b=RS0krY4cfTk3msdf06pvzk9K15bsjJe7SRekzQDaAcRDByCAc0yCLVU3kH+ueiBz9HmsXFdV5iAtNptRtjG+ky5Dh/KwNN2nXC/w2NrL+nmipquk1ignEE2gdhaZzCGCp1WbukmoTd+HYwzER2JsP8c6toIA7CnZLLeyocglou0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Zc8EOsfb; arc=fail smtp.client-ip=40.107.100.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174D01B0424;
+	Mon,  2 Jun 2025 12:42:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748868156; cv=none; b=kzQRag1F1yNDYsRf3UA6ChozipA8BCnWKaURSDDS3YSLqSn63qP9LELlg/oKhnU7Uw5BozbmshF/6ooE3tKKquWn8aF78581OJS21tR9yYCHEHKUJxEMIshhNYJAArQlzD2EIqC+Wmf+72dFD3ufv9X8WRAkCFznuxvG/5vdIO8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748868156; c=relaxed/simple;
+	bh=J8jwLwCGOlD4UX5mfWw+eqPyJEord+KPBbR+LYQWEs0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jS4a6NcpNqiNMv/ViAzvZ+JNbk9z6dxSUk4wQEB1UMCdVYQvpioQZRf6chuKM+P3Vs6P8qWYpZgDgMBOItbG/R+4kr4UHVqtymbTRxqB4q+fWvrCxW/QYTUcTfKtU1XnuAdHE/Ky+hqTC1FI0Qcsd/K2lNoeAfPb2aISo12SStI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GSqO/LFX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Zc8EOsfb"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tmxmPVHZwSeUouL9K5tfl3lUBZXmLMK/TAw+g6ubvdbB/mxrp4JaxNdLblbRSBOlPmDEwn2rmfMtT5fhBJNtntzaNj4ukrVT2F5Y+Z0DsEfGuq/qIHCJDyFdP9EYfnrUcpFgRyqGxqsfv//EuUeI7AODdGHs/uWw6fUBxwbrREACW8Q2xn4kh40Sh5xh7Us6+/IA6LeAXI/ctr37MNWEJ5pqk2GwODBmdoyDwHPRItMijqb72opQnw6I7mS0uAjsOoKaoiXMZWonCDfPaNo7wmEAG0vtLMBvCFx0sv+pwX11BRbF9j33ZU0WntKPZMYDJKGQbKz9CsMx96DcN2BxMw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=o19kDZ/5lbDOG+xQItLHswA5uCFHnp+HBrwO5NGS5Yg=;
- b=bcLJX2jtJxKI8tMHnwPrTei67zGP0kAMDm2UVXD1wtmck7JbHaWwJE9upQlCec00tFdwxADUJ4341oBYR6m2w6GjNPgmyt0L5UpMQzeQJrx5cGQXWfEV7hhE2aascab6YizXpzgMzwIarNjHjLc4kgej9TA38TdtEPZji31VXLrBZLlQ+jJLzcAWuXF8dIgt/pVDG9IRRzfjl+U7TAreE5nDeMf1xhiFYz5Zy/t4vYWafCj6ForKM1LeENn38slDqYuajzWJNdoEZ53L+5ZwVG3ALHihUw5VD7SXeQMrHI19qTBoQiR7TQi3OeSGqVs30HGUVxjG3nAL4+tq2wGj6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o19kDZ/5lbDOG+xQItLHswA5uCFHnp+HBrwO5NGS5Yg=;
- b=Zc8EOsfbNFtZNAc7ivwrVwgiadKE0bed1ivp9H2wfEPAXXVHsxQLb1aS98Qs7ypWb1Hcx0fMPYO4ZBut20PJ8OJ4TiRqbWn/F/C7cMMiyjaEAz2T0TsTrcKXS1L8zOIu1sDtA5gtc0NhQjfmXsrLPUIRRHPfp7K2Chm/KpqnANVTTrB8N616NRVhlMJNDMR629n2O0VbuFFLX3A8iCUu89+6AQhNtFly+6q+C8b1bMkbOnBdLKmlAtQgafQesTYJcvQv279rGT1llOyK1nxSLZujUgJ/X7WKCq4P2GnoAbAREGQ3NpcfxQZ2gEV1DwRwtdr0lEs4AUBjdYqs4jLPhQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
- by SA1PR12MB8965.namprd12.prod.outlook.com (2603:10b6:806:38d::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.32; Mon, 2 Jun
- 2025 12:42:05 +0000
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8769.037; Mon, 2 Jun 2025
- 12:42:05 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 02 Jun 2025 21:41:59 +0900
-Message-Id: <DAC20AXGABW2.X147X4JPMRBS@nvidia.com>
-Cc: "Abdiel Janulgue" <abdiel.janulgue@gmail.com>, <dakr@kernel.org>,
- <lyude@redhat.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
- <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Valentin Obst"
- <kernel@valentinobst.de>, "open list" <linux-kernel@vger.kernel.org>,
- "Marek Szyprowski" <m.szyprowski@samsung.com>, "Robin Murphy"
- <robin.murphy@arm.com>, <airlied@redhat.com>,
- <rust-for-linux@vger.kernel.org>, "open list:DMA MAPPING HELPERS"
- <iommu@lists.linux.dev>, "Petr Tesarik" <petr@tesarici.cz>, "Andrew Morton"
- <akpm@linux-foundation.org>, "Herbert Xu" <herbert@gondor.apana.org.au>,
- "Sui Jingfeng" <sui.jingfeng@linux.dev>, "Randy Dunlap"
- <rdunlap@infradead.org>, "Michael Kelley" <mhklinux@outlook.com>
-Subject: Re: [PATCH 1/2] rust: add initial scatterlist bindings
-From: "Alexandre Courbot" <acourbot@nvidia.com>
-To: "Jason Gunthorpe" <jgg@ziepe.ca>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250528221525.1705117-1-abdiel.janulgue@gmail.com>
- <20250528221525.1705117-2-abdiel.janulgue@gmail.com>
- <20250529004550.GB192517@ziepe.ca> <DA9JTYA0EQU8.26M0ZX80FOBWY@nvidia.com>
- <20250530141419.GA292183@ziepe.ca> <DA9KQF9CY77R.77PBMU8Y1FPY@nvidia.com>
- <20250530145026.GB293473@ziepe.ca> <DAAD0NZOCHS5.9FTVJIOI12QI@nvidia.com>
- <20250602114047.GA298147@ziepe.ca>
-In-Reply-To: <20250602114047.GA298147@ziepe.ca>
-X-ClientProxiedBy: TY2PR02CA0057.apcprd02.prod.outlook.com
- (2603:1096:404:e2::21) To CH2PR12MB3990.namprd12.prod.outlook.com
- (2603:10b6:610:28::18)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GSqO/LFX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D069C4CEEB;
+	Mon,  2 Jun 2025 12:42:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748868155;
+	bh=J8jwLwCGOlD4UX5mfWw+eqPyJEord+KPBbR+LYQWEs0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GSqO/LFXXTIKqwNn7Bwr5oX05wCy2BwopOyVreSbRdtz4Lz/NXozxsM6Cvbcd79QL
+	 hYLFS8aZXz4Xz2CELUsSs9PXAwsCnFT7ZNUOhENNv/FVpKS+VDdj32JkKLBlsIcsJR
+	 sZ9fuQZY8Mw0hoJ4FoviZ0hE+5LORbBhrgGlu7IDcqASt4UE6eivg/cdW2XJtMxCzA
+	 OsQ5/KWpn0ohL87BmonFjSyjbBXCax46yn/ndrL/scaXoeufeNZGfLi9t9C2eto8jv
+	 JGa+PptDSrfVc9RjNw+WFJ57MzKSod1jo77d6/p3Yxyj4gLvQfnOqnBIb9JSItSw2+
+	 kvYxRLIM5UJSw==
+Date: Mon, 2 Jun 2025 07:42:33 -0500
+From: Rob Herring <robh@kernel.org>
+To: Balamanikandan.Gunasundar@microchip.com
+Cc: miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+	krzk+dt@kernel.org, conor+dt@kernel.org,
+	Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
+	claudiu.beznea@tuxon.dev, krzysztof.kozlowski+dt@linaro.org,
+	linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] dt-bindings: mtd: microchip-nand: convert txt to
+ yaml
+Message-ID: <20250602124233.GA715676-robh@kernel.org>
+References: <20250602053507.25864-1-balamanikandan.gunasundar@microchip.com>
+ <20250602053507.25864-2-balamanikandan.gunasundar@microchip.com>
+ <654d2653-9152-449c-b3ee-4a91c700045e@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|SA1PR12MB8965:EE_
-X-MS-Office365-Filtering-Correlation-Id: 101a0403-45a0-4d38-a120-08dda1d2e168
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|7416014|10070799003|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MGxjTmJEZjlGT0Q2ckR5OGZEVXB0a0ppM0hGa1QxNlJUZnNlaklFckc4WUJ2?=
- =?utf-8?B?WFFMQUVOQ3luS2t5bVBGQU5Wc2dJY29iL2E2Q1BWdHZDMlZ6Q1JreFdSNFFH?=
- =?utf-8?B?ZkRSZndRWXh2Vm1Oc2dQcHdPL1BCTE9lZDhXczVvUlRkcXZ5aGc1USt1K2Er?=
- =?utf-8?B?R1NxMHJGSWdHK2tpbUdwaUVpczBpTnFoYmpRS1BWNmJ5MmlVZlpJQS9QYTNG?=
- =?utf-8?B?ZUsvSUROY0hXZXJJcTdEYW5nSFJEYmJwTnhsRjg0L2ZwQm5TdloxWUxCWkFX?=
- =?utf-8?B?aFBybDVzYXdRelJEUktEZTdtazcrYUdoakt1cE40QnZxeWhZTHhIKzhSZjk1?=
- =?utf-8?B?ZmQ1WWhIYWdRMWtzcXFKaFUxZ1hzZDNhUDByOUtESzc2YTNmbzl2S0syWDBU?=
- =?utf-8?B?ZHFmN2NwQVlNbjkzcURjazlPcm5hcnFDa0hyOGxGTmwrUG45WjNuWURJSzk5?=
- =?utf-8?B?aWtuekdDWmNyaEJxOGVvU1QxOWRCc0JxdzMyZUNoaGdUeXBPTVpHdGxCZHBY?=
- =?utf-8?B?eHptR0I1NVJyTW5BdXQ4bndkNmswMVovWU1xbGtHNTczcSt1ZFZ5MjlQWHM4?=
- =?utf-8?B?Qkl2RDdIZWYvNjkvZVJkZVN0UmFJcU8ySEZSeXlWczY2MWtiM0tYWjVsb3M1?=
- =?utf-8?B?Q1ZNalI3ZmwzcXgrQjJkK2pwMXlFYXBXVU1CaHc0UDVzN1d4QUszUWFoR2t1?=
- =?utf-8?B?QlphTElDTk0zby9YTmcrT2phaG51dTRzd1lyU2hKYStNeTRMLzRIazdaT0pL?=
- =?utf-8?B?OGMxNndYS1FndnczMXhlb1dxbEJpVEdYRXV3V0c1Q0JwOHdBREpHdUM4bXlI?=
- =?utf-8?B?NGEvTWd5YU5jeUVYSzU0NjI4VUlJcThtcmUwQ3Q3MVZ5VjdIRU9mZ1ZNQnl2?=
- =?utf-8?B?MXozRjBpdFRmSlM1cDRSSlhnNWEvakFObFc3Uldpd1ZvdVNjUFlQU0N4OWxr?=
- =?utf-8?B?dHc3MUY4TlU2YVllY0pzZ1Fvc2JLZUV4d1NyV3R3U05saGlwRjJPdkM3SGNW?=
- =?utf-8?B?OFpnUmdrTTBDTDJEZGhQV3ZhbjVTQ1Bxb3lSTXhPNCtGS3h2TFZEZjZGZU9Q?=
- =?utf-8?B?TGtCeUxHYUxaUXJzYXhZNlFZYmtrQUJaWk9mYmZXWllqalZVSnlJUzQ2dklI?=
- =?utf-8?B?eHFwL3Rkb09LR2hodXNzZlJTZGJSYWl1VlZpMTAwUVl4MExhaUc3VXFsdkdB?=
- =?utf-8?B?S1l2bHNoNDBQS0g4aWp0TXcyWDJYZEtRRzZRRnlreStXTWUzaGtUMVVUT3Bh?=
- =?utf-8?B?OW91eXFnVkFDMnRqaWhHeS84ZTVtb3kzemNUaDVIRzd2eVQzV0Q2azN5UFdF?=
- =?utf-8?B?dHlDQlBKY2pFeVRDNHI1cWRXT1R4dUNmbkJKQWNBeHFLcmZWdWRhbzBLUms2?=
- =?utf-8?B?RUhGVStCdjFRb25yWExPWG5jQjloM28zSENIWDMrNnU0NGNMMW0waDdmaVZj?=
- =?utf-8?B?TmRkSU4yNit1UmZISmhCTU4yWElpZGJpNkFYandrcEx3M1lUTncyOXZlb3Y2?=
- =?utf-8?B?VTNXT3VITmtBMGNnQ1ZETFpjeksrZ1E4TGVBckdUQTE5MXJPNmxDdnBjR1Zq?=
- =?utf-8?B?V2xuclFWSWh0Rk5IbVZYT1grMlZkVURNT2ROSysxUy9UYkRpNnY2L3JFYlZP?=
- =?utf-8?B?SXZWaHY1UmozdDBrRWNMTThYR1RldXNHaVpnbjQvMW9SVDhMRFg1eEJxQTJC?=
- =?utf-8?B?eGVtWmcxRU5BMnJVLzhsR0FMdjRUQllpV0J6Uko4eThkOUt0RmVLMlExV3Qz?=
- =?utf-8?B?ODFFdTdGcTJzOGVZUklyRWdKekRTSWFjTm50S1pIYjNUeUozWVRTYXN2Um5y?=
- =?utf-8?B?alFCMHNZVVZ5NzJYalNuSTdSbnQ2bjd4RUhidXpBWG1RUEM1aVprTy9WZWRw?=
- =?utf-8?B?K3U5Nm9DUEJCckZVOUg4QVFrK01DWS9QTWgrYmxRaFJmcllTVzBlNEpkRDB3?=
- =?utf-8?Q?y0QR1bgdKAI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(10070799003)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OTBjMFA2T0NKdHlWcXZXTTFDckFSWDlVMnV1ZnNuajhwUTltQ05sbDFiRGdI?=
- =?utf-8?B?cGpGRzZwSWl3QUxlQUN3Rmo1R09ickJyQ293amlnamsyZkdQRVNGT1lXZlAv?=
- =?utf-8?B?UlpnOHhNaEljVDhWMG0zN1F5c0ZnN0pYVnN0cVBUa2IxNnh5V3VJb0ZlbjR0?=
- =?utf-8?B?N2s0R0JVakFUTlRlUU9GM042QVNBQ2FKZ0VOeGhsckdJc1p3K3o2UisyWk5w?=
- =?utf-8?B?T1haekFLaXdSTHpaczlweEx5ZElZMGNpY1dTZmdKMzNxQUpCVVdpZkdqcENx?=
- =?utf-8?B?ZjBhTlpJbEN4cFZhcURwM0ZNU2QyQmJHeURYZDliTUNhMHR2TVNDQVlLUWoy?=
- =?utf-8?B?WU9icTRaSzlTVkhLU1VmclZZQ1VMTWxLbUZKYUFtNEJSdGdXLytmckpSRjU4?=
- =?utf-8?B?N0ZDVzFQUGg4Yy9Sdk1PaXU3cjZ6NkRsSWIwZy9NcEdTZWdRMmxxa1NnZXZx?=
- =?utf-8?B?azQ0Q243UU1zNHV2Q2ZKQ1I0VlZUM0ExNFJOMExOTVY2R3dqbVFTZG9qYTVE?=
- =?utf-8?B?SXBNb1FpSXFhVW1Wb0JJTmJvT1QxS05PcWNVN2RNZjZKekh5QTcrQ0RvVk9a?=
- =?utf-8?B?TFQ5MEdUeitrNHlPVy9TbndMZUJ0QTd0QW5rMmxqcjVyb2xYZ29mWW9XZVNN?=
- =?utf-8?B?aGE4cUhJYlh1Z05zRWh1RmRuSTlqNFBkZzUxY1NzQXEybG9od2hseHRtWE40?=
- =?utf-8?B?VnlOd015S0wzb00rVDNubmxDQ1RmVk9RMDlhekJHUWJRb3FpVHBpb1VrU09o?=
- =?utf-8?B?R05iaURidHkvT084TzU3TkVnMThMNU9CZDVBQ3lnZmJFcGpQd3Q2QWN2cStZ?=
- =?utf-8?B?bm53S251OExvVW5VMFh2RHFaQnFkMWtVZW1kdFRCL04rSzYvcFhRaDlGcXVh?=
- =?utf-8?B?dUdzeFZtUTJYQVdzcCtiTzhDSjZQQ0lqVzNERDBjZWxURE1TSGtOVTNaN2Vl?=
- =?utf-8?B?RE1DS2Y5UXMrelNXcTVYbWl3T1BERGp0bXg3dzRvc2dmSWNBWTZtd0sxcjgv?=
- =?utf-8?B?QkRzTHFFdmZyQXkyNFh6bmxJSHd1V1d5a1pHTEc2eW1XTGZmRjE1aldRVzRs?=
- =?utf-8?B?VkUreGJTTUdNUEZtTkhiWHNKQjhxMTZTSG5EcTdYQ1I4TVNwMGN2SE8wRjd5?=
- =?utf-8?B?NUlvS0JlaEtYMTdIUFphMkZ2UVczVXNiWUorZktUUEdveHd6TDZQL0ljQ1kr?=
- =?utf-8?B?TWQwelA2MzJQVGtmZDhZcHlBaGlHS08yaXEzMkZxMWZweml0akdFNVkvYVpB?=
- =?utf-8?B?VEpsRkFNd1IyQWd2TWZzZG5IdnV0ejlySEJvY1V1SUJoZ0hsSk54ZER6eGhY?=
- =?utf-8?B?UHBKWUg5YVBKNkRIcGpOVys2QnV5eDE4bFRwWU9aYmxIek53enUwSkgraUho?=
- =?utf-8?B?b0dmMFNtVHhYMkptQTEyazcrTU5pM1duU0FOSzNZRVlCb3o5Q0ZMUDhWU0t2?=
- =?utf-8?B?b2JGeXR4TUQ4eVF3bHRINW41T01LRDUyeFJ4WEtkdDFsbmwwWEpTOTlsblQ0?=
- =?utf-8?B?US9qVFVpUWRXZS9iQ21iZHRxNElJVU1ZS3MwMWcxcHFOK0FadDZ6NW4vaTJ2?=
- =?utf-8?B?dEsxejk1WFZyUTRKV2dvWkZBU2JNZlorTWoxaUdGZEkyWlhOdHRGUlBZWXI4?=
- =?utf-8?B?aDl2N1VIWmtiNm8xL1NDMU1xN1RSVXFNVm9hV2RCRERkYXpnV2xyYUxSQlZp?=
- =?utf-8?B?TXlMT3NLYTNoYm9saFRSWFdndms5K3doZEJnWWVTQ3FxRW85UENLbWJvUUwv?=
- =?utf-8?B?Smh2VUFSVjZ5c1k0bG41ekpBK1JNNHkxTVRHZHBOUXdrVEgweitvbGN0YWdq?=
- =?utf-8?B?dXIvZitBamt6ZDlSb3REczFFUmpINGxSZkc4ZGZWeEIxMWhsN1RZdjZ1RGw2?=
- =?utf-8?B?ek5KREkzNGx0bG5WZWl2WFZ4NXZPUm1RL1lWd3RkQis1VzNINWxaSHFQSGpH?=
- =?utf-8?B?NlNNb01VNVNzK09peW0wSU40SWJjaU95QjdRSHNmTkkyaGdpWWJvM0Y1U2s0?=
- =?utf-8?B?Z1dEK3RoSWFibzdPaTFBb2R6YWVPWjI4QmFkMEFic2pZQVNsR2hpRlBCZ3lH?=
- =?utf-8?B?RFl6V1ZRc1dneENPMEw5NjJSa2VVdE9Zc2RCR3Z1TWU5alY0d0FEaDhXbWho?=
- =?utf-8?B?NStPVy9aMStVZ05Pb3RPMTg1SHRLWC81MU5LOHBRSzA4djN4WUZ1Q3lrZFZK?=
- =?utf-8?Q?dfBCa9LflvnpQmoYxXqEQbExPpyVKwnDRNI4PTAKpUMC?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 101a0403-45a0-4d38-a120-08dda1d2e168
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2025 12:42:05.4960
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6f4hfunPWioM8QXJ0r0DCWGlI6lzhMZLYPL3+44B/cs4UvYbJySiNbX/V2/inau8SRdw4QT0WmoqlZTqrHQyNA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8965
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <654d2653-9152-449c-b3ee-4a91c700045e@microchip.com>
 
-On Mon Jun 2, 2025 at 8:40 PM JST, Jason Gunthorpe wrote:
-> On Sat, May 31, 2025 at 09:54:20PM +0900, Alexandre Courbot wrote:
->
->> So if I understood your idea correctly, this would mean creating the
->> SGTable and mapping it in one call, eschewing the typestate entirely?
->
-> Probably no need for a type state
+On Mon, Jun 02, 2025 at 06:58:52AM +0000, Balamanikandan.Gunasundar@microchip.com wrote:
+> Hi,
+> 
+> On 02/06/25 11:05 am, Balamanikandan Gunasundar wrote:
+> > Convert text to yaml for microchip nand controller
+> > 
+> > Signed-off-by: Balamanikandan Gunasundar <balamanikandan.gunasundar@microchip.com>
+> > ---
+> >   .../devicetree/bindings/mtd/atmel-nand.txt    |  50 ------
+> >   .../mtd/microchip,nand-controller.yaml        | 169 ++++++++++++++++++
+> >   2 files changed, 169 insertions(+), 50 deletions(-)
+> >   create mode 100644 Documentation/devicetree/bindings/mtd/microchip,nand-controller.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+> > index e36c35b17873..dbbc17a866f2 100644
+> > --- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+> > +++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+> > @@ -1,53 +1,3 @@
+> > -Atmel NAND flash controller bindings
+> > -
+> > -The NAND flash controller node should be defined under the EBI bus (see
+> > -Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt).
+> > -One or several NAND devices can be defined under this NAND controller.
+> > -The NAND controller might be connected to an ECC engine.
+> > -
+> > -* NAND controller bindings:
+> > -
+> > -Required properties:
+> > -- compatible: should be one of the following
+> > -	"atmel,at91rm9200-nand-controller"
+> > -	"atmel,at91sam9260-nand-controller"
+> > -	"atmel,at91sam9261-nand-controller"
+> > -	"atmel,at91sam9g45-nand-controller"
+> > -	"atmel,sama5d3-nand-controller"
+> > -	"microchip,sam9x60-nand-controller"
+> > -- ranges: empty ranges property to forward EBI ranges definitions.
+> > -- #address-cells: should be set to 2.
+> > -- #size-cells: should be set to 1.
+> > -- atmel,nfc-io: phandle to the NFC IO block. Only required for sama5d3
+> > -		controllers.
+> > -- atmel,nfc-sram: phandle to the NFC SRAM block. Only required for sama5d3
+> > -		  controllers.
+> > -
+> > -Optional properties:
+> > -- ecc-engine: phandle to the PMECC block. Only meaningful if the SoC embeds
+> > -	      a PMECC engine.
+> > -
+> > -* NAND device/chip bindings:
+> > -
+> > -Required properties:
+> > -- reg: describes the CS lines assigned to the NAND device. If the NAND device
+> > -       exposes multiple CS lines (multi-dies chips), your reg property will
+> > -       contain X tuples of 3 entries.
+> > -       1st entry: the CS line this NAND chip is connected to
+> > -       2nd entry: the base offset of the memory region assigned to this
+> > -		  device (always 0)
+> > -       3rd entry: the memory region size (always 0x800000)
+> > -
+> > -Optional properties:
+> > -- rb-gpios: the GPIO(s) used to check the Ready/Busy status of the NAND.
+> > -- cs-gpios: the GPIO(s) used to control the CS line.
+> > -- det-gpios: the GPIO used to detect if a Smartmedia Card is present.
+> > -- atmel,rb: an integer identifying the native Ready/Busy pin. Only meaningful
+> > -	    on sama5 SoCs.
+> > -
+> > -All generic properties are described in the generic yaml files under
+> > -Documentation/devicetree/bindings/mtd/.
+> > -
+> >   * ECC engine (PMECC) bindings:
+> >   
+> >   Required properties:
+> > diff --git a/Documentation/devicetree/bindings/mtd/microchip,nand-controller.yaml b/Documentation/devicetree/bindings/mtd/microchip,nand-controller.yaml
+> > new file mode 100644
+> > index 000000000000..2b0d03343611
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mtd/microchip,nand-controller.yaml
+> > @@ -0,0 +1,169 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/mtd/microchip,nand-controller.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Microchip NAND flash controller
+> > +
+> > +maintainers:
+> > +  - Balamanikandan Gunasundar <balamanikandan.gunasundar@microchip.com>
+> > +
+> > +description: |
 
-No need indeed, nice and simple.
+Don't need '|'
 
->
->> And the `SGTable` would own the backing data, and only release it upon
->> destruction and unmapping?
->
-> But I don't think you can do this, it is not allowed to pin kmalloc
-> memory for instance so you have to do something as you showed to tie
-> the lifetime to the kmalloc across the sgtable lifetime.
+> > +  The NAND flash controller node should be defined under the EBI bus (see
+> > +  Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt).
 
-The caller would have to pass already-pinned memory. And to allow both
-the owner and borrowed patterns we could leverage the `Borrow` trait I
-think.
+Please don't keep references to old bindings. Really, you should convert 
+this binding first.
+
+> > +  One or several NAND devices can be defined under this NAND controller.
+> > +  The NAND controller might be connected to an ECC engine.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - atmel,at91rm9200-nand-controller
+> > +      - atmel,at91sam9260-nand-controller
+> > +      - atmel,at91sam9261-nand-controller
+> > +      - atmel,at91sam9g45-nand-controller
+> > +      - atmel,sama5d3-nand-controller
+> > +      - microchip,sam9x60-nand-controller
+> > +
+> > +  ranges:
+> > +    description: empty ranges property to forward EBI ranges definitions.
+> > +
+> > +  ecc-engine:
+> > +    description:
+> > +      phandle to the PMECC block. Only meaningful if the SoC embeds a PMECC
+> > +      engine. Refer microchip,pmecc.yaml
+> > +
+> > +  "#address-cells":
+> > +    const: 2
+> > +
+> > +  "#size-cells":
+> > +    const: 1
+> nand-controller.yaml has this values defined as
+> 
+>    "#address-cells":
+>      const: 1
+> 
+>    "#size-cells":
+>      const: 0
+> 
+> I am unable to overwrite this as they are const values. Microchip's 
+> nand_controller is a child node of ebi unlike other nand controllers 
+> where i need to overwrite this. I didn't inherit nand-controller.yaml to 
+> has this defined locally.
+
+It is matching on the node name. More below...
+
+> 
+> I upgraded dtschema and ran dt_binding_check and dtb_check again for all 
+> the bindings in this series as recommended in v2 comments. But I don't 
+> get the error below
+> 
+> https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250311122847.90081-2-balamanikandan.gunasundar@microchip.com/
+> 
+> I am not sure what else I am missing. Your comments please?
+> 
+> Bala.
+> 
+> 
+> > +
+> > +  atmel,nfc-io:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > +    description: phandle to the NFC IO block. Only applicable for atmel,sama5d3-nand-controller
+> > +
+> > +  atmel,nfc-sram:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > +    description: phandle to the NFC SRAM block. Only applicable for atmel,sama5d3-nand-controller
+> > +
+> > +required:
+> > +  - compatible
+> > +  - ranges
+> > +  - "#address-cells"
+> > +  - "#size-cells"
+> > +
+> > +patternProperties:
+> > +  "^nand@[a-f0-9]$":
+> > +    type: object
+> > +    $ref: raw-nand-chip.yaml#
+> > +    description:
+> > +      NAND chip bindings.
+> > +
+> > +    additionalProperties: false
+> > +
+> > +    properties:
+> > +      reg:
+> > +        items:
+> > +          - items:
+> > +              - description: describes the CS lines assigned to the NAND device.
+> > +              - description: the base offset of the memory region assigned to this device (always 0)
+> > +              - description: the memory region size (always 0x800000)
+> > +      rb-gpios:
+> > +        description:
+> > +          the GPIO(s) used to check the Ready/Busy status of the NAND.
+> > +
+> > +      cs-gpios:
+> > +        description:
+> > +          the GPIO(s) used to control the CS line.
+> > +
+> > +      det-gpios:
+> > +        description:
+> > +          the GPIO used to detect if a Smartmedia Card is present.
+> > +
+> > +      atmel,rb:
+> > +        description: |
+
+Don't need '|'.
+
+> > +          an integer identifying the native Ready/Busy pin.
+> > +        $ref: /schemas/types.yaml#/definitions/uint32
+
+Constraints? I'd assume there's a limit much lower than 2^32.
+
+> > +
+> > +      nand-ecc-step-size:
+> > +        const: 512
+> > +
+> > +      nand-ecc-strength:
+> > +        enum: [2, 4, 8]
+> > +
+> > +      nand-ecc-mode:
+> > +        enum: [soft, hw]
+> > +
+> > +      nand-bus-width:
+> > +        const: 8
+> > +
+> > +      nand-on-flash-bbt: true
+> > +
+> > +      partitions:
+> > +        $ref: /schemas/mtd/partitions/partitions.yaml
+> > +
+> > +      label:
+> > +        description: Name or Label of the device
+> > +
+> > +    allOf:
+> > +      - if:
+> > +          properties:
+> > +            compatible:
+> > +              contains:
+> > +                const: atmel,sama5d3-nand-controller
+> > +        then:
+> > +          properties:
+> > +            "atmel,rb":
+> > +              description: an integer identifying the native Ready/Busy pin.
+
+This is wrong. This sub-schema applies to the 'nand' nodes, but 
+compatible is in the parent node for which the sub-schema has no 
+visibility. The 'if' is always true because 'compatible' is not present. 
+The 'then' is also always true. I would just drop the constraint.
+
+> > +
+> > +unevaluatedProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    nfc_io: nfc-io@70000000 {
+> > +        compatible = "atmel,sama5d3-nfc-io", "syscon";
+> > +        reg = <0x70000000 0x8000000>;
+> > +    };
+> > +
+> > +    nfc_sram: sram@200000 {
+> > +        compatible = "mmio-sram";
+> > +        no-memory-wc;
+> > +        reg = <0x200000 0x2400>;
+> > +        #address-cells = <1>;
+> > +        #size-cells = <1>;
+> > +        ranges = <0 0x200000 0x2400>;
+> > +    };
+> > +
+> > +    ebi@10000000 {
+> > +        compatible = "atmel,sama5d3-ebi";
+> > +        #address-cells = <2>;
+> > +        #size-cells = <1>;
+> > +        atmel,smc = <&hsmc>;
+> > +        reg = <0x10000000 0x10000000
+> > +               0x40000000 0x30000000>;
+> > +        ranges = <0x0 0x0 0x10000000 0x10000000
+> > +                  0x1 0x0 0x40000000 0x10000000
+> > +                  0x2 0x0 0x50000000 0x10000000
+> > +                  0x3 0x0 0x60000000 0x10000000>;
+> > +        clocks = <&mck>;
+> > +
+> > +        nand_controller: nand-controller {
+> > +            compatible = "atmel,sama5d3-nand-controller";
+> > +            atmel,nfc-sram = <&nfc_sram>;
+> > +            atmel,nfc-io = <&nfc_io>;
+> > +            ecc-engine = <&pmecc>;
+> > +            #address-cells = <2>;
+> > +            #size-cells = <1>;
+> > +            ranges;
+
+I think this should be '<0x3 0x3 0x0>' to translate this from a EBI 
+chipselect to the nand chip chipselect.
+
+> > +
+> > +            nand@3 {
+> > +                reg = <0x3 0x0 0x800000>;
+
+And then just 'reg = <3>;' here.
+
+That assumes changing this would work with the existing driver.
+
+Otherwise, we might need to add 'select: false' to nand-controller.yaml 
+and make sure all the controller schemas reference it (except this one).
+
+Rob
