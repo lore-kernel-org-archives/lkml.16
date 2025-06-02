@@ -1,90 +1,104 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C32221DE4C2
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 21:46:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B60324BD1A
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 21:51:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748900775; cv=none; b=bYI20CKqJ1j5jDvgOAb8k4VySQGLyJq3+3VlhwJfOPt0ued1W965ZUAJbrSNVH8vhsn4unma0fgd6PYSpCY3atHRvpR/OJou0jfxDZPaYXA/hTnrAjXCjB3A2u4Y0JguCTJJKoayIAx07kuNmi3Uk+r2uuIGGwP/U91GLDTxHx8=
+	t=1748901115; cv=none; b=dk3r+O9PuJVFp/ZpKG+Dulsrbq+D1BqASWfhurRcyH70nOEn3DQYsh4BkDO02uD5YxIizSzirkuOC1eOdcZrusA/cyUz5+vO5Y+XyQDjG3U9OLuzzXje5DwD3FAH8d2k1mnF9OnXiQTfxdVAu1aQVjhj03TSyTAnili2a4oUUmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748900775; c=relaxed/simple;
-	bh=i03a0gEOQ8sqo+TjLK80otPzRQn4e7S2y/MwwvPRNyY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TLVVGU5VDWP5ABfClJkY/skWrTy3nLjrre2o+/s8+pBrQtSEqKMQhp0JBdg5X+vWp/vNz2TxFd0soPyRi4bCnsOShh35vKCDWwpgDJL9SSIwB7RCaevDn0EwUtjTrbBzCM/fz+quSmKCXthwCsXEM4eepb3b75UCAcsJ4dwvIog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=AMU+1Akq; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1748901115; c=relaxed/simple;
+	bh=XE+uKvuWjdGPReHa+Kg+yAXhMCxyxJtDYEscw7wyFhI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nVA34tpUL1Iv52+6PqDGICICUN80HQL1+J4uWHAb/+TMlUXRMn3LbXWPajYTeQzM2iezhweVjXrELdEHKGEpsRiNE511kuuuHMOf2BZjREJyQZYAYkEOI1x36WQr0hGJrKyPtlXa6/5IAAiIJH/2pKaCMGu75i8HV9+nJBhYV7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VGBE5Ggl; arc=none smtp.client-ip=209.85.210.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AMU+1Akq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=lT+HRH6QjA3KSvp9CsIpP+VPy5730b4IvOKtxzXqYYo=; b=AMU+1Akq47fj1ahARZP3lorMYz
-	gWxiVTs6Gvro4V9kQJXk4/9MHRbERwQvbyl/BefO0s0ZYNLRV3zP4PW9ulQfscoy3qNReqTY+fWE5
-	slzaFDleE+84bdBoXQ160bL6WB6fZMkeLb4SndAnkGr7RrjRhbwzyVwf/hfnnNeS1/subsXHe3KmD
-	C6Q8S3BOPqcu+oDkyR9K9c/OUhE/ezjs45tQT7YgrKno+gPB9QahsInL8rb9rnv28Z/KO5w7KzFxH
-	UlMttkqs00HjM0/Tw/r/Jv++3EibKYhYOLAxeHbvoMASU6I0Cd+WtQguOkrKWy2tX9TRMcHAgLfDr
-	o6d0XJ7Q==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uMCyu-00000001MIc-0oeF;
-	Mon, 02 Jun 2025 21:46:08 +0000
-Date: Mon, 2 Jun 2025 22:46:08 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-	Hugh Dickins <hughd@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] mm: Fix compile error when CONFIG_SHMEM is not set
-Message-ID: <aD4boBrdZXtz_5kL@casper.infradead.org>
-References: <20250602170500.48713a2b@gandalf.local.home>
- <20250602171458.7ceabb1c@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VGBE5Ggl"
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-7382ffcb373so1175782a34.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 14:51:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748901113; x=1749505913; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7VTx1z0/jLBEHiZj+gQmntz7XkqKdJtW2AX9oINuRYk=;
+        b=VGBE5GglLY0egC2PTaWIckNfDRAd4ZL2EaaD1R4vJ3XgcFd9ckgigQQeaSWyjVr3f4
+         CNknn7KrGDZ+Ueao0Sftyzq2QkAnlqpSvEWvZ5qJ82mYKnWtUxA0/1yUM6obYGQTAltg
+         SutrZ40VHHuAkoc8gVyTDgaVdM8qFteaKvGw3yxZgirAaYDAPIdXqmiivsbGwGx03YXM
+         jfu0lWTeUBSCoXuK7iJaEK5qcrkXc+qq3T1Xpt7HNtasSyKo2/m2mFtCFFDZsNVYgWDR
+         +pstq+ccoYuGeXWO9RVMVJoErRs46iADrGn0xtppjE/9GCfyv5ecwEoZhrdMdAaezghL
+         qQhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748901113; x=1749505913;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7VTx1z0/jLBEHiZj+gQmntz7XkqKdJtW2AX9oINuRYk=;
+        b=EasXqz8ly/QdnKOuzuFGQDiEnL1qlOO+L4abnDH3AwNGJKosJWwvofjWstNUvHui2z
+         XPdihTa35Zm8bSTboleA6D5LgZQpnM8cv/1v3utYsuAvZYQuHoPyzt/8WGJBOHw1BB0f
+         +4c/WT3uOY1uj9GCPOCMPKyuHQXryl0vlHhtmLXudeo7UE0jOoGYrK3zU2JsVSKGq4so
+         zX1u12VnxARlLOlDGETj3+Vy1Pbn5zwX49+NWK8g6tAByAlN52CO3YLPTZZ03N/LnVoF
+         lvbQySRQVxr/eepSv1/ZVJUursnOGJVm5OQ7c3VEyQnhJIVfsoF3U8xWrm6IAs/S3+Eh
+         KyMA==
+X-Gm-Message-State: AOJu0YxUGaGZVBHDrH9GHezO/zCS38MJjHRXfQhA00RPr98GeAHM3Bt8
+	vSREM+UJeQTqkL5WX+06S2gIMvqFt8ngWcrTZ3cz0/+/R2xKjzFoTJlWwtObNXzP7ojZmZUfo/+
+	F/jWMcI5WeK8a4QBOWMVz88PeCLfW2As=
+X-Gm-Gg: ASbGncuyt+kqgZ9cvES1vkclIEKj7/kdjOaGd/QkfFVjhVHiULnsBjVWuyk2F81EaKu
+	P/PgKzE8BJPDzxAf0s5NN+FiUUcWeB92cxVDVpITo0unQJ1IrQBPzTpCQexDvlPXCC/pbs2uCT0
+	ofxIw6pMhEhTn6qheCPXDyl2HK6aOHaJFwtg==
+X-Google-Smtp-Source: AGHT+IHmi2NetFTv8t2KDL1fujnjEBP6Sz7JS+HOWeddJFsMV+AGpShVlKja8tJHWyP4ZrUlVudYHv+ymMauT+eDNsU=
+X-Received: by 2002:a05:6870:701f:b0:2a3:832e:5492 with SMTP id
+ 586e51a60fabf-2e921565ef6mr8026532fac.25.1748901113155; Mon, 02 Jun 2025
+ 14:51:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250602171458.7ceabb1c@gandalf.local.home>
+References: <aDlskzKIAULMlwPj@gondor.apana.org.au>
+In-Reply-To: <aDlskzKIAULMlwPj@gondor.apana.org.au>
+From: Andrei Vagin <avagin@gmail.com>
+Date: Mon, 2 Jun 2025 14:51:41 -0700
+X-Gm-Features: AX0GCFudKjyUPLOY8zW4gpYze4Qc2rn5-d480mXQEPMVsB7ghp6_CAys78NyEsE
+Message-ID: <CANaxB-xUyhtGq500ToxXLMJhD_-UC9rKFX0_3CezxNyhSJ=ouw@mail.gmail.com>
+Subject: Re: [PATCH] time_namespace.h: Add struct seq_file forward declaration
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Dmitry Safonov <dima@arista.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 02, 2025 at 05:14:58PM -0400, Steven Rostedt wrote:
-> On Mon, 2 Jun 2025 17:05:00 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > From: Steven Rostedt <rostedt@goodmis.org>
-> > 
-> > When CONFIG_SHMEM is not set, the following compiler error occurs:
-> > 
-> > ld: vmlinux.o: in function `ttm_backup_backup_page':
-> 
-> I'm not sure this is the right fix or not.
+On Fri, May 30, 2025 at 1:30=E2=80=AFAM Herbert Xu <herbert@gondor.apana.or=
+g.au> wrote:
+>
+> Add forward declaration of struct seq_file before using it in
+> function prototype.
+>
+> Fixes: 04a8682a71be ("fs/proc: Introduce /proc/pid/timens_offsets")
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
-> > +int shmem_writeout(struct folio *folio, struct writeback_control *wbc)
-> > +{
-> > +	return 0;
-> 
-> Perhaps this should return:
-> 
-> 	return swap_writeout(folio, wbc);
+Acked-by: Andrei Vagin <avagin@gmail.com>
 
-I don't think so.  ttm_backup_backup_page() gets its page from:
-
-        to_folio = shmem_read_folio_gfp(mapping, idx, alloc_gfp);
-...
-                ret = shmem_writeout(to_folio, &wbc);
-
-and if you look at the implementation of shmem_read_folio_gfp() does:
-
-#else
-        /*
-         * The tiny !SHMEM case uses ramfs without swap
-         */
-        return mapping_read_folio_gfp(mapping, index, gfp);
-#endif
-
-so I would say that if anybody is actually using it this way (and 99%
-chance they're not), they literally cannot write back the folio.  So
-I think your initial patch is fine.
+>
+> diff --git a/include/linux/time_namespace.h b/include/linux/time_namespac=
+e.h
+> index 0b8b32bf0655..bb2c52f4fc94 100644
+> --- a/include/linux/time_namespace.h
+> +++ b/include/linux/time_namespace.h
+> @@ -12,6 +12,7 @@
+>  struct user_namespace;
+>  extern struct user_namespace init_user_ns;
+>
+> +struct seq_file;
+>  struct vm_area_struct;
+>
+>  struct timens_offsets {
+> --
+> Email: Herbert Xu <herbert@gondor.apana.org.au>
+> Home Page: http://gondor.apana.org.au/~herbert/
+> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+>
