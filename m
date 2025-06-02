@@ -1,168 +1,232 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3C40221FB4
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 13:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ECC8222561;
+	Mon,  2 Jun 2025 13:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748872474; cv=none; b=F//6GTrwFECNNZfzjLKbS3CeBanIiW1zbML3ah6pqshZwGADFUj7UFR6t9tlD5gvnoqDKsyD+GE1MfCffD1+DTfPXxHAqTwWCuXBALuSI4Ag8P5LonuPJ724QqwO/foF65dwTZEb5fhTzjuiFFCzTHAPVJ+ciNQUcWLGMSn6vaU=
+	t=1748872506; cv=none; b=t4N/3hJBK/xLGNypYQ9eipiltUqbsqouqpFmbz0ml1mw5PetrPXDSw1M972duNKvf+Lv97/J+0oXMDWcBb3UhXxWmwduzUPMJHLJZ097sMSznzBoNUCFoPh6DTDmP9bk37b+e3z3A3tmn6whhBG0fE+yNcsCDZnXNFj7KQVulZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748872474; c=relaxed/simple;
-	bh=Vid+FEUoJKFMrUZGrDSzl6LsuWKYDUaU90e4+EdKkRo=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=SiFgKXwHvXysQEqPvryUH5LonUmL7PShWFIBOayFhFz/fJiwbZ0n1iMNIeFlDGf9XlufsAR1gzNTorUqAr6nj6NrYA75ANoLj/OW5Qn4S3umrAAtHoMw+HTpH9KZytSERJUCZEAe1qek7MK7O91pwqpJs4aTyHXvEGEmWiLiWKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3dc9cd70437so52495875ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 06:54:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748872472; x=1749477272;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8KVbGpUMlPxut20Iu0UwV8Qrt7EeeVNR+/KWAMkeocI=;
-        b=C1kzjbwt0DeepXgvW9a57tPPbjgJNX0BcBZN249yk2HOX3gKlYhG/+5YEAr8Z2X8Ab
-         5wK+pTr5W9m5sW/VZfGOwxbw+nsI7NrMFlxJT41RDnSh1NvDcevd7iVKGbaYkwu2vu+y
-         2OI70fuw/xDiwUtQ2autFh9JogiYXpGncn1wmoNHt31NG6wo2kxuyhUSnks9EMBcBAX9
-         sovsOEPJ5YY2leKWv72DbV5YsXu7t8eIzan8XpvLT0fycddc/i2w3INvhfcZcaPBdCNx
-         tg8H2aI0yqsEpDpfW5Yyxv9qqJR0oafc4fPAELVFI4Wtev9Lo+ibe1FmfUNaL7FD+DKq
-         KOOw==
-X-Forwarded-Encrypted: i=1; AJvYcCUBD4i/b90KtqhSCqwFa/dpvhwR64uHGWTmYDu79AkXSvyJ+W3YjVCABag5deLcTqp5CIaH1Ol4LpxKq+k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrVF1DfyoriFfVr7HGm3kRKpkpa+Ttygk+4LoAePfDLmVlBynM
-	AUp31W+WX/UrPgrsQG8dHSOMafbi87uG1d2vmiqmVmT5FrdWEu0hqKrKbyX1ZhzdQ1qRwWFjSaD
-	i0HMSHQHwfL74DRwT5NfD9tF/k7XLLQrMOn8o1Z/g/czkC9B+6vBM2xKQ8/c=
-X-Google-Smtp-Source: AGHT+IEbbr8aC5OBIH675LUi1XviHRh7vpww8ni/7KPCRegtkfA3qlcgVPD6SK3VS37vequJElmZgcA1DdnH1XMm3+GEL8HzU2aX
+	s=arc-20240116; t=1748872506; c=relaxed/simple;
+	bh=mIUipTaRh6NCVM7jbqFGFymMTskoonxgS39J9efjgpE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZwUOjCjlLa3cQQC2zOCN3FbHKkfbZejmEqXdpKYnnvGB9+LQ0qSVljMEDOoGWJNIb5FaT64cfD6ABcIzPPx0oAx/UID6xjO2yhnMWMoWb6wlVAdyNm8ipt40OiqQ0MY7+dIBdgw+j9Tc3FCzYT9x4rRMpiLxWLeaKLG9hzWlaI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=UFM0jlIm; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="UFM0jlIm"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id A56EBC9;
+	Mon,  2 Jun 2025 15:55:00 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1748872500;
+	bh=mIUipTaRh6NCVM7jbqFGFymMTskoonxgS39J9efjgpE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UFM0jlImjGSYOo657etBS6Zhecr4zoJyHsB1UF2ZwpHy7PfbpPwqeieTx1JP/1N95
+	 Mcsials05bjNHB9Rl9CP8tlotTmkQ7dnRG7H/P+lNaZyVaukdEu2demSZ3iLlpswXi
+	 je2rbcE1gQl7wA9VVY8w4Md1qw8eXFP7nNuOoKmk=
+Date: Mon, 2 Jun 2025 16:54:53 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+Cc: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Subject: Re: [PATCH v3 14/15] media: rcar-csi2: Add full streams support
+Message-ID: <20250602135453.GC23515@pendragon.ideasonboard.com>
+References: <20250530-rcar-streams-v3-0-026655df7138@ideasonboard.com>
+ <20250530-rcar-streams-v3-14-026655df7138@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3801:b0:3dc:7a56:18f6 with SMTP id
- e9e14a558f8ab-3dda339e432mr94719635ab.22.1748872471778; Mon, 02 Jun 2025
- 06:54:31 -0700 (PDT)
-Date: Mon, 02 Jun 2025 06:54:31 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <683dad17.a00a0220.d8eae.0054.GAE@google.com>
-Subject: [syzbot] [bcachefs?] kernel BUG in bch2_bkey_pack_pos_lossy (2)
-From: syzbot <syzbot+a6af6dbf934175da5161@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250530-rcar-streams-v3-14-026655df7138@ideasonboard.com>
 
-Hello,
+Hi Tomi,
 
-syzbot found the following issue on:
+Thank you for the patch.
 
-HEAD commit:    90b83efa6701 Merge tag 'bpf-next-6.16' of git://git.kernel..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=16a2c970580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ae6d9a7dd3ac8772
-dashboard link: https://syzkaller.appspot.com/bug?extid=a6af6dbf934175da5161
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=159907f4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1758a482580000
+On Fri, May 30, 2025 at 04:50:43PM +0300, Tomi Valkeinen wrote:
+> Add the missing pieces to enable full streams support:
+> 
+> - Add set_routing
+> - Drop the explicit uses of a single stream, and instead use the streams
+>   mask.
+> 
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+> ---
+>  drivers/media/platform/renesas/rcar-csi2.c | 85 ++++++++++++++++++++++--------
+>  1 file changed, 63 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/media/platform/renesas/rcar-csi2.c b/drivers/media/platform/renesas/rcar-csi2.c
+> index 8f708196ef49..4a73d223229c 100644
+> --- a/drivers/media/platform/renesas/rcar-csi2.c
+> +++ b/drivers/media/platform/renesas/rcar-csi2.c
+> @@ -694,6 +694,17 @@ static const struct rcar_csi2_format rcar_csi2_formats[] = {
+>  	},
+>  };
+>  
+> +static const struct v4l2_mbus_framefmt rcar_csi2_default_fmt = {
+> +	.width		= 1920,
+> +	.height		= 1080,
+> +	.code		= MEDIA_BUS_FMT_RGB888_1X24,
+> +	.colorspace	= V4L2_COLORSPACE_SRGB,
+> +	.field		= V4L2_FIELD_NONE,
+> +	.ycbcr_enc	= V4L2_YCBCR_ENC_DEFAULT,
+> +	.quantization	= V4L2_QUANTIZATION_DEFAULT,
+> +	.xfer_func	= V4L2_XFER_FUNC_DEFAULT,
+> +};
+> +
+>  static const struct rcar_csi2_format *rcsi2_code_to_fmt(unsigned int code)
+>  {
+>  	unsigned int i;
+> @@ -1641,10 +1652,8 @@ static int rcsi2_enable_streams(struct v4l2_subdev *sd,
+>  				u64 source_streams_mask)
+>  {
+>  	struct rcar_csi2 *priv = sd_to_csi2(sd);
+> -	int ret = 0;
+> -
+> -	if (source_streams_mask != 1)
+> -		return -EINVAL;
+> +	u64 sink_streams;
+> +	int ret;
+>  
+>  	if (!priv->remote)
+>  		return -ENODEV;
+> @@ -1655,8 +1664,13 @@ static int rcsi2_enable_streams(struct v4l2_subdev *sd,
+>  			return ret;
+>  	}
+>  
+> +	sink_streams = v4l2_subdev_state_xlate_streams(state,
+> +						       RCAR_CSI2_SOURCE_VC0,
+> +						       RCAR_CSI2_SINK,
+> +						       &source_streams_mask);
+> +
+>  	ret = v4l2_subdev_enable_streams(priv->remote, priv->remote_pad,
+> -					 BIT_ULL(0));
+> +					 sink_streams);
+>  	if (ret) {
+>  		rcsi2_stop(priv);
+>  		return ret;
+> @@ -1672,10 +1686,7 @@ static int rcsi2_disable_streams(struct v4l2_subdev *sd,
+>  				 u32 source_pad, u64 source_streams_mask)
+>  {
+>  	struct rcar_csi2 *priv = sd_to_csi2(sd);
+> -	int ret = 0;
+> -
+> -	if (source_streams_mask != 1)
+> -		return -EINVAL;
+> +	u64 sink_streams;
+>  
+>  	if (!priv->remote)
+>  		return -ENODEV;
+> @@ -1683,11 +1694,17 @@ static int rcsi2_disable_streams(struct v4l2_subdev *sd,
+>  	if (priv->stream_count == 1)
+>  		rcsi2_stop(priv);
+>  
+> -	v4l2_subdev_disable_streams(priv->remote, priv->remote_pad, BIT_ULL(0));
+> +	sink_streams = v4l2_subdev_state_xlate_streams(state,
+> +						       RCAR_CSI2_SOURCE_VC0,
+> +						       RCAR_CSI2_SINK,
+> +						       &source_streams_mask);
+> +
+> +	v4l2_subdev_disable_streams(priv->remote, priv->remote_pad,
+> +				    sink_streams);
+>  
+>  	priv->stream_count -= 1;
+>  
+> -	return ret;
+> +	return 0;
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/fc8b15fe0000/disk-90b83efa.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/01f6377bcdf4/vmlinux-90b83efa.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/afd1bac4b4ac/bzImage-90b83efa.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/6c680e5364cd/mount_0.gz
+This seems to belong to a previous patch.
 
-The issue was bisected to:
+>  }
+>  
+>  static int rcsi2_set_pad_format(struct v4l2_subdev *sd,
+> @@ -1720,6 +1737,40 @@ static int rcsi2_set_pad_format(struct v4l2_subdev *sd,
+>  	return 0;
+>  }
+>  
+> +static int rcsi2_set_routing(struct v4l2_subdev *sd,
+> +			     struct v4l2_subdev_state *state,
+> +			     enum v4l2_subdev_format_whence which,
+> +			     struct v4l2_subdev_krouting *routing)
+> +{
+> +	struct rcar_csi2 *priv = sd_to_csi2(sd);
+> +	int ret;
+> +
+> +	if (!priv->info->use_isp)
+> +		return -ENOTTY;
+> +
+> +	if (routing->num_routes > V4L2_FRAME_DESC_ENTRY_MAX)
+> +		return -EINVAL;
 
-commit cd3cdb1ef706a1ac725194d81858d58375739b25
-Author: Kent Overstreet <kent.overstreet@linux.dev>
-Date:   Tue Apr 22 13:14:19 2025 +0000
+A comment to explain this check would be nice.
 
-    bcachefs: Single err message for btree node reads
+> +
+> +	if (priv->info->use_isp) {
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14841ed4580000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=16841ed4580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=12841ed4580000
+You return an error above when this condition is false.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a6af6dbf934175da5161@syzkaller.appspotmail.com
-Fixes: cd3cdb1ef706 ("bcachefs: Single err message for btree node reads")
+> +		ret = v4l2_subdev_routing_validate(sd, routing,
+> +						   V4L2_SUBDEV_ROUTING_ONLY_1_TO_1);
+> +	} else {
+> +		ret = v4l2_subdev_routing_validate(sd, routing,
+> +						   V4L2_SUBDEV_ROUTING_ONLY_1_TO_1 |
+> +						   V4L2_SUBDEV_ROUTING_NO_SOURCE_MULTIPLEXING);
+> +	}
+> +
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = v4l2_subdev_set_routing_with_fmt(sd, state, routing,
+> +					       &rcar_csi2_default_fmt);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+>  static int rcsi2_get_frame_desc_fallback(struct v4l2_subdev *sd,
+>  					 unsigned int pad,
+>  					 struct v4l2_mbus_frame_desc *fd)
+> @@ -1781,6 +1832,7 @@ static const struct v4l2_subdev_pad_ops rcar_csi2_pad_ops = {
+>  	.set_fmt = rcsi2_set_pad_format,
+>  	.get_fmt = v4l2_subdev_get_fmt,
+>  
+> +	.set_routing = rcsi2_set_routing,
+>  	.get_frame_desc = rcsi2_get_frame_desc,
+>  };
+>  
+> @@ -1801,17 +1853,6 @@ static int rcsi2_init_state(struct v4l2_subdev *sd,
+>  		},
+>  	};
+>  
+> -	static const struct v4l2_mbus_framefmt rcar_csi2_default_fmt = {
+> -		.width		= 1920,
+> -		.height		= 1080,
+> -		.code		= MEDIA_BUS_FMT_RGB888_1X24,
+> -		.colorspace	= V4L2_COLORSPACE_SRGB,
+> -		.field		= V4L2_FIELD_NONE,
+> -		.ycbcr_enc	= V4L2_YCBCR_ENC_DEFAULT,
+> -		.quantization	= V4L2_QUANTIZATION_DEFAULT,
+> -		.xfer_func	= V4L2_XFER_FUNC_DEFAULT,
+> -	};
+> -
+>  	static const struct v4l2_subdev_krouting routing = {
+>  		.num_routes = ARRAY_SIZE(routes),
+>  		.routes = routes,
 
-bcachefs (loop0): invalid bkey in btree_node btree=subvolumes level=0: u64s 8 type snapshot 0:4294967295:0 len 0 ver 0: subvol parent          0 children          0          0 subvol 1 tree 0
-  invalid key type for btree subvolumes (snapshot), deleting
-------------[ cut here ]------------
-kernel BUG at fs/bcachefs/bkey.c:389!
-Oops: invalid opcode: 0000 [#1] SMP KASAN PTI
-CPU: 1 UID: 0 PID: 5831 Comm: read_btree_node Not tainted 6.15.0-syzkaller-07774-g90b83efa6701 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:set_inc_field_lossy fs/bcachefs/bkey.c:389 [inline]
-RIP: 0010:bch2_bkey_pack_pos_lossy+0x13de/0x24e0 fs/bcachefs/bkey.c:518
-Code: e8 57 ce 08 fe 48 ba 00 00 00 00 00 fc ff df e9 a5 f8 ff ff e8 c3 d5 a7 fd 90 0f 0b e8 bb d5 a7 fd 90 0f 0b e8 b3 d5 a7 fd 90 <0f> 0b e8 ab d5 a7 fd 90 0f 0b e8 a3 d5 a7 fd 90 0f 0b f3 0f 1e fa
-RSP: 0018:ffffc900043aeb40 EFLAGS: 00010293
-RAX: ffffffff8418244d RBX: 0000090000000000 RCX: ffff888030f41e00
-RDX: 0000000000000000 RSI: 00000000ffffffff RDI: 0000090000000000
-RBP: ffffc900043aed78 R08: ffffffffffffffff R09: ffffffffffffffff
-R10: ffffffffffffffff R11: ffffffffffffffff R12: ffff88814c4490c4
-R13: fffff700ffffffff R14: 0000000000000000 R15: fffffffffffffffe
-FS:  0000000000000000(0000) GS:ffff888125d98000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00005633c0c98470 CR3: 000000003443a000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- bkey_pack_pos fs/bcachefs/bkey.h:382 [inline]
- __build_ro_aux_tree+0xb21/0x1800 fs/bcachefs/bset.c:743
- bch2_bset_build_aux_tree+0x3f5/0x570 fs/bcachefs/bset.c:787
- bch2_btree_node_read_done+0x39e4/0x4f60 fs/bcachefs/btree_io.c:1322
- btree_node_read_work+0x426/0xe30 fs/bcachefs/btree_io.c:1400
- bch2_btree_node_read+0x887/0x29f0 fs/bcachefs/btree_io.c:-1
- bch2_btree_node_fill+0xd12/0x14f0 fs/bcachefs/btree_cache.c:994
- bch2_btree_node_get_noiter+0xa2c/0x1000 fs/bcachefs/btree_cache.c:1261
- found_btree_node_is_readable fs/bcachefs/btree_node_scan.c:85 [inline]
- try_read_btree_node fs/bcachefs/btree_node_scan.c:220 [inline]
- read_btree_nodes_worker+0x1319/0x1e20 fs/bcachefs/btree_node_scan.c:269
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:set_inc_field_lossy fs/bcachefs/bkey.c:389 [inline]
-RIP: 0010:bch2_bkey_pack_pos_lossy+0x13de/0x24e0 fs/bcachefs/bkey.c:518
-Code: e8 57 ce 08 fe 48 ba 00 00 00 00 00 fc ff df e9 a5 f8 ff ff e8 c3 d5 a7 fd 90 0f 0b e8 bb d5 a7 fd 90 0f 0b e8 b3 d5 a7 fd 90 <0f> 0b e8 ab d5 a7 fd 90 0f 0b e8 a3 d5 a7 fd 90 0f 0b f3 0f 1e fa
-RSP: 0018:ffffc900043aeb40 EFLAGS: 00010293
-RAX: ffffffff8418244d RBX: 0000090000000000 RCX: ffff888030f41e00
-RDX: 0000000000000000 RSI: 00000000ffffffff RDI: 0000090000000000
-RBP: ffffc900043aed78 R08: ffffffffffffffff R09: ffffffffffffffff
-R10: ffffffffffffffff R11: ffffffffffffffff R12: ffff88814c4490c4
-R13: fffff700ffffffff R14: 0000000000000000 R15: fffffffffffffffe
-FS:  0000000000000000(0000) GS:ffff888125c98000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055f7477e8168 CR3: 0000000034d24000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+-- 
+Regards,
 
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Laurent Pinchart
