@@ -1,185 +1,223 @@
-Received: from mail-yb1-f206.google.com (mail-yb1-f206.google.com [209.85.219.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902E94A0F
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 13:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C286ADD;
+	Mon,  2 Jun 2025 13:22:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748870508; cv=none; b=QphJZKndBp786pJVrOOYIAwFilIyIKMqJbnV78M5U2zduNv8g2FsbjnDo6ZLGzxV9/6DEzYYn7tjvnVJelCly/2eFZaFaF3IyVHJoREyKHEudbGCuiqFtKoR6IJByK2P05P0bictZusQgGas2/rFieVayEK7P5E8B0L8OD4r5Nw=
+	t=1748870534; cv=none; b=c5pFAdnHXJB8p4r8y5QZeOKwGIlsvfX9kIB+8ELGHWEJsP7Eg7lGecNrKDEr803RaWoimGetJ4YyVnxcKVAl9w1Cvqw/hhdb1uR1UMymuUIbn/6rPaZbg7sUsr4OYsilt7cAnxeBPEMGjtbGSp3Pz3zPSaHTb8vJoYOHlOO81lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748870508; c=relaxed/simple;
-	bh=SO+lLuo6bpH8NB9jUUNH3nIpqmaGlvRpVU+v+2k+2Ik=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=VeONNtbdWHCiofPQtooLqi9kxzcHpLOrhAth2zTpBQNzUyz2yQT2tUyXPN0BjxuYzohfV85RqL9uRDTNMc1WZiJRAhbXzYwjSFPkh9EHSDiaZ6++ibeWVAmn62unNzsZm4SSy3oE7j4icO9ABJiyft03LIJVUy3o9I+Dd6JD1Ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.219.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-yb1-f206.google.com with SMTP id 3f1490d57ef6-e72ecef490dso6547360276.0
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 06:21:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748870505; x=1749475305;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HUxnwz0MGqaQx/zzJuI4xbyeSwmPEWwIYhs+1mkMIT8=;
-        b=LBkTBaWWJggCGuOZD8dXeXB0etLNSTgk9wr7z7BKHP2ea19PDAuihi9wXnxZeZeevw
-         UGIp20Xy31noIlQ91j53mAFCyAK7LToFTqgB89I5oI3+/NXywcloq/BwgJ14pBoK9uuy
-         RV/scorF4CK32DPhIbkfcIIhygcaJ9syjzUN7JKUFUiIyaKS9ZSSgzNYShcYjAI9Vun6
-         t2DpHAJxiiI/9J0vKMoUXCwvn8xOGAL5hTnZkII3lV8RxbeMyWFzRjqOtzDIHhLwaVcz
-         S9Zl2akOVeyoCLapzfxVyJ5QWbZcqvSTKQVXPhCN3c5PHO5c7xdUMBZKvTp5kBk9FdZW
-         gZDg==
-X-Forwarded-Encrypted: i=1; AJvYcCU9x+1B3e5XaSlbZ75CWikXawDO3hbdV3bg3lvEwZiLijBTHbU31c9oXS0iZY9n1XNoW2b8oPDFwvxcGfo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9qsGklFw8Hj3EzG38Y9pasUUjCQkpb6Z8fCAlupFUrPTaXm5d
-	Qq1BdU8kJ1npAk3oPKCvJLuuMIHZTMEm/SShWzRchEpNmZEr4B2SQJFy9cLyfcVnPcHbaJqFhUH
-	VPPMUzmFgHZ2h/Y2SnC4g3+bx6vZZraFjEOL4CK0rPJL+ObsfRQ+cWqZxvwE=
-X-Google-Smtp-Source: AGHT+IEh3nfkVLswdHnJS8ur7GuATtva0rua850ix/lTROv5zWXN/jjUZkJz7/vW14hs16b5xIOW7gtzQrm24KrNeMlkL6Gv7a0y
+	s=arc-20240116; t=1748870534; c=relaxed/simple;
+	bh=jtsqkwWxMJ59NBFXcigEZb33daclENidcJqgOzkwCto=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ToKFjKDtuEfWRyxncq+PII0qhVpkJjvWRO6bC4F75DKVHUFd2hdn0jXYLbY7W6neHJCkW3PQFEZ7Q9Zsncgh04evp/g8N7J26aqZvm91vXBeyikUR3c9XU3poXHNQGBPOVh3mjjOvTjfJN4ETHX1Zz2H5n8iZFz8ZL4xB4rdsO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=AGCOzzb5; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="AGCOzzb5"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 37F5DC9;
+	Mon,  2 Jun 2025 15:22:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1748870529;
+	bh=jtsqkwWxMJ59NBFXcigEZb33daclENidcJqgOzkwCto=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AGCOzzb50CMOQSA7hqRykeGk5q0JAOcnGdChqGWnWf6jtBhBv5DftkpvYp5v4qKJS
+	 j3KTJQdcv6zAyaY3Ka2dzUc3RsH5Sff2EqV7iiPiBu5yfN/JftKJGC4sEA0x6emxsp
+	 Rv6ADD7vUFYgH8m3p+0NOUJzN4GjbHqKWW6WVKl0=
+Date: Mon, 2 Jun 2025 16:22:02 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+Cc: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Subject: Re: [PATCH v3 11/15] media: rcar-isp: Call get_frame_desc to find
+ out VC & DT
+Message-ID: <20250602132202.GD11750@pendragon.ideasonboard.com>
+References: <20250530-rcar-streams-v3-0-026655df7138@ideasonboard.com>
+ <20250530-rcar-streams-v3-11-026655df7138@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:154e:b0:3dd:75fe:9d68 with SMTP id
- e9e14a558f8ab-3dd9cc02bf8mr114767705ab.17.1748870494212; Mon, 02 Jun 2025
- 06:21:34 -0700 (PDT)
-Date: Mon, 02 Jun 2025 06:21:34 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <683da55e.a00a0220.d8eae.0052.GAE@google.com>
-Subject: [syzbot] [net?] general protection fault in veth_xdp_rcv
-From: syzbot <syzbot+c4c7bf27f6b0c4bd97fe@syzkaller.appspotmail.com>
-To: Jason@zx2c4.com, andrew+netdev@lunn.ch, davem@davemloft.net, 
-	edumazet@google.com, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com, 
-	wireguard@lists.zx2c4.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250530-rcar-streams-v3-11-026655df7138@ideasonboard.com>
 
-Hello,
+Hi Tomi,
 
-syzbot found the following issue on:
+Thank you for the patch.
 
-HEAD commit:    4cb6c8af8591 selftests/filesystems: Fix build of anon_inod..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11e8300c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5319177d225a42f1
-dashboard link: https://syzkaller.appspot.com/bug?extid=c4c7bf27f6b0c4bd97fe
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+On Fri, May 30, 2025 at 04:50:40PM +0300, Tomi Valkeinen wrote:
+> Call get_frame_desc to find out VC & DT, instead of hardcoding the VC
+> routing and deducing the DT based on the mbus format.
+> 
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+> ---
+>  drivers/media/platform/renesas/rcar-isp/csisp.c | 108 +++++++++++++++++-------
+>  1 file changed, 77 insertions(+), 31 deletions(-)
+> 
+> diff --git a/drivers/media/platform/renesas/rcar-isp/csisp.c b/drivers/media/platform/renesas/rcar-isp/csisp.c
+> index a04cbf96b809..887d8eb21a3a 100644
+> --- a/drivers/media/platform/renesas/rcar-isp/csisp.c
+> +++ b/drivers/media/platform/renesas/rcar-isp/csisp.c
+> @@ -225,24 +225,86 @@ static void risp_power_off(struct rcar_isp *isp)
+>  	pm_runtime_put(isp->dev);
+>  }
+>  
+> -static int risp_start(struct rcar_isp *isp, struct v4l2_subdev_state *state)
+> +static int risp_configure_routing(struct rcar_isp *isp,
+> +				  struct v4l2_subdev_state *state)
+>  {
+> -	const struct v4l2_mbus_framefmt *fmt;
+> -	const struct rcar_isp_format *format;
+> -	unsigned int vc;
+> -	u32 sel_csi = 0;
+> +	struct v4l2_mbus_frame_desc source_fd;
+> +	struct v4l2_subdev_route *route;
+>  	int ret;
+>  
+> -	fmt = v4l2_subdev_state_get_format(state, RCAR_ISP_SINK, 0);
+> -	if (!fmt)
+> -		return -EINVAL;
+> +	ret = v4l2_subdev_call(isp->remote, pad, get_frame_desc,
+> +			       isp->remote_pad, &source_fd);
+> +	if (ret)
+> +		return ret;
+>  
+> -	format = risp_code_to_fmt(fmt->code);
+> -	if (!format) {
+> -		dev_err(isp->dev, "Unsupported bus format\n");
+> -		return -EINVAL;
+> +	/* Clear the channel registers */
+> +	for (unsigned int ch = 0; ch < 12; ++ch) {
 
-Unfortunately, I don't have any reproducer for this issue yet.
+A macro for the number of channels would be nice.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-4cb6c8af.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/bc0e5dfdd686/vmlinux-4cb6c8af.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/2cdd323de6ca/bzImage-4cb6c8af.xz
+> +		risp_write_cs(isp, ISPCS_FILTER_ID_CH_REG(ch), 0);
+> +		risp_write_cs(isp, ISPCS_DT_CODE03_CH_REG(ch), 0);
+>  	}
+>  
+> +	/* Clear the proc mode registers */
+> +	for (unsigned int dt = 0; dt < 64; ++dt)
+> +		risp_write_cs(isp, ISPPROCMODE_DT_REG(dt), 0);
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+c4c7bf27f6b0c4bd97fe@syzkaller.appspotmail.com
+Do we really need to clear those ? These registers seem to be used to
+select how to process a particular DT, likely to allow overriding the
+default processing method. 0 means RAW8, so it's not a magic disable
+value as far as I can tell. I think we can leave the registers as-is.
 
-Oops: general protection fault, probably for non-canonical address 0xdffffc0000000098: 0000 [#1] SMP KASAN NOPTI
-KASAN: null-ptr-deref in range [0x00000000000004c0-0x00000000000004c7]
-CPU: 1 UID: 0 PID: 5975 Comm: kworker/1:4 Not tainted 6.15.0-syzkaller-10402-g4cb6c8af8591 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: wg-kex-wg0 wg_packet_handshake_receive_worker
-RIP: 0010:netdev_get_tx_queue include/linux/netdevice.h:2636 [inline]
-RIP: 0010:veth_xdp_rcv.constprop.0+0x142/0xda0 drivers/net/veth.c:912
-Code: 54 d9 31 fb 45 85 e4 0f 85 db 08 00 00 e8 06 de 31 fb 48 8d bd c0 04 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84 c0 74 08 3c 03 0f 8e 18 0c 00 00 44 8b a5 c0 04 00
-RSP: 0018:ffffc900006a09b8 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff868a1686
-RDX: 0000000000000098 RSI: ffffffff868a0d9a RDI: 00000000000004c0
-RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000000
-R10: 0000000000000001 R11: ffffc900006a0ff8 R12: 0000000000000001
-R13: 1ffff920000d4145 R14: ffffc900006a0e58 R15: ffff8880503d0000
-FS:  0000000000000000(0000) GS:ffff8880d686e000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fe5e3a6ad58 CR3: 000000000e382000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- veth_poll+0x19c/0x9c0 drivers/net/veth.c:979
- __napi_poll.constprop.0+0xba/0x550 net/core/dev.c:7414
- napi_poll net/core/dev.c:7478 [inline]
- net_rx_action+0xa9f/0xfe0 net/core/dev.c:7605
- handle_softirqs+0x219/0x8e0 kernel/softirq.c:579
- do_softirq kernel/softirq.c:480 [inline]
- do_softirq+0xb2/0xf0 kernel/softirq.c:467
- </IRQ>
- <TASK>
- __local_bh_enable_ip+0x100/0x120 kernel/softirq.c:407
- local_bh_enable include/linux/bottom_half.h:33 [inline]
- fpregs_unlock arch/x86/include/asm/fpu/api.h:77 [inline]
- kernel_fpu_end+0x5e/0x70 arch/x86/kernel/fpu/core.c:476
- blake2s_compress+0x7f/0xe0 arch/x86/lib/crypto/blake2s-glue.c:46
- blake2s_final+0xc9/0x150 lib/crypto/blake2s.c:54
- hmac.constprop.0+0x335/0x420 drivers/net/wireguard/noise.c:333
- kdf.constprop.0+0x122/0x280 drivers/net/wireguard/noise.c:360
- mix_dh+0xe8/0x150 drivers/net/wireguard/noise.c:413
- wg_noise_handshake_consume_initiation+0x265/0x880 drivers/net/wireguard/noise.c:608
- wg_receive_handshake_packet+0x219/0xbf0 drivers/net/wireguard/receive.c:144
- wg_packet_handshake_receive_worker+0x17f/0x3a0 drivers/net/wireguard/receive.c:213
- process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
- process_scheduled_works kernel/workqueue.c:3321 [inline]
- worker_thread+0x6c8/0xf10 kernel/workqueue.c:3402
- kthread+0x3c2/0x780 kernel/kthread.c:464
- ret_from_fork+0x5d4/0x6f0 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:netdev_get_tx_queue include/linux/netdevice.h:2636 [inline]
-RIP: 0010:veth_xdp_rcv.constprop.0+0x142/0xda0 drivers/net/veth.c:912
-Code: 54 d9 31 fb 45 85 e4 0f 85 db 08 00 00 e8 06 de 31 fb 48 8d bd c0 04 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84 c0 74 08 3c 03 0f 8e 18 0c 00 00 44 8b a5 c0 04 00
-RSP: 0018:ffffc900006a09b8 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff868a1686
-RDX: 0000000000000098 RSI: ffffffff868a0d9a RDI: 00000000000004c0
-RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000000
-R10: 0000000000000001 R11: ffffc900006a0ff8 R12: 0000000000000001
-R13: 1ffff920000d4145 R14: ffffc900006a0e58 R15: ffff8880503d0000
-FS:  0000000000000000(0000) GS:ffff8880d686e000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fe5e3a6ad58 CR3: 000000000e382000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	54                   	push   %rsp
-   1:	d9 31                	fnstenv (%rcx)
-   3:	fb                   	sti
-   4:	45 85 e4             	test   %r12d,%r12d
-   7:	0f 85 db 08 00 00    	jne    0x8e8
-   d:	e8 06 de 31 fb       	call   0xfb31de18
-  12:	48 8d bd c0 04 00 00 	lea    0x4c0(%rbp),%rdi
-  19:	48 b8 00 00 00 00 00 	movabs $0xdffffc0000000000,%rax
-  20:	fc ff df
-  23:	48 89 fa             	mov    %rdi,%rdx
-  26:	48 c1 ea 03          	shr    $0x3,%rdx
-* 2a:	0f b6 04 02          	movzbl (%rdx,%rax,1),%eax <-- trapping instruction
-  2e:	84 c0                	test   %al,%al
-  30:	74 08                	je     0x3a
-  32:	3c 03                	cmp    $0x3,%al
-  34:	0f 8e 18 0c 00 00    	jle    0xc52
-  3a:	44                   	rex.R
-  3b:	8b                   	.byte 0x8b
-  3c:	a5                   	movsl  %ds:(%rsi),%es:(%rdi)
-  3d:	c0                   	.byte 0xc0
-  3e:	04 00                	add    $0x0,%al
+> +
+> +	for_each_active_route(&state->routing, route) {
+> +		struct v4l2_mbus_frame_desc_entry *source_entry = NULL;
+> +		const struct rcar_isp_format *format;
+> +		const struct v4l2_mbus_framefmt *fmt;
+> +		unsigned int i;
+> +		u8 vc, dt, ch;
+> +		u32 v;
+> +
+> +		for (i = 0; i < source_fd.num_entries; i++) {
+> +			if (source_fd.entry[i].stream == route->sink_stream) {
+> +				source_entry = &source_fd.entry[i];
+> +				break;
+> +			}
+> +		}
+> +
+> +		if (!source_entry) {
+> +			dev_err(isp->dev,
+> +				"Failed to find stream from source frame desc\n");
 
+Isn't it rather "Failed to find source frame desc for stream" ?
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> +			return -EPIPE;
+> +		}
+> +
+> +		vc = source_entry->bus.csi2.vc;
+> +		dt = source_entry->bus.csi2.dt;
+> +		/* Channels 4 - 11 go to VIN */
+> +		ch = route->source_pad - 1 + 4;
+> +
+> +		fmt = v4l2_subdev_state_get_format(state, route->sink_pad,
+> +						   route->sink_stream);
+> +		if (!fmt)
+> +			return -EINVAL;
+> +
+> +		format = risp_code_to_fmt(fmt->code);
+> +		if (!format) {
+> +			dev_err(isp->dev, "Unsupported bus format\n");
+> +			return -EINVAL;
+> +		}
+> +
+> +		/* VC Filtering */
+> +		risp_write_cs(isp, ISPCS_FILTER_ID_CH_REG(ch), BIT(vc));
+> +
+> +		/* DT Filtering */
+> +		risp_write_cs(isp, ISPCS_DT_CODE03_CH_REG(ch),
+> +			      ISPCS_DT_CODE03_EN0 | ISPCS_DT_CODE03_DT0(dt));
+> +
+> +		/* Proc mode */
+> +		v = risp_read_cs(isp, ISPPROCMODE_DT_REG(dt));
+> +		v |= ISPPROCMODE_DT_PROC_MODE_VCn(vc, format->procmode);
+> +		risp_write_cs(isp, ISPPROCMODE_DT_REG(dt), v);
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+If we want to minimize the register writes, we could store the
+ISPPROCMODE_DT_REG values in a local variable and write all of them in
+one go. Possible/probably overkill.
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int risp_start(struct rcar_isp *isp, struct v4l2_subdev_state *state)
+> +{
+> +	u32 sel_csi = 0;
+> +	int ret;
+> +
+>  	ret = risp_power_on(isp);
+>  	if (ret) {
+>  		dev_err(isp->dev, "Failed to power on ISP\n");
+> @@ -256,25 +318,9 @@ static int risp_start(struct rcar_isp *isp, struct v4l2_subdev_state *state)
+>  	risp_write_cs(isp, ISPINPUTSEL0_REG,
+>  		      risp_read_cs(isp, ISPINPUTSEL0_REG) | sel_csi);
+>  
+> -	/* Configure Channel Selector. */
+> -	for (vc = 0; vc < 4; vc++) {
+> -		u8 ch = vc + 4;
+> -		u8 dt = format->datatype;
+> -
+> -		risp_write_cs(isp, ISPCS_FILTER_ID_CH_REG(ch), BIT(vc));
+> -		risp_write_cs(isp, ISPCS_DT_CODE03_CH_REG(ch),
+> -			      ISPCS_DT_CODE03_EN3 | ISPCS_DT_CODE03_DT3(dt) |
+> -			      ISPCS_DT_CODE03_EN2 | ISPCS_DT_CODE03_DT2(dt) |
+> -			      ISPCS_DT_CODE03_EN1 | ISPCS_DT_CODE03_DT1(dt) |
+> -			      ISPCS_DT_CODE03_EN0 | ISPCS_DT_CODE03_DT0(dt));
+> -	}
+> -
+> -	/* Setup processing method. */
+> -	risp_write_cs(isp, ISPPROCMODE_DT_REG(format->datatype),
+> -		      ISPPROCMODE_DT_PROC_MODE_VCn(3, format->procmode) |
+> -		      ISPPROCMODE_DT_PROC_MODE_VCn(2, format->procmode) |
+> -		      ISPPROCMODE_DT_PROC_MODE_VCn(1, format->procmode) |
+> -		      ISPPROCMODE_DT_PROC_MODE_VCn(0, format->procmode));
+> +	ret = risp_configure_routing(isp, state);
+> +	if (ret)
+> +		return ret;
+>  
+>  	/* Start ISP. */
+>  	risp_write_cs(isp, ISPSTART_REG, ISPSTART_START);
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+-- 
+Regards,
 
-If you want to undo deduplication, reply with:
-#syz undup
+Laurent Pinchart
