@@ -1,184 +1,90 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D4D1FBC8C;
-	Mon,  2 Jun 2025 14:06:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677BF22C32D;
+	Mon,  2 Jun 2025 14:07:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748873213; cv=none; b=pYGDff3i8wG1r+A7QIDDSDIkfbKzbYeP0rufqIV3yn+25jlfva40j5xyz3Y0YFAviu1A+H75Xveh844TnStRVKhydjE47wVdyS/R8NiHkA60E/scJDjl2FKIarHKA6+xGWQE1EhKFDtV2rkjHFGxRJe88JLx+I7exbH0+ccxRuU=
+	t=1748873248; cv=none; b=M0mNWgtlUdWxLWdHjx1FL1sZymBamEKi2a+VmoLzxNO/g4Fs1bSh/0tC10qd+Gb660nWp/u1Qa2dl4RP5MTg9cXgzpWtTaDdfR/lSciLJV556b3oNbj6ozmmVUAEsIF0KPd/tLU7S9Rj3mE1QUOS9PAt2zXaNMoT4h/QFqU5Y5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748873213; c=relaxed/simple;
-	bh=wzdXv0J62meupiqoL3PfTMvL1b06X3EOV3Vf2o7pHMc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u1X82Fexlli1SGSGEorb7pF9uoxp+36SJErtdZBb9axBu8SwuKxmsHTGeg/rB9VYoowXWB10WXE+QVOXS4yAEjH3iM3hm47zcLVMEHgsbdZAmz7YX4S+nCfoIB8APET3FyclUt276mHTivTNRCZasPw8C/unlHb16BDquEcKF34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=B4yHCEcl; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1748873248; c=relaxed/simple;
+	bh=w+RSkZm0dE+tSBY1cwi1pxFBizUVbWZVb7RDencG4jg=;
+	h=Date:From:To:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=lKgoConlxlVp5mXm5QmTPju65WZUG42tHwLgeelDUR7hdMs/4yfHP8kgot72ZZ5712FHrTUMR6r5Yr+cV2B9OPkAqS0sQ2unziAUy8bI7cZEPEgTJZHaDI/hDnelToSZurj1e32xkLHVDbXYTVP6U5K6slx5GEHwZBuHmwsTa9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B53WIa4b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="B4yHCEcl"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C63F6379;
-	Mon,  2 Jun 2025 16:06:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1748873209;
-	bh=wzdXv0J62meupiqoL3PfTMvL1b06X3EOV3Vf2o7pHMc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B4yHCEclb6A/nzw2hUHyA8nrGs2cAelBZxUQkdiV9XR9Aqbwg6f/NmY2dq32eRX/U
-	 9NwRE7HSYJZX0DpP6lh5oTDx7xMZsmqzESX/bQACH5eVscq8UMe5ZqiGZ98o+d4LWI
-	 RwV0KGLH9XJRHsgEWbG8vCoz/sD4qEgvaVkc4iIc=
-Date: Mon, 2 Jun 2025 17:06:41 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-Cc: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-Subject: Re: [PATCH v3 08/15] media: rcar-csi2: Switch to Streams API
-Message-ID: <20250602140641.GF23515@pendragon.ideasonboard.com>
-References: <20250530-rcar-streams-v3-0-026655df7138@ideasonboard.com>
- <20250530-rcar-streams-v3-8-026655df7138@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B53WIa4b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98669C4CEEB;
+	Mon,  2 Jun 2025 14:07:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748873247;
+	bh=w+RSkZm0dE+tSBY1cwi1pxFBizUVbWZVb7RDencG4jg=;
+	h=Date:From:To:Subject:In-Reply-To:References:From;
+	b=B53WIa4b6cMZe4ym8Clujmp38c5wvyZBWRr1IiCBHjLjms+bKH86r0aqdEWjtMHwZ
+	 aahGkobJPyI0uhCoCppUqMIoHNJoibt13GDTQPKx+MVjh2X/Bl1cJH0N/v8kQHx0hK
+	 ueJdw+VRPjlDXeJe/s1batWD9CU0/uC9YqChnMfK4G7F7Rk364lyFY6PXCtGibpUYn
+	 Uj8t9DNmNxNQ7/DlqdzYBzNWGDc0hVmesVPlpSYLqoOK3phvarCqLKZCfG6vEnTc3G
+	 2GqXOxDMKkQwJCHTvfNT+TmsSTc4MSdKduUhr5ulOyTk2jWtDDp4w6EleFxQrv25Gd
+	 wPpnmCmPA+/PQ==
+Date: Mon, 02 Jun 2025 07:07:23 -0700
+From: Kees Cook <kees@kernel.org>
+To: Pranav Tyagi <pranav.tyagi03@gmail.com>, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ horms@kernel.org, keescook@chromium.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
+ linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH] net: randomize layout of struct net_device
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250602135932.464194-1-pranav.tyagi03@gmail.com>
+References: <20250602135932.464194-1-pranav.tyagi03@gmail.com>
+Message-ID: <EEF63CCD-BEED-4471-BF07-586452F4E0BE@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250530-rcar-streams-v3-8-026655df7138@ideasonboard.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Tomi,
 
-Thank you for the patch.
 
-On Fri, May 30, 2025 at 04:50:37PM +0300, Tomi Valkeinen wrote:
-> Switch to Streams API with a single hardcoded route. This breaks any
-> existing userspace which depended on the custom rcar streams
-> implementation, but a single camera use case should continue to work.
-> 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-> ---
->  drivers/media/platform/renesas/rcar-csi2.c | 47 +++++++++++++++++++++---------
->  1 file changed, 33 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/media/platform/renesas/rcar-csi2.c b/drivers/media/platform/renesas/rcar-csi2.c
-> index e0a0fd96459b..20bd44274bd2 100644
-> --- a/drivers/media/platform/renesas/rcar-csi2.c
-> +++ b/drivers/media/platform/renesas/rcar-csi2.c
-> @@ -1028,7 +1028,7 @@ static int rcsi2_calc_mbps(struct rcar_csi2 *priv,
->  		if (ret)
->  			return ret;
->  
-> -		fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK);
-> +		fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK, 0);
->  		if (!fmt)
->  			return -EINVAL;
->  
-> @@ -1069,7 +1069,7 @@ static int rcsi2_start_receiver_gen3(struct rcar_csi2 *priv,
->  	int mbps, ret;
->  
->  	/* Use the format on the sink pad to compute the receiver config. */
-> -	fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK);
-> +	fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK, 0);
->  
->  	dev_dbg(priv->dev, "Input size (%ux%u%c)\n",
->  		fmt->width, fmt->height,
-> @@ -1650,8 +1650,7 @@ static int rcsi2_set_pad_format(struct v4l2_subdev *sd,
->  				struct v4l2_subdev_state *state,
->  				struct v4l2_subdev_format *format)
->  {
-> -	struct rcar_csi2 *priv = sd_to_csi2(sd);
-> -	unsigned int num_pads = rcsi2_num_pads(priv);
-> +	struct v4l2_mbus_framefmt *fmt;
->  
->  	if (format->pad > RCAR_CSI2_SINK)
->  		return v4l2_subdev_get_fmt(sd, state, format);
-> @@ -1659,11 +1658,20 @@ static int rcsi2_set_pad_format(struct v4l2_subdev *sd,
->  	if (!rcsi2_code_to_fmt(format->format.code))
->  		format->format.code = rcar_csi2_formats[0].code;
->  
-> -	*v4l2_subdev_state_get_format(state, format->pad) = format->format;
-> +	/* Set sink format */
+On June 2, 2025 6:59:32 AM PDT, Pranav Tyagi <pranav=2Etyagi03@gmail=2Ecom=
+> wrote:
+>Add __randomize_layout to struct net_device to support structure layout
+>randomization if CONFIG_RANDSTRUCT is enabled else the macro expands to
+>do nothing=2E This enhances kernel protection by making it harder to
+>predict the memory layout of this structure=2E
+>
+>Link: https://github=2Ecom/KSPP/linux/issues/188
+>Signed-off-by: Pranav Tyagi <pranav=2Etyagi03@gmail=2Ecom>
+>---
+> include/linux/netdevice=2Eh | 4 ++++
+> 1 file changed, 4 insertions(+)
+>
+>diff --git a/include/linux/netdevice=2Eh b/include/linux/netdevice=2Eh
+>index 7ea022750e4e=2E=2E0caff664ef3a 100644
+>--- a/include/linux/netdevice=2Eh
+>+++ b/include/linux/netdevice=2Eh
+>@@ -2077,7 +2077,11 @@ enum netdev_reg_state {
+>  *	moves out=2E
+>  */
+>=20
+>+#ifdef CONFIG_RANDSTRUCT
+>+struct __randomize_layout net_device {
+>+#else
+> struct net_device {
+>+#endif
 
-s/format/format./
+There no need for the ifdef=2E Also these traditionally go at the end, bet=
+ween } and ;=2E See other examples in the tree=2E
 
-> +	fmt = v4l2_subdev_state_get_format(state, format->pad, format->stream);
-> +	if (!fmt)
-> +		return -EINVAL;
-> +
-> +	*fmt = format->format;
-> +
-> +	/* Propagate to source format */
+-Kees
 
-Same here. Although I'd write
+> 	/* Cacheline organization can be found documented in
+> 	 * Documentation/networking/net_cachelines/net_device=2Erst=2E
+> 	 * Please update the document when adding new fields=2E
 
-	/* Propagate the format to the source pad. */
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-
-> +	fmt = v4l2_subdev_state_get_opposite_stream_format(state, format->pad,
-> +							   format->stream);
-> +	if (!fmt)
-> +		return -EINVAL;
->  
-> -	/* Propagate the format to the source pads. */
-> -	for (unsigned int i = RCAR_CSI2_SOURCE_VC0; i < num_pads; i++)
-> -		*v4l2_subdev_state_get_format(state, i) = format->format;
-> +	*fmt = format->format;
->  
->  	return 0;
->  }
-> @@ -1683,8 +1691,15 @@ static const struct v4l2_subdev_ops rcar_csi2_subdev_ops = {
->  static int rcsi2_init_state(struct v4l2_subdev *sd,
->  			    struct v4l2_subdev_state *state)
->  {
-> -	struct rcar_csi2 *priv = sd_to_csi2(sd);
-> -	unsigned int num_pads = rcsi2_num_pads(priv);
-> +	static struct v4l2_subdev_route routes[] = {
-> +		{
-> +			.sink_pad = RCAR_CSI2_SINK,
-> +			.sink_stream = 0,
-> +			.source_pad = RCAR_CSI2_SOURCE_VC0,
-> +			.source_stream = 0,
-> +			.flags = V4L2_SUBDEV_ROUTE_FL_ACTIVE,
-> +		},
-> +	};
->  
->  	static const struct v4l2_mbus_framefmt rcar_csi2_default_fmt = {
->  		.width		= 1920,
-> @@ -1697,10 +1712,13 @@ static int rcsi2_init_state(struct v4l2_subdev *sd,
->  		.xfer_func	= V4L2_XFER_FUNC_DEFAULT,
->  	};
->  
-> -	for (unsigned int i = RCAR_CSI2_SINK; i < num_pads; i++)
-> -		*v4l2_subdev_state_get_format(state, i) = rcar_csi2_default_fmt;
-> +	static const struct v4l2_subdev_krouting routing = {
-> +		.num_routes = ARRAY_SIZE(routes),
-> +		.routes = routes,
-> +	};
->  
-> -	return 0;
-> +	return v4l2_subdev_set_routing_with_fmt(sd, state, &routing,
-> +						&rcar_csi2_default_fmt);
->  }
->  
->  static const struct v4l2_subdev_internal_ops rcar_csi2_internal_ops = {
-> @@ -2356,7 +2374,8 @@ static int rcsi2_probe(struct platform_device *pdev)
->  	v4l2_set_subdevdata(&priv->subdev, &pdev->dev);
->  	snprintf(priv->subdev.name, sizeof(priv->subdev.name), "%s %s",
->  		 KBUILD_MODNAME, dev_name(&pdev->dev));
-> -	priv->subdev.flags = V4L2_SUBDEV_FL_HAS_DEVNODE;
-> +	priv->subdev.flags = V4L2_SUBDEV_FL_HAS_DEVNODE |
-> +			     V4L2_SUBDEV_FL_STREAMS;
->  
->  	priv->subdev.entity.function = MEDIA_ENT_F_PROC_VIDEO_PIXEL_FORMATTER;
->  	priv->subdev.entity.ops = &rcar_csi2_entity_ops;
-
--- 
-Regards,
-
-Laurent Pinchart
+--=20
+Kees Cook
