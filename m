@@ -1,116 +1,92 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945AA6ADD;
-	Mon,  2 Jun 2025 07:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896C66ADD;
+	Mon,  2 Jun 2025 07:05:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748847915; cv=none; b=fWoPuJw/jXoZz/WJKAImeadkHYR9s1e9AyfgsL7Niwq2iIrQkL68FTwzBmE2itDsfg3PCIC3jukSjsXYU9VUW6ozpIgh5/lYWKC4E4DpktLxk8WSdGn/+Os6f820lRxMhxZuvyTkj7ho7C8ArWGaURgjEI9ke5tIe7sJdt2Z+B0=
+	t=1748847958; cv=none; b=RIavMOu4VvuDrrmC178tDX5UhmMdhJN0M/mzjIC/b2F4+jVQsknyLmFVcDogmrjOEXrP+5aWNGvAJAeK0i7liq4uohtFx4CdF8ptdGoCvpn4kugBzFdZ/y+1m4J3VyrgLn+ITAd7Sb1PVGBPzumum4YednvSLtm7516TjFQuhY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748847915; c=relaxed/simple;
-	bh=/agSbtTlBnvlNYz0HytGbIny9TXx7Zqqrgv0m4BerA8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=QT3uhi/VjDNZ7q+KE3oOICKoVTzvClH9sjq5XrLwtVaPAgm3rjmyRCN/I2I5lEBAh4vti5iKk8z6GhHzbBoYYnZpeA4TNQ638s1Nubi4+Qb6fWJXYmAJq8GknQx+2iI/90ElFoz/Xh4yIrTuU6JaMZOYTgzBmdJD3P+eV6nZU+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IA166vdB; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748847958; c=relaxed/simple;
+	bh=3Zpf+Qil/YamO+qg691NiwhwZgCq5Dm12QIEOCFrJ6c=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=HZbwQANqbptp0hVkiN5MNTzSv3cmBVWghyCppFaD1tCTgmrCmVukcrDED5KaLL2/iMRl3R0kRN/tMTGM04LaYpC1UOjEn/E2taSehiTz6SS2A+pRhSAJ5tl1OGbTKNXDTTVXA2zSdvMqIU/G3/d+9du/7iipPcerfWUI88qf9V8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=etUHg7kT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IA166vdB"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a4fd1ba177so1068944f8f.0;
-        Mon, 02 Jun 2025 00:05:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748847912; x=1749452712; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/agSbtTlBnvlNYz0HytGbIny9TXx7Zqqrgv0m4BerA8=;
-        b=IA166vdBcATiZChb02jz5uG493Wiuzs7hrRWXJqWecjb+sjeeOuOk32weWJIWEaPJ2
-         kIYo9w9CrGo4c7qRbIwt9hwgeGuegmql/0dPrh5s+x/qtdkFS8yZncBXCGrHn4dwudz1
-         kyCgyQASkDL9Y739GUve3Pxe5uRNoLgISJ7s35bKKShi3Tbd0AACvXHew5y+xBfFxuQh
-         D0ac6sHP3KgLMBI33XRX+5Zi8J1iCBeXI9nlGkpqNCCU3Dfutoh9fA3rVRpsof++w08Y
-         AILnp1SiSTbqn/T5UPJetRqFsN7Xy7WfIrKE0aQdggkOWlMRPxP79rU+Qu9LAni0//2o
-         p92A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748847912; x=1749452712;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/agSbtTlBnvlNYz0HytGbIny9TXx7Zqqrgv0m4BerA8=;
-        b=wlay8v8BQrkhgA12C4E9fDlw5MBnwWru+0Q09QCpG7R3Oz0zeuu4JNRDSI0PsfEOPl
-         Q0QbJa9jEBN2RHOR+RI6ikts2XkzyRLH1EA+AtFyUcWL/iGDuNrQzkce1NeEOiMYgIqW
-         BMiwEm77NjrGKEodw3YISSS8cKBavqawExyjwnK7YnwKNWZdTUbVYyI96Ye2c0d92Fhx
-         SE8YDxpWyAu9pWS5oEmH18vzqsvHQDDymvlJU8JiiRwmuOMHEEw1++hkvof0tbZ7Yt4c
-         +q6AXjsaQVaz7YkXT5yo49gmwteskjBSNsDy3pI2TccwimkCUH2ic55s0SgUM1Q1dcUC
-         6Fpw==
-X-Forwarded-Encrypted: i=1; AJvYcCU9xqpZpYnOpl7yrjQW6bv0CVbMzu9r22su25gNrRwxNVQmKgHWSBcpyAiKDSZR2E3XWHRbvPLJjmK3IuNVMkQ3frE=@vger.kernel.org, AJvYcCV+Zz7l9bFJnK3EkuOVKn/lBFTxgzQzCkw0T6h9OKUyL85DwZwY9uJs9U9w4jFgK+QIiVwh2ajS7HqJ@vger.kernel.org, AJvYcCW6a/F2oIxAvcWYs1kbfZ7WxRewS16OsAEgZgOAa8IZxvlESn070pHz68C+O8bPa5KL8HdJTAYf5Jl8YVpc@vger.kernel.org, AJvYcCXYk0LbWZrbi+jTOCPcpaqhqaggK5K90UiSP6YQbar2/4DEHhdeKGvtendMH2vJFjD66OPmPqj0I3F5@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywsss22L+sCtev6fyoLPpuysbt5PsxxDC/pa+gRHyNoFBwLW3rP
-	YwoPamW+DNvLU59X4gh/KMYjVk1sDZ32LrEmGe0RKg9oW4ziyP1gmJQ3LwM5EnLOYEomCD7uzub
-	bHwgKHvW4wkgaMHmP/GvjZFgbzKJIgiU=
-X-Gm-Gg: ASbGncvOuEDytMMDWhsbSmfrH0f3e7vRxEW7cQvMrfmQdFJV85b3ra2mJ4wE/IKzJoY
-	RAnipNJIlcGVBNtyzuJ7E8GPKGBtj3AtylNctXVkVcbXNTsixWWqvmFcwYTmr+KyRKp+/lG4e23
-	oWHrA5j70zzTzTqa5t7E20vLdi5IexOps09EYOTMyiDC33uR9a3FkzOLRCL3rMlc7S6Q==
-X-Google-Smtp-Source: AGHT+IH0Zea22k6huD8NYftx0SSoT7UOXUD953lRkUFSmGHltG9SMaCG61Vk1DKMWxTYa8bvPJoUrEemc2Mzq/8jvzk=
-X-Received: by 2002:a05:6000:2485:b0:3a4:e1f5:41f4 with SMTP id
- ffacd0b85a97d-3a4eeda2f6amr13421055f8f.17.1748847911575; Mon, 02 Jun 2025
- 00:05:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="etUHg7kT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB657C4CEEB;
+	Mon,  2 Jun 2025 07:05:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748847958;
+	bh=3Zpf+Qil/YamO+qg691NiwhwZgCq5Dm12QIEOCFrJ6c=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=etUHg7kTonia1iJXlF47bA1+U3Jo/kbCY0MlSz+el5nFAhOkEFfmEm7b/imINjoVU
+	 DwsuDKEMWSga885lYX8J+HnjqXmV881U32GnZWArkfBnmjeoUxTBd+YdYRxN08wn1g
+	 /u2hj8bjAsPM8NsM2A1CRTS5Dam2Nf0LQ42GuZfVEAlMtFLbjtVmuhU++bfdPtUqmF
+	 Pkl3WPlSkpwXqYJawUaWwce8dVQAHOzdhGu6KD6uePzU4lveXH8RPj4veguo2pH8pm
+	 B4IUHgRcFTWHXbuku119cB0cjTEErAjMLTBG8h+35c+UewGdt1eK/TYia+bUvV+0Ql
+	 9frlkRJvZUEWw==
+Date: Mon, 02 Jun 2025 02:05:56 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530143135.366417-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250530143135.366417-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <aDryEVl4VtZZqUdK@shikoro>
-In-Reply-To: <aDryEVl4VtZZqUdK@shikoro>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Mon, 2 Jun 2025 08:04:45 +0100
-X-Gm-Features: AX0GCFtXDDE1G3o9rgqW63YXqoKraGeKxlXdelBd4cXjsFer9C21bDSrO6btEz8
-Message-ID: <CA+V-a8uFJ4WvpMg+wFKgyXnRT0omXUnK3JNsjE=1bd_ZNprAPA@mail.gmail.com>
-Subject: Re: [PATCH 4/6] i2c: riic: Pass IRQ desc array as part of OF data
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Prabhakar <prabhakar.csengg@gmail.com>, Chris Brandt <chris.brandt@renesas.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: claudiu.beznea@tuxon.dev, vigneshr@ti.com, krzk+dt@kernel.org, 
+ nicolas.ferre@microchip.com, krzysztof.kozlowski+dt@linaro.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ miquel.raynal@bootlin.com, alexandre.belloni@bootlin.com, richard@nod.at, 
+ conor+dt@kernel.org, linux-mtd@lists.infradead.org, 
+ linux-kernel@vger.kernel.org
+To: Balamanikandan Gunasundar <balamanikandan.gunasundar@microchip.com>
+In-Reply-To: <20250602053507.25864-2-balamanikandan.gunasundar@microchip.com>
+References: <20250602053507.25864-1-balamanikandan.gunasundar@microchip.com>
+ <20250602053507.25864-2-balamanikandan.gunasundar@microchip.com>
+Message-Id: <174884795608.25189.1492407932074912521.robh@kernel.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: mtd: microchip-nand: convert txt
+ to yaml
 
-Hi Wolfram,
 
-Thank you for the review.
+On Mon, 02 Jun 2025 11:05:04 +0530, Balamanikandan Gunasundar wrote:
+> Convert text to yaml for microchip nand controller
+> 
+> Signed-off-by: Balamanikandan Gunasundar <balamanikandan.gunasundar@microchip.com>
+> ---
+>  .../devicetree/bindings/mtd/atmel-nand.txt    |  50 ------
+>  .../mtd/microchip,nand-controller.yaml        | 169 ++++++++++++++++++
+>  2 files changed, 169 insertions(+), 50 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/microchip,nand-controller.yaml
+> 
 
-On Sat, May 31, 2025 at 1:12=E2=80=AFPM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
->
-> On Fri, May 30, 2025 at 03:31:33PM +0100, Prabhakar wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > In preparation for adding support for Renesas RZ/T2H and RZ/N2H SoCs,
-> > which feature a combined error interrupt instead of individual error
-> > interrupts per condition, update the driver to support configurable IRQ
-> > layouts via OF data.
-> >
-> > Introduce a new `irqs` field and `num_irqs` count in `riic_of_data` to
-> > allow future SoCs to provide a custom IRQ layout. This patch is a
-> > non-functional change for existing SoCs and maintains compatibility wit=
-h
-> > the current `riic_irqs` array.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
->
-> Did you test this on RZ/A1? I could do so next week?
->
-Unfortunately, I haven=E2=80=99t been able to test this on the RZ/A1 as I
-don=E2=80=99t have access to the hardware. If you=E2=80=99re able to run it=
- next week,
-that would be really helpful.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Cheers,
-Prabhakar
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/mtd/microchip,nand-controller.example.dtb: /example-0/ebi@10000000: failed to match any schema with compatible: ['atmel,sama5d3-ebi']
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mtd/microchip,nand-controller.example.dtb: nand-controller (atmel,sama5d3-nand-controller): #address-cells: 1 was expected
+	from schema $id: http://devicetree.org/schemas/mtd/nand-controller.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mtd/microchip,nand-controller.example.dtb: nand-controller (atmel,sama5d3-nand-controller): #size-cells: 0 was expected
+	from schema $id: http://devicetree.org/schemas/mtd/nand-controller.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250602053507.25864-2-balamanikandan.gunasundar@microchip.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
