@@ -1,139 +1,111 @@
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E8833F7;
-	Mon,  2 Jun 2025 18:44:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112BF9478;
+	Mon,  2 Jun 2025 18:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748889859; cv=none; b=UPGBqT4u26PxvPVlQI7PILVL1PUSXvA2yx4B2/d1JsB2yd3FFfmXI2+4xE+vmZ3OvTQClU/oi8Bg8v6gPHsUHxlxXSaySqPFd+elUptwQo6PjNxCMt8eqlznL6raHvYK/UdLtOGQShnNaUp8zCb01Sb1U/4vZtfbgbenCrEFic8=
+	t=1748889887; cv=none; b=fNsRIFjKz2IqEhm29GTIrBmxbHD08E2dF5FvHHr1DCql3Lb0E+zWom++JC7sL8RBYiNCtaV5BIx7HkvcL8ZmGQGW1UzX6f/Co66I58zaU2DKe+qKbG055KpXBYp3zM+w4CTPwuYxqRkvIjy9tJBzZQkktQykWseQRqcDpRWHgCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748889859; c=relaxed/simple;
-	bh=0/fOG8pYA02bHRc/ONtUI24TUIqdK818gSERz5gGdlc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UaMChUuu9eHHnx1sDkHWqw4hCJjdZgJJf5M+ftggZ0bk6u6J3o3Jj+adCiYl2WPv3CyiX3YMhNywfnaxSuCwCNWrw6YPSQ3stEt2T+neij0pnuVjkcvQVQlWMQwoXlTAqelJKV61ToR0bWmFA34cZrVb/2czrxNVvV/rLI2HkVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ursu.me; spf=pass smtp.mailfrom=ursu.me; dkim=pass (2048-bit key) header.d=ursu.me header.i=@ursu.me header.b=yW7n0enE; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=L3YVRy6/; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ursu.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ursu.me
+	s=arc-20240116; t=1748889887; c=relaxed/simple;
+	bh=tgt6I9DSOmblyV+VhXIdkDPXTQP0Z7ihBQ5Q4BYf8Rc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U80xdSXDgPf/Jz3sAONoaET0+r5OD3mWaG79G76DwhLxZe+pgGLlMIoto9b6tzd6bhpmz7fHMdplBzyuqMLJ8J+UGGd2dZ1ydySj5AAQkLMpio6duq1ke3LVuw3WmZNkJ98b6R368bZytysj7IILyBt+9JGxhKWf5VIFxH442+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I/6TaT1W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ursu.me header.i=@ursu.me header.b="yW7n0enE";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="L3YVRy6/"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.phl.internal (Postfix) with ESMTP id 1686F138034F;
-	Mon,  2 Jun 2025 14:44:15 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Mon, 02 Jun 2025 14:44:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ursu.me; h=cc:cc
-	:content-transfer-encoding:content-type:content-type:date:date
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1748889855;
-	 x=1748976255; bh=B9nR3mXG/IvR4Y4wwhnqlP1ObVOVBHTQ+M/bA4GnImM=; b=
-	yW7n0enEapi9VZE/EMHVzlcUeori2T2yv6ybZHvbjD5Xmhyr3O5Qk7SInVO5lSVH
-	ZxfHuSKdU+BogV6S2GBDVhbe2bldE+jceonm8eU6p3NStJqAQ1MAtMdszJRq7E/T
-	JCq9kmcRxPUVVSm8hJCRvBrEDfX+fg3XYg2rbgCWkbHqyD05jVlgRDqb4j0uSSPw
-	6GQEgqHev4ricoTBlMVuzN9tP9QZvXlOsfbvOu8p/bEXKAO9w/qxMpsPPHwIN+j4
-	3iZs6uYJb1mI4cUuFEjoHpqJQJrpMgBWoieyoX/nLXbrEdnOZOex2J3W6r2o1lS1
-	Ac1OvyvctnQdCw0BZuzlfw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1748889855; x=
-	1748976255; bh=B9nR3mXG/IvR4Y4wwhnqlP1ObVOVBHTQ+M/bA4GnImM=; b=L
-	3YVRy6/dzihm5dVxHEIS1yY6MiPb5r5l0CFKdAnA+Ye58i1TNeBtYVm0thHiFoOF
-	lmMX9m4DlLwUW7m+dHxZdE7YmZlC5O5INO2gfYkr/GvD34LBb8Oic6bjsUeyW9WA
-	SW5h0ZN8KRAs14MDr1MeRXCCnc1uNIOYecore6XLoTB4MkIXydsCXz7cGzrjCw2Y
-	AOhBVuWDXPktnYJj6C/zGrswo48APjwWZJ9j3hB3K6w/ftcm3HZe4D3FngDycpG6
-	+cZLkglMNqxhBNMt94KLCNNOrj2yy7b3ltaMdYrT69IoD9T8oykFNRkLOz47pF5g
-	56qXt4FchzeNpSvl8d3YQ==
-X-ME-Sender: <xms:_vA9aNtR3QHZavZvIucruwHaFv9jWfkH4LjapkNrhDSn7qsGsLq7JA>
-    <xme:_vA9aGe4oEqtsqA_KTNpDv8pb1K10sXgM4c5WkK-nq4c6p13yrRoSiC5KJioa5Bwa
-    oS72iOfm9SFVRn7r0g>
-X-ME-Received: <xmr:_vA9aAxmb3RSi31JfWP_kJ4j2gSTlc69iPjD-sYcVFjD5g4lCc7t3iO5_MrRHFMhwNp_>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdefkeegfeculddtuddrgeefvddrtd
-    dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
-    fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
-    dtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfev
-    fhfhjggtgfesthekredttddvjeenucfhrhhomhepgghlrgguucgftffufgcuoehvlhgrug
-    esuhhrshhurdhmvgeqnecuggftrfgrthhtvghrnhepteehfedugeelleffgfduffevffdv
-    hfevteevleefteetjedtiedvudevheduheffnecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepvhhlrggusehurhhsuhdrmhgvpdhnsggprhgtphht
-    thhopeduvddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepvhhithgrlhihrdhlih
-    hfshhhihhtshesihhnthgvlhdrtghomhdprhgtphhtthhopehjrggtvghksehjrggtvghk
-    khdrihhnfhhopdhrtghpthhtoheprghnthhhohhnhidrlhdrnhhguhihvghnsehinhhtvg
-    hlrdgtohhmpdhrtghpthhtohepphhriigvmhihshhlrgifrdhkihhtshiivghlsehinhht
-    vghlrdgtohhmpdhrtghpthhtoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthh
-    dprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohep
-    vgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrh
-    hnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomh
-X-ME-Proxy: <xmx:_vA9aEOnEGnOZRJJzxmQZ4CXXOutUrC9-wxaFsGFpVOO9ML--ZAxoA>
-    <xmx:_vA9aN8tZTqPUTpmSrJ-j7EI3RbgFf9ljkMgV4sfKimlgwN2TFfGbg>
-    <xmx:_vA9aEV-xfCeg0DM8jsAJiwMk8WMghS25XUdhHOwZtIXMAQDsqmXfQ>
-    <xmx:_vA9aOdSwqMkVd_CSnVgpBFlLiFgav3WmNCYIO7fN8VvuehsDo898Q>
-    <xmx:__A9aG99ww3Jd7rvJLvGpm586yAr-KGzcUr4rsXFewlPDK3FTamLsmMp>
-Feedback-ID: i9ff147ff:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 2 Jun 2025 14:44:11 -0400 (EDT)
-Message-ID: <20f39efe-ba5b-44b2-bfe6-b4ca17d6b0c1@ursu.me>
-Date: Mon, 2 Jun 2025 21:44:06 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I/6TaT1W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64687C4CEEB;
+	Mon,  2 Jun 2025 18:44:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748889885;
+	bh=tgt6I9DSOmblyV+VhXIdkDPXTQP0Z7ihBQ5Q4BYf8Rc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I/6TaT1WsCnKWWkSaK/FEEmtO3036TYUkDQs7ZZS5URVraWiEd33rS0+58bnPlOvC
+	 ypEcKQq5r3hR84Lf2VZaMqOYvgZj/wirlLz7GHZP8T+J3AFzukPWPFKQ8gfgoqpaaV
+	 I469HozmYlDBpLMI+ClyS+twQZoBjfThBzq5XmT+MCOEPGShCt5zsyze6P84JfCbqi
+	 IyhOQCQxwbHXEyp7dOkSkLjUQp0t1X2d+fo5/pNnuwRQ622o8tZHdgs2OHf08wQqLq
+	 VmhLDt75Ab5ZR2f+qPPsjfdyI6h/+SBFYIspn9XGoQs4jTghbl0p+VLY1hdhTnXr0h
+	 Rw14uNLL6ws/Q==
+Date: Mon, 2 Jun 2025 20:44:39 +0200
+From: Alexey Gladkov <legion@kernel.org>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Petr Pavlu <petr.pavlu@suse.com>, Luis Chamberlain <mcgrof@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org,
+	linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH v3 3/6] modpost: Make mod_device_table aliases more unique
+Message-ID: <aD3xFzKQbxaIo60a@example.org>
+References: <cover.1748335606.git.legion@kernel.org>
+ <ecf0ebdda5bcf82464ed1cebbf50afdcd8b5b23a.1748335606.git.legion@kernel.org>
+ <CAK7LNARm1+L0CrE8TYrFaipfOX4pjEJ7Uz7dn=3g+26PER6jNg@mail.gmail.com>
+ <aD1f0CZfbsMR61OX@example.org>
+ <CAK7LNATt+=k3sYU4FWM22aJzzH_a7_1FkO5S=LW7L-Z7K4CQhQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Intel-wired-lan] [PATCH] e1000e: disregard NVM checksum on tgp
- when valid checksum mask is not set
-To: "Lifshits, Vitaly" <vitaly.lifshits@intel.com>,
- Jacek Kowalski <jacek@jacekk.info>, Tony Nguyen
- <anthony.l.nguyen@intel.com>, Przemek Kitszel
- <przemyslaw.kitszel@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <5555d3bd-44f6-45c1-9413-c29fe28e79eb@jacekk.info>
- <23bb365c-9d96-487f-84cc-2ca1235a97bb@ursu.me>
- <03216908-6675-4487-a7e1-4a42d169c401@intel.com>
- <47b2fe98-da85-4cef-9668-51c36ac66ce5@ursu.me>
- <8adbc5a0-782d-4a07-93d7-c64ae0e3d805@intel.com>
-Content-Language: en-US
-From: Vlad URSU <vlad@ursu.me>
-In-Reply-To: <8adbc5a0-782d-4a07-93d7-c64ae0e3d805@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK7LNATt+=k3sYU4FWM22aJzzH_a7_1FkO5S=LW7L-Z7K4CQhQ@mail.gmail.com>
 
-On 01.06.2025 13:19, Lifshits, Vitaly wrote:
+On Tue, Jun 03, 2025 at 03:00:07AM +0900, Masahiro Yamada wrote:
+> On Mon, Jun 2, 2025 at 5:24 PM Alexey Gladkov <legion@kernel.org> wrote:
+> >
+> > On Mon, Jun 02, 2025 at 04:52:36PM +0900, Masahiro Yamada wrote:
+> > > On Tue, May 27, 2025 at 6:08 PM Alexey Gladkov <legion@kernel.org> wrote:
+> > > >
+> > > > In order to avoid symbol conflicts if they appear in the same binary, a
+> > > > more unique alias identifier can be generated.
+> > > >
+> > > > Signed-off-by: Alexey Gladkov <legion@kernel.org>
+> > > > Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
+> > > > ---
+> > > >  include/linux/module.h   | 14 ++++++++++++--
+> > > >  scripts/mod/file2alias.c | 18 ++++++++++++++----
+> > > >  2 files changed, 26 insertions(+), 6 deletions(-)
+> > > >
+> > > > diff --git a/include/linux/module.h b/include/linux/module.h
+> > > > index 88048561360f..e7506684069d 100644
+> > > > --- a/include/linux/module.h
+> > > > +++ b/include/linux/module.h
+> > > > @@ -249,10 +249,20 @@ struct module_kobject *lookup_or_create_module_kobject(const char *name);
+> > > >  /* What your module does. */
+> > > >  #define MODULE_DESCRIPTION(_description) MODULE_INFO(description, _description)
+> > > >
+> > > > +/* Format: __mod_device_table__<counter>__kmod_<modname>__<type>__<name> */
+> > >
+> > > This format relies on module-name mangling, but
+> > > I hope we will be able to stop doing it some day.
+> >
+> > I didn't like this approach either when I found out how it was
+> > implemented.
 > 
+> Yeah, I dislike it.
 > 
-> On 5/15/2025 10:07 PM, Vlad URSU wrote:
->> On 15.05.2025 07:39, Lifshits, Vitaly wrote:
->>> Since the checksum word is 0xFFFF which is peculiar, can you dump the 
->>> whole NVM and share with us?
->>
->> Sure, here's a dump of my NVM
->>
->> Offset        Values
->> ------        ------
->> 0x0000:        d0 8e 79 07 78 c8 01 08 ff ff 44 00 01 00 6c 00
->> 0x0010:        ff ff ff ff c9 10 54 0a 28 10 f9 15 00 00 00 00
->> 0x0020:        00 00 00 00 00 80 05 a7 30 30 00 16 00 00 00 0c
->> 0x0030:        f3 08 00 0a 43 08 13 01 f9 15 ad ba f9 15 fa 15
->> 0x0040:        ad ba f9 15 ad ba f9 15 00 00 80 80 00 4e 86 08
+> I hope we can stop this historical mistake:
+> https://lore.kernel.org/lkml/20250602130609.402581-1-masahiroy@kernel.org/
 > 
-> You're right — I see that the SW compatibility bit is set and the 
-> checksum appears to be incorrect.
-> 
-> Since the NVM is part of the system firmware and typically managed by 
-> the system manufacturer, I recommend checking whether a firmware update 
-> is available for your system as a first step.
-> 
-> If no update is available, perhaps we can consider ignoring the checksum 
-> on TGP systems if one of the following conditions is met:
-> 1. SW compatibility bit is not set (current Jacek's approach)
-> 2. The checksum word at offset 0x3F retains its factory default value of 
-> 0xFFFF.
+> Once we stop doing that, __KBUILD_MODNAME will not match to KBUILD_MODNAME.
 
-I am already on the latest firmware. I have also tried downgrading to 
-earlier versions and they have the same problem.
+Do I understand you correctly that I cannot use __KBUILD_MODNAME now ?
+
+> Also, you need to be careful about the rust side, as
+> you did not take care of it.
+> 
+> https://github.com/torvalds/linux/blob/v6.15/rust/kernel/device_id.rs#L157
+
+Oh. This will make it much more complicated because I don't know rust
+well. :(
+
+I found a few more issues with modules when they compile as part of the
+kernel, but was hoping to fix them after these patches.
+
+-- 
+Rgrds, legion
+
