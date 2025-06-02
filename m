@@ -1,170 +1,221 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 516751C32
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 12:15:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748866552; cv=none; b=LKWoD7qK7FuI/PwwMg+t2zPbxKOGdVToX5eWg2CFNJH9D4eNPGa0E1WfSqrnKdkZlGuun45sSqmBGGS4jWA5K0gOQCJXXwrxbmLyw5kI4F59695pDUZghp7Zudyb/jDQuAl+K0bvIUl4zTxvULawLQNO4gXLXfpcMyycNlMs7oc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748866552; c=relaxed/simple;
-	bh=K1sARFfjt5Wir3hjTbp5VcsY9vvxxeRd2uh+E+6ngVg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jyfbKbEs8lIpcD2XcCZ42ZrS4bz57FRf+FtZEAV5OzWlu42CZPRLGOdElqaxXwolzTpr3OK0v/m745V0ml7m2SRH26Orrw7Pa7Wnm6KvDbGeaTnnD2JD58Jbq6xMKbbNrO6FcQjMCbw0CNcoI40HQhZeu+1vhD8xlEDNZcCv1Fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=VrMHZtin; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6D41C32;
+	Mon,  2 Jun 2025 12:16:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748866606; cv=pass; b=cawz5ZaqLiV3hQsupi75B6LkYYztETAUrApPSH8dUr6bKAzfbpZ02uwwz+i4Bq2VkRPRrOWHbdG5CKd+Ff/1NLI06Uvpch2D7PBJloHymiI1gd3/ChyOesGjZrxqSIHvuTQ+hTlQhCdFB8KdQW9bg+JCxkxTOemn/NJYsxTjfeY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748866606; c=relaxed/simple;
+	bh=spiz+6jbQPJUaIKTN+CGRiXzusNZXCuqtp/xZHVjtfE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=A7eNMzINlrvwtLrxSX9k4+IY8kyzJEYUEq1S8/FCFNs7zlnpC5oo3noYz4jpe9k3LvpyU/oYjFuU9uu5xck7SK936ZMjZpGxtxBuL2bVAw7dJ6V9CNX481tNYnlUNoBxHFZ1yMR4S3PF1AMfnX4zKMu5Td6mKNCIHIvrkE76Ous=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=O39AVe9T; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="VrMHZtin"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b1fd59851baso2516269a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 05:15:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1748866549; x=1749471349; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GDaX+Ms/JxaHPiO5VVVHhufwbnzZiaWoNqvnoO02z4M=;
-        b=VrMHZtinvBwjHsAqnJF85dHQAERZqXWbKGZNrlc0Qkm/OQVgl0ajIvLR4rAXPiooDG
-         /d5gfaSAGgY9ecLNGc5/i1trEmtTYlFFUABpTurjSmrVt/cKX0w44MIwlFVSvnOP8cT6
-         nYE9yJJuwKiRPxKgZCzpkRYpOsZzfHoJUtxU+WRf3PktxRAr5xat6JuX2iBPLZKsEq9v
-         WZEcCmAhoy4ekxwsaRAOpreJtQ3rEbyfnT9O7xr6o1lp+Hptu6AxWqoeRW1GRoOq8qiA
-         cqz7BtDzZbFaMc3H7plc+2iQbmzuzqmgNJf+vhHJVp7ZIDu6dUmZ37iNT83eyYuHOWW1
-         HIvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748866549; x=1749471349;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GDaX+Ms/JxaHPiO5VVVHhufwbnzZiaWoNqvnoO02z4M=;
-        b=lWSGARN03HYdSm1xzr2o3eUKxYrDruHUC/tqtxOVLUY+xZz5dFuKq73WyXfIgz0z8I
-         7x8sSXVb9m2C7KJCjwXGxBGfNkjpE/o4AddfTQUICZksNnDXcOZRQiqOVfL5e5ssul1B
-         0v2ZurSSUp6T9sAl/VUrUj1CIGv/QkHHxaNkvpm8CHKculBPg72Mcyb57R4IQ4FraV8r
-         xuP+qy60hoXxI1L/H2M4XeujzSAvXcBVDPH7sirv6Mg5ZF1sy/TFrBoMEbG11NsA1ypA
-         j9AiXYbAmCASMN3fK18KyNn3U6Lh0wNKtVhNTMs0bb91qQG9sD1APTHPD3VONKJPlW7I
-         Fssg==
-X-Forwarded-Encrypted: i=1; AJvYcCU34cCMziBNp7SMq5ZSpPaF5+G+pkFvXWMbSOCqFGq9b5ovO227OmNHQj8ASrr6M56zht1BG/3pGNased8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5S/AjNPRkVdSkpAmJZ+AQdgjaiRwTzFC1X8+DVgMf0oUqIVqD
-	7s/nm4C4txKC+zym8k3b2gj1FAfgLz6zQWC1ZjERxDOSK1L8avS/1r+RSfRD1ZG0Pfk=
-X-Gm-Gg: ASbGncuRJeh1GRp9XwnNvhD0SMWoveqMp+mS2iIpRDzM7uOJyXwWR2kTmv4+g0eAZhx
-	cNimTyAKxZLdhyAwBYhIsjuHWNAk+TtxMESZdPDRHjUrSkGwebDuLT4Waa5xCftgNtnmoHfxZS1
-	rpvqCmCVO62EXawXbaDgs9g3+aPOAIIptTsfXvJJRrGi79buvZOr2DmeOghVjttT+6XBVDMh7mG
-	ZaJSi7Kur9G4/zIoETmZlt+tt4HDMZF/l5GqMnMqbcimJVyb9rHhHPac7eH5QahmmNVjHpoOH92
-	uh61dIQ2Bn60bfZ2OzPa2Yrn0yvWbdJBkwTzBvw03/DwL6D+k0MAXEIZvg3MQoiSvkjD1MtTV+A
-	0enuQR/rGdFOXx4oiEv5mq/wR0WYyMw5N6A==
-X-Google-Smtp-Source: AGHT+IE3ZZ9XZVrG6e5pbAOnOlFdHoHvNeeSOVeQA16FfBQLzHeudQW2FyoTDts8Gqcjz/FT+Fd4nw==
-X-Received: by 2002:a05:6a20:6a21:b0:215:db66:2a33 with SMTP id adf61e73a8af0-21adff6bccfmr17082491637.16.1748866549492;
-        Mon, 02 Jun 2025 05:15:49 -0700 (PDT)
-Received: from alexghiti.ba.rivosinc.com (alexghiti.eu.rivosinc.com. [141.95.202.232])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afeabb13sm7717558b3a.62.2025.06.02.05.15.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 05:15:48 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Cyril Bur <cyrilbur@tenstorrent.com>,
-	Andy Chiu <andybnac@gmail.com>,
-	Deepak Gupta <debug@rivosinc.com>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH v2] riscv: uaccess: Only restore the CSR_STATUS SUM bit
-Date: Mon,  2 Jun 2025 12:15:43 +0000
-Message-Id: <20250602121543.1544278-1-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="O39AVe9T"
+ARC-Seal: i=1; a=rsa-sha256; t=1748866555; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Vze/kjONo0AB70e1wZ0QkC2ynBo7Zq0uf545gqPwLvISGOTvuXAzUA+ZQUkgT/yabPY4SAI2wwfEWd++Pw3ju8eduO8POg4kuAyjrjtBUPFe1VIXQ8CPEs6/uW48a5pNQRRtUDuzPd49Pq89mcCcI+He1MfMlB0Ae4mruy/63t4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1748866555; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=+Aed1G3zEdiAE6/euJzRcaSWP5Y0mYDbnxPBMhKta6o=; 
+	b=Iw8ItoI0JX6aQ7esTRNbGbiSqiY+ajT7E3BJrKp1tp4mWqzgrycY7i4VNskyjzLnX6K4u6E59RojQDqqL8WpN3cLmJNGRiLl1gHrZnTGn6eQP0ldwqgtMogpDTDMFSXhgOH1r9GUfwXsAAstygtb/1rooxcO3R0AsBzW1FynCsM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1748866555;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=+Aed1G3zEdiAE6/euJzRcaSWP5Y0mYDbnxPBMhKta6o=;
+	b=O39AVe9TKwe84UGQR/XEuzyNvSLxFaej5EFC98AH5IcrJ9mhLCJkAz3qaYrbCR9o
+	Noy0MVDMzoyJCuqqYeai7k8gxbeP26nKRLSelY36aQlr373aHsEfUJelARxQdb4wGdR
+	nqdhZxkeKZF7d+Wr9EUcC0NT9lkWqv/EleeL9MEE=
+Received: by mx.zohomail.com with SMTPS id 1748866552562746.0707424997689;
+	Mon, 2 Jun 2025 05:15:52 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
+ William Breathitt Gray <wbg@kernel.org>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Kever Yang <kever.yang@rock-chips.com>,
+ Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+ linux-iio@vger.kernel.org, kernel@collabora.com,
+ Jonas Karlman <jonas@kwiboo.se>,
+ Detlev Casanova <detlev.casanova@collabora.com>
+Subject: Re: [PATCH 4/7] soc: rockchip: add mfpwm driver
+Date: Mon, 02 Jun 2025 14:15:45 +0200
+Message-ID: <13790724.uLZWGnKmhe@workhorse>
+In-Reply-To: <2188729.OBFZWjSADL@diego>
+References:
+ <20250408-rk3576-pwm-v1-0-a49286c2ca8e@collabora.com>
+ <20250408-rk3576-pwm-v1-4-a49286c2ca8e@collabora.com>
+ <2188729.OBFZWjSADL@diego>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3042; i=alexghiti@rivosinc.com; h=from:subject; bh=QR8/6bas1i5/uuucvXOTT2dS9uCkrhYuqeChIu397zo=; b=owGbwMvMwCGWYr9pz6TW912Mp9WSGDJsp+7xv/FpyfOAyAnx+5OMt+/98OSGzSqedU4xBxXyo 5Wby3k7OkpZGMQ4GGTFFFkUzBO6WuzP1s/+c+k9zBxWJpAhDFycAjARt7cM/9O2tifwbXyTkmtz 9+b3FbHNsYuPnG9dGuKhfeGWlMOdN74M/2Nk7k89Zhv07Zbim+9Lnxz4HH3p1Ub2nULFb+QzyyX 3ObMDAA==
-X-Developer-Key: i=alexghiti@rivosinc.com; a=openpgp; fpr=DC049C97114ED82152FE79A783E4BA75438E93E3
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-From: Cyril Bur <cyrilbur@tenstorrent.com>
+On Saturday, 31 May 2025 23:48:29 Central European Summer Time Heiko St=C3=
+=BCbner wrote:
+> Am Dienstag, 8. April 2025, 14:32:16 Mitteleurop=C3=A4ische Sommerzeit sc=
+hrieb Nicolas Frattaroli:
+> > With the Rockchip RK3576, the PWM IP used by Rockchip has changed
+> > substantially. Looking at both the downstream pwm-rockchip driver as
+> > well as the mainline pwm-rockchip driver made it clear that with all its
+> > additional features and its differences from previous IP revisions, it
+> > is best supported in a new driver.
+> >=20
+> > This brings us to the question as to what such a new driver should be.
+> > To me, it soon became clear that it should actually be several new
+> > drivers, most prominently when Uwe Kleine-K=C3=B6nig let me know that I
+> > should not implement the pwm subsystem's capture callback, but instead
+> > write a counter driver for this functionality.
+> >=20
+> > Combined with the other as-of-yet unimplemented functionality of this
+> > new IP, it became apparent that it needs to be spread across several
+> > subsystems.
+> >=20
+> > For this reason, we add a new platform bus based driver, called mfpwm
+> > (short for "Multi-function PWM"). This "parent" driver makes sure that
+> > only one device function driver is using the device at a time, and is in
+> > charge of registering the platform bus devices for the individual device
+> > functions offered by the device.
+> >=20
+> > An acquire/release pattern is used to guarantee that device function
+> > drivers don't step on each other's toes.
+> >=20
+> > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+>=20
+> actually trying to compile this, led me to
+>=20
+> aarch64-linux-gnu-ld: drivers/soc/rockchip/mfpwm.o: in function `mfpwm_re=
+g_read':
+> /home/devel/hstuebner/00_git-repos/linux-rockchip/_build-arm64/../include=
+/soc/rockchip/mfpwm.h:423: multiple definition of `mfpwm_reg_read'; drivers=
+/pwm/pwm-rockchip-v4.o:/home/devel/hstuebner/00_git-repos/linux-rockchip/_b=
+uild-arm64/../include/soc/rockchip/mfpwm.h:423: first defined here
+> aarch64-linux-gnu-ld: drivers/soc/rockchip/mfpwm.o: in function `mfpwm_re=
+g_write':
+> /home/devel/hstuebner/00_git-repos/linux-rockchip/_build-arm64/../include=
+/soc/rockchip/mfpwm.h:428: multiple definition of `mfpwm_reg_write'; driver=
+s/pwm/pwm-rockchip-v4.o:/home/devel/hstuebner/00_git-repos/linux-rockchip/_=
+build-arm64/../include/soc/rockchip/mfpwm.h:428: first defined here
+> make[3]: *** [../scripts/Makefile.vmlinux_o:72: vmlinux.o] Fehler 1
+>=20
+>=20
+> during the linking stage - with the driver as builtin
+>=20
+>=20
+> > +inline u32 mfpwm_reg_read(void __iomem *base, u32 reg)
+> > +{
+> > +	return readl(base + reg);
+> > +}
+> > +
+> > +inline void mfpwm_reg_write(void __iomem *base, u32 reg, u32 val)
+> > +{
+> > +	writel(val, base + reg);
+> > +}
+>=20
+> making that a "static inline ..." solves that.
 
-During switch to csrs will OR the value of the register into the
-corresponding csr. In this case we're only interested in restoring the
-SUM bit not the entire register.
+Ack, will change
 
-Fixes: 788aa64c0c01 ("riscv: save the SR_SUM status over switches")
-Signed-off-by: Cyril Bur <cyrilbur@tenstorrent.com>
-Link: https://lore.kernel.org/r/20250522160954.429333-1-cyrilbur@tenstorrent.com
-Co-developed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
+>=20
+>=20
+> On a more general note, what is the differentiation to an MFD here?
+>=20
+> Like you can already bind dt-nodes to MFD subdevices, and can implement
+> the exclusivity API thing on top of a general mfd device, to make sure on=
+ly
+> one mfd-cell gets activated at one time.
+>=20
+> Other than that, this looks like it reimplements MFDs?
 
-Changes in v2:
- - Rename status field
- - Remove a comment
- - Fix Fixes tag
+What initially made me not make this an MFD was Uwe Kleine-K=C3=B6nig expre=
+ssing
+some doubts, which lead me to alternatives like the auxiliary bus. Reading =
+the
+auxiliary bus docs I found:
 
- arch/riscv/include/asm/processor.h | 2 +-
- arch/riscv/kernel/asm-offsets.c    | 6 +++---
- arch/riscv/kernel/entry.S          | 9 +++++----
- 3 files changed, 9 insertions(+), 8 deletions(-)
+  A key requirement for utilizing the auxiliary bus is that there is no
+  dependency on a physical bus, device, register accesses or regmap support.
+  These individual devices split from the core cannot live on the platform
+  bus as they are not physical devices that are controlled by DT/ACPI. The
+  same argument applies for not using MFD in this scenario as MFD relies on
+  individual function devices being physical devices.
 
-diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
-index 7bcbb908798f2..05eb65fe95789 100644
---- a/arch/riscv/include/asm/processor.h
-+++ b/arch/riscv/include/asm/processor.h
-@@ -111,7 +111,7 @@ struct thread_struct {
- 	struct __riscv_d_ext_state fstate;
- 	unsigned long bad_cause;
- 	unsigned long envcfg;
--	unsigned long status;
-+	unsigned long sum;
- 	u32 riscv_v_flags;
- 	u32 vstate_ctrl;
- 	struct __riscv_v_ext_state vstate;
-diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm-offsets.c
-index 3aa5f56a84e9a..e4d55126dc3eb 100644
---- a/arch/riscv/kernel/asm-offsets.c
-+++ b/arch/riscv/kernel/asm-offsets.c
-@@ -34,7 +34,7 @@ void asm_offsets(void)
- 	OFFSET(TASK_THREAD_S9, task_struct, thread.s[9]);
- 	OFFSET(TASK_THREAD_S10, task_struct, thread.s[10]);
- 	OFFSET(TASK_THREAD_S11, task_struct, thread.s[11]);
--	OFFSET(TASK_THREAD_STATUS, task_struct, thread.status);
-+	OFFSET(TASK_THREAD_SUM, task_struct, thread.sum);
- 
- 	OFFSET(TASK_TI_CPU, task_struct, thread_info.cpu);
- 	OFFSET(TASK_TI_PREEMPT_COUNT, task_struct, thread_info.preempt_count);
-@@ -351,8 +351,8 @@ void asm_offsets(void)
- 		  offsetof(struct task_struct, thread.s[11])
- 		- offsetof(struct task_struct, thread.ra)
- 	);
--	DEFINE(TASK_THREAD_STATUS_RA,
--		  offsetof(struct task_struct, thread.status)
-+	DEFINE(TASK_THREAD_SUM_RA,
-+		  offsetof(struct task_struct, thread.sum)
- 		- offsetof(struct task_struct, thread.ra)
- 	);
- 
-diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-index d3cb515fb1596..77e334f7cbe4b 100644
---- a/arch/riscv/kernel/entry.S
-+++ b/arch/riscv/kernel/entry.S
-@@ -427,14 +427,15 @@ SYM_FUNC_START(__switch_to)
- 	REG_S s11, TASK_THREAD_S11_RA(a3)
- 
- 	/* save the user space access flag */
--	li    s0, SR_SUM
--	csrr  s1, CSR_STATUS
--	REG_S s1, TASK_THREAD_STATUS_RA(a3)
-+	csrr  s0, CSR_STATUS
-+	REG_S s0, TASK_THREAD_SUM_RA(a3)
- 
- 	/* Save the kernel shadow call stack pointer */
- 	scs_save_current
- 	/* Restore context from next->thread */
--	REG_L s0,  TASK_THREAD_STATUS_RA(a4)
-+	REG_L s0,  TASK_THREAD_SUM_RA(a4)
-+	li    s1,  SR_SUM
-+	and   s0,  s0, s1
- 	csrs  CSR_STATUS, s0
- 	REG_L ra,  TASK_THREAD_RA_RA(a4)
- 	REG_L sp,  TASK_THREAD_SP_RA(a4)
--- 
-2.34.1
+Additionally, LWN[1] about the auxiliary bus, which I've read up on during =
+my
+ill-fated journey into that version of the driver, also goes further into w=
+hy
+MFD is sometimes a bad fit:
+
+  Linux already includes a number of drivers for multi-function devices. One
+  of the ways to support them is the Multi-Function Devices (MFD) subsystem.
+  It handles independent devices "glued" together into one hardware block
+  which may contain some shared resources. MFD allows access to device
+  registers either directly, or using a common bus. In this second case, it
+  conveniently multiplexes accesses on Inter-Integrated Circuit (I2C) or
+  Serial Peripheral Interface (SPI) buses. As the MFD sub-devices are
+  separate, MFD drivers do not share a common state.
+
+  The devices Ertman addresses do not fit well into the MFD model. Devices
+  using the auxiliary bus provide subsets of the capabilities of a single
+  hardware device. They do not expose separate register sets for each
+  function; thus they cannot be described by devicetrees or discovered by
+  ACPI. Their drivers need to share access to the hardware. Events concerni=
+ng
+  all sub-functionalities (like power management) need to be properly handl=
+ed
+  by all drivers.
+
+The individual function devices may be all pointing at the same physical
+device here, but they're not distinct parts of the device. However, there
+still *is* a physical device, which convinced me that auxiliary bus wasn't
+the right one either, and the idea for just using the platform bus came
+during a work meeting. If someone with experience on aux bus vs platform bus
+(what this uses) vs MFD, then feel free to chime in. Unfortunately, as is t=
+he
+norm, I can't seem to find much in terms of MFD documentation. Needing to k=
+now
+what type of exclusion they guarantee and what type of abstractions they br=
+ing
+with them that would make them more useful than my solution would need some
+justification in more than just an auto-generated header listing.
+
+I am very inclined to start pretending things that aren't documented do
+not actually exist in the kernel, because it's very annoying to have to
+constantly deal with this.
+
+>=20
+> Also handing around a regmap might be nicer, compared to readl/writel.
+
+Strong disagree, adding error handling around every single register read
+and write, and needing to always read into a variable rather than getting
+the read value as a return value, made the drivers a lot uglier in a
+previous iteration of this.
+
+>=20
+>=20
+> Heiko
+>=20
+
+Kind regards,
+Nicolas Frattaroli
+
+[1]: https://lwn.net/Articles/840416/
+
+
 
