@@ -1,158 +1,106 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B782036FF
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 23:10:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BC7224240
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 23:10:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748905835; cv=none; b=MP6LPwKDz5Wvt0SstG+zre8Qf3BoIJcRObjrgI0kmsmlfSbi9nCF1XAAggv+A+VFvlYTokcuhkkeiZ3/31rj1uCNw8E9TieN8/zgdi3xOzJQ4HczrFAau2MS1F2u+o94piSeub9t8OTQHi8ZtX7rKIUTdCzaJ9xMSvKu+qBtzdI=
+	t=1748905838; cv=none; b=nyoR6sqLGxjCTqU6CTpiLxz4OJk9NuTWVk0LUvw5EFNVh02TOa2DqJD+jgwQfy2LwazxefFKACmEVY1gzRAVIIh4VoiFZv/i4478tnQZCviqE/vESUxPTLJu3YNQ2QSM7f/PAEENpbARQfd3V1wlBwiwTZJXAb0uuOl/bVtcDpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748905835; c=relaxed/simple;
-	bh=HLtWlUdCA5tSyETK+p1bjru5SFXCPmkyXFdHE6/YSc0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ufWwKM02D/t4y3eDxOGqw9ftbARix9UoohgRjcRYKE2OH+Oi+u71aau0eZ3LER+kBjxuqhJVAp2DC03E2HIqLgvEkT/c5pqbztgQjo6qZz+nf3y55/EcFoR6eh6nQGtCsZOzMsGmLjUIk6NG4sdtaL+aYsnsotlMtCuACs9wF2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=dihcd+Xo; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1748905838; c=relaxed/simple;
+	bh=sQ35O2PGhdv7k8uhPXRH4ecLIzJt7xdi1vpvvGUoQQE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hl8TeVasI8Xxzkuw5rXn9F3IaPk5PwHE7bKf/GTOQqqm3DWY4r7Pv8tE2ibQcUPIbVfNQk9GS4/Sd6wJZFeZoACPiWqGloiTs6uB8ctl/IWUb7gY9kakQn3vfxDtA3MYIwQs0Q3byh54E+f/nlFTr/u02ahV2+ktFkImEwNZU5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=OWyOWBeX; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="dihcd+Xo"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-441ab63a415so53958365e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 16:10:33 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OWyOWBeX"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ad572ba1347so732885766b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 16:10:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1748905832; x=1749510632; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y4Vpa5WCgPTy+i1VpwapiKrKW/K1L0f0Ol4/XZy6OOw=;
-        b=dihcd+Xo8UJq4oRortym8JMSolZPpgy4+AvRkF/entmp+14iXphdpRkJ+xq3AyoFqF
-         p2NdhnnZ3B9SztcRHDDfVISdXiGA3UwXzzH9qs9meWCendcZ5nPzXIfU5pnn2bAH1oWF
-         /Msl5VXD7PueAIU9O3XFBXDZ2t4E3SOD9VJZbB76KUqrzdS2Dq6Sp1eDXcmXAhRtUk5Q
-         /Md6l/tLx4JBGx/SQ3zZYO9J4Vl7PJGznivF2cRCZxH0DQF1uCT5ySnwkKFxLfly7677
-         ISIdP5hsBrppcR3ao4O6kYCP6fg/ii1R8fI69X8tW57dVAuIIodBWeJEzx6o62uWJWUJ
-         sZcQ==
+        d=linuxfoundation.org; s=google; t=1748905834; x=1749510634; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=aOLrDZGyl5sP1KOU7rG3gZEOIkcCfBad5MOiWtWXhg0=;
+        b=OWyOWBeXaK8J3Br0wQPuiT34QzV0pXfegJnqowAfhZjV1D0ShJ7Spf27ni2SXy+Y1K
+         iobs+cfZKcNsobx+VVqkZ/QfOjyQr/ZSFed4vFBcHOQga6dIbC1nmQImHd0vKiwP+jGO
+         H9A7HCMZpLukAfi9/b9kWrhf8Ifqp6MFYu2yk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748905832; x=1749510632;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y4Vpa5WCgPTy+i1VpwapiKrKW/K1L0f0Ol4/XZy6OOw=;
-        b=mGLA0A0j16cIWM3CoLI1J0O3pDAXn2Tb6h5zIJDzXWDQf4E0lYmXJ+NOpoCYDyZ+Fa
-         l+8P00GChl2KVIiSGDglqcmbxXdK9MVhBBEylptk85xJdMt5i4sxwsPjbTHEbtoAG6WT
-         QPnWlahTZ7a+aK9pKYDBI/PfSpDnC4PDmg5ivaQqOTaUqGK+LUqCczeu//2tED4g5YSY
-         /bFo2XgNCpDUv2PY5AOi2J4jJSmtaxoRRjfBmbBQOQnr/iMEACVqKIxSRYJ5iNuU8tUW
-         cvcj4CGlsKkh35ykCEwqkuiVOptTLojLeqrZzAaRWLVCC0sgfULQ1m83l9NhMhnL4zk6
-         BaXw==
-X-Forwarded-Encrypted: i=1; AJvYcCWkT/IQyH8aBU9ZtEqG+BBfbj0RYcQVz+x+sYfonCagzNv+nKNmff53MJ+QFdlcWlTa1Tv8qJC9mlTrIEI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzoJ5U0xq2B0mVh7+MFOEPL9CnF7YG96M4fRuMkJb3rRodPIvC/
-	k4Y7O9046pzvNCry1yC41TcWGpfHJpOa7g+R4UyFUbPf+0P1KWybVOmbpxBKMf32iuU=
-X-Gm-Gg: ASbGnctQlQvA134/5Eumu3JiZtmqvS+O4ZuXnJA9fJ5Kfwxtj7TLk6dKF5UyjX0bfk6
-	pET9Rc/z7/5sGyIyiOWWWqt7dik6rGCp6WdCaSnTipv02uoPHsEQ5Wpj0d3w6EAF3MJDca8XQPj
-	62RpKL/hcEXW2/nU3mrkSWgm616jJftuI6KJWfBYPtaSJF+oSpy8s20KWwoWvMVISYoXmgfJSxw
-	e+he72meWl6lCDj7J622l4Up7tOn1UnX3++TzU8ugZA7B+F8Ovf5pUAZ96EJw3v29Umpq/g/QX1
-	+AY4tBMMo4Lsa+WZEXuWJArAw93TNOXNlinZlAgy2k3RTayoRlX61GgCS3Z68nIHulZE+551J+h
-	3Z6U=
-X-Google-Smtp-Source: AGHT+IHVRb/jNONyUnY0zBCRWyEnP04lsieXvz6H7a2fe24kCCSQoZBv4k3ktjmMiMlGczV3RA5mhg==
-X-Received: by 2002:a05:6000:220b:b0:3a4:f50a:bd5f with SMTP id ffacd0b85a97d-3a4f7a825a2mr11742538f8f.31.1748905831575;
-        Mon, 02 Jun 2025 16:10:31 -0700 (PDT)
-Received: from ?IPV6:2403:580d:fda1::299? (2403-580d-fda1--299.ip6.aussiebb.net. [2403:580d:fda1::299])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e30b688sm6073962a91.32.2025.06.02.16.10.28
+        d=1e100.net; s=20230601; t=1748905834; x=1749510634;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aOLrDZGyl5sP1KOU7rG3gZEOIkcCfBad5MOiWtWXhg0=;
+        b=q61knzACsq4P0g3tI6PfBsgDerWln+2eGA2irM1VWx5NHIqp9bGO9H+VvHdzz8X/aQ
+         wW13OhHMY9jGSMhKbj9mj4mzkCzFYDs3swLlMgf6omFOIjzli13g57nZkp2wOZ5DWP4G
+         42tkCPXk/N7Z15qLJui7aVxDsaJ+nySgiZqgtujcFUwAyN689wa45wI4lW616KBDq90W
+         7LIiw7MWDRZ7aawQIC5YcMwUJLsq08dJobzB8LXHZ7JSL2amFni22e2CSq9lWMY4waNR
+         JtmaVvCKMwClKMiPnT0wQKBHrZBNEyhIiwVFZnTowmWAWIVkLEdxdv9QFLarv/e9wvZ8
+         hWyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXh6rOXjxisemhO03yUwpHFI5YDJyifQKAu7ZG5KkcLT5La+vIroPpO5fzkndjIukz+DyaXOiSZzQr0WUQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2i0UmwjqdBfiReREL46Qd+8IcYtVvbVyzjB2NwVSSfzdc3drs
+	qrIS/JMrNgrHOOU00erRHJhq+luEjOAfJ7hHnqiW0PzgeGJx+z2u5zjTj/1bDaF5rpj1rzRQpvh
+	56rZhoj5jYg==
+X-Gm-Gg: ASbGncuklvBgBMQzxdDpZJplhKuf6mlvACqZjFW9ivQKb8lNvxUq60F/QXTTj6Z0Z9Y
+	60mDl789d0GSn51KUEUT3kPEQjyfzRHlubGIoxNURHU2UHscfHs4hJ+Uq91Dv7brhrBB+iMSDlr
+	NW5TTIyjmgKS1j3g6tiW5dsAFlCHb091YIpsQf3Om8c/5gKeDXXKb9b//2B1YVQczQauT2UgNRb
+	mm3HnAWoZ0aO7tDl6FTkESYIaX8zBujS4aidCIjUxaQmzXRgAwTXWuoEyPqpYcsRt8Wu0TGOk2x
+	0TQsBRsQQLH3LFixiyTfUPI/3ujg6xv48/8OV9SOruMp5xyK0gG0AjJhxSPmzMvQefnh8NMpsmR
+	vKqUIA5mdCio9mqVqrvV0dpXP
+X-Google-Smtp-Source: AGHT+IEbhKOn6e6Ui3P8+oyqkuONK96WdagZF7vDncAOzKKg3oaoS81EUsR0lNKeXQ47zXIKwmxR/A==
+X-Received: by 2002:a17:907:940f:b0:adb:1eee:a083 with SMTP id a640c23a62f3a-adb495141a0mr978235666b.47.1748905833917;
+        Mon, 02 Jun 2025 16:10:33 -0700 (PDT)
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com. [209.85.208.48])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5d850d88sm864596566b.77.2025.06.02.16.10.32
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Jun 2025 16:10:30 -0700 (PDT)
-Message-ID: <d7383d29-516d-4643-aaac-dfd930ec896e@suse.com>
-Date: Tue, 3 Jun 2025 08:40:25 +0930
+        Mon, 02 Jun 2025 16:10:33 -0700 (PDT)
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6020ff8d54bso8890915a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 16:10:32 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWKyjwRmWSLS13XeOvMD4L/U/AjHLoivmG61xFzWQEMK22jQTzOcNzWZO+6r9J9cd37fWybZmVMw3sERO8=@vger.kernel.org
+X-Received: by 2002:a05:6402:2743:b0:601:68ee:9641 with SMTP id
+ 4fb4d7f45d1cf-605b75295fcmr9602756a12.10.1748905832611; Mon, 02 Jun 2025
+ 16:10:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Kernel crash on boot, arm64 VM
-To: Sudeep Holla <sudeep.holla@arm.com>, Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, LKML
- <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
- rafael.j.wysocki@intel.com, jonathanh@nvidia.com, ulf.hansson@linaro.org
-References: <17fc594b-b80b-4918-8945-4aef35dc9c94@suse.com>
- <20250602103521.GA1134@willie-the-truck>
- <20250602-solid-coot-of-karma-cfea5e@sudeepholla>
-Content-Language: en-US
-From: Qu Wenruo <wqu@suse.com>
-Autocrypt: addr=wqu@suse.com; keydata=
- xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAHNGFF1IFdlbnJ1byA8d3F1QHN1c2UuY29tPsLAlAQTAQgAPgIbAwULCQgHAgYVCAkKCwIE
- FgIDAQIeAQIXgBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXVgBQkQ/lqxAAoJEMI9kfOh
- Jf6o+jIH/2KhFmyOw4XWAYbnnijuYqb/obGae8HhcJO2KIGcxbsinK+KQFTSZnkFxnbsQ+VY
- fvtWBHGt8WfHcNmfjdejmy9si2jyy8smQV2jiB60a8iqQXGmsrkuR+AM2V360oEbMF3gVvim
- 2VSX2IiW9KERuhifjseNV1HLk0SHw5NnXiWh1THTqtvFFY+CwnLN2GqiMaSLF6gATW05/sEd
- V17MdI1z4+WSk7D57FlLjp50F3ow2WJtXwG8yG8d6S40dytZpH9iFuk12Sbg7lrtQxPPOIEU
- rpmZLfCNJJoZj603613w/M8EiZw6MohzikTWcFc55RLYJPBWQ+9puZtx1DopW2jOwE0EWdWB
- rwEIAKpT62HgSzL9zwGe+WIUCMB+nOEjXAfvoUPUwk+YCEDcOdfkkM5FyBoJs8TCEuPXGXBO
- Cl5P5B8OYYnkHkGWutAVlUTV8KESOIm/KJIA7jJA+Ss9VhMjtePfgWexw+P8itFRSRrrwyUf
- E+0WcAevblUi45LjWWZgpg3A80tHP0iToOZ5MbdYk7YFBE29cDSleskfV80ZKxFv6koQocq0
- vXzTfHvXNDELAuH7Ms/WJcdUzmPyBf3Oq6mKBBH8J6XZc9LjjNZwNbyvsHSrV5bgmu/THX2n
- g/3be+iqf6OggCiy3I1NSMJ5KtR0q2H2Nx2Vqb1fYPOID8McMV9Ll6rh8S8AEQEAAcLAfAQY
- AQgAJgIbDBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXWBBQkQ/lrSAAoJEMI9kfOhJf6o
- cakH+QHwDszsoYvmrNq36MFGgvAHRjdlrHRBa4A1V1kzd4kOUokongcrOOgHY9yfglcvZqlJ
- qfa4l+1oxs1BvCi29psteQTtw+memmcGruKi+YHD7793zNCMtAtYidDmQ2pWaLfqSaryjlzR
- /3tBWMyvIeWZKURnZbBzWRREB7iWxEbZ014B3gICqZPDRwwitHpH8Om3eZr7ygZck6bBa4MU
- o1XgbZcspyCGqu1xF/bMAY2iCDcq6ULKQceuKkbeQ8qxvt9hVxJC2W3lHq8dlK1pkHPDg9wO
- JoAXek8MF37R8gpLoGWl41FIUb3hFiu3zhDDvslYM4BmzI18QgQTQnotJH8=
-In-Reply-To: <20250602-solid-coot-of-karma-cfea5e@sudeepholla>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250602144201.301974933@infradead.org> <20250602144755.928750774@infradead.org>
+ <CAHk-=whkD=pveK6X_5gtVbJ62+86oBOr9JokneYpSJyxjHFBpQ@mail.gmail.com>
+ <20250602154943.GB30486@noisy.programming.kicks-ass.net> <CAHk-=wiYHv2duN1Aj3E5UD3zH=z6A9YpGJ1Mxj_CWL7_FRMKgw@mail.gmail.com>
+ <20250602215725.GA39782@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250602215725.GA39782@noisy.programming.kicks-ass.net>
+From: Linus Torvalds <torvalds@linuxfoundation.org>
+Date: Mon, 2 Jun 2025 16:10:16 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whOEyTJb6MAcy2ojN98RrEzU5TW031sGpHMhMMFAg5bnw@mail.gmail.com>
+X-Gm-Features: AX0GCFurnGJMYiwCtzh0zdwgyPO26K49bE_HPAsMz5DRqErXcI_u2aXFy_48n6g
+Message-ID: <CAHk-=whOEyTJb6MAcy2ojN98RrEzU5TW031sGpHMhMMFAg5bnw@mail.gmail.com>
+Subject: Re: [RFC 6/8] x86_64/bug: Implement __WARN_printf()
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, kees@kernel.org, 
+	acarmina@redhat.com, jpoimboe@kernel.org, mark.rutland@arm.com
+Content-Type: text/plain; charset="UTF-8"
 
+On Mon, 2 Jun 2025 at 14:57, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> So if I stuff the asm macro in a global asm() block then GCC ends up
+> looking like so:
 
+Better, but as then the clang thing looks like a horrendous disaster.
 
-在 2025/6/2 21:42, Sudeep Holla 写道:
-> On Mon, Jun 02, 2025 at 11:35:22AM +0100, Will Deacon wrote:
->> [+Sudeep]
->>
-> 
-> Thanks for adding me.
-> 
->> On Mon, Jun 02, 2025 at 10:00:38AM +0930, Qu Wenruo wrote:
->>> It looks like there is a regression related to the device tree/acpi parsing
->>> in the latest upstream kernel branch.
->>
->> I've kept the crash log below, but I suspect this is due to the __free()
->> cleanup path in dt_idle_state_present(), introduced recently by
->> 5836ebeb4a2b ("cpuidle: psci: Avoid initializing faux device if no DT
->> idle states are present").
+How about we simply make this all *code* instead of playing games with
+register numbers?
 
-Reverting works, thanks a lot!
+Why not just push the arguments by hand on the stack, and make that be
+the interface? A 'push %reg' is like a byte or two. And you'd do it in
+the cold section, so nobody cares.
 
->>
-> 
-> Hi Qu,
-> 
-> Do you also have this commit ?
-> 
-> 39cdf87a97fd ("cpuidle: psci: Fix uninitialized variable in dt_idle_state_present()")
+And the asm would look somewhat sane, instead of being crazy noise due
+to crazy macros.
 
-Not yet, the branch I'm using is from btrfs' development branch, which 
-is slightly older than the upstream.
-(The base commit is a56baa225308 ("Merge tag 'for-6.16-tag' of 
-git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux"))
+Or so I imagine, because I didn't actually try it.
 
-
-Just tried upstream, which also fixed the problem.
-
-So I guess it's really the same problem.
-Sorry for the noise.
-
-I'll just notify the btrfs community to rebase the development branch
-
-And thank you both for pointing out the proper fix.
-
-Thanks,
-Qu
-
-> 
-> Just trying to see if it is same issue or if this something else even
-> with the above commit included.
-> 
+           Linus
