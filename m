@@ -1,144 +1,159 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4076C22F177
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 14:46:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F5021885A
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 14:47:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748875605; cv=none; b=H+gq+IBGSj6wk2vPRIY2qs16oiXfuSl99Y4F8bG5WWWrFAFlfH/pjou2bFMVOqB20tC56YZalOlj63/9j9IUP05RMv8kdNGdJe9myosVlhrPM5TaTgnn7b1Ht6kGPJljvx+Pq2u38u/Vzr/S/UwAs1LOaos6B+XJTkP4g7qaSVw=
+	t=1748875670; cv=none; b=RQisAEYqDbQUf1a7mCSHA1o5ldJR+OqgH0d1xGayWwcc6bhK3NSX/dEKByEkmdizyttRw6jkyGrm8aS78mhUCSFMWVAuUcRIpz6EcqgP/jhpMOq9fDnoLUaI5VDKQ0+CfSTRj2Cn/00qeRRByhrOnee07H0oJqNRtiDjhz+37aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748875605; c=relaxed/simple;
-	bh=WXB5l7SzCJBSPdEQilpoEP7QHtfjo27lF8GSaY5y34I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J+9+fD/63PNPL0oZ8K0cbezYirCRRy+9pxtGm1nfeJdf+g6+7dUTwcqjX9fL+kLUQFg5EHlFU4YqLxj90i08sydBcOWzfq1OczkUUNNW22uk9jA5gpRCF4Uw90ysB82cllBO2h3jGAcADM3jaaPCk+altjezkbKwAb6dy9HRoyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=yUjZPn44; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1748875670; c=relaxed/simple;
+	bh=Wj6YL7lFPgWchDxVtC2mSZmKreUprD0S0huqwE7ccNs=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=H1EQ3Y4I923TqT6+r2m68GxpIFjIe99UbSj0JdEEShTbNxRCvsBkHmofFQE1iA6CDFaLLZf7MjzmOYngeb1whHi9zjarJdyBQ3jxipocYokPbufPJpGZhKgPgWAdKpkYpD9M4WmXOwU0+5LCiCEIYtqao6//vWBLWIHTTyx3vzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=TK5OBG0s; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=oaZptSvc; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1tQT6AZa; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=gbycWsQ9; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="yUjZPn44"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-55324587a53so6235846e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 07:46:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1748875601; x=1749480401; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KKpz5+EW5yvhjp8ha7JB1AbvVpuNxn56ERF8Ng3mq4o=;
-        b=yUjZPn446rujo02dzBJulRuegACSjZ+/0204I4U+F+kfL4gq25cDacCrhheKFgIbC6
-         es7cJBbR/2PM41mPlGSk/pZXkIy6yAw4rEciKQJFdRnv9nOxerR9aSttr8XZ4oFwEgjD
-         YjRz1oFhRkpb8im01iyUDr+1QajDbai7NfYRlepWkTClrVxvfYvX1V12sgLGorTo4eqI
-         KBEeq6ll8GuejwdOIC6mSW45zpczk1rf28lrwSTbwspYAkp1is5QogCpZLadltY+BsbZ
-         R6QK4X0egEWhMx6v5HxfVLqvW+EhfiStxgisvzOrSgZCThYO+PcoCps99l9TAeIg39/f
-         fxtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748875601; x=1749480401;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KKpz5+EW5yvhjp8ha7JB1AbvVpuNxn56ERF8Ng3mq4o=;
-        b=ej0+7gLRzzWKidgR8ZP1w3QtEDmjjdWpCS7YyKnzibtx5ar0CCGdcjHo5uT/7lzntE
-         d8YQpWFjbDURYhJzzmXavclLSigc7gmoJqKRp+27H0e8Np88sGb8ehGC7oWZj9xQJboW
-         h7Foxs/0UorukNz3CXQG1SSHTQv5TzgWTi5P2G1qdM6RjoTSARAktD/F6dhRONHH3Sno
-         7+s/f6OIqBxjwhttGcM8wSLuFpKgTszH1qyWBgRXqaPG6+WUpsX/2pML4bQ7xEKca5Jx
-         7no7Is7qiTYXlrPi/Uw8W52hNzUx1hI1qVa3Q68N0LmC/txxEFmaUXW2fkVR14nYbANZ
-         lofA==
-X-Forwarded-Encrypted: i=1; AJvYcCUzEeLB5ALZP0hpjjUJXDWShTZxlmkqteyoAUopQODYCyfGHoUAuGJVrH9cQXq+IPePr6O7Ux2EHPJWcCo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyzj0btSHeMYrY36u/1yZEn78cayIFbPLEUKJkbpS+kaSoyvx5/
-	E9z9PdXnWHPTAyXG6kBmx0LXCFz/ubALz8TKO2LOP5m+YJ77/1SAbgydTSlL/APxCytCDm7g+QS
-	F1aYcpxNPkiN4bHkuuW7azWaUHV8Sv9vmsim7/2HXCQ==
-X-Gm-Gg: ASbGncuuZvydXoybFyeL1pfaa6KmzRES2YLvZ+NpRW5wG4H1Rg2Jp8h/AQXZcQaF4vY
-	/YRmH6j8S8Au5tKOARG+k0lYpZ1+NUrn10E+1etxjA3H2YfPO/Q7e+MgOQb8MvrG9D6DQ6sT7FH
-	PdUrqYn50MoxWr50s89nTP+wPKUmLtW/w/lEgiu7VsNQPd+bbUoHZH/niLSUQuT987x+A+hV3jA
-	9M=
-X-Google-Smtp-Source: AGHT+IGw32F/MdMOccKhZO4XhdGXd2zDj9BI3w6oPi/36aYPhkJHPAtjAIeBiB8am3xWo3XPqYfLxYrbf7Mw3kihmy8=
-X-Received: by 2002:a05:6512:118d:b0:553:2bdf:8b87 with SMTP id
- 2adb3069b0e04-55335b117ebmr4997380e87.10.1748875600944; Mon, 02 Jun 2025
- 07:46:40 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="TK5OBG0s";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="oaZptSvc";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1tQT6AZa";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="gbycWsQ9"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id CF23D2128B;
+	Mon,  2 Jun 2025 14:47:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1748875667; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aqEsf6q70H30o4xbnY9EWsifgP82PL0AbdPvEThMh6A=;
+	b=TK5OBG0s22EdxueBDi/6kqgpSdZiFJAnU1Z7L2/q54W+FTm7wuDVsQURDV1HE9LbrYEa/W
+	CSKIF0IPROpEEgCSAMK7NP9IRzFl7A6LCDgJ1ihOaCbcprRaZNsUYGDBJl7EAa2NjtlD0p
+	Vgt4Zr1CSUX1l9LTKgJrHPbZYsxTsKs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1748875667;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aqEsf6q70H30o4xbnY9EWsifgP82PL0AbdPvEThMh6A=;
+	b=oaZptSvcCT+8qlflnWurF0KrVBBO08ePnTub9wIVH/Niek82JPPfRfybZe4XjvlrGdEt/Z
+	QlBbnf+8tNb7PMAA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=1tQT6AZa;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=gbycWsQ9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1748875666; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aqEsf6q70H30o4xbnY9EWsifgP82PL0AbdPvEThMh6A=;
+	b=1tQT6AZar8wUkyV5mzET33diW1T71TnReYuKI3rIcJ5T60BuFssH23qwEGRJ7UieW0VOo9
+	kCAshZYhgQtZvZr2yqoQumPRtSx6mTm0r5ObxkmiQeBdVeZLlk+S5zZkR0PV9GUJyMcl2w
+	dFGHhVSP3nl3EPuQieoLhmx3OclFZE0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1748875666;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aqEsf6q70H30o4xbnY9EWsifgP82PL0AbdPvEThMh6A=;
+	b=gbycWsQ9Zbk2OlSbgu6n0TP7YfPfs5lDTtvJ+A/ymm4kxBCSSpHEJCOFNy22pdRLPlKn7v
+	rILDamCS162GAiBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D0F3D13AE0;
+	Mon,  2 Jun 2025 14:47:45 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id VEAXMZG5PWgLXgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Mon, 02 Jun 2025 14:47:45 +0000
+Date: Mon, 02 Jun 2025 16:47:45 +0200
+Message-ID: <87tt4yxkry.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: "Deucher, Alexander" <Alexander.Deucher@amd.com>
+Cc: "Mukunda, Vijendar" <Vijendar.Mukunda@amd.com>,
+	"perex@perex.cz"
+	<perex@perex.cz>,
+	"tiwai@suse.com" <tiwai@suse.com>,
+	"alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+	"Dommati, Sunil-kumar" <Sunil-kumar.Dommati@amd.com>,
+	"linux-sound@vger.kernel.org"
+	<linux-sound@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ALSA: hda: Add new pci id for AMD GPU display HD audio controller
+In-Reply-To: <BL1PR12MB51449240DD771DB4C8005890F766A@BL1PR12MB5144.namprd12.prod.outlook.com>
+References: <20250529053838.2350071-1-Vijendar.Mukunda@amd.com>
+	<BL1PR12MB51449240DD771DB4C8005890F766A@BL1PR12MB5144.namprd12.prod.outlook.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <CGME20250529222403eucas1p1923fe09240be34e3bbadf16822574d75@eucas1p1.samsung.com>
- <20250530-apr_14_for_sending-v3-0-83d5744d997c@samsung.com> <20250530-apr_14_for_sending-v3-1-83d5744d997c@samsung.com>
-In-Reply-To: <20250530-apr_14_for_sending-v3-1-83d5744d997c@samsung.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 2 Jun 2025 16:46:29 +0200
-X-Gm-Features: AX0GCFvisvrL36l-aUNnU_LsfSK7tpw2-raHvXmZ5rzs225tzGALdRdBL2pjUL8
-Message-ID: <CAMRc=Me9cWfe2mL=Q6JQbAFjpd55MOBZuAWC793Us0criiQr4Q@mail.gmail.com>
-Subject: Re: [PATCH v3 1/8] dt-bindings: power: Add T-HEAD TH1520 GPU power sequencer
-To: Michal Wilczynski <m.wilczynski@samsung.com>
-Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Frank Binns <frank.binns@imgtec.com>, 
-	Matt Coster <matt.coster@imgtec.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: CF23D2128B
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[amd.com:email,suse.de:dkim,suse.de:mid,suse.com:email,alsa-project.org:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Score: -3.51
+X-Spam-Level: 
 
-On Fri, May 30, 2025 at 12:24=E2=80=AFAM Michal Wilczynski
-<m.wilczynski@samsung.com> wrote:
->
-> Introduce device tree bindings for a new power sequencer provider
-> dedicated to the T-HEAD TH1520 SoC's GPU.
->
-> The thead,th1520-gpu-pwrseq compatible designates a node that will
-> manage the complex power-up and power-down sequence for the GPU. This
-> sequencer requires a handle to the GPU's clock generator reset line
-> (gpu-clkgen), which is specified in its device tree node.
->
-> This binding will be used by a new pwrseq driver to abstract the
-> SoC specific power management details from the generic GPU driver.
->
-> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
-> ---
->  .../bindings/power/thead,th1520-pwrseq.yaml        | 42 ++++++++++++++++=
-++++++
->  MAINTAINERS                                        |  1 +
->  2 files changed, 43 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/power/thead,th1520-pwrseq.=
-yaml b/Documentation/devicetree/bindings/power/thead,th1520-pwrseq.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..4c302abfb76fb9e243946f4ee=
-fa333c6b02e59d3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/thead,th1520-pwrseq.yaml
-> @@ -0,0 +1,42 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/power/thead,th1520-pwrseq.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: T-HEAD TH1520 GPU Power Sequencer
-> +
-> +maintainers:
-> +  - Michal Wilczynski <m.wilczynski@samsung.com>
-> +
-> +description: |
-> +  This binding describes the power sequencer for the T-HEAD TH1520 GPU.
-> +  This sequencer handles the specific power-up and power-down sequences
-> +  required by the GPU, including managing clocks and resets from both th=
-e
-> +  sequencer and the GPU device itself.
-> +
-> +properties:
-> +  compatible:
-> +    const: thead,th1520-gpu-pwrseq
-> +
+On Thu, 29 May 2025 22:26:07 +0200,
+Deucher, Alexander wrote:
+> 
+> [Public]
+> 
+> > -----Original Message-----
+> > From: Mukunda, Vijendar <Vijendar.Mukunda@amd.com>
+> > Sent: Thursday, May 29, 2025 1:38 AM
+> > To: perex@perex.cz; tiwai@suse.com
+> > Cc: alsa-devel@alsa-project.org; Dommati, Sunil-kumar <Sunil-
+> > kumar.Dommati@amd.com>; Deucher, Alexander
+> > <Alexander.Deucher@amd.com>; linux-sound@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; Mukunda, Vijendar <Vijendar.Mukunda@amd.com>
+> > Subject: [PATCH] ALSA: hda: Add new pci id for AMD GPU display HD audio
+> > controller
+> >
+> > Add new pci id for AMD GPU display HD audio controller(device id- 0xab40).
+> >
+> > Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+> 
+> Is there a way we can just add a default entry for all ATI HDMI HDA
+> endpoints?  It would avoid then need to add an entry every time we
+> release a new endpoint DID.
 
-Before I review the rest: is this actually a physical device that
-takes care of the power sequencing? Some kind of a power management
-unit for the GPU? If so, I bet it's not called "power sequencer" so
-let's use its actual name as per the datasheet?
+We have already catch-all entries for ATI and AMD vendors, but those
+are setup without AZX_DRIVER_ATIHDMI_NS, that is, for older chip
+models.
 
-Bart
+
+Takashi
