@@ -1,151 +1,113 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86BC5158545
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 23:30:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F808A920
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 23:41:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748907016; cv=none; b=oMA6dlG/VcNY9JTFpKyLqXKv2aqhoPctGiu5UVsj6D4/0kW8P11wOjo/zXBjTtJW0L3tDjRqNqVzUhQ6fEvlbHF2yoZ8DyKP2EmuvpGzMn0rs3HEWTy8uWX8iFUEJvDpeiTOaUVhTaCWVel8bnEcViGVP8OKpxyWT+cPD2wQd2Q=
+	t=1748907698; cv=none; b=kcpuVJoW9Nibntyghsys8xnQUa7LB5dfaPTLT0N5lnAWvOeFBYgfQc7FC7bYpFXR00TdidIUUlp9CkUWJl1pT3cnWQDkhTidWzPcM5l5rKk+SwIfZgk/Hl+FAdEit6RUuT8KOpjXykFbOsm4xm3mmWduo84g5C22rasRK+4UgY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748907016; c=relaxed/simple;
-	bh=ERPVRkIbILIUcIjfV+EhBnHrMs9fZ3Q4qRlPwExSKOU=;
+	s=arc-20240116; t=1748907698; c=relaxed/simple;
+	bh=fMKS8WACMDtPAXmZ9MQI+ToMVGwyvZqRwVy5JyvSz3M=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=UwBSWFw9qaw0iuyd5e6Ck8/4sPQ9rZo7n5LA3W1x0naAy1HuMEukIzPOuXZTDiIywkm4Ga9PAjF+IZkFKRue/D6k0pKgUrMcHeTgKm4zG4hncN2foigBjmf14lxewOvtAImuu5qqj5Dj6KfMdOJSYHOuZ3D35WDdF66Fam7WTu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nVCICnCS; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=J7dPS+8b7SGgikvcWkJSQoqG1UToU0SwsKgMYpCv8xvbaOyLyuahl7eR4G+F6xoJWeqPOQcpQhCdevX/KpxyjmcPtmm8aZqzuqDcW4DIqrbkXMI/HH51UcgHJ8A75myXFj1vwjOc5+Lm2JdvRXQ7Ci39cuUDCssdyinBlO35aos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j9RyeHCN; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nVCICnCS"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-310efe825ccso4872241a91.3
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 16:30:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j9RyeHCN"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b1ffc678adfso3085481a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 16:41:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748907014; x=1749511814; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748907696; x=1749512496; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Yve1ZiL8T7g84JmBt/tikyI/6Bv4C2Bg0e+B1xxTdfo=;
-        b=nVCICnCSv8PFaqj6xzacChw/19sZEJ9ICfvHD/3vvqcx8uhcJXX1e5ZVebDJB+EiPn
-         LPJQmdVcpPklwAc8muYkO/XrGAMb+LlXlkeo+HzRGIl+MXi2azyCjA6RUecTv39xQOyi
-         1cL/JCbAZF7m12ei7fq2u+3CQFjZ33YveYTlHnrhvOJe1K+mNKuxWra0NiCnE74p1rI/
-         UIkO7nwGfKjYy3Fl9LTm8G0Z6oG2i+jryuGjW4yCNInKtddTnYxWKJCWvlYs8XA+0QnG
-         Y425XJ5/wl/mfyJoJjj+hvZANLCUV0FyJE5sx6lGCWSLtOhtXo5sdhTVotw0qt7Giat9
-         3qsw==
+        bh=Q5aK/ClnEO1BHlKYU0vEB7Daj0M2CFLLL/QgF7WVTiw=;
+        b=j9RyeHCNQxtwGuOZDNSQZX9/ggqXgsf+DUc9CNMCJD3gGvtcPUnb/i79frDWu1vwIH
+         8XEHAnuRavj3FqlgjMfsCqtArv4heQLDHHELwrlJGlBizL4KsgSsasr9q9sWWLjE9yKc
+         4gSq9V+HFea55/YWEngXj5CtLEt1LljzxZKvyVrHDhoJXJ2bq432O/vF+Jb4853BEmRA
+         x+Uz/Jx2UNpjESjdsfMKJyyUZEQ7jOT8zvKP5Q9jyn7PVKZ7IebdK8cM/08uVj76yDOH
+         PHHEQ7VsYfOW/+weUiTMnsGthSn5CbeMtE5uZjNoKg/V3QsvYYp7LerdOe5VAYSHcRKF
+         yv3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748907014; x=1749511814;
+        d=1e100.net; s=20230601; t=1748907696; x=1749512496;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Yve1ZiL8T7g84JmBt/tikyI/6Bv4C2Bg0e+B1xxTdfo=;
-        b=r4zTaCywHiGwnppxNo3i0d8TcuMkOLNji9CCAxTL5NggQCs2ylaDGOAtkjRC7jdG+x
-         7yMzyTGgslXzYXC3b5G0xlyqTJ8lT71ultvmdcyqnbaQITURZvxCW8Xen/gANwz43JxB
-         sWmONhDh4HxxYOv+FT4oVPds5GCqO1HJvyXKbqaHVCj2NKV21t7bRgCJ980adlmNtatL
-         znG8xkNZZr4y0hK6bcNBy4sWBvgbnjsK6jiB3yZyoNPK0giPQtaQIQBEPFBB8N05uh9K
-         tthER7ePNwL3h7QvmTalTksCqr2sEAtTLuFcIYXuI7KcsMpOAY0g3z0PyrWISFgFfz/C
-         cOVg==
-X-Forwarded-Encrypted: i=1; AJvYcCWLPVW3oQPl+ehDU9BwAFgktCxfn7DBmUupSOfXDNShLzEaOL1Jq96hMQSz4Kj6/IDSQx8/F3d8zqSVD2k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4GX/q1YzU64Tql61L7krdtQc8BKCBGG6anEJutxr0Tzes41hs
-	08PBxMvtuNu1QFtWurlfxmCGR51k6NwZwQyC1o0vLH7/S9iMot6HkChDEtGxHiMDxTK9hXoeFfl
-	cxx6Hlg==
-X-Google-Smtp-Source: AGHT+IE14BFeGM0J7uhuk33V5fPG5r1MtBBSniKvSePrbW7/nzVp1S6VXU7zoEWKiW8wpnHDPojK7VzfMl4=
-X-Received: from pjur7.prod.google.com ([2002:a17:90a:d407:b0:311:ea2a:3919])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4f4d:b0:312:1cd7:b337
- with SMTP id 98e67ed59e1d1-3125034a47amr19482649a91.5.1748907013702; Mon, 02
- Jun 2025 16:30:13 -0700 (PDT)
-Date: Mon, 2 Jun 2025 16:30:12 -0700
-In-Reply-To: <20250602125442.19d41098.alex.williamson@redhat.com>
+        bh=Q5aK/ClnEO1BHlKYU0vEB7Daj0M2CFLLL/QgF7WVTiw=;
+        b=HrVqq2lkhVx187N6e5a37ZviMewxEvusOc780yxaUBMFJ2Xc/xgexzZOBUaWZ61Heu
+         Xz2WZarK/h5Aml9ETe+Al8SGgcx3JOiPAI/gAqscnOfcThHCiLNWZ2jTgq66+l+lnL4I
+         NIbV6sYjWL9DSgPvJLIPMNFX/o8ke/AwqgPtxBjNtmXGybsjsteruJRgNdR5JarzPrQW
+         XVMUIHSMFLHFi+nPflTND6MJlDmY3cCkrtPlpcBcrpWyWh37o4DvtyML4ybC117pSHlm
+         N878Ap2JHSEo6xlNY1KD0fOqPToBOQcOnooflApSvkxmhHAB8asv86si2lQuKxoFAqzA
+         RMRA==
+X-Forwarded-Encrypted: i=1; AJvYcCUXMLV5BAHamGoYTwWiPfspaX6MuEUaiQ1HfE0yI0e3EvAjThp0yZbIOWKmv5213S6RLPWb5Bxx69Ckl1E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywf7Xtg8HHF5asbnskrep0Z5G3EdAP1CJH3G2A4vqRpG6P2FlMw
+	OT3eSrm7QTWuAVGZR+NeOD7dsTqftfKG66xOh2tKNSBrq6UuZRlw8fV8WVqPmMdA3edO1Lst/pp
+	aU5suqA==
+X-Google-Smtp-Source: AGHT+IG5ru2XR9cFkpu7bGl5YyCVbeXqLm5BUr9HX9PzTeqwFZg21QzASeGhlFnT2eYIHHgeQPt8CEsJnxQ=
+X-Received: from pji6.prod.google.com ([2002:a17:90b:3fc6:b0:312:1900:72e2])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1810:b0:312:39c1:c9cf
+ with SMTP id 98e67ed59e1d1-31241101002mr24531531a91.7.1748907696630; Mon, 02
+ Jun 2025 16:41:36 -0700 (PDT)
+Date: Mon, 2 Jun 2025 16:41:35 -0700
+In-Reply-To: <20250529033546.dhf3ittxsc3qcysc@desk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250516230734.2564775-1-seanjc@google.com> <20250602125442.19d41098.alex.williamson@redhat.com>
-Message-ID: <aD40BIYA1ecnbX73@google.com>
-Subject: Re: [PATCH v2 0/8] irqbypass: Cleanups and a perf improvement
+References: <20250523011756.3243624-1-seanjc@google.com> <20250529033546.dhf3ittxsc3qcysc@desk>
+Message-ID: <aD42rwMoJ0gh5VBy@google.com>
+Subject: Re: [PATCH 0/5] KVM: VMX: Fix MMIO Stale Data Mitigation
 From: Sean Christopherson <seanjc@google.com>
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org, virtualization@lists.linux.dev, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Kevin Tian <kevin.tian@intel.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	David Matlack <dmatlack@google.com>, Like Xu <like.xu.linux@gmail.com>, 
-	Binbin Wu <binbin.wu@linux.intel.com>, Yong He <alexyonghe@tencent.com>
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Borislav Petkov <bp@alien8.de>, Jim Mattson <jmattson@google.com>
 Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Jun 02, 2025, Alex Williamson wrote:
-> On Fri, 16 May 2025 16:07:26 -0700
-> Sean Christopherson <seanjc@google.com> wrote:
+On Wed, May 28, 2025, Pawan Gupta wrote:
+> On Thu, May 22, 2025 at 06:17:51PM -0700, Sean Christopherson wrote:
+> > Fix KVM's mitigation of the MMIO Stale Data bug, as the current approach
+> > doesn't actually detect whether or not a guest has access to MMIO.  E.g.
+> > KVM_DEV_VFIO_FILE_ADD is entirely optional, and obviously only covers VFIO
 > 
-> > The two primary goals of this series are to make the irqbypass concept
-> > easier to understand, and to address the terrible performance that can
-> > result from using a list to track connections.
+> I believe this needs userspace co-operation?
+
+Yes, more or less.  If the userspace VMM knows it doesn't need to trigger the
+side effects of KVM_DEV_VFIO_FILE_ADD (e.g. isn't dealing with non-coherent DMA),
+and doesn't need the VFIO<=>KVM binding (e.g. for KVM-GT), then AFAIK it's safe
+to skip KVM_DEV_VFIO_FILE_ADD, modulo this mitigation.
+
+> > devices, and so is a terrible heuristic for "can this vCPU access MMIO?"
 > > 
-> > For the first goal, track the producer/consumer "tokens" as eventfd context
-> > pointers instead of opaque "void *".  Supporting arbitrary token types was
-> > dead infrastructure when it was added 10 years ago, and nothing has changed
-> > since.  Taking an opaque token makes a very simple concept (device signals
-> > eventfd; KVM listens to eventfd) unnecessarily difficult to understand.
+> > To fix the flaw (hopefully), track whether or not a vCPU has access to MMIO
+> > based on the MMU it will run with.  KVM already detects host MMIO when
+> > installing PTEs in order to force host MMIO to UC (EPT bypasses MTRRs), so
+> > feeding that information into the MMU is rather straightforward.
 > > 
-> > Burying that simple behind a layer of obfuscation also makes the overall
-> > code more brittle, as callers can pass in literally anything. I.e. passing
-> > in a token that will never be paired would go unnoticed.
-> > 
-> > For the performance issue, use an xarray.  I'm definitely not wedded to an
-> > xarray, but IMO it doesn't add meaningful complexity (even requires less
-> > code), and pretty much Just Works.  Like tried this a while back[1], but
-> > the implementation had undesirable behavior changes and stalled out.
-> > 
-> > Note, I want to do more aggressive cleanups of irqbypass at some point,
-> > e.g. not reporting an error to userspace if connect() fails is awful
-> > behavior for environments that want/need irqbypass to always work.  And
-> > KVM shold probably have a KVM_IRQFD_FLAG_NO_IRQBYPASS if a VM is never going
-> > to use device posted interrupts.  But those are future problems.
-> > 
-> > v2:
-> >  - Collect reviews. [Kevin, Michael]
-> >  - Track the pointer as "struct eventfd_ctx *eventfd" instead of "void *token".
-> >    [Alex]
-> >  - Fix typos and stale comments. [Kevin, Binbin]
-> >  - Use "trigger" instead of the null token/eventfd pointer on failure in
-> >    vfio_msi_set_vector_signal(). [Kevin]
-> >  - Drop a redundant "tmp == consumer" check from patch 3. [Kevin]
-> >  - Require producers to pass in the line IRQ number.
-> > 
-> > v1: https://lore.kernel.org/all/20250404211449.1443336-1-seanjc@google.com
-> > 
-> > [1] https://lore.kernel.org/all/20230801115646.33990-1-likexu@tencent.com
-> > [2] https://lore.kernel.org/all/20250401161804.842968-1-seanjc@google.com
-> > 
-> > Sean Christopherson (8):
-> >   irqbypass: Drop pointless and misleading THIS_MODULE get/put
-> >   irqbypass: Drop superfluous might_sleep() annotations
-> >   irqbypass: Take ownership of producer/consumer token tracking
-> >   irqbypass: Explicitly track producer and consumer bindings
-> >   irqbypass: Use paired consumer/producer to disconnect during
-> >     unregister
-> >   irqbypass: Use guard(mutex) in lieu of manual lock+unlock
-> >   irqbypass: Use xarray to track producers and consumers
-> >   irqbypass: Require producers to pass in Linux IRQ number during
-> >     registration
-> > 
-> >  arch/x86/kvm/x86.c                |   4 +-
-> >  drivers/vfio/pci/vfio_pci_intrs.c |  10 +-
-> >  drivers/vhost/vdpa.c              |  10 +-
-> >  include/linux/irqbypass.h         |  46 ++++----
-> >  virt/kvm/eventfd.c                |   7 +-
-> >  virt/lib/irqbypass.c              | 190 +++++++++++-------------------
-> >  6 files changed, 107 insertions(+), 160 deletions(-)
-> > 
-> > 
-> > base-commit: 7ef51a41466bc846ad794d505e2e34ff97157f7f
+> > Note, I haven't actually verified this mitigates the MMIO Stale Data bug, but
+> > I think it's safe to say no has verified the existing code works either.
 > 
-> Sorry for the delay.
+> Mitigation was verifed for VFIO devices, but ofcourse not for the cases you
+> mentioned above. Typically, it is the PCI config registers on some faulty
+> devices (that don't respect byte-enable) are subject to MMIO Stale Data.
+>
+> But, it is impossible to test and confirm with absolute certainity that all
 
-Heh, no worries.  ~2 weeks is downright prompt by my standards ;-)
+Yeah, no argument there.  
 
-> Do you intend to take this through your trees?
+> other cases are not affected. Your patches should rule out those cases as
+> well.
+> 
+> Regarding validating this, if VERW is executed at VMenter, mitigation was
+> found to be effective. This is similar to other bugs like MDS. I am not a
+> virtualization expert, but I will try to validate whatever I can.
 
-Yes, ideally, it would go into Paolo's kvm/next sooner than later (I'll start
-poking him if necessary).  The s/token/eventfd rename creates an annoying conflict
-in kvm/x86.c with an in-flight patch (significant code movement between files).
-It would be nice to be able to rebase the in-flight patch instead of having to
-resolve a merge confict (the conflict itself isn't difficult to resolve, I just
-find it hard to visually review/audit the resolution due to the code movement).
+If you can re-verify the mitigation works for VFIO devices, that's more than
+good enough for me.  The bar at this point is to not regress the existing mitigation,
+anything beyond that is gravy.
+
+I've verified the KVM mechanics of tracing MMIO mappings fairly well (famous last
+words), the only thing I haven't sanity checked is that the existing coverage for
+VFIO devices is maintained.
