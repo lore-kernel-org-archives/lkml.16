@@ -1,94 +1,143 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52EDD6ADD;
-	Mon,  2 Jun 2025 17:11:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553EE13B293
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 17:12:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748884300; cv=none; b=jGJA6a8HCt3kDMNDODDTB1VZ+Hz0Ua9BSI7eY5yrpIUAl0RPHPVQWOqnzeDzq/zYMu84gYyJNReqbtTuzNCKTJw7inOQmhhQI+qOdajN6VORBZlZhz3vJI4Jrp1DC4EVCs6NXXWPn9Tn/aF3jfSxovyf7wW1bmiVNGtUeIUP3ho=
+	t=1748884345; cv=none; b=pKv/OTBZQ/j0HqS1SQ8na9AwMMriw489UntvZOoZLbiRdp2hgF1PnstgMjiTl4OyWmDHKRlh9ANu0LNBO2zsX++IxE2bSs/bnBgb9gFYl2LnsHe5jhYUgsMHyDtb9jEoIxIkLakLoaATOVSAOvPWeVEtNhCH5Vk6ZntQK/JXavQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748884300; c=relaxed/simple;
-	bh=wqA3gAOIJ90h6rmokvpadlXr026asFXBgCdCuLK4RZc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HFGhH0OH2Yn+mzbBBx4HEiBx2F0tWbTb48BzEa/0zkYBwqjAoL4V5WfhxIHz0zjhNUpX/geVnmgtK5EL7Okg5NuawrI8JcpVffCv6BC4ijMdGYkGe896aqTEQ1zwFddh2jJpOivM1AsflKhxDXFLduN3+Cf/iOnOy/z8Z3ZCJBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eWEWms8Z; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eWEWms8Z"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-312c8e85aa9so162378a91.1;
-        Mon, 02 Jun 2025 10:11:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748884299; x=1749489099; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wqA3gAOIJ90h6rmokvpadlXr026asFXBgCdCuLK4RZc=;
-        b=eWEWms8ZWWscHCoSvwNcsAnvCMtGWDHnQUGVPFHZjMQerVpk/0UqmIONXXcdtt4MWF
-         MMYwgDXHviJUC7b4uCgImTtnwUc2Tjdy00l7mWMNIcSYrdmms3WicAkowK/KHt+68jtx
-         Nkn7lMRwqPXwT+oP0HPGOuhNPe/RtY361HR0J4lqASP5GcTnezASvJK6RF7LEX/fMq76
-         3nH0j0kRryUkZF00LIrcV8Rsm242O9mUCi0vcNQbHKUSm8iOhI0WrTR1LNDY5CPDuBiC
-         fx0el9InIKUhmv+HlmxMn/Y/ilSwmeb9qQ14rSjsdKXMMjvId5iExGaYB/m4hjUTiWQT
-         7mmQ==
+	s=arc-20240116; t=1748884345; c=relaxed/simple;
+	bh=/Jq2Au0s6fmBmRE16l0X+42zzlVoPRij/zoKI3mlRZs=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=eIirhWEhaQjqPP9yAV0WuhBjevaaxfz0K7qmyzGxnERxjN7waWlNyak1j9vo+HHpgHMOrFqFGIc4SxiCwX1ljBsqKjKo5AfIHSxW8SVk3G+dUFjvSYTPKqsSiTKlUksjFvHx2hfjla8pNammtwB4O7pUaKuq7DPAHxU4v0Dxiwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3dda4148039so34722525ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 10:12:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748884299; x=1749489099;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wqA3gAOIJ90h6rmokvpadlXr026asFXBgCdCuLK4RZc=;
-        b=BNxhR0nW1TAKmvIv/iN+eHWa7lfnUsKkXtE/NQ2hzlW0MnWLyKDqiyluia+gnoYv4x
-         zsD905StQhEfBYl9dN7BeXgi6rTyTP+o9J1ugf3hL8cLGijtINqskLTogtcqr1Wu2frg
-         T2nspitMGIa/3HCayDlnFIeYvNyEZ3XkaaAixveicws5cfGlTjAh/M+2N10n0tS/jRLA
-         Bbdak/N92jdZMIiWqMYuaRa24V/H7wUJE0BC/kFCtJCjmkbB8JbBXPOl2A/RWcFbpvCv
-         CpJ2qhhjnizipWMzjz0FJPgR6zLbSrddyU7u+Dz4mzyzlG606hgQ/AWab+fn0e47V9QK
-         XuYw==
-X-Forwarded-Encrypted: i=1; AJvYcCVZQmwSaf48ujC+9E2jm2nYQdkAf8PPA5GfsMptF5QiMDXASD/eMekanWaJPU6UpSzjEy/xSE+YT0GbRhk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgFGRWWUenw3DLE8IYP02gXeQnypEgDeinn0ZN4gQQZ4HvwvLI
-	sreQcxjtNIolwxVxbmVknV3cUpie/7+XlvqA30pDMWm6gexzK6gueJnC412iSjSegS7nDyWDJq8
-	1iOnu3J/kbuaRKeMkZKYO/oZu6MolapM=
-X-Gm-Gg: ASbGnctv85iaEMuTxWdG7zXpwsvKep3kuJgrx2VZUDs55pvxrXwwHibsLLKp466PaKS
-	XHUE7Cs0Jo3yVeSAOdjvWx0A3HR/BOvquQhgagaZaZZC3+U+GkxTKEJBfpivhVzqG8IUonU6EW3
-	IDRImczEuWkPJQq3jPeo1oW5QnIhfA+I1e
-X-Google-Smtp-Source: AGHT+IEfrSPsxf1XX3lHo0JjSM1GkHbWkjMed/BNHzjQq1AJqrR9ru0QrCwyFbkK3Pe4yAwGRoKab9CVSKbrOkD+mLE=
-X-Received: by 2002:a17:90b:1f81:b0:311:e8cc:4250 with SMTP id
- 98e67ed59e1d1-3124daf3e85mr7626902a91.3.1748884298579; Mon, 02 Jun 2025
- 10:11:38 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748884343; x=1749489143;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kHzhGuS7OmKWz0RpyD6VrrayG8eHyU4NQV9hRrNlOmA=;
+        b=Z0gOtop9rGoEJauh/j5XO1mLrMRdO4CV+hnGhXCYb3UwxASPiXLF9IcYZjaaMHJLus
+         7u8Vzdbvf2n+OdRXUvtgniaIzikEQzu3dH+aqmWy6VgduablPylKcyY+DVUVeRbnvCNK
+         fhH6u6QtAmebJK0Iy+DSR++amFQ3XlVhhzvTWPUrwsoqPgUOGBdDFZ7xbtM3cNiv+c2w
+         WIdSL85m6iyuCa4DrHdN+M5frEcAoybFsaHc1+oZXnIy2hoeGsTVnU7O0vKtwbeAzmWw
+         CVdNAmWY2TRym1QJlIudJ77w3lOSxTCH979kwN60vLkxmiJCxeufu7mZ56Kn2T4wiS6O
+         l4qA==
+X-Forwarded-Encrypted: i=1; AJvYcCVwy4hpho1t56rdavmEJS/+HBntmzdNqHCJCsjancGlWp8N1NPZiIRe6KVESeB4WLqCy7hQJ3jWyXsnFVg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxD579F6kUzF/RfWGy37F5dnUn1nrhDuw2kOFRfdMu+COqxsFie
+	Oyt8UciKCkfAFv7E2pxGUIOTos1o3fgMZntS2Ly8Ap3nE1v7KCA/59wjjFnfmNNG5Kbid/+GpqQ
+	voOjoGihgFB2rKF4dEUs7l9wQU3zDLy7sMswtLL0McQl4ZnFzoIFJBtSCQKk=
+X-Google-Smtp-Source: AGHT+IFe750uJ1jt4MmrE/oZGvz4+q+a2QNMcu/itzZhjuaY5EIRfkPeXtgrIYtg89ZkSVJ6WNSc63iLorEb60LyNyCtfKfORbhL
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250602164923.48893-2-saivishnu725@gmail.com>
-In-Reply-To: <20250602164923.48893-2-saivishnu725@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 2 Jun 2025 19:11:25 +0200
-X-Gm-Features: AX0GCFvJ-nZPYNYx6wd1Q6mENot3z6AGWlF1PmGUXgDgZrwDbaVAs820xsVzAUc
-Message-ID: <CANiq72=scAG0bOJuj6VJ+cemtXMc0QKQZKfUoSg2rzwF94UVvw@mail.gmail.com>
-Subject: Re: [PATCH v4] rust: doc: Clean up formatting in io.rs
-To: Sai Vishnu M <saivishnu725@gmail.com>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
-	gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org, 
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, 
-	dakr@kernel.org, gregkh@linuxfoundation.org, daniel.almeida@collabora.com, 
-	me@kloenk.dev
+X-Received: by 2002:a05:6e02:1b0f:b0:3db:6fb2:4b95 with SMTP id
+ e9e14a558f8ab-3dd9cbd60dfmr143242855ab.18.1748884343382; Mon, 02 Jun 2025
+ 10:12:23 -0700 (PDT)
+Date: Mon, 02 Jun 2025 10:12:23 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <683ddb77.050a0220.55ceb.0001.GAE@google.com>
+Subject: [syzbot] [pci?] WARNING in pci_scan_single_device
+From: syzbot <syzbot+3385a151582cae2a4b39@syzkaller.appspotmail.com>
+To: bhelgaas@google.com, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 2, 2025 at 6:51=E2=80=AFPM Sai Vishnu M <saivishnu725@gmail.com=
-> wrote:
->
-> From: Sai Vishnu M <saivishnu725@gmail.com>
+Hello,
 
-I think this line should not have been generated by Git, but it should not =
-hurt.
+syzbot found the following issue on:
 
-Apart from that, looks good, thanks!
+HEAD commit:    90b83efa6701 Merge tag 'bpf-next-6.16' of git://git.kernel..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=152307f4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=fbd871027e10b130
+dashboard link: https://syzkaller.appspot.com/bug?extid=3385a151582cae2a4b39
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 
-I can pick it up, but if someone else does:
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Acked-by: Miguel Ojeda <ojeda@kerrnel.org>
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/7b23158542c6/disk-90b83efa.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/fe77cd0d7150/vmlinux-90b83efa.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/fdddbd2ed303/bzImage-90b83efa.xz
 
-Cheers,
-Miguel
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+3385a151582cae2a4b39@syzkaller.appspotmail.com
+
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007fbab67b5fa0 R15: 00007fff54b11b18
+ </TASK>
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 15983 at drivers/pci/probe.c:2716 pci_device_add+0xf53/0x1390 drivers/pci/probe.c:2716
+Modules linked in:
+CPU: 1 UID: 0 PID: 15983 Comm: syz.5.1707 Not tainted 6.15.0-syzkaller-07774-g90b83efa6701 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+RIP: 0010:pci_device_add+0xf53/0x1390 drivers/pci/probe.c:2716
+Code: 84 c0 74 06 0f 8e ae 03 00 00 0f b6 83 c0 00 00 00 c1 e5 02 83 e0 e3 09 e8 88 83 c0 00 00 00 e9 de f3 ff ff e8 0e 96 aa fc 90 <0f> 0b 90 e9 81 f8 ff ff e8 00 96 aa fc 90 0f 0b 90 90 0f 0b 90 e9
+RSP: 0018:ffffc9001058f918 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: 00000000fffffff4 RCX: ffffffff85104754
+RDX: ffff88805524da00 RSI: ffffffff85104ed2 RDI: 0000000000000005
+RBP: ffff88801b483400 R08: 0000000000000005 R09: 0000000000000000
+R10: 00000000fffffff4 R11: ffffffff81000130 R12: ffff888143aa3028
+R13: ffff888143aa3000 R14: 0000000000000001 R15: ffff888143abc000
+FS:  00007fbab74736c0(0000) GS:ffff888124a82000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f67143b1d58 CR3: 0000000035620000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ pci_scan_single_device drivers/pci/probe.c:2737 [inline]
+ pci_scan_single_device+0x325/0x470 drivers/pci/probe.c:2723
+ pci_scan_slot+0x1c0/0x790 drivers/pci/probe.c:2820
+ pci_scan_child_bus_extend+0x66/0x730 drivers/pci/probe.c:3039
+ pci_scan_child_bus drivers/pci/probe.c:3153 [inline]
+ pci_rescan_bus+0x18/0x40 drivers/pci/probe.c:3444
+ dev_rescan_store+0x11b/0x140 drivers/pci/pci-sysfs.c:479
+ dev_attr_store+0x58/0x80 drivers/base/core.c:2440
+ sysfs_kf_write+0xef/0x150 fs/sysfs/file.c:145
+ kernfs_fop_write_iter+0x354/0x510 fs/kernfs/file.c:334
+ new_sync_write fs/read_write.c:593 [inline]
+ vfs_write+0x6c7/0x1150 fs/read_write.c:686
+ ksys_write+0x12a/0x250 fs/read_write.c:738
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x490 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fbab658e969
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fbab7473038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007fbab67b5fa0 RCX: 00007fbab658e969
+RDX: 0000000000000004 RSI: 0000200000000440 RDI: 0000000000000005
+RBP: 00007fbab6610ab1 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007fbab67b5fa0 R15: 00007fff54b11b18
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
