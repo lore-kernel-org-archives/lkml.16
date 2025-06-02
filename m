@@ -1,21 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BE6E175BF;
-	Mon,  2 Jun 2025 07:32:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27D02F50
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 07:34:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748849532; cv=none; b=WQyXq4Xw248RDkfBfZ5JsJu33GZbSj+Lf2OfBG9ViMsn+BZRXwFdbi9YNdlmBqqPsuLrLj4OKCP2wEgTii6FH4CsKSHCjP3SOrPkqoE5wZhn71rX6z34Q09tskWiPJ2uuLG0X+UE35KpBuQ0vuRfzhgCXHP+dCGk+yKGd+cesqE=
+	t=1748849664; cv=none; b=aQhXM0I0wxs0qlTIaWWyGoTY3snHFAJtEf1XefxjSGPsjY6Ez+3zXsVMGe4YHn12m23MgCXnXcIfKzNj3Wr/JLoapK5lbiwfKEOb+idGoGhZhd/w5JiQbpDujH6Ti3CUIRWOFBPIs/7XNOq/BA1cYDTsfUJFcTCVIKx47X/qvtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748849532; c=relaxed/simple;
-	bh=YQNB2MJLMgBz6sHqs2F3mrI0QCwCTcf4Fwz1knbIk0k=;
+	s=arc-20240116; t=1748849664; c=relaxed/simple;
+	bh=uA3hgsltY0xBdb452ijBKb8akp03t52GLDqtBwju+40=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tHLBh95tc2/ywXfiiLe3dMgRxUMzDj0CuUi3GAz8PqWs2SEWYxlgu2f7DgkFy16oFMbCBeCsisr1SOomVAMvvGCc17gJSae3N3OnD4uCP6Bm8ilNNbcI4ZYQzPHRuFgcUGkDq/Yu89DB1deXdgmQdGweFiMXKDvckB3rlGy064I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57AF4C4CEEB;
-	Mon,  2 Jun 2025 07:32:10 +0000 (UTC)
-Message-ID: <5b2c5e93-3e5d-497e-aef5-89f3474be2c7@xs4all.nl>
-Date: Mon, 2 Jun 2025 09:32:08 +0200
+	 In-Reply-To:Content-Type; b=Wzq9BO9UPtsjrD3Ypjk3dNF0Dqpju2k94eV67ZmH+fFd8K8SUsZO8+RJ6vAf4rcwpDxYaT+hSY4kfoEhxrfY92EKliv4adGSCTS6VGpjzvmi5sv3LXlsV368N3BHc8l9ostO7ulO/MUMWBd5yfLs8rSNvf+/zhAgf9aPmeRv404=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=jTmn7Ptz; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="jTmn7Ptz"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a50956e5d3so638064f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 00:34:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1748849660; x=1749454460; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lomQSXMXVkyAhZfDo/QfGczWq75wkCBIKASDR7utUXs=;
+        b=jTmn7Ptz6kfSOppuSoY69nIavFM0j6x6cjftLQupxktM/KjDYrMbbAioKn5BnzQZqv
+         NrbpPgfC2jZiHDF4h7OgBlAa9frj2qM21omJODmoPDnP8Gw8cY2TyON1OvpOTd71MhQo
+         vgYVPbptx6bo+6HlD9UAeM5oLWNwxG/xey0iYF/f3JCw6LPRZahU3SEKCSs0j9qs6nMt
+         QFtiWnKVrTISlYJF996+T0YGrW3bAmM3Lvm9gN3B58UattPMZ8uArZ2ImW1WKIw4VoCA
+         fFA6Y7KJWHrB2wH98oxg88aRD6K0gj0CiQ48u+zvFk1qYNnE+qnaWj8Ir7RSh++w30ph
+         lihA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748849660; x=1749454460;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lomQSXMXVkyAhZfDo/QfGczWq75wkCBIKASDR7utUXs=;
+        b=sD0FkjntbyahRHxSagDEczpcsE4hTt2y9mFTXnMSRZL7vGK/gHgBbZdwm6taPnBv88
+         OTyGvqPB5RZRFFrKYWxI64/6xxry1br9KRm5HWOBgW4W3i/0i5hpAnk3gG3Zkn/ZLyU4
+         7RoIkCFtPB/NIKgStlTPFlp+iVYJIdrQit2DhGq3085RPjGQ/YXsjWQnBoodFFlgqyZi
+         V8mUR4BhH0XalLAN0aSxqpF78UEfkwy7cEFaW/Pp4XFKXRZgDpiVFh+Lga7nTXXgAEjH
+         JgN3AEgccsZLwmBU1rVM6EZnTlNtduZ1nxnhEmZ8/fuTAEJWwETIDmszE4dtPHu/wObs
+         eZIg==
+X-Forwarded-Encrypted: i=1; AJvYcCU81pE6hTdWiGcK23UA9rY9eAq0ob0Ft51yTDiX0RLzonLgXOzvoYOUdU5eNDpv2hCimijvPRt8nPYFzhU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKUZwuIKHDV9VUzt4SmVX92Ma4Itv4PFm0gogQ6F97UiLWLgKa
+	/9vormOYj/q3MUryDfUTdqyY/HhBWbdxM8bZY3toDwI29WC5xzAjYYhHMaDUBiNMZ24=
+X-Gm-Gg: ASbGncvNVoerxJ9TuRctPYU0bc31ez7nfmGltHv9hLnNtu7s1Z06msNtFLgIf9v1kRZ
+	r4DJNoEEDOyGmF7BOh9L+10tp0Zlm4cAy+4K85bbvcXHIK9wf8TQq3atj8/nP0duSAs4vwbY3yF
+	UZyi/XSPiH7aApNApgp9HGU2+3ovfQPgY/nWlFe20UGaRLZpcfuPV1qzzkM5SUo5DkIQaadbgEA
+	6Xi/uZOZ7ar3BwYRcRJymsEPorVAXQzhnMunAATlJ6blmLyNTj4oQooiE6wwlMCrf9F7Lk1CCq4
+	+V2UwqtykJb5kCSAbhL44rgog/ha7/we79qqAEhIpebnvUtJ6cQ83DbOEVeU9e7B3mR81Eb3mde
+	tl6cN1c+ERUxIbEZvs+qq7gYh3rFfdos=
+X-Google-Smtp-Source: AGHT+IFMNEOccS5H1c+9eg0kvVfM2JTlZ9ejc6LVtNoJXe6O6Fn56JDnZ4pP7VZIoUaQFgbEspXVTA==
+X-Received: by 2002:a05:6000:25c1:b0:3a4:d898:3e2d with SMTP id ffacd0b85a97d-3a4f7a654a9mr9829041f8f.24.1748849659826;
+        Mon, 02 Jun 2025 00:34:19 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe5b8besm14017930f8f.16.2025.06.02.00.34.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Jun 2025 00:34:18 -0700 (PDT)
+Message-ID: <836dffaf-c1c4-4e1a-957a-355deaa2d963@rivosinc.com>
+Date: Mon, 2 Jun 2025 09:34:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -23,111 +67,124 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] media: uvcvideo: Refactor uvc_queue_streamon
-To: Ricardo Ribalda <ribalda@chromium.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Hans de Goede <hdegoede@redhat.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250522-uvc-fop-v1-0-3bfe7a00f31d@chromium.org>
- <20250522-uvc-fop-v1-1-3bfe7a00f31d@chromium.org>
-Content-Language: en-US, nl
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Autocrypt: addr=hverkuil@xs4all.nl; keydata=
- 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
-In-Reply-To: <20250522-uvc-fop-v1-1-3bfe7a00f31d@chromium.org>
+Subject: Re: [PATCH 2/2] riscv: uaccess: do not do misaligned accesses in
+ get/put_user()
+To: David Laight <david.laight.linux@gmail.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>
+References: <20250530205658.624195-1-cleger@rivosinc.com>
+ <20250530205658.624195-3-cleger@rivosinc.com>
+ <20250531192801.5d6329c3@pumpkin>
+Content-Language: en-US
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <20250531192801.5d6329c3@pumpkin>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 22/05/2025 19:58, Ricardo Ribalda wrote:
-> Do uvc_pm_get before we call uvc_queue_streamon. Although the current
-> code is correct, uvc_ioctl_streamon is allways called after uvc_pm_get,
 
-allways -> always
 
-> this change makes the code more resiliant to future changes.
+On 31/05/2025 20:28, David Laight wrote:
+> On Fri, 30 May 2025 22:56:58 +0200
+> Clément Léger <cleger@rivosinc.com> wrote:
+> 
+>> Doing misaligned access to userspace memory would make a trap on
+>> platform where it is emulated. Latest fixes removed the kernel
+>> capability to do unaligned accesses to userspace memory safely since
+>> interrupts are kept disabled at all time during that. Thus doing so
+>> would crash the kernel.
+>>
+>> Such behavior was detected with GET_UNALIGN_CTL() that was doing
+>> a put_user() with an unsigned long* address that should have been an
+>> unsigned int*. Reenabling kernel misaligned access emulation is a bit
+>> risky and it would also degrade performances. Rather than doing that,
+>> we will try to avoid any misaligned accessed by using copy_from/to_user()
+>> which does not do any misaligned accesses. This can be done only for
+>> !CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS and thus allows to only generate
+>> a bit more code for this config.
+> 
+> For get_user() you are much better off reading the two words that contain
+> the value and then doing 'shift' and 'or' to get the correct value.
+> 
+> Even for put_user() doing the explicit byte accesses will be faster than
+> going though the generic copy_to/from_user() function.
 
-I would add that this change also avoids calling streamoff, which is
-a rather ugly thing to do.
+Hi David,
+
+Alexandre tried that approach as well but that added a bit more code and
+it was more complex than just calling copy_from/to_user(). That can
+still be done in another commit if we need more performance later. As a
+side note, prior to that patch, these misaligned accesses were using
+trap-and-emulate so that is still a performance improvement.
+
+Thanks,
+
+Clément
 
 > 
-> Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-
-Reviewed-by: Hans Verkuil <hverkuil@xs4all.nl>
-
-Regards,
-
-	Hans
-
-> ---
->  drivers/media/usb/uvc/uvc_v4l2.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+> 	David
 > 
-> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-> index 668a4e9d772c6d91f045ca75e2744b3a6c69da6b..862b4e34e5b629cf324479a9bb59ebe8784ccd5d 100644
-> --- a/drivers/media/usb/uvc/uvc_v4l2.c
-> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
-> @@ -853,15 +853,16 @@ static int uvc_ioctl_streamon(struct file *file, void *fh,
->  	if (handle->is_streaming)
->  		return 0;
->  
-> -	ret = uvc_queue_streamon(&stream->queue, type);
-> +	ret = uvc_pm_get(stream->dev);
->  	if (ret)
->  		return ret;
->  
-> -	ret = uvc_pm_get(stream->dev);
-> +	ret = uvc_queue_streamon(&stream->queue, type);
->  	if (ret) {
-> -		uvc_queue_streamoff(&stream->queue, type);
-> +		uvc_pm_put(stream->dev);
->  		return ret;
->  	}
-> +
->  	handle->is_streaming = true;
->  
->  	return 0;
+>>
+>> Signed-off-by: Clément Léger <cleger@rivosinc.com>
+>> ---
+>>  arch/riscv/include/asm/uaccess.h | 28 ++++++++++++++++++++++------
+>>  1 file changed, 22 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/asm/uaccess.h
+>> index 046de7ced09c..b542c05f394f 100644
+>> --- a/arch/riscv/include/asm/uaccess.h
+>> +++ b/arch/riscv/include/asm/uaccess.h
+>> @@ -169,8 +169,21 @@ do {								\
+>>  
+>>  #endif /* CONFIG_64BIT */
+>>  
+>> +unsigned long __must_check __asm_copy_to_user(void __user *to,
+>> +	const void *from, unsigned long n);
+>> +unsigned long __must_check __asm_copy_from_user(void *to,
+>> +	const void __user *from, unsigned long n);
+>> +
+>>  #define __get_user_nocheck(x, __gu_ptr, label)			\
+>>  do {								\
+>> +	if (!IS_ENABLED(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS)) {			\
+>> +		if (!IS_ALIGNED((uintptr_t)__gu_ptr, sizeof(*__gu_ptr))) {		\
+>> +			if (__asm_copy_from_user(&(x), __gu_ptr, sizeof(*__gu_ptr)))	\
+>> +				goto label;			\
+>> +			else					\
+>> +				break;				\
+>> +		}						\
+>> +	}							\
+>>  	switch (sizeof(*__gu_ptr)) {				\
+>>  	case 1:							\
+>>  		__get_user_asm("lb", (x), __gu_ptr, label);	\
+>> @@ -297,6 +310,15 @@ do {								\
+>>  
+>>  #define __put_user_nocheck(x, __gu_ptr, label)			\
+>>  do {								\
+>> +	if (!IS_ENABLED(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS)) {			\
+>> +		if (!IS_ALIGNED((uintptr_t)__gu_ptr, sizeof(*__gu_ptr))) {		\
+>> +			unsigned long val = (unsigned long)(x);				\
+>> +			if (__asm_copy_to_user(__gu_ptr, &(val), sizeof(*__gu_ptr)))	\
+>> +				goto label;			\
+>> +			else					\
+>> +				break;				\
+>> +		}						\
+>> +	}							\
+>>  	switch (sizeof(*__gu_ptr)) {				\
+>>  	case 1:							\
+>>  		__put_user_asm("sb", (x), __gu_ptr, label);	\
+>> @@ -385,12 +407,6 @@ err_label:							\
+>>  		-EFAULT;					\
+>>  })
+>>  
+>> -
+>> -unsigned long __must_check __asm_copy_to_user(void __user *to,
+>> -	const void *from, unsigned long n);
+>> -unsigned long __must_check __asm_copy_from_user(void *to,
+>> -	const void __user *from, unsigned long n);
+>> -
+>>  static inline unsigned long
+>>  raw_copy_from_user(void *to, const void __user *from, unsigned long n)
+>>  {
 > 
 
