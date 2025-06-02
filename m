@@ -1,119 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.aaazen.com (99-33-87-210.lightspeed.sntcca.sbcglobal.net [99.33.87.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84BEE523A;
-	Mon,  2 Jun 2025 17:45:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B4B21A28D;
+	Mon,  2 Jun 2025 17:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.33.87.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748886347; cv=none; b=YgPB191qEK+d+sq+JeZ1bStCng0MbgfTQDBc82WIHu1B8HTooY8Kho/OLHl0VBLL+cGGr+e5/zTOI4HUkWEjCDwovPakayHt1us5DjCYrMD8/kXxIo86vwdkX/gygJUHFkQHVEwkBobgIWvgwOmUetj+Occ29uR6uQwYaSCBIeE=
+	t=1748886422; cv=none; b=a/5QknkWoAXkEQFO8L2ytPCD4MOp+qdPvhiXuLxWjrbMlheOqmKmpagDaPsi+/YCHhm59wySgA/fPs8hLKgBu55PKOvTyKv0QJB8ewsV0sBln7klbi2Cw5zOyRz4cm7tDAW/0APyXWWdzgt2EyAeIqbJEUODWQQiRcV+20ClTIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748886347; c=relaxed/simple;
-	bh=cmbRGzAjJbcU9RL43GysVar9nkxMGOGwNZHu/XCzKYY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B1a6x8suOIevfgQyU+ZWXAdUk1CJNY2sw7Cr0hMiDVblEJJ0KykFrI+AqhJjKm/x864peyuwZjJedNbmB010Ts4o2TgNfFlHXuqx0jnOYMRCSsMZFiEWDyR5CNX/qOJo6BrKPIE/c0CcHusb8dSnhn1YsDovPsQ2q7jESf/QeMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FrXTRgOp; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FrXTRgOp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2094C4CEEB;
-	Mon,  2 Jun 2025 17:45:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748886346;
-	bh=cmbRGzAjJbcU9RL43GysVar9nkxMGOGwNZHu/XCzKYY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FrXTRgOp9pyO95akq2p0KZh/+Mt4AwNc55moU5tw7Ofn7Au8gEqipKsgMEjbDzCy3
-	 CyHNnXquTsnSnIjTcyNcUw73GQI94iYoURbDO2tf67x91uUwTeLVhxANp/gi43B/Q8
-	 7ymigCbERhnU0PRurvctPGbUaj4gY4P01FHU+Ys+NId210fl+xvtALBfFcZBeSWAQg
-	 +eJVG4R5cL0zzNQ3Gt8sxcpSBJ4aZV77OPeij421CWb3U3n8iVu5TuaXq8/7mvnMLp
-	 4SWiAMn8s72Lw7+hihzfMBAhmLSsRirTiXUEMYhxtKZ+ta36Z/RD7OkmgMgXwgW8FA
-	 c53VMNBscIGGQ==
-Date: Mon, 2 Jun 2025 19:45:41 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] rust: platform: add irq accessors
-Message-ID: <aD3jRbuxc0NQt6MC@pollux>
-References: <20250514-topics-tyr-request_irq-v3-0-d6fcc2591a88@collabora.com>
- <20250514-topics-tyr-request_irq-v3-2-d6fcc2591a88@collabora.com>
- <aCsK7s0qepzIiA-l@pollux>
- <CA34AB78-D9DC-433A-B6DF-663849A07370@collabora.com>
+	s=arc-20240116; t=1748886422; c=relaxed/simple;
+	bh=ZRP8C5tV4Lf4EEr8yH2sse5dwTbENYOSXQ8PYBVP9j0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Ck5PfzeyWFRhCO/dD8Ref3Mfbcr4SW428J4Zh0pvhWpIjSngHzQP/UrWmtO1cZBeZc0i0l/lu2pLxqD4PbTTwNmQZQJgR0EHo2NlI5/icyvj3DepleLxiO9EZvAi2xgr/dvaN9s1AUrkHEhqGJwuV4+/YhwPqWp3glADhALeqlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aaazen.com; spf=pass smtp.mailfrom=aaazen.com; arc=none smtp.client-ip=99.33.87.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aaazen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aaazen.com
+Received: from localhost (localhost [127.0.0.1])
+	by thursday.test (OpenSMTPD) with ESMTP id b6d5fd31;
+	Mon, 2 Jun 2025 10:46:54 -0700 (PDT)
+Date: Mon, 2 Jun 2025 10:46:54 -0700 (PDT)
+From: Richard Narron <richard@aaazen.com>
+X-X-Sender: richard@thursday.test
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+cc: Linux stable <stable@vger.kernel.org>, 
+    Linux kernel <linux-kernel@vger.kernel.org>, 
+    Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 5.15 000/207] 5.15.185-rc1 review
+In-Reply-To: <20250602134258.769974467@linuxfoundation.org>
+Message-ID: <2cb71dc9-a16b-5694-cb3-60a1815bdd84@aaazen.com>
+References: <20250602134258.769974467@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA34AB78-D9DC-433A-B6DF-663849A07370@collabora.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, Jun 02, 2025 at 11:56:28AM -0300, Daniel Almeida wrote:
-> Hi Danilo,
-> 
-> […]
-> 
-> >> +
-> >> +    /// Same as [`Self::irq_by_name`] but does not print an error message if an IRQ
-> >> +    /// cannot be obtained.
-> >> +    pub fn optional_irq_by_name(&self, name: &CStr) -> Result<u32> {
-> >> +        // SAFETY: `self.as_raw` returns a valid pointer to a `struct platform_device`.
-> >> +        let res = unsafe {
-> >> +            bindings::platform_get_irq_byname_optional(self.as_raw(), name.as_char_ptr())
-> >> +        };
-> >> +
-> >> +        if res < 0 {
-> >> +            return Err(Error::from_errno(res));
-> >> +        }
-> >> +
-> >> +        Ok(res as u32)
-> >> +    }
-> > 
-> > I don't like the indirection of claiming a u32 representing the IRQ number from
-> > a bus device and stuffing it into an irq::Registration.
-> > 
-> > It would be better we we'd make it impossible (or at least harder) for a driver
-> > to pass the wrong number to irq::Registration.
-> > 
-> > I see two options:
-> > 
-> >  1) Make the platform::Device accessors themselves return an
-> >     irq::Registration.
-> > 
-> >  2) Make the platform::Device accessors return some kind of transparent cookie,
-> >     that drivers can't create themselves that can be fed into the
-> >     irq::Registration.
-> > 
-> > My preference would be 1) if there's no major ergonomic issue with that.
-> 
-> Isn’t 1 way more cluttered?
+On Mon, 2 Jun 2025, Greg Kroah-Hartman wrote:
 
-I don't think so, your irq::Registration::register() function needs a reference
-to the registering device anyways.
+> This is the start of the stable review cycle for the 5.15.185 release.
+> There are 207 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 04 Jun 2025 13:42:20 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.185-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-And given that, now that I think about it, it even has to be this way.
+The new kernel works fine on my miscellaneous Intel and AMD machines
+running Slackware 15.0 both 32-bit and 64-bit.
 
-Otherwise, I could provide irq::Registration::register() an IRQ number that does
-not belong to the bus device that is passed into irq::Registration::register().
-
-So, irq::Registration::register() even needs to be unsafe, with the safety
-requirement that the IRQ number must belong to the corresponding device and
-should be wrapped by bus device abstractions providing the safe driver API.
-
-> That's because the accessors would have to forward all of the arguments (i.e.:
-> currently 4) to register().
-
-It's only the additional arguments below, which you can also wrap in an
-irq::Args structure to keep things cleaner. :)
-
-+        flags: Flags,
-+        name: &'static CStr,
-+        handler: T,
+Tested-by: Richard Narron <richard@aaazen.com>
