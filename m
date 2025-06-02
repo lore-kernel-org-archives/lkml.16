@@ -1,209 +1,197 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1211DEFDD;
-	Mon,  2 Jun 2025 08:54:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B2E1DDC11
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 08:56:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748854497; cv=none; b=rM/lnpqkEUlBDn5OOCv1u+JItC21k0zdf5FWZUrfFQEzmccyt7PWicdfZlKLBUQtrkZz5Tf8jjLxpXlvI0L5E2Uk4eNLziTvH1Y1wI6pxPbZIX6IabPIXcFQocOv6cmfqOdnHSriDWthYvSP0SLif1DTHgwCa4UohlSsz7KMQDw=
+	t=1748854562; cv=none; b=RjEqF6mDQvAYT6iADo3kyY3P1BbPo1UG3IgDBSGttjvZGML+6JD7AA+KDVYPrRFkkxBOZvV5aXk+PStCbwLgWcdArjzmni1BlbowlzjWTjMmOhTXDnOMmkpMi/JMoIDghHAjuH+zlBijW02WIHWNRvCNjDChfIDtC4g4ePteMEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748854497; c=relaxed/simple;
-	bh=N7DR+bUmuN4+fswwjtPRhudtA1jd7yX7JIbNPakSJqg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TLThK+fybBsLNVvdzhYcMDGWi5wz/hyPQ+++waRWpk7iXTdu32QpdP1Vj3BndpwNzTKHSPNl91GyI2hcW7oBoG53UBf8dUZe+GwLHJwPTaYhyf5GA0vwKKnUJ8z/3H5LdHm6ojpkKoM/DOwCk8npD0JMIFy4lW9kGqS4BYcmf6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q2ZS50pW; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748854562; c=relaxed/simple;
+	bh=oTbng+godhHg8e/ijVxCjzCR8UfcEq5jqExNxTsgaw0=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=HMnh487eW/8fGSufCnsyEeH4BQea3iuZTc8FJZUndCyCFSmfktRVYv/0NMvBpE1CPH5J/xg1xo/jjleGlMSslxF5TzYYua1B7/MLEY9Kfua1WVdyGeIGMQaNCKWAR+tdZdMTvjoApVQHojJSIi5RHDFdWB5jX70dHNfMgGuEmb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=T7ooV9LD; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q2ZS50pW"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54b09cb06b0so5512300e87.1;
-        Mon, 02 Jun 2025 01:54:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T7ooV9LD"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4508287895dso29342745e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 01:56:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748854493; x=1749459293; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eNjzh0lCljAImtPQH0yiCxzp0Zoe2cG4gqiqoZ8GiaA=;
-        b=Q2ZS50pWMZYAImdErYVKlTyH3V0y5f2v7hn5WcLgCtgM8fuuyLblNqxTyHSsN2e68O
-         7qD8DAW932eFSFWf3LXMq3kTQW/zPzLhlb3TbqW01ltRyFuPUfZfQGy/Xgwj+t+5XfdV
-         /aH1lYxfo0GSHBdgKKTeInLU2/1XDQ/iLwqzElJy0QqYymrwI0i7rFtbXEo0lXxQwg7t
-         1XL6PIb1aDK4UkD6sh8pLIoZ+WzpvGJu7bj0Elhn+b0gArg9UzMPwMJOQ0iddZSo5hoN
-         Xv1a4AR9e3N0kegyAnQZJcsr9dgEpdt9nfrgkwrjEBJOZJbOFtjWEHJ/vLzkLLtARRsu
-         0fHQ==
+        d=linaro.org; s=google; t=1748854559; x=1749459359; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7QYD6lw/8riHbGeOafpIw3lxHQ0yDfZV96sQp+2PqGY=;
+        b=T7ooV9LDEVXpqtiJNqPbW3ZJw0MKhz+yGDQqqPTScxrkYiigunDfx2XmGT+DM4s6i+
+         whEdONWixsxje45opmCXf3uaEjEQyT0ACsp38ki9JRBiuwlv2vJZEdJ9oRlh2pzuBTGj
+         UpDLjVpIEkYfgpAfBgNozmacdlU/Nf0PEYWXzKVz8jmelZQu8wYVe1pyubZirwXlAtKm
+         cEVzYkOHjXM0CdZJv+QQmK1Pgikuap4ULZtfMQEm2w59NBW+5kL2cjUzBZRTZUV3ORcv
+         kFyze5gl12g5AD6dKqumV/BqrQ2KSBpF+7YKAIYFY17M4IOvdfFT3BfBwuUSDHIDXRJT
+         JpUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748854493; x=1749459293;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eNjzh0lCljAImtPQH0yiCxzp0Zoe2cG4gqiqoZ8GiaA=;
-        b=sBrvTdlyHtUNI1HoCySOQfYuIYjduz8sSvCJo/qtPBNLLYwtiaXZnrRU4GHZSLUwd6
-         04ATbNb9SLrB0eUcGPJ+xeQae2HUmddYOhkw0gB0qb73GmQwQ0CBXuURLCUrGzJ9crMJ
-         LmLjTUJFIdwlLZV6Bl+ncBWpSYn476NuwDQBzqGP2qYsMeBvtqkEBIlSYrmAbsdi/DcS
-         Y77YKO5Q4s3wYEoA2OdzBXKU4qqad9eXfWn2SRXyiZb5YIf3dKFmRRbEHiJDDFa0MCFO
-         fQzXPh/VMIrBSNEfsVecjqirWTxuF0zSZ8Pys2bPI3KKa6Okr5eKfeJ8qtr1kdsaefw7
-         Zkqg==
-X-Forwarded-Encrypted: i=1; AJvYcCVB20W/Y9vPCqBUILrg0m0Ji+uQwBVUVF3gbd5hUoyzKVliECM8BhLjdEkBo2iMLGKL67HpD0z66jcKlkmCgFI=@vger.kernel.org, AJvYcCVtDVRL+c+Qn3+6oXthOjE9EtmrsV2279ZQWPMZB4pgwz9qW8JJp8MLoyBtH3tqyQSjsGEpSLvPgjvxamw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypxLlKOCuC2sZYcu3piZmulLoPzJppscocmF1wEx2gkiCubFxA
-	aitMTAdG2JEBesDZ/AhTHbZg2RF1QKR7IAWU3SHL7L1zvxHl+1vlVuE0
-X-Gm-Gg: ASbGncuEOXDb2exJJSI47BOsqEbPeQbkxYvVFofREUsz8ojjdR9MQx0zsW4sIxd28JE
-	vIzEFpqDcaAzJ+MWnt8mtRwrahNic4QYpydk7ct8Snvvh1I9OhjQTAT5xyXh5jgSjWI+wKswOEu
-	ysT+XOj4kZqvuvu+EZxwdWiYZiEATXjH0ftZQf1JHzeszGYTtQ6RqsuCTmJ2v50Yi9+Efcq/jF8
-	EV0dBl2NP+gkH6G9OBIg0wCXmykxRFOyIYQ0XG6G7PM03wRxepfsVMnJilM/F6rRxnUNuoGq7rr
-	ak/69abZHa8pqis2O9duzbHy6lOP298s1jBhD7+F/DftRmwOdxL1Xwbsn2OqOSZ3gfrbZRJsPBQ
-	3bWa/F9awBjmCsdZajL0bqMKgcmtm
-X-Google-Smtp-Source: AGHT+IENRfJOf3u52FspEjXhewCzmDRxrviHPyUYBNoN+lgkyQ/r5Trmcti6p6EUjGTFWv55XZjmlQ==
-X-Received: by 2002:a05:6512:23a6:b0:553:2f33:ac0e with SMTP id 2adb3069b0e04-55343190b94mr1983224e87.41.1748854493216;
-        Mon, 02 Jun 2025 01:54:53 -0700 (PDT)
-Received: from abj-NUC9VXQNX.. (dsl-hkibng22-54f8dc-251.dhcp.inet.fi. [84.248.220.251])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553378a13basm1524325e87.81.2025.06.02.01.54.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 01:54:52 -0700 (PDT)
-From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
-To: acourbot@nvidia.com,
-	dakr@kernel.org
-Cc: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Valentin Obst <kernel@valentinobst.de>,
-	linux-kernel@vger.kernel.org (open list),
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	airlied@redhat.com,
-	rust-for-linux@vger.kernel.org,
-	iommu@lists.linux.dev (open list:DMA MAPPING HELPERS),
-	Petr Tesarik <petr@tesarici.cz>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Sui Jingfeng <sui.jingfeng@linux.dev>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>
-Subject: [PATCH v4 3/3] rust: dma: add as_slice/write functions for CoherentAllocation
-Date: Mon,  2 Jun 2025 11:53:13 +0300
-Message-ID: <20250602085444.1925053-4-abdiel.janulgue@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250602085444.1925053-1-abdiel.janulgue@gmail.com>
-References: <20250602085444.1925053-1-abdiel.janulgue@gmail.com>
+        d=1e100.net; s=20230601; t=1748854559; x=1749459359;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=7QYD6lw/8riHbGeOafpIw3lxHQ0yDfZV96sQp+2PqGY=;
+        b=tXbnJsUoCcKGw9NJV6JDvOfcLDOW6YT58K3ngALj8Fkn5Hsiqq53WW55AlAOdhqtX9
+         1LSSFatMsxATpyrIbvoLGSzsVlTGG+3mWwah5erj9v5qHPMZmNJPpgGRxoWbBNtvkYq1
+         5wWhps2nL3x6VNNbk+sLgISyRPxC2uvBXl9IiLr9noAg/ud2r31eHPDKxlBsrfj8CSq7
+         YJewLu6OXvqGLWOfdbzypHHKAq4AI+6fBI06QVZFf38VyncmAJ8/7ZsnbdJilmUDysHr
+         /aEfs4EhY0lu0fqgkHRVGbSYl0HvHSaKuMBQ0qng4ouluIaLqAUHnl5SWfKDQ/ToR2UZ
+         C8Hg==
+X-Forwarded-Encrypted: i=1; AJvYcCWKbDZBBGLwEs2pVsq11agFoJ+LxSHiurPls6Uue458Fe/TfBL7Bk6xuAouaWm7wR+DTnJO2nCstoVDyjA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzb7E1t3Z7uaLu4wbKHwSQGZ9cikpuJYhqOpnWVOavFc1MyZITD
+	VZQL78UxkRRjgE+cO3XRRz6iFHctfPqPSks7ih1vHR42JBJ+IPcyR/NEtrzI0f+UOoI=
+X-Gm-Gg: ASbGnctlvVpDAX9okUc3PQ1HhijLON4hfygzeHAUig3nTt4Pn8kYdGsWHrtzmpQCOOD
+	zewKdmRqXE2Ph9nAZGXTICANLFn7xiPGrmdPnP4TqKbZtb7u4r64Qlay4yWodMvugaNep9Sviv6
+	U1Q4Lq24fjCwpn85QWXYigZqj4BOaGu3s7fdDqq4huIPmF/Uk62U3ddkQC+ojObUGq4nOFEu3/b
+	aZGU8Zpzhh4oHnjHbQEEOLFn73R7NBzDPC+yzQHqflPsBF3JhbQSITNYLy5rVHU3PdPXGAUg6Sw
+	WtXt1zKrNY9Uq0CLdOWyNjAvcLSIYYMK5UWZ+5wbfkFBSMr3Lc2rSMnZVOJI4BIAWcLi4Du4W8r
+	PDJ2xrO6if396AFw7EQhbw6tmYA==
+X-Google-Smtp-Source: AGHT+IERLKrJn1bEwrp3LKtii6LGu0HD8bbK3tSawKryKIi92EyAnI21DVniaXqIS0xT91UU9mDP+Q==
+X-Received: by 2002:adf:f604:0:b0:3a4:f7ae:77c9 with SMTP id ffacd0b85a97d-3a4f7ae783bmr8182583f8f.5.1748854559244;
+        Mon, 02 Jun 2025 01:55:59 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:cb6:30c6:d7ab:d145? ([2a01:e0a:3d9:2080:cb6:30c6:d7ab:d145])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f00972c1sm14297282f8f.68.2025.06.02.01.55.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Jun 2025 01:55:58 -0700 (PDT)
+Message-ID: <75dde9a2-3c0d-481b-bc73-089ba89a77e0@linaro.org>
+Date: Mon, 2 Jun 2025 10:55:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH v3 0/6] arm64: qcom: allow up to 4 lanes for the Type-C
+ DisplayPort Altmode
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Konrad Dybcio <konradybcio@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Krzysztof Kozlowski <krzk@kernel.org>
+References: <20250527-topic-4ln_dp_respin-v3-0-f9a0763ec289@oss.qualcomm.com>
+ <styd5gjksbsqt7efylpfn6bgwgyvt6zexxiooihjsnmp25yigp@unq7dor6gso2>
+ <447c3b13-8d6d-4bcb-83c1-9456b915a77e@oss.qualcomm.com>
+ <inpfuxskvmrebxitqtqwzvpnpicibo6zakgk4ujpcrqrpef2vw@nhclj5rg7axr>
+ <9037fefe-aa40-4884-97ee-b81ff8346944@oss.qualcomm.com>
+ <htufwjvfgdtav2gtgrytc356py6xqhrffbwjg42sgo7k4zzxof@z4xaf35qz7kq>
+ <aa17d7d4-b77d-4a0a-88c3-86255dfbc29d@oss.qualcomm.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <aa17d7d4-b77d-4a0a-88c3-86255dfbc29d@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add unsafe accessors for the region for reading or writing large
-blocks of data.
+On 28/05/2025 18:56, Konrad Dybcio wrote:
+> On 5/28/25 1:22 PM, Dmitry Baryshkov wrote:
+>> On Wed, May 28, 2025 at 01:13:26PM +0200, Konrad Dybcio wrote:
+>>> On 5/28/25 11:00 AM, Dmitry Baryshkov wrote:
+>>>> On Wed, May 28, 2025 at 12:24:02AM +0200, Konrad Dybcio wrote:
+>>>>> On 5/27/25 11:10 PM, Dmitry Baryshkov wrote:
+>>>>>> On Tue, May 27, 2025 at 10:40:02PM +0200, Konrad Dybcio wrote:
+>>>>>>> Register a typec mux in order to change the PHY mode on the Type-C
+>>>>>>> mux events depending on the mode and the svid when in Altmode setup.
+>>>>>>>
+>>>>>>> The DisplayPort phy should be left enabled if is still powered on
+>>>>>>> by the DRM DisplayPort controller, so bail out until the DisplayPort
+>>>>>>> PHY is not powered off.
+>>>>>>
+>>>>>> This series doesn't seem to solve the USB side of a problem. When the
+>>>>>> PHY is being switch to the 4-lane mode, USB controller looses PIPE
+>>>>>> clock, so it needs to be switched to the USB-2 mode.
+>>>>>
+>>>>> I didn't find issues with that on X13s.. Not sure if it's related, but
+>>>>> on the SL7, after plugging in a 4ln DP connection, I need to plug in
+>>>>> the USB thumb drive twice for the first time (only in that sequence)
+>>>>
+>>>> Might be.
+>>>>
+>>>>> But there's nothing interesting in dmesg and the phy seems to be
+>>>>> programmed with the same values on both the initial and the subsequent
+>>>>> working plug-in
+>>>>
+>>>> Please try using a DP dongle with USB 2 passthrough (there are some).
+>>>> Or just emulate this by enabling DP PHY / DP chain for plugged in USB3
+>>>> devices. Would you be able to see the USB device on a bus?
+>>>
+>>> I only have a dongle with both display and usb that does 2ln dp
+>>> (I tested 4ln dp on a type-c display that I don't think has a hub)
+>>>
+>>> USB3 - yes, USB2 - no (but it works after a replug)
+>>>
+>>> Are you talking about essentially doing qcom,select-utmi-as-pipe-clk
+>>> at runtime?
+>>
+>> I think so.
+> 
+> So after quite some time playing with that, I noticed that the USB2
+> device was never actually kicked off the bus.. and works totally fine
+> after connecting the display output (2ln DP)
+> 
+> I was looking at dmesg, checking for discovery/disconnect messages,
+> but the device was simply never disconnected (which makes sense given
+> repurposing USB3 TX/RX lanes doesn't affect the D+/D- of USB2)
+> 
+> I also read some docs and learnt that what we call
+> qcom,select-utmi-as-pipe-clk is suppossed to be a debug feature
+> and is unnecessary to set on USB2.0-only controllers
+> 
+> The USB controller programming guide though doesn't talk about DP,
+> but I'd expect that we may need to set that override for 4lnDP+USB2
+> use cases (which I don't have a dongle for)
 
-Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
-Signed-off-by: Abdiel Janulgue <abdiel.janulgue@gmail.com>
----
- rust/kernel/dma.rs | 86 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 86 insertions(+)
+Yeah basically we need to:
+1) power-off the USB3 PHY
+2) switch to UTMI clock
 
-diff --git a/rust/kernel/dma.rs b/rust/kernel/dma.rs
-index 5a690e5f1e66..b486f63c1d3a 100644
---- a/rust/kernel/dma.rs
-+++ b/rust/kernel/dma.rs
-@@ -218,6 +218,92 @@ pub fn dma_handle(&self) -> bindings::dma_addr_t {
-         self.dma_handle
-     }
- 
-+    /// Common helper to validate a range applied from the allocated region in the CPU's virtual
-+    /// address space.
-+    fn validate_range(&self, offset: usize, count: usize) -> Result
-+    {
-+        if offset.checked_add(count).ok_or(EOVERFLOW)? > self.count {
-+            return Err(EINVAL);
-+        }
-+        Ok(())
-+    }
-+
-+    /// Returns the data from the region starting from `offset` as a slice.
-+    /// `offset` and `count` are in units of `T`, not the number of bytes.
-+    ///
-+    /// For ringbuffer type of r/w access or use-cases where the pointer to the live data is needed,
-+    /// [`CoherentAllocation::start_ptr`] or [`CoherentAllocation::start_ptr_mut`] could be used instead.
-+    ///
-+    /// # Safety
-+    ///
-+    /// * Callers must ensure that the device does not read/write to/from memory while the returned
-+    ///   slice is live.
-+    /// * Callers must ensure that this call does not race with a write to the same region while
-+    ///   the returned slice is live.
-+    pub unsafe fn as_slice(&self, offset: usize, count: usize) -> Result<&[T]> {
-+        self.validate_range(offset, count)?;
-+        // SAFETY:
-+        // - The pointer is valid due to type invariant on `CoherentAllocation`,
-+        //   we've just checked that the range and index is within bounds. The immutability of the
-+        //   data is also guaranteed by the safety requirements of the function.
-+        // - `offset + count` can't overflow since it is smaller than `self.count` and we've checked
-+        //   that `self.count` won't overflow early in the constructor.
-+        Ok(unsafe { core::slice::from_raw_parts(self.cpu_addr.add(offset), count) })
-+    }
-+
-+    /// Performs the same functionality as [`CoherentAllocation::as_slice`], except that a mutable
-+    /// slice is returned.
-+    ///
-+    /// # Safety
-+    ///
-+    /// * Callers must ensure that the device does not read/write to/from memory while the returned
-+    ///   slice is live.
-+    /// * Callers must ensure that this call does not race with a read or write to the same region
-+    ///   while the returned slice is live.
-+    pub unsafe fn as_slice_mut(&self, offset: usize, count: usize) -> Result<&mut [T]> {
-+        self.validate_range(offset, count)?;
-+        // SAFETY:
-+        // - The pointer is valid due to type invariant on `CoherentAllocation`,
-+        //   we've just checked that the range and index is within bounds. The immutability of the
-+        //   data is also guaranteed by the safety requirements of the function.
-+        // - `offset + count` can't overflow since it is smaller than `self.count` and we've checked
-+        //   that `self.count` won't overflow early in the constructor.
-+        Ok(unsafe { core::slice::from_raw_parts_mut(self.cpu_addr.add(offset), count) })
-+    }
-+
-+    /// Writes data to the region starting from `offset`. `offset` is in units of `T`, not the
-+    /// number of bytes.
-+    ///
-+    /// # Safety
-+    ///
-+    /// * Callers must ensure that the device does not read/write to/from memory while the returned
-+    ///   slice is live.
-+    /// * Callers must ensure that this call does not race with a read or write to the same region
-+    ///   that overlaps with this write.
-+    ///
-+    /// # Examples
-+    ///
-+    /// ```
-+    /// # fn test(alloc: &mut kernel::dma::CoherentAllocation<u8>) -> Result {
-+    /// let somedata: [u8; 4] = [0xf; 4];
-+    /// let buf: &[u8] = &somedata;
-+    /// // SAFETY: No hw operation on the device and no other r/w access to the region at this point.
-+    /// unsafe { alloc.write(buf, 0)?; }
-+    /// # Ok::<(), Error>(()) }
-+    /// ```
-+    pub unsafe fn write(&self, src: &[T], offset: usize) -> Result {
-+        self.validate_range(offset, src.len())?;
-+        // SAFETY:
-+        // - The pointer is valid due to type invariant on `CoherentAllocation`
-+        //   and we've just checked that the range and index is within bounds.
-+        // - `offset + count` can't overflow since it is smaller than `self.count` and we've checked
-+        //   that `self.count` won't overflow early in the constructor.
-+        unsafe {
-+            core::ptr::copy_nonoverlapping(src.as_ptr(), self.cpu_addr.add(offset), src.len())
-+        };
-+        Ok(())
-+    }
-+
-     /// Returns a pointer to an element from the region with bounds checking. `offset` is in
-     /// units of `T`, not the number of bytes.
-     ///
--- 
-2.43.0
+In the following states:
+- USB safe mode (USB2 lanes may still be connected)
+- 4lanes DP mode
+- DP-only mode
+
+But for this, the dwc3 should also get USB-C events with an addition mode-switch property.
+The flatten DWC3 node now allows that !
+
+Neil
+
+> 
+> Konrad
 
