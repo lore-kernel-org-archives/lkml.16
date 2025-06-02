@@ -1,119 +1,160 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F1F3222595
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 13:06:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E6F21C171;
+	Mon,  2 Jun 2025 13:06:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748869601; cv=none; b=VKioGgu7fTM/qH6/YjR1MEK3muSimy4lUk+LrRH+5/zf/EoDlzXXUeRaVW043fiej2bUfHolsEJpN5fT1XxFr+V/WDZ/cxhDzI+wCeGepaT6uHDe+1CZ9ZexpienNQYqnICj/NGoBTrPJClZ13IV4sIZ0wYwrVhUohonbvvDFLY=
+	t=1748869609; cv=none; b=oXBnYQtVO1yUtRyFKB4HaCnaM6VhQLcNmJWa3GHUiiFLwRNqZKM1pALbb/Pi9Jn9lKJeozoz9huYxnsOXuCBuwbtTCrldCQTe/z1oNk2ULC749Qw6H5LMFOVYnXmbEDS8bHKV5Wfy8FdOtgq+PIy7dQVoakMS8mDpopSR2eehOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748869601; c=relaxed/simple;
-	bh=s2fTm5oyVsyETmrw7htvXbIfGrXW6uLj/89qBBxdQx0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=enuCEAL2GIA7PQjc9bM8bH6ZyjbdhRps70rWU6ybab7lLI9wTcNMFqPRp5SaAy29/M0dFxdTQD0axkgHCJxlV7TpaOW8r2lO1GmCEBNXzkipWRFINtqINng4ZmrFIWxL7+FKKfU/F4GrU84xsmtrXCMEtzC50Vr/lrEhoSy/hAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=RDDOb4HY; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1748869609; c=relaxed/simple;
+	bh=4W5iJT4qvv4gvMCawcbl0T+06lxem7eK5CvC/5B+TB4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Ca0GwhgPXuNZH3crDNTJ9/xHn5mj0O+qQK3lntMVQDP8CsWlVtu76LeMXSRzY32LAaoLB+UfkxsGjcZDMajFY9fPllcCB1zQ//FwJjdPQ940nrotx80kQa4JOqsgxHt561vEwWxwIuX1Krl39KigJoImPCB+eVSfLUKnpiGlYAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TawVPv/t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RDDOb4HY"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-54e816aeca6so5667405e87.2
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 06:06:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1748869598; x=1749474398; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mbA76Sy+7dv3Hy+WD50S5fx7NglU/kONFwY4cFw22AQ=;
-        b=RDDOb4HYsy7vJPgTgtVtYRzpHe0KjW5vl7sIPtj/llKWJdEH4kBJuQ0siKcCNCtbxD
-         XyDBjMoMRkQ2uM0NRnTtLjMflT7vhxB0x/n1vl56Djm2OmvcV2v4JE6S+AdymDNwmbtC
-         V6UHNKoJmnnRiwaWWJSXsilcp/2dWLGeaxDp0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748869598; x=1749474398;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mbA76Sy+7dv3Hy+WD50S5fx7NglU/kONFwY4cFw22AQ=;
-        b=SqyeNK81Aa9/4wr1mF23ZoDqy9C1OsN3g8LG24CZhVvPhc4Il6rs+FUIrKrdA14+yJ
-         x8x3JvDmn79aw66VGRSHn5ncD6yCsUL27kr7cPwJbM3tbom7SJwNPUCALezkN/qV+Vbj
-         OkwZT+FCTky977rqEEMEwkfgkAmrEVd18c6bb523pkHK+7HQgC3+uFuYfJAL2ia++owL
-         yzBO3CyX35KAVo2/5s9Zewd+hVVkAoFeyFg9/LYaSucEmwU03ifCURAspjIHCzZsd5kR
-         RK/+Kkp373VtVysSxEaccpYs6DUpUvmkkElCuirvZXRMdZSBw5N5k2AMeA0HNngoPcIJ
-         onvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUtp4IYGGmeKwhIkFzcqMKK0lg1b4u1tinq/hqEMkxS00MdfXF1aRbZw02amazwSZ0ApAEUTzBjV2gHQnY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9mqB/icZjS7D03WIm0yCeDddqSxoboTVKfY6pViuxz+kNlC/X
-	TQjJeDxgeCtI1opMK9cwFEet83hOmMM9K1okDUBSvYvYtcSz2MfbyMwGXOdpSbhHCg==
-X-Gm-Gg: ASbGncsb4rYQZOxzMwg0BSzGbamKai7yhp6KZlD0qqsKILUmdBmtl8ZetsAlLd/qyyE
-	f9qhadVrJgVs7wO1vAEFhIYNM7Ry/WtLIjcYnN2oGZ6En7EbEUvmVO2nkz+JGsuu/Ht6hhIU6R4
-	X1wp+XIAxvComVuJH3BugyjcEZqdT5+UbZQZIWvpncLElwOnfyS8bhF6p0RWcMHJlCy+vFSiCGO
-	WRrzdBXALhskduhk67VB4T1qyvFY1KdEW8P4sK7BgwBUZ2Hn6yzIBu45oT3Y5JYiOGJgWvelk35
-	wQfrt/zoowaagg5P8T4UyeaN2Kv9wMDLd+ygAbe5/Eqa8JCrsTmo0tpTje5IAnpHYz+RlLDIkQj
-	zvSik9V3PUWd2+kSnKenb4ifHcQ==
-X-Google-Smtp-Source: AGHT+IHe1vf7/F+KCeNYZJxpJFI7hvw+HxaaxkgDjKbbve9meQSh2ZyQ+hIz8qoG/mtgFJgJ8UxrEw==
-X-Received: by 2002:a05:6512:3dac:b0:553:23fb:595 with SMTP id 2adb3069b0e04-5533b8f3be4mr4267094e87.14.1748869597674;
-        Mon, 02 Jun 2025 06:06:37 -0700 (PDT)
-Received: from ribalda.c.googlers.com (90.52.88.34.bc.googleusercontent.com. [34.88.52.90])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5533787d26esm1590160e87.41.2025.06.02.06.06.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 06:06:35 -0700 (PDT)
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Mon, 02 Jun 2025 13:06:21 +0000
-Subject: [PATCH v2 9/9] media: uvcvideo: Support granular power saving for
- compat syscalls
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TawVPv/t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 324FBC4CEEB;
+	Mon,  2 Jun 2025 13:06:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748869608;
+	bh=4W5iJT4qvv4gvMCawcbl0T+06lxem7eK5CvC/5B+TB4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=TawVPv/tvXjNYu/rpoIY0xKb56cIrEzo/Xi15r9UhZm6ST7F8uZRggpBglucfv0OU
+	 fsHecQy2i+3R6StrqiyZ6+WbK1fBuyOOfDjuRY+qZdGcuTMpMU4V3iBvt8C7YOe9Fk
+	 AeANcDJVE2xFX5rVcndQarTYonhfBLoOLXf16W5fpWDJYWAdrVcH/jUkt/x4gjBZ3H
+	 8eqmpd4LBkQa2/ePs8uEuA7RgwViEilepLeNbKnD3qSfjvAj/4Bu32knsaAXXkmcNd
+	 64KU6I9drm5O9owkC0XB56VL5w4W7x2IWVrg/7h3WWu9rhR8qXoNZIaQy1nzyYO7gm
+	 5pbeIcOww2Sxg==
+X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Xu Yilun <yilun.xu@linux.intel.com>, kvm@vger.kernel.org,
+	sumit.semwal@linaro.org, christian.koenig@amd.com,
+	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
+	jgg@nvidia.com, dan.j.williams@intel.com, aik@amd.com,
+	linux-coco@lists.linux.dev
+Cc: dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, vivek.kasireddy@intel.com,
+	yilun.xu@intel.com, yilun.xu@linux.intel.com,
+	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
+	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
+	zhenzhong.duan@intel.com, tao1.su@intel.com,
+	linux-pci@vger.kernel.org, zhiw@nvidia.com, simona.vetter@ffwll.ch,
+	shameerali.kolothum.thodi@huawei.com, iommu@lists.linux.dev,
+	kevin.tian@intel.com
+Subject: Re: [RFC PATCH 27/30] PCI/TSM: Add PCI driver callbacks to handle
+ TSM requirements
+In-Reply-To: <20250529053513.1592088-28-yilun.xu@linux.intel.com>
+References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
+ <20250529053513.1592088-28-yilun.xu@linux.intel.com>
+Date: Mon, 02 Jun 2025 18:36:37 +0530
+Message-ID: <yq5att4yjns2.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250602-uvc-grannular-invert-v2-9-c871934ad880@chromium.org>
-References: <20250602-uvc-grannular-invert-v2-0-c871934ad880@chromium.org>
-In-Reply-To: <20250602-uvc-grannular-invert-v2-0-c871934ad880@chromium.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Hans de Goede <hdegoede@redhat.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Ricardo Ribalda <ribalda@chromium.org>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain
 
-Right now we cannot support granular power saving on compat syscalls
-because the VIDIOC_*32 NRs defines are not accessible to drivers.
+Xu Yilun <yilun.xu@linux.intel.com> writes:
 
-Use the v4l2_compat_translate_cmd  helper to convert the compat syscall
-NRs into syscall NRs.
+> Add optional PCI driver callbacks to notify TSM events. For now, these
+> handlers may be called during pci_tsm_unbind(). By calling these
+> handlers, TSM driver askes for external collaboration to finish entire
+> TSM unbind flow.
+>
+> If platform TSM driver could finish TSM bind/unbind all by itself, don't
+> call these handlers.
+>
+> Host may need to configure various system components according to
+> platform trusted firmware's requirements. E.g. for Intel TDX Connect,
+> host should do private MMIO mapping in S-EPT, trusted DMA setup, device
+> ownership claiming and device TDISP state transition. Some operations are
+> out of control of PCI TSM, so need collaboration by external components
+> like IOMMU driver, KVM.
+>
+> Further more, trusted firmware may enforce executing these operations
+> in a fixed sequence. E.g. Intel TDX Connect enforces the following
+> sequences for TSM unbind:
+>
+>   1. STOP TDI via TDISP message STOP_INTERFACE
+>   2. Private MMIO unmap from Secure EPT
+>   3. Trusted Device Context Table cleanup for the TDI
+>   4. TDI ownership reclaim and metadata free
+>
+> PCI TSM could do Step 1 and 4, but need KVM for Step 2 and IOMMU driver
+> for Step 3. While it is possible TSM provides finer grained APIs like
+> tdi_stop() & tdi_free(), and the caller ensures the sequence, it is
+> better these specific enforcement could be managed in platform TSM
+> driver. By introducing TSM handlers, platform TSM driver controls the
+> operation sequence and notify other components to do the real work.
+>
+> Currently add 3 callbacks for TDX Connect. disable_mmio() is for
+> VFIO to invalidate MMIO so that KVM could unmap them from S-EPT.
+> recover_mmio() is to re-validate MMIO so that KVM could map them
+> again for shared assigned device. disable_trusted_dma() is to cleanup
+> trusted IOMMU setup.
+>
+> Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
+> ---
+>  include/linux/pci-tsm.h | 7 +++++++
+>  include/linux/pci.h     | 3 +++
+>  2 files changed, 10 insertions(+)
+>
+> diff --git a/include/linux/pci-tsm.h b/include/linux/pci-tsm.h
+> index 737767f8a9c5..ed549724eb5b 100644
+> --- a/include/linux/pci-tsm.h
+> +++ b/include/linux/pci-tsm.h
+> @@ -157,6 +157,13 @@ struct pci_tsm_ops {
+>  	int (*accept)(struct pci_dev *pdev);
+>  };
+>  
+> +/* pci drivers callbacks for TSM */
+> +struct pci_tsm_handlers {
+> +	void (*disable_mmio)(struct pci_dev *dev);
+> +	void (*recover_mmio)(struct pci_dev *dev);
+> +	void (*disable_trusted_dma)(struct pci_dev *dev);
+> +};
+> +
+>  enum pci_doe_proto {
+>  	PCI_DOE_PROTO_CMA = 1,
+>  	PCI_DOE_PROTO_SSESSION = 2,
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 5f37957da18f..4f768b4658e8 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -545,6 +545,7 @@ struct pci_dev {
+>  #endif
+>  #ifdef CONFIG_PCI_TSM
+>  	struct pci_tsm *tsm;		/* TSM operation state */
+> +	void *trusted_dma_owner;
+>  #endif
+>  	u16		acs_cap;	/* ACS Capability offset */
+>  	u8		supported_speeds; /* Supported Link Speeds Vector */
+> @@ -957,6 +958,7 @@ struct module;
+>   * @sriov_get_vf_total_msix: PF driver callback to get the total number of
+>   *              MSI-X vectors available for distribution to the VFs.
+>   * @err_handler: See Documentation/PCI/pci-error-recovery.rst
+> + * @tsm_handler: Optional driver callbacks to handle TSM requirements.
+>   * @groups:	Sysfs attribute groups.
+>   * @dev_groups: Attributes attached to the device that will be
+>   *              created once it is bound to the driver.
+> @@ -982,6 +984,7 @@ struct pci_driver {
+>  	int  (*sriov_set_msix_vec_count)(struct pci_dev *vf, int msix_vec_count); /* On PF */
+>  	u32  (*sriov_get_vf_total_msix)(struct pci_dev *pf);
+>  	const struct pci_error_handlers *err_handler;
+> +	struct pci_tsm_handlers *tsm_handler;
+>  	const struct attribute_group **groups;
+>  	const struct attribute_group **dev_groups;
+>  	struct device_driver	driver;
+> -- 
+> 2.25.1
 
-Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
----
- drivers/media/usb/uvc/uvc_v4l2.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+It looks like the TSM feature is currently interacting with several
+components: struct pci_driver, VFIO, iommufd, and pci_tsm_ops.
 
-diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-index 13388879091c46ff74582226146521b5b5eb3d10..8358ca54b248dd1cf7c984b206b8e550cd883e54 100644
---- a/drivers/media/usb/uvc/uvc_v4l2.c
-+++ b/drivers/media/usb/uvc/uvc_v4l2.c
-@@ -1237,15 +1237,13 @@ static long uvc_v4l2_pm_ioctl(struct file *file,
- static long uvc_v4l2_unlocked_ioctl(struct file *file,
- 				    unsigned int cmd, unsigned long arg)
- {
--	/*
--	 * For now, we do not support granular power saving for compat
--	 * syscalls.
--	 */
-+	unsigned int converted_cmd = cmd;
-+
- 	if (in_compat_syscall())
--		return uvc_v4l2_pm_ioctl(file, cmd, arg);
-+		converted_cmd = v4l2_compat_translate_cmd(cmd);
- 
- 	/* The following IOCTLs do need to turn on the camera. */
--	switch (cmd) {
-+	switch (converted_cmd) {
- 	case UVCIOC_CTRL_QUERY:
- 	case VIDIOC_G_CTRL:
- 	case VIDIOC_G_EXT_CTRLS:
+Should we consider limiting this scattering? Would it make sense to
+encapsulate this logic within pci_tsm_ops?
 
--- 
-2.49.0.1266.g31b7d2e469-goog
-
+-aneesh
