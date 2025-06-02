@@ -1,226 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.mleia.com (mleia.com [178.79.152.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A30175BF;
-	Mon,  2 Jun 2025 15:41:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8492721A444;
+	Mon,  2 Jun 2025 15:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.79.152.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748878903; cv=none; b=PUPW8B059mfN+z4taZXuVqt4Qnmp7u6xgPtUi15kPD9QNbmtNHSDCBpQmhZ5jJncKDDOT2LVBmKKmjlsbUxREZjX9WeRYISPNOk+p9nKimHINHUvz8LgdH4s0W6oMRvRa5GCEhl1oT69xjsblEiPaY+YN7PCUi3ABsqIKWI/zgc=
+	t=1748879004; cv=none; b=Idh0OXkMO0+wzakdFtmNrcU3wwFws4/tJrdOGr2frusJOn2gN2ZHUo6CmDcafrcnHiws45+lvNraPVLkfCmiGYqFESzq9npbcTmCdFK0R22mSCYcgTHWYM1BCSS70wvQuRr8bpdoqTM4cuvg3O8VoTnFNvpjM7kVnXgKMZxjArI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748878903; c=relaxed/simple;
-	bh=SErxh7WSPVlVMY3VQCtjc25vnpO0BTrBiG4/l0WqpNk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D5bhsI4OR7fA7eZYf6ohkgqxA9rmPy/BzeLPpl8WnYfCEmQtrmfJDNrDyXdH2AWPzqju4rmyENC0uT/IzxyxIA0BJCFmgrYYCH6n0uWbaLEeNldJ4S+GZMx01ix/mLdUezJXWooAlBTWTQi8ypKhl3XB/F/6xnNMk+y2zC41R1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tGIGWGP1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748879004; c=relaxed/simple;
+	bh=DBJwOAmkyX2Nribm1dGA50el7+wrnSk5uZuhbhqZS4s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d4OKdxdYKqCTWJoXbKruwkb4BU7M81GZ6fK9uXvRZcXcyOvWAL0+gYNtrF2p8Kql/+3ekfhpdQzm/K7vWIwMombYcQyI0fMIDc3ldj2U1RG9hzmsLkh6OyAuaidXGTiFEBr5SCDWC3l0VZ+kQzYMjWJXebp4220Srgxl3ved/7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com; spf=none smtp.mailfrom=mleia.com; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=n9azWB/n; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=n9azWB/n; arc=none smtp.client-ip=178.79.152.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mleia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tGIGWGP1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 731E8C4CEEB;
-	Mon,  2 Jun 2025 15:41:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748878902;
-	bh=SErxh7WSPVlVMY3VQCtjc25vnpO0BTrBiG4/l0WqpNk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tGIGWGP1rl6fcd+udRDMiHKphlrMMsEvxfYTCB1RGLwgOrbWkGCLD4PaM9JhNyMOm
-	 MU5OOQ12RxPYTLgZyhksCrm3ctfp9lWjao/ue4Q9sHwU6jTElsQubbIPy1hmX+ue6+
-	 3cxpcV64YaC1ssIbj45mU8NUgo/f7fqAzlJbqHlnJZV2uB/LIn6dqUqBviFA4VzR5X
-	 RjL7F0ieVTKYcxb5RwPKVu9/jaZg2YscijxFrNtaYgBpRhfrnazjQS/XabtaOCu++s
-	 60m2E5oLtB3bR5sm35tgAC+lGdWlmW1dMS3z+rdK5GcgvRJtRzIGbDEs5RPQAeIudW
-	 l3dw+iz5UY0kw==
-Date: Mon, 2 Jun 2025 10:41:39 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Wasim Nazir <quic_wasimn@quicinc.com>
-Cc: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel@quicinc.com, kernel@oss.qualcomm.com, 
-	Pratyush Brahma <quic_pbrahma@quicinc.com>, Prakash Gupta <quic_guptap@quicinc.com>
-Subject: Re: [PATCH v9 2/4] arm64: dts: qcom: iq9: Introduce new memory map
- for qcs9100/qcs9075
-Message-ID: <ss3xhat6v3s4ivcypw6fqcmblqait56pqhzwuhzyfhevp4kzlr@5e3f5nwb6lhb>
-References: <20250530092850.631831-1-quic_wasimn@quicinc.com>
- <20250530092850.631831-3-quic_wasimn@quicinc.com>
+	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="n9azWB/n";
+	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="n9azWB/n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
+	t=1748878455; bh=DBJwOAmkyX2Nribm1dGA50el7+wrnSk5uZuhbhqZS4s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=n9azWB/nVNOjiLwTH70drkA1yuTzOU6cp4vgJ0VU37Q88UZpL/01xyQICw3cQF6Ri
+	 40+E509WAVyz4eVM7uPTYnHFC7UkXQk2N+qVzXyGiypX4hbgOEfhjcexL/3d1KfPYT
+	 XVSWdpJx3e2vMfVz0tV38bWPNPZy5l3EJKN+Fqbd6BjgAGq/JaZSrkRQM35qjC5VBL
+	 BCntMKkeDnF9LpAh79Hp/5tCq5yAtrJt4nobyJB6ix9I9sLBQvTxM9u7WHqrszkLSb
+	 S4G0epOaPOjqoNvuZWyacuqyH0pwAQdyNjCiIarHxb7J9uSsgjTGJgY8QVQqKPiOzO
+	 pdReT7E14GATg==
+Received: from mail.mleia.com (localhost [127.0.0.1])
+	by mail.mleia.com (Postfix) with ESMTP id C0FD03BE084;
+	Mon,  2 Jun 2025 15:34:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
+	t=1748878455; bh=DBJwOAmkyX2Nribm1dGA50el7+wrnSk5uZuhbhqZS4s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=n9azWB/nVNOjiLwTH70drkA1yuTzOU6cp4vgJ0VU37Q88UZpL/01xyQICw3cQF6Ri
+	 40+E509WAVyz4eVM7uPTYnHFC7UkXQk2N+qVzXyGiypX4hbgOEfhjcexL/3d1KfPYT
+	 XVSWdpJx3e2vMfVz0tV38bWPNPZy5l3EJKN+Fqbd6BjgAGq/JaZSrkRQM35qjC5VBL
+	 BCntMKkeDnF9LpAh79Hp/5tCq5yAtrJt4nobyJB6ix9I9sLBQvTxM9u7WHqrszkLSb
+	 S4G0epOaPOjqoNvuZWyacuqyH0pwAQdyNjCiIarHxb7J9uSsgjTGJgY8QVQqKPiOzO
+	 pdReT7E14GATg==
+Message-ID: <618490ca-cde1-4e13-8638-f5cb65606c6d@mleia.com>
+Date: Mon, 2 Jun 2025 18:34:14 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250530092850.631831-3-quic_wasimn@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] dt-bindings: arm: lpc: add missed lpc43xx board
+Content-Language: ru-RU
+To: Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Alexander Stein <alexander.stein@ew.tq-group.com>,
+ Marek Vasut <marex@denx.de>, Peng Fan <peng.fan@nxp.com>,
+ Michael Walle <mwalle@kernel.org>, Fabio Estevam <festevam@denx.de>,
+ Markus Niebel <Markus.Niebel@tq-group.com>,
+ Frieder Schrempf <frieder.schrempf@kontron.de>,
+ Francesco Dolcini <francesco.dolcini@toradex.com>,
+ Max Merchel <Max.Merchel@ew.tq-group.com>, Tim Harvey
+ <tharvey@gateworks.com>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: imx@lists.linux.dev
+References: <20250602140613.940785-1-Frank.Li@nxp.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
+In-Reply-To: <20250602140613.940785-1-Frank.Li@nxp.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
+X-CRM114-CacheID: sfid-20250602_153415_809469_D7AF26E5 
+X-CRM114-Status: UNSURE (   7.42  )
+X-CRM114-Notice: Please train this message. 
 
-On Fri, May 30, 2025 at 02:58:45PM +0530, Wasim Nazir wrote:
-> From: Pratyush Brahma <quic_pbrahma@quicinc.com>
+On 6/2/25 17:06, Frank Li wrote:
+> Add missed legancy lpc43xx board compatible string to fix below CHECK_DTB
+> warnings:
+> arch/arm/boot/dts/nxp/lpc/lpc4337-ciaa.dtb: /: failed to match any schema with compatible: ['ciaa,lpc4337', 'nxp,lpc4337', 'nxp,lpc4350']
 > 
-> SA8775P has a memory map which caters to the auto specific requirements.
-
-I thought SA8775P was the IoT platform and SA8255P was the automotive
-one. Has this changed?
-
-> QCS9100 & QCS9075 are its IOT variants (with marketing name as IQ9) which
-> inherit the memory map of SA8775P require a slightly different memory
-> map as compared to SA8775P auto parts.
-> This new memory map is applicable for all the IoT boards which inherit
-> the initial SA8775P memory map. This is not applicable for non-IoT
-
-Is there are platform out there that actually uses the "initial SA8775P
-memory map"?
-
-> boards.
-> 
-> Some new carveouts (viz. gunyah_md and a few pil dtb carveouts) have been
-> introduced as part of firmware updates for IoT. The size and base address
-> have been updated for video PIL carveout compared to SA8775P since it is
-> being brought up for the first time on IoT boards. The base addresses
-> of the rest of the PIL carveouts have been updated to accommodate the
-> change in size of video since PIL regions are relocatable and their
-> functionality is not impacted due to this change. The size of camera
-> pil has also been increased without breaking any feature.
-> 
-> The size of trusted apps carveout has also been reduced since it is
-> sufficient to meet IoT requirements. Also, audio_mdf_mem & tz_ffi_mem
-> carveout and its corresponding scm reference has been removed as these
-> are not required for IoT parts.
-> 
-> Incorporate these changes in the updated memory map.
-> 
-> Signed-off-by: Pratyush Brahma <quic_pbrahma@quicinc.com>
-> Signed-off-by: Prakash Gupta <quic_guptap@quicinc.com>
-> Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
->  .../boot/dts/qcom/iq9-reserved-memory.dtsi    | 113 ++++++++++++++++++
->  1 file changed, 113 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi b/arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi
-> new file mode 100644
-> index 000000000000..ff2600eb5e3d
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi
+>   .../devicetree/bindings/arm/fsl.yaml          | 23 +++++++++++++++++++
+>   1 file changed, 23 insertions(+)
 
-The naming convention is <soc>-<something>.dtsi and I don't see any
-other uses of the "iq9" naming.
+I prefer to see NXP SoC powered boards under Documentation/devicetree/bindings/arm/nxp/
 
-> @@ -0,0 +1,113 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +
+LPC18XX/LPC43XX SoCs are not Freescale.
 
-Why is there a blank space here?
-
-Regards,
-Bjorn
-
-> +/*
-> + * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
-> + */
-> +
-> +/delete-node/ &pil_camera_mem;
-> +/delete-node/ &pil_adsp_mem;
-> +/delete-node/ &pil_gdsp0_mem;
-> +/delete-node/ &pil_gdsp1_mem;
-> +/delete-node/ &pil_cdsp0_mem;
-> +/delete-node/ &pil_gpu_mem;
-> +/delete-node/ &pil_cdsp1_mem;
-> +/delete-node/ &pil_cvp_mem;
-> +/delete-node/ &pil_video_mem;
-> +/delete-node/ &audio_mdf_mem;
-> +/delete-node/ &trusted_apps_mem;
-> +/delete-node/ &hyptz_reserved_mem;
-> +/delete-node/ &tz_ffi_mem;
-> +
-> +/ {
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		gunyah_md_mem: gunyah-md@91a80000 {
-> +			reg = <0x0 0x91a80000 0x0 0x80000>;
-> +			no-map;
-> +		};
-> +
-> +		pil_camera_mem: pil-camera@95200000 {
-> +			reg = <0x0 0x95200000 0x0 0x700000>;
-> +			no-map;
-> +		};
-> +
-> +		pil_adsp_mem: pil-adsp@95900000 {
-> +			reg = <0x0 0x95900000 0x0 0x1e00000>;
-> +			no-map;
-> +		};
-> +
-> +		q6_adsp_dtb_mem: q6-adsp-dtb@97700000 {
-> +			reg = <0x0 0x97700000 0x0 0x80000>;
-> +			no-map;
-> +		};
-> +
-> +		q6_gdsp0_dtb_mem: q6-gdsp0-dtb@97780000 {
-> +			reg = <0x0 0x97780000 0x0 0x80000>;
-> +			no-map;
-> +		};
-> +
-> +		pil_gdsp0_mem: pil-gdsp0@97800000 {
-> +			reg = <0x0 0x97800000 0x0 0x1e00000>;
-> +			no-map;
-> +		};
-> +
-> +		pil_gdsp1_mem: pil-gdsp1@99600000 {
-> +			reg = <0x0 0x99600000 0x0 0x1e00000>;
-> +			no-map;
-> +		};
-> +
-> +		q6_gdsp1_dtb_mem: q6-gdsp1-dtb@9b400000 {
-> +			reg = <0x0 0x9b400000 0x0 0x80000>;
-> +			no-map;
-> +		};
-> +
-> +		q6_cdsp0_dtb_mem: q6-cdsp0-dtb@9b480000 {
-> +			reg = <0x0 0x9b480000 0x0 0x80000>;
-> +			no-map;
-> +		};
-> +
-> +		pil_cdsp0_mem: pil-cdsp0@9b500000 {
-> +			reg = <0x0 0x9b500000 0x0 0x1e00000>;
-> +			no-map;
-> +		};
-> +
-> +		pil_gpu_mem: pil-gpu@9d300000 {
-> +			reg = <0x0 0x9d300000 0x0 0x2000>;
-> +			no-map;
-> +		};
-> +
-> +		q6_cdsp1_dtb_mem: q6-cdsp1-dtb@9d380000 {
-> +			reg = <0x0 0x9d380000 0x0 0x80000>;
-> +			no-map;
-> +		};
-> +
-> +		pil_cdsp1_mem: pil-cdsp1@9d400000 {
-> +			reg = <0x0 0x9d400000 0x0 0x1e00000>;
-> +			no-map;
-> +		};
-> +
-> +		pil_cvp_mem: pil-cvp@9f200000 {
-> +			reg = <0x0 0x9f200000 0x0 0x700000>;
-> +			no-map;
-> +		};
-> +
-> +		pil_video_mem: pil-video@9f900000 {
-> +			reg = <0x0 0x9f900000 0x0 0x1000000>;
-> +			no-map;
-> +		};
-> +
-> +		trusted_apps_mem: trusted-apps@d1900000 {
-> +			reg = <0x0 0xd1900000 0x0 0x1c00000>;
-> +			no-map;
-> +		};
-> +	};
-> +
-> +	firmware {
-> +		scm {
-> +			/delete-property/ memory-region;
-> +		};
-> +	};
-> +};
-> --
-> 2.49.0
-> 
+--
+Best wishes,
+Vladimir
