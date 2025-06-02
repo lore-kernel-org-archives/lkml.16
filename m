@@ -1,33 +1,39 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C442C325A;
-	Mon,  2 Jun 2025 08:17:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34E8F282ED
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 08:18:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748852230; cv=none; b=ixliRSuAQBzepbbf3ZUCTvEpQTs9l8ukOPsV/49glXtgQOJ0fL4rXKTwzB52suOIAZZARn5SnvXR6mybkb9XY3tVXvf5pjp/hTUMkQui0hXgJSVMJGN4uNTPUsdY22qyG3OKZiogmnecFkCw/XM5jQ04Qiru2spLLYKWPdMqGTI=
+	t=1748852311; cv=none; b=BULE03veBwR3Mt2GyPxfwH3yQUoeEFwBT8zHBGs8iEOAY/6SZF+hNobSNFZn9I/mTEPRs3Etinae3gFiAiOOqRA9yRRsF0H8EfvHgYyV5VRH5zl/t2yrsQqPUqjcO5EOaw1hkTiMqoMBt9uQyxOnwYzROtzHydHfiTasp2VPYVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748852230; c=relaxed/simple;
-	bh=6BJBW7hoyakG5udJhK64Z32vJN+hzccr4+Nx1CdInn8=;
+	s=arc-20240116; t=1748852311; c=relaxed/simple;
+	bh=/RFOq4tGmeyFKeuL1aJwKo243e3t8ubbFw7suug1/gM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tVNaFVBvkhZmPrDtZUP7/mMCiRGz6kF/IYKA8emQh/BWhs6bN+sHIJbllB16GjccsnRl++kScwkFNx/oyFOo2O2n8zEMjiAGx7fTVbkOoWUo/1V6MmdoqYREvd7+gsstjzNXs6TNFlMu0frA//2h1GK+7PkQpB9tXbSPquOeVFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qADoffoH; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=llvHWUDJUnjM+BUukLi2SR5eGSqKVPS0sOw26+kZ0bALSoQ7MJuvCK+uvmObEF70ykk928EP8JakuGqx67IZlUGMMU+hxEh7OCVMhsYl1KdsB5YjevALAQOZSq9sNdPvgnpPJ4uJ9arP4v1J1lr7oWo7Q1jA5oA2EsWuqIlGQps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=JAGMVMHs; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qADoffoH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F257BC4CEED;
-	Mon,  2 Jun 2025 08:17:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748852229;
-	bh=6BJBW7hoyakG5udJhK64Z32vJN+hzccr4+Nx1CdInn8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qADoffoHweZjsKnSJcQ1gLtNtlO/yVLCwXzzu26LCCar32NB5fc2fl/e9syTJ+vDZ
-	 sSYh1Mu1JzcgzLywOMwN9bpoXOywsMOUADhYo98VNn3wHzphGPDIozyEMGgHHJx9L+
-	 X3axm0Bz0zWOsCC7gaTNUM6uoOTmF9dxYuaRfCpCuAW4sh38M6nGRgfLNrqlSICFvM
-	 gdfkGWWIz0A9y1+gEm+U6/EbTEmkm1b9wekPzA53y7wg3fYls0rP3i3jcYEV3E0gub
-	 okkaoZn9jSszErbR0WMNXC4TduBjvkVjhFykNqDcFJU+BUHhJYZ+cSxmHgGl2xcQ8r
-	 nxladnBpVmuDg==
-Message-ID: <93434285-ebef-4039-9a7a-e5786fd8bcd2@kernel.org>
-Date: Mon, 2 Jun 2025 10:17:04 +0200
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="JAGMVMHs"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=zdlCEeVUF00zQmejJCPvNPj1mEF7JVnwwI488w34Yp4=; b=JAGMVMHs5wf6yum9C+K1SKtaS2
+	PVIm/YKmwXru4q7WOgDyM2q3z1KJvVTH9ZOnXGPngr7dhXg0NLfvXDv3L47o0aNwCXF/31+qOKXEn
+	6A11OGevXgn2w2lPAIrRxIdoR8sDNdDpvIfbO8IsRnFnfCY1mN4ji9i6wRCMn+Qhe0JOlhb7E9GWA
+	ryaeRQx+tQdvU73KLpnaURFiYlQ5j+wFrX/ijd8a2S1deagE1/YkeHN7S8S5NKtQHtRNNeJ6Znxa3
+	856tsj06ytZqI7Az5lDnps2f7uDjDYBmB/EaDV6AMNVREj3sN1OGddpWUwkXYfdLR9d8w+9ciKeXj
+	5UBAxOQw==;
+Received: from [81.79.92.254] (helo=[192.168.0.101])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uM03z-00GCSq-9Y; Mon, 02 Jun 2025 09:58:31 +0200
+Message-ID: <9783f727-faad-44bb-b47d-3ba06ef8b82d@igalia.com>
+Date: Mon, 2 Jun 2025 08:58:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,105 +41,84 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] dt-bindings: input: Add TouchNetix axiom
- touchscreen
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, Russ Weight
- <russ.weight@linux.dev>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Kamel Bouhara <kamel.bouhara@bootlin.com>,
- Marco Felsch <kernel@pengutronix.de>, Henrik Rydberg <rydberg@bitmath.org>,
- Danilo Krummrich <dakr@redhat.com>, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-input@vger.kernel.org
-References: <20250529-v6-10-topic-touchscreen-axiom-v2-0-a5edb105a600@pengutronix.de>
- <20250529-v6-10-topic-touchscreen-axiom-v2-3-a5edb105a600@pengutronix.de>
- <119eba0a-2c81-4232-8b20-acc0a0eea969@kernel.org>
- <20250530084516.ee2kre7kmdd6uikv@pengutronix.de>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250530084516.ee2kre7kmdd6uikv@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v2] drm/sched/tests: Use one lock for fence context
+To: Philipp Stanner <phasta@kernel.org>,
+ Matthew Brost <matthew.brost@intel.com>, Danilo Krummrich <dakr@kernel.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+ airlied@gmail.com, Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250527101029.56491-2-phasta@kernel.org>
+Content-Language: en-GB
+From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+In-Reply-To: <20250527101029.56491-2-phasta@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 30/05/2025 10:45, Marco Felsch wrote:
->>> +
->>> +  interrupts:
->>> +    maxItems: 1
->>> +
->>> +  reset-gpios:
->>> +    maxItems: 1
->>> +
->>> +  panel: true
->>
->> So that was the reason of dropping tag?
->> https://lore.kernel.org/lkml/821ce1d4-bc15-4764-bbe0-315c57e8536e@linaro.org/
->>
->> Anyway, drop the property. Redundant.
+
+On 27/05/2025 11:10, Philipp Stanner wrote:
+> There is no need for separate locks for single jobs and the entire
+> scheduler. The dma_fence context can be protected by the scheduler lock,
+> allowing for removing the jobs' locks. This simplifies things and
+> reduces the likelyhood of deadlocks etc.
 > 
-> Why is this redundant? The touchscreen.yaml defines it but I need to
-
-It is redundant, because it has ZERO effect. The presence of this
-property or lack of it changes nothing. Binding has exactly the same
-meaning. Binding behaves exactly the same way in validation/checks. Zero
-difference. If there is a difference, please paste checks results.
-
-> request it? At least I understood it that way and all other users of
-> this property do it same way. Same is true for all the touchscreen-*
-
-And these users end the binding with additionalProps, right? So that's
-the difference.
-
-> properties definied in touchscreen.yaml.
+> Replace the jobs' locks with the mock scheduler lock.
 > 
-> Regards,
->   Marco
+> Signed-off-by: Philipp Stanner <phasta@kernel.org>
+> ---
+> Changes in v2:
+>    - Make commit message more neutral by stating it's about simplifying
+>      the code. (Tvrtko)
+> ---
+>   drivers/gpu/drm/scheduler/tests/mock_scheduler.c | 5 ++---
+>   drivers/gpu/drm/scheduler/tests/sched_tests.h    | 1 -
+>   2 files changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+> index f999c8859cf7..17023276f4b0 100644
+> --- a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+> +++ b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+> @@ -64,7 +64,7 @@ static void drm_mock_sched_job_complete(struct drm_mock_sched_job *job)
+>   
+>   	job->flags |= DRM_MOCK_SCHED_JOB_DONE;
+>   	list_move_tail(&job->link, &sched->done_list);
+> -	dma_fence_signal(&job->hw_fence);
+> +	dma_fence_signal_locked(&job->hw_fence);
+>   	complete(&job->done);
+>   }
+>   
+> @@ -123,7 +123,6 @@ drm_mock_sched_job_new(struct kunit *test,
+>   	job->test = test;
+>   
+>   	init_completion(&job->done);
+> -	spin_lock_init(&job->lock);
+>   	INIT_LIST_HEAD(&job->link);
+>   	hrtimer_setup(&job->timer, drm_mock_sched_job_signal_timer,
+>   		      CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
+> @@ -169,7 +168,7 @@ static struct dma_fence *mock_sched_run_job(struct drm_sched_job *sched_job)
+>   
+>   	dma_fence_init(&job->hw_fence,
+>   		       &drm_mock_sched_hw_fence_ops,
+> -		       &job->lock,
+> +		       &sched->lock,
+>   		       sched->hw_timeline.context,
+>   		       atomic_inc_return(&sched->hw_timeline.next_seqno));
+>   
+> diff --git a/drivers/gpu/drm/scheduler/tests/sched_tests.h b/drivers/gpu/drm/scheduler/tests/sched_tests.h
+> index 27caf8285fb7..fbba38137f0c 100644
+> --- a/drivers/gpu/drm/scheduler/tests/sched_tests.h
+> +++ b/drivers/gpu/drm/scheduler/tests/sched_tests.h
+> @@ -106,7 +106,6 @@ struct drm_mock_sched_job {
+>   	unsigned int		duration_us;
+>   	ktime_t			finish_at;
+>   
+> -	spinlock_t		lock;
+>   	struct dma_fence	hw_fence;
+>   
+>   	struct kunit		*test;
 
+Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
 
-Best regards,
-Krzysztof
+Regards,
+
+Tvrtko
+
