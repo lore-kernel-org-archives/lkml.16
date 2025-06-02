@@ -1,97 +1,115 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1FBEEA8;
-	Mon,  2 Jun 2025 23:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75FE22AE6C
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 23:48:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748908041; cv=none; b=ZAiFQwnbYySLZ6coQeBEJQeG7cXPoT8m3IlaDFtK1tOlYrjE/BErX3vqD5tyippphOGm0PXKwZQU4hHxRpUmEhDObGw1vkleH8PX2T/DbJCu1PkaUp32aIlgv0LP0b/NlS0Oy2juCURhzG3d7Hm6Mma8+AN5chOnMfq+qhP/K48=
+	t=1748908136; cv=none; b=IjDbgQ8lkcS+S/Yq+IcB+AuzncDokUqHkm6Nnu34oVuaWlpyQN3ZzdgnEBtT+1U1N8ZB6/KDwpnxePgOE86XyDkKOZe0lAVJ5DM3K/XZfpNpIy9bYFXyQCgSlquMSiIZggcKVBv4MrkSsaq2AqCfECPF6XHsd/0J0SQ4OAdywm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748908041; c=relaxed/simple;
-	bh=/DWl3nGaHU3bnKeyHf6CfgJYPu1TCJQhs/DUH2CxHkM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=I68PbU6/B9YisyJDGkv1F8u0kMHfjQocENrdWYGk79a3hcZPf1Jr0tWt6/OGJnSkBANzcaK84r3K861KwazcQel3z7fMY06aiCtVisMHU3CfNBdW4OpbR/yLZbAk5B0rCE++EuWJwkS959jrsrjTdFd+wWSouEDmdD3Yvip9j8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=FqO5og18; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1748908136; c=relaxed/simple;
+	bh=gsy3eEjSnbYMBE0wUJXrbHDurn+rASnYkoRk/QpGGew=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=kB776yOPY+K+/LIUjlL+eYKtq4lPgrLnTajXoUVrByOXMI/y91U/qjYQD6UXNKUECs/ho2A/cwaydeJtV6n0QHBfUtjU15owSJquvYJ//7NQTdLLzCvWtN9PVIHsC1EUw+C4kbUG/R1a0j97tH2kifcLyyfcdvbC93jRvTED0Zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VTLstTQm; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FqO5og18"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1748908032;
-	bh=oKxChYEyAukC5bCyf1KJjkwMW4JiICur4azOA4BAwYg=;
-	h=Date:From:To:Cc:Subject:From;
-	b=FqO5og18BNW1rlf751FF5MsDHz11a16lAkzIlj/xfpdH7b+KjSbckW45XX0mwElwh
-	 7aD7Oj3WY3Y8MLZRV8D34EfNLiFcbnQMQ15Sz3zQgcjlhvVW5+MNTENl0lWGPHIMQT
-	 TVX/tHuafXJt1kYcEkl2kIXvc2f+c5UCRg7weeVLrHHRxpr6oSRkeZGFLZY++NFaDZ
-	 g+czWNR9UZdM45v+VD8O66KmQDBSIBmyNxJ13IzxCgnHnD/tdEoahc8osWRixS/4MN
-	 NMukCzlXsBL/xEnAgu4H7szW3gLEW/xSE/6F6beoftF+azVndKV7p6MuMdTgfF+XdC
-	 I9dD6kOllT22w==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bB9Vm3bhDz4xMG;
-	Tue,  3 Jun 2025 09:47:12 +1000 (AEST)
-Date: Tue, 3 Jun 2025 09:47:11 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the bcachefs tree
-Message-ID: <20250603094711.15762f7c@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VTLstTQm"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b090c7c2c6aso3164224a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 16:48:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748908135; x=1749512935; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=L3aXcom7K3AYa+uBZzM5ecHbi/BcH+kyA4Qs4DNsym0=;
+        b=VTLstTQmmrY8u5H2pqRt6125jQdrj2VfgmSBpNCUHnHtEKBiQyQ+nhge42EI6oEmq2
+         hx9pL+U2dsf6xjqKbXVL2uFEdSzZQY28q4u+IMbrtbBRaDS7BFuxiIOOKUI7rC8G9aRH
+         EfLQ83iFrzcoZNv3tr7CZBwyQz7G94yXJl15rhg3I0YB1wuD8L0iZDEjqTGKvxc11wot
+         LjFarISx+3LaUA/6XATPHizIFJfVn7MIU49ArC9QtXmFVvLq6T072T/Oa1YmqYKtPZ0H
+         fPN6o4EgHySvPaKF8q9GYx4wFoayM4UlcdrZne6g8KhSoVM64mdQbyFmtpL7xmPe0odc
+         z1EQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748908135; x=1749512935;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=L3aXcom7K3AYa+uBZzM5ecHbi/BcH+kyA4Qs4DNsym0=;
+        b=r7m7626M0jgOTWuoa/eWfyFhy70CanaUTIsDa6ScnTdnS0rj7a/bIEfbQTxn3YjdvB
+         59fREjpFejs+HdPDT8x/KiqR5MhhmIKwxa9F9AFO6bPLgHQ2GplyyCV4bB7j/w6vITsC
+         VjrCVc9SyxU4CUcgexJK1+mTzbSPfzhYtU1rXXAGQkZ0XrD7dQg2dYfA5LzSNwqN5GYM
+         mzheG8C0qlpZ2LyjcmVH3NyrveB4ShQ5tNUKjtogkleYZlmSA/QAsH4qild5yRAX42nF
+         lWknREnYOf2aAAhL+Ts9s+iAQafihVt5lSmbtYZo5kRYVcu64gr4huyNgNlYil9Feaj4
+         T0dw==
+X-Forwarded-Encrypted: i=1; AJvYcCWlw9W/6TEZobBZ3qanANlb5X0Ak9wvuIlC3h2YfBBc92+lx6NEwxTJW3POl5O6oaEjfqigJJrUEKofL38=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhSKlYgbx2eCVkxE9/njoyaS3MHkXcLgOsb70OCbHNSP0Wkfa2
+	kRos/EZZJX8SCnJYkZeNKDS4lYE+fMBqx3YXxt8hghktaISd4SzPTFnBX+JhHOTpX26U63fK6Le
+	yHuLLzg==
+X-Google-Smtp-Source: AGHT+IHrW8lgam5hMs+q8Q41nDdQP7VjrdcQXqaqPJtcR+BjM+THP2Toplhq44lorb8g4sT9CHMEgvpWbMs=
+X-Received: from plgo5.prod.google.com ([2002:a17:902:d4c5:b0:223:225b:3d83])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:41c6:b0:235:225d:30a2
+ with SMTP id d9443c01a7336-23539715c69mr214408135ad.48.1748908134726; Mon, 02
+ Jun 2025 16:48:54 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Mon,  2 Jun 2025 16:48:51 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/7pdD6Wh.X7hZuRDwM09Zd/0";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
+Message-ID: <20250602234851.54573-1-seanjc@google.com>
+Subject: [PATCH] KVM: x86/mmu: Exempt nested EPT page tables from !USER,
+ CR0.WP=0 logic
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Jon Kohler <jon@nutanix.com>, Sergey Dyasli <sergey.dyasli@nutanix.com>
+Content-Type: text/plain; charset="UTF-8"
 
---Sig_/7pdD6Wh.X7hZuRDwM09Zd/0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Exempt nested EPT shadow pages tables from the CR0.WP=0 handling of
+supervisor writes, as EPT doesn't have a U/S bit and isn't affected by
+CR0.WP (or CR4.SMEP in the exception to the exception).
 
-Hi all,
+Opportunistically refresh the comment to explain what KVM is doing, as
+the only record of why KVM shoves in WRITE and drops USER is buried in
+years-old changelogs.
 
-After merging the bcachefs tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+Cc: Jon Kohler <jon@nutanix.com>
+Cc: Sergey Dyasli <sergey.dyasli@nutanix.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/kvm/mmu/paging_tmpl.h | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-fs/bcachefs/fsck.c: In function 'check_dirent':
-fs/bcachefs/fsck.c:2187:71: error: 'struct bch_fs' has no member named 'cf_=
-encoding'
- 2187 |         hash_info->cf_encoding =3D bch2_inode_casefold(c, &i->inode=
-) ? c->cf_encoding : NULL;
-      |                                                                    =
-   ^~
+diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
+index 68e323568e95..ed762bb4b007 100644
+--- a/arch/x86/kvm/mmu/paging_tmpl.h
++++ b/arch/x86/kvm/mmu/paging_tmpl.h
+@@ -804,9 +804,12 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
+ 	if (r != RET_PF_CONTINUE)
+ 		return r;
+ 
++#if PTTYPE != PTTYPE_EPT
+ 	/*
+-	 * Do not change pte_access if the pfn is a mmio page, otherwise
+-	 * we will cache the incorrect access into mmio spte.
++	 * Treat the guest PTE protections as writable, supervisor-only if this
++	 * is a supervisor write fault and CR0.WP=0 (supervisor accesses ignore
++	 * PTE.W if CR0.WP=0).  Don't change the access type for emulated MMIO,
++	 * otherwise KVM will cache incorrect access information in the SPTE.
+ 	 */
+ 	if (fault->write && !(walker.pte_access & ACC_WRITE_MASK) &&
+ 	    !is_cr0_wp(vcpu->arch.mmu) && !fault->user && fault->slot) {
+@@ -822,6 +825,7 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
+ 		if (is_cr4_smep(vcpu->arch.mmu))
+ 			walker.pte_access &= ~ACC_EXEC_MASK;
+ 	}
++#endif
+ 
+ 	r = RET_PF_RETRY;
+ 	write_lock(&vcpu->kvm->mmu_lock);
 
-Caused by commit
+base-commit: 3f7b307757ecffc1c18ede9ee3cf9ce8101f3cc9
+-- 
+2.49.0.1204.g71687c7c1d-goog
 
-  b4ff0eaf0aaa ("bcachefs: fix bch2_fsck_rename_dirent() for casefold")
-
-for this build:
-
-CONFIG_UNICODE=3Dm
-
-I have used the bcachefs tree from next-20250530 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/7pdD6Wh.X7hZuRDwM09Zd/0
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg+N/8ACgkQAVBC80lX
-0GztMAfxATWP48oHyLh1US2qreOu/D0bZHxa1Ev8vlcL9X1YT0dlm3wyW67OsHPh
-4QJ4FbH0SRcalk/CGjixp+1RhyvsTeEGk4a+dvpvF9rJoFK7EL6g4iYZxbzDv4LY
-k09WDxgANLtOe+48lDwbunXIspLB3BAAxfgxv1IeYPlMi2dws6FP1+zvTh+jHVw5
-tzrEJLf1ufcC5SFET3HQcbd7Ge09BR+tW3BN7YDiwe/PlQM3bX13oD5wEusdDCMz
-lHA/8bzy2GB1mf/eIUJEGVP8Zam0dGL576f+aN5VRBDCO/QRMNwLGommnqqNfC71
-UA+zQqw5ZE9j7WUDND38Nr3r1hev
-=BHnj
------END PGP SIGNATURE-----
-
---Sig_/7pdD6Wh.X7hZuRDwM09Zd/0--
