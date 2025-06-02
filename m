@@ -1,132 +1,248 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4262F1C7008
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 15:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF50021C182
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 15:44:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748879023; cv=none; b=nfrtZLa6E/6Vh/HgL7pcg75c1/Vvq4Iu9K7N4iZaAy5ukgp9wk8xsHhROQt+UXHpNxeXu9rQ+3jalzTyEf5HOEsHE1EDKglzjGiYA3yvvZIQ1BL6THNPmbmZa61J/EPwgSUkWByZkASiUb9O0P6g8cKlT2p2bB0kBx8c/RYdxdQ=
+	t=1748879082; cv=none; b=FPoyVq448fm2Clx6kLrvkqpTVN5rY9iXN7V330tiW/gkSN/oqAiH0r08sfXNH79JjTnp+jrttjy+oyByQPByOhgT1MFUwNlqZXxHq724YGyXTaC932TMWe3pqLs8l5MWVFiocwNyYGSS+iEs4ZZ7aVL48JvlKnx8oSLsypCnFwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748879023; c=relaxed/simple;
-	bh=vnDj3LDoE6fvOnpQxqV5cUhV0MzIRWUbuJRW8FXHgy0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RIQ4yH6ql5A/Bc1ndwkJuXFgoerUaytA/7pbL6Xuu3xFOtly4LKKfSYm2QNc6g20yjOfaIRe5erztCFWrO6mx58UL5k/rLPNSor6+xOyLIQx6RRe7/cOtBi4nQT5U81FUJryHvlS28prL01ui3ygVGHhfcu6k/VRZgvoZQEwpLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gL43YtlG; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748879082; c=relaxed/simple;
+	bh=5BGy1ZFZgVdgU4Ybb7k6V7+DZSi2lSFfGDksG89sg8k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RUDXKlriPiRAzpH1YK3L/yFXpMxaRJEVQHfvs5gDZQ+3sW6p5Bs/F0G+CP3owgxxA6Rw6VwN0obxLhtEezPu4t+S/ffYaMmZsHIdsxbfe8YvR+Refhud38/xiurO2CaK18OTrfBOgr5E07bmLN1lQz98bUjvthbgHKAKTA3M4OU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=qCWL+kRA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=WudUNCtB; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=qCWL+kRA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=WudUNCtB; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gL43YtlG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748879020;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="qCWL+kRA";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="WudUNCtB";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="qCWL+kRA";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="WudUNCtB"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id C72CD1F790;
+	Mon,  2 Jun 2025 15:44:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748879078; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=oEnNPOQQYinKhtyFPbtNahXJ+hfo2zYwElH9phszy/s=;
-	b=gL43YtlGSVLnnYVWPw8zMfZuvurFG1mf6MaZzuhRvERrny183Ysjv6aJFEzXOZEAa/urkg
-	Y3pltDpqe4Q8zZHTWtoIRkCwJsF9cSveB+p6Wgbgw3R/La9+snTLKi6JWt4ErFG0mYV1Ty
-	AupSD5uby51Eh9HsVPKbjLf/673yzs8=
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
- [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-208-AnoYZxCgMfqZmoZAQcXpSw-1; Mon, 02 Jun 2025 11:43:38 -0400
-X-MC-Unique: AnoYZxCgMfqZmoZAQcXpSw-1
-X-Mimecast-MFC-AGG-ID: AnoYZxCgMfqZmoZAQcXpSw_1748879018
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-8617c4a3d0dso28957339f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 08:43:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748879018; x=1749483818;
-        h=content-transfer-encoding:mime-version:organization:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oEnNPOQQYinKhtyFPbtNahXJ+hfo2zYwElH9phszy/s=;
-        b=qeFmVtC36mhWKmNKK/gu/IWv3Lz0+uRySLX65jP8kkPR50Fzh3xisv/V53H7VCdDS1
-         SJ8q163twauVbBVZjba0Bypo81ajJpTU+L6FtELEI7CWjyA58fJXgVxzGDbE6lP2Pff9
-         GSr5+7rsjrwv9FZnqZUT76Q3jpUXmwEVZ2V6GwETwiSg9fj/6mnF2LHoetH60pJgyXf3
-         HygJcmFsBheg7nxUN7+XlQravWcChE+WUxAP6GlF4qZ1KzGVbguZGlpK+uAc4/Tnygqw
-         XO0so78BdOEeEMO89bPd4a5vi3zWySxAfVvzOvdaZtXiZ7FUFaZGRwABgd38vzbk+G2v
-         Ui9g==
-X-Forwarded-Encrypted: i=1; AJvYcCWvodAvzFigFpNtQfDCnkGOdBtzNxP0uH+2HZWoxXhYFh/uUbIVj6aNcNz/218NiScTCOwlmsolMdk3o4Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXAwYnd54TtBf0bAoN4V7rsQLYgVPBpnN3PWQfcZgM76f67ZZi
-	ttEaAqwslwyBtRtR1foSNK2aka3xwjWyq8ZSv/hFeoKa6aWQUiMaJcV92i6JCR+v2J1jWkznFvN
-	nyNOu5HXSEtxQiYH97S+bL71oNbRFk0gxUWj1L0YW3D0mEmkA5PsWPiZnkGO8dGVfGw==
-X-Gm-Gg: ASbGncuvciVUMT/SLZcVLaNtOeGHWsKWvho4hgq/xD6JiJ6V3PVRXkyXgmieO/w7ayy
-	AJS3ao3ngpuvhl4niRG5ndJsWf8V1mRjLVt+ObjYw/hrAetLbRyqgksB0OkCKRsqVVDessYzdom
-	sEJbJ6PuwBo3VFDUSVEiqcHB532os3gcmHXxSplcLJakTJvpjZdwjlUZsxMnXdqWnN3Hl6a/7JV
-	brR8E5Nlb9gT/1OjfeICeZ0Wo6ErD/uqiuJ0iQvZzah9ToYCiMZE4j+ZVfHUr7cKuUBiHS9YPdn
-	+oivcsOfDgRCXME=
-X-Received: by 2002:a05:6602:1507:b0:85b:3f28:ff99 with SMTP id ca18e2360f4ac-86d025f5633mr430893839f.2.1748879017931;
-        Mon, 02 Jun 2025 08:43:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGxt5m7iXx5A9r4eTEAWC0Vws511DwnI/2T8V+mtgy7cCEIe9lBpfzRQFP+WGCTj9UR0FmfLg==
-X-Received: by 2002:a05:6602:1507:b0:85b:3f28:ff99 with SMTP id ca18e2360f4ac-86d025f5633mr430892039f.2.1748879017486;
-        Mon, 02 Jun 2025 08:43:37 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fdd7dfe4a5sm1808088173.16.2025.06.02.08.43.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 08:43:36 -0700 (PDT)
-Date: Mon, 2 Jun 2025 09:43:34 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Xose Vazquez Perez <xose.vazquez@gmail.com>
-Cc: Kirti Wankhede <kwankhede@nvidia.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, KVM ML <kvm@vger.kernel.org>, KERNEL ML
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] samples: vfio-mdev: mtty.c: delete MODULE_VERSION
-Message-ID: <20250602094334.4995ea23.alex.williamson@redhat.com>
-In-Reply-To: <20250531161836.102346-1-xose.vazquez@gmail.com>
-References: <20250531161836.102346-1-xose.vazquez@gmail.com>
-Organization: Red Hat
+	bh=WGfjyeHEyh7hJgT7OoNiC1/dbvbwsMYqtSmG3KK/uKg=;
+	b=qCWL+kRAlUoVS6m98KucsKQiLqjhxiM1cbeEkAQ5438Nae55BMyDQhuQr9rPgSUIkZoS9V
+	1/qk/Q5FqoC2mDCN4VmHFI83GN/V553dFJ8nPywpYd1hqAeKuvX0WKXYNdw2GRVgABop7F
+	seLo5xGXWwdyZApFn3nc+DjRxG6cGP0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748879078;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WGfjyeHEyh7hJgT7OoNiC1/dbvbwsMYqtSmG3KK/uKg=;
+	b=WudUNCtBM6ZsOE+mX0H4R4Vbv6NXgCz3c6NGEETTm+gBh90jQ6/BjCA+/2O+wh7B8wQpfB
+	/sgjg0csdZ9KrRCw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748879078; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WGfjyeHEyh7hJgT7OoNiC1/dbvbwsMYqtSmG3KK/uKg=;
+	b=qCWL+kRAlUoVS6m98KucsKQiLqjhxiM1cbeEkAQ5438Nae55BMyDQhuQr9rPgSUIkZoS9V
+	1/qk/Q5FqoC2mDCN4VmHFI83GN/V553dFJ8nPywpYd1hqAeKuvX0WKXYNdw2GRVgABop7F
+	seLo5xGXWwdyZApFn3nc+DjRxG6cGP0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748879078;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WGfjyeHEyh7hJgT7OoNiC1/dbvbwsMYqtSmG3KK/uKg=;
+	b=WudUNCtBM6ZsOE+mX0H4R4Vbv6NXgCz3c6NGEETTm+gBh90jQ6/BjCA+/2O+wh7B8wQpfB
+	/sgjg0csdZ9KrRCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B2C4E13A63;
+	Mon,  2 Jun 2025 15:44:38 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id iq6eK+bGPWiLAgAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 02 Jun 2025 15:44:38 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 67FC4A094C; Mon,  2 Jun 2025 17:44:30 +0200 (CEST)
+Date: Mon, 2 Jun 2025 17:44:30 +0200
+From: Jan Kara <jack@suse.cz>
+To: Baokun Li <libaokun1@huawei.com>
+Cc: Jan Kara <jack@suse.cz>, linux-ext4@vger.kernel.org, tytso@mit.edu, 
+	adilger.kernel@dilger.ca, linux-kernel@vger.kernel.org, yi.zhang@huawei.com, 
+	yangerkun@huawei.com, libaokun@huaweicloud.com
+Subject: Re: [PATCH 2/4] ext4: move mb_last_[group|start] to ext4_inode_info
+Message-ID: <5oqysbekjn7vazkzrh4lgtg25vqqxgrugvld6av7r2nx7dbghr@kk4yidjw735c>
+References: <20250523085821.1329392-1-libaokun@huaweicloud.com>
+ <20250523085821.1329392-3-libaokun@huaweicloud.com>
+ <afjkyrm4y5mp5p72ew3ddqma7v4gkmjqdkcloeaidcj55ruami@zfkn6dzgqfwh>
+ <6200e067-0ad1-4dc4-9694-05ee1e977f4c@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6200e067-0ad1-4dc4-9694-05ee1e977f4c@huawei.com>
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo,huawei.com:email]
+X-Spam-Level: 
 
-On Sat, 31 May 2025 18:18:36 +0200
-Xose Vazquez Perez <xose.vazquez@gmail.com> wrote:
+Hello!
 
-> Reminiscence of ancient times when modules were developed outside the kernel.
-
-s/Reminiscence/Reminiscent/
-
-I think there are likely better arguments that could be made for
-removal though, ex. citing specific policies or discussions.
-
-> Cc: Kirti Wankhede <kwankhede@nvidia.com>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: KVM ML <kvm@vger.kernel.org>
-> Cc: KERNEL ML <linux-kernel@vger.kernel.org>
-
-Signed-off-by?
-
-See Developer's Certificate of Origin:
-Documentation/process/submitting-patches.rst
-
-Thanks,
-Alex
-
-> ---
->  samples/vfio-mdev/mtty.c | 2 --
->  1 file changed, 2 deletions(-)
+On Fri 30-05-25 17:31:48, Baokun Li wrote:
+> On 2025/5/29 20:56, Jan Kara wrote:
+> > On Fri 23-05-25 16:58:19, libaokun@huaweicloud.com wrote:
+> > > From: Baokun Li <libaokun1@huawei.com>
+> > > 
+> > > After we optimized the block group lock, we found another lock
+> > > contention issue when running will-it-scale/fallocate2 with multiple
+> > > processes. The fallocate's block allocation and the truncate's block
+> > > release were fighting over the s_md_lock. The problem is, this lock
+> > > protects totally different things in those two processes: the list of
+> > > freed data blocks (s_freed_data_list) when releasing, and where to start
+> > > looking for new blocks (mb_last_[group|start]) when allocating.
+> > > 
+> > > Moreover, when allocating data blocks, if the first try (goal allocation)
+> > > fails and stream allocation is on, it tries a global goal starting from
+> > > the last group we used (s_mb_last_group). This can make things faster by
+> > > writing blocks close together on the disk. But when many processes are
+> > > allocating, they all fight over s_md_lock and might even try to use the
+> > > same group. This makes it harder to merge extents and can make files more
+> > > fragmented. If different processes allocate chunks of very different sizes,
+> > > the free space on the disk can also get fragmented. A small allocation
+> > > might fit in a partially full group, but a big allocation might have
+> > > skipped it, leading to the small IO ending up in a more empty group.
+> > > 
+> > > So, we're changing stream allocation to work per inode. First, it tries
+> > > the goal, then the last group where that inode successfully allocated a
+> > > block. This keeps an inode's data closer together. Plus, after moving
+> > > mb_last_[group|start] to ext4_inode_info, we don't need s_md_lock during
+> > > block allocation anymore because we already have the write lock on
+> > > i_data_sem. This gets rid of the contention between allocating and
+> > > releasing blocks, which gives a huge performance boost to fallocate2.
+> > > 
+> > > Performance test data follows:
+> > > 
+> > > CPU: HUAWEI Kunpeng 920
+> > > Memory: 480GB
+> > > Disk: 480GB SSD SATA 3.2
+> > > Test: Running will-it-scale/fallocate2 on 64 CPU-bound containers.
+> > > Observation: Average fallocate operations per container per second.
+> > > 
+> > >                        base     patched
+> > > mb_optimize_scan=0    6755     23280 (+244.6%)
+> > > mb_optimize_scan=1    4302     10430 (+142.4%)
+> > > 
+> > > Signed-off-by: Baokun Li <libaokun1@huawei.com>
+> > Good spotting with the s_md_lock contention here. But your changes don't
+> > quite make sense to me. The idea of streaming allocation in mballoc is to
+> > have an area of filesystem for large files to reduce fragmentation.  When
+> > you switch to per-inode, this effect of packing large files together goes
+> > away. Futhermore for each inode either all allocations will be very likely
+> > streaming or not streaming (the logic uses file size) so either your
+> > per-inode target will be unused or just another constantly used copy of
+> > goal value.
+> Sorry, I didn't intend to  break streaming allocation's semantics.
+> A precise definition of streaming allocation is not found in the
+> existing code, documentation, or historical records. Consequently,
+> my previous understanding of it was somewhat inaccurate.
 > 
-> diff --git a/samples/vfio-mdev/mtty.c b/samples/vfio-mdev/mtty.c
-> index 59eefe2fed10..f9f7472516c9 100644
-> --- a/samples/vfio-mdev/mtty.c
-> +++ b/samples/vfio-mdev/mtty.c
-> @@ -35,7 +35,6 @@
->   * #defines
->   */
->  
-> -#define VERSION_STRING  "0.1"
->  #define DRIVER_AUTHOR   "NVIDIA Corporation"
->  
->  #define MTTY_CLASS_NAME "mtty"
-> @@ -2057,5 +2056,4 @@ module_exit(mtty_dev_exit)
->  
->  MODULE_LICENSE("GPL v2");
->  MODULE_DESCRIPTION("Test driver that simulate serial port over PCI");
-> -MODULE_VERSION(VERSION_STRING);
->  MODULE_AUTHOR(DRIVER_AUTHOR);
+> I previously thought it was used to optimize the efficiency of linear
+> traversal. For instance, if 500 inodes are created in group 0 and each
+> file is sequentially filled to 1GB, each file's goal, being empty, would
+> be group 1 (the second group in the inode's flex_bg).
+> 
+> Without a global goal and in the absence of non-linear traversal,
+> after the first inode is filled, the second inode would need to traverse
+> groups 1 through 8 to find its first free block.
+> 
+> This inefficiency escalates, eventually requiring the 500th inode to
+> potentially traverse almost 4000 block groups to find its first available
+> block.
 
+I see. But doesn't ext4_mb_choose_next_group() usually select group from
+which allocation can succeed instead of linearly scanning through all the
+groups? The linear scan is just a last resort as far as I remember. Anyway
+I'm not 100% sure what was the original motivation for the streaming goal.
+Maybe Andreas would remember since he was involved in the design.  What I
+wrote is mostly derived from the general understanding of mballoc operating
+principles but I could be wrong.
+
+> I initially believed it could be split to the inode level to reduce
+> traversal time and file fragmentation. However, as you pointed out,
+> its purpose is to cluster large files, not data blocks within a file.
+> Given this, splitting it to the inode level no longer makes sense.
+> > So I can see two sensible solutions here:
+> > a) Drop streaming allocations support altogether.
+> As mentioned above, it can also greatly improve the efficiency of linear
+> traversal, so we can't simply remove it.
+> > 
+> > b) Enhance streaming allocation support to avoid contention between
+> > processes allocating in parallel and freeing. Frankly, there's no strong
+> > reason why reads & writes of streaming allocation goal need to use a
+> > spinlock AFAICS.
+> Yes, since it's just a hint, we don't need a lock at all, not even
+> fe_start, we just need the last fe_group.
+> > We could just store a physical block number and use
+> > atomic64 accessors for it? Also having single goal value is just causing
+> > more contention on group locks for parallel writers that end up using it
+> > (that's the problem I suspect you were hitting the most).
+> Spot on! We did try a single, lockless atomic64 variable, and just as
+> you pointed out, all processes started traversing from the very same
+> group, which just cranked up the contention, dropping OPS to just 6745.
+> >   So perhaps we
+> > can keep multiple streaming goal slots in the superblock (scale the count
+> > based on CPU count & filesystem group count) and just pick the slot based
+> > on inode number hash to reduce contention?
+> > 
+> > 								Honza
+> That's a brilliant idea, actually!
+> 
+> Since most containers are CPU-pinned, this would naturally cluster a single
+> container's data blocks together. I believe we can also apply this to inode
+> allocation, so a container's inodes and data are all in a single region,
+> significantly reducing interference between containers.
+> 
+> My gratitude for your valuable suggestion!
+> I'm going to try out the CPU bucketing approach.
+
+Cool, let's see how it works out :).
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
