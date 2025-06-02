@@ -1,133 +1,148 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 336742288D3
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 14:16:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8889622A7EA
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 14:16:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748873763; cv=none; b=GvIma6ToQ2PwQWlzV4yKN8rb9J0114SM8rNrFSnfuuqTRVZqtoXwIX44T0a5PLYa7kforQGRU6/44IScUlFW3N1CsIP1rmIzC7/QovQhQraEh9VBNHEhKEbYzbx6M9MBn2y0B/g4n1RUQX2LQ0iXWHWLBvdvcqg7KDH/SMDnRmU=
+	t=1748873786; cv=none; b=iiM2O1P+apZ2bdqty982mboVTUL8OCZMkumPCejr+HR8AQYnoa40nrG+3dTGiI5aKMlP0AaM9yz3jSNZDc5uftIDSsPPZ8vkRjbPQwYZZshmNsSLiuw2PglC1ZLHLDZFsmGMfr95krXkFelKu8zocF4PGXIhHo2Op58MH1yw/N8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748873763; c=relaxed/simple;
-	bh=dF5GAuwDgKDUST16OT0UxWR0Azq7MMy0XSykEj/fkT4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jR5MVuvO58F6ikLOu8MkfICwiQ0AMLHQxKU1LgzOJBiKBLKhLxgQP/HcCSL05k/4nYV4G59pNFIJwJCft0Y2Ho0RJDtXNyLfxX7seBwVEoPbHsmbfWQsB19ZvXd0FheRFYz5rE/wNmFYk1LkowB1OqaHeZgg1tsmRGSmo1t+gjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=K4N6Fdfh; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1748873786; c=relaxed/simple;
+	bh=PXQstq7TOI41h/yOclLwEDlULdPLpcbGn2JYw4wLCy8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pAUWXjyhkWFBQ8QNRhrwbU5OIa3DIwDIIuBHfB2g9//t7t9o7kTst/TJ13dD/JYG4C6eUljlkdQhd+Liup9O5dqKwgMHgJraSQs4bdzI8YWsItxw5dW+YheGINCiF+R0OEFRx0QSWxSC3mIusHcHZRdvL7uP4v8ocKsc3y6IV14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Oa/iWQ7N; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8+YCk0Ys; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Oa/iWQ7N; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8+YCk0Ys; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="K4N6Fdfh"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-441d437cfaaso29891005e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 07:16:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1748873759; x=1749478559; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pasRCSC32VgEjcQb416rK5+EN/XRXvQF7vBXVNk/1Wg=;
-        b=K4N6Fdfh44MAAVtfDadHVtymwVSqSRQTUlsul/VCRKcKGCLB0vvsfs7GKxRzlBR4j1
-         WFJc6/4I2CunWs+BKVvgNRTOW+goTFDQxJPaPdDtiksIOCnZrYuAsKdLT1Bx1laQ2aKC
-         rpyFXyKWpynKJm4fQB/7GLIncOoxe6+5+3aHG51Ql1m/MHg5mQqXlCGBPUzGytiL7woV
-         XpkKKAWFQTZ8zT7SPqGg/qzIB1WEb+tPQhvFz4wr/wAOsysFnTJ3asbh+bDJlJvS3IXX
-         mYrqdH1y1CQS8254J0BmIq9DvF7xONiwI4h4MgVmutVCz01Vt1wKukGRAIpFhhpcdfxt
-         co/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748873759; x=1749478559;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pasRCSC32VgEjcQb416rK5+EN/XRXvQF7vBXVNk/1Wg=;
-        b=qagpenlBaF89CW6F/ltKHtBfhtNate3HKoneDeRaQCq4FiJ6erjaJV4v16zOPzAure
-         3OGPVNVd4ZrF2XV3nBVUP7zD+C+zumKF1OvvRa2M3KCv/NwQ0jzT0Uf6Rv2zBAKQlaEY
-         BYXfbmPUJ3BeTlIj/8UQHLT++0SNAnD85CEQ3Sl8AivAWCDPoME4Mf/ACylp79QatknC
-         1zOTNhk6ymcoCsYAkSfvNXjsJKLFFxgUwUeHwPVpAs2vKhEsxAQc4mi/+4pAiYwDnKZj
-         HTUN1NbOX9I1q9Jpt3YZ/cLoSeQUB0gx7nxdYX2Gl2XWIW58iBULPMYWJrqG8D6Lx3xv
-         ETMw==
-X-Forwarded-Encrypted: i=1; AJvYcCVaNLGrW+CsCA3JLCnseQ8NAHmonVAGE5OFtKOD2MIL9PBBA2mwitPzYnwt5asX0dscVinDDMURnyKWKF8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXMomE35hQnBla8MArcygtcWUluuIR7tAGbq2WNm/oxmGFterf
-	yxioc8wRHHySiUUSH0AzFxLVfyo7k9D56UP5yW0kds+I3Bo5Bu3G6avM7sSSXvxyY5c=
-X-Gm-Gg: ASbGncskDbXJfzUTstiHGagv8+HRH0k8bz1Xb/6VUDfXoSSKaAUUCYXQpQ+ZaOK85Ov
-	O5HW/pjcTTWB9svbLmdBQ4rqOiuBxxD7hm7GWesBqsxH7rYhKZo4vKcZB0tfR/hMoAzN9LWW0sd
-	tyXQJGPrTpKSEFUZUZF3EIgzG7XxoddsBPRXjvxV/bpFCBCJYNTdysDSATIxOqeGabvMsNALG8f
-	OnaCaxx7BGyX5WzAg0Hh6oXz7H5S01A1JFQavAo/42XRrCrS4TnZOMf8XsHhAUo3NvixIxB1baF
-	en4rD4vRwVGCfei9Joz4Mbox/QTThPIOc2UJuCmO5nEmG8ELVaTwOg==
-X-Google-Smtp-Source: AGHT+IGeRpd8VDsT9tzxbCNKifu8MjL161GTIQbbUw44DS6V6JSyR7z1tMRcG6paU3cdSynR/larLQ==
-X-Received: by 2002:a05:6000:2c0d:b0:3a4:e5ea:1ac0 with SMTP id ffacd0b85a97d-3a4f89a7f0bmr10299120f8f.5.1748873759286;
-        Mon, 02 Jun 2025 07:15:59 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7f8f194sm125483535e9.4.2025.06.02.07.15.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 07:15:58 -0700 (PDT)
-Date: Mon, 2 Jun 2025 16:15:56 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: syzbot <syzbot+31eb4d4e7d9bc1fc1312@syzkaller.appspotmail.com>, 
-	inwardvessel@gmail.com
-Cc: akpm@linux-foundation.org, andrii@kernel.org, ast@kernel.org, 
-	axboe@kernel.dk, bpf@vger.kernel.org, cgroups@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, hannes@cmpxchg.org, haoluo@google.com, 
-	hawk@kernel.org, john.fastabend@gmail.com, jolsa@kernel.org, josef@toxicpanda.com, 
-	kpsingh@kernel.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, martin.lau@linux.dev, mhocko@kernel.org, 
-	muchun.song@linux.dev, mykolal@fb.com, netdev@vger.kernel.org, roman.gushchin@linux.dev, 
-	sdf@fomichev.me, shakeel.butt@linux.dev, shuah@kernel.org, song@kernel.org, 
-	syzkaller-bugs@googlegroups.com, tj@kernel.org, yonghong.song@linux.dev
-Subject: Re: [syzbot] [cgroups?] general protection fault in
- __cgroup_rstat_lock
-Message-ID: <p32ytuin2hmxacacroykhtfxf6l5l7sji33dt4xknnojqm4xh2@hrldb5d6fgfj>
-References: <6751e769.050a0220.b4160.01df.GAE@google.com>
- <683c7dee.a00a0220.d8eae.0032.GAE@google.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Oa/iWQ7N";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8+YCk0Ys";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Oa/iWQ7N";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8+YCk0Ys"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id AFD5B1F796;
+	Mon,  2 Jun 2025 14:16:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1748873782; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=LoFPgLgf2vNjDyn+wUEXD6fP0MAyNKRJ8yIGa5CR5GE=;
+	b=Oa/iWQ7NN5pX2YIB6DDTvvS1G9t6AWS4miwwH3bKwl+cxWIdQo40ySphO9QhS8m8Si7V4p
+	E1VJ/r1PUQqtt2jtVwuTBtayDPOaEQOPtiCUk7GD9po6Tmxo61f57U4MIea2OiTdRABzuZ
+	Ex5oO7RyxS92IsjYv8bEHVacejOI24s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1748873782;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=LoFPgLgf2vNjDyn+wUEXD6fP0MAyNKRJ8yIGa5CR5GE=;
+	b=8+YCk0YsFBPvK2Dtxz9+gZP0yMVx/o8Lw4LvQCyzqP7wyKckqc0IDAjfBE+FBorwOZAR3m
+	OTOu0NNb4NOX6MBQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1748873782; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=LoFPgLgf2vNjDyn+wUEXD6fP0MAyNKRJ8yIGa5CR5GE=;
+	b=Oa/iWQ7NN5pX2YIB6DDTvvS1G9t6AWS4miwwH3bKwl+cxWIdQo40ySphO9QhS8m8Si7V4p
+	E1VJ/r1PUQqtt2jtVwuTBtayDPOaEQOPtiCUk7GD9po6Tmxo61f57U4MIea2OiTdRABzuZ
+	Ex5oO7RyxS92IsjYv8bEHVacejOI24s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1748873782;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=LoFPgLgf2vNjDyn+wUEXD6fP0MAyNKRJ8yIGa5CR5GE=;
+	b=8+YCk0YsFBPvK2Dtxz9+gZP0yMVx/o8Lw4LvQCyzqP7wyKckqc0IDAjfBE+FBorwOZAR3m
+	OTOu0NNb4NOX6MBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2A2AB13AE1;
+	Mon,  2 Jun 2025 14:16:22 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id KHFcBzayPWhqVAAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Mon, 02 Jun 2025 14:16:22 +0000
+From: Oscar Salvador <osalvador@suse.de>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Muchun Song <muchun.song@linux.dev>,
+	David Hildenbrand <david@redhat.com>,
+	James Houghton <jthoughton@google.com>,
+	Peter Xu <peterx@redhat.com>,
+	Gavin Guo <gavinguo@igalia.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Oscar Salvador <osalvador@suse.de>
+Subject: [RFC PATCH 0/3] Clean up locking in hugetlb faulting code
+Date: Mon,  2 Jun 2025 16:16:07 +0200
+Message-ID: <20250602141610.173698-1-osalvador@suse.de>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="kzcsf5ktx4jfm6ch"
-Content-Disposition: inline
-In-Reply-To: <683c7dee.a00a0220.d8eae.0032.GAE@google.com>
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,imap1.dmz-prg2.suse.org:helo];
+	RCVD_TLS_ALL(0.00)[]
+X-Spam-Level: 
 
+Hi all,
 
---kzcsf5ktx4jfm6ch
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [syzbot] [cgroups?] general protection fault in
- __cgroup_rstat_lock
-MIME-Version: 1.0
+This RFC is the culmination of the discussion that happened in [1].
+TLDR: No one really knew what the locks were protecting us against, and
+whether we needed them at all.
 
-On Sun, Jun 01, 2025 at 09:21:02AM -0700, syzbot <syzbot+31eb4d4e7d9bc1fc13=
-12@syzkaller.appspotmail.com> wrote:
-> syzbot suspects this issue was fixed by commit:
->=20
-> commit a97915559f5c5ff1972d678b94fd460c72a3b5f2
-> Author: JP Kobryn <inwardvessel@gmail.com>
-> Date:   Fri Apr 4 01:10:48 2025 +0000
->=20
->     cgroup: change rstat function signatures from cgroup-based to css-bas=
-ed
+Some reasearch showed that most of them were introduced in a time were
+truncation was not serialized with the mutex, as it is today, so we were
+relying on the lock for the page to not go away from the pagecache.
+More details can be find in patch#1.
 
-It says: "This non-functional change serves..."
+This is for the locks, but I also started to look at the references
+we take in hugetlb_fault and hugetlb_wp as it seems to me we are taking
+more than actually needed, but that is once we manage to sort this out.
 
-However, it moves the *_rstat_init in cgroup_create() after kernfs dir
-creation and given the reproducer has a fault injected:
-	mkdir(&(0x7f0000000000)=3D'./cgroup/file0\x00', 0xd0939199c36b4d28) (fail_=
-nth: 8)
+I ran hugetlb LTP tests and nothing screamed, and I also plan to run selftests
+later on.
 
-I'd say this might be relevant (although I don't see the possibly
-incorrect error handlnig path) but it doesn't mean this commit fixes it,
-it'd rather require the reproducer to adjust the N on this path.
+@Galvin. Could you please run your syzkaller with this patchset applied and
+see whether you can trigger something?
 
-0.02=E2=82=AC,
-Michal
+Special thanks to David and Peter Xu that were helping out with this mess.
 
---kzcsf5ktx4jfm6ch
-Content-Type: application/pgp-signature; name="signature.asc"
+[1] https://lore.kernel.org/linux-mm/aDeBUXCRLRZobHq0@localhost.localdomain/T/#md02880ebc2c679678b7f326c5e9e93992428e124
 
------BEGIN PGP SIGNATURE-----
+Oscar Salvador (3):
+  mm, hugetlb: Clean up locking in hugetlb_fault and hugetlb_wp
+  mm, hugetlb: Update comments in hugetlb_fault
+  mm, hugetlb: Drop unlikelys from hugetlb_fault
 
-iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCaD2yGgAKCRAt3Wney77B
-SVQoAQDHq+sRBr9VIovCUMvE0lKEciOvnR/BAoR4DPgcg+NOwAD9Fm1hrpnED7c+
-obYDZ0tb/tA0+9khXt2TrVelWDcc/Ao=
-=n7f7
------END PGP SIGNATURE-----
+ include/linux/hugetlb.h |  12 +++++
+ mm/hugetlb.c            | 117 +++++++++++++++++-----------------------
+ 2 files changed, 62 insertions(+), 67 deletions(-)
 
---kzcsf5ktx4jfm6ch--
+-- 
+2.49.0
+
