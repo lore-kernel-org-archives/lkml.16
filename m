@@ -1,167 +1,226 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8DED224245;
-	Mon,  2 Jun 2025 17:31:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F021CDFD4
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 17:32:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748885466; cv=none; b=UkZ1FW2xqzv/VihQh6M/FtpoQceGWRRypeHxRK6RkgvaA1qKdcHxSsOZRX+toTrX8SSqgwnntC4iEu6OmQZFuK25Pu+/UU3rTr6v0FYw4acsps/JMafuxDkML44JRMNWGkM0eEe+RKH4qTrz9C5cOOowsxq1cTLcCGdA3bm/KoA=
+	t=1748885532; cv=none; b=W50bby6pP4ey++C4Cbuy3LqnSTH7fwEDyXFhUsnLTGWsDhokM9f+VPf8QRTR7FdvbkCdS+lNCDTjy6F4dxfK0RBobKUR1izDjP+c5APhinsbJiOoOZvWmnquUasCZjKMI0krD0AjscYGQz1dWNhyFmqGmm3Q/Skks9Q7t2Y2EFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748885466; c=relaxed/simple;
-	bh=A9MilKd7v8rxKZ+GFEjZyV9ZgWub5FkEKrTwUm7LxkE=;
+	s=arc-20240116; t=1748885532; c=relaxed/simple;
+	bh=n/H1b2PqMyEkG+qgwDmF/aZaLl11RynNT9iiSDgTaFU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NzcBmVAM2/NfhSd4aOmTM+3HpRTaONC7IGHQ1U3qhmPA1fHiGyi+14FiPg2ANyrJbeFUCbRJGvw6rRNYTYFuAjfiLgbZouTAmzqJ1Hypb9/xXK0qJBcfxZeskw75lCtp1mbORRKHjPSfvtEuTyIKZG2/5T4jRy6lKL0JOunR2v0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qLIpf8R2; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=DGh6kBktYwsIwTlNuCf9tCCyI+ToRttGtFmbV/3jUgWPm0NM3toCekU+Aog0ZgZETZC6vuwXwPtPouFUF5kwLeX+nK7x6RdZl0ZW3wOAAXszzp5vbGaQyh+wQOqkZ2si5MeSoGyq7fj4h6V2Pa+gE6aI+lqqMiijAGxoxqE8TIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tiM3YzkS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qLIpf8R2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48436C4CEEE;
-	Mon,  2 Jun 2025 17:31:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tiM3YzkS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D799EC4CEF4;
+	Mon,  2 Jun 2025 17:32:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748885466;
-	bh=A9MilKd7v8rxKZ+GFEjZyV9ZgWub5FkEKrTwUm7LxkE=;
+	s=k20201202; t=1748885530;
+	bh=n/H1b2PqMyEkG+qgwDmF/aZaLl11RynNT9iiSDgTaFU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qLIpf8R2lyZSyIjUxLP00WMUHLGwAT9GGxXNTVsqahLWzrxlLkDhLbuMAmI/y2sh2
-	 IPDYn2bCJq68p3u2G3TdNETC3TzwGBZ7xDC3849wQ89INO5Rykp88+CYWVQnIpuKqZ
-	 VAkuthiNLBsnqC38VnnQMDfLOmldRND9fNn0nUXeDUiTk67omcwQP1o9xTQeIFZhWh
-	 AcaZDqRBhm2McNEIc14XwmWn0ryIUGxnTUEtDG4z7ctg+O/lg3a9NCyLTRYRr7H4Jo
-	 1HSKL0z6WfwnYDmrtoQ7/ETSl57bnAQrWGdSIgvG74xEtmLijnkqlzZ1gNnOA33Nn1
-	 EBLm6pI1Ifxnw==
-Date: Mon, 2 Jun 2025 19:31:00 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>,
-	Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] rust: irq: add support for request_irq()
-Message-ID: <aD3f1GSZJ6K-RP5r@pollux>
-References: <20250514-topics-tyr-request_irq-v3-0-d6fcc2591a88@collabora.com>
- <20250514-topics-tyr-request_irq-v3-1-d6fcc2591a88@collabora.com>
- <aCUQ0VWgoxdmIUaS@pollux>
- <aD3PCc6QREqNgBYU@google.com>
+	b=tiM3YzkSbXUuWxAtf5T3H+L4DLDjA+IX1IytB1yS59gUlHx6lI/fNd3NDZLqHLj02
+	 MskIsrJQTNJktEMpX2GGYG9uLD4hIW1uqc2DCMQk8WuntPCQ5znYec1pX6Q1pJ4Wrl
+	 tm5sUixDCru2Ypkz0RdRKRBciC8SKf2N8lfvmlxk/vkOx1+DyrD8HdcMQ4o/UNfk6g
+	 TGuRvxKHXmRDBHGNF7FFpDumaXke/eWZpR8xqTTTY5Q9O8HTYzOljdQhL1XngL5Whs
+	 wmB+pXkwINM9447mKTjlwz85nHidv5aLYrR2x0BLlauxeSn1CXvDffcrlw4VDDkANL
+	 Qx386zukwisNg==
+Date: Mon, 2 Jun 2025 10:32:08 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: "Lai, Yi" <yi1.lai@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>, yi1.lai@intel.com
+Subject: Re: [RFC/PATCH] perf/core: Use POLLHUP for a pinned event in error
+Message-ID: <aD3gGKtrww3mjiqG@google.com>
+References: <20250317061745.1777584-1-namhyung@kernel.org>
+ <aD2w50VDvGIH95Pf@ly-workstation>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aD3PCc6QREqNgBYU@google.com>
+In-Reply-To: <aD2w50VDvGIH95Pf@ly-workstation>
 
-On Mon, Jun 02, 2025 at 04:19:21PM +0000, Alice Ryhl wrote:
-> On Wed, May 14, 2025 at 11:53:21PM +0200, Danilo Krummrich wrote:
-> > On Wed, May 14, 2025 at 04:20:51PM -0300, Daniel Almeida wrote:
-> > > +/// // This is running in process context.
-> > > +/// fn register_irq(irq: u32, handler: Handler) -> Result<Arc<Registration<Handler>>> {
-> > > +///     let registration = Registration::register(irq, flags::SHARED, c_str!("my-device"), handler);
-> > > +///
-> > > +///     // You can have as many references to the registration as you want, so
-> > > +///     // multiple parts of the driver can access it.
-> > > +///     let registration = Arc::pin_init(registration, GFP_KERNEL)?;
-> > 
-> > This makes it possible to arbitrarily extend the lifetime of an IRQ
-> > registration. However, we must guarantee that the IRQ is unregistered when the
-> > corresponding device is unbound. We can't allow drivers to hold on to device
-> > resources after the corresponding device has been unbound.
-> > 
-> > Why does the data need to be part of the IRQ registration itself? Why can't we
-> > pass in an Arc<T> instance already when we register the IRQ?
-> > 
-> > This way we'd never have a reason to ever access the Registration instance
-> > itself ever again and we can easily wrap it as Devres<irq::Registration> -
-> > analogously to devm_request_irq() on the C side - without any penalties.
-> 
-> If we step away from the various Rust abstractions for a moment, then it
-> sounds like the request_irq API must follow these rules:
-> 
-> 1. Ensure that free_irq is called before the device is unbound.
-> 2. Ensure that associated data remains valid until after free_irq is
->    called.
-> 
-> We don't necessarily need to ensure that the Registration object itself
-> is dropped before the device is unbound - as long as free_irq is called
-> in time, it's okay.
-> 
-> Now, if we use Devres, the way this is enforced is that during cleanup
-> of a device, we call free_irq *and* we destroy the associated data right
-> afterwards. By also destroying the associated data at that moment, it
-> becomes necessary to use rcu_read_lock() to access the associated data.
-> But if we just don't destroy the associated data during device cleanup,
-> then that requirement goes away.
-> 
-> Based on this, we could imagine something along these lines:
-> 
->     struct RegistrationInner(i32);
->     impl Drop for RegistrationInner {
->         fn drop(&mut self) {
->             free_irq(...);
->         }
->     }
->     
->     struct Registration<T> {
->         reg: Devres<RegistrationInner>,
->         data: T,
->     }
-> 
-> Here you can access the `data` on the registration at any time without
-> synchronization.
+Hello,
 
-I was just about to reply to Daniel proposing exactly this alternative, it's
-equivalent with what I went with in the MiscDeviceRegistration patches for
-supporting the device driver use-case [1].
-
-So, I'm perfectly fine with this approach.
-
-[1] https://lore.kernel.org/lkml/20250530142447.166524-6-dakr@kernel.org/
-
+On Mon, Jun 02, 2025 at 10:10:47PM +0800, Lai, Yi wrote:
+> Hi Namhyung Kim,
 > 
-> Note that with this, I don't think the rcu-based devres is really the
-> right choice. It would make more sense to have a mutex along these
-> lines:
+> Greetings!
 > 
->     // drop Registration
->     if devm_remove_callback() {
->         free_irq();
->     } else {
->         mutex_lock();
->         free_irq();
->         mutex_unlock();
->     }
->     
->     // devm callback
->     mutex_lock();
->     free_irq();
->     mutex_unlock();
+> I used Syzkaller and found that there is WARNING: locking bug in perf_event_wakeup in linux-next next-20250530.
 > 
-> This avoids that really expensive call to synchronize_rcu() in the devm
-> callback.
+> After bisection and the first bad commit is:
+> "
+> f4b07fd62d4d perf/core: Use POLLHUP for pinned events in error
+> "
+> 
+> All detailed into can be found at:
+> https://github.com/laifryiee/syzkaller_logs/tree/main/250601_162355_perf_event_wakeup
+> Syzkaller repro code:
+> https://github.com/laifryiee/syzkaller_logs/tree/main/250601_162355_perf_event_wakeup/repro.c
+> Syzkaller repro syscall steps:
+> https://github.com/laifryiee/syzkaller_logs/tree/main/250601_162355_perf_event_wakeup/repro.prog
+> Syzkaller report:
+> https://github.com/laifryiee/syzkaller_logs/tree/main/250601_162355_perf_event_wakeup/repro.report
+> Kconfig(make olddefconfig):
+> https://github.com/laifryiee/syzkaller_logs/tree/main/250601_162355_perf_event_wakeup/kconfig_origin
+> Bisect info:
+> https://github.com/laifryiee/syzkaller_logs/tree/main/250601_162355_perf_event_wakeup/bisect_info.log
+> bzImage:
+> https://github.com/laifryiee/syzkaller_logs/raw/refs/heads/main/250601_162355_perf_event_wakeup/bzImage_next-20250530
+> Issue dmesg:
+> https://github.com/laifryiee/syzkaller_logs/blob/main/250601_162355_perf_event_wakeup/next-20250530_dmesg.log
+> 
+> "
+> [   39.913691] =============================
+> [   39.914157] [ BUG: Invalid wait context ]
+> [   39.914623] 6.15.0-next-20250530-next-2025053 #1 Not tainted
+> [   39.915271] -----------------------------
+> [   39.915731] repro/837 is trying to lock:
+> [   39.916191] ffff88801acfabd8 (&event->waitq){....}-{3:3}, at: __wake_up+0x26/0x60
+> [   39.917182] other info that might help us debug this:
+> [   39.917761] context-{5:5}
+> [   39.918079] 4 locks held by repro/837:
+> [   39.918530]  #0: ffffffff8725cd00 (rcu_read_lock){....}-{1:3}, at: __perf_event_task_sched_in+0xd1/0xbc0
+> [   39.919612]  #1: ffff88806ca3c6f8 (&cpuctx_lock){....}-{2:2}, at: __perf_event_task_sched_in+0x1a7/0xbc0
+> [   39.920748]  #2: ffff88800d91fc18 (&ctx->lock){....}-{2:2}, at: __perf_event_task_sched_in+0x1f9/0xbc0
+> [   39.921819]  #3: ffffffff8725cd00 (rcu_read_lock){....}-{1:3}, at: perf_event_wakeup+0x6c/0x470
+> [   39.922823] stack backtrace:
+> [   39.923171] CPU: 0 UID: 0 PID: 837 Comm: repro Not tainted 6.15.0-next-20250530-next-2025053 #1 PREEMPT(voluntary)
+> [   39.923196] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.o4
+> [   39.923214] Call Trace:
+> [   39.923221]  <TASK>
+> [   39.923228]  dump_stack_lvl+0xea/0x150
+> [   39.923256]  dump_stack+0x19/0x20
+> [   39.923276]  __lock_acquire+0xb22/0x22a0
+> [   39.923308]  ? x86_pmu_commit_txn+0x195/0x2b0
+> [   39.923339]  ? __lock_acquire+0x412/0x22a0
+> [   39.923375]  lock_acquire+0x170/0x310
+> [   39.923407]  ? __wake_up+0x26/0x60
+> [   39.923448]  _raw_spin_lock_irqsave+0x52/0x80
+> [   39.923473]  ? __wake_up+0x26/0x60
+> [   39.923504]  __wake_up+0x26/0x60
+> [   39.923537]  perf_event_wakeup+0x14a/0x470
+> [   39.923571]  merge_sched_in+0x846/0x15c0
+> [   39.923610]  visit_groups_merge.constprop.0.isra.0+0x952/0x1420
+> [   39.923653]  ? __pfx_visit_groups_merge.constprop.0.isra.0+0x10/0x10
+> [   39.923688]  ? sched_clock_noinstr+0x12/0x20
+> [   39.923724]  ? __sanitizer_cov_trace_const_cmp1+0x1e/0x30
+> [   39.923766]  ctx_sched_in+0x471/0xa20
+> [   39.923804]  ? __pfx_ctx_sched_in+0x10/0x10
+> [   39.923838]  ? __sanitizer_cov_trace_const_cmp4+0x1a/0x20
+> [   39.923878]  perf_event_sched_in+0x47/0xa0
+> [   39.923912]  __perf_event_task_sched_in+0x3fc/0xbc0
+> [   39.923951]  ? __pfx___perf_event_task_sched_in+0x10/0x10
+> [   39.923984]  ? __this_cpu_preempt_check+0x21/0x30
+> [   39.924012]  ? __sanitizer_cov_trace_cmp8+0x1c/0x30
+> [   39.924046]  ? xfd_validate_state+0x14f/0x1b0
+> [   39.924081]  finish_task_switch.isra.0+0x525/0x990
+> [   39.924117]  ? lock_unpin_lock+0xdc/0x170
+> [   39.924152]  __schedule+0xef3/0x3840
+> [   39.924185]  ? __pfx___schedule+0x10/0x10
+> [   39.924218]  ? ktime_get_coarse_real_ts64+0xad/0xf0
+> [   39.924259]  schedule+0xf6/0x3d0
+> [   39.924285]  exit_to_user_mode_loop+0x7a/0x110
+> [   39.924315]  do_syscall_64+0x284/0x2e0
+> [   39.924340]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [   39.924360] RIP: 0033:0x7ff14103ee5d
+> [   39.924381] Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 8
+> [   39.924400] RSP: 002b:00007fffb2745578 EFLAGS: 00000202 ORIG_RAX: 0000000000000038
+> [   39.924418] RAX: 0000000000000346 RBX: 0000000000000000 RCX: 00007ff14103ee5d
+> [   39.924431] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000082000
+> [   39.924443] RBP: 00007fffb27455c0 R08: 0000000000000000 R09: 0000000000000000
+> [   39.924456] R10: 0000000000000000 R11: 0000000000000202 R12: 00007fffb27459a8
+> [   39.924468] R13: 0000000000404e78 R14: 0000000000406e08 R15: 00007ff141389000
+> [   39.924497]  </TASK>
+> [   40.307815] coredump: 804(repro): over core_pipe_limit, skipping core dump
+> [   40.472093] coredump: 795(repro): over core_pipe_limit, skipping core dump
+> [   40.545575] coredump: 799(repro): over core_pipe_limit, skipping core dump
+> [   40.948915] coredump: 833(repro): over core_pipe_limit, skipping core dump
+> [   40.989336] coredump: 811(repro): over core_pipe_limit, skipping core dump
+> [   42.121469] coredump: 857(repro): over core_pipe_limit, skipping core dump
+> "
+> 
+> Hope this cound be insightful to you.
+> 
+> Regards,
+> Yi Lai
+> 
+> ---
+> 
+> If you don't need the following environment to reproduce the problem or if you
+> already have one reproduced environment, please ignore the following information.
+> 
+> How to reproduce:
+> git clone https://gitlab.com/xupengfe/repro_vm_env.git
+> cd repro_vm_env
+> tar -xvf repro_vm_env.tar.gz
+> cd repro_vm_env; ./start3.sh  // it needs qemu-system-x86_64 and I used v7.1.0
+>   // start3.sh will load bzImage_2241ab53cbb5cdb08a6b2d4688feb13971058f65 v6.2-rc5 kernel
+>   // You could change the bzImage_xxx as you want
+>   // Maybe you need to remove line "-drive if=pflash,format=raw,readonly=on,file=./OVMF_CODE.fd \" for different qemu version
+> You could use below command to log in, there is no password for root.
+> ssh -p 10023 root@localhost
+> 
+> After login vm(virtual machine) successfully, you could transfer reproduced
+> binary to the vm by below way, and reproduce the problem in vm:
+> gcc -pthread -o repro repro.c
+> scp -P 10023 repro root@localhost:/root/
+> 
+> Get the bzImage for target kernel:
+> Please use target kconfig and copy it to kernel_src/.config
+> make olddefconfig
+> make -jx bzImage           //x should equal or less than cpu num your pc has
+> 
+> Fill the bzImage file into above start3.sh to load the target kernel in vm.
+> 
+> 
+> Tips:
+> If you already have qemu-system-x86_64, please ignore below info.
+> If you want to install qemu v7.1.0 version:
+> git clone https://github.com/qemu/qemu.git
+> cd qemu
+> git checkout -f v7.1.0
+> mkdir build
+> cd build
+> yum install -y ninja-build.x86_64
+> yum -y install libslirp-devel.x86_64
+> ../configure --target-list=x86_64-softmmu --enable-kvm --enable-vnc --enable-gtk --enable-sdl --enable-usb-redir --enable-slirp
+> make
+> make install 
 
-This would indeed be an optimization for the special case that we never care
-about actually accessing the Revocable, i.e. where we have no need to make the
-"read" have minimal overhead.
+Thanks for the detailed instruction.  I was able to reproduce it with
+your setup.  The below patch fixes it for me.  Can you please double
+check if it works well for you?
 
-However, I think we can do even better and, at the same time, avoid this special
-case optimization and have everything be the common case with what I already
-plan on implementing:
+Thanks,
+Namhyung
 
-I want that regardless of how many devres callbacks a driver registers by having
-Devres wrapped objects around, there's only a *single* synchronize_rcu() call for
-all of them.
+---8---
 
-We can achieve this by having the devres callbacks on driver unbind in two
-stages, the first callback flips the Revocable's atomic for for all Devres
-objects, then there is a single synchronize_rcu() and then we drop_in_place()
-all the Revocable's data for all Devres objects.
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index f34c99f8ce8f446a..e22eb88eb105b95b 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -3995,7 +3995,8 @@ static int merge_sched_in(struct perf_event *event, void *data)
+ 			if (*perf_event_fasync(event))
+ 				event->pending_kill = POLL_ERR;
+ 
+-			perf_event_wakeup(event);
++			event->pending_wakeup = 1;
++			irq_work_queue(&event->pending_irq);
+ 		} else {
+ 			struct perf_cpu_pmu_context *cpc = this_cpc(event->pmu_ctx->pmu);
+ 
+-- 
+2.49.0.1204.g71687c7c1d-goog
 
-As mentioned above I plan on implementing this, but given that it's "just" a
-performance optimization for the driver unbind path and given that we're not
-very close to a production driver upstream, it haven't had the highest priority
-for me to implement so far.
