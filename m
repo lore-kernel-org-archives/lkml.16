@@ -1,197 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F69218587;
-	Mon,  2 Jun 2025 12:26:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0210E2192EC;
+	Mon,  2 Jun 2025 12:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748867212; cv=none; b=dihKPH4s51oQ+YoewLAQtTGqR4luFZ69NdPXX/8NBlxdy9yO9rLxhDMGfLx3CCtfoD2st03esaTl7ezt2OH6hXjYS8VVPHPGLb1PpgTPn93OGhFMmD9FxSO5Sud5wdI1vPLRPGU6VMjOL8r6HaNoayfMv0krSvUro/GCYjFThqk=
+	t=1748867219; cv=none; b=gocjaS3MPm/zfxkaEapXkeiITAMCdfvBaaoFsPgRH+ox+RfSkLojrPE2MLa8fxXZF5QM1E4fYSQBSoX6UaxwoDubr4em9IgEu2gOb0tLuGmHl5rZd+Sjkx6EzKNO2rR7c1s0QAXF7ioKwKHXytT67ecwn7xd1UvmA5mhuHttLFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748867212; c=relaxed/simple;
-	bh=/PZYx8ll6uh4he6w2FYjTUh7JwhdyTzmnqOqsDpEF1c=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=CbGwKlUjy/BxlDKXdPzd2HHVq5sshyEvRyHxf1ADjOyZmDKC3TZMd+WsRl9SnmsE6ixz4qE1xrhz/Lb3OpFMTIKXdFvA+kwT/gv5hDB62Bo+bjoHS9tP0QoIb18TKh+ZiM/RgeiY4EJ0nKoMFc93lIYBzHcXhdXuc9aAhe4LcxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZT58MRLZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748867219; c=relaxed/simple;
+	bh=kILwxbA4feAy6G/FB0TXOwKAYb/2jC7u5uf564QQ5yk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DwO7m3yUV8IrfJA2+jVObZxBtnjNEc/XX6UagGmVxHcl1AIXJHqCfRz8meNAG98PGnl62UxP11yeEA4B57hP2pMZdrTLciuPI/ZdUmNeN0e7rlp5/Vesu4bn5zqzsZJbEnifQVfhP8J0BRZcw+/Po9kiwljM/nyoeT+6xv7wPIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=SRKJ7gEk; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZT58MRLZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3CAEC4CEEB;
-	Mon,  2 Jun 2025 12:26:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748867211;
-	bh=/PZYx8ll6uh4he6w2FYjTUh7JwhdyTzmnqOqsDpEF1c=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=ZT58MRLZTr1mVtKnshm6AgMrlspFGPFg27qOlBAMdzS9TeLDULQCyNX1jvTzjgErv
-	 Zryn0kDVTEGp1htDcyX1h5snFqn50H8ehqJ68nhcF18JTcn1iVesNOWuPRgWnXch55
-	 v7UVOGz0fPPBRvJjXcgC62tTsHQtCdbJ+d/engsMNuw7D3wTz9lsZdSeg6G9OGHHIg
-	 a4iVgSgvyD5GqcQZbNsyhfrxNqDItX2ECEaWXp61f9z0lgo3pq1M5POI/A9tFN8Ny5
-	 FYj5sDWC+ql2pW4iwekugNciYgWv2Tt3I4AXumpFhYVDA6xwktebCf9DSdvg0VecZj
-	 cCQjU8HgXTV2w==
-Date: Mon, 02 Jun 2025 07:26:50 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="SRKJ7gEk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=DoXTw3y1WZb6kUZwfppvYhZWgShbh4hkC/pckhm4nPo=; b=SRKJ7gEkMMCxuG9Oqpzr9Bzdj2
+	zDXbd5hxeym30p6fcPMATstXSAGFqKZ3jhJm6zi0FYlu8lTqMloZTZnb0vEwJFvX+DxMD/V8aQnZp
+	s7liJX3gjUlGarj8UK7Pdi1CRVgFowN4A13msDkYIzCwkX/Yv7aEsxdXdL7PF2R2ItQw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uM4Fc-00EV7z-UN; Mon, 02 Jun 2025 14:26:48 +0200
+Date: Mon, 2 Jun 2025 14:26:48 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Christoph Stoidner <C.Stoidner@phytec.de>
+Cc: Stefan Wahren <wahrenst@gmx.net>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"upstream@lists.phytec.de" <upstream@lists.phytec.de>
+Subject: Re: [PATCH v3] arm64: dts: freescale: imx93-phycore-som: Delay the
+ phy reset by a gpio
+Message-ID: <739f93d0-4cb4-4f1a-8792-84502d4beefe@lunn.ch>
+References: <b2ea6b7f-3623-4486-82a0-cab97053a53e@gmx.net>
+ <34a4441d4b4ed8db7cac585ce93ec2357738cc11.camel@phytec.de>
+ <7f6d7199-0a20-4370-a8b0-1d05326af052@gmx.net>
+ <bf0eb48fc72f4b0abbf62077c2f1fe4438579746.camel@phytec.de>
+ <967484d9-4165-4b75-bbb7-a203c36e8beb@gmx.net>
+ <517be266ebc3b55da53372a76a139245f8945cd8.camel@phytec.de>
+ <5afa6d62-4a3f-4c28-8165-363075ac36d8@lunn.ch>
+ <a948b903766a82897e5fc17a840ab40e29f5eda4.camel@phytec.de>
+ <8e448625-b4ad-4bf1-8930-6fecdedb1d8d@lunn.ch>
+ <78ec24d09d129d52d3442f6319cf1ef5b6ce7f3d.camel@phytec.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Rajendra Nayak <quic_rjendra@quicinc.com>, 
- Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-To: Konrad Dybcio <konradybcio@kernel.org>
-In-Reply-To: <20250531-topic-venus_opp_arm64-v1-0-54c6c417839f@oss.qualcomm.com>
-References: <20250531-topic-venus_opp_arm64-v1-0-54c6c417839f@oss.qualcomm.com>
-Message-Id: <174886710496.952780.2272262350593905866.robh@kernel.org>
-Subject: Re: [PATCH 0/5] Add missing OPP tables for Venus on qcom/arm64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <78ec24d09d129d52d3442f6319cf1ef5b6ce7f3d.camel@phytec.de>
 
-
-On Sat, 31 May 2025 14:27:18 +0200, Konrad Dybcio wrote:
-> Sparked by <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
+> > I agree it is long enough, but i'm also surprised how slow the kernel
+> > was. Are you using a fixed IP address, or dhcp?
 > 
-> No external dependencies
+> I use a fixed IP address.
 > 
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> ---
-> Konrad Dybcio (5):
->       arm64: dts: qcom: msm8916: Add Venus OPP table
->       arm64: dts: qcom: msm8996: Add Venus OPP table
->       arm64: dts: qcom: msm8998: Add Venus OPP table
->       arm64: dts: qcom: sdm630: Add Venus OPP table
->       arm64: dts: qcom: sdm845: Fix Venus OPP entries
-> 
->  arch/arm64/boot/dts/qcom/msm8916.dtsi | 20 ++++++++++++++++++
->  arch/arm64/boot/dts/qcom/msm8996.dtsi | 39 ++++++++++++++++++++++++++++-------
->  arch/arm64/boot/dts/qcom/msm8998.dtsi | 30 +++++++++++++++++++++++++++
->  arch/arm64/boot/dts/qcom/sdm630.dtsi  | 35 +++++++++++++++++++++++++++++++
->  arch/arm64/boot/dts/qcom/sdm845.dtsi  | 24 ++++++++++-----------
->  5 files changed, 128 insertions(+), 20 deletions(-)
-> ---
-> base-commit: 2a628f951ed54c30a232230b5b58349d2a8dbb11
-> change-id: 20250531-topic-venus_opp_arm64-378e98bf6071
-> 
-> Best regards,
-> --
-> Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> 
-> 
-> 
+> But isn't the bringup of ethernet+phy interface one of the last things
+> that happens during the kernel boot-up?
 
+Mounting the rootfs is somewhat towards the end of the core
+kernel. But if you have an initramfs, there can be modules loaded both
+before and afterwards, and once the rootfs has been mounted, yet more
+modules can be loaded.
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
+> However, what timing would you expect?
 
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
+I've seen interfaces configured up from deep within
+register_netdev(). I don't remember the exact configuration, but i
+thought it was NFS root. It might be in combination with initramfs. If
+you have the Ethernet driver as a module in the initramfs, and are
+using the "rootwait" option, it could be that you are already past the
+point it would first mount the rootfs, and with every new device
+popping into existence it is trying to see if the just created device
+allows it to do the mount. At that point, register_netdev() is going
+to trigger actions.
 
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-This patch series was applied (using b4) to base:
- Base: using specified base-commit 2a628f951ed54c30a232230b5b58349d2a8dbb11
-
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250531-topic-venus_opp_arm64-v1-0-54c6c417839f@oss.qualcomm.com:
-
-arch/arm64/boot/dts/qcom/msm8916-samsung-a5u-eur.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-samsung-j3ltetw.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/apq8096-ifc6640.dtb: video-codec@c00000 (qcom,msm8996-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8996-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-motorola-surnia.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-wingtech-wt88047.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-thwc-ufi001c.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-motorola-osprey.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-motorola-harpia.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-samsung-e5.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-samsung-rossa.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/apq8016-sbc-d3-camera-mezzanine.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dtb: video-codec@cc00000 (qcom,msm8998-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8996-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-samsung-grandmax.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-alcatel-idol347.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-samsung-e7.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/apq8096-db820c.dtb: video-codec@c00000 (qcom,msm8996-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8996-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-yiming-uz801v3.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-samsung-j5.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8996-xiaomi-gemini.dtb: video-codec@c00000 (qcom,msm8996-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8996-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-samsung-gprimeltecan.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8996-oneplus3t.dtb: video-codec@c00000 (qcom,msm8996-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8996-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-longcheer-l8910.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-lg-c50.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-samsung-grandprimelte.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-samsung-j5x.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-samsung-gt58.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/apq8016-sbc.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8996pro-xiaomi-natrium.dtb: video-codec@c00000 (qcom,msm8996-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8996-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8996pro-xiaomi-scorpio.dtb: video-codec@c00000 (qcom,msm8996-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8996-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-samsung-serranove.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-lg-m216.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8996-oneplus3.dtb: video-codec@c00000 (qcom,msm8996-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8996-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-asus-z00l.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-thwc-uf896.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-samsung-gt510.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-huawei-g7.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-wingtech-wt86518.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-gplus-fl8005a.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-wingtech-wt86528.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8916-acer-a1-724.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-arch/arm64/boot/dts/qcom/msm8216-samsung-fortuna3g.dtb: video-codec@1d00000 (qcom,msm8916-venus): Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#
-
-
-
-
-
+	Andrew
