@@ -1,160 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E6F21C171;
-	Mon,  2 Jun 2025 13:06:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C8C822424C;
+	Mon,  2 Jun 2025 13:06:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748869609; cv=none; b=oXBnYQtVO1yUtRyFKB4HaCnaM6VhQLcNmJWa3GHUiiFLwRNqZKM1pALbb/Pi9Jn9lKJeozoz9huYxnsOXuCBuwbtTCrldCQTe/z1oNk2ULC749Qw6H5LMFOVYnXmbEDS8bHKV5Wfy8FdOtgq+PIy7dQVoakMS8mDpopSR2eehOo=
+	t=1748869611; cv=none; b=TmOrdkypOKYbEfkS76XzfLTJEzxsbsv7uom/TX28NAo47q62UnJKDIz2qf26Uz+HVRwoZc+6wLYwe1FpWoUJA61Q83TFraafDJkXaCv8/cR6jtUjlF8Zrai3k4mN0LY5HzuIxZvcJMANa67bMwyLA3vacAzSazvT5MDq/O+2Pts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748869609; c=relaxed/simple;
-	bh=4W5iJT4qvv4gvMCawcbl0T+06lxem7eK5CvC/5B+TB4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Ca0GwhgPXuNZH3crDNTJ9/xHn5mj0O+qQK3lntMVQDP8CsWlVtu76LeMXSRzY32LAaoLB+UfkxsGjcZDMajFY9fPllcCB1zQ//FwJjdPQ940nrotx80kQa4JOqsgxHt561vEwWxwIuX1Krl39KigJoImPCB+eVSfLUKnpiGlYAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TawVPv/t; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748869611; c=relaxed/simple;
+	bh=ADbnYsa65bvXTe9eG8sDy/Kp7GEJDwl9jGtzi10wXjs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p83JmR9I0S+6LEp6GYd7V2LeQPMLbFSdqO4IfclvAE2jZ4z7KE+M1h7u6bl9HC6cb/0GBHYyr++6PZubbidN8voGKcmrbAVBm1IqCcauPvXp9kflo1HT04Qc75tKlRc8cufJnPcfP3qkOKgEn32EFeTuZPFdEg15hmTEuZNyEf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qGOPujj8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TawVPv/t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 324FBC4CEEB;
-	Mon,  2 Jun 2025 13:06:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qGOPujj8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E786FC4CEF3;
+	Mon,  2 Jun 2025 13:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748869608;
-	bh=4W5iJT4qvv4gvMCawcbl0T+06lxem7eK5CvC/5B+TB4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=TawVPv/tvXjNYu/rpoIY0xKb56cIrEzo/Xi15r9UhZm6ST7F8uZRggpBglucfv0OU
-	 fsHecQy2i+3R6StrqiyZ6+WbK1fBuyOOfDjuRY+qZdGcuTMpMU4V3iBvt8C7YOe9Fk
-	 AeANcDJVE2xFX5rVcndQarTYonhfBLoOLXf16W5fpWDJYWAdrVcH/jUkt/x4gjBZ3H
-	 8eqmpd4LBkQa2/ePs8uEuA7RgwViEilepLeNbKnD3qSfjvAj/4Bu32knsaAXXkmcNd
-	 64KU6I9drm5O9owkC0XB56VL5w4W7x2IWVrg/7h3WWu9rhR8qXoNZIaQy1nzyYO7gm
-	 5pbeIcOww2Sxg==
-X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Xu Yilun <yilun.xu@linux.intel.com>, kvm@vger.kernel.org,
-	sumit.semwal@linaro.org, christian.koenig@amd.com,
-	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
-	jgg@nvidia.com, dan.j.williams@intel.com, aik@amd.com,
-	linux-coco@lists.linux.dev
-Cc: dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org, vivek.kasireddy@intel.com,
-	yilun.xu@intel.com, yilun.xu@linux.intel.com,
-	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
-	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
-	zhenzhong.duan@intel.com, tao1.su@intel.com,
-	linux-pci@vger.kernel.org, zhiw@nvidia.com, simona.vetter@ffwll.ch,
-	shameerali.kolothum.thodi@huawei.com, iommu@lists.linux.dev,
-	kevin.tian@intel.com
-Subject: Re: [RFC PATCH 27/30] PCI/TSM: Add PCI driver callbacks to handle
- TSM requirements
-In-Reply-To: <20250529053513.1592088-28-yilun.xu@linux.intel.com>
-References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
- <20250529053513.1592088-28-yilun.xu@linux.intel.com>
-Date: Mon, 02 Jun 2025 18:36:37 +0530
-Message-ID: <yq5att4yjns2.fsf@kernel.org>
+	s=k20201202; t=1748869611;
+	bh=ADbnYsa65bvXTe9eG8sDy/Kp7GEJDwl9jGtzi10wXjs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=qGOPujj8rbuPfdNJjqeofvAKW6x8xdVNIfLO5ycjZLdaMWmEhIz8o+nvSr+l7s25g
+	 6hb+YZmasJf99KJ42h3KvLU1wQYcdPFmPRgETB4gaoOVsdhL00v+tNS05gtWBYL2DG
+	 zkhYQX7oc5gB7u+yktAOcgRVhFFrjOj1ByZxiwmCOxxf7IztLpAOqC/iq4YuvXmUY8
+	 UiymrO/+O0QxpJV10OT54V6bagM5CiqsioXsiVjF18n6ffgOa2peyU1xSYldeotI5a
+	 V9Z+SDA7rjVmwJZ8zIxOWRLNf/0WsAYHcdzbCBUDVSqdB3Hqo73wxqCWTOyAHTD4Qb
+	 cq/UMDxcuxHyA==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Lucas De Marchi <lucas.de.marchi@gmail.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	linux-modules@vger.kernel.org
+Subject: [PATCH] kbuild: stop module name mangling
+Date: Mon,  2 Jun 2025 22:06:02 +0900
+Message-ID: <20250602130609.402581-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Xu Yilun <yilun.xu@linux.intel.com> writes:
+In the old days, KBUILD_MODNAME was passed to C without double quotes,
+and then handled by __stringify() on the C side. This was the reason
+why KBUILD_MODNAME was mangled: characters such as commas (,) and
+hyphens (-) are not allowed in C identifiers, so they were replaced
+with underscores (_) in Kbuild.
 
-> Add optional PCI driver callbacks to notify TSM events. For now, these
-> handlers may be called during pci_tsm_unbind(). By calling these
-> handlers, TSM driver askes for external collaboration to finish entire
-> TSM unbind flow.
->
-> If platform TSM driver could finish TSM bind/unbind all by itself, don't
-> call these handlers.
->
-> Host may need to configure various system components according to
-> platform trusted firmware's requirements. E.g. for Intel TDX Connect,
-> host should do private MMIO mapping in S-EPT, trusted DMA setup, device
-> ownership claiming and device TDISP state transition. Some operations are
-> out of control of PCI TSM, so need collaboration by external components
-> like IOMMU driver, KVM.
->
-> Further more, trusted firmware may enforce executing these operations
-> in a fixed sequence. E.g. Intel TDX Connect enforces the following
-> sequences for TSM unbind:
->
->   1. STOP TDI via TDISP message STOP_INTERFACE
->   2. Private MMIO unmap from Secure EPT
->   3. Trusted Device Context Table cleanup for the TDI
->   4. TDI ownership reclaim and metadata free
->
-> PCI TSM could do Step 1 and 4, but need KVM for Step 2 and IOMMU driver
-> for Step 3. While it is possible TSM provides finer grained APIs like
-> tdi_stop() & tdi_free(), and the caller ensures the sequence, it is
-> better these specific enforcement could be managed in platform TSM
-> driver. By introducing TSM handlers, platform TSM driver controls the
-> operation sequence and notify other components to do the real work.
->
-> Currently add 3 callbacks for TDX Connect. disable_mmio() is for
-> VFIO to invalidate MMIO so that KVM could unmap them from S-EPT.
-> recover_mmio() is to re-validate MMIO so that KVM could map them
-> again for shared assigned device. disable_trusted_dma() is to cleanup
-> trusted IOMMU setup.
->
-> Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
-> ---
->  include/linux/pci-tsm.h | 7 +++++++
->  include/linux/pci.h     | 3 +++
->  2 files changed, 10 insertions(+)
->
-> diff --git a/include/linux/pci-tsm.h b/include/linux/pci-tsm.h
-> index 737767f8a9c5..ed549724eb5b 100644
-> --- a/include/linux/pci-tsm.h
-> +++ b/include/linux/pci-tsm.h
-> @@ -157,6 +157,13 @@ struct pci_tsm_ops {
->  	int (*accept)(struct pci_dev *pdev);
->  };
->  
-> +/* pci drivers callbacks for TSM */
-> +struct pci_tsm_handlers {
-> +	void (*disable_mmio)(struct pci_dev *dev);
-> +	void (*recover_mmio)(struct pci_dev *dev);
-> +	void (*disable_trusted_dma)(struct pci_dev *dev);
-> +};
-> +
->  enum pci_doe_proto {
->  	PCI_DOE_PROTO_CMA = 1,
->  	PCI_DOE_PROTO_SSESSION = 2,
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 5f37957da18f..4f768b4658e8 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -545,6 +545,7 @@ struct pci_dev {
->  #endif
->  #ifdef CONFIG_PCI_TSM
->  	struct pci_tsm *tsm;		/* TSM operation state */
-> +	void *trusted_dma_owner;
->  #endif
->  	u16		acs_cap;	/* ACS Capability offset */
->  	u8		supported_speeds; /* Supported Link Speeds Vector */
-> @@ -957,6 +958,7 @@ struct module;
->   * @sriov_get_vf_total_msix: PF driver callback to get the total number of
->   *              MSI-X vectors available for distribution to the VFs.
->   * @err_handler: See Documentation/PCI/pci-error-recovery.rst
-> + * @tsm_handler: Optional driver callbacks to handle TSM requirements.
->   * @groups:	Sysfs attribute groups.
->   * @dev_groups: Attributes attached to the device that will be
->   *              created once it is bound to the driver.
-> @@ -982,6 +984,7 @@ struct pci_driver {
->  	int  (*sriov_set_msix_vec_count)(struct pci_dev *vf, int msix_vec_count); /* On PF */
->  	u32  (*sriov_get_vf_total_msix)(struct pci_dev *pf);
->  	const struct pci_error_handlers *err_handler;
-> +	struct pci_tsm_handlers *tsm_handler;
->  	const struct attribute_group **groups;
->  	const struct attribute_group **dev_groups;
->  	struct device_driver	driver;
-> -- 
-> 2.25.1
+Since commit f83b5e323f57 ("kbuild: set correct KBUILD_MODNAME when
+using well known kernel symbols as module names"), KBUILD_MODNAME has
+been passed to C as a string literal, which allows any characters.
 
-It looks like the TSM feature is currently interacting with several
-components: struct pci_driver, VFIO, iommufd, and pci_tsm_ops.
+Aside from this historical behavior in the build system, there is no
+longer a reason for mangling. In fact, it is rather annoying, as we
+now need to convert between hyphens and underscores in some places,
+but not in others. See commit 0267cbf297bf ("module: Account for the
+build time module name mangling").
 
-Should we consider limiting this scattering? Would it make sense to
-encapsulate this logic within pci_tsm_ops?
+This commit eliminates that oddity, so the module name will now match
+the filename. For example, the module name of "foo-bar.ko" will be
+"foo-bar", not "foo_bar".
 
--aneesh
+However, this oddity persisted for so long and also affected the
+userspace. To adapt to this behavior, when a user runs "rmmod foo-bar",
+kmod converts hyphens to underscores, and passes "foo_bar" to the
+delete_module syscall.
+
+Therefore, the mod_strncmp() needs to remain in find_module_all(),
+otherwise, we cannot unload modules.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ kernel/module/main.c | 8 ++++++--
+ scripts/Makefile.lib | 4 ++--
+ 2 files changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index b8440b0887e3..1fa90a95e0c5 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -410,7 +410,11 @@ struct module *find_module_all(const char *name, size_t len,
+ 				lockdep_is_held(&module_mutex)) {
+ 		if (!even_unformed && mod->state == MODULE_STATE_UNFORMED)
+ 			continue;
+-		if (strlen(mod->name) == len && !memcmp(mod->name, name, len))
++		/*
++		 * For historical reasons, kmod passes a module name with
++		 * a hyphen replaced with an underscore.
++		 */
++		if (!mod_strncmp(mod->name, name, len))
+ 			return mod;
+ 	}
+ 	return NULL;
+@@ -1135,7 +1139,7 @@ static bool module_match(const char *modname, const char *patterns)
+ 		if (*sep)
+ 			sep++;
+ 
+-		if (mod_strncmp(patterns, modname, len) == 0 && (glob || len == modlen))
++		if (strncmp(patterns, modname, len) == 0 && (glob || len == modlen))
+ 			return true;
+ 	}
+ 
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 336fb0d763c7..e37e2db5f528 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -18,8 +18,8 @@ target-stem = $(basename $(patsubst $(obj)/%,%,$@))
+ # end up in (or would, if it gets compiled in)
+ name-fix-token = $(subst $(comma),_,$(subst -,_,$1))
+ name-fix = $(call stringify,$(call name-fix-token,$1))
+-basename_flags = -DKBUILD_BASENAME=$(call name-fix,$(basetarget))
+-modname_flags  = -DKBUILD_MODNAME=$(call name-fix,$(modname)) \
++basename_flags = -DKBUILD_BASENAME=$(call stringify,$(basetarget))
++modname_flags  = -DKBUILD_MODNAME=$(call stringify,$(modname)) \
+ 		 -D__KBUILD_MODNAME=kmod_$(call name-fix-token,$(modname))
+ modfile_flags  = -DKBUILD_MODFILE=$(call stringify,$(modfile))
+ 
+-- 
+2.43.0
+
