@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3ED31E9915;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A69E1EE02F;
 	Mon,  2 Jun 2025 09:53:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748858006; cv=none; b=ard/vRBuOC92fUQFdTb/rp98/0DRrHK1EX+m7Uw0npq/xpfupLYVoBUZd0Jw0L7Gk06NWo7YbXcOI9fhqeS5xJxsrcsF9ygL8kDLBQK6hYW0Yc0uj3CV3aM7pCuLXBOJC6K9iP+M7y1WJxxh0HgseKjhrvYFDlAiaCVP7H5/5uo=
+	t=1748858006; cv=none; b=B5iL9RK0hni3flrRddkhcA08+DeRpNpUtmq2pF08Qxa2fzpO0NN+RTbW8bJd8RwKkpMKnrwMACAUv9F+Kf5KJYI7G7Awzzbycc+XwXKcvUJ7c1wIpANd/BYr5TNFbpdXGw9b0z9TeYvrUq9GcbZ8kKyVgK4c1kyYYUbwoWBfrQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748858006; c=relaxed/simple;
-	bh=o9XnE86p7e/+vKba6ZL/A7DxDymIWvcFNdXSEZJcqKI=;
+	bh=YW0aYGk44OBGXMXwnXBPhhKQgB+lh/nINEBWmVaTupA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=uaWX5lVOqrl5wdzhs9at5LI2SuwE4zgThMB1mPfkUUcXnhKSzYxkIXdizrZSclZEP9zz+Yg/8mJ9/7GlU4xOglzdXBFXvBOhdJqkK+538FuIFFL6q/GGlScgS9xgkdxqvyXl5cy6XXchwvhSYd643pYQJd0ItARPoNNk7s2Wjlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UTDSKe4L; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=nSvbY4074TBWqToP9tWk1y643SLKmmORv5hoY1r/Y0URR9CdWT3W8qy08WLmwXyL9nhzkqJvjq5wRdoCryccEitSrJrax5VqRUsUtADDawNXf1D+2jtXmMfj+dN9hjnro3alnyCeTYzmrUK6WQxZ2soZ6sojYPpC9jKeUU8bkPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h7covpRT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UTDSKe4L"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6EC04C4CEF8;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h7covpRT"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 871FCC4AF0B;
 	Mon,  2 Jun 2025 09:53:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1748858005;
-	bh=o9XnE86p7e/+vKba6ZL/A7DxDymIWvcFNdXSEZJcqKI=;
+	bh=YW0aYGk44OBGXMXwnXBPhhKQgB+lh/nINEBWmVaTupA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=UTDSKe4LpdTDKea9JoNcDm4H46IeMtz+MP9+TYqG1+V2G813bAp68kBIGOz3rFe7i
-	 Q+gOOjFu1Vj3gg81C8eHyd5bWZrvVItlVvEt/092pek/orjWNVXhwtLlaMBX22mMoo
-	 9X9uIaAnkvHWcbvYNhrs28fcm0jtYgUOucxEDqbVQHjzIxLtz4rIH46d4zRluiL99W
-	 77USKPLCqER2nJQKVf3yOC5mg0MSxh5KfWRJlk7Gz5czjnNOotFcE+KWUkgQrhscrH
-	 IRPfOqp+mZkwFm7VunvTfYeGIEmHOO3YlKaFJVTxQ2bpZdWT8WuhR2eFilt4HF+9JK
-	 q405S7yHiFB0A==
+	b=h7covpRTh3TWctaSOHielhkRdC+O2qJwj1qh7JPnZTo7i1QKzENJBzN8rueMHgUJp
+	 6EZfL15aKWwLCEmDN2RsbsTgCHN3XJjKLl+l5QpzxooUpzIkV31Q5KBEhSob6HlJ9I
+	 D54LDGcf7vy/AoN9XnXzTahHDUxRE5tU8DXy82A44psLmwZtfM+7ve85lbMauo4WBY
+	 MEhf3FKqWn2t7dMeatvyVFtnRYq0RkITSXd1SJE/e0YBkAJaeCHbW61qAj7npGkGFS
+	 P2uryx7vqSf2oWgh+Afek/yj4pB+cIVYthJ66bMtkrx0V3Nh4SiPcS5vVQ3gk4nmZz
+	 0tOI0tGRhnrWg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62106C54FB3;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D973C61CE5;
 	Mon,  2 Jun 2025 09:53:25 +0000 (UTC)
 From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
-Date: Mon, 02 Jun 2025 13:53:15 +0400
-Subject: [PATCH v3 3/5] net: phy: qcom: at803x: Add Qualcomm IPQ5018
- Internal PHY support
+Date: Mon, 02 Jun 2025 13:53:17 +0400
+Subject: [PATCH v3 5/5] arm64: dts: qcom: ipq5018: Add GE PHY to internal
+ mdio bus
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250602-ipq5018-ge-phy-v3-3-421337a031b2@outlook.com>
+Message-Id: <20250602-ipq5018-ge-phy-v3-5-421337a031b2@outlook.com>
 References: <20250602-ipq5018-ge-phy-v3-0-421337a031b2@outlook.com>
 In-Reply-To: <20250602-ipq5018-ge-phy-v3-0-421337a031b2@outlook.com>
 To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
@@ -57,13 +57,14 @@ To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
  Stephen Boyd <sboyd@kernel.org>
 Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linux-clk@vger.kernel.org, George Moussalem <george.moussalem@outlook.com>
+ linux-clk@vger.kernel.org, George Moussalem <george.moussalem@outlook.com>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748858002; l=10020;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748858002; l=2285;
  i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
- bh=fAqFmmrHS9SwsM+fagAKrdxW+B0gISXJNK2eufuTxAE=;
- b=1jEHfObbPpTzD9u2xb3aLh2JCIWIEBj6p3owC+sbqV/tBUJSxEBUkZ3yujhZbZkD6f3o7dzsg
- BY7hczqevTIB/gueIq+n2Xh/P23r4LsgsUzmTaLfq5poRWQdJWsFCfN
+ bh=hFpy0osU/0n+A52muRC0D3Drst6JCZAX5hmtJZDrLks=;
+ b=N49n6bXKezFjPN5GJPRT+nh05uSgQVNbY4Dz+Qo7xmhVhq7Ajjuu+u12p/VRDTiYU3yFSOF0D
+ B9lgYJLAsIHDStM+rLG60GYWVlZU1VyEHjd0n5g4WNRwnLHpOP+cxJ+
 X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
  pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
 X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
@@ -73,278 +74,81 @@ Reply-To: george.moussalem@outlook.com
 
 From: George Moussalem <george.moussalem@outlook.com>
 
-The IPQ5018 SoC contains a single internal Gigabit Ethernet PHY which
-provides an MDI interface directly to an RJ45 connector or an external
-switch over a PHY to PHY link.
+The IPQ5018 SoC contains an internal GE PHY, always at phy address 7.
+As such, let's add the GE PHY node to the SoC dtsi.
 
-The PHY supports 10/100/1000 mbps link modes, CDT, auto-negotiation and
-802.3az EEE.
+The LDO controller found in the SoC must be enabled to provide constant
+low voltages to the PHY. The mdio-ipq4019 driver already has support
+for this, so adding the appropriate TCSR register offset.
 
-Let's add support for this PHY in the at803x driver as it falls within
-the Qualcomm Atheros OUI.
+In addition, the GE PHY outputs both the RX and TX clocks to the GCC
+which gate controls them and routes them back to the PHY itself.
+So let's create two DT fixed clocks and register them in the GCC node.
 
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 Signed-off-by: George Moussalem <george.moussalem@outlook.com>
 ---
- drivers/net/phy/qcom/Kconfig  |   2 +-
- drivers/net/phy/qcom/at803x.c | 185 ++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 178 insertions(+), 9 deletions(-)
+ arch/arm64/boot/dts/qcom/ipq5018.dtsi | 26 +++++++++++++++++++++++---
+ 1 file changed, 23 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/phy/qcom/Kconfig b/drivers/net/phy/qcom/Kconfig
-index 570626cc8e14d3e6615f74a6377f0f7c9f723e89..84239e08a8dfa466b0a7b2a5ec724a168b692cd2 100644
---- a/drivers/net/phy/qcom/Kconfig
-+++ b/drivers/net/phy/qcom/Kconfig
-@@ -7,7 +7,7 @@ config AT803X_PHY
- 	select QCOM_NET_PHYLIB
- 	depends on REGULATOR
- 	help
--	  Currently supports the AR8030, AR8031, AR8033, AR8035 model
-+	  Currently supports the AR8030, AR8031, AR8033, AR8035, IPQ5018 model
+diff --git a/arch/arm64/boot/dts/qcom/ipq5018.dtsi b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+index 03ebc3e305b267c98a034c41ce47a39269afce75..d47ad62b01991fafa51e7082bd1fcf6670d9b0bc 100644
+--- a/arch/arm64/boot/dts/qcom/ipq5018.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+@@ -16,6 +16,18 @@ / {
+ 	#size-cells = <2>;
  
- config QCA83XX_PHY
- 	tristate "Qualcomm Atheros QCA833x PHYs"
-diff --git a/drivers/net/phy/qcom/at803x.c b/drivers/net/phy/qcom/at803x.c
-index 26350b962890b0321153d74758b13d817407d094..c148e245b5391c5da374ace8609dcdfd8284732d 100644
---- a/drivers/net/phy/qcom/at803x.c
-+++ b/drivers/net/phy/qcom/at803x.c
-@@ -7,19 +7,24 @@
-  * Author: Matus Ujhelyi <ujhelyi.m@gmail.com>
-  */
+ 	clocks {
++		gephy_rx_clk: gephy-rx-clk {
++			compatible = "fixed-clock";
++			clock-frequency = <125000000>;
++			#clock-cells = <0>;
++		};
++
++		gephy_tx_clk: gephy-tx-clk {
++			compatible = "fixed-clock";
++			clock-frequency = <125000000>;
++			#clock-cells = <0>;
++		};
++
+ 		sleep_clk: sleep-clk {
+ 			compatible = "fixed-clock";
+ 			#clock-cells = <0>;
+@@ -184,7 +196,8 @@ pcie0_phy: phy@86000 {
  
--#include <linux/phy.h>
--#include <linux/module.h>
--#include <linux/string.h>
--#include <linux/netdevice.h>
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
- #include <linux/etherdevice.h>
- #include <linux/ethtool_netlink.h>
--#include <linux/bitfield.h>
--#include <linux/regulator/of_regulator.h>
--#include <linux/regulator/driver.h>
--#include <linux/regulator/consumer.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/netdevice.h>
- #include <linux/of.h>
-+#include <linux/phy.h>
- #include <linux/phylink.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/of_regulator.h>
-+#include <linux/reset.h>
- #include <linux/sfp.h>
-+#include <linux/string.h>
- #include <dt-bindings/net/qca-ar803x.h>
+ 		mdio0: mdio@88000 {
+ 			compatible = "qcom,ipq5018-mdio";
+-			reg = <0x00088000 0x64>;
++			reg = <0x00088000 0x64>,
++			      <0x019475c4 0x4>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
  
- #include "qcom.h"
-@@ -96,6 +101,8 @@
- #define ATH8035_PHY_ID				0x004dd072
- #define AT8030_PHY_ID_MASK			0xffffffef
+@@ -192,6 +205,13 @@ mdio0: mdio@88000 {
+ 			clock-names = "gcc_mdio_ahb_clk";
  
-+#define IPQ5018_PHY_ID				0x004dd0c0
+ 			status = "disabled";
 +
- #define QCA9561_PHY_ID				0x004dd042
++			ge_phy: ethernet-phy@7 {
++				compatible = "ethernet-phy-id004d.d0c0";
++				reg = <7>;
++
++				resets = <&gcc GCC_GEPHY_MISC_ARES>;
++			};
+ 		};
  
- #define AT803X_PAGE_FIBER			0
-@@ -108,6 +115,50 @@
- /* disable hibernation mode */
- #define AT803X_DISABLE_HIBERNATION_MODE		BIT(2)
- 
-+#define IPQ5018_PHY_FIFO_CONTROL		0x19
-+#define IPQ5018_PHY_FIFO_RESET			GENMASK(1, 0)
-+
-+#define IPQ5018_PHY_DEBUG_EDAC			0x4380
-+#define IPQ5018_PHY_MMD1_MDAC			0x8100
-+#define IPQ5018_PHY_DAC_MASK			GENMASK(15, 8)
-+
-+/* MDAC and EDAC values for short cable length */
-+#define IPQ5018_PHY_DEBUG_EDAC_VAL		0x10
-+#define IPQ5018_PHY_MMD1_MDAC_VAL		0x10
-+
-+#define IPQ5018_PHY_MMD1_MSE_THRESH1		0x1000
-+#define IPQ5018_PHY_MMD1_MSE_THRESH2		0x1001
-+#define IPQ5018_PHY_PCS_AZ_CTRL1		0x8008
-+#define IPQ5018_PHY_PCS_AZ_CTRL2		0x8009
-+#define IPQ5018_PHY_PCS_CDT_THRESH_CTRL3	0x8074
-+#define IPQ5018_PHY_PCS_CDT_THRESH_CTRL4	0x8075
-+#define IPQ5018_PHY_PCS_CDT_THRESH_CTRL5	0x8076
-+#define IPQ5018_PHY_PCS_CDT_THRESH_CTRL6	0x8077
-+#define IPQ5018_PHY_PCS_CDT_THRESH_CTRL7	0x8078
-+#define IPQ5018_PHY_PCS_CDT_THRESH_CTRL9	0x807a
-+#define IPQ5018_PHY_PCS_CDT_THRESH_CTRL13	0x807e
-+#define IPQ5018_PHY_PCS_CDT_THRESH_CTRL14	0x807f
-+
-+#define IPQ5018_PHY_MMD1_MSE_THRESH1_VAL	0xf1
-+#define IPQ5018_PHY_MMD1_MSE_THRESH2_VAL	0x1f6
-+#define IPQ5018_PHY_PCS_AZ_CTRL1_VAL		0x7880
-+#define IPQ5018_PHY_PCS_AZ_CTRL2_VAL		0xc8
-+#define IPQ5018_PHY_PCS_CDT_THRESH_CTRL3_VAL	0xc040
-+#define IPQ5018_PHY_PCS_CDT_THRESH_CTRL4_VAL	0xa060
-+#define IPQ5018_PHY_PCS_CDT_THRESH_CTRL5_VAL	0xc040
-+#define IPQ5018_PHY_PCS_CDT_THRESH_CTRL6_VAL	0xa060
-+#define IPQ5018_PHY_PCS_CDT_THRESH_CTRL7_VAL	0xc24c
-+#define IPQ5018_PHY_PCS_CDT_THRESH_CTRL9_VAL	0xc060
-+#define IPQ5018_PHY_PCS_CDT_THRESH_CTRL13_VAL	0xb060
-+#define IPQ5018_PHY_PCS_NEAR_ECHO_THRESH_VAL	0x90b0
-+
-+#define IPQ5018_PHY_DEBUG_ANA_LDO_EFUSE		0x1
-+#define IPQ5018_PHY_DEBUG_ANA_LDO_EFUSE_MASK	GENMASK(7, 4)
-+#define IPQ5018_PHY_DEBUG_ANA_LDO_EFUSE_DEFAULT	0x50
-+#define IPQ5018_PHY_DEBUG_ANA_DAC_FILTER	0xa080
-+
-+#define IPQ5018_TCSR_ETH_LDO_READY		BIT(0)
-+
- MODULE_DESCRIPTION("Qualcomm Atheros AR803x PHY driver");
- MODULE_AUTHOR("Matus Ujhelyi");
- MODULE_LICENSE("GPL");
-@@ -133,6 +184,11 @@ struct at803x_context {
- 	u16 led_control;
- };
- 
-+struct ipq5018_priv {
-+	struct reset_control *rst;
-+	bool set_short_cable_dac;
-+};
-+
- static int at803x_write_page(struct phy_device *phydev, int page)
- {
- 	int mask;
-@@ -987,6 +1043,105 @@ static int at8035_probe(struct phy_device *phydev)
- 	return at8035_parse_dt(phydev);
- }
- 
-+static int ipq5018_cable_test_start(struct phy_device *phydev)
-+{
-+	phy_write_mmd(phydev, MDIO_MMD_PCS, IPQ5018_PHY_PCS_CDT_THRESH_CTRL3,
-+		      IPQ5018_PHY_PCS_CDT_THRESH_CTRL3_VAL);
-+	phy_write_mmd(phydev, MDIO_MMD_PCS, IPQ5018_PHY_PCS_CDT_THRESH_CTRL4,
-+		      IPQ5018_PHY_PCS_CDT_THRESH_CTRL4_VAL);
-+	phy_write_mmd(phydev, MDIO_MMD_PCS, IPQ5018_PHY_PCS_CDT_THRESH_CTRL5,
-+		      IPQ5018_PHY_PCS_CDT_THRESH_CTRL5_VAL);
-+	phy_write_mmd(phydev, MDIO_MMD_PCS, IPQ5018_PHY_PCS_CDT_THRESH_CTRL6,
-+		      IPQ5018_PHY_PCS_CDT_THRESH_CTRL6_VAL);
-+	phy_write_mmd(phydev, MDIO_MMD_PCS, IPQ5018_PHY_PCS_CDT_THRESH_CTRL7,
-+		      IPQ5018_PHY_PCS_CDT_THRESH_CTRL7_VAL);
-+	phy_write_mmd(phydev, MDIO_MMD_PCS, IPQ5018_PHY_PCS_CDT_THRESH_CTRL9,
-+		      IPQ5018_PHY_PCS_CDT_THRESH_CTRL9_VAL);
-+	phy_write_mmd(phydev, MDIO_MMD_PCS, IPQ5018_PHY_PCS_CDT_THRESH_CTRL13,
-+		      IPQ5018_PHY_PCS_CDT_THRESH_CTRL13_VAL);
-+	phy_write_mmd(phydev, MDIO_MMD_PCS, IPQ5018_PHY_PCS_CDT_THRESH_CTRL3,
-+		      IPQ5018_PHY_PCS_NEAR_ECHO_THRESH_VAL);
-+
-+	/* we do all the (time consuming) work later */
-+	return 0;
-+}
-+
-+static int ipq5018_config_init(struct phy_device *phydev)
-+{
-+	struct ipq5018_priv *priv = phydev->priv;
-+	u16 val = 0;
-+
-+	/*
-+	 * set LDO efuse: first temporarily store ANA_DAC_FILTER value from
-+	 * debug register as it will be reset once the ANA_LDO_EFUSE register
-+	 * is written to
-+	 */
-+	val = at803x_debug_reg_read(phydev, IPQ5018_PHY_DEBUG_ANA_DAC_FILTER);
-+	at803x_debug_reg_mask(phydev, IPQ5018_PHY_DEBUG_ANA_LDO_EFUSE,
-+			      IPQ5018_PHY_DEBUG_ANA_LDO_EFUSE_MASK,
-+			      IPQ5018_PHY_DEBUG_ANA_LDO_EFUSE_DEFAULT);
-+	at803x_debug_reg_write(phydev, IPQ5018_PHY_DEBUG_ANA_DAC_FILTER, val);
-+
-+	/* set 8023AZ CTRL values */
-+	phy_write_mmd(phydev, MDIO_MMD_PCS, IPQ5018_PHY_PCS_AZ_CTRL1,
-+		      IPQ5018_PHY_PCS_AZ_CTRL1_VAL);
-+	phy_write_mmd(phydev, MDIO_MMD_PCS, IPQ5018_PHY_PCS_AZ_CTRL2,
-+		      IPQ5018_PHY_PCS_AZ_CTRL2_VAL);
-+
-+	/* set MSE threshold values */
-+	phy_write_mmd(phydev, MDIO_MMD_PMAPMD, IPQ5018_PHY_MMD1_MSE_THRESH1,
-+		      IPQ5018_PHY_MMD1_MSE_THRESH1_VAL);
-+	phy_write_mmd(phydev, MDIO_MMD_PMAPMD, IPQ5018_PHY_MMD1_MSE_THRESH2,
-+		      IPQ5018_PHY_MMD1_MSE_THRESH2_VAL);
-+
-+	/* PHY DAC values are optional and only set in a PHY to PHY link architecture */
-+	if (priv->set_short_cable_dac) {
-+		/* setting MDAC (Multi-level Digital-to-Analog Converter) in MMD1 */
-+		phy_modify_mmd(phydev, MDIO_MMD_PMAPMD, IPQ5018_PHY_MMD1_MDAC,
-+			       IPQ5018_PHY_DAC_MASK, IPQ5018_PHY_MMD1_MDAC_VAL);
-+
-+		/* setting EDAC (Error-detection and Correction) in debug register */
-+		at803x_debug_reg_mask(phydev, IPQ5018_PHY_DEBUG_EDAC,
-+				      IPQ5018_PHY_DAC_MASK, IPQ5018_PHY_DEBUG_EDAC_VAL);
-+	}
-+
-+	return 0;
-+}
-+
-+static void ipq5018_link_change_notify(struct phy_device *phydev)
-+{
-+	mdiobus_modify_changed(phydev->mdio.bus, phydev->mdio.addr,
-+			       IPQ5018_PHY_FIFO_CONTROL, IPQ5018_PHY_FIFO_RESET,
-+			       phydev->link ? IPQ5018_PHY_FIFO_RESET : 0);
-+}
-+
-+static int ipq5018_probe(struct phy_device *phydev)
-+{
-+	struct device *dev = &phydev->mdio.dev;
-+	struct ipq5018_priv *priv;
-+	int ret;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->set_short_cable_dac = of_property_read_bool(dev->of_node,
-+							  "qcom,dac-preset-short-cable");
-+
-+	priv->rst = devm_reset_control_array_get_exclusive(dev);
-+	if (IS_ERR_OR_NULL(priv->rst))
-+		return dev_err_probe(dev, PTR_ERR(priv->rst),
-+				     "failed to acquire reset\n");
-+
-+	ret = reset_control_reset(priv->rst);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to reset\n");
-+
-+	phydev->priv = priv;
-+
-+	return 0;
-+}
-+
- static struct phy_driver at803x_driver[] = {
- {
- 	/* Qualcomm Atheros AR8035 */
-@@ -1078,6 +1233,19 @@ static struct phy_driver at803x_driver[] = {
- 	.read_status		= at803x_read_status,
- 	.soft_reset		= genphy_soft_reset,
- 	.config_aneg		= at803x_config_aneg,
-+}, {
-+	PHY_ID_MATCH_EXACT(IPQ5018_PHY_ID),
-+	.name			= "Qualcomm Atheros IPQ5018 internal PHY",
-+	.flags			= PHY_IS_INTERNAL | PHY_POLL_CABLE_TEST,
-+	.probe			= ipq5018_probe,
-+	.config_init		= ipq5018_config_init,
-+	.link_change_notify	= ipq5018_link_change_notify,
-+	.read_status		= at803x_read_status,
-+	.config_intr		= at803x_config_intr,
-+	.handle_interrupt	= at803x_handle_interrupt,
-+	.cable_test_start	= ipq5018_cable_test_start,
-+	.cable_test_get_status	= qca808x_cable_test_get_status,
-+	.soft_reset		= genphy_soft_reset,
- }, {
- 	/* Qualcomm Atheros QCA9561 */
- 	PHY_ID_MATCH_EXACT(QCA9561_PHY_ID),
-@@ -1104,6 +1272,7 @@ static const struct mdio_device_id __maybe_unused atheros_tbl[] = {
- 	{ PHY_ID_MATCH_EXACT(ATH8032_PHY_ID) },
- 	{ PHY_ID_MATCH_EXACT(ATH8035_PHY_ID) },
- 	{ PHY_ID_MATCH_EXACT(ATH9331_PHY_ID) },
-+	{ PHY_ID_MATCH_EXACT(IPQ5018_PHY_ID) },
- 	{ PHY_ID_MATCH_EXACT(QCA9561_PHY_ID) },
- 	{ }
- };
+ 		mdio1: mdio@90000 {
+@@ -232,8 +252,8 @@ gcc: clock-controller@1800000 {
+ 				 <&pcie0_phy>,
+ 				 <&pcie1_phy>,
+ 				 <0>,
+-				 <0>,
+-				 <0>,
++				 <&gephy_rx_clk>,
++				 <&gephy_tx_clk>,
+ 				 <0>,
+ 				 <0>;
+ 			#clock-cells = <1>;
 
 -- 
 2.49.0
