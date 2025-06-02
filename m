@@ -1,132 +1,185 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC887485;
-	Mon,  2 Jun 2025 12:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9FCC214A7C
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 12:26:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748867179; cv=none; b=EIFsE4yVD3YgnUCr5vc6o0I0xz+AdPd7H0k3Fr1JMaapoZJ9TLpYArZ+CWpwKNtT3lJPim2A35oheFwKeVELk82KFiksJA/QbO+KVd8ArJQXX323Uw0VabAGl4kPWwSQ18nmsqbY8nOKinM4HK/OpieT8G5qN201Otd2nb3LGU8=
+	t=1748867188; cv=none; b=uGg5ms3SaS3peSNKi15jGUpYVrtkhsIR4JT3xjzKo1LO0tdTWX0zwPUwUuQiqwNjTT/fv+u44UV2jsDoLPR/7G3ymJ5/+Lti4utEXoeVAbrncTLM3uEw+mWmDrvofXuDQ2kPvhdPCcnONzF1FN+pM8zWFdSDUsFqGaaJ6CDaeZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748867179; c=relaxed/simple;
-	bh=pGav0rV/4DOUeGB4H+ahrH4gCJmO5uEhsOKx1aE0EmE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W15GFh1G5SqLNNhNxJ9wgZI7eJ/ce7BGPsca8l9CVdDlIPxSXXO8biRav7h7dhCyKqNINu2q3iBdNGL5biQXO+NMlaf7Gg8fqIUkmtQsBVieVS2Ma3tos+rk6IPglYONfMh1NaE0Y6yFIcOfczi3OaCbE5v9Ye5/eqJMnaW6SwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qxjHyms0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748867188; c=relaxed/simple;
+	bh=KmcEV+YC4wjkwupnz/aL0Lj8VjwoViL20lNM35pKRvE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qo1yIJIZ3zJw6C5HXJZsMNMpd/LWV2AbNUgRAD1qb+spuFlS1Kr7qYRHYH7VlH+tbpgYP0+JnUe7hET028z2dbmUFpmamtBirZ7loEQ5K1wfLC4cpd4V0SSXwTd8+GYFgQ7YizeJXWbYWZKIV2qXyOBy/oUMhFnOxiXpvmaQh6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R7DyzlCc; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qxjHyms0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 027E9C4CEEB;
-	Mon,  2 Jun 2025 12:26:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748867178;
-	bh=pGav0rV/4DOUeGB4H+ahrH4gCJmO5uEhsOKx1aE0EmE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qxjHyms02HjbpPTnGWZmqPqj+KZ/H1XdJ1NYNG9XS0FeIlay0EBDS/PLxYFMVRGuH
-	 S+7p1YqfJWknZdMnu2Td8xPx83dfa8SHf8G3sbAUBzuNSFEda7QDF8dOx1fNV/riLh
-	 JOuLYdLUrSsjhDhA0C9EKzqtgKFYox3J4kBIesPZwmnoOOQ5gb18yvnZyr/FMETj5N
-	 Kz2EV3nl1s3gMZnLm6UoygG3u42IfoVBWRY0lTH7P+IGy87/ALjBjlRFSOXyuJFPna
-	 JevSrOgnIB/vTQN9wAlY6CrFAffxKMjqm+yDdHenBqjrMn7XybM64UjNNC3FvVDTml
-	 4v6OBQp0S88tA==
-Date: Mon, 2 Jun 2025 14:26:11 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v4 15/20] gpu: nova-core: firmware: add ucode descriptor
- used by FWSEC-FRTS
-Message-ID: <aD2YY_zpo01rYkgN@pollux>
-References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
- <20250521-nova-frts-v4-15-05dfd4f39479@nvidia.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R7DyzlCc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748867185;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=murmMMX5h7qj5SslZFh+7lBZ+d1kCAp76FkWnJBtyAE=;
+	b=R7DyzlCcLV9k7SFk4g/49EeXPoq4pLnEtO/60L5L1cB4fMRDX6SdAD+/nKkIPrly1k1ZY5
+	7Uco0ZIJ68LGl2ZCsd4Hmj8hkn16gVIWp+Ll24mwaLzQygfdDotLAHZA7Z6N0zP+sXYVig
+	sPSNg1Uw24ZQm8JcDqPnB97YnnbNpts=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-664-iQXUkPdGMJabH5IPlqLbQw-1; Mon, 02 Jun 2025 08:26:24 -0400
+X-MC-Unique: iQXUkPdGMJabH5IPlqLbQw-1
+X-Mimecast-MFC-AGG-ID: iQXUkPdGMJabH5IPlqLbQw_1748867183
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4fea70656so692815f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 05:26:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748867183; x=1749471983;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=murmMMX5h7qj5SslZFh+7lBZ+d1kCAp76FkWnJBtyAE=;
+        b=MAJGAAdueH1xVfHjbxybVXeAmsZkqiMA1s0eg2kpPf3tukwqCRzDAofnQxVnx+r71x
+         JwsX+hlcnrbRc3eWItl7p6EM/hPUWSAkzdUpVg5D5SXckKnWaJiatg/c1vSrC9oDFqpr
+         93O1YDdTnq1zp51C2yTwwk/Sr45M6uJnQ/XQgEAzBNfuFBzaOGgpiYdspY2I1MWSB7Ca
+         hvU3VT6jLQSO+VDoPJbJ0wgXAQHLKB1qpBa386m3TdqS/qpKeN9qU5lz3Ge+QPcCO7+F
+         QeuUpxjvAMWIpiZcUWSillxE37vO7EOQja63VUGt3ZVrf7pzAFlSZooii3ED6s5SjVv/
+         ogjA==
+X-Forwarded-Encrypted: i=1; AJvYcCWLVKkk6SzNVL+HGvDRaxKqu57mGTNtAxRKU8Htw/gvF1H6Ihe7QGQw2/ls/wIqpn5H2me55Se1w0x6reA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxS3CLFNC0Y2FDYKkRgOdFhEoXdMtUVBK3cdW5NVy2Tih7hWdra
+	5VruGQ8UPV440S5OYcqtEn02MQgC+cWyfDfmOqH2OxcwvCppM6cvepO3fkUSMN0vPRf9DghUKZ8
+	H2ZBW2kyxcxHQtN4i2kg9vNKsA2uKbsbZW+p9X0FdGUV7QpxaW1YQZvm1BvNBYOqF/w==
+X-Gm-Gg: ASbGncvkiONL5waq+cxyTY3rE67zyWfMlDTbfwsC6d5/pAgMa04V0qLKr7LU5MuF6HG
+	Nt6Bi2OaV/2uKWTwX1TeV9u55nXIPi5DglN05bu3S+t2itK2Phkqh09cpia0bcjv5v9Rpqdgaof
+	pFQPUggHk6Aq8nNhTh/LoX55YE+dIz2Y4Gq0njEuDsreoajxVo1H+rl4ZvaIyHPgcYg6yCuH+4i
+	tgHW+KUVGphN4un/rn5HzMbiBtQHIfrxP6Bh0337GgThKdkXtsGEaEWR0rUCwJ3Lh+SKmg7GqNE
+	x9saxW4AsxHxwN+JqGrFfDOb7k5CSYq2xMzD0DTk/pryG2d2mnmF5vgGRwgWjLGXvGHR2VZHmOT
+	TK4htf1iQbHn9S6XFbd0UbsOAKX2xEeIt5AY7HIc=
+X-Received: by 2002:a5d:5f8b:0:b0:3a4:e841:b236 with SMTP id ffacd0b85a97d-3a4f89ddd6fmr10574188f8f.33.1748867183247;
+        Mon, 02 Jun 2025 05:26:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEnaWANB9zbp0ilBADD04kHr3ms2pu7nAWaU9IC6TaCnKgeYHJWpaEq5+LUjY+ufTDAVKKdWQ==
+X-Received: by 2002:a5d:5f8b:0:b0:3a4:e841:b236 with SMTP id ffacd0b85a97d-3a4f89ddd6fmr10574165f8f.33.1748867182869;
+        Mon, 02 Jun 2025 05:26:22 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f34:a300:1c2c:f35e:e8e5:488e? (p200300d82f34a3001c2cf35ee8e5488e.dip0.t-ipconnect.de. [2003:d8:2f34:a300:1c2c:f35e:e8e5:488e])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe6c7e5sm14699842f8f.28.2025.06.02.05.26.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Jun 2025 05:26:22 -0700 (PDT)
+Message-ID: <6dd3af08-b3be-4a68-af3d-1fc1b79f4279@redhat.com>
+Date: Mon, 2 Jun 2025 14:26:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250521-nova-frts-v4-15-05dfd4f39479@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/4] mm: Fix uprobe pte be overwritten when expanding
+ vma
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Pu Lehui <pulehui@huaweicloud.com>, mhiramat@kernel.org, oleg@redhat.com,
+ peterz@infradead.org, akpm@linux-foundation.org, Liam.Howlett@oracle.com,
+ vbabka@suse.cz, jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, pulehui@huawei.com
+References: <20250529155650.4017699-1-pulehui@huaweicloud.com>
+ <20250529155650.4017699-2-pulehui@huaweicloud.com>
+ <962c6be7-e37a-4990-8952-bf8b17f6467d@redhat.com>
+ <009fe1d5-9d98-45f1-89f0-04e2ee8f0ade@lucifer.local>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <009fe1d5-9d98-45f1-89f0-04e2ee8f0ade@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 21, 2025 at 03:45:10PM +0900, Alexandre Courbot wrote:
-> FWSEC-FRTS is the first firmware we need to run on the GSP falcon in
-> order to initiate the GSP boot process. Introduce the structure that
-> describes it.
+On 02.06.25 13:55, Lorenzo Stoakes wrote:
+> On Fri, May 30, 2025 at 08:51:14PM +0200, David Hildenbrand wrote:
+>>>    	if (vp->remove) {
+>>> @@ -1823,6 +1829,14 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
+>>>    		faulted_in_anon_vma = false;
+>>>    	}
+>>> +	/*
+>>> +	 * If the VMA we are copying might contain a uprobe PTE, ensure
+>>> +	 * that we do not establish one upon merge. Otherwise, when mremap()
+>>> +	 * moves page tables, it will orphan the newly created PTE.
+>>> +	 */
+>>> +	if (vma->vm_file)
+>>> +		vmg.skip_vma_uprobe = true;
+>>> +
+>>
+>> Assuming we extend the VMA on the way (not merge), would we handle that
+>> properly?
+>>
+>> Or is that not possible on this code path or already broken either way?
 > 
-> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
-> ---
->  drivers/gpu/nova-core/firmware.rs | 43 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
-> 
-> diff --git a/drivers/gpu/nova-core/firmware.rs b/drivers/gpu/nova-core/firmware.rs
-> index 4b8a38358a4f6da2a4d57f8db50ea9e788c3e4b5..f675fb225607c3efd943393086123b7aeafd7d4f 100644
-> --- a/drivers/gpu/nova-core/firmware.rs
-> +++ b/drivers/gpu/nova-core/firmware.rs
-> @@ -41,6 +41,49 @@ pub(crate) fn new(dev: &device::Device, chipset: Chipset, ver: &str) -> Result<F
->      }
->  }
->  
-> +/// Structure used to describe some firmwares, notably FWSEC-FRTS.
-> +#[repr(C)]
-> +#[derive(Debug, Clone)]
-> +pub(crate) struct FalconUCodeDescV3 {
-> +    /// Header defined by `NV_BIT_FALCON_UCODE_DESC_HEADER_VDESC*` in OpenRM.
-> +    ///
-> +    /// Bits `31:16` contain the size of the header, after which the actual ucode data starts.
+> I'm not sure in what context you mean expand, vma_merge_new_range() calls
+> vma_expand() so we call an expand a merge here, and this flag will be
+> obeyed.
 
-The field is private; this information is much more needed in Self::size().
+Essentially, an mremap() that grows an existing mapping while moving it.
 
-> +    hdr: u32,
-> +    /// Stored size of the ucode after the header.
-> +    stored_size: u32,
-> +    /// Offset in `DMEM` at which the signature is expected to be found.
-> +    pub(crate) pkc_data_offset: u32,
-> +    /// Offset after the code segment at which the app headers are located.
-> +    pub(crate) interface_offset: u32,
-> +    /// Base address at which to load the code segment into `IMEM`.
-> +    pub(crate) imem_phys_base: u32,
-> +    /// Size in bytes of the code to copy into `IMEM`.
-> +    pub(crate) imem_load_size: u32,
-> +    /// Virtual `IMEM` address (i.e. `tag`) at which the code should start.
-> +    pub(crate) imem_virt_base: u32,
-> +    /// Base address at which to load the data segment into `DMEM`.
-> +    pub(crate) dmem_phys_base: u32,
-> +    /// Size in bytes of the data to copy into `DMEM`.
-> +    pub(crate) dmem_load_size: u32,
-> +    /// Mask of the falcon engines on which this firmware can run.
-> +    pub(crate) engine_id_mask: u16,
-> +    /// ID of the ucode used to infer a fuse register to validate the signature.
-> +    pub(crate) ucode_id: u8,
-> +    /// Number of signatures in this firmware.
-> +    pub(crate) signature_count: u8,
-> +    /// Versions of the signatures, used to infer a valid signature to use.
-> +    pub(crate) signature_versions: u16,
-> +    _reserved: u16,
-> +}
-> +
-> +// To be removed once that code is used.
-> +#[expect(dead_code)]
-> +impl FalconUCodeDescV3 {
+Assume we have
 
-    const HDR_SIZE_SHIFT: u32 = 16;
-    const HDR_SIZE_MASK: u32 = 0xffff0000;
+[ VMA 0 ] [ VMA X]
 
-> +    pub(crate) fn size(&self) -> usize {
-> +        ((self.hdr & 0xffff0000) >> 16) as usize
+And want to grow VMA 0 by 1 page.
 
-	((self.hdr & HDR_SIZE_MASK) >> Self::HDR_SIZE_SHIFT)
+We cannot grow in-place, so we'll have to copy VMA 0 to another VMA, and 
+while at it, expand it by 1 page.
 
-In this case it may look a bit pointless, but I think it would make sense to
-establish to store consts for shifts and masks in general, such that one can get
-an easy overview of the layout of the structure.
+expand_vma()->move_vma()->copy_vma_and_data()->copy_vma()
+
+
+But maybe I'm getting lost in the code. (e.g., expand_vma() vs. 
+vma_expand() ... confusing :) )
+
+-- 
+Cheers,
+
+David / dhildenb
+
