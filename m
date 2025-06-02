@@ -1,63 +1,63 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE08022C339
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 15:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD3022D9E6
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 15:19:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748877543; cv=none; b=WDNWyw8V+g2FgysWQYyD+yEs9AJ6WFu7c2FeshmXuGLCzjJ7gu19RkvyAuAqC2Mf61B9xQ0rTrFDc+aojyjEa++7iT8LHeEHj+FvbU0HiF+0APWZSWemb6Bk1/3PnwP77Fj15jCLSA8ZdO/W203ubqMgM2Q+cls8Uwk4PXdnTYo=
+	t=1748877544; cv=none; b=C2+Z4Mgo+wFeBNKiOfmz/JvNSeTNgP0Bk9mUASc/kxZIFZ0fEPuhcpPFUeqPAJCDy7lrsbYsLJTrrQ1HIyp+Q4+bVcy1V6GZOg/mjSz9LnkerQ1h6u4wkGH8p4a+Hggf12qdSYo1XVXJfq6pnjjBHWq6zAMzyko+g/QSqA+yV0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748877543; c=relaxed/simple;
-	bh=2hHPT0ZatQTm44Z1t6wExkfhxFsepGpoQ7pDrN0NhyE=;
+	s=arc-20240116; t=1748877544; c=relaxed/simple;
+	bh=fAaZ3L9vEbtazUSHdMUtxxloxioTW1ggL5LaUshczj8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=l5UdSVc56nlQGICQvXmqVjQmh7l4qxZW6ZWYCdHnU3jHeYyzyTWDW7kZ3Lcj6zRKc7YW9KkSnHDobb3g8XqobLnhEDPUwOYGHSToJtYCzQY7xljhkDGkZfNGO7089tqoI0baI7rHvrWA29BGYQEUTR/MWHHY7REbK8YG8WT/lM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Qb5y5AB2; arc=none smtp.client-ip=209.85.221.45
+	 MIME-Version; b=B8bwZPtjgwwTrttj3uCcaop6zbrai4VNVy2dy+hMXls8e7qNm/ReXYVGqANnqonnK5kPOgiRduqqQt+6XUddLMFV7TLrWBbJUEKhskD7c9UjIsvM+eMVXYKxGYdZizXpn/4jSbpgarLvdr1gIYvxHjMCtA12wMdEj/7vIyouRVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=F91URjb/; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qb5y5AB2"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a36efcadb8so3975629f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 08:19:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F91URjb/"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-450ce671a08so28506605e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 08:19:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748877540; x=1749482340; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1748877541; x=1749482341; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4yhV1VS1sZnr/B/j9eDazI/vJTndFmPooDhpyVC7xA4=;
-        b=Qb5y5AB2UShSbakIMXSN+0+5vBOLXH6pHqvbwCquWt6nG/3PweqsOqc3OZCudupF+d
-         tgdvf5Bh4QfEm0SoNvsppi4O69edpfq3A+JkVMi6IEJ7lS8S5+LAsoyASzzzMhaH40we
-         Dx4Y34n0nnmBFwRjpWX8V2kd17eNbIV/yyRyU2MbCscmSgCx425hClZxZIupE2hD1FQh
-         3d/qIh2D8aasyMNomFQvF8aRFZqfTtn6zDWmQIx9biOSzyRoPG4ANNGa7Kxe0+lZyCIb
-         MWITk5JviQGDESOfLXYu7KNv8WiKp1DWe6ox63zbcD5eWjg3+9vBo3RK9tOYsbQjPLC+
-         WGAg==
+        bh=j2bXZElBrRwneMKewEI3S9wHUbgph+s2MD8uEMc202U=;
+        b=F91URjb/WGSoAqAcBC8zFjUfDp1lz/YszN3KYCr6bGO0Tp8Rga+s+biUpF0AE/DMqQ
+         7KAny3x/t60b65aHrC1KflTYMQG6Dh+ECjxWv4dNSQDeuz6WRSdEoFbsWdgY8BuASXrm
+         FrSg82I2BQyGnCx6i29qgDNZA/9AquaSKRlR4AHcNndnd3iasRf3G49QgWunnFqN63h0
+         q8RA0zbRyPQPtau6MCMrSxJ2znqryoKBFe5n8y1aPh5WN8Q6QH5WGfNcHdZoZYJMDUS7
+         CAcMEVGskAO3EnDB1GEtLzbGMlHGH3BRfhPWxuXtEaLgork/ASe0y1fUIg9ndRzzbvit
+         Vwwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748877540; x=1749482340;
+        d=1e100.net; s=20230601; t=1748877541; x=1749482341;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4yhV1VS1sZnr/B/j9eDazI/vJTndFmPooDhpyVC7xA4=;
-        b=d+qY0J3Rn55VtDcSfaZd7l2IrJtuQK+P30tQjQ7d/ZwvnGNn39d5ffhs9TNSU2I94D
-         X3SL+HXLeaLNqVUC9+yGggsHyvKefdXLNbXc5lZeXBD8X51XKu4Xtd86dUXU8iLBuqn0
-         Wzywx62DFcB+Mz5XPgAGAQpb9Zfu1Ao1GpvbaX5mBI3wwSCW81yBnx55oX1g8/8FmyP8
-         fqHDPZYj62ZgvYW00oaHY0dFDBOpdhNuGM35T7fvMB/nrCjj4Ptnf4pB1K2oy8BGM53b
-         dFJqS/mJrqZDoH0F4Cg3Df3DsOCtQBo+aAiJPnk0HNSJ788HA8h1KHeKW3aFRzW4oKPO
-         Vv6A==
-X-Forwarded-Encrypted: i=1; AJvYcCXrXoEuL0AKCeuA1kyrbRtI1x34O4G6fCLzDipsGGWgKTQfrQPN5T/mYRrFXikXCGDV0yo7jGDRl2aw528=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwI9aqFg5irfjYOGfAsTHxbjjVwD7r1N6pPNrWhJs5kI8yfWWv1
-	H3ZpPKknI0/1hOjKfpP/59e+GKyBrnJP+WFMSUKr0ijWQ8q5BaQdwWEhTbw+KCihhaI=
-X-Gm-Gg: ASbGncvVXHg05pqsyljDeOC8kIY+/8aSH17DI0D0PTUMSxA8tQHYXz6R6Gkb8Tc5/hU
-	ABElMkpQZW8XBMIc869iqzCpjLrHIT8EvF0BQDiP1hMBfcoXr3Ojh00niEsn+9q4OfYLxhqyAlN
-	pb37aQEXs2VyfligUiN2/FPawbttDOQRFWje6vS3CfFBSX/MG4tgy7VzdLTKtzkSItX7PtVh35x
-	MWD6BmQM2hsM36owOC/sBHV+lgT3gkKUdryZS5JqHhEEyfZYgSnrLF64JcGCgwXMimzOvEiAOmJ
-	iSrcXT6sVgfDm212p3JTE569Rrs+S1DIXd3GaA3REA3EueO4kti0snUh6Pe6vl03yjU0apY3jvs
-	pqny3jnvh+LPS
-X-Google-Smtp-Source: AGHT+IFyISAqwMHhCGLRj9aCfOACSARamwm5CChRIpOs6jPFxpI1R1pUgcUMERHo5kjL0SIXDlP4UA==
-X-Received: by 2002:a05:6000:18ab:b0:3a4:fb33:85ce with SMTP id ffacd0b85a97d-3a4fb3388bbmr9485326f8f.46.1748877540038;
-        Mon, 02 Jun 2025 08:19:00 -0700 (PDT)
+        bh=j2bXZElBrRwneMKewEI3S9wHUbgph+s2MD8uEMc202U=;
+        b=n2ha29ImNUpRwCYV++xjK6IBdptdlP0D5Wbd1uE9ApplNR91WMLZfkbF1jmW6XeSJa
+         9kcO48M/OEcARgSdpQvA8P+U7sUlF6E9qEiB5GJHNpmegWQ0vfSKTDzk3jZkS0xzogqC
+         XSXI5eMdSOIsp3W3FwXPYskLhP8XGWZ4Fp/aWW5tfkjMoLfGqExuA2iroVUj7w4jp2X1
+         BX4njKvGKfymEkOs1ag+0FvaEX6xvJotdURAZQqWZAKyXfLlgIhcMXfBcg+RCkNf7b1g
+         wcZT/D0QHT3ahtJ1I1e+hsNVJbtZMaYBeyOs6tj5aCX1F2jMpFzulGBy/IiVOR2twazg
+         rhvw==
+X-Forwarded-Encrypted: i=1; AJvYcCXLyrU+rsAqtgnwVLT/XUb/TvpcTyccZPpKm8c8Nb5d9xPU/PE8TCufDfhfDBqo5anqQ74a33s+NoLdYuo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyT0fFTDXlmqcq/FZ43jUd4s+P9CPGYfdoyI0kkyYv0tc7+jhHS
+	i5wA6UHtxIn/DykKrrwKQPRbrW4nf68vAzyaZOPeioIxR94m9WQMTpQdTsPEfb6T60w=
+X-Gm-Gg: ASbGncujQzHDQue90oFrxpZLODVJtols1/jFpxz7PodrSelYBTTDnqDVGDKupICLuXl
+	0k/DC7DEGm+RxsYRCpzE0v35ULSzw0SHO5eQN19+LlsCLOmaCHTGRMKw6MmZQhuFILE+JP2x3Ww
+	tK4Oebf/OyBLUL5iHpBkHToL0jcvUCly2Xt8ZQmIieX4LZ9U4D2ZUkaIyNL6ZDy7XZHQIkWbDMr
+	0cdDZXLGdZoFbSK/vPi9HvzsnlTM4XfkIOGa19JQqmLiZinss6cOkxOrLbCrU844ymtO0aS3T16
+	ChsceLL95VHltSG6JGbtT6Xp9LXzD3RjZfHwhTGFzwPjChg3WNDY94cpXQ1lViFMTsfQi85B/I2
+	Y7KOZc0vE0QvS
+X-Google-Smtp-Source: AGHT+IGm8o6nqRRjiZlM8OEtcH7Giz5iqVqvOKIqNhMfKW6+DVKKTld7vkKIltD7iNqNITzYzwGGxA==
+X-Received: by 2002:a5d:5c84:0:b0:3a3:7ba5:960e with SMTP id ffacd0b85a97d-3a4fe3a8214mr6931603f8f.59.1748877541180;
+        Mon, 02 Jun 2025 08:19:01 -0700 (PDT)
 Received: from mai.. (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe74111sm15619844f8f.56.2025.06.02.08.18.59
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe74111sm15619844f8f.56.2025.06.02.08.19.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 08:18:59 -0700 (PDT)
+        Mon, 02 Jun 2025 08:19:00 -0700 (PDT)
 From: Daniel Lezcano <daniel.lezcano@linaro.org>
 To: daniel.lezcano@linaro.org,
 	tglx@linutronix.de
@@ -81,9 +81,9 @@ Cc: Jim Cromie <jim.cromie@gmail.com>,
 	Will McVicker <willmcvicker@google.com>,
 	Peter Griffin <peter.griffin@linaro.org>,
 	Saravan Kanna <saravanak@google.com>
-Subject: [PATCH v1 2/7] clocksource/drivers/stm32-lp: Add module owner
-Date: Mon,  2 Jun 2025 17:18:46 +0200
-Message-ID: <20250602151853.1942521-3-daniel.lezcano@linaro.org>
+Subject: [PATCH v1 3/7] clocksource/drivers/sun5i: Add module owner
+Date: Mon,  2 Jun 2025 17:18:47 +0200
+Message-ID: <20250602151853.1942521-4-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250602151853.1942521-1-daniel.lezcano@linaro.org>
 References: <20250602151853.1942521-1-daniel.lezcano@linaro.org>
@@ -109,21 +109,29 @@ module.
 
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- drivers/clocksource/timer-stm32-lp.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clocksource/timer-sun5i.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/clocksource/timer-stm32-lp.c b/drivers/clocksource/timer-stm32-lp.c
-index 928da2f6de69..cf1423ca00d0 100644
---- a/drivers/clocksource/timer-stm32-lp.c
-+++ b/drivers/clocksource/timer-stm32-lp.c
-@@ -159,6 +159,7 @@ static void stm32_clkevent_lp_init(struct stm32_lp_private *priv,
- 	priv->clkevt.rating = STM32_LP_RATING;
- 	priv->clkevt.suspend = stm32_clkevent_lp_suspend;
- 	priv->clkevt.resume = stm32_clkevent_lp_resume;
-+	priv->clkevt.owner = THIS_MODULE;
+diff --git a/drivers/clocksource/timer-sun5i.c b/drivers/clocksource/timer-sun5i.c
+index 6b48a9006444..f827d3f98f60 100644
+--- a/drivers/clocksource/timer-sun5i.c
++++ b/drivers/clocksource/timer-sun5i.c
+@@ -185,6 +185,7 @@ static int sun5i_setup_clocksource(struct platform_device *pdev,
+ 	cs->clksrc.read = sun5i_clksrc_read;
+ 	cs->clksrc.mask = CLOCKSOURCE_MASK(32);
+ 	cs->clksrc.flags = CLOCK_SOURCE_IS_CONTINUOUS;
++	cs->clksrc.owner = THIS_MODULE;
  
- 	clockevents_config_and_register(&priv->clkevt, rate, 0x1,
- 					STM32_LPTIM_MAX_ARR);
+ 	ret = clocksource_register_hz(&cs->clksrc, rate);
+ 	if (ret) {
+@@ -214,6 +215,7 @@ static int sun5i_setup_clockevent(struct platform_device *pdev,
+ 	ce->clkevt.rating = 340;
+ 	ce->clkevt.irq = irq;
+ 	ce->clkevt.cpumask = cpu_possible_mask;
++	ce->clkevt.owner = THIS_MODULE;
+ 
+ 	/* Enable timer0 interrupt */
+ 	val = readl(base + TIMER_IRQ_EN_REG);
 -- 
 2.43.0
 
