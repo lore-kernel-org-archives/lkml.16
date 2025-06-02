@@ -1,319 +1,228 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5702E21CC4F;
-	Mon,  2 Jun 2025 14:01:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BAA51E3772;
+	Mon,  2 Jun 2025 14:02:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748872904; cv=none; b=cFGa+dHH8A2SP+30CV+bijCakp9PnHYAugHBhMS1Diu797IcaffgsNXQl8LY98BZZacTSdp9BoP3lIZgn4ldARPKRSep2a3d9B8kBlbz3TXBM2ikRKjv2a0WSBuFdGnP6Na8ZusgsdTR4U4JYaP7RcvgZzHfW0HHGRIZZm1UDPA=
+	t=1748872942; cv=none; b=So3nR2d/b1s4UyQwWjKHRJVnmgENL8XOPs+SxybE3yzZdInNkVpjUUwqqvovAUESmuR673lamPWwVjrZdZBOhcb5hJ4BnkAUmLqTzGUTnZf9bUvHWKL92IOA6vkJltUXuyF++Pj4HPGj8lxKicohQZwRGq5hgpWBNr4Ydf/bc8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748872904; c=relaxed/simple;
-	bh=v8gnQg1soB3We6lWtqntjwGS+FCUJ75LGFBAKDCpWxg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OchmPSMToGuM9RsCov1GPnRWMNosFsWMmRqsZZMAG/ECFog3g7PhAB/+W6MoAMNki6wPMJg/Qe586RuUwxXzy09jLZpvrzylwSypa6ifw+3pTNUr1QzrshpKGNLBQGCiKfGOnCuZrS8NmZWCujOwxVEsBnoDi5mOxyFXb6QBu34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=rKTc7a6x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748872942; c=relaxed/simple;
+	bh=iIK4xHtP2iB/dMVlgTRCrs6Nyv+GOjdTvMOXVehLvCw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=eO65RsKcV0AJN1imAw/V9M0NaKFBsahK3Ga4VC/EvqMR8G7dsq0gG7ecRPK8KnUcXJhECb0yqdaoXHu7a5lh93pWtiCMS+0mFsHtxrNC+XQEn0w8eLdG7y/+HYvTctH9CGqiuZJER5xOdHhSTUG2WsWJtjEfWhm9fd+yltvE/C8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mIqSRB0w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="rKTc7a6x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9624DC4CEEB;
-	Mon,  2 Jun 2025 14:01:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1748872904;
-	bh=v8gnQg1soB3We6lWtqntjwGS+FCUJ75LGFBAKDCpWxg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=rKTc7a6xytx8h1v3QgnFOdisnrffYcy4oSrWdNOLWvscnaCyaWVxYiAky++X+MGKG
-	 DRPU7YBHrsZcvrTklujQNVSyD7/hh9OUHyvF3rGWsG15kM3ozHnUxHC7/vS2TZTpdi
-	 42at+O3xtO3vcH9vaZdeONppj+TbWq82/6vYR82Q=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	hargar@microsoft.com,
-	broonie@kernel.org
-Subject: [PATCH 6.12 00/55] 6.12.32-rc1 review
-Date: Mon,  2 Jun 2025 15:47:17 +0200
-Message-ID: <20250602134238.271281478@linuxfoundation.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mIqSRB0w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F4F6C4CEEE;
+	Mon,  2 Jun 2025 14:02:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748872942;
+	bh=iIK4xHtP2iB/dMVlgTRCrs6Nyv+GOjdTvMOXVehLvCw=;
+	h=From:Subject:Date:To:Cc:From;
+	b=mIqSRB0wQgPqhsxVa/yNSBhTCnxYbWnQUlvlv69wc4Cq4E4u1+vwhXioO/ND29wuI
+	 B5q5s+kF23ftfWNv2ruuBNEOPTlLoAk9ixsMZcqW6PZnKnzzMMTCvHVjNig1ksB+Aa
+	 YD5JGnPJKlUPM/ohytpr2Pc+JCgxR23mDwbN/2kU7Oo0GU7/F6zbx/RAwnsZIpBfHn
+	 FDTbwV3AB31MX1aZxS+tKtMiFELxaBKSSYGsTdGCER5cTLzKTkuuTT9WIXlgCNAHbR
+	 hn1g4c/lUBMn5v8nv6am8MO3m1tr1IPNmK84fYgbz/wesGHiOGwjIRVfHlCncZdXUQ
+	 e4rTXpkfcqKZw==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH RFC v2 00/28] vfs, nfsd, nfs: implement directory
+ delegations
+Date: Mon, 02 Jun 2025 10:01:43 -0400
+Message-Id: <20250602-dir-deleg-v2-0-a7919700de86@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: quilt/0.68
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.32-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-6.12.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 6.12.32-rc1
-X-KernelTest-Deadline: 2025-06-04T13:42+00:00
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMeuPWgC/1XMSwrCMBAG4KuUWRvJTB9QV4LgAdxKF9GM7WBJZ
+ CJFKb27ITuX/4NvhcQqnOBQraC8SJIYcqBdBffJhZGN+JyBLDWWsDVe1HieeTRMSIT25nrfQP6
+ /lB/yKdYVLucTDLmcJL2jfou/YJkKVf9RCxprHPqObO/qrm2OT9bA8z7qCMO2bT/XK23mqAAAA
+ A==
+X-Change-ID: 20240215-dir-deleg-e212210ba9d4
+To: Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+ Chuck Lever <chuck.lever@oracle.com>, 
+ Alexander Aring <alex.aring@gmail.com>, 
+ Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>, 
+ Ronnie Sahlberg <ronniesahlberg@gmail.com>, 
+ Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, 
+ Bharath SM <bharathsm@microsoft.com>, NeilBrown <neil@brown.name>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Amir Goldstein <amir73il@gmail.com>, 
+ Miklos Szeredi <miklos@szeredi.hu>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
+ samba-technical@lists.samba.org, linux-doc@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7294; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=iIK4xHtP2iB/dMVlgTRCrs6Nyv+GOjdTvMOXVehLvCw=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBoPa7eH4dxLZMTDUBiNfi1m6jZ0a8U8aP49Cb4o
+ QXXiOiXSFmJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaD2u3gAKCRAADmhBGVaC
+ FQlxEAC7HyMj6Wi4Cj2ZXRnQ6tLUiAPql3kGQ6b+4TnB4C5INTYH7QJn6GyrOCsIWBLZs7RmO1Q
+ OWJUM5dpkulxHcf0SZRjhHJrL4jTxxpEjaNJyCs6uwmLF8xEmJYOpuRC5bGeylO6YFVA4VMa7d9
+ sL/zck8SI6v5sCFz82OKq4sdpCUqLwUSltgIvme+NYwcLCyIrxfPD629U39PecA2Fjj07lObW8Z
+ 0CcWx6ktdW7qGKdefjnwMfXB4VSH3BbBBfxn0KZO51xscytcGwbtVmBZrfV0ji8ltYXZTON8twR
+ vdFB6tzhYQH+U16o9DXnReztt6CIhRxAUq8yvv3BjlDZAOiGl8BoIQHgn1JSxQ00+nmZheWm8kX
+ 2ixcydZyThSs0rTCmfwF1aQuHZoK1Uufs98/J9VLGPWx6jI5CO6NrT04TEO8UmMKystNLkwCdw/
+ LTs6FPreZIf4fWk+/O2jdcmZY7pvQvDyvp64Fw+Vg+RVIj20vrjfZ3jV2Ys/b4nEy+LOvc2CNwY
+ TbqDGl7Jp/cS6BcU2vNsEkYuAYgQn1v1KnPkRLthM3vw58O9peuOTyYvYJf9pMoAaLdYGW6++1Z
+ BDcrfBdS5uvbRUM3Jj+WdpETlHmM+JBs2SCloiRD9foknEAo64p/XEE4pGLSxiy8gc0Ha3qWzMe
+ jbZtKoCl7Di4jOA==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-This is the start of the stable review cycle for the 6.12.32 release.
-There are 55 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+This patchset is an update to a patchset that I posted just over a year
+ago [1]. That version had client and server patches. This one is just
+the server-side patches.
 
-Responses should be made by Wed, 04 Jun 2025 13:42:20 +0000.
-Anything received after that time might be too late.
+NFSv4.1 adds a GET_DIR_DELEGATION operation, to allow clients
+to request a delegation on a directory. If the client holds a directory
+delegation, then it knows that nothing will change the dentries in it
+until it has been recalled.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.32-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-and the diffstat can be found below.
+In 2023, Rick Macklem gave a talk at the NFS Bakeathon on his
+implementation of directory delegations for FreeBSD [2], and showed that
+it can greatly improve LOOKUP-heavy workloads. There is also some
+earlier work by CITI [3] that showed similar results. The SMB protocol
+also has a similar sort of construct, and they have also seen large
+performance improvements on certain workloads.
 
-thanks,
+This version also starts with support for trivial directory delegations.
+From there it adds VFS support for ignoring certain break_lease() events
+on on directories. The server can then request leases that ignore
+certain events (like a create or delete) and set its fsnotify mask to
+receive a callback after that event occurs. That allows it to avoid
+breaking the lease.
 
-greg k-h
+When a fsnotify callback comes in, the server will encode the
+information directly as XDR in a buffer attached to the delegation. The
+CB_NOTIFY callback is then queued, which will scoop up that buffer and
+allocate another to start gathering more events.  If it runs out of
+space to spool events, it will give up and trigger a recall of the
+delegation.
 
--------------
-Pseudo-Shortlog of commits:
+This is still a work-in-progress however:
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 6.12.32-rc1
+The main thing missing at this point is support for sending attributes
+in the CB_NOTIFY, particularly on ADD events. The right set of fattrs
+would allow the client to instantiate a dentry and inode without having
+to contact the server.
 
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: use list_first_entry_or_null for opinfo_get_list()
+Still, it's getting close to the point where the server side is somewhat
+functional so it's a good time to post what I have so far.
 
-Nishanth Menon <nm@ti.com>
-    net: ethernet: ti: am65-cpsw: Lower random mac address error print to info
+Anna has graciously agreed to work on the client-side pieces. I do have
+some patches, but that piece is still pretty rough:
 
-Mark Pearson <mpearson-lenovo@squebb.ca>
-    platform/x86: thinkpad_acpi: Ignore battery threshold change event notification
+    https://git.kernel.org/pub/scm/linux/kernel/git/jlayton/linux.git/log/?h=dir-deleg-clnt
 
-Kailang Yang <kailang@realtek.com>
-    ALSA: hda/realtek - restore auto-mute mode for Dell Chrome platform
+In a nutshell, the client-side GDD4 support is still simplistic, and
+there is no support for CB_NOTIFY yet.
 
-Valtteri Koskivuori <vkoskiv@gmail.com>
-    platform/x86: fujitsu-laptop: Support Lifebook S2110 hotkeys
+I also have a MR up for wireshark [4], and I have patches for some basic
+pynfs tests that I've been using to drive the server (to be posted
+soon).
 
-Trond Myklebust <trond.myklebust@hammerspace.com>
-    NFS: Avoid flushing data while holding directory locks in nfs_rename()
+At this point I'm mainly interested in feedback on the VFS bits,
+particularly the delegated_inode changes. Also, I should make special
+mention of atomic_open since Al pointed it out in the last set:
 
-Purva Yeshi <purvayeshi550@gmail.com>
-    char: tpm: tpm-buf: Add sanity check fallback in read helpers
+I think we can't reasonably support dir delegations on filesystems that
+support atomic_open. When we do a create on those filesystems, we don't
+know whether the file exists or not, so we can't know whether we need to
+break a dir delegation.
 
-Umesh Nerlige Ramappa <umesh.nerlige.ramappa@intel.com>
-    drm/xe: Save the gt pointer in lrc and drop the tile
+It would be nice to have a compile-time check for that, but I'm not sure
+how we could reasonably do it. For now, I've settled for disabling
+directory leases in FUSE, NFS and CIFS, which should work around the
+potential problem.
 
-Aradhya Bhatia <aradhya.bhatia@intel.com>
-    drm/xe/xe2hpg: Add Wa_22021007897
+[1]: https://lore.kernel.org/linux-nfs/20240315-dir-deleg-v1-0-a1d6209a3654@kernel.org/
+[2]: https://www.youtube.com/watch?v=DdFyH3BN5pI
+[3]: https://linux-nfs.org/wiki/index.php/CITI_Experience_with_Directory_Delegations
+[4]: https://gitlab.com/wireshark/wireshark/-/merge_requests/20048
 
-Ilya Guterman <amfernusus@gmail.com>
-    nvme-pci: add NVME_QUIRK_NO_DEEPEST_PS quirk for SOLIDIGM P44 Pro
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v2:
+- add support for ignoring certain break_lease() events
+- basic support for CB_NOTIFY
+- Link to v1: https://lore.kernel.org/r/20240315-dir-deleg-v1-0-a1d6209a3654@kernel.org
 
-Alessandro Grassi <alessandro.grassi@mailbox.org>
-    spi: spi-sun4i: fix early activation
+---
+Jeff Layton (28):
+      filelock: push the S_ISREG check down to ->setlease handlers
+      filelock: add a lm_may_setlease lease_manager callback
+      vfs: add try_break_deleg calls for parents to vfs_{link,rename,unlink}
+      vfs: allow mkdir to wait for delegation break on parent
+      vfs: allow rmdir to wait for delegation break on parent
+      vfs: break parent dir delegations in open(..., O_CREAT) codepath
+      vfs: make vfs_create break delegations on parent directory
+      vfs: make vfs_mknod break delegations on parent directory
+      filelock: lift the ban on directory leases in generic_setlease
+      nfsd: allow filecache to hold S_IFDIR files
+      nfsd: allow DELEGRETURN on directories
+      nfsd: check for delegation conflicts vs. the same client
+      nfsd: wire up GET_DIR_DELEGATION handling
+      filelock: rework the __break_lease API to use flags
+      filelock: add struct delegated_inode
+      filelock: add support for ignoring deleg breaks for dir change events
+      filelock: add an inode_lease_ignore_mask helper
+      nfsd: add protocol support for CB_NOTIFY
+      nfsd: add callback encoding and decoding linkages for CB_NOTIFY
+      nfsd: add data structures for handling CB_NOTIFY to directory delegation
+      fsnotify: export fsnotify_recalc_mask()
+      nfsd: update the fsnotify mark when setting or removing a dir delegation
+      nfsd: make nfsd4_callback_ops->prepare operation bool return
+      nfsd: add notification handlers for dir events
+      nfsd: allow nfsd to get a dir lease with an ignore mask
+      nfsd: add a tracepoint for nfsd_file_fsnotify_handle_dir_event()
+      nfsd: add support for NOTIFY4_ADD_ENTRY events
+      nfsd: add support for NOTIFY4_RENAME_ENTRY events
 
-Algea Cao <algea.cao@rock-chips.com>
-    phy: phy-rockchip-samsung-hdptx: Fix PHY PLL output 50.25MHz error
+ Documentation/sunrpc/xdr/nfs4_1.x    | 252 ++++++++++++++++-
+ fs/attr.c                            |   4 +-
+ fs/fuse/dir.c                        |   1 +
+ fs/locks.c                           | 120 ++++++--
+ fs/namei.c                           | 296 ++++++++++++-------
+ fs/nfs/nfs4file.c                    |   2 +
+ fs/nfsd/filecache.c                  | 103 +++++--
+ fs/nfsd/filecache.h                  |   2 +
+ fs/nfsd/nfs4callback.c               |  60 +++-
+ fs/nfsd/nfs4layouts.c                |   3 +-
+ fs/nfsd/nfs4proc.c                   |  24 +-
+ fs/nfsd/nfs4state.c                  | 535 +++++++++++++++++++++++++++++++++--
+ fs/nfsd/nfs4xdr_gen.c                | 506 ++++++++++++++++++++++++++++++++-
+ fs/nfsd/nfs4xdr_gen.h                |  17 +-
+ fs/nfsd/state.h                      |  47 ++-
+ fs/nfsd/trace.h                      |  26 +-
+ fs/nfsd/vfs.c                        |   5 +-
+ fs/nfsd/vfs.h                        |   2 +-
+ fs/nfsd/xdr4cb.h                     |  11 +
+ fs/notify/mark.c                     |   1 +
+ fs/open.c                            |   8 +-
+ fs/posix_acl.c                       |  12 +-
+ fs/smb/client/cifsfs.c               |   3 +
+ fs/utimes.c                          |   4 +-
+ fs/xattr.c                           |  16 +-
+ include/linux/filelock.h             | 143 +++++++---
+ include/linux/fs.h                   |   9 +-
+ include/linux/nfs4.h                 | 127 ---------
+ include/linux/sunrpc/xdrgen/nfs4_1.h | 293 ++++++++++++++++++-
+ include/linux/xattr.h                |   4 +-
+ include/uapi/linux/nfs4.h            |   2 -
+ 31 files changed, 2249 insertions(+), 389 deletions(-)
+---
+base-commit: 22b71eb34051a70c39c86997657de92722ec1838
+change-id: 20240215-dir-deleg-e212210ba9d4
 
-Hal Feng <hal.feng@starfivetech.com>
-    phy: starfive: jh7110-usb: Fix USB 2.0 host occasional detection failure
-
-Aurabindo Pillai <aurabindo.pillai@amd.com>
-    drm/amd/display: check stream id dml21 wrapper to get plane_id
-
-George Shen <george.shen@amd.com>
-    drm/amd/display: fix link_set_dpms_off multi-display MST corner case
-
-Markus Burri <markus.burri@mt.com>
-    gpio: virtuser: fix potential out-of-bound write
-
-Masahiro Yamada <masahiroy@kernel.org>
-    um: let 'make clean' properly clean underlying SUBARCH as well
-
-John Chau <johnchau@0atlas.com>
-    platform/x86: thinkpad_acpi: Support also NEC Lavie X1475JAS
-
+Best regards,
+-- 
 Jeff Layton <jlayton@kernel.org>
-    nfs: don't share pNFS DS connections between net namespaces
-
-Milton Barrera <miltonjosue2001@gmail.com>
-    HID: quirks: Add ADATA XPG alpha wireless mouse support
-
-Purva Yeshi <purvayeshi550@gmail.com>
-    dmaengine: idxd: cdev: Fix uninitialized use of sva in idxd_cdev_open
-
-Christian Brauner <brauner@kernel.org>
-    coredump: hand a pidfd to the usermode coredump helper
-
-Christian Brauner <brauner@kernel.org>
-    coredump: fix error handling for replace_fd()
-
-Robin Murphy <robin.murphy@arm.com>
-    perf/arm-cmn: Add CMN S3 ACPI binding
-
-Robin Murphy <robin.murphy@arm.com>
-    perf/arm-cmn: Initialise cmn->cpu earlier
-
-Robin Murphy <robin.murphy@arm.com>
-    perf/arm-cmn: Fix REQ2/SNP2 mixup
-
-Pedro Tammela <pctammela@mojatatu.com>
-    net_sched: hfsc: Address reentrant enqueue adding class to eltree twice
-
-Siddharth Vadapalli <s-vadapalli@ti.com>
-    arm64: dts: ti: k3-j784s4-j742s2-main-common: Fix length of serdes_ln_ctrl
-
-Siddharth Vadapalli <s-vadapalli@ti.com>
-    arm64: dts: ti: k3-j722s-main: Disable "serdes_wiz0" and "serdes_wiz1"
-
-Siddharth Vadapalli <s-vadapalli@ti.com>
-    arm64: dts: ti: k3-j722s-evm: Enable "serdes_wiz0" and "serdes_wiz1"
-
-Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-    arm64: dts: ti: k3-j721e-sk: Add requiried voltage supplies for IMX219
-
-Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-    arm64: dts: ti: k3-j721e-sk: Remove clock-names property from IMX219 overlay
-
-Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-    arm64: dts: ti: k3-j721e-sk: Add DT nodes for power regulators
-
-Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-    arm64: dts: ti: k3-am68-sk: Fix regulator hierarchy
-
-Judith Mendez <jm@ti.com>
-    arm64: dts: ti: k3-am65-main: Add missing taps to sdhci0
-
-Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-    arm64: dts: ti: k3-am62x: Rename I2C switch to I2C mux in OV5640 overlay
-
-Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-    arm64: dts: ti: k3-am62x: Rename I2C switch to I2C mux in IMX219 overlay
-
-Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-    arm64: dts: ti: k3-am62x: Remove clock-names property from IMX219 overlay
-
-Judith Mendez <jm@ti.com>
-    arm64: dts: ti: k3-am62p-j722s-common-main: Set eMMC clock parent to default
-
-Judith Mendez <jm@ti.com>
-    arm64: dts: ti: k3-am62a-main: Set eMMC clock parent to default
-
-Judith Mendez <jm@ti.com>
-    arm64: dts: ti: k3-am62-main: Set eMMC clock parent to default
-
-Stephan Gerhold <stephan.gerhold@linaro.org>
-    arm64: dts: qcom: x1e80100: Fix video thermal zone
-
-Johan Hovold <johan+linaro@kernel.org>
-    arm64: dts: qcom: x1e80100-yoga-slim7x: mark l12b and l15b always-on
-
-Johan Hovold <johan+linaro@kernel.org>
-    arm64: dts: qcom: x1e80100-qcp: mark l12b and l15b always-on
-
-Stephan Gerhold <stephan.gerhold@linaro.org>
-    arm64: dts: qcom: x1e80100-qcp: Fix vreg_l2j_1p2 voltage
-
-Stephan Gerhold <stephan.gerhold@linaro.org>
-    arm64: dts: qcom: x1e80100-lenovo-yoga-slim7x: Fix vreg_l2j_1p2 voltage
-
-Stephan Gerhold <stephan.gerhold@linaro.org>
-    arm64: dts: qcom: x1e80100-asus-vivobook-s15: Fix vreg_l2j_1p2 voltage
-
-Stephan Gerhold <stephan.gerhold@linaro.org>
-    arm64: dts: qcom: sm8650: Add missing properties for cryptobam
-
-Stephan Gerhold <stephan.gerhold@linaro.org>
-    arm64: dts: qcom: sm8550: Add missing properties for cryptobam
-
-Stephan Gerhold <stephan.gerhold@linaro.org>
-    arm64: dts: qcom: sm8450: Add missing properties for cryptobam
-
-Alok Tiwari <alok.a.tiwari@oracle.com>
-    arm64: dts: qcom: sm8350: Fix typo in pil_camera_mem node
-
-Karthik Sanagavarapu <quic_kartsana@quicinc.com>
-    arm64: dts: qcom: sa8775p: Remove cdsp compute-cb@10
-
-Ling Xu <quic_lxu5@quicinc.com>
-    arm64: dts: qcom: sa8775p: Remove extra entries from the iommus property
-
-Stephan Gerhold <stephan.gerhold@linaro.org>
-    arm64: dts: qcom: ipq9574: Add missing properties for cryptobam
-
-Axel Forsman <axfo@kvaser.com>
-    can: kvaser_pciefd: Force IRQ edge in case of nested IRQ
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |   4 +-
- arch/arm64/boot/dts/qcom/ipq9574.dtsi              |   2 +
- arch/arm64/boot/dts/qcom/sa8775p.dtsi              | 246 ++-------------------
- arch/arm64/boot/dts/qcom/sm8350.dtsi               |   2 +-
- arch/arm64/boot/dts/qcom/sm8450.dtsi               |   2 +
- arch/arm64/boot/dts/qcom/sm8550.dtsi               |   2 +
- arch/arm64/boot/dts/qcom/sm8650.dtsi               |   2 +
- .../boot/dts/qcom/x1e80100-asus-vivobook-s15.dts   |   4 +-
- .../boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts  |   7 +-
- arch/arm64/boot/dts/qcom/x1e80100-qcp.dts          |   6 +-
- arch/arm64/boot/dts/qcom/x1e80100.dtsi             |  10 +-
- arch/arm64/boot/dts/ti/k3-am62-main.dtsi           |   2 -
- arch/arm64/boot/dts/ti/k3-am62a-main.dtsi          |   2 -
- .../boot/dts/ti/k3-am62p-j722s-common-main.dtsi    |   2 -
- .../arm64/boot/dts/ti/k3-am62x-sk-csi2-imx219.dtso |   3 +-
- .../arm64/boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso |   2 +-
- .../boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso  |   2 +-
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi           |   2 +
- arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts   |  13 +-
- .../boot/dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso  |  35 ++-
- arch/arm64/boot/dts/ti/k3-j721e-sk.dts             |  31 +++
- arch/arm64/boot/dts/ti/k3-j722s-evm.dts            |   8 +
- arch/arm64/boot/dts/ti/k3-j722s-main.dtsi          |   4 +
- .../boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi  |   2 +-
- arch/um/Makefile                                   |   1 +
- drivers/char/tpm/tpm-buf.c                         |   6 +-
- drivers/dma/idxd/cdev.c                            |   4 +-
- drivers/gpio/gpio-virtuser.c                       |  12 +-
- .../dc/dml2/dml21/dml21_translation_helper.c       |  20 +-
- drivers/gpu/drm/amd/display/dc/link/link_dpms.c    |  13 +-
- drivers/gpu/drm/xe/regs/xe_gt_regs.h               |   1 +
- drivers/gpu/drm/xe/xe_lrc.c                        |   4 +-
- drivers/gpu/drm/xe/xe_lrc_types.h                  |   4 +-
- drivers/gpu/drm/xe/xe_wa.c                         |   4 +
- drivers/hid/hid-ids.h                              |   4 +
- drivers/hid/hid-quirks.c                           |   2 +
- drivers/net/can/kvaser_pciefd.c                    |  83 ++++---
- drivers/net/ethernet/ti/am65-cpsw-nuss.c           |   2 +-
- drivers/nvme/host/pci.c                            |   2 +
- drivers/perf/arm-cmn.c                             |  11 +-
- drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c  |   2 +
- drivers/phy/starfive/phy-jh7110-usb.c              |   7 +
- drivers/platform/x86/fujitsu-laptop.c              |  33 ++-
- drivers/platform/x86/thinkpad_acpi.c               |   7 +
- drivers/spi/spi-sun4i.c                            |   5 +-
- fs/coredump.c                                      |  65 +++++-
- fs/nfs/client.c                                    |   2 +
- fs/nfs/dir.c                                       |  15 +-
- fs/nfs/filelayout/filelayoutdev.c                  |   6 +-
- fs/nfs/flexfilelayout/flexfilelayoutdev.c          |   6 +-
- fs/nfs/pnfs.h                                      |   4 +-
- fs/nfs/pnfs_nfs.c                                  |   9 +-
- fs/smb/server/oplock.c                             |   7 +-
- include/linux/coredump.h                           |   1 +
- include/linux/nfs_fs_sb.h                          |  12 +-
- net/sched/sch_hfsc.c                               |   9 +-
- sound/pci/hda/patch_realtek.c                      |   5 +-
- 57 files changed, 408 insertions(+), 355 deletions(-)
-
 
