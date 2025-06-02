@@ -1,133 +1,132 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D55F01C3BEB;
-	Mon,  2 Jun 2025 12:26:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC887485;
+	Mon,  2 Jun 2025 12:26:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748867163; cv=none; b=s0b1C85RG6TXnw+T21xSs/uvdhCBdWbFIVNRDUB9MCxMYjxbOTNVUChpxL0FxdCfOpD4axPOoq4rmYvsEMgk/O87gJvg9HG7iBWTthA6FXg29f2ve6mK/yP8spEvnawAkQBXLSuxXQSZDtfqf4ZfD558s4VUoiEJGjqz/eYBaSg=
+	t=1748867179; cv=none; b=EIFsE4yVD3YgnUCr5vc6o0I0xz+AdPd7H0k3Fr1JMaapoZJ9TLpYArZ+CWpwKNtT3lJPim2A35oheFwKeVELk82KFiksJA/QbO+KVd8ArJQXX323Uw0VabAGl4kPWwSQ18nmsqbY8nOKinM4HK/OpieT8G5qN201Otd2nb3LGU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748867163; c=relaxed/simple;
-	bh=IvyJNoELFWAc1pwZK+On2sYk30E3H6Bv/8JU7bkB85k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jvfduy/ST6xibayLarFX4kfKxuEndm+PJ4EvTxCJkfh/7Xn5iNhy0bl7hNat56R8Qg2Cc9/K2g9ll4ZTVtyis9yS8z6q41Vsi0vA6cZuOFf/GC/2FOhJb6qDKVWZ/towUFEMy8GGSD6lm5hOGxXnL0wF5uYLX6MYuqFqllF7uJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LlZX0/wJ; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748867179; c=relaxed/simple;
+	bh=pGav0rV/4DOUeGB4H+ahrH4gCJmO5uEhsOKx1aE0EmE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W15GFh1G5SqLNNhNxJ9wgZI7eJ/ce7BGPsca8l9CVdDlIPxSXXO8biRav7h7dhCyKqNINu2q3iBdNGL5biQXO+NMlaf7Gg8fqIUkmtQsBVieVS2Ma3tos+rk6IPglYONfMh1NaE0Y6yFIcOfczi3OaCbE5v9Ye5/eqJMnaW6SwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qxjHyms0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LlZX0/wJ"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-31062172698so42336711fa.0;
-        Mon, 02 Jun 2025 05:26:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748867160; x=1749471960; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=I+xZ+1rNLzamfg62JThm32IA/jBJvxSiOUYhQofWR7Y=;
-        b=LlZX0/wJKafnFvB+ORVJsAkWbkWzFAoNESv0jE2azkQVXihL4RMxNpsHIhxsGIufyG
-         7RG7CoPt6XJ/HhjtX31Ad2m/fzMOZVzmfNDjqQ9I4GmIe7HaRF+ufZKdpf5xNEgYapQI
-         i6ZRQrZt5NQPRaHRaaA1aTD/dbWEDxdGbXX3F75OWM9DTscCpTgXINjAiAfxUI4GMS3s
-         lKNWGJCxi2MQo2Nl2nVYi/dwyfMr8kceX6jXTmsvBYnafP4aw3naUssCeHSNRMuacdc7
-         4l5D/dpgd2nvxMLE+rn4VysG8sJ0fCKn8MjWBR4Px0In9vVJcb8QL+CfH5mlqxCzlz6X
-         6Erw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748867160; x=1749471960;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I+xZ+1rNLzamfg62JThm32IA/jBJvxSiOUYhQofWR7Y=;
-        b=H0pFi5lwplyfopzSM1FGBjvNdCaPGqDybOwcIMeqQAZwvaUCDjYSVXAoStdrCuZQBn
-         PGyps+xsXZ+eM2+6SzA51jZaqtGs6oDUovyap4XTTfggD/JHgjF4jriZeZ2Qdf8lSUjY
-         Nmq7ytalyh+jwQS/37tHPrHdOaPTZ4sUaeMDBPfC0GbrLLaGPGbRLC950XmsXc2QhpJI
-         aPmWEXOhxsQYM/QvF3ftwU/sDdvgAlb0auFt367uYSdXkk5LCXqp/ruuIkT/IUEfd5V8
-         ps3xzoIiiGvhgZ8BYzUVrUZIhdK7EKRSkmmnJktHQ4KnLuYy9q48i4s/vg9f8Uzy/+TW
-         h/dg==
-X-Forwarded-Encrypted: i=1; AJvYcCU8ZJx/4eUezg2E+WHr+HsKBtSWt8DWrlKTzYFUk8BMyZPEkYHFEWb2w/6vmdoLKRY1x4JG8Py42pehUTNGoMs=@vger.kernel.org, AJvYcCULKT8lAWN6qSxVjf7GwU8uYJDSZDTCmYRJHHVUo1vGP31R61JIWQwE/Qs8jPkgURr41O17SNysQhgm494=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKdqMyDRms3e2qCt6Sk9CH0isJM46M3noXLJTu5qsCJsVFRZcS
-	xK+6GmySbhp6ABVX1a8fcxs/Pa3qNgviN5qjWWXUQ8MzGG8JnyZJMegEN/PIzQ==
-X-Gm-Gg: ASbGncuos0GhUz96bpn8fIdVKXVRurl2LZ17lHICJ8M+2PV5n8z4JsLiTODXmLP98mA
-	KUbqc8+d6smr9kgejC2E30IHZ45FWV/wtpRfzwOrQ/4rHksAfJL4qzxOFpJd1Mei5QTH1ucVXgl
-	TaxGku2+W+cf0Q064xWC+4OzYW+6eqZYFvl1JzzmyIw3j5DAcJt6IVdS/Qtfuho4Wi8mYitgw1k
-	jBhHkAHzbMdMkSFZLN+/x4RNu+pUoLebZLa/A3uqiy0ziZuUEBCIn3DipEwj1j0XjX67KziyDJx
-	weRzGAxcBYHu02TU3h6p5k15RPxhCKoOyvUODIBs2urbFPyJX7IkAxK0/dAlFHg32/xo9pyxi5i
-	dned8wnJuFVCmBcv23D+MYumIkL/QeGpm96Wx+HI=
-X-Google-Smtp-Source: AGHT+IHfLZLW7auV30M3BKqzYy/PS/uhPlzd7MURt+DLuiKZmTu4Csl3qjOP0d7BohBDI7Zrb+dLMQ==
-X-Received: by 2002:a05:651c:3247:20b0:32a:8c95:d841 with SMTP id 38308e7fff4ca-32a9e9cee67mr11289011fa.14.1748867159569;
-        Mon, 02 Jun 2025 05:25:59 -0700 (PDT)
-Received: from [192.168.1.146] (dsl-hkibng22-54f8dc-251.dhcp.inet.fi. [84.248.220.251])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32a85b527ecsm15045091fa.48.2025.06.02.05.25.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Jun 2025 05:25:59 -0700 (PDT)
-Message-ID: <5380b2a1-8a92-4362-a014-132fbc301579@gmail.com>
-Date: Mon, 2 Jun 2025 15:25:58 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qxjHyms0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 027E9C4CEEB;
+	Mon,  2 Jun 2025 12:26:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748867178;
+	bh=pGav0rV/4DOUeGB4H+ahrH4gCJmO5uEhsOKx1aE0EmE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qxjHyms02HjbpPTnGWZmqPqj+KZ/H1XdJ1NYNG9XS0FeIlay0EBDS/PLxYFMVRGuH
+	 S+7p1YqfJWknZdMnu2Td8xPx83dfa8SHf8G3sbAUBzuNSFEda7QDF8dOx1fNV/riLh
+	 JOuLYdLUrSsjhDhA0C9EKzqtgKFYox3J4kBIesPZwmnoOOQ5gb18yvnZyr/FMETj5N
+	 Kz2EV3nl1s3gMZnLm6UoygG3u42IfoVBWRY0lTH7P+IGy87/ALjBjlRFSOXyuJFPna
+	 JevSrOgnIB/vTQN9wAlY6CrFAffxKMjqm+yDdHenBqjrMn7XybM64UjNNC3FvVDTml
+	 4v6OBQp0S88tA==
+Date: Mon, 2 Jun 2025 14:26:11 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v4 15/20] gpu: nova-core: firmware: add ucode descriptor
+ used by FWSEC-FRTS
+Message-ID: <aD2YY_zpo01rYkgN@pollux>
+References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
+ <20250521-nova-frts-v4-15-05dfd4f39479@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] rust: add initial scatterlist bindings
-To: Jason Gunthorpe <jgg@ziepe.ca>, Alexandre Courbot <acourbot@nvidia.com>
-Cc: dakr@kernel.org, lyude@redhat.com, Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Valentin Obst <kernel@valentinobst.de>,
- open list <linux-kernel@vger.kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Robin Murphy <robin.murphy@arm.com>, airlied@redhat.com,
- rust-for-linux@vger.kernel.org,
- "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
- Petr Tesarik <petr@tesarici.cz>, Andrew Morton <akpm@linux-foundation.org>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- Sui Jingfeng <sui.jingfeng@linux.dev>, Randy Dunlap <rdunlap@infradead.org>,
- Michael Kelley <mhklinux@outlook.com>
-References: <20250528221525.1705117-1-abdiel.janulgue@gmail.com>
- <20250528221525.1705117-2-abdiel.janulgue@gmail.com>
- <20250529004550.GB192517@ziepe.ca> <DA9JTYA0EQU8.26M0ZX80FOBWY@nvidia.com>
- <20250530141419.GA292183@ziepe.ca> <DA9KQF9CY77R.77PBMU8Y1FPY@nvidia.com>
- <20250530145026.GB293473@ziepe.ca> <DAAD0NZOCHS5.9FTVJIOI12QI@nvidia.com>
- <20250602114047.GA298147@ziepe.ca>
-Content-Language: en-US
-From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
-In-Reply-To: <20250602114047.GA298147@ziepe.ca>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250521-nova-frts-v4-15-05dfd4f39479@nvidia.com>
 
-
-
-On 02/06/2025 14:40, Jason Gunthorpe wrote:
-> On Sat, May 31, 2025 at 09:54:20PM +0900, Alexandre Courbot wrote:
+On Wed, May 21, 2025 at 03:45:10PM +0900, Alexandre Courbot wrote:
+> FWSEC-FRTS is the first firmware we need to run on the GSP falcon in
+> order to initiate the GSP boot process. Introduce the structure that
+> describes it.
 > 
->> So if I understood your idea correctly, this would mean creating the
->> SGTable and mapping it in one call, eschewing the typestate entirely?
+> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+> ---
+>  drivers/gpu/nova-core/firmware.rs | 43 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
 > 
-> Probably no need for a type state
-> 
->> And the `SGTable` would own the backing data, and only release it upon
->> destruction and unmapping?
-> 
-> But I don't think you can do this, it is not allowed to pin kmalloc
-> memory for instance so you have to do something as you showed to tie
-> the lifetime to the kmalloc across the sgtable lifetime.
-> 
+> diff --git a/drivers/gpu/nova-core/firmware.rs b/drivers/gpu/nova-core/firmware.rs
+> index 4b8a38358a4f6da2a4d57f8db50ea9e788c3e4b5..f675fb225607c3efd943393086123b7aeafd7d4f 100644
+> --- a/drivers/gpu/nova-core/firmware.rs
+> +++ b/drivers/gpu/nova-core/firmware.rs
+> @@ -41,6 +41,49 @@ pub(crate) fn new(dev: &device::Device, chipset: Chipset, ver: &str) -> Result<F
+>      }
+>  }
+>  
+> +/// Structure used to describe some firmwares, notably FWSEC-FRTS.
+> +#[repr(C)]
+> +#[derive(Debug, Clone)]
+> +pub(crate) struct FalconUCodeDescV3 {
+> +    /// Header defined by `NV_BIT_FALCON_UCODE_DESC_HEADER_VDESC*` in OpenRM.
+> +    ///
+> +    /// Bits `31:16` contain the size of the header, after which the actual ucode data starts.
 
-We could explicitly have the SGTable own the backing store, so the 
-lifetime of the pages is connected to it? ie., we have a VVec with the 
-kmalloc allocator, instead of passing a a reference to pages, one could 
-have the page builder something in the likes of:
+The field is private; this information is much more needed in Self::size().
 
-sgt.init(||
-	let k = Vec::<PageSlice, Kmalloc>::new();
-	k.reserve(pages, GFP_KERNEL) {
-	...
-	)
+> +    hdr: u32,
+> +    /// Stored size of the ucode after the header.
+> +    stored_size: u32,
+> +    /// Offset in `DMEM` at which the signature is expected to be found.
+> +    pub(crate) pkc_data_offset: u32,
+> +    /// Offset after the code segment at which the app headers are located.
+> +    pub(crate) interface_offset: u32,
+> +    /// Base address at which to load the code segment into `IMEM`.
+> +    pub(crate) imem_phys_base: u32,
+> +    /// Size in bytes of the code to copy into `IMEM`.
+> +    pub(crate) imem_load_size: u32,
+> +    /// Virtual `IMEM` address (i.e. `tag`) at which the code should start.
+> +    pub(crate) imem_virt_base: u32,
+> +    /// Base address at which to load the data segment into `DMEM`.
+> +    pub(crate) dmem_phys_base: u32,
+> +    /// Size in bytes of the data to copy into `DMEM`.
+> +    pub(crate) dmem_load_size: u32,
+> +    /// Mask of the falcon engines on which this firmware can run.
+> +    pub(crate) engine_id_mask: u16,
+> +    /// ID of the ucode used to infer a fuse register to validate the signature.
+> +    pub(crate) ucode_id: u8,
+> +    /// Number of signatures in this firmware.
+> +    pub(crate) signature_count: u8,
+> +    /// Versions of the signatures, used to infer a valid signature to use.
+> +    pub(crate) signature_versions: u16,
+> +    _reserved: u16,
+> +}
+> +
+> +// To be removed once that code is used.
+> +#[expect(dead_code)]
+> +impl FalconUCodeDescV3 {
 
-Anyway this probably needs the related (still WIP btw) support in: 
-https://lore.kernel.org/rust-for-linux/20241119112408.779243-3-abdiel.janulgue@gmail.com/ 
+    const HDR_SIZE_SHIFT: u32 = 16;
+    const HDR_SIZE_MASK: u32 = 0xffff0000;
 
+> +    pub(crate) fn size(&self) -> usize {
+> +        ((self.hdr & 0xffff0000) >> 16) as usize
 
-/Abdiel
+	((self.hdr & HDR_SIZE_MASK) >> Self::HDR_SIZE_SHIFT)
 
+In this case it may look a bit pointless, but I think it would make sense to
+establish to store consts for shifts and masks in general, such that one can get
+an easy overview of the layout of the structure.
