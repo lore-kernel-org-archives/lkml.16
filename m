@@ -1,169 +1,194 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA2520371E;
-	Mon,  2 Jun 2025 13:14:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB242C327D
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 13:19:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748870080; cv=none; b=CVcE4UQHaO9ek9E3mKIaJ5Y3c5NXIE0N/Uqvaek3dhw1g+gyqslDBZpIYbgYaLlU4yKX9BwdVWSk0Cifx4cdYVgDV+Wbx/BfDYZaisdHtZM/RKkB8yAgtLEryvVF+rcA6T2e68RcJOsXKAePwDrOFUiZz4O1Yk5f20iVR8yZp0s=
+	t=1748870368; cv=none; b=YdE/PELT1QcZOmK5ouKarbYm/xxL0lBGyh3m8OiBo5O1ZzaZbpYLeq9a+ReX6kL25edwLh1PPVlHYVA2xzl3aq1WJEOccEk1A/KQ+OTmc66QgKNy2Q671sWlUaDbvB0GMq+nYxTzVh+pqawReZf/9kjqgSDzZ4BOZFojft17Jlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748870080; c=relaxed/simple;
-	bh=TTwL/BKTMRfWSpnqfREP0hMXmoloFSrx+yYMDC7F1Z4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q/hcrdVD27zfBU/7OgkT/8d869GVkDrf7BPJMr7QVhwNUUrpLu7DUow8w3dTl2nIcpOETa3b17lsbKSYQfXfu7mVmi603ltDYjQblQrQsdLtMVwrNDBv+vXN3mEU+LdPPB5RdeNEamAbU6zVlmrBDPV2T9ar2FPdpP+ljW5AM34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=Zltz4DYE; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1748870368; c=relaxed/simple;
+	bh=urOJkX2VjWSvjtiwfgDrnKakD4pvfzNkU4bAqbjE+Lg=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=sUKXIZq6v7do+XPepfCASmRhu1xVQux+NIlV13PFiDwsFTrPh5YPx89aatpERESLcWZisOB999QwuUTGkCg2eu1JeF1Wdhrd0NJa6FJzzRsUstRXHZp15EHIXXWfj0iAH6ai3bjyJJe27Hro1FTqNvmr89PvQQJGqLcNKeSb9V8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=jt+WSqEB; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="Zltz4DYE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=Th1bsXYbOdZNBdF4HpkqWzJZdFEbTYJpHy2+yVwfjLk=; b=Zltz4DYEAJKKQbIDz9XRJRi/AJ
-	59wjiN/h8OXZGaXQGB0452s2iFnI1zU+IPY1w8k5EKp4u81L8YgToJme/4Y7pK4jA7yez7TWCegkN
-	OQGc6sZvsIGtymAkACMrMnE+3y/Vp/fxEgFVrLGadY4xXOxOmQoQjzfqn8Jw08rbA0Dys9bFKdTiw
-	G2mLBp2M1MzNsCfMVOOIWHQmWJHz3hU0XprPlfMM2WzxPYznBwsqZaI8KwuAnwKZ6jyx/ju6Onc+R
-	+P9cVvuKJ90OZhDAIq7vBruure411VR6UT/1AJtSwfuDuniO2L7l0hC3GCGZge3bprxpiH4EYriKg
-	Pip1Md9A==;
-Received: from i53875a2b.versanet.de ([83.135.90.43] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uM4zc-00038Y-5g; Mon, 02 Jun 2025 15:14:20 +0200
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
- William Breathitt Gray <wbg@kernel.org>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Kever Yang <kever.yang@rock-chips.com>,
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
- linux-iio@vger.kernel.org, kernel@collabora.com,
- Jonas Karlman <jonas@kwiboo.se>,
- Detlev Casanova <detlev.casanova@collabora.com>
-Subject: Re: [PATCH 4/7] soc: rockchip: add mfpwm driver
-Date: Mon, 02 Jun 2025 15:14:19 +0200
-Message-ID: <1970051.6tgchFWduM@diego>
-In-Reply-To: <13790724.uLZWGnKmhe@workhorse>
-References:
- <20250408-rk3576-pwm-v1-0-a49286c2ca8e@collabora.com>
- <2188729.OBFZWjSADL@diego> <13790724.uLZWGnKmhe@workhorse>
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="jt+WSqEB"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4a4323fe8caso28524211cf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 06:19:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1748870364; x=1749475164; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=hNeIv0nkqI8i4I6qvdfHDcZqAUy2I6oKFEk2iwT02ZU=;
+        b=jt+WSqEB7Xcev5d272aI4P/K5v/unhe4k/+bHCNfLxcZyI78UanGn1BGh3bk8ysm/g
+         pM9Uiq0WLcQfvyUoIXyaB0SEkTRFriT5jwAYWbQq4bK3PoQIMRrIH0G1axTU3Cbovfdb
+         zkPgBcpYnXdrxKz/h2K322Y8BHaPuRZIRpSA0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748870364; x=1749475164;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hNeIv0nkqI8i4I6qvdfHDcZqAUy2I6oKFEk2iwT02ZU=;
+        b=EqLiR000Wogley/iRXIY2X7GO7KKL3XeDfm7LuSo9ECdLMT/bhmJGdRdsui2cSpJWd
+         CXRa4liRJFco+DFxrzpz30gT8R7QRQdOU2wH1colI8HZDggTDbS10X5q9PrV/ggtgD7T
+         ioo1g23JQ23nLsQSvzVhvD88dsDacNf+3+h7wZI97qLMMvAjPo0l+JDlH7cEC8mBCd+n
+         WXwdS8TBFqZDYlGyK/d4bjiQmqdBJLBQZMBOSnMtTtyuAbTpOOLInrgcjANoRqRpaG3j
+         kOECP0blU4f00AYJ4U3QEH60Ax8/v4RSiyE61M67219yZojohK0BaHb8kk9jkvoco3IO
+         BBug==
+X-Forwarded-Encrypted: i=1; AJvYcCVBB/2+z88P+aWC5exWrcTs5ArgA0xSfCqbO40kdrg70YmnswVMyI1STkbdeV2iDlX9aRyk0Zfpr0+qFwA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5xB08iXc2JEQ7drXzIznp7uo9H+p3pXRlTBRhEFmcjEaBUo5o
+	/SW9Ib9Xe6eJoENetUyUYd2IazX+K/fdQWyzVXXwlIjkSs87T1Rul7g34rhYwz+m4hPojCCTHrK
+	4qJ1N1rhWdR+TxbCGqLUMbtHhY6KteyAQzN8yg7qCZg==
+X-Gm-Gg: ASbGncv+52QB/4+2lzJJQDEl2lHGWPO9kguP+TZP43Tyn3IuQvxwgeiY/9tvUmo8SOJ
+	icTQSshiQ8u0ihEopWRWrLb1PrY71DvtxeLFrCJQj9yZaIBUJXe9uvBFA2N6nO4W4j8GUwwkQy7
+	f5LPql1iucuMpQjStW5qd5Et9wn8/ujeA=
+X-Google-Smtp-Source: AGHT+IEqIX8uBNZUeXHVbIz/ByVsdfNk1YkCWbKwHXwV4z/QG9MV95SEQtbIlnvdSjm7wzaXzKGQ6VmxZihpWuWuYys=
+X-Received: by 2002:a05:622a:4d96:b0:4a4:3a45:a870 with SMTP id
+ d75a77b69052e-4a4aed86be6mr152401871cf.41.1748870363569; Mon, 02 Jun 2025
+ 06:19:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Mon, 2 Jun 2025 15:19:12 +0200
+X-Gm-Features: AX0GCFvw7gX-uNdjKLeV2woDtV5Y5MaBSm2beYIlJgsMM4lk09sgtGqTtt8oGcg
+Message-ID: <CAJfpegspRzFpTreohM56=ztnjaU2gVFYnvF2WETaD+LiymB8WQ@mail.gmail.com>
+Subject: [GIT PULL] fuse update for 6.16
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="000000000000c799f60636969cd7"
 
-Am Montag, 2. Juni 2025, 14:15:45 Mitteleurop=C3=A4ische Sommerzeit schrieb=
- Nicolas Frattaroli:
-> On Saturday, 31 May 2025 23:48:29 Central European Summer Time Heiko St=
-=C3=BCbner wrote:
-> > Am Dienstag, 8. April 2025, 14:32:16 Mitteleurop=C3=A4ische Sommerzeit =
-schrieb Nicolas Frattaroli:
+--000000000000c799f60636969cd7
+Content-Type: text/plain; charset="UTF-8"
 
-> > On a more general note, what is the differentiation to an MFD here?
-> >=20
-> > Like you can already bind dt-nodes to MFD subdevices, and can implement
-> > the exclusivity API thing on top of a general mfd device, to make sure =
-only
-> > one mfd-cell gets activated at one time.
-> >=20
-> > Other than that, this looks like it reimplements MFDs?
->=20
-> What initially made me not make this an MFD was Uwe Kleine-K=C3=B6nig exp=
-ressing
-> some doubts, which lead me to alternatives like the auxiliary bus. Readin=
-g the
-> auxiliary bus docs I found:
->=20
->   A key requirement for utilizing the auxiliary bus is that there is no
->   dependency on a physical bus, device, register accesses or regmap suppo=
-rt.
->   These individual devices split from the core cannot live on the platform
->   bus as they are not physical devices that are controlled by DT/ACPI. The
->   same argument applies for not using MFD in this scenario as MFD relies =
-on
->   individual function devices being physical devices.
+Hi Linus,
 
-Interestingly the 5 year old LWN article seems to have been overtaken by
-real-world usage ;-) .
+Please pull from:
 
-I see pinctrl/pinctrl-ep93xx.c using regmaps (and thus registers), similarly
-in gpu/drm/bridge/ti-sn65dsi86.c and a number more.
+  git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git
+tags/fuse-update-6.16
 
+- Remove tmp page copying in writeback path (Joanne).  This removes
+~300 lines and with that a lot of complexity related to avoiding
+reclaim related deadlock.  The old mechanism is replaced with a
+mapping flag that tells the MM not to block reclaim waiting for
+writeback to complete.  The MM parts have been reviewed/acked by
+respective maintainers.
 
-> Additionally, LWN[1] about the auxiliary bus, which I've read up on durin=
-g my
-> ill-fated journey into that version of the driver, also goes further into=
- why
-> MFD is sometimes a bad fit:
+- Convert more code to handle large folios (Joanne).  This still just
+adds the code to deal with large folios and does not enable them yet.
 
-[...] LWN excerpt [...]
+- Allow invalidating all cached lookups atomically (Luis Henriques).
+This feature is useful for CernVMFS, which currently does this
+iteratively.
 
-> The individual function devices may be all pointing at the same physical
-> device here, but they're not distinct parts of the device. However, there
-> still *is* a physical device, which convinced me that auxiliary bus wasn't
-> the right one either, and the idea for just using the platform bus came
-> during a work meeting. If someone with experience on aux bus vs platform =
-bus
-> (what this uses) vs MFD, then feel free to chime in. Unfortunately, as is=
- the
-> norm, I can't seem to find much in terms of MFD documentation. Needing to=
- know
-> what type of exclusion they guarantee and what type of abstractions they =
-bring
-> with them that would make them more useful than my solution would need so=
-me
-> justification in more than just an auto-generated header listing.
+- Align write prefaulting in fuse with generic one (Dave Hansen)
 
-I think MFD itself does not provide any exclusivity - aka allowing definiti=
-ons
-that combinations of sub-devices cannot be used at the same time.
+- Fix race causing invalid data to be cached when setting attributes
+on different nodes of a distributed fs (Guang Yuan Wu)
 
-But as I see it right now, you have sort of a mfd-device in there, creating
-all the sub-devices and then the aquire/release logic on top making sure
-only one device is ever active at the same time.
+- Update documentation for passthrough (Chen Linxuan)
 
-Right now I really don't see (prone to code-blindness though) why the
-aquire/release logic could not live in a mfd-device.
+- Add fdinfo about the device number associated with an opened
+/dev/fuse instance (Chen Linxuan)
 
+- Increase readdir buffer size (Miklos).  This depends on a patch to
+VFS readdir code that was already merged through Christians tree.
 
-> I am very inclined to start pretending things that aren't documented do
-> not actually exist in the kernel, because it's very annoying to have to
-> constantly deal with this.
+- Optimize io-uring request expiration (Joanne)
 
-Sadly the "ostrich method" won't work ;-)
+- Misc cleanups
 
-So as a way forward, I'd suggest you posting your v2, so that all the
-current review comments get addressed and amending the
-cover-letter with the aux-bux / mfd discussion thing (ideally in a
-somewhat highlighed block so that people skimming along will notice)
-and include the relevant people:
+There's conflict with commit 74e6ee62a894 ("fuse: drop usage of
+folio_index") the first hunk of which just gets evicted with the tmp
+page cleanup and the second one needs to apply the trivial
+folio_index(folio) -> folio->index conversion to my version.
+Resolution attached.
 
-=2D for aux-bux get_maintainer.pl says:
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> (maintainer:AUXILIARY BUS D=
-RIVER)
-Dave Ertman <david.m.ertman@intel.com> (reviewer:AUXILIARY BUS DRIVER)
-Ira Weiny <ira.weiny@intel.com> (reviewer:AUXILIARY BUS DRIVER)
-Leon Romanovsky <leon@kernel.org> (reviewer:AUXILIARY BUS DRIVER)
+Thanks,
+Miklos
+---
 
-=2D and for MFD it's of course Lee:
-Lee Jones <lee@kernel.org> (maintainer:MULTIFUNCTION DEVICES (MFD))
+Chen Linxuan (3):
+      MAINTAINERS: update filter of FUSE documentation
+      docs: filesystems: add fuse-passthrough.rst
+      fs: fuse: add dev id to /dev/fuse fdinfo
 
+Dave Hansen (1):
+      fuse: Move prefaulting out of hot write path
 
-Heiko
+Guang Yuan Wu (1):
+      fuse: fix race between concurrent setattrs from multiple nodes
 
+Jiale Yang (1):
+      fuse: change 'unsigned' to 'unsigned int'
 
-> [1]: https://lwn.net/Articles/840416/
+Joanne Koong (15):
+      fuse: Convert 'write' to a bit-field in struct fuse_copy_state
+      fuse: use boolean bit-fields in struct fuse_copy_state
+      fuse: optimize over-io-uring request expiration check
+      mm: skip folio reclaim in legacy memcg contexts for deadlockable mappings
+      fuse: remove tmp folio for writebacks and internal rb tree
+      fuse: support copying large folios
+      fuse: support large folios for retrieves
+      fuse: refactor fuse_fill_write_pages()
+      fuse: support large folios for writethrough writes
+      fuse: support large folios for folio reads
+      fuse: support large folios for symlinks
+      fuse: support large folios for stores
+      fuse: support large folios for queued writes
+      fuse: support large folios for readahead
+      fuse: support large folios for writeback
 
+Luis Henriques (1):
+      fuse: add more control over cache invalidation behaviour
 
+Miklos Szeredi (3):
+      fuse: don't allow signals to interrupt getdents copying
+      readdir: supply dir_context.count as readdir buffer size hint
+      fuse: increase readdir buffer size
 
+---
+ Documentation/filesystems/fuse-passthrough.rst | 133 +++++++
+ Documentation/filesystems/index.rst            |   1 +
+ MAINTAINERS                                    |   2 +-
+ fs/exportfs/expfs.c                            |   1 +
+ fs/fuse/dev.c                                  | 182 ++++++----
+ fs/fuse/dev_uring.c                            |  34 +-
+ fs/fuse/dir.c                                  |  46 ++-
+ fs/fuse/file.c                                 | 474 ++++++-------------------
+ fs/fuse/fuse_dev_i.h                           |   9 +-
+ fs/fuse/fuse_i.h                               |  10 +-
+ fs/fuse/inode.c                                |  11 +-
+ fs/fuse/readdir.c                              |  40 +--
+ fs/overlayfs/readdir.c                         |  12 +-
+ fs/readdir.c                                   |  47 ++-
+ include/linux/fs.h                             |  10 +
+ include/linux/pagemap.h                        |  11 +
+ include/uapi/linux/fuse.h                      |   6 +-
+ mm/vmscan.c                                    |  12 +-
+ 18 files changed, 519 insertions(+), 522 deletions(-)
+ create mode 100644 Documentation/filesystems/fuse-passthrough.rst
 
+--000000000000c799f60636969cd7
+Content-Type: text/x-patch; charset="US-ASCII"; name="conflict-res.patch"
+Content-Disposition: attachment; filename="conflict-res.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_mbf44ewu0>
+X-Attachment-Id: f_mbf44ewu0
+
+ZGlmZiAtLWNjIGZzL2Z1c2UvZmlsZS5jCmluZGV4IDZmMTlhNGRhYTU1OSwzZDBiMzNiZTM4MjQu
+LjAwMDAwMDAwMDAwMAotLS0gYS9mcy9mdXNlL2ZpbGUuYworKysgYi9mcy9mdXNlL2ZpbGUuYwpA
+QEAgLTIzNDksNyAtMjExOCw3ICsyMTE4LDcgQEBAIHN0YXRpYyBib29sIGZ1c2Vfd3JpdGVwYWdl
+X25lZWRfc2VuZChzdAogIAkJcmV0dXJuIHRydWU7CiAgCiAgCS8qIERpc2NvbnRpbnVpdHkgKi8K
+LSAJaWYgKGRhdGEtPm9yaWdfZm9saW9zW2FwLT5udW1fZm9saW9zIC0gMV0tPmluZGV4ICsgMSAh
+PSBmb2xpby0+aW5kZXgpCiAtCWlmIChmb2xpb19uZXh0X2luZGV4KGFwLT5mb2xpb3NbYXAtPm51
+bV9mb2xpb3MgLSAxXSkgIT0gZm9saW9faW5kZXgoZm9saW8pKQorKwlpZiAoZm9saW9fbmV4dF9p
+bmRleChhcC0+Zm9saW9zW2FwLT5udW1fZm9saW9zIC0gMV0pICE9IGZvbGlvLT5pbmRleAogIAkJ
+cmV0dXJuIHRydWU7CiAgCiAgCS8qIE5lZWQgdG8gZ3JvdyB0aGUgcGFnZXMgYXJyYXk/ICBJZiBz
+bywgZGlkIHRoZSBleHBhbnNpb24gZmFpbD8gKi8K
+--000000000000c799f60636969cd7--
