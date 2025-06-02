@@ -1,118 +1,145 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD6F20E026;
-	Mon,  2 Jun 2025 15:38:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92BF120E026;
+	Mon,  2 Jun 2025 15:40:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748878737; cv=none; b=uTnpHGdEN4fVNESbkW6JET4K7V8aR8EEswOzjx9BAnTQay8ZV3xcoWQNsnF9ALdcxD3vCFgTCJSqjgyzJJVvk/f+KmbZHVBMEh2jAV6YHag0Us6S138vF5OO/u0AFX7uHOhpSLq4QbuO/QkLNMooLtWgHtNg3xJOZ1fVrxP0tMA=
+	t=1748878822; cv=none; b=iCYy3cEHAXY0v9H/WemWOIOYFRNcB97+4GpqXOsKj1OGHAiZxLkEgQF1ont/s9FC4UYTZeL7zNxG1zggbqLRTAWLfXPwYJP7Wwzj//mEm5LDJDwgi4IJWhXM5kPelvk9W0Wcte4I1eKutiTcPvPD0f3yMpfkLKvlWOhpJwhnZKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748878737; c=relaxed/simple;
-	bh=X+E1oAHuMGqBToj3jAeeM8hGE/nfxaFldIcCYaSnIys=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tPc4fEMNjxQd9XxQOWQU9qbSizii2voLb48iBigGn6eqMycchLy9cY+sLwp3hPa0awPqCl5/q6Z3uZRwsbFLNLtOkefMjZh1SaedjAJtGtEL53ukGI3E/w/H4ZJGeDApAf+Z2NLW07xAIwrCFRM4ZaRyWsrsm7CeNKbB3PP4m5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DzKY6x6z; arc=none smtp.client-ip=209.85.216.48
+	s=arc-20240116; t=1748878822; c=relaxed/simple;
+	bh=R9Y05yx+OBDd8zhRYutvh4ZOz89p/wmEiP+mhd2CITM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EU7ow+D82+6hZQQ1/j7DrmcDYDsttRIXQfdj8HQjMgPwsL4mqTfmt8/YLccClEKmBDJEbM1onxO+RVnjntoifuL161n1gE7pTXk+vJIJPa1i1S7rBz+IiRleb7PcffNWGx/fQbTzGEffVf9HF3LuygslbvOAThDxgFXOHtAM08U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ApJVqihv; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DzKY6x6z"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-311da0bef4aso4980239a91.3;
-        Mon, 02 Jun 2025 08:38:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ApJVqihv"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-450cfb790f7so33589025e9.0;
+        Mon, 02 Jun 2025 08:40:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748878734; x=1749483534; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=K7WwE2szzySMaSbvnDjlIKqzFYgvBzLvgLKYcMgSkS4=;
-        b=DzKY6x6zXNPgPxGjayTKSa0Fp4jIXZm553BmIcV3zlo74Vlj7KO6hV9msv/98TyHBa
-         l05K3dpncCb+8vBvOCwIFQcgUeiH2s0ho3rGkIYjoVq0Yt77XuEy0k3YD1Djwpgr4Nkd
-         3D5ZMiOGWGGrrJkEnJaj7AQFElC9wuYd77dnUHkzC3UzfmBeVtwI+ARf/Q0etvgeMLWc
-         zg9/re+ko5n0xrAR1RkfARfAqhVLrjvp3VlxXoMmt8GloK+tMLtlsxGw+PD9rJKISmKA
-         PQFoCnbFuPuXa0D1naSVqUNffMAP//vtFFWU7kNzO3ucdHWmUf/6vILATJrvHQU65+8V
-         KS+Q==
+        d=gmail.com; s=20230601; t=1748878815; x=1749483615; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R9Y05yx+OBDd8zhRYutvh4ZOz89p/wmEiP+mhd2CITM=;
+        b=ApJVqihv/KOFu0lSmE3lUUiFFln46DU6VgXZ3hdBYn5DQ8xOuN9guJ1Q79sAj8YAIr
+         7pGEfXFlkVobw9AvjbYadwx3idjFKLYXC+m20mbXQh4/+H1pjqYXu4Od6RsjgfMctnpr
+         l+Ex5/s5lS59CQdUcF5pZEacqoKk/nIyl8DCTmy0ijtJk+3ohNS0zZCQ7fART2OcTAdw
+         xyr0BvWSGQVRiii8Bpy0kFfMhC5TE7ebaAFpLr2l4QzD7B1pdKxLo6rPGHGTBHyIEysv
+         En1JjJmUxKSNI5KPgEN72G3gAdftyZGGm2l9uKAaG/5bz9wT8UJqn1PVqDiJmKWXQdJF
+         3NAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748878734; x=1749483534;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=K7WwE2szzySMaSbvnDjlIKqzFYgvBzLvgLKYcMgSkS4=;
-        b=ZCRSLPbezVuInY5U6zww14TxA5uB1iHttgCvfV0hKX1UXb+cQxWgxQCifu2v56IDfN
-         btILF1QQwqFvhbVr6hk9mNP/KG0Rv18BoerU3gy2Bzehm43+Qj7UI+kv+6KEzjrP7ywx
-         8t11BHMwBSMSSilVFxI9KmXi89WKDD+lTzKCyY3dupNBFUN01+IcxPgYwkli2Hyy3Ggq
-         e1HkaD04Q5HGGjdzv0HSTVvxOmoyvzKum/0vDyuSH3osmXA3Iv5F8Zhiwclwcn8L+cBp
-         i5Ayge1rdpIV7pxXBamVHnAgOPeJMteya/MKyrcjKnPtPg/i0WHFt6r9Pe82CtzL/nGf
-         +ywA==
-X-Forwarded-Encrypted: i=1; AJvYcCVOP0qmQZvJ1AjI1weE9JsfzD59d8+1EhwrUs0JCEFUsB4pZtq6jrDn2AKlpV7d8k2GoKimqEbadYCQJScl+0U=@vger.kernel.org, AJvYcCWfJX4kw3xrH4/bJGunBQ/Ipmn70YIE3yFJnt/KJ/DgtqXMwEU5LBQPHIq5MPFScipxUmaQ8TR317H79YFo@vger.kernel.org
-X-Gm-Message-State: AOJu0YzO+6spbGDA09Uq1qB5u1nqEeMGBoik25igqQ0Z4hxu0S/uMMpF
-	bdxBgVOlBWyEU+kEMXCVHnrh0k5hpGvx47/2loERFTxzuJlZtujsu+xn
-X-Gm-Gg: ASbGncvMr0yH1eCx2ixawWzMlNQxx6WxH+mnRePc+77TK5cxL4cvOdDOB7yq/RWsqe+
-	2brWqrKwRFTzmOtv0S7hiwP+5AD8pnTJE0+fmIcCztG4WA0EPsqA6WR5Cwub2LJhkTMnBmMWnMx
-	Zj0qqH55dr+0v4ZsYpf19V5caiYpMeFr/WqcBxC5r9CKbWEjhhrIDdtYA/vyUolyBQDvtMNR/sv
-	do80fwfGsxwoA4v0x6zUvHzhLAqTS/H1zXyHBwcIQZtrQrn+84FYo6mjUwgrY0KGFTb80RsGjww
-	AwFr+Q8yMqRB0a9xzY9vc9W3FHEkl4ASEnrmp2fJ2CjSg/dbDRBPL+k/gbfQFhysN5pViaGKyEC
-	Ko2wCga5eDVTQLlKf8J3TCASg+6I7uEoKft1Cl6CLgizeLQsSumw=
-X-Google-Smtp-Source: AGHT+IFgM04J1ixGhBjY/yBdwy92JEZIfIDZO9+iEzcpVQT27xSxfUAe21gWN7DqRcoN3poq5CvmHA==
-X-Received: by 2002:a17:90b:268a:b0:312:db8:dbd1 with SMTP id 98e67ed59e1d1-3127c6bcd95mr12754409a91.5.1748878734517;
-        Mon, 02 Jun 2025 08:38:54 -0700 (PDT)
-Received: from va11o.lan (n058152119137.netvigator.com. [58.152.119.137])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2eceb9d1eesm4980157a12.54.2025.06.02.08.38.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 08:38:54 -0700 (PDT)
-From: Junhui Pei <paradoxskin233@gmail.com>
-To: kees@kernel.org
-Cc: elver@google.com,
-	andreyknvl@gmail.com,
-	ryabinin.a.a@gmail.com,
-	akpm@linux-foundation.org,
-	kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Junhui Pei <paradoxskin233@gmail.com>
-Subject: [PATCH] ubsan: Fix incorrect hand-side used in handle
-Date: Mon,  2 Jun 2025 23:38:41 +0800
-Message-ID: <20250602153841.62935-1-paradoxskin233@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1748878815; x=1749483615;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=R9Y05yx+OBDd8zhRYutvh4ZOz89p/wmEiP+mhd2CITM=;
+        b=fjqPWDwXY8VsWa+fuF5CG1YPLctPTomJEZ33kDTI5DUvKvVsr3/hQn2p1P7Is74lmJ
+         YWnygZceVoa12kA2KV9BBZGIjVRiBKZEILzuEZSPcQlV8AdRxfhrsKP1LZwYcncRDW5Y
+         rsLC6rszLGdlkVmdZDOMKizdpspInb9UMsAx/hHV0wWnDKpLakNB6NH4hVHJnNyHv1/v
+         +mhjKmVteIQ8GDRHJYIgQPs6tRUKNoxI5amEEsu8ga1WvR5z8oseTXCzjFJUcur1jKlr
+         WY9nAFaRy42KryltCyHL4wNM68OpBeoTw4B953t6hMeGCvg9iOBUGbIfEYTXi0Hzdxzz
+         RDHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUEiApueDQJiH3Gk1I5iJ2r20281f9deK0PMH7e5lqAJVKKgkxy2IVLqV4Z/P3wflSmhpVYotUVgIWXvW3vXg==@vger.kernel.org, AJvYcCUU2q7y08Z8sm2siYidljW5m0f3K12scdXNjUOtYTwsXJTpVXkGe7g0QucjoTcz7eIOvyvEe91a3+Cv95jWuFA0bXSKnKgy@vger.kernel.org, AJvYcCUiBIx5xdrztXGJ1UiGSlosEo3p58rSQwe5RA7I285hhSiHEzY+fltQDIYczZke4gve+Xd6dt3hkWr5nBvY@vger.kernel.org, AJvYcCWlOrC67kasOckFY4fcHPDap9HrMa3jHqdXgWGTWrCOx3+8TgOmdDy6A/Xs+qfKnWxsCk8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7lmQ6LO/FLb3VffDTzy+rKh0Q/Ner0GBJtjiX5dGvvyabTLou
+	JSjDhiKGWtDwXd3X3GU688p3sctSTB0HUa/juhQ9Z8hCdl0aQPfM33clQEr+ZyJT3gXZNAMhbXI
+	IPD6FZ0QMI4pWQxr4iq7AwKLiVsgCWnY=
+X-Gm-Gg: ASbGncsxpgKzOHZYUEstBMigNjl7weKOjJiNG35EVsL/MoXM9d6v4+rTiATKl+gq3tS
+	vLkaABxaJ1ndML4bAdHnF5sP5i5dnzgGHZpCB7Bd7tUHfPaHl5V9fVsPMnlBgwJj2tdXiWRGM9Z
+	+TS5qvkFgM202PehHH/gxh5A1AM5qkdNHJ9MHmrJcF75t7+yr6
+X-Google-Smtp-Source: AGHT+IFai74334nUkxJO8w5i7tlfzv8GkZQi4oU8k6b4JJORHTZUz87sq7bnLWguHyTzue1p9YeSb9RxpKx7T9X2A3M=
+X-Received: by 2002:a05:6000:26ca:b0:3a4:f787:9b58 with SMTP id
+ ffacd0b85a97d-3a4f7ab515fmr11139438f8f.58.1748878814719; Mon, 02 Jun 2025
+ 08:40:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250528222623.1373000-1-song@kernel.org> <20250528222623.1373000-4-song@kernel.org>
+ <20250528223724.GE2023217@ZenIV> <yti2dilasy7b3tu6iin5pugkn6oevdswrwoy6gorudb7x2cqhh@nqb3gcyxg4by>
+ <CAPhsuW4tg+bXU41fhAaS0n74d_a_KCFGvy_vkQOj7v4VLie2wg@mail.gmail.com>
+ <20250529173810.GJ2023217@ZenIV> <CAPhsuW5pAvH3E1dVa85Kx2QsUSheSLobEMg-b0mOdtyfm7s4ug@mail.gmail.com>
+ <20250602-lustig-erkennbar-7ef28fa97e20@brauner> <CAPhsuW7ogestn8Cc2jac2O0fnWcH_w=HuZQiSOx0umM4uT6Whg@mail.gmail.com>
+In-Reply-To: <CAPhsuW7ogestn8Cc2jac2O0fnWcH_w=HuZQiSOx0umM4uT6Whg@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Mon, 2 Jun 2025 08:40:03 -0700
+X-Gm-Features: AX0GCFvmqNkDHrRfZbAR59KGnpN2AAawPk43bzGmffyFYbsau48MyukEK4A30P8
+Message-ID: <CAADnVQ+_T2UTVQA9XXew26XR8zqhNpwX33Uy_pVW0_7s-bexLg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 3/4] bpf: Introduce path iterator
+To: Song Liu <song@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	bpf <bpf@vger.kernel.org>, Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	LSM List <linux-security-module@vger.kernel.org>, Kernel Team <kernel-team@meta.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Eduard <eddyz87@gmail.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Matt Bobrowski <mattbobrowski@google.com>, Amir Goldstein <amir73il@gmail.com>, repnop@google.com, 
+	Jeff Layton <jlayton@kernel.org>, Josef Bacik <josef@toxicpanda.com>, 
+	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-__ubsan_handle_divrem_overflow() incorrectly uses the RHS to report.
-It always reports the same log: division of -1 by -1. But it should
-report division of LHS by -1.
+On Mon, Jun 2, 2025 at 6:27=E2=80=AFAM Song Liu <song@kernel.org> wrote:
+>
+> On Mon, Jun 2, 2025 at 2:27=E2=80=AFAM Christian Brauner <brauner@kernel.=
+org> wrote:
+> >
+> > On Thu, May 29, 2025 at 11:00:51AM -0700, Song Liu wrote:
+> > > On Thu, May 29, 2025 at 10:38=E2=80=AFAM Al Viro <viro@zeniv.linux.or=
+g.uk> wrote:
+> > > >
+> > > > On Thu, May 29, 2025 at 09:53:21AM -0700, Song Liu wrote:
+> > > >
+> > > > > Current version of path iterator only supports walking towards th=
+e root,
+> > > > > with helper path_parent. But the path iterator API can be extende=
+d
+> > > > > to cover other use cases.
+> > > >
+> > > > Clarify the last part, please - call me paranoid, but that sounds l=
+ike
+> > > > a beginning of something that really should be discussed upfront.
+> > >
+> > > We don't have any plan with future use cases yet. The only example
+> > > I mentioned in the original version of the commit log is "walk the
+> > > mount tree". IOW, it is similar to the current iterator, but skips no=
+n
+> > > mount point iterations.
+> > >
+> > > Since we call it "path iterator", it might make sense to add ways to
+> > > iterate the VFS tree in different patterns. For example, we may
+> >
+> > No, we're not adding a swiss-army knife for consumption by out-of-tree
+> > code. I'm not opposed to adding a sane iterator for targeted use-cases
+> > with a clear scope and internal API behavior as I've said multiple time=
+s
+> > already on-list and in-person.
+> >
+> > I will not merge anything that will endup exploding into some fancy
+> > "walk subtrees in any order you want".
+>
+> We are not proposing (and AFAICT never proposed) to have a
+> swiss-army knife that "walk subtrees in any order you want". Instead,
+> we are proposing a sane iterator that serves exactly one use case
+> now. I guess the concern is that it looks extensible. However, I made
+> the API like this so that it can be extended, with thorough reviews, to
+> cover another sane use case. If there is still concern with this. We
+> sure can make current code not extensible. In case there is a
+> different sane use case, we will introduce another iterator after
+> thorough reviews.
 
-Signed-off-by: Junhui Pei <paradoxskin233@gmail.com>
----
- lib/ubsan.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/lib/ubsan.c b/lib/ubsan.c
-index a6ca235dd714..456e3dd8f4ea 100644
---- a/lib/ubsan.c
-+++ b/lib/ubsan.c
-@@ -333,18 +333,18 @@ EXPORT_SYMBOL(__ubsan_handle_implicit_conversion);
- void __ubsan_handle_divrem_overflow(void *_data, void *lhs, void *rhs)
- {
- 	struct overflow_data *data = _data;
--	char rhs_val_str[VALUE_LENGTH];
-+	char lhs_val_str[VALUE_LENGTH];
- 
- 	if (suppress_report(&data->location))
- 		return;
- 
- 	ubsan_prologue(&data->location, "division-overflow");
- 
--	val_to_string(rhs_val_str, sizeof(rhs_val_str), data->type, rhs);
-+	val_to_string(lhs_val_str, sizeof(lhs_val_str), data->type, lhs);
- 
- 	if (type_is_signed(data->type) && get_signed_val(data->type, rhs) == -1)
- 		pr_err("division of %s by -1 cannot be represented in type %s\n",
--			rhs_val_str, data->type->type_name);
-+			lhs_val_str, data->type->type_name);
- 	else
- 		pr_err("division by zero\n");
- 
--- 
-2.49.0
-
+It's good that the iterator is extensible, but to achieve that
+there is no need to introduce "enum bpf_path_iter_mode"
+which implies some unknown walk patterns.
+Just add "u64 flags" to bpf_iter_path_new() and
+if (!flags) return -EINVAL;
+Then we'll have a way to extend that kfunc if really necessary.
+Deleting and introducing new kfuncs/iterators is not a big deal,
+but reserving 'flags' as an option for extension is almost
+always a good backup.
