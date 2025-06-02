@@ -1,63 +1,63 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B20CA17BB6
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 21:38:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3073817BB6
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 21:38:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748900306; cv=none; b=tONZCOVbod/B7/7U1rFQUiDdn6R+97alVF2IeavXBLAzRylkRRBRU8Hc8YxHn5G4JHoxXQ8DOVUgKm919oNjJ+Ga7tHxwJVVPSsXUHlVb1yiMYur6x35enPN8wxEF2dZkGoR4c9pL56JjabCWuU2RHiVGUVDdRAA6d9DGuIiqhM=
+	t=1748900325; cv=none; b=iR2I/0Dkq89PSziyDCKuamMGfWHJh8EO+d/eHMz2t06ODxBOgOKjjjN89Vk0uTFwj10WBn2Lmy2j09ByCpkjEEqbB1vsDenUKxIvDGp1hOffZZZcMTHpE4nMogrUW8aBMxGzjW4JrJCXY98CRobkmbb4CY+d38wkwwVQHL6LwyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748900306; c=relaxed/simple;
-	bh=Ui4uYFqve41fxber8UjVsihCB3aUnN1o1Z3IFxnIydI=;
+	s=arc-20240116; t=1748900325; c=relaxed/simple;
+	bh=J0nMDIGKlKo0iWPfp0kpzAv5ygWRQAk3a0ClANRei1w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mDx5zKVbNT3TmxFYDRiIFAbPp3ptm3qYmSU11ou3W4SYzWqiqM8Vzi2OUoYOwUoUjIFib75QVzo82Zpf61Ey5UhX8AwWyiGRmOPN6Lp/X6Jbc8aqWu+nFn7tIKiVNXz7t4hPNBxb+m100tZMWc+AKufb2i0/pnRwgeJ7U9wx/KI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=ZkFkHRht; arc=none smtp.client-ip=209.85.210.182
+	 In-Reply-To:Content-Type; b=cPUiemJbdZpXIBaCIgKV9bdBQWbQpze4gG5jmo32fSSHFoUxH0vTb7SVWRv8YhWh+kZ6l1MzPrEIt9XzipvB4ubv1ELINQuyezZUynpO6g7zBLbMRh2dOwrnANZIZQgH/EiLdXvYYWutt99bbzZRSpc0zfxeSEgbkj63J/A8xLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Csmb1jTJ; arc=none smtp.client-ip=209.85.210.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ZkFkHRht"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-742c9907967so4988514b3a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 14:38:23 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Csmb1jTJ"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7398d65476eso3474513b3a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 14:38:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1748900303; x=1749505103; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1748900323; x=1749505123; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=2ZjqpYvzOu/E1QRY9S6tRLsm2usimRLkMEz/exGkrf8=;
-        b=ZkFkHRht8z7OWldVAFaPAn6rSTBj9NfxAl0jVTYzDEadHRF3HfdZAuejuv2+SLWpnT
-         7msYWZyEBXTPxoLb+uolTdx0uYbeaRAPKihHN1hocdse1ERBLVPWSV2EH4JaLDyIToaW
-         XdKTGuHcomVZufkJUBQI+6q30RlAS6KA33hTA=
+        bh=KfXCLvlviHl6xGWseYI36giiCVOqhY5KSAt+/5G8sGs=;
+        b=Csmb1jTJP41W8y52BNwROTfEvD7xMouhM86cFu9GG950AQiYbQH9hjZqBNwt3R0Up4
+         LEjHYKOHCG+EK5zAD79yGTsq1V+5M/3mGr3bFXIKCFVkoF/OG02lBq4XetyaIgE5xEK2
+         uxIT1cZ7kTo8483TuXc0mBxNotM7hwMJpH+CE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748900303; x=1749505103;
+        d=1e100.net; s=20230601; t=1748900323; x=1749505123;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2ZjqpYvzOu/E1QRY9S6tRLsm2usimRLkMEz/exGkrf8=;
-        b=uEjxh1NlIxr/m2OOZd0xvrtHl8CT+l9jhyZk4S6cgt9aipwNLBB5U9kjRawtl81M6Y
-         7LrejLBfYS9+3SUznu3BgXIr5mqha1VcYxd/52R+pOpjlrwW53JTwrbiuM75IbOd7F9/
-         Oz+96qmILGYB6dGE7AAaE9WRG1pZrLiMlQAX8S+5SpYKRspejc7W2iID8YyRXl5BtpUA
-         XTPnpRw6PnWAUVGjH/U63EYt536/BbxTuT0MrIo4xeukyeWd5e/1T1p6W9bYem2NmBFq
-         q3/550wNqvgL79Lw66HLYsTJbFC/3B80Y+VVTn9E8JQy6MPp9Q1Obmq2eVmtg1QJxw5B
-         8B0A==
-X-Forwarded-Encrypted: i=1; AJvYcCUVCb+l8qFVbLtB9gc3fGWo70L63RJAcY4z+/KvnRiYq1W1nM76Ac5s2J0FdtlQG0tX8/pXRtCl9vyjYi8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywjvr1YqC1C0rRJuHkuKL69LNdJ9wPUhBUtv++JgaJm4yJfyELF
-	ECJeiQ5fWpAX/xBe4J4klor1jBaOa5BBC9+q/fZ1+PS3ahKDdLhcq69EIg4lrOipRA==
-X-Gm-Gg: ASbGnctaFp+rD1K1Mhq7tx2D6hxLTshG7wqEGisKNQpKqk5az4j4BxxUGOyvc+yrFN2
-	I+LfcHWZSZ3ijH+5qm9SHfKatpMDYJnL6BosEVyY16fYNyTCg82dM0L7piiW7TVHtQGhYNcwpfu
-	mwut0Fx03VaQO2YYZuwqLexIw/rUzh/Aj0KMnWJfzHVYSdRVkwZG/oqeZYX8mSO2OpODA43h/9K
-	zyXMTpcYb42sAmUYPTt67mwtf0nWjFswtrG8W/J0g8m0aw42NTW0A+3HtYmZyzgWsbeESgpW05M
-	f4yq5lFwklcIIl9f2xLLv8QYGHo8sGzMPCRQBMik04VKjiqdE1IkdjFRpxWg2BJ2sljXj31L7Re
-	99R/dlJtcmX74N+M=
-X-Google-Smtp-Source: AGHT+IF8yRfd4dylOpz6L2d6nuH49Z0C6wyEZooEBgDMRlhm8qDJz7+P6+f2ww3sHrXlF3COu0JvGQ==
-X-Received: by 2002:a05:6a00:2301:b0:736:35d4:f03f with SMTP id d2e1a72fcca58-747d1835b73mr11858723b3a.6.1748900302946;
-        Mon, 02 Jun 2025 14:38:22 -0700 (PDT)
+        bh=KfXCLvlviHl6xGWseYI36giiCVOqhY5KSAt+/5G8sGs=;
+        b=rKe6J4pOQp7T1CzodA9+LuM1c30bqecs/MPiQjSaRXRJkPxma+BIvyQhRa9P9Hp2BD
+         B3Dc2YgNACLEAKc9ucQoyIYztb+83TFigtYdIoTeJLnuwIvxUAOAAlq/g8MCRWtaYmUk
+         5FtVf4ie4FsQz1LLIjUvDvVjTxgbIIBmJ9L/mVsJjNPCRQ+RRfF0TlQHsaIBk6Loz+Lz
+         1CxKdJLHVfeGNRCwSUyL7lYFKjy/FPxAJj1fBXNvHCRYcX6tVKmWwWSZNGIm1Xt9/mtT
+         /9idpxfrC40bBPlQdcYvM67Z3edB3fyB3fHxIRkVp5jxlLK4x4tppRs4nEe7MfeAb8CF
+         nqJw==
+X-Forwarded-Encrypted: i=1; AJvYcCV5iEzfkXonLJB8wZnrQ2Wf0Rwz4Dze/PMQl0kQEVjdgCzb8ACIO+JY0+UWcV37J2KuFBBCsU6xOXCQ3Ak=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/hSX1oy7vOq9LNiihUzgi/zloG6G+dGwkJ0a9wsszzsI8bYUH
+	UsYFD9doCE7m/jvlt3of6KgBx/JOWxGek0C5nTdFiZ7wsu6Ce5ZNslYXcnolWBvrtQ==
+X-Gm-Gg: ASbGncsKBO/RszJOg0K/o60QLNLhHoTnmKBPBePd9dZ6gxI9BOmMa+rR+ve8X68CaCi
+	zrTLLariMKxgcLTvuOZnRbXZ0m/g3JLkD46GhFpCGIAN79Ks1VZJUnB2XPPN4vnzZcPb3RqlhE5
+	I4gIBaseSTAxk0QWXlFLOada5wlompiT7soQKFDC8CnZ4TpjcuxAtec3j+J2+pGulB/7h3ZgLdO
+	7ReOE3QNDu+b3+FUq6rHy1IBXJkFgbA+yv8lA0zCHsZFylVM2uI6b1rWsUBLa5oUHcGB5lGE/ak
+	lTkq8RsnaZzcc2LTPs8ZPQGhKw0JXmczQEmuJ3bjEQpOf2ivItBYoNFdge4RefmiRjG1ZiErnCu
+	L2o0Wa/HP4pQIseI=
+X-Google-Smtp-Source: AGHT+IGpo04Fbfn1jf1pyDVdq0VVH9uqgwwDcZZGkEKM6DLiSINLk4oW+JZZBiIRSov0vFGZ0y3AZA==
+X-Received: by 2002:a05:6a00:198a:b0:744:a240:fb1b with SMTP id d2e1a72fcca58-747fe26f390mr178921b3a.5.1748900323333;
+        Mon, 02 Jun 2025 14:38:43 -0700 (PDT)
 Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afff71eesm8075400b3a.159.2025.06.02.14.38.20
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747affd54fbsm8096865b3a.154.2025.06.02.14.38.41
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Jun 2025 14:38:21 -0700 (PDT)
-Message-ID: <bb955bad-d9f4-430c-9df9-beb66dd60d7c@broadcom.com>
-Date: Mon, 2 Jun 2025 14:38:20 -0700
+        Mon, 02 Jun 2025 14:38:42 -0700 (PDT)
+Message-ID: <a6afc16d-7d64-4bb5-abd4-b130f6260d45@broadcom.com>
+Date: Mon, 2 Jun 2025 14:38:40 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,8 +65,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v2 2/5] net: dsa: b53: do not enable RGMII delay on
- bcm63xx
+Subject: Re: [PATCH net v2 3/5] net: dsa: b53: do not configure bcm63xx's IMP
+ port interface
 To: Jonas Gorski <jonas.gorski@gmail.com>,
  Florian Fainelli <florian.fainelli@broadcom.com>,
  Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>,
@@ -76,7 +76,7 @@ To: Jonas Gorski <jonas.gorski@gmail.com>,
  =?UTF-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20250602193953.1010487-1-jonas.gorski@gmail.com>
- <20250602193953.1010487-3-jonas.gorski@gmail.com>
+ <20250602193953.1010487-4-jonas.gorski@gmail.com>
 Content-Language: en-US
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
@@ -111,17 +111,16 @@ Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
  MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
  7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
  95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20250602193953.1010487-3-jonas.gorski@gmail.com>
+In-Reply-To: <20250602193953.1010487-4-jonas.gorski@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 6/2/25 12:39, Jonas Gorski wrote:
-> bcm63xx's RGMII ports are always in MAC mode, never in PHY mode, so we
-> shouldn't enable any delays and let the PHY handle any delays as
-> necessary.
+> The IMP port is not a valid RGMII interface, but hard wired to internal,
+> so we shouldn't touch the undefined register B53_RGMII_CTRL_IMP.
 > 
-> This fixes using RGMII ports with normal PHYs like BCM54612E, which will
-> handle the delay in the PHY.
+> While this does not seem to have any side effects, let's not touch it at
+> all, so limit RGMII configuration on bcm63xx to the actual RGMII ports.
 > 
 > Fixes: ce3bf94871f7 ("net: dsa: b53: add support for BCM63xx RGMIIs")
 > Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
