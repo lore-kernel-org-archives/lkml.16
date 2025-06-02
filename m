@@ -1,109 +1,120 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB091DDC37
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 10:05:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25CAE145A03;
+	Mon,  2 Jun 2025 10:09:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748858706; cv=none; b=acCupABf7C3RBzMEj2PBVc5X6YQpKs/ViIg8JdF+6lbRxxZojFZ+NZAV66436ePnAslNALvvG3U2XQzYI7NQMiGjD7TMYhjRj4b1v+xikeX2EZmmAlP0KfWIdpzIJoKiaHrHbAkGxm2DLlB3/0jrOzXLJw8nkPznrZrFN28KO2M=
+	t=1748858955; cv=none; b=doVceS0eDHiczHEJe2HPw92Q4sjC+W+hFpBEhymhTBzr3cpDqyd+FFBhqxnPTuaSFBHnYtKaUjII/RhTGN+HtYZb/AMoRnnM9pI7+9C+BFzEMBhbgrlWnTmquK5JHD6ry1r2QtY0tJqwusY2pu7LbOqjklKZ5USDghMJb63Vzo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748858706; c=relaxed/simple;
-	bh=Bk83LNbALxmPewRbnvWWB1M1iYIqeINndHZy9xJXc2s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DBH3newh8kzKWNgp3qElybv02Pjti1UMN9asf6BbXEfkAT9rU6ayYCXLgf/5q/I0K7OqHSaR1Dva31ErWppH9O5ceN+N7ZRWRenJ/rYFAWry1XhJU/tB4btw/0hA29BsQxnSnKZMun+VMK9mLiMeXydFx/uSNiElJIz6BOEQG4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ehp23+Sj; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748858955; c=relaxed/simple;
+	bh=cRXyGV9qMxw7Mqp385RRXEvnMD2ezN2tcInOJSKGL4Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XiSU4v/8jmiDqV8kKWcoGcG4jhK7HP18D81KPC7LtSpVYLA8BoDwYWKDKT+zY2CRs3fxkqU2QHBSK/9Oo4IoqciFmP8wDwY46/32cIshTV2TCDULlRVEmlgVj7Sp+78sf1+8b7iiECNJX9CavthoNSgDFS4mkCIO4AXwU1++NYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sZ9AVCX8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ehp23+Sj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748858703;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fep9/GB0cJfqKQgmfJB5i+bPko2YtosdytfWWu6bHc0=;
-	b=Ehp23+SjjuDmf1yLykzad/dv6dMrfffR3WYhsBGK4L4WAtF1ZQx10oihiQYPanamYay1QR
-	+zh9Dz2tjkt0e9kXgmc6VrCN8T5dxFg7nnc/Smcnxlzy9PmAZ1Z3uMmotJMVeO6jfT3L5W
-	7tq0QdXrptQFHo4aZDD163R/8kPUBBw=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-463-_suG_kkxPXeNbI9vYQ_TtQ-1; Mon,
- 02 Jun 2025 06:05:00 -0400
-X-MC-Unique: _suG_kkxPXeNbI9vYQ_TtQ-1
-X-Mimecast-MFC-AGG-ID: _suG_kkxPXeNbI9vYQ_TtQ_1748858698
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CFA7F18003FC;
-	Mon,  2 Jun 2025 10:04:57 +0000 (UTC)
-Received: from sirius.home.kraxel.org (unknown [10.45.224.29])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DA4DB19560A3;
-	Mon,  2 Jun 2025 10:04:56 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-	id 0A07C1800609; Mon, 02 Jun 2025 12:04:54 +0200 (CEST)
-Date: Mon, 2 Jun 2025 12:04:53 +0200
-From: Gerd Hoffmann <kraxel@redhat.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	kvm@vger.kernel.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] x86/sev/vc: fix efi runtime instruction emulation
-Message-ID: <763uanqowqaxiv3dzi7kndwpd3s2fxa3sm2fruynqsj5elld2e@lxk7v7bksyjw>
-References: <20250527144546.42981-1-kraxel@redhat.com>
- <20250527162151.GAaDXmn8O3f_HYgRju@fat_crate.local>
- <77hywpberfkulac3q3hpupdmdpw2xbmlvzin4ks7xypikravkj@xjpi7gqscs6a>
- <20250529230233.GEaDjniaXGlxAU0NzA@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sZ9AVCX8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E2E2C4CEED;
+	Mon,  2 Jun 2025 10:09:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748858954;
+	bh=cRXyGV9qMxw7Mqp385RRXEvnMD2ezN2tcInOJSKGL4Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=sZ9AVCX8QlaO1eU5+e/V4+wmAtmoR+O90JNKpPuqgjuBEtwz6ItI4NGxCl7FAw+Go
+	 O4yvCDH68ZzCToyax7IZRmSKl92rOP7f13CJ2S8XY+oWWwbRZVshmkyY8Rcy7Ch6Vs
+	 GJ8SgrAv/VynrWMd32K865XGk0QPAp3xJYxTcRunNhw5ZvmEQE06x9cMGKa7ySg68N
+	 BaAZdQzMHqxZaUj5PkibScRal3giqFsH5Dpl6lANCV+CLU6ECzC2OfD56/GUUQ03ep
+	 iJyUj1aD2LD1QxGWg/ZkqCBDqrJiMskSNsyEq2XNjFBC5+2FhV5CVuvignrQEzSczJ
+	 rj+i7Syk3tfLQ==
+Message-ID: <0459644e-cb62-441b-8fac-b7b50d484880@kernel.org>
+Date: Mon, 2 Jun 2025 12:09:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250529230233.GEaDjniaXGlxAU0NzA@fat_crate.local>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH] mptcp: fix typos in comments
+Content-Language: en-GB, fr-BE
+To: moyuanhao3676@163.com
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-kernel@vger.kernel.org, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, horms@kernel.org
+References: <20250530181004.261417-1-moyuanhao3676@163.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20250530181004.261417-1-moyuanhao3676@163.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 30, 2025 at 01:02:33AM +0200, Borislav Petkov wrote:
-> On Wed, May 28, 2025 at 09:38:24AM +0200, Gerd Hoffmann wrote:
-> > Use case is coconut-svsm providing an uefi variable store and edk2
-> > runtime code doing svsm protocol calls to send requests to the svsm
-> > variable store.  edk2 needs a caa page mapping and a working rdmsr
-> > instruction for that.
-> > 
-> > Another less critical but useful case is edk2 debug logging to qemu
-> > debugcon port.  That needs a working cpuid instruction because edk2
-> > uses that to figure whenever sev is active and adapt ioport access
-> > accordingly.
+Hi moyuanhao,
+
+On 30/05/2025 20:10, moyuanhao3676@163.com wrote:
+> From: moyuanhao <moyuanhao3676@163.com>
 > 
-> Yeah, I'd like for those justifications be in the commit messages please.
+> This patch fixes the spelling mistakes in comments.
+> greter -> greater
 
-Ok
+Thank you for the patch. It looks good to me:
 
-> > > We'd like to add them to our test pile.
-> > 
-> > That is a bit difficult right now because there are a number of pieces
-> > which need to fall into place before this is easily testable.  You need:
-> > 
-> >  * host kernel with vmplanes patch series (for snp vmpl support).
-> >  * coconut svsm with uefi variable store patches.
-> >  * edk2 patches so it talks to svsm for variable access.
-> >  * igvm support patches for qemu.
-> > 
-> > Hope I didn't forgot something ...
-> 
-> So why are you sending those for the kernel now is so many other things are
-> still moving?
-> 
-> What if something in those things change? Then you need to touch those
-> again...
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Well, the need for instruction emulation to work for uefi runtime code
-and the need to have access to the caa page is not going to change even
-if details of edk2 <=> svsm protocol communication will be updated.
+But please note that net-next is closed, so this patch should not have
+been sent now:
 
-take care,
-  Gerd
+https://docs.kernel.org/process/maintainer-netdev.html#git-trees-and-patch-flow
+
+I will apply this patch in MPTCP tree, and send it later with others.
+
+pw-bot: deferred
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
