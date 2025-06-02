@@ -1,92 +1,333 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD0D2C3254
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 22:40:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35392522B6
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 22:40:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748904031; cv=none; b=Ly+YwwblxnPqhKjPBW2BYjNxHbfNfGPR5MwtamD4OThlzC4aL5GxApo+il/qA3qMEkngkh9p8p+UMWpSeNZOozcE3KhGdTMWSsJpvJ9E/xtkkknRyPV+bwE5gNFQEHMhTWyvkvSW0n9ESxQVg0UsoEEQNqsT4l2A68xvo/SuSrc=
+	t=1748904050; cv=none; b=NWGtpqS3mVHRdNC0/En9sdpJZhveSp9mIC5+ye2ofx+0fdooM8R2K7R3wcdzxtw9DOjn/pQRAYhfHHmQwkVSGXhTYjDni7xQOk4S1TYAb8n5LwcHR+kFnpJqaKfron2OuPJ5gTZv67+koerSXpCnnMl88B3kA/IMh7Zr6jTyaFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748904031; c=relaxed/simple;
-	bh=Raej5S0fr0owynKaFtp+ssLwlG8DLE+hbQHXsl4GgeQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BWkEZodEXNRxApuRWPMiZEELJWLEtpT/joPVA0cX6y2Ei5uD4ZtUrYExEh35L5jgH8IVd23BJlBv+6zlajwTxAq96QP3wmpOjFaBcs3HNSXMBt2RSZVStMt58tR8hbt/lj2ONWifc8/5HMEjYV5bWBKiAVJbPz8v4kpPmESMe8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DRGlTg2l; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748904050; c=relaxed/simple;
+	bh=/vvqRw9cz+5hMeJ/bcZKDuYvQogKzDJ587sBcYGc52I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OPIsxU/Qb/TOnx0NSfJE+Kg2y1801lEF6Hgh85cxg+mNzlq5xdL3tvgcxob0S42tTlzoNU1PZcR45ZaW5CrmDPIOr1IYPF2XoyZaKN0d9pWQ+Q+kbsa/RbUhsUand7DjnWXYLm1i0T0qZXjxggWeNU+Gsb+E6lmTbNmjIfLG/fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=HdFEIjP1; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DRGlTg2l"
-Date: Mon, 2 Jun 2025 15:40:11 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748904017;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pVDqG7Qru3dfMpTwDZ3dCGAw70KwMy1IAEgL6+IAtD0=;
-	b=DRGlTg2l6dj3mx3YU+Hkrx8unn1zTLt40R3DTpki2p/KXrAfQdCsBTXlNY3/1LiA5NL/C3
-	AKu5HQu4fMzKoqvysZOOGOi+dS5HDBNebnMVbg8Q3KTQ3HS+lmWRWnqZ0S7Jx7EQrbL9cC
-	j1ccMBNvsr0LPvKUOue0qfpmAfPYP1w=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Colton Lewis <coltonlewis@google.com>
-Cc: kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Mark Rutland <mark.rutland@arm.com>, Shuah Khan <shuah@kernel.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 16/17] KVM: arm64: Add ioctl to partition the PMU when
- supported
-Message-ID: <aD4oS1_tnMPlgDJ6@linux.dev>
-References: <20250602192702.2125115-1-coltonlewis@google.com>
- <20250602192702.2125115-17-coltonlewis@google.com>
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="HdFEIjP1"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-70e102eada9so44665157b3.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 15:40:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1748904046; x=1749508846; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=T32s96RITG9z0l1YbpSqA97I6G74VAkYppjM6RayCCs=;
+        b=HdFEIjP13wNPN7B9ZfiIH5e51rXzvwjakjfsoI4MDqbqhrpxEgNbsMb3VSCm6mDfpN
+         AAuyCgd9sNc6GR4Yoqq0Ohd+quL0ZBbNr6oz8SZ1gKo7NKF3qQxOyinRZsQfAViuDFni
+         hMZs64U3Du6nZkvgnNG8OovAAVbbQFmBu5CXsD1EcyLCisyc9pBAndh+6e56ew6ocI7J
+         Ntxd2MtXBmdnN2vxQjEuMd0NuvWhKIpASk1Jszif02CgEZMxEVNNNaff1o4RBntSUCxY
+         6VCH2iGWomfX8pMsQrPVri4akA/eD4M8FnKQK61DZsun3QpPo9tkbY+oToYB2n3CaMTa
+         vSwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748904046; x=1749508846;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=T32s96RITG9z0l1YbpSqA97I6G74VAkYppjM6RayCCs=;
+        b=wFBKtT7kv5+bmywNizNnqKl3Dcl1dVzaJxU5A5sD4wHR4OGzwEYeX3D3Qbyjzdkig2
+         ocw5PxZJJ/uYzdbFylidY47m0W4Dhh7ruixwbuH3IK42Tn7M894KXRaYeCW8O9tm8vJT
+         sLxRbhX0QNWo+5Q+3MDNFDREA0YRTgTQJeE84hw8eN0OOP+AKmzsOLZiMbE8XPrQvgMu
+         knDqBrgU8ccabJaow6eCrHOQj2jHn55iedw3OZOWan1Gy3QwnqE7oPb/m4x57+OegIR/
+         mPHGCdwwFAKK/bS9TZy5NI9fo0SpXuOApageYqz7uCRu0L1KSXbLG8cUgpGLdlnEajNM
+         fD5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXmdaoPAtC9Kd1+gNPTfsXiWK5+X6xwhUefrpO9Q4SoDwUNTcE8AQwvENFJG7eokUT9IEGsBmrD7xvr178=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzsx3cRLoqz7klV2CIRmdhqN9ctX9ncRu53hBRY+6B/LK2eJEvn
+	/55X9fj606YO0liMkMhhdwyiBeg8BGBHJvi2AiC8lF39RilrkVS18GXQt2PiUHjjBEQlgU42zde
+	rFrVzHMNxyJJFlEkmykIozQzDjPxE4y9WVAVicKe8
+X-Gm-Gg: ASbGncv36MlbDW5uxVZT6kNUdnOV1UwUrhaMEpd8DEsO+cesnJXpkE9pap4XfM1nGnY
+	766tTJFoB6lRdt/SB+yGk6QyvHB18Lc6saBBWRleBsdXI4s5nY0giZ2jc2UGwyTK3YiFlHdo+Qt
+	KT+f3xjs/4ubaROfXsi77Kcz1xVu2t1J8S
+X-Google-Smtp-Source: AGHT+IEoW15vP4TZMilz80sYx0Hku+Zl/sAggEOxsTe06cP7n08O7EyiHxpX3KBOESBFu/aogEn4PvBql4PlUpAmSMI=
+X-Received: by 2002:a05:690c:6382:b0:70e:7503:1181 with SMTP id
+ 00721157ae682-70f97eaa4femr226665457b3.18.1748904046535; Mon, 02 Jun 2025
+ 15:40:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250602192702.2125115-17-coltonlewis@google.com>
-X-Migadu-Flow: FLOW_OUT
+References: <20250528215037.2081066-1-bboscaccy@linux.microsoft.com> <20250528215037.2081066-2-bboscaccy@linux.microsoft.com>
+In-Reply-To: <20250528215037.2081066-2-bboscaccy@linux.microsoft.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Mon, 2 Jun 2025 18:40:35 -0400
+X-Gm-Features: AX0GCFtYhBGLoq5-Qs5c7_qoke3991xjj2U1oRE7b1POKvzoUfmQJ8v4VIG2L64
+Message-ID: <CAHC9VhQT=ymqssa9ymXtvssHTdVH_64T8Mpb0Mh8oxRD0Guo_Q@mail.gmail.com>
+Subject: Re: [PATCH 1/3] bpf: Add bpf_check_signature
+To: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
+Cc: jarkko@kernel.org, zeffron@riotgames.com, xiyou.wangcong@gmail.com, 
+	kysrinivasan@gmail.com, code@tyhicks.com, 
+	linux-security-module@vger.kernel.org, roberto.sassu@huawei.com, 
+	James.Bottomley@hansenpartnership.com, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	David Howells <dhowells@redhat.com>, Lukas Wunner <lukas@wunner.de>, 
+	Ignat Korchagin <ignat@cloudflare.com>, Quentin Monnet <qmo@kernel.org>, 
+	Jason Xing <kerneljasonxing@gmail.com>, Willem de Bruijn <willemb@google.com>, 
+	Anton Protopopov <aspsk@isovalent.com>, Jordan Rome <linux@jordanrome.com>, 
+	Martin Kelly <martin.kelly@crowdstrike.com>, Alan Maguire <alan.maguire@oracle.com>, 
+	Matteo Croce <teknoraver@meta.com>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	keyrings@vger.kernel.org, linux-crypto@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 02, 2025 at 07:27:01PM +0000, Colton Lewis wrote:
-> +	case KVM_ARM_PARTITION_PMU: {
+On Wed, May 28, 2025 at 5:50=E2=80=AFPM Blaise Boscaccy
+<bboscaccy@linux.microsoft.com> wrote:
+>
+> This introduces signature verification for eBPF programs inside of the
+> bpf subsystem. Two signature validation schemes are included, one that
+> only checks the instruction buffer, and another that checks over a
+> hash chain constructed from the program and a list of maps. The
+> alternative algorithm is designed to provide support to scenarios
+> where having self-aborting light-skeletons or signature checking
+> living outside the kernel-proper is insufficient or undesirable.
+>
+> An abstract hash method is introduced to allow calculating the hash of
+> maps, only arrays are implemented at this time.
+>
+> A simple UAPI is introduced to provide passing signature information.
+>
+> The signature check is performed before the call to
+> security_bpf_prog_load. This allows the LSM subsystem to be clued into
+> the result of the signature check, whilst granting knowledge of the
+> method and apparatus which was employed.
+>
+> Signed-off-by: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
+> ---
+>  include/linux/bpf.h            |   2 +
+>  include/linux/verification.h   |   1 +
+>  include/uapi/linux/bpf.h       |   4 ++
+>  kernel/bpf/arraymap.c          |  11 ++-
+>  kernel/bpf/syscall.c           | 123 ++++++++++++++++++++++++++++++++-
+>  tools/include/uapi/linux/bpf.h |   4 ++
+>  6 files changed, 143 insertions(+), 2 deletions(-)
 
-This should be a vCPU attribute similar to the other PMUv3 controls we
-already have. Ideally a single attribute where userspace tells us it
-wants paritioning and specifies the PMU ID to use. None of this can be
-changed after INIT'ing the PMU.
+...
 
-> +		struct arm_pmu *pmu;
-> +		u8 host_counters;
+> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+> index 64c3393e8270..7dc35681d3f8 100644
+> --- a/kernel/bpf/syscall.c
+> +++ b/kernel/bpf/syscall.c
+> @@ -2753,8 +2764,113 @@ static bool is_perfmon_prog_type(enum bpf_prog_ty=
+pe prog_type)
+>         }
+>  }
+>
+> +static int bpf_check_signature(struct bpf_prog *prog, union bpf_attr *at=
+tr, bpfptr_t uattr,
+> +                              __u32 uattr_size)
+> +{
+> +       u64 hash[4];
+> +       u64 buffer[8];
+> +       int err;
+> +       char *signature;
+> +       int *used_maps;
+> +       int n;
+> +       int map_fd;
+> +       struct bpf_map *map;
 > +
-> +		if (unlikely(!kvm_vcpu_initialized(vcpu)))
-> +			return -ENOEXEC;
+> +       if (!attr->signature)
+> +               return 0;
 > +
-> +		if (!kvm_pmu_partition_supported())
-> +			return -EPERM;
+> +       signature =3D kmalloc(attr->signature_size, GFP_KERNEL);
+> +       if (!signature) {
+> +               err =3D -ENOMEM;
+> +               goto out;
+> +       }
 > +
-> +		if (copy_from_user(&host_counters, argp, sizeof(host_counters)))
-> +			return -EFAULT;
+> +       if (copy_from_bpfptr(signature,
+> +                            make_bpfptr(attr->signature, uattr.is_kernel=
+),
+> +                            attr->signature_size) !=3D 0) {
+> +               err =3D -EINVAL;
+> +               goto free_sig;
+> +       }
 > +
-> +		pmu = vcpu->kvm->arch.arm_pmu;
-> +		return kvm_pmu_partition(pmu, host_counters);
+> +       if (!attr->signature_maps_size) {
+> +               sha256((u8 *)prog->insnsi, prog->len * sizeof(struct bpf_=
+insn), (u8 *)&hash);
+> +               err =3D verify_pkcs7_signature(hash, sizeof(hash), signat=
+ure, attr->signature_size,
+> +                                    VERIFY_USE_SECONDARY_KEYRING,
+> +                                    VERIFYING_EBPF_SIGNATURE,
+> +                                    NULL, NULL);
+> +       } else {
+> +               used_maps =3D kmalloc_array(attr->signature_maps_size,
+> +                                         sizeof(*used_maps), GFP_KERNEL)=
+;
+> +               if (!used_maps) {
+> +                       err =3D -ENOMEM;
+> +                       goto free_sig;
+> +               }
+> +               n =3D attr->signature_maps_size;
+> +               n--;
+> +
+> +               err =3D copy_from_bpfptr_offset(&map_fd, make_bpfptr(attr=
+->fd_array, uattr.is_kernel),
+> +                                             used_maps[n] * sizeof(map_f=
+d),
+> +                                             sizeof(map_fd));
+> +               if (err < 0)
+> +                       goto free_maps;
+> +
+> +               /* calculate the terminal hash */
+> +               CLASS(fd, f)(map_fd);
+> +               map =3D __bpf_map_get(f);
+> +               if (IS_ERR(map)) {
+> +                       err =3D PTR_ERR(map);
+> +                       goto free_maps;
+> +               }
+> +               if (__map_get_hash(map, (u8 *)hash)) {
+> +                       err =3D -EINVAL;
+> +                       goto free_maps;
+> +               }
+> +
+> +               n--;
+> +               /* calculate a link in the hash chain */
+> +               while (n >=3D 0) {
+> +                       memcpy(buffer, hash, sizeof(hash));
+> +                       err =3D copy_from_bpfptr_offset(&map_fd,
+> +                                                     make_bpfptr(attr->f=
+d_array, uattr.is_kernel),
+> +                                                     used_maps[n] * size=
+of(map_fd),
+> +                                                     sizeof(map_fd));
+> +                       if (err < 0)
+> +                               goto free_maps;
+> +
+> +                       CLASS(fd, f)(map_fd);
+> +                       map =3D __bpf_map_get(f);
+> +                       if (!map) {
+> +                               err =3D -EINVAL;
+> +                               goto free_maps;
+> +                       }
+> +                       if (__map_get_hash(map, (u8 *)buffer+4)) {
+> +                               err =3D -EINVAL;
+> +                               goto free_maps;
+> +                       }
+> +                       sha256((u8 *)buffer, sizeof(buffer), (u8 *)&hash)=
+;
 
-Yeah, we really can't be changing the counters available to the ARM PMU
-driver at this point. What happens to host events already scheduled on
-the CPU?
+James' comment about using the hash from the PKCS7 data makes a lot of
+sense.  I'm not a kernel crypto expert, but if looks like if you call
+pkcs7_parse_message() you should be able to get the hash algorithm
+from pkcs7_message->signed_infos->sig->hash_algo.
 
-Either the partition of host / KVM-owned counters needs to be computed
-up front (prior to scheduling events) or KVM needs a way to direct perf
-to reschedule events on the PMU based on the new operating constraints.
+I imagine there might be user/admin concerns over which algorithms
+would be considered acceptable for a signature verification, but I
+suppose one could make the argument that if you don't trust that
+algorithm it shouldn't be enabled in the kernel.
 
-Thanks,
-Oliver
+> +                       n--;
+> +               }
+> +               /* calculate the root hash and verify it's signature */
+> +               sha256((u8 *)prog->insnsi, prog->len * sizeof(struct bpf_=
+insn), (u8 *)&buffer);
+> +               memcpy(buffer+4, hash, sizeof(hash));
+> +               sha256((u8 *)buffer, sizeof(buffer), (u8 *)&hash);
+> +               err =3D verify_pkcs7_signature(hash, sizeof(hash), signat=
+ure, attr->signature_size,
+> +                                    VERIFY_USE_SECONDARY_KEYRING,
+> +                                    VERIFYING_EBPF_SIGNATURE,
+> +                                    NULL, NULL);
+> +free_maps:
+> +               kfree(used_maps);
+> +       }
+> +
+> +free_sig:
+> +       kfree(signature);
+> +out:
+> +       prog->aux->signature_verified =3D !err;
+
+Considering this code supports two signature schemes, signed loader
+(with implied loader verification of maps) and signed loader + maps,
+it seems like it might be a good idea to have two flags to indicate
+what has been verified in bpf_check_signature(); a "prog_sig_verified"
+(or similar) flag to indicate the program has been verified and a
+"maps_sig_verified" (or similar) to indicate the maps have been
+verified.
+
+Beyond that, I wanted to talk a bit about the two different signature
+schemes and why I think there is value in supporting both.  The
+discussion was happening in patch 0/3, but it looks like KP wanted to
+move the discussion away from the cover letter and into that patch, so
+I'm doing that here ...
+
+The loader (+ implicit loader verification of maps w/original program)
+signature verification scheme has been requested by Alexei/KP, and
+that's fine, the code is trivial and if the user/admin is satisfied
+with that as a solution, great.  However, the loader + map signature
+verification scheme has some advantages and helps satisfy some
+requirements that are not satisfied by only verifying the loader and
+relying on the loader to verify the original program stored in the
+maps.  One obvious advantage is that the lskel loader is much simpler
+in this case as it doesn't need to worry about verification of the
+program maps as that has already been done in bpf_check_signature().
+I'm sure there are probably some other obvious reasons, but beyond the
+one mentioned above, the other advantages that I'm interested in are a
+little less obvious, or at least I haven't seen them brought up yet.
+As I mentioned in an earlier thread, it's important to have the LSM
+hook that handles authorization of a BPF program load *after* the BPF
+program's signature has been verified.  This is not simply because the
+LSM implementation might want to enforce and access control on a BPF
+program load due to the signature state (signature verified vs no
+signature), but also because the LSM might want to measure system
+state and/or provide a record of the operation.  If we only verify the
+lskel loader, at the point in time that the security_bpf_prog_load()
+hook is called, we haven't properly verified both the loader and the
+original BPF program stored in the map, that doesn't happen until much
+later when the lskel loader executes.  Yes, I understand that may
+sound very pedantic and fussy, but there are users who care very much
+about those details, and if they see an event in the logs that
+indicates that the BPF program signature has been verified as "good",
+they need that log event to be fully, 100% true, and not have an
+asterix of "only the lskel loader has been verified, the original BPF
+program will potentially be verified later without any additional
+events being logged to indicate the verification".
+
+Considering that Blaise has proposed something which satisfies both
+the loader-only and loader+maps signature requirements, I don't
+understand the objections.  KP described two technical objections in
+his replies to patch 0/3:
+
+1. "It does not align with most BPF use-cases out there as most
+use-cases need a trusted loader."
+2. "Locks us into a UAPI, whereas a signed LOADER allows us to
+incrementally build signing for all use-cases without compromising the
+security properties."
+
+In response to objection #1, the approach Blaise has described here
+fully supports signing only the lskel loader and leaving it to the
+loader to verify the original BPF program maps.  The "trusted loader"
+use cases are fully supported, as the loader+maps scheme does not
+prevent the loader-only signature scheme.
+
+In response to objection #2, honestly this seems like an extension to
+objection #1.  The trusted loader-only signature scheme is fully
+supported.  Yes, adding support for either signature schemes is an
+extension to the BPF program loading UAPI, but both schemes are
+optional and supporting both is very much in line with BPF's stated
+philosophy of "flexibility and not locking the users into a rigid
+in-kernel implementation and UAPI."
+
+> +       return err;
+> +}
+> +
+
+--=20
+paul-moore.com
