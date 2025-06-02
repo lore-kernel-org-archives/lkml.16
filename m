@@ -1,113 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C72520C031;
-	Mon,  2 Jun 2025 13:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB171FF61E;
+	Mon,  2 Jun 2025 13:28:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748870864; cv=none; b=ofHvXsyFQ3+3ZCVbIxzGqd6GECxu+u0Z164R7qbTt8IHmjnvNGICyz3WTBfoZMQLOgZS5k0RFShtg69vlvZgjy+w53ejWuNcyHoY0RSCTQDoHNZUKWMgOtsfoT4DGYorNqIhBjzKf9goTisUTaBWR5IfHu1i1YgnlHVn81JeDk8=
+	t=1748870930; cv=none; b=ZB7j09mCDPiLNrESXLRX/nuYnA6KtjW2R4cwSr1Os1Lub6S2A9DaS+RhGFXyx0d0YKwW45pHgu4xd0/Xx1r8yHK19JwsxbjG7N+SDufA0WlVWOOQSoTUBEXp29WWoCOoZMYeI7GgzJxUcqQ1ToNUWGViHtux79EU5C1QmIL9gu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748870864; c=relaxed/simple;
-	bh=MWnaFm0fY7wNgxp6V57uPFFzewM6NZbpUyh6VIJyeIY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Dnd2oS/2+j8j8W4X+LxNUqJOk0yO2jWBTLLIC/lQTZM4svcVYiWfq7OyByh/tcFy9Mux/xgAlnBQ/cf3JK2DhtnCxhUHWMd1QXx8h8bFJi6rg8adRVca/ofJN2VYIE8EuJhQ06DYEr6nWKh6AbgFhcahpSwrfSArx49KYxP1dUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GTGsplkt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748870930; c=relaxed/simple;
+	bh=GHu/uGah50Q9xqXZQgy2REwYYTTnPThxDJ1YpGowp/s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lxLFJHNy8qPMnvHVBp2jrFcJ7bbmO8KN13RAaaepT6ATQSGqZsDw6Ycfdj3C0eP7EmSunEJ2gcztdvhzQaQB0XyCAjDqvZIcMcnP9kSJl0yKygz/f8XAEsl1OPuj+hrplQwBeFD+nLnbaLo0c9VWYZPEqf0xS4IHYoX+w5guE+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Ry2ZLToJ; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GTGsplkt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABB26C4CEEB;
-	Mon,  2 Jun 2025 13:27:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748870863;
-	bh=MWnaFm0fY7wNgxp6V57uPFFzewM6NZbpUyh6VIJyeIY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=GTGsplktGqg46KrRxSG9dRHAgPn6zYxPpeUk/lnsjx8RZcOyXvye7yWGkppzYvlWl
-	 oT1PFOlOWf7r6a3ztWBM4DpsbnnBuItwsqZg8lavXXkepa2LJUgHTDNRMU7dyz7MvG
-	 eMs7KOC6P08IjabJcxmbl1vi6NwqQWSLvk1zPlx79Ifdwfi0lCB2U2dsh0cAq7qMfQ
-	 M/E5XDZDvdjXT29mpzwLcLtgqrng/Y5Nr7+iGbx0ci+4Om91vvS6f5i62hnYUzZq2y
-	 7475Z40MJ9b3Xk5sPKvzbjaZHBlsq9g32g5Zt3k6s7lqf5rFG0pn8kE80sRbPt/Asr
-	 4Wi/HyUseJ4Tg==
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6fadb9a0325so17978466d6.2;
-        Mon, 02 Jun 2025 06:27:43 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU4aGptmYO+BsdZxe6Vx23M4xzssngPnY+6Xd55TxA1k01m1XU/VndyVkOD2MmM3w6RG6pW1FwF70oOsXwLEmwn2wJyOMpf@vger.kernel.org, AJvYcCVQBqsWZMN6nm7PHysA5r2RLnk8sq4qgGL6HPu+43HT9znB8gBpNAfrPbhP8aj3n7nD8P9x7y96pfuN6SqIMw==@vger.kernel.org, AJvYcCWhYXcfELrfbaO6bgFvs3fIU+a86pV3AH2pqz3g6/+tMOqn7V7BATM8WPgmPYvQL3Nukk8=@vger.kernel.org, AJvYcCXCxnYZVMnCTeXqvlHHIkMfbirsQlx9zEERq5c6l7jp0bzb+vxOtVCRlcRhpv3zchk5lqr8+EqMJLK8q/dV@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNy0p/ElTiZn3iZIn5zvshK+KR1cprkldFOoGRoFhnw96Piz8Z
-	rIqMgAGw3UcqnMfNXH0d6sQTRPJDPW3lhQGLYiIvcdZzgKRoM7jGKU0MbxvdB1HFuJqeJBvQq8N
-	CmOxPIphMXNhzDdJGIPb5O/scn+i0HwM=
-X-Google-Smtp-Source: AGHT+IFhY1OAUdXnhV9TDyfD4od4kgsfWVZ9DSzY5wOUCfTeloAckm3mtPnaNhiF9n1KxtcPrqpA2C2xxaCGMsik8yQ=
-X-Received: by 2002:a05:6214:3115:b0:6fa:d976:197e with SMTP id
- 6a1803df08f44-6fad9761a27mr159411406d6.33.1748870862882; Mon, 02 Jun 2025
- 06:27:42 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Ry2ZLToJ"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5FBB7C9;
+	Mon,  2 Jun 2025 15:28:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1748870925;
+	bh=GHu/uGah50Q9xqXZQgy2REwYYTTnPThxDJ1YpGowp/s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ry2ZLToJH4Gq7Uy96YHJqT46DUk/ibpH2wUHjJ1DL1ZxqQbyqVPsSMLlxsII0iUdK
+	 Jf6/IuMmtu2J+WC+U5oa2bjT6gKIi2g/iDeEGDF1XTKp5zFNmCuUh4UxcPNAnO4pD5
+	 L33x4Fu3Wt0L04NQT1lk/bpBMKwsektt1AwddIEI=
+Date: Mon, 2 Jun 2025 16:28:38 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+Cc: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Subject: Re: [PATCH v3 12/15] media: rcar-csi2: Add more stream support to
+ rcsi2_calc_mbps()
+Message-ID: <20250602132838.GE11750@pendragon.ideasonboard.com>
+References: <20250530-rcar-streams-v3-0-026655df7138@ideasonboard.com>
+ <20250530-rcar-streams-v3-12-026655df7138@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528222623.1373000-1-song@kernel.org> <20250528222623.1373000-4-song@kernel.org>
- <20250528223724.GE2023217@ZenIV> <yti2dilasy7b3tu6iin5pugkn6oevdswrwoy6gorudb7x2cqhh@nqb3gcyxg4by>
- <CAPhsuW4tg+bXU41fhAaS0n74d_a_KCFGvy_vkQOj7v4VLie2wg@mail.gmail.com>
- <20250529173810.GJ2023217@ZenIV> <CAPhsuW5pAvH3E1dVa85Kx2QsUSheSLobEMg-b0mOdtyfm7s4ug@mail.gmail.com>
- <20250602-lustig-erkennbar-7ef28fa97e20@brauner>
-In-Reply-To: <20250602-lustig-erkennbar-7ef28fa97e20@brauner>
-From: Song Liu <song@kernel.org>
-Date: Mon, 2 Jun 2025 06:27:31 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW7ogestn8Cc2jac2O0fnWcH_w=HuZQiSOx0umM4uT6Whg@mail.gmail.com>
-X-Gm-Features: AX0GCFv7exgfZHaSo_HrFli6RvFn8kD3E2x-G4ZgMt74ykULlK91j3RGb1-OW18
-Message-ID: <CAPhsuW7ogestn8Cc2jac2O0fnWcH_w=HuZQiSOx0umM4uT6Whg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 3/4] bpf: Introduce path iterator
-To: Christian Brauner <brauner@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, bpf@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, kernel-team@meta.com, 
-	andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, daniel@iogearbox.net, 
-	martin.lau@linux.dev, kpsingh@kernel.org, mattbobrowski@google.com, 
-	amir73il@gmail.com, repnop@google.com, jlayton@kernel.org, 
-	josef@toxicpanda.com, mic@digikod.net, gnoack@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250530-rcar-streams-v3-12-026655df7138@ideasonboard.com>
 
-On Mon, Jun 2, 2025 at 2:27=E2=80=AFAM Christian Brauner <brauner@kernel.or=
-g> wrote:
->
-> On Thu, May 29, 2025 at 11:00:51AM -0700, Song Liu wrote:
-> > On Thu, May 29, 2025 at 10:38=E2=80=AFAM Al Viro <viro@zeniv.linux.org.=
-uk> wrote:
-> > >
-> > > On Thu, May 29, 2025 at 09:53:21AM -0700, Song Liu wrote:
-> > >
-> > > > Current version of path iterator only supports walking towards the =
-root,
-> > > > with helper path_parent. But the path iterator API can be extended
-> > > > to cover other use cases.
-> > >
-> > > Clarify the last part, please - call me paranoid, but that sounds lik=
-e
-> > > a beginning of something that really should be discussed upfront.
-> >
-> > We don't have any plan with future use cases yet. The only example
-> > I mentioned in the original version of the commit log is "walk the
-> > mount tree". IOW, it is similar to the current iterator, but skips non
-> > mount point iterations.
-> >
-> > Since we call it "path iterator", it might make sense to add ways to
-> > iterate the VFS tree in different patterns. For example, we may
->
-> No, we're not adding a swiss-army knife for consumption by out-of-tree
-> code. I'm not opposed to adding a sane iterator for targeted use-cases
-> with a clear scope and internal API behavior as I've said multiple times
-> already on-list and in-person.
->
-> I will not merge anything that will endup exploding into some fancy
-> "walk subtrees in any order you want".
+Hi Tomi,
 
-We are not proposing (and AFAICT never proposed) to have a
-swiss-army knife that "walk subtrees in any order you want". Instead,
-we are proposing a sane iterator that serves exactly one use case
-now. I guess the concern is that it looks extensible. However, I made
-the API like this so that it can be extended, with thorough reviews, to
-cover another sane use case. If there is still concern with this. We
-sure can make current code not extensible. In case there is a
-different sane use case, we will introduce another iterator after
-thorough reviews.
+Thank you for the patch.
 
-Thanks,
-Song
+On Fri, May 30, 2025 at 04:50:41PM +0300, Tomi Valkeinen wrote:
+> In the case where link-freq is not available, make sure we fail if there
+> are more than one stream configured, and also use the correct stream
+> number for that single stream.
+> 
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+> ---
+>  drivers/media/platform/renesas/rcar-csi2.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/renesas/rcar-csi2.c b/drivers/media/platform/renesas/rcar-csi2.c
+> index 65c7f3040696..b9f83aae725a 100644
+> --- a/drivers/media/platform/renesas/rcar-csi2.c
+> +++ b/drivers/media/platform/renesas/rcar-csi2.c
+> @@ -1018,17 +1018,22 @@ static int rcsi2_calc_mbps(struct rcar_csi2 *priv,
+>  	 */
+>  	freq = v4l2_get_link_freq(remote_pad, 0, 0);
+>  	if (freq < 0) {
+> +		struct v4l2_subdev_route *route = &state->routing.routes[0];
+
+const
+
+>  		const struct rcar_csi2_format *format;
+>  		struct v4l2_mbus_framefmt *fmt;
+>  		unsigned int lanes;
+>  		unsigned int bpp;
+>  		int ret;
+>  
+> +		if (state->routing.num_routes > 1)
+> +			return -EINVAL;
+
+Do we have to guard against the case where there would be no route ?
+
+> +
+>  		ret = rcsi2_get_active_lanes(priv, &lanes);
+>  		if (ret)
+>  			return ret;
+>  
+> -		fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK, 0);
+> +		fmt = v4l2_subdev_state_get_format(state, route->sink_pad,
+> +						   route->sink_stream);
+>  		if (!fmt)
+>  			return -EINVAL;
+>  
+
+-- 
+Regards,
+
+Laurent Pinchart
