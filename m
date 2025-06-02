@@ -1,137 +1,311 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ADC71E5B9D;
-	Mon,  2 Jun 2025 09:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A421E47AE
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 09:43:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748857425; cv=none; b=DkWW7IUpnqfZim2wkS1/bIS7Z+2mB6Ya3dg1JBANBrNtP/ITbC0Orw5HzBwMnLxWw7Ex30k8w/3mv5reD2nQdeFQcMSI/T0sgcIUuStgB8HhldoMxtlC+kF4r/AoGTar+jFYTa/eYAdjIfQbpvJQfM8rgoo/49a01SWaI9BCbcs=
+	t=1748857425; cv=none; b=mqQiq/h9WvlN4wMh7H/Pg5AJ4QnuvWhXy9bY0/zTeLWK/Kauo9F49j7dlKoFsl7TtZ7k6t4gwxGGPWIDrVuaYhHkgqiRjcSEZ/C13/LUkiMF/L9otd+c+BaSlBk0a1vrZn7dTN1U76uzboE1R7yJZUusXpuzw9q34hjL3L2ad+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748857425; c=relaxed/simple;
-	bh=x3kNh4w3y7yoZck135yvoQQWXpEmjy608kokjDlJ7KU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XdjXGImouPQi2aBgWAH9e0E08J8xI0P+N3mw5r+6Cu0wJOQsOyLqHb4Y9LysD2cKXnhMlYXqGd1Uwe349ZY6ab2kS97+V/cvlgvxqOlUIbAjcdaoSowQWFiQoEiVYRBhkla5wIxgHoqWj5j4RFrnbdNm3mk4P6YyfkRa6xr9qG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=P00mtQ0d; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	bh=REBUgI6WvAgg7qhQ4s6VTIr8/bnIQiY5sJ0c/scjknM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RduWEZOCMyTT+3QsYabzfdnh5Le90GNEMs1uEUyXI4/3i8il2WHBW2SwFYxKRG6Utkv+xWn0EbP/uolsrpqGMr+Dm7lCpIobvsdH74z7faIENFAm9XmaVbGZpoKa4SeUg1U7oLS3LImGv0EWFgKZR8Dk66XwK8qCT3zvCWHeGAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=etCmQvSJ; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="P00mtQ0d"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C41B4379;
-	Mon,  2 Jun 2025 11:43:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1748857420;
-	bh=x3kNh4w3y7yoZck135yvoQQWXpEmjy608kokjDlJ7KU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P00mtQ0dwrMM2fBbpQ3VJjEwikjO28KMwUWbUQMuJZvjFdsnk9YYc9U1Hlzy4h/n/
-	 VfxVDbJBnUJk4EnZGyrmlJzzSxSCk2Rlf+sJEbGZbaH9mPvyLo7qO0nlTqAEDMgPX5
-	 GXDaSDWTkCzd4ESa15tzuykiqO57N8TAVoIbQOjg=
-Date: Mon, 2 Jun 2025 12:43:33 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-Cc: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-Subject: Re: [PATCH v3 03/15] media: rcar-isp: Move
- {enable|disable}_streams() calls
-Message-ID: <20250602055742.GC11750@pendragon.ideasonboard.com>
-References: <20250530-rcar-streams-v3-0-026655df7138@ideasonboard.com>
- <20250530-rcar-streams-v3-3-026655df7138@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="etCmQvSJ"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4a58ef58a38so132631cf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 02:43:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748857422; x=1749462222; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=uo8mvfVOCPKDzB6phw0TdqUcAgsJs18ujFhEA6TPVZg=;
+        b=etCmQvSJUliKtsynHnnpq/r08LS0yJTn7ODhGfTyCLOEhbd4POBqJp3xsAzIzlTSXr
+         fPklFwpmGOFRT2fXc3VuUi0n4/Gr2c/Ts+bgryPjDX/i/LhWQsSJ5D5F4eCBKOQ5U3t1
+         bwkGFPF6zyHbtLlZrAOC3XDdSTbAD4lPMD4qOzr/mU6CCknvB7MULe+ZkkM6PFADauOs
+         03gmfEMY7JlON23z7KZcs/9zzE1rsHTw3I5ToKz7bDwbk05WMVPjB4XsUEyH86ZG4qyu
+         zjA1XPbVCLx/idQ6epH5UECBYIQkbCKE5/5M77cdyiPVlzKKHRwookjvFKlY1io7p1nj
+         6pLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748857422; x=1749462222;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uo8mvfVOCPKDzB6phw0TdqUcAgsJs18ujFhEA6TPVZg=;
+        b=J+hTXFIBQFo9WjHT2Dd2YtH7iPaYZySQ/Vkk7QFINGlkIF0wLXz9TMM5M3s26CkwgY
+         FuL1s5H5UdwjYz99W4psUSSKRTIxXkRGs6L4lTwvU3zfy8D5lG3RUfSm/Du9Aqw3ae/v
+         mnBjdg4kQHDPi63jR9jZw+p4cNs9arGgkT1PAVNPmZAKU9BUXbtVKhIMC3FEvBhnTXSb
+         IGgTV7tqXGDHjLqeUIta1UgrXfYhvalPa+X2wYU7ZqGfCdMxok9oKe1EiwvScNQ2uzSF
+         168BNTLOCcYvWIly0AWcarWxMEQR6o2iNbKyB2GeEceNdfXL0x4CLFU6suDzf1QxUJyI
+         T8Lw==
+X-Forwarded-Encrypted: i=1; AJvYcCUgyVNfDaS+oYyt1DOEVfD0tXbpyDlW2xvWqsRtD7HdHwMy7Ovm84zzujdFAvo3G6ojzKf+2RYkSqzyTzA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyqx+8H2xGoW+lu2l2XgtnzZOgFEJxvuJXAa9m8ZVHTFa7ha859
+	P1qNEVSbXzTyxV2P9DQvLxYimEwV3iOp2mbP+NbsAQ/BiTW1RlkLVlnhfOTUDTvKsCop/RqcI3t
+	8sXH6ST2wbVy89/il+HfV6l5X93A0ra4C1ziSfCDc
+X-Gm-Gg: ASbGncsUQ9JHuLsW802wgSpFvq1gV67PwkHnokI3vzboQlilSvY3iAbznDZ3ER2o9GE
+	+MJBu1GfRo/ib9lp6uU6VDvEyauT10TBdvL/kiDl8AjFgtTQB/ybIBks9KA4QzJQtfYmu7E526w
+	p80mjBpwZoZXa4cx6t5qYRAsq70epWzi9piH3H/PkpgdU=
+X-Google-Smtp-Source: AGHT+IGWihVD4pfolVqs4guDDc40fFZEGkU6C3Ax5Qsx3Qx9MhC6Q8kpj0Q3hgKeQLjhU0Zcd4NAEFjvR2PgYiaFuH4=
+X-Received: by 2002:a05:622a:2288:b0:494:b833:aa42 with SMTP id
+ d75a77b69052e-4a45815ef5cmr4822181cf.5.1748857421902; Mon, 02 Jun 2025
+ 02:43:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250530-rcar-streams-v3-3-026655df7138@ideasonboard.com>
+References: <cover.1747264138.git.ackerleytng@google.com> <b784326e9ccae6a08388f1bf39db70a2204bdc51.1747264138.git.ackerleytng@google.com>
+ <aDU3eL7qQYrXkE3T@yzhao56-desk.sh.intel.com> <CA+EHjTxgO4LmdYY83a+uzBshvFf8EcJzY58Rovvz=pZgyO2yow@mail.gmail.com>
+ <diqzzfeu54rf.fsf@ackerleytng-ctop.c.googlers.com>
+In-Reply-To: <diqzzfeu54rf.fsf@ackerleytng-ctop.c.googlers.com>
+From: Fuad Tabba <tabba@google.com>
+Date: Mon, 2 Jun 2025 10:43:05 +0100
+X-Gm-Features: AX0GCFs1Ed5_8o-cI-u2zHzfuVBCp-xOIalJ6ir71J27GefrvJtgoWToLCCKlFs
+Message-ID: <CA+EHjTyv9KsRsbf6ec9u5mLjBbcnNti9k8hPi9Do59Mw7ayYqw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 02/51] KVM: guest_memfd: Introduce and use
+ shareability to guard faulting
+To: Ackerley Tng <ackerleytng@google.com>
+Cc: Yan Zhao <yan.y.zhao@intel.com>, kvm@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, linux-fsdevel@vger.kernel.org, 
+	aik@amd.com, ajones@ventanamicro.com, akpm@linux-foundation.org, 
+	amoorthy@google.com, anthony.yznaga@oracle.com, anup@brainfault.org, 
+	aou@eecs.berkeley.edu, bfoster@redhat.com, binbin.wu@linux.intel.com, 
+	brauner@kernel.org, catalin.marinas@arm.com, chao.p.peng@intel.com, 
+	chenhuacai@kernel.org, dave.hansen@intel.com, david@redhat.com, 
+	dmatlack@google.com, dwmw@amazon.co.uk, erdemaktas@google.com, 
+	fan.du@intel.com, fvdl@google.com, graf@amazon.com, haibo1.xu@intel.com, 
+	hch@infradead.org, hughd@google.com, ira.weiny@intel.com, 
+	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
+	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
+	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, 
+	kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
+	kirill.shutemov@intel.com, liam.merwick@oracle.com, 
+	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
+	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
+	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
+	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
+	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
+	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
+	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
+	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
+	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
+	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
+	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
+	steven.sistare@oracle.com, suzuki.poulose@arm.com, thomas.lendacky@amd.com, 
+	usama.arif@bytedance.com, vannapurve@google.com, vbabka@suse.cz, 
+	viro@zeniv.linux.org.uk, vkuznets@redhat.com, wei.w.wang@intel.com, 
+	will@kernel.org, willy@infradead.org, xiaoyao.li@intel.com, 
+	yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Tomi,
+Hi Ackerley,
 
-Thank you for the patch.
+On Fri, 30 May 2025 at 19:32, Ackerley Tng <ackerleytng@google.com> wrote:
+>
+> Fuad Tabba <tabba@google.com> writes:
+>
+> > Hi,
+> >
+> > .. snip..
+> >
+> >> I noticed that in [1], the kvm_gmem_mmap() does not check the range.
+> >> So, the WARN() here can be hit when userspace mmap() an area larger than the
+> >> inode size and accesses the out of band HVA.
+> >>
+> >> Maybe limit the mmap() range?
+> >>
+> >> @@ -1609,6 +1620,10 @@ static int kvm_gmem_mmap(struct file *file, struct vm_area_struct *vma)
+> >>         if (!kvm_gmem_supports_shared(file_inode(file)))
+> >>                 return -ENODEV;
+> >>
+> >> +       if (vma->vm_end - vma->vm_start + (vma->vm_pgoff << PAGE_SHIFT) > i_size_read(file_inode(file)))
+> >> +               return -EINVAL;
+> >> +
+> >>         if ((vma->vm_flags & (VM_SHARED | VM_MAYSHARE)) !=
+> >>             (VM_SHARED | VM_MAYSHARE)) {
+> >>                 return -EINVAL;
+> >>
+> >> [1] https://lore.kernel.org/all/20250513163438.3942405-8-tabba@google.com/
+> >
+> > I don't think we want to do that for a couple of reasons. We catch
+> > such invalid accesses on faulting, and, by analogy, afaikt, neither
+> > secretmem nor memfd perform a similar check on mmap (nor do
+> > memory-mapped files in general).
+> >
+> > There are also valid reasons why a user would want to deliberately
+> > mmap more memory than the backing store, knowing that it's only going
+> > to fault what it's going to use, e.g., alignment.
+> >
+>
+> This is a good point.
+>
+> I think there's no check against the inode size on faulting now though?
+> v10's [1] kvm_gmem_fault_shared() calls kvm_gmem_get_folio()
+> straightaway.
+>
+> We should add a check like [2] to kvm_gmem_fault_shared().
 
-On Fri, May 30, 2025 at 04:50:32PM +0300, Tomi Valkeinen wrote:
-> With multiple streams the operation to enable the ISP hardware and to
-> call {enable|disable}_streams() on upstream subdev will need to be
-> handled separately.
-> 
-> Prepare for that by moving {enable|disable}_streams() calls out from
-> risp_start() and risp_stop().
-> 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-> ---
->  drivers/media/platform/renesas/rcar-isp/csisp.c | 18 ++++++++++--------
->  1 file changed, 10 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/media/platform/renesas/rcar-isp/csisp.c b/drivers/media/platform/renesas/rcar-isp/csisp.c
-> index 8fb2cc3b5650..2337c5d44c40 100644
-> --- a/drivers/media/platform/renesas/rcar-isp/csisp.c
-> +++ b/drivers/media/platform/renesas/rcar-isp/csisp.c
-> @@ -268,18 +268,11 @@ static int risp_start(struct rcar_isp *isp, struct v4l2_subdev_state *state)
->  	/* Start ISP. */
->  	risp_write_cs(isp, ISPSTART_REG, ISPSTART_START);
->  
-> -	ret = v4l2_subdev_enable_streams(isp->remote, isp->remote_pad,
-> -					 BIT_ULL(0));
-> -	if (ret)
-> -		risp_power_off(isp);
-> -
-> -	return ret;
-> +	return 0;
->  }
->  
->  static void risp_stop(struct rcar_isp *isp)
->  {
-> -	v4l2_subdev_disable_streams(isp->remote, isp->remote_pad, BIT_ULL(0));
-> -
->  	/* Stop ISP. */
->  	risp_write_cs(isp, ISPSTART_REG, ISPSTART_STOP);
->  
-> @@ -305,6 +298,13 @@ static int risp_enable_streams(struct v4l2_subdev *sd,
->  			return ret;
->  	}
->  
-> +	ret = v4l2_subdev_enable_streams(isp->remote, isp->remote_pad,
-> +					 BIT_ULL(0));
+Yes! I mistakenly thought that kvm_gmem_get_folio() had such a check,
+I just verified that it doesn't. I have added the check, as well as a
+new selftest to make sure we don't miss it in the future.
 
-You're now potentially calling v4l2_subdev_disable_streams() multiple
-times on the same pad and stream, as this call isn't covered by the
-stream_count check anymore. Is that correct ? Maybe because
-risp_enable_streams() is guaranteed to never be called multiple times,
-with stream_count never becoming larger than 1 ? If so that should be
-explained in the commit message, and stream_count should probably be
-dropped.
+Thanks!
+/fuad
 
-Same when stopping.
-
-> +	if (ret) {
-> +		risp_stop(isp);
-
-This is also not covered by the stream_count, while risp_start() is.
-
-> +		return ret;
-> +	}
-> +
->  	isp->stream_count += 1;
->  
->  	return ret;
-> @@ -322,6 +322,8 @@ static int risp_disable_streams(struct v4l2_subdev *sd,
->  	if (!isp->remote)
->  		return -ENODEV;
->  
-> +	v4l2_subdev_disable_streams(isp->remote, isp->remote_pad, BIT_ULL(0));
-> +
->  	if (isp->stream_count == 1)
->  		risp_stop(isp);
->  
-
--- 
-Regards,
-
-Laurent Pinchart
+> [1] https://lore.kernel.org/all/20250513163438.3942405-8-tabba@google.com/
+> [2] https://github.com/torvalds/linux/blob/8477ab143069c6b05d6da4a8184ded8b969240f5/mm/filemap.c#L3373
+>
+> > Cheers,
+> > /fuad
+> >
+> >
+> >> > +     return xa_to_value(entry);
+> >> > +}
+> >> > +
+> >> > +static struct folio *kvm_gmem_get_shared_folio(struct inode *inode, pgoff_t index)
+> >> > +{
+> >> > +     if (kvm_gmem_shareability_get(inode, index) != SHAREABILITY_ALL)
+> >> > +             return ERR_PTR(-EACCES);
+> >> > +
+> >> > +     return kvm_gmem_get_folio(inode, index);
+> >> > +}
+> >> > +
+> >> > +#else
+> >> > +
+> >> > +static int kvm_gmem_shareability_setup(struct maple_tree *mt, loff_t size, u64 flags)
+> >> > +{
+> >> > +     return 0;
+> >> > +}
+> >> > +
+> >> > +static inline struct folio *kvm_gmem_get_shared_folio(struct inode *inode, pgoff_t index)
+> >> > +{
+> >> > +     WARN_ONCE("Unexpected call to get shared folio.")
+> >> > +     return NULL;
+> >> > +}
+> >> > +
+> >> > +#endif /* CONFIG_KVM_GMEM_SHARED_MEM */
+> >> > +
+> >> >  static int __kvm_gmem_prepare_folio(struct kvm *kvm, struct kvm_memory_slot *slot,
+> >> >                                   pgoff_t index, struct folio *folio)
+> >> >  {
+> >> > @@ -333,7 +404,7 @@ static vm_fault_t kvm_gmem_fault_shared(struct vm_fault *vmf)
+> >> >
+> >> >       filemap_invalidate_lock_shared(inode->i_mapping);
+> >> >
+> >> > -     folio = kvm_gmem_get_folio(inode, vmf->pgoff);
+> >> > +     folio = kvm_gmem_get_shared_folio(inode, vmf->pgoff);
+> >> >       if (IS_ERR(folio)) {
+> >> >               int err = PTR_ERR(folio);
+> >> >
+> >> > @@ -420,8 +491,33 @@ static struct file_operations kvm_gmem_fops = {
+> >> >       .fallocate      = kvm_gmem_fallocate,
+> >> >  };
+> >> >
+> >> > +static void kvm_gmem_free_inode(struct inode *inode)
+> >> > +{
+> >> > +     struct kvm_gmem_inode_private *private = kvm_gmem_private(inode);
+> >> > +
+> >> > +     kfree(private);
+> >> > +
+> >> > +     free_inode_nonrcu(inode);
+> >> > +}
+> >> > +
+> >> > +static void kvm_gmem_destroy_inode(struct inode *inode)
+> >> > +{
+> >> > +     struct kvm_gmem_inode_private *private = kvm_gmem_private(inode);
+> >> > +
+> >> > +#ifdef CONFIG_KVM_GMEM_SHARED_MEM
+> >> > +     /*
+> >> > +      * mtree_destroy() can't be used within rcu callback, hence can't be
+> >> > +      * done in ->free_inode().
+> >> > +      */
+> >> > +     if (private)
+> >> > +             mtree_destroy(&private->shareability);
+> >> > +#endif
+> >> > +}
+> >> > +
+> >> >  static const struct super_operations kvm_gmem_super_operations = {
+> >> >       .statfs         = simple_statfs,
+> >> > +     .destroy_inode  = kvm_gmem_destroy_inode,
+> >> > +     .free_inode     = kvm_gmem_free_inode,
+> >> >  };
+> >> >
+> >> >  static int kvm_gmem_init_fs_context(struct fs_context *fc)
+> >> > @@ -549,12 +645,26 @@ static const struct inode_operations kvm_gmem_iops = {
+> >> >  static struct inode *kvm_gmem_inode_make_secure_inode(const char *name,
+> >> >                                                     loff_t size, u64 flags)
+> >> >  {
+> >> > +     struct kvm_gmem_inode_private *private;
+> >> >       struct inode *inode;
+> >> > +     int err;
+> >> >
+> >> >       inode = alloc_anon_secure_inode(kvm_gmem_mnt->mnt_sb, name);
+> >> >       if (IS_ERR(inode))
+> >> >               return inode;
+> >> >
+> >> > +     err = -ENOMEM;
+> >> > +     private = kzalloc(sizeof(*private), GFP_KERNEL);
+> >> > +     if (!private)
+> >> > +             goto out;
+> >> > +
+> >> > +     mt_init(&private->shareability);
+> >> Wrap the mt_init() inside "#ifdef CONFIG_KVM_GMEM_SHARED_MEM" ?
+> >>
+> >> > +     inode->i_mapping->i_private_data = private;
+> >> > +
+> >> > +     err = kvm_gmem_shareability_setup(private, size, flags);
+> >> > +     if (err)
+> >> > +             goto out;
+> >> > +
+> >> >       inode->i_private = (void *)(unsigned long)flags;
+> >> >       inode->i_op = &kvm_gmem_iops;
+> >> >       inode->i_mapping->a_ops = &kvm_gmem_aops;
+> >> > @@ -566,6 +676,11 @@ static struct inode *kvm_gmem_inode_make_secure_inode(const char *name,
+> >> >       WARN_ON_ONCE(!mapping_unevictable(inode->i_mapping));
+> >> >
+> >> >       return inode;
+> >> > +
+> >> > +out:
+> >> > +     iput(inode);
+> >> > +
+> >> > +     return ERR_PTR(err);
+> >> >  }
+> >> >
+> >> >  static struct file *kvm_gmem_inode_create_getfile(void *priv, loff_t size,
+> >> > @@ -654,6 +769,9 @@ int kvm_gmem_create(struct kvm *kvm, struct kvm_create_guest_memfd *args)
+> >> >       if (kvm_arch_vm_supports_gmem_shared_mem(kvm))
+> >> >               valid_flags |= GUEST_MEMFD_FLAG_SUPPORT_SHARED;
+> >> >
+> >> > +     if (flags & GUEST_MEMFD_FLAG_SUPPORT_SHARED)
+> >> > +             valid_flags |= GUEST_MEMFD_FLAG_INIT_PRIVATE;
+> >> > +
+> >> >       if (flags & ~valid_flags)
+> >> >               return -EINVAL;
+> >> >
+> >> > @@ -842,6 +960,8 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
+> >> >       if (!file)
+> >> >               return -EFAULT;
+> >> >
+> >> > +     filemap_invalidate_lock_shared(file_inode(file)->i_mapping);
+> >> > +
+> >> >       folio = __kvm_gmem_get_pfn(file, slot, index, pfn, &is_prepared, max_order);
+> >> >       if (IS_ERR(folio)) {
+> >> >               r = PTR_ERR(folio);
+> >> > @@ -857,8 +977,8 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
+> >> >               *page = folio_file_page(folio, index);
+> >> >       else
+> >> >               folio_put(folio);
+> >> > -
+> >> >  out:
+> >> > +     filemap_invalidate_unlock_shared(file_inode(file)->i_mapping);
+> >> >       fput(file);
+> >> >       return r;
+> >> >  }
+> >> > --
+> >> > 2.49.0.1045.g170613ef41-goog
+> >> >
+> >> >
