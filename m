@@ -1,99 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD014229B1E;
-	Mon,  2 Jun 2025 14:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D85224AF3;
+	Mon,  2 Jun 2025 14:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748875796; cv=none; b=aJLZy0HnslXNF7v1AZ4jTkn1J6NdL1qgs4WcFxYJZgfsXhQkfFL+Teioftb5UmGuqvMYmfEhF2I75z5wbY4+0gk4gF9vT/XrfbZ0XVCnH9uYe3FAl/77WTf9s7Bl5a9v/QCX8JVOyhnul4POOtlOf7QWRfhZ4HxERKIeIH8wFUI=
+	t=1748875812; cv=none; b=BnzUSMl2W9fpdsAgBBBZmxCyFGh3WOwii54YoaSCQM7Af3qfZTMkz9vZ6yZyepqath9emduErKAr57n7Knfz86TtWBINLWwdk9/yzwsVfIkK3C7Wq+cKx3B5FVNDp9pdeu5vEMuiitmP+H+YvrFdWLJEgm09y0Pr7XcqmPGYIKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748875796; c=relaxed/simple;
-	bh=UM3C4cwYFnomaoOmG+MOnC3qVnLRE4Eqmt0i5bm7r7Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=b5W8/xnXuMQuCBr0LCkorjWdolmv2cGTEpThdX/pXoHTjm5c/z5v6r1+rO5eeoyT1vmzqmDneDln8QxBCg5FWNwIa+ezWbFxmio+vGo39FWUzHClTCOmRRcIv7macXqM3A0F3unBu9EeqJBqNODY8OP1uoWGp2GgQ2DISK30xmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AC05C4CEEB;
-	Mon,  2 Jun 2025 14:49:54 +0000 (UTC)
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	David Gow <davidgow@google.com>
-Cc: linux-hardening@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH] lib/tests: Make RANDSTRUCT_KUNIT_TEST depend on RANDSTRUCT
-Date: Mon,  2 Jun 2025 16:49:51 +0200
-Message-ID: <22d9c2fa9e751a9de3c599aa082be588ea82a7a0.1748875640.git.geert@linux-m68k.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1748875812; c=relaxed/simple;
+	bh=blgDM88X1jeUq6a6pKELtXM99bkI0X9VE3VgtHE0QKs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FY+Z80QD3Z4NWE+cvGeuTOZ0vJcpf5QWRzPpalxnxOx1JweE67kz+z+XeN0DyuFwaIhRxJOQ4Pktas16nMetwwrNR4g/vKSXJ3BxL8OnEvEGYLy/clpHknkz4RV8p1Y3Dh0J/73mbYwTQG8SXdhKSeorgXJ4biWx2sKUtgj78Wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=blvB6/I/; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="blvB6/I/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=nKqwZCXhGkjNvsE42Xwqt58Wfb5dz/M/EpxBUAE8GyY=; b=blvB6/I/05SE0PEHfhVo7BxpuS
+	rrpG2PkaQk4VsIGzW6ZEs8h06tbGzNgsGCMlW2e+Yoyl4iT8BWe0xDcfbLYGqH5PRLTOudi/V2SX+
+	6HNyxBgsUWxEEwrsJ7Uc1KiqxM6blWzte2eF8uZfAwLiSMWnHMO7Y8+VAAe3fqpTajZE=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uM6UC-00EVh1-Bo; Mon, 02 Jun 2025 16:50:00 +0200
+Date: Mon, 2 Jun 2025 16:50:00 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
+Subject: Re: [PATCH 1/1] dt-bindings: net: convert nxp,lpc1850-dwmac.txt to
+ yaml format
+Message-ID: <65f5e6e9-f02e-4374-9f17-bc833fac2316@lunn.ch>
+References: <20250602141638.941747-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250602141638.941747-1-Frank.Li@nxp.com>
 
-When CONFIG_RANDSTRUCT is not enabled, all randstruct tests are skipped.
-Move this logic from run-time to config-time, to avoid people building
-and running tests that do not do anything.
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/lpc18xx-ccu.h>
+> +
+> +    ethernet@40010000 {
+> +        compatible = "nxp,lpc1850-dwmac", "snps,dwmac-3.611", "snps,dwmac";
+> +        reg = <0x40010000 0x2000>;
+> +        interrupts = <5>;
+> +        interrupt-names = "macirq";
+> +        clocks = <&ccu1 CLK_CPU_ETHERNET>;
+> +        clock-names = "stmmaceth";
+> +        resets = <&rgu 22>;
+> +        reset-names = "stmmaceth";
+> +        phy-mode = "rgmii";
 
-Fixes: b370f7eacdcfe1dd ("lib/tests: Add randstruct KUnit test")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
-FTR, after adding "select HAVE_GCC_PLUGINS" to arch/m68k/Kconfig and
-installing gcc-13-plugin-dev-m68k-linux-gnu, I could enable
-CONFIG_RANDSTRUCT_FULL and run the tests (all passed!), so probably I
-should send a patch to select HAVE_GCC_PLUGINS?
----
- lib/Kconfig.debug            | 4 ++--
- lib/tests/randstruct_kunit.c | 9 ---------
- 2 files changed, 2 insertions(+), 11 deletions(-)
+Please don't use 'rgmii' in an example, because it is 99% of the time
+wrong. You are just encouraging developers to copy/paste this into
+real DT blobs, and then i need to point out it is wrong. Use
+'rgmii-id', which is much more likely to be correct.
 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index a8b4febad716a4be..407f2ed7fcb3e94c 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -2895,10 +2895,10 @@ config OVERFLOW_KUNIT_TEST
- config RANDSTRUCT_KUNIT_TEST
- 	tristate "Test randstruct structure layout randomization at runtime" if !KUNIT_ALL_TESTS
- 	depends on KUNIT
-+	depends on RANDSTRUCT
- 	default KUNIT_ALL_TESTS
- 	help
--	  Builds unit tests for the checking CONFIG_RANDSTRUCT=y, which
--	  randomizes structure layouts.
-+	  Builds unit tests for checking structure layout randomization.
- 
- config STACKINIT_KUNIT_TEST
- 	tristate "Test level of stack variable initialization" if !KUNIT_ALL_TESTS
-diff --git a/lib/tests/randstruct_kunit.c b/lib/tests/randstruct_kunit.c
-index f3a2d63c4cfbe7dc..2c95eca76d2411bc 100644
---- a/lib/tests/randstruct_kunit.c
-+++ b/lib/tests/randstruct_kunit.c
-@@ -305,14 +305,6 @@ static void randstruct_initializers(struct kunit *test)
- #undef init_members
- }
- 
--static int randstruct_test_init(struct kunit *test)
--{
--	if (!IS_ENABLED(CONFIG_RANDSTRUCT))
--		kunit_skip(test, "Not built with CONFIG_RANDSTRUCT=y");
--
--	return 0;
--}
--
- static struct kunit_case randstruct_test_cases[] = {
- 	KUNIT_CASE(randstruct_layout_same),
- 	KUNIT_CASE(randstruct_layout_mixed),
-@@ -324,7 +316,6 @@ static struct kunit_case randstruct_test_cases[] = {
- 
- static struct kunit_suite randstruct_test_suite = {
- 	.name = "randstruct",
--	.init = randstruct_test_init,
- 	.test_cases = randstruct_test_cases,
- };
- 
--- 
-2.43.0
-
+	Andrew
