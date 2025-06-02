@@ -1,125 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFEA3C8CE;
-	Mon,  2 Jun 2025 13:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6BA81A08B1
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 13:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748869314; cv=none; b=rGnXpaDPDj6cwcsCd/sVrzoBJcTnFe69zmOEc4cuCsqU3P+uH6kqxDV5uvsBQK/rJutby3hhS4p/9mbqWDYyhkvMzX+idheiNFe7FNVeFs/p5+GOdDwtWQFu+86Pb4+YV3+j1TG7fQc9t1gOi6noC/xqNuMcO3wPws3g4ABg+ho=
+	t=1748869333; cv=none; b=IQrZKoqLp4c18rP91uwPCk9saH5M++2at4EuOB0y0fvYk5kP3utp2rsFvxqn9o129CI82R0xO/bRaRJ9n06VRQdb//Q9nzoCYPJ9tbzpxChjk/Hkp9IhQJrxc8noNzP4MUZTWOoLWyniTeMnqXbARn7ducet1E+JhvS4dqnsLYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748869314; c=relaxed/simple;
-	bh=Sbcuk083nXaGHK3PAlrnD8RXFqO6Co/oGxGk/SQGokw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FHngehGnsuXBajy5Thzjju/Z0u8p5E08uco7Ro0x7x2yZQ5y7rNzJEm91fG+ecM0CSaWufb+aG0yrlTHr8amr/YOk2oiGi+dgvdS/RqRAsPQhEQh4kSUjdTZ8wkpgLM5yBrMlKbeuza1fni97F5weOE/a7P+BqCNYiA3aB8cFSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hRsWUbgq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hRsWUbgq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55FAEC4CEEB;
-	Mon,  2 Jun 2025 13:01:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748869314;
-	bh=Sbcuk083nXaGHK3PAlrnD8RXFqO6Co/oGxGk/SQGokw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hRsWUbgq5umrmahSeV9iJR4TvrEHGa4HcqpUHNjjEXKeU+XXt9V0Xb5DPIOqEW2td
-	 VDBRZ746dtnEh0elZnqd8DiSkJfkXn/heqffsSiA94Wnn2DdXiYKbdfZwNXdsOcXHX
-	 C0hVjgPsga/xWu7rFltfA0C3UYLSHwsLcA6gRjLi6S+QJ5Z5mROFQ1e2SmSUvcv9kb
-	 deXnmBWGeb19DMuVuQOaeriEDTnDQ4Q/qcIPsAOOGk4QnZUUWwkHJpWlkOzDeYsghD
-	 wE5Wj9sM53ixDCqaLetTJuAISvzAyWHygXW0xysjhLx+efpW68flbtSdNwLA8kHBmA
-	 QBElGRBa3w0Pw==
-Message-ID: <ba107a41-5520-47fa-9943-6e33946f50b1@kernel.org>
-Date: Mon, 2 Jun 2025 15:01:48 +0200
+	s=arc-20240116; t=1748869333; c=relaxed/simple;
+	bh=TtkT46dVySzqpj34qqQIaU3JLj45FXDa0CAJbYjQ1zc=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=B0RCsEwqYAlj8H6xZlZ9Up/RS6dCQZQwNZV4ObC1nxNUaCR098dPupdV6Vg00kXZ2b5l5v8wfI3C8Q5sTDLndykswG8HbxG91Hf8ZQ4W+HIcrpYYclF94a9sE6YsHJuz601kCUvg/Ar2u1U7Uz1mZwClJiLsx/GRw6vMQi21Vxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3dc8b60169eso45963545ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 06:02:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748869331; x=1749474131;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=w7fxteB/f5sDtYeR1EMo4Ak0z4+Q25y3p1Fc+NOwwIY=;
+        b=o5vls2+daa4qUc87UihzYj8CDnnXke6VkgghTGYlWWbzMvhSeIv4XM9KVBvpVRTZoZ
+         KyYrYUQj3BUpMeJ2dPodjt+b4/HXhDR1311Pn1bSO6g/Y1uqjNH76HhSu5MdZoY3uf2r
+         +7db+yMibIRviT5XybbG77303lEHBgBlJ83WCLYoMsmICzr1o7j1gYclYlrWUVw6jmON
+         HT3r8UHcOhqSAhgPRtxNM7RyJBh3SNVmtJaRfJh452/YqyB0ZvxW788MrfDG0pKq/ms0
+         TC4bgFsP9qE7Dhoj4XTS9ZzAHKNNz8JJQLw7jAfPLoXYZ8yuFpxosjWILnmxy/knk/bc
+         UCvw==
+X-Forwarded-Encrypted: i=1; AJvYcCXwLDjY/NzzEEbDvOB1kU3hcfUWX0oWz24yYNQRtOnBIldXSOl7KG1WyAAqDwtkBiBqgdxZJUO06kgkCss=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpKCpEygWEGQ0XUg/obY6otdyoudJI5nGhgfjtyVgHD47z1IF+
+	vwbT9JcDBsmIB9DxNSjWw65Mg2p7CjncITSXv/rhrYQWVdfI15GNim5ITcTIPSIJv/NsQ/AQxAO
+	g1VgdcP4dZODCMPPgJOZrfCDcp66/dUcW9TcUPp/m3JDnSAr5O5sO/R5sg/c=
+X-Google-Smtp-Source: AGHT+IFWtTdvixuVzBD0tn2upCe8Es69ApyF4PTbdgFaEHRZJy+E6cBgwD65KLDcZ2xxw/V33d/AHZi98X2kLR8f3KcI+qbaKPu3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] arm64: qcom: sc7280: Move phy, perst to root port
- node
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Rob Herring <robh@kernel.org>,
- Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org,
- linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
-References: <20250419-perst-v3-0-1afec3c4ea62@oss.qualcomm.com>
- <20250419-perst-v3-3-1afec3c4ea62@oss.qualcomm.com>
- <20250423153747.GA563929-robh@kernel.org>
- <2ce28fb9-1184-4503-8f16-878d1fcb94cd@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <2ce28fb9-1184-4503-8f16-878d1fcb94cd@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:5e0e:b0:3dd:b540:b795 with SMTP id
+ e9e14a558f8ab-3ddb540b9d8mr3170435ab.3.1748869322784; Mon, 02 Jun 2025
+ 06:02:02 -0700 (PDT)
+Date: Mon, 02 Jun 2025 06:02:02 -0700
+In-Reply-To: <683447f8.a70a0220.29d4a0.0803.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <683da0ca.a00a0220.d8eae.0051.GAE@google.com>
+Subject: Re: [syzbot] [bcachefs?] possible deadlock in start_poll_synchronize_rcu_expedited
+From: syzbot <syzbot+cbc79a37b5fa23efd23b@syzkaller.appspotmail.com>
+To: agordeev@linux.ibm.com, boqun.feng@gmail.com, guoweikang.kernel@gmail.com, 
+	hdanton@sina.com, kent.overstreet@linux.dev, kpsingh@kernel.org, 
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	paulmck@kernel.org, pmladek@suse.com, rppt@kernel.org, rrangel@chromium.org, 
+	syzkaller-bugs@googlegroups.com, urezki@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 08/05/2025 16:26, Konrad Dybcio wrote:
-> On 4/23/25 5:37 PM, Rob Herring wrote:
->> On Sat, Apr 19, 2025 at 10:49:26AM +0530, Krishna Chaitanya Chundru wrote:
->>> There are many places we agreed to move the wake and perst gpio's
->>> and phy etc to the pcie root port node instead of bridge node[1].
->>>
->>> So move the phy, phy-names, wake-gpio's in the root port.
->>> There is already reset-gpio defined for PERST# in pci-bus-common.yaml,
->>> start using that property instead of perst-gpio.
->>
->> Moving the properties will break existing kernels. If that doesn't 
->> matter for these platforms, say so in the commit msg.
-> 
-> I don't think we generally guarantee *forward* dt compatibility though, no?
-We do not guarantee, comment was not about this, but we expect. This DTS
-is supposed and is used by other projects. There was entire complain
-last DT BoF about kernel breaking DTS users all the time.
+syzbot has bisected this issue to:
 
-Best regards,
-Krzysztof
+commit 82067c916994dd1bfec65496144dc16e17899e36
+Author: Kent Overstreet <kent.overstreet@linux.dev>
+Date:   Fri May 9 03:21:28 2025 +0000
+
+    bcachefs: buckets_in_flight on stack
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12fc7970580000
+start commit:   3a83b350b5be Add linux-next specific files for 20250530
+git tree:       linux-next
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=11fc7970580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=16fc7970580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=28859360c84ac63d
+dashboard link: https://syzkaller.appspot.com/bug?extid=cbc79a37b5fa23efd23b
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=106ebed4580000
+
+Reported-by: syzbot+cbc79a37b5fa23efd23b@syzkaller.appspotmail.com
+Fixes: 82067c916994 ("bcachefs: buckets_in_flight on stack")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
