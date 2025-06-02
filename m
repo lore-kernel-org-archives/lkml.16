@@ -1,86 +1,255 @@
-Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6D4222582;
-	Mon,  2 Jun 2025 15:36:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF55A188907
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 15:36:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748878579; cv=none; b=TYdhXhEbnr41wAUeOrTq1aWXoWphLJFuPZT7N83pi5jvQuMx16c2K0YKC62HgBTP0IwqRInKUJKyfvOffO1je0ox1DeHFhUL/w/g6EEFfR+uEE0VsZpqsIQ25UwiZFpJXOuanPYa2OkkrJLVddvyaVeGxuQl9+7CZZYKU41i/AM=
+	t=1748878621; cv=none; b=Z2YpfQRuV8iT4Q1tKn2Uf34TaOpcU7NnnjmjkLblOuug5M8X7iG5S4EhT/oRm7G+UOTeT6qOIG8Qzqh5yeieW6PNtZE5XTovsDGbNkzRudkknz3oLXEHe0zDUc+KRAt2yoG8oo4Oycaw/2Ye7Rxscfk9nag0rXE/A9mqe0farGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748878579; c=relaxed/simple;
-	bh=c603DWBYqwlU/aWg2+WiVmQp9Ok9b798vC1nRwPD66g=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZmTWaTOZFgjAak3ooWmefuzo/YxK741raJLPjTiLbGecdoMlrnO45cYDAk6/REu0uL8Lj1zgAx728UJNtl+cq1ySdC46MjHIykGD90GFk98QLzvQluRVfNXZP4fQ2TwQo4Fgu0Q27AxoR6d5R727V/Y0eio64t97+mZ5LuucXGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chainsx.cn; spf=pass smtp.mailfrom=chainsx.cn; arc=none smtp.client-ip=18.169.211.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chainsx.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chainsx.cn
-X-QQ-mid: esmtpgz12t1748878503t61ff263f
-X-QQ-Originating-IP: 6W6+bQXnVHQhbo8HPKV1XPMJMh78ckaDklHZl58FLdI=
-Received: from chainsx-ubuntu-server.lan ( [182.245.65.132])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 02 Jun 2025 23:35:01 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 1004114850195244819
-EX-QQ-RecipientCnt: 15
-From: Hsun Lai <i@chainsx.cn>
-To: i@chainsx.cn
-Cc: andrew@lunn.ch,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	heiko@sntech.de,
-	inindev@gmail.com,
-	jonas@kwiboo.se,
-	krzk+dt@kernel.org,
-	krzysztof.kozlowski@linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	quentin.schulz@cherry.de,
-	robh@kernel.org,
-	sfr@canb.auug.org.au
-Subject: [v5,0/2] Add support for Firefly Station-M3/ROC-RK3588S-PC
-Date: Mon,  2 Jun 2025 23:35:00 +0800
-Message-Id: <20250602153500.1831349-1-i@chainsx.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250530031046.166202-1-i@chainsx.cn>
-References: <20250530031046.166202-1-i@chainsx.cn>
+	s=arc-20240116; t=1748878621; c=relaxed/simple;
+	bh=3pVngmV9mQTMkPWE3piKLOBdpJ4NfJJcPoFfSAWhpeo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ILShDEeT91Nh0wHc1C/5cieoDa3fLwgpMZ72qQtW+2IHCMI98i9z9v6jpvXrEEl5dMmcvZ1yf/cmF1FflhOy392sUfxxDG+HFpqbi31zE2WWi/b0MDcDpx2J1DU+VRZD5sxNu9we8JSxQgv0g4XRH3TKP3ZU4bqUXRYTdUEykEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Ws5S/c5L; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Ws5S/c5L"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-32aabfd3813so11906211fa.3
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 08:36:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1748878618; x=1749483418; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9QK6b48IzoYZ1czrVDC4E9lcyQE5tyMzcuV+x/G4A10=;
+        b=Ws5S/c5Lz6cu7Acwy1SUC9IpArUBWF+CY11rQ4lMCI9gY/rs5i2n+Uwf34a9eFPcQg
+         jwNFx+RboazEc323Am4fjIDvCrCfMaafWxxY5KIAMN34HiZEIGE/xLGOLbPkecoOu3Fx
+         cMCSGdBYsYUmXHLKqpfqn6B2e428C18ex5hv0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748878618; x=1749483418;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9QK6b48IzoYZ1czrVDC4E9lcyQE5tyMzcuV+x/G4A10=;
+        b=OEqQRhpOyjHzajlzZpoKJOB4oVH3Dhh5Z811/B6e/fWkgRTlmYLcVk0V8KGSQfXB8Q
+         /Hi8BDYJ4pwkYW33mkZaB6ZR/inhIn9qTF11RXdlCwaG1DUapPuQz3qm31XYQGjHOrEB
+         oQKrjF/jnjZgq28AE/nDpVdD+zeMXvexU8H1v+u08fcCRoU9klF1jeEBVThaN9HF1VCn
+         TbQDZbOQ3x0d38O323htB0icpgxPse338qO4G9fD5vqwF5+WvPZYX4C+UQeuNFR5C7Lk
+         ymBzRMEKZvBbgFekq7dsfxdXNx3oTpRE9B+gEuhAeJWJA6w/uJpEOINRPLxDD4A7cZ4l
+         3Xkw==
+X-Forwarded-Encrypted: i=1; AJvYcCVkEQPWH1qApR1ZVg4kCwEpsTrFLmU+bC0Pc9N3tpug/CS70iUSLCdPTvPSE8FCdQo4h0/tRVZdJu8jwXA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7HT7pkPEJt/03DucPrB7oTB0Di+zhlHQ2HEzC7UNtVDDSIcgI
+	k4jkXlMgZqZGs7L3n+DhyJnIKLBq5rO9T7so4fbnFz+NHU9cWIDzgtKmJY4yHd0AqYHTjwmvEIS
+	OOtOIZjofWLIl7j1QTfXRnIVh3y7U91Y8qGp9b25z
+X-Gm-Gg: ASbGnct5qkifZN1nVjmIKM/PP7dQDgD8JrFsVeggTPph73bzXXv86ujWlBxd1FTV0n6
+	snroBm8L9fr5u7YkrDKygpt5AvlN3ZfSEXPzXItpuQalHsJGHFGn9/Y7K6mkUiRX//ASyA1zxne
+	p5lTMG2CCq3oX9Y4q+vUXw6k1hXsAAlsS9rg==
+X-Google-Smtp-Source: AGHT+IGVdqEkKnUyCTSFT+9+5Aa03z5mtKupyjnf1plFynTemOAfSu/8mZNsQ15tprQhbCLpstHUfH+3BYqpCdCELEM=
+X-Received: by 2002:a2e:a9a7:0:b0:32a:885b:d0f with SMTP id
+ 38308e7fff4ca-32a907b5ffemr33324241fa.24.1748878617891; Mon, 02 Jun 2025
+ 08:36:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpgz:chainsx.cn:qybglogicsvrsz:qybglogicsvrsz3a-0
-X-QQ-XMAILINFO: NyTsQ4JOu2J2YHolm8kogsVjbbA1pNZRv2rLqpgswDE8y4EIOC64O2fv
-	xxhl4aEvmolbqfeNzqIyi1fbrte42iaPLC8GCxC0WxrNNREil3cbIafsy+kEULItMMUcbiq
-	Mj1r6zKWDB5jpEHimH3HFFItJWC4ZyyRfYXvn6znD2AXkPOowhJUnV1OsBPV2q0wCW//LX4
-	iSBoUTEYZlaK4qexxjicBjQLlyOjZJkOkvBOEsKZvzLPYezjIS6CHlZrqvQaxGr3MFHvTx2
-	i/IatOVoW7WcFNZoLLQv60igExwTDOeN8HB4NGUeSPO+zmlOUQJpYFfyn54qgC+YdKxcaVP
-	0sYUzaJCR14vxxUrYGmNwJuQ+MLoVbnZwBxeavbNB9fWkYzhcDdoprNmWh64lMDs8/lT9MC
-	l50IlKiI6uRJxgfL3riS3mfe3bahOLaBWSSiYQjMSSCH3X4WQa04AOpZAx+2wWz5Se010Rz
-	OnLII59EiZPkM2al6IsjlpKNtKZaTlqjBDd0+I5FtB1K/QqJvTfY9uA3O4UE4/d3U56oT5Q
-	v+eEYEEUMPCvxwclfDM1lpAGfTWujEerMFtw/EopiCAWKuaUj1XWwTcgDKWgyQM7Mia4h7s
-	R+SK0GvoPWZcwBBoQUo4m1vSch4FdXwgrHmSXyadhip4t2IGiWo5mntEhMVlV5Mm0jn55N+
-	zh/tKG+LMpLtpM1ckZiJ0WTxLoWK/lBzt+2pq+krJklxWdHHhNKoWgMwUQCyORddTXUYz5j
-	nCxxCs31S42wAxn37+yDdxOHjGS+0bi+KhXk3to7ex7ZfogyA30zn44Ky3jC44QI2s+rBDm
-	kKwelyE6Ho4UI5dH/ktF+dRzkdtjK3lSmFQmlz4GvNt1aFU9xZ3tcU57Vb+yFSTci/eIQQr
-	XUYPSbad7GAe5BO5yyQ9kJ5/UH9sl/vJxcpK6Ofeac9mAIFAK2UO3AdIlzmV6/DHl+Cjzzu
-	OVpD+irN55+sGfSJg0dS1Gab1zDfmofXMXlCE6egXutlErr1/dkRp42MOxKuXoamchVPKQ/
-	AOw8gBlOoBBLy0nLmidS4kEm6olqoDD4KnaxGdMg==
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-X-QQ-RECHKSPAM: 0
+References: <20250530224035.41886-1-james.quinlan@broadcom.com>
+ <20250530224035.41886-3-james.quinlan@broadcom.com> <g5rhfbvlx77imub6nn2bx2q6zest3hgsmssjdjrpwqhs2wuan5@uo2ca5asxbpe>
+In-Reply-To: <g5rhfbvlx77imub6nn2bx2q6zest3hgsmssjdjrpwqhs2wuan5@uo2ca5asxbpe>
+From: Jim Quinlan <james.quinlan@broadcom.com>
+Date: Mon, 2 Jun 2025 11:36:45 -0400
+X-Gm-Features: AX0GCFvQM320POU3IkAr8ibVY9VrUJrRaRz6J6JSXGjCiwYnJUu3TuOgVjnkxwo
+Message-ID: <CA+-6iNxioAQH8vsdPxhjP6gHzhzy3EAKtgOCMncCqgMSMZNRPg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] PCI: brcmstb: Use "num-lanes" DT property if present
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
+	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="000000000000cd212306369888c5"
 
-> I tried to replicate on top of master 
-> (24de2b9da3e28df323c1e096538ae1e035751adf) but couldn't, so I guess we 
-> can simply ignore this warning?
+--000000000000cd212306369888c5
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Yes, the same situation occurs here,
-and it has already been answered by Heiko Stübner(#2):
-https://patchwork.kernel.org/project/linux-rockchip/cover/20250516012402.580468-1-i@chainsx.cn/
+On Sat, May 31, 2025 at 2:34=E2=80=AFAM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+>
+> On Fri, May 30, 2025 at 06:40:33PM -0400, Jim Quinlan wrote:
+> > By default, we use automatic HW negotiation to ascertain the number of
+> > lanes of the PCIe connection.  If the "num-lanes" DT property is presen=
+t,
+> > assume that the chip's built-in capability information is incorrect or
+> > undesired, and use the specified value instead.
+> >
+> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > ---
+> >  drivers/pci/controller/pcie-brcmstb.c | 26 +++++++++++++++++++++++++-
+> >  1 file changed, 25 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/contro=
+ller/pcie-brcmstb.c
+> > index e19628e13898..79fc6d00b7bc 100644
+> > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > @@ -46,6 +46,7 @@
+> >  #define  PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK   0xffffff
+> >
+> >  #define PCIE_RC_CFG_PRIV1_LINK_CAPABILITY                    0x04dc
+> > +#define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_MAX_LINK_WIDTH_MASK       0=
+x1f0
+> >  #define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK 0xc00
+> >
+> >  #define PCIE_RC_CFG_PRIV1_ROOT_CAP                   0x4f8
+> > @@ -55,6 +56,9 @@
+> >  #define PCIE_RC_DL_MDIO_WR_DATA                              0x1104
+> >  #define PCIE_RC_DL_MDIO_RD_DATA                              0x1108
+> >
+> > +#define PCIE_RC_PL_REG_PHY_CTL_1                     0x1804
+> > +#define  PCIE_RC_PL_REG_PHY_CTL_1_REG_P2_POWERDOWN_ENA_NOSYNC_MASK   0=
+x8
+> > +
+> >  #define PCIE_RC_PL_PHY_CTL_15                                0x184c
+> >  #define  PCIE_RC_PL_PHY_CTL_15_DIS_PLL_PD_MASK               0x400000
+> >  #define  PCIE_RC_PL_PHY_CTL_15_PM_CLK_PERIOD_MASK    0xff
+> > @@ -1072,7 +1076,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie=
+)
+> >       void __iomem *base =3D pcie->base;
+> >       struct pci_host_bridge *bridge;
+> >       struct resource_entry *entry;
+> > -     u32 tmp, burst, aspm_support;
+> > +     u32 tmp, burst, aspm_support, num_lanes, num_lanes_cap;
+> >       u8 num_out_wins =3D 0;
+> >       int num_inbound_wins =3D 0;
+> >       int memc, ret;
+> > @@ -1180,6 +1184,26 @@ static int brcm_pcie_setup(struct brcm_pcie *pci=
+e)
+> >               PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
+> >       writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
+> >
+> > +     /* 'tmp' still holds the contents of PRIV1_LINK_CAPABILITY */
+> > +     num_lanes_cap =3D u32_get_bits(tmp, PCIE_RC_CFG_PRIV1_LINK_CAPABI=
+LITY_MAX_LINK_WIDTH_MASK);
+> > +     num_lanes =3D 0;
+> > +     /*
+> > +      * Use automatic num-lanes HW negotiation by default.  If the
+>
+> "Use hardware negotiated Max Link Width value by default."
+>
+> > +      * "num-lanes" DT property is present, assume that the chip's
+> > +      * built-in link width capability information is
+> > +      * incorrect/undesired and use the specified value instead.
+> > +      */
+> > +     if (!of_property_read_u32(pcie->np, "num-lanes", &num_lanes) &&
+> > +         num_lanes && num_lanes <=3D 4 && num_lanes_cap !=3D num_lanes=
+) {
+>
+> I think you should drop the 'num_lanes && num_lanes <=3D 4' check since t=
+he DT
+> binding should take care of that. Otherwise, once link width gets increas=
+ed, you
+> need to update both binding and the driver, which is redundant.
+Not all Linux release configuration systems run a comprehensive DT
+validator  before execution.  Our bootloader modifies the DT blob on
+the fly and also permits -- with restrictions -- customers to modify
+the DT at the bootloader command line.  Yes, we can do partial a
+priori DT validation, but there is still value to checking the params
+in the driver code, at least for us.
 
-Best regards,
-Hsun
+>
+> - Mani
+>
+> --
+> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
+=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
+=E0=AF=8D
+
+--000000000000cd212306369888c5
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
+uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
+AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
+c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
+AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
+TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
+bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
+L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
+BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
+VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
+z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
+b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
++R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
+AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
+75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICYDCC
+AlwCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
+AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
+MA0GCWCGSAFlAwQCAQUAoIHHMC8GCSqGSIb3DQEJBDEiBCB7fVqOARSYGFt2JOOBULuds9u54j59
+wPH4/m0Ve3sFcTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNTA2
+MDIxNTM2NThaMFwGCSqGSIb3DQEJDzFPME0wCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0B
+AQEFAASCAQAcSVt7SZZrW+HiQeZds/0lPTeAtCri8ow40DfjvJbKFB1/fjYMndPw4T/ZnxD5tfeI
+aFVUUta6+mKhmy6lUr/q94j9tZYnwtDOjy85kH+C3HqvSCgwia+gcDaWqrbitA1rcCO9Yga+8oXV
+0nITDsnxVcaMDQjJDk8JBsPW+XBITPk7KKo5WA6+zgB6UWEihgnp458SJuc7zsu28sEVHX2cuKS8
+R8CtOELzXAlvn3Ge0Et9isrNGpLd6eMMgSn9NhuI3fm/DzH5Sm5nSO2vlBqGQKr8td1hI2pazqPp
+LzlVN6EvXb9toNIu7AwvADS1BgdSWGiPfbJy+Mc7IfI4NULN
+--000000000000cd212306369888c5--
