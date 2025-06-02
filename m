@@ -1,211 +1,143 @@
-Received: from smtp-bc0f.mail.infomaniak.ch (smtp-bc0f.mail.infomaniak.ch [45.157.188.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9572226D16
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 17:35:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE561925AB;
+	Mon,  2 Jun 2025 17:42:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748885757; cv=none; b=pOsSutb0y9HnapIa4oM3008NtaRm3GFyfQppgecNlGzwqX3QHuQ554lQBcXy2mKyMEhSfXuknaDgmdX9J9g0XkQik7S31mxpLD/iY+X9IdE3WeGmzXP2dzXZD6xOBsKx9YQAENoivpppx7BMFpNATAQQb/HtMjRE1y2tkd3iWjg=
+	t=1748886144; cv=none; b=ZbTWP0d48c5OppPcK+J90vMTqDsSc0YYuST0JVFxBCXJJUypc7CXtBrU3BYMJl1+ZHz/aBViJ8WKclzlwu1sBvq0KGk25BN15SsGpTGyHICaqTj/I1l4GxiDv4dDsSK24Y/04nCQs6roBaIbNKOW6668Xij6BVCFgj30bNU4fBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748885757; c=relaxed/simple;
-	bh=VUhI7CSW76kd/2BwwKOpp8s7Bj4/P8quxGT6EYFmteI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dofpPjUUhjRsZnIsr+23FZUOBk+SL1GxKecDHFlke+lMARJzccqBjP6dGP56hg5+TD/c0F8oVaK/KqebyLoOYcxn8365gBEB6+Rt6fLQc/GskkSRh3VxyAKbzQF06//8pPg4DZGz4ifcJ/unqPMSKe/M0Zis4ukzyL+oYe6bETI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=M8OOQWx+; arc=none smtp.client-ip=45.157.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1748886144; c=relaxed/simple;
+	bh=U7CAb8BnAtTJFCli7APtV6H+DEmqqsPJrtdC7ZKPIKA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JEexje9jUjcfJBkpX80H2l+JrlaMHToZeDUJE/SKF3iN4BKiZdRf8oQncqf02ItcjGy0vINbz9/RpWADWuk8PixJHly6DagfPujnagls5l57FAhZSawKcQtf+EUnNvhs2IqgzLUJbN0GtDTysdbniIezrVGcXf3oWEU/mOY+VXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NgMsJHGd; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="M8OOQWx+"
-Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bB1GF445mzsq2;
-	Mon,  2 Jun 2025 19:35:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1748885749;
-	bh=I1+g0eVqjmTqLKooXrJGQ9n+AkRh/ReUCRj2fzMRkns=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M8OOQWx+BGV1YUVOeH25ve75KC7jFyye0iOoy0EdCVr6ZYaGDhtsX014OSqpfPhUm
-	 +3dbggZnfrD0emuVwQjB8/b2KnTe5Fle3MHkvDZTinGUDPcs8WLizrFvMv4EhSC1Fo
-	 YzC244GupgBAhzLZ6CBxPV9ycq9vUURFtNoKj8sU=
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4bB1GD2KT5zbdy;
-	Mon,  2 Jun 2025 19:35:48 +0200 (CEST)
-Date: Mon, 2 Jun 2025 19:35:47 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Tingmao Wang <m@maowtm.org>
-Cc: Song Liu <song@kernel.org>, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, 
-	daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk, 
-	brauner@kernel.org, jack@suse.cz, kpsingh@kernel.org, mattbobrowski@google.com, 
-	amir73il@gmail.com, repnop@google.com, jlayton@kernel.org, josef@toxicpanda.com, 
-	gnoack@google.com
-Subject: Re: [PATCH bpf-next 2/4] landlock: Use path_parent()
-Message-ID: <20250602.Oqu6piethung@digikod.net>
-References: <20250528222623.1373000-1-song@kernel.org>
- <20250528222623.1373000-3-song@kernel.org>
- <027d5190-b37a-40a8-84e9-4ccbc352bcdf@maowtm.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NgMsJHGd"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-742c73f82dfso3740339b3a.2;
+        Mon, 02 Jun 2025 10:42:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748886142; x=1749490942; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=l/N8ZuvbAgzSK+DMiDG8OUbVN0w+Ue+YmvcUiQqN7lA=;
+        b=NgMsJHGdmVb5hJce48fs/v33QjZzs1CbvyzjkSzHAKqBjEjPh/SJIZiSERPnVoUEyu
+         7I3WcKokFPpA5XrXlWUaStK49IWzvKQ3llZ+iOZAmTVg34x0jhRSXZNpFtPQWGI4g9U4
+         zxdoJ2cepIdcRjEsTmoJBCxkfQbZFCMmoL4NU17M456vFRNbTz5S8G8tY/T2JRbVFRED
+         PRXO+k1aG5oxNPmRAtTooABSaP3ksSIT+7Vp0t97uZhaoSlOEkGXjXm7z54MmRgDn94+
+         kVbgZXzJYuq0C6liNazcq2jbmGfcP8gDdhyMENKN+Q+sXJgRYihBfcznMCq5bwCXxBpJ
+         /Y9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748886142; x=1749490942;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l/N8ZuvbAgzSK+DMiDG8OUbVN0w+Ue+YmvcUiQqN7lA=;
+        b=pfJrZfLfjny/kYc63RM5HZCZTu1WixaQA5IGAOZKd8XXTWcZrR0PrMA9EGwARUx40u
+         wD5UGLH3t0UY7UsFGHLnWl4ID1duLjIHGLbDDqRLyzgp7/Cj19OX9yCR+42/ZE6qdXZ5
+         yqVKHVN3INoo+XNSSQtE86iqZNSta3VhXFy1Pqfn1YVBkfTrDeGcfWsn8ImFHOptxtOt
+         bIBA8MmjHMINBOZoNHp1IG81LbBTNBs1LRQ/UF0xh4J4uZk0arNW+capuKS4iQi/uwUq
+         L5hSLXLdily+9hTOHjeUfeSBJbjTg9uHNhoX3ajV3vimUkRUSgDzM65gV5dLQupy7Lnd
+         hoqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVotZss/9ivSpkaL7QPy1ybDSLQOoFV05PBoitsluGmt/f6U8qZ8NJ13Qca1jdDgMJ3HnypuqhtH/a2o4k=@vger.kernel.org, AJvYcCWX4QA7647Biq/KCoVB1kqydZm8+gIExNGRm+vKIZTTzS5azJssiT4lcrCjqH6My/D6SMn2aEeQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoDsSzCCt4XH8AYpV4jB105TIzHMZ9G0c0cR9aKrpdbPFwuytI
+	XoIDMfYoSNIHbFZcIijG2g4vl3f4M/VkDefThR3vgdpX5gBPAQjZFLtmbxcNeGRC
+X-Gm-Gg: ASbGncuO0tegVwlhF7fAQK50/H5+yd5TfC38Vyfhw+fCcPogDlkhkohB37g8iZ8W+gg
+	UFDt+62uk1STKy6JOdpZvy4RWjYJbu4cnDlowfKrm9F20aEYUTIhyEjvqfPQwYXzZNtzLRSQljH
+	pJjguU25FvUnAEJgvcnQ8R6iFI0k0ESTuNrZ2lfkOBteOgE5OvpFBQaRadm8c3EQMkgxcgu0fHW
+	DltHIM+5sm6qH3DIFpdZ3jsMvVRlQ+NWGVjvfdqqTzagnrDdi7QxmdWr5Sg/6X4o6Q7pp+3AUaK
+	XqD+KinUIQ8v53QXfJDVvdw9lCBMtu6siobJgDw2ryeXNMC/XXyTxsWtMzKmKHaBdEhMRi8eYGv
+	zEBRy5ecH3ixtXRh1VeE/hukK
+X-Google-Smtp-Source: AGHT+IEQWDi4+hbXVMyn9KwRlZNfzc6/xaqK0KRvAu1NW5sDJHhXGRjAq2vxR+Fr0ZCfivfFEqMBpg==
+X-Received: by 2002:a05:6a00:10c8:b0:742:ae7e:7da8 with SMTP id d2e1a72fcca58-747d1831959mr13852223b3a.8.1748886142304;
+        Mon, 02 Jun 2025 10:42:22 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747affd441asm7927087b3a.153.2025.06.02.10.42.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Jun 2025 10:42:21 -0700 (PDT)
+Message-ID: <8f790a6c-bbd0-4f6d-8c13-3bce2b050fee@gmail.com>
+Date: Mon, 2 Jun 2025 10:42:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <027d5190-b37a-40a8-84e9-4ccbc352bcdf@maowtm.org>
-X-Infomaniak-Routing: alpha
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.12 00/55] 6.12.32-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250602134238.271281478@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250602134238.271281478@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, May 31, 2025 at 02:51:22PM +0100, Tingmao Wang wrote:
-> On 5/28/25 23:26, Song Liu wrote:
-> > Use path_parent() to walk a path up to its parent.
-> > 
-> > While path_parent() has an extra check with path_connected() than existing
-> > code, there is no functional changes intended for landlock.
-> > 
-> > Signed-off-by: Song Liu <song@kernel.org>
-> > ---
-> >  security/landlock/fs.c | 34 +++++++++++++++++-----------------
-> >  1 file changed, 17 insertions(+), 17 deletions(-)
-> > 
-> > diff --git a/security/landlock/fs.c b/security/landlock/fs.c
-> > index 6fee7c20f64d..32a24758ad6e 100644
-> > --- a/security/landlock/fs.c
-> > +++ b/security/landlock/fs.c
-> > @@ -837,7 +837,6 @@ static bool is_access_to_paths_allowed(
-> >  	 * restriction.
-> >  	 */
-> >  	while (true) {
-> > -		struct dentry *parent_dentry;
-> >  		const struct landlock_rule *rule;
-> >  
-> >  		/*
-> > @@ -896,19 +895,17 @@ static bool is_access_to_paths_allowed(
-> >  		if (allowed_parent1 && allowed_parent2)
-> >  			break;
-> >  jump_up:
-> > -		if (walker_path.dentry == walker_path.mnt->mnt_root) {
-> > -			if (follow_up(&walker_path)) {
-> > -				/* Ignores hidden mount points. */
-> > -				goto jump_up;
-> > -			} else {
-> > -				/*
-> > -				 * Stops at the real root.  Denies access
-> > -				 * because not all layers have granted access.
-> > -				 */
-> > -				break;
-> > -			}
-> > -		}
-> > -		if (unlikely(IS_ROOT(walker_path.dentry))) {
-> > +		switch (path_parent(&walker_path)) {
-> > +		case PATH_PARENT_CHANGED_MOUNT:
-> > +			/* Ignores hidden mount points. */
-> > +			goto jump_up;
-> > +		case PATH_PARENT_REAL_ROOT:
-> > +			/*
-> > +			 * Stops at the real root.  Denies access
-> > +			 * because not all layers have granted access.
-> > +			 */
-> > +			goto walk_done;
-> > +		case PATH_PARENT_DISCONNECTED_ROOT:
-> >  			/*
-> >  			 * Stops at disconnected root directories.  Only allows
-> >  			 * access to internal filesystems (e.g. nsfs, which is
+On 6/2/25 06:47, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.12.32 release.
+> There are 55 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> I was looking at the existing handling of disconnected root in Landlock
-> and I realized that the comment here confused me a bit:
+> Responses should be made by Wed, 04 Jun 2025 13:42:20 +0000.
+> Anything received after that time might be too late.
 > 
-> /*
->  * Stops at disconnected root directories.  Only allows
->  * access to internal filesystems (e.g. nsfs, which is
->  * reachable through /proc/<pid>/ns/<namespace>).
->  */
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.32-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
+> and the diffstat can be found below.
 > 
-> In the original code, this was under a
+> thanks,
 > 
->     if (unlikely(IS_ROOT(walker_path.dentry)))
-> 
-> which means that it only stops walking if we found out we're disconnected
-> after reaching a filesystem boundary.  However if before we got to this
-> point, we have already collected enough rules to allow access, access
-> would be allowed, even if we're currently disconnected.  Demo:
-> 
-> / # cd /
-> / # cp /linux/samples/landlock/sandboxer .
-> / # mkdir a b
-> / # mkdir a/foo
-> / # echo baz > a/foo/bar
-> / # mount --bind a b
-> / # LL_FS_RO=/ LL_FS_RW=/ ./sandboxer bash
-> Executing the sandboxed command...
-> / # cd /b/foo
-> /b/foo # cat bar
-> baz
-> /b/foo # mv /a/foo /foo
-> /b/foo # cd ..     # <- We're now disconnected
-> bash: cd: ..: No such file or directory
-> /b/foo # cat bar
-> baz                # <- but landlock still lets us read the file
-> 
-> However, I think this patch will change this behavior due to the use of
-> path_connected
-> 
-> root@10a8fff999ce:/# mkdir a b
-> root@10a8fff999ce:/# mkdir a/foo
-> root@10a8fff999ce:/# echo baz > a/foo/bar
-> root@10a8fff999ce:/# mount --bind a b
-> root@10a8fff999ce:/# LL_FS_RO=/ LL_FS_RW=/ ./sandboxer bash
-> Executing the sandboxed command...
-> bash: cannot set terminal process group (191): Inappropriate ioctl for device
-> bash: no job control in this shell
-> root@10a8fff999ce:/# cd /b/foo
-> root@10a8fff999ce:/b/foo# cat bar
-> baz
-> root@10a8fff999ce:/b/foo# mv /a/foo /foo
-> root@10a8fff999ce:/b/foo# cd ..
-> bash: cd: ..: No such file or directory
-> root@10a8fff999ce:/b/foo# cat bar
-> cat: bar: Permission denied
+> greg k-h
 
-This is a good test case, we should add a test for that.
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
-> 
-> I'm not sure if the original behavior was intentional, but since this
-> technically counts as a functional changes, just pointing this out.
-
-This is indeed an issue.
-
-> 
-> Also I'm slightly worried about the performance overhead of doing
-> path_connected for every hop in the iteration (but ultimately it's
-> Mickaël's call).
-
-Yes, we need to check with a benchmark.  We might want to keep the
-walker_path.dentry == walker_path.mnt->mnt_root check inlined.
-
-> At least for Landlock, I think if we want to block all
-> access to disconnected files, as long as we eventually realize we have
-> been disconnected (by doing the "if dentry == path.mnt" check once when we
-> reach root), and in that case deny access, we should be good.
-> 
-> 
-> > @@ -918,12 +915,15 @@ static bool is_access_to_paths_allowed(
-> >  				allowed_parent1 = true;
-> >  				allowed_parent2 = true;
-> >  			}
-> > +			goto walk_done;
-> > +		case PATH_PARENT_SAME_MOUNT:
-> >  			break;
-> > +		default:
-> > +			WARN_ON_ONCE(1);
-> > +			goto walk_done;
-> >  		}
-> > -		parent_dentry = dget_parent(walker_path.dentry);
-> > -		dput(walker_path.dentry);
-> > -		walker_path.dentry = parent_dentry;
-> >  	}
-> > +walk_done:
-> >  	path_put(&walker_path);
-> >  
-> >  	if (!allowed_parent1) {
-> 
-> 
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
