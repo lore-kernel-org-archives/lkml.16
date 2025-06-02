@@ -1,196 +1,128 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B7F19F49E
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 07:37:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C43BC2C324C;
+	Mon,  2 Jun 2025 07:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748849833; cv=none; b=Vd6dGO/sACUdr6xFifMVuYYWKpOQWRjHmd0R30P5m6BCdlC4Fnhr5m7rK5faLsJUTALlTwvlQmGJ4IKHWK9qTk+dA7A0LbzOHaM6wP3RgY7HIhZI1sP8foa/lBYgaZvxHJpaQm2I5s2GQS2syyB9W1BwZd1mN0gzl9DrqjpsJEE=
+	t=1748849889; cv=none; b=UHHlr+rIeEtAWUXQKpm+0E8MYtin3m3fhazfOM/vrUM/VBStC33vi2RDNBcmyFfYMRFs8uSHf8OReLcEXTS5DihyfVCXvAzjhyaGsyBuCGwUmPlY8wExGoSj+5xosnLQXekHfSF5GeaH7Z4zQQVlAldUAhMEOsS83DhXwj4J8bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748849833; c=relaxed/simple;
-	bh=ZFPSJEWrRSR5R2UR5eW88m8gmY8YjPhnjlUty+uw3p0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r+ElrJAiBpJhzO7/39yIhN5+LmZU9X/7QPbrfyxmvWx6+IjlSjwpCrWrNlqRh09GfdvlGxr4KF545vlMJ60dI6QJZjpbcoBtzuMc0ofTVnHEpUruFYuxjaAfCtRlaWVTWAJYjSxyn7BJugoUn6scc/Qno33frk516E3JhkXWtDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=ZRGLAXdr; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="ZRGLAXdr"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-442f4a3a4d6so23156785e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 00:37:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1748849830; x=1749454630; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=owj0mSUC9XrWQS9ZIjU7UCMTuXH27a1AjFrPEffsoSQ=;
-        b=ZRGLAXdr8kfnt0cgFDnCnVfuaSxwFacp2HhUQiQdmRyaiVYFoiULT9hyJXKK6SqTXT
-         lgHFJz9QeplIuU0tlwhAwDrlnBnniB3ZIGdqD33RuumkiNDrbCtmtOeIqenY0dxC6gcD
-         x5iWOmWyVN5h78qdqUAJQKzw1+sIRTXufceJwTR9Nybke7xgSCFr8ijd/+019xIOYjpM
-         2Dn8RXEUa9SC2iozyCd6G+OYx0gGO/yAYRFIgSa2R5VM5NpRLhf8AEZYrj6WYCwa+UUo
-         YTkmVFgu/ISWfxo/FVnFXJ4OQQ1cAnP6/UBVTgdmV/e6o0e13GKi9nY7SY3k4eZ+6GAy
-         bNOA==
+	s=arc-20240116; t=1748849889; c=relaxed/simple;
+	bh=z/azy+31HbVsK3NrQuQsrL3BzDrnWedg01lhHJXkgHg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e/K23R84aibVbRFYq4wxkEbJsmhZFF9TnqcQKvSFzz1U/Ssx2RUeoLGZwpmeYeYLrr1QxxL5tqb9u2+w1SMFbGMxspcON48Rx1BAr4AotJ1Hl/dm+Bnhj34bdCIrryrdk2ntGCQtP/a3h8laFAsHwYjrWKv0p4qGZt5X3SU91lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4dfa2aeec86so1749303137.1;
+        Mon, 02 Jun 2025 00:38:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748849830; x=1749454630;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=owj0mSUC9XrWQS9ZIjU7UCMTuXH27a1AjFrPEffsoSQ=;
-        b=wc3WK26nNrluna6ZmRCzsMhXf5jtLke26iPJhE8ux7Yeo5esl0B5lmkxJmUW1wwOxr
-         BwAz2vDvytcEYncAmZrS1Yol00p9ld1Drp+wanDLNQCfdiaILbwLQnRGKZp4ldGJsQA3
-         x1OI92tCDILTjGB9Hm7330Zoj2cziTciqjo65/EZ5kIisl1L3CW6MxVrfeBVTDDqDngA
-         kQg2mh0XTMp7UCefJ2LYWcyjmIszTQUhKRjxueP2/QaA9V/A9YCkRN2fYNqAoCT+1W76
-         UBbvi1Wbwt6e/kJH4A/ucUZCRR3lCgTFzHWN4eY2Pk4uiN49PCKJrgg9R/cM0W+CRL90
-         xhTg==
-X-Forwarded-Encrypted: i=1; AJvYcCWMGOnizDadWYbxmCKCHSe4OslJk2JzpM2U8SV5qwY9trn+gmtakAd3seb//EgCCXwSGwvl8AYroiJQc7M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGt5rQ0xtwzN2mrQtbDDaR8edMp9p4od4H51t72aDkjQwC6KyD
-	sN0WUCAd+wY6lhPjnZNjvn8Gl0wMMvZS+knulSG3D/zBovKsu1Cj8M6D/g0a1hnh3Xo=
-X-Gm-Gg: ASbGncuruBaU5O0REbycE57qSBIW7gvUm33rgSBrgx3AaSNH4pd+GjJXeeDLTZ1/+3p
-	05rEDQf7KLYSsqvFQC9uOErRJo8LBX4M89usTPX4pOp0ubFIvuT5Ng8LMjV6Lnq02Io7+yCX3JH
-	bzrqyf8/dZsW6DgCga09AEpzMF6dge6akV9N8Nc6HAMCSj7qrJ0rII7IYeqCBM0r/acNUf6ZhKT
-	cvJfrAVzeU7zLShLtAZFV4iK8VzBIYdPjYGIIkntfxbNx8wi6qdFklHQwR4f+oldzwnRIKkwwZV
-	bJV4XwrMwCLvNeSEoP4B0M3Bt2SAZSjFb1EJ2Kd6j6BCEVTvdCIWq1BPcJAEalBwI84sa83SgdM
-	CA1JuERkc43Jy9OMpGqZh
-X-Google-Smtp-Source: AGHT+IFepfbgL5FL5fc7F67zCMeGhfU6MSqbq8WhZXJbSylhitW/eqXVBzS3q1dD54TfD0UHJbodmQ==
-X-Received: by 2002:a05:600c:3555:b0:450:cabc:a6c6 with SMTP id 5b1f17b1804b1-450d6bbb899mr114080925e9.15.1748849829678;
-        Mon, 02 Jun 2025 00:37:09 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d8012af3sm109895745e9.35.2025.06.02.00.37.08
+        d=1e100.net; s=20230601; t=1748849885; x=1749454685;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KvF+qF++Ju4HjkLFrv9Tlh68BJ2ssPJrJXD0AyUXDac=;
+        b=IsffXbb6pwy10LLWqQPy1CEkPffz4qzZkBFFhj3fKl5AATj5nu03PLtniwBgg541sF
+         PUFzzw29U8NVF+JEawCFyxbTAW10IeF9sQn6/82ZR91DaarJNXPOc5+LDhmkNcE0d/fl
+         5vANJ/cQh5KKWUljmQ61l7BGi9NHzvizf4C9Ju8vPB0P3fyqUmMuOOTQQgL9UcaU2ZO/
+         9o0yYkQq4ljYsPHeGysQNSwx5MNSxA71Z9NKhgm2eT9eWPyi/2Qf+0hHLRFHGpR+NPx3
+         OeLmgpwaj+NfV09ln7aYFZa82RBnsvO1Y4zwfj1e9qLAHMtUx7FDgmA3QoENSusMs9GM
+         hxzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUJ0wlB+LPpfm8Spo3YP5btDzrBapzQC22cj51+Z8pNh50O5Zx2BXj2sCAaDXHRaOnLhDkcj5NkKccRGwPU+/O8b/s=@vger.kernel.org, AJvYcCVMAxuK1nMNfpDo6cu254o+V/FEs1NzsBV/L05/y4KSaxW8NPByhdVcjTPlWCaiuc0qNMCr8F9y/D7C0g==@vger.kernel.org, AJvYcCWQots3uZjZhILCgzAbNaPfdvbiQH91fOMmRD8BuPzquRiEVuWF+dSiTZqUNgobX1B6MW6Ta27IZY2S@vger.kernel.org, AJvYcCWuKuxLR9+mMRwR+d6fvU+VnaxpO9ANDAhUyd1x95KYoNrZ+MYjr7wmXcadWL2mlH2o8eYElnhuEj9ksLwc@vger.kernel.org
+X-Gm-Message-State: AOJu0YystoVgl7DWhJ7DvPCEJjencSgABbgJU56B8+CZQHUJQOyIftkI
+	DmAO6+qpwc4qN/NYsDOGBoq7S6KNTRWEwkSBt6og7s6QOO+IQqJbgxDHKMCRcPb7
+X-Gm-Gg: ASbGncsylB6dv75aaKIhbnVLwL4jkxbin8PwLQmmg15AG/k+IlgVeVUMfc+c8i6cXD9
+	xPsQVqY1rKjOmB56Vz+KuVICb0fGopGeDhsaAOseT/reTLQr9KUGG6Phh9guYaOs8N55mkxltD7
+	XCYqnWQfXW19Q7qIhg7besQL2JMaxsVE1scdt/1XCHFcriBXxRREGjtiDMrcTFjbFNKx9lQOrnl
+	pQZYp381gWfcKEUJYUMm4clM/23Sus1Lfzo7Q5W+Er/nccXA3vCHww3P8Er6kVARE3Lj8rwukEJ
+	PKTvqVCu/3ZAj4uEJbmFbgjrsUJi5t5VWGG5yQDm311HnvhyGybthhn1Q6HB08CENGlqmaHf2c+
+	mebFC2Nw5zT4THw==
+X-Google-Smtp-Source: AGHT+IGoQh49bLD7mAb41upUfLsuK/uirwnIDPQ1+qdF0F3eZUINEucXabOrg90uyU8y94EZ/vRIGw==
+X-Received: by 2002:a05:6102:41ab:b0:4e6:1a8c:13dd with SMTP id ada2fe7eead31-4e701bcd515mr3722156137.7.1748849884947;
+        Mon, 02 Jun 2025 00:38:04 -0700 (PDT)
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com. [209.85.222.42])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4e6444644aesm6956659137.7.2025.06.02.00.38.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Jun 2025 00:37:08 -0700 (PDT)
-Message-ID: <cea8cdf2-4b1e-4628-a5df-249adf4387b5@rivosinc.com>
-Date: Mon, 2 Jun 2025 09:37:08 +0200
+        Mon, 02 Jun 2025 00:38:04 -0700 (PDT)
+Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-86fbb48fc7fso715382241.2;
+        Mon, 02 Jun 2025 00:38:04 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUF7ruovotgD7iXeZtg8NYtA9SXeLphVWjCpXakW73obNZUSe4fF3uFvoc8/FKkcgNsb5xzet+ar11M@vger.kernel.org, AJvYcCUSC9Q2aCCISgm7/rSznQ9uBIw0jzSM8cbLPqqTOgAEyiYXZ/sKKKrFDmyfi9/CVlB7lB4xIOOYBsf07A==@vger.kernel.org, AJvYcCXKwhI3iyzg/7UGmAAel3isENSMGlCob7BUWwFCPlnXPptq2UDKXuQZa5bHAP06NjWF4dJWt4imMboWkzAq@vger.kernel.org, AJvYcCXSQl16M1gZpSfLTRGMvJEFw12MYNgOQb7O28fSBoEzKYZ+jndPvEUTmI6DW8jrjrKoZY+ZuKb0i/7UjYO48lWxOTM=@vger.kernel.org
+X-Received: by 2002:a05:6102:cd4:b0:4e5:59ce:4717 with SMTP id
+ ada2fe7eead31-4e701bd47dfmr4263071137.9.1748849884043; Mon, 02 Jun 2025
+ 00:38:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] riscv: uaccess: do not do misaligned accesses in
- get/put_user()
-To: Alexandre Ghiti <alex@ghiti.fr>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-References: <20250530205658.624195-1-cleger@rivosinc.com>
- <20250530205658.624195-3-cleger@rivosinc.com>
- <718fb1d7-9f0c-4637-abe8-5a34305c3ae2@ghiti.fr>
-Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <718fb1d7-9f0c-4637-abe8-5a34305c3ae2@ghiti.fr>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250519215734.577053-1-thierry.bultel.yh@bp.renesas.com>
+ <20250519215734.577053-2-thierry.bultel.yh@bp.renesas.com>
+ <CAMuHMdWHUuLiwG+-znzGxqWzYHo3Um7e+yrTJeb-Ei=SQ8TjGg@mail.gmail.com> <CA+V-a8vDMon-cHLYr3PknWvgT5EJ_4d9tv-J+iapst1iiPo0Ng@mail.gmail.com>
+In-Reply-To: <CA+V-a8vDMon-cHLYr3PknWvgT5EJ_4d9tv-J+iapst1iiPo0Ng@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 2 Jun 2025 09:37:50 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVebPgJP5wp9J-kBJERBFdvrSObXoSbGJ4tRFGU_4UrXQ@mail.gmail.com>
+X-Gm-Features: AX0GCFsij9B8ceLPh_XqmZWRKnVD9OsdXPDNAmXIT94jCXa0CeV26CPPbpztW_Q
+Message-ID: <CAMuHMdVebPgJP5wp9J-kBJERBFdvrSObXoSbGJ4tRFGU_4UrXQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: add compatible for Renesas RZ/T2H
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>, thierry.bultel@linatsea.fr, 
+	linux-renesas-soc@vger.kernel.org, paul.barker.ct@bp.renesas.com, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Prabhakar,
 
+On Mon, 2 Jun 2025 at 09:12, Lad, Prabhakar <prabhakar.csengg@gmail.com> wr=
+ote:
+> On Mon, May 26, 2025 at 6:03=E2=80=AFPM Geert Uytterhoeven <geert@linux-m=
+68k.org> wrote:
+> > On Mon, 19 May 2025 at 23:57, Thierry Bultel
+> > <thierry.bultel.yh@bp.renesas.com> wrote:
+> > > Document RZ/T2H (a.k.a r9a09g077) pinctrl
+> > >
+> > > Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> >
+> > > --- a/Documentation/devicetree/bindings/pinctrl/renesas,pfc.yaml
+> > > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc.yaml
+> > > @@ -194,3 +209,13 @@ examples:
+> > >                      power-source =3D <3300>;
+> > >              };
+> > >      };
+> > > +
+> > > +  - |
+> > > +    pinctrl: pinctrl@812c0000 {
+> >
+> > The unit address does not match the first reg property.
+> >
+> > > +            compatible =3D "renesas,pfc-r9a09g077";
+> > > +            reg =3D <0x802c0000 0x2000>,
+> > > +                  <0x812c0000 0x2000>;
+> > > +            gpio-controller;
+> > > +            #gpio-cells =3D <2>;
+> > > +            gpio-ranges =3D <&pinctrl 0 0 287>;
+> >
+> > GPIOs without interrupts?
+> >
+> I think the intention here was to go without interrupt support for the
+> initial series and when later support for ICU is added we add this
+> property. Hope thats OK?
 
-On 31/05/2025 14:35, Alexandre Ghiti wrote:
-> On 5/30/25 22:56, Clément Léger wrote:
->> Doing misaligned access to userspace memory would make a trap on
->> platform where it is emulated. Latest fixes removed the kernel
->> capability to do unaligned accesses to userspace memory safely since
->> interrupts are kept disabled at all time during that. Thus doing so
->> would crash the kernel.
->>
->> Such behavior was detected with GET_UNALIGN_CTL() that was doing
->> a put_user() with an unsigned long* address that should have been an
->> unsigned int*. Reenabling kernel misaligned access emulation is a bit
->> risky and it would also degrade performances. Rather than doing that,
->> we will try to avoid any misaligned accessed by using copy_from/to_user()
->> which does not do any misaligned accesses. This can be done only for
->> !CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS and thus allows to only generate
->> a bit more code for this config.
->>
->> Signed-off-by: Clément Léger <cleger@rivosinc.com>
->> ---
->>   arch/riscv/include/asm/uaccess.h | 28 ++++++++++++++++++++++------
->>   1 file changed, 22 insertions(+), 6 deletions(-)
->>
->> diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/
->> asm/uaccess.h
->> index 046de7ced09c..b542c05f394f 100644
->> --- a/arch/riscv/include/asm/uaccess.h
->> +++ b/arch/riscv/include/asm/uaccess.h
->> @@ -169,8 +169,21 @@ do {                                \
->>     #endif /* CONFIG_64BIT */
->>   +unsigned long __must_check __asm_copy_to_user(void __user *to,
->> +    const void *from, unsigned long n);
->> +unsigned long __must_check __asm_copy_from_user(void *to,
->> +    const void __user *from, unsigned long n);
->> +
->>   #define __get_user_nocheck(x, __gu_ptr, label)            \
->>   do {                                \
->> +    if (!IS_ENABLED(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS))
->> {            \
->> +        if (!IS_ALIGNED((uintptr_t)__gu_ptr, sizeof(*__gu_ptr)))
->> {        \
-> 
-> 
-> Nit: I would use && instead of 2 ifs.
-> 
-> 
->> +            if (__asm_copy_from_user(&(x), __gu_ptr,
->> sizeof(*__gu_ptr)))    \
->> +                goto label;            \
->> +            else                    \
->> +                break;                \
-> 
-> 
-> Here I would remove the else
+Yes, that is fine.
 
-Hi Alex,
+Gr{oetje,eeting}s,
 
-The "else" is needed to break from the outer do/while loop or it will go
-though the next switch case (and it will crash due to misaligned accesses).
+                        Geert
 
-> 
-> 
->> +        }                        \
->> +    }                            \
->>       switch (sizeof(*__gu_ptr)) {                \
->>       case 1:                            \
->>           __get_user_asm("lb", (x), __gu_ptr, label);    \
->> @@ -297,6 +310,15 @@ do {                                \
->>     #define __put_user_nocheck(x, __gu_ptr, label)            \
->>   do {                                \
->> +    if (!IS_ENABLED(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS))
->> {            \
->> +        if (!IS_ALIGNED((uintptr_t)__gu_ptr, sizeof(*__gu_ptr)))
->> {        \
->> +            unsigned long val = (unsigned long)(x);                \
-> 
-> 
-> Here it sems like __inttype(*(__gu_ptr)) is more accurate than unsigned
-> long, even though I think unsigned long works fine too.
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-Wasn't aware of __inttype, but it sounds good.
-
-Thanks,
-
-Clément
-
-> 
-> 
->> +            if (__asm_copy_to_user(__gu_ptr, &(val),
->> sizeof(*__gu_ptr)))    \
->> +                goto label;            \
->> +            else                    \
->> +                break;                \
->> +        }                        \
->> +    }                            \
->>       switch (sizeof(*__gu_ptr)) {                \
->>       case 1:                            \
->>           __put_user_asm("sb", (x), __gu_ptr, label);    \
->> @@ -385,12 +407,6 @@ err_label:                            \
->>           -EFAULT;                    \
->>   })
->>   -
->> -unsigned long __must_check __asm_copy_to_user(void __user *to,
->> -    const void *from, unsigned long n);
->> -unsigned long __must_check __asm_copy_from_user(void *to,
->> -    const void __user *from, unsigned long n);
->> -
->>   static inline unsigned long
->>   raw_copy_from_user(void *to, const void __user *from, unsigned long n)
->>   {
-
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
