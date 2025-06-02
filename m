@@ -1,67 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E392288CB;
-	Mon,  2 Jun 2025 18:11:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17EAB22A1C5;
+	Mon,  2 Jun 2025 18:11:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748887892; cv=none; b=i1HqsvX1Oz0IY/sI+t0cxI030IpnDa8pXygWuIo7KgH3cEp4YbgPZQWFXybKHMeBKH4T60ThnBtp3kZnk3IRIZk8dn67e48km0gkPB8IPEYzBVKCAE0waOpBr++SUuzHL7DB4m5mlpapKkilcyR/ZXldXVB6lDH3nN/vKIA1vaA=
+	t=1748887907; cv=none; b=C3vVH1yi+IiGvvUWbAYnK+2Cv5TY++15XnCSP629t+L9ztzfqkHchziShPq/2p3cb4M63uq7ahCMSmVoYs2QpAPrAj1uNBY/GjXNNG2lPTq7rOW3dIlccd1zTQU2bImnLZSF+4VT4yh2TmCKVDQr4jIt6zECdhT8EAXN4Ef3AwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748887892; c=relaxed/simple;
-	bh=pKayk//axGGraHGB1+iIPIKX+7C+PbImGLMS5A9QTJc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tDouxZJpS7zdLWlS22vfhKCJAKa8RHAuQx5bQcFIQ43vsR2DPKGntZeS9hs0Q65CRsoNExXqos+iCKum4DwfYlXy/mXZtKJOTXNeHNCbFh28XP0hAEQaAh0rFzMOZk3fKNSFEQjgkwgkB7Gtb8yBMhTV/2yFlMqLKbnp/FXVj9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lDBayr8/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748887907; c=relaxed/simple;
+	bh=FV3+H8QXvPANRqtUuE5ThoL4FRz85WqkMoojFaRyZcE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LbYG6VRT+KgTcK87hvicf64pn4Mv4e8hZuQWGj01MHMrLxBFvobEqhVdWq0ErKpwYnIeHPoal9HY6+LFBkP+4TwYIASkgd3MkZfTwXUCBIZ/vzQJm15Bw6zLGW6Gb12Jvm9wjJ+sUAxwhoON2F5227Rv1dPyEzl+cu8At5jB75o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IVeSVJvM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lDBayr8/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76482C4CEEB;
-	Mon,  2 Jun 2025 18:11:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IVeSVJvM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15BCAC4CEEB;
+	Mon,  2 Jun 2025 18:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748887891;
-	bh=pKayk//axGGraHGB1+iIPIKX+7C+PbImGLMS5A9QTJc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lDBayr8/Lc+nq0Nvcf7flG3POh9qvI7+421CSQPBFo/8rtUgqueGctqpFg1LScGO4
-	 zspG0+fazamdPVYFcTjQdLFr2wfNV5pdyELzLHNP08COVMypTdB75UtPl6xbpLTTQw
-	 x4i6ipt+V77NuAogEpbLU2pLpWLqzApEOuezjukRocF+F8yG/zYnKk6q0B/TgqQ6xW
-	 Er3uQi/+J50j3Eql3JRoZdvBqP93WaSnMdbzMQ2qFQ52XxmyU1eiSa+eOAMqyXd3QO
-	 td4SMhyWGLPjjX1JeFvX3+1p3af4XJ0A3EopAZyeXrYYmFsrKy1Jq4NSZEwAFo0XjU
-	 JuJZWlLOwJtig==
-Date: Mon, 2 Jun 2025 11:11:28 -0700
-From: Kees Cook <kees@kernel.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	David Gow <davidgow@google.com>, linux-hardening@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] lib/tests: Make FORTIFY_KUNIT_TEST depend on
- FORTIFY_SOURCE
-Message-ID: <202506021108.3AD999F73@keescook>
-References: <e36d5e6996a7ea4dc694c4b8dedd15943952d33d.1748875801.git.geert@linux-m68k.org>
+	s=k20201202; t=1748887907;
+	bh=FV3+H8QXvPANRqtUuE5ThoL4FRz85WqkMoojFaRyZcE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=IVeSVJvMOj2hmossFVXASDjIsYo9KhGH3O89ssTjbv7NDZzG3d2Ed0t8Me19fO58j
+	 pkJkgRkpZjY48WuIUMOunSX9hYoMD2wjSlRLUK4DOXftJqFxXEZVFa6TghqkXzLnFA
+	 Q66BRret+r+Lu5BCa2cVVd0UCmiqpwYs5zQVYdq6ivCLql5hLA/EWxzQNblp3E7nFU
+	 s29E7PaJRHZkp5ELXM3Uq0O+qE6N6Ns1dn+B01UmlaDJDVtjngg9UjO71SQvT45/WL
+	 cfoAzMJfI+HWBXhguaaAwZ5/gwBlAETebGoNf+iYPN47SxuSu/0x5pv6X/G72F92c1
+	 GuK5zoxcliyNA==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	linux-efi@vger.kernel.org
+Subject: [PATCH] efi/libstub: use 'targets' instead of extra-y in Makefile
+Date: Tue,  3 Jun 2025 03:11:41 +0900
+Message-ID: <20250602181143.528789-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e36d5e6996a7ea4dc694c4b8dedd15943952d33d.1748875801.git.geert@linux-m68k.org>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 02, 2025 at 04:51:44PM +0200, Geert Uytterhoeven wrote:
-> When CONFIG_FORTIFY_SOURCE is not enabled, all fortify tests are
-> skipped.  Move this logic from run-time to config-time, to avoid people
-> building and running tests that do not do anything.
-> 
-> This basically reverts commit 1a78f8cb5daac774 ("fortify: Allow KUnit
-> test to build without FORTIFY") in v6.9, which was v3 of commit
-> a9dc8d0442294b42 ("fortify: Allow KUnit test to build without FORTIFY")
-> in v6.5, which was quickly reverted in commit 5e2956ee46244ffb ("Revert
-> "fortify: Allow KUnit test to build without FORTIFY"").
+These objects are built as prerequisites of %.stub.o files.
+There is no need to use extra-y, which is planned for deprecation.
 
-Same thing as for randstruct: I want the test to always be available. I
-don't want 1a78f8cb5daac reverted.
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
--Kees
+ drivers/firmware/efi/libstub/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+index d23a1b9fed75..5ce9f2098b99 100644
+--- a/drivers/firmware/efi/libstub/Makefile
++++ b/drivers/firmware/efi/libstub/Makefile
+@@ -102,7 +102,7 @@ lib-$(CONFIG_EFI_ZBOOT)		+= zboot.o $(zboot-obj-y)
+ 
+ lib-$(CONFIG_UNACCEPTED_MEMORY) += unaccepted_memory.o bitmap.o find.o
+ 
+-extra-y				:= $(lib-y)
++targets				:= $(lib-y)
+ lib-y				:= $(patsubst %.o,%.stub.o,$(lib-y))
+ 
+ # Even when -mbranch-protection=none is set, Clang will generate a
 -- 
-Kees Cook
+2.43.0
+
