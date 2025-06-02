@@ -1,61 +1,63 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6821021A444
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 15:18:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE08022C339
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 15:19:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748877542; cv=none; b=mpiewgdP3r7HAl8DMpf52Ri0LNTDEgrV31tExrJHC9LH2HAZV9QTd0EqtgyA009ukqAU1EXifguMIwvgYobnpGXEMcIvDOrVq5q4e8YbH2CscGVto7TTmpj7BviqTMXsQFbfOxdO4gYI3JWTlbjEKwsuK+2MKacMGzLcK8oUjQ0=
+	t=1748877543; cv=none; b=WDNWyw8V+g2FgysWQYyD+yEs9AJ6WFu7c2FeshmXuGLCzjJ7gu19RkvyAuAqC2Mf61B9xQ0rTrFDc+aojyjEa++7iT8LHeEHj+FvbU0HiF+0APWZSWemb6Bk1/3PnwP77Fj15jCLSA8ZdO/W203ubqMgM2Q+cls8Uwk4PXdnTYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748877542; c=relaxed/simple;
-	bh=oFAT+NNKGnh5VXgaLf8krwrz5XSrHjhFetyALYSIt7M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AYG6eA7/F8K09zsZ76+Deqrfm2mHMjKxWkDztN/Fv1paZi8Ib1nNcJjyCVfAvzZmhR8ZK6MtN5h44KFAJdxXOuMaRymz88/X9AEBHn0bbZTi2sT0qBfJpohciJ3P/iVlK6wMiD7aa1JbAA5BEVWf3/C5MRJ1mKY1xJyRERK+YTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hU+rxaRj; arc=none smtp.client-ip=209.85.128.54
+	s=arc-20240116; t=1748877543; c=relaxed/simple;
+	bh=2hHPT0ZatQTm44Z1t6wExkfhxFsepGpoQ7pDrN0NhyE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=l5UdSVc56nlQGICQvXmqVjQmh7l4qxZW6ZWYCdHnU3jHeYyzyTWDW7kZ3Lcj6zRKc7YW9KkSnHDobb3g8XqobLnhEDPUwOYGHSToJtYCzQY7xljhkDGkZfNGO7089tqoI0baI7rHvrWA29BGYQEUTR/MWHHY7REbK8YG8WT/lM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Qb5y5AB2; arc=none smtp.client-ip=209.85.221.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hU+rxaRj"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-450dd065828so19343705e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 08:18:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qb5y5AB2"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a36efcadb8so3975629f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 08:19:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748877538; x=1749482338; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IUg1jDrh7o13xIeD5Z16HH35vSn20OCOm1MqSRrAi94=;
-        b=hU+rxaRjiBH8xcwMXgSB+l4qIkG1HkLaVP6j+LFVWVqwVwDZBBJGvyPJgzLWDdv7mE
-         VrAnJEvohap10Ncq54pnb/oVQmjzbuqFRO3aoreqOC0r4MQrR3VjzCKon/UgNpULpAOG
-         HTfZp92bSHfXQOTPt+EuMhC0MG11rC3ACkM9a3krAIBclFU3erTondo/nXTxLrIjBRBf
-         2W04mbOeTjK2qf6ri32Q5WbJK8cm002VsGG2b4UM7yP9UxvfAs1D29Q1Z+pfoxBplUOg
-         Nm5W/OKUxyUseVIvnVytekk+/5SEbOL2BFjgipzscEpZaaErP/wYcf4Rjy5gZnMH93MZ
-         Owlg==
+        d=linaro.org; s=google; t=1748877540; x=1749482340; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4yhV1VS1sZnr/B/j9eDazI/vJTndFmPooDhpyVC7xA4=;
+        b=Qb5y5AB2UShSbakIMXSN+0+5vBOLXH6pHqvbwCquWt6nG/3PweqsOqc3OZCudupF+d
+         tgdvf5Bh4QfEm0SoNvsppi4O69edpfq3A+JkVMi6IEJ7lS8S5+LAsoyASzzzMhaH40we
+         Dx4Y34n0nnmBFwRjpWX8V2kd17eNbIV/yyRyU2MbCscmSgCx425hClZxZIupE2hD1FQh
+         3d/qIh2D8aasyMNomFQvF8aRFZqfTtn6zDWmQIx9biOSzyRoPG4ANNGa7Kxe0+lZyCIb
+         MWITk5JviQGDESOfLXYu7KNv8WiKp1DWe6ox63zbcD5eWjg3+9vBo3RK9tOYsbQjPLC+
+         WGAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748877538; x=1749482338;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IUg1jDrh7o13xIeD5Z16HH35vSn20OCOm1MqSRrAi94=;
-        b=Z8NllKYWE6OAYbf27stQynWLZuf1KV8EckdwvWH4LCHWWTmqSRXT4RPTaYEhMIfgQR
-         0ciXXGSdlPYDoQWBCdeymzgovT+HKTRoDDD2tCwyFwATq0L5rlSaauuRLdLMZPoCSlUR
-         8qQebbG719PC7i9GMRg4qgt2rw/Xvlb0/OQS5pYWWZLuSKoQtUkRLor7tu5bPDbXDevF
-         l7rnzt5LGcqvJIRwHALMep57KS5IKHNOT84a8NxrD0z0CkMFy22h9ldRfox7NLnX52Dv
-         c94TRIvNDqHYAJdP0I05dYFxZRquiBcKsgrFfzCnpaHjWk4EwokLIVczhbUjIpB0OPb7
-         fd9w==
-X-Forwarded-Encrypted: i=1; AJvYcCUi0zfR8ofivtAVsMZumzh++GfkBoWwG2VnP1sT3NKkJzrLZpaTAiLGbgtiiCUoIOH3UkxEc2Wxi5pVrn4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/36JRZEgZPIdEoUiGQ3glM1DfbmQHkEIkzAMHhdVaRaYL76wQ
-	hN1WZBZv3MgG8+27guVO4Go4piR/0LDH+m7Wj6G3Z1A2HIl4eBU/GkcXPOZ8RMPJttU=
-X-Gm-Gg: ASbGnct4+9+gHmv2nvUTlpDFT7NU9M8wIuSyCjXTQn6eUgE2pQwy9Efpm65l3G4XfiV
-	nIM2SkEYOqwEe1d1bkWPpTR+Pi1jQFjOUQnBYv1W8xoBy/q8U2gDV4hft+YtdlRziksiBhA/pc/
-	xwc5ZtMs6JvTigLIF/Y7nvaJa5/9gx4gEb8hUWF/l/BrXHtrcZ5fHKPnidHkcbDYhKKAiW2XJ2J
-	avDHLMKYlUpKx2xbBVcJfqda5JQnEj/uwLI/pLhBK5YxhNg1siC5mFybinze1zIPcjgyjEMCXPz
-	41UZgWD77ezBRoaLRLpTPYUqWdxOyB3HirS9+zMujGCR92rieQH7SFkFESwIy79XHIizSj3hn1Z
-	Vsm2Ecis3CllC
-X-Google-Smtp-Source: AGHT+IGd9hG5YHfH76nGmto9bsoX9DJOOYs0jiBYnyQonK2UIDx2uNqiKNlTaeCJzRAT0d46DtaI3w==
-X-Received: by 2002:a05:600c:4fce:b0:450:d367:c385 with SMTP id 5b1f17b1804b1-450d886f21bmr129966005e9.16.1748877537630;
-        Mon, 02 Jun 2025 08:18:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748877540; x=1749482340;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4yhV1VS1sZnr/B/j9eDazI/vJTndFmPooDhpyVC7xA4=;
+        b=d+qY0J3Rn55VtDcSfaZd7l2IrJtuQK+P30tQjQ7d/ZwvnGNn39d5ffhs9TNSU2I94D
+         X3SL+HXLeaLNqVUC9+yGggsHyvKefdXLNbXc5lZeXBD8X51XKu4Xtd86dUXU8iLBuqn0
+         Wzywx62DFcB+Mz5XPgAGAQpb9Zfu1Ao1GpvbaX5mBI3wwSCW81yBnx55oX1g8/8FmyP8
+         fqHDPZYj62ZgvYW00oaHY0dFDBOpdhNuGM35T7fvMB/nrCjj4Ptnf4pB1K2oy8BGM53b
+         dFJqS/mJrqZDoH0F4Cg3Df3DsOCtQBo+aAiJPnk0HNSJ788HA8h1KHeKW3aFRzW4oKPO
+         Vv6A==
+X-Forwarded-Encrypted: i=1; AJvYcCXrXoEuL0AKCeuA1kyrbRtI1x34O4G6fCLzDipsGGWgKTQfrQPN5T/mYRrFXikXCGDV0yo7jGDRl2aw528=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwI9aqFg5irfjYOGfAsTHxbjjVwD7r1N6pPNrWhJs5kI8yfWWv1
+	H3ZpPKknI0/1hOjKfpP/59e+GKyBrnJP+WFMSUKr0ijWQ8q5BaQdwWEhTbw+KCihhaI=
+X-Gm-Gg: ASbGncvVXHg05pqsyljDeOC8kIY+/8aSH17DI0D0PTUMSxA8tQHYXz6R6Gkb8Tc5/hU
+	ABElMkpQZW8XBMIc869iqzCpjLrHIT8EvF0BQDiP1hMBfcoXr3Ojh00niEsn+9q4OfYLxhqyAlN
+	pb37aQEXs2VyfligUiN2/FPawbttDOQRFWje6vS3CfFBSX/MG4tgy7VzdLTKtzkSItX7PtVh35x
+	MWD6BmQM2hsM36owOC/sBHV+lgT3gkKUdryZS5JqHhEEyfZYgSnrLF64JcGCgwXMimzOvEiAOmJ
+	iSrcXT6sVgfDm212p3JTE569Rrs+S1DIXd3GaA3REA3EueO4kti0snUh6Pe6vl03yjU0apY3jvs
+	pqny3jnvh+LPS
+X-Google-Smtp-Source: AGHT+IFyISAqwMHhCGLRj9aCfOACSARamwm5CChRIpOs6jPFxpI1R1pUgcUMERHo5kjL0SIXDlP4UA==
+X-Received: by 2002:a05:6000:18ab:b0:3a4:fb33:85ce with SMTP id ffacd0b85a97d-3a4fb3388bbmr9485326f8f.46.1748877540038;
+        Mon, 02 Jun 2025 08:19:00 -0700 (PDT)
 Received: from mai.. (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe74111sm15619844f8f.56.2025.06.02.08.18.56
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe74111sm15619844f8f.56.2025.06.02.08.18.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 08:18:57 -0700 (PDT)
+        Mon, 02 Jun 2025 08:18:59 -0700 (PDT)
 From: Daniel Lezcano <daniel.lezcano@linaro.org>
 To: daniel.lezcano@linaro.org,
 	tglx@linutronix.de
@@ -79,10 +81,12 @@ Cc: Jim Cromie <jim.cromie@gmail.com>,
 	Will McVicker <willmcvicker@google.com>,
 	Peter Griffin <peter.griffin@linaro.org>,
 	Saravan Kanna <saravanak@google.com>
-Subject: [PATCH v1 0/7] Setting the scene to convert the timers into modules
-Date: Mon,  2 Jun 2025 17:18:44 +0200
-Message-ID: <20250602151853.1942521-1-daniel.lezcano@linaro.org>
+Subject: [PATCH v1 2/7] clocksource/drivers/stm32-lp: Add module owner
+Date: Mon,  2 Jun 2025 17:18:46 +0200
+Message-ID: <20250602151853.1942521-3-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250602151853.1942521-1-daniel.lezcano@linaro.org>
+References: <20250602151853.1942521-1-daniel.lezcano@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -91,112 +95,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The timer drivers are all compiled-in. The initial pre-requisite is to
-have them available as soon as possible in the boot process. While
-this statement made sense a long time ago, the platforms have today
-multiple timers for different purposes along with architected timers
-which are initialized very early. For example, a timer can be used as
-a backup timer when the local timers are belonging to a power domain
-which is shutted down, or used a watchdog timer when the counter are
-shared, or also as a pulse width modulation counter. Another use case
-is the platform user may want to switch to a timer different from the
-architected timers because they have interesting characteristics in
-the context of a dedicated platform (eg. automotive).
+The conversion to modules requires a correct handling of the module
+refcount in order to prevent to unload it if it is in use. That is
+especially true with the clockevents where there is no function to
+unregister them.
 
-In some existing drivers, there is already the code to load and unload
-a timer driver even if the Kconfig does not allow that. It means, the
-need is there but partially upstream.
+The core time framework correctly handles the module refcount with the
+different clocksource and clockevents if the module owner is set.
 
-There were multiple attempts to configure the timer drivers into
-modules but it faced the fact that we were unsure if it is correctly
-supported by the time framework.
+Add the module owner to make sure the core framework will prevent
+stupid things happening when the driver will be converted into a
+module.
 
-After investigating deeper in the core code it appears we have
-everything set for the modularization of the timer drivers.
-
- - When a clocksource is registered with a better rating, the current
-   clocksource is swapped with the new one. The userspace allows to
-   change the current clocksource via sysfs
-
- - A clocksource can be unregistered
-
- - When a clockevent is registered with a better rating, it becomes
-   the active one
-
- - A clockevent can not be unregistered
-
-A timer driver can be loaded later because of all the supported
-above. However unloading is unsupported because a clockevent can not
-be unregistered and that will lead to a crash.
-
-But if the timer driver has the module owner set, the core framework
-will handle the refcount correctly and will prevent to unload the
-module if a clockevent is registered. All the refcounting is working
-in different use cases.
-
- - A clocksource is the current clocksource, the refcount is held
-
- - A current clocksource is switched to another one, the refcount is
-   released
-
- - A broadcast timer is registered, the refcount is held
-
- - A local timer is registered, the refcount is held
-
-Consequently, it is possible to unload a module which is only used as
-a clocksource. As soon as a clockevent is registered, the refcount is
-held and can not be released thus preventing the module to be
-unloaded.
-
-That mechanism ensure it is safe to convert the different timer
-drivers into modules.
-
-This series adds the module owner in the different driver which are
-initialized with the module_platform_driver() function and export the
-symbols for the sched_clock_register() function.
-
-Cc: Jim Cromie <jim.cromie@gmail.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: Chen-Yu Tsai <wens@csie.org>
-Cc: Jernej Skrabec <jernej.skrabec@gmail.com>
-Cc: Samuel Holland <samuel@sholland.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Jonathan Hunter <jonathanh@nvidia.com>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc: Marco Elver <elver@google.com>
-Cc: Nam Cao <namcao@linutronix.de>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-sunxi@lists.linux.dev
-Cc: linux-tegra@vger.kernel.org
-Cc: John Stulz <jstultz@google.com>
-Cc: Will McVicker <willmcvicker@google.com>
-Cc: Peter Griffin <peter.griffin@linaro.org>
-Cc: Saravan Kanna <saravanak@google.com>
-
-
-Daniel Lezcano (7):
-  clocksource/drivers/scx200: Add module owner
-  clocksource/drivers/stm32-lp: Add module owner
-  clocksource/drivers/sun5i: Add module owner
-  clocksource/drivers/tegra186: Add module owner
-  clocksource/drivers/stm: Add module owner
-  clocksource/drivers/cs5535: Add module owner
-  time: Export symbol for sched_clock register function
-
- drivers/clocksource/scx200_hrt.c     | 1 +
- drivers/clocksource/timer-cs5535.c   | 1 +
- drivers/clocksource/timer-nxp-stm.c  | 2 ++
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
  drivers/clocksource/timer-stm32-lp.c | 1 +
- drivers/clocksource/timer-sun5i.c    | 2 ++
- drivers/clocksource/timer-tegra186.c | 3 +++
- kernel/time/sched_clock.c            | 4 ++--
- 7 files changed, 12 insertions(+), 2 deletions(-)
+ 1 file changed, 1 insertion(+)
 
+diff --git a/drivers/clocksource/timer-stm32-lp.c b/drivers/clocksource/timer-stm32-lp.c
+index 928da2f6de69..cf1423ca00d0 100644
+--- a/drivers/clocksource/timer-stm32-lp.c
++++ b/drivers/clocksource/timer-stm32-lp.c
+@@ -159,6 +159,7 @@ static void stm32_clkevent_lp_init(struct stm32_lp_private *priv,
+ 	priv->clkevt.rating = STM32_LP_RATING;
+ 	priv->clkevt.suspend = stm32_clkevent_lp_suspend;
+ 	priv->clkevt.resume = stm32_clkevent_lp_resume;
++	priv->clkevt.owner = THIS_MODULE;
+ 
+ 	clockevents_config_and_register(&priv->clkevt, rate, 0x1,
+ 					STM32_LPTIM_MAX_ARR);
 -- 
 2.43.0
 
