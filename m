@@ -1,233 +1,203 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53FA922A7EF
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 14:40:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55CB422A804
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 14:40:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748875223; cv=none; b=ANscO/xWCZmsQvkrgl0ApPTp/ckM86uevK8x4wKIqYQEDbcD/f5TYhOS4A3twSCdyN5yH60CTYNNEE9vPjC3VrNhw5npY13SFvrub4nbv0yZihuCGDmwsBzMi146f0B1sdtZIJZb0tBl/29FCqK/eUF7NV+wL/+KOBiUw3sHJUA=
+	t=1748875225; cv=none; b=I5x4O++FaYhH+hIfkc0XKt8/2MQ6xq7sOKYJpRvBjOOsr4i/0AtuiAmgTa6VzspdOwfO4lfzAtyBsnZO63e2g+WoO4n6fzejkJQRnwbDKxiDfUNIsRwVUnNsg1kY2soVHzK676MEFAHmk7YrrQw7VofBpbGu4aI8UXVx2iyKd9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748875223; c=relaxed/simple;
-	bh=07XG5x+QAeJhTjZQ2/UKCylVkGAFsJMZTfx4cUJDjGk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=npBDvros/FC2iz24lXgntGJl3u6RYmsMNFgcvN7clGSv/xgQgJ9sqYovvY6jy/lD1nMKOM+9P+YN4opsjDRS/+u0/uM/YqYYhhpqaRymPK86HxUIbs13vD91/qEL+HziPsa4jkJPVdFHuATaFrXf9SddKUufEX4YcLaz4w9CQOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LfiujJPO; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748875225; c=relaxed/simple;
+	bh=UbnBn8tfT8ZcbdT68ZGxa26CWg9/x3KXlIYEipLgrI0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QUjoS+xV9bshAVUuKjmrbR8fenlPncI3mf+HkjEqYBvRYhh3iCNAR1ojmnZvQcx/9ophvpAzIF2MRmWZukCJPJj/T+/JcahgEmkq1LdOqTVVISRzf2imx/MwQcIrd8vQz5g5Z43BmEr908VIJwtzjM1txQFDTjOqZQeDz4KG1RU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ypb4bw7B; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LfiujJPO"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-451d7b50815so10758725e9.2
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ypb4bw7B"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-606741e8e7cso1342830a12.1
         for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 07:40:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748875219; x=1749480019; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gzJqzJEUCc0XLsoz3b6HngePdRvcXa5BR8sAyxQH6Bw=;
-        b=LfiujJPOaxdy40m0ZkY9eOfZVM8zwMmXk8bzlitLBCux/uqErObyEHr+hMF79EeI4g
-         28xNK+QBOuFXJAAH6exY3+WUBoHyu6g0EQkz9etNOWu0r/3vmayuOMjLtZYQTRlVxf/W
-         ooJwOMIQ6q4wyjup32k7+dfE5if4S3dFwY4Eux8Tfo/okaSlaArv14pB6qfX2IDf1c55
-         gQnOF7sbfA5YtuMoZ7MJu9eY6ctVTxhdvmwND4CQy1U5NdWRrRC5Dio7Gt87+8Zuvic+
-         y/gz/nGZ+Hsb5pG/a7OTEyhdn7840RscuUCAR8py3Ed3LB3/Ple/IV8rOYEKnKMz/i4m
-         N6LA==
+        d=linaro.org; s=google; t=1748875220; x=1749480020; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=17rjv0YNoJkKo4gi7+hBtlZzTO2nh7fXG9npkl5iBe0=;
+        b=ypb4bw7BDk5lod1eAVVXHhi66xQnNoJrLueg/if97h4MqWAA4bUkSpIYYTC5ckZSJK
+         sov3vK+k2RLlZ7Lr8MYEYuk9xibZPogERiBIKn9h6yvuCooK5eymr8kdUJPYlhQ5k3N1
+         bmzQ6i6gLMx7iYRRTHZQqJGjlFXvzUIA8GpPkkIqg3go4z24esDuj9yBmbw1YVlhp1zP
+         BiRujM5ClKzTm/kAFMUgx0kJ5oQvQoZZMSEsAS3JRZT+/Q75U9CbUnf2YG9SFJIlKxsC
+         aabXg1Bu8atu6kvIoWG7ZJxtm/JRELjc8/xC+DzjSZZnbdV0cgUp8unfLm0xO5Pe90Pg
+         NCWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748875219; x=1749480019;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gzJqzJEUCc0XLsoz3b6HngePdRvcXa5BR8sAyxQH6Bw=;
-        b=vsRfnE/Ghd1SZcgGIZ0eoHIpcHFzdYyC1TV7NDs1rXlv3vIwTsHhpOANO68dvafaCy
-         W0waat593awjCwLngBMXSSYTw4KlPIDmC5gq5IbkSsJA3ydd6TCywUJNA+JBWb4Gqugw
-         p0Gyo+ijmOlNRa4bpfJEIDb6+xT+bBf0kBG1YXqm/V5+lPDuYvqki884f/CiXaTBXQRW
-         2THB88QJjxg9UfoO8zxFbfHeUiZHlNkM8ZgfsvKnDvYOcVkIfjBKVDZxMLwrxzNmBmVq
-         5+mTVmrsWx5Ty3ZqW8qTNNB6gnio3z+TpM6fcC6bvwtm4bzPT6Ce1huDO2ibTNVfNAU1
-         po2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX5LUSG1ft76t1hAlc0TZRalz4u5Goy8EmHWdGcn4aJ2ktgKerco+h05nArNpQ4YZ8M16Lop0r0KqMooII=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVLOoxM8P17IG3tSCawb4wGFAR7i1I6E6edCT/T04O0XMFddQR
-	P1/8HuHjL6JGPyFzcJs0PgWz6ytLsjgyVV1VClmQ2re5ucV6wbzU3oytN8vjeJo4tb+0Au7UtkN
-	NMTA7AFek70B5X+m4Gf7VwU1Kyn6EksYWcnJ4eKXA
-X-Gm-Gg: ASbGncsHSWlOebY3SEfNVeichSsJeq7Vfuwwo2Em/wa6dG8P3JdeSwjG+Z2ONZpil6+
-	MOJqOQS42XUyHDAhsbDD/yvoRv2R1IX6gf3+AfU1E16rcVq90rnqii76IM3WDbq48qS3xPNhxKL
-	1PngaPIjddDgbEC0y1EDwR69dgWeapqyMJYaaqxhcJJLet
-X-Google-Smtp-Source: AGHT+IFtXYNUotTHkadpuR3zhkQf1TtUFXklWZRqHyZgW9DzEoGcgbokF2oSS1iOj5zHldAAyXwronzMKN0qfxi3blQ=
-X-Received: by 2002:a05:6000:2303:b0:3a4:da87:3a73 with SMTP id
- ffacd0b85a97d-3a4f89dcc3amr8905954f8f.42.1748875219346; Mon, 02 Jun 2025
- 07:40:19 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748875220; x=1749480020;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=17rjv0YNoJkKo4gi7+hBtlZzTO2nh7fXG9npkl5iBe0=;
+        b=TMwQk9J4NV6dNg2pTrmDVyfCevqQ1UguXmwXZUh4AObF3JbQ4M9z8io/t74kvtRENO
+         zM1/e8EqIDM64YIOTfy7f49NZqjaWPNoj470juGqO1gs+8oyML7+CaRo3vrbjqhS9r9G
+         izx7Rpqqic5YDUG7VqYWzKCAgIdzZxle5gpl8y9CtdyIjuAcpIJRftIyAge1fG1QtxJn
+         gczkUiP65yWovlQI4sBk5SxzM8DGMmNfeJEkUCv+PB1ONNQ9TwUz/x7kjz0s8CNhoEWq
+         bY+o01TATmw3yMi3+CFPHu572x67EX+L3jLyXXvyyOqADUCgZuOeYB5E5dcXZkYa+yGt
+         kO1A==
+X-Forwarded-Encrypted: i=1; AJvYcCWyRQB8jroQDzSB1eQWUNbNE5P2v++xfFmM/mL6RPefbfo3Gk6e3HbDbpk3jHkYwgCl20Wd5U4SJYTaUZg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiK4bslesy0FgQtEuDgFQijyNeGWone9lb2yRvYJWlPReDbWKX
+	+P/nne5tiojBImMZhIf/LfjvW+CD2PLpElZn6FHoohVSjAmpdrmr4sj+YjG06ghqKCU=
+X-Gm-Gg: ASbGncsQczCXBPtxfvFg2GIgBw+aceXERJy2plCPD8adqE1EdPRe/Wbrc/b1yvfycPD
+	9DVX99P0pT8tOmZcUwLWca+Oq22e4+lk8zUiuJ7PYqwznhajtnvHwfVNj9kK8xIfebbgSbjhbqy
+	x9Emv0CuTqpoSIjrvuj4Ld73rBEleRTfo0NQ+hf3fMoQGpNQX/MG/fpsC4iUhqRHFHVmMjiX4Zi
+	droBRqsVfvtuXYs2MvFGSDUQ4egs3HA2bPgALaJUpqOaOiAXK0eRsIJ7PWclSMV9qoV9R50LqbF
+	YhwseKZm4rz6cLHO8fMPcUgDeY1NhyZck/oqo+jGGtodqYG9DLW6wA3uVTvnNibrZ2tXWQ==
+X-Google-Smtp-Source: AGHT+IEyvvmQFAXI+47qMTgwD54rEnxkNOV+WVE+6umaVq7qvzVjKK+BHzDrSujJ8RzHfqtedkxN2Q==
+X-Received: by 2002:a05:6402:13cb:b0:604:d739:614a with SMTP id 4fb4d7f45d1cf-6056dd3b514mr11273412a12.12.1748875220460;
+        Mon, 02 Jun 2025 07:40:20 -0700 (PDT)
+Received: from [192.168.0.14] ([79.115.63.75])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60566c75aebsm6269024a12.46.2025.06.02.07.40.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Jun 2025 07:40:20 -0700 (PDT)
+Message-ID: <a56284a4-755d-4eb4-ba77-9ea30e18d08f@linaro.org>
+Date: Mon, 2 Jun 2025 15:40:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250602133653.1606388-1-bqe@google.com> <20250602133653.1606388-5-bqe@google.com>
- <aD2118mMOs8CZyGa@yury>
-In-Reply-To: <aD2118mMOs8CZyGa@yury>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Mon, 2 Jun 2025 16:40:04 +0200
-X-Gm-Features: AX0GCFsPsbx9hoHYGMRNqYNAZfer2osv1pLFziy8aDAkBITPNbhAdtkRbp8KGC0
-Message-ID: <CAH5fLghi4jgS+MuG48aLnYb6N6_FOeR0pLCjG3z5XdLve5tdhQ@mail.gmail.com>
-Subject: Re: [PATCH v10 4/5] rust: add find_bit_benchmark_rust module.
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Burak Emir <bqe@google.com>, Kees Cook <kees@kernel.org>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
-	Carlos LLama <cmllamas@google.com>, Pekka Ristola <pekkarr@protonmail.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
+ in sync
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+ =?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>,
+ Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ William McVicker <willmcvicker@google.com>
+References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
+ <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com>
+ <5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org>
+ <8f281667-b4ef-9385-868f-93893b9d6611@linux.intel.com>
+ <3a47fc82-dc21-46c3-873d-68e713304af3@linaro.org>
+ <f6ee05f7-174b-76d4-3dbe-12473f676e4d@linux.intel.com>
+ <867e47dc-9454-c00f-6d80-9718e5705480@linux.intel.com>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <867e47dc-9454-c00f-6d80-9718e5705480@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 2, 2025 at 4:32=E2=80=AFPM Yury Norov <yury.norov@gmail.com> wr=
-ote:
->
-> On Mon, Jun 02, 2025 at 01:36:45PM +0000, Burak Emir wrote:
-> > Microbenchmark protected by a config FIND_BIT_BENCHMARK_RUST,
-> > following `find_bit_benchmark.c` but testing the Rust Bitmap API.
-> >
-> > We add a fill_random() method protected by the config in order to
-> > maintain the abstraction.
-> >
-> > The sample output from the benchmark, both C and Rust version:
-> >
-> > find_bit_benchmark.c output:
-> > ```
-> > Start testing find_bit() with random-filled bitmap
-> > [  438.101937] find_next_bit:                  860188 ns, 163419 iterat=
-ions
-> > [  438.109471] find_next_zero_bit:             912342 ns, 164262 iterat=
-ions
-> > [  438.116820] find_last_bit:                  726003 ns, 163419 iterat=
-ions
-> > [  438.130509] find_nth_bit:                  7056993 ns,  16269 iterat=
-ions
-> > [  438.139099] find_first_bit:                1963272 ns,  16270 iterat=
-ions
-> > [  438.173043] find_first_and_bit:           27314224 ns,  32654 iterat=
-ions
-> > [  438.180065] find_next_and_bit:              398752 ns,  73705 iterat=
-ions
-> > [  438.186689]
-> >                Start testing find_bit() with sparse bitmap
-> > [  438.193375] find_next_bit:                    9675 ns,    656 iterat=
-ions
-> > [  438.201765] find_next_zero_bit:            1766136 ns, 327025 iterat=
-ions
-> > [  438.208429] find_last_bit:                    9017 ns,    656 iterat=
-ions
-> > [  438.217816] find_nth_bit:                  2749742 ns,    655 iterat=
-ions
-> > [  438.225168] find_first_bit:                 721799 ns,    656 iterat=
-ions
-> > [  438.231797] find_first_and_bit:               2819 ns,      1 iterat=
-ions
-> > [  438.238441] find_next_and_bit:                3159 ns,      1 iterat=
-ions
-> > ```
-> >
-> > find_bit_benchmark_rust.rs output:
-> > ```
-> > [  451.182459] find_bit_benchmark_rust_module:
-> > [  451.186688] Start testing find_bit() Rust with random-filled bitmap
-> > [  451.194450] next_bit:                       777950 ns, 163644 iterat=
-ions
-> > [  451.201997] next_zero_bit:                  918889 ns, 164036 iterat=
-ions
-> > [  451.208642] Start testing find_bit() Rust with sparse bitmap
-> > [  451.214300] next_bit:                         9181 ns,    654 iterat=
-ions
-> > [  451.222806] next_zero_bit:                 1855504 ns, 327026 iterat=
-ions
-> > ```
-> >
-> > Here are the results from 32 samples, with 95% confidence interval.
-> > The microbenchmark was built with RUST_BITMAP_HARDENED=3Dn and run on a
-> > machine that did not execute other processes.
-> >
-> > Random-filled bitmap:
-> > +-----------+-------+-----------+--------------+-----------+-----------=
-+
-> > | Benchmark | Lang  | Mean (ms) | Std Dev (ms) | 95% CI Lo | 95% CI Hi =
-|
-> > +-----------+-------+-----------+--------------+-----------+-----------=
-+
-> > | find_bit/ | C     |    825.07 |        53.89 |    806.40 |    843.74 =
-|
-> > | next_bit  | Rust  |    870.91 |        46.29 |    854.88 |    886.95 =
-|
-> > +-----------+-------+-----------+--------------+-----------+-----------=
-+
-> > | find_zero/| C     |    933.56 |        56.34 |    914.04 |    953.08 =
-|
-> > | next_zero | Rust  |    945.85 |        60.44 |    924.91 |    966.79 =
-|
-> > +-----------+-------+-----------+--------------+-----------+-----------=
-+
-> >
-> > Rust appears 5.5% slower for next_bit, 1.3% slower for next_zero.
-> >
-> > Sparse bitmap:
-> > +-----------+-------+-----------+--------------+-----------+-----------=
-+
-> > | Benchmark | Lang  | Mean (ms) | Std Dev (ms) | 95% CI Lo | 95% CI Hi =
-|
-> > +-----------+-------+-----------+--------------+-----------+-----------=
-+
-> > | find_bit/ | C     |     13.17 |         6.21 |     11.01 |     15.32 =
-|
-> > | next_bit  | Rust  |     14.30 |         8.27 |     11.43 |     17.17 =
-|
-> > +-----------+-------+-----------+--------------+-----------+-----------=
-+
-> > | find_zero/| C     |   1859.31 |        82.30 |   1830.80 |   1887.83 =
-|
-> > | next_zero | Rust  |   1908.09 |       139.82 |   1859.65 |   1956.54 =
-|
-> > +-----------+-------+-----------+--------------+-----------+-----------=
-+
-> >
-> > Rust appears 8.5% slower for next_bit, 2.6% slower for next_zero.
-> >
-> > In summary, taking the arithmetic mean of all slow-downs, we can say
-> > the Rust API has a 4.5% slowdown.
-> >
-> > Suggested-by: Alice Ryhl <aliceryhl@google.com>
-> > Suggested-by: Yury Norov <yury.norov@gmail.com>
-> > Signed-off-by: Burak Emir <bqe@google.com>
 
-> > +const BITMAP_LEN: usize =3D 4096 * 8 * 10;
-> > +// Reciprocal of the fraction of bits that are set in sparse bitmap.
-> > +const SPARSENESS: usize =3D 500;
->
-> Is there any simple mechanism to keep C and rust sizes synced? (If no,
-> not a big deal to redefine them.)
 
-Rust can access constants from header files, so you can move it to a
-header file.
+On 5/30/25 3:48 PM, Ilpo Järvinen wrote:
+>>> I added the suggested prints
+>>> (https://paste.ofcode.org/DgmZGGgS6D36nWEzmfCqMm) on top of v6.15 with
+>>> the downstream PCIe pixel driver and I obtain the following. Note that
+>>> all added prints contain "tudor" for differentiation.
+>>>
+>>> [   15.211179][ T1107] pci 0001:01:00.0: [144d:a5a5] type 00 class
+>>> 0x000000 PCIe Endpoint
+>>> [   15.212248][ T1107] pci 0001:01:00.0: BAR 0 [mem
+>>> 0x00000000-0x000fffff 64bit]
+>>> [   15.212775][ T1107] pci 0001:01:00.0: ROM [mem 0x00000000-0x0000ffff
+>>> pref]
+>>> [   15.213195][ T1107] pci 0001:01:00.0: enabling Extended Tags
+>>> [   15.213720][ T1107] pci 0001:01:00.0: PME# supported from D0 D3hot
+>>> D3cold
+>>> [   15.214035][ T1107] pci 0001:01:00.0: 15.752 Gb/s available PCIe
+>>> bandwidth, limited by 8.0 GT/s PCIe x2 link at 0001:00:00.0 (capable of
+>>> 31.506 Gb/s with 16.0 GT/s PCIe x2 link)
+>>> [   15.222286][ T1107] pci 0001:01:00.0: tudor: 1: pbus_size_mem: BAR 0
+>>> [mem 0x00000000-0x000fffff 64bit] list empty? 1
+>>> [   15.222813][ T1107] pci 0001:01:00.0: tudor: 1: pbus_size_mem: ROM
+>>> [mem 0x00000000-0x0000ffff pref] list empty? 1
+>>> [   15.224429][ T1107] pci 0001:01:00.0: tudor: 2: pbus_size_mem: ROM
+>>> [mem 0x00000000-0x0000ffff pref] list empty? 0
+>>> [   15.224750][ T1107] pcieport 0001:00:00.0: bridge window [mem
+>>> 0x00100000-0x001fffff] to [bus 01-ff] add_size 100000 add_align 100000
+>>>
+>>> [   15.225393][ T1107] tudor : pci_assign_unassigned_bus_resources:
+>>> before __pci_bus_assign_resources -> list empty? 0
+>>> [   15.225594][ T1107] pcieport 0001:00:00.0: tudor:
+>>> pdev_sort_resources: bridge window [mem 0x00100000-0x001fffff] resource
+>>> added in head list
+>>> [   15.226078][ T1107] pcieport 0001:00:00.0: bridge window [mem
+>>> 0x40000000-0x401fffff]: assigned
+>> So here it ends up assigning the resource here I think.
+>>
+>>
+>> That print isn't one of yours in reassign_resources_sorted() so the 
+>> assignment must have been made in assign_requested_resources_sorted(). But 
+>> then nothing is printed out from reassign_resources_sorted() so I suspect 
+>> __assign_resources_sorted() has short-circuited.
+>>
+>> We know that realloc_head is not empty, so that leaves the goto out from 
+>> if (list_empty(&local_fail_head)), which kind of makes sense, all 
+>> entries on the head list were assigned. But the code there tries to remove 
+>> all head list resources from realloc_head so why it doesn't get removed is 
+>> still a mystery. assign_requested_resources_sorted() doesn't seem to 
+>> remove anything from the head list so that resource should still be on the 
+>> head list AFAICT so it should call that remove_from_list(realloc_head, 
+>> dev_res->res) for it.
+>>
+>> So can you see if that theory holds water and it short-circuits without 
+>> removing the entry from realloc_head?
+> I think I figured out more about the reason. It's not related to that 
+> bridge window resource.
+> 
+> pbus_size_mem() will add also that ROM resource into realloc_head 
+> as it is considered (intentionally) optional after the optional change
+> (as per "tudor: 2:" line). And that resource is never assigned because 
 
-> > +module! {
-> > +    type: FindBitBenchmarkModule,
->
-> I think we agreed to have the type something less unique, like:
->
->         Benchmark.
->
-> > +    name: "find_bit_benchmark_rust_module",
->
-> What is the name policy for rust? Maybe a more human-readable name
-> would work better here?
+right, the ROM resource is added into realloc_head here:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/pci/setup-bus.c#n1202
 
-I don't think there's any particular policy for Rust. Name modules in
-the same manner you would C modules.
+Then in the failing case, and extra resource is added:
+[   15.224750][ T1107] pcieport 0001:00:00.0: bridge window [mem
+0x00100000-0x001fffff] to [bus 01-ff] add_size 100000 add_align 100000
 
-> All the above are nits. Please have my
->
-> Reviewed-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
->
-> Thanks,
-> Yury
+The above extra print happens just in the failing case. Here's where the
+extra resource is added:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/pci/setup-bus.c#n1285
 
-Alice
+It seems that in the failing case 2 resources are added into
+realloc_head at the pbus_size_mem() time, whereas with the patch
+reverted - none.
+
+Also, in the failing case a smaller resource is added into the list:
+pdev_sort_resources: bridge window [mem 0x00100000-0x001fffff]
+compared to the working case:
+pdev_sort_resources: bridge window [mem 0x00100000-0x002fffff]
+
+Can this make a difference?
+
+> pdev_sort_resources() didn't pick it up into the head list. The next 
+> question is why the ROM resource isn't in the head list.
+> 
+
+It seems the ROM resource is skipped at:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/pci/setup-bus.c#n175
+
+tudor: pdev_sort_resources: ROM [??? 0x00000000 flags 0x0] resource
+skipped due to !(r->flags) || r->parent
+
+> 
+> While it is not necessarily related to issue, I think the bridge sizing 
+> functions too should consider pdev_resources_assignable() so that it
+> won't ever add resources from such devices onto the realloc_head. This is 
+> yet another small inconsistency within all this fitting/assignment logic.
+> 
+> pbus_size_mem() seems to consider IORESOURCE_PCI_FIXED so that cannot 
+> explain it as the ROM resource wouldn't be on the realloc_head list in 
+> that case.
+> 
+> 
+> Just wanted to let you know early even if I don't fully understand 
+> everything so you can hopefully avoid unnecessary debugging.
+
+Thanks! Would adding some prints in pbus_size_mem() to describe the code
+paths in the working and non-working case help?
+
+Cheers,
+ta
+
