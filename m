@@ -1,217 +1,256 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CAED20DD7D;
-	Mon,  2 Jun 2025 11:40:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C601213E69
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 11:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748864423; cv=none; b=jWZb4jcOImah+I/uwsB+mnlQJ9Zn4DJB911zhUFJMiZ2SeKylj8cz+l04OziN0w1vCwZVwx2sHZSUZppKQrrrxrWT8eB2p+wv4eNFheun6DjraxpObuxgy/p6OyPbGAGweWVxv9JBP7MpNOqdk7HHC5pjz1DQ/XpKoyRsL5QDlA=
+	t=1748864429; cv=none; b=OeXPuHbE0tgbcO1dR6EW/wnxFj1R0vV2sbp0izc/3wwYyEqGfxF1Z5NzKk6V3o4m0DLKPGB3tLZkcMQECoecEkFbb9F2zcoq2T2MyIWonqoHe3dit/lXEvRDa4ffquViVlh37k5BVNcoVJS3NBEtRYDJR/z8nRz3ZBO9e2k+NuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748864423; c=relaxed/simple;
-	bh=YsziGBauBytj25jVethc7IjUh4EbNlnmtTJdYtIBnIc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BbwZqykTAYBPz+BrG2aBYqc6VDC4AI1YXaiZKPvUN95tZgUhA2VJ++W5VoYitWJgkOrDhAnjQhwTDTxCfnRzwcv/xjXL9Etuausqhu4RMm6PF3H5iVB1jhF1TN2BNsRu86q88twLsCYi2n31Dww3rRCzaecarUdcp6uXZRdJydA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=1JKI6rgd; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1748864429; c=relaxed/simple;
+	bh=dRUdYyLiv7HUQ7bUBwyNfD4MB8oZDgxtM3+ZPWYebCw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JSmiAjW1PEJUsesg8iAF3QvKUEL4/xkj3yW45hUYO+0Gw5LgFf8bzKtGg1Cieu/8e77OEm5c+5kXiVlQVWdsNKPBTWLRUjMhid2AxVxi3wfWZkwemIZ8xPaY+ewMiqVwJAtLEhL97bcD8JJ8RBQIVCFi2xa9xVmY2NAcEUXtWg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bcw7P3O4; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="1JKI6rgd"
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5528Htdd021951;
-	Mon, 2 Jun 2025 07:40:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=UOdwJ
-	7dSxNjT5SeKMPjwgqp96ZFl6hozpWcAOrTqnAA=; b=1JKI6rgdympS0VhGEcM/F
-	J/HvnqSKOkihtiA9ByueSDueJQAg8k+397Y2x5ne+bjcq3gdWluPZ/Gve9fy/H7I
-	p32M15N7HthqF28Nhtf6BAdoEBEiSuhNYGoQ1YoB9YQlB/7x15Uray1AHbDzRwh5
-	JRKT2sLaziW3ltvubd1N/SHv8MXTXYAH/vjxyunLb9z66++AKUb978WzsKaKqKmX
-	dnRcin8fr8/sjh59YOlOnIz8LyH5NZhyl1XxwrorkZdHcmNSG4tPDtnmMQQmmeMa
-	/JLDsc1W6/6Imip6Dtvy/+8fwmv5DDdZv5+b6Byvkjs3A1EwjzEjHzkE0nCxjS5z
-	g==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 46yxp57bau-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 02 Jun 2025 07:40:05 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 552Be4jV043393
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 2 Jun 2025 07:40:04 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Mon, 2 Jun 2025 07:40:04 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Mon, 2 Jun 2025 07:40:04 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
- Transport; Mon, 2 Jun 2025 07:40:04 -0400
-Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.9])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 552BdjIv024956;
-	Mon, 2 Jun 2025 07:39:48 -0400
-From: Marcelo Schmitt <marcelo.schmitt@analog.com>
-To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <jic23@kernel.org>, <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <dlechner@baylibre.com>, <nuno.sa@analog.com>, <andy@kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
-        <marcelo.schmitt1@gmail.com>
-Subject: [PATCH v4 09/11] iio: adc: ad4170: Add support for internal temperature sensor
-Date: Mon, 2 Jun 2025 08:39:42 -0300
-Message-ID: <7cf2b59339ad7fb3bd5758190d494c843b0cf6f5.1748829860.git.marcelo.schmitt@analog.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <cover.1748829860.git.marcelo.schmitt@analog.com>
-References: <cover.1748829860.git.marcelo.schmitt@analog.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bcw7P3O4"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54b10594812so5226131e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 04:40:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1748864425; x=1749469225; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=gil6AlHmzhgpcu56HDGcVLiUYTQhdxpwRL+hujim4tE=;
+        b=bcw7P3O45K+gXKD4fZc/sRhFB20T23h6EoYBsp4e56PhHxoLcBlqFVGcKpR7R59AT9
+         BioxVNytqlOFDzGqAmV+5j3z+MdXy6d6TG6f7E6uHEuzWSgystg/SBVnfnXgUPiWCl/r
+         JcSc7FmiPT/fOJFwbv5gkuwU7Y7SN1H/P8KII=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748864425; x=1749469225;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gil6AlHmzhgpcu56HDGcVLiUYTQhdxpwRL+hujim4tE=;
+        b=qq9SlyL03OIMhYSg5IWFghjq9MaZ4YMe5QyIjVlgZVsbVztnJZlrYsV/C6opFBJ/RA
+         ynKJRmsO7D3C8saEwjshG6D4krYviqZ/LOdDc1pEYhH1npJa/zS2U7F7jhlYYkokOkuM
+         z8VkppxrCEoKYhRI9L+Svj4XU8BvUTePOlqbHVFECgHIv2bZhG5S0iKwd/vYcHv7ZsCm
+         8cbjNVh3S0T3GMuoxfJKlQlA8BMjLBCiIVZgoZGj3KzfT19Sw54uaHDxriyEUJyDjQ7x
+         XRgGHSUZ+DCQaBZJJyl0qUryEsOSVgtUGz8hJc/rRR6dIn2bSS780ucWlzr0cq7ynpTb
+         Rmlw==
+X-Forwarded-Encrypted: i=1; AJvYcCU6ZJMSxB/LCgayjJu6D240Gj8n7Vci453/1iFSzt74dc5layXjBF/ZFnol4xZ8evUZmiCzzkNi78snVwE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJe3EYCk5dcOjV9I3Yz4RGRdcHACxPTHcv9xCa0R3N1LBBPGY8
+	+j0L5RTflHDzhjGcJJZnmJQDYoIC0KK2RvAV0Io10adKbKDY691EljgYyK0yGcUCKTk0LYSotxM
+	83do=
+X-Gm-Gg: ASbGncvU+igPo1sBmbIcBQEM5iVuPdJpYdGGmHtNdJFTCGOzKwOulvpQ0k/ltEPyiGg
+	Vb09IX/DiqODJeKOSFvhYdtURp5zo70y7rzBI3tNj2agS3yDDkjFh3RaEPGvcLtxOhHX5yhE3AD
+	2isFMCUCbX4ohIsC/bf0gc0Dq1m5CMwKroEIU57Aq4Z0euFui3Ix1Hc+LFeQjXPWTEMK8TASPX+
+	NC8liW0jno7l9WTchS5ABdf4hpYCV0rDTx9GOx69w5ROyxf/R+q2f3tWBfUpznh7WI4I4UblNBT
+	iZChVOEU1L7RTFeNRmim652RxBLHNc7ChDR6tn6AyGI/bQwN1OqsxHL+6UOBXFjEOYxg8GsqlfC
+	kDcItBqhtqRPXh1c/59+T8Hq+
+X-Google-Smtp-Source: AGHT+IGobs3jAxNLTgBbi85nm5ecWkAAJoBrwZ4QIUrt0GscLIjy0kCs+6f1NgluKYDiGT2f5QIP0g==
+X-Received: by 2002:a05:6512:3b25:b0:553:3332:b65f with SMTP id 2adb3069b0e04-55342f54624mr2167643e87.12.1748864424373;
+        Mon, 02 Jun 2025 04:40:24 -0700 (PDT)
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5533791d105sm1555706e87.209.2025.06.02.04.40.20
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Jun 2025 04:40:21 -0700 (PDT)
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54b10594812so5226051e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 04:40:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW0AUdcjLYHVVMX7K7ufasTXNqtz9d2p29K3s5TSB16pxfw/nVsEdqUl3Z82QqOiTn99nT5oY7xAWxoQcg=@vger.kernel.org
+X-Received: by 2002:a05:6512:3b25:b0:553:3332:b65f with SMTP id
+ 2adb3069b0e04-55342f54624mr2167585e87.12.1748864418670; Mon, 02 Jun 2025
+ 04:40:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250528-uvc-grannular-invert-v1-0-d01581f9cc25@chromium.org>
+ <20250528-uvc-grannular-invert-v1-9-d01581f9cc25@chromium.org>
+ <34d9f779-987f-4e2c-b046-5dc15641547c@kernel.org> <CANiDSCtrG59QX-R0YcS+G9HmG5oE8LwiXdm_NKuCbNmHp8aeTQ@mail.gmail.com>
+ <b88a8847-6e19-4d5e-a847-5deee69ab7b4@kernel.org> <CANiDSCsXNu2xa_ATGUJbKY_t7xxXgSGdpZMf+P4LT+x3qcP1tg@mail.gmail.com>
+ <69885612-75ea-422c-ba13-07eaf4325005@kernel.org>
+In-Reply-To: <69885612-75ea-422c-ba13-07eaf4325005@kernel.org>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Mon, 2 Jun 2025 13:40:06 +0200
+X-Gmail-Original-Message-ID: <CANiDSCtSKCn+mx8pGwuYCre9Wb7gONJYjLqc6tYLWQL3YXBmrw@mail.gmail.com>
+X-Gm-Features: AX0GCFsb5l02HNSHjOIwpwsxX7MGOLU1IzK9yeaQ6vL8i18RyuyOrgkhC7K-W58
+Message-ID: <CANiDSCtSKCn+mx8pGwuYCre9Wb7gONJYjLqc6tYLWQL3YXBmrw@mail.gmail.com>
+Subject: Re: [PATCH 9/9] media: uvcvideo: Support granular power saving for
+ compat syscalls
+To: Hans de Goede <hansg@kernel.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans de Goede <hdegoede@redhat.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Authority-Analysis: v=2.4 cv=HdIUTjE8 c=1 sm=1 tr=0 ts=683d8d95 cx=c_pps
- a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=gAnH3GRIAAAA:8 a=o3DtMFfdRpqB0q9FUmIA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAyMDEwMCBTYWx0ZWRfX2kJCeReLNVDk
- OD4hJL+0PNn+LLPVXivM4yK7w1wl2/tA4C9goiu60OMEN170cn42IVwUeYmIADApP+nrbxv6+Qa
- ixbdK3JdbrgwtJIYsFOEr+Rf+dKN1tp8yRpW11Hi60w5iPsAYokLQ1EmskyfiZphPL1NsI5fCof
- BsNLQ4ExOUgK9pyjCpIfwbrT4wV5Og/hGkcST45QvW0l0eYWehF0p6Y/uBF8CGr8Tuuk5pxq405
- YScku//SBaA+AV34gYsRRTgbF7H6KFCvVUzeLB5KtvAZRs0tw+U7t9xuFIXPox/keowM1xD1JDc
- rPBTUdDz911is1K0SS4RiQfGWW0YjyqCJhHoV0zOcBBx8vpqA5oV2CQGKIN9q6gS0kgNsDzIkME
- kGCBydrVra628NSJUpcKpioxv2+wLhvPVYGbeSZbX+eDKeb1GcXjNSAcu+DM/m4GX1XioZUP
-X-Proofpoint-ORIG-GUID: uYHhZxe-ObaTBt-q2pXKOidqWC1mFxCx
-X-Proofpoint-GUID: uYHhZxe-ObaTBt-q2pXKOidqWC1mFxCx
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-02_05,2025-05-30_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=999 mlxscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0
- adultscore=0 suspectscore=0 impostorscore=0 phishscore=0 clxscore=1015
- priorityscore=1501 malwarescore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2506020100
 
-The AD4170 has an internal temperature sensor that can be read using the
-ADC. Whenever possible, configure an IIO channel to provide the chip's
-temperature.
+Hi Hans
 
-Reviewed-by: Nuno Sá <nuno.sa@analog.com>
-Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
----
-No changes since v3.
+On Mon, 2 Jun 2025 at 13:24, Hans de Goede <hansg@kernel.org> wrote:
+>
+> On 2-Jun-25 13:11, Ricardo Ribalda wrote:
+> > On Mon, 2 Jun 2025 at 13:07, Hans de Goede <hansg@kernel.org> wrote:
+> >>
+> >> Hi Ricardo,
+> >>
+> >> On 2-Jun-25 12:27, Ricardo Ribalda wrote:
+> >>> Hi Hans
+> >>>
+> >>> On Mon, 2 Jun 2025 at 12:11, Hans de Goede <hansg@kernel.org> wrote:
+> >>>>
+> >>>> Hi Ricardo,
+> >>>>
+> >>>> On 28-May-25 19:58, Ricardo Ribalda wrote:
+> >>>>> Right now we cannot support granular power saving on compat syscalls
+> >>>>> because the VIDIOC_*32 NRs defines are not accessible to drivers.
+> >>>>>
+> >>>>> Use the video_translate_cmd() helper to convert the compat syscall NRs
+> >>>>> into syscall NRs.
+> >>>>>
+> >>>>> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> >>>>> ---
+> >>>>>  drivers/media/usb/uvc/uvc_v4l2.c     | 9 ++-------
+> >>>>>  drivers/media/v4l2-core/v4l2-ioctl.c | 3 ++-
+> >>>>>  include/media/v4l2-ioctl.h           | 1 +
+> >>>>>  3 files changed, 5 insertions(+), 8 deletions(-)
+> >>>>>
+> >>>>> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+> >>>>> index fcb1b79c214849ce4da96a86a688d777b32cc688..048ee7e01808c8944f9bd46e5df2931b9c146ad5 100644
+> >>>>> --- a/drivers/media/usb/uvc/uvc_v4l2.c
+> >>>>> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
+> >>>>> @@ -1282,15 +1282,10 @@ static long uvc_v4l2_pm_ioctl(struct file *file,
+> >>>>>  static long uvc_v4l2_unlocked_ioctl(struct file *file,
+> >>>>>                                   unsigned int cmd, unsigned long arg)
+> >>>>>  {
+> >>>>> -     /*
+> >>>>> -      * For now, we do not support granular power saving for compat
+> >>>>> -      * syscalls.
+> >>>>> -      */
+> >>>>> -     if (in_compat_syscall())
+> >>>>> -             return uvc_v4l2_pm_ioctl(file, cmd, arg);
+> >>>>> +     unsigned int converted_cmd = video_translate_cmd(cmd);
+> >>>>
+> >>>> It looks like something went wrong here and you did not test-compile this?
+> >>>> video_translate_cmd() is private to drivers/media/v4l2-core/v4l2-ioctl.c
+> >>>> so this should not compile.
+> >>>
+> >>> Hmm... Actually I am pretty sure that I tested it on real hardware.
+> >>>
+> >>> Did you miss the EXPORT_SYMBOL() on the patch?
+> >>
+> >> Ah yes I did miss that, sorry.
+> >
+> > My bad, I doubt it till the last second if I should split it or not :)
+> >
+> >>
+> >> For the next time please split core changes out into their own
+> >> separate patches.
+> >>
+> >> In this case I think the core changes are not necessary instead
+> >> you can just do:
+> >>
+> >>         unsigned int converted_cmd = cmd;
+> >>
+> >> #ifdef CONFIG_COMPAT
+> >>         converted_cmd = v4l2_compat_translate_cmd(cmd);
+> >> #endif
+> >
+> > I believe this should work as well:
+> >
+> > unsigned int converted_cmd = cmd;
+> > if (in_compat_syscall())
+> >   converted_cmd = v4l2_compat_translate_cmd(cmd);
+> >
+> > the compiler knows that CONFIG_COMPAT=n means in_compat_syscall() will
+> > be always fails.
+> >
+> > If it is ok with you (and it actually works :) ) I will use this version.
+>
+> I agree that that is cleaner/better and I also think it should work,
+> so lets go with that.
 
- drivers/iio/adc/ad4170.c | 72 ++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 69 insertions(+), 3 deletions(-)
+Actually, v4l2_compat_translate_cmd() does not seem to be EXPORT_SYMBOL()ed
 
-diff --git a/drivers/iio/adc/ad4170.c b/drivers/iio/adc/ad4170.c
-index 3aa1553c0e3d..6e17f47a78bf 100644
---- a/drivers/iio/adc/ad4170.c
-+++ b/drivers/iio/adc/ad4170.c
-@@ -878,6 +878,27 @@ static const struct iio_chan_spec ad4170_channel_template = {
- 	},
- };
- 
-+static const struct iio_chan_spec ad4170_temp_channel_template = {
-+	.type = IIO_TEMP,
-+	.indexed = 0,
-+	.channel = 17,
-+	.channel2 = 17,
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+			      BIT(IIO_CHAN_INFO_SCALE) |
-+			      BIT(IIO_CHAN_INFO_OFFSET) |
-+			      BIT(IIO_CHAN_INFO_CALIBSCALE) |
-+			      BIT(IIO_CHAN_INFO_CALIBBIAS) |
-+			      BIT(IIO_CHAN_INFO_SAMP_FREQ),
-+	.info_mask_separate_available = BIT(IIO_CHAN_INFO_SAMP_FREQ),
-+	.scan_type = {
-+		.sign = 's',
-+		.realbits = 24,
-+		.storagebits = 32,
-+		.shift = 8,
-+		.endianness = IIO_BE,
-+	},
-+};
-+
- /*
-  * Receives the number of a multiplexed AD4170 input (ain_n), and stores the
-  * voltage (in µV) of the specified input into ain_voltage. If the input number
-@@ -1177,9 +1198,27 @@ static int ad4170_read_raw(struct iio_dev *indio_dev,
- 		return ret;
- 	case IIO_CHAN_INFO_SCALE:
- 		pga = FIELD_GET(AD4170_AFE_PGA_GAIN_MSK, setup->afe);
--		*val = chan_info->scale_tbl[pga][0];
--		*val2 = chan_info->scale_tbl[pga][1];
--		return IIO_VAL_INT_PLUS_NANO;
-+		switch (chan->type) {
-+		case IIO_VOLTAGE:
-+			*val = chan_info->scale_tbl[pga][0];
-+			*val2 = chan_info->scale_tbl[pga][1];
-+			return IIO_VAL_INT_PLUS_NANO;
-+
-+		case IIO_TEMP:
-+			/*
-+			 * The scale_tbl converts output codes to mV units so
-+			 * multiply by MILLI to make the factor convert to µV.
-+			 * Then, apply the temperature sensor change sensitivity
-+			 * of 477 μV/K. Finally, multiply the result by MILLI
-+			 * again to comply with milli degrees Celsius IIO ABI.
-+			 */
-+			*val = 0;
-+			*val2 = DIV_ROUND_CLOSEST(chan_info->scale_tbl[pga][1] * MILLI, 477) *
-+						  MILLI;
-+			return IIO_VAL_INT_PLUS_NANO;
-+		default:
-+			return -EINVAL;
-+		}
- 	case IIO_CHAN_INFO_OFFSET:
- 		pga = FIELD_GET(AD4170_AFE_PGA_GAIN_MSK, setup->afe);
- 		*val = chan_info->offset_tbl[pga];
-@@ -1830,12 +1869,39 @@ static int ad4170_parse_channels(struct iio_dev *indio_dev)
- 	if (num_channels > AD4170_MAX_CHANNELS)
- 		return dev_err_probe(dev, -EINVAL, "Too many channels\n");
- 
-+	/* Add one for temperature */
-+	num_channels = min(num_channels + 1, AD4170_MAX_CHANNELS);
-+
- 	device_for_each_child_node_scoped(dev, child) {
- 		ret = ad4170_parse_channel_node(indio_dev, child, chan_num++);
- 		if (ret)
- 			return ret;
- 	}
- 
-+	/*
-+	 * Add internal temperature sensor channel if the maximum number of
-+	 * channels has not been reached.
-+	 */
-+	if (num_channels < AD4170_MAX_CHANNELS) {
-+		struct ad4170_setup *setup = &st->chan_infos[chan_num].setup;
-+
-+		st->chans[chan_num] = ad4170_temp_channel_template;
-+		st->chans[chan_num].address = chan_num;
-+		st->chans[chan_num].scan_index = chan_num;
-+
-+		st->chan_infos[chan_num].setup_num = AD4170_INVALID_SETUP;
-+		st->chan_infos[chan_num].initialized = true;
-+
-+		setup->afe |= FIELD_PREP(AD4170_AFE_REF_SELECT_MSK,
-+					 AD4170_REF_AVDD);
-+
-+		ret = ad4170_get_input_range(st, &st->chans[chan_num], chan_num,
-+					     AD4170_REF_AVDD);
-+		if (ret < 0)
-+			return dev_err_probe(dev, ret, "Invalid input config\n");
-+
-+		st->chan_infos[chan_num].input_range_uv = ret;
-+	}
- 	indio_dev->num_channels = num_channels;
- 	indio_dev->channels = st->chans;
- 
+So I still need to do some changes in the core.
+(It also does not handle COMPAT_32BIT_TIME... but in this case it
+seems to be the same).
+
+
+Any preference between what to use: v4l2_compat_translate_cmd() vs
+video_translate_cmd()?
+
+Thanks!
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+> >>>> You can use v4l2_compat_translate_cmd() but only when CONFIG_COMPAT is set
+> >>>> otherwise that symbol is not available.
+> >>>
+> >>> I tried now without CONFIG_COMPAT and it built fine.
+> >>>
+> >>>>
+> >>>> Regards,
+> >>>>
+> >>>> Hans
+> >>>>
+> >>>>
+> >>>>
+> >>>>>
+> >>>>>       /* The following IOCTLs do need to turn on the camera. */
+> >>>>> -     switch (cmd) {
+> >>>>> +     switch (converted_cmd) {
+> >>>>>       case UVCIOC_CTRL_QUERY:
+> >>>>>       case VIDIOC_G_CTRL:
+> >>>>>       case VIDIOC_G_EXT_CTRLS:
+> >>>>> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+> >>>>> index 650dc1956f73d2f1943b56c42140c7b8d757259f..6fbd28f911cf23eec43ef1adcf64bd46ef067c81 100644
+> >>>>> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+> >>>>> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+> >>>>> @@ -3245,7 +3245,7 @@ static int check_array_args(unsigned int cmd, void *parg, size_t *array_size,
+> >>>>>       return ret;
+> >>>>>  }
+> >>>>>
+> >>>>> -static unsigned int video_translate_cmd(unsigned int cmd)
+> >>>>> +unsigned int video_translate_cmd(unsigned int cmd)
+> >>>>>  {
+> >>>>>  #if !defined(CONFIG_64BIT) && defined(CONFIG_COMPAT_32BIT_TIME)
+> >>>>>       switch (cmd) {
+> >>>>> @@ -3266,6 +3266,7 @@ static unsigned int video_translate_cmd(unsigned int cmd)
+> >>>>>
+> >>>>>       return cmd;
+> >>>>>  }
+> >>>>> +EXPORT_SYMBOL(video_translate_cmd);
+> >>>>>
+> >>>>>  static int video_get_user(void __user *arg, void *parg,
+> >>>>>                         unsigned int real_cmd, unsigned int cmd,
+> >>>>> diff --git a/include/media/v4l2-ioctl.h b/include/media/v4l2-ioctl.h
+> >>>>> index c6ec87e88dfef9e6cfe1d1fb587c1600882fb14d..437b9f90714c62e0ba434ce47391ef64d88110aa 100644
+> >>>>> --- a/include/media/v4l2-ioctl.h
+> >>>>> +++ b/include/media/v4l2-ioctl.h
+> >>>>> @@ -687,6 +687,7 @@ int v4l2_compat_get_array_args(struct file *file, void *mbuf,
+> >>>>>  int v4l2_compat_put_array_args(struct file *file, void __user *user_ptr,
+> >>>>>                              void *mbuf, size_t array_size,
+> >>>>>                              unsigned int cmd, void *arg);
+> >>>>> +unsigned int video_translate_cmd(unsigned int cmd);
+> >>>>>
+> >>>>>  /**
+> >>>>>   * typedef v4l2_kioctl - Typedef used to pass an ioctl handler.
+> >>>>>
+> >>>>
+> >>>
+> >>>
+> >>
+> >
+> >
+>
+
+
 -- 
-2.47.2
-
+Ricardo Ribalda
