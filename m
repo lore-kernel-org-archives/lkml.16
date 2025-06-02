@@ -1,205 +1,165 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394D2231C87;
-	Mon,  2 Jun 2025 14:50:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E8E239099
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 14:50:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748875839; cv=none; b=QugAXskoUdlVX0Zok5GPAbic1uABWipBpraotpqsXFUcheSrB8heSRMm9bBemhbfcaxQNj1czC/lpfgPWZplQVtxBM4TAidkGFPG3tj1+t3AyF8O57LJ3YxHYzAPr9Jtoa1Sfi56ufhGJyZbRWPsK/vaRR9V0JSNF/EjjE7c7OU=
+	t=1748875841; cv=none; b=Nc3YpJ0Gl4JrKWHkBuFXHPiKtwLc1auolD8gJGkMQE73YgTSuHdwL+lv9Tt1BCk0I2yNb3+RYJ/nxMtxD8oc+vX5kSv2YasULo9WEPcrvnPhgwWnnKb+YtrIN4OtH0SN9W9/cAOIrqwEeysfxCAK4Fd3IXpp6PSnrPHuXota1/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748875839; c=relaxed/simple;
-	bh=gvltXEjxatA7cwXbM1ySU6qvzw0guFizH5e5rJ906Jg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IKCfVUdZiMe18+TtAoepz4+Ug90Zc+TeLuL4VOT5f3BuNGTh5tqa+g9dULfPxvBbszwje2XpGCI/KRwje75CHNm2q7ONU53ts1TuD9A+rvzxYiVaIhGISjQwAtTf2LFOOdDsnaU1YuSu/2yUHCnpULiT9IIeg8GCVHHkFmwCOhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gAxGSIiR; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748875841; c=relaxed/simple;
+	bh=ArGqYqLAPAwYcAf5/soqdMotxidfgLg0HCKUX+WdmsU=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=HdsxkPcygPynWK/vGHybiUScpByyySyVI8UalYxvvKZx8sheAD1KbiV23CElVXsYaR5TovX1KrEU0luvh4xe1lX2mx2/RPn3RMUgyObOUo7vE6YrQE1SvnAXO0eJ8K7r+9+tDgbBNXGzrlzoEuLCi3uHFIwP1kZRYo3JsjemBWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Rr0vZ+y1; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gAxGSIiR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748875837; x=1780411837;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gvltXEjxatA7cwXbM1ySU6qvzw0guFizH5e5rJ906Jg=;
-  b=gAxGSIiRmPNfF74z2v8p2uVMdrDvB4Jsrq8ai5zQsR3qVdx0+/uPq/Mt
-   GBDj5QJNgPR2vrvyfmggDnZrV9zJODB3shZWed6D32t/XVl55+bhylPaZ
-   wZAp1xnOOe8qMqLneoPW9lZKWGCQ2/25KeRXi5lUMrvSUGe4/vCuTkJtR
-   xQGaXzZAvA8LjKP+0mEu1VF1gviAgLn6FwJGrTD/w2tViWVAjMYLq0O/b
-   zqOiH82efqUBRaFhBUCWqbU/8sZE07+rrXcMSpAPvT2B17Yi3Y45FNLt5
-   BW2ok61D1J1aIyKeh0xaXPF2N8lL/l3wRGnzU1MKiOZdget/V+kKInIRP
-   A==;
-X-CSE-ConnectionGUID: bONEmGf5SUC+7oJCVuxPAw==
-X-CSE-MsgGUID: u2QuODLRRcCkredeVqk/lw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="68435605"
-X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
-   d="scan'208";a="68435605"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 07:50:36 -0700
-X-CSE-ConnectionGUID: bSyumsRCQFaHieW5WnNEIw==
-X-CSE-MsgGUID: ORB/JHGpRB2A/q6o48Pqug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
-   d="scan'208";a="144592177"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa009.jf.intel.com with ESMTP; 02 Jun 2025 07:50:30 -0700
-Date: Mon, 2 Jun 2025 22:43:59 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: kvm@vger.kernel.org, sumit.semwal@linaro.org, christian.koenig@amd.com,
-	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
-	jgg@nvidia.com, dan.j.williams@intel.com, aik@amd.com,
-	linux-coco@lists.linux.dev, dri-devel@lists.freedesktop.org,
-	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-	vivek.kasireddy@intel.com, yilun.xu@intel.com,
-	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
-	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
-	zhenzhong.duan@intel.com, tao1.su@intel.com,
-	linux-pci@vger.kernel.org, zhiw@nvidia.com, simona.vetter@ffwll.ch,
-	shameerali.kolothum.thodi@huawei.com, iommu@lists.linux.dev,
-	kevin.tian@intel.com
-Subject: Re: [RFC PATCH 19/30] vfio/pci: Add TSM TDI bind/unbind IOCTLs for
- TEE-IO support
-Message-ID: <aD24r44v0g1NgeZs@yilunxu-OptiPlex-7050>
-References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
- <20250529053513.1592088-20-yilun.xu@linux.intel.com>
- <yq5aplfn210z.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Rr0vZ+y1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
+	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To;
+	bh=69eKPMKauwr5SrpkkD7307Ri6VHkmTkjx6DQ3rxMAyA=; b=Rr0vZ+y154c6de0eVfQK5ZZvnq
+	nkZ+Q98GTYjKZRetaekSAnnJHNGUUN38OTgpS7VBKtpsJUr/zrcEPMvBtVstyp/NLKLYIB/5GiDod
+	OXaitPg0Q+UMDsxU6aJjUS24dMToOpyJHTxE3rwEyAmxvYTftRLv/l0zXsuSSPheQlarwrgKKsq4M
+	DlP12tLjv9cqA3MMw7N266EGWhl8WF+aSJg9A62bp+QviefOLuARJ51b53sMwNaZFjABBTn7fdF9I
+	1ImeSCqVTX7ShCQqPNcy8PyMZx4vzL6PCQ/OFCMk12O/cyqwcULJOQEfLhyf6IzbLn0GtyXB8M9HC
+	kVahMgLg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uM6Um-00000000dlJ-26x5;
+	Mon, 02 Jun 2025 14:50:36 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
+	id 247083080C5; Mon,  2 Jun 2025 16:50:35 +0200 (CEST)
+Message-ID: <20250602144756.163540221@infradead.org>
+User-Agent: quilt/0.66
+Date: Mon, 02 Jun 2025 16:42:09 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+ peterz@infradead.org,
+ kees@kernel.org,
+ acarmina@redhat.com,
+ jpoimboe@kernel.org,
+ mark.rutland@arm.com,
+ torvalds@linuxfoundation.org
+Subject: [RFC 8/8] x86: Clean up default rethunk warning
+References: <20250602144201.301974933@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yq5aplfn210z.fsf@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+X-Bad-Reply: References but no 'Re:' in Subject.
 
-On Sun, Jun 01, 2025 at 04:15:32PM +0530, Aneesh Kumar K.V wrote:
-> Xu Yilun <yilun.xu@linux.intel.com> writes:
-> 
-> > Add new IOCTLs to do TSM based TDI bind/unbind. These IOCTLs are
-> > expected to be called by userspace when CoCo VM issues TDI bind/unbind
-> > command to VMM. Specifically for TDX Connect, these commands are some
-> > secure Hypervisor call named GHCI (Guest-Hypervisor Communication
-> > Interface).
-> >
-> > The TSM TDI bind/unbind operations are expected to be initiated by a
-> > running CoCo VM, which already have the legacy assigned device in place.
-> > The TSM bind operation is to request VMM make all secure configurations
-> > to support device work as a TDI, and then issue TDISP messages to move
-> > the TDI to CONFIG_LOCKED or RUN state, waiting for guest's attestation.
-> >
-> > Do TSM Unbind before vfio_pci_core_disable(), otherwise will lead
-> > device to TDISP ERROR state.
-> >
-> 
-> Any reason these need to be a vfio ioctl instead of iommufd ioctl?
-> For ex: https://lore.kernel.org/all/20250529133757.462088-3-aneesh.kumar@kernel.org/
+Replace the funny __warn_thunk thing with a more regular WARN_ONCE()
+and simplify the ifdeffery.
 
-A general reason is, the device driver - VFIO should be aware of the
-bound state, and some operations break the bound state. VFIO should also
-know some operations on bound may crash kernel because of platform TSM
-firmware's enforcement. E.g. zapping MMIO, because private MMIO mapping
-in secure page tables cannot be unmapped before TDI STOP [1].
+Notably this avoids RET from having recursive RETs (once from the
+thunk and once from the C function) -- recurive RET makes my head hurt
+for no good reason.
 
-Specifically, for TDX Connect, the firmware enforces MMIO unmapping in
-S-EPT would fail if TDI is bound. For AMD there seems also some
-requirement about this but I need Alexey's confirmation.
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ arch/x86/entry/entry.S               |    4 ----
+ arch/x86/include/asm/nospec-branch.h |    2 --
+ arch/x86/kernel/cpu/bugs.c           |    5 -----
+ arch/x86/lib/retpoline.S             |   24 +++++++++++++++++-------
+ 4 files changed, 17 insertions(+), 18 deletions(-)
 
-[1] https://lore.kernel.org/all/aDnXxk46kwrOcl0i@yilunxu-OptiPlex-7050/
+--- a/arch/x86/entry/entry.S
++++ b/arch/x86/entry/entry.S
+@@ -13,8 +13,6 @@
+ #include <asm/cpufeatures.h>
+ #include <asm/nospec-branch.h>
+ 
+-#include "calling.h"
+-
+ .pushsection .noinstr.text, "ax"
+ 
+ /* Clobbers AX, CX, DX */
+@@ -53,8 +51,6 @@ EXPORT_SYMBOL_GPL(mds_verw_sel);
+ 
+ .popsection
+ 
+-THUNK warn_thunk_thunk, __warn_thunk
+-
+ /*
+  * Clang's implementation of TLS stack cookies requires the variable in
+  * question to be a TLS variable. If the variable happens to be defined as an
+--- a/arch/x86/include/asm/nospec-branch.h
++++ b/arch/x86/include/asm/nospec-branch.h
+@@ -386,8 +386,6 @@ extern void clear_bhb_loop(void);
+ 
+ extern void (*x86_return_thunk)(void);
+ 
+-extern void __warn_thunk(void);
+-
+ #ifdef CONFIG_MITIGATION_CALL_DEPTH_TRACKING
+ extern void call_depth_return_thunk(void);
+ 
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -3415,8 +3415,3 @@ ssize_t cpu_show_indirect_target_selecti
+ 	return cpu_show_common(dev, attr, buf, X86_BUG_ITS);
+ }
+ #endif
+-
+-void __warn_thunk(void)
+-{
+-	WARN_ONCE(1, "Unpatched return thunk in use. This should not happen!\n");
+-}
+--- a/arch/x86/lib/retpoline.S
++++ b/arch/x86/lib/retpoline.S
+@@ -12,6 +12,7 @@
+ #include <asm/percpu.h>
+ #include <asm/frame.h>
+ #include <asm/nops.h>
++#include <asm/bug.h>
+ 
+ 	.section .text..__x86.indirect_thunk
+ 
+@@ -416,6 +417,21 @@ EXPORT_SYMBOL(its_return_thunk)
+ 
+ #endif /* CONFIG_MITIGATION_ITS */
+ 
++        .pushsection        .rodata.str1.1
++.Lwarn:
++        .string "Unpatched return thunk in use.\n"
++	.popsection
++
++/*
++ * Helper that will trip WARN_ONCE() after alternatives have ran.
++ */
++#define ALT_WARN_RETHUNK						\
++	1: ALTERNATIVE "", "ud2", X86_FEATURE_ALWAYS ;			\
++	ASM_BUGTABLE_FLAGS(1b, .Lwarn,					\
++	                   0, 0, BUGFLAG_WARNING |			\
++	                   BUGFLAG_ONCE | BUGFLAG_FORMAT) ;		\
++	ANNOTATE_REACHABLE
++
+ /*
+  * This function name is magical and is used by -mfunction-return=thunk-extern
+  * for the compiler to generate JMPs to it.
+@@ -432,15 +448,9 @@ EXPORT_SYMBOL(its_return_thunk)
+ SYM_CODE_START(__x86_return_thunk)
+ 	UNWIND_HINT_FUNC
+ 	ANNOTATE_NOENDBR
+-#if defined(CONFIG_MITIGATION_UNRET_ENTRY) || \
+-    defined(CONFIG_MITIGATION_SRSO) || \
+-    defined(CONFIG_MITIGATION_CALL_DEPTH_TRACKING)
+-	ALTERNATIVE __stringify(ANNOTATE_UNRET_SAFE; ret), \
+-		   "jmp warn_thunk_thunk", X86_FEATURE_ALWAYS
+-#else
++	ALT_WARN_RETHUNK
+ 	ANNOTATE_UNRET_SAFE
+ 	ret
+-#endif
+ 	int3
+ SYM_CODE_END(__x86_return_thunk)
+ SYM_PIC_ALIAS(__x86_return_thunk)
 
-> 
-> >
-> > Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-> > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
-> > ---
-> >  drivers/vfio/iommufd.c           | 22 ++++++++++
-> >  drivers/vfio/pci/vfio_pci_core.c | 74 ++++++++++++++++++++++++++++++++
-> >  include/linux/vfio.h             |  7 +++
-> >  include/linux/vfio_pci_core.h    |  1 +
-> >  include/uapi/linux/vfio.h        | 42 ++++++++++++++++++
-> >  5 files changed, 146 insertions(+)
-> >
-> > diff --git a/drivers/vfio/iommufd.c b/drivers/vfio/iommufd.c
-> > index 3441d24538a8..33fd20ffaeee 100644
-> > --- a/drivers/vfio/iommufd.c
-> > +++ b/drivers/vfio/iommufd.c
-> > @@ -297,3 +297,25 @@ void vfio_iommufd_emulated_detach_ioas(struct vfio_device *vdev)
-> >  	vdev->iommufd_attached = false;
-> >  }
-> >  EXPORT_SYMBOL_GPL(vfio_iommufd_emulated_detach_ioas);
-> > +
-> > +int vfio_iommufd_tsm_bind(struct vfio_device *vdev, u32 vdevice_id)
-> > +{
-> > +	lockdep_assert_held(&vdev->dev_set->lock);
-> > +
-> > +	if (WARN_ON(!vdev->iommufd_device))
-> > +		return -EINVAL;
-> > +
-> > +	return iommufd_device_tsm_bind(vdev->iommufd_device, vdevice_id);
-> > +}
-> > +EXPORT_SYMBOL_GPL(vfio_iommufd_tsm_bind);
-> > +
-> > +void vfio_iommufd_tsm_unbind(struct vfio_device *vdev)
-> > +{
-> > +	lockdep_assert_held(&vdev->dev_set->lock);
-> > +
-> > +	if (WARN_ON(!vdev->iommufd_device))
-> > +		return;
-> > +
-> > +	iommufd_device_tsm_unbind(vdev->iommufd_device);
-> > +}
-> > +EXPORT_SYMBOL_GPL(vfio_iommufd_tsm_unbind);
-> > diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-> > index 116964057b0b..92544e54c9c3 100644
-> > --- a/drivers/vfio/pci/vfio_pci_core.c
-> > +++ b/drivers/vfio/pci/vfio_pci_core.c
-> > @@ -692,6 +692,13 @@ void vfio_pci_core_close_device(struct vfio_device *core_vdev)
-> >  #if IS_ENABLED(CONFIG_EEH)
-> >  	eeh_dev_release(vdev->pdev);
-> >  #endif
-> > +
-> > +	if (vdev->is_tsm_bound) {
-> > +		vfio_iommufd_tsm_unbind(&vdev->vdev);
-> > +		pci_release_regions(vdev->pdev);
-> > +		vdev->is_tsm_bound = false;
-> > +	}
-> > +
-> >  	vfio_pci_core_disable(vdev);
-> >  
-> >  	vfio_pci_dma_buf_cleanup(vdev);
-> > @@ -1447,6 +1454,69 @@ static int vfio_pci_ioctl_ioeventfd(struct vfio_pci_core_device *vdev,
-> >  				  ioeventfd.fd);
-> >  }
-> >  
-> > +static int vfio_pci_ioctl_tsm_bind(struct vfio_pci_core_device *vdev,
-> > +				   void __user *arg)
-> > +{
-> > +	unsigned long minsz = offsetofend(struct vfio_pci_tsm_bind, vdevice_id);
-> > +	struct vfio_pci_tsm_bind tsm_bind;
-> > +	struct pci_dev *pdev = vdev->pdev;
-> > +	int ret;
-> > +
-> > +	if (copy_from_user(&tsm_bind, arg, minsz))
-> > +		return -EFAULT;
-> > +
-> > +	if (tsm_bind.argsz < minsz || tsm_bind.flags)
-> > +		return -EINVAL;
-> > +
-> > +	mutex_lock(&vdev->vdev.dev_set->lock);
-> > +
-> > +	/* To ensure no host side MMIO access is possible */
-> > +	ret = pci_request_regions_exclusive(pdev, "vfio-pci-tsm");
-> > +	if (ret)
-> > +		goto out_unlock;
-> >
-> 
-> This should be part of pci_tsm_bind() ? 
 
-I'm not quite sure. My feelig is this method is specific for VFIO
-driver. Many other drivers just request regions on probe(), they can
-never bind successfully if pci tsm hide this implementation internally.
-
-Thanks,
-Yilun
