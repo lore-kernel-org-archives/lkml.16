@@ -1,36 +1,47 @@
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D342C325B;
-	Mon,  2 Jun 2025 05:01:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BFCC2C325B;
+	Mon,  2 Jun 2025 05:03:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748840493; cv=none; b=EMSNPHukTjthRn45qOg6P9hR+s4VadFlTmqNNxfA7lrn6mNfzLjoFmSWzqziu4Q0stbzLyTfZ4luQxua9gg+VEt+W9PLLep9deK/fzNHE9mdQBtcKRZKLyjVqKDoj36x3pI+91v8n91OJRo1qww8Unizt0GaOPE1G7jdbEWTmak=
+	t=1748840593; cv=none; b=rw0jr2BdqkyKt04ejxRaTxJEg7AOX3/yabjabHV6W+9iSdKR0tHpYt/Zl9Csd/VRuAt1TPg+CekIT8S/kjSnLCldBP59mlJt/eljcIQ7O2ocQkiEj60xv1owzLHoOvL37rrv4HqH97mxkXVME4M8WQ8OMBPANlpYPR0mqvIYJM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748840493; c=relaxed/simple;
-	bh=CkzyrVKBqeDESZDeEtPTudQj9SBDw/o+5BJY/pHtw/s=;
+	s=arc-20240116; t=1748840593; c=relaxed/simple;
+	bh=ZW5f+q6Wbl0Dgpfr0/2chECrrdMKRJgsgaeagUlFSQg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IzbmGfMMp+5YA8BFlbWt8gfdkqBFlqkHPLcFCZ00iUCF5ldvSf3vJfkUJrQCCaQD7ppSMI9d7ZSdXRHLxfghagN6Hv/HTbvbHhqOrSGwLe2zrKXM3pEXA2lR908CxeaV/dZf0hoKBIHNt8slDt2heHH8rX46xpML126g0QqpUKM=
+	 Content-Type:Content-Disposition:In-Reply-To; b=UJ8LantjiCO3zHSlkCmHDCN/15mgsrVre+jL/veUGJ74txIHbYiQDnXbzEFAU0//DuWTkCiTZOJn8PwfufzDUPgKzU4Twzm8o3GkUgfQhp+LsoGbUHs+ouPWr425NgJCYoia14L2IPdKHF3HMap09dUZPR2IMS3YsGRj9cpUY3o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 3E49E68C7B; Mon,  2 Jun 2025 07:01:27 +0200 (CEST)
-Date: Mon, 2 Jun 2025 07:01:26 +0200
+	id 635A668C7B; Mon,  2 Jun 2025 07:03:07 +0200 (CEST)
+Date: Mon, 2 Jun 2025 07:03:07 +0200
 From: Christoph Hellwig <hch@lst.de>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Hongyu Ning <hongyu.ning@linux.intel.com>, stable@vger.kernel.org,
-	Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
-	Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-	Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH] mm: Fix vmstat after removing NR_BOUNCE
-Message-ID: <20250602050126.GB21716@lst.de>
-References: <20250529103832.2937460-1-kirill.shutemov@linux.intel.com>
+To: Pankaj Raghav <p.raghav@samsung.com>
+Cc: Suren Baghdasaryan <surenb@google.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+	"H . Peter Anvin" <hpa@zytor.com>, Zi Yan <ziy@nvidia.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Michal Hocko <mhocko@suse.com>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Nico Pache <npache@redhat.com>, Dev Jain <dev.jain@arm.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-block@vger.kernel.org,
+	willy@infradead.org, x86@kernel.org, linux-fsdevel@vger.kernel.org,
+	"Darrick J . Wong" <djwong@kernel.org>, mcgrof@kernel.org,
+	gost.dev@samsung.com, kernel@pankajraghav.com, hch@lst.de
+Subject: Re: [RFC 2/3] mm: add STATIC_PMD_ZERO_PAGE config option
+Message-ID: <20250602050307.GC21716@lst.de>
+References: <20250527050452.817674-1-p.raghav@samsung.com> <20250527050452.817674-3-p.raghav@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,41 +50,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250529103832.2937460-1-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20250527050452.817674-3-p.raghav@samsung.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Thu, May 29, 2025 at 01:38:32PM +0300, Kirill A. Shutemov wrote:
-> Hongyu noticed that the nr_unaccepted counter kept growing even in the
-> absence of unaccepted memory on the machine.
-> 
-> This happens due to a commit that removed NR_BOUNCE: it removed the
-> counter from the enum zone_stat_item, but left it in the vmstat_text
-> array.
-> 
-> As a result, all counters below nr_bounce in /proc/vmstat are
-> shifted by one line, causing the numa_hit counter to be labeled as
-> nr_unaccepted.
-> 
-> To fix this issue, remove nr_bounce from the vmstat_text array.
-
-Ooops, yes:
-
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-
-> diff --git a/mm/vmstat.c b/mm/vmstat.c
-> index 4c268ce39ff2..ae9882063d89 100644
-> --- a/mm/vmstat.c
-> +++ b/mm/vmstat.c
-> @@ -1201,7 +1201,6 @@ const char * const vmstat_text[] = {
->  	"nr_zone_unevictable",
->  	"nr_zone_write_pending",
->  	"nr_mlock",
-> -	"nr_bounce",
->  #if IS_ENABLED(CONFIG_ZSMALLOC)
->  	"nr_zspages",
->  #endif
-
-It would be really useful if such pretty printing arrays used
-named initializers, as that would make it obvious that an entry
-needs removal.
+Should this say FOLIO instead of PAGE in the config option to match
+the symbol protected by it?
 
