@@ -1,127 +1,191 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF325224B0C
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 16:23:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4001DDC37;
+	Mon,  2 Jun 2025 16:24:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748881432; cv=none; b=Pw9OTxD8qIsQIN79fFMmR0diag6l0rICyS4Zcz0TOvXeU6oHdse2VfIrmnem1eNeQXYg3C0+Gq7gqTp82SrPhgm8pBARboDjDWLXRkwQOjrvdGY3cLeg3OWKuBWPw7RHkTM9hJbTyWFsKLoVrkrmPuioWCxjd7sNMKgoai4OzcU=
+	t=1748881476; cv=none; b=CgdRCg9QuXuogQa/2skNBw1GIBEs+irAIG59YzHRsH+EQN9vLZI/Li2DCJ6mI9ywaAVqaQpzcoPCJHBtiGVNOFOgG3PPEK/EKrf3inPYli/fl9U8UrYIupJnDRLCOaGktUw0r/djIMDqKkHvEEXWyIfCjRuRXd2+DjG0Jgisb2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748881432; c=relaxed/simple;
-	bh=MRqXBdAn9zDoJaYcvJl4grJoIUqjqFTPczFxTi9DeAc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mpxnJkynt55ce1SFCozKcFsOF6f9gCjbLwmK1eSGKRBrYKhAAVnFRTmdcWNKt+w6PJOuc6ZLL3bKfbjH8WKaM3o3T4+r9Su9iX2Gzb0XTBTy9XnuLDGN56tAQpIYxg6PRtWx0lbcEEDNHlhoiY1viQm8hh66fdiJOuG6pgg0XOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NmYwRzK+; arc=none smtp.client-ip=209.85.128.175
+	s=arc-20240116; t=1748881476; c=relaxed/simple;
+	bh=VTBB6S6T9CYtENIK9amegBgyMcLfyoBbf6sQJw/Vg2k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=a00ya5w2G2L/73bQes1y7f1/WZlbmTNlfZoljtYmPXnvUydTxoGclmh63FpxwpRalWW1VuNTwelXuV0P1ljFMO9OhbHDsSMWFkgG6ftO7qKh4H/5bkkYaylMZ/x+ZjgZtzZSSC4Q3rmTI3BUIwKuExkvsVqPi7Rlj1V4/GjNlhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iAMEls5B; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NmYwRzK+"
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-6ff4faf858cso30949937b3.2
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 09:23:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iAMEls5B"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a36e090102so2655176f8f.2;
+        Mon, 02 Jun 2025 09:24:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748881430; x=1749486230; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1748881473; x=1749486273; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=l6hViexzBOJawxZADAUmG+i5Hyb7f9Zdki0bf4IHNME=;
-        b=NmYwRzK+ToYi37xYAZy5M9S3VAGXVkHUJx7ulqeE16azidYVcc8MngbFICqNfMCA5P
-         F2CwXEXQW1t6TkvYfF8iUTGypbyP3pWhRHO0lrUhW7AEY5K1lvvwn4fKn84n0ZaTHVpx
-         Y7IcoC93RDd5gEl65SoYKvvw+USl3tAzE3gb7tsiqZxqHFb0eus6uiJG6brls63DpJ7y
-         5oAcOBe1yY2Hzv/mCE+hCibhZ35Jxf7zb4eaFd+p0EoIl/CG49pkiE4sNNQmN+G26z6i
-         BZ30IrikzmCDlEeITG7O5yDF59dh2bZW53J5BUkGAXA+sdDmPEE5DMQzhj3QNDRN71Yy
-         d+pw==
+        bh=0Hf4awDBXsGRvLnA3GnF3C2CVs5TAWdo9HF9pPM5WH0=;
+        b=iAMEls5BcOFW+9R/xNC8uG3epiHllwuc1QFs4hb92Z2fu+RvdrCGjQYAzWYt65a7jf
+         vmrwd9HEzC1VjX9wXm/WZSUS3GahCzHw1Puk54EuAcdvID9bq0QTs6maL8q84GQKkCk+
+         xujrpx/SbgXndBM24yP3E27Mxk1OAX37rMly4NZhVbLnT/28lIfEDCKu4TNBCx9axjMl
+         HihccNGlRGHDMk5pJ3u8q3Vj/tkIvW8hCbBNJZOhQS5InBNyEV25eBWw+SzO9yXgTyzD
+         Ojh/RGNEP1dD28tgWyZzy1uyba9z6mCAfiP4SyZhMiafshzn643RDfL+oyFWcMlPI/J1
+         c/eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748881430; x=1749486230;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1748881473; x=1749486273;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=l6hViexzBOJawxZADAUmG+i5Hyb7f9Zdki0bf4IHNME=;
-        b=IzHKvZ56sC4oE1A7YCc1aGbmrG4m+q0777hk2oWVOyfNuAfAs8GQQC/bLLR6tvNdPV
-         PqUJN+UzgZs8dC10M2C8c7GzoF8f7DiBqKPEvywu0mSEvE8KxEIvcgI9I6X2Bg47QW1L
-         vZyI71qmR508yZjWTd+TJnq631Wj11ODMf/Ct2MYgxinzyb35UZn/45/KuTCVaRb9+Yj
-         /tfigRYhEenOrgJTO0qqWpmwly2KT8rYaAhmcZ4wqBH27stTFHVl6PMRzEfd+c0BkbA3
-         XfB8sMbLSyaRfgGPkK0toiKX9l9hFmyn/FWPjcrfxJSb3XyijGNSMQCP0BwpD9QNDvGT
-         ierQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUyAkiTjAJO8bApKmHNdsniDATAnk40+iVuzzlXoNGqNEXSVIjWAtn+z2fA+dz14ZSgHKL6Nqh//ZejnIA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiYZzEh6AhCY0MfmxeAdwJq2OBRduej30mpHrNoWKNU18iwPOK
-	VyyqdhBFTjjw9D5yYDbzgtDykeqazEb/rTlmmJl2LrQKbW9sfTolG4v1
-X-Gm-Gg: ASbGncu5RG+NMgllUrMeEW/IXcMQdtR/JtAMngXp7dEIxPL88KKtyYPDbmLMCMkGfhV
-	aO3XSZAi3jtk5PI7F/NZo1SP3dvUjkkdBCdKUAR/fR3JMu3eJEJooyPOQ1q10curkHtpPqAeu3g
-	WxDWNPL2HrjkDy1SMdMm19dil8wSxosYqFpEHCPPbjolzv0uHQsw06SVOHQFYHf1AezNDa3j9q5
-	7y+6wYi0e4lLUgfTvDmJG70LB0NXVck+fJ9s0+MtmaU4YzfbZjlHf6atTiRWDytGHjanpncXCXd
-	cmepLt+OpsA1cCCTfG+oDIHiABZyfTownDQN2RV9rbcJdOA=
-X-Google-Smtp-Source: AGHT+IFhg/cUFp+Z5nleh6zqNPQkgj7/iV/9zMKVm808PtUFq1TWffftuwjIYHM8E8ba7zLCiBhKWg==
-X-Received: by 2002:a05:690c:67c7:b0:70e:7a67:b4c5 with SMTP id 00721157ae682-71097e67ffdmr118360997b3.36.1748881429609;
-        Mon, 02 Jun 2025 09:23:49 -0700 (PDT)
-Received: from localhost ([2a03:2880:25ff::])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-70f8abee777sm21191637b3.40.2025.06.02.09.23.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 09:23:47 -0700 (PDT)
-From: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Gregory Price <gourry@gourry.net>
-Cc: David Hildenbrand <david@redhat.com>,
-	Zi Yan <ziy@nvidia.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Rakie Kim <rakie.kim@sk.com>,
-	Byungchul Park <byungchul@sk.com>,
-	Ying Huang <ying.huang@linux.alibaba.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	kernel-team@meta.com
-Subject: [PATCH 2/2] mm/mempolicy: Skip unnecessary synchronize_rcu()
-Date: Mon,  2 Jun 2025 09:23:40 -0700
-Message-ID: <20250602162345.2595696-2-joshua.hahnjy@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250602162345.2595696-1-joshua.hahnjy@gmail.com>
-References: <20250602162345.2595696-1-joshua.hahnjy@gmail.com>
+        bh=0Hf4awDBXsGRvLnA3GnF3C2CVs5TAWdo9HF9pPM5WH0=;
+        b=VAfF13Ctu5f50qOvJGqwkxv7LP0VzBJH4V5ztEXSYfTInsP+RJTMZ4zTk7+yauLZyW
+         i1FAgUvNmqhIuakkKfgv4U8vvMqH9jBv2PSpwkdGsJB+b5OP9ekMQLXECInUxTmrJ+nn
+         eIFQ9aLa/KV3y4TklQaB8A/vLnV/WNQqzoJZ9GUt5NbtXUGPhGqpwikmPNSLhnbxV3sh
+         00/Du6/eR+V/QQGYXCLoHpcpQcPJAOhZcecZWqW9uLj36aE2Oj/f3OWDjeP9n0zcCJF2
+         mqHauWmgUrMgndSsEGJqXlCMOMqaoNBwFOrnVhgRTnGAxG91FUiffbPI2IRRm31KqNfQ
+         PlzA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBpr5x3b05QzhyNOObmTAKHohiCeAq0xP8Y4tDLOoEyxqwRkjZr/ow4v0Z5hpC4iLeqqUL2Yk4RyJprF/0@vger.kernel.org, AJvYcCUWscuJVtheGYFt2PwGepczslaa9YimGIECkQuoZOH8kpOmuE9k17AKLFUmKWfm00XPnDU=@vger.kernel.org, AJvYcCWkBC1y9GMWUQaM7m0bO6xCjgyl+3fYWQwEAouTQ+5b7Ctzl3BeN40fbtlsiSZ1iySKlxXXHMApr2LZSVxbvRzEiQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YydtUVB9Y91dRxmbS+fN0Vq6SnIweAimL/WnQ2o+qoTKQXyC5Wx
+	6ZCn3MmPECnrKl6JW3Kj4l2P6t4yD+rNcNLh6N+QtDV5pIlznLXIGeLDA09GVBervY8rlO35iSg
+	jrA8Z3i23Lc6esSsfd8qlQ8WlbhtzHAD+Xrwl
+X-Gm-Gg: ASbGnctA5mXAWzhp5LBrRamvoVBzkE/TAZFkenZE0/DeuyvAulmzWvscltnkd+LL1DA
+	HgD8bu2o0nzD4Nf31VdwwehIfVZYPLSCF9Lp8i23QdwbQwaGtH9LwvPGtgBY1u9SQbxFLRpZdpN
+	pP+LDSLWSLAkDdHZ6D1FDbAKkjAmQCZ/PjM7Dvsq7gLwA+zvSK
+X-Google-Smtp-Source: AGHT+IHe08an4JNIFcJK4cpXI820F+nqTybaZjc6XNMNs55Ubnp7qLnvs85PIfG9HSe2TO0FnW/ObkqflH7Ctk5oroA=
+X-Received: by 2002:a05:6000:1447:b0:3a4:d41d:8f40 with SMTP id
+ ffacd0b85a97d-3a4f7a6d2bcmr10499625f8f.46.1748881472942; Mon, 02 Jun 2025
+ 09:24:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250520181644.2673067-1-kan.liang@linux.intel.com>
+ <20250520181644.2673067-2-kan.liang@linux.intel.com> <djxlh5fx326gcenwrr52ry3pk4wxmugu4jccdjysza7tlc5fef@ktp4rffawgcw>
+ <d3c6b899-7281-4f97-a449-96f506181bab@linux.intel.com>
+In-Reply-To: <d3c6b899-7281-4f97-a449-96f506181bab@linux.intel.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Mon, 2 Jun 2025 09:24:21 -0700
+X-Gm-Features: AX0GCFvADJbbPaSyYnAXh1Shx0VxwiPeDyPR931crj8K5fpdnLUXNqnq89qaelw
+Message-ID: <CAADnVQL_v4SscxVK5fLxKo5Z4+LJtVfpvrJ4+ztu-ecPfxwrhQ@mail.gmail.com>
+Subject: Re: perf regression. Was: [PATCH V4 01/16] perf: Fix the throttle
+ logic for a group
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Mark Rutland <mark.rutland@arm.com>, LKML <linux-kernel@vger.kernel.org>, 
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>, Stephane Eranian <eranian@google.com>, 
+	Chun-Tse Shao <ctshao@google.com>, Thomas Richter <tmricht@linux.ibm.com>, Leo Yan <leo.yan@arm.com>, 
+	bpf <bpf@vger.kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	Ihor Solodrai <ihor.solodrai@linux.dev>, Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-By unconditionally setting wi_state to NULL and conditionally calling
-synchronize_rcu(), we can save an unncessary call when there is no
-old_wi_state.
-
-Suggested-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Joshua Hahn <joshua.hahnjy@gmail.com>
----
- mm/mempolicy.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
-
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 3b1dfd08338b..b0619d0020c9 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -3703,18 +3703,15 @@ static void wi_state_free(void)
- 	struct weighted_interleave_state *old_wi_state;
- 
- 	mutex_lock(&wi_state_lock);
+On Mon, Jun 2, 2025 at 5:55=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.co=
+m> wrote:
+>
+> Hi Alexei,
+>
+> On 2025-06-01 8:30 p.m., Alexei Starovoitov wrote:
+> > On Tue, May 20, 2025 at 11:16:29AM -0700, kan.liang@linux.intel.com wro=
+te:
+> >> From: Kan Liang <kan.liang@linux.intel.com>
+> >>
+> >> The current throttle logic doesn't work well with a group, e.g., the
+> >> following sampling-read case.
+> >>
+> >> $ perf record -e "{cycles,cycles}:S" ...
+> >>
+> >> $ perf report -D | grep THROTTLE | tail -2
+> >>             THROTTLE events:        426  ( 9.0%)
+> >>           UNTHROTTLE events:        425  ( 9.0%)
+> >>
+> >> $ perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
+> >> 0 1020120874009167 0x74970 [0x68]: PERF_RECORD_SAMPLE(IP, 0x1):
+> >> ... sample_read:
+> >> .... group nr 2
+> >> ..... id 0000000000000327, value 000000000cbb993a, lost 0
+> >> ..... id 0000000000000328, value 00000002211c26df, lost 0
+> >>
+> >> The second cycles event has a much larger value than the first cycles
+> >> event in the same group.
+> >>
+> >> The current throttle logic in the generic code only logs the THROTTLE
+> >> event. It relies on the specific driver implementation to disable
+> >> events. For all ARCHs, the implementation is similar. Only the event i=
+s
+> >> disabled, rather than the group.
+> >>
+> >> The logic to disable the group should be generic for all ARCHs. Add th=
+e
+> >> logic in the generic code. The following patch will remove the buggy
+> >> driver-specific implementation.
+> >>
+> >> The throttle only happens when an event is overflowed. Stop the entire
+> >> group when any event in the group triggers the throttle.
+> >> The MAX_INTERRUPTS is set to all throttle events.
+> >>
+> >> The unthrottled could happen in 3 places.
+> >> - event/group sched. All events in the group are scheduled one by one.
+> >>   All of them will be unthrottled eventually. Nothing needs to be
+> >>   changed.
+> >> - The perf_adjust_freq_unthr_events for each tick. Needs to restart th=
+e
+> >>   group altogether.
+> >> - The __perf_event_period(). The whole group needs to be restarted
+> >>   altogether as well.
+> >>
+> >> With the fix,
+> >> $ sudo perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
+> >> 0 3573470770332 0x12f5f8 [0x70]: PERF_RECORD_SAMPLE(IP, 0x2):
+> >> ... sample_read:
+> >> .... group nr 2
+> >> ..... id 0000000000000a28, value 00000004fd3dfd8f, lost 0
+> >> ..... id 0000000000000a29, value 00000004fd3dfd8f, lost 0
+> >>
+> >> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> >> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> >> ---
+> >>  kernel/events/core.c | 66 ++++++++++++++++++++++++++++++-------------=
 -
- 	old_wi_state = rcu_dereference_protected(wi_state,
- 			lockdep_is_held(&wi_state_lock));
--	if (!old_wi_state) {
--		mutex_unlock(&wi_state_lock);
--		return;
--	}
--
- 	rcu_assign_pointer(wi_state, NULL);
- 	mutex_unlock(&wi_state_lock);
--	synchronize_rcu();
--	kfree(old_wi_state);
-+
-+	if (old_wi_state) {
-+		synchronize_rcu();
-+		kfree(old_wi_state);
-+	}
- }
- 
- static struct kobj_attribute wi_auto_attr =
--- 
-2.47.1
+> >>  1 file changed, 46 insertions(+), 20 deletions(-)
+> >
+> > This patch breaks perf hw events somehow.
+> >
+> > After merging this into bpf trees we see random "watchdog: BUG: soft lo=
+ckup"
+> > with various stack traces followed up:
+> > [   78.620749] Sending NMI from CPU 8 to CPUs 0:
+> > [   76.387722] NMI backtrace for cpu 0
+> > [   76.387722] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Tainted: G         =
+  O L      6.15.0-10818-ge0f0ee1c31de #1163 PREEMPT
+> > [   76.387722] Tainted: [O]=3DOOT_MODULE, [L]=3DSOFTLOCKUP
+> > [   76.387722] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), B=
+IOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
+> > [   76.387722] RIP: 0010:_raw_spin_lock_irqsave+0xc/0x40
+> > [   76.387722] Call Trace:
+> > [   76.387722]  <IRQ>
+> > [   76.387722]  hrtimer_try_to_cancel.part.0+0x24/0xe0
+> > [   76.387722]  hrtimer_cancel+0x21/0x40
+> > [   76.387722]  cpu_clock_event_stop+0x64/0x70
+>
+>
+> The issues should be fixed by the patch.
+> https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.int=
+el.com/
+>
+> Could you please give it a try?
 
+Thanks. It fixes it, but the commit log says that
+only cpu-clock and task_clock are affected,
+which are SW events.
+
+While our tests are locking while setting up:
+
+        struct perf_event_attr attr =3D {
+                .freq =3D 1,
+                .type =3D PERF_TYPE_HARDWARE,
+                .config =3D PERF_COUNT_HW_CPU_CYCLES,
+        };
+
+Is it because we run in x86 VM and HW_CPU_CYCLES is mapped
+to cpu-clock sw ?
