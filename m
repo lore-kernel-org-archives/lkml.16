@@ -1,65 +1,73 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E1E1EE02F
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 11:45:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97FE61925AB
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 11:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748864708; cv=none; b=dhqafeSy7f8lOW7XU13AejdvcIu4OK232AIzFsa4CT3twarXyCW5DljgAMrBihgbU3Ib0QXqIibraLPAcsM/lSnUfYJoaElSvlF+xl/E4FF+5a+ax2mN9cD439BkEs7u85Dq7M1cdQTKGE3dSr3nnq7Z41LI0AhrxfbjYyhK9hk=
+	t=1748864718; cv=none; b=BLsOYLyai5MqxcMXyw6xVByHOtrjzd5Tt2vl2vAoz0aQ8d2kFXhAdY3Sx6x1waPZcOAEoL5fOL2MXsP8OXWwhX8htg3BBkuiLUFkKnnlUZjeQcfIAPnK8TiFr/JK5wG29t3pCiKFV0WiIwFvfXp/GmRGaw/OspjHPJ0Mo1QdpL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748864708; c=relaxed/simple;
-	bh=mI6YHKNlnW1qZTvXa6Sj8uLMeFMjC1fQdSYW9nHeVYE=;
+	s=arc-20240116; t=1748864718; c=relaxed/simple;
+	bh=62q+4Y3u3AUMWco0Ri8A9+Iw4BxELPI+v9ZG2/03SOc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZaerOMwYWUdHtUhHrBlrgGjsNbNeIyk0nw3zblQiS+lvYxD1z4e/IpIRIdpeIOub6fWS/JeYKXODEGMkwDE61O431F18jjhknnyD+D6yqT0TSbStNpCXZx6jZE/0JJ1eJWbu5TCjbHL6LIoTO2h+G2bxDOzOaYnFskcCR2yP7z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=BsXlx2wb; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 In-Reply-To:Content-Type; b=fP70dM9NYqtpaBRfSlVmIonAUG8sak7HmKN0FGWYikvQNwvY9JS1Gm04LUvbDvpcghmzYF4WiQ41B2/rjNREEoWQu2jEH3qrXgSIclOpOCgaTXSZzT0l81FSzKU1mZVeoEugIh0XmynWP9zykw0ZM6lAiYch4dG6RP9r1R+UDiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZByUxsDK; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="BsXlx2wb"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-451d3f72391so19411955e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 04:45:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1748864704; x=1749469504; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=T/Gws85zoR9SnVd6DMFy9YCg7h7huIfv39b74XZ7DYs=;
-        b=BsXlx2wbVShp0Tf8W7ioFNvDq6tJCyLkO4fJ0azoSoX8HysVcc0qn1suKkWOP5A9Sy
-         fS3B37hj7ybZ+ZzuXSYMT1Yvz41SblrEJCiLwjZFCuaGQBU+9LPz52w6iQ6eEREbBUU2
-         XIlobwZyIKFW/gx6B9W6OPRbpeMKfjr+UbjucWIiu3w/t+TZQptSN9mN1KVkytZaMKgd
-         kwKBy5Jo2JoFyJBiowqqOV5hI4JerdbPngS9zgJebgcMcCKPLo7wvaKL6DZfLHinApLO
-         3lnkrn4U6feagnV7cqSoBZ1uusmpkY7LRRotTfqLQKSN/z6eisrFNtK41ViQV2xqo0hu
-         N/XA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZByUxsDK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748864714;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=pluW0u/+xJd0eUGvzfkykomG6yjqcYSK31IZ33YVJmI=;
+	b=ZByUxsDKPGTaZk8y2+Kb8NwAh3A/X0ad92kDTHL3s7oa62aj+3PbBYumiAXFx4gdsn3Shr
+	5ftlCSznJBCNlmeLhWZYXTqkH0g7xrqjd3+FX+b6V66ESJv9aj2jCT/MN3K+/QjHQH9gAs
+	rRlfECCwTwghjwoEenSa88OJ8sMt7XQ=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-417-PDlawiJnPNayS2LG78EdIA-1; Mon, 02 Jun 2025 07:45:13 -0400
+X-MC-Unique: PDlawiJnPNayS2LG78EdIA-1
+X-Mimecast-MFC-AGG-ID: PDlawiJnPNayS2LG78EdIA_1748864712
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-450cb902173so19454555e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 04:45:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748864704; x=1749469504;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=T/Gws85zoR9SnVd6DMFy9YCg7h7huIfv39b74XZ7DYs=;
-        b=bGsdXU82/Gkli/O5eiiphA0E6UQ+3vzn9x4txWcapooa3EBxShMEWOiAPZRnVX6yqm
-         h1sqWMSRZDsz9KR7qGTFrHMWFH6eXMDqt6436SYbQuvnjvyHz+sv4TrEs457jE1XeBuB
-         O2HZKrJS0YGX9K/mQ2+5HVMunTPk19qPMIKfdDWlWpMONEFQp/KO+RRi1R3iTKISonz6
-         KY8CvJ9E5ruXNPkR+kFjc2E44YvzS3M5zQzPrKvgdAOYEXSfwk8vtRLLEOkLDaixeJ5I
-         xYGB9T0PiEk0M2Ubm2DzJa/E+aus6FtjoUyzd1+axHdKUld09U73civr9mqbLPozqV+4
-         KEwA==
-X-Forwarded-Encrypted: i=1; AJvYcCXCEKWNhW5DRr2aE+VGbyQn5A0oI9XzjL0f5oW9bpHckIZwK/3yaOe/I35ClwToFpBriLus68aQVk3QwFA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhcRQqttrEr/IBgedZNumUuljFhCfJ/OkW73G4LIk9vLNyv8++
-	7Z/jC1WQ/bjqfp/FGVj35ep/UarbK8gg+2EMtroD5Kbo3dnHYpFsdKVuXURZBSxCW3A=
-X-Gm-Gg: ASbGncvRxkCWUIMvDiRfA5pfGp9caXDkjkkI8k9/eMvodMHV8ptExWjzu1hrT7/yUkF
-	CIgqA6QFlnDVzX6E9SCGlgvDhdJYLzdQAJQvx+DD9/cynWQBNmTyM/aB92q38Kq6vrsT/veT6C0
-	pZRFy/UKM4CXDWPn3kDShMp9u+IZmzeM3AwpL2xi3X3ktZe+qiC+vlAChScQr7kvCv7dRo0zg7g
-	F03UIOv3vBF0mOz9cUf0qIFH8cbMc7wOZrECu8ULVVc9GwpYLxCttlrjW5yfI4qE8nIpzha2P/s
-	szrSHHIvJqWMKIBQLDVDBsO+JXa4tqzSO7KjGA945PCVW1Ma9c29Oxpk3NogI1pIwSk=
-X-Google-Smtp-Source: AGHT+IFUGSzWAiHE9WCAow/7oba11of2+NcrtfT5TUW/nxlLLmE8a1z2qGU7UbqtdWbO5dFQYtw1IA==
-X-Received: by 2002:a05:600c:348c:b0:442:ffb1:b58 with SMTP id 5b1f17b1804b1-450d880cc63mr98978045e9.12.1748864704327;
-        Mon, 02 Jun 2025 04:45:04 -0700 (PDT)
-Received: from [192.168.0.20] ([212.21.159.167])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7fb0654sm119829555e9.21.2025.06.02.04.45.02
+        d=1e100.net; s=20230601; t=1748864712; x=1749469512;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=pluW0u/+xJd0eUGvzfkykomG6yjqcYSK31IZ33YVJmI=;
+        b=XlNM7vRJe2XLUhHgwbwQagJYrpZhSgU0vZFCDmFfCZBBcbDfm/cIjjiDD0/U1CWqxK
+         bSOEZReCuEKYpLyGnZe7AJAI6tVeU+Ymrb7n7l0N9Bc2316TmCp9QJ4AFM234HlXCupp
+         2W4BZusP4lomwxbX/iEKk8fkSRsay0aiw7HE7Fm/mYXo1gtziAanWc4Wo20MRpA/aauj
+         bVp6IUWbUpS7PbFHxRzw+nTaAlj0hy4dt/33H1ibeDNwR+n4ex4ePIi8rO5nJBAwIe5b
+         gTjUiK6KPJgPoz3gRfjaafQS4rJz9H1V4sAHbM7rZZrxIBe9Ul99gmNcxDeSAGPqEL6f
+         Iyyg==
+X-Forwarded-Encrypted: i=1; AJvYcCVuWa++5QUP4ABYkb20t3v0Ryv89NVFwcIFIdO7DB/rTOm8KpLsqEK4x0Rz6/nVd/dJnM0wdSLcSM9Nsf4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw03RVABQeKoVg2RCXxsgGn/tGhqqh/GGZbNjAQ4aCiPmz/K9XV
+	33HkmlJZKfpBHsmbxqqWLh5s/8mjqth74pdx+XwZH7tDwxiYVKD3YoadNouqjAGDvq4gGNGaC+a
+	XF2Lhhxy1nmauQCXllvRf0d6DDhlsZ2KcpLn9vlSpcpGW59pJTFuWYZvgFZn6I+5k6A==
+X-Gm-Gg: ASbGnctDzt+eWDtOOMseR6gec9sZIOsTqKHcFaMGgoSzCj8MphdRHHgrqokJpAlaZ+n
+	hBvDlbp4/iYciz1VcjOLg55ucTRS0LsRG660+vUyrCweieeOyu6ocq1fiyplyc1G1u+yGrPxQjr
+	yafVootYlxWyiJl/U7qIpZkUZj72dhpM3v9Tv5enzQI6wlFgTiCrnwMOh3huxyWKtaCLrSxz3Ou
+	fz+PGTNaqoaZ2lLrmWsZ/7u5Ww/J2x0PkUIY5yJAO1rhBW2BJVQVlpjM1NmDVW6m5yRysYiCZ+9
+	Jnqf6zTIl5oS/czs5f4F0czkuoNoBilYd4gOt5fCOLFQWMlEFscqWRYP8t545mxOlD3W43kFH64
+	gNMzJ86bK4VoNlJJcPhMYxLs99CFMzcNc1hX87TPtvkQWOkX+Bg==
+X-Received: by 2002:a05:600c:3555:b0:450:cabc:a6c6 with SMTP id 5b1f17b1804b1-450d6bbb899mr123242615e9.15.1748864712258;
+        Mon, 02 Jun 2025 04:45:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFNiWxj7ru1ZpdEa7TTYC+Mx0/zZsZQT6PVApBO3c8hzuU2D+iOpq+QjyaIBIup3raLJSW1Xg==
+X-Received: by 2002:a05:600c:3555:b0:450:cabc:a6c6 with SMTP id 5b1f17b1804b1-450d6bbb899mr123242185e9.15.1748864711876;
+        Mon, 02 Jun 2025 04:45:11 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f34:a300:1c2c:f35e:e8e5:488e? (p200300d82f34a3001c2cf35ee8e5488e.dip0.t-ipconnect.de. [2003:d8:2f34:a300:1c2c:f35e:e8e5:488e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7f92585sm126373555e9.5.2025.06.02.04.45.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Jun 2025 04:45:03 -0700 (PDT)
-Message-ID: <92a15c2d-055c-4f4e-b232-32030a8e5e54@suse.com>
-Date: Mon, 2 Jun 2025 14:45:02 +0300
+        Mon, 02 Jun 2025 04:45:11 -0700 (PDT)
+Message-ID: <3327f886-e708-4229-a83f-2404f115d44b@redhat.com>
+Date: Mon, 2 Jun 2025 13:45:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,185 +75,82 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 12/32] x86/boot/e820: Clean up confusing and
- self-contradictory verbiage around E820 related resource allocations
-To: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andy@kernel.org>, Arnd Bergmann <arnd@kernel.org>,
- Borislav Petkov <bp@alien8.de>, Juergen Gross <jgross@suse.com>,
- "H . Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Mike Rapoport <rppt@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
- David Woodhouse <dwmw@amazon.co.uk>
-References: <20250515120549.2820541-1-mingo@kernel.org>
- <20250515120549.2820541-13-mingo@kernel.org>
-From: Nikolay Borisov <nik.borisov@suse.com>
+Subject: Re: [PATCH 08/12] mm/khugepaged: Remove redundant pmd_devmap() check
+To: Alistair Popple <apopple@nvidia.com>, linux-mm@kvack.org
+Cc: gerald.schaefer@linux.ibm.com, dan.j.williams@intel.com, jgg@ziepe.ca,
+ willy@infradead.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
+ zhang.lyra@gmail.com, debug@rivosinc.com, bjorn@kernel.org,
+ balbirs@nvidia.com, lorenzo.stoakes@oracle.com,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org, John@Groves.net
+References: <cover.541c2702181b7461b84f1a6967a3f0e823023fcc.1748500293.git-series.apopple@nvidia.com>
+ <2093b864560884a2a525d951a7cc20007da6b9b6.1748500293.git-series.apopple@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-Autocrypt: addr=nik.borisov@suse.com; keydata=
- xsFNBGcrpvIBEAD5cAR5+qu30GnmPrK9veWX5RVzzbgtkk9C/EESHy9Yz0+HWgCVRoNyRQsZ
- 7DW7vE1KhioDLXjDmeu8/0A8u5nFMqv6d1Gt1lb7XzSAYw7uSWXLPEjFBtz9+fBJJLgbYU7G
- OpTKy6gRr6GaItZze+r04PGWjeyVUuHZuncTO7B2huxcwIk9tFtRX21gVSOOC96HcxSVVA7X
- N/LLM2EOL7kg4/yDWEhAdLQDChswhmdpHkp5g6ytj9TM8bNlq9I41hl/3cBEeAkxtb/eS5YR
- 88LBb/2FkcGnhxkGJPNB+4Siku7K8Mk2Y6elnkOctJcDvk29DajYbQnnW4nhfelZuLNupb1O
- M0912EvzOVI0dIVgR+xtosp66bYTOpX4Xb0fylED9kYGiuEAeoQZaDQ2eICDcHPiaLzh+6cc
- pkVTB0sXkWHUsPamtPum6/PgWLE9vGI5s+FaqBaqBYDKyvtJfLK4BdZng0Uc3ijycPs3bpbQ
- bOnK9LD8TYmYaeTenoNILQ7Ut54CCEXkP446skUMKrEo/HabvkykyWqWiIE/UlAYAx9+Ckho
- TT1d2QsmsAiYYWwjU8igXBecIbC0uRtF/cTfelNGrQwbICUT6kJjcOTpQDaVyIgRSlUMrlNZ
- XPVEQ6Zq3/aENA8ObhFxE5PLJPizJH6SC89BMKF3zg6SKx0qzQARAQABzSZOaWtvbGF5IEJv
- cmlzb3YgPG5pay5ib3Jpc292QHN1c2UuY29tPsLBkQQTAQoAOxYhBDuWB8EJLBUZCPjT3SRn
- XZEnyhfsBQJnK6byAhsDBQsJCAcCAiICBhUKCQgLAgQWAgMBAh4HAheAAAoJECRnXZEnyhfs
- XbIQAJxuUnelGdXbSbtovBNm+HF3LtT0XnZ0+DoR0DemUGuA1bZAlaOXGr5mvVbTgaoGUQIJ
- 3Ejx3UBEG7ZSJcfJobB34w1qHEDO0pN9orGIFT9Bic3lqhawD2r85QMcWwjsZH5FhyRx7P2o
- DTuUClLMO95GuHYQngBF2rHHl8QMJPVKsR18w4IWAhALpEApxa3luyV7pAAqKllfCNt7tmed
- uKmclf/Sz6qoP75CvEtRbfAOqYgG1Uk9A62C51iAPe35neMre3WGLsdgyMj4/15jPYi+tOUX
- Tc7AAWgc95LXyPJo8069MOU73htZmgH4OYy+S7f+ArXD7h8lTLT1niff2bCPi6eiAQq6b5CJ
- Ka4/27IiZo8tm1XjLYmoBmaCovqx5y5Xt2koibIWG3ZGD2I+qRwZ0UohKRH6kKVHGcrmCv0J
- YO8yIprxgoYmA7gq21BpTqw3D4+8xujn/6LgndLKmGESM1FuY3ymXgj5983eqaxicKpT9iq8
- /a1j31tms4azR7+6Dt8H4SagfN6VbJ0luPzobrrNFxUgpjR4ZyQQ++G7oSRdwjfIh1wuCF6/
- mDUNcb6/kA0JS9otiC3omfht47yQnvod+MxFk1lTNUu3hePJUwg1vT1te3vO5oln8lkUo9BU
- knlYpQ7QA2rDEKs+YWqUstr4pDtHzwQ6mo0rqP+zzsFNBGcrpvIBEADGYTFkNVttZkt6e7yA
- LNkv3Q39zQCt8qe7qkPdlj3CqygVXfw+h7GlcT9fuc4kd7YxFys4/Wd9icj9ZatGMwffONmi
- LnUotIq2N7+xvc4Xu76wv+QJpiuGEfCDB+VdZOmOzUPlmMkcJc/EDSH4qGogIYRu72uweKEq
- VfBI43PZIGpGJ7TjS3THX5WVI2YNSmuwqxnQF/iVqDtD2N72ObkBwIf9GnrOgxEyJ/SQq2R0
- g7hd6IYk7SOKt1a8ZGCN6hXXKzmM6gHRC8fyWeTqJcK4BKSdX8PzEuYmAJjSfx4w6DoxdK5/
- 9sVrNzaVgDHS0ThH/5kNkZ65KNR7K2nk45LT5Crjbg7w5/kKDY6/XiXDx7v/BOR/a+Ryo+lM
- MffN3XSnAex8cmIhNINl5Z8CAvDLUtItLcbDOv7hdXt6DSyb65CdyY8JwOt6CWno1tdjyDEG
- 5ANwVPYY878IFkOJLRTJuUd5ltybaSWjKIwjYJfIXuoyzE7OL63856MC/Os8PcLfY7vYY2LB
- cvKH1qOcs+an86DWX17+dkcKD/YLrpzwvRMur5+kTgVfXcC0TAl39N4YtaCKM/3ugAaVS1Mw
- MrbyGnGqVMqlCpjnpYREzapSk8XxbO2kYRsZQd8J9ei98OSqgPf8xM7NCULd/xaZLJUydql1
- JdSREId2C15jut21aQARAQABwsF2BBgBCgAgFiEEO5YHwQksFRkI+NPdJGddkSfKF+wFAmcr
- pvICGwwACgkQJGddkSfKF+xuuxAA4F9iQc61wvAOAidktv4Rztn4QKy8TAyGN3M8zYf/A5Zx
- VcGgX4J4MhRUoPQNrzmVlrrtE2KILHxQZx5eQyPgixPXri42oG5ePEXZoLU5GFRYSPjjTYmP
- ypyTPN7uoWLfw4TxJqWCGRLsjnkwvyN3R4161Dty4Uhzqp1IkNhl3ifTDYEvbnmHaNvlvvna
- 7+9jjEBDEFYDMuO/CA8UtoVQXjy5gtOhZZkEsptfwQYc+E9U99yxGofDul7xH41VdXGpIhUj
- 4wjd3IbgaCiHxxj/M9eM99ybu5asvHyMo3EFPkyWxZsBlUN/riFXGspG4sT0cwOUhG2ZnExv
- XXhOGKs/y3VGhjZeCDWZ+0ZQHPCL3HUebLxW49wwLxvXU6sLNfYnTJxdqn58Aq4sBXW5Un0Q
- vfbd9VFV/bKFfvUscYk2UKPi9vgn1hY38IfmsnoS8b0uwDq75IBvup9pYFyNyPf5SutxhFfP
- JDjakbdjBoYDWVoaPbp5KAQ2VQRiR54lir/inyqGX+dwzPX/F4OHfB5RTiAFLJliCxniKFsM
- d8eHe88jWjm6/ilx4IlLl9/MdVUGjLpBi18X7ejLz3U2quYD8DBAGzCjy49wJ4Di4qQjblb2
- pTXoEyM2L6E604NbDu0VDvHg7EXh1WwmijEu28c/hEB6DwtzslLpBSsJV0s1/jE=
-In-Reply-To: <20250515120549.2820541-13-mingo@kernel.org>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <2093b864560884a2a525d951a7cc20007da6b9b6.1748500293.git-series.apopple@nvidia.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-
-
-On 5/15/25 15:05, Ingo Molnar wrote:
-> So the E820 code has a rather confusing area of code at around
-> e820__reserve_resources(), which is, by its plain reading,
-> rather self-contradictory. For example, the comment explaining
-> e820__reserve_resources() claims:
+On 29.05.25 08:32, Alistair Popple wrote:
+> The only users of pmd_devmap were device dax and fs dax. The check for
+> pmd_devmap() in check_pmd_state() is therefore redundant as callers
+> explicitly check for is_zone_device_page(), so this check can be dropped.
 > 
->   - '* Mark E820 reserved areas as busy for the resource manager'
-> 
-> By 'E820 reserved areas' one can naively conclude that it's
-> talking about E820_TYPE_RESERVED areas - while those areas
-> are treated in exactly the opposite fashion by do_mark_busy():
-> 
->          switch (type) {
->          case E820_TYPE_RESERVED:
->          case E820_TYPE_SOFT_RESERVED:
->          case E820_TYPE_PRAM:
->          case E820_TYPE_PMEM:
->                  return false;
-> 
-> Ie. E820_TYPE_RESERVED areas are *not* marked busy for the
-> resource manager, because E820_TYPE_RESERVED areas are
-> device regions that might eventually be claimed by a device driver.
-> 
-> This type of confusion permeates this whole area of code,
-> making it exceedingly difficult to read (for me at least).
-> 
-> So untangle it bit by bit:
-> 
->   - Instead of talking about ambiguous 'reserved areas',
->     talk about 'E820 device address regions' instead,
->     and 'register'/'lock' them.
-> 
->   - The do_mark_busy() function is a misnomer as well, because despite
->     its name it 'does' nothing - it only determines what type
->     of resource handling an E820 type should receive from the
->     kernel. Rename it to e820_device_region() and negate its
->     meaning, to avoid the 'busy/reserved' confusion. Because
->     that's what this code is really about: filtering out
->     device regions such as E820_TYPE_RESERVED, E820_TYPE_PRAM,
->     E820_TYPE_PMEM, etc., and allowing them to be claimed
->     by device drivers later on.
-> 
->   - All other E820 regions (system regions) are registered and
->     locked early on, before the PCI resource manager does its
->     search for device BAR addresses, etc.
-> 
-> Also fix this somewhat misleading comment:
-> 
-> 	/*
-> 	 * Try to bump up RAM regions to reasonable boundaries, to
-> 	 * avoid stolen RAM:
-> 	 */
-> 
-> and explain that here we register artificial 'gap' resources
-> at the end of suspiciously sized RAM regions, as heuristics
-> to try to avoid buggy firmware with undeclared 'stolen RAM' regions:
-> 
-> 	/*
-> 	 * Create additional 'gaps' at the end of RAM regions,
-> 	 * rounding them up to 64k/1MB/64MB boundaries, should
-> 	 * they be weirdly sized, and register extra, locked
-> 	 * resource regions for them, to make sure drivers
-> 	 * won't claim those addresses.
-> 	 *
-> 	 * These are basically blind guesses and heuristics to
-> 	 * avoid resource conflicts with broken firmware that
-> 	 * doesn't properly list 'stolen RAM' as a system region
-> 	 * in the E820 map.
-> 	 */
-> 
-> Also improve the printout of this extra resource a bit: make the
-> message more unambiguous, and upgrade it from pr_debug() (where
-> very few people will see it), to pr_info() (where it will make
-> it into the syslog on default distro configs).
-> 
-> Also fix spelling and improve comment placement.
-> 
-> No change in functionality intended.
-> 
-> Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> Cc: Andy Shevchenko <andy@kernel.org>
-> Cc: Arnd Bergmann <arnd@kernel.org>
-> Cc: David Woodhouse <dwmw@amazon.co.uk>
-> Cc: H. Peter Anvin <hpa@zytor.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Signed-off-by: Alistair Popple <apopple@nvidia.com>
 > ---
->   arch/x86/kernel/e820.c | 55 +++++++++++++++++++++++++++++++++-----------------
->   1 file changed, 37 insertions(+), 18 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-> index 5eb0849b492f..c9bb808c4888 100644
-> --- a/arch/x86/kernel/e820.c
-> +++ b/arch/x86/kernel/e820.c
-> @@ -1106,37 +1106,44 @@ static unsigned long __init e820_type_to_iores_desc(struct e820_entry *entry)
->   	}
->   }
->   
-> -static bool __init do_mark_busy(enum e820_type type, struct resource *res)
-> +/*
-> + * We assign one resource entry for each E820 map entry:
-> + */
-> +static struct resource __initdata *e820_res;
-> +
-> +/*
-> + * Is this a device address region that should not be marked busy?
-> + * (Versus system address regions that we register & lock early.)
-> + */
-> +static bool __init e820_device_region(enum e820_type type, struct resource *res)
->   {
-> -	/* this is the legacy bios/dos rom-shadow + mmio region */
-> +	/* This is the legacy BIOS/DOS ROM-shadow + MMIO region: */
->   	if (res->start < (1ULL<<20))
 
-nit: While at it, change this to also use SZ_1M define rather than this 
-shift.
+Acked-by: David Hildenbrand <david@redhat.com>
 
-<snip>
+-- 
+Cheers,
+
+David / dhildenb
+
