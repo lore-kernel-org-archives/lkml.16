@@ -1,177 +1,639 @@
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9FA13AD26;
-	Mon,  2 Jun 2025 09:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33B811D516F
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 09:24:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748855874; cv=none; b=aCWH5ssDQtF4tEpazmlQVKlyjsgkhkLLfYbeWjixW166FQTjdWXo/Zc/UV+eWDei1fRcC1EOBswBqp4vWgkZqyaM9fEH+zBuYqFTGyLzEOQQOPsRmDX+1sbrfxCIVQATj1/5P9dBxflAKoeK6Z4BIPC62v2shq0iE26p0Rk6Hl4=
+	t=1748856245; cv=none; b=DI3AKmkyjn6/YaJzd0Bk+lubXqaqRtpmah4YeR4UsPV2xlczQ6BO4zEluiCnP85tpR0kdZHBM6aXRREitpBFAfoQ6mTDzh/XWk4GXe0kjm4cf9smH/4ebES49DPS/C6anhzKtkWhevxNVgH9RNjEfUTtuQqqd4HP5MHTzXqF1r4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748855874; c=relaxed/simple;
-	bh=p3pVK36eYaUHcAq2nEti5IMb/UfHDM06YJHUt5S2oMY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s1DaDyzYNlmzMRoE3di0oHzQOqB/pp8f6DXhxRvqgr6reixJLtO4M6OeEcoUyZmUYjzxGpiAZtQRwgd4STDb/ub4objMP1s6+QMLvzYEomBUQ3McxnxVGbmCgnUvvo0r4QYElnI2iZUL4c0QhWWKiMjYTQJlIhz94aJ0mQoRvLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OO1sMt5+; arc=none smtp.client-ip=209.85.222.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748856245; c=relaxed/simple;
+	bh=jjCGcVLT1bBN28MXqaH8zoc4qx6D91yWTG4EESSqAl0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t1fTyOd0yeUQGHBzeJo4GJjutEDwXX0Ey7KlyxR9sLIHnWCnDiUXxg79yxKTYwBMnHqjkGxDJPxOBZ1wdbKKbljxiWI7KrdTPcf2dWIGProciKfDhbe9b/YpaZlGSGd94HwdqfcRX6z2ON4g+kxceDxdb7F432Flu7PEIKppquI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QMvxsbUZ; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OO1sMt5+"
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-86d5e3ddb66so1042782241.2;
-        Mon, 02 Jun 2025 02:17:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748855871; x=1749460671; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Foak5GJOvF2qzw/Sdnn9z8LtJHh30NXj00gMeZswR34=;
-        b=OO1sMt5+I2h3AYiNYbJd772JHwWQWzY9TxEK6BfpcXOjIozsVWzEgBl+F6szcZVWiU
-         H6DKg4IK8CkBcnxPgQu7ulL3UgN/oL2lX+WRdvTZUVuKYRSOJh3tlD+O6Oe4O9du0z0j
-         ifbcuLy5baGDXPex9PObchSUdopzbiOIhFVNy0qqIwwJUzjeA28OqbXkGuEfXAM+Aev8
-         2B8kKOxEx1+K7XAS/JUyK1gwLcSfU8CnIaVvZ3sKJgezBfxA/Zzyx5bavO36/BWavMKY
-         hsVh5/tIn/T5MN3Btp9AnUFpOAy9GMJ3miDz7cc2MiG/Ak3LWla4SvxXw7VX/e8QRm+X
-         lXIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748855871; x=1749460671;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Foak5GJOvF2qzw/Sdnn9z8LtJHh30NXj00gMeZswR34=;
-        b=JjId/07qQmTEEs1ItEXXRWeEhrTHGf3Vbl0N58jcauZYA8fewjFEA/kST2o18a8kHD
-         sHV3l/0aqcn4ZFalfRFTzvQ8hX4KXFgknnPz7kkk7xVlL/MnO9mjYv9P0QKbb+Qx4uTE
-         xr+fQwjbgWLBhFUyxT7nuN8+ImTnmilRW4cAD5r7QSS4RtTwbuoIWJ8Dp5yznjY6+Obc
-         HrFmYrsRyxy9O5HRdyQB+HChxz1eRZM3QMjYzyV4NZ1k02bKfr+TmD1ULJ1XiQiH1QAc
-         /H4sJ14M9glUy98NBrbX/q2alUpAq0qfBP8slDdW+Wu07+M61qXApC9RrckBh/1TFEMf
-         X2mQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUyI+l3O5Imk1/aoRyYZBBBZlJqbkZ7aA1UmrCISV+8ZARYoXZsVULcoyvDzxKZJr8g2h4XayoWK2+M@vger.kernel.org, AJvYcCVGr3OBTgqwaq2NhLulgzXCED26MexlEyIsUS9j2NI+s1MjRnG8euFNXROBE5gqlrwU3mbM8YabQy8z95ql@vger.kernel.org, AJvYcCWOggS7ckXjS8jZNzWtwzYd+eMX/HrOXOcU9ksFg3+pk+jgrmFKCdAmTXTBk5OEcI0DasiJjppErzuB@vger.kernel.org, AJvYcCWfFn5h9IAi+avNK8sexPCc5y1lgke+KHoHNfN10SRMW9vvFm8uvh1VQOJZmHXjTwcjWbOUWvsez2wL@vger.kernel.org, AJvYcCXtCdNUoOZto/C92uONLUr4A2qzm7BCxei31LbKyuqQfgx3Ey2lgE5ybcNwss/k0EqRoeyLu8UCLpQK@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlQN7JoTw92IJX7W4Btml2U5nK0qEfKErS8ivKTQapMZcQ9dbq
-	wWXhrsJjLJhvBGgOSb7y8xSqDcT7oSGn9xAeTupax8VW6dWP1Q8AAo8Y
-X-Gm-Gg: ASbGncuqqqSB4uni60OyW8GVQ3W+Hsrh2kzmYMLDjeTtjx9w69+PDlas+vaMqb4nIK0
-	powLiIZX4OO2rV9FtZaFhNTd4CClKc7Ua4cLcbxWbcE9pcT4vNRlh7zlPe1wEBAOPaeVBTFOgnc
-	TZs9mpR/u8O+bZ+8cl36FxxUDMh9ITlKWBaKVzg+XdiCsWk8I9TSuIHgcgbEAK4IIMR4I+fEcnI
-	BE9XUdPaLJsRFc0IE0UOen5e4M4leywb+/1MNS94yiGB4AC48HFYFGl8KGIYOklAWdeKgpb+W1y
-	Ifh19NKNPSbPh/G+YGIY1UvF0sJ9UTYBLR+wA3bTYjcQZ1JsSYospik6sgcETJKhpqHcXhmY9oT
-	qwKOUQ3bb9x0=
-X-Google-Smtp-Source: AGHT+IFoOchOYbJ+UDHdTg+DkrYs/5KlfIAQRWOe732oHXo514hsBw5BJWreXuIJr/izqnwWxVmW0A==
-X-Received: by 2002:a05:6102:509e:b0:4e5:ac99:e466 with SMTP id ada2fe7eead31-4e701bae7ddmr4143247137.18.1748855871236;
-        Mon, 02 Jun 2025 02:17:51 -0700 (PDT)
-Received: from HYB-DlYm71t3hSl.ad.analog.com ([2001:a61:1225:ec01:ecf2:8e21:9f0f:159e])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87e2a2a1622sm5937964241.10.2025.06.02.02.17.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 02:17:50 -0700 (PDT)
-Date: Mon, 2 Jun 2025 11:17:39 +0200
-From: Jorge Marques <gastmaier@gmail.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Jorge Marques <jorge.marques@analog.com>, 
-	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v2 3/5] dt-bindings: iio: adc: Add adi,ad4052
-Message-ID: <vchomz3iazgdmotcs3jskrugi2qmdxyo74t4ruo2fsc7cjwtqb@7rtdmdkxobvg>
-References: <20250422-iio-driver-ad4052-v2-0-638af47e9eb3@analog.com>
- <20250422-iio-driver-ad4052-v2-3-638af47e9eb3@analog.com>
- <88a326e7-3910-4e02-b4ba-7afe06402871@baylibre.com>
- <hvexchm2ozsto5s2o6n5j2z3odrkbcamgmg67umd4aehwzmgie@dvtx6anioasq>
- <1b0e9003-7322-46fa-b2ba-518a142616dc@baylibre.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QMvxsbUZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748856243; x=1780392243;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=jjCGcVLT1bBN28MXqaH8zoc4qx6D91yWTG4EESSqAl0=;
+  b=QMvxsbUZDhCtMZl8nKt2qkFP2Xp+aUsHgKYQFvw5RE1e0eIvCjejERm6
+   +s466auReoVH46Klv5vMGpODxpVN8/nqk3wHiu+2gH0HHAztxeu6KtWNY
+   H3KgAGARA77rjZafusbyFljEB18t+6GJMqyQAkxF3dK3fB7psB76EdqOB
+   JHLcUTQzNiNo4azlgLHzi0aisGlofVVJFYCBmTXvYRYPFS/bG4XKjX57y
+   NQZYZSRjZ1s7zrG9aiWty2SJUCAlhixmaTJ4eW+O003rGNLC0AlPZIqYq
+   KzSQxgMY22gZSSN8cXKLF3mYVpZu7Ui4IHN4HnYCW45H+Z0UhQfXXEIaE
+   A==;
+X-CSE-ConnectionGUID: Mac7VLrQRL6ClwRxJYTjBg==
+X-CSE-MsgGUID: NRa6SWFaSaGPBoLrwTbnFA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11450"; a="49981859"
+X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
+   d="scan'208";a="49981859"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 02:24:02 -0700
+X-CSE-ConnectionGUID: Zz6giRLzRbuOXVsGtm6KMw==
+X-CSE-MsgGUID: 2EfPp4X7Qta+XV15xM/tTQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
+   d="scan'208";a="145440804"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa008.jf.intel.com with ESMTP; 02 Jun 2025 02:24:00 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id BB0C9139; Mon, 02 Jun 2025 12:23:57 +0300 (EEST)
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>
+Cc: lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	hch@lst.de,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH] mm/vmstat: Utilize designated initializers for the vmstat_text array
+Date: Mon,  2 Jun 2025 12:23:51 +0300
+Message-ID: <20250602092351.3807465-1-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1b0e9003-7322-46fa-b2ba-518a142616dc@baylibre.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 29, 2025 at 10:45:20AM -0500, David Lechner wrote:
-> On 4/29/25 8:48 AM, Jorge Marques wrote:
-> > Hi David, 
-> > 
-> > I didn't went through your's and Jonathan's ad4052.c review yet,
-> > but for the trigger-source-cells I need to dig deeper and make
-> > considerable changes to the driver, as well as hardware tests.
-> > My idea was to have a less customizable driver, but I get that it is
-> > more interesting to make it user-definable.
-> 
-> We don't need to make the driver support all possibilities, but the devicetree
-> needs to be as complete as possible since it can't be as easily changed in the
-> future.
-> 
+The vmstat_text array defines labels for counters displayed in
+/proc/vmstat. The current definition of the array implies a specific
+order of the counters in their enums, making it fragile.
 
-Ack.
+To make it clear which counter the label is for, use designated
+initializers.
 
-I see that the node goes in the spi controller (the parent). To use the
-same information in the driver I need to look-up the parent node, then
-the node. I don't plan to do that in the version of the driver, just an
-observation.
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+---
+ mm/vmstat.c | 439 +++++++++++++++++++++++++++-------------------------
+ 1 file changed, 230 insertions(+), 209 deletions(-)
 
-There is something else I want to discuss on the dt-bindings actually.
-According to the schema, the spi-max-frequency is:
+diff --git a/mm/vmstat.c b/mm/vmstat.c
+index 0903adace423..8ff621af253b 100644
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -1163,318 +1163,339 @@ int fragmentation_index(struct zone *zone, unsigned int order)
+ #if defined(CONFIG_PROC_FS) || defined(CONFIG_SYSFS) || \
+     defined(CONFIG_NUMA) || defined(CONFIG_MEMCG)
+ #ifdef CONFIG_ZONE_DMA
+-#define TEXT_FOR_DMA(xx) xx "_dma",
++#define TEXT_FOR_DMA(xx, yy) [xx##_DMA] = yy "_dma",
+ #else
+-#define TEXT_FOR_DMA(xx)
++#define TEXT_FOR_DMA(xx, yy)
+ #endif
+ 
+ #ifdef CONFIG_ZONE_DMA32
+-#define TEXT_FOR_DMA32(xx) xx "_dma32",
++#define TEXT_FOR_DMA32(xx, yy) [xx##_DMA32] = yy "_dma32",
+ #else
+-#define TEXT_FOR_DMA32(xx)
++#define TEXT_FOR_DMA32(xx, yy)
+ #endif
+ 
+ #ifdef CONFIG_HIGHMEM
+-#define TEXT_FOR_HIGHMEM(xx) xx "_high",
++#define TEXT_FOR_HIGHMEM(xx, yy) [xx##_HIGH] = yy "_high",
+ #else
+-#define TEXT_FOR_HIGHMEM(xx)
++#define TEXT_FOR_HIGHMEM(xx, yy)
+ #endif
+ 
+ #ifdef CONFIG_ZONE_DEVICE
+-#define TEXT_FOR_DEVICE(xx) xx "_device",
++#define TEXT_FOR_DEVICE(xx, yy) [xx##_DEVICE] = yy "_device",
+ #else
+-#define TEXT_FOR_DEVICE(xx)
++#define TEXT_FOR_DEVICE(xx, yy)
+ #endif
+ 
+-#define TEXTS_FOR_ZONES(xx) TEXT_FOR_DMA(xx) TEXT_FOR_DMA32(xx) xx "_normal", \
+-					TEXT_FOR_HIGHMEM(xx) xx "_movable", \
+-					TEXT_FOR_DEVICE(xx)
++#define TEXTS_FOR_ZONES(xx, yy)			\
++	TEXT_FOR_DMA(xx, yy)			\
++	TEXT_FOR_DMA32(xx, yy)			\
++	[xx##_NORMAL] = yy "_normal",		\
++	TEXT_FOR_HIGHMEM(xx, yy)		\
++	[xx##_MOVABLE] = yy "_movable",		\
++	TEXT_FOR_DEVICE(xx, yy)
+ 
+ const char * const vmstat_text[] = {
+ 	/* enum zone_stat_item counters */
+-	"nr_free_pages",
+-	"nr_free_pages_blocks",
+-	"nr_zone_inactive_anon",
+-	"nr_zone_active_anon",
+-	"nr_zone_inactive_file",
+-	"nr_zone_active_file",
+-	"nr_zone_unevictable",
+-	"nr_zone_write_pending",
+-	"nr_mlock",
++#define I(x) (x)
++	[I(NR_FREE_PAGES)]			= "nr_free_pages",
++	[I(NR_FREE_PAGES_BLOCKS)]		= "nr_free_pages_blocks",
++	[I(NR_ZONE_INACTIVE_ANON)]		= "nr_zone_inactive_anon",
++	[I(NR_ZONE_ACTIVE_ANON)]		= "nr_zone_active_anon",
++	[I(NR_ZONE_INACTIVE_FILE)]		= "nr_zone_inactive_file",
++	[I(NR_ZONE_ACTIVE_FILE)]		= "nr_zone_active_file",
++	[I(NR_ZONE_UNEVICTABLE)]		= "nr_zone_unevictable",
++	[I(NR_ZONE_WRITE_PENDING)]		= "nr_zone_write_pending",
++	[I(NR_MLOCK)]				= "nr_mlock",
+ #if IS_ENABLED(CONFIG_ZSMALLOC)
+-	"nr_zspages",
++	[I(NR_ZSPAGES)]				= "nr_zspages",
+ #endif
+-	"nr_free_cma",
++	[I(NR_FREE_CMA_PAGES)]			= "nr_free_cma",
+ #ifdef CONFIG_UNACCEPTED_MEMORY
+-	"nr_unaccepted",
++	[I(NR_UNACCEPTED)]			= "nr_unaccepted",
+ #endif
++#undef I
+ 
+ 	/* enum numa_stat_item counters */
++#define I(x) (NR_VM_ZONE_STAT_ITEMS + x)
+ #ifdef CONFIG_NUMA
+-	"numa_hit",
+-	"numa_miss",
+-	"numa_foreign",
+-	"numa_interleave",
+-	"numa_local",
+-	"numa_other",
++	[I(NUMA_HIT)]				= "numa_hit",
++	[I(NUMA_MISS)]				= "numa_miss",
++	[I(NUMA_FOREIGN)]			= "numa_foreign",
++	[I(NUMA_INTERLEAVE_HIT)]		= "numa_interleave",
++	[I(NUMA_LOCAL)]				= "numa_local",
++	[I(NUMA_OTHER)]				= "numa_other",
+ #endif
++#undef I
+ 
+ 	/* enum node_stat_item counters */
+-	"nr_inactive_anon",
+-	"nr_active_anon",
+-	"nr_inactive_file",
+-	"nr_active_file",
+-	"nr_unevictable",
+-	"nr_slab_reclaimable",
+-	"nr_slab_unreclaimable",
+-	"nr_isolated_anon",
+-	"nr_isolated_file",
+-	"workingset_nodes",
+-	"workingset_refault_anon",
+-	"workingset_refault_file",
+-	"workingset_activate_anon",
+-	"workingset_activate_file",
+-	"workingset_restore_anon",
+-	"workingset_restore_file",
+-	"workingset_nodereclaim",
+-	"nr_anon_pages",
+-	"nr_mapped",
+-	"nr_file_pages",
+-	"nr_dirty",
+-	"nr_writeback",
+-	"nr_writeback_temp",
+-	"nr_shmem",
+-	"nr_shmem_hugepages",
+-	"nr_shmem_pmdmapped",
+-	"nr_file_hugepages",
+-	"nr_file_pmdmapped",
+-	"nr_anon_transparent_hugepages",
+-	"nr_vmscan_write",
+-	"nr_vmscan_immediate_reclaim",
+-	"nr_dirtied",
+-	"nr_written",
+-	"nr_throttled_written",
+-	"nr_kernel_misc_reclaimable",
+-	"nr_foll_pin_acquired",
+-	"nr_foll_pin_released",
+-	"nr_kernel_stack",
++#define I(x) (NR_VM_ZONE_STAT_ITEMS + NR_VM_NUMA_EVENT_ITEMS + x)
++	[I(NR_INACTIVE_ANON)]			= "nr_inactive_anon",
++	[I(NR_ACTIVE_ANON)]			= "nr_active_anon",
++	[I(NR_INACTIVE_FILE)]			= "nr_inactive_file",
++	[I(NR_ACTIVE_FILE)]			= "nr_active_file",
++	[I(NR_UNEVICTABLE)]			= "nr_unevictable",
++	[I(NR_SLAB_RECLAIMABLE_B)]		= "nr_slab_reclaimable",
++	[I(NR_SLAB_UNRECLAIMABLE_B)]		= "nr_slab_unreclaimable",
++	[I(NR_ISOLATED_ANON)]			= "nr_isolated_anon",
++	[I(NR_ISOLATED_FILE)]			= "nr_isolated_file",
++	[I(WORKINGSET_NODES)]			= "workingset_nodes",
++	[I(WORKINGSET_REFAULT_ANON)]		= "workingset_refault_anon",
++	[I(WORKINGSET_REFAULT_FILE)]		= "workingset_refault_file",
++	[I(WORKINGSET_ACTIVATE_ANON)]		= "workingset_activate_anon",
++	[I(WORKINGSET_ACTIVATE_FILE)]		= "workingset_activate_file",
++	[I(WORKINGSET_RESTORE_ANON)]		= "workingset_restore_anon",
++	[I(WORKINGSET_RESTORE_FILE)]		= "workingset_restore_file",
++	[I(WORKINGSET_NODERECLAIM)]		= "workingset_nodereclaim",
++	[I(NR_ANON_MAPPED)]			= "nr_anon_pages",
++	[I(NR_FILE_MAPPED)]			= "nr_mapped",
++	[I(NR_FILE_PAGES)]			= "nr_file_pages",
++	[I(NR_FILE_DIRTY)]			= "nr_dirty",
++	[I(NR_WRITEBACK)]			= "nr_writeback",
++	[I(NR_WRITEBACK_TEMP)]			= "nr_writeback_temp",
++	[I(NR_SHMEM)]				= "nr_shmem",
++	[I(NR_SHMEM_THPS)]			= "nr_shmem_hugepages",
++	[I(NR_SHMEM_PMDMAPPED)]			= "nr_shmem_pmdmapped",
++	[I(NR_FILE_THPS)]			= "nr_file_hugepages",
++	[I(NR_FILE_PMDMAPPED)]			= "nr_file_pmdmapped",
++	[I(NR_ANON_THPS)]			= "nr_anon_transparent_hugepages",
++	[I(NR_VMSCAN_WRITE)]			= "nr_vmscan_write",
++	[I(NR_VMSCAN_IMMEDIATE)]		= "nr_vmscan_immediate_reclaim",
++	[I(NR_DIRTIED)]				= "nr_dirtied",
++	[I(NR_WRITTEN)]				= "nr_written",
++	[I(NR_THROTTLED_WRITTEN)]		= "nr_throttled_written",
++	[I(NR_KERNEL_MISC_RECLAIMABLE)]		= "nr_kernel_misc_reclaimable",
++	[I(NR_FOLL_PIN_ACQUIRED)]		= "nr_foll_pin_acquired",
++	[I(NR_FOLL_PIN_RELEASED)]		= "nr_foll_pin_released",
++	[I(NR_KERNEL_STACK_KB)]			= "nr_kernel_stack",
+ #if IS_ENABLED(CONFIG_SHADOW_CALL_STACK)
+-	"nr_shadow_call_stack",
++	[I(NR_KERNEL_SCS_KB)]			= "nr_shadow_call_stack",
+ #endif
+-	"nr_page_table_pages",
+-	"nr_sec_page_table_pages",
++	[I(NR_PAGETABLE)]			= "nr_page_table_pages",
++	[I(NR_SECONDARY_PAGETABLE)]		= "nr_sec_page_table_pages",
+ #ifdef CONFIG_IOMMU_SUPPORT
+-	"nr_iommu_pages",
++	[I(NR_IOMMU_PAGES)]			= "nr_iommu_pages",
+ #endif
+ #ifdef CONFIG_SWAP
+-	"nr_swapcached",
++	[I(NR_SWAPCACHE)]			= "nr_swapcached",
+ #endif
+ #ifdef CONFIG_NUMA_BALANCING
+-	"pgpromote_success",
+-	"pgpromote_candidate",
++	[I(PGPROMOTE_SUCCESS)]			= "pgpromote_success",
++	[I(PGPROMOTE_CANDIDATE)]		= "pgpromote_candidate",
+ #endif
+-	"pgdemote_kswapd",
+-	"pgdemote_direct",
+-	"pgdemote_khugepaged",
+-	"pgdemote_proactive",
++	[I(PGDEMOTE_KSWAPD)]			= "pgdemote_kswapd",
++	[I(PGDEMOTE_DIRECT)]			= "pgdemote_direct",
++	[I(PGDEMOTE_KHUGEPAGED)]		= "pgdemote_khugepaged",
++	[I(PGDEMOTE_PROACTIVE)]			= "pgdemote_proactive",
+ #ifdef CONFIG_HUGETLB_PAGE
+-	"nr_hugetlb",
++	[I(NR_HUGETLB)]				= "nr_hugetlb",
+ #endif
+-	"nr_balloon_pages",
++	[I(NR_BALLOON_PAGES)]			= "nr_balloon_pages",
++#undef I
++
+ 	/* system-wide enum vm_stat_item counters */
+-	"nr_dirty_threshold",
+-	"nr_dirty_background_threshold",
+-	"nr_memmap_pages",
+-	"nr_memmap_boot_pages",
++#define I(x) (NR_VM_ZONE_STAT_ITEMS + NR_VM_NUMA_EVENT_ITEMS + \
++	     NR_VM_NODE_STAT_ITEMS + x)
++	[I(NR_DIRTY_THRESHOLD)]			= "nr_dirty_threshold",
++	[I(NR_DIRTY_BG_THRESHOLD)]		= "nr_dirty_background_threshold",
++	[I(NR_MEMMAP_PAGES)]			= "nr_memmap_pages",
++	[I(NR_MEMMAP_BOOT_PAGES)]		= "nr_memmap_boot_pages",
++#undef I
+ 
+ #if defined(CONFIG_VM_EVENT_COUNTERS) || defined(CONFIG_MEMCG)
+ 	/* enum vm_event_item counters */
+-	"pgpgin",
+-	"pgpgout",
+-	"pswpin",
+-	"pswpout",
++#define I(x) (NR_VM_ZONE_STAT_ITEMS + NR_VM_NUMA_EVENT_ITEMS + \
++	     NR_VM_NODE_STAT_ITEMS + NR_VM_STAT_ITEMS + x)
+ 
+-	TEXTS_FOR_ZONES("pgalloc")
+-	TEXTS_FOR_ZONES("allocstall")
+-	TEXTS_FOR_ZONES("pgskip")
++	[I(PGPGIN)]				= "pgpgin",
++	[I(PGPGOUT)]				= "pgpgout",
++	[I(PSWPIN)]				= "pswpin",
++	[I(PSWPOUT)]				= "pswpout",
+ 
+-	"pgfree",
+-	"pgactivate",
+-	"pgdeactivate",
+-	"pglazyfree",
++#define OFF (NR_VM_ZONE_STAT_ITEMS + NR_VM_NUMA_EVENT_ITEMS + \
++	     NR_VM_NODE_STAT_ITEMS + NR_VM_STAT_ITEMS)
++	TEXTS_FOR_ZONES(OFF+PGALLOC, "pgalloc")
++	TEXTS_FOR_ZONES(OFF+ALLOCSTALL, "allocstall")
++	TEXTS_FOR_ZONES(OFF+PGSCAN_SKIP, "pgskip")
++#undef OFF
+ 
+-	"pgfault",
+-	"pgmajfault",
+-	"pglazyfreed",
++	[I(PGFREE)]				= "pgfree",
++	[I(PGACTIVATE)]				= "pgactivate",
++	[I(PGDEACTIVATE)]			= "pgdeactivate",
++	[I(PGLAZYFREE)]				= "pglazyfree",
+ 
+-	"pgrefill",
+-	"pgreuse",
+-	"pgsteal_kswapd",
+-	"pgsteal_direct",
+-	"pgsteal_khugepaged",
+-	"pgsteal_proactive",
+-	"pgscan_kswapd",
+-	"pgscan_direct",
+-	"pgscan_khugepaged",
+-	"pgscan_proactive",
+-	"pgscan_direct_throttle",
+-	"pgscan_anon",
+-	"pgscan_file",
+-	"pgsteal_anon",
+-	"pgsteal_file",
++	[I(PGFAULT)]				= "pgfault",
++	[I(PGMAJFAULT)]				= "pgmajfault",
++	[I(PGLAZYFREED)]			= "pglazyfreed",
++
++	[I(PGREFILL)]				= "pgrefill",
++	[I(PGREUSE)]				= "pgreuse",
++	[I(PGSTEAL_KSWAPD)]			= "pgsteal_kswapd",
++	[I(PGSTEAL_DIRECT)]			= "pgsteal_direct",
++	[I(PGSTEAL_KHUGEPAGED)]			= "pgsteal_khugepaged",
++	[I(PGSTEAL_PROACTIVE)]			= "pgsteal_proactive",
++	[I(PGSCAN_KSWAPD)]			= "pgscan_kswapd",
++	[I(PGSCAN_DIRECT)]			= "pgscan_direct",
++	[I(PGSCAN_KHUGEPAGED)]			= "pgscan_khugepaged",
++	[I(PGSCAN_PROACTIVE)]			= "pgscan_proactive",
++	[I(PGSCAN_DIRECT_THROTTLE)]		= "pgscan_direct_throttle",
++	[I(PGSCAN_ANON)]			= "pgscan_anon",
++	[I(PGSCAN_FILE)]			= "pgscan_file",
++	[I(PGSTEAL_ANON)]			= "pgsteal_anon",
++	[I(PGSTEAL_FILE)]			= "pgsteal_file",
+ 
+ #ifdef CONFIG_NUMA
+-	"zone_reclaim_success",
+-	"zone_reclaim_failed",
++	[I(PGSCAN_ZONE_RECLAIM_SUCCESS)]	= "zone_reclaim_success",
++	[I(PGSCAN_ZONE_RECLAIM_FAILED)]		= "zone_reclaim_failed",
+ #endif
+-	"pginodesteal",
+-	"slabs_scanned",
+-	"kswapd_inodesteal",
+-	"kswapd_low_wmark_hit_quickly",
+-	"kswapd_high_wmark_hit_quickly",
+-	"pageoutrun",
++	[I(PGINODESTEAL)]			= "pginodesteal",
++	[I(SLABS_SCANNED)]			= "slabs_scanned",
++	[I(KSWAPD_INODESTEAL)]			= "kswapd_inodesteal",
++	[I(KSWAPD_LOW_WMARK_HIT_QUICKLY)]	= "kswapd_low_wmark_hit_quickly",
++	[I(KSWAPD_HIGH_WMARK_HIT_QUICKLY)]	= "kswapd_high_wmark_hit_quickly",
++	[I(PAGEOUTRUN)]				= "pageoutrun",
+ 
+-	"pgrotated",
++	[I(PGROTATED)]				= "pgrotated",
+ 
+-	"drop_pagecache",
+-	"drop_slab",
+-	"oom_kill",
++	[I(DROP_PAGECACHE)]			= "drop_pagecache",
++	[I(DROP_SLAB)]				= "drop_slab",
++	[I(OOM_KILL)]				= "oom_kill",
+ 
+ #ifdef CONFIG_NUMA_BALANCING
+-	"numa_pte_updates",
+-	"numa_huge_pte_updates",
+-	"numa_hint_faults",
+-	"numa_hint_faults_local",
+-	"numa_pages_migrated",
++	[I(NUMA_PTE_UPDATES)]			= "numa_pte_updates",
++	[I(NUMA_HUGE_PTE_UPDATES)]		= "numa_huge_pte_updates",
++	[I(NUMA_HINT_FAULTS)]			= "numa_hint_faults",
++	[I(NUMA_HINT_FAULTS_LOCAL)]		= "numa_hint_faults_local",
++	[I(NUMA_PAGE_MIGRATE)]			= "numa_pages_migrated",
+ #endif
+ #ifdef CONFIG_MIGRATION
+-	"pgmigrate_success",
+-	"pgmigrate_fail",
+-	"thp_migration_success",
+-	"thp_migration_fail",
+-	"thp_migration_split",
++	[I(PGMIGRATE_SUCCESS)]			= "pgmigrate_success",
++	[I(PGMIGRATE_FAIL)]			= "pgmigrate_fail",
++	[I(THP_MIGRATION_SUCCESS)]		= "thp_migration_success",
++	[I(THP_MIGRATION_FAIL)]			= "thp_migration_fail",
++	[I(THP_MIGRATION_SPLIT)]		= "thp_migration_split",
+ #endif
+ #ifdef CONFIG_COMPACTION
+-	"compact_migrate_scanned",
+-	"compact_free_scanned",
+-	"compact_isolated",
+-	"compact_stall",
+-	"compact_fail",
+-	"compact_success",
+-	"compact_daemon_wake",
+-	"compact_daemon_migrate_scanned",
+-	"compact_daemon_free_scanned",
++	[I(COMPACTMIGRATE_SCANNED)]		= "compact_migrate_scanned",
++	[I(COMPACTFREE_SCANNED)]		= "compact_free_scanned",
++	[I(COMPACTISOLATED)]			= "compact_isolated",
++	[I(COMPACTSTALL)]			= "compact_stall",
++	[I(COMPACTFAIL)]			= "compact_fail",
++	[I(COMPACTSUCCESS)]			= "compact_success",
++	[I(KCOMPACTD_WAKE)]			= "compact_daemon_wake",
++	[I(KCOMPACTD_MIGRATE_SCANNED)]		= "compact_daemon_migrate_scanned",
++	[I(KCOMPACTD_FREE_SCANNED)]		= "compact_daemon_free_scanned",
+ #endif
+ 
+ #ifdef CONFIG_HUGETLB_PAGE
+-	"htlb_buddy_alloc_success",
+-	"htlb_buddy_alloc_fail",
++	[I(HTLB_BUDDY_PGALLOC)]			= "htlb_buddy_alloc_success",
++	[I(HTLB_BUDDY_PGALLOC_FAIL)]		= "htlb_buddy_alloc_fail",
+ #endif
+ #ifdef CONFIG_CMA
+-	"cma_alloc_success",
+-	"cma_alloc_fail",
++	[I(CMA_ALLOC_SUCCESS)]			= "cma_alloc_success",
++	[I(CMA_ALLOC_FAIL)]			= "cma_alloc_fail",
+ #endif
+-	"unevictable_pgs_culled",
+-	"unevictable_pgs_scanned",
+-	"unevictable_pgs_rescued",
+-	"unevictable_pgs_mlocked",
+-	"unevictable_pgs_munlocked",
+-	"unevictable_pgs_cleared",
+-	"unevictable_pgs_stranded",
++	[I(UNEVICTABLE_PGCULLED)]		= "unevictable_pgs_culled",
++	[I(UNEVICTABLE_PGSCANNED)]		= "unevictable_pgs_scanned",
++	[I(UNEVICTABLE_PGRESCUED)]		= "unevictable_pgs_rescued",
++	[I(UNEVICTABLE_PGMLOCKED)]		= "unevictable_pgs_mlocked",
++	[I(UNEVICTABLE_PGMUNLOCKED)]		= "unevictable_pgs_munlocked",
++	[I(UNEVICTABLE_PGCLEARED)]		= "unevictable_pgs_cleared",
++	[I(UNEVICTABLE_PGSTRANDED)]		= "unevictable_pgs_stranded",
+ 
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+-	"thp_fault_alloc",
+-	"thp_fault_fallback",
+-	"thp_fault_fallback_charge",
+-	"thp_collapse_alloc",
+-	"thp_collapse_alloc_failed",
+-	"thp_file_alloc",
+-	"thp_file_fallback",
+-	"thp_file_fallback_charge",
+-	"thp_file_mapped",
+-	"thp_split_page",
+-	"thp_split_page_failed",
+-	"thp_deferred_split_page",
+-	"thp_underused_split_page",
+-	"thp_split_pmd",
+-	"thp_scan_exceed_none_pte",
+-	"thp_scan_exceed_swap_pte",
+-	"thp_scan_exceed_share_pte",
++	[I(THP_FAULT_ALLOC)]			= "thp_fault_alloc",
++	[I(THP_FAULT_FALLBACK)]			= "thp_fault_fallback",
++	[I(THP_FAULT_FALLBACK_CHARGE)]		= "thp_fault_fallback_charge",
++	[I(THP_COLLAPSE_ALLOC)]			= "thp_collapse_alloc",
++	[I(THP_COLLAPSE_ALLOC_FAILED)]		= "thp_collapse_alloc_failed",
++	[I(THP_FILE_ALLOC)]			= "thp_file_alloc",
++	[I(THP_FILE_FALLBACK)]			= "thp_file_fallback",
++	[I(THP_FILE_FALLBACK_CHARGE)]		= "thp_file_fallback_charge",
++	[I(THP_FILE_MAPPED)]			= "thp_file_mapped",
++	[I(THP_SPLIT_PAGE)]			= "thp_split_page",
++	[I(THP_SPLIT_PAGE_FAILED)]		= "thp_split_page_failed",
++	[I(THP_DEFERRED_SPLIT_PAGE)]		= "thp_deferred_split_page",
++	[I(THP_UNDERUSED_SPLIT_PAGE)]		= "thp_underused_split_page",
++	[I(THP_SPLIT_PMD)]			= "thp_split_pmd",
++	[I(THP_SCAN_EXCEED_NONE_PTE)]		= "thp_scan_exceed_none_pte",
++	[I(THP_SCAN_EXCEED_SWAP_PTE)]		= "thp_scan_exceed_swap_pte",
++	[I(THP_SCAN_EXCEED_SHARED_PTE)]		= "thp_scan_exceed_share_pte",
+ #ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
+-	"thp_split_pud",
++	[I(THP_SPLIT_PUD)]			= "thp_split_pud",
+ #endif
+-	"thp_zero_page_alloc",
+-	"thp_zero_page_alloc_failed",
+-	"thp_swpout",
+-	"thp_swpout_fallback",
++	[I(THP_ZERO_PAGE_ALLOC)]		= "thp_zero_page_alloc",
++	[I(THP_ZERO_PAGE_ALLOC_FAILED)]		= "thp_zero_page_alloc_failed",
++	[I(THP_SWPOUT)]				= "thp_swpout",
++	[I(THP_SWPOUT_FALLBACK)]		= "thp_swpout_fallback",
+ #endif
+ #ifdef CONFIG_MEMORY_BALLOON
+-	"balloon_inflate",
+-	"balloon_deflate",
++	[I(BALLOON_INFLATE)]			= "balloon_inflate",
++	[I(BALLOON_DEFLATE)]			= "balloon_deflate",
+ #ifdef CONFIG_BALLOON_COMPACTION
+-	"balloon_migrate",
++	[I(BALLOON_MIGRATE)]			= "balloon_migrate",
+ #endif
+ #endif /* CONFIG_MEMORY_BALLOON */
+ #ifdef CONFIG_DEBUG_TLBFLUSH
+-	"nr_tlb_remote_flush",
+-	"nr_tlb_remote_flush_received",
+-	"nr_tlb_local_flush_all",
+-	"nr_tlb_local_flush_one",
++	[I(NR_TLB_REMOTE_FLUSH)]		= "nr_tlb_remote_flush",
++	[I(NR_TLB_REMOTE_FLUSH_RECEIVED)]	= "nr_tlb_remote_flush_received",
++	[I(NR_TLB_LOCAL_FLUSH_ALL)]		= "nr_tlb_local_flush_all",
++	[I(NR_TLB_LOCAL_FLUSH_ONE)]		= "nr_tlb_local_flush_one",
+ #endif /* CONFIG_DEBUG_TLBFLUSH */
+ 
+ #ifdef CONFIG_SWAP
+-	"swap_ra",
+-	"swap_ra_hit",
+-	"swpin_zero",
+-	"swpout_zero",
++	[I(SWAP_RA)]				= "swap_ra",
++	[I(SWAP_RA_HIT)]			= "swap_ra_hit",
++	[I(SWPIN_ZERO)]				= "swpin_zero",
++	[I(SWPOUT_ZERO)]			= "swpout_zero",
+ #ifdef CONFIG_KSM
+-	"ksm_swpin_copy",
++	[I(KSM_SWPIN_COPY)]			= "ksm_swpin_copy",
+ #endif
+ #endif
+ #ifdef CONFIG_KSM
+-	"cow_ksm",
++	[I(COW_KSM)]				= "cow_ksm",
+ #endif
+ #ifdef CONFIG_ZSWAP
+-	"zswpin",
+-	"zswpout",
+-	"zswpwb",
++	[I(ZSWPIN)]				= "zswpin",
++	[I(ZSWPOUT)]				= "zswpout",
++	[I(ZSWPWB)]				= "zswpwb",
+ #endif
+ #ifdef CONFIG_X86
+-	"direct_map_level2_splits",
+-	"direct_map_level3_splits",
+-	"direct_map_level2_collapses",
+-	"direct_map_level3_collapses",
++	[I(DIRECT_MAP_LEVEL2_SPLIT)]		= "direct_map_level2_splits",
++	[I(DIRECT_MAP_LEVEL3_SPLIT)]		= "direct_map_level3_splits",
++	[I(DIRECT_MAP_LEVEL2_COLLAPSE)]		= "direct_map_level2_collapses",
++	[I(DIRECT_MAP_LEVEL3_COLLAPSE)]		= "direct_map_level3_collapses",
+ #endif
+ #ifdef CONFIG_PER_VMA_LOCK_STATS
+-	"vma_lock_success",
+-	"vma_lock_abort",
+-	"vma_lock_retry",
+-	"vma_lock_miss",
++	[I(VMA_LOCK_SUCCESS)]			= "vma_lock_success",
++	[I(VMA_LOCK_ABORT)]			= "vma_lock_abort",
++	[I(VMA_LOCK_RETRY)]			= "vma_lock_retry",
++	[I(VMA_LOCK_MISS)]			= "vma_lock_miss",
+ #endif
+ #ifdef CONFIG_DEBUG_STACK_USAGE
+-	"kstack_1k",
++	[I(KSTACK_1K)]				= "kstack_1k",
+ #if THREAD_SIZE > 1024
+-	"kstack_2k",
++	[I(KSTACK_2K)]				= "kstack_2k",
+ #endif
+ #if THREAD_SIZE > 2048
+-	"kstack_4k",
++	[I(KSTACK_4K)]				= "kstack_4k",
+ #endif
+ #if THREAD_SIZE > 4096
+-	"kstack_8k",
++	[I(KSTACK_8K)]				= "kstack_8k",
+ #endif
+ #if THREAD_SIZE > 8192
+-	"kstack_16k",
++	[I(KSTACK_16K)]				= "kstack_16k",
+ #endif
+ #if THREAD_SIZE > 16384
+-	"kstack_32k",
++	[I(KSTACK_32K)]				= "kstack_32k",
+ #endif
+ #if THREAD_SIZE > 32768
+-	"kstack_64k",
++	[I(KSTACK_64K)]				= "kstack_64k",
+ #endif
+ #if THREAD_SIZE > 65536
+-	"kstack_rest",
++	[I(KSTACK_REST)]			= "kstack_rest",
+ #endif
+ #endif
++#undef I
+ #endif /* CONFIG_VM_EVENT_COUNTERS || CONFIG_MEMCG */
+ };
+ #endif /* CONFIG_PROC_FS || CONFIG_SYSFS || CONFIG_NUMA || CONFIG_MEMCG */
+-- 
+2.47.2
 
-  > Maximum SPI clocking speed of the device in Hz.
-
-The ad4052 has 2 maximum speeds: Configuration mode (lower) and ADC Mode
-(higher, depends on VIO). The solution I came up, to not require a
-custom regmap spi bus, is to have spi-max-frequency bound the
-Configuration mode speed, and have ADC Mode set by VIO regulator
-voltage, through spi_transfer.speed_hz. At the end of the day, both are
-bounded by the spi controller maximum speed.
-
-My concern is that having ADC mode speed higher than spi-max-frequency
-may be counter-intuitive, still, it allows to achieve the max data sheet
-speed considering VIO voltage with the lowest code boilerplate.
-
-Let me know if I can proceed this way before submitting V3.
-
-> ...
-> 
-> >>
-> >> Assuming the diagram at [1] is correct, for SPI offload use, we are missing:
-> >>
-> >>   #trigger-source-cells:
-> >>     const: 2
-> >>     description: |
-> >>       Output pins used as trigger source.
-> >>
-> >>       Cell 0 defines which pin:
-> >>       * 0 = GP0
-> >>       * 1 = GP1
-> >>
-> >>       Cell 1 defines the event:
-> >>       * 0 = Data ready
-> >>       * 1 = Min threshold
-> >>       * 2 = Max threshold
-> >>       * 3 = Either threshold
-> >>       * 4 = Device ready
-> >>       * 5 = Device enable
-> >>       * 6 = Chop control
-> >>
-> >> Bonus points for adding a header with macros for the arbitrary event values.
-> > 
-> > In the sense of describing the device and not what the driver does, I
-> > believe the proper mapping would be:
-> > 
-> >   Cell 1 defines the event:
-> >   * 0 = Disabled
-> >   * 1 = Data ready
-> >   * 2 = Min threshold
-> >   * 3 = Max threshold
-> >   * 4 = Either threshold
-> >   * 5 = CHOP control
-> >   * 6 = Device enable
-> >   * 7 = Device ready (only GP1)
-> > 
-> > I will investigate further this.
-> > 
-> >>
-> 
-> 0 = Disabled doesn't make sense to me. One would just not wire up a
-> trigger-source in that case.
-
-Ack.
-
-
-Regards,
-Jorge
