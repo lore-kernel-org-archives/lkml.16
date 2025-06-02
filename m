@@ -1,113 +1,97 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A34DA2222C2
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 16:38:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0BFE2C3258;
+	Mon,  2 Jun 2025 16:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748882311; cv=none; b=nfeIelxSUY+6v/QTalzO1KOAl9R1QUch4VEvhy1A1CyrqaAsLI1SLjfZDdOxguzEIo1eYJlLclc5cySY5SiP/1zyvFD2bZL0S8k2wIK+j27FMP8/4Fjk1uMSsTiDgk/jRAPY0LZqE2698xtpt7NU4oIWAg5l+FqGJMj797I4pw0=
+	t=1748882385; cv=none; b=do8wecLCdxFYPef1+9ewsCDsog2e54M9zK7e4tS3Dt+qnJqK+X8lBUZWfO6f5mG9qoTqcy+6NnXHiMr00R32YxxJZa4bvJxZFl1Mj+d1kPdgAWEgYZrTr6QYQ3/CoZ6H8xDXhMov0S8Qk1Hwdcb4KS6SwT8w5NjEvosBSP0k8fU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748882311; c=relaxed/simple;
-	bh=bnG5iPo3HwSaDL4fm9oeTibpsEbFGsBs3Rwq7zBxREI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TW6z5NBmU4eCwFT+/KdD41thbU11kWmp/X2Xn8wjMm8W6v4TJEGNBHFPPPEebbiiHrEyjYq0ZG/ujwU3+np/oHFr9r4Zo4CcCaNK5U0co59OV9XbJSw4Ipsoqe+l9wVrtcreLmWAVuRqFbYCWYLPFdXIajP6EVCBvM/uHxMk7Dc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=GsYj4swa; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1748882385; c=relaxed/simple;
+	bh=e7pm2A0dvrPnFtemdr71Iq/QgQlb8NO8MxQy+Ry8Xxo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pHalI1eaiFbqf12NN+fMTLjXRH3VK8wPoqwxBRVtUpWLZ60t7kFgTpXYg6X25nvq3b9aw3czfOrwk/ZBNuN0T575mUA5QqLoxMd3sytwvMIagt3z0dB7WPNJUfn9ITJhL8A5yj+g6TyMVJgSIgNyR8b0NwWKYsQBEeNGXgLuUPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WlQHfKSk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="GsYj4swa"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ad8a8da2376so752804866b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 09:38:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1748882307; x=1749487107; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=/Ve0jVjoVm4UNAa1zq2jlYcjMy+9TmFYLnbDma3YExQ=;
-        b=GsYj4swai2LpZSDEnZigVRTlsmDyMLVSD7bJWKp7DAXClCJUGfFLcRCDYTIfj3cOmK
-         9dAZmiRdz9Qh0ZwudFht6OBQEweyt86JsH6sksNHa4jc4eLj42WqbMxNOE6QwkCi/5RT
-         Sk+Uz8Tnom/MabXB+ckcCnHj1B8tqnQxhioKQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748882307; x=1749487107;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/Ve0jVjoVm4UNAa1zq2jlYcjMy+9TmFYLnbDma3YExQ=;
-        b=GCSg3VaJdiBc7Tqfwk5f5nXCG/cIde2J49v5ipWuwx6iqsGzO0NI7BQAHvd959BgtE
-         7LQHpZrh0v6s4JuFg2mE3ZVmWeC9AGt8unWGOBpeosyAfeE4tbIUgv4i9JV06XCe8Kvm
-         s2BCCq3rUqx4B9N9jx9KONezIHX1FlXxJLXpfOCblBtVnQz5StigbTinoNWjpTsp3Cxs
-         o4BTGz4C7C3auFj/HYL1rTB1i3IwrTDYWlZvF3uRqE9UJV+Lo98jvC55LU0XNTMC3N45
-         Li0pUGRYturPyZY/A7ksPVfc7PXz284xOtTlK20TquxMZn3lrHPcVXDCEonkcsEIDWwj
-         NtGg==
-X-Forwarded-Encrypted: i=1; AJvYcCVdlyOHSzUJx8VkxX8wYu5dpqKVCDb14IGVBfObfgoyhH81OEKWOe+vlbA3L7ekwFjlRGER4jiR0RZk1V4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy50JG+qhrfCGV1bKOvC4L5MqXY2gNGvXzkn9tOkK2/pMXux+BZ
-	cufmAa+lrBY0FdVQgeRgYraHgC14ZHGttvnUWGKtDC2YJDIBeWZRvF4nHqfsdn3lQAou6VX5Cnq
-	WTnidFFwIjQ==
-X-Gm-Gg: ASbGncvaNq+Q1u4bOnFa+iXFg01uR033eVIxZgn9wX2/zg0Mwrlr5NKkCDxONnXi8YT
-	GeTLyksbuwM59yZ0fxX2ZGkDOMFJq3Kru7bcYTHp6V5wtbr66Zf23Wr117o4lJ9Eaa3XZM5NiA1
-	qXSJbTrHQOQnnQwQA50ahFiYKIfg/+BCaDE7iuuKywlcUTf8zvC4pV919SSgPgTM9tmdo998Rtg
-	BxADuMz2o5sOGrD3YNdiDoL7VKJK5ztYwjQirLHY2hleNMRwz33NYPcNgFjpQMrT9O/TGAh1mS1
-	leoCmdGj9N3VQG122gvyN01fxfAWpwXB2LJFk9TapfJN5NCFaVt8/zFahOjHbI29BiQWiQh+HR2
-	lZYFGb+97CdXZfsJxq37r1cJ18QVyjnQzy0k=
-X-Google-Smtp-Source: AGHT+IGc5Z3bGUXiUiKz3+vpVfGkb54Jd++/dD/hAZTaTsvDrp6JJzaJFLmrzmJXGkCy5UNA0ewhhw==
-X-Received: by 2002:a17:907:944c:b0:ad8:9257:571b with SMTP id a640c23a62f3a-adb493ca4ccmr965155566b.16.1748882306639;
-        Mon, 02 Jun 2025 09:38:26 -0700 (PDT)
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com. [209.85.208.50])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5d82ccf8sm812190666b.44.2025.06.02.09.38.25
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Jun 2025 09:38:26 -0700 (PDT)
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-601dfef6a8dso7439616a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 09:38:25 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVvPxtdocCIY22MDsYli0uj+8r+NeSImPbdy9ijA6CfL8cGIifCWdi114e+qoalCzGuoFuT2qXhXbu5p1o=@vger.kernel.org
-X-Received: by 2002:a05:6402:1e8e:b0:5ff:fa46:907c with SMTP id
- 4fb4d7f45d1cf-605b795f738mr7361957a12.29.1748882305561; Mon, 02 Jun 2025
- 09:38:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WlQHfKSk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AACF2C4CEEB;
+	Mon,  2 Jun 2025 16:39:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748882383;
+	bh=e7pm2A0dvrPnFtemdr71Iq/QgQlb8NO8MxQy+Ry8Xxo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WlQHfKSkBUvgS+ppRZ0U+kEkSJ/OkXyu8uskpkl+9ScyP6dEFTF6iVUU5esuKs50R
+	 mXecNucqDFw/CF3eCalR0EBznCFkfQsVniGxuaZbdnGeeTmee8kMUY8S5a1UqInNQ8
+	 2oZj44baPkqD5AhUFX9pphTfs+nceLEbhVN+PyRVv/cj/qxBRAM9VZNCQq8lwfPmdY
+	 MRCTNE7031djyWZO6vYWJnR7xizIGGigrPuSGw2uVgB89CTtZOyMtJbSdeb+G+qD2C
+	 S34LIdNxkV6ZE1Q+UI+U+AHW+XqnU82PMTgiwP3rOR3EhOqU4m/ICJiKZwXwXW6uqP
+	 p0YOuWbfwLNpg==
+Date: Mon, 2 Jun 2025 18:39:40 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Michael Hennerich <michael.hennerich@analog.com>, 
+	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, Trevor Gamblin <tgamblin@baylibre.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] pwm: axi-pwmgen: add external clock
+Message-ID: <m6evwezyzewtbiacqxfh4x6klrnc4425j6vayg7gtbytuodqpm@r72ajswzfo4k>
+References: <20250529-pwm-axi-pwmgen-add-external-clock-v3-0-5d8809a7da91@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250602144201.301974933@infradead.org> <20250602144755.928750774@infradead.org>
- <CAHk-=whkD=pveK6X_5gtVbJ62+86oBOr9JokneYpSJyxjHFBpQ@mail.gmail.com> <20250602154943.GB30486@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250602154943.GB30486@noisy.programming.kicks-ass.net>
-From: Linus Torvalds <torvalds@linuxfoundation.org>
-Date: Mon, 2 Jun 2025 09:38:09 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiYHv2duN1Aj3E5UD3zH=z6A9YpGJ1Mxj_CWL7_FRMKgw@mail.gmail.com>
-X-Gm-Features: AX0GCFuvpCkGBoAVw0sdcta4oPa5A0cQ4_MuEqZwMXvu5E9D5nsfPp8D2ElYHCQ
-Message-ID: <CAHk-=wiYHv2duN1Aj3E5UD3zH=z6A9YpGJ1Mxj_CWL7_FRMKgw@mail.gmail.com>
-Subject: Re: [RFC 6/8] x86_64/bug: Implement __WARN_printf()
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, kees@kernel.org, 
-	acarmina@redhat.com, jpoimboe@kernel.org, mark.rutland@arm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="u26q2jrrojj6d6m4"
+Content-Disposition: inline
+In-Reply-To: <20250529-pwm-axi-pwmgen-add-external-clock-v3-0-5d8809a7da91@baylibre.com>
 
-On Mon, 2 Jun 2025 at 08:50, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> Yes, it absolutely builds with clang. The inline asm isn't something we
-> don't already do elsewhere :-) *cough* extable *cough*
 
-Eww. I hadn't looked at that (or repressed it if I did). *Shudder*.
+--u26q2jrrojj6d6m4
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 0/3] pwm: axi-pwmgen: add external clock
+MIME-Version: 1.0
 
-But looking around, I don't think any of the normal code I ever look
-at actually *generate* that disgusting thing.
+Hello David,
 
-I had to search for it, and looked at the absolute horror it generates
-in the futex code, and honestly, if I ever have to look at that
-garbage, I would throw up.
+On Thu, May 29, 2025 at 11:53:17AM -0500, David Lechner wrote:
+> When we created the driver for the AXI PWMGEN IP block, we overlooked
+> the fact that it can optionally be configured to use an external clock
+> in addition to the AXI bus clock. This is easy to miss in testing
+> because the bus clock is always on because it is driving other
+> peripherals as well.
+>=20
+> Up to now, users were specifying the external clock if there was one and
+> the AXI bus clock otherwise. But the proper way to do this is to would
+> be to always specify the bus clock and only specify the external clock
+> if the IP block has been configured to use it.
+>=20
+> To fix this, we add clock-names to the devicetree bindings and change
+> clocks to allow 1 or 2 clocks.
 
-And WARN_ONCE() is in stuff I *do* look at.
+I applied path #1 for 6.17-rc1 and will send patches #2 and #3 to Linus
+before 6.16.
 
-So no. I'm NAK'ing it just because it makes the asm look entirely unreadable.
+Best regards
+Uwe
 
-And no, I'm not ok with only using 'objdump' and friends to look at
-assembly generation. I want to be able to do
+--u26q2jrrojj6d6m4
+Content-Type: application/pgp-signature; name="signature.asc"
 
-   make xyz.s
+-----BEGIN PGP SIGNATURE-----
 
-and look at code generation without throwing up.
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmg908kACgkQj4D7WH0S
+/k4bVgf/Ye0/AfnDPkgzq/NTliksF484IKG2xWdbQoo1nhmvomETPD7t9dyJSzMZ
+ZGW98pEZyXHJQSrvNt1guNJF/vLUCs/fBpsCunCfkjAhBhMc5/cGfkwlMFSqEBGC
+eyJ7dcP7HB1/U12uvB8jh5uO17kxeDDz3XSlYsiwH+ePgSlLTj5ILn1kuPOHssuI
+yUXh6Up1f9iahnqME6BbP/6DrfKFpfYTMxUr5mqk80W5rcKPTNaqdj1OlVn8ARrt
+RSoxj+hXGYVX6m1Xw0ccJNw9hagzc146Ujlqpo4mC5ClTx+2iUUWPNIH3Yub99vX
+ssJInNm0jBMFWRX70etHpdfjhgmQOg==
+=exv3
+-----END PGP SIGNATURE-----
 
-The fact that we have this disgusting thing elsewhere in places that
-I've not looked at does *not* excuse adding it to other places.
-
-                Linus
+--u26q2jrrojj6d6m4--
