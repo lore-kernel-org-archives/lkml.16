@@ -1,80 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1734015E96;
-	Mon,  2 Jun 2025 18:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C58E1FDA6D
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 18:22:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748888346; cv=none; b=nVL6A5dl/Q3Wl3Y2pXjcOO36M/0HLtrKhp2BOfzeZc9AqJgzLqULdSHkbcjMa86eM5ZAejmv1/8gtV2g5bLS9OE8Nr1Vz5XJUyLyqcf3KV3+phWNsHn9R9nm7C+T5dHVC13fNncjOpkNWW05GGcwso82jbYDJGzg9sQvJDXdaFE=
+	t=1748888528; cv=none; b=b7Luyi1zlQg8RVgslz/uYVH/oDD1TjqV2Gq3BMxenvB/X76zFDy7d7dKZBnEMw8sWdIgL0hAXaW/tsQOMDGZuEfXT8GToEunfRxxwYiSO2OiU1iMotFQa2PjoH1rqTnwvYa/YgFhtXAIMM0BjABnLY7GcPOscas4Fx/bZ8ljoZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748888346; c=relaxed/simple;
-	bh=2oasVvl6DH7CI44BAtmn9xYVnrVzUp8Orzbu9CRPEr0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BqFym4bFkcIt3xZU0MI1ojcrti4XAgA1pjQ2WYN5ykVRWIZ7zSx/OSfpWVtMbH39SHYNiorKRK/iTwU+yuJwPYul5rlig5DfM0c/0FZ0BiLFELYrdlvPcHeQ4SciKBZ3d1DlSGCW7wxjEJQbb5rem7JBs5Ryqg0aTQEJSQIgtQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S9mDuzE1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748888528; c=relaxed/simple;
+	bh=C7zOKNuv+/pWisWAp5ezHG8l2YUZ/F/bXf6WhACvC+M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GXaxSJ41lniZHseKvtw+scrX24CozPMRR+gnOT7UAgIUWFwl7VQ5yvknel/Hxk3+Qwdt/zEKo+QttMdvMMEAKWrEeJWwcI6YuEit9cfSaMX6EgdlKFmpBzvuoUdWDOp2RHzCkaBkWfaaI3JDhjj9NM7OMMTK7Zixel0XD90jYrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=gETvjFfN; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S9mDuzE1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CC5AC4CEEB;
-	Mon,  2 Jun 2025 18:19:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748888345;
-	bh=2oasVvl6DH7CI44BAtmn9xYVnrVzUp8Orzbu9CRPEr0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S9mDuzE14MJLaPAVcTzdtTu+XXMzmBlp2SaAeyEKFPgRUJD0L4y9hDMatglszqpzg
-	 NmRYabmZJybi1U2UeFRZLzz4Cw8NVkMM2AIanQOO2DlqtmjCQ4G+VFvxO5a6j6MCnD
-	 FvFbRBs7gze5LAVW1glgcD38SKPaQuANE6+rSQvKZ4e+JVeRCAARYNhlv29N29rY5U
-	 4LEJocwz5tlWSKSRb7nWXOkkkQ9DcHwsiBkhq2VfKUzhpweo97UrpyU7S57UT/udcE
-	 I3SfiheHV1TXz25I2xWt/Dds+fHRyXoiUf5ljCAp+EWvamS7Lt/Hre5JAzQobmwpIZ
-	 z3JvGwCu4WRew==
-Date: Mon, 2 Jun 2025 11:19:02 -0700
-From: Kees Cook <kees@kernel.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	David Gow <davidgow@google.com>, linux-hardening@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] lib/tests: Make RANDSTRUCT_KUNIT_TEST depend on
- RANDSTRUCT
-Message-ID: <202506021115.82342FB9@keescook>
-References: <22d9c2fa9e751a9de3c599aa082be588ea82a7a0.1748875640.git.geert@linux-m68k.org>
- <202506021107.EA2F1CBDB8@keescook>
- <CAMuHMdXN_1zwWuTGYuv4aH57cynsNA8443dbRgp+UTMzdvyLNw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="gETvjFfN"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-231e98e46c0so43869405ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 11:22:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1748888525; x=1749493325; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=DWdyHJiJ3ZXArA9dkhWhB28yR6o1uekhigLk9PlqB54=;
+        b=gETvjFfNYvGXuBJmAVaavbklvYPYB67HQ7Ejj/YCX4MT8NPClI+bVg3FgU4x76Nm2N
+         /xY7NBpEJK0pvuPzf6RZaJsI4HViMsayQSgWvAr6sMf2m2BNPnFCJ94VV90daGgit2B+
+         KY/AisnbGyZobMFPdlstDQg1LS0JyW9xXa0+U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748888525; x=1749493325;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DWdyHJiJ3ZXArA9dkhWhB28yR6o1uekhigLk9PlqB54=;
+        b=BDzy1FadMNMYrTk9U5Kxg0esK8TY9ai9dh0Ledwj8WPsC3e3w5pg54rfgAgV+lOgFD
+         Q4z45t1FNJzTXTjIHcL+6FEeg8TAbiAVzGwuwbQlt7dK7N+HOhkNEo4gJNYbS3BzSMc+
+         Ho3sFNt7G1hHnpPFxgk7k8AkFO9f5n3vYy4U8XnhNA9j0yNy8uK0oH5NqYvDQdbzIQKJ
+         HkjVAUvz+RlpQI3HXlJvUk/QTUBsJxU0UEumYz3LsWIpkSY4HJdxPYgZWft5uwz+DcNQ
+         fUSVetSAd2n6OsvdvaMLYr3MTvgp7IGG+aXY1dnUXrqn/WOWtQW6XkAke1Up1bDZKuNV
+         O4Cg==
+X-Forwarded-Encrypted: i=1; AJvYcCXMFovjBf1x54nLZ6oByokL8oNiB8MMcuhFfiywJJ0/MmHbqxWdHzEpqfTLveJab8D8U+XiD3JsiPevpLI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyISAcrn5KJZ/TNswM2sch+rpTW4je3mxslSz27Rue387UC5ypm
+	yklU5fHtZZdLtNBfp3165/mNUNvgIPe5JqhTn2B+xdeCYtukgJcbhUknPJbXhox8xoRaBIKyFYg
+	ePyotQ1O2
+X-Gm-Gg: ASbGncu+1amDDbvXNVp7P2Jubk9EH41L2XKen7NvAESszb+GyPIgZ8WV95z20XF/xcD
+	JovbEwhaX4sY4zOIBLRnOFhmREDxKAzk3OS9zbDJ+HkGi7Hh1r2MdyPMf3SIPKvMuB5s51CWzSw
+	JAKpup1T17U9u8w59k8Cc5qIi8h8ncxmBRL4oGYGAx/P5Dhdt4UOfgPvs9HZhDnGs1qcI6BVRkU
+	HINCQB3y47yBA+1WAoRNKZKswxH6zUSMCStFD5tka7q71vIWLQ3VzjbKvWJ221Dps9uSYeaPVCj
+	5gNvtW2jY0G/mKMWTZ4RQ1GufP3Cf1OynyJvQQnI6GQVZ6YXwaXtdNexvSWLp98+Gf1qKR9FLwc
+	jHFIGjC4UrsXldSI=
+X-Google-Smtp-Source: AGHT+IH0zqHfndykLqKua5b375RnTZ06yA7IdjiSQ1ZsXxG1O25kaLn+u1WDj5/rJ+wjtmQxByz6/g==
+X-Received: by 2002:a17:903:98f:b0:234:8f5d:e3a1 with SMTP id d9443c01a7336-2355f6cb5a4mr153012365ad.11.1748888525621;
+        Mon, 02 Jun 2025 11:22:05 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bdd06fsm73968325ad.101.2025.06.02.11.22.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Jun 2025 11:22:04 -0700 (PDT)
+Message-ID: <b5a88452-f10d-4893-87a5-5bb001d4be3a@broadcom.com>
+Date: Mon, 2 Jun 2025 11:22:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXN_1zwWuTGYuv4aH57cynsNA8443dbRgp+UTMzdvyLNw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 01/10] net: dsa: b53: add support for FDB operations
+ on 5325/5365
+To: =?UTF-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>,
+ jonas.gorski@gmail.com, andrew@lunn.ch, olteanv@gmail.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, vivien.didelot@gmail.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dgcbueu@gmail.com
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+References: <20250531101308.155757-1-noltari@gmail.com>
+ <20250531101308.155757-2-noltari@gmail.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250531101308.155757-2-noltari@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 02, 2025 at 08:14:08PM +0200, Geert Uytterhoeven wrote:
-> Hi Kees,
+On 5/31/25 03:12, Álvaro Fernández Rojas wrote:
+> From: Florian Fainelli <f.fainelli@gmail.com>
 > 
-> On Mon, 2 Jun 2025 at 20:08, Kees Cook <kees@kernel.org> wrote:
-> > On Mon, Jun 02, 2025 at 04:49:51PM +0200, Geert Uytterhoeven wrote:
-> > > When CONFIG_RANDSTRUCT is not enabled, all randstruct tests are skipped.
-> > > Move this logic from run-time to config-time, to avoid people building
-> > > and running tests that do not do anything.
-> >
-> > I don't like doing this because it means that looking at CI output means
-> > I can't tell if the test was not built or if the config was not
-> > included. I want to always have the test available, but skip the test if
-> > the config is missing.
+> BCM5325 and BCM5365 are part of a much older generation of switches which,
+> due to their limited number of ports and VLAN entries (up to 256) allowed
+> a single 64-bit register to hold a full ARL entry.
+> This requires a little bit of massaging when reading, writing and
+> converting ARL entries in both directions.
 > 
-> So should we drop all dependencies from tests?
-> Do you want Zorro bus, NuBus, ... tests (assumed we have them) to
-> be built on all platforms, and "run" on all CIs?
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 
-I can't speak for those authors, but I think they are pretty different
-from treewide instrumentation tests. As a consumer of CI output, I would
-like to be able to always see this kind of test output. Sometimes it's
-Kconfig settings (like here) and sometimes it's architectural capabilities
-(as seen in LKDTM tests). If the test is always run and explains why
-it has been skipped if it is skipped, I always get actionable details
-without needing to do a round-trip with the CI runner, spend time
-locating .config files, etc, etc.
+Regarding your error in the cover letter which are mostly -ENOSPC, I 
+believe the problem is that b53_arl_read() is still looking for 
+ARLTBL_VALID rather than ARLTBL_VALID_25.
+
+Given there is no VID returned upon an ARL ready with the 5325, I don't 
+know how to also reconcile that line:
+
+                 if (dev->vlan_enabled &&
+                     ((mac_vid >> ARLTBL_VID_S) & ARLTBL_VID_MASK) != vid)
+                         continue;
+
 
 -- 
-Kees Cook
+Florian
