@@ -1,106 +1,113 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 582296ADD
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 07:39:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF72B1B0F17;
+	Mon,  2 Jun 2025 07:40:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748849956; cv=none; b=FXjJXgAOJf8F3Hu/6Dqcs3vIreH4jvqoMlXvs0bCGfiTVADqHlyymNE0qPITOC02SRKYQma5CKw5wDclh38RyXa1tkwUjNo2rUC0TowLmPOiToTSybG0QChm5NhTlqBJ/QLVnB2Yc4H2I59x9JdDI6Wi18XiEOTUiYh0A0yWNeM=
+	t=1748850035; cv=none; b=F390USNYpvs6PW9SFfijGumR2e4h/PnVldUoYceRFjoq/By7S4rocfP8LcBkd5f2OsugnLPfgAmcpsUk6vqYZaHOJjK9Tz1DftZv3VXdlQchgMTW57pMyVyWxSH0+JgFr6+nXK2UD5GMuT+KVH77rQIEO0wOcU7lSOkeT/dbfOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748849956; c=relaxed/simple;
-	bh=tpbGa+wb1ROibOMJ754QCVyWSnLkiLu3ogNqXjrQrSM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I8hPcdg9bj1Tggd8nQ39bL94g79J9Ow/wwZstCL5KwEB1E+/PsyKF0x+mfVPaQzvBrSfn3V3C/k6yl7VgHDLqCLMD6Yipf7HsPB3jX+nkudtbmTA0s/EdJxU09ZGubgH+Dd+aXTNJ3pZou6xBhQVMmDhH/nHMynNgSoKsK7dFJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ll4VNW+1; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748850035; c=relaxed/simple;
+	bh=hGiH4Hoo2/uVVMFxeDhPxI1kIAj5t2YPrpFBr1YfSY4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RcpK1pNeWpUzx45ccSgy/KKrFpcE1NemyPt0o5ml0J3G2Hivv1AtIKQfAmd/Skow8PzSkzCzi2/P2J1Y1NFHMAMy2U9KOlRj5Eq+Y/St3RdKkCaqe6ak1GeJAMkv3JdfPAawdZgIRmQzZ2FCU0kyBf9tThpcjl7pB34Ewljygzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CaXmCEz7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ll4VNW+1"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-450ce3a2dd5so34905545e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 00:39:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748849952; x=1749454752; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0KRsqCQdQxGvJUA1Gb3gOwJAWm93IjHatNhbLpImD7I=;
-        b=Ll4VNW+1Ngepsnl/d8olQGqHnHWgL631ZuzVV1RpPrcmh9j7C3JaWuBKXnQn4sW2nR
-         pN/Qqfh2W10fp6lSfGGTaQvalCTOBVOkdfMqsTLVhYtdDp9i0/kXzZ3/zpkDxF2H0lAM
-         MXzH2nnrFw/o7wig2OqqARmwG5UYuO7Pa0frgZ/dbjuZBoF3i7hOpcNW6UWGmfbqMJap
-         7NrPUr8X8eThl3kGlubB500Jx737AW6GoW3AdiCIlbAFYhQK//v/HNMBTpjvXp++Uru1
-         6QTucjHmBicfwQHNvITrHyQvdTAqkGuIl2fHUTlYpYX8513LUrT3WfgGOtUBSE2i0ti8
-         9xzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748849952; x=1749454752;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0KRsqCQdQxGvJUA1Gb3gOwJAWm93IjHatNhbLpImD7I=;
-        b=I+6eVDSgx38BS5LBQUCyfFCYWjZnZEv46Fw5zu3wDHJ1VqvSYITJaRg6mAktkmrmuu
-         XYd6AapTLqKMEOCbdgoJNOnXEagAnUU2wYL8FJhIg7rQBAwnZPR/AaQDSyKrkhwFMNGy
-         2Lbb+6EjAWWoWpmeoo4EpHWGEbkn3llVnJoMUszUtfJOl7kUkmUx6kZVxtmZMOMeR3Pu
-         l1FZo0oSahSdeyFIlPtAmC/S40UKQ69ig/hse6v1MCyvoJzaw50HvdHamBakJ4ih9WL/
-         O+ZoZ2+Brv1AMWnfnBsbq2iWZttfEVy65QknvgWtQL+QQGor/wQsS81owkU2ItoOBIlN
-         nsrw==
-X-Forwarded-Encrypted: i=1; AJvYcCW8S24V+pcj1uKxX4jmMdnjgBAIDLjdUFQrGArMC/XKPXfXmwRmhF+A9xCJdLril86B7lus4d3LmOdRg7I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyg8xxnkIKR+mFlFXP55dIgrNm1kvvlrisg3S25gwM9oKfsZ7Ti
-	wHLFm/oGP1joyYUVELCMTedLveOgbD57ibQULkfEPH+KXnIjYDKiQTF7
-X-Gm-Gg: ASbGncviNOSk6zVQ9KtFEh572WrBNxNIWbVD7U5U9GFhtmzi7Z9JVunYEtPJZsMwBaw
-	Lp9B0jeMGUlwp8PNYulBLrEwwMSfOQNfgVxSsxt7acpwQ3XIx0V6+HpOutQgiM3+n/lYyhFcFjd
-	k0eWAjXK3YK+NNRnS5Fr4gixnTufChblsEo6AXaeEaYqvPo2r53kX8hgQkyPlbgBBS1XFbfr1dr
-	lLJG7CGE4SlAu46pdLS4PACiLYIf1JDHj7SYKniKkeBiuPXSr4uoGxWXW3ZDq4cCQn/krrTuHre
-	CwWe+u6d/9TKVeN7xazej4MRAsdQzaESAjJxtQ+DWNwhtSm9TIDUnlZyrqV4g8CtnzIIQf54670
-	AiA==
-X-Google-Smtp-Source: AGHT+IE8lDHcTjU/MxOEjrpe1DoCim0M2qp/z/Bda98u1Z+TCcARAjAz1Rb4YJjFowK3otT/SnYu7g==
-X-Received: by 2002:a05:600c:5251:b0:43d:47b7:b32d with SMTP id 5b1f17b1804b1-451221a223emr48903255e9.25.1748849952241;
-        Mon, 02 Jun 2025 00:39:12 -0700 (PDT)
-Received: from localhost.localdomain ([41.79.198.22])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7f8f188sm112487005e9.3.2025.06.02.00.39.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 00:39:11 -0700 (PDT)
-From: Khalid Ali <khaliidcaliy@gmail.com>
-X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
-To: tglx@linutronix.de,
-	bp@alien8.de,
-	peterz@infradead.org,
-	jpoimboe@kernel.org,
-	mingo@redhat.com,
-	dave.hansen@linux.intel.com
-Cc: pawan.kumar.gupta@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	hpa@zytor.com,
-	Khalid Ali <khaliidcaliy@gmail.com>
-Subject: [PATCH] kernel/cpu/bugs: log ltf1 mitigation status
-Date: Mon,  2 Jun 2025 07:37:06 +0000
-Message-ID: <20250602073732.734-1-khaliidcaliy@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CaXmCEz7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3957C4CEEB;
+	Mon,  2 Jun 2025 07:40:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748850034;
+	bh=hGiH4Hoo2/uVVMFxeDhPxI1kIAj5t2YPrpFBr1YfSY4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=CaXmCEz7hYMcEdm4EIc3whkuIh0WhbzTaK2ejft6ZUzE6W1NjBAJAJ5ZYjiWhq7Vv
+	 a8TYVehAKKYJwT4pK1GlMjpaowjaliyu4GGaMQjDc4ybO7Ah96dpiQc6yaPHn5EWAK
+	 x3aU1UK4mqvX+j9m/Ouyk1lj3D8/y71d6N4l014Yq7LFwWTiiQxJ2jxvUKbL1LK8Gr
+	 zZIjljCo2SyX2QBWnikOiWzbdY0W62s/0HvY6Xd7evsow/9RHb13ZW7YfHr5ScWHHU
+	 4Ua1THv7H29I5hrBQCews3GQOIUdCr1585ZM6cGbEixvVNjJGi/01HatpfULh9alaI
+	 Ia5wNigP1a+jA==
+Message-ID: <4e093835-af3b-4a84-b42f-fa7d3a6f60a1@kernel.org>
+Date: Mon, 2 Jun 2025 09:40:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 6/8] dt-bindings: soc: qcom: pmic-glink: Move X1E80100
+ out of fallbacks
+To: fenglin.wu@oss.qualcomm.com, Sebastian Reichel <sre@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Subbaraman Narayanamurthy <subbaraman.narayanamurthy@oss.qualcomm.com>,
+ David Collins <david.collins@oss.qualcomm.com>, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ kernel@oss.qualcomm.com, devicetree@vger.kernel.org,
+ linux-usb@vger.kernel.org
+References: <20250530-qcom_battmgr_update-v2-0-9e377193a656@oss.qualcomm.com>
+ <20250530-qcom_battmgr_update-v2-6-9e377193a656@oss.qualcomm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250530-qcom_battmgr_update-v2-6-9e377193a656@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Log the L1TF mitigation like other mitigatioons. This one is is the
-only one that doesn't get logged.
+On 30/05/2025 09:35, Fenglin Wu via B4 Relay wrote:
+> From: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
+> 
+> Move X1E80100 out of the fallbacks of SM8550 in pmic-glink support.
 
-Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
----
- arch/x86/kernel/cpu/bugs.c | 1 +
- 1 file changed, 1 insertion(+)
+Why?
 
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 7f94e6a5497d..38cb2a1b2849 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -2803,6 +2803,7 @@ static void __init l1tf_apply_mitigation(void)
- 		return;
- 	}
- 
-+	pr_info("Mitigation: PTE inversion\n");
- 	setup_force_cpu_cap(X86_FEATURE_L1TF_PTEINV);
- }
- 
--- 
-2.49.0
+Do not describe what you do here, it's obvious. We see it from the diff.
 
+
+Best regards,
+Krzysztof
