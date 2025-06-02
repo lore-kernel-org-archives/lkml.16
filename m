@@ -1,135 +1,164 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF4B51A0BE0
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 11:00:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 728D52F509
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 11:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748862034; cv=none; b=BlqC31rvPc9fBmLj0Wak3gu79WeeoWXuc/SwtK/niHkwS2ErbBv/VJCwbePCDgidrGzWX08ckwOQARP/MuQXFk5j+dc2dkQFBtpd/gI2+owLFTddlJSZwsri7Dc28bY04E6xgvCSvKBuu+bSHfhSCP4EkJYF00RLR1Ox5KyADbg=
+	t=1748862062; cv=none; b=r6ugXjqTYTjiZXRwjpAsCbVp4pLMHVP5Uah5mi5rjTqIL7ebJ2fj359AtF1jMBWlF61BlK1COrSxNTdpB/v7XN5XuYQcXvAkDvUH66De9qRhzT0ISiDC6Yy7gwL5ubA9KwU4x8qJhbSd0zBUm5pvM3Id/Ly+VXHIAgU0rRRnBWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748862034; c=relaxed/simple;
-	bh=ls2JLD5Mz8NbZxf/6R50L93ped0rqAxJ3miLIh+YWAM=;
+	s=arc-20240116; t=1748862062; c=relaxed/simple;
+	bh=hl/euo6Sdu63YjYGLOEeGJpt1NRGT7Z7ek+NVDBVv2I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MNt9AZBp9xMJcu79Q1AzFbY+uDQ2VJ0lI36YnYpQVuYPwEI8sAf8F1/RUYY5eyoJZpQNqpI5I1nDFkMtbs+MYxCcJCzXPUlSN9qd8YQLvhWUMKVfiUSepNKCCDBw7wohW1vmh38czqzVMu092whJwDqs4F8yT7t0KT5eDf53rjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=D8Cazi66; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BksKiEsO; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=dxENr19oARfwM5HKgzlPWuXmIiSXdO1LzbwZsshy1QmPeiTwiwqvEZfWr79j6m87OlewnI2wRh5xrNr4cVlcVL6+Olszr9nn8MYXVgpIBg1aC5EXpmRuJT7XyjOIgeW59OAsNCZab8f0sEvoW2To6A+yrZuHmwyEq7hCaVVWtt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n7bFXCtv; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="D8Cazi66";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BksKiEsO"
-Date: Mon, 2 Jun 2025 13:00:27 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748862029;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UT6nzUN7LhHmg9W3rwJe+klPpPhJk6BH+tSclxjHD78=;
-	b=D8Cazi66nno62Iy89tsIDly4bGW12mxtafP/9lS+C8PP73oNauatwVhI5g/H9xlxRe027o
-	JP7yGA4J92TrI84gXD2OVyHlwPhp+Dwqs7kaaJGLSTfiRuBlQfd28aT0Pp+lJCLmuHutTm
-	zlcTqp60r7if+L9/0dMln7hD2pEpxO1mVniyRg24NLz2z2tXSC8/Z5GuFMsu9/wzO9sQOz
-	iDQ8A3BD55zIy9uv1vgy2UX/Vvpc8uOU8XCH0cJ33Ofk1rX9n4nnRt/vLea4idsb/a01TQ
-	Hbwxu2qfcBfXjcElMeRz7WDNF6C6JYcDeuzh/hEpKHs+GySBqeXI0ppITQ+uWQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748862029;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UT6nzUN7LhHmg9W3rwJe+klPpPhJk6BH+tSclxjHD78=;
-	b=BksKiEsODfl6LDONoXd+Wi0hwK4MqSiYzxsD/ygjoCAh7u6NGOcTbqiN3V4BjHsGTJfTEB
-	730w55zLZQZc2LDg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: "Lai, Yi" <yi1.lai@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org,
-	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>, yi1.lai@intel.com
-Subject: Re: [PATCH v12 14/21] futex: Allow to resize the private local hash
-Message-ID: <20250602110027.wfqbHgzb@linutronix.de>
-References: <20250416162921.513656-1-bigeasy@linutronix.de>
- <20250416162921.513656-15-bigeasy@linutronix.de>
- <aDwDw9Aygqo6oAx+@ly-workstation>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n7bFXCtv"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-442ea341570so28477945e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 04:01:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748862059; x=1749466859; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=APwGN0/eqz9/45Et2ppeGaMN2T+hRqNScPGgnQKWid0=;
+        b=n7bFXCtvmn1CN4dqe79OjmIvlzKvZ3QLTQVC8jAtiP2bzHSE1L1mwXIMNhbxQglMGo
+         YPp9WJc3+H7M+kpGPvqv6qcH4+l0whhebiHH6B8COWqfkqbpLcb/3a9+j7sjEePc4sqq
+         oUfL7IkvFv5ua2vgFqHXomBgP1VQ5KWWJPocJhVxVlX/KEVDaEAD0iTKuaokakmkM1S+
+         KFsC/Jebpu9aPPvvrd/OIbtX6HqxdA8fJRzKYt/2Qa9V6OZqITpoH1fRWy+hD1eEiCYu
+         Ps8VA+bK2LsjnLMP43qr1mFSUJs6PwB3mcovprJ8fVA9Os63qoE2xxjqNaXx47+V87DG
+         f9Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748862059; x=1749466859;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=APwGN0/eqz9/45Et2ppeGaMN2T+hRqNScPGgnQKWid0=;
+        b=PJrg9CL1w2Cqw9TvRdduJLho4kJ4CGeqEc45ZZumIBajxOY7b+9ECnmcndYPzv03gV
+         dllCuzKw1TdTBdQMxXaRZTQj9ijnY3IYAAUIxov6mpBroRcWKVUa+eGYJLnN88/9ABBh
+         NmDaoQIIt+NJhGeNCtqyyGmrsNJ1kdqRUJn0av1ASI3x6cRDXZRCYoeglH+9kh6QXETe
+         VR6JeUW+c4xMErathx5vZ3s4w0oDGL2YT1az4LL0eHcXBEhEVX36ps5j+SsjgCFsvFzJ
+         3jk01MVc0NbxRnSNzhZNbwhu5wA6TcD5wY0/qKMkEqJMFNfuIeRn6zxscbU1gytGfdr1
+         3JYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU6RruOH8Y+Gi/rw83yWOo2dTvdUY3HGQI87EPy+jULpo6LqM54pPE+tkcGEzwL2IfmUGiU4LVpihgJXFo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxacI330DgKOljGx40qmcC8AYYcaakVxrb0ZDKB5CgkG02KkPPh
+	ltxXeAo2v7v3pAC1yIlP5tgRSIf+GFhaZlXQBxUfO6EHWu50kf+Y3+PDPr0G+twQHOI=
+X-Gm-Gg: ASbGncsaTtnUMVxqh2oCcIQL5TDt3Dnzr/dp9QsOgV68yxP1PT0CaeVYwZtLlBktbwC
+	mztIVhV4S5P8BwbOD9q2/XcAsuFZItJtF8tv1XyR2uSJ2YOLr0I/sTAbOs6V3e9pcmz/oifuOet
+	eoLzWcE5d055RSw/084HmvcN0QvhY474x8AHivhDjIUirOOl9GRf6qG3pqHucWO5FrjFUHBlp7I
+	Kdz/ryBwx+jPIOyIEdw0S7rEV7j2LlUOMKg1Xc90jY2mVUiQcXkV5Zi4hyQJMjJ6otE8Pja12iX
+	K1Omr0xg8tNXuYEGlh2dI1rxYRHLlfjxyuYW8wSCIn3u4vbdFQSvyRs=
+X-Google-Smtp-Source: AGHT+IFvqSbq/mxIH2p1mh4XibQErn6t9isHaT2vMWAsPAcME6qqAGy+0iLzr3WNRcfVG5XZiGtRHw==
+X-Received: by 2002:a05:600c:4e44:b0:441:b3eb:570a with SMTP id 5b1f17b1804b1-450d882b3c3mr109348255e9.2.1748862058518;
+        Mon, 02 Jun 2025 04:00:58 -0700 (PDT)
+Received: from localhost ([41.210.143.146])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-450d7facf9dsm115376275e9.17.2025.06.02.04.00.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Jun 2025 04:00:58 -0700 (PDT)
+Date: Mon, 2 Jun 2025 14:00:53 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	David Lechner <dlechner@baylibre.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Erick Archer <erick.archer@outlook.com>,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] Input: ims-pcu - Check record size in
+ ims_pcu_flash_firmware()
+Message-ID: <aD2EZRX8CVuvqjsN@stanley.mountain>
+References: <cover.1748463049.git.dan.carpenter@linaro.org>
+ <131fd1ae92c828ee9f4fa2de03d8c210ae1f3524.1748463049.git.dan.carpenter@linaro.org>
+ <202505281611.A024D45E@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aDwDw9Aygqo6oAx+@ly-workstation>
+In-Reply-To: <202505281611.A024D45E@keescook>
 
-On 2025-06-01 15:39:47 [+0800], Lai, Yi wrote:
-> Hi Sebastian Andrzej Siewior,
-Hi Yi,
-> Greetings!
+On Wed, May 28, 2025 at 04:26:18PM -0700, Kees Cook wrote:
+> On Wed, May 28, 2025 at 11:22:24PM +0300, Dan Carpenter wrote:
+> > The "len" variable comes from the firmware and we generally do
+> > trust firmware, but it's always better to double check.  If the "len"
+> > is too large it could result in memory corruption when we do
+> > "memcpy(fragment->data, rec->data, len);"
+> > 
+> > Fixes: 628329d52474 ("Input: add IMS Passenger Control Unit driver")
+> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> > ---
+> > Kees, this is a __counted_by() thing.  Would the checkers catch this?
+> > We know the maximum valid length for "fragment" is and so it's maybe
+> > possible to know that "fragment->len = len;" is too long?
 > 
-> I used Syzkaller and found that there is KASAN: null-ptr-deref Read in __futex_pivot_hash in linux-next next-20250527.
+> I see:
 > 
-> After bisection and the first bad commit is:
-> "
-> bd54df5ea7ca futex: Allow to resize the private local hash
-> "
+> pcu->cmd_buf as:
+> 
+>         u8 cmd_buf[IMS_PCU_BUF_SIZE];
+> 
+> and fragment is:
+> 
+> struct ims_pcu_flash_fmt {
+>         __le32 addr;
+>         u8 len;
+>         u8 data[] __counted_by(len);
+> };
+> 
+> I assume you're asking about this line:
+> 
+> 		fragment->len = len;
+> 
+> I'm not aware of any compiler instrumentation that would bounds check
+> this -- it was designed to trust these sort of explicit assignments.
+> 
+> This is hardly the only place in the kernel doing this kind of
+> deserialization into a flexible array structure, so maybe there should
+> be some kind of helper to do the bounds checking and set the
+> "counted_by" counter?
+> 
+> #define gimme(from, into, counter, len)				\
+> 	({							\
+> 		int __gimme_rc = -EINVAL			\
+> 		size_t __gimme_size = __member_size(from);	\
+> 		if (__gimme_size >= sizeof(*into) &&		\
+> 		    __gimme_size - sizeof(*into) >= len) {	\
+> 			into = (void *)from;			\
+> 			into->counter = len;			\
+> 			__gimme_rc = 0;				\
+> 		}						\
+> 		__gimme_rc;					\
+> 	})
+> 
+> 	rc = gimme(&pcu->cmd_buf[1], fragment, len, len);
+> 	if (rc) {
+> 		dev_err(pcu->dev,
+> 			"Invalid record length in firmware: %d\n", len);
+> 		return rc;
+> 	}
 
-Thank you for the report. Next time please trim your report. There is no
-need to put your report in the middle of the patch.
+I don't think that really scales...  I don't know how KASAN works
+internally.  I was thinking it might track the buffer size when we
+assign "fragment = (void *)&pcu->cmd_buf[1];" so it could calculate
+the valid values of ->len.  But that's actually quite complicated.
 
-The following fixes it:
+Smatch does track this:
 
------------>8--------------
+drivers/input/misc/ims-pcu.c:856 ims_pcu_flash_firmware() buf size: 'fragment->data' 119 elements, 119 bytes
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Date: Mon, 2 Jun 2025 12:11:13 +0200
-Subject: [PATCH] futex: Verify under the lock if global hash is in use
+But:
 
-Once the global hash is requested there is no way back to switch back to
-the per-task private hash. This is checked at the begin of the function.
+1) Smatch doesn't know about __counted_by().  This is just a matter of
+   writing the code in Sparse.
+2) It's not treating fw->data[] as user controlled data because this
+   driver loads the firmware asynchronously and Smatch gets confused by
+   threads.
 
-It is possible that two threads simultaneously request the global hash
-and both pass the initial check and block later on the
-mm::futex_hash_lock. In this case the first thread performs the switch
-to the global hash. The second thread will also attempt to switch to the
-global hash and while doing so, accessing the nonexisting slot 1 of the
-struct futex_private_hash.
-This has been reported by Yi Lai.
+regards,
+dan carpenter
 
-Verify under mm_struct::futex_phash that the global hash is not in use.
-
-Reported-by: "Lai, Yi" <yi1.lai@linux.intel.com>
-Closes: https://lore.kernel.org/all/aDwDw9Aygqo6oAx+@ly-workstation/
-Fixes: bd54df5ea7cad ("futex: Allow to resize the private local hash")
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- kernel/futex/core.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/kernel/futex/core.c b/kernel/futex/core.c
-index 1cd3a646c91fd..abbd97c2fcba8 100644
---- a/kernel/futex/core.c
-+++ b/kernel/futex/core.c
-@@ -1629,6 +1629,16 @@ static int futex_hash_allocate(unsigned int hash_slots, unsigned int flags)
- 		mm->futex_phash_new = NULL;
- 
- 		if (fph) {
-+			if (cur && !cur->hash_mask) {
-+				/*
-+				 * If two threads simultaneously request the global
-+				 * hash then the first one performs the switch,
-+				 * the second one returns here.
-+				 */
-+				free = fph;
-+				mm->futex_phash_new = new;
-+				return -EBUSY;
-+			}
- 			if (cur && !new) {
- 				/*
- 				 * If we have an existing hash, but do not yet have
--- 
-2.49.0
-
-
-Sebastian
