@@ -1,268 +1,383 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12olkn2100.outbound.protection.outlook.com [40.92.23.100])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2073.outbound.protection.outlook.com [40.107.96.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E4AAD51;
-	Mon,  2 Jun 2025 04:44:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.23.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9957BAD51
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 04:44:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.73
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748839451; cv=fail; b=tRkL2fWohTZ17crbENm99jskPGEpkusZO5MqlmQuogEUrxh3FT7MvwtWYrdxOm/STDsRHZx2JrI9XM3+fXn5+rQbPWdHW/SG/q2ZP02Dkfn5XNJ+MVU6cuODC4p0FuqxliRi4F/R2dTTdFRKjfNRSPHXC6LasXWzmTl1Ije3NAc=
+	t=1748839477; cv=fail; b=pHS+2Kz7KVhgxPWY9fuqd+0wrxf2LFQtsrwScD61CcaJeVgyNx/I45O3bcjaMy6kNwuqir4N38I1c55Oi9Vh4KbhHzsNSmQ8Aeog83tmxX9DzGUEUPEICCgBG6e9J3C7YtQQAO5sjwfYRst9dqT73qJpg+kyGcQuBbPAlXqke3Y=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748839451; c=relaxed/simple;
-	bh=70njf9Uj/2IGz/AKRN6ixiJCIkgRiDhwQkncF0CGNt4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=RCT0gzf7N/1MyRgy1V5X5D7lP0plxDyfCK7fdHp2UGvkzjjZVt8ucV2PYhl7jj4DbKvYOna5QUppxJi2BMneLc0YVgiFM5cEy9uKjx/nECBMFThuHuYA4vd+xvS6+TiPczjC+FTpF8wulsQ0hwzVKukJXv3Hp/SZisPU8IZMlG8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=W5klesxR; arc=fail smtp.client-ip=40.92.23.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	s=arc-20240116; t=1748839477; c=relaxed/simple;
+	bh=CjLBGY3671PGeRG8kjL4jilihrbrIeA/KnFDNCCqCDE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=L2pa1lEtjDV4D45EGOr2jYhWxwXEM1PHER2zn4CTfAOHfga+9l/Q3AuWgi4bLs/CmZJjg+5WCQ8ldtcVwdXEq0e+bdWgyjIMH1B78Zf4By+BgMsbmwHarYmWdXSmz2ehSelfKyjd82ub25tr22bWTp/iUOi85iSPdjFq9KssSdE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=vpd0dGLV; arc=fail smtp.client-ip=40.107.96.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="W5klesxR"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="vpd0dGLV"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=X/C2Bh/B8KSrN30o2qebscTb8/AeCRd7nE0as+9T1NKBiWHzj+wrKPNt2ELc2ythMA807kaKG7q18eAyjG6O0DIzsPEEk315UwTTmNlb300r+qHck/DnPtgglTwNE+ZkItTAbzeaeGPlMc7inrGWWeJBjX5n20ESAHeg7eGWTPiZLGollBydvFrgDjemGsPR2Ie2Jf4sDw5s9XZVL33VQ6xi5Om+U+ro23HPGCp0KChiKsZtt+x+jeOglgunRFeO5RrQdSvyEf9WKjyKwleSroX+hwBQuTfDTqyXSM+vlBXHHP81ZKR6wm3olz/OLoCrPWIV0UEjW7KekIC52CriOw==
+ b=tJihE83y4re5PawAcCy02E7L8tMr2YVBX+FjvGUWmT3WY/2yWeCdcEl3i7ocm9AHUUnx2sj5DSn1R3oAY4wTHj5yk+idw82la62zcBlouuRzj2Sy5YoOIbYgAi7MAgSSv70TmBpDprMR95qK6clMaDl5Y+G/eRMHzgh+sr85W9JbjvkMapykSrembtUBRbftxaHDsSpXvz9IjT4T9PMWogJr8rksvNLsTKCoNWI9L2nK2wzflhV/rgHzeGy7+t6qfskfaqdg5eas9+Q4JM7gOlZXXNZhXCT9BbCfRd1i5N+VnfeTdi674oCPNkmQRnNoqzrtKnQR8K7JfbISlu/nKA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2RiWgaT1/3iPDhMFBF9I6gIdQAEfK5PtrRIYH0B1qGs=;
- b=vuNoYeoFIIfT6F1uKrZxHQi/dvw2dXsQcMiYoLt/NOwaqCPf34Y0fjiEaHbJPmRGD69z205M6fpH/JGU/mvvv+9d72LLwF+un47skJxjChbH3Y9EC5/66BrLp7DnUiZCiHkHHv1lMEIsRnfZFBe34Q6F2LmRZVTl0o0Abj46ki+ggO/rCpbEyYAZ4l3lzG8YiAxIhipxCeixxNfWrAYzTAMQGisuc75g07BvUKY5fzhSrHug9EKHB98Y5JPHAzbf9zcD2FHDArOi2L9ovxfz9M5ho2Peb7i7+e1bkxwwGRGZJd4qzNlGDZFixK7NFyMdNciUWGm9hqu1WDyuZUYrdg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
+ bh=f+RWYMcezDynkO/jkES6ZiaJzpXoxjEMK96Z3KSf+4g=;
+ b=QI5ZpXdBc+022q1VTT50UuADoSo2TVnlpHgyA/0iKd3eY6WSSt3vRMhP4JZcb8QacqLBDq/7TuBvyB3QRnmRyYevsKDg0W8b1B7AafnlFRCavQu+KmUjb55Yco29DqLfYC2tP5SxIYgEGm0Em6yhpKyfcLqKkf04VV9AfGJIeaPyQe0Jd0JpUYjcyklMT6dAT9yndGt2fadyoWy2EVT/YQLB2OjgMivDhXdHWTJEOlDRz/a6TLDbC6eoEsrgSqlVIgXufRQz7o+iPGIMao9Ch2Z1EcleGWMuBsPOOjnHk767UgCfLI+sV7iUZNWgwnrMdSV+KGjXGKQda/5o1vfVxw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2RiWgaT1/3iPDhMFBF9I6gIdQAEfK5PtrRIYH0B1qGs=;
- b=W5klesxR6xhARTrfG8BTLC1BIFPuSwhbgKLBwSyzjfN8Y2PLNcHirDGeDSObsjPh6s7ydU+7LzgWgvD1EPgolYRfgkpayYHi7AoKpKXDpSIl/UDhBzl84s9oI1TVwR8mljri3YG/PJsqsyspWP7XuHkUYgyB49ZwSmbrR6OkTmDgiScARkc93p2mHGKnoAK0qpGjSl/O+t8iioAvU5CmEihi14GMYoP2XFh/oWYBwm7J3IDQgeFi65MHa8YcJTkeHYn8qs2FDKDnn3JGuYOaVlC0uN2pcEsWN8hbsbjHiFHJBWi+jPaNAf/RN/ySxPh/P2gAop6KCJKq3Mst5EcODA==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by SA2PR02MB7787.namprd02.prod.outlook.com (2603:10b6:806:134::9) with
+ bh=f+RWYMcezDynkO/jkES6ZiaJzpXoxjEMK96Z3KSf+4g=;
+ b=vpd0dGLVUOGjWMbOXKh8qFaMXNc1NH5SeRty5gqu/9AUNmec1CKbr3gwJeHOFeDxsMMRc6kpC4oQgXTRNPMKYAN/7U0plT0GC1qwOurxN+F2NEcAGVW8B6g6XDPHu1+aYdn59wcg8bNpa9JeXi78OpB8RnzQCwXfQP+HBYC/7JQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB8658.namprd12.prod.outlook.com (2603:10b6:610:175::8)
+ by DS0PR12MB7535.namprd12.prod.outlook.com (2603:10b6:8:13a::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.29; Mon, 2 Jun
- 2025 04:44:07 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8813.016; Mon, 2 Jun 2025
- 04:44:07 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Alistair Popple <apopple@nvidia.com>, "linux-mm@kvack.org"
-	<linux-mm@kvack.org>
-CC: "gerald.schaefer@linux.ibm.com" <gerald.schaefer@linux.ibm.com>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>, "jgg@ziepe.ca"
-	<jgg@ziepe.ca>, "willy@infradead.org" <willy@infradead.org>,
-	"david@redhat.com" <david@redhat.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "nvdimm@lists.linux.dev"
-	<nvdimm@lists.linux.dev>, "linux-fsdevel@vger.kernel.org"
-	<linux-fsdevel@vger.kernel.org>, "linux-ext4@vger.kernel.org"
-	<linux-ext4@vger.kernel.org>, "linux-xfs@vger.kernel.org"
-	<linux-xfs@vger.kernel.org>, "jhubbard@nvidia.com" <jhubbard@nvidia.com>,
-	"hch@lst.de" <hch@lst.de>, "zhang.lyra@gmail.com" <zhang.lyra@gmail.com>,
-	"debug@rivosinc.com" <debug@rivosinc.com>, "bjorn@kernel.org"
-	<bjorn@kernel.org>, "balbirs@nvidia.com" <balbirs@nvidia.com>,
-	"lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "loongarch@lists.linux.dev"
-	<loongarch@lists.linux.dev>, "linuxppc-dev@lists.ozlabs.org"
-	<linuxppc-dev@lists.ozlabs.org>, "linux-riscv@lists.infradead.org"
-	<linux-riscv@lists.infradead.org>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>, "John@Groves.net" <John@Groves.net>
-Subject: RE: [PATCH 11/12] mm: Remove callers of pfn_t functionality
-Thread-Topic: [PATCH 11/12] mm: Remove callers of pfn_t functionality
-Thread-Index: AQHb0GROaEejup7DJECB0OaLLvji1LPtp3Iw
-Date: Mon, 2 Jun 2025 04:44:06 +0000
-Message-ID:
- <SN6PR02MB4157F8C860B0164C4115622CD462A@SN6PR02MB4157.namprd02.prod.outlook.com>
-References:
- <cover.541c2702181b7461b84f1a6967a3f0e823023fcc.1748500293.git-series.apopple@nvidia.com>
- <4b644a3562d1b4679f5c4a042d8b7d565e24c470.1748500293.git-series.apopple@nvidia.com>
-In-Reply-To:
- <4b644a3562d1b4679f5c4a042d8b7d565e24c470.1748500293.git-series.apopple@nvidia.com>
-Accept-Language: en-US
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.36; Mon, 2 Jun
+ 2025 04:44:31 +0000
+Received: from CH3PR12MB8658.namprd12.prod.outlook.com
+ ([fe80::d5cc:cc84:5e00:2f42]) by CH3PR12MB8658.namprd12.prod.outlook.com
+ ([fe80::d5cc:cc84:5e00:2f42%7]) with mapi id 15.20.8792.033; Mon, 2 Jun 2025
+ 04:44:30 +0000
+Message-ID: <2bb35bb3-cbe4-460f-a209-1fe4095e1dce@amd.com>
+Date: Mon, 2 Jun 2025 10:14:22 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC][PATCH 0/5] sched: Try and address some recent-ish
+ regressions
+To: Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com,
+ juri.lelli@redhat.com, vincent.guittot@linaro.org
+Cc: linux-kernel@vger.kernel.org, dietmar.eggemann@arm.com,
+ rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+ vschneid@redhat.com, clm@meta.com
+References: <20250520094538.086709102@infradead.org>
 Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SA2PR02MB7787:EE_
-x-ms-office365-filtering-correlation-id: fad27895-1d25-4be1-60b0-08dda1901b81
-x-ms-exchange-slblob-mailprops:
- iS5pQZgsAQAsRVzdZadpos775QbI24X3vbC7sMvidW3c5hjd3nqK/+ifepDrykBRlQB6dKPJzSa++rUVSLiYXbYw9pJRIb9w3iyzRJ9sg3r7oWu21rK2CeOhIV1ABIsh336rISzS9h7hhLp2RpSAPaJ1DTr18i4IFMzK5pSS2ejxB9mgxsdrBeLiz3BTSFjq2/7nC2/D8+ZJ9MQT3SK+knABQYev3hv6MVCofZnIxtVCiFnp1wYMUISXXEJ+HtIwgUUBtbv5ZWPpHuKYB/I0fYgO1UIGhYksjWikc1xyi0G/m1eypclNQQUDXAw3t6BP0RV4ZX7oyChfEFD31F/8rMgnMiZ/jNfXfYHzPlRZCdNJbdjGApgiNeZrDlbcqffpTpMQPXfB/v4lwq2uN6KrRI7R8r6gtjE4BJ8ZV6yNQ7QNluxlcapvygLGAU0BekPTaUaXnGeB53uRzxSvL/dz/06fRIShnIRx3exyoAphR5efVNvbd+qEvecFKbxslytiAncupnYe4k9KVpNp62MLN8amF1tjwv0pMGgLt746JnwLbPuUy+e0pyYhywWkz1hPPg7vc7L4uu3Uc8YuGTQ6wmhkTCQoqhMExAb2UWEkUr1xOrgI/dBCuYF/sgBY5DU9kKZuPQv/q9rkIzUEbJW+amXyCrHZ7ZnNW3EMGenQf3beGt4IT05zZDS7TI06o0tmysuSpd+CqAL/ppauVr0YD5EgKccBJP7eDZuVRGOCtImCDGttZdC3AtR/QovwC9VHT/q/dM5OcovguO2EC9OhLb9scjG2keX1htblJS2r/ZgEtvnInJfGgkUJxw6fLJvY
-x-microsoft-antispam:
- BCL:0;ARA:14566002|461199028|8060799009|8062599006|15080799009|41001999006|19110799006|102099032|1602099012|10035399007|4302099013|3412199025|440099028;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?vkrn156pVk1hhU/yJmXbf03jUgyaoGp3mo3vd1iKdtjUBEL74ltP2b4sVnOq?=
- =?us-ascii?Q?p8IPKJkxlm7cHNKiuAEG8KzznoSkEgyGdu8uc2tYIVYvC+jckYcj5fmioFZx?=
- =?us-ascii?Q?rjppN/TECVfYUwIN/iOzsocef6HcAUbFtTqZH9j7cXbivxBl8I+7LCdDDIMx?=
- =?us-ascii?Q?AuwrnrN2osXMJ03BaKV0cny8hedb9ysewcPOlgwbVzYsUjKHVZlqw/Ech98D?=
- =?us-ascii?Q?N4Jf+gtLVa9qyzO5OE2Y2XdYpxzH/oRwVwqZbexTD5RRXErL8ep9I2j0Uidy?=
- =?us-ascii?Q?klMdhKZKw92tu7QMcOw8wEXcmsJyBQGOjoI07GwSEyvO/4ZjXH87XWGYlPfH?=
- =?us-ascii?Q?w9hZsNfiZ8nBNjcXqbap7ugc9bWOMGVgyqHAuPKtK9eN6jgxgAy7NnhLHrB2?=
- =?us-ascii?Q?ABKfoDvmpVroQydgay531WFQkIDQ5Rr4cqrAKwDik9BzcpQBQhWSrWV+ZIA4?=
- =?us-ascii?Q?d6ow2SXvwxxJ8LZXN88aBZJ4Mq+Qbz+3bHQjhr+QmComnoA6Psz4SWyy7vyd?=
- =?us-ascii?Q?QP85Wt3pepTpZnU0/itcVnCnV8pWtmBq5bvFKki5M1XFnT2v/17tlgBrjU0s?=
- =?us-ascii?Q?MpmHdf4H6yWBuPH0ksoS/jpbqKW3wRRneIXTu1HyHwMt6GFyfHdnr7a+qNru?=
- =?us-ascii?Q?4m/96vKq/YGVgaHD5yiebDRzPBxqtE+bjRkrR9COerV9xh3xSFXfDjakvP2+?=
- =?us-ascii?Q?xils64nLgFSUCMxcMJoQUmvg7VuVSOF1KuOmckisDECrLVWOMpgXcPDedH2v?=
- =?us-ascii?Q?0mzbS1/2lTgqujb12xUYMTgJz8P7676tSpkYlxlzO2eP8KWZ0rewf6K8fZFl?=
- =?us-ascii?Q?a9BROx8yCHhas09CFthVqQxU6l1sHUHJGd5fN6VxixkN6oWyNBhWMC0rKq/i?=
- =?us-ascii?Q?xHtx0viSJYWGuY9ntULfQGJH3r8rgbjp73T5JhyFfPpoy5PGDNpprDoKvlA5?=
- =?us-ascii?Q?s2M9MOEYWuQamtCJ9anbIiY1rc67IgNFXtbWmy2EbJr0KKSzF7+jYbrAIf+q?=
- =?us-ascii?Q?WXYBRlLSLeO5dh/DdD/5oAuLP1norqNKFbihucsqtkLJMYnq44pymDcSWLPB?=
- =?us-ascii?Q?Y45LeaF3RCp9CFCo1H7jLIApEtYMZjHhfOHjaCBuBZ5ucQ+ogGKMvroBUoLz?=
- =?us-ascii?Q?G9DtCcraSrSRLC1W9N0vL7mNrnvCT6jWfgG1JmY5/1AiW510EImXsUAGzUFD?=
- =?us-ascii?Q?PrVq1yieQs6rvHfpL4ViQi3xISrx3BZesAtIj7dWx/uA2Z4j/NgZaHo4qx58?=
- =?us-ascii?Q?wmorkm5C1559rNm5rU+YEzMz//hW+MfrCj7qcKW/Mg=3D=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?QKZIUgCAqpnwyOdj39X7o3AcVjNfSSvWLG/BGnxgBbnXSvkdRWXwnFaC4/iH?=
- =?us-ascii?Q?OuK8bgWcrWOwNsjK0n6h866WuouDq26MuSTNnDfgtQyUtqu9BFm/nRDjcyGe?=
- =?us-ascii?Q?421FShGm+2sZFPV4ll6uUANKMG0rLhkPkW/hzrXJlwAZDvXsQ+VT/jogmCGi?=
- =?us-ascii?Q?0smvoNhNcjyGPP1qDXpiuhpww7b18Ak0qp2Z8IcxwEViGuXke9Ai8mD0xair?=
- =?us-ascii?Q?YOWhDPvjYnl2EqIGhPHmfswkOkqhw9X68Hs8BSX9jZoFhTNJP5UMTtbqOYEU?=
- =?us-ascii?Q?0YCn2A4HJtkqnmLW5IGW8CGhc8qqu/ty9SeWIihPSsCpRw/OC0Xm7u2bt3Gm?=
- =?us-ascii?Q?17Gl/nKQJanUrdZg4TPO4O+y35b8RGSIhHR6YHWQBUF9jrSAqrx5qrkC8IVd?=
- =?us-ascii?Q?f7I5Y2/4pIub9aHzxO7ZZGec3TLnXOgkNNxj4lDohhGUeILwWrkRCyormgTE?=
- =?us-ascii?Q?QeZzNuIfp5f3QgRkt9f8x99lEFqnGXiyILVUPiFn71IFtfkBQeKoWYYGV0S8?=
- =?us-ascii?Q?DQN+GvWA+zkwuLdrMQWM4w3qwb7Qem42PkfVMDH40FPqBhUtrKNZW4jcn2bG?=
- =?us-ascii?Q?vn4aQ+jPLhzJYCfqglH9EpDjzEwBCES0p47aTyizJQtLpJ8Mw4Buz1Q2BVHg?=
- =?us-ascii?Q?QRv59u5bSZTmhwUBBDol85rQkSSmbmM56A/IXl7vVdMK+PBrLZynJUjSFK8K?=
- =?us-ascii?Q?Lzh00Xuw1T+CnoPDG5X4Pi26XkAb8d2J/0K5dmiDlMMjxx4DP7rwBhNWY0t3?=
- =?us-ascii?Q?1Lysh7ma36r3rINEJpwWyM3QW4pDebJ96MUYuXnsxKlM9vF5daTbk9ATVD61?=
- =?us-ascii?Q?gySHD0lBu6bKxj31dEAoDatJO9+Cfht+9nhrwkGF3Jn+x+Jr3aOStDB4uqBj?=
- =?us-ascii?Q?Ln+iZoACibKsHDTIET0Iv6J21O4jBGA7j2ZdXTWuf8qktpPHbrCzgSjzerDo?=
- =?us-ascii?Q?vqOeuinqSOZb2pYt3YCIbVWb50KpKzc+mL1XdKJ8/ez508SMFEuQ8lwjogb5?=
- =?us-ascii?Q?iR+t4g6Ia8SPXI0ioL7ul6kVx0xk6gwMbLGv6tev9shSksbVfdt7mfpw2PaG?=
- =?us-ascii?Q?CmvpIts697K8IBVWTuuyVLPngQx641rM4ywB5YpznsGYri/2TkglbaqK6y+E?=
- =?us-ascii?Q?yVGOduOpbdD7ZJ0IJbaWxq06Qc0gbNPHv8dDnkgVC9zobvKm0mrvwkzduIBi?=
- =?us-ascii?Q?eHFAeLLrtiQho49ts7UXWGuvD2lQXtghz6BTHJNmU6Nqu/+BQR4SaeABVJw?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <20250520094538.086709102@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN4PR01CA0074.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:26d::9) To CH3PR12MB8658.namprd12.prod.outlook.com
+ (2603:10b6:610:175::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8658:EE_|DS0PR12MB7535:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0a78c389-69ad-4f75-8eb4-08dda190297a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VHZEaGN2SXFGU3hYUWFKUnFWTHpjQ0Z6WHhwT21DdEVqekE4eXBOaG5uQlZE?=
+ =?utf-8?B?cXNlWWlRWHBUcFdjODJGRExqN1hZZVFpNDAxV2VZYlhQeGNYVUpKS2pvbzFM?=
+ =?utf-8?B?QmkyeU9teFNybUY4SVozc0M4d1Q5UGJKUWNXWjQ5SGtFdmszMGFsOE05TmZX?=
+ =?utf-8?B?LzN6Y1NIcDZqWVF3MTZLcnFEUVpRUG9pYkFNUXlTd00yNnJob1BkaDBpUFlY?=
+ =?utf-8?B?OTdMZW5NYUliTW1WNTF2MENoY1liUytYMzN4WHJUQ21IUHFOaE5abHlkVkdC?=
+ =?utf-8?B?bFo2WTgvcEkzSnJDeXMwbmFIN1IyeS9DZVhoQ3M0dEhqenBIT2p3eVpCcWZy?=
+ =?utf-8?B?TGp2ZnkvWmhlNGdCOXNwZVhSMzJKU2czajRzYVhWc2dRZEhQYWJWd1Q0RjZu?=
+ =?utf-8?B?TjFHaUdvSlJ3VkdyRk1uOXRJYitHY016MHN6WlRUVW5RWGNjdlNyckxHOXBE?=
+ =?utf-8?B?dm9sNlMxZms1YSsxUTU5Q0FqbmdqNlo5bitBR1lHdEFKRjRYRUJJTW1GTUhR?=
+ =?utf-8?B?aCtZaDMxejQyWFhaOTBROGJmUm5wTStSc0FyQU5WMWlaeWU2M2JyZlozZWIw?=
+ =?utf-8?B?TE5aN0tVMlpoQjIxSkNlR1YxWmxUKzF0amloZFhuZWNydDF1MlNwRTZqNHkx?=
+ =?utf-8?B?ZkdNWGJzcnZ1S3ZXMFlzLzdwV0VCWlB6R3h6VDhFb0NEOUdsWC9wdm9VZW9h?=
+ =?utf-8?B?SEdRbG42QXUyVFFNaG5kN3BHNU9FU2JZam92K0hPZ3Q3SVZkVmhBSTU4RUpF?=
+ =?utf-8?B?aExxWWRyWE54VjFMZzNBS3VNd3RzaU1qbFRiMDA1RTZaaGlzQ3VabEtvaDdQ?=
+ =?utf-8?B?Z2RJb29Dd1U3bEVmWk9PNURGMXdTelNRMVRNWVhINXdsbU03TFBSZGdDcjJC?=
+ =?utf-8?B?dDM5ZkVpbVh1UGgwOUdJUTl1VzVrbVpSR1NSZ3NBbXhhR3ZiYThPczV5RjJp?=
+ =?utf-8?B?NVdPV0NGenY3Q003RDBRR3hmc1N1bnBaSGNBK1NoZkNTckZPUlk1amllK3R1?=
+ =?utf-8?B?eVAwdk5TOVUrcW10VElwVXVXbWFyOVltN1hnQldEQUo5bG4wUGdBSkFnMkxT?=
+ =?utf-8?B?YlBCRVVYVEVWUWVvN2twNDRvQ0pFd3NGdWRhU2EwUzltWFc1NDY2WkFkR25u?=
+ =?utf-8?B?R1RSRlVHeEJyVU9IUFY1NTEvek1QYW5TaVFGTXlidlRkT0ZoRGowY1lqV3F5?=
+ =?utf-8?B?RURXOC91Q2U5YU16WCsxTEx2ZGZQT0lCczByNFFEOWI5V0Ixdi93NDRGa1B4?=
+ =?utf-8?B?cHZvK0VyaXVZNU5NZVFSZ0NjMWtaQmx0c3hSMGNTa05qaUVzZ0xBSUVjdTVX?=
+ =?utf-8?B?L2x6blNhVWZKUXg1OS9HVllUbW1FKzUvUWc5VjUvaHl0ak8yUWFnbUovNXI1?=
+ =?utf-8?B?Nm54SGt1QTh4N1VlcmRIazBQZFRsZ2FtNk5LT3loaEw2OEh5WFNKeFoyOEM4?=
+ =?utf-8?B?NzBtSjlmd0JQUnBSeEl1V2d3dXUyY0thMnNkNlhvT082OUhKNHIwaUhBZG42?=
+ =?utf-8?B?SFlVRmROL1dIbExVU24yQm94UjNwMVpCbE8weTVBWndmdmNqTTcxWVdNVTBH?=
+ =?utf-8?B?WTYzT0V1MEp1SVBqRzEzV3RKMkNDQkZpckpNWDlTN3BNRTFxcDV5eDdNSHZJ?=
+ =?utf-8?B?VjY5L0hwYnFqZjJJaEJXRG5CMjV0VU5ETVRvb3hpZUNkendVN1hlRy9sNkFS?=
+ =?utf-8?B?RWxxNUtkczNacEFUc2p6Q1p1bExVVlRUUEhOUWVGeWxRR1ZlVmM4aEROOGEy?=
+ =?utf-8?B?VFl2UXNOUnlhYmRvUUgyU21MbklNdTZETElyelZwcE14dG8rMkZmNWtEWUhy?=
+ =?utf-8?B?ZFJHcWt3WERNNkxXTVpHNDROOFJCaGpYL0tqS2ErMGRXd1ZaSFkwMTVBV0x1?=
+ =?utf-8?B?RzZzR2I4cEpnNGlHVy9tN2g2L0dnKzRpVzR5NS94dUN2cUdhVW5VSHZ5NnhC?=
+ =?utf-8?Q?KSTXLEH9bmU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8658.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VjBzYmhxK29GbzZ1WUhOeEcrVUcxZ04zTVQ3Z0V6SVVGbUI4MlhzR3NUTjN6?=
+ =?utf-8?B?TmRqTDdiU25FRkNxVWtxRzNITVkyZHltdEt3bFdyNUVPTmJBbkorZ3d3cXM3?=
+ =?utf-8?B?Yy9HT1ZNd29uVlJ0TGxWSXpmak1lZktOeTljMWtweG5rN1JGbGVTQjVDOFdj?=
+ =?utf-8?B?ZjEyNkJjUWtEeHdTdFJxUU1uTmxXN1FPZGpOZGpKM2VrRFFVVW9QZUh3S0FT?=
+ =?utf-8?B?eCtFRjNiRy85U0c5YmNHc2NzSUg3OERwZHkrbDNocHhOSEY4bU9MaXJlU09W?=
+ =?utf-8?B?eVJvZ2JGTmJTanFQa0c4eXMvWUxHZXF4a0hGWlVBcWRIS3BIRjQ3a054RXFN?=
+ =?utf-8?B?eTd2ZlhqcytSRWhsaUxhNW82UXlremhtVGw4d3dFVUdUQnFZTWRlTEdSUUFK?=
+ =?utf-8?B?SER3em9pOWVSWXJSK05xdVFrU3VEZjQrVUlTRTJmQ0wzRmc1b3RtZ1FPSGJp?=
+ =?utf-8?B?NEJGTGU3VWNnL2FQZXF6OVdiNGxuWFlmUWJ2UWlhR3BKMFgybFNiemdxRmNB?=
+ =?utf-8?B?ZGNoQ2xPaHhScVBXeXp5VmlvTzl5a2xtMmlFWit3dkpocTB5MGNiY2F0c1ZG?=
+ =?utf-8?B?cEVjN0ZUWm54aEIydzVuVW1iVHZWd3IzTzFIeTQ4aFdwSTJ0R1BZMEVTU3JM?=
+ =?utf-8?B?UXlFeGRaeE1uN1FCWGFMS280RG9KTE1SeWpsMHQ1bnhzL2QzbjNLQzdkUFEv?=
+ =?utf-8?B?WlhWQXdCQ1MwZzBIUUpJcDZXZEZDejcyMW1aeTBEUWF1QldTNG5jT2xIa0I5?=
+ =?utf-8?B?MDBxbTZWUjJYUFVVNWtpN01LTFpSU1B1K0s2dmYwempERy9HVUdMN0x4NUM1?=
+ =?utf-8?B?aklrNW12eHpIZ0JwdGR4VkNGMDgramRkRU1GaUVPbFpZSERSN1RveXNjMVZE?=
+ =?utf-8?B?anZJR0M0WXFoUDk4NU5CQVZiek4vWTVPdUdjOXVRYjhyL0FjV0VRN0ZLTVA2?=
+ =?utf-8?B?bnRmd0dQdGFBdEU0Yk9TWHB6M2JtMjRYZHNNTnF6S0I2MzV1Q0dsUkh6dzRz?=
+ =?utf-8?B?TlBjY1gwNm5PQkJLa0hjT3kzZlMzcVFsZkF1cDdWS0FZNXlWbzhaTTBHUnZK?=
+ =?utf-8?B?Q1I0Z05QYkZ3SndHMzNiRlRvTzY4UUg4RkJpL1UvaVV2MTBjSTJqbktZanVL?=
+ =?utf-8?B?MS9NeUlhMWd6Z0RJdHFXcUpxWnlOUVVuOHQ2eCs0cU93d2VZK1g5dDhXc01n?=
+ =?utf-8?B?d2h1dUFEcjRGbTFIMTBSU3NwbCtRR3hiMk5IaVlTZUxhaFk3Ty9qd0tPQ0dY?=
+ =?utf-8?B?TENpcW1ySVUzY3BocllUQytkbHVpejdzMU8yUjVwcVJWdEN2M3Zzd3l4MHBC?=
+ =?utf-8?B?cnk3NGxMRnE1OTczbC9pTGJVNjJ4SEVTMWJ4TVdxeTdGRTNXSmhuRGxaSSs2?=
+ =?utf-8?B?Y3NTQmxqNlZXVEtpejlQSUwrUHBxYkIyd3IyUFE5eGpFQTFuYnhSY3F2eFg1?=
+ =?utf-8?B?cE5pS29xdVIyV2phZ3VCdXg3NjM5a1NmUkhtQ2VwQ2xJb2tQdk1CTkJVdE83?=
+ =?utf-8?B?TmJoa1pKbEdUcW5ycXNCMy82OU1QeFgzUlNVMG9pZ3ZNbFRmMW92YU0wS2dE?=
+ =?utf-8?B?elh4VVVacnQwMEFLMDB1bU9JRzY3T2t6OW5SVFJLLzVhKzQ0aDdsb1d5S2ly?=
+ =?utf-8?B?QzU1cW0zQlFLeWszcDdNUVE5bGlZaVpKWXgrQlFraGY5V0JkRzZSRitnRHlq?=
+ =?utf-8?B?Rkl0N1RhRWVocWpDRThpYkhQTFdUN0RYcGQ0bkVDQjFta1IzR2VuMmV1QklP?=
+ =?utf-8?B?dFRPREF3WTlpTDM3Tk9wRDdrR0oxZWgxWm9rc01PblJRQUVFM0Rpc285eEFp?=
+ =?utf-8?B?Z3N5c0tpS0xJdEw4eEZYY25ncy9UcE1UOW9PeXlMSjFMZmpzM0I5QXhOQlMy?=
+ =?utf-8?B?REVhSXREQ2NnZmZzRnB0ZWNLMlR2ZVorb2pHUDBFaW9FS1VzVm9iUlhFaXh6?=
+ =?utf-8?B?WkhBNFBPTDgyVFBIakpZek1tV3RudUVBd2VwTXJJanF6aXMydUx3ZWRTLy9r?=
+ =?utf-8?B?TFdHUXdwOW1ZOHQxYWFVdlJqUURDd0dGYldka1dLblNHVEZxbC9oSWtjWmIv?=
+ =?utf-8?B?RkxOYnFpdFBqZzV4RmI4WTFYMGZCeXhyUUNPT0p6TFAxSjdLdWROR2NUT3pk?=
+ =?utf-8?Q?gCggSy8wGSHpT6HoPmJIwAnr8?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0a78c389-69ad-4f75-8eb4-08dda190297a
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8658.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: fad27895-1d25-4be1-60b0-08dda1901b81
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jun 2025 04:44:06.5107
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2025 04:44:30.5725
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR02MB7787
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vqmYuTw1/gXBpegU1/n8SBrM1ZlKENZxQMqDJYY0GY9hiD0hbbOCWykesedCtnGVkr20k2uPri+hos72vq/1jA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7535
 
-From: Alistair Popple <apopple@nvidia.com> Sent: Wednesday, May 28, 2025 11=
-:32 PM
->=20
-> All PFN_* pfn_t flags have been removed. Therefore there is no longer
-> a need for the pfn_t type and all uses can be replaced with normal
-> pfns.
->=20
-> Signed-off-by: Alistair Popple <apopple@nvidia.com>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/x86/mm/pat/memtype.c                |  6 +-
->  drivers/dax/device.c                     | 23 +++----
->  drivers/dax/hmem/hmem.c                  |  1 +-
->  drivers/dax/kmem.c                       |  1 +-
->  drivers/dax/pmem.c                       |  1 +-
->  drivers/dax/super.c                      |  3 +-
->  drivers/gpu/drm/exynos/exynos_drm_gem.c  |  1 +-
->  drivers/gpu/drm/gma500/fbdev.c           |  3 +-
->  drivers/gpu/drm/i915/gem/i915_gem_mman.c |  1 +-
->  drivers/gpu/drm/msm/msm_gem.c            |  1 +-
->  drivers/gpu/drm/omapdrm/omap_gem.c       |  6 +--
->  drivers/gpu/drm/v3d/v3d_bo.c             |  1 +-
->  drivers/hwtracing/intel_th/msu.c         |  3 +-
->  drivers/md/dm-linear.c                   |  2 +-
->  drivers/md/dm-log-writes.c               |  2 +-
->  drivers/md/dm-stripe.c                   |  2 +-
->  drivers/md/dm-target.c                   |  2 +-
->  drivers/md/dm-writecache.c               | 11 +--
->  drivers/md/dm.c                          |  2 +-
->  drivers/nvdimm/pmem.c                    |  8 +--
->  drivers/nvdimm/pmem.h                    |  4 +-
->  drivers/s390/block/dcssblk.c             |  9 +--
->  drivers/vfio/pci/vfio_pci_core.c         |  5 +-
->  fs/cramfs/inode.c                        |  5 +-
->  fs/dax.c                                 | 50 +++++++--------
->  fs/ext4/file.c                           |  2 +-
->  fs/fuse/dax.c                            |  3 +-
->  fs/fuse/virtio_fs.c                      |  5 +-
->  fs/xfs/xfs_file.c                        |  2 +-
->  include/linux/dax.h                      |  9 +--
->  include/linux/device-mapper.h            |  2 +-
->  include/linux/huge_mm.h                  |  6 +-
->  include/linux/mm.h                       |  4 +-
->  include/linux/pfn.h                      |  9 +---
->  include/linux/pfn_t.h                    | 85 +-------------------------
->  include/linux/pgtable.h                  |  4 +-
->  include/trace/events/fs_dax.h            | 12 +---
->  mm/debug_vm_pgtable.c                    |  1 +-
->  mm/huge_memory.c                         | 27 +++-----
->  mm/memory.c                              | 31 ++++-----
->  mm/memremap.c                            |  1 +-
->  mm/migrate.c                             |  1 +-
->  tools/testing/nvdimm/pmem-dax.c          |  6 +-
->  tools/testing/nvdimm/test/iomap.c        |  7 +--
->  tools/testing/nvdimm/test/nfit_test.h    |  1 +-
->  45 files changed, 121 insertions(+), 250 deletions(-)
->  delete mode 100644 include/linux/pfn_t.h
->=20
+Hello Peter,
 
-[snip]
+On 5/20/2025 3:15 PM, Peter Zijlstra wrote:
+> As can be seen, the SPR is much easier to please than the SKL for whatever
+> reason. I'm thinking we can make TTWU_QUEUE_DELAYED default on, but I suspect
+> TTWU_QUEUE_DEFAULT might be a harder sell -- we'd need to run more than this
+> one benchmark.
 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index c5345ee..12d9665 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -3644,9 +3644,9 @@ vm_fault_t vmf_insert_pfn(struct vm_area_struct *vm=
-a, unsigned long addr,
->  vm_fault_t vmf_insert_pfn_prot(struct vm_area_struct *vma, unsigned long=
- addr,
->  			unsigned long pfn, pgprot_t pgprot);
->  vm_fault_t vmf_insert_mixed(struct vm_area_struct *vma, unsigned long ad=
-dr,
-> -			pfn_t pfn);
-> +			unsigned long pfn);
->  vm_fault_t vmf_insert_mixed_mkwrite(struct vm_area_struct *vma,
-> -		unsigned long addr, pfn_t pfn);
-> +		unsigned long addr, unsigned long pfn);
->  int vm_iomap_memory(struct vm_area_struct *vma, phys_addr_t start, unsig=
-ned long len);
->=20
->  static inline vm_fault_t vmf_insert_page(struct vm_area_struct *vma,
+I haven't tried toggling any of the newly added SCHED_FEAT() yet.
+Following are the numbers for the out of the box variant:
 
-[snip]
+tl;dr Minor improvements across the board; no noticeable regressions
+except for a few schbench datapoints but they also have a high
+run-to-run variance so we should be good.
 
-> diff --git a/mm/memory.c b/mm/memory.c
-> index 6b03771..4eaf444 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -2635,7 +2634,7 @@ EXPORT_SYMBOL(vmf_insert_mixed);
->   *  the same entry was actually inserted.
->   */
->  vm_fault_t vmf_insert_mixed_mkwrite(struct vm_area_struct *vma,
-> -		unsigned long addr, pfn_t pfn)
-> +		unsigned long addr, unsigned long pfn)
->  {
->  	return __vm_insert_mixed(vma, addr, pfn, true);
->  }
+o Machine details
 
-vmf_insert_mixed_mkwrite() is not used anywhere in the
-kernel. The commit message for cd1e0dac3a3e suggests it was
-originally used by DAX code, so presumably it could just go away.
+- 3rd Generation EPYC System
+- 2 sockets each with 64C/128T
+- NPS1 (Each socket is a NUMA node)
+- C2 Disabled (POLL and C1(MWAIT) remained enabled)
 
-On the flip side, I have a patch set in flight (see Patch 3 of [1])
-that uses it to do mkwrite on a special PTE, and my usage
-requires passing PFN_SPECIAL in order to pass the tests in
-vm_mixed_ok(). But this may be dubious usage, and should not
-be a blocker to your elimination of pfn_t. I'll either add
-vmf_insert_special_mkwrite() or figure out an equivalent. Anyone
-with suggestions in that direction would be appreciated as I'm
-not an mm expert.
+o Kernel details
 
-Michael
+tip:	  tip:sched/core at commit 914873bc7df9 ("Merge tag
+           'x86-build-2025-05-25' of
+           git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip")
 
-[1] https://lore.kernel.org/linux-hyperv/20250523161522.409504-1-mhklinux@o=
-utlook.com/
+ttwu_opt: tip + this series as is
+
+o Benchmark results
+
+     ==================================================================
+     Test          : hackbench
+     Units         : Normalized time in seconds
+     Interpretation: Lower is better
+     Statistic     : AMean
+     ==================================================================
+     Case:           tip[pct imp](CV)       ttwu_opt[pct imp](CV)
+      1-groups     1.00 [ -0.00](13.74)     0.92 [  7.68]( 6.04)
+      2-groups     1.00 [ -0.00]( 9.58)     1.04 [ -3.56]( 4.96)
+      4-groups     1.00 [ -0.00]( 2.10)     1.01 [ -1.30]( 2.27)
+      8-groups     1.00 [ -0.00]( 1.51)     0.99 [  1.26]( 1.70)
+     16-groups     1.00 [ -0.00]( 1.10)     0.97 [  3.01]( 1.62)
+
+
+     ==================================================================
+     Test          : tbench
+     Units         : Normalized throughput
+     Interpretation: Higher is better
+     Statistic     : AMean
+     ==================================================================
+     Clients:    tip[pct imp](CV)       ttwu_opt[pct imp](CV)
+         1     1.00 [  0.00]( 0.82)     1.04 [  4.33]( 1.84)
+         2     1.00 [  0.00]( 1.13)     1.06 [  5.52]( 1.04)
+         4     1.00 [  0.00]( 1.12)     1.05 [  5.41]( 0.53)
+         8     1.00 [  0.00]( 0.93)     1.06 [  5.72]( 0.47)
+        16     1.00 [  0.00]( 0.38)     1.07 [  6.99]( 0.50)
+        32     1.00 [  0.00]( 0.66)     1.05 [  4.68]( 1.79)
+        64     1.00 [  0.00]( 1.18)     1.06 [  5.53]( 0.37)
+       128     1.00 [  0.00]( 1.12)     1.06 [  5.52]( 0.13)
+       256     1.00 [  0.00]( 0.42)     0.99 [ -0.83]( 1.01)
+       512     1.00 [  0.00]( 0.14)     1.01 [  1.06]( 0.13)
+      1024     1.00 [  0.00]( 0.26)     1.02 [  1.82]( 0.41)
+
+
+     ==================================================================
+     Test          : stream-10
+     Units         : Normalized Bandwidth, MB/s
+     Interpretation: Higher is better
+     Statistic     : HMean
+     ==================================================================
+     Test:       tip[pct imp](CV)       ttwu_opt[pct imp](CV)
+      Copy     1.00 [  0.00]( 8.37)     0.97 [ -2.79]( 9.17)
+     Scale     1.00 [  0.00]( 2.85)     1.00 [  0.12]( 2.91)
+       Add     1.00 [  0.00]( 3.39)     0.98 [ -2.36]( 4.85)
+     Triad     1.00 [  0.00]( 6.39)     1.01 [  1.45]( 8.42)
+
+
+     ==================================================================
+     Test          : stream-100
+     Units         : Normalized Bandwidth, MB/s
+     Interpretation: Higher is better
+     Statistic     : HMean
+     ==================================================================
+     Test:       tip[pct imp](CV)       ttwu_opt[pct imp](CV)
+      Copy     1.00 [  0.00]( 3.91)     0.98 [ -1.84]( 2.07)
+     Scale     1.00 [  0.00]( 4.34)     0.96 [ -3.80]( 6.38)
+       Add     1.00 [  0.00]( 4.14)     0.97 [ -3.04]( 6.31)
+     Triad     1.00 [  0.00]( 1.00)     0.98 [ -2.36]( 2.60)
+
+
+     ==================================================================
+     Test          : netperf
+     Units         : Normalized Througput
+     Interpretation: Higher is better
+     Statistic     : AMean
+     ==================================================================
+     Clients:         tip[pct imp](CV)       ttwu_opt[pct imp](CV)
+      1-clients     1.00 [  0.00]( 0.41)     1.06 [  5.63]( 1.17)
+      2-clients     1.00 [  0.00]( 0.58)     1.06 [  6.25]( 0.85)
+      4-clients     1.00 [  0.00]( 0.35)     1.06 [  5.59]( 0.49)
+      8-clients     1.00 [  0.00]( 0.48)     1.06 [  5.76]( 0.81)
+     16-clients     1.00 [  0.00]( 0.66)     1.06 [  5.95]( 0.69)
+     32-clients     1.00 [  0.00]( 1.15)     1.06 [  5.84]( 1.34)
+     64-clients     1.00 [  0.00]( 1.38)     1.05 [  5.20]( 1.50)
+     128-clients    1.00 [  0.00]( 0.87)     1.04 [  4.39]( 1.03)
+     256-clients    1.00 [  0.00]( 5.36)     1.00 [  0.10]( 3.48)
+     512-clients    1.00 [  0.00](54.39)     0.98 [ -1.93](52.45)
+
+
+     ==================================================================
+     Test          : schbench
+     Units         : Normalized 99th percentile latency in us
+     Interpretation: Lower is better
+     Statistic     : Median
+     ==================================================================
+     #workers: tip[pct imp](CV)       ttwu_opt[pct imp](CV)
+       1     1.00 [ -0.00]( 8.54)     0.89 [ 10.87](35.39)
+       2     1.00 [ -0.00]( 1.15)     0.88 [ 12.00]( 4.55)
+       4     1.00 [ -0.00](13.46)     0.96 [  4.17](10.60)
+       8     1.00 [ -0.00]( 7.14)     0.84 [ 15.79]( 8.44)
+      16     1.00 [ -0.00]( 3.49)     1.08 [ -8.47]( 4.69)
+      32     1.00 [ -0.00]( 1.06)     1.10 [ -9.57]( 2.91)
+      64     1.00 [ -0.00]( 5.48)     1.25 [-25.00]( 5.36)
+     128     1.00 [ -0.00](10.45)     1.18 [-17.99](12.54)
+     256     1.00 [ -0.00](31.14)     1.28 [-27.79](17.66)
+     512     1.00 [ -0.00]( 1.52)     1.01 [ -0.51]( 2.78)
+
+
+     ==================================================================
+     Test          : new-schbench-requests-per-second
+     Units         : Normalized Requests per second
+     Interpretation: Higher is better
+     Statistic     : Median
+     ==================================================================
+     #workers: tip[pct imp](CV)       ttwu_opt[pct imp](CV)
+       1     1.00 [  0.00]( 1.07)     1.00 [  0.29]( 0.00)
+       2     1.00 [  0.00]( 0.00)     1.00 [  0.00]( 0.15)
+       4     1.00 [  0.00]( 0.00)     1.00 [ -0.29]( 0.15)
+       8     1.00 [  0.00]( 0.15)     1.00 [  0.00]( 0.15)
+      16     1.00 [  0.00]( 0.00)     1.00 [  0.00]( 0.00)
+      32     1.00 [  0.00]( 3.41)     0.99 [ -0.95]( 2.06)
+      64     1.00 [  0.00]( 1.05)     0.92 [ -7.58]( 9.01)
+     128     1.00 [  0.00]( 0.00)     1.00 [  0.00]( 0.00)
+     256     1.00 [  0.00]( 0.72)     1.00 [ -0.31]( 0.42)
+     512     1.00 [  0.00]( 0.57)     1.00 [  0.00]( 0.45)
+
+
+     ==================================================================
+     Test          : new-schbench-wakeup-latency
+     Units         : Normalized 99th percentile latency in us
+     Interpretation: Lower is better
+     Statistic     : Median
+     ==================================================================
+     #workers: tip[pct imp](CV)       ttwu_opt[pct imp](CV)
+       1     1.00 [ -0.00]( 9.11)     0.75 [ 25.00](11.08)
+       2     1.00 [ -0.00]( 0.00)     1.00 [ -0.00]( 3.78)
+       4     1.00 [ -0.00]( 3.78)     0.93 [  7.14]( 3.87)
+       8     1.00 [ -0.00]( 0.00)     1.08 [ -8.33](12.91)
+      16     1.00 [ -0.00]( 7.56)     0.92 [  7.69](11.71)
+      32     1.00 [ -0.00](15.11)     1.07 [ -6.67]( 3.30)
+      64     1.00 [ -0.00]( 9.63)     1.00 [ -0.00]( 8.15)
+     128     1.00 [ -0.00]( 4.86)     0.89 [ 11.06]( 7.83)
+     256     1.00 [ -0.00]( 2.34)     1.00 [  0.20]( 0.10)
+     512     1.00 [ -0.00]( 0.40)     1.00 [  0.38]( 0.20)
+
+
+     ==================================================================
+     Test          : new-schbench-request-latency
+     Units         : Normalized 99th percentile latency in us
+     Interpretation: Lower is better
+     Statistic     : Median
+     ==================================================================
+     #workers: tip[pct imp](CV)       ttwu_opt[pct imp](CV)
+       1     1.00 [ -0.00]( 2.73)     0.98 [  2.08]( 1.04)
+       2     1.00 [ -0.00]( 0.87)     1.05 [ -5.40]( 3.10)
+       4     1.00 [ -0.00]( 1.21)     0.99 [  0.54]( 1.27)
+       8     1.00 [ -0.00]( 0.27)     0.99 [  0.79]( 2.14)
+      16     1.00 [ -0.00]( 4.04)     1.01 [ -0.53]( 0.55)
+      32     1.00 [ -0.00]( 7.35)     1.10 [ -9.97](21.10)
+      64     1.00 [ -0.00]( 3.54)     1.03 [ -2.89]( 1.55)
+     128     1.00 [ -0.00]( 0.37)     0.99 [  0.62]( 0.00)
+     256     1.00 [ -0.00]( 9.57)     0.92 [  8.36]( 2.22)
+     512     1.00 [ -0.00]( 1.82)     1.01 [ -1.23]( 0.94)
+
+
+     ==================================================================
+     Test          : Various longer running benchmarks
+     Units         : %diff in throughput reported
+     Interpretation: Higher is better
+     Statistic     : Median
+     ==================================================================
+     Benchmarks:                 %diff
+     ycsb-cassandra              -0.05%
+     ycsb-mongodb                -0.80%
+
+     deathstarbench-1x            2.44%
+     deathstarbench-2x            5.47%
+     deathstarbench-3x            0.36%
+     deathstarbench-6x            1.14%
+
+     hammerdb+mysql 16VU          1.08%
+     hammerdb+mysql 64VU         -0.43%
+
+> 
+> Anyway, the patches are stable (finally!, I hope, knock on wood) but in a
+> somewhat rough state. At the very least the last patch is missing ttwu_stat(),
+> still need to figure out how to account it ;-)
+> 
+
+Since TTWU_QUEUE_DELAYED is off by defaults, feel free to include:
+
+Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
+
+if you are planning on retaining the current defaults for the
+SCHED_FEATs. I'll get back with numbers for TTWU_QUEUE_DELAYED and
+TTWU_QUEUE_DEFAULT soon.
+
+-- 
+Thanks and Regards,
+Prateek
+
