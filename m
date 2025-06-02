@@ -1,148 +1,107 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.mleia.com (mleia.com [178.79.152.223])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CADD1FDD;
-	Mon,  2 Jun 2025 17:15:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDAC5219A9B;
+	Mon,  2 Jun 2025 17:17:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.79.152.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748884532; cv=none; b=jsPHi7mnSS/lExzEWOdQhP+FiWDpJrgZD+KFmzzSrGSf8i9rbcW+O3AlYe0ffUNbfEK//Oj6PPQKLJ9vRjBqemMYzXENvkNOk4jbMY2dig0fvFDuBs6XGU5U6ORhW8/89JptokrSlcoC8AMYQPlpjoxROw47N3ZfhzWca1udNu4=
+	t=1748884631; cv=none; b=UEM8dmNqIRDeKeMOPeHCqGfxSyi+4zMeTgDwAZaQA2OuWx9tvyyVkC1DkoHHGzVf8td7+ahyvm/4/KbL7oULDEtKB1UAWzBPatuuhZHnAs/VrV2igi3Dpe1InCyYnO73hldtWIm8LADgkIix1jSbvQKNwk4KlP3Z9vs4ILUc288=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748884532; c=relaxed/simple;
-	bh=BSPZ+8k3j7hRfUMuTmnUvpVGMIHP+qqGksybdohOw0U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=toO1FqEKvm2FnnLepxqw1xuSYsSVCDwOqmxhNZeojBXB5cY25mDxQBxI0KrHNMRr8D4tN2P9RNQxJ/jmT/0CpsHcZY7sg+yETZh+LyUVCO0UqTfrbj5IboETnapqexGMZdSeMdCQBhnO6OIidBFxbdZSef4/yF3MlNYjTaP5iHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zt17EzvH; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748884631; c=relaxed/simple;
+	bh=h550fCfTltjqsv0qBuski4X0DvmlcPysXPBy1Wek500=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Evj94/Y4kxp6s3AZ+IXxGzo4yev6hSJUgTLG/LwGgbbAWTEZSAgEFmRCB+Ho7s9wXbBP+Qk6yq8QRMLPkLlmnf2vDJLSQpDuCZnaQi0rk0rNmQrn8dL4iyfF2n45JpW3g/Ybl5TC3fUi684mz5WU//x4RtFsGZ19in4+eeMrhE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com; spf=none smtp.mailfrom=mleia.com; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=kpuUOO4j; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=kpuUOO4j; arc=none smtp.client-ip=178.79.152.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mleia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zt17EzvH"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6fad77c3ce1so1178506d6.2;
-        Mon, 02 Jun 2025 10:15:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748884530; x=1749489330; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cPqj+hlUb15Vo0gwcmnc7OruGv7UIdZSe73EVhzlEf4=;
-        b=Zt17EzvHDopbB1vda7uvsy6AXNlsY0zQ0k854GltCZyM/RsYeCGXWNowKFTSMFtg/w
-         3Wy6TAe0dIElTio4stpy8Yw+1ECmRGrGQxxOsDE19AxJ2YAWt6RlEFsg8uaEylUHKX+Q
-         eFANk0NMewVcm3O4SdpaIFIrXeWCE8vAgJ+IoZMZcWoHK2oakRBiX30LdCj7ucWM37Bj
-         szOOS7WyiiMYM9rkhmvXv4m1Dsp0yONxbphUyCNi3cOfVvWfQ/+GAdpngZE6Mj97SO2p
-         wOhclhyWvS4G1XcBdx/VCFufCSuLcymMhgbdkm4bmoYkT14YVYRaZ5+IShItFF4mFos6
-         6z1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748884530; x=1749489330;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cPqj+hlUb15Vo0gwcmnc7OruGv7UIdZSe73EVhzlEf4=;
-        b=UaAqD+ZLdgXE4lkI8OMnTaphasTZdi/Q7XV3aChKiUiXJducH7lme/K35190731xhe
-         /4NYZ/OAG+iqQSGBDyu1dAUztWJEIMxaQYz8v2N1wN2XcdTIjV56EPoP9KQ2u32jtBZm
-         gdzcHHMlkJuJs00Q65oZCjtoXwGBqJAxmTIQOXqbC1uMJIwm7kIDDGHCZKtOo9WMZact
-         pRI+H9T86s92GZoPadENuXYwIotmioa4ckjME783xOALmQGPFCN4thJ3av2qxqwcZ/9U
-         cHsdcOWyoXsHnw2zb7f5pmueSZIEA+7pEHGoH78ESK8WmpaJJHGU399V/PAJoFYnrsqW
-         hRBg==
-X-Forwarded-Encrypted: i=1; AJvYcCUO3YsEHvDU+5HduRSUeZ2ZlpMIC0aI+FV2OTvfANhlFtFqdJ23d18EdUTkJyVwbPc8ATaLS/MowM7Lvg==@vger.kernel.org, AJvYcCUiJXaj92fMYOtuhfNeq4hb/5AFO0H609YN2vgW5rV/0FAzNqq2weZeIPP4rJgkTincu8YlkEyW81pygcNE@vger.kernel.org, AJvYcCWUXw6B8zglvBTKrY87GMv0xD8thR3YC5ZZWBXM5mZ5SE2eiGEpkWGl1KvzGE/mFiUeLdZTcsWTBLxn@vger.kernel.org, AJvYcCWX23JNV6FnKWTff33cXxA4Sqy5XnlT5s4vj9KDfY/T5L78r+Kfpy15CyDyUWPi+oNf4AiXv/Zxg5T+fw==@vger.kernel.org, AJvYcCXfkFM5Abyc+7/paVpLJs0i08c8n+UoAM9uhvsFeYndcQEUbdvLNuh51pYx5FqvDhFbdYEgROM5uBen@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJ8nVbx3W1Ye7iMH19Arw//n1c6BC5TqJctZ0MMCpOlNYM7niu
-	5RL1lu9KTiYhXBAEA2KQpxRcdDMd3IeHJCsWCyRSUcUP0DvQU1DAG1QF
-X-Gm-Gg: ASbGncvMVvNtNV5TSBMV+Pc0RnqGLmUa450B9WHTLdq8RfYR9U/KaCI4rphJPW+Nv81
-	vrkq5zJE0F9FOI8Bh8dH9svoX0TvQccfsuYmv8Lbu30bj5z6JGIU2RqE3tfP7dtFRGJnPoNGlzw
-	UgagZyMG8/VDadhMxj5h19fmswty3XkdJ+yF64IltZFv4TRhNOWaEgkTNx7JYx89PQ2Uw6IWztP
-	v1+ZKXM/8wcyFjbMpKNbzIJl1U/+jUO+xfa7oL7ym8hMFsAlu40wFkEW9XiKPDi9IiqxKOZdyGg
-	CfIYargcNxeqkionnEk/fc/E2RK0+9JUmm0cUQS2ZlHe6N5sSJxmGwoWMVuVfil8jgvHCD9xnYB
-	GVMky+hU=
-X-Google-Smtp-Source: AGHT+IEXoxkzXT24Ug4BWtO98apWkgU/PzoKpBIv7F4ljkTOJkULgLYOyNFTPtMiFl4pDML3ami7BQ==
-X-Received: by 2002:ad4:5ca5:0:b0:6fa:be81:e18f with SMTP id 6a1803df08f44-6fad059a7f8mr86733506d6.0.1748884529431;
-        Mon, 02 Jun 2025 10:15:29 -0700 (PDT)
-Received: from JSANTO12-L01.ad.analog.com ([189.121.203.94])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fac6e1c800sm63659146d6.102.2025.06.02.10.15.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 10:15:28 -0700 (PDT)
-Date: Mon, 2 Jun 2025 14:15:23 -0300
-From: Jonathan Santos <jonath4nns@gmail.com>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-	nuno.sa@analog.com, Michael.Hennerich@analog.com,
-	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
-	broonie@kernel.org, dlechner@baylibre.com, rafael@kernel.org,
-	djrscally@gmail.com
-Subject: Re: [PATCH v9 09/12] iio: adc: ad7768-1: add support for
- Synchronization over SPI
-Message-ID: <aD3cK5PioN7Rw3pP@JSANTO12-L01.ad.analog.com>
-Reply-To: aDnuvAdkcTAP2tMt@smile.fi.intel.com
-References: <cover.1748447035.git.Jonathan.Santos@analog.com>
- <27cccb51cc56f1bb57cb06d279854a503d779e25.1748447035.git.Jonathan.Santos@analog.com>
- <aDnuvAdkcTAP2tMt@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="kpuUOO4j";
+	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="kpuUOO4j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
+	t=1748884628; bh=h550fCfTltjqsv0qBuski4X0DvmlcPysXPBy1Wek500=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=kpuUOO4jbcDLwgUM9LkrM00QElHiFJBp4l0Lr5Cw83PZGQUCTEMvFHKRuDmnsafCk
+	 xfbza4qUib1JqFbJ85M47DKIFRVFgbH9/FEaHby8Mq7gwIzveBqCs4m3+YB1RFmuOw
+	 5uPJW7AvyZHpFdZZU9O6PYYLILE/VuRcLgYhU0ac9RdohE9Hur5VRJl9KDjW938KQr
+	 NTRaz7zZs4Mw1uI1mBNMqXfnhIX1KalF5WNHdGuEGSr5TTfkzobqySPS3tN4ERF3c9
+	 +yYsEJ75iWIjdBfs4rKeKNn0fhD5A728wRdMHXWeqrlks16WDxiofAPTK4HndVEAR2
+	 EJUizIRA8F5pQ==
+Received: from mail.mleia.com (localhost [127.0.0.1])
+	by mail.mleia.com (Postfix) with ESMTP id 171053BE084;
+	Mon,  2 Jun 2025 17:17:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
+	t=1748884628; bh=h550fCfTltjqsv0qBuski4X0DvmlcPysXPBy1Wek500=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=kpuUOO4jbcDLwgUM9LkrM00QElHiFJBp4l0Lr5Cw83PZGQUCTEMvFHKRuDmnsafCk
+	 xfbza4qUib1JqFbJ85M47DKIFRVFgbH9/FEaHby8Mq7gwIzveBqCs4m3+YB1RFmuOw
+	 5uPJW7AvyZHpFdZZU9O6PYYLILE/VuRcLgYhU0ac9RdohE9Hur5VRJl9KDjW938KQr
+	 NTRaz7zZs4Mw1uI1mBNMqXfnhIX1KalF5WNHdGuEGSr5TTfkzobqySPS3tN4ERF3c9
+	 +yYsEJ75iWIjdBfs4rKeKNn0fhD5A728wRdMHXWeqrlks16WDxiofAPTK4HndVEAR2
+	 EJUizIRA8F5pQ==
+Message-ID: <09089071-57fc-4495-b6ee-159c59d59650@mleia.com>
+Date: Mon, 2 Jun 2025 20:17:06 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aDnuvAdkcTAP2tMt@smile.fi.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] dt-bindings: arm: lpc: add missed lpc43xx board
+Content-Language: ru-RU
+To: Frank Li <Frank.li@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Alexander Stein <alexander.stein@ew.tq-group.com>,
+ Marek Vasut <marex@denx.de>, Peng Fan <peng.fan@nxp.com>,
+ Michael Walle <mwalle@kernel.org>, Fabio Estevam <festevam@denx.de>,
+ Markus Niebel <Markus.Niebel@tq-group.com>,
+ Frieder Schrempf <frieder.schrempf@kontron.de>,
+ Francesco Dolcini <francesco.dolcini@toradex.com>,
+ Max Merchel <Max.Merchel@ew.tq-group.com>, Tim Harvey
+ <tharvey@gateworks.com>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ imx@lists.linux.dev
+References: <20250602140613.940785-1-Frank.Li@nxp.com>
+ <618490ca-cde1-4e13-8638-f5cb65606c6d@mleia.com>
+ <aD3Lg+LRUThzm2ce@lizhi-Precision-Tower-5810>
+From: Vladimir Zapolskiy <vz@mleia.com>
+In-Reply-To: <aD3Lg+LRUThzm2ce@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
+X-CRM114-CacheID: sfid-20250602_171708_116346_A318CD15 
+X-CRM114-Status: GOOD (  10.94  )
 
-On 05/30, Andy Shevchenko wrote:
-> On Thu, May 29, 2025 at 07:50:29PM -0300, Jonathan Santos wrote:
- 
-> > +static int ad7768_trigger_sources_sync_setup(struct device *dev,
-> > +					     struct fwnode_handle *dev_fwnode,
-> > +					     struct ad7768_state *st)
-> > +{
-> > +	struct fwnode_reference_args args;
-> > +
-> > +	struct fwnode_handle *fwnode __free(fwnode_handle) =
-> > +		fwnode_find_reference_args(dev_fwnode, "trigger-sources",
-> > +					   "#trigger-source-cells", 0,
-> > +					   AD7768_TRIGGER_SOURCE_SYNC_IDX, &args);
+On 6/2/25 19:04, Frank Li wrote:
+> On Mon, Jun 02, 2025 at 06:34:14PM +0300, Vladimir Zapolskiy wrote:
+>> On 6/2/25 17:06, Frank Li wrote:
+>>> Add missed legancy lpc43xx board compatible string to fix below CHECK_DTB
+>>> warnings:
+>>> arch/arm/boot/dts/nxp/lpc/lpc4337-ciaa.dtb: /: failed to match any schema with compatible: ['ciaa,lpc4337', 'nxp,lpc4337', 'nxp,lpc4350']
+>>>
+>>> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+>>> ---
+>>>    .../devicetree/bindings/arm/fsl.yaml          | 23 +++++++++++++++++++
+>>>    1 file changed, 23 insertions(+)
+>>
+>> I prefer to see NXP SoC powered boards under Documentation/devicetree/bindings/arm/nxp/
+>>
+>> LPC18XX/LPC43XX SoCs are not Freescale.
 > 
-> I don't see how args are being used. This puts in doubt the need of the first
-> patch.
-> 
+> Generally, we don't distingiush that, new s32g chip also in this files.
+> All nxp/fsl was maintained by one person and everyone know these are one
+> company now.
 
-If the wrapper is the issue, maybe it is better doing this instead?
+Well, my concern is actually not about the companies, but these two SoC
+families are totally different, the peripherals or core controllers are
+all different, it makes little sense to mix them up.
 
-static int ad7768_trigger_sources_sync_setup(struct device *dev,
-					     struct fwnode_handle *dev_fwnode,
-					     struct ad7768_state *st)
-{
-	struct fwnode_reference_args args;
-	struct fwnode_handle *fwnode __free(fwnode_handle) = NULL;
-	int ret;
+I won't raise any questions or insist on the correctness of i.MX placement
+under arm/nxp or arm/freescale, but NXP LPC32xx and NXP LPC18xx/LPC43xx dt
+bindings shall be put under arm/nxp for certain.
 
-	ret = fwnode_property_get_reference_args(dev_fwnode, "trigger-sources",
-						 "#trigger-source-cells", 0,
-						 AD7768_TRIGGER_SOURCE_SYNC_IDX, &args);
-	if (ret)
-		return ret;
-
-	fwnode = args.fwnode;
-> > +	/* First, try getting the GPIO trigger source */
-> > +	if (fwnode_device_is_compatible(fwnode, "gpio-trigger")) {
-> > +		st->gpio_sync_in = devm_fwnode_gpiod_get_index(dev, fwnode,
-> > +							       NULL,
-> > +							       0,
-> > +							       GPIOD_OUT_LOW,
-> > +							       "sync-in");
-> > +		return PTR_ERR_OR_ZERO(st->gpio_sync_in);
-> > +	}
-> > +
-> > +	/*
-> > +	 * TODO: Support the other cases when we have a trigger subsystem
-> > +	 * to reliably handle other types of devices as trigger sources.
-> > +	 *
-> > +	 * For now, return an error message. For self triggering, omit the
-> > +	 * trigger-sources property.
-> > +	 */
-> > +	return dev_err_probe(dev, -EOPNOTSUPP, "Invalid synchronization trigger source\n");
-> > +}
-
-Then we can get rid of the first patch.
-
-Regards,
-Jonathan S.
+--
+Best wishes,
+Vladimir
