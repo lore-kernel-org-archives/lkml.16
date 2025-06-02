@@ -1,180 +1,232 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166DD81ACA;
-	Mon,  2 Jun 2025 08:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 983B01C8629
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 08:24:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748852627; cv=none; b=bKb9JtUE9GRjorS+ahSBObXxkuQEpObM8+Q5OsSSLnzyU9qzOH1nmB0+8MpEtwno2VB9vPNQk/ePHJjLB6pAB+p8YSlFUrB1Pa/yX3tjE7ZbQk0pYjFG3l+dISa0zJKSvG5f05dlZneoqNsIon4C7ErndYpaLJ5FnEkBkYzXciE=
+	t=1748852661; cv=none; b=Z1h0QbgtOVReQmOBM2kuDf7zUl0Z2bgS7R/3qp6dnimVE3K37ffexS/RijbMv8bnoCsrsKD1avh41ftaMwS4fQqndBzwax0krlin1470gz5uuIkW9d31GkQhENXiX7AEx7JxoH6tbBURwabvkZEj9g/E+xpyjImBbPrL6Muu928=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748852627; c=relaxed/simple;
-	bh=7H7Ew7VPJ4GDaygvhUKOLgVMOua5zf4WxmZkr4fy4u4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=dXiD7YAYFEcT5h6GJlup5CoTjSzLcL1c2zgun7A93RMIhfQiVWbnBjJNPAdKlnx2BNNk8M1rFueiQuSToYenGd/g7wY1Atkdrm8Jy7DztfAjRK40kzNjvyDP5Wu8QioNlq34zCxqF8ZKF2sWzNK+oNvwpk4Txjst0qZurqXmqeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b9n0s253Pz6GDr7;
-	Mon,  2 Jun 2025 16:23:25 +0800 (CST)
-Received: from frapeml500005.china.huawei.com (unknown [7.182.85.13])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0C2741402E9;
-	Mon,  2 Jun 2025 16:23:35 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml500005.china.huawei.com (7.182.85.13) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 2 Jun 2025 10:23:34 +0200
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Mon, 2 Jun 2025 10:23:34 +0200
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Alison Schofield <alison.schofield@intel.com>, Li Ming
-	<ming.li@zohomail.com>
-CC: "dave@stgolabs.net" <dave@stgolabs.net>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, "dave.jiang@intel.com" <dave.jiang@intel.com>,
-	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>, "ira.weiny@intel.com"
-	<ira.weiny@intel.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC PATCH 1/1] cxl/edac: Fix the min_scrub_cycle of a region
- miscalculation
-Thread-Topic: [RFC PATCH 1/1] cxl/edac: Fix the min_scrub_cycle of a region
- miscalculation
-Thread-Index: AQHb0V6BLsbEFutoIk+fqAJdROItN7PrXNGAgAQsgOA=
-Date: Mon, 2 Jun 2025 08:23:34 +0000
-Message-ID: <bba0fc4616d54babb2b0113967acc95f@huawei.com>
-References: <20250530122852.10139-1-ming.li@zohomail.com>
- <aDn4o8Fw91vQ9D-D@aschofie-mobl2.lan>
-In-Reply-To: <aDn4o8Fw91vQ9D-D@aschofie-mobl2.lan>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1748852661; c=relaxed/simple;
+	bh=z9EmpY7z92fHZSjGH1Yqr+txuDTiN1BAAx38J8/utbQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AZgVAMYmhJmweRxexy4Zzv5z1H7Hi4VtypUfsJNzY9BewvhF7hdBoQXDkqkATsozxi2O/cidcCTiQOhAQhVcrA/cqMyaYRCf6xP8l9DM+rVQlqKP6GuZy4QDJ/I9E1D++F8Z8SLiY/kmKLBINwKAdGTAMxBlVrgZJ4FLsagTrk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=W4tM2GX7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=AtXtRF/U; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=W4tM2GX7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=AtXtRF/U; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="W4tM2GX7";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="AtXtRF/U";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="W4tM2GX7";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="AtXtRF/U"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 9EF4A216F2;
+	Mon,  2 Jun 2025 08:24:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748852655; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=UD8ca6htrwG56j6z357MyYbe+Zb0EK9l9LJ0+RTTU+E=;
+	b=W4tM2GX7rvPd2XXYzV8zDIU1Epgm5FjaDac8C92eQb0GIK0pwzjjKMt/51cjR1P98nvs9Z
+	rljke0qDewGTzDnPtS6ffAEGBS1Rr2eAIopwVTRWk8MHP/iUel2dVaGaRdun1RlywyNIS6
+	FzskXD9a8aOx8EKBQ+ve8/LxZobWh/Q=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748852655;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=UD8ca6htrwG56j6z357MyYbe+Zb0EK9l9LJ0+RTTU+E=;
+	b=AtXtRF/UGAgXnwmlfaXoQsaQfS2eXrgzRTwGn8SWwL/QZbtAHlsJkkx6rXu/cGKMaVKZFb
+	PNktu+GqQfD8mBCw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748852655; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=UD8ca6htrwG56j6z357MyYbe+Zb0EK9l9LJ0+RTTU+E=;
+	b=W4tM2GX7rvPd2XXYzV8zDIU1Epgm5FjaDac8C92eQb0GIK0pwzjjKMt/51cjR1P98nvs9Z
+	rljke0qDewGTzDnPtS6ffAEGBS1Rr2eAIopwVTRWk8MHP/iUel2dVaGaRdun1RlywyNIS6
+	FzskXD9a8aOx8EKBQ+ve8/LxZobWh/Q=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748852655;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=UD8ca6htrwG56j6z357MyYbe+Zb0EK9l9LJ0+RTTU+E=;
+	b=AtXtRF/UGAgXnwmlfaXoQsaQfS2eXrgzRTwGn8SWwL/QZbtAHlsJkkx6rXu/cGKMaVKZFb
+	PNktu+GqQfD8mBCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8C154136C7;
+	Mon,  2 Jun 2025 08:24:15 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 4rfVIa9fPWisaQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 02 Jun 2025 08:24:15 +0000
+Message-ID: <ba288a84-a4c9-4bf2-a584-f8c5d05c1767@suse.cz>
+Date: Mon, 2 Jun 2025 10:24:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] mm, slab: support NUMA policy for large kmalloc
+To: "Christoph Lameter (Ampere)" <cl@gentwo.org>
+Cc: David Rientjes <rientjes@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>,
+ Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250529-frozen-pages-for-large-kmalloc-v1-0-b3aa52a8fa17@suse.cz>
+ <20250529-frozen-pages-for-large-kmalloc-v1-2-b3aa52a8fa17@suse.cz>
+ <e391fe8a-6bef-4067-86d8-b75ece441b75@gentwo.org>
+ <b8a5dc9d-3697-47b3-bf66-f9bd726389fb@suse.cz>
+ <17a999f3-7e6b-17d4-2caf-4912221894ec@gentwo.org>
+Content-Language: en-US
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ m6M14QORSWTLRg==
+In-Reply-To: <17a999f3-7e6b-17d4-2caf-4912221894ec@gentwo.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:mid]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
 
->-----Original Message-----
->From: Alison Schofield <alison.schofield@intel.com>
->Sent: 30 May 2025 19:28
->To: Li Ming <ming.li@zohomail.com>
->Cc: dave@stgolabs.net; Jonathan Cameron <jonathan.cameron@huawei.com>;
->dave.jiang@intel.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
->dan.j.williams@intel.com; Shiju Jose <shiju.jose@huawei.com>; linux-
->cxl@vger.kernel.org; linux-kernel@vger.kernel.org
->Subject: Re: [RFC PATCH 1/1] cxl/edac: Fix the min_scrub_cycle of a region
->miscalculation
->
->On Fri, May 30, 2025 at 08:28:52PM +0800, Li Ming wrote:
->> When trying to update the scrub_cycle value of a cxl region, which
->> means updating the scrub_cycle value of each memdev under a cxl
->> region. cxl driver needs to guarantee the new scrub_cycle value is
->> greater than the min_scrub_cycle value of a memdev, otherwise the
->> updating operation will fail(Per Table 8-223 in CXL r3.2 section 8.2.10.=
-9.11.1).
+On 5/30/25 21:05, Christoph Lameter (Ampere) wrote:
+> On Thu, 29 May 2025, Vlastimil Babka wrote:
+> 
+>> On 5/29/25 16:57, Christoph Lameter (Ampere) wrote:
+>> > On Thu, 29 May 2025, Vlastimil Babka wrote:
+>> >
+>> >> The slab allocator observes the task's numa policy in various places
+>> >> such as allocating slab pages. Large kmalloc allocations currently do
+>> >> not, which seems to be an unintended omission. It is simple to correct
+>> >> that, so make ___kmalloc_large_node() behave the same way as
+>> >> alloc_slab_page().
+>> >
+>> > Large kmalloc allocation lead to the use of the page allocator which
+>> > implements the NUMA policies for the allocations.
+>> >
+>> > This patch is not necessary.
 >>
->> Current implementation logic of getting the min_scrub_cycle value of a
->> cxl region is that getting the min_scrub_cycle value of each memdevs
->> under the cxl region, then using the minimum min_scrub_cycle value as
->> the region's min_scrub_cycle. Checking if the new scrub_cycle value is
->> greater than this value. If yes, updating the new scrub_cycle value to
->> each memdevs. The issue is that the new scrub_cycle value is possibly
->> greater than the minimum min_scrub_cycle value of all memdevs but less
->> than the maximum min_scrub_cycle value of all memdevs if memdevs have
->> a different min_scrub_cycle value. The updating operation will always
->> fail on these memdevs which have a greater min_scrub_cycle than the
->> new scrub_cycle.
+>> I'm confused, as that's only true depending on which page allocator entry
+>> point you use. AFAICS before this series, it's using
+>> alloc_pages_node_noprof() which only does
 >>
->> The correct implementation logic is to get the maximum value of these
->> memdevs' min_scrub_cycle, check if the new scrub_cycle value is
->> greater than the value. If yes, the new scrub_cycle value is fit for the=
- region.
 >>
->> The change also impacts the result of
->> cxl_patrol_scrub_get_min_scrub_cycle(), the interface returned the
->> minimum min_scrub_cycle value among all memdevs under the region
->> before the change. The interface will return the maximum
->> min_scrub_cycle value among all memdevs under the region with the change=
-.
+>>         if (nid == NUMA_NO_NODE)
+>>                 nid = numa_mem_id();
 >>
->> Signed-off-by: Li Ming <ming.li@zohomail.com>
->> ---
->> I made this change based on my understanding on the SPEC and current
->> CXL EDAC code, but I am not sure if it is a bug or it is designed this w=
-ay.
->
->The attribute is defined to show (per Documentation/ABI/testing/sysfs-edac=
--
->scrub)
->   "Supported minimum scrub cycle duration in seconds by the memory
->scrubber."
->
->Your fix, making the min the max of the mins, looks needed.
->
->I took a look at the max attribute. If the min is the max on the mins, the=
-n the
->max should be the max of the maxes. But, not true. We do this:
->
->instead: *max =3D U8_MAX * 3600; /* Max set by register size */
->
->The comment isn't helping me, esp since the sysfs description doesn't expl=
-ain
->that we are using a constant max.
-CXL spec r3.2 Table 8-222. Device Patrol Scrub Control Feature Readable Att=
-ributes
-does not define a field for "max scrub cycle supported".  Thus for max scru=
-b=20
-cycle, returning max value of (U8_MAX) of patrol scrub cycle field.=20
+>> and no mempolicies.
+> 
+> That is a bug.
+> 
+>> I see this patch as analogical to your commit 1941b31482a6 ("Reenable NUMA
+>> policy support in the slab allocator")
+>>
+>> Am I missing something?
+> 
+> The page allocator has its own NUMA suport.
 
-Thanks,
-Shiju
->
->
->>
->> base-commit: 9f153b7fb5ae45c7d426851f896487927f40e501 cxl/next
->> ---
->>  drivers/cxl/core/edac.c | 8 ++++++--
->>  1 file changed, 6 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c index
->> 2cbc664e5d62..ad243cfe00e7 100644
->> --- a/drivers/cxl/core/edac.c
->> +++ b/drivers/cxl/core/edac.c
->> @@ -103,10 +103,10 @@ static int cxl_scrub_get_attrbs(struct
->cxl_patrol_scrub_context *cxl_ps_ctx,
->>  				u8 *cap, u16 *cycle, u8 *flags, u8 *min_cycle)
->{
->>  	struct cxl_mailbox *cxl_mbox;
->> -	u8 min_scrub_cycle =3D U8_MAX;
->>  	struct cxl_region_params *p;
->>  	struct cxl_memdev *cxlmd;
->>  	struct cxl_region *cxlr;
->> +	u8 min_scrub_cycle =3D 0;
->>  	int i, ret;
->>
->>  	if (!cxl_ps_ctx->cxlr) {
->> @@ -133,8 +133,12 @@ static int cxl_scrub_get_attrbs(struct
->cxl_patrol_scrub_context *cxl_ps_ctx,
->>  		if (ret)
->>  			return ret;
->>
->> +		/*
->> +		 * The min_scrub_cycle of a region is the maximum value
->among
->> +		 * the min_scrub_cycle of all the memdevs under the region.
->> +		 */
->>  		if (min_cycle)
->> -			min_scrub_cycle =3D min(*min_cycle, min_scrub_cycle);
->> +			min_scrub_cycle =3D max(*min_cycle, min_scrub_cycle);
->>  	}
->>
->>  	if (min_cycle)
->> --
->> 2.34.1
->>
+It has support for respecting a preferred node (or forced node with
+__GFP_THISNODE), nodemask, cpusets.
+
+Mempolicy support is arguably outside the page allocator itself -
+alloc_pages_mpol() lives in mm/mempolicy.c. Although some generically
+looking wrappers alloc_pages() lead to it, while others don't
+(__alloc_pages()). It's a kinda mess.
+
+> The patch to reenable NUMA support dealt with an issue within the
+> allocator where the memory policies were ignored.
+
+I'd agree in the sense the issue was within the slab allocator, calling the
+non-mpol-aware page allocator entry, which was not intended.
+
+> It seems that the error was repeated for large kmalloc allocations.
+
+After some digging, seems you're right and the error was done in commit
+c4cab557521a ("mm/slab_common: cleanup kmalloc_large()") in v6.1. I'll add a
+Fixes: tag and reword changelog accordingly.
+
+> Instead of respecting memory allocation policies the allocation is forced
+> to be local to the node.
+
+It's not forced, but preferred, unless kmalloc() caller itself passes
+__GFP_THISNODE. The slab layer doesn't add it.
+
+> The forcing to the node is possible with GFP_THISNODE. The default needs
+> to be following memory policies.
+
+
+
+> 
 
