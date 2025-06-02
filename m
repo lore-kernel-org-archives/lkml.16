@@ -1,180 +1,122 @@
-Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2C0120F067;
-	Mon,  2 Jun 2025 11:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E66820F082
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 11:41:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748864461; cv=none; b=q3RYKbQsv6h+zTr589ihMqWLlScbMSasOGAJcCxa7HueZv2NBF0MCVt6IA+9vVciigzetukLiqRhpx633y6rSEtzsZolPaszSNZdQqJZzb71b5qzur3lCKpYRBE91oGyE0tyg1GzxvUWhMtTtDNKnxniybgDVtged41tQipaZ/w=
+	t=1748864462; cv=none; b=m4LSzdV9d9yEd5WoEMObh5E5qvw5e5Lq2Mg3+Fzvq2GlVBiOJfftiluBkuE7L/Hj5Ydjf94sRlAd5k76G7f+4Uyfhz0RTVyHC4KlBQOdpMHRyANdmQZhi2MLm4OcFHh0y8viApmO+aLlXa7kbcFP3+oN7IdDgC6ZnTE7/igN/6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748864461; c=relaxed/simple;
-	bh=frO+5Uw+FFWvnZhmxBsgg95PnNMzamfOuSyyhM7pW/E=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aU1MEZ0bUfoqSuxSfi1KrWgf1nDsY4vbUhyVukeloL/j6I28ucDbAOLFa8OUDPpf2PULVXqgOMwmrjxicrLDxpmk8R1cWUuAH/TvOtp5CSpYitX1bG+UxtUfb+s19hBa0ePO9aKBDaWAwaXSd/BEH7LlrPBXY3ztmO2psO456JE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=UT/VHevy; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1748864462; c=relaxed/simple;
+	bh=U8K0uf4aWhhzfObYJoePKwQHyJj41+wsc7eB/15CdT4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RHeMnnaiYaoD0azu9hCARe+M+IqSaBJK5zH1MlLNgBSO0vnOQh13NoHZFFqKz/FYIdpfJc74jo2w2iHhhOKK5xASJn6qdbnVa8OaCT5NbZX6na5NvP1NseqZ3adkiA00dOqsPouS4r7kSOa/2kXOAWhPM9mqZeNn761r1FwQU8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=W8l422xP; arc=none smtp.client-ip=209.85.160.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="UT/VHevy"
-Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
-	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 552BSViv006785;
-	Mon, 2 Jun 2025 07:40:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=FOb5a
-	J2aVNLZu+0Loa+8hBFtGDoQeca0LadPc3yuziE=; b=UT/VHevygegDf09CgX+ef
-	TEKw38uZ07lUNHBoAHYfXdQgZcYk/k8ZF33NdbexPdIJS9dwF8136SGsbaqp+E4i
-	GZhqjvYrJAsu5dggjlepsO4BiXu8SB/HCRGu53bP/G4EkBGXQpv0EX4OhjAPbGD+
-	mL/4AISSGZc/FQhWj1dkL+rR/6a76JgZJvV7+0XK0QToDAEVhcaGlPO/qiA1FYT0
-	XW8gLCjVIuSRLq5YQie60LiQS9RypQqmaUBhyZtvoaXLp3T3G3ps/ZAJ3GRX3pKc
-	j5S6YZVWHNNPOskEF4NlF+bCq0tCCcDW8hRO6kKqwtq2F1JuQ0ZxWxtpSFVbP4Ax
-	Q==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 47133mj2rd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 02 Jun 2025 07:40:43 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 552BeaPX023600
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 2 Jun 2025 07:40:36 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Mon, 2 Jun
- 2025 07:40:36 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
- Transport; Mon, 2 Jun 2025 07:40:36 -0400
-Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.9])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 552BeKS8025010;
-	Mon, 2 Jun 2025 07:40:23 -0400
-From: Marcelo Schmitt <marcelo.schmitt@analog.com>
-To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <jic23@kernel.org>, <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <dlechner@baylibre.com>, <nuno.sa@analog.com>, <andy@kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
-        <marcelo.schmitt1@gmail.com>
-Subject: [PATCH v4 11/11] iio: adc: ad4170: Add timestamp channel
-Date: Mon, 2 Jun 2025 08:40:17 -0300
-Message-ID: <40f7403efbca2cade808a769a9b3b50135a24fec.1748829860.git.marcelo.schmitt@analog.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <cover.1748829860.git.marcelo.schmitt@analog.com>
-References: <cover.1748829860.git.marcelo.schmitt@analog.com>
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="W8l422xP"
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-2cca475546fso3472509fac.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 04:41:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1748864459; x=1749469259; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=U8K0uf4aWhhzfObYJoePKwQHyJj41+wsc7eB/15CdT4=;
+        b=W8l422xPONQtWanqExljoiqYDcuuSKIujEdkeeOJis4HmKcTVzt0fdqvaUjHPxPzb6
+         ovVADiWgVpkVr0xIGKWqCQvRYeHvUSka4R3UPQybh+jRwnxypLu940mxHbePZtpGxOIh
+         Ae4O1VpiNigjaMxdAGh538eEwXsLCXgKrnU8TIUbXoO7x9rEJEV9APRXhEINitUpJhsB
+         NpqIJoyVYvGEOxmK3JnoGNLOLnF32TAIY7r2+SrN2doAh5rbcIZ0uXyRszMSR905A3kc
+         SgTxN/BmXz9KWkAZlUWWCO+hXyppdX8GgjHRDrgZhrCDgG5uNjBJIKYXPLcaG7Xfx5Qd
+         CEHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748864459; x=1749469259;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U8K0uf4aWhhzfObYJoePKwQHyJj41+wsc7eB/15CdT4=;
+        b=nWwQ6sZfzk+4rusdt9PkN3nPpU8N5uwnPha02tnkPLIy3sV3Gp6ev1N4/7GJSpdrj0
+         CpoispexIEa/v7Aq5VAIfF4qN4H4ne3RtFdVNqXIfNkjKUD5Qax6f78nvuPiK/GvCEJJ
+         peWF5JfgmfnPkczt9JEmVjZ6QhCblISM0C7SESlxjVO117vdsyH2d3RzU1qgF/1L6Nb6
+         hfoHW/xHGo2+GOhjtYi2i7YnnZaWPbytSkcIpjD/ukCvxUMCMSMmLPqk8GL9h7LJin2S
+         h5FRllMVGlaXE8x9dFByeyuxQ3DscDeoR8NR6Yx4/sd1bCWHrYC38+8huW89wbWfogs7
+         KpoA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0DJMA3DDbe7ULOO5yC3Dxaa89evRo8x7KTU0WqnE1yKnPqmCpy86kL0LrAWP982CAUq3rUgnXl2h+9vk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwY3un5RShAe5PUvgoYfbH45WSTTRd+50U4OACLciVWt2hpcIeN
+	az+ukKLhfRloY4jPy4T4Op+hCBT8wS4usrSs12tFZIPow/bi0Kb8VOxKww0nHUFayDrubhEQWh4
+	xDasp
+X-Gm-Gg: ASbGncuw0wCVbdCEKWw4fmFMLbgXliM2aLRxoRnwsz5jUYSuT6Vq9JASUbcf5FglJXH
+	BCR1Sigpdxn5LhbOZYk5nizeK+ABi4hWrfe1YhLY4l01KflM1s1Hr44Tg5ur1IwtJNiZbsCpm5I
+	viHMluPOWgftiYGKr5Ksw4PK9aurCNOjFeYE5mq6cWAqg6AC2yk8VXFrqVTpngvLTpfunI2cd9U
+	yrJgp/sjyPoN62vvS/M0Yh+/cQh2v4fgVM2R8HyLuKDo8zwlLFJY/ONAzPvaS+yvJmgo1xnTvVz
+	4qAJbJx5lW9gvJOxohnNjhPe1ffNenWby0gvfLdeyRs1qEXCx8T4gFyVmmD5K3trIaZSk+HgHNT
+	w/ludDOrX9DT+3xZHRF6kJU9fAuw=
+X-Google-Smtp-Source: AGHT+IGfF18ffm8VzY6ByMTGaYLJNsId5S1P2oW9/h5gR4uH/hdOQWknfp/QYUyMCIClWhNY/nUI7w==
+X-Received: by 2002:a05:6214:248d:b0:6e8:f166:b19c with SMTP id 6a1803df08f44-6faced23964mr189368276d6.41.1748864448996;
+        Mon, 02 Jun 2025 04:40:48 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fac6d4d498sm60065976d6.27.2025.06.02.04.40.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Jun 2025 04:40:47 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uM3X5-00000001XQw-1BjZ;
+	Mon, 02 Jun 2025 08:40:47 -0300
+Date: Mon, 2 Jun 2025 08:40:47 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Abdiel Janulgue <abdiel.janulgue@gmail.com>, dakr@kernel.org,
+	lyude@redhat.com, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Valentin Obst <kernel@valentinobst.de>,
+	open list <linux-kernel@vger.kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>, airlied@redhat.com,
+	rust-for-linux@vger.kernel.org,
+	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
+	Petr Tesarik <petr@tesarici.cz>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Sui Jingfeng <sui.jingfeng@linux.dev>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Michael Kelley <mhklinux@outlook.com>
+Subject: Re: [PATCH 1/2] rust: add initial scatterlist bindings
+Message-ID: <20250602114047.GA298147@ziepe.ca>
+References: <20250528221525.1705117-1-abdiel.janulgue@gmail.com>
+ <20250528221525.1705117-2-abdiel.janulgue@gmail.com>
+ <20250529004550.GB192517@ziepe.ca>
+ <DA9JTYA0EQU8.26M0ZX80FOBWY@nvidia.com>
+ <20250530141419.GA292183@ziepe.ca>
+ <DA9KQF9CY77R.77PBMU8Y1FPY@nvidia.com>
+ <20250530145026.GB293473@ziepe.ca>
+ <DAAD0NZOCHS5.9FTVJIOI12QI@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: uv6iOJUWhFW5DeZ6ZySy4S-3Og5mA2Nm
-X-Proofpoint-ORIG-GUID: uv6iOJUWhFW5DeZ6ZySy4S-3Og5mA2Nm
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAyMDEwMSBTYWx0ZWRfXxvnatpSFvHSv
- 0ii+4auimX24jw/Zl4BOGTEz2G0fH2rApxEAIJkVVKgf8ID6b7W0R0W5TVlRSJPvCFDCFSxtbWM
- hcCcwn+uLbeOqwBPBxTeLsHveW6JJzCltjqAb1hu4PxQSFAmbZ0xUT2M669riqsOSILjKT6+2h6
- +l6jhfj0EA9Ni22fufGfy0AvELi/fZcgU+Go0RManRc5qZJs+ONbfcjPc/7taZbE1Y0aHwuDpx5
- 00Q4/sLfQzfNvj4XDYBLy6GLAYxluATW1uE8ih5XeXBtO8FRbrnN6oemWb8yGBoamkKTMueDVmR
- RV5Gz6nMu+wTPz76oZMvFb7vuTPBz08zEAnMHvlk422sRwMW7A7ftxsjbfoUOheHXkhudta+wU4
- xU4Jvu5sHdpuET3OKEVlBQaheSSzMElFQwd59IcAiGppYTiAu3xUcv+uOsRRhe9Ml3g2NNWN
-X-Authority-Analysis: v=2.4 cv=DY4XqutW c=1 sm=1 tr=0 ts=683d8dbb cx=c_pps
- a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17
- a=6IFa9wvqVegA:10 a=gAnH3GRIAAAA:8 a=ooJTjvKFDTQpXrV7GjsA:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-02_05,2025-05-30_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 mlxlogscore=999 priorityscore=1501 lowpriorityscore=0
- suspectscore=0 spamscore=0 clxscore=1015 malwarescore=0 adultscore=0
- bulkscore=0 impostorscore=0 phishscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2506020101
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DAAD0NZOCHS5.9FTVJIOI12QI@nvidia.com>
 
-Add timestamp channel allowing to record the moment at which ADC samples
-are captured in buffered read mode.
+On Sat, May 31, 2025 at 09:54:20PM +0900, Alexandre Courbot wrote:
 
-Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
----
- drivers/iio/adc/ad4170.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+> So if I understood your idea correctly, this would mean creating the
+> SGTable and mapping it in one call, eschewing the typestate entirely?
 
-diff --git a/drivers/iio/adc/ad4170.c b/drivers/iio/adc/ad4170.c
-index 23b634d324a7..28466b245567 100644
---- a/drivers/iio/adc/ad4170.c
-+++ b/drivers/iio/adc/ad4170.c
-@@ -182,6 +182,7 @@
- #define AD4170_NUM_ANALOG_PINS				9
- #define AD4170_NUM_GPIO_PINS				4
- #define AD4170_MAX_CHANNELS				16
-+#define AD4170_MAX_IIO_CHANNELS				(AD4170_MAX_CHANNELS + 1)
- #define AD4170_MAX_ANALOG_PINS				8
- #define AD4170_MAX_SETUPS				8
- #define AD4170_INVALID_SETUP				9
-@@ -426,7 +427,7 @@ struct ad4170_state {
- 	int vrefs_uv[AD4170_MAX_SUP];
- 	u32 mclk_hz;
- 	struct ad4170_setup_info setup_infos[AD4170_MAX_SETUPS];
--	struct iio_chan_spec chans[AD4170_MAX_CHANNELS];
-+	struct iio_chan_spec chans[AD4170_MAX_IIO_CHANNELS];
- 	struct ad4170_chan_info chan_infos[AD4170_MAX_CHANNELS];
- 	struct spi_device *spi;
- 	struct regmap *regmap;
-@@ -443,6 +444,7 @@ struct ad4170_state {
- 	unsigned int clock_ctrl;
- 	int gpio_fn[AD4170_NUM_GPIO_PINS];
- 	unsigned int cur_src_pins[AD4170_NUM_CURRENT_SRC];
-+	unsigned int num_adc_chans;
- 	/*
- 	 * DMA (thus cache coherency maintenance) requires the transfer buffers
- 	 * to live in their own cache lines.
-@@ -2385,7 +2387,16 @@ static int ad4170_parse_channels(struct iio_dev *indio_dev)
- 			return dev_err_probe(dev, ret, "Invalid input config\n");
- 
- 		st->chan_infos[chan_num].input_range_uv = ret;
-+		chan_num++;
- 	}
-+	st->num_adc_chans = chan_num;
-+
-+	/* Add timestamp channel */
-+	struct iio_chan_spec ts_chan = IIO_CHAN_SOFT_TIMESTAMP(chan_num);
-+
-+	st->chans[chan_num] = ts_chan;
-+	num_channels = num_channels + 1;
-+
- 	indio_dev->num_channels = num_channels;
- 	indio_dev->channels = st->chans;
- 
-@@ -2577,7 +2588,7 @@ static int ad4170_initial_config(struct iio_dev *indio_dev)
- 		return dev_err_probe(dev, ret,
- 				     "Failed to set ADC mode to idle\n");
- 
--	for (i = 0; i < indio_dev->num_channels; i++) {
-+	for (i = 0; i < st->num_adc_chans; i++) {
- 		struct ad4170_chan_info *chan_info;
- 		struct iio_chan_spec const *chan;
- 		struct ad4170_setup *setup;
-@@ -2702,7 +2713,7 @@ static int ad4170_buffer_predisable(struct iio_dev *indio_dev)
- 	 * is done after buffer disable. Disable all channels so only requested
- 	 * channels will be read.
- 	 */
--	for (i = 0; i < indio_dev->num_channels; i++) {
-+	for (i = 0; i < st->num_adc_chans; i++) {
- 		ret = ad4170_set_channel_enable(st, i, false);
- 		if (ret)
- 			return ret;
-@@ -2752,7 +2763,9 @@ static irqreturn_t ad4170_trigger_handler(int irq, void *p)
- 		memcpy(&st->bounce_buffer[i++], st->rx_buf, ARRAY_SIZE(st->rx_buf));
- 	}
- 
--	iio_push_to_buffers(indio_dev, st->bounce_buffer);
-+	iio_push_to_buffers_with_ts(indio_dev, st->bounce_buffer,
-+				    sizeof(st->bounce_buffer),
-+				    iio_get_time_ns(indio_dev));
- err_out:
- 	iio_trigger_notify_done(indio_dev->trig);
- 	return IRQ_HANDLED;
--- 
-2.47.2
+Probably no need for a type state
 
+> And the `SGTable` would own the backing data, and only release it upon
+> destruction and unmapping?
+
+But I don't think you can do this, it is not allowed to pin kmalloc
+memory for instance so you have to do something as you showed to tie
+the lifetime to the kmalloc across the sgtable lifetime.
+
+Jason
