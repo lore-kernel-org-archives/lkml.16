@@ -1,91 +1,176 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C43102C3255;
-	Mon,  2 Jun 2025 07:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A2170805;
+	Mon,  2 Jun 2025 07:57:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748851051; cv=none; b=fnfayUEh2H65UKryK0jr1HtdZnfzP2b47xeyPzB9b9AXKM3vdSQyb2U2bX6dhRhaIjCnzU0ken0aMVcmhTAEWwqD0EZTXkn1YMtflAsQM2CcJqzhaOaooEsdYky6QunrBmENgLCiepPkeBmBnlcWEJYJy6o+rX8vwXtTFmGqvM0=
+	t=1748851067; cv=none; b=FYEBGGVSg0nujYo8C3JV699e7yrydrwo/T+IK/OcL1jm65SDX3HKWoFisuVaME5yLpO8KKEGKLS2huGSBsFTs4zUjoGrC5cEwnS24pgVpABFeuwSdBzojrc0gF3qZWVFTe2yxYkDS2dnBwwXJ2k6HsyBGlEQEfIUH3Lby7291+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748851051; c=relaxed/simple;
-	bh=x2N8/3IgmL2UzD7fyelcMMdDZAZcgyGD+CjcmBSBNxc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UxsccxVSW5H44opkPXpUeA7A3vWI1bV/wxgrqg8I+pfqYfY5QFXVNOBctHWUWOEIlItmEFYuKJVWLGogcG5FfCHWScwAflXnkaTXOTcjTiIdAxgLwPQReENFU2KohJWht4+nr8BknKeAs6O2EvTWpiJ1zdbml8RkbqKzU3EIm7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ahVR6kUD; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ahVR6kUD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=x2N8/3IgmL2UzD7fyelcMMdDZAZcgyGD+CjcmBSBNxc=; b=ahVR6kUDW4IX/VYgbJMSYH4nGh
-	94pje5KJ+LraDhD0TFQ7pZm4b3D0he0tKGcK6Dk7ZMh+nEv9JTpYfbgdY8z1A8Ra+871Yal9ZEUJM
-	Ba6CMJjym/T3VTT6K6WUjpqaZErX1Izh6hPuv5veOm+fJjQqjw44t5LfqrdtjlMjF6wcBcmcIbJTA
-	wtD73U7MXyXeXxK8ojnMvkQKjCDVlJylOrMaqnBoCFaSIXqkPelLeH2iRLmP4Udy5FBrveGQ0N6BY
-	FZMlWDnSKMrwR/nziZ35wCzY7NQffyZyuKqfueZiiTW6GnfnMthg3010manTyM3d5CZ8Lvh3Ecbc7
-	i1tKfBhg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uM02e-00000000bol-2ZLq;
-	Mon, 02 Jun 2025 07:57:08 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id B19173005AF; Mon,  2 Jun 2025 09:57:07 +0200 (CEST)
-Date: Mon, 2 Jun 2025 09:57:07 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Alessandro Carminati <acarmina@redhat.com>,
-	linux-kselftest@vger.kernel.org,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Daniel Diaz <daniel.diaz@linaro.org>,
-	David Gow <davidgow@google.com>,
-	Arthur Grillo <arthurgrillo@riseup.net>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Maxime Ripard <mripard@kernel.org>,
-	Ville Syrjala <ville.syrjala@linux.intel.com>,
-	Daniel Vetter <daniel@ffwll.ch>, Guenter Roeck <linux@roeck-us.net>,
-	Alessandro Carminati <alessandro.carminati@gmail.com>,
-	Jani Nikula <jani.nikula@intel.com>,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Linux Kernel Functional Testing <lkft@linaro.org>,
-	dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v5 1/5] bug/kunit: Core support for suppressing warning
- backtraces
-Message-ID: <20250602075707.GI21197@noisy.programming.kicks-ass.net>
-References: <20250526132755.166150-1-acarmina@redhat.com>
- <20250526132755.166150-2-acarmina@redhat.com>
- <20250529090129.GZ24938@noisy.programming.kicks-ass.net>
- <CAGegRW76X8Fk_5qqOBw_aqBwAkQTsc8kXKHEuu9ECeXzdJwMSw@mail.gmail.com>
- <20250530140140.GE21197@noisy.programming.kicks-ass.net>
- <202505301037.D816A49@keescook>
- <20250531102304.GF21197@noisy.programming.kicks-ass.net>
- <8C5E309E-03E5-4353-8515-67A53EC6C9E3@kernel.org>
+	s=arc-20240116; t=1748851067; c=relaxed/simple;
+	bh=K0O63BQ0OAbxm8V42IWUNC3tMzh+WxnHeSXMQRI4VtM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DEAoVwAhp34K1T6R41bBzEuDBjiYlboyM1h4Z+KUzWDPKSPJsCdNfTmdtjEgYTW1AwFQ33agt1XeIdu36CZQ39gpt3utW6ixr8PX6e9zC+1Zg5OM3YvpkbIEUOMHSEFZzi075rjDIbxl9MQx+i3RoCl0Ocbxyh4RZYlQpBt+iOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0EF0C4CEF2;
+	Mon,  2 Jun 2025 07:57:45 +0000 (UTC)
+Message-ID: <adb22c62-94c8-4ab5-8aea-cc204affba3c@xs4all.nl>
+Date: Mon, 2 Jun 2025 09:57:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8C5E309E-03E5-4353-8515-67A53EC6C9E3@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] media: uvcvideo: Remove stream->is_streaming field
+To: Ricardo Ribalda <ribalda@chromium.org>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250522-uvc-fop-v1-0-3bfe7a00f31d@chromium.org>
+ <20250522-uvc-fop-v1-3-3bfe7a00f31d@chromium.org>
+Content-Language: en-US, nl
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Autocrypt: addr=hverkuil@xs4all.nl; keydata=
+ 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
+In-Reply-To: <20250522-uvc-fop-v1-3-3bfe7a00f31d@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, May 31, 2025 at 06:51:50AM -0700, Kees Cook wrote:
+On 22/05/2025 19:58, Ricardo Ribalda wrote:
+> The is_streaming field is used by modular PM to know if the device is
+> currently streaming or not.
+> 
+> With the transition to vb2 and fop helpers, we can use vb2 functions for
+> the same functionality.
+> 
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> ---
+>  drivers/media/usb/uvc/uvc_v4l2.c | 12 +++++-------
+>  drivers/media/usb/uvc/uvcvideo.h |  1 -
+>  2 files changed, 5 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+> index 7a5ecbefa32c0a6b74c85d7f77a25b433598471e..51419f443f2c43dfd17a9782352bd2cde1094732 100644
+> --- a/drivers/media/usb/uvc/uvc_v4l2.c
+> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
+> @@ -617,7 +617,8 @@ static int uvc_v4l2_release(struct file *file)
+>  
+>  	uvc_ctrl_cleanup_fh(handle);
+>  
+> -	if (handle->is_streaming)
+> +	if (stream->queue.queue.owner == file->private_data &&
 
-> It's not for you, then. :) I can't operate ftrace, but I use kunit
-> almost daily. Ignoring WARNs makes this much nicer, and especially for
-> CIs.
+Use vb2_queue_is_busy(&stream->queue) instead of directly accessing the owner field.
+But see below, since this can be dropped altogether.
 
-I'm thinking you are more than capable of ignoring WARNs too. This
-leaves the CI thing.
+> +	    uvc_queue_streaming(&stream->queue))
+>  		uvc_pm_put(stream->dev);
 
-So all this is really about telling CIs which WARNs are to be ignored,
-and which are not? Surely the easiest way to achieve that is by
-printing more/better identifying information instead of suppressing
-things?
+I think patch 1/3 can be improved, which likely makes this patch obsolete.
+
+The uvc_pm_get/put should be placed in the start/stop_streaming callbacks. That's
+where you need them, and it avoids all these is_streaming tests. And it allows you to
+use the vb2_ioctl_streamon/off helpers in patch 2, since the streamon/off functions
+no longer mess with the uvc_pm_get/put functions.
+
+Regards,
+
+	Hans
+
+>  
+>  	/* Release the file handle. */
+> @@ -684,7 +685,7 @@ static int uvc_ioctl_streamon(struct file *file, void *fh,
+>  	struct uvc_streaming *stream = handle->stream;
+>  	int ret;
+>  
+> -	if (handle->is_streaming)
+> +	if (uvc_queue_streaming(&stream->queue))
+>  		return 0;
+>  
+>  	ret = uvc_pm_get(stream->dev);
+> @@ -697,8 +698,6 @@ static int uvc_ioctl_streamon(struct file *file, void *fh,
+>  		return ret;
+>  	}
+>  
+> -	handle->is_streaming = true;
+> -
+>  	return 0;
+>  }
+>  
+> @@ -707,16 +706,15 @@ static int uvc_ioctl_streamoff(struct file *file, void *fh,
+>  {
+>  	struct uvc_fh *handle = fh;
+>  	struct uvc_streaming *stream = handle->stream;
+> +	bool was_streaming = uvc_queue_streaming(&stream->queue);
+>  	int ret;
+>  
+>  	ret = vb2_ioctl_streamoff(file, fh, type);
+>  	if (ret)
+>  		return ret;
+>  
+> -	if (handle->is_streaming) {
+> -		handle->is_streaming = false;
+> +	if (was_streaming)
+>  		uvc_pm_put(stream->dev);
+> -	}
+>  
+>  	return 0;
+>  }
+> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+> index 3ddbf065a2cbae40ee48cb06f84ca8f0052990c4..f895f690f7cdc1af942d5f3a5f10e9dd1c956a35 100644
+> --- a/drivers/media/usb/uvc/uvcvideo.h
+> +++ b/drivers/media/usb/uvc/uvcvideo.h
+> @@ -626,7 +626,6 @@ struct uvc_fh {
+>  	struct uvc_video_chain *chain;
+>  	struct uvc_streaming *stream;
+>  	unsigned int pending_async_ctrls;
+> -	bool is_streaming;
+>  };
+>  
+>  /* ------------------------------------------------------------------------
+> 
+
