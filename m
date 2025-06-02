@@ -1,223 +1,133 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C286ADD;
-	Mon,  2 Jun 2025 13:22:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2986D1A9B4C
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 13:25:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748870534; cv=none; b=c5pFAdnHXJB8p4r8y5QZeOKwGIlsvfX9kIB+8ELGHWEJsP7Eg7lGecNrKDEr803RaWoimGetJ4YyVnxcKVAl9w1Cvqw/hhdb1uR1UMymuUIbn/6rPaZbg7sUsr4OYsilt7cAnxeBPEMGjtbGSp3Pz3zPSaHTb8vJoYOHlOO81lo=
+	t=1748870755; cv=none; b=UNOiOaKG19K5HIvq17dewUxi65FQkaNLB3ACx3+GfOcHJK39e1SpFjjTezQIRdXB12vfNDR+/3hMBF4p77QcbQL59DBSquWASKYlQpx7UOouAlk6u0AWzQKNj8KVkrZ1Wcj3Sbw1EjWbEankk+CWvedTJ4uBsJo5//ND6YlZ9M4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748870534; c=relaxed/simple;
-	bh=jtsqkwWxMJ59NBFXcigEZb33daclENidcJqgOzkwCto=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ToKFjKDtuEfWRyxncq+PII0qhVpkJjvWRO6bC4F75DKVHUFd2hdn0jXYLbY7W6neHJCkW3PQFEZ7Q9Zsncgh04evp/g8N7J26aqZvm91vXBeyikUR3c9XU3poXHNQGBPOVh3mjjOvTjfJN4ETHX1Zz2H5n8iZFz8ZL4xB4rdsO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=AGCOzzb5; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1748870755; c=relaxed/simple;
+	bh=bfes8zZB5azdrucRkZ0R+StBkCNzaum0W5A5blaEZAE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=i9FVLWpy4ln9giJhAyZgwaNd4pGlqwI09Afm/0O/Kcul1hw3vmAiOp5XD1izHPM2AD+l6a3Ellu0QRRj1tMgGHdUy4c8n0Mvxz3ON6Ird1Nc3PMtt8PEszgKKO6kEg7yE9mzJQmNbXdSlnqebR+p5sYNnY1P7/8VFBZcYWMhTEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iVY3ZKlj; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="AGCOzzb5"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 37F5DC9;
-	Mon,  2 Jun 2025 15:22:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1748870529;
-	bh=jtsqkwWxMJ59NBFXcigEZb33daclENidcJqgOzkwCto=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AGCOzzb50CMOQSA7hqRykeGk5q0JAOcnGdChqGWnWf6jtBhBv5DftkpvYp5v4qKJS
-	 j3KTJQdcv6zAyaY3Ka2dzUc3RsH5Sff2EqV7iiPiBu5yfN/JftKJGC4sEA0x6emxsp
-	 Rv6ADD7vUFYgH8m3p+0NOUJzN4GjbHqKWW6WVKl0=
-Date: Mon, 2 Jun 2025 16:22:02 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-Cc: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-Subject: Re: [PATCH v3 11/15] media: rcar-isp: Call get_frame_desc to find
- out VC & DT
-Message-ID: <20250602132202.GD11750@pendragon.ideasonboard.com>
-References: <20250530-rcar-streams-v3-0-026655df7138@ideasonboard.com>
- <20250530-rcar-streams-v3-11-026655df7138@ideasonboard.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iVY3ZKlj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748870751;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=badVlBQqQnqQ+WuvslSW3Ky30eTx0uVb3Tc6t4qkrJM=;
+	b=iVY3ZKljngasX3Q32nAmSs3RN6Tn+z2mmNUiz7ZbLD41WZ6xYg0Nr2bQVGe3qOJd3cDnwx
+	s82k2xzCciNUPsgUy/UuQSLKtzFr7udp2dabVf6qFPOTjZS5nwlB0UUcLy5Av/3al3IOAV
+	7EdiFUU8ElHjcfHOl9nOnu1/WE4Pey0=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-618-7h5M09zkPwSRZFablYj2gw-1; Mon,
+ 02 Jun 2025 09:25:50 -0400
+X-MC-Unique: 7h5M09zkPwSRZFablYj2gw-1
+X-Mimecast-MFC-AGG-ID: 7h5M09zkPwSRZFablYj2gw_1748870746
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C5F3E1800366;
+	Mon,  2 Jun 2025 13:25:45 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.44.34.87])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B353818003FD;
+	Mon,  2 Jun 2025 13:25:36 +0000 (UTC)
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+To: linux-security-module@vger.kernel.org,
+	linux-integrity@vger.kernel.org,
+	linux-modules@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	keyrings@vger.kernel.org,
+	David Howells <dhowells@redhat.com>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+	Eric Snowberg <eric.snowberg@oracle.com>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Peter Jones <pjones@redhat.com>,
+	Robert Holmes <robeholmes@gmail.com>,
+	Jeremy Cline <jcline@redhat.com>,
+	Coiby Xu <coxu@redhat.com>,
+	James Bottomley <James.Bottomley@HansenPartnership.com>,
+	Gerd Hoffmann <kraxel@redhat.com>
+Subject: [PATCH RFC 0/1] module: Optionally use .platform keyring for signatures verification
+Date: Mon,  2 Jun 2025 15:25:34 +0200
+Message-ID: <20250602132535.897944-1-vkuznets@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250530-rcar-streams-v3-11-026655df7138@ideasonboard.com>
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Hi Tomi,
+UEFI SecureBoot 'db' keys are currently not trusted for modules signatures
+verification. RedHat based downstream distros (RHEL, Fedora, ...) carry a
+patch changing that for many years (since 2019 at least). This RFC is an
+attempt to upstream it as the functionality seems to be generally useful.
 
-Thank you for the patch.
+Previously, pre-boot keys (SecureBoot 'db', MOK) were not trusted within
+kernel at all. Things have changed since '.machine' keyring got introduced
+making MOK keys optionally trusted. Before that, there was a discussion to
+make .platform trusted by default:
+https://lore.kernel.org/lkml/1556116431-7129-1-git-send-email-robeholmes@gmail.com/
+which didn't go very far because the assumption was that this is only useful
+when the user has control over 'db'. I believe there's a fairly common
+use-case where this is true.
 
-On Fri, May 30, 2025 at 04:50:40PM +0300, Tomi Valkeinen wrote:
-> Call get_frame_desc to find out VC & DT, instead of hardcoding the VC
-> routing and deducing the DT based on the mbus format.
-> 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-> ---
->  drivers/media/platform/renesas/rcar-isp/csisp.c | 108 +++++++++++++++++-------
->  1 file changed, 77 insertions(+), 31 deletions(-)
-> 
-> diff --git a/drivers/media/platform/renesas/rcar-isp/csisp.c b/drivers/media/platform/renesas/rcar-isp/csisp.c
-> index a04cbf96b809..887d8eb21a3a 100644
-> --- a/drivers/media/platform/renesas/rcar-isp/csisp.c
-> +++ b/drivers/media/platform/renesas/rcar-isp/csisp.c
-> @@ -225,24 +225,86 @@ static void risp_power_off(struct rcar_isp *isp)
->  	pm_runtime_put(isp->dev);
->  }
->  
-> -static int risp_start(struct rcar_isp *isp, struct v4l2_subdev_state *state)
-> +static int risp_configure_routing(struct rcar_isp *isp,
-> +				  struct v4l2_subdev_state *state)
->  {
-> -	const struct v4l2_mbus_framefmt *fmt;
-> -	const struct rcar_isp_format *format;
-> -	unsigned int vc;
-> -	u32 sel_csi = 0;
-> +	struct v4l2_mbus_frame_desc source_fd;
-> +	struct v4l2_subdev_route *route;
->  	int ret;
->  
-> -	fmt = v4l2_subdev_state_get_format(state, RCAR_ISP_SINK, 0);
-> -	if (!fmt)
-> -		return -EINVAL;
-> +	ret = v4l2_subdev_call(isp->remote, pad, get_frame_desc,
-> +			       isp->remote_pad, &source_fd);
-> +	if (ret)
-> +		return ret;
->  
-> -	format = risp_code_to_fmt(fmt->code);
-> -	if (!format) {
-> -		dev_err(isp->dev, "Unsupported bus format\n");
-> -		return -EINVAL;
-> +	/* Clear the channel registers */
-> +	for (unsigned int ch = 0; ch < 12; ++ch) {
+The use-case: virtualized and cloud infrastructure generally provide an
+ability to customize SecureBoot variables, in particular, it is possible
+to bring your own SecureBoot 'db'. This may come handy when a user wants to
+load a third party kernel module (self built or provided by a third party
+vendor) while still using a distro provided kernel. Generally, distro
+provided kernels sign modules with an ephemeral key and discard the private
+part during the build. While MOK can sometimes be used to sign something
+out-of-tree, it is a tedious process requiring either a manual intervention
+with shim or a 'certmule' 
+(see https://blogs.oracle.com/linux/post/the-machine-keyring). In contrast,
+the beauty of using SecureBoot 'db' in this scenario is that for public
+clouds and virtualized infrastructure it is normally a property of the OS
+image (or the whole infrastructure/host) and not an individual instance;
+this means that all instances created from the same template will have 'db'
+keys in '.platform' by default.
 
-A macro for the number of channels would be nice.
+The suggested approach is not to change the default, but to introduce a
+Kconfig variable (CONFIG_MODULE_SIG_PLATFORM) doing the job. Note, the 
+kernel already trusts '.platform' for kexec (see commit 278311e417be 
+("kexec, KEYS: Make use of platform keyring for signature verify"))
+and dm-verity (see commit 6fce1f40e951 ("dm verity: add support for
+signature verification with platform keyring")) so maybe changing the
+default or introducing a generic '.plarform is fully trusted' option
+would actually be better.
 
-> +		risp_write_cs(isp, ISPCS_FILTER_ID_CH_REG(ch), 0);
-> +		risp_write_cs(isp, ISPCS_DT_CODE03_CH_REG(ch), 0);
->  	}
->  
-> +	/* Clear the proc mode registers */
-> +	for (unsigned int dt = 0; dt < 64; ++dt)
-> +		risp_write_cs(isp, ISPPROCMODE_DT_REG(dt), 0);
+Vitaly Kuznetsov (1):
+  module: Make use of platform keyring for module signature verify
 
-Do we really need to clear those ? These registers seem to be used to
-select how to process a particular DT, likely to allow overriding the
-default processing method. 0 means RAW8, so it's not a magic disable
-value as far as I can tell. I think we can leave the registers as-is.
-
-> +
-> +	for_each_active_route(&state->routing, route) {
-> +		struct v4l2_mbus_frame_desc_entry *source_entry = NULL;
-> +		const struct rcar_isp_format *format;
-> +		const struct v4l2_mbus_framefmt *fmt;
-> +		unsigned int i;
-> +		u8 vc, dt, ch;
-> +		u32 v;
-> +
-> +		for (i = 0; i < source_fd.num_entries; i++) {
-> +			if (source_fd.entry[i].stream == route->sink_stream) {
-> +				source_entry = &source_fd.entry[i];
-> +				break;
-> +			}
-> +		}
-> +
-> +		if (!source_entry) {
-> +			dev_err(isp->dev,
-> +				"Failed to find stream from source frame desc\n");
-
-Isn't it rather "Failed to find source frame desc for stream" ?
-
-> +			return -EPIPE;
-> +		}
-> +
-> +		vc = source_entry->bus.csi2.vc;
-> +		dt = source_entry->bus.csi2.dt;
-> +		/* Channels 4 - 11 go to VIN */
-> +		ch = route->source_pad - 1 + 4;
-> +
-> +		fmt = v4l2_subdev_state_get_format(state, route->sink_pad,
-> +						   route->sink_stream);
-> +		if (!fmt)
-> +			return -EINVAL;
-> +
-> +		format = risp_code_to_fmt(fmt->code);
-> +		if (!format) {
-> +			dev_err(isp->dev, "Unsupported bus format\n");
-> +			return -EINVAL;
-> +		}
-> +
-> +		/* VC Filtering */
-> +		risp_write_cs(isp, ISPCS_FILTER_ID_CH_REG(ch), BIT(vc));
-> +
-> +		/* DT Filtering */
-> +		risp_write_cs(isp, ISPCS_DT_CODE03_CH_REG(ch),
-> +			      ISPCS_DT_CODE03_EN0 | ISPCS_DT_CODE03_DT0(dt));
-> +
-> +		/* Proc mode */
-> +		v = risp_read_cs(isp, ISPPROCMODE_DT_REG(dt));
-> +		v |= ISPPROCMODE_DT_PROC_MODE_VCn(vc, format->procmode);
-> +		risp_write_cs(isp, ISPPROCMODE_DT_REG(dt), v);
-
-If we want to minimize the register writes, we could store the
-ISPPROCMODE_DT_REG values in a local variable and write all of them in
-one go. Possible/probably overkill.
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int risp_start(struct rcar_isp *isp, struct v4l2_subdev_state *state)
-> +{
-> +	u32 sel_csi = 0;
-> +	int ret;
-> +
->  	ret = risp_power_on(isp);
->  	if (ret) {
->  		dev_err(isp->dev, "Failed to power on ISP\n");
-> @@ -256,25 +318,9 @@ static int risp_start(struct rcar_isp *isp, struct v4l2_subdev_state *state)
->  	risp_write_cs(isp, ISPINPUTSEL0_REG,
->  		      risp_read_cs(isp, ISPINPUTSEL0_REG) | sel_csi);
->  
-> -	/* Configure Channel Selector. */
-> -	for (vc = 0; vc < 4; vc++) {
-> -		u8 ch = vc + 4;
-> -		u8 dt = format->datatype;
-> -
-> -		risp_write_cs(isp, ISPCS_FILTER_ID_CH_REG(ch), BIT(vc));
-> -		risp_write_cs(isp, ISPCS_DT_CODE03_CH_REG(ch),
-> -			      ISPCS_DT_CODE03_EN3 | ISPCS_DT_CODE03_DT3(dt) |
-> -			      ISPCS_DT_CODE03_EN2 | ISPCS_DT_CODE03_DT2(dt) |
-> -			      ISPCS_DT_CODE03_EN1 | ISPCS_DT_CODE03_DT1(dt) |
-> -			      ISPCS_DT_CODE03_EN0 | ISPCS_DT_CODE03_DT0(dt));
-> -	}
-> -
-> -	/* Setup processing method. */
-> -	risp_write_cs(isp, ISPPROCMODE_DT_REG(format->datatype),
-> -		      ISPPROCMODE_DT_PROC_MODE_VCn(3, format->procmode) |
-> -		      ISPPROCMODE_DT_PROC_MODE_VCn(2, format->procmode) |
-> -		      ISPPROCMODE_DT_PROC_MODE_VCn(1, format->procmode) |
-> -		      ISPPROCMODE_DT_PROC_MODE_VCn(0, format->procmode));
-> +	ret = risp_configure_routing(isp, state);
-> +	if (ret)
-> +		return ret;
->  
->  	/* Start ISP. */
->  	risp_write_cs(isp, ISPSTART_REG, ISPSTART_START);
+ Documentation/admin-guide/module-signing.rst |  6 ++++++
+ kernel/module/Kconfig                        | 11 +++++++++++
+ kernel/module/signing.c                      |  9 ++++++++-
+ security/integrity/Kconfig                   |  2 +-
+ 4 files changed, 26 insertions(+), 2 deletions(-)
 
 -- 
-Regards,
+2.49.0
 
-Laurent Pinchart
