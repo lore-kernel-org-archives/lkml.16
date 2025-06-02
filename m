@@ -1,102 +1,80 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6978213213E
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 03:15:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA94715A8
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 03:25:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748834104; cv=none; b=aq+XJlQUSmaITf2mUILp8b50e+nxN35YPq5l41C6bjEXpLnzktMjtDBSS5e2UoUlLhitpxYWFTfXL8BGzj1y+ml6RbmUiqshR/B519J5uTVVXaGKCQtSZpr+LO2aKA8ZcFAz1q5+gVOYeTI+nUAD4AHomPeuTBHGU6+UX4U4o8U=
+	t=1748834724; cv=none; b=pvHQYZPAFELq/PvE1CDCOciQaYHlcBFyZ6m1O6VNNQqACd+tGY+n6fmekDn4fCArUUozRu2oGsItuLMU/4FWu3ebMd3O4uMLqVh0p+17FCBtn77/5AOMa0n7io3vUcNVg454uL3v3IuzHsGypi7TaS6vt5O2qtGaFygkYXQq0sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748834104; c=relaxed/simple;
-	bh=D6DLBeL90bmiLH5bMFl8ypCqGax7lp1oYuoYkh1PNGM=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=h6K+unJ3AOUtvnetYtlz1Z7NYQsJt2QbZ5YYa2aeB/HTUIObq+E1YD7TWfwTjTr9UClvyS8GqRMPVvEd9xRArre/CXcluAHoWkT/vKmef93TjRCqqv01RSCFuD/NrddVy15xy2kf881QGEcF53nG5cj9PIgRrrhU4zZyp9F2Vzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3da6fe2a552so80401415ab.1
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Jun 2025 20:15:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748834102; x=1749438902;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CQ1Lf5dRi/YXJa1clEEDd5X4sNe6zO9b/e4yStQscrE=;
-        b=NZqmvVna5uLfaxwbQ1+eavdqlcqu6eVRrN2nH3oIvHYxjR3IOtkAl6BlF2O6G5HIuc
-         Qo6EWT26/PmkNjK3k2jgYt5LOCdXZOBUDP+z8xr7p2CfPvuIDIRNILqu/Mvur7qVUrn+
-         Z2/fsao5zAQ+L9tgLnWoV9m6B6zDSXyV5Qk5JLyYPkteYU8IgXWIRcRFa6gBf2iuJMPf
-         h1ezMMfRV1uNe0Tso31z06Njrg6w7vbXhVNN+05j5EgVoXfYS3ml4RfEg3469mbPOsn7
-         chuTtIXsZV1wQwhHF+hrUKLDYo+hzLodgqv5xS5KawTSTzUpqq/HDeWz5QAdeb5VY7VI
-         bq6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXo3LdtSyc/CRCquq49wwGx3XMMBF/yvu51V6kXIKljGC8d3WFiDnFCfWv337OJ/94T/fX9ihw/MRXMIs8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyZcfDy5RP6oF+9tW3aGKIEBLDHHjC/aHiUUiacMC2+NEuWZjS
-	V4BRgt1gSFF1t2Z1XM1rPg/gmmwlZl4/74/iRwx6WgvqWyRHLTVnqegLgXrDb7wKI7502OZeJBw
-	lYYyVH7dXghe4rLMIiGtja0XyNw4dw6/IBJbQsbUJH0ruCZJo8gibDtrq5FA=
-X-Google-Smtp-Source: AGHT+IHLnj6Xq+L6LjnJUtJUx805MezyK6EV45LNiLdAUfS/nPpElXOaAzelGuxRF4AeKuvf6oTC5/SuHSKiMJ13qcIsrEMsQwYJ
+	s=arc-20240116; t=1748834724; c=relaxed/simple;
+	bh=stxGjSmFVizBmSu66HXat4zZLjvaLm1XnfvsuTHmjaY=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=Vgwk8yiVIMNzLd9Ictj0XQ/fIVv1MQAIzNN30bcXby/NuQdF1HnBboUEbT9U5Gu1mhSEHTnIYEsvYp1RzMAL/KA2vWdFf0j7mK/EQWbSDfZuLDcmwXL4D4+/b3vwOrydtd6bKscs6/PiWv7SL4YSUoV/zUBV95TYv7RmGfD9Ch4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=SsYKL/Ei; arc=none smtp.client-ip=162.62.58.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="SsYKL/Ei"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1748834414; bh=b1j+mSdLPvSDTlRONOL+w5wsNRXNf2UHVaHn7BlZ3vA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=SsYKL/EiC6fd3/NHGDgBgZudC9QFyVeidWo6WFkdxaYI6LunIRnkJRWSB6vtmsMaw
+	 +uryKmk/jwxmGJMkzh7JdFrB8o0KGmafeLoRDJDJWcQE2NQMo4UYK2azeHvMLE7C8a
+	 KT2P1rQ5ofMSJnnbi9gr22/pC7R57RYsZB5+yBy4=
+Received: from pek-lxu-l1.corp.ad.wrs.com ([111.198.228.63])
+	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
+	id 50CA9E0C; Mon, 02 Jun 2025 11:20:12 +0800
+X-QQ-mid: xmsmtpt1748834412t02bzwaj0
+Message-ID: <tencent_A10D9FA5B88DE792075D835DCD99474FC107@qq.com>
+X-QQ-XMAILINFO: Nn2PdnhJz/aLAtW1q+c+y6tKZEq/NJFG6xxP127bCvKfWAS348PyGmM7XG/DOv
+	 +t9W+tvqttE8WWM1mOvfjEUKAcD75poDrUVkKzD2LhNCG2AWU5fl+ZLHIaRYLPe7Lw4BhHWGSRst
+	 fKfQDkQDwIWUyenl/tNbBbhY79ksayL+UR/uzAHHWftnD4iBccZe/92KN/w8ayljpIv9jp7MNPoR
+	 4RRT3GdRcHVpnFo1bqklwi8O/gXO1l0esdSeisE2Mcc/jHuCZyYdiOErb7nTT7xa5Z+Ebcaa4sG+
+	 FYw/HKwCAiSmm/e3oC2mLWZV0bNG9rWHlTaRwNFL+ewmDKlZbiXpAE9K8Z9DFOo9J3Ak7Ygx38nv
+	 pCnPjCKzHoOgwLzwFtt8nsms21Ros6+oF4o0LPwIwYZXTzkDwpDbM+2IcHjSBTdYR4IMfTjNSsp7
+	 56IfGz3ADSYAHqfw+oKiD8vYjT/6VSEEt+IDy9/3i7QU9a+WWsLyyGKcKza0Kiv8R/jc7QHkHwTb
+	 Nj+6R5UTJgNrE4ZCfJkIUkT8JNqgPICwjX22j9xvPLGfKxljgt6phmzcsQg7HFqarg+3p/vyd0nz
+	 s+ZUFlZkYDt7y11g458LMhjxzTQ5i8ZicrtyRkYfYKyqlKRt+UiSuHPJhqoHRShmA7cfG9xiLVjE
+	 bd/LVOJ0InemS+f/ilz70rBXthBD3lDK4KstCgp5wEDRR+VQXcJQz80XAwSZ4zkeyMk4iLTshgr/
+	 hc7OXB1ZGuOUMrMTXQ7luv28tkdZK+OJVOmewG1j82USAfhqFk5EGYHZc/EAWfNNFUF3MQvsi6iq
+	 sjRvOe2UHPvdpRNmMsP9SMhSXJFzsmoPJyjJXlBSvX2NO+Tiq+vHtdvstgaByDV8hzonBWlFb1i4
+	 ENNyexXTxYn2eAbXiszKiPU5fMNppc9VAazBaQzrC54Bsp0giXE0BX9s9jYpu6yCrKHZLCzdIqgu
+	 7Vx6WgPA13TH+VcOM51Zx+xXYTlODNDcswny+V3S20zI2bD3BIo7MewzL2GlLG
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+0a5079ee014f4b907817@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [kernel?] KASAN: slab-out-of-bounds Read in __futex_pivot_hash
+Date: Mon,  2 Jun 2025 11:19:54 +0800
+X-OQ-MSGID: <20250602031953.1429280-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <683ca389.a00a0220.d8eae.0035.GAE@google.com>
+References: <683ca389.a00a0220.d8eae.0035.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a23:b0:3dc:8058:ddfc with SMTP id
- e9e14a558f8ab-3dda3363edamr53070925ab.11.1748834102566; Sun, 01 Jun 2025
- 20:15:02 -0700 (PDT)
-Date: Sun, 01 Jun 2025 20:15:02 -0700
-In-Reply-To: <tencent_BEF362E363C960C3BD0448D77DF76066D105@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <683d1736.a00a0220.d8eae.003e.GAE@google.com>
-Subject: Re: [syzbot] [kernel?] KASAN: slab-out-of-bounds Read in __futex_pivot_hash
-From: syzbot <syzbot+0a5079ee014f4b907817@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+#syz test
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-INFO: trying to register non-static key in futex_hash_prctl
-
-INFO: trying to register non-static key.
-The code is fine but needs lockdep annotation, or maybe
-you didn't initialize this object before use?
-turning off the locking correctness validator.
-CPU: 3 UID: 0 PID: 6500 Comm: syz.0.16 Not tainted 6.15.0-syzkaller-gcd2e103d57e5-dirty #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- assign_lock_key kernel/locking/lockdep.c:987 [inline]
- register_lock_class+0x4a3/0x4c0 kernel/locking/lockdep.c:1302
- __lock_acquire+0xa6/0x1c90 kernel/locking/lockdep.c:5115
- lock_acquire kernel/locking/lockdep.c:5871 [inline]
- lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5828
- __mutex_lock_common kernel/locking/mutex.c:602 [inline]
- __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:747
- futex_hash_prctl+0x2fc/0x770 kernel/futex/core.c:1758
- __do_sys_prctl+0x171f/0x24c0 kernel/sys.c:2825
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x4c0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f516c98e969
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f516d8a5038 EFLAGS: 00000246 ORIG_RAX: 000000000000009d
-RAX: ffffffffffffffda RBX: 00007f516cbb5fa0 RCX: 00007f516c98e969
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: 000000000000004e
-RBP: 00007f516ca10ab1 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000001 R14: 00007f516cbb5fa0 R15: 00007ffc88069c38
- </TASK>
-
-
-Tested on:
-
-commit:         cd2e103d Merge tag 'hardening-v6.16-rc1-fix1-take2' of..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=104b700c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4df26174733e11f3
-dashboard link: https://syzkaller.appspot.com/bug?extid=0a5079ee014f4b907817
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1574b970580000
+diff --git a/kernel/futex/core.c b/kernel/futex/core.c
+index 19a2c65f3d37..ea6b8266efb9 100644
+--- a/kernel/futex/core.c
++++ b/kernel/futex/core.c
+@@ -1754,7 +1754,10 @@ int futex_hash_prctl(unsigned long arg2, unsigned long arg3, unsigned long arg4)
+ 			return -EINVAL;
+ 		if (arg4 & FH_FLAG_IMMUTABLE)
+ 			flags |= FH_IMMUTABLE;
++		static DEFINE_MUTEX(fha_syn);
++		mutex_lock(&fha_syn);
+ 		ret = futex_hash_allocate(arg3, flags);
++		mutex_unlock(&fha_syn);
+ 		break;
+ 
+ 	case PR_FUTEX_HASH_GET_SLOTS:
 
