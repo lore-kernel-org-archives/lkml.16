@@ -1,226 +1,578 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F021CDFD4
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 17:32:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C1A223707
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 17:32:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748885532; cv=none; b=W50bby6pP4ey++C4Cbuy3LqnSTH7fwEDyXFhUsnLTGWsDhokM9f+VPf8QRTR7FdvbkCdS+lNCDTjy6F4dxfK0RBobKUR1izDjP+c5APhinsbJiOoOZvWmnquUasCZjKMI0krD0AjscYGQz1dWNhyFmqGmm3Q/Skks9Q7t2Y2EFU=
+	t=1748885561; cv=none; b=NE9t4YeH5lutekrfi6rbZhNudFda5B+8jo91iU+ggeUBukgK4jsTwC1fksTS42aE0M6P8/O39Jvlo0K5JkEgbqli563DcXf8JYW3Nq61PKQ4X878YassejW2HheWykJeGzOFxkyaxPnu46iB8zvhgHysd28XJI2A4ZwwCrJymqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748885532; c=relaxed/simple;
-	bh=n/H1b2PqMyEkG+qgwDmF/aZaLl11RynNT9iiSDgTaFU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DGh6kBktYwsIwTlNuCf9tCCyI+ToRttGtFmbV/3jUgWPm0NM3toCekU+Aog0ZgZETZC6vuwXwPtPouFUF5kwLeX+nK7x6RdZl0ZW3wOAAXszzp5vbGaQyh+wQOqkZ2si5MeSoGyq7fj4h6V2Pa+gE6aI+lqqMiijAGxoxqE8TIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tiM3YzkS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748885561; c=relaxed/simple;
+	bh=7jYWFXrW6RLJwuOEEVuDgjTHVx/PAKmRw3/YDgRK2WQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HyBFYcDO6UlvjSrG03DScXRd6uJ9xuhgOp8zUY1IAibrp4Tc7VC7h4ujBIUVwDbheFEa2WDE7OnszXmpQRlFxVC59uP8DuFdz5bFvNjdicaoo+gsMIlXEavYUZT/4LYkwTJb3ZX6KoF4xZEgRtWWMI40CAHmD0G20wCwjgePDUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kt5cCxRZ; arc=none smtp.client-ip=209.85.166.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tiM3YzkS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D799EC4CEF4;
-	Mon,  2 Jun 2025 17:32:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748885530;
-	bh=n/H1b2PqMyEkG+qgwDmF/aZaLl11RynNT9iiSDgTaFU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tiM3YzkSbXUuWxAtf5T3H+L4DLDjA+IX1IytB1yS59gUlHx6lI/fNd3NDZLqHLj02
-	 MskIsrJQTNJktEMpX2GGYG9uLD4hIW1uqc2DCMQk8WuntPCQ5znYec1pX6Q1pJ4Wrl
-	 tm5sUixDCru2Ypkz0RdRKRBciC8SKf2N8lfvmlxk/vkOx1+DyrD8HdcMQ4o/UNfk6g
-	 TGuRvxKHXmRDBHGNF7FFpDumaXke/eWZpR8xqTTTY5Q9O8HTYzOljdQhL1XngL5Whs
-	 wmB+pXkwINM9447mKTjlwz85nHidv5aLYrR2x0BLlauxeSn1CXvDffcrlw4VDDkANL
-	 Qx386zukwisNg==
-Date: Mon, 2 Jun 2025 10:32:08 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: "Lai, Yi" <yi1.lai@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>, yi1.lai@intel.com
-Subject: Re: [RFC/PATCH] perf/core: Use POLLHUP for a pinned event in error
-Message-ID: <aD3gGKtrww3mjiqG@google.com>
-References: <20250317061745.1777584-1-namhyung@kernel.org>
- <aD2w50VDvGIH95Pf@ly-workstation>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kt5cCxRZ"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3dd745f8839so12175ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 10:32:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748885558; x=1749490358; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YWyCHnPpsz5jiOCC5fkQdcz/qdjcO8jI9QCn4djS++A=;
+        b=kt5cCxRZAegdc9BIazHWGxdphfkzm4C0dHyl/dNT8eHk0M38+vJDj254jvQu6MQZ0J
+         DbZVFatTTXIR3OeONIZW+96oIQNvB0ZMncOEe2zJgDg4vDtLMgtYCkIcv3fJh38r1Ckh
+         HOkzGh+91kk/7SkBComsbcgvGTu+Y0jKD+qI3Ku31y5c7i4FxG9pt4q80gH2/koLQbos
+         4l7zxZuC2zt7e7F65YC9NhnpPX0Nqwt1PcrFsGhVG92ddvPJUC459U9ZW79A04CqsIav
+         bDGoYcAyepCn3vsVzPkELlpaTXAPP04ricLiBOOBXw4R3sw+1B+kY8HJOeMNA6w/EZid
+         XOkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748885558; x=1749490358;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YWyCHnPpsz5jiOCC5fkQdcz/qdjcO8jI9QCn4djS++A=;
+        b=ETayzUBAWe0uvrtBfA/ZhaM7BqYqonkqMmNMzGkz891PzacgaLLWjTxgK5deXewJ0V
+         /SZ098aWbjAG8cCXxZz4WUX4NFTo1zd/grMUnBbrWiAjsS4fi+FAlhJs612mlAu5n19A
+         qqVL0rpG/bq79bLaQhNcDpY0+yFTd3Y6770thJTlqG813zC+x8e4BwK+FrSJm9gTsLDk
+         gdU3ucSFrzJXwjvnLytCI4hlEno8GmGO9wKv3zLv0m4lnPovgHE0dtNzZc6GhF4iw28W
+         5BVtvT1/owbp2QnTKz7euDbAFBB9ytC3SAphaKSAehThHENaRhYkC2BiLAfVm+6OF8tq
+         NCew==
+X-Forwarded-Encrypted: i=1; AJvYcCXg2hE2xXmvYoPHJ5Nr2BhjuNeKGRNOuYCtfFTdgTv4XVnNETqZN6Fiaagy06W/aLe12Gt4uB6K9S7rLH8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxkOZEMin7o5SgtjZ/u8cJ3f197ZaE1C7XGWaCfBj4krc0FWFS
+	EW6KFnP8RZ7TDUdlt4xkSbIf09G58IOxfEYJuyjIJpPn56Z/XFQdH1P4fXUOtQkZtj1v6JtZ5jb
+	I9xDP6JUPHSDrHSZQp0cnvtBwP51CNbId5M6Zd3jHG0dxVKE0q5/uM0oXf14=
+X-Gm-Gg: ASbGnct/C93/n9SdHAOyW4yggBRN+APR0+pkD5EXP8mGcJ48veiYcdCypMmy6sHIfaD
+	yJMu089XYrodjQq1fDK+z7uf3s+2kTWu2xc/+ioWIkXi/+sMAY0ggkpYptWlCsuY8T8H14uw0U+
+	pahwwLq3DYhWrTvLLZipWq8MHVRbaqqqCqjsKSTHAhrNGp51sxk9uoUoZ1ojes98T5TMjk9XnB
+X-Google-Smtp-Source: AGHT+IGcgjDveA1f2goly7nIa337NOCnuv1+3aIFsV9PYdV/9Phe1S4XNa8ammEYnRO2Px1DffFAov8T3xUobdN1Hws=
+X-Received: by 2002:a05:6e02:156b:b0:3dd:a524:9470 with SMTP id
+ e9e14a558f8ab-3dda5249625mr5135335ab.27.1748885546614; Mon, 02 Jun 2025
+ 10:32:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aD2w50VDvGIH95Pf@ly-workstation>
+References: <20250529052322.381947-1-irogers@google.com> <20250529052322.381947-2-irogers@google.com>
+ <aDjBtuxyumBrn70B@x1> <CAP-5=fXonwoMOqfK30bo1i438cDa7oTWOOWFwJNXY9UOMBpkCQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fXonwoMOqfK30bo1i438cDa7oTWOOWFwJNXY9UOMBpkCQ@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 2 Jun 2025 10:32:15 -0700
+X-Gm-Features: AX0GCFtvM9h-svrhY-U-soiP0u8TEbc_-RHxISmm1FBYq42MREbKbhJ53qT0dXU
+Message-ID: <CAP-5=fXg-gQVYwdLpWkkD+egqpq1KbPjUt3cXXa+Msm5hSU9PA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] perf debug: Add function symbols to dump_stack
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Michael Petlan <mpetlan@redhat.com>, 
+	Andi Kleen <ak@linux.intel.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, 
+	=?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Thu, May 29, 2025 at 3:02=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> On Thu, May 29, 2025 at 1:21=E2=80=AFPM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > On Wed, May 28, 2025 at 10:23:22PM -0700, Ian Rogers wrote:
+> > > Symbolize stack traces by creating a live machine. Add this
+> > > functionality to dump_stack and switch dump_stack users to use
+> > > it. Switch TUI to use it. Add stack traces to the child test function
+> > > which can be useful to diagnose blocked code.
+> > >
+> > > Example output:
+> > > ```
+> > >   8: PERF_RECORD_* events & perf_sample fields                       =
+: Running (1 active)
+> > > ^C
+> > > Signal (2) while running tests.
+> > > Terminating tests with the same signal
+> > > Internal test harness failure. Completing any started tests:
+> > > :  8: PERF_RECORD_* events & perf_sample fields:
+> >
+> > So you are testing it with:
+> >
+> > root@number:~# perf test PERF_RECORD
+> >   8: PERF_RECORD_* events & perf_sample fields                       : =
+Running (1 active)
+> > ^C
+> > Signal (2) while running tests.
+> > Terminating tests with the same signal
+> > Internal test harness failure. Completing any started tests:
+> >   8: PERF_RECORD_* events & perf_sample fields                       : =
+Skip (permissions)
+> > root@number:~#
+> >
+> > ?
+>
+> You are running the test as a child and by default the child test
+> output is only displayed if verbose is enabled. I use verbose=3D2 below
+> as verbose=3D1 won't display anything unless the child test gives a fail
+> exit value:
+> ```
+> $ git log --oneline
+> b9ac06abfde9 perf debug: Add function symbols to dump_stack
+> e561806265ed perf machine: Factor creating a "live" machine out of dwarf-=
+unwind
+> 628e124404b3 perf tests switch-tracking: Fix timestamp comparison
+> $ make -C tools/perf O=3D/tmp/perf
+> ...
+> $ sudo /tmp/perf/perf test -vv PERF_RECORD
+>  8: PERF_RECORD_* events & perf_sample fields:
+>  8: PERF_RECORD_* events & perf_sample fields                       :
+> Running (1 active)
+> ^C
+> Signal (2) while running tests.
+> Terminating tests with the same signal
+> Internal test harness failure. Completing any started tests:
+> :  8: PERF_RECORD_* events & perf_sample fields:
+>
+> ---- unexpected signal (2) ----
+>    #0 0x5617ec45e5e3 in child_test_sig_handler builtin-test.c:0
+>    #1 0x7f855c649df0 in __restore_rt libc_sigaction.c:0
+>    #2 0x7f855c699687 in __internal_syscall_cancel cancellation.c:64
+>    #3 0x7f855c6e5f7a in clock_nanosleep@GLIBC_2.2.5 clock_nanosleep.c:72
+>    #4 0x7f855c6f1393 in __nanosleep nanosleep.c:26
+>    #5 0x7f855c702d68 in __sleep sleep.c:55
+>    #6 0x5617ec46ebfb in test__PERF_RECORD perf-record.c:0
+>    #7 0x5617ec45e4f0 in run_test_child builtin-test.c:0
+>    #8 0x5617ec3faf0d in start_command run-command.c:127
+>    #9 0x5617ec45f433 in __cmd_test builtin-test.c:0
+>    #10 0x5617ec45faff in cmd_test perf[147aff]
+>    #11 0x5617ec3ed960 in run_builtin perf.c:0
+>    #12 0x5617ec3edc7b in handle_internal_command perf.c:0
+>    #13 0x5617ec368d33 in main perf[50d33]
+>    #14 0x7f855c633ca8 in __libc_start_call_main libc_start_call_main.h:74
+>    #15 0x7f855c633d65 in __libc_start_main@@GLIBC_2.34 libc-start.c:128
+>    #16 0x5617ec369381 in _start perf[51381]
+>
+> ---- unexpected signal (2) ----
+>    #0 0x5617ec45e5e3 in child_test_sig_handler builtin-test.c:0
+>    #1 0x7f855c649df0 in __restore_rt libc_sigaction.c:0
+>    #2 0x7f855c6a3a14 in pthread_sigmask@GLIBC_2.2.5 pthread_sigmask.c:45
+>    #3 0x7f855c649fd9 in __GI___sigprocmask sigprocmask.c:26
+>    #4 0x7f855c72601b in __longjmp_chk longjmp.c:36
+>    #5 0x5617ec45e600 in print_test_result.isra.0 builtin-test.c:0
+>    #6 0x7f855c649df0 in __restore_rt libc_sigaction.c:0
+>    #7 0x7f855c699687 in __internal_syscall_cancel cancellation.c:64
+>    #8 0x7f855c6e5f7a in clock_nanosleep@GLIBC_2.2.5 clock_nanosleep.c:72
+>    #9 0x7f855c6f1393 in __nanosleep nanosleep.c:26
+>    #10 0x7f855c702d68 in __sleep sleep.c:55
+>    #11 0x5617ec46ebfb in test__PERF_RECORD perf-record.c:0
+>    #12 0x5617ec45e4f0 in run_test_child builtin-test.c:0
+>    #13 0x5617ec3faf0d in start_command run-command.c:127
+>    #14 0x5617ec45f433 in __cmd_test builtin-test.c:0
+>    #15 0x5617ec45faff in cmd_test perf[147aff]
+>    #16 0x5617ec3ed960 in run_builtin perf.c:0
+>    #17 0x5617ec3edc7b in handle_internal_command perf.c:0
+>    #18 0x5617ec368d33 in main perf[50d33]
+>    #19 0x7f855c633ca8 in __libc_start_call_main libc_start_call_main.h:74
+>    #20 0x7f855c633d65 in __libc_start_main@@GLIBC_2.34 libc-start.c:128
+>    #21 0x5617ec369381 in _start perf[51381]
+>  8: PERF_RECORD_* events & perf_sample fields                       :
+> Skip (permissions)
+> ```
+>
+>
+> > I built it with DEBUG=3D1 and without, and with your patch, following y=
+our
+> > example output, I'm not being able to reproduce.
+> >
+> > Tried it as well with:
+> >
+> > =E2=AC=A2 [acme@toolbx perf-tools-next]$ cat segv.patch
+> > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> > index 8b30c6f16a9eeac1..e55d86f1097d6d79 100644
+> > --- a/tools/perf/util/symbol.c
+> > +++ b/tools/perf/util/symbol.c
+> > @@ -402,6 +402,8 @@ static struct symbol *symbols__find(struct rb_root_=
+cached *symbols, u64 ip)
+> >  {
+> >         struct rb_node *n;
+> >
+> > +       *(int *)NULL =3D 0;
+> > +
+> >         if (symbols =3D=3D NULL)
+> >                 return NULL;
+> >
+> > =E2=AC=A2 [acme@toolbx perf-tools-next]$ patch -p1 < segv.patch
+> > patching file tools/perf/util/symbol.c
+> > =E2=AC=A2 [acme@toolbx perf-tools-next]$ m
+> > rm: cannot remove '/home/acme/libexec/perf-core/scripts/python/Perf-Tra=
+ce-Util/lib/Perf/Trace/__pycache__/Core.cpython-313.pyc': Permission denied
+> > make: Entering directory '/home/acme/git/perf-tools-next/tools/perf'
+> >   BUILD:   Doing 'make -j32' parallel build
+> > Warning: Kernel ABI header differences:
+> >   diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm=
+/cputype.h
+> >
+> > Auto-detecting system features:
+> > ...                                   libdw: [ on  ]
+> > ...                                   glibc: [ on  ]
+> > ...                                  libelf: [ on  ]
+> > ...                                 libnuma: [ on  ]
+> > ...                  numa_num_possible_cpus: [ on  ]
+> > ...                                 libperl: [ on  ]
+> > ...                               libpython: [ on  ]
+> > ...                               libcrypto: [ on  ]
+> > ...                             libcapstone: [ on  ]
+> > ...                               llvm-perf: [ on  ]
+> > ...                                    zlib: [ on  ]
+> > ...                                    lzma: [ on  ]
+> > ...                               get_cpuid: [ on  ]
+> > ...                                     bpf: [ on  ]
+> > ...                                  libaio: [ on  ]
+> > ...                                 libzstd: [ on  ]
+> >
+> >   INSTALL libsubcmd_headers
+> >   INSTALL libperf_headers
+> >   INSTALL libapi_headers
+> >   INSTALL libsymbol_headers
+> >   INSTALL libbpf_headers
+> >   CC      /tmp/build/perf-tools-next/util/symbol.o
+> >   LD      /tmp/build/perf-tools-next/util/perf-util-in.o
+> >   LD      /tmp/build/perf-tools-next/perf-util-in.o
+> >   AR      /tmp/build/perf-tools-next/libperf-util.a
+> >   LINK    /tmp/build/perf-tools-next/perf
+> >   GEN     /tmp/build/perf-tools-next/python/perf.cpython-313-x86_64-lin=
+ux-gnu.so
+> >   INSTALL binaries
+> >   INSTALL tests
+> >   INSTALL libperf-jvmti.so
+> >   INSTALL libexec
+> >   INSTALL perf-archive
+> >   INSTALL perf-iostat
+> >   INSTALL perl-scripts
+> >   INSTALL python-scripts
+> >   INSTALL dlfilters
+> >   INSTALL perf_completion-script
+> >   INSTALL perf-tip
+> > make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
+> >  18: 'import perf' in python                                         : =
+Ok
+> > =E2=AC=A2 [acme@toolbx perf-tools-next]$
+> >
+> > root@number:~# perf top
+> > perf: Segmentation fault
+> > -------- backtrace --------
+> > Segmentation fault (core dumped)
+> > root@number:~#
+> >
+> > Tried also with this, but probably something else is at play:
+> >
+> > root@number:~# perf probe -x ~/bin/perf dump_stack
+> > Added new event:
+> >   probe_perf:dump_stack (on dump_stack in /home/acme/bin/perf)
+> >
+> > You can now use it in all perf tools, such as:
+> >
+> >         perf record -e probe_perf:dump_stack -aR sleep 1
+> >
+> > root@number:~#
+> > root@number:~# perf trace -e probe_perf:dump_stack/max-stack=3D16/ perf=
+ top
+> > perf: Segmentation fault
+> > -------- backtrace --------
+> > root@number:~#
+> >
+> > Running perf trace on a separate terminal it also doesn't catch
+> > dump_stack being called (that probe point).
+> >
+> > root@number:~# perf top --stdio
+> >    PerfTop:       0 irqs/sec  kernel: 0.0%  exact:  0.0% lost: 0/0 drop=
+: 0/0 [4000Hz cycles:P],  (all, 32 CPUs)
+> > -----------------------------------------------------------------------=
+---------------------------------------------------------------------------=
+----------------------
+> >
+> > perf: Segmentation fault
+> > Segmentation fault (core dumped)
+> > root@number:~#
+> >
+> > root@number:~# nm ~/bin/perf | grep dump_stack
+> > 0000000000637eaa T __dump_stack
+> > 00000000006380fa T dump_stack
+> > 000000000063816b T sighandler_dump_stack
+> > root@number:~#
+> >
+> > =E2=AC=A2 [acme@toolbx perf-tools-next]$ rpm -q glibc
+> > glibc-2.41-5.fc42.x86_64
+> > root@number:~# uname -a
+> > Linux number 6.14.8-300.fc42.x86_64 #1 SMP PREEMPT_DYNAMIC Thu May 22 1=
+9:26:02 UTC 2025 x86_64 GNU/Linux
+> > root@number:~#
+> >
+> > What am I missing?
+>
+> For perf top I can do:
+> ```
+> $ sudo /tmp/perf/perf top
+> ```
+> in a different terminal:
+> ```
+> $ sudo killall -11 perf
+> ```
+> then back in the first terminal:
+> ```
+> perf: Segmentation fault
+> -------- backtrace --------
+>    #0 0x55ee68647918 in ui__signal_backtrace setup.c:110
+>    #1 0x7fe2d3849df0 in __restore_rt libc_sigaction.c:0
+>    #2 0x7fe2d38a49ee in __syscall_cancel_arch syscall_cancel.S:56
+>    #3 0x7fe2d3899668 in __internal_syscall_cancel cancellation.c:54
+>    #4 0x7fe2d38996ad in __syscall_cancel cancellation.c:79
+>    #5 0x7fe2d390d9c6 in __poll poll.c:43
+>    #6 0x55ee6855dfcb in fdarray__poll array.c:139
+>    #7 0x55ee68565a05 in perf_evlist__poll evlist.c:391
+>    #8 0x55ee68673b5a in evlist__poll evlist.c:594
+>    #9 0x55ee684e7a61 in __cmd_top builtin-top.c:1369
+>    #10 0x55ee684e9a6c in cmd_top builtin-top.c:1856
+>    #11 0x55ee6855d1f0 in run_builtin perf.c:351
+>    #12 0x55ee6855d497 in handle_internal_command perf.c:404
+>    #13 0x55ee6855d5f0 in run_argv perf.c:451
+>    #14 0x55ee6855d939 in main perf.c:558
+>    #15 0x7fe2d3833ca8 in __libc_start_call_main libc_start_call_main.h:74
+>    #16 0x7fe2d3833d65 in __libc_start_main@@GLIBC_2.34 libc-start.c:128
+>    #17 0x55ee684b0a91 in _start perf[4ca91]
+> ```
+> As the same symbol code is used for the backtrace then adding the segv
+> there is likely causing a segv in the signal handler in __dump_stack.
 
-On Mon, Jun 02, 2025 at 10:10:47PM +0800, Lai, Yi wrote:
-> Hi Namhyung Kim,
-> 
-> Greetings!
-> 
-> I used Syzkaller and found that there is WARNING: locking bug in perf_event_wakeup in linux-next next-20250530.
-> 
-> After bisection and the first bad commit is:
-> "
-> f4b07fd62d4d perf/core: Use POLLHUP for pinned events in error
-> "
-> 
-> All detailed into can be found at:
-> https://github.com/laifryiee/syzkaller_logs/tree/main/250601_162355_perf_event_wakeup
-> Syzkaller repro code:
-> https://github.com/laifryiee/syzkaller_logs/tree/main/250601_162355_perf_event_wakeup/repro.c
-> Syzkaller repro syscall steps:
-> https://github.com/laifryiee/syzkaller_logs/tree/main/250601_162355_perf_event_wakeup/repro.prog
-> Syzkaller report:
-> https://github.com/laifryiee/syzkaller_logs/tree/main/250601_162355_perf_event_wakeup/repro.report
-> Kconfig(make olddefconfig):
-> https://github.com/laifryiee/syzkaller_logs/tree/main/250601_162355_perf_event_wakeup/kconfig_origin
-> Bisect info:
-> https://github.com/laifryiee/syzkaller_logs/tree/main/250601_162355_perf_event_wakeup/bisect_info.log
-> bzImage:
-> https://github.com/laifryiee/syzkaller_logs/raw/refs/heads/main/250601_162355_perf_event_wakeup/bzImage_next-20250530
-> Issue dmesg:
-> https://github.com/laifryiee/syzkaller_logs/blob/main/250601_162355_perf_event_wakeup/next-20250530_dmesg.log
-> 
-> "
-> [   39.913691] =============================
-> [   39.914157] [ BUG: Invalid wait context ]
-> [   39.914623] 6.15.0-next-20250530-next-2025053 #1 Not tainted
-> [   39.915271] -----------------------------
-> [   39.915731] repro/837 is trying to lock:
-> [   39.916191] ffff88801acfabd8 (&event->waitq){....}-{3:3}, at: __wake_up+0x26/0x60
-> [   39.917182] other info that might help us debug this:
-> [   39.917761] context-{5:5}
-> [   39.918079] 4 locks held by repro/837:
-> [   39.918530]  #0: ffffffff8725cd00 (rcu_read_lock){....}-{1:3}, at: __perf_event_task_sched_in+0xd1/0xbc0
-> [   39.919612]  #1: ffff88806ca3c6f8 (&cpuctx_lock){....}-{2:2}, at: __perf_event_task_sched_in+0x1a7/0xbc0
-> [   39.920748]  #2: ffff88800d91fc18 (&ctx->lock){....}-{2:2}, at: __perf_event_task_sched_in+0x1f9/0xbc0
-> [   39.921819]  #3: ffffffff8725cd00 (rcu_read_lock){....}-{1:3}, at: perf_event_wakeup+0x6c/0x470
-> [   39.922823] stack backtrace:
-> [   39.923171] CPU: 0 UID: 0 PID: 837 Comm: repro Not tainted 6.15.0-next-20250530-next-2025053 #1 PREEMPT(voluntary)
-> [   39.923196] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.o4
-> [   39.923214] Call Trace:
-> [   39.923221]  <TASK>
-> [   39.923228]  dump_stack_lvl+0xea/0x150
-> [   39.923256]  dump_stack+0x19/0x20
-> [   39.923276]  __lock_acquire+0xb22/0x22a0
-> [   39.923308]  ? x86_pmu_commit_txn+0x195/0x2b0
-> [   39.923339]  ? __lock_acquire+0x412/0x22a0
-> [   39.923375]  lock_acquire+0x170/0x310
-> [   39.923407]  ? __wake_up+0x26/0x60
-> [   39.923448]  _raw_spin_lock_irqsave+0x52/0x80
-> [   39.923473]  ? __wake_up+0x26/0x60
-> [   39.923504]  __wake_up+0x26/0x60
-> [   39.923537]  perf_event_wakeup+0x14a/0x470
-> [   39.923571]  merge_sched_in+0x846/0x15c0
-> [   39.923610]  visit_groups_merge.constprop.0.isra.0+0x952/0x1420
-> [   39.923653]  ? __pfx_visit_groups_merge.constprop.0.isra.0+0x10/0x10
-> [   39.923688]  ? sched_clock_noinstr+0x12/0x20
-> [   39.923724]  ? __sanitizer_cov_trace_const_cmp1+0x1e/0x30
-> [   39.923766]  ctx_sched_in+0x471/0xa20
-> [   39.923804]  ? __pfx_ctx_sched_in+0x10/0x10
-> [   39.923838]  ? __sanitizer_cov_trace_const_cmp4+0x1a/0x20
-> [   39.923878]  perf_event_sched_in+0x47/0xa0
-> [   39.923912]  __perf_event_task_sched_in+0x3fc/0xbc0
-> [   39.923951]  ? __pfx___perf_event_task_sched_in+0x10/0x10
-> [   39.923984]  ? __this_cpu_preempt_check+0x21/0x30
-> [   39.924012]  ? __sanitizer_cov_trace_cmp8+0x1c/0x30
-> [   39.924046]  ? xfd_validate_state+0x14f/0x1b0
-> [   39.924081]  finish_task_switch.isra.0+0x525/0x990
-> [   39.924117]  ? lock_unpin_lock+0xdc/0x170
-> [   39.924152]  __schedule+0xef3/0x3840
-> [   39.924185]  ? __pfx___schedule+0x10/0x10
-> [   39.924218]  ? ktime_get_coarse_real_ts64+0xad/0xf0
-> [   39.924259]  schedule+0xf6/0x3d0
-> [   39.924285]  exit_to_user_mode_loop+0x7a/0x110
-> [   39.924315]  do_syscall_64+0x284/0x2e0
-> [   39.924340]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> [   39.924360] RIP: 0033:0x7ff14103ee5d
-> [   39.924381] Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 8
-> [   39.924400] RSP: 002b:00007fffb2745578 EFLAGS: 00000202 ORIG_RAX: 0000000000000038
-> [   39.924418] RAX: 0000000000000346 RBX: 0000000000000000 RCX: 00007ff14103ee5d
-> [   39.924431] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000082000
-> [   39.924443] RBP: 00007fffb27455c0 R08: 0000000000000000 R09: 0000000000000000
-> [   39.924456] R10: 0000000000000000 R11: 0000000000000202 R12: 00007fffb27459a8
-> [   39.924468] R13: 0000000000404e78 R14: 0000000000406e08 R15: 00007ff141389000
-> [   39.924497]  </TASK>
-> [   40.307815] coredump: 804(repro): over core_pipe_limit, skipping core dump
-> [   40.472093] coredump: 795(repro): over core_pipe_limit, skipping core dump
-> [   40.545575] coredump: 799(repro): over core_pipe_limit, skipping core dump
-> [   40.948915] coredump: 833(repro): over core_pipe_limit, skipping core dump
-> [   40.989336] coredump: 811(repro): over core_pipe_limit, skipping core dump
-> [   42.121469] coredump: 857(repro): over core_pipe_limit, skipping core dump
-> "
-> 
-> Hope this cound be insightful to you.
-> 
-> Regards,
-> Yi Lai
-> 
-> ---
-> 
-> If you don't need the following environment to reproduce the problem or if you
-> already have one reproduced environment, please ignore the following information.
-> 
-> How to reproduce:
-> git clone https://gitlab.com/xupengfe/repro_vm_env.git
-> cd repro_vm_env
-> tar -xvf repro_vm_env.tar.gz
-> cd repro_vm_env; ./start3.sh  // it needs qemu-system-x86_64 and I used v7.1.0
->   // start3.sh will load bzImage_2241ab53cbb5cdb08a6b2d4688feb13971058f65 v6.2-rc5 kernel
->   // You could change the bzImage_xxx as you want
->   // Maybe you need to remove line "-drive if=pflash,format=raw,readonly=on,file=./OVMF_CODE.fd \" for different qemu version
-> You could use below command to log in, there is no password for root.
-> ssh -p 10023 root@localhost
-> 
-> After login vm(virtual machine) successfully, you could transfer reproduced
-> binary to the vm by below way, and reproduce the problem in vm:
-> gcc -pthread -o repro repro.c
-> scp -P 10023 repro root@localhost:/root/
-> 
-> Get the bzImage for target kernel:
-> Please use target kconfig and copy it to kernel_src/.config
-> make olddefconfig
-> make -jx bzImage           //x should equal or less than cpu num your pc has
-> 
-> Fill the bzImage file into above start3.sh to load the target kernel in vm.
-> 
-> 
-> Tips:
-> If you already have qemu-system-x86_64, please ignore below info.
-> If you want to install qemu v7.1.0 version:
-> git clone https://github.com/qemu/qemu.git
-> cd qemu
-> git checkout -f v7.1.0
-> mkdir build
-> cd build
-> yum install -y ninja-build.x86_64
-> yum -y install libslirp-devel.x86_64
-> ../configure --target-list=x86_64-softmmu --enable-kvm --enable-vnc --enable-gtk --enable-sdl --enable-usb-redir --enable-slirp
-> make
-> make install 
-
-Thanks for the detailed instruction.  I was able to reproduce it with
-your setup.  The below patch fixes it for me.  Can you please double
-check if it works well for you?
+Just to note, it would be nice for this to land as I need to rebase:
+https://lore.kernel.org/lkml/20250529044000.759937-19-irogers@google.com/
+due to the machine changes. I believe the patches are WAI as shown in
+the output.
 
 Thanks,
-Namhyung
+Ian
 
----8---
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index f34c99f8ce8f446a..e22eb88eb105b95b 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -3995,7 +3995,8 @@ static int merge_sched_in(struct perf_event *event, void *data)
- 			if (*perf_event_fasync(event))
- 				event->pending_kill = POLL_ERR;
- 
--			perf_event_wakeup(event);
-+			event->pending_wakeup = 1;
-+			irq_work_queue(&event->pending_irq);
- 		} else {
- 			struct perf_cpu_pmu_context *cpc = this_cpc(event->pmu_ctx->pmu);
- 
--- 
-2.49.0.1204.g71687c7c1d-goog
-
+> Thanks,
+> Ian
+>
+> > - Arnaldo
+> >
+> > > ____ unexpected signal (2) ____
+> > >     #0 0x5590fb6209b6 in child_test_sig_handler builtin-test.c:243
+> > >     #1 0x7f4a91e49e20 in __restore_rt libc_sigaction.c:0
+> > >     #2 0x7f4a91ee4f33 in clock_nanosleep@GLIBC_2.2.5 clock_nanosleep.=
+c:71
+> > >     #3 0x7f4a91ef0333 in __nanosleep nanosleep.c:26
+> > >     #4 0x7f4a91f01f68 in __sleep sleep.c:55
+> > >     #5 0x5590fb638c63 in test__PERF_RECORD perf-record.c:295
+> > >     #6 0x5590fb620b43 in run_test_child builtin-test.c:269
+> > >     #7 0x5590fb5b83ab in start_command run-command.c:127
+> > >     #8 0x5590fb621572 in start_test builtin-test.c:467
+> > >     #9 0x5590fb621a47 in __cmd_test builtin-test.c:573
+> > >     #10 0x5590fb6225ea in cmd_test builtin-test.c:775
+> > >     #11 0x5590fb5a9099 in run_builtin perf.c:351
+> > >     #12 0x5590fb5a9340 in handle_internal_command perf.c:404
+> > >     #13 0x5590fb5a9499 in run_argv perf.c:451
+> > >     #14 0x5590fb5a97e2 in main perf.c:558
+> > >     #15 0x7f4a91e33d68 in __libc_start_call_main libc_start_call_main=
+.h:74
+> > >     #16 0x7f4a91e33e25 in __libc_start_main@@GLIBC_2.34 libc-start.c:=
+128
+> > >     #17 0x5590fb4fd6d1 in _start perf[436d1]
+> > > ```
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > > v2: Fix NO_BACKTRACE=3D1 build (Arnaldo)
+> > > ---
+> > >  tools/perf/tests/builtin-test.c | 15 +++++++-
+> > >  tools/perf/ui/tui/setup.c       |  2 +-
+> > >  tools/perf/util/debug.c         | 68 +++++++++++++++++++++++++++----=
+--
+> > >  tools/perf/util/debug.h         |  1 +
+> > >  4 files changed, 73 insertions(+), 13 deletions(-)
+> > >
+> > > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/built=
+in-test.c
+> > > index 45d3d8b3317a..80375ca39a37 100644
+> > > --- a/tools/perf/tests/builtin-test.c
+> > > +++ b/tools/perf/tests/builtin-test.c
+> > > @@ -6,6 +6,9 @@
+> > >   */
+> > >  #include <fcntl.h>
+> > >  #include <errno.h>
+> > > +#ifdef HAVE_BACKTRACE_SUPPORT
+> > > +#include <execinfo.h>
+> > > +#endif
+> > >  #include <poll.h>
+> > >  #include <unistd.h>
+> > >  #include <setjmp.h>
+> > > @@ -231,6 +234,16 @@ static jmp_buf run_test_jmp_buf;
+> > >
+> > >  static void child_test_sig_handler(int sig)
+> > >  {
+> > > +#ifdef HAVE_BACKTRACE_SUPPORT
+> > > +     void *stackdump[32];
+> > > +     size_t stackdump_size;
+> > > +#endif
+> > > +
+> > > +     fprintf(stderr, "\n---- unexpected signal (%d) ----\n", sig);
+> > > +#ifdef HAVE_BACKTRACE_SUPPORT
+> > > +     stackdump_size =3D backtrace(stackdump, ARRAY_SIZE(stackdump));
+> > > +     __dump_stack(stderr, stackdump, stackdump_size);
+> > > +#endif
+> > >       siglongjmp(run_test_jmp_buf, sig);
+> > >  }
+> > >
+> > > @@ -244,7 +257,7 @@ static int run_test_child(struct child_process *p=
+rocess)
+> > >
+> > >       err =3D sigsetjmp(run_test_jmp_buf, 1);
+> > >       if (err) {
+> > > -             fprintf(stderr, "\n---- unexpected signal (%d) ----\n",=
+ err);
+> > > +             /* Received signal. */
+> > >               err =3D err > 0 ? -err : -1;
+> > >               goto err_out;
+> > >       }
+> > > diff --git a/tools/perf/ui/tui/setup.c b/tools/perf/ui/tui/setup.c
+> > > index 16c6eff4d241..022534eed68c 100644
+> > > --- a/tools/perf/ui/tui/setup.c
+> > > +++ b/tools/perf/ui/tui/setup.c
+> > > @@ -108,7 +108,7 @@ static void ui__signal_backtrace(int sig)
+> > >
+> > >       printf("-------- backtrace --------\n");
+> > >       size =3D backtrace(stackdump, ARRAY_SIZE(stackdump));
+> > > -     backtrace_symbols_fd(stackdump, size, STDOUT_FILENO);
+> > > +     __dump_stack(stdout, stackdump, size);
+> > >
+> > >       exit(0);
+> > >  }
+> > > diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
+> > > index f9ef7d045c92..0c7c6a9e158b 100644
+> > > --- a/tools/perf/util/debug.c
+> > > +++ b/tools/perf/util/debug.c
+> > > @@ -14,11 +14,18 @@
+> > >  #ifdef HAVE_BACKTRACE_SUPPORT
+> > >  #include <execinfo.h>
+> > >  #endif
+> > > +#include "addr_location.h"
+> > >  #include "color.h"
+> > > -#include "event.h"
+> > >  #include "debug.h"
+> > > +#include "event.h"
+> > > +#include "machine.h"
+> > > +#include "map.h"
+> > >  #include "print_binary.h"
+> > > +#include "srcline.h"
+> > > +#include "symbol.h"
+> > > +#include "synthetic-events.h"
+> > >  #include "target.h"
+> > > +#include "thread.h"
+> > >  #include "trace-event.h"
+> > >  #include "ui/helpline.h"
+> > >  #include "ui/ui.h"
+> > > @@ -298,21 +305,60 @@ void perf_debug_setup(void)
+> > >       libapi_set_print(pr_warning_wrapper, pr_warning_wrapper, pr_deb=
+ug_wrapper);
+> > >  }
+> > >
+> > > +void __dump_stack(FILE *file, void **stackdump, size_t stackdump_siz=
+e)
+> > > +{
+> > > +     /* TODO: async safety. printf, malloc, etc. aren't safe inside =
+a signal handler. */
+> > > +     pid_t pid =3D getpid();
+> > > +     struct machine *machine =3D machine__new_live(/*kernel_maps=3D*=
+/false, pid);
+> > > +     struct thread *thread =3D NULL;
+> > > +
+> > > +     if (machine)
+> > > +             thread =3D machine__find_thread(machine, pid, pid);
+> > > +
+> > > +#ifdef HAVE_BACKTRACE_SUPPORT
+> > > +     if (!machine || !thread) {
+> > > +             /*
+> > > +              * Backtrace functions are async signal safe. Fall back=
+ on them
+> > > +              * if machine/thread creation fails.
+> > > +              */
+> > > +             backtrace_symbols_fd(stackdump, stackdump_size, fileno(=
+file));
+> > > +             machine__delete(machine);
+> > > +             return;
+> > > +     }
+> > > +#endif
+> > > +
+> > > +     for (size_t i =3D 0; i < stackdump_size; i++) {
+> > > +             struct addr_location al;
+> > > +             u64 addr =3D (u64)stackdump[i];
+> > > +             bool printed =3D false;
+> > > +
+> > > +             addr_location__init(&al);
+> > > +             if (thread && thread__find_map(thread, PERF_RECORD_MISC=
+_USER, addr, &al)) {
+> > > +                     al.sym =3D map__find_symbol(al.map, al.addr);
+> > > +                     if (al.sym) {
+> > > +                             fprintf(file, "    #%zd %p in %s ", i, =
+stackdump[i], al.sym->name);
+> > > +                             printed =3D true;
+> > > +                     }
+> > > +             }
+> > > +             if (!printed)
+> > > +                     fprintf(file, "    #%zd %p ", i, stackdump[i]);
+> > > +
+> > > +             map__fprintf_srcline(al.map, al.addr, "", file);
+> > > +             fprintf(file, "\n");
+> > > +             addr_location__exit(&al);
+> > > +     }
+> > > +     thread__put(thread);
+> > > +     machine__delete(machine);
+> > > +}
+> > > +
+> > >  /* Obtain a backtrace and print it to stdout. */
+> > >  #ifdef HAVE_BACKTRACE_SUPPORT
+> > >  void dump_stack(void)
+> > >  {
+> > > -     void *array[16];
+> > > -     size_t size =3D backtrace(array, ARRAY_SIZE(array));
+> > > -     char **strings =3D backtrace_symbols(array, size);
+> > > -     size_t i;
+> > > -
+> > > -     printf("Obtained %zd stack frames.\n", size);
+> > > -
+> > > -     for (i =3D 0; i < size; i++)
+> > > -             printf("%s\n", strings[i]);
+> > > +     void *stackdump[32];
+> > > +     size_t size =3D backtrace(stackdump, ARRAY_SIZE(stackdump));
+> > >
+> > > -     free(strings);
+> > > +     __dump_stack(stdout, stackdump, size);
+> > >  }
+> > >  #else
+> > >  void dump_stack(void) {}
+> > > diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
+> > > index a4026d1fd6a3..6b737e195ce1 100644
+> > > --- a/tools/perf/util/debug.h
+> > > +++ b/tools/perf/util/debug.h
+> > > @@ -85,6 +85,7 @@ void debug_set_display_time(bool set);
+> > >  void perf_debug_setup(void);
+> > >  int perf_quiet_option(void);
+> > >
+> > > +void __dump_stack(FILE *file, void **stackdump, size_t stackdump_siz=
+e);
+> > >  void dump_stack(void);
+> > >  void sighandler_dump_stack(int sig);
+> > >
+> > > --
+> > > 2.49.0.1204.g71687c7c1d-goog
+> > >
