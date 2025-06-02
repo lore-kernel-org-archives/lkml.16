@@ -1,112 +1,162 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52912523A;
-	Mon,  2 Jun 2025 15:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB4F1C245C;
+	Mon,  2 Jun 2025 15:35:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748878490; cv=none; b=Vn0IByxeEnc4K5sdfLpaoXequbmvzyfrMSf9U2XeD7e7asH8rF3Ffs7KJr4Rr4gxLB5LbRRQf8TXHTIQE7rQ7MnmEMIiNATI1JlmbggIVDqisAyPeqvJk6VRV9xzy171dGeYQGneYtlmElkTtbVANZmRAPW8341GNzn3Y39JAfU=
+	t=1748878559; cv=none; b=tsJxmar+Z0YNz+KCN8nUFn1GmesHKoeLqVax93JjrESWDM2dyJKsVVOeSanUlN5KCte0kVF5BInwhZh429zNkEH3SSozzL8nNc9kDYprvnkLhmWuDnSlHW3sHiIMd5qhJEHScHcRCYVziOQH7ZPFBOadMASquVspsOWv2D4JTIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748878490; c=relaxed/simple;
-	bh=rxSgjePRrDqocTR5PEa49E0emUGdPLDuFJFOaU0vyCc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q6SzKM84FVu6bYCSdo5mNV5wLE333vdzhNtDAWDXGwjWWE26eZvL92T99ci0AbwKKeSD/UjEsN7YFnL5o1UE5BnsYXC6Tgr8rZR0yl3divld0MAQrFKobmNNwyRdsH36DNPJ0JC7OryVUlm/YxNkXduPkvmDX+rOSCbRfAnz6WU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=JYHa/G6Z; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	s=arc-20240116; t=1748878559; c=relaxed/simple;
+	bh=uVanfGYE8GJVCmIGdZwtcNhOll4tNtdy4QOFK3CEVJU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LxQ49Os5z6EIxc8WWz7kask1cRQZf2cpbQ6HzqNrpCdVWbVeALrzWdogR5iMzc9ID42+MGHwGaKlO+KgrHRoaXBVuqp0q8CNv8eAgu3tuotzSggPo4tNsq7iZyC1M0Kg3BJV438B2TMFsSCzs3HgOHP7vcIeq6y9l74inmoOIVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NMBjYTl0; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="JYHa/G6Z"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4b9yZP6Tt5z9spq;
-	Mon,  2 Jun 2025 17:34:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1748878477;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RSWKa5jRWKpvNy5AYCWfE+HSpjMQwSPIzI/OGLplaVE=;
-	b=JYHa/G6ZeQB0yAIfVULn7KaHNi4u8pvPNXSitQ8sgxqIlk+aajfX3BD9W0hQ+kbsx9N+9W
-	4+YpGSR1x/9Gh9Fl4RfwNNQ4F7DMRNJrQ257cm5pEKfOP75SlHLUx0rz4jX2wokT972Hue
-	g/QuoCL9k1F1+UyaQbPWltOLes749bUQfmviBmHvr18Kj9mKw1JygJQklQr7s8ja9pvnm1
-	I/+nRbIjRkCvi6lKJE/Gow/dROVAa1ZqEi/Hc6vgRPJA8MqqiPwY82gJeMLdhQoXKpiyvC
-	ypkNLWhdS2u6RYhoqxkjev30NqlJyBmCOU/r87fIZlVKDRmSrJCbbi/cmjMS1A==
-Message-ID: <2acfe69f-f542-4f74-b671-d5a952d5b205@pankajraghav.com>
-Date: Mon, 2 Jun 2025 17:34:27 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NMBjYTl0"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso3159556b3a.2;
+        Mon, 02 Jun 2025 08:35:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748878557; x=1749483357; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QNrtHxvAARLKVPFpYujSB14zlhbXQAvcOq3ksde84Gc=;
+        b=NMBjYTl0xTDelfX06hD96AEcXEIpylKu6yfl0MQuYsct0extdVrY3Cf6AWHPWNinMY
+         0XPJTHw4kiXBqh/vJD+YJagsfoO8J4cMuqkus/WgFX7DRTYqwbpdsfq6viez48jMKZyZ
+         xab93EdRFG0jY9TIQk0zQQ07cl5Ktovxh1MSYr/rzkCcyrFZh5wj/m9DMzYpsA6984dP
+         6FOJ01KUJhXrw5EReWW0PzzDkBvxUe011vqmcxqNsJUFMQxj+sZcCkL42iosvqwi5svG
+         tI5jrqRbXagKIXN2bDGlNTrsm+BDm4X7l/7Q/reRWa0LYSA256g2A0nmo7qS33hOGHZM
+         Kp8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748878557; x=1749483357;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QNrtHxvAARLKVPFpYujSB14zlhbXQAvcOq3ksde84Gc=;
+        b=AXLWlEv5psk53Ei9YP0B2Ldaq955L8UWociv6zuvbAosMkoQKGnTu0Q4LeMsyqgoL8
+         oSPEAadej4CTG8sCZi8gbfOeJcIsH598wpd+wN2t4DyTK9UKpxZmTwbSCNXZl3o1FroJ
+         K0g1C1Zrb/8ZMR9X21oWtG1eirag6tzb9rbCLeaaFhISAfTqPuNCdLU8V7KEmWoKGB4m
+         xgZa/Jzrn8EPrW9s/M7uovS+7LCXuKkJzKy4N4XgXh/hx3kuiUV+xVDjrsSj1kiK5YkQ
+         7tA57ykI/XfmTMKuntO2SKjUrSEjPK6WpVVah3HH97PtDTnq51EfZwRdGeu3yZ4oxhA4
+         BEkg==
+X-Forwarded-Encrypted: i=1; AJvYcCX7Naab0uZs96dMlg7cKuxsRgslRWq3omgK/cqI7uNmSD07HjkROneo68nTcaACnrKM44sfvuJafXbnclNz@vger.kernel.org, AJvYcCXNFyYZtWxC3zkXCTBW882W+3wE3mWbpl/8w9iK8oauYBB4/wmb+2qM1bnXYuHtt3vfB277q7FtR8t2@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQV83SzqwYaG7s/OhfLDkyYB+a3oqb4qcZgNY7/AStcK/0vvnP
+	0qjyaOTiihhmDP+NzgSc+DLJ1oviR1/uf3RWEEjDI5P2hPWpNEPVlblQYEFhokzJNkVbWjdfiLr
+	pKjix0EEbF1xxVfQVG1ZyVx+1IrJL+XkbMYPR
+X-Gm-Gg: ASbGncuuZL1RSlDzLpGpNTt2Azy41kkEzQdmZrthWpCGOcvQlXUjcAQjR9bhCD9y5oO
+	nxQdfybXlqtdaTTEJ2ybUbcjLK+Mk9chQFIWfVcJPF56aqYg4G18Or9EBE1nbjWFd9dYzIvrnnO
+	kR9OWEma27KeAlfOKRCXY6fGFWFRpEkq3FMdz5e+JY00I=
+X-Google-Smtp-Source: AGHT+IE8dA1Pco98GdRrtQc3CXC3zKuqxixGckqlX0jZC5qF1ahyeT/uWicDjaPk55wZT7A9YkfMRqlC7hap1CDu8es=
+X-Received: by 2002:a05:6a00:88e:b0:73e:2d76:9eb1 with SMTP id
+ d2e1a72fcca58-747bd96bb7bmr16842852b3a.10.1748878557404; Mon, 02 Jun 2025
+ 08:35:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [RFC 3/3] block: use mm_huge_zero_folio in
- __blkdev_issue_zero_pages()
-To: Christoph Hellwig <hch@lst.de>, Pankaj Raghav <p.raghav@samsung.com>
-Cc: Suren Baghdasaryan <surenb@google.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Vlastimil Babka <vbabka@suse.cz>,
- Baolin Wang <baolin.wang@linux.alibaba.com>, Borislav Petkov <bp@alien8.de>,
- Ingo Molnar <mingo@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>,
- Zi Yan <ziy@nvidia.com>, Mike Rapoport <rppt@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>, Michal Hocko <mhocko@suse.com>,
- David Hildenbrand <david@redhat.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Thomas Gleixner <tglx@linutronix.de>, Nico Pache <npache@redhat.com>,
- Dev Jain <dev.jain@arm.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-block@vger.kernel.org, willy@infradead.org,
- x86@kernel.org, linux-fsdevel@vger.kernel.org,
- "Darrick J . Wong" <djwong@kernel.org>, mcgrof@kernel.org,
- gost.dev@samsung.com
-References: <20250527050452.817674-1-p.raghav@samsung.com>
- <20250527050452.817674-4-p.raghav@samsung.com>
- <20250602050514.GD21716@lst.de>
-Content-Language: en-US
-From: Pankaj Raghav <kernel@pankajraghav.com>
-In-Reply-To: <20250602050514.GD21716@lst.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 4b9yZP6Tt5z9spq
+References: <20250530221713.54804-1-aford173@gmail.com> <20250530221713.54804-5-aford173@gmail.com>
+ <20250601183620.npuicmipv6kv54z6@pengutronix.de>
+In-Reply-To: <20250601183620.npuicmipv6kv54z6@pengutronix.de>
+From: Adam Ford <aford173@gmail.com>
+Date: Mon, 2 Jun 2025 10:35:46 -0500
+X-Gm-Features: AX0GCFv__4JuP0qoSXHoB0hrfnXBe2PzvmOKWGMVmTMtI6s693tpZjD_UaOkNuc
+Message-ID: <CAHCN7xKjEt3rq4VUOSSTqcT4SyWxSCPLHGf6jR6KVHvor5wfKQ@mail.gmail.com>
+Subject: Re: [PATCH 4/4] arm64: dts: imx8mp: Configure VPU clocks for overdrive
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, aford@beaconembedded.com, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org, 
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/2/25 07:05, Christoph Hellwig wrote:
-> On Tue, May 27, 2025 at 07:04:52AM +0200, Pankaj Raghav wrote:
->> Noticed a 4% increase in performance on a commercial NVMe SSD which does
->> not support OP_WRITE_ZEROES. The device's MDTS was 128K. The performance
->> gains might be bigger if the device supports bigger MDTS.
-> 
-> Impressive gain on the one hand - on the other hand what is the macro
-> workload that does a lot of zeroing on an SSD, because avoiding that
-> should yield even better result while reducing wear..
-> 
+On Sun, Jun 1, 2025 at 1:36=E2=80=AFPM Marco Felsch <m.felsch@pengutronix.d=
+e> wrote:
+>
+> Hi Adam,
+>
+> thanks for the patch.
+>
+> On 25-05-30, Adam Ford wrote:
+> > The defaults for this SoC are configured for overdrive mode, but
+> > the VPU clocks are currently configured for nominal mode.
+> > Increase VPU_G1_CLK_ROOT to 800MHZ from 600MHz,
+> > Increase VPU_G2_CLK_ROOT to 700MHZ from 500MHz, and
+> > Increase VPU_BUS_CLK_ROOT to 800MHz from 600MHz.
+> >
+> > This requires adjusting the clock parents. Since there is already
+> > 800MHz clock references, move the VPU_BUS and G1 clocks to it.
+> > This frees up the VPU_PLL to be configured at 700MHz to run
+> > the G2 clock at 700MHz.
+> >
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
+> > ---
+> >  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 12 ++++++------
+> >  1 file changed, 6 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boo=
+t/dts/freescale/imx8mp.dtsi
+> > index 909555a5da4b..848b25c9b752 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> > @@ -2256,8 +2256,8 @@ vpu_g1: video-codec@38300000 {
+> >                       interrupts =3D <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> >                       clocks =3D <&clk IMX8MP_CLK_VPU_G1_ROOT>;
+> >                       assigned-clocks =3D <&clk IMX8MP_CLK_VPU_G1>;
+> > -                     assigned-clock-parents =3D <&clk IMX8MP_VPU_PLL_O=
+UT>;
+> > -                     assigned-clock-rates =3D <600000000>;
+> > +                     assigned-clock-parents =3D <&clk IMX8MP_SYS_PLL1_=
+800M>;
+> > +                     assigned-clock-rates =3D <800000000>;
+> >                       power-domains =3D <&vpumix_blk_ctrl IMX8MP_VPUBLK=
+_PD_G1>;
+> >               };
+> >
+> > @@ -2267,8 +2267,8 @@ vpu_g2: video-codec@38310000 {
+> >                       interrupts =3D <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+> >                       clocks =3D <&clk IMX8MP_CLK_VPU_G2_ROOT>;
+> >                       assigned-clocks =3D <&clk IMX8MP_CLK_VPU_G2>;
+> > -                     assigned-clock-parents =3D <&clk IMX8MP_SYS_PLL2_=
+1000M>;
+> > -                     assigned-clock-rates =3D <500000000>;
+> > +                     assigned-clock-parents =3D <&clk IMX8MP_VPU_PLL_O=
+UT>;
+> > +                     assigned-clock-rates =3D <700000000>;
+> >                       power-domains =3D <&vpumix_blk_ctrl IMX8MP_VPUBLK=
+_PD_G2>;
+> >               };
+> >
+> > @@ -2284,8 +2284,8 @@ vpumix_blk_ctrl: blk-ctrl@38330000 {
+> >                                <&clk IMX8MP_CLK_VPU_VC8KE_ROOT>;
+> >                       clock-names =3D "g1", "g2", "vc8000e";
+> >                       assigned-clocks =3D <&clk IMX8MP_VPU_PLL>, <&clk =
+IMX8MP_CLK_VPU_BUS>;
+> > -                     assigned-clock-parents =3D <0>, <&clk IMX8MP_VPU_=
+PLL_OUT>;
+> > -                     assigned-clock-rates =3D <600000000>, <600000000>=
+;
+> > +                     assigned-clock-parents =3D <0>, <&clk IMX8MP_SYS_=
+PLL1_800M>;
+> > +                     assigned-clock-rates =3D <700000000>, <800000000>=
+;
+>
+> I think we can drop the "assigned-clocks =3D <&clk IMX8MP_VPU_PLL>" part
+> completely.
+>
+> Before your patch the IMX8MP_VPU_PLL_OUT was used as clock-parent for
+> the IMX8MP_CLK_VPU_BUS. With yout patch IMX8MP_SYS_PLL1_800M is used.
 
-Absolutely. I think it is better to use either WRITE_ZEROES or DISCARD. But I wanted
-to have some measurable workload to show the benefits of using a huge page to zero out.
+I think you're right.  I'll fix that up and do a V2.  I forgot to add
+my own s-o-b tag, so I'll fix that too.  I'll try to do it this week.
 
-Interestingly, I have seen many client SSDs not implementing WRITE_ZEROES.
-
->> +			unsigned int len, added = 0;
->>  
->> +			len = min_t(sector_t, folio_size(zero_folio),
->> +				    nr_sects << SECTOR_SHIFT);
->> +			if (bio_add_folio(bio, zero_folio, len, 0))
->> +				added = len;
->>  			if (added < len)
->>  				break;
->>  			nr_sects -= added >> SECTOR_SHIFT;
-> 
-> Unless I'm missing something the added variable can go away now, and
-> the code using it can simply use len.
-> 
-
-Yes. This should do it.
-
-if (!bio_add_folio(bio, zero_folio, len, 0))
-    break;
-
-nr_sects -= len >> SECTOR_SHIFT;
-
---
-Pankaj
+adam
+>
+> Regards,
+>   Marco
