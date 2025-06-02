@@ -1,75 +1,211 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-bc0f.mail.infomaniak.ch (smtp-bc0f.mail.infomaniak.ch [45.157.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E5E223DFA;
-	Mon,  2 Jun 2025 17:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9572226D16
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 17:35:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748885751; cv=none; b=j9YxIwvk8oyNG5gP2d9EFNxW/6qOpyPWEd7tsIwMrN0boZ+4VF4ILqy8oqoC584sdifKkOoWKkbb7kcfJ+mg4Lx++4RSuQ44kpOXkElK+I9X+CjpqORGP7jBpsTa1WCm5GMmDfvzy0ze3hmzR0/RteT19LgTQtE5ijTrL/cIZJc=
+	t=1748885757; cv=none; b=pOsSutb0y9HnapIa4oM3008NtaRm3GFyfQppgecNlGzwqX3QHuQ554lQBcXy2mKyMEhSfXuknaDgmdX9J9g0XkQik7S31mxpLD/iY+X9IdE3WeGmzXP2dzXZD6xOBsKx9YQAENoivpppx7BMFpNATAQQb/HtMjRE1y2tkd3iWjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748885751; c=relaxed/simple;
-	bh=2K17d6RKHpwWtsyakp/VCJ9J3clE4UaBs142079EpCQ=;
+	s=arc-20240116; t=1748885757; c=relaxed/simple;
+	bh=VUhI7CSW76kd/2BwwKOpp8s7Bj4/P8quxGT6EYFmteI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uAFeuq2CpBomLaAC4Tnl4l3wP4FfunRypCF65I0vrRnwZBeNViuG2kFDfS7oJEHwJ2+QpxliN/rwvirGTI+wbSxl2qpRItqRGMeZ8dkaJoasQ/pvky55v7U6cnAKIidSWuYkRqZ6PqG7z2x/DviURefJw6IaJ3mPT/jaGNiBKOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SbgYVJNk; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=dofpPjUUhjRsZnIsr+23FZUOBk+SL1GxKecDHFlke+lMARJzccqBjP6dGP56hg5+TD/c0F8oVaK/KqebyLoOYcxn8365gBEB6+Rt6fLQc/GskkSRh3VxyAKbzQF06//8pPg4DZGz4ifcJ/unqPMSKe/M0Zis4ukzyL+oYe6bETI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=M8OOQWx+; arc=none smtp.client-ip=45.157.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SbgYVJNk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBFD8C4CEEB;
-	Mon,  2 Jun 2025 17:35:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748885750;
-	bh=2K17d6RKHpwWtsyakp/VCJ9J3clE4UaBs142079EpCQ=;
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="M8OOQWx+"
+Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bB1GF445mzsq2;
+	Mon,  2 Jun 2025 19:35:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1748885749;
+	bh=I1+g0eVqjmTqLKooXrJGQ9n+AkRh/ReUCRj2fzMRkns=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SbgYVJNkBsao12/g6cjP6ky1L46Qe4iLEoeA0An4aaBUhrV/kCQC0+15u7168vkiP
-	 eBIPEjnQl/3DhSJ0G5kPbFaoTWoYoQT93v+bmv/zUl4spBBHoD4WQprma3hgmm+Kj2
-	 enJBUjgNnfk9wRHb7+QLS74dofZ4yJvSE7c/9yTeaJhA4yGbwt0z+lLv8pkCgGhaw6
-	 tmVflXBdv87KGQRS0ScU232pQdOVNhVMijSCZqKZR49c7uaRtZ1G50RylKlDMkOPJf
-	 +K+GZ1BeoODelqjS3lF3GUE7btYbRHjw1Y4R57bwzSrc4I/mZ8MR188wpcD2Wxwq3M
-	 y4eVq+sQc2wxQ==
-Date: Mon, 2 Jun 2025 19:35:44 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] rust: irq: add support for request_irq()
-Message-ID: <aD3g8P2qqgNsEkul@pollux>
-References: <20250514-topics-tyr-request_irq-v3-1-d6fcc2591a88@collabora.com>
- <aCUQ0VWgoxdmIUaS@pollux>
- <A7E3A124-AF77-4A4A-B4E2-AE7DDB1CE007@collabora.com>
- <aCXYaCGvO_tI1OOh@pollux>
- <39C56E3E-07C6-44BB-B5F6-38090F037032@collabora.com>
- <aCXh1g5FWNiz7exb@pollux>
- <BEDD659F-B222-4150-9018-3B59126140E6@collabora.com>
- <aCXv86nAARGgoqEq@pollux>
- <aCXxnUdO8--5y8Zo@pollux>
- <1FCFF2CD-9CF1-4716-AFDA-78A5AFAF113F@collabora.com>
+	b=M8OOQWx+BGV1YUVOeH25ve75KC7jFyye0iOoy0EdCVr6ZYaGDhtsX014OSqpfPhUm
+	 +3dbggZnfrD0emuVwQjB8/b2KnTe5Fle3MHkvDZTinGUDPcs8WLizrFvMv4EhSC1Fo
+	 YzC244GupgBAhzLZ6CBxPV9ycq9vUURFtNoKj8sU=
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4bB1GD2KT5zbdy;
+	Mon,  2 Jun 2025 19:35:48 +0200 (CEST)
+Date: Mon, 2 Jun 2025 19:35:47 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Tingmao Wang <m@maowtm.org>
+Cc: Song Liu <song@kernel.org>, linux-fsdevel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, 
+	daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk, 
+	brauner@kernel.org, jack@suse.cz, kpsingh@kernel.org, mattbobrowski@google.com, 
+	amir73il@gmail.com, repnop@google.com, jlayton@kernel.org, josef@toxicpanda.com, 
+	gnoack@google.com
+Subject: Re: [PATCH bpf-next 2/4] landlock: Use path_parent()
+Message-ID: <20250602.Oqu6piethung@digikod.net>
+References: <20250528222623.1373000-1-song@kernel.org>
+ <20250528222623.1373000-3-song@kernel.org>
+ <027d5190-b37a-40a8-84e9-4ccbc352bcdf@maowtm.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1FCFF2CD-9CF1-4716-AFDA-78A5AFAF113F@collabora.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <027d5190-b37a-40a8-84e9-4ccbc352bcdf@maowtm.org>
+X-Infomaniak-Routing: alpha
 
-On Mon, Jun 02, 2025 at 11:40:43AM -0300, Daniel Almeida wrote:
-> I guess the only difference would be removing the handler() accessor, as the
-> caller is now expected to figure this part out on his own, i.e.:
+On Sat, May 31, 2025 at 02:51:22PM +0100, Tingmao Wang wrote:
+> On 5/28/25 23:26, Song Liu wrote:
+> > Use path_parent() to walk a path up to its parent.
+> > 
+> > While path_parent() has an extra check with path_connected() than existing
+> > code, there is no functional changes intended for landlock.
+> > 
+> > Signed-off-by: Song Liu <song@kernel.org>
+> > ---
+> >  security/landlock/fs.c | 34 +++++++++++++++++-----------------
+> >  1 file changed, 17 insertions(+), 17 deletions(-)
+> > 
+> > diff --git a/security/landlock/fs.c b/security/landlock/fs.c
+> > index 6fee7c20f64d..32a24758ad6e 100644
+> > --- a/security/landlock/fs.c
+> > +++ b/security/landlock/fs.c
+> > @@ -837,7 +837,6 @@ static bool is_access_to_paths_allowed(
+> >  	 * restriction.
+> >  	 */
+> >  	while (true) {
+> > -		struct dentry *parent_dentry;
+> >  		const struct landlock_rule *rule;
+> >  
+> >  		/*
+> > @@ -896,19 +895,17 @@ static bool is_access_to_paths_allowed(
+> >  		if (allowed_parent1 && allowed_parent2)
+> >  			break;
+> >  jump_up:
+> > -		if (walker_path.dentry == walker_path.mnt->mnt_root) {
+> > -			if (follow_up(&walker_path)) {
+> > -				/* Ignores hidden mount points. */
+> > -				goto jump_up;
+> > -			} else {
+> > -				/*
+> > -				 * Stops at the real root.  Denies access
+> > -				 * because not all layers have granted access.
+> > -				 */
+> > -				break;
+> > -			}
+> > -		}
+> > -		if (unlikely(IS_ROOT(walker_path.dentry))) {
+> > +		switch (path_parent(&walker_path)) {
+> > +		case PATH_PARENT_CHANGED_MOUNT:
+> > +			/* Ignores hidden mount points. */
+> > +			goto jump_up;
+> > +		case PATH_PARENT_REAL_ROOT:
+> > +			/*
+> > +			 * Stops at the real root.  Denies access
+> > +			 * because not all layers have granted access.
+> > +			 */
+> > +			goto walk_done;
+> > +		case PATH_PARENT_DISCONNECTED_ROOT:
+> >  			/*
+> >  			 * Stops at disconnected root directories.  Only allows
+> >  			 * access to internal filesystems (e.g. nsfs, which is
 > 
-> In your example (IIUC) that would mean accessing the Arc in IRQHandler1
-> and IRQHandler2 through some other clone and from the actual T:Handler in
-> the callback.
+> I was looking at the existing handling of disconnected root in Landlock
+> and I realized that the comment here confused me a bit:
+> 
+> /*
+>  * Stops at disconnected root directories.  Only allows
+>  * access to internal filesystems (e.g. nsfs, which is
+>  * reachable through /proc/<pid>/ns/<namespace>).
+>  */
+> 
+> In the original code, this was under a
+> 
+>     if (unlikely(IS_ROOT(walker_path.dentry)))
+> 
+> which means that it only stops walking if we found out we're disconnected
+> after reaching a filesystem boundary.  However if before we got to this
+> point, we have already collected enough rules to allow access, access
+> would be allowed, even if we're currently disconnected.  Demo:
+> 
+> / # cd /
+> / # cp /linux/samples/landlock/sandboxer .
+> / # mkdir a b
+> / # mkdir a/foo
+> / # echo baz > a/foo/bar
+> / # mount --bind a b
+> / # LL_FS_RO=/ LL_FS_RW=/ ./sandboxer bash
+> Executing the sandboxed command...
+> / # cd /b/foo
+> /b/foo # cat bar
+> baz
+> /b/foo # mv /a/foo /foo
+> /b/foo # cd ..     # <- We're now disconnected
+> bash: cd: ..: No such file or directory
+> /b/foo # cat bar
+> baz                # <- but landlock still lets us read the file
+> 
+> However, I think this patch will change this behavior due to the use of
+> path_connected
+> 
+> root@10a8fff999ce:/# mkdir a b
+> root@10a8fff999ce:/# mkdir a/foo
+> root@10a8fff999ce:/# echo baz > a/foo/bar
+> root@10a8fff999ce:/# mount --bind a b
+> root@10a8fff999ce:/# LL_FS_RO=/ LL_FS_RW=/ ./sandboxer bash
+> Executing the sandboxed command...
+> bash: cannot set terminal process group (191): Inappropriate ioctl for device
+> bash: no job control in this shell
+> root@10a8fff999ce:/# cd /b/foo
+> root@10a8fff999ce:/b/foo# cat bar
+> baz
+> root@10a8fff999ce:/b/foo# mv /a/foo /foo
+> root@10a8fff999ce:/b/foo# cd ..
+> bash: cd: ..: No such file or directory
+> root@10a8fff999ce:/b/foo# cat bar
+> cat: bar: Permission denied
 
-Basically yes, but there's also the other alternative in [1] -- either is fine
-for me.
+This is a good test case, we should add a test for that.
 
-[1] https://lore.kernel.org/lkml/aD3f1GSZJ6K-RP5r@pollux/
+> 
+> I'm not sure if the original behavior was intentional, but since this
+> technically counts as a functional changes, just pointing this out.
+
+This is indeed an issue.
+
+> 
+> Also I'm slightly worried about the performance overhead of doing
+> path_connected for every hop in the iteration (but ultimately it's
+> Mickaël's call).
+
+Yes, we need to check with a benchmark.  We might want to keep the
+walker_path.dentry == walker_path.mnt->mnt_root check inlined.
+
+> At least for Landlock, I think if we want to block all
+> access to disconnected files, as long as we eventually realize we have
+> been disconnected (by doing the "if dentry == path.mnt" check once when we
+> reach root), and in that case deny access, we should be good.
+> 
+> 
+> > @@ -918,12 +915,15 @@ static bool is_access_to_paths_allowed(
+> >  				allowed_parent1 = true;
+> >  				allowed_parent2 = true;
+> >  			}
+> > +			goto walk_done;
+> > +		case PATH_PARENT_SAME_MOUNT:
+> >  			break;
+> > +		default:
+> > +			WARN_ON_ONCE(1);
+> > +			goto walk_done;
+> >  		}
+> > -		parent_dentry = dget_parent(walker_path.dentry);
+> > -		dput(walker_path.dentry);
+> > -		walker_path.dentry = parent_dentry;
+> >  	}
+> > +walk_done:
+> >  	path_put(&walker_path);
+> >  
+> >  	if (!allowed_parent1) {
+> 
+> 
