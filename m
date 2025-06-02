@@ -1,118 +1,169 @@
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B3519049B
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 13:12:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA2520371E;
+	Mon,  2 Jun 2025 13:14:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748869924; cv=none; b=UQpI1v9l0KPivLen34HF1Z4qNPRHk41PDwm/HZYWgvH+y4XOK70NKIZpaVqAj070Ps8l+tJymswRLa1S+RVI5deClOE+EImcFxOhQDJ117vzeUkyTZuNgaUHfZXTMf3kNqQesiK33Z+qiDE23K6maCAiDwdFQgM3qSDaVafoNyU=
+	t=1748870080; cv=none; b=CVcE4UQHaO9ek9E3mKIaJ5Y3c5NXIE0N/Uqvaek3dhw1g+gyqslDBZpIYbgYaLlU4yKX9BwdVWSk0Cifx4cdYVgDV+Wbx/BfDYZaisdHtZM/RKkB8yAgtLEryvVF+rcA6T2e68RcJOsXKAePwDrOFUiZz4O1Yk5f20iVR8yZp0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748869924; c=relaxed/simple;
-	bh=CX/1iDHPVy0wwNWQINXFXHbW7tkxcP7a0WOFWuDfRgY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DZvGCGjYf32hryi5Bk8uJRsW+uUWKqW+2SBsYWBNDYVTsmXp7UbFFQOf9s9iPOpw+HC1FrHY5Gt8GHvMW6X3TNbNHS3y4w8okgsj1O6Wr2ZyW1LxkEJ36ymWl+taf5s2TnQsOnedBxV/cUiBrlFiqeTgrF7wkgxloQ3Tjs5P84A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FKGNOYzF; arc=none smtp.client-ip=209.85.210.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748870080; c=relaxed/simple;
+	bh=TTwL/BKTMRfWSpnqfREP0hMXmoloFSrx+yYMDC7F1Z4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=q/hcrdVD27zfBU/7OgkT/8d869GVkDrf7BPJMr7QVhwNUUrpLu7DUow8w3dTl2nIcpOETa3b17lsbKSYQfXfu7mVmi603ltDYjQblQrQsdLtMVwrNDBv+vXN3mEU+LdPPB5RdeNEamAbU6zVlmrBDPV2T9ar2FPdpP+ljW5AM34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=Zltz4DYE; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FKGNOYzF"
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-735a9e65471so2649398a34.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 06:12:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748869921; x=1749474721; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CX/1iDHPVy0wwNWQINXFXHbW7tkxcP7a0WOFWuDfRgY=;
-        b=FKGNOYzFxWSD8eO+5/EEi2aq04AxbBY0foZDHshun7bGXVSRUaOgkBLNgzi8dBSeVv
-         duXUyiEcGz1iR8wMFkM8QLP6vOSWakVhlM1ay7dotKKYmIp+II3l4CmNqC6wWEhnMZaJ
-         KGBE+cgGcb+GWYstbLV2rDN2rpBJkK9Mrvp72rmL7g7T7KIAb+KXsB4RQV8C4JGFB6zq
-         BYgHheyywqyGTR6cftiNW9ASpTyPMLgB0FaFy0mkQ9U9u2tqjZLEUWX0SfguWkdsNf8/
-         +KJAQt4hMYvcYyv8A7sA3hWUasFYFsf8cIEK4s/GNBxzwJjeylppS2FTQsokB3WDvC57
-         c6aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748869921; x=1749474721;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CX/1iDHPVy0wwNWQINXFXHbW7tkxcP7a0WOFWuDfRgY=;
-        b=ICJL8OP7qcEmXcgZnX6H7hoZc9lVvbBkxb7iqrd1RbLr8G3uk4WdQ8aEsOs5YW43g7
-         hXEya0wY8h6ImVVT7Eef1krw5Qri3mRDcmUUS5cTKOQTzEQBVvlX86KVOioFR6Yd5KFp
-         QJJWOwyJ1JQrIAjzOSqBSI2ToXDQelDb1dSU14cLKCsxWHZ1KD/BKWWlNjiZ8QQtVGeB
-         78E2AGf9UAffyEK3n2jzAibrMfB7/+dpKbZ6RFQ24PwppgkmFX8BeEjB+DEXCGrkdI4P
-         jyZS24VNZ8s7jxxSxUkiQCsvfT3RztzGSRWsxFxFilaHaJKIt2RjjG15RgipBulBy+cb
-         FRHw==
-X-Forwarded-Encrypted: i=1; AJvYcCW3URyTDK7Wso7qpaNoo6Ox3nEFgzR0n3eWAc/lU1yVSkEzyBgYM1RHwVGqtaIv+k1WkjpSe/l7cqNa2mc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywlzgaxv2A08q0kXQ/8yXsnYICD94ze4cEUxrvHyQFGvJqMIsat
-	FrjQyqQ9Au4XYIBJtmyGgZU2tOWxUWGXpzR8kiVQBiByG9OtZEtGRH1YEM0BYN7kMRSqSSBnY5h
-	HlZBagLXKMb6ARQwZghS+7Mn384e+0uWPDa4vLEcm
-X-Gm-Gg: ASbGncsqde47gp8dZY8ViiAeuDEEr+9TGtNc39bRarw4LS9NPCZIOF5VdYGNS+eQ16K
-	mkiCQ18i0PdfpkliViHqbAbx1iboH1+H/M2L/C1YHayM5CjPMLCIG6qpqQQf3SJhF7MmwOaKrzV
-	WbrzKSaAKoXdrhSJIgi1+Vu3MmRH7710WbpoyZvI3mFhl41qJZ9lnAIBBV1x8d8NPLDFHUo8iEF
-	w==
-X-Google-Smtp-Source: AGHT+IEK3NdAWPeTFVYBHSzHkCcveg60NzsP17so1/Ky5+fflhuk++j9utkshWE8HYwfmNNUeec1s+X9NdKXYBaSM/4=
-X-Received: by 2002:a05:6871:7288:b0:2e4:140:4b1f with SMTP id
- 586e51a60fabf-2e9212bf665mr7498721fac.17.1748869921028; Mon, 02 Jun 2025
- 06:12:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="Zltz4DYE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=Th1bsXYbOdZNBdF4HpkqWzJZdFEbTYJpHy2+yVwfjLk=; b=Zltz4DYEAJKKQbIDz9XRJRi/AJ
+	59wjiN/h8OXZGaXQGB0452s2iFnI1zU+IPY1w8k5EKp4u81L8YgToJme/4Y7pK4jA7yez7TWCegkN
+	OQGc6sZvsIGtymAkACMrMnE+3y/Vp/fxEgFVrLGadY4xXOxOmQoQjzfqn8Jw08rbA0Dys9bFKdTiw
+	G2mLBp2M1MzNsCfMVOOIWHQmWJHz3hU0XprPlfMM2WzxPYznBwsqZaI8KwuAnwKZ6jyx/ju6Onc+R
+	+P9cVvuKJ90OZhDAIq7vBruure411VR6UT/1AJtSwfuDuniO2L7l0hC3GCGZge3bprxpiH4EYriKg
+	Pip1Md9A==;
+Received: from i53875a2b.versanet.de ([83.135.90.43] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uM4zc-00038Y-5g; Mon, 02 Jun 2025 15:14:20 +0200
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
+ William Breathitt Gray <wbg@kernel.org>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Kever Yang <kever.yang@rock-chips.com>,
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+ linux-iio@vger.kernel.org, kernel@collabora.com,
+ Jonas Karlman <jonas@kwiboo.se>,
+ Detlev Casanova <detlev.casanova@collabora.com>
+Subject: Re: [PATCH 4/7] soc: rockchip: add mfpwm driver
+Date: Mon, 02 Jun 2025 15:14:19 +0200
+Message-ID: <1970051.6tgchFWduM@diego>
+In-Reply-To: <13790724.uLZWGnKmhe@workhorse>
+References:
+ <20250408-rk3576-pwm-v1-0-a49286c2ca8e@collabora.com>
+ <2188729.OBFZWjSADL@diego> <13790724.uLZWGnKmhe@workhorse>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250526150141.3407433-1-bqe@google.com> <20250526150141.3407433-3-bqe@google.com>
- <6835eaa4.c80a0220.2baf57.d14b@mx.google.com>
-In-Reply-To: <6835eaa4.c80a0220.2baf57.d14b@mx.google.com>
-From: Burak Emir <bqe@google.com>
-Date: Mon, 2 Jun 2025 15:11:48 +0200
-X-Gm-Features: AX0GCFtdTIfbdTAKN2zMtULvGWz-LoXbR6AP_RXTCxaczWNvuvasR0DxMgkYtdo
-Message-ID: <CACQBu=XJ+21amU2tEkDYFO00RWt8PvOXsU173ZO_y3u9xmWUHw@mail.gmail.com>
-Subject: Re: [PATCH v9 2/5] rust: add bindings for bitops.h
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On Tue, May 27, 2025 at 6:39=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
-rote:
->
-> On Mon, May 26, 2025 at 03:01:31PM +0000, Burak Emir wrote:
-> > --- /dev/null
-> > +++ b/rust/helpers/bitops.c
-> > @@ -0,0 +1,23 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +#include <linux/bitops.h>
-> > +
-> > +void rust_helper___set_bit(unsigned int nr, unsigned long *addr)
->
-> Why "unsigned int" instead of "unsigned long"? The C API uses
-> "unsigned long" and in the Rust API, you uses "usize" for `nbits` and
-> `index`s, therefore using "unsigned int" only introduces unnecessary "as
-> u32" casting IMO, am I missing something here?
+Am Montag, 2. Juni 2025, 14:15:45 Mitteleurop=C3=A4ische Sommerzeit schrieb=
+ Nicolas Frattaroli:
+> On Saturday, 31 May 2025 23:48:29 Central European Summer Time Heiko St=
+=C3=BCbner wrote:
+> > Am Dienstag, 8. April 2025, 14:32:16 Mitteleurop=C3=A4ische Sommerzeit =
+schrieb Nicolas Frattaroli:
 
-This is certainly a bit confusing to me.
+> > On a more general note, what is the differentiation to an MFD here?
+> >=20
+> > Like you can already bind dt-nodes to MFD subdevices, and can implement
+> > the exclusivity API thing on top of a general mfd device, to make sure =
+only
+> > one mfd-cell gets activated at one time.
+> >=20
+> > Other than that, this looks like it reimplements MFDs?
+>=20
+> What initially made me not make this an MFD was Uwe Kleine-K=C3=B6nig exp=
+ressing
+> some doubts, which lead me to alternatives like the auxiliary bus. Readin=
+g the
+> auxiliary bus docs I found:
+>=20
+>   A key requirement for utilizing the auxiliary bus is that there is no
+>   dependency on a physical bus, device, register accesses or regmap suppo=
+rt.
+>   These individual devices split from the core cannot live on the platform
+>   bus as they are not physical devices that are controlled by DT/ACPI. The
+>   same argument applies for not using MFD in this scenario as MFD relies =
+on
+>   individual function devices being physical devices.
 
-As Jann points out here [1] the expand to asm macros arch___set_bit,
-where `nr` is indeed unsigned long.
+Interestingly the 5 year old LWN article seems to have been overtaken by
+real-world usage ;-) .
 
-There is also the constraint that a bitmap's length must be shorter
-than INT32_MAX bits, but that does not matter.
+I see pinctrl/pinctrl-ep93xx.c using regmaps (and thus registers), similarly
+in gpu/drm/bridge/ti-sn65dsi86.c and a number more.
 
-Being consistent with the C API, including parameter names, is what we
-should do, so fixing this.
-I found the underlying C API is just hard to find for these macros.
-Thanks for catching.
 
-cheers
-- Burak
+> Additionally, LWN[1] about the auxiliary bus, which I've read up on durin=
+g my
+> ill-fated journey into that version of the driver, also goes further into=
+ why
+> MFD is sometimes a bad fit:
 
-[1] https://lore.kernel.org/rust-for-linux/CAG48ez1NM7B8Vk7GOwhsitCipmfHi9e=
-K6JNb3ve8aR4m8Cj0gA@mail.gmail.com/
+[...] LWN excerpt [...]
+
+> The individual function devices may be all pointing at the same physical
+> device here, but they're not distinct parts of the device. However, there
+> still *is* a physical device, which convinced me that auxiliary bus wasn't
+> the right one either, and the idea for just using the platform bus came
+> during a work meeting. If someone with experience on aux bus vs platform =
+bus
+> (what this uses) vs MFD, then feel free to chime in. Unfortunately, as is=
+ the
+> norm, I can't seem to find much in terms of MFD documentation. Needing to=
+ know
+> what type of exclusion they guarantee and what type of abstractions they =
+bring
+> with them that would make them more useful than my solution would need so=
+me
+> justification in more than just an auto-generated header listing.
+
+I think MFD itself does not provide any exclusivity - aka allowing definiti=
+ons
+that combinations of sub-devices cannot be used at the same time.
+
+But as I see it right now, you have sort of a mfd-device in there, creating
+all the sub-devices and then the aquire/release logic on top making sure
+only one device is ever active at the same time.
+
+Right now I really don't see (prone to code-blindness though) why the
+aquire/release logic could not live in a mfd-device.
+
+
+> I am very inclined to start pretending things that aren't documented do
+> not actually exist in the kernel, because it's very annoying to have to
+> constantly deal with this.
+
+Sadly the "ostrich method" won't work ;-)
+
+So as a way forward, I'd suggest you posting your v2, so that all the
+current review comments get addressed and amending the
+cover-letter with the aux-bux / mfd discussion thing (ideally in a
+somewhat highlighed block so that people skimming along will notice)
+and include the relevant people:
+
+=2D for aux-bux get_maintainer.pl says:
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> (maintainer:AUXILIARY BUS D=
+RIVER)
+Dave Ertman <david.m.ertman@intel.com> (reviewer:AUXILIARY BUS DRIVER)
+Ira Weiny <ira.weiny@intel.com> (reviewer:AUXILIARY BUS DRIVER)
+Leon Romanovsky <leon@kernel.org> (reviewer:AUXILIARY BUS DRIVER)
+
+=2D and for MFD it's of course Lee:
+Lee Jones <lee@kernel.org> (maintainer:MULTIFUNCTION DEVICES (MFD))
+
+
+Heiko
+
+
+> [1]: https://lwn.net/Articles/840416/
+
+
+
+
