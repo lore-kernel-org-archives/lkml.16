@@ -1,174 +1,186 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DDC4801;
-	Mon,  2 Jun 2025 00:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA8651684A4;
+	Mon,  2 Jun 2025 00:30:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748823832; cv=none; b=dtrK8KaoRG3HwQp0do7qZNkafIvIWycuYLltvMMdadbRT/AUKJ7d1wtiTDs3799nq4ZgIYFv6AOpgyHGyPjgjZQi084WM1AK19iYP7dRphmDwFBMGO0Rq4SgLcgWCrv3+KO4k25bmdgVQDeVl5HbW5r/a0nasw09kaP1Vt2fpOM=
+	t=1748824206; cv=none; b=JyzW3jmJ2TXMpl6T8Nu6YZztkE9uHUyysANq2WEq9aaSdGqaNvnMQJ2GHgS+tL16KwPeE8i8D1SDmIRf61gWMpnzJ/19txkprrCcw19xG37VTvgM2nKW3xSOufCKjl07m7btUQa+RMrbqzPQMVSg8sIafht9xMZ3/W1NkjbBm70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748823832; c=relaxed/simple;
-	bh=mPT034hNVZ/977d10Yr+1gK7OY83Sfsc+vYjI2DF18M=;
+	s=arc-20240116; t=1748824206; c=relaxed/simple;
+	bh=S9HzM07U1RDivk5UFSgGZdF+ElLyL6x0aAWqge4J4uM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F/objP5M+Gsmce7qSkd/pm2qUC651+Z1BxkVzq6sf2394QQCluZJm4Kc+IEFnllbkONOdrdh2VMHYutfmyaB7hqX4AgIbwQTf5+EdNH1OW4phsWIckkrbxrkQrlDttlrnbAIa0K0eDpxk8BiD4F/CapB9NL1kAvuEf7h2u89KMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=N6VRS2YS; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=sE+4k/kAj0Hs2CuAH7MPfY5DPj/jEJ542rGiXbNs56b39BfKeZJtG6QgPj59YSC/mw5NFXrStLh/RbaO271zN/q+VFQQx4dB4cp1Qo/fkvaSOc8Ap4DACOQs6BVmKJLl+dJ2NxDQYo3bSp8zQvJC6gBc0K0lbceB+2PQKyckZcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lrr8pvLp; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="N6VRS2YS"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=FYIuU5adQcAYGloGoUqfC/nnupMXlhYz03OeWU8d5SU=; b=N6VRS2YSAFXF86qS
-	DuTC0pRgN9Gmce800c4ExShbL1zoIOeDRHO309B1UY93x5BUAx4RvY03m7643W5EY1wGj3hqG0UsG
-	HZQLV8Y2aUo8JA5OmDZvXzxkK4Lh7S6qo9ZMBa25jowDs1GTHiBvoi7/ZTU5Xf/wBva1yMe0EYwkg
-	ja8fPWiwVRfNHvP753rmcqI3CVAVbe6n53tT9x+GmccLjHEim+lCZT3jbfeJyy39peje37jkR3n9d
-	Z73cHw/QUtqmPTajQQA8uyeYBTtaQINDDsQHh1q3oQhtbHKs2XNmmrFdFFyTIwbP0r71gO9J+Uqmg
-	WrmjVV5gKDzNJIxx3g==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1uLsSE-0074vX-2C;
-	Sun, 01 Jun 2025 23:51:02 +0000
-Date: Sun, 1 Jun 2025 23:51:02 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Sasha Levin <sashal@kernel.org>
-Cc: patches@lists.linux.dev, stable@vger.kernel.org,
-	Takashi Iwai <tiwai@suse.de>, perex@perex.cz, tiwai@suse.com,
-	yuehaibing@huawei.com, linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.15 101/110] ALSA: seq: Remove unused
- snd_seq_queue_client_leave_cells
-Message-ID: <aDznZgej_QbaalP0@gallifrey>
-References: <20250601232435.3507697-1-sashal@kernel.org>
- <20250601232435.3507697-101-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lrr8pvLp"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22c33677183so29901725ad.2;
+        Sun, 01 Jun 2025 17:30:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748824204; x=1749429004; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ngVqkWKuuyrv3pS34wegFZrDD9qRIPEFwg45t/mtRWA=;
+        b=Lrr8pvLprOcVLRTv3s8nPeWIQeWc5/cRhpeZt7H8P/OCByhecVUD/g4sLFanNz0XlZ
+         e2F77Y6YYa9+TduoytWwJ44rrBKf8e45nkVPsHsLWWLgXTp+BpXVXQ7g5mkNSP08AG2/
+         k1d8Na0h8CeK5coKh3yqppZLiFEJaRSV06iPRggL8YfQeMBEfyIrYOe4jizIs5FNo+o7
+         v9s2QoDklDrSpYH3ZFJNEszAyuabJ0/hAuYs7XANYD38+qcsbWiSdWhHOskvGeZMYV/U
+         FF/bqAm7PH7cjS4jRKVphMFvyVV/17LR1A5/bUHknJAcbZaUaJ8Z+b1kacZkdZGkRnEd
+         5oog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748824204; x=1749429004;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ngVqkWKuuyrv3pS34wegFZrDD9qRIPEFwg45t/mtRWA=;
+        b=vg9DppgmO1nxIgGjhX+Y5egJ0HbfsLaDTx4ttKaei8wxuZC69PG2QvqG8KzVcIsxp3
+         I1bKQlQPjPYWwhRMvcIz3LLwnLSuoUKHK4XRux+5tqZ0ejqrDl/tiquNEeYyXoZtWF8d
+         8YIRzLu+8s2tmYltV7toBHPCTEGLN0/2NNQpQYWcaPhC+Z4T53jHzrwqrdcgRiY6cyA7
+         TnkL3LMuWsjyHMskQ2xGl073h2SMpBjLer6mLxtS+ca3ptGn/YKgGGC+aUAoApKsQcTE
+         TZmFDSn3XCkkVLO+Q+6oMb07XQDc7qWjYMNJZuQqThhWcMLs7k1kkKCHtTNvO0JMcxWK
+         IaIg==
+X-Forwarded-Encrypted: i=1; AJvYcCU6HLGV7N8jxffl41qQCxcDTxgx6/NYcPSrspusIVD4CF6CliZRNH+PPI5P9vWjdo+NWXA=@vger.kernel.org, AJvYcCW/HPIV/7eAgdxx6oU4LQjj9HQ3YXmuJNe1oYK0lDcRiYpL/fU/1tCEKpfPvTR03Q5IfFPhN3YEpjQnMcgl@vger.kernel.org, AJvYcCX2f6y8fpYSQ5cA2jaknlc54Bhhmcxm1O5DPuzIvHj5FsrJ+tI3E5uePUF+zbu5XZjiGuVoUBD2il1Ad0wegBlxKw==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2zh3u9NCoYlB7QlfDz7uucoa83kFfYtJcTQjatui7KTVMSoqq
+	WNmjQ+L5zbivkuZajWoQ+teMsAmmH69/mVjSFC+0Pb4RVTNTUhCzOBXl
+X-Gm-Gg: ASbGncvrvj/L7JaggzjDlNS2yFokTCurvD5UnyiJoOSPT2chOwqHAuyYAdkB57EFUQD
+	/Bw6D0HBaneXxavi9v8sWF2AI8/GytAjtR6MMDzve+fQfW3Pztfco64dxdh0wAbpGDA31Zm5Qbw
+	7wg3VY1er1TsHu41/tX7+aanbAjKjA5J5iJ2XzI+JNNFFbPjZaqmpl5FSQa3VoEJW1hPN8Jzsa0
+	f0z2m2gE+YGWoc4/hfRzR8Lqx8rbnOilYDlGcxm5waQTTY0OU02zPdak4v1Ns4rFcHFTlOWdnWg
+	5uBxdnczqIwdJWhT9hMwvsIRvJXEk8YcEVlb1PxdELmm8BCQj7wtpXTdysZoHy8BrjsUyROe3ft
+	OecqrYI1dV7w+5hQ=
+X-Google-Smtp-Source: AGHT+IE6g4HtxWXwhqVCpk3sHq5jE7Vpsz3jkUldBiQJBorAXshRGs4uBBpiBBUSwxmB1I7WUlgKCA==
+X-Received: by 2002:a17:902:e851:b0:234:c65f:6c0c with SMTP id d9443c01a7336-235390e105fmr153686125ad.15.1748824203722;
+        Sun, 01 Jun 2025 17:30:03 -0700 (PDT)
+Received: from MacBook-Pro-49.local ([2001:558:600a:7:a83d:600f:32cc:235a])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cf471asm59935235ad.164.2025.06.01.17.30.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Jun 2025 17:30:03 -0700 (PDT)
+Date: Sun, 1 Jun 2025 17:30:01 -0700
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To: kan.liang@linux.intel.com
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org, 
+	irogers@google.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, eranian@google.com, ctshao@google.com, tmricht@linux.ibm.com, 
+	leo.yan@arm.com, bpf@vger.kernel.org, andrii@kernel.org, ihor.solodrai@linux.dev, 
+	song@kernel.org, jolsa@kernel.org
+Subject: perf regression. Was: [PATCH V4 01/16] perf: Fix the throttle logic
+ for a group
+Message-ID: <djxlh5fx326gcenwrr52ry3pk4wxmugu4jccdjysza7tlc5fef@ktp4rffawgcw>
+References: <20250520181644.2673067-1-kan.liang@linux.intel.com>
+ <20250520181644.2673067-2-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250601232435.3507697-101-sashal@kernel.org>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-34-amd64 (x86_64)
-X-Uptime: 23:48:36 up 35 days,  8:02,  1 user,  load average: 0.10, 0.06, 0.01
-User-Agent: Mutt/2.2.12 (2023-09-09)
+In-Reply-To: <20250520181644.2673067-2-kan.liang@linux.intel.com>
 
-* Sasha Levin (sashal@kernel.org) wrote:
-
-Hi Sasha,
-
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On Tue, May 20, 2025 at 11:16:29AM -0700, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
 > 
-> [ Upstream commit 81ea9e92941091bb3178d49e63b13bf4df2ee46b ]
+> The current throttle logic doesn't work well with a group, e.g., the
+> following sampling-read case.
 > 
-> The last use of snd_seq_queue_client_leave_cells() was removed in 2018
-> by
-> commit 85d59b57be59 ("ALSA: seq: Remove superfluous
-> snd_seq_queue_client_leave_cells() call")
+> $ perf record -e "{cycles,cycles}:S" ...
 > 
-> Remove it.
+> $ perf report -D | grep THROTTLE | tail -2
+>             THROTTLE events:        426  ( 9.0%)
+>           UNTHROTTLE events:        425  ( 9.0%)
 > 
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> Signed-off-by: Takashi Iwai <tiwai@suse.de>
-> Link: https://patch.msgid.link/20250502235219.1000429-4-linux@treblig.org
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> $ perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
+> 0 1020120874009167 0x74970 [0x68]: PERF_RECORD_SAMPLE(IP, 0x1):
+> ... sample_read:
+> .... group nr 2
+> ..... id 0000000000000327, value 000000000cbb993a, lost 0
+> ..... id 0000000000000328, value 00000002211c26df, lost 0
+> 
+> The second cycles event has a much larger value than the first cycles
+> event in the same group.
+> 
+> The current throttle logic in the generic code only logs the THROTTLE
+> event. It relies on the specific driver implementation to disable
+> events. For all ARCHs, the implementation is similar. Only the event is
+> disabled, rather than the group.
+> 
+> The logic to disable the group should be generic for all ARCHs. Add the
+> logic in the generic code. The following patch will remove the buggy
+> driver-specific implementation.
+> 
+> The throttle only happens when an event is overflowed. Stop the entire
+> group when any event in the group triggers the throttle.
+> The MAX_INTERRUPTS is set to all throttle events.
+> 
+> The unthrottled could happen in 3 places.
+> - event/group sched. All events in the group are scheduled one by one.
+>   All of them will be unthrottled eventually. Nothing needs to be
+>   changed.
+> - The perf_adjust_freq_unthr_events for each tick. Needs to restart the
+>   group altogether.
+> - The __perf_event_period(). The whole group needs to be restarted
+>   altogether as well.
+> 
+> With the fix,
+> $ sudo perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
+> 0 3573470770332 0x12f5f8 [0x70]: PERF_RECORD_SAMPLE(IP, 0x2):
+> ... sample_read:
+> .... group nr 2
+> ..... id 0000000000000a28, value 00000004fd3dfd8f, lost 0
+> ..... id 0000000000000a29, value 00000004fd3dfd8f, lost 0
+> 
+> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 > ---
-> 
-> NO This commit should not be backported to stable kernel trees for
-> several reasons: 
+>  kernel/events/core.c | 66 ++++++++++++++++++++++++++++++--------------
+>  1 file changed, 46 insertions(+), 20 deletions(-)
 
-I'd agree with that big fat NO - unless it makes your life easier backporting
-a big pile of other stuff.
-I'm a bit curious about:
-  a) How it got picked up by autosel - I'm quite careful not to include
-     'fixes' tags to avoid them getting picked up.
-  b) Given it's got a big fat no, why is it posted here?
+This patch breaks perf hw events somehow.
 
-Dave
+After merging this into bpf trees we see random "watchdog: BUG: soft lockup"
+with various stack traces followed up:
+[   78.620749] Sending NMI from CPU 8 to CPUs 0:
+[   76.387722] NMI backtrace for cpu 0
+[   76.387722] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Tainted: G           O L      6.15.0-10818-ge0f0ee1c31de #1163 PREEMPT
+[   76.387722] Tainted: [O]=OOT_MODULE, [L]=SOFTLOCKUP
+[   76.387722] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
+[   76.387722] RIP: 0010:_raw_spin_lock_irqsave+0xc/0x40
+[   76.387722] Call Trace:
+[   76.387722]  <IRQ>
+[   76.387722]  hrtimer_try_to_cancel.part.0+0x24/0xe0
+[   76.387722]  hrtimer_cancel+0x21/0x40
+[   76.387722]  cpu_clock_event_stop+0x64/0x70
+[   76.387722]  __perf_event_account_interrupt+0xcf/0x140
+[   76.387722]  __perf_event_overflow+0x36/0x340
+[   76.387722]  ? hrtimer_start_range_ns+0x2c1/0x420
+[   76.387722]  ? kvm_sched_clock_read+0x11/0x20
+[   76.387722]  perf_swevent_hrtimer+0xaf/0x100
+[   76.387722]  ? cpu_clock_event_add+0x6e/0x90
+[   76.387722]  ? event_sched_in+0xc3/0x190
+[   76.387722]  ? update_load_avg+0x87/0x3d0
+[   76.387722]  ? _raw_spin_unlock+0xe/0x20
+[   76.387722]  ? sched_balance_update_blocked_averages+0x59b/0x6a0
+[   76.387722]  ? ctx_sched_in+0x184/0x210
+[   76.387722]  ? kvm_sched_clock_read+0x11/0x20
+[   76.387722]  ? sched_clock_cpu+0x55/0x190
+[   76.387722]  ? perf_exclude_event+0x50/0x50
+[   76.387722]  __hrtimer_run_queues+0x111/0x290
+[   76.387722]  hrtimer_interrupt+0xff/0x240
+[   76.387722]  __sysvec_apic_timer_interrupt+0x4f/0x110
+[   76.387722]  sysvec_apic_timer_interrupt+0x6c/0x90
 
+After reverting:
+commit e800ac51202f ("perf: Only dump the throttle log for the leader")
+commit 9734e25fbf5a ("perf: Fix the throttle logic for a group")
+everything is back to normal.
 
-**1. This is a code cleanup, not a bug fix** The commit
-> removes dead code (`snd_seq_queue_client_leave_cells()`) that hasn't
-> been used since 2018. The commit message explicitly states this function
-> was already removed from use by commit 85d59b57be59 in 2018, and this
-> commit is simply cleaning up the unused function definition. This is
-> purely a maintenance/cleanup change with no functional impact. **2. No
-> user-visible impact or bug being fixed** The removed function
-> `snd_seq_queue_client_leave_cells()` was already unused, so removing it
-> doesn't fix any existing bugs, security issues, or user-reported
-> problems. The code changes show: - Removal of the function
-> implementation from `sound/core/seq/seq_queue.c` (lines that iterate
-> through queues and call `snd_seq_prioq_leave()`) - Removal of the
-> function declaration from `sound/core/seq/seq_queue.h` **3. Follows
-> pattern of similar non-backported commits** Looking at the similar
-> commits provided: - **Similar Commit #1**: Removed superfluous function
-> call - Status: NO - **Similar Commit #2**: Removed useless function -
-> Status: NO - **Similar Commit #4**: Removed unused declarations -
-> Status: NO - **Similar Commit #5**: Code refactoring with no functional
-> changes - Status: NO Only **Similar Commit #3** was backported (Status:
-> YES), and that was because it fixed an actual race condition bug that
-> could cause long stalls, not because it was removing unused code. **4.
-> Stable tree criteria not met** Stable kernel backports should focus on:
-> - Important bug fixes that affect users - Security fixes - Critical
-> functionality issues This commit doesn't meet any of these criteria.
-> It's purely cosmetic code cleanup that removes dead code without
-> changing any runtime behavior. **5. Risk vs. benefit analysis** While
-> the risk of regression is minimal since the function was unused, there's
-> no benefit to users of stable kernels from this change. Stable trees
-> should minimize churn and only include changes that provide tangible
-> benefits to users. The commit represents good housekeeping for the
-> mainline kernel but doesn't provide the type of user-impacting fix that
-> justifies inclusion in stable kernel trees.
-> 
->  sound/core/seq/seq_queue.c | 16 ----------------
->  sound/core/seq/seq_queue.h |  1 -
->  2 files changed, 17 deletions(-)
-> 
-> diff --git a/sound/core/seq/seq_queue.c b/sound/core/seq/seq_queue.c
-> index 5df26788dda41..10add922323da 100644
-> --- a/sound/core/seq/seq_queue.c
-> +++ b/sound/core/seq/seq_queue.c
-> @@ -564,22 +564,6 @@ void snd_seq_queue_client_leave(int client)
->  
->  /*----------------------------------------------------------------*/
->  
-> -/* remove cells from all queues */
-> -void snd_seq_queue_client_leave_cells(int client)
-> -{
-> -	int i;
-> -	struct snd_seq_queue *q;
-> -
-> -	for (i = 0; i < SNDRV_SEQ_MAX_QUEUES; i++) {
-> -		q = queueptr(i);
-> -		if (!q)
-> -			continue;
-> -		snd_seq_prioq_leave(q->tickq, client, 0);
-> -		snd_seq_prioq_leave(q->timeq, client, 0);
-> -		queuefree(q);
-> -	}
-> -}
-> -
->  /* remove cells based on flush criteria */
->  void snd_seq_queue_remove_cells(int client, struct snd_seq_remove_events *info)
->  {
-> diff --git a/sound/core/seq/seq_queue.h b/sound/core/seq/seq_queue.h
-> index 74cc31aacdac1..b81379c9af43e 100644
-> --- a/sound/core/seq/seq_queue.h
-> +++ b/sound/core/seq/seq_queue.h
-> @@ -66,7 +66,6 @@ void snd_seq_queue_client_leave(int client);
->  int snd_seq_enqueue_event(struct snd_seq_event_cell *cell, int atomic, int hop);
->  
->  /* Remove events */
-> -void snd_seq_queue_client_leave_cells(int client);
->  void snd_seq_queue_remove_cells(int client, struct snd_seq_remove_events *info);
->  
->  /* return pointer to queue structure for specified id */
-> -- 
-> 2.39.5
-> 
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+There are many ways to reproduce.
+Any test that sets up perf hw event followed up by tests that IPIs all cpus.
+One way:
+selftests/bpf/test_progs -t stacktrace_build_id_nmi
+selftests/bpf/test_progs -t unpriv_bpf_disabled
+
+Please take a look.
