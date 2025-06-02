@@ -1,193 +1,148 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f74.google.com (mail-oa1-f74.google.com [209.85.160.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D85139D;
-	Mon,  2 Jun 2025 19:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B69E2236F8
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 19:28:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748892512; cv=none; b=GKTOq+ISJGYbfJ1burvmUHDdzYd9kvWFsW98nGvn4aPTqnm7LW0X0ID6KJpyzkjccXtLFsQ9FgGNUb9tCP97Vz1MlNuRF0PbxvM16dykg3HMcITPmPNNeZChudvJzG02pvxUMRuSSJrHwVOYozdNorO+nCr8Y+QH3JPouogd+vc=
+	t=1748892541; cv=none; b=Ojzr8fpbIiZ9Ict9jK73eXOBrbG04SItjZ6CdtWgWaUuW6+ZeSZFK2rFqX+jxd/X7IrPfwpz6lVXBFjBSTGT2hTY0BGae+ArOGeZ7UMRjanXQKjWBo+lKEJeOf11By0TR+I7qFfla0UeXg+NpGEYbnhDeE839ur+v5qFc6TGteU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748892512; c=relaxed/simple;
-	bh=Yir4z9iUxeXhxIOYYiF8Uq4KfXiw2labPtJVGZS0zGI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c951v/cUSU8UAhB7daDnbyJ2gZO2s9U6Zuzl743tdBIoXecxdhuKaOlEstrdkk97kxMgfRb5XufWHDEbRzcH9GHuyeCgAc1EwdqLrLuilp9mVK1kjSOhEd6NMUtZHOjZ1cVRzQX+iwxafAqflYTqa89MkUxk4LoOVfIXMFbxZXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=UYJJecdm; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	s=arc-20240116; t=1748892541; c=relaxed/simple;
+	bh=UpyLhDgeST+9yjPTPNbtC0GB4N1QHxuH3tcvChyIfWE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ndpD83ILSsxkmdddJoDSUdSrRelGMWlOhsk184MIoAldgUhi1LOK46q4DOAyTIcXd/M5U9NIs0rccb2EjSCtjyGAJgBnaUI4Ys/RvxAEmXZrz4inLlx5m6m7+IWXhhiE0nmxwKfhi02DvLvNF8TYcdsX0p4kj9vtffgDWnajPC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dWjPA7Mv; arc=none smtp.client-ip=209.85.160.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="UYJJecdm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1748892487; x=1749497287; i=wahrenst@gmx.net;
-	bh=q/cg5ojJ/w13pjpukVEUe8AkJtPgaqLfIdxA24RlIUA=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=UYJJecdmW0vrnH9nxiziF9AlgmYk9DvISm1WEb7CzxqfSLDoa9v5R5GQOsmsNRy5
-	 Mn4ExrOrtYetdB0mu08qAJboo3xmxNygzLLhT7zU/VmRJ3x0SatZTyoAJhbDFxITg
-	 QFhX0j3QykElnRENPYF1ORMJUWwlRACW5RLWmi+grhUZgTda4Nig1dDLOkl6aJEbZ
-	 wKzho9OvH6RGb/jRPhWkZLqeLzLwPLN/a5lp3YdG823dNKjlty4vWQoklrtL7ihGR
-	 LcuFKV7eShmEx+UvQ140a5NPZWP4r0vu3UmJW47nfKmIt7j7u8/mZAFIr7/Mf5Xm2
-	 +K/1NME73KN4gJzNxg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.103] ([91.41.216.208]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MvsEx-1vBwMi1FVH-013lPJ; Mon, 02
- Jun 2025 21:28:07 +0200
-Message-ID: <602cc521-9b7e-424b-8956-429d654fc760@gmx.net>
-Date: Mon, 2 Jun 2025 21:28:02 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dWjPA7Mv"
+Received: by mail-oa1-f74.google.com with SMTP id 586e51a60fabf-2d9ea524aa6so4517451fac.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 12:28:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748892538; x=1749497338; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zgwK7stiipaBbElK9ZH8eFt+KmwsSimSmMPY4y4bpeQ=;
+        b=dWjPA7MvaOHSJe1kYu0WU0y08mojxXXNrP2WK0ZIjspQXsn1gjAWI5X8asaKmXo29f
+         5Js7A9y8noxsW423wRSz36mjn8W/SvOVjBAtCs10cFsOyRYQh/QIFqdfo0tmNb0lfFe/
+         hwQKs6cumge2DX+sNsYtGgPY4x6XHmweccz8EnFEMvlKYdxqE1FBIcJXufC03NCDsWAl
+         6eWK1P/80DIjVhdNeEQglmGzUy4RonP+ydFCzQx/zek0WbVljaWTNXPkr6TvUAIKIPu7
+         QhnYwsM+8Ub9XrWnTKvoqdof/HD8I55gdnAZQhL+ioVM33katWIl2v0sBqVUFtOS/wB+
+         zRyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748892538; x=1749497338;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zgwK7stiipaBbElK9ZH8eFt+KmwsSimSmMPY4y4bpeQ=;
+        b=bE4ZeC4gA9tQUT+Hvlf3d9HAoHQTM2h5Q8htisM0XEeCE6YremX/FWwRyirXH181Yf
+         2fkRCYm93RXqVaDvwTvn2DiI69fQmmpJeHGpEO9bM3v0gDlR693tABLVGropMdPlXFCu
+         aKohWimfek9axPaqDgoYC5asdNCId4NE0djBhwrdRlPiw9MBAQtyt0Yqi6Ble2lMn/uM
+         LvY9JsGkVp1Y6WUTPUfxcNrcOWNnrJQaa6btY8gX4iGDZe4YJfDs2eHdr7SnX6GsrAfA
+         Jl7Q2fVCw6FUDeMllkwtVtw+XxtLQaiFz84gdCHbGY7exzrh/manlniIBtbRdzbb0j+j
+         3QaA==
+X-Forwarded-Encrypted: i=1; AJvYcCWTNixK8N0hpOTF4h1t3XeX0GysIpynnn5vVJd58zyh8GcEyFxpMoJiNhwXhCibfFvrt+2lAeZyOoPqDCE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwaRcah+uPLE0Eyq4mv66UMaU9AcmPCEwcbrU053Y6lkHtd1UtN
+	b0SGcIhAKnWesmQjCdUtwv1wj9vOrnQHva5+b8q0NceSxLZTPHpJpIUW3IWioThJgrqM5+qAr8i
+	J1chG8OHOSHodbbZy4vtwYftcTg==
+X-Google-Smtp-Source: AGHT+IHY5orLOMss72/ttOtRz18RgR7Q6GomVkN3UzZeAOQY/fszGrZVl+8B2BDQNOJ4jWTDkgrOBQQZ8Rc/ZsDHgg==
+X-Received: from oabgs11.prod.google.com ([2002:a05:6870:ab8b:b0:2c1:5c70:acac])
+ (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6870:b1cc:b0:2d8:5015:1a8f with SMTP id 586e51a60fabf-2e94881808fmr4931862fac.7.1748892538177;
+ Mon, 02 Jun 2025 12:28:58 -0700 (PDT)
+Date: Mon,  2 Jun 2025 19:26:46 +0000
+In-Reply-To: <20250602192702.2125115-1-coltonlewis@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] dt-bindings: net: convert qca,qca7000.txt yaml format
-To: Frank Li <Frank.li@nxp.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
- imx@lists.linux.dev
-References: <20250529191727.789915-1-Frank.Li@nxp.com>
- <047fb49e-1ca8-43a6-b122-0d6fa9a61c74@gmx.net>
- <aD3E2ONB6Ay1wwmk@lizhi-Precision-Tower-5810>
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-Autocrypt: addr=wahrenst@gmx.net; keydata=
- xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
- IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
- NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
- JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
- TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
- f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
- V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
- aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
-In-Reply-To: <aD3E2ONB6Ay1wwmk@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:AJQ2ixEvwg/itP70Uj8xnydOVxM6lyLntqA43DPWy193LI9QDFJ
- BAD5b59iauwBVMTKvwf4334m9vCNhfkI9FLMAnhOdR8F/ya5+BAxDYdyxNztMVoYk0dl5b9
- 7XkX/SVLLbkYwpg0sPhM+92ddZHu8eQCzLh5UHgyyw7VxREkOCOHM4U/IBuf6LmACfGMPrA
- 1zJmqnV5mO/tWL2N4kEyA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:uYK9uE2dX1Q=;DKTN5ymCFAqlbh9PnhostIe0JhP
- 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
+Mime-Version: 1.0
+References: <20250602192702.2125115-1-coltonlewis@google.com>
+X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
+Message-ID: <20250602192702.2125115-2-coltonlewis@google.com>
+Subject: [PATCH 01/17] arm64: cpufeature: Add cpucap for HPMN0
+From: Colton Lewis <coltonlewis@google.com>
+To: kvm@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Zenghui Yu <yuzenghui@huawei.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Colton Lewis <coltonlewis@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Frank,
+Add a capability for FEAT_HPMN0, whether MDCR_EL2.HPMN can specify 0
+counters reserved for the guest.
 
-Am 02.06.25 um 17:35 schrieb Frank Li:
-> On Fri, May 30, 2025 at 10:33:28AM +0200, Stefan Wahren wrote:
->> Hi Frank,
->>
->> thanks for this patch.
->>
->> Am 29.05.25 um 21:17 schrieb Frank Li:
-...
->>> +  - Frank Li <Frank.Li@nxp.com>
->>> +
->>> +description: |
->>> +  The QCA7000 is a serial-to-powerline bridge with a host interface w=
-hich could
->>> +  be configured either as SPI or UART slave. This configuration is do=
-ne by
->>> +  the QCA7000 firmware.
->>> +
->>> +  (a) Ethernet over SPI
->>> +
->>> +  In order to use the QCA7000 as SPI device it must be defined as a c=
-hild of a
->>> +  SPI master in the device tree.
->> Could you please add the dropped "(b) Ethernet over UART" description h=
-ere?
-> Okay, I will add back.
->
->>> +
->>> +properties:
->>> +  compatible:
->>> +    const: qca,qca7000
->>> +
->>> +  reg:
->>> +    maxItems: 1
->>> +
->>> +  interrupts:
->>> +    maxItems: 1
->>> +
->>> +  spi-cpha: true
->>> +
->>> +  spi-cpol: true
->> In case of a SPI setup these properties should be required. Unfortunate=
-ly
->> i'm not sure how to enforce this. Maybe depending on the presence of "r=
-eg"?
-> But It think depend on reg is not good idea, which too obscure.
-I understand, but this was the first idea which comes to my mind.
->   Ideally it
-> should be use two compatible strings. It should treat as two kinds devic=
-e.
-Back in the days there was a discussion about different compatible=20
-strings and it was rejected [1].
-> It is really old devices and not worth to update compatible string.
-Yes, this powerline communication chip was introduced in 2012 but it's=20
-very widespread. Most of the electric vehicles and DC charging stations=20
-use this chip.
+This required changing HPMN0 to an UnsignedEnum in tools/sysreg
+because otherwise not all the appropriate macros are generated to add
+it to arm64_cpu_capabilities_arm64_features.
 
-Regards
+Signed-off-by: Colton Lewis <coltonlewis@google.com>
+---
+ arch/arm64/kernel/cpufeature.c | 8 ++++++++
+ arch/arm64/tools/cpucaps       | 1 +
+ arch/arm64/tools/sysreg        | 6 +++---
+ 3 files changed, 12 insertions(+), 3 deletions(-)
 
-[1] - https://lkml.org/lkml/2017/5/19/390
->
-> Maybe some one in dt team can provide suggestion!
->
-> Rob and Krzysztof Kozlowski:
->    any idea about this?
->
-> Frank
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index a3da020f1d1c..578eea321a60 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -541,6 +541,7 @@ static const struct arm64_ftr_bits ftr_id_mmfr0[] = {
+ };
+ 
+ static const struct arm64_ftr_bits ftr_id_aa64dfr0[] = {
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_HPMN0_SHIFT, 4, 0),
+ 	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_DoubleLock_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_PMSVer_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_CTX_CMPs_SHIFT, 4, 0),
+@@ -2884,6 +2885,13 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+ 		.matches = has_cpuid_feature,
+ 		ARM64_CPUID_FIELDS(ID_AA64MMFR0_EL1, FGT, FGT2)
+ 	},
++	{
++		.desc = "Hypervisor PMU Partitioning 0 Guest Counters",
++		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
++		.capability = ARM64_HAS_HPMN0,
++		.matches = has_cpuid_feature,
++		ARM64_CPUID_FIELDS(ID_AA64DFR0_EL1, HPMN0, IMP)
++	},
+ #ifdef CONFIG_ARM64_SME
+ 	{
+ 		.desc = "Scalable Matrix Extension",
+diff --git a/arch/arm64/tools/cpucaps b/arch/arm64/tools/cpucaps
+index 10effd4cff6b..5b196ba21629 100644
+--- a/arch/arm64/tools/cpucaps
++++ b/arch/arm64/tools/cpucaps
+@@ -39,6 +39,7 @@ HAS_GIC_CPUIF_SYSREGS
+ HAS_GIC_PRIO_MASKING
+ HAS_GIC_PRIO_RELAXED_SYNC
+ HAS_HCR_NV1
++HAS_HPMN0
+ HAS_HCX
+ HAS_LDAPR
+ HAS_LPA2
+diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
+index 8a8cf6874298..d29742481754 100644
+--- a/arch/arm64/tools/sysreg
++++ b/arch/arm64/tools/sysreg
+@@ -1531,9 +1531,9 @@ EndEnum
+ EndSysreg
+ 
+ Sysreg	ID_AA64DFR0_EL1	3	0	0	5	0
+-Enum	63:60	HPMN0
+-	0b0000	UNPREDICTABLE
+-	0b0001	DEF
++UnsignedEnum	63:60	HPMN0
++	0b0000	NI
++	0b0001	IMP
+ EndEnum
+ UnsignedEnum	59:56	ExtTrcBuff
+ 	0b0000	NI
+-- 
+2.49.0.1204.g71687c7c1d-goog
+
