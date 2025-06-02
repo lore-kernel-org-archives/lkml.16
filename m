@@ -1,95 +1,81 @@
-Received: from forward501a.mail.yandex.net (forward501a.mail.yandex.net [178.154.239.81])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0611B221DA0;
-	Mon,  2 Jun 2025 13:08:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD3F221FB8
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 13:09:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748869727; cv=none; b=ZD6cGKTjFrI6QeogsVoCiHkftC24lAnMYX0wlZJ5snmZIxCvMpHmIqsfOz2zGbD0tV6hZiKSExROIMXRURTV8EUYrqcYsYlS3d8nbHmojrocCk0BRuAKGSoAPMSawBBhj6p9jxm0Euhhs7Ii2PuVfcTXQB26Xrj1Qe7SEu0mPsg=
+	t=1748869753; cv=none; b=oQdWo8pXQsG8e3ocISxUK3bVXrguz02Nwizc50lstKQnwdd2veUfHCQYpdjk8KtIAkQTMgyhPN6bONF5CctBCVxmx9rQ3WCNUJ8uvk7FlB0f9MJyX6PIx0rV4s4l//vcy4kTt+dAwgLnM2Yva2W4+Xhb47Bp4w9QIK00UlUdrfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748869727; c=relaxed/simple;
-	bh=yTEXqsnUcW3cl5WcXbdMtFzmwUho1rDc7vZsuRYKyXU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lTfWjxXNz6q98PXo1kFA9yDRzg5MMs0uH9UA7FECSCgeupQ8iu7SjxPeCqjzdYsrg30hfiXy82VGV0iG82mpU4Gj9TpvIgynItNEgM0qLiVqWs1DhXggNP5DT53unxNDhC1xCQ/BNpIztrNnx8NBqxUuLRJKEAbn76scvMgMzZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=0upti.me; spf=pass smtp.mailfrom=0upti.me; dkim=pass (1024-bit key) header.d=0upti.me header.i=@0upti.me header.b=EzcWINEr; arc=none smtp.client-ip=178.154.239.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=0upti.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0upti.me
+	s=arc-20240116; t=1748869753; c=relaxed/simple;
+	bh=2U/rqDTkSEhF3kVkNcn14qr3OQRG+JbH96DVpplAJUI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bYgGyjXOWpGaPN6DsalvWJo0S6WP6Z/UBbLaocEOQH0JfzNG9zbm7snbjnBUzf5iCUhtaPSTK/pPN8PGW3qhmH2XL4HRu1c8AOQZeANYgu4jRHQa7yEuyISyIG04eESLnXXdOIbWwIBJ1WWtO9lsPZA8wSG6+6b9aKQgr8jvCMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CDQOg/Ff; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=0upti.me header.i=@0upti.me header.b="EzcWINEr"
-Received: from mail-nwsmtp-smtp-production-main-74.iva.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-74.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:160e:0:640:a44a:0])
-	by forward501a.mail.yandex.net (Yandex) with ESMTPS id 89D6961677;
-	Mon,  2 Jun 2025 16:00:19 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-74.iva.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id F0aS6QbLoa60-v1prNre5;
-	Mon, 02 Jun 2025 16:00:18 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=0upti.me; s=mail;
-	t=1748869218; bh=oZ32ri9UvCA0ZFnxXbOjw3nZYx8ajIN2VWmbh80DLjU=;
-	h=From:In-Reply-To:Cc:Date:References:To:Subject:Message-ID;
-	b=EzcWINEr1YcBsyckPUR3nlN3K+/LMzSaQKkMLqlbcJj6CrPBngXx/eDKc18C6WbJ+
-	 RJztATJ/WAvys8DZNnSxo0MbSn+9ezY18d5m9s1x9LMmcGUTwkR4lIQP67AAm6ZkCd
-	 Gv5gMnOxTZ5Oaa0NtUAkqX5gKrFUfqZi7JSa191U=
-Authentication-Results: mail-nwsmtp-smtp-production-main-74.iva.yp-c.yandex.net; dkim=pass header.i=@0upti.me
-Message-ID: <2894a781-4d4b-4e3c-9f4e-7c1f04122f8a@0upti.me>
-Date: Mon, 2 Jun 2025 16:00:14 +0300
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CDQOg/Ff"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748869750;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2U/rqDTkSEhF3kVkNcn14qr3OQRG+JbH96DVpplAJUI=;
+	b=CDQOg/FfPrAoBZSq1VuTceoHzid6zJxo6FrRlQfDh8oTMBo+0TOOTnPzxIVEABnrn9u3xW
+	iI5zTaYJVFkqIVLQx5VrbDJmmHG2TAmuGWCQn263kXbWVGIeYpT7vA+9G57bac6AdWuw1o
+	Ck9qtT2Isppzh6QH2ZMb1i9knsD8GOU=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-101-J6k_oaR1OLqL6Z52PrwNhg-1; Mon,
+ 02 Jun 2025 09:09:07 -0400
+X-MC-Unique: J6k_oaR1OLqL6Z52PrwNhg-1
+X-Mimecast-MFC-AGG-ID: J6k_oaR1OLqL6Z52PrwNhg_1748869745
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8D60F19560AE;
+	Mon,  2 Jun 2025 13:09:05 +0000 (UTC)
+Received: from [192.168.37.1] (unknown [10.22.58.2])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BCD4C18001D8;
+	Mon,  2 Jun 2025 13:09:03 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Chuck Lever <chuck.lever@oracle.com>, Alexander Aring <alex.aring@gmail.com>,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] filelock: add new locks_wake_up_waiter() helper
+Date: Mon, 02 Jun 2025 09:09:01 -0400
+Message-ID: <F3D97B2E-1693-4E31-BBF8-63F7F550ADCB@redhat.com>
+In-Reply-To: <20250602-filelock-6-16-v1-1-7da5b2c930fd@kernel.org>
+References: <20250602-filelock-6-16-v1-1-7da5b2c930fd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC net-next] net: phylink: always config mac for
- (delayed) phy
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Eric Woudstra <ericwouds@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
- Heiner Kallweit <hkallweit1@gmail.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Frank Wunderlich <frank-w@public-files.de>,
- Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
- coreteam@netfilter.org, bridge@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-References: <20250107123615.161095-1-ericwouds@gmail.com>
- <Z30iUj6DE9-fRp0n@shell.armlinux.org.uk>
- <4b9b2a9a-061b-43ad-b402-a49aee317f41@gmail.com>
- <Z31CJS1YUvPGiEXs@shell.armlinux.org.uk>
- <98234080-946e-4b36-832f-113b185e7bca@gmail.com>
- <Z3-Tz5WdLCat91vm@shell.armlinux.org.uk>
- <9cc913d7-7e5b-4b6c-886c-ca9778c3f970@0upti.me>
- <aD1lRha-enQ9Pw0g@shell.armlinux.org.uk>
-Content-Language: en-US
-From: Ilya K <me@0upti.me>
-In-Reply-To: <aD1lRha-enQ9Pw0g@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On 2025-06-02 11:48, Russell King (Oracle) wrote:
-> On Mon, Jun 02, 2025 at 10:19:22AM +0300, Ilya K wrote:
->> On 2025-01-09 12:15, Russell King (Oracle) wrote:
->>> On Thu, Jan 09, 2025 at 09:56:17AM +0100, Eric Woudstra wrote:
->>> I'll look at what we can do for this today.
->> Hey folks, don't really want to necrobump this, but the original hack patch is the only way I can get my weirdo Realtek (noticing a pattern here) GPON modem-on-a-stick to probe at 2500base-x on a BPi-R4. I've actually tracked down the issue myself and wrote basically the same patch first :( Is there anything I can do (with my extremely limited phylink understanding) to help move this forward so other people don't have to suffer like I did?
-> 
-> There were two issues that were identified. The first was that when in
-> 2500Base-X mode, the PCS wasn't reporting link-up. That was addressed
-> by the patch series:
-> 
-> Z4TbR93B-X8A8iHe@shell.armlinux.org.uk
-> 
-> then, the replacement for Eric's patch was:
-> 
-> E1tYhxp-001FHf-Ac@rmk-PC.armlinux.org.uk
-> 
-> So the problem should be solved with these applied, as when the PHY is
-> attached, "changed" will always be true, which is in effect what Eric's
-> patch was doing, but in a cleaner way.
-> 
-> Please confirm that you have all six patches applied.
-> 
+On 2 Jun 2025, at 7:58, Jeff Layton wrote:
 
-That's weird, because I do have all the patches applied. I think this may have been broken by the pcs_inband_caps changes, because without the patch I'm just getting "autoneg setting not compatible with PCS", after which it bails, when it should really reconfigure the MAC instead.
+> Currently the function that does this takes a struct file_lock, but
+> __locks_wake_up_blocks() deals with both locks and leases. Currently
+> this works because both file_lock and file_lease have the file_lock_core
+> at the beginning of the struct, but it's fragile to rely on that.
+>
+> Add a new locks_wake_up_waiter() function and call that from
+> __locks_wake_up_blocks().
+>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-(resending because I replied instead of reply-all by accident)
+Looks good,
+
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+
+Ben
+
