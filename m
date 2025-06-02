@@ -1,158 +1,137 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32BD01E3790
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 09:48:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1899572638
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 09:52:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748857728; cv=none; b=Y+W9ekpgswcFxNdLrgOYMwFuaUoSIpdi8kRiLDB21m6WUDuRnXr1Fur3jQofA4zLbBe+Zkj0gTTp44KHG/ry5HPxYcsShfmrBVVQ3yvu6ANO0ho5q6KckutY2SMoQxoh+cJjuc/CaEf8GLekY9UvMJhGIUT67khZAoRQuQGVLRE=
+	t=1748857973; cv=none; b=Ks4mRhOHpYXuL0OrCja4ERmHOpkNydP3wagfLZ3MosoofcQxNEbP3CpbB9PRqHKlXZi3vscGm9h4KTyZU8LXLsDuwr5oDn/CXsNWPNjTLuixn0Bt1/AAJY7Flkb1JGxJ15iDyqfrNkHsqsg9HOo9x8U6SYGUfijJfxAhF+GGJkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748857728; c=relaxed/simple;
-	bh=ZqAe0XxBRYxYACmyGo/2UtIEvjApYGwR2wXetHXMxwI=;
+	s=arc-20240116; t=1748857973; c=relaxed/simple;
+	bh=3Nr3rdAGLG+bEMBy2/W8X+wI8WL1Tg0+J7sPa+p7Hek=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AT91SeNdja+m9jM0H/mde+PxuQMaw7JggCHXultdihJhQ0R+et/RVieb0vzb6y8pyfbNcH8RhoZ7wQ3FaxWbpq4WQSFkg8lVQZdTMHNULl4lqKN8buOQhD1kRWW2exgFtQYa8yY/dKVoODjpZClt5ys9mt73QPadI7P3QTV96sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=NnyhKqcG; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	 To:Cc:Content-Type; b=PR6V0WS/J5kjZS/Ffl7jvIYWUiTQU9MW72M8DdW9A8tVvrKAk/P9KTYqf19A4PBIz9t1rLsJQk7o5Jod+zn2OX4PHv3IQIg2kwXDuwMqLDjzU6zgnsnvraWponxxJcf9HRRe+o7j+1i5jVdA5XSAfL2gFTdIMLTDC7shP7hyYs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sFUOki3h; arc=none smtp.client-ip=209.85.160.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="NnyhKqcG"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54998f865b8so3963328e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 02:48:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sFUOki3h"
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2db2f23f174so2312011fac.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 02:52:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1748857724; x=1749462524; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748857971; x=1749462771; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zpFde9Lqa/a3If18OyyVampcrtgmxniT0nRXi/1rUjE=;
-        b=NnyhKqcGdgqJiuzWDZuWt0uXApqdK3tuwbusZBdhwyJpJknXlsQSQLLB4vSNQJlLJy
-         i1LgyR6I8guGipeYZKzux8SPqevjx/cLktdmqXPbyTOi+f0SqzLvlLQMmiGsO1rA1WJa
-         f6gtWXeqFdh9bkvirtPiGaeDaG5oi/qyTQbcJlzZwnVQBs8wSyjlzgPrqsoDFNy1WZej
-         z71KFOQ2FWCzy50PhnNjyMFe2Q18FAXOXBQefA0mMdIGTcq20AL0wNhAhoFp7HkOoV0V
-         llRKsZpfWTVzHKYAslL9aOlT39OIeD9sbMnea6biDm8rVTrC0g6QAkRQ7sKbWj4g29k8
-         qhoQ==
+        bh=fA3ofLgxtfNebWUF4UqqforqyhiSi+NdjwHYvtGkbrM=;
+        b=sFUOki3hcCO+Y1ycPhbXKkcOoB9R54EQrfJIZsRKRiMXP5+e4PZXKk9Tn2AiP2rJOy
+         9pPrU/VUfgyn3P5lmwkz5Jh6iukhUIcTj5jt+vYrpjL+wi3LggOVOfXtnwx+9UG4poNG
+         PV6bfnpY/HvRvPJxQ2k1jei795ZwYFPUUuK+qLaovabSSgHQen7kxTs2p5gJIupYqhid
+         4Ywk41DKGVXVxOoYaoUp9/yhYkMqXi1QwW1YoZ5yccCieM32lr840CtgeNayKE6QOXWz
+         RsZn51lziJxC2opWf9KIBFw+I4kaIHcB/b2RKg21ZQhfKRmYyc7VDY5Vq66uzwFdwggU
+         jJkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748857724; x=1749462524;
+        d=1e100.net; s=20230601; t=1748857971; x=1749462771;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zpFde9Lqa/a3If18OyyVampcrtgmxniT0nRXi/1rUjE=;
-        b=VecIf8JOQlJ0dnq7LMkcejqHaSlIVwVNthyYdJy+uhoDUf7lOC6zCfxw1uHHsTFwVG
-         kAN9wDRLD3DnnaJpPWiZUx6opWF40TfWkoLmYohnQww7F95RfKHRrutq+2XCmbIe6u0g
-         +70ZFGEY9WT/1AoVLUO7Q1e+EHEvjvSFElSVvZSt2iCZTUm0tRyNrP1VRSA8MlFT2FOd
-         Rq866QqK50u6DuhUCiYbAXJ4K3qOyHNlpB0idQsihoDsh6QBuiCq+/D1s8u0AeWE6a5a
-         YY6/1fwcl+hO2HtTUlJ2y9cdoOP3DZOfl9c9u+IlkdM7zO+DP/zBUhe9E/BERJ5qMb5l
-         T15w==
-X-Forwarded-Encrypted: i=1; AJvYcCU28YqEo1JplAtjh1bOej+xbWtSw21cWgiTbFbAS7gdiOuFavvLIKQVMSnHbQR5K+gHzd+HUXnTAMOcRiA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbY4Ngr1+9l807W0GG4NDxAePR4yFJe0udST7od8RrVy1Yktpl
-	vThMORuCAHB9e8T7Z3Q+JCmpeNSrDg0ikktXC/q5U2PggbeCJNEvOWre74QMimgeG9Ub6G067Qm
-	77x5AHxwPa9Aa+nUk8ITxib/Qk8BmUwLeCiQXVZIydg==
-X-Gm-Gg: ASbGncsTuwQ/De+ue0+bUD5lA/abvId9LFXxVcW6BWYACGQGM5QtOVg3kR19rTDUXFZ
-	IdU0V3oulpd1fzM/e5jhsjIVclN2wcw1SlprmNbTgZfuCfExcc5kLOYuNeH2MGjCPYTWnevfBUF
-	+C05PGwbvyjAuKtUbj7UqxlLu1XBYFI06zQuq17ujzVKpteYR39adubyB2UilbDKX9
-X-Google-Smtp-Source: AGHT+IHu6LRM/rAlao7v5WhiyZHb32X4y+4RMYsF+bArPMNjiiqB+mqgfQKEsN6bAuhhQzHwTmuEp3BH5GI+EqJoEdU=
-X-Received: by 2002:a05:6512:3d28:b0:553:2c58:f967 with SMTP id
- 2adb3069b0e04-5533b93b8f9mr3820418e87.56.1748857724100; Mon, 02 Jun 2025
- 02:48:44 -0700 (PDT)
+        bh=fA3ofLgxtfNebWUF4UqqforqyhiSi+NdjwHYvtGkbrM=;
+        b=uc8/bkp87CDtBtKtHwiJM8dRWaB5OKEq4dmuMVQLnnsdapHSgp5Cwj6rrycEM+Jos3
+         +LA1GyxZ8F6ovBo76Os6+jMUcFwUmvYrO+7YoNZY738z3vr8iLC4K143zz6cSu9FpXiZ
+         yEtlkcpB1PjIC+TychmCgTFhrOn4dKoD3QrpiOFFPVC2CsvD6tDjoZk56naiSrxfmLMK
+         ksHHBIf3OL9E450bGTloDqO6yLGCiqdT88nsB/Axnf1IpcbYARoQOc2z/pHUgi31Tw6D
+         B+0kowUuHzxQ99YFWNWn4kbzqu8m/5yZrhvMhbu6kWhSyfdsAjZLQSBggVBqIi3W0g9O
+         1w6A==
+X-Forwarded-Encrypted: i=1; AJvYcCWXUbSaWL2srIDTajTi0UKB/eQFhZ5nqk743x9pLkZ6RiRdnUOT+A3JgV+X94p9ScbADmrWNF5qxke1oL0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYI/Ya1Yi3dLpYsAHF8HdWoGyKhDVecxYQQraxRIj30L8vdAPx
+	uwnVw87o9oZtUta0wx2d8hf77g/KuuJTOI3c/SpYvH4+6nyVGhAk1RUeOqbE48Ni8j88c8vUCN/
+	ey1myBs41Dtdi0YAqZgOyQM+tXRs5q8FrO4m8usvc
+X-Gm-Gg: ASbGncsopTOeqV3avrp2/zVAdgn7OUon5xP5R1vuUm5r3nJjpNAeieoppzocqrjbcMi
+	Mg37MEyOPz7Ar1FbANnOnO3JWG3rWYVMjBRqzbyLbm3Uh1IhUG4jPGFx4gxRY440Danjztsey52
+	9ZvOYbQu0/AVh6ACcIw/IESjVmDZkhOUb2f0E8xvsyJf8696H26axqn6LNwYAKrElMoBp8MYYHZ
+	Q==
+X-Google-Smtp-Source: AGHT+IE0ZGbnN04vjx83CwiRAf58xPvogSS6sEqYUTYlTlD740NOxi5Aoj2v4ECI6TEk/um1u2Qod5ydbnaGW57R8yM=
+X-Received: by 2002:a05:6870:9725:b0:2e4:68ee:4f21 with SMTP id
+ 586e51a60fabf-2e9212c9e5fmr7107654fac.20.1748857970178; Mon, 02 Jun 2025
+ 02:52:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522-gpio-palmas-gpio-v2-1-89f209d4a949@gmail.com>
-In-Reply-To: <20250522-gpio-palmas-gpio-v2-1-89f209d4a949@gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 2 Jun 2025 11:48:33 +0200
-X-Gm-Features: AX0GCFtddofCDjgZ5DIeg4B0vNuU-cCbYFWXjGMtM5hdIOhc8iwC4AUoKRGZuts
-Message-ID: <CAMRc=Mdwa=DuubA6P+EnjUAQE8XupYsbo=3LuH-jYEBttREGqg@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: palmas: Allow building as a module
-To: webgeek1234@gmail.com, Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20250526150141.3407433-1-bqe@google.com> <aDXLqJTWlsrvVYB2@yury>
+In-Reply-To: <aDXLqJTWlsrvVYB2@yury>
+From: Burak Emir <bqe@google.com>
+Date: Mon, 2 Jun 2025 11:52:38 +0200
+X-Gm-Features: AX0GCFvUUiFbUINzQ_Bdsf7EBt95VwNEYE5j1QvwuapbexknnbONhxI4OgqJICM
+Message-ID: <CACQBu=WL=RLN_9sU-DcJaRxCrCcokFhHvOF4K+=Ui+=POH9jVQ@mail.gmail.com>
+Subject: Re: [PATCH v9 0/5] rust: adds Bitmap API, ID pool and bindings
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Kees Cook <kees@kernel.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 23, 2025 at 12:22=E2=80=AFAM Aaron Kling via B4 Relay
-<devnull+webgeek1234.gmail.com@kernel.org> wrote:
->
-> From: Aaron Kling <webgeek1234@gmail.com>
->
-> The driver works fine as a module, so allowing building as such. This
-> drops the driver specific init in favor of the module macro which does
-> the same, plus handling exit.
->
-> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> ---
-> Changes in v2:
-> - Drop module alias and add module device table
-> - Link to v1: https://lore.kernel.org/r/20250522-gpio-palmas-gpio-v1-1-d6=
-b1a3776ef5@gmail.com
-> ---
->  drivers/gpio/Kconfig       |  2 +-
->  drivers/gpio/gpio-palmas.c | 10 +++++-----
->  2 files changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index f2c39bbff83a33dcb12b2d32aa3ebc358a0dd949..be5d823516d0e2bff4b4231da=
-c6a82bf10887118 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -1464,7 +1464,7 @@ config GPIO_MAX77650
->           These chips have a single pin that can be configured as GPIO.
->
->  config GPIO_PALMAS
-> -       bool "TI PALMAS series PMICs GPIO"
-> +       tristate "TI PALMAS series PMICs GPIO"
->         depends on MFD_PALMAS
->         help
->           Select this option to enable GPIO driver for the TI PALMAS
-> diff --git a/drivers/gpio/gpio-palmas.c b/drivers/gpio/gpio-palmas.c
-> index 28dba7048509a3ef9c7972c1be53ea30adddabb0..eaef29f59292de5281f31e196=
-961d90974e65b75 100644
-> --- a/drivers/gpio/gpio-palmas.c
-> +++ b/drivers/gpio/gpio-palmas.c
-> @@ -140,6 +140,7 @@ static const struct of_device_id of_palmas_gpio_match=
-[] =3D {
->         { .compatible =3D "ti,tps80036-gpio", .data =3D &tps80036_dev_dat=
-a,},
->         { },
->  };
-> +MODULE_DEVICE_TABLE(of, of_palmas_gpio_match);
->
->  static int palmas_gpio_probe(struct platform_device *pdev)
->  {
-> @@ -191,9 +192,8 @@ static struct platform_driver palmas_gpio_driver =3D =
-{
->         .driver.of_match_table =3D of_palmas_gpio_match,
->         .probe          =3D palmas_gpio_probe,
->  };
-> +module_platform_driver(palmas_gpio_driver);
->
-> -static int __init palmas_gpio_init(void)
-> -{
-> -       return platform_driver_register(&palmas_gpio_driver);
-> -}
-> -subsys_initcall(palmas_gpio_init);
+On Tue, May 27, 2025 at 4:27=E2=80=AFPM Yury Norov <yury.norov@gmail.com> w=
+rote:
 
-This being put into an earlier initcall than device_initcall() makes
-me think, someone had a reason for it and this change can break this.
-I'm Cc'ing the original author who seems to still be active in the
-kernel.
+> So, 95% CI means z=3D1.96, isn't? And to me it should be, for example for
+> the first line: 5.18 +- 1.96*0.32/sqrt(32) =3D 5.18 +- 0.11 =3D [5.07, 5.=
+29].
+> Can you check your math please?
 
-Laxman: can you verify that this can be safely moved to module_initcall()?
+Facepalm... I used scipy to get the CI, and passed alpha (5%) instead
+of 1-alpha (95%) for confidence level.
+I am very sorry...
 
-Bartosz
+> > Results for sparse bitmap:
+> > +------------+------+-----------+--------------+-----------+-----------=
++
+> > | Benchmark  | Code | Mean (ns) | Std Dev (ns) | 95% CI Lo | 95% CI Hi =
+|
+> > +------------+------+-----------+--------------+-----------+-----------=
++
+> > | find_bit/  | C    |     22.51 |        12.34 |     22.38 |     22.65 =
+|
+> > | next_bit   | Rust |     30.53 |        20.44 |     30.30 |     30.75 =
+|
+> > +------------+------+-----------+--------------+-----------+-----------=
++
+> > | find_zero/ | C    |      5.69 |         0.22 |      5.68 |      5.69 =
+|
+> > | next_zero  | Rust |      5.68 |         0.29 |      5.68 |      5.68 =
+|
+> > +------------+------+-----------+--------------+-----------+-----------=
++
+>
+> Your numbers look pretty weird. I wrote the test such that on a typical
+> x86 system it takes milliseconds for each subtest to pass.  Here you
+> report nanoseconds-scaled times. Did you divide by the number of
+> iterations? If so, please mention it.
 
-> +MODULE_DESCRIPTION("TI PALMAS series GPIO driver");
-> +MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
-> +MODULE_LICENSE("GPL");
+Yes, I had divided by number of iterations.
+Now that you are questioning this, I have second thoughts.
+I will repeat the benchmark, without dividing by iterations.
+
+> Please print raw output of your test in patch #4 which adds the test.
+> Because the test is tightly coupled to it's C version, we need to make
+> sure it hast the same format - fields alignment, etc.
+
+Will do. In v10, I have removed the module name from the output and
+the lines match exactly now.
+
+> I would prefer to have detailed performance discussion in the
+> corresponding patch (#4), and here in cover letter you'd just mention
+> the overall performance difference - 2%, as I can see.
 >
-> ---
-> base-commit: b36ddb9210e6812eb1c86ad46b66cc46aa193487
-> change-id: 20250520-gpio-palmas-gpio-a99fc046dc7f
->
-> Best regards,
-> --
-> Aaron Kling <webgeek1234@gmail.com>
->
->
+ok.
+
+cheers,
+Burak
