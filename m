@@ -1,54 +1,54 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8207322171E
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 13:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F10221FD6
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 13:37:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748871424; cv=none; b=s8dNYdRY568zfbCkQUyHzyFeA6NZdRRjugmYcFSyShjhbaPnbaIOxX4PKHxrfmcuWmw10HoZ2RRttrlrXHPZhglcmO7bMumuYurkIdOYjsGw74V/6Z7mPPxrKCZQ4ceA+UXh2HkgthGJoEpOTMOBVPXeNdo+C77zt1x/15ZDkfQ=
+	t=1748871428; cv=none; b=WkjDkIluokufyeIOPsfiS+Lm172t0/fb4MwyvqltJ482HFH177/MpSENarwWCqKO0/u9YCs+M1PE09vo3lZL9fUSOk1FaEHDxKG5E0nKqu3CrNtul30bJk9GqZKR4yD1d9nTQJOOFXp+Sfdmm58N6R2c+UtEC0XepdmH699ibNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748871424; c=relaxed/simple;
-	bh=E/w79vVPcT3Zr2nhL4Sj2w1AZemSgO2OaKw7xSVzVdY=;
+	s=arc-20240116; t=1748871428; c=relaxed/simple;
+	bh=Cqzii58nVmE6Xjc0I4yziV5YigzMbAtsB8RogUbVtgQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=oKtq4tq3Llmiy+fGXhY8ITq4sWkwCshPNIjCy+ZM6uvQGroAUAwSRSgVaE7O5LMikrY9cidIvuUzYt8aZfOzStBSNpQUfZwNUKxhHZEeviIqJwckEo/jDsYhdL/47XCsUmeb+HTxsFDrGH7t+ifHkOJWTqb6niAelzfKpvMEqdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--bqe.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AUEJXZK0; arc=none smtp.client-ip=209.85.221.73
+	 To:Cc:Content-Type; b=GALfCGJLoesw4njzbipB5lWmQMuhrr5qta1qxC3EVaxb3GxJq+SnbND/1SRZ++LvxugMQ4E4PCorUZa0lAga0DJcJZs05Ujyr8YiSuzRdwmM5dFhYJaxxRyWeco+FiBLNRpmqWsy0kUD1JqhIJA6HZ9wrdU7y4ARjVSU+R3ynn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--bqe.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LoSN2jhr; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--bqe.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AUEJXZK0"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-3a4f8192e2cso1631600f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 06:37:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LoSN2jhr"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-450cb902173so20048205e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 06:37:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748871421; x=1749476221; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748871425; x=1749476225; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1xsZ3bzHWEHjMHqu05pw0LNNFT3NBkPT2T7RuaKPsqs=;
-        b=AUEJXZK01RNf9xH8EiLdXaOSfCcK9g9pawjZ0+qk4wCAIqwAJwwivswUU1bBl1MLH/
-         RVw1HlYqoHug7cEGLYOADJ5cat3ty0jbUo/tCmW+f8ycDE+CU441u2FKN8gNnuOZD/hB
-         8jYDnBFANaoLzHv1XbsZtHtw/N6iQIrdTgtxIEcnxPt107CT3CUZg8EdhXGlQfCqqJpu
-         mxIVYT2HPF4HnsfB82/o39bk6ZVxG67rJm05zEU3OCiPBBkv4RVL14kRZbGi11Lsiw4A
-         7yZSpJBy4tcRZdsOpu3o6e5juAqEfmrt7MddoSA7DPR8MPU6PCTkHU+tw6FEGaDyFjTb
-         FbjQ==
+        bh=IcVakMlKYDO8yucN345y9x+THKYoIpGW6/IQj21Bs8c=;
+        b=LoSN2jhrTL2bWn10W0T0f4ELXMWdklJGeBKHLhGbGNvkrspRx4Nm0yHMmyoFrS1QvC
+         nKuawv7yT456WANMahmRvCzVSHjjMMkm95+zjsth7SCcsA8i2LprApOn0jpdoWOF54H2
+         6MI8orAL3xYx/PCQjpT1ZbAYdmwgRHLkDp+sYgEYMwPeCk8vBpc4EDkDaqSlia7NzpoH
+         gOHf9hL1rEcW/NLlCgLFe5Itgy5s01cN9gmMXxxiZfGKaQXeS1DWNHyLTs6iqrnjUhQF
+         jUGQnUtcgU+oWF6qDYC5oKT9l3HUaC4+RvN0AEa7r+8+ARR0dq/Mr/uhGOhqJjr2rWyg
+         vjmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748871421; x=1749476221;
+        d=1e100.net; s=20230601; t=1748871425; x=1749476225;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1xsZ3bzHWEHjMHqu05pw0LNNFT3NBkPT2T7RuaKPsqs=;
-        b=Gf70fzMaVjpJvrBrC+/rpu5McERIVmC6tZtIEYjl0CI3/0J90Ev5gjzTxjZhXv5c+e
-         47ZN9+IawnNyKkE86YK4x2ZGMzgSr0Wrcny5e1/ZQGC6fjlD6y/akhy6wqlek5GcuozH
-         fKxylNNuS6kOJsgNUyUt1LBcuwhyLg8xT0Dz0mZ+VIkhInIMields36UbQG62bq1tnxg
-         OxacmnR6f61a0OLWeDKgKH3Km1ntx/uo08+I89T9inAVvmdVedk8cF8BBolIpHdLfbng
-         Q5XaWTDfGqQjPUKspIBm12XmkCLDEDisvJKLEcRwejLkVS/CBrcS6cwjDsDn0wMVIFu2
-         cMAg==
-X-Forwarded-Encrypted: i=1; AJvYcCX7IbOHMJw0yZsacRQOZUTjnn59RpScjL3wkDnJ7yaZ0KlUINPVWcFZc/ZKHfPjNW6GssdygbzAd1ElJIk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyV1ebzYaLuANNBTj/VX7qMkRI+ktZh5BKPrmsF0Mo/PoGXP8Rw
-	f2DMPZ/sEctrHHHpSZiMKFI3ofGh9kFf/d5a+cACfmIP3En3i3BJDMSHaGesU14b5NHRoQ==
-X-Google-Smtp-Source: AGHT+IFUd3/Au7r0/E7zO/NvqFb2d5LVWOIiZ8HD6Xtu76YAGOeLpsZQ2jP0GboADBe+dtG5nQN0HQQ=
-X-Received: from wmbet10.prod.google.com ([2002:a05:600c:818a:b0:450:df6d:a450])
- (user=bqe job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:2586:b0:3a4:fb7e:5fa6
- with SMTP id ffacd0b85a97d-3a4fe154b3emr6667986f8f.1.1748871420861; Mon, 02
- Jun 2025 06:37:00 -0700 (PDT)
-Date: Mon,  2 Jun 2025 13:36:43 +0000
+        bh=IcVakMlKYDO8yucN345y9x+THKYoIpGW6/IQj21Bs8c=;
+        b=cwhMbwYdBdOjaUPgnrrAtzidE3mtF5AsVm3e6pSGieOxuyQ0iKrzthwaPR4Jxs7Fg2
+         LrOiWk4ZamJVhZXUnxGotkPbYbfRuZc9Gr6PYEi1fBCTw3n/AfewSIzoi3U6RsdeyTAk
+         tk3eRR+nU7edtAm+iUAeEMOZieXvNcyuB65cuoBwfqFxRRx10t7E20sbUAVx1h/P5lvz
+         aEYkwakr80zjwCB70Z9aplwdW89LN9kXP31HFvrUMKMnpfTxjFgcox/uIIOBfhucXrCT
+         IB0FCU7++5+Ka4ETqWBq57xVyKxVnVT9HQEjA+kmWWe5rItMRCPm7Ln8hvnvbFp040tu
+         /Nbg==
+X-Forwarded-Encrypted: i=1; AJvYcCX8B86+ibwjlRTj9VMfYMr2UHuEj+i9s/wePu5BBLh213RfBMfVRLpLIzqPeYWhvGAkB/+dM6M5Idg0nEI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywr7hjVn6Ecsl+zcxeHvP4NswpIEPxi6aJolzFQVUIF8mV7M1S2
+	7EKfkQm60iQGaeCmsTuCB19kJw3FEXVMOgyCjuzHvUdlTSx0Q3oFM2ih8L1dn5q/TiIgYA==
+X-Google-Smtp-Source: AGHT+IFb3l1kghpSN4ZINeIBahBXDBeeTyzt/dryW+DWckhRTNtnV2D19C5lIAPGWZBXUKCorl74PlE=
+X-Received: from wmrn8.prod.google.com ([2002:a05:600c:5008:b0:451:d280:847])
+ (user=bqe job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:a319:b0:43c:f509:2bbf
+ with SMTP id 5b1f17b1804b1-450ce897c9dmr118880545e9.15.1748871425000; Mon, 02
+ Jun 2025 06:37:05 -0700 (PDT)
+Date: Mon,  2 Jun 2025 13:36:45 +0000
 In-Reply-To: <20250602133653.1606388-1-bqe@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250602133653.1606388-1-bqe@google.com>
 X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
-Message-ID: <20250602133653.1606388-3-bqe@google.com>
-Subject: [PATCH v10 2/5] rust: add bindings for bitops.h
+Message-ID: <20250602133653.1606388-5-bqe@google.com>
+Subject: [PATCH v10 4/5] rust: add find_bit_benchmark_rust module.
 From: Burak Emir <bqe@google.com>
 To: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>
 Cc: Burak Emir <bqe@google.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
@@ -74,78 +74,278 @@ Cc: Burak Emir <bqe@google.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
 	linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Makes atomic set_bit and clear_bit inline functions as well as the
-non-atomic variants __set_bit and __clear_bit available to Rust.
-Adds a new MAINTAINERS section BITOPS API BINDINGS [RUST].
+Microbenchmark protected by a config FIND_BIT_BENCHMARK_RUST,
+following `find_bit_benchmark.c` but testing the Rust Bitmap API.
+
+We add a fill_random() method protected by the config in order to
+maintain the abstraction.
+
+The sample output from the benchmark, both C and Rust version:
+
+find_bit_benchmark.c output:
+```
+Start testing find_bit() with random-filled bitmap
+[  438.101937] find_next_bit:                  860188 ns, 163419 iterations
+[  438.109471] find_next_zero_bit:             912342 ns, 164262 iterations
+[  438.116820] find_last_bit:                  726003 ns, 163419 iterations
+[  438.130509] find_nth_bit:                  7056993 ns,  16269 iterations
+[  438.139099] find_first_bit:                1963272 ns,  16270 iterations
+[  438.173043] find_first_and_bit:           27314224 ns,  32654 iterations
+[  438.180065] find_next_and_bit:              398752 ns,  73705 iterations
+[  438.186689]
+               Start testing find_bit() with sparse bitmap
+[  438.193375] find_next_bit:                    9675 ns,    656 iterations
+[  438.201765] find_next_zero_bit:            1766136 ns, 327025 iterations
+[  438.208429] find_last_bit:                    9017 ns,    656 iterations
+[  438.217816] find_nth_bit:                  2749742 ns,    655 iterations
+[  438.225168] find_first_bit:                 721799 ns,    656 iterations
+[  438.231797] find_first_and_bit:               2819 ns,      1 iterations
+[  438.238441] find_next_and_bit:                3159 ns,      1 iterations
+```
+
+find_bit_benchmark_rust.rs output:
+```
+[  451.182459] find_bit_benchmark_rust_module:
+[  451.186688] Start testing find_bit() Rust with random-filled bitmap
+[  451.194450] next_bit:                       777950 ns, 163644 iterations
+[  451.201997] next_zero_bit:                  918889 ns, 164036 iterations
+[  451.208642] Start testing find_bit() Rust with sparse bitmap
+[  451.214300] next_bit:                         9181 ns,    654 iterations
+[  451.222806] next_zero_bit:                 1855504 ns, 327026 iterations
+```
+
+Here are the results from 32 samples, with 95% confidence interval.
+The microbenchmark was built with RUST_BITMAP_HARDENED=n and run on a
+machine that did not execute other processes.
+
+Random-filled bitmap:
++-----------+-------+-----------+--------------+-----------+-----------+
+| Benchmark | Lang  | Mean (ms) | Std Dev (ms) | 95% CI Lo | 95% CI Hi |
++-----------+-------+-----------+--------------+-----------+-----------+
+| find_bit/ | C     |    825.07 |        53.89 |    806.40 |    843.74 |
+| next_bit  | Rust  |    870.91 |        46.29 |    854.88 |    886.95 |
++-----------+-------+-----------+--------------+-----------+-----------+
+| find_zero/| C     |    933.56 |        56.34 |    914.04 |    953.08 |
+| next_zero | Rust  |    945.85 |        60.44 |    924.91 |    966.79 |
++-----------+-------+-----------+--------------+-----------+-----------+
+
+Rust appears 5.5% slower for next_bit, 1.3% slower for next_zero.
+
+Sparse bitmap:
++-----------+-------+-----------+--------------+-----------+-----------+
+| Benchmark | Lang  | Mean (ms) | Std Dev (ms) | 95% CI Lo | 95% CI Hi |
++-----------+-------+-----------+--------------+-----------+-----------+
+| find_bit/ | C     |     13.17 |         6.21 |     11.01 |     15.32 |
+| next_bit  | Rust  |     14.30 |         8.27 |     11.43 |     17.17 |
++-----------+-------+-----------+--------------+-----------+-----------+
+| find_zero/| C     |   1859.31 |        82.30 |   1830.80 |   1887.83 |
+| next_zero | Rust  |   1908.09 |       139.82 |   1859.65 |   1956.54 |
++-----------+-------+-----------+--------------+-----------+-----------+
+
+Rust appears 8.5% slower for next_bit, 2.6% slower for next_zero.
+
+In summary, taking the arithmetic mean of all slow-downs, we can say
+the Rust API has a 4.5% slowdown.
 
 Suggested-by: Alice Ryhl <aliceryhl@google.com>
 Suggested-by: Yury Norov <yury.norov@gmail.com>
 Signed-off-by: Burak Emir <bqe@google.com>
-Acked-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
 ---
- MAINTAINERS            |  5 +++++
- rust/helpers/bitops.c  | 23 +++++++++++++++++++++++
- rust/helpers/helpers.c |  1 +
- 3 files changed, 29 insertions(+)
- create mode 100644 rust/helpers/bitops.c
+ MAINTAINERS                     |  1 +
+ lib/Kconfig.debug               | 13 +++++
+ lib/Makefile                    |  1 +
+ lib/find_bit_benchmark_rust.rs  | 95 +++++++++++++++++++++++++++++++++
+ rust/bindings/bindings_helper.h |  1 +
+ rust/kernel/bitmap.rs           | 14 +++++
+ 6 files changed, 125 insertions(+)
+ create mode 100644 lib/find_bit_benchmark_rust.rs
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 86cae0ca5287..04d6727e944c 100644
+index 565eaa015d9e..943d85ed1876 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -4141,6 +4141,11 @@ F:	include/linux/bitops.h
- F:	lib/test_bitops.c
- F:	tools/*/bitops*
- 
-+BITOPS API BINDINGS [RUST]
-+M:	Yury Norov <yury.norov@gmail.com>
-+S:	Maintained
-+F:	rust/helpers/bitops.c
-+
- BLINKM RGB LED DRIVER
- M:	Jan-Simon Moeller <jansimon.moeller@gmx.de>
+@@ -4132,6 +4132,7 @@ M:	Alice Ryhl <aliceryhl@google.com>
+ M:	Burak Emir <bqe@google.com>
+ R:	Yury Norov <yury.norov@gmail.com>
  S:	Maintained
-diff --git a/rust/helpers/bitops.c b/rust/helpers/bitops.c
-new file mode 100644
-index 000000000000..5d0861d29d3f
---- /dev/null
-+++ b/rust/helpers/bitops.c
-@@ -0,0 +1,23 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/bitops.h>
-+
-+void rust_helper___set_bit(unsigned long nr, unsigned long *addr)
-+{
-+	__set_bit(nr, addr);
-+}
-+
-+void rust_helper___clear_bit(unsigned long nr, unsigned long *addr)
-+{
-+	__clear_bit(nr, addr);
-+}
-+
-+void rust_helper_set_bit(unsigned long nr, volatile unsigned long *addr)
-+{
-+	set_bit(nr, addr);
-+}
-+
-+void rust_helper_clear_bit(unsigned long nr, volatile unsigned long *addr)
-+{
-+	clear_bit(nr, addr);
-+}
-diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-index 92721d165e35..4de8ac390241 100644
---- a/rust/helpers/helpers.c
-+++ b/rust/helpers/helpers.c
-@@ -8,6 +8,7 @@
-  */
++F:	lib/find_bit_benchmark_rust.rs
+ F:	rust/kernel/bitmap.rs
  
- #include "bitmap.c"
-+#include "bitops.c"
- #include "blk.c"
- #include "bug.c"
- #include "build_assert.c"
+ BITOPS API
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index f9051ab610d5..d8ed53f35495 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -2605,6 +2605,19 @@ config FIND_BIT_BENCHMARK
+ 
+ 	  If unsure, say N.
+ 
++config FIND_BIT_BENCHMARK_RUST
++	tristate "Test find_bit functions in Rust"
++	depends on RUST
++	help
++	  This builds the "find_bit_benchmark_rust" module. It is a micro
++          benchmark that measures the performance of Rust functions that
++          correspond to the find_*_bit() operations in C. It follows the
++          FIND_BIT_BENCHMARK closely but will in general not yield same
++          numbers due to extra bounds checks and overhead of foreign
++          function calls.
++
++	  If unsure, say N.
++
+ config TEST_FIRMWARE
+ 	tristate "Test firmware loading via userspace interface"
+ 	depends on FW_LOADER
+diff --git a/lib/Makefile b/lib/Makefile
+index f07b24ce1b3f..99e49a8f5bf8 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -62,6 +62,7 @@ obj-y += hexdump.o
+ obj-$(CONFIG_TEST_HEXDUMP) += test_hexdump.o
+ obj-y += kstrtox.o
+ obj-$(CONFIG_FIND_BIT_BENCHMARK) += find_bit_benchmark.o
++obj-$(CONFIG_FIND_BIT_BENCHMARK_RUST) += find_bit_benchmark_rust.o
+ obj-$(CONFIG_TEST_BPF) += test_bpf.o
+ test_dhry-objs := dhry_1.o dhry_2.o dhry_run.o
+ obj-$(CONFIG_TEST_DHRY) += test_dhry.o
+diff --git a/lib/find_bit_benchmark_rust.rs b/lib/find_bit_benchmark_rust.rs
+new file mode 100644
+index 000000000000..468a2087f68c
+--- /dev/null
++++ b/lib/find_bit_benchmark_rust.rs
+@@ -0,0 +1,95 @@
++// SPDX-License-Identifier: GPL-2.0
++//! Benchmark for find_bit-like methods in Bitmap Rust API.
++
++use kernel::alloc::flags::GFP_KERNEL;
++use kernel::bindings;
++use kernel::bitmap::Bitmap;
++use kernel::error::{code, Result};
++use kernel::prelude::module;
++use kernel::time::Ktime;
++use kernel::ThisModule;
++use kernel::{pr_cont, pr_err};
++
++const BITMAP_LEN: usize = 4096 * 8 * 10;
++// Reciprocal of the fraction of bits that are set in sparse bitmap.
++const SPARSENESS: usize = 500;
++
++/// Test module that benchmarks performance of traversing bitmaps.
++struct FindBitBenchmarkModule();
++
++fn test_next_bit(bitmap: &Bitmap) {
++    let mut time = Ktime::ktime_get();
++    let mut cnt = 0;
++    let mut i = 0;
++
++    while let Some(index) = bitmap.next_bit(i) {
++        cnt += 1;
++        i = index + 1;
++    }
++
++    time = Ktime::ktime_get() - time;
++    pr_cont!(
++        "next_bit:           {:18} ns, {:6} iterations\n",
++        time.to_ns(),
++        cnt
++    );
++}
++
++fn test_next_zero_bit(bitmap: &Bitmap) {
++    let mut time = Ktime::ktime_get();
++    let mut cnt = 0;
++    let mut i = 0;
++
++    while let Some(index) = bitmap.next_zero_bit(i) {
++        cnt += 1;
++        i = index + 1;
++    }
++
++    time = Ktime::ktime_get() - time;
++    pr_cont!(
++        "next_zero_bit:      {:18} ns, {:6} iterations\n",
++        time.to_ns(),
++        cnt
++    );
++}
++
++fn find_bit_test() {
++    pr_err!("\n");
++    pr_cont!("Start testing find_bit() Rust with random-filled bitmap\n");
++
++    let mut bitmap = Bitmap::new(BITMAP_LEN, GFP_KERNEL).expect("alloc bitmap failed");
++    bitmap.fill_random();
++
++    test_next_bit(&bitmap);
++    test_next_zero_bit(&bitmap);
++
++    pr_cont!("Start testing find_bit() Rust with sparse bitmap\n");
++
++    let mut bitmap = Bitmap::new(BITMAP_LEN, GFP_KERNEL).expect("alloc sparse bitmap failed");
++    let nbits = BITMAP_LEN / SPARSENESS;
++    for _i in 0..nbits {
++        // SAFETY: BITMAP_LEN fits in 32 bits.
++        let bit: usize =
++            unsafe { bindings::__get_random_u32_below(BITMAP_LEN.try_into().unwrap()) as _ };
++        bitmap.set_bit(bit);
++    }
++
++    test_next_bit(&bitmap);
++    test_next_zero_bit(&bitmap);
++}
++
++impl kernel::Module for FindBitBenchmarkModule {
++    fn init(_module: &'static ThisModule) -> Result<Self> {
++        find_bit_test();
++        // Return error so test module can be inserted again without rmmod.
++        Err(code::EINVAL)
++    }
++}
++
++module! {
++    type: FindBitBenchmarkModule,
++    name: "find_bit_benchmark_rust_module",
++    authors: ["Burak Emir <bqe@google.com>"],
++    description: "Module with benchmark for bitmap Rust API",
++    license: "GPL v2",
++}
+diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
+index b6bf3b039c1b..f6ca7f1dd08b 100644
+--- a/rust/bindings/bindings_helper.h
++++ b/rust/bindings/bindings_helper.h
+@@ -31,6 +31,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/poll.h>
+ #include <linux/property.h>
++#include <linux/random.h>
+ #include <linux/refcount.h>
+ #include <linux/sched.h>
+ #include <linux/security.h>
+diff --git a/rust/kernel/bitmap.rs b/rust/kernel/bitmap.rs
+index 28c11e400d1e..9fefb2473099 100644
+--- a/rust/kernel/bitmap.rs
++++ b/rust/kernel/bitmap.rs
+@@ -252,6 +252,20 @@ pub fn new(nbits: usize, flags: Flags) -> Result<Self, AllocError> {
+     pub fn len(&self) -> usize {
+         self.nbits
+     }
++
++    /// Fills this `Bitmap` with random bits.
++    #[cfg(CONFIG_FIND_BIT_BENCHMARK_RUST)]
++    pub fn fill_random(&mut self) {
++        // SAFETY: `self.as_mut_ptr` points to either an array of the
++        // appropriate length or one usize.
++        unsafe {
++            bindings::get_random_bytes(
++                self.as_mut_ptr() as *mut ffi::c_void,
++                usize::div_ceil(self.nbits, bindings::BITS_PER_LONG as usize)
++                    * bindings::BITS_PER_LONG as usize,
++            );
++        }
++    }
+ }
+ 
+ impl CBitmap {
 -- 
 2.49.0.1204.g71687c7c1d-goog
 
