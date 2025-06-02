@@ -1,126 +1,94 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CAA920E026
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 15:50:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 806DD1CBA18;
+	Mon,  2 Jun 2025 15:50:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748879402; cv=none; b=uHn+1Y//gxhAXdGDywi0Y9hDGh+YQB4fj8yKrS6w4d3EXbHY95C61Lx5aXJm9hIxqn23bwhuBNWAAd9Tr7pmg/Y64lksiR06oqqhUZwJFtfodkM//Yn0zzH2w43MnJG1Th5DuG5Exm4wo4hH3sAuEBWl0C5/RwXnSYRKFBXLUWw=
+	t=1748879440; cv=none; b=Qfaq3/UuJMgulouG2AvUEKcgcywLyKfmA4ZkqAgbMPwTHSQ9B0LYfCb8K2Wm+D5L3vjvkecvcdf6ZNLGuBT2Tvct6MAk7zZYZR/oqTnrfsygJuqDSRmNw8XIC5TGDNa61mRW3l/RJYr1TyOigJ8rPvacNG1DfidteImelnZjT6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748879402; c=relaxed/simple;
-	bh=/VHivltKqxqSaf5juV87j5L52YWHMf1OKo/22wkVjiE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZT2CoRbd5nUU+PsEN5sx4Y3GwSnzrMZ/rY9VFPbtAJBNVLZgmHAtsbDK52MiPPh+rosRljNipSFXfCjLl39O2Xd3QCZzoOe1DoKvf2AlWOT50r269GjSYk0UcWCeF3hPmlmqLYWVdYPoT9ibFPb0bK9ZoMY1WgswBVjj1Ue78/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=azi7hOe2; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1748879440; c=relaxed/simple;
+	bh=dpNIIRfB6X+tuqJ+fGKlkwqZb7Bt5khpJO2+aEzdglw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=FI+q2Om6jJrjAE4BNkJY+hQy+hqvUhpqT1/9XFzdLKqwtL401yKQsQ1zrwf+mqQtfAj0mSXXnOOoccd4KVB236Yr1uSEJcT4JrCEoHsWXTP7H59mzqezJfZYxxPSGhqMkIA/0hL1sz+sqNynkgaeb17YKsM30oKqhlSt0sGyDpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QGQJuCs1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="azi7hOe2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=0oV50ImWJ0MX64pfE8X9DZy1qeBv7O5McR9r1DBIgc8=; b=azi7hOe2K9SsyGmBTl03L0JaYE
-	hvOLgaAZuyfqS9pO6C6VDLcJC2HrpZn57hij+oXZktcO7/OMB8/mrIV/tvLziq9AEqrMGkzWQlUW3
-	W92+bHa/HGaoLudcS7MxYjRnoip3zzMI8/bBi/1XtZRpV24ml5ZjSJuRsY1tF9/niFUujyBQWiG4o
-	orFapv2JfLRB+rH2QbbmFOm2Vq5Jb70fspYRZBBReHYj1qirYYYQE3c3woKn+r/40fVxpFfmgepJX
-	K/gCTn+aWB9kPqoZ1cJlGQQ9TzqtiSbKp/NBMqeSfPND68mkQpOAvLEvdNCcHMCZzl/5UrOjA8XYj
-	9RNfy+9g==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uM7Q1-000000014LX-2kup;
-	Mon, 02 Jun 2025 15:49:45 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 4823E300F1D; Mon,  2 Jun 2025 17:49:43 +0200 (CEST)
-Date: Mon, 2 Jun 2025 17:49:43 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Linus Torvalds <torvalds@linuxfoundation.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, kees@kernel.org,
-	acarmina@redhat.com, jpoimboe@kernel.org, mark.rutland@arm.com
-Subject: Re: [RFC 6/8] x86_64/bug: Implement __WARN_printf()
-Message-ID: <20250602154943.GB30486@noisy.programming.kicks-ass.net>
-References: <20250602144201.301974933@infradead.org>
- <20250602144755.928750774@infradead.org>
- <CAHk-=whkD=pveK6X_5gtVbJ62+86oBOr9JokneYpSJyxjHFBpQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QGQJuCs1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DA1AC4CEEB;
+	Mon,  2 Jun 2025 15:50:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748879440;
+	bh=dpNIIRfB6X+tuqJ+fGKlkwqZb7Bt5khpJO2+aEzdglw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=QGQJuCs16VY0EdzuFVkt4FySTiy1Bj2lJX4It/9FIWELldK6cXbRkjOr1+EMvA/2z
+	 nNlzb9EKc2z7i05vME31Tm/pB2TXFY1YPFjpEITva7Us/4SaPBW1sI2o3rJH+LRfQK
+	 e9gPbkXTednpzOnnmZKNXSnGzpg3+fNKFa7TyMMztJy6FQWCDfcdGjQz2XBimS3nvN
+	 yXApjkN/Fu+VbMb3OsznieAeAwrlRKiFbZUKatNviKZDjxUsxvBeX3wh3GN/882exw
+	 QH1Y2A2CPhKUWOS0GZs5pWtXF4BOIRrqiRIRBDAOBzuSsG1VTXekl0JMM99CorHYeg
+	 6A93uOcXdIbYQ==
+From: Mark Brown <broonie@kernel.org>
+To: Peter Ujfalusi <peter.ujfalusi@gmail.com>, 
+ Jarkko Nikula <jarkko.nikula@bitmer.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Yuuki NAGAO <wf.yn386@gmail.com>
+Cc: linux-sound@vger.kernel.org, linux-omap@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250531141341.81164-1-wf.yn386@gmail.com>
+References: <20250531141341.81164-1-wf.yn386@gmail.com>
+Subject: Re: [PATCH] ASoC: ti: omap-hdmi: Re-add dai_link->platform to fix
+ card init
+Message-Id: <174887943805.88031.11177528647496649258.b4-ty@kernel.org>
+Date: Mon, 02 Jun 2025 16:50:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whkD=pveK6X_5gtVbJ62+86oBOr9JokneYpSJyxjHFBpQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-On Mon, Jun 02, 2025 at 08:02:24AM -0700, Linus Torvalds wrote:
-> On Mon, 2 Jun 2025 at 07:52, Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > Use the normal COUNT_ARGS() trick to split the variadic WARN() macro
-> > into per nr_args sub-marcos, except use a custom mapping such that 4
-> > and above map to another variadic that does the current thing as
-> > fallback.
+On Sat, 31 May 2025 23:13:41 +0900, Yuuki NAGAO wrote:
+> The removed dai_link->platform component cause a fail which
+> is exposed at runtime. (ex: when a sound tool is used)
+> This patch re-adds the dai_link->platform component to have
+> a full card registered.
 > 
-> Does this horror work with clang? Because I suspect not. The games you
-> play with inline asm are too disgusting for words.
-
-Yes, it absolutely builds with clang. The inline asm isn't something we
-don't already do elsewhere :-) *cough* extable *cough*
-
-> But honestly, even if it does,I really hate this kind of insane
-> complexity for dubious reasons.
+> Before this patch:
+> $ aplay -l
+> **** List of PLAYBACK Hardware Devices ****
+> card 1: HDMI [HDMI], device 0: HDMI snd-soc-dummy-dai-0 []
+>   Subdevices: 1/1
+>   Subdevice #0: subdevice #0
 > 
-> If you have a warning that is *so* critical for performance that you
-> can't deal with the register movement that comes from the compiler
-> doing this for you, just remove the warning.
-> 
-> Don't make our build system do something this disgusting.
+> [...]
 
-It isn't just the register movement. What we currently have for WARN()
-is:
+Applied to
 
-WARN(cond, fmt, arg...)
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-	if (unlikely(cond)) {
-		__warn_printf(fmt, arg);
-		ud2
-	}
+Thanks!
 
-Where the UD2 bug_entry will have NO_CUT_HERE, because __warn_printf()
-will have started the printing.
+[1/1] ASoC: ti: omap-hdmi: Re-add dai_link->platform to fix card init
+      commit: bae071aa7bcd034054cec91666c80f812adeccd9
 
-Part of the problem is with unlikely() not causing the text to break out
-into .text.unlikely, but at best it moves it to the end of whatever
-function we're in.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-This also means that if you do WARN_ONCE() the whole ONCE machinery is
-also dumped into that function.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-And now someone wants to go add some KUnit specific testing to this as
-well, which is also dumped into the function.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-This is all cruft that shouldn't be in the normal .text.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
+Thanks,
+Mark
 
-The horrors I did will change things into:
-
-	if (unlikely(cond))
-		ud1 regs
-
-where the bug_entry will then have the fmt, and the ud1 instruction some
-regs (provided 3 or less args). Then all the ONCE and KUnit crap can
-live in the exception handler. Not littered around the real code.
-
-
-Now, I can still relate to: "this is too horrible for words". But then I
-would strongly suggest people go poke at the compilers so we can get:
-
-	if (really_unlikely(cond)) {
-		whatever;
-	}
-
-such that the compiler is forced to split whatever into a cold
-sub-function placed in .text.unlikely. Then it doesn't really matter how
-much crap we stick in there, it will not affect the normal code paths /
-I$.
-
-Anyway, I had fun hacking this up :-)
