@@ -1,181 +1,135 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5675E42A8F;
-	Mon,  2 Jun 2025 16:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7594118FDD5
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 16:49:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748882952; cv=none; b=r8cJtP8gPVV+MyHQ86+eIRfFDTY7kGq1QpiTCCq9riBZWSTT8/dNdVpth+XH8uit+c2Kf97hDwFtvTjjHGOjBmlMWRhV5rXaWZuIJFS1rFSt5JSAiyJJqsnmR1dYGjC9jXoCSa9TLI4tq+sJ1K8ljKr2QhNTUkDwu7xSLNjE14A=
+	t=1748882991; cv=none; b=nW89M5lcKZR/9kQJh1Q/XjjXD+a2uabOlrK6CHacwI6+5OGpnZ9htKf5icxfM25fEfGIHaSk8onOzweIwgyLajjTN7F7Am2OpqUWtLbeykfd8hdyHg6gpfiOE4z0UD6/35VzGPB05zuwv9Q4Sn9dUk78J8GmNrgyXB2/UtkDJko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748882952; c=relaxed/simple;
-	bh=c0gEGMhBwwH3EsG3J6mtSe3TBHd4NML2arG+mH1i/Eo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PA6eyPaFH5MtbaLlR9HsVBzXkLBTKqlFcf56zinjumjFcm36fw+zR9HHUdY46LD1H+8CgbUrqJMhurWiyZwKuaA7x3c78u+xVVre1B5GSpVLIjMf6F4/+J/zpWr3xHQ+nGVgO42WmgA8KwJ7RdTee+bnJJivFlqPpJaMR+wNPOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bJobAp6v; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748882991; c=relaxed/simple;
+	bh=t41YNlrYxkEJSSxgqLb/rQ0ZuTZlBz9xtzIyTCEdCPo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uxscAzqqEkjOO2xmG3k6H2wOR+x1kT67BykxABkWSWulpVTMB8yEqCnb/enr2LHFqSA21WDon1NX/UO/UlUXzDbN+16iQigY7rdTSEc8kWKKl7JrAeB7qmKLIPe7NbLGo4Jn2vv8hCI/LRZ22e061MRMpEBhP0gMzhuLAN0JEls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Ox5muyNT; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bJobAp6v"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2351ffb669cso35979545ad.2;
-        Mon, 02 Jun 2025 09:49:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Ox5muyNT"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-234e48b736aso55760905ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 09:49:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748882950; x=1749487750; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=HknikpJA2FcmTw342+lb8lkp3yYgT8HLedmbOD4V3nk=;
-        b=bJobAp6vNH5FAdKqBoxSz7GPfuXVWjfwFxaHxX9BPGvBu7VynGFBVwe/p4udxdIv2G
-         TNr6n+pw7fwq4Cb4PVM3ZgHO2MAd/CyoWiZx97uQ5WBKQVEH/5Q6v7TPLcCkpSVIU5Ps
-         u7ic/vLH0SkVBjhxYeMV1x2iodVwaptI/VQLwjq7al+ksfPCNDAB4R/O/Z765YRd07Xu
-         Lu9AEIluO8bnmyoqTX22q5C2ke4vAMQplS2ZAk3bgr+AsAkKnD1w8zQO90XgJKhYhyrP
-         ezna5AJh2d5W0UOxt1W09tbsgQDslrZObLddanlP3GZg0o+EnPEAhhs2+E9njoodnT41
-         dP1g==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1748882988; x=1749487788; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SJtLmJ1+ZA9gGTeiAdVPiVyS3gmJ2S4O+OKpjfVOgGU=;
+        b=Ox5muyNTSBUZz7ZyVEZbqvyMt6EjkDAFHsNw+SUePwpntaX8QrA3Tn/Yc9Zdy+SAfH
+         8ZenGAxtQzvNh8vGdaWGocJGcJzT4c1tKygSA6kIaK9n9TCnZRvlErVRZqG1zH4+XQXt
+         PHiaNvCgLrVT15GvWd6nrR7GI0g9XFqO0yH2/cztoFXaYyuYHAymHKIjKGlYpz/7gB8d
+         UI9sdVC21e0SRXOp706LbH3HKEky1mAEcDCDdfR9kxhUQJ7ww8tuOKGAuEFE48C52Qwv
+         8QHZepuohPFBiV9hDGlE5vxT3/ij6CuRdy+g5zpgGg+Wv2f4ZrZ3OBS7UIAz8Y1F0+w6
+         sohA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748882950; x=1749487750;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1748882988; x=1749487788;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HknikpJA2FcmTw342+lb8lkp3yYgT8HLedmbOD4V3nk=;
-        b=E/uvrNNUZdTvi0nfQoDa0MHDmLCq0nhdaSNg4prYcATBAs0YFdKs19UwtLpQLkNQuf
-         aMlEPEImLwHenNEkj9LumDevhi85d3d66+s0EvxTIf4UA4F9zkS+/EtYaggILDUX9J72
-         NZBYEUuuJwkg6gCJiIhfNB9UyL0cUN02XBIcEga1R9HYLOhlWlZCwheVQ51/VcSDpymf
-         EM7yAErV3bQYdEr5aoYXQIGCgC+lj2JdIJzA9UloFTP0ePk9dxoXq76/brLIzhn/spk5
-         ghmcOuyIE+SH5EQjZeLM8dnTb1S+RxBZRMHf/jDMNyM+qMwWFW4khuQsyGCLy082vnJQ
-         1l4w==
-X-Forwarded-Encrypted: i=1; AJvYcCVFukudEwoFtMUv2oC+Z4og6GhvjbMjfvd4DqK0lowJnEpkPkX5kuin0PytNLHFbwUenxf5jhVm@vger.kernel.org, AJvYcCVQ07jkVUAqgvj90cagerQetFY8qFVVBZN79IfT0utZ9O/7HL/5Du1rwCYWVCYGvvTbSIxF47CCU8AVd/w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMGlMYvcT5GquA/XHNqdx1VgIDezJ+0vxfREtMQwIT1woGw2ls
-	WJZKJKRPKbYnmfw+loNY7wX9UFppk3AUmDy5UoF4UNUHBPg/ByJFwswo
-X-Gm-Gg: ASbGncusRmrvuikoPpIkg8NPFioZccteaCbiMbLY8DP5AtuUsCO0GcRFWbPev+D49l5
-	gAfwkelvtKiQhn/f8xIdaI27f9Q3D68Jq33wTf34aHBwkyoLHrRYhOg628SC43eKe6o5Tr1JjoU
-	Xjpg+wH4OcBDGmeQ6Am5+d+HgThWwAUrZ0FzGc9QxdW+lVSJE8Wh+BMBTEYJqlrjm4RGg4BfJQ0
-	qis6JVVbNVPSGZl0ZreKDcp0EGkBsWz9Vd8CH5kCVBlU7koeFVI4VpXAGM9Fqv/Zi2XPmrnqOv/
-	mROPvQ0HGe72jud4ejGb6rTzPZvS1rN5gOebi4EMAB2rxJpVjnF4p5qv+kfcRbs03sVylvcRg8g
-	QBKI=
-X-Google-Smtp-Source: AGHT+IHI1CdVRfDD9bf+nXVVrQOXSVtm+Yt+Yys2GsvFnPNTkgMLFR5+P/Cn+V3/3WtyF1CZOw0dEg==
-X-Received: by 2002:a17:902:dac5:b0:234:a139:11e7 with SMTP id d9443c01a7336-2355f76c20amr137080885ad.35.1748882950526;
-        Mon, 02 Jun 2025 09:49:10 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2eceb96fe8sm5767803a12.59.2025.06.02.09.49.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Jun 2025 09:49:09 -0700 (PDT)
-Message-ID: <4c608184-5a64-4814-a70a-d2395662d437@gmail.com>
-Date: Mon, 2 Jun 2025 09:49:08 -0700
+        bh=SJtLmJ1+ZA9gGTeiAdVPiVyS3gmJ2S4O+OKpjfVOgGU=;
+        b=f5ajcrgNyw7EfC4rwbd7NCD2LBEkvtrCrdC189f+Kd5eGhURYfl0LdwK26jVOK7kSa
+         2yhEEgxXt8+9rnne2Fu+arw0f3psC+k0cCkYQlQrTzl2aC5pzWB3h/oBdWQXhpLFuZvb
+         hhovBhnYwLSJ3FsHB525j/+fxD/df5UUfzU/Fr63koVl+4mt5/5tFqKHfPU4+yYivoA3
+         uEC57G4T9vat7F/9uJ4vYF8NpeZ5Hzkq8/Syrxt9iogha8kYd0Ua0o/7e4c6GGI5F4Dd
+         M5MF7zh+mARqUhsDNcwOdNCxMnaJCqVyCn/B468AZfI4d0seJlzEvKaAesc4+8YXnor1
+         x0mQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVzDSlZgXu3jWHaoJeeHSjW0w5CcMtzivPuYIBRH0TqlpU94vuYv4zRuEJjk7yWwFEsTAE6+WJUFol2mhg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDsZHfM+h76W3l8UObzSxQPv/4Wxjzg5X1fv/kUxOl9uVD4y46
+	MFjzdxiyfSbw5gYlDA967ktQUcdyGdpAhCwrRYfTcrejB696W4vn0jSWXqYqN6I+4S0=
+X-Gm-Gg: ASbGncuoFoBIixTTSXmVQ7HZZqWvt26JEEyQMBAEwgNg9xjFo067UudzpHq2zPPoMD4
+	S5a2Hj6OKFRwjRpD/ONtqVgL197bDBbOgGibcjHnFeffuSjjUzLBrFhGCJXGzos/zE0SPDs1ebd
+	XiR6Kz8HyId9tj3dCkGu5JlySohGFoN1mlVlLB6EbYPB4tXdkqNmvBedlxV34E1a4FMOT32mCrN
+	KMxAMYbI/zzw9qvOTpB06U1VcMacf3xQQsgA3ff7SVKe65/DCco34phpcosefACIpXkYImb37bV
+	zc9BqL2mjbSQoWz3uLsVtLWNdQwdapfNKJeR4hVPonF/qHG3zotpHD/0lFkmBVM7Hj39Czfa
+X-Google-Smtp-Source: AGHT+IHf3hxMDA11sY8CrqFCsHaPToaLCZdH89rX8lG5jyAges8FHHXEJxrLZzMcA5pRD8YHrbMtkg==
+X-Received: by 2002:a17:902:ce84:b0:234:a992:96d8 with SMTP id d9443c01a7336-23528ef7a17mr232511875ad.19.1748882988548;
+        Mon, 02 Jun 2025 09:49:48 -0700 (PDT)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cd75c7sm73327845ad.113.2025.06.02.09.49.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Jun 2025 09:49:48 -0700 (PDT)
+Date: Mon, 2 Jun 2025 09:49:46 -0700
+From: Deepak Gupta <debug@rivosinc.com>
+To: Zong Li <zong.li@sifive.com>
+Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: traps: handle uprobe event in software-check
+ exception
+Message-ID: <aD3WKnyp_ffk60oF@debug.ba.rivosinc.com>
+References: <20250314092614.27372-1-zong.li@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5.10 000/270] 5.10.238-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250602134307.195171844@linuxfoundation.org>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- WlfRzlpjIPmdjgoicA==
-In-Reply-To: <20250602134307.195171844@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250314092614.27372-1-zong.li@sifive.com>
 
-On 6/2/25 06:44, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.10.238 release.
-> There are 270 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed, 04 Jun 2025 13:42:20 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.238-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+Hi Zong,
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+Thanks for taking the initiative for making cfi work with uprobe.
+And sorry for not noticing the patch earlier.
+Few comments inline.
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
 
-Similar build warning as reported for 5.4, due to the same commit:
+On Fri, Mar 14, 2025 at 05:26:14PM +0800, Zong Li wrote:
+>Handle the uprobe event first before handling the CFI violation in
+>software-check exception handler. Because when the landing pad is
+>activated, if the uprobe point is set at the lpad instruction at
+>the beginning of a function, the system triggers a software-check
+>exception instead of an ebreak exception due to the exception
+>priority, then uprobe can't work successfully.
+>
+>Co-developed-by: Deepak Gupta <debug@rivosinc.com>
+>Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+>Signed-off-by: Zong Li <zong.li@sifive.com>
+>---
+>
+>This patch is based on top of the following series
+>[PATCH v11 00/27] riscv control-flow integrity for usermode
+>
+> arch/riscv/kernel/traps.c | 9 ++++++---
+> 1 file changed, 6 insertions(+), 3 deletions(-)
+>
+>diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+>index 3f7709f4595a..ef5a92111ee1 100644
+>--- a/arch/riscv/kernel/traps.c
+>+++ b/arch/riscv/kernel/traps.c
+>@@ -386,9 +386,12 @@ asmlinkage __visible __trap_section void do_trap_software_check(struct pt_regs *
+> 	if (user_mode(regs)) {
+> 		irqentry_enter_from_user_mode(regs);
+>
+>-		/* not a cfi violation, then merge into flow of unknown trap handler */
+>-		if (!handle_user_cfi_violation(regs))
+>-			do_trap_unknown(regs);
+>+		/* handle uprobe event frist */
+>+		if (!probe_breakpoint_handler(regs)) {
 
-commit b47e6abc7dc5772ecb45383d9956f9fcb7fdf33c
-Author: Jeongjun Park <aha310510@gmail.com>
-Date:   Tue Apr 22 20:30:25 2025 +0900
+If task has uprobe enabled and there is a cfi violation due to mismatch in
+return address on shadow stack and regular stack, then it would be a cfi
+bypass, right?
+Perhaps we should be doing this only when we match that sw check exception
+is due to forward cfi violation?
 
-     tracing: Fix oob write in trace_seq_to_buffer()
+Do you agree?
 
-     commit f5178c41bb43444a6008150fe6094497135d07cb upstream.
-
-In file included from ./include/linux/kernel.h:15,
-                  from ./include/asm-generic/bug.h:20,
-                  from ./arch/arm/include/asm/bug.h:60,
-                  from ./include/linux/bug.h:5,
-                  from ./include/linux/mmdebug.h:5,
-                  from ./include/linux/mm.h:9,
-                  from ./include/linux/ring_buffer.h:5,
-                  from kernel/trace/trace.c:15:
-kernel/trace/trace.c: In function 'tracing_splice_read_pipe':
-./include/linux/minmax.h:20:35: warning: comparison of distinct pointer 
-types lacks a cast
-    20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
-       |                                   ^~
-./include/linux/minmax.h:26:18: note: in expansion of macro '__typecheck'
-    26 |                 (__typecheck(x, y) && __no_side_effects(x, y))
-       |                  ^~~~~~~~~~~
-./include/linux/minmax.h:36:31: note: in expansion of macro '__safe_cmp'
-    36 |         __builtin_choose_expr(__safe_cmp(x, y), \
-       |                               ^~~~~~~~~~
-./include/linux/minmax.h:45:25: note: in expansion of macro '__careful_cmp'
-    45 | #define min(x, y)       __careful_cmp(x, y, <)
-       |                         ^~~~~~~~~~~~~
-kernel/trace/trace.c:6688:43: note: in expansion of macro 'min'
-  6688 | 
-min((size_t)trace_seq_used(&iter->seq),
-       |                                           ^~~
-
--- 
-Florian
+>+			/* not a cfi violation, then merge into flow of unknown trap handler */
+>+			if (!handle_user_cfi_violation(regs))
+>+				do_trap_unknown(regs);
+>+		}
+>
+> 		irqentry_exit_to_user_mode(regs);
+> 	} else {
+>-- 
+>2.17.1
+>
