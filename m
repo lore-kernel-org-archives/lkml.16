@@ -1,182 +1,148 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A983EA98;
-	Mon,  2 Jun 2025 18:39:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748889563; cv=none; b=X9YSFRpLyAsa7xVGwQhXj6k9Khc+0Y1wnNfrmXYnOGrT+GO/uzZk6t2XNFmM0W9ngkzKY9vK/+ju3P9TDUQGoUxi9CVWCdirkftFZrnTFpvyh1xms8AlOoTMzFrkk4/zXqFjwR0eFNXLSHSc3NXJKPBmGYWMZCTSydfnJcGTwJs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748889563; c=relaxed/simple;
-	bh=bGGkzeql+kLBnwAhHz5NwSXdhWSCN087guRy3TwIvTs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PlEvW+XAOGDYMHpax6eNERQq9bUF0hMdMEgCz3E4z4uCR7LO5JTEvtsbp0r1C+AMjyBIuB9JI6H1EQ5Dwp5eWNzRAtvdfplWZin4yWJfdGX5oWZHQrovCsqDENa2K3iT6LaoK2Q+7cwYaCYdm9TptaTx95eijR5g6d6wb8TQlpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B7KQriAP; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C4EF4C85
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 18:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748889648; cv=pass; b=LLjLuJ+tJMqKn93PQ6dzP33PxRRx9P7lePtsvTL8RV/CMXpT8G85ng2uDYZX8LW1uFGZFKgD6selbvOO+o9NKZkxy/GPOfZJ8/dyFCtlT+7/Z6RW/6zLINntVTtbIiGCldSM1BjWlDVDf5pQuu3XJudn2rZbhjdq/IhYJh/5c1Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748889648; c=relaxed/simple;
+	bh=WRYw06pF2kKc0T5qyicxtCuGFcjav7p4nOcOuqqO/qM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kcyV6XTFrvIkD/tjXOGjJSQxqG4nJTUit76CfoTSDw+lUzLXOUDkdOVxTXihnTOpVbu/S6Os1yuLL/jWfZ1alNlkVL+2N7YHQWE/geMs1JlNrCnt6dkQHyjKSoPldiMW+Gb6RMTRItfprL4QFPdbKQLaRb7H64ezdfCTeX3RMlw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fossekall.de; spf=pass smtp.mailfrom=fossekall.de; dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=fibYQmTc; dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=hH9TwSuo; arc=pass smtp.client-ip=85.215.255.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fossekall.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fossekall.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B7KQriAP"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a36efcadb8so4169820f8f.0;
-        Mon, 02 Jun 2025 11:39:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748889559; x=1749494359; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p4EJ/bNdkxlN82qnQqNLj+AZOld+xZ2/fvExor8dpnA=;
-        b=B7KQriAPfJc/bCpO2Y0q5W7M6ABYLfIKKYmLnIPBqGqVqTp4B4gV073J5XRWLxVr5g
-         Ur6GTbO1OOPtW3wDwzn7HTQ8RK82wfXC8AYqZ85bBPtofP+1AFg8tGyK7XxDiIqMzX4x
-         GCYThM0LCtP7AJ0X4BnksMWOFpECeShYba/eN2goEVtbXTWTmDyAfK/kBsOyBkFuQ8OT
-         cTP4Ng+NwLacgAx7z+MKqxOKyTsixIqbrndCnptI65tz5eI+NueNe8YDijWix0HYCZ5y
-         yGeGTZEhstoWJ5orJ/OEW7elP2kX8JBOMpK3NnNhd5FqOFG5gxoY2x/zHltcFxiPVBpg
-         AMQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748889559; x=1749494359;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=p4EJ/bNdkxlN82qnQqNLj+AZOld+xZ2/fvExor8dpnA=;
-        b=rZPmejEBxaGZ/WZh6fvlBHbOMHrPSGUYRcnjB24RdZfAv7XRW2JoFM+KSwIYMFhaNt
-         hloS6FnDd0x7HWohFwmsUoMtaX17GvgNsMy7JH6iIqCw5N4lmV447PHncm+tK/LWO0Gu
-         WnJH1Jhx7GNs006u02KpHXh0YxJAO1bPGkxr+OsXxrgs8SCmVBiviWacEZVVgJC58VR4
-         DQ4/cOIQBV59UOrD+OpLVURVOyx7gi/GIm6n2+jXshZsXiedLHYPRk1z0L0q4PRjIlv+
-         2oKDQ3NUOeR6ldnTzMi9zRS6pnmp0Dx0UXOT68DudYLsLaVTtctN8c4xZsfKQ9ap5e/9
-         DwAw==
-X-Forwarded-Encrypted: i=1; AJvYcCUzN2CkoSTzVybjVNOENNA8N0d9OeWm/S4Fi7oBZ6fKVO6+Qpdt+GP2nGiIjtEkGkwX6G0=@vger.kernel.org, AJvYcCVlUF3kzAsny5M6BUXtMPmGv7ImeDUOmvYJiCSUDJwiT4eO8gsSu/G5d72VCf31AXyeJlRtEnzPJeD2956Mfl/w@vger.kernel.org, AJvYcCXsOmy+S76kcEn9Sfo+I2iX1Z+eGHflwpxejn170EsxPLsNciga/WhMI+NnKZGZUewOciaynxNo3BjXdP3n@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz++2myKrZ4bFNfqj5yXDm/wzUztIqkbp8m81sHvsCBBDyssGgW
-	IBB5vYLxN6QF4lK1cW6jkJ4cwbuIRmV3y1RTH7M/K+VAG4mMUo4rmAtkXvHXQ3PUrLirrIbTtdO
-	nVk552JpnWIO/HD7C8gOqH2TtTiaFguM=
-X-Gm-Gg: ASbGncs2KObI/28uN1ITVsPUcs3vsBkGydjWUxNPE+sGHVkHaJiZZ+WPVFkHCO/tkc6
-	7zTqJkq0qBXdcFl/fC1WjjItZWWF5Qkdg+WySJkWDcY6HN6NUWTwmVs4NJt6GYh9SkEB1MbwgTG
-	xerYarZcuKAWlyIZdJEKFgiBrO7VztqnNpq0D1EfiGfDYmQI9oTnhcWD6WO3lCteTWGedyGg==
-X-Google-Smtp-Source: AGHT+IHUqx+mgL8hi72589JB27VJBUMwBIp9UzNzlH5b5s1OhLB/pURvh6gvJXZGV2bvvKk9RnNCYMD8HuP9sRI3DPU=
-X-Received: by 2002:a05:6000:3112:b0:3a0:7f9c:189a with SMTP id
- ffacd0b85a97d-3a4f799acd4mr11273853f8f.0.1748889559007; Mon, 02 Jun 2025
- 11:39:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="fibYQmTc";
+	dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="hH9TwSuo"
+ARC-Seal: i=1; a=rsa-sha256; t=1748889622; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=rM2P+CaRhGffqVq4tRviWSTbREPg5znvUJSQVLUsjAaLhBZVfrK1+Og6v62NQVqbMo
+    MK4bqVz0mLm9QM0PMWe+pPNmhcq3rLjrzGQF0NOiHu4WV5OEncwpcouezQiF25BvUPk5
+    otcw3k40frk0KYmk22Uih3Y3Do4HfD8GuF9WdHNQ1mdD4AnQCdZd+7DnGxqyjkSIx/L3
+    Ci9NfS3RYL/YnkI2cdXMycGjyEk5Unu9ZdnLl71vIv0KlPIDciJoigXMtzhywlmA/K9J
+    y2zR0FGHsOh6s3V3JGR5e1wazpoFjiEhED8l9BtAsq8jCyntXzoDyruVMdFZmz0pXzno
+    w3nQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1748889622;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=Ll30kUAP5eRCFRJRemYe8NpfsMFwOGHDOe6WSTbd6a8=;
+    b=a441mlLadlD0fbmfWUxWlwmb8TJhBV8Z/qrA8rtp7idRk/vFXhv3t6K3zPRudbPbxl
+    C22AQuuxb2qMQbCV9D7NeKxo+zl8TW6zKsWsIeH+v5DpfYMwC5czFqtbMIcp51hT5G5c
+    DrG3RGOU9qdxubVziqY92J0Pcj9wGB7pFHhUIC1pqvi9uA6EnPN93YBQaotLX+g/CN+o
+    pZIaSTFkFqAsUfJsmPyok01xvQnOnOevPKty2NCf5U88p+aiBuYDDmPv/A8taqk2NhZF
+    YtOg9KSONblrqvqedcft3+xvk2EBKRYXD/kYzxKonyPG75E+CgaqHtsQtstK7yXnqOrB
+    +tkA==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1748889622;
+    s=strato-dkim-0002; d=fossekall.de;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=Ll30kUAP5eRCFRJRemYe8NpfsMFwOGHDOe6WSTbd6a8=;
+    b=fibYQmTcvfRVQE1qje44LVdC3dq0LSSw79RK8eyXF2/fl8WEP4yPYMUx9cjCNLL3IB
+    PbVTy/mmDzs7DZsD2K3hVDYjhCG2B0Qu7mCx3/PMk1QHPe1qoxL4f9wVpLKtajnMvjT+
+    jFVJTDIzUJdasuEuFBVwRJq515dYaVzBazQLUnwgdL65QERnV6cRtRV45lSD7ZO+6HHx
+    TXywYa8El7MSZPnmmnPgdfC7qkHafGCmI1sEsS/XHEJ60R8AGXTFv1XE19UD9axhSYdJ
+    qZoSJGfxFb0fYla48gtvWC0Jzsq+N5D5pTmM4JLsONM3DfKanVd1XCkn/qCumo1lS8GH
+    WPug==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1748889622;
+    s=strato-dkim-0003; d=fossekall.de;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=Ll30kUAP5eRCFRJRemYe8NpfsMFwOGHDOe6WSTbd6a8=;
+    b=hH9TwSuo8Rz5q4Ljw2UR98E8Uvs5v2ifM2IFF5SBIAeU5LjeRsYFkcSpx6ayyMeKvz
+    E++JGWGHkYaawC6N11Aw==
+X-RZG-AUTH: ":O2kGeEG7b/pS1EzgE2y7nF0STYsSLflpbjNKxx7cGrBdao6FTL4AJcMdm+lap4JEHkzok9eyEg=="
+Received: from aerfugl
+    by smtp.strato.de (RZmta 51.3.0 AUTH)
+    with ESMTPSA id f28b35152IeLr39
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Mon, 2 Jun 2025 20:40:21 +0200 (CEST)
+Received: from koltrast.home ([192.168.1.32] helo=a98shuttle.de)
+	by aerfugl with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <michael@fossekall.de>)
+	id 1uMA56-0000lr-23;
+	Mon, 02 Jun 2025 20:40:20 +0200
+Date: Mon, 2 Jun 2025 20:40:19 +0200
+From: Michael Klein <michael@fossekall.de>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Chen-Yu Tsai <wens@csie.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [REGRESSION] [BISECTED] drm/sun4i: hdmi: No HDMI output with
+ BananaPI M1 on 6.9
+Message-ID: <aD3wE_mkfYA2XqA6@a98shuttle.de>
+References: <aCJZmm8rC0RwbcBX@a98shuttle.de>
+ <20250526-refined-dog-of-blizzard-b48f11@houat>
+ <aDTZXagQ28OdNtLh@a98shuttle.de>
+ <20250602-psychedelic-purring-poodle-900a5b@houat>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250531072031.2263491-1-blakejones@google.com>
- <CAADnVQJv_FVciT9LC+W=sVtWAt9oXeAACzmTHzyqY-2svi4ugA@mail.gmail.com> <CAP-5=fWADfh9WNXgUOhXYW5hZWk-FZL1oJTdaDgq8Hqr8_Fd0g@mail.gmail.com>
-In-Reply-To: <CAP-5=fWADfh9WNXgUOhXYW5hZWk-FZL1oJTdaDgq8Hqr8_Fd0g@mail.gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Mon, 2 Jun 2025 11:39:07 -0700
-X-Gm-Features: AX0GCFtiw9IZLAsO114ncb1PisrfRk2ajYyxEUOp4PqScN6vm6DijNlIQ-pyHHA
-Message-ID: <CAADnVQKeJUdvJ7tKhpdatL-A5zDi9DXKFun8fwM2e7Bynd5FDg@mail.gmail.com>
-Subject: Re: [PATCH] libbpf: add support for printing BTF character arrays as strings
-To: Ian Rogers <irogers@google.com>
-Cc: Blake Jones <blakejones@google.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	Ihor Solodrai <ihor.solodrai@linux.dev>, Namhyung Kim <namhyung@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250602-psychedelic-purring-poodle-900a5b@houat>
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 2, 2025 at 8:05=E2=80=AFAM Ian Rogers <irogers@google.com> wrot=
-e:
+On Mon, Jun 02, 2025 at 11:55:44AM +0200, Maxime Ripard wrote:
+>On Mon, May 26, 2025 at 11:13:01PM +0200, Michael wrote:
+>> On Mon, May 26, 2025 at 07:30:35PM +0200, Maxime Ripard wrote:
+>> > On Mon, May 12, 2025 at 10:27:06PM +0200, Michael wrote:
+>> > > with v6.9 and later there is no output on the BananaPI HDMI connector.
+>> > >
+>> > > I have bisected the issue to the following commit:
+>> > >
+>> > >   358e76fd613a ("drm/sun4i: hdmi: Consolidate atomic_check and mode_valid")
+>> > >
+>> > > With this patch, sun4i_hdmi_connector_clock_valid() is occasionally called
+>> > > with clock=0, causing the function to return MODE_NOCLOCK.
+>> > > In the old sun4i_hdmi_mode_valid() before the patch, mode->clock is
+>> > > always!=0, maybe that gives someone a hint.
+>> >
+>> > This doesn't make sense to me, if only because the two callers of
+>> > tmds_char_rate_valid (hdmi_compute_clock and
+>> > drm_hdmi_connector_mode_valid) have, right before calling it, checks to
+>> > make sure the clock rate isn't 0, and would return MODE_ERROR or EINVAL
+>> > in such a case.
+>> >
+>> > https://elixir.bootlin.com/linux/v6.15/source/drivers/gpu/drm/display/drm_hdmi_state_helper.c#L234
+>> > https://elixir.bootlin.com/linux/v6.15/source/drivers/gpu/drm/display/drm_hdmi_state_helper.c#L553
+>>
+>> Before 6.14, sun4i_hdmi_connector_clock_valid() was also called from
+>> sun4i_hdmi_connector_atomic_check()...
+>>
+>> > Do you have some logs (with dri.devel=0xff)? Does it happen with 6.15 as
+>> > well?
+>>
+>> It does not happen with 6.15, as it was fixed in 6.14 with 84e541b1e58e
+>> ("drm/sun4i: use drm_atomic_helper_connector_hdmi_check()").
 >
-> On Sat, May 31, 2025 at 11:20=E2=80=AFAM Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
-> >
-> > On Sat, May 31, 2025 at 12:20=E2=80=AFAM Blake Jones <blakejones@google=
-.com> wrote:
-> > >
-> > > The BTF dumper code currently displays arrays of characters as just t=
-hat -
-> > > arrays, with each character formatted individually. Sometimes this is=
- what
-> > > makes sense, but it's nice to be able to treat that array as a string=
-.
-> > >
-> > > This change adds a special case to the btf_dump functionality to allo=
-w
-> > > arrays of single-byte integer values to be printed as character strin=
-gs.
-> > > Characters for which isprint() returns false are printed as hex-escap=
-ed
-> > > values. This is enabled when the new ".print_strings" is set to 1 in =
-the
-> > > btf_dump_type_data_opts structure.
-> > >
-> > > As an example, here's what it looks like to dump the string "hello" u=
-sing
-> > > a few different field values for btf_dump_type_data_opts (.compact =
-=3D 1):
-> > >
-> > > - .print_strings =3D 0, .skip_names =3D 0:  (char[6])['h','e','l','l'=
-,'o',]
-> > > - .print_strings =3D 0, .skip_names =3D 1:  ['h','e','l','l','o',]
-> > > - .print_strings =3D 1, .skip_names =3D 0:  (char[6])"hello"
-> > > - .print_strings =3D 1, .skip_names =3D 1:  "hello"
-> > >
-> > > Here's the string "h\xff", dumped with .compact =3D 1 and .skip_names=
- =3D 1:
-> > >
-> > > - .print_strings =3D 0:  ['h',-1,]
-> > > - .print_strings =3D 1:  "h\xff"
-> > >
-> > > Signed-off-by: Blake Jones <blakejones@google.com>
-> > > ---
-> > >  tools/lib/bpf/btf.h                           |   3 +-
-> > >  tools/lib/bpf/btf_dump.c                      |  51 ++++++++-
-> > >  .../selftests/bpf/prog_tests/btf_dump.c       | 102 ++++++++++++++++=
-++
-> > >  3 files changed, 154 insertions(+), 2 deletions(-)
-> >
-> > Please split selftests vs main libbpf parts.
-> >
-> > > diff --git a/tools/lib/bpf/btf.h b/tools/lib/bpf/btf.h
-> > > index 4392451d634b..be8e8e26d245 100644
-> > > --- a/tools/lib/bpf/btf.h
-> > > +++ b/tools/lib/bpf/btf.h
-> > > @@ -326,9 +326,10 @@ struct btf_dump_type_data_opts {
-> > >         bool compact;           /* no newlines/indentation */
-> > >         bool skip_names;        /* skip member/type names */
-> > >         bool emit_zeroes;       /* show 0-valued fields */
-> > > +       bool print_strings;     /* print char arrays as strings */
-> > >         size_t :0;
-> > >  };
-> > > -#define btf_dump_type_data_opts__last_field emit_zeroes
-> > > +#define btf_dump_type_data_opts__last_field print_strings
-> > >
-> > >  LIBBPF_API int
-> > >  btf_dump__dump_type_data(struct btf_dump *d, __u32 id,
-> > > diff --git a/tools/lib/bpf/btf_dump.c b/tools/lib/bpf/btf_dump.c
-> > > index 460c3e57fadb..a07dd5accdd8 100644
-> > > --- a/tools/lib/bpf/btf_dump.c
-> > > +++ b/tools/lib/bpf/btf_dump.c
-> > > @@ -75,6 +75,7 @@ struct btf_dump_data {
-> > >         bool is_array_member;
-> > >         bool is_array_terminated;
-> > >         bool is_array_char;
-> > > +       bool print_strings;
-> >
-> > Looks useful, but make sure to add a feature detection
-> > to perf, since it has to work with old and new libbpf.
+>Then we might still need to backport that patch.
 >
-> Just for clarity on this. We'll need a "libbpf-strings" feature like
-> the existing "libbpf" one:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
-git/tree/tools/build/feature/test-libbpf.c?h=3Dperf-tools-next
->
-> Currently these features are only used if perf is built with
-> LIBBPF_DYNAMIC=3D1 as part of the build arguments (ie its not the
-> default):
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
-git/tree/tools/perf/Makefile.config?h=3Dperf-tools-next#n580
->
-> If no suitable libbpf is detected then the build will error out. I
-> guess if feature-libbpf is present but not feature-libbpf-strings then
-> we'll need a perf #define so that the string feature won't cause
-> perf's build to fail.
+>Does applying it to 6.9 alone makes it work, or do you need some additional ones (I'm thinking of
+>ae048fc4f96d in particular, which in turn would require 47368ab437fd)
 
-Yes. Something like this.
-It will also allow libbpf and perf patches to land in parallel.
+No way to apply this to anything 6.9. The closest I can get it into is 
+6.11, which requires both ae048fc4f96d and 47368ab437fd (with one 
+trivial conflict) to make it work. Anthing earlier lacks the entire HDMI 
+connector framework.
+
+-- 
+Michael
