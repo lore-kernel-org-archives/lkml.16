@@ -1,194 +1,231 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2085.outbound.protection.outlook.com [40.107.21.85])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E985258;
-	Mon,  2 Jun 2025 22:09:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.85
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748902173; cv=fail; b=tBSJs0sSnW+CuPfUVRVBC2nxiEDjpuoen3N55NF3pq+uzSiUpiZYizZdbADnmXVPcmInuWAafUIQNV8t9elPrYisYaUwtorl6YaaIujCX39u7Qa/703obXwHZLm3mkX6jRsltq81RfSG0fSu4RyTyPVJ7axBbYeqO0P5mCJPpps=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748902173; c=relaxed/simple;
-	bh=8w4jVgAh7L3FxVWbOS3IWeR0lBEK9Bs4T30Yg7HoJKY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=uI7QoOqvB51gouPo69pdiKZWW/hezxSniOLKVCOAPrlEUJVEPEnY2mOLzaFbjyCf/16t8cmpSU/JSl6sFyTyF745WlfxmmdJ+XuCWYVv49j1t2vOk3hvQvxgJ6pHwJS7rbg2+b8qvXTgARr1BG5bVBsiC2nQNNQ7j2+wCh83eks=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=lUXHxhyT; arc=fail smtp.client-ip=40.107.21.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F92E5258
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 22:10:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748902210; cv=none; b=pi7emQdUNUi5OQuc2GaZ2RgBxAFdE5oEOOLFaqxCtTXLi7gH8omX9TsmMKhcP8exCbgZA+/8d9lODVImO7LPnNXZtKhY5SsLVz8X7RCL54Qg3YzeHeH1lk3joWsfjgVW/eZKfOAkWd4NtW2TohLXSeal8//rHfFCg1PxhxS32dM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748902210; c=relaxed/simple;
+	bh=AljSUlS8f8Lj1MC812AZ6FEBnSpJdtnFPYK/dAA7rL4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=upYo5vBrSiuXDZ+Tn1VSdQObsWCf5uESTbbcU3FrR62xulogqRNBLwHdYkE8l5yQXVEOpdRGvjJjzSAPaAmkswmPM0ISDOxMvQb+1RkiSh3U8BsoKwTh7gdHTjt9FFMvbYKg131mkvaAwnCwv1PD7PPh85697W5E/bJqoOS57QE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=icQVPUmG; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="lUXHxhyT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kKdF3a0mb0w2Mu3HugxC+E8z84srIH7kVQDEMbMV1qsciw805FoQrX0YZm6xoQ535CsFwqKEwolVoJElCKKSkkRqgq2iGSxjcJFbCd3wy6tMShzU8LfoqZh3nqoQ2SBgqCDiUKF3M6lF3nvFlicNrz4h8PptEUhL6acFOlOuJZowygo6Y/m8qsVmpeZH1hSm8XanUxhZgX71p2g+2OalvdiwzuxVG67OmMWwxTMkMUhKe/+7TIuuQxHuSKuzUlRq2db1Dqu7sDihwRXiUZjqn9ev3stXuWdAdLTCPfj5Rv2a7D1/B0HrUGyTrcNQRBrFTs/OrHDN+z61f+Sc/FA9mg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JvBmRUAVpwM6XoutEwPDTYPc+Pu/ZvXCDXPAt4Emk+Y=;
- b=geMQlZ/h4ir7M1M3BeaU27w1epFjPsgzasAAjs1yca7c4IU7hvB9nD3dpxrwpPXbnUAyczgiyVZ/dmdGTxAQ/pCDJHzixjNst/aJ4OmJuWTzRHBUD+fYsdU96UOfgwGYp0abx4cjw7v6zfa3EYp52BIhVFPN0oDQ+LyQ0rwyHCLxXkFL1AN9tzDVq5BH/M+C3tNKmTPbqE9mYE5wk3v0jV+gL/De9ouXnIsJ9n4J7T4cLQ0Fm0w03AZU8jwIBx2XYAFUimlH7T2V736oeNwhPd5L1JXhiggwAgJvAuyYiVys65l4vnTyuihCg6EACAp64BE4P7WQjCGTQZQvuRH9JQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JvBmRUAVpwM6XoutEwPDTYPc+Pu/ZvXCDXPAt4Emk+Y=;
- b=lUXHxhyT60aJddaF6Jbn8Gbo0KNPWWci2H62woS6nOa/FWL2a14z4nx2OT9pQG6IU547JMc83nAz9emlwy4Co7kvNehVjk0RBdHpH0UPuuFEOE7FjXoUfxCncdRbQESkjLB9oLna7nwaZdB0S7jpdBNow7xFiOHVUIk1WX5yJFJFO5b1jfKf9slEVmiFeL36tOerF1K7Zybja7y5+nWqIERiNdWIT6Dx8oJP+gy/fSMw9VHfX8p88p+/CD5e+I6H3d93mIyurhPzaZ6WqbpHlM64mLEp/bNnxbFBKqEgJbra7ZJ/NI59KNuwr22+A3rj1LXydUiH2ITeb/efwyUHcQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by PAXPR04MB9472.eurprd04.prod.outlook.com (2603:10a6:102:2b1::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.34; Mon, 2 Jun
- 2025 22:09:28 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%6]) with mapi id 15.20.8769.025; Mon, 2 Jun 2025
- 22:09:28 +0000
-Date: Mon, 2 Jun 2025 18:09:20 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Vladimir Zapolskiy <vz@mleia.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Marek Vasut <marex@denx.de>, Peng Fan <peng.fan@nxp.com>,
-	Michael Walle <mwalle@kernel.org>, Fabio Estevam <festevam@denx.de>,
-	Markus Niebel <Markus.Niebel@tq-group.com>,
-	Frieder Schrempf <frieder.schrempf@kontron.de>,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	Max Merchel <Max.Merchel@ew.tq-group.com>,
-	Tim Harvey <tharvey@gateworks.com>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-Subject: Re: [PATCH 1/1] dt-bindings: arm: lpc: add missed lpc43xx board
-Message-ID: <aD4hEJYbFIrqtEXX@lizhi-Precision-Tower-5810>
-References: <20250602140613.940785-1-Frank.Li@nxp.com>
- <618490ca-cde1-4e13-8638-f5cb65606c6d@mleia.com>
- <aD3Lg+LRUThzm2ce@lizhi-Precision-Tower-5810>
- <09089071-57fc-4495-b6ee-159c59d59650@mleia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <09089071-57fc-4495-b6ee-159c59d59650@mleia.com>
-X-ClientProxiedBy: PH0P220CA0010.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:510:d3::20) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="icQVPUmG"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b115383fcecso3022080a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 15:10:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748902207; x=1749507007; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JUlbdIaIr1hwWTRCMrIXkwFkCclKF9G7bnIFh7/NpzI=;
+        b=icQVPUmGuPd0TnFa0a+IIscaVaJ06eKC1CJc6Jl7vNpN6G1yQVOsjdmUCB4OwNnZTj
+         M/k8iZkPKjpatSXhdg998cKJ5pHyCJvx2Ha53oaMEz5JZD9X6vPoG6FN8CTKoUu2y9Vs
+         +IA72y+dwmbsFzOKL29ZlK8BdiB4SM8jCohkhvdFMP+LMuDhndD+FXyNXOZ51yAG+CVK
+         HdkRrtBwjLNi03v5bNPNUfBolnD1A7aRKIx7LFei3oUJr2M2BFbusZv9HjIJFshnaPYK
+         QeJ/VvQvJ9qCzJmV33Yz7HZ/z0I7maUzJn7i5LJ/STW/YYRic5u3FkRS68Tk8K+TUY9Q
+         8Ugg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748902207; x=1749507007;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JUlbdIaIr1hwWTRCMrIXkwFkCclKF9G7bnIFh7/NpzI=;
+        b=ZbC7z1/A8BJPto5gVa5kMA3qpW3ZbFmhuD5DslAzay83W9trNCPhGUN0h9fruzllJO
+         3/zZn4Y2ikgU2MMyZ8f603FYgVn4PqWHTOqeK4kWx3wEhtYQL+w64SLdAT4FSdhvWlSp
+         ynjstGZvb1w5Okn/29ThX6tkjoSv9JvvxsuNymXvJtgRrUCZToKhBboDUcZu8ODVyVPQ
+         1L+UvhBtGzvsBHQaPrVXGiva+d0Szm+Zr5Y4nuTqFfe2Btf7o9nsi0/TdQdStTsiW1+M
+         oCnEd9tcXSUlZTU2bF6CwdiUWIpNOcIsos4VfBQCIsNIJpl8oO9bVy53Stup4SfO7sJL
+         48Aw==
+X-Gm-Message-State: AOJu0YzYDlHX+rksKjCROkVQ/heULZqyMm2YEoYjXQ8aY/kR82P1+6SQ
+	rxK4elVhocC9zZsnwYA+eBKR/margwV7Oz5u2QzVrt0XnrFiw4w3zsXX/fEryHpfBQbWnBen/1j
+	eaSPA3CvlkKUk5RmpQ1n7lua1qvOVRD28HzVcd3Ma9nEnBJdY+RUg+Gy9yya0LZQrgzqKGJWgdV
+	due+28+89Ib3MHQYFOUlmXcOlQh62vN6/ydG7N3zaFgmQXjL9S
+X-Google-Smtp-Source: AGHT+IGUa41aEmF9jqFSVhT7GD05j4bZdkd8Q9j/xDAMZX2843jQZEAgkGkBZ+Sssy1SAzr8hvMCa9qUlXhV
+X-Received: from plbjy12.prod.google.com ([2002:a17:903:42cc:b0:234:a13b:dc92])
+ (user=jstultz job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ea08:b0:234:a063:e2ac
+ with SMTP id d9443c01a7336-23528fedd7bmr224754885ad.2.1748902207455; Mon, 02
+ Jun 2025 15:10:07 -0700 (PDT)
+Date: Mon,  2 Jun 2025 22:09:47 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PAXPR04MB9472:EE_
-X-MS-Office365-Filtering-Correlation-Id: bca63dd0-d75a-4c19-203e-08dda222247a
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
- BCL:0;ARA:13230040|1800799024|366016|52116014|7416014|376014|38350700014;
-X-Microsoft-Antispam-Message-Info:
- =?us-ascii?Q?dLed4xPINCQC0ZTKPJH2minVsvL9MpNKkN4v9eJwR/8bkb1lAfsZ/O0fTfYI?=
- =?us-ascii?Q?geOd6YxLUMIa/zvRovZt6TktVSKdc3mJ3tJV3sHKG5UkgyDerKPDukgtqExP?=
- =?us-ascii?Q?3jRa/nzj8GdV2xLgcKNGkStZMwhGlxDcZT5X1tFdYja68gbDZWquBVrW10VG?=
- =?us-ascii?Q?ReA/UJ0eNZm5xPHTv4bx98wKkXFyNZy9pLAfeO5M3CJx7kqk4NHtYzfJcnF/?=
- =?us-ascii?Q?M4TlgVArNj4/Hbw2C6fUCi7nj7sBrFPzIRr0Q7ZOwCIfyMj1Yqy0HCje8feg?=
- =?us-ascii?Q?G2wjSjUqS+TM9DZg+GV6GLZ7RcFGrxUhnlPLPu4U2VOIVam3GAE1gMe00HYL?=
- =?us-ascii?Q?bM+/EjwK3EJNDRSXbxhcXQa6zsIfrmCh997RpBY7Q1VqtHLHcSR6WAjDfuJu?=
- =?us-ascii?Q?PbGweH8itfKjECKDv1ar1kq2h1O9hLVEAay7HQug8pfzNIiGzTCBuR10A20y?=
- =?us-ascii?Q?6dBeI9AWEzx9MrAsK+VVI+lsEDWZASgHfk+m0E23IvM2qaspOKKqU4nMSdeQ?=
- =?us-ascii?Q?mm/yxPl0k3N1IkwtLVpwmVjeQCpe0C0pvxLnlzx4OOWCUG6UjeyXCoj41CBg?=
- =?us-ascii?Q?HFFjU9ZkE4SgQbZT4uG8wsXhxlLrr/+W5BA635ULV0mt7//901uDfWQlmbfD?=
- =?us-ascii?Q?HyVDq7JoIq4dPQ/2l+7L+7sZ1KtxI0/JN/L8TGnXU6GsgH16cwhWm5JrW7B4?=
- =?us-ascii?Q?4yvGLT4sTz9SHiPnuq6MnJcMeKr2rdtaOaK3FrizinJ5d4Pts7bDx3uV/kkY?=
- =?us-ascii?Q?2YpV/Vp3IJP1JCASUU7UqUI/n9cCUDoRMTH9uA5zrUCQvlQF1aNXA8knEikz?=
- =?us-ascii?Q?bM9kY6e1f40o/PhpiT5X7qR6wjVnt0ut0XCYUFQYBfg4axyWU+FbLtryCT/i?=
- =?us-ascii?Q?twrbrsoo9lUwAEMI1ExIK+kEAFE1AXW9u9O/cLIwxwupeqMZlyv5Wc27O4O6?=
- =?us-ascii?Q?njCft4YyJZUDZy75ZAiJZy3ocm+zzwG//DnD17e/kKryNnrG+e+neY6aFx+7?=
- =?us-ascii?Q?n+WRBTzimpgCUR+WO2mUZJ0zgV7PkhppkZkIRZrJzvRdPRKiqMceqekqrvbL?=
- =?us-ascii?Q?xVvNRvFMqzC44yrrhArr/TpyqygGfhWtPzRTy98lyN8JPSurmyKoy64Gl+EK?=
- =?us-ascii?Q?EqCbdHX0vlUXFgT7WA/h159K1bcgwsPbDWOO20VDFEkxKy2UbKnl8X9OaHzt?=
- =?us-ascii?Q?bj9278HMWAbFRZOGytrM5f0nG05ObPPF+3S2Wz4VBkYoAPYuDkb27P4zUNE/?=
- =?us-ascii?Q?XnUKehgUoMO95G7pWUGeRW9u60n5daUGFNAYHh6ow+ltL4f0wXV3vMUo43hv?=
- =?us-ascii?Q?4pYjY9UnoXSZZ5QMb2DWnTEX3PGpGkLD+rPDsTp5roe43zQz45p/Fzq2g0qq?=
- =?us-ascii?Q?AVKbZ52bb+8ie0me2U4pGwLp5uOx6mFs8H4VA+AoHKUTlEiKXSQmJQs2j/FM?=
- =?us-ascii?Q?jgKHiKgtKAOPhQ5tIYd5mMPJ/FRIOaP31OhySaROH7RS2nSNAUkEfQ=3D=3D?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(7416014)(376014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?us-ascii?Q?wCvHzrVd6rjZrWqkKoIbG7Z62IOiVKlXICsieFkF4hN8C03qmtMkldAkEd57?=
- =?us-ascii?Q?x1RSNY0DRNRtl5eAiUx7nwFbLo7UVWV5U7Q0+8jP+Fzpj9uw4bGB3Kvhx4yB?=
- =?us-ascii?Q?xGshv/23z7+kr/fRVeqqJ56+jwC3dO4tBi0bmXsorBrM681NCGOvjJ6jMmp4?=
- =?us-ascii?Q?1crIaITutazjox23Qy5vm4WbDWezZzEkPrGZb2yloB0syDcMyfYsQV8ldKO5?=
- =?us-ascii?Q?Jd8/UwihVNbWLEOOsFprm+xxP2TwkjCgXQmsJONEPQRxiccGeRtW1BNdWVAM?=
- =?us-ascii?Q?2i8UECNe0+GidzYDafeP0CzIwYX82O8xt3s0SYeTA1V+n6/hjJJFGcHolkn7?=
- =?us-ascii?Q?+659LuvOdfQCYCvQ7OcYLUCLHgMET9poiKrda/wGmxcQilLASDy9Z4BvTfXo?=
- =?us-ascii?Q?zVt8JNvK/GSu8GUsNoOdxYw1WKJ6dMKqGJ1VXOd085OG3TvUe/outEidJjBj?=
- =?us-ascii?Q?iufk2W9SW07YdjOsb5hYCm/F4RVnl9hTUWMlGf8NzqVNUP0kuReo8X+WJZcV?=
- =?us-ascii?Q?eSnSxgBJM2HMJLSUsvO2HTjxxBd0dwkMHceuimytJA3yKwd/Z0w8sMh6P6vw?=
- =?us-ascii?Q?Itc6lgD16RVEtQ4/pUNxRSfDrNV+HHJJLXnVnm7ZRyoqDx+yXXREmbamltpO?=
- =?us-ascii?Q?bCpvIOzYkYX7F3BkwxfF0deShl7MdBiO1bVhtWJgdTCjzGhOT+U+yIeUTE81?=
- =?us-ascii?Q?rbxfZTMub81bIlJX5nH/Cxpd+owvESyUGC/nErQvwuqptcVErch3SMt4+OL0?=
- =?us-ascii?Q?D2yGS/5Wa+7pEvuwWBb5OAu1gjNOULK+SvaUWuP4rVk5DvvFryH09SScs5Er?=
- =?us-ascii?Q?mUXWXDDBbJKpK8xXaY6aax1gdAzlZ+TzFnaNRrNR2q1cTD9MFhY2vhQmKGLI?=
- =?us-ascii?Q?xsYILntysx/Ynl04B557bhQOKHrAH9sV+75y6OcK+qXpxFBFTTSJ46UpA7S8?=
- =?us-ascii?Q?qGQXlf/JDb8gQVP02ToXK7xiIJ8ng7aGpxLe9CKd+FqwYKFtrAeQf63Mk8Fc?=
- =?us-ascii?Q?d/QI/HqxSi/OxN0Ly2fpD/50rMhmC3iLwf3F35dE4nvq7H9wOmu/7hkdSvTI?=
- =?us-ascii?Q?jWS1Nu2KUnHPrIh+kc3GM+3FOybYEjZdDd/iZV3yVw5AxJGZOH/+PnwpnWA6?=
- =?us-ascii?Q?AnMQiD3MywOu782INc9ZiygeuxgNzvioE76UwHRkuOleHN219Kfu3DgqBJj2?=
- =?us-ascii?Q?Jg8mPUkTdpOx/iBMkrvVrLFR2VXPa2WvM8qBZtwHQQ1gZpnILluRB0GN4G6L?=
- =?us-ascii?Q?Gh0QIe1xKsBwNz0cSy4fgDTP+aljNoIUAco1zHafyYXOsmv2FeWShIOUoqva?=
- =?us-ascii?Q?iIobiVYTcyBfTITSkR4a7cZdWJU+TjHMVgdfIMEny54Za4HEiNVocyhVdwBL?=
- =?us-ascii?Q?J0l/xIgPjfaNWwO7FQgY9+GE91caxp+lcJvT2rOQuqIg8OGf+4YswBHmSUHm?=
- =?us-ascii?Q?ZkBONdzMqHjx1447T3pwOujNoVF51K4xyeMgfbsHRzOEWeZpqE5wTuVYDZq7?=
- =?us-ascii?Q?MXDudHUNX8SRBmeS+GbLLlTFRn81I6Kcsvv9NIMt9wR5CXWyZ2rZcE++kMnZ?=
- =?us-ascii?Q?AW0n7IKZhySBN0laudL+SJplz8WGF3ydUFMFa17F?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bca63dd0-d75a-4c19-203e-08dda222247a
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2025 22:09:28.2843
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lGsrGsda2QcV8hZLPzoPmfbJVwxsAfs3BDK+xTak7j3n0NHdkiCgwCIFGkjCjP7GdotzB7qyCS2ojVHkEOCWmQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9472
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
+Message-ID: <20250602221004.3837674-1-jstultz@google.com>
+Subject: [RESEND][PATCH v17 0/8] Single RunQueue Proxy Execution (v17)
+From: John Stultz <jstultz@google.com>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: John Stultz <jstultz@google.com>, Joel Fernandes <joelagnelf@nvidia.com>, 
+	Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Valentin Schneider <vschneid@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ben Segall <bsegall@google.com>, Zimuzo Ezeozue <zezeozue@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Metin Kaya <Metin.Kaya@arm.com>, 
+	Xuewen Yan <xuewen.yan94@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Suleiman Souhlal <suleiman@google.com>, kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 02, 2025 at 08:17:06PM +0300, Vladimir Zapolskiy wrote:
-> On 6/2/25 19:04, Frank Li wrote:
-> > On Mon, Jun 02, 2025 at 06:34:14PM +0300, Vladimir Zapolskiy wrote:
-> > > On 6/2/25 17:06, Frank Li wrote:
-> > > > Add missed legancy lpc43xx board compatible string to fix below CHECK_DTB
-> > > > warnings:
-> > > > arch/arm/boot/dts/nxp/lpc/lpc4337-ciaa.dtb: /: failed to match any schema with compatible: ['ciaa,lpc4337', 'nxp,lpc4337', 'nxp,lpc4350']
-> > > >
-> > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > > ---
-> > > >    .../devicetree/bindings/arm/fsl.yaml          | 23 +++++++++++++++++++
-> > > >    1 file changed, 23 insertions(+)
-> > >
-> > > I prefer to see NXP SoC powered boards under Documentation/devicetree/bindings/arm/nxp/
-> > >
-> > > LPC18XX/LPC43XX SoCs are not Freescale.
-> >
-> > Generally, we don't distingiush that, new s32g chip also in this files.
-> > All nxp/fsl was maintained by one person and everyone know these are one
-> > company now.
->
-> Well, my concern is actually not about the companies, but these two SoC
-> families are totally different, the peripherals or core controllers are
-> all different, it makes little sense to mix them up.
+Hey All,
 
-This just collect board level compatible string, like trivial-devices.yaml,
-which collect variance devices.
+Just wanted to resend v17, as I hadn't gotten any feedback this
+time around. Many many thanks to Peter, Prateek, Metin and Juri
+for their helpful feedback on the prior revision.=20
 
-Shawn:
-	Do you like create a nxp.yaml for LPC18xx/LPC43xx boards?
+So with that out of the way, here is v17 of the Proxy Execution
+series, a generalized form of priority inheritance.
 
-Frank
+As I=E2=80=99m trying to submit this work in smallish digestible pieces,
+in this series, I=E2=80=99m only submitting for review the logic that
+allows us to do the proxying if the lock owner is on the same
+runqueue as the blocked waiter.  Introducing the
+CONFIG_SCHED_PROXY_EXEC option and boot-argument, reworking the
+task_struct::blocked_on pointer and wrapper functions, the
+initial sketch of the find_proxy_task() logic, some fixes for
+using split contexts, and finally same-runqueue proxying.=20
 
->
-> I won't raise any questions or insist on the correctness of i.MX placement
-> under arm/nxp or arm/freescale, but NXP LPC32xx and NXP LPC18xx/LPC43xx dt
-> bindings shall be put under arm/nxp for certain.
->
-> --
-> Best wishes,
-> Vladimir
+The biggest change with v17 is work to fix an issue Peter
+pointed out about thread-group cpu time accounting. I=E2=80=99ve added
+an additional patch to reorganize some logic, and included a
+fix along with additional comments to try to make it clear.
+Please let me know if there are still concerns here.
+
+I=E2=80=99ve also continued working on the rest of the series, which
+you can find here:
+  https://github.com/johnstultz-work/linux-dev/commits/proxy-exec-v17-6.15-=
+rc6
+  https://github.com/johnstultz-work/linux-dev.git proxy-exec-v17-6.15-rc6
+
+New changes:
+* A number of improvements to the commit messages and comments
+  suggested by Juri Lelli and Peter Zijlstra=20
+* Added missing logic to put_prev_task_dl as pointed out by
+  K Prateek Nayak
+* Add lockdep_assert_held_once and drop the READ_ONCE in
+  __get_task_blocked_on(), as suggested by Juri Lelli
+* Introduced a new patch to move update_curr_task logic into
+  update_curr_se to simplify things
+* Renamed update_se_times to update_se, as suggested by Peter
+* Reworked logic to fix an issue Peter pointed out with thread
+  group accounting being done on the donor, rather than the
+  running execution context.
+* Fixed typos caught by Metin Kaya
+* Reworked commit messages so Cc: list is below the fold, as
+  Peter seems to prefer that when applying commits
+
+Issues still to address with the full series:
+* Peter suggested an idea that instead of when tasks become
+  unblocked, using (blocked_on_state =3D=3D BO_WAKING) to protect
+  against running proxy-migrated tasks on cpu=E2=80=99s they are not
+  affined to, we could dequeue tasks first and then wake them.
+  This does look to be cleaner in many ways, but the locking
+  rework is significant and I=E2=80=99ve not worked out all the kinks
+  with it yet. I am also a little worried that we may trip other
+  wakeup paths that might not do the dequeue first. However, I
+  have adopted this approach for the find_proxy_task() forced
+  return migration, and it=E2=80=99s working well.
+* The new rework using guard() cleans up a lot of things, but
+  there are some edge cases where we change blocked_on locks, or
+  need to drop locks to do migration, so there still are some
+  odd goto exit cases needed to get out of the guard scope.
+  Ideas for further cleanups would be welcome here.
+* Need to sort out what is needed for sched_ext to be ok with
+  proxy-execution enabled.
+* K Prateek Nayak did some testing about a bit over a year ago
+  with an earlier version of the series and saw ~3-5%
+  regressions in some cases. I=E2=80=99m hoping to look into this soon
+  to see if we can reduce those further.
+* The chain migration functionality needs further iterations and
+  better validation to ensure it truly maintains the RT/DL load
+  balancing invariants (despite this being broken in vanilla
+  upstream with RT_PUSH_IPI currently)
+
+I=E2=80=99d really appreciate any feedback or review thoughts on the
+full series as well. I=E2=80=99m trying to keep the chunks small,
+reviewable and iteratively testable, but if you have any
+suggestions on how to improve the series, I=E2=80=99m all ears.
+
+Credit/Disclaimer:
+=E2=80=94--------------------
+As mentioned previously, this Proxy Execution series has a long
+history:=20
+
+First described in a paper[1] by Watkins, Straub, Niehaus, then
+from patches from Peter Zijlstra, extended with lots of work by
+Juri Lelli, Valentin Schneider, and Connor O'Brien. (and thank
+you to Steven Rostedt for providing additional details here!)
+
+So again, many thanks to those above, as all the credit for this
+series really is due to them - while the mistakes are likely mine.
+
+Thanks so much!
+-john
+
+[1] https://static.lwn.net/images/conf/rtlws11/papers/proc/p38.pdf
+
+
+Cc: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: Qais Yousef <qyousef@layalina.io>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Valentin Schneider <vschneid@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ben Segall <bsegall@google.com>
+Cc: Zimuzo Ezeozue <zezeozue@google.com>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Will Deacon <will@kernel.org>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Metin Kaya <Metin.Kaya@arm.com>
+Cc: Xuewen Yan <xuewen.yan94@gmail.com>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Suleiman Souhlal <suleiman@google.com>
+Cc: kernel-team@android.com
+
+John Stultz (4):
+  sched: Add CONFIG_SCHED_PROXY_EXEC & boot argument to enable/disable
+  sched: Move update_curr_task logic into update_curr_se
+  sched: Fix runtime accounting w/ split exec & sched contexts
+  sched: Add an initial sketch of the find_proxy_task() function
+
+Peter Zijlstra (2):
+  locking/mutex: Rework task_struct::blocked_on
+  sched: Start blocked_on chain processing in find_proxy_task()
+
+Valentin Schneider (2):
+  locking/mutex: Add p->blocked_on wrappers for correctness checks
+  sched: Fix proxy/current (push,pull)ability
+
+ .../admin-guide/kernel-parameters.txt         |   5 +
+ include/linux/sched.h                         |  72 ++++-
+ init/Kconfig                                  |  12 +
+ kernel/fork.c                                 |   3 +-
+ kernel/locking/mutex-debug.c                  |   9 +-
+ kernel/locking/mutex.c                        |  18 ++
+ kernel/locking/mutex.h                        |   3 +-
+ kernel/locking/ww_mutex.h                     |  16 +-
+ kernel/sched/core.c                           | 258 +++++++++++++++++-
+ kernel/sched/deadline.c                       |   7 +
+ kernel/sched/fair.c                           |  65 +++--
+ kernel/sched/rt.c                             |   5 +
+ kernel/sched/sched.h                          |  22 +-
+ 13 files changed, 449 insertions(+), 46 deletions(-)
+
+--=20
+2.49.0.1204.g71687c7c1d-goog
+
