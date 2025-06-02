@@ -1,166 +1,114 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877FA1758B
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 10:22:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AFC61474DA
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 10:25:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748859771; cv=none; b=SC9M56MZvPqBws8oW53YLlUp3x0KxxB7N5IyJQx9d9OY0jA+xNR39N0ZVifEayR7Jv2EVqBTpntPbgtnmzSNla/GaAXRi2FR0zyMrz8uhYjUmSvZqXZZN1VoTfsZkM3rYB+ntgtaGTfsiXyMIWv8MqSYdYOgNx0mHJ8y91UWGtM=
+	t=1748859942; cv=none; b=UV5FbP0lci50XVl2Tv5rUqc/TGJ4acgRtitvCarqQqF9FdNHlj4afbDsPKgsMvVDZL/yv5KqqpCuXNvMjBfR03BR+suQxCivzHiYWKXhskK2Cg+pC7BXYfgesnJ4JLteBYG9RQHg+foNvXm3hF5UAA/FsibebM2X+8bRrhkzZ/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748859771; c=relaxed/simple;
-	bh=C9pmjVW0KhwAcy61epjvYTBa4pXDQwO2yV+k8s/fuC4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=s0kSPWv3h/ac51WB4h++nAzcxmtlLrh90gMyPclLSebK79DzmBXS4AXpZKNcyFNyTJ1Wd0qS/H5wU82noomHXrk5BxiSCt/fNF7wf/gsuwkssAPnCYfkmbROkwE66vuKVcTHv9w8Y5jIRSYyRv8Nkm+IiENbR42XfadqsqD547U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q0QXgeEH; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748859942; c=relaxed/simple;
+	bh=7P6Y4GKB06s5F+Y/MFVbmu8Z9uqQTHt8g1UGCgyc4pU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R3ZpdazDhd4VCEFxaSPCEG/WAgu1KTlfePCzjhMraIZWC416cmAI467R4YcWyaWBOs4ZAZ6nu9fX806l7LAFQR0Seu98ZzQwVo+pY+O006X20loShnVJaYjx8z0tsvlomql++hmzu5K5o+ZGoKe/2kX/Zbiu+Oc28d3IIjWuehM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linbit.com; spf=pass smtp.mailfrom=linbit.com; dkim=pass (2048-bit key) header.d=linbit-com.20230601.gappssmtp.com header.i=@linbit-com.20230601.gappssmtp.com header.b=PNbm4qZQ; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q0QXgeEH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748859768;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CKMj/dmcZFnIoX+/jXJwdMyeYm/ORc0hdxg4CxCECwk=;
-	b=Q0QXgeEHE8JrwbFxBCIH2P+xB/V/6ht8I78e6IoB03ZVh9k99z+qasneDXwSkG8HsKDQHP
-	jFTDZeS2UIJvQ1F0QyW/SupSHCzEcvl9GJlBBrCOf+t70vzoFnGItp9mmpVCdGpV053WDH
-	cCbO5J4RxW6s85uyML6N+ULhg1uTOyc=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-195-2hfh_mI2PPmC-y9yYQxzNA-1; Mon, 02 Jun 2025 06:22:47 -0400
-X-MC-Unique: 2hfh_mI2PPmC-y9yYQxzNA-1
-X-Mimecast-MFC-AGG-ID: 2hfh_mI2PPmC-y9yYQxzNA_1748859766
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-442e0e6eb84so26122365e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 03:22:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linbit-com.20230601.gappssmtp.com header.i=@linbit-com.20230601.gappssmtp.com header.b="PNbm4qZQ"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e803de44790so1947874276.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 03:25:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linbit-com.20230601.gappssmtp.com; s=20230601; t=1748859939; x=1749464739; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=7P6Y4GKB06s5F+Y/MFVbmu8Z9uqQTHt8g1UGCgyc4pU=;
+        b=PNbm4qZQw3L1GtFL16JA3+j5b9MPJQDPe6BLVzvZHxADG1f/sf1P0L3H3760C/Enkq
+         HSmgULtLiAMMyiKDJiDzf8kQQxMmOQxMreTcltg76MTqwImjhuNlSg8hI2KUknkSijIM
+         PwoTHDG9gT9OvIq4PFjhorQGi6uTHxcZ69JIvnH3Bw/STSFqAlgv1V2E/DhOkAHpVyiv
+         +VNRRtK8D0I5iPkDtGPXqPjyd77FM5mAFUW5+RvH/Y2OBtF2pjz/aqpYGSdcQAfyWIH5
+         LPaPRp56CJX2I5d9Ifb1P+jfZYtt2aCOhdxGzMQeF29d700q8Ov088z6FXEL2a2/4Dp6
+         T6Pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748859766; x=1749464566;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CKMj/dmcZFnIoX+/jXJwdMyeYm/ORc0hdxg4CxCECwk=;
-        b=IiX29bVe7amGhRvlHZ4C+GTsZC3mTExg0cVxToRxwtCOhOpZ1x4FLSwJqyIsQypWKt
-         l+NBN89kHqQ5FKmH9juB0s2spNpwkD2gKPmfSChnehpxoVOK03NL+bVmDGMqz+HUzmHz
-         CbRZyN4XVMG7i0j9VPQabF2SqFs8kjhyoaJhJRVAmJdf+4H+/GIUqTSrpd5BsLIEOO/y
-         Oyl/CjSrv7V4rQ+h/pIFtU8rk0BFi/xY4+QAX5ABxHrdR/qrg1s+tUbioogVqXG3SncT
-         knbx/S7TkNJYSWUOm2F/ZryXGe9qw8o8EsbH+E83xGP+emI6cwrVJTn0Qbxv7rVgerlm
-         HoYA==
-X-Forwarded-Encrypted: i=1; AJvYcCUtKbseB4K6OCtnZah6+/vaK6khG+lGjb2wZy5ZSCMXcpnXhzi3BJbHA2pF7qRd0+b5AjPpCCuVevHCrRs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYRTIi8vFSa1ZzF1unadJPq6GGC0dSrSLD+phwTcRol00huH9g
-	8cXROxz59T0JVaXCJbvKOCvp6TpiBtfOhea+UTurRw2zEt2SuJiBCdaWs41IQKhFitK7MX7a653
-	Cg5ksFpzqyYbBOkLGpDenQOFS8npElmKW6Du2Atoqaic9vKbyAXmFz0WUf2QPWZ9kGA==
-X-Gm-Gg: ASbGncvwm4BX1dUgpTmZFMgarztHSU7EPFTTMzPPoilDygDn6x82kANnrtYawmXY9pD
-	XhfGduggLwKMc0lN1pvxVaU4HLTPvhyL3KDab9Xjr+ALCSOb7ZUPkZhTH4N6qlC3C+J4Xrdxk6H
-	kw3l5jS8L1SG6m3TUgH9Dy2bqbIy4zAfwmTTGXb2Q4SaF+kb/RVUN7EBS8Q1lcFB0XoZWZhEpYp
-	f38wyH8efjon3Z8WRVvfgpehmy3cWX2PbVoilZQvnP/jTrfOMuLOo3GqvlBsKQVwzaoxw7WNcDD
-	fPb5dxM/ptrBE5OpN8fouOTo+hx1Hd6k
-X-Received: by 2002:a05:600c:1c08:b0:43c:ec0a:ddfd with SMTP id 5b1f17b1804b1-450d64e2cedmr95031995e9.6.1748859765976;
-        Mon, 02 Jun 2025 03:22:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEeawgvYHwXYBD7Ncx6S/vt4KgrtY/j8BkA9OdXSa/4ZY4UEAQYaLMSnHOrNdPF14e7MUUAoA==
-X-Received: by 2002:a05:600c:1c08:b0:43c:ec0a:ddfd with SMTP id 5b1f17b1804b1-450d64e2cedmr95031585e9.6.1748859765515;
-        Mon, 02 Jun 2025 03:22:45 -0700 (PDT)
-Received: from imammedo.users.ipa.redhat.com ([85.93.96.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7fb80f6sm115820455e9.28.2025.06.02.03.22.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 03:22:45 -0700 (PDT)
-Date: Mon, 2 Jun 2025 12:22:44 +0200
-From: Igor Mammedov <imammedo@redhat.com>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, Shiju Jose <shiju.jose@huawei.com>,
- qemu-arm@nongnu.org, qemu-devel@nongnu.org, Philippe =?UTF-8?B?TWF0aGll?=
- =?UTF-8?B?dS1EYXVkw6k=?= <philmd@linaro.org>, Ani Sinha
- <anisinha@redhat.com>, Eduardo Habkost <eduardo@habkost.net>, Marcel
- Apfelbaum <marcel.apfelbaum@gmail.com>, Peter Maydell
- <peter.maydell@linaro.org>, Shannon Zhao <shannon.zhaosl@gmail.com>, Yanan
- Wang <wangyanan55@huawei.com>, Zhao Liu <zhao1.liu@intel.com>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 12/20] acpi/generic_event_device: add logic to detect
- if HEST addr is available
-Message-ID: <20250602122244.081a1960@imammedo.users.ipa.redhat.com>
-In-Reply-To: <20250530221810.694ce02e@foz.lan>
-References: <cover.1747722973.git.mchehab+huawei@kernel.org>
-	<aa74b756f633dbee5442cf4baa2c1d81a669d2f9.1747722973.git.mchehab+huawei@kernel.org>
-	<20250528174212.2823d3de@imammedo.users.ipa.redhat.com>
-	<20250530080120-mutt-send-email-mst@kernel.org>
-	<20250530164903.0f9f8444@imammedo.users.ipa.redhat.com>
-	<20250530221810.694ce02e@foz.lan>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+        d=1e100.net; s=20230601; t=1748859939; x=1749464739;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7P6Y4GKB06s5F+Y/MFVbmu8Z9uqQTHt8g1UGCgyc4pU=;
+        b=pjaETRP4G7G1IFInHyadcbGgkkQ52dR+zemCGX5azvrV7pmf0KtTe0TwrXHZY2tnC9
+         B82rzIP90uQjeZzdG7AA7ve09YeyHkZJ6eg6DqYailRi3OXUryLv+s6mD8zd2iRr7+Aw
+         qri2LHv35WYmW7NjQ6dUSO3RUa+DImA0iJ0/UPQF1gZOe4HZ3D9S0j9zVo6825KLA3rj
+         l4NETVoUXnrugk9zJQZ5aWj5RPLcO2hxxiSMGuSq+MJOTt8T0HQwrMGY0t7PvDBZQyWq
+         /Y3BDkvbrrlChJl8/YmxXRiXQsxJctZfG2snAp9BskYbY/X5rZcIsoWUYZNow073A5TI
+         PYiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU1Wo8HQOVNj0XITZPTHMiu999OZsPBAMZKPqlnCdBapCWPAjVo1vOYIwnyNiNQdPZqG8IHhtsKHWoj61o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYhL/BWhwPUZCLvsUB65CMWyHBXrIX+7T4qDiBDwxeMHe8sT+4
+	n2EFfaJ9AdNg4OYxjjqVeblq71/NKI4BjT9wCGdUwtlh43wZHzEw3uSggpvhFeRbyVEvQuBDpmH
+	mbmsNAUr980hWW9XkoNRxEOnRFR0UGmLBnGH56tjwsQ==
+X-Gm-Gg: ASbGncsADx1fw8WrGNoWQecwzL44S/k75E0ejB8Dd6m4T3ugjAsrV7u+FYTHGl4luIW
+	mIT8ZmxkSTN/nX3x2zml3NOfFmFzF1PxrotlCrugr8pvySE1NQr8P/8WCSdr9WdpzrRAvg+Q8np
+	E3tXOmlHV/7XlMSqNwKjCGKkzR5tcVYDMXGw==
+X-Google-Smtp-Source: AGHT+IHgf241/+XooGY+7VQxGz+QMtTXcq1pcvUD9HmfJ7+OM+oqivNr0clUSJ9p7Kt8etwmmS/GC0gaf+rJbhU5LW8=
+X-Received: by 2002:a05:6902:120e:b0:e7b:3d15:10f0 with SMTP id
+ 3f1490d57ef6-e8128c58284mr8454809276.31.1748859939384; Mon, 02 Jun 2025
+ 03:25:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250107140240.325899-1-philipp.reisner@linbit.com>
+ <942c02f2-6496-4406-a73b-941d096aadfb@amd.com> <CADGDV=U_7CdkdEiLX9kj9yHsXhwb5zP_eGXpwmrj20cmgzMAtA@mail.gmail.com>
+ <eb5f3198-7625-40f4-bc23-cac969664e85@amd.com> <582e10673bb749f18ebf8a18f46ca573df396576.camel@redhat.com>
+ <b055ff59-4653-44d9-a2e0-bb43eb158315@amd.com> <DA7PC2LNU79K.28KBFOL3MGI1S@kode54.net>
+In-Reply-To: <DA7PC2LNU79K.28KBFOL3MGI1S@kode54.net>
+From: Philipp Reisner <philipp.reisner@linbit.com>
+Date: Mon, 2 Jun 2025 12:25:28 +0200
+X-Gm-Features: AX0GCFuYwA4pxqr2zT4Iil1JuDkN-FBXLdtD9OExlZ-E9pvXbkNRDtWL20NsXrE
+Message-ID: <CADGDV=WJjcLds5T1uAst7ctOMbApnLR6ixH8wvgvKvF-YS6kog@mail.gmail.com>
+Subject: Re: [PATCH] drm/sched: Fix amdgpu crash upon suspend/resume
+To: Christopher Snowhill <chris@kode54.net>
+Cc: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Philipp Stanner <pstanner@redhat.com>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, Simona Vetter <simona@ffwll.ch>, 
+	Danilo Krummrich <dakr@kernel.org>, Philipp Stanner <phasta@kernel.org>, 
+	dri-devel <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 30 May 2025 22:18:10 +0200
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+Hi Christopher,
 
-> Em Fri, 30 May 2025 16:49:03 +0200
-> Igor Mammedov <imammedo@redhat.com> escreveu:
-> 
-> > On Fri, 30 May 2025 08:01:28 -0400
-> > "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> >   
-> > > On Wed, May 28, 2025 at 05:42:12PM +0200, Igor Mammedov wrote:    
-> > > > On Tue, 20 May 2025 08:41:31 +0200
-> > > > Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
-> > > >       
-> > > > > Create a new property (x-has-hest-addr) and use it to detect if
-> > > > > the GHES table offsets can be calculated from the HEST address
-> > > > > (qemu 10.0 and upper) or via the legacy way via an offset obtained
-> > > > > from the hardware_errors firmware file.      
-> > > > 
-> > > > 
-> > > > it doesn't apply to current master anymore      
-> > > 
-> > > indeed. Mauro?    
-> > 
-> > Michael,
-> > it's trivial conflict in machine compat,
-> > could you fix it up while applying?  
-> 
-> IMHO, that's the best. The thing is, as code gets merged upstream with
-> backports, conflicts happen.
-> 
-> I can re-send the series, if you prefer, as I'm keeping it rebasing it
-> from time to time at:
-> 	https://gitlab.com/mchehab_kernel/qemu/-/tree/qemu_submitted?ref_type=heads
-> 
-> (it is on the top of upstream/master)
-> 
-> But even that might have conflicts on your test tree if you pick
-> other patches touching this backport table:
-> 
-> > -GlobalProperty hw_compat_10_0[] = {};
-> > +GlobalProperty hw_compat_10_0[] = {
-> > +    { TYPE_ACPI_GED, "x-has-hest-addr", "false" },
-> > +};  
-> 
-> (this was the code when I sent the PR. When applying upstream,
-> such hunk is now(*):
-> 
->  GlobalProperty hw_compat_10_0[] = {
->      { "scsi-hd", "dpofua", "off" },
-> +    { TYPE_ACPI_GED, "x-has-hest-addr", "false" },
->  };
-> 
-> 
-> (*) https://gitlab.com/mchehab_kernel/qemu/-/commit/08c4859f8c6f36d7dccf2b773be88847e5d1fe0c
-> 
-> If you still prefer that I resubmit the entire PR, let me know.
+Thanks for following up. The bug still annoys me from time to time.
+It triggered last on May 8, May 12, and May 18.
+The crash on May 18 was already with the 6.14.5 kernel.
 
-If it's the only patch that needs rebase and doesn't affect the rest,
-I'd say there is no need to spam the list with whole series respin, 
-just post rebased v10 12/20 as reply here
+> Could this sleep wake issue also be caused by a similar thing to the
+> panics and SMU hangs I was experiencing with my own issue? It's an issue
+> known to have the same workaround for both 6000 and 7000 series users. A
+> specific kernel commit seems to affect it as well.
+>
 
-If it's more than that, respin series.
+I posted the stack trace earlier in the thread. The question is, what
+was the stack
+trace of the issue you are referring to?
 
-> 
-> Regards,
-> Mauro
-> 
+>
+> If you could test whether you can still reproduce the error after
+> disabling GFXOFF states with the following kernel commandline override:
+>
+> amdgpu.ppfeaturemask=0xfff73fff
+>
 
+that disables PP_OVERDRIVE_MASK, PP_GFXOFF_MASK,
+and PP_GFX_DCS_MASK.
+
+IMHO, that looks like a mitigation for something different than the non-ready
+compute schedulers that seem to be the root cause for the NULL pointer derefs
+in my case.
+
+Anyhow, I will give it a try, and will report back if my workstation
+does not deref
+NULL pointers for more than three weeks with that amdgpu.ppfeaturemask set.
+
+Best regards,
+ Philipp
