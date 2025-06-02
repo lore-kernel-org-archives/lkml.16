@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A1051EE02F;
-	Mon,  2 Jun 2025 09:58:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB7192C3254;
+	Mon,  2 Jun 2025 10:00:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748858300; cv=none; b=jVelnSbLmZtXJ+qBfj7P0FJeWKepLNf6JOLO/0/vOf644u2aVP7tUcD/Cg3UBUUwhDuHVvYvcZXg856RIGLS6O3ay1BiY2DsZXHPebdBDul5wtYLOwAwOHxwC5/YRZEa3OwRSCF94n9G1RVIFyzG7Sv8Eso9rwbzBqs4T5htG20=
+	t=1748858451; cv=none; b=qmRbeem5pm1hNofILZxGtrHbdEiErO/IfG+2WInqqFV7CAs/R9Rscu1RJA5bInR5JX8kzhCwCvIZZm/VA/imbe2j87MtcnATY7KanC7WEzRdRBJwKBUQzMHUSU91uYZEP0Q25TzOaUXSG4N/XUc3N4+wakTHxuU46a0EBZT6h5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748858300; c=relaxed/simple;
-	bh=ZnIdkB15WwUpVr6n6Zit4iYM7WbhK6kpmIhZUXLteU8=;
+	s=arc-20240116; t=1748858451; c=relaxed/simple;
+	bh=AOKjPL5p8OlF2b76UVSrAr78d+RsZ6Vh7p3ySJe5lJg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qdtjpSD8JtEvMwwOYSbkNZA8/a3V4ZAJ4BRMITvlDZeUR6ATAjIYxBSygQRrjZr4MA4nt/EOoM58/XA5StaRZVf3Dk/OtfpIhrhURBl3eTckpg7YvCxZo/UFffQgn1BrsKHu02xaJdxmjMw8rhESjM5CrhahkRLmKMBAlG1VqFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jc8kDqO9; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ZAW7rxnbjZCtBCdf6ePcAMNhBr1Souovexwzet1NqL087L3KS7ByMZIBvxlqFdf9jZWFP36NUYvEqh7rGa/jOg8Q8tKIQPT0NcRxzRPweBKIR+JqjI+EZgPckJpAGbDQ7pw8fiDUVB74Gi+YCVE7qEowFi/oSrWCy9lzrSlqClg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ImOUVASA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jc8kDqO9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F9DDC4CEEB;
-	Mon,  2 Jun 2025 09:58:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ImOUVASA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA245C4CEEB;
+	Mon,  2 Jun 2025 10:00:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748858300;
-	bh=ZnIdkB15WwUpVr6n6Zit4iYM7WbhK6kpmIhZUXLteU8=;
+	s=k20201202; t=1748858450;
+	bh=AOKjPL5p8OlF2b76UVSrAr78d+RsZ6Vh7p3ySJe5lJg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Jc8kDqO9hDxgm634jwhd6+lB5P+8qZ5JOXMeZ9bkc7sdDd2hpSMP7s+VApNtC3Ee/
-	 EM5Z8ClDh+EScDQNjTzRiVsGx+bNMD5mbrBZbcACTgG24cnWrSOn5QZzE+dZg7t+tI
-	 bBRib01l/gT+VQTvuRXVXTeJVGf+oinKsv2lNxk8kmLJconsYzaZDolButb44+sfC3
-	 fa+JRy2uog/0sTPtKqHtHvpf5xfwXrlpaJqm8XnNEgcwVBTiO2BZSGCy6KjDvPR2Y8
-	 LkLzre5kh6T3J9eAfaATCLOryYbFV7q1hdHoQjNC8J9pQsSQUekmUxmW0SuUYZlGgB
-	 UwsP0t4LCekVA==
-Message-ID: <7905ecb9-6e18-4b3d-99ab-830aac19d3ad@kernel.org>
-Date: Mon, 2 Jun 2025 11:58:16 +0200
+	b=ImOUVASA26tN2jh9dfwWFXuHi+w6fnPu7ZFO7gwbtWfod7gkUaJM+9vIo1rsGx2LM
+	 CmDPz4NdPeaeNmmvLcIpHjXyiugxUNvkIStMQyYuNgG9jZXn7aeYoqJUjXmWYXcAuS
+	 IYJmDjYYQXVwa+fxn7ijnHUDfyJgPQf2L3nwrjfYhE41rYzENHV3y+aO/pFm+8Fm8L
+	 mm1xP3jIfAwIxS8kV5SEXbQlThRn+4zTWgXApOFi4QJ3PeilBaBOBs3x4nMsEj0xJr
+	 da1awwhxCSzqPZUTTgXwwVC6P6V/nL/2H+v4jGOq6PF3tcbS7s7GCV/gNxjKJMZmbn
+	 5JJXGW40zeUrQ==
+Message-ID: <47a51d88-7494-4610-b406-8f0fb829fc51@kernel.org>
+Date: Mon, 2 Jun 2025 12:00:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,201 +35,69 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/9] media: uvcvideo: uvc_v4l2_unlocked_ioctl: Invert PM
- logic
-To: Ricardo Ribalda <ribalda@chromium.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Hans de Goede <hdegoede@redhat.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- Hans Verkuil <hans@jjverkuil.nl>
-References: <20250528-uvc-grannular-invert-v1-0-d01581f9cc25@chromium.org>
- <20250528-uvc-grannular-invert-v1-7-d01581f9cc25@chromium.org>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250528-uvc-grannular-invert-v1-7-d01581f9cc25@chromium.org>
+Subject: Re: [PATCH 1/1] arm64: dts: qcom: support sound on Asus Vivobook S15
+To: Elliot Huang <elliot.huang.signed@gmail.com>
+Cc: andersson@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
+ johan@kernel.org, konrad.dybcio@oss.qualcomm.com, konradybcio@kernel.org,
+ krzk+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, lumag@kernel.org, maud_spierings@hotmail.com,
+ robh@kernel.org
+References: <174770727723.36693.13352978360096773573.b4-ty@kernel.org>
+ <20250602081638.51724-1-elliot.huang.signed@gmail.com>
+ <466ee887-cbea-434d-8599-3a8966b08c2a@kernel.org>
+ <CALe+u94c6EVjXWc5MjmT4U8xWF3EX-e=yY59k=RG=eXVYrfPmA@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <CALe+u94c6EVjXWc5MjmT4U8xWF3EX-e=yY59k=RG=eXVYrfPmA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Ricardo,
+On 02/06/2025 10:30, Elliot Huang wrote:
+> Thanks, I will
+There is no context here. Don't top post.
 
-On 28-May-25 19:58, Ricardo Ribalda wrote:
-> Instead of listing the IOCTLs that do not need to turn on the camera,
-> list the IOCTLs that need to turn it on. This makes the code more
-> maintainable.
-> 
-> This patch is designed to be a NOP. Non relevant IOCTLs will be removed
-> in future patches.
-> 
-> Suggested-by: Hans Verkuil <hans@jjverkuil.nl>
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> ---
->  drivers/media/usb/uvc/uvc_v4l2.c | 117 +++++++++++++++++++++++++++++++--------
->  1 file changed, 93 insertions(+), 24 deletions(-)
-> 
-> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-> index 2c6f3cf6bcc3f116bbdb3383d9af7d5be9832537..e7373a2ae3c37ca02f9076773154901a603820ac 100644
-> --- a/drivers/media/usb/uvc/uvc_v4l2.c
-> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
-> @@ -1264,42 +1264,111 @@ static long uvc_v4l2_compat_ioctl32(struct file *file,
->  }
->  #endif
->  
-> -static long uvc_v4l2_unlocked_ioctl(struct file *file,
-> -				    unsigned int cmd, unsigned long arg)
-> +static long uvc_v4l2_pm_ioctl(struct file *file,
-> +			      unsigned int cmd, unsigned long arg)
->  {
->  	struct uvc_fh *handle = file->private_data;
->  	int ret;
->  
-> -	/* The following IOCTLs do not need to turn on the camera. */
-> -	switch (cmd) {
-> -	case VIDIOC_CREATE_BUFS:
-> -	case VIDIOC_DQBUF:
-> -	case VIDIOC_ENUM_FMT:
-> -	case VIDIOC_ENUM_FRAMEINTERVALS:
-> -	case VIDIOC_ENUM_FRAMESIZES:
-> -	case VIDIOC_ENUMINPUT:
-> -	case VIDIOC_EXPBUF:
-> -	case VIDIOC_G_FMT:
-> -	case VIDIOC_G_PARM:
-> -	case VIDIOC_G_SELECTION:
-> -	case VIDIOC_QBUF:
-> -	case VIDIOC_QUERYCAP:
-> -	case VIDIOC_REQBUFS:
-> -	case VIDIOC_SUBSCRIBE_EVENT:
-> -	case VIDIOC_UNSUBSCRIBE_EVENT:
-> -		return video_ioctl2(file, cmd, arg);
-> -	}
-> -
->  	ret = uvc_pm_get(handle->stream->dev);
->  	if (ret)
->  		return ret;
-> -
->  	ret = video_ioctl2(file, cmd, arg);
-> -
->  	uvc_pm_put(handle->stream->dev);
-> +
->  	return ret;
->  }
->  
-> +static long uvc_v4l2_unlocked_ioctl(struct file *file,
-> +				    unsigned int cmd, unsigned long arg)
-> +{
-> +	/*
-> +	 * For now, we do not support granular power saving for compat
-> +	 * syscalls.
-> +	 */
-> +	if (in_compat_syscall())
-> +		return uvc_v4l2_pm_ioctl(file, cmd, arg);
-> +
-> +	/* The following IOCTLs do need to turn on the camera. */
-> +	switch (cmd) {
-> +	case UVCIOC_CTRL_MAP:
-> +	case UVCIOC_CTRL_QUERY:
-> +	case VIDIOC_CROPCAP:
-> +	case VIDIOC_DBG_G_CHIP_INFO:
-> +	case VIDIOC_DBG_G_REGISTER:
-> +	case VIDIOC_DBG_S_REGISTER:
-> +	case VIDIOC_DECODER_CMD:
-> +	case VIDIOC_DQEVENT:
-> +	case VIDIOC_DV_TIMINGS_CAP:
-> +	case VIDIOC_ENCODER_CMD:
-> +	case VIDIOC_ENUMAUDIO:
-> +	case VIDIOC_ENUMAUDOUT:
-> +	case VIDIOC_ENUMOUTPUT:
-> +	case VIDIOC_ENUMSTD:
-> +	case VIDIOC_ENUM_DV_TIMINGS:
-> +	case VIDIOC_ENUM_FREQ_BANDS:
-> +	case VIDIOC_G_AUDIO:
-> +	case VIDIOC_G_AUDOUT:
-> +	case VIDIOC_G_CROP:
-> +	case VIDIOC_G_CTRL:
-> +	case VIDIOC_G_DV_TIMINGS:
-> +	case VIDIOC_G_EDID:
-> +	case VIDIOC_G_ENC_INDEX:
-> +	case VIDIOC_G_EXT_CTRLS:
-> +	case VIDIOC_G_FBUF:
-> +	case VIDIOC_G_FREQUENCY:
-> +	case VIDIOC_G_INPUT:
-> +	case VIDIOC_G_JPEGCOMP:
-> +	case VIDIOC_G_MODULATOR:
-> +	case VIDIOC_G_OUTPUT:
-> +	case VIDIOC_G_PRIORITY:
-> +	case VIDIOC_G_SLICED_VBI_CAP:
-> +	case VIDIOC_G_STD:
-> +	case VIDIOC_G_TUNER:
-> +	case VIDIOC_LOG_STATUS:
-> +	case VIDIOC_OVERLAY:
-> +	case VIDIOC_PREPARE_BUF:
-> +	case VIDIOC_QUERYBUF:
-> +	case VIDIOC_QUERYCAP:
-> +	case VIDIOC_QUERYCTRL:
-> +	case VIDIOC_QUERYMENU:
-> +	case VIDIOC_QUERYSTD:
-> +	case VIDIOC_QUERY_DV_TIMINGS:
-> +	case VIDIOC_QUERY_EXT_CTRL:
-> +	case VIDIOC_REMOVE_BUFS:
-> +	case VIDIOC_STREAMOFF:
-> +	case VIDIOC_STREAMON:
-> +	case VIDIOC_S_AUDIO:
-> +	case VIDIOC_S_AUDOUT:
-> +	case VIDIOC_S_CROP:
-> +	case VIDIOC_S_CTRL:
-> +	case VIDIOC_S_DV_TIMINGS:
-> +	case VIDIOC_S_EDID:
-> +	case VIDIOC_S_EXT_CTRLS:
-> +	case VIDIOC_S_FBUF:
-> +	case VIDIOC_S_FMT:
-> +	case VIDIOC_S_FREQUENCY:
-> +	case VIDIOC_S_HW_FREQ_SEEK:
-> +	case VIDIOC_S_INPUT:
-> +	case VIDIOC_S_JPEGCOMP:
-> +	case VIDIOC_S_MODULATOR:
-> +	case VIDIOC_S_OUTPUT:
-> +	case VIDIOC_S_PARM:
-> +	case VIDIOC_S_PRIORITY:
-> +	case VIDIOC_S_SELECTION:
-> +	case VIDIOC_S_STD:
-> +	case VIDIOC_S_TUNER:
-> +	case VIDIOC_TRY_DECODER_CMD:
-> +	case VIDIOC_TRY_ENCODER_CMD:
-> +	case VIDIOC_TRY_EXT_CTRLS:
-> +	case VIDIOC_TRY_FMT:
-> +		return uvc_v4l2_pm_ioctl(file, cmd, arg);
-> +	}
-
-IMHO adding a whole bunch of ioctls which are not supported by UVC at all here
-and then dropping them again in patch 8/9 is not helpful.
-
-I understand that your purpose is to have this initial patch
-be a no-op, still doing the uvc_pm_get() + uvc_pm_put() for
-unsupported IOCTLs but I don't really see that as something
-useful to do while at the same time introducing unnecessary churn.
-
-My preference would be to drop unsupported IOCTLs from this list
-right away with a remark in the commit message that this changes
-the behavior for unsupported IOCTLs.
-
-For something like UVCIOC_CTRL_MAP I do agree that it is best
-to keep it here and drop it later separately. Or maybe it would
-be cleaner to add UVCIOC_CTRL_MAP to the list of IOCTLs _not_
-needing pm before this patch ?
-
-Regards,
-
-Hans
-
-
-
-> +
-> +	/* The other IOCTLs can run with the camera off. */
-> +	return video_ioctl2(file, cmd, arg);
-> +}
-> +
->  const struct v4l2_ioctl_ops uvc_ioctl_ops = {
->  	.vidioc_g_fmt_vid_cap = uvc_ioctl_g_fmt,
->  	.vidioc_g_fmt_vid_out = uvc_ioctl_g_fmt,
-> 
-
+Best regards,
+Krzysztof
