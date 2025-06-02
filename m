@@ -1,106 +1,124 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BC7224240
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 23:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131D51482E7
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 23:22:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748905838; cv=none; b=nyoR6sqLGxjCTqU6CTpiLxz4OJk9NuTWVk0LUvw5EFNVh02TOa2DqJD+jgwQfy2LwazxefFKACmEVY1gzRAVIIh4VoiFZv/i4478tnQZCviqE/vESUxPTLJu3YNQ2QSM7f/PAEENpbARQfd3V1wlBwiwTZJXAb0uuOl/bVtcDpo=
+	t=1748906553; cv=none; b=YmyY/FuKPQhFTcF9BOhTfcSuBcdqooNVSgXXFLwtSaupsd08xjSdTSDL2LyUF1mruDYD89uvZH+hqTvVMV7X8qkoaWgQwOl3JOlmTp287CUlcm58/z3zAK7bR0Mvxg8jF0Y3O6ThxhPrb+7yT8NopJHJK0d7/B2tAT7tXftOetg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748905838; c=relaxed/simple;
-	bh=sQ35O2PGhdv7k8uhPXRH4ecLIzJt7xdi1vpvvGUoQQE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hl8TeVasI8Xxzkuw5rXn9F3IaPk5PwHE7bKf/GTOQqqm3DWY4r7Pv8tE2ibQcUPIbVfNQk9GS4/Sd6wJZFeZoACPiWqGloiTs6uB8ctl/IWUb7gY9kakQn3vfxDtA3MYIwQs0Q3byh54E+f/nlFTr/u02ahV2+ktFkImEwNZU5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=OWyOWBeX; arc=none smtp.client-ip=209.85.218.44
+	s=arc-20240116; t=1748906553; c=relaxed/simple;
+	bh=CfnMNOCbjMEyJoz3Q1bK4Y14uGlSI1+jGpZw9hAUQRo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ubR6XiUHbQ+RVEiDPBSV4W2bHGMF7f4VrbGxZMXx631s7AQkHaOeLXN0p7i+BSpk61mHu/jLPgFX49ETrcW1ps5DUEMBIs9ohLI0tn1lgDWpRSaFnPosxMwEVAo9EOjRZVqFQpADwrLWR01RhZYX/YgvZVx1FWDPCVwfuOUo7gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=APh+fIgZ; arc=none smtp.client-ip=209.85.166.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OWyOWBeX"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ad572ba1347so732885766b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 16:10:35 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="APh+fIgZ"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3dc978d5265so15593385ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 16:22:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1748905834; x=1749510634; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=aOLrDZGyl5sP1KOU7rG3gZEOIkcCfBad5MOiWtWXhg0=;
-        b=OWyOWBeXaK8J3Br0wQPuiT34QzV0pXfegJnqowAfhZjV1D0ShJ7Spf27ni2SXy+Y1K
-         iobs+cfZKcNsobx+VVqkZ/QfOjyQr/ZSFed4vFBcHOQga6dIbC1nmQImHd0vKiwP+jGO
-         H9A7HCMZpLukAfi9/b9kWrhf8Ifqp6MFYu2yk=
+        d=linuxfoundation.org; s=google; t=1748906550; x=1749511350; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qT3wVHWE1rM3dJa7hjPLW9JGzPh24mia4Xa7cI/6U6k=;
+        b=APh+fIgZbRaTlMBg0L5hPvD/oK9hS7dThYSeRpST4VS9zDZhxrckC/9rMpjXM6QTGW
+         6Ws4lzX+j3sGUxu7c/scW76ocN0qlicnMhFNXpb8knwTQiq8gfZXbfl6dlqmdt62u3B4
+         Vz05n4coSIcATKp9hle8EHcOu1n652kuMfBDA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748905834; x=1749510634;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aOLrDZGyl5sP1KOU7rG3gZEOIkcCfBad5MOiWtWXhg0=;
-        b=q61knzACsq4P0g3tI6PfBsgDerWln+2eGA2irM1VWx5NHIqp9bGO9H+VvHdzz8X/aQ
-         wW13OhHMY9jGSMhKbj9mj4mzkCzFYDs3swLlMgf6omFOIjzli13g57nZkp2wOZ5DWP4G
-         42tkCPXk/N7Z15qLJui7aVxDsaJ+nySgiZqgtujcFUwAyN689wa45wI4lW616KBDq90W
-         7LIiw7MWDRZ7aawQIC5YcMwUJLsq08dJobzB8LXHZ7JSL2amFni22e2CSq9lWMY4waNR
-         JtmaVvCKMwClKMiPnT0wQKBHrZBNEyhIiwVFZnTowmWAWIVkLEdxdv9QFLarv/e9wvZ8
-         hWyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXh6rOXjxisemhO03yUwpHFI5YDJyifQKAu7ZG5KkcLT5La+vIroPpO5fzkndjIukz+DyaXOiSZzQr0WUQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2i0UmwjqdBfiReREL46Qd+8IcYtVvbVyzjB2NwVSSfzdc3drs
-	qrIS/JMrNgrHOOU00erRHJhq+luEjOAfJ7hHnqiW0PzgeGJx+z2u5zjTj/1bDaF5rpj1rzRQpvh
-	56rZhoj5jYg==
-X-Gm-Gg: ASbGncuklvBgBMQzxdDpZJplhKuf6mlvACqZjFW9ivQKb8lNvxUq60F/QXTTj6Z0Z9Y
-	60mDl789d0GSn51KUEUT3kPEQjyfzRHlubGIoxNURHU2UHscfHs4hJ+Uq91Dv7brhrBB+iMSDlr
-	NW5TTIyjmgKS1j3g6tiW5dsAFlCHb091YIpsQf3Om8c/5gKeDXXKb9b//2B1YVQczQauT2UgNRb
-	mm3HnAWoZ0aO7tDl6FTkESYIaX8zBujS4aidCIjUxaQmzXRgAwTXWuoEyPqpYcsRt8Wu0TGOk2x
-	0TQsBRsQQLH3LFixiyTfUPI/3ujg6xv48/8OV9SOruMp5xyK0gG0AjJhxSPmzMvQefnh8NMpsmR
-	vKqUIA5mdCio9mqVqrvV0dpXP
-X-Google-Smtp-Source: AGHT+IEbhKOn6e6Ui3P8+oyqkuONK96WdagZF7vDncAOzKKg3oaoS81EUsR0lNKeXQ47zXIKwmxR/A==
-X-Received: by 2002:a17:907:940f:b0:adb:1eee:a083 with SMTP id a640c23a62f3a-adb495141a0mr978235666b.47.1748905833917;
-        Mon, 02 Jun 2025 16:10:33 -0700 (PDT)
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com. [209.85.208.48])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5d850d88sm864596566b.77.2025.06.02.16.10.32
-        for <linux-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1748906550; x=1749511350;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qT3wVHWE1rM3dJa7hjPLW9JGzPh24mia4Xa7cI/6U6k=;
+        b=a43MG5LljdETm5TPvLBiPjrXJ1kHb7mOVL/SZnSyn5EtE6yq/aD7KrmK+q5b4kriGS
+         Q+aXqYugrptqlQDa9i0dGfoeiPZzijFYJ+GgnqUdHToqhlY9Rs4BHDy5jMVOxo+daYOz
+         sqLL/kqayr6REmhm6KyUoofws2n55wjNF/7AEkoWlGgcvWcHCDE08t+8YCQLgxjOyisl
+         jLkIsTpX2dfCTZOFq1LG3Hquw5LvjGp/An1m/sbnZ3RjTRC8lUeTKAVsWqiXzXHUCaKt
+         XPk1H2bOi87FeeNV//vIBEjRu1GNem3u3ZxqTSz7vAr6offDxeI5cGqR+zzVlI9p+CY8
+         YJog==
+X-Forwarded-Encrypted: i=1; AJvYcCUXUG6S5mWwM3ML78DjWhCUPgy7nhoOUJqJNxeMoHugPjvQumce8gVWh5grJkGhwgcCwoZZ4hAe9hUEzI4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGrB9q5I9/lFX2tEy6jFfLFHYBlqIbkG47So+cpl6yXP75xQYL
+	x4HqSHZC8QclgJhBturd6WQ1Ask08AXh8fWQrEpjBeGrRTJXPjjBtmnXFWWIXw7PIj8=
+X-Gm-Gg: ASbGncvjCYIP3/iuZXRurgaWQ743o0x2aphFmqN22tKmdmwD15EJTm/uoa7ffzYR5uB
+	WJHIpB6E/n5rlU/dcDlV/BHXyAqZhLvPzMOz8dgZMQS7pF00rcbI4DVIfGow6A5l2wyaTfQ4RsC
+	uZH0jHnWWUvfNU2XXw+QZnlxEJx5I9yF9D8dcOrFW0zDmrUx+wyN9I1EGnl5SulBVaJycPMOsiu
+	65CrHmiKlEjiP1FMboSOgSAvqrr5fAeups7mBnkwaq62QNhtp74lgvBcLZpgCLqTLxzqMsDAx+v
+	EzIfWw/LN5yWE7YagTQg78kpcse2vzBPSFvBEVc7RjaOa6GJQGC9jaLNf1Y3BQ==
+X-Google-Smtp-Source: AGHT+IF7uLkYyb2UqK/tGnOiuFb0m76VobbyWvrOenXTHdPcdfk9UTH7o8q1NlmnaIuPiCjJgFHuQg==
+X-Received: by 2002:a05:6e02:230a:b0:3dc:5be8:9695 with SMTP id e9e14a558f8ab-3dd9c989d83mr143426925ab.3.1748906550017;
+        Mon, 02 Jun 2025 16:22:30 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3dd935a7ad0sm24412105ab.66.2025.06.02.16.22.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Jun 2025 16:10:33 -0700 (PDT)
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6020ff8d54bso8890915a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 16:10:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWKyjwRmWSLS13XeOvMD4L/U/AjHLoivmG61xFzWQEMK22jQTzOcNzWZO+6r9J9cd37fWybZmVMw3sERO8=@vger.kernel.org
-X-Received: by 2002:a05:6402:2743:b0:601:68ee:9641 with SMTP id
- 4fb4d7f45d1cf-605b75295fcmr9602756a12.10.1748905832611; Mon, 02 Jun 2025
- 16:10:32 -0700 (PDT)
+        Mon, 02 Jun 2025 16:22:29 -0700 (PDT)
+Message-ID: <c7c071ed-6a4e-4a9c-ba9d-c745fd42c22f@linuxfoundation.org>
+Date: Mon, 2 Jun 2025 17:22:28 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250602144201.301974933@infradead.org> <20250602144755.928750774@infradead.org>
- <CAHk-=whkD=pveK6X_5gtVbJ62+86oBOr9JokneYpSJyxjHFBpQ@mail.gmail.com>
- <20250602154943.GB30486@noisy.programming.kicks-ass.net> <CAHk-=wiYHv2duN1Aj3E5UD3zH=z6A9YpGJ1Mxj_CWL7_FRMKgw@mail.gmail.com>
- <20250602215725.GA39782@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250602215725.GA39782@noisy.programming.kicks-ass.net>
-From: Linus Torvalds <torvalds@linuxfoundation.org>
-Date: Mon, 2 Jun 2025 16:10:16 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whOEyTJb6MAcy2ojN98RrEzU5TW031sGpHMhMMFAg5bnw@mail.gmail.com>
-X-Gm-Features: AX0GCFurnGJMYiwCtzh0zdwgyPO26K49bE_HPAsMz5DRqErXcI_u2aXFy_48n6g
-Message-ID: <CAHk-=whOEyTJb6MAcy2ojN98RrEzU5TW031sGpHMhMMFAg5bnw@mail.gmail.com>
-Subject: Re: [RFC 6/8] x86_64/bug: Implement __WARN_printf()
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, kees@kernel.org, 
-	acarmina@redhat.com, jpoimboe@kernel.org, mark.rutland@arm.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests: firmware: Add details in error logging
+To: Harshal Wadhwa <embedkari167@gmail.com>
+Cc: shuah@kernel.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20250516153955.111815-1-embedkari167@gmail.com>
+ <73a4b1c9-44b4-4f06-a766-ea7ed391c578@linuxfoundation.org>
+ <CAPCCTVOXHUh7j6Vb=dmnY4wi37f4NMo+Pumuho-sA7jq1iH_fQ@mail.gmail.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <CAPCCTVOXHUh7j6Vb=dmnY4wi37f4NMo+Pumuho-sA7jq1iH_fQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 2 Jun 2025 at 14:57, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> So if I stuff the asm macro in a global asm() block then GCC ends up
-> looking like so:
+On 5/25/25 12:26, Harshal Wadhwa wrote:
+> On Fri, 23 May 2025 at 03:49, Shuah Khan <skhan@linuxfoundation.org> wrote:
+>>
+>> On 5/16/25 09:39, Harshal wrote:
+>>> Specify details in logs of failed cases
+>>>
+>>> Use die() instead of exit() when write to
+>>> sys_path fails
+>>
+>> Please explain why this change is needed?
+>>
+>>>
+>>> Signed-off-by: Harshal <embedkari167@gmail.com>
+>>> ---
+>>>    tools/testing/selftests/firmware/fw_namespace.c | 17 +++++++++--------
+>>>    1 file changed, 9 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/tools/testing/selftests/firmware/fw_namespace.c b/tools/testing/selftests/firmware/fw_namespace.c
+>>> index 04757dc7e546..deff7f57b694 100644
+>>> --- a/tools/testing/selftests/firmware/fw_namespace.c
+>>> +++ b/tools/testing/selftests/firmware/fw_namespace.c
+>>> @@ -38,10 +38,11 @@ static void trigger_fw(const char *fw_name, const char *sys_path)
+>>>
+>>>        fd = open(sys_path, O_WRONLY);
+>>>        if (fd < 0)
+>>> -             die("open failed: %s\n",
+>>> +             die("open of sys_path failed: %s\n",
+>>>                    strerror(errno));
+>>>        if (write(fd, fw_name, strlen(fw_name)) != strlen(fw_name))
+>>> -             exit(EXIT_FAILURE);
+>>> +             die("write to sys_path failed: %s\n",
+>>> +                 strerror(errno));
+>>
+>> Hmm. Wrapper scripts key off of the EXIT_FAILURE - how does
+>> the output change with this change?
+> 
+> In the whole test file, all fail cases uses die() with the specified
+> error log and error code, so just wanted to add a error log for this
+> fault condition and maintain consistency.
 
-Better, but as then the clang thing looks like a horrendous disaster.
+You don't want to make changes to be consistent, especially when
+the change alters the behavior - this change changes the results.
 
-How about we simply make this all *code* instead of playing games with
-register numbers?
-
-Why not just push the arguments by hand on the stack, and make that be
-the interface? A 'push %reg' is like a byte or two. And you'd do it in
-the cold section, so nobody cares.
-
-And the asm would look somewhat sane, instead of being crazy noise due
-to crazy macros.
-
-Or so I imagine, because I didn't actually try it.
-
-           Linus
+thanks,
+-- Shuah
