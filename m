@@ -1,119 +1,130 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5981420DD7D
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 10:56:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D860F2054E4
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 10:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748861786; cv=none; b=hWo0kRPNcAcL9Rc/gsFNhrOFKMkflolE5wM4nl9I8OzttiVsoRBeWKgCdLwdojJ1wJ0DH0VlueyIEbL4daaav4p68Tr9JiKXyIPc3l4AQLq9s2TlTyD31sG4nNe5BF31p+DAihrYIqjKieZkqmMErpp8tVeAePA9g8gIXLTYfQM=
+	t=1748861808; cv=none; b=GVwKCdzdmxROAeb6ozN/MvleOuSBiqEqDK3+yxfjXM3jouvIkhakUprF+5Y8CjTCa3M3NfEgOXTH0XuhPUVQooQzCiXnCarTK6XivFaL34Evqiht3i1nYZvpUc073BqmfYLMFvdILuak3Iq6UxyrZ+o/CWHODEpDoxiu/Mk89bg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748861786; c=relaxed/simple;
-	bh=0swPdWXbh3sZ/RC6CHXrgtp2m4M1uxqvIYmkeohPKvw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hErNWuatJUA+EITV9Ewc6vn+MZscggpo3jvjjuskVZ2ORbmm7HrLvZ+TNRJLIVrYL+uOS202/t+Xk7zlPxPoAvINQTQfcRXEkJgAVLTN1aWNlUK0GAde1fi+WRCsJAAfd5LQA9cz9ukSCZYkxwSHYjnz5OMOsSdpCkDBXAsy4h8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=UKirGOvU; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1748861808; c=relaxed/simple;
+	bh=Bo1Dn3w37seMAP+bw5pDOhXBdEtsC55jIbo6qBxZVSk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HOX3nj2CDiva4FyyBVytyqkfGb2dzLlIpCLGCXaTvZ2WewXQA8hbp0SLFeyx9R7HM9RwUk5mmaLAE0BCizOZXW487EotrzrKmw8rT03qPsnQRtzXPzvFsKPel7hKTlkdxiWp+EmFcrtPdxP+Q7vCs8Jw8uKh6JmboYCYvyh2lkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=R4Oqv6GL; arc=none smtp.client-ip=209.85.167.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="UKirGOvU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=0swP
-	dWXbh3sZ/RC6CHXrgtp2m4M1uxqvIYmkeohPKvw=; b=UKirGOvUVBKNQWZpkJGB
-	vtIOQeok8vS71cWbq5XBpgC7ID+sCUmQpZ2ON0lwIt8szjyJZ/17AHkU6SQI1JOX
-	KJ+Xkh6sYSqFBhoKtKlj1/kBupc6e2WU/luLvuSmVSMamQIJoSYuBHVuVOPKk6Kf
-	YkzztpRy0ow9haiuLjGjYoBLeVbxalmipv4hqzy9xNW5TxUBboIXXYGZIN5i7p8T
-	oVSEaKDi75ovCgliUQ20qe5ox0ugqVTSTTD8a4crlYJsZWdgKIeXFaGoGa3mZGEB
-	2giOjNpD5tpifvKFSfDhn1y5zMjpyPdNYn4NmDSJJHD8qqbKH76OCOyVfTxbShci
-	8w==
-Received: (qmail 3354859 invoked from network); 2 Jun 2025 12:56:22 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 2 Jun 2025 12:56:22 +0200
-X-UD-Smtp-Session: l3s3148p1@sk9AnZQ2N1NtKPMO
-Date: Mon, 2 Jun 2025 12:56:21 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Chris Brandt <chris.brandt@renesas.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 6/6] i2c: riic: Add support for RZ/T2H SoC
-Message-ID: <aD2DVSSPhoe4fb5h@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Chris Brandt <chris.brandt@renesas.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250530143135.366417-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250530143135.366417-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R4Oqv6GL"
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-407a3c10d03so1438948b6e.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 03:56:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748861805; x=1749466605; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Bo1Dn3w37seMAP+bw5pDOhXBdEtsC55jIbo6qBxZVSk=;
+        b=R4Oqv6GLLaD6df16lbj1nmmT+HNq/u21bPhjUNsupTvST40J6CW+5zKSaPSzeyC2Yu
+         ZsdR2J9lij8N8wkho0QRoRq3VB4GC4YfOuuoYeL6O9lA4oEWp1CVxuGWL4TpjBNoymTj
+         MU/KwmeLTNVxMXcnjecAqlthiNOZGUh8RDX4ijL2FMLCHQZ9RaTibdElardGyIY7ljcC
+         7xiG9kujalVxaMwMtNNC/LrGzOXcUZZgsTUtr4Ituce2hqnlSR4DZb2DpIntaL0QK7pJ
+         8Ysum07gZdD3rDvjkDfBc600ymfBF0pfCgveOmy3khWy2eNL6BJO99Wms8XjvdyJHxl/
+         gUBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748861805; x=1749466605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Bo1Dn3w37seMAP+bw5pDOhXBdEtsC55jIbo6qBxZVSk=;
+        b=n/teMmVkqiKr5OdaOmnIH8NqVWUQvOCxx+IX57Oi2DNSBeYmxTEQBJ1L3lh1ENkyD2
+         Ui0jp4rFGIgZIhq1u/1MArVReW6Dc/d9G0dosX7+h4Lr7Ke6TGuXTTRgHu9EyRyzx037
+         6tmlIi4vco80nJQhDxIrvAP0MahIrB+jqU/p23BW87jQRuLPohkP7MNXKIZoXJkgbqxC
+         ylQiS4aoISmiwbVYIzcjqWmuVsmVOv5BCMtqyaKEs4mBCaw7ThSdGBXWVKJC9WV4wly0
+         dciFu4ucRzyI7RUHqvmnP3GNAfMczF+odcq5UcGyQslMVrp6k4dITzr0O7NsrbJqi6Ad
+         aOhg==
+X-Forwarded-Encrypted: i=1; AJvYcCX8oCPsX+qbkJwDIO5rDFIoaHUCO3GOIoD7TWVFSRbdxPm0eVkStK+2HTrBeQO7O58nrLuv2JRQJCyeTgo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVyWXuXf5r5KJYiPuPscAAwFntCocj2FSxIaxpbfiYTxDPpT14
+	NPZhNFbTMN6Kxq4AvT07H+F+XXVflK4d+iUKqnd2YQvB5JSv77p8JUFoxeu7uO+EBd3psAFX0DK
+	s1rXCrXpeXJEy6JabtSOBk3jaKjbpdduSu4367l4o
+X-Gm-Gg: ASbGncvG3NQWWNBPheSzPi+SxBk5A+vaOrOkrwurGYi9TqqIKcsH1DSKs5Kc2riRxW3
+	DFcf5ELMchac097xIoZwKqyPfRA5AaUHleoUwtCdmrGD+Ll2gsYE2CY7wArS+L+hRabMk7bX0oT
+	26QcCISeFzes5hIZRN8iDhrCXYLYif5N2NJNHmrkU2qeeFYUgqnJH2ciDAIfzMBSNRbQzB1eHZI
+	Q==
+X-Google-Smtp-Source: AGHT+IGCwnRveAFrn3m1cHd75Jseg91XQxQvUPPL0lIKIgwRZ6smz4rU2A5lacSedSenmk+Jlg2FWjdBjazxr2GujXg=
+X-Received: by 2002:a05:6870:818e:b0:2c1:6948:d57c with SMTP id
+ 586e51a60fabf-2e948cb5422mr4678788fac.28.1748861805503; Mon, 02 Jun 2025
+ 03:56:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="//J3Fvyv9YK2V0Hw"
-Content-Disposition: inline
-In-Reply-To: <20250530143135.366417-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
-
-
---//J3Fvyv9YK2V0Hw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250526150141.3407433-1-bqe@google.com> <aDXPhs79tQGTNU9b@yury>
+In-Reply-To: <aDXPhs79tQGTNU9b@yury>
+From: Burak Emir <bqe@google.com>
+Date: Mon, 2 Jun 2025 12:56:33 +0200
+X-Gm-Features: AX0GCFsptb4AjM3AXX__0mElF1fRr3ofVuwEuTFh0eet1zbR-ixQIe0moGlg4S0
+Message-ID: <CACQBu=Wtd=b+BwCGqXgw=pJdFexDH8GfVXHdnGVcOKD9seeo0A@mail.gmail.com>
+Subject: Re: [PATCH v9 0/5] rust: adds Bitmap API, ID pool and bindings
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Kees Cook <kees@kernel.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Carlos Llamas <cmllamas@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 30, 2025 at 03:31:35PM +0100, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->=20
-> Add support for the Renesas RZ/T2H (R9A09G077) SoC, which features a
-> different interrupt layout for the RIIC controller. Unlike other SoCs
-> with individual error interrupts, RZ/T2H uses a combined error interrupt
-> (EEI).
->=20
-> Introduce a new IRQ descriptor table for RZ/T2H, along with a custom
-> ISR (`riic_eei_isr`) to handle STOP and NACK detection from the shared
-> interrupt.
->=20
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
++Carlos
 
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com> # on RZ/A1
+On Tue, May 27, 2025 at 4:43=E2=80=AFPM Yury Norov <yury.norov@gmail.com> w=
+rote:
+>
+> On Mon, May 26, 2025 at 03:01:29PM +0000, Burak Emir wrote:
+> > We include set_bit_atomic and clear_bit_atomic operations. One has
+> > to avoid races with non-atomic operations, which is ensure by the
+> > Rust type system: either callers have shared references &bitmap in
+> > which case the mutations are atomic operations. Or there is a
+> > exclusive reference &mut bitmap, in which case there is no concurrent
+> > access.
+>
+> Here I'm lost. In the other email you say:
+>
+> > You also commented on the API. The weirdness of the API is all due to
+> > the separating "request to shrink/grow" from allocation.
+> > Since allocation can happen while other threads may mess with the id
+> > pool, one has to double check that the request to shrink/grow still
+> > makes sense.
+>
+> And here you say:
+>
+> > there is a
+> > exclusive reference &mut bitmap, in which case there is no concurrent
+> > access
+>
+> So to me it sounds like if I want to resize, I just allocate a new bitmap=
+,
+> take this exclusive reference, copy IDs, swap the pointers in
+> corresponding class, and that's it. What did I miss?
 
+The two emails are about two related but different things:
+1. the bitmap API which uses kmalloc with GFP_KERNEL, and what you
+suggest could be done with &mut references
+2. the id_pool and its fine-grained API that permits controlling the
+time of allocation, which is used in binder which relies on a
+spinlock.
 
---//J3Fvyv9YK2V0Hw
-Content-Type: application/pgp-signature; name="signature.asc"
+My limited understanding is that calling kmalloc w/ GFP_KERNEL while
+holding a spinlock is not good, since the kmalloc may sleep.
+You can see this "first unlock, then alloc, then lock again" pattern
+in binder code here:
+https://github.com/torvalds/linux/blob/15d9da3f818cae676f822a04407d3c17b533=
+57d2/drivers/android/binder.c#L1099
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmg9g1UACgkQFA3kzBSg
-KbYQ2w//RRE275vTazkBT4CUs+j5+/an9Z4KNjvLPHG2f/SoO1loUsPkPa9fGTp5
-NbKrUDRSEePjyKgJpPNu/4ODMe91aIjdM7IXSQPKsT5dCwIbewW7xpoGtVb3Gb2r
-w5pubanTrdchNiIufQIlzl4fVxRoKORnHa5okir71ZRgcKzEYBk5nIIGJcngkSc3
-7XajNl0pHhWkk2rjpIvMqlTOxoevQwYqmpMggqDEit+h5lbF3FH2Y0Tg8w7l0kFZ
-blRp/f54LrU71zwyUN84ievqE75flvPVcd9dmA1RjnrUkTvxQyBvCGxhR+5q5Xou
-0KaHlzz333NsQeJv6mL5kkAsqt1NcWKu5erV1/GMBWbpvgdKsP48iqfStYo/wTby
-OJnPHQao+2tGhWmUb2f62cV7cxs5M8muPN+j3MX8qedFi9thC7GEOP59ipROal2T
-oWjj5xKjqgLfkx7wanumxJLOHGClNvgkXwYXgjawyc9a3T2KPPdpgvt+m8MvjytL
-8xln3ZHKvfTX47H44cXxNmqyGUv+YJr3HqUDM4Nhkkbt84WUNu5wI0iKnDTFbxIv
-ngp7Zm2pfhQ2OFZCNjQpBjx8urK6CvueztrTkxuZZ1m6tOEzmJYecMCW7o4hr1Q/
-/lgWsCZ6kN4sE0Mx7h2Ka2GdSzR8eLmiJlHZsgIaGCajlkvpRcQ=
-=jeg9
------END PGP SIGNATURE-----
-
---//J3Fvyv9YK2V0Hw--
+cheers,
+- Burak
