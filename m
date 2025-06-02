@@ -1,55 +1,49 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99ABA182B7;
-	Mon,  2 Jun 2025 04:11:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2784BA49;
+	Mon,  2 Jun 2025 04:12:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748837490; cv=none; b=L37878dKjSGJWh6H7C3iiwwRaTn7cNAskkzzx0xVd5wP9g7N1gdxGryTUhSeC/VmEjqvS8Z7Jg47T8k9NMQrDArdt28wRSDapEJsr/MVSgXdsxL97gxjuja1UmieWoLtQSw4D8KXi6hR2h4MmBlCzPTYVABM4OaPlFlbQGD5RQ4=
+	t=1748837570; cv=none; b=WxJP/GAPU08GozSAMst8YUrjcuWyWCPoJUCjDjeAkbA57C4JZUbR54gij4d2N74c/PjHJGeDca3KVqRVOwqQJ09si+K8AVz/4PNqmus9Q5SPeARZwzH9ce76VKsslZt6/Ig6WS9K9eTSYqCvQ+616q44kqITXgpS/U0C6sn+GGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748837490; c=relaxed/simple;
-	bh=VNUqtAL1SHKb0pozQoeZywC6qZxi9oGNe5rRKbOsy4Q=;
+	s=arc-20240116; t=1748837570; c=relaxed/simple;
+	bh=SXGI68zTpEQxoRLpV8kTenRPwkQ4mgLfAF1yy8lB/ug=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=biseBkn2Y23CItRRBVvCR4j8+4WkWsZP3wcAcZ9CKxU1Jm0DyzouZiMdZoEb1AEwAOybmqXY4GdbCBndC9f2dDedKD1tuNYeQpfbSaUxfgnhHHqtyrjHUuA9trfjY0Pwa6BD4jC6CZr4AJHmY2XDsriuUY2PzQ8aG5jYMHkp9H8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=cDLc7AG1; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=c36+wQFFdVsedzKwmoySmpIuWlQJs9RuwFY9/lKDKJQ2TIt25ftqaIzG1P0nQvpUNd+pVbW24QAKfvJDijvJn/kNmDjeOf1Ivg/ctVmgG9aL/SOv7alZSyWGOB4LF+4krvmE6srcGf04n4EFHAxAkBA6efJ/9wf6DTsVjIZuq8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=hrmTsxMf; arc=none smtp.client-ip=220.197.32.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="cDLc7AG1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=iuH08HhCzFKCMOC8/O0swKDH+rpWOadfk7Rm4fI946Q=; b=cDLc7AG1xVeGrDIh1peeN0IWEk
-	zSPl9poJhEGT0YoB/3XnvH6rSM6bY3xjL0IUqjUntiObN7RMhtlCPHuD3A62GgdK0UEACC5R8vd1k
-	nGJkZRQS6J7IpGD5Cac8ckt2eGuQw0ldn0T1SIMMph5HBpFztRTyZBhVmy8+xkbQoA7OwVtDKj3OZ
-	76BRcTLzVJZLqbCzOHiBTXoFLI5gsn+T2zZ4MU1RCovTNxA1K7wQ4w3A4hqY1qW3qspeqQLRXJ12A
-	qO/+nks1w4qOwDF7mdiodEdOvdFTMW5W0MgrK6eRVtCQ084Z11K100prR+Fy/v0Uyq+f2T84t8Tki
-	2y66Yf/A==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uLwW6-0000000BUl8-1UDJ;
-	Mon, 02 Jun 2025 04:11:18 +0000
-Date: Mon, 2 Jun 2025 05:11:18 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linmag7@gmail.com, Al Viro <viro@ftp.linux.org.uk>, arnd@arndb.de,
-	chris@zankel.net, dinguyen@kernel.org, glaubitz@physik.fu-berlin.de,
-	ink@unseen.parts, jcmvbkbc@gmail.com, kees@kernel.org,
-	linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	mattst88@gmail.com, monstr@monstr.eu, richard.henderson@linaro.org,
-	sparclinux@vger.kernel.org, x86@kernel.org,
-	Sam James <sam@gentoo.org>
-Subject: Re: [PATCH v2 1/1] mm: pgtable: fix pte_swp_exclusive
-Message-ID: <20250602041118.GA2675383@ZenIV>
-References: <87cyfejafj.fsf@gentoo.org>
- <87v7rik020.fsf@gentoo.org>
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="hrmTsxMf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=PM1YUNe6Kcjv4VvPdBukyHU695tq2C+DM6YTTyjSZJQ=;
+	b=hrmTsxMffdE5+2LEHRQK4t5V9+FQHtqNu35A1386zBT09uiEhgmhF5lq6FRiS2
+	ZDGQ1sn5sS04WCLR6boKt1vkVIxb6HCs6hQDHHsBeCkBNxYiiWwTwAEFcAxvtrtA
+	dXXCwUkG8VgJpZXWrblWxIR2M/2m1wccymM5BpLHs7guA=
+Received: from dragon (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id M88vCgBX1cmGJD1oH4VrAg--.29433S3;
+	Mon, 02 Jun 2025 12:11:52 +0800 (CST)
+Date: Mon, 2 Jun 2025 12:11:50 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	Shengjiu Wang <shengjiu.wang@nxp.com>, Frank Li <Frank.li@nxp.com>,
+	Marco Felsch <m.felsch@pengutronix.de>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 5/6] arm64: dts: imx8mp: add aipstz-related definitions
+Message-ID: <aD0khjdjv7a1GcO5@dragon>
+References: <20250415171919.5623-1-laurentiumihalcea111@gmail.com>
+ <20250415171919.5623-6-laurentiumihalcea111@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,65 +52,84 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87v7rik020.fsf@gentoo.org>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+In-Reply-To: <20250415171919.5623-6-laurentiumihalcea111@gmail.com>
+X-CM-TRANSID:M88vCgBX1cmGJD1oH4VrAg--.29433S3
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Cr1UJF47XryUAF4xZF17GFg_yoW5JFyfpa
+	43CryUCr1IkF47G3sFvr1fJrn8Ka1fAF429w4agrW8KrnI9a48Kr4Fqr1SgrsFqrn3Ca1F
+	9Fn0vw1xurnxX3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U3PEfUUUUU=
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiNAiU+Wg9JIjiHQAA3X
 
-On Sat, Apr 05, 2025 at 06:09:11PM +0100, Sam James wrote:
-> Sam James <sam@gentoo.org> writes:
+On Tue, Apr 15, 2025 at 01:19:18PM -0400, Laurentiu Mihalcea wrote:
+> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
 > 
-> > Lovely cleanup and a great suggestion from Al.
-> >
-> > Reviewed-by: Sam James <sam@gentoo.org>
-> >
-> > I'd suggest adding a:
-> > Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+> Add header file with AIPSTZ-related definitions: consumer types,
+> master/peripheral configuration bits, and master ID definitions.
 > 
-> Al, were you planning on taking this through your tree?
+> Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mp-aipstz.h | 33 +++++++++++++++++++
+>  arch/arm64/boot/dts/freescale/imx8mp.dtsi     |  1 +
+>  2 files changed, 34 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx8mp-aipstz.h
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mp-aipstz.h b/arch/arm64/boot/dts/freescale/imx8mp-aipstz.h
+> new file mode 100644
+> index 000000000000..b5bfcbcf38b8
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/imx8mp-aipstz.h
+> @@ -0,0 +1,33 @@
+> +/* SPDX-License-Identifier: (GPL-2.0-only OR MIT) */
+> +/*
+> + * Copyright 2025 NXP
+> + */
+> +
+> +#ifndef __IMX8MP_AIPSTZ_H
+> +#define __IMX8MP_AIPSTZ_H
+> +
+> +/* consumer type - master or peripheral */
+> +#define IMX8MP_AIPSTZ_MASTER 0x0
+> +#define IMX8MP_AIPSTZ_PERIPH 0x1
+> +
+> +/* master configuration options */
+> +#define IMX8MP_AIPSTZ_MPL (1 << 0)
+> +#define IMX8MP_AIPSTZ_MTW (1 << 1)
+> +#define IMX8MP_AIPSTZ_MTR (1 << 2)
+> +#define IMX8MP_AIPSTZ_MBW (1 << 3)
+> +
+> +/* peripheral configuration options */
+> +#define IMX8MP_AIPSTZ_TP (1 << 0)
+> +#define IMX8MP_AIPSTZ_WP (1 << 1)
+> +#define IMX8MP_AIPSTZ_SP (1 << 2)
+> +#define IMX8MP_AIPSTZ_BW (1 << 3)
+> +
+> +/* master ID definitions */
+> +#define IMX8MP_AIPSTZ_EDMA 0 /* AUDIOMIX EDMA */
+> +#define IMX8MP_AIPSTZ_CA53 1 /* Cortex-A53 cluster */
+> +#define IMX8MP_AIPSTZ_SDMA2 3 /* AUDIOMIX SDMA2 */
+> +#define IMX8MP_AIPSTZ_SDMA3 3 /* AUDIOMIX SDMA3 */
+> +#define IMX8MP_AIPSTZ_HIFI4 5 /* HIFI4 DSP */
+> +#define IMX8MP_AIPSTZ_CM7 6 /* Cortex-M7 */
 
-FWIW, I expected it to get sent to Linus as "please, run this
-sed script before -rc1" kind of thing, script being something
-like
+Could we use tabs to align all these values vertically?
 
-sed -i -e 's/int pte_swp_exclusive/bool pte_swp_exclusive/' \
-	`git grep -l 'int pte_swp_exclusive'`
+Shawn
 
-with suggested commit message...  It's absolutely regular and
-that kind of tree-wide change is easier handled that way.
-
-	Oh, well...  To restore the context: Magnus had spotted a fun
-bug on Alpha back in February - pte_swp_exclusive() there returned
-pte_val(pte) & _PAGE_SWP_EXCLUSIVE as int.  The problem is that
-_PAGE_SWP_EXCLUSIVE is 1UL<<39 there, with obvious results...
-
-	I looked at the originally posted patch and suggested to
-make pte_swp_exclusive() return bool instead of int.  All users
-are in explicitly boolean contexts:
-
-include/linux/swapops.h:        if (pte_swp_exclusive(pte))
-mm/debug_vm_pgtable.c:  WARN_ON(pte_swp_exclusive(pte));
-mm/debug_vm_pgtable.c:  WARN_ON(!pte_swp_exclusive(pte));
-mm/debug_vm_pgtable.c:  WARN_ON(pte_swp_exclusive(pte));
-mm/internal.h:  if (pte_swp_exclusive(pte))
-mm/memory.c:            if (pte_swp_exclusive(orig_pte)) {
-mm/memory.c:            exclusive = pte_swp_exclusive(vmf->orig_pte);
-mm/swapfile.c:          if (pte_swp_exclusive(old_pte))
-mm/userfaultfd.c:               if (!pte_swp_exclusive(orig_src_pte)) {
-
-	Magnus posted patch of that form (see
-https://lore.kernel.org/all/20250218175735.19882-2-linmag7@gmail.com/),
-got no serious objections and then it went nowhere.
-
-	Bug is real and fairly obvious, fix is entirely mechanical and
-affects one line in each asm/pgtable.h out there.  Linus, could you
-run that sed script just before -rc1?  Commit message from the patch refered
-above looks sane:
-
-mm: pgtable: fix pte_swp_exclusive
-
-Make pte_swp_exclusive return bool instead of int. This will better reflect
-how pte_swp_exclusive is actually used in the code. This fixes swap/swapoff
-problems on Alpha due pte_swp_exclusive not returning correct values when
-_PAGE_SWP_EXCLUSIVE bit resides in upper 32-bits of PTE (like on alpha).
-
-Signed-off-by: Magnus Lindholm <linmag7@gmail.com>
+> +
+> +#endif /* __IMX8MP_AIPSTZ_H */
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> index aa7940c65f2d..ebbc99f9ceba 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> @@ -12,6 +12,7 @@
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/thermal/thermal.h>
+>  
+> +#include "imx8mp-aipstz.h"
+>  #include "imx8mp-pinfunc.h"
+>  
+>  / {
+> -- 
+> 2.34.1
+> 
 
