@@ -1,104 +1,99 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6572C3251;
-	Mon,  2 Jun 2025 21:19:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E885A1519B8;
+	Mon,  2 Jun 2025 21:19:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748899169; cv=none; b=d9MVqW9Ggsr0HAosaZ9aW7BSEVC5F2v/YfZD7PXGRSYzVWrp+4dHC4iCEBBQRNQK9nXhXuTgXc2Wk4i28v/YemkDAfafSzbpkKEv0G4jP1NAlULhG8Sm7eRLADTRwM1E1f4LBBsabtR6nC83bipWPUALAA9ykVCeQm07JmquMGk=
+	t=1748899187; cv=none; b=pgSDcCOvBtHooVgbmMrpIeRCMl45m0PRrAFjUy7nV1Mjk18Cx/tCSJtjGZ2m4OsBIf5gUb+kS0rGL2Pb2UhmLy3R8WVCiguWxpGbgtr24nxv3o4n4ZSCnnX/Auf9WGwThVXhJX/ISWHk2MPlrj9E3U4tG9UKpsBhfco0nQexm4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748899169; c=relaxed/simple;
-	bh=fA7kkOGHTvsZ6p5lbH9wX+TNESc5QgAkSJcorlZrVM4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FvlLoZ0jZUsIyl5e3FULcNdoEOWy4Wv9wMQ+t+w9pv6ceos1HQYfo2EBXcH7z/NYTwpRZmdk/LoFpuOyCjRHLmxgUp0VgxNyY6Y0cpqDUMdHxFUNzVKOkzdKIi9mHuoMojLLBqBsCrto5HIyTb+9pQOgvDH3nlshi8uVclXV+TY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QX/uzXWE; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748899187; c=relaxed/simple;
+	bh=6mj/BlYXhWA2zqQmobSnww4HV6I3qNHM38OyJ0T6thY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=mwUkFrxkSGacY/BX//Bgd+qLZ97EHK+pgZqbwQD3vQwz56yXhrUu2Do4SxWexiX4XSlMMYNxl0hiaWhTq6Jng8wmjJ9wK6H5Q1VW/mxKQHk5lWHzcCIBvWarzJS3Dd7k10umaTm/TnEjAkre9bOWYRjePqFGCpQ0POTYiCuzMd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IfLj37KI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QX/uzXWE"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-451d7b50815so14051265e9.2;
-        Mon, 02 Jun 2025 14:19:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748899165; x=1749503965; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Jkp8Zo9nGduEKF5bIjgb1RX1iaMvxoQSzr2bwuYc8UQ=;
-        b=QX/uzXWEiZL152rCkU85ZrAhZ7lf9GwqRoNrhlXMuLp18tYXhel4CzsRTGjwTX7qEH
-         UJmmTkJ+kYZbo/hZhcoOg9QWeAaiEmwH1sFvjnos+J19FwIx4WEYn7e53GZdMfRt9vyh
-         T2KDQUqBVJJmtb0g41YBul/LvKXn7/qpzTmN+W7BlL7hsui9kYvP8iG608+aYEhxcezT
-         7pjUxOzunfis+pzaogF5EOUWRr88hYSWsXg3c3oRuLU6OpGuLKVFsMdiSIVXBqDx46m2
-         sB7IyJsK8Z3WB3Gm7vT4HaHhtPYvOwi20Ici8/o0QKKC5fh8CuK+9fJM/qy+V+luqil9
-         gYAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748899165; x=1749503965;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Jkp8Zo9nGduEKF5bIjgb1RX1iaMvxoQSzr2bwuYc8UQ=;
-        b=Ef8ME42nfsjcUXyx9s2YyvAhjWpOZ9pJyU2eY68kyOxzZKdeA8/GTrrVG0Dx0l9lQX
-         XfOqzTiOU5e68FAmrCcSe+bWusx4DtQVS8d7UdEn8Swpz3gbCTMh7+yLOLTuc3pcA5XV
-         1VHZqreIdlSPxmTnkgPgsGjmy0x749GFM/FTal/vvRI6FkLCDlKN7ZL/y/MPciLwMUYc
-         SbL3wgdKbyuK0aAiOk813CUnxaB7ygWgg0EckRvQ3nM/MXd8MmbqZcyhTt0FK+HeTqa8
-         1TtGi1tzmjXCltC3rwZxvjuEYa7icpOY2FKqEwyCaHTUicUeGuM8PZMuv9wGwD8ztAoh
-         Ab+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUlnymfLv6EEJDpWcHuEs3Qet/rCtAZkbIrR3ITsFjLHjr6XIF+QkxKxnfroE74HIazrCQUGF7cQ6eY@vger.kernel.org, AJvYcCUukhUflmuQkcsw31XYbt15Md0/QDQ2Dl/pz763gqw0idlpGCkHsl53Y8WfY+j7x3Znio5BJ+wndm2BTX0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJyFQV0re9ydPNN/gTGbi8IFnrxSvpIegsXiPgjn5x6LOH0PX9
-	JIwYkz9bhfc19WcljeuiFYw9g2KTAJcZzAHdpmhXZPSDHnJKiRDv/0iUwzbDfoRL9FU=
-X-Gm-Gg: ASbGnctvWSSrefTCXFWaOV5TBa8figqo64WT7Rc55jSrsT/ffEEMA8yrZdTTvMfNDZl
-	I4bPLANWyY9XI7atNLw9U98ETNJRsydjnHnsXYNNTPu6ux/YvKUfBj8622alysoqCx4t5onhHVd
-	urxjkEWZnBxPn5vSNzHT49Za14UAZ/xmyUy080pPf69fjoZeOLOQJbr0tjmJVP8esYcM3gjPZXj
-	viaFLUMf29OS6AK8Tu6rvVX86UQW37QnBkMtASfUOv+Un/xC/DWF4P224SSvH+Qwbsr9ktBltre
-	4PS9RJ6QZ7GziwF0H5gipu7JM5LT2tJ6GCUOhrHPtpilhfpov8bj1VZEh7KYqbydnZZuqMo=
-X-Google-Smtp-Source: AGHT+IGIJAoFS2NiL1tf4NFBAQyjhFxYI/D+mNHMut91QdUhNHMvaxDM+oCYR+cy8Rl7Vchth6p6IA==
-X-Received: by 2002:a05:600c:45d0:b0:43d:26e3:f2f6 with SMTP id 5b1f17b1804b1-450d882b456mr106362175e9.5.1748899165290;
-        Mon, 02 Jun 2025 14:19:25 -0700 (PDT)
-Received: from debian.local ([81.78.104.57])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7f9efa3sm134425025e9.9.2025.06.02.14.19.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 14:19:24 -0700 (PDT)
-Date: Mon, 2 Jun 2025 22:19:22 +0100
-From: Chris Bainbridge <chris.bainbridge@gmail.com>
-To: Mateusz =?utf-8?Q?Jo=C5=84czyk?= <mat.jonczyk@o2.pl>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>, linux-rtc@vger.kernel.org,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	lkml <linux-kernel@vger.kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [DRAFT PATCH] rtc-cmos: use spin_lock_irqsave in cmos_interrupt
-Message-ID: <aD4VWov2L1pJfxUY@debian.local>
-References: <74bcd576-d410-45b2-aaf0-05aedf96b8be@o2.pl>
- <20250602202019.625331-1-mat.jonczyk@o2.pl>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IfLj37KI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3319DC4CEEB;
+	Mon,  2 Jun 2025 21:19:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748899186;
+	bh=6mj/BlYXhWA2zqQmobSnww4HV6I3qNHM38OyJ0T6thY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=IfLj37KIEU0Jy+o62Y0/R/gpmCidEqsAZWzdxwnL5HG85g62rUbIrFSLo1ASjyW0E
+	 y087JbYvyqH6P0sxoL5Qky0xSKuJSHtn/j8nE76kFXO/pv8Yvty3tt8qc7yiB5Xyfw
+	 oR7816Es3kjDy+NpaxUuATsG/9yz3l6s0Mcf5TX3TWFDvUxPJHfYJve1DpFDrl5/TD
+	 aTidwE3xAY+YwOXO+C4kxAEjuR3zzU0LFIplBOpp/6XKnqvxU1wpzdPOrFATsTLkVs
+	 9KPt/oUZvn0rRo5D+EdjpdLuaozVtiIt7kB8psup46KAwCEAani/+R9Zz46DS9un6V
+	 bN+Em+YzTa7Vg==
+Date: Mon, 2 Jun 2025 16:19:44 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>,
+	Will Deacon <will@kernel.org>, Robert Richter <rric@kernel.org>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Marc Zyngier <maz@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>, dingwei@marvell.com,
+	cassel@kernel.org, Lukas Wunner <lukas@wunner.de>,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v4 4/5] PCI: host-common: Add link down handling for host
+ bridges
+Message-ID: <20250602211944.GA150795@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250602202019.625331-1-mat.jonczyk@o2.pl>
+In-Reply-To: <20250508-pcie-reset-slot-v4-4-7050093e2b50@linaro.org>
 
-On Mon, Jun 02, 2025 at 10:20:19PM +0200, Mateusz Jończyk wrote:
-> cmos_interrupt() can also be called also in non-interrupt contexts, such
-> as in ACPI handlers via rtc_handler(). Therefore, usage of
-> spin_lock(&rtc_lock) is insecure. Use spin_lock_irqsave() / etc.
-> instead.
-> 
-> Remove the local_irq_disable() hacks in cmos_check_wkalrm() and add a
-> comment so that these _irqsave / _irqrestore will not be disabled again,
-> as in
-> 
-> commit 6950d046eb6e ("rtc: cmos: Replace spin_lock_irqsave with spin_lock in hard IRQ")
-> 
-> Untested yet.
-> 
-> Signed-off-by: Mateusz Jończyk <mat.jonczyk@o2.pl>
-> Fixes: 13be2efc390a ("rtc: cmos: Disable irq around direct invocation of cmos_interrupt()")
+On Thu, May 08, 2025 at 12:40:33PM +0530, Manivannan Sadhasivam wrote:
+> The PCI link, when down, needs to be recovered to bring it back. But that
+> cannot be done in a generic way as link recovery procedure is specific to
+> host bridges. So add a new API pci_host_handle_link_down() that could be
+> called by the host bridge drivers when the link goes down.
 
-I tested this, and can confirm it does fix the "inconsistent lock state"
-error in my test case.
+IIUC you plumbed this into the reset path so the standard entries
+(pci_reset_function() and the sysfs "reset" files) work can now work
+for Root Ports on DT systems just like they do for ACPI systems
+(assuming the ACPI systems supply an _RST method for the ports).  That
+all sounds good.
+
+> The API will iterate through all the slots and calls the pcie_do_recovery()
+> function with 'pci_channel_io_frozen' as the state. This will result in the
+> execution of the AER Fatal error handling code. Since the link down
+> recovery is pretty much the same as AER Fatal error handling,
+> pcie_do_recovery() helper is reused here. First the AER error_detected
+> callback will be triggered for the bridge and the downstream devices. Then,
+> pci_host_reset_slot() will be called for the slot, which will reset the
+> slot using 'reset_slot' callback to recover the link. Once that's done,
+> resume message will be broadcasted to the bridge and the downstream devices
+> indicating successful link recovery.
+
+We have standard PCIe mechanisms to learn about "link down" events,
+e.g., AER Surprise Down error reporting and the Data Link Layer State
+Changed events for hot-plug capable ports.
+
+How does this controller-specific "link down" notification relate to
+those?  Is this for controllers that don't support those AER or
+hotplug mechanisms?  Or is this a different scenario that wouldn't be
+covered by them?
+
+If AER is enabled, do we get both the AER interrupt and the controller
+"link down" interrupt?
+
+> In case if the AER support is not enabled in the kernel, only
+> pci_bus_error_reset() will be called for each slots as there is no way we
+> could inform the drivers about link recovery.
