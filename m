@@ -1,80 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E994E21B9F6
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 13:42:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8CA870825;
+	Mon,  2 Jun 2025 13:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748871739; cv=none; b=X/tEpqmEFpBtT/QhMPO3QMitbVlFRx+Uu7fLH48HjSA1QcNd1UXrMGQ4rIPBrNgSgn8OH91Ks3GnAyfjwLAHW/OfsJwZ3XwVnry5QN1giyaLT0c54BL5NdF8ef/7/vqNlWknq0i+ZtMZo+In02UycLXaY0rBexRjt2sgS0nQVYg=
+	t=1748871887; cv=none; b=T6e/4nbftbt79yB4rpqrK1btxKu8kBZL6dtKi0pujEi1zSfm2d+u0ZCiWg5mI2wlamZP/TVqH7uAnRkqpQCeb61UeajyP111FMDgEvEHaVHYMs79NQeYvwxcaCaVq69OC+h/rhuSDR/yxjOyg8pnt12hUI+MPJJLOOOFFh0ntSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748871739; c=relaxed/simple;
-	bh=QGP116vocQSl0XnSlDwq9B8Uh09Tx/0uFirdqmSCerk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=f7f2yjVX5QVCurQ7trwmztRUHrxbmDLqgbVNo90GA3Rf/6Pk1uF6IT7g6146eaPNXVsaMXQeTer5FHGXqfREn/KjxXuWwZGc4KCZCiko24qXxGHk/ltHL9kOlCLCatVYpCtV8RVcDR+/mSzfeayHOTK+L+rRRwtGBr7GM6bZ6Ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vhted7lw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748871887; c=relaxed/simple;
+	bh=PBjdw75nG2B+DZlXL6ieuXIjx1Is8+ut5awWeFQLto0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Fc5uKPFIyWunQJNEc21CST1IIFSKGktxjMcT8vJvlp6mYEaflLaJ+A860kn1BolGjItMeCTJKj3wNjldcf63KaObL7lJ5Q47FapDhNI7VVmay8zd0pQdXBUMA+qn0stqb23QHj7S8cP3amuPEJ1Egq+LUJz+TCeIE46DFt302MA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bs0vK6AW; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vhted7lw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18D6DC4CEEB;
-	Mon,  2 Jun 2025 13:42:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748871737;
-	bh=QGP116vocQSl0XnSlDwq9B8Uh09Tx/0uFirdqmSCerk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Vhted7lwJWdHYWPPoC+r65ItQeB21VPbcME3yg5VqfPf9Qr/yJGrNpMJVYqKY/Q0J
-	 9vzjpLmhOOBmeFWwEwMcMjsH0WfA+nIZkxjJy1VeUIzOX4a53PKwQRi1egy5vp/EZE
-	 v3a/yv5CsfsxPhNy9U+WO7wXA+cMSjBbV2+DqZvLwMqHTWPIuUeE2EAFifyY5ckZjA
-	 Z07E7YYvEnbRNdDAS5nqFaCmLQWo6L02tBQ4Qm4u3YY60ZDUDxGWSeAz8ovUBFGCv1
-	 uYDrAc5WE1SJ8fi3LXBL62bjtzl95dFUoM96vReCcwzte4bfp9giHRX3TmRY6ypmo1
-	 e1X9sV0nvcFuA==
-From: Will Deacon <will@kernel.org>
-To: James Morse <james.morse@arm.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Ben Horgan <ben.horgan@arm.com>,
-	Xi Ruoyao <xry111@xry111.site>
-Cc: catalin.marinas@arm.com,
-	kernel-team@android.com,
-	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bs0vK6AW"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22c33677183so34374845ad.2;
+        Mon, 02 Jun 2025 06:44:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748871885; x=1749476685; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rFBx5jKDuVRtha+SRezclpTFWVzFgQykHX5dVfLDSwI=;
+        b=bs0vK6AWwrIfu13lE6N+NG7s1sP9C8k46CLQkLwE1JSr19I7ZDHce4XwjQzDu3f2bT
+         QefBrC/qUFmQBfqNr4xkC9KTpLaLF1j/kdvxqS1TT2bOpVu3OggYrIo3TVE6AW/4O8HK
+         LWm3Q03dRp8Ln9BcW04Wwb+TzsAAXHYlO0xA/y93Dtmq1HA47DenH54WZ+XBZAjZ8hXk
+         Lm/LSpOCDide5CzubX0Yj2ms0tPEtnoB/qr3W4Ld0toVqjPgiZks4i+VxKyj4oNk130G
+         zfUz5WmaZlOuG8YoqiU2q6EOmCHXE+R0dNT0MClnJaFIYlHwTvtvE48NUTbKTn2pW+XU
+         3rJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748871885; x=1749476685;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rFBx5jKDuVRtha+SRezclpTFWVzFgQykHX5dVfLDSwI=;
+        b=ahFG+KsPt5p28TDeH9ZQoLk8POSyUApruJr5HGR0h0COYCgVfm+0tMMGODORAnV63c
+         Xy1aXvWODC1Fv1HRnRuOdoykt3OKdsA6z/GYIk7Smcp7/FohhXY8kU2nGxfgcrRtA4Nw
+         aobFeGa5GXfHNI2dzFSnP5gG/GbJ18ui6X4uQ7jVW5P2jGmPLohKCnrCIoE6AgAyqd1v
+         7EABp242aYqJslSVdyf/r7BCxO/3FRFf/JFwKlGwMNM2SnJt88lOIVstYVu2OAfSTkHY
+         6Ix10cPYDvn3y9A1n+HSSVBsKVieNpPVOaLjmHZBiDzsM8dIGg2V4in0LcvXPCbsPXg6
+         D2ag==
+X-Forwarded-Encrypted: i=1; AJvYcCWyiJ7duV731u3+p/P5WGLKhbyRu7oEfxeozFAsyBwhYCXrdg+Q6t0g6qW3JKyzquFkIPrg5dwXQ8TQ@vger.kernel.org, AJvYcCX+eEzUfPR+QYPLEmeiTG8z8ZjEW1zKOqHFyLGIrksTJc2MpVSs0EtzHGi3zW/uEl5AN3aYPZArNQaOHsxDfw==@vger.kernel.org, AJvYcCXSLMMwNy6HLKmcFr/k+HqeSDv0LeoqdipXDrGOzf1dhnyCDyoiUsPddoxbRIthBljH+x55QBBiYySz6fgv@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyq/J55plLsi8SNh4OvTRwhuPVPxsm4qt5ftw95SbRfCQ+RGSDX
+	5mLovfLF5l6JenpkvEyoT/Jekfbhyi/1a/limlf8pe1nackVzaVwxWPL
+X-Gm-Gg: ASbGncu+QwBWGl5EX0SUP9jcIVpcw6dUI4ud6EZOwXhiXwpJFQqwIfqIEhcPwWCZwU4
+	ifemG3yFI2j4NTauum1uK52p/nSZDtOnwlqQ/g1g/hnEBck7RNP4tJI9MeDNJmlCC7mD3ORd9Kd
+	/V111iQ004ugftsqtxkyJPPfwDeR9+McmwaMxe9Gq0YCDCrX7SbsISpxGOo8bpcK/nZWSUoq5q0
+	C5yKpiSMX30sIkPLwle4mmor9o6PBCL5U+/V1DKsNjIx3tw+TRldGBbBSd7Rq737ylUPe1ILQDQ
+	go84HkRo/PwHeX2W2HnHjIw5zq9zejJ2qLdrFvxiELPy/weBbQ==
+X-Google-Smtp-Source: AGHT+IGZ3ISao9LOD02HFMyv7IYGlfRXgbofDUHMIrOHIClx9GbRhRLjxOBF6CIZaY+GlJ6G8Cmevg==
+X-Received: by 2002:a17:902:ea11:b0:234:9068:ed99 with SMTP id d9443c01a7336-235395b1df0mr176410065ad.24.1748871885009;
+        Mon, 02 Jun 2025 06:44:45 -0700 (PDT)
+Received: from nuvole.. ([144.202.86.13])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cd7623sm70817855ad.114.2025.06.02.06.44.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Jun 2025 06:44:44 -0700 (PDT)
+From: Pengyu Luo <mitltlatltl@gmail.com>
+To: konrad.dybcio@oss.qualcomm.com
+Cc: andersson@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	konradybcio@kernel.org,
+	krzk+dt@kernel.org,
+	linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Mingcong Bai <jeffbai@aosc.io>,
-	Shaopeng Tan <tan.shaopeng@fujitsu.com>
-Subject: Re: [PATCH v4] arm64: Add override for MPAM
-Date: Mon,  2 Jun 2025 14:42:05 +0100
-Message-Id: <174886855062.2951814.2307723986328064576.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20250602043723.216338-1-xry111@xry111.site>
-References: <20250602043723.216338-1-xry111@xry111.site>
+	mitltlatltl@gmail.com,
+	robh@kernel.org
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: sm8650: Add support for Oneplus Pad Pro (caihong)
+Date: Mon,  2 Jun 2025 21:44:30 +0800
+Message-ID: <20250602134431.114469-1-mitltlatltl@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <2e052c11-f22c-4d95-841e-cb4665d02451@oss.qualcomm.com>
+References: <2e052c11-f22c-4d95-841e-cb4665d02451@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Mon, 02 Jun 2025 12:33:21 +0800, Xi Ruoyao wrote:
-> As the message of the commit 09e6b306f3ba ("arm64: cpufeature: discover
-> CPU support for MPAM") already states, if a buggy firmware fails to
-> either enable MPAM or emulate the trap as if it were disabled, the
-> kernel will just fail to boot.  While upgrading the firmware should be
-> the best solution, we have some hardware of which the vendor have made
-> no response 2 months after we requested a firmware update.  Allow
-> overriding it so our devices don't become some e-waste.
-> 
-> [...]
+On Tue, May 27, 2025 at 7:11 PM Konrad Dybcio <konrad.dybcio@oss.qualcomm.com> wrote:
+> On 5/25/25 12:51 PM, Pengyu Luo wrote:
+> > On Thu, May 22, 2025 at 11:05 PM Konrad Dybcio <konrad.dybcio@oss.qualcomm.com> wrote:
+> >> On 5/21/25 10:37 AM, Pengyu Luo wrote:
+> >>> On Wed, May 21, 2025 at 5:54 AM Konrad Dybcio <konrad.dybcio@oss.qualcomm.com> wrote:
+> >>>> On 5/20/25 6:42 PM, Pengyu Luo wrote:
+> >>>>> The OnePlus Pad Pro is an Android tablet based on the Qualcomm SM8650
+> >>>>> platform. Its device codename is "caihong". This patch adds an initial
+> >>>>> devicetree for basic functionality.
+> >>
+> >> [...]
+> >>
+> >>>>> +&i2c2 {
+> >>>>> +     status = "okay";
+> >>>>> +
+> >>>>> +     /* secondary kinetic,ktz8866@11 */
+> >>>>
+> >>>> You can describe it, the driver sets some nonzero default brightness
+> >>>>
+> >>>
+> >>> But the backlight framework won't index them, which causes sysfs
+> >>> collision when the second instance is registering.
+> >>
+> >> Have you talked to the backlight maintainers? This shouldn't be too
+> >> complex to figure out
+> >
+> > Last time I tried to touch ktz8866 source, the reviewer advised me to
+> > add an backlight API to register the secondary devie. Since I am still
+> > working on the other parts when I am free, it remains unresolved. Now
+> > that you reminded me, then I tried to do it.
+> >
+> > https://lore.kernel.org/linux-fbdev/20250525104022.1326997-1-mitltlatltl@gmail.com/
+>
+> I think this should be made more generic, so that devices with e.g.
+> quad backlight can be easily accommodated for too.. Perhaps you could
+> do something like PLATFORM_DEVID_AUTO with incrementing suffixes and
 
-Applied to arm64 (for-next/core), thanks!
+Agree, thanks.
 
-[1/1] arm64: Add override for MPAM
-      https://git.kernel.org/arm64/c/10f885d63a0e
+> make `backlight = <&foo>;` on the panel accept an array of devices
+> that would be controlled together
 
-Cheers,
--- 
-Will
+In this way, we keep them independent, but we control every backlight
+in drm_panel. The questions are the systemd and distribution(sorry, I
+am just a junior, I use them). Generally, the systemd will create
+serivce for every backlight sysfs. I encountered that they saved
+different backlight values, even if I set the same value manually.
+As for distribution, it seems that only half backlight is controlled.
+I encountered that only half backlight got dimmed.
 
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+Best wishes,
+Pengyu
