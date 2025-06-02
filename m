@@ -1,91 +1,165 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A7DF21A444;
-	Mon,  2 Jun 2025 15:26:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A34D2C327B
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 15:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748877973; cv=none; b=nzjirnvz0YJh7cZUsl8P5MOVJJJ3bzoymEX4X5sK4gZm7zvhqv5Q5287uQFapwFMPVh/6vr78yGpvobh6QDippk0V7XkIXYDtNRe+G21kb3KNmgpkfT189iFKJBHSLtrTK2YvxBTyrQqAkqsLa4zSVsBwHkuNWX9S6LUzabzvRk=
+	t=1748878033; cv=none; b=by+q0ZmT4LB2wICKG0K5k8s/I1pB3Ewok/A9CConrJ6E1SRYfphxF04Njp0NmxfAXFGf78VQrCtsdE2LnXaPhjoygl7O+0dGqfNcdG48ajk8E4mOknCvFciZ/wPRCfxdg9N+1fyykUCtyUEazQWC9fZUwUCsSZwwPaB/xcR02tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748877973; c=relaxed/simple;
-	bh=B/rTeYDT4bu9TqlcVS+AMRm0LLhf4oIY9pXCk0xIYWY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WhSOcSaIrtBpDY2s1NsDD74LVRrsFAq7P0K4zS1kEMSnRaoetiWwaBxxv4nr5FghCE51VTiPHKjzvxDDN5555B0IUg18pcoTLIibhdfzNI+Wi0TBC5/fr+GA3dznAaanQz5+LpJ8etl4DS1RQQ8RjgxdZ7N8MM1rmJvyEVqHz7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=nocTW5lJ; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1748878033; c=relaxed/simple;
+	bh=1rj2sQDyariKlENRwVnpUEuuscsrU93/V7MTbMeQzXg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RWOBaZ2JefhONWDKtj2I2aDM4raIxgIoE/GIjsamuYuDw5Vn2/ANI1RY97zeJGSEQO2MYY/Z9eLYMN4zfYVp7V108DLOY+xOpHmTZuUsIKX/cjIZ+mKEUZDSukcBnEO+X2JMtGAs/j8vftY+czQfsdzwVOY2jQ9VyeUQHLCHCU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z1cWWZFu; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="nocTW5lJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=VsmBZUh+vyXv4ku+fzDdFGhVlt45TaS4taDV3PYjBJs=; b=nocTW5lJMQ/TMaA8qaPK4x9xGY
-	YHoLB6m1pNtMbB+bEbBT3ru7jVtGgwGZvuPuGgBT253G23p3UJ5WHYUwS26S9UmPa9E+uG8S65Lxp
-	GFCvWfH4t88+KK4RUBPL48KvgCAUHuXHoI6rfN4XYyHIAu63tdKU7phtVc8bOvBOsWMkJGxoRXWCs
-	jbqQ2DqHn9IRa8f2y8hTgjiqY3qQrA03xW/9y1g8BT5x+suXlKEihGY1Wec0H4D5q2afAdyT+XUuv
-	AYUOV3yQbBY+yxWNOC9lbQ8zTiB40WZ5nP2ReoIqYXljqYIhBiID+mpg1B3ma/Pe1QEpaghq6GeNh
-	ql3M45uA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:55524)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uM72q-00051K-2g;
-	Mon, 02 Jun 2025 16:25:48 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uM72h-0007i6-0r;
-	Mon, 02 Jun 2025 16:25:39 +0100
-Date: Mon, 2 Jun 2025 16:25:39 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Ilya K <me@0upti.me>
-Cc: Eric Woudstra <ericwouds@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Frank Wunderlich <frank-w@public-files.de>,
-	Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org, bridge@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH RFC net-next] net: phylink: always config mac for
- (delayed) phy
-Message-ID: <aD3Cc7gmB2Tev_ul@shell.armlinux.org.uk>
-References: <20250107123615.161095-1-ericwouds@gmail.com>
- <Z30iUj6DE9-fRp0n@shell.armlinux.org.uk>
- <4b9b2a9a-061b-43ad-b402-a49aee317f41@gmail.com>
- <Z31CJS1YUvPGiEXs@shell.armlinux.org.uk>
- <98234080-946e-4b36-832f-113b185e7bca@gmail.com>
- <Z3-Tz5WdLCat91vm@shell.armlinux.org.uk>
- <9cc913d7-7e5b-4b6c-886c-ca9778c3f970@0upti.me>
- <aD1lRha-enQ9Pw0g@shell.armlinux.org.uk>
- <2894a781-4d4b-4e3c-9f4e-7c1f04122f8a@0upti.me>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z1cWWZFu"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso13897a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 08:27:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748878030; x=1749482830; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zbjOjEHHvX/w+qCD0FUvqPgmxnmWutifPueg1K990TI=;
+        b=Z1cWWZFuKOjh0UKJqdwE2tuNfmpj3uck4DzES5JOhunVYMgXk9hwYKnMW0nm2FBKeM
+         E7QecL8HHMNk7j17cwlW4TpIDKD0onLyVTQzGBIKdw+1mv7e/TUK8m1zeOYXV9RiiX8p
+         fvp4Wt25gvWlUKHYzTaHJQhQjsgc1YpWfTePdeR8UzK46Wj91YJ2HEnpVy4LfAvGXpVw
+         3aJL0LP4U1Y1pw3vr9fH/roxxwf57CmDVN/05d13gsrjKrBRp0vKxO2xNpDtRM38JxRz
+         j0DNliVEhWg41cXmZQSQF452Vn8XNMhl9FhPhuOl+EGMRTqTwcbC3oBMxIUazLDi7SIy
+         WTIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748878030; x=1749482830;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zbjOjEHHvX/w+qCD0FUvqPgmxnmWutifPueg1K990TI=;
+        b=KnUpMTL1fNjFR4ROUjH8+l4rFuoaQd2N8PwF4n42SYZ7AvCBWhcsBiCco9AkKEqlsg
+         bLWUexUKYD3njD1wdn0ZGPlVghMxLbFlMeBvJfGZalIig8zi5Yn92PKV1Ow80+2sMM57
+         KWxTKKgLDmkAkLk3ifxxMwuc/rjMHiF9opBkgQkPL+gKvr0S/Ol4JzfIo1gdPDcjrOYq
+         UcfNOA7XlDXoKUDtC68JJolKqF4W4DYfLN2Qm9kzslFdhmQMKUAC1LVrGZ1ZrLxdjOga
+         +YrkMReFIsA4lpMCknYdz8rU9yKjQ2Wz0g7D0+cik3RfdQX+S/RakSDoQ/1di4ahWUdq
+         29MQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX40/E3DTI0ZDVdDQaOY21Vkekd7XgvnawGx7JnuBZWfG4z3VQLjBa6XwfYfhcQg+aU8B3OB/Gn1GNjLbw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywsn7evV9j0WojeH4nTDulFyuSRsQNx8lgk+blFw1WoE0CbPg7k
+	S4OQtML7BEYlgGMAkV1g6vV268K2kZGy4ZIyzvXyZAqejmyncKoY1coCGoTFFH/doyvlGYjStyE
+	mqc1uQwrKZ4yDfr0mg3dcHwCTeh4IqKacwJhkHnex
+X-Gm-Gg: ASbGncsrm3PrrCHW2t+WKcrxwOgJRyWxwjgaTAKQQvWgOUF8AqPwqjUH4nVR+2qO9nS
+	Zn9VWpomihjGIO704UbejvBKZBJvU4lHvpZV/rQ5WrEmParAWNcR12zTseNTyzrApYte05pb8Qm
+	FEiBW7bzOljYoo3hApduhdfWE+lVyzU3VIWI5cehr4hGACrwJ3k/mF7fO/AAoNmy2hjRLQnrCb4
+	+53NlJxoTE=
+X-Google-Smtp-Source: AGHT+IF3SAgzgTfIOEAJCNnqf61hto0sKFw3fKSTwkwoYpTJCVLFGMjBKRqPHWQ1Mav84AP7exchd1mgkGE4qK2qElY=
+X-Received: by 2002:aa7:d58f:0:b0:606:9166:767 with SMTP id
+ 4fb4d7f45d1cf-60691660795mr32275a12.2.1748878029454; Mon, 02 Jun 2025
+ 08:27:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2894a781-4d4b-4e3c-9f4e-7c1f04122f8a@0upti.me>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+References: <20250404021902.48863-1-anthony.yznaga@oracle.com>
+ <20250404021902.48863-13-anthony.yznaga@oracle.com> <CAG48ez0gzjbumcECmE39dxsF9TTtR0ED3L7WdKdW4RupZDRyWA@mail.gmail.com>
+ <7fb16136-947b-4a72-8134-60d95ba38c1a@oracle.com>
+In-Reply-To: <7fb16136-947b-4a72-8134-60d95ba38c1a@oracle.com>
+From: Jann Horn <jannh@google.com>
+Date: Mon, 2 Jun 2025 17:26:32 +0200
+X-Gm-Features: AX0GCFv5I7J5q1_pTQ4ODWbpUYmffUV-gnSyvK2emUPO7QHiqsiByiseHqXWo8Q
+Message-ID: <CAG48ez0i527ibBCvZ_TF_PVt4OxfVTpS=_TYUKrk0cRQ10Bpxg@mail.gmail.com>
+Subject: Re: [PATCH v2 12/20] mm/mshare: prepare for page table sharing support
+To: Anthony Yznaga <anthony.yznaga@oracle.com>
+Cc: akpm@linux-foundation.org, willy@infradead.org, markhemm@googlemail.com, 
+	viro@zeniv.linux.org.uk, david@redhat.com, khalid@kernel.org, 
+	andreyknvl@gmail.com, dave.hansen@intel.com, luto@kernel.org, 
+	brauner@kernel.org, arnd@arndb.de, ebiederm@xmission.com, 
+	catalin.marinas@arm.com, linux-arch@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, mhiramat@kernel.org, 
+	rostedt@goodmis.org, vasily.averin@linux.dev, xhao@linux.alibaba.com, 
+	pcc@google.com, neilb@suse.de, maz@kernel.org, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Liam Howlett <liam.howlett@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 02, 2025 at 04:00:14PM +0300, Ilya K wrote:
-> That's weird, because I do have all the patches applied. I think this may have been broken by the pcs_inband_caps changes, because without the patch I'm just getting "autoneg setting not compatible with PCS", after which it bails, when it should really reconfigure the MAC instead.
+On Fri, May 30, 2025 at 6:42=E2=80=AFPM Anthony Yznaga
+<anthony.yznaga@oracle.com> wrote:
+> On 5/30/25 7:56 AM, Jann Horn wrote:
+> > On Fri, Apr 4, 2025 at 4:18=E2=80=AFAM Anthony Yznaga <anthony.yznaga@o=
+racle.com> wrote:
+> >> In preparation for enabling the handling of page faults in an mshare
+> >> region provide a way to link an mshare shared page table to a process
+> >> page table and otherwise find the actual vma in order to handle a page
+> >> fault. Modify the unmap path to ensure that page tables in mshare regi=
+ons
+> >> are unlinked and kept intact when a process exits or an mshare region
+> >> is explicitly unmapped.
+> >>
+> >> Signed-off-by: Khalid Aziz <khalid@kernel.org>
+> >> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> >> Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
+> > [...]
+> >> diff --git a/mm/memory.c b/mm/memory.c
+> >> index db558fe43088..68422b606819 100644
+> >> --- a/mm/memory.c
+> >> +++ b/mm/memory.c
+> > [...]
+> >> @@ -259,7 +260,10 @@ static inline void free_p4d_range(struct mmu_gath=
+er *tlb, pgd_t *pgd,
+> >>                  next =3D p4d_addr_end(addr, end);
+> >>                  if (p4d_none_or_clear_bad(p4d))
+> >>                          continue;
+> >> -               free_pud_range(tlb, p4d, addr, next, floor, ceiling);
+> >> +               if (unlikely(shared_pud))
+> >> +                       p4d_clear(p4d);
+> >> +               else
+> >> +                       free_pud_range(tlb, p4d, addr, next, floor, ce=
+iling);
+> >>          } while (p4d++, addr =3D next, addr !=3D end);
+> >>
+> >>          start &=3D PGDIR_MASK;
+> > [...]
+> >> +static void mshare_vm_op_unmap_page_range(struct mmu_gather *tlb,
+> >> +                               struct vm_area_struct *vma,
+> >> +                               unsigned long addr, unsigned long end,
+> >> +                               struct zap_details *details)
+> >> +{
+> >> +       /*
+> >> +        * The msharefs vma is being unmapped. Do not unmap pages in t=
+he
+> >> +        * mshare region itself.
+> >> +        */
+> >> +}
+> >
+> > Unmapping a VMA has three major phases:
+> >
+> > 1. unlinking the VMA from the VMA tree
+> > 2. removing the VMA contents
+> > 3. removing unneeded page tables
+> >
+> > The MM subsystem broadly assumes that after phase 2, no stuff is
+> > mapped in the region anymore and therefore changes to the backing file
+> > don't need to TLB-flush this VMA anymore, and unlinks the mapping from
+> > rmaps and such. If munmap() of an mshare region only removes the
+> > mapping of shared page tables in step 3, as implemented here, that
+> > means things like TLB flushes won't be able to discover all
+> > currently-existing mshare mappings of a host MM through rmap walks.
+> >
+> > I think it would make more sense to remove the links to shared page
+> > tables in step 2 (meaning in mshare_vm_op_unmap_page_range), just like
+> > hugetlb does, and not modify free_pgtables().
+>
+> That makes sense. I'll make this change.
 
-Please enable phylink and sfp debug (adding #define DEBUG to the top of
-phylink.c and sfp.c, and then send the kernel messages after reproducing
-the issue.
+Related: I think there needs to be a strategy for preventing walking
+of mshare host page tables through an mshare VMA by codepaths relying
+on MM/VMA locks, because those locks won't have an effect on the
+underlying host MM. For example, I think the only reason fork() is
+safe with your proposal is that copy_page_range() skips shared VMAs,
+and I think non-fast get_user_pages() could maybe hit use-after-free
+of page tables or such?
 
-Thanks.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+I guess the only clean strategy for that is to ensure that all
+locking-based page table walking code does a check for "is this an
+mshare VMA?" and, if yes, either bails immediately or takes extra
+locks on the host MM (which could get messy).
