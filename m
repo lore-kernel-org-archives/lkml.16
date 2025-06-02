@@ -1,139 +1,71 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5872F801;
-	Mon,  2 Jun 2025 19:59:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A163A1AA786;
+	Mon,  2 Jun 2025 19:59:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748894385; cv=none; b=TegxIGwpmZukbE7eHx8XqIM6zLomENJe9MArRjxUAMa9RSUCnJjtBLg9KmXN9hbhb6wPkp72dB5/yl4pRcfyHl6iHZ18W2NruvxPcCf2ncmqazlLsBCcJxCWq3i9VdqoUASkFQ3x7cVCaephvFGUVP/2BKZEAMRBVmdbKSDnoko=
+	t=1748894391; cv=none; b=VV5Ox0tTxAzaeQT26VomA16fZdL524XMYO9LF5L5JkkniSoWtOwwBG71yoECa6IMKhPH06kQj1O4yVbVZiApcocRijFTnOzBgNx5kBXZdd8a8JhZc+PsQwYnN4EagwBnWk9h+XumtImUfinJ8y1Sgn5aiRYQcUaIG6OnZRd3SJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748894385; c=relaxed/simple;
-	bh=RHvDS4cAJl+92SKascd6+GCLIsOdByGvIOkroYDtzFQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cvtN/a6IJVUXF7U/n3tXAvm5jilzn3scKkXoKN6X8OeuYRF26EJMg6A0SEKalfYJMV27V7keVuXb6tHR23VT4J3wvF/hLWciRgqyyLsUpH+3gUdVbskj6rev6QAMJ9aM4r7jb6VHj1Mx0VbPszbNwmWf00RIsYE1ojVjiIc1frc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YMi50EeR; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YMi50EeR"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-70e102eada9so43443007b3.2;
-        Mon, 02 Jun 2025 12:59:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748894383; x=1749499183; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xIhra9oieA5lipSepna6Y8iP2PylydCCjXn7hB/eBYU=;
-        b=YMi50EeRCPKXMllyPCADbX6O/wvnf81CWTeugrJenQUlOGFpbe3zJDnh/W1RMWOVVv
-         fpjAwTHab2cBie98+H4N26ho7tXoQH50z1D67tpjw3v7pDqn+0Uof9g0YewRqKRi9hNF
-         syjiUQKBikTwULBbsODF66e0xPZujLLtaQgstfIsnvkCDnIQL+c0jMY4z+Ks/VubTJ1u
-         GgYHkF1+oYf3+EPNjoNHBcx56nrtr/ch+7zI7iyfVX5zxwK7RO/+/8jsHPBSgu5bAeI8
-         bR3J7UbAwkuupmLELXUjq53nqZJgA//rTHt+JSijfA9somDh/Y/ZuywH3BEdRloXpe/v
-         fPcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748894383; x=1749499183;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xIhra9oieA5lipSepna6Y8iP2PylydCCjXn7hB/eBYU=;
-        b=eyeqeEYSgXgRPBtkVPyGORgE8ZB9on/SYG6DlnOLGa3TY012Uy6UyC1kNNRPNe3MRu
-         XcIAQURz5t1SUB0yTTNW3mz+0s25dYDo1C8uiLn+kuKMkIgQXW4eYsAzxTyWJo9n4TI6
-         V38xhZogbOPWAuUeGhBsi39TM3oaB2LzGb/CGLqBPzmwI0J2tvWmpzqPAWUmNX15QVX7
-         wDxWV8NnD3C6E7BLNw13KlgOp7vXUjpp5SCfize8minaTGXndLjai+HJmRwQWHWTyV7+
-         wsyzT2Tto3bp3s6bp38hDGV3A2yVcNBfY5yfAVEAvnnIZNUSFZ6jTAN37kCPxBxweH6d
-         VJqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU59BOTXZAVY9DQFWdgdq4f+1j4ZvH0wsYMxuDLt0PuwaZZQ31yHREEoPrSVyIG0z+5Z2/DZD1Akt748gQ=@vger.kernel.org, AJvYcCUZAA3aQsyT2PYF6k28fZasOhKUm5+TZ0R+sTn1pnICOtZKI2QC9L4wJfAbR+PmgBUTxV7P2yf3@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPW5PolQOYoFM4r0yQ42NMfLH/zX6IMPxCK7YkIfsXLxgaj2Im
-	97xdC1v+ePAMA+yNLCCDjny52yQC3fhvKVPcRWcESLLfvZLmiQtPWtMt6e8xABAdvc4SNcSLz2W
-	14jzHtlAcOWbeN9rAwE7NePYuymXFi8k=
-X-Gm-Gg: ASbGncvb/AsDZPRR47ppsHVwg+JBAgt/cB4MhOFJMYYdi1O1d2ZV+XmO50M86qieczU
-	iHY7HydG4zNKZxS5s5FW/cFIcFMGNXsrAA9UyFva7E1jJ6J8h4CfDrUnN3+D2gNDb917aCNhYYI
-	1zkGA0ONhQ28A8CPnUOQAnMY89Zxcgiuk=
-X-Google-Smtp-Source: AGHT+IFaWA9t31/piCYFAJk6alZKu/kEChLNmdDEWgF6KlX3U4CkL8UaHAE4YZ2ByETQvmO7lewDlSOwJp08MPrWqqE=
-X-Received: by 2002:a05:690c:4485:b0:6fb:1c5a:80ea with SMTP id
- 00721157ae682-70f97ff9266mr222966767b3.32.1748894382835; Mon, 02 Jun 2025
- 12:59:42 -0700 (PDT)
+	s=arc-20240116; t=1748894391; c=relaxed/simple;
+	bh=wuD9ZkdesExAhQhkMLxllx71KQ+NvGKgJo+ngi9MnzU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=diZ83hsoaULed14ydOzskW8ot/CTMs9lFaGr5K7yAVcVWJsLubCJcr6mXCZcH3VQxlc/vsv5i2fTO/p26TfNsBxGJEni3lqT43wMjgfcNTbR8vFICgB3vU4EbARs+PDXUNzO/xn48twdJsX+eyeStvebe2r14L5NX+IIM8N+QUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id C8707200A28D;
+	Mon,  2 Jun 2025 21:59:40 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id B3C922F90D4; Mon,  2 Jun 2025 21:59:40 +0200 (CEST)
+Date: Mon, 2 Jun 2025 21:59:40 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Changwoo Min <changwoo@igalia.com>
+Cc: lukasz.luba@arm.com, rafael@kernel.org, len.brown@intel.com,
+	pavel@kernel.org, christian.loehle@arm.com, tj@kernel.org,
+	kernel-dev@igalia.com, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/11] PM: EM: Add the infrastructure for command
+ processing.
+Message-ID: <aD4CrOmIwhUI-pet@wunner.de>
+References: <20250529001315.233492-1-changwoo@igalia.com>
+ <20250529001315.233492-5-changwoo@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250531101308.155757-1-noltari@gmail.com> <20250531101308.155757-5-noltari@gmail.com>
- <5d3d04c0-d9e4-4f80-8ab3-7bedb81505b3@broadcom.com>
-In-Reply-To: <5d3d04c0-d9e4-4f80-8ab3-7bedb81505b3@broadcom.com>
-From: Jonas Gorski <jonas.gorski@gmail.com>
-Date: Mon, 2 Jun 2025 21:59:31 +0200
-X-Gm-Features: AX0GCFtdY2lyYs2N50Q99tWdxoPNyeqsskkVl8zfCyMTRNSNLhGpNsTfeSkElC0
-Message-ID: <CAOiHx=nQiYs43oHXJpOhUn1dJ-tzD-TPdB22zcHFxjUBKXeVng@mail.gmail.com>
-Subject: Re: [RFC PATCH 04/10] net: dsa: b53: fix IP_MULTICAST_CTRL on BCM5325
-To: Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>, 
-	andrew@lunn.ch, olteanv@gmail.com, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, vivien.didelot@gmail.com, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, dgcbueu@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250529001315.233492-5-changwoo@igalia.com>
 
-On Mon, Jun 2, 2025 at 8:06=E2=80=AFPM Florian Fainelli
-<florian.fainelli@broadcom.com> wrote:
->
-> On 5/31/25 03:13, =C3=81lvaro Fern=C3=A1ndez Rojas wrote:
-> > BCM5325 doesn't implement B53_UC_FWD_EN, B53_MC_FWD_EN or B53_IPMC_FWD_=
-EN.
-> >
-> > Fixes: 53568438e381 ("net: dsa: b53: Add support for port_egress_floods=
- callback")
-> > Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
-> > ---
-> >   drivers/net/dsa/b53/b53_common.c | 13 +++++++++----
-> >   drivers/net/dsa/b53/b53_regs.h   |  1 +
-> >   2 files changed, 10 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53=
-_common.c
-> > index f314aeb81643..6b2ad82aa95f 100644
-> > --- a/drivers/net/dsa/b53/b53_common.c
-> > +++ b/drivers/net/dsa/b53/b53_common.c
-> > @@ -367,11 +367,16 @@ static void b53_set_forwarding(struct b53_device =
-*dev, int enable)
-> >               b53_write8(dev, B53_CTRL_PAGE, B53_SWITCH_CTRL, mgmt);
-> >       }
-> >
-> > -     /* Look at B53_UC_FWD_EN and B53_MC_FWD_EN to decide whether
-> > -      * frames should be flooded or not.
-> > -      */
-> >       b53_read8(dev, B53_CTRL_PAGE, B53_IP_MULTICAST_CTRL, &mgmt);
-> > -     mgmt |=3D B53_UC_FWD_EN | B53_MC_FWD_EN | B53_IPMC_FWD_EN;
-> > +     if (is5325(dev)) {
-> > +             /* Enable IP multicast address scheme. */
-> > +             mgmt |=3D B53_IP_MCAST_25;
-> > +     } else {
-> > +             /* Look at B53_UC_FWD_EN and B53_MC_FWD_EN to decide whet=
-her
-> > +              * frames should be flooded or not.
-> > +              */
-> > +             mgmt |=3D B53_UC_FWD_EN | B53_MC_FWD_EN | B53_IPMC_FWD_EN=
-;
-> > +     }
-> >       b53_write8(dev, B53_CTRL_PAGE, B53_IP_MULTICAST_CTRL, mgmt);
+On Thu, May 29, 2025 at 09:13:08AM +0900, Changwoo Min wrote:
+> +static int em_genl_cmd_doit(struct sk_buff *skb, struct genl_info *info)
+> +{
+> +	struct param p = { .attrs = info->attrs };
+> +	struct sk_buff *msg;
+> +	void *hdr;
+> +	int cmd = info->genlhdr->cmd;
+> +	int ret = -EMSGSIZE;
+> +
+> +	msg = genlmsg_new(NLMSG_GOODSIZE, GFP_KERNEL);
+> +	if (!msg)
+> +		return -ENOMEM;
 
-Since the only common thing is the register name, maybe it would make
-more sense to have the flow here
+Just a heads-up, I know everyone recommends NLMSG_GOODSIZE but in reality
+it's not that great because netlink_trim() reallocates the skb and copies
+the entire linear buffer if it determines that the skb is half-empty.
+Performance suffers as a result.  So it's actually better to calculate
+the exact message length prior to allocation.  See the SPDM commit
+referenced in my previous e-mail.  Another lesson I had to learn the
+hard way. :(
 
-if (is5325) {
-    enable IP_MULTICAST
-}  else {
-    enable DUMB_FWD_EN
-    enable {UC,MC,IPMC}_FWD_EN
-}
+Thanks,
 
->
-> I don't think B53_IPM_MULTICAST_CTRL is a valid register offset within
-> B53_CTRL_PAGE, or elsewhere for that matter, do you have a datasheet
-> that says this exists?
-
-5325E-DS14-R, page 83 (or 105 in pdf paging) on the top.
-
-Regards,
-Jonas
+Lukas
