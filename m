@@ -1,265 +1,129 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2127.outbound.protection.outlook.com [40.107.243.127])
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB1802C859;
-	Mon,  2 Jun 2025 20:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.127
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748897499; cv=fail; b=iub6d8q4ivCaYPh8tC3JTVUdavMaO4NFI0HNyCpzQaOkR21PFoLKif2RqHDH9HS/97sh/j3gPir548lz0XG4MwnI+HwYtWXkiOpL3D9nT2Xie2JsaZwzbjPtk63mLYwTejhSXUqFcwHKvStHeGxpXQwMpTV6G+X9JU0Am4LzH/M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748897499; c=relaxed/simple;
-	bh=yI76v8rOs52PLFOSa8kdB3oX6c1h+evKV+116ImFgs4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=J+D/oxh1SsDGs7MQycxl/wE8nFVnumEIYrBtB9oeQre7qxC81TEcJFoXZBWVI6LDi/rXije+2vsE7Zgo6/ZRx7u9+J0Q97t7j8ACIZPnYjoDJKaoA/52uyr8IakEHydt0Gw9mJjR5zQrHh9cmopW486FdLxbOuKbQR0Bckpa+aI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=amperemail.onmicrosoft.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=fail (0-bit key) header.d=amperemail.onmicrosoft.com header.i=@amperemail.onmicrosoft.com header.b=E7kpdcg2 reason="key not found in DNS"; arc=fail smtp.client-ip=40.107.243.127
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=amperemail.onmicrosoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4D1213255
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 20:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748897587; cv=none; b=BMaev60nhqv+XeJoferzyXghPvITsZat88NHmm7VGox49L7QM8Z0srt0aIpmcxB/MKq3BaDYqIKTMgpsnQMhIm5bsd8uvurc4d8+MvZQLBo9n+9WpOmvbBP5h661pO8S96/WJVo229uJoD54WKMZzIX6brVWuP/4e9tWR3dFCnQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748897587; c=relaxed/simple;
+	bh=spJPdv3SxMsR+kVYLWWmXtxQIJc58Pfgt5/9zrFEoTo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=RnFDJUCHTXJb7LkrxrXYU7uZcpTAIYrX5IA+13mmPjMplsEtycJ0g7hpC0SSuWM8RN/psDOpzKTX8OQyM9+WHXA7uiqGwTdazNRXqY//x/aXU0+WkXNNg2+rB0dZOl5SJmbprCb2EkL9fs8FWqko7prOk4eLudVIm5PxM1S43H4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=hyUgOkOn; arc=none smtp.client-ip=202.36.163.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=amperemail.onmicrosoft.com header.i=@amperemail.onmicrosoft.com header.b="E7kpdcg2"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sC0hSOXiPEUQ7WO3QWQt6HVihmKILS0kygHGYdKTwHRYo3np2AezD/dRxtelbjH72tEVFPr+uVA+8tKfuCz9oJLXoG46jUiBczxyCTYi/PPumX+LJ52ng2RjGsTlQqzEEDDh1JjwXRghVc6rNhXnHi1UJIt7neIkn0dGJIYwgm0tZv8dRxzpW14eY13u6PLn+a8jXo72RbgGZIgX6jqzeYTLIGpdrKf0ImlUTVcqGzAcMHvl8dLD6CZZ8A6N39qyPt283Rf7QM9ts8cbLNIjk6lC6Rd5J7lPB25b0ZcG5mdI1MEDHkaNeFssJFVToKlpqfzkwpYQwi9m1oXClXCgVQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=e5GlScKEW+nCQfxwCrz1v9MqXW3Q3fCTvTFedJdS7i0=;
- b=YRb9VxFMbXXUDGA6HJzEdolrmMPwcCUtNNCECMfEosvaO1gSFPgx1HY9adwfCv9rpZjpE2Cj2U5DZrGA2g5BSX2YdFD1DiO8opTU1IvElpgBNMfWbJ/AnZtpYrvGuSgzbwnl3sDGYq3lPJHAxkYr3pmK/N3hOBmA+8llcUcpAOh4R0Mvj7nuVYhottEUoUW+W6KhNJ/EZTy8LRkuroS8hHf4NpvZG8tO84yV/USlfI6dlae8BUB1IF2fkuPqHRcsb0n6MAPZ4nNCp5O14G6PUEnMrMYbWaFbqP+ebb1MH1LpjP7ZssqWjbh3FWgA0J0pAZL7Hn10yDVRGCVfl9Aspw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=amperemail.onmicrosoft.com; dkim=pass
- header.d=amperemail.onmicrosoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amperemail.onmicrosoft.com; s=selector1-amperemail-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e5GlScKEW+nCQfxwCrz1v9MqXW3Q3fCTvTFedJdS7i0=;
- b=E7kpdcg2RuS5HynqkEaSrIYCLEskZScGQrTYvc3pHRVNImC7E/zu6Qsq4c97jMwViz0iNV/AonXtwwNr4EtYju9hjYS7WVwRc1I6natiL4MiokqwYi99z9UjqyDLu5OcO8mCb3YVBOZrH3HNfIJUW7SSHklUcCyZIw3ASTq9jgk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amperemail.onmicrosoft.com;
-Received: from BN3PR01MB9212.prod.exchangelabs.com (2603:10b6:408:2cb::8) by
- CY1PR01MB9340.prod.exchangelabs.com (2603:10b6:930:108::12) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8769.34; Mon, 2 Jun 2025 20:51:34 +0000
-Received: from BN3PR01MB9212.prod.exchangelabs.com
- ([fe80::3513:ad6e:208c:5dbd]) by BN3PR01MB9212.prod.exchangelabs.com
- ([fe80::3513:ad6e:208c:5dbd%3]) with mapi id 15.20.8769.037; Mon, 2 Jun 2025
- 20:51:34 +0000
-Message-ID: <9e3e0739-b859-4a62-954e-2b13f7d5dd85@amperemail.onmicrosoft.com>
-Date: Mon, 2 Jun 2025 16:51:29 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v20 1/1] mctp pcc: Implement MCTP over PCC
- Transport
-To: "lihuisong (C)" <lihuisong@huawei.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Sudeep Holla <sudeep.holla@arm.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- admiyo@os.amperecomputing.com, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>,
- Jeremy Kerr <jk@codeconstruct.com.au>, Eric Dumazet <edumazet@google.com>,
- Matt Johnston <matt@codeconstruct.com.au>, Paolo Abeni <pabeni@redhat.com>,
- Jakub Kicinski <kuba@kernel.org>
-References: <20250423220142.635223-1-admiyo@os.amperecomputing.com>
- <20250423220142.635223-2-admiyo@os.amperecomputing.com>
- <497a60df-c97e-48b7-bf0f-decbee6ed732@huawei.com>
- <a9f67a55-3471-46b3-bd02-757b0796658a@amperemail.onmicrosoft.com>
- <807e5ea9-ed04-4203-b4a6-bf90952e7934@huawei.com>
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="hyUgOkOn"
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id E2F442C0372;
+	Tue,  3 Jun 2025 08:52:56 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1748897576;
+	bh=spJPdv3SxMsR+kVYLWWmXtxQIJc58Pfgt5/9zrFEoTo=;
+	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+	b=hyUgOkOn5X3zkLYIOc4lJM4rsgU+CiZVcowX0r/xKpRVFlnGThYOEcTQvZ36P/XU3
+	 phT7OjkavcFumvUe9T2hZjuWv8gzgKgElF8IhzPLPb7gYc6BV6WUUklrq3Rvnz3p7m
+	 hIZ8YLnG0qxQKv20l0fn90FSSDvguCXqAXJY7xDlS2OQXur6I5AMfpJ9TjMlT2MQa2
+	 UeFnFzDhri6UtDJUKWOKZXf5woajtqWwesTBTsjYm83EELfb9zYA9bn2PxYRvnyTWb
+	 mdSFVb0i5aIIDu0DKT5XjBrINLsyqUCynCVeutQmjxwQr03VmWKVqgYBH0oTz419aH
+	 WWNBoBHPGotCw==
+Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B683e0f280001>; Tue, 03 Jun 2025 08:52:56 +1200
+Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
+ svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Tue, 3 Jun 2025 08:52:56 +1200
+Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
+ svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
+ 15.02.1544.014; Tue, 3 Jun 2025 08:52:56 +1200
+From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To: =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <ukleinek@kernel.org>
+CC: "jdelvare@suse.com" <jdelvare@suse.com>, "linux@roeck-us.net"
+	<linux@roeck-us.net>, "robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>, "linux-hwmon@vger.kernel.org"
+	<linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-pwm@vger.kernel.org"
+	<linux-pwm@vger.kernel.org>
+Subject: Re: [PATCH v7 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm properties
+Thread-Topic: [PATCH v7 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm
+ properties
+Thread-Index: AQHa3IT3bvX/iipZGkiPmVYc9wkwxrPnwi+AgABGbYCAAKO4gIAA/Z6AgAJhDICABXNvAA==
+Date: Mon, 2 Jun 2025 20:52:56 +0000
+Message-ID: <d538cd42-f8b3-43cb-897d-d60c3af57300@alliedtelesis.co.nz>
+References: <20240722221737.3407958-1-chris.packham@alliedtelesis.co.nz>
+ <20240722221737.3407958-2-chris.packham@alliedtelesis.co.nz>
+ <jzxu6mcbxf5zwyirnb2jjpm2i7sln3v5mz3gyhc5xhpqexicvb@atrcjvh7wuh5>
+ <bc99a27e-74ec-45a0-b77c-48f993269586@alliedtelesis.co.nz>
+ <jmxmxzzfyobuheqe75lj7qcq5rlt625wddb3rlhiernunjdodu@tgxghvfef4tl>
+ <4858ce06-2081-4335-af09-f118872317ea@alliedtelesis.co.nz>
+ <dirkbdd5oeofjhy5pk6jiaixbuhmuq7axewhrd7bdghc3dp5x6@ok2uhywwz5ls>
+In-Reply-To: <dirkbdd5oeofjhy5pk6jiaixbuhmuq7axewhrd7bdghc3dp5x6@ok2uhywwz5ls>
+Accept-Language: en-NZ, en-US
 Content-Language: en-US
-From: Adam Young <admiyo@amperemail.onmicrosoft.com>
-In-Reply-To: <807e5ea9-ed04-4203-b4a6-bf90952e7934@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: CY5PR14CA0004.namprd14.prod.outlook.com
- (2603:10b6:930:2::35) To BN3PR01MB9212.prod.exchangelabs.com
- (2603:10b6:408:2cb::8)
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E1E01981D71D9249981DD4F9B1F88EF9@alliedtelesis.co.nz>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PR01MB9212:EE_|CY1PR01MB9340:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4f32ab80-6b2e-40d6-e146-08dda217427a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|10070799003|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RHhFNjlqSlJkSzU1VlM2Q2FlbXBJRXdtR3lkTDZCdXJJd1RpL3ZsNDRNVnVz?=
- =?utf-8?B?UGtsSmFCYlF4cnIrSFk0ai8vWE42OFZQcEJrTHd1dGd0OWdIWGlHZ29DdTY5?=
- =?utf-8?B?cnFXaE1UQlZmZGVJei9GQU96SXRTL011dDA0STlkUk52ZzM2TEpHKzdIVm9R?=
- =?utf-8?B?a3RBMWNVRG4wVWFiKzc3dVVQL25PYmt5ZVRkb0VwRGJhbXFJclVqUm05eDkw?=
- =?utf-8?B?Z0NzQ0d0d2ZheHl1WDRMM0MvSWFmYTJuMjlOelgxTU5mcEsxRlBtSDN0Rnhh?=
- =?utf-8?B?YlJDT25EdmkrbkxibU4xbW1Hc3Uvcld3REJwWjFFUEppUkswVmplU25MTmxj?=
- =?utf-8?B?TmZrNTR4RHpwWTJzUTNTbFRCOXN3Y09zWnp3NVF0T29SME5oQ2pCQUY0Qmxk?=
- =?utf-8?B?b1Rwb3BwT1JXWHJkTGVFNEdUeXFpVVRaWW10bmFpSjRNcDJpckd6c0Q5SHB3?=
- =?utf-8?B?NzB0VUNYQXQ0NldydE9SMTRPWktNTTVZL1RkeFl2cVAxVGU0LzBVRWlxSTQ4?=
- =?utf-8?B?OHQrMVRNY1hrMVRBaVBpblhXRzlkVjQvNzN3QXR5Sk42dEpvcDVjYjl5ZVFJ?=
- =?utf-8?B?NnQ5TkJmK2xWWHI0djNMdlJla3JVUFpNY1JHU1dEMFlOdndlMVBJWjBPa0xi?=
- =?utf-8?B?cnI4ZTBJaDBYWEVDbDBPZm9CazBqMWp4TnFaRkJNYVVCd3dFK0tTVVpVcGZx?=
- =?utf-8?B?U1hMSkZuenhEMEgzRU1MK2g3NVRGc24zT0pxMklVZDdOMzcza3RnUVNmSFhM?=
- =?utf-8?B?dlJFZEQvWnU3RUJZRk5sb3cyTnhZaHBzb3Z4cm82VUN6djZGcG1JKzM0WGt0?=
- =?utf-8?B?S2RpNktTWDFUaVZzN0VscnlUM3lGanhndmxKcUZxOHBKOEZlMjFhUk1PVDdt?=
- =?utf-8?B?b0NiK0c1Rzh1RXY2WUVTdi9IQ3BXTkRxNDlXTDVCeG9aK0sxb0NlL0xSMkJY?=
- =?utf-8?B?OEFxSk9lYUR4ZUhiK2F1YStQbkNLdkxEWDNIWllVMlRqVGYrbURlY3VnQXJH?=
- =?utf-8?B?bEtpOUt0ZjVPWFVyTkZhQ29vN2RzRVN1SXVuczg2OEZwV3NxenN0R1NEaGx4?=
- =?utf-8?B?RzhGQk9BTEkwMThDU2ZtRGd5S0k2UDFHT2FrYWxOcHBhL2hnRjRESW01UHNo?=
- =?utf-8?B?MjcrUlcvTUQ4OHZKM3d3VGhTSHlXZkw5VmRLejRRNTJhdHRydTZVZ29TNkM3?=
- =?utf-8?B?WGNGRExRZUNaRUVkSFpVS0FtUVdFbXJhKzFEWjZyVnd3MlRPUVJKa0lTemVQ?=
- =?utf-8?B?aThIeFk1bWRHZ05TR1pzRWI3ZW40eXI0RFEybmdGMllrMXNFaXQ3OTNjTEM4?=
- =?utf-8?B?WmhBYWpKOG10dFhsS1ErcHUvY1hqRERHZlFiMk9waWZZNkVmSGJBbCtib1Vn?=
- =?utf-8?B?b2N4d1JvS2JyNlpGUitFSjIvdEdma2ZxQ1dpVHV4QkpaZXBxTkVmenAxZ0w2?=
- =?utf-8?B?amorc3pFR0Z5cUdyZ2ZZdHJDQjNIbkxsaGdJL1BSVTlaR0F2eXVicEhKOUkr?=
- =?utf-8?B?Y29laGw3WXdTM1hmb2VneUhWN0NsZW0vTjJYaWZSWWxYYzg5RlhkS1VuL0cy?=
- =?utf-8?B?WWlSNFlTOUIxaHdtdTNvR1NlcmkxNzl5RHdMS3BWTXN1VWxPMGRDb1Blaldh?=
- =?utf-8?B?SXFvUU43WFpTVUxEZGxJdmxVM3JWdFNhcnJNM0lhdzBYckNzUktmMUVyRGpp?=
- =?utf-8?B?SkU5RHgwMFp4dFduWk5EamhnUDJLMVpheVI2dGtZUU5CQTRERU13aFdKaWtr?=
- =?utf-8?B?Vk00eG5tMFhLN0poNUl4a0NUWHJ1SmpNa05Pekw0S1dYRzV2c1padTdjdmpu?=
- =?utf-8?B?c3lCNFQzaEpaTXVnREdaRVZadWtxdmZhdXpSUVJsMytUL00yb2J1Ulpxc3lx?=
- =?utf-8?B?aC80ZEJ1aFdLUXpCL0hnZ2x1UGEzRjBzbDJuRGxrVFRMUFk3NGVZWFcyREJN?=
- =?utf-8?Q?B3w5DXb/Y3Q=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN3PR01MB9212.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WUlDbDBHczhQRjdyR2s0ME4xN1hwK2VyQ2NiQk5mK2lWVUcvdzB6YXBGNHcr?=
- =?utf-8?B?b0gyYVFURjdBTmM5OVNFZ3ZCbkkzN3NpdGUxbXpMYjZ6OVRDRnppcHdTVVdU?=
- =?utf-8?B?eVNUcWpwM1U3bUl0d2Uza0ovZ3NEZ1dyRXBqaUpVYmdBakorMFMyZ2YyclYx?=
- =?utf-8?B?dGtycHVDcllvZ21FSjVtcCtZa25uUFEvOStZTTVjNmJ4UkFLQm9heS9rVHNO?=
- =?utf-8?B?UFF5RDdGNzJmT2xDdWxBR2o2VjdXb3MyOHZiUjV3NXppNUlKaHZ1cnZPb0p3?=
- =?utf-8?B?T0txd0ZOWm9zTGV1RDZjd1gzU2hnUGVJbXpmUEVHcEpQRk5JMHRsVEFIQk9V?=
- =?utf-8?B?NDhoUit4cUwwbGtDbWRFSnhXMWhubnczNDA0N1VGTXZXTzR1ZnZOL3VPYU8w?=
- =?utf-8?B?K1VKWDdhNjRKdEQ3MmdlYWRTSVBMd0I1VXZCVkE1Z3FEM2pYQ1hCdFVjNnZk?=
- =?utf-8?B?MXJJWVhneWJuOTRBM0xjcGMydkVGL00xQXBadGcvbFNrNW5kSmJKUTdxck9P?=
- =?utf-8?B?S3JiWit3R1ZqSERsbGlCQmdpeldyaXFzcUZaL0FMT0xmaTRpdVZlQ3JkM1lP?=
- =?utf-8?B?S3JnVnBjKzg2Q3dSMDI4cis0WStPSS9lTHBpVGcwYSs5N3lKMmZaeHNZaGpJ?=
- =?utf-8?B?amxkY3lUNThaV2dUT3hKS2IxN2VZVStLeTVaOGVQUVZqMVcvVXJlTDNyMncy?=
- =?utf-8?B?cCtqNFpsRU9UY0x6ZVZnc0ZEVkFnUmsvMUk0MHRURkVMNHVhcGsxeUgzb3dE?=
- =?utf-8?B?VExwM2x6OVh3R0tHMit3Y1c1a2lqQ2R0YVlZTGhWSytIU2ZGd3ZUVU9aNHFK?=
- =?utf-8?B?RVhkZXN0V0tMS1NOdjR5WmZ5S2p1UVBmaTV6Y1o0ZnB3OE1KM2F4QXVrVzRP?=
- =?utf-8?B?MnVwRkxrbTM4Q0l2L2dZZi8xSlEweE5WekRPdHBoVW4vRkd3ejNtNUVTT1Zr?=
- =?utf-8?B?ZWduUGFUclBRMkdUdTRidzRRejR4bzlwQ0lPdmxjRVREbHVXemswK3lCY1JL?=
- =?utf-8?B?OFlTbjBvOVpWdG9sYmxmaHN3MTRJdVlSZ3gzN2NWUjJsQVVLOFpZTUU2NUJX?=
- =?utf-8?B?NmFSbTVtVzVaWU55dnY1SWxNUFBGWDRjeGZOQlZyNDZ5QkhQbnB5NjFvRllE?=
- =?utf-8?B?eGpJTHJ4Und6dFgxU3Qwc2xkdHNSV1NRQXI1aXlzOVZEOXFyMVB6dURUN01a?=
- =?utf-8?B?NlhUdUJ0SkhXRG9tV2NyVjQ0NmRJWWNkbDBMSUdwdGU5NmRzOS9NRG9EMzdW?=
- =?utf-8?B?ZVdqbmR2bTc0SFdQazFneEpRTllIbXBEb0lYNTVEbzJnc0J6MmFNL04vM2E0?=
- =?utf-8?B?SW5OckNNZUNQTGFhOGJYd2QxV2ZaYW5kdmdtb3pKZzVzWjZUeEVHaWh0VEV4?=
- =?utf-8?B?UVFiSEozb0MzT2g0amtHd0xzY0ZOMFh2SkV5cExkVUp0WDF6U3p6WEEvaTFy?=
- =?utf-8?B?WlBoMG80VFprOFh6aHNYR2ZvU2xsNlVjVUtpSkZ0V2lKSko3K25tSXJsVG83?=
- =?utf-8?B?aXJtb1NRR09YampUM2hHUVA4MHE2Z2loMVFLb0hTZ1MrZXk3ZjJHYU0vVy9k?=
- =?utf-8?B?UlBQS2VqVVlhYWd1eDNGS2dZVkw5TnQ2dDdEN09ETlJHdTBCQ2o4b3l5dmpN?=
- =?utf-8?B?Z0NvRUpJb0xMT3hhdE9ZTGlhdlpxdDlqL0RiYXk1NVN1YjJnWXVsYXZ3dDFK?=
- =?utf-8?B?eVJPNXRPS2lEQ2VBQlZqUnVZMW55OVc4dnJZT2d4MDRIcEJjQmNxSnBMTUs3?=
- =?utf-8?B?ZGxoTng4M2tibW9LazVKN1hURTZTNWQvUHFpU21QdUxUWDMxMTZTbUxYdVc1?=
- =?utf-8?B?aHViNTNiVWl4ZGhTY29VWGtXZmNmaklzT2pZTCtqT00zRGlTdXB6bWNaWmJQ?=
- =?utf-8?B?THZMMDVDdC9obHNvaGJucms1VjhJZ3JJVkZHZHVjZjRLU0xtNVBGQ1VzRlF0?=
- =?utf-8?B?cGRSaXpyS3pMN2I0dXRDbm1wUXg5SEYrYVlNSndYdnhJRTVSWEpWSmJpQzFH?=
- =?utf-8?B?T1NyYWNYVjNOYTY2YW1Oc2FvNEhLeHVwckhENmpJRXI4bGlzTXJlNE5rSXdQ?=
- =?utf-8?B?ZzJwUmZYYW9Rb3pFcFp6NXhZRVEwQzY1QTBQaXhPZ2xKcjBCUXpmS1NjUkdT?=
- =?utf-8?B?MVJrZUl1KzNpQ252Ty9ZRFo0andjeWtxMm93MDYzczVROW9xeVlZeFVwdEpn?=
- =?utf-8?B?aXJhYkZPR2lDM0NlNWpCa1FzT1VYRVpoSE9OU0FzY29NK1Y2a2huTWhicVh4?=
- =?utf-8?Q?6ggdL8XRzFsifihPIMBq76nbp4gFT35qzz/PIIVrXU=3D?=
-X-OriginatorOrg: amperemail.onmicrosoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f32ab80-6b2e-40d6-e146-08dda217427a
-X-MS-Exchange-CrossTenant-AuthSource: BN3PR01MB9212.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2025 20:51:34.3149
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3OS1L78VX4KCfYmzPl+XmtP/g2fUms6/VoFnn74KyizZLHqvVCqpehQx/LPuU2JaFDqUZWKbPE7J68OQHZKdyAikyrc3pkNirhsZxLO0Iool4MQpBfm0mKWX16Bm2/nr
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR01MB9340
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=KqPu2nWN c=1 sm=1 tr=0 ts=683e0f28 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=Nz_DCE0GXln2RDVxwVYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-SEG-SpamProfiler-Score: 0
 
-
-On 5/30/25 02:19, lihuisong (C) wrote:
->
-> 在 2025/4/29 2:48, Adam Young 写道:
->>
->> On 4/24/25 09:03, lihuisong (C) wrote:
->>>> +    rc = mctp_pcc_initialize_mailbox(dev, &mctp_pcc_ndev->inbox,
->>>> +                     context.inbox_index);
->>>> +    if (rc)
->>>> +        goto free_netdev;
->>>> +    mctp_pcc_ndev->inbox.client.rx_callback = 
->>>> mctp_pcc_client_rx_callback;
->>> It is good to move the assignemnt of  rx_callback pointer to 
->>> initialize inbox mailbox.
->>
->>
->> The other changes are fine, but this one I do not agree with.
->>
->> The rx callback only makes sense for one of the two mailboxes, and 
->> thus is not appropriate for a generic function.
->>
->> Either  initialize_mailbox needs more complex logic, or would blindly 
->> assign the callback to both mailboxes, neither of which simplifies or 
->> streamlines the code.  That function emerged as a way to reduce 
->> duplication.  Lets keep it that way.
->>
-> It depends on you. But please reply my below comment. I didn't see any 
-> change about it in next version.
->
-> -->
->
->> +static netdev_tx_t mctp_pcc_tx(struct sk_buff *skb, struct 
->> net_device *ndev)
->> +{
->> +    struct mctp_pcc_ndev *mpnd = netdev_priv(ndev);
->> +    struct mctp_pcc_hdr *mctp_pcc_header;
->> +    void __iomem *buffer;
->> +    unsigned long flags;
->> +    int len = skb->len;
->> +    int rc;
->> +
->> +    rc = skb_cow_head(skb, sizeof(struct mctp_pcc_hdr));
->> +    if (rc)
->> +        goto err_drop;
->> +
->> +    mctp_pcc_header = skb_push(skb, sizeof(struct mctp_pcc_hdr));
->> +    mctp_pcc_header->signature = cpu_to_le32(PCC_MAGIC | 
->> mpnd->outbox.index);
->> +    mctp_pcc_header->flags = cpu_to_le32(PCC_HEADER_FLAGS);
->> +    memcpy(mctp_pcc_header->mctp_signature, MCTP_SIGNATURE,
->> +           MCTP_SIGNATURE_LENGTH);
->> +    mctp_pcc_header->length = cpu_to_le32(len + MCTP_SIGNATURE_LENGTH);
->> +
->> +    spin_lock_irqsave(&mpnd->lock, flags);
->> +    buffer = mpnd->outbox.chan->shmem;
->> +    memcpy_toio(buffer, skb->data, skb->len);
->> + 
->> mpnd->outbox.chan->mchan->mbox->ops->send_data(mpnd->outbox.chan->mchan,
->> +                            NULL);
->> +    spin_unlock_irqrestore(&mpnd->lock, flags);
->> +
-> Why does it not need to know if the packet is sent successfully?
-> It's possible for the platform not to finish to send the packet after 
-> executing this unlock.
-> In this moment, the previous packet may be modified by the new packet 
-> to be sent.
-
-I think you missed version  21.
-
-Version 21 of this function ends with:
-         memcpy_toio(buffer, skb->data, skb->len);
-         rc = mpnd->outbox.chan->mchan->mbox->ops->send_data
-                 (mpnd->outbox.chan->mchan, NULL);
-         spin_unlock_irqrestore(&mpnd->lock, flags);
-         if ACPI_FAILURE(rc)
-                 goto err_drop;
-         dev_dstats_tx_add(ndev, len);
-         dev_consume_skb_any(skb);
-         return NETDEV_TX_OK;
-err_drop:
-         dev_dstats_tx_dropped(ndev);
-         kfree_skb(skb);
-         return NETDEV_TX_OK;
-
-
-Once the memcpy_toio completes, the driver will not look at the packet 
-again.  if the Kernel did change it at this point, it would not affect 
-the flow.  The send of the packet is checked vi rc returned from 
-send_data, and it tags the packet as dropped.  Is this not sufficient?
-
-
-
-
+DQpPbiAzMC8wNS8yMDI1IDIxOjM4LCBVd2UgS2xlaW5lLUvDtm5pZyB3cm90ZToNCj4gSGVsbG8g
+Q2hyaXMsDQo+DQo+IE9uIFdlZCwgTWF5IDI4LCAyMDI1IGF0IDA5OjE4OjM3UE0gKzAwMDAsIENo
+cmlzIFBhY2toYW0gd3JvdGU6DQo+PiBPbiAyOC8wNS8yMDI1IDE4OjEwLCBVd2UgS2xlaW5lLUvD
+tm5pZyB3cm90ZToNCj4+PiBJZiBJIHVuZGVyc3RhbmQgY29ycmVjdGx5IHlvdSBuZWVkIHRoZSBk
+ZWZhdWx0IHZhbHVlIGZvciBkdXR5IHRvDQo+Pj4gc3RhdGljYWxseSBzZXR1cCAob3Igb25seSBp
+bml0aWFsaXplPykgYSBmYW4sIHJpZ2h0Pw0KPj4gQ29ycmVjdC4NCj4+DQo+Pj4gSSdtIG5vdCBz
+dXJlIEkgbGlrZQ0KPj4+IGV4dGVuZGluZyAjcHdtLWNlbGxzIGZvciBhIGRlZmF1bHQgZHV0eSB2
+YWx1ZS4gVGhpbmtpbmcgYWJvdXQgdGhhdCBhDQo+Pj4gd2hpbGUgSSdkIHByZWZlciBhIGJpbmRp
+bmcgdGhhdCBsb29rcyBtb3JlIGxpa2UgdGhlIGNsb2NrIGNvbmZpZ3VyYXRpb24NCj4+PiBzdHVm
+ZiBiZWNhdXNlIGFjdHVhbGx5IGhhdmluZyB0aGUgcGVyaW9kIGFuZCBmbGFncyBhcyBwYXJ0IG9m
+IHRoZQ0KPj4+IHJlZmVyZW5jZSB0byB0aGUgUFdNIHRvIGJlIHVzZWQgaXMgYWxzbyBhIGJpdCBz
+dHJhbmdlLiBTbyBJIGltYWdpbmUNCj4+PiBzb21ldGhpbmcgbGlrZToNCj4+Pg0KPj4+IAlteXB3
+bTogcHdtIHsNCj4+PiAJCWNvbXBhdGlibGUgPSAiLi4uLiINCj4+PiAJCSNwd20tY2VsbHMgPSA8
+MT47DQo+Pj4gCX07DQo+Pj4NCj4+PiAJZmFuIHsNCj4+PiAJCWNvbXBhdGlibGUgPSAicHdtLWZh
+biI7DQo+Pj4gCQlwd21zID0gPCZteXB3bSAxPjsNCj4+PiAJCWFzc2lnbmVkLXB3bXMgPSA8Jm15
+cHdtPjsNCj4+PiAJCWFzc2lnbmVkLXB3bS1kZWZhdWx0LXBlcmlvZC1sZW5ndGhzLW5zID0gPDQw
+MDAwPjsNCj4+PiAJCWFzc2lnbmVkLXB3bS1kZWZhdWx0LWZsYWdzID0gPFBXTV9QT0xBUklUWV9J
+TlZFUlRFRD47DQo+Pj4gCX07DQo+Pj4NCj4+PiBUaGVuIHNwZWNpZnlpbmcgYSBwZXJpb2QgKG9y
+IGxhdGVyIGEgZHV0eSBjeWNsZSBsZW5ndGgpIHdvdWxkIGJlDQo+Pj4gb3B0aW9uYWwgYW5kIGNv
+dWxkIGJlIHByb3ZpZGVkIGlmZiB0aGUgZGV2aWNlIG5lZWRzIHRoYXQgZm9yIG9wZXJhdGlvbi4N
+Cj4+IFRoZSBmcmVxdWVuY3kgYW5kIGZsYWdzIHdlcmUgYWxyZWFkeSBwYXJ0IG9mIHRoZSBzdGFu
+ZGFyZCAjcHdtLWNlbGxzDQo+PiB3aGljaCBJIHRoaW5rIGlzIHdoeSBJIHdhcyBlbmNvdXJhZ2Vk
+IHRvIHVzZSB0aGVtLg0KPiBZZWFoLCB0aGF0IHBhcnQgaXMgZmluZS4gVGhpcyBtaWdodCBub3Qg
+YmUgdGhlIGxvbmctdGVybSBmdXR1cmUsIGJ1dA0KPiB0b2RheSB0aGF0J3MgdGhlIG5vcm0uDQo+
+DQo+PiBJIHdhcyBhbHNvIHRyeWluZyB0byBnZXQgc29tZXRoaW5nIHRoYXQgd291bGQgd29yayBh
+cyBhbiBBQ1BJIG92ZXJsYXkNCj4+IHdoaWNoIHR1cm5lZCBvdXQgdG8gYmUgcmVhbGx5IGhhcmQu
+DQo+IEkgZG9uJ3Qga25vdyBlbm91Z2ggYWJvdXQgQUNQSSB0byBiZSBoZWxwZnVsIHdpdGggdGhp
+cyBxdWVzdC4NCj4NCj4+PiBNeSBtYWlsIHdhcyBqdXN0IG1lIGJlaW5nIGZydXN0cmF0ZWQgYWJv
+dXQgYW5vdGhlciBzcGVjaWFsIGNhc2UgdGhhdCBJJ2QNCj4+PiBoYXZlIHRvIGhhbmRsZSBpZiBJ
+IGdvIGludG8gdGhhdCBkaXJlY3Rpb24uIEkgc2hvdWxkIGhhdmUgYmVlbiBtb3JlDQo+Pj4gYXR0
+ZW50aXZlIHRvIHRoYXQgZGV2ZWxvcG1lbnQgYmVmb3JlIGl0IGVudGVyZWQgdGhlIG1haW5saW5l
+Lg0KPj4gSSdkIGJlIGhhcHB5IHRvIGRlcHJlY2F0ZSB0aGUgNCBjZWxsIHRoaW5nIGFuZCByZXBs
+YWNlIGl0IHdpdGggMyBjZWxsICsNCj4+IHZlbmRvciBwcm9wZXJ0eSBmb3IgdGhlIGRlZmF1bHQg
+cGVyaW9kIGlmIHRoYXQgaGVscHMuDQo+IEkgd29uZGVyIGhvdyBvdGhlciBzaW1pbGFyIGRldmlj
+ZXMgZGV0ZXJtaW5lIHRoZSBkZWZhdWx0IGR1dHkgY3ljbGUuDQo+IElzbid0IHRoZSBub3JtIHRv
+IG1ha2UgdGhlIGZhbiByb3RhdGUgYXQgbWF4IHNwZWVkIGFuZCB0aGVuIHdoZW4NCj4gdXNlcnNw
+YWNlIHRha2VzIG92ZXIgaXQncyBzcGVlZGVkIGRvd24/DQoNClllcyB0aGF0IGlzIHRoZSBub3Jt
+YWwgKGFuZCBzZW5zaWJsZSB0aGluZyBkbyB0bykuIEJ1dCBvY2Nhc2lvbmFsbHkgDQpoYXJkd2Fy
+ZSBkZXNpZ25lcnMgbGlrZSB0byB1c2UgaW5jcmVkaWJseSBvdmVyIHNwZWMnZMKgIGZhbnMgdGhh
+dCBhcmUgDQpqdXN0IHJpZGljdWxvdXNseSBub2lzeS4gT24gc29tZSBwcm9kdWN0cyBJJ3ZlIHdv
+cmtlZCBvbiB3ZSBhZGRlZCBiYXNpYyANCmZhbiBjb250cm9sIHRvIHUtYm9vdCBzbyB3ZSBjb3Vs
+ZCBzaWxlbmNlIHRoZSBmYW5zIGVhcmx5IGluIHRoZSBib290LiBJIA0KYWxzbyBnYXRoZXIgdGhh
+dCBpbiB0aGUgUEMgd29ybGQgdGhlIGZhbiBjb250cm9sIGlzIG9mdGVuIGRvbmUgDQpleHRlcm5h
+bGx5IHRvIHRoZSBPUy4gSW4gdGhlIHNwZWNpZmljIGNhc2Ugd2VyZSBJIG5lZWRlZCB0aGlzIA0K
+ZnVuY3Rpb25hbGl0eSBpdCB3YXMgYW4gZW1iZWRkZWQgeDg2XzY0IHNvIEkgaGFkIG5laXRoZXIg
+VS1Cb290IG5vciBhIEJNQy4NCg0K
