@@ -1,122 +1,163 @@
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E66820F082
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 11:41:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACBA920E026;
+	Mon,  2 Jun 2025 11:43:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748864462; cv=none; b=m4LSzdV9d9yEd5WoEMObh5E5qvw5e5Lq2Mg3+Fzvq2GlVBiOJfftiluBkuE7L/Hj5Ydjf94sRlAd5k76G7f+4Uyfhz0RTVyHC4KlBQOdpMHRyANdmQZhi2MLm4OcFHh0y8viApmO+aLlXa7kbcFP3+oN7IdDgC6ZnTE7/igN/6c=
+	t=1748864588; cv=none; b=XKel3mYHxB85rYwSXV3t+nirK1l4X3aTrTUoKDpe1aXe/93U284IWdmBrRmAjLhwI2AME1Frs2mbGOpQqbbKZbfRw1KdZrbJkVv1YGdqd8RwPlYiXSFEM2YyrAxN6i9M9g8KTdpJhiFjk+KmesP+UDObQ3SFFD3xOBaCZd4wRgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748864462; c=relaxed/simple;
-	bh=U8K0uf4aWhhzfObYJoePKwQHyJj41+wsc7eB/15CdT4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RHeMnnaiYaoD0azu9hCARe+M+IqSaBJK5zH1MlLNgBSO0vnOQh13NoHZFFqKz/FYIdpfJc74jo2w2iHhhOKK5xASJn6qdbnVa8OaCT5NbZX6na5NvP1NseqZ3adkiA00dOqsPouS4r7kSOa/2kXOAWhPM9mqZeNn761r1FwQU8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=W8l422xP; arc=none smtp.client-ip=209.85.160.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1748864588; c=relaxed/simple;
+	bh=JVLrJ8f5yXPr+YmPDvTTlCVB2/YsXVgAn6ZIZWWwEK8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MMS4EN8ooWv3ni4ACEx1YnuR+1ya59pgEtHDZFGlJfsfTfjAkbQj4zpyLI3hjvzOOAVPmcjrCt1dSGqWSY7B0sUU799/g44qWMnrQOfj4mZ+q8rGbLv8RgkvGNOlx9dDTupYhy0zEAfGRhK3eHbocoQvkhH2q4nFzYq/77UHpB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ktnscg/Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="W8l422xP"
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-2cca475546fso3472509fac.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 04:41:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1748864459; x=1749469259; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=U8K0uf4aWhhzfObYJoePKwQHyJj41+wsc7eB/15CdT4=;
-        b=W8l422xPONQtWanqExljoiqYDcuuSKIujEdkeeOJis4HmKcTVzt0fdqvaUjHPxPzb6
-         ovVADiWgVpkVr0xIGKWqCQvRYeHvUSka4R3UPQybh+jRwnxypLu940mxHbePZtpGxOIh
-         Ae4O1VpiNigjaMxdAGh538eEwXsLCXgKrnU8TIUbXoO7x9rEJEV9APRXhEINitUpJhsB
-         NpqIJoyVYvGEOxmK3JnoGNLOLnF32TAIY7r2+SrN2doAh5rbcIZ0uXyRszMSR905A3kc
-         SgTxN/BmXz9KWkAZlUWWCO+hXyppdX8GgjHRDrgZhrCDgG5uNjBJIKYXPLcaG7Xfx5Qd
-         CEHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748864459; x=1749469259;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U8K0uf4aWhhzfObYJoePKwQHyJj41+wsc7eB/15CdT4=;
-        b=nWwQ6sZfzk+4rusdt9PkN3nPpU8N5uwnPha02tnkPLIy3sV3Gp6ev1N4/7GJSpdrj0
-         CpoispexIEa/v7Aq5VAIfF4qN4H4ne3RtFdVNqXIfNkjKUD5Qax6f78nvuPiK/GvCEJJ
-         peWF5JfgmfnPkczt9JEmVjZ6QhCblISM0C7SESlxjVO117vdsyH2d3RzU1qgF/1L6Nb6
-         hfoHW/xHGo2+GOhjtYi2i7YnnZaWPbytSkcIpjD/ukCvxUMCMSMmLPqk8GL9h7LJin2S
-         h5FRllMVGlaXE8x9dFByeyuxQ3DscDeoR8NR6Yx4/sd1bCWHrYC38+8huW89wbWfogs7
-         KpoA==
-X-Forwarded-Encrypted: i=1; AJvYcCU0DJMA3DDbe7ULOO5yC3Dxaa89evRo8x7KTU0WqnE1yKnPqmCpy86kL0LrAWP982CAUq3rUgnXl2h+9vk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwY3un5RShAe5PUvgoYfbH45WSTTRd+50U4OACLciVWt2hpcIeN
-	az+ukKLhfRloY4jPy4T4Op+hCBT8wS4usrSs12tFZIPow/bi0Kb8VOxKww0nHUFayDrubhEQWh4
-	xDasp
-X-Gm-Gg: ASbGncuw0wCVbdCEKWw4fmFMLbgXliM2aLRxoRnwsz5jUYSuT6Vq9JASUbcf5FglJXH
-	BCR1Sigpdxn5LhbOZYk5nizeK+ABi4hWrfe1YhLY4l01KflM1s1Hr44Tg5ur1IwtJNiZbsCpm5I
-	viHMluPOWgftiYGKr5Ksw4PK9aurCNOjFeYE5mq6cWAqg6AC2yk8VXFrqVTpngvLTpfunI2cd9U
-	yrJgp/sjyPoN62vvS/M0Yh+/cQh2v4fgVM2R8HyLuKDo8zwlLFJY/ONAzPvaS+yvJmgo1xnTvVz
-	4qAJbJx5lW9gvJOxohnNjhPe1ffNenWby0gvfLdeyRs1qEXCx8T4gFyVmmD5K3trIaZSk+HgHNT
-	w/ludDOrX9DT+3xZHRF6kJU9fAuw=
-X-Google-Smtp-Source: AGHT+IGfF18ffm8VzY6ByMTGaYLJNsId5S1P2oW9/h5gR4uH/hdOQWknfp/QYUyMCIClWhNY/nUI7w==
-X-Received: by 2002:a05:6214:248d:b0:6e8:f166:b19c with SMTP id 6a1803df08f44-6faced23964mr189368276d6.41.1748864448996;
-        Mon, 02 Jun 2025 04:40:48 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fac6d4d498sm60065976d6.27.2025.06.02.04.40.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 04:40:47 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1uM3X5-00000001XQw-1BjZ;
-	Mon, 02 Jun 2025 08:40:47 -0300
-Date: Mon, 2 Jun 2025 08:40:47 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Abdiel Janulgue <abdiel.janulgue@gmail.com>, dakr@kernel.org,
-	lyude@redhat.com, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Valentin Obst <kernel@valentinobst.de>,
-	open list <linux-kernel@vger.kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>, airlied@redhat.com,
-	rust-for-linux@vger.kernel.org,
-	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
-	Petr Tesarik <petr@tesarici.cz>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Sui Jingfeng <sui.jingfeng@linux.dev>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Michael Kelley <mhklinux@outlook.com>
-Subject: Re: [PATCH 1/2] rust: add initial scatterlist bindings
-Message-ID: <20250602114047.GA298147@ziepe.ca>
-References: <20250528221525.1705117-1-abdiel.janulgue@gmail.com>
- <20250528221525.1705117-2-abdiel.janulgue@gmail.com>
- <20250529004550.GB192517@ziepe.ca>
- <DA9JTYA0EQU8.26M0ZX80FOBWY@nvidia.com>
- <20250530141419.GA292183@ziepe.ca>
- <DA9KQF9CY77R.77PBMU8Y1FPY@nvidia.com>
- <20250530145026.GB293473@ziepe.ca>
- <DAAD0NZOCHS5.9FTVJIOI12QI@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ktnscg/Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 887A4C4CEEB;
+	Mon,  2 Jun 2025 11:43:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748864588;
+	bh=JVLrJ8f5yXPr+YmPDvTTlCVB2/YsXVgAn6ZIZWWwEK8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ktnscg/Zhp3zYbKj1e7OO3r01c47xlv8I3Bs3zBlVAVwH/5yLROvizAO4RmjxSFdy
+	 KTeQNPVtk4i3h9f4gGH3uh/tAHM4ct7t4u4EvXYCQUdI201286Rv9Gh71i7DYONZ/B
+	 HFSYTJwCTZq2cRPxc2esqnyLP6yovolPXIFxzTnhPOpYEGx4lZl5gLgekH0Qr9NdPt
+	 68PJ5dzwJjpQ6377uMa/dJxTLxaHWVSqLOelD5BjPOAhAmDxg90uOmpUg1xCoyZNLd
+	 KgcenC7U5gpXnhj+WeVCRTptbKrH5t4YrnQaH16kjz9Ml7g/NnICEjs3BCOKepbbIn
+	 IWbaxOUkpNDog==
+Message-ID: <3022f455-f6f4-470b-9989-e37b2f8a0b51@kernel.org>
+Date: Mon, 2 Jun 2025 13:43:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DAAD0NZOCHS5.9FTVJIOI12QI@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 9/9] media: uvcvideo: Support granular power saving for
+ compat syscalls
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
+ <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250528-uvc-grannular-invert-v1-0-d01581f9cc25@chromium.org>
+ <20250528-uvc-grannular-invert-v1-9-d01581f9cc25@chromium.org>
+ <34d9f779-987f-4e2c-b046-5dc15641547c@kernel.org>
+ <CANiDSCtrG59QX-R0YcS+G9HmG5oE8LwiXdm_NKuCbNmHp8aeTQ@mail.gmail.com>
+ <b88a8847-6e19-4d5e-a847-5deee69ab7b4@kernel.org>
+ <CANiDSCsXNu2xa_ATGUJbKY_t7xxXgSGdpZMf+P4LT+x3qcP1tg@mail.gmail.com>
+ <69885612-75ea-422c-ba13-07eaf4325005@kernel.org>
+ <CANiDSCtSKCn+mx8pGwuYCre9Wb7gONJYjLqc6tYLWQL3YXBmrw@mail.gmail.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <CANiDSCtSKCn+mx8pGwuYCre9Wb7gONJYjLqc6tYLWQL3YXBmrw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, May 31, 2025 at 09:54:20PM +0900, Alexandre Courbot wrote:
+Hi,
 
-> So if I understood your idea correctly, this would mean creating the
-> SGTable and mapping it in one call, eschewing the typestate entirely?
+On 2-Jun-25 13:40, Ricardo Ribalda wrote:
+> Hi Hans
+> 
+> On Mon, 2 Jun 2025 at 13:24, Hans de Goede <hansg@kernel.org> wrote:
+>>
+>> On 2-Jun-25 13:11, Ricardo Ribalda wrote:
+>>> On Mon, 2 Jun 2025 at 13:07, Hans de Goede <hansg@kernel.org> wrote:
+>>>>
+>>>> Hi Ricardo,
+>>>>
+>>>> On 2-Jun-25 12:27, Ricardo Ribalda wrote:
+>>>>> Hi Hans
+>>>>>
+>>>>> On Mon, 2 Jun 2025 at 12:11, Hans de Goede <hansg@kernel.org> wrote:
+>>>>>>
+>>>>>> Hi Ricardo,
+>>>>>>
+>>>>>> On 28-May-25 19:58, Ricardo Ribalda wrote:
+>>>>>>> Right now we cannot support granular power saving on compat syscalls
+>>>>>>> because the VIDIOC_*32 NRs defines are not accessible to drivers.
+>>>>>>>
+>>>>>>> Use the video_translate_cmd() helper to convert the compat syscall NRs
+>>>>>>> into syscall NRs.
+>>>>>>>
+>>>>>>> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+>>>>>>> ---
+>>>>>>>  drivers/media/usb/uvc/uvc_v4l2.c     | 9 ++-------
+>>>>>>>  drivers/media/v4l2-core/v4l2-ioctl.c | 3 ++-
+>>>>>>>  include/media/v4l2-ioctl.h           | 1 +
+>>>>>>>  3 files changed, 5 insertions(+), 8 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+>>>>>>> index fcb1b79c214849ce4da96a86a688d777b32cc688..048ee7e01808c8944f9bd46e5df2931b9c146ad5 100644
+>>>>>>> --- a/drivers/media/usb/uvc/uvc_v4l2.c
+>>>>>>> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
+>>>>>>> @@ -1282,15 +1282,10 @@ static long uvc_v4l2_pm_ioctl(struct file *file,
+>>>>>>>  static long uvc_v4l2_unlocked_ioctl(struct file *file,
+>>>>>>>                                   unsigned int cmd, unsigned long arg)
+>>>>>>>  {
+>>>>>>> -     /*
+>>>>>>> -      * For now, we do not support granular power saving for compat
+>>>>>>> -      * syscalls.
+>>>>>>> -      */
+>>>>>>> -     if (in_compat_syscall())
+>>>>>>> -             return uvc_v4l2_pm_ioctl(file, cmd, arg);
+>>>>>>> +     unsigned int converted_cmd = video_translate_cmd(cmd);
+>>>>>>
+>>>>>> It looks like something went wrong here and you did not test-compile this?
+>>>>>> video_translate_cmd() is private to drivers/media/v4l2-core/v4l2-ioctl.c
+>>>>>> so this should not compile.
+>>>>>
+>>>>> Hmm... Actually I am pretty sure that I tested it on real hardware.
+>>>>>
+>>>>> Did you miss the EXPORT_SYMBOL() on the patch?
+>>>>
+>>>> Ah yes I did miss that, sorry.
+>>>
+>>> My bad, I doubt it till the last second if I should split it or not :)
+>>>
+>>>>
+>>>> For the next time please split core changes out into their own
+>>>> separate patches.
+>>>>
+>>>> In this case I think the core changes are not necessary instead
+>>>> you can just do:
+>>>>
+>>>>         unsigned int converted_cmd = cmd;
+>>>>
+>>>> #ifdef CONFIG_COMPAT
+>>>>         converted_cmd = v4l2_compat_translate_cmd(cmd);
+>>>> #endif
+>>>
+>>> I believe this should work as well:
+>>>
+>>> unsigned int converted_cmd = cmd;
+>>> if (in_compat_syscall())
+>>>   converted_cmd = v4l2_compat_translate_cmd(cmd);
+>>>
+>>> the compiler knows that CONFIG_COMPAT=n means in_compat_syscall() will
+>>> be always fails.
+>>>
+>>> If it is ok with you (and it actually works :) ) I will use this version.
+>>
+>> I agree that that is cleaner/better and I also think it should work,
+>> so lets go with that.
+> 
+> Actually, v4l2_compat_translate_cmd() does not seem to be EXPORT_SYMBOL()ed
+> 
+> So I still need to do some changes in the core.
+> (It also does not handle COMPAT_32BIT_TIME... but in this case it
+> seems to be the same).
+> 
+> 
+> Any preference between what to use: v4l2_compat_translate_cmd() vs
+> video_translate_cmd()?
 
-Probably no need for a type state
+v4l2_compat_translate_cmd() is already exposed in include/media/v4l2-ioctl.h
+so I think it is best to go with that function.
 
-> And the `SGTable` would own the backing data, and only release it upon
-> destruction and unmapping?
+Regards,
 
-But I don't think you can do this, it is not allowed to pin kmalloc
-memory for instance so you have to do something as you showed to tie
-the lifetime to the kmalloc across the sgtable lifetime.
+Hans
 
-Jason
