@@ -1,143 +1,148 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553EE13B293
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 17:12:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CADD1FDD;
+	Mon,  2 Jun 2025 17:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748884345; cv=none; b=pKv/OTBZQ/j0HqS1SQ8na9AwMMriw489UntvZOoZLbiRdp2hgF1PnstgMjiTl4OyWmDHKRlh9ANu0LNBO2zsX++IxE2bSs/bnBgb9gFYl2LnsHe5jhYUgsMHyDtb9jEoIxIkLakLoaATOVSAOvPWeVEtNhCH5Vk6ZntQK/JXavQ=
+	t=1748884532; cv=none; b=jsPHi7mnSS/lExzEWOdQhP+FiWDpJrgZD+KFmzzSrGSf8i9rbcW+O3AlYe0ffUNbfEK//Oj6PPQKLJ9vRjBqemMYzXENvkNOk4jbMY2dig0fvFDuBs6XGU5U6ORhW8/89JptokrSlcoC8AMYQPlpjoxROw47N3ZfhzWca1udNu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748884345; c=relaxed/simple;
-	bh=/Jq2Au0s6fmBmRE16l0X+42zzlVoPRij/zoKI3mlRZs=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=eIirhWEhaQjqPP9yAV0WuhBjevaaxfz0K7qmyzGxnERxjN7waWlNyak1j9vo+HHpgHMOrFqFGIc4SxiCwX1ljBsqKjKo5AfIHSxW8SVk3G+dUFjvSYTPKqsSiTKlUksjFvHx2hfjla8pNammtwB4O7pUaKuq7DPAHxU4v0Dxiwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3dda4148039so34722525ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 10:12:24 -0700 (PDT)
+	s=arc-20240116; t=1748884532; c=relaxed/simple;
+	bh=BSPZ+8k3j7hRfUMuTmnUvpVGMIHP+qqGksybdohOw0U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=toO1FqEKvm2FnnLepxqw1xuSYsSVCDwOqmxhNZeojBXB5cY25mDxQBxI0KrHNMRr8D4tN2P9RNQxJ/jmT/0CpsHcZY7sg+yETZh+LyUVCO0UqTfrbj5IboETnapqexGMZdSeMdCQBhnO6OIidBFxbdZSef4/yF3MlNYjTaP5iHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zt17EzvH; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zt17EzvH"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6fad77c3ce1so1178506d6.2;
+        Mon, 02 Jun 2025 10:15:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748884530; x=1749489330; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cPqj+hlUb15Vo0gwcmnc7OruGv7UIdZSe73EVhzlEf4=;
+        b=Zt17EzvHDopbB1vda7uvsy6AXNlsY0zQ0k854GltCZyM/RsYeCGXWNowKFTSMFtg/w
+         3Wy6TAe0dIElTio4stpy8Yw+1ECmRGrGQxxOsDE19AxJ2YAWt6RlEFsg8uaEylUHKX+Q
+         eFANk0NMewVcm3O4SdpaIFIrXeWCE8vAgJ+IoZMZcWoHK2oakRBiX30LdCj7ucWM37Bj
+         szOOS7WyiiMYM9rkhmvXv4m1Dsp0yONxbphUyCNi3cOfVvWfQ/+GAdpngZE6Mj97SO2p
+         wOhclhyWvS4G1XcBdx/VCFufCSuLcymMhgbdkm4bmoYkT14YVYRaZ5+IShItFF4mFos6
+         6z1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748884343; x=1749489143;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kHzhGuS7OmKWz0RpyD6VrrayG8eHyU4NQV9hRrNlOmA=;
-        b=Z0gOtop9rGoEJauh/j5XO1mLrMRdO4CV+hnGhXCYb3UwxASPiXLF9IcYZjaaMHJLus
-         7u8Vzdbvf2n+OdRXUvtgniaIzikEQzu3dH+aqmWy6VgduablPylKcyY+DVUVeRbnvCNK
-         fhH6u6QtAmebJK0Iy+DSR++amFQ3XlVhhzvTWPUrwsoqPgUOGBdDFZ7xbtM3cNiv+c2w
-         WIdSL85m6iyuCa4DrHdN+M5frEcAoybFsaHc1+oZXnIy2hoeGsTVnU7O0vKtwbeAzmWw
-         CVdNAmWY2TRym1QJlIudJ77w3lOSxTCH979kwN60vLkxmiJCxeufu7mZ56Kn2T4wiS6O
-         l4qA==
-X-Forwarded-Encrypted: i=1; AJvYcCVwy4hpho1t56rdavmEJS/+HBntmzdNqHCJCsjancGlWp8N1NPZiIRe6KVESeB4WLqCy7hQJ3jWyXsnFVg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxD579F6kUzF/RfWGy37F5dnUn1nrhDuw2kOFRfdMu+COqxsFie
-	Oyt8UciKCkfAFv7E2pxGUIOTos1o3fgMZntS2Ly8Ap3nE1v7KCA/59wjjFnfmNNG5Kbid/+GpqQ
-	voOjoGihgFB2rKF4dEUs7l9wQU3zDLy7sMswtLL0McQl4ZnFzoIFJBtSCQKk=
-X-Google-Smtp-Source: AGHT+IFe750uJ1jt4MmrE/oZGvz4+q+a2QNMcu/itzZhjuaY5EIRfkPeXtgrIYtg89ZkSVJ6WNSc63iLorEb60LyNyCtfKfORbhL
+        d=1e100.net; s=20230601; t=1748884530; x=1749489330;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cPqj+hlUb15Vo0gwcmnc7OruGv7UIdZSe73EVhzlEf4=;
+        b=UaAqD+ZLdgXE4lkI8OMnTaphasTZdi/Q7XV3aChKiUiXJducH7lme/K35190731xhe
+         /4NYZ/OAG+iqQSGBDyu1dAUztWJEIMxaQYz8v2N1wN2XcdTIjV56EPoP9KQ2u32jtBZm
+         gdzcHHMlkJuJs00Q65oZCjtoXwGBqJAxmTIQOXqbC1uMJIwm7kIDDGHCZKtOo9WMZact
+         pRI+H9T86s92GZoPadENuXYwIotmioa4ckjME783xOALmQGPFCN4thJ3av2qxqwcZ/9U
+         cHsdcOWyoXsHnw2zb7f5pmueSZIEA+7pEHGoH78ESK8WmpaJJHGU399V/PAJoFYnrsqW
+         hRBg==
+X-Forwarded-Encrypted: i=1; AJvYcCUO3YsEHvDU+5HduRSUeZ2ZlpMIC0aI+FV2OTvfANhlFtFqdJ23d18EdUTkJyVwbPc8ATaLS/MowM7Lvg==@vger.kernel.org, AJvYcCUiJXaj92fMYOtuhfNeq4hb/5AFO0H609YN2vgW5rV/0FAzNqq2weZeIPP4rJgkTincu8YlkEyW81pygcNE@vger.kernel.org, AJvYcCWUXw6B8zglvBTKrY87GMv0xD8thR3YC5ZZWBXM5mZ5SE2eiGEpkWGl1KvzGE/mFiUeLdZTcsWTBLxn@vger.kernel.org, AJvYcCWX23JNV6FnKWTff33cXxA4Sqy5XnlT5s4vj9KDfY/T5L78r+Kfpy15CyDyUWPi+oNf4AiXv/Zxg5T+fw==@vger.kernel.org, AJvYcCXfkFM5Abyc+7/paVpLJs0i08c8n+UoAM9uhvsFeYndcQEUbdvLNuh51pYx5FqvDhFbdYEgROM5uBen@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJ8nVbx3W1Ye7iMH19Arw//n1c6BC5TqJctZ0MMCpOlNYM7niu
+	5RL1lu9KTiYhXBAEA2KQpxRcdDMd3IeHJCsWCyRSUcUP0DvQU1DAG1QF
+X-Gm-Gg: ASbGncvMVvNtNV5TSBMV+Pc0RnqGLmUa450B9WHTLdq8RfYR9U/KaCI4rphJPW+Nv81
+	vrkq5zJE0F9FOI8Bh8dH9svoX0TvQccfsuYmv8Lbu30bj5z6JGIU2RqE3tfP7dtFRGJnPoNGlzw
+	UgagZyMG8/VDadhMxj5h19fmswty3XkdJ+yF64IltZFv4TRhNOWaEgkTNx7JYx89PQ2Uw6IWztP
+	v1+ZKXM/8wcyFjbMpKNbzIJl1U/+jUO+xfa7oL7ym8hMFsAlu40wFkEW9XiKPDi9IiqxKOZdyGg
+	CfIYargcNxeqkionnEk/fc/E2RK0+9JUmm0cUQS2ZlHe6N5sSJxmGwoWMVuVfil8jgvHCD9xnYB
+	GVMky+hU=
+X-Google-Smtp-Source: AGHT+IEXoxkzXT24Ug4BWtO98apWkgU/PzoKpBIv7F4ljkTOJkULgLYOyNFTPtMiFl4pDML3ami7BQ==
+X-Received: by 2002:ad4:5ca5:0:b0:6fa:be81:e18f with SMTP id 6a1803df08f44-6fad059a7f8mr86733506d6.0.1748884529431;
+        Mon, 02 Jun 2025 10:15:29 -0700 (PDT)
+Received: from JSANTO12-L01.ad.analog.com ([189.121.203.94])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fac6e1c800sm63659146d6.102.2025.06.02.10.15.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Jun 2025 10:15:28 -0700 (PDT)
+Date: Mon, 2 Jun 2025 14:15:23 -0300
+From: Jonathan Santos <jonath4nns@gmail.com>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+	nuno.sa@analog.com, Michael.Hennerich@analog.com,
+	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+	broonie@kernel.org, dlechner@baylibre.com, rafael@kernel.org,
+	djrscally@gmail.com
+Subject: Re: [PATCH v9 09/12] iio: adc: ad7768-1: add support for
+ Synchronization over SPI
+Message-ID: <aD3cK5PioN7Rw3pP@JSANTO12-L01.ad.analog.com>
+Reply-To: aDnuvAdkcTAP2tMt@smile.fi.intel.com
+References: <cover.1748447035.git.Jonathan.Santos@analog.com>
+ <27cccb51cc56f1bb57cb06d279854a503d779e25.1748447035.git.Jonathan.Santos@analog.com>
+ <aDnuvAdkcTAP2tMt@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1b0f:b0:3db:6fb2:4b95 with SMTP id
- e9e14a558f8ab-3dd9cbd60dfmr143242855ab.18.1748884343382; Mon, 02 Jun 2025
- 10:12:23 -0700 (PDT)
-Date: Mon, 02 Jun 2025 10:12:23 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <683ddb77.050a0220.55ceb.0001.GAE@google.com>
-Subject: [syzbot] [pci?] WARNING in pci_scan_single_device
-From: syzbot <syzbot+3385a151582cae2a4b39@syzkaller.appspotmail.com>
-To: bhelgaas@google.com, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aDnuvAdkcTAP2tMt@smile.fi.intel.com>
 
-Hello,
+On 05/30, Andy Shevchenko wrote:
+> On Thu, May 29, 2025 at 07:50:29PM -0300, Jonathan Santos wrote:
+ 
+> > +static int ad7768_trigger_sources_sync_setup(struct device *dev,
+> > +					     struct fwnode_handle *dev_fwnode,
+> > +					     struct ad7768_state *st)
+> > +{
+> > +	struct fwnode_reference_args args;
+> > +
+> > +	struct fwnode_handle *fwnode __free(fwnode_handle) =
+> > +		fwnode_find_reference_args(dev_fwnode, "trigger-sources",
+> > +					   "#trigger-source-cells", 0,
+> > +					   AD7768_TRIGGER_SOURCE_SYNC_IDX, &args);
+> 
+> I don't see how args are being used. This puts in doubt the need of the first
+> patch.
+> 
 
-syzbot found the following issue on:
+If the wrapper is the issue, maybe it is better doing this instead?
 
-HEAD commit:    90b83efa6701 Merge tag 'bpf-next-6.16' of git://git.kernel..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=152307f4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fbd871027e10b130
-dashboard link: https://syzkaller.appspot.com/bug?extid=3385a151582cae2a4b39
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+static int ad7768_trigger_sources_sync_setup(struct device *dev,
+					     struct fwnode_handle *dev_fwnode,
+					     struct ad7768_state *st)
+{
+	struct fwnode_reference_args args;
+	struct fwnode_handle *fwnode __free(fwnode_handle) = NULL;
+	int ret;
 
-Unfortunately, I don't have any reproducer for this issue yet.
+	ret = fwnode_property_get_reference_args(dev_fwnode, "trigger-sources",
+						 "#trigger-source-cells", 0,
+						 AD7768_TRIGGER_SOURCE_SYNC_IDX, &args);
+	if (ret)
+		return ret;
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/7b23158542c6/disk-90b83efa.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/fe77cd0d7150/vmlinux-90b83efa.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/fdddbd2ed303/bzImage-90b83efa.xz
+	fwnode = args.fwnode;
+> > +	/* First, try getting the GPIO trigger source */
+> > +	if (fwnode_device_is_compatible(fwnode, "gpio-trigger")) {
+> > +		st->gpio_sync_in = devm_fwnode_gpiod_get_index(dev, fwnode,
+> > +							       NULL,
+> > +							       0,
+> > +							       GPIOD_OUT_LOW,
+> > +							       "sync-in");
+> > +		return PTR_ERR_OR_ZERO(st->gpio_sync_in);
+> > +	}
+> > +
+> > +	/*
+> > +	 * TODO: Support the other cases when we have a trigger subsystem
+> > +	 * to reliably handle other types of devices as trigger sources.
+> > +	 *
+> > +	 * For now, return an error message. For self triggering, omit the
+> > +	 * trigger-sources property.
+> > +	 */
+> > +	return dev_err_probe(dev, -EOPNOTSUPP, "Invalid synchronization trigger source\n");
+> > +}
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3385a151582cae2a4b39@syzkaller.appspotmail.com
+Then we can get rid of the first patch.
 
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007fbab67b5fa0 R15: 00007fff54b11b18
- </TASK>
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 15983 at drivers/pci/probe.c:2716 pci_device_add+0xf53/0x1390 drivers/pci/probe.c:2716
-Modules linked in:
-CPU: 1 UID: 0 PID: 15983 Comm: syz.5.1707 Not tainted 6.15.0-syzkaller-07774-g90b83efa6701 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:pci_device_add+0xf53/0x1390 drivers/pci/probe.c:2716
-Code: 84 c0 74 06 0f 8e ae 03 00 00 0f b6 83 c0 00 00 00 c1 e5 02 83 e0 e3 09 e8 88 83 c0 00 00 00 e9 de f3 ff ff e8 0e 96 aa fc 90 <0f> 0b 90 e9 81 f8 ff ff e8 00 96 aa fc 90 0f 0b 90 90 0f 0b 90 e9
-RSP: 0018:ffffc9001058f918 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: 00000000fffffff4 RCX: ffffffff85104754
-RDX: ffff88805524da00 RSI: ffffffff85104ed2 RDI: 0000000000000005
-RBP: ffff88801b483400 R08: 0000000000000005 R09: 0000000000000000
-R10: 00000000fffffff4 R11: ffffffff81000130 R12: ffff888143aa3028
-R13: ffff888143aa3000 R14: 0000000000000001 R15: ffff888143abc000
-FS:  00007fbab74736c0(0000) GS:ffff888124a82000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f67143b1d58 CR3: 0000000035620000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- pci_scan_single_device drivers/pci/probe.c:2737 [inline]
- pci_scan_single_device+0x325/0x470 drivers/pci/probe.c:2723
- pci_scan_slot+0x1c0/0x790 drivers/pci/probe.c:2820
- pci_scan_child_bus_extend+0x66/0x730 drivers/pci/probe.c:3039
- pci_scan_child_bus drivers/pci/probe.c:3153 [inline]
- pci_rescan_bus+0x18/0x40 drivers/pci/probe.c:3444
- dev_rescan_store+0x11b/0x140 drivers/pci/pci-sysfs.c:479
- dev_attr_store+0x58/0x80 drivers/base/core.c:2440
- sysfs_kf_write+0xef/0x150 fs/sysfs/file.c:145
- kernfs_fop_write_iter+0x354/0x510 fs/kernfs/file.c:334
- new_sync_write fs/read_write.c:593 [inline]
- vfs_write+0x6c7/0x1150 fs/read_write.c:686
- ksys_write+0x12a/0x250 fs/read_write.c:738
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x490 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fbab658e969
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fbab7473038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00007fbab67b5fa0 RCX: 00007fbab658e969
-RDX: 0000000000000004 RSI: 0000200000000440 RDI: 0000000000000005
-RBP: 00007fbab6610ab1 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007fbab67b5fa0 R15: 00007fff54b11b18
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Regards,
+Jonathan S.
