@@ -1,102 +1,319 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F15021CC4F
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 14:01:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5702E21CC4F;
+	Mon,  2 Jun 2025 14:01:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748872896; cv=none; b=uCzomp3pKOcBM/+/zURW+p4IBFcmPz/cfiKrrQX0op1wCtIk3HWc72BZshxaxEY5Jo285QcKcRNhVuhSXXcOwQURqFDH4S8IgxvVFr+3Gbo9dOGeq7kzHoYGBg8FZGidRH9QJsXpOVt4FajWsgLNuiZZ8uBD7bgnV0C5OJ1UHqg=
+	t=1748872904; cv=none; b=cFGa+dHH8A2SP+30CV+bijCakp9PnHYAugHBhMS1Diu797IcaffgsNXQl8LY98BZZacTSdp9BoP3lIZgn4ldARPKRSep2a3d9B8kBlbz3TXBM2ikRKjv2a0WSBuFdGnP6Na8ZusgsdTR4U4JYaP7RcvgZzHfW0HHGRIZZm1UDPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748872896; c=relaxed/simple;
-	bh=NagQOnPJDvkb2mkYf+XeOB5En0lYB8s9niseheZBotI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mai6HCXcIl4xwzoTczTxKIspfrRJnZ7heZBBHe2GPbRs3uCPj6bxENRuA4LsCc2AqzQRn2FcrAo41cyK96A4tzrg8/heH7RuowUwrMbsO1/yAr8us+9HWYg0Tw9nhsyox29cU2f+npLUu/oBtsUQPOWx9gRSAHjSTagUmytpg9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Uanr9LLf; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748872904; c=relaxed/simple;
+	bh=v8gnQg1soB3We6lWtqntjwGS+FCUJ75LGFBAKDCpWxg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OchmPSMToGuM9RsCov1GPnRWMNosFsWMmRqsZZMAG/ECFog3g7PhAB/+W6MoAMNki6wPMJg/Qe586RuUwxXzy09jLZpvrzylwSypa6ifw+3pTNUr1QzrshpKGNLBQGCiKfGOnCuZrS8NmZWCujOwxVEsBnoDi5mOxyFXb6QBu34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=rKTc7a6x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Uanr9LLf"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a4fea34e07so1126050f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 07:01:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748872892; x=1749477692; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iIbBoniHrQ8ysPUakN2ZSVqOUqWXbm4NXe1FWYc3Lms=;
-        b=Uanr9LLfoTE01oJ841zWFY8P8MyvuFKYUt8W4IaN94K3MEFNbx580BM2nA8iPXx0b7
-         9z2X5cvJx07rQj2DEDyKm49sEB/cRPxF3YGzicESzGPU0x7d44TVIdGUDU8Bczfm3sy3
-         NeVVfUPIVATbwsA6vLIPzdunACnwWrxL8477xKe1/7rryRjaNfVte4MYCgWluOO74nCJ
-         k6eu2SgQ0alRROv1BzNtIg5ply8gvY8LYYrfmoRrckWaDH/TPL1eehAmJffxua+qBoql
-         QA8Rbhm07x2vukGaOP+47O9s4tHTwRn7uYG5ENNkSvciD4S9YX8ZPeyPjApiW/xfdfqF
-         VQlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748872892; x=1749477692;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iIbBoniHrQ8ysPUakN2ZSVqOUqWXbm4NXe1FWYc3Lms=;
-        b=E6a3tTcfKXir8u/wXxtf5lu1rbFXp0Vcow0NVoMRI+JulWDadR0zN7307RLwEUJVzp
-         5NPMdEM3RiT8K9Xmt5X0QWEJT2mQggHA87/i+UXr6xLdufLjQ+ar+ykom63dVV1ZpA+M
-         qW/bD+rEtHJIg4aGdjduffRY5ap1/VINvBwXgv4grtp+yAST9TtqmKpPYl5WDAetzkYb
-         MEbJBR38REJaPooN5PeLWHL66ICw8C4hT0umZzEpMsUAX9ofRusYAmeGeg/LscRhlXtL
-         hWo3Wi4896bxMUsHJgvkuAlO4wuNdL085w/JvV7JQimTXnHMAcXqjqKN8045AeXhYZGy
-         fLlg==
-X-Forwarded-Encrypted: i=1; AJvYcCWWlUCun64MXE1Cqk1c64ixRymFNLDryjWzwYDjIM5TPaHma1QWgK6jrb1B73ogsJO1dki+aOcQIucZkp4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfiiXK2DXmhMkQYjU+DnV5UJu1mRBsOvg3nARz8qlxGOyy+N8O
-	aVi2s6PGizGV8uvaEUI5JZt35dJrwxVcOIWfpxDr8+eYb0+cYBmMM08DkL6csHsgcuA=
-X-Gm-Gg: ASbGncsQ9MatZfRh9hHUutVU/3dhPQvm5GNy0Uz1czdOJkIl4d+c70TFv0fp2PD6mZ7
-	gYgToaAgXQ5A6v1Ic656FbFqB17/7eZKMGRQzLxX1MNDVM+xaCtEdqsmYuwNHPxZntmzRQzd6Mi
-	Erhhm8Yx1Mgk++t1mIngSZs7Ruy6bnYgw0diHpYmMn4WDtBDzaMm6H7Pd9nLbQ85FBgIwH7ySSs
-	3EA/CNbzQnocFgyKkP2ADOUQ1AehuF/jaHWBAC5ZcXSWiZClBW74ZzGD/Ml+R8PQz20i9qY/rfR
-	1H8Zt5A279Nl01O7FMaY8l4NhAjVoU2kA7Vkr0E7QdiSeL4uUtgoZt3o77yztL6qBmU=
-X-Google-Smtp-Source: AGHT+IFcK/6ISQPxykPrncma5VHws55L2Y9hI5oNzFpiILYMm6BZyuZo0dKaVkm4FGL7w36sh5Q2lg==
-X-Received: by 2002:a05:6000:2409:b0:3a4:d0dc:184d with SMTP id ffacd0b85a97d-3a4f7a3650bmr10615706f8f.27.1748872892237;
-        Mon, 02 Jun 2025 07:01:32 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a4efe5b871sm15236681f8f.13.2025.06.02.07.01.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 07:01:31 -0700 (PDT)
-Date: Mon, 2 Jun 2025 17:01:28 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Peter Chen <peter.chen@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, linux-usb@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="rKTc7a6x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9624DC4CEEB;
+	Mon,  2 Jun 2025 14:01:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1748872904;
+	bh=v8gnQg1soB3We6lWtqntjwGS+FCUJ75LGFBAKDCpWxg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rKTc7a6xytx8h1v3QgnFOdisnrffYcy4oSrWdNOLWvscnaCyaWVxYiAky++X+MGKG
+	 DRPU7YBHrsZcvrTklujQNVSyD7/hh9OUHyvF3rGWsG15kM3ozHnUxHC7/vS2TZTpdi
+	 42at+O3xtO3vcH9vaZdeONppj+TbWq82/6vYR82Q=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>, s32@nxp.com,
-	linaro-s32@linaro.org
-Subject: Re: [PATCH 2/4] usb: chipidea: usbmisc: s32g: Add a
- REINIT_DURING_RESUME flag
-Message-ID: <aD2uuP6Tx9NH7wVg@stanley.mountain>
-References: <cover.1748453565.git.dan.carpenter@linaro.org>
- <b1ddbc5993b2906cf916d023fdf27b07088a9672.1748453565.git.dan.carpenter@linaro.org>
- <aDd/pNP0jt73PKtb@lizhi-Precision-Tower-5810>
+	torvalds@linux-foundation.org,
+	akpm@linux-foundation.org,
+	linux@roeck-us.net,
+	shuah@kernel.org,
+	patches@kernelci.org,
+	lkft-triage@lists.linaro.org,
+	pavel@denx.de,
+	jonathanh@nvidia.com,
+	f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net,
+	rwarsow@gmx.de,
+	conor@kernel.org,
+	hargar@microsoft.com,
+	broonie@kernel.org
+Subject: [PATCH 6.12 00/55] 6.12.32-rc1 review
+Date: Mon,  2 Jun 2025 15:47:17 +0200
+Message-ID: <20250602134238.271281478@linuxfoundation.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aDd/pNP0jt73PKtb@lizhi-Precision-Tower-5810>
+User-Agent: quilt/0.68
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.32-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-6.12.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 6.12.32-rc1
+X-KernelTest-Deadline: 2025-06-04T13:42+00:00
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 28, 2025 at 05:27:00PM -0400, Frank Li wrote:
-> On Wed, May 28, 2025 at 10:57:20PM +0300, Dan Carpenter wrote:
-> > From: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
-> >
-> > The s32g2 and s32g3 chips will need to re-initialize in the resume path.
-> > Add a REINIT_DURING_RESUME flag which will trigger the reinitialization.
-> 
-> why power_lost_check() doesn't work for you?
-> 
+This is the start of the stable review cycle for the 6.12.32 release.
+There are 55 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-Yeah.  That looks like it should work.  Thanks.
+Responses should be made by Wed, 04 Jun 2025 13:42:20 +0000.
+Anything received after that time might be too late.
 
-regards,
-dan carpenter
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.32-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
+and the diffstat can be found below.
+
+thanks,
+
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 6.12.32-rc1
+
+Namjae Jeon <linkinjeon@kernel.org>
+    ksmbd: use list_first_entry_or_null for opinfo_get_list()
+
+Nishanth Menon <nm@ti.com>
+    net: ethernet: ti: am65-cpsw: Lower random mac address error print to info
+
+Mark Pearson <mpearson-lenovo@squebb.ca>
+    platform/x86: thinkpad_acpi: Ignore battery threshold change event notification
+
+Kailang Yang <kailang@realtek.com>
+    ALSA: hda/realtek - restore auto-mute mode for Dell Chrome platform
+
+Valtteri Koskivuori <vkoskiv@gmail.com>
+    platform/x86: fujitsu-laptop: Support Lifebook S2110 hotkeys
+
+Trond Myklebust <trond.myklebust@hammerspace.com>
+    NFS: Avoid flushing data while holding directory locks in nfs_rename()
+
+Purva Yeshi <purvayeshi550@gmail.com>
+    char: tpm: tpm-buf: Add sanity check fallback in read helpers
+
+Umesh Nerlige Ramappa <umesh.nerlige.ramappa@intel.com>
+    drm/xe: Save the gt pointer in lrc and drop the tile
+
+Aradhya Bhatia <aradhya.bhatia@intel.com>
+    drm/xe/xe2hpg: Add Wa_22021007897
+
+Ilya Guterman <amfernusus@gmail.com>
+    nvme-pci: add NVME_QUIRK_NO_DEEPEST_PS quirk for SOLIDIGM P44 Pro
+
+Alessandro Grassi <alessandro.grassi@mailbox.org>
+    spi: spi-sun4i: fix early activation
+
+Algea Cao <algea.cao@rock-chips.com>
+    phy: phy-rockchip-samsung-hdptx: Fix PHY PLL output 50.25MHz error
+
+Hal Feng <hal.feng@starfivetech.com>
+    phy: starfive: jh7110-usb: Fix USB 2.0 host occasional detection failure
+
+Aurabindo Pillai <aurabindo.pillai@amd.com>
+    drm/amd/display: check stream id dml21 wrapper to get plane_id
+
+George Shen <george.shen@amd.com>
+    drm/amd/display: fix link_set_dpms_off multi-display MST corner case
+
+Markus Burri <markus.burri@mt.com>
+    gpio: virtuser: fix potential out-of-bound write
+
+Masahiro Yamada <masahiroy@kernel.org>
+    um: let 'make clean' properly clean underlying SUBARCH as well
+
+John Chau <johnchau@0atlas.com>
+    platform/x86: thinkpad_acpi: Support also NEC Lavie X1475JAS
+
+Jeff Layton <jlayton@kernel.org>
+    nfs: don't share pNFS DS connections between net namespaces
+
+Milton Barrera <miltonjosue2001@gmail.com>
+    HID: quirks: Add ADATA XPG alpha wireless mouse support
+
+Purva Yeshi <purvayeshi550@gmail.com>
+    dmaengine: idxd: cdev: Fix uninitialized use of sva in idxd_cdev_open
+
+Christian Brauner <brauner@kernel.org>
+    coredump: hand a pidfd to the usermode coredump helper
+
+Christian Brauner <brauner@kernel.org>
+    coredump: fix error handling for replace_fd()
+
+Robin Murphy <robin.murphy@arm.com>
+    perf/arm-cmn: Add CMN S3 ACPI binding
+
+Robin Murphy <robin.murphy@arm.com>
+    perf/arm-cmn: Initialise cmn->cpu earlier
+
+Robin Murphy <robin.murphy@arm.com>
+    perf/arm-cmn: Fix REQ2/SNP2 mixup
+
+Pedro Tammela <pctammela@mojatatu.com>
+    net_sched: hfsc: Address reentrant enqueue adding class to eltree twice
+
+Siddharth Vadapalli <s-vadapalli@ti.com>
+    arm64: dts: ti: k3-j784s4-j742s2-main-common: Fix length of serdes_ln_ctrl
+
+Siddharth Vadapalli <s-vadapalli@ti.com>
+    arm64: dts: ti: k3-j722s-main: Disable "serdes_wiz0" and "serdes_wiz1"
+
+Siddharth Vadapalli <s-vadapalli@ti.com>
+    arm64: dts: ti: k3-j722s-evm: Enable "serdes_wiz0" and "serdes_wiz1"
+
+Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+    arm64: dts: ti: k3-j721e-sk: Add requiried voltage supplies for IMX219
+
+Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+    arm64: dts: ti: k3-j721e-sk: Remove clock-names property from IMX219 overlay
+
+Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+    arm64: dts: ti: k3-j721e-sk: Add DT nodes for power regulators
+
+Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+    arm64: dts: ti: k3-am68-sk: Fix regulator hierarchy
+
+Judith Mendez <jm@ti.com>
+    arm64: dts: ti: k3-am65-main: Add missing taps to sdhci0
+
+Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+    arm64: dts: ti: k3-am62x: Rename I2C switch to I2C mux in OV5640 overlay
+
+Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+    arm64: dts: ti: k3-am62x: Rename I2C switch to I2C mux in IMX219 overlay
+
+Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+    arm64: dts: ti: k3-am62x: Remove clock-names property from IMX219 overlay
+
+Judith Mendez <jm@ti.com>
+    arm64: dts: ti: k3-am62p-j722s-common-main: Set eMMC clock parent to default
+
+Judith Mendez <jm@ti.com>
+    arm64: dts: ti: k3-am62a-main: Set eMMC clock parent to default
+
+Judith Mendez <jm@ti.com>
+    arm64: dts: ti: k3-am62-main: Set eMMC clock parent to default
+
+Stephan Gerhold <stephan.gerhold@linaro.org>
+    arm64: dts: qcom: x1e80100: Fix video thermal zone
+
+Johan Hovold <johan+linaro@kernel.org>
+    arm64: dts: qcom: x1e80100-yoga-slim7x: mark l12b and l15b always-on
+
+Johan Hovold <johan+linaro@kernel.org>
+    arm64: dts: qcom: x1e80100-qcp: mark l12b and l15b always-on
+
+Stephan Gerhold <stephan.gerhold@linaro.org>
+    arm64: dts: qcom: x1e80100-qcp: Fix vreg_l2j_1p2 voltage
+
+Stephan Gerhold <stephan.gerhold@linaro.org>
+    arm64: dts: qcom: x1e80100-lenovo-yoga-slim7x: Fix vreg_l2j_1p2 voltage
+
+Stephan Gerhold <stephan.gerhold@linaro.org>
+    arm64: dts: qcom: x1e80100-asus-vivobook-s15: Fix vreg_l2j_1p2 voltage
+
+Stephan Gerhold <stephan.gerhold@linaro.org>
+    arm64: dts: qcom: sm8650: Add missing properties for cryptobam
+
+Stephan Gerhold <stephan.gerhold@linaro.org>
+    arm64: dts: qcom: sm8550: Add missing properties for cryptobam
+
+Stephan Gerhold <stephan.gerhold@linaro.org>
+    arm64: dts: qcom: sm8450: Add missing properties for cryptobam
+
+Alok Tiwari <alok.a.tiwari@oracle.com>
+    arm64: dts: qcom: sm8350: Fix typo in pil_camera_mem node
+
+Karthik Sanagavarapu <quic_kartsana@quicinc.com>
+    arm64: dts: qcom: sa8775p: Remove cdsp compute-cb@10
+
+Ling Xu <quic_lxu5@quicinc.com>
+    arm64: dts: qcom: sa8775p: Remove extra entries from the iommus property
+
+Stephan Gerhold <stephan.gerhold@linaro.org>
+    arm64: dts: qcom: ipq9574: Add missing properties for cryptobam
+
+Axel Forsman <axfo@kvaser.com>
+    can: kvaser_pciefd: Force IRQ edge in case of nested IRQ
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |   4 +-
+ arch/arm64/boot/dts/qcom/ipq9574.dtsi              |   2 +
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi              | 246 ++-------------------
+ arch/arm64/boot/dts/qcom/sm8350.dtsi               |   2 +-
+ arch/arm64/boot/dts/qcom/sm8450.dtsi               |   2 +
+ arch/arm64/boot/dts/qcom/sm8550.dtsi               |   2 +
+ arch/arm64/boot/dts/qcom/sm8650.dtsi               |   2 +
+ .../boot/dts/qcom/x1e80100-asus-vivobook-s15.dts   |   4 +-
+ .../boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts  |   7 +-
+ arch/arm64/boot/dts/qcom/x1e80100-qcp.dts          |   6 +-
+ arch/arm64/boot/dts/qcom/x1e80100.dtsi             |  10 +-
+ arch/arm64/boot/dts/ti/k3-am62-main.dtsi           |   2 -
+ arch/arm64/boot/dts/ti/k3-am62a-main.dtsi          |   2 -
+ .../boot/dts/ti/k3-am62p-j722s-common-main.dtsi    |   2 -
+ .../arm64/boot/dts/ti/k3-am62x-sk-csi2-imx219.dtso |   3 +-
+ .../arm64/boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso |   2 +-
+ .../boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso  |   2 +-
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi           |   2 +
+ arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts   |  13 +-
+ .../boot/dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso  |  35 ++-
+ arch/arm64/boot/dts/ti/k3-j721e-sk.dts             |  31 +++
+ arch/arm64/boot/dts/ti/k3-j722s-evm.dts            |   8 +
+ arch/arm64/boot/dts/ti/k3-j722s-main.dtsi          |   4 +
+ .../boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi  |   2 +-
+ arch/um/Makefile                                   |   1 +
+ drivers/char/tpm/tpm-buf.c                         |   6 +-
+ drivers/dma/idxd/cdev.c                            |   4 +-
+ drivers/gpio/gpio-virtuser.c                       |  12 +-
+ .../dc/dml2/dml21/dml21_translation_helper.c       |  20 +-
+ drivers/gpu/drm/amd/display/dc/link/link_dpms.c    |  13 +-
+ drivers/gpu/drm/xe/regs/xe_gt_regs.h               |   1 +
+ drivers/gpu/drm/xe/xe_lrc.c                        |   4 +-
+ drivers/gpu/drm/xe/xe_lrc_types.h                  |   4 +-
+ drivers/gpu/drm/xe/xe_wa.c                         |   4 +
+ drivers/hid/hid-ids.h                              |   4 +
+ drivers/hid/hid-quirks.c                           |   2 +
+ drivers/net/can/kvaser_pciefd.c                    |  83 ++++---
+ drivers/net/ethernet/ti/am65-cpsw-nuss.c           |   2 +-
+ drivers/nvme/host/pci.c                            |   2 +
+ drivers/perf/arm-cmn.c                             |  11 +-
+ drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c  |   2 +
+ drivers/phy/starfive/phy-jh7110-usb.c              |   7 +
+ drivers/platform/x86/fujitsu-laptop.c              |  33 ++-
+ drivers/platform/x86/thinkpad_acpi.c               |   7 +
+ drivers/spi/spi-sun4i.c                            |   5 +-
+ fs/coredump.c                                      |  65 +++++-
+ fs/nfs/client.c                                    |   2 +
+ fs/nfs/dir.c                                       |  15 +-
+ fs/nfs/filelayout/filelayoutdev.c                  |   6 +-
+ fs/nfs/flexfilelayout/flexfilelayoutdev.c          |   6 +-
+ fs/nfs/pnfs.h                                      |   4 +-
+ fs/nfs/pnfs_nfs.c                                  |   9 +-
+ fs/smb/server/oplock.c                             |   7 +-
+ include/linux/coredump.h                           |   1 +
+ include/linux/nfs_fs_sb.h                          |  12 +-
+ net/sched/sch_hfsc.c                               |   9 +-
+ sound/pci/hda/patch_realtek.c                      |   5 +-
+ 57 files changed, 408 insertions(+), 355 deletions(-)
+
 
