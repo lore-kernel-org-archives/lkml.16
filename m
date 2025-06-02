@@ -1,578 +1,316 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C1A223707
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 17:32:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E26671CDFD4
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 17:33:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748885561; cv=none; b=NE9t4YeH5lutekrfi6rbZhNudFda5B+8jo91iU+ggeUBukgK4jsTwC1fksTS42aE0M6P8/O39Jvlo0K5JkEgbqli563DcXf8JYW3Nq61PKQ4X878YassejW2HheWykJeGzOFxkyaxPnu46iB8zvhgHysd28XJI2A4ZwwCrJymqg=
+	t=1748885592; cv=none; b=QDffsBUbYWC29kwyY/TcZxk8T95luE7OLBOG08zbJpprLBMw4wihVsM0QPygpX4PHtC8NxvxbzeH9pXxKyAsFftTPzjlURVBj3zuyL2cnURRhuoOys83bt49hQLoQ7LIqO/Jy5hqFrWllSgrIZUAW8Ocxl4AvUVVZnMnureS7VY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748885561; c=relaxed/simple;
-	bh=7jYWFXrW6RLJwuOEEVuDgjTHVx/PAKmRw3/YDgRK2WQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HyBFYcDO6UlvjSrG03DScXRd6uJ9xuhgOp8zUY1IAibrp4Tc7VC7h4ujBIUVwDbheFEa2WDE7OnszXmpQRlFxVC59uP8DuFdz5bFvNjdicaoo+gsMIlXEavYUZT/4LYkwTJb3ZX6KoF4xZEgRtWWMI40CAHmD0G20wCwjgePDUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kt5cCxRZ; arc=none smtp.client-ip=209.85.166.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748885592; c=relaxed/simple;
+	bh=iZI1TQqs7zFVzBl46Gelxg/rlbbNVCWwOLVs/8skQeE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sauVlFnLlaEQQUAmYCPlQ/YlijQQPVWjeBUXfKGzRTXBZsA+vK7J4asVRRN3x+J54Ycj4F4I2QV9DzA7V98PAy4tIGeb5SKa6k6A+LGKoZj3DUzehUOpoDaxKOmr4fEV8wWgSbiQEHfE4eIbjWNhTzjx5TNoDiD7klpPYjeMYk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=hiyg5+tI; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kt5cCxRZ"
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3dd745f8839so12175ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 10:32:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="hiyg5+tI"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b26df8f44e6so5020471a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 10:33:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748885558; x=1749490358; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YWyCHnPpsz5jiOCC5fkQdcz/qdjcO8jI9QCn4djS++A=;
-        b=kt5cCxRZAegdc9BIazHWGxdphfkzm4C0dHyl/dNT8eHk0M38+vJDj254jvQu6MQZ0J
-         DbZVFatTTXIR3OeONIZW+96oIQNvB0ZMncOEe2zJgDg4vDtLMgtYCkIcv3fJh38r1Ckh
-         HOkzGh+91kk/7SkBComsbcgvGTu+Y0jKD+qI3Ku31y5c7i4FxG9pt4q80gH2/koLQbos
-         4l7zxZuC2zt7e7F65YC9NhnpPX0Nqwt1PcrFsGhVG92ddvPJUC459U9ZW79A04CqsIav
-         bDGoYcAyepCn3vsVzPkELlpaTXAPP04ricLiBOOBXw4R3sw+1B+kY8HJOeMNA6w/EZid
-         XOkg==
+        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1748885590; x=1749490390; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=p9nDTLkcGAIkg7CRE/p7klOUylClrsHD4YAyslCH86o=;
+        b=hiyg5+tI2nRfMd/h1ndD2Bl0cSHxznVxOTxI/s4y1WrC/TnYcyZnB+BwGgMP8kupHN
+         S/a8U2f+VPAUIA4Y2vDqnewnbUvOmKuE9waCy01UJ6GfDG+tUFvRXNxMd3HP1BcYju9W
+         5aH3qaoECnuHExM4A6MfXiLbThpZP1rGQ5zalX2RJdmyn/k3BMOspPbu9OqfdOgI/uin
+         4Opg1UHVQ63yaudMeQtEy8rRe03G0Fxux3du2exrFaEE9diZQhdl2v4xzuIsCS5aV0Yv
+         7IOzOHoZBlY1p39Agv/ETknJPOW3NKa2PiH0HcckdgdvcTDTBKyy6JiSGOr7PfRdQ01B
+         Enbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748885558; x=1749490358;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YWyCHnPpsz5jiOCC5fkQdcz/qdjcO8jI9QCn4djS++A=;
-        b=ETayzUBAWe0uvrtBfA/ZhaM7BqYqonkqMmNMzGkz891PzacgaLLWjTxgK5deXewJ0V
-         /SZ098aWbjAG8cCXxZz4WUX4NFTo1zd/grMUnBbrWiAjsS4fi+FAlhJs612mlAu5n19A
-         qqVL0rpG/bq79bLaQhNcDpY0+yFTd3Y6770thJTlqG813zC+x8e4BwK+FrSJm9gTsLDk
-         gdU3ucSFrzJXwjvnLytCI4hlEno8GmGO9wKv3zLv0m4lnPovgHE0dtNzZc6GhF4iw28W
-         5BVtvT1/owbp2QnTKz7euDbAFBB9ytC3SAphaKSAehThHENaRhYkC2BiLAfVm+6OF8tq
-         NCew==
-X-Forwarded-Encrypted: i=1; AJvYcCXg2hE2xXmvYoPHJ5Nr2BhjuNeKGRNOuYCtfFTdgTv4XVnNETqZN6Fiaagy06W/aLe12Gt4uB6K9S7rLH8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxkOZEMin7o5SgtjZ/u8cJ3f197ZaE1C7XGWaCfBj4krc0FWFS
-	EW6KFnP8RZ7TDUdlt4xkSbIf09G58IOxfEYJuyjIJpPn56Z/XFQdH1P4fXUOtQkZtj1v6JtZ5jb
-	I9xDP6JUPHSDrHSZQp0cnvtBwP51CNbId5M6Zd3jHG0dxVKE0q5/uM0oXf14=
-X-Gm-Gg: ASbGnct/C93/n9SdHAOyW4yggBRN+APR0+pkD5EXP8mGcJ48veiYcdCypMmy6sHIfaD
-	yJMu089XYrodjQq1fDK+z7uf3s+2kTWu2xc/+ioWIkXi/+sMAY0ggkpYptWlCsuY8T8H14uw0U+
-	pahwwLq3DYhWrTvLLZipWq8MHVRbaqqqCqjsKSTHAhrNGp51sxk9uoUoZ1ojes98T5TMjk9XnB
-X-Google-Smtp-Source: AGHT+IGcgjDveA1f2goly7nIa337NOCnuv1+3aIFsV9PYdV/9Phe1S4XNa8ammEYnRO2Px1DffFAov8T3xUobdN1Hws=
-X-Received: by 2002:a05:6e02:156b:b0:3dd:a524:9470 with SMTP id
- e9e14a558f8ab-3dda5249625mr5135335ab.27.1748885546614; Mon, 02 Jun 2025
- 10:32:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748885590; x=1749490390;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p9nDTLkcGAIkg7CRE/p7klOUylClrsHD4YAyslCH86o=;
+        b=cD/b+7bc5YmSSfr6mFRTeSsu7sIdLL5lEjtdFD8sK5bvEpsTpnpo+S0eAjkB0jPqSp
+         JLDTpgElBI3BQNnMEfj3IFVwD4lodGHVIx9Q9OvkrmJfP7OcXEtcacLmaqMMMd4RLceY
+         kSP5SjNVcLL3mw0NAt2eeJh7MPZryfADEu45hUfQW4cTc955p7MEgqnLkEy5uiMLgr41
+         lzfTu1ORm9XeScX9UzEb2l5sn+z1W4PEOA5traAnHXyQ5af+PhT5jRDzbBP/EfzDx4IP
+         KC7g7d30TVl+3t8fbU/ayG/3luPC9BJp5ImcAKVdAUQE4u5NIN+S0DqM/D65n5AAkzhr
+         Ql5w==
+X-Forwarded-Encrypted: i=1; AJvYcCUkU7oRSrwvvLA2bEo3/0D8BVUvS3kXIEnE56r6awZ7DoU3p1QYtrre4ze65ElBu1ET5sWT7xbFImBen0Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzfC0PaSiSgBCM5P2dDsNNucaLEyFXNdaFXmMurlbGxqOYV7At
+	KmEwascALWMuhqBUQiLbJYlw8yq0i1CeBhr4nYrWi2K5HaBLbhHFsudT3iFStT/JZSM=
+X-Gm-Gg: ASbGnctNvJDXXqmblqquCgW4Lx2KAtUkg/BjXIiZABiFHh+J1nTOlYggApGuO7YDC7d
+	x3NC48fzEvLByJz1eS8S+mRnH+DtdDI0Cr0rNTlDRZXQJM0+uSd73ZG1hNNAcK1TZT2pwnXE0U7
+	JUnE92RYdZPicDdS5046VYGz55eDiAyMtMlrHeaRWEuxs7XuJnlERToTEa15a7uROirq7F1F9mT
+	VQCKfaY0Na+qbzhOnPxoYeAM5m0HJYU4kXlu6f0WJrviQL3ff8sZX9cSGq4f+ycbGJ5oAI1y/z/
+	i5RauyugHKtFGfRzEq5n0jE+V3246yD27yW235Byuh8=
+X-Google-Smtp-Source: AGHT+IEhf+hbSJIgKQ6xbE3OCLEJw/a8F3k729/3ouoi/zbM4ai6IF1UOWTbMpWnLmrJDoMHmmmdxA==
+X-Received: by 2002:a05:6a21:328e:b0:201:85f4:ade6 with SMTP id adf61e73a8af0-21bad15741fmr14269458637.27.1748885589946;
+        Mon, 02 Jun 2025 10:33:09 -0700 (PDT)
+Received: from x1 ([97.120.245.255])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afe96474sm7931449b3a.22.2025.06.02.10.33.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Jun 2025 10:33:09 -0700 (PDT)
+Date: Mon, 2 Jun 2025 10:33:07 -0700
+From: Drew Fustini <drew@pdp7.com>
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Frank Binns <frank.binns@imgtec.com>,
+	Matt Coster <matt.coster@imgtec.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v3 0/8] Add TH1520 GPU support with power sequencing
+Message-ID: <aD3gU6lS1eMtkOTU@x1>
+References: <CGME20250529222402eucas1p1c9e0ddd3efd62e078e5de2cf71655f58@eucas1p1.samsung.com>
+ <20250530-apr_14_for_sending-v3-0-83d5744d997c@samsung.com>
+ <aDzcul5vBeQvP634@x1>
+ <d949f2b5-1351-4778-9716-eaec1e2b1ba7@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250529052322.381947-1-irogers@google.com> <20250529052322.381947-2-irogers@google.com>
- <aDjBtuxyumBrn70B@x1> <CAP-5=fXonwoMOqfK30bo1i438cDa7oTWOOWFwJNXY9UOMBpkCQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fXonwoMOqfK30bo1i438cDa7oTWOOWFwJNXY9UOMBpkCQ@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 2 Jun 2025 10:32:15 -0700
-X-Gm-Features: AX0GCFtvM9h-svrhY-U-soiP0u8TEbc_-RHxISmm1FBYq42MREbKbhJ53qT0dXU
-Message-ID: <CAP-5=fXg-gQVYwdLpWkkD+egqpq1KbPjUt3cXXa+Msm5hSU9PA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] perf debug: Add function symbols to dump_stack
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Michael Petlan <mpetlan@redhat.com>, 
-	Andi Kleen <ak@linux.intel.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, 
-	=?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d949f2b5-1351-4778-9716-eaec1e2b1ba7@samsung.com>
 
-On Thu, May 29, 2025 at 3:02=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Thu, May 29, 2025 at 1:21=E2=80=AFPM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > On Wed, May 28, 2025 at 10:23:22PM -0700, Ian Rogers wrote:
-> > > Symbolize stack traces by creating a live machine. Add this
-> > > functionality to dump_stack and switch dump_stack users to use
-> > > it. Switch TUI to use it. Add stack traces to the child test function
-> > > which can be useful to diagnose blocked code.
-> > >
-> > > Example output:
-> > > ```
-> > >   8: PERF_RECORD_* events & perf_sample fields                       =
-: Running (1 active)
-> > > ^C
-> > > Signal (2) while running tests.
-> > > Terminating tests with the same signal
-> > > Internal test harness failure. Completing any started tests:
-> > > :  8: PERF_RECORD_* events & perf_sample fields:
-> >
-> > So you are testing it with:
-> >
-> > root@number:~# perf test PERF_RECORD
-> >   8: PERF_RECORD_* events & perf_sample fields                       : =
-Running (1 active)
-> > ^C
-> > Signal (2) while running tests.
-> > Terminating tests with the same signal
-> > Internal test harness failure. Completing any started tests:
-> >   8: PERF_RECORD_* events & perf_sample fields                       : =
-Skip (permissions)
-> > root@number:~#
-> >
-> > ?
->
-> You are running the test as a child and by default the child test
-> output is only displayed if verbose is enabled. I use verbose=3D2 below
-> as verbose=3D1 won't display anything unless the child test gives a fail
-> exit value:
-> ```
-> $ git log --oneline
-> b9ac06abfde9 perf debug: Add function symbols to dump_stack
-> e561806265ed perf machine: Factor creating a "live" machine out of dwarf-=
-unwind
-> 628e124404b3 perf tests switch-tracking: Fix timestamp comparison
-> $ make -C tools/perf O=3D/tmp/perf
-> ...
-> $ sudo /tmp/perf/perf test -vv PERF_RECORD
->  8: PERF_RECORD_* events & perf_sample fields:
->  8: PERF_RECORD_* events & perf_sample fields                       :
-> Running (1 active)
-> ^C
-> Signal (2) while running tests.
-> Terminating tests with the same signal
-> Internal test harness failure. Completing any started tests:
-> :  8: PERF_RECORD_* events & perf_sample fields:
->
-> ---- unexpected signal (2) ----
->    #0 0x5617ec45e5e3 in child_test_sig_handler builtin-test.c:0
->    #1 0x7f855c649df0 in __restore_rt libc_sigaction.c:0
->    #2 0x7f855c699687 in __internal_syscall_cancel cancellation.c:64
->    #3 0x7f855c6e5f7a in clock_nanosleep@GLIBC_2.2.5 clock_nanosleep.c:72
->    #4 0x7f855c6f1393 in __nanosleep nanosleep.c:26
->    #5 0x7f855c702d68 in __sleep sleep.c:55
->    #6 0x5617ec46ebfb in test__PERF_RECORD perf-record.c:0
->    #7 0x5617ec45e4f0 in run_test_child builtin-test.c:0
->    #8 0x5617ec3faf0d in start_command run-command.c:127
->    #9 0x5617ec45f433 in __cmd_test builtin-test.c:0
->    #10 0x5617ec45faff in cmd_test perf[147aff]
->    #11 0x5617ec3ed960 in run_builtin perf.c:0
->    #12 0x5617ec3edc7b in handle_internal_command perf.c:0
->    #13 0x5617ec368d33 in main perf[50d33]
->    #14 0x7f855c633ca8 in __libc_start_call_main libc_start_call_main.h:74
->    #15 0x7f855c633d65 in __libc_start_main@@GLIBC_2.34 libc-start.c:128
->    #16 0x5617ec369381 in _start perf[51381]
->
-> ---- unexpected signal (2) ----
->    #0 0x5617ec45e5e3 in child_test_sig_handler builtin-test.c:0
->    #1 0x7f855c649df0 in __restore_rt libc_sigaction.c:0
->    #2 0x7f855c6a3a14 in pthread_sigmask@GLIBC_2.2.5 pthread_sigmask.c:45
->    #3 0x7f855c649fd9 in __GI___sigprocmask sigprocmask.c:26
->    #4 0x7f855c72601b in __longjmp_chk longjmp.c:36
->    #5 0x5617ec45e600 in print_test_result.isra.0 builtin-test.c:0
->    #6 0x7f855c649df0 in __restore_rt libc_sigaction.c:0
->    #7 0x7f855c699687 in __internal_syscall_cancel cancellation.c:64
->    #8 0x7f855c6e5f7a in clock_nanosleep@GLIBC_2.2.5 clock_nanosleep.c:72
->    #9 0x7f855c6f1393 in __nanosleep nanosleep.c:26
->    #10 0x7f855c702d68 in __sleep sleep.c:55
->    #11 0x5617ec46ebfb in test__PERF_RECORD perf-record.c:0
->    #12 0x5617ec45e4f0 in run_test_child builtin-test.c:0
->    #13 0x5617ec3faf0d in start_command run-command.c:127
->    #14 0x5617ec45f433 in __cmd_test builtin-test.c:0
->    #15 0x5617ec45faff in cmd_test perf[147aff]
->    #16 0x5617ec3ed960 in run_builtin perf.c:0
->    #17 0x5617ec3edc7b in handle_internal_command perf.c:0
->    #18 0x5617ec368d33 in main perf[50d33]
->    #19 0x7f855c633ca8 in __libc_start_call_main libc_start_call_main.h:74
->    #20 0x7f855c633d65 in __libc_start_main@@GLIBC_2.34 libc-start.c:128
->    #21 0x5617ec369381 in _start perf[51381]
->  8: PERF_RECORD_* events & perf_sample fields                       :
-> Skip (permissions)
-> ```
->
->
-> > I built it with DEBUG=3D1 and without, and with your patch, following y=
-our
-> > example output, I'm not being able to reproduce.
-> >
-> > Tried it as well with:
-> >
-> > =E2=AC=A2 [acme@toolbx perf-tools-next]$ cat segv.patch
-> > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> > index 8b30c6f16a9eeac1..e55d86f1097d6d79 100644
-> > --- a/tools/perf/util/symbol.c
-> > +++ b/tools/perf/util/symbol.c
-> > @@ -402,6 +402,8 @@ static struct symbol *symbols__find(struct rb_root_=
-cached *symbols, u64 ip)
-> >  {
-> >         struct rb_node *n;
-> >
-> > +       *(int *)NULL =3D 0;
-> > +
-> >         if (symbols =3D=3D NULL)
-> >                 return NULL;
-> >
-> > =E2=AC=A2 [acme@toolbx perf-tools-next]$ patch -p1 < segv.patch
-> > patching file tools/perf/util/symbol.c
-> > =E2=AC=A2 [acme@toolbx perf-tools-next]$ m
-> > rm: cannot remove '/home/acme/libexec/perf-core/scripts/python/Perf-Tra=
-ce-Util/lib/Perf/Trace/__pycache__/Core.cpython-313.pyc': Permission denied
-> > make: Entering directory '/home/acme/git/perf-tools-next/tools/perf'
-> >   BUILD:   Doing 'make -j32' parallel build
-> > Warning: Kernel ABI header differences:
-> >   diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm=
-/cputype.h
-> >
-> > Auto-detecting system features:
-> > ...                                   libdw: [ on  ]
-> > ...                                   glibc: [ on  ]
-> > ...                                  libelf: [ on  ]
-> > ...                                 libnuma: [ on  ]
-> > ...                  numa_num_possible_cpus: [ on  ]
-> > ...                                 libperl: [ on  ]
-> > ...                               libpython: [ on  ]
-> > ...                               libcrypto: [ on  ]
-> > ...                             libcapstone: [ on  ]
-> > ...                               llvm-perf: [ on  ]
-> > ...                                    zlib: [ on  ]
-> > ...                                    lzma: [ on  ]
-> > ...                               get_cpuid: [ on  ]
-> > ...                                     bpf: [ on  ]
-> > ...                                  libaio: [ on  ]
-> > ...                                 libzstd: [ on  ]
-> >
-> >   INSTALL libsubcmd_headers
-> >   INSTALL libperf_headers
-> >   INSTALL libapi_headers
-> >   INSTALL libsymbol_headers
-> >   INSTALL libbpf_headers
-> >   CC      /tmp/build/perf-tools-next/util/symbol.o
-> >   LD      /tmp/build/perf-tools-next/util/perf-util-in.o
-> >   LD      /tmp/build/perf-tools-next/perf-util-in.o
-> >   AR      /tmp/build/perf-tools-next/libperf-util.a
-> >   LINK    /tmp/build/perf-tools-next/perf
-> >   GEN     /tmp/build/perf-tools-next/python/perf.cpython-313-x86_64-lin=
-ux-gnu.so
-> >   INSTALL binaries
-> >   INSTALL tests
-> >   INSTALL libperf-jvmti.so
-> >   INSTALL libexec
-> >   INSTALL perf-archive
-> >   INSTALL perf-iostat
-> >   INSTALL perl-scripts
-> >   INSTALL python-scripts
-> >   INSTALL dlfilters
-> >   INSTALL perf_completion-script
-> >   INSTALL perf-tip
-> > make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
-> >  18: 'import perf' in python                                         : =
-Ok
-> > =E2=AC=A2 [acme@toolbx perf-tools-next]$
-> >
-> > root@number:~# perf top
-> > perf: Segmentation fault
-> > -------- backtrace --------
-> > Segmentation fault (core dumped)
-> > root@number:~#
-> >
-> > Tried also with this, but probably something else is at play:
-> >
-> > root@number:~# perf probe -x ~/bin/perf dump_stack
-> > Added new event:
-> >   probe_perf:dump_stack (on dump_stack in /home/acme/bin/perf)
-> >
-> > You can now use it in all perf tools, such as:
-> >
-> >         perf record -e probe_perf:dump_stack -aR sleep 1
-> >
-> > root@number:~#
-> > root@number:~# perf trace -e probe_perf:dump_stack/max-stack=3D16/ perf=
- top
-> > perf: Segmentation fault
-> > -------- backtrace --------
-> > root@number:~#
-> >
-> > Running perf trace on a separate terminal it also doesn't catch
-> > dump_stack being called (that probe point).
-> >
-> > root@number:~# perf top --stdio
-> >    PerfTop:       0 irqs/sec  kernel: 0.0%  exact:  0.0% lost: 0/0 drop=
-: 0/0 [4000Hz cycles:P],  (all, 32 CPUs)
-> > -----------------------------------------------------------------------=
----------------------------------------------------------------------------=
-----------------------
-> >
-> > perf: Segmentation fault
-> > Segmentation fault (core dumped)
-> > root@number:~#
-> >
-> > root@number:~# nm ~/bin/perf | grep dump_stack
-> > 0000000000637eaa T __dump_stack
-> > 00000000006380fa T dump_stack
-> > 000000000063816b T sighandler_dump_stack
-> > root@number:~#
-> >
-> > =E2=AC=A2 [acme@toolbx perf-tools-next]$ rpm -q glibc
-> > glibc-2.41-5.fc42.x86_64
-> > root@number:~# uname -a
-> > Linux number 6.14.8-300.fc42.x86_64 #1 SMP PREEMPT_DYNAMIC Thu May 22 1=
-9:26:02 UTC 2025 x86_64 GNU/Linux
-> > root@number:~#
-> >
-> > What am I missing?
->
-> For perf top I can do:
-> ```
-> $ sudo /tmp/perf/perf top
-> ```
-> in a different terminal:
-> ```
-> $ sudo killall -11 perf
-> ```
-> then back in the first terminal:
-> ```
-> perf: Segmentation fault
-> -------- backtrace --------
->    #0 0x55ee68647918 in ui__signal_backtrace setup.c:110
->    #1 0x7fe2d3849df0 in __restore_rt libc_sigaction.c:0
->    #2 0x7fe2d38a49ee in __syscall_cancel_arch syscall_cancel.S:56
->    #3 0x7fe2d3899668 in __internal_syscall_cancel cancellation.c:54
->    #4 0x7fe2d38996ad in __syscall_cancel cancellation.c:79
->    #5 0x7fe2d390d9c6 in __poll poll.c:43
->    #6 0x55ee6855dfcb in fdarray__poll array.c:139
->    #7 0x55ee68565a05 in perf_evlist__poll evlist.c:391
->    #8 0x55ee68673b5a in evlist__poll evlist.c:594
->    #9 0x55ee684e7a61 in __cmd_top builtin-top.c:1369
->    #10 0x55ee684e9a6c in cmd_top builtin-top.c:1856
->    #11 0x55ee6855d1f0 in run_builtin perf.c:351
->    #12 0x55ee6855d497 in handle_internal_command perf.c:404
->    #13 0x55ee6855d5f0 in run_argv perf.c:451
->    #14 0x55ee6855d939 in main perf.c:558
->    #15 0x7fe2d3833ca8 in __libc_start_call_main libc_start_call_main.h:74
->    #16 0x7fe2d3833d65 in __libc_start_main@@GLIBC_2.34 libc-start.c:128
->    #17 0x55ee684b0a91 in _start perf[4ca91]
-> ```
-> As the same symbol code is used for the backtrace then adding the segv
-> there is likely causing a segv in the signal handler in __dump_stack.
+On Mon, Jun 02, 2025 at 10:03:09AM +0200, Michal Wilczynski wrote:
+> 
+> 
+> On 6/2/25 01:05, Drew Fustini wrote:
+> > On Fri, May 30, 2025 at 12:23:47AM +0200, Michal Wilczynski wrote:
+> >> This patch series introduces support for the Imagination IMG BXM-4-64
+> >> GPU found on the T-HEAD TH1520 SoC. A key aspect of this support is
+> >> managing the GPU's complex power-up and power-down sequence, which
+> >> involves multiple clocks and resets.
+> >>
+> >> The TH1520 GPU requires a specific sequence to be followed for its
+> >> clocks and resets to ensure correct operation. Initial discussions and
+> >> an earlier version of this series explored managing this via the generic
+> >> power domain (genpd) framework. However, following further discussions
+> >> with kernel maintainers [1], the approach has been reworked to utilize
+> >> the dedicated power sequencing (pwrseq) framework.
+> >>
+> >> This revised series now employs a new pwrseq provider driver
+> >> (pwrseq-thead-gpu.c) specifically for the TH1520 GPU. This driver
+> >> encapsulates the SoC specific power sequence details. The Imagination
+> >> GPU driver (pvr_device.c) is updated to act as a consumer of this power
+> >> sequencer, requesting the "gpu-power" target. The sequencer driver,
+> >> during its match phase with the GPU device, acquires the necessary clock
+> >> and reset handles from the GPU device node to perform the full sequence.
+> >>
+> >> This approach aligns with the goal of abstracting SoC specific power
+> >> management details away from generic device drivers and leverages the
+> >> pwrseq framework as recommended.
+> >>
+> >> The series is structured as follows:
+> >>
+> >> Patch 1: Adds device tree bindings for the new T-HEAD TH1520 GPU
+> >>          power sequencer provider.
+> >> Patch 2: Introduces the pwrseq-thead-gpu driver to manage the GPU's
+> >>          power-on/off sequence.
+> >> Patch 3: Updates the Imagination DRM driver to utilize the pwrseq
+> >>          framework for TH1520 GPU power management.
+> >> Patch 4: Adds the TH1520 GPU compatible string to the Imagination
+> >>          GPU DT bindings.
+> >> Patch 5: Adds the missing reset controller header include in the
+> >>          TH1520 DTS include file.
+> >> Patch 6: Adds the device tree node for the GPU power sequencer to
+> >>          the TH1520 DTS include file.
+> >> Patch 7: Adds the GPU device tree node for the IMG BXM-4-64 GPU to
+> >>          the TH1520 DTS include file.
+> >> Patch 8: Enables compilation of the drm/imagination on the RISC-V
+> >>          architecture
+> >>
+> >> This patchset finishes the work started in bigger series [2] by adding
+> >> all the remaining GPU power sequencing piece. After this patchset the GPU
+> >> probes correctly.
+> >>
+> >> This series supersedes the previous genpd based approach. Testing on
+> >> T-HEAD TH1520 SoC indicates the new pwrseq based solution works
+> >> correctly.
+> >>
+> >> This time it's based on linux-next, as there are dependent patches not
+> >> yet merged, but present in linux-next like clock and reset patches.
+> >>
+> >> An open point in Patch 7/8 concerns the GPU memory clock (gpu_mem_clk),
+> >> defined as a fixed-clock. The specific hardware frequency for this clock
+> >> on the TH1520 could not be determined from available public
+> >> documentation. Consequently, clock-frequency = <0>; has been used as a
+> >> placeholder to enable driver functionality.
+> >>
+> >> Link to v2 of this series - [3].
+> >>
+> >> v3:
+> >>
+> >>  - re-worked cover letter completely
+> >>  - complete architectural rework from using extended genpd callbacks to a
+> >>    dedicated pwrseq provider driver
+> >>  - introduced pwrseq-thead-gpu.c and associated DT bindings
+> >>    (thead,th1520-gpu-pwrseq)
+> >>  - the Imagination driver now calls devm_pwrseq_get() and uses
+> >>    pwrseq_power_on() / pwrseq_power_off() for the TH1520 GPU
+> >>  - removed the platform_resources_managed flag from dev_pm_info and
+> >>    associated logic
+> >>  - the new pwrseq driver's match() function now acquires consumer-specific
+> >>    resources (GPU clocks, GPU core reset) directly from the consumer device
+> >>
+> >> v2:
+> >>
+> >> Extended the series by adding two new commits:
+> >>  - introduced a new platform_resources_managed flag in dev_pm_info along
+> >>    with helper functions, allowing drivers to detect when clocks and resets
+> >>    are managed by the platform
+> >>  - updated the DRM Imagination driver to skip claiming clocks when
+> >>    platform_resources_managed is set
+> >>
+> >> Split the original bindings update:
+> >>  - the AON firmware bindings now only add the GPU clkgen reset (the GPU
+> >>    core reset remains handled by the GPU node)
+> >>
+> >> Reworked the TH1520 PM domain driver to:
+> >>  - acquire GPU clocks and reset dynamically using attach_dev/detach_dev
+> >>    callbacks
+> >>  - handle clkgen reset internally, while GPU core reset is obtained from
+> >>    the consumer device node
+> >>  - added a check to enforce that only a single device can be attached to
+> >>    the GPU PM domain
+> >>
+> >> [1] - https://lore.kernel.org/all/CAPDyKFpi6_CD++a9sbGBvJCuBSQS6YcpNttkRQhQMTWy1yyrRg@mail.gmail.com/
+> >> [2] - https://lore.kernel.org/all/20250219140239.1378758-1-m.wilczynski@samsung.com/
+> >> [3] - https://lore.kernel.org/all/20250414-apr_14_for_sending-v2-0-70c5af2af96c@samsung.com/
+> >>
+> >> ---
+> >> Michal Wilczynski (8):
+> >>       dt-bindings: power: Add T-HEAD TH1520 GPU power sequencer
+> >>       power: sequencing: Add T-HEAD TH1520 GPU power sequencer driver
+> >>       drm/imagination: Use pwrseq for TH1520 GPU power management
+> >>       dt-bindings: gpu: Add TH1520 GPU compatible to Imagination bindings
+> >>       riscv: dts: thead: th1520: Add missing reset controller header include
+> >>       riscv: dts: thead: Add GPU power sequencer node
+> >>       riscv: dts: thead: th1520: Add IMG BXM-4-64 GPU node
+> >>       drm/imagination: Enable PowerVR driver for RISC-V
+> >>
+> >>  .../devicetree/bindings/gpu/img,powervr-rogue.yaml |   9 +-
+> >>  .../bindings/power/thead,th1520-pwrseq.yaml        |  42 +++++
+> >>  MAINTAINERS                                        |   2 +
+> >>  arch/riscv/boot/dts/thead/th1520.dtsi              |  29 ++++
+> >>  drivers/gpu/drm/imagination/Kconfig                |   3 +-
+> >>  drivers/gpu/drm/imagination/pvr_device.c           |  33 +++-
+> >>  drivers/gpu/drm/imagination/pvr_device.h           |   6 +
+> >>  drivers/gpu/drm/imagination/pvr_power.c            |  82 +++++----
+> >>  drivers/power/sequencing/Kconfig                   |   8 +
+> >>  drivers/power/sequencing/Makefile                  |   1 +
+> >>  drivers/power/sequencing/pwrseq-thead-gpu.c        | 183 +++++++++++++++++++++
+> >>  11 files changed, 363 insertions(+), 35 deletions(-)
+> >> ---
+> >> base-commit: 49473fe7fdb5fbbe5bbfa51083792c17df63d317
+> >> change-id: 20250414-apr_14_for_sending-5b3917817acc
+> >>
+> >> Best regards,
+> >> -- 
+> >> Michal Wilczynski <m.wilczynski@samsung.com>
+> >>
+> > 
+> > Thank you for continuing to work on this series.
+> > 
+> > I applied it to next-20250530 and the boot hangs:
+> > 
+> > <snip>
+> > [    0.895622] mmc0: new HS400 MMC card at address 0001
+> > [    0.902638] mmcblk0: mmc0:0001 8GTF4R 7.28 GiB
+> > [    0.915454]  mmcblk0: p1 p2 p3
+> > [    0.916613] debug_vm_pgtable: [debug_vm_pgtable         ]: Validating architecture page table helpers
+> > [    0.920107] mmcblk0boot0: mmc0:0001 8GTF4R 4.00 MiB
+> > [    0.936592] mmcblk0boot1: mmc0:0001 8GTF4R 4.00 MiB
+> > [    0.944986] mmcblk0rpmb: mmc0:0001 8GTF4R 512 KiB, chardev (243:0)
+> > [    0.947700] mmc1: new UHS-I speed DDR50 SDHC card at address aaaa
+> > [    0.961368] mmcblk1: mmc1:aaaa SU16G 14.8 GiB
+> > [    0.969639]  mmcblk1: p1 p2 p3
+> > [    0.986688] printk: legacy console [ttyS0] disabled
+> > [    0.992468] ffe7014000.serial: ttyS0 at MMIO 0xffe7014000 (irq = 23, base_baud = 6250000) is a 16550A
+> > [    1.002085] printk: legacy console [ttyS0] enabled
+> > [    1.002085] printk: legacy console [ttyS0] enabled
+> > [    1.011784] printk: legacy bootconsole [uart0] disabled
+> > [    1.011784] printk: legacy bootconsole [uart0] disabled
+> > [    1.024633] stackdepot: allocating hash table of 524288 entries via kvcalloc
+> > <no more output>
+> > 
+> > I pasted the full boot log [1]. I have clk_ignore_unused in the kernel
+> > cmdline so I don't think it is related to disabling clocks. Boot does
+> > complete okay if I set the gpu node status to disabled.
+> > 
+> > Any ideas of what might fix the boot hang?
+> > 
+> > Thanks,
+> > Drew
+> 
+> Hi,
+> Thanks a lot for testing and promptly providing debug data. I think the
+> problem is with the fallback logic implemented in the pvr_device.c:
+> 	/*
+> 	 * Try to get a power sequencer. If successful, it will handle clocks
+> 	 * and resets. Otherwise, we fall back to managing them ourselves.
+> 	 */
+> 	pvr_dev->pwrseq = devm_pwrseq_get(dev, "gpu-power");
+> 	if (IS_ERR(pvr_dev->pwrseq)) {
+> 		int pwrseq_err = PTR_ERR(pvr_dev->pwrseq);
+> 
+> 		/*
+> 		 * If the error is -EPROBE_DEFER, it's because the
+> 		 * optional sequencer provider is not present
+> 		 * and it's safe to fall back on manual power-up.
+> 		 */
+> 		if (pwrseq_err == -EPROBE_DEFER)
+> 			pvr_dev->pwrseq = NULL;
+> 		else
+> 			return dev_err_probe(dev, pwrseq_err,
+> 					     "Failed to get power sequencer\n");
+> 	}
+> 
+> 
+> Since you have:
+> # CONFIG_POWER_SEQUENCING_THEAD_GPU is not set
+> The fallback logic assumes that there is no pwrseq provider for
+> 'gpu-power' and falls back on generic driver to do the initial power
+> sequence. Obviously for TH1520 the generic driver fails to do that
+> correctly, and the register access hangs.
 
-Just to note, it would be nice for this to land as I need to rebase:
-https://lore.kernel.org/lkml/20250529044000.759937-19-irogers@google.com/
-due to the machine changes. I believe the patches are WAI as shown in
-the output.
+Ah! Yeah, I missed setting CONFIG_POWER_SEQUENCING_THEAD_GPU. The boot
+completes okay now that is enabled.
+
+> 
+> So the code seems to behave as designed.
+> 
+> By the way, there are quite a lot of Kconfig options added recently to
+> TH1520 SoC that haven't made it's way to defconfig for risc-v. Do you
+> think it's a good idea to add them there ?
+
+Yeah, I think we should have all the recent Kconfing options enabled by
+default. I'm not sure if it should be in the riscv defconfig and as new
+selects under ARCH_THEAD in Kconfig.socs. I just asked conor and palmer
+on irc to see what would work best.
 
 Thanks,
-Ian
-
-
-> Thanks,
-> Ian
->
-> > - Arnaldo
-> >
-> > > ____ unexpected signal (2) ____
-> > >     #0 0x5590fb6209b6 in child_test_sig_handler builtin-test.c:243
-> > >     #1 0x7f4a91e49e20 in __restore_rt libc_sigaction.c:0
-> > >     #2 0x7f4a91ee4f33 in clock_nanosleep@GLIBC_2.2.5 clock_nanosleep.=
-c:71
-> > >     #3 0x7f4a91ef0333 in __nanosleep nanosleep.c:26
-> > >     #4 0x7f4a91f01f68 in __sleep sleep.c:55
-> > >     #5 0x5590fb638c63 in test__PERF_RECORD perf-record.c:295
-> > >     #6 0x5590fb620b43 in run_test_child builtin-test.c:269
-> > >     #7 0x5590fb5b83ab in start_command run-command.c:127
-> > >     #8 0x5590fb621572 in start_test builtin-test.c:467
-> > >     #9 0x5590fb621a47 in __cmd_test builtin-test.c:573
-> > >     #10 0x5590fb6225ea in cmd_test builtin-test.c:775
-> > >     #11 0x5590fb5a9099 in run_builtin perf.c:351
-> > >     #12 0x5590fb5a9340 in handle_internal_command perf.c:404
-> > >     #13 0x5590fb5a9499 in run_argv perf.c:451
-> > >     #14 0x5590fb5a97e2 in main perf.c:558
-> > >     #15 0x7f4a91e33d68 in __libc_start_call_main libc_start_call_main=
-.h:74
-> > >     #16 0x7f4a91e33e25 in __libc_start_main@@GLIBC_2.34 libc-start.c:=
-128
-> > >     #17 0x5590fb4fd6d1 in _start perf[436d1]
-> > > ```
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > > v2: Fix NO_BACKTRACE=3D1 build (Arnaldo)
-> > > ---
-> > >  tools/perf/tests/builtin-test.c | 15 +++++++-
-> > >  tools/perf/ui/tui/setup.c       |  2 +-
-> > >  tools/perf/util/debug.c         | 68 +++++++++++++++++++++++++++----=
---
-> > >  tools/perf/util/debug.h         |  1 +
-> > >  4 files changed, 73 insertions(+), 13 deletions(-)
-> > >
-> > > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/built=
-in-test.c
-> > > index 45d3d8b3317a..80375ca39a37 100644
-> > > --- a/tools/perf/tests/builtin-test.c
-> > > +++ b/tools/perf/tests/builtin-test.c
-> > > @@ -6,6 +6,9 @@
-> > >   */
-> > >  #include <fcntl.h>
-> > >  #include <errno.h>
-> > > +#ifdef HAVE_BACKTRACE_SUPPORT
-> > > +#include <execinfo.h>
-> > > +#endif
-> > >  #include <poll.h>
-> > >  #include <unistd.h>
-> > >  #include <setjmp.h>
-> > > @@ -231,6 +234,16 @@ static jmp_buf run_test_jmp_buf;
-> > >
-> > >  static void child_test_sig_handler(int sig)
-> > >  {
-> > > +#ifdef HAVE_BACKTRACE_SUPPORT
-> > > +     void *stackdump[32];
-> > > +     size_t stackdump_size;
-> > > +#endif
-> > > +
-> > > +     fprintf(stderr, "\n---- unexpected signal (%d) ----\n", sig);
-> > > +#ifdef HAVE_BACKTRACE_SUPPORT
-> > > +     stackdump_size =3D backtrace(stackdump, ARRAY_SIZE(stackdump));
-> > > +     __dump_stack(stderr, stackdump, stackdump_size);
-> > > +#endif
-> > >       siglongjmp(run_test_jmp_buf, sig);
-> > >  }
-> > >
-> > > @@ -244,7 +257,7 @@ static int run_test_child(struct child_process *p=
-rocess)
-> > >
-> > >       err =3D sigsetjmp(run_test_jmp_buf, 1);
-> > >       if (err) {
-> > > -             fprintf(stderr, "\n---- unexpected signal (%d) ----\n",=
- err);
-> > > +             /* Received signal. */
-> > >               err =3D err > 0 ? -err : -1;
-> > >               goto err_out;
-> > >       }
-> > > diff --git a/tools/perf/ui/tui/setup.c b/tools/perf/ui/tui/setup.c
-> > > index 16c6eff4d241..022534eed68c 100644
-> > > --- a/tools/perf/ui/tui/setup.c
-> > > +++ b/tools/perf/ui/tui/setup.c
-> > > @@ -108,7 +108,7 @@ static void ui__signal_backtrace(int sig)
-> > >
-> > >       printf("-------- backtrace --------\n");
-> > >       size =3D backtrace(stackdump, ARRAY_SIZE(stackdump));
-> > > -     backtrace_symbols_fd(stackdump, size, STDOUT_FILENO);
-> > > +     __dump_stack(stdout, stackdump, size);
-> > >
-> > >       exit(0);
-> > >  }
-> > > diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
-> > > index f9ef7d045c92..0c7c6a9e158b 100644
-> > > --- a/tools/perf/util/debug.c
-> > > +++ b/tools/perf/util/debug.c
-> > > @@ -14,11 +14,18 @@
-> > >  #ifdef HAVE_BACKTRACE_SUPPORT
-> > >  #include <execinfo.h>
-> > >  #endif
-> > > +#include "addr_location.h"
-> > >  #include "color.h"
-> > > -#include "event.h"
-> > >  #include "debug.h"
-> > > +#include "event.h"
-> > > +#include "machine.h"
-> > > +#include "map.h"
-> > >  #include "print_binary.h"
-> > > +#include "srcline.h"
-> > > +#include "symbol.h"
-> > > +#include "synthetic-events.h"
-> > >  #include "target.h"
-> > > +#include "thread.h"
-> > >  #include "trace-event.h"
-> > >  #include "ui/helpline.h"
-> > >  #include "ui/ui.h"
-> > > @@ -298,21 +305,60 @@ void perf_debug_setup(void)
-> > >       libapi_set_print(pr_warning_wrapper, pr_warning_wrapper, pr_deb=
-ug_wrapper);
-> > >  }
-> > >
-> > > +void __dump_stack(FILE *file, void **stackdump, size_t stackdump_siz=
-e)
-> > > +{
-> > > +     /* TODO: async safety. printf, malloc, etc. aren't safe inside =
-a signal handler. */
-> > > +     pid_t pid =3D getpid();
-> > > +     struct machine *machine =3D machine__new_live(/*kernel_maps=3D*=
-/false, pid);
-> > > +     struct thread *thread =3D NULL;
-> > > +
-> > > +     if (machine)
-> > > +             thread =3D machine__find_thread(machine, pid, pid);
-> > > +
-> > > +#ifdef HAVE_BACKTRACE_SUPPORT
-> > > +     if (!machine || !thread) {
-> > > +             /*
-> > > +              * Backtrace functions are async signal safe. Fall back=
- on them
-> > > +              * if machine/thread creation fails.
-> > > +              */
-> > > +             backtrace_symbols_fd(stackdump, stackdump_size, fileno(=
-file));
-> > > +             machine__delete(machine);
-> > > +             return;
-> > > +     }
-> > > +#endif
-> > > +
-> > > +     for (size_t i =3D 0; i < stackdump_size; i++) {
-> > > +             struct addr_location al;
-> > > +             u64 addr =3D (u64)stackdump[i];
-> > > +             bool printed =3D false;
-> > > +
-> > > +             addr_location__init(&al);
-> > > +             if (thread && thread__find_map(thread, PERF_RECORD_MISC=
-_USER, addr, &al)) {
-> > > +                     al.sym =3D map__find_symbol(al.map, al.addr);
-> > > +                     if (al.sym) {
-> > > +                             fprintf(file, "    #%zd %p in %s ", i, =
-stackdump[i], al.sym->name);
-> > > +                             printed =3D true;
-> > > +                     }
-> > > +             }
-> > > +             if (!printed)
-> > > +                     fprintf(file, "    #%zd %p ", i, stackdump[i]);
-> > > +
-> > > +             map__fprintf_srcline(al.map, al.addr, "", file);
-> > > +             fprintf(file, "\n");
-> > > +             addr_location__exit(&al);
-> > > +     }
-> > > +     thread__put(thread);
-> > > +     machine__delete(machine);
-> > > +}
-> > > +
-> > >  /* Obtain a backtrace and print it to stdout. */
-> > >  #ifdef HAVE_BACKTRACE_SUPPORT
-> > >  void dump_stack(void)
-> > >  {
-> > > -     void *array[16];
-> > > -     size_t size =3D backtrace(array, ARRAY_SIZE(array));
-> > > -     char **strings =3D backtrace_symbols(array, size);
-> > > -     size_t i;
-> > > -
-> > > -     printf("Obtained %zd stack frames.\n", size);
-> > > -
-> > > -     for (i =3D 0; i < size; i++)
-> > > -             printf("%s\n", strings[i]);
-> > > +     void *stackdump[32];
-> > > +     size_t size =3D backtrace(stackdump, ARRAY_SIZE(stackdump));
-> > >
-> > > -     free(strings);
-> > > +     __dump_stack(stdout, stackdump, size);
-> > >  }
-> > >  #else
-> > >  void dump_stack(void) {}
-> > > diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
-> > > index a4026d1fd6a3..6b737e195ce1 100644
-> > > --- a/tools/perf/util/debug.h
-> > > +++ b/tools/perf/util/debug.h
-> > > @@ -85,6 +85,7 @@ void debug_set_display_time(bool set);
-> > >  void perf_debug_setup(void);
-> > >  int perf_quiet_option(void);
-> > >
-> > > +void __dump_stack(FILE *file, void **stackdump, size_t stackdump_siz=
-e);
-> > >  void dump_stack(void);
-> > >  void sighandler_dump_stack(int sig);
-> > >
-> > > --
-> > > 2.49.0.1204.g71687c7c1d-goog
-> > >
+Drew
