@@ -1,29 +1,29 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2065.outbound.protection.outlook.com [40.107.21.65])
+Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010057.outbound.protection.outlook.com [52.101.69.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A697F22FDE2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A7D22FE18
 	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 14:09:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.65
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.57
 ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748873355; cv=fail; b=pHJC7hkv2FVXOoj3/x0g0i2jWSaYWMmqsQ/Z2l8qo84CvD6InXwwIJrtCdKloQK2IGnUHSIDx5afK8yVeIV+W35VZLMLxxC03SeeJ6O51CdRlcH3enrkrcYTZ8xHojeoPfj38K0Q3ZmhmPGg+ACk9ZR/bGB67c0szzSRsk3QtXQ=
+	t=1748873356; cv=fail; b=kORH3k6olq0CYWPqw/Js7hlspbyHx1V2V52xWgAaf0gXaYaRHpJJFIcwOWIeFr4j2r4qdF3zMA7b42XR8qC+pThtIWWCU6f5UiyewLmPpZGUMZiJJ9ytKHt6FLlWLt+bKbmGZOod8lfHAiorwsn+/v8VUTwPS6i9E3YcrDhKjpQ=
 ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748873355; c=relaxed/simple;
-	bh=/AY1xk7j5tSkDkD8QOjym4zkMPpuIwalJc8tXDar3JQ=;
+	s=arc-20240116; t=1748873356; c=relaxed/simple;
+	bh=86Ug6hRxjBqaIkgGJLNl1ZsrpfeEt1mBmbbBMG2M+FU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gffUsyVIBMebTEk6TCFBEoUGXxZPK0wkSFhfS1Fri0UIRZChlRnz1TZYjonMiFIDo/1XqE0E2BIAjWewhzP8+Ch9et9CM6kOZIgL3B37u+VwdrY32QHDSIYzkdJwftz5z8b0qSGzU1SbX0vDW6HMl7dLuNw43Mmm0X1LRDzPhKQ=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=XJFNtomd; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=XJFNtomd; arc=fail smtp.client-ip=40.107.21.65
+	 Content-Type:MIME-Version; b=Gyb9fCm9DfZP+7z+mBMOBfwuffn6T7qCKMBd/4s5rZU19CTrH7+dyYi5q9SLarGKKVSvOAl5cGnKOdFUz6LmL1W6fhaD/NiMkElBEYT5IzqpRm5o9WqJVAQH2cxYqWiC5jlkWuSiOf+hSZDzZ3DE0pmFA+MKM/aFq2dM3dd1CWI=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Qo57NxZm; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Qo57NxZm; arc=fail smtp.client-ip=52.101.69.57
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="XJFNtomd";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="XJFNtomd"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Qo57NxZm";
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Qo57NxZm"
 ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=XEV2kM1S1C2eTfD+YOZx/8+3iOkXinNQOwEmB3ruI+S4OndEotTU66GWgB+HCNuoOLFyvMU9B3IgVAY6thSzCT9w0ib2g5xuVkgCwsm2szPhgscrBt4FcyEvJyDpbyXpDqzgxsDO7DIaeRX7Hdzc//eVbazdXpCVTYViUwqh8V8rPL6mBWti+UCJ/CHGhSA/vbZJKhCh4yEHR/BhO0hQcDz4oKnxOWtdocUYICQjIbFoj5l4NqKZaLoa613MPJmkGgi0PLQUHM9pLbjQ2GqlIBSVgJHaAEsX9CLprPkFrppAcQZG99o5wrG4KCT+8IytcW5d91y7elGl288Ok84OvA==
+ b=Deaj0/LgFFQwwSmz73l6jAhHsrTv4Q8k3z8mpH0FKyN13pl6iILk/Fh/oC6Mxzv0srewgYUf49IQ3q3Z/jq1E3EfJdU/7A67x7mHHYyiIH2cieOwit0Chj0Oz9mmz+oXyWK2KIyMjOkw90IjOVhN2d66GkNShg/dsWXp1lMVQlvpTnmGoBHbFdMC//VesLWih62RLZXVvyHHjI/2O802SAsAmIaFYdFCoTRgYgsNCk0FrUT+724PtSwfZ6NBvl7oGn9Lr2gtlk0OwHEd3dMvpUcPlN+gX5412PSWzehCzz4Rf2GVw5gnHgdrT0OGMoIyu3Tpn7/jCNLaxOX2H9Z74Q==
 ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DuIQkNHHx6gH9kL3tvPElLH+YEBSrqOX4WRDMjkUZJE=;
- b=uV6EizGQKmyieFfxHy7Zes9fU6TqpqCumW8L9SjqknVsHTCpV1hc7fNRk1mtzVS7ja4fcGrOrgsnhtlEV3OjureFgGkF0MU6RPeEpCPPj+dyx2w8UnI3IX+BznHCA9vtmDR0xVprr0URfKOa5MCZd/FHvq6Fs4ta5AsJLql3Jd+pAIJxg9swCe5I5jTDYphtar6lRznDwW36kC1cel30AQ5VgLjpJnElTKw1SWKxBPz7lkYwl5fvMJ7c6xtp64w9aB7/ChMJdygx4UYW1BY7kWtmDBYS1gdycP8drm87DRl4gQ/nfAxPMUZuDNOto1iQJrSXCE/kTpizj4GHAgHveQ==
+ bh=NCHfWpf5zWZOPq8o5CgMyzciYXE78/x5WUs4vbuxuyk=;
+ b=CwW26e9k1sOeVzf6NsatPYY9/mo3vEVIDqZmilWVQ8uUMyMfdtjQhCKtrjPrdxdwUvXGhZhp1g8jub0uboJR6+38WddaBl28D5XABlOmHlyrMx2FrZukzSiQRszTQyfD+BOyqGBcT1BrWDS1mkSR92mXQV3EdL3cCt2vzDbSJxbgT+9HOdmmmazbGAaV1V0giz3GcbMqe7IUAqUezLF8YR08lciNMTpimFpXwQkPCPrml9gv1U/arAdwmdyb91pylx3npvLxkb6+kdjuAjPB6SnmxmasMZSgVCa/xb7F6ttqsYNM3bmQClCoc7nEKI59+LVI4VeBjQOFT5rpViJoIw==
 ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
  4.158.2.129) smtp.rcpttodomain=lists.freedesktop.org smtp.mailfrom=arm.com;
  dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
@@ -32,18 +32,18 @@ ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
  dmarc=[1,1,header.from=arm.com])
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DuIQkNHHx6gH9kL3tvPElLH+YEBSrqOX4WRDMjkUZJE=;
- b=XJFNtomd22b/sTOdONFbEZZqLU5yNaSIiiPCUPoR8CkIaZuTCzpS0ukg1UDp+U4xCVIptvcvgBldLzcbULDMljMFImFQCMsfM8kJXqCeaNnZTLjoIhpBbd0tJ57fjL7Tbkb9I/bDJRva5lIRznEQFYXkEFry8PSbIco8ZmlRJlk=
-Received: from DU7P250CA0006.EURP250.PROD.OUTLOOK.COM (2603:10a6:10:54f::21)
- by PAVPR08MB9281.eurprd08.prod.outlook.com (2603:10a6:102:306::6) with
+ bh=NCHfWpf5zWZOPq8o5CgMyzciYXE78/x5WUs4vbuxuyk=;
+ b=Qo57NxZmNfaHe+1jYLu+WUL1znvgvtc+AXb91YSwGhmww9fItMs93DD53lFszFsXP60VUpoS0AmdEwqjARwvVe+xI6sPB3+puZZeiPMnyTrccvZX+Pza+R8ciExnVE2soFoPu1DwzGWiqGp/u03BXN+8q2a9WqmQD4PB7hAzk40=
+Received: from DU2PR04CA0171.eurprd04.prod.outlook.com (2603:10a6:10:2b0::26)
+ by DU0PR08MB7566.eurprd08.prod.outlook.com (2603:10a6:10:31e::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Mon, 2 Jun
- 2025 14:09:08 +0000
-Received: from DU2PEPF00028D00.eurprd03.prod.outlook.com
- (2603:10a6:10:54f:cafe::89) by DU7P250CA0006.outlook.office365.com
- (2603:10a6:10:54f::21) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.31 via Frontend Transport; Mon,
- 2 Jun 2025 14:09:08 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Mon, 2 Jun
+ 2025 14:09:09 +0000
+Received: from DU2PEPF00028D0E.eurprd03.prod.outlook.com
+ (2603:10a6:10:2b0:cafe::6d) by DU2PR04CA0171.outlook.office365.com
+ (2603:10a6:10:2b0::26) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.19 via Frontend Transport; Mon,
+ 2 Jun 2025 14:09:09 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
  smtp.mailfrom=arm.com; dkim=pass (signature was verified)
  header.d=arm.com;dmarc=pass action=none header.from=arm.com;
@@ -51,34 +51,34 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  4.158.2.129 as permitted sender) receiver=protection.outlook.com;
  client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
 Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- DU2PEPF00028D00.mail.protection.outlook.com (10.167.242.184) with Microsoft
+ DU2PEPF00028D0E.mail.protection.outlook.com (10.167.242.22) with Microsoft
  SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.29
  via Frontend Transport; Mon, 2 Jun 2025 14:09:07 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=zWyQTQkU7Zb89+6+xdgol7oce6HfPefl20XzXpv4z3gK7LHqBcGIwJdYU5jCcNv3ezGz9t2hk0adNjRqnk0q8I7O7Lefb4Wa218IPalKAxhzUjipdV8pMJwEk58/T3mnp2vJdtm5rDHzzgVm2TIus0ZgFZOtbOYnh3VEEnR/hTHMpuZcDEL1Vv6u2dsjxjs0vWtxhF0PG+9/wjzBAvOaAfWv551BGMfJDSds8Y334vZG3rb8PWhS8TSvDyCAA8mxOEDFctijoQ0k9O58b7bmU8jAs+psRjhqfd2O/DZiarFbcQDV/o0Y43dutS3f8MAy7lFyOqn87VQ9Bj79AWTP7g==
+ b=NinLLfhcqkx0Nkma76J/+9lYPlMKvpQFUTaaYMQ6PaJFaobZdFyxbtsQ16WEhf2sftz1UmGyehkgw7aZ+k8iWt8fPqgdjcI7hSIMOqzeUQxT/LosA807IZ2hpLnL1gHhI8bM9811bOwjmugw1xYrhOFGZ2gFMpPgavC/8xsHNlyqJKvS7GaLGabBLPhudwuxqG4MMIyAy6ES5Uw+ma89Ag1CKuzsXEAKtIKVKFvtRrI7gw1I3ZMoXe7LCQM0B8Jrpny9aYdMWQIgo9Gr7DYwM2O6NvVK0xsN0DzZGNkSYevUuZuB633pCU5X1FAl/BUp3XgzmBNS89Aoz7Zja0EX0A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DuIQkNHHx6gH9kL3tvPElLH+YEBSrqOX4WRDMjkUZJE=;
- b=uR5XIf4bBeTEfAhZiuvEOIxur4EsJdmT0Ee3AGCXvZO+gDmJq/Y+d/r4vfiB47XE6mCmqPF5OkPuuyg+uthoIe92XUF5Adzlz3jwKtzZubt19XF52Y1Dvxymm5RzxcCR5f5Bb6gNxfjwdlnUGhMxCduXZwq1+Ji3qDXnNdG6cLjgkhYQj3q2uRBc2i4DWTV5gw5avuNEIeKpMsTiJd7umi2mn7/5k6vzPQsPuEzrxh5HiQh74z3DwC0dwLcPmLMbo+SMFTd1IfFcLToH+d0WMU1J/WSIsdzJEyvvVe3Aj5iRL3EfENLPMVRjz+i/giqVJRT8FkteL9xX+0epL/YLsA==
+ bh=NCHfWpf5zWZOPq8o5CgMyzciYXE78/x5WUs4vbuxuyk=;
+ b=OV59b811m8HIMmJUnKRBiFIsoBr4c9TUX12p9yugRf7ZbiwEn+ApkzIJAydgbYhBGKEzpvIqSjpiwPNhvHJUVevmXMYvJ36CQNSr0Rt7hSLmu3bXPOcpW3YtB+VUQfOYCU2ZJbkAMA7KdUNdD8Q3GIp1a6NrnEN8AiYojALw52u5LdmAlNQvWU9YosTaUQ61FoNtKQjGugkhS65qCr7KNzpKSfjGCtM5Me5PHqvqg3iR6fu2X8uszeFBQrstZJFg7odLz4NJxJKiDIjw/RAgaCk7Mwck4Vv+0A6+kQ1m1QB6Ctt9p+t14bVeMQ3i4OQp3aga3nkwB1N2BnPgw5AChA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DuIQkNHHx6gH9kL3tvPElLH+YEBSrqOX4WRDMjkUZJE=;
- b=XJFNtomd22b/sTOdONFbEZZqLU5yNaSIiiPCUPoR8CkIaZuTCzpS0ukg1UDp+U4xCVIptvcvgBldLzcbULDMljMFImFQCMsfM8kJXqCeaNnZTLjoIhpBbd0tJ57fjL7Tbkb9I/bDJRva5lIRznEQFYXkEFry8PSbIco8ZmlRJlk=
+ bh=NCHfWpf5zWZOPq8o5CgMyzciYXE78/x5WUs4vbuxuyk=;
+ b=Qo57NxZmNfaHe+1jYLu+WUL1znvgvtc+AXb91YSwGhmww9fItMs93DD53lFszFsXP60VUpoS0AmdEwqjARwvVe+xI6sPB3+puZZeiPMnyTrccvZX+Pza+R8ciExnVE2soFoPu1DwzGWiqGp/u03BXN+8q2a9WqmQD4PB7hAzk40=
 Authentication-Results-Original: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=arm.com;
 Received: from VI0PR08MB11200.eurprd08.prod.outlook.com
  (2603:10a6:800:257::18) by AS8PR08MB9018.eurprd08.prod.outlook.com
  (2603:10a6:20b:5b0::19) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.32; Mon, 2 Jun
- 2025 14:08:25 +0000
+ 2025 14:08:32 +0000
 Received: from VI0PR08MB11200.eurprd08.prod.outlook.com
  ([fe80::d594:64a:dfc:db74]) by VI0PR08MB11200.eurprd08.prod.outlook.com
  ([fe80::d594:64a:dfc:db74%7]) with mapi id 15.20.8746.041; Mon, 2 Jun 2025
- 14:08:25 +0000
+ 14:08:32 +0000
 From: Karunika Choo <karunika.choo@arm.com>
 To: dri-devel@lists.freedesktop.org
 Cc: nd@arm.com,
@@ -91,16 +91,16 @@ Cc: nd@arm.com,
 	David Airlie <airlied@gmail.com>,
 	Simona Vetter <simona@ffwll.ch>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/7] drm/panthor: Move GPU info initialization into panthor_hw.c
-Date: Mon,  2 Jun 2025 15:08:06 +0100
-Message-ID: <20250602140814.2559538-3-karunika.choo@arm.com>
+Subject: [PATCH v3 5/7] drm/panthor: Add support for Mali-Gx15 family of GPUs
+Date: Mon,  2 Jun 2025 15:08:11 +0100
+Message-ID: <20250602140814.2559538-8-karunika.choo@arm.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250602140814.2559538-1-karunika.choo@arm.com>
 References: <20250602140814.2559538-1-karunika.choo@arm.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: LO4P265CA0138.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2c4::9) To VI0PR08MB11200.eurprd08.prod.outlook.com
+X-ClientProxiedBy: FR0P281CA0185.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:ab::10) To VI0PR08MB11200.eurprd08.prod.outlook.com
  (2603:10a6:800:257::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -109,8 +109,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-TrafficTypeDiagnostic:
-	VI0PR08MB11200:EE_|AS8PR08MB9018:EE_|DU2PEPF00028D00:EE_|PAVPR08MB9281:EE_
-X-MS-Office365-Filtering-Correlation-Id: 09abaa6a-9f92-4b4a-79d0-08dda1df0a25
+	VI0PR08MB11200:EE_|AS8PR08MB9018:EE_|DU2PEPF00028D0E:EE_|DU0PR08MB7566:EE_
+X-MS-Office365-Filtering-Correlation-Id: ee669fa8-c4bb-46b4-ac60-08dda1df0a5d
 X-LD-Processed: f34e5979-57d9-4aaa-ad4d-b122a662184d,ExtAddr,ExtAddr
 x-checkrecipientrouted: true
 NoDisclaimer: true
@@ -118,336 +118,222 @@ X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam-Untrusted: BCL:0;ARA:13230040|366016|1800799024|376014;
 X-Microsoft-Antispam-Message-Info-Original:
- =?us-ascii?Q?mXVtyAEd5pRz/xGKvWo+PIyenBAiLrTa1xYvTr6mmdNuVsvX+FJ+R65j+STv?=
- =?us-ascii?Q?YI5JVBTZwSoStK0kwF2CEU3UjAUdgM7bo/SA4FVPyQz2erxkAnmE4tx/9nnf?=
- =?us-ascii?Q?OYU+TVepm01eceOCKtWTk0qUlZVj8l6LmVDYOaGvJBn42csNhZ6r+wYxuJks?=
- =?us-ascii?Q?bVaui/rTo3JFW2CDrb30QPVI3TjApLGtHZq2BsUF2iu4p+yNFprwyzL/cUzo?=
- =?us-ascii?Q?QzoYjnm7l6GgPH305NNmmTBjAk8L/74QTowDfgQVbC0Bn/mfb3xVlJFVW5Aa?=
- =?us-ascii?Q?Y3BijsHC4sY0imtrdbAvhdT652PUQ6MyRb6dYTEI1Sm7ASQi9rlqgQb//giB?=
- =?us-ascii?Q?rgrtq5G5OqAYsfKvnbR90+w96bMCE2xYbB1DsKU0LD09rFZ6f6lUjnzJtrKE?=
- =?us-ascii?Q?K8RYANhXmNgIAX8Aj2sj0Nabnd+79tbQQc+napVSFdpdlFAyYojdVCpwae9P?=
- =?us-ascii?Q?2Faj14mXlTjRL88GBMlwxVjlxoT3JllzdELZF1SM055cT8hx+3NfH0S2Atac?=
- =?us-ascii?Q?uil9KIpCJI/QQyPcj11x/hsm9O0yxJDpOnaCUXIbaqKR+0IfHix6FEt5VQad?=
- =?us-ascii?Q?C7BpRBkrig+QtcSIc5HwNPpIKX7NVda/sLItnZ9++DFkajTlavFovtSlEz7l?=
- =?us-ascii?Q?j8Gp3ALxkv/4m13HlYY178vBWCwNk/jAQ9WqLC+PdyFdvjjcO0Iurf2rueye?=
- =?us-ascii?Q?aloOJyVUJ1eCs72oUk4lTDW4UpJ4vEsAB37pD0WpqqHtvM/0vNccQSt9VK/l?=
- =?us-ascii?Q?iOdN9K/s1z3yAaej6M8ec5vFx7n9F0tf2mfQSfFJRHXiWyKkyD5mlRPmHc0o?=
- =?us-ascii?Q?ZkoODu9St83aVqRLw1qqZpvyilk2hzimcHC4fR++bQxsZ/5QDXlxb2fVHezX?=
- =?us-ascii?Q?27MgKsiA4wTPygpXBioDmNhsiTSLth+p+HM0rs2r6BR8k15NlYHjFInguyja?=
- =?us-ascii?Q?jiI1o4eo2RlZ8QDCCzKHovH5s1KPDHqI2ytkZxs86mmreeALjeKBdpTHK1Do?=
- =?us-ascii?Q?0xzkeLpSTWgCaSavkWyzMdriBxk5uluXQq3PRmStw57QssD0ZWUEBk1s7AL7?=
- =?us-ascii?Q?4BBMBcWQVzxNA+czWVCrd5JTYjX4IzfSz52cUGozBvg6lQFc0oLhTbE6X5q3?=
- =?us-ascii?Q?wWehUO0Q6Ubvmy88mYrxrFYeN1OLv5zzXL+x8wntxYedXSBXPKhpFCb+g9KV?=
- =?us-ascii?Q?ozgpwy7Gw3dUTTt4eJMjeWcZhF8PjnErU6HrLOCyw/2typa4ALAh4ZrEZ5Qd?=
- =?us-ascii?Q?/Khrk9PaRy3VYCB7m5B0Ne/2Ul4n9Wa0MkCnnt/1zQ=3D=3D?=
+ =?us-ascii?Q?OQsSEsgsSVzBv2R3H/zzexV0CHpfX826GrqBctXKawOcdF0vykj9waLs2pMj?=
+ =?us-ascii?Q?GNHY5wvR2njNnEqEpfYcp6tLTQEpgUHf0KU0c1rVp/4NZVg7goR979581Qpr?=
+ =?us-ascii?Q?Y8qIrixAPzYTvfTZdAhk6OVf4M3w8wQZTO0lbMCJJbpzc0e3rxv1xAx3N68v?=
+ =?us-ascii?Q?uaA0MMoluM5lyPsYq57m4uJua37sGLH+nElWnhn3PEDKi2hWwd14vZACKrrL?=
+ =?us-ascii?Q?LAQc2rRrnhLZZR9oQ/gTueNuw7uZKXA57onj6nmyyaCUC7gkHFO09VtOUyt2?=
+ =?us-ascii?Q?9gnrIOon914VxkoObzN9kirz5+nKZiWRYqPMngO9RYg5j/AVtW1JO0g4Ywc0?=
+ =?us-ascii?Q?UU5GznYRGZ4iklO5Czui9jI0o28tAH0wcmXiUHnRLnAK9JgKybaf8sKGopwP?=
+ =?us-ascii?Q?YZ8mH4kZ+7VtsndWnOqFSoCdsjAdY3PYAbNC5ljAJpGbZSQ8LVm7hjNuH74Y?=
+ =?us-ascii?Q?SgnGoE5XzPxyprQqDVOsGSKfwERZWXfma1Ts2C/JegjUUokaUH60CLq0YyEA?=
+ =?us-ascii?Q?A+ebuli155lZSx9BHME3FkgJsS/vZ32BmkScT60EPv1BuYJgtvIwM9Mi9p6h?=
+ =?us-ascii?Q?TmweQTHhTHShOw4h8EsK8kgZFIkUAKIAQMoRPGG2pv0BIbtgmes3O3nL7z3p?=
+ =?us-ascii?Q?l6ewjue4GrIvj9wWqUrcQlb+mTvfa5zWzMXInbqlNJgfCCxDSpiBYeWp7Cka?=
+ =?us-ascii?Q?3BtPe1FhVTtmB9lXEVmrptmFKXgpJwiWAK4EQnefiXGigbRx13M/vEfWrbPz?=
+ =?us-ascii?Q?LB4I0zGb7tsYeL/bCnMzPnSZTmk1SY24bYqnJwM0nteG9BTE4RLb97gJxd38?=
+ =?us-ascii?Q?609ItW2a4C7kBHBrEh9ENRj78tgJmfPhvG47MrXcUiben9GEVSaDtEavXdfZ?=
+ =?us-ascii?Q?XJya+hSmEJd6n7k+f6nkQVnLdMyrXlsRIIZ/mKz4BgjilalyVerBQIJHZnbC?=
+ =?us-ascii?Q?0NHcBovlMdfk+LIX/0nF7ujQy4dma5cYcRDN3QXmLDV8UTsHVDwOQ6VXk62d?=
+ =?us-ascii?Q?tlC+yoXMxan4RvBs+kOlQg8mVds247mWjEZfTd6UhwLmIZig8O249s26sv9F?=
+ =?us-ascii?Q?vvaBGGOc4S4UHAHBn7IwN1uH52QtjB9iQEqop734i3BH9pZ/kuXBmzveV8a7?=
+ =?us-ascii?Q?84LNVfYzgyc+aUGdUhNwVkfyFcAY1W8nmudZOxvQGhJ4VZdXuvZn30qzGXva?=
+ =?us-ascii?Q?FKckocCe9T/emxuRuu7++CNI7HYJ/tkuNNbEcVbAR1axasO5uihcoQJa7AJs?=
+ =?us-ascii?Q?xU+mrj0Rh3DthIdYn9WtQ1IKJK7pB/z6NwIZ3CrjCQ=3D=3D?=
 X-Forefront-Antispam-Report-Untrusted:
  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI0PR08MB11200.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB9018
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DU2PEPF00028D00.eurprd03.prod.outlook.com
+ DU2PEPF00028D0E.eurprd03.prod.outlook.com
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	1697fa66-29a4-4d90-e0a0-08dda1def096
+	3af03067-bb37-4651-4be2-08dda1def506
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|14060799003|35042699022|36860700013|1800799024|82310400026;
+	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014|14060799003|35042699022;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?dcf56KxMS/9bwkk+g+kGQoRK/4/3SJ+7cvwza7OyZUTryIV+lCSxXMosKm5I?=
- =?us-ascii?Q?rl6jqf1OJDiR0EzpclHTiIoXWaOj8IpDww1ffpmzNfjl1UjvWkue2nticlUV?=
- =?us-ascii?Q?/BLVPBu9muKWIa83xF9z2kj9oeyJrXyDVTOkjZwiMR/W/orpcKiy2owlPABO?=
- =?us-ascii?Q?bKzEF3afTmvmss1WEK5m8urRIpGJxRclCYj2yK7l0uYVV0BBOK+z3XSVlL8Y?=
- =?us-ascii?Q?HKtYLdDs4JhljrQM+EmkoeFkMx0nYwVqaGLKN87VqTergkouN7guVkorwZLC?=
- =?us-ascii?Q?3xfzBBCiWRbR05EHgyHcqAulkLQoJIQzwkGyXtEvq0dKAiC8yRgfNKa8KbCS?=
- =?us-ascii?Q?gibd0wKoIaxt/3+lYHTcMNCTpfalQSfCPcVbyfBiPJCBTaThaLv/vHk8De4/?=
- =?us-ascii?Q?wxWUbuQH7uXGySYiyB658zNuG/2V/7/pPVyWQhutyKcDPGWOoIqctWUuNGHs?=
- =?us-ascii?Q?OlQHEMa4Brt84v7Qde9AYDELjAqtmmr4ErVk2E6ki+2zfaIrDA4+42a/BwWx?=
- =?us-ascii?Q?bapgnYQI9g0JI8JR/0j3V9kjStYivTb5cDsZwA+8DTAWPCSUE1lorN2b6NvO?=
- =?us-ascii?Q?U2p9e6ltaWqadeQTUWG0KUhk/tHz0+KkZHUoHEpE0F4BrC2gSD4VtdTZnGus?=
- =?us-ascii?Q?DkMsq4/qgDSVU2t2DlyNypwZJka6a5Op7cZWJGOxNueTtIGnC7VpjYFI64oH?=
- =?us-ascii?Q?pKR8DNewP5g2hjQTBOXx/r4yE6JQ3bQnplLhh1GcWzzAjhEzS8yjoP5g1kfz?=
- =?us-ascii?Q?cySUko2Xe7IcThX9c5GbjrQFk5vahrsBs60RYckO/zBd9EfSVCWGlg4BGg6R?=
- =?us-ascii?Q?2j/KXC8QE6nnSnAImKq3bM9sfaag41M0Jt/7fGDEan7n6BBznr/X45/7DxNE?=
- =?us-ascii?Q?FEZo/5dAQrxyRZCcQ8lLTO5BFk2xlrwyf1klIz8NJHsKNmDwwsnqiKHhr8Hn?=
- =?us-ascii?Q?0aV7tc+5G6Ezk+TCAbNjZI4VAo9fbTo8lZeHitIHKn6A1Xvha3JOzVs3IQpv?=
- =?us-ascii?Q?IwdA1ehqR8Njvp36/lC5K5FlJpuGpZ//Y9RFmOAGkjwGeFYvyRmzJjHH9DQV?=
- =?us-ascii?Q?Hp2RrMP9MiwtTb3mTHK7JMbPZCfSiu/BJ/oS1YdQljiw55w45MwBxf/atkqH?=
- =?us-ascii?Q?VCtDtVoWqky2vp9QMTYUcuJd7N2LeB8g9A4Gu/CwrsJTL2qlsoEdcGKvmntl?=
- =?us-ascii?Q?QhDwOhsfh+SM4rpNowRj34U8hPf6GDFdUdtGXPLQAu9YcBFXgIdaVOl6OeCp?=
- =?us-ascii?Q?tP0GYrSC+YOEjDNSfacrsFF/chdDc5qX7OGQy0mE9jB+l4r2dpSdU5KZjn8D?=
- =?us-ascii?Q?ubbNAjbfE0epPhlJvzGUeJmGaNB6x6jNK/sP1VANX3kXQSCLsaeDSRqGU1p0?=
- =?us-ascii?Q?KcjC3zDz6JIsnTO39A7odjuBZMK3Bwjn0EDsv2MPw9kEDrkB7jw54bGFfonX?=
- =?us-ascii?Q?+Pb540Bt+BBloWv4ypQsCrQGUYqdEWKvC87TCgBXeaP5jfYLhKvxbdMM+RD8?=
- =?us-ascii?Q?pTZVv0zHDir3gE73Q0Mp4V1J72Yzjli3Wodo?=
+	=?us-ascii?Q?jW9Hp06UH/oqzISXNwqEBl4YZ4XXKwFbSCfz6mKkm72+irn6I9XPFuYWhIAy?=
+ =?us-ascii?Q?HDoUPZLTxtK3oLGsiJunSBFpD8jbindYRbpN+5VJCmVpMWEAgVuRORXsxtkL?=
+ =?us-ascii?Q?H0YAnWTKs3hBmqMgqZll8x9aeShrwM7+fU7IMYoMPLPYp+m/kr0SrG7Oz13e?=
+ =?us-ascii?Q?1F2kM50dMde00MRChALl0Ip+s59ERSGLdcpMYdZJFXbTuGrR7x91Jd3TAvvY?=
+ =?us-ascii?Q?f8C4pfunOxHEeixeZeg30iFVUWPcjK8uNruoWGDTtG8tLsEDgmxBeaMJGeDG?=
+ =?us-ascii?Q?hodXfM2YEdhoiRKkC0BcU1wZ9GgEH+liMJCDGCK8PT0v+usC+3TPtanBTt48?=
+ =?us-ascii?Q?839J2zQaimZa1tp65lj8P/1m/PNypHUDOtPpGx+5nrr42kpNBa2WsS4XnCKN?=
+ =?us-ascii?Q?34RpqVHodUt7vI/PUv8IdYUZL8+B8CASYrbPAKi+xCBkgTQTGU1zhlwezKrM?=
+ =?us-ascii?Q?Hwf7F4KIuetFAVvTeOVu6zL0z6PsFKjpGbjGrx4kynH4YQo8NODK1j38O12/?=
+ =?us-ascii?Q?XIt36MtmHGviOIyEW6E84L1BzQem06OL81y4Bxa0W4lCcyjidDf+gCM0CgrG?=
+ =?us-ascii?Q?z10qsdeb3wQNX081Zi6PHDftvxSHOZut7LnGT+yvrdgTCCkvVjerBxvtbmBh?=
+ =?us-ascii?Q?VgXuDMd+b1FXyh3Wgdw2fwcTfsuCoe0X0QeotUB60ytCkDaNGJn96erCv54D?=
+ =?us-ascii?Q?R3qiwlSKKKLTvdOHsKYXdKJX/9m/4aZqfjhZtDyVf57A1/HbHcpc6P6YWL9O?=
+ =?us-ascii?Q?zY5dmwtXN0kWzxYqhOLloUBbPmh3rnnNLgxxwS2JdrhJp4CnigQrKEL3GzeW?=
+ =?us-ascii?Q?zuE7T018NWkclVke8TUjMl8A3aWszWlsqK1IFpV09drOsYWt/M1ha6JmtAol?=
+ =?us-ascii?Q?ecIK07VY92bhHMTd0jxpXRVzu67dEV+kNCTOsUH9xlsnMJzI3k3tiYZgziVC?=
+ =?us-ascii?Q?3EDkPU6hLuH3Oh1P7qK1z19lKt2KlJbDVKI8p+OSDL+R+RW4rKsPbl/Ru5Qo?=
+ =?us-ascii?Q?cBHQ/miYhu9Fy4N/27ZIOc7gEg9G4wGrwtp0lleQcCB/jwsZd/Otr/rsuPmi?=
+ =?us-ascii?Q?jxcPbJhP0/MGTIj4J4eLEG+zltqB83wowEGD8fwzhysN3qkW+Eo5pPQ3alEl?=
+ =?us-ascii?Q?521Kpsusc7SMI58RyuxTp5Cya6p1YcDyGL+QJIFJ1EsIWZAoBwcnAIoTbmqe?=
+ =?us-ascii?Q?L2If5Z1CdCGP5Gkbjw4k/RWz+KoE79JdzkqPPEt1raf8KoxYK4HMuMQ7XZRg?=
+ =?us-ascii?Q?dgFcPBLDjjeMp82Hfe+dY/8LtCuc1x5nirNQpMShUH5jTpkw0cWAfxT3zPbF?=
+ =?us-ascii?Q?41kLvqJYoRD3yGJECs1G2thGHEX5TKCklm8v0jCt4UL5QiWM5W8VgdNar61N?=
+ =?us-ascii?Q?DgQb2hCcHQMXAKIO7gRjXYsrGXOOWozhMx1Qja3GL+7i2nBEqdPgs05ra1PA?=
+ =?us-ascii?Q?VO4wEiLY/gO3hai370zPvH5f9umm93DziGzbz/xjazlmq+8REPIuq/5HlzYL?=
+ =?us-ascii?Q?YIugyBVCi95tkqVnlH40pCv3WPWcGEJdE3U5?=
 X-Forefront-Antispam-Report:
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(14060799003)(35042699022)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014)(14060799003)(35042699022);DIR:OUT;SFP:1101;
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2025 14:09:07.5304
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2025 14:09:07.8996
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 09abaa6a-9f92-4b4a-79d0-08dda1df0a25
+X-MS-Exchange-CrossTenant-Network-Message-Id: ee669fa8-c4bb-46b4-ac60-08dda1df0a5d
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	DU2PEPF00028D00.eurprd03.prod.outlook.com
+	DU2PEPF00028D0E.eurprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAVPR08MB9281
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB7566
 
-This patch moves GPU info initialization into panthor_hw.c in
-preparation of handling future GPU register changes. The GPU register
-reading operations to populate gpu_info are moved into a separate
-function to facilitate this.
+Mali-Gx15 introduces a new GPU_FEATURES register that provides
+information about GPU-wide supported features. The register value will
+be passed on to userspace via gpu_info. It also adds the following
+registers that are specific to the kernel driver only:
+- ASN_HASH_0~2
+- DOORBELL_FEATURES
+- PRFCNT_FEATURES
+- SYSC_ALLOC0~7
+- SYSC_PBHA_OVERRIDE0~3
 
-Future GPU support can be added by extending this function with the
-necessary register reads behind GPU architecture version guards if the
-change is minor. For more complex changes, the function can be forked
-and we can leverage the panthor_hw_ops structure to provide architecture
-specific initialization routines.
+Additionally, Mali-Gx15 presents an 'Immortalis' naming variant
+depending on the shader core count and presence of Ray Intersection
+feature support.
+
+This patch adds:
+- support for correctly identifying the model names for Mali-Gx15 GPUs.
+- arch 11.8 FW binary support
 
 Signed-off-by: Karunika Choo <karunika.choo@arm.com>
 ---
- drivers/gpu/drm/panthor/panthor_gpu.c |  95 ------------------------
- drivers/gpu/drm/panthor/panthor_hw.c  | 101 ++++++++++++++++++++++++++
- 2 files changed, 101 insertions(+), 95 deletions(-)
+ drivers/gpu/drm/panthor/panthor_fw.c   |  1 +
+ drivers/gpu/drm/panthor/panthor_hw.c   | 18 ++++++++++++++++++
+ drivers/gpu/drm/panthor/panthor_regs.h | 11 +++++++++++
+ include/uapi/drm/panthor_drm.h         |  3 +++
+ 4 files changed, 33 insertions(+)
 
-diff --git a/drivers/gpu/drm/panthor/panthor_gpu.c b/drivers/gpu/drm/panthor/panthor_gpu.c
-index 534735518824..ca720e70211c 100644
---- a/drivers/gpu/drm/panthor/panthor_gpu.c
-+++ b/drivers/gpu/drm/panthor/panthor_gpu.c
-@@ -37,40 +37,6 @@ struct panthor_gpu {
- 	wait_queue_head_t reqs_acked;
- };
- 
--/**
-- * struct panthor_model - GPU model description
-- */
--struct panthor_model {
--	/** @name: Model name. */
--	const char *name;
--
--	/** @arch_major: Major version number of architecture. */
--	u8 arch_major;
--
--	/** @product_major: Major version number of product. */
--	u8 product_major;
--};
--
--/**
-- * GPU_MODEL() - Define a GPU model. A GPU product can be uniquely identified
-- * by a combination of the major architecture version and the major product
-- * version.
-- * @_name: Name for the GPU model.
-- * @_arch_major: Architecture major.
-- * @_product_major: Product major.
-- */
--#define GPU_MODEL(_name, _arch_major, _product_major) \
--{\
--	.name = __stringify(_name),				\
--	.arch_major = _arch_major,				\
--	.product_major = _product_major,			\
--}
--
--static const struct panthor_model gpu_models[] = {
--	GPU_MODEL(g610, 10, 7),
--	{},
--};
--
- #define GPU_INTERRUPTS_MASK	\
- 	(GPU_IRQ_FAULT | \
- 	 GPU_IRQ_PROTM_FAULT | \
-@@ -83,66 +49,6 @@ static void panthor_gpu_coherency_set(struct panthor_device *ptdev)
- 		ptdev->coherent ? GPU_COHERENCY_PROT_BIT(ACE_LITE) : GPU_COHERENCY_NONE);
- }
- 
--static void panthor_gpu_init_info(struct panthor_device *ptdev)
--{
--	const struct panthor_model *model;
--	u32 arch_major, product_major;
--	u32 major, minor, status;
--	unsigned int i;
--
--	ptdev->gpu_info.gpu_id = gpu_read(ptdev, GPU_ID);
--	ptdev->gpu_info.csf_id = gpu_read(ptdev, GPU_CSF_ID);
--	ptdev->gpu_info.gpu_rev = gpu_read(ptdev, GPU_REVID);
--	ptdev->gpu_info.core_features = gpu_read(ptdev, GPU_CORE_FEATURES);
--	ptdev->gpu_info.l2_features = gpu_read(ptdev, GPU_L2_FEATURES);
--	ptdev->gpu_info.tiler_features = gpu_read(ptdev, GPU_TILER_FEATURES);
--	ptdev->gpu_info.mem_features = gpu_read(ptdev, GPU_MEM_FEATURES);
--	ptdev->gpu_info.mmu_features = gpu_read(ptdev, GPU_MMU_FEATURES);
--	ptdev->gpu_info.thread_features = gpu_read(ptdev, GPU_THREAD_FEATURES);
--	ptdev->gpu_info.max_threads = gpu_read(ptdev, GPU_THREAD_MAX_THREADS);
--	ptdev->gpu_info.thread_max_workgroup_size = gpu_read(ptdev, GPU_THREAD_MAX_WORKGROUP_SIZE);
--	ptdev->gpu_info.thread_max_barrier_size = gpu_read(ptdev, GPU_THREAD_MAX_BARRIER_SIZE);
--	ptdev->gpu_info.coherency_features = gpu_read(ptdev, GPU_COHERENCY_FEATURES);
--	for (i = 0; i < 4; i++)
--		ptdev->gpu_info.texture_features[i] = gpu_read(ptdev, GPU_TEXTURE_FEATURES(i));
--
--	ptdev->gpu_info.as_present = gpu_read(ptdev, GPU_AS_PRESENT);
--
--	ptdev->gpu_info.shader_present = gpu_read64(ptdev, GPU_SHADER_PRESENT);
--	ptdev->gpu_info.tiler_present = gpu_read64(ptdev, GPU_TILER_PRESENT);
--	ptdev->gpu_info.l2_present = gpu_read64(ptdev, GPU_L2_PRESENT);
--
--	arch_major = GPU_ARCH_MAJOR(ptdev->gpu_info.gpu_id);
--	product_major = GPU_PROD_MAJOR(ptdev->gpu_info.gpu_id);
--	major = GPU_VER_MAJOR(ptdev->gpu_info.gpu_id);
--	minor = GPU_VER_MINOR(ptdev->gpu_info.gpu_id);
--	status = GPU_VER_STATUS(ptdev->gpu_info.gpu_id);
--
--	for (model = gpu_models; model->name; model++) {
--		if (model->arch_major == arch_major &&
--		    model->product_major == product_major)
--			break;
--	}
--
--	drm_info(&ptdev->base,
--		 "mali-%s id 0x%x major 0x%x minor 0x%x status 0x%x",
--		 model->name ?: "unknown", ptdev->gpu_info.gpu_id >> 16,
--		 major, minor, status);
--
--	drm_info(&ptdev->base,
--		 "Features: L2:%#x Tiler:%#x Mem:%#x MMU:%#x AS:%#x",
--		 ptdev->gpu_info.l2_features,
--		 ptdev->gpu_info.tiler_features,
--		 ptdev->gpu_info.mem_features,
--		 ptdev->gpu_info.mmu_features,
--		 ptdev->gpu_info.as_present);
--
--	drm_info(&ptdev->base,
--		 "shader_present=0x%0llx l2_present=0x%0llx tiler_present=0x%0llx",
--		 ptdev->gpu_info.shader_present, ptdev->gpu_info.l2_present,
--		 ptdev->gpu_info.tiler_present);
--}
--
- static void panthor_gpu_irq_handler(struct panthor_device *ptdev, u32 status)
- {
- 	gpu_write(ptdev, GPU_INT_CLEAR, status);
-@@ -205,7 +111,6 @@ int panthor_gpu_init(struct panthor_device *ptdev)
- 	spin_lock_init(&gpu->reqs_lock);
- 	init_waitqueue_head(&gpu->reqs_acked);
- 	ptdev->gpu = gpu;
--	panthor_gpu_init_info(ptdev);
- 
- 	dma_set_max_seg_size(ptdev->base.dev, UINT_MAX);
- 	pa_bits = GPU_MMU_FEATURES_PA_BITS(ptdev->gpu_info.mmu_features);
+diff --git a/drivers/gpu/drm/panthor/panthor_fw.c b/drivers/gpu/drm/panthor/panthor_fw.c
+index b7b454d16f12..fa6e0b48a0b2 100644
+--- a/drivers/gpu/drm/panthor/panthor_fw.c
++++ b/drivers/gpu/drm/panthor/panthor_fw.c
+@@ -1404,3 +1404,4 @@ int panthor_fw_init(struct panthor_device *ptdev)
+ MODULE_FIRMWARE("arm/mali/arch10.8/mali_csffw.bin");
+ MODULE_FIRMWARE("arm/mali/arch10.10/mali_csffw.bin");
+ MODULE_FIRMWARE("arm/mali/arch10.12/mali_csffw.bin");
++MODULE_FIRMWARE("arm/mali/arch11.8/mali_csffw.bin");
 diff --git a/drivers/gpu/drm/panthor/panthor_hw.c b/drivers/gpu/drm/panthor/panthor_hw.c
-index 4dbe23df0c4c..576cda231c1c 100644
+index 5e423122cd4e..f5127a4b02dc 100644
 --- a/drivers/gpu/drm/panthor/panthor_hw.c
 +++ b/drivers/gpu/drm/panthor/panthor_hw.c
-@@ -5,6 +5,105 @@
- #include "panthor_hw.h"
- #include "panthor_regs.h"
- 
-+/**
-+ * struct panthor_model - GPU model description
-+ */
-+struct panthor_model {
-+	/** @name: Model name. */
-+	const char *name;
+@@ -29,6 +29,9 @@ static void panthor_gpu_info_init(struct panthor_device *ptdev)
+ 	ptdev->gpu_info.shader_present = gpu_read64(ptdev, GPU_SHADER_PRESENT);
+ 	ptdev->gpu_info.tiler_present = gpu_read64(ptdev, GPU_TILER_PRESENT);
+ 	ptdev->gpu_info.l2_present = gpu_read64(ptdev, GPU_L2_PRESENT);
 +
-+	/** @arch_major: Major version number of architecture. */
-+	u8 arch_major;
-+
-+	/** @product_major: Major version number of product. */
-+	u8 product_major;
-+};
-+
-+/**
-+ * GPU_MODEL() - Define a GPU model. A GPU product can be uniquely identified
-+ * by a combination of the major architecture version and the major product
-+ * version.
-+ * @_name: Name for the GPU model.
-+ * @_arch_major: Architecture major.
-+ * @_product_major: Product major.
-+ */
-+#define GPU_MODEL(_name, _arch_major, _product_major) \
-+{\
-+	.name = __stringify(_name),				\
-+	.arch_major = _arch_major,				\
-+	.product_major = _product_major,			\
-+}
-+
-+static const struct panthor_model gpu_models[] = {
-+	GPU_MODEL(g610, 10, 7),
-+	{},
-+};
-+
-+static void panthor_gpu_info_init(struct panthor_device *ptdev)
-+{
-+	unsigned int i;
-+
-+	ptdev->gpu_info.csf_id = gpu_read(ptdev, GPU_CSF_ID);
-+	ptdev->gpu_info.gpu_rev = gpu_read(ptdev, GPU_REVID);
-+	ptdev->gpu_info.core_features = gpu_read(ptdev, GPU_CORE_FEATURES);
-+	ptdev->gpu_info.l2_features = gpu_read(ptdev, GPU_L2_FEATURES);
-+	ptdev->gpu_info.tiler_features = gpu_read(ptdev, GPU_TILER_FEATURES);
-+	ptdev->gpu_info.mem_features = gpu_read(ptdev, GPU_MEM_FEATURES);
-+	ptdev->gpu_info.mmu_features = gpu_read(ptdev, GPU_MMU_FEATURES);
-+	ptdev->gpu_info.thread_features = gpu_read(ptdev, GPU_THREAD_FEATURES);
-+	ptdev->gpu_info.max_threads = gpu_read(ptdev, GPU_THREAD_MAX_THREADS);
-+	ptdev->gpu_info.thread_max_workgroup_size = gpu_read(ptdev, GPU_THREAD_MAX_WORKGROUP_SIZE);
-+	ptdev->gpu_info.thread_max_barrier_size = gpu_read(ptdev, GPU_THREAD_MAX_BARRIER_SIZE);
-+	ptdev->gpu_info.coherency_features = gpu_read(ptdev, GPU_COHERENCY_FEATURES);
-+	for (i = 0; i < 4; i++)
-+		ptdev->gpu_info.texture_features[i] = gpu_read(ptdev, GPU_TEXTURE_FEATURES(i));
-+
-+	ptdev->gpu_info.as_present = gpu_read(ptdev, GPU_AS_PRESENT);
-+
-+	ptdev->gpu_info.shader_present = gpu_read64(ptdev, GPU_SHADER_PRESENT);
-+	ptdev->gpu_info.tiler_present = gpu_read64(ptdev, GPU_TILER_PRESENT);
-+	ptdev->gpu_info.l2_present = gpu_read64(ptdev, GPU_L2_PRESENT);
-+}
-+
-+static void panthor_hw_info_init(struct panthor_device *ptdev)
-+{
-+	const struct panthor_model *model;
-+	u32 arch_major, product_major;
-+	u32 major, minor, status;
-+
-+	panthor_gpu_info_init(ptdev);
-+
-+	arch_major = GPU_ARCH_MAJOR(ptdev->gpu_info.gpu_id);
-+	product_major = GPU_PROD_MAJOR(ptdev->gpu_info.gpu_id);
-+	major = GPU_VER_MAJOR(ptdev->gpu_info.gpu_id);
-+	minor = GPU_VER_MINOR(ptdev->gpu_info.gpu_id);
-+	status = GPU_VER_STATUS(ptdev->gpu_info.gpu_id);
-+
-+	for (model = gpu_models; model->name; model++) {
-+		if (model->arch_major == arch_major &&
-+		    model->product_major == product_major)
-+			break;
-+	}
-+
-+	drm_info(&ptdev->base,
-+		 "mali-%s id 0x%x major 0x%x minor 0x%x status 0x%x",
-+		 model->name ?: "unknown", ptdev->gpu_info.gpu_id >> 16,
-+		 major, minor, status);
-+
-+	drm_info(&ptdev->base,
-+		 "Features: L2:%#x Tiler:%#x Mem:%#x MMU:%#x AS:%#x",
-+		 ptdev->gpu_info.l2_features,
-+		 ptdev->gpu_info.tiler_features,
-+		 ptdev->gpu_info.mem_features,
-+		 ptdev->gpu_info.mmu_features,
-+		 ptdev->gpu_info.as_present);
-+
-+	drm_info(&ptdev->base,
-+		 "shader_present=0x%0llx l2_present=0x%0llx tiler_present=0x%0llx",
-+		 ptdev->gpu_info.shader_present, ptdev->gpu_info.l2_present,
-+		 ptdev->gpu_info.tiler_present);
-+}
-+
- static struct panthor_hw panthor_hw_devices[] = {
- 	{
- 		.arch_major = 10,
-@@ -55,6 +154,8 @@ int panthor_hw_init(struct panthor_device *ptdev)
- 
- 	ptdev->hw = hdev;
- 
-+	panthor_hw_info_init(ptdev);
-+
- 	return 0;
++	/* Introduced in arch 11.x */
++	ptdev->gpu_info.gpu_features = gpu_read64(ptdev, GPU_FEATURES);
  }
  
+ static char *get_gpu_model_name(struct panthor_device *ptdev)
+@@ -36,6 +39,9 @@ static char *get_gpu_model_name(struct panthor_device *ptdev)
+ 	const u32 gpu_id = ptdev->gpu_info.gpu_id;
+ 	const u32 product_id = GPU_PROD_ID_MAKE(GPU_ARCH_MAJOR(gpu_id),
+ 						GPU_PROD_MAJOR(gpu_id));
++	const bool ray_intersection = !!(ptdev->gpu_info.gpu_features &
++					 GPU_FEATURES_RAY_INTERSECTION);
++	const u8 shader_core_count = hweight64(ptdev->gpu_info.shader_present);
+ 
+ 	switch (product_id) {
+ 	case GPU_PROD_ID_MAKE(10, 2):
+@@ -46,6 +52,15 @@ static char *get_gpu_model_name(struct panthor_device *ptdev)
+ 		return "Mali-G510";
+ 	case GPU_PROD_ID_MAKE(10, 4):
+ 		return "Mali-G310";
++	case GPU_PROD_ID_MAKE(11, 2):
++		if (shader_core_count > 10 && ray_intersection)
++			return "Mali-G715-Immortalis";
++		else if (shader_core_count >= 7)
++			return "Mali-G715";
++
++		fallthrough;
++	case GPU_PROD_ID_MAKE(11, 3):
++		return "Mali-G615";
+ 	}
+ 
+ 	return "(Unknown Mali GPU)";
+@@ -85,6 +100,9 @@ static struct panthor_hw panthor_hw_devices[] = {
+ 	{
+ 		.arch_major = 10,
+ 	},
++	{
++		.arch_major = 11,
++	},
+ };
+ 
+ static int init_gpu_id(struct panthor_device *ptdev)
+diff --git a/drivers/gpu/drm/panthor/panthor_regs.h b/drivers/gpu/drm/panthor/panthor_regs.h
+index e7a81686afdb..4eaa2b612756 100644
+--- a/drivers/gpu/drm/panthor/panthor_regs.h
++++ b/drivers/gpu/drm/panthor/panthor_regs.h
+@@ -72,6 +72,10 @@
+ #define GPU_PWR_OVERRIDE0				0x54
+ #define GPU_PWR_OVERRIDE1				0x58
+ 
++#define GPU_FEATURES					0x60
++#define   GPU_FEATURES_RAY_INTERSECTION			BIT(2)
++#define GPU_PRFCNT_FEATURES				0x68
++
+ #define GPU_TIMESTAMP_OFFSET				0x88
+ #define GPU_CYCLE_COUNT					0x90
+ #define GPU_TIMESTAMP					0x98
+@@ -83,6 +87,8 @@
+ 
+ #define GPU_TEXTURE_FEATURES(n)				(0xB0 + ((n) * 4))
+ 
++#define GPU_DOORBELL_FEATURES				0xC0
++
+ #define GPU_SHADER_PRESENT				0x100
+ #define GPU_TILER_PRESENT				0x110
+ #define GPU_L2_PRESENT					0x120
+@@ -109,6 +115,8 @@
+ 
+ #define GPU_REVID					0x280
+ 
++#define GPU_ASN_HASH(n)					(0x2C0 + ((n) * 4))
++
+ #define GPU_COHERENCY_FEATURES				0x300
+ #define GPU_COHERENCY_PROT_BIT(name)			BIT(GPU_COHERENCY_  ## name)
+ 
+@@ -117,6 +125,9 @@
+ #define   GPU_COHERENCY_ACE				1
+ #define   GPU_COHERENCY_NONE				31
+ 
++#define GPU_SYSC_PBHA_OVERRIDE(n)			(0x320 + ((n) * 4))
++#define GPU_SYSC_ALLOC(n)				(0x340 + ((n) * 4))
++
+ #define MCU_CONTROL					0x700
+ #define MCU_CONTROL_ENABLE				1
+ #define MCU_CONTROL_AUTO				2
+diff --git a/include/uapi/drm/panthor_drm.h b/include/uapi/drm/panthor_drm.h
+index ad9a70afea6c..888179effdee 100644
+--- a/include/uapi/drm/panthor_drm.h
++++ b/include/uapi/drm/panthor_drm.h
+@@ -310,6 +310,9 @@ struct drm_panthor_gpu_info {
+ 
+ 	/** @pad: MBZ. */
+ 	__u32 pad;
++
++	/** @gpu_features: Bitmask describing supported GPU-wide features */
++	__u64 gpu_features;
+ };
+ 
+ /**
 -- 
 2.49.0
 
