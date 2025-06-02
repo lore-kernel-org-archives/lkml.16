@@ -1,192 +1,249 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013046.outbound.protection.outlook.com [40.107.162.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 223B522068E;
-	Mon,  2 Jun 2025 13:20:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748870404; cv=none; b=u0/c6EvkYu00sOj1qbsmzVaciAvhDtdEcS6ZIlU52e8+FG4qRrGe3knxeQ2uNjroYgCisoZUW24m7ZUXbzq9Naw7GL9ZLU55JWDvHuzB5y/HDLj+uFkrfBeCp3a3kV+5PQUNbpWo0x+KXkHdk2KGCtzub7/B0eVYxnztsDDhpZg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748870404; c=relaxed/simple;
-	bh=kWoyBBVAR9Ha1I3eVXr883D+sm5esK1y5bluwlJLzPQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=f7Tvr/VPZMVh8jY/ZkWQ8dJBRv4H1TAEQ6MT2U8I8SZFFCbNmeOyzn4sx+NRT/1DdVINMm1uASJwaeNmqM8QFnZN/xDJ9jWxsLA5xXEthyvtndZHGy40dE8yY9dRRgsK1IpimyqMfSU8uQmsmFYJFV3K08EcPMRfH1M8QWt8CVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LLEKDtlr; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27664A0F;
+	Mon,  2 Jun 2025 13:21:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748870500; cv=fail; b=rTjl31/1fki5c/uQYkDLsAMvpvzTjupOZxCNVwoDtvxfsgK+TmaaaqmxtPLpstgEy+xtePW6n3EQuUMjns1G2XJ9WJVH+548iXoC7m5dFjcjyFZXDThptPR8Kdgoz6k4IWXLgh5vQvvzat7cvQSd62/eM+s/l7fFozqvLO+DxZc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748870500; c=relaxed/simple;
+	bh=pu58ew8x3w19AOzh/bfuO6S0fubXEWkrK0FpjcEVN94=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=vFuFqpia7uz308v3R/5F6O48vllWp7vxfTq30abjFGuxhGlvaosfKbqk32pVhH58FQmrwnRR93BabZ8r6z0XQ8jwT6Oh+M9js7kHn97zBDtS8T25KsMKe3F8USDo7WeSv1Myshld/baIjSx5LEMHui82VcrVWYCUO0/lwkjW4aE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=Egy8so9t; arc=fail smtp.client-ip=40.107.162.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LLEKDtlr"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-3122368d7c4so3129033a91.1;
-        Mon, 02 Jun 2025 06:20:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748870402; x=1749475202; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GhKP5iYORRYNLEnbf33EP9epGoMRKymXdxcO+qLp2CY=;
-        b=LLEKDtlrBqfa+3v6+COKWMroTzEVNCzNF9mAGBKQhjgP912z9I2GVgijbKYPM8VErF
-         5y0W0L8U0yoGyikwp/mJ2zCZ+OLSAmezILaIeITLoyBz9Igyd6uZsNwnXAf1Xt05JG2j
-         gWJXux2JYDcXbOQNqK24UeS3stIzANx8yffbfdf/LwBLZjLTMl/YqHBOiUD2HXLT4Ehp
-         zwCThO7q8cODxr7a8IpwW4w0ZO2os7QGgAvrNg0ab5Y9bq5z7AM8eKS9MLgQWyuv9bBN
-         3HuqYiPBcG2Wes9FSTfsXqqjHDZ4QP5KgXTt4OlNQD6kwXIJx/1Ny8ZOUHXVGhMx0ADK
-         L0PA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748870402; x=1749475202;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GhKP5iYORRYNLEnbf33EP9epGoMRKymXdxcO+qLp2CY=;
-        b=eCDrGdDuqEYnkc/dRdopYm/Pp9A1bB0oKjGgqJPNAn0kegDpe/ksRNl3xocDGohHuq
-         9Oe8zp2mAaxZgzZ+ICmK0sin476NVJozzo/Tb4xjX2Ab0akks2x0Y6rzDgycKn5dp+Jq
-         q9CnHO0//FpCnciGsCZfRZfm+l0nlnJnr2Siurwvri3izHYhk0uQumpyjuNANN+VjJEw
-         t3YoLT5IHCJsrRV/YGfDnWblUIx1sBDo+1hwrR1i0BVGOynb5dd1FgrbYnrlu4507nq4
-         f6r5P2NgcsDq/9DywOZ5oHmPoYMawSp9UxAh14M7KvvuHpwsrwugPDz2l7+ntO8O7kXa
-         F8Yg==
-X-Forwarded-Encrypted: i=1; AJvYcCUeiYaGZUdZ7g+DGOZ+czK2IjHhXhZJYrqZ8fygztSdOSYXT6xslny2XZ4mMEzuHu8fMwNEw1xKtXCM3MY=@vger.kernel.org, AJvYcCVjgGvD9yo+sHm7ZO0Ins17Byw8nByYBiEMA9lDQpy/P68g4o6auyERdWdJT+XlbVVAR7nCMLgZXG8=@vger.kernel.org, AJvYcCVyK4Nhp5ooJg9FfcVTuPRnEJvZiIlHoEmfPZZ8rRGUMe+/FBprtKiG1XhB2Bao54511fKlkccvBma58rb7DEdy2w==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7vIJYHuwSlI9vAo5X6TJ+8dxQG53FApD7JyjCpJBklHBq1Z9P
-	Ira2EN+MTa+ADDLShswJtvl0PhYM6fRhK5IqfwNeLSwgQO5aq3roWJPi
-X-Gm-Gg: ASbGncviFJqpaqBGjIRpbPQQJlXXIdTB2Fii7po5RxpVif4xoSeSNcLt2VArjrKNEEr
-	aZTZDqBo2SbtD7nHDK9vb1dU6MBMYGFIOt4rsJ6koHJ1NWiPGdzV0aGKNSEb8ykOyZmZJ9zhzJ1
-	EaEtT0ZYF018yTPR7fgarIKYyvhGFC7mLtjqDSMWmzyj4nIb5H6Abk+ciLeLyChYdWnz20jiTdG
-	WR6KCWpIoPeUTN1+2PKcSeX54dGxbH55UmvqSL1da84p5BBqHTIEOH99ESBhtluqa+USvTRGziJ
-	+pd44jQaObyYQW9NYi6LfDm6N9O9VLBKCexNLnJPzykxsKMUU8Cfbm2ha/a1tKKMJTxoyj0YQw=
-	=
-X-Google-Smtp-Source: AGHT+IGpk0MW40KUnLGhZi6aTcs7hziCgisIwOKdVotPNVMy0bYaTAXay/v52EDp38MmY2gyBOvaiQ==
-X-Received: by 2002:a17:90b:5344:b0:301:9f62:a944 with SMTP id 98e67ed59e1d1-31241e9846dmr20882041a91.33.1748870402169;
-        Mon, 02 Jun 2025 06:20:02 -0700 (PDT)
-Received: from hiagof-nb.corp.toradex.com ([67.159.246.222])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e2b67bcsm6130983a91.8.2025.06.02.06.19.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 06:20:00 -0700 (PDT)
-From: Hiago De Franco <hiagofranco@gmail.com>
-To: Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	linux-pm@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org
-Cc: Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Hiago De Franco <hiago.franco@toradex.com>,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Peng Fan <peng.fan@oss.nxp.com>,
-	daniel.baluta@nxp.com,
-	iuliana.prodan@oss.nxp.com,
-	"Rafael J . Wysocki" <rafael@kernel.org>
-Subject: [PATCH v4 3/3] remoteproc: imx_rproc: detect and attach to pre-booted remote cores
-Date: Mon,  2 Jun 2025 10:19:05 -0300
-Message-Id: <20250602131906.25751-4-hiagofranco@gmail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250602131906.25751-1-hiagofranco@gmail.com>
-References: <20250602131906.25751-1-hiagofranco@gmail.com>
+	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="Egy8so9t"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=X7O4ysDUiuz/WwIpnBNDek+VkdwKNHd8oooRyRavDmzAoW5BmI4oLbzW/b1IySXxmuyZ5zzwgjSvBWLjzt7q+1O2l98M6k/SRJBGJzIJ0CE+D1V4qNtt5ysDC/+fR/0SyGJo6yRkExFCevR4eGkcz+i4Uc5IWeP12MLjZLl2WJXYk2Kh/N3InXoQzDozrL843BItIAgd4Cyp561d/4C4YlHl5VGbR4swqsMlJoGBaseq4xE3ClhUfd3kG7iYYfORkEKvVZPkqCiUDRaEaY4Xks1tgKwKD91yXdLJuknoJtdz2rmABhc5pd0qLk40R6U5ocPhNHWMIECEiazmkwMZjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bc+wfsRfbCR/8i/wLV87bjJOiHVEdB300o2zGzK8kis=;
+ b=MwsZ3XRgRsVMzb/Yb5JQGyucW5TgmCBAcGDmdqwXFf4pU6ZpxOJcEeZbg3aHSBmjlvZ9DNty4URNWovBZQbhE7syS+bf4n5GzdcW3U974oiKHMNBlZV8viVEL2o4KmiXXElUpLXLsCELMuzO3J1oD1I9h3zZPKkR+dmuF3L1X4+b6aq5xoiP96GkU01BtykqSCcjTVhXOU2G1d1FVu5fRYFD9WsB0B8kYGv85e9v+mKV1IoLzLq7SzMbTXqa8xePyxKWSI/022e3WGIhkTrDb5bUbQGQBdXd4xv/4csaJse3tj3J18i4PdaeZibg+5n82XPr5t9AQNrLU+93fPgFXA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
+ dkim=pass header.d=cherry.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bc+wfsRfbCR/8i/wLV87bjJOiHVEdB300o2zGzK8kis=;
+ b=Egy8so9tG72Ll5RUuqea1kukYbr5cHtrxzyDwK7EArPMaXNM50/eIz/pVsdRnpLLTCjZNX4ielZ2RBAMX+usoyL5PJryHze81PCJUCjl9vY4b/LHTLABIR6PuOH0z+iZIazkyQo2hHDS7z9NhiHfd77WD35IEv/QBmv526/i7+4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cherry.de;
+Received: from AS8PR04MB8897.eurprd04.prod.outlook.com (2603:10a6:20b:42c::20)
+ by PA1PR04MB11034.eurprd04.prod.outlook.com (2603:10a6:102:483::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.37; Mon, 2 Jun
+ 2025 13:21:34 +0000
+Received: from AS8PR04MB8897.eurprd04.prod.outlook.com
+ ([fe80::35f6:bc7d:633:369a]) by AS8PR04MB8897.eurprd04.prod.outlook.com
+ ([fe80::35f6:bc7d:633:369a%4]) with mapi id 15.20.8769.037; Mon, 2 Jun 2025
+ 13:21:34 +0000
+Message-ID: <517a6335-9246-4de6-aab4-24949eb7277f@cherry.de>
+Date: Mon, 2 Jun 2025 15:21:31 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] hwmon: (amc6821) Move reading fan data from OF to a
+ function
+To: =?UTF-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?=
+ <jpaulo.silvagoncalves@gmail.com>, Jean Delvare <jdelvare@suse.com>,
+ Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Farouk Bouabid <farouk.bouabid@cherry.de>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ =?UTF-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>
+References: <20250530-b4-v1-amc6821-cooling-device-support-b4-v1-0-7bb98496c969@toradex.com>
+ <20250530-b4-v1-amc6821-cooling-device-support-b4-v1-2-7bb98496c969@toradex.com>
+Content-Language: en-US
+From: Quentin Schulz <quentin.schulz@cherry.de>
+In-Reply-To: <20250530-b4-v1-amc6821-cooling-device-support-b4-v1-2-7bb98496c969@toradex.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: DUZPR01CA0150.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:4bd::7) To AS8PR04MB8897.eurprd04.prod.outlook.com
+ (2603:10a6:20b:42c::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8897:EE_|PA1PR04MB11034:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5874d692-09d2-48fb-3c94-08dda1d86534
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?S3NwVi9jVzYyTXZnaTdPd3lhSTE0dGxwZlp4VGVMcCtLS1B2K0JHOVpISEk2?=
+ =?utf-8?B?TzVjSHhXc3AzVXdqYWhMZWhmMFpiN3ptbk5FQUFEQmpjOEFaenpla0d0Z0Ru?=
+ =?utf-8?B?MkE4WnhUZzJDR1VUZ0JmNisvMjl5WkpYQUZySUxxRkV4dFl6WEZsbmY1dWRU?=
+ =?utf-8?B?TG5IYW5KR042eGlzYm9DQWNnaGtCZVdTWHJyUUwvRXhjMkFKaTZYUXVzcHha?=
+ =?utf-8?B?N0NiZ0RySkIwWFZ0U1VjeWhIQW5vdHVZUmFrK3p6K0xxNytOSjRoeGVGbzZy?=
+ =?utf-8?B?MS9MckI0cVU0UjVhdTAwbTNGRjU2ZDZMcVRLczJRclU1Nk5VSlFQOEZRSzVL?=
+ =?utf-8?B?VUx5Y3JlUXNSWTEwMm9MTFdqTUJydXJJSno0clhQWDFEVUdzRXlSLzNnZ3RQ?=
+ =?utf-8?B?Ym4zdDQzTXBPWVlSTjJtQjA3NUZRQmQvYllNREdoTFdBcUVZdHUvMlZPRWVr?=
+ =?utf-8?B?U3R0dGsvZzJ3Z1FlZ3dFVDJvaTE5YVZNa1ZiM1c2djMwRnFGNU5EUEYwWXNh?=
+ =?utf-8?B?bkNDQm13SE9VdHVYUmZzbERFOWlwdHRLQ2RnOC9LcFpSTXR2am1GL2wvNGQ4?=
+ =?utf-8?B?VjM0TGk1SktuNk5hbkh0SlVaaGd4cU5GRXVOMXAwQVhyRkk4Z1NLMGV6SUVy?=
+ =?utf-8?B?Z3RIUnV2VTVRZjA0cTVUcUV4NjNoUHloUjZPRmJtUVhkcUh0WmZCeUdaZll0?=
+ =?utf-8?B?cGZRa01SblRFK0NVRDEwaVJPZDFNNjl2bUMxdExndWVNdTNGMmFVd0FlL0JG?=
+ =?utf-8?B?TXNlQ3pGSnErVHBsclhpNjB3Z3prUmRCY0xvT2tUNnQwWjNmNmRzRWUvWUhv?=
+ =?utf-8?B?a0N1dkVLaEFXNHFvdTZjTG12aHhWd3BKWXVYMFI5MmcydzE2UzYwaWxpc1Zh?=
+ =?utf-8?B?TFlISDl6NCsxMWVNVVhvSWw4SW5aTnNMWVg1a2NtMlJycGxkcVhjSjBNVkpp?=
+ =?utf-8?B?YmdwTjlRZ0ZSVURvWktKakhtOS9UWWUvdnpDTGhieDk4SUFaVDNVM3pKc3J4?=
+ =?utf-8?B?TU5BbGRxWmw2UVozS1lKenZoUUpTVDg1ZzQvU3c2ZEMzaFh4TzJwQmp2d1pJ?=
+ =?utf-8?B?bENtSWpRZHhJdmlZRllGcUFMR0xXYk5rVWlZd1VsdHMxVGU3SkpaR1VISWdm?=
+ =?utf-8?B?WkdsSlBkcnNjdjJ4SGZnbzRDa0dJUGNGTXV1cEdtTG81OHBISE93Qm8rdHll?=
+ =?utf-8?B?dVBWN0NUaVBvLzBjSEhmSUlIUEk3SDRWejA3VjhTRjBMRXZHdXpHMTd1TXlP?=
+ =?utf-8?B?aXBJVUpnVkJLRGxTMWVyRVRjVlJIZEFBNnl2ZzJRaC84OE9HczZhSk15VThM?=
+ =?utf-8?B?eDJmeUlsMWwvTjdmSlZVOFIvd09Eb0xqQXJPVGxISkJYcExhZ2VHOXJMeTA2?=
+ =?utf-8?B?YkpRTlA4S0huVGEydEs0VDhaQy8vV1lmQ0daQnNWL25HZ2xhanJZWDNrL1Rk?=
+ =?utf-8?B?UzdkM1BWU01ydXZDeVkweVVhdHpYRGF6VEZHOXJzc3Raa2FCeGxxcXV3aGNq?=
+ =?utf-8?B?L3BPOHVpMk5TdWRSS1VVM29iQmM3anBGbXVBUlF1L3F5bEF1ekRha0hTWHZP?=
+ =?utf-8?B?cmx2YUx5eXlsaU5qYkRzOG91NVYrUVArakMwSkxjOXI3alFPNTJEaE5wQ09q?=
+ =?utf-8?B?VUpsbDJqWXlBaTdmbW5hYUFjdTJERGpiWlF4dXZKNXpocUh3OUp2NWw4eTZl?=
+ =?utf-8?B?M2Njcnh0WlJ3K01IQWJDVkdhazJTWTZGKzBFME5jU3pidFd1dUViUGo0Tnl4?=
+ =?utf-8?B?N29VL3ljVi85WXBHT0hvUnRHWjVpdEhSalR5cjVzdFErZGpScWNuYzlIdDZR?=
+ =?utf-8?Q?Y1h8PnzTde9pjP4GYwtNPk5mCceVL3d/O96jU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8897.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Ym85cWtGeXVCaXhaa0JBVmdyQXp3TkRUREdTOGdpMnpOdHlCcU5md2p4emN5?=
+ =?utf-8?B?VzQ1RHhjbTdQNG1iYURDZFVUaisranhacS95VU05NHBQN2NCTEd3SEFhY0s5?=
+ =?utf-8?B?Qkc4c0RLQTdRcTVhb3J1bVAzcVcvL1FEdDZFZEJGa2JkWUdpUlZWb2c5aGhX?=
+ =?utf-8?B?NUo2RG52aFlOcHdOWmtxZWJjckl4bEdXTUlJbEs0cGd6VEI1dlE4aWR4TjdU?=
+ =?utf-8?B?aGc4R2laSjZOOG9wb21iOFMvQUI2M2lFZTBkajNrYzM0V2tQaXVjY3JHa3Fr?=
+ =?utf-8?B?TG9kWUw2S3ltZk8yS0VjOGlCV1JTWEZ5UGRiM2xCc3VJUjBqcEdjWkpMa1Zk?=
+ =?utf-8?B?QURsUUJUY3IzNCtrNEhXM2h1UWdqUDVrRElZRStnTERlQUJjSVM3aXhpVmg4?=
+ =?utf-8?B?V3MzN1VQcmNoUjR6dHJTdVhaYzRIS21CVDFWNGhVU1lrYWZKWmJKVUNrK2RX?=
+ =?utf-8?B?QlE2OVhvcEhnWXAydkQyU0FnWlhrNXdCVVU3RUJwTTJVbFg2S3BIUVdtanBr?=
+ =?utf-8?B?UzJMS2hvUGU0MisveXJDbkFNQk51Qjg4UTNsajh4dXo5VHVpWXZrVGxraXA1?=
+ =?utf-8?B?MUkrUU1OWUwvM3QwcEdaQUhSN05wK21VQW1ua2l2OEZQT3VNcWFyOExRcEtQ?=
+ =?utf-8?B?STFEUlNJVUxKYTFtZi9DeDg3QXRLcVpPQXVyRkxNMWc2SDVkN2Y4ek5mY20y?=
+ =?utf-8?B?ZkdZcFBSNkF4bENOZmYwRFNJSnlPM0NvYVhndU9yUUNYMXR5TWtsU3pUa0J5?=
+ =?utf-8?B?V2V2NGx5KzF5VGhmSytPeEdiL3V3cDNhWVVBMGI1TmtPbHhYbmgrMlY4VEo1?=
+ =?utf-8?B?VjVaSG5PRllkQUt5TWdYdnZWTGZLNlFYbEdZK29naXJrZ2ZUVHIzejBBY0VV?=
+ =?utf-8?B?eVp3UXJoOS81UzFCSWxrL1RSdFVIelhLa0ZIb25CTjVZNnhsaXZyOUZJMnQ2?=
+ =?utf-8?B?VFhtWnJ3YnBUMHRRVW9tMVJPZ0ZHZzE2NEV4M0UrVEVIcU1uYUhWVG9xZEJQ?=
+ =?utf-8?B?bDVGUklVMHo2UnNJTVJiWGp4eStkREYvclVWWkhkTTZySk1MeE52bVdwb2tM?=
+ =?utf-8?B?YjVNd1dFY09IKzRmV2hnSTBVWXFLUTBqSHF5MityS0FRdXpySVFnemtHRlRH?=
+ =?utf-8?B?a2xTNFIrTzZ3dTNNWk1zODJibWFsUFhwMXVrNWtEOEdrUFhuTWt5V2hrYWFy?=
+ =?utf-8?B?aXBuMURZR3d4WWpTQ3hkK01GRWtYRTk5Snhza2Qxa3AvYXZRMUpFaFNLc2R5?=
+ =?utf-8?B?TEpmUU1VY2dJV0pMeUhlWlg2Z1NhaFZTbDJyNUlzVzVJbGVFZTFETGU1V042?=
+ =?utf-8?B?VXA5ZjBXS0I1Y1dSeUZOQVFIZWNhYnVFeDRTQmRtRTN3Mi8rblc5OHUrK0d6?=
+ =?utf-8?B?Qkh0K0p4dFhGWEU3VzBZZGZ0U2FGMERVSTU4RlZYOFlpUHFKbkxoUURmeGF3?=
+ =?utf-8?B?L0JhZVl6aVpvYytYWTVMaEVpR1czemtNVjNsY2JKY01PVWtncHhmN3lIQTNm?=
+ =?utf-8?B?UERMUmZHTVdkNUsrVnZZdDI5QXc0TzR3Zk9sSHJsR0ttYkVIZzFPR1BnRTVr?=
+ =?utf-8?B?YzdUbUoxRUZrU0xSb3V6ckdyWHBSMlArRm5NYUpLZG5IckhiNmNlSVlLVEt1?=
+ =?utf-8?B?TnZkN2pZbGR4cnI4SHJzQVFFbldZdFM2ald3aFY0UFA2L1dRL1UzL3QreUhC?=
+ =?utf-8?B?cVFOM0UwT2cyaExPWnVtN1FHVXdaQ2YzUU5DUHE3Wk1JNWNRanpORkhLZnVP?=
+ =?utf-8?B?aXVsa1FwdXRuZ2xhNm9lRVpnVW41VW85bjVrVkFDdzhsWEFvaDlKUVg2QUxx?=
+ =?utf-8?B?NHNEdHRnaHo3ekJReDlVWklLeDV5c1MrazdDak8rd29CaHowRi9ZZEQ4bHBB?=
+ =?utf-8?B?UlRsZDgzQ3dhdUR1dkN0c3FBOU5Xb1IyY2wyZDg2c0FDbjduME9sRTRQdkNI?=
+ =?utf-8?B?bmhVUDBWYkxEL0pYSU5SRXdFRHBGYXpHeUt4SDdBYUVJejRLOHFoSTEzZjkz?=
+ =?utf-8?B?eEdyZU5iZzdRVTVxVTZPQzZ1NWpKTDJHRWNlME5sSGc1eFc3OTlXaWdXWnF4?=
+ =?utf-8?B?T2lCa010Q000TXFkTW5ZdEJkL3BDWVgwcVJnRUFmalJUNnRQL0ZTOENiSVd4?=
+ =?utf-8?B?S3owRjBuT1BHREFIWGJRVEsvVWVGc21VS1Q1eFAvUlVTOG1xM3RNcEpndExG?=
+ =?utf-8?B?dXc9PQ==?=
+X-OriginatorOrg: cherry.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5874d692-09d2-48fb-3c94-08dda1d86534
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8897.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2025 13:21:34.0902
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VTakxFVZTMRqW/XlmI4r5ATyKSIssp24Q2pXUb877gBw0OXoXhUZtDau94yS4qgF35dI60hu5TDarGwG7V9POWpvbsumALXmOKfRKOATrjg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB11034
 
-From: Hiago De Franco <hiago.franco@toradex.com>
+Hi João Paulo,
 
-When the remote core is started before Linux boots (e.g., by the
-bootloader), the driver currently is not able to attach because it only
-checks for cores running in different partitions. If the core was kicked
-by the bootloader, it is in the same partition as Linux and it is
-already up and running.
+On 5/30/25 7:46 PM, João Paulo Gonçalves wrote:
+> From: João Paulo Gonçalves <joao.goncalves@toradex.com>
+> 
+> Move fan property reading from OF to a separate function. This keeps OF
+> data handling separate from the code logic and makes it easier to add
+> features like cooling device support that use the same fan node.
+> 
+> Signed-off-by: João Paulo Gonçalves <joao.goncalves@toradex.com>
+> ---
+>   drivers/hwmon/amc6821.c | 58 +++++++++++++++++++++++++++++++------------------
+>   1 file changed, 37 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/hwmon/amc6821.c b/drivers/hwmon/amc6821.c
+> index 13a789cc85d24da282430eb2d4edf0003617fe6b..a969fad803ae1abb05113ce15f2476e83df029d9 100644
+> --- a/drivers/hwmon/amc6821.c
+> +++ b/drivers/hwmon/amc6821.c
+> @@ -126,6 +126,7 @@ module_param(init, int, 0444);
+>   struct amc6821_data {
+>   	struct regmap *regmap;
+>   	struct mutex update_lock;
+> +	enum pwm_polarity of_pwm_polarity;
 
-This adds power mode verification through dev_pm_genpd_is_on(), enabling
-the driver to detect when the remote core is already running and
-properly attach to it if all the power domain devices are on.
+Do we actually need to keep the information about the OF polarity?
 
-To accomplish this, we need to avoid passing any attach_data or flags to
-dev_pm_domain_attach_list(), letting the platform device become a
-consumer of the power domain provider. With that the current power state
-of the genpds will not change, allowing the detection of the remote core
-power state.
+Are you trying to handle runtime modification of the pwminv module 
+parameter where we could set it to -1 to force reading from the Device 
+Tree again? This seems to be possible, c.f. https://lwn.net/Articles/85443/
 
-We enable and sync the device runtime PM during probe to make sure the
-power domains are correctly managed when the core is controlled by the
-kernel.
+Otherwise I would have said we just need to store the "computed" 
+polarity, the output of amc6821_pwm_polarity instead of going through 
+the logic every time we ask for the polarity.
 
-Suggested-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
----
-v4: Changed to use the new dev_pm_genpd_is_on() function instead, as
-suggested by Ulf. This will now get the power status of the two remote
-cores power domains to decided if imx_rpoc needs to attach or not. In
-order to do that, pm_runtime_enable() and pm_runtime_get_sync() were
-introduced and pd_data was removed.
-v3: Unchanged.
-v2: Dropped unecessary include. Removed the imx_rproc_is_on function, as
-suggested.
-v1: https://lore.kernel.org/lkml/20250505154849.64889-4-hiagofranco@gmail.com/
----
- drivers/remoteproc/imx_rproc.c | 29 ++++++++++++++++++++++++-----
- 1 file changed, 24 insertions(+), 5 deletions(-)
+Justify in the commit log why we want to keep the OF value instead of 
+the resolved one (with the module param one).
 
-diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-index 627e57a88db2..6f9680142704 100644
---- a/drivers/remoteproc/imx_rproc.c
-+++ b/drivers/remoteproc/imx_rproc.c
-@@ -18,6 +18,7 @@
- #include <linux/of_reserved_mem.h>
- #include <linux/platform_device.h>
- #include <linux/pm_domain.h>
-+#include <linux/pm_runtime.h>
- #include <linux/reboot.h>
- #include <linux/regmap.h>
- #include <linux/remoteproc.h>
-@@ -890,10 +891,8 @@ static int imx_rproc_partition_notify(struct notifier_block *nb,
- static int imx_rproc_attach_pd(struct imx_rproc *priv)
- {
- 	struct device *dev = priv->dev;
--	int ret;
--	struct dev_pm_domain_attach_data pd_data = {
--		.pd_flags = PD_FLAG_DEV_LINK_ON,
--	};
-+	int ret, i;
-+	bool detached = true;
- 
- 	/*
- 	 * If there is only one power-domain entry, the platform driver framework
-@@ -902,7 +901,22 @@ static int imx_rproc_attach_pd(struct imx_rproc *priv)
- 	if (dev->pm_domain)
- 		return 0;
- 
--	ret = dev_pm_domain_attach_list(dev, &pd_data, &priv->pd_list);
-+	ret = dev_pm_domain_attach_list(dev, NULL, &priv->pd_list);
-+	/*
-+	 * If all the power domain devices are already turned on, the remote
-+	 * core is already up when the kernel booted (e.g. kicked by the
-+	 * bootloader). In this case attach to it.
-+	 */
-+	for (i = 0; i < ret; i++) {
-+		if (!dev_pm_genpd_is_on(priv->pd_list->pd_devs[i])) {
-+			detached = false;
-+			break;
-+		}
-+	}
-+
-+	if (detached)
-+		priv->rproc->state = RPROC_DETACHED;
-+
- 	return ret < 0 ? ret : 0;
- }
- 
-@@ -1146,6 +1160,11 @@ static int imx_rproc_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	if (dcfg->method == IMX_RPROC_SCU_API) {
-+		pm_runtime_enable(dev);
-+		pm_runtime_get_sync(dev);
-+	}
-+
- 	ret = rproc_add(rproc);
- 	if (ret) {
- 		dev_err(dev, "rproc_add failed\n");
--- 
-2.39.5
+[...]
 
+> @@ -938,13 +935,21 @@ static const struct regmap_config amc6821_regmap_config = {
+>   	.cache_type = REGCACHE_MAPLE,
+>   };
+>   
+> +static void amc6821_of_fan_put(void *data)
+> +{
+> +	struct device_node *fan_np = data;
+> +
+> +	of_node_put(fan_np);
+> +}
+> +
+>   static int amc6821_probe(struct i2c_client *client)
+>   {
+>   	struct device *dev = &client->dev;
+>   	struct amc6821_data *data;
+>   	struct device *hwmon_dev;
+>   	struct regmap *regmap;
+> -	int err;
+> +	struct device_node *fan_np;
+> +	int err = 0;
+>   
+>   	data = devm_kzalloc(dev, sizeof(struct amc6821_data), GFP_KERNEL);
+>   	if (!data)
+> @@ -956,6 +961,17 @@ static int amc6821_probe(struct i2c_client *client)
+>   				     "Failed to initialize regmap\n");
+>   	data->regmap = regmap;
+>   
+> +	fan_np = of_get_child_by_name(dev->of_node, "fan");
+> +	if (fan_np)
+> +		err = devm_add_action_or_reset(dev, amc6821_of_fan_put, fan_np);
+> +
+
+This seems a bit overkill to me. If I'm not mistaken, we should be able 
+to do something simpler such as:
+
+fan_np = of_get_child_by_name(dev->of_node, "fan");
+if (fan_np) {
+     amc6821_of_fan_read_data(data, fan_np);
+     of_node_put(fan_np);
+}
+
+(not tested) what do you think? What made you pick the 
+devm_add_action_or_reset here? What am I missing :)
+
+Cheers,
+Quentin
