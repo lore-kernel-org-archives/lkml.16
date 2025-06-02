@@ -1,204 +1,167 @@
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2043.outbound.protection.outlook.com [40.107.237.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA09225A37
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 17:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748885025; cv=none; b=ZCryJujPPk86bSfWzllShhmQX+qKZIKDP07nn/zMAPCfnghQ2PDBep+/VQaIszMuZiH7ay7ceqnY1tkMuuqMf89i7tm9jDudoHPA+kuVhMeo7tNsFurNYa0dGw/KtmlVnsZ3unfiNF0ycYW3lj09X6s98xdN9oNq5CRDQZOp1SQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748885025; c=relaxed/simple;
-	bh=r0Srhe/ZFSlTd2d/RdFpJIbbLWqeYqSSyXCuK8RILNs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hvxwyvVAMOEfRrBljr18FugChLOGyawFcKitemtGU88NsLYS/5xS4zqwzVB7W/FZ4ZxKspcXykCirumnHYMDgyFjtyjsAZrD1p3hs3VbBp564v6OX7beDK4IvXZo85bnh5deRy42Oj/35D7EfjHue3VFfb1mOxtqPu9rjl0ec1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=OvwwslSn; arc=none smtp.client-ip=209.85.167.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA051FDD;
+	Mon,  2 Jun 2025 17:24:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748885078; cv=fail; b=Jf8TLFEkN6+/suup4geWvX4VHMXy/2+8aBk2VuQZA0kykUE3nc1C9mfxAm4g0Jnd0fIs/RA0PqJMx1HJ4FABTyLrLghEBNie3PJcmGPGWfAUbC86rD8HMXKOpxTFconZhyZhqwos8iiJzfTVVukKut6urOPJHC8opwhHK1YCT/4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748885078; c=relaxed/simple;
+	bh=DRNqqY/4AbwEXk39Qpozbu8P5EAIZabKiLzaa9WA7b4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Fgb+qXMjGVDHQnSel2BoP9ERCdD5EqD8oqMBtWAcaNOQnTtQh3n0bUwpfzmDlmvOXokNnyQEDC4IEJGLJoiK3InZY4queCqAZ44qAwKuxHRJo7dlZnizyiEl4EbOPvlQ0Uo25v+bEOmTkgKRD0qRTrQ9l1tQCD0iLgboUsj1+v0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=0rLGLYsh; arc=fail smtp.client-ip=40.107.237.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="OvwwslSn"
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-407a3c10d03so1721827b6e.2
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 10:23:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748885023; x=1749489823; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MzFNRbVnIR8z38r4bV92OVe26qdtExOhHTzdvqaLzx4=;
-        b=OvwwslSnr3J7Lu7JN8KIS+UGohilB0jebW/fZ4RiB+EAnFdRMtQUZQk8PUcCvktr90
-         wDkLdX0ryDTlwHnpLQ4VJue5pVJxmiKR+2f6jamo3OyoMBJjWK0BeaHMQKKmcG81GNAg
-         HC2+0xYOQFQaMReRW21j8RnO3+FUOLHSQhmn0zdiLLueyuTRIR2UmENkjhwXjJR3kKUv
-         6en/qa9BKG6+9JWn+btdzTXPBkYPp/NwR2CZWNLC6723Unp/Xh8QcIhktAdCtEQUVAWm
-         nKX9PVnVvRMjgPjr4EN5WgC88F6tgmyI0bu7GZtHp8TyG4Oj7ZJ6ka+tTQLZGSKrTmtv
-         spTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748885023; x=1749489823;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MzFNRbVnIR8z38r4bV92OVe26qdtExOhHTzdvqaLzx4=;
-        b=G0Yd7n1ouXmfltXGAgD8qO6xRec4t9d9dbzopIWc1s65aF4fdlRS26tz3Jsrl6ATwt
-         dJqzy0u6mT1BiAWkxmg8PiPW+oP1PbOKeiSOUnNYU4VJ6oWTLwQj17WqIFnRzVL7JUNg
-         QaXt3iiG4XUwXxAqOyPennXTcdiooBs3CT/38Ch+6QE/+gfxx2euqZpyE2I2BDIyT7RS
-         lV9U5HLuGocTNWkprx6piQH99HR7lbcEjDo2wYqK7hnTd7KXIsJhKt+DdAkwBsNcCWBx
-         tMwjxPcjMxuy4mSk2drhlDXYBlU1Ij758JR8qsWCn4m2UBxdzFsPssEkXfOWZHYFf8A3
-         vpKw==
-X-Forwarded-Encrypted: i=1; AJvYcCUpzhY1WgFoTOEsU+0bA6yym8nqwCRKe3scXvlHS8wRWFwKihtu70BZs9j41fLKUbUMq6Z48jFwe397p+s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsRCWivnegMhb9yueR72sdIN92228iqPJn667tlH0x718qy3Qp
-	Y9PGP5IbsCS/zXPhJX0w2LjJ8cWt977K4BymS+GOBruRqHiYYbikUuI4R6/maJrOR7w=
-X-Gm-Gg: ASbGncshTryH/cl1NydyYKXoHpKl8R69XRed7GpxouaIkAitoitxH0ymhFhdqA1oBOw
-	5jc4rOCeNFzyqL0yn0Shhd0oVVCKk4si5PWY3nbrvocvsM7tKP1K//kp4etHTft8LzH51IENC48
-	rs2rJEePIsPITtNtVUPopGbuCaK6n/uAOOwDpYexVTgJIlzmZQBF7h0Yk8eGTgQjlPYHXQ8bLsG
-	Sj4wMSyLyPSXWTDAhUQzQxBe1byC/9HqU32MHvA4h56H8E/Xf2hPi0242mnk9GTC0OubGYkKiSD
-	EXTliTjlsmeHOMuyAuPfhSSMbh9hN1EMffFO8r2jW1rK6Lzg4CpomMycE1pf7/3LOwH2EzldtjR
-	wkPrJB8ARAykHaaw6Vx/Z1vWLPhDNHyROTilibyQ=
-X-Google-Smtp-Source: AGHT+IF/xPy2n8rJ6168kLQsxv7ffSrx4BuuXj2i7ygSF4TQfB25Gz7EO+g2oYAOQ65OBubji4r0aw==
-X-Received: by 2002:a05:6808:3307:b0:406:755a:9352 with SMTP id 5614622812f47-407a665402dmr5823437b6e.38.1748885022856;
-        Mon, 02 Jun 2025 10:23:42 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:74f4:5886:86e1:3bcf? ([2600:8803:e7e4:1d00:74f4:5886:86e1:3bcf])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40678ce8480sm1507195b6e.36.2025.06.02.10.23.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Jun 2025 10:23:42 -0700 (PDT)
-Message-ID: <fca1e8c7-2c1c-4244-a109-f674940d6030@baylibre.com>
-Date: Mon, 2 Jun 2025 12:23:40 -0500
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="0rLGLYsh"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=oiKRVJ+qgX7wPALitek08DjdQnMmQlfVnqq6gHbUfrO5M5IWWWo1X+cXXLdBQfwL1fmiOLuebMsDgjB2AwAvbjVujY7bfxaC2NCtaTnp6lD7vELc77MPGAHixj+v7Tj/sQuRPmqysz7B4wdS7dY6tqqMBmqMAVe4oQBwITMdSZwPLOXReaT45K+pcG05K7x11N0bhkW82/sEkenYKuvIYN7YwCJeW0SPcocUm/J6BTK+W5IvLpGXGMFR432IWT5cDs8NeGB0PXHohYiKI/2bPPe6iEyjtDNSxJr8Vi+FLc0o6/MQ0chMHYGcoiwsuzDjmShn94y8JzZjpLP/Fh1csw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BT2T0QlTF8VdJkmgsjHsUXxMZ+xsLLu8f1BG8wh9onM=;
+ b=pNazwb8ezWvwQ7gvlE9SsXDobxsRSBOL7k3OHLQHwVafrPLj4y9138Ex6sG0/70szI4Tqth/vhYDKrCvP0HNNbWPIe+5+yg+HqDDHMPTJIOx9cEfwcB8ui0hZLHZdD4lhykRxJ2tKr+DRlh01JkFtiK2jjOeel/zAkCmR7Vf30YxTJo236z+vcd5JbmYkgRJn2r5L19IoA6NpNy+KWIVzWerywd2rTL0tUXx/0kp+rNupRUpBEuUT+i02MeiKBZ8O0+hlIamUOfD1UjSylEwoRloJjdieV5vYs56MstYpQwlpn/CXgT031GT60NV52HjV/54lzw+BJvMF1nmu3q8JQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BT2T0QlTF8VdJkmgsjHsUXxMZ+xsLLu8f1BG8wh9onM=;
+ b=0rLGLYsh8zpAIsfJTUpnpwzcoeYlWjXtuvMpT20k93xEZsXOL/McJRkVHRsq+lvzj18SawsnT96NnhVuxuI276U39yZwxwqPHD1tfyA1maWYZHU6wcj8GNuc+26sHM9f34H30CrDh+20uVxwjYI0DfA/EeO63sjdWEqn2sukFx8=
+Received: from DS7PR03CA0069.namprd03.prod.outlook.com (2603:10b6:5:3bb::14)
+ by CY8PR12MB8412.namprd12.prod.outlook.com (2603:10b6:930:6f::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.33; Mon, 2 Jun
+ 2025 17:24:11 +0000
+Received: from DS3PEPF000099DF.namprd04.prod.outlook.com
+ (2603:10b6:5:3bb:cafe::fa) by DS7PR03CA0069.outlook.office365.com
+ (2603:10b6:5:3bb::14) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.18 via Frontend Transport; Mon,
+ 2 Jun 2025 17:24:11 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS3PEPF000099DF.mail.protection.outlook.com (10.167.17.202) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8792.29 via Frontend Transport; Mon, 2 Jun 2025 17:24:11 +0000
+Received: from kaveri.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 2 Jun
+ 2025 12:24:08 -0500
+From: Shivank Garg <shivankg@amd.com>
+To: <pbonzini@redhat.com>, <kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <shivankg@amd.com>, <bharata@amd.com>, <tabba@google.com>,
+	<ackerleytng@google.com>
+Subject: [PATCH] KVM: guest_memfd: Remove redundant kvm_gmem_getattr implementation
+Date: Mon, 2 Jun 2025 17:23:18 +0000
+Message-ID: <20250602172317.10601-1-shivankg@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/5] dt-bindings: iio: adc: Add adi,ad4052
-To: Jorge Marques <gastmaier@gmail.com>
-Cc: Jorge Marques <jorge.marques@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org
-References: <20250422-iio-driver-ad4052-v2-0-638af47e9eb3@analog.com>
- <20250422-iio-driver-ad4052-v2-3-638af47e9eb3@analog.com>
- <88a326e7-3910-4e02-b4ba-7afe06402871@baylibre.com>
- <hvexchm2ozsto5s2o6n5j2z3odrkbcamgmg67umd4aehwzmgie@dvtx6anioasq>
- <1b0e9003-7322-46fa-b2ba-518a142616dc@baylibre.com>
- <vchomz3iazgdmotcs3jskrugi2qmdxyo74t4ruo2fsc7cjwtqb@7rtdmdkxobvg>
- <a6f62963-5776-47e4-bdac-78e921a6e476@baylibre.com>
- <a6cguahvrbqjv2wtisvgg2wvm2tj3awmn7omo6ebfpts6v546o@4xzpj353vlsx>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <a6cguahvrbqjv2wtisvgg2wvm2tj3awmn7omo6ebfpts6v546o@4xzpj353vlsx>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099DF:EE_|CY8PR12MB8412:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3e46b5c8-88d3-4507-14af-08dda1fa4a28
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?DJSt4GIP9nrbh8XvMHuaOXw+QyRDy+JPvNpH+zvrO2ove7IXXF9vXlYo0e0N?=
+ =?us-ascii?Q?Yyv19/T50oOyeWnGetyC6JKLT1eBWPluBx42Bkr7KVH6BS7H9ZmIhbA33BbQ?=
+ =?us-ascii?Q?T4W56M29lZcV3RWiPSBsD9Kyb6FAGYvq/X6VVrFlABdzxC99tPyrDJ8Xvjyg?=
+ =?us-ascii?Q?EClcqVnmK2pQD+e5ECIJxLRUlC6ob+q9hYG9+wSmAaeH0WVcpD4hwl9VPwHv?=
+ =?us-ascii?Q?upt2o9h57lc2d/LiPOdx9l7t0ePWooaUpx6UrZZ4+ZPvEsQYSVyXGr4L4oR+?=
+ =?us-ascii?Q?LkjlwE6q6L1C6EbxuTnRF4DoB5UZ+iNV6hTyGfGGsEOP9z8rOqXOgSSARv/O?=
+ =?us-ascii?Q?1cFDqyrzRhYt14ucagppzfJaG0BvtWkQ9vHfbVRm31JYgfsyDzcUwGlsndp2?=
+ =?us-ascii?Q?FJCx8imPX8YB0WElPHRARXm1hc/UBT+gK5iMmOqayZ6kctWRR1KyVda3U95X?=
+ =?us-ascii?Q?QNTyrHCwnf9W4QpsaaVaeFOVUQH/ea1LkZ3M5iJaz/xGJzKNTnBpll3iWtFn?=
+ =?us-ascii?Q?nrwnq27ohVfet7Bq9f+/3hougrgndUEy0aDOZjcYo3XS4Y5+nWk0gd8snmkN?=
+ =?us-ascii?Q?qdzzi4YPedvpDrC78gis2KvZsJr57zhHPcXt0Qrtc7StDVnVrccqfwXbSSQO?=
+ =?us-ascii?Q?z8uHw0iLdH/52ce42imYj32QCr924UZfGGiEso9SSAqx5DWwQx78heAdK3kh?=
+ =?us-ascii?Q?ZN6+zNb1etpj6orrsFfO5fpyl+Vw7ED4lijJjIBr5cKdl+gKdEJPRgnhDX2B?=
+ =?us-ascii?Q?q+sVUyiv8AzQy8wNwlofIzQh6U5udqnqGpeYbSmwZFbSZXc5WHcv+clla0Kf?=
+ =?us-ascii?Q?QtgXgnrp7CZyYZjqti6lv7AD8PKT4oJiWZSCJkd6BpYynr1CvTDkEuaP/m9T?=
+ =?us-ascii?Q?MMgW/fO4xUD+m9NqaY+iscyL1F3EIPfcqHmX9D0W+Dar/wj+A6yyleeSj+lj?=
+ =?us-ascii?Q?1iEcUGg42CBREKys6y8BE2m5UxzGXKXFuSuEHXILRk65rCEx3IeqqQ6DB9pR?=
+ =?us-ascii?Q?/JUdRQGrjark2cNfKZwINc+ieMZ3ZS5htmnzdBfkunwEeYS1paXdWPkqT8nd?=
+ =?us-ascii?Q?xsVqtsNdu+FfK76Z/qd7EUITlVWAIJXsWekdCQwUvKRaY/dqR2mjoIePULED?=
+ =?us-ascii?Q?oodXnx1B+ddIwF50DHJ19Xopng1cjYjDByWi5RrFLbdu9yNHUS3w3tlwAsvB?=
+ =?us-ascii?Q?Rytg0g6wsnOZ83lI61YER0vUqMqzO/TKz47Hy9DY1WFxX29hYLj8BVxp9iUQ?=
+ =?us-ascii?Q?fkK7sU6NbWsl6hccYOYu+Hka8waCP+BJtrYUecYgoRmuJOu2ozrmf5BzIF2D?=
+ =?us-ascii?Q?O85EgSx6aMyj2UK6IwAXVu89Vc1uVnVf1xqzv8nP5C84TZW5yP1IoLGotfmw?=
+ =?us-ascii?Q?eC7lRrmDekKKZBGph9JhnDE1jUbHNBSoiDh2iZdlzDDjg9M9z7AzRAJ5aPPC?=
+ =?us-ascii?Q?tOYS8wxqeEPmWjcXvqwXn/AD9bFyw/fi6Bm7BaXz7iBrD2AlPTmvB3QEv10A?=
+ =?us-ascii?Q?vpcQ6vmPiEV7279bvsFR4vkYsIrd8eK39Cbg?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2025 17:24:11.3702
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e46b5c8-88d3-4507-14af-08dda1fa4a28
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS3PEPF000099DF.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8412
 
-On 6/2/25 11:32 AM, Jorge Marques wrote:
-> Hi David,
-> 
-> On Mon, Jun 02, 2025 at 10:17:18AM -0500, David Lechner wrote:
->> On 6/2/25 4:17 AM, Jorge Marques wrote:
->>> On Tue, Apr 29, 2025 at 10:45:20AM -0500, David Lechner wrote:
->>>> On 4/29/25 8:48 AM, Jorge Marques wrote:
->>>>> Hi David, 
->>>>>
->>>>> I didn't went through your's and Jonathan's ad4052.c review yet,
->>>>> but for the trigger-source-cells I need to dig deeper and make
->>>>> considerable changes to the driver, as well as hardware tests.
->>>>> My idea was to have a less customizable driver, but I get that it is
->>>>> more interesting to make it user-definable.
->>>>
->>>> We don't need to make the driver support all possibilities, but the devicetree
->>>> needs to be as complete as possible since it can't be as easily changed in the
->>>> future.
->>>>
->>>
->>> Ack.
->>>
->>> I see that the node goes in the spi controller (the parent). To use the
->>> same information in the driver I need to look-up the parent node, then
->>> the node. I don't plan to do that in the version of the driver, just an
->>> observation.
->>>
->>> There is something else I want to discuss on the dt-bindings actually.
->>> According to the schema, the spi-max-frequency is:
->>>
->>>   > Maximum SPI clocking speed of the device in Hz.
->>>
->>> The ad4052 has 2 maximum speeds: Configuration mode (lower) and ADC Mode
->>> (higher, depends on VIO). The solution I came up, to not require a
->>> custom regmap spi bus, is to have spi-max-frequency bound the
->>> Configuration mode speed,
->>
->> The purpose of spi-max-frequency in the devicetree is that sometimes
->> the wiring of a complete system makes the effective max frequency
->> lower than what is allowed by the datasheet. So this really needs
->> to be the absolute highest frequency allowed.
->>
->>> and have ADC Mode set by VIO regulator
->>> voltage, through spi_transfer.speed_hz. At the end of the day, both are
->>> bounded by the spi controller maximum speed.
->>
->> If spi_transfer.speed_hz > spi-max-frequency, then the core SPI code
->> uses spi-max-frequency. So I don't think this would actually work.
->>
-> Ok, so that's something that may be worth some attention.
-> 
-> At spi/spi.c#2472
-> 	if (!of_property_read_u32(nc, "spi-max-frequency", &value))
-> 		spi->max_speed_hz = value;
-> 
-> At spi/spi.c#4090
-> 	if (!xfer->speed_hz)
-> 		xfer->speed_hz = spi->max_speed_hz;
-> 
-> So, speed_hz is max-spi-frequency only if xfer->speed_hz is 0 and
-> not bounded by it.
+Remove the redundant kvm_gmem_getattr() implementation that simply calls
+generic_fillattr() without any special handling. The VFS layer
+(vfs_getattr_nosec()) will call generic_fillattr() by default when no
+custom getattr operation is provided in the inode_operations structure.
 
-Ah, OK, my memory was wrong. It is only bound by the controller max
-speed, not the device max speed.
+This is a cleanup with no functional change.
 
-	if (ctlr->max_speed_hz && xfer->speed_hz > ctlr->max_speed_hz)
-		xfer->speed_hz = ctlr->max_speed_hz;
+Signed-off-by: Shivank Garg <shivankg@amd.com>
+---
+ virt/kvm/guest_memfd.c | 11 -----------
+ 1 file changed, 11 deletions(-)
 
-It does seem odd that it would allow setting an individual xfer
-speed higher than than the given device max speed. I suppose we
-could submit a patch adding that check to the SPI core code and
-see what Mark has to say.
-
-> 
-> Then at spi-axi-spi-engine.c:
-> 
-> 	static int spi_engine_precompile_message(struct spi_message *msg)
-> 	{
->   		clk_div = DIV_ROUND_UP(max_hz, xfer->speed_hz);
-> 		xfer->effective_speed_hz = max_hz / min(clk_div, 256U);
-> 	}
-> 
-> Where max_hz is set only by the IP spi_clk. If at the driver I set
-> xfer.speed_hz, it won't be bounded by max-spi-frequency.
-> 
-> The only that seems to bound as described is the layer for flash memory
-> at spi-mem.c@spi_mem_adjust_op_freq.
-> 
-> For the adc driver, I will then consider your behavioral description and
-> create a custom regmap bus to limit set the reg access speed (fixed),
-> and keep adc mode speed set by VIO. And consider spi-max-frequency can
-> further reduce both speeds.
-> (or should instead be handled at the driver like spi-mem.c ?)
-
-It would be more work, but if it is common enough, we could generalize this
-in the core code. For example add a spi-register-max-frequency binding (or
-even a more general spi-max-freqency-map to map operations to max frequencies).
-Then we could bake it into the regmap_spi code to handle this property
-and not have to make a separate bus.
-
-FWIW, there are also some SPI TFT displays that use a different frequency
-for register access compared to framebuffer data that could potentially
-use this too. Right now, these just have a hard-coded register access
-frequency of e.g. 10 MHz.
-
-> 
-> Thanks for the quick reply!
-> Jorge
+diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+index b2aa6bf24d3a..7d85cc33c0bb 100644
+--- a/virt/kvm/guest_memfd.c
++++ b/virt/kvm/guest_memfd.c
+@@ -382,23 +382,12 @@ static const struct address_space_operations kvm_gmem_aops = {
+ #endif
+ };
+ 
+-static int kvm_gmem_getattr(struct mnt_idmap *idmap, const struct path *path,
+-			    struct kstat *stat, u32 request_mask,
+-			    unsigned int query_flags)
+-{
+-	struct inode *inode = path->dentry->d_inode;
+-
+-	generic_fillattr(idmap, request_mask, inode, stat);
+-	return 0;
+-}
+-
+ static int kvm_gmem_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 			    struct iattr *attr)
+ {
+ 	return -EINVAL;
+ }
+ static const struct inode_operations kvm_gmem_iops = {
+-	.getattr	= kvm_gmem_getattr,
+ 	.setattr	= kvm_gmem_setattr,
+ };
+ 
+-- 
+2.34.1
 
