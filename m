@@ -1,152 +1,134 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B90915CD74
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 06:20:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDAEFF9D6;
+	Mon,  2 Jun 2025 06:22:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748845220; cv=none; b=tDPD5AbWXICXJq8QPP+trx3019yLZb0Wd5IqdtcL+9ZyN3xjFgPF6RU0CaGMFYqBvrEsWR9NdiJHEY1zfN2Q3ZzOMhy3H0hUCDm0K+tKUZBYHqr6GgkCqb73C2HcWSf2+NyQSskK5ore+kNEFerX2SA7D4ZdR0qW+V1pFFV2MGI=
+	t=1748845358; cv=none; b=Jjk9YimWfwkkKpU0xQ+EKIERU54gXSSC5n/Hc8XxSFWWF+vkxc7KJBzMZx4Q2gx/ztibprbbUN3xV9hZAW0xK9chi/CQKVzi5vHpFsyxNaiWswmWps7siABx3pQ6VqPwmhhMkZH/4lPRoyrkDmaYrXK+1boWg6hFQ1MUdtlMKjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748845220; c=relaxed/simple;
-	bh=uqhiVvUTjJUz12WNnC5vQ4AYx38ysdEHyQ+YwgWYwRo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=S8jEx87hfzJYQMDY/8Uw5VYQBh2nObwJuusSJ1az3JSVASGYIGQ8dDD64JeOC/mQ6/D1/jMC2gpFdMpi12mZEJ52kEBKIHiqBgg17sCDEdVbIibkCmDlw0cdT7M1p1NL8J/1fBoNq8dwY8LklD3Xe1SJPwHXL/R2S/rbIQQTk6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sSU7IPnO; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748845358; c=relaxed/simple;
+	bh=aUzhb04EIyUiugDB+P6leFcM01sGvgiqCARuKafgLr8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k6vr2VN0QYdWrqBfgHIUsHkbq7bTYDbu183vp8/XP1VAHpgvvEdacT6OlkubFNYj51Z50TwbLU3SwBkb6jPRkZNerGBhByiQePaMbtsxBdDoi0ftc6XbD8GI1obC0K5qQH2vFeymPh/uyBxqQppfwk+tOHHFrvLefVJ5r4AngeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iqTmp+j2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sSU7IPnO"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-451dbe494d6so5402205e9.1
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Jun 2025 23:20:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748845215; x=1749450015; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tOEMUoWDeDY5mzeOr4SEl8dbwxhrqozXvwOKEHtHeUk=;
-        b=sSU7IPnOUUi7yGcTpR5L7oLOSaKVyOCpIH90T675LubPUAtDorfV2PnXkARETVOF4E
-         eSN21BtaPO4Mp3AboQeI7H5hEH9x+yuudFzdhZ+IGQe8mN4Eb3yDjXRYywwANhgBKPuD
-         zmar0EDkt2RZmDoC4L5cW3BoNNUnhffc7AxjZ1AUc1sybPS27ySDo8Fu61u+rbgtVcMj
-         WmMqNQf9DLHfYY0PsgSN69SvMfiXRmMi8Vbjv9weRrJKcyUhZZXgv2hajgB/hw4BwSoG
-         Or1YGfToONsRlikOEfBQx5kAyQSaaIwvQ/AW4DG5BXD67E2STBTZgIYGmg99JuXluCF1
-         rSBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748845215; x=1749450015;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tOEMUoWDeDY5mzeOr4SEl8dbwxhrqozXvwOKEHtHeUk=;
-        b=eoNz36h4dUTozcRrmbmz/a69zG2J6isnmy/dl3cIv5bOypop7BlTvOpHQLn/6QRYVd
-         AuWISssE7+zHJBG6yPZxjkcUFzoD92u6+TJPhAHJJVL8Lu07Ufn+ZF229urLZNyfp5fk
-         gApSPpzF1VHXWysD8vTlTwJyBsO+aVjAWviqi9iQQCulebehKdeyk55+mT2qTT/yoslk
-         jQAmj74YPPz9lNZy7VWEavTJv6hfqRdWOa6hG5dI++DGAzv8S7O35lrf/DoxSN2k+b+j
-         Nxbomt1IO43wdI3O8wgEMiKc+c/l2IO0yp4fjndUm+IMvrWHMwOsEf1F2mF0zNgLxOFu
-         seDA==
-X-Forwarded-Encrypted: i=1; AJvYcCWIbojpMf9Bd7yxxUkHWJnTG1jaNQAMM6VOzsEjtcrLEwJSruVpkDm+XtRzcSkuGBpnDOd27TzBx4YxKd8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTBvOzCsnzxxRkEyc3nDWC/fURHjhJaBxg3+7EvMTsd7Yz2foB
-	ZVRWnIYuEwNjJuqH/7Xw9TcD4xKVLUoeJzOCHixSZ5iYMa9FCz3Xt8ZZno89x8dQrLM=
-X-Gm-Gg: ASbGncvS+nn2A6V5w1pZsPR0Zr+y/rGeBJGQBLY6/juZrVYCMNWQokSplxAAHWYMP2+
-	dOdzoAGiATIhVGKHdx+YQck3zRtk6VvkT7gmM5bppkd/hVZwiXSmvi+1qGqt7358SXkKBZtHNmV
-	3EJ17KWwOzo1s0dhAyAv1mByXdNtwH263Uqhsh2rk2jc5CrYUTsme7issQIDr3R5nvIEchVsj3S
-	cv1Rv+XJqfRyDM2mdfBMR7MsHQCjvdXNFuFZBoNMW+kDLbvubjCX8Pn7tTdXo779h6c942BuM2L
-	88vn3V3NsnjnYhnbIYDZRfpBa86yC17jiOfrhAfQLyZ0pK3O3dX90Ck=
-X-Google-Smtp-Source: AGHT+IEhg9lSTzexUaVbkdcQrdyWsGg7a4BXZ1AHF91UKUvvwVHEH4xwEI9JAg73XATTsIBgax4M7A==
-X-Received: by 2002:a05:600c:4f05:b0:43c:ea1a:720c with SMTP id 5b1f17b1804b1-4511ee13fb8mr65790875e9.18.1748845215311;
-        Sun, 01 Jun 2025 23:20:15 -0700 (PDT)
-Received: from localhost ([41.210.143.146])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-450d7fa24c6sm108973155e9.12.2025.06.01.23.20.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Jun 2025 23:20:14 -0700 (PDT)
-Date: Mon, 2 Jun 2025 09:20:10 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: oe-kbuild@lists.linux.dev, Rong Tao <rtoax@foxmail.com>, ast@kernel.org,
-	daniel@iogearbox.net
-Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev, rtoax@foxmail.com,
-	rongtao@cestc.cn, Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Juntong Deng <juntong.deng@outlook.com>,
-	Amery Hung <amery.hung@bytedance.com>,
-	Dave Marchevsky <davemarchevsky@fb.com>,
-	Hou Tao <houtao1@huawei.com>,
-	"(open list:BPF (Safe Dynamic Programs and Tools))" <bpf@vger.kernel.org>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH bpf-next 1/2] bpf: Add bpf_task_cwd_from_pid() kfunc
-Message-ID: <202505300432.nZC50gOu-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iqTmp+j2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2708C4CEEB;
+	Mon,  2 Jun 2025 06:22:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748845357;
+	bh=aUzhb04EIyUiugDB+P6leFcM01sGvgiqCARuKafgLr8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=iqTmp+j2WQwDIMg2OiRjFfsCfzYBcciSPu3Ip1B8s7LlQC7gM5PWPx7FFXGWYbkvB
+	 qM5+YCQGzpIcezXNJmUfgoEK61bDfGkdyaUhButDlUqTXkvsS0Y5I+TX4ZRmMXowKN
+	 IkXUK7erwaIEi+VC5TJHEzdVS7vOeg7XlsIhV2oPkdEL1ER7lOUzG13PQ/F2ZBoshn
+	 Gu6v0buAEmVk67zDWQ0yedGE6kTeKCtCOx3nC5x6QBu+JQgikdh1MJScw9WZnkP/wA
+	 XDXzwutYqX6oXT8sdK6Lz124r5Bac4JxC7C5TU2+pyodHhkSKl0rrP+l1+ZnQbWeiF
+	 Jo7kKmQ1j101w==
+Message-ID: <ea54b6ec-41b9-4962-b22a-115ccf521076@kernel.org>
+Date: Mon, 2 Jun 2025 08:22:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <tencent_97F8B56B340F51DB604B482FEBF012460505@qq.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/6] dt-bindings: crypto: Document support for SPAcc
+To: Pavitrakumar Managutte <pavitrakumarm@vayavyalabs.com>,
+ linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, herbert@gondor.apana.org.au, robh@kernel.org
+Cc: krzk+dt@kernel.org, conor+dt@kernel.org, Ruud.Derwig@synopsys.com,
+ manjunath.hadli@vayavyalabs.com, adityak@vayavyalabs.com,
+ Bhoomika Kadabi <bhoomikak@vayavyalabs.com>
+References: <20250602053231.403143-1-pavitrakumarm@vayavyalabs.com>
+ <20250602053231.403143-2-pavitrakumarm@vayavyalabs.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250602053231.403143-2-pavitrakumarm@vayavyalabs.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Rong,
+On 02/06/2025 07:32, Pavitrakumar Managutte wrote:
+> Add DT bindings related to the SPAcc driver for Documentation.
+> DWC Synopsys Security Protocol Accelerator(SPAcc) Hardware Crypto
+> Engine is a crypto IP designed by Synopsys.
+> 
+> Co-developed-by: Bhoomika Kadabi <bhoomikak@vayavyalabs.com>
+> Signed-off-by: Bhoomika Kadabi <bhoomikak@vayavyalabs.com>
+> Signed-off-by: Pavitrakumar Managutte <pavitrakumarm@vayavyalabs.com>
+> Acked-by: Ruud Derwig <Ruud.Derwig@synopsys.com>
+> ---
+>  .../bindings/crypto/snps,dwc-spacc.yaml       | 77 +++++++++++++++++++
+>  1 file changed, 77 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/snps,dwc-spacc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/crypto/snps,dwc-spacc.yaml b/Documentation/devicetree/bindings/crypto/snps,dwc-spacc.yaml
+> new file mode 100644
+> index 000000000000..2780b3db2182
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/crypto/snps,dwc-spacc.yaml
+> @@ -0,0 +1,77 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/crypto/snps,dwc-spacc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Synopsys DesignWare Security Protocol Accelerator(SPAcc) Crypto Engine
+> +
+> +maintainers:
+> +  - Ruud Derwig <Ruud.Derwig@synopsys.com>
 
-kernel test robot noticed the following build warnings:
+One more thing, there was no public Ack for this. What's more, there
+were no emails EVER from Ruud. This has to be publicly Acked and Ruud
+needs to understand the obligations coming from being the maintainer here.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Rong-Tao/selftests-bpf-Add-selftests-for-bpf_task_cwd_from_pid/20250529-113933
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
-patch link:    https://lore.kernel.org/r/tencent_97F8B56B340F51DB604B482FEBF012460505%40qq.com
-patch subject: [PATCH bpf-next 1/2] bpf: Add bpf_task_cwd_from_pid() kfunc
-config: x86_64-randconfig-161-20250529 (https://download.01.org/0day-ci/archive/20250530/202505300432.nZC50gOu-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202505300432.nZC50gOu-lkp@intel.com/
 
-smatch warnings:
-kernel/bpf/helpers.c:2687 bpf_task_cwd_from_pid() warn: inconsistent returns 'rcu_read'.
-
-vim +/rcu_read +2687 kernel/bpf/helpers.c
-
-b24383bde5a454 Rong Tao     2025-05-29  2657  __bpf_kfunc int bpf_task_cwd_from_pid(s32 pid, char *buf, u32 buf_len)
-b24383bde5a454 Rong Tao     2025-05-29  2658  {
-b24383bde5a454 Rong Tao     2025-05-29  2659  	struct path pwd;
-b24383bde5a454 Rong Tao     2025-05-29  2660  	char kpath[256], *path;
-b24383bde5a454 Rong Tao     2025-05-29  2661  	struct task_struct *task;
-b24383bde5a454 Rong Tao     2025-05-29  2662  
-b24383bde5a454 Rong Tao     2025-05-29  2663  	if (!buf || buf_len == 0)
-b24383bde5a454 Rong Tao     2025-05-29  2664  		return -EINVAL;
-b24383bde5a454 Rong Tao     2025-05-29  2665  
-b24383bde5a454 Rong Tao     2025-05-29  2666  	rcu_read_lock();
-b24383bde5a454 Rong Tao     2025-05-29  2667  	task = pid_task(find_vpid(pid), PIDTYPE_PID);
-b24383bde5a454 Rong Tao     2025-05-29  2668  	if (!task) {
-b24383bde5a454 Rong Tao     2025-05-29  2669  		rcu_read_unlock();
-b24383bde5a454 Rong Tao     2025-05-29  2670  		return -ESRCH;
-b24383bde5a454 Rong Tao     2025-05-29  2671  	}
-b24383bde5a454 Rong Tao     2025-05-29  2672  	task_lock(task);
-b24383bde5a454 Rong Tao     2025-05-29  2673  	if (!task->fs) {
-b24383bde5a454 Rong Tao     2025-05-29  2674  		task_unlock(task);
-b24383bde5a454 Rong Tao     2025-05-29  2675  		return -ENOENT;
-
-rcu_read_unlock();
-
-b24383bde5a454 Rong Tao     2025-05-29  2676  	}
-b24383bde5a454 Rong Tao     2025-05-29  2677  	get_fs_pwd(task->fs, &pwd);
-b24383bde5a454 Rong Tao     2025-05-29  2678  	task_unlock(task);
-b24383bde5a454 Rong Tao     2025-05-29  2679  	rcu_read_unlock();
-b24383bde5a454 Rong Tao     2025-05-29  2680  
-b24383bde5a454 Rong Tao     2025-05-29  2681  	path = d_path(&pwd, kpath, sizeof(kpath));
-b24383bde5a454 Rong Tao     2025-05-29  2682  	path_put(&pwd);
-b24383bde5a454 Rong Tao     2025-05-29  2683  	if (IS_ERR(path))
-b24383bde5a454 Rong Tao     2025-05-29  2684  		return PTR_ERR(path);
-b24383bde5a454 Rong Tao     2025-05-29  2685  
-b24383bde5a454 Rong Tao     2025-05-29  2686  	strncpy(buf, path, buf_len);
-b24383bde5a454 Rong Tao     2025-05-29 @2687  	return 0;
-b24383bde5a454 Rong Tao     2025-05-29  2688  }
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
+Best regards,
+Krzysztof
