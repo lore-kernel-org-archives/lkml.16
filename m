@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 228C225487A;
-	Mon,  2 Jun 2025 22:12:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ED6F255E4E
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 22:12:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748902331; cv=none; b=QBCLwhxeAVMzFSiFNlnIATJcGD/PnnOlW+yOxYOEYmr8VpoUN+xI5ZAf5NWhAz9fU0JzPVYylxOGNV9Rz05WxZCMgILQGOhRwjsGqaJmCNzo+ASsi1tEVGKI/5AUJ6XGDmyQdyWvVC6KOqKeyIu+AmLRbIIsAB1wjaNksFQsgrU=
+	t=1748902334; cv=none; b=bLpRIIT7msGYRp/BFn5VswMOMXhmpCXia/dLnzgVk6IADbm0P07mEZIl91nnNaDjpzFWH09SLJYQ8+mEMlrr3RYCrGY/CEHqRCoJmBFQeT3iIjSyYWIBFIqG9+05f/ShcpGsUJ0frZfYDILeycuTGs8SMypydsFtLk1Z7B8D73g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748902331; c=relaxed/simple;
-	bh=aBzjsMEEhXVIe1zVGvGDXk9sXhqzdXCVIPE36+jRrbQ=;
+	s=arc-20240116; t=1748902334; c=relaxed/simple;
+	bh=mnMBuXPc2ZQFw3argKuVRCHSdMH2r8EVc5rT2Tz2hRY=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=TkRFXvGQAI6xqThiCNBO5CLOvX8WGhgUrurUGgaKDtZRunzlHfSoCYu5PNjJk3ZJTo8ZfK+ALAw+acqZwu51peGIMCigKKu9EvA+qDz7IlYGgRBoNblkVKPjQsBWVkZxCGZ2zU+xzKcN+CrpwOnKDC+o3pv+8PrDvLOI3UaWdH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RaIxgnmY; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=mRJIdTAvU7eh3CGD00yhatpn7xw1mJnLVj0UB084/Nvx3I+T1SV4LNnuQ0k5XI2GZlkBG+aR8gAMiUUQUqBgi5k5cu3XwEPL/+VpHeJmATJDh5P3T0KdHi/ca9QW9cg5VHW3+8KTU6arU21z2zYHqzj4HObAPjAtgcSibp1mtvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=reKmYbUX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RaIxgnmY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 951DBC4CEEB;
-	Mon,  2 Jun 2025 22:12:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="reKmYbUX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A307C4CEEB;
+	Mon,  2 Jun 2025 22:12:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748902330;
-	bh=aBzjsMEEhXVIe1zVGvGDXk9sXhqzdXCVIPE36+jRrbQ=;
+	s=k20201202; t=1748902333;
+	bh=mnMBuXPc2ZQFw3argKuVRCHSdMH2r8EVc5rT2Tz2hRY=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=RaIxgnmYx+7sNvyNz2IzcnpY39HOM+PAHCo0MTt+d318KLoaxtOwfO3dWMQB1SGuY
-	 8txcIQm8bYZIcSSdQGkcPP9GqXMUhsCm5PpV9FTRrVhHSzvGke+qCuLTqu7dXeOovw
-	 7nAlh+Iz8wjYWyq7xv2TWeWprir2BXqST761RayqIvZ0PjdI3nGyvmLN4hOSs8uFnL
-	 00R1KU56O21XsYY/3fGbN4u45YZc3oeoJZ7YlT9CCF9pSIrvT2IV5YojWuzndq9B1Q
-	 vEBXl9soSu5nujHVR8jb1BzIt7FrN6f7ammbVJNI11LIoC96AYl+5FLg8RV+6EfToF
-	 +15LBv/4dVxwg==
+	b=reKmYbUXF9j28zyl2c7Q/9//n7V4xK/4Coo/W/hzAvJPrf0ORw0BQlsHauVn/0zyE
+	 XwY5lmrm7vc644GWrKGnTLME2QBQh+JR3U+l35NKi0YL50UHgoSz1yuVdUnaZTqB3L
+	 /b4UTQVNblan8RaLS4sTAg13GjH/8g8o85eKfNQpB8VABlkghAWSKCFXSLdZkyOLSk
+	 032+0NfHSWUvvBQjvKTnuv5tePxMd3PvDYaNlQhEfrPWI7++yNrFjUiQXz571wLz24
+	 W8yipZwo2JbbfA1y7fodKIN0w+st6jrAgRQ3WSFmBjup2WPdxqQvtidlJwLj2NWs5X
+	 xd7PEQKPqVn8g==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70CA8380AAD0;
-	Mon,  2 Jun 2025 22:12:44 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 71209380AAD0;
+	Mon,  2 Jun 2025 22:12:47 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,67 +37,39 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v4 01/12] riscv: ftrace: support fastcc in Clang for
- WITH_ARGS
+Subject: Re: [PATCH] riscv/kexec_file: Fix comment in purgatory relocator
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <174890236299.925497.5731685320676689356.git-patchwork-notify@kernel.org>
-Date: Mon, 02 Jun 2025 22:12:42 +0000
-References: <20250407180838.42877-1-andybnac@gmail.com>
-In-Reply-To: <20250407180838.42877-1-andybnac@gmail.com>
-To: Andy Chiu <andybnac@gmail.com>
-Cc: linux-riscv@lists.infradead.org, alexghiti@rivosinc.com,
- palmer@dabbelt.com, andy.chiu@sifive.com, e.shatokhin@yadro.com,
- nathan@kernel.org, bjorn@rivosinc.com, palmer@rivosinc.com,
- puranjay@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, llvm@lists.linux.dev,
- mark.rutland@arm.com, alex@ghiti.fr, nick.desaulniers+lkml@gmail.com,
- morbo@google.com, justinstitt@google.com, puranjay12@gmail.com,
- paul.walmsley@sifive.com, greentime.hu@sifive.com, nick.hu@sifive.com,
- nylon.chen@sifive.com, eric.lin@sifive.com, vicent.chen@sifive.com,
- zong.li@sifive.com, yongxuan.wang@sifive.com, samuel.holland@sifive.com,
- olivia.chu@sifive.com, c2232430@gmail.com
+ <174890236599.925497.11306329780731063365.git-patchwork-notify@kernel.org>
+Date: Mon, 02 Jun 2025 22:12:45 +0000
+References: <20250326073450.57648-2-ziyao@disroot.org>
+In-Reply-To: <20250326073450.57648-2-ziyao@disroot.org>
+To: Yao Zi <ziyao@disroot.org>
+Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+ ajones@ventanamicro.com, sunying@isrc.iscas.ac.cn, arnd@arndb.de,
+ kent.overstreet@linux.dev, lizhengyu3@huawei.com,
+ linux-kernel@vger.kernel.org
 
 Hello:
 
-This series was applied to riscv/linux.git (for-next)
+This patch was applied to riscv/linux.git (for-next)
 by Alexandre Ghiti <alexghiti@rivosinc.com>:
 
-On Tue,  8 Apr 2025 02:08:25 +0800 you wrote:
-> From: Andy Chiu <andy.chiu@sifive.com>
+On Wed, 26 Mar 2025 07:34:51 +0000 you wrote:
+> Apparently sec_base doesn't mean relocated symbol value, which seems a
+> copy-pasting error in the comment. Assigned with the address of section
+> indexed by sym->st_shndx, it should represent base address of the
+> relevant section. Let's fix the comment to avoid possible confusion.
 > 
-> Some caller-saved registers which are not defined as function arguments
-> in the ABI can still be passed as arguments when the kernel is compiled
-> with Clang. As a result, we must save and restore those registers to
-> prevent ftrace from clobbering them.
+> Fixes: 838b3e28488f ("RISC-V: Load purgatory in kexec_file")
+> Signed-off-by: Yao Zi <ziyao@disroot.org>
 > 
 > [...]
 
 Here is the summary with links:
-  - [v4,01/12] riscv: ftrace: support fastcc in Clang for WITH_ARGS
-    https://git.kernel.org/riscv/c/7cecf4f30c33
-  - [v4,02/12] riscv: ftrace factor out code defined by !WITH_ARG
-    https://git.kernel.org/riscv/c/2efa234f5e0c
-  - [v4,03/12] riscv: ftrace: align patchable functions to 4 Byte boundary
-    https://git.kernel.org/riscv/c/cced570c2c0c
-  - [v4,04/12] kernel: ftrace: export ftrace_sync_ipi
-    (no matching commit)
-  - [v4,05/12] riscv: ftrace: prepare ftrace for atomic code patching
-    (no matching commit)
-  - [v4,06/12] riscv: ftrace: do not use stop_machine to update code
-    (no matching commit)
-  - [v4,07/12] riscv: vector: Support calling schedule() for preemptible Vector
-    https://git.kernel.org/riscv/c/e2a8cbdbe932
-  - [v4,08/12] riscv: add a data fence for CMODX in the kernel mode
-    https://git.kernel.org/riscv/c/29b59e3bbb6e
-  - [v4,09/12] riscv: ftrace: support PREEMPT
-    https://git.kernel.org/riscv/c/f48ba55bb8a8
-  - [v4,10/12] riscv: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS
-    (no matching commit)
-  - [v4,11/12] riscv: ftrace: support direct call using call_ops
-    https://git.kernel.org/riscv/c/7ef9ae7457c0
-  - [v4,12/12] riscv: Documentation: add a description about dynamic ftrace
-    https://git.kernel.org/riscv/c/0e07200b2af6
+  - riscv/kexec_file: Fix comment in purgatory relocator
+    https://git.kernel.org/riscv/c/0f6edcccfbd8
 
 You are awesome, thank you!
 -- 
