@@ -1,108 +1,181 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E481117B402;
-	Mon,  2 Jun 2025 19:51:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726B813BC35;
+	Mon,  2 Jun 2025 19:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748893900; cv=none; b=sbK10P9sCf5w3RK1RY6rKXpR6HpuHBqXZn5vJmIDZsoEn9JI2ANz5IJ1snDjwS17rc0Qv2GGA8d/MxJ/h/TqUh/2AHpupdvKbYXG507U7skCgpnHgrcBjmSOnqQxrsA7+wWUCxMcVSh9YyPtAUJ3mTzjKcZy9Qbyxe382YwMGis=
+	t=1748894003; cv=none; b=O+aZWopZtTJyzA2y7lRCeKjl5G/HBj8xSvyoi8T6hdadkXvsNIc8GuRUp89TcnKrDAn2CCGh33jMbtE1X+f6ewmyeW+80Q8zn47Pppl/4xNNJyoOR06TktlVn01C9WC/X29GYvpA52ZtvUhFzSDpJYKeNlIg9lcxnBV59BB4zU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748893900; c=relaxed/simple;
-	bh=PDxgwHxZ2fv1zHkhlESn3ZqpBz71BeATIeQYdGAevYM=;
+	s=arc-20240116; t=1748894003; c=relaxed/simple;
+	bh=xxLHPiRenp4yZIphGmjEN+lPuM5g24FnW6uhTp0Vca0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t37NY2+i2ucpg8dOP0nCbTvu3USCnT/83bFXQjevj1PJ8yMLORSTiIpi/DqJWQdAfnxMJj0jfdqgVq0o0VbTGwLiIPAvKzMKwAi/y5W3jIZ5o7RHcetDIsk1n4J5LsppP06ZxWcHJclzSMYCsQ1wgTN8ZuNwT3T57hEfPKBjLvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=FxoRIPnj; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	 In-Reply-To:Content-Type; b=Z4IfcTIkev+NP5Uj1s579165/vpveJwX7X2tQwT+BiRZEN8HNO4/4zLBPgTSecCtT0klG1mYZuMDcJWG4+aSqvBWQRrd+6xuxaEXWkcOZHV0yv2amw3rI/KhLs4G0aWR7Ze9AplyEnviJVt0UkUQ2RxC2RdWcjVy2P1O8gcZVhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QCojKUWD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="FxoRIPnj"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a5123c1533so310451f8f.2;
-        Mon, 02 Jun 2025 12:51:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1748893897; x=1749498697; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FdQH+gYaWiAPPdu29kvcsCjEWq2JnvTRRl0+eDrbZLg=;
-        b=FxoRIPnjxmj5Cu8bQrYH7M0D/FetOW4RGvSeB3tV+UTNLMJrjwbo1ifa6aK3iZgEzq
-         SHUut2DySh2Ojv3Mw3zdUAI/PD7V1CcQfbsczTDlf2Tz3xnHCHimrpR27pr32m3Oh0ZX
-         cTfPZUuxnWAFXvYcERxTfjdNbIca18/0WvuJxMmFqwxD5D56aZVurMgQZNaNSGoxJ6rq
-         R53/1pD8mNlrVRdwUVmz8txnWSbe1P/haTpr++JpUFp2+OxQggziJoza0lDRAJU8micI
-         4AMDmJlsc4cvaARTTHCH+UuxVMHvL+cJyMReVpMFMNKCjZwHN0gWSUwsWVq3bYoqm4fj
-         4i/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748893897; x=1749498697;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FdQH+gYaWiAPPdu29kvcsCjEWq2JnvTRRl0+eDrbZLg=;
-        b=uoLi+42SXfUEQGeeSnpc53cCSVDxtYpZGOex6b4hnWL38wWX1cNkbuEiPUhEwOy6ba
-         YF+PZC2AhDwi3BeZsh87NQEsIMvOKtCppTwMpQwP5nyqObRXz7l6H7qAkC8wci5ZmhbE
-         WOL+SbzkTEa7ukJQikljXBOqvs77MrwFneH/oExRRDlemUjsq7movIcWsth5HwYPILyf
-         +WBTjnkPwG8FYzvH4LDHG7w3gE8s6DbuqCHB856+CNeWZP7yQNN077Eb6UWM+Xlv7v9K
-         jVglKAaR4qh+TQc7wtmqeRBYFR5Leg7PJoaqSzE0HNvIM7B4fgRneqBzFC75Euzv/wEw
-         8oWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWTpzMa20tBC//3E6LlVihSi6pSD/VGuQNWRBBeai/+sDCcX27/VCaiaYHipWyRdsMHokPyhVC9@vger.kernel.org, AJvYcCXs7T6ifBVKCHedhlqSUaCHmXr07nQSCthMYiDn4FzPDcQOXrFGCL+tTHlBXmoKVpbIv75sl2reEmCBXoE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhwlO7rJeSof6CimqpOo0oDjjeKO7y6blCO/G5JpvkpNZXSlRa
-	bg8fTpB78l4ItkeRwMpC3HQX7d5zQaepys75/XIG9aXmqQM+ia5FG64=
-X-Gm-Gg: ASbGncsDyX4O4CLTa7dfRZa76O3bP0dxWvKa7MjV6uHFnnSN7O3qPCPotQWeTUTOXhI
-	AP09qnxwKBBTBRje6tovNC46tXCnpWgWOPFPIw3C8jRYu4nxE+ZpNIMMGgP4cCVxEXJfrY9FB2R
-	F+HU5de67Dyc0sg5KxMb/yJfrknlat3tLUkuF4+CgkCc8J5AND6O1QKuAA6CIWBmZfG/x0PCKeP
-	l7QR3bG0LX4y9guDTht4FfNrZsi7sxW8LYjMCAiwodw68kDvzBm9knTcMf56Aq8nqMA+Uo2Jfv4
-	jUB80S52RZHgnJkdIJG4zx40zCwo9THzQJlynJ1AY6vm2ZFKI0xvT8HeJgimIORKqL9tUcaxLEj
-	4MVlETX/8lPzOuznJ5I5qmQue8KEd1t9dUUhgdg==
-X-Google-Smtp-Source: AGHT+IEMS/aWQ1Ihl6wDJsvQbfZi5zg23IDKIRWgu57p786dbUitQSIW7l0HnT+yNLwD9jcz02z9ZQ==
-X-Received: by 2002:a5d:5f88:0:b0:3a3:7bbc:d959 with SMTP id ffacd0b85a97d-3a4f89a89f7mr10855462f8f.18.1748893896920;
-        Mon, 02 Jun 2025 12:51:36 -0700 (PDT)
-Received: from [192.168.1.3] (p5b057d53.dip0.t-ipconnect.de. [91.5.125.83])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f00971fasm15693615f8f.77.2025.06.02.12.51.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Jun 2025 12:51:35 -0700 (PDT)
-Message-ID: <b86b9c0f-0a3f-46cd-8f09-a30ba7f2fc67@googlemail.com>
-Date: Mon, 2 Jun 2025 21:51:34 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QCojKUWD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A095C4CEEB;
+	Mon,  2 Jun 2025 19:53:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748894002;
+	bh=xxLHPiRenp4yZIphGmjEN+lPuM5g24FnW6uhTp0Vca0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QCojKUWDXjG/Sob0ga6Y/HDBW/ZeZ+5K0tXbOneqzTgPq4Nv6BmQRlaw9kwHqu1Kx
+	 FCTY1JUFGOhcW4mUcIwiRFfQtwpTU+YkLwH3EEdMxHB+GPQd7J8iZlHlM9QElfGldS
+	 q/VuC3Ijb7r28Yf4FwnBRvX/5ojes75ZSPLVlt6HIeiTDPhLMdMXzlnwyLhPV8wFEv
+	 r5cR+nRShgx9uzRT4EMasXilrfzAxAJFzbI7T8a2rc1Qo/5tZwrmzzakzjcv8On4Ps
+	 xFo/qwrQM2IF18hED6I0TvUDaBFPdq0MPvYtiJT23y4ZcqOJbuO4FRTak83wFNk748
+	 MfRDpjKpzqMnQ==
+Message-ID: <a5028d5a-cc93-4ece-bff5-16990a7de2e3@kernel.org>
+Date: Mon, 2 Jun 2025 21:53:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.15 00/49] 6.15.1-rc1 review
-Content-Language: de-DE
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250602134237.940995114@linuxfoundation.org>
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250602134237.940995114@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] dt-bindings: net: dsa: microchip: add bit-banged SMI
+ example
+To: Corentin Guillevic <corentin.guillevic@smile.fr>,
+ Woojung Huh <woojung.huh@microchip.com>, UNGLinuxDriver@microchip.com,
+ Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Marek Vasut <marex@denx.de>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250602170458.125549-1-corentin.guillevic@smile.fr>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250602170458.125549-1-corentin.guillevic@smile.fr>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Am 02.06.2025 um 15:46 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.15.1 release.
-> There are 49 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 02/06/2025 19:04, Corentin Guillevic wrote:
+> KSZ8863 can be configured using I2C, SPI or Microchip SMI. The latter is
+> similar to MDIO, but uses a different protocol. If the hardware doesn't
+> support this, SMI bit banging can help. This commit adds an device tree
+> example that uses the CONFIG_MDIO_GPIO driver for SMI bit banging.
 
-Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
-oddities or regressions found.
+So the difference is in one property? Or no difference at all...
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+> 
+> Signed-off-by: Corentin Guillevic <corentin.guillevic@smile.fr>
+> ---
+> Changes in v2:
+> - Fix dt_binding_check errors
+> 
+>  .../bindings/net/dsa/microchip,ksz.yaml       | 59 ++++++++++++++++++-
+>  1 file changed, 58 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/dsa/microchip,ksz.yaml b/Documentation/devicetree/bindings/net/dsa/microchip,ksz.yaml
+> index 62ca63e8a26f..33a067809ebe 100644
+> --- a/Documentation/devicetree/bindings/net/dsa/microchip,ksz.yaml
+> +++ b/Documentation/devicetree/bindings/net/dsa/microchip,ksz.yaml
+> @@ -241,4 +241,61 @@ examples:
+>              };
+>          };
+>      };
+> -...
+> +
+> +  # KSZ8863 with bit-banged SMI
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    // Ethernet switch connected via SMI to the host, CPU port wired to eth0:
+> +    ethernet0 {
 
 
-Beste Grüße,
-Peter Schneider
+Drop node, not really used.
 
--- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
+> +        phy-mode = "rmii";
+> +
+> +        fixed-link {
+> +            speed = <100>;
+> +            full-duplex;
+> +            pause;
+> +        };
+> +    };
+> +
+> +    mdio: mdio {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
 
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
+Order properties according to DTS coding style.
+
+> +        compatible = "microchip,mdio-smi0";
+
+Not relevant. This binding describes device, not bus.
+
+> +        gpios = <&gpioc 1 GPIO_ACTIVE_HIGH>,
+> +            <&gpioa 2 GPIO_ACTIVE_HIGH>;
+
+Messed indentation
+
+> +        status = "okay";
+
+Drop status
+
+but anyway all above is not really relevant, drop.
+
+> +
+> +        switch@0 {
+> +            compatible = "microchip,ksz8863";
+> +            reg = <0>;
+> +            reset-gpios = <&gpioa 4 GPIO_ACTIVE_LOW>;
+> +            status = "okay";
+
+Drop.
+
+After cleanup from redundant pieces there is basically no difference.
+Don't add examples which differ by compatible (or even by one property).
+
+
+
+Best regards,
+Krzysztof
