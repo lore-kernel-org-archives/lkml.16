@@ -1,111 +1,131 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C400822D7A6;
-	Mon,  2 Jun 2025 15:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B051FC0EF
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 15:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748876448; cv=none; b=MrzgMbEnHznHT4a4vrtP1oV0RiY0bVbdsqEiJ51ZtGU67QbvHZi4ls1Jg0kaUCvuibccSl3LE25cXYWIbQrE5TqRXbsG7KWmyqGyyRpaEC+It7AwHJsL1+UP6AnDMk2YYeRa8cChfGIJjk9KliIeE9E4pRGK52GT2gANwp9zq1c=
+	t=1748876462; cv=none; b=f8Hwh4NeLeg2ihx6aMbfq2eBLOdHiFCGAq5LVv7AntKirZK4+E8nnrDuO8bGRPHDoKDjRRn/7DT5TkUa7WCPGxvDSkQ1Ttoviu3Y3w44cTZzjTvxjHWPmfKHM1lv5Bx+wuO+t1lTZgFAD5rZnHNtGX5JTRJeNKXODVgnIV/0gPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748876448; c=relaxed/simple;
-	bh=TJE7d1QlO4KBY8QKjhz1Z13bvzRugIPW9bJZv5Tkl1E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Iu0Ovqkuf5t1CkdoaalO1WogWj/5oQp1CSmlgMnxPU/QZQjaMpL3GMdKpAlqMJRU92uJbnbWc+1XTmryVJJxn0GoCwt5By57vanS1dzzt3frGmfneEiw2cCpU6kD0zg2zTnm89ZuxTvbFIY57UGFHzoXDrQAqvKhEyqgqKGgiTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eAMw036N; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748876462; c=relaxed/simple;
+	bh=5dRvYuDZHJt4dxtRSL6dPD9so8Zn1bK1pE7CkV2g2Ys=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k703kaBrvteNSFPXqntgrGzY+Ao1RYN2uxjLWuLfhpC/txEP8L4H5XqwDR0gV3T3uekXCGHQ2XHFv7CXkkN6YFBkxlZoGU/Dd/jNugffxORA8Mgyg6ClSFIZrrE2Ce/5RzOzDHW3gAcaflnpGG2TfhPqLBYR8NlGEKzmVsYNcT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=hU+2bDb/; arc=none smtp.client-ip=209.85.210.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eAMw036N"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-23035b3edf1so40206185ad.3;
-        Mon, 02 Jun 2025 08:00:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="hU+2bDb/"
+Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-72c14138668so1166100a34.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 08:01:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748876446; x=1749481246; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TJE7d1QlO4KBY8QKjhz1Z13bvzRugIPW9bJZv5Tkl1E=;
-        b=eAMw036NMayOLOX0b1/f8FAqyH8q2iiPV3KmxwcQlQmMuab2c9VOzdbbhnE/h9Iq6u
-         cLsm/l11OtbkoUInPsJPNwOOyQ2zPMLRq81D25S+YKs0vWjJipadM6XpJmuQm8G7OWJ1
-         1mXmkpFsgjSoQcRBSIHcxp/lEX1WgsiMIr0YQNPug8WAHTalCOasbJI7rDHWYq80wdED
-         lydUAOr2WUPHuQ7hQuj3WR7EUeHLTX5kwrI6vbEAjCTZDSqGng3IJav5ZBwoZCMNgC2e
-         X8NxdnwlFQn/9RoFU/srATdpa2Qb459SO2xY1YUOEQ6N5ETPJ7ElDEfRnh3s+7VREtUC
-         bt/w==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748876459; x=1749481259; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BKRRslHq9l+I796/Ew8fuJsvx+yR6BWkXnH67RqDqcg=;
+        b=hU+2bDb/YufFv5TP3/Vt4IJ2p5GaGEr1PigKVuaZUr7Ib5W4nyT35HT1C0G/RcLMci
+         JGZKpXIzvxGdCcTxaCq4Ntfn89Jxhdsm41zAZTDX8Yjd4JpNPzE+J6EkOu8X9tRPl3CG
+         rH0+6mBCJESkwo0kF05vPdTj6aTWQv/Ci46Uq9EJawpcfW/Rt1h25pah94HgnmascrxH
+         SJ6tVWzRNLD8EaKxiZV9qx0mNzIlKzUskx0+mHdEZyInlPzoZI8H5FMbwsp7xIZ28JMV
+         RKdeW7IhiP5BIvV/KOIztNp15VMLAqU+zLORon3ozBQBiJpYF9o23rAlvx/Yq66URdWD
+         qYZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748876446; x=1749481246;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TJE7d1QlO4KBY8QKjhz1Z13bvzRugIPW9bJZv5Tkl1E=;
-        b=VCG6lWjtOioVUrN9KaXuap+w+pi6aGQKmk30DO+o3Nh9jyXIj5Ml8GxZ5U9OLx940K
-         48BUy+VXhEz9/Oq0+QW3KZAppsEqcvF+WDfNU8oMSTUNUKRI0qYm7GqRkjLPWj5Ij6Fz
-         Wwb3MukFlkZftuMIZypt+k85guA2CE9YFQqhlrwj0ohaSjVqA4GzR2wETU8lKKghtjq6
-         6Z4nnq1UATmnWM2zx39NDZpTiG86NqdyYj7vvXmoc9qRg+TL71Nt/OrVKLB16VcTCHpC
-         hPnbewAGub+Obt9Uca4osNSIjt69zAHhT+ya4yJ3Ae7jzm4SXi4WtvyypEaQKsU8WDJ5
-         owgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW3oZvNIcU0WB+l3LuLcVVbtE1up12ZJJuOPb9ylYO2GWB4L/JoEKf5Gf9WzrJLd1KV2rZ9mxY3GlM1@vger.kernel.org, AJvYcCXIrZk7QeYJGxfNa0Lk0Ufc1bwJvyBPTGCYsKeKEHN14znOTTRf8L8wbPF80LKX1E4s1O62YSHAHrpA@vger.kernel.org, AJvYcCXOJl88TdbKVwzqiBVDRBaVZ1IqX/sDYUZM3ghGBgLeGcEMzL78sVW1Hh77H1b1ve5CoKY2JfqYIp2ZkqWE@vger.kernel.org, AJvYcCXbDH7yRzXSCPjh108TaYCxAq+WnKxNNUFLgzJZmz5NXp7e71fYaODRkKsm90Xx3YPJ6MN+2mrU2lHZhqI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGOygeaEpZUHb4fuqNBe0BBIpUZTTagTRcIMcZ0K6HsWfh96sV
-	YIKCZ0iKmDDQUGrgAbMN1MHWOVxqioKmy/g9uUZ8WoToZMuXYub8f99emYaZ6KcQ
-X-Gm-Gg: ASbGncsXvg/Ddf1UzQx9Vgzvgf6uD/4fhxK9x3RAeGMrJs5yIn00r4NvHJKtYDRUVL/
-	RV72+pRx7n2RrBEDyBx5SBHAHvGtjU0OdyGhlXV3KsKV6/CcVnyCtAarfrUoh4uJIHyU2zBPVT2
-	ab8AoHykzDUqhO8cksfnVIJYOluAH7V2JilHKFdRiOJNBm8zr2kHehW/gp/uV3q/KBdn7CrKupT
-	VGMwyTKj60uNsbWibHfS5z0RO6fY6SvhKkXk8Oog+Yk1wIi0cMlqffP6bV/9++/DVo5Ua9+dw2G
-	30Ban8EI8Rqn+oEm7OoZftJ2kfJd1Ks1giKdlIroqsnRQY/GHlLLNO43tqQUDCHY
-X-Google-Smtp-Source: AGHT+IHpexqrF/VnpGWBxjuy4tOcCzXxSM6H9cBd3Svx6k9p1fO3U8u3WCyCIWub1yUao++AS5zgeQ==
-X-Received: by 2002:a17:902:d4cc:b0:234:ea6:c77a with SMTP id d9443c01a7336-23529a17fe4mr213356195ad.38.1748876445456;
-        Mon, 02 Jun 2025 08:00:45 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bd974asm71896755ad.97.2025.06.02.08.00.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 08:00:44 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Mon, 2 Jun 2025 08:00:43 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	"jdelvare@suse.com" <jdelvare@suse.com>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH v7 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm properties
-Message-ID: <c316130c-9b64-4510-b2a2-d2aa45ee3734@roeck-us.net>
-References: <20240722221737.3407958-1-chris.packham@alliedtelesis.co.nz>
- <20240722221737.3407958-2-chris.packham@alliedtelesis.co.nz>
- <jzxu6mcbxf5zwyirnb2jjpm2i7sln3v5mz3gyhc5xhpqexicvb@atrcjvh7wuh5>
- <bc99a27e-74ec-45a0-b77c-48f993269586@alliedtelesis.co.nz>
- <jmxmxzzfyobuheqe75lj7qcq5rlt625wddb3rlhiernunjdodu@tgxghvfef4tl>
- <4858ce06-2081-4335-af09-f118872317ea@alliedtelesis.co.nz>
+        d=1e100.net; s=20230601; t=1748876459; x=1749481259;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BKRRslHq9l+I796/Ew8fuJsvx+yR6BWkXnH67RqDqcg=;
+        b=iP3rr2dyrHj9jbn5CbTjJQeeNNXGfW1Gc/4xlcrz4G+iOOSX40vOVRXyQIi+Iwn9zx
+         tsWtCmu+5cdjmUnwcLkAWI0xghI1ei5KRqQlk0FWdFFn/1R18lJxgPUkW4vjbS2zbieW
+         ERErhNulj9WI0pdOUxsTG/LJXpcLMIkifKRIhI9EISjbyz34FpiGwHqsa/hyZmr5mhtv
+         /kyd82YblSCkb1xRMp8q0GNq9xXl7vbPTfvMGKybiYHpAivm/FVqk9yKJuEDuTJUgICp
+         9BLBElA7WYu9nDR6N8DIZy8CFoll0rOd2kEF2GbnlL1HZUCIkmd1y54FzFEBm9h68Dhw
+         nkkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUY/PpRnyxbQm8g0wEWRbBeZM79WtgKk2Sm5CCS9y/ewV15ulwOOVE3OLzOjt/j0QJblfdmC7YVj882PcM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRquD5WF+mScTrDrrb/3ZkMoA0Lp/G7uLRkmNmy6ph3OecJDeG
+	Z9842d+RbfXo2dEFINE5lr8orctoZZsfujwzZKtxW/9SOS052JjydrAlYKB0/OxvDAQ=
+X-Gm-Gg: ASbGncvsND6sv7+b+gGABCZaLGIVlcg1yY7JFi6ssGbhaPLncPCqLPLCfP0AfwSLcYs
+	KMkxPHJEg3rjeqKTajTjTIS8DzSug/fABlR7J2Fki37FLQQhZ1yLv7f1S1LVjPu29+MNcPWEZdJ
+	ItB34qDML35oS7F4t9VDTDSeN9srhBi9PreT5hqL7FXSVX9Kx+0apYG9k34VzcchuH9vfWLcVFO
+	eRK1FhHRAzv2cTF2IU7eHUvIB1vaeS2zK3L7ZpZGXg9jGyOyilcZWgoo4ZbqzPsGDBJdofq9sJL
+	jOd1JWNeCtT4b3UPHZh4HnCW/7dL1MX7AVyNjtNVizNbIokthaXYdkqCXDJKA2szXr9Dk7iCU1c
+	hlLm7is49n6kS6Jk0atdrIDTCr9bKQHkOi9NB4xI=
+X-Google-Smtp-Source: AGHT+IE+kAIBR0NheiTCHpkl4+yPXWEfW3+c5RK6WjfBdTqWkx83ge6s8Nuep+dL1P8pXQzSBEB20Q==
+X-Received: by 2002:a05:6830:6582:b0:727:36a0:a2ae with SMTP id 46e09a7af769-736ece4918emr8154398a34.14.1748876457933;
+        Mon, 02 Jun 2025 08:00:57 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:74f4:5886:86e1:3bcf? ([2600:8803:e7e4:1d00:74f4:5886:86e1:3bcf])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-735af82d086sm1555913a34.11.2025.06.02.08.00.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Jun 2025 08:00:57 -0700 (PDT)
+Message-ID: <f0c94748-7d09-41c0-9557-b37a1f6a8f7b@baylibre.com>
+Date: Mon, 2 Jun 2025 10:00:56 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4858ce06-2081-4335-af09-f118872317ea@alliedtelesis.co.nz>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iio: accel: fxls8962af: Fix use after free in
+ fxls8962af_fifo_flush
+To: Sean Nyekjaer <sean@geanix.com>, Jonathan Cameron <jic23@kernel.org>
+Cc: =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ Andy Shevchenko <andy@kernel.org>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20250524-fxlsrace-v1-1-dec506dc87ae@geanix.com>
+ <20250531175302.05b2da17@jic23-huawei>
+ <x6lmsxsz6njt22z23l3nbetlstkwn4jk5ohgtpyd23idwleeg5@szatvfu4drjj>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <x6lmsxsz6njt22z23l3nbetlstkwn4jk5ohgtpyd23idwleeg5@szatvfu4drjj>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 28, 2025 at 09:18:37PM +0000, Chris Packham wrote:
-> >> As I mentioned at the time the adt7475 is not currently pwm_chip so I
-> >> need the ad-hoc parsing in that driver. I'd be happy to take you
-> >> prototype patch for pwm/core.c and polish it although I don't really
-> >> have a good way of testing it.
-> > It's more the deviation of the default binding for PWMs that I don't
-> > like than the ad-hoc parsing. Ideally the adt7475 would provide a
-> > pwmchip (as the binding suggests) and the fan would be formalized as a
+On 6/2/25 5:50 AM, Sean Nyekjaer wrote:
+> Hi Jonathan,
+> 
+> On Sat, May 31, 2025 at 05:53:02PM +0100, Jonathan Cameron wrote:
+>> On Sat, 24 May 2025 12:34:09 +0200
+>> Sean Nyekjaer <sean@geanix.com> wrote:
+>>
+>>> fxls8962af_fifo_flush() uses indio_dev->active_scan_mask (with
+>>> iio_for_each_active_channel()) without making sure the indio_dev
+>>> stays in buffer mode.
+>>> There is a race if indio_dev exits buffer mode in the middle of the
+>>> interrupt that flushes the fifo. Fix this by calling
+>>> iio_device_claim_buffer_mode() to ensure indio_dev can't exit buffer
+>>> mode during the flush.
+>>>
+>>> Unable to handle kernel NULL pointer dereference at virtual address 00000000 when read
+>>> [...]
+>>> _find_first_bit_le from fxls8962af_fifo_flush+0x17c/0x290
+>>> fxls8962af_fifo_flush from fxls8962af_interrupt+0x80/0x178
+>>> fxls8962af_interrupt from irq_thread_fn+0x1c/0x7c
+>>> irq_thread_fn from irq_thread+0x110/0x1f4
+>>> irq_thread from kthread+0xe0/0xfc
+>>> kthread from ret_from_fork+0x14/0x2c
+>>>
+>>> Fixes: 79e3a5bdd9ef ("iio: accel: fxls8962af: add hw buffered sampling")
+>>> Cc: stable@vger.kernel.org
+>>> Signed-off-by: Sean Nyekjaer <sean@geanix.com>
+>>
+>> That's nasty and a case I'd never thought about.  Most of the
+>> races around disabling end up with an extra sample or two which then gets
+>> dropped because there are no buffers enabled.
+>>
+>> We need to consider the active scan mask as part of the buffer state.
+>> So effectively taking mlock if we enter this code will delay the state
+>> transition (and change of active_scan_mask until after this interrupt is done).
+>>
+>> If David's synchronize_irq() is enough maybe that's a lighter weight path?
+> 
+> I agree if David's proposal is sufficient, I can try it.
+> It's something we have seen once in some unrelated testing, so it's
+> quite hard to reproduce :/
+> 
+> /Sean
 
-We are not going to force each fan controller driver to register as pwm chip
-just because it provides a pwm value to control the fans - even more so since
-this gets really ugly if the chip can be programmed to either provide a voltage
-output or a pwm value to control fan speed. Maybe the next requirement is that
-fan controllers supporting voltage output to control fan speeds are supposed
-to register themselves as regulators. I really don't want to go there.
-
-Those are _not_ pwm controllers. They are special-purpose fan controllers.
-Forcing them into the pwm framework from devicetree perspective is bad enough,
-but forcing them to register as pwm controllers is a step too far.
-
-Guenter
+Maybe temporarily adding a time delay of one sample period towards the
+beginning of fxls8962af_interrupt() could make it easier to reproduce?
