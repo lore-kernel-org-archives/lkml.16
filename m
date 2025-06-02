@@ -1,143 +1,121 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE561925AB;
-	Mon,  2 Jun 2025 17:42:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A34E91925AB;
+	Mon,  2 Jun 2025 17:43:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748886144; cv=none; b=ZbTWP0d48c5OppPcK+J90vMTqDsSc0YYuST0JVFxBCXJJUypc7CXtBrU3BYMJl1+ZHz/aBViJ8WKclzlwu1sBvq0KGk25BN15SsGpTGyHICaqTj/I1l4GxiDv4dDsSK24Y/04nCQs6roBaIbNKOW6668Xij6BVCFgj30bNU4fBE=
+	t=1748886205; cv=none; b=k9Kd1WBuwiWO0QdhSYbQuttljLQbO8yvNsqoXvxpFUZNe8weUGzxauyp6vliViXsr3zroLg+e0/bHBDcs+uD8RlPCyGv+Td9abhi5Pz402ojtIzQGhI+OClbr0VLIlQprNEyzOCW8lVpkEKPNxJSjnhmDQ+NBu7FO0ZHitZ6NdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748886144; c=relaxed/simple;
-	bh=U7CAb8BnAtTJFCli7APtV6H+DEmqqsPJrtdC7ZKPIKA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JEexje9jUjcfJBkpX80H2l+JrlaMHToZeDUJE/SKF3iN4BKiZdRf8oQncqf02ItcjGy0vINbz9/RpWADWuk8PixJHly6DagfPujnagls5l57FAhZSawKcQtf+EUnNvhs2IqgzLUJbN0GtDTysdbniIezrVGcXf3oWEU/mOY+VXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NgMsJHGd; arc=none smtp.client-ip=209.85.210.173
+	s=arc-20240116; t=1748886205; c=relaxed/simple;
+	bh=fXrgd83elDEuepOQPG4IhT9vtapfZgCMADiLVFA5TL0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AodXIoT9DUCa54IEk0tbuYU/alSaj3rKQJlvzvrzBZZwv/LJfzxfOZHcNKGpeSnxyDaPnVjlK2V8qJiT5GeBKwS5UE5PmLFXnCUDkITjN38/eJlH0iOt8C7HdWrwrE9mJ0Ekrzl3sIo385UXc5NwJoNFvxyBs/wFrGneVIura2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rc2ace2q; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NgMsJHGd"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-742c73f82dfso3740339b3a.2;
-        Mon, 02 Jun 2025 10:42:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rc2ace2q"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-23035b3edf1so42364035ad.3;
+        Mon, 02 Jun 2025 10:43:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748886142; x=1749490942; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=l/N8ZuvbAgzSK+DMiDG8OUbVN0w+Ue+YmvcUiQqN7lA=;
-        b=NgMsJHGdmVb5hJce48fs/v33QjZzs1CbvyzjkSzHAKqBjEjPh/SJIZiSERPnVoUEyu
-         7I3WcKokFPpA5XrXlWUaStK49IWzvKQ3llZ+iOZAmTVg34x0jhRSXZNpFtPQWGI4g9U4
-         zxdoJ2cepIdcRjEsTmoJBCxkfQbZFCMmoL4NU17M456vFRNbTz5S8G8tY/T2JRbVFRED
-         PRXO+k1aG5oxNPmRAtTooABSaP3ksSIT+7Vp0t97uZhaoSlOEkGXjXm7z54MmRgDn94+
-         kVbgZXzJYuq0C6liNazcq2jbmGfcP8gDdhyMENKN+Q+sXJgRYihBfcznMCq5bwCXxBpJ
-         /Y9Q==
+        d=gmail.com; s=20230601; t=1748886203; x=1749491003; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IodS3ygWGQlGtxvOhMysa+jDntNIq1MDmyqZVf6SuZo=;
+        b=Rc2ace2qigXqPoJW19+Tu48x/Aqo24B8IbRmemefdh9qbJPuG6OLtZ32l2uaTW/D+p
+         qAjVHa5gaa0vjoc59JS5c8Oiz3bZExW6FSac+Zfi6JovLREFsdHwDqTCx4WQNWcrcuq0
+         fEAXvn7OQEEBfjSr0vqqVb6C08kkcmvg3Pgiv1E/IsONvIRlHhodwjTKp7NGr1icTcDG
+         hROtUAO6wPRgsJVTYhDIvn8nyq9Ybw75g2ORE9hCevMXmWhDuGKaGj7HtwmTGYWIvVUx
+         zeXeFGCdhf9z4cKAVWWmCzTspmUVLf4S6h68suLjKVE007fNHPnmfEjLMFiAeWs07n61
+         LJjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748886142; x=1749490942;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l/N8ZuvbAgzSK+DMiDG8OUbVN0w+Ue+YmvcUiQqN7lA=;
-        b=pfJrZfLfjny/kYc63RM5HZCZTu1WixaQA5IGAOZKd8XXTWcZrR0PrMA9EGwARUx40u
-         wD5UGLH3t0UY7UsFGHLnWl4ID1duLjIHGLbDDqRLyzgp7/Cj19OX9yCR+42/ZE6qdXZ5
-         yqVKHVN3INoo+XNSSQtE86iqZNSta3VhXFy1Pqfn1YVBkfTrDeGcfWsn8ImFHOptxtOt
-         bIBA8MmjHMINBOZoNHp1IG81LbBTNBs1LRQ/UF0xh4J4uZk0arNW+capuKS4iQi/uwUq
-         L5hSLXLdily+9hTOHjeUfeSBJbjTg9uHNhoX3ajV3vimUkRUSgDzM65gV5dLQupy7Lnd
-         hoqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVotZss/9ivSpkaL7QPy1ybDSLQOoFV05PBoitsluGmt/f6U8qZ8NJ13Qca1jdDgMJ3HnypuqhtH/a2o4k=@vger.kernel.org, AJvYcCWX4QA7647Biq/KCoVB1kqydZm8+gIExNGRm+vKIZTTzS5azJssiT4lcrCjqH6My/D6SMn2aEeQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoDsSzCCt4XH8AYpV4jB105TIzHMZ9G0c0cR9aKrpdbPFwuytI
-	XoIDMfYoSNIHbFZcIijG2g4vl3f4M/VkDefThR3vgdpX5gBPAQjZFLtmbxcNeGRC
-X-Gm-Gg: ASbGncuO0tegVwlhF7fAQK50/H5+yd5TfC38Vyfhw+fCcPogDlkhkohB37g8iZ8W+gg
-	UFDt+62uk1STKy6JOdpZvy4RWjYJbu4cnDlowfKrm9F20aEYUTIhyEjvqfPQwYXzZNtzLRSQljH
-	pJjguU25FvUnAEJgvcnQ8R6iFI0k0ESTuNrZ2lfkOBteOgE5OvpFBQaRadm8c3EQMkgxcgu0fHW
-	DltHIM+5sm6qH3DIFpdZ3jsMvVRlQ+NWGVjvfdqqTzagnrDdi7QxmdWr5Sg/6X4o6Q7pp+3AUaK
-	XqD+KinUIQ8v53QXfJDVvdw9lCBMtu6siobJgDw2ryeXNMC/XXyTxsWtMzKmKHaBdEhMRi8eYGv
-	zEBRy5ecH3ixtXRh1VeE/hukK
-X-Google-Smtp-Source: AGHT+IEQWDi4+hbXVMyn9KwRlZNfzc6/xaqK0KRvAu1NW5sDJHhXGRjAq2vxR+Fr0ZCfivfFEqMBpg==
-X-Received: by 2002:a05:6a00:10c8:b0:742:ae7e:7da8 with SMTP id d2e1a72fcca58-747d1831959mr13852223b3a.8.1748886142304;
-        Mon, 02 Jun 2025 10:42:22 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747affd441asm7927087b3a.153.2025.06.02.10.42.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Jun 2025 10:42:21 -0700 (PDT)
-Message-ID: <8f790a6c-bbd0-4f6d-8c13-3bce2b050fee@gmail.com>
-Date: Mon, 2 Jun 2025 10:42:19 -0700
+        d=1e100.net; s=20230601; t=1748886203; x=1749491003;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IodS3ygWGQlGtxvOhMysa+jDntNIq1MDmyqZVf6SuZo=;
+        b=B0PWcD3nZPsukhqjjXm0XaTjpNaxoXecq1cPFYtg3H+DwnadpIWlZvDs2Ho7O3ouUx
+         W9nGVpaRuU8Ek1Aeqt6Gty7+wlWGKghEEeL0N6tALmB93ZPaw6scVN1Ujg8vnI+yb3Dy
+         iY0fPb3QNBy0EyTX/19eN+FtU6DEYRN4YfnbOznne1JmRpwTEmTEcbj/ItZNQs3heWh+
+         OUiFMKW3kQPe6tqJOhODUwpvt0jU34cQyU97So+gYRuJjpesuT05lprKErpoSkZRhkyY
+         WIKTP1k1ZySE41gZXV869q8sHVm/UPQHW8ppQ34uJJNZDWhaqU/yXu2ufy1PDeczKi4w
+         Mw8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUgO+3Uzs6y18P/1cYMedfNRictIsIo91QEMw5NS55VdXMirVXf72qCNousnFp4wOjhCVw0RX81cvRjQiG6RKwP@vger.kernel.org, AJvYcCW4rte6xk1LslMXcn+bSeciR8ou55Zfw3rpbgVh3ZMd5tn3bNIUba5/t0OIy36K0Rx1GG8=@vger.kernel.org, AJvYcCWxn+BH+dlxMEz6UGb43emH6TZ0LWkDkLvn3io0NI8WZh19hhvf88er/C28chQXcnUk4rgNad4JQMrI4Gpx@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRttomRmQv0Vq8ycnUpuxwDKWwEBpATS2DGKyL8Lm0ZEc7NDej
+	t6Id4318O1B57QI7cJYQfPtxCOg6xrjwnqDyRsZAUU98GLqafIXZAhTS
+X-Gm-Gg: ASbGncuA9LiCvpz2di7Tx0G/0ZU4eKX0yqKyPpXLulzqGZeLVdYEDCKIQMqvBriQKoI
+	i0Y7USYlXC6cfacTZ+918TQGM/89Ejo8MvY4dsKXAMDF8scOORpZUcWbfLjDxOTJK0oxe9upNl+
+	1ea70VtLQ1iHyRibtlFKoWnqrKHZRMvpSXbsfdObDgOdWP1pfkXM5R7WD+qx5uBTPVKHCAiZ+1m
+	i5dudpd8ssV3iVyn3+R6/74Bqgwvfv8V4f5jLrT1KA1DLShYJ/a9hv1YU7H30jKtn9zEjgPVOgh
+	VLzcERSlfNYl08fXnpjadVlRhF7ODvKXfATQUhH+lsmxQ/QYBokZ8wl41V4ZqClCGH1LroQizEp
+	COk9hASgw
+X-Google-Smtp-Source: AGHT+IHTd3m02WIDm2HVjeZnxZ0rKLBE61LTISQj2SyrFKIfYac3HYIPLqtf4MlXZwHol0UGij+kxw==
+X-Received: by 2002:a17:902:cf0a:b0:224:26fd:82e5 with SMTP id d9443c01a7336-23529b4637emr235241435ad.48.1748886202697;
+        Mon, 02 Jun 2025 10:43:22 -0700 (PDT)
+Received: from localhost.localdomain ([205.254.163.2])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bdd034sm73590405ad.92.2025.06.02.10.43.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Jun 2025 10:43:22 -0700 (PDT)
+From: Suchit <suchitkarunakaran@gmail.com>
+To: andrii@kernel.org,
+	eddyz87@gmail.com,
+	bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	mykolal@fb.com,
+	ast@kernel.org,
+	daniel@iogearbox.net
+Cc: martin.lau@linux.dev,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	shuah@kernel.org,
+	Suchit <suchitkarunakaran@gmail.com>
+Subject: [PATCH] selftests/bpf: Validate UDP length in cls_redirect test
+Date: Mon,  2 Jun 2025 23:13:09 +0530
+Message-ID: <20250602174309.31315-1-suchitkarunakaran@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.12 00/55] 6.12.32-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250602134238.271281478@linuxfoundation.org>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- WlfRzlpjIPmdjgoicA==
-In-Reply-To: <20250602134238.271281478@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/2/25 06:47, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.12.32 release.
-> There are 55 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed, 04 Jun 2025 13:42:20 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.32-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+Add validation step to ensure that the UDP payload is
+long enough to contain the expected GUE and UNIGUE encapsulation
+headers
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+Signed-off-by: Suchit <suchitkarunakaran@gmail.com>
+---
+ tools/testing/selftests/bpf/progs/test_cls_redirect.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+diff --git a/tools/testing/selftests/bpf/progs/test_cls_redirect.c b/tools/testing/selftests/bpf/progs/test_cls_redirect.c
+index f344c6835e84..c1d2eaee2e77 100644
+--- a/tools/testing/selftests/bpf/progs/test_cls_redirect.c
++++ b/tools/testing/selftests/bpf/progs/test_cls_redirect.c
+@@ -978,7 +978,14 @@ int cls_redirect(struct __sk_buff *skb)
+ 		return TC_ACT_OK;
+ 	}
+ 
+-	/* TODO Check UDP length? */
++	uint16_t udp_len = bpf_ntohs(encap->udp.len);
++	uint16_t min_encap_len = sizeof(encap->udp) + sizeof(encap->gue) + sizeof(encap->unigue);
++
++	if (udp_len < min_encap_len) {
++		metrics->errors_total_malformed_encapsulation++;
++		return TC_ACT_SHOT;
++	}
+
+ 	if (encap->udp.dest != ENCAPSULATION_PORT) {
+ 		return TC_ACT_OK;
+ 	}
 -- 
-Florian
+2.49.0
+
