@@ -1,169 +1,386 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C41A72576;
-	Mon,  2 Jun 2025 13:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0342576;
+	Mon,  2 Jun 2025 13:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748872670; cv=none; b=fXgGVGyYC+M0j3OuZMAoUzXdxa9RU+nDh4VVhusADgkDphmsMfKlr2ugrydNxJ/tSSTSNdH2kx80ZC+mD0UYZeZ7JJDTLUqiF/QKg2UKBIFL/an9brd3Z3kr+g157WV58wvg6pD/QhX+veUIC2SzWp2toO12+9x860ca3cNp2hs=
+	t=1748872687; cv=none; b=iLZPSDZYyu9j6vTq+1B8O1N1hCgifOCgGiab91x+zLjMU2v3tU/pi3f+juzaZwvfB2OipZFgmxyO7cWrZPPrgfnQm+TmovwYPaCE7WjRYUnfBAC3OGKnk3YdEHE4ofbbU1KjBs6mQtzM/G+BY6OiBiwp/RhtDufDnxhIeFJXNNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748872670; c=relaxed/simple;
-	bh=8PwdyMlO42U6o10QF7rzabYrBPW9CnENmGdw2/V0FlU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PGPV4MgZdKLBsnprwJXj+EEJd8dXxro+WgNzkzNIoV6yP3t7TPsRFpDTQ+IBhYwqOhTFrJ29e2yGT3QBOvssX159I30lE4J5QHuvd+WAnmAbfs8ES4U+4Jm4sbv2R59k2n4j3H4yFXD0nxPSr9qgmonRtvcVvj2h7rhiv/NtGFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=NN4GR4hx; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1748872687; c=relaxed/simple;
+	bh=nMnXKUuATEpZG42axsJNs3TRyx84YhSz4x5QUxN5ErA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VCuVsAboDpuumPDNQ0kbyom0MwI/wfksXVVbN2JcoQWsp0pnizVqhWhO4U0W3wyXHCy+NTIKqBTVE9HxRCEbkAK0+tVEsHGSvkkWel71HlJnExshvJKsiOC0ZTjQZqt6WjjYrzmAiSG9l8OHDML7eyECboH5amOCwzfA7resQjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=A64e2kVP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="NN4GR4hx"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1E31CC9;
-	Mon,  2 Jun 2025 15:57:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1748872665;
-	bh=8PwdyMlO42U6o10QF7rzabYrBPW9CnENmGdw2/V0FlU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NN4GR4hxhOnjAsGyrA8EAID9V/1KB3/FMWRvsJYf5kaOyfseLoULb2SDRR4Tm4ZK2
-	 nJaGLXm8pike3fBc++Z3S8SEaUO7/XZYstFieo2zdorUt/+Wo7dvSSa4m8XmpDx6DE
-	 e0GpwFJO9FvSOcSrFzQHyKRQUKe3pF4rSG5Jee30=
-Date: Mon, 2 Jun 2025 16:57:38 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-Cc: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="A64e2kVP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09C95C4CEEB;
+	Mon,  2 Jun 2025 13:58:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1748872687;
+	bh=nMnXKUuATEpZG42axsJNs3TRyx84YhSz4x5QUxN5ErA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=A64e2kVPYU58b398EBGVdIHjXlGv1kjI+NI/qvvva/NebVunVBd4mLR4p05UFL0+D
+	 QvF0EP5E0vcJAHRAq5YqnBLe+Q4RPE87kQTUqZxG0MooMLrGM7AFq8XAIhvg8EqnyO
+	 AY96tpOHLRxB89WD/O6cv8R4ASmPr1aUwmQilcO0=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-Subject: Re: [PATCH v3 15/15] media: rcar-isp: Add full streams support
-Message-ID: <20250602135738.GD23515@pendragon.ideasonboard.com>
-References: <20250530-rcar-streams-v3-0-026655df7138@ideasonboard.com>
- <20250530-rcar-streams-v3-15-026655df7138@ideasonboard.com>
+	torvalds@linux-foundation.org,
+	akpm@linux-foundation.org,
+	linux@roeck-us.net,
+	shuah@kernel.org,
+	patches@kernelci.org,
+	lkft-triage@lists.linaro.org,
+	pavel@denx.de,
+	jonathanh@nvidia.com,
+	f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net,
+	rwarsow@gmx.de,
+	conor@kernel.org,
+	hargar@microsoft.com,
+	broonie@kernel.org
+Subject: [PATCH 6.14 00/73] 6.14.10-rc1 review
+Date: Mon,  2 Jun 2025 15:46:46 +0200
+Message-ID: <20250602134241.673490006@linuxfoundation.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250530-rcar-streams-v3-15-026655df7138@ideasonboard.com>
+User-Agent: quilt/0.68
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.14.10-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-6.14.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 6.14.10-rc1
+X-KernelTest-Deadline: 2025-06-04T13:42+00:00
+Content-Transfer-Encoding: 8bit
 
-Hi Tomi,
+This is the start of the stable review cycle for the 6.14.10 release.
+There are 73 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-Thank you for the patch.
+Responses should be made by Wed, 04 Jun 2025 13:42:20 +0000.
+Anything received after that time might be too late.
 
-On Fri, May 30, 2025 at 04:50:44PM +0300, Tomi Valkeinen wrote:
-> Add the missing pieces to enable full streams support:
-> 
-> - Add set_routing
-> - Drop the explicit uses of a single stream, and instead use the streams
->   mask.
-> 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-> ---
->  drivers/media/platform/renesas/rcar-isp/csisp.c | 41 +++++++++++++++++++++++--
->  1 file changed, 39 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/platform/renesas/rcar-isp/csisp.c b/drivers/media/platform/renesas/rcar-isp/csisp.c
-> index 887d8eb21a3a..101d69a2eba4 100644
-> --- a/drivers/media/platform/renesas/rcar-isp/csisp.c
-> +++ b/drivers/media/platform/renesas/rcar-isp/csisp.c
-> @@ -342,6 +342,7 @@ static int risp_enable_streams(struct v4l2_subdev *sd,
->  {
->  	struct rcar_isp *isp = sd_to_isp(sd);
->  	int ret = 0;
-> +	u64 sink_streams;
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.14.10-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.14.y
+and the diffstat can be found below.
 
-I'd move this before ret.
+thanks,
 
->  
->  	if (source_streams_mask != 1)
->  		return -EINVAL;
-> @@ -355,8 +356,13 @@ static int risp_enable_streams(struct v4l2_subdev *sd,
->  			return ret;
->  	}
->  
-> +	sink_streams = v4l2_subdev_state_xlate_streams(state,
-> +						       source_pad,
-> +						       RCAR_ISP_SINK,
-> +						       &source_streams_mask);
-> +
->  	ret = v4l2_subdev_enable_streams(isp->remote, isp->remote_pad,
-> -					 BIT_ULL(0));
-> +					 sink_streams);
->  	if (ret) {
->  		risp_stop(isp);
->  		return ret;
-> @@ -372,6 +378,7 @@ static int risp_disable_streams(struct v4l2_subdev *sd,
->  				u64 source_streams_mask)
->  {
->  	struct rcar_isp *isp = sd_to_isp(sd);
-> +	u64 sink_streams;
->  
->  	if (source_streams_mask != 1)
->  		return -EINVAL;
-> @@ -379,7 +386,12 @@ static int risp_disable_streams(struct v4l2_subdev *sd,
->  	if (!isp->remote)
->  		return -ENODEV;
->  
-> -	v4l2_subdev_disable_streams(isp->remote, isp->remote_pad, BIT_ULL(0));
-> +	sink_streams = v4l2_subdev_state_xlate_streams(state,
-> +						       source_pad,
-> +						       RCAR_ISP_SINK,
-> +						       &source_streams_mask);
-> +
-> +	v4l2_subdev_disable_streams(isp->remote, isp->remote_pad, sink_streams);
->  
->  	if (isp->stream_count == 1)
->  		risp_stop(isp);
-> @@ -419,12 +431,37 @@ static int risp_set_pad_format(struct v4l2_subdev *sd,
->  	return 0;
->  }
->  
-> +static int risp_set_routing(struct v4l2_subdev *sd,
-> +			    struct v4l2_subdev_state *state,
-> +			    enum v4l2_subdev_format_whence which,
-> +			    struct v4l2_subdev_krouting *routing)
-> +{
-> +	int ret;
-> +
-> +	if (routing->num_routes > V4L2_FRAME_DESC_ENTRY_MAX)
-> +		return -EINVAL;
-> +
-> +	ret = v4l2_subdev_routing_validate(sd, routing,
-> +					   V4L2_SUBDEV_ROUTING_ONLY_1_TO_1 |
-> +					   V4L2_SUBDEV_ROUTING_NO_SOURCE_MULTIPLEXING);
+greg k-h
 
-Given V4L2_SUBDEV_ROUTING_NO_SOURCE_MULTIPLEXING, shouldn't the
-num_routes check be replaced by an intrinsic hardware limit (I would
-guess 8, as that's the number of source pads) ?
+-------------
+Pseudo-Shortlog of commits:
 
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = v4l2_subdev_set_routing_with_fmt(sd, state, routing,
-> +					       &risp_default_fmt);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
->  static const struct v4l2_subdev_pad_ops risp_pad_ops = {
->  	.enable_streams = risp_enable_streams,
->  	.disable_streams = risp_disable_streams,
->  	.set_fmt = risp_set_pad_format,
->  	.get_fmt = v4l2_subdev_get_fmt,
->  	.link_validate = v4l2_subdev_link_validate_default,
-> +	.set_routing = risp_set_routing,
->  };
->  
->  static const struct v4l2_subdev_ops rcar_isp_subdev_ops = {
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 6.14.10-rc1
 
--- 
-Regards,
+Namjae Jeon <linkinjeon@kernel.org>
+    ksmbd: use list_first_entry_or_null for opinfo_get_list()
 
-Laurent Pinchart
+Nishanth Menon <nm@ti.com>
+    net: ethernet: ti: am65-cpsw: Lower random mac address error print to info
+
+Mark Pearson <mpearson-lenovo@squebb.ca>
+    platform/x86: thinkpad_acpi: Ignore battery threshold change event notification
+
+Kailang Yang <kailang@realtek.com>
+    ALSA: hda/realtek - restore auto-mute mode for Dell Chrome platform
+
+Valtteri Koskivuori <vkoskiv@gmail.com>
+    platform/x86: fujitsu-laptop: Support Lifebook S2110 hotkeys
+
+Trond Myklebust <trond.myklebust@hammerspace.com>
+    NFS: Avoid flushing data while holding directory locks in nfs_rename()
+
+Purva Yeshi <purvayeshi550@gmail.com>
+    char: tpm: tpm-buf: Add sanity check fallback in read helpers
+
+Umesh Nerlige Ramappa <umesh.nerlige.ramappa@intel.com>
+    drm/xe: Save the gt pointer in lrc and drop the tile
+
+Aradhya Bhatia <aradhya.bhatia@intel.com>
+    drm/xe/xe2hpg: Add Wa_22021007897
+
+Ilya Guterman <amfernusus@gmail.com>
+    nvme-pci: add NVME_QUIRK_NO_DEEPEST_PS quirk for SOLIDIGM P44 Pro
+
+Alan Adamson <alan.adamson@oracle.com>
+    nvme: all namespaces in a subsystem must adhere to a common atomic write size
+
+Alessandro Grassi <alessandro.grassi@mailbox.org>
+    spi: spi-sun4i: fix early activation
+
+Algea Cao <algea.cao@rock-chips.com>
+    phy: phy-rockchip-samsung-hdptx: Fix PHY PLL output 50.25MHz error
+
+Hal Feng <hal.feng@starfivetech.com>
+    phy: starfive: jh7110-usb: Fix USB 2.0 host occasional detection failure
+
+Alan Adamson <alan.adamson@oracle.com>
+    nvme: multipath: enable BLK_FEAT_ATOMIC_WRITES for multipathing
+
+Aurabindo Pillai <aurabindo.pillai@amd.com>
+    drm/amd/display: check stream id dml21 wrapper to get plane_id
+
+George Shen <george.shen@amd.com>
+    drm/amd/display: fix link_set_dpms_off multi-display MST corner case
+
+Markus Burri <markus.burri@mt.com>
+    gpio: virtuser: fix potential out-of-bound write
+
+Damien Le Moal <dlemoal@kernel.org>
+    nvmet: pci-epf: cleanup nvmet_pci_epf_raise_irq()
+
+Masahiro Yamada <masahiroy@kernel.org>
+    um: let 'make clean' properly clean underlying SUBARCH as well
+
+Sami Tolvanen <samitolvanen@google.com>
+    kbuild: Require pahole <v1.28 or >v1.29 with GENDWARFKSYMS on X86
+
+John Chau <johnchau@0atlas.com>
+    platform/x86: thinkpad_acpi: Support also NEC Lavie X1475JAS
+
+Jeff Layton <jlayton@kernel.org>
+    nfs: don't share pNFS DS connections between net namespaces
+
+Milton Barrera <miltonjosue2001@gmail.com>
+    HID: quirks: Add ADATA XPG alpha wireless mouse support
+
+Mario Limonciello <mario.limonciello@amd.com>
+    HID: amd_sfh: Avoid clearing reports for SRA sensor
+
+Purva Yeshi <purvayeshi550@gmail.com>
+    dmaengine: idxd: cdev: Fix uninitialized use of sva in idxd_cdev_open
+
+Christian Brauner <brauner@kernel.org>
+    coredump: hand a pidfd to the usermode coredump helper
+
+Christian Brauner <brauner@kernel.org>
+    coredump: fix error handling for replace_fd()
+
+Robin Murphy <robin.murphy@arm.com>
+    iommu: Handle yet another race around registration
+
+Robin Murphy <robin.murphy@arm.com>
+    perf/arm-cmn: Add CMN S3 ACPI binding
+
+Robin Murphy <robin.murphy@arm.com>
+    perf/arm-cmn: Initialise cmn->cpu earlier
+
+Robin Murphy <robin.murphy@arm.com>
+    perf/arm-cmn: Fix REQ2/SNP2 mixup
+
+Pedro Tammela <pctammela@mojatatu.com>
+    net_sched: hfsc: Address reentrant enqueue adding class to eltree twice
+
+Siddharth Vadapalli <s-vadapalli@ti.com>
+    arm64: dts: ti: k3-j784s4-j742s2-main-common: Fix length of serdes_ln_ctrl
+
+Siddharth Vadapalli <s-vadapalli@ti.com>
+    arm64: dts: ti: k3-j722s-main: Disable "serdes_wiz0" and "serdes_wiz1"
+
+Siddharth Vadapalli <s-vadapalli@ti.com>
+    arm64: dts: ti: k3-j722s-evm: Enable "serdes_wiz0" and "serdes_wiz1"
+
+Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+    arm64: dts: ti: k3-j721e-sk: Add requiried voltage supplies for IMX219
+
+Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+    arm64: dts: ti: k3-j721e-sk: Remove clock-names property from IMX219 overlay
+
+Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+    arm64: dts: ti: k3-j721e-sk: Add DT nodes for power regulators
+
+Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+    arm64: dts: ti: k3-am68-sk: Fix regulator hierarchy
+
+Judith Mendez <jm@ti.com>
+    arm64: dts: ti: k3-am65-main: Add missing taps to sdhci0
+
+Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+    arm64: dts: ti: k3-am62x: Rename I2C switch to I2C mux in OV5640 overlay
+
+Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+    arm64: dts: ti: k3-am62x: Rename I2C switch to I2C mux in IMX219 overlay
+
+Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+    arm64: dts: ti: k3-am62x: Remove clock-names property from IMX219 overlay
+
+Judith Mendez <jm@ti.com>
+    arm64: dts: ti: k3-am62p-j722s-common-main: Set eMMC clock parent to default
+
+Judith Mendez <jm@ti.com>
+    arm64: dts: ti: k3-am62a-main: Set eMMC clock parent to default
+
+Judith Mendez <jm@ti.com>
+    arm64: dts: ti: k3-am62-main: Set eMMC clock parent to default
+
+Abel Vesa <abel.vesa@linaro.org>
+    arm64: dts: qcom: x1e80100: Fix PCIe 3rd controller DBI size
+
+Stephan Gerhold <stephan.gerhold@linaro.org>
+    arm64: dts: qcom: x1e80100: Add GPU cooling
+
+Stephan Gerhold <stephan.gerhold@linaro.org>
+    arm64: dts: qcom: x1e80100: Apply consistent critical thermal shutdown
+
+Stephan Gerhold <stephan.gerhold@linaro.org>
+    arm64: dts: qcom: x1e80100: Fix video thermal zone
+
+Johan Hovold <johan+linaro@kernel.org>
+    arm64: dts: qcom: x1e80100-yoga-slim7x: mark l12b and l15b always-on
+
+Johan Hovold <johan+linaro@kernel.org>
+    arm64: dts: qcom: x1e80100-qcp: mark l12b and l15b always-on
+
+Stephan Gerhold <stephan.gerhold@linaro.org>
+    arm64: dts: qcom: x1e80100-qcp: Fix vreg_l2j_1p2 voltage
+
+Stephan Gerhold <stephan.gerhold@linaro.org>
+    arm64: dts: qcom: x1e80100-lenovo-yoga-slim7x: Fix vreg_l2j_1p2 voltage
+
+Johan Hovold <johan+linaro@kernel.org>
+    arm64: dts: qcom: x1e80100-hp-x14: mark l12b and l15b always-on
+
+Stephan Gerhold <stephan.gerhold@linaro.org>
+    arm64: dts: qcom: x1e80100-hp-omnibook-x14: Fix vreg_l2j_1p2 voltage
+
+Juerg Haefliger <juerg.haefliger@canonical.com>
+    arm64: dts: qcom: x1e80100-hp-omnibook-x14: Enable SMB2360 0 and 1
+
+Johan Hovold <johan+linaro@kernel.org>
+    arm64: dts: qcom: x1e80100-dell-xps13-9345: mark l12b and l15b always-on
+
+Stephan Gerhold <stephan.gerhold@linaro.org>
+    arm64: dts: qcom: x1e80100-asus-vivobook-s15: Fix vreg_l2j_1p2 voltage
+
+Johan Hovold <johan+linaro@kernel.org>
+    arm64: dts: qcom: x1e001de-devkit: mark l12b and l15b always-on
+
+Stephan Gerhold <stephan.gerhold@linaro.org>
+    arm64: dts: qcom: x1e001de-devkit: Fix vreg_l2j_1p2 voltage
+
+Stephan Gerhold <stephan.gerhold@linaro.org>
+    arm64: dts: qcom: sm8650: Add missing properties for cryptobam
+
+Stephan Gerhold <stephan.gerhold@linaro.org>
+    arm64: dts: qcom: sm8550: Add missing properties for cryptobam
+
+Stephan Gerhold <stephan.gerhold@linaro.org>
+    arm64: dts: qcom: sm8450: Add missing properties for cryptobam
+
+Alok Tiwari <alok.a.tiwari@oracle.com>
+    arm64: dts: qcom: sm8350: Fix typo in pil_camera_mem node
+
+Karthik Sanagavarapu <quic_kartsana@quicinc.com>
+    arm64: dts: qcom: sa8775p: Remove cdsp compute-cb@10
+
+Ling Xu <quic_lxu5@quicinc.com>
+    arm64: dts: qcom: sa8775p: Remove extra entries from the iommus property
+
+Stephan Gerhold <stephan.gerhold@linaro.org>
+    arm64: dts: qcom: sa8775p: Add missing properties for cryptobam
+
+Stephan Gerhold <stephan.gerhold@linaro.org>
+    arm64: dts: qcom: ipq9574: Add missing properties for cryptobam
+
+Lukasz Czechowski <lukasz.czechowski@thaumatec.com>
+    arm64: dts: rockchip: fix internal USB hub instability on RK3399 Puma
+
+Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
+    arm64: dts: socfpga: agilex5: fix gpio0 address
+
+Axel Forsman <axfo@kvaser.com>
+    can: kvaser_pciefd: Force IRQ edge in case of nested IRQ
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |   4 +-
+ arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi     |   4 +-
+ arch/arm64/boot/dts/qcom/ipq9574.dtsi              |   2 +
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi              | 248 ++---------------
+ arch/arm64/boot/dts/qcom/sm8350.dtsi               |   2 +-
+ arch/arm64/boot/dts/qcom/sm8450.dtsi               |   2 +
+ arch/arm64/boot/dts/qcom/sm8550.dtsi               |   2 +
+ arch/arm64/boot/dts/qcom/sm8650.dtsi               |   2 +
+ arch/arm64/boot/dts/qcom/x1e001de-devkit.dts       |   6 +-
+ .../boot/dts/qcom/x1e80100-asus-vivobook-s15.dts   |   4 +-
+ .../boot/dts/qcom/x1e80100-dell-xps13-9345.dts     |   2 +
+ .../boot/dts/qcom/x1e80100-hp-omnibook-x14.dts     |  14 +-
+ .../boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts  |   7 +-
+ arch/arm64/boot/dts/qcom/x1e80100-qcp.dts          |   6 +-
+ arch/arm64/boot/dts/qcom/x1e80100.dtsi             | 309 +++++++++++----------
+ arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi      |  40 ++-
+ arch/arm64/boot/dts/ti/k3-am62-main.dtsi           |   2 -
+ arch/arm64/boot/dts/ti/k3-am62a-main.dtsi          |   2 -
+ .../boot/dts/ti/k3-am62p-j722s-common-main.dtsi    |   2 -
+ .../arm64/boot/dts/ti/k3-am62x-sk-csi2-imx219.dtso |   3 +-
+ .../arm64/boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso |   2 +-
+ .../boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso  |   2 +-
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi           |   2 +
+ arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts   |  13 +-
+ .../boot/dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso  |  35 ++-
+ arch/arm64/boot/dts/ti/k3-j721e-sk.dts             |  31 +++
+ arch/arm64/boot/dts/ti/k3-j722s-evm.dts            |   8 +
+ arch/arm64/boot/dts/ti/k3-j722s-main.dtsi          |   4 +
+ .../boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi  |   2 +-
+ arch/um/Makefile                                   |   1 +
+ drivers/char/tpm/tpm-buf.c                         |   6 +-
+ drivers/dma/idxd/cdev.c                            |   4 +-
+ drivers/gpio/gpio-virtuser.c                       |  12 +-
+ .../dc/dml2/dml21/dml21_translation_helper.c       |  20 +-
+ drivers/gpu/drm/amd/display/dc/link/link_dpms.c    |  13 +-
+ drivers/gpu/drm/xe/regs/xe_gt_regs.h               |   1 +
+ drivers/gpu/drm/xe/xe_lrc.c                        |   4 +-
+ drivers/gpu/drm/xe/xe_lrc_types.h                  |   4 +-
+ drivers/gpu/drm/xe/xe_wa.c                         |   4 +
+ drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c      |   5 +
+ drivers/hid/hid-ids.h                              |   4 +
+ drivers/hid/hid-quirks.c                           |   2 +
+ drivers/iommu/iommu.c                              |  26 +-
+ drivers/net/can/kvaser_pciefd.c                    |  83 +++---
+ drivers/net/ethernet/ti/am65-cpsw-nuss.c           |   2 +-
+ drivers/nvme/host/core.c                           |  30 +-
+ drivers/nvme/host/multipath.c                      |   3 +-
+ drivers/nvme/host/nvme.h                           |   3 +-
+ drivers/nvme/host/pci.c                            |   2 +
+ drivers/nvme/target/pci-epf.c                      |  10 +-
+ drivers/perf/arm-cmn.c                             |  11 +-
+ drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c  |   2 +
+ drivers/phy/starfive/phy-jh7110-usb.c              |   7 +
+ drivers/platform/x86/fujitsu-laptop.c              |  33 ++-
+ drivers/platform/x86/thinkpad_acpi.c               |   7 +
+ drivers/spi/spi-sun4i.c                            |   5 +-
+ fs/coredump.c                                      |  65 ++++-
+ fs/nfs/client.c                                    |   2 +
+ fs/nfs/dir.c                                       |  15 +-
+ fs/nfs/filelayout/filelayoutdev.c                  |   6 +-
+ fs/nfs/flexfilelayout/flexfilelayoutdev.c          |   6 +-
+ fs/nfs/pnfs.h                                      |   4 +-
+ fs/nfs/pnfs_nfs.c                                  |   9 +-
+ fs/smb/server/oplock.c                             |   7 +-
+ include/linux/coredump.h                           |   1 +
+ include/linux/iommu.h                              |   2 +
+ include/linux/nfs_fs_sb.h                          |  12 +-
+ kernel/module/Kconfig                              |   5 +
+ net/sched/sch_hfsc.c                               |   9 +-
+ sound/pci/hda/patch_realtek.c                      |   5 +-
+ 70 files changed, 674 insertions(+), 540 deletions(-)
+
+
