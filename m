@@ -1,152 +1,211 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C66A6229B0D
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 18:06:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54DC228CB5
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 18:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748887572; cv=none; b=JRk0NNPJLCn12pYWO1a/oVJ48xM9/0mA6jxmUjNOY1d9S4pYVIwPH3PfQthIV/pC3DpFOHHWrEWUvFcf8NPhpzsEDnlibwkIRyHgmOGQXssOK4z0ZnRQ5OY8ezEkX4jTOZC0hYn4y0FBdsq80oAqhun8A2ttl4G3xVBOqmT0ofA=
+	t=1748887572; cv=none; b=eEXUgs8s0eRFUPw4EABI4WnuONC1OYfCYTIRkFNGRZz0WdCDVqt4O0O70f8kPMxbMTO2bY3EaCFocORcIacedUvMUP+jNOdir584vak08s1aQ3nPR/VzK58u7q9eVt+AReHcrmDoICw0EOWp48I9PqUhtD5wCT80oBLsH4PT+nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748887572; c=relaxed/simple;
-	bh=XwmDGXznqEWTw2nfNirknvPgvCboCtPXEHBULgARSC8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=m46Dgqrr6jZr7qxJMpiE3Jv7Z7nES/wqPAla5Dk7G5JT0KTPdU0AaeCT/2kRvQZ74uBI8xeVP7zm0iaJv6OPMMkpLm3/FzzFTaFRMVBVBS5SL+eVxcSMRD0LUS9ulE1ztdmBLjmJiQHQcsqDipNNLk7SROvK+/EOaYnYxVTj3AI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=WuUAPqPT; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	bh=xt14giH4H2Boj1LehC8v8p2UGvEQ5ROsW4o3kmI6NEs=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Tk0JxWB8gaJ+LR3DavUZ7fFLYWCAotKwqFKBMw31atCeBdg0O6U8QrSw6VDf9yFXVLUQaQKyel59KibVjm3vopdaeiicCGf4lm1Og4W6SZzVaYbUugaxMI3foGnoqleFSxFept7cF9hC3azuqCxOyr4Gd4BmixXaa5Mp/t3LK6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--zecheng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cDCgLPKc; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--zecheng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="WuUAPqPT"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7426c44e014so3785819b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 11:06:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cDCgLPKc"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e812d1126deso2499508276.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 11:06:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1748887570; x=1749492370; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=vWvKiH2Mm8EbNJ5RtFQE6GZhlIE3IosIvfbUm9RBQRk=;
-        b=WuUAPqPTfr/LgjUcYl/ZD51PpQuRIGYDMKvOrF88wJk6Cnz7G/WL/6VHLLid9Ck/Tw
-         e6NP8FoFKdjvtNmc1cmyaR4YN1qhjqJ9FuIjqcDPuQio/aMONP0nUjANaYyTswPdmqlo
-         RMA8LjalP/rdz7bokemTddrlLe8Bbrzw7rjwU=
+        d=google.com; s=20230601; t=1748887568; x=1749492368; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TCrDrn8l7ZQ01wUSaHvfLKKVmhd43n1nTteE9Ulczlg=;
+        b=cDCgLPKcWRFllHkTi4FeWQ5onVOJOtDwIOQ2p1O2t/DZCXOC+uzdN1VHsGLRz3aShe
+         yil294lM8LYZwb8bXiCW9xFyckN6tVwXQFnAA4pGKhkcWu1J+9XKbkvKIyWwPeglUsEg
+         aR+1ppDndrWUX93xpUe8jhxQqmRDEE7QFEFUPxn4kYdcuj1FMIcimAbeNg1beV8dY43z
+         fUWQjDM0sf3C2wEHlFxI7zOrad9zQHBdJnNUiTUVKLbKz/tkxPCztdgFXaju7sKvV6+8
+         gGeRFCccRdEnndF+QJYjt06ngNixMFcGexjVQC0wZLxpNvCjgKhKoDb1VU/tGjvyhlJc
+         OBrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748887570; x=1749492370;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vWvKiH2Mm8EbNJ5RtFQE6GZhlIE3IosIvfbUm9RBQRk=;
-        b=AdkzAOYPqIgnzRcGWrpSAowisL5wQ6Wn7REVe44adZDI4h1RSirJ1SNXdaFM4wHADL
-         L8KhQXJo0VnbRLLX5JKDjdwFXOw0ZhggXMST5N3IdOhRdoARfr/d1pAhOvAt4URpOZLa
-         K6tvQ7oFD+6nPxUL6w553VyVw+DbdygpPFYNaXgK49IUi0+EwJz90Qs0m7HmsbUt5QGJ
-         ubuPGJCURDHhehYW+RBytJ2Q888p9M4xXCHxKRyntlb56HpkV+ErRowjMIskr3EfSnlL
-         9Nq3kqtBcA2t5ENsHma8UIjlvshyQfJmR1FmeZhL6EKodg08xBD532nq4Jb9YRO5Mboe
-         of2A==
-X-Forwarded-Encrypted: i=1; AJvYcCVATnU5O2ykUOSH0OOZR14s7vGVO5y6rTEWT7isXkjlFVU8wH2Lmf3zBqbuHarAG0SnZHeFGdH9grBNPg4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0QuEJLsFXdoeqM21DSTzO8Uqef1ODnBFR92MTKjnW6zG8WLI4
-	1BPF8Dl1qSfKehdW1tuTme2a8NdtGmD4ZfHgDxTDbD20YfP/ZRidjNTRRMmml/dNLw==
-X-Gm-Gg: ASbGncvkpLUct9YcvgBBpww7I6p2NymKKsYP9J3YwUa65W2ZHTeoIxBfU8yiwtUWuUD
-	fQOAwCMNg0cvnfmdPk90w/0KE3Iyfy9qeLca0bDs/yvjgUOe2MJJ25KU/sF4tt9pCiHO9m4IP/Y
-	oPcJlIbNfpRORvCLn7yaYhqzTkiHum86OY+UUklnYeTwoJRIGg13ur/xYFr2KwYGQivWN8kAT4D
-	XGG+0Gr8P8bXfb9tKFEF0FPrrHRSlM+mtp8fJrdThAU5XPxKJZLu6zMLti45kMd45VW60MngnEZ
-	aQros5P2Ix0V9Ts91XzHpqzrDAX+zbfiQaJBUpbbf97OQqDGnSbAVk5aCVj1D+4Mrw9BPxrd2y2
-	kA5uq/ebEIXS4rek=
-X-Google-Smtp-Source: AGHT+IF4+zdbKfHJ4X+31cSpPgVaRuv+nJ8qz+s+PnOZiduTX+UreaCQFduqwwpQTiszKthZ/dcIHw==
-X-Received: by 2002:a05:6a00:a13:b0:742:a23e:2a67 with SMTP id d2e1a72fcca58-747bd9e6da6mr18299998b3a.16.1748887569926;
-        Mon, 02 Jun 2025 11:06:09 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afff7459sm7900776b3a.169.2025.06.02.11.06.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Jun 2025 11:06:09 -0700 (PDT)
-Message-ID: <5d3d04c0-d9e4-4f80-8ab3-7bedb81505b3@broadcom.com>
-Date: Mon, 2 Jun 2025 11:06:07 -0700
+        d=1e100.net; s=20230601; t=1748887568; x=1749492368;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TCrDrn8l7ZQ01wUSaHvfLKKVmhd43n1nTteE9Ulczlg=;
+        b=vgq6HFKY/FydoJyk5YMsFY2OxqpEJhA3fvaD7CWVKoSAOasXwvHmBPgJN812vo3j3E
+         Rlm5P5ZXXx8YMuXHtalY0efTfv5laeb5T5fRyfDW1VSqLNxis8RioMKaIKXupZTot08d
+         4N2fjEnzK3ABdJxHqupcDCAgsvzI0YUW4I4opfUvlO33tJh1RXq7CU2gjB5dFZg6bg16
+         MuFlguX6jWhBiiyhUdS7Lal3zRBDz3dL5O9whJYCTpO2d6IP56eJ+vK8XmZMtyThw5gr
+         85yOn7h1//7QjNo8E+xeBQy6vesL/5uBQRamXHaKQB2qPo0KX9z2xvYbPafveA+Jpy1O
+         qKNg==
+X-Forwarded-Encrypted: i=1; AJvYcCVYLuqrdj/EPg5bfvMlqYxfQM5u7A9vrCDZCJ4ydyqCDInuDeamYku8vU8naHvbRnAnnTKuIi+dy3hCAIQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyB4Nc8le7c2RNhGaKFhvjQ0nrnvGZB2euNqaN8A9vKohsmyDZJ
+	L+q6SjPR+nbGKQDTKkjgMavTmJ70FjAs/N961hPdixlYlRyGSzoGzcIpgXfEI+t96wu2LQIeHR5
+	GD3OSE4+4ZA==
+X-Google-Smtp-Source: AGHT+IHcNb6bKXDTsa0HdCWFtVoy0XH/LU/dCeX+oRa/ab36fKnnncKj2TfD6Sgznxdk3pAEH4A7mfXJlwlp
+X-Received: from ybbgr8.prod.google.com ([2002:a05:6902:6208:b0:e7d:6f4c:cf59])
+ (user=zecheng job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6902:c04:b0:e7d:a6f8:2eb2
+ with SMTP id 3f1490d57ef6-e8128c7348dmr11955643276.35.1748887568266; Mon, 02
+ Jun 2025 11:06:08 -0700 (PDT)
+Date: Mon,  2 Jun 2025 18:05:43 +0000
+In-Reply-To: <20250602180544.3626909-1-zecheng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 04/10] net: dsa: b53: fix IP_MULTICAST_CTRL on BCM5325
-To: =?UTF-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>,
- jonas.gorski@gmail.com, andrew@lunn.ch, olteanv@gmail.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, vivien.didelot@gmail.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, dgcbueu@gmail.com
-References: <20250531101308.155757-1-noltari@gmail.com>
- <20250531101308.155757-5-noltari@gmail.com>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20250531101308.155757-5-noltari@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250602180544.3626909-1-zecheng@google.com>
+X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
+Message-ID: <20250602180544.3626909-4-zecheng@google.com>
+Subject: [RFC PATCH v2 3/3] sched/fair: Reorder struct sched_entity
+From: Zecheng Li <zecheng@google.com>
+To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Xu Liu <xliuprof@google.com>, 
+	Blake Jones <blakejones@google.com>, Josh Don <joshdon@google.com>, 
+	Madadi Vineeth Reddy <vineethr@linux.ibm.com>, linux-kernel@vger.kernel.org, 
+	Zecheng Li <zecheng@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/31/25 03:13, Álvaro Fernández Rojas wrote:
-> BCM5325 doesn't implement B53_UC_FWD_EN, B53_MC_FWD_EN or B53_IPMC_FWD_EN.
-> 
-> Fixes: 53568438e381 ("net: dsa: b53: Add support for port_egress_floods callback")
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-> ---
->   drivers/net/dsa/b53/b53_common.c | 13 +++++++++----
->   drivers/net/dsa/b53/b53_regs.h   |  1 +
->   2 files changed, 10 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
-> index f314aeb81643..6b2ad82aa95f 100644
-> --- a/drivers/net/dsa/b53/b53_common.c
-> +++ b/drivers/net/dsa/b53/b53_common.c
-> @@ -367,11 +367,16 @@ static void b53_set_forwarding(struct b53_device *dev, int enable)
->   		b53_write8(dev, B53_CTRL_PAGE, B53_SWITCH_CTRL, mgmt);
->   	}
->   
-> -	/* Look at B53_UC_FWD_EN and B53_MC_FWD_EN to decide whether
-> -	 * frames should be flooded or not.
-> -	 */
->   	b53_read8(dev, B53_CTRL_PAGE, B53_IP_MULTICAST_CTRL, &mgmt);
-> -	mgmt |= B53_UC_FWD_EN | B53_MC_FWD_EN | B53_IPMC_FWD_EN;
-> +	if (is5325(dev)) {
-> +		/* Enable IP multicast address scheme. */
-> +		mgmt |= B53_IP_MCAST_25;
-> +	} else {
-> +		/* Look at B53_UC_FWD_EN and B53_MC_FWD_EN to decide whether
-> +		 * frames should be flooded or not.
-> +		 */
-> +		mgmt |= B53_UC_FWD_EN | B53_MC_FWD_EN | B53_IPMC_FWD_EN;
-> +	}
->   	b53_write8(dev, B53_CTRL_PAGE, B53_IP_MULTICAST_CTRL, mgmt);
+Groups the mostly read fields in struct sched_entity to the head of the
+struct when `CONFIG_FAIR_GROUP_SCHED` is set. The additional fields from
+`CONFIG_FAIR_GROUP_SCHED` are related to CFS cgroup scheduling and were
+placed far away from the hot fields `load`, `on_rq` and `vruntime`. They
+are moved together to the head of the struct to exploit locality.
+Although `depth` is not as hot as other fields, we keep it here to avoid
+breaking the #ifdef boundaries. Adds enforced alignment of struct
+sched_entity to ensure the cache group works as intended.
 
-I don't think B53_IPM_MULTICAST_CTRL is a valid register offset within 
-B53_CTRL_PAGE, or elsewhere for that matter, do you have a datasheet 
-that says this exists?
+Also adds a compile time check when `CONFIG_FAIR_GROUP_SCHED` is set to
+check the placement of the hot fields.
+
+Signed-off-by: Zecheng Li <zecheng@google.com>
+---
+ include/linux/sched.h | 39 +++++++++++++++++++++------------------
+ kernel/sched/core.c   | 20 ++++++++++++++++++++
+ 2 files changed, 41 insertions(+), 18 deletions(-)
+
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index f96ac1982893..b20b2d590cf6 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -567,40 +567,43 @@ struct sched_statistics {
+ } ____cacheline_aligned;
+ 
+ struct sched_entity {
++#ifdef CONFIG_FAIR_GROUP_SCHED
++	/* Group the read most hot fields in sched_entity */
++	__cacheline_group_begin(hot);
++	struct sched_entity		*parent;
++	/* rq on which this entity is (to be) queued: */
++	struct cfs_rq			*cfs_rq;
++	/* rq "owned" by this entity/group: */
++	struct cfs_rq			*my_q;
++	/* cached value of my_q->h_nr_running */
++	unsigned long			runnable_weight;
++	int				depth;
++#endif
++	unsigned char			on_rq;
++	unsigned char			sched_delayed;
++	unsigned char			rel_deadline;
++	unsigned char			custom_slice;
+ 	/* For load-balancing: */
+ 	struct load_weight		load;
++	u64				vruntime;
++#ifdef CONFIG_FAIR_GROUP_SCHED
++	__cacheline_group_end(hot);
++#endif
+ 	struct rb_node			run_node;
+ 	u64				deadline;
+ 	u64				min_vruntime;
+ 	u64				min_slice;
+ 
+ 	struct list_head		group_node;
+-	unsigned char			on_rq;
+-	unsigned char			sched_delayed;
+-	unsigned char			rel_deadline;
+-	unsigned char			custom_slice;
+-					/* hole */
+ 
+ 	u64				exec_start;
+ 	u64				sum_exec_runtime;
+ 	u64				prev_sum_exec_runtime;
+-	u64				vruntime;
+ 	s64				vlag;
+ 	u64				slice;
+ 
+ 	u64				nr_migrations;
+ 
+-#ifdef CONFIG_FAIR_GROUP_SCHED
+-	int				depth;
+-	struct sched_entity		*parent;
+-	/* rq on which this entity is (to be) queued: */
+-	struct cfs_rq			*cfs_rq;
+-	/* rq "owned" by this entity/group: */
+-	struct cfs_rq			*my_q;
+-	/* cached value of my_q->h_nr_running */
+-	unsigned long			runnable_weight;
+-#endif
+-
+ #ifdef CONFIG_SMP
+ 	/*
+ 	 * Per entity load average tracking.
+@@ -610,7 +613,7 @@ struct sched_entity {
+ 	 */
+ 	struct sched_avg		avg;
+ #endif
+-};
++} ____cacheline_aligned;
+ 
+ struct sched_rt_entity {
+ 	struct list_head		run_list;
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index ba89cd4f2fac..dcc50df9e8ca 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -8525,6 +8525,7 @@ static struct kmem_cache *task_group_cache __ro_after_init;
+ #endif
+ 
+ static void __init cfs_rq_struct_check(void);
++static void __init sched_entity_struct_check(void);
+ 
+ void __init sched_init(void)
+ {
+@@ -8543,6 +8544,7 @@ void __init sched_init(void)
+ 	BUG_ON(!sched_class_above(&ext_sched_class, &idle_sched_class));
+ #endif
+ 	cfs_rq_struct_check();
++	sched_entity_struct_check();
+ 	wait_bit_init();
+ 
+ #ifdef CONFIG_FAIR_GROUP_SCHED
+@@ -10805,3 +10807,21 @@ static void __init cfs_rq_struct_check(void)
+ #endif
+ #endif
+ }
++
++static void __init sched_entity_struct_check(void)
++{
++	/*
++	 * The compile time check is only enabled with CONFIG_FAIR_GROUP_SCHED.
++	 * We care about the placement of six hottest fields below.
++	 */
++#ifdef CONFIG_FAIR_GROUP_SCHED
++	CACHELINE_ASSERT_GROUP_MEMBER(struct sched_entity, hot, parent);
++	CACHELINE_ASSERT_GROUP_MEMBER(struct sched_entity, hot, cfs_rq);
++	CACHELINE_ASSERT_GROUP_MEMBER(struct sched_entity, hot, my_q);
++	CACHELINE_ASSERT_GROUP_MEMBER(struct sched_entity, hot,
++				      runnable_weight);
++	CACHELINE_ASSERT_GROUP_MEMBER(struct sched_entity, hot, on_rq);
++	CACHELINE_ASSERT_GROUP_MEMBER(struct sched_entity, hot, load);
++	CACHELINE_ASSERT_GROUP_MEMBER(struct sched_entity, hot, vruntime);
++#endif
++}
 -- 
-Florian
+2.49.0
+
