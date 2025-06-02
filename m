@@ -1,121 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8074D9478
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 20:04:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6382C3253;
+	Mon,  2 Jun 2025 20:08:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748894688; cv=none; b=nqJgwYKgJ7PlA/57zxQFcDXt+EQuK5gxYvKHp+Vh20fgiibygrMifdD484ch2a5qLFw4lozZ5nGtlFVQzBZstX/E6gxuYQdi3TspwHybyFWXmljLmI/aufI4ek0u2K7eQAnRilsqfsin1/AT6w3pnlmlg85R9xGtIle4P2YmhjE=
+	t=1748894908; cv=none; b=KdR/G5qIY7Rr5vDF8F1v26DGnx5RoL67opP7GBFxrDjbmbFT4j1KyYKNz+e0sMemxiM6zmb9qCPz34iLmdxzGL+9gtEIE0HUGMo4dHiVwk4DEF4UDnqT5WNn8FpsEcfyi6OVlU53jTeEMLVg3jnMFRgKEbuRtwTz7v+Wor50GiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748894688; c=relaxed/simple;
-	bh=cgJAkRwu8qrloap2W6VDtS0s3sbNEyuO5UiyJT6Yqq8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CTxkSb5IuEmqfjvDkee1TMjKCdmd4BFzmnzX185gs/qMDjBa0esXOzEUnU529EmuvPmtvXq0TElYBLSQzteXAq0QKRua10NL0QQnchTetxM3E5gnQQmskPcZ3jh3oMQDwtSOqaj+A/rgLYM3Qvz69ysm6RQw0RnqjtKQfWnBJ5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S+QBq+Kj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748894908; c=relaxed/simple;
+	bh=PIPXBBZg7C2yvQ3j8IiIoplr8n25rRMwqIvEeOI8Zyc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oSbX974ywB0gSy5o39XHSCCcYZMauPXEfJHJT4tG7mID4pbM0k+cf7vRnx7EV5NDN6u1kPului890+8kNnTKg8JtWJVNBPHCKkii/q+7tNHJPyAceYRAbmhP+4wampruWpItJToTxv6uipsLEON2zVCK/ohLW6aUnvzGjoA0hFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ma+JWcly; arc=none smtp.client-ip=209.85.128.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S+QBq+Kj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE7F6C4CEEB;
-	Mon,  2 Jun 2025 20:04:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748894687;
-	bh=cgJAkRwu8qrloap2W6VDtS0s3sbNEyuO5UiyJT6Yqq8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S+QBq+Kj1QILPp9XzV00mVfsfuQYvIqXti8G9WYHS8FTidbd6C5ddtYO15rqNiA+7
-	 KSSp074txrk9Z72n4l8wls2dDI8KU4l3T85d1B4Bqy2rSiTjiZEidMkhQupa4CpDdw
-	 O7dcNL31DYPEzsQ/28VRwQWYwlUonsUjhkIABqiHhyoA1QOZIcXex3/hO3rTxTJ9/r
-	 +WKlFT4O+Zvt1trHmFBoiA2C4CHyBTHWK4Pr23PjXltgAvivWKYdPY56gwoisrT2Sw
-	 gGuj+ZWtCnaEs5uGyPEYtuU/pp3KNMpnihl5rbz0BZhJikncNEMBrqLhMgpkmkRg/C
-	 WOwmT6+i/nTag==
-Date: Mon, 2 Jun 2025 13:04:45 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linuxfoundation.org>, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, kees@kernel.org, acarmina@redhat.com, mark.rutland@arm.com
-Subject: Re: [RFC 6/8] x86_64/bug: Implement __WARN_printf()
-Message-ID: <xnp5btu4aysccfyrcqwftvv6dx44vnwh4xx32k4nrjxy5ecoxf@rthjisd5aj5p>
-References: <20250602144201.301974933@infradead.org>
- <20250602144755.928750774@infradead.org>
- <CAHk-=whkD=pveK6X_5gtVbJ62+86oBOr9JokneYpSJyxjHFBpQ@mail.gmail.com>
- <20250602154943.GB30486@noisy.programming.kicks-ass.net>
- <CAHk-=wiYHv2duN1Aj3E5UD3zH=z6A9YpGJ1Mxj_CWL7_FRMKgw@mail.gmail.com>
- <20250602180922.GC30486@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ma+JWcly"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-70dd2d35449so37956057b3.3;
+        Mon, 02 Jun 2025 13:08:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748894905; x=1749499705; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Cprm1S+tUstmLA7CDXo1VIR+8RYNYAjuJZ/dc4j69j8=;
+        b=Ma+JWclyG08cdLwyGDj6hl6T+se2E2aZMXEOCKUU7dNgGUzl8dwaQz6y/T1r9NjlBm
+         Z9fLWO0k+kYSoqHfZxbOmXwUQ1LpDrRR8s8syuz7UmYuwP65YxjB0Kx4EppZF8jmosMy
+         Nzsb/yXQEKowUXJ+0dCRYx6An3EEnXTJt5C0D5xkQpUXwb5xPQLmmz+dYvPLqZHd9KRx
+         n8X4ANTmBTFByOWmGNh37lGgtaiaOpVkrGd52KnOwMih/4af7N5yhu88s7iH6Dp3IsAG
+         XlonIkdfi7m8Oy5DcbI3xMKvP8mhBc3xnldCgOx6Exi+PWZDLpQx9+ErLoqcfKrHJdl0
+         diCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748894905; x=1749499705;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Cprm1S+tUstmLA7CDXo1VIR+8RYNYAjuJZ/dc4j69j8=;
+        b=rkipu5mZNcGfReGkRveZjY8fs68aq9d6Mu3ZCKC2awGlePAjZlXjCH4nBsRJOuphpc
+         aMoxungisgbFFD4d2JXfo9TONTnUfUffZhpfE0ktffUaSd3ztH7PwkFUQL79VK/TZBYp
+         tLScS8SgtAgpKjF7dVS8F3XT+ziIax1S55r0kAuFA2mVBBtHwSbHJLDsqLbY1fYZe/Fl
+         771QsgOS5VTcwt06zYZBkhXBnQW+AEnhxKM4Ky2uicxb5v0ABddbEA4VUjnmRHcMJ3fm
+         4espV/82+rC8C4LciS8XjIlwV6PcnB0C5QSWTB00+MYi0eQI317rhvGETMih+JefCRNd
+         TA3g==
+X-Forwarded-Encrypted: i=1; AJvYcCUtEBA4cgu79EhURsG1fwb6rTYye3WgZqP8jTnPCLyF28yL2eY4+2Fe6/O6h6d0w34mNBlcxwlV@vger.kernel.org, AJvYcCVNpvpsTQZr+AS94C3ysurAe4B7HJ8JTv2KZGIt9QqMHJE//T+vlw/V+cYj8wr4sEhAJ9Ro7JdQaZvf2KI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXfTYs0eSVNS56vNAPTIgExW0nICcE2m4r40YQ2XdxeNZCs+ZS
+	hOcxW9+m9bPVKbYPl4dVr+0CFe82UCkcg5guJeygrFsghgeh1HnXlJyTjuCtvudePoQRGjSqsVm
+	K7ssehwf/7Q6VQAcufCScUaaKo2jkOeU3Tj30
+X-Gm-Gg: ASbGncuRUKFPdGmRk9ADcymQNvEEMwK2HjMEftDd1/QsBeyghkd9+Di9yRxuPvQLkK1
+	Acv1j1QuJnQgDIVhGnnT16fC1Zw1VRwW3m2VjXSU3Dv63QWlCTpmUPN9eOdg+Gs2XqOlaw2raKa
+	93aVIQ6B2eFPDCSFb9VNyZnLR5O9L7aTw=
+X-Google-Smtp-Source: AGHT+IGIfc/pYTINL/txMCM0UIRxqjrhrD/US0i9WnhRYDeio3LeA1O34pfBxJ0yxGNaeMkzKqhWpZ1hoxXmnUVZ4pQ=
+X-Received: by 2002:a05:690c:7082:b0:70f:6ebb:b29a with SMTP id
+ 00721157ae682-71057d1f0f1mr173561767b3.29.1748894905699; Mon, 02 Jun 2025
+ 13:08:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250602180922.GC30486@noisy.programming.kicks-ass.net>
+References: <20250531101308.155757-1-noltari@gmail.com> <20250531101308.155757-9-noltari@gmail.com>
+ <a8332eba-70c3-482a-a644-c86c13792f8b@broadcom.com>
+In-Reply-To: <a8332eba-70c3-482a-a644-c86c13792f8b@broadcom.com>
+From: Jonas Gorski <jonas.gorski@gmail.com>
+Date: Mon, 2 Jun 2025 22:08:14 +0200
+X-Gm-Features: AX0GCFviWleKw2g6aZqmuOU2dKeAi2btt5oaGRYh2N5pR0_3zrXJkv2uPErW3nQ
+Message-ID: <CAOiHx=nmuZe+aeZQrRSB6re1K0G9DzL-+w+dAs5Bkdze72Rf0w@mail.gmail.com>
+Subject: Re: [RFC PATCH 08/10] net: dsa: b53: fix unicast/multicast flooding
+ on BCM5325
+To: Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>, 
+	andrew@lunn.ch, olteanv@gmail.com, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, vivien.didelot@gmail.com, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, dgcbueu@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 02, 2025 at 08:09:22PM +0200, Peter Zijlstra wrote:
-> On Mon, Jun 02, 2025 at 09:38:09AM -0700, Linus Torvalds wrote:
-> > On Mon, 2 Jun 2025 at 08:50, Peter Zijlstra <peterz@infradead.org> wrote:
-> > >
-> > > Yes, it absolutely builds with clang. The inline asm isn't something we
-> > > don't already do elsewhere :-) *cough* extable *cough*
-> > 
-> > Eww. I hadn't looked at that (or repressed it if I did). *Shudder*.
-> > 
-> > But looking around, I don't think any of the normal code I ever look
-> > at actually *generate* that disgusting thing.
-> > 
-> > I had to search for it, and looked at the absolute horror it generates
-> > in the futex code, and honestly, if I ever have to look at that
-> > garbage, I would throw up.
-> > 
-> > And WARN_ONCE() is in stuff I *do* look at.
-> > 
-> > So no. I'm NAK'ing it just because it makes the asm look entirely unreadable.
-> > 
-> > And no, I'm not ok with only using 'objdump' and friends to look at
-> > assembly generation. I want to be able to do
-> > 
-> >    make xyz.s
-> > 
-> > and look at code generation without throwing up.
-> > 
-> > The fact that we have this disgusting thing elsewhere in places that
-> > I've not looked at does *not* excuse adding it to other places.
-> 
-> Right. So the problem is using asm macros in inline-asm. We've tried
-> adding those macros to a global asm, but IIRC that had trouble.
-> 
-> So yeah, now we do the macro definition and purge right around the
-> inline asm and then you get this horror show :-(
-> 
-> Anyway, I'll try and come up with something else.
+On Mon, Jun 2, 2025 at 8:09=E2=80=AFPM Florian Fainelli
+<florian.fainelli@broadcom.com> wrote:
+>
+> On 5/31/25 03:13, =C3=81lvaro Fern=C3=A1ndez Rojas wrote:
+> > BCM5325 doesn't implement UC_FLOOD_MASK, MC_FLOOD_MASK and IPMC_FLOOD_M=
+ASK
+> > registers.
+> > This has to be handled differently with other pages and registers.
+> >
+> > Fixes: a8b659e7ff75 ("net: dsa: act as passthrough for bridge port flag=
+s")
+> > Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+> > ---
+>
+> [snip]
+>
+> > +/*********************************************************************=
+****
+> > + * IEEE 802.1X Registers
+> > + *********************************************************************=
+****/
+> > +
+> > +/* Multicast DLF Drop Control register (16 bit) */
+> > +#define B53_IEEE_MCAST_DLF           0x94
+> > +#define B53_IEEE_MCAST_DROP_EN               BIT(11)
+> > +
+> > +/* Unicast DLF Drop Control register (16 bit) */
+> > +#define B53_IEEE_UCAST_DLF           0x96
+> > +#define B53_IEEE_UCAST_DROP_EN               BIT(11)
+>
+> Are you positive the 5325 implements all of those registers? They are
+> not documented in my databook.
 
-At least the purge could be skipped if you check a global assembler
-variable before defining the macro.
+They are in 5325E-DS14-R pages 112 - 112 (134/135)
 
-For example here was one of my experiments trying to making alternatives
-more readable:
+That being said, I don't thing we need to touch the MC/BC/DLF rate
+control registers when enabling/disabling flooding - these only limit
+how much traffic may be UC / MC  on a port, but apart from that they
+do not limit flooding. We don't limit this on other switch models
+either.
 
-  #define DEFINE_ALT_MACRO							\
-	".ifndef alt; "								\
-	".set alt, 1; "								\
-	__stringify(ALTERNATIVE_MACRO) "; "					\
-	".endif\n\n\t"								\
-
-  #define __ALTERNATIVE(oldinstr, newinstr, ft_flags, ft_flags_str)		\
-	"\n# <ALTERNATIVE>\n"							\
-	DEFINE_ALT_MACRO							\
-	"alternative \"" oldinstr "\", \""					\
-			 newinstr "\", \""					\
-			 __stringify(ft_flags) "\" /* " ft_flags_str " */"	\
-	"\n# </ALTERNATIVE>\n"
-
-which produced code like:
-
-  # <ALTERNATIVE>
-  .ifndef alt; .set alt, 1; .macro __alt_replace orig, orig_end, newinstr, ft_flags, args:vararg; .skip -(((.Lnew_end_\@ - .Lnew_\@) - (\orig_end - \orig)) > 0) * ((.Lnew_end_\@ - .Lnew_\@) - (\orig_end - \orig)), 0x90; .Lskip_end_\@: .pushsection .altinstr_replacement, "ax"; .Lnew_\@: \newinstr; .Lnew_end_\@: .popsection; .pushsection .altinstructions, "a"; .long \orig - .; .long .Lnew_\@ - .; .4byte \ft_flags; .byte .Lskip_end_\@ - \orig; .byte .Lnew_end_\@ - .Lnew_\@; .popsection; .ifnb \args; __alt_replace \orig, \orig_end, \args; .endif; .endm; .macro alternative oldinstr, args:vararg; .Lorig_\@: \oldinstr; .Lorig_end_\@: __alt_replace .Lorig_\@, .Lorig_end_\@, \args; .endm; .endif
-
-	alternative "", "stac", "( 9*32+20)" /* X86_FEATURE_SMAP */
-  # </ALTERNATIVE>
-
-which is much more readable if you ignore the horrendous first line ;-)
-
--- 
-Josh
+Regards,
+Jonas
