@@ -1,72 +1,76 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719541C36;
-	Mon,  2 Jun 2025 01:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD00D4C85;
+	Mon,  2 Jun 2025 01:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748827615; cv=none; b=Sn772XJkKKCKVei5LwbyLb3UJh37OjWtqcRRvQ5wkqlieTAK/iF0KjTFyafwCRXOYFHChA/uxyDRqWGFfyGodQW03LdIoAou94jA4uDP8ZNICn6yhmBfo/bxbc4vUpJrQUJsmpues3May3uqylfjnLrIXR0Qi91i0a81Q+aclAw=
+	t=1748827715; cv=none; b=ie3vEBV5Z1EUO+AQVzqXG1fsuUm8rZHKnYNsuvM0rMEN1zctQqqt4zEWTy7oZwq7o+8lhXYBxLYS1ZHujZNnth5rOxDbD5xd9FATV5X/a+luU+UHGlL4Xgsaqx3qp7Ray+SRMZEKNmOKra4qYEm5EaYPahTSQ7AQsYkwZixpDjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748827615; c=relaxed/simple;
-	bh=EBiBJgwoh5aEhCj5Q2ZZovHlEhxmqveBySI6f0g/iFs=;
+	s=arc-20240116; t=1748827715; c=relaxed/simple;
+	bh=GSMhuCkUTouMCO3Mw3XiI2bRPu+XGj80R3s5HZm28sk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f38BX8Jc+8yaMDBVHoH5PFSGV6Ek2N5VrFi6Mua7szeHe2PpNi6LGQu/KZl1NH1GFQEz6r1B/6SfCT0UMipT0heMblOjWI+WMuDjwo7lGDMIu4TTAZeZ8R2joqzDeIwNEPTcx+d01eOEVZL04Ixy8fxqk54xOFe3iAOhWOJSuYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KRNQctzE; arc=none smtp.client-ip=209.85.215.169
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZP3ADO/06wUamGKJvHUtZZPYTOEYDKJu5Be6etJkp0g1jQuOb82N7aVEfl6WQ98V7VHR8MCNth/KVkRixLgQ/8BkkPHL2yIloZ0JHQnPWXo9Likacd+3DW0JaoweVkKGTAeJSlRn8rbNHKmYn6TvxVXIOi4uVVD8IsjROmejMLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KvoYAsGc; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KRNQctzE"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b26f5f47ba1so2256294a12.1;
-        Sun, 01 Jun 2025 18:26:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KvoYAsGc"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-742c46611b6so4594001b3a.1;
+        Sun, 01 Jun 2025 18:28:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748827613; x=1749432413; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748827713; x=1749432513; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EBiBJgwoh5aEhCj5Q2ZZovHlEhxmqveBySI6f0g/iFs=;
-        b=KRNQctzEO2y7E1a8BgdnBRJguKKOT3avl2BrWIIALCI9BEzYFBVgXIuua37L3+EI0w
-         6HYxbXjMeif3qqSImpK1h1vFa6UgVuE9Z0QWsQQMhv+j9eSTh1zcbv58b6V1kn98hejc
-         /AeLbieXIfTOGhyXLtiExjLaFo9fUKSOd4912YfDneg5xMpXC0p7qOBfhRLP6raOH00v
-         jRTKC2d8eYVbX8lMFRp2AfNbTduyI6amQdqXr1C22ZEeGnl08K5GcvQokVUP1G/7WjFg
-         jVy4OjnHG+vX0S6jGAop8KO1dciZgXLwpE0mTGx80RQX/pkTZ0dl7GeMWHymmk7yrfcB
-         cLkA==
+        bh=rIuuG42987mfkoJzwQaJbrpT4E2UM7n24cZCLeM9y+o=;
+        b=KvoYAsGcBctqOAK3tKXVkL0j2hQ8PtKoEci9tTsRYT22ibDceppwqu9yqR9wkIXviV
+         jk1cWdVAuCby8IdhaQ3Qifi4p1bgBGaXGc3NaJuSvcBBi+AFvv52EYlzk8rlIZqMTweu
+         BM8u3DOmbiYSR/zbYlqBaLxgEzh7RM8muv0s7RgvgmPMeHvkbm5PD/YvIQrn+JXQr1NI
+         VpNYtrpjHoABGq+yq3Oes8EM5SZUnBxise6o5OsKOuoaLCBYdEUfljAp4ojdIbD7LQ+n
+         KQMkTGPdTDUPnpc8b8GNizha9kPtvoMbwvq+v2HpXc/DrnoReJFUiqwzHGSpV5W+x+F6
+         EyMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748827613; x=1749432413;
+        d=1e100.net; s=20230601; t=1748827713; x=1749432513;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EBiBJgwoh5aEhCj5Q2ZZovHlEhxmqveBySI6f0g/iFs=;
-        b=IvLeYEpGGu8kuc5Lt0OJBDkYmdvcKcK7tehoK8AYkuxwcdW5mH7lv4QS/gZNt2jwCp
-         CJvzrTreliioIOmFxYjp4E4IYQSOJCsXJs+1MzlQ7y5/NQ6DHCcMaqqtedjetrrB8Fe1
-         oYs4ONTWtseW/l7+yq6xM5J3LpysQSdu2BcJyTrF34fpn/0IG6HL8VwAdDiLqndOFC+n
-         8GMWUYdxO0olSPb6tIdrhJSDtQ5yZ6w2CyDUmQMaNgyIsAhKAWEidjFIwM0RMmL9luIw
-         IUQeyuzzpUS3fkFbVhup+3sQLOcjFZUx6mMEIJ+J/cXy4Ga3ng64l6j/xvdRHZn/TXQn
-         4i8w==
-X-Forwarded-Encrypted: i=1; AJvYcCXgTE8ztgJrCZf48GIzEKQm61R7L7FgOnReaLVeiOdjP1RCItmdMMkd+ibpzeQV29kGqcI/cxEQYNM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvKFwoBPOqbonkE3nyMKBbTqEqiSJ/usUD+7oJEprea4rD/LTo
-	51wmApnOkd9tUoQL82TrJE1X1OKbqfyUmI2ZQCNiLCmwHBqEJamw7ZK9
-X-Gm-Gg: ASbGncvAgK1eQXM+pGnvUErdBKoUELRI3cOot+AFraHpqmxa3leuvGcHFcWVdFvLEjr
-	GEZjjrsaQq3PpmfXm97r0PW4Dd5vRubD3svocXvV+5KVVMlc/BQTX1Yd6ezEw6ghnXDdLPgOnrk
-	Ji18h27nC3lsCq9xw/tTojQir4uWaMm8VILIx7vOK2aut1P8EBJYT6I6XWLrDVsdg5CrweZ3+c4
-	8MkUlwL1MquZoOo5uaTp9UH4HsUx+YQzc167s8IJEnknwa5REcgQIzet4HPVUhM925XBHdFXq/w
-	QALnqJTDIMEh6SgHW/e+Uti0CuQA7Hsk43cgxMZtqdK2fSpjjQI=
-X-Google-Smtp-Source: AGHT+IF9FortDvoInFEsktJ9EgFmUf3mWfhPOwfkPSsaYeJZgoCfbwczqIaR6w8OSSdkYoUc1YNHvg==
-X-Received: by 2002:a17:90b:4b48:b0:311:b413:f5e1 with SMTP id 98e67ed59e1d1-31250475630mr12644129a91.32.1748827612388;
-        Sun, 01 Jun 2025 18:26:52 -0700 (PDT)
+        bh=rIuuG42987mfkoJzwQaJbrpT4E2UM7n24cZCLeM9y+o=;
+        b=sAsteQkjXRA1RM+R04lCtlsAgseXud9Q9nDombrBMOcBVViUoEVTxXziufOoF6169D
+         ru5b8zeqgR9wUi6n0zIj4wLHRHHmOuT3Fb6UJjn6IgzYvIY3fVp5AhF1JRFz0QgG26LV
+         CDvRB0gw0tSqDRwnv5GSGSHjOC/R+E7x6CZLuJ91FdJJxryM7IQVlkj44js5ePubtQtB
+         0KB1r+Aym8dxu955Hz+5PPbw/tQEmiHi2fm8jMzptD0lSo298Hy9IXYZkTBvgxJ4vTjB
+         W4NLSz9aoPAspo/Abo8CF2rtNKeyGu1HE8ElyguD3/RqLdguZ4ovrvyxNlOYCubbot2a
+         k8xA==
+X-Forwarded-Encrypted: i=1; AJvYcCUDH8E/qdY31zF/mKHCKZmG9tBZavyEPdijCPGUMP5kQ9n801weHrNBgnoqsAvjqf1hiuixoW0hLkCqlf7u@vger.kernel.org, AJvYcCXXNANDuF5UUgXoqcnGevk6IhC4UDk8FquvQouPkKmcVbsBc4aYVJNVEVnFmNltG9xoWS2yX55PZm4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwojarkoZ12ZJh9TZFUn9XhhqG3IZuG/amlVaaT7INqeo2bPziM
+	ZGQwlQs3deGhVDEp1pNLEr55xmwLy0e1gM3alebBrjWvRQH1dMll3KbP
+X-Gm-Gg: ASbGncuFiVG9dongOERwaQ4ASZU7saoCqSFLu3KCiVukA41FekGlP9lP4Pa4Dh99Ydr
+	rO6ONT1p/2DrF9CRaZU03bv3oEr0QmDU87PdYqVFwi4Qv9ORJKGS4r0Gbb0mzZpuz5wsBEvSwi1
+	du2SE9rIgtj8nG0E0y3sAQUUL3v15vw7DGFysYte45M1pPe3Ttnwzi/WOPdTMoLJkGOK4d107Bv
+	/xDsrdBDm7eG+d3c+kEcMVlZSv2NQbcAxrGVRycGMDXenqb3Gzzd5OA0IVVEFzIR0ozi9yn+ICa
+	mzOdpn0b7S/yIdOsRgSwzmTW3Pb8BxzL8CEFkxErfSdEyqTGVvw5LhxWvfQXnw==
+X-Google-Smtp-Source: AGHT+IEBKCmgKDbpBseOlmrgXxmiDooBrj9LseBav0q71CMCKp7QIsKPUb/WVhWv1cwtRXM5cn0jGw==
+X-Received: by 2002:a05:6a00:809:b0:736:3be3:3d76 with SMTP id d2e1a72fcca58-747c1c2f569mr12167910b3a.17.1748827712939;
+        Sun, 01 Jun 2025 18:28:32 -0700 (PDT)
 Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506d16e04sm60112715ad.212.2025.06.01.18.26.51
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747affafab3sm6468548b3a.88.2025.06.01.18.28.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Jun 2025 18:26:51 -0700 (PDT)
+        Sun, 01 Jun 2025 18:28:31 -0700 (PDT)
 Received: by archie.me (Postfix, from userid 1000)
-	id AA6694209E8C; Mon, 02 Jun 2025 08:26:49 +0700 (WIB)
-Date: Mon, 2 Jun 2025 08:26:49 +0700
+	id 590B24209E8C; Mon, 02 Jun 2025 08:28:30 +0700 (WIB)
+Date: Mon, 2 Jun 2025 08:28:30 +0700
 From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Randy Dunlap <rdunlap@infradead.org>,
-	William Raezer <wraezer@gmail.com>, linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, corbet@lwn.net
-Subject: Re: [PATCH] Documentation: Add a source tree map overview
-Message-ID: <aDz92QNc3ZSVkdx3@archie.me>
-References: <CAKg96b=n1pZi4FUBqe+puUJo9ndRfU8npvo9w6fE6Enshe73Hg@mail.gmail.com>
- <f882f6d9-c914-48af-97b7-0aad6d995819@infradead.org>
+To: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] drm: add overview diagram for drm stack
+Message-ID: <aDz-Pq4eMAYmzqsJ@archie.me>
+References: <20250601-drm-doc-updates-v4-1-e7c46821e009@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,88 +78,95 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="HsbckGZv56aBrvQU"
+	protocol="application/pgp-signature"; boundary="0m9bGV+m6U5l6pls"
 Content-Disposition: inline
-In-Reply-To: <f882f6d9-c914-48af-97b7-0aad6d995819@infradead.org>
+In-Reply-To: <20250601-drm-doc-updates-v4-1-e7c46821e009@gmail.com>
 
 
---HsbckGZv56aBrvQU
+--0m9bGV+m6U5l6pls
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jun 01, 2025 at 09:50:14AM -0700, Randy Dunlap wrote:
-> Hi,
+On Sun, Jun 01, 2025 at 06:18:47PM -0400, Abdulrasaq Lawani wrote:
+> Add an overview diagram of Linux DRM architecture for
+> graphics and compute to introduction.rst
 >=20
-> On 6/1/25 9:22 AM, William Raezer wrote:
-> > Hello,
-> >=20
+> Signed-off-by: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>
+> ---
+> <snipped>...
+> diff --git a/Documentation/gpu/introduction.rst b/Documentation/gpu/intro=
+duction.rst
+> index 3cd0c8860b949408ed570d3f9384edd5f03df002..a8d3f953a470180b395ec52a4=
+5d0f3f4561424e0 100644
+> --- a/Documentation/gpu/introduction.rst
+> +++ b/Documentation/gpu/introduction.rst
+> @@ -14,7 +14,45 @@ including the TTM memory manager, output configuration=
+ and mode setting,
+>  and the new vblank internals, in addition to all the regular features
+>  found in current kernels.
+> =20
+> -[Insert diagram of typical DRM stack here]
+> +Overview of the Linux DRM Architecture
+> +--------------------------------------
+> +::
+> +
+> +        +-----------------------------+
+> +        |     User-space Apps         |
+> +        | (Games, Browsers, ML, etc.) |
+> +        +-----------------------------+
+> +                      |
+> +                      v
+> +        +---------------------------------------+
+> +        |    Graphics APIs   |   Compute APIs   |
+> +        |  (OpenGL, Vulkan)  |  (OpenCL, CUDA)  |
+> +        +---------------------------------------+
+> +                |                   |
+> +                v                   v
+> +        +---------------------+  +-----------------------+
+> +        |  User-space Driver  |  |    Compute Runtime    |
+> +        |  (Mesa, AMD/NVIDIA) |  |  (OpenCL, CUDA, ROCm) |
+> +        +---------------------+  +-----------------------+
+> +                |                   |
+> +                +--------+----------+
+> +                         |
+> +                         v
+> +                +-----------------------+
+> +                |   libdrm (DRM API)    |
+> +                +-----------------------+
+> +                          |
+> +                          v
+> +        +-------------------------------------------+
+> +        |     Kernel DRM/KMS Driver (i915, amdgpu,  |
+> +        |     nouveau, etc.)                        |
+> +        +-------------------------------------------+
+> +                |                       |
+> +                v                       v
+> +        +----------------+     +-------------------+
+> +        | GPU Display HW |     | GPU Compute Units |
+> +        +----------------+     +-------------------+
+> +
+> =20
+>  Style Guidelines
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 >=20
-> Please wrap email lines at around 72-75 characters each.
->=20
-> > My name is William Raezer, and this is my first contribution to the Lin=
-ux kernel. I'm submitting a simple but hopefully helpful addition: a high-l=
-evel map of the Linux kernel source tree as a new document in `Documentatio=
-n/source-map.rst`.
->=20
-> This looks somewhat useful, although I was expecting more of a graphic pr=
-esentation
-> of the tree structure. But that would cause trouble with the role of each=
- subdirectory.
-> (and one can always use `tree` for that)
 
-I was expecting tree output either.
+The patch LGTM, thanks!
 
->=20
-> > As someone beginning to explore the internals of the Linux kernel, I no=
-ticed that while there is some documentation available that describes the s=
-ubsystems in principle, there's no centralized overview of the source tree =
-structure itself. This patch adds a basic source map that describes the rol=
-e of each top-level directory in the kernel source.
-> >=20
-> > The goal is to assist both myself and others in navigating the codebase=
-, especially new contributors who may be overwhelmed by the kernel's size a=
-nd complexity. As a follow-up, I plan to add subsystem-level maps for key d=
-irectories such as `kernel/`, `mm/`, and `fs/`.
-> >=20
-> > I hope this addition is seen as a positive and useful step, and I=E2=80=
-=99m open to feedback or suggestions to improve it.
->=20
-> Patches should generally be inline as email text, not as attachments.
-> This is up to the maintainer to decide about...
-> and gmail is not good as maintaining whitespace in emails.
-> (I don't see any whitespace problems in the current patch.)
-
-tl;dr: see Documentation/process/submitting-patches.rst.
-
->=20
-> I get a warning when building with this patch applied:
->=20
-> Documentation/source-map.rst: WARNING: document isn't included in any toc=
-tree [toc.not_included]
-
-make htmldocs.
-
->=20
-> Also, when I look at source-map.html with a web browser, no parts of
-> the source-map are shown. (tested with multiple browsers)
-
-Do you mean toctree in the sidebar?
-
-Thanks.
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 
 --=20
 An old man doll... just what I always wanted! - Clara
 
---HsbckGZv56aBrvQU
+--0m9bGV+m6U5l6pls
 Content-Type: application/pgp-signature; name=signature.asc
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaDz91QAKCRD2uYlJVVFO
-o6QJAQDu6id3peVcQpn83sfrnKiJFxhk0QiCvPAl63MVEcxFfwD/XDGE4geIxTPM
-y6EeFCOVRhogItRuAurs4qj7cHXa3wA=
-=5o5+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaDz+PgAKCRD2uYlJVVFO
+o9tLAP0Sow5tlzIKu7aF+0vKKkRtHELvknXuFL5ejOAt+TAvmQEAiYUMmJTAcXAz
+YTpp61irGM5dwEpWDqxDhJ0J+PspnAE=
+=L4Sj
 -----END PGP SIGNATURE-----
 
---HsbckGZv56aBrvQU--
+--0m9bGV+m6U5l6pls--
