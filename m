@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C912C3249
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 17:21:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437C22C3249
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 17:23:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748884916; cv=none; b=JP2rQVHpiM2rduiqr5qrJ9i+0dNxS1gtFaPtj7ZK1cArRTEFkYb8BSfSlZ29CKtdzN1nO6vu5PuhyX2EKoWheKjdq1qsMq6OrI2YjW2tr7VuBSb7qDLtdvd0jhzy6/6u2xoK83l/R3edeAlJ6J+PBxwMG9PzArhnixEWcpUTY6I=
+	t=1748884983; cv=none; b=PoONwKqu0uJb2BuWhq/PoI7ZSQ2XdwdFbWpILIfzCpAPWwvXoCq7x0AlKojxPT5lbcyT5oobAYd6uSB+sv4WP9dpplvObCz3lzHkjvItYKQjVesEBLzRm4p6XOtoGOpvMjhFqbNX/PnwkPwkmT4KagQtaqGJg/9hnC6IQ4Q0Hkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748884916; c=relaxed/simple;
-	bh=9tXx1xInSJT5S33e1ZeTzhjTTZPWrc5D5oGD7EMI2DY=;
+	s=arc-20240116; t=1748884983; c=relaxed/simple;
+	bh=KpqzGHG6TiaSFGst9WnBGR9v5OnQA8PQV/O8NmD3rH4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bqS9wN+wkTuSIgMiAVweZCo4UO8/854sUzw1fB95N48mLXakVy1IDMtjALNS8SANxMSfK4tbUtDBGm/vxXriGNT185Fv3iM8l7I6jj82vcm7+giPvwsmDvTvb0Kh4a8PU1h7+MUvzmlz89CXL9IitEnOtKL8oe4FyIIBdiM40R8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AcMlwjzF; arc=none smtp.client-ip=198.175.65.11
+	 In-Reply-To:Content-Type; b=N2VF8JcFkNmVL3C06C9/AZ4w9u/9gaSmgHS+ScONjwtyak8iWb3KArCE0NCoWfThoDhgClPlWLU5bnYMJ/Rbvhwk5Xm/uvW7KP/wb85CyYUDs74svuPQ1y/buedANknrPHBJEyffgaotsTRz6eF8X9OeB1rUBV3XbYUNcYi/vOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xy/9owt2; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AcMlwjzF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xy/9owt2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748884915; x=1780420915;
+  t=1748884982; x=1780420982;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=9tXx1xInSJT5S33e1ZeTzhjTTZPWrc5D5oGD7EMI2DY=;
-  b=AcMlwjzFGt7g6F5cmQ7XbKnaxHHzaBDFH3QZFzT64WTE0unWivawkr1z
-   u8IN2sVdqSetM1jBFvYH/d767HHsBwQGVwYLUfjyrQ5FwRJxbJt3l5DxA
-   L8B2jeDps2wNS/xNgCwj9BOFSCL4n7Loy+kGAJ+SbJYep1EwbVKdviKUC
-   /FvAns02Q7P13KguOCcHyn/UnX0HVBSuS03hEtYL5PJ+w7DhcnyflCehG
-   inZEYh9tBtNu0XfmdWv8ZWdggTQlAYQiTXbjbz903yXyiVngtf8GylmWb
-   tNrd/kTPW1hCfrD+X5qa+0FiE2mkll/c4cqekVYuzD2FT603QNMlW5nC4
-   Q==;
-X-CSE-ConnectionGUID: Ya5cdJ7EQiCFl6kZKdtzaA==
-X-CSE-MsgGUID: xZ25lbyTScq/hrodaSEHUg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="61159174"
+  bh=KpqzGHG6TiaSFGst9WnBGR9v5OnQA8PQV/O8NmD3rH4=;
+  b=Xy/9owt2gUAqKVpnez+P5yowCXRyK4+MRD+O0HcSo1ndeDylegrA71X8
+   UZOEqwEkYuC03J5sniG+BokMIfGaXa9D3SSlRms+KdFptLl3+ccY1zn++
+   jsalksebE2s2dzRyVpsBb8Du1gZYy/nYlMRBLX5woHlvVRpVSI7AoNmdD
+   YhebHnOdWc/b0NpEiv03/pDXQhA4zSdC0BjKhpQ34+TCaXow5iARoedz6
+   2sIaFN1wiaMVEdYdQn/KecsBm8iLEZyjQrkGgq31QyZSuCqpCNNZ1sZfa
+   gofJkA7cnrwbjL2EISiymr/vyrXGILt1m8wb/gly5UzYLOUBsk9MEB9z3
+   g==;
+X-CSE-ConnectionGUID: kvLPm2Q7Q5ahD/pyhPADQg==
+X-CSE-MsgGUID: EdoqG/SAR0OCrUtJ5nvTyQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="61159280"
 X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
-   d="scan'208";a="61159174"
+   d="scan'208";a="61159280"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 10:21:54 -0700
-X-CSE-ConnectionGUID: NJsB5JoTTBezPLPPQqZ1Hg==
-X-CSE-MsgGUID: TddNN9kpQz+y3W0TYn8jqg==
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 10:23:00 -0700
+X-CSE-ConnectionGUID: cqge3KGNS2yEN8ch7DWg9A==
+X-CSE-MsgGUID: QhGBqwHhSim6dINJly0dAA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
-   d="scan'208";a="149433831"
+   d="scan'208";a="149433969"
 Received: from lstrano-mobl6.amr.corp.intel.com (HELO [10.125.110.163]) ([10.125.110.163])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 10:21:54 -0700
-Message-ID: <3ab0fc2b-646e-4413-a485-cb9373f8b9d5@intel.com>
-Date: Mon, 2 Jun 2025 10:21:53 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 10:23:00 -0700
+Message-ID: <a799a880-debc-4805-abc8-7756d21e5262@intel.com>
+Date: Mon, 2 Jun 2025 10:22:59 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,13 +52,13 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] x86/mm: Fix early boot use of INVPLGB
+Subject: Re: [PATCH 3/3] x86/mm: Change cpa_flush() to call
+ flush_kernel_range() directly
 To: Rik van Riel <riel@surriel.com>, linux-kernel@vger.kernel.org
 Cc: kernel-team@meta.com, dave.hansen@linux.intel.com, luto@kernel.org,
- peterz@infradead.org, bp@alien8.de, x86@kernel.org, yu-cheng.yu@intel.com,
- stable@kernel.org
+ peterz@infradead.org, bp@alien8.de, x86@kernel.org, yu-cheng.yu@intel.com
 References: <20250602133402.3385163-1-riel@surriel.com>
- <20250602133402.3385163-3-riel@surriel.com>
+ <20250602133402.3385163-4-riel@surriel.com>
 From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
 Autocrypt: addr=dave.hansen@intel.com; keydata=
@@ -104,44 +104,24 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <20250602133402.3385163-3-riel@surriel.com>
+In-Reply-To: <20250602133402.3385163-4-riel@surriel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 6/2/25 06:30, Rik van Riel wrote:
-> Use of the INVLPGB instruction is done based off the X86_FEATURE_INVLPGB
-> CPU feature, which is provided directly by the hardware.
+> From: Yu-cheng Yu <yu-cheng.yu@intel.com>
 > 
-> If invlpgb_kernel_range_flush is called before the kernel has read
-> the value of invlpgb_count_max from the hardware, the normally
-> bounded loop can become an infinite loop if invlpgb_count_max is
-> initialized to zero.
+> The function cpa_flush() calls __flush_tlb_one_kernel() and
+> flush_tlb_all().
 > 
-> Fix that issue by initializing invlpgb_count_max to 1.
+> Replacing that with a call to flush_tlb_kernel_range() allows
+> cpa_flush() to make use of INVLPGB or RAR without any additional
+> changes.
 > 
-> This way INVPLGB at early boot time will be a little bit slower
-> than normal (with initialized invplgb_count_max), and not an
-> instant hang at bootup time.
+> Initialize invlpgb_count_max to 1, since flush_tlb_kernel_range()
+> can now be called before invlpgb_count_max has been initialized
+> to the value read from CPUID.
 
-The INVLPGB instruction has limits on how many invalidations it can
-perform at once. That limit is enumerated in CPUID, read by the kernel,
-and stored in 'invlpgb_count_max'. Ranged invalidation (like
-invlpgb_kernel_range_flush()) break up their invalidations so that they
-do not exceed the limit.
-
-However, early boot code currently attempts to do ranged invalidations
-before populating 'invlpgb_count_max'. There's a for() loop which is
-basically:
-
-	for (...; addr < end; addr += invlpgb_count_max*PAGE_SIZE)
-
-It doesn't make much progress when invlpgb_count_max==0.
-
-... then the rest
-
----
-
-BTW, how was this code even _working_ without this patch? Are the early
-boot ranged invalidations infrequent or something?
+Looks good, thanks for picking this out of the RAR series:
 
 Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
