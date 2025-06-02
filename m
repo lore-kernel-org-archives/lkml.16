@@ -1,280 +1,265 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721A314901B
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 13:33:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE9531DF268;
+	Mon,  2 Jun 2025 13:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748871217; cv=none; b=GiMpc7tLRnzM2LDz4wcVrerRJquNfeVCjkSNiE43QhPFp4SSiLBi8GRmMSQZmL1CByvw4IP5UwRWYGydJxhiQAgbdrgiDKcKd04F6VXXRw2LcKGADZuH3PyYZGbfAoeY6qaPyS3M9D49aZosFEIRnXty4T6w8q6dsAAikPgipHk=
+	t=1748871244; cv=none; b=fhPrUpO3wRgxvG2aVAiIA9OkWlVYLqXlc7iWDY1Dy9uNoCyB6FAQzUX5+pd9rQkP4pASii7xF5wgqJTOg/qGrKX25a3pTI8x6vhVoEkYFO+d2dlqGvZCEdOKUDOqWTJOna3ZySZ0L1B3eCXn357RUT3lyi7lIoxwAmuL1V+LwwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748871217; c=relaxed/simple;
-	bh=KYCRxiQL70L4+2PWY0E6du2ZC74eLxX3dPGCO9GJb/4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h3YdLvcsQT7xEJ9edCfDnriarzrHsXxGLYZaOibavmha4EPUfJEvABclB3N77AK0zFfHkmhTXUO5RowLxaP2d/yRTwhm/rakJQOQ1nhCS22b/fhB9uGfXn5mBxWIhWuWtOBFSp5A16GBixkmUqWt3WVa9FT4dcaaZb84HttcowY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dwuCmyDz; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1748871244; c=relaxed/simple;
+	bh=iZvHDfvfAD+yKJVYln/PMQ78EgZJYPP9rx+IC7Zkrww=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fvyyw2jQHkeuAOKaFI8FI4Zz+rUcP1NJ/qlPcr6kXRHldNI8Larzjgf9FiTftMQZq+3ZxD+z0bGlx5ILI6xiw6jPFbUhq1/TYopN1jPo98WnRllPiVDWzbDYnbmWkKsb+qk1j0OOlRWE3LuvHJo1BWBPqferBD61OLRo1N+z7n8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QTbx93gx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dwuCmyDz"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-551fe46934eso5078500e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 06:33:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1748871213; x=1749476013; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=LKecjCGbso1LbBogQRI837OEfYyXk7pBW0fhUFW97Z0=;
-        b=dwuCmyDzuY3wczeEpiOcqfMPKb86UpFHV1TU5bKB65w+89+uwjuj39+cd85/kxRg6g
-         P4VyDm+78FqzaMwY+DR85yvwFRwgHtstiQpbGcLA/Kyqm5GeWrzmAmi2M+yVYm7GB4/5
-         hBM6lC03ASmy7ViGqO7FfvEC90sx1cYnYFZPM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748871213; x=1749476013;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LKecjCGbso1LbBogQRI837OEfYyXk7pBW0fhUFW97Z0=;
-        b=mf4yUN8qZT+OqzZwj3G2eKF2XLsOGsuhpqvtGUgJhQYdC0VkdmE3q/2z73YcFnbi0e
-         wqK0x6Xl06UQQELqgWJ/HSzmoKHz4FNA2tef5IqRXE67nVPlmPkhUpmjdv2IYx3vTd3t
-         X136X3XH06rVrHOSUVhpCUn9TMmFwnQXhS/w8Ft2xZELYG2cWsyJxFCKEARQyNnMEiQZ
-         2Wr3tPA7TkEpB/ldFS2RjmfBzq3cbR456JbBTJKElfjqxTpabb3T0tqlq2fP0mYOx4GD
-         YVQ0M0Y5a1wERaMlCR9NJh4LB1u4p88EtbWqb3RyHUxN8d17VFG3zlGru7rVKuXbaglm
-         A5Ow==
-X-Forwarded-Encrypted: i=1; AJvYcCW04lTnyVOLxr+E0+z3z40eOh6/0llfyv0vZV94bhFL+9FYfoEivmBkmIG0+P0ztFdabKL/38Tlqs9c88A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxW8K99E2fD5p1a7vojnB+wTJMwK/LjORzQPlUi4w/K36s/Oziu
-	xqsnbklL93+UjDcToqOCfBRKkbMP1BRACnN2NDihQzQSn535mc6w6d3LJdQcsuLAbh8e5JTGhId
-	kr94=
-X-Gm-Gg: ASbGnctbW34tWKboInMvXRdrG41Hm3HQB71NonybTRx6ZSB3bLk0e+OyzJ0KpDy8aNI
-	vbmA1AcUO99WojExfit7KPQzroHxAH6GDwk56xwS54DCtc4PO/gssW/akX/j3h+u7ICuwzVlH0B
-	T5HxUdxzcjGMIBtdX/64+xUl5rDprr7qt1vOs6c6Wt0Ytuu++kiGntG6p8uAoZAo10XCPMRjbAC
-	VX/GYhytw9mdvUy+X5pfg68WQb4otg3whs7I005bVO5ipJjqP/2C872FNKfUjxqQYWZEHOTZbwm
-	sZbihYMQiDFQ5cukFQMxxyer9aF967Qx3MSoFYhDcWDNWOcwjXAwm4Yryi+YsZ1WW6hjehB4RI9
-	QWkyVVvkpomtNqZS7szL1zW8k
-X-Google-Smtp-Source: AGHT+IFbyhWmcg5VloW+sBq3jmuduKhi1yABU8gXWMH87l57dZjYGn0JswEU/vwTS1WgscbYOd+fDA==
-X-Received: by 2002:a05:6512:1048:b0:553:2411:b4fc with SMTP id 2adb3069b0e04-5533ba478f5mr3988792e87.10.1748871213161;
-        Mon, 02 Jun 2025 06:33:33 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553402b5d44sm980922e87.144.2025.06.02.06.33.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Jun 2025 06:33:32 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-55324587a53so6150095e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 06:33:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVYBOBdDSATY9F/n+6NNlUj7MroneQVp9cwbFUgLapAyMee2UAqPDaqp5IBb811ppLTPcOGZtJFgvRo4eE=@vger.kernel.org
-X-Received: by 2002:a05:6512:31d4:b0:551:ecf4:2cd8 with SMTP id
- 2adb3069b0e04-55335b4524dmr5202823e87.23.1748871211916; Mon, 02 Jun 2025
- 06:33:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QTbx93gx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55687C4CEEB;
+	Mon,  2 Jun 2025 13:33:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748871244;
+	bh=iZvHDfvfAD+yKJVYln/PMQ78EgZJYPP9rx+IC7Zkrww=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QTbx93gxASCTQGU/HsrECc9MgbYuQnPnkPi9dGbSj3E/zI7TsrZ/bSobLj01apVd3
+	 neH4I2bnm/DjWxXvd2jVsat7zqaER8ao745HV7rSSKgnTidL3E+N4U+jGLVUAGJdG6
+	 h9dZZjGZ5rg7U5/tFSYGGkrAHiRPwDNVtLbbxf2O0yCM3UunRjsAn2SDDw+2aMr68w
+	 i0ed19vNdyMrcm8TsOArOiOUzRARLJv/eCiKLuOknn6iS/R5ch3p3Ucr2y8pBTAael
+	 fEJngYe6nK/bNEEQWmMnCfocsnVvLnrls2t4Q/MUDGg2D6dOgq/Knd+hp4x+hdI0Nx
+	 uj6P+WeFhSUhQ==
+Date: Mon, 2 Jun 2025 15:33:56 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	Shirish Baskaran <sbaskaran@nvidia.com>
+Subject: Re: [PATCH v4 16/20] nova-core: Add support for VBIOS ucode
+ extraction for boot
+Message-ID: <aD2oROKpaU8Bmyj-@pollux>
+References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
+ <20250521-nova-frts-v4-16-05dfd4f39479@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250602-uvc-fop-v2-0-508a293eae81@chromium.org>
- <20250602-uvc-fop-v2-3-508a293eae81@chromium.org> <dba66347-7b6c-49b5-8d31-166845efd1a0@jjverkuil.nl>
-In-Reply-To: <dba66347-7b6c-49b5-8d31-166845efd1a0@jjverkuil.nl>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Mon, 2 Jun 2025 15:33:18 +0200
-X-Gmail-Original-Message-ID: <CANiDSCttXAu0bJHG7L=Y4Y0LqfRQa=Y-wC8PKr1Pv7Hwpq6Txg@mail.gmail.com>
-X-Gm-Features: AX0GCFugWcSvqTWPR3e5MqLoEg2ncrSKg_eltqcjsGw5OBv6lBxhcg923Rgn4hI
-Message-ID: <CANiDSCttXAu0bJHG7L=Y4Y0LqfRQa=Y-wC8PKr1Pv7Hwpq6Txg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] media: uvcvideo: Remove stream->is_streaming field
-To: Hans Verkuil <hans@jjverkuil.nl>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans de Goede <hdegoede@redhat.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250521-nova-frts-v4-16-05dfd4f39479@nvidia.com>
 
-Hi Hans
+On Wed, May 21, 2025 at 03:45:11PM +0900, Alexandre Courbot wrote:
+> +impl Vbios {
 
-On Mon, 2 Jun 2025 at 15:23, Hans Verkuil <hans@jjverkuil.nl> wrote:
->
-> On 02/06/2025 14:59, Ricardo Ribalda wrote:
-> > The is_streaming field is used by modular PM to know if the device is
-> > currently streaming or not.
-> >
-> > With the transition to vb2 and fop helpers, we can use vb2 functions for
-> > the same functionality. The great benefit is that vb2 already takes
-> > track of the streaming state for us.
-> >
-> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> > ---
-> >  drivers/media/usb/uvc/uvc_queue.c | 11 ++++++++-
-> >  drivers/media/usb/uvc/uvc_v4l2.c  | 51 ++-------------------------------------
-> >  drivers/media/usb/uvc/uvcvideo.h  |  1 -
-> >  3 files changed, 12 insertions(+), 51 deletions(-)
-> >
-> > diff --git a/drivers/media/usb/uvc/uvc_queue.c b/drivers/media/usb/uvc/uvc_queue.c
-> > index 72c5494dee9f46ff61072e7d293bfaddda40e615..dff93bec204428b8aebc09332e0322fa68823fa4 100644
-> > --- a/drivers/media/usb/uvc/uvc_queue.c
-> > +++ b/drivers/media/usb/uvc/uvc_queue.c
-> > @@ -165,12 +165,18 @@ static int uvc_start_streaming(struct vb2_queue *vq, unsigned int count)
-> >
-> >       lockdep_assert_irqs_enabled();
-> >
-> > +     ret = uvc_pm_get(stream->dev);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> >       queue->buf_used = 0;
-> >
-> >       ret = uvc_video_start_streaming(stream);
->
-> I'm not sure this is correct. See comments below.
->
-> >       if (ret == 0)
-> >               return 0;
-> >
-> > +     uvc_pm_put(stream->dev);
-> > +
-> >       spin_lock_irq(&queue->irqlock);
-> >       uvc_queue_return_buffers(queue, UVC_BUF_STATE_QUEUED);
-> >       spin_unlock_irq(&queue->irqlock);
-> > @@ -181,11 +187,14 @@ static int uvc_start_streaming(struct vb2_queue *vq, unsigned int count)
-> >  static void uvc_stop_streaming(struct vb2_queue *vq)
-> >  {
-> >       struct uvc_video_queue *queue = vb2_get_drv_priv(vq);
-> > +     struct uvc_streaming *stream = uvc_queue_to_stream(queue);
-> >
-> >       lockdep_assert_irqs_enabled();
-> >
-> > -     if (vq->type != V4L2_BUF_TYPE_META_CAPTURE)
-> > +     if (vq->type != V4L2_BUF_TYPE_META_CAPTURE) {
-> > +             uvc_pm_put(stream->dev);
->
-> This doesn't look right, for both video and metadata uvc_pm_get is called,
-> but only for video is put called.
+<snip>
 
-Please take a look at
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/media/usb/uvc/uvc_queue.c#n195
+> +    pub(crate) fn fwsec_header(&self, pdev: &device::Device) -> Result<&FalconUCodeDescV3> {
+> +        self.fwsec_image.fwsec_header(pdev)
+> +    }
+> +
+> +    pub(crate) fn fwsec_ucode(&self, pdev: &device::Device) -> Result<&[u8]> {
+> +        self.fwsec_image.fwsec_ucode(pdev, self.fwsec_header(pdev)?)
+> +    }
+> +
+> +    pub(crate) fn fwsec_sigs(&self, pdev: &device::Device) -> Result<&[u8]> {
+> +        self.fwsec_image.fwsec_sigs(pdev, self.fwsec_header(pdev)?)
+> +    }
 
-start_streaming is not called for metadata nodes, only for video nodes.
+Can't we just implement Deref here? Why do we need this indirection?
 
+> +impl PcirStruct {
+> +    fn new(pdev: &pci::Device, data: &[u8]) -> Result<Self> {
+> +        if data.len() < core::mem::size_of::<PcirStruct>() {
+> +            dev_err!(pdev.as_ref(), "Not enough data for PcirStruct\n");
+> +            return Err(EINVAL);
+> +        }
+> +
+> +        let mut signature = [0u8; 4];
+> +        signature.copy_from_slice(&data[0..4]);
+> +
+> +        // Signature should be "PCIR" (0x52494350) or "NPDS" (0x5344504e)
+> +        if &signature != b"PCIR" && &signature != b"NPDS" {
+> +            dev_err!(
+> +                pdev.as_ref(),
+> +                "Invalid signature for PcirStruct: {:?}\n",
+> +                signature
+> +            );
+> +            return Err(EINVAL);
+> +        }
+> +
+> +        let mut class_code = [0u8; 3];
+> +        class_code.copy_from_slice(&data[13..16]);
+> +
+> +        Ok(PcirStruct {
+> +            signature,
+> +            vendor_id: u16::from_le_bytes([data[4], data[5]]),
+> +            device_id: u16::from_le_bytes([data[6], data[7]]),
+> +            device_list_ptr: u16::from_le_bytes([data[8], data[9]]),
+> +            pci_data_struct_len: u16::from_le_bytes([data[10], data[11]]),
+> +            pci_data_struct_rev: data[12],
+> +            class_code,
+> +            image_len: u16::from_le_bytes([data[16], data[17]]),
+> +            vendor_rom_rev: u16::from_le_bytes([data[18], data[19]]),
+> +            code_type: data[20],
+> +            last_image: data[21],
+> +            max_runtime_image_len: u16::from_le_bytes([data[22], data[23]]),
+> +        })
+> +    }
+> +
+> +    /// Check if this is the last image in the ROM
+> +    fn is_last(&self) -> bool {
+> +        self.last_image & LAST_IMAGE_BIT_MASK != 0
+> +    }
+> +
+> +    /// Calculate image size in bytes
+> +    fn image_size_bytes(&self) -> Result<usize> {
+> +        if self.image_len > 0 {
 
+Please make this check when creating the structure...
 
->
-> >               uvc_video_stop_streaming(uvc_queue_to_stream(queue));
->
-> And this is odd too.
->
-> > +     }
->
-> My assumption is that uvc_video_start_streaming and uvc_video_stop_streaming
-> are valid for both video and meta: i.e. the first time you start streaming
-> (either video or meta) you call uvc_video_start_streaming. If you were already
-> streaming for e.g. video, then start streaming metadata (or vice versa), then
-> you don't need to do anything in start_streaming.
->
-> Same for stop_streaming: only if both video and metadata stopped streaming
-> is uvc_video_stop_streaming called.
->
-> Please correct me if I am wrong.
->
-> In any case, if I am right, then you have to rework this code accordingly.
->
-> Regardless, you need to test various sequences of streaming video and metadata
-> in different orders and make sure this is handled correctly.
+> +            // Image size is in 512-byte blocks
 
-I have tried streaming and getting frames. After some seconds the
-device turns off as expected.
+...and make this a type invariant.
 
->
-> Regards,
->
->         Hans
->
-> >
-> >       spin_lock_irq(&queue->irqlock);
-> >       uvc_queue_return_buffers(queue, UVC_BUF_STATE_ERROR);
-> > diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-> > index 7a5ecbefa32c0a6b74c85d7f77a25b433598471e..d4bee0d4334b764c0cf02363b573b55fb44eb228 100644
-> > --- a/drivers/media/usb/uvc/uvc_v4l2.c
-> > +++ b/drivers/media/usb/uvc/uvc_v4l2.c
-> > @@ -617,9 +617,6 @@ static int uvc_v4l2_release(struct file *file)
-> >
-> >       uvc_ctrl_cleanup_fh(handle);
-> >
-> > -     if (handle->is_streaming)
-> > -             uvc_pm_put(stream->dev);
-> > -
-> >       /* Release the file handle. */
-> >       vb2_fop_release(file);
-> >       file->private_data = NULL;
-> > @@ -677,50 +674,6 @@ static int uvc_ioctl_try_fmt(struct file *file, void *fh,
-> >       return uvc_v4l2_try_format(stream, fmt, &probe, NULL, NULL);
-> >  }
-> >
-> > -static int uvc_ioctl_streamon(struct file *file, void *fh,
-> > -                           enum v4l2_buf_type type)
-> > -{
-> > -     struct uvc_fh *handle = fh;
-> > -     struct uvc_streaming *stream = handle->stream;
-> > -     int ret;
-> > -
-> > -     if (handle->is_streaming)
-> > -             return 0;
-> > -
-> > -     ret = uvc_pm_get(stream->dev);
-> > -     if (ret)
-> > -             return ret;
-> > -
-> > -     ret = vb2_ioctl_streamon(file, fh, type);
-> > -     if (ret) {
-> > -             uvc_pm_put(stream->dev);
-> > -             return ret;
-> > -     }
-> > -
-> > -     handle->is_streaming = true;
-> > -
-> > -     return 0;
-> > -}
-> > -
-> > -static int uvc_ioctl_streamoff(struct file *file, void *fh,
-> > -                            enum v4l2_buf_type type)
-> > -{
-> > -     struct uvc_fh *handle = fh;
-> > -     struct uvc_streaming *stream = handle->stream;
-> > -     int ret;
-> > -
-> > -     ret = vb2_ioctl_streamoff(file, fh, type);
-> > -     if (ret)
-> > -             return ret;
-> > -
-> > -     if (handle->is_streaming) {
-> > -             handle->is_streaming = false;
-> > -             uvc_pm_put(stream->dev);
-> > -     }
-> > -
-> > -     return 0;
-> > -}
-> > -
-> >  static int uvc_ioctl_enum_input(struct file *file, void *fh,
-> >                               struct v4l2_input *input)
-> >  {
-> > @@ -1323,8 +1276,8 @@ const struct v4l2_ioctl_ops uvc_ioctl_ops = {
-> >       .vidioc_expbuf = vb2_ioctl_expbuf,
-> >       .vidioc_dqbuf = vb2_ioctl_dqbuf,
-> >       .vidioc_create_bufs = vb2_ioctl_create_bufs,
-> > -     .vidioc_streamon = uvc_ioctl_streamon,
-> > -     .vidioc_streamoff = uvc_ioctl_streamoff,
-> > +     .vidioc_streamon = vb2_ioctl_streamon,
-> > +     .vidioc_streamoff = vb2_ioctl_streamoff,
-> >       .vidioc_enum_input = uvc_ioctl_enum_input,
-> >       .vidioc_g_input = uvc_ioctl_g_input,
-> >       .vidioc_s_input = uvc_ioctl_s_input,
-> > diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-> > index 3ddbf065a2cbae40ee48cb06f84ca8f0052990c4..f895f690f7cdc1af942d5f3a5f10e9dd1c956a35 100644
-> > --- a/drivers/media/usb/uvc/uvcvideo.h
-> > +++ b/drivers/media/usb/uvc/uvcvideo.h
-> > @@ -626,7 +626,6 @@ struct uvc_fh {
-> >       struct uvc_video_chain *chain;
-> >       struct uvc_streaming *stream;
-> >       unsigned int pending_async_ctrls;
-> > -     bool is_streaming;
-> >  };
-> >
-> >  /* ------------------------------------------------------------------------
-> >
->
+> +            Ok(self.image_len as usize * 512)
 
+It should also be a type invariant that this does not overflow.
 
--- 
-Ricardo Ribalda
+The same applies to NpdeStruct.
+
+> +        } else {
+> +            Err(EINVAL)
+> +        }
+> +    }
+> +}
+
+<snip>
+
+> +    /// Try to find NPDE in the data, the NPDE is right after the PCIR.
+> +    fn find_in_data(
+> +        pdev: &pci::Device,
+> +        data: &[u8],
+> +        rom_header: &PciRomHeader,
+> +        pcir: &PcirStruct,
+> +    ) -> Option<Self> {
+> +        // Calculate the offset where NPDE might be located
+> +        // NPDE should be right after the PCIR structure, aligned to 16 bytes
+> +        let pcir_offset = rom_header.pci_data_struct_offset as usize;
+> +        let npde_start = (pcir_offset + pcir.pci_data_struct_len as usize + 0x0F) & !0x0F;
+
+What's this magic offset and mask?
+
+> +
+> +        // Check if we have enough data
+> +        if npde_start + 11 > data.len() {
+
+'+ 11'?
+
+> +            dev_err!(pdev.as_ref(), "Not enough data for NPDE\n");
+
+BiosImageBase declares this as "NVIDIA PCI Data Extension (optional)". If it's
+really optional, why is this an error?
+
+> +            return None;
+> +        }
+> +
+> +        // Try to create NPDE from the data
+> +        NpdeStruct::new(pdev, &data[npde_start..])
+> +            .inspect_err(|e| {
+> +                dev_err!(pdev.as_ref(), "Error creating NpdeStruct: {:?}\n", e);
+> +            })
+> +            .ok()
+
+So, this returns None if it's a real error. This indicates that the return type
+should just be Result<Option<Self>>.
+
+> +struct FwSecBiosPartial {
+
+Since this structure follows the builder pattern, can we please call it
+FwSecBiosBuilder?
+
+> +    base: BiosImageBase,
+> +    // FWSEC-specific fields
+> +    // These are temporary fields that are used during the construction of
+> +    // the FwSecBiosPartial. Once FwSecBiosPartial is constructed, the
+> +    // falcon_ucode_offset will be copied into a new FwSecBiosImage.
+> +
+> +    // The offset of the Falcon data from the start of Fwsec image
+> +    falcon_data_offset: Option<usize>,
+> +    // The PmuLookupTable starts at the offset of the falcon data pointer
+> +    pmu_lookup_table: Option<PmuLookupTable>,
+> +    // The offset of the Falcon ucode
+> +    falcon_ucode_offset: Option<usize>,
+> +}
+> +
+> +struct FwSecBiosImage {
+> +    base: BiosImageBase,
+> +    // The offset of the Falcon ucode
+> +    falcon_ucode_offset: usize,
+> +}
+> +
+> +// Convert from BiosImageBase to BiosImage
+> +impl TryFrom<BiosImageBase> for BiosImage {
+
+Why is this a TryFrom impl, instead of a regular constructor, i.e.
+BiosImage::new()?
+
+I don't think this is a canonical conversion.
+
+> +    type Error = Error;
+> +
+> +    fn try_from(base: BiosImageBase) -> Result<Self> {
+> +        match base.pcir.code_type {
+> +            0x00 => Ok(BiosImage::PciAt(base.try_into()?)),
+> +            0x03 => Ok(BiosImage::Efi(EfiBiosImage { base })),
+> +            0x70 => Ok(BiosImage::Nbsi(NbsiBiosImage { base })),
+> +            0xE0 => Ok(BiosImage::FwSecPartial(FwSecBiosPartial {
+> +                base,
+> +                falcon_data_offset: None,
+> +                pmu_lookup_table: None,
+> +                falcon_ucode_offset: None,
+> +            })),
+> +            _ => Err(EINVAL),
+> +        }
+> +    }
+> +}
+
+<snip>
+
+> +impl TryFrom<BiosImageBase> for PciAtBiosImage {
+
+Same here.
+
+> +    type Error = Error;
+> +
+> +    fn try_from(base: BiosImageBase) -> Result<Self> {
+> +        let data_slice = &base.data;
+> +        let (bit_header, bit_offset) = PciAtBiosImage::find_bit_header(data_slice)?;
+> +
+> +        Ok(PciAtBiosImage {
+> +            base,
+> +            bit_header,
+> +            bit_offset,
+> +        })
+> +    }
+> +}
+
+<snip>
+
+> +impl FwSecBiosImage {
+> +    fn new(pdev: &pci::Device, data: FwSecBiosPartial) -> Result<Self> {
+
+Please add a method FwSecBiosBuilder::build() that returns an instance of
+FwSecBiosImage instead.
