@@ -1,173 +1,92 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B8C2147E7;
-	Mon,  2 Jun 2025 15:28:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E48664A1E;
+	Mon,  2 Jun 2025 15:33:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748878136; cv=none; b=s14DYwiIBNJPIj6KT/6ImYN2JAR/PbeG9kh2EqPGNcQQbtx15R/swehjlgXwXdMcKZKw9rJZWUGw9OFmFUtN9ng/LrDxXbuRcLkIbDR8BjY/HTqdAoVgwrMCh+vZ0s5fQLFLVGg9hZBabI4ciqTMnIUqMmIZeTL7+UtuHIiv2No=
+	t=1748878403; cv=none; b=EEwTBDiZFGs00T+LNLeHBUFFCYtRyy5XX0P3ldA6voDA9dT5QOfAcT0+eweOO6jOXASNU5Cbm8A7QMj6A6ZPvQCb9eEAo9bhxabMN/LN0y41tpImOmVWsp7QfoNpRbEBrxZ6FRDskJSP0plmw1GqEMAfVr1REZxHsAxNavk9C/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748878136; c=relaxed/simple;
-	bh=q7taHoVa4l9CtYy0iL1W3iWM2TGP0kNDiwb+YddXSU0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=awYOcAW6OsaQvHRx8CbfRTIyBE4hcC6sAc8MO3lnhJtlH6NjLCt+uphEgk2ESd64z7j+dVuX0SiU+2EpXyeKMYD0lvB03DZEtBZ8MpFfAuEwm6rkrIHkqGYPBtgF+3MtOTa9rRfIM3tQWEAmiaKGbKQUoj9zzmQNe59BpteAhDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AWcnciwd; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748878403; c=relaxed/simple;
+	bh=re4PGiECHNFx9WXp4WOS/YuuBDf5tAzxxZHGBPAurCU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=JVRC/i1XbePwVyoYijjL44YIcX1QO3UuBJt6o2f8YdeJqcUOzhw0auWb+t4wVe13dg4GeF2MBzwU5QXi/LI/APIqVWwYFZPF66EiwmNbzrkawu6dtMPLXtx5rmqNm9od2WRz7uQqbuRWTQGH6srf8VekFxWwbFLD9kgExUA6yro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=hgSdaRNf reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AWcnciwd"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2320d06b728so39129595ad.1;
-        Mon, 02 Jun 2025 08:28:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748878133; x=1749482933; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TyhX9NbOq4eJXC2EVLcgaYIkPqpwZjDZzsRo8RbCXJA=;
-        b=AWcnciwddubNgC2JBeddQS5ngjpT085uVCweVx/u+igFGbz/7p7DEVqy/lK5Hn/rQH
-         iXd9gI5Y1f9nlGd8ozYr7do9gVtYXATHu1P82onTd0T8NY6Ev30qTblRJQ+tB8LESmNg
-         693UbcWVx52Sj/ufDkw0v6ljrNePAxnTiJ7r0Q7o8RJ8IkO3SmKZ7ZwY2Ja2Ga+nJmZz
-         UsgdGWvqBFtYkWuNGp6r2cPsee/8iUkOSQtCwBVari/yx0C2y3wfKAri1m6/lvt/Mq4n
-         DCBSPRGe3adlRvzufJB25e3aPZYS0JvZRXZURq1w/H/AArShdMAzAuQ25eiQ/nhQaAlj
-         Xh4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748878133; x=1749482933;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TyhX9NbOq4eJXC2EVLcgaYIkPqpwZjDZzsRo8RbCXJA=;
-        b=eMNnVMOCKNjSIc94/aazBy0RI902LV/J72Aw3Gv5DNDmruvlKH4COQ3RMp4G6maA0m
-         Ko3FEZjNPUSij3UhyYkAGd+umiMyRgLxzptlLcbeDoA+HPIXyY1LGMXhwXPeqLwCWDx4
-         Ifj0k420tCLwD7l1Im9sNLFr7hkB7mbK/MEZVqn9u+Jp4LgpBP1YCjmaIle6RN3Eg3Mf
-         4aXUNwNV3yak/hHnMH+tJImDm8OUd8QidZz3q9JW1A/qmmXTk08SExRLh7RBgE2/PwF/
-         e6J4yfzyMNVwKCHYzGrEB/DnDdNhCrq+k0SNpIwbXSe8UxBgzihsHz4rBxpgn7YWjriY
-         YhxA==
-X-Forwarded-Encrypted: i=1; AJvYcCXx6L2WZbKmCzm3aZK8MS0ou3KRdJeL1rsF9MCtEoa5Q+5x1DmpLqktaUAs9POj4K3uW33bysLW1efi3oc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyi68CBMoGZkEfvS7mTJszInWEZkDJ0GZFynjle2Bi+ze/xzzwR
-	OFZ78U9GWB9eAYKCDadMBDoqFL7Esvj/m6vkX+NeQYpbr7T919ouG94=
-X-Gm-Gg: ASbGncucQtigHiOi/kpZw1T+7cbvWc2Q/6+peLG95eWVjEHpnVZoqglWwUPPP4lmxaF
-	Cfu/az0RAeDQi1Tn1WIpwu7UY5yeDn41Qoog29/bCcBNGeNhsg7lZe8XzljxC/YHUlo/2AVXR1j
-	c4rIfR/5Cj11ukJ0v2UDOe5TBtvW5dSkQte7v3z/O+aJ280YO5rhAGys2js1x6ym7wWtG+e9rv7
-	+IT1HA9shK/lF0xWOI278bFeaZHMwUURmbH23rSxhdeMdY05Q/9yPXadGvTkSPLefQanoWstW8F
-	Xuizg9XR1uVCqC4Ug05GX5/uTBpAt2riY0MQvskXEvwsj3Xcbc5x0aqMInDavBUHueiJIX+60LG
-	Tdywr20atvPRm
-X-Google-Smtp-Source: AGHT+IHjmv4fbhsnSYHt4UCLZ9DUWSV8QGFrP+17mDHqMDKXfBlG0avCCHv2PMgw7MoEJx6bbOjGew==
-X-Received: by 2002:a17:902:ea0d:b0:234:914b:3841 with SMTP id d9443c01a7336-23529a17ffamr199212775ad.39.1748878132820;
-        Mon, 02 Jun 2025 08:28:52 -0700 (PDT)
-Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
-        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-b2eceb36961sm5702278a12.43.2025.06.02.08.28.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 08:28:52 -0700 (PDT)
-Date: Mon, 2 Jun 2025 08:28:51 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Eryk Kubanski <e.kubanski@partner.samsung.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"bjorn@kernel.org" <bjorn@kernel.org>,
-	"magnus.karlsson@intel.com" <magnus.karlsson@intel.com>,
-	"maciej.fijalkowski@intel.com" <maciej.fijalkowski@intel.com>,
-	"jonathan.lemon@gmail.com" <jonathan.lemon@gmail.com>
-Subject: Re: Re: [PATCH bpf v2] xsk: Fix out of order segment free in
- __xsk_generic_xmit()
-Message-ID: <aD3DM4elo_Xt82LE@mini-arch>
-References: <aDnX3FVPZ3AIZDGg@mini-arch>
- <20250530103456.53564-1-e.kubanski@partner.samsung.com>
- <CGME20250530103506eucas1p1e4091678f4157b928ddfa6f6534a0009@eucms1p1>
- <20250602092754eucms1p1b99e467d1483531491c5b43b23495e14@eucms1p1>
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="hgSdaRNf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=oCeTEqONNQP62D+997YrgUyRDKBWkf3brV1BiFNF0RM=; b=h
+	gSdaRNfR7GSuzbQUb2TQHDAQy0jnnqUYgssYsOQWmt+IVrQOxBR3PWLpQzvILHGX
+	wipQCsI0+vZDahfhE/ufj1DV/u65GEcfHHwCFffhm1v61PZDRnRASy+o6++TYPt4
+	JNlQgpd/JDhnqu+eMCcrzwOQC2dMKuPuRxvDgxfVrE=
+Received: from 00107082$163.com ( [111.35.189.95] ) by
+ ajax-webmail-wmsvr-40-138 (Coremail) ; Mon, 2 Jun 2025 23:32:51 +0800 (CST)
+Date: Mon, 2 Jun 2025 23:32:51 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Yeoreum Yun" <yeoreum.yun@arm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, mingo@kernel.org, leo.yan@arm.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [BUG][6.15][perf] Kernel panic not syncing: Fatal exception in
+ interrupt
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <aD2/hoB+KhLITSu3@e129823.arm.com>
+References: <aD2TspKH/7yvfYoO@e129823.arm.com>
+ <aD2kz52p5NHpuXk3@e129823.arm.com> <aD2/hoB+KhLITSu3@e129823.arm.com>
+X-NTES-SC: AL_Qu2fCvSct0ss5yaRZukXn0oTju85XMCzuv8j3YJeN500iCXpxj8deXBJB3bmwcO1DSGtvxe+WQdfzMBlfLtgcYs26ctt3AgL4okYbvsMTE/U
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250602092754eucms1p1b99e467d1483531491c5b43b23495e14@eucms1p1>
+Message-ID: <72c1852.372d.19731462b73.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:iigvCgDXv9okxD1oJRoSAA--.22340W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkBRgqmg9v1wKGAACso
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-On 06/02, Eryk Kubanski wrote:
-> > I'm not sure I understand what's the issue here. If you're using the
-> > same XSK from different CPUs, you should take care of the ordering
-> > yourself on the userspace side?
-> 
-> It's not a problem with user-space Completion Queue READER side.
-> Im talking exclusively about kernel-space Completion Queue WRITE side.
-> 
-> This problem can occur when multiple sockets are bound to the same
-> umem, device, queue id. In this situation Completion Queue is shared.
-> This means it can be accessed by multiple threads on kernel-side.
-> Any use is indeed protected by spinlock, however any write sequence
-> (Acquire write slot as writer, write to slot, submit write slot to reader)
-> isn't atomic in any way and it's possible to submit not-yet-sent packet
-> descriptors back to user-space as TX completed.
-> 
-> Up untill now, all write-back operations had two phases, each phase
-> locks the spinlock and unlocks it:
-> 1) Acquire slot + Write descriptor (increase cached-writer by N + write values)
-> 2) Submit slot to the reader (increase writer by N)
-> 
-> Slot submission was solely based on the timing. Let's consider situation,
-> where two different threads issue a syscall for two different AF_XDP sockets
-> that are bound to the same umem, dev, queue-id.
-> 
-> AF_XDP setup:
->                                                             
->                              kernel-space                   
->                                                             
->            Write   Read                                     
->             +--+   +--+                                     
->             |  |   |  |                                     
->             |  |   |  |                                     
->             |  |   |  |                                     
->  Completion |  |   |  | Fill                                
->  Queue      |  |   |  | Queue                               
->             |  |   |  |                                     
->             |  |   |  |                                     
->             |  |   |  |                                     
->             |  |   |  |                                     
->             +--+   +--+                                     
->             Read   Write                                    
->                              user-space                     
->                                                             
->                                                             
->    +--------+         +--------+                            
->    | AF_XDP |         | AF_XDP |                            
->    +--------+         +--------+                            
->                                                             
->                                                             
->                                                             
->                                                             
-> 
-> Possible out-of-order scenario:
->                                                                                                                                        
->                                                                                                                                        
->                               writer         cached_writer1                      cached_writer2                                        
->                                  |                 |                                   |                                               
->                                  |                 |                                   |                                               
->                                  |                 |                                   |                                               
->                                  |                 |                                   |                                               
->                   +--------------|--------|--------|--------|--------|--------|--------|----------------------------------------------+
->                   |              |        |        |        |        |        |        |                                              |
->  Completion Queue |              |        |        |        |        |        |        |                                              |
->                   |              |        |        |        |        |        |        |                                              |
->                   +--------------|--------|--------|--------|--------|--------|--------|----------------------------------------------+
->                                  |                 |                                   |                                               
->                                  |                 |                                   |                                               
->                                  |-----------------|                                   |                                               
->                                   A) T1 syscall    |                                   |                                               
->                                   writes 2         |                                   |                                               
->                                   descriptors      |-----------------------------------|                                               
->                                                     B) T2 syscall writes 4 descriptors                                                 
->                                                                                                                                        
->                                                                                                                                        
->                                                                                                                                        
->                                                                                                                                        
->                  Notes:                                                                                                                
->                  1) T1 and T2 AF_XDP sockets are two different sockets,                                                                
->                     __xsk_generic_xmit will obtain two different mutexes.                                                              
->                  2) T1 and T2 can be executed simultaneously, there is no                                                              
->                     critical section whatsoever between them.                                                                          
-
-XSK represents a single queue and each queue is single producer single
-consumer. The fact that you can dup a socket and call sendmsg from
-different threads/processes does not lift that restriction. I think
-if you add synchronization on the userspace (lock(); sendmsg();
-unlock();), that should help, right?
+CkF0IDIwMjUtMDYtMDIgMjM6MTM6MTAsICJZZW9yZXVtIFl1biIgPHllb3JldW0ueXVuQGFybS5j
+b20+IHdyb3RlOgo+SGkgRGF2aWQsCj4KPj4gPiA+IEJlZm9yZSBJIHN0YXJ0IHRlc3RpbmcsIEkg
+ZmVlbCBjb25jZXJuZWQgYWJvdXQgZm9sbG93aW5nIGNoYWluOgo+PiA+ID4KPj4gPiA+IC4va2Vy
+bmVsL2ZvcmsuYzoKPj4gPiA+IGJhZF9mb3JrX2NsZWFudXBfcGVyZjoKPj4gPiA+ICAgICBwZXJm
+X2V2ZW50X2ZyZWVfdGFzaygpCj4+ID4gPiAgICAgICAgIHBlcmZfZnJlZV9ldmVudCgpCj4+ID4g
+PiAgICAgICAgICAgICBsaXN0X2RlbF9ldmVudCgpCj4+ID4gPgo+PiA+ID4gVGhpcyBwYXRjaCBz
+ZWVtcyBjaGFuZ2VzIHRoZSBiZWhhdmlvciBpbiB0aGlzIGNhbGxjaGFpbi4KPj4gPiA+IFdvdWxk
+IHRoaXMgaGF2ZSBvdGhlciBzaWRlLWVmZmVjdD8KPj4gPgo+PiA+IFdoYXQgYmVoYXZpb3IgaXMg
+Y2hhbmdlZCB5b3UncmUgd29ycnkgYWJvdXQ/Cj4+ID4gYm90aCBlcnJvciBwYXRjaCBpcyBoYW5k
+bGVkIGJ5IF9fcGVyZl9yZW1vdmVfZnJvbV9jb250ZXh0KCksCj4+ID4gVGhlcmUgd291bGRuJ3Qg
+YmUgbm8gcHJvYmxlbSBzaW5jZSB0aGlzIHBhdGNoIGp1c3QgbW92ZSB0aGUKPj4gPiB0aW1lIG9m
+IGRpc2FibGluZyBjZ3JvdXAgYmVmb3JlIGNoYW5naW5nIGV2ZW50IHN0YXRlLgo+PiA+Cj4+ID4g
+YWxzbywgdGhlIGNncm91cCBldmVudCBpcyBmb3Igb25seSBjcHVjdHggbm90IGFkZGVkIGluIHRh
+c2tjdHguCj4+ID4gU28sIHRoZXJlJ3Mgbm8gZWZmZWN0IGZvciBldmVudCBhdHRhY2hlZCBpbiB0
+YXNrY3R4Lgo+PiA+Cj4+ID4gVGhhbmtzLgo+Pgo+PiBBbSBJIHJlYWRpbmcgaXQgd3Jvbmc/Cj4+
+IFRoZSBjYWxsIGNoYWluIEkgbWVudGlvbmVkIGFib3ZlIGRvc2Ugbm90IHdhbGsgdGhyb3VnaCBf
+X3BlcmZfcmVtb3ZlX2Zyb21fY29udGV4dCwKPj4gSXQgaXMgYSBmYWlsIHBhdGggaW4gZm9yaywg
+d2hpY2ggaGFwcGVucyByYXJlbHksIGJ1dCBzdGlsbCBwb3NzaWJsZS4gSSBndWVzcy4uLgo+Cj5T
+aW5jZSBjb21taXQgOTA2NjEzNjUwMjFhCj4oInBlcmYgVW5pZnkgcGVyZl9ldmVudF9mcmVlX3Rh
+c2soKSAvIHBlcmZfZXZlbmV0X2V4aXRfdGFza19jb250ZXh0KCkiKQo+Cj5wZXJmX2V2ZW50X2Zy
+ZWVfdGFzaygpIGlzIGludGVncmF0ZWQgd2l0aCBwZXJmX2V2ZW50X2V4aXRfdGFza19jb250ZXh0
+KCkKPlNvLCBpdCBjYWxscyBfX3BlcmZfcmVtb3ZlX2Zyb21fY29udGV4dCgpLgoKCkdvb2QgdG8g
+a25vd34KCj4KPkluIHY2LjE1LCBJIHRoaW5rIHlvdSBjYW4gdGVzdCB3aXRoIGJlbG93IGNoYW5n
+ZSBvbmx5Ogo+QEAgLTI0NzEsNiArMjQ1OSwxNiBAQCBfX3BlcmZfcmVtb3ZlX2Zyb21fY29udGV4
+dChzdHJ1Y3QgcGVyZl9ldmVudCAqZXZlbnQsCj4KPiAgICAgICAgY3R4X3RpbWVfdXBkYXRlKGNw
+dWN0eCwgY3R4KTsKPgo+KyAgICAgICAvKgo+KyAgICAgICAgKiBJZiBldmVudCB3YXMgaW4gZXJy
+b3Igc3RhdGUsIHRoZW4ga2VlcCBpdAo+KyAgICAgICAgKiB0aGF0IHdheSwgb3RoZXJ3aXNlIGJv
+Z3VzIGNvdW50cyB3aWxsIGJlCj4rICAgICAgICAqIHJldHVybmVkIG9uIHJlYWQoKS4gVGhlIG9u
+bHkgd2F5IHRvIGdldCBvdXQKPisgICAgICAgICogb2YgZXJyb3Igc3RhdGUgaXMgYnkgZXhwbGlj
+aXQgcmUtZW5hYmxpbmcKPisgICAgICAgICogb2YgdGhlIGV2ZW50Cj4rICAgICAgICAqLwo+KyAg
+ICAgICBpZiAoZXZlbnQtPnN0YXRlID4gUEVSRl9FVkVOVF9TVEFURV9PRkYpCj4rICAgICAgICAg
+ICAgICAgcGVyZl9jZ3JvdXBfZXZlbnRfZGlzYWJsZShldmVudCwgY3R4KTsKPisKPiAgICAgICAg
+LyoKPiAgICAgICAgICogRW5zdXJlIGV2ZW50X3NjaGVkX291dCgpIHN3aXRjaGVzIHRvIE9GRiwg
+YXQgdGhlIHZlcnkgbGVhc3QKPiAgICAgICAgICogdGhpcyBhdm9pZHMgcmFpc2luZyBwZXJmX3Bl
+bmRpbmdfdGFzaygpIGF0IHRoaXMgdGltZS4KPgo+bm90IHdpdGggbW9kaWZpY2F0aW9uIHdpdGgg
+Imxpc3RfZGVsX2V2ZW50KCkiLgoKLi4uIEkgYXBwbHkgeW91ciBvcmlnaW5hbCBwYXRjaCBvbiA2
+LjE1LCB1cCB0byBub3csIDcgcm91bmRzIG9mIHRlc3Qgc2hvdyBubyBzaWduIG9mIGtlcm5lbCBw
+YW5pYy4KSSB0aGluaywgdGhlIHBhdGNoIGRvZXMgZml4IGl0LgoKVGVzdGVkLWJ5OiBEYXZpZCBX
+YW5nIDwwMDEwNzA4MkAxNjMuY29tPgoKClRoYW5rcwpEYXZpZAoK
