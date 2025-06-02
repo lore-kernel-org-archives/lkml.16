@@ -1,119 +1,151 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322001C84D0;
-	Mon,  2 Jun 2025 23:22:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86BC5158545
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 23:30:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748906581; cv=none; b=lepe1ewf6Sg5y8ZMdCBPoJ7/NbFXbR/rFt0Lxh6sIzIIiKP5IK9pcV8x5FS3u6+rdViZmRtDCm8ngA79tvcxq4C7lN3czO+Kapo6Pbr1AGxilyyntuPQLQZDztva2sqHAW34rEaNVhLQDsiRXdUItGwWayIk7rIIQu9SItK1D2I=
+	t=1748907016; cv=none; b=oMA6dlG/VcNY9JTFpKyLqXKv2aqhoPctGiu5UVsj6D4/0kW8P11wOjo/zXBjTtJW0L3tDjRqNqVzUhQ6fEvlbHF2yoZ8DyKP2EmuvpGzMn0rs3HEWTy8uWX8iFUEJvDpeiTOaUVhTaCWVel8bnEcViGVP8OKpxyWT+cPD2wQd2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748906581; c=relaxed/simple;
-	bh=l4lNPNZ3NUcwOxlD8zL9Fz88dSmoXnMGOr5KnMPj9Zs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n1jY8bpCyfZs+FMiyxMIHb1meI1K5ScgsLSbGt8laJ1rqXvbZKXOdZVjVNZE/4WAJQ7MbKFpED2ToUFlVyi0cJRVujI1pa0Qc+Fy/SdtZ/rVJ0E4sIV/IQtn0oYbf2HlIuK8NCGK87YErAi96ZypkmuaW/XV9RoGvOAhInfXF/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WcMlJ2bT; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748907016; c=relaxed/simple;
+	bh=ERPVRkIbILIUcIjfV+EhBnHrMs9fZ3Q4qRlPwExSKOU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=UwBSWFw9qaw0iuyd5e6Ck8/4sPQ9rZo7n5LA3W1x0naAy1HuMEukIzPOuXZTDiIywkm4Ga9PAjF+IZkFKRue/D6k0pKgUrMcHeTgKm4zG4hncN2foigBjmf14lxewOvtAImuu5qqj5Dj6KfMdOJSYHOuZ3D35WDdF66Fam7WTu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nVCICnCS; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WcMlJ2bT"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-442e9c00bf4so32187085e9.3;
-        Mon, 02 Jun 2025 16:22:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nVCICnCS"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-310efe825ccso4872241a91.3
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 16:30:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748906578; x=1749511378; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l4lNPNZ3NUcwOxlD8zL9Fz88dSmoXnMGOr5KnMPj9Zs=;
-        b=WcMlJ2bTGgBsX4iKTdSvXpTjVci6ClPFsPV6sbjRhue9Cwjf92zr9xbmpQXuL+Nu8k
-         aQpJ4dNX0qq4uKKXRrGm0hyYAJQlCxeHUDF6siJymok/dz3ij7/pcoBjzBldsCU3S2fN
-         vvRiGKftSd5cjMIUOlA+GGLn96jYeL3pwl6S46QtD39pIT/knwRa3sYlj5cdlxg13LS7
-         LeQE6O+5qD8q2FzovLnHijYKJ8vmd+H+PDiu4hfdDBYPaPU8wfEulb6BFLwS9GSDKpOX
-         djpQ6vXrC/UC3zS2efLR6WXJqp/GGo7Wbe5rhj3FLsDQZS0FS2kKsiXi5R97Gc2Njdwc
-         DCCg==
+        d=google.com; s=20230601; t=1748907014; x=1749511814; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Yve1ZiL8T7g84JmBt/tikyI/6Bv4C2Bg0e+B1xxTdfo=;
+        b=nVCICnCSv8PFaqj6xzacChw/19sZEJ9ICfvHD/3vvqcx8uhcJXX1e5ZVebDJB+EiPn
+         LPJQmdVcpPklwAc8muYkO/XrGAMb+LlXlkeo+HzRGIl+MXi2azyCjA6RUecTv39xQOyi
+         1cL/JCbAZF7m12ei7fq2u+3CQFjZ33YveYTlHnrhvOJe1K+mNKuxWra0NiCnE74p1rI/
+         UIkO7nwGfKjYy3Fl9LTm8G0Z6oG2i+jryuGjW4yCNInKtddTnYxWKJCWvlYs8XA+0QnG
+         Y425XJ5/wl/mfyJoJjj+hvZANLCUV0FyJE5sx6lGCWSLtOhtXo5sdhTVotw0qt7Giat9
+         3qsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748906578; x=1749511378;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=l4lNPNZ3NUcwOxlD8zL9Fz88dSmoXnMGOr5KnMPj9Zs=;
-        b=nHpoHDtNO6MRDCTiTPeNQxKdkwsz7cvBGz6W+aJleYEsd+DJyWFY4JTtpJygreQuEK
-         yJ1FvK29tjGwpvHQKEpmE/2b5X96TZjaMC4HPSqOsi7uZi3tmUGXkp4HjxQeN7Nww8BG
-         iQydgchxqrAzSaJbHGRXxcwJaTd1t8dmPM6ezgcqwcxKnpNjB5FwnGnoLy4X28ANQx4S
-         20AG5Eqs9WZZTgBnpHhsObNkQUKk/SvIT1ER5BGXQVBZWN9VhnULicHYG4Nfkon/gxTg
-         VsWQxLsPAMEFvBgkcurPMFvilb8LiyoblhPDAfKtaPJu2GcJ0z3uZvV2TTUK8ayTPPgJ
-         1rtg==
-X-Forwarded-Encrypted: i=1; AJvYcCU5uaC0lmlGzNAENEVoPm39btlFAEae2wXIiWEWrdml/WoIV4A2fWhco1h8rXCu9PlYiBRi8SrKGHXlCy8=@vger.kernel.org, AJvYcCVYuSAQCukawlnfkYFAle4evmJVtOl3d9ya1zRJoZi+7g2JTfSsx9Q7YMryZc3Q13tvVwygyOLqSQoW7nlNbC9G@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLd153vUyRuXBDGo1AmQg6BH6lUgMUD2240AwgIdvkGRqRY/M7
-	4x1wFLqTYutidsqZUNSQZ6RHrPtWaYI2BD8YZrvqycVr1PhYvfhKwDGIHQAYNA==
-X-Gm-Gg: ASbGncsG2v3tBLjtWyN2jabOsHE109hmNIHdIjvkm+kGgZtEhI+SwPcWtT5AyKNd7mw
-	Miw9jOrRo6hWPo/rvzeK8tpuaJHHxmy4jgJ+AKc/CEw3xYDeHhHc88urb8bHwGUOsM0Y98iVw/5
-	bA5oBnZ+jq9fus2KF+g9LUFId+BBOR/MlECV1RiTulhzXxSa/EbpRBp56OuF6WHNaKMJoburTc1
-	yA9BUAvDhY8aNL+vAULG/qkuNhUsE/HD06YF3BA1yp6VDqN1V1RBTLCP4qg0pKyqZYrtQGkARG0
-	frP2OW0hXTF9ejCv2rn9rR8uJeF2XGjOBiKz2aFi2qE/P1vWVAsEXNxOOjKeFtAeaGFjz24Q7QF
-	wuQ==
-X-Google-Smtp-Source: AGHT+IH6DsnJBoiQsAc3Tp9KiqWWBaTYvk3z0aYMLUKq3Rr7QP0jqJR9LBj8Sq5TS5iI/BGiHrY1Wg==
-X-Received: by 2002:a05:600c:5294:b0:43c:f513:958a with SMTP id 5b1f17b1804b1-450d883b9admr124035505e9.13.1748906578187;
-        Mon, 02 Jun 2025 16:22:58 -0700 (PDT)
-Received: from localhost.localdomain ([197.63.228.129])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7fb80f6sm137954765e9.28.2025.06.02.16.22.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 16:22:57 -0700 (PDT)
-From: Khaled Elnaggar <khaledelnaggarlinux@gmail.com>
-To: linux-mm@kvack.org
-Cc: Khaled Elnaggar <khaledelnaggarlinux@gmail.com>,
-	linux-kernel-mentees@lists.linux.dev,
-	shuah@kernel.org,
-	akpm@linux-foundation.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] selftests/mm/run_vmtests.sh: skip hugevm tests if write_to_hugetlbfs is missing
-Date: Tue,  3 Jun 2025 02:22:32 +0300
-Message-ID: <20250602232233.224099-1-khaledelnaggarlinux@gmail.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250523184312.2647781-1-khaledelnaggarlinux@gmail.com>
-References: <20250523184312.2647781-1-khaledelnaggarlinux@gmail.com>
+        d=1e100.net; s=20230601; t=1748907014; x=1749511814;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Yve1ZiL8T7g84JmBt/tikyI/6Bv4C2Bg0e+B1xxTdfo=;
+        b=r4zTaCywHiGwnppxNo3i0d8TcuMkOLNji9CCAxTL5NggQCs2ylaDGOAtkjRC7jdG+x
+         7yMzyTGgslXzYXC3b5G0xlyqTJ8lT71ultvmdcyqnbaQITURZvxCW8Xen/gANwz43JxB
+         sWmONhDh4HxxYOv+FT4oVPds5GCqO1HJvyXKbqaHVCj2NKV21t7bRgCJ980adlmNtatL
+         znG8xkNZZr4y0hK6bcNBy4sWBvgbnjsK6jiB3yZyoNPK0giPQtaQIQBEPFBB8N05uh9K
+         tthER7ePNwL3h7QvmTalTksCqr2sEAtTLuFcIYXuI7KcsMpOAY0g3z0PyrWISFgFfz/C
+         cOVg==
+X-Forwarded-Encrypted: i=1; AJvYcCWLPVW3oQPl+ehDU9BwAFgktCxfn7DBmUupSOfXDNShLzEaOL1Jq96hMQSz4Kj6/IDSQx8/F3d8zqSVD2k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4GX/q1YzU64Tql61L7krdtQc8BKCBGG6anEJutxr0Tzes41hs
+	08PBxMvtuNu1QFtWurlfxmCGR51k6NwZwQyC1o0vLH7/S9iMot6HkChDEtGxHiMDxTK9hXoeFfl
+	cxx6Hlg==
+X-Google-Smtp-Source: AGHT+IE14BFeGM0J7uhuk33V5fPG5r1MtBBSniKvSePrbW7/nzVp1S6VXU7zoEWKiW8wpnHDPojK7VzfMl4=
+X-Received: from pjur7.prod.google.com ([2002:a17:90a:d407:b0:311:ea2a:3919])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4f4d:b0:312:1cd7:b337
+ with SMTP id 98e67ed59e1d1-3125034a47amr19482649a91.5.1748907013702; Mon, 02
+ Jun 2025 16:30:13 -0700 (PDT)
+Date: Mon, 2 Jun 2025 16:30:12 -0700
+In-Reply-To: <20250602125442.19d41098.alex.williamson@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250516230734.2564775-1-seanjc@google.com> <20250602125442.19d41098.alex.williamson@redhat.com>
+Message-ID: <aD40BIYA1ecnbX73@google.com>
+Subject: Re: [PATCH v2 0/8] irqbypass: Cleanups and a perf improvement
+From: Sean Christopherson <seanjc@google.com>
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org, virtualization@lists.linux.dev, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Kevin Tian <kevin.tian@intel.com>, Oliver Upton <oliver.upton@linux.dev>, 
+	David Matlack <dmatlack@google.com>, Like Xu <like.xu.linux@gmail.com>, 
+	Binbin Wu <binbin.wu@linux.intel.com>, Yong He <alexyonghe@tencent.com>
+Content-Type: text/plain; charset="us-ascii"
 
-The hugevm tests 'charge_reserved_hugetlb.sh' and 'hugetlb_reparenting_test.sh'
-depend on the 'write_to_hugetlbfs' binary to simulate writes to hugetlbfs
-while checking reservations asynchronously in the background.
+On Mon, Jun 02, 2025, Alex Williamson wrote:
+> On Fri, 16 May 2025 16:07:26 -0700
+> Sean Christopherson <seanjc@google.com> wrote:
+> 
+> > The two primary goals of this series are to make the irqbypass concept
+> > easier to understand, and to address the terrible performance that can
+> > result from using a list to track connections.
+> > 
+> > For the first goal, track the producer/consumer "tokens" as eventfd context
+> > pointers instead of opaque "void *".  Supporting arbitrary token types was
+> > dead infrastructure when it was added 10 years ago, and nothing has changed
+> > since.  Taking an opaque token makes a very simple concept (device signals
+> > eventfd; KVM listens to eventfd) unnecessarily difficult to understand.
+> > 
+> > Burying that simple behind a layer of obfuscation also makes the overall
+> > code more brittle, as callers can pass in literally anything. I.e. passing
+> > in a token that will never be paired would go unnoticed.
+> > 
+> > For the performance issue, use an xarray.  I'm definitely not wedded to an
+> > xarray, but IMO it doesn't add meaningful complexity (even requires less
+> > code), and pretty much Just Works.  Like tried this a while back[1], but
+> > the implementation had undesirable behavior changes and stalled out.
+> > 
+> > Note, I want to do more aggressive cleanups of irqbypass at some point,
+> > e.g. not reporting an error to userspace if connect() fails is awful
+> > behavior for environments that want/need irqbypass to always work.  And
+> > KVM shold probably have a KVM_IRQFD_FLAG_NO_IRQBYPASS if a VM is never going
+> > to use device posted interrupts.  But those are future problems.
+> > 
+> > v2:
+> >  - Collect reviews. [Kevin, Michael]
+> >  - Track the pointer as "struct eventfd_ctx *eventfd" instead of "void *token".
+> >    [Alex]
+> >  - Fix typos and stale comments. [Kevin, Binbin]
+> >  - Use "trigger" instead of the null token/eventfd pointer on failure in
+> >    vfio_msi_set_vector_signal(). [Kevin]
+> >  - Drop a redundant "tmp == consumer" check from patch 3. [Kevin]
+> >  - Require producers to pass in the line IRQ number.
+> > 
+> > v1: https://lore.kernel.org/all/20250404211449.1443336-1-seanjc@google.com
+> > 
+> > [1] https://lore.kernel.org/all/20230801115646.33990-1-likexu@tencent.com
+> > [2] https://lore.kernel.org/all/20250401161804.842968-1-seanjc@google.com
+> > 
+> > Sean Christopherson (8):
+> >   irqbypass: Drop pointless and misleading THIS_MODULE get/put
+> >   irqbypass: Drop superfluous might_sleep() annotations
+> >   irqbypass: Take ownership of producer/consumer token tracking
+> >   irqbypass: Explicitly track producer and consumer bindings
+> >   irqbypass: Use paired consumer/producer to disconnect during
+> >     unregister
+> >   irqbypass: Use guard(mutex) in lieu of manual lock+unlock
+> >   irqbypass: Use xarray to track producers and consumers
+> >   irqbypass: Require producers to pass in Linux IRQ number during
+> >     registration
+> > 
+> >  arch/x86/kvm/x86.c                |   4 +-
+> >  drivers/vfio/pci/vfio_pci_intrs.c |  10 +-
+> >  drivers/vhost/vdpa.c              |  10 +-
+> >  include/linux/irqbypass.h         |  46 ++++----
+> >  virt/kvm/eventfd.c                |   7 +-
+> >  virt/lib/irqbypass.c              | 190 +++++++++++-------------------
+> >  6 files changed, 107 insertions(+), 160 deletions(-)
+> > 
+> > 
+> > base-commit: 7ef51a41466bc846ad794d505e2e34ff97157f7f
+> 
+> Sorry for the delay.
 
-When this binary is missing (e.g., excluded from the build), these tests hang
-for up to 180 seconds. During this time, run_vmtests.sh is eventually killed
-due to timeout, aborting all subsequent tests.
+Heh, no worries.  ~2 weeks is downright prompt by my standards ;-)
 
-This patch skips these tests if the binary is not found, preventing delays
-and ensuring that the test suite runs to completion.
+> Do you intend to take this through your trees?
 
-Signed-off-by: Khaled Elnaggar <khaledelnaggarlinux@gmail.com>
----
- tools/testing/selftests/mm/run_vmtests.sh | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
-index dddd1dd8af14..0b55395ee2cb 100755
---- a/tools/testing/selftests/mm/run_vmtests.sh
-+++ b/tools/testing/selftests/mm/run_vmtests.sh
-@@ -375,8 +375,13 @@ CATEGORY="process_mrelease" run_test ./mrelease_test
- CATEGORY="mremap" run_test ./mremap_test
-
- CATEGORY="hugetlb" run_test ./thuge-gen
-+
-+# the following tests depend on write_to_hugetlbfs binary
-+if [ -x ./write_to_hugetlbfs ]; then
- CATEGORY="hugetlb" run_test ./charge_reserved_hugetlb.sh -cgroup-v2
- CATEGORY="hugetlb" run_test ./hugetlb_reparenting_test.sh -cgroup-v2
-+fi
-+
- if $RUN_DESTRUCTIVE; then
- nr_hugepages_tmp=$(cat /proc/sys/vm/nr_hugepages)
- enable_soft_offline=$(cat /proc/sys/vm/enable_soft_offline)
---
-2.47.2
-
+Yes, ideally, it would go into Paolo's kvm/next sooner than later (I'll start
+poking him if necessary).  The s/token/eventfd rename creates an annoying conflict
+in kvm/x86.c with an in-flight patch (significant code movement between files).
+It would be nice to be able to rebase the in-flight patch instead of having to
+resolve a merge confict (the conflict itself isn't difficult to resolve, I just
+find it hard to visually review/audit the resolution due to the code movement).
