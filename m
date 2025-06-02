@@ -1,139 +1,197 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2842D7BF;
-	Mon,  2 Jun 2025 10:11:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ED1E2D7BF;
+	Mon,  2 Jun 2025 10:11:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748859063; cv=none; b=c6WkH8ishNLqJxZNkD1+H2WJ4X9eMIo9kqqtc9N7Ki0/RB4kwp7XYWrVw+XDulzJx6pJhDWUev7pk/4BtKQMWY1qgQFzdyC6+t6WJt/95sLa/O3uFXppcVMz5kWt9gLGyuoks6RrVixZzvIW7CxdUWXOeYAE3glqa3MqN8pJWbE=
+	t=1748859102; cv=none; b=HnULxRakYaDItaLAf6/nCDmWqXwfR2s5T11mhLlrcvcdOqnYMYl+GRqnZqdOfweRrNNVx8se47lKmTZkFNF7rY5/WQH3IekQ+76QIAzydYxZYGBZHSGTJex6HW0ydnQfrIDYaNIR296loKDOuPN3DE/dbokX1EW7jdh66ATrTK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748859063; c=relaxed/simple;
-	bh=49CE/luc5OMBXikwCko3fRANx1ylY3xXS/3fFqs5kYs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aOwc7lIj+r/39bMFX7R8F1+Boz0+HAdiGpupz6timHypDr4y3mRzUdqXlar7JoEHkVEcedOkG5sUDtFgCYSZIeU9+hTESwT7YXw6M2Xoa8tKIKSCcg46+WqXW1IlO3Aat7dDAKMzHnquiaakkBi4q9bE2v6D2tKiHZ+p6nWEC3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dN6BQhXF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748859102; c=relaxed/simple;
+	bh=vr2Iavl3s/JtJluwNUIZpU0je/LfAgUbPmUBZ0xpPXw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=H7IGbaqd51l3NdKpp47UGDlvdNgQE6iJTXElBEw3Dy6SbiqJLE+Y8zhB2sBDLYOJX7nssxDxUOVxz+VdWKPHQImYCaxahddRLPJFRH1aEahKOWvZYk+VgERsCaJR3bfuhMdUefn68VOH0tR9ESPQN7wsd3kPvNvS6G5zdV8vWZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mo3+58x5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dN6BQhXF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AEA6C4CEEB;
-	Mon,  2 Jun 2025 10:11:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mo3+58x5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4A3AC4CEF1;
+	Mon,  2 Jun 2025 10:11:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748859063;
-	bh=49CE/luc5OMBXikwCko3fRANx1ylY3xXS/3fFqs5kYs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dN6BQhXFH4KU9rKSVR9Gp3W6GsSIR9vFY1zWGNmSxUqUDiJS2F68wuacpVgI3uzRn
-	 UMDMRUOSbglrAIuGJ8iB44+8I9nQHKfaWoqVnHPMcCFjt2yTAUmoK4v2nxWuqQ9ftg
-	 45kbSXntFJJkiSZvOdjTTDcj95X2KlDxIyiKN1FVorEPJkv0qLjO8jOz4Y29psBTxo
-	 olF2I9pKtn4TJpQxs1uhC391feI+MRlT1hHK/YFiJIi6eVUnVNAbXYtwQgYBoiVlhP
-	 JfOzPfZQ6DXrDfxfyXuuDie/4qtfcd6gNKU/uN2pofC60ofuKMMVqR/C0wrMJ8cKM7
-	 htKa6Z1KHfewg==
-Message-ID: <34d9f779-987f-4e2c-b046-5dc15641547c@kernel.org>
-Date: Mon, 2 Jun 2025 12:10:59 +0200
+	s=k20201202; t=1748859101;
+	bh=vr2Iavl3s/JtJluwNUIZpU0je/LfAgUbPmUBZ0xpPXw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Mo3+58x5xrjoMldRqAduaSKIx+bV7lQte0B0DfKZpt9lXVpvpXgu7eQJoWe2nVXOQ
+	 a7CsbwVHJ4apwrxeXXrFGXOYDxS926WJ3X5Jx+rOu95UJbcNrIUnGqD2NCsZ3R0P4q
+	 iC/pyT0L/Hqu2GeFjWBwpo4tDuuygV8SvQ0rdPqywq3YjwmYA2sM3qg0iNEroGJCFp
+	 mBlRR4HJTcrfJnpGLKq+vt3234Glho0tYxmktvsiRr2SWqWv/jyyyBX1RNcCkGA5hp
+	 rOQII+tj4HM2pLWVQtiCboatltZqcLcKOxYYZL5ijnUb69VF52qS4UepvmSZ76hIUx
+	 NWmyJvtxJJcCg==
+From: Christian Brauner <brauner@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] vfs netfs
+Date: Mon,  2 Jun 2025 12:11:31 +0200
+Message-ID: <20250602-vfs-netfs-bf063d178ff0@brauner>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 9/9] media: uvcvideo: Support granular power saving for
- compat syscalls
-To: Ricardo Ribalda <ribalda@chromium.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Hans de Goede <hdegoede@redhat.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250528-uvc-grannular-invert-v1-0-d01581f9cc25@chromium.org>
- <20250528-uvc-grannular-invert-v1-9-d01581f9cc25@chromium.org>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250528-uvc-grannular-invert-v1-9-d01581f9cc25@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5673; i=brauner@kernel.org; h=from:subject:message-id; bh=vr2Iavl3s/JtJluwNUIZpU0je/LfAgUbPmUBZ0xpPXw=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWTYVtxIPr7dle/K5BsqInPSVd5/C0jNEEk8sfHesgPxH 9YzfMox7ShlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAZjIuUkM/yt2x2+ZMWFX3JuV lx/oBli0Z3Lyn0nnm3x+oc33HSlFH00Z/ikIbXGq7tokfOe1wCrPPu2pLp8W/k9btMg1Wzr3mi9 jKgsA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-Hi Ricardo,
+Hey Linus,
 
-On 28-May-25 19:58, Ricardo Ribalda wrote:
-> Right now we cannot support granular power saving on compat syscalls
-> because the VIDIOC_*32 NRs defines are not accessible to drivers.
-> 
-> Use the video_translate_cmd() helper to convert the compat syscall NRs
-> into syscall NRs.
-> 
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> ---
->  drivers/media/usb/uvc/uvc_v4l2.c     | 9 ++-------
->  drivers/media/v4l2-core/v4l2-ioctl.c | 3 ++-
->  include/media/v4l2-ioctl.h           | 1 +
->  3 files changed, 5 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-> index fcb1b79c214849ce4da96a86a688d777b32cc688..048ee7e01808c8944f9bd46e5df2931b9c146ad5 100644
-> --- a/drivers/media/usb/uvc/uvc_v4l2.c
-> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
-> @@ -1282,15 +1282,10 @@ static long uvc_v4l2_pm_ioctl(struct file *file,
->  static long uvc_v4l2_unlocked_ioctl(struct file *file,
->  				    unsigned int cmd, unsigned long arg)
->  {
-> -	/*
-> -	 * For now, we do not support granular power saving for compat
-> -	 * syscalls.
-> -	 */
-> -	if (in_compat_syscall())
-> -		return uvc_v4l2_pm_ioctl(file, cmd, arg);
-> +	unsigned int converted_cmd = video_translate_cmd(cmd);
+A quick word on the general timing for netfs pull requests going
+forward. In contrast to most of the other work I tend to send the netfs
+updates a little later and will probably continue to do so in the
+future. In the past we had some issues with late-stage fixes or there
+were complicated merge conflicts with other trees or mainline that were
+a little unusal. So since there's more jitter in how consistently this
+tree can be carried through a cycle I'm letting this reflect in the pull
+request timing as well.
 
-It looks like something went wrong here and you did not test-compile this?
-video_translate_cmd() is private to drivers/media/v4l2-core/v4l2-ioctl.c
-so this should not compile.
+/* Summary */
 
-You can use v4l2_compat_translate_cmd() but only when CONFIG_COMPAT is set
-otherwise that symbol is not available.
+This contains the netfs updates for this cycle:
 
-Regards,
+- The main API document has been extensively updated/rewritten.
 
-Hans
+- Fix an oops in write-retry due to mis-resetting the I/O iterator.
 
+- Fix the recording of transferred bytes for short DIO reads.
 
+- Fix a request's work item to not require a reference, thereby avoiding
+  the need to get rid of it in BH/IRQ context.
 
->  
->  	/* The following IOCTLs do need to turn on the camera. */
-> -	switch (cmd) {
-> +	switch (converted_cmd) {
->  	case UVCIOC_CTRL_QUERY:
->  	case VIDIOC_G_CTRL:
->  	case VIDIOC_G_EXT_CTRLS:
-> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-> index 650dc1956f73d2f1943b56c42140c7b8d757259f..6fbd28f911cf23eec43ef1adcf64bd46ef067c81 100644
-> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
-> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-> @@ -3245,7 +3245,7 @@ static int check_array_args(unsigned int cmd, void *parg, size_t *array_size,
->  	return ret;
->  }
->  
-> -static unsigned int video_translate_cmd(unsigned int cmd)
-> +unsigned int video_translate_cmd(unsigned int cmd)
->  {
->  #if !defined(CONFIG_64BIT) && defined(CONFIG_COMPAT_32BIT_TIME)
->  	switch (cmd) {
-> @@ -3266,6 +3266,7 @@ static unsigned int video_translate_cmd(unsigned int cmd)
->  
->  	return cmd;
->  }
-> +EXPORT_SYMBOL(video_translate_cmd);
->  
->  static int video_get_user(void __user *arg, void *parg,
->  			  unsigned int real_cmd, unsigned int cmd,
-> diff --git a/include/media/v4l2-ioctl.h b/include/media/v4l2-ioctl.h
-> index c6ec87e88dfef9e6cfe1d1fb587c1600882fb14d..437b9f90714c62e0ba434ce47391ef64d88110aa 100644
-> --- a/include/media/v4l2-ioctl.h
-> +++ b/include/media/v4l2-ioctl.h
-> @@ -687,6 +687,7 @@ int v4l2_compat_get_array_args(struct file *file, void *mbuf,
->  int v4l2_compat_put_array_args(struct file *file, void __user *user_ptr,
->  			       void *mbuf, size_t array_size,
->  			       unsigned int cmd, void *arg);
-> +unsigned int video_translate_cmd(unsigned int cmd);
->  
->  /**
->   * typedef v4l2_kioctl - Typedef used to pass an ioctl handler.
-> 
+- Fix waiting and waking to be consistent about the waitqueue used.
 
+- Remove NETFS_SREQ_SEEK_DATA_READ.
+
+- Remove NETFS_INVALID_WRITE.
+
+- Remove NETFS_ICTX_WRITETHROUGH.
+
+- Remove NETFS_READ_HOLE_CLEAR.
+
+- Reorder structs to eliminate holes.
+
+- Remove netfs_io_request::ractl.
+
+- Only provide proc_link field if CONFIG_PROC_FS=y.
+
+- Remove folio_queue::marks3.
+
+- Remove NETFS_RREQ_DONT_UNLOCK_FOLIOS.
+
+- Remove NETFS_RREQ_BLOCKED.
+
+- Fix undifferentiation of DIO reads from unbuffered reads.
+
+generally sent
+after vfs-6.16-rc1.misc
+
+/* Testing */
+
+gcc (Debian 14.2.0-19) 14.2.0
+Debian clang version 19.1.7 (3)
+
+No build failures or warnings were observed.
+
+/* Conflicts */
+
+Merge conflicts with mainline
+=============================
+
+No known conflicts.
+
+Merge conflicts with other trees
+================================
+
+No known conflicts.
+
+The following changes since commit f1745496d3fba34a2e16ef47d78903d7208c1214:
+
+  netfs: Update main API document (2025-04-11 15:23:50 +0200)
+
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.16-rc1.netfs
+
+for you to fetch changes up to db26d62d79e4068934ad0dccdb92715df36352b9:
+
+  netfs: Fix undifferentiation of DIO reads from unbuffered reads (2025-05-23 10:35:03 +0200)
+
+Please consider pulling these changes from the signed vfs-6.16-rc1.netfs tag.
+
+Thanks!
+Christian
+
+----------------------------------------------------------------
+vfs-6.16-rc1.netfs
+
+----------------------------------------------------------------
+Christian Brauner (3):
+      Merge netfs API documentation updates
+      Merge patch series "netfs: Miscellaneous cleanups"
+      Merge patch series "netfs: Miscellaneous fixes"
+
+David Howells (4):
+      netfs: Fix oops in write-retry from mis-resetting the subreq iterator
+      netfs: Fix the request's work item to not require a ref
+      netfs: Fix wait/wake to be consistent about the waitqueue used
+      netfs: Fix undifferentiation of DIO reads from unbuffered reads
+
+Max Kellermann (10):
+      fs/netfs: remove unused flag NETFS_SREQ_SEEK_DATA_READ
+      fs/netfs: remove unused source NETFS_INVALID_WRITE
+      fs/netfs: remove unused flag NETFS_ICTX_WRITETHROUGH
+      fs/netfs: remove unused enum choice NETFS_READ_HOLE_CLEAR
+      fs/netfs: reorder struct fields to eliminate holes
+      fs/netfs: remove `netfs_io_request.ractl`
+      fs/netfs: declare field `proc_link` only if CONFIG_PROC_FS=y
+      folio_queue: remove unused field `marks3`
+      fs/netfs: remove unused flag NETFS_RREQ_DONT_UNLOCK_FOLIOS
+      fs/netfs: remove unused flag NETFS_RREQ_BLOCKED
+
+Paulo Alcantara (1):
+      netfs: Fix setting of transferred bytes with short DIO reads
+
+ Documentation/core-api/folio_queue.rst      |   3 -
+ Documentation/filesystems/netfs_library.rst |   5 -
+ fs/9p/vfs_addr.c                            |   5 +-
+ fs/afs/write.c                              |   9 +-
+ fs/cachefiles/io.c                          |  16 +-
+ fs/ceph/addr.c                              |   6 +-
+ fs/erofs/fscache.c                          |   6 +-
+ fs/netfs/buffered_read.c                    |  56 ++++---
+ fs/netfs/buffered_write.c                   |   5 +-
+ fs/netfs/direct_read.c                      |  16 +-
+ fs/netfs/direct_write.c                     |  12 +-
+ fs/netfs/fscache_io.c                       |  10 +-
+ fs/netfs/internal.h                         |  42 ++++--
+ fs/netfs/main.c                             |   1 +
+ fs/netfs/misc.c                             | 219 ++++++++++++++++++++++++++++
+ fs/netfs/objects.c                          |  48 +++---
+ fs/netfs/read_collect.c                     | 199 +++++--------------------
+ fs/netfs/read_pgpriv2.c                     |   4 +-
+ fs/netfs/read_retry.c                       |  26 +---
+ fs/netfs/read_single.c                      |   6 +-
+ fs/netfs/write_collect.c                    |  83 ++++-------
+ fs/netfs/write_issue.c                      |  38 ++---
+ fs/netfs/write_retry.c                      |  19 +--
+ fs/nfs/fscache.c                            |   1 +
+ fs/smb/client/cifsproto.h                   |   3 +-
+ fs/smb/client/cifssmb.c                     |   4 +-
+ fs/smb/client/file.c                        |  10 +-
+ fs/smb/client/smb2pdu.c                     |   4 +-
+ include/linux/folio_queue.h                 |  42 ------
+ include/linux/fscache.h                     |   5 +-
+ include/linux/netfs.h                       |  45 +++---
+ include/trace/events/netfs.h                |  11 +-
+ net/9p/client.c                             |   6 +-
+ 33 files changed, 478 insertions(+), 487 deletions(-)
