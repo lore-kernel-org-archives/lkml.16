@@ -1,182 +1,159 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A95B71CDFD5;
-	Mon,  2 Jun 2025 11:07:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCCE71B412A;
+	Mon,  2 Jun 2025 11:09:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748862437; cv=none; b=ma6Gun4w+M5kl4z4XvkS5Al5nwNISyP/dlRZ1A8SmcLG6+g4HtSlloyphBSoI1Y7NlYNHNx2TxGoo16wAbCmVPn2epdeQ0fjOQ9XNSF7ir/aTG2Zg85JDwnXyCdul/4hi/Afjb1jySUt3VSoSJjq45iacwm1O4k4amEVXafc+Rk=
+	t=1748862595; cv=none; b=Nu1nX1osP/Ogv5nWB8cg29G8YsUpsGnvPoSgeL9yMXN6nlqetM+/FeSEYuu1q8wEHdvDxzdHwqjxey8rAxmSrGlPnV/OYHwxyaPTQGzYY6Ha7vX3vqBMFBafPjW+biLpynWYPjxozYFjjA0n2aT8cTolo3ZEPSKRcCtUTCFn4Ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748862437; c=relaxed/simple;
-	bh=E6maFw8RNbm/mBTXc6Y92pxX5WbQ29KDi1UudDHNda4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S9ipJVGhhknjPxBDbONmR9yqBgpGp+upVnMIpEjMZQX9XNaMvdY15KhRxmJ9IYw6WGf3Q/FNxetYEvedpluxY6+Zsk/ry/l7bwYYITAqNLZN3QTJi0ZzHwD1vYstE6YshnxBI276m/25i8qK9Hj3JOvYRuix3Kj4K7D8fv8Wkps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FIh7dO7G; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748862595; c=relaxed/simple;
+	bh=a7I7HJvFQ9VEde/6Ve3ViLZ6lotsk0Tp4rZAPkF0fNg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gShevZiZcgYUFrBnH74qMOnLZEHnrlYqvVXJOcm1CvvMH///rhXcuKv5uM0fIbixI/0P4AJfFrRYrYDLouAeD8lUwz0EkDeQMxcXvlPkYPxmmFIlcSC1JkabmLNcVAK78laIq0VhEjH1tTa2qWZlnuG/+w7MBYNoe8qn7REkbz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Evq5kpWg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FIh7dO7G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75B50C4CEEB;
-	Mon,  2 Jun 2025 11:07:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Evq5kpWg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 527A8C4CEEB;
+	Mon,  2 Jun 2025 11:09:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748862434;
-	bh=E6maFw8RNbm/mBTXc6Y92pxX5WbQ29KDi1UudDHNda4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FIh7dO7GuVcBBvgnPPqfkg/Ld9WJDFY9eJWbo2tiXYeoVtsU4O8CM20zE13tc48OU
-	 zbD9hA8VJCCZ4G45cy5TX4xy4jQt8/8p/0NoEJ5X/dfBtCfXTNTFJ73Wr/oLihZ5Yj
-	 +WFN93N/DDdmI/uaDiWAx8Ez8agqaXIpSLCV/B4/xk2dhRARqw3xagxnHjZmjNW7Ph
-	 c0TD5TVQANyW749f/X9MsYP524CjsGDxXsCkmCJ7HIAsYEZ3th02FP4qbG7l7XPOcl
-	 UizBIsUITcp86nHzjlLsqTC/kC99WY4uWu8fPYJ8nVYK4B5pGIke7qDUR0wihyUTA3
-	 +PRAYhMNGKDXQ==
-Message-ID: <b88a8847-6e19-4d5e-a847-5deee69ab7b4@kernel.org>
-Date: Mon, 2 Jun 2025 13:07:10 +0200
+	s=k20201202; t=1748862595;
+	bh=a7I7HJvFQ9VEde/6Ve3ViLZ6lotsk0Tp4rZAPkF0fNg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Evq5kpWgyNewVa6YT61xGlwHz1Grol3+yKM9bYOYALw03KfYmvv7GSA1oSUXJS3eM
+	 oFfmAhCaCJQSAvbnElZ8w2UM76LOBplvkfvTBfX/b2V44DIUArNvb5+Jl8nvZ+yJaY
+	 aWD9hB2h7W6+K/LCrUzUX5MjTuXVcYlLd9G+inj6nIjcK5hlHyZdpXxvi9qIq7oEq4
+	 GsKZJfupAMWnZI3aGqbG2KWl2qv9BaAOt+YZsapTx6OCTxbY3DkfMh2TFq3ofNAFzx
+	 g7Ja/ia+jkqK3Ai72I6OUUFZfIegyiPXOiIsZAp6xUpt2tZqeyrvCFq86R3BTb9Aig
+	 l9GfmqD20qvow==
+Date: Mon, 2 Jun 2025 13:09:47 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Lyude Paul <lyude@redhat.com>, Alexandre Courbot <acourbot@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v4 13/20] gpu: nova-core: register sysmem flush page
+Message-ID: <aD2Ge8RM1uTT726z@pollux>
+References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
+ <20250521-nova-frts-v4-13-05dfd4f39479@nvidia.com>
+ <44f13ec88af918893e2a4b7050dce9ac184e3b75.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 9/9] media: uvcvideo: Support granular power saving for
- compat syscalls
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Hans de Goede <hdegoede@redhat.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
- <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250528-uvc-grannular-invert-v1-0-d01581f9cc25@chromium.org>
- <20250528-uvc-grannular-invert-v1-9-d01581f9cc25@chromium.org>
- <34d9f779-987f-4e2c-b046-5dc15641547c@kernel.org>
- <CANiDSCtrG59QX-R0YcS+G9HmG5oE8LwiXdm_NKuCbNmHp8aeTQ@mail.gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <CANiDSCtrG59QX-R0YcS+G9HmG5oE8LwiXdm_NKuCbNmHp8aeTQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <44f13ec88af918893e2a4b7050dce9ac184e3b75.camel@redhat.com>
 
-Hi Ricardo,
+On Fri, May 30, 2025 at 05:57:44PM -0400, Lyude Paul wrote:
+> On Wed, 2025-05-21 at 15:45 +0900, Alexandre Courbot wrote:
+> > Reserve a page of system memory so sysmembar can perform a read on it if
+> > a system write occurred since the last flush. Do this early as it can be
+> > required to e.g. reset the GPU falcons.
+> > 
+> > Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+> > ---
+> >  drivers/gpu/nova-core/gpu.rs  | 45 +++++++++++++++++++++++++++++++++++++++++--
+> >  drivers/gpu/nova-core/regs.rs | 10 ++++++++++
+> >  2 files changed, 53 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/nova-core/gpu.rs b/drivers/gpu/nova-core/gpu.rs
+> > index 50417f608dc7b445958ae43444a13c7593204fcf..a4e2cf1b529cc25fc168f68f9eaa6f4a7a9748eb 100644
+> > --- a/drivers/gpu/nova-core/gpu.rs
+> > +++ b/drivers/gpu/nova-core/gpu.rs
+> > @@ -2,6 +2,7 @@
+> >  
+> >  use kernel::{device, devres::Devres, error::code::*, pci, prelude::*};
+> >  
+> > +use crate::dma::DmaObject;
+> >  use crate::driver::Bar0;
+> >  use crate::firmware::{Firmware, FIRMWARE_VERSION};
+> >  use crate::gfw;
+> > @@ -158,12 +159,32 @@ fn new(bar: &Bar0) -> Result<Spec> {
+> >  }
+> >  
+> >  /// Structure holding the resources required to operate the GPU.
+> > -#[pin_data]
+> > +#[pin_data(PinnedDrop)]
+> >  pub(crate) struct Gpu {
+> >      spec: Spec,
+> >      /// MMIO mapping of PCI BAR 0
+> >      bar: Devres<Bar0>,
+> >      fw: Firmware,
+> > +    /// System memory page required for flushing all pending GPU-side memory writes done through
+> > +    /// PCIE into system memory.
+> > +    sysmem_flush: DmaObject,
+> > +}
+> > +
+> > +#[pinned_drop]
+> > +impl PinnedDrop for Gpu {
+> > +    fn drop(self: Pin<&mut Self>) {
+> > +        // Unregister the sysmem flush page before we release it.
+> > +        let _ = self.bar.try_access_with(|b| {
+> > +            regs::NV_PFB_NISO_FLUSH_SYSMEM_ADDR::default()
+> > +                .set_adr_39_08(0)
+> > +                .write(b);
+> > +            if self.spec.chipset >= Chipset::GA102 {
+> > +                regs::NV_PFB_NISO_FLUSH_SYSMEM_ADDR_HI::default()
+> > +                    .set_adr_63_40(0)
+> > +                    .write(b);
+> > +            }
+> > +        });
+> > +    }
 
-On 2-Jun-25 12:27, Ricardo Ribalda wrote:
-> Hi Hans
+Sorry that I haven't noticed this before -- I think this should be self
+contained in a new type (e.g. SysmemFlush).
+
+We should also move this kind of cleanup into the Driver::remove() callback,
+where we still have a bound device, to avoid try_access_with().
+
+I already have this on my list to implement for quite a while, because I wasn't
+quite sure yet what's the best way to approach this, but I think the simple
+remove() callback to perform tear down operations on device resources is fine.
+
+I'll prepare the corresponding patches and subsequently rework those bits
+accordingly.
+
+> >  }
+> >  
+> >  impl Gpu {
+> > @@ -187,10 +208,30 @@ pub(crate) fn new(
+> >          gfw::wait_gfw_boot_completion(bar)
+> >              .inspect_err(|_| dev_err!(pdev.as_ref(), "GFW boot did not complete"))?;
+> >  
+> > +        // System memory page required for sysmembar to properly flush into system memory.
+> > +        let sysmem_flush = {
+> > +            let page = DmaObject::new(pdev.as_ref(), kernel::bindings::PAGE_SIZE)?;
+> > +
+> > +            // Register the sysmem flush page.
+> > +            let handle = page.dma_handle();
+> > +
+> > +            regs::NV_PFB_NISO_FLUSH_SYSMEM_ADDR::default()
+> > +                .set_adr_39_08((handle >> 8) as u32)
+> > +                .write(bar);
+> > +            if spec.chipset >= Chipset::GA102 {
+> > +                regs::NV_PFB_NISO_FLUSH_SYSMEM_ADDR_HI::default()
+> > +                    .set_adr_63_40((handle >> 40) as u32)
+> > +                    .write(bar);
+> > +            }
+> > +
 > 
-> On Mon, 2 Jun 2025 at 12:11, Hans de Goede <hansg@kernel.org> wrote:
->>
->> Hi Ricardo,
->>
->> On 28-May-25 19:58, Ricardo Ribalda wrote:
->>> Right now we cannot support granular power saving on compat syscalls
->>> because the VIDIOC_*32 NRs defines are not accessible to drivers.
->>>
->>> Use the video_translate_cmd() helper to convert the compat syscall NRs
->>> into syscall NRs.
->>>
->>> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
->>> ---
->>>  drivers/media/usb/uvc/uvc_v4l2.c     | 9 ++-------
->>>  drivers/media/v4l2-core/v4l2-ioctl.c | 3 ++-
->>>  include/media/v4l2-ioctl.h           | 1 +
->>>  3 files changed, 5 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
->>> index fcb1b79c214849ce4da96a86a688d777b32cc688..048ee7e01808c8944f9bd46e5df2931b9c146ad5 100644
->>> --- a/drivers/media/usb/uvc/uvc_v4l2.c
->>> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
->>> @@ -1282,15 +1282,10 @@ static long uvc_v4l2_pm_ioctl(struct file *file,
->>>  static long uvc_v4l2_unlocked_ioctl(struct file *file,
->>>                                   unsigned int cmd, unsigned long arg)
->>>  {
->>> -     /*
->>> -      * For now, we do not support granular power saving for compat
->>> -      * syscalls.
->>> -      */
->>> -     if (in_compat_syscall())
->>> -             return uvc_v4l2_pm_ioctl(file, cmd, arg);
->>> +     unsigned int converted_cmd = video_translate_cmd(cmd);
->>
->> It looks like something went wrong here and you did not test-compile this?
->> video_translate_cmd() is private to drivers/media/v4l2-core/v4l2-ioctl.c
->> so this should not compile.
-> 
-> Hmm... Actually I am pretty sure that I tested it on real hardware.
-> 
-> Did you miss the EXPORT_SYMBOL() on the patch?
+> Small nit - would it make sense for us to just add a function for initiating a
+> sysmem memory flush that you could pass the bar to? Seems like it might be a
+> bit less error prone if we end up having to do this elsewhere
 
-Ah yes I did miss that, sorry.
-
-For the next time please split core changes out into their own
-separate patches.
-
-In this case I think the core changes are not necessary instead
-you can just do:
-
-	unsigned int converted_cmd = cmd;
-
-#ifdef CONFIG_COMPAT
-	converted_cmd = v4l2_compat_translate_cmd(cmd);
-#endif
-
-Regards,
-
-Hans
-
-
-
-
-> 
->>
->> You can use v4l2_compat_translate_cmd() but only when CONFIG_COMPAT is set
->> otherwise that symbol is not available.
-> 
-> I tried now without CONFIG_COMPAT and it built fine.
-> 
->>
->> Regards,
->>
->> Hans
->>
->>
->>
->>>
->>>       /* The following IOCTLs do need to turn on the camera. */
->>> -     switch (cmd) {
->>> +     switch (converted_cmd) {
->>>       case UVCIOC_CTRL_QUERY:
->>>       case VIDIOC_G_CTRL:
->>>       case VIDIOC_G_EXT_CTRLS:
->>> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
->>> index 650dc1956f73d2f1943b56c42140c7b8d757259f..6fbd28f911cf23eec43ef1adcf64bd46ef067c81 100644
->>> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
->>> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
->>> @@ -3245,7 +3245,7 @@ static int check_array_args(unsigned int cmd, void *parg, size_t *array_size,
->>>       return ret;
->>>  }
->>>
->>> -static unsigned int video_translate_cmd(unsigned int cmd)
->>> +unsigned int video_translate_cmd(unsigned int cmd)
->>>  {
->>>  #if !defined(CONFIG_64BIT) && defined(CONFIG_COMPAT_32BIT_TIME)
->>>       switch (cmd) {
->>> @@ -3266,6 +3266,7 @@ static unsigned int video_translate_cmd(unsigned int cmd)
->>>
->>>       return cmd;
->>>  }
->>> +EXPORT_SYMBOL(video_translate_cmd);
->>>
->>>  static int video_get_user(void __user *arg, void *parg,
->>>                         unsigned int real_cmd, unsigned int cmd,
->>> diff --git a/include/media/v4l2-ioctl.h b/include/media/v4l2-ioctl.h
->>> index c6ec87e88dfef9e6cfe1d1fb587c1600882fb14d..437b9f90714c62e0ba434ce47391ef64d88110aa 100644
->>> --- a/include/media/v4l2-ioctl.h
->>> +++ b/include/media/v4l2-ioctl.h
->>> @@ -687,6 +687,7 @@ int v4l2_compat_get_array_args(struct file *file, void *mbuf,
->>>  int v4l2_compat_put_array_args(struct file *file, void __user *user_ptr,
->>>                              void *mbuf, size_t array_size,
->>>                              unsigned int cmd, void *arg);
->>> +unsigned int video_translate_cmd(unsigned int cmd);
->>>
->>>  /**
->>>   * typedef v4l2_kioctl - Typedef used to pass an ioctl handler.
->>>
->>
-> 
-> 
-
+Agreed -- but let's solve this with a new type and make it a method instead.
