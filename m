@@ -1,192 +1,698 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2041.outbound.protection.outlook.com [40.107.244.41])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0AEB1FF61E;
-	Mon,  2 Jun 2025 14:48:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD30225A24;
+	Mon,  2 Jun 2025 14:48:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748875738; cv=fail; b=VEYd9GU4GGkTIT5V2ykoRfKLnEKpeQBJEczILC3x3aJJRq52aADxk+079necymjHtppv9pgGvHYozxCcuTJo77KlKjoTo/062oLEu6lbsS4InpOjEhETmDWv2i9QxFlmpPRV7A5sWiqHStLZBAeZj5rW+3aHb10jTGh4BXysmJM=
+	t=1748875741; cv=fail; b=ccVJV3F5d01STigKX3QzVifyl2XEg8CElDHax6FRvsvFgq2xVhIiT7sH7ABSbFwUh5NMpFyTQhV0NtgrJf8msWiBFy6Gk3C5PdyKmREGd0EuCuigASPQo9xJWAcqhjTbFHowB4rTGD8ZvS8gkVsVw9QgSEOVfQobFpUKNNTD+xs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748875738; c=relaxed/simple;
-	bh=DFLmtSPbpEPG2U09sFCpKIRVnvYHBv1rEmWOp82shLw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=h9mVGDtvuveV8AYVguXlWQ2WwCDdfLCls9hXsBhe8dxK03Gsn0a4mZ5wqskSoj0CWLwRzyJeiSKiufZ2Whlt3CQxcgIdvP+3WPmScm+mQwp2XzmLMaQQfKSrBA/BwE6117n2IJIvu4UO4Vezxi9lS1hU1vOWygw1cIA8Sp2rzyE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=tf7LNOno; arc=fail smtp.client-ip=40.107.244.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1748875741; c=relaxed/simple;
+	bh=yIRy6UbKME/A+uPoTlel+YaYaXJjMOE/OvKUObwIOGo=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=G6uaI8rwGkJJumnSmX8UpbkOUjX8X+669uvAXiHcNsgBK5qCkl1p2un3vEFynJKYOiHPrSzwzezf7LPMhwaPTGca0Z7qEj3M8mvhbBm23YGuvf1pTzO7MyYm/FeNb0uUWBkPwK9YnAv3Q5J9g78UGm99G93HaLLU0ZvmXe+9Vig=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cAxy1bKd; arc=fail smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="tf7LNOno"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cAxy1bKd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748875739; x=1780411739;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=yIRy6UbKME/A+uPoTlel+YaYaXJjMOE/OvKUObwIOGo=;
+  b=cAxy1bKdrY2yubHNe9DNwA/IAh2OUStWqMCRg031ucFYq+dJCP2AQNda
+   O6gcD0d7AM6TZWI9DD2QXNA3FFd6L7qjRNZuoNciaGL9j6gh2z9JJcHNd
+   sfsyWvf30zPno28nWDqpextZx+tHAnARap7yO666Rttzshf50djQFjVxd
+   JqlabdVX/rUdc8iMDuh5LYpCxpNpTHcvbdrG8h8cQ7uedNgxHExpafrcv
+   DbVLxZH7hZkf5OyT54MDR9hkaXkJXzHttGqs2O1SRpJaPnK5T8rem1NuP
+   aJTOViNfxLZct31PkMFSTQ83PTxrQSSto9tyECIJGvcQ4OpYefVd7NyTo
+   Q==;
+X-CSE-ConnectionGUID: a+jF4QHcQCyNgdGZxENYoA==
+X-CSE-MsgGUID: BjY4U9TlRG+DHptB06++/Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="50008483"
+X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
+   d="scan'208";a="50008483"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 07:48:58 -0700
+X-CSE-ConnectionGUID: qkomBxKOQnCv852Jv9zfTQ==
+X-CSE-MsgGUID: N7jvmjAXQvuD4QqDzKMsqg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
+   d="scan'208";a="149832260"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 07:48:58 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Mon, 2 Jun 2025 07:48:57 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Mon, 2 Jun 2025 07:48:57 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (40.107.244.71)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.55; Mon, 2 Jun 2025 07:48:56 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Lf4O8DQdUcJRcIMz0SsCogy9dAcEUR2tHRp/21rHJRbhy9tPafn2XUcsDCLUbbMAfvugu3uq4MClmUlpBYvjoy/wyzHKGO7L1btfd8RuibDF2qmqtKmd097HDOKpOZxKaxFnEIEWvW5qard4PxnltwI+LFM91bweg9a34x/aZ6+tbLM8X2lV11mV0KcDU+kTeGdE/C4kBLLNi4X/hO8lG4J4sstuuphWjj5lza5E+5dt0ucmdDn8NX75H1g4+wYC00NZSVHYX8XykJqtsaGNJj8TQTb1E2wfmaIcdJKk5FfIXxYYy+9FcR/eeXgRnfSvwEi0EvW9NktDPs8Zf/myjQ==
+ b=ESnAmRI3Y0TbPFqeioa2Vwww/77meQkAhA3rbocFoS6Fm0JvCSknB/pTnNMDIJtcZt0tnCHCAJc2/6p853Dj2pKLsQrSUSfwTSmUKKndH7jhqp3OBpqbAlYi3wLoPKJPPUWyXZa8dvpBxpvnNzwTKT99M8CQbEuPbgAqnm+x85CsvYcp62aeE/qYYVj5rzRP6NNzoE4/e0SPaCiyJBFp+l0GleaFTLBtNP8SIZF2ouqXA/ROIPsn/bGczvUR7P8It0qZgKONQHLneia57GIj6qMwdYf3kKOj3AKhZyRPfHFbPlRePB2PsRkpxnJ/vWVZyJ9s98SpK0jM26iuHuDIIg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DFLmtSPbpEPG2U09sFCpKIRVnvYHBv1rEmWOp82shLw=;
- b=cuDw2h59jjUaukpH+bL1z9eqiBM+cAv8oo23ZBe/+8Umeidrv2N4p2jHwON0NskHB4WTdg32Sh99uUk6HeCba36lGH3XDFHtYe1kvZknFyeHlIfnUixPKCFBJcNA2H0ShkCS5X+377FBPuny2fiSUnswBKQQY1Nfgzp7FduLnDNfB7ZDlocYmez0FlEzd5PExTtptoCj5/WXjxCwEV3m/FwvVcL9Te8cACbM7ttb4aTsBzRMA6QSrk2SHUHU8JU2MIs4WJ6vyGQEl3z4dtqJO2YEI8xModseARS4kr3tJqMRWluIXYm2xWkY+S7XNpDZzDi+FRpNnmVW53krT18noA==
+ bh=qrj0gwpcXJs1Y2qk510BBQIScp5s4VCfxaKCDF5i6W8=;
+ b=PZtBpTlR4Qtv+rdF1Ll77xJQAQOw3x8m+B4+nd46M8KiPeKMI2CEWWlWurNpFPptIT2ZHVxeOdK9Mud0m1wLOUf/Y/2SYg6oQuF5UsBGCztgQYNS8pUHs5dazeCIds7MHBQjXJmstbMi3qzzlb38F6O6WBOVB6iF7TlS1UIi2GhU3y+R7yOBFeKLzpzQ5JEnZ6Ba+kL/+5hIgesvd1WFQUnwHMkTBfWqp7KuTyfeoWeByJxCzqPjyKzX+jOq0FXxDUQUsPLrILOHe9ofXkW+xvqJVSvyjsU9vHyjkshHFNowLN+TScn7TUlmModDV2kMIZvfGW3lpdxprW/lX6niBw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microchip.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DFLmtSPbpEPG2U09sFCpKIRVnvYHBv1rEmWOp82shLw=;
- b=tf7LNOnomOkWiyTt+cGyrpn/79pP1SNhp5cZoZRAIK0FU4OYSBc1PE+pjdwAzvX07bhbOZG7Z8xPproF43TSelCK7lWxWkBVPMWvP04Nauseo1EW6CbzVPvisfJ98KMB0kktk1oPjvknY2oOOjycJYG2Pn0hpZ+mccgV9xKT7nWi3miBRrDmjCmdrJxhs9EyF36tVDcrY+lHrgUIkcxkEKIPqJ6t2J/Gfa2QaWbSKCX1k34IF+nqn+QkiP5CzJVL4u1M0fYqNNrykAZSb0fQYNPDl+ngLhAF1ui84lqY7eqBLSnZNeYIXdWsIfN2c7TxpAZAuWw06OKCMzaa11NWAw==
-Received: from SN7PR11MB7589.namprd11.prod.outlook.com (2603:10b6:806:34a::14)
- by PH0PR11MB7588.namprd11.prod.outlook.com (2603:10b6:510:28b::16) with
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CY5PR11MB6139.namprd11.prod.outlook.com (2603:10b6:930:29::17)
+ by MN2PR11MB4598.namprd11.prod.outlook.com (2603:10b6:208:26f::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.29; Mon, 2 Jun
- 2025 14:48:53 +0000
-Received: from SN7PR11MB7589.namprd11.prod.outlook.com
- ([fe80::df51:5691:df7d:9a34]) by SN7PR11MB7589.namprd11.prod.outlook.com
- ([fe80::df51:5691:df7d:9a34%3]) with mapi id 15.20.8769.025; Mon, 2 Jun 2025
- 14:48:52 +0000
-From: <Victor.Duicu@microchip.com>
-To: <conor@kernel.org>, <dlechner@baylibre.com>
-CC: <nuno.sa@analog.com>, <linux-iio@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <robh@kernel.org>, <jic23@kernel.org>,
-	<krzk+dt@kernel.org>, <andy@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<Marius.Cristea@microchip.com>, <conor+dt@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: iio: temperature: add support for
- MCP998X
-Thread-Topic: [PATCH v2 1/2] dt-bindings: iio: temperature: add support for
- MCP998X
-Thread-Index: AQHb0H02VwkVCnAA/0y86KUckGKYY7Pp6dIAgAFrrACABKRxAA==
-Date: Mon, 2 Jun 2025 14:48:52 +0000
-Message-ID: <91c1d757a4ac051c115a821779a8c1fba764ea05.camel@microchip.com>
-References: <20250529093628.15042-1-victor.duicu@microchip.com>
-	 <20250529093628.15042-2-victor.duicu@microchip.com>
-	 <0f68e3f9-cba5-4df3-8e56-2cccbccf35ce@baylibre.com>
-	 <20250530-dramatize-camisole-0a1aa9a38281@spud>
-In-Reply-To: <20250530-dramatize-camisole-0a1aa9a38281@spud>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN7PR11MB7589:EE_|PH0PR11MB7588:EE_
-x-ms-office365-filtering-correlation-id: 3aa97bb1-69d2-4803-b98c-08dda1e497d4
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|376014|7416014|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?ZUp4eFozMHkwbURCNDhEWUpJWkthT0VRcnV4aUxIakhPRUdNVGtwTFdUS3Zl?=
- =?utf-8?B?UTlzdGFQc1JKSEVvYnBMR1MvMXMrY1BwdkVNeldUMG1Lb3JaT1czVXd0Rk0x?=
- =?utf-8?B?Q3AwUGRlR3VRTG9uNjA0VWpUT0tsTVhqU0FuOVM3Z1lVV3lGS1BLOG5NaXE5?=
- =?utf-8?B?L2RyekZBZ2JzTWZxMG0rN3BmdnlzZEdlemx4UGVHdnpycFYxVjZBMDRneFEz?=
- =?utf-8?B?WFplOEZ2aFp2MUVIQTl4UlZlalVvN0RiY0pka1A1VmpFQXZZOFZ5NVVFQmY2?=
- =?utf-8?B?Sjc4OGEwWEhPRFdjdDA4Rk8zdHMxL0VzYmJXR3NUK1pvM0h6bWZEbVB2R21w?=
- =?utf-8?B?V0lHcmQwU09mbzhJRFVQY3JFbXV1Q09vMGJOQnhOa0poenR3Y2RiVDNvU25Q?=
- =?utf-8?B?eHhLVUpZOFRLT01tVEc2c2dDSkh1c0tWejNyZzBLYmFhVzQ0UWVBMTQ3ZFJY?=
- =?utf-8?B?U21KOFp0Wi9CVVdKMEtvZlV4Y2VjUzVHTTJxOG1nSjgxMll0TjJNSGxzWTht?=
- =?utf-8?B?bEptNlJreVB0dE4yaFdoTG1XOHVQaTI5Tm5ZRyt5Y3N0V05KbHh5VVJsT2lE?=
- =?utf-8?B?d29VRGF6TSt6WVBGRVBrOGtJY3pCQzNYMmRDZ1NsM1pERm1RSWVHLzE3N1lr?=
- =?utf-8?B?d2J6SFVDTHBJaDREcUNsZmZkeGw4eFV4eU5FWHA4QlJ0eUx4a3lEdXBJZ3ZC?=
- =?utf-8?B?UHlPWWVSUnNKVE9PSktJZnZGZXhJVFg2ZENKT09sS0s0MUw0WE9TY0djWElx?=
- =?utf-8?B?NEZyMkRUNzQxTXlsOVNRbWFZaGRqWWxGcXAvS3QveXlrczJYVE9HT0dyR2gz?=
- =?utf-8?B?ZzFHRWQ5WDZMZmUyYWpMV1ptRFR6cWFYZ3dZMHFRRXFuVnB1R1R5T1hmZEdK?=
- =?utf-8?B?Wnc4d09yNmMycFNGekFYbjY5azJBK3ZYL00xZVZKYnp1a3Z6WU80ZUYwNDBp?=
- =?utf-8?B?TjZaTkJYcmF5VXExNHVxV1JWWElZMnU4ckhaY0hlU3gyUmtwSHY3eENweW1I?=
- =?utf-8?B?ZTFtWnUrcldibGxGQThOS0orb2VRSHJ0MmhVbytub0RqM2oxQVFLOEdZWXB0?=
- =?utf-8?B?bm81eElGZ211WlJsTjlNNDcxZmNhdTF3dWtJUDlEdHV2OHRNMnlkM3NwYXAv?=
- =?utf-8?B?K2tpajdjU0ZqelNMMVVvMGhvM05JOGdyc1ZRU1ZrMzQvYnBreUlGMTRBRmNH?=
- =?utf-8?B?eVg2RE5uK1ZxMlRkbFRmaWZBbmxyL01ReFd0VktRTG1BTVB5ckJtRnVaUlNQ?=
- =?utf-8?B?TW5zR01DQ3pBb3FPOVpkSXdIRTFuQUVMMUNPU0tSK2Yxamh4cGxiZDlCMU5w?=
- =?utf-8?B?NGFxRUZkSXFNU3BhcUw0aUNwSldBRnFjWUdsS0JLa0pXblBYdkNSbS8vbFJB?=
- =?utf-8?B?aC9lTGgveCthekpNMFlXVkMwRFdhUUhXMWJBMlRoSkd0cFRjK3JFamFqM1V3?=
- =?utf-8?B?dU9IcEVjRllsR3RKRE1wdXB3MHphMVQ1WDBKdVFMejFUYzY1aDFrT1BIdFVa?=
- =?utf-8?B?bUQ1cStsVjdNY2ZpY2lxZzk0RDAxYUF3SU4xNEZXbTdUUi8ralRWTUltWmps?=
- =?utf-8?B?Wm43RytIMXMwb0dvUEZmNE1xbHV6RW4zaEpETzM1eFlCcW84M1d1TWNHYmY2?=
- =?utf-8?B?QXV0aFhDN01UU1Rvb0NycDNGWG5BU1IxZDh5ZmMrNnZiaEhvU09oWnFDall1?=
- =?utf-8?B?VWZVY1dmbEw1d1kvcVpsWUZCYVVFRGI5VDBaYklmZmJVQzVSMTRYWHdnTExN?=
- =?utf-8?B?RW4rb1hZRDk2S2VGZlVxcnlYYytPc0lMa2VaWk1NTDI1SytvM3R3YkMyb1RL?=
- =?utf-8?B?TW9UZ2JpQXhEbU1nSW5MSjFiWkoxU2RpZTc1YytUa3Qva0ZEeE5xRTNnSngw?=
- =?utf-8?B?U09qczlmdmk4bzAvQnVTeW9qM1Y2WkJWeUF3RTZKVkwvWVVsbSs1bGZiS1gr?=
- =?utf-8?B?YUhEVlZYaThoRGJqemx1US95SVdSZXg0VVIrNG8yS2tocDdDWXlzTnlxRlFN?=
- =?utf-8?Q?PhMKcMv/NEEbTnm6lEPPAZ0IIO3TJ4=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR11MB7589.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?RkVNU0d4RzFiSHZGWVptNEp5TTNEK09OZDhodW1MZFNuYmRhWTdnRkRCUFZi?=
- =?utf-8?B?ZS9QTGtxRE9XVWVyb3kra0dob2dQVktrbmVST2tJTWJWeEdJT3RhSDBBelhX?=
- =?utf-8?B?eHljTHBKTDhQVmMvdHBZMjE1bXIvdFM3MTBMWUtIalQ3SVBYdEdwdG50VFYx?=
- =?utf-8?B?MGtjanJBT21OMnoyeTgyNnhQMW5wZWtKYUhkQVQzL0hUOFdDRDF4ZCsrN0lD?=
- =?utf-8?B?YTdtR0ZLT0RHYUxaWmlpOEYxaFJvdndSWFYxYWZhUVNCLzZUV0lONXJ4RkR0?=
- =?utf-8?B?OHZmVTYyN3hxSEdmaHdRQUtkaDFyb0o0VjdjSmRVRmt0bWdkQVJYNW56MWtF?=
- =?utf-8?B?YUp4UkN4N1A3SjRJSzVaTGQ0emlxUHIyT3FGeUdFSDhISHJyTlpwSUE5WlBM?=
- =?utf-8?B?blJCSTNkb3RPRHBMVEx3SjdGZTJoRzRlaStjUFFubXFTZWljRVNKRVo4T0Rv?=
- =?utf-8?B?WkhmMEY4VVVyaTNsdFM4MFQ2Z2w4d2Ywa2RBMi9XbmI4b3JpcjJmS0tMczlk?=
- =?utf-8?B?Ump2b0RVTnMxSjFxZXp4d0liamJXcjZvNFNHWjA5UkM5VERNU3E4a2cxM0pz?=
- =?utf-8?B?YldRU0JyTmpPZ2hVN0IyakNoR3k0a1ltc25iVEJvamNnOWgyYTVFUzRrRENz?=
- =?utf-8?B?QUViZnFrdFJnZzJPUlZ5R254OUlyVlV5TENhU1BMR2tNd2Q0V1BydXhIejF3?=
- =?utf-8?B?U0l5dllMOUN0UC8zdXk0MHVlMC9LSHAxNVg4WVk3R2pGTlc2SjB6YXFwQWxH?=
- =?utf-8?B?aGpwMFlYS2NRaTB6UFF0OVNVMU15cGxqSzlFT2JBU1BRckg2TGpWU2FicnFi?=
- =?utf-8?B?SmE1aVRpck1Dc2hkUXVFMVNSTjFWYXh2VWZtMEgxcVhkSGx3TFBXNnpaSGdZ?=
- =?utf-8?B?QUVGNFppMlRGcWQ3VWgxc3RtaUlPMmRMS0UxekRSOFFjc2RDalk2Q1g1RDlj?=
- =?utf-8?B?aHpCVENZSTliZHhwbHQybjdheUxkWUE0azB6ek4zVVlCcDduTitBVmt3UFI1?=
- =?utf-8?B?cERvb1ovUzVvOXkvZjA1K2VkM2FBdUtZNTd1NnY0eGUzQWZTR2J2bE5pT1Fo?=
- =?utf-8?B?eXI5ZHlqOGRXdHFFakxYem43TDBDbmVIbVhYOTVuSGNGU0lHejc4b3I4WnhK?=
- =?utf-8?B?UnczWFY2SWNFaytEcXYweEFCaGozNXZ0VDFWL2VuZDZLRkF5UC8ycjVXRHlY?=
- =?utf-8?B?am5yN3d3MTVUbXNwOVd1SHdhS1loOW5jSW8xeGRmek1MOUxXS2lKV09mNU5r?=
- =?utf-8?B?SkxtdVdwc3hqZDZuOWZ3NWk0ZVBvNnJjSjB1SHdhSnhpS3RZR0Y3eWtnQVRs?=
- =?utf-8?B?ZWFoM0t5OXN6YXF3ZFREcHBKWWMwbHNwUWhQVFB2UzdndEtVUHB5NEp4K0h1?=
- =?utf-8?B?d1pZd0ZmenVmdE0vZzlpRWttNGJ2eVJaMzhKUU1zck9xV0RMN0JEZDFIWFY4?=
- =?utf-8?B?dVY2QXJBSmpXZkMwQ0IzWS9TWjZZemRHVFVQV0pod0grS2lCN1BDdnpVWnpl?=
- =?utf-8?B?NE5Sb3krY0IyV3RzWVdnY0RiSm9sNEFyTWlUdDI3VmExSzBxcFJkYVpwam4r?=
- =?utf-8?B?bllLN2NVMDJDbjE4aDBOc3k5QlZHUXBkelBEWFFLNmpRTFlqeVBPUnBTQ1Z6?=
- =?utf-8?B?eWlGMnJ6dkQ1cS8xU1dQOUV1NE5CK1phQjlzQU1vM1NyZDQ2blAzekFyZXpl?=
- =?utf-8?B?SERTUmdvRWU3WGVzMmh0QWZzdjh3RjdONUNHNVFhUXBKdnVyeDB0QnlPcnc5?=
- =?utf-8?B?ZUVHdXdtMEQ3SmZERnAvZFRTUmpqS3cwVVRIblRWNjZMNVQ5Q016YmlJQ1Z0?=
- =?utf-8?B?aytXdmU2Z0k4d0I3ZHQ2bTJ5aUJzY3MzRlJSeG1lOVhWUUNnSk8xVjdhc3hB?=
- =?utf-8?B?TEFZSjJBMW11OVRORFF4TlFyREw0cGlEWEVzNzhSTXhoV1k2dkgrclM4U0JH?=
- =?utf-8?B?ekViNjVtcWVJYjlzK1VtZTk1RWw1d1g4SmxNVFl4OXk0aXFLb1Uzd1Y4YTd6?=
- =?utf-8?B?RVhid1FldXBGUXF5WmpPeG9IclF4UnJvRktER0JWbitlNEMySkJJNzZsOFly?=
- =?utf-8?B?UURlYUxCejBkbVk4d1JiRWhXeWpwdXBRYnlaVklHYU9ySFB0b1BVSFo3S09S?=
- =?utf-8?B?ejVzd2hBZ2xhSEhtTnErdjB1TFQvcklQVnRZaTZWVlg5cTJ0VWpTZjBlakhX?=
- =?utf-8?B?Tmc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <049215A3293F9E43B49C9DF0EDE95835@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Mon, 2 Jun
+ 2025 14:48:26 +0000
+Received: from CY5PR11MB6139.namprd11.prod.outlook.com
+ ([fe80::7141:316f:77a0:9c44]) by CY5PR11MB6139.namprd11.prod.outlook.com
+ ([fe80::7141:316f:77a0:9c44%5]) with mapi id 15.20.8769.025; Mon, 2 Jun 2025
+ 14:48:25 +0000
+Date: Mon, 2 Jun 2025 09:48:21 -0500
+From: Lucas De Marchi <lucas.demarchi@intel.com>
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+CC: Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, Jarkko Nikula
+	<jarkko.nikula@linux.intel.com>, David Airlie <airlied@gmail.com>, "Simona
+ Vetter" <simona@ffwll.ch>, Andy Shevchenko
+	<andriy.shevchenko@linux.intel.com>, Mika Westerberg
+	<mika.westerberg@linux.intel.com>, Jan Dabros <jsd@semihalf.com>, Andi Shyti
+	<andi.shyti@kernel.org>, Raag Jadav <raag.jadav@intel.com>, "Tauro, Riana"
+	<riana.tauro@intel.com>, "Adatrao, Srinivasa" <srinivasa.adatrao@intel.com>,
+	<intel-xe@lists.freedesktop.org>, <linux-i2c@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, "Michael J. Ruhl" <michael.j.ruhl@intel.com>
+Subject: Re: [PATCH v1 2/2] drm/xe: Support for I2C attached MCUs
+Message-ID: <ixdkpl3ssri7ggv7yxhdla4ft5hbyce6a2ngvmypgkmjc5tj4a@qqbebbzhkd2b>
+References: <20250530141744.3605983-1-heikki.krogerus@linux.intel.com>
+ <20250530141744.3605983-3-heikki.krogerus@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250530141744.3605983-3-heikki.krogerus@linux.intel.com>
+X-ClientProxiedBy: BYAPR07CA0036.namprd07.prod.outlook.com
+ (2603:10b6:a02:bc::49) To CY5PR11MB6139.namprd11.prod.outlook.com
+ (2603:10b6:930:29::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microchip.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR11MB6139:EE_|MN2PR11MB4598:EE_
+X-MS-Office365-Filtering-Correlation-Id: 02e500dc-a651-4f41-4804-08dda1e4872f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?8BPEGEGQYdtyEWe0+cE1cSRpa+Mkaf88TqcyVzvbOQJvPc2i/ZMzNol/nuL4?=
+ =?us-ascii?Q?VITuDYh6lXaOBv9841W0cyFW8D0TQREahKbv6MepibxFiCRP4n2l8A3c+Ypu?=
+ =?us-ascii?Q?MuBzR76sElc3bUbImizxNR8VZMXQT3afJa2Qa2F1HzJvP9G4byQniDBCTq8Y?=
+ =?us-ascii?Q?foBnoEmXmhEndePVUdD7E8vQls44IlyWrHJQypMiDthaJD/g+lAL+Xa32tB2?=
+ =?us-ascii?Q?WqD+TP5PMTQgyr8u6TRf3Ss5GppcRuiLzMEh59pOicOoUEKC96C4srfNvCfF?=
+ =?us-ascii?Q?TQ4Dc1Q3lI3yowJ7DpdQNATVwN+VUKWLTpr5BX4wdLQHt/gu0eGQvYrYGTOm?=
+ =?us-ascii?Q?/Qs2uHZGH0J2HzE5v+cA5SXm8K0Quf3DkZQLxC+6+72FT7KPMmAPOz2Xdtyx?=
+ =?us-ascii?Q?uuuE+0QzJ4Tg0NkIKjbUPuRptzVrM0l1H4wiClNow5AeKwpCbo/XfBLNBgnw?=
+ =?us-ascii?Q?11RfC3K3O94Qt5iwyZd+a6XqivU0FxrafVCnAdjHg8wtdYPY1RQN/vhCr01I?=
+ =?us-ascii?Q?2L8O/SJFKTSNdy1aP66sJ1H+8WHWQhVdZwD1sM0IfbUkq+Bt7/62EFw1MIQo?=
+ =?us-ascii?Q?u+uoxRrKDyD8EyyngQ/yii0XYCZWTQRxqoPcTs0g/2NtlHCgOWJPOw3eZtvf?=
+ =?us-ascii?Q?dclGX53xxzyvCDSD+6AWmV1qD6vMuy0ejWlon+xKu3ob3rGkdiFH5BQoPB32?=
+ =?us-ascii?Q?d9Ggoa+tiY+ol5V9CnftCHCyVV4BSVj92ECjED/LpMHABna3TuE0qi5xEkN2?=
+ =?us-ascii?Q?yHgqZ1dUHmcHZOkPhffjC01GTVLELntqhRC0DOv/Z2AHpWrHSBImep9Nz9Pf?=
+ =?us-ascii?Q?7n41/7EgPmxQQt9JzKt8GWJY42XcKfvpQLDRy5h/UewUkcwbH21P3HY2PTju?=
+ =?us-ascii?Q?ihNUwP/m82x4XZsFECjL/n//Y3Fy7UJ5VvSOyv0j3CpsjYyQSjORl2ULGt8/?=
+ =?us-ascii?Q?c1BgMw0ITGmmDmRSiALoykOqUjVmYioDBq4cUdDonTozLQ7NTSLtjx1wUiwe?=
+ =?us-ascii?Q?vrc7AdToOTWgz5VKDPn3BZn8OT5FagLG33jKr32wu5OKvQRqJHaEt7WcIpwX?=
+ =?us-ascii?Q?iDMVMhES2lQE2/fCRXUyq/b2dj6YagIA1wzoTayy/U171ZLJGQso7vQ4IQRB?=
+ =?us-ascii?Q?FIjd0XINvrKh9+pZddCz1nfVaM1b5darkhnYqM/3ss4jrN8T9Op+8mlrtglA?=
+ =?us-ascii?Q?nrbbumUyNlPKIweIUCJ1jGE6RcDyZ2X8dtBJyR6tXQJwI0gYG35nQ4Cao5Qe?=
+ =?us-ascii?Q?g33PW0SinOIb+GonVWtI6GoHlQw24zA1UKpYsvgxJoXl9QRT9S5VVjuDt0x8?=
+ =?us-ascii?Q?XO0yqcNhmD17UKbkg79MjuEwvM5aA6dpwzL9VUkLO4SF8yWHooFdrsMbH1un?=
+ =?us-ascii?Q?31jhHGq/xB6dfXRvzFhqfcoZcDUv?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6139.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?pf9Tfj49y/H2ar8yKx0PWYbnpVOCSjw0ePdnUoUFgL2Zjc2xbwNXibvGem8d?=
+ =?us-ascii?Q?u5C3zau3kFL1QdkVxhi+MlbHIr0qTHubXVvQejQT9lPt1pR4+xIwQj+M8/Ti?=
+ =?us-ascii?Q?vuHpu/JbPS0/QH1uOBl14B2t4JIJjZmavqRqXKBi3vnH3Z2UYh6juGnUpIxH?=
+ =?us-ascii?Q?uA7bElKnxfpN6bLn7Fm84NW1MsJArr5C6EPCeKRCqpQKrLO2dI5LZHMxZkQK?=
+ =?us-ascii?Q?M4V8s5whaxL28x9a6FCIALadohCNjXq0R1TD2EpGPjIkwL1r6wRHyldw7Z0j?=
+ =?us-ascii?Q?spLmd3MwTE+a0qKzzcf8ntdlbl7+UlUCS2xsbDlduVW4c04zVMeMXhpOtZ2A?=
+ =?us-ascii?Q?aQ5aqwsZAS7+7b2h0p071uciYKtwBJzs7GrqSvCVEXIZOiyAD32G/82LTDdE?=
+ =?us-ascii?Q?o/2LLvlHemtIOfrgFQ0auhWTtxzabxRe9IC4sggZ7D3rKU/XYxAK0zeWfdgP?=
+ =?us-ascii?Q?TzZg1t7tSLHJV2+FRTp6+OGXmDZPqb8jVoE7YriNTZI+4pbTZ9EAkuyGsNNH?=
+ =?us-ascii?Q?LAWeNlVZlDkFvxswUPMZxzEKXC0Kw64Opi7Xdz/wtyyetDvNrNfPwnyG/l0i?=
+ =?us-ascii?Q?oo2JrfInSRel4KpQbyVpY1r9nbVbfQQ/pMhdhavBoXO7DdpIe3eeGHBUHPbb?=
+ =?us-ascii?Q?J1p8L4RpqpkxITjuGIsbwFj/TJIJ9voTDLFh4wXLWa2XrDXAy18whgaEUWyG?=
+ =?us-ascii?Q?nqF976froAiFYoEBnaEn9XGjqqFFFiEaUA7JFsopcqGfduF4ddYBwNC0v5pW?=
+ =?us-ascii?Q?eFx6qfVzHXcMzPz6f2w2KTQyVYuJ0CyiwWOArUTnzT4AhEri24Wl/lrS/OMM?=
+ =?us-ascii?Q?sepIljMpiKEsuH4+9u0gUVrDxSBXgMcPTQsbnmJ02tNldC+WpTzoO/44iAAO?=
+ =?us-ascii?Q?cVk3vJULy1bJJYQy23RSvbnuVs96X2ngoq7GFqFhCRJZnpSgrg0v2tB7C9Z9?=
+ =?us-ascii?Q?bbvcHY8JAvRZAmd8QoIXaR09PtReFZwoq2PaAD0KeYWgxN7WBas0dKyQcTVG?=
+ =?us-ascii?Q?Dcm/n8fT2Vtbfey0JgTVptB+f9rGl9Tj8y3RY9hrmdxQCPQ7UuvRRFDE7Uad?=
+ =?us-ascii?Q?nUqmHNawIPWlvMjegdD1j+LE2uoVfNpqIxPMseu7WOjKK+KiOHLtS9jXrc9e?=
+ =?us-ascii?Q?Pdd0CqsWFvMP9aN4GHYbcRlPJZefQ5+a6C/voEIt7qvXw6l/JHq/TnOk6sxi?=
+ =?us-ascii?Q?487elnzrIn5gmBj1eIGaTn9cUbEXltNfdfj8hdu03wGf4vZyF9yW4YMrEgux?=
+ =?us-ascii?Q?d2fJK2Ek8R2lRtfBPIBJoNIcO7mhccq7D+bpxHZULUg7EOEP1dowLj9KHvlh?=
+ =?us-ascii?Q?IoXGMbONSoSqRqe6nsfAOFh9IvhpQTX2lVeaLLqTFMmDBDjhvMvRZDABXTES?=
+ =?us-ascii?Q?BlB2RQbcIKkK5BEeS3w0Me2ymW6h57thXDEcNicHpHR5WvCF24NSH8XDV/25?=
+ =?us-ascii?Q?mDij1HcZkvMVcm3HFBIv7QRM1vEqoc7AhPsAasUC/3N4xBg2WGx8NztSIla4?=
+ =?us-ascii?Q?aI75qLKDIFkNYG8d5Ty/rESfw7VP/WmhM+izTz1OGSz5X7dsSeyS+zPfXEz7?=
+ =?us-ascii?Q?3zKcmzJdyxu8yR2lXxog4syNg8M3a7fDf4+/P2ksm6P79Z6TqR1FEx5fbuI4?=
+ =?us-ascii?Q?XA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 02e500dc-a651-4f41-4804-08dda1e4872f
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6139.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR11MB7589.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3aa97bb1-69d2-4803-b98c-08dda1e497d4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jun 2025 14:48:52.8157
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2025 14:48:25.1917
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: M5XMA3XOG2yrIiwfcagAlf2yrB1FiYjYqwXd109ygjIhd+cynJigg2cLpRIu9hqQrpK+Pbtr1dCMI/TozCJp6HwN2M89/sexTDXpGLgTWhQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB7588
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eAAMPx+VwsMv+AZVjDX4qn3m8FkUd+gMDgCvhSrOUj8XTBcIs9jwA82IaT+LxF3wP6j4uD9Po2h2zVy0udDleIx+mV1OAG3NENE24T2ZQsQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4598
+X-OriginatorOrg: intel.com
 
-T24gRnJpLCAyMDI1LTA1LTMwIGF0IDE2OjU1ICswMTAwLCBDb25vciBEb29sZXkgd3JvdGU6DQo+
-IE9uIFRodSwgTWF5IDI5LCAyMDI1IGF0IDAxOjEzOjM4UE0gLTA1MDAsIERhdmlkIExlY2huZXIg
-d3JvdGU6DQo+ID4gT24gNS8yOS8yNSA0OjM2IEFNLCB2aWN0b3IuZHVpY3VAbWljcm9jaGlwLmNv
-bcKgd3JvdGU6DQo+ID4gPiBGcm9tOiBWaWN0b3IgRHVpY3UgPHZpY3Rvci5kdWljdUBtaWNyb2No
-aXAuY29tPg0KPiA+ID4gDQo+ID4gPiANCkhpIENvbm9yLA0KDQouLi4NCg0KPiA+ID4gK8KgIG1p
-Y3JvY2hpcCxyZWNkMTI6DQo+ID4gPiArwqDCoMKgIGRlc2NyaXB0aW9uOg0KPiA+ID4gK8KgwqDC
-oMKgwqAgRW5hYmxlIHJlc2lzdGFuY2UgZXJyb3IgY29ycmVjdGlvbiBmb3IgZXh0ZXJuYWwgY2hh
-bm5lbHMgMQ0KPiA+ID4gYW5kIDIuDQo+ID4gPiArwqDCoMKgwqDCoCBPbWl0IHRoaXMgdGFnIHRv
-IGRpc2FibGUgUkVDIGZvciBjaGFubmVscyAxIGFuZCAyLg0KPiA+ID4gK8KgwqDCoCB0eXBlOiBi
-b29sZWFuDQo+ID4gPiArDQo+ID4gPiArwqAgbWljcm9jaGlwLHJlY2QzNDoNCj4gPiA+ICvCoMKg
-wqAgZGVzY3JpcHRpb246DQo+ID4gPiArwqDCoMKgwqDCoCBFbmFibGUgcmVzaXN0YW5jZSBlcnJv
-ciBjb3JyZWN0aW9uIGZvciBleHRlcm5hbCBjaGFubmVscyAzDQo+ID4gPiBhbmQgNC4NCj4gPiA+
-ICvCoMKgwqDCoMKgIE9taXQgdGhpcyB0YWcgdG8gZGlzYWJsZSBSRUMgZm9yIGNoYW5uZWxzIDMg
-YW5kIDQuDQo+IA0KPiBXaHkgYXJlIHRoZXNlIHR3byBkZXZpY2V0cmVlIHByb3BlcnRpZXMsIHJh
-dGhlciB0aGFuIHJ1bnRpbWUNCj4gY29udHJvbHM/DQoNClRoZSBwYXJhc2l0aWMgcmVzaXN0YW5j
-ZSBhZGRlZCB0byB0aGUgc2VyaWVzIHJlc2lzdGFuY2UgaXMgZGVwZW5kZW50DQpvbmx5IG9uIHRo
-ZSBjaXJjdWl0LsKgDQpJdCBpcyBwb3NzaWJsZSBmb3IgdGhlIGNoaXAgYW5kIHRoZSB0cmFuc2lz
-dG9yIHRvIGJlIGF0IHNvbWUgZGlzdGFuY2UNCmZyb20gZWFjaCBvdGhlci4gVGhlIG1hbnVmYWN0
-dXJlciBjYW4gYXBwcm94aW1hdGUgdGhlIGVycm9yIGFkZGVkIGFuZA0KZGVjaWRlIGlmIHJlc2lz
-dGFuY2UgZXJyb3IgY29ycmVjdGlvbiBzaG91bGQgYmUgYXBwbGllZC4NClRoZSB1c2VyIGNhbm5v
-dCBpbmZsdWVuY2UgdGhlIHBhcmFzaXRpYyByZXNpc3RhbmNlIG5vciBjYWxjdWxhdGUgaXQuDQoN
-CldpdGggS2luZCBSZWdhcmRzLA0KVmljdG9yIER1aWN1DQoNCg==
+On Fri, May 30, 2025 at 05:17:44PM +0300, Heikki Krogerus wrote:
+>Adding adaption/glue layer where the I2C host adapter
+>(Synopsys DesignWare I2C adapter) and the I2C clients (the
+>microcontroller units) are enumerated.
+>
+>The microcontroller units (MCU) that are attached to the GPU
+>depend on the OEM. The initially supported MCU will be the
+>Add-In Management Controller (AMC).
+>
+>Originally-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+>Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+
+Please use drm-tip as base for the patch series, otherwise we can't run
+CI to make sure it doesn't regress:
+https://drm.pages.freedesktop.org/maintainer-tools/repositories/drm-tip.html
+
+We will probably also need new tests in igt.
+
+>---
+> drivers/gpu/drm/xe/Makefile           |   1 +
+> drivers/gpu/drm/xe/regs/xe_i2c_regs.h |  16 ++
+> drivers/gpu/drm/xe/regs/xe_irq_regs.h |   1 +
+> drivers/gpu/drm/xe/xe_device.c        |   3 +
+> drivers/gpu/drm/xe/xe_device_types.h  |   4 +
+> drivers/gpu/drm/xe/xe_i2c.c           | 270 ++++++++++++++++++++++++++
+> drivers/gpu/drm/xe/xe_i2c.h           |  60 ++++++
+> drivers/gpu/drm/xe/xe_irq.c           |   2 +
+> 8 files changed, 357 insertions(+)
+> create mode 100644 drivers/gpu/drm/xe/regs/xe_i2c_regs.h
+> create mode 100644 drivers/gpu/drm/xe/xe_i2c.c
+> create mode 100644 drivers/gpu/drm/xe/xe_i2c.h
+>
+>diff --git a/drivers/gpu/drm/xe/Makefile b/drivers/gpu/drm/xe/Makefile
+>index e4bf484d4121..3f581e2bb564 100644
+>--- a/drivers/gpu/drm/xe/Makefile
+>+++ b/drivers/gpu/drm/xe/Makefile
+>@@ -124,6 +124,7 @@ xe-y += xe_bb.o \
+> 	xe_wait_user_fence.o \
+> 	xe_wopcm.o
+>
+>+xe-$(CONFIG_I2C)	+= xe_i2c.o
+> xe-$(CONFIG_HMM_MIRROR) += xe_hmm.o
+> xe-$(CONFIG_DRM_XE_GPUSVM) += xe_svm.o
+>
+>diff --git a/drivers/gpu/drm/xe/regs/xe_i2c_regs.h b/drivers/gpu/drm/xe/regs/xe_i2c_regs.h
+>new file mode 100644
+>index 000000000000..2acb55eeef0d
+>--- /dev/null
+>+++ b/drivers/gpu/drm/xe/regs/xe_i2c_regs.h
+>@@ -0,0 +1,16 @@
+>+/* SPDX-License-Identifier: GPL-2.0 */
+>+#ifndef _XE_I2C_REGS_H_
+>+#define _XE_I2C_REGS_H_
+>+
+>+#include "xe_reg_defs.h"
+>+
+>+#define SOC_BASE			0x280000
+>+
+>+#define I2C_CONFIG_SPACE_OFFSET		(SOC_BASE + 0xf6000)
+>+#define I2C_MEM_SPACE_OFFSET		(SOC_BASE + 0xf7400)
+>+#define I2C_BRIDGE_OFFSET		(SOC_BASE + 0xd9000)
+>+
+>+#define CLIENT_DISC_COOKIE		XE_REG(SOC_BASE + 0x0164)
+>+#define CLIENT_DISC_ADDRESS		XE_REG(SOC_BASE + 0x0168)
+>+
+>+#endif /* _XE_I2C_REGS_H_ */
+>diff --git a/drivers/gpu/drm/xe/regs/xe_irq_regs.h b/drivers/gpu/drm/xe/regs/xe_irq_regs.h
+>index f0ecfcac4003..13635e4331d4 100644
+>--- a/drivers/gpu/drm/xe/regs/xe_irq_regs.h
+>+++ b/drivers/gpu/drm/xe/regs/xe_irq_regs.h
+>@@ -19,6 +19,7 @@
+> #define   MASTER_IRQ				REG_BIT(31)
+> #define   GU_MISC_IRQ				REG_BIT(29)
+> #define   DISPLAY_IRQ				REG_BIT(16)
+>+#define   I2C_IRQ				REG_BIT(12)
+> #define   GT_DW_IRQ(x)				REG_BIT(x)
+>
+> /*
+>diff --git a/drivers/gpu/drm/xe/xe_device.c b/drivers/gpu/drm/xe/xe_device.c
+>index d4b6e623aa48..dd635101420b 100644
+>--- a/drivers/gpu/drm/xe/xe_device.c
+>+++ b/drivers/gpu/drm/xe/xe_device.c
+>@@ -42,6 +42,7 @@
+> #include "xe_guc.h"
+> #include "xe_hw_engine_group.h"
+> #include "xe_hwmon.h"
+>+#include "xe_i2c.h"
+> #include "xe_irq.h"
+> #include "xe_memirq.h"
+> #include "xe_mmio.h"
+>@@ -929,6 +930,8 @@ int xe_device_probe(struct xe_device *xe)
+>
+> 	xe_vsec_init(xe);
+>
+>+	xe_i2c_probe(xe);
+
+please don't ignore errors on probe, it's painful to keep fixing this up
+later. See e.g.
+
+	35359c36356a drm/xe: Stop ignoring errors from xe_ttm_sys_mgr_init()
+	292b1a8a5054 drm/xe: Stop ignoring errors from xe_heci_gsc_init()
+	d40f275d96e8 drm/xe: Move survivability entirely to xe_pci
+	62fbc75b28a7 drm/xe/hwmon: Stop ignoring errors on probe
+	6b5506158f90 drm/xe/pmu: Fail probe if xe_pmu_register() fails
+	960d71044eee drm/xe/oa: Handle errors in xe_oa_register()
+
+if it's failing we want to catch it in our CI rather than realizing much
+later a subsystem integration was not really working and the driver is
+in a semi-working state.
+
+>+
+> 	return devm_add_action_or_reset(xe->drm.dev, xe_device_sanitize, xe);
+>
+> err_unregister_display:
+>diff --git a/drivers/gpu/drm/xe/xe_device_types.h b/drivers/gpu/drm/xe/xe_device_types.h
+>index 50b2bfa682ac..7011a078b9c7 100644
+>--- a/drivers/gpu/drm/xe/xe_device_types.h
+>+++ b/drivers/gpu/drm/xe/xe_device_types.h
+>@@ -36,6 +36,7 @@
+> #endif
+>
+> struct xe_ggtt;
+>+struct xe_i2c;
+> struct xe_pat_ops;
+> struct xe_pxp;
+>
+>@@ -572,6 +573,9 @@ struct xe_device {
+> 	/** @pmu: performance monitoring unit */
+> 	struct xe_pmu pmu;
+>
+>+	/** @i2c: I2C host controller */
+>+	struct xe_i2c *i2c;
+>+
+> 	/** @atomic_svm_timeslice_ms: Atomic SVM fault timeslice MS */
+> 	u32 atomic_svm_timeslice_ms;
+>
+>diff --git a/drivers/gpu/drm/xe/xe_i2c.c b/drivers/gpu/drm/xe/xe_i2c.c
+>new file mode 100644
+>index 000000000000..cc231368789f
+>--- /dev/null
+>+++ b/drivers/gpu/drm/xe/xe_i2c.c
+>@@ -0,0 +1,270 @@
+>+// SPDX-License-Identifier: GPL-2.0
+>+/*
+>+ * Intel Xe I2C attached Microcontroller Units (MCU)
+>+ *
+>+ * Copyright (C) 2025 Intel Corporation.
+>+ */
+>+
+>+#include <linux/array_size.h>
+>+#include <linux/container_of.h>
+>+#include <linux/device.h>
+>+#include <linux/err.h>
+>+#include <linux/i2c.h>
+>+#include <linux/ioport.h>
+>+#include <linux/irq.h>
+>+#include <linux/irqdomain.h>
+>+#include <linux/notifier.h>
+>+#include <linux/pci.h>
+>+#include <linux/platform_device.h>
+>+#include <linux/property.h>
+>+#include <linux/regmap.h>
+>+#include <linux/sprintf.h>
+>+#include <linux/string.h>
+>+#include <linux/types.h>
+>+#include <linux/workqueue.h>
+>+
+>+#include "regs/xe_i2c_regs.h"
+>+#include "regs/xe_irq_regs.h"
+>+
+>+#include "xe_device.h"
+>+#include "xe_device_types.h"
+>+#include "xe_i2c.h"
+>+#include "xe_mmio.h"
+>+#include "xe_platform_types.h"
+>+
+>+/* Synopsys DesignWare I2C Host Adapter */
+>+static const char adapter_name[] = "i2c_designware";
+>+
+>+static const struct property_entry xe_i2c_adapter_properties[] = {
+>+	PROPERTY_ENTRY_STRING("compatible", "intel,xe-mcu-i2c"),
+>+	PROPERTY_ENTRY_U32("clock-frequency", I2C_MAX_FAST_MODE_PLUS_FREQ),
+>+	{ }
+>+};
+>+
+>+static inline void xe_i2c_read_endpoint(struct xe_mmio *mmio, void *ep)
+>+{
+>+	u32 *val = ep;
+>+
+>+	val[0] = xe_mmio_read32(mmio, CLIENT_DISC_COOKIE);
+>+	val[1] = xe_mmio_read32(mmio, CLIENT_DISC_ADDRESS);
+>+}
+>+
+>+static void xe_i2c_client_work(struct work_struct *work)
+>+{
+>+	struct xe_i2c *i2c = container_of(work, struct xe_i2c, work);
+>+	struct i2c_board_info info = {
+>+		.type	= "amc",
+>+		.flags	= I2C_CLIENT_HOST_NOTIFY,
+>+		.addr	= i2c->ep.addr[1],
+>+	};
+
+so... AMC is not a new thing. We also have it in PVC for example.
+However the way it is exposed to the driver seems to be different
+and what you did here here wouldn't match.
+
+>+
+>+	i2c->client[0] = i2c_new_client_device(i2c->adapter, &info);
+>+}
+>+
+>+static int xe_i2c_notifier(struct notifier_block *nb, unsigned long action, void *data)
+>+{
+>+	struct xe_i2c *i2c = container_of(nb, struct xe_i2c, bus_notifier);
+>+	struct i2c_adapter *adapter = i2c_verify_adapter(data);
+>+	struct device *dev = data;
+>+
+>+	if (action == BUS_NOTIFY_ADD_DEVICE &&
+>+	    adapter && dev->parent == &i2c->pdev->dev) {
+>+		i2c->adapter = adapter;
+>+		schedule_work(&i2c->work);
+>+		return NOTIFY_OK;
+>+	}
+>+
+>+	return NOTIFY_DONE;
+>+}
+>+
+>+static int xe_i2c_register_adapter(struct xe_i2c *i2c)
+>+{
+>+	struct pci_dev *pci = to_pci_dev(i2c->drm_dev);
+>+	struct platform_device *pdev;
+>+	struct fwnode_handle *fwnode;
+>+	int ret;
+>+
+>+	fwnode = fwnode_create_software_node(xe_i2c_adapter_properties, NULL);
+>+	if (!fwnode)
+>+		return -ENOMEM;
+>+
+>+	/*
+>+	 * Not using platform_device_register_full() here because we don't have
+>+	 * a handle to the platform_device before it returns. xe_i2c_notifier()
+>+	 * uses that handle, but it may be called before
+>+	 * platform_device_register_full() is done.
+>+	 */
+>+	pdev = platform_device_alloc(adapter_name, pci_dev_id(pci));
+>+	if (!pdev) {
+>+		ret = -ENOMEM;
+>+		goto err_fwnode_remove;
+>+	}
+>+
+>+	if (i2c->adapter_irq) {
+>+		struct resource	res = { };
+>+
+>+		res.start = i2c->adapter_irq;
+>+		res.name = "xe_i2c";
+>+		res.flags = IORESOURCE_IRQ;
+>+
+>+		ret = platform_device_add_resources(pdev, &res, 1);
+>+		if (ret)
+>+			goto err_pdev_put;
+>+	}
+>+
+>+	pdev->dev.parent = i2c->drm_dev;
+>+	pdev->dev.fwnode = fwnode;
+>+	i2c->adapter_node = fwnode;
+>+	i2c->pdev = pdev;
+>+
+>+	ret = platform_device_add(pdev);
+>+	if (ret)
+>+		goto err_pdev_put;
+>+
+>+	return 0;
+>+
+>+err_pdev_put:
+>+	platform_device_put(pdev);
+>+err_fwnode_remove:
+>+	fwnode_remove_software_node(fwnode);
+>+
+>+	return ret;
+>+}
+>+
+>+static void xe_i2c_unregister_adapter(struct xe_i2c *i2c)
+>+{
+>+	platform_device_unregister(i2c->pdev);
+>+	fwnode_remove_software_node(i2c->adapter_node);
+>+}
+>+
+>+void xe_i2c_irq_handler(struct xe_device *xe, u32 master_ctl)
+>+{
+>+	if (!xe->i2c || !xe->i2c->adapter_irq)
+>+		return;
+>+
+>+	if (master_ctl & I2C_IRQ)
+>+		generic_handle_irq_safe(xe->i2c->adapter_irq);
+>+}
+>+
+>+static int xe_i2c_irq_map(struct irq_domain *h, unsigned int virq,
+>+			  irq_hw_number_t hw_irq_num)
+>+{
+>+	irq_set_chip_and_handler(virq, &dummy_irq_chip, handle_simple_irq);
+>+	return 0;
+>+}
+>+
+>+static const struct irq_domain_ops xe_i2c_irq_ops = {
+>+	.map = xe_i2c_irq_map,
+>+};
+>+
+>+static int xe_i2c_create_irq(struct xe_i2c *i2c)
+>+{
+>+	struct irq_domain *domain;
+>+
+>+	if (!(i2c->ep.capabilities & XE_I2C_EP_CAP_IRQ))
+>+		return 0;
+>+
+>+	domain = irq_domain_create_linear(dev_fwnode(i2c->drm_dev), 1, &xe_i2c_irq_ops, NULL);
+>+	if (!domain)
+>+		return -ENOMEM;
+>+
+>+	i2c->adapter_irq = irq_create_mapping(domain, 0);
+>+	i2c->irqdomain = domain;
+>+
+>+	return 0;
+>+}
+>+
+>+static void xe_i2c_remove_irq(struct xe_i2c *i2c)
+>+{
+>+	if (i2c->irqdomain) {
+>+		irq_dispose_mapping(i2c->adapter_irq);
+>+		irq_domain_remove(i2c->irqdomain);
+>+	}
+>+}
+>+
+>+static int xe_i2c_read(void *context, unsigned int reg, unsigned int *val)
+>+{
+>+	struct xe_i2c *i2c = context;
+>+
+>+	*val = xe_mmio_read32(i2c->mmio, XE_REG(reg + I2C_MEM_SPACE_OFFSET));
+>+
+>+	return 0;
+>+}
+>+
+>+static int xe_i2c_write(void *context, unsigned int reg, unsigned int val)
+>+{
+>+	struct xe_i2c *i2c = context;
+>+
+>+	xe_mmio_write32(i2c->mmio, XE_REG(reg + I2C_MEM_SPACE_OFFSET), val);
+>+
+>+	return 0;
+>+}
+>+
+>+static const struct regmap_config i2c_regmap_config = {
+>+	.reg_bits = 32,
+>+	.val_bits = 32,
+>+	.reg_read = xe_i2c_read,
+>+	.reg_write = xe_i2c_write,
+>+	.fast_io = true,
+>+};
+>+
+>+static void xe_i2c_remove(void *data)
+>+{
+>+	struct xe_i2c *i2c = data;
+>+	int i;
+>+
+>+	for (i = 0; i < XE_I2C_MAX_CLIENTS; i++)
+>+		i2c_unregister_device(i2c->client[i]);
+>+
+>+	xe_i2c_unregister_adapter(i2c);
+>+	xe_i2c_remove_irq(i2c);
+>+	bus_unregister_notifier(&i2c_bus_type, &i2c->bus_notifier);
+
+this looks racy. Shouldn't you unregister the notifier before the other
+2 calls?
+
+>+}
+>+
+>+int xe_i2c_probe(struct xe_device *xe)
+>+{
+>+	struct xe_i2c_endpoint ep;
+>+	struct regmap *regmap;
+>+	struct xe_i2c *i2c;
+>+	int ret;
+>+
+>+	if (xe->info.platform != XE_BATTLEMAGE)
+>+		return 0;
+
+we prefer checking for IP versions but don't have a good way for the SOC
+versioning. However bspec 54028 seems to disagree here. It
+would probably be better to check on the GT IP + is_dgfx. Or if it's
+safe to rely on the cookie below, just check for is_dgfx.
+
+>+
+>+	xe_i2c_read_endpoint(xe_root_tile_mmio(xe), &ep);
+>+	if (ep.cookie != XE_I2C_EP_COOKIE_DEVICE)
+>+		return 0;
+>+
+>+	i2c = devm_kzalloc(xe->drm.dev, sizeof(*i2c), GFP_KERNEL);
+>+	if (!i2c)
+>+		return -ENOMEM;
+>+
+>+	INIT_WORK(&i2c->work, xe_i2c_client_work);
+>+	i2c->mmio = xe_root_tile_mmio(xe);
+>+	i2c->drm_dev = xe->drm.dev;
+>+	i2c->ep = ep;
+>+
+>+	regmap = devm_regmap_init(i2c->drm_dev, NULL, i2c, &i2c_regmap_config);
+>+	if (IS_ERR(regmap))
+>+		return PTR_ERR(regmap);
+>+
+>+	i2c->bus_notifier.notifier_call = xe_i2c_notifier;
+>+	ret = bus_register_notifier(&i2c_bus_type, &i2c->bus_notifier);
+>+	if (ret)
+>+		return ret;
+>+
+>+	ret = xe_i2c_create_irq(i2c);
+>+	if (ret)
+>+		goto err_unregister_notifier;
+>+
+>+	ret = xe_i2c_register_adapter(i2c);
+>+	if (ret)
+>+		goto err_unregister_notifier;
+>+
+>+	return devm_add_action_or_reset(i2c->drm_dev, xe_i2c_remove, i2c);
+>+
+>+err_unregister_notifier:
+>+	bus_unregister_notifier(&i2c_bus_type, &i2c->bus_notifier);
+>+
+>+	return ret;
+>+}
+>diff --git a/drivers/gpu/drm/xe/xe_i2c.h b/drivers/gpu/drm/xe/xe_i2c.h
+>new file mode 100644
+>index 000000000000..ab8e21630838
+>--- /dev/null
+>+++ b/drivers/gpu/drm/xe/xe_i2c.h
+>@@ -0,0 +1,60 @@
+>+/* SPDX-License-Identifier: GPL-2.0 */
+>+#ifndef _XE_I2C_H_
+>+#define _XE_I2C_H_
+>+
+>+#include <linux/bits.h>
+>+#include <linux/notifier.h>
+>+#include <linux/types.h>
+>+#include <linux/workqueue.h>
+>+
+>+struct device;
+>+struct fwnode_handle;
+>+struct i2c_adapter;
+>+struct i2c_client;
+>+struct irq_domain;
+>+struct platform_device;
+>+struct xe_device;
+>+struct xe_mmio;
+>+
+>+#define XE_I2C_MAX_CLIENTS		3
+>+
+>+#define XE_I2C_EP_COOKIE_DEVICE		0xde
+>+
+>+/* Endpoint Capabilities */
+>+#define XE_I2C_EP_CAP_IRQ		BIT(0)
+>+#define XE_I2C_EP_CAP_MULTI_MCU		BIT(1)
+>+#define XE_I2C_EP_CAP_SMBUS		BIT(2)
+
+these 2 are unused?
+
+>+
+>+struct xe_i2c_endpoint {
+>+	u8 cookie;
+>+	u8 capabilities;
+>+	u16 addr[XE_I2C_MAX_CLIENTS];
+>+};
+>+
+>+struct xe_i2c {
+>+	struct fwnode_handle *adapter_node;
+>+	struct platform_device *pdev;
+>+	struct i2c_adapter *adapter;
+>+	struct i2c_client *client[XE_I2C_MAX_CLIENTS];
+>+
+>+	struct notifier_block bus_notifier;
+>+	struct work_struct work;
+>+
+>+	struct irq_domain *irqdomain;
+>+	int adapter_irq;
+>+
+>+	struct xe_i2c_endpoint ep;
+>+	struct device *drm_dev;
+>+
+>+	struct xe_mmio *mmio;
+>+};
+>+
+>+#if IS_ENABLED(CONFIG_I2C)
+>+int xe_i2c_probe(struct xe_device *xe);
+>+void xe_i2c_irq_handler(struct xe_device *xe, u32 master_ctl);
+>+#else
+>+static inline int xe_i2c_probe(struct xe_device *xe) { return 0; }
+>+static inline void xe_i2c_irq_handler(struct xe_device *xe, u32 master_ctl) { }
+>+#endif
+>+
+>+#endif
+>diff --git a/drivers/gpu/drm/xe/xe_irq.c b/drivers/gpu/drm/xe/xe_irq.c
+>index 5362d3174b06..c43e62dc692e 100644
+>--- a/drivers/gpu/drm/xe/xe_irq.c
+>+++ b/drivers/gpu/drm/xe/xe_irq.c
+>@@ -18,6 +18,7 @@
+> #include "xe_gt.h"
+> #include "xe_guc.h"
+> #include "xe_hw_engine.h"
+>+#include "xe_i2c.h"
+> #include "xe_memirq.h"
+> #include "xe_mmio.h"
+> #include "xe_pxp.h"
+>@@ -476,6 +477,7 @@ static irqreturn_t dg1_irq_handler(int irq, void *arg)
+> 			if (xe->info.has_heci_cscfi)
+> 				xe_heci_csc_irq_handler(xe, master_ctl);
+> 			xe_display_irq_handler(xe, master_ctl);
+>+			xe_i2c_irq_handler(xe, master_ctl);
+> 			gu_misc_iir = gu_misc_irq_ack(xe, master_ctl);
+> 		}
+> 	}
+>-- 
+>2.47.2
+>
