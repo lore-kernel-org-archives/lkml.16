@@ -1,187 +1,121 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD6722333B
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 15:53:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25BEB70814;
+	Mon,  2 Jun 2025 15:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748879621; cv=none; b=g8XL6yYreHxBjlXZ17LGJjpHS4vVKx9NJ9Ujjy4cYhcnQla3+CNp/93zE2GgDyNQp7OKDsrEAPGFm2A4rq6WLAPb3By+ELGQ0e6pH57hdR/ZTBS0rl5Ugec81NsMfES6CDGTO9oe1n9zj3fFD60xeGLoKaaJAWSyRrjIvr4UrAs=
+	t=1748879837; cv=none; b=CyS6imAw+Wp6xbaHqfkNhnigKMikIThXGsu0RS4U0nu6SQv0/IavBEsK/us24PKUDvAiT2PephMg/Q6v+gwFXT4TrUyvdTX8o1pLkXDbPdeXX/3dUXDadDtk4hcdgZ6Akj7CQOFM6qFRpVQNAN6uyfJAJpf0f5Q6aVe5uDl1Bao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748879621; c=relaxed/simple;
-	bh=go1PPFz+AMC/M5zXK7Is9Mi6bbDhxdFN6LXeNEBwDLs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MxNd96joX8I5ZP1OlDtpzkNAzEVg/rPkBpH+zFRRqbWulta/cWkb2c7khDOV8fL6qv+PPJ0lgJdQS7SyCx/P4gH5mwj4s/6w6Xqykkf8oRw4ZW369tMc5tddeH1upwXxvwCbGPviAjG8+FlZZcdoidii72I0JKNyyeqgMwmloW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=qfVgSCGj; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=qfVgSCGj; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1748879837; c=relaxed/simple;
+	bh=Z6lTBV/TUYQTEVACUHiDucb8pf6EfGXIjpAhGSb6Qcw=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nqXgfmtikM7vf6D/PsGd5EYyYo8jyj2Qzt8p7kD+vLdX+C0ElRmpNtY3jQ/efILwOOdDE/VxP5nBtx0IVwEoq2FBfOL3HefJ8evIBJTnqHpEQzV9dDzle6baV2kzx/ifLi2frQ4ULbP4As0KkTTO119UqInuse1eICIrnQg2aSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WacSPkqT; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="qfVgSCGj";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="qfVgSCGj"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 494D22120E;
-	Mon,  2 Jun 2025 15:53:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1748879603; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WacSPkqT"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E2E9442D83;
+	Mon,  2 Jun 2025 15:57:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1748879833;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QWkGADfqpetKnnKrUkvD8J/JBZ9PJNS7K0KKvu/tSqU=;
-	b=qfVgSCGjjop2VBVuGiaPUPGkJ6lG5Z22jYedW+2/NljDiwUvWWCIk9wvnOGvex5LWmAixP
-	0Hf34TDX71FO+JxkOxmi+3h0efZwl4DTSUYT9+oXhbbmZjxKCcHqh2Q1KvtpkGUzsm4R7M
-	9eSx05DvlzSGVdptBRnhQxyF0tM4MOE=
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1748879603; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QWkGADfqpetKnnKrUkvD8J/JBZ9PJNS7K0KKvu/tSqU=;
-	b=qfVgSCGjjop2VBVuGiaPUPGkJ6lG5Z22jYedW+2/NljDiwUvWWCIk9wvnOGvex5LWmAixP
-	0Hf34TDX71FO+JxkOxmi+3h0efZwl4DTSUYT9+oXhbbmZjxKCcHqh2Q1KvtpkGUzsm4R7M
-	9eSx05DvlzSGVdptBRnhQxyF0tM4MOE=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2E98113A63;
-	Mon,  2 Jun 2025 15:53:23 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id IB7GCvPIPWhIBQAAD6G6ig
-	(envelope-from <neelx@suse.com>); Mon, 02 Jun 2025 15:53:23 +0000
-From: Daniel Vacek <neelx@suse.com>
-To: Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>,
-	Nick Terrell <terrelln@fb.com>
-Cc: linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Daniel Vacek <neelx@suse.com>
-Subject: [PATCH v3 2/2] btrfs: harden parsing of compress mount options
-Date: Mon,  2 Jun 2025 17:53:19 +0200
-Message-ID: <20250602155320.1854888-3-neelx@suse.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250602155320.1854888-1-neelx@suse.com>
-References: <20250602155320.1854888-1-neelx@suse.com>
+	bh=0YGq1biihEXyf/jpPz4mx9vQDFp/CPUDwD9fQG7AXaE=;
+	b=WacSPkqTLTV9iTRTAdJJSuVmHSVJKwbGbKPc3be9c/vdLmZP0oMCjUw8vK0Jz1XJLey0kD
+	vNcHJ3M0ksmgT5P+AL8/FBTEx8obUg1O7hh/uahF066C8hHgbuKdg5Q+fX5VDogj7yF6UI
+	Spuekh7H5Amu0m0eqzCxZzHh1RpsdHDigr30WO/hZ8vpWUIN3vh2Wh8VF8ZLX6YUnoocqA
+	n5nf1iQiHwsY+nlm9q0vw9FFVD+YOCldi9iK6ycKPiseNsLGEy+Oer0LbF4FedFH+Q3pZI
+	pL9cScK4Z08/+zl6v8nMa8TyGF7NMLq7o7wfkef9YofAcTXu4RzwYmW1Vq2kNA==
+From: Romain Gantois <romain.gantois@bootlin.com>
+To: Wolfram Sang <wsa@the-dreams.de>,
+ Romain Gantois <romain.gantois@bootlin.com>,
+ Stephen Rothwell <sfr@canb.auug.org.au>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Hans Verkuil <hverkuil@xs4all.nl>, Jai Luthra <jai.luthra@ideasonboard.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Subject: Re: linux-next: manual merge of the v4l-dvb tree with the i2c tree
+Date: Mon, 02 Jun 2025 17:57:08 +0200
+Message-ID: <5203152.31r3eYUQgx@fw-rgant>
+In-Reply-To: <aDrwb1YvwFKQB8x1@shikoro>
+References:
+ <20250428104905.2b54643f@canb.auug.org.au> <3352024.aeNJFYEL58@fw-rgant>
+ <aDrwb1YvwFKQB8x1@shikoro>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-6.80 / 50.00];
-	REPLY(-4.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -6.80
+Content-Type: multipart/signed; boundary="nextPart4843312.LvFx2qVVIh";
+ micalg="pgp-sha512"; protocol="application/pgp-signature"
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdefkedtleculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvufffkfgjfhggtgesghdtreertddtjeenucfhrhhomheptfhomhgrihhnucfirghnthhoihhsuceorhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeijeejhfeujedtffetgeevudekkeevfedthfehgffhleduueffjedvtdetjeelkeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppedvuddvrddutdehrdduhedtrddvhedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdduvddruddthedrudehtddrvdehvddphhgvlhhopehffidqrhhgrghnthdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedutddprhgtphhtthhopeifshgrsehthhgvqdgurhgvrghmshdruggvpdhrtghpthhtoheprhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmpdhrtghpthhtohepshhfrhestggrnhgsrdgruhhughdrohhrghdrrghupdhrtghpthhtohepm
+ hgthhgvhhgrsgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhhvvghrkhhuihhlseigshegrghllhdrnhhlpdhrtghpthhtohepjhgrihdrlhhuthhhrhgrsehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhnvgigthesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: romain.gantois@bootlin.com
 
-Btrfs happily but incorrectly accepts the `-o compress=zlib+foo` and similar
-options with any random suffix.
+--nextPart4843312.LvFx2qVVIh
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: Romain Gantois <romain.gantois@bootlin.com>
+Date: Mon, 02 Jun 2025 17:57:08 +0200
+Message-ID: <5203152.31r3eYUQgx@fw-rgant>
+In-Reply-To: <aDrwb1YvwFKQB8x1@shikoro>
+MIME-Version: 1.0
 
-Fix that by explicitly checking the end of the strings.
+Hi Wolfram,
 
-Signed-off-by: Daniel Vacek <neelx@suse.com>
----
-v3 changes: Split into two patches to ease backporting,
-            no functional changes.
+On Saturday, 31 May 2025 14:05:03 CEST Wolfram Sang wrote:
+> > Below is the resolution I came up with.
+> 
+> Linus solved it differently [1]. I think he is right, but those
+> interested please double check.
+> 
+> [1]
+> https://lore.kernel.org/all/CAHk-=wiKW=BPcDvBAsVDemdWBR0uh09A_WMOCoceqj3w3d
+> oGJg@mail.gmail.com/
 
- fs/btrfs/super.c | 26 +++++++++++++++++++-------
- 1 file changed, 19 insertions(+), 7 deletions(-)
+Indeed Linus' resolution is correct, the mutex destroy line should be:
 
-diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
-index 6291ab45ab2a5..4510c5f7a785e 100644
---- a/fs/btrfs/super.c
-+++ b/fs/btrfs/super.c
-@@ -270,9 +270,20 @@ static inline blk_mode_t btrfs_open_mode(struct fs_context *fc)
- 	return sb_open_mode(fc->sb_flags) & ~BLK_OPEN_RESTRICT_WRITES;
- }
- 
-+static bool btrfs_match_compress_type(char *string, char *type, bool may_have_level)
-+{
-+	int len = strlen(type);
-+
-+	return strncmp(string, type, len) == 0 &&
-+		((may_have_level && string[len] == ':') ||
-+				    string[len] == '\0');
-+}
-+
- static int btrfs_parse_compress(struct btrfs_fs_context *ctx,
- 				struct fs_parameter *param, int opt)
- {
-+	char *string = param->string;
-+
- 	/*
- 	 * Provide the same semantics as older kernels that don't use fs
- 	 * context, specifying the "compress" option clears
-@@ -288,36 +299,37 @@ static int btrfs_parse_compress(struct btrfs_fs_context *ctx,
- 		btrfs_set_opt(ctx->mount_opt, COMPRESS);
- 		btrfs_clear_opt(ctx->mount_opt, NODATACOW);
- 		btrfs_clear_opt(ctx->mount_opt, NODATASUM);
--	} else if (strncmp(param->string, "zlib", 4) == 0) {
-+	} else if (btrfs_match_compress_type(string, "zlib", true)) {
- 		ctx->compress_type = BTRFS_COMPRESS_ZLIB;
- 		ctx->compress_level =
- 			btrfs_compress_str2level(BTRFS_COMPRESS_ZLIB,
--						 param->string + 4);
-+						 string + 4);
- 		btrfs_set_opt(ctx->mount_opt, COMPRESS);
- 		btrfs_clear_opt(ctx->mount_opt, NODATACOW);
- 		btrfs_clear_opt(ctx->mount_opt, NODATASUM);
--	} else if (strncmp(param->string, "lzo", 3) == 0) {
-+	} else if (btrfs_match_compress_type(string, "lzo", false)) {
- 		ctx->compress_type = BTRFS_COMPRESS_LZO;
- 		ctx->compress_level = 0;
- 		btrfs_set_opt(ctx->mount_opt, COMPRESS);
- 		btrfs_clear_opt(ctx->mount_opt, NODATACOW);
- 		btrfs_clear_opt(ctx->mount_opt, NODATASUM);
--	} else if (strncmp(param->string, "zstd", 4) == 0) {
-+	} else if (btrfs_match_compress_type(string, "zstd", true)) {
- 		ctx->compress_type = BTRFS_COMPRESS_ZSTD;
- 		ctx->compress_level =
- 			btrfs_compress_str2level(BTRFS_COMPRESS_ZSTD,
--						 param->string + 4);
-+						 string + 4);
- 		btrfs_set_opt(ctx->mount_opt, COMPRESS);
- 		btrfs_clear_opt(ctx->mount_opt, NODATACOW);
- 		btrfs_clear_opt(ctx->mount_opt, NODATASUM);
--	} else if (strncmp(param->string, "no", 2) == 0) {
-+	} else if (btrfs_match_compress_type(string, "no", false) ||
-+		   btrfs_match_compress_type(string, "none", false)) {
- 		ctx->compress_level = 0;
- 		ctx->compress_type = 0;
- 		btrfs_clear_opt(ctx->mount_opt, COMPRESS);
- 		btrfs_clear_opt(ctx->mount_opt, FORCE_COMPRESS);
- 	} else {
- 		btrfs_err(NULL, "unrecognized compression value %s",
--			  param->string);
-+			  string);
- 		return -EINVAL;
- 	}
- 	return 0;
+    mutex_destroy(&it.rxport->aliased_addrs_lock);
+
+
+Thanks,
+
 -- 
-2.47.2
+Romain Gantois, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--nextPart4843312.LvFx2qVVIh
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEYFZBShRwOvLlRRy+3R9U/FLj284FAmg9ydQACgkQ3R9U/FLj
+287RJQ//dCf4ktUacENgy4w+i0niTR8B+ykeEW/eAK9UsZ9aoBcW9I1p2CUOKLTb
+XlYJw3RNwiWoVsC1mTKi4VnSEN+HTO+7pxTNOMGg7O32hOeO/dOIrzHZDdbBrAMs
+kT+5qX+0zWz6iFTGREcpDKPed+dKT0MVedOHy75nc6v+83zZSWgC5gRvH81b3B9r
+oL1/K+ExmsqBUUHNO40xvPNjgGHmw15SY1R9VRkzqz/gOwyrkt/HmRv+O3j5/DxC
+RRmJRYCUMt2O6gKqkddetVBXj13HNglL5ri7UhmvrOHgJf+KcZkdeD4M+pey9cu8
+PtAa2qwyRQB3SzH9qEZbrgBt9oZCELdwdk0t0rwcd5hNmAUalJe9hV+YoCjRtK9C
+nfb536xTJgAuYUrq7kHOAXQqhsnCwlxkBoqmBy69+5EmPL2ae6BoVoLfl80t8b/A
+tE4xTEI/wPlyeBDgV2Z6jJVCft0PI1Arcutp9IKnXGVL3qMowBVln5RMZl7VnRNi
+n9kxnSZ44lkuYyZfVnszC+Smjg660SU98njunTV7ogG7bFKTg9S0XE+tBBPT8emP
+kWcFEh9VzqQD5Y2bSUAV0fU9VkZznhK+KmcaH0iK0TaU0x02GqdXI+1TJnfEAUQh
+75hJdEQCj1older7B2euOyn3/4uqy7REXbND72/7YciJTYGd3VA=
+=9KN6
+-----END PGP SIGNATURE-----
+
+--nextPart4843312.LvFx2qVVIh--
+
+
 
