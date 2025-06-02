@@ -1,125 +1,172 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9964322D4F6;
-	Mon,  2 Jun 2025 19:40:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98EFB22D4E9;
+	Mon,  2 Jun 2025 19:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748893209; cv=none; b=X4y7lFgv59ISt8Nj/WFV9UW2FCT2fCMl1leIWVaKSWhLv++1D6zJR/KC6arQr9U4NZbZl4ogwt+2QBgRIZ5gZtLZTN/4dJedsnnU1zSZhdNlXFIc8uehEdthXCnqeKy1wSdPXX8RJQ86sMRhCIq3J0smvsVrhnkXcrZtg56D5bw=
+	t=1748893209; cv=none; b=Y36+zAxlGdJitaIQVGPKUH7opUg0Lo5SSteBvriDfm85vDj6EhFkJYpWoR8VhxP+E3jjRT3oR4ER0lPcJHMD/HfffiYw1dJDzWV0L+oemiD4tVy7Mc9k1Faj/7SQsgq44Xw2dahI613EG5g7F7DaC8t416j/V5Sb0vqZ28JsvyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748893209; c=relaxed/simple;
-	bh=kaMgHoWYLYvGbfKuyz8FjfIvHL93d78mxqSd9irxe/Y=;
+	bh=hWu5mf/ibSOw0ioy3LC7dcXEKAsj0y+UB5ogGus1Hcc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jzaYJQYkaXtErYvGr1/gVAfxHsRDWrKJbSJtg49ItLgHM4Yg8wBQJKo/laaet6aGW3FcMj500TR4xJPqvyh6jr3AB+PxwDC7qjoLTgr0DUVbX/IlwXb/Mn/JADpVAg0+mRC79kbSO112WJmDvvm/hf8r2ZJZN3mR+DRmil3LSv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NdFOxf0K; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version:Content-Type; b=C3v3jpIsMy4epryyXNq0vNEZc+0LZpY1jIFhFolrXh7XBnvgtbU0ZPPdWH98kcfboZn5Ef6XIW7Ls1UqER7Ht/k7QmaetpJx4jcNxXyqtZtQyQ+qcZOToxiDsi9iBMufRjefMw3tpbB9+KpquLx23wV9uwyQ4JiWQ8Mhq/WoHig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=ZbiIOWWr; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NdFOxf0K"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6045e69c9a8so9228967a12.3;
-        Mon, 02 Jun 2025 12:40:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748893204; x=1749498004; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QUzxaG7r98wSKohMlOOAAhXemIOrwTNYnmCUuKws3h4=;
-        b=NdFOxf0KjtRFLAA2Xhq38EoKda423tiQXWsYlmSK01M3nh4jRMXnoNdnyPlehgSErm
-         xDCP3XACm03SSKCL5VjMaCBIcWxsQ1QapHnuttJ0UerpZYAneTIG10loY5Ce/RWUdd2B
-         o1jSLNsmOrrFxFh+Rk2fmqDXU7+Z6ASeQ8QHgZYmvIMsKeCvbBDVLWJSm6B/9BYaaWEm
-         GqXlYlEVx7fCJbGhXBt6EhBk5biczv14eob0yG4q30RwHjRBsjQbOyNCn6dBI5ZmCsTS
-         /EwAvfvl/5fZxzjQW6v2grsS3nn4IBux0IjJPtv+rDaNXWo2SriajClAy2qv0A3+gaVc
-         GZ4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748893204; x=1749498004;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QUzxaG7r98wSKohMlOOAAhXemIOrwTNYnmCUuKws3h4=;
-        b=Hrhf3wV78f95bqu/Zb+akGX9s0NTjHF+MRU7JXW4VD5FcYjmyZwlBEZg/9wYq3Mqcp
-         69cEq8vA5NCxvWojsJadiNZ8DDdEC6IFYL1FegPvzhVhaDNiOMIbmcixb+NYtaW2ZkYp
-         YkEWbgpphlBljh8uDf9phoqAr4Q/tpS7/7kcyjGpT4zMa83poorNT1HVdmPlcrs1RiJk
-         Ge7LAEdvl6F9Pvm23jPFAlO/x5jMb/G2z5SKHiJ0qutxb/WdZdYoK+iutp/zZ3QVEL+p
-         VWV+O/pKHn2Z9tfiVH9aE9cGhoNOO+xetHfWS+QVyur7mUORyA8pO5GOmP6ZbEotIhyd
-         JIkg==
-X-Forwarded-Encrypted: i=1; AJvYcCWOfEVcgsQToKxBIOt2T8+Gj0+x/AqXjQvBjYTIaPM294xk1agDLpi3XOHTBg+XGCa0aF2hZwvhwruvp1o=@vger.kernel.org, AJvYcCWvICTiKZXJzcBkuQp93TUuudq1CjSnyFENm2Gje3TfryWD6pJ5NXuyFNq1TnJCOjeQV1ZVDJkm@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMOvAFSSFkN1TWz57ES00HUCohmFxc/Sp9eed+LuS0Pn4U/lT8
-	LxfKm+pVC144iiwKjriGnfMbA3EuMPQ0jlXGpI9MFSFptAbhQd/6WgyU
-X-Gm-Gg: ASbGncv4Yc//NO4s05UQ2yexFYFRdS16fk3/OR3FOcQz4/YC0E3hnoEs9N5xLexABSm
-	XKd+MQv/ZmV5+VKRAkpdB+ziH58IkQb4OYWHdCqKn8RqWLiPqOoi9hwQJaPQTZnhLgwSmw3v0uh
-	wwRcpyJsxRmPmPpLFA402UwAuKAYFWPGx4bp9oW6XIOYi3bStwZNxse09kv/ZKPc8YgXlQLn2Vt
-	o/Py2WCX+OVoRaBDzzrj4v2zGnVoc+kuFjT9D4H93gNvLjMLJgmYeLMt1yfqAX0A9xtsLuxihgg
-	h7dkfSQ/B45fdwxf/BRUsuNnlL4GXko+4CDPADNKm9jDT8UmmAP8RbfgqS7mCZw9uNxWfCmRpGI
-	oxxg2wUGYqOmpApHhmSE5a7fiARSzZ9M=
-X-Google-Smtp-Source: AGHT+IHfZPl4EHqdvcHEsmAE+HPej3McuF8SlAf973Eld7dW+ssySVbsuESuRGVDGhGTauQmWW1q4w==
-X-Received: by 2002:a17:907:97c5:b0:adb:2bb2:ee3 with SMTP id a640c23a62f3a-adb4954948bmr908599566b.46.1748893203784;
-        Mon, 02 Jun 2025 12:40:03 -0700 (PDT)
-Received: from localhost (dslb-002-205-016-252.002.205.pools.vodafone-ip.de. [2.205.16.252])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5d82eee2sm840999866b.73.2025.06.02.12.40.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 12:40:03 -0700 (PDT)
-From: Jonas Gorski <jonas.gorski@gmail.com>
-To: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Vivien Didelot <vivien.didelot@gmail.com>,
-	=?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net v2 4/5] net: dsa: b53: allow RGMII for bcm63xx RGMII ports
-Date: Mon,  2 Jun 2025 21:39:52 +0200
-Message-ID: <20250602193953.1010487-5-jonas.gorski@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250602193953.1010487-1-jonas.gorski@gmail.com>
-References: <20250602193953.1010487-1-jonas.gorski@gmail.com>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="ZbiIOWWr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=SPw9tHv+YFqDOgHItgDh6WWYcZqPEA6GRstSGC7FvMw=; b=ZbiIOWWrqz4Xo+xhj4MkrCq550
+	Ab4dft5PIpkhNivF6xz0iT41AGSWYazCmEw52oUzY7yke177u5Jn17ClfKLKgG86ri9LUrUqJfOno
+	Pn8EjwT7yFIYPwULfA5k8jmbuEcqPmanrMBT6HWnehBEexpPbTctIyfSzqURX979tYqk8d8ZxaeAD
+	jl7R9E9YJwLs5A++pG9KovRDmiemI6nsgopOBXLBY6wp5Qz1gt6cS9JxgKLJ/+G7HdDvCllOuAHm5
+	DiccjOKDXbLRNQCJsqtSXDCl/3Kw+ALRxQJGiewJj2UNSwAU0dVdGWerCn7sT4gW0/MUXsK05vjRb
+	UIfpB2rw==;
+Received: from i53875a2b.versanet.de ([83.135.90.43] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uMAPg-0001RE-Cy; Mon, 02 Jun 2025 21:01:36 +0200
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
+ William Breathitt Gray <wbg@kernel.org>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Kever Yang <kever.yang@rock-chips.com>, Yury Norov <yury.norov@gmail.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Leon Romanovsky <leon@kernel.org>, Lee Jones <lee@kernel.org>,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+ linux-iio@vger.kernel.org, kernel@collabora.com,
+ Jonas Karlman <jonas@kwiboo.se>,
+ Detlev Casanova <detlev.casanova@collabora.com>,
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Subject: Re: [PATCH v2 3/7] bitfield: introduce HI16_WE bitfield prep macros
+Date: Mon, 02 Jun 2025 21:01:35 +0200
+Message-ID: <6139278.alqRGMn8q6@diego>
+In-Reply-To: <20250602-rk3576-pwm-v2-3-a6434b0ce60c@collabora.com>
+References:
+ <20250602-rk3576-pwm-v2-0-a6434b0ce60c@collabora.com>
+ <20250602-rk3576-pwm-v2-3-a6434b0ce60c@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-Add RGMII to supported interfaces for BCM63xx RGMII ports so they can be
-actually used in RGMII mode.
+Am Montag, 2. Juni 2025, 18:19:14 Mitteleurop=C3=A4ische Sommerzeit schrieb=
+ Nicolas Frattaroli:
+> Hardware of various vendors, but very notably Rockchip, often uses
+> 32-bit registers where the upper 16-bit half of the register is a
+> write-enable mask for the lower half.
+>=20
+> This type of hardware setup allows for more granular concurrent register
+> write access.
+>=20
+> Over the years, many drivers have hand-rolled their own version of this
+> macro, usually without any checks, often called something like
+> HIWORD_UPDATE or FIELD_PREP_HIWORD, commonly with slightly different
+> semantics between them.
+>=20
+> Clearly there is a demand for such a macro, and thus the demand should
+> be satisfied in a common header file.
+>=20
+> Add two macros: FIELD_PREP_HI16_WE, and FIELD_PREP_HI16_WE_CONST. The
+> latter is a version that can be used in initializers, like
+> FIELD_PREP_CONST. The macro names are chosen to explicitly reference the
+> assumed half-register width, and its function, while not clashing with
+> any potential other macros that drivers may already have implemented
+> themselves.
+>=20
+> Future drivers should use these macros instead of handrolling their own,
+> and old drivers can be ported to the new macros as time and opportunity
+> allows.
+>=20
+> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> ---
+>  include/linux/bitfield.h | 47 ++++++++++++++++++++++++++++++++++++++++++=
++++++
+>  1 file changed, 47 insertions(+)
+>=20
+> diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
+> index 6d9a53db54b66c0833973c880444bd289d9667b1..2b3e7cb90ccb5d48f510104f6=
+1443b06748bb7eb 100644
+> --- a/include/linux/bitfield.h
+> +++ b/include/linux/bitfield.h
+> @@ -8,6 +8,7 @@
+>  #define _LINUX_BITFIELD_H
+> =20
+>  #include <linux/build_bug.h>
+> +#include <linux/limits.h>
+>  #include <linux/typecheck.h>
+>  #include <asm/byteorder.h>
+> =20
+> @@ -142,6 +143,52 @@
+>  		(((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask))	\
+>  	)
+> =20
+> +/**
+> + * FIELD_PREP_HI16_WE() - prepare a bitfield element with a write-enable=
+ mask
+> + * @_mask: shifted mask defining the field's length and position
+> + * @_val:  value to put in the field
+> + *
+> + * FIELD_PREP_HI16_WE() masks and shifts up the value, as well as bitwis=
+e ORs
+> + * the result with the mask shifted up by 16.
+> + *
+> + * This is useful for a common design of hardware registers where the up=
+per
+> + * 16-bit half of a 32-bit register is used as a write-enable mask. In s=
+uch a
+> + * register, a bit in the lower half is only updated if the correspondin=
+g bit
+> + * in the upper half is high.
+> + */
+> +#define FIELD_PREP_HI16_WE(_mask, _val)					\
+> +	({								\
+> +		__BF_FIELD_CHECK(_mask, ((u16) 0U), _val,		\
+> +				 "FIELD_PREP_HI16_WE: ");		\
+> +		((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask) |	\
 
-Without this, phylink will fail to configure them:
+gcc is quite adamant about suggesting more parentheses here:
 
-[    3.580000] b53-switch 10700000.switch GbE3 (uninitialized): validation of rgmii with support 0000000,00000000,00000000,000062ff and advertisement 0000000,00000000,00000000,000062ff failed: -EINVAL
-[    3.600000] b53-switch 10700000.switch GbE3 (uninitialized): failed to connect to PHY: -EINVAL
-[    3.610000] b53-switch 10700000.switch GbE3 (uninitialized): error -22 setting up PHY for tree 0, switch 0, port 4
+=2E./include/linux/bitfield.h:163:70: warning: suggest parentheses around a=
+rithmetic in operand of =E2=80=98|=E2=80=99 [-Wparentheses]
+  163 |                 ((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask=
+) |  \
+      |                                                                    =
+  ^
+=2E./include/soc/rockchip/mfpwm.h:225:41: note: in expansion of macro =E2=
+=80=98FIELD_PREP_HI16_WE=E2=80=99
+  225 | #define PWMV4_MODE(v)                   FIELD_PREP_HI16_WE(PWMV4_MO=
+DE_MASK, (v))
+      |                                         ^~~~~~~~~~~~~~~~~~
+=2E./include/soc/rockchip/mfpwm.h:230:34: note: in expansion of macro =E2=
+=80=98PWMV4_MODE=E2=80=99
+  230 | #define PWMV4_CTRL_CONT_FLAGS   (PWMV4_MODE(PWMV4_MODE_CONT) | \
+      |                                  ^~~~~~~~~~
+=2E./drivers/pwm/pwm-rockchip-v4.c:237:57: note: in expansion of macro =E2=
+=80=98PWMV4_CTRL_CONT_FLAGS=E2=80=99
+  237 |         mfpwm_reg_write(pc->pwmf->base, PWMV4_REG_CTRL, PWMV4_CTRL_=
+CONT_FLAGS);
+      |                                                         ^~~~~~~~~~~=
+~~~~~~~~~~
 
-Fixes: ce3bf94871f7 ("net: dsa: b53: add support for BCM63xx RGMIIs")
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
-Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
----
-v1 -> v2:
-* add reviewed-by
-* do not enable RGMII for CPU port (internal only, no rgmii)
 
- drivers/net/dsa/b53/b53_common.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Heiko
 
-diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
-index 3f4934f974c8..be4493b769f4 100644
---- a/drivers/net/dsa/b53/b53_common.c
-+++ b/drivers/net/dsa/b53/b53_common.c
-@@ -1439,6 +1439,10 @@ static void b53_phylink_get_caps(struct dsa_switch *ds, int port,
- 	__set_bit(PHY_INTERFACE_MODE_MII, config->supported_interfaces);
- 	__set_bit(PHY_INTERFACE_MODE_REVMII, config->supported_interfaces);
- 
-+	/* BCM63xx RGMII ports support RGMII */
-+	if (is63xx(dev) && in_range(port, B53_63XX_RGMII0, 4))
-+		phy_interface_set_rgmii(config->supported_interfaces);
-+
- 	config->mac_capabilities = MAC_ASYM_PAUSE | MAC_SYM_PAUSE |
- 		MAC_10 | MAC_100;
- 
--- 
-2.43.0
 
