@@ -1,209 +1,173 @@
-Received: from smtp-bc0d.mail.infomaniak.ch (smtp-bc0d.mail.infomaniak.ch [45.157.188.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB0E7DA7F
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 06:45:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0AF12DD95
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 06:52:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748846721; cv=none; b=stbpZ6y5wTqz2j/Zceek0hmIV8OTA3LMHB8RUXrz3/xOKuhSnJX0+NDCHF6b8cdxhSLPyxl177phoEXBm/qXfUQ208Pc4ZJcu71HkhL8LG5osU156/3jQY10+sJwpGrA25dFqvInFnbQvJBQOKLY5gyDCvI588f+iweCH6/lelk=
+	t=1748847162; cv=none; b=dZLWdvxnFNHfIy5qugAB6IApaKwOUCrb6A3zCh5ySxiuixRtzQfLfcZOamyzzplG2qXqRi33cVlW/ywQpDUuJfmLfM9CvAmTfoRvmXeqWSzM6OxgjtwKNq1Vqw05vYym63A7cAQwmSZRQegwyraOxLEDAodP7EBQ7ivNHsa1ccY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748846721; c=relaxed/simple;
-	bh=n6RxvSLnAvAv8QJbkOZfP1xL7uhMGvfhdcxkVNtYaZI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NB/YWxZh0KuDSayrNLXx2k5AAUblgIX8uZZzOEqYjaEoU1Q2rEpiX1oX1imoPQ8zRA/GVJTKofU/1k+HVxbY2JKAaRyK1vAo/9c4yJrZkynoKQq5SIU0duHobumzLXqmdKjjIuI3owBKYLY24fLmUmuRy3kGRTGorq2HayjqEUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=lw4T4YRs; arc=none smtp.client-ip=45.157.188.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1748847162; c=relaxed/simple;
+	bh=0hym0BUS6jqerOB7zJMdIZF+E/EaLTB3aGzU8g4MyQ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=jl2faIdkW65l4BhC3Ot6Mdl2WWe++4ubb12drHdzje9VdaTKCxJrdhn3cjUsNPhEVgLy4+pNfdIzFDLQ0re9sgt5R4AaH/YZfWogicshSmg6mSehEKG9tiSzBwDer+oLFBxTyGu4qGotlAGj1cQJzQ2fSdEKuCmYqI0hB4nA/oQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NZwMmFFB; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="lw4T4YRs"
-Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4b9kqS2BLMz5kb;
-	Mon,  2 Jun 2025 08:45:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1748846708;
-	bh=VH6zFQvhPJQBgfTo5ban3m0VUR+MA2qMksTosH15CmM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lw4T4YRserDBU+LpHTACnYqcNKHlNHD04fLGz++gFBYs3TqGQTqUFxOYz3ME0FMuO
-	 yBFo681TKjHHt3uYqagYONWfNgYebm/HwPfg8IOKJk9GEWqW7Hxpy904RFw4AgsI4k
-	 /XxIbCArW470QttbI0RBuvrFj/18eEQAlDDHKb64=
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4b9kqQ5kGqzqdG;
-	Mon,  2 Jun 2025 08:45:06 +0200 (CEST)
-Date: Mon, 2 Jun 2025 08:45:06 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>
-Cc: Casey Schaufler <casey@schaufler-ca.com>, 
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack3000@gmail.com>, Paul Moore <paul@paul-moore.com>, sergeh@kernel.org, 
-	David Howells <dhowells@redhat.com>, Kees Cook <keescook@chromium.org>, 
-	linux-security-module@vger.kernel.org, Konstantin Meskhidze <konstantin.meskhidze@huawei.com>, 
-	Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org, 
-	Peter Newman <peternewman@google.com>, Andy Lutomirski <luto@amacapital.net>, 
-	Will Drewry <wad@chromium.org>, Jarkko Sakkinen <jarkko@kernel.org>
-Subject: Re: [RFC 1/2] landlock: Multithreading support for
- landlock_restrict_self()
-Message-ID: <20250602.ko3thoc7ooL4@digikod.net>
-References: <20250227.Aequah6Avieg@digikod.net>
- <20250228.b3794e33d5c0@gnoack.org>
- <20250304.aroh3Aifiiz9@digikod.net>
- <20250310.990b29c809af@gnoack.org>
- <20250311.aefai7vo6huW@digikod.net>
- <20250518.be040c48937c@gnoack.org>
- <20250518.xeevoom3kieY@digikod.net>
- <aDmvpOMlaAZOXrji@google.com>
- <20250530.ozeuZufee5yu@digikod.net>
- <aDncH8D9FoyAIsTv@google.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NZwMmFFB"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43ede096d73so28350815e9.2
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Jun 2025 23:52:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748847159; x=1749451959; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UJx76R+q+RUB6GwJbjfN8d8kPj+Gd8DjvzSAAAVToQE=;
+        b=NZwMmFFBGiLKJFRNYSss/V0HUB2irBWId0MLFsp302x6v3DNtqjWemoKHVnKsLe7lZ
+         6KS5qoU8xZ4667FqVDJOndWXor1EV2HD939qIH+SCrinShWcSq8ewqExVh2VtyPR93lM
+         B6ki4XAYWOfs+N6iLw/I0rbX4qPnsofqFAVcOFx7e3Y/RbnpbUqCVNHaqUk9BTYI0jrN
+         nWV/iF3GgEY/M9dqooRswc7C5BgB4/BXfl1au45gNzC87xyocrk6ezYJ6/+sRt1urLd2
+         lRJ5rgMpfx60Z8nRCIrZHT1R/h3Sc0Bqexh1aQWgdt9uwIPDf/X6m7aHKvYopSLluNys
+         617Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748847159; x=1749451959;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UJx76R+q+RUB6GwJbjfN8d8kPj+Gd8DjvzSAAAVToQE=;
+        b=cUGnW/qZ1idc42z0V2oRcfeITY04vKIVC9YoPj90I6sYGEHa67yOmFEbJIQZZlB7Dv
+         xkL+KxbWB8TSnTUPWw+bPCbcgA/Uuy1bBuTgaDIFYBqqH58WaYN/JJOXgaQsYfl4s0Vc
+         6SIbkCnm6Gypu/jy5U/uaQv1t+ZSPWGu9Np3GTnfMVXvpBTsyn7d1rp9hsrTlmPnEfSO
+         9RTKRll0EPd6oLjZD97ANNWPNfnxswhO4vuG+eeqHtvWl8jhkdogPEelc26UhfEqs5Eh
+         lMaFJr2paJgpFu4KQ0Dyj7UnzFx1YjtzYP95bsV8Ftu+X4kKP+gMOkDYu94IoVofSFFB
+         5tQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX7w1TW5pmkCRSn0qKyi9WnIeSaaONDDIJakdCqKxYkRv+cfyC/v5WzM7H60wq+SCjDEQI4ozzCFNKFCqk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyW6CKav/T0upypEGhPozUfgjUrFMst5HXOY7RRQSXXY9xy4sBL
+	zZ4Q7aPJM6csbV9KwDK9sCuSpjTCyMsMupl+HYBsgZnHDp3XM+iFkxWFXKlA7G5Wajk=
+X-Gm-Gg: ASbGncuRwu4zRg28d6Oiy8h3xWtHCVA3hdQbtTiGlNeXCVy/lC2v11t4xQUzFqvG0d7
+	0ZHyNh0vvI88DpXTia0gy0zftWWt4vZnQBNuiiwE8FbXKEk+fzwr2vMFzz1ovNbBs9Yiis+4non
+	F/QN8sAQ+NkM8NuOyCmR4lRFNFZJgy000EHgidFPhJ51ZQhrIYjh1O7od6EOPO9o/cpRHW44pel
+	9F3Yibakyskjx6td7WVuRYb3aUTqeq209mObZ8JMTYIp04q1RSmv1UQwDJoUewJjJGQJuR/I5Lv
+	hYyReSAVn90J9Gec5PG9OJYDS2QvfGrNvbq2F8g0946oC5nWpsZ+X6j10WSRT+Jocg==
+X-Google-Smtp-Source: AGHT+IFelW6nd6xGMcrwxtWYEh6cXGsGvk80xK1pRJRECj4EukgRTyKQBMfM6jZRfmit/zkfAHS5lQ==
+X-Received: by 2002:a05:6000:381:b0:3a4:eec5:441c with SMTP id ffacd0b85a97d-3a4fe399495mr5417023f8f.47.1748847158915;
+        Sun, 01 Jun 2025 23:52:38 -0700 (PDT)
+Received: from localhost ([41.210.143.146])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-450d800671csm110334925e9.30.2025.06.01.23.52.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Jun 2025 23:52:38 -0700 (PDT)
+Date: Mon, 2 Jun 2025 09:52:34 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: oe-kbuild@lists.linux.dev, Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>
+Subject: net/netlabel/netlabel_kapi.c:1200 netlbl_conn_setattr() warn:
+ inconsistent returns 'rcu_read'.
+Message-ID: <202506010920.TbxfWuYH-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aDncH8D9FoyAIsTv@google.com>
-X-Infomaniak-Routing: alpha
 
-On Fri, May 30, 2025 at 06:26:07PM +0200, Günther Noack wrote:
-> On Fri, May 30, 2025 at 05:11:34PM +0200, Mickaël Salaün wrote:
-> > On Fri, May 30, 2025 at 03:16:20PM +0200, Günther Noack wrote:
-> > > On Sun, May 18, 2025 at 09:57:32PM +0200, Mickaël Salaün wrote:
-> > > > We should rename the flag to LANDLOCK_RESTRICT_SELF_PROCESS to make it
-> > > > clear what it does.
-> > > > 
-> > > > The remaining issues are still the potential memory allocation failures.
-> > > > There are two things:
-> > > > 
-> > > > 1. We should try as much as possible to limit useless credential
-> > > >    duplications by not creating a new struct cred if parent credentials
-> > > >    are the same.
-> > > > 
-> > > > 2. To avoid the libpsx inconsistency (because of ENOMEM or EPERM),
-> > > >    landlock_restrict_self(2) should handle memory allocation and
-> > > >    transition the process from a known state to another known state.
-> > > > 
-> > > > What about this approach:
-> > > > - "Freeze" all threads of the current process (not ideal but simple) to
-> > > >   make sure their credentials don't get updated.
-> > > > - Create a new blank credential for the calling thread.
-> > > > - Walk through all threads and create a new blank credential for all
-> > > >   threads with a different cred than the caller.
-> > > > - Inject a task work that will call cred_transfer() for all threads with
-> > > >   either the same new credential used by the caller (incrementing the
-> > > >   refcount), or it will populate and use a blank one if it has different
-> > > >   credentials than the caller.
-> > > > 
-> > > > This may not efficiently deduplicate credentials for all threads but it
-> > > > is a simple deduplication approach that should be useful in most cases.
-> > > > 
-> > > > The difficult part is mainly in the "fleezing". It would be nice to
-> > > > change the cred API to avoid that but I'm not sure how.
-> > > 
-> > > I don't see an option how we could freeze the credentials of other threads:
-> > > 
-> > > To freeze a task's credentials, we would have to inhibit that commit_creds()
-> > > succeeds on that task, and I don't see how that would be done - we can not
-> > > prevent these tasks from calling commit_creds() [1], and when commit_creds()
-> > > gets called, it is guaranteed to work.
-> > > 
-> > > So in my mind, we have to somehow deal with the possibility that a task has a
-> > > new and not-previously-seen struct creds, by the time that its task_work gets
-> > > called.  As a consequence, I think a call to prepare_creds() would then be
-> > > unavoidable in the task_work?
-> > 
-> > OK, we don't need to freeze all threads, just to block thread creation.
-> > 
-> > What about that:
-> > 1. lock thread creation for this process
-> > 2. call prepare_creds() for the calling thread (called new_cred)
-> > 3. call cred_alloc_blank() for all other threads, store them in a list,
-> >    and exit if ENOMEM
-> > 4. asynchronously walk through all threads, and for each:
-> >   a. if its creds are the same (i.e. same pointer) as the calling
-> >      thread's ones, then call get_cred(new_cred) and
-> >      commit_creds(new_cred).
-> >   b. otherwise, take a blank cred, call cred_transfer(), add the
-> >      Landlock domain, and commit_creds() with it.
-> > 5. free all unused blank creds (most)
-> > 6. call commit_creds(new_creds) and return
-> > 
-> > Pros:
-> > - do not block threads
-> > - minimize cred duplication
-> > - atomic operation (from the point of view of the caller): all or
-> >   nothing (with an error)
-> > - almost no change to existing cred API
-> > 
-> > Cons:
-> > - block thread creation
-> > - initially allocate one cred per thread (but free most of them after)
-> 
-> The proposal is growing on me.
-> 
-> One way to view transfer_creds() and have it nicely fit into the credentials API
-> would be to view prepare_creds() as a convenience wrapper around
-> transfer_creds(), so that prepare_creds() is implemented as a function which:
-> 
->   1) allocates a new struct cred (this may fail)
->   2) calls transfer_creds() with the new struct cred to populate
-> 
-> We could then move the bulk of its existing prepare_creds() implementation into
-> the new transfer_creds(), and could also move the keyctl implementation to use
-> that.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   4cb6c8af8591135ec000fbe4bb474139ceec595d
+commit: 6e9f2df1c550ead7cecb3e450af1105735020c92 calipso: Don't call calipso functions for AF_INET sk.
+date:   4 days ago
+config: i386-randconfig-141-20250601 (https://download.01.org/0day-ci/archive/20250601/202506010920.TbxfWuYH-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
 
-Yes
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202506010920.TbxfWuYH-lkp@intel.com/
 
-> 
-> A remaining problem is: The caveat and the underlying assumption is that
-> transfer_creds() must never fail when it runs in the task work, if we want to
-> avoid the additional synchronization.  The existing cases in which the
-> credentials preparation logic can return an error are:
-> 
-> * Allocation failure for struct cred  (we would get rid of this)
-> * get_ucounts(new->ucounts) returns NULL  (not supposed to happen, AFAICT)
-> * security_prepare_creds() fails.  Existing LSM implementations are:
->   * Tomoyo, SELinux, AppArmor, Landlock: always return 0
->   * SMACK: May return -ENOMEM on allocation failure
-> 
-> 
-> So summing up, in my understanding, the prerequisites for this approach are that:
-> 
->   1) get_ucounts() never returns NULL, and
-> 
->   2) SMACK does not bubble up allocation errors from the cred_prepare hook
-> 
->      Casey, Jarkko: do you think this is realistic for SMACK to change?
+smatch warnings:
+net/netlabel/netlabel_kapi.c:1200 netlbl_conn_setattr() warn: inconsistent returns 'rcu_read'.
 
-There is no issue using cred_alloc_blank() and then transfer_creds().
-The allocation is up front and transfer_creds() cannot failed.
+vim +/rcu_read +1200 net/netlabel/netlabel_kapi.c
 
-> 
-> and that
-> 
->   3) We can block new thread creation
-> 
->      Mickaël, do you have a specific approach in mind for that?
+014ab19a69c325 Paul Moore        2008-10-10  1129  int netlbl_conn_setattr(struct sock *sk,
+014ab19a69c325 Paul Moore        2008-10-10  1130  			struct sockaddr *addr,
+014ab19a69c325 Paul Moore        2008-10-10  1131  			const struct netlbl_lsm_secattr *secattr)
+014ab19a69c325 Paul Moore        2008-10-10  1132  {
+014ab19a69c325 Paul Moore        2008-10-10  1133  	int ret_val;
+014ab19a69c325 Paul Moore        2008-10-10  1134  	struct sockaddr_in *addr4;
+ceba1832b1b2da Huw Davies        2016-06-27  1135  #if IS_ENABLED(CONFIG_IPV6)
+ceba1832b1b2da Huw Davies        2016-06-27  1136  	struct sockaddr_in6 *addr6;
+ceba1832b1b2da Huw Davies        2016-06-27  1137  #endif
+6a8b7f0c85f1f4 Paul Moore        2013-08-02  1138  	struct netlbl_dommap_def *entry;
+014ab19a69c325 Paul Moore        2008-10-10  1139  
+014ab19a69c325 Paul Moore        2008-10-10  1140  	rcu_read_lock();
+014ab19a69c325 Paul Moore        2008-10-10  1141  	switch (addr->sa_family) {
+014ab19a69c325 Paul Moore        2008-10-10  1142  	case AF_INET:
+014ab19a69c325 Paul Moore        2008-10-10  1143  		addr4 = (struct sockaddr_in *)addr;
+6a8b7f0c85f1f4 Paul Moore        2013-08-02  1144  		entry = netlbl_domhsh_getentry_af4(secattr->domain,
+014ab19a69c325 Paul Moore        2008-10-10  1145  						   addr4->sin_addr.s_addr);
+6a8b7f0c85f1f4 Paul Moore        2013-08-02  1146  		if (entry == NULL) {
+014ab19a69c325 Paul Moore        2008-10-10  1147  			ret_val = -ENOENT;
+014ab19a69c325 Paul Moore        2008-10-10  1148  			goto conn_setattr_return;
+014ab19a69c325 Paul Moore        2008-10-10  1149  		}
+6a8b7f0c85f1f4 Paul Moore        2013-08-02  1150  		switch (entry->type) {
+014ab19a69c325 Paul Moore        2008-10-10  1151  		case NETLBL_NLTYPE_CIPSOV4:
+014ab19a69c325 Paul Moore        2008-10-10  1152  			ret_val = cipso_v4_sock_setattr(sk,
+8ec9897ec2e93a Davide Caratti    2024-05-10  1153  							entry->cipso, secattr,
+8ec9897ec2e93a Davide Caratti    2024-05-10  1154  							netlbl_sk_lock_check(sk));
+014ab19a69c325 Paul Moore        2008-10-10  1155  			break;
+014ab19a69c325 Paul Moore        2008-10-10  1156  		case NETLBL_NLTYPE_UNLABELED:
+014ab19a69c325 Paul Moore        2008-10-10  1157  			/* just delete the protocols we support for right now
+014ab19a69c325 Paul Moore        2008-10-10  1158  			 * but we could remove other protocols if needed */
+ceba1832b1b2da Huw Davies        2016-06-27  1159  			netlbl_sock_delattr(sk);
+014ab19a69c325 Paul Moore        2008-10-10  1160  			ret_val = 0;
+014ab19a69c325 Paul Moore        2008-10-10  1161  			break;
+014ab19a69c325 Paul Moore        2008-10-10  1162  		default:
+014ab19a69c325 Paul Moore        2008-10-10  1163  			ret_val = -ENOENT;
+014ab19a69c325 Paul Moore        2008-10-10  1164  		}
+014ab19a69c325 Paul Moore        2008-10-10  1165  		break;
+dfd56b8b38fff3 Eric Dumazet      2011-12-10  1166  #if IS_ENABLED(CONFIG_IPV6)
+014ab19a69c325 Paul Moore        2008-10-10  1167  	case AF_INET6:
+6e9f2df1c550ea Kuniyuki Iwashima 2025-05-22  1168  		if (sk->sk_family != AF_INET6)
+6e9f2df1c550ea Kuniyuki Iwashima 2025-05-22  1169  			return -EAFNOSUPPORT;
 
-I was thinking to do the same as seccomp: lock siglock and,
-check/synchronize credentials in a new LSM hook called just after
-copy_seccomp() (when siglock is locked).  However, as pointed out by
-Jann, that would not be enough because this new LSM hook would not be
-able to allocate new credentials, and the siglock locking happens after
-copy_creds().
+Need to call conn_setattr_return() so goto conn_setattr_return.
 
-> 
->      As Jann pointed out in [1], the tasklist_lock and siglock are not sleepable
->      and can't be used while waiting, which is why he proposed an approach where
->      we retry in a loop until no new threads show up any more, while getting the
->      existing threads stuck in the task_work as well (where they can't spawn new
->      threads).
+6e9f2df1c550ea Kuniyuki Iwashima 2025-05-22  1170  
+ceba1832b1b2da Huw Davies        2016-06-27  1171  		addr6 = (struct sockaddr_in6 *)addr;
+ceba1832b1b2da Huw Davies        2016-06-27  1172  		entry = netlbl_domhsh_getentry_af6(secattr->domain,
+ceba1832b1b2da Huw Davies        2016-06-27  1173  						   &addr6->sin6_addr);
+ceba1832b1b2da Huw Davies        2016-06-27  1174  		if (entry == NULL) {
+ceba1832b1b2da Huw Davies        2016-06-27  1175  			ret_val = -ENOENT;
+ceba1832b1b2da Huw Davies        2016-06-27  1176  			goto conn_setattr_return;
+ceba1832b1b2da Huw Davies        2016-06-27  1177  		}
+ceba1832b1b2da Huw Davies        2016-06-27  1178  		switch (entry->type) {
+ceba1832b1b2da Huw Davies        2016-06-27  1179  		case NETLBL_NLTYPE_CALIPSO:
+ceba1832b1b2da Huw Davies        2016-06-27  1180  			ret_val = calipso_sock_setattr(sk,
+ceba1832b1b2da Huw Davies        2016-06-27  1181  						       entry->calipso, secattr);
+ceba1832b1b2da Huw Davies        2016-06-27  1182  			break;
+ceba1832b1b2da Huw Davies        2016-06-27  1183  		case NETLBL_NLTYPE_UNLABELED:
+ceba1832b1b2da Huw Davies        2016-06-27  1184  			/* just delete the protocols we support for right now
+ceba1832b1b2da Huw Davies        2016-06-27  1185  			 * but we could remove other protocols if needed */
+ceba1832b1b2da Huw Davies        2016-06-27  1186  			netlbl_sock_delattr(sk);
+014ab19a69c325 Paul Moore        2008-10-10  1187  			ret_val = 0;
+014ab19a69c325 Paul Moore        2008-10-10  1188  			break;
+ceba1832b1b2da Huw Davies        2016-06-27  1189  		default:
+ceba1832b1b2da Huw Davies        2016-06-27  1190  			ret_val = -ENOENT;
+ceba1832b1b2da Huw Davies        2016-06-27  1191  		}
+ceba1832b1b2da Huw Davies        2016-06-27  1192  		break;
+014ab19a69c325 Paul Moore        2008-10-10  1193  #endif /* IPv6 */
+014ab19a69c325 Paul Moore        2008-10-10  1194  	default:
+389fb800ac8be2 Paul Moore        2009-03-27  1195  		ret_val = -EPROTONOSUPPORT;
+014ab19a69c325 Paul Moore        2008-10-10  1196  	}
+014ab19a69c325 Paul Moore        2008-10-10  1197  
+014ab19a69c325 Paul Moore        2008-10-10  1198  conn_setattr_return:
+014ab19a69c325 Paul Moore        2008-10-10  1199  	rcu_read_unlock();
+014ab19a69c325 Paul Moore        2008-10-10 @1200  	return ret_val;
+014ab19a69c325 Paul Moore        2008-10-10  1201  }
 
-This looks good.  Too bad we need to block all threads.
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
-> 
-> 
-> Thanks,
-> 
-> —Günther
-> 
-> [1] https://lore.kernel.org/all/CAG48ez0pWg3OTABfCKRk5sWrURM-HdJhQMcWedEppc_z1rrVJw@mail.gmail.com/
-> 
