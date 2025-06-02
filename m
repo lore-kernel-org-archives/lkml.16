@@ -1,120 +1,268 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14733165F16;
-	Mon,  2 Jun 2025 21:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8AB7165F16
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 21:14:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748898827; cv=none; b=NUCgdzZOVahDaUDUD/Qz73r67Sl6584QT+q14ROLVWS5hFSdp/VGGTUqLCjYF9+2k+Xz08yWybMD1lzTjlXVNGTAszteUngs3Wx7okrw3/4Pak/YK8+zhnlVvsr7qWAAgrwFq0AJsc3q0Ijy94LdeaWtKLXgSkG3GOrAtO2ljB8=
+	t=1748898888; cv=none; b=PSV0Mi2QdDjRf3FhLPlYap8jKv7iy3BjZKSNvUZ3oTDdpDLeIxW6tQFlGF6KB7Czwrp6Fa3+AXUjBjYtcTrRFFfthHOs1+AIeqkUo2qGmMpZ8yzZD306FKtDuVbhtHsl1zCWPQdtwX/aiLVwPtbh31dgxgA70F1hM0mMHFLcrdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748898827; c=relaxed/simple;
-	bh=8USxg6SA8nGz3BAkEuYuS+4+eTJ3BHPZ/Z14aMgD5Vo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=cxEca7mC8CYAXRIwohECes1hmdIg/TVfZjZF8mbcKoeTHbRlodeAN5ShQ5eaFHMWQb72wkrYZMOqyuvP70t88q6orCtRdHa2zB35lASViRYg826kYgjqBUOwtfJmSYaCEiqxJSuIxQJbGpd9v0F/xKk2UhZcq5mnpMqtCEdLuL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m4m/SaHE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748898888; c=relaxed/simple;
+	bh=ZeXrkIjyPgFTvd4aFSLXeU04UHGtJ1bsQeI2z6Dvnbs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OldEfwK14rr7bTS1UhndQeszsftwWH3UsiBsvnejschrvtHSRRs5oj9625FLm+EusyWX14//6gTZ1QyyhdBcpkCBUhJFWIqMxtOkqt22hgHEv6GWQryCC+QMqgf1c5xZngloYqvVdYp+HToWiMmtQtBnOWcPhQwFNTbTogDr2+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nzjB7JAg; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m4m/SaHE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39042C4CEEB;
-	Mon,  2 Jun 2025 21:13:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748898826;
-	bh=8USxg6SA8nGz3BAkEuYuS+4+eTJ3BHPZ/Z14aMgD5Vo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=m4m/SaHE8iFG6uTm85JTtjtTJIE+XALUYhiJDLcsNKo6erXpfFaE2eoftIUOtZb2i
-	 2kGm4VUL7Ua/7F6a5U5aUqNink/ou4zhQ4Or1Zu7AYGVnh/ZWeSI0pyfMn30WRcQ31
-	 EE7y5jSxfu0sLgGiQqM9pTqNQCecm9dKrsuKXEXhC3Td41Cj2aNiNv4pF6GrK5lFa1
-	 EfDIsfRClEIUokRxgztxTyzmeHqtr5VVVhoTie87u7ngMqCcxERT0Ht1Aso+2l0gf8
-	 q5ypX9vO9UXttxSnq3oiYxYVfj8lsLtaHE1ephK+mkINFt6bB+xtQFBwk5k3E3s4sO
-	 ZFsT1JqbxJN6A==
-Date: Mon, 2 Jun 2025 16:13:44 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>,
-	Will Deacon <will@kernel.org>, Robert Richter <rric@kernel.org>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Marc Zyngier <maz@kernel.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>, dingwei@marvell.com,
-	cassel@kernel.org, Lukas Wunner <lukas@wunner.de>,
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v4 4/5] PCI: host-common: Add link down handling for host
- bridges
-Message-ID: <20250602211344.GA444082@bhelgaas>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nzjB7JAg"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ad89f9bb725so991957766b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 14:14:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748898885; x=1749503685; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m8ftkWSSIMy816Jx/bO3t4iajWSXp+7OOwQXgXhutgE=;
+        b=nzjB7JAgG9+odwpyIzDSHk4A8o1xUeF2EdVj2TemJhCSrvWm2ZuFJo2vmWORS2KIEC
+         liFrNGSZIRelUDiWugqGnfRVKjSTdDTo3oOjpSvlFH+CtXgl5vmINm47xmPCOmTtaPTo
+         YPEGOnLVH+g64/34dmT/DBbvKyvNBD+1CUgsbIfoEGnWONNO5NJCCHFYkJRfg51Wn+zi
+         D6Xuiu3drfTlpjqNwUMma+MOKTqywxG3i5Y4xR5M+Mv2hgsvGcFrsp1WieH+fDyf3FEk
+         QkJ2jtaAWkRMxKpcCmYmjSoFgbuP9Qc5Zg5HGZpsrHD0246tMHNOh3A5BDC876ODW0aj
+         qq6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748898885; x=1749503685;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=m8ftkWSSIMy816Jx/bO3t4iajWSXp+7OOwQXgXhutgE=;
+        b=CWMK2jwbCAH2//0ENKAWqEjkTsgl9+rhPzaIn/RoDgKpaTEmzgpjKTvX8b1sMfXQSO
+         Atyl5+HJatAPLeh0ejmqVpdgNujRxsF2HU7/8keCpbXs8fV2mm1zRu4dJgE0nTINHRjn
+         kArQpPI+5ztUwdut437cQwY+LvAgQBTyQqGTsLXrzxd/toALzJXHL74aMGHQfe3C3+31
+         XlnCqaVW68ZAFxDtdDpBIAAOH+DulS6LMvq/8KbPWoXDZeDWNkNNUFZkjtWxzaO+39jQ
+         RDdcAQFAPizgzsI1K1cOuvJQ4gbkNuYhN83OaczlGE2dwBQBTGqeW6JVxEVA0VHdiet5
+         x4ig==
+X-Forwarded-Encrypted: i=1; AJvYcCWIJyFOAG2P/s4XWJVWs4GGLym7S1oHQ5uJnLYwbOUo9L29FuY+hspGQF8h52P75d6Z78FaCu9fnEkJCis=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8qD1i5D7wF4cn2WG1azgKhEK5xqXXOAhCKKpIx4meAguikR71
+	2Z8Bjk3iWyGmP3jIi+QBt7NyWOa1RkQVkOlfFIxdgYMHxzms84HPBdunYYYOOabvXW2fqzAMsC9
+	uyt1s5pdObqBziS8TvySnW9rlVfO1RTTcqa54iGT2CaaYExwHsdw55wpuFw==
+X-Gm-Gg: ASbGncuee6EdDv6LTGzmhm/mIB2W2rjbhiS0Fqve3io1u5Rqdwo2ggx+8ldeF6Vc1tP
+	0M691CEMAxn6esZytDWqp0qqUitxCseaHmxS1uW5Vlhcw20hZZUKGaskq3iBXEOJ2gnb1rYDzvK
+	a+lT8F3iXCRxHqWPcfLwX3y+PZCuQQZ1zWNlVPG37q
+X-Google-Smtp-Source: AGHT+IE+VipmkuZVXa5mLje8ADCcdaLzWX984KOU6BVdodEOK1iXNGSSjRNrCQhzWlytHUaZkqqZXjWCZ4J4ABYdziQ=
+X-Received: by 2002:a17:907:3d02:b0:ad8:9c30:b66 with SMTP id
+ a640c23a62f3a-adb36b31a52mr1209293266b.18.1748898884874; Mon, 02 Jun 2025
+ 14:14:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bixtbu7hzs5rwrgj22ff53souxvpd7vqysktpcnxvd66jrsizf@pelid4rjhips>
+References: <20250602102825-42aa84f0-23f1-4d10-89fc-e8bbaffd291a@linutronix.de>
+ <20250602193718.GA915101@ax162>
+In-Reply-To: <20250602193718.GA915101@ax162>
+From: Bill Wendling <morbo@google.com>
+Date: Mon, 2 Jun 2025 14:14:28 -0700
+X-Gm-Features: AX0GCFsc2RMXbkJa80qarC-w9TN9ynL07wJ6BL7h65giiVy6nAFWHenYNCMcLgY
+Message-ID: <CAGG=3QVoa=v0wdG64m5HT+TEj+Epg-zKcgJjTA+A+hUia84oUw@mail.gmail.com>
+Subject: Re: [BUG?] clang miscompilation of inline ASM with overlapping
+ input/output registers
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Justin Stitt <justinstitt@google.com>, 
+	llvm@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 30, 2025 at 09:39:28PM +0530, Manivannan Sadhasivam wrote:
-> On Fri, May 30, 2025 at 06:34:04AM -0500, Bjorn Helgaas wrote:
-> > On Fri, May 30, 2025 at 09:16:59AM +0530, Manivannan Sadhasivam wrote:
-> > > On Wed, May 28, 2025 at 05:35:00PM -0500, Bjorn Helgaas wrote:
-> > > > On Thu, May 08, 2025 at 12:40:33PM +0530, Manivannan Sadhasivam wrote:
-> > > > > The PCI link, when down, needs to be recovered to bring it back. But that
-> > > > > cannot be done in a generic way as link recovery procedure is specific to
-> > > > > host bridges. So add a new API pci_host_handle_link_down() that could be
-> > > > > called by the host bridge drivers when the link goes down.
-> > > > > 
-> > > > > The API will iterate through all the slots and calls the pcie_do_recovery()
-> > > > > function with 'pci_channel_io_frozen' as the state. This will result in the
-> > > > > execution of the AER Fatal error handling code. Since the link down
-> > > > > recovery is pretty much the same as AER Fatal error handling,
-> > > > > pcie_do_recovery() helper is reused here. First the AER error_detected
-> > > > > callback will be triggered for the bridge and the downstream devices. Then,
-> > > > > pci_host_reset_slot() will be called for the slot, which will reset the
-> > > > > slot using 'reset_slot' callback to recover the link. Once that's done,
-> > > > > resume message will be broadcasted to the bridge and the downstream devices
-> > > > > indicating successful link recovery.
-> > > > 
-> > > > Link down is an event for a single Root Port.  Why would we iterate
-> > > > through all the Root Ports if the link went down for one of them?
-> > > 
-> > > Because on the reference platform (Qcom), link down notification is
-> > > not per-port, but per controller. So that's why we are iterating
-> > > through all ports.  The callback is supposed to identify the ports
-> > > that triggered the link down event and recover them.
-> > 
-> > Maybe I'm missing something.  Which callback identifies the port(s)
-> > that triggered the link down event?
-> 
-> I was referring to the host_bridge::reset_root_port() callback that resets the
-> root ports.
-> 
-> >  I see that
-> > pci_host_handle_link_down() is called by
-> > rockchip_pcie_rc_sys_irq_thread() and qcom_pcie_global_irq_thread(),
-> > but I don't see the logic that identifies a particular Root Port.
-> > 
-> > Per-controller notification of per-port events is a controller
-> > deficiency, not something inherent to PCIe.  I don't think we should
-> > build common infrastructure that resets all the Root Ports just
-> > because one of them had an issue.
-> 
-> Hmm, fair enough.
-> 
-> > I think pci_host_handle_link_down() should take a Root Port, not a
-> > host bridge, and the controller driver should figure out which port
-> > needs to be recovered, or the controller driver can have its own loop
-> > to recover all of them if it can't figure out which one needs it.
-> 
-> This should also work. Feel free to drop the relevant commits for
-> v6.16, I can resubmit them (including dw-rockchip after -rc1).
+On Mon, Jun 2, 2025 at 12:37=E2=80=AFPM Nathan Chancellor <nathan@kernel.or=
+g> wrote:
+>
+> Hi Thomas,
+>
+> On Mon, Jun 02, 2025 at 10:29:30AM +0200, Thomas Wei=C3=9Fschuh wrote:
+> > I observed a surprising behavior of clang around inline assembly and re=
+gister
+> > variables, differing from GCC.
+> >
+> > Consider the following snippet:
+> >
+> >       $ cat repro.c
+> >       int main(void)
+> >       {
+> >               register long in asm("eax");
+> >               register long out asm("eax");
+> >
+> >               in =3D 0;
+> >               asm volatile("nop" : "+r" (out) : "r" (in));
+> >
+> >               return out;
+> >       }
+> >
+> > The relevant part is that the inline ASM has input and output register
+> > variables both using the same register and the input one is assigned to=
+.
+> >
+> >
+> > Compile with clang (19.1.7, tested on godbolt.org with trunk):
+> >
+> >       $ clang -O2 repro.c
+> >       $ llvm-objdump --disassemble-symbols=3Dmain a.out
+> >       0000000000001120 <main>:
+> >           1120: 90                            nop
+> >           1121: c3                            retq
+> >
+> > The store of the variable "in" has been optimized away.
+> >
+> >
+> > Compile with gcc (15.1.1, also tested on godbolt.org with trunk):
+> >
+> >       $ gcc -O2 repro.c
+> >       $ llvm-objdump --disassemble-symbols=3Dmain a.out
+> >       0000000000001020 <main>:
+> >           1020: 31 c0                         xorl    %eax, %eax
+> >           1022: 90                            nop
+> >           1023: c3                            retq
+> >           1024: 66 2e 0f 1f 84 00 00 00 00 00 nopw    %cs:(%rax,%rax)
+> >           102e: 66 90                         nop
+> >
+> > The store to "eax" is preserved.
+> >
+> >
+> > As far as I can see gcc is correct here. As the variable is used as an =
+input to
+> > ASM the compiler can not optimize away.
+> > On other architectures the same effect can be observed.
+> >
+> >
+> > The real kernel example for this issue is in the loongarch vDSO code fr=
+om
+> > arch/loongarch/include/asm/vdso/gettimeofday.h:
+> >
+> >       static __always_inline long clock_gettime_fallback(
+> >                                               clockid_t _clkid,
+> >                                               struct __kernel_timespec =
+*_ts)
+> >       {
+> >               register clockid_t clkid asm("a0") =3D _clkid;
+> >               register struct __kernel_timespec *ts asm("a1") =3D _ts;
+> >               register long nr asm("a7") =3D __NR_clock_gettime;
+> >               register long ret asm("a0");
+> >
+> >               asm volatile(
+> >               "       syscall 0\n"
+> >               : "+r" (ret)
+> >               : "r" (nr), "r" (clkid), "r" (ts)
+> >               : "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7",
+> >                "$t8", "memory");
+> >
+> >               return ret;
+> >       }
+> >
+> > Here both "clkid" and "ret" are stored in "a0". I can't point to the co=
+ncrete
+> > disassembly here because it is inlined into a much larger block of code
+> > and removing the inlining hides the bug.
 
-OK, I kept "PCI: host-common: Make the driver as a common library for
-host controller drivers" (renamed to "PCI: host-common: Convert to
-library for host controller drivers") on pci/controller/dw-rockchip
-for v6.16 and deferred the rest until later.
+Hi Thomas,
+
+To help find a random inline assembly in your code, place comments
+within the ASM block. Something like:
+
+asm volatile(
+  "# HEY! I'M RIGHT HERE\n\t"
+  "syscall 0\n"
+...
+
+You can then search the assembly for that to see what's generated.
+
+> > Also in my tests the bug only manifests for "_clkid" in the interval [1=
+6, 23].
+> > Other values work by chance.
+> > Removing the aliasing by dropping "ret" and using "clkid" for both inpu=
+t and
+> > output produces correct results.
+> >
+> > Is this a clang bug, is the code broken or am I missing something?
+>
+> For the record, inline assembly semantics are a little out of my
+> wheelhouse. Bill can probably comment more on what might be happening
+> internally within clang/LLVM here but it does seem like there could be a
+> clang code generation bug. Looking at the example you provided and GCC's
+> assembly and local register documentation, which has a very similar
+> example, it looks like the issue disappears when using "=3Dr" for the
+> output constaint instead of "+r".
+>
+> https://godbolt.org/z/jo3T8o3hj
+>
+> Looking at the constraint string in both the unoptimized and optimized
+> IR, it looks like eax appears an input twice in the list for broken(),
+> likely because "+r" was internally expanded to "=3Dr" for the output and
+> "r" for the input. In the optimized IR, we can see that the first eax
+> will be the 2 that was assigned but the second eax is "undef"
+> (undefined), which follows from the unoptimized IR. What I am guessing
+> happens based on my investigation with '-mllvm -opt-bisect-limit=3D' on
+> x86 is the second eax "wins" over the first one that has the actual
+> value. Using an undef value is UB so the backend removes the initial
+> write to eax altogether.
+>
+> It definitely seems like this could be handled better on the clang side
+> but I do think that switching the constraints to "=3Dr" would be a proper
+> fix, as "+r" is really an overspecification and that matches an almost
+> identical example in the GCC local register documentation:
+>
+> https://gcc.gnu.org/onlinedocs/gcc-15.1.0/gcc/Local-Register-Variables.ht=
+ml
+>
+[+Ian because he also knows inline assembly]
+
+This might be a Clang bug, as it's well known that Clang's support of
+GCC's extended asm is lacking in key areas...especially with regards
+to local register variables.
+
+I'm not confident I completely understand the documentation Nathan
+pointed out. It states that the only supported use is for input and
+output to extended asm, but then goes on to show an example where they
+initialize a variable. (??)
+
+Looking at this a bit closer, the LLVM IR initially generated by the
+front end is this for the "+r" version (it's verbose, but not to
+worry):
+
+ 1. %in =3D alloca i64, align 8
+ 2. %out =3D alloca i64, align 8
+ 3. store i32 0, ptr %retval, align 4
+ 4. store i64 0, ptr %in, align 8, !dbg !19
+ 5. %0 =3D load i64, ptr %out, align 8, !dbg !26
+ 6. %1 =3D load i64, ptr %in, align 8, !dbg !27
+ 7. %2 =3D call i64 asm sideeffect "nop",
+"=3D{eax},{eax},{eax},~{dirflag},~{fpsr},~{flags}"(i64 %1, i64 %0) #2,
+!dbg !26
+ 8. store i64 %2, ptr %out, align 8, !dbg !26
+
+Notice instructions (1), (2), (5), and (6). Instructions (1) and (2)
+are simply a way for LLVM to indicate that these are variables and are
+64-bits in size. The "%in" variable is assigned the value "0" (zero)
+with the "store" in (4), but notice that "%out" never has a value
+assigned to it. The assembly block indicated that it *should* have a
+value, because of the '+' modifier. This means that once all of the
+stores and loads are reduced by later passes the "%out" variable will
+have an undefined value.
+
+One could argue that it *does* have a value, because it's in the same
+register as "%in", but LLVM's middle end doesn't work like that. It
+only sees two variables, not that they're in the same register. So
+that's what adds the 'undef' that Nathan pointed out.. In Clang terms,
+"undef" can mean "undefined behavior" (like here) and may elide code
+that exhibits it.
+
+One way you could resolve this is to say that the "out" variable has
+an early clobber:
+
+  : "+&r"(out)
+
+This tells the compiler that the value is written before being read.
+Therefore, the compiler won't assume that it has no value.
+
+-bw
