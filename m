@@ -1,138 +1,108 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F204F5E0;
-	Mon,  2 Jun 2025 19:49:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E481117B402;
+	Mon,  2 Jun 2025 19:51:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748893778; cv=none; b=NbhzBinIKCiRfqBr4wUs9jrJieI6ohUnAQ5i+DkV3L3Bx9WvTCtTEU1AmmmYvJTCSFIhMS95aI9tVEJuKs78wAoWAwvjlbAsn5UKCeBW6Xk11hBfGVDxRwU+WfBvI6pEyagMUTCeqTAONXKD6rP/jrjj3u3WPbjFauqDFCxCKkg=
+	t=1748893900; cv=none; b=sbK10P9sCf5w3RK1RY6rKXpR6HpuHBqXZn5vJmIDZsoEn9JI2ANz5IJ1snDjwS17rc0Qv2GGA8d/MxJ/h/TqUh/2AHpupdvKbYXG507U7skCgpnHgrcBjmSOnqQxrsA7+wWUCxMcVSh9YyPtAUJ3mTzjKcZy9Qbyxe382YwMGis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748893778; c=relaxed/simple;
-	bh=YfdlVVEw/6/rdApKtBlpYYw976lAfPWt6/Tm6qeJB2A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=vGC8sEyrwFZYaIW0WMrh73/Qqo1X3CtTy7ZEnq26whTQtdha83bvt8pmhx5NWgSaE/zpH54e1ljb0Omoa6R7VaKc8dCFMZZqt6ueHy61mFzEvvChpf1uBAnCdbOwqJ6jZBemMunmxRIac46vC8fWZp6fv1JWWORI/ceWa1hxsY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RKvPR4r4; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748893900; c=relaxed/simple;
+	bh=PDxgwHxZ2fv1zHkhlESn3ZqpBz71BeATIeQYdGAevYM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t37NY2+i2ucpg8dOP0nCbTvu3USCnT/83bFXQjevj1PJ8yMLORSTiIpi/DqJWQdAfnxMJj0jfdqgVq0o0VbTGwLiIPAvKzMKwAi/y5W3jIZ5o7RHcetDIsk1n4J5LsppP06ZxWcHJclzSMYCsQ1wgTN8ZuNwT3T57hEfPKBjLvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=FxoRIPnj; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RKvPR4r4"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-adb47e0644dso440942066b.0;
-        Mon, 02 Jun 2025 12:49:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="FxoRIPnj"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a5123c1533so310451f8f.2;
+        Mon, 02 Jun 2025 12:51:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748893775; x=1749498575; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+JFnvzbjUuGhVJFj4lgN9kbadYFKhk8KIDJQTTgCUdk=;
-        b=RKvPR4r4nUzSCGOAl5En8refdI0N2qCGmmYcgua+7SXkNZ5G6m+fKZ4lmvj7Oyml6f
-         Cz14qsbU6ivfZjE+UGFm9dIMjQjpoeE40AB7nttZ0JdVf9wENG5GwKfLZ2xQoakLCO5D
-         1l7QLnGv8Fx9Hutw2ok2nW7f+NEiYfPtyl4umrIfJipds1C09p4mAMYRRYXz+oPEAePj
-         hRo157zDWnsM3jc08AKXM5LCL31nLWC7gkiCiZR+HMfPvqvL8Z8HVEO9zJvpueLLx7T4
-         BPyM10p3PhHstK0VPJkp+hqTKhCTvIAHwRqWl8OrBSPycpUl+vYToDOcmUhooSo0Qd87
-         SXoQ==
+        d=googlemail.com; s=20230601; t=1748893897; x=1749498697; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FdQH+gYaWiAPPdu29kvcsCjEWq2JnvTRRl0+eDrbZLg=;
+        b=FxoRIPnjxmj5Cu8bQrYH7M0D/FetOW4RGvSeB3tV+UTNLMJrjwbo1ifa6aK3iZgEzq
+         SHUut2DySh2Ojv3Mw3zdUAI/PD7V1CcQfbsczTDlf2Tz3xnHCHimrpR27pr32m3Oh0ZX
+         cTfPZUuxnWAFXvYcERxTfjdNbIca18/0WvuJxMmFqwxD5D56aZVurMgQZNaNSGoxJ6rq
+         R53/1pD8mNlrVRdwUVmz8txnWSbe1P/haTpr++JpUFp2+OxQggziJoza0lDRAJU8micI
+         4AMDmJlsc4cvaARTTHCH+UuxVMHvL+cJyMReVpMFMNKCjZwHN0gWSUwsWVq3bYoqm4fj
+         4i/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748893775; x=1749498575;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+JFnvzbjUuGhVJFj4lgN9kbadYFKhk8KIDJQTTgCUdk=;
-        b=csoMSHm18qMIoy34wCid3JWLZJwvsuthXVEPsMt2lb/d36WyTjP3ifn4nGAvdjiREC
-         UemdU1ZZ5R0pwfwI4F/9n6H0qpKMmzoBcHC6XyLrjFM+K7wxui5lQOvwWIT8X9nVDh0g
-         dfpSc8Xt12LT3PZPXfU86QBaNF2WK/K8izAs5jQxQEOMP3TY922GoxtuE0RhKdSkEj9b
-         RQ80GxBkzkUgv0ehi1IbqWbi463qdFY8L7hBW0MJnLXk/HM7A5qWLDWz+ks4ny66GpgJ
-         nB1/Kd/kZ2tS3EW1NBgqbPAZtR/CiCMYdNjl12wO8xoHMS6xUnUdzpG/14AM44+fb2AW
-         BDhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUvbf/sz8Mo2XRQk7Z+UaJBndOvnyc5LHc1v4ve1icxGAXNuAAfti8/pwt06tD74cKsL4/KiuqXzYyHf2A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbQM4pqQxXOXXiGlnfN3jrTXy0z1ng9KjD/tLP/ztLacy6bqgL
-	562n8IYSNULjYJpBoBSu0ftcqcXYx1fzBG4rd607AQVNKZm8VlAnr988
-X-Gm-Gg: ASbGnctr/zHTyUuC28b7vnB7c5Y73JNznXuTPW8DO7Z+HeBYI7BUJJwaLqQZgc62VnA
-	QY2SIrphjvTwSUej+pWS0AhFFpEtih8tITPXsK4xKVR3eAnhMHMXaAUosKcoPuzZymmxu5MFBnS
-	+yfDWEkbEvdTUFKIMmxkWDBgVpn5E2hywy0/ZMw9ZxQWGftkrL0QfD0OOVbKmQ8T4x1/vq0OSS6
-	aDfdN8DOKo2eMwyve95kxUtEiiYIogY2q9+VZtmRDbIJ3Hr4JzOXr6e7ruOabdXIpNr9sALgvuQ
-	1qV6Cl7XTa2AzpFl49DSjz/iOzliHh10pkbkwQhlPOrMIlOZavwjZ59v3UoVDIJSHaq1/Fcr1mk
-	zZgdr6J2G0dmWxpLLCg1HqVbpxU9mWTw=
-X-Google-Smtp-Source: AGHT+IGPsYM9exsx9ePJFNubHcPZiDtwnOjmoDPhd9AFlpTMUTQswskrVkz8YeRL6XBGY8badAqsfg==
-X-Received: by 2002:a17:907:868e:b0:ad8:93a3:29a0 with SMTP id a640c23a62f3a-adde0d54c7cmr71988466b.18.1748893775387;
-        Mon, 02 Jun 2025 12:49:35 -0700 (PDT)
-Received: from localhost (dslb-002-205-016-252.002.205.pools.vodafone-ip.de. [2.205.16.252])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adb4292ae03sm498280166b.80.2025.06.02.12.49.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 12:49:34 -0700 (PDT)
-From: Jonas Gorski <jonas.gorski@gmail.com>
-To: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Jonas Gorski <jonas.gorski@gmail.com>
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net] net: dsa: b53: fix untagged traffic sent via cpu tagged with VID 0
-Date: Mon,  2 Jun 2025 21:49:14 +0200
-Message-ID: <20250602194914.1011890-1-jonas.gorski@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1748893897; x=1749498697;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FdQH+gYaWiAPPdu29kvcsCjEWq2JnvTRRl0+eDrbZLg=;
+        b=uoLi+42SXfUEQGeeSnpc53cCSVDxtYpZGOex6b4hnWL38wWX1cNkbuEiPUhEwOy6ba
+         YF+PZC2AhDwi3BeZsh87NQEsIMvOKtCppTwMpQwP5nyqObRXz7l6H7qAkC8wci5ZmhbE
+         WOL+SbzkTEa7ukJQikljXBOqvs77MrwFneH/oExRRDlemUjsq7movIcWsth5HwYPILyf
+         +WBTjnkPwG8FYzvH4LDHG7w3gE8s6DbuqCHB856+CNeWZP7yQNN077Eb6UWM+Xlv7v9K
+         jVglKAaR4qh+TQc7wtmqeRBYFR5Leg7PJoaqSzE0HNvIM7B4fgRneqBzFC75Euzv/wEw
+         8oWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWTpzMa20tBC//3E6LlVihSi6pSD/VGuQNWRBBeai/+sDCcX27/VCaiaYHipWyRdsMHokPyhVC9@vger.kernel.org, AJvYcCXs7T6ifBVKCHedhlqSUaCHmXr07nQSCthMYiDn4FzPDcQOXrFGCL+tTHlBXmoKVpbIv75sl2reEmCBXoE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhwlO7rJeSof6CimqpOo0oDjjeKO7y6blCO/G5JpvkpNZXSlRa
+	bg8fTpB78l4ItkeRwMpC3HQX7d5zQaepys75/XIG9aXmqQM+ia5FG64=
+X-Gm-Gg: ASbGncsDyX4O4CLTa7dfRZa76O3bP0dxWvKa7MjV6uHFnnSN7O3qPCPotQWeTUTOXhI
+	AP09qnxwKBBTBRje6tovNC46tXCnpWgWOPFPIw3C8jRYu4nxE+ZpNIMMGgP4cCVxEXJfrY9FB2R
+	F+HU5de67Dyc0sg5KxMb/yJfrknlat3tLUkuF4+CgkCc8J5AND6O1QKuAA6CIWBmZfG/x0PCKeP
+	l7QR3bG0LX4y9guDTht4FfNrZsi7sxW8LYjMCAiwodw68kDvzBm9knTcMf56Aq8nqMA+Uo2Jfv4
+	jUB80S52RZHgnJkdIJG4zx40zCwo9THzQJlynJ1AY6vm2ZFKI0xvT8HeJgimIORKqL9tUcaxLEj
+	4MVlETX/8lPzOuznJ5I5qmQue8KEd1t9dUUhgdg==
+X-Google-Smtp-Source: AGHT+IEMS/aWQ1Ihl6wDJsvQbfZi5zg23IDKIRWgu57p786dbUitQSIW7l0HnT+yNLwD9jcz02z9ZQ==
+X-Received: by 2002:a5d:5f88:0:b0:3a3:7bbc:d959 with SMTP id ffacd0b85a97d-3a4f89a89f7mr10855462f8f.18.1748893896920;
+        Mon, 02 Jun 2025 12:51:36 -0700 (PDT)
+Received: from [192.168.1.3] (p5b057d53.dip0.t-ipconnect.de. [91.5.125.83])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f00971fasm15693615f8f.77.2025.06.02.12.51.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Jun 2025 12:51:35 -0700 (PDT)
+Message-ID: <b86b9c0f-0a3f-46cd-8f09-a30ba7f2fc67@googlemail.com>
+Date: Mon, 2 Jun 2025 21:51:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.15 00/49] 6.15.1-rc1 review
+Content-Language: de-DE
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250602134237.940995114@linuxfoundation.org>
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250602134237.940995114@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-When Linux sends out untagged traffic from a port, it will enter the CPU
-port without any VLAN tag, even if the port is a member of a vlan
-filtering bridge with a PVID egress untagged VLAN.
+Am 02.06.2025 um 15:46 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.15.1 release.
+> There are 49 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-This makes the CPU port's PVID take effect, and the PVID's VLAN
-table entry controls if the packet will be tagged on egress.
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
-Since commit 45e9d59d3950 ("net: dsa: b53: do not allow to configure
-VLAN 0") we remove bridged ports from VLAN 0 when joining or leaving a
-VLAN aware bridge. But we also clear the untagged bit, causing untagged
-traffic from the controller to become tagged with VID 0 (and priority
-0).
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
-Fix this by not touching the untagged map of VLAN 0. Additionally,
-always keep the CPU port as a member, as the untag map is only effective
-as long as there is at least one member, and we would remove it when
-bridging all ports and leaving no standalone ports.
 
-Since Linux (and the switch) treats VLAN 0 tagged traffic like untagged,
-the actual impact of this is rather low, but this also prevented earlier
-detection of the issue.
+Beste Grüße,
+Peter Schneider
 
-Fixes: 45e9d59d3950 ("net: dsa: b53: do not allow to configure VLAN 0")
-Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
----
-My favourite kind of fix, just deleting code :-)
-
- drivers/net/dsa/b53/b53_common.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
-index 132683ed3abe..6eac09a267d0 100644
---- a/drivers/net/dsa/b53/b53_common.c
-+++ b/drivers/net/dsa/b53/b53_common.c
-@@ -2051,9 +2051,6 @@ int b53_br_join(struct dsa_switch *ds, int port, struct dsa_bridge bridge,
- 
- 		b53_get_vlan_entry(dev, pvid, vl);
- 		vl->members &= ~BIT(port);
--		if (vl->members == BIT(cpu_port))
--			vl->members &= ~BIT(cpu_port);
--		vl->untag = vl->members;
- 		b53_set_vlan_entry(dev, pvid, vl);
- 	}
- 
-@@ -2132,8 +2129,7 @@ void b53_br_leave(struct dsa_switch *ds, int port, struct dsa_bridge bridge)
- 		}
- 
- 		b53_get_vlan_entry(dev, pvid, vl);
--		vl->members |= BIT(port) | BIT(cpu_port);
--		vl->untag |= BIT(port) | BIT(cpu_port);
-+		vl->members |= BIT(port);
- 		b53_set_vlan_entry(dev, pvid, vl);
- 	}
- }
 -- 
-2.43.0
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
 
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
