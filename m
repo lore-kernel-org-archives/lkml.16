@@ -1,334 +1,233 @@
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013013.outbound.protection.outlook.com [40.107.162.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D3E22AE9A;
-	Mon,  2 Jun 2025 14:39:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748875187; cv=fail; b=gp5YYdRVnRaZ+jlDD+WsHD95SxU4Zux/IZgBEJa8/8AEKHlD/mOWkmR2DTPWnpDIrnk2aGaVHEj3aT/wDzS/0T8JC04NaXBmoqXhLgvj9q30OZ9HV5Kc6AhWZGAs4zvE6JtaOhB3cSwY00I8AtjYuQywvRzl7NfodqcbpRfNLCc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748875187; c=relaxed/simple;
-	bh=u1lgNTeWBLylJZl2pjbqXqBkwAdqBuRjSl0TDi1OyBI=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=Q3wSz5aeQbUKOzHn+DAsiclo/WF/JR2CNYwr08rsohiZXW+HpD0avaeYRFOPXQRfDlLnOWbzavuPGiHH5CY92FOr0Pidp0+8m08N+pH4fwVAlxgHtXcIFAY3eZQee8oNnoQ//Qy6P7897jUL+xCv+cjfJ4Z/u65ppxBz2Eu27Tw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=S0fZv81P; arc=fail smtp.client-ip=40.107.162.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53FA922A7EF
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 14:40:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748875223; cv=none; b=ANscO/xWCZmsQvkrgl0ApPTp/ckM86uevK8x4wKIqYQEDbcD/f5TYhOS4A3twSCdyN5yH60CTYNNEE9vPjC3VrNhw5npY13SFvrub4nbv0yZihuCGDmwsBzMi146f0B1sdtZIJZb0tBl/29FCqK/eUF7NV+wL/+KOBiUw3sHJUA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748875223; c=relaxed/simple;
+	bh=07XG5x+QAeJhTjZQ2/UKCylVkGAFsJMZTfx4cUJDjGk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=npBDvros/FC2iz24lXgntGJl3u6RYmsMNFgcvN7clGSv/xgQgJ9sqYovvY6jy/lD1nMKOM+9P+YN4opsjDRS/+u0/uM/YqYYhhpqaRymPK86HxUIbs13vD91/qEL+HziPsa4jkJPVdFHuATaFrXf9SddKUufEX4YcLaz4w9CQOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LfiujJPO; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="S0fZv81P"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cQrkejSrgUmFalWFpEl0st02SFKL6h1uCZtKKX4164Sl/APzFumg/VnH5yEuc6HFSmvsZ7ZPpx/OdfmGTOQ8YG09sgQ64slYMQaf7e00XTiz/n6pdbp0ISD4tTX8B5bFrd1nh1DRVnQ61COFt7HNiFlZ0O0HFktRGkwd/DeF1u7RBjaMYEjX8Xfjp6qc9XpkvsScPohgFO/DRsbwznVfpK0ZOo1ZfAhdYlsLDKF8CpcyPxRoRBmfLyyZcg/qbH6l9cx4VzxejDIMYKNQUzgACF38EOINZN25KmBQSWGCIh7IHFv50ZFRxGTOjx1MSs1ZxxRHVMi3bEXzvtNDzv1zRQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8H4qjor30QeI7PmGOQaOFhbkj7QWUZDzBZir18+3hwc=;
- b=AIv1XFqGKjVc4r2AfepK3EVgb+coVH5wHIausuHF2Iwgh1fYGcvtcYaznHSHo4DvrkxvOrYNqZZ7IJ05UeLZMqdhqQCtSpY9UvUz+sKT9bdJqxTOH+FPr8WcowWufvcO7qEw+znMc5Uxdr2vYjUR1YKnDX/99TdNOcBP6xK2mkLzhsMltmJeihOf+7gGpqC8fC24W8ES1W21eEyYYXyhQNFlTnK/oZgtdtI+SmcAAvdw0WKIoMF4jIu6ll1JPetBuftrWqIky+5amhulkaajtxqC+cNcFecFnmx3wTz6eRLwJoH5lLr7amYa999srNwYOEaHwpUbJxgy1yATfvDhcw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8H4qjor30QeI7PmGOQaOFhbkj7QWUZDzBZir18+3hwc=;
- b=S0fZv81PFQNWxCFML0P3ZIdH3bb0UeQ8YlAfdAurVq+Drgfz16MbCcAsKKtlyGLSQqEMCEDvq2fNK3JkQ69rRZMhqmBDx0IrXQ4IQg+KaoqbsvNnK0EkvjdB8WJTa+oO5eW9Cb0DYOhG4udfCWCWIfGYWh16/RY6Q30iIVUeArdUkma0JTzGZVC/Ofem9VxLDokB9ki5Vby9SLb8y5MByEjIPBzjnKy8+bxRrp12oFs3Uxh9fu4+7eV+xM/Kbkc7XmUOeFn2ElTeCzcqZTH4/65ZJnhp/d3rDu99SdGf+CDgmnw1Lvtnn0vnuOEChi3g6+CGXHjSlr4JjlThD7r9sQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by GV2PR04MB11304.eurprd04.prod.outlook.com (2603:10a6:150:2a8::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.37; Mon, 2 Jun
- 2025 14:39:42 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%6]) with mapi id 15.20.8769.025; Mon, 2 Jun 2025
- 14:39:42 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-gpio@vger.kernel.org (open list:PIN CONTROL SUBSYSTEM),
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-kernel@vger.kernel.org (open list)
-Cc: imx@lists.linux.dev
-Subject: [PATCH 1/1] dt-bindings: pinctrl: convert xp,lpc1850-scu.txt to yaml format
-Date: Mon,  2 Jun 2025 10:39:29 -0400
-Message-Id: <20250602143930.943830-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: PH8P222CA0010.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:510:2d7::8) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LfiujJPO"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-451d7b50815so10758725e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 07:40:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748875219; x=1749480019; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gzJqzJEUCc0XLsoz3b6HngePdRvcXa5BR8sAyxQH6Bw=;
+        b=LfiujJPOaxdy40m0ZkY9eOfZVM8zwMmXk8bzlitLBCux/uqErObyEHr+hMF79EeI4g
+         28xNK+QBOuFXJAAH6exY3+WUBoHyu6g0EQkz9etNOWu0r/3vmayuOMjLtZYQTRlVxf/W
+         ooJwOMIQ6q4wyjup32k7+dfE5if4S3dFwY4Eux8Tfo/okaSlaArv14pB6qfX2IDf1c55
+         gQnOF7sbfA5YtuMoZ7MJu9eY6ctVTxhdvmwND4CQy1U5NdWRrRC5Dio7Gt87+8Zuvic+
+         y/gz/nGZ+Hsb5pG/a7OTEyhdn7840RscuUCAR8py3Ed3LB3/Ple/IV8rOYEKnKMz/i4m
+         N6LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748875219; x=1749480019;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gzJqzJEUCc0XLsoz3b6HngePdRvcXa5BR8sAyxQH6Bw=;
+        b=vsRfnE/Ghd1SZcgGIZ0eoHIpcHFzdYyC1TV7NDs1rXlv3vIwTsHhpOANO68dvafaCy
+         W0waat593awjCwLngBMXSSYTw4KlPIDmC5gq5IbkSsJA3ydd6TCywUJNA+JBWb4Gqugw
+         p0Gyo+ijmOlNRa4bpfJEIDb6+xT+bBf0kBG1YXqm/V5+lPDuYvqki884f/CiXaTBXQRW
+         2THB88QJjxg9UfoO8zxFbfHeUiZHlNkM8ZgfsvKnDvYOcVkIfjBKVDZxMLwrxzNmBmVq
+         5+mTVmrsWx5Ty3ZqW8qTNNB6gnio3z+TpM6fcC6bvwtm4bzPT6Ce1huDO2ibTNVfNAU1
+         po2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX5LUSG1ft76t1hAlc0TZRalz4u5Goy8EmHWdGcn4aJ2ktgKerco+h05nArNpQ4YZ8M16Lop0r0KqMooII=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVLOoxM8P17IG3tSCawb4wGFAR7i1I6E6edCT/T04O0XMFddQR
+	P1/8HuHjL6JGPyFzcJs0PgWz6ytLsjgyVV1VClmQ2re5ucV6wbzU3oytN8vjeJo4tb+0Au7UtkN
+	NMTA7AFek70B5X+m4Gf7VwU1Kyn6EksYWcnJ4eKXA
+X-Gm-Gg: ASbGncsHSWlOebY3SEfNVeichSsJeq7Vfuwwo2Em/wa6dG8P3JdeSwjG+Z2ONZpil6+
+	MOJqOQS42XUyHDAhsbDD/yvoRv2R1IX6gf3+AfU1E16rcVq90rnqii76IM3WDbq48qS3xPNhxKL
+	1PngaPIjddDgbEC0y1EDwR69dgWeapqyMJYaaqxhcJJLet
+X-Google-Smtp-Source: AGHT+IFtXYNUotTHkadpuR3zhkQf1TtUFXklWZRqHyZgW9DzEoGcgbokF2oSS1iOj5zHldAAyXwronzMKN0qfxi3blQ=
+X-Received: by 2002:a05:6000:2303:b0:3a4:da87:3a73 with SMTP id
+ ffacd0b85a97d-3a4f89dcc3amr8905954f8f.42.1748875219346; Mon, 02 Jun 2025
+ 07:40:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|GV2PR04MB11304:EE_
-X-MS-Office365-Filtering-Correlation-Id: ccc57e41-875b-4415-b2b1-08dda1e34faa
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|52116014|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?zS9BpzoDbVu0nCgQ4ocGDK0+ggIyvwW+HJ9+XMlF6XoC5ciBJKoWLtia587H?=
- =?us-ascii?Q?o00V3hsEx2W25VYIt608QBxmFrZAElWUoT75ALdWY6RhUn0v/aJToZy/ttHc?=
- =?us-ascii?Q?3Cr6DZMS5eRrFiappONmP9+y2ZagKLJqdgRTLiswpMe9ElGf7dyPIE5Bxawr?=
- =?us-ascii?Q?Cd7dz/+5clKa/tFjHt5yq2S0dyxey2hWML1RdcqRkbgVKXSaQdN9BO2T0ypB?=
- =?us-ascii?Q?M+7tmfrPZMx3WO0lA1wCkLn2WFRYR/wxDygwSJ6bGKnr58Dl/l40TDxa6wbk?=
- =?us-ascii?Q?8ugZWjp/GGq0036u0PUNfY0+busJ56lcwwvA9bq6zLa8wkTctwTBtMlBW140?=
- =?us-ascii?Q?RnSRHjPAvUDSZoShGj4Pg085MkIq6/4O5CijGqwM6A18jTIPsS2zRouLWfF0?=
- =?us-ascii?Q?EGvYZsN5jEKwgQVv1noDO43CJO8rk0OZ5vh++UngDa1vo+a6LC5WJBUrV+tM?=
- =?us-ascii?Q?GPmXP1vCLxX5J7OZvAKbHe5Uh+Ject8gK/Z8nc1pNWAGYj55fIOGy/Sb6tgZ?=
- =?us-ascii?Q?06pMsGvBbQeQx85x/Ugu3BYM8vvnqcqpLZMpJ40d5lMvmw+x5ZOgfd6wCMwc?=
- =?us-ascii?Q?+1zpzeyuQZdgGDrbz0K0cVxVMLYvBzwm+QeUK/BB2vv3jNvkikxzXBXeFeop?=
- =?us-ascii?Q?2wIvBiJ0yDwdQzalEC1ADFgq8HEml/nFsCQ5/stSiZ194hCWmMI9lGpbDPbs?=
- =?us-ascii?Q?aZCnocxx/BXg2PpoQLLsTpfP9xEi5KsjbYlEZRobzjzMC+dNu9Lb8dGw+baF?=
- =?us-ascii?Q?UWbm0UZws3oNB9K+7l7z4/Z9zzH+4hZ576UUVHCtWhR2DaJ69OnzqneUctUd?=
- =?us-ascii?Q?W+4ktCtxlPcQ+DMjhm8sOGsIvkFgxvcrZqwLwOWSwNPRtDl6dE5cY6vfqbAJ?=
- =?us-ascii?Q?Htpk040gIgoUYXuZYrv7ZrI+X1u05ArL0tyILu393MEWU70KGj7L8ksIbadi?=
- =?us-ascii?Q?bc4cQEi7JvdimnkqpYbRN96cKMuED95FadI2aEnJC4f3DHcu7loDBF3ZisbZ?=
- =?us-ascii?Q?EOBYYD51CKZBBFBLZ70NtyJdMEDu+4a5Wpb7+vh4kbZD+wAoAGUuKr4BDILj?=
- =?us-ascii?Q?5M34XWnq3UZUV0mliwyipO4bjSDNvRB2vqhxYo1qThgCod19ZWria++E3M9A?=
- =?us-ascii?Q?WRQgSzNLPOLj9Vj37VbtAc/WuGFOZACZxbX+z1pRoGd+YryyMEoaPudY60vp?=
- =?us-ascii?Q?zBG8NoPDets9cZBH2rhWg8uZsPlzq5vR6qgk3RLez9rtbbnLNs2vu1+lLVo7?=
- =?us-ascii?Q?6pRQAcPngQBrVHpSo5OoD7uuIzTvm7R1FUmJmT3DL7grRAv8r+SnJw7PosmR?=
- =?us-ascii?Q?pdTy9kNsYf8lotLbYMWdeRp2SwQhKD58qn+kOSCv4rF+diEFAIqip/nzh+af?=
- =?us-ascii?Q?roncWjXfF1YbCQXtJ1nnVAz3UeJPcE1iFx6TPugM7o2aDUQS5/K9C4Ul+H8R?=
- =?us-ascii?Q?TwTqJZJjc4+T7s9Ri3CaySc6VQHZsGNC?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?B4veN94FBuiBngGdILpYEwFShXGsaRGpFoMPe7MB+n+7d/tlkSupZJzMyM+M?=
- =?us-ascii?Q?hs3/oTCmq2umhOYjoi58t6M4yvHhCxxjjXAqWfGp9uG6dCg7C1UlyQqdcFnT?=
- =?us-ascii?Q?QA4TNPLUtKxCOgQB6cEt6QMY8OL8bSupy5OXc6ygFb8JH8xjP5acLzS8iaXo?=
- =?us-ascii?Q?PutZLs7Q1AFFKpfES+Uj3fjUyrJL/Mcu4T4kKADr2CU/6UQTxK67EIvhBP4S?=
- =?us-ascii?Q?m9VgfCfaljcqKmciF7x857/tJx4XY6CC6TMd0mUmt06G3JD0+Dpu8IgTPQBm?=
- =?us-ascii?Q?Toi54W1//ognIWgNtiFPBdDYHW7dp4LVikZJWTI0JGDI2SzScusJtzdetKg+?=
- =?us-ascii?Q?umaezwzxsaKAk6hXX2xgCTT7WMhIQdwJyIrsoz28z6xrysAxmJES4YuwwNbo?=
- =?us-ascii?Q?zYbv4NYCL+WUaMbg3OQh14S5kZ0+f2xrw21m6Y9EFc8cU+PoE1jRlQfm+1QD?=
- =?us-ascii?Q?m+V+YWUASoUX/Hk+GATlu+MiK01q2Ae9LaqldUsVa10vk1VzwuwDmc9f3dQX?=
- =?us-ascii?Q?9FW9+utXhh4SZPHLlflAGZTzgsULgxuoQgWaOYzdQ+W/WRrkmN5aCm/pfug0?=
- =?us-ascii?Q?9bXC4M2zl1qbDJTTau64CXXVKw1R8PnHqhu32ROA1vA82d4Qgvn1JMNj81Ig?=
- =?us-ascii?Q?YU6nQc8ODsE2PJjl6wEnCurMguKXBV8Q0158iDfVW+BgT8LgirNbzW5+ra98?=
- =?us-ascii?Q?gGQDdMkkYADvk5Ef5Wo9Dh7y/d0eMZBMW0z2gVmCdwnvAkrpzsO2dZZrLHyW?=
- =?us-ascii?Q?v3wRY69DVhAzTJBDkIMMgS318dBojKG3e+QM6V8eEi6groV2bTJfWcL9yV66?=
- =?us-ascii?Q?+kIeYv6hB+b9rSw1sW7XBm7ptmluEYpu2gweAj91Xt0ogb0yerds4Sh7Qjnn?=
- =?us-ascii?Q?HCoJJ9uCRd7+tZ/WRTV2Gtq1/CR6tQXC1lWTmKlDh+yftosI1h69YOLbqaNt?=
- =?us-ascii?Q?FRoj6Utott7X158iDAWhfajKj2p8sO4R8kdLBstOPwON+WNv69ercf8D+5Se?=
- =?us-ascii?Q?bWIegcrYQwf5aZPe9CF7ynZtfZQXthK6s5WWc8u8IIgqyU2Yav8fIYlmNQL9?=
- =?us-ascii?Q?u9UYTouV4Ni+R4pXgAHADm70cGCyHxqDyY8jwEpskMm7bIGWvjzBvnOc7Eyo?=
- =?us-ascii?Q?fBkyI9ZKwWg/prkWkMunhoNp8Z+G8oqtDbjBGMViJ6vcL/PpiJYZBcouDiS9?=
- =?us-ascii?Q?Laa88L4C1upmkCyonQl5WDn4QVgceoo/cvNWRSiJbbMQpx5nWw+ndUY/eI7f?=
- =?us-ascii?Q?edfP6YT505Hkkbxq/R83QyzUjhcqHAQbauPwU7sJ769pwP6PFWMJq+HWsq8m?=
- =?us-ascii?Q?WfCp3JCLiJ91GXJBgIpnMV7wYB/ZWltlurFEHki6ohtgMvylwv+9vRdbE13g?=
- =?us-ascii?Q?THfKUq79tAis2edKgZxNhx5uPSCg2sjTg9nQY8S6Q3Ybd425P9ozTfq8CMSF?=
- =?us-ascii?Q?ApKjBVnt9nT6tC+5IovVmdvH08FpGtK2kDPTPSLaEfv5zfBY0LXWh3JXFGVC?=
- =?us-ascii?Q?CUC3kyjWPvUtKvGKSoPez1Q4o6b9ZoTr6rubq55oobQrQVv4ybeOL9bPuc13?=
- =?us-ascii?Q?7NC7dIrMh1gOOpwFzek=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ccc57e41-875b-4415-b2b1-08dda1e34faa
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2025 14:39:42.4413
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /i5CVB+Qs3+g4I1R/L3jhBV+nKCu3v0yrsDDIQVPjx8zqokK6/DSc7fMO6yITnKfzRjTXgEtRElrXc+ZSgOIuw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR04MB11304
+References: <20250602133653.1606388-1-bqe@google.com> <20250602133653.1606388-5-bqe@google.com>
+ <aD2118mMOs8CZyGa@yury>
+In-Reply-To: <aD2118mMOs8CZyGa@yury>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 2 Jun 2025 16:40:04 +0200
+X-Gm-Features: AX0GCFsPsbx9hoHYGMRNqYNAZfer2osv1pLFziy8aDAkBITPNbhAdtkRbp8KGC0
+Message-ID: <CAH5fLghi4jgS+MuG48aLnYb6N6_FOeR0pLCjG3z5XdLve5tdhQ@mail.gmail.com>
+Subject: Re: [PATCH v10 4/5] rust: add find_bit_benchmark_rust module.
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Burak Emir <bqe@google.com>, Kees Cook <kees@kernel.org>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
+	Carlos LLama <cmllamas@google.com>, Pekka Ristola <pekkarr@protonmail.com>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Convert nxp,lpc1850-scu.txt to yaml format.
+On Mon, Jun 2, 2025 at 4:32=E2=80=AFPM Yury Norov <yury.norov@gmail.com> wr=
+ote:
+>
+> On Mon, Jun 02, 2025 at 01:36:45PM +0000, Burak Emir wrote:
+> > Microbenchmark protected by a config FIND_BIT_BENCHMARK_RUST,
+> > following `find_bit_benchmark.c` but testing the Rust Bitmap API.
+> >
+> > We add a fill_random() method protected by the config in order to
+> > maintain the abstraction.
+> >
+> > The sample output from the benchmark, both C and Rust version:
+> >
+> > find_bit_benchmark.c output:
+> > ```
+> > Start testing find_bit() with random-filled bitmap
+> > [  438.101937] find_next_bit:                  860188 ns, 163419 iterat=
+ions
+> > [  438.109471] find_next_zero_bit:             912342 ns, 164262 iterat=
+ions
+> > [  438.116820] find_last_bit:                  726003 ns, 163419 iterat=
+ions
+> > [  438.130509] find_nth_bit:                  7056993 ns,  16269 iterat=
+ions
+> > [  438.139099] find_first_bit:                1963272 ns,  16270 iterat=
+ions
+> > [  438.173043] find_first_and_bit:           27314224 ns,  32654 iterat=
+ions
+> > [  438.180065] find_next_and_bit:              398752 ns,  73705 iterat=
+ions
+> > [  438.186689]
+> >                Start testing find_bit() with sparse bitmap
+> > [  438.193375] find_next_bit:                    9675 ns,    656 iterat=
+ions
+> > [  438.201765] find_next_zero_bit:            1766136 ns, 327025 iterat=
+ions
+> > [  438.208429] find_last_bit:                    9017 ns,    656 iterat=
+ions
+> > [  438.217816] find_nth_bit:                  2749742 ns,    655 iterat=
+ions
+> > [  438.225168] find_first_bit:                 721799 ns,    656 iterat=
+ions
+> > [  438.231797] find_first_and_bit:               2819 ns,      1 iterat=
+ions
+> > [  438.238441] find_next_and_bit:                3159 ns,      1 iterat=
+ions
+> > ```
+> >
+> > find_bit_benchmark_rust.rs output:
+> > ```
+> > [  451.182459] find_bit_benchmark_rust_module:
+> > [  451.186688] Start testing find_bit() Rust with random-filled bitmap
+> > [  451.194450] next_bit:                       777950 ns, 163644 iterat=
+ions
+> > [  451.201997] next_zero_bit:                  918889 ns, 164036 iterat=
+ions
+> > [  451.208642] Start testing find_bit() Rust with sparse bitmap
+> > [  451.214300] next_bit:                         9181 ns,    654 iterat=
+ions
+> > [  451.222806] next_zero_bit:                 1855504 ns, 327026 iterat=
+ions
+> > ```
+> >
+> > Here are the results from 32 samples, with 95% confidence interval.
+> > The microbenchmark was built with RUST_BITMAP_HARDENED=3Dn and run on a
+> > machine that did not execute other processes.
+> >
+> > Random-filled bitmap:
+> > +-----------+-------+-----------+--------------+-----------+-----------=
++
+> > | Benchmark | Lang  | Mean (ms) | Std Dev (ms) | 95% CI Lo | 95% CI Hi =
+|
+> > +-----------+-------+-----------+--------------+-----------+-----------=
++
+> > | find_bit/ | C     |    825.07 |        53.89 |    806.40 |    843.74 =
+|
+> > | next_bit  | Rust  |    870.91 |        46.29 |    854.88 |    886.95 =
+|
+> > +-----------+-------+-----------+--------------+-----------+-----------=
++
+> > | find_zero/| C     |    933.56 |        56.34 |    914.04 |    953.08 =
+|
+> > | next_zero | Rust  |    945.85 |        60.44 |    924.91 |    966.79 =
+|
+> > +-----------+-------+-----------+--------------+-----------+-----------=
++
+> >
+> > Rust appears 5.5% slower for next_bit, 1.3% slower for next_zero.
+> >
+> > Sparse bitmap:
+> > +-----------+-------+-----------+--------------+-----------+-----------=
++
+> > | Benchmark | Lang  | Mean (ms) | Std Dev (ms) | 95% CI Lo | 95% CI Hi =
+|
+> > +-----------+-------+-----------+--------------+-----------+-----------=
++
+> > | find_bit/ | C     |     13.17 |         6.21 |     11.01 |     15.32 =
+|
+> > | next_bit  | Rust  |     14.30 |         8.27 |     11.43 |     17.17 =
+|
+> > +-----------+-------+-----------+--------------+-----------+-----------=
++
+> > | find_zero/| C     |   1859.31 |        82.30 |   1830.80 |   1887.83 =
+|
+> > | next_zero | Rust  |   1908.09 |       139.82 |   1859.65 |   1956.54 =
+|
+> > +-----------+-------+-----------+--------------+-----------+-----------=
++
+> >
+> > Rust appears 8.5% slower for next_bit, 2.6% slower for next_zero.
+> >
+> > In summary, taking the arithmetic mean of all slow-downs, we can say
+> > the Rust API has a 4.5% slowdown.
+> >
+> > Suggested-by: Alice Ryhl <aliceryhl@google.com>
+> > Suggested-by: Yury Norov <yury.norov@gmail.com>
+> > Signed-off-by: Burak Emir <bqe@google.com>
 
-Additional changes:
-- keep child name *_cfg to align legancy very old platform dts file.
-- remove label in examples.
-- just keep one examples.
+> > +const BITMAP_LEN: usize =3D 4096 * 8 * 10;
+> > +// Reciprocal of the fraction of bits that are set in sparse bitmap.
+> > +const SPARSENESS: usize =3D 500;
+>
+> Is there any simple mechanism to keep C and rust sizes synced? (If no,
+> not a big deal to redefine them.)
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
- .../bindings/pinctrl/nxp,lpc1850-scu.txt      | 71 ---------------
- .../bindings/pinctrl/nxp,lpc1850-scu.yaml     | 91 +++++++++++++++++++
- 2 files changed, 91 insertions(+), 71 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/nxp,lpc1850-scu.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/nxp,lpc1850-scu.yaml
+Rust can access constants from header files, so you can move it to a
+header file.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/nxp,lpc1850-scu.txt b/Documentation/devicetree/bindings/pinctrl/nxp,lpc1850-scu.txt
-deleted file mode 100644
-index bd8b0c69fa447..0000000000000
---- a/Documentation/devicetree/bindings/pinctrl/nxp,lpc1850-scu.txt
-+++ /dev/null
-@@ -1,71 +0,0 @@
--NXP LPC18xx/43xx SCU pin controller Device Tree Bindings
----------------------------------------------------------
--
--Required properties:
--- compatible		: Should be "nxp,lpc1850-scu"
--- reg			: Address and length of the register set for the device
--- clocks		: Clock specifier (see clock bindings for details)
--
--The lpc1850-scu driver uses the generic pin multiplexing and generic pin
--configuration documented in pinctrl-bindings.txt.
--
--The following generic nodes are supported:
-- - function
-- - pins
-- - bias-disable
-- - bias-pull-up
-- - bias-pull-down
-- - drive-strength
-- - input-enable
-- - input-disable
-- - input-schmitt-enable
-- - input-schmitt-disable
-- - slew-rate
--
--NXP specific properties:
-- - nxp,gpio-pin-interrupt : Assign pin to gpio pin interrupt controller
--			    irq number 0 to 7. See example below.
--
--Not all pins support all properties so either refer to the NXP 1850/4350
--user manual or the pin table in the pinctrl-lpc18xx driver for supported
--pin properties.
--
--Example:
--pinctrl: pinctrl@40086000 {
--	compatible = "nxp,lpc1850-scu";
--	reg = <0x40086000 0x1000>;
--	clocks = <&ccu1 CLK_CPU_SCU>;
--
--	i2c0_pins: i2c0-pins {
--		i2c0_pins_cfg {
--			pins = "i2c0_scl", "i2c0_sda";
--			function = "i2c0";
--			input-enable;
--		};
--	};
--
--	uart0_pins: uart0-pins {
--		uart0_rx_cfg {
--			pins = "pf_11";
--			function = "uart0";
--			bias-disable;
--			input-enable;
--		};
--
--		uart0_tx_cfg {
--			pins = "pf_10";
--			function = "uart0";
--			bias-disable;
--		};
--	};
--
--	gpio_joystick_pins: gpio-joystick-pins {
--		gpio_joystick_1_cfg {
--			pins =  "p9_0";
--			function = "gpio";
--			nxp,gpio-pin-interrupt = <0>;
--			input-enable;
--			bias-disable;
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/pinctrl/nxp,lpc1850-scu.yaml b/Documentation/devicetree/bindings/pinctrl/nxp,lpc1850-scu.yaml
-new file mode 100644
-index 0000000000000..4df47fee3a228
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/nxp,lpc1850-scu.yaml
-@@ -0,0 +1,91 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/nxp,lpc1850-scu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: NXP LPC18xx/43xx SCU pin controller
-+
-+description: |
-+  The following generic nodes are supported:
-+    - function
-+    - pins
-+    - bias-disable
-+    - bias-pull-up
-+    - bias-pull-down
-+    - drive-strength
-+    - input-enable
-+    - input-disable
-+    - input-schmitt-enable
-+    - input-schmitt-disable
-+    - slew-rat
-+  Not all pins support all properties so either refer to the NXP 1850/4350
-+  user manual or the pin table in the pinctrl-lpc18xx driver for supported
-+  pin properties.
-+
-+maintainers:
-+  - Frank Li <Frank.Li@nxp.com>
-+
-+properties:
-+  compatible:
-+    const: nxp,lpc1850-scu
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+patternProperties:
-+  '-pins$':
-+    type: object
-+    additionalProperties: false
-+
-+    patternProperties:
-+      '_cfg$':
-+        type: object
-+
-+        allOf:
-+          - $ref: pincfg-node.yaml#
-+          - $ref: pinmux-node.yaml#
-+
-+        unevaluatedProperties: false
-+
-+        properties:
-+          nxp,gpio-pin-interrupt:
-+            $ref: /schemas/types.yaml#/definitions/uint32
-+            minimum: 0
-+            maximum: 7
-+            description:
-+              Assign pin to gpio pin interrupt controller
-+              irq number 0 to 7. See example below.
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+
-+allOf:
-+  - $ref: pinctrl.yaml#
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/lpc18xx-ccu.h>
-+
-+    pinctrl@40086000 {
-+        compatible = "nxp,lpc1850-scu";
-+        reg = <0x40086000 0x1000>;
-+        clocks = <&ccu1 CLK_CPU_SCU>;
-+
-+        gpio-joystick-pins {
-+            gpio-joystick-1_cfg {
-+                pins = "p9_0";
-+                function = "gpio";
-+                nxp,gpio-pin-interrupt = <0>;
-+                input-enable;
-+                bias-disable;
-+            };
-+        };
-+    };
--- 
-2.34.1
+> > +module! {
+> > +    type: FindBitBenchmarkModule,
+>
+> I think we agreed to have the type something less unique, like:
+>
+>         Benchmark.
+>
+> > +    name: "find_bit_benchmark_rust_module",
+>
+> What is the name policy for rust? Maybe a more human-readable name
+> would work better here?
 
+I don't think there's any particular policy for Rust. Name modules in
+the same manner you would C modules.
+
+> All the above are nits. Please have my
+>
+> Reviewed-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
+>
+> Thanks,
+> Yury
+
+Alice
