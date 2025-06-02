@@ -1,284 +1,171 @@
-Received: from dane.soverin.net (dane.soverin.net [185.233.34.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2067.outbound.protection.outlook.com [40.107.223.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2816122156B;
-	Mon,  2 Jun 2025 13:28:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.34.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748870941; cv=none; b=hJkmiiuvbZT7sEzbG3kyr6j9W7uCXGHSd20cN3R/BLfOsUC1elqUGiwC54b4z8gZ2jQQja+BEZGAqJV+xOFyMhHSrQHMzut1XP7XeJSCr3S42SCxocwo62TI2SyBM8Y8RpTampKw3/SRRtD0yCF38N5C11HyZDu8BGOmnkiUUso=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748870941; c=relaxed/simple;
-	bh=cyuSt9uM6bBJkGQdBwnq87mr1DSgG5l6nPuS2r5NGsw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fJbAKtsZb1xEInFoN7QmPmr/8iAF4cwGQCr51MMXeQEztjyxJbOYf55e5abHTk2f4ZUJZ1w1LjrohoCy1TuZzkR5e6djx1jyNW7dM+WibHCR8ycDT+yAf7K6J7KIBmHoFbkQ9TcMbTiOTSS/51w0M6Jd0tIcToorfT5SzgLVI2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl; spf=pass smtp.mailfrom=jjverkuil.nl; dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b=JiZDtxye; arc=none smtp.client-ip=185.233.34.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jjverkuil.nl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECADA2576;
+	Mon,  2 Jun 2025 13:30:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748871023; cv=fail; b=JIoKdPLcParpPrjzkSUvCjtyHQ8wsxeNtnlS/00s1u0F0tSUaaeQ94UTeNoYF4tZTCYt3FjRAnzYnMR5o+UINg5BjgE7IDNBSBboMw3LiUOKWqT95Obkq+xKQowTEkg4zEASaDFd2tNAY3xhByBeTrnRscX4d/Wh2tt/2rCy56A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748871023; c=relaxed/simple;
+	bh=JN7iVHVoHviouDMVJRyzoR/0hrI4mGE2jn/rruL6Mb4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=tkgFnWQ8Zv6N+97EUywFb9ZDK9zbCGp2DQRMqkIPpyEOJkXx3LKvXZ6c9e75Y/vvSnQ14PTxkVK84wAOB6xC6srmrfqffKmENQ1B7KCu2DDDZPrwyqVboNDk04IplSc5t3jl4+a+aWMUTeTxzRaFwK5zW9VgTe3VFW63x3I8dRg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Y7N5aaqI; arc=fail smtp.client-ip=40.107.223.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b="JiZDtxye"
-Received: from smtp.freedom.nl (unknown [10.10.4.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	by dane.soverin.net (Postfix) with ESMTPS id 4b9vfW0jTrz1SJg;
-	Mon,  2 Jun 2025 13:22:59 +0000 (UTC)
-Received: from smtp.freedom.nl (smtp.freedom.nl [10.10.4.108]) by freedom.nl (Postfix) with ESMTPSA id 4b9vfV4dppz2xHT;
-	Mon,  2 Jun 2025 13:22:58 +0000 (UTC)
-Authentication-Results: smtp.freedom.nl;
-	dkim=pass (2048-bit key; unprotected) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.a=rsa-sha256 header.s=soverin1 header.b=JiZDtxye;
-	dkim-atps=neutral
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jjverkuil.nl;
-	s=soverin1; t=1748870578;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WJpIkS1UnxEpWebsEXbtCmSVIk4dCjHiIuApYIDc4jc=;
-	b=JiZDtxyebuKRVSTMdV3Cx83A5kQHptbQxTmJ548+8jm/27j+64vLRpCW5ym1K75+YSHfpe
-	SShdYUP9O65zF7dyu0qESBsXsaHhEi0p+Dm/A01NT0FMPm43M+eI+zTfWaRZhOBb7/fC1h
-	6mMr2DnP79fZfxKcT9DqM+PTopgRfTI4PlmnoQdY57TojAE0F4K9HiH3wBfV38WQKFrDQa
-	M7v/RV2gtw7sAhRB4DYQcIZFTDhpf6d9lTLr+EetNpdP7yRjjzQnTGJ9XP/weJzH54YIyH
-	aiPdINgEl6sVcC48qn48fC7kt5tZmRKTG7GWj8+ILsN3GrBySNw6iYr3CPuFPA==
-X-CM-Envelope: MS4xfL1kcg29k4joyKT1Ibk9CmspW8FZX5z3Qpl1K5GYJJSclWtEi4pGTQXf9mrbJwL3TKJkZ8hIU2cgBG1vmzDWuq3ChK3EtUsIjiX6kgOUoSDW6N7iNh7P XU2fgzzcGFlpdzkN3u73yOgXMGWsmX1hKtFrFVOWP+AIWPOvr178553eXSyQTUc4bsGzLK1VDSiO33dB+2wfQ8UzSAM1QtjnyGdbO1BtyexM4NVzpmp8RCXn AhZ6o4kqgEN70eNshY4cXMqOFkpZkgHUqrS8lHgeiJypBko7PvM8uUXY8Ez7Ox9LJIbd4s/tbwf+an0OUI4x1pvEKhq9J27R2+x3KJ8kQ/5QRDkeQ2oEAPto Vttyv+3VMogHu+wfC3UOg5bo7L5YhQ==
-X-CM-Analysis: v=2.4 cv=UsCZN/wB c=1 sm=1 tr=0 ts=683da5b2 a=smkfPCmiGCBx+NgG8pXs4w==:117 a=smkfPCmiGCBx+NgG8pXs4w==:17 a=IkcTkHD0fZMA:10 a=cm27Pg_UAAAA:8 a=OfXrXSe5vZlPL9uwHxUA:9 a=QEXdDO2ut3YA:10
-Message-ID: <dba66347-7b6c-49b5-8d31-166845efd1a0@jjverkuil.nl>
-Date: Mon, 2 Jun 2025 15:22:58 +0200
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Y7N5aaqI"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UaNy1gAFB6gJ9yjLQ2Ffd64I948wREEOcfn/Y+lMy/t2hmiekSH/TS5DZT8Tj4rG9jYxDI8pIQ3fOQODvVfOIh7mMi8ULU4O+KXhV8Yu/Fkgq27ESTK/xT2dXrT2NG/cach9/M5TvsjMEL+7h6TgZd4EOG8prugvC2x3dL0+q32MjOWgq+YzilLHXDHj0vj23ErnUIkrtshOlUwT6OBB1E312VwgHbxVvNOgg8Lfd0wb+DT/39gn2QitUHgH91T4TcKlmsw62sVY3qP1CNNaIA9PRUeWQXUf46RXYB/7ufOtIOLpb/U5kZdjMAY2e5rXF2q08/u6WrMJ3PhDlBMQ1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kRHrq2t4mM/OkPlSiWYjCEGe9bhzW13lxytzpnMudDg=;
+ b=SqO7N5lb+66tEGBKkGAnNBJis7EzS0oV40RMxLwJZ7ouJflAzsQoy+de698prKP34OdPLhN1293JUgbjmhXZczur5qSlg6Oz7AFNjurttn6llbpXhy9RKt6VyWKp3HXqTga4VSBkKr7hM1Ab+4aXIJp4pvH4hKox9Tm7bzpO2+xsFnMTyivMRRQM/ZVnnudIwkKIdMdT905JdWD8EK+pUy3BIXcpHu0woI0pkUTRW0Ir+RWEcULOnqU6h4NNTUznhRgx16IvT8CGG4wi0UtPCGuxNjipnybOiJWoT1+kZUvemxNPeUqS0y5jiDl4yfmCd1TA2gjhd2VZy3DhLDbc/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kRHrq2t4mM/OkPlSiWYjCEGe9bhzW13lxytzpnMudDg=;
+ b=Y7N5aaqIyWQI4noEe9LQKVizn+U7lyr/9+bgJ39oSAorXZjQUaRWunFY+pXNcf9v9MPRzB9qv0RMenCam1qJWlWleTSkQCqsA6oqVXml2oBmqmMK0AlzTGj8lDy2oNG81C96E9hKgR/BCm975uOjyVvHY5lSFb2tjeeh5rU8WpHmJ/bD7RcOkdyddxkufvVHmL42Db9wT6nQzOn84zHMvNQM8LcPaYAF69wL+tEX4rZbb5OenbOIHNR1VxffmEH8rbw1rTQH9YnopspSmmIVq5Y+jndUI5BJD/ggSpeXRI85uWCwvFJxuzlruPu8cUXdHVsOnps355fIyvGKIlWrxg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from MW6PR12MB8663.namprd12.prod.outlook.com (2603:10b6:303:240::9)
+ by SJ2PR12MB8782.namprd12.prod.outlook.com (2603:10b6:a03:4d0::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.37; Mon, 2 Jun
+ 2025 13:30:11 +0000
+Received: from MW6PR12MB8663.namprd12.prod.outlook.com
+ ([fe80::594:5be3:34d:77f]) by MW6PR12MB8663.namprd12.prod.outlook.com
+ ([fe80::594:5be3:34d:77f%7]) with mapi id 15.20.8769.033; Mon, 2 Jun 2025
+ 13:30:11 +0000
+Date: Mon, 2 Jun 2025 10:30:09 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Xu Yilun <yilun.xu@linux.intel.com>
+Cc: kvm@vger.kernel.org, sumit.semwal@linaro.org, christian.koenig@amd.com,
+	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
+	dan.j.williams@intel.com, aik@amd.com, linux-coco@lists.linux.dev,
+	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, vivek.kasireddy@intel.com,
+	yilun.xu@intel.com, linux-kernel@vger.kernel.org, lukas@wunner.de,
+	yan.y.zhao@intel.com, daniel.vetter@ffwll.ch, leon@kernel.org,
+	baolu.lu@linux.intel.com, zhenzhong.duan@intel.com,
+	tao1.su@intel.com, linux-pci@vger.kernel.org, zhiw@nvidia.com,
+	simona.vetter@ffwll.ch, shameerali.kolothum.thodi@huawei.com,
+	aneesh.kumar@kernel.org, iommu@lists.linux.dev,
+	kevin.tian@intel.com
+Subject: Re: [RFC PATCH 10/30] vfio/pci: Export vfio dma-buf specific info
+ for importers
+Message-ID: <20250602133009.GC233377@nvidia.com>
+References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
+ <20250529053513.1592088-11-yilun.xu@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250529053513.1592088-11-yilun.xu@linux.intel.com>
+X-ClientProxiedBy: BN9PR03CA0538.namprd03.prod.outlook.com
+ (2603:10b6:408:131::33) To MW6PR12MB8663.namprd12.prod.outlook.com
+ (2603:10b6:303:240::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 3/3] media: uvcvideo: Remove stream->is_streaming field
-To: Ricardo Ribalda <ribalda@chromium.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Hans de Goede <hdegoede@redhat.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250602-uvc-fop-v2-0-508a293eae81@chromium.org>
- <20250602-uvc-fop-v2-3-508a293eae81@chromium.org>
-Content-Language: en-US, nl
-From: Hans Verkuil <hans@jjverkuil.nl>
-Autocrypt: addr=hans@jjverkuil.nl; keydata=
- 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
-In-Reply-To: <20250602-uvc-fop-v2-3-508a293eae81@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spampanel-Class: ham
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW6PR12MB8663:EE_|SJ2PR12MB8782:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7678dc16-bfd0-4d3c-b4b7-08dda1d99938
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?jHqxO4I/G138o6R+ppyCgotBuPIsYc2e16lEvNPHdwQ+j0zR309L5Q8J1yoE?=
+ =?us-ascii?Q?CqDw1m8fMTCPz8s3BQ6ooQ3dBOZbnmPgXMYJQ2z6ArXtXm8sxvKuj5JciLvI?=
+ =?us-ascii?Q?wwngXq91zXYrc8mVDhzbIXBvVI9jxBobwHcZSCR7qQsBtmZYTNTYk0C2uUqM?=
+ =?us-ascii?Q?DJ5PJLNpo9HMN3KzTCodxjHtC8CkU6kk4Il8rxlSIjC9O3BS81D3pur2ED5d?=
+ =?us-ascii?Q?HBgTM1lEXmbTjgrd3Vpcy1tkTnyww5hiJXNJ2dLEYHztaulzFn2Fyvgs5V2u?=
+ =?us-ascii?Q?hzhCYHOqtZm4B//KUZHnwXkCeooV+4NVPST2HayYyXpVOeHwcJ9i5ziEJ2vS?=
+ =?us-ascii?Q?ChrfZUDSAdHyBzGxD43tlDEEYTBPn0tCc6QzU8qU2dDipsT74b+Cm/Iwfbuo?=
+ =?us-ascii?Q?0gpfBeKY0XHN3WVCRQksFsmuvQYbt/7gUVgrWBPDoe1WymzNhHovG6/0yfsW?=
+ =?us-ascii?Q?qaYsZJbaPd0ZM2VqH4PqjgEa4QBlWnG1qYvxeKMsaqvnwaFlimC3kaoTVpvT?=
+ =?us-ascii?Q?e11hRoQnMv5l6MGTqLhjO4SdbaKRYzkHZAuWBRiTk1oHl0wpORa1KfLUNK6a?=
+ =?us-ascii?Q?VSdUs4HlhXT7AMJE4OwzsUWUdTH4fvHYCul6A44i7FcVwC4353fEjWuphVN9?=
+ =?us-ascii?Q?UAW8ndjHHoq+A0fT+1Cdd8SGUa0wMKKirngD4IaoqlmHefHegHj4tifrbU0L?=
+ =?us-ascii?Q?RbNDApEtngogQ/yCQwmx9nUvbHaCjHK8IANKmv5mPx12Z2G+WGYsSj9btEY4?=
+ =?us-ascii?Q?A0ao08The9jdfbfEQfWWMkL2sPvxyUFZZBtfr4007Z7tNiXUN0RZvXN86UUU?=
+ =?us-ascii?Q?KEF+XKCPk00aq+n92onxWxZYyVFL2osOfT8ajOw4K9mZUrnIcDcB5ltwXBpI?=
+ =?us-ascii?Q?gFpyoJgEz7ohApKkdH/EPHZFW69Oz+IPB8gvyv3YEeub94LK/ISnuHRBSTux?=
+ =?us-ascii?Q?Skb79S8OQINy204gzV8uuJEDH0YI8rB9NZrn5lp9ZTnd03wi7pENrsEqDdCY?=
+ =?us-ascii?Q?8daqUTJvdC7yUYa4PuSiq9UzqyipSiPgUJa84H/fcvv/CvH6UgsE9dIzT/wc?=
+ =?us-ascii?Q?1r6cx1YHaEVItfz3Z76vlJhL7aI/OHtA2zUBMcNKyRbtXfkNVTsJgXZyBCjO?=
+ =?us-ascii?Q?9ji4/ANmI2fD01XSguT73vSSXhAuIyBy7Icd7VK/UITiujYVUnsRYw59bD36?=
+ =?us-ascii?Q?oVY9rdZbDVNUE2TTcvw+/iU9Teb86DMFiaY82rU+3IEhuuQGQmRFvygLKQvD?=
+ =?us-ascii?Q?bDA7/viL5yyVOKYW0/wDNwjbUDH+Zir+IO/Uj+iMnz9zwOSE3KDGtvsI0hd4?=
+ =?us-ascii?Q?Es3tTZMkTBmI6mSfueilAIBajnftUHoFY3u3nKYLoci/YVl7V1r6LFM5Xuba?=
+ =?us-ascii?Q?Z/7iJaa2Zrfz8hQdvJ4f0So/IUahXmE99DP5Uw/gS4+x1FCu5952IQLAxCaQ?=
+ =?us-ascii?Q?EaqIWMBNvSY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW6PR12MB8663.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ldX/IEfozltGIWPtAPfM7V5BAUuiF9lAV3n3FWlcW/cdCBrL/d7s3ZiaH4Jd?=
+ =?us-ascii?Q?oEuUP8XQea0O//W/3DHRYxa1MpW7yrTwk+gcL0cwxtlyO2xLZ96h6EWkiSpz?=
+ =?us-ascii?Q?Tc7CvfgWZYh+SLXb2kRk/HiDaNpQVP0ILNpmVXEgeKIuQE7QMr3Ee64TrsiP?=
+ =?us-ascii?Q?YaFLEVllB+nb0cs/GuRbFscim5e4lcVhUBEkchR+MBRC7JnnPCM1vCO3Q233?=
+ =?us-ascii?Q?0DfKj6j2539M3vGXAMGRwBYFbRPYNaTSc2H5sT53mon0a1Rjggj/5YZFZPHZ?=
+ =?us-ascii?Q?cjb/AfQORn8HeY8M6uEUFlS9jO4VIc8/gK8B8IVw5JG9jSJPSSi8/7ucmeH1?=
+ =?us-ascii?Q?zs0OEawXdkXi/bgcckrI7vwWszasjWeSHUyJtRDxWtVzxUmoqwIjqc6yeDvp?=
+ =?us-ascii?Q?/q86zGkxaL3UnVRG+CWDkm1lCMGwQClzOUwGVKrTm6XCfz+31ixTPBELF5o+?=
+ =?us-ascii?Q?GYwCchIaVV6y31lSZfyTXYWHRoavFMUCTm5VKWeQjrNWCVCElkWGwpON2FhB?=
+ =?us-ascii?Q?TOaX36bBiFUfSEporQ5DEgh/J5ZuOTRvsmRHJQ0bqsBYDBheydVjPFF2w0Rx?=
+ =?us-ascii?Q?HihQlJlBeVVMHyjs+sR6imHSA2xlqKaBjUc+Vpo/ZUuXE8ilg36ErKpL4G0i?=
+ =?us-ascii?Q?REZOCmg0g1Ae1UGiC43qceNHWe4a/MVBZ4owyVvbpmAZO1a0WRqbLXLvgfRb?=
+ =?us-ascii?Q?p57SOD4szg83wDN24SUfL0m7aJjhGGdFvNwkP47lgSaoB3qZGwFpIIMD22N7?=
+ =?us-ascii?Q?Qzz8n1JiURFE5bkLyv6J+EatWUKFO0e/HBAQFd7kn5sL6KtVpUnc8ucExbQV?=
+ =?us-ascii?Q?Q+0EG+BDGprGH4C13SX93iQMBHBr9sRc4KmZ57h5RMFJ385lxGHLoa2qU4hO?=
+ =?us-ascii?Q?ZfFcBx70VkeWEmyImgxrfB7qm4lO3YXAO+0gLbyDsH9Je2F5eksHL9Fhp4BS?=
+ =?us-ascii?Q?NX+dE65bKVANeOSExEsCWETEMQbM1X1X/Fr7DBdOjHcEJu1KpQFqCBXFetyG?=
+ =?us-ascii?Q?mXe+wvGHgqBFPJu56lFparKUrTwT6nhCIaXzZL3AN52wrQwyRcEs9ro7rtF/?=
+ =?us-ascii?Q?SXI2w+RHPk3hn75Xk8fI7vMzWGFBK78wdJqt8okniGuOZUAltcY4Rn1JLtdz?=
+ =?us-ascii?Q?DjCVMT+rcPw+CjYsgQIHeGmZPawNOWzH8fGoEoTyWzCcbnU9LUff1YGgCFlN?=
+ =?us-ascii?Q?VStxTpf1JiVj4JuOJeG9H/7JcNRajzfNEqalbZndZE/169wgM0QqEoZwmcL2?=
+ =?us-ascii?Q?kRu7Q+RAqScUbmpz8BgWw+IGUxFHAIPS9Pm8PDh2PfCXKyG5sEfCw5ezV2a0?=
+ =?us-ascii?Q?gyBNfXjxLOAFxdwOQskQsJJbCc4L5NDkBq6mumhVOfu/fK+JxYjEACFuv3y+?=
+ =?us-ascii?Q?XdF1/u8unYxlZOp0EjRq9zYzVxuhZm77j40OaKb17cwc5Cy5sTl/Kp44QMhD?=
+ =?us-ascii?Q?RMHWGw64677pAJbKk0THkt3pc8TSq163DrSEQsiD2q0nc44Ab3bqWTFOI6Wm?=
+ =?us-ascii?Q?QPZEfJifJJI4cr3WPKhVSkyDARxW0tKoDLAN9oEJ26jY1p9JiHryNL9dqT46?=
+ =?us-ascii?Q?Vo3g0hfBz12eZxVzd0dJqd6fB68+a8ChisYfRqzw?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7678dc16-bfd0-4d3c-b4b7-08dda1d99938
+X-MS-Exchange-CrossTenant-AuthSource: MW6PR12MB8663.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2025 13:30:10.9345
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: e/+MfIZlMU7cmurItncCeG7Fi6ydaM64YqlNkbHqupblFZAQOPB12ENxw5Dri0aX
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8782
 
-On 02/06/2025 14:59, Ricardo Ribalda wrote:
-> The is_streaming field is used by modular PM to know if the device is
-> currently streaming or not.
+On Thu, May 29, 2025 at 01:34:53PM +0800, Xu Yilun wrote:
+> Export vfio dma-buf specific info by attaching vfio_dma_buf_data in
+> struct dma_buf::priv. Provide a helper vfio_dma_buf_get_data() for
+> importers to fetch these data. Exporters identify VFIO dma-buf by
+> successfully getting these data.
 > 
-> With the transition to vb2 and fop helpers, we can use vb2 functions for
-> the same functionality. The great benefit is that vb2 already takes
-> track of the streaming state for us.
+> VFIO dma-buf supports disabling host access to these exported MMIO
+> regions when the device is converted to private. Exporters like KVM
+> need to identify this type of dma-buf to decide if it is good to use.
+> KVM only allows host unaccessible MMIO regions been mapped in private
+> roots.
 > 
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> ---
->  drivers/media/usb/uvc/uvc_queue.c | 11 ++++++++-
->  drivers/media/usb/uvc/uvc_v4l2.c  | 51 ++-------------------------------------
->  drivers/media/usb/uvc/uvcvideo.h  |  1 -
->  3 files changed, 12 insertions(+), 51 deletions(-)
-> 
-> diff --git a/drivers/media/usb/uvc/uvc_queue.c b/drivers/media/usb/uvc/uvc_queue.c
-> index 72c5494dee9f46ff61072e7d293bfaddda40e615..dff93bec204428b8aebc09332e0322fa68823fa4 100644
-> --- a/drivers/media/usb/uvc/uvc_queue.c
-> +++ b/drivers/media/usb/uvc/uvc_queue.c
-> @@ -165,12 +165,18 @@ static int uvc_start_streaming(struct vb2_queue *vq, unsigned int count)
->  
->  	lockdep_assert_irqs_enabled();
->  
-> +	ret = uvc_pm_get(stream->dev);
-> +	if (ret)
-> +		return ret;
-> +
->  	queue->buf_used = 0;
->  
->  	ret = uvc_video_start_streaming(stream);
+> Export struct kvm * handler attached to the vfio device. This
+> allows KVM to do another sanity check. MMIO should only be assigned to
+> a CoCo VM if its owner device is already assigned to the same VM.
 
-I'm not sure this is correct. See comments below.
+This doesn't seem right, it should be encapsulated into the standard
+DMABUF API in some way.
 
->  	if (ret == 0)
->  		return 0;
->  
-> +	uvc_pm_put(stream->dev);
-> +
->  	spin_lock_irq(&queue->irqlock);
->  	uvc_queue_return_buffers(queue, UVC_BUF_STATE_QUEUED);
->  	spin_unlock_irq(&queue->irqlock);
-> @@ -181,11 +187,14 @@ static int uvc_start_streaming(struct vb2_queue *vq, unsigned int count)
->  static void uvc_stop_streaming(struct vb2_queue *vq)
->  {
->  	struct uvc_video_queue *queue = vb2_get_drv_priv(vq);
-> +	struct uvc_streaming *stream = uvc_queue_to_stream(queue);
->  
->  	lockdep_assert_irqs_enabled();
->  
-> -	if (vq->type != V4L2_BUF_TYPE_META_CAPTURE)
-> +	if (vq->type != V4L2_BUF_TYPE_META_CAPTURE) {
-> +		uvc_pm_put(stream->dev);
-
-This doesn't look right, for both video and metadata uvc_pm_get is called,
-but only for video is put called.
-
->  		uvc_video_stop_streaming(uvc_queue_to_stream(queue));
-
-And this is odd too.
-
-> +	}
-
-My assumption is that uvc_video_start_streaming and uvc_video_stop_streaming
-are valid for both video and meta: i.e. the first time you start streaming
-(either video or meta) you call uvc_video_start_streaming. If you were already
-streaming for e.g. video, then start streaming metadata (or vice versa), then
-you don't need to do anything in start_streaming.
-
-Same for stop_streaming: only if both video and metadata stopped streaming
-is uvc_video_stop_streaming called.
-
-Please correct me if I am wrong.
-
-In any case, if I am right, then you have to rework this code accordingly.
-
-Regardless, you need to test various sequences of streaming video and metadata
-in different orders and make sure this is handled correctly.
-
-Regards,
-
-	Hans
-
->  
->  	spin_lock_irq(&queue->irqlock);
->  	uvc_queue_return_buffers(queue, UVC_BUF_STATE_ERROR);
-> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-> index 7a5ecbefa32c0a6b74c85d7f77a25b433598471e..d4bee0d4334b764c0cf02363b573b55fb44eb228 100644
-> --- a/drivers/media/usb/uvc/uvc_v4l2.c
-> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
-> @@ -617,9 +617,6 @@ static int uvc_v4l2_release(struct file *file)
->  
->  	uvc_ctrl_cleanup_fh(handle);
->  
-> -	if (handle->is_streaming)
-> -		uvc_pm_put(stream->dev);
-> -
->  	/* Release the file handle. */
->  	vb2_fop_release(file);
->  	file->private_data = NULL;
-> @@ -677,50 +674,6 @@ static int uvc_ioctl_try_fmt(struct file *file, void *fh,
->  	return uvc_v4l2_try_format(stream, fmt, &probe, NULL, NULL);
->  }
->  
-> -static int uvc_ioctl_streamon(struct file *file, void *fh,
-> -			      enum v4l2_buf_type type)
-> -{
-> -	struct uvc_fh *handle = fh;
-> -	struct uvc_streaming *stream = handle->stream;
-> -	int ret;
-> -
-> -	if (handle->is_streaming)
-> -		return 0;
-> -
-> -	ret = uvc_pm_get(stream->dev);
-> -	if (ret)
-> -		return ret;
-> -
-> -	ret = vb2_ioctl_streamon(file, fh, type);
-> -	if (ret) {
-> -		uvc_pm_put(stream->dev);
-> -		return ret;
-> -	}
-> -
-> -	handle->is_streaming = true;
-> -
-> -	return 0;
-> -}
-> -
-> -static int uvc_ioctl_streamoff(struct file *file, void *fh,
-> -			       enum v4l2_buf_type type)
-> -{
-> -	struct uvc_fh *handle = fh;
-> -	struct uvc_streaming *stream = handle->stream;
-> -	int ret;
-> -
-> -	ret = vb2_ioctl_streamoff(file, fh, type);
-> -	if (ret)
-> -		return ret;
-> -
-> -	if (handle->is_streaming) {
-> -		handle->is_streaming = false;
-> -		uvc_pm_put(stream->dev);
-> -	}
-> -
-> -	return 0;
-> -}
-> -
->  static int uvc_ioctl_enum_input(struct file *file, void *fh,
->  				struct v4l2_input *input)
->  {
-> @@ -1323,8 +1276,8 @@ const struct v4l2_ioctl_ops uvc_ioctl_ops = {
->  	.vidioc_expbuf = vb2_ioctl_expbuf,
->  	.vidioc_dqbuf = vb2_ioctl_dqbuf,
->  	.vidioc_create_bufs = vb2_ioctl_create_bufs,
-> -	.vidioc_streamon = uvc_ioctl_streamon,
-> -	.vidioc_streamoff = uvc_ioctl_streamoff,
-> +	.vidioc_streamon = vb2_ioctl_streamon,
-> +	.vidioc_streamoff = vb2_ioctl_streamoff,
->  	.vidioc_enum_input = uvc_ioctl_enum_input,
->  	.vidioc_g_input = uvc_ioctl_g_input,
->  	.vidioc_s_input = uvc_ioctl_s_input,
-> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-> index 3ddbf065a2cbae40ee48cb06f84ca8f0052990c4..f895f690f7cdc1af942d5f3a5f10e9dd1c956a35 100644
-> --- a/drivers/media/usb/uvc/uvcvideo.h
-> +++ b/drivers/media/usb/uvc/uvcvideo.h
-> @@ -626,7 +626,6 @@ struct uvc_fh {
->  	struct uvc_video_chain *chain;
->  	struct uvc_streaming *stream;
->  	unsigned int pending_async_ctrls;
-> -	bool is_streaming;
->  };
->  
->  /* ------------------------------------------------------------------------
-> 
-
+Jason
