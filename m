@@ -1,330 +1,115 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848D46ADD
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 07:40:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8F061991CB;
+	Mon,  2 Jun 2025 07:41:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748850034; cv=none; b=LjpvR4Mq9FxhX2u3Ig7dG3fKwmSf151QQvXBxPE72hZdI1rQB/8fCPueT9h84rv+1+XW6JVP2kYjvpwEzs9iDDgnlbMDA7qZZpusWEWC2TLk+S/m76C8jAvRD9+PxFiS/yfgCesekvJTi+b9aeLV9nSqU3vbx1sQhznC23Rzt48=
+	t=1748850120; cv=none; b=F4d+Frwc3IM8s3WjOFGPCOEmT6E8lC3nZGnOvUZ2Nd8TzyPtJ8T02/nmu3qoZYI4dX4KMWfCdiDYdznF4tbgDZdlXZesjOvtTRLntIwK6hP7jvMoQm2PqbnCvWqE17S+TxyEtU9/aYbHXM4i36xmk67uMoenDsGotRz9uRrDOrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748850034; c=relaxed/simple;
-	bh=mL451OwRCLSyd8QUkL+u0nhW8XErmdIy0CNBNEUWAZk=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=V7L40ETs/HFLxOgEgMmWp1SQMsOe77m35R6tDji7TsFg9mdk8BEUTJVfDmE6iBiz3egVckLXumf1qwcccJGe7xagZAtjDjP6EZdWa5PwtmFSVggWv7NHLOVBlCNxl7SisSjspBoaIBCyMT/nlfsbFs/z95UrnPWZAZRqbEk8NgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-86cf9bad8e9so321883639f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 00:40:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748850031; x=1749454831;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZCQUnJTpocwD8iCTbWh1RKqkexvVanhQOeIANSjBMwg=;
-        b=wyoBr7xyRjthOvQUeRrz8gSZsfMofl7qSVJWVqBiJn1FphNXbTkOHHefUYHfsyLPZR
-         q5ajeW0tBA0N0X+8aFBnGbRhUqjOodDlH69bQp5NXoCtMMvB/rkbkCcTt5qqW6MDb9/n
-         wQ2PpySkhqvQwpbckHOJU52Nv3MRSbXI3oV1GBGGP2Fx9Je5o7chU0ZVZwswoVvq295R
-         8YBOb3+Fp5sU1/PDEh09FQAm533AgHs5/ltqnlqOY05RlM5Pn0hcjHB9wYq8DWAIvH+a
-         aIexRz1ieLw8tgmnAnbC7o8I+O/BJ9mYR5CSR6awo0uE+GvRI9ToAddoNUHzOG82pSW/
-         3F/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWP9t00b6lFZx3xavg/O3FRt5aO8cL0dTmcd/kftl5/pnwBkWKmFYHOwTvGztBcXv5dYf/1RVoDqeLSino=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwfJKcegL5APmZ8qruzzMjl3MHgDCg3XHGmPVRGoJvKKdCeMjW
-	qBuytzrO4W475vUI+qo6EjJltp/BC0XcnroEH4W/eXrotLhGZvjmO+aw7jFDWfhjsoDsFB8NVmV
-	40K/fRUlIfws2oW3do7QDYT0s0uWoE5mylLhrXAXuNbQOmwvPG4Xvnmmg/ow=
-X-Google-Smtp-Source: AGHT+IE8Suin7637ORjoJeH3sTburMZ6FlCLViwoJ4QH3604AaqBx9IDcqJEGwN2sUK2jQCz4N3VuZIl9V3ZGwXe8rjcFwnNR2R1
+	s=arc-20240116; t=1748850120; c=relaxed/simple;
+	bh=hOG4mPEVeG4lGy1Sn/Tq1ECpU9a+dWUrQdhXmcnIpnc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u8SuejWeHO7nd1d8wumohJSPpWLHY6izVm0kJIdMS76sed3VRsW1M7SNi6CwyWu01dbGF38pwhLmpaDwsESYxwooEE6INbSHjlt3wmyVP61zvm3ymuYnMYucrsXauVLTw4O+UeHAro91irXVX+QBCVuMPYBJx2K9uKpx/wGG9Dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oQsTX+7c; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oQsTX+7c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92684C4CEF2;
+	Mon,  2 Jun 2025 07:41:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748850119;
+	bh=hOG4mPEVeG4lGy1Sn/Tq1ECpU9a+dWUrQdhXmcnIpnc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=oQsTX+7chufuFHAltLNBbBScpHRh7pQbwjUJND8O976Dcw1hV6HjXDyi0FZv0UNv/
+	 Dfz1t6dNmYXla7niV3MolRaX2T0GNmF2cQ8QN1eWqm2J35Wnm+aY+rj93SA9vHGFnR
+	 HWUt5yndibzaxdsJx6G749jWqjklClMiTiM3piIAjbB75QmJwVUXtSl6qoxpwKV1Ez
+	 kpRwBJOSL1EckJaBpGzxZLn4b+dac4VDT0FqhuY4AkPdzoDADM937iEDLSfR/b6eGr
+	 Nm1kQdrE+C8DrjFh4Ly+QLDUOlptysbVx/K7+fmGrLpZ0abCYiUEeBjJi5d8zeFvga
+	 bqnR1oWc/VXSg==
+Message-ID: <c585e338-22eb-42f1-b8a9-adeefe14f374@kernel.org>
+Date: Mon, 2 Jun 2025 09:41:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a5e:d80d:0:b0:86d:9ec4:effe with SMTP id
- ca18e2360f4ac-86d9ec4f55emr486642739f.8.1748850031580; Mon, 02 Jun 2025
- 00:40:31 -0700 (PDT)
-Date: Mon, 02 Jun 2025 00:40:31 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <683d556f.a00a0220.d8eae.0046.GAE@google.com>
-Subject: [syzbot] [net?] possible deadlock in dev_set_promiscuity
-From: syzbot <syzbot+58c65777e7d41ac833a9@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
-	kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 8/8] arm64: dts: qcom: x1*: Remove
+ qcom,sm8550-pmic-glink fallback
+To: fenglin.wu@oss.qualcomm.com, Sebastian Reichel <sre@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Subbaraman Narayanamurthy <subbaraman.narayanamurthy@oss.qualcomm.com>,
+ David Collins <david.collins@oss.qualcomm.com>, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ kernel@oss.qualcomm.com, devicetree@vger.kernel.org,
+ linux-usb@vger.kernel.org
+References: <20250530-qcom_battmgr_update-v2-0-9e377193a656@oss.qualcomm.com>
+ <20250530-qcom_battmgr_update-v2-8-9e377193a656@oss.qualcomm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250530-qcom_battmgr_update-v2-8-9e377193a656@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 30/05/2025 09:35, Fenglin Wu via B4 Relay wrote:
+> From: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
+> 
+> The "qcom,x1e80100-pmic-glink" is not longer a fallback compatible
+> string of "qcom,sm8550-pmic-glink", so remove "qcom,sm8550-pmic-glink"
 
-syzbot found the following issue on:
+No, it still is.
 
-HEAD commit:    90b83efa6701 Merge tag 'bpf-next-6.16' of git://git.kernel..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=135adbf4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=262b2977ef00756b
-dashboard link: https://syzkaller.appspot.com/bug?extid=58c65777e7d41ac833a9
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-userspace arch: i386
+> in x1* platform pmic-glink device nodes.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+No explanation, no reasoning and this affects users of this DTS.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/2dccf70158c7/disk-90b83efa.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/e7a2b208c541/vmlinux-90b83efa.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/022501a5f90a/bzImage-90b83efa.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+58c65777e7d41ac833a9@syzkaller.appspotmail.com
-
-batadv0: entered promiscuous mode
-team0: entered promiscuous mode
-team_slave_0: entered promiscuous mode
-macvlan2: entered promiscuous mode
-bond0: entered promiscuous mode
-======================================================
-WARNING: possible circular locking dependency detected
-6.15.0-syzkaller-07774-g90b83efa6701 #0 Not tainted
-------------------------------------------------------
-syz.1.1497/11860 is trying to acquire lock:
-ffff8880314e4d30 (&dev_instance_lock_key#20){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2756 [inline]
-ffff8880314e4d30 (&dev_instance_lock_key#20){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:42 [inline]
-ffff8880314e4d30 (&dev_instance_lock_key#20){+.+.}-{4:4}, at: dev_set_promiscuity+0x10e/0x260 net/core/dev_api.c:286
-
-but task is already holding lock:
-ffff88805cd74e00 (team->team_lock_key#5){+.+.}-{4:4}, at: team_change_rx_flags+0x38/0x220 drivers/net/team/team_core.c:1781
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (team->team_lock_key#5){+.+.}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x182/0xe80 kernel/locking/mutex.c:746
-       team_port_change_check drivers/net/team/team_core.c:2966 [inline]
-       team_device_event+0x182/0xa20 drivers/net/team/team_core.c:2992
-       notifier_call_chain+0x1b3/0x3e0 kernel/notifier.c:85
-       call_netdevice_notifiers_extack net/core/dev.c:2268 [inline]
-       call_netdevice_notifiers net/core/dev.c:2282 [inline]
-       dev_close_many+0x29c/0x410 net/core/dev.c:1785
-       vlan_device_event+0x1748/0x1d00 net/8021q/vlan.c:449
-       notifier_call_chain+0x1b3/0x3e0 kernel/notifier.c:85
-       call_netdevice_notifiers_extack net/core/dev.c:2268 [inline]
-       call_netdevice_notifiers net/core/dev.c:2282 [inline]
-       __dev_notify_flags+0x18d/0x2e0 net/core/dev.c:-1
-       netif_change_flags+0xe8/0x1a0 net/core/dev.c:9526
-       do_setlink+0xc55/0x41c0 net/core/rtnetlink.c:3141
-       rtnl_changelink net/core/rtnetlink.c:3759 [inline]
-       __rtnl_newlink net/core/rtnetlink.c:3918 [inline]
-       rtnl_newlink+0x160b/0x1c70 net/core/rtnetlink.c:4055
-       rtnetlink_rcv_msg+0x7cf/0xb70 net/core/rtnetlink.c:6944
-       netlink_rcv_skb+0x205/0x470 net/netlink/af_netlink.c:2534
-       netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
-       netlink_unicast+0x758/0x8d0 net/netlink/af_netlink.c:1339
-       netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
-       sock_sendmsg_nosec net/socket.c:712 [inline]
-       __sock_sendmsg+0x219/0x270 net/socket.c:727
-       ____sys_sendmsg+0x505/0x830 net/socket.c:2566
-       ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
-       __sys_sendmsg+0x164/0x220 net/socket.c:2652
-       do_syscall_32_irqs_on arch/x86/entry/syscall_32.c:83 [inline]
-       __do_fast_syscall_32+0xb6/0x2b0 arch/x86/entry/syscall_32.c:306
-       do_fast_syscall_32+0x34/0x80 arch/x86/entry/syscall_32.c:331
-       entry_SYSENTER_compat_after_hwframe+0x84/0x8e
-
--> #0 (&dev_instance_lock_key#20){+.+.}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3168 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3287 [inline]
-       validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3911
-       __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5240
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x182/0xe80 kernel/locking/mutex.c:746
-       netdev_lock include/linux/netdevice.h:2756 [inline]
-       netdev_lock_ops include/net/netdev_lock.h:42 [inline]
-       dev_set_promiscuity+0x10e/0x260 net/core/dev_api.c:286
-       bond_set_promiscuity drivers/net/bonding/bond_main.c:919 [inline]
-       bond_change_rx_flags+0x219/0x690 drivers/net/bonding/bond_main.c:4738
-       dev_change_rx_flags net/core/dev.c:9241 [inline]
-       __dev_set_promiscuity+0x534/0x740 net/core/dev.c:9285
-       netif_set_promiscuity+0x50/0xe0 net/core/dev.c:9305
-       dev_set_promiscuity+0x126/0x260 net/core/dev_api.c:287
-       dev_change_rx_flags net/core/dev.c:9241 [inline]
-       __dev_set_promiscuity+0x534/0x740 net/core/dev.c:9285
-       netif_set_promiscuity+0x50/0xe0 net/core/dev.c:9305
-       dev_set_promiscuity+0x126/0x260 net/core/dev_api.c:287
-       team_change_rx_flags+0x123/0x220 drivers/net/team/team_core.c:1785
-       dev_change_rx_flags net/core/dev.c:9241 [inline]
-       __dev_set_promiscuity+0x534/0x740 net/core/dev.c:9285
-       netif_set_promiscuity+0x50/0xe0 net/core/dev.c:9305
-       dev_set_promiscuity+0x126/0x260 net/core/dev_api.c:287
-       hsr_portdev_setup net/hsr/hsr_slave.c:148 [inline]
-       hsr_add_port+0x549/0x890 net/hsr/hsr_slave.c:202
-       hsr_dev_finalize+0x6c4/0xaa0 net/hsr/hsr_device.c:760
-       hsr_newlink+0x7d7/0x940 net/hsr/hsr_netlink.c:122
-       rtnl_newlink_create+0x310/0xb00 net/core/rtnetlink.c:3823
-       __rtnl_newlink net/core/rtnetlink.c:3940 [inline]
-       rtnl_newlink+0x16d6/0x1c70 net/core/rtnetlink.c:4055
-       rtnetlink_rcv_msg+0x7cf/0xb70 net/core/rtnetlink.c:6944
-       netlink_rcv_skb+0x205/0x470 net/netlink/af_netlink.c:2534
-       netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
-       netlink_unicast+0x758/0x8d0 net/netlink/af_netlink.c:1339
-       netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
-       sock_sendmsg_nosec net/socket.c:712 [inline]
-       __sock_sendmsg+0x219/0x270 net/socket.c:727
-       ____sys_sendmsg+0x505/0x830 net/socket.c:2566
-       ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
-       __sys_sendmsg+0x164/0x220 net/socket.c:2652
-       do_syscall_32_irqs_on arch/x86/entry/syscall_32.c:83 [inline]
-       __do_fast_syscall_32+0xb6/0x2b0 arch/x86/entry/syscall_32.c:306
-       do_fast_syscall_32+0x34/0x80 arch/x86/entry/syscall_32.c:331
-       entry_SYSENTER_compat_after_hwframe+0x84/0x8e
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(team->team_lock_key#5);
-                               lock(&dev_instance_lock_key#20);
-                               lock(team->team_lock_key#5);
-  lock(&dev_instance_lock_key#20);
-
- *** DEADLOCK ***
-
-3 locks held by syz.1.1497/11860:
- #0: ffffffff8fa2cd70 (&ops->srcu#2){.+.+}-{0:0}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
- #0: ffffffff8fa2cd70 (&ops->srcu#2){.+.+}-{0:0}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
- #0: ffffffff8fa2cd70 (&ops->srcu#2){.+.+}-{0:0}, at: rtnl_link_ops_get+0x23/0x250 net/core/rtnetlink.c:570
- #1: ffffffff8f50a808 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_lock net/core/rtnetlink.c:80 [inline]
- #1: ffffffff8f50a808 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_nets_lock net/core/rtnetlink.c:341 [inline]
- #1: ffffffff8f50a808 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_newlink+0x8db/0x1c70 net/core/rtnetlink.c:4054
- #2: ffff88805cd74e00 (team->team_lock_key#5){+.+.}-{4:4}, at: team_change_rx_flags+0x38/0x220 drivers/net/team/team_core.c:1781
-
-stack backtrace:
-CPU: 1 UID: 0 PID: 11860 Comm: syz.1.1497 Not tainted 6.15.0-syzkaller-07774-g90b83efa6701 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_circular_bug+0x2ee/0x310 kernel/locking/lockdep.c:2046
- check_noncircular+0x134/0x160 kernel/locking/lockdep.c:2178
- check_prev_add kernel/locking/lockdep.c:3168 [inline]
- check_prevs_add kernel/locking/lockdep.c:3287 [inline]
- validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3911
- __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5240
- lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
- __mutex_lock_common kernel/locking/mutex.c:601 [inline]
- __mutex_lock+0x182/0xe80 kernel/locking/mutex.c:746
- netdev_lock include/linux/netdevice.h:2756 [inline]
- netdev_lock_ops include/net/netdev_lock.h:42 [inline]
- dev_set_promiscuity+0x10e/0x260 net/core/dev_api.c:286
- bond_set_promiscuity drivers/net/bonding/bond_main.c:919 [inline]
- bond_change_rx_flags+0x219/0x690 drivers/net/bonding/bond_main.c:4738
- dev_change_rx_flags net/core/dev.c:9241 [inline]
- __dev_set_promiscuity+0x534/0x740 net/core/dev.c:9285
- netif_set_promiscuity+0x50/0xe0 net/core/dev.c:9305
- dev_set_promiscuity+0x126/0x260 net/core/dev_api.c:287
- dev_change_rx_flags net/core/dev.c:9241 [inline]
- __dev_set_promiscuity+0x534/0x740 net/core/dev.c:9285
- netif_set_promiscuity+0x50/0xe0 net/core/dev.c:9305
- dev_set_promiscuity+0x126/0x260 net/core/dev_api.c:287
- team_change_rx_flags+0x123/0x220 drivers/net/team/team_core.c:1785
- dev_change_rx_flags net/core/dev.c:9241 [inline]
- __dev_set_promiscuity+0x534/0x740 net/core/dev.c:9285
- netif_set_promiscuity+0x50/0xe0 net/core/dev.c:9305
- dev_set_promiscuity+0x126/0x260 net/core/dev_api.c:287
- hsr_portdev_setup net/hsr/hsr_slave.c:148 [inline]
- hsr_add_port+0x549/0x890 net/hsr/hsr_slave.c:202
- hsr_dev_finalize+0x6c4/0xaa0 net/hsr/hsr_device.c:760
- hsr_newlink+0x7d7/0x940 net/hsr/hsr_netlink.c:122
- rtnl_newlink_create+0x310/0xb00 net/core/rtnetlink.c:3823
- __rtnl_newlink net/core/rtnetlink.c:3940 [inline]
- rtnl_newlink+0x16d6/0x1c70 net/core/rtnetlink.c:4055
- rtnetlink_rcv_msg+0x7cf/0xb70 net/core/rtnetlink.c:6944
- netlink_rcv_skb+0x205/0x470 net/netlink/af_netlink.c:2534
- netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
- netlink_unicast+0x758/0x8d0 net/netlink/af_netlink.c:1339
- netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
- sock_sendmsg_nosec net/socket.c:712 [inline]
- __sock_sendmsg+0x219/0x270 net/socket.c:727
- ____sys_sendmsg+0x505/0x830 net/socket.c:2566
- ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
- __sys_sendmsg+0x164/0x220 net/socket.c:2652
- do_syscall_32_irqs_on arch/x86/entry/syscall_32.c:83 [inline]
- __do_fast_syscall_32+0xb6/0x2b0 arch/x86/entry/syscall_32.c:306
- do_fast_syscall_32+0x34/0x80 arch/x86/entry/syscall_32.c:331
- entry_SYSENTER_compat_after_hwframe+0x84/0x8e
-RIP: 0023:0xf705e539
-Code: 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 002b:00000000f504e55c EFLAGS: 00000206 ORIG_RAX: 0000000000000172
-RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000080000280
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000206 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
- </TASK>
-vlan2: entered promiscuous mode
-debugfs: Directory 'hsr1' with parent 'hsr' already present!
-Cannot create hsr debugfs directory
-hsr1: entered promiscuous mode
-hsr1: entered allmulticast mode
-batadv0: entered allmulticast mode
-team0: entered allmulticast mode
-team_slave_0: entered allmulticast mode
-syz.1.1497 (11860) used greatest stack depth: 19568 bytes left
-----------------
-Code disassembly (best guess):
-   0:	03 74 b4 01          	add    0x1(%rsp,%rsi,4),%esi
-   4:	10 07                	adc    %al,(%rdi)
-   6:	03 74 b0 01          	add    0x1(%rax,%rsi,4),%esi
-   a:	10 08                	adc    %cl,(%rax)
-   c:	03 74 d8 01          	add    0x1(%rax,%rbx,8),%esi
-  20:	00 51 52             	add    %dl,0x52(%rcx)
-  23:	55                   	push   %rbp
-  24:	89 e5                	mov    %esp,%ebp
-  26:	0f 34                	sysenter
-  28:	cd 80                	int    $0x80
-* 2a:	5d                   	pop    %rbp <-- trapping instruction
-  2b:	5a                   	pop    %rdx
-  2c:	59                   	pop    %rcx
-  2d:	c3                   	ret
-  2e:	90                   	nop
-  2f:	90                   	nop
-  30:	90                   	nop
-  31:	90                   	nop
-  32:	90                   	nop
-  33:	90                   	nop
-  34:	90                   	nop
-  35:	90                   	nop
-  36:	90                   	nop
-  37:	90                   	nop
-  38:	90                   	nop
-  39:	90                   	nop
-  3a:	90                   	nop
-  3b:	90                   	nop
-  3c:	90                   	nop
-  3d:	90                   	nop
-  3e:	90                   	nop
-  3f:	90                   	nop
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Best regards,
+Krzysztof
