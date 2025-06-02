@@ -1,266 +1,270 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2064.outbound.protection.outlook.com [40.107.21.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A759239E7B
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 14:10:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748873455; cv=none; b=P/r07yP1GMDRq044q6HlZjxAudiJPYCROzCaIINGb+mOs3BSP1B40w8km3COP566ZPNYlUv90eEUnimYlm1PM+ktBGR0/QcsEldwB+p78FyXNHJbNjSRl4kXFiHdyL+kb3MMK/TYxXuFn9hjxpQ7dr2C+CnECiRqiMtxylSGMho=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748873455; c=relaxed/simple;
-	bh=ousPvc2zGRDEFMA40RS58QI/UFkXo7SsE2URjvgjojw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D8e6IZQPRaxX0sYBOBQETxom/E0nlIYmOFq5j2M95YbgzSjBEiVmRA3nYvBtROdLfGjnqazZBW5RkbMmvpbVOAakUZGfBTbg9zjKVpyh7OTIVWj6KRpDDR9+b4kvTyJxSlsSZTQhb/tw4N+AUv42EHLXkm56so84KpjJllUsuPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Li2nBdMd; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E9E239E97;
+	Mon,  2 Jun 2025 14:10:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.64
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748873458; cv=fail; b=cT5VHuRWHdSOQwotxua7XKxAO60TAhdKd0PADTjPJ4te79b1Ez8oDXCrcHyl313Z8JlaplqH/5p08s6KPxREW4KbnL5wEM4bsCy3IAUcSd2gxcqdrwGHbOxePHIDFvBkegds6h8VIWeOfta/NoeAVZw1SjJq4pMEWiXmCBoNwA0=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748873458; c=relaxed/simple;
+	bh=TLyBkH1ZYdTKmJKIIyHUflXAF065BYGinM2HuoR2k00=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EVe0LkiegQeyo3P2gG96ujZQs8a3ksIfs08QzXtNxcOTY3bGi+RlEN2qnx87NiTyDb91/gNmfg92UkdUvwYeg6p+6rpQM0a8TQGNTWZKuomepNEjs1R1cNcoTugYE0U10pVqGfWmuPrUZijXVZ2Z1Goq+EJlDRRQbI9r/LZsHNQ=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=CWRM684o; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=CWRM684o; arc=fail smtp.client-ip=40.107.21.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Li2nBdMd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748873453; x=1780409453;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ousPvc2zGRDEFMA40RS58QI/UFkXo7SsE2URjvgjojw=;
-  b=Li2nBdMdnd+2r9al0TvozIkySTN/9IfP0ZW5GORzMdEFFORxgNAS5R/w
-   B3VHJIGthCTBiskIutzySvVYxwcHbVS7iTS8IxNDGoxX8okz7vBpOGIqc
-   uWE5QOJ6Xvq0sshwJc949U6uOogZEtfkQQIRQiteXD7o/aMQoHqN1pC+6
-   0tRRzTaIQJPrLkx1BZwOCDK7foshFAG2CkjKLq1bBeJhhx0OSP4IelJU3
-   yo5e060asinuILXQsFjU3xHQPd4pbNBWq+ZVvMEVK3xfUwO8HDcyMoTOJ
-   sAJ6kL+Sra8AOAVfb1P83wq/WqHzNponyX9KnStb0rWZ/v/fU3UujE4R1
-   g==;
-X-CSE-ConnectionGUID: ZzmrTpvhTXqyxj97bcIhhg==
-X-CSE-MsgGUID: OTYhlWzeS+maQ15ftOqidQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="50798973"
-X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
-   d="scan'208";a="50798973"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 07:10:52 -0700
-X-CSE-ConnectionGUID: rocCGsKcQXy/xxWDkyW9UQ==
-X-CSE-MsgGUID: EKNS3vxGT52QIHI5/nS25g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
-   d="scan'208";a="149552246"
-Received: from ly-workstation.sh.intel.com (HELO ly-workstation) ([10.239.35.3])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 07:10:50 -0700
-Date: Mon, 2 Jun 2025 22:10:47 +0800
-From: "Lai, Yi" <yi1.lai@linux.intel.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>, yi1.lai@intel.com
-Subject: Re: [RFC/PATCH] perf/core: Use POLLHUP for a pinned event in error
-Message-ID: <aD2w50VDvGIH95Pf@ly-workstation>
-References: <20250317061745.1777584-1-namhyung@kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="CWRM684o";
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="CWRM684o"
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=Gzz44lo6DAvI1Gi0DW63mbBCvfi7XgpfY3rx7NW6Wh++iVirIofc7ddBzy7hTsB1XfiSWCIUaxjoifa6RehIGzHLgSh6o29GBlY7Xgg4aV2O5zfU8vGlEKr2irVaTkaQhU28QBvDeE1r2kL8rFWDrkXrBGxLh7A8pN92YJ7TeJn5lHthQqKy4HeMgBH/PUk3A+1kSfRc3dfGGNIx+mgfU/qmFLjBzZ8Oyu9pTD3Q/pJaI+MePchixTOAdG3Z7LFxABXlfweVQBtofFJ3Szy9Jhi+k6l8czQJrxrONpfE56i5V9YuXNeTYHW+g44CQhnVC3Ub7fatRsYKVM4VgMV8wA==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZTk9d8dPB7FqS/vhusHWKpPohu/ch37YNaa9xHLlmS8=;
+ b=dDQfZ8pYPR1+OEdFs9cU8uUch2pHsUCokrIeiWRh6gP7rJiDiNzva6Sg2K8G/iuNtIlcBuEQrN0Z9b9AsOdWK+sKu6il+X5mNp6QpSLEPUJRuI9uQu7QTk9HiNii7a/82c89uGgGe16E6t/EmpYveG7b16vk5xFp8G3o34AVDDz8b3BdRtejowTLOUEMcEI5e7VyMkcRkNl+fTN5R5ptcEnNGYjZIEeF5iSiim0/CllKzQzj7UgNylKXSM5/B7zOhdRqm+W/Kz/jjbwv8/TjXbhJSCtgn4U6cBpNq0BTg2RjLYPneYOZxjGwKFv58LigFucUCptKhbB2Og3L0Tkjvw==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=arm.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
+ dkim=pass (signature was verified) header.d=arm.com; arc=pass (0 oda=0
+ ltdi=1)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZTk9d8dPB7FqS/vhusHWKpPohu/ch37YNaa9xHLlmS8=;
+ b=CWRM684o2jSbxpRdcGShwDeZStBrH/T/OpVD5g9VjizRJLgT0dK551oeJ+Vr4Bv3xZY/Kmo9KZNoYkomXkX8G3olz7ts9GkKDsGPVLh2dTjJTWrxZFkJ0kJnEEXlAGH0coSQuXymQG423RuFzJwvbOfo+QU36ND8W5jg87J2j5A=
+Received: from PR1P264CA0146.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:346::11)
+ by AS8PR08MB6279.eurprd08.prod.outlook.com (2603:10a6:20b:294::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.34; Mon, 2 Jun
+ 2025 14:10:52 +0000
+Received: from AM2PEPF0001C716.eurprd05.prod.outlook.com
+ (2603:10a6:102:346:cafe::8e) by PR1P264CA0146.outlook.office365.com
+ (2603:10a6:102:346::11) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.24 via Frontend Transport; Mon,
+ 2 Jun 2025 14:10:52 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ AM2PEPF0001C716.mail.protection.outlook.com (10.167.16.186) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.29
+ via Frontend Transport; Mon, 2 Jun 2025 14:10:50 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=TafeUAgw/ULbdm4e+IqhABbMuowo4fMOn0MgClSTFc64N2hs9exUBwFJXrD7GZwIny0riF6mrcsLUmmm1BYVlrP3wkxgy9xBrvnIcAkA1nPmRRrJZVzj0j4cDBZeKw9Limrb1eY6P8p0hXfF6fwv3G60jHoParlRUlFT8FzviEetXZBWYxEnEACVrx4zfkj4hiFyf4oxATBXdqs5j7HpTnzUDr0RrKZMLU3s50zmEUNKj1v+/Z5oOKHM9ksOsNzlR4yLX1uSOmX9sj4iZzu7rqBtf82jAM9gWvXd/5hob6d9IqGcIaTc2OpQVpJbNFovfjpt2RQsKr35sQMQ38h5sw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZTk9d8dPB7FqS/vhusHWKpPohu/ch37YNaa9xHLlmS8=;
+ b=xawNOH3D8FH0vW+CDXsZPTPL7wHxXqZWHExil3P3TRLjywkbvccfAXz0GEsmYeXTuOxfdmkrjSSX59oa7gCSZV4WVC8Zo40JEPWFzsX/AfnH1RDGCR6CX/G0nrbt8IrpxWaQ/eCxDAje8lhSud1q7aDP+xWBcQ4qT4+zn5hSHtMsKEKiToFfSi71U9L3hn3BBCDTusCLyWVYMxfXygZQoJngAL1kJMsQ/NITqZuzyuHW+EI4h0LleDTVWyiFcYCrTzk29GKXb9xMUe9VCJb7axQwj+nKrVLLg5dtwwkpqm1q3iUv8KX9JYaJVMs9UfyiSbFE9G+wMWugOLyjLrnx3w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 172.205.89.229) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=arm.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=arm.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZTk9d8dPB7FqS/vhusHWKpPohu/ch37YNaa9xHLlmS8=;
+ b=CWRM684o2jSbxpRdcGShwDeZStBrH/T/OpVD5g9VjizRJLgT0dK551oeJ+Vr4Bv3xZY/Kmo9KZNoYkomXkX8G3olz7ts9GkKDsGPVLh2dTjJTWrxZFkJ0kJnEEXlAGH0coSQuXymQG423RuFzJwvbOfo+QU36ND8W5jg87J2j5A=
+Received: from DU2PR04CA0020.eurprd04.prod.outlook.com (2603:10a6:10:3b::25)
+ by VI1PR08MB10197.eurprd08.prod.outlook.com (2603:10a6:800:1bc::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.32; Mon, 2 Jun
+ 2025 14:10:17 +0000
+Received: from DB1PEPF000509F0.eurprd03.prod.outlook.com
+ (2603:10a6:10:3b:cafe::4c) by DU2PR04CA0020.outlook.office365.com
+ (2603:10a6:10:3b::25) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.31 via Frontend Transport; Mon,
+ 2 Jun 2025 14:10:17 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 172.205.89.229)
+ smtp.mailfrom=arm.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=arm.com;
+Received-SPF: Fail (protection.outlook.com: domain of arm.com does not
+ designate 172.205.89.229 as permitted sender)
+ receiver=protection.outlook.com; client-ip=172.205.89.229;
+ helo=nebula.arm.com;
+Received: from nebula.arm.com (172.205.89.229) by
+ DB1PEPF000509F0.mail.protection.outlook.com (10.167.242.74) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8792.29 via Frontend Transport; Mon, 2 Jun 2025 14:10:17 +0000
+Received: from AZ-NEU-EX06.Arm.com (10.240.25.134) by AZ-NEU-EX05.Arm.com
+ (10.240.25.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 2 Jun
+ 2025 14:10:15 +0000
+Received: from arm.com (10.1.34.144) by mail.arm.com (10.240.25.134) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39 via Frontend
+ Transport; Mon, 2 Jun 2025 14:10:15 +0000
+Date: Mon, 2 Jun 2025 15:10:14 +0100
+From: Yury Khrustalev <yury.khrustalev@arm.com>
+To: <linux-kernel@vger.kernel.org>
+CC: Christian Brauner <brauner@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	<linux-api@vger.kernel.org>
+Subject: Re: Extending clone_args for clone3()
+Message-ID: <aD2wxsTweADD4f3Q@arm.com>
+References: <aCs65ccRQtJBnZ_5@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20250317061745.1777584-1-namhyung@kernel.org>
+In-Reply-To: <aCs65ccRQtJBnZ_5@arm.com>
+X-EOPAttributedMessage: 1
+X-MS-TrafficTypeDiagnostic:
+	DB1PEPF000509F0:EE_|VI1PR08MB10197:EE_|AM2PEPF0001C716:EE_|AS8PR08MB6279:EE_
+X-MS-Office365-Filtering-Correlation-Id: 62579cd2-e5cd-4e98-7fde-08dda1df47b8
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted:
+ BCL:0;ARA:13230040|82310400026|36860700013|1800799024|376014;
+X-Microsoft-Antispam-Message-Info-Original:
+ =?us-ascii?Q?QZp94p5uqipEXgG7luyAPrgTbdkC25pRs8FiMchHVz31eiQUE7S6wEXimhr7?=
+ =?us-ascii?Q?km1AlY3CBlHxDGNrDeqe+hXfdv8Ectl7djQIlBub9dCbGelkTvv2HxkLuWO2?=
+ =?us-ascii?Q?HfuI8C7098RJ4gUQxilzI1a19Mt9DuEgEf15Nz9GJfPVThCoBiPqaKdFOFUr?=
+ =?us-ascii?Q?6IdnhwiZJoW0/rkNyJVXpBtXPtLbvac23RhcuCi7F/Js02BwU1X4OwwLgG8l?=
+ =?us-ascii?Q?+9mdw3Qu0GFlarY/gnDEkETwvr8KSv93rekzb3tLUYw3Hull8SPSu4cfNuMR?=
+ =?us-ascii?Q?sfuUcuMHC17tvK8Drpi8prQb8T/lRGsXbtAT97suzmwcKn1X4ay9MZC9XoDV?=
+ =?us-ascii?Q?BVo03hl5GuiY+82yg7XSUbZvDCo3A7ezZKcUPt9VcOAxqkdeTkaLmq75+EXP?=
+ =?us-ascii?Q?jRVCdkLGy54F0lSpqJcuDPe/Vw+Uuo6wh6ljmfsHbnq5IW7jXzXkLQ4jACi8?=
+ =?us-ascii?Q?obXLy2jjsZedhxGijY9QlmrlQ8czFz4VWXDxjEXgwgqa7FKi7x6sViuAWT8A?=
+ =?us-ascii?Q?sS/uhEuPR8/H/XlUQ6vfh7hkIZYjUx/xnwFil/wSj/7yIHD16fC8gdVptP1a?=
+ =?us-ascii?Q?KgoDF6gw9i3MmAc9c3p5xIZjOJ0P9tionTM8LK2zZVBAtrhz3YNYT5uyY8py?=
+ =?us-ascii?Q?uhENFZnYR62omcsHMGNxMmphjdmuxMTRw5aI3G1fpm7aEi4ILyNsRj7IjH3r?=
+ =?us-ascii?Q?buemiF3I+JhCDeiJ+d5B7uXN1TV4ZU+PrLKivXbIDWvRzPp6AS6bp17TmSlB?=
+ =?us-ascii?Q?1gsri2uFvk3B8gROBg8YFWIrEMOAutn37FgoaktYu1rIMeNSWUTXqTKSAKFF?=
+ =?us-ascii?Q?QCUF0uO846luBQxQdC3+NHGMXveiP6N5mZxXCNDipzIetqIrUTS55YOLPrMr?=
+ =?us-ascii?Q?lW+UQAAagOzjWz/h7BZERDsm4QLLIZrEKwrGnHRSXkuTbxxo4Y5l7T+k73d6?=
+ =?us-ascii?Q?hSrhG5meckg4qKS3UT/3udCbuzhagH+kgxhAx0LTWDb5k7NOfEpUf9uGG0gE?=
+ =?us-ascii?Q?kZyM4gBjU53sNgN+r/4cUBC6t9ufaphvkvPy/qbPbSg/zls8TVs2nelz+fsD?=
+ =?us-ascii?Q?+689tNUeksWZuzI8lwbJESvqaenw8r9ZimrO+gXt6yTqabaMHEMkeVVbgSJs?=
+ =?us-ascii?Q?fH62i3HfPl0MDcmbINntHGCdltT/BggyXqvNsbrD6ImfUgbWz3Ymaa+Jcofv?=
+ =?us-ascii?Q?LRkuI5zaU4Ys+KGbaTcM0s/WsR659JO6up0itbK8p6fqNK+kpj0BroRUwehO?=
+ =?us-ascii?Q?HGFNK+mVU0p4QHZesXyC6u9IBj9dHlAAs+6OXF7vDJnLNFWN0C7uG8iJsEuQ?=
+ =?us-ascii?Q?v1zXKTFxsnlhJWqwyBO9XJVsazuxjHkqE80svHI0iWjuuFpwxcyqK+5gSOpe?=
+ =?us-ascii?Q?pl+4rHCMbKMVnYJTV3H48U3e6mxIBgNZK+2H+7RM3+yaqdckNqDrYiHtzsly?=
+ =?us-ascii?Q?1O2ddnSLnXLOvUdkblbANk88RcFVyWr7sOJzC7NpibpwEj6lbcLWK0QdXOFR?=
+ =?us-ascii?Q?K3CTDfmhRgNARNsi8VqDhlRGf6/E0Tp6uBjs9/e0vZ0MqW0D8lFjrYmFkg?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:172.205.89.229;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:nebula.arm.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB10197
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ AM2PEPF0001C716.eurprd05.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	eb038632-db97-4dbd-032c-08dda1df33ea
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|14060799003|82310400026|35042699022|1800799024|36860700013|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?dYS3qcHOtuuvk+xX6cpMITFlgZe7XENt1I/heWthXEAGytBYMHiKFrCieeMM?=
+ =?us-ascii?Q?80Zb3uEbCPT986bV8AZ4SiJ1YvZnxQT3tKZryrqVUPt+/WqFzWqfY4KAbUL+?=
+ =?us-ascii?Q?FPICFbMkQnhN3VmtslEULpZKTh4NQiqNGKsFx5pbKKfIM/xFiBFRloarbP8S?=
+ =?us-ascii?Q?x5ENQQEfF6etDrxHX8OysCg0zPRQlGc3xhvxgCqU4BLyl9O8pzXEE/PKIlRf?=
+ =?us-ascii?Q?wst+7ZaxqHl060c5Das45E4+jv+DtWII6EOFsJpkmBJRwG7BPjLqMoI91Trf?=
+ =?us-ascii?Q?v+7usOzBTdOBKnXw7P7SG9Ku/N7KrFhdBchvccY18qD3W8d6n9hTrSAnf4oq?=
+ =?us-ascii?Q?Yrn3/wNlejNnl8R+/udsmQcCe0bQsm/o+vV4xvhmM9JX3SoQJpgC4XIt84Uj?=
+ =?us-ascii?Q?N1D9Z2DhSANM1l0+1w8FWQ6z8abaSJ+24Rk4ad6Fv7X6Ac/kNO/lsjKZjskY?=
+ =?us-ascii?Q?Ge1SlvEsiZV0SRBrStmpxD65wWUVGXY60wXTRJ/Aqh/3q/u+9NZgw7CGPRC5?=
+ =?us-ascii?Q?tKETxg2zV47bR9N0SAXjbqHiYU7ZVfePbu9FVnZ0wg1tStu9W5ZU4yUXlXLG?=
+ =?us-ascii?Q?NV54z1r3HdVcRUC0h/zbTw9KzXi42R+pH9nhUTK9DUji1mKG+9GKi9uRlvGE?=
+ =?us-ascii?Q?gpPo1RO7ojuyOdAAcwH6lCT5iDVFV40pdG+LQs5OwQ2cQfFAj/IXOAphEiIH?=
+ =?us-ascii?Q?q1aMmonpAutlDgd93jy+d7u8rGhok2byKTO/qaXDmpyZdiSoD2g3XAIhRPcU?=
+ =?us-ascii?Q?PRiTLxcdra+TO481PgDuF+mk0jW4IpS7mwEPB4lClYTjvTOwZFFuwnshsZVs?=
+ =?us-ascii?Q?xwDRf032tE2IlVw9Xr53bi5ZgB9vCiM33F1gQslPy1V8B0pUZHmtajGOtN8c?=
+ =?us-ascii?Q?d7ZoSjBar5ci4pAqXmeXupQV7+dwVYM/fCdXtVhyUNzXrrc6g34T9Dge15b5?=
+ =?us-ascii?Q?imIY3/YJKZ8ArDkqIuhE51COQp8Icnx16PcZr6Fn+RQub1JtV8cBKx5x6zAU?=
+ =?us-ascii?Q?utGhDjJ03Dl/+X3G3ilIJgAzRVQZ64oiptH27oc4r4YUrOwtscGNS271M0c4?=
+ =?us-ascii?Q?RX7laqdrbXfSk/4MaJ8ynzZVcYDohiemPL5mVs/s7mxgBWKIvQZD8GBKU3be?=
+ =?us-ascii?Q?dwuZMSR27qMhZf5e9xTrkV7srKY4bhIxwD+qoGvLod5UyFmF2l6mF0a9yS86?=
+ =?us-ascii?Q?AQerlmNiUwcux0hqLDdkD9c0PDwLoh9R5SDudj6BZKGRAWacMlkDGX7DQIca?=
+ =?us-ascii?Q?iT6n7d6n76+N9zutq/OosNJng2a+8was1K1zpt6vFTQEj84JK7rCZVgfJg45?=
+ =?us-ascii?Q?ptat0wiMGLQvKDOwVDXd6Wtps1X09wRN4yLKhATIC7JlaitSQO95TkMydc49?=
+ =?us-ascii?Q?Sn/d38aLHWmS7ijZCYjMNBdXlFzmL3rNhu/uaKUq/Hq8LQHFX0iKeyNo3rXG?=
+ =?us-ascii?Q?ysPQr3xQTr2Jgzj/DOirTtJ5aTR3/oAReQWpbcnyqhcNNub0MJQUwCp1BtY2?=
+ =?us-ascii?Q?oC4qsI7MvfFl7IsFteHr6vhZQ+qi68OLwosBPqCM60r1PrbH0Dhe9fEqFg?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(14060799003)(82310400026)(35042699022)(1800799024)(36860700013)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2025 14:10:50.8627
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 62579cd2-e5cd-4e98-7fde-08dda1df47b8
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AM2PEPF0001C716.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB6279
 
-Hi Namhyung Kim,
+Hi everyone,
 
-Greetings!
+A gentle ping :)
 
-I used Syzkaller and found that there is WARNING: locking bug in perf_event_wakeup in linux-next next-20250530.
-
-After bisection and the first bad commit is:
-"
-f4b07fd62d4d perf/core: Use POLLHUP for pinned events in error
-"
-
-All detailed into can be found at:
-https://github.com/laifryiee/syzkaller_logs/tree/main/250601_162355_perf_event_wakeup
-Syzkaller repro code:
-https://github.com/laifryiee/syzkaller_logs/tree/main/250601_162355_perf_event_wakeup/repro.c
-Syzkaller repro syscall steps:
-https://github.com/laifryiee/syzkaller_logs/tree/main/250601_162355_perf_event_wakeup/repro.prog
-Syzkaller report:
-https://github.com/laifryiee/syzkaller_logs/tree/main/250601_162355_perf_event_wakeup/repro.report
-Kconfig(make olddefconfig):
-https://github.com/laifryiee/syzkaller_logs/tree/main/250601_162355_perf_event_wakeup/kconfig_origin
-Bisect info:
-https://github.com/laifryiee/syzkaller_logs/tree/main/250601_162355_perf_event_wakeup/bisect_info.log
-bzImage:
-https://github.com/laifryiee/syzkaller_logs/raw/refs/heads/main/250601_162355_perf_event_wakeup/bzImage_next-20250530
-Issue dmesg:
-https://github.com/laifryiee/syzkaller_logs/blob/main/250601_162355_perf_event_wakeup/next-20250530_dmesg.log
-
-"
-[   39.913691] =============================
-[   39.914157] [ BUG: Invalid wait context ]
-[   39.914623] 6.15.0-next-20250530-next-2025053 #1 Not tainted
-[   39.915271] -----------------------------
-[   39.915731] repro/837 is trying to lock:
-[   39.916191] ffff88801acfabd8 (&event->waitq){....}-{3:3}, at: __wake_up+0x26/0x60
-[   39.917182] other info that might help us debug this:
-[   39.917761] context-{5:5}
-[   39.918079] 4 locks held by repro/837:
-[   39.918530]  #0: ffffffff8725cd00 (rcu_read_lock){....}-{1:3}, at: __perf_event_task_sched_in+0xd1/0xbc0
-[   39.919612]  #1: ffff88806ca3c6f8 (&cpuctx_lock){....}-{2:2}, at: __perf_event_task_sched_in+0x1a7/0xbc0
-[   39.920748]  #2: ffff88800d91fc18 (&ctx->lock){....}-{2:2}, at: __perf_event_task_sched_in+0x1f9/0xbc0
-[   39.921819]  #3: ffffffff8725cd00 (rcu_read_lock){....}-{1:3}, at: perf_event_wakeup+0x6c/0x470
-[   39.922823] stack backtrace:
-[   39.923171] CPU: 0 UID: 0 PID: 837 Comm: repro Not tainted 6.15.0-next-20250530-next-2025053 #1 PREEMPT(voluntary)
-[   39.923196] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.o4
-[   39.923214] Call Trace:
-[   39.923221]  <TASK>
-[   39.923228]  dump_stack_lvl+0xea/0x150
-[   39.923256]  dump_stack+0x19/0x20
-[   39.923276]  __lock_acquire+0xb22/0x22a0
-[   39.923308]  ? x86_pmu_commit_txn+0x195/0x2b0
-[   39.923339]  ? __lock_acquire+0x412/0x22a0
-[   39.923375]  lock_acquire+0x170/0x310
-[   39.923407]  ? __wake_up+0x26/0x60
-[   39.923448]  _raw_spin_lock_irqsave+0x52/0x80
-[   39.923473]  ? __wake_up+0x26/0x60
-[   39.923504]  __wake_up+0x26/0x60
-[   39.923537]  perf_event_wakeup+0x14a/0x470
-[   39.923571]  merge_sched_in+0x846/0x15c0
-[   39.923610]  visit_groups_merge.constprop.0.isra.0+0x952/0x1420
-[   39.923653]  ? __pfx_visit_groups_merge.constprop.0.isra.0+0x10/0x10
-[   39.923688]  ? sched_clock_noinstr+0x12/0x20
-[   39.923724]  ? __sanitizer_cov_trace_const_cmp1+0x1e/0x30
-[   39.923766]  ctx_sched_in+0x471/0xa20
-[   39.923804]  ? __pfx_ctx_sched_in+0x10/0x10
-[   39.923838]  ? __sanitizer_cov_trace_const_cmp4+0x1a/0x20
-[   39.923878]  perf_event_sched_in+0x47/0xa0
-[   39.923912]  __perf_event_task_sched_in+0x3fc/0xbc0
-[   39.923951]  ? __pfx___perf_event_task_sched_in+0x10/0x10
-[   39.923984]  ? __this_cpu_preempt_check+0x21/0x30
-[   39.924012]  ? __sanitizer_cov_trace_cmp8+0x1c/0x30
-[   39.924046]  ? xfd_validate_state+0x14f/0x1b0
-[   39.924081]  finish_task_switch.isra.0+0x525/0x990
-[   39.924117]  ? lock_unpin_lock+0xdc/0x170
-[   39.924152]  __schedule+0xef3/0x3840
-[   39.924185]  ? __pfx___schedule+0x10/0x10
-[   39.924218]  ? ktime_get_coarse_real_ts64+0xad/0xf0
-[   39.924259]  schedule+0xf6/0x3d0
-[   39.924285]  exit_to_user_mode_loop+0x7a/0x110
-[   39.924315]  do_syscall_64+0x284/0x2e0
-[   39.924340]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[   39.924360] RIP: 0033:0x7ff14103ee5d
-[   39.924381] Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 8
-[   39.924400] RSP: 002b:00007fffb2745578 EFLAGS: 00000202 ORIG_RAX: 0000000000000038
-[   39.924418] RAX: 0000000000000346 RBX: 0000000000000000 RCX: 00007ff14103ee5d
-[   39.924431] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000082000
-[   39.924443] RBP: 00007fffb27455c0 R08: 0000000000000000 R09: 0000000000000000
-[   39.924456] R10: 0000000000000000 R11: 0000000000000202 R12: 00007fffb27459a8
-[   39.924468] R13: 0000000000404e78 R14: 0000000000406e08 R15: 00007ff141389000
-[   39.924497]  </TASK>
-[   40.307815] coredump: 804(repro): over core_pipe_limit, skipping core dump
-[   40.472093] coredump: 795(repro): over core_pipe_limit, skipping core dump
-[   40.545575] coredump: 799(repro): over core_pipe_limit, skipping core dump
-[   40.948915] coredump: 833(repro): over core_pipe_limit, skipping core dump
-[   40.989336] coredump: 811(repro): over core_pipe_limit, skipping core dump
-[   42.121469] coredump: 857(repro): over core_pipe_limit, skipping core dump
-"
-
-Hope this cound be insightful to you.
-
-Regards,
-Yi Lai
-
----
-
-If you don't need the following environment to reproduce the problem or if you
-already have one reproduced environment, please ignore the following information.
-
-How to reproduce:
-git clone https://gitlab.com/xupengfe/repro_vm_env.git
-cd repro_vm_env
-tar -xvf repro_vm_env.tar.gz
-cd repro_vm_env; ./start3.sh  // it needs qemu-system-x86_64 and I used v7.1.0
-  // start3.sh will load bzImage_2241ab53cbb5cdb08a6b2d4688feb13971058f65 v6.2-rc5 kernel
-  // You could change the bzImage_xxx as you want
-  // Maybe you need to remove line "-drive if=pflash,format=raw,readonly=on,file=./OVMF_CODE.fd \" for different qemu version
-You could use below command to log in, there is no password for root.
-ssh -p 10023 root@localhost
-
-After login vm(virtual machine) successfully, you could transfer reproduced
-binary to the vm by below way, and reproduce the problem in vm:
-gcc -pthread -o repro repro.c
-scp -P 10023 repro root@localhost:/root/
-
-Get the bzImage for target kernel:
-Please use target kconfig and copy it to kernel_src/.config
-make olddefconfig
-make -jx bzImage           //x should equal or less than cpu num your pc has
-
-Fill the bzImage file into above start3.sh to load the target kernel in vm.
-
-
-Tips:
-If you already have qemu-system-x86_64, please ignore below info.
-If you want to install qemu v7.1.0 version:
-git clone https://github.com/qemu/qemu.git
-cd qemu
-git checkout -f v7.1.0
-mkdir build
-cd build
-yum install -y ninja-build.x86_64
-yum -y install libslirp-devel.x86_64
-../configure --target-list=x86_64-softmmu --enable-kvm --enable-vnc --enable-gtk --enable-sdl --enable-usb-redir --enable-slirp
-make
-make install 
-
-On Sun, Mar 16, 2025 at 11:17:45PM -0700, Namhyung Kim wrote:
-> Pinned events can go to an error state when they are failed to be
-> scheduled in the context.  And they won't generate samples anymore
-> and silently ignored until it's recovered by PERF_EVENT_IOC_ENABLE or
-> something (and of course the condition also should be changed so that
-> they can be scheduled in).  But then users should know about the state
-> change.
+On Mon, May 19, 2025 at 03:06:29PM +0100, Yury Khrustalev wrote:
+> Hi,
 > 
-> Currently there's no mechanism to notify users when they go to an error
-> state.
+> I'm working on an RFC patch for Glibc to make use of the newly added
+> shadow_stack_token field in struct clone_args in [1] on arm64 targets.
 > 
-> One way to do this is to issue POLLHUP event to poll(2) to handle this.
-> Reading events in an error state would return 0 (EOF) and it matches to
-> the behavior of POLLHUP according to the man page.
+> I encountered the following problem. Glibc might be built with newer
+> version of struct clone_args than the currently running kernel. In
+> this case, we may attempt to use a non-zero value in the new field
+> in args (and pass size bigger than expected by the kernel) and the
+> kernel will reject the syscall with E2BIG error.
 > 
-> Users should remove the fd of the event from pollfd after getting
-> POLLHUP, otherwise it'll be returned repeatedly.
+> This seems to be due to a fail-early approach. The unexpected non-
+> zero values beyond what's supported by the kernel may indicate that
+> userspace expects something to happen (and may even have allocated
+> some resources). So it's better to indicate a problem rather than
+> silently ignore this and have userspace encounter an error later.
 > 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  kernel/events/core.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
+> However, it creates difficulty with using extended "versions" of
+> the clone3 syscall. AFAIK, there is no way to ask kernel about
+> the supported size of struct clone_args except for making syscalls
+> with decreasing value of size until we stop getting E2BIG.
 > 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 2533fc32d890eacd..cef1f5c60f642d21 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -3984,6 +3984,11 @@ static int merge_sched_in(struct perf_event *event, void *data)
->  		if (event->attr.pinned) {
->  			perf_cgroup_event_disable(event, ctx);
->  			perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
-> +
-> +			if (*perf_event_fasync(event))
-> +				event->pending_kill = POLL_HUP;
-> +
-> +			perf_event_wakeup(event);
->  		} else {
->  			struct perf_cpu_pmu_context *cpc = this_cpc(event->pmu_ctx->pmu);
->  
-> @@ -5925,6 +5930,10 @@ static __poll_t perf_poll(struct file *file, poll_table *wait)
->  	if (is_event_hup(event))
->  		return events;
->  
-> +	if (unlikely(READ_ONCE(event->state) == PERF_EVENT_STATE_ERROR &&
-> +		     event->attr.pinned))
-> +		return events;
-> +
->  	/*
->  	 * Pin the event->rb by taking event->mmap_mutex; otherwise
->  	 * perf_event_set_output() can swizzle our rb and make us miss wakeups.
-> -- 
-> 2.49.0.rc1.451.g8f38331e32-goog
+> This seems fragile and may call for writing cumbersome code. In essence,
+> we will have to have clone30(), clone31(), clone32()... wrappers which
+> probably defeats the point of why clone3 was added:
 > 
+> 
+>   if (clone32_supported && clone32(...) == -1 && errno == E2BIG)
+>     {
+>       clone32_supported = false;
+>       /* ... */
+>     }
+>   else if (clone31_supported && clone31(...) == -1 && errno == E2BIG)
+>     {
+>       clone12_supported = false;
+>       /* ... */
+>     }
+>  ...
+> 
+> Is there a neat way to work around this? What was the idea for extending
+> clone_args in practice?
+> 
+> I suppose we can't rely on kernel version because support for extended
+> clone_args can be backported. In any case, we'd have to do a syscall
+> for this (it would probably be great to have kernel version in auxv).
+> 
+> I appreciate any advice here.
+> 
+> Thanks,
+> Yury
+> 
+> 
+> [1]: https://lore.kernel.org/all/20250416-clone3-shadow-stack-v16-0-2ffc9ca3917b@kernel.org/
+> 
+
+Kind regards,
+Yury
+
