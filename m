@@ -1,204 +1,140 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD7219C554;
-	Mon,  2 Jun 2025 11:24:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FAB482EF
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 11:28:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748863478; cv=none; b=Prtpv9IWpVYPHz1tz9nv/Ak7wEMtoXdZ6yjqmDqnmrjKbxuwZoPOAxG1IY6qirNjzvO2X2GE2855KB0UNCdolfJbx/CvUkILocMUwGhMquGDmVSWczwchI5LTlKPCQlkvEfIjpfOrFr4Wf8qZBpiew1clbplPI4ZAr51SbqFG78=
+	t=1748863697; cv=none; b=S2KZuWKGJ9ioPBNirZmChVz1Codv1TJqceU23P+6DmzQpu+wsCa7VeKoXtqODipG4Hn3+QEeDm62f0vge/a3TYVzS71R2dH3Od6Q9GL5neBXnh48Vr/tqNwywDm5w8jOi5V48huqcPVAJcJvAlL4jSsEKuxTA6xYKoYzmsqB88o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748863478; c=relaxed/simple;
-	bh=tjF4oDdfxktTT3rsm8foVvv3JXx/2Qd7CyIEWjhJ3SI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nTjaWsBu9ab1fBIJHXJ7XpiUUEvX3jKHgP4E3TNFhY1Glha8ToLksxKZE4cjRFV64eFBWtDDUyoknJmPnRjzsilv3ont3VwrFnShvGxrEX6l9m7Ek4Ie55KAuuHnsqvz/TmNMDMGm4waOn/gRc5cMx28sYE2/e4lxrQtXW9ztW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nf3nnDOd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748863697; c=relaxed/simple;
+	bh=VmXDOPNS8/S6TCwAzvLV43piHsMOAAZNLSlKbNUhKb0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bgzRr8gB1wV59EgnbS+/dKfA8fkGjjfCT6BwQjjwGazJ48KjlSppQaHI6BRL01vCNPN9SK4808/2K0jEOd7TY1JzFxhgJBgHzdrt+HCw+j5oYYyR4VkopvQ84hErazTzaopalrKp7CYTBKBteLMxFW/6uDJH5PshiZ8d+G9KkgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ry/2PQ3o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nf3nnDOd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22C30C4CEEB;
-	Mon,  2 Jun 2025 11:24:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ry/2PQ3o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 365D0C4CEEB;
+	Mon,  2 Jun 2025 11:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748863477;
-	bh=tjF4oDdfxktTT3rsm8foVvv3JXx/2Qd7CyIEWjhJ3SI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nf3nnDOdfpmG2AslYcoIQMnfbeoyKz85KfwRw1Hn3573OCMN8txMv1HsTULa4E7eK
-	 tM0iWsaF3J8nUo/dChRzewqS4ezb2CXEk0T8lbKAQb/UjVwhPFQM9dxrQHX4vdjB4w
-	 O5WcYJNPD9+RKRrQCUNGaL5SbKfLVIIX3xgpFtTWC4MDbqInP4BzguPtyiKBsxKEBH
-	 CPe92Nr9XxsPwvk63Vh+YMLZLXECgrOB75URDR/299EwI7qxPjfBTin2peIQhIIrei
-	 3PS0jJUFmP5kixXTzg6xeLWnpvOcxOpV3wRIv1OjokayImWoLNlQzOaHYPlSeGadhQ
-	 KKaW4nGZPLqEg==
-Message-ID: <69885612-75ea-422c-ba13-07eaf4325005@kernel.org>
-Date: Mon, 2 Jun 2025 13:24:34 +0200
+	s=k20201202; t=1748863694;
+	bh=VmXDOPNS8/S6TCwAzvLV43piHsMOAAZNLSlKbNUhKb0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ry/2PQ3obPGxGRr4fOPfhplXyQHvWO+zARHGGd3it7hjrz5lClSZzhRZfnV8F9ll3
+	 tQ4UzIvX3Ac9fEUeidWDRExcRJcZH4rMv8yROHc8FJqc4RdoPvbvOgB1Gv1N7YtVrB
+	 47fMI9tOZERbgsrOPWHpuASvbqqFkuXm4RwHtLuS+NIjXDpJcEOOzO3OQllZyZ7o84
+	 ooZpAoHUtlBxZGld3AAOPc9KL5DxtSNy4b1bzuQh9PspXGg2ukQ+yNJ2ZbfGdCT9co
+	 VcoYkHL6ZrBTnQZbAuAlkt6LIBmcEt1CX7Zlz4btbaHcYmtA8cKy9VJLFhtCJeUfo9
+	 y9REGJHxInNqA==
+Date: Mon, 2 Jun 2025 13:28:08 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Igor Mammedov <imammedo@redhat.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, Shiju Jose <shiju.jose@huawei.com>,
+ qemu-arm@nongnu.org, qemu-devel@nongnu.org, Philippe =?UTF-8?B?TWF0aGll?=
+ =?UTF-8?B?dS1EYXVkw6k=?= <philmd@linaro.org>, Ani Sinha
+ <anisinha@redhat.com>, Eduardo Habkost <eduardo@habkost.net>, Marcel
+ Apfelbaum <marcel.apfelbaum@gmail.com>, Peter Maydell
+ <peter.maydell@linaro.org>, Shannon Zhao <shannon.zhaosl@gmail.com>, Yanan
+ Wang <wangyanan55@huawei.com>, Zhao Liu <zhao1.liu@intel.com>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 12/20] acpi/generic_event_device: add logic to detect
+ if HEST addr is available
+Message-ID: <20250602132436.1e0e83aa@foz.lan>
+In-Reply-To: <20250602122244.081a1960@imammedo.users.ipa.redhat.com>
+References: <cover.1747722973.git.mchehab+huawei@kernel.org>
+	<aa74b756f633dbee5442cf4baa2c1d81a669d2f9.1747722973.git.mchehab+huawei@kernel.org>
+	<20250528174212.2823d3de@imammedo.users.ipa.redhat.com>
+	<20250530080120-mutt-send-email-mst@kernel.org>
+	<20250530164903.0f9f8444@imammedo.users.ipa.redhat.com>
+	<20250530221810.694ce02e@foz.lan>
+	<20250602122244.081a1960@imammedo.users.ipa.redhat.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 9/9] media: uvcvideo: Support granular power saving for
- compat syscalls
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Hans de Goede <hdegoede@redhat.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
- <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250528-uvc-grannular-invert-v1-0-d01581f9cc25@chromium.org>
- <20250528-uvc-grannular-invert-v1-9-d01581f9cc25@chromium.org>
- <34d9f779-987f-4e2c-b046-5dc15641547c@kernel.org>
- <CANiDSCtrG59QX-R0YcS+G9HmG5oE8LwiXdm_NKuCbNmHp8aeTQ@mail.gmail.com>
- <b88a8847-6e19-4d5e-a847-5deee69ab7b4@kernel.org>
- <CANiDSCsXNu2xa_ATGUJbKY_t7xxXgSGdpZMf+P4LT+x3qcP1tg@mail.gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <CANiDSCsXNu2xa_ATGUJbKY_t7xxXgSGdpZMf+P4LT+x3qcP1tg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 2-Jun-25 13:11, Ricardo Ribalda wrote:
-> On Mon, 2 Jun 2025 at 13:07, Hans de Goede <hansg@kernel.org> wrote:
->>
->> Hi Ricardo,
->>
->> On 2-Jun-25 12:27, Ricardo Ribalda wrote:
->>> Hi Hans
->>>
->>> On Mon, 2 Jun 2025 at 12:11, Hans de Goede <hansg@kernel.org> wrote:
->>>>
->>>> Hi Ricardo,
->>>>
->>>> On 28-May-25 19:58, Ricardo Ribalda wrote:
->>>>> Right now we cannot support granular power saving on compat syscalls
->>>>> because the VIDIOC_*32 NRs defines are not accessible to drivers.
->>>>>
->>>>> Use the video_translate_cmd() helper to convert the compat syscall NRs
->>>>> into syscall NRs.
->>>>>
->>>>> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
->>>>> ---
->>>>>  drivers/media/usb/uvc/uvc_v4l2.c     | 9 ++-------
->>>>>  drivers/media/v4l2-core/v4l2-ioctl.c | 3 ++-
->>>>>  include/media/v4l2-ioctl.h           | 1 +
->>>>>  3 files changed, 5 insertions(+), 8 deletions(-)
->>>>>
->>>>> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
->>>>> index fcb1b79c214849ce4da96a86a688d777b32cc688..048ee7e01808c8944f9bd46e5df2931b9c146ad5 100644
->>>>> --- a/drivers/media/usb/uvc/uvc_v4l2.c
->>>>> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
->>>>> @@ -1282,15 +1282,10 @@ static long uvc_v4l2_pm_ioctl(struct file *file,
->>>>>  static long uvc_v4l2_unlocked_ioctl(struct file *file,
->>>>>                                   unsigned int cmd, unsigned long arg)
->>>>>  {
->>>>> -     /*
->>>>> -      * For now, we do not support granular power saving for compat
->>>>> -      * syscalls.
->>>>> -      */
->>>>> -     if (in_compat_syscall())
->>>>> -             return uvc_v4l2_pm_ioctl(file, cmd, arg);
->>>>> +     unsigned int converted_cmd = video_translate_cmd(cmd);
->>>>
->>>> It looks like something went wrong here and you did not test-compile this?
->>>> video_translate_cmd() is private to drivers/media/v4l2-core/v4l2-ioctl.c
->>>> so this should not compile.
->>>
->>> Hmm... Actually I am pretty sure that I tested it on real hardware.
->>>
->>> Did you miss the EXPORT_SYMBOL() on the patch?
->>
->> Ah yes I did miss that, sorry.
-> 
-> My bad, I doubt it till the last second if I should split it or not :)
-> 
->>
->> For the next time please split core changes out into their own
->> separate patches.
->>
->> In this case I think the core changes are not necessary instead
->> you can just do:
->>
->>         unsigned int converted_cmd = cmd;
->>
->> #ifdef CONFIG_COMPAT
->>         converted_cmd = v4l2_compat_translate_cmd(cmd);
->> #endif
-> 
-> I believe this should work as well:
-> 
-> unsigned int converted_cmd = cmd;
-> if (in_compat_syscall())
->   converted_cmd = v4l2_compat_translate_cmd(cmd);
-> 
-> the compiler knows that CONFIG_COMPAT=n means in_compat_syscall() will
-> be always fails.
-> 
-> If it is ok with you (and it actually works :) ) I will use this version.
+Em Mon, 2 Jun 2025 12:22:44 +0200
+Igor Mammedov <imammedo@redhat.com> escreveu:
 
-I agree that that is cleaner/better and I also think it should work,
-so lets go with that.
+> On Fri, 30 May 2025 22:18:10 +0200
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+> 
+> > Em Fri, 30 May 2025 16:49:03 +0200
+> > Igor Mammedov <imammedo@redhat.com> escreveu:
+> >   
+> > > On Fri, 30 May 2025 08:01:28 -0400
+> > > "Michael S. Tsirkin" <mst@redhat.com> wrote:
+> > >     
+> > > > On Wed, May 28, 2025 at 05:42:12PM +0200, Igor Mammedov wrote:      
+> > > > > On Tue, 20 May 2025 08:41:31 +0200
+> > > > > Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+> > > > >         
+> > > > > > Create a new property (x-has-hest-addr) and use it to detect if
+> > > > > > the GHES table offsets can be calculated from the HEST address
+> > > > > > (qemu 10.0 and upper) or via the legacy way via an offset obtained
+> > > > > > from the hardware_errors firmware file.        
+> > > > > 
+> > > > > 
+> > > > > it doesn't apply to current master anymore        
+> > > > 
+> > > > indeed. Mauro?      
+> > > 
+> > > Michael,
+> > > it's trivial conflict in machine compat,
+> > > could you fix it up while applying?    
+> > 
+> > IMHO, that's the best. The thing is, as code gets merged upstream with
+> > backports, conflicts happen.
+> > 
+> > I can re-send the series, if you prefer, as I'm keeping it rebasing it
+> > from time to time at:
+> > 	https://gitlab.com/mchehab_kernel/qemu/-/tree/qemu_submitted?ref_type=heads
+> > 
+> > (it is on the top of upstream/master)
+> > 
+> > But even that might have conflicts on your test tree if you pick
+> > other patches touching this backport table:
+> >   
+> > > -GlobalProperty hw_compat_10_0[] = {};
+> > > +GlobalProperty hw_compat_10_0[] = {
+> > > +    { TYPE_ACPI_GED, "x-has-hest-addr", "false" },
+> > > +};    
+> > 
+> > (this was the code when I sent the PR. When applying upstream,
+> > such hunk is now(*):
+> > 
+> >  GlobalProperty hw_compat_10_0[] = {
+> >      { "scsi-hd", "dpofua", "off" },
+> > +    { TYPE_ACPI_GED, "x-has-hest-addr", "false" },
+> >  };
+> > 
+> > 
+> > (*) https://gitlab.com/mchehab_kernel/qemu/-/commit/08c4859f8c6f36d7dccf2b773be88847e5d1fe0c
+> > 
+> > If you still prefer that I resubmit the entire PR, let me know.  
+> 
+> If it's the only patch that needs rebase and doesn't affect the rest,
+> I'd say there is no need to spam the list with whole series respin, 
+> just post rebased v10 12/20 as reply here
+> 
+> If it's more than that, respin series.
 
-Regards,
+This is the only patch with conflicts. I'll send a v10 of it.
 
-Hans
+> 
+> > 
+> > Regards,
+> > Mauro
+> >   
+> 
 
 
 
->>>> You can use v4l2_compat_translate_cmd() but only when CONFIG_COMPAT is set
->>>> otherwise that symbol is not available.
->>>
->>> I tried now without CONFIG_COMPAT and it built fine.
->>>
->>>>
->>>> Regards,
->>>>
->>>> Hans
->>>>
->>>>
->>>>
->>>>>
->>>>>       /* The following IOCTLs do need to turn on the camera. */
->>>>> -     switch (cmd) {
->>>>> +     switch (converted_cmd) {
->>>>>       case UVCIOC_CTRL_QUERY:
->>>>>       case VIDIOC_G_CTRL:
->>>>>       case VIDIOC_G_EXT_CTRLS:
->>>>> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
->>>>> index 650dc1956f73d2f1943b56c42140c7b8d757259f..6fbd28f911cf23eec43ef1adcf64bd46ef067c81 100644
->>>>> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
->>>>> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
->>>>> @@ -3245,7 +3245,7 @@ static int check_array_args(unsigned int cmd, void *parg, size_t *array_size,
->>>>>       return ret;
->>>>>  }
->>>>>
->>>>> -static unsigned int video_translate_cmd(unsigned int cmd)
->>>>> +unsigned int video_translate_cmd(unsigned int cmd)
->>>>>  {
->>>>>  #if !defined(CONFIG_64BIT) && defined(CONFIG_COMPAT_32BIT_TIME)
->>>>>       switch (cmd) {
->>>>> @@ -3266,6 +3266,7 @@ static unsigned int video_translate_cmd(unsigned int cmd)
->>>>>
->>>>>       return cmd;
->>>>>  }
->>>>> +EXPORT_SYMBOL(video_translate_cmd);
->>>>>
->>>>>  static int video_get_user(void __user *arg, void *parg,
->>>>>                         unsigned int real_cmd, unsigned int cmd,
->>>>> diff --git a/include/media/v4l2-ioctl.h b/include/media/v4l2-ioctl.h
->>>>> index c6ec87e88dfef9e6cfe1d1fb587c1600882fb14d..437b9f90714c62e0ba434ce47391ef64d88110aa 100644
->>>>> --- a/include/media/v4l2-ioctl.h
->>>>> +++ b/include/media/v4l2-ioctl.h
->>>>> @@ -687,6 +687,7 @@ int v4l2_compat_get_array_args(struct file *file, void *mbuf,
->>>>>  int v4l2_compat_put_array_args(struct file *file, void __user *user_ptr,
->>>>>                              void *mbuf, size_t array_size,
->>>>>                              unsigned int cmd, void *arg);
->>>>> +unsigned int video_translate_cmd(unsigned int cmd);
->>>>>
->>>>>  /**
->>>>>   * typedef v4l2_kioctl - Typedef used to pass an ioctl handler.
->>>>>
->>>>
->>>
->>>
->>
-> 
-> 
-
+Thanks,
+Mauro
