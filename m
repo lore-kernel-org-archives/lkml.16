@@ -1,41 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0CA2C3255;
-	Mon,  2 Jun 2025 07:58:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD6C54763;
+	Mon,  2 Jun 2025 08:00:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748851120; cv=none; b=pr/rOoYGAplaMJ+F6w+AIWo1MSXvwyjSYnd94a/2CfyAJ42Hh/USWrbrVMgQR2DOb6fMkVmU3lryajEOw8fVyJ/n4fTjuimtXFKeqluawzSpvFXYlBd7Q8z+YqRobStmdXWyTgDO79zYQFJpFAZ/q4iLlyap/IKh53a/gXHmjMg=
+	t=1748851243; cv=none; b=DNFWr9ehSuCtkKVoFTSHx2gpqX220a/O8fdIS5W1r2LIlFinWEKkG1WlXtyvnFzy6JCj0LwrAK46Nfzhg7VJzhNf8wEAeUEBonDchRZMQGaZUeV9aqKH4eep9UHYah4WBmhpHtuNiZJDWyfFJGcQmwrjNoiqDMyfaGyXJpNAOBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748851120; c=relaxed/simple;
-	bh=544lQiqDWQm+uX2Zups+rNvGYpg3RDJp/RoqS3mQbXc=;
+	s=arc-20240116; t=1748851243; c=relaxed/simple;
+	bh=37ye/eSIVajhgIxL7yVeCYHQXe4eGw/GyWJRdlDwrbw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Km2PC7F5cCvScNIbUKV8/nXbFt8TOEmgGFj1esskai5VivnHOgF2q14crZXw+PWEydFax3Wh8xPLirLQsunp6cPbkwsZR+1AM7G97Q6hyDubhyuxEioumu0+j/WN6C//OKGfEqEs52kFmzTTb4YGfsSNQl2DsDJNuXKUSAmJzAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YG7iR5UU; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=XQU5oe2BSQUG0Hhra5hPfVU6XyOkxdkPESxsIUm0Rf6xXENRNuggtaPPO16T2WewOSpdLuDH+SPzBgum4QlSq1SkFhFS2OCWL+CELjPaSMcF8yjKRmeuinsBEp8xN0FSt53ilxohIW63bYX3uimWDMY5PCqISTRFX4AfVVt51+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n49JKo/3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YG7iR5UU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09459C4CEEB;
-	Mon,  2 Jun 2025 07:58:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n49JKo/3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 686C4C4CEEB;
+	Mon,  2 Jun 2025 08:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748851119;
-	bh=544lQiqDWQm+uX2Zups+rNvGYpg3RDJp/RoqS3mQbXc=;
+	s=k20201202; t=1748851243;
+	bh=37ye/eSIVajhgIxL7yVeCYHQXe4eGw/GyWJRdlDwrbw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YG7iR5UUTf4WRRRbxYFk0IlK8l9Vbh57IGFkUQ69NdQC0dbuApSDMY7VQ1zAenXVo
-	 jQfUmja+Wrix6TMloeCtNEyLX+lADPCdCwYj7Uu61Rss/vLn/WeiaxneQgWZZOepdn
-	 6mEU6zWB9z8OA8NSkm6kiCZf4xkM8ii5pgUT61frSV0R0s7QQhzFfU39NB9NU9HO9I
-	 mMsoTELnmF9yX0yU5ew6M2ItuRbbjn6ZdDDfiXksUlFAYX2m75k8SeI1WSlFvE5QmI
-	 3nnKhZwMraeWYs5Ssf9iZSnA/tsOxv6PeIXg1KEZQ3emmzur9vWTmkdO+Htbjh1GBk
-	 m7vel9um4Imig==
-Date: Mon, 2 Jun 2025 09:58:37 +0200
+	b=n49JKo/3sLrucLQwr2GfSd1RZFVrBqEyhxjft52ouIAH1y/yU2ziEu67mQ7qeWPH3
+	 hP9QPmpdZl1dreknxp7xgimzfTcaP+nT3YIo6rU+Z/doHcKvjlvyzFBCTRxrO9YDQ9
+	 RqaOYxXLS7jtaLRKwejl2o5fQWikWUljy2aDEY4wTz4cvjBU5DwWRraYTIOTqGItMk
+	 DHhGIB6tQKbB8jVK1Njuu8SAJ83hk1O0meStJ6CPYhQPDSK2azUXziHptNYAd8X/hI
+	 MiVGRqsHBcfUJY1Lw2rWavpu3xIBLljrOcbwTAi+EKGv/e52teOeSQvgsiD2703DMI
+	 +lP0i39yPxAsA==
+Date: Mon, 2 Jun 2025 10:00:40 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>
-Cc: broonie@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, git@amd.com, amitrkcian2002@gmail.com
-Subject: Re: [PATCH v3] spi: dt-bindings: cdns,qspi-nor: Update
- minItems/maxItems of resets for Cadence OSPI controller
-Message-ID: <20250602-precious-hound-of-argument-de01be@kuoka>
-References: <20250527063438.504207-1-amit.kumar-mahapatra@amd.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Michael Hennerich <michael.hennerich@analog.com>, 
+	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, Trevor Gamblin <tgamblin@baylibre.com>, 
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] dt-bindings: pwm: adi,axi-pwmgen: fix clocks
+Message-ID: <20250602-glorious-horned-beluga-f396da@kuoka>
+References: <20250529-pwm-axi-pwmgen-add-external-clock-v3-0-5d8809a7da91@baylibre.com>
+ <20250529-pwm-axi-pwmgen-add-external-clock-v3-2-5d8809a7da91@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,45 +46,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250527063438.504207-1-amit.kumar-mahapatra@amd.com>
+In-Reply-To: <20250529-pwm-axi-pwmgen-add-external-clock-v3-2-5d8809a7da91@baylibre.com>
 
-On Tue, May 27, 2025 at 12:04:38PM GMT, Amit Kumar Mahapatra wrote:
-> The Cadence Octal SPI (OSPI) controller on AMD Versal SoCs requires only
-> one reset entry. To reflect this, the maxItems for "resets" and
-> "reset-names" has been set to 1 for AMD Versal SoCs.
+On Thu, May 29, 2025 at 11:53:19AM GMT, David Lechner wrote:
+> Fix a shortcoming in the bindings that doesn't allow for a separate
+> external clock.
 > 
-> Acked-by: Mark Brown <broonie@kernel.org>
-> Signed-off-by: Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>
+> The AXI PWMGEN IP block has a compile option ASYNC_CLK_EN that allows
+> the use of an external clock for the PWM output separate from the AXI
+> clock that runs the peripheral.
+> 
+> This was missed in the original bindings and so users were writing dts
+> files where the one and only clock specified would be the external
+> clock, if there was one, incorrectly missing the separate AXI clock.
+> 
+> The correct bindings are that the AXI clock is always required and the
+> external clock is optional (must be given only when HDL compile option
+> ASYNC_CLK_EN=1).
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 1edf2c2a2841 ("dt-bindings: pwm: Add AXI PWM generator")
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
 > ---
-> BRANCH: mtd/next
-> 
-> Changes in v3:
->  - Updates to 'resets' and 'reset-names' removed for non-Versal platforms.
->  - Updated patch description.
->  - Added Mark's Acked-by tag.
-> 
-> Changes in v2:
->  - Removed "resets" & "reset-names" from required properties.
->  - To address review comments, removed "maxItems" from "reset-names".
->  ---
->  Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-> index d48ecd6cd5ad..81e8342db4bc 100644
-> --- a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-> +++ b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-> @@ -17,6 +17,13 @@ allOf:
->            contains:
->              const: xlnx,versal-ospi-1.0
->      then:
-> +      properties:
-> +        resets:
-> +          maxItems: 1
+>  Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
 
-And now this is not synced with top-level properties. They say
-minItems:2. I never asked to drop update of top-level - read carefully
-v1 feedback.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
