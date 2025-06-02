@@ -1,122 +1,180 @@
-Received: from mx1.emlix.com (mx1.emlix.com [178.63.209.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3F26150980
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 05:09:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.209.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8FA05695;
+	Mon,  2 Jun 2025 05:10:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748840962; cv=none; b=EgejB+2Ts7P++KY4TUmg3oBZ4POdDg6FbkWuz5HoK4pMc4QBHi7csvp4cvypxshC1ZLkhAOrp6wybxYIC96UjTyzcB4sykTYpBuevkTbY114jtgY8WqA4iLnBWm6UAPVEcuI6+5sotmT9/Vn9b/XDYhcYlzQMnTs19aSlr7v7gc=
+	t=1748841054; cv=none; b=oOZmZMfMAg5JgnzWIYgpA6c9L8KmPl9FeQjY9JlX33xLzqp0biGtsYKGvtNipHNpmPEnfLrDZBE33RWcHp1+w/nAh/gcpKFnHkifTCQAeLXvfurPLqHfjyf16eniEocoi8+LbRs4AXKtXxH0rFHo0AKYciaFZHPLbBwXqXYCh0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748840962; c=relaxed/simple;
-	bh=lMZ78FPtFBZxV+m67TF6REJkpUacIal4PFWF+mQQGPU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PTYYAajtaZe689Mxiws86iPEp1A7jiwDXC4VAVbBJ1uR0jbvMkFfNN5gvwvJTGrzPjViRIsj6YurCqBO2K5D9LOG8uDJbhudUz2MrX6vrhVcpkYT3ypI5DhTHhxcITglO1XBvF8rn8eEhgxw+sgrr7atruglqbLgH5LaTd5CRSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emlix.com; spf=pass smtp.mailfrom=emlix.com; arc=none smtp.client-ip=178.63.209.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emlix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emlix.com
-Received: from mailer.emlix.com (p5098be52.dip0.t-ipconnect.de [80.152.190.82])
-	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.emlix.com (Postfix) with ESMTPS id 589F65F8AF;
-	Mon,  2 Jun 2025 07:09:12 +0200 (CEST)
-From: Rolf Eike Beer <eb@emlix.com>
-To: Joerg Roedel <joro@8bytes.org>, Lu Baolu <baolu.lu@linux.intel.com>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
- iommu@lists.linux.dev, Arnd Bergmann <arnd@kernel.org>
-Subject: Re: [git pull] IOMMU Updates for Linux v6.16
-Date: Mon, 02 Jun 2025 07:09:06 +0200
-Message-ID: <2784838.mvXUDI8C0e@devpool92.emlix.com>
-Organization: emlix GmbH
-In-Reply-To:
- <CAHk-=wh4qRwm7AQ8sBmQj7qECzgAhj4r73RtCDfmHo5SdcN0Jw@mail.gmail.com>
-References:
- <aDmght5YpHmJ6qZ2@8bytes.org>
- <CAHk-=wguPX5w3UVmQpOk+v1ahJwRzRNXKHUJB92cwJfNpMU4ZA@mail.gmail.com>
- <CAHk-=wh4qRwm7AQ8sBmQj7qECzgAhj4r73RtCDfmHo5SdcN0Jw@mail.gmail.com>
+	s=arc-20240116; t=1748841054; c=relaxed/simple;
+	bh=fxDosPY8Wny75hKwXSp7HiD2ycgAdMQx1mnEg0e7Xco=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=LAA9xatP8Ppwplogz1Sio1Skf91eZUwYmzznW2kP41DZJiyzIGP2fBLDA/yL7xcHZNW1Kz0uKzXC9ZG4a1Kx0dFUqfpwUog9wH5/Ymb+noc/oziAs1qKiyEaLAkstCv14A416c2r7Nn20AxGQEQbJEhanQuQ0jbZH7Qf4UB3eks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PvWliMUS; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PvWliMUS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748841052; x=1780377052;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=fxDosPY8Wny75hKwXSp7HiD2ycgAdMQx1mnEg0e7Xco=;
+  b=PvWliMUSA3lGVmY1/4f8QFrjQxu963ILr4lXLPS+GJHjsYnqXyC40D7y
+   omPrY0tnHcBDQOiyJgcOmpfNRrT0csNWjoxf2ki4ro8AutWv2N9bUbp5O
+   iPk7PJ2EXk8khvXDjVpV+0gay54szolJDR90Fq3Iz70bXHVmACseRXDi/
+   mfmohLDDYXpHZZDKduAGQs37PbUuHjxlNBBWSxwQHchK2o0GLUKeWjrZO
+   WKjFM4pt487+KJoWxBe7EyaOjs9beoBhYKEoh9u1quK+BJgcdecOAtsXG
+   navSoSb+ItaM3qFc2bgosWsSsiaeAsoQCt4xX4BbDEEW1G3UMQXHxnxIs
+   A==;
+X-CSE-ConnectionGUID: FX9W3Kn9Q9mc0zL4t69Akw==
+X-CSE-MsgGUID: BkCCyqZiQOmUZbXFAq2vYQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11450"; a="68396905"
+X-IronPort-AV: E=Sophos;i="6.16,202,1744095600"; 
+   d="scan'208";a="68396905"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2025 22:10:51 -0700
+X-CSE-ConnectionGUID: cCOHNwErSH+NtylyeCcbaQ==
+X-CSE-MsgGUID: b99YSdCfQQO4vQ0vfIUCVQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,202,1744095600"; 
+   d="scan'208";a="181622455"
+Received: from vpanait-mobl.ger.corp.intel.com (HELO localhost) ([10.245.245.134])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2025 22:10:46 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 2 Jun 2025 08:10:42 +0300 (EEST)
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+cc: Dan Williams <dan.j.williams@intel.com>, Lukas Wunner <lukas@wunner.de>, 
+    Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, 
+    Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+    Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+    "H. Peter Anvin" <hpa@zytor.com>, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/1] PCI: Add Extended Tag + MRRS quirk for Xeon 6
+In-Reply-To: <xwcoamcgyprdiru3z3qyamqxjmolis23vps4axzkpesgjrag4p@wnp63ospijyw>
+Message-ID: <45809733-1e02-0109-a929-3cdd6c960646@linux.intel.com>
+References: <20250422130207.3124-1-ilpo.jarvinen@linux.intel.com> <xwcoamcgyprdiru3z3qyamqxjmolis23vps4axzkpesgjrag4p@wnp63ospijyw>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart12677247.O9o76ZdvQC";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
+Content-Type: multipart/mixed; boundary="8323328-1642513350-1748841042=:1085"
 
---nextPart12677247.O9o76ZdvQC
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Rolf Eike Beer <eb@emlix.com>
-Subject: Re: [git pull] IOMMU Updates for Linux v6.16
-Date: Mon, 02 Jun 2025 07:09:06 +0200
-Message-ID: <2784838.mvXUDI8C0e@devpool92.emlix.com>
-Organization: emlix GmbH
-MIME-Version: 1.0
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On Samstag, 31. Mai 2025 07:20:02 Mitteleurop=C3=A4ische Sommerzeit Linus T=
-orvalds=20
-wrote:
-> On Fri, 30 May 2025 at 21:57, Linus Torvalds
->=20
-> <torvalds@linux-foundation.org> wrote:
-> > Bah. This seems very broken.
-> >=20
-> > I haven't bisected it, but my arm64 build - which I sadly didn't end
-> >=20
-> > up doing earlier today - breaks with modpost errors:
-> >    ERROR: modpost: "arm_smmu_make_cdtable_ste"
-> >=20
-> > [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
->=20
-> Ok, bisected to commit e436576b0231 ("iommu: make inclusion of
-> arm/arm-smmu-v3 directory conditional").
->=20
-> Which explains why I didn't see any obvious code changes that would
-> explain that.
->=20
-> This is with a plain "make allmodconfig" build, and I think the issue
-> is that CONFIG_ARM_SMMU_V3 is 'm', not 'y', and the change didn't take
-> that modular case into account at all.
->=20
-> I'll revert it, but I'll wait until tomorrow to see if somebody has an
-> alternative fix.
+--8323328-1642513350-1748841042=:1085
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Sorry for the mess. Arnd Bergmann already has a fix sent, looks like it got=
+On Sun, 1 Jun 2025, Manivannan Sadhasivam wrote:
+
+> On Tue, Apr 22, 2025 at 04:02:07PM +0300, Ilpo J=C3=A4rvinen wrote:
+> > When bifurcated to x2, Xeon 6 Root Port performance is sensitive to the
+> > configuration of Extended Tags, Max Read Request Size (MRRS), and 10-Bi=
+t
+> > Tag Requester (note: there is currently no 10-Bit Tag support in the
+> > kernel). While those can be configured to the recommended values by FW,
+> > kernel may decide to overwrite the initial values.
+> >=20
+> > Unfortunately, there is no mechanism for FW to indicate OS which parts
+> > of PCIe configuration should not be altered. Thus, the only option is
+> > to add such logic into the kernel as quirks.
+> >=20
+> > There is a pre-existing quirk flag to disable Extended Tags. Depending
+> > on CONFIG_PCIE_BUS_* setting, MRRS may be overwritten by what the
+> > kernel thinks is the best for performance (the largest supported
+> > value), resulting in performance degradation instead with these Root
+> > Ports. (There would have been a pre-existing quirk to disallow
+> > increasing MRRS but it is not identical to rejecting >128B MRRS.)
+> >=20
+> > Add a quirk that disallows enabling Extended Tags and setting MRRS
+> > larger than 128B for devices under Xeon 6 Root Ports if the Root Port i=
+s
+> > bifurcated to x2. Reject >128B MRRS only when it is going to be written
+> > by the kernel (this assumes FW configured a good initial value for MRRS
+> > in case the kernel is not touching MRRS at all).
+> >=20
+> > It was first attempted to always write MRRS when the quirk is needed
+> > (always overwrite the initial value). That turned out to be quite
+> > invasive change, however, given the complexity of the initial setup
+> > callchain and various stages returning early when they decide no change=
+s
+> > are necessary, requiring override each. As such, the initial value for
+> > MRRS is now left into the hands of FW.
+> >=20
+> > Link: https://cdrdv2.intel.com/v1/dl/getContent/837176
+> > Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> > ---
+> >=20
+> > v2:
+> > - Explain in changelog why FW cannot solve this on its own
+> > - Moved the quirk under arch/x86/pci/
+> > - Don't NULL check value from pci_find_host_bridge()
+> > - Added comment above the quirk about the performance degradation
+> > - Removed all setup chain 128B quirk overrides expect for MRRS write
+> >   itself (assumes a sane initial value is set by FW)
+> >=20
+> >  arch/x86/pci/fixup.c | 30 ++++++++++++++++++++++++++++++
+> >  drivers/pci/pci.c    | 15 ++++++++-------
+> >  include/linux/pci.h  |  1 +
+> >  3 files changed, 39 insertions(+), 7 deletions(-)
+> >=20
+> > diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
+> > index efefeb82ab61..aa9617bc4b55 100644
+> > --- a/arch/x86/pci/fixup.c
+> > +++ b/arch/x86/pci/fixup.c
+> > @@ -294,6 +294,36 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,=09PCI=
+_DEVICE_ID_INTEL_MCH_PB1,=09pcie_r
+> >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,=09PCI_DEVICE_ID_INTEL_MCH=
+_PC,=09pcie_rootport_aspm_quirk);
+> >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,=09PCI_DEVICE_ID_INTEL_MCH=
+_PC1,=09pcie_rootport_aspm_quirk);
+> > =20
+> > +/*
+> > + * PCIe devices underneath Xeon6 PCIe Root Port bifurcated to 2x have =
+slower
+> > + * performance with Extended Tags and MRRS > 128B. Workaround the perf=
+ormance
+> > + * problems by disabling Extended Tags and limiting MRRS to 128B.
+> > + *
+> > + * https://cdrdv2.intel.com/v1/dl/getContent/837176
+> > + */
+> > +static void quirk_pcie2x_no_tags_no_mrrs(struct pci_dev *pdev)
+> > +{
+> > +=09struct pci_host_bridge *bridge =3D pci_find_host_bridge(pdev->bus);
+> > +=09u32 linkcap;
+> > +
+> > +=09pcie_capability_read_dword(pdev, PCI_EXP_LNKCAP, &linkcap);
+> > +=09if (FIELD_GET(PCI_EXP_LNKCAP_MLW, linkcap) !=3D 0x2)
+> > +=09=09return;
+> > +
+> > +=09bridge->no_ext_tags =3D 1;
+> > +=09bridge->only_128b_mrrs =3D 1;
+>=20
+> My 2 cents here. Wouldn't it work if you hardcode MRRS to 128 in PCI_EXP_=
+DEVCTL
+> here and then set pci_host_bridge::no_inc_mrrs to 1? This would avoid
+> introducing an extra flag and also serve the same purpose.
+
+Hi Mani,
+
+Thanks for the suggestion but it won't work because this is the Root Port.=
 =20
-stuck somewhere.
+The devices underneath it need this setting so we cannot set them to 128B=
+=20
+reliable here (is there anything that guarantees those devices have been=20
+enumerated at this point?).
 
-Regards,
+I've v3 already prepared which uses the enable device hook as suggested by=
+=20
+Lukas. I'll send it soon.
 
-Eike
-=2D-=20
-Rolf Eike Beer
+--=20
+ i.
 
-emlix GmbH
-Headquarters: Berliner Str. 12, 37073 G=C3=B6ttingen, Germany
-Phone +49 (0)551 30664-0, e-mail info@emlix.com
-District Court of G=C3=B6ttingen, Registry Number HR B 3160
-Managing Directors: Heike Jordan, Dr. Uwe Kracke
-VAT ID No. DE 205 198 055
-Office Berlin: Panoramastr. 1, 10178 Berlin, Germany
-Office Bonn: Bachstr. 6, 53115 Bonn, Germany
-http://www.emlix.com
-
-emlix - your embedded Linux partner
---nextPart12677247.O9o76ZdvQC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iLMEAAEIAB0WIQQ/Uctzh31xzAxFCLur5FH7Xu2t/AUCaD0x8gAKCRCr5FH7Xu2t
-/KfyA/wPOfD5Mbr32oD0if+5JoaXI68IZAz3HHxDbBraW8JhmasIP98eX0M853IE
-YWn6VsR+eX0zEQX0JBmRR1iZzHh4FWC37ZkEWPy7LiZRtK43OnIpTYNshD42vgPE
-vpmMVVBOWdnsQJfZ7xrPB/zvNcMDmsbThbHIRgPiGWaUu2c9Qw==
-=NtdT
------END PGP SIGNATURE-----
-
---nextPart12677247.O9o76ZdvQC--
-
-
-
+--8323328-1642513350-1748841042=:1085--
