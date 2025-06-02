@@ -1,105 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4657F17BBF;
-	Mon,  2 Jun 2025 15:38:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD6F20E026;
+	Mon,  2 Jun 2025 15:38:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748878725; cv=none; b=GcnoS5J1FeGQ09YOBAHhD7pHF6+XwQU/5GyGnA49CktESCS0W/UVQLPczayE64D4T9KF0Md4wSEuFxG6UCSKrbebr2O7uoGz5xFqXZ1AVMurXW95C6AinIOSoD+RiTfsOhOYes2I+3EzXPm6N9giY8c94Ce0quXZFikjApxKeEY=
+	t=1748878737; cv=none; b=uTnpHGdEN4fVNESbkW6JET4K7V8aR8EEswOzjx9BAnTQay8ZV3xcoWQNsnF9ALdcxD3vCFgTCJSqjgyzJJVvk/f+KmbZHVBMEh2jAV6YHag0Us6S138vF5OO/u0AFX7uHOhpSLq4QbuO/QkLNMooLtWgHtNg3xJOZ1fVrxP0tMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748878725; c=relaxed/simple;
-	bh=IJDZ1hQCAOyA73sAOdBWo1+XIgrBqdEcKZf5fgDiopo=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BK9J739M3d/107D33nu7wwM+Z0kSUQK6pcL43Lu6KhHfvBZp1Y4me8k1yDRMDt2ziuhXWzHny2OmEf+daAVpKB7CtbQR41MHVdBYbvC5RWznnU8pILrhtvuFzyHPjXMV191/hSKuBMEWnKWJlr7xX91jV1tkWcm05MpC4Qenp+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d0faTVcy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748878737; c=relaxed/simple;
+	bh=X+E1oAHuMGqBToj3jAeeM8hGE/nfxaFldIcCYaSnIys=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tPc4fEMNjxQd9XxQOWQU9qbSizii2voLb48iBigGn6eqMycchLy9cY+sLwp3hPa0awPqCl5/q6Z3uZRwsbFLNLtOkefMjZh1SaedjAJtGtEL53ukGI3E/w/H4ZJGeDApAf+Z2NLW07xAIwrCFRM4ZaRyWsrsm7CeNKbB3PP4m5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DzKY6x6z; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d0faTVcy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7FA0C4CEEB;
-	Mon,  2 Jun 2025 15:38:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748878723;
-	bh=IJDZ1hQCAOyA73sAOdBWo1+XIgrBqdEcKZf5fgDiopo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=d0faTVcyXEz4vhADLUaC8q8EBcHEKbkJYBvXw+PQPFVOKkkes3fH44eIk+v7sQ1v5
-	 zs0hTpfSD0eslB8w2jU5jZeR0bFsOHghqd0rhcyoZziF+T2mH4vejqwks8pKW+1FNu
-	 f4gHIRcpYrgQFme3Tk/3dFZ//1kCZILHRiJF4kuDzcJ3bflodWQihx7GxwMZg7Ry/f
-	 TWOYBDkSIVHOs4KNi91Bopy0Zw9aKSY1mF4GTRR9vHrVDfyl0PqT/a8Ghz9RQcG1xz
-	 Qd5BlQDWb6c8Q39xnO7ruR9YcY3oO9GaZCYxSWzz+keJyZkvl9Gr8FRYvN1Vd1Ms1t
-	 7iV0dXDl/kEQg==
-Received: from [149.88.19.236] (helo=lobster-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uM7FI-002WrR-Vh;
-	Mon, 02 Jun 2025 16:38:41 +0100
-Date: Mon, 02 Jun 2025 16:38:38 +0100
-Message-ID: <87msaqdugx.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Itaru Kitayama <itaru.kitayama@linux.dev>
-Cc: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kselftest@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DzKY6x6z"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-311da0bef4aso4980239a91.3;
+        Mon, 02 Jun 2025 08:38:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748878734; x=1749483534; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=K7WwE2szzySMaSbvnDjlIKqzFYgvBzLvgLKYcMgSkS4=;
+        b=DzKY6x6zXNPgPxGjayTKSa0Fp4jIXZm553BmIcV3zlo74Vlj7KO6hV9msv/98TyHBa
+         l05K3dpncCb+8vBvOCwIFQcgUeiH2s0ho3rGkIYjoVq0Yt77XuEy0k3YD1Djwpgr4Nkd
+         3D5ZMiOGWGGrrJkEnJaj7AQFElC9wuYd77dnUHkzC3UzfmBeVtwI+ARf/Q0etvgeMLWc
+         zg9/re+ko5n0xrAR1RkfARfAqhVLrjvp3VlxXoMmt8GloK+tMLtlsxGw+PD9rJKISmKA
+         PQFoCnbFuPuXa0D1naSVqUNffMAP//vtFFWU7kNzO3ucdHWmUf/6vILATJrvHQU65+8V
+         KS+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748878734; x=1749483534;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K7WwE2szzySMaSbvnDjlIKqzFYgvBzLvgLKYcMgSkS4=;
+        b=ZCRSLPbezVuInY5U6zww14TxA5uB1iHttgCvfV0hKX1UXb+cQxWgxQCifu2v56IDfN
+         btILF1QQwqFvhbVr6hk9mNP/KG0Rv18BoerU3gy2Bzehm43+Qj7UI+kv+6KEzjrP7ywx
+         8t11BHMwBSMSSilVFxI9KmXi89WKDD+lTzKCyY3dupNBFUN01+IcxPgYwkli2Hyy3Ggq
+         e1HkaD04Q5HGGjdzv0HSTVvxOmoyvzKum/0vDyuSH3osmXA3Iv5F8Zhiwclwcn8L+cBp
+         i5Ayge1rdpIV7pxXBamVHnAgOPeJMteya/MKyrcjKnPtPg/i0WHFt6r9Pe82CtzL/nGf
+         +ywA==
+X-Forwarded-Encrypted: i=1; AJvYcCVOP0qmQZvJ1AjI1weE9JsfzD59d8+1EhwrUs0JCEFUsB4pZtq6jrDn2AKlpV7d8k2GoKimqEbadYCQJScl+0U=@vger.kernel.org, AJvYcCWfJX4kw3xrH4/bJGunBQ/Ipmn70YIE3yFJnt/KJ/DgtqXMwEU5LBQPHIq5MPFScipxUmaQ8TR317H79YFo@vger.kernel.org
+X-Gm-Message-State: AOJu0YzO+6spbGDA09Uq1qB5u1nqEeMGBoik25igqQ0Z4hxu0S/uMMpF
+	bdxBgVOlBWyEU+kEMXCVHnrh0k5hpGvx47/2loERFTxzuJlZtujsu+xn
+X-Gm-Gg: ASbGncvMr0yH1eCx2ixawWzMlNQxx6WxH+mnRePc+77TK5cxL4cvOdDOB7yq/RWsqe+
+	2brWqrKwRFTzmOtv0S7hiwP+5AD8pnTJE0+fmIcCztG4WA0EPsqA6WR5Cwub2LJhkTMnBmMWnMx
+	Zj0qqH55dr+0v4ZsYpf19V5caiYpMeFr/WqcBxC5r9CKbWEjhhrIDdtYA/vyUolyBQDvtMNR/sv
+	do80fwfGsxwoA4v0x6zUvHzhLAqTS/H1zXyHBwcIQZtrQrn+84FYo6mjUwgrY0KGFTb80RsGjww
+	AwFr+Q8yMqRB0a9xzY9vc9W3FHEkl4ASEnrmp2fJ2CjSg/dbDRBPL+k/gbfQFhysN5pViaGKyEC
+	Ko2wCga5eDVTQLlKf8J3TCASg+6I7uEoKft1Cl6CLgizeLQsSumw=
+X-Google-Smtp-Source: AGHT+IFgM04J1ixGhBjY/yBdwy92JEZIfIDZO9+iEzcpVQT27xSxfUAe21gWN7DqRcoN3poq5CvmHA==
+X-Received: by 2002:a17:90b:268a:b0:312:db8:dbd1 with SMTP id 98e67ed59e1d1-3127c6bcd95mr12754409a91.5.1748878734517;
+        Mon, 02 Jun 2025 08:38:54 -0700 (PDT)
+Received: from va11o.lan (n058152119137.netvigator.com. [58.152.119.137])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2eceb9d1eesm4980157a12.54.2025.06.02.08.38.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Jun 2025 08:38:54 -0700 (PDT)
+From: Junhui Pei <paradoxskin233@gmail.com>
+To: kees@kernel.org
+Cc: elver@google.com,
+	andreyknvl@gmail.com,
+	ryabinin.a.a@gmail.com,
+	akpm@linux-foundation.org,
+	kasan-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	oliver.upton@linux.dev,
-	joey.gouly@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	seanjc@google.com,
-	darren@os.amperecomputing.com
-Subject: Re: [RFC PATCH v2 8/9] KVM: selftests: arm64: Extend kvm_page_table_test to run guest code in vEL2
-In-Reply-To: <aD0+1+aVBrPEeYUl@vm4>
-References: <20250512105251.577874-1-gankulkarni@os.amperecomputing.com>
-	<20250512105251.577874-9-gankulkarni@os.amperecomputing.com>
-	<aD0+1+aVBrPEeYUl@vm4>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	Junhui Pei <paradoxskin233@gmail.com>
+Subject: [PATCH] ubsan: Fix incorrect hand-side used in handle
+Date: Mon,  2 Jun 2025 23:38:41 +0800
+Message-ID: <20250602153841.62935-1-paradoxskin233@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 149.88.19.236
-X-SA-Exim-Rcpt-To: itaru.kitayama@linux.dev, gankulkarni@os.amperecomputing.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, seanjc@google.com, darren@os.amperecomputing.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, 02 Jun 2025 07:04:07 +0100,
-Itaru Kitayama <itaru.kitayama@linux.dev> wrote:
-> 
-> On Mon, May 12, 2025 at 03:52:50AM -0700, Ganapatrao Kulkarni wrote:
-> > Adding code to run guest_code in vEL2.
-> > NV is enabled using command line argument and it is disabled by default.
-> > 
-> > NV is only enabled on ARM64, for other architectures the test will exit
-> > with an ASSERT, if tried to run with NV enabled.
-> > 
-> 
-> I'm seeing this in QEMU TCG mode, does this mean the limitation of the
-> emulation?
-> 
-> $ sudo /mnt/projects/linux/tools/testing/selftests/kvm/arm64/page_fault_test -m 3 -s anonymous
-> Random seed: 0x6b8b4567
-> ==== Test Assertion Failure ====
->   arm64/page_fault_test.c:632: test->expected_events.uffd_faults == events.uffd_faults
->   pid=769 tid=769 errno=9 - Bad file descriptor
->      1	0x000000000040325b: check_event_counts at page_fault_test.c:632
->      2	 (inlined by) run_test at page_fault_test.c:739
->      3	0x0000000000403cbf: for_each_guest_mode at guest_modes.c:96
->      4	0x0000000000401cfb: for_each_test_and_guest_mode at page_fault_test.c:1107
->      5	 (inlined by) main at page_fault_test.c:1133
->      6	0x0000ffff848122db: ?? ??:0
->      7	0x0000ffff848123bb: ?? ??:0
->      8	0x0000000000401def: _start at ??:?
->   0x2 != 0x1 (test->expected_events.uffd_faults != events.uffd_faults)
+__ubsan_handle_divrem_overflow() incorrectly uses the RHS to report.
+It always reports the same log: division of -1 by -1. But it should
+report division of LHS by -1.
 
-Unlikely. This could be a bug in the test, in KVM, or most likely
-both.  You will have to investigate, I'm afraid.
+Signed-off-by: Junhui Pei <paradoxskin233@gmail.com>
+---
+ lib/ubsan.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-	M.
-
+diff --git a/lib/ubsan.c b/lib/ubsan.c
+index a6ca235dd714..456e3dd8f4ea 100644
+--- a/lib/ubsan.c
++++ b/lib/ubsan.c
+@@ -333,18 +333,18 @@ EXPORT_SYMBOL(__ubsan_handle_implicit_conversion);
+ void __ubsan_handle_divrem_overflow(void *_data, void *lhs, void *rhs)
+ {
+ 	struct overflow_data *data = _data;
+-	char rhs_val_str[VALUE_LENGTH];
++	char lhs_val_str[VALUE_LENGTH];
+ 
+ 	if (suppress_report(&data->location))
+ 		return;
+ 
+ 	ubsan_prologue(&data->location, "division-overflow");
+ 
+-	val_to_string(rhs_val_str, sizeof(rhs_val_str), data->type, rhs);
++	val_to_string(lhs_val_str, sizeof(lhs_val_str), data->type, lhs);
+ 
+ 	if (type_is_signed(data->type) && get_signed_val(data->type, rhs) == -1)
+ 		pr_err("division of %s by -1 cannot be represented in type %s\n",
+-			rhs_val_str, data->type->type_name);
++			lhs_val_str, data->type->type_name);
+ 	else
+ 		pr_err("division by zero\n");
+ 
 -- 
-Jazz isn't dead. It just smells funny.
+2.49.0
+
