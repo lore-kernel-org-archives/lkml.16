@@ -1,197 +1,135 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4271E17A31F
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 08:38:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6851F12F399
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 08:45:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748853540; cv=none; b=SekhdhqFC3G9agO4U0N2YOuFyTKDdw/dNtvF4fcpD7DmNlFj47W2UKdWaNiKWxu7oFUFrTvUOSCn/8s0RGvN1GsVpqWBtQIvgdPb5uGGz8s/G9BZJ4U9hyvgjRHCJbqYaBeODbCRbl9qfxEjDJU+oFuZZ0A4Di3NYM3o46+tBY4=
+	t=1748853922; cv=none; b=qcbuBBB19poQfWhTZZ87T7ctWSrE4mTpwQ/oY6kezmNpywG3hym0UOmo+rH0mrxYYQeFkGiii5lzDFU64kNsN/unTMMKP6kaYUs0BHXodt2B4KtMy0vszicGDg+jnG354zGTZ4JmoPeE9+Jy0DiOPuIw9TqW5BUv+wtcp9sP4fI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748853540; c=relaxed/simple;
-	bh=M4dMnLIz1HIUssVepnpQnYX6YjNDveUp4I6hVplMyQw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CBhQqbkMu1bxhphl3VDEJgZ+51Rdbsr8nW0+hpbYFFG510qkWcwG9KQiIteam5rmmPHR5MVBtF0FIMYCuFKY0VzU6fxi1nzSPWn9npU8jk3/kNVo7Ue1uDPxQAYhf142RLXKJe3EzgiPp32VAMpCi0CVn2eCl9uJqbWYWOGIF8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ef0z6fqr; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1748853922; c=relaxed/simple;
+	bh=FnmJdnnfQEOeXtBs17TTqlpvE/Z6l2P4aZY4NkM4qxc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ZyBgY4qjxHJrz7iASO8NImPEBgRTPhUXKSdNAtQxRNLJmtFAnfFxSLQFItPaaQXsNgaKeBWAF3lK8AZ7bsXJa49JVRg81rbCt1fc6fUpVuzSZvUIJuInDXhT12HtCSXxi4/pcxREVF/0lh9k+/usB4dKRsbU+Bac0pmz1VaiyjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aIOjdn0/; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ef0z6fqr"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5532e0ad84aso5047237e87.2
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 01:38:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aIOjdn0/"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-451ac1b43c4so8762825e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 01:45:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1748853535; x=1749458335; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3D1MqOk55yyF+QvJZLd9AC11tpsnZTeUoMSqzJses+Q=;
-        b=Ef0z6fqr+hQl3/IcWA+QVqn30lRHmYDDQQBC67VDehV6EK6xfmkd3zekRNx3tH3lHw
-         ilevfb9yVZKoBf0TRiS3dmMx0qCC9c8ndgzjB7bFmrg5XyelX3tcfV3jNksM1Larz6H+
-         8RXRzCSFZLVOOFkQVTGDiFjlhS68/v+nw1L/w=
+        d=google.com; s=20230601; t=1748853919; x=1749458719; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6VThKlttpzakaK+gyheH3wNtNAtAxPTgkZTge5fKamo=;
+        b=aIOjdn0/uAGIvgue2rZNxXVyyYtn34qf2+wdYw83h/wiSyICBU6FpJAx7yeu2Otmy7
+         PDdjE99CIEyrE3tCK+4Tp9moDWlygpdD/3Y5HLkH3d4m+pbsy2I47tNLMwXethtqAqkD
+         wbLcujv5avzsXJLY8dE8DEmTwM5jHSsRDWdWBz68Bb0OMSd7DsyBfHGAq5sUoeibiva5
+         aZk+wrdp55qS5xqrAfnXJ9ayEHvfuSCpIWfxUZlmwN/loCWl8ZOQ86hz7QuXJEQ60Y60
+         xo7B1QqcLAL2gWI2dNl+Gj5F8SlZSMwVMy7yXqO7r4+9fnBXLVEM5mSPfTmxexxD1LVa
+         2Lew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748853535; x=1749458335;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3D1MqOk55yyF+QvJZLd9AC11tpsnZTeUoMSqzJses+Q=;
-        b=o/Q3t1YYZfqp/UH4WgHa7IhIzVqH/CTNLqhvKdYWFrRu27SZtKDEOwPHxeAA/C+5iS
-         lUlqhge5WHs+2143QQnVsW0gDjA7VZWJn/hkG2T5OLNubYofPhvPJrMdH9fW5v1FgT8+
-         DtbxMs9KSXlL8jP1mMI+jMUdrfaBwsdsQmhbJvY6KqqzMoYqCKAAC6aTbZ9N+lOIL7Um
-         kdGZF0L/DzCSa38ITK+G7TI58SA8e2rGCb5ytFvz+804oLiM8q5/Vpf9q7lWSE9v5OKs
-         Fh1kfWdEUbx6cQjMtRsP0+iqisqy4nNF8hw9jDJLWadBiN63X+WSjCA4xBsUi7jKzosN
-         mKEg==
-X-Forwarded-Encrypted: i=1; AJvYcCWtaOK6zc6oJU/puekYPrlIa3KxM7dhCCyDwWpQngguiqQaCxnCLKHxLTI4pjdlieLcFgaWZar8Zx/9xGg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOmV0V7AncFlrMyuLoKIScRYCu6ymoOvTRwcLCnzD2/7nDM9A3
-	QXaNcuBArardcJY+a46jirbO6uJeFISUHnXBQ0f1mf34fKJFhY7FdJIj9TUaXl525NndjoSH8OP
-	oWhTLrA==
-X-Gm-Gg: ASbGncvK2Ikk+RPJ5jRLBOHHh3bpmEm9DNHCduStdWcqvBG652MP2zU9Hw7bm3BEvHg
-	Czjb249Rdmo9w9d7gzy4IMCl1a5nXiCZ/qLfAqdOp1/YS0yY3PI7PKcGp7wwq1rvTSLyxM8cW0e
-	kDiCqCjLaqQ9UzAUPCLuPL+RIGnLNceZibwDxDJGq6sd+4kah9jtnLa2V4U1daxol+EUX2b7aoo
-	as7qR84xQaiTvdSarvDQX5xLK0+yXKaab8brMqqDZUWhdz8xyJLvF9qwU7XQNYY1e+NS34TJY7K
-	DXzpBWL6Tu7Fnicf1vTObL0rtzBn90SoSkAaJ7+Easb6cOeomKqDW23s2F0/HCXItbdITP2T7Wn
-	RpAgDNz5Qa770kw==
-X-Google-Smtp-Source: AGHT+IEL+zH2EvMNOHitajQYC9SNu0XOyOXE4V9J4DdMHrWj5yA6J/9gizGRAhuu/tOcr9SoosATJA==
-X-Received: by 2002:a05:6512:39c3:b0:553:3770:c907 with SMTP id 2adb3069b0e04-55342f51a5amr1874016e87.10.1748853535169;
-        Mon, 02 Jun 2025 01:38:55 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5533787d48bsm1512048e87.22.2025.06.02.01.38.54
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Jun 2025 01:38:54 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-55324062ea8so5477014e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 01:38:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWHdzfcu1Pbr1aZWlUF4JFxe3Q9oGpYPskDrY46i9qkYX2jV7fokfZoLzpUjq+Xs1MEUbCah056JmCym2A=@vger.kernel.org
-X-Received: by 2002:a05:6512:244e:b0:553:2668:6f47 with SMTP id
- 2adb3069b0e04-55342f931b5mr1417841e87.31.1748853533656; Mon, 02 Jun 2025
- 01:38:53 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748853919; x=1749458719;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6VThKlttpzakaK+gyheH3wNtNAtAxPTgkZTge5fKamo=;
+        b=MziYpZljXqW2o4354y014ANcReeUU4VPD7GN23SM9ikO3zCvW3h9ZWr2lA7RSLq8uJ
+         02fHvxiL8+y6Nh9QZajXaHXr7KTF0WnxbU5BtOLVng1nHyEN3NoHnpFNKPzukz/JmfD+
+         nV8KbXVkqmhIbb7kaYS+v6QFwXkGYgHlbgvP20Wyr6MHL/k4H42tz0HOVCaWsA/tsVaH
+         wmyCJxpQF1Upcx3uSFaE907tSTljyK0haurTayXRiFP7f7e3ZCE0ZiZy2jFr/MZW56Ou
+         TnA9dqc7ABs919LBGBO0YigvduBw/pN9GJF7kIvZrNmn+Mcz//cZFoEfpjbuDEmvPy5G
+         ukRw==
+X-Forwarded-Encrypted: i=1; AJvYcCXt+wxc1PzVwETfVRn3Dz2OwAhYNUk+QAkOW9sdrYT/AyXCUiZtBulVm6ML5A57c6qA4GKB2s9bhHraQao=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLMdXj7sZwFE9kekV7v0zhtjqa6bAD8TjEsqEgFe0fvN+F42AG
+	P5Q5+4etKCG4pdzVCrsrnU/ZZodlL1qhLWpDSQf2dJyNfAazh5u9hV4q6qW1uWZZzNSaBNOc2Bi
+	XJXr4V55dvRb9GankAw==
+X-Google-Smtp-Source: AGHT+IHMPBuyHnbsu1fzojxAvVWoB+t0RQajrCfQEAuCK7B7x+b6pusC9Fc1oNLvaFICxRkoCWW8Tzuvcbz6+Eo=
+X-Received: from wmbdo10.prod.google.com ([2002:a05:600c:680a:b0:450:dcf2:1c36])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6000:1a8a:b0:3a4:dfc2:b9e1 with SMTP id ffacd0b85a97d-3a4f89a7e71mr9312736f8f.2.1748853918569;
+ Mon, 02 Jun 2025 01:45:18 -0700 (PDT)
+Date: Mon, 2 Jun 2025 08:45:16 +0000
+In-Reply-To: <20250530-cstr-core-v11-4-cd9c0cbcb902@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250522-uvc-fop-v1-0-3bfe7a00f31d@chromium.org>
- <20250522-uvc-fop-v1-3-3bfe7a00f31d@chromium.org> <adb22c62-94c8-4ab5-8aea-cc204affba3c@xs4all.nl>
-In-Reply-To: <adb22c62-94c8-4ab5-8aea-cc204affba3c@xs4all.nl>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Mon, 2 Jun 2025 10:38:40 +0200
-X-Gmail-Original-Message-ID: <CANiDSCubHc+WMgdQqyyqoDLixeN=ubGm4_ejeRj7M_vA=FA_DQ@mail.gmail.com>
-X-Gm-Features: AX0GCFuQ3qLhCsXgJka-N2u6ssEczrawiqsO3Mr8fCMkM9jgnlKUIPt_YufzZJk
-Message-ID: <CANiDSCubHc+WMgdQqyyqoDLixeN=ubGm4_ejeRj7M_vA=FA_DQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] media: uvcvideo: Remove stream->is_streaming field
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans de Goede <hdegoede@redhat.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <20250530-cstr-core-v11-0-cd9c0cbcb902@gmail.com> <20250530-cstr-core-v11-4-cd9c0cbcb902@gmail.com>
+Message-ID: <aD1knOuEFxv6VQy1@google.com>
+Subject: Re: [PATCH v11 4/5] rust: replace `kernel::c_str!` with C-Strings
+From: Alice Ryhl <aliceryhl@google.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Michal Rostecki <vadorovsky@protonmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>, Benno Lossin <lossin@kernel.org>, 
+	"Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=" <kwilczynski@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, dri-devel@lists.freedesktop.org, 
+	netdev@vger.kernel.org, devicetree@vger.kernel.org, llvm@lists.linux.dev, 
+	linux-pci@vger.kernel.org, nouveau@lists.freedesktop.org, 
+	linux-block@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-Hi Hans
+On Fri, May 30, 2025 at 08:27:45AM -0400, Tamir Duberstein wrote:
+> C-String literals were added in Rust 1.77. Replace instances of
+> `kernel::c_str!` with C-String literals where possible and rename
+> `kernel::c_str!` to `str_to_cstr!` to clarify its intended use.
+> 
+> Closes: https://github.com/Rust-for-Linux/linux/issues/1075
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
-On Mon, 2 Jun 2025 at 09:57, Hans Verkuil <hverkuil@xs4all.nl> wrote:
->
-> On 22/05/2025 19:58, Ricardo Ribalda wrote:
-> > The is_streaming field is used by modular PM to know if the device is
-> > currently streaming or not.
-> >
-> > With the transition to vb2 and fop helpers, we can use vb2 functions for
-> > the same functionality.
-> >
-> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> > ---
-> >  drivers/media/usb/uvc/uvc_v4l2.c | 12 +++++-------
-> >  drivers/media/usb/uvc/uvcvideo.h |  1 -
-> >  2 files changed, 5 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-> > index 7a5ecbefa32c0a6b74c85d7f77a25b433598471e..51419f443f2c43dfd17a9782352bd2cde1094732 100644
-> > --- a/drivers/media/usb/uvc/uvc_v4l2.c
-> > +++ b/drivers/media/usb/uvc/uvc_v4l2.c
-> > @@ -617,7 +617,8 @@ static int uvc_v4l2_release(struct file *file)
-> >
-> >       uvc_ctrl_cleanup_fh(handle);
-> >
-> > -     if (handle->is_streaming)
-> > +     if (stream->queue.queue.owner == file->private_data &&
->
-> Use vb2_queue_is_busy(&stream->queue) instead of directly accessing the owner field.
-> But see below, since this can be dropped altogether.
->
-> > +         uvc_queue_streaming(&stream->queue))
-> >               uvc_pm_put(stream->dev);
->
-> I think patch 1/3 can be improved, which likely makes this patch obsolete.
+> -/// Creates a new [`CStr`] from a string literal.
+> +/// Creates a static C string wrapper at compile time.
 
-If it is ok with you, I'd rather not touch 1/3. It has landed already
-in the uvc tree.
+A C string *wrapper*? What do you mean? I would drop the word "wrapper"
+here.
 
-I am reimplemeing 3/3 using  vb2's start_streaming stop_streaming.
+> -/// The string literal should not contain any `NUL` bytes.
+> +/// Rust supports C string literals since Rust 1.77, and they should be used instead of this macro
+> +/// where possible. This macro exists to allow static *non-literal* C strings to be created at
+> +/// compile time. This is most often used in other macros.
+> +///
+> +/// # Panics
+> +///
+> +/// This macro panics if the operand contains an interior `NUL` byte.
+>  ///
+>  /// # Examples
+>  ///
+>  /// ```
+> -/// # use kernel::c_str;
+> +/// # use kernel::str_to_cstr;
+>  /// # use kernel::str::CStr;
+> -/// const MY_CSTR: &CStr = c_str!("My awesome CStr!");
+> +/// const MY_CSTR: &CStr = str_to_cstr!(concat!(file!(), ":", line!(), ": My CStr!"));
+>  /// ```
+>  #[macro_export]
+> -macro_rules! c_str {
+> +macro_rules! str_to_cstr {
+> +    // NB: we could write `($str:lit) => compile_error!("use a C string literal instead");` here but
+> +    // that would trigger when the literal is at the top of several macro expansions. That would be
+> +    // too limiting to macro authors, so we rely on the name as a hint instead.
+>      ($str:expr) => {{
+>          const S: &str = concat!($str, "\0");
+>          const C: &$crate::str::CStr = match $crate::str::CStr::from_bytes_with_nul(S.as_bytes()) {
 
-BTW, I see that vb2 keeps track of the streaming state, so most of the
-code is gone :)
-
-
->
-> The uvc_pm_get/put should be placed in the start/stop_streaming callbacks. That's
-> where you need them, and it avoids all these is_streaming tests. And it allows you to
-> use the vb2_ioctl_streamon/off helpers in patch 2, since the streamon/off functions
-> no longer mess with the uvc_pm_get/put functions.
->
-> Regards,
->
->         Hans
->
-> >
-> >       /* Release the file handle. */
-> > @@ -684,7 +685,7 @@ static int uvc_ioctl_streamon(struct file *file, void *fh,
-> >       struct uvc_streaming *stream = handle->stream;
-> >       int ret;
-> >
-> > -     if (handle->is_streaming)
-> > +     if (uvc_queue_streaming(&stream->queue))
-> >               return 0;
-> >
-> >       ret = uvc_pm_get(stream->dev);
-> > @@ -697,8 +698,6 @@ static int uvc_ioctl_streamon(struct file *file, void *fh,
-> >               return ret;
-> >       }
-> >
-> > -     handle->is_streaming = true;
-> > -
-> >       return 0;
-> >  }
-> >
-> > @@ -707,16 +706,15 @@ static int uvc_ioctl_streamoff(struct file *file, void *fh,
-> >  {
-> >       struct uvc_fh *handle = fh;
-> >       struct uvc_streaming *stream = handle->stream;
-> > +     bool was_streaming = uvc_queue_streaming(&stream->queue);
-> >       int ret;
-> >
-> >       ret = vb2_ioctl_streamoff(file, fh, type);
-> >       if (ret)
-> >               return ret;
-> >
-> > -     if (handle->is_streaming) {
-> > -             handle->is_streaming = false;
-> > +     if (was_streaming)
-> >               uvc_pm_put(stream->dev);
-> > -     }
-> >
-> >       return 0;
-> >  }
-> > diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-> > index 3ddbf065a2cbae40ee48cb06f84ca8f0052990c4..f895f690f7cdc1af942d5f3a5f10e9dd1c956a35 100644
-> > --- a/drivers/media/usb/uvc/uvcvideo.h
-> > +++ b/drivers/media/usb/uvc/uvcvideo.h
-> > @@ -626,7 +626,6 @@ struct uvc_fh {
-> >       struct uvc_video_chain *chain;
-> >       struct uvc_streaming *stream;
-> >       unsigned int pending_async_ctrls;
-> > -     bool is_streaming;
-> >  };
-> >
-> >  /* ------------------------------------------------------------------------
-> >
->
-
-
--- 
-Ricardo Ribalda
+Alice
