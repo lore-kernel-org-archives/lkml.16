@@ -1,68 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEDA122259F
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 15:00:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C400822D7A6;
+	Mon,  2 Jun 2025 15:00:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748876420; cv=none; b=odiZ5ZZ5fE6R2ZzZFZ1zhfCNVNzDq7okJjqYUf6Dn0DXMFZpo74fBqm7EfzegGYPOeHDNo4o4AqeT9pcrgdE5HKnV8JhjUvvfeiqsc/YTz5ztxpNchB+bI7/8yn8IZkKQjerrarS1Nb1zzgbHMJxY6X9Zx6Rd+c19iuYFQL4njM=
+	t=1748876448; cv=none; b=MrzgMbEnHznHT4a4vrtP1oV0RiY0bVbdsqEiJ51ZtGU67QbvHZi4ls1Jg0kaUCvuibccSl3LE25cXYWIbQrE5TqRXbsG7KWmyqGyyRpaEC+It7AwHJsL1+UP6AnDMk2YYeRa8cChfGIJjk9KliIeE9E4pRGK52GT2gANwp9zq1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748876420; c=relaxed/simple;
-	bh=wWb+Nid5VUOH38Jde4+YnT8vvEysVcJMVJwzOim0Hds=;
+	s=arc-20240116; t=1748876448; c=relaxed/simple;
+	bh=TJE7d1QlO4KBY8QKjhz1Z13bvzRugIPW9bJZv5Tkl1E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gxc+j9nvXhTOf2aMVSCCJ/Lf3LZfwV5nMUbQ53HzoeNrlgb2eXak2XjMkz3nL9MvG2o+lTB9iM+QDJDTCEDorp0vgUbdo4IEQ/xxBSWO3iekwBs5YNY6OFdqqfUS1HEBhpl7UOTt9G6dmyAsxuXn/Lbd1+pQ7dvYnMo8wuRpkXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=in305YNH; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Iu0Ovqkuf5t1CkdoaalO1WogWj/5oQp1CSmlgMnxPU/QZQjaMpL3GMdKpAlqMJRU92uJbnbWc+1XTmryVJJxn0GoCwt5By57vanS1dzzt3frGmfneEiw2cCpU6kD0zg2zTnm89ZuxTvbFIY57UGFHzoXDrQAqvKhEyqgqKGgiTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eAMw036N; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="in305YNH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748876419; x=1780412419;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wWb+Nid5VUOH38Jde4+YnT8vvEysVcJMVJwzOim0Hds=;
-  b=in305YNHY065nbLuWd2PgBk6OVJoay8s/ltTZvHBSnzFZ8dkYJikPOEL
-   uA8aUF1NUDpAE1eTzu6x3ljpEOtiVcX/kq4Xdwx80yOwuJRP/AbAJGUP1
-   A5d7ehycTaG84lpPeA8yGsbocEgPSWF6H4XahpYBFM+UkwgdmNAo1kTP+
-   NrhFf7/ipAV+MHfVeJXbdsJ8Y46rhO7Yz7RDTgu8Wi8nGQw8gHXG/ES4v
-   d651953KtFW5BeWho5ba8/FfzYv5Vgw8Ttik4IiaIK1FexSNOL7gjtGU7
-   IsP8SPd23hXHItacFTk7CBNun4aH8ekiOFqHSVeu+dICv2jHF4jPJPHvx
-   Q==;
-X-CSE-ConnectionGUID: 7tKWUuXPTwG3RyLRCGrtVg==
-X-CSE-MsgGUID: lYSJs8fKS0uQ7x7yeCdiQQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="68436666"
-X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
-   d="scan'208";a="68436666"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 08:00:18 -0700
-X-CSE-ConnectionGUID: 8ihRZWE+RUWHuwZTejsogQ==
-X-CSE-MsgGUID: mpsLBosnQASZ6yAnaxw13g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
-   d="scan'208";a="144594788"
-Received: from ly-workstation.sh.intel.com (HELO ly-workstation) ([10.239.35.3])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 08:00:15 -0700
-Date: Mon, 2 Jun 2025 23:00:11 +0800
-From: "Lai, Yi" <yi1.lai@linux.intel.com>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>, yi1.lai@intel.com
-Subject: Re: [PATCH v12 14/21] futex: Allow to resize the private local hash
-Message-ID: <aD28exSNTcRKCCkl@ly-workstation>
-References: <20250416162921.513656-1-bigeasy@linutronix.de>
- <20250416162921.513656-15-bigeasy@linutronix.de>
- <aDwDw9Aygqo6oAx+@ly-workstation>
- <20250602110027.wfqbHgzb@linutronix.de>
- <aD22/Ra2jHOsHJ9W@ly-workstation>
- <20250602144422.GIWEDzbT@linutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eAMw036N"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-23035b3edf1so40206185ad.3;
+        Mon, 02 Jun 2025 08:00:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748876446; x=1749481246; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TJE7d1QlO4KBY8QKjhz1Z13bvzRugIPW9bJZv5Tkl1E=;
+        b=eAMw036NMayOLOX0b1/f8FAqyH8q2iiPV3KmxwcQlQmMuab2c9VOzdbbhnE/h9Iq6u
+         cLsm/l11OtbkoUInPsJPNwOOyQ2zPMLRq81D25S+YKs0vWjJipadM6XpJmuQm8G7OWJ1
+         1mXmkpFsgjSoQcRBSIHcxp/lEX1WgsiMIr0YQNPug8WAHTalCOasbJI7rDHWYq80wdED
+         lydUAOr2WUPHuQ7hQuj3WR7EUeHLTX5kwrI6vbEAjCTZDSqGng3IJav5ZBwoZCMNgC2e
+         X8NxdnwlFQn/9RoFU/srATdpa2Qb459SO2xY1YUOEQ6N5ETPJ7ElDEfRnh3s+7VREtUC
+         bt/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748876446; x=1749481246;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TJE7d1QlO4KBY8QKjhz1Z13bvzRugIPW9bJZv5Tkl1E=;
+        b=VCG6lWjtOioVUrN9KaXuap+w+pi6aGQKmk30DO+o3Nh9jyXIj5Ml8GxZ5U9OLx940K
+         48BUy+VXhEz9/Oq0+QW3KZAppsEqcvF+WDfNU8oMSTUNUKRI0qYm7GqRkjLPWj5Ij6Fz
+         Wwb3MukFlkZftuMIZypt+k85guA2CE9YFQqhlrwj0ohaSjVqA4GzR2wETU8lKKghtjq6
+         6Z4nnq1UATmnWM2zx39NDZpTiG86NqdyYj7vvXmoc9qRg+TL71Nt/OrVKLB16VcTCHpC
+         hPnbewAGub+Obt9Uca4osNSIjt69zAHhT+ya4yJ3Ae7jzm4SXi4WtvyypEaQKsU8WDJ5
+         owgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW3oZvNIcU0WB+l3LuLcVVbtE1up12ZJJuOPb9ylYO2GWB4L/JoEKf5Gf9WzrJLd1KV2rZ9mxY3GlM1@vger.kernel.org, AJvYcCXIrZk7QeYJGxfNa0Lk0Ufc1bwJvyBPTGCYsKeKEHN14znOTTRf8L8wbPF80LKX1E4s1O62YSHAHrpA@vger.kernel.org, AJvYcCXOJl88TdbKVwzqiBVDRBaVZ1IqX/sDYUZM3ghGBgLeGcEMzL78sVW1Hh77H1b1ve5CoKY2JfqYIp2ZkqWE@vger.kernel.org, AJvYcCXbDH7yRzXSCPjh108TaYCxAq+WnKxNNUFLgzJZmz5NXp7e71fYaODRkKsm90Xx3YPJ6MN+2mrU2lHZhqI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGOygeaEpZUHb4fuqNBe0BBIpUZTTagTRcIMcZ0K6HsWfh96sV
+	YIKCZ0iKmDDQUGrgAbMN1MHWOVxqioKmy/g9uUZ8WoToZMuXYub8f99emYaZ6KcQ
+X-Gm-Gg: ASbGncsXvg/Ddf1UzQx9Vgzvgf6uD/4fhxK9x3RAeGMrJs5yIn00r4NvHJKtYDRUVL/
+	RV72+pRx7n2RrBEDyBx5SBHAHvGtjU0OdyGhlXV3KsKV6/CcVnyCtAarfrUoh4uJIHyU2zBPVT2
+	ab8AoHykzDUqhO8cksfnVIJYOluAH7V2JilHKFdRiOJNBm8zr2kHehW/gp/uV3q/KBdn7CrKupT
+	VGMwyTKj60uNsbWibHfS5z0RO6fY6SvhKkXk8Oog+Yk1wIi0cMlqffP6bV/9++/DVo5Ua9+dw2G
+	30Ban8EI8Rqn+oEm7OoZftJ2kfJd1Ks1giKdlIroqsnRQY/GHlLLNO43tqQUDCHY
+X-Google-Smtp-Source: AGHT+IHpexqrF/VnpGWBxjuy4tOcCzXxSM6H9cBd3Svx6k9p1fO3U8u3WCyCIWub1yUao++AS5zgeQ==
+X-Received: by 2002:a17:902:d4cc:b0:234:ea6:c77a with SMTP id d9443c01a7336-23529a17fe4mr213356195ad.38.1748876445456;
+        Mon, 02 Jun 2025 08:00:45 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bd974asm71896755ad.97.2025.06.02.08.00.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Jun 2025 08:00:44 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Mon, 2 Jun 2025 08:00:43 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	"jdelvare@suse.com" <jdelvare@suse.com>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+Subject: Re: [PATCH v7 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm properties
+Message-ID: <c316130c-9b64-4510-b2a2-d2aa45ee3734@roeck-us.net>
+References: <20240722221737.3407958-1-chris.packham@alliedtelesis.co.nz>
+ <20240722221737.3407958-2-chris.packham@alliedtelesis.co.nz>
+ <jzxu6mcbxf5zwyirnb2jjpm2i7sln3v5mz3gyhc5xhpqexicvb@atrcjvh7wuh5>
+ <bc99a27e-74ec-45a0-b77c-48f993269586@alliedtelesis.co.nz>
+ <jmxmxzzfyobuheqe75lj7qcq5rlt625wddb3rlhiernunjdodu@tgxghvfef4tl>
+ <4858ce06-2081-4335-af09-f118872317ea@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,27 +86,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250602144422.GIWEDzbT@linutronix.de>
+In-Reply-To: <4858ce06-2081-4335-af09-f118872317ea@alliedtelesis.co.nz>
 
-On Mon, Jun 02, 2025 at 04:44:22PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2025-06-02 22:36:45 [+0800], Lai, Yi wrote:
-> > Will trim my report next time.
-> Thank you.
-> 
-> > After applying following patch on top of lastest linux-next, issue
-> > cannot be reproduced. Thanks.
-> 
-> Does this statement above count as
-> Tested-by: "Lai, Yi" <yi1.lai@linux.intel.com>
-> 
-> ?
->
+On Wed, May 28, 2025 at 09:18:37PM +0000, Chris Packham wrote:
+> >> As I mentioned at the time the adt7475 is not currently pwm_chip so I
+> >> need the ad-hoc parsing in that driver. I'd be happy to take you
+> >> prototype patch for pwm/core.c and polish it although I don't really
+> >> have a good way of testing it.
+> > It's more the deviation of the default binding for PWMs that I don't
+> > like than the ad-hoc parsing. Ideally the adt7475 would provide a
+> > pwmchip (as the binding suggests) and the fan would be formalized as a
 
-Yes. Please kindly include it.
+We are not going to force each fan controller driver to register as pwm chip
+just because it provides a pwm value to control the fans - even more so since
+this gets really ugly if the chip can be programmed to either provide a voltage
+output or a pwm value to control fan speed. Maybe the next requirement is that
+fan controllers supporting voltage output to control fan speeds are supposed
+to register themselves as regulators. I really don't want to go there.
 
-Tested-by: "Lai, Yi" <yi1.lai@linux.intel.com>
+Those are _not_ pwm controllers. They are special-purpose fan controllers.
+Forcing them into the pwm framework from devicetree perspective is bad enough,
+but forcing them to register as pwm controllers is a step too far.
 
-> > Regards,
-> > Yi Lai
-> 
-> Sebastian
+Guenter
