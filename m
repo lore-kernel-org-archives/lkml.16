@@ -1,63 +1,92 @@
-Received: from mail.aaazen.com (99-33-87-210.lightspeed.sntcca.sbcglobal.net [99.33.87.210])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B4B21A28D;
-	Mon,  2 Jun 2025 17:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.33.87.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 478DA523A
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 17:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748886422; cv=none; b=a/5QknkWoAXkEQFO8L2ytPCD4MOp+qdPvhiXuLxWjrbMlheOqmKmpagDaPsi+/YCHhm59wySgA/fPs8hLKgBu55PKOvTyKv0QJB8ewsV0sBln7klbi2Cw5zOyRz4cm7tDAW/0APyXWWdzgt2EyAeIqbJEUODWQQiRcV+20ClTIw=
+	t=1748886580; cv=none; b=aCytWGoxomIBpAo9cqLZEltE+mzkz0ZZ04HvbSGrhwP1lLgnx+0Jf1o6x2TXMvMvANxEY8oztw7GOAEGZkI7dVKjmJkZIrYa3jZpdZFJzFKF4Mcro1LqYPF6du9NbdsNe50ViSZYYHM7CaREAMqwtlU1yaoouvLn9cRm5pjCv8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748886422; c=relaxed/simple;
-	bh=ZRP8C5tV4Lf4EEr8yH2sse5dwTbENYOSXQ8PYBVP9j0=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Ck5PfzeyWFRhCO/dD8Ref3Mfbcr4SW428J4Zh0pvhWpIjSngHzQP/UrWmtO1cZBeZc0i0l/lu2pLxqD4PbTTwNmQZQJgR0EHo2NlI5/icyvj3DepleLxiO9EZvAi2xgr/dvaN9s1AUrkHEhqGJwuV4+/YhwPqWp3glADhALeqlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aaazen.com; spf=pass smtp.mailfrom=aaazen.com; arc=none smtp.client-ip=99.33.87.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aaazen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aaazen.com
-Received: from localhost (localhost [127.0.0.1])
-	by thursday.test (OpenSMTPD) with ESMTP id b6d5fd31;
-	Mon, 2 Jun 2025 10:46:54 -0700 (PDT)
-Date: Mon, 2 Jun 2025 10:46:54 -0700 (PDT)
-From: Richard Narron <richard@aaazen.com>
-X-X-Sender: richard@thursday.test
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-cc: Linux stable <stable@vger.kernel.org>, 
-    Linux kernel <linux-kernel@vger.kernel.org>, 
-    Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH 5.15 000/207] 5.15.185-rc1 review
-In-Reply-To: <20250602134258.769974467@linuxfoundation.org>
-Message-ID: <2cb71dc9-a16b-5694-cb3-60a1815bdd84@aaazen.com>
-References: <20250602134258.769974467@linuxfoundation.org>
+	s=arc-20240116; t=1748886580; c=relaxed/simple;
+	bh=0pF7W5nDodLyDaDRsawbxvt9O7kgIx1eeXo1DFqCyWw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZckRvLI6rm9EI8WLvjfYMYpMlTvOmHmledmngECz7cL0mWNIonueuDFBUYGP5pGR5UJoKsMYWzfNWt6GhnhoMXuO3uRD9DUkR4HxoWYio0upDOL7ZDSqJoTqv1Flpczj7v33vRd+Y0X4NJdaffNBVbcxEFvYSZgIFGrZFxnTaX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ui9wChQJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ui9wChQJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8255AC4CEEB;
+	Mon,  2 Jun 2025 17:49:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748886579;
+	bh=0pF7W5nDodLyDaDRsawbxvt9O7kgIx1eeXo1DFqCyWw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ui9wChQJsuGhH1mAQl2/0sJ87jasohaoM3541r34h0y3sGT6Bq9AvdgZ0MokOFlwS
+	 p6+gy+N6pIS2pisd96br6uqEzvbdPSPB6XnOQp9nlIrNLDJvP7ZpT4hAm1Z4+pF//T
+	 MC2KxfbvantAj+GeAn+IEU6N4Z9lIzSxQ7HdZpvPHLDTydDImWNMHYi4EJJ2Q5jb2l
+	 0G1baoaCPCfmdKY0mm3dwfs5lPHD1MJHeUNVCgeQmZPm4XrsGi9VOYpMLHp0DplhN8
+	 1i8LLUAlg8ba6kKs4nubmx1tXPn/Tm2Y9uQSXTdfNz5Nn1br5sKRZD4p9a0pcHKiqk
+	 FQrWGFgBq3r2A==
+From: SeongJae Park <sj@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: SeongJae Park <sj@kernel.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	David Hildenbrand <david@redhat.com>,
+	Jann Horn <jannh@google.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	stable@kernel.org,
+	Barry Song <21cnbao@gmail.com>
+Subject: [PATCH] mm/madvise: handle madvise_lock() failure during race unwinding
+Date: Mon,  2 Jun 2025 10:49:26 -0700
+Message-Id: <20250602174926.1074-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2 Jun 2025, Greg Kroah-Hartman wrote:
+When unwinding race on -ERESTARTNOINTR handling of process_madvise(),
+madvise_lock() failure is ignored.  Check the failure and abort
+remaining works in the case.
 
-> This is the start of the stable review cycle for the 5.15.185 release.
-> There are 207 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 04 Jun 2025 13:42:20 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.185-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+Fixes: 4000e3d0a367 ("mm/madvise: remove redundant mmap_lock operations from process_madvise()")
+Cc: stable@kernel.org
+Reported-by: Barry Song <21cnbao@gmail.com>
+Closes: https://lore.kernel.org/CAGsJ_4xJXXO0G+4BizhohSZ4yDteziPw43_uF8nPXPWxUVChzw@mail.gmail.com
+Signed-off-by: SeongJae Park <sj@kernel.org>
+---
+ mm/madvise.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-The new kernel works fine on my miscellaneous Intel and AMD machines
-running Slackware 15.0 both 32-bit and 64-bit.
+diff --git a/mm/madvise.c b/mm/madvise.c
+index 8433ac9b27e0..5f7a66a1617e 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -1881,7 +1881,9 @@ static ssize_t vector_madvise(struct mm_struct *mm, struct iov_iter *iter,
+ 			/* Drop and reacquire lock to unwind race. */
+ 			madvise_finish_tlb(&madv_behavior);
+ 			madvise_unlock(mm, behavior);
+-			madvise_lock(mm, behavior);
++			ret = madvise_lock(mm, behavior);
++			if (ret)
++				goto out;
+ 			madvise_init_tlb(&madv_behavior, mm);
+ 			continue;
+ 		}
+@@ -1892,6 +1894,7 @@ static ssize_t vector_madvise(struct mm_struct *mm, struct iov_iter *iter,
+ 	madvise_finish_tlb(&madv_behavior);
+ 	madvise_unlock(mm, behavior);
+ 
++out:
+ 	ret = (total_len - iov_iter_count(iter)) ? : ret;
+ 
+ 	return ret;
 
-Tested-by: Richard Narron <richard@aaazen.com>
+base-commit: d85ea9175e4147e15ff6e3c0e02c6c447ef473c8
+-- 
+2.39.5
