@@ -1,188 +1,209 @@
-Received: from PNZPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19011028.outbound.protection.outlook.com [52.103.68.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f201.google.com (mail-qt1-f201.google.com [209.85.160.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C8B35695;
-	Mon,  2 Jun 2025 18:05:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.28
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748887539; cv=fail; b=nC1Lx588Tb8P9CJJ7+QOiYjHDRPdy9pXtj/txtgLJHQXutzmBuJcdJ+5YBtKKjg9h+o8qeRor7eleZv4I/NyAl0zoTvQQimd2rkI+u9RPzVfFtlHnU2yMyNy2B2itaFr1vLXelXKZVzGgz+uVaZKOet/64Y1J4gaPSgnFgMxOeE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748887539; c=relaxed/simple;
-	bh=RVUIdjL/RN2FbU3uBVq7zOoHjpvfHI9oNvqGZi34eIs=;
-	h=Message-ID:Date:Subject:To:References:From:Cc:In-Reply-To:
-	 Content-Type:MIME-Version; b=aiLgTkB/vXBaCj7x1vBEZyhjVxUnTPRd3S0qIHvIc01sMXCYrzPdGTrbAgASjrJ6T+dqxi1jo8syXe1uA5e/nlJCMimQFgfiWQtpydnQ/3SVPKyTDKuk04AV/9wIf1NbJD1zTC7YReJL3RFOULAFFZisFiFTRhjGEt+9pb80/Y0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=Ycf2do/V; arc=fail smtp.client-ip=52.103.68.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D35817B402
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 18:05:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748887558; cv=none; b=nAPza33Ur5qtoilXRMxw6A4vMYXbgyk7yiNx1ZpOigWmViCZRko6GBpIdaC8eE3uOVulhqq0Fjl9RJxgJ71UcpgNP6PzYi4NEcUoRasBys6/dlNeDBIjo5GsLVGBR3nc+Xz4+KrlcjPjxJzAs0AfLHKy/LEHodTmr6ibqLFQWnk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748887558; c=relaxed/simple;
+	bh=uTxgffaCVKDusEkGXgA8/2r4K1mAz1i0Gtv0hWUC+OM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=C7/H4AJBqdSQZqVkY9TJHFn81vbkQr7TguAm5Nwq3QRlItKP1M7DDI2mkY3IP5wuSYD0Xsp6dKeZw7o9TfT8qUH8UCNXNbS7oWZzNlXwp6HlcLlVixiXfsDB02sVQMCmQ1RvrCvi9K6yQW3k4jh3PqlVQ7AhF3GPMtkTOf3/WFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--zecheng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MzIBjG/R; arc=none smtp.client-ip=209.85.160.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--zecheng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="Ycf2do/V"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=P0dbfx/ZOY9J5lITYLpfro7bXYzd4mCJYm1FZ9xyoH5KVtrnLgPYKS+1mVjwvgHuWnLsc+xyufcUGmOSxF8n2Qmr3ZjXTRqQvkbgSFh+0cwM2iIuxSfzMiNHL/wZOm23+LdBGXHILb32S5wXkU5tUZUZKBakD+QsqEz1UV+Ml2K9e1L/UDdW+rJu158MFMqjt5civbzdO3ZaIOytrg4o+keaMpgHt+QLwzm5gepb22ro7poKpbEYCN0rk7/uzFyfde0fLX13NmotPLSLKBNP4F9aLZO7k9sRjagc43IgHlFWjRrGCPozm1dYINCboMsky815xxm0iAq8790Qidgu6w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MvURnGeD2mOL6oGzb0w1xGc4yAnHBUGpmOSRBvrNCCg=;
- b=Vya6n3qi7pwTL21FXooSHXMpfOPdG5Gl1kEJ3Ec/x1gzD+KDAqsUcM/rZrjynMlEmtFPqXDk/YfVYz84240TZF4fF2wEYkauTZhRRFbxq7xoaaWCy/Rsp7/A6tqufxLhRp3gUQYHdn+q8ZzwcVdvHKA7qY1tkI/S3INusaAXmsDqe3yBmWCCJyKZ6mEAhA8sT0v4zhyVzu55nnu9fqFwLxyjE1vnWV529oeoBhnctGKB/ntInnXVdZfmJFqbpeDDV8QsKNXspquDXSesgS/9v0uTtJ/H1NhMRtfltOdxi1gMRUvTouUQ20HMrUnyjrBQjXufgdhtkM7fGzK0wz/CuQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MvURnGeD2mOL6oGzb0w1xGc4yAnHBUGpmOSRBvrNCCg=;
- b=Ycf2do/V/fe8Um79i4IPsAIT8ntSNnUZvx+ZnCDTU4lXbABBqrwTti/X66g5s55TTpvA4bdGks5fqnAATMQ6wIO2hC2Et0d0QLglPhsIGt2CttHAxn1I6WtSrG5zLuoAaab12Op6giAMz2uqble/ysQfBPznSJMOcZS+YhctVR4ajeSp9hbIShAz3w3qctBrLi1R6m8VXpHBPcbxpjV5SzRiYTZlYNJzgGNSptNH5jfK5+rAAf/dPpGteJJA3PPwO8TyJ+KSDy1yHbYP6NlOt5yNDg3cvL9Z8wbDDaVU1wERHzLfxpMLoDVYzL6OT2ajfd3nlliZlS71Ry6hsvfrlw==
-Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
- by PN2PR01MB9411.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:fb::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Mon, 2 Jun
- 2025 18:05:30 +0000
-Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::324:c085:10c8:4e77%5]) with mapi id 15.20.8769.038; Mon, 2 Jun 2025
- 18:05:30 +0000
-Message-ID:
- <PN3PR01MB9597C74E424033DC90B6F3B2B862A@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
-Date: Mon, 2 Jun 2025 23:35:27 +0530
-User-Agent: Mozilla Thunderbird
-Subject: [REGRESSION] Re: ELAN1206 Touchpad Bugzilla 219799
-To: agski33 <agski33@proton.me>,
- "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
-References: <z9A_-FfhGGSZqAHPl-DnF-qPhbI563CsiUUiC8nhdhcZUZYkgpkruvHQ6Vdt8Jt0s0ogm9tCNXFAfn06utR9Zwh_UNTUy4whJ2Z9oVcfPEA=@proton.me>
-Content-Language: en-US
-From: Aditya Garg <gargaditya08@live.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- dmaengine@vger.kernel.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Heiner Kallweit <hkallweit1@gmail.com>, Vinod Koul <vkoul@kernel.org>,
- Benjamin Tissoires <bentiss@kernel.org>
-In-Reply-To: <z9A_-FfhGGSZqAHPl-DnF-qPhbI563CsiUUiC8nhdhcZUZYkgpkruvHQ6Vdt8Jt0s0ogm9tCNXFAfn06utR9Zwh_UNTUy4whJ2Z9oVcfPEA=@proton.me>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN3PR01CA0013.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:95::9) To PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:f7::14)
-X-Microsoft-Original-Message-ID:
- <18bf85e9-d30a-4676-9830-e264f436003b@live.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MzIBjG/R"
+Received: by mail-qt1-f201.google.com with SMTP id d75a77b69052e-4a58f455cdbso13575271cf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 11:05:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748887555; x=1749492355; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QyDj/2B3/il5yCN5lwJYwPP19JR+5CMXAKDxaydY8hI=;
+        b=MzIBjG/RufGUa3wiuNa0AlV94qNqgblea9XlebkjWpVVM3JNGR4JwRUQkzLjMlAdEc
+         3JDHx1XlFuPFkhbz3L6y0igJKysZfqWwiGEeZ+W1SD9RcNruqunM3KydOiAJ+xpwP0uN
+         cZmMYU1y97yozyRARkmBfsdJYRw87D1WzBXj0/ccv+nPpY5Tnkn7zssxrctJCqQGczjz
+         K8YBDkm62EsMTtZ04LywU4BAZT3heIE382fl/MzDzmypIt8usBQxyePAnBJjhvw8OqW+
+         A9CPYov1+DtnDMuKuUkSiJvaf1yEcwVXWRNXb2JrZC3V4XJc5ovJbP4yfgp/BDLiQM4r
+         wL/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748887555; x=1749492355;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QyDj/2B3/il5yCN5lwJYwPP19JR+5CMXAKDxaydY8hI=;
+        b=MJCWYGHrf49jEMfzbxPjOcY7sNru6FHGZ+OyZzRrK6mDATuvxHKEaIWi9nIkgENG20
+         1w88HTNuW8DcWGsRUQ2y+gz2DzrjUcKRS1S4JvuDCjwVhxvBpegoXiI00Q3GsoU5Qyh+
+         mADfVCmSxiZaHSdDuQ3Yg+15yjbono/F7mq8yLsn9O6N57RO+Ciulc0Qf8Ac7/aJY6Dy
+         TpOOho7j6+9sIkuHVNEdMf2nFwcQ/y3vPVWMqza7TYv6zf89/NVKRHPd1/peKqRDDyb2
+         uhXLEcvfNBAyxofBJfzCsxlkZtoqW12BJbZdeTBvtpPt8hqQhCaFAaJU2MKtiU1NG644
+         KVsA==
+X-Forwarded-Encrypted: i=1; AJvYcCUfCwmB5SoHKPJhn6930b/j/PQ+T6enJydjigNaudbNMjD23Ze90ZHFq0cnU9G+gl82CsTWxfGqQPUkrmE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznColOIRG/G1IKGiSLQiZIncOlb3b31ByaS5pWGVpdgk/hoTXY
+	6UTUdwuIu3vHIXgvP+H+lBB+DQeISTo7Ok/H/oiZDqqGSOjMxlLksPq8lhu14UV/Nyw/JtGwqLE
+	Gm75srqOgkQ==
+X-Google-Smtp-Source: AGHT+IGOtRccs4qjSAskTq1bZg5Ex4D2SU2mqQL7o/L1nlbh1LnNAAcvD0MsyC1c/jlkLhb23LZqzldScSLr
+X-Received: from qtbha6.prod.google.com ([2002:a05:622a:2b06:b0:49b:ddb8:8b75])
+ (user=zecheng job=prod-delivery.src-stubby-dispatcher) by 2002:a05:622a:1ccf:b0:4a4:2f42:a676
+ with SMTP id d75a77b69052e-4a4aed6b20amr163585291cf.29.1748887555163; Mon, 02
+ Jun 2025 11:05:55 -0700 (PDT)
+Date: Mon,  2 Jun 2025 18:05:40 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PN3PR01MB9597:EE_|PN2PR01MB9411:EE_
-X-MS-Office365-Filtering-Correlation-Id: cdf64f25-6768-43c9-0781-08dda2000fc4
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|7092599006|15080799009|8060799009|19110799006|12121999007|5072599009|6090799003|461199028|440099028|3412199025|4302099013|10035399007|1602099012;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MEV3MTRWKzZiRGxHLzRqNnoxbjFnRFB3VGVaSDBPRXd1SlNZOGZxQVR2OTFr?=
- =?utf-8?B?REF0eEdpdHZ6bXc2a1YxUDhWZ2VZSHB1QWoxWWp4cmlYaVhnNU5jMDZYSm9R?=
- =?utf-8?B?MFRBWnhwMlJYM0dyL0tZQk0yWFF1TGpsU3ZnTHhCRHh6UGdMYXNsUDBNVm9n?=
- =?utf-8?B?bkNaTTNUMURTSDFRR1lKQjdjQ25TOS8vS3ArbHp3U0hZWGc4YUl2cFYrNWVM?=
- =?utf-8?B?VnliczFJdWo2SFdyd09scWNDcmdoeUpvZnBLTDZjSGVGK21sOWpSWTlweExj?=
- =?utf-8?B?UkJhU3lKc1REYzZhWDlLaUFVVnl3NTBEYmJmU25KbHpvNGI2VVlOamRCRUhI?=
- =?utf-8?B?aWRJTm93cmRUUkl0T3NTQ0JydzQwd1hUdk5xR0FLT25QeWkwVnVmb2h5VCtL?=
- =?utf-8?B?dmh2bE1hblRuWE9mQ2NjcmNpUzRNcEZnRE1oRHlKOExhNHNhakZwN0ZqYWZX?=
- =?utf-8?B?dHJZRm42eDByTTA2TUZDYVZOWHBMWkNLdXc0RitiVDY5TkthR1JaZUVpK2Uz?=
- =?utf-8?B?K3hPYjJGOUoxVjlxMUdtTHZuVjdZTndHRWxBQ09sK3gzdWNuTG56b3FXandv?=
- =?utf-8?B?RlVVTXBHZW5PSEFld1gzSUJMSnBoeFZlTkFzWW14RjFuSmM4YjJ2THlNam94?=
- =?utf-8?B?NEp1M0VHaGVFUE55UXgvdG1oWnZwQlQ1S0FIQzNncWFyYXlBQlZTd1k0ZnQ4?=
- =?utf-8?B?b092Skx0ZTJjbjlFSXc5SzJJczZLWHZxeVVQK1loV3U1MzJSdElEbVJSZHdz?=
- =?utf-8?B?NFRxNXBkd3dDRFBmcWJyM0RwN1NDK0NrcS9zRjk0MWdMNVlvemJQSDFJeFkw?=
- =?utf-8?B?dlI4YUs3QzhNYmdCRUlGcTBWcmsrTEJUd3JwRm4zejdhYzl4bjVXM1NOZnBk?=
- =?utf-8?B?bjkwNC82VnZtVHZvSUxGVVJGWUlkQ1N0Z3pTbCtwOFpadmhPSkl6UGovUWcv?=
- =?utf-8?B?ZmpyT0pPWDk0TmUvV3BGMVZBbUdqTmFyeHNSZi95MUxJdkN0SFliS0FDWEY2?=
- =?utf-8?B?MkRPUmY3NEpDaFdLZ1JGMmdEV2UxZHRzdnN5OG5oYzFrQjdPVGpDc2d2TE1Q?=
- =?utf-8?B?RHp5NWk1V3l5MUtzOGI5NVdnT3ZJd0RESk1rL0NSSi8vYjQ3SWhlaEJSMnps?=
- =?utf-8?B?bDFMRnpHdmV1dU1tUXo5Tk13TUpnMExUdlFmUnhTQmp1eVRhakhOaWdIUlc0?=
- =?utf-8?B?SGRDdG1VZENhMjUyL1NNZkJ0V3lPaCtVcUVsWk1ydVZiajJRVXhpeTNqcjRK?=
- =?utf-8?B?cDdvUW0rS281RUJhc043RHhmNTlPU3FkdXNFYnZFMi9XVDUrbWdBc2tpWENY?=
- =?utf-8?B?cGxTcUhSR000S2ZHNGpLRHVXcFRSd2dMZDRMR01iSDUyU3YxQ3NkWmtxcFFB?=
- =?utf-8?B?UnNXRmgra2RYd2xPc0k0dkpSYVk4WG8vckJMT0s2dm10bWRYeDdETGdqcDNM?=
- =?utf-8?B?amtCOVBVS080NTQ3SXd5Ui9YNlBpUmhNYXNMRytreUxiaHRlaHVWR05wK2JZ?=
- =?utf-8?B?bktaWVdpeUtpWCszUHQzWVVqNEJOZHhhYXI3b2pXUkhhTDF5SWlvdzZZQWVl?=
- =?utf-8?B?QVBNSFJyWW1INDNhdHBSeTJlZGdYcmRNRzc3UDVsTVhmOGRrbk5FQXI4dERo?=
- =?utf-8?B?Z0xWTVl2UUxRV1EyQ2hHcVJycUwzUnJvYXJsa1FFcU52MnV5VU5yZS9uTHBI?=
- =?utf-8?B?bi9POVRIUDJHcDh6Z0NJQit1V0Mzd0grL200aEhBRWY5ZUkwRkY2bWtpOEo1?=
- =?utf-8?B?S2FwZ1g2d1JGVHFORkxIR2gvT2NZb2FrZVl0L2lFN2tXMFJkTGxDN1B2MnZI?=
- =?utf-8?B?NGNsenJUMEFRVjJvb1VyQT09?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?alBrQTZ6VGlRQ20zb0pIbWlTVW9qd3NRNFZNM2lHaHNPVkIybU1EYktaaGxW?=
- =?utf-8?B?UngxTFBraEU5TkFpWjJWVG5CRG5FVDMyUDh5M3hiOW5nbEd5NXVTN2g5Y0FF?=
- =?utf-8?B?UGFLV2FweUlIeTg1MkZGaENmTlhSbEpubjB2bnBjSUFVRG50STFrQnoyUGVs?=
- =?utf-8?B?RXFucmFQZEdMSGVFSTlhbmdvNG5sR2hsQXpZTmMrc3k4SmN0ampBUEYzYytL?=
- =?utf-8?B?ZXRrc3lKaGRlQ2ZyWUJLYkc5OUFka2JjRys3V1V3T2t0SkpFeWU1VUpSYmxk?=
- =?utf-8?B?MW95bWVuUkVwSFIxdk5KUFkyU1R3YjY4Tk0xNzNWVGpBek80Y3hVcXN3RWc1?=
- =?utf-8?B?a2E0eGRXQjlJNmJSbTYrZmJMT0VaZ05uYm1ualE1Z3lRUk96UGRXeFB6eE8x?=
- =?utf-8?B?S3BIdDNwbEF6ZTNOUGdMRTduUUZ3QlpJeGNJMUMzVHhGNzBuN1QwdEg1R0dG?=
- =?utf-8?B?QmM0TDJ3TS9mUjJaeGJaQ0hJd2haYjBGZEU5Qlk2akczZFllQzNsa21IRVJX?=
- =?utf-8?B?U0tmb0drdnZpSWVQZnF2Qnpwbjc3UU4wQjQ4OEgxMks0ZnJkOUZKQlhEVGo1?=
- =?utf-8?B?cUYydnp1YmtnaWxrQ3IyT2lCTXZ5ZFVNS3BQMnZGSjY1YXQvdHhHaWwvNXFD?=
- =?utf-8?B?dnFXSEtsemRLRURjd1ByWEljdnovYmVrSEdUUXdmR1NvTENhdU1HeEVXM1Vy?=
- =?utf-8?B?cEIrbFowb3dXM0VQclpGRWhJRkxnWDluWFUwTHdmRWJTcmp4QzZSWUZVWUVx?=
- =?utf-8?B?dkczZzZNQnlPNE1WaTdRTStOVFMxMFFOOTA3cDJSQUJhR0Q5OTJRQmtIemti?=
- =?utf-8?B?RU5lbUNJeWs3RitqRlhZTFNGOUtBMzlFRDhLZEVvT244alFVTUVwMTVYdHJY?=
- =?utf-8?B?STRZaG4xcElhTHVBRlhVTjUySWhNSkVsemJsN25kTDYvNFB0VnEvM3BpcDRD?=
- =?utf-8?B?U1BRaDA1a25XeFZwWElXNVZ1Vy9wcEg3eWFkSmpqQk1DU2w1d21oN0p4SGpJ?=
- =?utf-8?B?NWpacVp2eG9vd2ppaE50ZzgxeEtacDg0RXNEVzJUTlJKQXVCS2NiZ2tMbVFS?=
- =?utf-8?B?WmZjeHVHRjBMcXhqc08xQTJWNFZFV3B6VVFqK2RRUGk0VUF4dXJIdG40NDJI?=
- =?utf-8?B?YXlQWC9kK2FQUXo4OHNKNEJ1cUk4K1IzeFZ2TmtNZGkvUGFhTFJ4NEkzSVJo?=
- =?utf-8?B?L05BRU5jRFBpditCWGw2aTNxLzlLa1p1ekx2QUdtVUV1UCtzcFNqVHpzTFkr?=
- =?utf-8?B?SjNSTWpKK2owU0F0T2x1Mm0yVWJycm9MWlgvT3hWMzAvbEkrdCtkNXQ3VU1U?=
- =?utf-8?B?SHVHZGZwUWtIdmJxZVZTWFpYVFdSVU5ZREZOcy9pSExOM1VWRGE5aGluL2ZE?=
- =?utf-8?B?TzREN3NlcGp0S1dJd2xMLzZTWnE5ZnlsRXFNTWhIZ3hyTHlsbnlLdHUxRlBm?=
- =?utf-8?B?a1hNQnRCNHFMVy9WTm1vdTFKT3pHS3dNWDZ4S1hqQmhkUmM2cWx1ZTRjOTl5?=
- =?utf-8?B?NE5Zc2lkc0NHdFNHZ2gySXNoRXh0MExkVkRJYm1DRG03ZEROMjBMUHpOd0hu?=
- =?utf-8?B?d2g3eEhMc282RnZONFJHaGlHRFRTUENaRWhlZm40QnBwV0x5WjFpYlVKNHNS?=
- =?utf-8?B?NWdiQ0kxU0MwUHgvVnJkc2NkTytFdkJLcFlGcHU4NDJDdjBSODNYWGM0TUli?=
- =?utf-8?B?ckttSUFjTEo1Q3VuN0dzSVdhNEMvWFpjOERYc2VmRStvYlo0bGVpd3Y4KzBs?=
- =?utf-8?Q?6lbwmp7XbNMvdA5Oec=3D?=
-X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-18ccf.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: cdf64f25-6768-43c9-0781-08dda2000fc4
-X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2025 18:05:30.6976
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN2PR01MB9411
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
+Message-ID: <20250602180544.3626909-1-zecheng@google.com>
+Subject: [RFC PATCH v2 0/3] sched/fair: Reorder scheduling related structs to
+ reduce cache misses
+From: Zecheng Li <zecheng@google.com>
+To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Xu Liu <xliuprof@google.com>, 
+	Blake Jones <blakejones@google.com>, Josh Don <joshdon@google.com>, 
+	Madadi Vineeth Reddy <vineethr@linux.ibm.com>, linux-kernel@vger.kernel.org, 
+	Zecheng Li <zecheng@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Reorder the fields within the `struct cfs_rq` and `struct sched_entity`
+to improve cache locality. The two structs are heavily accessed, and
+their layouts have not been optimized yet. This can reduce cache misses,
+improving performance in CFS scheduling-related operations, particularly
+for servers with hundreds of cores and ~1000 cgroups.
+
+The reordering is based on kernel data-type profiling
+(https://lwn.net/Articles/955709/) indicating hot fields and fields
+frequently accessed together on real workloads.
+
+This reordering aims to optimize cache utilization and improve the
+performance of scheduling-related functions, particularly
+`tg_throttle_down`, `tg_unthrottle_up`,`__update_load_avg_cfs_rq`, and
+`sched_balance_update_blocked_averages`. The reordering mainly considers
+performance when `CONFIG_FAIR_GROUP_SCHED` is configured. When it is
+disabled, there is no CFS bandwidth control and only a single `cfs_rq`
+exists per CPU, thus its layout would not significantly impact
+performance.
+
+We use a benchmark with multiple cgroup levels to simulate real server
+load. The benchmark constructs a tree structure hierarchy of cgroups,
+with =E2=80=9Cwidth=E2=80=9D and =E2=80=9Cdepth=E2=80=9D parameters control=
+ling the number of children
+per node and the depth of the tree. Each leaf cgroup runs a `schbench`
+workload and gets an 80% quota of the total CPU quota divided by number
+of leaf cgroups (in other words, the target CPU load is set to 80%) to
+exercise the throttling functions. Bandwidth control period is set to
+10ms. We run the benchmark on Intel and AMD machines; each machine has
+hundreds of threads.
+
+Kernel LLC load misses for 30 seconds. d3 w10 (wider tree) means a
+cgroup hierarchy of 3 levels, each level has 10 children, totaling 1000
+leaf cgroups. d5 w4 represents a deeper tree with more hierarchies. Each
+benchmark is run 10 times. The table shows 95% confidence intervals of
+the kernel LLC misses in millions.
+
+| Kernel LLC Misses | d3 w10            | d5 w4             |
++-------------------+-------------------+-------------------+
+| AMD-orig          | [3025.5, 3344.1]M | [3382.4, 3607.8]M |
+| AMD-opt           | [2410.7, 2556.9]M | [2565.4, 2931.2]M |
+| Change            | -22.01%           | -21.37%           |
+| Intel-orig        | [1157.2, 1249.0]M | [1343.7, 1630.7]M |
+| Intel-opt         | [960.2, 1023.0]M  | [1092.7, 1350.7]M |
+| Change            | -17.59%           | -17.86%           |
+
+Since the benchmark limits CPU quota, the RPS results reported by
+`schbench` did not show statistically significant improvement as it
+does not reflect the kernel overhead reduction.
+
+Perf data shows the reduction of LLC misses percentage within the kernel
+for the depth 5, width 4 workload. The symbols are taken from the union
+of top 10 symbols in both original and optimized profiles.
+
+| Symbol                                | Intel-orig | Intel-opt |
++---------------------------------------+------------+-----------+
+| worker_thread                         | 75.41%     | 78.95%    |
+| tg_unthrottle_up                      | 3.21%      | 1.61%     |
+| tg_throttle_down                      | 2.42%      | 1.77%     |
+| __update_load_avg_cfs_rq              | 1.95%      | 1.60%     |
+| walk_tg_tree_from                     | 1.23%      | 0.91%     |
+| sched_balance_update_blocked_averages | 1.09%      | 1.13%     |
+| sched_balance_rq                      | 1.03%      | 1.08%     |
+| _raw_spin_lock                        | 1.01%      | 1.23%     |
+| task_mm_cid_work                      | 0.87%      | 1.09%     |
+| __update_load_avg_se                  | 0.78%      | 0.48%     |
+
+| Symbol                                | AMD-orig | AMD-opt |
++---------------------------------------+----------+---------+
+| worker_thread                         | 53.97%   | 61.49%  |
+| sched_balance_update_blocked_averages | 3.94%    | 2.48%   |
+| __update_load_avg_cfs_rq              | 3.52%    | 2.62%   |
+| update_load_avg                       | 2.66%    | 2.19%   |
+| tg_throttle_down                      | 1.99%    | 1.57%   |
+| tg_unthrottle_up                      | 1.98%    | 1.34%   |
+| __update_load_avg_se                  | 1.89%    | 1.32%   |
+| walk_tg_tree_from                     | 1.79%    | 1.37%   |
+| sched_clock_noinstr                   | 1.59%    | 1.01%   |
+| sched_balance_rq                      | 1.53%    | 1.26%   |
+| _raw_spin_lock                        | 1.47%    | 1.41%   |
+| task_mm_cid_work                      | 1.34%    | 1.42%   |
+
+The percentage of the LLC misses in the system is reduced.
+
+Other benchmarks (without CPU share limits) show no regression.
+They ran in a cgroup hierarchy with depth 5, width 4 setting (1024
+instances) for 10 runs. perf profiles confirm the targeted CFS functions
+have lower LLC misses after reordering cfs_rq and sched_entity.
+
+For avg latency and time, lower is better; for record/s, higher is
+better. Ranges are 95% CI.
+
+           | base                 | opt                  | metric
+-----------+----------------------+----------------------+-------------
+ sysbench  | 45.05 [44.69, 45.42] | 44.51 [43.99, 45.04] | avg latency
+ hackbench | 27.00 [26.39, 27.61] | 27.29 [26.38, 28.20] | time
+ ebizzy    | 948.2 [848.1, 1048]  | 951.8 [840.8, 1063]  | record/s
+
+LLC cache miss in kernel. The fluctuation is in the order of =C2=B110%.
+
+           | base   | opt
+-----------+--------+--------
+ sysbench  | 404M   | 351M
+ hackbench | 3,294M | 3,169M
+ ebizzy    | 2,149M | 1,956M
+
+Although we see a noticable reduction in LLC misses, the application
+throughput improvement is negligible because the cycles spent accessing
+cfs_rq and sched_entity are around ~1% among these benchmarks. The
+improvement saves 20% of the cycles accessing them, which is a ~0.2%
+direct saving. However, this benefits most workloads with quite large
+cgroup hierarchies.
+
+v2 updates:
+
+- Add macros to conditionally align a cache group to avoid extra RAM
+paddings on architectures with cacheline sizes other than 64B.
+
+- Add more benchmark results.
+
+Zecheng Li (3):
+  cache: conditionally align cache groups
+  sched/fair: Reorder struct cfs_rq
+  sched/fair: Reorder struct sched_entity
+
+ include/linux/cache.h | 28 +++++++++++++++
+ include/linux/sched.h | 39 +++++++++++----------
+ kernel/sched/core.c   | 81 ++++++++++++++++++++++++++++++++++++++++++-
+ kernel/sched/sched.h  | 81 +++++++++++++++++++++++++++++--------------
+ 4 files changed, 184 insertions(+), 45 deletions(-)
 
 
-
-On 28-05-2025 07:44 pm, agski33 wrote:
-> Hello all,
-> I am currently experiencing the issue that was previously reported in the following BugZilla entry: https://bugzilla.kernel.org/show_bug.cgi?id=219799.  I noticed that the bug was marked as NEEDINFO so I attempted to fill in the relevant information.
-> 
-> 
->  From my testing, it seems like IDMA transfers relating to the touchpad input are taking too long and causing timeouts within hid-multitouch.  
-> 
-> 
-> I contacted ASUS in an attempt to obtain information relating to the workings of the touchpad that may assist with this issue, however I believe it is unlikely that I will be able to obtain anything useful from them.
-> 
-> 
-> I am wondering if anyone has any additional suggestions for next debugging steps or things that I may try - would be happy to provide any additional information or do additional debugging etc.
-> 
-> 
-> System Details:
-> Device: ASUS Q528EH with ELAN1206 Touchpad
-> Kernel versions: 6.9-rc6 is where the issue starts, persists through all kernel versions after including latest.
-> Symptoms: Touchpad cursor will not move.  
->  Additional Observations: Something of potential interest that I noticed was that it appeared the touchpad is sending data byte by byte when doing an IDMA transfer, not sure if that is normal or not.
-> 
-> 
-> Any suggestions for next steps are appreciated!  Thank you in advance for your time and input.
-> 
-> 
-> Thank you,
-> Aaron Gdanski
-
-Looking at https://bugzilla.kernel.org/show_bug.cgi?id=219799#c2, dd4478d63b6a2b6891fcc1800eb26ce3f1ead1d4
-seems to be the patch causing regression.
-
-https://lore.kernel.org/lkml/20240321120453.1360138-1-andriy.shevchenko@linux.intel.com/
-
-Ccing relevant folks here.
+base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
+--=20
+2.49.0
 
