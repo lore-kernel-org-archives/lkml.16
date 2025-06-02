@@ -1,166 +1,63 @@
-Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03CA6224240;
-	Mon,  2 Jun 2025 22:56:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA524224240;
+	Mon,  2 Jun 2025 22:56:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748904975; cv=none; b=fEUAI/bgplfPhc8aSSUQjowqkW5DpPMVYgMfVPSuNVcO5obWyv9dRBXZTB3HEnz3K2No+n9dgIvAtAlNqIqYxPEUrMWLI8JALkrn1WahwnpOPczZNw0pO7YoZEmhAW6WSzNPsbdfUe/X11SOOjZcBDZVekwe/FztrtawcdEsvC0=
+	t=1748904998; cv=none; b=h0OSbT1C2VMPB7XfnJpHNP+Vdff4pWyTHrE+sKlpsnl9aKxXafC7JyNshUxXOzOjD75QzmtY7EdOdRzq/0atV+annT64aIntqKNE1ssA2OJlR9DX517ITLJjDFL5pnk7oiYBtXjkOnDgKbBoUz+iKEkJ+TAqsMYodD7ThERVuMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748904975; c=relaxed/simple;
-	bh=bs0uQbFC8a3+B+UVBUz/7Mj+FMPhbCeM9qCsUm37p5U=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=oZdiHr8qwzyPvuq1t6zMy1D22Zk/qm8H2zr4yyaNUG+WCh5XR0vr1gz1zqBBqRo15n4v6VeRfiytcIrGS0kwEwPXGiuf2xk/Mvks9N3AhPGeElx+C8ABjxLmYqqL94Pf0m+cYNasP7W6yb+sOkLaS8Q2g3f+4AUIQR0D06geIQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-	by vmicros1.altlinux.org (Postfix) with ESMTP id 3764772C8CC;
-	Tue,  3 Jun 2025 01:56:11 +0300 (MSK)
-Received: by mua.local.altlinux.org (Postfix, from userid 508)
-	id 224917CCB3A; Tue,  3 Jun 2025 01:56:11 +0300 (IDT)
-Date: Tue, 3 Jun 2025 01:56:11 +0300
-From: "Dmitry V. Levin" <ldv@strace.io>
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Shuah Khan <shuah@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-	"Maciej W. Rozycki" <macro@orcam.me.uk>,
-	strace-devel@lists.strace.io, linux-kselftest@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] selftests/ptrace/get_syscall_info: fix for MIPS n32
-Message-ID: <20250602225610.GA6005@strace.io>
+	s=arc-20240116; t=1748904998; c=relaxed/simple;
+	bh=+vUJTsDAo2f2hWGgoDTN6JIZNq875apShg3dNj8gA7c=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=nxSG6GenxB2vU3VsuOxNaNMz8mGlAobpL1hdMgJyVyuZ9QxZuzHmof+t4zr7tACJCH6EkyExD9BCxCs5S++wE2EcjBLGe/jz4uvRQyrOgRcZSXZ2WmqICsNsjULBCHP8QRe1bKv0amhccPKCa2Yu9mlvJEzqmZj94eMze6ZIOcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SrMcwiLd; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SrMcwiLd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98397C4CEEB;
+	Mon,  2 Jun 2025 22:56:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748904998;
+	bh=+vUJTsDAo2f2hWGgoDTN6JIZNq875apShg3dNj8gA7c=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=SrMcwiLdKqhhquYCeI/mmky8Xn9/ZCeh9N0C6EH4Ad+Btne9jP22xLknN+a00k0qJ
+	 OkrS6KgYsR2Y+IURqd83GY5wmHRJW3if5+U1u9M+tCRi39ur01ME0pq2+9zrBKerqm
+	 XJOiDxB+uTe7u9qidwVjoWMW1acWNh/jkQ7HWOnQVwLcVl54EjdWFs2OzJyvomFyPE
+	 OCcdvgB8ZdrW/R4fxezDuOXaxPVkoAx8H6dDkCaot/zzf9P+2GIvqgXOED8LbBsW9J
+	 Fvvwg+C0WzstUHfp6qhHi61tJE7FxicLIisyTrX+1A+000NLZNjZ9Qqe6covChcmjg
+	 Io02mzQVKtL9Q==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 71479380AAD0;
+	Mon,  2 Jun 2025 22:57:12 +0000 (UTC)
+Subject: Re: [GIT PULL] additional gfs2 fix for 6.16
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250602161242.2106610-1-agruenba@redhat.com>
+References: <20250602161242.2106610-1-agruenba@redhat.com>
+X-PR-Tracked-List-Id: <gfs2.lists.linux.dev>
+X-PR-Tracked-Message-Id: <20250602161242.2106610-1-agruenba@redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git tags/gfs2-for-6.16-fix
+X-PR-Tracked-Commit-Id: 9126d2754c5e5d1818765811a10af0a14cf1fa0a
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: fe4281644c62ce9385d3b9165e27d6c86ae0a845
+Message-Id: <174890503103.939710.16670523386502907705.pr-tracker-bot@kernel.org>
+Date: Mon, 02 Jun 2025 22:57:11 +0000
+To: Andreas Gruenbacher <agruenba@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Andreas Gruenbacher <agruenba@redhat.com>, gfs2@lists.linux.dev, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-MIPS n32 is one of two ILP32 architectures supported by the kernel
-that have 64-bit syscall arguments (another one is x32).
+The pull request you sent on Mon,  2 Jun 2025 18:12:41 +0200:
 
-When this test passed 32-bit arguments to syscall(), they were
-sign-extended in libc, PTRACE_GET_SYSCALL_INFO reported these
-sign-extended 64-bit values, and the test complained about the mismatch.
+> git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git tags/gfs2-for-6.16-fix
 
-Fix this by passing arguments of the appropriate type to syscall(),
-which is "unsigned long long" on MIPS n32, and __kernel_ulong_t on other
-architectures, the same way as selftests/ptrace/set_syscall_info already
-does.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/fe4281644c62ce9385d3b9165e27d6c86ae0a845
 
-As a side effect, this also extends the test on all 64-bit architectures
-by choosing constants that don't fit into 32-bit integers.
+Thank you!
 
-Signed-off-by: Dmitry V. Levin <ldv@strace.io>
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
----
-
-v3: Added Acked-by:
-    https://lore.kernel.org/all/b2e62143-fa68-4cd1-bf6c-67f0ad49c670@linuxfoundation.org/
-
-v2: Fixed MIPS #ifdef:
-    https://lore.kernel.org/all/20250115233747.GA28541@strace.io/
-
- .../selftests/ptrace/get_syscall_info.c       | 53 +++++++++++--------
- 1 file changed, 32 insertions(+), 21 deletions(-)
-
-diff --git a/tools/testing/selftests/ptrace/get_syscall_info.c b/tools/testing/selftests/ptrace/get_syscall_info.c
-index 5bcd1c7b5be6..2970f72d66d3 100644
---- a/tools/testing/selftests/ptrace/get_syscall_info.c
-+++ b/tools/testing/selftests/ptrace/get_syscall_info.c
-@@ -11,8 +11,19 @@
- #include <err.h>
- #include <signal.h>
- #include <asm/unistd.h>
-+#include <linux/types.h>
- #include "linux/ptrace.h"
- 
-+#if defined(_MIPS_SIM) && _MIPS_SIM == _MIPS_SIM_NABI32
-+/*
-+ * MIPS N32 is the only architecture where __kernel_ulong_t
-+ * does not match the bitness of syscall arguments.
-+ */
-+typedef unsigned long long kernel_ulong_t;
-+#else
-+typedef __kernel_ulong_t kernel_ulong_t;
-+#endif
-+
- static int
- kill_tracee(pid_t pid)
- {
-@@ -42,37 +53,37 @@ sys_ptrace(int request, pid_t pid, unsigned long addr, unsigned long data)
- 
- TEST(get_syscall_info)
- {
--	static const unsigned long args[][7] = {
-+	const kernel_ulong_t args[][7] = {
- 		/* a sequence of architecture-agnostic syscalls */
- 		{
- 			__NR_chdir,
--			(unsigned long) "",
--			0xbad1fed1,
--			0xbad2fed2,
--			0xbad3fed3,
--			0xbad4fed4,
--			0xbad5fed5
-+			(uintptr_t) "",
-+			(kernel_ulong_t) 0xdad1bef1bad1fed1ULL,
-+			(kernel_ulong_t) 0xdad2bef2bad2fed2ULL,
-+			(kernel_ulong_t) 0xdad3bef3bad3fed3ULL,
-+			(kernel_ulong_t) 0xdad4bef4bad4fed4ULL,
-+			(kernel_ulong_t) 0xdad5bef5bad5fed5ULL
- 		},
- 		{
- 			__NR_gettid,
--			0xcaf0bea0,
--			0xcaf1bea1,
--			0xcaf2bea2,
--			0xcaf3bea3,
--			0xcaf4bea4,
--			0xcaf5bea5
-+			(kernel_ulong_t) 0xdad0bef0caf0bea0ULL,
-+			(kernel_ulong_t) 0xdad1bef1caf1bea1ULL,
-+			(kernel_ulong_t) 0xdad2bef2caf2bea2ULL,
-+			(kernel_ulong_t) 0xdad3bef3caf3bea3ULL,
-+			(kernel_ulong_t) 0xdad4bef4caf4bea4ULL,
-+			(kernel_ulong_t) 0xdad5bef5caf5bea5ULL
- 		},
- 		{
- 			__NR_exit_group,
- 			0,
--			0xfac1c0d1,
--			0xfac2c0d2,
--			0xfac3c0d3,
--			0xfac4c0d4,
--			0xfac5c0d5
-+			(kernel_ulong_t) 0xdad1bef1fac1c0d1ULL,
-+			(kernel_ulong_t) 0xdad2bef2fac2c0d2ULL,
-+			(kernel_ulong_t) 0xdad3bef3fac3c0d3ULL,
-+			(kernel_ulong_t) 0xdad4bef4fac4c0d4ULL,
-+			(kernel_ulong_t) 0xdad5bef5fac5c0d5ULL
- 		}
- 	};
--	const unsigned long *exp_args;
-+	const kernel_ulong_t *exp_args;
- 
- 	pid_t pid = fork();
- 
-@@ -154,7 +165,7 @@ TEST(get_syscall_info)
- 			}
- 			ASSERT_LT(0, (rc = sys_ptrace(PTRACE_GET_SYSCALL_INFO,
- 						      pid, size,
--						      (unsigned long) &info))) {
-+						      (uintptr_t) &info))) {
- 				LOG_KILL_TRACEE("PTRACE_GET_SYSCALL_INFO: %m");
- 			}
- 			ASSERT_EQ(expected_none_size, rc) {
-@@ -177,7 +188,7 @@ TEST(get_syscall_info)
- 		case SIGTRAP | 0x80:
- 			ASSERT_LT(0, (rc = sys_ptrace(PTRACE_GET_SYSCALL_INFO,
- 						      pid, size,
--						      (unsigned long) &info))) {
-+						      (uintptr_t) &info))) {
- 				LOG_KILL_TRACEE("PTRACE_GET_SYSCALL_INFO: %m");
- 			}
- 			switch (ptrace_stop) {
 -- 
-ldv
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
