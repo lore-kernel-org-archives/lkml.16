@@ -1,78 +1,95 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48C12C324E;
-	Mon,  2 Jun 2025 19:20:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D3D62C324E
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 19:20:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748892041; cv=none; b=QaadN8nZ9JjnpyYtX1YRCLJxmN0Ro/oiHWrQClm0k2QS7SZeJdOVYRDPpUbr8i5pdxrI9XxX2dW6EoFSQInM1CuZ26TvdV50va7Wo2eC8SKqp8G5o23SmT5xaUETS2pEi8CUAvupoFru4i0COPuutDjcanLbN6uHEsMUSSRLaCw=
+	t=1748892054; cv=none; b=C6P6mkv+QdbVz91gdvg10FvJA5PGguUaYMGNIoli3X2pVRGRjRHOPeFpD9uOpOfzMdFRF4Wfv6l0XNQF5p8SLfugFmVp91qHG6DD177AyaReYXQal7brvi4rg7EOjBtRYC4GQ7MI14m6w4MJ5H77leTokMeLfMJGmmU5BhsoTwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748892041; c=relaxed/simple;
-	bh=5uhXrocylBQdGBan0QqjAPQ5k009DNU1Z8mQ+OjLuBo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jQ4hlVT+fJEP6V3GQruRv0aXuboTwPEpHYlut0ijEvS8KUocd+77+BLrTqCxHM/IxRMXcAr4u0xoUYsp0sXSvrHaln25jCujL/6AM06NUQpEsXVAQ2dCATA3huAbNtuGfXfBQM9w6EXfZPNb+HVWSDpNPVXLYv8UBQMoI+WJecE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bURaxLVJ; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1748892054; c=relaxed/simple;
+	bh=XNKlHM50OeNV5Y37EFYZ0ze3VZ45dw6QiEF9GvPU0BI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uaGVXhldyEH1TpUX06XQ5rfJFJcMe7Ox3xwfIqmk32OS2mMZF/o9atXpSJpblDeoAsppv4/qABo4rx+6nXb7kvlJs4BHT69K88XZThW/hL1P8k2zphtQpfRWPxERGcbW2we6jM9jK77ANRoRlbphp2/9yaQJwAgpDyzx2sXPH9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ljZRUq6X; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bURaxLVJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=v0JOHp1Sk8wZLXiW77XvXNKnCz2rxKUiMhwBWqUIHew=; b=bURaxLVJAmyVpHPBIb19lm59cU
-	rZP9W8HemkuDXsIreFITIpBEv/DxtNb9SNpWVNOVlpWFl/suDq6SRbL1wKLeXZKXmq8jcQRSLUxyS
-	DnHfoRUDVJSN3YCVV+6XVcwestxHw7p1B0jDYmxFXj5g6A7DBiIr2s8nmxrTmKEZ/balxdeC1epJ5
-	g2unXJkTZtmIOe0t+W+HOO9xWaY6YDAzpw0tmDA1S1hgWyI33e/40kZTF/tb3t5spNwp4cIt/N4lj
-	jCMeL67EcMHk4fwNJmCmHL/oMkd3Ev9t7jygrLBY/a359tcZ08drJ4533UoIe62nyd02KdVJ/DJF+
-	FvdMY86A==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uMAi5-00000001FuO-3FZs;
-	Mon, 02 Jun 2025 19:20:37 +0000
-Date: Mon, 2 Jun 2025 20:20:37 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
-	mm-commits@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] Additional MM updates for 6.16-rc1
-Message-ID: <aD35hVObSEuPmHDg@casper.infradead.org>
-References: <20250601151222.60ead71e7d8492a18c711a05@linux-foundation.org>
- <aD29wnb5zR-afWpM@casper.infradead.org>
- <20250602121751.53ee502779a2f746404a3548@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ljZRUq6X"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-6024087086dso2316a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 12:20:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748892051; x=1749496851; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3gwRFlc/UyGQEBimT4kA+BZOQC0ntrU0C9Q22jAptBI=;
+        b=ljZRUq6X+L42CdT1bDukyCaC9F2xa/R2rY+JFfKZgHjLwPibvGn4wV4ekJXXUY0xZY
+         BtIx2LfeVa74ibSEnHeaxOaegicPiKk0Scnwn6fWqO3K++Ek7vVNgouNCUun7h9yrt89
+         uVDUoeWe1CV4UZdN/btZ6jT2hukAVSNG6TmVcYR0mwjAdfKI+JRome9O2H+ToMgR583W
+         1p/fc0C8lA0ZWuWQhYKLg8todGbf/+Zh0PKuxr79Pu9HJUEfUEh7kP/73ItNo1nwX3vF
+         bLT+zHAYkEEa82YqYFY3XheDdy36Grt06jBy+VNAmTIMYWpWbwBgk5gJax0s1kzRKQ4G
+         m97A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748892051; x=1749496851;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3gwRFlc/UyGQEBimT4kA+BZOQC0ntrU0C9Q22jAptBI=;
+        b=YPh+CDsiha17LiDtoiOIJQOYBwjl/Vg6io6gtAiy3L5r+Gya8LkLFobYkUAs/MsvU8
+         6mwfi7HLY+O0/jiznqsDqdHoWzlV7N27bg+9q8NefdcMmBOiPzN27bWS3w3f6aK+otn2
+         els9oAbwuN+Mtr8zdUwN21wwCtGdJGz/QRmXdqKhAt3sn6cE2cMVacN9OUbn8Qobucka
+         +wTxeQ02cPXTEw1guTx2+rADv5x5hV4gBEGLHtL5ZW0AhgoFnsYiq/g3yMjQBofzOKId
+         IpDS1tOn1BixLenk/idNl9g2rVUOmmhmZMUh32rvlaw3wwg/6+Pai/jG0KV8cc5o+45p
+         VPBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU31f9GBZg7KWhLRZwaZ+ybIxSAEQAs7W/Y8DJ78TbWrkvN0OrGdrZZ9foPsW2sljLXFOo/8k/Rz8048O4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6rtw93+X8QumF5J249PscqyUQ5rUPpJOEWBqp2WQVxC57HqNY
+	4z3rUbZqLbNdA7BrZbA8VDi3CjWsbZkJAbG7fznEwXsVxOTakKZPk7dC2EBOweTshmPKYu4liKI
+	7/IOvc77h+YsxkUYApBBNgFjFyuZfo5u88aLrFngO
+X-Gm-Gg: ASbGnctQBrp3usPOA+662wfXRFF5xoLS/32IEvmdzXPXMZFwbHWu0roIvNQiarjHO4k
+	LZr9zXy2ahJTWGg6Di8ouMZP+KPM60RC2GNe50jBQekRhh5GYFr5DjNTwr+HVaywtlZ/20/s9Mm
+	nW+rMB3wP9p6NzIdCEQG17dClD5q3uc2rssTywSv/9fbgJNWym3VDY6HnPR3GYMALUwwV59X3MG
+	7wdVQCvz+k=
+X-Google-Smtp-Source: AGHT+IFYV0PX95qdO7NRqTq5XfLrQw/yUYV2ENfg4voiHjm1KfmtxIh7AJ0OAeerlVk4m1cTPjKz7p5WqQWRPgtyMgg=
+X-Received: by 2002:a50:9fcd:0:b0:604:58e9:516c with SMTP id
+ 4fb4d7f45d1cf-606a9c51bf5mr13611a12.5.1748892050318; Mon, 02 Jun 2025
+ 12:20:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250602121751.53ee502779a2f746404a3548@linux-foundation.org>
+References: <20250602174926.1074-1-sj@kernel.org>
+In-Reply-To: <20250602174926.1074-1-sj@kernel.org>
+From: Jann Horn <jannh@google.com>
+Date: Mon, 2 Jun 2025 21:20:14 +0200
+X-Gm-Features: AX0GCFtKpt8eeRNfSX98xljzde8cTOfEt7rbGQpQQpaLjCjbYAWojg23HDCM9Mc
+Message-ID: <CAG48ez0cysRfJ82UKH39Ns0gYOcmn7HR=UVRDo74w=uwm6pcTg@mail.gmail.com>
+Subject: Re: [PATCH] mm/madvise: handle madvise_lock() failure during race unwinding
+To: SeongJae Park <sj@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, stable@kernel.org, Barry Song <21cnbao@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 02, 2025 at 12:17:51PM -0700, Andrew Morton wrote:
-> On Mon, 2 Jun 2025 16:05:38 +0100 Matthew Wilcox <willy@infradead.org> wrote:
-> 
-> > On Sun, Jun 01, 2025 at 03:12:22PM -0700, Andrew Morton wrote:
-> > > Linus, please merge this second batch of MM updates for the 6.16-rcX cycle.
-> > 
-> > A word of warning for Linus since he wouldn't've been cc'd on the
-> > earlier email.  This branch is based on v6.15-rc6 but contains a
-> > commit which depends on 97dfbbd135cb which was merged during the
-> > current merge window.  You might want to do a rebase or ask Andrew to
-> > do it in order to prevent a bisection hazard.
-> > 
-> > 0day-ci found the problem here:
-> > https://lore.kernel.org/linux-mm/202506022027.IYQzZghL-lkp@intel.com/
-> 
-> I think it's OK?  I did the merge and 
-> 
-> 	d9736929445e iov: remove copy_page_from_iter_atomic()
-> 
-> lands later than
-> 
-> 	97dfbbd135cb highmem: add folio_test_partial_kmap()
+@akpm FYI, this looks like it fixes a security bug in 6.15 (probably
+leads to UAF of VMA structs and page tables by racing madvise(...,
+MADV_GUARD_INSTALL) with concurrent faults)
 
-Yes, but if 'git bisect' lands you on there being a problem in 0b43b8bc8ef8
-you won't be able to build it because 0b43b8bc8ef8 has d9736929445e as
-an ancestor but not 97dfbbd135cb .  You'll need to add a cherry-pick of
-97dfbbd135cb which is aggravating and we try to avoid this.
+On Mon, Jun 2, 2025 at 7:49=E2=80=AFPM SeongJae Park <sj@kernel.org> wrote:
+> When unwinding race on -ERESTARTNOINTR handling of process_madvise(),
+> madvise_lock() failure is ignored.  Check the failure and abort
+> remaining works in the case.
+>
+> Fixes: 4000e3d0a367 ("mm/madvise: remove redundant mmap_lock operations f=
+rom process_madvise()")
+> Cc: stable@kernel.org
+> Reported-by: Barry Song <21cnbao@gmail.com>
+> Closes: https://lore.kernel.org/CAGsJ_4xJXXO0G+4BizhohSZ4yDteziPw43_uF8nP=
+XPWxUVChzw@mail.gmail.com
+> Signed-off-by: SeongJae Park <sj@kernel.org>
+
+Reviewed-by: Jann Horn <jannh@google.com>
