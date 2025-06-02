@@ -1,194 +1,140 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB242C327D
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 13:19:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2E95227;
+	Mon,  2 Jun 2025 13:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748870368; cv=none; b=YdE/PELT1QcZOmK5ouKarbYm/xxL0lBGyh3m8OiBo5O1ZzaZbpYLeq9a+ReX6kL25edwLh1PPVlHYVA2xzl3aq1WJEOccEk1A/KQ+OTmc66QgKNy2Q671sWlUaDbvB0GMq+nYxTzVh+pqawReZf/9kjqgSDzZ4BOZFojft17Jlg=
+	t=1748870389; cv=none; b=jdbWbSvtmJioimYH6TxiHYVNPGCrlplbVqMzCIlBO+ve0LbM5lq61FAHfE+d4ndYoSQ7FAJ6rMGR35vZFrHhMqwX5b8zAOz165frgNqk5wlSab1BS9tR9poEYB1SV/wDTGdspYOrTfPyda17buOA8uAS68HtHrv90CF5cP+gjZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748870368; c=relaxed/simple;
-	bh=urOJkX2VjWSvjtiwfgDrnKakD4pvfzNkU4bAqbjE+Lg=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=sUKXIZq6v7do+XPepfCASmRhu1xVQux+NIlV13PFiDwsFTrPh5YPx89aatpERESLcWZisOB999QwuUTGkCg2eu1JeF1Wdhrd0NJa6FJzzRsUstRXHZp15EHIXXWfj0iAH6ai3bjyJJe27Hro1FTqNvmr89PvQQJGqLcNKeSb9V8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=jt+WSqEB; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	s=arc-20240116; t=1748870389; c=relaxed/simple;
+	bh=UxGEKXZqr/JaIi0rMXu3vg+WUXFZEFThlv9I/oaHoDA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=H4MHk6BkH044AauMoGcOXiFv1Z4/+7dy33Vjm5GtC21D29Zqyvjx/Idh0XOjuZJ6JAHn3p0hQwXvdhUGe0nlFn/Iz1Voviv5ojNZtkqXOO4HRhygRWFalxmWzErlV8fa3NeOh1Qr9n40NfIp9chgrinK6GvxM49cu4v6pTFYNks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EOQpJ1Vm; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="jt+WSqEB"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4a4323fe8caso28524211cf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 06:19:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EOQpJ1Vm"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-31223a4cddeso3015401a91.1;
+        Mon, 02 Jun 2025 06:19:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1748870364; x=1749475164; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=hNeIv0nkqI8i4I6qvdfHDcZqAUy2I6oKFEk2iwT02ZU=;
-        b=jt+WSqEB7Xcev5d272aI4P/K5v/unhe4k/+bHCNfLxcZyI78UanGn1BGh3bk8ysm/g
-         pM9Uiq0WLcQfvyUoIXyaB0SEkTRFriT5jwAYWbQq4bK3PoQIMRrIH0G1axTU3Cbovfdb
-         zkPgBcpYnXdrxKz/h2K322Y8BHaPuRZIRpSA0=
+        d=gmail.com; s=20230601; t=1748870387; x=1749475187; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=U2pWQ8XYInPzY7yzvFzb84/7Ia0EnVFU8WNL68zGHlw=;
+        b=EOQpJ1VmyTxByW69ygZWWDI0yb2LCZhzGZUNA6TNUkm2uPEZZUuz4UP5KHttBMVTP0
+         9VOisYX1gvaq/r1/IYwrTI62s8VUT3EHca7Zz4jq54lmK3QC5qon7tlFx3HJR6o43uVN
+         N/Z0HsEVpw1Elw0lqotVwc3o90E+f8H2SV1X5d+NISWOopXP5sSfIywT8LqcT1X/5aOP
+         atlhKoiA+eU9LRhjB+cyGGQp3RHO6gTWd/7SCnu5yBQjFu/Ip5NjOa98BFrUM2FHsjQq
+         Lee8bP814KC34HSv8Fs0qJHIZjRmGLzYYG5AIUfALc/KXeL0pmML4kk59HZr5rFSxxGO
+         exOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748870364; x=1749475164;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hNeIv0nkqI8i4I6qvdfHDcZqAUy2I6oKFEk2iwT02ZU=;
-        b=EqLiR000Wogley/iRXIY2X7GO7KKL3XeDfm7LuSo9ECdLMT/bhmJGdRdsui2cSpJWd
-         CXRa4liRJFco+DFxrzpz30gT8R7QRQdOU2wH1colI8HZDggTDbS10X5q9PrV/ggtgD7T
-         ioo1g23JQ23nLsQSvzVhvD88dsDacNf+3+h7wZI97qLMMvAjPo0l+JDlH7cEC8mBCd+n
-         WXwdS8TBFqZDYlGyK/d4bjiQmqdBJLBQZMBOSnMtTtyuAbTpOOLInrgcjANoRqRpaG3j
-         kOECP0blU4f00AYJ4U3QEH60Ax8/v4RSiyE61M67219yZojohK0BaHb8kk9jkvoco3IO
-         BBug==
-X-Forwarded-Encrypted: i=1; AJvYcCVBB/2+z88P+aWC5exWrcTs5ArgA0xSfCqbO40kdrg70YmnswVMyI1STkbdeV2iDlX9aRyk0Zfpr0+qFwA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5xB08iXc2JEQ7drXzIznp7uo9H+p3pXRlTBRhEFmcjEaBUo5o
-	/SW9Ib9Xe6eJoENetUyUYd2IazX+K/fdQWyzVXXwlIjkSs87T1Rul7g34rhYwz+m4hPojCCTHrK
-	4qJ1N1rhWdR+TxbCGqLUMbtHhY6KteyAQzN8yg7qCZg==
-X-Gm-Gg: ASbGncv+52QB/4+2lzJJQDEl2lHGWPO9kguP+TZP43Tyn3IuQvxwgeiY/9tvUmo8SOJ
-	icTQSshiQ8u0ihEopWRWrLb1PrY71DvtxeLFrCJQj9yZaIBUJXe9uvBFA2N6nO4W4j8GUwwkQy7
-	f5LPql1iucuMpQjStW5qd5Et9wn8/ujeA=
-X-Google-Smtp-Source: AGHT+IEqIX8uBNZUeXHVbIz/ByVsdfNk1YkCWbKwHXwV4z/QG9MV95SEQtbIlnvdSjm7wzaXzKGQ6VmxZihpWuWuYys=
-X-Received: by 2002:a05:622a:4d96:b0:4a4:3a45:a870 with SMTP id
- d75a77b69052e-4a4aed86be6mr152401871cf.41.1748870363569; Mon, 02 Jun 2025
- 06:19:23 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748870387; x=1749475187;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=U2pWQ8XYInPzY7yzvFzb84/7Ia0EnVFU8WNL68zGHlw=;
+        b=eagfQT+tLsQbBPg2N3RmR+Yytx5CUwcIX/ofgZWUDUtargkH0pWNjCO6oPjY4r6V98
+         GwJhLHw4/AJ0IsWaD6fuvQpgQ4HPYMjyQAUgPSQTGOzYM3Vbt2SXiN89XcsLWBc3yUT7
+         gtVEnWs9Rs6K5YVj0wTvo5VG4UhIyE7uDONrG5sajZqBsTlt4MI3T/7TYOqfr2KQC6LD
+         XqgSqKGD6yg1IR/2IEhAp83oZg624mP+1q8gKthUOt0g5z3QAZx4lsoa1rSaYO/amEyf
+         khVO7seoDIXvYtsafBu3J8d2o/mkKY5/enf410YWdvnEQk87v5L4lgd23eOKfEUYznPo
+         HLVA==
+X-Forwarded-Encrypted: i=1; AJvYcCV5GY00X34pYdutgccNlz0q0AZKZpJ4gKoNAMcO7zRGfT2UtLdyK5hR4gb8p2tPXRG0BlIB97G1dxaruaIrtprfWQ==@vger.kernel.org, AJvYcCW7a+N4+ITdGpPCgT63s02QdLkLxzgrXogNMzTmvu+Tpak0VJsKPfV92vnIfKKKaly3gZSC5EYekBQ=@vger.kernel.org, AJvYcCXF6Pwn09h+oLDCEhidH8YetBuEawGCd3V9uYv7HSiqT2aM+c3q7DYJlTXKveY8C4E+9bgZ7115sdBPjtI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEFrvZExDA7Qa6PG/r35JuVoHhpBXN7J2mMadylW3kv5dWuuC9
+	cLk9Q2l+LpExzZaV13sVr9nkfIbc1BrmrqLLth6FIgPB+q4Wu+FKICLr57QTzbqL
+X-Gm-Gg: ASbGnct7WtkoFjJUbDw+ImTPuknAd/rEnjQxDa31Yh5S4rPMFuVovzV4YSedAFEnocS
+	J8LdzbVx+NYSbBNoIGCQ2qs+og3PPdxYqKoK7ApG8+mMk52ExCUvy52O+0+DWlhkQ8eSkuGTqpl
+	KkCby2MFrZ3yKvKVeuEksBE/oFdFHfRHYnocr/yqJ3xycGmONg8KGQgG0AJ5l0hOrXVmmvRBiss
+	auyJ++euEZrd+VrASwggwx2GiTYifgtbNxgklMUjWjovNyYds5XGLORSvjriQO3oNaluuOEf1Nk
+	DxeskcC921h8gju51xgjAnTSisRQtuvz6PkLmY5FJ+70T7Xw8g1j2vGpdgTOIbGHSHcR05rVyQ=
+	=
+X-Google-Smtp-Source: AGHT+IFDyEzGFaym1wpwRqsblj24xGVKJRt91HFE7nLSINnTFLOY+Zcd+cdYuE1FMCys07O3cnvoUw==
+X-Received: by 2002:a17:90b:4a0d:b0:312:1d2d:18d9 with SMTP id 98e67ed59e1d1-3127c6a9969mr11777603a91.5.1748870386764;
+        Mon, 02 Jun 2025 06:19:46 -0700 (PDT)
+Received: from hiagof-nb.corp.toradex.com ([67.159.246.222])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e2b67bcsm6130983a91.8.2025.06.02.06.19.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Jun 2025 06:19:45 -0700 (PDT)
+From: Hiago De Franco <hiagofranco@gmail.com>
+To: Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	linux-pm@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org
+Cc: Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Hiago De Franco <hiago.franco@toradex.com>,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Peng Fan <peng.fan@oss.nxp.com>,
+	daniel.baluta@nxp.com,
+	iuliana.prodan@oss.nxp.com,
+	"Rafael J . Wysocki" <rafael@kernel.org>
+Subject: [PATCH v4 0/3] remoteproc: imx_rproc: allow attaching to running core kicked by the bootloader
+Date: Mon,  2 Jun 2025 10:19:02 -0300
+Message-Id: <20250602131906.25751-1-hiagofranco@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Mon, 2 Jun 2025 15:19:12 +0200
-X-Gm-Features: AX0GCFvw7gX-uNdjKLeV2woDtV5Y5MaBSm2beYIlJgsMM4lk09sgtGqTtt8oGcg
-Message-ID: <CAJfpegspRzFpTreohM56=ztnjaU2gVFYnvF2WETaD+LiymB8WQ@mail.gmail.com>
-Subject: [GIT PULL] fuse update for 6.16
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: multipart/mixed; boundary="000000000000c799f60636969cd7"
+Content-Transfer-Encoding: 8bit
 
---000000000000c799f60636969cd7
-Content-Type: text/plain; charset="UTF-8"
+From: Hiago De Franco <hiago.franco@toradex.com>
 
-Hi Linus,
+This patch series depends on Ulf's patches that are currently under review,
+"pmdomain: Add generic ->sync_state() support to genpd" [1]. Without them,
+this series is not going to work.
 
-Please pull from:
+For the i.MX8X and i.MX8 family SoCs, currently when the remotecore is
+started by the bootloader and the M core and A core are in the same
+partition, the driver is not capable to detect the remote core and
+report the correct state of it.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git
-tags/fuse-update-6.16
+This patch series implement a new function, dev_pm_genpd_is_on(), which
+returns the power status of a given power domain (M core power domains
+IMX_SC_R_M4_0_PID0 and IMX_SC_R_M4_0_MU_1A in this case). If it is already
+powered on, the driver will attach to it.
 
-- Remove tmp page copying in writeback path (Joanne).  This removes
-~300 lines and with that a lot of complexity related to avoiding
-reclaim related deadlock.  The old mechanism is replaced with a
-mapping flag that tells the MM not to block reclaim waiting for
-writeback to complete.  The MM parts have been reviewed/acked by
-respective maintainers.
+Finally, the imx_rproc_clk_enable() function was also changed to make it
+return before dev_clk_get() is called, as it currently generates an SCU
+fault reset if the remote core is already running and the kernel tries
+to enable the clock again. These changes are a follow up from a v1 sent
+to imx_rproc [2] and from a reported regression [3].
 
-- Convert more code to handle large folios (Joanne).  This still just
-adds the code to deal with large folios and does not enable them yet.
+[1] https://lore.kernel.org/all/20250523134025.75130-1-ulf.hansson@linaro.org/
+[2] https://lore.kernel.org/lkml/20250423155131.101473-1-hiagofranco@gmail.com/
+[3] https://lore.kernel.org/lkml/20250404141713.ac2ntcsjsf7epdfa@hiago-nb/
 
-- Allow invalidating all cached lookups atomically (Luis Henriques).
-This feature is useful for CernVMFS, which currently does this
-iteratively.
+v4:
+- dev_pm_genpd_is_on() introduced to drivers/pmdomain/core.c
+- imx_rproc.c updated to use the generic power domains instead of the
+  SCU API call, which depends on Ulf's patch series.
 
-- Align write prefaulting in fuse with generic one (Dave Hansen)
+v3:
+- https://lore.kernel.org/all/20250519171514.61974-1-hiagofranco@gmail.com/
 
-- Fix race causing invalid data to be cached when setting attributes
-on different nodes of a distributed fs (Guang Yuan Wu)
+v2:
+- https://lore.kernel.org/lkml/20250507160056.11876-1-hiagofranco@gmail.com/
 
-- Update documentation for passthrough (Chen Linxuan)
+v1:
+- https://lore.kernel.org/lkml/20250505154849.64889-1-hiagofranco@gmail.com/
 
-- Add fdinfo about the device number associated with an opened
-/dev/fuse instance (Chen Linxuan)
+Hiago De Franco (3):
+  pmdomain: core: introduce dev_pm_genpd_is_on
+  remoteproc: imx_rproc: skip clock enable when M-core is managed by the
+    SCU
+  remoteproc: imx_rproc: detect and attach to pre-booted remote cores
 
-- Increase readdir buffer size (Miklos).  This depends on a patch to
-VFS readdir code that was already merged through Christians tree.
+ drivers/pmdomain/core.c        | 27 +++++++++++++++++++++++++++
+ drivers/remoteproc/imx_rproc.c | 33 ++++++++++++++++++++++++++-------
+ include/linux/pm_domain.h      |  6 ++++++
+ 3 files changed, 59 insertions(+), 7 deletions(-)
 
-- Optimize io-uring request expiration (Joanne)
+-- 
+2.39.5
 
-- Misc cleanups
-
-There's conflict with commit 74e6ee62a894 ("fuse: drop usage of
-folio_index") the first hunk of which just gets evicted with the tmp
-page cleanup and the second one needs to apply the trivial
-folio_index(folio) -> folio->index conversion to my version.
-Resolution attached.
-
-Thanks,
-Miklos
----
-
-Chen Linxuan (3):
-      MAINTAINERS: update filter of FUSE documentation
-      docs: filesystems: add fuse-passthrough.rst
-      fs: fuse: add dev id to /dev/fuse fdinfo
-
-Dave Hansen (1):
-      fuse: Move prefaulting out of hot write path
-
-Guang Yuan Wu (1):
-      fuse: fix race between concurrent setattrs from multiple nodes
-
-Jiale Yang (1):
-      fuse: change 'unsigned' to 'unsigned int'
-
-Joanne Koong (15):
-      fuse: Convert 'write' to a bit-field in struct fuse_copy_state
-      fuse: use boolean bit-fields in struct fuse_copy_state
-      fuse: optimize over-io-uring request expiration check
-      mm: skip folio reclaim in legacy memcg contexts for deadlockable mappings
-      fuse: remove tmp folio for writebacks and internal rb tree
-      fuse: support copying large folios
-      fuse: support large folios for retrieves
-      fuse: refactor fuse_fill_write_pages()
-      fuse: support large folios for writethrough writes
-      fuse: support large folios for folio reads
-      fuse: support large folios for symlinks
-      fuse: support large folios for stores
-      fuse: support large folios for queued writes
-      fuse: support large folios for readahead
-      fuse: support large folios for writeback
-
-Luis Henriques (1):
-      fuse: add more control over cache invalidation behaviour
-
-Miklos Szeredi (3):
-      fuse: don't allow signals to interrupt getdents copying
-      readdir: supply dir_context.count as readdir buffer size hint
-      fuse: increase readdir buffer size
-
----
- Documentation/filesystems/fuse-passthrough.rst | 133 +++++++
- Documentation/filesystems/index.rst            |   1 +
- MAINTAINERS                                    |   2 +-
- fs/exportfs/expfs.c                            |   1 +
- fs/fuse/dev.c                                  | 182 ++++++----
- fs/fuse/dev_uring.c                            |  34 +-
- fs/fuse/dir.c                                  |  46 ++-
- fs/fuse/file.c                                 | 474 ++++++-------------------
- fs/fuse/fuse_dev_i.h                           |   9 +-
- fs/fuse/fuse_i.h                               |  10 +-
- fs/fuse/inode.c                                |  11 +-
- fs/fuse/readdir.c                              |  40 +--
- fs/overlayfs/readdir.c                         |  12 +-
- fs/readdir.c                                   |  47 ++-
- include/linux/fs.h                             |  10 +
- include/linux/pagemap.h                        |  11 +
- include/uapi/linux/fuse.h                      |   6 +-
- mm/vmscan.c                                    |  12 +-
- 18 files changed, 519 insertions(+), 522 deletions(-)
- create mode 100644 Documentation/filesystems/fuse-passthrough.rst
-
---000000000000c799f60636969cd7
-Content-Type: text/x-patch; charset="US-ASCII"; name="conflict-res.patch"
-Content-Disposition: attachment; filename="conflict-res.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_mbf44ewu0>
-X-Attachment-Id: f_mbf44ewu0
-
-ZGlmZiAtLWNjIGZzL2Z1c2UvZmlsZS5jCmluZGV4IDZmMTlhNGRhYTU1OSwzZDBiMzNiZTM4MjQu
-LjAwMDAwMDAwMDAwMAotLS0gYS9mcy9mdXNlL2ZpbGUuYworKysgYi9mcy9mdXNlL2ZpbGUuYwpA
-QEAgLTIzNDksNyAtMjExOCw3ICsyMTE4LDcgQEBAIHN0YXRpYyBib29sIGZ1c2Vfd3JpdGVwYWdl
-X25lZWRfc2VuZChzdAogIAkJcmV0dXJuIHRydWU7CiAgCiAgCS8qIERpc2NvbnRpbnVpdHkgKi8K
-LSAJaWYgKGRhdGEtPm9yaWdfZm9saW9zW2FwLT5udW1fZm9saW9zIC0gMV0tPmluZGV4ICsgMSAh
-PSBmb2xpby0+aW5kZXgpCiAtCWlmIChmb2xpb19uZXh0X2luZGV4KGFwLT5mb2xpb3NbYXAtPm51
-bV9mb2xpb3MgLSAxXSkgIT0gZm9saW9faW5kZXgoZm9saW8pKQorKwlpZiAoZm9saW9fbmV4dF9p
-bmRleChhcC0+Zm9saW9zW2FwLT5udW1fZm9saW9zIC0gMV0pICE9IGZvbGlvLT5pbmRleAogIAkJ
-cmV0dXJuIHRydWU7CiAgCiAgCS8qIE5lZWQgdG8gZ3JvdyB0aGUgcGFnZXMgYXJyYXk/ICBJZiBz
-bywgZGlkIHRoZSBleHBhbnNpb24gZmFpbD8gKi8K
---000000000000c799f60636969cd7--
