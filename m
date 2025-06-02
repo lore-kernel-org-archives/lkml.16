@@ -1,73 +1,81 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F2EAD5E
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 09:31:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A64A2C3249;
+	Mon,  2 Jun 2025 09:32:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748856694; cv=none; b=mWaTNGFdcolwIhc0md5ljlj78Q0VoI4Rma+0DPYDCbD2HV2xTbIZsmCS7JcpjtOz0xWEZrBlfDHn+hJXLSQw+qUT7rfyT8tGjR/wYDwcMD6dBoRPQ2MrCBgLEuVwmGHTpXeaXGuIHccR9OufDIHNnCgh5BCGFM8GXY+wXzUnUpU=
+	t=1748856758; cv=none; b=MVmiRnoiK7VNw7tW8XDZNVC2awvJF6x7oVf7wbX3v1Ej8BYv2Dfl0wxl1+IpqtdLjzeN/7Go8J/3xCBPcJk83s5RsT3cBJV3rtaGyvZaK0JR2D3iftM56YqC5Ned01KgiR1l+Dcvr6//J89k+4WYJB6IpoMQ1qwp++ydshKms50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748856694; c=relaxed/simple;
-	bh=DDQCYoxGnWSY2S+soWqfqhkVaAWwzBsBgbxvaeWkF7I=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fs1pF6tTX+UdVFnt6xhVMHSAZ1ZCS4EHRaxPFXvRWKGDRRqYSU2pyOcqjs3P9s+mYOODb0OugIlby2oHWemhzec5389ZP1dSeUnuDUbaEFwJImZOd9+J0snVxDbaQWsQqOvrN+w455itZOQMbw0Ho3ZXOvvP870NOS70kAfndRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uM1Vr-0003wb-C5; Mon, 02 Jun 2025 11:31:23 +0200
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uM1Vq-001Qlw-29;
-	Mon, 02 Jun 2025 11:31:22 +0200
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uM1Vq-000A3f-1v;
-	Mon, 02 Jun 2025 11:31:22 +0200
-Message-ID: <83e59280261ad0769dd7e9f6135656c795836878.camel@pengutronix.de>
-Subject: Re: [PATCH] spi: bcm63xx: fix shared reset
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: =?ISO-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>, 
- dgcbueu@gmail.com, florian.fainelli@broadcom.com,
- william.zhang@broadcom.com,  kursad.oney@broadcom.com,
- jonas.gorski@gmail.com,  bcm-kernel-feedback-list@broadcom.com,
- broonie@kernel.org,  linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Mon, 02 Jun 2025 11:31:22 +0200
-In-Reply-To: <20250529130915.2519590-1-noltari@gmail.com>
-References: <20250529130915.2519590-1-noltari@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1748856758; c=relaxed/simple;
+	bh=nr4WqDvry9Cej4Mt316h/Dzw69D+4TInCxHLquLuXZM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Za9N0C7xWG0iESfskk+vr255t3GUWFJlU+CGLHBcqsHv9okAwNS+89ARHM1bAqd33VawLSxE2kD6pxewQNq6RyTCiuzKP7kxhaLGruSOZREIk0nnbMbqdUxrRMqaKvWKi1niB21wbixkDEjZGOoEpTU+z9dZEopRok0m3EppFZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b/bQqgF/; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b/bQqgF/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7010C4CEEB;
+	Mon,  2 Jun 2025 09:32:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748856758;
+	bh=nr4WqDvry9Cej4Mt316h/Dzw69D+4TInCxHLquLuXZM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=b/bQqgF/D2RMhGm2dsGYeYPHlX/2BpeQ+jCGtifH5sJXlzICBeiNAFBIKRuF2HRvL
+	 BmYTwVWy08M+Dg8ye38PD44v7aAfkEg7ctXRbjzRXEF/qdnObtlDr3ImqQfI87qaJ3
+	 cNqaIZ6zgs1NPnmPgdnqiVZfmwDKwA9ct77XcGzruvspCMdpbXUWF7D8ePweEiiYNx
+	 5pKzOUsbXd0LyRc5L9jkbtZX1gyQ7XzLbyQYpZS2E7RmvkDA24gHX2OcFqXbxEiK1p
+	 DknJP2rB9A1lm9w69qeB3cOaphrvnH7T1L3cYQFtfC9SHn5MdA7I3CO68KtVAB9zJ0
+	 ERHbtYy+4ubtw==
+Date: Mon, 2 Jun 2025 11:32:30 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, 
+	Song Liu <song@kernel.org>, Jan Kara <jack@suse.cz>, bpf@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, 
+	ast@kernel.org, daniel@iogearbox.net, martin.lau@linux.dev, kpsingh@kernel.org, 
+	mattbobrowski@google.com, amir73il@gmail.com, repnop@google.com, jlayton@kernel.org, 
+	josef@toxicpanda.com, gnoack@google.com, Tingmao Wang <m@maowtm.org>
+Subject: Re: [PATCH bpf-next 3/4] bpf: Introduce path iterator
+Message-ID: <20250602-hagel-poliklinisch-922154e2202d@brauner>
+References: <20250529183536.GL2023217@ZenIV>
+ <CAPhsuW7LFP0ddFg_oqkDyO9s7DZX89GFQBOnX=4n5mV=VCP5oA@mail.gmail.com>
+ <20250529201551.GN2023217@ZenIV>
+ <CAPhsuW5DP1x_wyzT1aYjpj3hxUs4uB8vdK9iEp=+i46QLotiOg@mail.gmail.com>
+ <20250529214544.GO2023217@ZenIV>
+ <CAPhsuW5oXZVEaMwNpSF74O7wZ_f2Qr_44pu9L4_=LBwdW5T9=w@mail.gmail.com>
+ <20250529231018.GP2023217@ZenIV>
+ <CAPhsuW6-J+NUe=jX51wGVP=nMFjETu+1LUTsWZiBa1ckwq7b+w@mail.gmail.com>
+ <20250530.euz5beesaSha@digikod.net>
+ <20250530184348.GQ2023217@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250530184348.GQ2023217@ZenIV>
 
-On Do, 2025-05-29 at 15:09 +0200, =C3=81lvaro Fern=C3=A1ndez Rojas wrote:
-> Some bmips SoCs (bcm6362, bcm63268) share the same SPI reset for both SPI=
- and
-> HSSPI controllers, so reset shouldn't be exclusive.
->=20
-> =C3=81lvaro Fern=C3=A1ndez Rojas (2):
->   spi: bcm63xx-spi: fix shared reset
+On Fri, May 30, 2025 at 07:43:48PM +0100, Al Viro wrote:
+> On Fri, May 30, 2025 at 02:20:39PM +0200, Mickaël Salaün wrote:
+> 
+> > Without access to mount_lock, what would be the best way to fix this
+> > Landlock issue while making it backportable?
+> > 
+> > > 
+> > > If we update path_parent in this patchset with choose_mountpoint(),
+> > > and use it in Landlock, we will close this race condition, right?
+> > 
+> > choose_mountpoint() is currently private, but if we add a new filesystem
+> > helper, I think the right approach would be to expose follow_dotdot(),
+> > updating its arguments with public types.  This way the intermediates
+> > mount points will not be exposed, RCU optimization will be leveraged,
+> > and usage of this new helper will be simplified.
+> 
+> IMO anything that involves struct nameidata should remain inside
+> fs/namei.c - something public might share helpers with it, but that's
 
-Both drivers currently enable the SPI clock before triggering a reset.
-Can the hardware cope with being reset before the clock is enabled?
-That could happen for the second device to be bound [1], unless the SPI
-clock is shared as well or already running for another reason.
-
-[1] https://docs.kernel.org/driver-api/reset.html#triggering
-
-regards
-Philipp
+Strongly agree.
