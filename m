@@ -1,183 +1,783 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2052.outbound.protection.outlook.com [40.107.100.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877AA22A4E3
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 18:01:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748887306; cv=fail; b=qqad8dAyurpn2/CLZ2E9+SvNd4CxSbH+c34eTPu5DB9Azd1L2vJEIe+MPy6T8UCpn/QjFX+9U5Tb5eFFu4bJ7/hnbYePUY5+sCLxBccH6aoZv2sUxP38lvREYHY1BwvA9myHbsR+9AEqQfoIjAN35fqv/2HgtjK36yHB/xXARhU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748887306; c=relaxed/simple;
-	bh=3LA1pAh3v/VCEim9S4RQBB5H2RXOVIFNw5SKUYGEokk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=p6blU6fzek8r3CvqlM1PRkGM0j3R8SJkoOX2TKSuzoViOXTd2OQawiASlcyBiVP5ik/m5LtsO1Uv6a35dF2VPB9AMmDVm74ZyPvqDJmwbQYEzEzYrJYCAFRYJKklk8JinxaEjec5Cx5BZo7UWR8FHPrPaU/KZgT/9W3NRM5wbhY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=nTFSZdL8; arc=fail smtp.client-ip=40.107.100.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="nTFSZdL8"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=unDuO5oVuyePXgzcyvdEgFg9abXFxQO54adIJFEnHzzVRpRWZli0va7qTr86jeZ/JU0ZJK72P8HoLYnR1lODP6LtUJ1TEURLY0z8VbHp1xpFvq61q8dqFgET+MdrJGPxw7bIEUaLgFmWn3+LPtpe68NIO4T234FVgeKJO5a+KO7AfHueIQQHc3o7mHVI2X/eEYSw57dIhX8MMymCyV2oWv6cNhfxZk05V7KQDQfi2rTq5wM2TJyywBxq1HnaY+RlqiCeSVkq+qcNuRm8o+23UgAjU+5sS9RSBWA9kU3tD0vMDIgvIvcQ2niEvqz/L1wUHkGgaYlZKIdfrTRFQdlOEw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TqBkoyUkqKBlVdy3eUzDRLTUg0ZpvL9D2CO8mlK8EQw=;
- b=tMgy8fuJQ/tR6Uw7scEQEpEB8tyI8m/pVLb04lNqObzoG8jkQJvjll7sL5qidF/j0l8n1ZLj8sfR51XSY3Jfg6s1S8o9cquVukh7fpUaxaSJj5C+p2RgPWvrex8Lh0V0fdg8APZPe6aDExM2IbZwHN6km4DHgGw1lNhE4YETm6XNphUlL5klc2I4iqxpuLl/t5ZSibDe8pczH08YWGRTDi3pi+tPxOTkqORQwEVsDtGpkAjVYbn4GcVZOCLXZnPkHpyWDfFse/8s56BgA3WVs0cWVvFyx3DDQygtus6urBXk1Zc2frT/BTSTxEpLWKmHA/wvygEogrT2MnPHUHcyfw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TqBkoyUkqKBlVdy3eUzDRLTUg0ZpvL9D2CO8mlK8EQw=;
- b=nTFSZdL8kEP4VKpPB5yVXL3vjaqomt+QOK0TH/Yj1m00Sl2PuBcO/OVX+TIjZKk3252BQrX7J8r6nfQofFOsL/+w4vt7zskx4gRILFx0IuFaVMfgrrQR9V9zopkGfxW+slEN6gz4gHo7e+5DGbktrFqfhcYf4p9LdbVWvGUkfbNzP2JARrEGlFuTU/dlkKQjFeY9tOceNx+p1hZoNOJ+XlFI2m8lS6mwahw9Xkx/g8L+rV+Oa0d/CzGN4k5e0j4rZHlDwbYOmWKMCaK1Yp/EP/5zKGwm+WUJ4wdUDLy5SJdWt8g7wIVyt2J+4fdkjzCir1Vyfhg+TKhQc1S4ma9kPA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
- by MW5PR12MB5683.namprd12.prod.outlook.com (2603:10b6:303:1a0::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Mon, 2 Jun
- 2025 18:01:39 +0000
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91%3]) with mapi id 15.20.8769.025; Mon, 2 Jun 2025
- 18:01:39 +0000
-From: Joel Fernandes <joelagnelf@nvidia.com>
-To: linux-kernel@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Daniel Bristot de Oliveira <bristot@kernel.org>
-Cc: Joel Fernandes <joelagnelf@nvidia.com>,
-	Tejun Heo <tj@kernel.org>,
-	David Vernet <void@manifault.com>,
-	Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>
-Subject: [PATCH v2 07/10] sched/deadline: Clear the defer params
-Date: Mon,  2 Jun 2025 14:01:03 -0400
-Message-ID: <20250602180110.816225-8-joelagnelf@nvidia.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250602180110.816225-1-joelagnelf@nvidia.com>
-References: <20250602180110.816225-1-joelagnelf@nvidia.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BL1P222CA0029.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:208:2c7::34) To SN7PR12MB8059.namprd12.prod.outlook.com
- (2603:10b6:806:32b::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37BD022CBEC
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 18:01:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748887307; cv=none; b=vCZ9zvk+jCNMNLmIiOEv4Fv3BqyyxoAXwn/JtC0YuCMy4/p/1cjpjueUMgCIXu4lJzRcQAZXR+6nhFsqkw1wQ6iAhh6/E0whuN6QNo2VIMfBIRHSbT2oI8vwRBLhh4p+LIoe71LkQAeXaKENS99Wm5Ra/LdQ0Su6455hNKU74wY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748887307; c=relaxed/simple;
+	bh=ZDXdHTP3y9r8i26Llw1mF6X4w/ldRUnVUQu0gfAzbi4=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=q4EQe1pXNi6VCCQjDgBKMBk5TPrNAj/QhFawoL5eGJx+0QzYgZ7/g9kNDGRkCRhEcy3Zc9psNEsY4qSSYCsBPlQbFgrtssp6Twl7ZYjVy9AdgyXN7dcrNQ59mGxA/Dz+O5ITeB6Txn+qsnHK/F2SDUL6JoYoYTJfbpRvrYenCOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3dc9c1970daso44405325ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 11:01:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748887303; x=1749492103;
+        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s20fH27GoXZ5jU9R5V1MzVdUESJD6wf+Zw4NAwD595w=;
+        b=SiGQaGZT9UgYHeHjrlj4f6jgFIwMa82rRxeLamJ3alKFDZUUhYp96j5hMWzo4gbcK9
+         g1WNqxxOqmbmvRUyT1tkX6dhjauldHAmW5Cr69LSxn9ah7El0H0SqU9aoNQHyfVJs8b1
+         M3qxJzS4B6DNOyP0k4HAIzifDOGydOSCr2AEW+DcKKGjhod6eGqCKfVvNrHu6RmPwixo
+         g1QNGcMkouFRI3saQzdb44ZI0nHnWDh7Q1PoVpbH6k/qewbyxclL+/k3lxN2NiZMjVx1
+         e41JXloepVmY2QrcimVsdXl2m4Wzep/WPSVbOENna5mM2lDsiI9U8mk5rfI7JGLx9XKt
+         KyJA==
+X-Gm-Message-State: AOJu0YzVFZ/UgAxXTBHMFNlVxAAFiTaI7oLHL7tV65fIW1aL/AzD1Ri2
+	7bzRssFOUaEBlXqxM5bJQRBLpASz55fLBXXMroCkI8/pWWK+N8AWGiqbWG5C3Hvy6YEcFEMBReH
+	cmN4wYv52IATjqea24tuvrd0vZ6mohTvg2LPXuY+xmoCkdpkAuJIUuoz//hU=
+X-Google-Smtp-Source: AGHT+IH8UJ51eYCLq+CrzNpv1MJP7zViwbaXDY8bnyYRfj/7FVYWr7l3VjBldjcPa3NwYhSlQgRiqWHERYkCdxzt6z7TLNWm9ioj
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|MW5PR12MB5683:EE_
-X-MS-Office365-Filtering-Correlation-Id: 42e9ab67-28eb-4512-807e-08dda1ff85de
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?VdozJW1Ih53N7bGX1QvO9/3w9DCKVZtZuZYJq3GB7SVGPjsx6Js6IzkU0s6Z?=
- =?us-ascii?Q?O9OSFsIyRCqhnxV8vSQSsy8W2Wa8itrOqJjars8pj9WcCylQbYkQDtq0BC3Q?=
- =?us-ascii?Q?M3s7SjbDQ0efOuKOWaXVYsj2Gfk5OhFV2rY9ZvT2Y7QMWM7uxFM66ChhjTip?=
- =?us-ascii?Q?4wvVOh9g0ateP3Zmdpkr5BgSvs1Inz7fX2w9OHTRx9HUkxnq1R6YP1oHl9GH?=
- =?us-ascii?Q?JsH7WIkyV7DxpMebjHaUa4nwriZtpbt9RNNZH3S0lx6pK0KZEghcApNh91Pq?=
- =?us-ascii?Q?oDTbAXKJt4CRnDXpT/3WJMWecjkBnmHh7EPlsB7hOBWsuv6aeFmEpce8ZnCo?=
- =?us-ascii?Q?05bm8FU2ijbadn7OdUisqMotLk35dxRWX5UmSrOOIrtICbHNm3AReplx93wo?=
- =?us-ascii?Q?1m/Ixh0psJzTJvZgmc86stTaLGZ9e8rGGVhtnUbuimxd/8FbH6RmRcBuTbO7?=
- =?us-ascii?Q?mRn4wotvayYh8MHvGo7wNUmF1U8t9JkegFEdnl3fPQt++uEtZYrRfxbFTMfP?=
- =?us-ascii?Q?2sU8FLDvgjnjv90YFV3TLCw2E1Rx0zi+0cTzSrK2BpwVjQQrf9eq9tV1RtNv?=
- =?us-ascii?Q?MA3+AIwiuA0m506sRFM3y5bFG9SMLILIlc8imc7KIbMjx2jqCIx/N8qifmQy?=
- =?us-ascii?Q?F61u4FKJ318QzocMFKl8zS8DrmPhpokuP0KhZTAA0LTrFWxh5CfkDJQ+hWzu?=
- =?us-ascii?Q?j8uomQP14pSVadhuNsC2lxzvC5FXron6t+L93ZY2HK5tmfsmAcmookzA5VGF?=
- =?us-ascii?Q?FRZIb2+sdw3/V9MZ0UgGBIzr6xWzxAYon3PwMBLGvRZKT/QWFc6kmWHSC8Yf?=
- =?us-ascii?Q?WRBololw1NstpZoGufBxJdb79Ti32jus71t+CIfxfA8q6LVjVa0/X1U0fZMA?=
- =?us-ascii?Q?4lPP/W/qdypyy30t3kGJka84YzHRS++GmcQSepACErpWK4GP8ntCDZnTCQeY?=
- =?us-ascii?Q?SQ8ZezsQPuUIarEI/zNHgChK20AIiCL8NK7jRbDQ2w2L723gL0njDfLlA2Wa?=
- =?us-ascii?Q?n+iz97w1/WMkJoVxd4kGIkFjY6vlkO5kkBl7VtVFFQk6eiorhSu9GLfGvQaH?=
- =?us-ascii?Q?dyRzNLe5eoS82MR2mF2+GMVsMWlSghY9L+TteD5bEWr7NT2gsOB9qffzKEVa?=
- =?us-ascii?Q?4+2L5ddJgVLbUoMyCU/V+PQOKbSAluKNw6kfYb2vYN36luhCtU4DAQEndyft?=
- =?us-ascii?Q?9TYlbsoliU+WKLwvLOSbvalIEZDRSIEpSiSMIGyVVo1132UnZklhtvxRPlWB?=
- =?us-ascii?Q?KCosjzhcnnn+CcJfOegATJ2kZo7JXm4qN/cjLG0zxRaW063MhPGqPfGk0ntg?=
- =?us-ascii?Q?D+79MaVS5lkcvQ9El9rKzlyMN3oQWTsr8rd9rqs5W3ovjYtCFEAca9bHYwA+?=
- =?us-ascii?Q?ARey5i+k2jwY1qwY9l4VRBx2H2Eacq7MLQGRu5q7FRJBxy9Wok7oHH61BboY?=
- =?us-ascii?Q?6rKGAbFr4zxpA8QSOmDclmptl2VGTZ+XAx1xF6HX3TaHaew9+k0CXg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?/INhB42Nm7Opncfsj4PPCH+RFvrpmBC6afsBqaA8JAlZIcHXaBtt3kLkpTmv?=
- =?us-ascii?Q?7V/kvqAQjcNlseCidr+aUrHL/ObDYBBvQHe5cL0sjeMIrYvwUrghu9SfIadM?=
- =?us-ascii?Q?6rNDXD1qkOYPUwN83/SbnlyhRLL372m/aMhuqDvPqgRbjNavjYswxpxDqjhb?=
- =?us-ascii?Q?RRf2rjXHWfV9/z/xzla4gOr3WrbTNSdr49Qv+ikNGxe0eBvql4ZsvcVzXty7?=
- =?us-ascii?Q?8mX8WDXetffxaS32g87SPo37MlZj+RBfR7KR3v068Ie9lyGmtOHt5BK/hVld?=
- =?us-ascii?Q?Oc51/U94TYR8eSozaKFSF0mkzFw5iuJDdMFna2ndJxpvmN2y7RFFVgU6x5ND?=
- =?us-ascii?Q?w9kG7N4qeuLmGGZyNzl756uBuBO98+8yMEiUw0A7ATreia9JUPLLOv0j97DX?=
- =?us-ascii?Q?NjsD9ofzDxGxrRZ0c50AF/ajO6Lw5mxdjxLDB/OcT/xj9cDQbAfgl/hkTivR?=
- =?us-ascii?Q?xImtGT3ot2jcYhHLetWWzSnfhQay42Y5vo6jQi6YTFesQhluwYqmrA+okdd+?=
- =?us-ascii?Q?hut7lRR12aYSkuY6SHSin2odxValwCMxE/6u4j+rW1Sgun4lEsRFG30poMxE?=
- =?us-ascii?Q?yanc7pDGe5u5om2KzK9nJFs4aljE0tMbFWW8Gqd6Sz1pV3jSWku6sf/oti4H?=
- =?us-ascii?Q?FZdUK+Vj7nwTBFw7oXOTGB4bIJ32e922lx9oHURd/7s4+DYgFqVES4k9z3/c?=
- =?us-ascii?Q?72t5m66KGw2vjeHdzHQfxB9nqecj7PvSQcL15HCqLHckGc5tREEL76+NTz54?=
- =?us-ascii?Q?ip3WjMkkmcdoskxHdLsjj9Aa7/DwbNCTVIRdIeqyoRb6sbqh66ups3SwUlLV?=
- =?us-ascii?Q?OFdDimSw7+MKkKU0G9VqQtaXjdWCEnb/PSTECqr66cJ2BZIhYOuUD+U825hn?=
- =?us-ascii?Q?yrCQbn4fCv4e/DMzjJOwNO08lrgNziAHq3LLbmd3Jbg71EG7QEGCwweMD2OM?=
- =?us-ascii?Q?qEWYlDT1vOMpNuEFd5NpOwPD69Z1HrHKxY92g+ss06EJV+TcrmL9p5vmK2tf?=
- =?us-ascii?Q?F19GihqCqJCd5myfTfSZ2zZJu2EyN53te8wvAZ7Ib5TH82hsh8i0nLeVI/C2?=
- =?us-ascii?Q?YFtwJzbKWzqUdarxpJVho9owoYX95N+6NqlI8bGECB/8MsmcOj+KpVgRdss5?=
- =?us-ascii?Q?0TFFW4pHD77MhbsZsdv9bGNN+PWXu/Q8nU3PQkDxG0t/9EbiBSI7Rcjc5YfS?=
- =?us-ascii?Q?vPsnrGBWNRVp1LXB3vSE4GOToxsgnW0KKBAq9kACPI5quB4qpO3F8qvFk62l?=
- =?us-ascii?Q?+d1Klkk2JQXIt86F2iFzPUseLb4mICve//4LnoL3uCgREyGafnRcuks+/Te3?=
- =?us-ascii?Q?5u9taHxvumcyglHbiWjMiplvvWVLbmu4nbR0AXWEIUlpxU/tsIoVHridZzBS?=
- =?us-ascii?Q?AshEBLSGKrQaIFziyqdGU0Kyx5Qx5vqUncp1p06ZPhRZpKnCi4hSnXId4HO6?=
- =?us-ascii?Q?ATipS+i0kb2cN5/utyiNan/mJdzeo+qUVaMAlHK00dmC89vQezM4M6rvOxgt?=
- =?us-ascii?Q?4E5du/gsc64XR1aKN1PDCUdK16JccMrmKXqpxXkacRGs39z5un3oQzS8rKgi?=
- =?us-ascii?Q?yjZ5pc4Em8q8ErJNCDNGSEqwAiHNKztziAuJ8dFd?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 42e9ab67-28eb-4512-807e-08dda1ff85de
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2025 18:01:39.2786
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qPRW7wFttKLoCOD9O2t0T/vEgP4JcNWU3MrRJeCt1gj2vhUvtw4jG4KbvHBpw4jcmn4tdD7i6ZRiVrkcVO43qQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR12MB5683
+X-Received: by 2002:a05:6e02:168a:b0:3dd:81d1:74aa with SMTP id
+ e9e14a558f8ab-3ddb6838162mr5534735ab.10.1748887303171; Mon, 02 Jun 2025
+ 11:01:43 -0700 (PDT)
+Date: Mon, 02 Jun 2025 11:01:43 -0700
+In-Reply-To: <6832ca5f.a70a0220.1765ec.015d.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <683de707.050a0220.55ceb.0003.GAE@google.com>
+Subject: Re: [syzbot] Re: [PATCH v3] Bluetooth: MGMT: Protect mgmt_pending
+ list with its own lock
+From: syzbot <syzbot+0a7039d5d9986ff4ecec@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The defer params were not cleared in __dl_clear_params. Clear them.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-Without this is some of my test cases are flaking and the DL timer is
-not starting correctly AFAICS.
+***
 
-Fixes: a110a81c52a9 ("sched/deadline: Deferrable dl server")
-Reviewed-by: Andrea Righi <arighi@nvidia.com>
-Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
----
- kernel/sched/deadline.c | 3 +++
- 1 file changed, 3 insertions(+)
+Subject: Re: [PATCH v3] Bluetooth: MGMT: Protect mgmt_pending list with its=
+ own lock
+Author: luiz.dentz@gmail.com
 
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index b703cbf627c1..4ed61266f3ea 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -3432,6 +3432,9 @@ static void __dl_clear_params(struct sched_dl_entity *dl_se)
- 	dl_se->dl_non_contending	= 0;
- 	dl_se->dl_overrun		= 0;
- 	dl_se->dl_server		= 0;
-+	dl_se->dl_defer			= 0;
-+	dl_se->dl_defer_running	= 0;
-+	dl_se->dl_defer_armed	= 0;
- 
- #ifdef CONFIG_RT_MUTEXES
- 	dl_se->pi_se			= dl_se;
--- 
-2.43.0
+#syz test
 
+On Mon, Jun 2, 2025 at 2:00=E2=80=AFPM Luiz Augusto von Dentz
+<luiz.dentz@gmail.com> wrote:
+>
+> #syz test
+>
+> On Mon, Jun 2, 2025 at 1:46=E2=80=AFPM Luiz Augusto von Dentz
+> <luiz.dentz@gmail.com> wrote:
+> >
+> > From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+> >
+> > This uses a mutex to protect from concurrent access of mgmt_pending
+> > list which can cause crashes like:
+> >
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > BUG: KASAN: slab-use-after-free in mgmt_remove_adv_monitor_complete+0xe=
+5/0x540 net/bluetooth/mgmt.c:5405
+> > Read of size 8 at addr ffff888048891a18 by task kworker/u5:8/5333
+> >
+> > CPU: 0 UID: 0 PID: 5333 Comm: kworker/u5:8 Not tainted 6.15.0-rc5-syzka=
+ller-00197-gea34704d6ad7 #0 PREEMPT(full)
+> > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-=
+1.16.3-2~bpo12+1 04/01/2014
+> > Workqueue: hci0 hci_cmd_sync_work
+> > Call Trace:
+> >  <TASK>
+> >  dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+> >  print_address_description mm/kasan/report.c:408 [inline]
+> >  print_report+0xb4/0x290 mm/kasan/report.c:521
+> >  kasan_report+0x118/0x150 mm/kasan/report.c:634
+> >  mgmt_remove_adv_monitor_complete+0xe5/0x540 net/bluetooth/mgmt.c:5405
+> >  hci_cmd_sync_work+0x25e/0x3a0 net/bluetooth/hci_sync.c:334
+> >  process_one_work kernel/workqueue.c:3238 [inline]
+> >  process_scheduled_works+0xadb/0x17a0 kernel/workqueue.c:3319
+> >  worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
+> >  kthread+0x70e/0x8a0 kernel/kthread.c:464
+> >  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+> >  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+> >  </TASK>
+> >
+> > Allocated by task 5702:
+> >  kasan_save_stack mm/kasan/common.c:47 [inline]
+> >  kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
+> >  poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+> >  __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:394
+> >  kasan_kmalloc include/linux/kasan.h:260 [inline]
+> >  __kmalloc_cache_noprof+0x230/0x3d0 mm/slub.c:4358
+> >  kmalloc_noprof include/linux/slab.h:905 [inline]
+> >  kzalloc_noprof include/linux/slab.h:1039 [inline]
+> >  mgmt_pending_new+0x65/0x240 net/bluetooth/mgmt_util.c:252
+> >  mgmt_pending_add+0x34/0x120 net/bluetooth/mgmt_util.c:279
+> >  remove_adv_monitor+0x103/0x1b0 net/bluetooth/mgmt.c:5453
+> >  hci_mgmt_cmd+0x9c6/0xef0 net/bluetooth/hci_sock.c:1712
+> >  hci_sock_sendmsg+0x6ca/0xee0 net/bluetooth/hci_sock.c:1832
+> >  sock_sendmsg_nosec net/socket.c:712 [inline]
+> >  __sock_sendmsg+0x219/0x270 net/socket.c:727
+> >  sock_write_iter+0x258/0x330 net/socket.c:1131
+> >  new_sync_write fs/read_write.c:591 [inline]
+> >  vfs_write+0x548/0xa90 fs/read_write.c:684
+> >  ksys_write+0x145/0x250 fs/read_write.c:736
+> >  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+> >  do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+> >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> >
+> > Freed by task 5700:
+> >  kasan_save_stack mm/kasan/common.c:47 [inline]
+> >  kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
+> >  kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:576
+> >  poison_slab_object mm/kasan/common.c:247 [inline]
+> >  __kasan_slab_free+0x62/0x70 mm/kasan/common.c:264
+> >  kasan_slab_free include/linux/kasan.h:233 [inline]
+> >  slab_free_hook mm/slub.c:2380 [inline]
+> >  slab_free mm/slub.c:4642 [inline]
+> >  kfree+0x193/0x440 mm/slub.c:4841
+> >  mgmt_pending_foreach+0xc9/0x120 net/bluetooth/mgmt_util.c:242
+> >  mgmt_index_removed+0x10d/0x2f0 net/bluetooth/mgmt.c:9362
+> >  hci_sock_bind+0xbe9/0x1000 net/bluetooth/hci_sock.c:1307
+> >  __sys_bind_socket net/socket.c:1810 [inline]
+> >  __sys_bind+0x2c3/0x3e0 net/socket.c:1841
+> >  __do_sys_bind net/socket.c:1846 [inline]
+> >  __se_sys_bind net/socket.c:1844 [inline]
+> >  __x64_sys_bind+0x7a/0x90 net/socket.c:1844
+> >  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+> >  do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+> >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> >
+> > Fixes: a380b6cff1a2 ("Bluetooth: Add generic mgmt helper API")
+> > Closes: https://syzkaller.appspot.com/bug?extid=3Dfeb0dc579bbe30a13190
+> > Closes: https://syzkaller.appspot.com/bug?extid=3D0a7039d5d9986ff4ececi
+> > Closes: https://syzkaller.appspot.com/bug?extid=3Dcc0cc52e7f43dc9e6df1
+> > Reported-by: syzbot+feb0dc579bbe30a13190@syzkaller.appspotmail.com
+> > Tested-by: syzbot+feb0dc579bbe30a13190@syzkaller.appspotmail.com
+> > Tested-by: syzbot+0a7039d5d9986ff4ecec@syzkaller.appspotmail.com
+> > Tested-by: syzbot+cc0cc52e7f43dc9e6df1@syzkaller.appspotmail.com
+> > Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+> > Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+> > ---
+> >  include/net/bluetooth/hci_core.h |   1 +
+> >  net/bluetooth/hci_core.c         |   1 +
+> >  net/bluetooth/mgmt.c             | 101 +++++++++++++++----------------
+> >  net/bluetooth/mgmt_util.c        |  32 ++++++++--
+> >  net/bluetooth/mgmt_util.h        |   4 +-
+> >  5 files changed, 80 insertions(+), 59 deletions(-)
+> >
+> > diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/h=
+ci_core.h
+> > index 2b261e74e2c4..b9ff0e825071 100644
+> > --- a/include/net/bluetooth/hci_core.h
+> > +++ b/include/net/bluetooth/hci_core.h
+> > @@ -546,6 +546,7 @@ struct hci_dev {
+> >         struct hci_conn_hash    conn_hash;
+> >
+> >         struct list_head        mesh_pending;
+> > +       struct mutex            mgmt_pending_lock;
+> >         struct list_head        mgmt_pending;
+> >         struct list_head        reject_list;
+> >         struct list_head        accept_list;
+> > diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+> > index 04845ff3ad57..f197f5497043 100644
+> > --- a/net/bluetooth/hci_core.c
+> > +++ b/net/bluetooth/hci_core.c
+> > @@ -2487,6 +2487,7 @@ struct hci_dev *hci_alloc_dev_priv(int sizeof_pri=
+v)
+> >
+> >         mutex_init(&hdev->lock);
+> >         mutex_init(&hdev->req_lock);
+> > +       mutex_init(&hdev->mgmt_pending_lock);
+> >
+> >         ida_init(&hdev->unset_handle_ida);
+> >
+> > diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+> > index 14a9462fced5..7d9ed7db377f 100644
+> > --- a/net/bluetooth/mgmt.c
+> > +++ b/net/bluetooth/mgmt.c
+> > @@ -1447,22 +1447,17 @@ static void settings_rsp(struct mgmt_pending_cm=
+d *cmd, void *data)
+> >
+> >         send_settings_rsp(cmd->sk, cmd->opcode, match->hdev);
+> >
+> > -       list_del(&cmd->list);
+> > -
+> >         if (match->sk =3D=3D NULL) {
+> >                 match->sk =3D cmd->sk;
+> >                 sock_hold(match->sk);
+> >         }
+> > -
+> > -       mgmt_pending_free(cmd);
+> >  }
+> >
+> >  static void cmd_status_rsp(struct mgmt_pending_cmd *cmd, void *data)
+> >  {
+> >         u8 *status =3D data;
+> >
+> > -       mgmt_cmd_status(cmd->sk, cmd->index, cmd->opcode, *status);
+> > -       mgmt_pending_remove(cmd);
+> > +       mgmt_cmd_status(cmd->sk, cmd->hdev->id, cmd->opcode, *status);
+> >  }
+> >
+> >  static void cmd_complete_rsp(struct mgmt_pending_cmd *cmd, void *data)
+> > @@ -1476,8 +1471,6 @@ static void cmd_complete_rsp(struct mgmt_pending_=
+cmd *cmd, void *data)
+> >
+> >         if (cmd->cmd_complete) {
+> >                 cmd->cmd_complete(cmd, match->mgmt_status);
+> > -               mgmt_pending_remove(cmd);
+> > -
+> >                 return;
+> >         }
+> >
+> > @@ -1486,13 +1479,13 @@ static void cmd_complete_rsp(struct mgmt_pendin=
+g_cmd *cmd, void *data)
+> >
+> >  static int generic_cmd_complete(struct mgmt_pending_cmd *cmd, u8 statu=
+s)
+> >  {
+> > -       return mgmt_cmd_complete(cmd->sk, cmd->index, cmd->opcode, stat=
+us,
+> > +       return mgmt_cmd_complete(cmd->sk, cmd->hdev->id, cmd->opcode, s=
+tatus,
+> >                                  cmd->param, cmd->param_len);
+> >  }
+> >
+> >  static int addr_cmd_complete(struct mgmt_pending_cmd *cmd, u8 status)
+> >  {
+> > -       return mgmt_cmd_complete(cmd->sk, cmd->index, cmd->opcode, stat=
+us,
+> > +       return mgmt_cmd_complete(cmd->sk, cmd->hdev->id, cmd->opcode, s=
+tatus,
+> >                                  cmd->param, sizeof(struct mgmt_addr_in=
+fo));
+> >  }
+> >
+> > @@ -1532,7 +1525,7 @@ static void mgmt_set_discoverable_complete(struct=
+ hci_dev *hdev, void *data,
+> >
+> >         if (err) {
+> >                 u8 mgmt_err =3D mgmt_status(err);
+> > -               mgmt_cmd_status(cmd->sk, cmd->index, cmd->opcode, mgmt_=
+err);
+> > +               mgmt_cmd_status(cmd->sk, cmd->hdev->id, cmd->opcode, mg=
+mt_err);
+> >                 hci_dev_clear_flag(hdev, HCI_LIMITED_DISCOVERABLE);
+> >                 goto done;
+> >         }
+> > @@ -1707,7 +1700,7 @@ static void mgmt_set_connectable_complete(struct =
+hci_dev *hdev, void *data,
+> >
+> >         if (err) {
+> >                 u8 mgmt_err =3D mgmt_status(err);
+> > -               mgmt_cmd_status(cmd->sk, cmd->index, cmd->opcode, mgmt_=
+err);
+> > +               mgmt_cmd_status(cmd->sk, cmd->hdev->id, cmd->opcode, mg=
+mt_err);
+> >                 goto done;
+> >         }
+> >
+> > @@ -1943,8 +1936,8 @@ static void set_ssp_complete(struct hci_dev *hdev=
+, void *data, int err)
+> >                         new_settings(hdev, NULL);
+> >                 }
+> >
+> > -               mgmt_pending_foreach(MGMT_OP_SET_SSP, hdev, cmd_status_=
+rsp,
+> > -                                    &mgmt_err);
+> > +               mgmt_pending_foreach(MGMT_OP_SET_SSP, hdev, true,
+> > +                                    cmd_status_rsp, &mgmt_err);
+> >                 return;
+> >         }
+> >
+> > @@ -1954,7 +1947,7 @@ static void set_ssp_complete(struct hci_dev *hdev=
+, void *data, int err)
+> >                 changed =3D hci_dev_test_and_clear_flag(hdev, HCI_SSP_E=
+NABLED);
+> >         }
+> >
+> > -       mgmt_pending_foreach(MGMT_OP_SET_SSP, hdev, settings_rsp, &matc=
+h);
+> > +       mgmt_pending_foreach(MGMT_OP_SET_SSP, hdev, true, settings_rsp,=
+ &match);
+> >
+> >         if (changed)
+> >                 new_settings(hdev, match.sk);
+> > @@ -2074,12 +2067,12 @@ static void set_le_complete(struct hci_dev *hde=
+v, void *data, int err)
+> >         bt_dev_dbg(hdev, "err %d", err);
+> >
+> >         if (status) {
+> > -               mgmt_pending_foreach(MGMT_OP_SET_LE, hdev, cmd_status_r=
+sp,
+> > -                                                       &status);
+> > +               mgmt_pending_foreach(MGMT_OP_SET_LE, hdev, true, cmd_st=
+atus_rsp,
+> > +                                    &status);
+> >                 return;
+> >         }
+> >
+> > -       mgmt_pending_foreach(MGMT_OP_SET_LE, hdev, settings_rsp, &match=
+);
+> > +       mgmt_pending_foreach(MGMT_OP_SET_LE, hdev, true, settings_rsp, =
+&match);
+> >
+> >         new_settings(hdev, match.sk);
+> >
+> > @@ -2138,7 +2131,7 @@ static void set_mesh_complete(struct hci_dev *hde=
+v, void *data, int err)
+> >         struct sock *sk =3D cmd->sk;
+> >
+> >         if (status) {
+> > -               mgmt_pending_foreach(MGMT_OP_SET_MESH_RECEIVER, hdev,
+> > +               mgmt_pending_foreach(MGMT_OP_SET_MESH_RECEIVER, hdev, t=
+rue,
+> >                                      cmd_status_rsp, &status);
+> >                 return;
+> >         }
+> > @@ -2638,7 +2631,7 @@ static void mgmt_class_complete(struct hci_dev *h=
+dev, void *data, int err)
+> >
+> >         bt_dev_dbg(hdev, "err %d", err);
+> >
+> > -       mgmt_cmd_complete(cmd->sk, cmd->index, cmd->opcode,
+> > +       mgmt_cmd_complete(cmd->sk, cmd->hdev->id, cmd->opcode,
+> >                           mgmt_status(err), hdev->dev_class, 3);
+> >
+> >         mgmt_pending_free(cmd);
+> > @@ -3427,7 +3420,7 @@ static int pairing_complete(struct mgmt_pending_c=
+md *cmd, u8 status)
+> >         bacpy(&rp.addr.bdaddr, &conn->dst);
+> >         rp.addr.type =3D link_to_bdaddr(conn->type, conn->dst_type);
+> >
+> > -       err =3D mgmt_cmd_complete(cmd->sk, cmd->index, MGMT_OP_PAIR_DEV=
+ICE,
+> > +       err =3D mgmt_cmd_complete(cmd->sk, cmd->hdev->id, MGMT_OP_PAIR_=
+DEVICE,
+> >                                 status, &rp, sizeof(rp));
+> >
+> >         /* So we don't get further callbacks for this connection */
+> > @@ -5196,7 +5189,7 @@ static void mgmt_add_adv_patterns_monitor_complet=
+e(struct hci_dev *hdev,
+> >                 hci_update_passive_scan(hdev);
+> >         }
+> >
+> > -       mgmt_cmd_complete(cmd->sk, cmd->index, cmd->opcode,
+> > +       mgmt_cmd_complete(cmd->sk, cmd->hdev->id, cmd->opcode,
+> >                           mgmt_status(status), &rp, sizeof(rp));
+> >         mgmt_pending_remove(cmd);
+> >
+> > @@ -5411,7 +5404,7 @@ static void mgmt_remove_adv_monitor_complete(stru=
+ct hci_dev *hdev,
+> >         if (!status)
+> >                 hci_update_passive_scan(hdev);
+> >
+> > -       mgmt_cmd_complete(cmd->sk, cmd->index, cmd->opcode,
+> > +       mgmt_cmd_complete(cmd->sk, cmd->hdev->id, cmd->opcode,
+> >                           mgmt_status(status), &rp, sizeof(rp));
+> >         mgmt_pending_remove(cmd);
+> >
+> > @@ -5792,7 +5785,7 @@ static void start_discovery_complete(struct hci_d=
+ev *hdev, void *data, int err)
+> >             cmd !=3D pending_find(MGMT_OP_START_SERVICE_DISCOVERY, hdev=
+))
+> >                 return;
+> >
+> > -       mgmt_cmd_complete(cmd->sk, cmd->index, cmd->opcode, mgmt_status=
+(err),
+> > +       mgmt_cmd_complete(cmd->sk, cmd->hdev->id, cmd->opcode, mgmt_sta=
+tus(err),
+> >                           cmd->param, 1);
+> >         mgmt_pending_remove(cmd);
+> >
+> > @@ -6013,7 +6006,7 @@ static void stop_discovery_complete(struct hci_de=
+v *hdev, void *data, int err)
+> >
+> >         bt_dev_dbg(hdev, "err %d", err);
+> >
+> > -       mgmt_cmd_complete(cmd->sk, cmd->index, cmd->opcode, mgmt_status=
+(err),
+> > +       mgmt_cmd_complete(cmd->sk, cmd->hdev->id, cmd->opcode, mgmt_sta=
+tus(err),
+> >                           cmd->param, 1);
+> >         mgmt_pending_remove(cmd);
+> >
+> > @@ -6238,7 +6231,7 @@ static void set_advertising_complete(struct hci_d=
+ev *hdev, void *data, int err)
+> >         u8 status =3D mgmt_status(err);
+> >
+> >         if (status) {
+> > -               mgmt_pending_foreach(MGMT_OP_SET_ADVERTISING, hdev,
+> > +               mgmt_pending_foreach(MGMT_OP_SET_ADVERTISING, hdev, tru=
+e,
+> >                                      cmd_status_rsp, &status);
+> >                 return;
+> >         }
+> > @@ -6248,7 +6241,7 @@ static void set_advertising_complete(struct hci_d=
+ev *hdev, void *data, int err)
+> >         else
+> >                 hci_dev_clear_flag(hdev, HCI_ADVERTISING);
+> >
+> > -       mgmt_pending_foreach(MGMT_OP_SET_ADVERTISING, hdev, settings_rs=
+p,
+> > +       mgmt_pending_foreach(MGMT_OP_SET_ADVERTISING, hdev, true, setti=
+ngs_rsp,
+> >                              &match);
+> >
+> >         new_settings(hdev, match.sk);
+> > @@ -6592,7 +6585,7 @@ static void set_bredr_complete(struct hci_dev *hd=
+ev, void *data, int err)
+> >                  */
+> >                 hci_dev_clear_flag(hdev, HCI_BREDR_ENABLED);
+> >
+> > -               mgmt_cmd_status(cmd->sk, cmd->index, cmd->opcode, mgmt_=
+err);
+> > +               mgmt_cmd_status(cmd->sk, cmd->hdev->id, cmd->opcode, mg=
+mt_err);
+> >         } else {
+> >                 send_settings_rsp(cmd->sk, MGMT_OP_SET_BREDR, hdev);
+> >                 new_settings(hdev, cmd->sk);
+> > @@ -6729,7 +6722,7 @@ static void set_secure_conn_complete(struct hci_d=
+ev *hdev, void *data, int err)
+> >         if (err) {
+> >                 u8 mgmt_err =3D mgmt_status(err);
+> >
+> > -               mgmt_cmd_status(cmd->sk, cmd->index, cmd->opcode, mgmt_=
+err);
+> > +               mgmt_cmd_status(cmd->sk, cmd->hdev->id, cmd->opcode, mg=
+mt_err);
+> >                 goto done;
+> >         }
+> >
+> > @@ -7176,7 +7169,7 @@ static void get_conn_info_complete(struct hci_dev=
+ *hdev, void *data, int err)
+> >                 rp.max_tx_power =3D HCI_TX_POWER_INVALID;
+> >         }
+> >
+> > -       mgmt_cmd_complete(cmd->sk, cmd->index, MGMT_OP_GET_CONN_INFO, s=
+tatus,
+> > +       mgmt_cmd_complete(cmd->sk, cmd->hdev->id, MGMT_OP_GET_CONN_INFO=
+, status,
+> >                           &rp, sizeof(rp));
+> >
+> >         mgmt_pending_free(cmd);
+> > @@ -7336,7 +7329,7 @@ static void get_clock_info_complete(struct hci_de=
+v *hdev, void *data, int err)
+> >         }
+> >
+> >  complete:
+> > -       mgmt_cmd_complete(cmd->sk, cmd->index, cmd->opcode, status, &rp=
+,
+> > +       mgmt_cmd_complete(cmd->sk, cmd->hdev->id, cmd->opcode, status, =
+&rp,
+> >                           sizeof(rp));
+> >
+> >         mgmt_pending_free(cmd);
+> > @@ -8586,10 +8579,10 @@ static void add_advertising_complete(struct hci=
+_dev *hdev, void *data, int err)
+> >         rp.instance =3D cp->instance;
+> >
+> >         if (err)
+> > -               mgmt_cmd_status(cmd->sk, cmd->index, cmd->opcode,
+> > +               mgmt_cmd_status(cmd->sk, cmd->hdev->id, cmd->opcode,
+> >                                 mgmt_status(err));
+> >         else
+> > -               mgmt_cmd_complete(cmd->sk, cmd->index, cmd->opcode,
+> > +               mgmt_cmd_complete(cmd->sk, cmd->hdev->id, cmd->opcode,
+> >                                   mgmt_status(err), &rp, sizeof(rp));
+> >
+> >         add_adv_complete(hdev, cmd->sk, cp->instance, err);
+> > @@ -8777,10 +8770,10 @@ static void add_ext_adv_params_complete(struct =
+hci_dev *hdev, void *data,
+> >
+> >                 hci_remove_adv_instance(hdev, cp->instance);
+> >
+> > -               mgmt_cmd_status(cmd->sk, cmd->index, cmd->opcode,
+> > +               mgmt_cmd_status(cmd->sk, cmd->hdev->id, cmd->opcode,
+> >                                 mgmt_status(err));
+> >         } else {
+> > -               mgmt_cmd_complete(cmd->sk, cmd->index, cmd->opcode,
+> > +               mgmt_cmd_complete(cmd->sk, cmd->hdev->id, cmd->opcode,
+> >                                   mgmt_status(err), &rp, sizeof(rp));
+> >         }
+> >
+> > @@ -8927,10 +8920,10 @@ static void add_ext_adv_data_complete(struct hc=
+i_dev *hdev, void *data, int err)
+> >         rp.instance =3D cp->instance;
+> >
+> >         if (err)
+> > -               mgmt_cmd_status(cmd->sk, cmd->index, cmd->opcode,
+> > +               mgmt_cmd_status(cmd->sk, cmd->hdev->id, cmd->opcode,
+> >                                 mgmt_status(err));
+> >         else
+> > -               mgmt_cmd_complete(cmd->sk, cmd->index, cmd->opcode,
+> > +               mgmt_cmd_complete(cmd->sk, cmd->hdev->id, cmd->opcode,
+> >                                   mgmt_status(err), &rp, sizeof(rp));
+> >
+> >         mgmt_pending_free(cmd);
+> > @@ -9089,10 +9082,10 @@ static void remove_advertising_complete(struct =
+hci_dev *hdev, void *data,
+> >         rp.instance =3D cp->instance;
+> >
+> >         if (err)
+> > -               mgmt_cmd_status(cmd->sk, cmd->index, cmd->opcode,
+> > +               mgmt_cmd_status(cmd->sk, cmd->hdev->id, cmd->opcode,
+> >                                 mgmt_status(err));
+> >         else
+> > -               mgmt_cmd_complete(cmd->sk, cmd->index, cmd->opcode,
+> > +               mgmt_cmd_complete(cmd->sk, cmd->hdev->id, cmd->opcode,
+> >                                   MGMT_STATUS_SUCCESS, &rp, sizeof(rp))=
+;
+> >
+> >         mgmt_pending_free(cmd);
+> > @@ -9364,7 +9357,7 @@ void mgmt_index_removed(struct hci_dev *hdev)
+> >         if (test_bit(HCI_QUIRK_RAW_DEVICE, &hdev->quirks))
+> >                 return;
+> >
+> > -       mgmt_pending_foreach(0, hdev, cmd_complete_rsp, &match);
+> > +       mgmt_pending_foreach(0, hdev, true, cmd_complete_rsp, &match);
+> >
+> >         if (hci_dev_test_flag(hdev, HCI_UNCONFIGURED)) {
+> >                 mgmt_index_event(MGMT_EV_UNCONF_INDEX_REMOVED, hdev, NU=
+LL, 0,
+> > @@ -9402,7 +9395,8 @@ void mgmt_power_on(struct hci_dev *hdev, int err)
+> >                 hci_update_passive_scan(hdev);
+> >         }
+> >
+> > -       mgmt_pending_foreach(MGMT_OP_SET_POWERED, hdev, settings_rsp, &=
+match);
+> > +       mgmt_pending_foreach(MGMT_OP_SET_POWERED, hdev, true, settings_=
+rsp,
+> > +                            &match);
+> >
+> >         new_settings(hdev, match.sk);
+> >
+> > @@ -9417,7 +9411,8 @@ void __mgmt_power_off(struct hci_dev *hdev)
+> >         struct cmd_lookup match =3D { NULL, hdev };
+> >         u8 zero_cod[] =3D { 0, 0, 0 };
+> >
+> > -       mgmt_pending_foreach(MGMT_OP_SET_POWERED, hdev, settings_rsp, &=
+match);
+> > +       mgmt_pending_foreach(MGMT_OP_SET_POWERED, hdev, true, settings_=
+rsp,
+> > +                            &match);
+> >
+> >         /* If the power off is because of hdev unregistration let
+> >          * use the appropriate INVALID_INDEX status. Otherwise use
+> > @@ -9431,7 +9426,7 @@ void __mgmt_power_off(struct hci_dev *hdev)
+> >         else
+> >                 match.mgmt_status =3D MGMT_STATUS_NOT_POWERED;
+> >
+> > -       mgmt_pending_foreach(0, hdev, cmd_complete_rsp, &match);
+> > +       mgmt_pending_foreach(0, hdev, true, cmd_complete_rsp, &match);
+> >
+> >         if (memcmp(hdev->dev_class, zero_cod, sizeof(zero_cod)) !=3D 0)=
+ {
+> >                 mgmt_limited_event(MGMT_EV_CLASS_OF_DEV_CHANGED, hdev,
+> > @@ -9672,7 +9667,6 @@ static void unpair_device_rsp(struct mgmt_pending=
+_cmd *cmd, void *data)
+> >         device_unpaired(hdev, &cp->addr.bdaddr, cp->addr.type, cmd->sk)=
+;
+> >
+> >         cmd->cmd_complete(cmd, 0);
+> > -       mgmt_pending_remove(cmd);
+> >  }
+> >
+> >  bool mgmt_powering_down(struct hci_dev *hdev)
+> > @@ -9728,8 +9722,8 @@ void mgmt_disconnect_failed(struct hci_dev *hdev,=
+ bdaddr_t *bdaddr,
+> >         struct mgmt_cp_disconnect *cp;
+> >         struct mgmt_pending_cmd *cmd;
+> >
+> > -       mgmt_pending_foreach(MGMT_OP_UNPAIR_DEVICE, hdev, unpair_device=
+_rsp,
+> > -                            hdev);
+> > +       mgmt_pending_foreach(MGMT_OP_UNPAIR_DEVICE, hdev, true,
+> > +                            unpair_device_rsp, hdev);
+> >
+> >         cmd =3D pending_find(MGMT_OP_DISCONNECT, hdev);
+> >         if (!cmd)
+> > @@ -9922,7 +9916,7 @@ void mgmt_auth_enable_complete(struct hci_dev *hd=
+ev, u8 status)
+> >
+> >         if (status) {
+> >                 u8 mgmt_err =3D mgmt_status(status);
+> > -               mgmt_pending_foreach(MGMT_OP_SET_LINK_SECURITY, hdev,
+> > +               mgmt_pending_foreach(MGMT_OP_SET_LINK_SECURITY, hdev, t=
+rue,
+> >                                      cmd_status_rsp, &mgmt_err);
+> >                 return;
+> >         }
+> > @@ -9932,8 +9926,8 @@ void mgmt_auth_enable_complete(struct hci_dev *hd=
+ev, u8 status)
+> >         else
+> >                 changed =3D hci_dev_test_and_clear_flag(hdev, HCI_LINK_=
+SECURITY);
+> >
+> > -       mgmt_pending_foreach(MGMT_OP_SET_LINK_SECURITY, hdev, settings_=
+rsp,
+> > -                            &match);
+> > +       mgmt_pending_foreach(MGMT_OP_SET_LINK_SECURITY, hdev, true,
+> > +                            settings_rsp, &match);
+> >
+> >         if (changed)
+> >                 new_settings(hdev, match.sk);
+> > @@ -9957,9 +9951,12 @@ void mgmt_set_class_of_dev_complete(struct hci_d=
+ev *hdev, u8 *dev_class,
+> >  {
+> >         struct cmd_lookup match =3D { NULL, hdev, mgmt_status(status) }=
+;
+> >
+> > -       mgmt_pending_foreach(MGMT_OP_SET_DEV_CLASS, hdev, sk_lookup, &m=
+atch);
+> > -       mgmt_pending_foreach(MGMT_OP_ADD_UUID, hdev, sk_lookup, &match)=
+;
+> > -       mgmt_pending_foreach(MGMT_OP_REMOVE_UUID, hdev, sk_lookup, &mat=
+ch);
+> > +       mgmt_pending_foreach(MGMT_OP_SET_DEV_CLASS, hdev, false, sk_loo=
+kup,
+> > +                            &match);
+> > +       mgmt_pending_foreach(MGMT_OP_ADD_UUID, hdev, false, sk_lookup,
+> > +                            &match);
+> > +       mgmt_pending_foreach(MGMT_OP_REMOVE_UUID, hdev, false, sk_looku=
+p,
+> > +                            &match);
+> >
+> >         if (!status) {
+> >                 mgmt_limited_event(MGMT_EV_CLASS_OF_DEV_CHANGED, hdev, =
+dev_class,
+> > diff --git a/net/bluetooth/mgmt_util.c b/net/bluetooth/mgmt_util.c
+> > index 3713ff490c65..a88a07da3947 100644
+> > --- a/net/bluetooth/mgmt_util.c
+> > +++ b/net/bluetooth/mgmt_util.c
+> > @@ -217,30 +217,47 @@ int mgmt_cmd_complete(struct sock *sk, u16 index,=
+ u16 cmd, u8 status,
+> >  struct mgmt_pending_cmd *mgmt_pending_find(unsigned short channel, u16=
+ opcode,
+> >                                            struct hci_dev *hdev)
+> >  {
+> > -       struct mgmt_pending_cmd *cmd;
+> > +       struct mgmt_pending_cmd *cmd, *tmp;
+> >
+> > -       list_for_each_entry(cmd, &hdev->mgmt_pending, list) {
+> > +       mutex_lock(&hdev->mgmt_pending_lock);
+> > +
+> > +       list_for_each_entry_safe(cmd, tmp, &hdev->mgmt_pending, list) {
+> >                 if (hci_sock_get_channel(cmd->sk) !=3D channel)
+> >                         continue;
+> > -               if (cmd->opcode =3D=3D opcode)
+> > +
+> > +               if (cmd->opcode =3D=3D opcode) {
+> > +                       mutex_unlock(&hdev->mgmt_pending_lock);
+> >                         return cmd;
+> > +               }
+> >         }
+> >
+> > +       mutex_unlock(&hdev->mgmt_pending_lock);
+> > +
+> >         return NULL;
+> >  }
+> >
+> > -void mgmt_pending_foreach(u16 opcode, struct hci_dev *hdev,
+> > +void mgmt_pending_foreach(u16 opcode, struct hci_dev *hdev, bool remov=
+e,
+> >                           void (*cb)(struct mgmt_pending_cmd *cmd, void=
+ *data),
+> >                           void *data)
+> >  {
+> >         struct mgmt_pending_cmd *cmd, *tmp;
+> >
+> > +       mutex_lock(&hdev->mgmt_pending_lock);
+> > +
+> >         list_for_each_entry_safe(cmd, tmp, &hdev->mgmt_pending, list) {
+> >                 if (opcode > 0 && cmd->opcode !=3D opcode)
+> >                         continue;
+> >
+> > +               if (remove)
+> > +                       list_del(&cmd->list);
+> > +
+> >                 cb(cmd, data);
+> > +
+> > +               if (remove)
+> > +                       mgmt_pending_free(cmd);
+> >         }
+> > +
+> > +       mutex_unlock(&hdev->mgmt_pending_lock);
+> >  }
+> >
+> >  struct mgmt_pending_cmd *mgmt_pending_new(struct sock *sk, u16 opcode,
+> > @@ -254,7 +271,7 @@ struct mgmt_pending_cmd *mgmt_pending_new(struct so=
+ck *sk, u16 opcode,
+> >                 return NULL;
+> >
+> >         cmd->opcode =3D opcode;
+> > -       cmd->index =3D hdev->id;
+> > +       cmd->hdev =3D hdev;
+> >
+> >         cmd->param =3D kmemdup(data, len, GFP_KERNEL);
+> >         if (!cmd->param) {
+> > @@ -280,7 +297,9 @@ struct mgmt_pending_cmd *mgmt_pending_add(struct so=
+ck *sk, u16 opcode,
+> >         if (!cmd)
+> >                 return NULL;
+> >
+> > +       mutex_lock(&hdev->mgmt_pending_lock);
+> >         list_add_tail(&cmd->list, &hdev->mgmt_pending);
+> > +       mutex_unlock(&hdev->mgmt_pending_lock);
+> >
+> >         return cmd;
+> >  }
+> > @@ -294,7 +313,10 @@ void mgmt_pending_free(struct mgmt_pending_cmd *cm=
+d)
+> >
+> >  void mgmt_pending_remove(struct mgmt_pending_cmd *cmd)
+> >  {
+> > +       mutex_lock(&cmd->hdev->mgmt_pending_lock);
+> >         list_del(&cmd->list);
+> > +       mutex_unlock(&cmd->hdev->mgmt_pending_lock);
+> > +
+> >         mgmt_pending_free(cmd);
+> >  }
+> >
+> > diff --git a/net/bluetooth/mgmt_util.h b/net/bluetooth/mgmt_util.h
+> > index f2ba994ab1d8..024e51dd6937 100644
+> > --- a/net/bluetooth/mgmt_util.h
+> > +++ b/net/bluetooth/mgmt_util.h
+> > @@ -33,7 +33,7 @@ struct mgmt_mesh_tx {
+> >  struct mgmt_pending_cmd {
+> >         struct list_head list;
+> >         u16 opcode;
+> > -       int index;
+> > +       struct hci_dev *hdev;
+> >         void *param;
+> >         size_t param_len;
+> >         struct sock *sk;
+> > @@ -54,7 +54,7 @@ int mgmt_cmd_complete(struct sock *sk, u16 index, u16=
+ cmd, u8 status,
+> >
+> >  struct mgmt_pending_cmd *mgmt_pending_find(unsigned short channel, u16=
+ opcode,
+> >                                            struct hci_dev *hdev);
+> > -void mgmt_pending_foreach(u16 opcode, struct hci_dev *hdev,
+> > +void mgmt_pending_foreach(u16 opcode, struct hci_dev *hdev, bool remov=
+e,
+> >                           void (*cb)(struct mgmt_pending_cmd *cmd, void=
+ *data),
+> >                           void *data);
+> >  struct mgmt_pending_cmd *mgmt_pending_add(struct sock *sk, u16 opcode,
+> > --
+> > 2.49.0
+> >
+>
+>
+> --
+> Luiz Augusto von Dentz
+
+
+
+--=20
+Luiz Augusto von Dentz
