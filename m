@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E944D1A285;
-	Mon,  2 Jun 2025 09:16:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5511A5B99;
+	Mon,  2 Jun 2025 09:17:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748855786; cv=none; b=rhRdPyukstCdQsFoiGWEeCCNgnC4IKU9QFFaW4sY8nyQ6MFcakLsaaX70MVNRp+4oIuQG8tmCVmrhTOBgUBKIxH84U5CIF5WaZizpX15yOdgWil8qJ6tcOzcm4M5+zSgbuZ9xtHLbSyXB2UBxwhrF4a0KECeHxES5C3wJ6HMec8=
+	t=1748855833; cv=none; b=pTUJ2PlWweDuyWMHDK3Tuxjrtfw+8WP+1LSJD0wqpSHpDq9oBDhVBQYEfiRHsW2iIbxamiK7purPe59euOQ6iYqN2pupr3T0/9AybwFZ73ANVvkEFVEeyM7KWrDAvd6xc3GJbGLrefAUqrXcjLaIEwvQFhgcN5Yl5p7ckpHcOSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748855786; c=relaxed/simple;
-	bh=C1De+IOxAcDQvZAsEVV4bkESfkA1sLY6u15THMKu99E=;
+	s=arc-20240116; t=1748855833; c=relaxed/simple;
+	bh=dOuRTKmQlNshvgTsqcQocuGllITy9xMmbnYbxOpDspc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O4EJpRzSFrAd2zxF3+9M+v6+gffLf3Ps2gS0h3LXQT8v4jc1wWEaMUDdqQfTC7/rx+eVCaORQJxMDe6P6GLhp5pTw4qwlrMAiRLFfpUROhUiHmEOtRFfGBiAHOFSxQ29huh1DhqIVLSu5p0pVvXZIpiHI3y6JJXrYrSgpjUFzTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jHEc3E1o; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=NPGASEpH/QQ4AAhVCuJIUY4R9AuWKPDIPnQsGPetpqg19NGGznfmpFbLIIbofqLtWrFYZZyuoxn8j0UPYapKGwmMa/jE50rOJGEX4bTm4tu1ur7VZq//sDq7jslcDhgltNoO7SNkYZLFqwfkYYe3+k5i+ZKh8iTZvUw7xgQ75tM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iCBp4yrM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jHEc3E1o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 248AFC4CEEB;
-	Mon,  2 Jun 2025 09:16:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iCBp4yrM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B9E6C4CEED;
+	Mon,  2 Jun 2025 09:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748855785;
-	bh=C1De+IOxAcDQvZAsEVV4bkESfkA1sLY6u15THMKu99E=;
+	s=k20201202; t=1748855832;
+	bh=dOuRTKmQlNshvgTsqcQocuGllITy9xMmbnYbxOpDspc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jHEc3E1oJ7/9XEzu+JsoTDOH5xVMcn/fP/A5jJUEuy+tl02dHstQU5qiCEQ7k22vH
-	 YPvW4Eo06B+L6lrc/gtocbzJs4F1h3i5cXOLwdDGPpPRbB2BUYzz2EGbLghrjiIEAN
-	 wDad7w8tSFobiy1axktSGLr/qTyQXjX1bPnovR63+I7395BS0vqR5te3jCArw1Gt8M
-	 bItsuS9D3+OTOc5rrvmmbSJ5u73eIUKiF33RYWcv4ZahYT70DHhTE8tNcqCOwaT1kf
-	 pVsWSSIsekxtiHhC9UxwFm0lA3Gw3+0mriORyHx5tCJpqamTXjpwD6TNNNtkcA6JRh
-	 /nKGXCwlDMPDA==
-Message-ID: <9b54c25e-27e9-4590-9ba4-030ba485abcc@kernel.org>
-Date: Mon, 2 Jun 2025 11:16:19 +0200
+	b=iCBp4yrMAOG0ewaoqFLuY+9XQdbsHptd+29QQutMBpoDqZyZTRXFrfkUSSKtgjcIY
+	 Q8UYO5nt2TyEvaFHqRtDoA0tpIlC8EA9BqKYd2mDkEojXjxeL3E1vX1sFKedjIIRlL
+	 YjFrX9CBHskvIKRN3VPA4LDenFNgrIP4iCpmc/XIMi1W316PsHVk3CysBtjN4v9bK4
+	 BmJnYz8MDYT4fXttE22192ZpUoZlKi1mkDZXp9kLhxRBo6vbVZh/ZlFwnC7HNRIxXR
+	 qh4VskCWZ6qn1GTReOxiL0YuBr304ZMHrJ8SveyA2NaLBwMl7utO4DyOWiDxToV2df
+	 0uCgtQ+NbuHTA==
+Message-ID: <34288beb-a00a-4b17-a893-87d569a440ef@kernel.org>
+Date: Mon, 2 Jun 2025 11:17:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,20 +35,19 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: clk: mt8189: Porting driver for clk
-To: "irving.ch.lin" <irving-ch.lin@mediatek.com>,
- Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck
- <linux@roeck-us.net>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, nfraprado@collabora.com
-Cc: angelogioacchino.delregno@collabora.com,
- Project_Global_Chrome_Upstream_Group@mediatek.com,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-pm@vger.kernel.org, netdev@vger.kernel.org,
- linux-mediatek@lists.infradead.org,
- Irving lin <irving-ch.lin@mediatek.corp-partner.google.com>
-References: <20250602082610.1848291-1-irving-ch.lin@mediatek.com>
+Subject: Re: [PATCH v3 3/4] dt-bindings: mtd: atmel-nand: add legacy nand
+ controllers
+To: Balamanikandan.Gunasundar@microchip.com, miquel.raynal@bootlin.com,
+ richard@nod.at, vigneshr@ti.com, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, Nicolas.Ferre@microchip.com,
+ alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev,
+ krzysztof.kozlowski+dt@linaro.org
+Cc: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250602053507.25864-1-balamanikandan.gunasundar@microchip.com>
+ <20250602053507.25864-4-balamanikandan.gunasundar@microchip.com>
+ <3825dcb6-00b1-4e03-ab1a-258bcd3265ba@kernel.org>
+ <e457c167-59d2-45c9-8da8-e9fbd1f5e17e@microchip.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -94,26 +93,27 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250602082610.1848291-1-irving-ch.lin@mediatek.com>
+In-Reply-To: <e457c167-59d2-45c9-8da8-e9fbd1f5e17e@microchip.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 02/06/2025 10:25, irving.ch.lin wrote:
-> From: Irving lin <irving-ch.lin@mediatek.corp-partner.google.com>
+On 02/06/2025 10:59, Balamanikandan.Gunasundar@microchip.com wrote:
+> On 02/06/25 12:53 pm, Krzysztof Kozlowski wrote:
+>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+>>
+>> On 02/06/2025 07:35, Balamanikandan Gunasundar wrote:
+>>> Add support for atmel legacy nand controllers. These bindings should not be
+>>
+>> No new support for legacy bindings. Both your commit msg and subject do
+>> not describe what you do here. I see you convert EXISTING bindings
+>> instead of adding support. But if you insist on adding, that would be
+>> NAKed because why would we want to accept new stuff which is already
+>> deprecated?
 > 
-> 1. Add mt8189 clk driver
-> 2. Fix mux failed
-> 3. Add apll12_div_tdmout_b
-> 4. Add disable-unused configs
-> 
-> BUG=b:387252012
-> TEST=emerge-skywalker chromeos-kernel-6_6
-
-6_6 feels like v6.6, so nope. You need to start working on mainline and
-TESTING on mainline.
-
-This also explains a bit all the issues which you copied from downstream
-drivers... although they were fixed in v6.6 as well, so maybe not. :/
+> Yes. I am just converting the exiting bindings. Hope rephrasing the 
+> commit message is sufficient enough.
+And you just ignored everything else? Please kindly trim the replies
+from unnecessary context. It makes it much easier to find new content.
 
 Best regards,
 Krzysztof
