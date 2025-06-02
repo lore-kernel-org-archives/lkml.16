@@ -1,228 +1,220 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7582E229B16;
-	Mon,  2 Jun 2025 18:14:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77849211C;
+	Mon,  2 Jun 2025 18:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748888069; cv=none; b=uHFXfYRMtU2uqkmlfhu0cqJivBxDPVnXE7oo7f7Qt5zIarXIXIo979yitB2d10/jotf66hn1U84PUtTA4LrguzNecaugRTX4aNw/Ficr+zV9QZps0+z/Y/rx/9tuW3ivNluS18kBJWgP6LmUKXIUJj/RJGnS2qYqAZB57vjrRmw=
+	t=1748888114; cv=none; b=Yi+spty4PgoAvlsW1KL91b8GJzZp4xPPEFoFaLmTHAiEorMTMaCEGDljk7fqh+KzyfWfaNygAaukAxlTy4XPwjmyZJ9YsJP6biRrqCv9BjxPure1X051qqTVX28J+GFojBIS/YFrMuaY4+9JsCgoMadGguPGJBDclWdkDWi0pxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748888069; c=relaxed/simple;
-	bh=WlrnfOLtX7txl2cuPp/DmsvZdpij2ZhEMFWtoJ1eEkc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RRrRwBCiMhPfUpx5dRbJgA/lMnpQ1r39oGXsfNPsdPJniwhWpbJquVG1eG2FZDUFwFLEADsIsmKy0QUtUC1t8+pMnDm8D4ob0Wf7Zs/EB1SJ8ygcA5KlaaeDwEDoha+01pmJtGtgPo/CgJ4Yc4lUIDSYNYb9hqNpHh3gQHrIDdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dXPIQt/D; arc=none smtp.client-ip=209.85.214.170
+	s=arc-20240116; t=1748888114; c=relaxed/simple;
+	bh=hedc1slK+9Lv61TDwSQNxLU1CfM474XSEdPMgVna/Ck=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Tuh+AhYFyAvATucMPKzcpzF5KJbF6ihR0csT1Iwz5GVA+GLoOlUr5s12eyQRg3xbR3VTH0EY0gsKyPtWtfvjqQ6ZfdqgxAEbNEy9qTLUO/AQu3g/UcgmRDA4TgzxdrdEEM8/TrBylbxWJV3Jxf3s2pbWSlWv4uW5ohO428exjZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DeC+kyPP; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dXPIQt/D"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2353a2bc210so29557565ad.2;
-        Mon, 02 Jun 2025 11:14:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DeC+kyPP"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-442f9043f56so28507635e9.0;
+        Mon, 02 Jun 2025 11:15:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748888067; x=1749492867; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JDZ3mQFVfy4xCt7wewUY81eAfsa93TjxeELX/NJDSpw=;
-        b=dXPIQt/Dq5ZlOh+cWMTnT3/OWZj3q6/1MMWjFFhyikTggaTgslUKGJVGL0yEIwWS5D
-         hG1fQh0AD7M/qTYwoC9bbK2oBtPMVFmgPph3qo0SyuTzaUgCGkmZAI/ZnpVrhvoBsEL9
-         Fz4RQ545aYKEqYuIk93DoiiWi3iAnmpVXYFfseOVwiVG8Vz3HvrzPlfZEYaMsqg8+f7p
-         RffWcThXA42BZyc3AIgLB1NzOcq1FtXZLvMjdew418my/SBwKq2CfixJam9c+S1k65yc
-         K1lnVwHNSPzT+94pDn5NMyM8PBkGbU+kWnRma1d4CY0hRlbLm9Qez+3iApty2Pmh0CJz
-         N0YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748888067; x=1749492867;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1748888111; x=1749492911; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JDZ3mQFVfy4xCt7wewUY81eAfsa93TjxeELX/NJDSpw=;
-        b=JUoLVputRoV0pr8Uf1pyaOA9JrwbgtvrVx7kfNV7ay6yGyZ1gUL73a201zBSX8QiDI
-         Lq0KrgNMJtwZsQNhVgyeudSfE9XTMpW/W+HZcy8sYnxWMxLnxf6F1WkIM1cl1X0+qsd1
-         tupJcEzCUHC/F0OPQlucmZxxWQIKMEWgu+PWHa+pwrmwat1ZwycGP96Q2qiM7HxNZt1O
-         vXijWv89zkvHZkFbZP6C3xRjg/7sl1u9ia0vUO5vn14pVAr71dTaeyWfL2oNaYhma2Gk
-         x6e8rmK3545BsLt/WSlerHSOrYv7dWdS8b6PPpAlk+IPbtTFD1FxGnVBXHk/NGxHCElr
-         ftYw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7vUtlRZHh86gVZeXGMzYOQxsDwDnd+iYFGD2bQJlB2m4gLlYGNbga8W64oRWGWqsIRNXpACkH+Qd5CgQ=@vger.kernel.org, AJvYcCVIPTGygRWF76GSGvt4K0c7enNca4+mIFVIV4jLiMmJqivcASUAmZWAaPJlmQMVsllcoUVJq0Zp@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyyouk2qTaUwFPX/8xs+2+VabZtpsGXbzqedrXJUyi4duXcbqcp
-	H3KB8PxgqjEUVNewTZ7XdY1Gfh1OR/BwaDvzzUCkR6g37raW+kJHrYLS
-X-Gm-Gg: ASbGncsGWKgBfzHh5Cks2h3YrllS6+5jG9Zxx4KdyrhhwjENwCWXBbDZ6UYx0kSm0f0
-	0BMdL4BSRSXhIgFY+2A0WWxWIoUKzskdX7vkJkwyTJuJZFhSNTLYJHgqtHP9YZyELVHRYlAr4Eu
-	vKrahazfFX8EYuBjJ/EtI6x6Vtnau/Apc/fykZMM34rl7qJEs6bHPl/rmY8XsKJSLh6Y3oFOaUz
-	poIh7k7YkHxlVQgn5QlSUotQUNAucYE7ZdGqY0PgCCsq7tXARodZXx2las8Ff6mVvisuDRlOxci
-	AEofslUhRqTkFXsZ0FSmgm6rLmNJbuaFns3LAKPr08mhdDXfW08DpjUoDn/sIGu6jlMNSak9rSd
-	lEUgQaFo=
-X-Google-Smtp-Source: AGHT+IFNUzydhhbwzDlKGYhPSEDvNyUIjQMWLcCreC/Ptd/11scl6UUMIg4C1XJP1X2NKPSLK4iw2g==
-X-Received: by 2002:a17:902:f610:b0:229:1619:ab58 with SMTP id d9443c01a7336-235396e2a84mr204137485ad.43.1748888066475;
-        Mon, 02 Jun 2025 11:14:26 -0700 (PDT)
-Received: from KASONG-MC4.tencent.com ([101.32.222.185])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2354fd632d7sm45031275ad.130.2025.06.02.11.14.23
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 02 Jun 2025 11:14:25 -0700 (PDT)
-From: Kairui Song <ryncsn@gmail.com>
-To: linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Barry Song <21cnbao@gmail.com>,
-	Peter Xu <peterx@redhat.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Andrea Arcangeli <aarcange@redhat.com>,
-	David Hildenbrand <david@redhat.com>,
-	Lokesh Gidra <lokeshgidra@google.com>,
-	stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kairui Song <kasong@tencent.com>
-Subject: [PATCH v3] mm: userfaultfd: fix race of userfaultfd_move and swap cache
-Date: Tue,  3 Jun 2025 02:14:19 +0800
-Message-ID: <20250602181419.20478-1-ryncsn@gmail.com>
-X-Mailer: git-send-email 2.49.0
-Reply-To: Kairui Song <kasong@tencent.com>
+        bh=mX/pCZ6QPtF7g93rpLdt86rmKoHi6yL8n3t0sLvtHpg=;
+        b=DeC+kyPPIcVujpo05GyoYfXLyxu3sZzQTfiXD9D4SDPN8miMJVFKjbSt0VGFiHTdlk
+         Re469aXMTNoDig86b313tc+z5yocOMQLYbtaHXL4B2NJvUlER9RII7LYhCA58GPDeEbs
+         /14r1egkiMucq+i6fM3/UGhvw0KymPvhZmkiT+I0O1i0pQBblqQO6I3gmpO1HzXr3JdE
+         UzJm3xvboZP7yeqKSbDuD5Dymne1Lx5RoPHoW+IvINy8OaNxD76vsQz0zMO55gOvx6Kq
+         77CzB2sosacTIjInbo9mCqHfYdec1+nrrGnDpVSBgVvmbE3u+AEX4C6iKutJPE1Egr/K
+         ETrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748888111; x=1749492911;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mX/pCZ6QPtF7g93rpLdt86rmKoHi6yL8n3t0sLvtHpg=;
+        b=sglPAajMXSRlcXYRTNdU9lLxTfgZlGGYNE4EWAG1eVuZQqk18YLWR4p1Og/+J5SLQ6
+         SOEPLIk5xylKniJSIQphwb0wnnv4xvvB10ygMjXWT/HBau8amDrhN0hbvqGFnsF8Kk4j
+         pYgVbN12iVuEqiPRU5ZFxMNk+cYxizqS6+P4PV22sNj3gYN/b5v72Z7+XDVIfTK8fGYx
+         2q7cxDZeCJMUTBWePREj+0EQqsfmDQl/EQzPt0RXDd9iVe1+ygMYJ0sJTF0TH6vA8NCi
+         kLtCqxj6N8zuKWpGGJkAN9Ware4lnsZ8Mh0Si+co44F6GVJ8HYWb5QjPnH4N4rwfbUF7
+         ZfwA==
+X-Forwarded-Encrypted: i=1; AJvYcCWt1Bql4mz88cgpWC7y1bLcslulHbVOtLTCKDzUfYOkGRvBHMWpZM4Haq001BsuUKhYHgc=@vger.kernel.org, AJvYcCX9ytnvTB8F/Nls5yC1cv+SeRd1WxnKpUhQ7hreWnVj1bhPU17WkrG3DktIC+79/uPQB/sxrPQh1dJP9tu1wEsXKg==@vger.kernel.org, AJvYcCXib3QOcgJQkbcnx1tOq0FQdN47FxgHRyX3gclyTm14769Q0sZn9eH7fz/KK7bbT4cfffRp27GkM1Dmv8Ut@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXWaYgeK6cYNMIKwiwUaI5HvL4mT8jY2s9mAx0DUrIQQiDvz3A
+	ZhsoTl9wPE8Hd4Cv4yPofbFNhL+7iFT34oRsJ2D7NSsKJdp2GRiZ2fsnsX4bWVUIoFleAGzYIjl
+	oAAT5rNcl5vXHlBHQdIFrw9+QXlA0rm0=
+X-Gm-Gg: ASbGncvtV7OwwFBQHo+2fahwNqVZL2N3Umpg3UhCwybbZF8a2Ii9dtprdIRtEmRYDWi
+	yVjknclWrugCyARE/sUVRlmJZfxNmyO1uv0XI8mvriMQHcVm+4YbhbmxIuqdqbLiBu7hmWYo9Oy
+	ry9teTG56NV4mCuWoIz6GDcLUBPHo5LSId+pnc6XlmlvxSd5gN
+X-Google-Smtp-Source: AGHT+IGpJYuInbfHGFM0Zs7ZYiwunfyj5vlSoTMHxj6LUcKavVkEz4WNHuG4znOYLPTBJU4BgCL66MJAHdk+hUyWB1w=
+X-Received: by 2002:a05:6000:2dca:b0:3a4:e706:532b with SMTP id
+ ffacd0b85a97d-3a4fe398f49mr6954997f8f.43.1748888110368; Mon, 02 Jun 2025
+ 11:15:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250520181644.2673067-1-kan.liang@linux.intel.com>
+ <20250520181644.2673067-2-kan.liang@linux.intel.com> <djxlh5fx326gcenwrr52ry3pk4wxmugu4jccdjysza7tlc5fef@ktp4rffawgcw>
+ <d3c6b899-7281-4f97-a449-96f506181bab@linux.intel.com> <CAADnVQL_v4SscxVK5fLxKo5Z4+LJtVfpvrJ4+ztu-ecPfxwrhQ@mail.gmail.com>
+ <fb64520f-3890-4cdf-9c12-73d6b8de584b@linux.intel.com>
+In-Reply-To: <fb64520f-3890-4cdf-9c12-73d6b8de584b@linux.intel.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Mon, 2 Jun 2025 11:14:59 -0700
+X-Gm-Features: AX0GCFtaVFimDMEvqxIFdbLFiBresthrljCeNVzlQTI2Dmecz-iAlJlh5ai8MYA
+Message-ID: <CAADnVQ+h24Sez9iaa9DdwS9sWQ4m1LXeXQM7XMPKfZO7FmUtMg@mail.gmail.com>
+Subject: Re: perf regression. Was: [PATCH V4 01/16] perf: Fix the throttle
+ logic for a group
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Mark Rutland <mark.rutland@arm.com>, LKML <linux-kernel@vger.kernel.org>, 
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>, Stephane Eranian <eranian@google.com>, 
+	Chun-Tse Shao <ctshao@google.com>, Thomas Richter <tmricht@linux.ibm.com>, Leo Yan <leo.yan@arm.com>, 
+	bpf <bpf@vger.kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	Ihor Solodrai <ihor.solodrai@linux.dev>, Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Kairui Song <kasong@tencent.com>
-
-On seeing a swap entry PTE, userfaultfd_move does a lockless swap cache
-lookup, and try to move the found folio to the faulting vma when.
-Currently, it relies on the PTE value check to ensure the moved folio
-still belongs to the src swap entry, which turns out is not reliable.
-
-While working and reviewing the swap table series with Barry, following
-existing race is observed and reproduced [1]:
-
-( move_pages_pte is moving src_pte to dst_pte, where src_pte is a
- swap entry PTE holding swap entry S1, and S1 isn't in the swap cache.)
-
-CPU1                               CPU2
-userfaultfd_move
-  move_pages_pte()
-    entry = pte_to_swp_entry(orig_src_pte);
-    // Here it got entry = S1
-    ... < Somehow interrupted> ...
-                                   <swapin src_pte, alloc and use folio A>
-                                   // folio A is just a new allocated folio
-                                   // and get installed into src_pte
-                                   <frees swap entry S1>
-                                   // src_pte now points to folio A, S1
-                                   // has swap count == 0, it can be freed
-                                   // by folio_swap_swap or swap
-                                   // allocator's reclaim.
-                                   <try to swap out another folio B>
-                                   // folio B is a folio in another VMA.
-                                   <put folio B to swap cache using S1 >
-                                   // S1 is freed, folio B could use it
-                                   // for swap out with no problem.
-                                   ...
-    folio = filemap_get_folio(S1)
-    // Got folio B here !!!
-    ... < Somehow interrupted again> ...
-                                   <swapin folio B and free S1>
-                                   // Now S1 is free to be used again.
-                                   <swapout src_pte & folio A using S1>
-                                   // Now src_pte is a swap entry pte
-                                   // holding S1 again.
-    folio_trylock(folio)
-    move_swap_pte
-      double_pt_lock
-      is_pte_pages_stable
-      // Check passed because src_pte == S1
-      folio_move_anon_rmap(...)
-      // Moved invalid folio B here !!!
-
-The race window is very short and requires multiple collisions of
-multiple rare events, so it's very unlikely to happen, but with a
-deliberately constructed reproducer and increased time window, it can be
-reproduced [1].
-
-It's also possible that folio (A) is swapped in, and swapped out again
-after the filemap_get_folio lookup, in such case folio (A) may stay in
-swap cache so it needs to be moved too. In this case we should also try
-again so kernel won't miss a folio move.
-
-Fix this by checking if the folio is the valid swap cache folio after
-acquiring the folio lock, and checking the swap cache again after
-acquiring the src_pte lock.
-
-SWP_SYNCRHONIZE_IO path does make the problem more complex, but so far
-we don't need to worry about that since folios only might get exposed to
-swap cache in the swap out path, and it's covered in this patch too by
-checking the swap cache again after acquiring src_pte lock.
-
-Testing with a simple C program to allocate and move several GB of memory
-did not show any observable performance change.
-
-Cc: <stable@vger.kernel.org>
-Fixes: adef440691ba ("userfaultfd: UFFDIO_MOVE uABI")
-Closes: https://lore.kernel.org/linux-mm/CAMgjq7B1K=6OOrK2OUZ0-tqCzi+EJt+2_K97TPGoSt=9+JwP7Q@mail.gmail.com/ [1]
-Signed-off-by: Kairui Song <kasong@tencent.com>
-
+On Mon, Jun 2, 2025 at 10:51=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
+om> wrote:
+>
+>
+>
+> On 2025-06-02 12:24 p.m., Alexei Starovoitov wrote:
+> > On Mon, Jun 2, 2025 at 5:55=E2=80=AFAM Liang, Kan <kan.liang@linux.inte=
+l.com> wrote:
+> >>
+> >> Hi Alexei,
+> >>
+> >> On 2025-06-01 8:30 p.m., Alexei Starovoitov wrote:
+> >>> On Tue, May 20, 2025 at 11:16:29AM -0700, kan.liang@linux.intel.com w=
+rote:
+> >>>> From: Kan Liang <kan.liang@linux.intel.com>
+> >>>>
+> >>>> The current throttle logic doesn't work well with a group, e.g., the
+> >>>> following sampling-read case.
+> >>>>
+> >>>> $ perf record -e "{cycles,cycles}:S" ...
+> >>>>
+> >>>> $ perf report -D | grep THROTTLE | tail -2
+> >>>>             THROTTLE events:        426  ( 9.0%)
+> >>>>           UNTHROTTLE events:        425  ( 9.0%)
+> >>>>
+> >>>> $ perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
+> >>>> 0 1020120874009167 0x74970 [0x68]: PERF_RECORD_SAMPLE(IP, 0x1):
+> >>>> ... sample_read:
+> >>>> .... group nr 2
+> >>>> ..... id 0000000000000327, value 000000000cbb993a, lost 0
+> >>>> ..... id 0000000000000328, value 00000002211c26df, lost 0
+> >>>>
+> >>>> The second cycles event has a much larger value than the first cycle=
+s
+> >>>> event in the same group.
+> >>>>
+> >>>> The current throttle logic in the generic code only logs the THROTTL=
+E
+> >>>> event. It relies on the specific driver implementation to disable
+> >>>> events. For all ARCHs, the implementation is similar. Only the event=
+ is
+> >>>> disabled, rather than the group.
+> >>>>
+> >>>> The logic to disable the group should be generic for all ARCHs. Add =
+the
+> >>>> logic in the generic code. The following patch will remove the buggy
+> >>>> driver-specific implementation.
+> >>>>
+> >>>> The throttle only happens when an event is overflowed. Stop the enti=
+re
+> >>>> group when any event in the group triggers the throttle.
+> >>>> The MAX_INTERRUPTS is set to all throttle events.
+> >>>>
+> >>>> The unthrottled could happen in 3 places.
+> >>>> - event/group sched. All events in the group are scheduled one by on=
+e.
+> >>>>   All of them will be unthrottled eventually. Nothing needs to be
+> >>>>   changed.
+> >>>> - The perf_adjust_freq_unthr_events for each tick. Needs to restart =
+the
+> >>>>   group altogether.
+> >>>> - The __perf_event_period(). The whole group needs to be restarted
+> >>>>   altogether as well.
+> >>>>
+> >>>> With the fix,
+> >>>> $ sudo perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
+> >>>> 0 3573470770332 0x12f5f8 [0x70]: PERF_RECORD_SAMPLE(IP, 0x2):
+> >>>> ... sample_read:
+> >>>> .... group nr 2
+> >>>> ..... id 0000000000000a28, value 00000004fd3dfd8f, lost 0
+> >>>> ..... id 0000000000000a29, value 00000004fd3dfd8f, lost 0
+> >>>>
+> >>>> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> >>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> >>>> ---
+> >>>>  kernel/events/core.c | 66 ++++++++++++++++++++++++++++++-----------=
 ---
+> >>>>  1 file changed, 46 insertions(+), 20 deletions(-)
+> >>>
+> >>> This patch breaks perf hw events somehow.
+> >>>
+> >>> After merging this into bpf trees we see random "watchdog: BUG: soft =
+lockup"
+> >>> with various stack traces followed up:
+> >>> [   78.620749] Sending NMI from CPU 8 to CPUs 0:
+> >>> [   76.387722] NMI backtrace for cpu 0
+> >>> [   76.387722] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Tainted: G       =
+    O L      6.15.0-10818-ge0f0ee1c31de #1163 PREEMPT
+> >>> [   76.387722] Tainted: [O]=3DOOT_MODULE, [L]=3DSOFTLOCKUP
+> >>> [   76.387722] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),=
+ BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
+> >>> [   76.387722] RIP: 0010:_raw_spin_lock_irqsave+0xc/0x40
+> >>> [   76.387722] Call Trace:
+> >>> [   76.387722]  <IRQ>
+> >>> [   76.387722]  hrtimer_try_to_cancel.part.0+0x24/0xe0
+> >>> [   76.387722]  hrtimer_cancel+0x21/0x40
+> >>> [   76.387722]  cpu_clock_event_stop+0x64/0x70
+> >>
+> >>
+> >> The issues should be fixed by the patch.
+> >> https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.=
+intel.com/
+> >>
+> >> Could you please give it a try?
+> >
+> > Thanks. It fixes it, but the commit log says that
+> > only cpu-clock and task_clock are affected,
+> > which are SW events.
+>
+> Yes, only the two SW events are affected.
+>
+> >
+> > While our tests are locking while setting up:
+> >
+> >         struct perf_event_attr attr =3D {
+> >                 .freq =3D 1,
+> >                 .type =3D PERF_TYPE_HARDWARE,
+> >                 .config =3D PERF_COUNT_HW_CPU_CYCLES,
+> >         };
+> >
+> > Is it because we run in x86 VM and HW_CPU_CYCLES is mapped
+> > to cpu-clock sw ?
+>
+> No, that's from different PMU. We never map HW_CPU_CYCLES to a SW event.
+> It will error our if the PMU is not available.
+>
+> I'm not familiar with your test case and env. At least, I saw
+> PERF_COUNT_SW_CPU_CLOCK is used in the case unpriv_bpf_disabled.
 
-V1: https://lore.kernel.org/linux-mm/20250530201710.81365-1-ryncsn@gmail.com/
-Changes:
-- Check swap_map instead of doing a filemap lookup after acquiring the
-  PTE lock to minimize critical section overhead [ Barry Song, Lokesh Gidra ]
+I see. The first test was necessary to create throttle conditions
+for the 2nd test that actually used cpu-clock.
 
-V2: https://lore.kernel.org/linux-mm/20250601200108.23186-1-ryncsn@gmail.com/
-Changes:
-- Move the folio and swap check inside move_swap_pte to avoid skipping
-  the check and potential overhead [ Lokesh Gidra ]
-- Add a READ_ONCE for the swap_map read to ensure it reads a up to dated
-  value.
+Feel free to add
+Tested-by: Alexei Starovoitov <ast@kernel.org>
 
- mm/userfaultfd.c | 23 +++++++++++++++++++++--
- 1 file changed, 21 insertions(+), 2 deletions(-)
-
-diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-index bc473ad21202..5dc05346e360 100644
---- a/mm/userfaultfd.c
-+++ b/mm/userfaultfd.c
-@@ -1084,8 +1084,18 @@ static int move_swap_pte(struct mm_struct *mm, struct vm_area_struct *dst_vma,
- 			 pte_t orig_dst_pte, pte_t orig_src_pte,
- 			 pmd_t *dst_pmd, pmd_t dst_pmdval,
- 			 spinlock_t *dst_ptl, spinlock_t *src_ptl,
--			 struct folio *src_folio)
-+			 struct folio *src_folio,
-+			 struct swap_info_struct *si, swp_entry_t entry)
- {
-+	/*
-+	 * Check if the folio still belongs to the target swap entry after
-+	 * acquiring the lock. Folio can be freed in the swap cache while
-+	 * not locked.
-+	 */
-+	if (src_folio && unlikely(!folio_test_swapcache(src_folio) ||
-+				  entry.val != src_folio->swap.val))
-+		return -EAGAIN;
-+
- 	double_pt_lock(dst_ptl, src_ptl);
- 
- 	if (!is_pte_pages_stable(dst_pte, src_pte, orig_dst_pte, orig_src_pte,
-@@ -1102,6 +1112,15 @@ static int move_swap_pte(struct mm_struct *mm, struct vm_area_struct *dst_vma,
- 	if (src_folio) {
- 		folio_move_anon_rmap(src_folio, dst_vma);
- 		src_folio->index = linear_page_index(dst_vma, dst_addr);
-+	} else {
-+		/*
-+		 * Check if the swap entry is cached after acquiring the src_pte
-+		 * lock. Or we might miss a new loaded swap cache folio.
-+		 */
-+		if (READ_ONCE(si->swap_map[swp_offset(entry)]) & SWAP_HAS_CACHE) {
-+			double_pt_unlock(dst_ptl, src_ptl);
-+			return -EAGAIN;
-+		}
- 	}
- 
- 	orig_src_pte = ptep_get_and_clear(mm, src_addr, src_pte);
-@@ -1412,7 +1431,7 @@ static int move_pages_pte(struct mm_struct *mm, pmd_t *dst_pmd, pmd_t *src_pmd,
- 		}
- 		err = move_swap_pte(mm, dst_vma, dst_addr, src_addr, dst_pte, src_pte,
- 				orig_dst_pte, orig_src_pte, dst_pmd, dst_pmdval,
--				dst_ptl, src_ptl, src_folio);
-+				dst_ptl, src_ptl, src_folio, si, entry);
- 	}
- 
- out:
--- 
-2.49.0
-
+I've applied your patch to bpf tree for now to stop the bleeding.
+Will drop it when the fix gets to Linus through perf trees.
