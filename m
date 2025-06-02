@@ -1,133 +1,138 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37BEB1A23B6
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 10:17:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C8F1C32FF
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 10:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748859436; cv=none; b=pHXDUDIHBI2ubxt0ZaqoYTNp/aRqJsqDZNbRMbcQpym1F5utbGR2NdUpyzVxXyzBt52BDGrOVgtTPtgxELxH7301T/M3kwTlW+6ZeFPLz17kfcevJTXbO2J7L+xbbizmuewupbBMourBzUAwUxQyOtRxVUNViVlnMkSyalhIKMs=
+	t=1748859526; cv=none; b=rhyo+FQlOZDwmD/AJHOMZqkvN+OlAUwM0+G3Zm04Kvfyxh6tUt2msGoSyHz58qZW2Y2+ROq8clc2RL72sKkPaZkEcN7kbbDf6nCeP5yZltrJ0DApkxohOW00PXlH5U63Cz7RSJ/MKWikdqYLQQietsJu2zoe963xC5IwgwnTuR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748859436; c=relaxed/simple;
-	bh=pEyblw1ZF05CXEYNgROXAcVImF3tve5gvGba+f35nQg=;
+	s=arc-20240116; t=1748859526; c=relaxed/simple;
+	bh=uLQazk56BTexUgsHGJMDpigwB9tywPCf55jmlZm6j/8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qFL/L2ayivc++McGToRqfo8TmNjxrhi6hUN2XUDZGjfBXTUrZEMm/oTz6J6Cg9yd8ytsVuNsUJaP9RU9HJFLB46z+TOrrM5Nj5zGmq5zI9fdUDYRZ/tu7Xy3Cau8v2f1Z5iX8d2v8ga5euiAbaoQK/Kf3G10SH51SVM3svm08uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=S0cEX5zt; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	 To:Cc:Content-Type; b=iYoYFj9oB4Acm3Vol+86YOg2w44xsceJ9SsNlH/e3ksNsQORmAtcSvoBq79NX38sRC2oc5KN6xZU5HIhJhgBqHSXo6bY1k9npm/NbQFoKFA8xBNbfxSDlR7+x4OE7c9NTbMgAGykbcBGszriUsXCBbO4GhfYHNDLlsgL4OOm2OI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aQH2Xeu8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="S0cEX5zt"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5532a30ac45so4267775e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 03:17:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1748859432; x=1749464232; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pGO9sUY+r7vqr6gLOI6qlkiYKXTKtTQAWLD2mIokncE=;
-        b=S0cEX5ztlLK808ycniXZr1H9/H7xNzCtX79FukKmhSGvEttA+EdcE3SDTfdS8Zj0sB
-         5SOfwONgUcs2rN/dw/TXR28w9tQhrHu1cTDJ7HkWV3pmX8YSOgCn8aDoExkeGy+fdysi
-         KpzUEZ7ueCuTdaVapPm52Kddsv1TxUEqc+JzEgHEUwBOls/FdWq54+kXPBJothd236d5
-         s3scgXi0NpyCT+yWPy1esu1uUeZ8h7oo2iYtJCobVBDMZb2ouMDQQw0bSTwn8b26Ttm+
-         NTzfB85nlVtY4bL0kVtRuD++jUbb8W2MVlWJ3djL5caCERGjNBYExhS+rfPH7oB38S7L
-         5hjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748859432; x=1749464232;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pGO9sUY+r7vqr6gLOI6qlkiYKXTKtTQAWLD2mIokncE=;
-        b=VUhy/9uZANSYSDGcdxFpzIDYoEaqysMPw8gkQA0rf4cq4gkwJQhBxgafpWPbher3HV
-         CoCzonL816iWRA5bGwklHQ8+oFk/BqDY+WJU6XBb0oJMo9uj9K5PvV4X9/SN9oDkMALu
-         wLydixZoqEdPSQKkYmCD06DDAU0UFVO1QfoRzRkIzqir3hAMqVOTKqaM1BQyx0dxwhIg
-         TZZPd8Goo71vE+EflaETDB73Dlx8a4M2qM2TcZmG8DsaenkbCsc2cXx5Vp2kOa/jHqQT
-         kzWMunjO5HsrLrt6knH2rVeYAwVnQAf5ApqG0QmrzO7YHw5yw1ydoFIShxzWaC1vamz+
-         0kPg==
-X-Forwarded-Encrypted: i=1; AJvYcCWH/a9WX0QyiXqw88btb4heE9SHZVKvHDRxCFIBwGvB8JSIXdKwd+Vra3giFc66W4sAly46xLv3GxGJC0Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxxsjq2XrBqW6nBCs6rOY8nP8emZFpWmw6qf0HT/Tp5zR0jR353
-	FXRgSUCAwc9FTWBgMj1I2ikd2FJGHXuHUEImgfFubGqGw1yOpIraExu581eFqZoiWjtIFMyis/D
-	f6lo64HT9ojJEJoyxghyFD68B+xO3Xgf/RXzG7L0cBA==
-X-Gm-Gg: ASbGncvoBI9brSLvjBCijIjPn3QoBCxyaGeCTsEmm2OQvbLR4k1BeK6GXgmbGM1vKgz
-	S+q9DlHa5Tu99mwbGWX+/VU5lgvqXMTQK7BRe/c67O9gxLSer9Luk4qOe0UzKQ2XP0dBpPYOY2v
-	HvUoWINWzuqMXjpTu+WzQEiYZiW8mlFq7lHF+IN4dMu5GImAJqrfxg2eYrcO41untY
-X-Google-Smtp-Source: AGHT+IE2ScFlgSOO/jzGpylrUkqPYvdmuNlMMD0/AntL/Q/1ICr4QgrhpUxX3vIEoEkKGY8aofftc7B/+e+Cne9Hayk=
-X-Received: by 2002:a05:6512:1108:b0:553:2927:9864 with SMTP id
- 2adb3069b0e04-5533ba23ab1mr3564157e87.6.1748859432178; Mon, 02 Jun 2025
- 03:17:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aQH2Xeu8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5818CC4AF09
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 10:18:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748859526;
+	bh=uLQazk56BTexUgsHGJMDpigwB9tywPCf55jmlZm6j/8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=aQH2Xeu8G8u7KvsNJNgOrp2DnTDQl6YMRHaBOkdCqci5ulQbkBmqH/plTo+sHkyRb
+	 yxOfTgEpagaDgRFkI0eQ5CXLrJ1cfCMGWeYCM0YsZk0aGCaXvsavmhW8vOZfASxg20
+	 zRgHlDrYwk8dN+Sd/p7m3D4djfvNTI5CouNfOeHquwXoTXopfW95JEjg3XxDSjh9lp
+	 CG8sfDS26LfRjQOEF8GEdPPh3kiDRKZ3CQbXGBVanq5rBsFBqvPG57a+t/d8qpy365
+	 chbMJgUlEh70baMg/hAsOcrzmphUKG47ncoYfsToNwJek+u/dpK7p/RuvCljhbAXry
+	 LmH93GZWTGuQw==
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5534edc646dso405984e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 03:18:46 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUaxi4bU0m7tyvDMCiAt/BcHgq7Tlq0azmXwDxsnovNRrW2hUrT8SK0SFR9efW+1inwbGLp8weQSmC546k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4tToGppwJuDJznAmnwyp5zzLzxB3YDUfx7j93KL6NqlkPnC1l
+	Z2G5+UAlESB3qdJR3DZPycNltuiax8cbOf4o00SeYFZSd/r8gR/Q6pwC5BLcTuV/iRa3ogACN/X
+	YVJ+WH6RP508Eiesg8+r25MeJONdSL+s=
+X-Google-Smtp-Source: AGHT+IFi9HK9WNzL4nXyoqhZF+tafWf9gRJFq8rKqeVagEgYLbmiY1W9Y5P6iWsmEp8Wznqox9DdglvyNKnbXkBjqLo=
+X-Received: by 2002:a05:6512:3e0f:b0:553:28f1:66ec with SMTP id
+ 2adb3069b0e04-5533d19dbbamr3202081e87.31.1748859524677; Mon, 02 Jun 2025
+ 03:18:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530225504.55042-1-marek.vasut+renesas@mailbox.org>
-In-Reply-To: <20250530225504.55042-1-marek.vasut+renesas@mailbox.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 2 Jun 2025 12:17:01 +0200
-X-Gm-Features: AX0GCFsfGl-iahXc2ZEy1lSOQx3uH8u4YrEEg6MXx4A4twZNi28c07s79G74fwQ
-Message-ID: <CAMRc=MckQhB4diiWc+Rtk84PtwaKqr34At3heT0vyAgJ9VA7Hg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] PCI/pwrctrl: Add optional slot clock to pwrctrl
- driver for PCI slots
-To: Marek Vasut <marek.vasut+renesas@mailbox.org>
-Cc: linux-arm-kernel@lists.infradead.org, Anand Moon <linux.amoon@gmail.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Conor Dooley <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	Rob Herring <robh@kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+References: <20250529073507.2984959-2-ardb+git@google.com> <20250530133811.GB30622@willie-the-truck>
+ <CAMj1kXHypqdC9O+8WH7n1=aDOySMScZc2y526S3gc_-QNpqO=w@mail.gmail.com> <20250602100932.GA919@willie-the-truck>
+In-Reply-To: <20250602100932.GA919@willie-the-truck>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Mon, 2 Jun 2025 12:18:33 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEKMyR0PoQnY2zvQ=BVPJfEb4EO9HCUWKURUW+_Dj5h4w@mail.gmail.com>
+X-Gm-Features: AX0GCFtV7EFK8QfbOKqdQzWZFlqFjENgJ20dK-v1vdlyJN6pNEtBwCNmuIl6VrY
+Message-ID: <CAMj1kXEKMyR0PoQnY2zvQ=BVPJfEb4EO9HCUWKURUW+_Dj5h4w@mail.gmail.com>
+Subject: Re: [PATCH] arm64: Disable LLD linker ASSERT()s for the time being
+To: Will Deacon <will@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Ard Biesheuvel <ardb+git@google.com>, 
+	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, catalin.marinas@arm.com, nathan@kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 31, 2025 at 12:55=E2=80=AFAM Marek Vasut
-<marek.vasut+renesas@mailbox.org> wrote:
+On Mon, 2 Jun 2025 at 12:09, Will Deacon <will@kernel.org> wrote:
 >
-> Add the ability to enable optional slot clock into the pwrctrl driver.
-> This is used to enable slot clock in split-clock topologies, where the
-> PCIe host/controller supply and PCIe slot supply are not provided by
-> the same clock. The PCIe host/controller clock should be described in
-> the controller node as the controller clock, while the slot clock should
-> be described in controller bridge/slot subnode.
+> On Fri, May 30, 2025 at 04:23:16PM +0200, Ard Biesheuvel wrote:
+> > On Fri, 30 May 2025 at 15:38, Will Deacon <will@kernel.org> wrote:
+> > >
+> > > On Thu, May 29, 2025 at 09:35:08AM +0200, Ard Biesheuvel wrote:
+> > > > From: Ard Biesheuvel <ardb@kernel.org>
+> > > >
+> > > > It turns out that the way LLD handles ASSERT()s in the linker script can
+> > > > result in spurious failures, so disable them for the newly introduced
+> > > > BSS symbol export checks.
+> > > >
+> > > > Link: https://github.com/ClangBuiltLinux/linux/issues/2094
+> > > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> > > > ---
+> > > >  arch/arm64/kernel/image-vars.h | 6 ++++++
+> > > >  1 file changed, 6 insertions(+)
+> > > >
+> > > > diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
+> > > > index c5266430284b..86f088a16147 100644
+> > > > --- a/arch/arm64/kernel/image-vars.h
+> > > > +++ b/arch/arm64/kernel/image-vars.h
+> > > > @@ -10,6 +10,10 @@
+> > > >  #error This file should only be included in vmlinux.lds.S
+> > > >  #endif
+> > > >
+> > > > +#if defined(CONFIG_LD_IS_LLD) && CONFIG_LLD_VERSION < 210000
+> > > > +#define ASSERT(...)
+> > > > +#endif
+> > > > +
+> > > >  #define PI_EXPORT_SYM(sym)           \
+> > > >       __PI_EXPORT_SYM(sym, __pi_ ## sym, Cannot export BSS symbol sym to startup code)
+> > > >  #define __PI_EXPORT_SYM(sym, pisym, msg)\
+> > > > @@ -142,4 +146,6 @@ KVM_NVHE_ALIAS(kvm_protected_mode_initialized);
+> > > >  _kernel_codesize = ABSOLUTE(__inittext_end - _text);
+> > > >  #endif
+> > > >
+> > > > +#undef ASSERT
+> > >
+> > > What about the ASSERT()s at the end of vmlinux.lds.S? Are they not
+> > > affected by the bug, for some reason?
+> > >
+> > > Also, even with this patch applied, I still see a link failure:
+> > >
+> > >   | ld.lld: error: assignment to symbol __init_end does not converge
+> > >
+> > > with the .config you sent me off-list.
+> > >
+> >
+> > That is a different error that has been lurking for a while now; Arnd
+> > occasionally hits it but I haven't seen any other reports of it. AIUI,
+> > the issue is that INIT_IDMAP_DIR_PAGES and INIT_DIR_SIZE are defined
+> > in terms of (_end - KIMAGE_VADDR), resulting in a circular dependency.
 >
-> Example DT snippet:
-> &pcicontroller {
->     clocks =3D <&clk_dif 0>;             /* PCIe controller clock */
+> Ok, I'll ignore that one for the moment, then...
 >
->     pci@0,0 {
->         #address-cells =3D <3>;
->         #size-cells =3D <2>;
->         reg =3D <0x0 0x0 0x0 0x0 0x0>;
->         compatible =3D "pciclass,0604";
->         device_type =3D "pci";
->         clocks =3D <&clk_dif 1>;         /* PCIe slot clock */
->         vpcie3v3-supply =3D <&reg_3p3v>;
->         ranges;
->     };
-> };
+> > The config in the kernel test robot's report [0] appears to build fine
+> > with this patch applied.
+> >
+> >
+> > [0] https://lore.kernel.org/all/202505261019.OUlitN6m-lkp@intel.com/T/#u
 >
-> Example clock topology:
->  ____________                    ____________
-> |  PCIe host |                  | PCIe slot  |
-> |            |                  |            |
-> |    PCIe RX<|=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D|>PCI=
-e TX    |
-> |    PCIe TX<|=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D|>PCI=
-e RX    |
-> |            |                  |            |
-> |   PCIe CLK<|=3D=3D=3D=3D=3D=3D..  ..=3D=3D=3D=3D=3D=3D|>PCIe CLK   |
-> '------------'      ||  ||      '------------'
->                     ||  ||
->  ____________       ||  ||
-> |  9FGV0441  |      ||  ||
-> |            |      ||  ||
-> |   CLK DIF0<|=3D=3D=3D=3D=3D=3D''  ||
-> |   CLK DIF1<|=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D''
-> |   CLK DIF2<|
-> |   CLK DIF3<|
-> '------------'
->
-> Reviewed-by: Anand Moon <linux.amoon@gmail.com>
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
-> ---
+> ... but I'm still not sure why the ASSERT()s in vmlinux.lds.S are not
+> affected. Is it just that we've not hit a .config which breaks with
+> those yet, or is it something more fundamental than that?
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+The former, as far as I can tell. The BSS patch just adds a fair
+amount of ASSERT()s so the attack surface has become larger. And
+perhaps those checks are more susceptible due to the fact that they
+compare symbols living in different sections? But that is just
+conjecture.
+
+> I'd have
+> thought we'd need to so something like below (on top of your patch) to
+> fix this issue properly.
+>
+
+Yes, it is the more thorough fix, but we'd lose coverage for those
+ASSERT()s which are arguably more important than the ones I added.
