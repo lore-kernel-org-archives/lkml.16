@@ -1,94 +1,242 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B966F1DE2CC;
-	Mon,  2 Jun 2025 13:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91082221FCA;
+	Mon,  2 Jun 2025 13:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748872175; cv=none; b=iqH1zP361pcK7hjWxEDKqCBc0u2Dj02gzQm8ReiKam5bd9rgiiyKhwZrMt3KGf96I1csYiAbMfTsAnkrFtPvRKYvrF7kiyoc4+6adlqsQBv3oXXc0OJyD0XR5UMKx51KtE+ehv7vaBHQLd0MPbhCswcNxHLp6JHrESnyc4rODkM=
+	t=1748872178; cv=none; b=k3K80/XGgXpfsyOsEJKwEAhB2vfcAPgxkjcV8ui5BmK2qurNp4PbulVtdsoLSoE2lRQrzICHaRzPVf75ddUIxRVdYDeNhkg9g1SvEPKwaOxIHEo/388iyB10cQWbaigPzpGKYkylwLG6q2o/j6CM58WqvRiZ7kt9/L0T/+OeGQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748872175; c=relaxed/simple;
-	bh=uUC0Tmx0QaerHMkNytkLZoq4sJKr8yMxwE6hyQWxQKg=;
+	s=arc-20240116; t=1748872178; c=relaxed/simple;
+	bh=fEgCmJn14YCLg4Nbmc/Dmo0gdmseyNkH1UNBp79XPPo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MpvTJWnIde1SPr/qapSb+z9U5nY4UARMFvzCC+djLYnFtqcWobcgahd7t9DgfKPCBp5faLzwCCFzkrriRInJIOybWak1Py8sSo2oeH4s1aJYZx6MhiKhCgcS2rIKuf5PqiPKYpKMTGvMpgAcsj4eesywevAkbwkhWA+aS0npjWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=NkckSpJA; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZrKLS4QJQ00hjw4Ulv5zBF+bZBrG5+TFQd+8dB6n36yh8+tODeE5Nh3CBLkZ54Smh9mQFASIfQ3UM9weyTWVDP9cQKm4A8xfpX5ksEUsTFJhaFuohYa1CdV2ksNb3s0bwBQunfOjX4uD2ClLTPlKvS2aMXbA85scRCU8xFa5izU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=oA+w3gT6; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="NkckSpJA"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=KClf/L5EO+Fw2bszJ2s3soremDMaf6aoB4Nu/1spgug=; b=NkckSpJAU2VS4CdB+rRmbjzTG2
-	lhR7A+lZ/8EdGDqMJcnnejHhI14DpDzSdaIQ2LbYd1s3Qi801deLq7XcRD5khbjeaUhuuWGPuzNhe
-	j7MGsj6PbNhWQ/n+I08WjrwI8rgYMCn4Xpd76L9TXel8l3jFHs6TTr8dZlcX3XUhXm5o=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uM5XV-00EVR6-A8; Mon, 02 Jun 2025 15:49:21 +0200
-Date: Mon, 2 Jun 2025 15:49:21 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: George Moussalem <george.moussalem@outlook.com>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH v3 3/5] net: phy: qcom: at803x: Add Qualcomm IPQ5018
- Internal PHY support
-Message-ID: <7b92f27b-3953-4673-a532-6671acdfd402@lunn.ch>
-References: <20250602-ipq5018-ge-phy-v3-0-421337a031b2@outlook.com>
- <20250602-ipq5018-ge-phy-v3-3-421337a031b2@outlook.com>
- <3704c056-91b9-464a-8bc8-7a98a9d9b7a7@lunn.ch>
- <DS7PR19MB8883B6501250F67CB83415BD9D62A@DS7PR19MB8883.namprd19.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="oA+w3gT6"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3413FC9;
+	Mon,  2 Jun 2025 15:49:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1748872173;
+	bh=fEgCmJn14YCLg4Nbmc/Dmo0gdmseyNkH1UNBp79XPPo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oA+w3gT6dezzAvebr9CuEBqd7//cajhNEmJ38RUlrN5c+4KVeRL0VydPKmm/aVKiV
+	 jUQvB8g8FbQoQm1LQoU9jUso+G6InD25uGH2Yw7wYRz/Sua20s92vdlVn9mDkQ02I/
+	 9ZB0HvXevDwwWVWi9T7zJkn1dToivRIqEldIo1jg=
+Date: Mon, 2 Jun 2025 16:49:26 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+Cc: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Subject: Re: [PATCH v3 13/15] media: rcar-csi2: Call get_frame_desc to find
+ out VC & DT (Gen3)
+Message-ID: <20250602134926.GB23515@pendragon.ideasonboard.com>
+References: <20250530-rcar-streams-v3-0-026655df7138@ideasonboard.com>
+ <20250530-rcar-streams-v3-13-026655df7138@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <DS7PR19MB8883B6501250F67CB83415BD9D62A@DS7PR19MB8883.namprd19.prod.outlook.com>
+In-Reply-To: <20250530-rcar-streams-v3-13-026655df7138@ideasonboard.com>
 
-> > So shouldn't there be an else clause here setting these two values to
-> > their default, undoing what the bootloader might of done etc.
+Hi Tomi,
+
+Thank you for the patch.
+
+On Fri, May 30, 2025 at 04:50:42PM +0300, Tomi Valkeinen wrote:
+> Call get_frame_desc to find out VC & DT, for Gen3 platforms, instead of
+> hardcoding the VC routing and deducing the DT based on the mbus format.
 > 
-> DAC values are only set if the property is set in the DTS. If the property
-> is not set, the default values set by the PHY itself are used, and as you
-> mentioned below, DAC values aren't modified by the driver.
+> If the source subdevice doesn't implement .get_frame_desc, we use a
+> fallback case where we assume there's a single stream with VC = 0 and DT
+> based on the mbus format.
 > 
-> > 
-> > Or you can change the binding, and say something like:
-> > 
-> > +            If not set, DAC values are not modified.
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+> ---
+>  drivers/media/platform/renesas/rcar-csi2.c | 113 +++++++++++++++++++----------
+>  1 file changed, 76 insertions(+), 37 deletions(-)
 > 
-> sure, anything else you need changed for v4?
+> diff --git a/drivers/media/platform/renesas/rcar-csi2.c b/drivers/media/platform/renesas/rcar-csi2.c
+> index b9f83aae725a..8f708196ef49 100644
+> --- a/drivers/media/platform/renesas/rcar-csi2.c
+> +++ b/drivers/media/platform/renesas/rcar-csi2.c
+> @@ -71,10 +71,7 @@ struct rcar_csi2;
+>  #define FLD_REG				0x1c
+>  #define FLD_FLD_NUM(n)			(((n) & 0xff) << 16)
+>  #define FLD_DET_SEL(n)			(((n) & 0x3) << 4)
+> -#define FLD_FLD_EN4			BIT(3)
+> -#define FLD_FLD_EN3			BIT(2)
+> -#define FLD_FLD_EN2			BIT(1)
+> -#define FLD_FLD_EN			BIT(0)
+> +#define FLD_FLD_EN(ch)			BIT(ch)
+>  
+>  /* Automatic Standby Control */
+>  #define ASTBY_REG			0x20
+> @@ -1066,52 +1063,94 @@ static int rcsi2_calc_mbps(struct rcar_csi2 *priv,
+>  static int rcsi2_start_receiver_gen3(struct rcar_csi2 *priv,
+>  				     struct v4l2_subdev_state *state)
+>  {
+> -	const struct rcar_csi2_format *format;
+> -	u32 phycnt, vcdt = 0, vcdt2 = 0, fld = 0;
+> -	const struct v4l2_mbus_framefmt *fmt;
+> +	u32 phycnt, vcdt = 0, vcdt2 = 0;
+> +	u32 fld = FLD_DET_SEL(1);
+> +	struct v4l2_mbus_frame_desc source_fd;
+> +	struct v4l2_subdev_route *route;
+>  	unsigned int lanes;
+> -	unsigned int i;
+>  	int mbps, ret;
+> +	u8 ch = 0;
+>  
+> -	/* Use the format on the sink pad to compute the receiver config. */
+> -	fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK, 0);
+> +	ret = v4l2_subdev_call(priv->remote, pad, get_frame_desc,
+> +			       priv->remote_pad, &source_fd);
+> +	if (ret && ret != -ENOIOCTLCMD) {
+> +		return ret;
+> +	} else if (ret == -ENOIOCTLCMD) {
 
-We have seen cases where the bootloader does the wrong thing, e.g. in
-this case, hard coded for short cable. A DT developer than looks at
-the binding, sees that the defaults should be used, and are confused.
-By accurately wording the binding, that the values are left untouched,
-it gives the DT developer a hint where to look, at the bootloader.
+	if (ret && ret != -ENOIOCTLCMD)
+		return ret;
 
-So in general, i tend to be picky about what does it mean if the
-property is not present, because its a detail which is often
-overlooked.
+	if (ret == -ENOIOCTLCMD) {
 
-I did not notice anything else, but net-next is closed at the moment
-for the merge window, so you need to wait a while before submitting it
-for merging.
+> +		/* Create a fallback source_fd */
+> +		struct v4l2_mbus_frame_desc *fd = &source_fd;
+> +		const struct rcar_csi2_format *format;
+> +		struct v4l2_mbus_framefmt *fmt;
+>  
+> -	dev_dbg(priv->dev, "Input size (%ux%u%c)\n",
+> -		fmt->width, fmt->height,
+> -		fmt->field == V4L2_FIELD_NONE ? 'p' : 'i');
+> +		fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK, 0);
+> +		if (!fmt)
+> +			return -EINVAL;
+>  
+> -	/* Code is validated in set_fmt. */
+> -	format = rcsi2_code_to_fmt(fmt->code);
+> -	if (!format)
+> -		return -EINVAL;
+> +		format = rcsi2_code_to_fmt(fmt->code);
+> +		if (!format)
+> +			return -EINVAL;
+>  
+> -	/*
+> -	 * Enable all supported CSI-2 channels with virtual channel and
+> -	 * data type matching.
+> -	 *
+> -	 * NOTE: It's not possible to get individual datatype for each
+> -	 *       source virtual channel. Once this is possible in V4L2
+> -	 *       it should be used here.
+> -	 */
+> -	for (i = 0; i < priv->info->num_channels; i++) {
+> +		memset(fd, 0, sizeof(*fd));
+> +
+> +		fd->num_entries = 1;
+> +		fd->type = V4L2_MBUS_FRAME_DESC_TYPE_CSI2;
+> +		fd->entry[0].stream = 0;
+> +		fd->entry[0].pixelcode = fmt->code;
+> +		fd->entry[0].bus.csi2.vc = 0;
+> +		fd->entry[0].bus.csi2.dt = format->datatype;
+> +	}
+> +
+> +	for_each_active_route(&state->routing, route) {
+> +		struct v4l2_mbus_frame_desc_entry *source_entry = NULL;
 
-	Andrew
+const
+
+> +		const struct v4l2_mbus_framefmt *fmt;
+> +		const struct rcar_csi2_format *format;
+> +		unsigned int i;
+> +		u8 vc, dt;
+>  		u32 vcdt_part;
+>  
+> -		if (priv->channel_vc[i] < 0)
+> -			continue;
+> +		for (i = 0; i < source_fd.num_entries; i++) {
+> +			if (source_fd.entry[i].stream == route->sink_stream) {
+
+No need to check the pad ?
+
+> +				source_entry = &source_fd.entry[i];
+> +				break;
+> +			}
+> +		}
+> +
+> +		if (!source_entry) {
+> +			dev_err(priv->dev,
+> +				"Failed to find stream from source frame desc\n");
+> +			return -EPIPE;
+> +		}
+>  
+> -		vcdt_part = VCDT_SEL_VC(priv->channel_vc[i]) | VCDT_VCDTN_EN |
+> -			VCDT_SEL_DTN_ON | VCDT_SEL_DT(format->datatype);
+> +		vc = source_entry->bus.csi2.vc;
+> +		dt = source_entry->bus.csi2.dt;
+> +
+> +		vcdt_part = VCDT_SEL_VC(vc) | VCDT_VCDTN_EN |
+> +			VCDT_SEL_DTN_ON | VCDT_SEL_DT(dt);
+
+I would drop the vc and dt variables and write
+
+		vcdt_part = VCDT_SEL_VC(source_entry->bus.csi2.vc)
+			  | VCDT_VCDTN_EN | VCDT_SEL_DTN_ON
+			  | VCDT_SEL_DT(source_entry->bus.csi2.dt);
+
+>  
+>  		/* Store in correct reg and offset. */
+> -		if (i < 2)
+> -			vcdt |= vcdt_part << ((i % 2) * 16);
+> +		if (ch < 2)
+> +			vcdt |= vcdt_part << ((ch % 2) * 16);
+>  		else
+> -			vcdt2 |= vcdt_part << ((i % 2) * 16);
+> -	}
+> +			vcdt2 |= vcdt_part << ((ch % 2) * 16);
+> +
+> +		fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK,
+> +						   route->sink_stream);
+> +		if (!fmt)
+> +			return -EINVAL;
+> +
+> +		dev_dbg(priv->dev, "Input size (%ux%u%c)\n",
+> +			fmt->width, fmt->height,
+> +			fmt->field == V4L2_FIELD_NONE ? 'p' : 'i');
+>  
+> -	if (fmt->field == V4L2_FIELD_ALTERNATE)
+> -		fld = FLD_DET_SEL(1) | FLD_FLD_EN4 | FLD_FLD_EN3 | FLD_FLD_EN2
+> -			| FLD_FLD_EN;
+> +		/* Code is validated in set_fmt. */
+
+Then why don't you drop the !format check ?
+
+> +		format = rcsi2_code_to_fmt(fmt->code);
+> +		if (!format)
+> +			return -EINVAL;
+> +
+> +		if (fmt->field == V4L2_FIELD_ALTERNATE)
+> +			fld |= FLD_FLD_EN(ch);
+> +
+> +		ch++;
+> +	}
+>  
+>  	/*
+>  	 * Get the number of active data lanes inspecting the remote mbus
+
+-- 
+Regards,
+
+Laurent Pinchart
