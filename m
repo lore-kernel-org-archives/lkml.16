@@ -1,124 +1,308 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A111C4609
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 08:09:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A8E2C3255;
+	Mon,  2 Jun 2025 08:13:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748851800; cv=none; b=sQda937HC6jgYL8Mq3HFExsnt2XajeHMjVdqTdpa23Tbb8xDOU+hz0uLAvLx6Wwx8sHDBylM+3hr4fJAoX2HfwW2obtR7A8ttVECKuq13Yr83oDgsX34a93/ih2yQM5/pxLmHq/pjeGl9h7fruSSrxvjQroXJT2453CsGsh2LtQ=
+	t=1748852024; cv=none; b=qxalZ2+i07G3/PSC23A5P/+KaXBbgBZ39hQNjiEnSIKhWqc2kLHJ7Q3JuFcO9KUQ9e1w93lkf5ZLf6NrLvvSiKbUm9aI0AHUVZhFXOxayJcf00U843shSkgHtd9mJCC1BpqZUq5AvH+qfTllD9O2I+hOKPlnp79z5Uq8lJXOJNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748851800; c=relaxed/simple;
-	bh=UxuN13PmIdB/x/BlClqWyqnfkQfE0IdtSqDqp9f4HX8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MRIzzq2EnOPWze2/8CrNPlv2/Vc1Ay1/ld6F0VQXrE2eHvM5TA57EiYPc+dFvsPnUwnOS18Gq43uca6mjedMhc/PjG6O2uJX1ueNQZf3H3DmOviWAEIb+LCEzBTpCA1FNnbepYEFrjyKmZLbeNuqZhEf5QIahS+m0f1KF/+HwSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gvP28q/W; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748852024; c=relaxed/simple;
+	bh=XzzqHVbOtagpoblhmdguIE8ADu39Ux8iTVasZh53L9c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C+cCWFnS9/YT4EFR6alJfd3Vrj6cP2HqfaQkfF/ngpadHrxI+Vyqy9oCqD1C4t/dYfZWbZF63f12YPyZ4a4GFsGdlLFUrAEC5D0Rjq4m5AuwXXEecE7MOfzbqhQIBQQYYVxKtvIQnwB/qoCVpilCtvgy84N2tnT9CoNp5x8aqk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YIIysWJK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gvP28q/W"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-602039559d8so7668276a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 01:09:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748851796; x=1749456596; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WM86YJxMluttKbsSnclJLccOcH+h2GT9X8ahniFV+r0=;
-        b=gvP28q/WinmLrQfEaPCqypmquUgw+vWqJ0uy4+BhlX7mdZSC8yEhHPd+dLDrfMyZXg
-         PCfjLW6bCJUuQl+WaU/uKX+DS29v8PC7U6BUWZKjumh9qbR8aphCpgN4Jow4KetG3dfB
-         ainwyxsvCLmZMtSLb63QrQqvs6DQYBNOIQAqNJgUp+UdfNhNSQC9WQWnF5s7cc52mHVL
-         09ENqn1kLr+I/Tbrua9h0iZVzGiR3L2iPjf9eZjV3kjmJiILv2gSIyZdo/ohVhBQb4PM
-         omnDlQeqHVEI/ef6WF2qNE8QFJd0hqWyEKUh1P79L9RasABs9ECbWYIAdCe2930SUkvX
-         6/Jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748851796; x=1749456596;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WM86YJxMluttKbsSnclJLccOcH+h2GT9X8ahniFV+r0=;
-        b=lDM214RDNsDnBEWG2mG6F7sjjnpVvNsy26hLx3mJvyO+RGA1R+aFjZfRVBCtX1od0R
-         9M2fPFOrEOF55Mr9quRU3f+pkx9910qwN6p7zyDzba8d+6+FIzhPcAK17pqvvDlYkWp2
-         PG3MBR8BOefYFs1Ar97ICt9WP4wH3lFR3rmQ2YQbd/wOvbBlnog+C1qwtzZH7ZcSG+ZK
-         8hLlKXr1g+rqbDa7nHCDZZkssddXanRYSpecFup1cwCoU0xFGbXPUUUMDCsZWdA+s66Q
-         4gJ48MLsZjI/uNZ1PyRIl1An0Vre8st8mqkzuemldHZr6ysuER/WgM96xTtzxWQJZ5i4
-         0DIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX6CEwOV5DtYFNbOXx3+pdIJVSdku+yl20Q/YFb9xUybgELrd2oVS90oXyopvT5mDq3mFv/1M6oE5FY7AQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeQ++a0ZNoc1FHviPSuowfDIZ3d8jEOEXLNa2AS9hUfzRtKYwB
-	yapeO3AVwfMkKkIjpWiGdg5x+pqldPKWgBkyM8YQe5PWbDSeyPpzxdINz7NsKI18VBY=
-X-Gm-Gg: ASbGncsgTaK5L68RV+vnPnddYH4d7Vpf6brqOV5MUm4Mc82Y/dKadLqO68rcle862xf
-	s+BStgi3MjJAJL7cNPdOLpSDYBpM+mmOe4tp9LWTFL9tZ5ZDNU99reWfyKgg6VUwdWO5XL/4p+A
-	bXm7UleAot3o6fYebcCO4eD7ZqptWqzNxeT/Xno5PawbjI3/kD/NUzfas7yVLK0K/gIbpUB211P
-	itd6v6mVun0gd9rZsvRWAX2WuliWydKg6l6z7UXgyjzPqV6YiJjsOmrsLnoW7bvdaFceM08sTSt
-	TQkyM7q6hV2bccczHLVftdkqogCQyx0K+7e+yz5aGgAU2jCtMJEvJ2C49z9URwU=
-X-Google-Smtp-Source: AGHT+IFeKHggw4Jv/SBl+EY7f7TWu4S/aefMDT8Wy8nBVqk5RywZ+kVMfbcR7IM0tMLybaVfbxltWg==
-X-Received: by 2002:a17:907:724b:b0:adb:2bb2:50a8 with SMTP id a640c23a62f3a-adb36b316e0mr998861666b.21.1748851796351;
-        Mon, 02 Jun 2025 01:09:56 -0700 (PDT)
-Received: from linaro.org ([2a02:2454:ff21:ef30:ab8c:6d23:1cdc:f4f8])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5e2befaesm767977166b.104.2025.06.02.01.09.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 01:09:55 -0700 (PDT)
-Date: Mon, 2 Jun 2025 10:09:52 +0200
-From: Stephan Gerhold <stephan.gerhold@linaro.org>
-To: Konrad Dybcio <konradybcio@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Rajendra Nayak <quic_rjendra@quicinc.com>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH 0/5] Add missing OPP tables for Venus on qcom/arm64
-Message-ID: <aD1cUF56-IX_tSpp@linaro.org>
-References: <20250531-topic-venus_opp_arm64-v1-0-54c6c417839f@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YIIysWJK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A053C4CEEB;
+	Mon,  2 Jun 2025 08:13:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748852023;
+	bh=XzzqHVbOtagpoblhmdguIE8ADu39Ux8iTVasZh53L9c=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YIIysWJKn6eoXyJpVTrAlyAHICrqAqhb+Xki1dfu753llwqDqVREtTN//FqX/7mQo
+	 rIX13w4yAQauxr/Qu9KZW4kLo4qvle3g4LWHckyd5IU5sflfXAu2Y/3kJv7ze2KPr5
+	 wRfOeAaP0E7GC1npQNnyvESUir5Ed0LpKRE1lCDqnV9/lqyKwED8PU4TKryOnU8ORY
+	 jPTayhgkELjOmc5il49gxvjqr8FmfqLVqiBDJS6dNZkz0n4MFC3YoAnezd/WIm524U
+	 XhKyG9S56+s5/Xth52vuodzzwG3pUeIVV53UzixwzL/7ewdX3cpTR7wn2do9JaBpgx
+	 yRmiKVDRdDuEQ==
+Message-ID: <7e293d04-da1c-461c-b58a-18c1b942193b@kernel.org>
+Date: Mon, 2 Jun 2025 10:13:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250531-topic-venus_opp_arm64-v1-0-54c6c417839f@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/5] dt-bindings: clock: airoha: Document support for
+ AN7583 clock
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Felix Fietkau <nbd@nbd.name>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250528004924.19970-1-ansuelsmth@gmail.com>
+ <20250528004924.19970-5-ansuelsmth@gmail.com>
+ <f9aebfb8-6312-45db-be12-94580ad412cb@kernel.org>
+ <6836cf62.5d0a0220.35d0aa.2025@mx.google.com>
+ <969c42d7-0a40-4daf-a074-f2713d0d0412@kernel.org>
+ <6837084c.050a0220.1e474f.3f20@mx.google.com>
+ <3fb8ad2b-016d-4eee-af57-be7dec659f4c@kernel.org>
+ <6839ce13.050a0220.1038eb.83e1@mx.google.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <6839ce13.050a0220.1038eb.83e1@mx.google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, May 31, 2025 at 02:27:18PM +0200, Konrad Dybcio wrote:
-> Sparked by <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
+On 30/05/2025 17:26, Christian Marangi wrote:
+> On Thu, May 29, 2025 at 11:00:39AM +0200, Krzysztof Kozlowski wrote:
+>> On 28/05/2025 14:57, Christian Marangi wrote:
+>>>>> Again sorry if this question keeps coming around and I can totally
+>>>>> understand if you are getting annoyed by this. The reason I always ask
+>>>>> this is because it's a total PAIN to implement this with the driver
+>>>>> structure due to the old "simple-mfd" model.
+>>>>
+>>>> ... and Rob was saying multiple times: be careful when adding
+>>>> simple-mfd. If it bites back, then I am sorry, but everyone were warned,
+>>>> weren't they?
+>>>>
+>>>> What is exactly the pain anyway? You cannot instantiate children from
+>>>> SCU driver?
+>>>>
+>>>
+>>> Answering below since they are related.
+>>>
+>>>>>
+>>>>> (as again putting everything in a single node conflicts with the OF
+>>>>> principle of autoprobing stuff with compatible property)
+>>>>
+>>>> I am not sure if I follow. What principle? Where is this principle
+>>>> expressed?
+>>>>
+>>>> And you do not have in your second example additional compatibles, so
+>>>> even if such principle exists it is not broken: everything autoprobes, I
+>>>> think.
+>>>>
+>>>>>
+>>>>
+>>>>
+>>>
+>>> The principle I'm talking about is one driver for one compatible.
+>>
+>> There is no such principle. One compatible can map to many drivers and
+>> many compatibles can map to one driver.
+>>
 > 
-> No external dependencies
+> I might be wrong but there is currently a limitation on the OF system
+> where if a driver gets probed for a node then it's ignored for any other
+> driver. (sorry for the bad explaination, hope it's understandable)
+
+Yes but this can be changed easily. See: depopulate. Whether you
+populate or not-populate is not a reason to model hardware description
+one way or another.
+
+> 
+>>> (to be more precise excluding syscon compatible that is actually
+>>> ignored, if a driver for the compatible is found, any other compatible
+>>> is ignored.)
+>>>
+>>> This means that declaring multiple compatible as:
+>>>
+>>> compatible = "airoha,clock", "airoha,mdio"
+>>>
+>>> doesn't result in the clock driver and the mdio driver probed but only
+>>> one of the 2 (probably only clock since it does have priority)
+>>
+>> I don't understand this example. It makes no sense - clock is not
+>> compatible with mdio.
+>>
+> 
+> This was an example to put every properties in the oparent node.
+
+So it was a bad example because it makes no sense. You move the
+properties, not merge compatibles!
+
+> 
+>>>
+>>> The "simple-mfd" compatible is just a simple compatible that indicate to
+>>> the OF system that every child (with a compatible) should be also probed.
+>>> And then automagically the driver gets probed.
+>>>
+>>> Now the ""PAIN"" explaination. Not using the "simple-mfd" way with the
+>>> child with compatible and putting everything in the node means having to
+>>> create a dedicated MFD driver that just instruct to manually probe the
+>>> clock and mdio driver. (cause the compatible system can't be used)
+>>
+>> You already have that driver - SCU. No need for new MFD driver...
+>>
+> 
+> The SCU driver is actually the clock driver (currently). This was done
+> for simplicity and because in SCU there were only some bits.
+> 
+> But now with AN7583 they put 2 MDIO controller in it.
+> 
+>>
+>>>
+>>> So it's 3 driver instead of 2 with the extra effort of MFD driver
+>>> maintainer saying "Why simple-mfd is not used?"
+>>
+>> Sorry, that's a wrong argument. You can use simple-mfd, iff it follows
+>> standard practices. If it does not fit standard practices, you cannot
+>> use an argument "now I need more complicated solution".
+>>
+> 
+> Then I think we are getting confused because I am following the usual
+> pattern.
+> 
+> This is what would be the ideal and easy solution. (ti what was done on
+> EN7581 with pinctrl and pwm)
+> 
+> 		scu: system-controller@1fa20000 {
+> 			compatible = "syscon", "simple-mfd";
+> 			reg = <0x0 0x1fb00000 0x0 0x970>;
+> 
+> 			scuclk: scuclk {
+> 				compatible = "airoha,an7583-scu";
+> 				#clock-cells = <1>;
+> 				#reset-cells = <1>;
+> 			};
+> 
+> 			mdio {
+> 				compatible = "airoha,an7583-mdio";
+> 				#address-cells = <1>;
+> 				#size-cells = <0>;
+> 
+> 				mdio_0: bus@0 {
+> 					reg = <0>;
+> 					resets = <&scuclk AN7583_MDIO0>;
+> 				};
+> 
+> 				mdio_1: bus@1 {
+> 					reg = <1>;
+> 					resets = <&scuclk AN7583_MDIO1>;
+> 				};
+> 			};
+> 		};
+> 
 > 
 
-Are you sure?
+By repeating the same you will not get different answers but rather me
+become annoyed.
 
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> ---
-> Konrad Dybcio (5):
->       arm64: dts: qcom: msm8916: Add Venus OPP table
->       arm64: dts: qcom: msm8996: Add Venus OPP table
->       arm64: dts: qcom: msm8998: Add Venus OPP table
->       arm64: dts: qcom: sdm630: Add Venus OPP table
+> 
+>>>
+>>>
+>>> There is a solution for this but I always feel it's more of a workaround
+>>> since it doesn't really describe the HW with the DT node.
+>>
+>> Really? All arguments you used here are driver arguments - that
+>> something is a pain in drivers. Now you mention that hardware would not
+>> match description.
+>>
+>> Then let's change entire talk towards hardware description and send
+>> patches matching hardware, not matching your MFD driver structure.
+>>
+> 
+> Ok to describe the HW for this register block
+> 
+> SCU register:
 
-None of these platforms has a power domain that supports performance
-states specified in the venus node of the DT, and the venus GDSC does
-not have any parent either. I think you will need to update the venus
-bindings and add
+What is here?
 
-	.opp_pmdomain = (const char *[]) { "cx" /*???*/ },
+> - clock
 
-for all these in the venus driver (plus backwards compat if not already
-there). And then add that power domain additionally in the DT.
+Here are clocks, but what is in "SCU register"?
 
-This series is also introducing new dtbs_check failures :/
+> - mdio controller 1
+> - mdio controller 2
+> 
+> So this is why I think a good matching node block is:
+> 
+> parent node (SCU register):
 
-qcom/apq8016-sbc.dtb: video-codec@1d00000: Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)                                               
-        from schema $id: http://devicetree.org/schemas/media/qcom,msm8916-venus.yaml#         
-qcom/apq8096-db820c.dtb: video-codec@c00000: Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)                                             
-        from schema $id: http://devicetree.org/schemas/media/qcom,msm8996-venus.yaml#     
-qcom/msm8998-lenovo-miix-630.dtb: video-codec@cc00000: Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)                                   
-        from schema $id: http://devicetree.org/schemas/media/qcom,msm8996-venus.yaml#       
+So what is here?
 
->       arm64: dts: qcom: sdm845: Fix Venus OPP entries
+> 	- child 1 (clock)
+> 	- child 2 (mdio controller)
+> 		- child 1 (mdio bus 1)
+> 		- child 2 (mdio bus 2)
+> 
+> Is it wrong to model the DT node this way?
 
-This one has .opp_pmdomain and "cx" in the bindings, so it's probably
-fine (didn't check if the current OPPs are really wrong).
+Yes and I explained you already why.
 
-Thanks,
-Stephan
+> 
+>>>
+>>> The workaround is:
+>>>
+>>> 		system-controller@1fa20000 {
+>>>                         /* The parent SCU node implement the clock driver */
+>>>                         compatible = "airoha,an7583-scu", "syscon";
+>>>                         reg = <0x0 0x1fb00000 0x0 0x970>;
+>>>
+>>>                         #clock-cells = <1>;
+>>>                         #reset-cells = <1>;
+>>>
+>>>                         /* Clock driver is instructed to probe child */
+>>>                         mdio {
+>>>                                 compatible = "airoha,an7583-mdio";
+>>
+>> Again, drop compatible.
+>>
+> 
+> To drop the compatible a dedicated MFD driver is needed (or adding code
+> in the clock driver to register the MDIO controller and that is net
+> clean code wise)
+
+If you need to do some driver changes, do some driver changes...
+
+
+Best regards,
+Krzysztof
