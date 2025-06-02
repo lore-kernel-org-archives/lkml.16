@@ -1,109 +1,97 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A43AEEA8
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 23:45:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1FBEEA8;
+	Mon,  2 Jun 2025 23:47:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748907917; cv=none; b=ZnzFuKqFqtWRipi1w+a+UhIQ3TOi0622eqdqvVDmDZDqMqiFdyAXvuCSej/uH98rWgOKyexCLxu+HsyqJCGUYBFIBnyXLnbS4q96Dael7UVjQqT9vZkXhNDdyBMzGf/RXFUuyL6glWYmwO7h5Prrj1YphLFk+bWV81nqpmmZBVU=
+	t=1748908041; cv=none; b=ZAiFQwnbYySLZ6coQeBEJQeG7cXPoT8m3IlaDFtK1tOlYrjE/BErX3vqD5tyippphOGm0PXKwZQU4hHxRpUmEhDObGw1vkleH8PX2T/DbJCu1PkaUp32aIlgv0LP0b/NlS0Oy2juCURhzG3d7Hm6Mma8+AN5chOnMfq+qhP/K48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748907917; c=relaxed/simple;
-	bh=/bWJ2fGp0Et7U/W2JVN+6U5ujNjjLBDXeMSAu0EFhbE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=cCNnRRYb3pZj4SNozJ/gK8JiLfse3aRBjaXeJzuXqsijmHajmobl/nlB9uwWy38EeJHsUVaonBEIc0Vc8Wma16W/cjBVUj/C7IP1u6MqsRdoa6tukDqiTM+YOJX8hyaBB4VYgXm1WrWNmTRYvfBbZ/mB59sLyz3aJB9NqgXP+Ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=swVWxGjS; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1748908041; c=relaxed/simple;
+	bh=/DWl3nGaHU3bnKeyHf6CfgJYPu1TCJQhs/DUH2CxHkM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=I68PbU6/B9YisyJDGkv1F8u0kMHfjQocENrdWYGk79a3hcZPf1Jr0tWt6/OGJnSkBANzcaK84r3K861KwazcQel3z7fMY06aiCtVisMHU3CfNBdW4OpbR/yLZbAk5B0rCE++EuWJwkS959jrsrjTdFd+wWSouEDmdD3Yvip9j8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=FqO5og18; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="swVWxGjS"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-747fa83d81dso401677b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 16:45:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748907915; x=1749512715; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GkQR60PQIrxeQGEctk2O7uEeUdi3LKrDj0MxkXt3OGQ=;
-        b=swVWxGjS2pzkKi15+O6ADFSzLBhCHiAVr5JB9c+GW9yqIfb8i+jLgHfTHAaM3vVobH
-         OYKXKiCYopBiqjwUTXE0y3cVnhvpAwKp/nkEjcD+5l/U7o1jSjQwwWS2TKBUp2tJqFRK
-         P+pkQqIMRdoQ6WBILt9MUNnB7P2VLDd0blk05FC2uyJPvYya48sJjtK3emoLbVyWwh20
-         6AnPOHTyuGEwtQgzXSmUCqadYNbmm6zIhYgDNau2Tt11U/tGLEx/EX4N/WEFfBbqRVe6
-         a8BeTC7FMftyETw/kBSAiHw/8Eu6mTcgD16eOgsY6tBpvcKrKHQ3K8qhZtc5kYnm3iOG
-         v+8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748907915; x=1749512715;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GkQR60PQIrxeQGEctk2O7uEeUdi3LKrDj0MxkXt3OGQ=;
-        b=u+9prTVtzezAuyoFjcnNokwMs9c/v4B5wn0TfBqZcKBZX0FrktmYQ/Q9617LIJKqeE
-         AHpl278tfVzbl9d8yb7nELT6Zp8jhxEGFdRRtMQdhbD5GTbfBeCWctXXAjoJuzIpIfhB
-         lAeHdUE44P4grNtEMxKLJ5GEx/BnJGxmMEi1zIrNeUXtUfzBnv5Oq3oa/cPpTMz/7/BT
-         hkNHT5jwLPLmcGCFez22Q1kXoUEe1m2NKYqkvlO5OaHiXnFfowLaUMvmcR9N7IKaAgac
-         /JbdK72fYRwSBUouOeiWUH9IEzzFKUH3j/zAPjjEOVDwqWDW1oh0M+48DcpyKjQTfXGA
-         di1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWmPYn/UGwn8D9yV0cZ++N0vZ+wYHOkvGD8vEZhKiy68Dm9zLHxQGyRZTb4EYfAoZFVwxZsL5zFldDRADU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHxDQHsbtvLXSVCy9taqOzRzfeZ9lQMRA/8eyfpLUGzOMfXIWV
-	0bciFw2tXX+IWZ/sAiKh+gaFrZq+cv/d+yn/M/Yazreu1HVXsgNUHrJneAqDUoRxe6qJ162+xIU
-	3ryJ7LA==
-X-Google-Smtp-Source: AGHT+IEbM7rkSZXQh/W0Dm0Y3uOmV7bU4LP2HEoAjHJ2xpVVJGKMsen91jAMHkuzTnZiPUaHiCrdtEUnDkY=
-X-Received: from pfhx4.prod.google.com ([2002:a05:6a00:1884:b0:746:22b3:4c0d])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:885:b0:736:54c9:df2c
- with SMTP id d2e1a72fcca58-747c1bfacf3mr16034894b3a.15.1748907915213; Mon, 02
- Jun 2025 16:45:15 -0700 (PDT)
-Date: Mon, 2 Jun 2025 16:45:13 -0700
-In-Reply-To: <20250529234013.fbxruxq44wpfh5w4@desk>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FqO5og18"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1748908032;
+	bh=oKxChYEyAukC5bCyf1KJjkwMW4JiICur4azOA4BAwYg=;
+	h=Date:From:To:Cc:Subject:From;
+	b=FqO5og18BNW1rlf751FF5MsDHz11a16lAkzIlj/xfpdH7b+KjSbckW45XX0mwElwh
+	 7aD7Oj3WY3Y8MLZRV8D34EfNLiFcbnQMQ15Sz3zQgcjlhvVW5+MNTENl0lWGPHIMQT
+	 TVX/tHuafXJt1kYcEkl2kIXvc2f+c5UCRg7weeVLrHHRxpr6oSRkeZGFLZY++NFaDZ
+	 g+czWNR9UZdM45v+VD8O66KmQDBSIBmyNxJ13IzxCgnHnD/tdEoahc8osWRixS/4MN
+	 NMukCzlXsBL/xEnAgu4H7szW3gLEW/xSE/6F6beoftF+azVndKV7p6MuMdTgfF+XdC
+	 I9dD6kOllT22w==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bB9Vm3bhDz4xMG;
+	Tue,  3 Jun 2025 09:47:12 +1000 (AEST)
+Date: Tue, 3 Jun 2025 09:47:11 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the bcachefs tree
+Message-ID: <20250603094711.15762f7c@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250523011756.3243624-1-seanjc@google.com> <20250523011756.3243624-4-seanjc@google.com>
- <20250529042710.crjcc76dqpiak4pn@desk> <aDjdagbqcesTcnhc@google.com> <20250529234013.fbxruxq44wpfh5w4@desk>
-Message-ID: <aD43icQolCvESIpc@google.com>
-Subject: Re: [PATCH 3/5] KVM: VMX: Apply MMIO Stale Data mitigation if KVM
- maps MMIO into the guest
-From: Sean Christopherson <seanjc@google.com>
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Borislav Petkov <bp@alien8.de>, Jim Mattson <jmattson@google.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/7pdD6Wh.X7hZuRDwM09Zd/0";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Thu, May 29, 2025, Pawan Gupta wrote:
-> On Thu, May 29, 2025 at 03:19:22PM -0700, Sean Christopherson wrote:
-> > On Wed, May 28, 2025, Pawan Gupta wrote:
-> > > On Thu, May 22, 2025 at 06:17:54PM -0700, Sean Christopherson wrote:
-> > > > @@ -7282,7 +7288,7 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
-> > > >  	if (static_branch_unlikely(&vmx_l1d_should_flush))
-> > > >  		vmx_l1d_flush(vcpu);
-> > > >  	else if (static_branch_unlikely(&mmio_stale_data_clear) &&
-> > > > -		 kvm_arch_has_assigned_device(vcpu->kvm))
-> > > > +		 (flags & VMX_RUN_CLEAR_CPU_BUFFERS_FOR_MMIO))
-> > > >  		mds_clear_cpu_buffers();
-> > > 
-> > > I think this also paves way for buffer clear for MDS and MMIO to be done at
-> > > a single place. Please let me know if below is feasible:
-> > 
-> > It's definitely feasible (this thought crossed my mind as well), but because
-> > CLEAR_CPU_BUFFERS emits VERW iff X86_FEATURE_CLEAR_CPU_BUF is enabled, the below
-> > would do nothing for the MMIO case (either that, or I'm missing something).
-> 
-> Thats right, CLEAR_CPU_BUFFERS needs rework too.
-> 
-> > We could obviously rework CLEAR_CPU_BUFFERS, I'm just not sure that's worth the
-> > effort at this point.  I'm definitely not opposed to it though.
-> 
-> My goal with this is to have 2 separate controls for user-kernel and
-> guest-host. Such that MDS/TAA/RFDS gets finer controls to only enable
-> user-kernel or guest-host mitigation. This would play well with the Attack
-> vector series by David:
-> 
-> https://lore.kernel.org/lkml/20250509162839.3057217-1-david.kaplan@amd.com/
-> 
-> For now this patch is fine as is. I will send update separately including
-> the CLEAR_CPU_BUFFERS rework.
+--Sig_/7pdD6Wh.X7hZuRDwM09Zd/0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Sounds good.
+Hi all,
 
-Ah, and the s/mmio_stale_data_clear/cpu_buf_vm_clear rename already landed for
-6.16-rc1, so we don't have to overthink about the ordering with respect to that
-change. :-)
+After merging the bcachefs tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
+
+fs/bcachefs/fsck.c: In function 'check_dirent':
+fs/bcachefs/fsck.c:2187:71: error: 'struct bch_fs' has no member named 'cf_=
+encoding'
+ 2187 |         hash_info->cf_encoding =3D bch2_inode_casefold(c, &i->inode=
+) ? c->cf_encoding : NULL;
+      |                                                                    =
+   ^~
+
+Caused by commit
+
+  b4ff0eaf0aaa ("bcachefs: fix bch2_fsck_rename_dirent() for casefold")
+
+for this build:
+
+CONFIG_UNICODE=3Dm
+
+I have used the bcachefs tree from next-20250530 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/7pdD6Wh.X7hZuRDwM09Zd/0
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEyBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg+N/8ACgkQAVBC80lX
+0GztMAfxATWP48oHyLh1US2qreOu/D0bZHxa1Ev8vlcL9X1YT0dlm3wyW67OsHPh
+4QJ4FbH0SRcalk/CGjixp+1RhyvsTeEGk4a+dvpvF9rJoFK7EL6g4iYZxbzDv4LY
+k09WDxgANLtOe+48lDwbunXIspLB3BAAxfgxv1IeYPlMi2dws6FP1+zvTh+jHVw5
+tzrEJLf1ufcC5SFET3HQcbd7Ge09BR+tW3BN7YDiwe/PlQM3bX13oD5wEusdDCMz
+lHA/8bzy2GB1mf/eIUJEGVP8Zam0dGL576f+aN5VRBDCO/QRMNwLGommnqqNfC71
+UA+zQqw5ZE9j7WUDND38Nr3r1hev
+=BHnj
+-----END PGP SIGNATURE-----
+
+--Sig_/7pdD6Wh.X7hZuRDwM09Zd/0--
