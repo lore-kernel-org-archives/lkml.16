@@ -1,63 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7869E228CB8;
-	Mon,  2 Jun 2025 19:17:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9472C3242;
+	Mon,  2 Jun 2025 19:17:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748891843; cv=none; b=cSd/tNxTmwaJOH7NKoakPXskrbu9oVs1IoJZbofaL5JWMkjmI2z+aNRReL2CVhcYiEeQhrxt3kWoe6oQu6qy+n+j+H8UtHjOZZAo4tfDuaPUZFbYVCd0XsXmcQAc+Bk7YkMH8MRm9X3kT6kCPzW3hwMF/pP5C5YUv4GJuj271G4=
+	t=1748891872; cv=none; b=udCk3vgdrqsg+YKjHEcKaPk9peQovTYiPXUjA9OwgQQ12jByAnlQcXw4W4K3Wuwvu+mO5m3mteRsnd5cvyGCgpkJHi3ZMUMCoTWYE5H6JEigZY+mGGPbts9rYOjj8eggTUvcuV84UHytsMA4Mg7r11P/bwhKmrkKLFbrXecGmE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748891843; c=relaxed/simple;
-	bh=lEf460NZudzPaFxmO4RFcmfGTyhfIcEnCl1dheqCkBc=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Ql3Dq1dEKV2hJHZO/7QYxMffZr8+3xnxST2J92G+MTdMqOiPI3mwGZWqxXySLTbyPGF0FTjh5/PEfmZ/9ZyDNPrBDZjVMKYqRYum4VhOYmMortOCeMrhP4Q/4hyKxxewoNGeT0fbUZCyo+etnCArmneLlDGNZyt5dDvXZTpbALw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bx1cdUwc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748891872; c=relaxed/simple;
+	bh=JbBE2BSt4IuIp/mHpK/1woVzzTCCuTRSikmM/SfpxhY=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=rkfaiAqqrbY13Kb46XvtuPTU45XRIouZ2hgceSiJKM1IhSjs/Rhbchj9LikkH7RJZ5Hk5ZT3OCtnnu+kXekRJkor5TkNMOfn9Odwwg4eNz/fMDV3vnYo4c/dSghYrQ9EL2Y2cbt3k0k4LVnK4708ZAIve7N5WyGPHnNOcwsfR34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=RPrYj70D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bx1cdUwc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52CA9C4CEEB;
-	Mon,  2 Jun 2025 19:17:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748891843;
-	bh=lEf460NZudzPaFxmO4RFcmfGTyhfIcEnCl1dheqCkBc=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=bx1cdUwc1/AQR8XEysAhTOECNyUUfTPt+7cKrzPdUBuoeu4mN8ik5OxWAmWgcxjSf
-	 qc+Km/6c1/9MPBOsxlqgp6nqAhzzK2CYNOowMeiE1SNG8yymFUNRKyd8V+yDj2LEzr
-	 8TDwF2a9Wx/dw/PJqCGl18vwYaYYgQZkBrUAkF3js80Iy1h4lg1jWiVmiQ5v6lC1y4
-	 dr6bHxfGU2TFWya0GJCX2QCTCZ+fqaJGcRqAHKtVmMVXyvXg44Bjzd8C3+LN+xRhIk
-	 D733waho+kixJx6cBu4Ar+mM37LR7028Rqh9XJtxQnAe5MIOgCYl7qOn+vmGRTesnt
-	 Se1G9dlP5Nilg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D2C380AAD0;
-	Mon,  2 Jun 2025 19:17:57 +0000 (UTC)
-Subject: Re: [GIT PULL] remoteproc updates for v6.16
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250602153710.3447-1-andersson@kernel.org>
-References: <20250602153710.3447-1-andersson@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250602153710.3447-1-andersson@kernel.org>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/remoteproc/linux.git tags/rproc-v6.16
-X-PR-Tracked-Commit-Id: 5779f6f9a64ffc3e002a37ab1f78521d9a5c0100
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: dcf9ee9ac4d5c09c5bc74aba5e93581e93a1ac33
-Message-Id: <174889187581.877155.9237954879953235201.pr-tracker-bot@kernel.org>
-Date: Mon, 02 Jun 2025 19:17:55 +0000
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, Beleswar Padhi <b-padhi@ti.com>, Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>, Siddharth Vadapalli <s-vadapalli@ti.com>, Xiaolei Wang <xiaolei.wang@windriver.com>, Dan Carpenter <dan.carpenter@linaro.org>, Iuliana Prodan <iuliana.prodan@nxp.com>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Tanmay Shah <tanmay.shah@amd.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="RPrYj70D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCDB7C4CEEB;
+	Mon,  2 Jun 2025 19:17:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1748891872;
+	bh=JbBE2BSt4IuIp/mHpK/1woVzzTCCuTRSikmM/SfpxhY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RPrYj70DmEmC7GBiB8PpxtPpU/sbGbi6aG9rrPIRKVx7x62oNDMBzL3sdd6zk3AfA
+	 JnimY6oTs8hWj0hO1nCK76iCMRfVhK8g7IZG4g3OyCZat2uwoQuoMBHdqb8KjZ42T1
+	 2r2AxubAjvJN+V0z5Sft2RiPFyUJrOzvVsWAzHeA=
+Date: Mon, 2 Jun 2025 12:17:51 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
+ mm-commits@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] Additional MM updates for 6.16-rc1
+Message-Id: <20250602121751.53ee502779a2f746404a3548@linux-foundation.org>
+In-Reply-To: <aD29wnb5zR-afWpM@casper.infradead.org>
+References: <20250601151222.60ead71e7d8492a18c711a05@linux-foundation.org>
+	<aD29wnb5zR-afWpM@casper.infradead.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The pull request you sent on Mon,  2 Jun 2025 10:37:09 -0500:
+On Mon, 2 Jun 2025 16:05:38 +0100 Matthew Wilcox <willy@infradead.org> wrote:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/remoteproc/linux.git tags/rproc-v6.16
+> On Sun, Jun 01, 2025 at 03:12:22PM -0700, Andrew Morton wrote:
+> > Linus, please merge this second batch of MM updates for the 6.16-rcX cycle.
+> 
+> A word of warning for Linus since he wouldn't've been cc'd on the
+> earlier email.  This branch is based on v6.15-rc6 but contains a
+> commit which depends on 97dfbbd135cb which was merged during the
+> current merge window.  You might want to do a rebase or ask Andrew to
+> do it in order to prevent a bisection hazard.
+> 
+> 0day-ci found the problem here:
+> https://lore.kernel.org/linux-mm/202506022027.IYQzZghL-lkp@intel.com/
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/dcf9ee9ac4d5c09c5bc74aba5e93581e93a1ac33
+I think it's OK?  I did the merge and 
 
-Thank you!
+	d9736929445e iov: remove copy_page_from_iter_atomic()
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+lands later than
+
+	97dfbbd135cb highmem: add folio_test_partial_kmap()
+
+
