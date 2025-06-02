@@ -1,209 +1,161 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363BB4C7C;
-	Mon,  2 Jun 2025 01:26:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719541C36;
+	Mon,  2 Jun 2025 01:26:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748827602; cv=none; b=HO6mKGd6DK+jsPyGw+aQzVRfs9tz3ztxpzo/N2PlG0iYZLtYI4tUWJOO3qCWL0YbUHzTK48QfwP2z+oWJn+ktNGGj+QQQ0N1WJWmjVBzaedmuest8EL57RYMrG81PWd0Q+y4qqf9dAFVCS9UoJ6hTbmc6zQfQNJtto4bFa0JRfw=
+	t=1748827615; cv=none; b=Sn772XJkKKCKVei5LwbyLb3UJh37OjWtqcRRvQ5wkqlieTAK/iF0KjTFyafwCRXOYFHChA/uxyDRqWGFfyGodQW03LdIoAou94jA4uDP8ZNICn6yhmBfo/bxbc4vUpJrQUJsmpues3May3uqylfjnLrIXR0Qi91i0a81Q+aclAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748827602; c=relaxed/simple;
-	bh=KHOrI/tcUQxQ/4g8TO2DNZqo8MwNVeHh8Rb/WFAhsMY=;
+	s=arc-20240116; t=1748827615; c=relaxed/simple;
+	bh=EBiBJgwoh5aEhCj5Q2ZZovHlEhxmqveBySI6f0g/iFs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fNFU8ystIFRD6+Nmfie8uOSa+2lJtAwv1S8KRQAI2cJDJqZ+2c4huWxuWUO1s9BveCh61ULY5nUs7pwZA9whfH842aNCXkwCQs0ndenPUI0BgHwT59lBI0IwPBRi74ltUpiczg/KDU7Rknpsv4G/i/akDRW363+ANMbdhtmsVpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l6GCEhyQ; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=f38BX8Jc+8yaMDBVHoH5PFSGV6Ek2N5VrFi6Mua7szeHe2PpNi6LGQu/KZl1NH1GFQEz6r1B/6SfCT0UMipT0heMblOjWI+WMuDjwo7lGDMIu4TTAZeZ8R2joqzDeIwNEPTcx+d01eOEVZL04Ixy8fxqk54xOFe3iAOhWOJSuYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KRNQctzE; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l6GCEhyQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748827600; x=1780363600;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=KHOrI/tcUQxQ/4g8TO2DNZqo8MwNVeHh8Rb/WFAhsMY=;
-  b=l6GCEhyQV7xOonqcrkFtLccw6t+nmJEkLcyCEbbEXuLqkqUpMYXOnpiU
-   GPhp6A6+4PnD/kA9GhxfGJ+DmDrqDPwzV+6OycEjJXPodNAEj9Kdo7HFu
-   mTkLqqyP79MzXNOj00es52cCD1zJ/YSNYzhCko836ohjW9XF23T73ldGC
-   gHw2R/qO0fxiRO4LNbGyoNRtK9yFetQdWwj7ai4l8HKyvS01A1uwNPV5a
-   wPPB79hh/Jq9L/7WhgMVTpRM0m7bEIi8l/X5xC9WdUELpEMIAMa9AyZ5Z
-   slxmmYFzbIVVSVEBZ4kf7Ditd0OiI/HGNTWUeTeluOOwv0nH6om9dx4do
-   g==;
-X-CSE-ConnectionGUID: cYNFZuT/SkKCJBbMrq6fZQ==
-X-CSE-MsgGUID: ViAWmTSkR8+rp49WzVuFXg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11450"; a="50936428"
-X-IronPort-AV: E=Sophos;i="6.16,202,1744095600"; 
-   d="scan'208";a="50936428"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2025 18:26:39 -0700
-X-CSE-ConnectionGUID: dHD8CikpSNaf/8GLC5VgOg==
-X-CSE-MsgGUID: q7DJSSPfTvanbnzLXeEggg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,202,1744095600"; 
-   d="scan'208";a="149695206"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2025 18:26:39 -0700
-Date: Sun, 1 Jun 2025 18:31:44 -0700
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, x86@kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>, devicetree@vger.kernel.org,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Chris Oo <cho@microsoft.com>, linux-hyperv@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-	Ricardo Neri <ricardo.neri@intel.com>
-Subject: Re: [PATCH v3 06/13] dt-bindings: reserved-memory: Wakeup Mailbox
- for Intel processors
-Message-ID: <20250602013144.GA27991@ranerica-svr.sc.intel.com>
-References: <20250506-pompous-meaty-crane-97efce@kuoka>
- <20250507032339.GA27243@ranerica-svr.sc.intel.com>
- <20250512153224.GA3377771-robh@kernel.org>
- <20250513221456.GA2794@ranerica-svr.sc.intel.com>
- <20250514154248.GA2375202-robh@kernel.org>
- <20250515035338.GA4955@ranerica-svr.sc.intel.com>
- <20250519152937.GA2227051-robh@kernel.org>
- <20250519175606.GA9693@ranerica-svr.sc.intel.com>
- <20250524155650.GA16942@ranerica-svr.sc.intel.com>
- <20250529131634.GA2784667-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KRNQctzE"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b26f5f47ba1so2256294a12.1;
+        Sun, 01 Jun 2025 18:26:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748827613; x=1749432413; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EBiBJgwoh5aEhCj5Q2ZZovHlEhxmqveBySI6f0g/iFs=;
+        b=KRNQctzEO2y7E1a8BgdnBRJguKKOT3avl2BrWIIALCI9BEzYFBVgXIuua37L3+EI0w
+         6HYxbXjMeif3qqSImpK1h1vFa6UgVuE9Z0QWsQQMhv+j9eSTh1zcbv58b6V1kn98hejc
+         /AeLbieXIfTOGhyXLtiExjLaFo9fUKSOd4912YfDneg5xMpXC0p7qOBfhRLP6raOH00v
+         jRTKC2d8eYVbX8lMFRp2AfNbTduyI6amQdqXr1C22ZEeGnl08K5GcvQokVUP1G/7WjFg
+         jVy4OjnHG+vX0S6jGAop8KO1dciZgXLwpE0mTGx80RQX/pkTZ0dl7GeMWHymmk7yrfcB
+         cLkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748827613; x=1749432413;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EBiBJgwoh5aEhCj5Q2ZZovHlEhxmqveBySI6f0g/iFs=;
+        b=IvLeYEpGGu8kuc5Lt0OJBDkYmdvcKcK7tehoK8AYkuxwcdW5mH7lv4QS/gZNt2jwCp
+         CJvzrTreliioIOmFxYjp4E4IYQSOJCsXJs+1MzlQ7y5/NQ6DHCcMaqqtedjetrrB8Fe1
+         oYs4ONTWtseW/l7+yq6xM5J3LpysQSdu2BcJyTrF34fpn/0IG6HL8VwAdDiLqndOFC+n
+         8GMWUYdxO0olSPb6tIdrhJSDtQ5yZ6w2CyDUmQMaNgyIsAhKAWEidjFIwM0RMmL9luIw
+         IUQeyuzzpUS3fkFbVhup+3sQLOcjFZUx6mMEIJ+J/cXy4Ga3ng64l6j/xvdRHZn/TXQn
+         4i8w==
+X-Forwarded-Encrypted: i=1; AJvYcCXgTE8ztgJrCZf48GIzEKQm61R7L7FgOnReaLVeiOdjP1RCItmdMMkd+ibpzeQV29kGqcI/cxEQYNM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvKFwoBPOqbonkE3nyMKBbTqEqiSJ/usUD+7oJEprea4rD/LTo
+	51wmApnOkd9tUoQL82TrJE1X1OKbqfyUmI2ZQCNiLCmwHBqEJamw7ZK9
+X-Gm-Gg: ASbGncvAgK1eQXM+pGnvUErdBKoUELRI3cOot+AFraHpqmxa3leuvGcHFcWVdFvLEjr
+	GEZjjrsaQq3PpmfXm97r0PW4Dd5vRubD3svocXvV+5KVVMlc/BQTX1Yd6ezEw6ghnXDdLPgOnrk
+	Ji18h27nC3lsCq9xw/tTojQir4uWaMm8VILIx7vOK2aut1P8EBJYT6I6XWLrDVsdg5CrweZ3+c4
+	8MkUlwL1MquZoOo5uaTp9UH4HsUx+YQzc167s8IJEnknwa5REcgQIzet4HPVUhM925XBHdFXq/w
+	QALnqJTDIMEh6SgHW/e+Uti0CuQA7Hsk43cgxMZtqdK2fSpjjQI=
+X-Google-Smtp-Source: AGHT+IF9FortDvoInFEsktJ9EgFmUf3mWfhPOwfkPSsaYeJZgoCfbwczqIaR6w8OSSdkYoUc1YNHvg==
+X-Received: by 2002:a17:90b:4b48:b0:311:b413:f5e1 with SMTP id 98e67ed59e1d1-31250475630mr12644129a91.32.1748827612388;
+        Sun, 01 Jun 2025 18:26:52 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506d16e04sm60112715ad.212.2025.06.01.18.26.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Jun 2025 18:26:51 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id AA6694209E8C; Mon, 02 Jun 2025 08:26:49 +0700 (WIB)
+Date: Mon, 2 Jun 2025 08:26:49 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Randy Dunlap <rdunlap@infradead.org>,
+	William Raezer <wraezer@gmail.com>, linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, corbet@lwn.net
+Subject: Re: [PATCH] Documentation: Add a source tree map overview
+Message-ID: <aDz92QNc3ZSVkdx3@archie.me>
+References: <CAKg96b=n1pZi4FUBqe+puUJo9ndRfU8npvo9w6fE6Enshe73Hg@mail.gmail.com>
+ <f882f6d9-c914-48af-97b7-0aad6d995819@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="HsbckGZv56aBrvQU"
 Content-Disposition: inline
-In-Reply-To: <20250529131634.GA2784667-robh@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <f882f6d9-c914-48af-97b7-0aad6d995819@infradead.org>
 
-On Thu, May 29, 2025 at 08:16:34AM -0500, Rob Herring wrote:
-> On Sat, May 24, 2025 at 08:56:50AM -0700, Ricardo Neri wrote:
-> > On Mon, May 19, 2025 at 10:56:06AM -0700, Ricardo Neri wrote:
-> > > On Mon, May 19, 2025 at 10:29:37AM -0500, Rob Herring wrote:
-> > > > On Wed, May 14, 2025 at 08:53:38PM -0700, Ricardo Neri wrote:
-> > > > > On Wed, May 14, 2025 at 10:42:48AM -0500, Rob Herring wrote:
-> > > > > > On Tue, May 13, 2025 at 03:14:56PM -0700, Ricardo Neri wrote:
-> > > > > > > On Mon, May 12, 2025 at 10:32:24AM -0500, Rob Herring wrote:
-> > > > > > > > On Tue, May 06, 2025 at 08:23:39PM -0700, Ricardo Neri wrote:
-> > > > > > > > > On Tue, May 06, 2025 at 09:10:22AM +0200, Krzysztof Kozlowski wrote:
-> > > > > > > > > > On Mon, May 05, 2025 at 10:16:10PM GMT, Ricardo Neri wrote:
-> > > > > > > > > > > > If this is a device, then compatibles specific to devices. You do not
-> > > > > > > > > > > > get different rules than all other bindings... or this does not have to
-> > > > > > > > > > > > be binding at all. Why standard reserved-memory does not work for here?
-> > > > > > > > > > > > 
-> > > > > > > > > > > > Why do you need compatible in the first place?
-> > > > > > > > > > > 
-> > > > > > > > > > > Are you suggesting something like this?
-> > > > > > > > > > > 
-> > > > > > > > > > > reserved-memory {
-> > > > > > > > > > > 	# address-cells = <2>;
-> > > > > > > > > > > 	# size-cells = <1>;
-> > > > > > > > > > > 
-> > > > > > > > > > > 	wakeup_mailbox: wakeupmb@fff000 {
-> > > > > > > > > > > 		reg = < 0x0 0xfff000 0x1000>
-> > > > > > > > > > > 	}
-> > > > > > > > > > > 
-> > > > > > > > > > > and then reference to the reserved memory using the wakeup_mailbox
-> > > > > > > > > > > phandle?
-> > > > > > > > > > 
-> > > > > > > > > > Yes just like every other, typical reserved memory block.
-> > > > > > > > > 
-> > > > > > > > > Thanks! I will take this approach and drop this patch.
-> > > > > > > > 
-> > > > > > > > If there is nothing else to this other than the reserved region, then 
-> > > > > > > > don't do this. Keep it like you had. There's no need for 2 nodes.
-> > > > > > > 
-> > > > > > > Thank you for your feedback!
-> > > > > > > 
-> > > > > > > I was planning to use one reserved-memory node and inside of it a child
-> > > > > > > node to with a `reg` property to specify the location and size of the
-> > > > > > > mailbox. I would reference to that subnode from the kernel code.
-> > > > > > > 
-> > > > > > > IIUC, the reserved-memory node is only the container and the actual memory
-> > > > > > > regions are expressed as child nodes.
-> > > > > > > 
-> > > > > > > I had it like that before, but with a `compatible` property that I did not
-> > > > > > > need.
-> > > > > > > 
-> > > > > > > Am I missing anything?
-> > > > > > 
-> > > > > > Without a compatible, how do you identify which reserved region is the 
-> > > > > > wakeup mailbox?
-> > > > > 
-> > > > > I thought using a phandle to the wakeup_mailbox. Then I realized that the
-> > > > > device nodes using the mailbox would be CPUs. They would need a `memory-
-> > > > > region` property. This does not look right to me.
-> > > > 
-> > > > That doesn't really make sense unless it's a memory region per CPU.
-> > > 
-> > > Agreed.
-> > > 
-> > > > 
-> > > > 
-> > > > > > Before you say node name, those are supposed to be 
-> > > > > > generic though we failed to enforce anything for /reserved-memory child 
-> > > > > > nodes.
-> > > > > 
-> > > > > I see. Thanks for preventing me from doing this.
-> > > > > 
-> > > > > Then the `compatible` property seems the way to go after all.
-> > > > > 
-> > > > > This what motivated this patch in the first place. On further analysis,
-> > > > > IIUC, defining bindings and schema is not needed, IMO, since the mailbox
-> > > > > is already defined in the ACPI spec. No need to redefine.
-> > > > 
-> > > > You lost me...
-> > > > 
-> > > > You don't need to redefine the layout of the memory region as that's 
-> > > > defined already somewhere,
-> > > 
-> > > Great!
-> > > 
-> > > > but you do need to define where it is for DT. 
-> > > > And for that, you need a compatible. Do you know where it is in this 
-> > > > case?
-> > > 
-> > > The compatible is not defined anywhere yet. Is a DT schema needed to
-> > > document it? If yes, I am usure what to put in the description. We tried
-> > > to not redefine the mailbox and refer to the ACPI spec. That was a NAK
-> > > from Krzysztof [1].
-> > > 
-> > > [1]. https://lore.kernel.org/r/624e1985-7dd2-4abe-a918-78cb43556967@kernel.org
-> > 
-> > In summary, documenting the `compatible` property for the mailbox is
-> > necessary. There is no need to redefine the malbox on a schema but
-> > referring to the ACPI spec is not acceptable.
-> 
-> There's the whole "DT bindings in ACPI systems" where ACPI tables 
-> contain compatibles and DT properties which I think is what 
-> Krzysztof was objecting to (and I do too). But this is a DT based system 
-> that implements a mailbox region defined in an ACPI spec. That is 
-> perfectly fine to refer to.
 
-That is correct. It is a DT-based system.
+--HsbckGZv56aBrvQU
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Great! I will refer to the ACPI spec in my schema in my next version.
+On Sun, Jun 01, 2025 at 09:50:14AM -0700, Randy Dunlap wrote:
+> Hi,
+>=20
+> On 6/1/25 9:22 AM, William Raezer wrote:
+> > Hello,
+> >=20
+>=20
+> Please wrap email lines at around 72-75 characters each.
+>=20
+> > My name is William Raezer, and this is my first contribution to the Lin=
+ux kernel. I'm submitting a simple but hopefully helpful addition: a high-l=
+evel map of the Linux kernel source tree as a new document in `Documentatio=
+n/source-map.rst`.
+>=20
+> This looks somewhat useful, although I was expecting more of a graphic pr=
+esentation
+> of the tree structure. But that would cause trouble with the role of each=
+ subdirectory.
+> (and one can always use `tree` for that)
 
-> 
-> > 
-> > What about referring in the schema to the Intel TDX Virtual Firmware Design
-> > Guide[2]? It describes how firmware should implement the mailbox the section
-> > 4.3.5.
-> > 
-> > A mailbox with compatible = "intel,wakeup-mailbox" is implemented after the
-> > guide that Intel published.
-> 
-> Use whatever you think best describes the programming model of the 
-> region.
+I was expecting tree output either.
 
-Understood.
+>=20
+> > As someone beginning to explore the internals of the Linux kernel, I no=
+ticed that while there is some documentation available that describes the s=
+ubsystems in principle, there's no centralized overview of the source tree =
+structure itself. This patch adds a basic source map that describes the rol=
+e of each top-level directory in the kernel source.
+> >=20
+> > The goal is to assist both myself and others in navigating the codebase=
+, especially new contributors who may be overwhelmed by the kernel's size a=
+nd complexity. As a follow-up, I plan to add subsystem-level maps for key d=
+irectories such as `kernel/`, `mm/`, and `fs/`.
+> >=20
+> > I hope this addition is seen as a positive and useful step, and I=E2=80=
+=99m open to feedback or suggestions to improve it.
+>=20
+> Patches should generally be inline as email text, not as attachments.
+> This is up to the maintainer to decide about...
+> and gmail is not good as maintaining whitespace in emails.
+> (I don't see any whitespace problems in the current patch.)
 
-Thanks and BR,
-Ricardo
+tl;dr: see Documentation/process/submitting-patches.rst.
+
+>=20
+> I get a warning when building with this patch applied:
+>=20
+> Documentation/source-map.rst: WARNING: document isn't included in any toc=
+tree [toc.not_included]
+
+make htmldocs.
+
+>=20
+> Also, when I look at source-map.html with a web browser, no parts of
+> the source-map are shown. (tested with multiple browsers)
+
+Do you mean toctree in the sidebar?
+
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--HsbckGZv56aBrvQU
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaDz91QAKCRD2uYlJVVFO
+o6QJAQDu6id3peVcQpn83sfrnKiJFxhk0QiCvPAl63MVEcxFfwD/XDGE4geIxTPM
+y6EeFCOVRhogItRuAurs4qj7cHXa3wA=
+=5o5+
+-----END PGP SIGNATURE-----
+
+--HsbckGZv56aBrvQU--
