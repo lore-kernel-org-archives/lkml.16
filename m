@@ -1,148 +1,192 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638D8226D1D
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 14:55:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6F2227E95;
+	Mon,  2 Jun 2025 14:55:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748876153; cv=none; b=IM5LsDHlOMzjJhUvS/jqqdBMC96EcAAQruNTGCvslyjOGyXJ8AnZ/Pm/wC7tPxJl0mJeDATwP5WxqtkqYei/27xhGF30/92/1Oa+CsX/XE6hX5i9p/MrWI8Muq3E/yE8NNCwUAy+Ha9Y9MwCrY6kqAnwMW/fzxK+Ezrkgsh2Zao=
+	t=1748876155; cv=none; b=EFAUgxg+5VUSeNNjQmsb99PSJ2xdAHFYSxz/NVN6e5t9wP550FTRTJN/Cwu9Ag/oXzrLCKsYaDHfRLoMeRwBL5FmgLroUEAPBBOS2HHm1gCQ8M+GbZ0j6QjGJNl0wtLrQyltML+u6XGp7CxlPR162vqgU7YT/Wn7IvIb8HuGPDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748876153; c=relaxed/simple;
-	bh=mmsuWg92E1oRARJsckfmaN9kCc+sTcUE7a4qFv2JjcY=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PbCpOepN/kIgpVgCCd/7FqKSfeAA/yMOKSPAN19xs8MguWwEPngREX70GQVycst/gwCenDQgs4L3ZKXNTrc3PCO8wuHo5LBDw5DP7i8jqcMeGwjrX7p04UuDVpiVOgpW5tDamWpHyseOa8f5SfkVIW6clky3i65NPVvy3honodc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jeWyvWNp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=apFAX9Vi; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jeWyvWNp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=apFAX9Vi; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jeWyvWNp";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="apFAX9Vi";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jeWyvWNp";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="apFAX9Vi"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 92E781F7BD;
-	Mon,  2 Jun 2025 14:55:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1748876149; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aGgH2NC4M/mYCe/ce1FmqHa6Dl8VRr5A1u9oMQuPP5Q=;
-	b=jeWyvWNpHb1y6AAXrn5cbsuxUSq0HkLL8QEwl3BGs1pjzQFzShw3UA5Tkw+4eV2odPj6kp
-	sWI5PJnh6Shj1Yi2aU2hwTbW6AiFPg1euTy6tnHnabk5fe6gc8dFbV1VIe8LkHwR4Xd4rD
-	QnkGtEYbEk1MIY2EkGrZfs0YAd1RdKQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1748876149;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aGgH2NC4M/mYCe/ce1FmqHa6Dl8VRr5A1u9oMQuPP5Q=;
-	b=apFAX9ViT3BTWfUZu24e6mWYkx8J8Z1xccr16w4qFiYzRhZqzgO2Qqo7fm0JHLP/T0hanf
-	99X2TL4uEtAajGDQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1748876149; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aGgH2NC4M/mYCe/ce1FmqHa6Dl8VRr5A1u9oMQuPP5Q=;
-	b=jeWyvWNpHb1y6AAXrn5cbsuxUSq0HkLL8QEwl3BGs1pjzQFzShw3UA5Tkw+4eV2odPj6kp
-	sWI5PJnh6Shj1Yi2aU2hwTbW6AiFPg1euTy6tnHnabk5fe6gc8dFbV1VIe8LkHwR4Xd4rD
-	QnkGtEYbEk1MIY2EkGrZfs0YAd1RdKQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1748876149;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aGgH2NC4M/mYCe/ce1FmqHa6Dl8VRr5A1u9oMQuPP5Q=;
-	b=apFAX9ViT3BTWfUZu24e6mWYkx8J8Z1xccr16w4qFiYzRhZqzgO2Qqo7fm0JHLP/T0hanf
-	99X2TL4uEtAajGDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 59A65136C7;
-	Mon,  2 Jun 2025 14:55:49 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id h77BE3W7PWhnYAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 02 Jun 2025 14:55:49 +0000
-Date: Mon, 02 Jun 2025 16:55:48 +0200
-Message-ID: <87jz5uxkej.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Cc: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	kernel@collabora.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/9] ALSA: usb-audio: Support jack detection on Sony DualSense PS5
-In-Reply-To: <20250526-dualsense-alsa-jack-v1-0-1a821463b632@collabora.com>
-References: <20250526-dualsense-alsa-jack-v1-0-1a821463b632@collabora.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	s=arc-20240116; t=1748876155; c=relaxed/simple;
+	bh=OTDnDpz91oo7TI10WrL8VLx5msdpHQhefrkAOSWO9kw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cyjwvd4eohEL1lDSmIopkhTkxbKHkIyVdEacw0FLaqFkXE1JQBqkeqBb1p67jVwt+nbUeKYVm7oLjHPj9ycd2EyuGGn11exaUB6cPLSfHkRtsSutZkbNie+y62znA526wzwy7tOwdtR8/txsaJO9fOVaxlZ8NC4vR0Z0SbsQzTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: FbKZ4WJ2Rj6hHvo7IvWwCQ==
+X-CSE-MsgGUID: hstPhcp2RTeA4P8obRJ0yQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="68436266"
+X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
+   d="scan'208";a="68436266"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 07:55:53 -0700
+X-CSE-ConnectionGUID: oHYVTvX5T8WyxghHliO4Ag==
+X-CSE-MsgGUID: dtO+QBWoQlKFsWE9GPPfHg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
+   d="scan'208";a="148422996"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 07:55:49 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1uM6Zm-00000002sAx-2EuP;
+	Mon, 02 Jun 2025 17:55:46 +0300
+Date: Mon, 2 Jun 2025 17:55:46 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Ana-Maria Cusco <ana-maria.cusco@analog.com>, jic23@kernel.org,
+	lars@metafoo.de, Michael.Hennerich@analog.com,
+	dlechner@baylibre.com, nuno.sa@analog.com, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
+	brgl@bgdev.pl, marcelo.schmitt1@gmail.com
+Subject: Re: [PATCH v4 02/11] iio: adc: Add basic support for AD4170
+Message-ID: <aD27cobHWeBX8o30@smile.fi.intel.com>
+References: <cover.1748829860.git.marcelo.schmitt@analog.com>
+ <e79f9a126672b33b8a7c01f650fee43a68c74029.1748829860.git.marcelo.schmitt@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Flag: NO
-X-Spam-Score: -3.30
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,collabora.com:email,suse.de:mid]
-X-Spam-Level: 
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e79f9a126672b33b8a7c01f650fee43a68c74029.1748829860.git.marcelo.schmitt@analog.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, 26 May 2025 16:07:39 +0200,
-Cristian Ciocaltea wrote:
+On Mon, Jun 02, 2025 at 08:36:47AM -0300, Marcelo Schmitt wrote:
+> From: Ana-Maria Cusco <ana-maria.cusco@analog.com>
 > 
-> The Sony DualSense PS5 controller has an internal mono speaker, but it
-> also provides a 3.5mm jack socket for headphone output and headset
-> microphone input.
+> The AD4170 is a multichannel, low noise, 24-bit precision sigma-delta
+> analog to digital converter. The AD4170 design offers a flexible data
+> acquisition solution with crosspoint multiplexed analog inputs,
+> configurable ADC voltage reference inputs, ultra-low noise integrated PGA,
+> digital filtering, wide range of configurable output data rates, internal
+> oscillator and temperature sensor, four GPIOs, and integrated features for
+> interfacing with load cell weigh scales, RTD, and thermocouple sensors.
 > 
-> Since this is a UAC1 device, it doesn't advertise any jack detection
-> capability.  However, the controller is able to report HP & MIC insert
-> events via HID, i.e. through a dedicated input device managed by the
-> hid-playstation driver [1].
-> 
-> This patch series implements a quirk to create the jack controls for
-> headphone and headset mic, respectively, and registers an input handler
-> for each of them in order to intercept the related hotplug events.
-> 
-> It's worth noting there is no hard dependency on the HID patch set [1],
-> as the usb-audio driver will simply bind the jack controls to the input
-> devices when they become available - this is managed internally by the
-> input handler framework.
-> 
-> Unrelated to the above, the series also provides fixes to a bunch of
-> general coding style issues as reported by checkpatch.
-> 
-> [1] https://lore.kernel.org/all/20250526-dualsense-hid-jack-v1-0-a65fee4a60cc@collabora.com/
-> 
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+> Add basic support for the AD4170 ADC with the following features:
+> - Single-shot read.
+> - Analog front end PGA configuration.
+> - Differential and pseudo-differential input configuration.
 
-Thanks for patches.  Through a quick glance, the code change looks OK,
-but since it's with significant amount of changes, so I'll postpone
-after 6.16 merge window (once after I'm back from traveling).
+...
+
++ array_size.h
+
+> +#include <linux/bitfield.h>
+> +#include <linux/bitmap.h>
+
+> +#include <linux/bitops.h>
+> +#include <linux/bits.h>
+
+bitmap.h guarantees to include the two above, but it;s not a big deal to leave
+them.
+
+> +#include <linux/cleanup.h>
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/math64.h>
+> +#include <linux/module.h>
+> +#include <linux/property.h>
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/spi/spi.h>
+
++ types.h
+
+> +#include <linux/unaligned.h>
+> +#include <linux/units.h>
+> +#include <linux/util_macros.h>
+
+...
+
+> +static bool ad4170_setup_eq(struct ad4170_setup *a, struct ad4170_setup *b)
+> +{
+> +	/*
+> +	 * The use of static_assert() here is to make sure that the comparison
+> +	 * is adapted whenever struct ad4170_setup is changed.
+> +	 */
+> +	static_assert(sizeof(*a) ==
+> +		      sizeof(struct {
+> +				     u16 misc;
+> +				     u16 afe;
+> +				     u16 filter;
+> +				     u16 filter_fs;
+> +				     u32 offset;
+> +				     u32 gain;
+> +			     }));
+
+I think it doesn't make much sense unless one uses memcpy().
+
+> +	if (a->misc != b->misc ||
+> +	    a->afe != b->afe ||
+> +	    a->filter != b->filter ||
+> +	    a->filter_fs != b->filter_fs ||
+> +	    a->offset != b->offset ||
+> +	    a->gain != b->gain)
+> +		return false;
+> +
+> +	return true;
+> +}
+
+...
+
+> +static int ad4170_soft_reset(struct ad4170_state *st)
+> +{
+> +	int ret;
+> +
+> +	ret = regmap_write(st->regmap, AD4170_CONFIG_A_REG,
+> +			   AD4170_SW_RESET_MSK);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* AD4170-4 requires 1 ms between reset and any register access. */
+> +	fsleep(MILLI);
+
+1 * USEC_PER_MSEC
+
+(need time.h)
+
+...
+
+> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	st = iio_priv(indio_dev);
+
++ blank line here.
+
+> +	ret = devm_mutex_init(dev, &st->lock);
+> +	if (ret)
+> +		return ret;
+
+> +	chip = spi_get_device_match_data(spi);
+> +	if (!chip)
+> +		return -EINVAL;
+> +
+> +	indio_dev->name = chip->name;
+> +	indio_dev->info = &ad4170_info;
+
+> +	st->spi = spi;
+
+Can be grouped with above st = ...
+
+> +	st->regmap = devm_regmap_init(dev, NULL, st, &ad4170_regmap_config);
+> +	if (IS_ERR(st->regmap))
+> +		return dev_err_probe(dev, PTR_ERR(st->regmap),
+> +				     "Failed to initialize regmap\n");
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Takashi
