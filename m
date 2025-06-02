@@ -1,164 +1,163 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 728D52F509
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 11:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB20418C00B
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 11:02:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748862062; cv=none; b=r6ugXjqTYTjiZXRwjpAsCbVp4pLMHVP5Uah5mi5rjTqIL7ebJ2fj359AtF1jMBWlF61BlK1COrSxNTdpB/v7XN5XuYQcXvAkDvUH66De9qRhzT0ISiDC6Yy7gwL5ubA9KwU4x8qJhbSd0zBUm5pvM3Id/Ly+VXHIAgU0rRRnBWM=
+	t=1748862141; cv=none; b=lbfArEMuAF02yabGEdZ4lLQTT2F9ktaeHeYWfIUuR5JBztnOg0BQh2WKc3MULBlxCy6lTn2MAxwI1QVAuCNQiiDhR8g4swqrZrszPcgrpCzytUPqWpMqDM4NS71q4mxgQKE31C7MACx8YLuaC1QBIHBATo2cHIwmHXTWKS1N/bE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748862062; c=relaxed/simple;
-	bh=hl/euo6Sdu63YjYGLOEeGJpt1NRGT7Z7ek+NVDBVv2I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dxENr19oARfwM5HKgzlPWuXmIiSXdO1LzbwZsshy1QmPeiTwiwqvEZfWr79j6m87OlewnI2wRh5xrNr4cVlcVL6+Olszr9nn8MYXVgpIBg1aC5EXpmRuJT7XyjOIgeW59OAsNCZab8f0sEvoW2To6A+yrZuHmwyEq7hCaVVWtt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n7bFXCtv; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748862141; c=relaxed/simple;
+	bh=aXu9DhJ3a9/IrzXDE3FwIqjbSh8hj8O4jZzg1CZs72k=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OeDqY5IGBaoBpeRy7pZ6c50FcPAQ2XTLZOIt2RubuImPJP5VHbHKQQnvMWZ9Ly8RlKC516s/J4qzNFFemSNm1tVB2OIAjvc7OSMknF2sDBLsXMQQER7icrAcGyWAXbCfQBikD4hnW+TbKxLMRYN6uSYd8tPuabSGpKME0IlIOEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=jHPfQ470; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=46dOllc+; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=jHPfQ470; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=46dOllc+; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n7bFXCtv"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-442ea341570so28477945e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 04:01:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748862059; x=1749466859; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=APwGN0/eqz9/45Et2ppeGaMN2T+hRqNScPGgnQKWid0=;
-        b=n7bFXCtvmn1CN4dqe79OjmIvlzKvZ3QLTQVC8jAtiP2bzHSE1L1mwXIMNhbxQglMGo
-         YPp9WJc3+H7M+kpGPvqv6qcH4+l0whhebiHH6B8COWqfkqbpLcb/3a9+j7sjEePc4sqq
-         oUfL7IkvFv5ua2vgFqHXomBgP1VQ5KWWJPocJhVxVlX/KEVDaEAD0iTKuaokakmkM1S+
-         KFsC/Jebpu9aPPvvrd/OIbtX6HqxdA8fJRzKYt/2Qa9V6OZqITpoH1fRWy+hD1eEiCYu
-         Ps8VA+bK2LsjnLMP43qr1mFSUJs6PwB3mcovprJ8fVA9Os63qoE2xxjqNaXx47+V87DG
-         f9Fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748862059; x=1749466859;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=APwGN0/eqz9/45Et2ppeGaMN2T+hRqNScPGgnQKWid0=;
-        b=PJrg9CL1w2Cqw9TvRdduJLho4kJ4CGeqEc45ZZumIBajxOY7b+9ECnmcndYPzv03gV
-         dllCuzKw1TdTBdQMxXaRZTQj9ijnY3IYAAUIxov6mpBroRcWKVUa+eGYJLnN88/9ABBh
-         NmDaoQIIt+NJhGeNCtqyyGmrsNJ1kdqRUJn0av1ASI3x6cRDXZRCYoeglH+9kh6QXETe
-         VR6JeUW+c4xMErathx5vZ3s4w0oDGL2YT1az4LL0eHcXBEhEVX36ps5j+SsjgCFsvFzJ
-         3jk01MVc0NbxRnSNzhZNbwhu5wA6TcD5wY0/qKMkEqJMFNfuIeRn6zxscbU1gytGfdr1
-         3JYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU6RruOH8Y+Gi/rw83yWOo2dTvdUY3HGQI87EPy+jULpo6LqM54pPE+tkcGEzwL2IfmUGiU4LVpihgJXFo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxacI330DgKOljGx40qmcC8AYYcaakVxrb0ZDKB5CgkG02KkPPh
-	ltxXeAo2v7v3pAC1yIlP5tgRSIf+GFhaZlXQBxUfO6EHWu50kf+Y3+PDPr0G+twQHOI=
-X-Gm-Gg: ASbGncsaTtnUMVxqh2oCcIQL5TDt3Dnzr/dp9QsOgV68yxP1PT0CaeVYwZtLlBktbwC
-	mztIVhV4S5P8BwbOD9q2/XcAsuFZItJtF8tv1XyR2uSJ2YOLr0I/sTAbOs6V3e9pcmz/oifuOet
-	eoLzWcE5d055RSw/084HmvcN0QvhY474x8AHivhDjIUirOOl9GRf6qG3pqHucWO5FrjFUHBlp7I
-	Kdz/ryBwx+jPIOyIEdw0S7rEV7j2LlUOMKg1Xc90jY2mVUiQcXkV5Zi4hyQJMjJ6otE8Pja12iX
-	K1Omr0xg8tNXuYEGlh2dI1rxYRHLlfjxyuYW8wSCIn3u4vbdFQSvyRs=
-X-Google-Smtp-Source: AGHT+IFvqSbq/mxIH2p1mh4XibQErn6t9isHaT2vMWAsPAcME6qqAGy+0iLzr3WNRcfVG5XZiGtRHw==
-X-Received: by 2002:a05:600c:4e44:b0:441:b3eb:570a with SMTP id 5b1f17b1804b1-450d882b3c3mr109348255e9.2.1748862058518;
-        Mon, 02 Jun 2025 04:00:58 -0700 (PDT)
-Received: from localhost ([41.210.143.146])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-450d7facf9dsm115376275e9.17.2025.06.02.04.00.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 04:00:58 -0700 (PDT)
-Date: Mon, 2 Jun 2025 14:00:53 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	David Lechner <dlechner@baylibre.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Erick Archer <erick.archer@outlook.com>,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] Input: ims-pcu - Check record size in
- ims_pcu_flash_firmware()
-Message-ID: <aD2EZRX8CVuvqjsN@stanley.mountain>
-References: <cover.1748463049.git.dan.carpenter@linaro.org>
- <131fd1ae92c828ee9f4fa2de03d8c210ae1f3524.1748463049.git.dan.carpenter@linaro.org>
- <202505281611.A024D45E@keescook>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="jHPfQ470";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="46dOllc+";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="jHPfQ470";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="46dOllc+"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id AD8B8219E2;
+	Mon,  2 Jun 2025 11:02:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748862137; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ttgg3X+ZBzZwcPRWhLO7lmL1TYNOpMVMH+F5r8W4p48=;
+	b=jHPfQ470fgZ3y7Vyvbua8FZ3Lp61P+C6rgWOzH1+gbM1VfRpwly7xudCxkMGhJqekj4EF7
+	vdtHhMVu5QdEZVxSQEZnQCMkF/QH4xqb543JIVLUklD6NP+SlWFYWlYdDvIe5DJ6bKly3g
+	eh864Evmz4chMa5XYdX2yuAU7sF8Mbo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748862137;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ttgg3X+ZBzZwcPRWhLO7lmL1TYNOpMVMH+F5r8W4p48=;
+	b=46dOllc+HCV3T+/ABiF1TSpySJ3nCmNXD6LP+YqVFGZIPblcGyPaZlylEt/rG2ck7IRT1e
+	lvCIf3qOJG8VqRCQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748862137; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ttgg3X+ZBzZwcPRWhLO7lmL1TYNOpMVMH+F5r8W4p48=;
+	b=jHPfQ470fgZ3y7Vyvbua8FZ3Lp61P+C6rgWOzH1+gbM1VfRpwly7xudCxkMGhJqekj4EF7
+	vdtHhMVu5QdEZVxSQEZnQCMkF/QH4xqb543JIVLUklD6NP+SlWFYWlYdDvIe5DJ6bKly3g
+	eh864Evmz4chMa5XYdX2yuAU7sF8Mbo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748862137;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ttgg3X+ZBzZwcPRWhLO7lmL1TYNOpMVMH+F5r8W4p48=;
+	b=46dOllc+HCV3T+/ABiF1TSpySJ3nCmNXD6LP+YqVFGZIPblcGyPaZlylEt/rG2ck7IRT1e
+	lvCIf3qOJG8VqRCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9A2A913A63;
+	Mon,  2 Jun 2025 11:02:17 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ipxRJbmEPWggHAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 02 Jun 2025 11:02:17 +0000
+From: Vlastimil Babka <vbabka@suse.cz>
+Subject: [PATCH v2 0/2] frozen pages for large kmalloc
+Date: Mon, 02 Jun 2025 13:02:11 +0200
+Message-Id: <20250602-frozen-pages-for-large-kmalloc-v2-0-84a21f2c3640@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202505281611.A024D45E@keescook>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALOEPWgC/42NTQ6CQAxGr2K6tgaqE39W3sOwKNCBiciQVolCu
+ LsjJ3D5vnx5bwYTDWJw2cygMgYLsU9A2w1ULfeNYKgTA2XkMkdn9Bon6XHgRgx9VOxY0+v+4K6
+ LFZb1oSZHJI5KSJJBxYf3GrgVidtgz6iftTfmv/Vv9ZhjhuWe2RGfPOfHq71MdtUExbIsXwEp7
+ PnKAAAA
+X-Change-ID: 20250529-frozen-pages-for-large-kmalloc-bd4d2522e52b
+To: Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+ Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>, 
+ Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, 
+ linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>
+X-Mailer: b4 0.14.2
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:mid]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
 
-On Wed, May 28, 2025 at 04:26:18PM -0700, Kees Cook wrote:
-> On Wed, May 28, 2025 at 11:22:24PM +0300, Dan Carpenter wrote:
-> > The "len" variable comes from the firmware and we generally do
-> > trust firmware, but it's always better to double check.  If the "len"
-> > is too large it could result in memory corruption when we do
-> > "memcpy(fragment->data, rec->data, len);"
-> > 
-> > Fixes: 628329d52474 ("Input: add IMS Passenger Control Unit driver")
-> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > ---
-> > Kees, this is a __counted_by() thing.  Would the checkers catch this?
-> > We know the maximum valid length for "fragment" is and so it's maybe
-> > possible to know that "fragment->len = len;" is too long?
-> 
-> I see:
-> 
-> pcu->cmd_buf as:
-> 
->         u8 cmd_buf[IMS_PCU_BUF_SIZE];
-> 
-> and fragment is:
-> 
-> struct ims_pcu_flash_fmt {
->         __le32 addr;
->         u8 len;
->         u8 data[] __counted_by(len);
-> };
-> 
-> I assume you're asking about this line:
-> 
-> 		fragment->len = len;
-> 
-> I'm not aware of any compiler instrumentation that would bounds check
-> this -- it was designed to trust these sort of explicit assignments.
-> 
-> This is hardly the only place in the kernel doing this kind of
-> deserialization into a flexible array structure, so maybe there should
-> be some kind of helper to do the bounds checking and set the
-> "counted_by" counter?
-> 
-> #define gimme(from, into, counter, len)				\
-> 	({							\
-> 		int __gimme_rc = -EINVAL			\
-> 		size_t __gimme_size = __member_size(from);	\
-> 		if (__gimme_size >= sizeof(*into) &&		\
-> 		    __gimme_size - sizeof(*into) >= len) {	\
-> 			into = (void *)from;			\
-> 			into->counter = len;			\
-> 			__gimme_rc = 0;				\
-> 		}						\
-> 		__gimme_rc;					\
-> 	})
-> 
-> 	rc = gimme(&pcu->cmd_buf[1], fragment, len, len);
-> 	if (rc) {
-> 		dev_err(pcu->dev,
-> 			"Invalid record length in firmware: %d\n", len);
-> 		return rc;
-> 	}
+In [1] I have suggested we start warning for get_page() done on large
+kmalloc pages as the first step to convert them to frozen pages.
+We exposed to -next and indeed got such a warning [2]. But it turns out
+the code is using sendpage_ok() and thus would avoid the get_page() if
+the page was actually frozen.
 
-I don't think that really scales...  I don't know how KASAN works
-internally.  I was thinking it might track the buffer size when we
-assign "fragment = (void *)&pcu->cmd_buf[1];" so it could calculate
-the valid values of ->len.  But that's actually quite complicated.
+So in this version, freeze the large kmalloc pages at the same time as
+adding the warnings and refusals to get_page/put_page() on large kmalloc
+pages, the same as we do for slab pages - in patch 2.
 
-Smatch does track this:
+While doing that I've noticed that large kmalloc doesn't observe NUMA
+policies, while the rest of the allocator does. This turns out to be a
+regression from v6.1, so I'm restoring that first in patch 1. There is
+no Cc: stable as it's not fixing a critical bug, but we can submit it to
+e.g. latest LTSS afterwards.
 
-drivers/input/misc/ims-pcu.c:856 ims_pcu_flash_firmware() buf size: 'fragment->data' 119 elements, 119 bytes
+Given the timing I would expose this to -next after the current merge
+window closes, thus towards 6.17.
 
-But:
+[1] https://lore.kernel.org/all/20250417074102.4543-2-vbabka@suse.cz/
+[2] https://lore.kernel.org/all/202505221248.595a9117-lkp@intel.com/
 
-1) Smatch doesn't know about __counted_by().  This is just a matter of
-   writing the code in Sparse.
-2) It's not treating fw->data[] as user controlled data because this
-   driver loads the firmware asynchronously and Smatch gets confused by
-   threads.
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+---
+Changes in v2:
+- Reword commit log of patch 1 to acknowledge it's restoring pre-6.1
+  behavior, add Fixes:
+- Change the order of the two patches to allow possible backport of the
+  NUMA fix.
+- Link to v1: https://patch.msgid.link/20250529-frozen-pages-for-large-kmalloc-v1-0-b3aa52a8fa17@suse.cz
 
-regards,
-dan carpenter
+---
+Vlastimil Babka (2):
+      mm, slab: restore NUMA policy support for large kmalloc
+      mm, slab: use frozen pages for large kmalloc
+
+ include/linux/mm.h | 4 +++-
+ mm/slub.c          | 9 +++++++--
+ 2 files changed, 10 insertions(+), 3 deletions(-)
+---
+base-commit: 9c32cda43eb78f78c73aee4aa344b777714e259b
+change-id: 20250529-frozen-pages-for-large-kmalloc-bd4d2522e52b
+
+Best regards,
+-- 
+Vlastimil Babka <vbabka@suse.cz>
 
