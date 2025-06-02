@@ -1,157 +1,277 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE1C220685
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 16:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748880164; cv=none; b=iOlpA8+gH5snojrjDITekzk8ssF318zH19lzTCpwZ8hDvSttOUG2UqHQK/u3Dt+yrpp3WDvukdjH6zDOmk31XiLd1QoixgncRAKgRPzItrwURO2retaVfFwNNfhX6CdDYpWlTWG/ZQN1SSfFrtl3ioA7s6KkDPK4VaiLk0kRNZ8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748880164; c=relaxed/simple;
-	bh=6NfF/X3yQ0XHNDEeB3ap42sSQz7382eJ+Iu/Erbmta4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=JVMr2yA2g170iCe9cflsg/jsoVtzYjVxHN0q/LaIiejZSGhPRogy70r0r9Uz0s9msUYDRCw+6MRmq1howqnxTd95+9OwB4ywgp/O50mj5wPUmzI6nsCwTsaABdsKNHJDexH6+Anw7uPplpjLC/FI/JM2FZmKEYVFIjMRkTSHmlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=J9/BQFxs; arc=none smtp.client-ip=209.85.221.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72FA4221F3E;
+	Mon,  2 Jun 2025 16:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748880199; cv=fail; b=AVmDyVgL5pOJZPvTxhKne7XnlVK8vShhzRhA7lf9swhFbJZG3Oq7G1xcmP+51GqC3JItn9CYJSNUtCNZgCuNXVzk/ee31V7P/Q5737wY3Fo0bJJTbN0ngIRyJ/J+xz9yHVRmAkUYkJy+slgmj43jfHFZ96zjFwVK4RHhlN6/lfo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748880199; c=relaxed/simple;
+	bh=sMIZqCIg+nLJ3NEdo22MGCsRxnr8BW9u3xy1/MGERXA=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=DuAfP7BYUwAHpEHrpTzos30+bFwKzVGgvOjrv3FkC/5nTB1jNaUKfJ3EXwvzxs84LO9LuiwNXuUxdFpHyCsgN3VVIYXAqXAm2y5x1EZwme1eHtLj2d43u43mmY4ZN7b7JVDxN7nsI6IW19YQJQMEvIYyFWs6K+JQcSD+jrgmMC4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hatzy/pH; arc=fail smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J9/BQFxs"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-3a4f65a705dso3019732f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 09:02:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748880159; x=1749484959; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5LSRzdKUmCfZ6ZEE5fydRUyqDXoWGCBC1D0jQYKLUL0=;
-        b=J9/BQFxsZhIwlCDz5SXBS/iueKbpK1pyjFzr22hVE/h1/8slUTcv5GyAAwDeWWr1kA
-         4taHqIeLvnAB9+Xr3OEUsmUwEJzWr3xPUpBaNECaLhUh/fZ12ESL9pOsbXpKg12HT+Ui
-         KgCG8bdzPpCTM+5m4EafxDqIlOiMzw5Pt1QgjQ32MxGU2z+BTeSh17Dl4UFxfFHzO7Z4
-         rFS/9uuhuuy2cFf0waoYQR4MFWO3qOQbEXAi7BXcvvKw7BFj6XHVCkD3kegCX7R+DFA/
-         vqkQ5/JiIh4qe+fPBGC5ueU5TXFaJJkEotK4X7IoPMvSnWwSx5WIqLFvygtwx19IZc5f
-         Ts6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748880159; x=1749484959;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5LSRzdKUmCfZ6ZEE5fydRUyqDXoWGCBC1D0jQYKLUL0=;
-        b=IyHpwM0l0eFwWDQ3q/9H5a95Fk0fPLDs9whk9yLXcijve7PyKfZYIqOroPUyiNfSrX
-         z3gyyfg02ut0XI+jUxMBYU3y3YqhztNPUyH248zYr+8Xix5q46mZNzmZha9Wz8+dqB49
-         557gvjzcHYjGrJhPBj2YF8+UJWjLXlpfOPSigR3uCrVjc9C63ZkOCVqG9UUx6XYekQ5g
-         L7cKojbt4Q6dTjNzbYrKhqkMyw489SoHM+VCHJKDLw7wUhfUdDXi7vPUAdlH5B8+p821
-         xNDJnjgVzetKSUhcNIkyLKU1uj4sA5nozVmyB8mEnr+lLYDlrUvQF+54W5OG5//mlWaR
-         rPzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW3xGDS1IuKsfO+E61fAXKXN7WSQSJsyGY5CtKLZM2/LZluCKlQtLGq3N69KOWRav5CgW0UewZVRpp210Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNwcwXKlUm3cs4ZjvklJntQZaETvJp6fMz3f9xL9CIgj2YI4I8
-	IOmzb1KyBY7aBASqMipDdJ3FV+SkkdvcHB5qnGHtSf+7vZSSAf2/3G2TQcq9SgUGN/zmywM9nDe
-	qs8w+Kj/s1fNJsCZggQ==
-X-Google-Smtp-Source: AGHT+IG8cLazPRIdxKpkEHN0QpVz7JJD0lWn7hgDZa3uU8xfy6JHF1/OrcOMgFXS+oLc0dKG6umKocG6VFxuQNY=
-X-Received: from wmbfp6.prod.google.com ([2002:a05:600c:6986:b0:450:ce9d:a742])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:1885:b0:3a4:eb80:fcc2 with SMTP id ffacd0b85a97d-3a4fe15ad82mr7450176f8f.11.1748880159443;
- Mon, 02 Jun 2025 09:02:39 -0700 (PDT)
-Date: Mon, 2 Jun 2025 16:02:37 +0000
-In-Reply-To: <aCXxnUdO8--5y8Zo@pollux>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hatzy/pH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748880197; x=1780416197;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=sMIZqCIg+nLJ3NEdo22MGCsRxnr8BW9u3xy1/MGERXA=;
+  b=Hatzy/pHqjZSm69NpeYyanO0BHWtGFoCHiUfWGjkb1hpsD0Y5Y7dU5ey
+   zLYt4sgl51lTN7N3LtWW7JkkNuKloKnhwyCdDduDNJ0XBEiGGHwuzxpgH
+   14vTSsZ5R/EjzQkU1UAfOwdihYd575Y1DGYwPYFlCQtEb+sraoCowE3gM
+   ZcdHYOiyp2Sgv2xdz80d1wXDECHsw1FihclIVo+C1p7HHQy89C09Op6YF
+   04b63X9K2++C2goivm1M4m7pbasJ09OBA1Q4tqKz/73oYaW2kyVd1M9U5
+   Hh9Jk/ekaMemA7DDDz3f96Oq7G3qM3GApMnEYyEVmR9UKCqcEqdpKvAAQ
+   g==;
+X-CSE-ConnectionGUID: x3iHxO7AS1KfjfojR0dLJg==
+X-CSE-MsgGUID: DYuSiGwyQUmPV/AH4iF+aw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="53521124"
+X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
+   d="scan'208";a="53521124"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 09:03:16 -0700
+X-CSE-ConnectionGUID: yWvBfX5MRROwIMCbaxqbNQ==
+X-CSE-MsgGUID: BCV7UmYCTiCCcCWC6vx7Ew==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
+   d="scan'208";a="144613607"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 09:03:16 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Mon, 2 Jun 2025 09:03:15 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Mon, 2 Jun 2025 09:03:15 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (40.107.223.75)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.55; Mon, 2 Jun 2025 09:03:14 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HCvWz61oHn3ciC7qs1EQdfuBW1Zr47YN88msLWYbdNk+aEj5qeADEwFjCMDZ04EtMVtH1vAZkcaZwGhLR0z0VQ6pGwCLBxVCrh17trIXek4sPzSp8Xkbh4KzDUDoaCuO4lNVQil30GtT/hTbbJqnhHu4anRojKkQ88t9W9UgKnsXHhGR7c46fG1Alzhd5HCplAXMfYLgm0XXPwmgCjDWaMxg7fUUqsjW437ZN8LRlTCuIoj+QTiuBAafGdFlCGY9CXWLoDH3N+agasxEDMGjyPuqcQ61L9jer9ntVrrqGkfTD9GzXkUlzC6Cfjs1DLm3EWGg3zXtU8G8xmsUiS3/Ew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HQHf/8+b/NrYYWL4ZpBPCytXUkFYt9GJjRZlP7v3D5k=;
+ b=yXw/q2C0fltWGnQ1DADm81XV3ajHaHGNW3Hm12T1/F57axSV12RAaNM2RIabpUYKCuryW6nGXSyYaRlrdeFnfwNwSknR0kmaCKfmoN7qCyScin8wG6G5BzaBTngWQwuh1ere77wHJV8KpyG89zolirJxdGU3DsPxrQ9NGOoqheIHirYAFkskzwgHABBEZRpFZslUTq77m04CN7XZUlgUIEgRHBok44MckdHzW7V3iDF37xSmGwDJv5L6RLNDCucmQghjAg+Peogq/1F24vOQNTRvbE1FBZeYsymBwhO+iRVBUWFxTam5I254uvS1xd6+4p0IDfsB82xxWITbx/0EYw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM4PR11MB6117.namprd11.prod.outlook.com (2603:10b6:8:b3::19) by
+ LV8PR11MB8678.namprd11.prod.outlook.com (2603:10b6:408:20b::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.36; Mon, 2 Jun
+ 2025 16:03:07 +0000
+Received: from DM4PR11MB6117.namprd11.prod.outlook.com
+ ([fe80::d19:56fe:5841:77ca]) by DM4PR11MB6117.namprd11.prod.outlook.com
+ ([fe80::d19:56fe:5841:77ca%4]) with mapi id 15.20.8769.022; Mon, 2 Jun 2025
+ 16:03:07 +0000
+Date: Mon, 2 Jun 2025 18:03:01 +0200
+From: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+To: Stanislav Fomichev <stfomichev@gmail.com>
+CC: Eryk Kubanski <e.kubanski@partner.samsung.com>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "bjorn@kernel.org" <bjorn@kernel.org>,
+	"magnus.karlsson@intel.com" <magnus.karlsson@intel.com>,
+	"jonathan.lemon@gmail.com" <jonathan.lemon@gmail.com>
+Subject: Re: Re: [PATCH bpf v2] xsk: Fix out of order segment free in
+ __xsk_generic_xmit()
+Message-ID: <aD3LNcG0qHHwPbiw@boxer>
+References: <aDnX3FVPZ3AIZDGg@mini-arch>
+ <20250530103456.53564-1-e.kubanski@partner.samsung.com>
+ <CGME20250530103506eucas1p1e4091678f4157b928ddfa6f6534a0009@eucms1p1>
+ <20250602092754eucms1p1b99e467d1483531491c5b43b23495e14@eucms1p1>
+ <aD3DM4elo_Xt82LE@mini-arch>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <aD3DM4elo_Xt82LE@mini-arch>
+X-ClientProxiedBy: DB8P191CA0011.EURP191.PROD.OUTLOOK.COM
+ (2603:10a6:10:130::21) To DM4PR11MB6117.namprd11.prod.outlook.com
+ (2603:10b6:8:b3::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250514-topics-tyr-request_irq-v3-0-d6fcc2591a88@collabora.com>
- <20250514-topics-tyr-request_irq-v3-1-d6fcc2591a88@collabora.com>
- <aCUQ0VWgoxdmIUaS@pollux> <A7E3A124-AF77-4A4A-B4E2-AE7DDB1CE007@collabora.com>
- <aCXYaCGvO_tI1OOh@pollux> <39C56E3E-07C6-44BB-B5F6-38090F037032@collabora.com>
- <aCXh1g5FWNiz7exb@pollux> <BEDD659F-B222-4150-9018-3B59126140E6@collabora.com>
- <aCXv86nAARGgoqEq@pollux> <aCXxnUdO8--5y8Zo@pollux>
-Message-ID: <aD3LHfkmuXR-wPzm@google.com>
-Subject: Re: [PATCH v3 1/2] rust: irq: add support for request_irq()
-From: Alice Ryhl <aliceryhl@google.com>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Daniel Almeida <daniel.almeida@collabora.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR11MB6117:EE_|LV8PR11MB8678:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6a18eb0e-fe29-489b-6046-08dda1eef691
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?xahQI29d4Yb8oO9/C9PaZkN4NspkJsLy3e+EYtAEpeutzJt6r4Ulm15blkMs?=
+ =?us-ascii?Q?rkXlZsL3XaMVaUSpM47YyTwszrmF7dOzBh3JDWoCJScHPgcjP3r8U9L4OKUA?=
+ =?us-ascii?Q?rzXrs2nS7nedFBC8C3kd71jp9DUSecY7c0VbMMg49KriBC0xb1NRd8aQb5Y+?=
+ =?us-ascii?Q?hUzdiaQo6sXXJ/od8sWYAh2zU5dlDCBM+0qlidVPw0ZD800ftlmXQ4GwAyMf?=
+ =?us-ascii?Q?r5JgIrjZzGaOtrecTDk7OYXNrYtXympMKqRzdRvVXF86mnZ1CEDc6K+YDGpN?=
+ =?us-ascii?Q?9aNVgEAqCwSsbylJ3j5IJ92cm5wqASMDSgnHc+by2/bT5N5PW/CO7z1RYx+M?=
+ =?us-ascii?Q?MfGfOIaI6Ljx7b/XH6SljH9b6LFfZCPWPHpknyrh2sG1KJpqsYB8GNJ7P13y?=
+ =?us-ascii?Q?Fx3smnQAYD2BtMFnyKx/orzgJdrv1MT4RdntGTWAbVyhT7ZgmX//rLihIVor?=
+ =?us-ascii?Q?NF0NNqJSucKZ40xiwHNkcHSJE7V9xUx5Qrf+MrE/6SSASVFunXpcmOsFzvuL?=
+ =?us-ascii?Q?CqKzDm3sA4LsGFKRhK1h9KNdhsiZfRjEjeY7IvfBUZJe2U2YgkdnEoC4E74j?=
+ =?us-ascii?Q?PXlmkISRrOoit9mrvIyd/VPL1EDe86bVYNDl3DmYFA1msFnD38vG2RR8f6dx?=
+ =?us-ascii?Q?T/MbEtN6VsvN1/cOMLNbKAXeam79nNhXZyaOpCpos34rDDyNZD/R1nX1uXTQ?=
+ =?us-ascii?Q?r6oQc2DgoBpPp2ZDo5Q93TZvxjdoqEDReFQj24i6MSuAju7UGNquaBkC+jLC?=
+ =?us-ascii?Q?5R9L9Zct/gj9G9EIRKmiJmTS7gvEmoBW6TqE4cobEF4FoHYavUk5jZVPKld4?=
+ =?us-ascii?Q?Hj1EBFf7f6Z6lgIcoOarytvUtHAsUm6duhPnJTCrWIrW9Oyke6utk4MNqQCz?=
+ =?us-ascii?Q?Bqtirl/BDDaX9ie8AQwMFGc55EvbTWIS6PXC53sxej1s1Z9SsER16gMBTPAm?=
+ =?us-ascii?Q?wbIXSp3mr2eRNWlvqXGSn6/HMMsn1+Tdj3MKVQilTUKRUWwN1wo4LmWo+N8K?=
+ =?us-ascii?Q?wyakAwL/qKD7izdi6thW84rG9NS+zDryUjEUQUFJPhAs7Hp70/h1dd4fy6eb?=
+ =?us-ascii?Q?LQg4nYeoSv8K/9jRat/KipP6brzoFHRfZaloQfpW1C2Ts50YPBG79lBEHq5x?=
+ =?us-ascii?Q?AB0J1JMv6J3rnNWEUqA/ZCqHD4zxGJGj+otBJMLtgVE/NOcGTdCUFJoHUvBU?=
+ =?us-ascii?Q?ySeqjf/wGeyd7FzTBaMBvauVDhf33eW+QyqW8OLLUUHCXtfNmLQrpVEavfGh?=
+ =?us-ascii?Q?H8FZ0txa3PJ1qyonVeWCLS2OIbTh1RC9HJts217bD1bTSVpLGAR+wkirv/Np?=
+ =?us-ascii?Q?ua8HAbA4HnbID4iThvBevQdUBPBxW6V1vWAus0+p4rHrIW2T8bDsoQRi4ghy?=
+ =?us-ascii?Q?i6IRz8EL6HudK5IKwFb/Xyj9MXT/YSwzc5d5nYhCe7yzj40a9Ce3LToap13U?=
+ =?us-ascii?Q?ifv6bB563mk=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6117.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?CFNXnNRMO2TUqE6IEtHzlPCKaigDt4SZ6R8w44Bk6hVVEAWtGbMi1iG0CVF5?=
+ =?us-ascii?Q?W9JM/Ug9YQU3cfi4lt5MEJQbi+GQeDZadYB/mbb6mU9hwCMXV/AVAfgC7J9h?=
+ =?us-ascii?Q?hf3DIHSXlHYRaqaNzAtxnJaWkNcceVnE1RQWW/XQRhzIq8DFbWAZESLi9l9D?=
+ =?us-ascii?Q?CuRJLdY1H4C2wyM4ymcB7IhdSPxpl/VhG7nz6/nk5ouBQzTi0YkL+xtOmxkp?=
+ =?us-ascii?Q?+psh09uP+Cxbq+s7hMUOwpn+J3mh3dt5c00qc60V+lTQzAme4Glr6TUJW+K2?=
+ =?us-ascii?Q?3I6O6K94tdSzp3kAMSSDKmTaTjJZncqpAAv+i0xyvuE/Mcg5dfZkrI6bQe/y?=
+ =?us-ascii?Q?TYUP3Hat8LqLmPlbvdTmLoR6DDqGQ0n7Z5nN5a6Sr/hbIIGHjMbveWIwkkQP?=
+ =?us-ascii?Q?hrtkt2CN4V7hpUIbMhMAYHMgGTCSs0snhDC5bCosPOj1jf3UexcqNWiDDpOQ?=
+ =?us-ascii?Q?wl+W4lI9RVPMBuYyHMFzbHa2YXkxYGGv2vsQQQZsN6RyMnrYecFEPsDQlf5P?=
+ =?us-ascii?Q?+GAjI1vCbOdzjLpfYp7OSV/VKc3Oyn0G3qM0IDEnB4845ukkT1irgz3BaTHQ?=
+ =?us-ascii?Q?BB3oDKESmvxko72nz8h6y7c2kUT3Barhr9XxeQw5nHrCzFUUbEWIWI53h3nj?=
+ =?us-ascii?Q?y5KGFyBXt6t7JsR6qIiCZe5lQQNIlcKgYARXFWf/iQd/EcgEyRQyW8K6f1Fa?=
+ =?us-ascii?Q?Y3voqA3CfIQIGufUPqwlu6PsI8knxs7M4tlP5vimMlS9oqRNB6mCP5TqgqfF?=
+ =?us-ascii?Q?DQD0t30WmjA4P1Bf1otvK9GOf3j0/GiSm250Sfd04p0t67nhptcNSdHA7ycF?=
+ =?us-ascii?Q?XoJZxTQP4zU/LaDg6+KpWb4WzqKwQpBzGNQCVGwVJQD5CGI0jtdNJjDV5yx8?=
+ =?us-ascii?Q?hFAxHR6MKi9ZlDafA3JEdlDu+uhPZm5jduJF8IgnUPuLC/JmS9S6mVusZsVV?=
+ =?us-ascii?Q?YtleJxqI4zUMIrwutiOYs+LV4cLum9r/i4Amjb04idrIrzX1ssjkzFaM3ley?=
+ =?us-ascii?Q?HqYiRhHpJkX0F9B9IA1vlexF4Xs9vh7QBUFlgp1pciohziK8EKby9bnv5lLo?=
+ =?us-ascii?Q?jmSlp2VkMVi63aL25xAczjjQ/04tui0Br8JRFXBxtqS10O1wSUVR0ejusAJR?=
+ =?us-ascii?Q?ZQ/LUsPlL/gr2u2K9In8mplWJt+IIbJjpWIzugWu5QkjsuimXPksS8j88K2C?=
+ =?us-ascii?Q?hffEzLW1To+c/tkP+abKbJDfhB05w4y1qGyMJoNhhFgftP6Qbi6isGAoeqLH?=
+ =?us-ascii?Q?9rtvm9xLp2b96YSgEQbc4x5VgXkA4GekU/pm7ltYyGvChC+Uj17PR17hXlmk?=
+ =?us-ascii?Q?RIP6N1mAUGm41VUAdNIwIYVbh0hPb1/GPqwiq/XqC3ztgTUYPytmOvzhpSLQ?=
+ =?us-ascii?Q?M7ns/nWHSOOduHFn+wn71mIX1h7zV66WYezOnrEoc8zeJUgSd4FWhi9EI6xl?=
+ =?us-ascii?Q?6JacnOM5/qNJ05H3riRQkuWKQRgDRzzWI/Zw8/fgV3adtua2zCnALa+wNyXe?=
+ =?us-ascii?Q?PWn86ZrJZdXb+mDQytGwLSWScEOXUBf1hMbzBcwB58pnKOCvtgu9JEJG6s3E?=
+ =?us-ascii?Q?KNgzFa7MuF5rHu0XixeI4o48n+l0LFsjZaniAI45IfEzJxfFQkqw3V/9OuH9?=
+ =?us-ascii?Q?ww=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6a18eb0e-fe29-489b-6046-08dda1eef691
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6117.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2025 16:03:06.9337
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Go2GeMdP1bkeicCjkwaXBeVogbtHp7Vjn15y4SMnvOR978DJZTMIp0kp7EpmWMYd+xgTIz84gn5iWUDC2PW6GrLdKSaS7qWT5MY3WhWov5M=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR11MB8678
+X-OriginatorOrg: intel.com
 
-On Thu, May 15, 2025 at 03:52:29PM +0200, Danilo Krummrich wrote:
-> On Thu, May 15, 2025 at 03:45:28PM +0200, Danilo Krummrich wrote:
-> > On Thu, May 15, 2025 at 10:16:33AM -0300, Daniel Almeida wrote:
-> > > 
-> > > >> 
-> > > >> Well, not really, because this impl PinInit can be assigned to something larger
-> > > >> that is already pinned, like drm::Device::Data for example, which is (or was)
-> > > >> already behind an Arc, or any other private data in other subsystems.
-> > > >> 
-> > > >> IIUC what you proposed has yet another indirection. If we reuse the example
-> > > >> from above, that would be an Arc for the drm Data, and another Arc for the
-> > > >> handler itself?
-> > > > 
-> > > > Can't you implement Handler for drm::Device::Data and e.g. make Registration
-> > > > take an Arc<T: Handler>?
-> > > 
-> > > No, because drivers may need more than one handler. Panthor needs 3, for
-> > > example, for 3 different lines.
-> > > 
-> > > > 
-> > > > The irq::Registration itself doesn't need to be allocated dynamically, so it'd
-> > > > still be a single allocation, no?
-> > > > 
-> > > 
-> > > Right, the registrations don't, but the handlers do.
+On Mon, Jun 02, 2025 at 08:28:51AM -0700, Stanislav Fomichev wrote:
+> On 06/02, Eryk Kubanski wrote:
+> > > I'm not sure I understand what's the issue here. If you're using the
+> > > same XSK from different CPUs, you should take care of the ordering
+> > > yourself on the userspace side?
 > > 
-> > Why does the handler need to be allocated dynamically?
+> > It's not a problem with user-space Completion Queue READER side.
+> > Im talking exclusively about kernel-space Completion Queue WRITE side.
 > > 
-> > What about something like the following?
+> > This problem can occur when multiple sockets are bound to the same
+> > umem, device, queue id. In this situation Completion Queue is shared.
+> > This means it can be accessed by multiple threads on kernel-side.
+> > Any use is indeed protected by spinlock, however any write sequence
+> > (Acquire write slot as writer, write to slot, submit write slot to reader)
+> > isn't atomic in any way and it's possible to submit not-yet-sent packet
+> > descriptors back to user-space as TX completed.
 > > 
-> > 	pub struct Registration<T, H: Handler<T>> { ... };
+> > Up untill now, all write-back operations had two phases, each phase
+> > locks the spinlock and unlocks it:
+> > 1) Acquire slot + Write descriptor (increase cached-writer by N + write values)
+> > 2) Submit slot to the reader (increase writer by N)
 > > 
-> > 	pub trait Handler<T> {
-> > 	   fn handle_irq(&T) -> IrqReturn;
-> > 	}
+> > Slot submission was solely based on the timing. Let's consider situation,
+> > where two different threads issue a syscall for two different AF_XDP sockets
+> > that are bound to the same umem, dev, queue-id.
 > > 
-> > 	// Could be `drm::Device::Data`.
-> > 	struct MyData { ... };
+> > AF_XDP setup:
+> >                                                             
+> >                              kernel-space                   
+> >                                                             
+> >            Write   Read                                     
+> >             +--+   +--+                                     
+> >             |  |   |  |                                     
+> >             |  |   |  |                                     
+> >             |  |   |  |                                     
+> >  Completion |  |   |  | Fill                                
+> >  Queue      |  |   |  | Queue                               
+> >             |  |   |  |                                     
+> >             |  |   |  |                                     
+> >             |  |   |  |                                     
+> >             |  |   |  |                                     
+> >             +--+   +--+                                     
+> >             Read   Write                                    
+> >                              user-space                     
+> >                                                             
+> >                                                             
+> >    +--------+         +--------+                            
+> >    | AF_XDP |         | AF_XDP |                            
+> >    +--------+         +--------+                            
+> >                                                             
+> >                                                             
+> >                                                             
+> >                                                             
 > > 
-> > 	// Implements `Handler<MyData>`.
-> > 	struct IRQHandler1;
-> > 	struct IRQHandler2;
-> > 
-> > 	// `data` is `Arc<MyData>`
-> > 	irq::Registration::<IRQHandler1>::new(data, ...);
-> > 	irq::Registration::<IRQHandler2>::new(data, ...);
-> > 
-> > With that you can have as many IRQs as you want without any additional
-> > allocation.
+> > Possible out-of-order scenario:
+> >                                                                                                                                        
+> >                                                                                                                                        
+> >                               writer         cached_writer1                      cached_writer2                                        
+> >                                  |                 |                                   |                                               
+> >                                  |                 |                                   |                                               
+> >                                  |                 |                                   |                                               
+> >                                  |                 |                                   |                                               
+> >                   +--------------|--------|--------|--------|--------|--------|--------|----------------------------------------------+
+> >                   |              |        |        |        |        |        |        |                                              |
+> >  Completion Queue |              |        |        |        |        |        |        |                                              |
+> >                   |              |        |        |        |        |        |        |                                              |
+> >                   +--------------|--------|--------|--------|--------|--------|--------|----------------------------------------------+
+> >                                  |                 |                                   |                                               
+> >                                  |                 |                                   |                                               
+> >                                  |-----------------|                                   |                                               
+> >                                   A) T1 syscall    |                                   |                                               
+> >                                   writes 2         |                                   |                                               
+> >                                   descriptors      |-----------------------------------|                                               
+> >                                                     B) T2 syscall writes 4 descriptors                                                 
+> >                                                                                                                                        
+> >                                                                                                                                        
+> >                                                                                                                                        
+> >                                                                                                                                        
+> >                  Notes:                                                                                                                
+> >                  1) T1 and T2 AF_XDP sockets are two different sockets,                                                                
+> >                     __xsk_generic_xmit will obtain two different mutexes.                                                              
+> >                  2) T1 and T2 can be executed simultaneously, there is no                                                              
+> >                     critical section whatsoever between them.                                                                          
 > 
-> Alternatively we could also do the following, which is probably simpler.
-> 
-> 	pub struct Registration<H: Handler> { ... };
-> 
-> 	pub trait Handler {
-> 	   fn handle_irq(&self) -> IrqReturn;
-> 	}
-> 
-> 	// Could be `drm::Device::Data`.
-> 	struct MyData { ... };
-> 
-> 	// Implements `Handler`.
-> 	struct IRQHandler1(Arc<MyData>);
-> 	struct IRQHandler2(Arc<MyData>);
-> 
-> 	// `data` is `Arc<MyData>`
-> 	let handler1 = IRQHandler1::new(data);
-> 	let handler2 = IRQHandler2::new(data);
-> 
-> 	irq::Registration::new(handler1, ...);
-> 	irq::Registration::new(handler2, ...);
+> XSK represents a single queue and each queue is single producer single
+> consumer. The fact that you can dup a socket and call sendmsg from
+> different threads/processes does not lift that restriction. I think
+> if you add synchronization on the userspace (lock(); sendmsg();
+> unlock();), that should help, right?
 
-Yeah there's no reason to *force* the user to store an Arc. The user
-could store data that is only accessed by the irq callback without an
-Arc. I agree that for shared content you probably want to access it
-through an Arc.
+Eryk, can you tell us a bit more about HW you're using? The problem you
+described simply can not happen for HW with in-order completions. You
+can't complete descriptor from slot 5 without going through completion of
+slot 3. So our assumption is you're using HW with out-of-order
+completions, correct?
 
-Alice
+If that is the case then we have to think about possible solutions which
+probably won't be straight-forward. As Stan said current fix is a no-go.
