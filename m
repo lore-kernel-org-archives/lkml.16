@@ -1,50 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085EA224B10
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 16:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2443A219314
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 16:59:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748883327; cv=none; b=CUelY5VEEMj7tikloxBoJaTjUo3wSmqWhbc/wQ0hY9lE591QQ+2Zfi3LnvR8ZQVvrH4rI7iDiHlYLpRYk0+jL2ByWiu6xoUK6ctuql6Cqf7kqcog0qz6BHVHbNVNGKSlePHLQcNN3ESQ6eMtReCgNqbVlqQPST1FLADOIVZg5sQ=
+	t=1748883594; cv=none; b=dlcJ9LmEWrKTKiq3f38NbnngefHRq0h2CPAIyvIsoLjI3SP+ht41JnUxvsp9aPbxXXl+j/YBDkwznfFnN2MFDfej3V9r15tQLs7ty+WSj3oQq7XwsRzK40j8nwiL+pMU9h/th/fUVu5mY2q4sO8taXJunWGu7wv09Ek67K5r06g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748883327; c=relaxed/simple;
-	bh=wMPjns6bDceR0VEgoKeUYNYbIAl8CTpAwsj8mQxdBO8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aPOuc2hW6kwDgq61o5Eyq4Gc3PDcNaztI/JXyOaCZVc7uVR8g5P3RWC8P7l8JEAFRlt71QGQrICWHOwlPK3stnnS6hZRUxG5POqJmUG9hl+jTW7cpqV9K6u5EXwy6ExDxf+y1aKN2Nu2Ecul15D9idomQFM26OEEAEx2degmbRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LitofpgN; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748883594; c=relaxed/simple;
+	bh=hLCMau5YMSaezYEkZcAjhmTJs0p51SrcKofyLoyP440=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Y4vwtAuwaIHJvn6PiFZiAidrVcOq0M6eWRjN+yqM5cc5zDmItgchMamHabO8Vu27Tqj6z24VPfxA0sH6HYc/FVy0XDqOrbH85+Dds3/YYa612TSzIaVesMr5AO4yxLiKi1CTgmboh1FBeXVpMbQxNX6MrNT8AHiLzSMayqydb9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=dv3qoIOH; arc=none smtp.client-ip=209.85.160.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LitofpgN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748883326; x=1780419326;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=wMPjns6bDceR0VEgoKeUYNYbIAl8CTpAwsj8mQxdBO8=;
-  b=LitofpgNhyey/KVlwNkfqr4f5fPd8afeC1G292b6x3pWjaKNusXQyLa6
-   kMUinwUHcSIpZd0fV4ddF+qr7AdRaaOHYRO4IDymi4cWdiF8Dyl5Z3Jco
-   CkOX/HX/LxR7kfJtuYOFTL0tKaXUEfL7YcewytdMzJNtt9wiBu9X4NVEW
-   6UyZqw/rQEhM6wj63phGtUqSKUoe2nvlICJHagbajvUMysCtHqBAldSbS
-   sFuNfjX/NO5H1qzKdLytpBSN8kWqu68bup9fpvWIrYPWdOaFxhBU/XYlz
-   s1c02o7CIXHiKfl4lF5zS7+bXoFFrwsugreheZYatuaqMcgzuw3fz9vGl
-   A==;
-X-CSE-ConnectionGUID: 7KpCz/FiRU6YBMfXzzz7oA==
-X-CSE-MsgGUID: O66LO/ZTQSKchn/BadYIYA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="62247719"
-X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
-   d="scan'208";a="62247719"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 09:55:25 -0700
-X-CSE-ConnectionGUID: wvZ2yCAbSViO5nMDEBx2hg==
-X-CSE-MsgGUID: /Lw31xiySYysszbIIxRAFg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
-   d="scan'208";a="144556663"
-Received: from lstrano-mobl6.amr.corp.intel.com (HELO [10.125.110.163]) ([10.125.110.163])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 09:55:24 -0700
-Message-ID: <83a671ed-4862-4a0f-b91d-d4598b4a82d7@intel.com>
-Date: Mon, 2 Jun 2025 09:55:23 -0700
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="dv3qoIOH"
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2cc57330163so2807375fac.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 09:59:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748883590; x=1749488390; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ZJRDMPbYGvRNvOHiecbSgnd1erK2y/8jb60RJvda/SU=;
+        b=dv3qoIOH0h8m+Pn2pxY8cb6KU+8AoQDSnjeGQ9ZgIsndpTlonW3CgbbbP87A4IYmRv
+         ldp27SnTmJ7QhHkIR8XuGlHpHUNjfeUk7uwz8D7PoBexUNrCoBZZ/cnioFvgOY2TCu60
+         0gXjexEz2if/U8L5VRyTf4oimLH6j6N4tWbe+/Co644JTvOfgyktgAqDW4Re3v4+ADWd
+         sDXOAKBozExBm8onrG8ks/iXRw+vXUD39efxmyuMnDd7q3UVmsWW5YvHmG6m9hljePBY
+         aS4UrCe2ckCh+OECSsGSc6ZgEWFsbECsI2IC/RQj/YhzuHI8j4RvW/sRDoAj2NFZg9vr
+         TzTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748883590; x=1749488390;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZJRDMPbYGvRNvOHiecbSgnd1erK2y/8jb60RJvda/SU=;
+        b=rvzQrMnP9kuq3QY0U4HX2rw/SM6NVicqUQmQWltM7t6W3nrO1/NcpZuezVvcwoQ/Yj
+         JDoehJa9RmLn702gZgqswyC4nQvWOOcvknQUEd5olggOQESjLVDDr0TELFyPprMOjYlM
+         JfoNpV5zQEsZTnCpDe2ZedwgohtnAEbcDaiM1NzwkZ0YRInP+S1sjREegw82U2kUcNed
+         mK63I1iqQpLZl/FtTYQ5MIfL1jY6dp+TqeUI9wHXP1OpXz/Ks2v1dAreWbPKapubMAnp
+         pOeKIhmVbCagu0Ns8x8dKqFj1W8lgRKs/+PN48NSzk2iwLMebvvLTF214DZPdOKWwFmB
+         aFrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWofuI48Z6Q7vZrxYaAEnrG73a5oRhpyhZ1CYfr/K8TA1DdF5PHj1gEphn2v0dKbZc15DEGt9kNdsnU0WA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9A5njEzQm8mYhYpXw4TBG0FnmDUn8qBrpr/cK+DKDxaBFxm36
+	zfgByXu2UkD3FQGE79OCFpp6vCJ0gjymMptq5bViX8GQeXUr8v5PmzY7056IZBlypy0=
+X-Gm-Gg: ASbGnct9Vq7goMnOfoYvjMnswVBc3mDLPdVQOeBPDu5ZfVnnBqTxkavmpAH4cu17p+m
+	9XHsSzp7e/XxmQMvBFSCXHoP4qZDoIAG70cu5zLPZoKz9kSahDJbPh4ejXZY45G5SKRAdOCRn0Q
+	+bUENfLjfKxFeIueLoGfm9f3VbAJA+D1EXDNhsT8rS9lR2A9a56W60FpKvpRCpDgy6aEj+314wI
+	56UnCBHDCHIHKOApHqr47dJChpX7byhHClbAV49qMOQtfQhJJxXAfrsa3YabLuwN2jnRHIpH9mH
+	rghUdPhhaYYQGo28ZsaFBVYKCyRml3p3tOA/9gF8I9eXhdl5UFLuom/UVW1T6JHBhNmZDn8xkED
+	J0UqoJqHcooBKFXcsDJkIXfF+s/eJ
+X-Google-Smtp-Source: AGHT+IGQwFXBT/2VEHi6WvcZQOXd5gzFS9vQRZKOYXx2obpDoZmVJN74wDAhDg3cd0XCPg1AOp9EdQ==
+X-Received: by 2002:a05:6871:878f:b0:2c2:3eb4:e53 with SMTP id 586e51a60fabf-2e9216a6b5emr7938765fac.37.1748883590051;
+        Mon, 02 Jun 2025 09:59:50 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:74f4:5886:86e1:3bcf? ([2600:8803:e7e4:1d00:74f4:5886:86e1:3bcf])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2e906c213e0sm1875447fac.47.2025.06.02.09.59.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Jun 2025 09:59:49 -0700 (PDT)
+Message-ID: <f582c6fd-6216-4f6f-8024-ae4a0d28fbbb@baylibre.com>
+Date: Mon, 2 Jun 2025 11:59:48 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,243 +67,383 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] x86/mm: Fix potential overflow in
- user_pcid_flush_mask
-To: Rik van Riel <riel@surriel.com>, linux-kernel@vger.kernel.org
-Cc: kernel-team@meta.com, dave.hansen@linux.intel.com, luto@kernel.org,
- peterz@infradead.org, bp@alien8.de, x86@kernel.org, yu-cheng.yu@intel.com,
- Rik van Riel <riel@meta.com>, stable@kernel.org
-References: <20250602133402.3385163-1-riel@surriel.com>
- <20250602133402.3385163-2-riel@surriel.com>
-From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH v5 5/5] iio: adc: ad7405: add ad7405 driver
+To: Pop Ioan Daniel <pop.ioan-daniel@analog.com>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
+ Dragos Bogdan <dragos.bogdan@analog.com>,
+ Antoniu Miclaus <antoniu.miclaus@analog.com>,
+ Olivier Moysan <olivier.moysan@foss.st.com>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+ Matti Vaittinen <mazziesaccount@gmail.com>,
+ Tobias Sperling <tobias.sperling@softing.com>,
+ Alisa-Dariana Roman <alisadariana@gmail.com>,
+ Marcelo Schmitt <marcelo.schmitt@analog.com>,
+ Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250602134349.1930891-1-pop.ioan-daniel@analog.com>
+ <20250602134349.1930891-6-pop.ioan-daniel@analog.com>
 Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250602133402.3385163-2-riel@surriel.com>
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250602134349.1930891-6-pop.ioan-daniel@analog.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/2/25 06:30, Rik van Riel wrote:
-> Currently no system with AMD INVLPGB support requires the page table
-> isolation mitigation. However, people could still enable PTI manually,
-> or a vulnerability could be found in the future that makes PTI useful
-> on certain AMD CPUs.
+On 6/2/25 8:43 AM, Pop Ioan Daniel wrote:
+> Add support for the AD7405/ADUM770x, a high performance isolated ADC,
+> 1-channel, 16-bit with a second-order Σ-Δ modulator that converts an
+> analog input signal into a high speed, single-bit data stream.
 > 
-> Additionally, there are systems that support Intel RAR TLB invalidation,
-> where PTI is a useful mitigation.
-
-Let's just leave this mention of RAR out for now.
-
-> The combination of PTI and broadcast TLB flush has a problem:
-> - invalidate_user_asid() sets a bit corresponding to the process PCID in user_pcid_flush_mask
-> - SWITCH_TO_USER_CR3 tests and clears a bit corresponding to the process PCID in user_pcid_flush_mask
-
-The other bit of background here is that there are currently only 6
-PCIDs that might need to be flushed in this way (TLB_NR_DYN_ASIDS).
-There are obviously more than 6 bits in an unsigned long, so this is all
-fine.
-
-But the INVLPGB support vastly expanded the number of ASIDs that might
-be used.
-
-> diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
-> index e9b81876ebe4..cc9935bbbd45 100644
-> --- a/arch/x86/include/asm/tlbflush.h
-> +++ b/arch/x86/include/asm/tlbflush.h
-> @@ -23,6 +23,31 @@ void __flush_tlb_all(void);
->  #define TLB_FLUSH_ALL	-1UL
->  #define TLB_GENERATION_INVALID	0
+> Signed-off-by: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
+> ---
+> changes in v5:
+>  - add range checking for dec_rate
+>  - remove ad7405_get_scale function
+>  - check for negative values in ad7405_write_raw function
+>  - remove unuseful comment
+>  - remove indio_dev -> dev.parent = dev
+>  - fix IIO_CHAN_INFO_OFFSET
+>  - add struct mutex lock
+>  drivers/iio/adc/Kconfig  |  10 ++
+>  drivers/iio/adc/Makefile |   1 +
+>  drivers/iio/adc/ad7405.c | 256 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 267 insertions(+)
+>  create mode 100644 drivers/iio/adc/ad7405.c
+> 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index ad06cf556785..43af2070e27f 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -251,6 +251,16 @@ config AD7380
+>  	  To compile this driver as a module, choose M here: the module will be
+>  	  called ad7380.
 >  
+> +config AD7405
+> +	tristate "Analog Device AD7405 ADC Driver"
+> +	depends on IIO_BACKEND
+> +	help
+> +	  Say yes here to build support for Analog Devices AD7405, ADUM7701,
+> +	  ADUM7702, ADUM7703 analog to digital converters (ADC).
+> +
+> +	  To compile this driver as a module, choose M here: the module will be
+> +	  called ad7405.
+> +
+>  config AD7476
+>  	tristate "Analog Devices AD7476 1-channel ADCs driver and other similar devices from AD and TI"
+>  	depends on SPI
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index 07d4b832c42e..8115f30b7862 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -26,6 +26,7 @@ obj-$(CONFIG_AD7291) += ad7291.o
+>  obj-$(CONFIG_AD7292) += ad7292.o
+>  obj-$(CONFIG_AD7298) += ad7298.o
+>  obj-$(CONFIG_AD7380) += ad7380.o
+> +obj-$(CONFIG_AD7405) += ad7405.o
+>  obj-$(CONFIG_AD7476) += ad7476.o
+>  obj-$(CONFIG_AD7606_IFACE_PARALLEL) += ad7606_par.o
+>  obj-$(CONFIG_AD7606_IFACE_SPI) += ad7606_spi.o
+> diff --git a/drivers/iio/adc/ad7405.c b/drivers/iio/adc/ad7405.c
+> new file mode 100644
+> index 000000000000..6199a6661ff5
+> --- /dev/null
+> +++ b/drivers/iio/adc/ad7405.c
+> @@ -0,0 +1,256 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
 > +/*
-> + * When enabled, MITIGATION_PAGE_TABLE_ISOLATION consumes a single bit for
-> + * user/kernel switches
+> + * Analog Devices AD7405 driver
+> + *
+> + * Copyright 2025 Analog Devices Inc.
 > + */
-> +#ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
-> +# define PTI_CONSUMED_PCID_BITS	1
-> +#else
-> +# define PTI_CONSUMED_PCID_BITS	0
-> +#endif
 > +
-> +#define CR3_AVAIL_PCID_BITS (X86_CR3_PCID_BITS - PTI_CONSUMED_PCID_BITS)
+> +#include <linux/clk.h>
+> +#include <linux/module.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/util_macros.h>
+> +#include <linux/mutex.h>
 > +
-> +/*
-> + * ASIDs are zero-based: 0->MAX_AVAIL_ASID are valid.  -1 below to account
-> + * for them being zero-based.  Another -1 is because PCID 0 is reserved for
-> + * use by non-PCID-aware users.
-> + */
-> +#define MAX_ASID_AVAILABLE ((1 << CR3_AVAIL_PCID_BITS) - 2)
+> +#include <linux/iio/backend.h>
+> +#include <linux/iio/iio.h>
 > +
-> +#ifdef CONFIG_BROADCAST_TLB_FLUSH
-> +# define CR3_AVAIL_PCID_LONGS ((1 << CR3_AVAIL_PCID_BITS) / BITS_PER_LONG)
-> +#else
-> +# define CR3_AVAIL_PCID_LONGS 1
-> +#endif
+> +static const unsigned int ad7405_dec_rates[] = {
+> +	4096, 2048, 1024, 512, 256, 128, 64, 32,
+> +};
 
-I wonder if we can make this easier to understand. Is there something
-preventing us from using good old DECLARE_BITMAP()?
+It looks lilke this should be a range, not a list. The driver
+currently allows any value to be passed to the backend, not
+just these values.
 
-	DECLARE_BITMAP(user_pcid_flush_mask, MAX_KERN_ASID);
+Or if these are the only values that make sense for this
+ADC chip even if the backend allows other values, then
+we should do more checking in this driver to ensure only
+these values can be passed to the backend.
 
-#ifdef CONFIG_BROADCAST_TLB_FLUSH
-# define MAX_KERN_PCID (1 << CR3_AVAIL_PCID_BITS - 1)
-#else
-  /* PCID 0 is reserved. Dynamic asids 0->5 map to PCIDs 1->6 */
-# define MAX_KERN_PCID (TLB_NR_DYN_ASIDS + 1)
-#endif
-
-The TLB_NR_DYN_ASIDS portion of this could even be a preparatory patch
-before the CONFIG_BROADCAST_TLB_FLUSH gets added. That might also make
-the whole thing more clear.
-
->  void cr4_update_irqsoff(unsigned long set, unsigned long clear);
->  unsigned long cr4_read_shadow(void);
->  
-> @@ -115,14 +140,6 @@ struct tlb_state {
->  	 */
->  	u8 lam;
->  #endif
-> -
-> -	/*
-> -	 * Mask that contains TLB_NR_DYN_ASIDS+1 bits to indicate
-> -	 * the corresponding user PCID needs a flush next time we
-> -	 * switch to it; see SWITCH_TO_USER_CR3.
-> -	 */
-> -	unsigned short user_pcid_flush_mask;
-> -
->  	/*
->  	 * Access to this CR4 shadow and to H/W CR4 is protected by
->  	 * disabling interrupts when modifying either one.
-> @@ -149,6 +166,15 @@ struct tlb_state {
->  	 * context 0.
->  	 */
->  	struct tlb_context ctxs[TLB_NR_DYN_ASIDS];
 > +
-> +#ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
+> +struct ad7405_chip_info {
+> +	const char *name;
+> +	struct iio_chan_spec channel;
+> +	const unsigned int full_scale_mv;
+> +};
+> +
+> +struct ad7405_state {
+> +	struct iio_backend *back;
+> +	const struct ad7405_chip_info *info;
 > +	/*
-> +	 * Mask that contains TLB_NR_DYN_ASIDS+1 bits to indicate
-> +	 * the corresponding user PCID needs a flush next time we
-> +	 * switch to it; see SWITCH_TO_USER_CR3.
+> +	 *Synchronize access to members the of driver state, and ensure
+> +	 *atomicity of consecutive regmap operations.
+
+There is no regmap.
+
 > +	 */
-> +	unsigned long user_pcid_flush_mask[CR3_AVAIL_PCID_LONGS];
-> +#endif
->  };
->  DECLARE_PER_CPU_ALIGNED(struct tlb_state, cpu_tlbstate);
+> +	struct mutex lock;
 
-This adds an #ifdef. I guess it makes sense to do it for the now larger
-user_pcid_flush_mask[] while it didn't for a single long. But that's
-another logically separate bit that adds complexity to reading this
-whole mess.
+This is never initalized.
 
-Honestly, I'd just leave this out for the bug fix. If someone really
-cares, we can come back and fix it up in mainline.
+> +	unsigned int ref_frequency;
+> +	unsigned int dec_rate;
+> +};
+> +
+> +static int ad7405_set_dec_rate(struct iio_dev *indio_dev,
+> +			       const struct iio_chan_spec *chan,
+> +			       unsigned int dec_rate)
+> +{
+> +	struct ad7405_state *st = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	guard(mutex)(&st->lock);
 
-> diff --git a/arch/x86/kernel/asm-offsets.c b/arch/x86/kernel/asm-offsets.c
-> index 6259b474073b..8c41a2e5a53e 100644
-> --- a/arch/x86/kernel/asm-offsets.c
-> +++ b/arch/x86/kernel/asm-offsets.c
-> @@ -103,8 +103,10 @@ static void __used common(void)
->  	BLANK();
->  	DEFINE(PTREGS_SIZE, sizeof(struct pt_regs));
->  
-> +#ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
->  	/* TLB state for the entry code */
->  	OFFSET(TLB_STATE_user_pcid_flush_mask, tlb_state, user_pcid_flush_mask);
-> +#endif
+Why not iio_device_claim_direct() instead? Seems like it could be
+probalamatic if this was changed in the middle of a buffered read.
 
-Because it necessitates this hunk too...
+> +
+> +	if (dec_rate > 4096 || dec_rate < 32)
+> +		return -EINVAL;
+> +
+> +	ret = iio_backend_oversampling_ratio_set(st->back, chan->scan_index, dec_rate);
+> +	if (ret)
+> +		return ret;
+> +
+> +	st->dec_rate = dec_rate;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ad7405_read_raw(struct iio_dev *indio_dev,
+> +			   const struct iio_chan_spec *chan, int *val,
+> +			   int *val2, long info)
+> +{
+> +	struct ad7405_state *st = iio_priv(indio_dev);
+> +
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*val = st->info->full_scale_mv;
+> +		*val2 = st->info->channel.scan_type.realbits - 1;
+> +		return IIO_VAL_FRACTIONAL_LOG2;
+> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+> +		*val = st->dec_rate;
+> +		guard(mutex)(&st->lock);
 
->  	/* Layout info for cpu_entry_area */
->  	OFFSET(CPU_ENTRY_AREA_entry_stack, cpu_entry_area, entry_stack_page);
-> diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-> index 39f80111e6f1..f5761e8be77f 100644
-> --- a/arch/x86/mm/tlb.c
-> +++ b/arch/x86/mm/tlb.c
-> @@ -90,25 +90,6 @@
->   *
->   */
->  
-> -/*
-> - * When enabled, MITIGATION_PAGE_TABLE_ISOLATION consumes a single bit for
-> - * user/kernel switches
-> - */
-> -#ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
-> -# define PTI_CONSUMED_PCID_BITS	1
-> -#else
-> -# define PTI_CONSUMED_PCID_BITS	0
-> -#endif
-> -
-> -#define CR3_AVAIL_PCID_BITS (X86_CR3_PCID_BITS - PTI_CONSUMED_PCID_BITS)
-> -
-> -/*
-> - * ASIDs are zero-based: 0->MAX_AVAIL_ASID are valid.  -1 below to account
-> - * for them being zero-based.  Another -1 is because PCID 0 is reserved for
-> - * use by non-PCID-aware users.
-> - */
-> -#define MAX_ASID_AVAILABLE ((1 << CR3_AVAIL_PCID_BITS) - 2)
-> -
->  /*
->   * Given @asid, compute kPCID
->   */
-> @@ -543,10 +524,7 @@ static void broadcast_tlb_flush(struct flush_tlb_info *info)
->   */
->  static inline void invalidate_user_asid(u16 asid)
->  {
-> -	/* There is no user ASID if address space separation is off */
-> -	if (!IS_ENABLED(CONFIG_MITIGATION_PAGE_TABLE_ISOLATION))
-> -		return;
-> -
-> +#ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
->  	/*
->  	 * We only have a single ASID if PCID is off and the CR3
->  	 * write will have flushed it.
-> @@ -557,8 +535,8 @@ static inline void invalidate_user_asid(u16 asid)
->  	if (!static_cpu_has(X86_FEATURE_PTI))
->  		return;
->  
-> -	__set_bit(kern_pcid(asid),
-> -		  (unsigned long *)this_cpu_ptr(&cpu_tlbstate.user_pcid_flush_mask));
-> +	__set_bit(kern_pcid(asid), this_cpu_ptr(&cpu_tlbstate.user_pcid_flush_mask[0]));
-> +#endif
->  }
-... and this one.
+Taking the mutex here does nothing. Maybe it was meant to go before
+*val = st->dec_rate;
+
+But I'm not sure that is really necessary. 
+
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		*val = DIV_ROUND_CLOSEST_ULL(st->ref_frequency, st->dec_rate);
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_OFFSET:
+> +		*val = -(1 << (st->info->channel.scan_type.realbits - 1));
+> +		return IIO_VAL_INT;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int ad7405_write_raw(struct iio_dev *indio_dev,
+> +			    struct iio_chan_spec const *chan, int val,
+> +			    int val2, long info)
+> +{
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+> +		if (val < 0)
+> +			return -EINVAL;
+> +		return ad7405_set_dec_rate(indio_dev, chan, val);
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int ad7405_read_avail(struct iio_dev *indio_dev,
+> +			     struct iio_chan_spec const *chan,
+> +			     const int **vals, int *type, int *length,
+> +			     long info)
+> +{
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+> +		*vals = ad7405_dec_rates;
+> +		*length = ARRAY_SIZE(ad7405_dec_rates);
+> +		*type = IIO_VAL_INT;
+> +		return IIO_AVAIL_LIST;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static const struct iio_info ad7405_iio_info = {
+> +	.read_raw = &ad7405_read_raw,
+> +	.write_raw = &ad7405_write_raw,
+> +	.read_avail = &ad7405_read_avail,
+> +};
+> +
+> +#define AD7405_IIO_CHANNEL {					\
+> +	.type = IIO_VOLTAGE,					\
+> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |	\
+> +			BIT(IIO_CHAN_INFO_OFFSET),		\
+> +	.info_mask_shared_by_all = IIO_CHAN_INFO_SAMP_FREQ |	\
+> +			BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),	\
+> +	.info_mask_shared_by_all_available =			\
+> +			BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),	\
+> +	.indexed = 1,						\
+> +	.channel = 0,						\
+> +	.channel2 = 1,						\
+> +	.differential = 1,					\
+> +	.scan_index = 0,					\
+> +	.scan_type = {						\
+> +		.sign = 'u',					\
+> +		.realbits = 16,					\
+> +		.storagebits = 16,				\
+> +	},							\
+> +}
+> +
+> +static const struct ad7405_chip_info ad7405_chip_info = {
+> +	.name = "AD7405",
+
+In all the other ADI drivers, the name is lower case, so we should
+to the same here to be consistent.
+
+> +	.full_scale_mv = 320,
+> +	.channel = AD7405_IIO_CHANNEL,
+> +};
+> +
+> +static const struct ad7405_chip_info adum7701_chip_info = {
+> +	.name = "ADUM7701",
+> +	.full_scale_mv = 320,
+> +	.channel = AD7405_IIO_CHANNEL,
+> +};
+> +
+> +static const struct ad7405_chip_info adum7702_chip_info = {
+> +	.name = "ADUM7702",
+> +	.full_scale_mv = 64,
+> +	.channel = AD7405_IIO_CHANNEL,
+> +};
+> +
+> +static const struct ad7405_chip_info adum7703_chip_info = {
+> +	.name = "ADUM7703",
+> +	.full_scale_mv = 320,
+> +	.channel = AD7405_IIO_CHANNEL,
+> +};
+> +
+> +static const char * const ad7405_power_supplies[] = {
+> +	"vdd1",	"vdd2",
+> +};
+> +
+> +static int ad7405_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct iio_dev *indio_dev;
+> +	struct ad7405_state *st;
+> +	struct clk *clk;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*st));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	st = iio_priv(indio_dev);
+> +
+> +	st->info = device_get_match_data(dev);
+> +	if (!st->info)
+> +		return dev_err_probe(dev, -EINVAL, "no chip info\n");
+> +
+> +	ret = devm_regulator_bulk_get_enable(dev, ARRAY_SIZE(ad7405_power_supplies),
+> +					     ad7405_power_supplies);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "failed to get and enable supplies");
+> +
+> +	clk = devm_clk_get_enabled(dev, NULL);
+> +	if (IS_ERR(clk))
+> +		return PTR_ERR(clk);
+> +
+> +	st->ref_frequency = clk_get_rate(clk);
+> +	if (!st->ref_frequency)
+> +		return -EINVAL;
+> +
+> +	indio_dev->name = st->info->name;
+> +	indio_dev->channels = &st->info->channel;
+> +	indio_dev->num_channels = 1;
+> +	indio_dev->info = &ad7405_iio_info;
+> +
+> +	st->back = devm_iio_backend_get(dev, NULL);
+> +	if (IS_ERR(st->back))
+> +		return dev_err_probe(dev, PTR_ERR(st->back),
+> +				     "failed to get IIO backend");
+> +
+> +	ret = iio_backend_chan_enable(st->back, 0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = devm_iio_backend_request_buffer(dev, st->back, indio_dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = devm_iio_backend_enable(dev, st->back);
+> +	if (ret)
+> +		return ret;
+> +
+
+Would not hurt to have a comment explaining why 256 is chosen for the
+default value.
+
+> +	ret = ad7405_set_dec_rate(indio_dev, &indio_dev->channels[0], 256);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return devm_iio_device_register(dev, indio_dev);
+> +}
+> +
+> +static const struct of_device_id ad7405_of_match[] = {
+> +	{ .compatible = "adi,ad7405", .data = &ad7405_chip_info, },
+> +	{ .compatible = "adi,adum7701", .data = &adum7701_chip_info, },
+> +	{ .compatible = "adi,adum7702", .data = &adum7702_chip_info, },
+> +	{ .compatible = "adi,adum7703", .data = &adum7703_chip_info, },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, ad7405_of_match);
+> +
+> +static struct platform_driver ad7405_driver = {
+> +	.driver = {
+> +		.name = "ad7405",
+> +		.owner = THIS_MODULE,
+> +		.of_match_table = ad7405_of_match,
+> +	},
+> +	.probe = ad7405_probe,
+> +};
+> +module_platform_driver(ad7405_driver);
+> +
+> +MODULE_AUTHOR("Dragos Bogdan <dragos.bogdan@analog.com>");
+> +MODULE_AUTHOR("Pop Ioan Daniel <pop.ioan-daniel@analog.com>");
+> +MODULE_DESCRIPTION("Analog Devices AD7405 driver");
+> +MODULE_LICENSE("GPL");
+> +MODULE_IMPORT_NS("IIO_BACKEND");
+
