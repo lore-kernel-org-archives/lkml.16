@@ -1,128 +1,93 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 763012C3249
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 17:06:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A666ADD
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 17:08:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748883998; cv=none; b=mrXEIZM7CnpVY7DyTXkDPhfCsY+/1EokNq0chxxvJTKmsCARrBh+wrMshcKD3P1K+8DHmgI8atRe3pFkT1lUqgArSMlom31WBexF/SWv5XYyiGVLYcGRnO6MiC/p1soLDawieTbMfBRS+AHed1Yr/wm6APKjzTKS+zyffoGO7AM=
+	t=1748884086; cv=none; b=Ih7h+vExkVpNzC9qRTJwjYmv6XDoVL2e80ZoGVnhxMyZ+0YRzCwBpOeH/n7r4hJ3JTXN6Rv+1eYV62oKOb8PTOGnSTrbcdCp02JAIsJH3oReWKZ98uisOJlJuGSHklkCt7D81/do0WCA0sy0/s/j0B6F5Pa8CyYE+yk2aCvJV88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748883998; c=relaxed/simple;
-	bh=jGHtXSMNYuOS4DBBIsFiHbP+AkxtA8bAuVMP2cZb2Gw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Houv969ULi+qJzO98E/I1SRxIF+sJnTkniZNES6PXeiijmLcSTc12ZIvt4Nc1dP8s7z/gZvlUBsaoT7y/bL9JRyJioGwovZnCDCgh1Dt1gHfdnwBLvZEVcoxuCnOcQn8kdmwYrIsElK6cM/DN2f3FHI43e5pYXnzppIwTkNVORU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YOrkthuO; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748884086; c=relaxed/simple;
+	bh=+WvDBTQGgVcJ4+48hvjRRqUcYgzGsQGUF27/OrTHv5o=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=sJ2CQ+WMlpMk5cOl/omKhSfkPnxvhQbLYNMaDLAKvs1P2G+c84LKrIZ8ZaVskfm5hgujHCGWEvmdUDjmnlwGnV7uFGR/+x2jt0QT3DXwGT1NGSZ7yrXDt4iLgw6f8GuOoMXC3hsPHmEC0sURlfbCe8I9hQxRpxfhAjeR/78t3Uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eob+SzUP; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YOrkthuO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748883994;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tYcA+9sD/BT6SER7UMB+2zvYQlRmXLTzrbmL5tzdDww=;
-	b=YOrkthuOixzRnsz4UVYYApR6exodnco3+7BUh95etZCH9f4QaHjVE329FrOnO8Duzo50SX
-	QyTsV8MxbTGOcY3sGOM/tQCrIR3Y+8wsoFaSQ4gFcXP0tpdQzu6tmOy58iESZolC/DhK9y
-	xpKTcUiRwt0QvUsMpwXm/kUTILaWgaY=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-635-lhgK5W9uMjWODePOTdea0Q-1; Mon, 02 Jun 2025 13:06:33 -0400
-X-MC-Unique: lhgK5W9uMjWODePOTdea0Q-1
-X-Mimecast-MFC-AGG-ID: lhgK5W9uMjWODePOTdea0Q_1748883993
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6fad1f7f175so51565296d6.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 10:06:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eob+SzUP"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-747d394f45fso1503305b3a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 10:08:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748884084; x=1749488884; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ydlOhEkRopFxTeDK5Q649uIqLSzngVdlEEZytCet2UU=;
+        b=eob+SzUPtE3ImVsCeAyZg6ziFCJNEJxczLkKMgOLoizfQLj1/2GwEuwsrwloJNo1eD
+         EB4FwpVPCeGUVecMIQ7SDOy/sLKxZfVpDepv8JUlLwzKBpkwTTL4ZRfMf5Mdjyx+vmBq
+         nfunpXzFuql1p3hrAS8RVx9cW1cuKwW71tYqzYiEnISBkRr1hxhaoVBsUPJuzE9zY5hw
+         v9tAhVH2Oe6tlnW24zbWe5Fw01yZJTZf/XlNIRNSDtWRA9BmN7oVMJti1vIPl6gASew2
+         V5ERA0LAsGtuntjWSLlk3CvT8S3yQUngo1AxRBYuNwCvlGd21I/4zGblkuOa4FF4z/FG
+         OnTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748883993; x=1749488793;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tYcA+9sD/BT6SER7UMB+2zvYQlRmXLTzrbmL5tzdDww=;
-        b=eIb6k+0eLNdqsL1phBQtReqmsCf2J/5XrMQNmDMdVjME4Vl7fti9C+nw3kYJGFdmQd
-         ijsuPF+4x0jXQEeo25LeRaFn7qRMqwpzZrB318Jg1XfZMRPnRFPTLNp57qGOM5xDIHee
-         aAopUHnI4LUyEYtuJIYDMDOPgAMmkAsm6VnG83LvLJPuf7/lPQsMeIDPte5u3UZJYBbS
-         YZRY7fk5P589pT/9OTA9aODxYn6Cs3COy2zZpHh5kBouNQ49UjFx3mpftRozJ26zcEiL
-         EzgjiS+vaf6lmBlbRrhokfAtzTttXC29Lntx+nFAUHqxMLiJPi91iFpN+x62y/T+7Cog
-         UtHA==
-X-Forwarded-Encrypted: i=1; AJvYcCUeweGWi0Yp7LFAc14TYf2iQy/vdPw0TW9/OLojbwteXB+j65U+u6dQuRffO1QVHEURgbhCLDKUN+Q3xx0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTHZL47iw6rZxONzCew0438ta/6MzJoXrVQl/d76GaVrpdYawe
-	EPgDcrMK1EDOe37fNdqtAqURcX8Bc2eniRbpVE8JqjQj8nrerEn7hA3/XEDsJFkqGmnNM87LY6e
-	TlOCO8Z1mE2Z8V27r7nUsqlxx4hHGCMO1FYoaifU7gNqkuY+iedr88WsJSkbAvlwphg==
-X-Gm-Gg: ASbGnctb1P8JnWXK+0cxpjvregtnvYi83FHOY2Z1FjKobd5Oe6iigj6VdgSVhxkU1xK
-	W4uPzNzWB8QpP0AvbglrZUPoW42cOPxut3BbR0YuuQzmopPE3fqxCa82sTGdzxJIP87kHAl7wTI
-	Nqu2FmTGPh4r/LY9hJNXoP28R7XiCTsjUSaaFJxWARyRtShx0xcaE9gOUa8tR/gEnOizoSBVxTi
-	EtiaUMpzaRoIxN9T9iAHjNHvMELRFbYQt07CA0H98YujjCHYyS/6wpp2v/B1WjjZIhR/CDQJTtZ
-	hzUci1SWrEJjZTePgFosEFDGPaWcFhqoOS8=
-X-Received: by 2002:a05:6214:584d:b0:6fa:b468:caf4 with SMTP id 6a1803df08f44-6faed6cec34mr3581376d6.0.1748883992765;
-        Mon, 02 Jun 2025 10:06:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEDIW6J9P2qG1g1rwGHAt0e10YSWO/VaY15tJKPiaekxXAvJTtUGm41gXv6znBsK6TM7kwmtg==
-X-Received: by 2002:a05:6214:584d:b0:6fa:b468:caf4 with SMTP id 6a1803df08f44-6faed6cec34mr3581066d6.0.1748883992376;
-        Mon, 02 Jun 2025 10:06:32 -0700 (PDT)
-Received: from x1 (c-73-183-52-120.hsd1.pa.comcast.net. [73.183.52.120])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fac6d4d6b6sm63640396d6.44.2025.06.02.10.06.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 10:06:31 -0700 (PDT)
-Date: Mon, 2 Jun 2025 13:06:30 -0400
-From: Brian Masney <bmasney@redhat.com>
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] clk: tests: add clk_hw_get_dev() and
- clk_hw_get_of_node() tests
-Message-ID: <aD3aFs-hbtYw0PVO@x1>
-References: <20250417-clk-hw-get-helpers-v1-0-7743e509612a@baylibre.com>
- <20250417-clk-hw-get-helpers-v1-2-7743e509612a@baylibre.com>
+        d=1e100.net; s=20230601; t=1748884084; x=1749488884;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ydlOhEkRopFxTeDK5Q649uIqLSzngVdlEEZytCet2UU=;
+        b=rFMm/hIgqg6AH0to1RHZhRiGbgREfT+WfQgk6UeGH+6uqjvmh8VB6EeflQ3m36vN2I
+         kevgp+kJ0IE6q5GPGyu2GCyBTWKIgJ6xCK7rd8oIiDMu5mBWd/PXfnI5GDu791QdpTBu
+         /ef7KMmi7+m9scuuFYaWv2d51sNplO2QjblelnO1ek24X3MTtB/fBJ/1sjd9/wQveJRd
+         u2MpniEGjH5tjRZdfiMd3xzhMU8nhlndWZxD6CEcgyRvSYU67+51eBNr19KLic58/AlZ
+         U9BhyuiFCKFPPb1l9NDQDfcIB9oApH0YrdzzUay0CLN23le7knxVOe4eK8S2KkVAfQUt
+         +E3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW1VydzwiCSF8hmJ4Cc0jtBBCp7nwmT+n+OHXlAsqit3OY42V8dUmoAP5jjK9Y812YxEJfPXDmspg+YlzI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwveygFWWmWD9i9RCsF7tzq/steFRVTr04gBqxny1ibR+E6lEjP
+	OqoDKVu87+PbPn2tmqO+TsPH6ds5uqiZf8D9nz/+G7NWTWpb09ucTalzGQcmQHMaIVQiY7fFLLw
+	T5i3kfg==
+X-Google-Smtp-Source: AGHT+IF5TZWeKQm22/4S72UXWjGujgvsZqXcKchu15yQOBD2jnBt1xngILSWHoW56WuJMyOtVuiL0dTcYe0=
+X-Received: from pgbfq4.prod.google.com ([2002:a05:6a02:2984:b0:b29:bc7a:8aa2])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:339f:b0:1f5:8e33:c417
+ with SMTP id adf61e73a8af0-21adff48c6cmr20699816637.2.1748884084082; Mon, 02
+ Jun 2025 10:08:04 -0700 (PDT)
+Date: Mon, 2 Jun 2025 10:08:02 -0700
+In-Reply-To: <e5e1fb2715a98f24ba69cc4da5c30777633f6f62.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250417-clk-hw-get-helpers-v1-2-7743e509612a@baylibre.com>
-User-Agent: Mutt/2.2.14 (2025-02-20)
+Mime-Version: 1.0
+References: <20250529234013.3826933-18-seanjc@google.com> <e5e1fb2715a98f24ba69cc4da5c30777633f6f62.camel@gmail.com>
+Message-ID: <aD3acnURwE7am7gf@google.com>
+Subject: Re: [PATCH 17/28] KVM: SVM: Manually recalc all MSR intercepts on
+ userspace MSR filter change
+From: Sean Christopherson <seanjc@google.com>
+To: Francesco Lavra <francescolavra.fl@gmail.com>
+Cc: bp@alien8.de, chao.gao@intel.com, dapeng1.mi@linux.intel.com, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, pbonzini@redhat.com, 
+	xin@zytor.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, Apr 17, 2025 at 03:44:23PM +0200, Jerome Brunet wrote:
-> Add kunit test suites clk_hw_get_dev() and clk_hw_get_of_node()
-> for clocks registered with clk_hw_register() and of_clk_hw_register()
+On Sat, May 31, 2025, Francesco Lavra wrote:
+> On 2025-05-29 at 23:40, Sean Christopherson wrote:
+> > -static_assert(ARRAY_SIZE(direct_access_msrs) ==
+> > -	      MAX_DIRECT_ACCESS_MSRS - 6 * !IS_ENABLED(CONFIG_X86_64));
+> > -#undef MAX_DIRECT_ACCESS_MSRS
 > 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> The MAX_DIRECT_ACCESS_MSRS define should now be removed from
+> arch/x86/kvm/svm/svm.harch/x86/kvm/svm/svm.h, since it's no longer used.
 
-Reviewed-by: Brian Masney <bmasney@redhat.com>
+/facepalm
 
-I also ran the tests with no issues.
+All that work to get rid of the darn thing, and then I forget to actually get rid
+of it.
 
-Just a few minor nits below if you happen to spin a v2.
+I also failed to remove the msrpm_offset declaration (and its size macro)
 
-> @@ -3016,7 +3023,7 @@ KUNIT_ARRAY_PARAM(clk_register_clk_parent_data_device_hw_test,
->   */
->  static void clk_register_clk_parent_data_device_hw_test(struct kunit *test)
->  {
-> -	struct clk_register_clk_parent_data_device_ctx *ctx;
-> +	struct clk_register_device_ctx *ctx;
->  	const struct clk_register_clk_parent_data_test_case *test_param;
->  	struct clk_dummy_context *parent;
->  	struct clk_hw *parent_hw;
+  #define MSRPM_OFFSETS	32
+  extern u32 msrpm_offsets[MSRPM_OFFSETS] __read_mostly;
 
-Put in reverse Christmas tree where possible.
+which are dead code as of "KVM: SVM: Manually recalc all MSR intercepts on userspace
+MSR filter change".
 
-> +static void clk_hw_register_get_of_node_test(struct kunit *test)
-> +{
-> +	const struct clk_hw_get_dev_of_node_test_param *test_param = test->param_value;
-> +	struct clk_register_device_ctx *ctx = test->priv;
-> +	struct device *dev = test_param->has_ref ? ctx->dev : NULL;
-> +	struct device_node *np = NULL;
-> +
-> +	if (dev) {
-> +		np = dev_of_node(dev);
-> +
-> +		if (!np)
-> +			np = dev_of_node(dev->parent);
-
-Remove newline before the if().
-
-Brian
-
+Nice catch, and thank you!
