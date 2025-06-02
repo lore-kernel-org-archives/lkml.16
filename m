@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21882C327E;
-	Mon,  2 Jun 2025 14:01:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86278221F10;
+	Mon,  2 Jun 2025 14:01:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748872871; cv=none; b=coYKb33Uoodi1iSw55+s748KQCcSjxg011LlrPoeBw376g32k4havAVaAF5zhpoBsez+3/Yp+XmOM71anYcsHp/1Cle1XOBf/zIrzxq4Q3CAK+X1dKGDVNOxpV2Y++Ry8V+JQXlXNCP3S3huZv1P7EzOLNR6GerjngxsZwrMvRM=
+	t=1748872872; cv=none; b=usRzCXs6PbaepZl42egfdXCxmci/W95gl00cJc5V1ViNBhSnmmVDcvMXsPDpDtTmlDR0ZcYIwhqK5GmJCMjULX9h1/o+F9X/V22tMop5y/nCeSKCM4zMdpQvvKn1Kd6MnpH4UaVmvZchKRC//n1nwUCP2mi9+ux3ymvkgBExDg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748872871; c=relaxed/simple;
-	bh=HUcczS7kF+nDU707roRjQQJDLKJgw1PMxAfm7beuSjU=;
+	s=arc-20240116; t=1748872872; c=relaxed/simple;
+	bh=YpXHqkOfYbjmBfWYsT9XlirLT3FOYSkAoPbRE2/wJro=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nfUYSjCqua42tnYqvM/kImG/IAx4sEfn6JUn3RPco4Za5unDaAoHX3APqkAcPm0ccrXiykdkhrE+0Ju3K0vJ375A1BMUE9YHEmCAgt7/hTW6sZvfgHnnKBHcUyEn5T4a3b3EYo+h73FCziPy0VzkB4umh8HxF2JqAr3M12x/qN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fblVALSm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=p/Ph2A2x; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=QjlGGBgOgonTY3bhPJEn/+QWPzz/fiP37o1Q5iJa6Iohae97hgqjf47B+vp0lJqt4goqJ7oyXc59CUodQumtwekhylrrttpVP2sPZ77NIH1X4ve9KSOHwoyDLDiROGzJNBSGNmGWOWtWy6e24GLKGKU5HMt9x/vUYvovoudlTMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jvJOyfhN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1NDtcM6O; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fblVALSm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="p/Ph2A2x"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jvJOyfhN";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1NDtcM6O"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748872867;
+	s=2020; t=1748872868;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Owk2aippojDeHXRPl4IzFpvfST1YewhCtUMATmqlZR0=;
-	b=fblVALSm8kKqlhBosy5pnJKptznWE1yB6Fuwp7GnUMy9gLmEQyx00PWpJaBEbckbUpk/xP
-	24LCjGDwrufbT6scBoGDSfpUcaNbYQC4uA+h4jiT2eyIspbfp3EXWWMTGMnCFpgHuUBFY8
-	S0CNILw1KwY8NrxysiZOKsA+btsrxDR3CnFhjOrMyIXqgSuLTzA2q+C0QzgOHkFasJoMch
-	mndpyDBpDJ3wKHRlQuPFjaDdM3pAaH1yonwx4bxohXQsLyiAFWKK5VIki/DUfCMcoL++XA
-	xABxsmzy/E8HpMs39wB4fqUK51AruirCdpN3JxqDplLJEL1S7brxFUPSsKQzCA==
+	bh=7tpspZ5z5yJcrONoYAmjpEX6uY8u62SOLKRvr2PGBuk=;
+	b=jvJOyfhNKpDM2tj+S6xtzVuVVJ+vDa/qaZ4o5/ZCiBNx8vyWLCAbqsXgKwLk0f3XOP8TNC
+	8iqOP/rKJA4k/UTq6On7KbIfTW70DPQPhTrfSuWfKMTeML35LO+4S7HMW3qsVGXIcphHrm
+	IfJUF9wT6QN8pyEWCBvyx4obNDGduw0bkteDk87NhMbh0uzge4zSWQwfh9g55z9IO5/iUw
+	SlLUHq215gd01QU650fFObw6hlQa+MYO/x5YjdfU6MMiAq5Q9MqgjQHtQ0yRLt9WoWgaE0
+	4DCY1QhlqLaxuwenhwehHLTLh2qJQihE6VoGOMzp6qWXle6PZ3uVO/xCD9fWzw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748872867;
+	s=2020e; t=1748872868;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Owk2aippojDeHXRPl4IzFpvfST1YewhCtUMATmqlZR0=;
-	b=p/Ph2A2x0+B2FWLjTq+Zj2iCNuOQtWCBv0Qmyro4An3Jx+ij6a/Gap16odIMrA0PWDX7XE
-	PeylWAnpU+4Xw5DA==
+	bh=7tpspZ5z5yJcrONoYAmjpEX6uY8u62SOLKRvr2PGBuk=;
+	b=1NDtcM6OpxyUs5J22yFSw8edNvsA6mnkqQ9OlCq+oCgjmtUM9+4u43Q4pH5aZr6+ZF74rj
+	RAWrO3ztarX53nDw==
 To: linux-kernel@vger.kernel.org,
 	linux-man@vger.kernel.org
 Cc: Alejandro Colomar <alx@kernel.org>,
@@ -52,9 +52,9 @@ Cc: Alejandro Colomar <alx@kernel.org>,
 	Valentin Schneider <vschneid@redhat.com>,
 	Waiman Long <longman@redhat.com>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v4 1/4] man/man2/prctl.2, man/man2const/PR_FUTEX_HASH.2const: Document PR_FUTEX_HASH
-Date: Mon,  2 Jun 2025 16:01:01 +0200
-Message-ID: <20250602140104.2769223-2-bigeasy@linutronix.de>
+Subject: [PATCH v4 4/4] man/man2/prctl.2, PR_FUTEX_HASH_GET_IMMUTABLE.2const: Document PR_FUTEX_HASH_GET_IMMUTABLE
+Date: Mon,  2 Jun 2025 16:01:04 +0200
+Message-ID: <20250602140104.2769223-5-bigeasy@linutronix.de>
 In-Reply-To: <20250602140104.2769223-1-bigeasy@linutronix.de>
 References: <20250602140104.2769223-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -65,51 +65,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The prctl(PR_FUTEX_HASH) is queued for the v6.16 merge window.
-Add some documentation of the interface.
-
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- man/man2/prctl.2                   |  3 +
- man/man2const/PR_FUTEX_HASH.2const | 89 ++++++++++++++++++++++++++++++
- 2 files changed, 92 insertions(+)
- create mode 100644 man/man2const/PR_FUTEX_HASH.2const
+ .../PR_FUTEX_HASH_GET_IMMUTABLE.2const        | 39 +++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 man/man2const/PR_FUTEX_HASH_GET_IMMUTABLE.2const
 
-diff --git a/man/man2/prctl.2 b/man/man2/prctl.2
-index cb5e75bf79ab2..ddfd1d1f5b940 100644
---- a/man/man2/prctl.2
-+++ b/man/man2/prctl.2
-@@ -150,6 +150,8 @@ with a significance depending on the first one.
- .B PR_GET_MDWE
- .TQ
- .B PR_RISCV_SET_ICACHE_FLUSH_CTX
-+.TQ
-+.B PR_FUTEX_HASH
- .SH RETURN VALUE
- On success,
- a nonnegative value is returned.
-@@ -262,4 +264,5 @@ so these operations should be used with care.
- .BR PR_SET_MDWE (2const),
- .BR PR_GET_MDWE (2const),
- .BR PR_RISCV_SET_ICACHE_FLUSH_CTX (2const),
-+.BR PR_FUTEX_HASH (2const),
- .BR core (5)
-diff --git a/man/man2const/PR_FUTEX_HASH.2const b/man/man2const/PR_FUTEX_HA=
-SH.2const
+diff --git a/man/man2const/PR_FUTEX_HASH_GET_IMMUTABLE.2const b/man/man2con=
+st/PR_FUTEX_HASH_GET_IMMUTABLE.2const
 new file mode 100644
-index 0000000000000..08511b18335b2
+index 0000000000000..d3b9e95ccbc98
 --- /dev/null
-+++ b/man/man2const/PR_FUTEX_HASH.2const
-@@ -0,0 +1,89 @@
++++ b/man/man2const/PR_FUTEX_HASH_GET_IMMUTABLE.2const
+@@ -0,0 +1,39 @@
 +.\" Copyright, the authors of the Linux man-pages project
 +.\"
 +.\" SPDX-License-Identifier: Linux-man-pages-copyleft
 +.\"
-+.TH PR_FUTEX_HASH 2const (date) "Linux man-pages (unreleased)"
++.TH PR_FUTEX_HASH_GET_IMMUTABLE 2const (date) "Linux man-pages (unreleased=
+)"
 +.SH NAME
-+PR_FUTEX_HASH
++PR_FUTEX_HASH_GET_IMMUTABLE
 +\-
-+configure the private futex hash
++check if the private hash is immutable.
 +.SH LIBRARY
 +Standard C library
 +.RI ( libc ,\~ \-lc )
@@ -118,67 +96,16 @@ index 0000000000000..08511b18335b2
 +.BR "#include <linux/prctl.h>" "  /* Definition of " PR_* " constants */"
 +.B #include <sys/prctl.h>
 +.P
-+.BI "int prctl(PR_FUTEX_HASH, unsigned long " op ", ...);"
++.B int prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_GET_IMMUTABLE);
 +.fi
 +.SH DESCRIPTION
-+Configure the attributes for the underlying hash used by the
-+.BR futex (2)
-+family of operations.
-+The Linux kernel uses a hash to distribute the unrelated
-+.BR futex (2)
-+requests to different data structures
-+in order to reduce the lock contention.
-+Unrelated requests are requests which are not related to one another
-+because they use a different futex word.
-+The data structure holds the in-kernel representation of the operation and
-+keeps track of the current users which are enqueued and wait for a wake up.
-+It also provides synchronisation of waiters against wakers.
-+The size of the global hash is determined at boot time
-+and is based on the number of CPUs in the system.
-+Due to hash collision,
-+two unrelated
-+.BR futex (2)
-+requests can share the same hash bucket.
-+This in turn can lead to delays of the
-+.BR futex (2)
-+operation due to lock contention while accessing the data structure.
-+These delays can be problematic on a real-time system
-+since random processes can
-+share in-kernel locks
-+and it is not deterministic which process will be involved.
-+.P
-+Linux 6.16 implements a process-wide private hash which is used by all
-+.BR futex (2)
-+operations that specify the
-+.B FUTEX_PRIVATE_FLAG
-+option as part of the operation.
-+Without any configuration
-+the kernel will allocate 16 hash slots
-+once the first thread has been created.
-+If the process continues to create threads,
-+the kernel will try to resize the private hash based on the number of thre=
-ads
-+and available CPUs in the system.
-+The kernel will only increase the size and will make sure it does not exce=
-ed
-+the size of the global hash.
-+.P
-+The user can configure the size of the private
-+hash which will also disable the
-+automatic resize provided by the kernel.
-+.P
-+The value in
-+.I op
-+is one of the options below.
-+.TP
-+.B PR_FUTEX_HASH_GET_IMMUTABLE
-+.TQ
-+.B PR_FUTEX_HASH_GET_SLOTS
-+.TQ
-+.B PR_FUTEX_HASH_SET_SLOTS
++Check if the private hash is immutable.
 +.SH RETURN VALUE
-+On success,
-+these calls return a nonnegative value.
++If the hash is immutable,
++it returns 1;
++otherwise,
++it returns 0.
++.P
 +On error, \-1 is returned, and
 +.I errno
 +is set to indicate the error.
@@ -188,8 +115,7 @@ ed
 +Linux 6.16.
 +.SH SEE ALSO
 +.BR prctl (2),
-+.BR futex (2),
-+.BR PR_FUTEX_HASH_GET_IMMUTABLE (2const),
++.BR PR_FUTEX_HASH (2const),
 +.BR PR_FUTEX_HASH_GET_SLOTS (2const),
 +.BR PR_FUTEX_HASH_SET_SLOTS (2const)
 --=20
