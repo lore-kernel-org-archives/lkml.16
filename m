@@ -1,157 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9043B21B9F5
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 12:56:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6D01F461D
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 12:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748868960; cv=none; b=hJRcNp9VADUHLKyQWLq2x1882HacDDlQYuWhVyjpgn29fl0NPBsMb3NkfQsdylz+CxbVuF453koAR7pr01Xyob7N7V6Stw4DcZ3cHgZk+ufthl6yUd0NlZwE4D0u9hx+zVwAF1RQ03QBT4Jo3kOOujM0FgacXZMn0Am+tb5LwWI=
+	t=1748869035; cv=none; b=u6+f369kMjU/QUlXrzN7LAT7TWb2KJevDjf0MR3xHcESUkPCXMZ+LcX3egKaTLFFkRo+M0UN+CLw4oBggegDpmmaawLovCC+EZIb43kmoH8vD6sTjeJMux5ZJ77hKmxZHu4zymuCtxA2TDDekLEwsPdbtoaeLZEUel2NXg05gAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748868960; c=relaxed/simple;
-	bh=1y1k9L6v273vVnANqw0hHe3EnLWOX+Fa7Jbly59n7Q8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ugim5W8F7FzMDJBdAlXoixAO1Nb8cJD2fXTjEaAS878OHI4oiapQfBFvyq9HN2nL7v35B7/5o7k56llSX82lqQMLlQknult+slnMcQibql5XjYpg/zAaXPqxoLom18pGZqBmfKR7U/BJk8bH8VtLi2K1A4Ch+L7nHCK6nu/zGCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AuTUU2ET; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AuTUU2ET"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F300EC4CEEB;
-	Mon,  2 Jun 2025 12:55:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748868960;
-	bh=1y1k9L6v273vVnANqw0hHe3EnLWOX+Fa7Jbly59n7Q8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AuTUU2ETaC4zcMj2e9medq9DpK1kpQ1Z4GptW+VZfh+F0niL2wttEvT2MLo6mUH9Q
-	 iGtoKWqYgvlwP4M7vRgYcNy/bF67fKmEGd3PgJnJ3Qaibu2tOZmVKPkFi7v1InnG+i
-	 GhvVjUkiwmmDy9oxSFWraVNO2/03Fqx/O5Agz6uudV1u8Swa8LxepWWJFzShmB65z+
-	 F7OLADiYqScR7qVbLd/uoL6wlfQZGzMaquoiRNPN5UeqelmD+GzGJTFxysHmv96RMu
-	 7KSSKOYguLx5Fv7RmZS4a1rkxSKLwqWi6e5tQMYtSlFLrY4qIase30Aa26UqS8uG7h
-	 icbv4+ZA/omhQ==
-Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
-	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uM4hV-000000008bf-0Wcl;
-	Mon, 02 Jun 2025 14:55:37 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Igor Mammedov <imammedo@redhat.com>,
-	"Michael S . Tsirkin" <mst@redhat.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Shiju Jose <shiju.jose@huawei.com>,
-	qemu-arm@nongnu.org,
-	qemu-devel@nongnu.org,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
-	Ani Sinha <anisinha@redhat.com>,
-	Eduardo Habkost <eduardo@habkost.net>,
-	Marcel Apfelbaum <marcel.apfelbaum@gmail.com>,
-	Peter Maydell <peter.maydell@linaro.org>,
-	Shannon Zhao <shannon.zhaosl@gmail.com>,
-	Yanan Wang <wangyanan55@huawei.com>,
-	Zhao Liu <zhao1.liu@intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v10 12/26] acpi/generic_event_device: add logic to detect if HEST addr is available
-Date: Mon,  2 Jun 2025 14:52:30 +0200
-Message-ID: <20250602122244.081a1960@imammedo.users.ipa.redhat.com>, Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250530221810.694ce02e@foz.lan>
-References: <20250530221810.694ce02e@foz.lan>
+	s=arc-20240116; t=1748869035; c=relaxed/simple;
+	bh=Ia69MBn6pqFH7viov3StXLVhknL9Lg/tn1MBOK48wG8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jaw/FKAD50hERLAjoT2oCSpB7R/cLPBkP981LCZMCuOxbAZ4hhY5Bz7PL+AyfxNkh5lkMnWIA/QORYeioHtiPj/fx6B6qmURnB1GrtE06ZWHmsgdv08wbEVR7IPBsUAOBN2eRsjXy/PBAaScuDzULGxrbQssiP/rk9xQm5d30BU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: fhhoe/9rTj+V7jBnyCpTGg==
+X-CSE-MsgGUID: VGrN2ed0RTCtPejIQIKwkA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="51021447"
+X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
+   d="scan'208";a="51021447"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 05:57:13 -0700
+X-CSE-ConnectionGUID: u5XV/5HgRXyKJkgTbEPywQ==
+X-CSE-MsgGUID: UyJdOlgvTseMQYbG9BZtMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
+   d="scan'208";a="148391097"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 05:57:10 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1uM4ix-00000002qS0-2j0z;
+	Mon, 02 Jun 2025 15:57:07 +0300
+Date: Mon, 2 Jun 2025 15:57:07 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Nikolay Borisov <nik.borisov@suse.com>
+Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+	Arnd Bergmann <arnd@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Juergen Gross <jgross@suse.com>, "H . Peter Anvin" <hpa@zytor.com>,
+	Kees Cook <keescook@chromium.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	David Woodhouse <dwmw@amazon.co.uk>
+Subject: Re: [PATCH 25/32] x86/boot/e820: Simplify append_e820_table() and
+ remove restriction on single-entry tables
+Message-ID: <aD2fozO3s859C7xG@smile.fi.intel.com>
+References: <20250515120549.2820541-1-mingo@kernel.org>
+ <20250515120549.2820541-26-mingo@kernel.org>
+ <206656f9-917e-4478-b731-ab7e05bc8a74@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <206656f9-917e-4478-b731-ab7e05bc8a74@suse.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Create a new property (x-has-hest-addr) and use it to detect if
-the GHES table offsets can be calculated from the HEST address
-(qemu 10.0 and upper) or via the legacy way via an offset obtained
-from the hardware_errors firmware file.
+On Mon, Jun 02, 2025 at 03:50:24PM +0300, Nikolay Borisov wrote:
+> On 5/15/25 15:05, Ingo Molnar wrote:
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Igor Mammedov <imammedo@redhat.com>
----
-v10:
-- rebased on the top of upstream
+...
 
- hw/acpi/generic_event_device.c |  2 ++
- hw/arm/virt-acpi-build.c       | 18 ++++++++++++++++--
- hw/core/machine.c              |  2 ++
- 3 files changed, 20 insertions(+), 2 deletions(-)
+> How about doing this instead (on top of this patch):
 
-diff --git a/hw/acpi/generic_event_device.c b/hw/acpi/generic_event_device.c
-index d292f61b4e41..3cf9dab0d01a 100644
---- a/hw/acpi/generic_event_device.c
-+++ b/hw/acpi/generic_event_device.c
-@@ -318,6 +318,8 @@ static void acpi_ged_send_event(AcpiDeviceIf *adev, AcpiEventStatusBits ev)
- 
- static const Property acpi_ged_properties[] = {
-     DEFINE_PROP_UINT32("ged-event", AcpiGedState, ged_event_bitmap, 0),
-+    DEFINE_PROP_BOOL("x-has-hest-addr", AcpiGedState,
-+                     ghes_state.use_hest_addr, false),
- };
- 
- static const VMStateDescription vmstate_memhp_state = {
-diff --git a/hw/arm/virt-acpi-build.c b/hw/arm/virt-acpi-build.c
-index da3ebf403ef9..3126234e657d 100644
---- a/hw/arm/virt-acpi-build.c
-+++ b/hw/arm/virt-acpi-build.c
-@@ -893,6 +893,10 @@ static const AcpiNotificationSourceId hest_ghes_notify[] = {
-     { ACPI_HEST_SRC_ID_SYNC, ACPI_GHES_NOTIFY_SEA },
- };
- 
-+static const AcpiNotificationSourceId hest_ghes_notify_10_0[] = {
-+    { ACPI_HEST_SRC_ID_SYNC, ACPI_GHES_NOTIFY_SEA },
-+};
-+
- static
- void virt_acpi_build(VirtMachineState *vms, AcpiBuildTables *tables)
- {
-@@ -947,15 +951,25 @@ void virt_acpi_build(VirtMachineState *vms, AcpiBuildTables *tables)
- 
-     if (vms->ras) {
-         AcpiGedState *acpi_ged_state;
-+        static const AcpiNotificationSourceId *notify;
-+        unsigned int notify_sz;
-         AcpiGhesState *ags;
- 
-         acpi_ged_state = ACPI_GED(vms->acpi_dev);
-         ags = &acpi_ged_state->ghes_state;
-         if (ags) {
-             acpi_add_table(table_offsets, tables_blob);
-+
-+            if (!ags->use_hest_addr) {
-+                notify = hest_ghes_notify_10_0;
-+                notify_sz = ARRAY_SIZE(hest_ghes_notify_10_0);
-+            } else {
-+                notify = hest_ghes_notify;
-+                notify_sz = ARRAY_SIZE(hest_ghes_notify);
-+            }
-+
-             acpi_build_hest(ags, tables_blob, tables->hardware_errors,
--                            tables->linker, hest_ghes_notify,
--                            ARRAY_SIZE(hest_ghes_notify),
-+                            tables->linker, notify, notify_sz,
-                             vms->oem_id, vms->oem_table_id);
-         }
-     }
-diff --git a/hw/core/machine.c b/hw/core/machine.c
-index c3f3a5020d0b..aa90a83d8c23 100644
---- a/hw/core/machine.c
-+++ b/hw/core/machine.c
-@@ -35,10 +35,12 @@
- #include "hw/virtio/virtio-pci.h"
- #include "hw/virtio/virtio-net.h"
- #include "hw/virtio/virtio-iommu.h"
-+#include "hw/acpi/generic_event_device.h"
- #include "audio/audio.h"
- 
- GlobalProperty hw_compat_10_0[] = {
-     { "scsi-hd", "dpofua", "off" },
-+    { TYPE_ACPI_GED, "x-has-hest-addr", "false" },
- };
- const size_t hw_compat_10_0_len = G_N_ELEMENTS(hw_compat_10_0);
- 
+> +       for (int i = 0; i < nr_entries; i++) {
+
+This would be nice when defined as u32.
+
+>         }
+
 -- 
-2.49.0
+With Best Regards,
+Andy Shevchenko
+
 
