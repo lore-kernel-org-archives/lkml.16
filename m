@@ -1,136 +1,184 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2546204C2F
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 11:28:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 870E92C3278;
+	Mon,  2 Jun 2025 11:35:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748863728; cv=none; b=YBx7P0zg/4I7hXNaDSzKmzlssGmlohdTXPHu0OCu2I5Ki4WjaSWB0gBZMek6bhUhRNUZkq41CD2YLR+fHmUyVsN5J/ito70As8gCvEWRIUtffCq7zJLeHDRmOpyMFQJ9DQt8b0RI5c4uyAoC6mI+8d1vp1bYrbSlWAJJDcojsX8=
+	t=1748864129; cv=none; b=mnJwnsNL13XlidAGj/zWE9Eh9Vyr6azVmr34WoTVVjs6g1Ge+O0/MCZ7cBWSK3YwMe0gwgvtzs+IGQSpPXEwBTB4MeX5N0AVtKRc3AE0B4F7LtoexQSnylc7Z1WXZNU2rvAiVNr5zpRO8f9ULzTezt99a0r+ZQbsQDhF7Sm5J6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748863728; c=relaxed/simple;
-	bh=R9d3oJmP9BrN49ZdSlpWahejkiwe4YhzzKWtP38hmGk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KDERfEpCcjx2bphRukJA5NKfqHCY8qI8tJVtvXLTDyKXfbXTmLBIAYjgJVXdaH8NWorFcWBlTghR+YTbP8+QtIJQGM1DIHYfyLByS/BINB9Ela/YwpnLhF7IUofJ2t4zoyI82igH6NBeuxTEraKiX+heBMTAawZddhUJ8LPFE3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=Nuy+wV5K; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1748864129; c=relaxed/simple;
+	bh=rF/9b3LJ3IA8TfLAcik97ecBjzWIPZPNPh6eJpq38Io=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lT4+qT+Z2ovIxu0gZqBZbhnixpcEP7zLCNTrI893sXrIq5EJlISY95VNFOhzTKsmESHl719XAyZ8zyu4qfU1pWyTDoe7txjbkWQMiAlWIodyZLkUf5onk4EDTtgKviRHJ8ITNLUsESd+OyIyRIzjsRmL90/LsKX7ElM2i7An06w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=d1+1oxtz; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="Nuy+wV5K"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4b9s6X2GNHz9spJ;
-	Mon,  2 Jun 2025 13:28:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1748863716; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nr8qXtPIgbMMdXUGn/RWMazMygXo495Zeik7yKT8EyY=;
-	b=Nuy+wV5KpNAobQOWCOOmNX3L+95dmYfC6nA38zzGHGSxDHWYgyOGfPp7hquMCmjbkaIvml
-	602nhle+ALj4kSGO/FZfN8iLzkjz95oztiJ9igJUPuD7eIM5UprPuqXu0mTzvpf5JxFqTn
-	ZoC+UItGkRuDSfBL61lU8oKKlLQG8MhmVDr2E5QvEc7QVbgKXgZpZlJHK9OIgc8J2Ckg6A
-	/bW/4DBMRjQUxhXL5IN2HH+jXz1rF6Mm2Mc6pagi5aFhm4qFkpbZ/Xnd+DZhLOx2g79g9N
-	cErfdlprwyxBg/15pguVaVFXygA3U/bW35gM0ak53gXMMQAqWAAxj9vOCtC8EQ==
-Message-ID: <d47a1e33a0579deb13a0327cc20f43a414e90f57.camel@mailbox.org>
-Subject: Re: [PATCH v2] drm/sched/tests: Use one lock for fence context
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Philipp Stanner <phasta@kernel.org>, Matthew Brost
- <matthew.brost@intel.com>,  Danilo Krummrich <dakr@kernel.org>, Christian
- =?ISO-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
- airlied@gmail.com, Simona Vetter <simona@ffwll.ch>, Tvrtko Ursulin
- <tvrtko.ursulin@igalia.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Date: Mon, 02 Jun 2025 13:28:32 +0200
-In-Reply-To: <20250527101029.56491-2-phasta@kernel.org>
-References: <20250527101029.56491-2-phasta@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="d1+1oxtz"
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5528HtcN021951;
+	Mon, 2 Jun 2025 07:34:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=StonQp8T+GwsIst/+wugE6MZqc/
+	OMQy2k/0svrvjomI=; b=d1+1oxtzmTurjFlo+/BcekOfQubKo7GvKFd3DWk5+2b
+	A9MIaUE9Gzf+IlkixTA/Uw4c91jH/vgB8cQar9u5nssH3xSTSUjY4ZW23rsQk8Ok
+	9gaBKI/Xm8GNDLGL7oe/WHeugS1iOoZ5HPBI8/oT1n+otJcDSciaviA2fsse6S9O
+	IeNfeBYPstymOm3OyVaxyooaV4V7E0bhlx2n9JtOQfXGBsJlfH9uyj/FKp8R4WCW
+	gT2UpCBw91UuXkuVVEbS8PBCat5P5teS7OgWt9lt/G2cBLnUwGLbUgJvHQVztzuV
+	hidRVnu3nZS/qBVlCF1uGU6y3CzysryMUfgZ9BJVVmg==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 46yxp57apk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 02 Jun 2025 07:34:55 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 552BYsYf023136
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 2 Jun 2025 07:34:54 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Mon, 2 Jun
+ 2025 07:34:54 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
+ Transport; Mon, 2 Jun 2025 07:34:54 -0400
+Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.9])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 552BYaou024822;
+	Mon, 2 Jun 2025 07:34:38 -0400
+From: Marcelo Schmitt <marcelo.schmitt@analog.com>
+To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <jic23@kernel.org>, <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <dlechner@baylibre.com>, <nuno.sa@analog.com>, <andy@kernel.org>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
+        <marcelo.schmitt1@gmail.com>
+Subject: [PATCH v4 00/11] iio: adc: Add support for AD4170 series of ADCs
+Date: Mon, 2 Jun 2025 08:34:31 -0300
+Message-ID: <cover.1748829860.git.marcelo.schmitt@analog.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-META: nfifcbut9b44xbk655tqfxkkct9ccyku
-X-MBO-RS-ID: 613d9d97a584c2ad33c
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Authority-Analysis: v=2.4 cv=HdIUTjE8 c=1 sm=1 tr=0 ts=683d8c5f cx=c_pps
+ a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=gAnH3GRIAAAA:8
+ a=DCPjQr0N_ePN03jlYIoA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAyMDA5OSBTYWx0ZWRfXyBajPOEwOLzI
+ 6Rbd7FImKJ3hh66+wqFHaG4uskdIThJoUYM410WdjhTU6kgecnqVNRIrK2/lhvRO2yeVN0wmog6
+ CjWkGf5j9+mYpHa4MrcRq9Dvro0smp1HkVkULPJfd3HLVD3hWFhUEaZpldwkV131W3Z6pnqSkEP
+ QBEsnH2vsIGCqYtKnMVgq8KFkpBJoxnYJTviAl/wifoavufAi6iLALcjDUdGhQa7Extqe5qbpuC
+ TvlCujVZj7fxdrAK/Kg4AC4bNbWYu5TOX1ERY625PKEtFZAlNXwd4wD+kI1MzaALQ8g7x3Z+yPd
+ mdP0Ez43cPBQQGsXWqaSNTkJ+WbWAq1rnJekv862P4zKO55kENqxSlwEMRiOP9Zznv9ZaQl+mC2
+ 2c89Xcxe8w6hNvNK9lA62m8vclxOusOwWILCTM8mvvT5QYYDFd+uCd5mLbytQq1dJJ0gv/SZ
+X-Proofpoint-ORIG-GUID: nRdhRdhYHL_nP-Nx18jD7ummIYC-iOjr
+X-Proofpoint-GUID: nRdhRdhYHL_nP-Nx18jD7ummIYC-iOjr
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-02_05,2025-05-30_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=999 mlxscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0
+ adultscore=0 suspectscore=0 impostorscore=0 phishscore=0 clxscore=1015
+ priorityscore=1501 malwarescore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2506020099
 
-On Tue, 2025-05-27 at 12:10 +0200, Philipp Stanner wrote:
-> There is no need for separate locks for single jobs and the entire
-> scheduler. The dma_fence context can be protected by the scheduler
-> lock,
-> allowing for removing the jobs' locks. This simplifies things and
-> reduces the likelyhood of deadlocks etc.
->=20
-> Replace the jobs' locks with the mock scheduler lock.
->=20
-> Signed-off-by: Philipp Stanner <phasta@kernel.org>
+Hi,
 
-Applied to drm-misc-next
+As always, thank you to all reviewers of previous versions of this set.
+v4 comes with a few changes to comply with suggestions provided to v3, being
+most of them related to the adaptation of dt-binding properties.
 
-P.
+This patch set adds support for Analog Devices AD4170 and similar sigma-delta ADCs.
 
-> ---
-> Changes in v2:
-> =C2=A0 - Make commit message more neutral by stating it's about
-> simplifying
-> =C2=A0=C2=A0=C2=A0 the code. (Tvrtko)
-> ---
-> =C2=A0drivers/gpu/drm/scheduler/tests/mock_scheduler.c | 5 ++---
-> =C2=A0drivers/gpu/drm/scheduler/tests/sched_tests.h=C2=A0=C2=A0=C2=A0 | 1=
- -
-> =C2=A02 files changed, 2 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> index f999c8859cf7..17023276f4b0 100644
-> --- a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> +++ b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> @@ -64,7 +64,7 @@ static void drm_mock_sched_job_complete(struct
-> drm_mock_sched_job *job)
-> =C2=A0
-> =C2=A0	job->flags |=3D DRM_MOCK_SCHED_JOB_DONE;
-> =C2=A0	list_move_tail(&job->link, &sched->done_list);
-> -	dma_fence_signal(&job->hw_fence);
-> +	dma_fence_signal_locked(&job->hw_fence);
-> =C2=A0	complete(&job->done);
-> =C2=A0}
-> =C2=A0
-> @@ -123,7 +123,6 @@ drm_mock_sched_job_new(struct kunit *test,
-> =C2=A0	job->test =3D test;
-> =C2=A0
-> =C2=A0	init_completion(&job->done);
-> -	spin_lock_init(&job->lock);
-> =C2=A0	INIT_LIST_HEAD(&job->link);
-> =C2=A0	hrtimer_setup(&job->timer, drm_mock_sched_job_signal_timer,
-> =C2=A0		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 CLOCK_MONOTONIC, HRTIMER_MODE_ABS)=
-;
-> @@ -169,7 +168,7 @@ static struct dma_fence
-> *mock_sched_run_job(struct drm_sched_job *sched_job)
-> =C2=A0
-> =C2=A0	dma_fence_init(&job->hw_fence,
-> =C2=A0		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &drm_mock_sched_hw_fence_ops=
-,
-> -		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &job->lock,
-> +		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &sched->lock,
-> =C2=A0		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sched->hw_timeline.context,
-> =C2=A0		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 atomic_inc_return(&sched-
-> >hw_timeline.next_seqno));
-> =C2=A0
-> diff --git a/drivers/gpu/drm/scheduler/tests/sched_tests.h
-> b/drivers/gpu/drm/scheduler/tests/sched_tests.h
-> index 27caf8285fb7..fbba38137f0c 100644
-> --- a/drivers/gpu/drm/scheduler/tests/sched_tests.h
-> +++ b/drivers/gpu/drm/scheduler/tests/sched_tests.h
-> @@ -106,7 +106,6 @@ struct drm_mock_sched_job {
-> =C2=A0	unsigned int		duration_us;
-> =C2=A0	ktime_t			finish_at;
-> =C2=A0
-> -	spinlock_t		lock;
-> =C2=A0	struct dma_fence	hw_fence;
-> =C2=A0
-> =C2=A0	struct kunit		*test;
+Patch 1 adds device tree documentation for the parts.
+Patch 2 adds basic device support.
+Patch 3 adds support for calibration scale.
+Patch 4 adds support for calibration bias.
+Patch 5 adds support for sample frequency along with filter type configuration.
+Patch 6 adds support for buffered ADC reading.
+Patch 7 adds clock provider support
+Patch 8 adds GPIO controller support.
+Patch 9 adds internal temperature sensor support.
+Patch 10 adds support for external RTD and bridge circuit sensors.
+Patch 11 adds timestamp channel [new patch]
+
+Change log v3 -> v4
+
+[Device tree changes]
+- Dropped sensor-node and most of defs.
+- Updated external sensor props to have similar name and type of adi,ad4130 ones.
+- Added constraints to properties related to external bridge sensor excitation.
+
+[General IIO driver changes]
+- Locked device mutex to ensure attribute read correctness on all archs
+- Fixed typo unasigned -> unassigned
+
+[Basic driver patch]
+- Added previously missing #include <linux/cleanup.h>.
+- Moved struct completion declaration to reduce commit diff.
+
+[Calibration scale/gain patch]
+[Calibration bias/offset patch]
+- No longer restoring calib gain or calib offset on reg write fail.
+
+[Digital filter and sample frequency config patch]
+- Use scoped_guard to ensure correct lock release order in ad4170_set_filter_type().
+
+[Buffer support patch]
+- Fixed a bug in the filling of the IIO device buffer.
+
+[CLOCK provider patch]
+- Explicitly stated that clock divider (CLKDIV) control support is not provided.
+- Skipped clock provider register if "#clock-cells" is not present.
+
+[GPIO controller patch]
+- Made AD4170 depend on GPIOLIB.
+
+[External sensor patch]
+- Update to string adi,sensor-type dt property.
+- Adapted external sensor dt prop parsing to work with the updated version of those props.
+- Improvements to readability.
+
+[New patch - Add timestamp channel]
+
+Link to v3: https://lore.kernel.org/linux-iio/cover.1747083143.git.marcelo.schmitt@analog.com/
+Link to v2: https://lore.kernel.org/linux-iio/cover.1745841276.git.marcelo.schmitt@analog.com/
+Link to v1: https://lore.kernel.org/linux-iio/cover.1744200264.git.marcelo.schmitt@analog.com/
+
+Ana-Maria Cusco (1):
+  iio: adc: Add basic support for AD4170
+
+Marcelo Schmitt (10):
+  dt-bindings: iio: adc: Add AD4170
+  iio: adc: ad4170: Add support for calibration gain
+  iio: adc: ad4170: Add support for calibration bias
+  iio: adc: ad4170: Add digital filter and sample frequency config
+    support
+  iio: adc: ad4170: Add support for buffered data capture
+  iio: adc: ad4170: Add clock provider support
+  iio: adc: ad4170: Add GPIO controller support
+  iio: adc: ad4170: Add support for internal temperature sensor
+  iio: adc: ad4170: Add support for weigh scale and RTD sensors
+  iio: adc: ad4170: Add timestamp channel
+
+ .../bindings/iio/adc/adi,ad4170.yaml          |  543 +++
+ MAINTAINERS                                   |    8 +
+ drivers/iio/adc/Kconfig                       |   16 +
+ drivers/iio/adc/Makefile                      |    1 +
+ drivers/iio/adc/ad4170.c                      | 2973 +++++++++++++++++
+ 5 files changed, 3541 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
+ create mode 100644 drivers/iio/adc/ad4170.c
+
+
+base-commit: c06335516e8c14f501a479a4d9de0e6c09c52ef2
+-- 
+2.47.2
 
