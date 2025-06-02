@@ -1,95 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EAFA221DA2;
-	Mon,  2 Jun 2025 14:00:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21F81E3772;
+	Mon,  2 Jun 2025 14:01:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748872827; cv=none; b=JVAEcMJ8M+Lzd2xpsKnDZ2FIp5hIA4rJjZ56JCYJCWWIKrHhtNfhqNTg3notHcLtwTm42GEEkfCtaPxLMBO+863Zt+rMcS8ProjXMs89Og3YM8OLJB5JoQRDzDpJcCHsylNsJb/yH9r2YQXh2FSZtmWowwNKQcMuvD7HnNUzsUU=
+	t=1748872871; cv=none; b=P+4tcxDpWENqZyKDMe1qk2LYnX03B0LwVun0e3TamTCOKvH8eA6mVOHzh36zRVP0O595vkZz61Rm2tL22DJ0Z4SvpXY2DV8uXgk+ZtCXwfMyhMPQR2kaaJEGmbukl13FT3PkmORgDdYvO1/8ghLVhw+lRzzGygK9cH2RZM2TjRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748872827; c=relaxed/simple;
-	bh=wNC7AaKe9Ra7Pe5UYUQ6T8kl4WJKtgV4gm/y/d9HwYA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=hm4OHHaMqnMaPibwGoiQ6g1+kf0H+fzgSvZIAw1zkgKDaL/VtJ6C22ejori/o2gm055onyrfZPH6+ph8y/az9f/syfn9WqMKG0ql1K26/JzEPrpj92355IWE9fVPnDaCx1ZZPe8Irb1Y7lIt9ilayMj55usTfCNKMTr0sziD1F0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=odmJ29Tg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748872871; c=relaxed/simple;
+	bh=tnzDrYQlCcDbVE3Ad/PaUGDBvXzYbqTNAmF/EbjsrTI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=L0RyiYL3NdqF5SBRafKfvek1utefyGQI8F06aNNDj0udzYlZrB8jAXn1nn5wlIgfkFh5VdHc22pOnDgk1xoiYN3QyisjqW4tbLK/LkefD4LYEVrz4qWuR1aT8adTApORp7trUPnu4oBWVvqgXiJOoRkkukGYk3eD/w0bMCabnIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=es6Dta9o; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8in+sZi8; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="odmJ29Tg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01AD1C4AF09;
-	Mon,  2 Jun 2025 14:00:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748872826;
-	bh=wNC7AaKe9Ra7Pe5UYUQ6T8kl4WJKtgV4gm/y/d9HwYA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=odmJ29TgLSk1eGgj/iJAPiRUO858mVI2Tt41Em+yUgfpwQafnTSb0TYyzYTji7Gfm
-	 hqF4QIi+Ql3uxYhMBXD91tvYIYfQ0/PDKDJK6SKMnh9hjY7kOqmhwIdmtAmmfVf8Sb
-	 qj03+/Ou5TEWeF8opqLH9BZjMJO+2cXnEFhjWrVwxCwY16Km0zvogqhjoH1/EBama/
-	 aX41571aA3F335y3HaJwIR/5t1O8XN+chx2jx6C0vgeCVrokOeyOwvtDkBxdTbVo7V
-	 k7przZP19XGI0Jr+fxT4GAhMjOiYqxUkZDZry3pMwxqmu3sYOYGxpee2p/31RnZLsj
-	 1m6i0Io8ggCfA==
-X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Xu Yilun <yilun.xu@linux.intel.com>, kvm@vger.kernel.org,
-	sumit.semwal@linaro.org, christian.koenig@amd.com,
-	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
-	jgg@nvidia.com, dan.j.williams@intel.com, aik@amd.com,
-	linux-coco@lists.linux.dev
-Cc: dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org, vivek.kasireddy@intel.com,
-	yilun.xu@intel.com, yilun.xu@linux.intel.com,
-	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
-	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
-	zhenzhong.duan@intel.com, tao1.su@intel.com,
-	linux-pci@vger.kernel.org, zhiw@nvidia.com, simona.vetter@ffwll.ch,
-	shameerali.kolothum.thodi@huawei.com, iommu@lists.linux.dev,
-	kevin.tian@intel.com
-Subject: Re: [RFC PATCH 20/30] vfio/pci: Do TSM Unbind before zapping bars
-In-Reply-To: <20250529053513.1592088-21-yilun.xu@linux.intel.com>
-References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
- <20250529053513.1592088-21-yilun.xu@linux.intel.com>
-Date: Mon, 02 Jun 2025 19:30:15 +0530
-Message-ID: <yq5ar002jlao.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="es6Dta9o";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8in+sZi8"
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1748872867;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=mHTcjK86DwFps5axChZfBj5W49tmXXBhspRAwpyzkWk=;
+	b=es6Dta9orxDVsX11t3dHqhgC6G7xiJHGVZ1iXkBtvNndMLKIrTOhJ4/ujm8do9GCpX2vys
+	cWigCkn3Ka1c6Mvsc/drXHdg9FMLIatSllOC+wGH5ib7o6GHeM5u8rITP3g1WODwNrce6K
+	Gv/xOT0XCWoAu3UM/Gra6o1nThsO69pf1NbHCUVr9D5R1/rBj57B5TiSykQDD8A3efeRKg
+	aunbno7PQVCLWp765mZ+TnUVRlXh3Nig3/N8gBP/4xhrO13CjUZts2Pc4vq1G8fgtTzvGL
+	auQm2rG+EJPU8L7dw4AJ8uCdObu8mQ/X1Xpnj3IocvC+13+hcRORhPBwMLFI5g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1748872867;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=mHTcjK86DwFps5axChZfBj5W49tmXXBhspRAwpyzkWk=;
+	b=8in+sZi8NxEYZxzj9t86eHP8TJw4kuf2SdPxiFdQk/uWtWUpuAzNFEJjX8DZkGFzpRVu5T
+	AIQqkGnuLgn4TvDw==
+To: linux-kernel@vger.kernel.org,
+	linux-man@vger.kernel.org
+Cc: Alejandro Colomar <alx@kernel.org>,
+	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH v4 0/4] Add documentation for PR_FUTEX_HASH
+Date: Mon,  2 Jun 2025 16:01:00 +0200
+Message-ID: <20250602140104.2769223-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Xu Yilun <yilun.xu@linux.intel.com> writes:
+Add some documentation of the prctl(PR_FUTEX_HASH, =E2=80=A6) interface.
+The PR_FUTEX_HASH interface has been merged during the merge window,
+v6.16-rc1 is expected this weekend.
 
-> When device is TSM Bound, some of its MMIO regions are controlled by
-> secure firmware. E.g. TDX Connect would require these MMIO regions
-> mappeed in S-EPT and never unmapped until device Unbound. Zapping bars
-> irrespective of TSM Bound state may cause unexpected secure firmware
-> errors. It is always safe to do TSM Unbind first, transiting the device
-> to shared, then do whatever needed as before.
->
-> Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
-> ---
->  drivers/vfio/pci/vfio_pci_config.c |  4 +++
->  drivers/vfio/pci/vfio_pci_core.c   | 41 +++++++++++++++++++-----------
->  drivers/vfio/pci/vfio_pci_priv.h   |  3 +++
->  3 files changed, 33 insertions(+), 15 deletions(-)
->
-> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-> index 7ac062bd5044..4ffe661c9e59 100644
-> --- a/drivers/vfio/pci/vfio_pci_config.c
-> +++ b/drivers/vfio/pci/vfio_pci_config.c
-> @@ -590,6 +590,7 @@ static int vfio_basic_config_write(struct vfio_pci_core_device *vdev, int pos,
->  		new_mem = !!(new_cmd & PCI_COMMAND_MEMORY);
->  
->  		if (!new_mem) {
-> +			vfio_pci_tsm_unbind(vdev);
->  			vfio_pci_zap_and_down_write_memory_lock(vdev);
->  			vfio_pci_dma_buf_move(vdev, true);
->
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+v3=E2=80=A6v4: https://lore.kernel.org/all/20250526155523.1382465-1-bigeasy=
+@linutronix.de/
+  - Make FH_FLAG_IMMUTABLE and CONFIG_PROVE_LOCKING bold.
+  - Drop one too many "Relative inset"
+  - Reword return value for "GET_IMMUTABLE"
+  - Reword the description of "unrelated futexes" in PR_FUTEX_HASH
 
-For a secure device mmio range instead of vfio_pci_zap_and_down_write_memory_lock()
--> unmap_mapping_range() we want the vfio_pci_dma_buf_move right? Also
-is that expected to get called twice as below?
+v2=E2=80=A6v3: https://lore.kernel.org/all/20250520104247.S-gVcgxM@linutron=
+ix.de/
+  - Split the individual PR_FUTEX_HASH ops into their own man page.
+  - Reword a sentence referring to uaddr in order to link to futex(2).
+  - Address remaining review feedback such the semantic new line.
 
-vfio_pci_tsm_unbind-> pci_tsm_unbind -> tdx_tsm_unbind ->
-tsm_handler->disable_mmio() -> vfio_pci_core_tsm_disable_mmio -> vfio_pci_dma_buf_move(vdev, true);
+v1=E2=80=A6v2: https://lore.kernel.org/all/20250516161422.BqmdlxlF@linutron=
+ix.de/
+  - Partly reword
+  - Use "semantic newlines"
 
--aneesh
+Sebastian Andrzej Siewior (4):
+  man/man2/prctl.2, man/man2const/PR_FUTEX_HASH.2const: Document
+    PR_FUTEX_HASH
+  man/man2/prctl.2, PR_FUTEX_HASH_SET_SLOTS.2const: Document
+    PR_FUTEX_HASH_SET_SLOTS
+  man/man2/prctl.2, PR_FUTEX_HASH_GET_SLOTS.2const: Document
+    PR_FUTEX_HASH_GET_SLOTS
+  man/man2/prctl.2, PR_FUTEX_HASH_GET_IMMUTABLE.2const: Document
+    PR_FUTEX_HASH_GET_IMMUTABLE
+
+ man/man2/prctl.2                              |  3 +
+ man/man2const/PR_FUTEX_HASH.2const            | 89 +++++++++++++++++++
+ .../PR_FUTEX_HASH_GET_IMMUTABLE.2const        | 39 ++++++++
+ man/man2const/PR_FUTEX_HASH_GET_SLOTS.2const  | 37 ++++++++
+ man/man2const/PR_FUTEX_HASH_SET_SLOTS.2const  | 82 +++++++++++++++++
+ 5 files changed, 250 insertions(+)
+ create mode 100644 man/man2const/PR_FUTEX_HASH.2const
+ create mode 100644 man/man2const/PR_FUTEX_HASH_GET_IMMUTABLE.2const
+ create mode 100644 man/man2const/PR_FUTEX_HASH_GET_SLOTS.2const
+ create mode 100644 man/man2const/PR_FUTEX_HASH_SET_SLOTS.2const
+
+--=20
+2.49.0
+
