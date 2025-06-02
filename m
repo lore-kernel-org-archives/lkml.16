@@ -1,156 +1,126 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07425224882
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 16:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99145221280
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 16:53:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748883201; cv=none; b=X0TvHUc9//9s5rXFXbjxx7iivY90BWt5uBjaCDtoPHVljq9t953kmRRaB48nwRUkYFjPzyTfm3GgQw9xVAqkv+MT8oOnRWQRY0+twNU/R3rz/Vt1tdmh8ldaBwzCO1G/BcVfgki6lcx3TAEZMmusLBkAA1xClwho0LTzg5+ZheE=
+	t=1748883218; cv=none; b=DuNEolUU4qJIsqu9tS9RAnwwZTSv0luH6UpA263qVFYTHKl8An55Xh2FWd9u96iv1Mmo/lw20Cy49Tl3WotJ/P/RBaRgVQnN9uUX0MNBWdkfJCT2OVWRufgbzcCsESoHbcdaHll2cS/IFjI5bpW/n/abZJ/vWi65V98bEACmGJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748883201; c=relaxed/simple;
-	bh=sNnLuhKO3AReaOzRIspErHSF5xPJfYKaxZ8sZbVkEh0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mgIFoxx+i+r/4PM0KWZy2Qwc+QgsCUZXkLXI6hti768FjlZiPYuSyBLI5gQGvhHfTMGEpx442uZCoWoZawGhpdVaI9qu6EtY+orYqP7PpFezqW2fbiqRpEg17FIS0fZhtZKkXdti02MMQQmACMVQEd3Y4MOGGwgysMBJBNv8Ols=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=XhRhv1pn; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1748883218; c=relaxed/simple;
+	bh=qfYGX5uf3SN2A72mhHtHMLZvVQ4BrJ7GbTCkW23d4dc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SEXVKad7TijfSHpGDw+MIrz+cFYf3zdCQFz/Sw3ufqhzPBMHlhAbEo7hH/IVre6uDOX5PD5jFROWlKEo4SJOwoj75QIMwm/5O+7Dg6xcIWA5Hk8KRpmfehPIi1MhbqOFcd+ocMD0ja/HBGo6MKyXgzqpnLdfI/LdHvvl+pf5oNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C2mZsHDg; arc=none smtp.client-ip=209.85.219.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="XhRhv1pn"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-450ccda1a6eso41640195e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 09:53:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C2mZsHDg"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e812fc35985so1558546276.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 09:53:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1748883196; x=1749487996; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5agi1qs9OW78m3JphTzvG7DfpG3RNEiOQUPRyolTd6E=;
-        b=XhRhv1pnnGjlDoo1gJU3hpFr3LZuzQUb4lcHlAZcU/5zyfr1+HFPodaXiwiZXt+aVG
-         /Qc35uq/fbXCx5lAOU6wtIbUvvqm00E7m56/wng7eQZlqsP0hAlXyofd5IvkA9oyHn0y
-         WvTHtPdrdtvzyLhEhsXbzEz0mJ6KoUXLyJiXwXELPmFRpQC6abQmWbHnkwy9yEt6pzu7
-         Kyu3mJ08CSpKChKtd3c0RzwVmor7WF1SkGM8zOMeCUWKsxcSMl+4MFLGEDFAM83rQQtX
-         +djQquhW9KX99SxPCpwDYgMEEYBlxGVR9Na+xrqKPNH1yGz0LmmHB1DKMzcyn5PbEjqx
-         N9UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748883196; x=1749487996;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1748883215; x=1749488015; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5agi1qs9OW78m3JphTzvG7DfpG3RNEiOQUPRyolTd6E=;
-        b=i3ewXriqO3y2re38F1bRATKMUJOO2AIVPRAfYMr7+LuegwxztIQAJMtUQTlr0xdNdf
-         KVAajSeGg/AKSz3v8BXZ7Q8HCy6t2Hq+/Wz7SVyXkLhLCxi4gzwR8K6NhXKKPUzRvId0
-         P0T0QMuG5S60fz9NdpK/TOnzdm86SgaCfvnCDm2OqfwZveyUO7TDrlDmW5PZD8SgV5PF
-         jpK5wjqRMTk8T/MF+lJbXig6n0gDsZeUvBPDIPJYwsJ5f4kikBZQ1qFPm+6jldey/ofV
-         M+RH/EX6zpz/p9czwXYScgqGbpLP2W34qAOkj2S3rINeRGpVy0IDPwkBNxiECMPTialL
-         Ie+w==
-X-Forwarded-Encrypted: i=1; AJvYcCVEXnjIOrKarEyU4kg0YC1ctz7tar44/3dwIsRVJHtpSUdBdKsANFVnHu1esFFH69YZoOXl5lCxQXxSg+A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwK1inc8CXos3exrcDTx2/aR9OgXwFjFVJ2W7bivlGBH4QuCUoZ
-	DJ3sDoOI2qS7YXki3vpXbPuy7cOj/qzaRSMbGU8Q3oUtc8UurEthNj1zROQBE88ImWY=
-X-Gm-Gg: ASbGnct1WsbkA4ztW6GTe78+0fXjlNpbhr/g7cJ7b/oyrZteTpD7do8tlnUpJ+wXKxW
-	n0YZ1RNCkE6vVu5JZdTQ5MhNsloMCwN9tpbjVgz/V8nHlZK+gj+f6n6pLyB5t6TPy+EPrUMZm0a
-	cmU9cjht7DOAC/waPAhNyHS3ST0lHVomDSvJIbvVknlRdCg6CKxg23TunbeFDTEjAXQBarn8hFV
-	PAwpXQZ06V/GCt6zJbqFiZwWKVDlt1htxaYQsAljZsX4SzeDNDRLEDrLG5/8E4YG0wKkusL81Yl
-	x3CrkJcodSzEnzMqT7ghcVjqxcYIsmHJn7Q/TqDZOXS/WEvZKLlbKg==
-X-Google-Smtp-Source: AGHT+IHIE0h8ks2B24+GvFatYdBhkFfv8FzjJdWIaF0OkvJ4PLpG5qpKqArlSVDjF/Tm2wElewMocA==
-X-Received: by 2002:a05:6000:40cb:b0:3a3:7987:945e with SMTP id ffacd0b85a97d-3a4f89df65dmr10778901f8f.56.1748883196046;
-        Mon, 02 Jun 2025 09:53:16 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe5b7b0sm15609636f8f.10.2025.06.02.09.53.15
+        bh=xDHMuqo6RzMoJIRbVQT8ztx5HK0kzx4NSGfmPKbpaeM=;
+        b=C2mZsHDgKGjj6xg5TokIyRXKDswfYeCwDzRjAGDeuRJ+Nl3zxNWcfKKxB+EGCF8hp9
+         VhFS0lbNOjQBattHnG3ReGGpYjh8+gwccXK9DzGCg6BcOVjNypBq7iPMCgiXo2UgorRX
+         MJWYi92UmiXR9ByBZA705Q1gFqItbglS1elyx89/m5p1cda7diTwCgYs3ZveUPGmb0KM
+         rnyNvIEkf65DEWWiDyKg9dUaQuG7EFmzaUyQDiSK/FtGMM07YM1b8LU6V/7ctsJWGtp7
+         CtZ/aGUK1J3Vslf2bCSqkFQiX5TjjIzaQsfa3knqe1K8Yyq4KlDOIGPgWncxCj+89ASx
+         j49g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748883215; x=1749488015;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xDHMuqo6RzMoJIRbVQT8ztx5HK0kzx4NSGfmPKbpaeM=;
+        b=fhNi/wKQNcS9mTLy+b88NKahS4wE71veEoBHCpOnyIOJ80ggUxZutbOYRfUFbf7sj1
+         Ah0Iw5/iqnFFE3MvyFR0tsm4kAJCe8vnuXi3mqQd/MKFpVBDqQggDFQmYrVq7cM8Gu7a
+         X8xdrrhq0vdl2E5ux1s2YKeFNTQNMb+sSfMjBG2NBzVMr7/aswRXv2J8CNYL4uRiP9id
+         sKC+FiHmEMJsWlBIXRqUky7HR2Linyi97tA7k8WSdzgTV5HSpuAG6Fxglc1mFPTGMhYz
+         LXy8ZChI/Hp8x8fDgedDgno7mngr04qL5xRpGYFJd6lJVRR0EMASTGI5k/l3UwE3NUVb
+         C6zA==
+X-Forwarded-Encrypted: i=1; AJvYcCXQeT4VIGo91GprWK6bfntWyRpbIldt2NCA7QLdz1PWSogxMmeQoWEjpiJqwYCffaerNEWiJ1A5N2oZkeY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQh/A0oHBLBBxIdnt3EPgmSDJPocYMDVSg23W42iqyJwXvDu66
+	6tJ5vIsq7eL7R949B1INS3jcyk7XJ0KEtU5pDxS/9648mfRHhQrWtG1V
+X-Gm-Gg: ASbGnctlJaQTiIyThyQgTIUYBsPEIjoKRpc5pnUoCUnqCjr/GBM2Y+b5/d8a7LddlEY
+	UYJMKUV8ipQ8QH5NpPiCKW7ZHDsfIC/3a/8QPJ8GmSvPCsNpzWA42WcmHd8sX9111S1atjDF8qJ
+	c7D9la7N4rtyUAGknllIBaxRgIQsv8D73bO/IPS/zl2ZCj5sC3MaedPDhB4cydOWm4pFF77yWCc
+	vH1R8XpZzgfIIrHRcnDHO1Qo1O+5uo6FF5xqCr45VHTmQ6C7rVDvs3Y0DmCMAotPNLLA+BSYUcr
+	iIJyreK6nA1Fe3kmj4l/JHX5m60+pcTkXTwvoYItkDptP2lXN/U=
+X-Google-Smtp-Source: AGHT+IHn23nMGp0B35ZPqUDMayqPq1AMBdtqerU9zasbWOYSJSaq5D+zdFs6bGTN3Xvsede1apJ8jg==
+X-Received: by 2002:a05:690c:6a02:b0:70e:142d:9c69 with SMTP id 00721157ae682-70f97f2f43emr206017637b3.31.1748883215244;
+        Mon, 02 Jun 2025 09:53:35 -0700 (PDT)
+Received: from localhost ([2a03:2880:25ff:72::])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-70f8abd6052sm21510437b3.24.2025.06.02.09.53.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 09:53:15 -0700 (PDT)
-Date: Mon, 2 Jun 2025 18:53:13 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: "Chen, Yu C" <yu.c.chen@intel.com>, peterz@infradead.org, 
-	akpm@linux-foundation.org, mingo@redhat.com, tj@kernel.org, hannes@cmpxchg.org, 
-	corbet@lwn.net, mgorman@suse.de, mhocko@kernel.org, muchun.song@linux.dev, 
-	roman.gushchin@linux.dev, tim.c.chen@intel.com, aubrey.li@intel.com, libo.chen@oracle.com, 
-	kprateek.nayak@amd.com, vineethr@linux.ibm.com, venkat88@linux.ibm.com, ayushjai@amd.com, 
-	cgroups@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, yu.chen.surf@foxmail.com
-Subject: Re: [PATCH v5 2/2] sched/numa: add statistics of numa balance task
-Message-ID: <djkzirwswrvhuuloyitnhxcm3sh7ebk6i22tvq2zzm4cb6pl45@t64jvtpl3ys6>
-References: <cover.1748002400.git.yu.c.chen@intel.com>
- <7ef90a88602ed536be46eba7152ed0d33bad5790.1748002400.git.yu.c.chen@intel.com>
- <cx4s4pnw5ymr4bxxmvrkhc457krq46eh6zamlr4ikp7tn3jsno@xzchjlnnawe5>
- <uuhyie7udxyvbdpccwi7dl5cy26ygkkuxjixpl247u5nqwpcqm@5whxlt5ddswo>
- <a8314889-f036-49ff-9cda-01367ddccf51@intel.com>
- <fpa42ohp54ewxxymaclnmiafdlfs7lbddnqhtv7haksdd5jq6z@mb6jxk3pl2m2>
+        Mon, 02 Jun 2025 09:53:34 -0700 (PDT)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: Joshua Hahn <joshua.hahnjy@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Gregory Price <gourry@gourry.net>,
+	David Hildenbrand <david@redhat.com>,
+	Zi Yan <ziy@nvidia.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Rakie Kim <rakie.kim@sk.com>,
+	Byungchul Park <byungchul@sk.com>,
+	Ying Huang <ying.huang@linux.alibaba.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH 1/2] mm/mempolicy: Fix incorrect freeing of wi_kobj
+Date: Mon,  2 Jun 2025 09:53:31 -0700
+Message-ID: <20250602165332.2746843-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250602162345.2595696-1-joshua.hahnjy@gmail.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="g6yleufkzt7awgj3"
-Content-Disposition: inline
-In-Reply-To: <fpa42ohp54ewxxymaclnmiafdlfs7lbddnqhtv7haksdd5jq6z@mb6jxk3pl2m2>
+Content-Transfer-Encoding: 8bit
 
+On Mon,  2 Jun 2025 09:23:39 -0700 Joshua Hahn <joshua.hahnjy@gmail.com> wrote:
 
---g6yleufkzt7awgj3
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v5 2/2] sched/numa: add statistics of numa balance task
-MIME-Version: 1.0
-
-On Tue, May 27, 2025 at 11:15:33AM -0700, Shakeel Butt <shakeel.butt@linux.=
-dev> wrote:
-> I am now more inclined to keep these new stats in memory.stat as the
-> current version is doing because:
->=20
-> 1. Relevant stats are exposed through the same interface and we already
->    have numa balancing stats in memory.stat.
->=20
-> 2. There is no single good home for these new stats and exposing them in
->    cpu.stat would require more code and even if we reuse memcg infra, we
->    would still need to flush the memcg stats, so why not just expose in
->    the memory.stat.
->=20
-> 3. Though a bit far fetched, I think we may add more stats which sit at
->    the boundary of sched and mm in future. Numa balancing is one
->    concrete example of such stats. I am envisioning for reliable memory
->    reclaim or overcommit, there might be some useful events as well.
->    Anyways it is still unbaked atm.
->=20
->=20
-> Michal, let me know your thought on this.
-
-I reckon users may be little bit more likely to look that info in
-memory.stat.
-
-Which would be OK unless threaded subtrees are considered (e.g. cpuset
-(NUMA affinity) has thread granularity) and these migration stats are
-potentially per-thread relevant.
-
-
-I was also pondering why cannot be misplaced container found by existing
-NUMA stats. Chen has explained task vs page migration in NUMA balancing.
-I guess mere page migration number (especially when stagnating) may not
-point to the the misplaced container. OK.
-
-Second thing is what is the "misplaced" container. Is it because of
-wrong set_mempolicy(2) or cpuset configuration? If it's the former (i.e.
-it requires enabled cpuset controller), it'd justify exposing this info
-in cpuset.stat, if it's the latter, the cgroup aggregation is not that
-relevant (hence /proc/<PID>/sched) is sufficient. Or is there another
-meaning of a misplaced container? Chen, could you please clarify?
-
-Because memory controller doesn't control NUMA, it needn't be enabled
-to have this statistics and it cannot be enabled in threaded groups, I'm
-having some doubts whether memory.stat is a good home for this field.
-
-Regards,
-Michal
-
---g6yleufkzt7awgj3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCaD3W9wAKCRAt3Wney77B
-Sd2uAP99fRZB3zwdhHyZCwIbpZAgx51Hl8FgeZoZxCpyovrMGgEA39M62oE0rmZz
-mcKZRPReYjxX0Ty4SyIIK75L/yiX4Qs=
-=IOWj
------END PGP SIGNATURE-----
-
---g6yleufkzt7awgj3--
+> We should not free wi_group->wi_kobj here. In the error path of
+> add_weighted_interleave_group() where this snippet is called from,
+> kobj_{del, put} is immediately called right after this section. Thus,
+> it is not only unnecessary but also incorrect to free it here. 
+> 
+Fixes: e341f9c3c841 ("mm/mempolicy: Weighted Interleave Auto-tuning")
+> Signed-off-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202506011545.Fduxqxqj-lkp@intel.com/
+> ---
+>  mm/mempolicy.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index 72fd72e156b1..3b1dfd08338b 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -3708,15 +3708,13 @@ static void wi_state_free(void)
+>  			lockdep_is_held(&wi_state_lock));
+>  	if (!old_wi_state) {
+>  		mutex_unlock(&wi_state_lock);
+> -		goto out;
+> +		return;
+>  	}
+>  
+>  	rcu_assign_pointer(wi_state, NULL);
+>  	mutex_unlock(&wi_state_lock);
+>  	synchronize_rcu();
+>  	kfree(old_wi_state);
+> -out:
+> -	kfree(&wi_group->wi_kobj);
+>  }
+>  
+>  static struct kobj_attribute wi_auto_attr =
+> -- 
+> 2.47.1
