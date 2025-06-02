@@ -1,85 +1,116 @@
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A9717A303
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 07:03:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945AA6ADD;
+	Mon,  2 Jun 2025 07:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748847825; cv=none; b=YL3V+PfI7PPSmj1JgKWV9WGUCFtELzzEjNSSGm+dP6Fx6caLioFlVJ3HC7jE6AnvQTH5LK8GfjPCMWXrWfpD9KyUT3vDKNv/WPPRHAarX6lUuq4djYyr46kZhJqlhHrPJ2WcuYkBRS70P35Bnx8QD682YjeEH72ko0gMkjXUzu4=
+	t=1748847915; cv=none; b=fWoPuJw/jXoZz/WJKAImeadkHYR9s1e9AyfgsL7Niwq2iIrQkL68FTwzBmE2itDsfg3PCIC3jukSjsXYU9VUW6ozpIgh5/lYWKC4E4DpktLxk8WSdGn/+Os6f820lRxMhxZuvyTkj7ho7C8ArWGaURgjEI9ke5tIe7sJdt2Z+B0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748847825; c=relaxed/simple;
-	bh=aZCJcblbElIitQlmWiG8blGEDXgzlXYgqJYCQ/VgPns=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=s/+tX7UgAT7/KUfYDCiAOnDg7HFyEQQNa/2zDrrKZgXRiOrNrVKzDNGZAUYSp23IG1TOD5oMWyus/E9W5Bphh7slCCAUigfZH893DL46XBRcVfNOKtfGEmiRtzAIGWksdzA7bI9A7vG4jVmp+P6KF5LqE7RnrdEpUmNQKJ16TF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
-Received: from mail.andestech.com (ATCPCS34.andestech.com [10.0.1.134])
-	by Atcsqr.andestech.com with ESMTPS id 55272pLT020253
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK);
-	Mon, 2 Jun 2025 15:02:51 +0800 (+08)
-	(envelope-from ycliang@andestech.com)
-Received: from swlinux02 (10.0.15.183) by ATCPCS34.andestech.com (10.0.1.134)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 2 Jun
- 2025 15:02:51 +0800
-Date: Mon, 2 Jun 2025 15:02:48 +0800
-From: Leo Liang <ycliang@andestech.com>
-To: <linux-kernel@vger.kernel.org>
-CC: <rd-sw-linux@andestech.com>, <daniel.thompson@linaro.org>,
-        <rmk+kernel@armlinux.org.uk>, <ying.huang@intel.com>
-Subject: [QUESTION] NMI: Understanding ARCH_HAVE_NMI_SAFE_CMPXCHG usage
-Message-ID: <aD1MmIi8o2vyi-Zs@swlinux02>
+	s=arc-20240116; t=1748847915; c=relaxed/simple;
+	bh=/agSbtTlBnvlNYz0HytGbIny9TXx7Zqqrgv0m4BerA8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=QT3uhi/VjDNZ7q+KE3oOICKoVTzvClH9sjq5XrLwtVaPAgm3rjmyRCN/I2I5lEBAh4vti5iKk8z6GhHzbBoYYnZpeA4TNQ638s1Nubi4+Qb6fWJXYmAJq8GknQx+2iI/90ElFoz/Xh4yIrTuU6JaMZOYTgzBmdJD3P+eV6nZU+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IA166vdB; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IA166vdB"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a4fd1ba177so1068944f8f.0;
+        Mon, 02 Jun 2025 00:05:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748847912; x=1749452712; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/agSbtTlBnvlNYz0HytGbIny9TXx7Zqqrgv0m4BerA8=;
+        b=IA166vdBcATiZChb02jz5uG493Wiuzs7hrRWXJqWecjb+sjeeOuOk32weWJIWEaPJ2
+         kIYo9w9CrGo4c7qRbIwt9hwgeGuegmql/0dPrh5s+x/qtdkFS8yZncBXCGrHn4dwudz1
+         kyCgyQASkDL9Y739GUve3Pxe5uRNoLgISJ7s35bKKShi3Tbd0AACvXHew5y+xBfFxuQh
+         D0ac6sHP3KgLMBI33XRX+5Zi8J1iCBeXI9nlGkpqNCCU3Dfutoh9fA3rVRpsof++w08Y
+         AILnp1SiSTbqn/T5UPJetRqFsN7Xy7WfIrKE0aQdggkOWlMRPxP79rU+Qu9LAni0//2o
+         p92A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748847912; x=1749452712;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/agSbtTlBnvlNYz0HytGbIny9TXx7Zqqrgv0m4BerA8=;
+        b=wlay8v8BQrkhgA12C4E9fDlw5MBnwWru+0Q09QCpG7R3Oz0zeuu4JNRDSI0PsfEOPl
+         Q0QbJa9jEBN2RHOR+RI6ikts2XkzyRLH1EA+AtFyUcWL/iGDuNrQzkce1NeEOiMYgIqW
+         BMiwEm77NjrGKEodw3YISSS8cKBavqawExyjwnK7YnwKNWZdTUbVYyI96Ye2c0d92Fhx
+         SE8YDxpWyAu9pWS5oEmH18vzqsvHQDDymvlJU8JiiRwmuOMHEEw1++hkvof0tbZ7Yt4c
+         +q6AXjsaQVaz7YkXT5yo49gmwteskjBSNsDy3pI2TccwimkCUH2ic55s0SgUM1Q1dcUC
+         6Fpw==
+X-Forwarded-Encrypted: i=1; AJvYcCU9xqpZpYnOpl7yrjQW6bv0CVbMzu9r22su25gNrRwxNVQmKgHWSBcpyAiKDSZR2E3XWHRbvPLJjmK3IuNVMkQ3frE=@vger.kernel.org, AJvYcCV+Zz7l9bFJnK3EkuOVKn/lBFTxgzQzCkw0T6h9OKUyL85DwZwY9uJs9U9w4jFgK+QIiVwh2ajS7HqJ@vger.kernel.org, AJvYcCW6a/F2oIxAvcWYs1kbfZ7WxRewS16OsAEgZgOAa8IZxvlESn070pHz68C+O8bPa5KL8HdJTAYf5Jl8YVpc@vger.kernel.org, AJvYcCXYk0LbWZrbi+jTOCPcpaqhqaggK5K90UiSP6YQbar2/4DEHhdeKGvtendMH2vJFjD66OPmPqj0I3F5@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywsss22L+sCtev6fyoLPpuysbt5PsxxDC/pa+gRHyNoFBwLW3rP
+	YwoPamW+DNvLU59X4gh/KMYjVk1sDZ32LrEmGe0RKg9oW4ziyP1gmJQ3LwM5EnLOYEomCD7uzub
+	bHwgKHvW4wkgaMHmP/GvjZFgbzKJIgiU=
+X-Gm-Gg: ASbGncvOuEDytMMDWhsbSmfrH0f3e7vRxEW7cQvMrfmQdFJV85b3ra2mJ4wE/IKzJoY
+	RAnipNJIlcGVBNtyzuJ7E8GPKGBtj3AtylNctXVkVcbXNTsixWWqvmFcwYTmr+KyRKp+/lG4e23
+	oWHrA5j70zzTzTqa5t7E20vLdi5IexOps09EYOTMyiDC33uR9a3FkzOLRCL3rMlc7S6Q==
+X-Google-Smtp-Source: AGHT+IH0Zea22k6huD8NYftx0SSoT7UOXUD953lRkUFSmGHltG9SMaCG61Vk1DKMWxTYa8bvPJoUrEemc2Mzq/8jvzk=
+X-Received: by 2002:a05:6000:2485:b0:3a4:e1f5:41f4 with SMTP id
+ ffacd0b85a97d-3a4eeda2f6amr13421055f8f.17.1748847911575; Mon, 02 Jun 2025
+ 00:05:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-User-Agent: Mutt/2.2.10 (e0e92c31) (2023-03-25)
-X-ClientProxiedBy: ATCPCS33.andestech.com (10.0.1.100) To
- ATCPCS34.andestech.com (10.0.1.134)
-X-DKIM-Results: atcpcs34.andestech.com; dkim=none;
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 55272pLT020253
+References: <20250530143135.366417-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250530143135.366417-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <aDryEVl4VtZZqUdK@shikoro>
+In-Reply-To: <aDryEVl4VtZZqUdK@shikoro>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Mon, 2 Jun 2025 08:04:45 +0100
+X-Gm-Features: AX0GCFtXDDE1G3o9rgqW63YXqoKraGeKxlXdelBd4cXjsFer9C21bDSrO6btEz8
+Message-ID: <CA+V-a8uFJ4WvpMg+wFKgyXnRT0omXUnK3JNsjE=1bd_ZNprAPA@mail.gmail.com>
+Subject: Re: [PATCH 4/6] i2c: riic: Pass IRQ desc array as part of OF data
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Prabhakar <prabhakar.csengg@gmail.com>, Chris Brandt <chris.brandt@renesas.com>, 
+	Andi Shyti <andi.shyti@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi everyone,
+Hi Wolfram,
 
-I came across the `ARCH_HAVE_NMI_SAFE_CMPXCHG` definition recently
-and could not fully understand how an architecture indicates its support for it.
+Thank you for the review.
 
-From my initial review of the code,
-it seems to indicate whether a compare-exchange operation is safe
-within an NMI context (handler) without causing a deadlock or other issues.
+On Sat, May 31, 2025 at 1:12=E2=80=AFPM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+>
+> On Fri, May 30, 2025 at 03:31:33PM +0100, Prabhakar wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > In preparation for adding support for Renesas RZ/T2H and RZ/N2H SoCs,
+> > which feature a combined error interrupt instead of individual error
+> > interrupts per condition, update the driver to support configurable IRQ
+> > layouts via OF data.
+> >
+> > Introduce a new `irqs` field and `num_irqs` count in `riic_of_data` to
+> > allow future SoCs to provide a custom IRQ layout. This patch is a
+> > non-functional change for existing SoCs and maintains compatibility wit=
+h
+> > the current `riic_irqs` array.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>
+> Did you test this on RZ/A1? I could do so next week?
+>
+Unfortunately, I haven=E2=80=99t been able to test this on the RZ/A1 as I
+don=E2=80=99t have access to the hardware. If you=E2=80=99re able to run it=
+ next week,
+that would be really helpful.
 
-I have checked the initial commit and the architectures that enabled this config
-with that commit. My inference is that if an architecture implements cmpxchg
-with a lockless algorithm, it should be able to enable this config.
-
-The reason is that I can only think of one constraint: "taking a lock"
-should be avoided in an NMI context in case the NMI encounters a deadlock.
-Therefore, if the architecture does not use interrupt masking and locking algorithm
-to implement cmpxchg then it should be safe for the architecture to enable this config.
-
-However, PARISC implements cmpxchg using interrupt masking and a while loop[1],
-and `ARCH_HAVE_NMI_SAFE_CMPXCHG` is also enabled for this architecture, so I am
-unsure if my inference is valid.
-
-Could someone please clarify the specific implications of this definition
-and in which scenarios it becomes particularly critical? Are there
-any specific hardware capabilities or kernel architecture-specific APIs
-that govern its presence or absence?
-
-I've searched lore.kernel.org and kernel documentation for a detailed
-explanation of `ARCH_HAVE_NMI_SAFE_CMPXCHG`'s history and current
-usage guarantees, but haven't found a definitive overview.
-
-Any pointers or explanations would be greatly appreciated.
-
-[1] https://github.com/torvalds/linux/blob/master/arch/parisc/lib/bitops.c#L59
-
-Thanks,
-Leo
+Cheers,
+Prabhakar
