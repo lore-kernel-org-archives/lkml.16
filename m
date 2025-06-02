@@ -1,144 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E9B5BAF0;
-	Mon,  2 Jun 2025 07:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48DB5BAF0
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 07:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748850602; cv=none; b=Lueqa7JWL+BzGVbgN2ckp1OEN7E1x3V5lqLjBpneOyS10oVOTgOGule1Ve29TM7+knUmQvq2eGspzuCErd69myR+4cXNb5J/CD5INoOWV5mQ8jMfFJF7ssUB33rhmIneVwfSJ3o2VLikYRhr4GotSRL+5bwsq3rn7SRH/XYpclw=
+	t=1748850691; cv=none; b=QeuZ3lIgGtiOAm3BeEkkhILp0HYC0gcxf6Le2xmCfxeJjEl7Xs2ZeXElCzuAfqlpS3SeHQ/iijCf4XLttCKYPu3a3YY3z8jH1/QSDrD8zqmMWhwBRxcgTYhaoyFAIy4swZ/2LJFwiLVFGkaZm5qJwJtaMsAwHoDR5aX8AhNVlIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748850602; c=relaxed/simple;
-	bh=d//H++7exyPSMnan9RFSD5d4qCZ3guc6sNey20DU/Vs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B+26ssMJJkUyrSTwcdwzGABThazi2TWw6W8hR93+DDFD5ZRtQfb7HpQNG1h+P+WxuwP1UJohxDCuhjsBjoIcShhvU6PaH7HmCFDijdDmNUnYtf3/OvhRoJ+XIbc+G4sl8ZR7hrNDizhDpU/caugH+tr1iwzZry2/NgnDq0gL81Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=addjUGgl; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="addjUGgl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9378DC4CEF2;
-	Mon,  2 Jun 2025 07:50:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748850601;
-	bh=d//H++7exyPSMnan9RFSD5d4qCZ3guc6sNey20DU/Vs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=addjUGglBObnNhJ3bwF6Vf5Anv4ro7WHgsy2aP4N5DuIaSjQwBtNfUCT/Qm6NJ8aK
-	 6J9Zhg+Mje76MQliTHidkqSkOfq21WA2qXQTY0M/pUlIdUk+MKqluAFjmQFOrgEAOm
-	 C8tWXhK27WMQS6AdYq7GRzoDfqirk8o6seCNUrZAT0Tceo/+EimqWqqYHjq/ndqRRT
-	 FR68lfR6+2cYwqfKmKO1o0PFl2eLzN0Nu3sVa4R4ue4Oj6K2MK0cMBo246J39F2ia4
-	 15Ws+4CfCYaOCZHiz7ZJluBkQHLSX0GnTRzDWYuP/4yJB65ovgFZMZ+ZmPLwicDaIC
-	 mEundkBMpRDZQ==
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-551fc6d4a76so4415562e87.0;
-        Mon, 02 Jun 2025 00:50:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU8C34bCTTo2cVvVzC/SE6fjetLrdT8gsZd5F00KZLmWW4xT/TzPnMV0SxWk2BE0uqgDZR+NnjbN8Forj7I@vger.kernel.org, AJvYcCVM+1uSPdf16BEODg3iMq8yFGR3x0wR46wndggA+O5l/inURTfRzn4etkKGrTFOBtfdiPV7AAOIYywbzHE=@vger.kernel.org, AJvYcCVWhCLrSpovpYGcZoiFCmR9FLJRK7F9voORjNIeLUdQ81BsUARmk5+lNwbQTOiv05eqoBTrUBul81aYJh9u4g==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJ2S7/VoUbTEP3kj+YcJ8TdaxWq9iUnLkhtxbJr3IZBsNdflSq
-	VdZiXwYs0jT8qIW+7Lft24d/3WG5J7jXoevmaJE84EW3Q0++TzKXgfWh5tA3F+/25MzUlPaLYyK
-	2SglVvHbDroFsPdnk2UGWEYyMr1nKpQg=
-X-Google-Smtp-Source: AGHT+IF8Nko2uHYBlEL64F66tffstcYvHgSRxaUtDS97nJZSz0JSG4C5pVGrWM1kkKBDzoqBWqi/8RO5FTC7kPVVtwQ=
-X-Received: by 2002:a05:6512:3e17:b0:553:3332:b66e with SMTP id
- 2adb3069b0e04-5533d1ad781mr3020135e87.27.1748850600268; Mon, 02 Jun 2025
- 00:50:00 -0700 (PDT)
+	s=arc-20240116; t=1748850691; c=relaxed/simple;
+	bh=UMDcY/x4ajMZTj8Zj5dlLrfxjw6rIfqkylsXXmgVS4Y=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=KUfEDAQrlM8obfwkPQ8BzcqVSPr96bSyxtxd6BVwBDkwS8/m0qpkIBbx9/0+Z8KSdseUwYJS8CVlmDw3JuMRoJC42vmEhBSoHSA0in0bCljijUjLx6vIWu//Aa0A1t4IKxi5eaAmCRbwjPHLptSCy0sfROj/CE9hyeu9RG1/P10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3dd75379fa0so88020855ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 00:51:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748850689; x=1749455489;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XVum76WYJkhxbVFuUvobx6OTlGIJVf1bF6Wj6/N6lf0=;
+        b=UdllbpHZTVgLtUaBaoYLmjfBJKfYrHNMGaa5v+BTfOrMgrbVyykLm4rV2FLX5i5Cfg
+         bGwftToACNY9+n2RmEPBjDpygPwPAW8z0J+tYoq9gvHC3Fh6L3JKdBSAHvV9zPDKEAcy
+         bGHWQmv2EdJRoaUnx+9uEQ+hkaUeO5p6diRSA6phJiA5dwuM/1KE8lK/Cwgmzcprc4hm
+         E8SV6v5DiFoUhY97mJA+K4qmIUfNFWa0lh8gsvOFxnsiepPl2dWKBLb3dfyheKe3C11g
+         0q9Ox48iwXFEQFAZXg92iV8c0iJ+1o4RUZO9owiiNU0+RqYxfaE3I9hZiRapH8Ewlb0n
+         XPZg==
+X-Forwarded-Encrypted: i=1; AJvYcCVlEn9ajB78yzSuRFJwEWCWl8R87nfh6G2I/0LkPzgHHPMg4VDrOSdidqpnQgDiE+a4G6nrfm6/4Pb3orM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlMQV1vcTGpXmx++oOYSPyz8QyGGPBnRbQTk/hURX8pZbWLRRU
+	6hGX5MWVvyhcodwuO7k5AuZU5uIEQZcQFmBd1zoC+v5Hyj8rbc7bQlPe/dHUnNKNvlC4kaKHoKN
+	s2FsKQiBvkYqJMg9uNtC405/ga/O0MGkgvban6ehNVkwGRA9i9y+OKd13Ohc=
+X-Google-Smtp-Source: AGHT+IE2p59FpzEqb3SSgA25S8jo+QkgwR4WUQRGWvPhq7+XLJvwPqNSCBMA/qASAiTtWRzRPK1uYLYshWuWyol+cTziyXFLnMOj
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1748335606.git.legion@kernel.org> <5cd53f6a4bca5186d3c9c47c070883131826c5eb.1748335606.git.legion@kernel.org>
-In-Reply-To: <5cd53f6a4bca5186d3c9c47c070883131826c5eb.1748335606.git.legion@kernel.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Mon, 2 Jun 2025 16:49:24 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATkXFqKLPcHFg-WDynRrVy3BRs6twvcyo2YJQqZBy9xsQ@mail.gmail.com>
-X-Gm-Features: AX0GCFtJsTSjthJfEE6WIU8nSJsrUwshIVZhUEe_rb8vx5p3qrPJT1BCpoYEH_E
-Message-ID: <CAK7LNATkXFqKLPcHFg-WDynRrVy3BRs6twvcyo2YJQqZBy9xsQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/6] modules: Add macros to specify modinfo prefix
-To: Alexey Gladkov <legion@kernel.org>
-Cc: Petr Pavlu <petr.pavlu@suse.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org
+X-Received: by 2002:a05:6e02:1c29:b0:3dd:89d0:3d82 with SMTP id
+ e9e14a558f8ab-3dd99c2875bmr130513095ab.16.1748850688863; Mon, 02 Jun 2025
+ 00:51:28 -0700 (PDT)
+Date: Mon, 02 Jun 2025 00:51:28 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <683d5800.a00a0220.d8eae.0047.GAE@google.com>
+Subject: [syzbot] [bcachefs?] kernel BUG in bch2_bkey_cmp_packed (2)
+From: syzbot <syzbot+00644eb66b865d7db7f0@syzkaller.appspotmail.com>
+To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 27, 2025 at 6:08=E2=80=AFPM Alexey Gladkov <legion@kernel.org> =
-wrote:
->
-> The __MODULE_INFO macros always use __MODULE_INFO_PREFIX. The only way
-> to use a different prefix is to override __MODULE_INFO_PREFIX, which is
-> not very useful.
+Hello,
 
-Not necessarily.
-This would be a very special case only used in modpost,
-and modpost can use MODULE_INFO() instead.
+syzbot found the following issue on:
+
+HEAD commit:    90b83efa6701 Merge tag 'bpf-next-6.16' of git://git.kernel..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=122807f4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=262b2977ef00756b
+dashboard link: https://syzkaller.appspot.com/bug?extid=00644eb66b865d7db7f0
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=162807f4580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12bedbf4580000
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-90b83efa.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/09e54f3c33aa/vmlinux-90b83efa.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/6417d9c45508/bzImage-90b83efa.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/424513942ae2/mount_0.gz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+00644eb66b865d7db7f0@syzkaller.appspotmail.com
+
+    bi_nocow=0
+    bi_depth=0
+    bi_inodes_32bit=0
+    bi_casefold=0
+  nonzero k.p.inode, deleting
+------------[ cut here ]------------
+kernel BUG at fs/bcachefs/bkey_cmp.h:104!
+Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
+CPU: 0 UID: 0 PID: 5322 Comm: read_btree_node Not tainted 6.15.0-syzkaller-07774-g90b83efa6701 #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:__bch2_bkey_cmp_packed_format_checked_inlined fs/bcachefs/bkey_cmp.h:103 [inline]
+RIP: 0010:bch2_bkey_cmp_packed_inlined fs/bcachefs/bkey_cmp.h:116 [inline]
+RIP: 0010:bch2_bkey_cmp_packed+0x941/0x950 fs/bcachefs/bkey.c:1031
+Code: fd 90 0f 0b e8 f0 67 a5 fd 90 0f 0b e8 e8 67 a5 fd 90 0f 0b e8 e0 67 a5 fd 90 0f 0b e8 d8 67 a5 fd 90 0f 0b e8 d0 67 a5 fd 90 <0f> 0b e8 c8 67 a5 fd 90 0f 0b 0f 1f 44 00 00 90 90 90 90 90 90 90
+RSP: 0018:ffffc9000d46ebe0 EFLAGS: 00010293
+RAX: ffffffff841a9320 RBX: dffffc0000000000 RCX: ffff88801c99c880
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 00000000ffffffff
+RBP: ffffc9000d46ed30 R08: ffffc9000d46ec3b R09: 0000000000000000
+R10: ffffc9000d46ec30 R11: fffff52001a8dd88 R12: 00000000ffffffff
+R13: 1ffff92001a8dd8c R14: 00000000ffffffff R15: 0000000800001000
+FS:  0000000000000000(0000) GS:ffff88808d266000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffe172b0da8 CR3: 0000000039110000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ btree_node_read_bkey_cmp fs/bcachefs/btree_io.c:935 [inline]
+ validate_bset_keys+0xb9c/0x1390 fs/bcachefs/btree_io.c:1000
+ bch2_btree_node_read_done+0x18c8/0x4f60 fs/bcachefs/btree_io.c:1211
+ btree_node_read_work+0x426/0xe30 fs/bcachefs/btree_io.c:1400
+ bch2_btree_node_read+0x887/0x29f0 fs/bcachefs/btree_io.c:-1
+ bch2_btree_node_fill+0xd12/0x14f0 fs/bcachefs/btree_cache.c:994
+ bch2_btree_node_get_noiter+0xa2c/0x1000 fs/bcachefs/btree_cache.c:1261
+ found_btree_node_is_readable fs/bcachefs/btree_node_scan.c:85 [inline]
+ try_read_btree_node fs/bcachefs/btree_node_scan.c:220 [inline]
+ read_btree_nodes_worker+0x1319/0x1e20 fs/bcachefs/btree_node_scan.c:269
+ kthread+0x70e/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:__bch2_bkey_cmp_packed_format_checked_inlined fs/bcachefs/bkey_cmp.h:103 [inline]
+RIP: 0010:bch2_bkey_cmp_packed_inlined fs/bcachefs/bkey_cmp.h:116 [inline]
+RIP: 0010:bch2_bkey_cmp_packed+0x941/0x950 fs/bcachefs/bkey.c:1031
+Code: fd 90 0f 0b e8 f0 67 a5 fd 90 0f 0b e8 e8 67 a5 fd 90 0f 0b e8 e0 67 a5 fd 90 0f 0b e8 d8 67 a5 fd 90 0f 0b e8 d0 67 a5 fd 90 <0f> 0b e8 c8 67 a5 fd 90 0f 0b 0f 1f 44 00 00 90 90 90 90 90 90 90
+RSP: 0018:ffffc9000d46ebe0 EFLAGS: 00010293
+RAX: ffffffff841a9320 RBX: dffffc0000000000 RCX: ffff88801c99c880
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 00000000ffffffff
+RBP: ffffc9000d46ed30 R08: ffffc9000d46ec3b R09: 0000000000000000
+R10: ffffc9000d46ec30 R11: fffff52001a8dd88 R12: 00000000ffffffff
+R13: 1ffff92001a8dd8c R14: 00000000ffffffff R15: 0000000800001000
+FS:  0000000000000000(0000) GS:ffff88808d266000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffe172b0da8 CR3: 0000000039110000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
-        list_for_each_entry_safe(alias, next, &mod->aliases, node) {
--               buf_printf(&buf, "MODULE_ALIAS_MODNAME(\"%s\", \"%s\");\n",
-+               buf_printf(&buf, "MODULE_INFO(\"%s\".alias, \"%s\");\n",
-                           alias->builtin_modname, alias->str);
-                list_del(&alias->node);
-                free(alias->builtin_modname);
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-> The new macro will be used in file2alias.c to generate modalias for
-> builtin modules.
->
-> Signed-off-by: Alexey Gladkov <legion@kernel.org>
-> Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
-> ---
->  include/linux/module.h      | 3 +++
->  include/linux/moduleparam.h | 7 +++++--
->  2 files changed, 8 insertions(+), 2 deletions(-)
->
-> diff --git a/include/linux/module.h b/include/linux/module.h
-> index 8050f77c3b64..88048561360f 100644
-> --- a/include/linux/module.h
-> +++ b/include/linux/module.h
-> @@ -170,6 +170,9 @@ struct module_kobject *lookup_or_create_module_kobjec=
-t(const char *name);
->  /* For userspace: you can also call me... */
->  #define MODULE_ALIAS(_alias) MODULE_INFO(alias, _alias)
->
-> +#define MODULE_ALIAS_MODNAME(_modname, _alias) \
-> +       __MODULE_INFO_WITH_PREFIX(_modname ".", alias, alias, _alias)
-> +
->  /* Soft module dependencies. See man modprobe.d for details.
->   * Example: MODULE_SOFTDEP("pre: module-foo module-bar post: module-baz"=
-)
->   */
-> diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
-> index bfb85fd13e1f..3f819fc67c43 100644
-> --- a/include/linux/moduleparam.h
-> +++ b/include/linux/moduleparam.h
-> @@ -20,10 +20,13 @@
->  /* Chosen so that structs with an unsigned long line up. */
->  #define MAX_PARAM_PREFIX_LEN (64 - sizeof(unsigned long))
->
-> -#define __MODULE_INFO(tag, name, info)                                  =
- \
-> +#define __MODULE_INFO_WITH_PREFIX(prefix, tag, name, info)              =
- \
->         static const char __UNIQUE_ID(name)[]                            =
- \
->                 __used __section(".modinfo") __aligned(1)                =
- \
-> -               =3D __MODULE_INFO_PREFIX __stringify(tag) "=3D" info
-> +               =3D prefix __stringify(tag) "=3D" info
-> +
-> +#define __MODULE_INFO(tag, name, info)                                  =
- \
-> +       __MODULE_INFO_WITH_PREFIX(__MODULE_INFO_PREFIX, tag, name, info)
->
->  #define __MODULE_PARM_TYPE(name, _type)                                 =
-         \
->         __MODULE_INFO(parmtype, name##type, #name ":" _type)
-> --
-> 2.49.0
->
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-
---=20
-Best Regards
-Masahiro Yamada
+If you want to undo deduplication, reply with:
+#syz undup
