@@ -1,120 +1,120 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C341221297
-	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 21:13:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14733165F16;
+	Mon,  2 Jun 2025 21:13:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748898827; cv=none; b=D6+yZMW/BPqvLyg49Jx6AiyeQyX1+THTzXn1in+ZFLiHDSBGEq841/VCn+iuQUc1GaKg9QfjPgUmYPr2eguqdovJqa11+A34x+zqhWrnBlyxdelv/xn8oboJgHuZdGtBM4QF4uEIQbyHaRpH8JAvZPzR+ESUkfS/3oyd6TsI+3I=
+	t=1748898827; cv=none; b=NUCgdzZOVahDaUDUD/Qz73r67Sl6584QT+q14ROLVWS5hFSdp/VGGTUqLCjYF9+2k+Xz08yWybMD1lzTjlXVNGTAszteUngs3Wx7okrw3/4Pak/YK8+zhnlVvsr7qWAAgrwFq0AJsc3q0Ijy94LdeaWtKLXgSkG3GOrAtO2ljB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748898827; c=relaxed/simple;
-	bh=o9DpXCA0aRGtLlwK7hg83J1m+0koDQhVrg2oPYRgLj0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZEmvnv09KvDGZe9lBMwKM6Js1uq0g0PBplt1Hgxyr5EaJQhKlekxibscyujpZBKEHJdJrFb2Td6t+HEiE1gxTzqqCmEg2fGiFpWduagooN5a2YFRaSyslA+66SbFT9TKJdoANZU2+hittF8FP3Pg/k5Rghhr6wBbj5ApxGTdFqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C506C4CEEE;
+	bh=8USxg6SA8nGz3BAkEuYuS+4+eTJ3BHPZ/Z14aMgD5Vo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=cxEca7mC8CYAXRIwohECes1hmdIg/TVfZjZF8mbcKoeTHbRlodeAN5ShQ5eaFHMWQb72wkrYZMOqyuvP70t88q6orCtRdHa2zB35lASViRYg826kYgjqBUOwtfJmSYaCEiqxJSuIxQJbGpd9v0F/xKk2UhZcq5mnpMqtCEdLuL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m4m/SaHE; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m4m/SaHE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39042C4CEEB;
 	Mon,  2 Jun 2025 21:13:46 +0000 (UTC)
-Date: Mon, 2 Jun 2025 17:14:58 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
-Cc: Hugh Dickins <hughd@google.com>, Andrew Morton
- <akpm@linux-foundation.org>, "Matthew Wilcox (Oracle)"
- <willy@infradead.org>, Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] mm: Fix compile error when CONFIG_SHMEM is not set
-Message-ID: <20250602171458.7ceabb1c@gandalf.local.home>
-In-Reply-To: <20250602170500.48713a2b@gandalf.local.home>
-References: <20250602170500.48713a2b@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748898826;
+	bh=8USxg6SA8nGz3BAkEuYuS+4+eTJ3BHPZ/Z14aMgD5Vo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=m4m/SaHE8iFG6uTm85JTtjtTJIE+XALUYhiJDLcsNKo6erXpfFaE2eoftIUOtZb2i
+	 2kGm4VUL7Ua/7F6a5U5aUqNink/ou4zhQ4Or1Zu7AYGVnh/ZWeSI0pyfMn30WRcQ31
+	 EE7y5jSxfu0sLgGiQqM9pTqNQCecm9dKrsuKXEXhC3Td41Cj2aNiNv4pF6GrK5lFa1
+	 EfDIsfRClEIUokRxgztxTyzmeHqtr5VVVhoTie87u7ngMqCcxERT0Ht1Aso+2l0gf8
+	 q5ypX9vO9UXttxSnq3oiYxYVfj8lsLtaHE1ephK+mkINFt6bB+xtQFBwk5k3E3s4sO
+	 ZFsT1JqbxJN6A==
+Date: Mon, 2 Jun 2025 16:13:44 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>,
+	Will Deacon <will@kernel.org>, Robert Richter <rric@kernel.org>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Marc Zyngier <maz@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>, dingwei@marvell.com,
+	cassel@kernel.org, Lukas Wunner <lukas@wunner.de>,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v4 4/5] PCI: host-common: Add link down handling for host
+ bridges
+Message-ID: <20250602211344.GA444082@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bixtbu7hzs5rwrgj22ff53souxvpd7vqysktpcnxvd66jrsizf@pelid4rjhips>
 
-On Mon, 2 Jun 2025 17:05:00 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> From: Steven Rostedt <rostedt@goodmis.org>
+On Fri, May 30, 2025 at 09:39:28PM +0530, Manivannan Sadhasivam wrote:
+> On Fri, May 30, 2025 at 06:34:04AM -0500, Bjorn Helgaas wrote:
+> > On Fri, May 30, 2025 at 09:16:59AM +0530, Manivannan Sadhasivam wrote:
+> > > On Wed, May 28, 2025 at 05:35:00PM -0500, Bjorn Helgaas wrote:
+> > > > On Thu, May 08, 2025 at 12:40:33PM +0530, Manivannan Sadhasivam wrote:
+> > > > > The PCI link, when down, needs to be recovered to bring it back. But that
+> > > > > cannot be done in a generic way as link recovery procedure is specific to
+> > > > > host bridges. So add a new API pci_host_handle_link_down() that could be
+> > > > > called by the host bridge drivers when the link goes down.
+> > > > > 
+> > > > > The API will iterate through all the slots and calls the pcie_do_recovery()
+> > > > > function with 'pci_channel_io_frozen' as the state. This will result in the
+> > > > > execution of the AER Fatal error handling code. Since the link down
+> > > > > recovery is pretty much the same as AER Fatal error handling,
+> > > > > pcie_do_recovery() helper is reused here. First the AER error_detected
+> > > > > callback will be triggered for the bridge and the downstream devices. Then,
+> > > > > pci_host_reset_slot() will be called for the slot, which will reset the
+> > > > > slot using 'reset_slot' callback to recover the link. Once that's done,
+> > > > > resume message will be broadcasted to the bridge and the downstream devices
+> > > > > indicating successful link recovery.
+> > > > 
+> > > > Link down is an event for a single Root Port.  Why would we iterate
+> > > > through all the Root Ports if the link went down for one of them?
+> > > 
+> > > Because on the reference platform (Qcom), link down notification is
+> > > not per-port, but per controller. So that's why we are iterating
+> > > through all ports.  The callback is supposed to identify the ports
+> > > that triggered the link down event and recover them.
+> > 
+> > Maybe I'm missing something.  Which callback identifies the port(s)
+> > that triggered the link down event?
 > 
-> When CONFIG_SHMEM is not set, the following compiler error occurs:
+> I was referring to the host_bridge::reset_root_port() callback that resets the
+> root ports.
 > 
-> ld: vmlinux.o: in function `ttm_backup_backup_page':
-
-Actually, I was looking at the wrong location and not at ttm_backup_backup_page().
-
-Which commit fe75adffac33e ("ttm: Call shmem_writeout() from
-ttm_backup_backup_page()") updates as:
-
-diff --git a/drivers/gpu/drm/ttm/ttm_backup.c b/drivers/gpu/drm/ttm/ttm_backup.c
-index 93c007f18855..0d5718466ffc 100644
---- a/drivers/gpu/drm/ttm/ttm_backup.c
-+++ b/drivers/gpu/drm/ttm/ttm_backup.c
-@@ -136,13 +136,13 @@ ttm_backup_backup_page(struct ttm_backup *backup, struct page *page,
-                        .for_reclaim = 1,
-                };
-                folio_set_reclaim(to_folio);
--               ret = mapping->a_ops->writepage(folio_file_page(to_folio, idx), &wbc);
-+               ret = shmem_writeout(to_folio, &wbc);
-                if (!folio_test_writeback(to_folio))
-                        folio_clear_reclaim(to_folio);
-                /*
--                * If writepage succeeds, it unlocks the folio.
--                * writepage() errors are otherwise dropped, since writepage()
--                * is only best effort here.
-+                * If writeout succeeds, it unlocks the folio.  errors
-+                * are otherwise dropped, since writeout is only best
-+                * effort here.
-                 */
-                if (ret)
-                        folio_unlock(to_folio);
-
-I'm not sure this is the right fix or not.
-
-
-> (.text+0x10363bc): undefined reference to `shmem_writeout'
-> make[3]: *** [/work/build/trace/nobackup/linux-test.git/scripts/Makefile.vmlinux:91: vmlinux.unstripped] Error 1
-> make[2]: *** [/work/build/trace/nobackup/linux-test.git/Makefile:1241: vmlinux] Error 2
-> make[1]: *** [/work/build/trace/nobackup/linux-test.git/Makefile:248: __sub-make] Error 2
-> make[1]: Leaving directory '/work/build/nobackup/tracetest'
-> make: *** [Makefile:248: __sub-make] Error 2
+> >  I see that
+> > pci_host_handle_link_down() is called by
+> > rockchip_pcie_rc_sys_irq_thread() and qcom_pcie_global_irq_thread(),
+> > but I don't see the logic that identifies a particular Root Port.
+> > 
+> > Per-controller notification of per-port events is a controller
+> > deficiency, not something inherent to PCIe.  I don't think we should
+> > build common infrastructure that resets all the Root Ports just
+> > because one of them had an issue.
 > 
-> This is due to the replacement of writepage and calling swap_writepage()
-> and shmem_writepage() directly. The issue is that when CONFIG_SHMEM is not
-> defined, shmem_writepage() is also not defined. Add it as a stub, and it
-> should also never be called when CONFIG_SHMEM is undefined.
+> Hmm, fair enough.
 > 
-> Fixes: 84798514db50 ("mm: Remove swap_writepage() and shmem_writepage()")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  mm/shmem.c | 5 +++++
->  1 file changed, 5 insertions(+)
+> > I think pci_host_handle_link_down() should take a Root Port, not a
+> > host bridge, and the controller driver should figure out which port
+> > needs to be recovered, or the controller driver can have its own loop
+> > to recover all of them if it can't figure out which one needs it.
 > 
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index 858cee02ca49..dec85388030a 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -5760,6 +5760,11 @@ void shmem_unlock_mapping(struct address_space *mapping)
->  {
->  }
->  
-> +int shmem_writeout(struct folio *folio, struct writeback_control *wbc)
-> +{
-> +	return 0;
+> This should also work. Feel free to drop the relevant commits for
+> v6.16, I can resubmit them (including dw-rockchip after -rc1).
 
-Perhaps this should return:
-
-	return swap_writeout(folio, wbc);
-
-?
-
--- Steve
-
-> +}
-> +
->  #ifdef CONFIG_MMU
->  unsigned long shmem_get_unmapped_area(struct file *file,
->  				      unsigned long addr, unsigned long len,
-
+OK, I kept "PCI: host-common: Make the driver as a common library for
+host controller drivers" (renamed to "PCI: host-common: Convert to
+library for host controller drivers") on pci/controller/dw-rockchip
+for v6.16 and deferred the rest until later.
