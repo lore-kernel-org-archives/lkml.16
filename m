@@ -1,150 +1,141 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mail.enpas.org (zhong.enpas.org [46.38.239.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF78F21FF39;
-	Mon,  2 Jun 2025 13:38:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 280FC2AD1C;
+	Mon,  2 Jun 2025 13:41:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.239.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748871529; cv=none; b=Dk2MM30hyeeoEYuriTiEMA26TpVff0XZEaZbvHRl6ZO6KL9HgDOTgLXBDP0a1OrE97WVHLUyGdAZ+g0d5UKx4IGQpqDvR5eDye3FNO6drjW5jpOIvry5esYXEXt/srupIhY84ShNA545H740KdYRBAJM8z89tJYNNCQSZFgFCW0=
+	t=1748871675; cv=none; b=qHYJGL4eTEKIqsPfQHVjXtYQpa5BQMl5rEqKwJbrmPKA6NIc5r11cCO/GyLjaoTDWWEhoQo9EGzJzgEf1Cyz63psWuddbL7TdVZDpPg52fcxZ6Exj6Ns/2ZUc79YBfY1SEovYG3eRehjCZGDAPAqLMk4roWq4OQPtlzO8NFkK/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748871529; c=relaxed/simple;
-	bh=LhkeGeXHUt2ggJe/w/3bBrnJJDW8lZHf2s3EfUYKuSM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eR8FN4JX/JHcnydkTE736tewplZrnTinOaJD0fouQwFgNunPTObtVlqRCA0gyjWr34qmd3THliw4ma/lL9oVByH/5Xqb/qgkmppCiPRTM5E7cVrxWFxUjscp1DB6OAbDfGksbhRnOfK3dnLWr4lrPvroprp2odJGmXoiRO4mcK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=pSlEcIPt; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pSlEcIPt"
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 552C4WUo025222;
-	Mon, 2 Jun 2025 13:38:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=corp-2025-04-25; bh=B5fPK4uiFS4T0Mux0HVN5rTQIvFrP
-	fJbnAszm7VP20Y=; b=pSlEcIPtchTFtM+wTHH/8f1+BHr9tiKTC39Gsti+Xuufw
-	pFNFe43/XjGAI3Bpj8DOKjkFrFC7TDgIuIqf0CLjsvU2kM0Zk7T2RAQxjm9gsnxk
-	IRp6W/6c14tmsHJenbGQQ0Za3nkqgtJtKu11IpgfTI8qOzYqPFQy7Ut9eq2kqN6/
-	nROzY9bBA0tTA+lBua5oYXvRYjaFk//ZhzdcM82Qy4CGbgPcwDrRZ1Kgr8bpQKc/
-	XQv6fTUEvC3snk7ab00014K73xFsFTZIYWrCojOjSUBUt34/RcanmbpCeikBHUAQ
-	jf6bzaLdLf4M52Mdv/+tG9dek2c5Rji7CtWLneG/g==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46ysnctkcv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 02 Jun 2025 13:38:36 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 552C2CVN016255;
-	Mon, 2 Jun 2025 13:38:36 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46yr7806by-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 02 Jun 2025 13:38:36 +0000
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 552DblK3011778;
-	Mon, 2 Jun 2025 13:38:35 GMT
-Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 46yr7805xv-1;
-	Mon, 02 Jun 2025 13:38:35 +0000
-From: Alok Tiwari <alok.a.tiwari@oracle.com>
-To: gourry@gourry.net, rdunlap@infradead.org, dave@stgolabs.net,
-        jonathan.cameron@huawei.com, dave.jiang@intel.com,
-        alison.schofield@intel.com, vishal.l.verma@intel.com,
-        ira.weiny@intel.com, dan.j.williams@intel.com, corbet@lwn.net,
-        linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org,
-        darren.kenny@oracle.com
-Subject: [PATCH v2] Documentation: cxl: fix typos and improve clarity in memory-devices.rst
-Date: Mon,  2 Jun 2025 06:38:01 -0700
-Message-ID: <20250602133806.3481259-1-alok.a.tiwari@oracle.com>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1748871675; c=relaxed/simple;
+	bh=LrGXX0ytLpJHG5PcCLWzObiPuSCT1TcTq4syPexx9Z0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MRTINSyPYXAiNVgrM10ZFAm/bTzSgPQ8/Bu9HkX9FdjJzG0XxJ6SIIzICuHkRgcVIMi2vR48e8sO37qQQ6nWC8rBpwpRGmvwEJQ3e5WrjLFcbXUJHCf1fvx5JML0QhfaOdPS+td/t9sERk+p6JZhSE94qq0akXyGYuEEbajW/PI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enpas.org; spf=pass smtp.mailfrom=enpas.org; arc=none smtp.client-ip=46.38.239.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enpas.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enpas.org
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	by mail.enpas.org (Postfix) with ESMTPSA id 97B591012E8;
+	Mon, 02 Jun 2025 13:41:00 +0000 (UTC)
+Message-ID: <16cc8c9d-f89a-406c-9427-94ca75984752@enpas.org>
+Date: Mon, 2 Jun 2025 22:40:55 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] tty: Fix race against tty_open() in
+ tty_register_device_attr()
+Content-Language: en-US
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Johan Hovold <johan@kernel.org>,
+ linux-serial <linux-serial@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+References: <20250528132816.11433-1-max@enpas.org>
+ <20250528132816.11433-2-max@enpas.org>
+ <6068387e-7064-0c2b-700a-3817bea1045b@linux.intel.com>
+From: Max Staudt <max@enpas.org>
+Autocrypt: addr=max@enpas.org; keydata=
+ xsNNBFWfXgEBIADcbJMG2xuJBIVNlhj5AFBwKLZ6GPo3tGxHye+Bk3R3W5uIws3Sxbuj++7R
+ PoWqUkvrdsxJAmnkFgMKx4euW/MCzXXgEQOM2nE0CWR7xmutpoXYc9BLZ2HHE2mSkpXVa1Ea
+ UTm00jR+BUXgG/ZzCRkkLvN1W9Hkdb75qE/HIpkkVyDiSteJTIjGnpTnJrwiHbZVvXoR/Bx3
+ IWFNpuG80xnsGv3X9ierbalXaI3ZrmFiezbPuGzG1kqV1q0gdV4DNuFVi1NjpQU1aTmBV8bv
+ gDi2Wygs1pOSj+dlLPwUJ+9jGVzFXiM3xUkNaJc4UPRKxAGskh1nWDdg0odbs0OarQ0o+E+v
+ d7WbKK7TR1jfYNcQ+Trr0ca0m72XNFk0hUxNyaEv3kkZEpAv0IDKqXFQD700kr3ftZ8ZKOxd
+ CP4UqVYI+1d0nR9LnJYVjRpKI9QqIx492As6Vl1YPjUbmuKi4OT2JdvaT4czGq9EJkbhjC8E
+ KQqc2mWeLnnwiMJwp8fMGTq+1TuBgNIbVSdTeyMnNr5w0UmJ4Y/TNFnTsOR0yytpJlHU4YiW
+ HDQKaw6wzvdxql2DCjRvn+Hgm9ifMmtPn5RO3PGvq7XQJ0bNzJ/lXl9ts9QbeR62vQUuv63S
+ P6WIU+uEUZVtaNJIjmsoEkziMX01Agi+5gCgKkY8mLakdXOAGX9CaUrVAH/ssM0SIwgxbmeH
+ F0mwfbd7OuPYCKpmIiX1wqNfiLhcTgV3lJ12Gz7XeeIH3JW5gw6tFGN3pQQNsy6SqtThyFQN
+ RlLNZWEHBh2RdE1Bh3HFFCgdbQ2CISV+nEGdTpP+wjlP17FaBUEREM/j4FT5Dn1y/XICJog/
+ dymN4Srn8BZ0q1HQBVIJszdfpBa37Fj3gHQbUPinoDsNCCjNibOD06Xk4hvex307pcsXe/Gi
+ qON0vCtTfbF9jUmao84LpOMjfnqMXQDl3bIi0GwvdXWTvTNM3gCllj1sygWYvPn405BHysbk
+ xbuGCP1qwRRYxrkBpCOUxBz48fT+90CewfwvhuYjBc1dPu0x2io+TRex2rfpMLbjUhYWYeun
+ Oo/w+7Ea8UoxqLkvQjNY7IDBtvtPQdW5NxPh1kYOOMCMTGPR7wKMo7O0clMQ3Gviu12nvt2X
+ 2rKtI56oU9pEFpIY/moDM+nDNR3fIi1BjdBfhGhSi6uRWy1vgBHYdW0rItPqYtQ9R/AxMbFN
+ Kv4axzus1+yAfqSAWyp1DCC8+PX+x4gYEh0rbh2Ii91jdhzONzoEjMy8VCfu9hgeE4XazsFD
+ 234zaonkEh8Mpo/SyYH4x0iMO0UyKn1RbyC9zTmAtlIvYUsQdF8exWwF07vvqbzKWkHv8a+y
+ RFT9nuZZtVN3ABEBAAHNGk1heCBTdGF1ZHQgPG1heEBlbnBhcy5vcmc+wsN9BBMBCgAnAhsD
+ CAsJCAcNDAsKBRUKCQgLAh4BAheAAhkBBQJnpyx4BQkWM613AAoJEGVYAQQ5PhMuwdof/As9
+ qacD3VIJTjG051QAficPVM6bDHQAxuzGFEyj29MiUXEZe+G1YTcp3XbJoLB5KBYG4t6sKmnh
+ 3Cc7XE65MMY0e3OScL172cq74VZ4q7xh0vqTKkARgFNBWvjV9P3fUxfKFopfjf5iYtGYhYVu
+ nr29CgE4Xv5x86mTFlcBXhYMS7kHvxgQ2rpdSwwdABNI+801J93vKyyDze6vZPHZ89rQmoGj
+ ESWeNwMF5/fre+qmkUyS650gsMoErmHxG4OGSxecwADZOVUMwraeYRPbbU9deGipUGeoEcFB
+ eVo2eKDW/okO8m2NOIIRgg1PYfX+cZ0exmGqdX+/Hpmyv0esqBE+9SxNDgm9HcctApStRTWX
+ ZQF/MuqmwfKN6wqEKZYIo/Cex7Olbu91yfz+Agti/ZCT59FRNIHw75dOVk294hyH6QdJEYfd
+ 92zPw/xfMxC5EuKbQIZX4D8/0GyVdzoYNbkFWFZ8a4Sz+XVQrlO9j5+yHhxfIqcD4Mfti8A0
+ BijPdn1TAdOreyMYqyKrh4gHfxEkELT01ZeVUCanmvOt87SiimhG1dJhurYpC/rme08k/cJ+
+ LeblkAKPJWdy/XUxTQ/l5xPr0mrZdVA4BAv7RYIhhdpf/DuOF5bfN/ByY+Oq5MTh7VEUXq6L
+ m39hWIF37Q+y33R3inwuzKgbEuEY/K0w+JnmPeCWDT83dfoeA3ZaTMybEvYdgsRpxBK4muBl
+ dHBKsA7AfPFaWO8XrjKO1FITxGjG2T/IQ9suTA6ITVZ0eLWI+RcuFZboVjYyh85C1KkXaCHG
+ nAOLADB63tGzWPBNPCfX8RkEsUy3arxTQordxVOGHpzxubVPVnDPj5WwUkE5TJhpfycuLGaB
+ bKiFRZKccchDRxHi0JSoLzDh6uV6r6exk/2RzdsG8NAfLMB6D/lfibSM0IIGOgGa2/OD+aKO
+ vw+A6ei+bMg8WRxPe/WVK1cSuR3hUSZvLb8fjY6YfonsOgcbUx2ci9+e/2DxbXbdQvLBUGfZ
+ iDo6SikLvkY0hFok8QbvVib7wwCqRvedHEaE0417IWkydinXUoDSAJdOm4cqZZmwTEJ7JgQh
+ z/C+yXevWIbc3u7xqB5bdrc6eToTQMamxSpl5IYGlWrPzS/kTm6W3tBRcaTnFKz7g0zpWddP
+ i1ecrTrJ+6KVfyzffS/DHwRBy0GKHDoakqlnpxM+ImA1OCsQaq4BGu4M4X6mJZVUy+wcpGnO
+ r3bYwZ2RuSUctBcPN1A0A1OakoHZ1gnN6ctR8L3NLCR/UZL66XwXxgUqnoNU9qWd3G2OQhLA
+ 8EK88WVd+FAvHBTva1b6HdyCcCVGq9X5DSbGpKAG3juYUvNrCsDVZiYQZTdrHS7mOjTOwU0E
+ VZ96mAEQAMPq/us9ZHl8E8+V6PdoOGvwNh0DwxjVF7kT/LEIwLu94jofUSwz8sgiQqz/AEJg
+ HFysMbTxpUnq9sqVMr46kOMVavkRhwZWtjLGhr9iiIRJDnCSkjYuzEmLOfAgkKo+moxz4PZk
+ DL0sluOCJeWWm3fFMs4y3YcMXC0DMNGOtK+l1Xno4ZZ2euAy2+XlOgBQQH3cOyPdMeJvpu7m
+ nY8CXejH/aS40H4b/yaDu1RUa1+NajnmX+EwRoHsnJcXm62Qu8zjyhYdQjV8B2raMk5HcIzl
+ jeVRpEQDlQMUGXESGF4CjYlMGlTidRy6d5GydhRLZXHOLdqG2HZKz1/cot7x5Qle2+P50I32
+ iB0u4aPCyeKYJV6m/evBGWwYWYvCUJWnghbP5F2ouC/ytfyzXVNAJKJDkz//wqU27K26vWjy
+ Bh0Jdg+G8HivgZLmyZP229sYH0ohrJBoc68ndh9ukw53jASNGkzQ6pONue8+NKF9NUNONkw4
+ jjm7lqD/VWFe5duMgSoizu/DkoN+QJwOu/z10y3oN9X7EMImppCdEVS01hdJSyEcyUq90v/O
+ kt8tWo906trE65NkIj+ZSaONYAhTK+Yp/jrG88W2WAZU54CwHtoMxhbMH9xRM0hB97rBvaLO
+ JwGBAU0+HrxOp1Sqy2M1v91XBt4HeW8YxzNEexq1ZtNnABEBAAHCw2UEGAEKAA8CGwwFAmen
+ LMoFCRYzkTIACgkQZVgBBDk+Ey6DPh/9HslbVBJqC3fFRqQBEByWI1khEkgM+WzbzClbdAhZ
+ Se+NMLCE5pqDRCUMzZyTm2+v5ipLA1ysZuW2K+5qDvo94H4kt1Na5IrAU1OtQIU55h+zPNXh
+ 9zj3EKhJDB/HgYmXy23WQpyet1lRN/Qp+rkEc+ktjl5LLpWbbznr/zH2ukmAlVIUgQ9WggXH
+ 1WuYyEc6oi5z8scLaj0uNSAlY3YWMDWE3e0uLPZ8WRp31dmv0KnQEMVT8Om1LTYEEL9sK+Gt
+ pGDvTj73WxNyrF/5v3O4LDRqRTw71rOIJqxlhoIXId8JPxOYSfn6NFFcfRjLWX3l2ctxuC4b
+ Fhces0lU4wx42eq/ue02xNn7TNt7PCXmEiFPpngFi8aq+1JEftWa7JHVFUxBYgRu4GmLKh36
+ FhmO0suRDu8WBEnzMkVflsLs4jJ8kYUU8O9yWQSQHnfYzePspxPTVPO37yMNy6KEh9mKJiw/
+ NsOdowacJR/ZOsrhE4d132i6qjn4xgEc7NmVKXbjF6wGOIp8+xq5wgTze7pPFV/IR6X6dtGb
+ yYnu3VyLDESULYuWiV0jeTKZSrsOcMSKpmDkz4VAv1pab3EzSvSXWhUL4w3V9gK3lzMRDPWf
+ sBcrsZQcwjlCRhNsU0d0vd+IqRLMZED3ZzMI4qPO9QGxJ0itEEFw0DaOs7nEw1OhuSfpyYdJ
+ cr5jApjab0YmVkNhoBMquJL/B5Qz1w4PHVOrqT69DhtDC3EfehNFBBvV8juoB5HcfbzmNGVX
+ JUTLEY+/Eze7Nq0tcU1oUtk6qH/2LRP/Cg3xLuGoNC0kOOsbEFVeSbsxdT8Q3OpeQNh5Nk5l
+ QXVd3ooZkmgRYEUPdWfgbQ7CH3zwVgeipvXSfC/8GH3sdbyhVkW/7UyPVIzDmGkU0Pjq1hsQ
+ WXzTkkLacTG9TBDsCk5xt3jH6hT6WKB3ToHltePN/u9xc44jAfZsgxi+NW20bAn2tg9V/RcP
+ jVhyMfm+4u3OTEMvZT6lNOKybxqo2FQcz1SbMHCNKLbQzyYIuvVY1mcA0p/GRyR87qTOqn1N
+ ZMNH8IIiNv0vm2GoQdm9icfyXkvVwwlWB87421PAWE6iZe2pv9aM6znfcQ8UuQqrs+3UpxK3
+ vs56eN8VtSWgviHk/k/DeTJ+VNSZowxO9Dn0oG43aecjHOdRq1ES5+yf2moX0e3+mJQuOCHc
+ UZW4kivHnEPTY4R09+wGgi/axkz/G4mmUjOtoJd//iavtmmP3dx6a/UfXbJgLWGWy6IZszAB
+ 6RWhzkRPkZdlGjxnltyQqhy35ZHKsbg/oNBHaRGrLbp6+Z2sWX3Vzzb9k/Gs0+asQMSe0poq
+ 1Nk4wgjdif6n69chAwuDQyOfWdz/dQ==
+In-Reply-To: <6068387e-7064-0c2b-700a-3817bea1045b@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-02_05,2025-06-02_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0 adultscore=0
- bulkscore=0 spamscore=0 suspectscore=0 malwarescore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2506020111
-X-Authority-Analysis: v=2.4 cv=Jdu8rVKV c=1 sm=1 tr=0 ts=683da95c cx=c_pps a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=JfrnYn6hAAAA:8 a=tHa68p0SAAAA:8 a=RChXXvxoYHtGxfn2W1YA:9 a=1CNFftbPRP8L7MoqJWF3:22
- a=ufIsyHvWW7FwcMbVRpPq:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAyMDExMCBTYWx0ZWRfX+LmPhDUTlWJ/ wMMgqVDq12+1uCfE05st/YPPYxSRp5PzvkBUkNH9TG1h42Yfl5BeQp5WpRI//sQ5zGzedPtxXjH R5Sp/CYoUSxzlptfq748iVn0/RIIVNJ7GhbQH+TR/zLIFwtglTEa503SkAE9gApXncomzUxJsqd
- h8e3Xre9eITxdXYVhhIsMl0OZGGW97GT10bNz51PCVAxqxR2AZSWQrSS0qBWL/5yaOPc+TFYtTg RvQGia35nlC/ZbvcDmIGzUErPZG+alRQ6R59hdic9JWWBFLDfD2A65ZIQKpQQQMJ2elB+fdsXcr 7a59d9C4WoYEaUAE+zsqIpvbNpI4W7gYgCqAXoNHMyG+6fmvGVGbZrpGxRwWYHmHuvRFqoGVzkd
- Mi4L3k3mzcO3YBPK/L2jKf/BYOIRCaHYgdSCzC67yDdtWfCAfcg4Z2cZZgg/JOEyNsMAaRkE
-X-Proofpoint-GUID: R362YqjlYjavhN5BQLbcqbyrahh_OKg9
-X-Proofpoint-ORIG-GUID: R362YqjlYjavhN5BQLbcqbyrahh_OKg9
 
-This patch corrects several typographical issues and improves phrasing
-in memory-devices.rst:
+On 6/2/25 19:31, Ilpo Järvinen wrote:
+>> +	mutex_lock(&tty_mutex);
+> 
+> Use guard() so you don't need to change the returns and rollback path.
 
-- Fixes duplicate word ("1 one") and adjusts phrasing for clarity.
-- Adds missing hyphen in "on-device".
-- Corrects "a give memory device" to "a given memory device".
-- fix singular/plural "decoder resource" -> "decoder resources".
-- Clarifies "spans to Host Bridges" -> "spans two Host Bridges".
-- change "at a" -> "a"
+Thanks, I didn't know about this new kind of helper.
 
-These changes improve readability and accuracy of the documentation.
+I'll leave it up to the TTY maintainers - if they don't express a 
+preference for guard(), then I deem this code simple enough to leave it 
+as-is, because I don't have any experience with guard(), and in fact, 
+until 5 minutes ago, I didn't know at all that GCC cleanup attributes 
+even exist.
 
-Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-Reviewed-by: Gregory Price <gourry@gourry.net>
----
-v1->v2
-added Reviewed-by Randy Dunlap and Gregory Price
-change "at a" -> "a"
----
- Documentation/driver-api/cxl/memory-devices.rst | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Interestingly, Documentation/process/maintainer-netdev.rst documents a 
+preference against guard(). I wonder why, but that's for another day.
 
-diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
-index d732c42526df..2c67353de77a 100644
---- a/Documentation/driver-api/cxl/memory-devices.rst
-+++ b/Documentation/driver-api/cxl/memory-devices.rst
-@@ -29,8 +29,8 @@ Platform firmware enumerates a menu of interleave options at the "CXL root port"
- (Linux term for the top of the CXL decode topology). From there, PCIe topology
- dictates which endpoints can participate in which Host Bridge decode regimes.
- Each PCIe Switch in the path between the root and an endpoint introduces a point
--at which the interleave can be split. For example platform firmware may say at a
--given range only decodes to 1 one Host Bridge, but that Host Bridge may in turn
-+at which the interleave can be split. For example, platform firmware may say a
-+given range only decodes to one Host Bridge, but that Host Bridge may in turn
- interleave cycles across multiple Root Ports. An intervening Switch between a
- port and an endpoint may interleave cycles across multiple Downstream Switch
- Ports, etc.
-@@ -187,7 +187,7 @@ decodes them to "ports", "ports" decode to "endpoints", and "endpoints"
- represent the decode from SPA (System Physical Address) to DPA (Device Physical
- Address).
- 
--Continuing the RAID analogy, disks have both topology metadata and on device
-+Continuing the RAID analogy, disks have both topology metadata and on-device
- metadata that determine RAID set assembly. CXL Port topology and CXL Port link
- status is metadata for CXL.mem set assembly. The CXL Port topology is enumerated
- by the arrival of a CXL.mem device. I.e. unless and until the PCIe core attaches
-@@ -197,7 +197,7 @@ the Linux PCI core to tear down switch-level CXL resources because the endpoint
- ->remove() event cleans up the port data that was established to support that
- Memory Expander.
- 
--The port metadata and potential decode schemes that a give memory device may
-+The port metadata and potential decode schemes that a given memory device may
- participate can be determined via a command like::
- 
-     # cxl list -BDMu -d root -m mem3
-@@ -249,8 +249,8 @@ participate can be determined via a command like::
- ...which queries the CXL topology to ask "given CXL Memory Expander with a kernel
- device name of 'mem3' which platform level decode ranges may this device
- participate". A given expander can participate in multiple CXL.mem interleave
--sets simultaneously depending on how many decoder resource it has. In this
--example mem3 can participate in one or more of a PMEM interleave that spans to
-+sets simultaneously depending on how many decoder resources it has. In this
-+example mem3 can participate in one or more of a PMEM interleave that spans two
- Host Bridges, a PMEM interleave that targets a single Host Bridge, a Volatile
- memory interleave that spans 2 Host Bridges, and a Volatile memory interleave
- that only targets a single Host Bridge.
--- 
-2.47.1
+
+Do you have an idea on how to solve the circular lock that the kernel 
+test robot found for v1 of this patch?
+
+   https://lore.kernel.org/linux-serial/202505281412.8c836cb7-lkp@intel.com/
+
+							
+
+Max
 
