@@ -1,207 +1,100 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B399213AA31;
-	Mon,  2 Jun 2025 09:00:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CBAF13AA31
+	for <linux-kernel@vger.kernel.org>; Mon,  2 Jun 2025 09:01:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748854858; cv=none; b=nCbd1JA5KklDpT0PPPltyjUrBSdAPFZVwI3fDUsDHGAfwOSpE0l9tLI7kh4LaiLsRvKYG/64iDnGuXvxcpfY+ET6nMtwTJsNCnCOZWbklS0myYFTpGhD2QCOJsrwZ5dBMdBDNEibDSZX1tOEaTsgAIy+JQJ2B6Sc0J9ytutvHZo=
+	t=1748854905; cv=none; b=uwlR6cjfaWkRiBs2rZWAlKNnV/shFIRk69adAR+LxOlOvJ7AW6/aRxhGdPyzEUu0Qf7o2xVu+AqYRweohxXzwZ9TOcK/yvETOva6LO3xYZX1geFm9F5KsFuJedSrj/iZJHrjuI6gewPnDe3d6wormqMojOT7c7uCNJ+tt2B8+Es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748854858; c=relaxed/simple;
-	bh=BcrFlaN0DUSc4XMSGVel1jTYhQ2Rep8XFTvxQKHq5GY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WBC+L1JoEfIgU06t3JBWm3kAlwsnAwR+4J6XVXl+nFbLPqdGqTGd0ePD3Zv8n2NK+8cXd6VWv5/h7k96xYr+7flQzTEJyUFrbEniiW7CfyKsFAl1On+ksSJA0SjsuhxmCzVY399cRoFYQGh/EqeQ/EcG+FH0+bDT6Ip3gU/os0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=TyfeeaTT; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1748854905; c=relaxed/simple;
+	bh=5L/HO89i91CBOEvIwOi6CpU0lXjQdG3dUBRaVby2iuA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JDV6FTIWHEE8iP+aVk5M0U+Ds5IYZO4zbLOux5WdlVJ9FFSiSAl83yGYmtTYgdHKxY14lVgVUKuO2jDqcJU1CtLTWqSfM92d7DA0jejLgAgVoUMKb9gWjrt2sRfRVMJCYdFczGGFpmIImzusircaV32gSxYCLtGN54oc23oqO1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=odW6szYp; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TyfeeaTT"
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55290NAC3198912;
-	Mon, 2 Jun 2025 04:00:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1748854823;
-	bh=ic9euyyuVWJr6eusG8wsLT5gPn6K8vh92egg+XHV9Gc=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=TyfeeaTTmt132lYJ3PNV7vkmAlgfwMX6T0ZlW2CpqUw4NUKVG6mRKvYknJoIxoGq8
-	 knJeHnCjaw1Z9J9rCYwyrVt7q+ec/YdHQ1Qoqa5H46UO1Koc0W4FfcRKTwtfPAmV1l
-	 ejoy5LVp7YfKMtQ66K/grvga/tVtw1dhf+SEHRQQ=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55290NEa2848944
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Mon, 2 Jun 2025 04:00:23 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 2
- Jun 2025 04:00:23 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 2 Jun 2025 04:00:23 -0500
-Received: from [172.24.227.151] (uda0510294.dhcp.ti.com [172.24.227.151])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55290KSL2681428;
-	Mon, 2 Jun 2025 04:00:21 -0500
-Message-ID: <77dd25e4-a807-4a7f-902a-7b362f2ce6c0@ti.com>
-Date: Mon, 2 Jun 2025 14:30:20 +0530
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="odW6szYp"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5532e0ad84aso5069681e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 02:01:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1748854899; x=1749459699; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5L/HO89i91CBOEvIwOi6CpU0lXjQdG3dUBRaVby2iuA=;
+        b=odW6szYpRI3EmFensdcwnVCYi3yEt8zG78135qjRh+kWAeOxi+PI9fcLDXoUgLHh9/
+         sn2xpJ69JWEH2caRUD9kBJBpD+2dRXElfYtJKYZSBU9HqA1es1/vKR+EeMJ0s2zdMmWe
+         yxUnHjEhlWpurBd7Eh2iqcZPiLac5jzSXrocSRGzTzLj49h2Q4VbTDswE2MZ+38XsZ1Z
+         xUqfRfbVFnIgBr//N1HgTmwiAzTLWMGRah77WftglTRCBbsxQc9YZzs1MqSjG5A8xwjR
+         XRHtJH2kQOxsGYtwrsVbFprGW0u69kaFLQ1iuyv/YdiNOy0sBYSCeb6XTAM/YSC/WK3r
+         SaBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748854899; x=1749459699;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5L/HO89i91CBOEvIwOi6CpU0lXjQdG3dUBRaVby2iuA=;
+        b=Z0CzgxDM1MIeWhe+4wl1Q+rdoqMUoQiTB9eK4/IpcWUqlSOuGuIoBtRaDlOtExKswY
+         T3Z5/OHcqmR4MhbG9WpHiDZ/WJkBR4tXGx5vBF23wKut2PSaC/u33NGhHppi8GHM+7o4
+         p+Hy0pOTXsI+lv8gVMsCEq4YTYtCYOTGY8jZbXAklKd8UwjBG7YeZDo1/So9eyPTazTl
+         U25Es2PPu7YxnL/4JCSBQZgCw3PlvN4pJH74LSdzi3FwT8O6kIAXC4ueAsdhpklvLO8+
+         KzPMlHvSnv86ps4B6r4KU56YDoGC9H3GtqzGFtf1pbaJnLNWpcEypwXt79yI4IXciplI
+         Q+5w==
+X-Forwarded-Encrypted: i=1; AJvYcCVtFJhHDNAAer+OZLXFmMUxbsD2KE/21YmbrZ8Oh9bSRlyoU4o7T29CfDp7l1L9GjRESZF5UTGJSZvySR4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyP5sqc8Q2/X0v+X7Zttae7+Dqy3LrL057uq4RNOCkng/OsEfF
+	2Z5hhqyUQWJBcNMzrKgcZ714Cwab+5CPW3JAXKySd746n8UdLs//X/555QQK7NeLsnkwLIZC0/4
+	d2fJSjXZxHt4oex3aEZko8VsYmzn8hc7AMCF81xI/1Q==
+X-Gm-Gg: ASbGncvVaQlRQNphFLE8aiQlhgrL5I89cZ1Nh+w7q+LPaGfWp5ngyMfZxFhGj3hATnA
+	nOJgNGNlvFvPGwMULY5kXBGZrgp/a94ecU2xHdbBf/lyuHXkUAqZX3Lgrr0jrZnPm7CXSD92+jw
+	/c4Lz2YNzzj42RPpPFc0YLBUfMSISUYwZphgIr2NvGq3Ia4SBEBEY0t76vSp+Y9rxP
+X-Google-Smtp-Source: AGHT+IF7JzftWwBtbdxn3eRdY2g5R0ABLfyCCe/FWeTYczv7PUkyVOJRx3e2k3Y8Pc2+u0CtYYyLp681MfBoTrjlx1c=
+X-Received: by 2002:a05:6512:350e:b0:553:2bc1:e26d with SMTP id
+ 2adb3069b0e04-55343183e70mr1314549e87.46.1748854899308; Mon, 02 Jun 2025
+ 02:01:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] rpmsg: ctrl: Introduce RPMSG_CREATE_EPT_FD_IOCTL
- uAPI
-To: Dawei Li <dawei.li@linux.dev>
-CC: <andersson@kernel.org>, <mathieu.poirier@linaro.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <set_pte_at@outlook.com>
-References: <20250519150823.62350-1-dawei.li@linux.dev>
- <20250519150823.62350-4-dawei.li@linux.dev>
- <7e983702-6662-465d-86ac-d515849d731d@ti.com>
- <20250530125008.GA5355@wendao-VirtualBox>
-Content-Language: en-US
-From: Beleswar Prasad Padhi <b-padhi@ti.com>
-In-Reply-To: <20250530125008.GA5355@wendao-VirtualBox>
+References: <20250522-gpio-palmas-gpio-v2-1-89f209d4a949@gmail.com> <CALHNRZ-z4+a-h4GZepODbqcmcPKkvGXvX4wpJSinr_gcZptjrQ@mail.gmail.com>
+In-Reply-To: <CALHNRZ-z4+a-h4GZepODbqcmcPKkvGXvX4wpJSinr_gcZptjrQ@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 2 Jun 2025 11:01:28 +0200
+X-Gm-Features: AX0GCFvQfCgbCs500n43zWgfaAQRPWyohpTKwcUG4tS-dFrmVzQQCaFyT1e44NQ
+Message-ID: <CAMRc=MdJ91n1TU7gaiwtQiKFZXKEFwqyNHzhZcw+qXH4KXBdKg@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: palmas: Allow building as a module
+To: Aaron Kling <webgeek1234@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: quoted-printable
 
-Hi Dawei,
+On Wed, May 28, 2025 at 7:44=E2=80=AFPM Aaron Kling <webgeek1234@gmail.com>=
+ wrote:
+>
+> On Thu, May 22, 2025 at 5:22=E2=80=AFPM Aaron Kling via B4 Relay
+> <devnull+webgeek1234.gmail.com@kernel.org> wrote:
+> >
+> > From: Aaron Kling <webgeek1234@gmail.com>
+> >
+> > The driver works fine as a module, so allowing building as such. This
+> > drops the driver specific init in favor of the module macro which does
+> > the same, plus handling exit.
+> >
+> > Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> > ---
+>
+> Friendly reminder about this patch.
 
-On 30/05/25 18:20, Dawei Li wrote:
-> HI Beleswar,
->
-> Thanks for reviewing.
->
-> On Fri, May 30, 2025 at 03:15:28PM +0530, Beleswar Prasad Padhi wrote:
->> Hi Dawei,
->>
->> On 19/05/25 20:38, Dawei Li wrote:
->>> Implement RPMSG_CREATE_EPT_FD_IOCTL, new uAPI for rpmsg ctrl, which
->>> shares most of operations of RPMSG_CREATE_EPT_IOCTL except that it
->>> returns fd representing eptdev to userspace directly.
->>>
->>> Possible calling procedures for userspace are:
->>> - fd = open("/dev/rpmsg_ctrlX")
->>> - ioctl(fd, RPMSG_CREATE_EPT_FD_IOCTL, &info);
->>> - fd_ep = info.fd
->>
->> We are returning a new fd to userspace from inside an IOCTL itself. Is this a
->> standard way of doing things in Kernel space? (see below related comment)
-> Yes, anon_get_{fd,file} are used extensively in kernel for returning a new
-> fd to userspace which is associated with an unique data structure in kernel
-> space, in different ways:
->
-> - via ioctl(), some examples are:
->
->  - KVM ioctl(s)
->    - KVM_CREATE_VCPU -> kvm_vm_ioctl_create_vcpu
->    - KVM_GET_STATS_FD -> kvm_vcpu_ioctl_get_stats_fd
->    - KVM_CREATE_DEVICE -> kvm_ioctl_create_device
->    - KVM_CREATE_VM -> kvm_dev_ioctl_create_vm 
->
->  - DMA buf/fence/sync ioctls
->    - DMA_BUF_IOCTL_EXPORT_SYNC_FILE -> dma_buf_export_sync_file
->    - SW_SYNC_IOC_CREATE_FENCE -> sw_sync_ioctl_create_fence
->    - Couples of driver implement DMA buf by using anon file _implicitly_:
->      - UDMABUF_CREATE -> udmabuf_ioctl_create
->      - DMA_HEAP_IOCTL_ALLOC -> dma_heap_ioctl_allocate
->
->  - gpiolib ioctls:
->    - GPIO_GET_LINEHANDLE_IOCTL -> linehandle_create
->    - GPIO_V2_GET_LINE_IOCTL
->
->  -  IOMMUFD ioctls:
->
->  -  VFIO Ioctls:
->
->  - ....
->
->
-> - via other specific syscalls:
->  - epoll_create1
->  - bpf 
->  - perf_event_open
->  - inotify_init
->  - ...
+Hi Aaron,
 
-
-Thank you for the extensive list of examples!
-
->
->>> - operations on fd_ep(write, read, poll ioctl)
->>> - ioctl(fd_ep, RPMSG_DESTROY_EPT_IOCTL)
->>> - close(fd_ep)
->>
->> Can we rely on the userspace to close() the fd_ep? (if not done, could be a
->> memory leak..).. Opposed to fd, which we can rely on the userspace to
->> close() since they initiated the open() call. I am just trying to understand if
->> this is a standard way of doing things...
-> Good question.
->
-> When userland gets a fd from kernel, it's userland's duty to manage and release
-> the resource when it's done with it, because kernel never knows when the fd and
-> its resourcen are not needed by userland except process is on exiting. The fact
-> remains true no matter how fd is generated from kernel:
-> - open()
-> - ioctl()
-> - Other syscalls(epoll_create1, e.g, as listed above)
->
-> As a result, kernel & driver provide fops->release() to achieve resource
-> release when fd is not needed for userland, some callers of it maybe:
-> - Userland call close() explicitly
-> - Kernel does the dirty job when user process exits(if some fds are
->   still opened):
->   - Userland call exit() explicitly.
->   - User process was killed by some signals.
->
-> Maybe some comments/docs are needed in uAPI?
-
-
-Perhaps yes. It makes sense to me now. Thanks for addressing my queries!
-
->
->>> - close(fd)
->>>
-> [snip]
->
->>> +
->>> +	if (cmd == RPMSG_CREATE_EPT_IOCTL || cmd == RPMSG_CREATE_DEV_IOCTL ||
->>> +	    cmd == RPMSG_RELEASE_DEV_IOCTL) {
->>> +		if (copy_from_user(&eptinfo, argp, sizeof(eptinfo)))
->>> +			return -EFAULT;
->>> +
->>> +		memcpy(chinfo.name, eptinfo.name, RPMSG_NAME_SIZE);
->>> +		chinfo.name[RPMSG_NAME_SIZE - 1] = '\0';
->>> +		chinfo.src = eptinfo.src;
->>> +		chinfo.dst = eptinfo.dst;
->>> +	} else if (cmd == RPMSG_CREATE_EPT_FD_IOCTL) {
->>
->> Maybe we can put this 'else if condition' in the first 'if' and treat other
->> conditions under 'else', as 'RPMSG_CREATE_EPT_FD_IOCTL' is the only
->> ioctl with a different struct type.
-> Good point! I will try to address it in next respin.
-
+We're in the middle of the merge window and you sent this patch at rc7
+(too late to make the next release). I will not be picking it up
+before v6.16-rc1 is tagged. Please don't ping me for at least 2 weeks
+after you send a patch nor during the merge window.
 
 Thanks,
-Beleswar
-
->
->> Thanks,
->> Beleswar
->>
->>> +		if (copy_from_user(&ept_fd_info, argp, sizeof(ept_fd_info)))
->>> +			return -EFAULT;
->>> +
->>> +		memcpy(chinfo.name, ept_fd_info.name, RPMSG_NAME_SIZE);
->>> +		chinfo.name[RPMSG_NAME_SIZE - 1] = '\0';
->>> +		chinfo.src = ept_fd_info.src;
->>> +		chinfo.dst = ept_fd_info.dst;
->>> +	}
->>>  
-> [snip]
->
-> Thanks,
->
-> 	Dawei
+Bartosz
