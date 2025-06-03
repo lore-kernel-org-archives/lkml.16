@@ -1,30 +1,33 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B43291D47AD;
-	Tue,  3 Jun 2025 07:08:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5158E2C324C;
+	Tue,  3 Jun 2025 07:09:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748934509; cv=none; b=tLPV1sIAWCd7tQ+IgnBt227vtHZW6Gj4QwB+9r94tPrlmwzc+TKQpWbgfTKNw4g+7IogJ0WOeyrgzo5sDjCTT/aDgl9kBMuM88KGD9WyH6ALpI4XEx4jy/oG2uOsJmwDzdrr5a9WKSRxuYWesCtGiyzU2xQTWc0vNiIxiQrTofw=
+	t=1748934581; cv=none; b=l6u9Jxx4/cMjTVnMR6CcPJmFyfRQeox+B7rTiW3OfaSywC42+MwLfA4HjsRCq8rbsyT/SAeo7uinugTkJIVKeDyTNwbCZWDQjqB2gepZorcauLoKrg20qw/YMST2amlGHstocTadcYZSGi/JLlXV02o2NGN1D5pNdKXKQeAYEYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748934509; c=relaxed/simple;
-	bh=+B0PBHH61Eka8uNJ2JHoc6EJkC0qS/HA2xw/BuJki74=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L4u3ur3pvnW0qgsvSWKoeWe1Gal9OGBcO2txmGaFX5m4+J2tpMHro1Zn7h25Q7jerwMVddGn7PpnV5MyQKr/ITFRKCp+JRdWMoLcD/f1+GEm6/qSOgtNHIuBaE+yLjYMOS2wseGC11cKW2Ovfz4kZFRYQfbSboQUPOeseaali/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bBMHs0WFHzYQvmf;
-	Tue,  3 Jun 2025 15:08:25 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 223431A11C6;
-	Tue,  3 Jun 2025 15:08:24 +0800 (CST)
-Received: from [10.67.109.184] (unknown [10.67.109.184])
-	by APP2 (Coremail) with SMTP id Syh0CgAnMGNmnz5otIT5OA--.20294S2;
-	Tue, 03 Jun 2025 15:08:23 +0800 (CST)
-Message-ID: <c093f0d7-58b2-492b-bba5-5e1007a78056@huaweicloud.com>
-Date: Tue, 3 Jun 2025 15:08:22 +0800
+	s=arc-20240116; t=1748934581; c=relaxed/simple;
+	bh=xAEI3Ut9TYumW68KMwCVHfupohyU8Y1rYilzS5OHv+I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=rW5hlFdJHQG5FnJ7lCmAydJp7F78vXWXNec3ct8eBV+o1zfIatLKnq79Nv5gLp2kfHAdk60kVQklmkTJ2vVZXqf/dE51qVzFUOpeNuhqyANzdxlqiy3ca/y94zl1xcgyTJIeDPdkEeJ3HmGej3TLsrNbkpfmqYDi/YsU7pDwf8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p24BGaJ7; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p24BGaJ7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 780D3C4CEED;
+	Tue,  3 Jun 2025 07:09:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748934580;
+	bh=xAEI3Ut9TYumW68KMwCVHfupohyU8Y1rYilzS5OHv+I=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=p24BGaJ7f6ypCBiHUpAeNeN8J/zJdpYM/N4+zN5o75OJCA9Nk6wBkW9KBMkBNXSrV
+	 R8L5Hl6lggzWeC02evPI/gZ6EmRlWW8/KzK57Eyz++BW5N4QL+f/10NvSuRbE0CXOe
+	 8Pgjma635AedSHD23/f1sgPqcLLXS/RhjKxcTE3Mdc6iK8JeMeK68OQHl3h5giWav0
+	 ZAoNX4cYRxB0JHIbRChnBbB4HNv4/oyn/WnkdIyCBdozG3OTKbELjH3TbxCO/3tgxB
+	 wbNDtPse29q++kHnPdyg0vjoua5ZoKpjEijPkNEe5vuzhHt1PP8xEbMmBQLnrvO94a
+	 dHettTZYxTGEw==
+Message-ID: <2bcb724d-d582-40f0-a1d2-3b6fac93fcad@kernel.org>
+Date: Tue, 3 Jun 2025 09:09:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,135 +35,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 4/4] selftests/mm: Add test about uprobe pte be orphan
- during vma merge
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org,
- akpm@linux-foundation.org, Liam.Howlett@oracle.com, vbabka@suse.cz,
- jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, pulehui@huawei.com
-References: <20250529155650.4017699-1-pulehui@huaweicloud.com>
- <20250529155650.4017699-5-pulehui@huaweicloud.com>
- <9117d6d8-df01-4949-a695-29cafe7fe65f@lucifer.local>
+Subject: Re: [Patch 6/8] dt-bindings: arm: tegra: Add NVIDIA Tegra264 CBB 2.0
+ binding
+To: Sumit Gupta <sumitg@nvidia.com>, treding@nvidia.com,
+ jonathanh@nvidia.com, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, linux-tegra@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20250530133336.1419971-1-sumitg@nvidia.com>
+ <20250530133336.1419971-7-sumitg@nvidia.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Pu Lehui <pulehui@huaweicloud.com>
-In-Reply-To: <9117d6d8-df01-4949-a695-29cafe7fe65f@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgAnMGNmnz5otIT5OA--.20294S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxZw1rtrWrWF4kJry7Kry3urg_yoW5ArWkp3
-	WkA3Z0yF4xtF13Jw1avr909a1fKrs3JF42y34fXFy8ZrnFvr93GF4IkFWYkFW8WrWv9r1r
-	uw45JrZ3Wr4UJFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
-	7KsUUUUUU==
-X-CM-SenderInfo: psxovxtxl6x35dzhxuhorxvhhfrp/
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250530133336.1419971-7-sumitg@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 30/05/2025 15:33, Sumit Gupta wrote:
+> Update device-tree bindings documentation to represent the
+> Control Backbone (CBB) 2.0 based fabrics used in Tegra264 SoC.
+> Fabrics reporting errors are: SYSTEM, TOP, UPHY, VISION.
+> 
+> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+> ---
+>  .../devicetree/bindings/arm/tegra/nvidia,tegra234-cbb.yaml    | 4 ++++
+>  1 file changed, 4 insertions(+)
 
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-On 2025/5/30 19:32, Lorenzo Stoakes wrote:
-> On Thu, May 29, 2025 at 03:56:50PM +0000, Pu Lehui wrote:
->> From: Pu Lehui <pulehui@huawei.com>
->>
->> Add test about uprobe pte be orphan during vma merge.
->>
->> Signed-off-by: Pu Lehui <pulehui@huawei.com>
->> ---
->>   tools/testing/selftests/mm/merge.c | 42 ++++++++++++++++++++++++++++++
->>   1 file changed, 42 insertions(+)
->>
->> diff --git a/tools/testing/selftests/mm/merge.c b/tools/testing/selftests/mm/merge.c
->> index c76646cdf6e6..8e1f38d23384 100644
->> --- a/tools/testing/selftests/mm/merge.c
->> +++ b/tools/testing/selftests/mm/merge.c
->> @@ -2,11 +2,13 @@
->>
->>   #define _GNU_SOURCE
->>   #include "../kselftest_harness.h"
->> +#include <fcntl.h>
->>   #include <stdio.h>
->>   #include <stdlib.h>
->>   #include <unistd.h>
->>   #include <sys/mman.h>
->>   #include <sys/wait.h>
->> +#include <linux/perf_event.h>
->>   #include "vm_util.h"
-> 
-> Need to include sys/syscall.h...
-> 
->>
->>   FIXTURE(merge)
->> @@ -452,4 +454,44 @@ TEST_F(merge, forked_source_vma)
->>   	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr2 + 5 * page_size);
->>   }
->>
->> +TEST_F(merge, handle_uprobe_upon_merged_vma)
->> +{
->> +	const size_t attr_sz = sizeof(struct perf_event_attr);
->> +	unsigned int page_size = self->page_size;
->> +	const char *probe_file = "./foo";
->> +	char *carveout = self->carveout;
->> +	struct perf_event_attr attr;
->> +	unsigned long type;
->> +	void *ptr1, *ptr2;
->> +	int fd;
->> +
->> +	fd = open(probe_file, O_RDWR|O_CREAT, 0600);
->> +	ASSERT_GE(fd, 0);
->> +
->> +	ASSERT_EQ(ftruncate(fd, page_size), 0);
->> +	ASSERT_EQ(read_sysfs("/sys/bus/event_source/devices/uprobe/type", &type), 0);
->> +
->> +	memset(&attr, 0, attr_sz);
->> +	attr.size = attr_sz;
->> +	attr.type = type;
->> +	attr.config1 = (__u64)(long)probe_file;
->> +	attr.config2 = 0x0;
->> +
->> +	ASSERT_GE(syscall(__NR_perf_event_open, &attr, 0, -1, -1, 0), 0);
-> 
-> ...Because this results in:
-> 
-> In file included from merge.c:4:
-> merge.c: In function ‘merge_handle_uprobe_upon_merged_vma’:
-> merge.c:480:27: error: ‘__NR_perf_event_open’ undeclared (first use in this function)
->    480 |         ASSERT_GE(syscall(__NR_perf_event_open, &attr, 0, -1, -1, 0), 0);
-> 
-
-I did not encounter this problem when compiling in the 
-tools/testing/selftests/mm directory, but in any case, adding the 
-sys/syscall.h header file makes sense.
-
-> Otherwise :>)
-> 
->> +
->> +	ptr1 = mmap(&carveout[page_size], 10 * page_size, PROT_EXEC,
->> +		    MAP_PRIVATE | MAP_FIXED, fd, 0);
->> +	ASSERT_NE(ptr1, MAP_FAILED);
->> +
->> +	ptr2 = mremap(ptr1, page_size, 2 * page_size,
->> +		      MREMAP_MAYMOVE | MREMAP_FIXED, ptr1 + 5 * page_size);
->> +	ASSERT_NE(ptr2, MAP_FAILED);
->> +
->> +	ASSERT_NE(mremap(ptr2, page_size, page_size,
->> +			 MREMAP_MAYMOVE | MREMAP_FIXED, ptr1), MAP_FAILED);
->> +
->> +	close(fd);
->> +	remove(probe_file);
->> +}
->> +
->>   TEST_HARNESS_MAIN
->> --
->> 2.34.1
->>
-
+Best regards,
+Krzysztof
