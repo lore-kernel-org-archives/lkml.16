@@ -1,66 +1,31 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39FDE1487F6
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 21:00:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BB741487F6;
+	Tue,  3 Jun 2025 21:01:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748984452; cv=none; b=aFIqrQnjqbmuLBr6sBAA8t5s9s9sPXJB+nVyQ7WDkdI0qJab5K2v/FgRturvYfqAk4RQY+ohPHtxDcd5wx2Pyz2KD1hOyURXEcBsKgVrpDTUJ0tQaZsY6OHlBqXda5Lb+f9wzwPz9aZgTGtHLnWddcXfjK8s963Xd+zOzTp9xHg=
+	t=1748984463; cv=none; b=sqNkKVl8Mp4Spsj0VEG46rl2g+aFCnOj3nTuCHLl0Q73kN+ehyaW6IH1RYTWNh1GOUaaYY4D5qndtdhpZZAM2y09qhy+J2rnam/G4qLYOX8hDOoO0EHllfy9vUpc6JmE/IJhx/jpFe7f9HkzNcAiiY2M9psNxlxHzpOPrSKo/5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748984452; c=relaxed/simple;
-	bh=UkVpdqJHMPRKWwzgkIoCA2s+FvvyPiw9dxao/ZWsUgM=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=YRn5JVhFfxSKLH2M5pBvtYEkj8XOShoXSsOlGwpMYgno60XVZRgTMf7PNgFZkTvXxZV6hO9asY8Xz40CB9ZfaaVI16i3ryha1mNZ0GZ/54bsa4rJdZfwyjnokSP5a9IUfb92GXtOL9NZlvXkBtHQXTY4/XbEJM5L+eLAS/zofwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info; spf=pass smtp.mailfrom=jacekk.info; dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b=gr1fRDzQ; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jacekk.info
+	s=arc-20240116; t=1748984463; c=relaxed/simple;
+	bh=r3jk8NiwEP5rXMWWtANPKYEXLB8GlSyHB3WwxJIHfhk=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=R7+bAO2B3ZJUjKqdPfu58DMhnetjUYCMObfMDoTzJrBV3bVzkZxGlWppI14qDgurWASq6AsreNUyb8ReIWdynNby3LuM2BM3LirrevcFGNuVs3qly2zttwFkzyJBYVeoGh5bKeXlVJPBQ+yIfIeRYPYpsEZXB96g/pBFWgSUflw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ftezYUWK; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b="gr1fRDzQ"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ad572ba1347so889457366b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 14:00:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jacekk.info; s=g2024; t=1748984448; x=1749589248; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=+PKgRqE/agxHfUSUWE1ZX+G/aaQhrQ+OflgKrEMgMlM=;
-        b=gr1fRDzQD4csOlBG01ID5UNTv7/+iCWDoPaebrtnO7NYNsL+e68Qtl8PpKd0y1KGrx
-         AcfL3DdrjFRhb2LCFVuSBCfb7sZxtDxgEGPt1O5vIOl2ckJU7epXDWOnQ3OvUmkT+D1D
-         U7XqGGphwvZxsHIl6DyBdMnfs8ScanOH2p+3Ic8numiVxBRqlRD4gpNAge/cji8FfbQR
-         8htza4u2Mhpw1yW7fh+8nwSlNlqT0j8mCL9c1e215m7rl2ZHYjbHaoKljMxqO0vfqi85
-         gzBj8pGpSRjtVVnj/br8gbL2GvKwGlT7g090SXSQoiHkRQk/TDPKPeayxtO9YYJhpjIB
-         g6Fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748984448; x=1749589248;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+PKgRqE/agxHfUSUWE1ZX+G/aaQhrQ+OflgKrEMgMlM=;
-        b=df01yIifg64bJGD/eS5t1ysQ86SOFJVfA3D1oTVw/Jjyfhq/pGLh2PFFOXPwnTdeEb
-         6yT9iR8t4N99yJBXnrjXPPEIxDdvLdz9qFsnimzRqW+tnpzn3KIy0YZPXmoSgmifQMDp
-         PM4NAkwwtZxy/olxATJ+qYxKDFxEUbgnyqur5223hF//CtI1IHOTBYnGiw6VwQK+SJz/
-         Qd+w7pZh6JUjK9WX8bvE5bC4kJ+vUQp2IULp0JBmbHU5okaCExnEPkWvK9ofMZwbzUJm
-         wEQfoisIGTn+HrZpuOQ2eM/0olzeBcaSgMhJHfkHgs8nZHXrNQAAIlg24PiqT+Ailxfs
-         bvUA==
-X-Forwarded-Encrypted: i=1; AJvYcCVBgjipcs5OZRAV8FlwkIW1EfiGET2T8sJdpklF7YfUaSnQ+ODNy3LIUCuaSO/lvSMX/a057aU6wgLvJXc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvXeTuvNXMwFNQLNGRXSrXeiWI9Ocexz+IpnYS1a3YfuMHEd2v
-	PPBqIOl9JERJATTFgrNhDb5+SHrcSUSp0kDr+4iqtRP3nB5s3jAZYf2u5GT8gfDSRg==
-X-Gm-Gg: ASbGnctlcbaU3ylMeT02NGrFpVmGyR5kzeyN74jZ9/+haH0u04Qu+rcVUCnaJUQzbz0
-	XYAWA43+BymNWVaK/ZnsprwumBYU41NQ1y9nU7wT6mqAEPQkdJBaaI28NGwxsvgO2AiirgJNqF5
-	eRmklobe7kc7L0HMOPQ/jowOJ06RCXCi6gIm1KcZKTfqhKwcw8tyBGYaiXXBxdHMBXg0BqT35cH
-	xx28KUSZTIaWlLPanpnRFBvD6qJGjKHDiUALwAhzTgjfwlBpEY/h45sRSq+gySvW76kUwy9KRIB
-	WjhmIOE56QH81so/khuIZsgBDEQbU4oRSAdiwpf+W3/pm8rlaw==
-X-Google-Smtp-Source: AGHT+IFE/zq55kKCpFNUP8s47xQ1VlVxdxq1nZI5gpd41ZgPDjMuxiJo036Y0yIPNM78hWufsGJ+cQ==
-X-Received: by 2002:a17:907:6d0f:b0:acb:b900:2bca with SMTP id a640c23a62f3a-addf8a92b51mr10123066b.0.1748984448317;
-        Tue, 03 Jun 2025 14:00:48 -0700 (PDT)
-Received: from [10.2.1.100] ([194.53.194.238])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada6ad3d7ebsm1002032566b.159.2025.06.03.14.00.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jun 2025 14:00:47 -0700 (PDT)
-From: Jacek Kowalski <jacek@jacekk.info>
-X-Google-Original-From: Jacek Kowalski <Jacek@jacekk.info>
-Message-ID: <c0ece81e-6fee-41bb-96c9-eef36b09af37@jacekk.info>
-Date: Tue, 3 Jun 2025 23:00:46 +0200
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ftezYUWK"
+Received: from [100.64.0.138] (unknown [52.148.171.5])
+	by linux.microsoft.com (Postfix) with ESMTPSA id D578C2115DB5;
+	Tue,  3 Jun 2025 14:01:00 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D578C2115DB5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1748984461;
+	bh=cuvZaG9YZJheHlVoHJF6wkxDezWTkCK93CTFbc8d26I=;
+	h=Date:To:Cc:From:Subject:From;
+	b=ftezYUWKTthPxfuQNVJBa8vgp9KUxg5cFcs59YXTg8F2GN4x8eWQ2Qator7DxCDPd
+	 nmHZFT/woaFYmroxb+XhTuavty8Q9XEBBw6Y2XU7AqlvyL4tW2FkTmd+zmNx8W2Fqm
+	 OtxYrSz3itJPqK/s7PvuzagHUBMPLiaFgfvskcMo=
+Message-ID: <096edaf7-cc90-42b6-aff4-c5f088574e1e@linux.microsoft.com>
+Date: Tue, 3 Jun 2025 14:01:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,43 +33,95 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Intel-wired-lan] [PATCH] e1000e: disregard NVM checksum on tgp
- when valid checksum mask is not set
-To: "Lifshits, Vitaly" <vitaly.lifshits@intel.com>, Vlad URSU <vlad@ursu.me>,
- Tony Nguyen <anthony.l.nguyen@intel.com>,
- Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <5555d3bd-44f6-45c1-9413-c29fe28e79eb@jacekk.info>
- <23bb365c-9d96-487f-84cc-2ca1235a97bb@ursu.me>
- <03216908-6675-4487-a7e1-4a42d169c401@intel.com>
- <47b2fe98-da85-4cef-9668-51c36ac66ce5@ursu.me>
- <8adbc5a0-782d-4a07-93d7-c64ae0e3d805@intel.com>
- <20f39efe-ba5b-44b2-bfe6-b4ca17d6b0c1@ursu.me>
- <1e92a26e-1fb9-44bb-86df-8007cf9ee711@intel.com>
 Content-Language: en-US
-In-Reply-To: <1e92a26e-1fb9-44bb-86df-8007cf9ee711@intel.com>
+To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, ssengar@microsoft.com
+Cc: romank@linux.microsoft.com, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@kernel.org, apais@microsoft.com
+From: Hardik Garg <hargar@linux.microsoft.com>
+Subject: Subject: [PATCH v2] vmbus: retrieve connection-id from DeviceTree
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
->>> If no update is available, perhaps we can consider ignoring the 
->>> checksum on TGP systems if one of the following conditions is met:
->>> 1. SW compatibility bit is not set (current Jacek's approach)
->>> 2. The checksum word at offset 0x3F retains its factory default value 
->>> of 0xFFFF.
->>
->> I am already on the latest firmware. I have also tried downgrading to 
->> earlier versions and they have the same problem.
-> 
-> Ok, so in this case I think that we should go with option 2.
-> 
-> Jacek - can you please add this check to your patch?
+The connection-id determines which hypervisor communication channel the
+guest should use to talk to the VMBus host. This patch adds support to
+read this value from the DeviceTree where it exists as a property under
+the vmbus node with the compatible ID "microsoft,message-connection-id".
+The property name follows the format <vendor>,<field> where
+"vendor": "microsoft" and "field": "message-connection-id"
 
-Yes, I'll prepare v2 by the end of this week.
+Reading from DeviceTree allows platforms to specify their preferred
+communication channel, making it more flexible. If the property is
+not found in the DeviceTree, use the default connection ID
+(VMBUS_MESSAGE_CONNECTION_ID or VMBUS_MESSAGE_CONNECTION_ID_4
+based on protocol version).
 
+Signed-off-by: Hardik Garg <hargar@linux.microsoft.com>
+---
+v2:
+- Rebased on hyperv-next branch as requested by maintainers
+- Added details about the property name format in the commit message
+
+v1: 
+https://lore.kernel.org/all/6acee4bf-cb04-43b9-9476-e8d811d26dfd@linux.microsoft.com/
+
+  drivers/hv/connection.c |  6 ++++--
+  drivers/hv/vmbus_drv.c  | 13 +++++++++++++
+  2 files changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
+index be490c598785..c444c943c1d4 100644
+--- a/drivers/hv/connection.c
++++ b/drivers/hv/connection.c
+@@ -99,12 +99,14 @@ int vmbus_negotiate_version(struct 
+vmbus_channel_msginfo *msginfo, u32 version)
+      if (version >= VERSION_WIN10_V5) {
+          msg->msg_sint = VMBUS_MESSAGE_SINT;
+          msg->msg_vtl = ms_hyperv.vtl;
+-        vmbus_connection.msg_conn_id = VMBUS_MESSAGE_CONNECTION_ID_4;
+      } else {
+          msg->interrupt_page = virt_to_phys(vmbus_connection.int_page);
+-        vmbus_connection.msg_conn_id = VMBUS_MESSAGE_CONNECTION_ID;
+      }
+
++    /* Set default connection ID if not provided via DeviceTree */
++    if (!vmbus_connection.msg_conn_id)
++        vmbus_connection.msg_conn_id = (version >= VERSION_WIN10_V5) ?
++            VMBUS_MESSAGE_CONNECTION_ID_4 : VMBUS_MESSAGE_CONNECTION_ID;
+      /*
+       * shared_gpa_boundary is zero in non-SNP VMs, so it's safe to always
+       * bitwise OR it
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index c236081d0a87..6a886611c448 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -2541,10 +2541,23 @@ static int vmbus_device_add(struct 
+platform_device *pdev)
+      struct of_range range;
+      struct of_range_parser parser;
+      struct device_node *np = pdev->dev.of_node;
++    unsigned int conn_id;
+      int ret;
+
+      vmbus_root_device = &pdev->dev;
+
++    /*
++     * Read connection ID from DeviceTree. The property name follows the
++     * format <vendor>,<field> where:
++     * - vendor: "microsoft"
++     * - field: "message-connection-id"
++     */
++    ret = of_property_read_u32(np, "microsoft,message-connection-id", 
+&conn_id);
++    if (!ret) {
++        pr_info("VMBus message connection ID: %u\n", conn_id);
++        vmbus_connection.msg_conn_id = conn_id;
++    }
++
+      ret = of_range_parser_init(&parser, np);
+      if (ret)
+          return ret;
 -- 
-Best regards,
-   Jacek Kowalski
+2.40.4
+
+
