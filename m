@@ -1,313 +1,229 @@
-Received: from mail-m49198.qiye.163.com (mail-m49198.qiye.163.com [45.254.49.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C1F91E50E;
-	Tue,  3 Jun 2025 12:30:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D926B224AF3
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 12:30:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748953840; cv=none; b=BCyyheMCxahOFOf60FyORU87NUVhTNaKUCAs0mI7eyjW5V+62uFxFKMivys0v3Bk3WsUmkUicuwS+7XrKcbl8cnhlc/Qze8UJGrS6/O1+NoMNwd6E1zNLEj6k+XIN7wvYu9HjCODynI3Aduzqx3yiTZ/72THRQN4NXYpZu8x8R8=
+	t=1748953852; cv=none; b=gbjv6DPSMU59b3jG4+bzar1ewF4a77AnUWIlhIUrHnua+SLb6gH7J683naLqTdu6FNdioBVpaC3ohclN0OlIyWlO4gjRl91Z620FCv1+GOh7iF1yTIbL7H747cdEbsoLbmf12cLqbqtZvacW8BR4OqScJj34cUhwE+NpoLvsGCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748953840; c=relaxed/simple;
-	bh=jiV0DIz+35/KlgSGDEdIydttSaz8AZfr9qmgRlX5kUg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nDS9DQf98rjAl7yrOSNoeFihDNmmJF8iF1es5Ic9t7PwiZStpQrRYefqURQfxllYXKQbyriUjhYw2OHK+e/VmR9GBSYVFsSvkVDOtFURbhkj6kIPT4YjgT/SO6fA/Ui2f0f2F7m2wKZ7oPNyI+BWiuVS3Ii+bJ6jhNQOUZ21rho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn; spf=pass smtp.mailfrom=whut.edu.cn; arc=none smtp.client-ip=45.254.49.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=whut.edu.cn
-Received: from localhost (gy-adaptive-ssl-proxy-3-entmail-virt135.gy.ntes [27.17.176.245])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 176000623;
-	Tue, 3 Jun 2025 20:30:26 +0800 (GMT+08:00)
-Date: Tue, 3 Jun 2025 20:30:26 +0800
-From: Ze Huang <huangze@whut.edu.cn>
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-	Ze Huang <huangze@whut.edu.cn>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/4] phy: spacemit: support K1 USB2.0 PHY controller
-Message-ID: <aD7q4t3AVHUSFJZ8@jean.localdomain>
-References: <20250527-b4-k1-usb3-phy-v2-v5-0-2d366b0af999@whut.edu.cn>
- <20250527-b4-k1-usb3-phy-v2-v5-3-2d366b0af999@whut.edu.cn>
- <d9be98db-9196-4a15-896f-d802f8251f3d@linaro.org>
+	s=arc-20240116; t=1748953852; c=relaxed/simple;
+	bh=EmQ/A9vSfKWWPB/K/T8g8cr639C8K9rcW3d2OXMslYI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tZaGk/ocvjICz7nt0nvFZ1BYPgyHfkdB62xFJhdU6lYofIQrBWQMBoHIUz2bbnwProYLajd+ExyEztCc9Lmh7KYwJbj7fCOBw3Q2cvobrkAeu7GZMK29IHWI+FjudWpDmTnqpo1cgfj8HUuRb2NpVTVRqk9i6fQIwSUtRkOT6Xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LKvP3EzW; arc=none smtp.client-ip=209.85.222.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LKvP3EzW"
+Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-87df4dc0e54so1104328241.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 05:30:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748953850; x=1749558650; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LY/1nUmGBa6dpDChrxvy7BQ7e4yIy3xA/coyZFocW/0=;
+        b=LKvP3EzWGddE4uWuB7OfVy5oDwkJQu8QXp+kbSInopfsq0Dt/ulzjij3bknit7gUH3
+         9COBmnOrbiJ+hrIkCRvQTRQ8WLqCYpzNA3wSybQw9Wlag1pzanfyizd1xNNuJMT5f46l
+         hJ9iB6lE66bI7x8ClQznWI2GW58iivl2fBIcMOalw2QlY40USWLDf0cq6lhPlPiXx+g1
+         Aze9ZbE32pc1JOufsj+UA4jLRMsc68minAvhz0/Ca0RiVaw77b46aKr0JIODAF0aPNaC
+         DUTQu/zlNzX4HsMa+2dSzcz4MM/3McAjU2fgWoKCzRO841yEblS2mHuXi3p0x8Zx6Fu0
+         r35A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748953850; x=1749558650;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LY/1nUmGBa6dpDChrxvy7BQ7e4yIy3xA/coyZFocW/0=;
+        b=eS1v/HwyRJnY+gk/Cq/iRFCavO3Et1lAX/IJJsu4cteTriNRFkXPuWKVQkKdSFUuxj
+         sbP7odWbqGbVlNmNSNvnjSQPPgBjSICtecUyEDbVrFIeth/AGOQCTrGv3iDD3DGTZjgH
+         Cg8vQ7uZhfz51aedswM0VAaO8gRSYVSrszw8tNTCWql/JFOIfvaKWxMQDEb7Kf7/YUdl
+         z0xnrjb/239i/yLAYiagolyYUE+gHmgp0o/TWJN3FrGqCo75GRvX8ZuniT8Noc5ZatLt
+         pZh4cXmQWjO14asZuvvqJY3UMrd6Jw9u1U8GuhtOYO0GfXx8uL4xQavmAg8ONOeNlJ8s
+         AbyA==
+X-Forwarded-Encrypted: i=1; AJvYcCXVWzks9WJAVRZ0lF51leziGamzfj+sBgXtJ/A7RclaVx/j41h/+UOK8ANYWyjYLNa1G9315tqX+Y1f0/E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyChY458bv1keW4GYYJVdEAupWwTZxPDAo3FdZFOxLCI20VJA5H
+	AHT12I/oQNDDqOOYs8qdWjnV/lZHHcTT/Cvutr9Ot7EGp6iAZi+iBpo6eZfIIspzWgzI18XFfKm
+	koFk+lAzp8NtgHdsjRF5awMUFZ5dQR1MZFrsJ7oGWqQ==
+X-Gm-Gg: ASbGncv/HxC5Bnto+4p3PuKh5LXnBjRco43FEzbx/xpZRPEb5eqa7LsLhSAcwFI6NJj
+	PWYytked8H0jrvSJVMhBaX0jkU8slLcultODOGm1vWCSQ60LPowgjImhpIzoqVZYlugjG8QxZo4
+	cVzwWbnTyN0b5WOZo4ZRD4RTShAKgsnms=
+X-Google-Smtp-Source: AGHT+IHTosQvOBKF0L3D0Inb+MoWZZ3cSRXCp014dL+KqAo8fezAvJU5scdjR5Ga9Sawg0g6JBdjG2QGVG+FJzLfAfg=
+X-Received: by 2002:a05:6122:1ad4:b0:52c:4eb0:118d with SMTP id
+ 71dfb90a1353d-53084be0280mr12838886e0c.4.1748953849537; Tue, 03 Jun 2025
+ 05:30:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d9be98db-9196-4a15-896f-d802f8251f3d@linaro.org>
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaTENMVkxNQhgeTUlNHU8fT1YeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlJTFVKTFVKTE1VSU9OWVdZFhoPEhUdFFlBWU9LSFVKS0hKTkxPVUpLS1VKQk
-	tLWQY+
-X-HM-Tid: 0a9735c5851c03a1kunm68847d9b2eda9c
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Pj46HAw6KDExVjQrODojNTMY
-	Py0wFEhVSlVKTE9DQk5IQ0lMTUtCVTMWGhIXVRMOGhUcAR47DBMOD1UeHw5VGBVFWVdZEgtZQVlJ
-	TFVKTFVKTE1VSU9OWVdZCAFZQUJMTk43Bg++
+References: <20250602134241.673490006@linuxfoundation.org>
+In-Reply-To: <20250602134241.673490006@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 3 Jun 2025 18:00:38 +0530
+X-Gm-Features: AX0GCFumOsdVyieNJlmgoVB__zbTkcpeuCdAKy4COLBbvEc6SfoIbneNR7OPeWM
+Message-ID: <CA+G9fYtrUYsAtZgJg4b8ZxCUzWmekp9v0USDVC5dKgZ3XNe7UA@mail.gmail.com>
+Subject: Re: [PATCH 6.14 00/73] 6.14.10-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 03, 2025 at 09:37:58AM +0200, neil.armstrong@linaro.org wrote:
-> On 27/05/2025 14:01, Ze Huang wrote:
-> > The SpacemiT K1 SoC includes three USB ports:
-> > 
-> > - One USB2.0 OTG port
-> > - One USB2.0 host-only port
-> > - One USB3.0 port with an integrated USB2.0 DRD interface
-> > 
-> > Each of these ports is connected to a USB2.0 PHY responsible for USB2
-> > transmission.
-> > 
-> > This commit adds support for the SpacemiT K1 USB2.0 PHY, which is
-> > compliant with the USB 2.0 specification and supports both 8-bit 60MHz
-> > and 16-bit 30MHz parallel interfaces.
-> > 
-> > Signed-off-by: Ze Huang <huangze@whut.edu.cn>
-> > ---
-> >   drivers/phy/Kconfig                |   1 +
-> >   drivers/phy/Makefile               |   1 +
-> >   drivers/phy/spacemit/Kconfig       |  13 ++++
-> >   drivers/phy/spacemit/Makefile      |   2 +
-> >   drivers/phy/spacemit/phy-k1-usb2.c | 144 +++++++++++++++++++++++++++++++++++++
-> >   5 files changed, 161 insertions(+)
-> > 
-> > diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> > index 8d58efe998ec5fd50054eed2c90d6ecce6bd5dd8..fca589aa7926eb5bce14e99785cf32cf0395202e 100644
-> > --- a/drivers/phy/Kconfig
-> > +++ b/drivers/phy/Kconfig
-> > @@ -114,6 +114,7 @@ source "drivers/phy/renesas/Kconfig"
-> >   source "drivers/phy/rockchip/Kconfig"
-> >   source "drivers/phy/samsung/Kconfig"
-> >   source "drivers/phy/socionext/Kconfig"
-> > +source "drivers/phy/spacemit/Kconfig"
-> >   source "drivers/phy/st/Kconfig"
-> >   source "drivers/phy/starfive/Kconfig"
-> >   source "drivers/phy/sunplus/Kconfig"
-> > diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> > index e281442acc752820fe0bd638dfe38986a37c2a78..05993ff8a15daf7e2583b5f9b9b37ac584a30609 100644
-> > --- a/drivers/phy/Makefile
-> > +++ b/drivers/phy/Makefile
-> > @@ -34,6 +34,7 @@ obj-y					+= allwinner/	\
-> >   					   rockchip/	\
-> >   					   samsung/	\
-> >   					   socionext/	\
-> > +					   spacemit/	\
-> >   					   st/		\
-> >   					   starfive/	\
-> >   					   sunplus/	\
-> > diff --git a/drivers/phy/spacemit/Kconfig b/drivers/phy/spacemit/Kconfig
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..0136aee2e8a2f5f484da136b26f80130794b992c
-> > --- /dev/null
-> > +++ b/drivers/phy/spacemit/Kconfig
-> > @@ -0,0 +1,13 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +#
-> > +# Phy drivers for SpacemiT platforms
-> > +#
-> > +config PHY_SPACEMIT_K1_USB2
-> > +	tristate "SpacemiT K1 USB 2.0 PHY support"
-> > +	depends on (ARCH_SPACEMIT || COMPILE_TEST) && OF
-> > +	depends on COMMON_CLK
-> > +	depends on USB_COMMON
-> > +	select GENERIC_PHY
-> > +	help
-> > +	  Enable this to support K1 USB 2.0 PHY driver. This driver takes care of
-> > +	  enabling and clock setup and will be used by K1 udc/ehci/otg/xhci driver.
-> > diff --git a/drivers/phy/spacemit/Makefile b/drivers/phy/spacemit/Makefile
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..fec0b425a948541b39b814caef0b05e1e002d92f
-> > --- /dev/null
-> > +++ b/drivers/phy/spacemit/Makefile
-> > @@ -0,0 +1,2 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +obj-$(CONFIG_PHY_SPACEMIT_K1_USB2)		+= phy-k1-usb2.o
-> > diff --git a/drivers/phy/spacemit/phy-k1-usb2.c b/drivers/phy/spacemit/phy-k1-usb2.c
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..ee64af07478ea02b421473e6f73fd37a3a135e7d
-> > --- /dev/null
-> > +++ b/drivers/phy/spacemit/phy-k1-usb2.c
-> > @@ -0,0 +1,144 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * SpacemiT K1 USB 2.0 PHY driver
-> > + *
-> > + * Copyright (C) 2025 SpacemiT (Hangzhou) Technology Co. Ltd
-> > + * Copyright (C) 2025 Ze Huang <huangze9015@gmail.com>
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/iopoll.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/usb/of.h>
-> > +
-> > +#define USB2_PHY_REG01			0x04
-> > +#define  USB2_PHY_REG01_VAL		0x60ef
-> > +#define  USB2_PHY_REG01_PLL_IS_READY	BIT(0)
-> > +#define USB2_PHY_REG04			0x10
-> > +#define  USB2_PHY_REG04_AUTO_CLEAR_DIS	BIT(2)
-> > +#define USB2_PHY_REG0D			0x34
-> > +#define  USB2_PHY_REG0D_VAL		0x1c
-> > +#define USB2_PHY_REG26			0x98
-> > +#define  USB2_PHY_REG26_VAL		0xbec4
-> > +
-> > +#define USB2D_CTRL_RESET_TIME_MS	50
-> > +
-> > +struct spacemit_usb2phy {
-> > +	struct phy	*phy;
-> > +	struct clk	*clk;
-> > +	struct regmap	*regmap_base;
-> > +};
-> > +
-> > +static const struct regmap_config phy_regmap_config = {
-> > +	.reg_bits = 32,
-> > +	.val_bits = 32,
-> > +	.reg_stride = 4,
-> > +	.max_register = 0x200,
-> > +};
-> > +
-> > +static int spacemit_usb2phy_init(struct phy *phy)
-> > +{
-> > +	struct spacemit_usb2phy *sphy = phy_get_drvdata(phy);
-> > +	struct regmap *map = sphy->regmap_base;
-> > +	u32 val;
-> > +	int ret;
-> > +
-> > +	ret = clk_prepare_enable(sphy->clk);
-> 
-> clock is already prepared, should be clk_enable
-> 
+On Mon, 2 Jun 2025 at 19:28, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.14.10 release.
+> There are 73 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 04 Jun 2025 13:42:20 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.14.10-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Yes, the clock is already prepared during probe and managed by devm. I'll
-change it to clk_enable here.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-> > +	if (ret) {
-> > +		dev_err(&phy->dev, "failed to enable clock\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	/*
-> > +	 * make sure the usb controller is not under reset process before
-> > +	 * any configuration
-> > +	 */
-> > +	usleep_range(150, 200);
-> > +	regmap_write(map, USB2_PHY_REG26, USB2_PHY_REG26_VAL); /* 24M ref clk */
-> > +
-> > +	ret = regmap_read_poll_timeout(map, USB2_PHY_REG01, val,
-> > +				       (val & USB2_PHY_REG01_PLL_IS_READY),
-> > +				       500, USB2D_CTRL_RESET_TIME_MS * 1000);
-> > +	if (ret) {
-> > +		dev_err(&phy->dev, "wait PHY_REG01[PLLREADY] timeout\n");
-> > +		return ret;
-> 
-> clk_disable on error ?
-> 
-> 
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Will do
+## Build
+* kernel: 6.14.10-rc1
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
+rc.git
+* git commit: d9764ae2492695b2e87e4cd07bf1c61426d3693d
+* git describe: v6.14.9-74-gd9764ae24926
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.14.y/build/v6.14=
+.9-74-gd9764ae24926
 
-    if (ret) {
-        dev_err(&phy->dev, "wait PHY_REG01[PLLREADY] timeout\n");
-        clk_disable(sphy->clk);
-        return ret;
-    }
+## Test Regressions (compared to v6.14.8-784-g10804dbee7fa)
 
-> > +	}
-> > +
-> > +	/* release usb2 phy internal reset and enable clock gating */
-> > +	regmap_write(map, USB2_PHY_REG01, USB2_PHY_REG01_VAL);
-> > +	regmap_write(map, USB2_PHY_REG0D, USB2_PHY_REG0D_VAL);
-> > +
-> > +	/* auto clear host disc */
-> > +	regmap_update_bits(map, USB2_PHY_REG04, USB2_PHY_REG04_AUTO_CLEAR_DIS,
-> > +			   USB2_PHY_REG04_AUTO_CLEAR_DIS);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int spacemit_usb2phy_exit(struct phy *phy)
-> > +{
-> > +	struct spacemit_usb2phy *sphy = phy_get_drvdata(phy);
-> > +
-> > +	clk_disable_unprepare(sphy->clk);
-> 
-> clk_disable
-> 
+## Metric Regressions (compared to v6.14.8-784-g10804dbee7fa)
 
-Thanks, will fix
+## Test Fixes (compared to v6.14.8-784-g10804dbee7fa)
 
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct phy_ops spacemit_usb2phy_ops = {
-> > +	.init = spacemit_usb2phy_init,
-> > +	.exit = spacemit_usb2phy_exit,
-> > +	.owner = THIS_MODULE,
-> > +};
-> > +
-> > +static int spacemit_usb2phy_probe(struct platform_device *pdev)
-> > +{
-> > +	struct phy_provider *phy_provider;
-> > +	struct device *dev = &pdev->dev;
-> > +	struct spacemit_usb2phy *sphy;
-> > +	void __iomem *base;
-> > +
-> > +	sphy = devm_kzalloc(dev, sizeof(*sphy), GFP_KERNEL);
-> > +	if (!sphy)
-> > +		return -ENOMEM;
-> > +
-> > +	sphy->clk = devm_clk_get_prepared(&pdev->dev, NULL);
-> > +	if (IS_ERR(sphy->clk))
-> > +		return dev_err_probe(dev, PTR_ERR(sphy->clk), "Failed to get clock\n");
-> > +
-> > +	base = devm_platform_ioremap_resource(pdev, 0);
-> > +	if (IS_ERR(base))
-> > +		return PTR_ERR(base);
-> > +
-> > +	sphy->regmap_base = devm_regmap_init_mmio(dev, base, &phy_regmap_config);
-> > +	if (IS_ERR(sphy->regmap_base))
-> > +		return dev_err_probe(dev, PTR_ERR(sphy->regmap_base),
-> > +				     "Failed to init regmap\n");
-> > +
-> > +	sphy->phy = devm_phy_create(dev, NULL, &spacemit_usb2phy_ops);
-> > +	if (IS_ERR(sphy->phy))
-> > +		return dev_err_probe(dev, PTR_ERR(sphy->phy), "Failed to create phy\n");
-> > +
-> > +	phy_set_drvdata(sphy->phy, sphy);
-> > +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-> > +
-> > +	return PTR_ERR_OR_ZERO(phy_provider);
-> > +}
-> > +
-> > +static const struct of_device_id spacemit_usb2phy_dt_match[] = {
-> > +	{ .compatible = "spacemit,k1-usb2-phy", },
-> > +	{ /* sentinel */ }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, spacemit_usb2phy_dt_match);
-> > +
-> > +static struct platform_driver spacemit_usb2_phy_driver = {
-> > +	.probe	= spacemit_usb2phy_probe,
-> > +	.driver = {
-> > +		.name   = "spacemit-usb2-phy",
-> > +		.of_match_table = spacemit_usb2phy_dt_match,
-> > +	},
-> > +};
-> > +module_platform_driver(spacemit_usb2_phy_driver);
-> > +
-> > +MODULE_DESCRIPTION("Spacemit USB 2.0 PHY driver");
-> > +MODULE_LICENSE("GPL");
-> > 
-> 
-> Thanks,
-> Neil
-> 
-> 
-> 
+## Metric Fixes (compared to v6.14.8-784-g10804dbee7fa)
+
+## Test result summary
+total: 332025, pass: 306599, fail: 4596, skip: 20041, xfail: 789
+
+## Build Summary
+* arc: 5 total, 5 passed, 0 failed
+* arm: 139 total, 137 passed, 2 failed
+* arm64: 57 total, 56 passed, 1 failed
+* i386: 18 total, 18 passed, 0 failed
+* mips: 34 total, 33 passed, 1 failed
+* parisc: 4 total, 4 passed, 0 failed
+* powerpc: 40 total, 40 passed, 0 failed
+* riscv: 25 total, 22 passed, 3 failed
+* s390: 22 total, 22 passed, 0 failed
+* sh: 5 total, 5 passed, 0 failed
+* sparc: 4 total, 3 passed, 1 failed
+* x86_64: 49 total, 48 passed, 1 failed
+
+## Test suites summary
+* boot
+* commands
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-cgroup
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-cpufreq
+* kselftest-efivarfs
+* kselftest-exec
+* kselftest-fpu
+* kselftest-ftrace
+* kselftest-futex
+* kselftest-gpio
+* kselftest-intel_pstate
+* kselftest-ipc
+* kselftest-kcmp
+* kselftest-kvm
+* kselftest-livepatch
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-mincore
+* kselftest-mm
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-mptcp
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-rust
+* kselftest-seccomp
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-tc-testing
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* kvm-unit-tests
+* lava
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* modules
+* perf
+* rcutorture
+* rt-tests-cyclicdeadline
+* rt-tests-pi-stress
+* rt-tests-pmqtest
+* rt-tests-rt-migrate-test
+* rt-tests-signaltest
+
+--
+Linaro LKFT
+https://lkft.linaro.org
