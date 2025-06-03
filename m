@@ -1,89 +1,68 @@
-Received: from mail.cjdns.fr (mail.cjdns.fr [5.135.140.105])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD8281474DA;
-	Tue,  3 Jun 2025 10:05:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.135.140.105
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A414477111;
+	Tue,  3 Jun 2025 10:06:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748945124; cv=none; b=VIhDVX9s4a9OdJ0C9EL0mcEEutgKqGMSNUy0+5JD7J6B/Rl5hloc2f2i7QZFpjp40dL/fE5E00JbXh9HS1Tt4B0jkjW5rbbaqDx4Nzt4qKT+qL2Z0aVe9Gw/RMkGMa7jF5kRzD/mc4ZGN22OiTR9RqjyqsI3Ig1ayZVoNTguJ/Y=
+	t=1748945197; cv=none; b=LtIHg3cKKY681u6eWyu9B8gGesquqZOQxq+Xo3lBtAXU5FsJ8ooa+ss3tzkFRgSYQfNztctgMLt+AkDs9Qoy+bTqFDKckM72MiCJRfE3hHlJjPoILkIMyQ5GvfWA0vxNV6whB/ygupcjz1KCOBajQtOIJ3RYCnIZ0ZpwfQbaQ7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748945124; c=relaxed/simple;
-	bh=aKoy2voj3JHmEctto6vb4+o785Xz/xT57sWgjO2fDRg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d0uIjC4TRR7KpSuLQvzNBRGI35palYJYcfAEoyKcK+LgylYDcKoGthv2O3jgMU/Vg36l4n9Ngiow2SWQT74VnR32Yv1+f8WT8nu1cvEJV1CTJ363GNquyaGo1dZ9Be7BDeUQ8/wsVlZ88p0ANVf+V88lcTgCdWycuv7OTMh6zrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr; spf=none smtp.mailfrom=cjdns.fr; dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b=QU+CHtdQ; arc=none smtp.client-ip=5.135.140.105
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cjdns.fr
+	s=arc-20240116; t=1748945197; c=relaxed/simple;
+	bh=kfLvpZoyCcWiupBC2EXSy9QbfYDhhc2hz0Lldz8VPV0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fpfZCDig3qL7Tl2/FweMiV4oqPAVZkruIwz5XzWXV4HyKrpIUiYd9SSK7QbEWmVnyZIUOmvQgWFRAswIBreW6drSgCWfM93E9B5duezKZ56LXDyEJoTutWX88kBtEm//1jdZY9z/lADMXVoH/S68bsCDgT6GaJc54Mxjc0RWnMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=afSyqfm3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b="QU+CHtdQ"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C8CEC23F5A5;
-	Tue,  3 Jun 2025 12:05:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cjdns.fr; s=dkim;
-	t=1748945120; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:content-language:in-reply-to:references;
-	bh=OozP1XsCyy8/ehPNzN7eul+LCLA7VroK5+qN//FqHpk=;
-	b=QU+CHtdQKDKbIAfKd+VWlKI/QgUo3zNgG1ax/arBms7uOUDqKF+rdBl0OVMo3Q7wPAJ5ga
-	4A0BomfmYsDHgSApvBHyQW6Yo0AUVEbk1C/WiBobYWTyRgAWc2rFDS386XbYw/rJsN6Mz6
-	NBvOlKMT8KunmmW8gXt4XvoT8DR2fb0bd6HzPe4xKNP/CrMm/XMRuTK1e24HQ7/VY2di9L
-	3C3A1UkdhkdYMMBi9rOv69D5doPAZOZIsq9G2DflT1dbXk8NuS9vEvm8lCSSMxx7c1mddt
-	4uc6esSRvnIDDw980N61jqpvIxA+YXaIY0s5R2Msv54VdOLYBK8YAI7gH5d72Q==
-Message-ID: <c40fd836-ac63-48d0-93aa-8dd5f3dbcf79@cjdns.fr>
-Date: Tue, 3 Jun 2025 12:05:17 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="afSyqfm3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E4C0C4CEED;
+	Tue,  3 Jun 2025 10:06:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1748945197;
+	bh=kfLvpZoyCcWiupBC2EXSy9QbfYDhhc2hz0Lldz8VPV0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=afSyqfm3Y+Q6z1jNuUOw0nKfXUt2rKZ16qlAS0sol9f8y42cSOwkT16nPJvYKT1U5
+	 ByGegBFqyNvsAHR6AysvoUAhe5e2DtcpXRUAxtYNUx3xD7lFfY133TuO8WZStiNVE6
+	 mQaWMGDkyOzANdqYZ3+UxWgnqa1Ca0jw0vr7AFHw=
+Date: Tue, 3 Jun 2025 12:06:34 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com
+Subject: Re: [PATCH 5.10 000/270] 5.10.238-rc1 review
+Message-ID: <2025060302-reflected-tarot-acfc@gregkh>
+References: <20250602134307.195171844@linuxfoundation.org>
+ <6dd7aac1-4ca1-46c5-8a07-22a4851a9b34@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH] clocksource/timer-econet-en751221: Convert comma to
- semicolon
-To: Chen Ni <nichen@iscas.ac.cn>, daniel.lezcano@linaro.org,
- tglx@linutronix.de
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250603060450.1310204-1-nichen@iscas.ac.cn>
-Content-Language: en-US
-From: Caleb James DeLisle <cjd@cjdns.fr>
-In-Reply-To: <20250603060450.1310204-1-nichen@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6dd7aac1-4ca1-46c5-8a07-22a4851a9b34@sirena.org.uk>
 
+On Tue, Jun 03, 2025 at 10:45:34AM +0100, Mark Brown wrote:
+> On Mon, Jun 02, 2025 at 03:44:45PM +0200, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.10.238 release.
+> > There are 270 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> 
+> This fails to boot with a NFS root on Raspberry Pi 3b+, due to
+> 558a48d4fabd70213117ec20f476adff48f72365 ("net: phy: microchip: force
+> IRQ polling mode for lan88xx") as was also a problem for other stables.
 
-On 03/06/2025 08:04, Chen Ni wrote:
-> Replace comma between expressions with semicolons.
->
-> Using a ',' in place of a ';' can have unintended side effects.
-> Although that is not the case here, it is seems best to use ';'
-> unless ',' is intended.
->
-> Found by inspection.
-> No functional change intended.
-> Compile tested only.
->
-> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+Odd, I see it in the 5.15.y released tree, so did we get a fix for it
+with a different commit or should it just be dropped entirely from the
+5.10.y queue?
 
-Tested-by: Caleb James DeLisle <cjd@cjdns.fr>
+thanks,
 
+greg k-h
 
-The comma was indeed unintended, thank you.
-
-Caleb
-
-> ---
->   drivers/clocksource/timer-econet-en751221.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/clocksource/timer-econet-en751221.c b/drivers/clocksource/timer-econet-en751221.c
-> index 3b449fdaafee..4008076b1a21 100644
-> --- a/drivers/clocksource/timer-econet-en751221.c
-> +++ b/drivers/clocksource/timer-econet-en751221.c
-> @@ -146,7 +146,7 @@ static int __init cevt_init(struct device_node *np)
->   	for_each_possible_cpu(i) {
->   		struct clock_event_device *cd = &per_cpu(econet_timer_pcpu, i);
->   
-> -		cd->rating		= 310,
-> +		cd->rating		= 310;
->   		cd->features		= CLOCK_EVT_FEAT_ONESHOT |
->   					  CLOCK_EVT_FEAT_C3STOP |
->   					  CLOCK_EVT_FEAT_PERCPU;
