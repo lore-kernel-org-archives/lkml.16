@@ -1,159 +1,287 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94264267F75;
-	Tue,  3 Jun 2025 07:06:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA3A2690C8
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 07:06:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748934386; cv=none; b=FQzlQ+mFLsYQIqyjRvtyY3gTbmYruVMqfBzuDLOEPX6a5ssELyEHls2z/jIZ6roxYL3sC1xEWAAlDyQGQgdlOTO37xZmInFyAekDvUIegQN5cQ4W/9s1CPKZ/O9y6ryOYpGP/j3Mv0m60hLP5TwPM2+LAKcul4jVWAE4g3s+urk=
+	t=1748934391; cv=none; b=lDPMN40yu/o8hTYVqmUnmKbNT56U1SXJAvjbbSMWdmHkDcMCWpGlm0naUgTmOrvgZS++7b3x2cQC0mRLpROqmpBF+Okkp5StBtSn+SqTBwNP27h/iov+tGdBt/Rx8mAQG9ilYekMfEnKEgIfuk+/XjsjHFPKd9uQCJtoN0MyCQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748934386; c=relaxed/simple;
-	bh=Sfe2o5YTqfaeOEsvn93+GtVo0/OjSJdAikbEZ0PmGGc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UEnTefN9HdM/FWnkkGTPlOjwBL5v5sc4fcMMb8WNJvpRTto6mLDa31RkCRiPoFKFVCDdYYThoNk7roKqfY9kHsrWJbmaq+m1fL8LsE3/XWtkKVk+Fe56Iwp5HfbitaVmc5m4rwNJRcg5WMDG99t4j5MZQf33o9hcyA27zpkdMyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y2x5OP0V; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748934391; c=relaxed/simple;
+	bh=Pcvt8tLciMfuBwsRHOidNWQzHeOgwibU0d8Wlh4f5o8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JVwc+aS3p6RbcXdE0M9CSfR2GdvZGEufV62Rl9SiQ2CsDuoR5tBxIGA3NOwN+PqHs9KOgyVQyGVU1/I+fUO0YEZpjl4p0LPHtEIK8T/PtPW6gEsAROd9I/20cuE6kwcVehPYjDd0FKgB1XC+r18uhBvMaeJ72DAT8KpGPYwQaHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LgeCE0OO; arc=none smtp.client-ip=209.85.221.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y2x5OP0V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DF8DC4CEED;
-	Tue,  3 Jun 2025 07:06:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748934386;
-	bh=Sfe2o5YTqfaeOEsvn93+GtVo0/OjSJdAikbEZ0PmGGc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Y2x5OP0V931RhxgwZW3nkL7koE0B84xeNwa1MUx5QaUZRfhr3xgrtMIvbP2ihFXQG
-	 IkA//iGctlnNZto+XysiilDFyLDlYluqw9rT2hHWn50muaIu+O5KCb8xPtSQ+zVzJR
-	 1mKiZ6qYIZaZEpaTYAFTUl827rqbj11aQMTHspY/7CCemcr9JRxMO1edn4ZCeGUYOZ
-	 wf1EbdYxMOxCQ6xih5aqRm4TS49QhM/AU3/ILY6WctfT9LgvqAFTl6f7XDt/uX6nX6
-	 epg2ZVqIjSv62OF+OjUOuPiFADEVo1UsxPqdlleudZ3udxLnnRznTvj9+saqrV7MGY
-	 ACs+8yO2hhf8w==
-Message-ID: <bcf487c9-e522-44a3-b094-daf98823a195@kernel.org>
-Date: Tue, 3 Jun 2025 09:06:20 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LgeCE0OO"
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-530802fd5cdso1407269e0c.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 00:06:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748934388; x=1749539188; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sObAWsrJ5ZBZRLi4kwOyELlX1Cpss2QS7Q/UEJ4ssaU=;
+        b=LgeCE0OOzo3JoAuJJncg3Iosnik8HF+qL0MVGjMfu5gOebkKKRBrofn4uSeGpXk1Oa
+         H/Dh+3AJvY5BJQHEMBFcWdgw++7c7NszAIxA248BEP3tt2eegAaKDfJ9Q+yjlsBMNbKn
+         TNH3o5+38QiCgBC6A80aqrlRigJmuYZyDPTcdkgJAcZ6mrDoTAQU7nyZWTC7Tnnal2EZ
+         6b7g6zAYh+IemMXBLXSDbWXt9OQC1BLIyvvFUVIl0L8Oo3UoOVniDxoevHGIdvTAJo0w
+         mN/NItkHJoshCFKbUdi1p4ZyAdHCERGNfCWiiNF1IBv79ICi22z5F3jy4X5/E8l914d9
+         fSXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748934388; x=1749539188;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sObAWsrJ5ZBZRLi4kwOyELlX1Cpss2QS7Q/UEJ4ssaU=;
+        b=detPtUi1lDEL+yoo7VxJWE0acL0c1UB+HDi3G9jCWtovMsNOEatervGXsths2MBuIp
+         L491r5g8AFpD5o8wNGqTBQ2xzu5M6mZCmqZrJiBjp2lbJsGB8nT6sAAo0MSd1LfUddsG
+         DFPr2EeXOVbfwtNpUN1ttbl7ceUJE6L9wW/s9NY4eL9KRzd56oCy/iiT+0MKxE0bsfWx
+         hLeMx2b00UQZH2GbeX72EnJqQqAKrVJol7SFDdIScB2utcgiJemfdAlqX87Zatoc5bf5
+         FMYbwJ9SMABWtUqm9c4icpM1Bb6f+5TkAd1O9zStR3xEkkbXU4bdKH4RosiEI0Myk7pr
+         rr6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXe3mqjPY6jMT237WjIbnXGSj9eZf9Wmd1xi6axoWVE//metGNNCmehMmT4TX4B7uCCFPY3/h7sa1uwzWw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6zZ5N4PBAKy3iuyrzrrt0C3+Grc/xZmWOOh4UJPdZuRssXVRX
+	jmjGqTn6fDf2vrJcWfhF8xVmXgnd5KcRQJgmiSDhHts0hQdX21Fa3Di4/cG1X8pedb7tx/G3SKN
+	hmnDN9hc4sKLlTpEwV6jFZUDuqaIauqQ=
+X-Gm-Gg: ASbGncsj5O4bfatwfrJaEdgomJWBd7BS9hBFZSuqZxiFhiDYe1pgF+anbGs4kMd4H9F
+	uMEM/PMzjDQIzrwFMcfW1CBrWMvmr50KcSWGZ4dwsX6t+s/q0C0V/+VECoCzxoAtI+qt1mTv5d/
+	4lyvnFsGWHXholQkhZ5dfIZbgow3qQ639oJg==
+X-Google-Smtp-Source: AGHT+IFgxM277lZpa2B3Lrllf3ZISbTA7LdOXghtJE1KYNhyL0d8+gJhNSO6JMPfxbIdCb3IWgMbPe1K9GMriToyaQw=
+X-Received: by 2002:a05:6122:658b:b0:530:65f0:7fcf with SMTP id
+ 71dfb90a1353d-53080f4443emr11625555e0c.1.1748934387774; Tue, 03 Jun 2025
+ 00:06:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/8] dt-bindings: soc: qcom: pmic-glink: Move X1E80100
- out of fallbacks
-To: Fenglin Wu <fenglin.wu@oss.qualcomm.com>,
- Sebastian Reichel <sre@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Subbaraman Narayanamurthy <subbaraman.narayanamurthy@oss.qualcomm.com>,
- David Collins <david.collins@oss.qualcomm.com>, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- kernel@oss.qualcomm.com, devicetree@vger.kernel.org,
- linux-usb@vger.kernel.org
-References: <20250530-qcom_battmgr_update-v2-0-9e377193a656@oss.qualcomm.com>
- <20250530-qcom_battmgr_update-v2-6-9e377193a656@oss.qualcomm.com>
- <4e093835-af3b-4a84-b42f-fa7d3a6f60a1@kernel.org>
- <14cba9ae-e3bb-46e8-a800-be5d979b2e06@oss.qualcomm.com>
- <b07200a2-4e7b-480e-a683-d116e7da8de8@kernel.org>
- <c4be4b97-6104-45e3-b555-6691e369c3a4@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <c4be4b97-6104-45e3-b555-6691e369c3a4@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250530104439.64841-1-21cnbao@gmail.com> <CAG48ez11zi-1jicHUZtLhyoNPGGVB+ROeAJCUw48bsjk4bbEkA@mail.gmail.com>
+ <002aa917-d952-491d-800c-88a0476ac02f@lucifer.local> <CAG48ez0kb+on=erofZL2ZwB9CqtrSCJVND7K7=ww1prMUGXDRg@mail.gmail.com>
+In-Reply-To: <CAG48ez0kb+on=erofZL2ZwB9CqtrSCJVND7K7=ww1prMUGXDRg@mail.gmail.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Tue, 3 Jun 2025 19:06:16 +1200
+X-Gm-Features: AX0GCFvjSl1QW5m77TVMmrcJF3x3HUNvTB2vCn4KXpj-ivn5L-XiksBy_ZeMpNM
+Message-ID: <CAGsJ_4y0LJRdMg3-0NC6n9-UvRXAEuwHzEL7KMJ3dD1CUkQa9w@mail.gmail.com>
+Subject: Re: [PATCH RFC v2] mm: use per_vma lock for MADV_DONTNEED
+To: Jann Horn <jannh@google.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, akpm@linux-foundation.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Barry Song <v-songbaohua@oppo.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	David Hildenbrand <david@redhat.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Suren Baghdasaryan <surenb@google.com>, Lokesh Gidra <lokeshgidra@google.com>, 
+	Tangquan Zheng <zhengtangquan@oppo.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 03/06/2025 08:59, Fenglin Wu wrote:
-> 
-> On 6/3/2025 2:47 PM, Krzysztof Kozlowski wrote:
->> On 03/06/2025 08:42, Fenglin Wu wrote:
->>> On 6/2/2025 3:40 PM, Krzysztof Kozlowski wrote:
->>>> On 30/05/2025 09:35, Fenglin Wu via B4 Relay wrote:
->>>>> From: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
->>>>>
->>>>> Move X1E80100 out of the fallbacks of SM8550 in pmic-glink support.
->>>> Why?
->>>>
->>>> Do not describe what you do here, it's obvious. We see it from the diff.
->>>>
->>>>
->>>> Best regards,
->>>> Krzysztof
->>> Previously, in qcom_battmgr driver, x1e80100 was specified with a match
->>> data the same as sc8280xp, also sm8550 was treated a fallback of sm8350
->>> without the need of a match data.
->>>
->>> In ucsi_glink driver, sm8550 had a match data and x1e80100 was treated
->>> as a fallback of sm8550. There was no issues to make x1e80100 as a
->>> fallback of sm8550 from both qcom_battmgr and ucsi_glink driver perspective.
->>>
->>> In patch [5/8] in this series, in qcom_battmgr driver, it added charge
->>> control functionality for sm8550 and x1e80100 differently hence
->>> different match data was specified for them, and it makes x1e80100 ad
->>> sm8550 incompatible and they need to be treated differently.
->> So you break ABI and that's your problem to fix. You cannot make devices
->> incompatible without good justification.
-> 
-> I would say x1e80100 and sm8550 are different and incompatible from a 
-> battery management firmware support perspective. The x1e80100 follows 
-> the sc8280xp as a compute platform, whereas the sm8550 follows the 
-> sm8350 as a mobile platform.
+On Sat, May 31, 2025 at 8:41=E2=80=AFAM Jann Horn <jannh@google.com> wrote:
+>
+> On Fri, May 30, 2025 at 4:34=E2=80=AFPM Lorenzo Stoakes
+> <lorenzo.stoakes@oracle.com> wrote:
+> > Barry - I was going to come back to this later, but Jann's sort of bump=
+ed
+> > this in my inbox.
+> >
+> > This implementation isn't quite what I was after, would you give me a
+> > little bit before a respin so I can have a think about this and make
+> > sensible suggestions?
+> >
+> > Thanks!
+> >
+> > On Fri, May 30, 2025 at 04:06:30PM +0200, Jann Horn wrote:
+> > > On Fri, May 30, 2025 at 12:44=E2=80=AFPM Barry Song <21cnbao@gmail.co=
+m> wrote:
+> > > One important quirk of this is that it can, from what I can see, caus=
+e
+> > > freeing of page tables (through pt_reclaim) without holding the mmap
+> > > lock at all:
+> > >
+> > > do_madvise [behavior=3DMADV_DONTNEED]
+> > >   madvise_lock
+> > >     lock_vma_under_rcu
+> > >   madvise_do_behavior
+> > >     madvise_single_locked_vma
+> > >       madvise_vma_behavior
+> > >         madvise_dontneed_free
+> > >           madvise_dontneed_single_vma
+> > >             zap_page_range_single_batched [.reclaim_pt =3D true]
+> > >               unmap_single_vma
+> > >                 unmap_page_range
+> > >                   zap_p4d_range
+> > >                     zap_pud_range
+> > >                       zap_pmd_range
+> > >                         zap_pte_range
+> > >                           try_get_and_clear_pmd
+> > >                           free_pte
+> > >
+> > > This clashes with the assumption in walk_page_range_novma() that
+> > > holding the mmap lock in write mode is sufficient to prevent
+> > > concurrent page table freeing, so it can probably lead to page table
+> > > UAF through the ptdump interface (see ptdump_walk_pgd()).
+> >
+> > Hmmmmmm is this because of the series that allows page table freeing on
+> > zap... I think Zi's?
+>
+> Yeah, that was Qi Zheng's
+> https://lore.kernel.org/all/92aba2b319a734913f18ba41e7d86a265f0b84e2.1733=
+305182.git.zhengqi.arch@bytedance.com/
+> .
+>
+> > We need to update the documentation on this then... which currently sta=
+tes
+> > the VMA need only be stable.
+> >
+> > I guess this is still the case except for the novma walker you mention.
+> >
+> > Relatedly, It's worth looking at Dev's series which introduces a concer=
+ning
+> > new 'no lock at all' mode to the page table walker explicitly for novma=
+. I
+> > cc'd you :) See [0].
+> >
+> > [0]: https://lore.kernel.org/linux-mm/6a60c052-9935-489e-a38e-1b03a1a79=
+155@lucifer.local/
+>
+> Yeah, I saw that you CC'ed me; at a first glance that seems relatively
+> innocuous to me as long as it's only done for kernel mappings where
+> all the rules are different.
+>
+> >
+> > >
+> > > I think before this patch can land, you'll have to introduce some new
+> > > helper like:
+> > >
+> > > void mmap_write_lock_with_all_vmas(struct mm_struct *mm)
+> > > {
+> > >   mmap_write_lock(mm);
+> > >   for_each_vma(vmi, vma)
+> > >     vma_start_write(vma);
+> > > }
+> > >
+> > > and use that in walk_page_range_novma() for user virtual address spac=
+e
+> > > walks, and update the comment in there.
+> >
+> > What dude? No, what? Marking literally all VMAs write locked? :/
+> >
+> > I think this could have unexpected impact no? We're basically disabling=
+ VMA
+> > locking when we're in novma, that seems... really silly?
+>
+> I mean, walk_page_range_novma() being used on user virtual address
+> space is pretty much a debug-only thing, I don't think it matters if
+> it has to spend time poking flags in a few thousand VMAs. I guess the
+> alternative would be to say "ptdump just doesn't show entries between
+> VMAs, which shouldn't exist in the first place", and change ptdump to
+> do a normal walk that skips over userspace areas not covered by a VMA.
+> Maybe that's cleaner.
+>
+> But FWIW, we already do worse than what I proposed here when
+> installing MMU notifiers, with mm_take_all_locks().
+>
+> > > > +       else
+> > > > +               __madvise_unlock(mm, madv_behavior->behavior);
+> > > > +}
+> > > > +
+> > > >  static bool madvise_batch_tlb_flush(int behavior)
+> > > >  {
+> > > >         switch (behavior) {
+> > > > @@ -1714,19 +1770,24 @@ static int madvise_do_behavior(struct mm_st=
+ruct *mm,
+> > > >                 unsigned long start, size_t len_in,
+> > > >                 struct madvise_behavior *madv_behavior)
+> > > >  {
+> > > > +       struct vm_area_struct *vma =3D madv_behavior->vma;
+> > > >         int behavior =3D madv_behavior->behavior;
+> > > > +
+> > > >         struct blk_plug plug;
+> > > >         unsigned long end;
+> > > >         int error;
+> > > >
+> > > >         if (is_memory_failure(behavior))
+> > > >                 return madvise_inject_error(behavior, start, start =
++ len_in);
+> > > > -       start =3D untagged_addr_remote(mm, start);
+> > > > +       start =3D untagged_addr(start);
+> > >
+> > > Why is this okay? I see that X86's untagged_addr_remote() asserts tha=
+t
+> > > the mmap lock is held, which is no longer the case here with your
+> > > patch, but untagged_addr() seems wrong here, since we can be operatin=
+g
+> > > on another process. I think especially on X86 with 5-level paging and
+> > > LAM, there can probably be cases where address bits are used for part
+> > > of the virtual address in one task while they need to be masked off i=
+n
+> > > another task?
+> > >
+> > > I wonder if you'll have to refactor X86 and Risc-V first to make this
+> > > work... ideally by making sure that their address tagging state
+> > > updates are atomic and untagged_area_remote() works locklessly.
+> >
+> > Yeah I don't know why we're doing this at all? This seems new unless I
+> > missed it?
+>
+> Because untagged_addr_remote() has a mmap_assert_locked(mm) on x86 and
+> reads data that is updated under the mmap lock, I think? So without
+> this change you should get a lockdep splat on x86.
+>
+> > > (Or you could try to use something like the
+> > > mmap_write_lock_with_all_vmas() I proposed above for synchronizing
+> > > against untagged_addr(), first write-lock the MM and then write-lock
+> > > all VMAs in it...)
+> >
+> > This would completely eliminate the point of this patch no? The whole p=
+oint
+> > is not taking these locks... And I'm very much not in favour of
+> > write-locking literally every single VMA. under any circumstances.
+>
+> I'm talking about doing this heavyweight locking in places like
+> arch_prctl(ARCH_ENABLE_TAGGED_ADDR, ...) that can, if I understand
+> correctly, essentially reconfigure the size of the virtual address
+> space of a running process from 56-bit to 47-bit at the hardware level
+> and cause address bits that were previously part of the virtual
+> address to be ignored. READ_ONCE()/WRITE_ONCE() might do the job too,
+> but then we'll have to keep in mind that two subsequent invocations of
+> untagged_addr() can translate a userspace-specified virtual address
+> into two different virtual addresses at the page table level.
 
-Not correct arguments for compatibility.
+I=E2=80=99m confused about how arch_prctl(ARCH_ENABLE_TAGGED_ADDR, ...) can
+reconfigure a running process from using 56-bit addresses to 47-bit.
+I read the code and see the x86 kernel only supports LAM U57, and not
+LAM U48 at all:
 
-> 
-> The difference between them was initially ignored because the sm8550 
-> could use everything that the sm8350 has, and no match data needed to be 
-> specified for it. However, now the sm8550 has new features that the 
-> sm8350 doesn't have, requiring us to treat it differently, thus the 
-> incompatibility was acknowledged.
+static int prctl_enable_tagged_addr(struct mm_struct *mm, unsigned long nr_=
+bits)
+{
+        ...
 
-So they are perfectly compatible.
+        if (!nr_bits || nr_bits > LAM_U57_BITS) {
+                mmap_write_unlock(mm);
+                return -EINVAL;
+        }
 
-I really do not understand what we are discussing here. Explain in
-simple terms of DT spec: what is incompatible that SW cannot use one
-interface to handle the other?
+        mm_enable_lam(mm);
+        mmap_write_unlock(mm);
 
+        return 0;
+}
 
-Best regards,
-Krzysztof
+I still don't fully understand why x86 differs from ARM64,
+where the same bit mask is always applied unconditionally.
+
+On ARM64, we can even enable or disable PROT_MTE on a per-VMA basis
+using mmap or mprotect. However, the same bitmask operation is
+always executed regardless of whether memory tags are present for a
+given VMA.
+
+I mean, on arm64, if a process or a VMA doesn't have tag access
+enabled, and we pass an address with high bits to madvise,
+untagged_addr() will still strip the tag. But wouldn't that address
+be invalid for a process or VMA that doesn't have TBI enabled?
+
+Thanks
+Barry
