@@ -1,102 +1,284 @@
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 173491E519;
-	Tue,  3 Jun 2025 12:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748955373; cv=none; b=TR5TdymszmRAbW+Wq+g7gjbqRAWQLfvIouSQG6DZE46wu7SMAiIgJZsqJUbmrtRF7DodzHeNjvcge2cniOcc0DfvN+dcN1M9HsXWR04lFwQbbcGtJEDCXTx9Ao5aoMehhh64YI7LVjJlrBkNEFK7jvkBqhRWuyXaIVUuiYqwjIY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748955373; c=relaxed/simple;
-	bh=tnDWURJxBu29MAhAQ5kBlMknFDohQuT7/EPE7rM3kz0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T6uldmVdBZT1t3KULlxin3blqqkTE07fUmbX5rJ6v2CQDepJvaBfLvxOier93VkHI+HQWhj6Y8G54ngK+oDaH6o4cM2e+dM4ISq+cWkET535XJr+Tf4nDgC8Y/dmaIdDMv0ZKngOq9WkONcs9Jv1q+u+PI1WM3Rc6mVPDNT2Od8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jLuJJq01; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232421E519
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 12:56:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748955410; cv=pass; b=HsZnG9R4XyKeqP3xJ2rVxKNHvi9Yz600S5nlxkcKVqwuGrW2dmy3jtud2vfFiLtMQyFozJpq+jBUeBUugBgFzO8TKccW1+TZy1hLPeS2p75lwkdWm9Ub5LRXYXsSfaueEasjGJj3OQK2z3q6ApAexBJmIHt68RRtD1ZObvPF4mA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748955410; c=relaxed/simple;
+	bh=IO9KyOw3+DX5pVe/A25OU4742Ss9DE3nlol/QI8cPos=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UYwNvEESNARP1eU7jU3pSBQ3nQ4JrEfz11SIkDznnSAtA6viDfc4o8iCKkRLyzxdxFg0QQ8yFyUqD40v5FAWiHCrt5xE3eD+XyW2OFi9Z25J0bETR9wg8oZc+7Y8gFBqZoJvE/PngP8lg+ehhgg3EGIKTvu1fTe4utNfM9O9WSg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=UMn3cCcI; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jLuJJq01"
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-87df8fa1c6aso2986439241.0;
-        Tue, 03 Jun 2025 05:56:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748955369; x=1749560169; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=WqCgqkVkHr1OUaJdWiHVR1CiDNceuGwFWHZhOjkI94s=;
-        b=jLuJJq01tCnbXvPzNdTtchnf/yUnWTvMElLKJ7QwHUWNeTywJGSUQXitj00tpRuvAW
-         /T2/a6NPrnu98d0kYWuqFUzy5IJFOFrx5MTsrL26slhFaMvX8KwBsQv+MU/o7V21qvHF
-         6dhg7OykhqotmFjWv+R0HelzGAnxYJ8ezLkB/ZyDhydaRhLnk8Xf6mXK/6qAiScAJIR5
-         iHXq/8UQmsnu4z+BSQm502laQOXAzeS9x6JpPy42becZO2WXR/IpxZ5LqbjGnXGgFU3E
-         yF0VGE88H7U+BykGnAb6FjHr0gkicYUkjP4mQGlhcIbUmUaimIm7Lm3gwWEXZp1H40up
-         kvtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748955369; x=1749560169;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WqCgqkVkHr1OUaJdWiHVR1CiDNceuGwFWHZhOjkI94s=;
-        b=YJlrtSTgXfJY9pZd3AD2FU/edRu+MYyHB2hp7N9EmNUf6GU+ee0Mb9NvpNNHsWm2bW
-         Mm5mfeOCrfZZqtdXIaij4P7H4R/QV97/4IyMyzX8W7BE2PQ+TvN+kRNHHrtrJQEuO178
-         RmG/M7NDjcTNpfJ++9abLvcBYIULSK/J0DJOVfcmb9TeICAkTN2hoCS4YfNFPC5YpJXB
-         vSwUVCfm+xnQJsACYN9SmA+54pZerk/W0jIu5CZoVzsebOkDK1FrskF1/Rxkk5j2l8of
-         +5DkW6VWntRtZiJniQjJ3LwzCj3YFjYzvC3763VawgXTjrFcIDdepLt8ruO9ZNPryo0N
-         Hvlw==
-X-Forwarded-Encrypted: i=1; AJvYcCULN78s8J5ircFOrvYwc+/iAO2toRTuRI3yLBMQFgbrvPObT3RBbsoAN0dbR4NBP25DXLvcGI0V0hfg@vger.kernel.org, AJvYcCWO72MYBG4ST+et2VfK6hpzDRN+qhS2iyRCL7YwfK/E5FFip96kSEy5bwyLyrw/yvX0ClWRpkQS0t2rMOU4l5g=@vger.kernel.org, AJvYcCWt278FSDHUpM/IJkknSqdJkvMZ0o/tM1Nc+bYy6Rg3QhuP927dF2vCuSIfLhR8AsGgfm+L7LsfoI5cLnSI@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNaAxKmJ2719cx5NiZK//iC9ed1yWDlzJA8QCJiuqBPAq28+CP
-	DFTINJCufKo+Bwxvzr6iNn13fCpSf4zAuVhKZ1OANuXzJFCD1CA8W7gPZBAaZNId/1V3fZIiQfP
-	/4PvlgDccIL4nkqX/HLVPhR3Lb4OquQPjDFVg
-X-Gm-Gg: ASbGnctkHO8fih+EkAdPrAqIKSucFm19MHLbmdSYyarGtf0tVrmqMgUuyB+qE7Qzplb
-	fOExo/1NX6oWtS8co9TjNGbwaAawg9Z1Z3EK+p7qArc3SsvfE1hOkTN1rp4lLd7ujjwZSVkCEUC
-	i+AC4nPKDKRwIPJUuHohMXEbYX+sJE3w==
-X-Google-Smtp-Source: AGHT+IGkCU9q/jGCgYkKnk5w4ox9fP/ZSVFfzHsSXPjA58eEG+hcpGo7g7McYHy9QFNonYwedeyh/W20kx3txlIrvG8=
-X-Received: by 2002:a05:6122:1d11:b0:529:1a6a:cc2f with SMTP id
- 71dfb90a1353d-530810d7929mr15272934e0c.7.1748955358373; Tue, 03 Jun 2025
- 05:55:58 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="UMn3cCcI"
+ARC-Seal: i=1; a=rsa-sha256; t=1748955349; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=RXagZj1fGH6Nojxfk1Rz6J0iOD1MKY34Dj0aWtcpj3YuIqbdJTDuoajVO6MLRPo6aS3OO3Z7pGgpZrtuv5Dmnjfq0GZLVHAFMjWDyfTKrnWyuU52cMOMVVyMPzQTYSDpnxlH8Sv5fdL42vtOchRsMwiiPjnwZlrSrhRtSwshkfI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1748955349; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=OKOarRGHsL2ajSiin4VcPu5AlkGxReA7dzEybyUZJ50=; 
+	b=knWRds/IAEI0iYCI1k4z6jjKzQ6AAhToejvBwUkYsrO70K3vfTjqDgUkqQ9I8vdw+INa0viJssxhmJJ/xwTvGYKyQ3boPQ+yfxc/5mpzg+wIbYqKKjMczvFS+gsfb9J9dg/x06FYOKxQhojRvC82tmJ7tVKSJURvXzdrXk+hW6M=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1748955349;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=OKOarRGHsL2ajSiin4VcPu5AlkGxReA7dzEybyUZJ50=;
+	b=UMn3cCcI0tYg01nC1fITQksGt/2f+wTumyUR6A1pTxQ4ypnWz/CADTD32YOuXmk1
+	UjOmUbniXZ/AXnrN4WsuCwct2AsQ6qslqHwW9dW08++dxUgmXlWMmC2ECMC6DjeE4a3
+	FApldWwyKi0b18EYN+cUUBZkq/XZ2WpgrGhUSyV8=
+Received: by mx.zohomail.com with SMTPS id 1748955347750347.95572855171406;
+	Tue, 3 Jun 2025 05:55:47 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Heiko Stuebner <heiko@sntech.de>,
+ Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
+ William Breathitt Gray <wbg@kernel.org>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Kever Yang <kever.yang@rock-chips.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Leon Romanovsky <leon@kernel.org>, Lee Jones <lee@kernel.org>,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+ linux-iio@vger.kernel.org, kernel@collabora.com,
+ Jonas Karlman <jonas@kwiboo.se>,
+ Detlev Casanova <detlev.casanova@collabora.com>
+Subject: Re: [PATCH v2 3/7] bitfield: introduce HI16_WE bitfield prep macros
+Date: Tue, 03 Jun 2025 14:55:40 +0200
+Message-ID: <2525788.jE0xQCEvom@workhorse>
+In-Reply-To: <aD4DSz3vs41yMQSv@yury>
+References:
+ <20250602-rk3576-pwm-v2-0-a6434b0ce60c@collabora.com>
+ <20250602-rk3576-pwm-v2-3-a6434b0ce60c@collabora.com> <aD4DSz3vs41yMQSv@yury>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530123815.1766726-1-igor.korotin.linux@gmail.com>
- <aDnD_Bb3l6GiI_8K@cassiopeiae> <CAG7QV92rtk7NUKzUoApkopv1LF2WVjqyNA9hPt=yCuEvdJjoCA@mail.gmail.com>
- <2025053111-anteater-balsamic-8d01@gregkh> <aDrWCBAxPnu7VY0P@pollux>
-In-Reply-To: <aDrWCBAxPnu7VY0P@pollux>
-From: Igor Korotin <igor.korotin.linux@gmail.com>
-Date: Tue, 3 Jun 2025 13:55:47 +0100
-X-Gm-Features: AX0GCFvn3f5JBPkgAzmRxRxHC9D0futeilp6i6Q-qO5HuZk4eVci7qT64RWQ48s
-Message-ID: <CAG7QV936MPp7RLH_D6+K8mRcgPdpNsGFWF_D10b1C8op7YRtqA@mail.gmail.com>
-Subject: Re: [PATCH] rust: acpi: add `acpi::DeviceId` abstraction
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
-	Len Brown <lenb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, linux-acpi@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-> Alternatively, if you want to upstream this dependency already you can send the
-> following patches:
->
->   - this acpi::DeviceId abstraction
->   - the glue code for the generic adapter trait in rust/kernel/driver.rs
->   - use this glue code in the platform abstraction
->   - add acpi support to the platform sample driver
->
-> This way we can already validate that the code works correctly. All this is
-> required anyways if the I2C device you write a driver for is on the platform
-> bus.
+On Monday, 2 June 2025 22:02:19 Central European Summer Time Yury Norov wrote:
+> On Mon, Jun 02, 2025 at 06:19:14PM +0200, Nicolas Frattaroli wrote:
+> > Hardware of various vendors, but very notably Rockchip, often uses
+> > 32-bit registers where the upper 16-bit half of the register is a
+> > write-enable mask for the lower half.
+> 
+> Can you list them all explicitly please? I grepped myself for the
+> 'HIGHWORD_UPDATE' and 'FIELD_PREP_HIGWORD', and found just 4 or 5 in
+> addition to the rockchip.
 
-A few questions if I may:
-1. I committed to 4 different files: `acpi.rs`, `driver.rs`,
-`platform.rs`, platform rust sample driver.
-Should I commit all of this as one commit or split each part to a
-separate commit and send it as a patch sequence?
-2. From author's point of view, as Danilo noticed, `acpi table`
-abstraction code is in general just copy-paste from `of table`
-abstraction code. How should I explicitly mark that fact?
+Most of the ones Heiko brought up[1] just appear to be the clock stuff,
+I'm only aware of the drivers/mmc/host/sdhci-of-arasan.c one outside of
+Rockchip. For a complete listing I'd have to do a semantic search with
+e.g. Coccinelle, which I've never used before and would need to wrap
+my head around first. grep is a bad fit for catching them all as some
+macros are split across lines, or reverse the operators of the OR.
+Weggli[2] is another possibility but it's abandoned and undocumented, and
+I've ran into its limitations before fairly quickly.
 
-Thanks
-Igor
+>  
+> > This type of hardware setup allows for more granular concurrent register
+> > write access.
+> > 
+> > Over the years, many drivers have hand-rolled their own version of this
+> > macro, usually without any checks, often called something like
+> > HIWORD_UPDATE or FIELD_PREP_HIWORD, commonly with slightly different
+> > semantics between them.
+> > 
+> > Clearly there is a demand for such a macro, and thus the demand should
+> > be satisfied in a common header file.
+> 
+> I agree. Nice catch.
+> 
+> > Add two macros: FIELD_PREP_HI16_WE, and FIELD_PREP_HI16_WE_CONST. The
+> > latter is a version that can be used in initializers, like
+> > FIELD_PREP_CONST.
+> 
+> I'm not sure that the name you've chosen reflects the intention. If
+> you just give me the name without any background, I'd bet it updates
+> the HI16 part of presumably 32-bit field. The 'WE' part here is most
+> likely excessive because at this level of abstraction you can't
+> guarantee that 'write-enable mask' is the only purpose for the macro.
+> 
+> > The macro names are chosen to explicitly reference the
+> > assumed half-register width, and its function, while not clashing with
+> > any potential other macros that drivers may already have implemented
+> > themselves.
+> >
+> > Future drivers should use these macros instead of handrolling their own,
+> > and old drivers can be ported to the new macros as time and opportunity
+> > allows.
+> 
+> This is a wrong way to go. Once you introduce a macro that replaces
+> functionality of few other arch or driver macros, you should consolidate
+> them all in the same series. Otherwise, it will be just another flavor
+> of the same, but now living in a core header. 
+> 
+> Can you please prepare a series that introduces the new macro and
+> wires all arch duplications to it?
+
+Okay, I will do that after I learn Coccinelle. Though I suspect the reason
+why I'm the first person to address this is because it's much easier to
+hide duplicated macros away in drivers than go the long route of fixing up
+every single other user. I'm not too miffed about it though, it's cleanup
+of technical debt that's long overdue.
+
+>  
+> > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> > ---
+> >  include/linux/bitfield.h | 47 +++++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 47 insertions(+)
+> > 
+> > diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
+> > index 6d9a53db54b66c0833973c880444bd289d9667b1..2b3e7cb90ccb5d48f510104f61443b06748bb7eb 100644
+> > --- a/include/linux/bitfield.h
+> > +++ b/include/linux/bitfield.h
+> > @@ -8,6 +8,7 @@
+> >  #define _LINUX_BITFIELD_H
+> >  
+> >  #include <linux/build_bug.h>
+> > +#include <linux/limits.h>
+> >  #include <linux/typecheck.h>
+> >  #include <asm/byteorder.h>
+> >  
+> > @@ -142,6 +143,52 @@
+> >  		(((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask))	\
+> >  	)
+> >  
+> > +/**
+> > + * FIELD_PREP_HI16_WE() - prepare a bitfield element with a write-enable mask
+> > + * @_mask: shifted mask defining the field's length and position
+> > + * @_val:  value to put in the field
+> > + *
+> > + * FIELD_PREP_HI16_WE() masks and shifts up the value, as well as bitwise ORs
+> > + * the result with the mask shifted up by 16.
+> > + *
+> > + * This is useful for a common design of hardware registers where the upper
+> > + * 16-bit half of a 32-bit register is used as a write-enable mask. In such a
+> > + * register, a bit in the lower half is only updated if the corresponding bit
+> > + * in the upper half is high.
+> > + */
+> > +#define FIELD_PREP_HI16_WE(_mask, _val)					\
+> > +	({								\
+> > +		__BF_FIELD_CHECK(_mask, ((u16) 0U), _val,		\
+> > +				 "FIELD_PREP_HI16_WE: ");		\
+> > +		((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask) |	\
+> > +		((_mask) << 16);					\
+> > +	})
+> 
+> This pretty much is a duplication of the FIELD_PREP(), isn't? Why don't
+> you borrow the approach from drivers/clk/clk-sp7021.c:
+> 
+> 	/* HIWORD_MASK FIELD_PREP */
+> 	#define HWM_FIELD_PREP(mask, value)             \
+> 	({                                              \
+> 	        u64 _m = mask;                          \
+> 	        (_m << 16) | FIELD_PREP(_m, value);     \
+> 	})
+> 
+> If you do so, the existing FIELD_PREP() will do all the work without
+> copy-pasting.
+
+Because then the __BF_FIELD_CHECK macro will be invoked twice, once without
+the proper prefix. Factoring the actual prep-no-check operation out into a
+separate macro is macro definition + 1-line invocation * 2, whereas copy-
+pasting the implementation that will never change is 1-line invocation*2.
+
+> The only questionI have  to the above macro is why '_m'
+> is u64? Seemingly, it should be u32?
+
+I didn't write the HWM_FIELD_PREP macro in clk-sp7021.c, nor am I familiar
+with the hardware. It's possible they were trying to prevent an overflow
+wraparound here though, but they're not checking if the result ends up
+greater than 32 bits so that seems suspect.
+
+> Regarding the name... I can't invent a good one as well, so the best
+> thing I can suggest is not to invent something that can mislead. The
+> HWM_FIELD_PREP() is not bad because it tells almost nothing and
+> encourages one to refer to the documentation. If you want something
+> self-explaining, maybe MASK_HI_FIELD_LO_PREP_U16(), or something?
+
+This seems a bit unwieldy, at 25 characters. "FIELD32_HIMASK_LOPREP"
+(or FIELD16, depending on which end of the cornet to eat) would be 21
+characters but I'm also not in love with it.
+
+I think the name should include the following parts:
+1. it's a field
+2. the field is halved into two halves of 16 bits
+3. the mask is copied into the upper 16 bits
+
+Since we're on the subject of bit widths, I have a somewhat sacrilegious
+point to raise: should this be a function-like macro at all, as opposed
+to a static __pure inline function? It's not generic with regards to the
+data types, as we're always assuming a u16 value and mask input and a
+u32 output. The __pure inline definition should let the compiler treat it
+essentially similar to what the pre-processor expanded macro does, which
+is as not a function call at all but a bunch of code to constant fold away
+if possible. What we get in return is type checking and less awful syntax.
+Then we could call it something like `himask_field_prep_u32`, which is
+also 21 characters but the ambiguity of whether the u32 refers to the mask
+or the whole register width is cleared up by the types of the function
+arguments.
+
+The const version of the macro may still need to remain though because I'm
+not sure C11 can do that for us. With C23 maybe there's a way with
+constexpr but I've never used it before.
+
+> 
+> Thanks,
+> Yury
+> 
+
+Kind Regards,
+Nicolas Frattaroli
+
+Link: https://lore.kernel.org/linux-rockchip/1895349.atdPhlSkOF@diego/ [1]
+Link: https://github.com/weggli-rs/weggli [2]
+
+> > +
+> > +/**
+> > + * FIELD_PREP_HI16_WE_CONST() - prepare a constant bitfield element with a
+> > + *                              write-enable mask
+> > + * @_mask: shifted mask defining the field's length and position
+> > + * @_val:  value to put in the field
+> > + *
+> > + * FIELD_PREP_HI16_WE_CONST() masks and shifts up the value, as well as bitwise
+> > + * ORs the result with the mask shifted up by 16.
+> > + *
+> > + * This is useful for a common design of hardware registers where the upper
+> > + * 16-bit half of a 32-bit register is used as a write-enable mask. In such a
+> > + * register, a bit in the lower half is only updated if the corresponding bit
+> > + * in the upper half is high.
+> > + *
+> > + * Unlike FIELD_PREP_HI16_WE(), this is a constant expression and can therefore
+> > + * be used in initializers. Error checking is less comfortable for this
+> > + * version, and non-constant masks cannot be used.
+> > + */
+> > +#define FIELD_PREP_HI16_WE_CONST(_mask, _val)				 \
+> > +	(								 \
+> > +		FIELD_PREP_CONST(_mask, _val) |				 \
+> > +		(BUILD_BUG_ON_ZERO(const_true((u64) (_mask) > U16_MAX)) + \
+> > +		 ((_mask) << 16))					 \
+> > +	)
+> > +
+> >  /**
+> >   * FIELD_GET() - extract a bitfield element
+> >   * @_mask: shifted mask defining the field's length and position
+> > 
+> 
+
+
