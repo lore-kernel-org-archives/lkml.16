@@ -1,105 +1,102 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1444F5E0
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 08:55:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA6024F5E0;
+	Tue,  3 Jun 2025 08:59:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748940902; cv=none; b=jbK0gCsT61ci3UIZps1CRyZF7QbDrIyPMuuZCiiSqV/5zyeCXClv42l6h03N3ylRMUEpLekx3LsUO/lNrA1/zzwdPO+ERnokfE6Zf+f7mJFAFworLuYbt4+zCpRObw94dQKutds5mi8jlSTiqdFI2MqAiNFBHZjWfNxd0ZDFR8I=
+	t=1748941195; cv=none; b=G/vYZ6XH9Lp6PtLG7dJNTQM/y4ulLYS0gZJALFL+jDoTZsEUppqfzVXGPuS2yVzGp9ksI7jz0dh1GpvK8unyq49hKubi1A62xw4+39DlWf7rALWeahd3vFSBWBoNpsa9KstMq/Qb7n6NBDKzV9YmpwTyRaK3QgVDFogiTLCAxVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748940902; c=relaxed/simple;
-	bh=8zkH6prdGTufgqEid7ToNXi9IZnD0KdhH/6nGwT9UYA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=L0nTeL1sZTbAR05VQ4m4YxASYI7P++dspPQTO27VFQtbavQ1Dmxqlr+RwoxrCfJhfmeoZsC16dLcOPF+LgKaC4TkvaybbrsG5L5Mu8S9wnV/Kb9sIK+WPby/SCbXOaK2FeywIjwaY4N8iSFsUpzD0TG6OiJq6MCPLtHwmZsrXuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1q/G7tjJ; arc=none smtp.client-ip=209.85.221.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1748941195; c=relaxed/simple;
+	bh=R50WQrCRCTILDFY9a5xYZZIKpDYGrHm9HaM9VrFd8qo=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=UmoGLTcRhxGwHn2HO9RLR9RwOmFIrdWTQUna0UvQppDZvIA35GgNf6tt84+Hit/be5D1mJ81WOxpaDc+tNeGn0BgZYlnqkc5CbokLdrM0qe2ZrYNo6uWh4VfJnIiISYgMRd5E9PXRKFwiFPbxKOPNgGmSRc6n/QImW+XDsFiKv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s5ewOc1I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1q/G7tjJ"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-3a4f7f1b932so2955644f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 01:55:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748940899; x=1749545699; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=L4v74ZSV//uCzbQ8L34+E7FaJ0Q0XlOyVQs25eQfNuw=;
-        b=1q/G7tjJXseKfzRYme+hOCT9FxKYDx+kX/xeyLHutElgsKqj6qxCl0o2spt3CHj6PK
-         g03sJZVjK6mhAMen1JTxcvfF1lbxYmhvTFZ72xVanocIxuVp6KddOUyMMd/qhUMNTU8s
-         PIL86PJQUG/hQ7hUvisIRV6N3AqMD708wHUVL2ZbErdwZrsbFjZCR8pG56BrwfkDTInO
-         HdlZlWZcNhGAW7YIy6Kx1/nT9/vcnPCqFHfmquDpLo+8lOEcivVl1qIVfsRb5lKmNewf
-         QfkycwVrL3i5+16oJIOLNh6nA0nVe46Ex1KTWm1TtgkubStHgsyYh71pZq097hZrwb8s
-         BDPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748940899; x=1749545699;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L4v74ZSV//uCzbQ8L34+E7FaJ0Q0XlOyVQs25eQfNuw=;
-        b=jjgBbP15bCeL5LmPvGpvF1dcZn9DIMkKPx22CEjoJW7TBVjeYcnO7sLm5/NKMaWeVW
-         aY8bjUakEWuYK1ryz7QLDJw4M7x+xpXxPNWVagHTgVAbOYJ5BRGS/oIgMRsoXgQfGAjO
-         jCmh/YH/mzAv6aCF2ZWfksbbPuqayAr2aTr2PTywu1Zn40SlRSAduHiVpwIq0WrC8UUZ
-         ZsxmoEqNhtFLC3NgktiXQgsWYbP6SHDvBJFenboKDkzKW3r3rbq0kEBolMveHPyjJ+8l
-         bInCJxOUoQV3h4ynipNJWAl1INdEM9kmnUYIQ15p5hc7FLVEwDTiEhGzAeIUiQt+BERg
-         SyZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXjkKLSUg1MC4joF2UXKVavbYT+egbxMdQjlUWHT3alyr9RysGhRf9gbyymQiIRS/LW9k/h86bl+QGGgbQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySJ+5JG/WZlUdWneOrzhR0n7T6SeTjhQrAm2peTTatWRNygHlQ
-	lfCg+/Ic5Q6OJEatYfagIfqAydPX/YBE+SJ2zLJ9lwrLNMfqOAROnYC32eRchiIN5HKqb3wVf40
-	6Hpc1DqvY1AVFzUOPsA==
-X-Google-Smtp-Source: AGHT+IGgUOqa4CrSOnbtUYHuRz1fa/zK1YaDVpN9MK4313d/Fuh3G2QB+JXlrr/oG7qhBAQqXlWPkLzWC1K3t1E=
-X-Received: from wruv2.prod.google.com ([2002:a5d:6782:0:b0:3a4:e4cc:e53d])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:40ca:b0:3a3:655e:d472 with SMTP id ffacd0b85a97d-3a4fe395a08mr8666308f8f.47.1748940898874;
- Tue, 03 Jun 2025 01:54:58 -0700 (PDT)
-Date: Tue, 3 Jun 2025 08:54:56 +0000
-In-Reply-To: <aD62ZGBwqXxTroeX@cassiopeiae>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s5ewOc1I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75F96C4CEED;
+	Tue,  3 Jun 2025 08:59:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748941195;
+	bh=R50WQrCRCTILDFY9a5xYZZIKpDYGrHm9HaM9VrFd8qo=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=s5ewOc1IzJzHNkzRDAsQZ2xHPKpi2YS6kSkA/5HltTiaLiQYKfkEyIeNuN/jxhCsW
+	 s4B7+6SJeKjhbyKxZS5GYQuz62AkgQyCNTaU6bT8yUFr7Eci3zlYKpgUiUkqpmlqqK
+	 fh2u+coWSQxSjBhqF+dhVz6oYRfaF+KrxvCQCPcxL2phWj++C2qSMpAY/HYENGXQ1L
+	 9Vcgg7HDzZvCkwOi+/YrcJl5mfmS0JOi4jh4zN0ufHStOdEUZfcKDN6yBLPd7ZTsd0
+	 whGJBEPoXFGu/LvWJpVXuukKUKoiKXI3jO/HNH6ekNyxoxzJ9iSQ4jwwOreAinckRm
+	 cFzWJAyDlbW+w==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33BE8380DBEC;
+	Tue,  3 Jun 2025 09:00:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250514-topics-tyr-request_irq-v3-0-d6fcc2591a88@collabora.com>
- <20250514-topics-tyr-request_irq-v3-1-d6fcc2591a88@collabora.com>
- <aCUQ0VWgoxdmIUaS@pollux> <aD3PCc6QREqNgBYU@google.com> <aD3f1GSZJ6K-RP5r@pollux>
- <aD6yOte8g4_pcks7@google.com> <aD62ZGBwqXxTroeX@cassiopeiae>
-Message-ID: <aD64YNuqbPPZHAa5@google.com>
-Subject: Re: [PATCH v3 1/2] rust: irq: add support for request_irq()
-From: Alice Ryhl <aliceryhl@google.com>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Daniel Almeida <daniel.almeida@collabora.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [net v3] net: wwan: t7xx: Fix napi rx poll issue
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174894122801.1429658.207799656496074697.git-patchwork-notify@kernel.org>
+Date: Tue, 03 Jun 2025 09:00:28 +0000
+References: <20250530031648.5592-1-jinjian.song@fibocom.com>
+In-Reply-To: <20250530031648.5592-1-jinjian.song@fibocom.com>
+To: Jinjian Song <jinjian.song@fibocom.com>
+Cc: chandrashekar.devegowda@intel.com, chiranjeevi.rapolu@linux.intel.com,
+ haijun.liu@mediatek.com, m.chetan.kumar@linux.intel.com,
+ ricardo.martinez@linux.intel.com, loic.poulain@linaro.org,
+ ryazanov.s.a@gmail.com, johannes@sipsolutions.net, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-doc@vger.kernel.org, angelogioacchino.delregno@collabora.com,
+ linux-arm-kernel@lists.infradead.org, matthias.bgg@gmail.com, corbet@lwn.net,
+ linux-mediatek@lists.infradead.org, helgaas@kernel.org,
+ danielwinkler@google.com, andrew+netdev@lunn.ch, horms@kernel.org,
+ sreehari.kancharla@linux.intel.com, ilpo.jarvinen@linux.intel.com
 
-On Tue, Jun 03, 2025 at 10:46:28AM +0200, Danilo Krummrich wrote:
-> On Tue, Jun 03, 2025 at 08:28:42AM +0000, Alice Ryhl wrote:
-> > That optimization sounds like something we definitely want, but I have
-> > one question: is free_irq() safe to use in atomic context / inside
-> > rcu_read_lock()? What about the threaded-irq variant?
+Hello:
+
+This patch was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
+
+On Fri, 30 May 2025 11:16:48 +0800 you wrote:
+> When driver handles the napi rx polling requests, the netdev might
+> have been released by the dellink logic triggered by the disconnect
+> operation on user plane. However, in the logic of processing skb in
+> polling, an invalid netdev is still being used, which causes a panic.
 > 
-> No, free_irq() must not be called from atomic context. Hence, it's not valid to
-> call it from within an RCU read-side critical section.
+> BUG: kernel NULL pointer dereference, address: 00000000000000f1
+> Oops: 0000 [#1] PREEMPT SMP NOPTI
+> RIP: 0010:dev_gro_receive+0x3a/0x620
+> [...]
+> Call Trace:
+>  <IRQ>
+>  ? __die_body+0x68/0xb0
+>  ? page_fault_oops+0x379/0x3e0
+>  ? exc_page_fault+0x4f/0xa0
+>  ? asm_exc_page_fault+0x22/0x30
+>  ? __pfx_t7xx_ccmni_recv_skb+0x10/0x10 [mtk_t7xx (HASH:1400 7)]
+>  ? dev_gro_receive+0x3a/0x620
+>  napi_gro_receive+0xad/0x170
+>  t7xx_ccmni_recv_skb+0x48/0x70 [mtk_t7xx (HASH:1400 7)]
+>  t7xx_dpmaif_napi_rx_poll+0x590/0x800 [mtk_t7xx (HASH:1400 7)]
+>  net_rx_action+0x103/0x470
+>  irq_exit_rcu+0x13a/0x310
+>  sysvec_apic_timer_interrupt+0x56/0x90
+>  </IRQ>
 > 
-> I assume you're confusing something, free_irq() is called from the destructor of
-> the irq::Registration object, hence it is either called when the object itself
-> is dropped or from the devres callback, which is called after the
-> synchronize_rcu(), but not from an RCU read-side critical section.
+> [...]
 
-Ok hold on ... I guess the issue I thought was there manifests itself in
-another way. What about this situation?
+Here is the summary with links:
+  - [net,v3] net: wwan: t7xx: Fix napi rx poll issue
+    https://git.kernel.org/netdev/net/c/905fe0845bb2
 
-Thread 1                 Thread 2
-device removal starts
-                         Drop for Devres starts running
-                         devm_remove_action() = 0
-device is fully unbound
-                         free_irq()
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Now the call to free_irq() happens too late, because there's nothing in
-the devm callback stack to wait for it.
 
-Alice
