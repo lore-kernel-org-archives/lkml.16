@@ -1,153 +1,76 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.hosts.co.uk (smtp.hosts.co.uk [85.233.160.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16F421FF35
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 20:27:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2CDF221703;
+	Tue,  3 Jun 2025 20:27:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.233.160.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748982440; cv=none; b=Zzps0lV6ICbCgLzXEy7Cp5x+UuPHmy+om80bv+cslsmdWvzJhyFk+Q5kNtvcMSu8h64NdpRZV3qzpX/dDpd5/J4X5EX4AqGVfavNosFkJorVamUTp5qIeAZ+auiS6tJ9q9gx57FYUJH1PvEfNMrcWRuB2F8nas0d2wcvtXnUqXg=
+	t=1748982462; cv=none; b=PhaJvvXuEwSVdMwiR2o3Ml/DZBoBGq4u619Nwutsx3qnYznEdZ8dhCRdfyja8s5kVX8YXDg3omilIgyQw/wxVPJkc0ha0DDqw3DzelKoV2OPuiMdXCaUi7SxhfwTsGjJ5xZBtfEZvxAQoHXLG4APIkQRM0EdNyntVGu/XnaadY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748982440; c=relaxed/simple;
-	bh=FkyXOZFJS2JTs2yvyJibGlBLckskxePeubP27I+ZqKw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EWvGYd5Qs1tZa5SMueOEYn9okfjJ+CGWWTJPrnzaJqYwfE+3+mlKCuh4VyecOKlRIEo0skTbXek3lwyeLcC0WVQReoYm2GVd93NLhGqdbazVDX6YUJI+jU3lANhSHl7zgnXjSq0/OTKn1yWeVoFvOOTrRZO98T3UlrtGWy1gQ1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pzIr5FP0; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pzIr5FP0"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-552206ac67aso6773563e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 13:27:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748982437; x=1749587237; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1+IyIfkIPOra+AocHu+9QAm2JwpYmUQiCUktZpdyAo0=;
-        b=pzIr5FP0y+LAGAeiFLCW2qeJIr36wbZfSA+M411vWFufTscHXuDgoaNpVoMPmEf98g
-         42yY5DDZQh4zPFZ/MP5pVfmb/WSlO4l4QAB1kYKBIBbUrtgsm5q/I0WsmspFiadKscxH
-         C0uL6lVYzlUClOBrnuSvARjGSLRVzPUBp+3Dp09XvAtrN/j8+zE5tqGNbvx6pa96g0z/
-         YcALG7xmN+ClYNaokmehDCce2qEfD1FsjzBpFlWNmaSp1BFeCuZat1t16idz3NVNVZS5
-         /mJZpvlyh1UYWWn/AWpZ0HHlCLo9Y+QFJlSLfHvnFHgUVBH16wSMBxhYxruL2nmDORGK
-         oR+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748982437; x=1749587237;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1+IyIfkIPOra+AocHu+9QAm2JwpYmUQiCUktZpdyAo0=;
-        b=h9v9R4+4T/lCgoH7qC+bUNUi9FTAfrSf0toJSO7WZhR6j68lbO4yVZ4E3rnE84MkqF
-         YXhxxWdhWBCGcuLr0QOgOAaFNvOnj/wh5S7lsHK2W4EHIEyllry0SZRaBb3l6elHLNmx
-         hb3C6dWbXdEYm1+oviICQ6YUIml3ONK5OQIwr49LzDcYyVoHRezqHHojDWA/vgh1utaV
-         HEmrMozlhLrDjHOPIZj6aE+cF9NmfCGvRLohLEZH4PXa2Qa6CU/TIq8GaIjDCO19T5vX
-         JyajDYmpa7fQbu8j/MW1Z2DaeSg45aYiGqu/HiR2qBWfBBXp1jpuLKODujR8qbk8Rk78
-         mKIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUPFS+QX1jOHo+EsPU73UZRK565H1XP23OUGZJPN8ahlLDiDx864XwGC5vt1y7hgBw+MDW8X8MM8vv1gg0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhYryqvQiXfMVSEs/1HtmSlKJMc3eDz+/tO6MiurpmU7hg8F76
-	Em0JcdwwmoRBRWiY5ws3Qi+DspU/x9ASDRPDh11aNZAG6h/9r4dsNPw1OY5lIqUWAeLp7D8TWhN
-	6PdRV8i5zoZv5CWleDZDrb4d2TAiC4s/Qe8P3EEY6ByVu2npXLAuFudkf66Lm
-X-Gm-Gg: ASbGncvk6fuy8dOElvzp2a0NJo6Sr3g+0qOcZM67Fg96W87d0cmFXsp+cDGebKPIFcK
-	7NcO6T5Unwpbu873cGPg99Wz5FXQU22gLn2EMSSSP/yGEruzLVr4igfUE9/qbJJbVWDnNSBy+vj
-	sn9F8JPeFUv5oMrvKQH747Etmg/s87rmPDSBBS/thMK3/ZscIs8vH3UhHCLOPGlBa56aGOZlAu
-X-Google-Smtp-Source: AGHT+IFh1B+A+fdjQ0CvAxPbjMYP1A9rdTXQW/HM/GhCzzE5FNCpc4tMd+qHVqr75+gws1rXT4Ypm9ihHODwnJj5SLo=
-X-Received: by 2002:a05:6512:124b:b0:553:399d:58e6 with SMTP id
- 2adb3069b0e04-55356df9977mr125129e87.31.1748982436553; Tue, 03 Jun 2025
- 13:27:16 -0700 (PDT)
+	s=arc-20240116; t=1748982462; c=relaxed/simple;
+	bh=CFN5r97BmjCk03+Y1LKtu0Hgmvt5GG0TdJzsWkiMK24=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Sh4n3Wx++VXzSusLlARqoh1565+kJWdIdNIQrBWtkJQqY3ESHBqKoEoGUrKrFmSK7sAN7/BYuMdYK2ZP05rTrk89RTlgyP6/Y+mAEbZiyDhxkl2jTKqsDJE8w8IJWONfTyWgl456108L/PirQyBh8cnQ4u8vOSSDNT+AcvXjF8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=youngman.org.uk; spf=pass smtp.mailfrom=youngman.org.uk; arc=none smtp.client-ip=85.233.160.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=youngman.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=youngman.org.uk
+Received: from host86-158-182-88.range86-158.btcentralplus.com ([86.158.182.88] helo=[192.168.1.65])
+	by smtp.hosts.co.uk with esmtpa (Exim)
+	(envelope-from <antmbox@youngman.org.uk>)
+	id 1uMYES-000000004ba-3d8w;
+	Tue, 03 Jun 2025 21:27:37 +0100
+Message-ID: <b23b6075-e177-4a85-b34b-e7f5feb95291@youngman.org.uk>
+Date: Tue, 3 Jun 2025 21:27:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250603201036.44504-1-terry.tritton@linaro.org>
-In-Reply-To: <20250603201036.44504-1-terry.tritton@linaro.org>
-From: John Stultz <jstultz@google.com>
-Date: Tue, 3 Jun 2025 13:27:04 -0700
-X-Gm-Features: AX0GCFuuX4lVBQbzNpicNH90nbJZyqUiFq9bOfP2TAZziYhan0ThpfFSgl5qplE
-Message-ID: <CANDhNCoiKjPOyGwiu5Apg2y4LduPTRQvEjG7snmbzrenZojAKg@mail.gmail.com>
-Subject: Re: [PATCH] selftests/timers: Fix integer overlow errors on 32 bit systems
-To: Terry Tritton <terry.tritton@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>, Shuah Khan <shuah@kernel.org>, 
-	ttritton@google.com, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Need help increasing raid scan efficiency.
+To: David Niklas <simd@vfemail.net>, Wol <antlists@youngman.org.uk>
+Cc: Linux RAID <linux-raid@vger.kernel.org>, linux-kernel@vger.kernel.org
+References: <20250602210514.7acd5325@Zen-II-x12.niklas.com>
+ <24815d81-2e4f-4ddf-b194-b03ea3232b91@youngman.org.uk>
+ <20250603160415.61c9ca7c@Zen-II-x12.niklas.com>
+Content-Language: en-GB
+From: anthony <antmbox@youngman.org.uk>
+In-Reply-To: <20250603160415.61c9ca7c@Zen-II-x12.niklas.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 3, 2025 at 1:10=E2=80=AFPM Terry Tritton <terry.tritton@linaro.=
-org> wrote:
->
-> The use of NSEC_PER_SEC (1000000000L) as defined in include/vdso/time64.h
-> causes several integer overflow warnings and test errors on 32 bit
-> architectures.
->
-> Use a long long instead of long to prevent integer overflow when
-> converting seconds to nanoseconds.
->
-> Signed-off-by: Terry Tritton <terry.tritton@linaro.org>
+On 03/06/2025 21:04, David Niklas wrote:
+> Searching online turned up raid6check.
+> https://unix.stackexchange.com/questions/137384/raid6-scrubbing- 
+> mismatch-repair
+> 
+> But the people there also pointed out that Linux's raid repair operation
+> only recalculates the parity. I would have thought that it did a best of
+> 3 option. I mean, that's a big part of why we have RAID6 instead of RAID5,
+> right?
 
-Needs a Fixes: tag?
+ From what I remember of raid6check, it actually does a proper raid 6 
+calculation to recover the damaged data.
 
-> ---
->  tools/testing/selftests/timers/adjtick.c             | 5 ++++-
->  tools/testing/selftests/timers/alarmtimer-suspend.c  | 4 +++-
->  tools/testing/selftests/timers/inconsistency-check.c | 4 +++-
->  tools/testing/selftests/timers/leap-a-day.c          | 4 +++-
->  tools/testing/selftests/timers/mqueue-lat.c          | 3 ++-
->  tools/testing/selftests/timers/nanosleep.c           | 4 +++-
->  tools/testing/selftests/timers/nsleep-lat.c          | 4 +++-
->  tools/testing/selftests/timers/posix_timers.c        | 5 ++++-
->  tools/testing/selftests/timers/raw_skew.c            | 4 +++-
->  tools/testing/selftests/timers/set-2038.c            | 4 +++-
->  tools/testing/selftests/timers/set-timer-lat.c       | 4 +++-
->  tools/testing/selftests/timers/valid-adjtimex.c      | 5 ++++-
->  12 files changed, 38 insertions(+), 12 deletions(-)
->
-> diff --git a/tools/testing/selftests/timers/adjtick.c b/tools/testing/sel=
-ftests/timers/adjtick.c
-> index 777d9494b683..b5929c33b632 100644
-> --- a/tools/testing/selftests/timers/adjtick.c
-> +++ b/tools/testing/selftests/timers/adjtick.c
-> @@ -22,10 +22,13 @@
->  #include <sys/time.h>
->  #include <sys/timex.h>
->  #include <time.h>
-> -#include <include/vdso/time64.h>
->
->  #include "../kselftest.h"
->
-> +/* define NSEC_PER_SEC as long long to avoid overflow on 32 bit architec=
-tures*/
-> +#define NSEC_PER_SEC   1000000000LL
-> +#define USEC_PER_SEC   1000000LL
-> +
->  #define MILLION                        1000000
->
->  long systick;
-> diff --git a/tools/testing/selftests/timers/alarmtimer-suspend.c b/tools/=
-testing/selftests/timers/alarmtimer-suspend.c
-> index a9ef76ea6051..b5799df271ae 100644
-> --- a/tools/testing/selftests/timers/alarmtimer-suspend.c
-> +++ b/tools/testing/selftests/timers/alarmtimer-suspend.c
-> @@ -28,10 +28,12 @@
->  #include <signal.h>
->  #include <stdlib.h>
->  #include <pthread.h>
-> -#include <include/vdso/time64.h>
->  #include <errno.h>
->  #include "../kselftest.h"
->
-> +/* define NSEC_PER_SEC as long long to avoid overflow on 32 bit architec=
-tures*/
-> +#define NSEC_PER_SEC   1000000000LL
-> +
->  #define UNREASONABLE_LAT (NSEC_PER_SEC * 5) /* hopefully we resume in 5 =
-secs */
+Raid 5 certainly just recalculates the parity, but it doesn't have any 
+choice. Because it can only reconstruct ONE piece of information, it can 
+detect the corruption, but it has no idea WHAT is corrupted. So it 
+assumes (with good reason) that it's the parity and re-calculates it. 
+Where raid 5 scores is if you lose a block, or a drive, or whatever, it 
+is told what has been lost and can recreate it. If your data is 
+corrupted, however, it has two pieces of missing information ("what" and 
+"where"), and can only reconstruct one, so it assumes it's the parity 
+that's been lost.
 
-So this seems to be undoing commit 80fa614e2fbc ("selftests: timers:
-Remove local NSEC_PER_SEC and USEC_PER_SEC defines")
+Because raid-6 has two levels of redundancy, if ONE block is damaged, it 
+can work out both what and where, which is what raid6check does.
 
-Would it make more sense to fix the NSEC_PER_SEC definition in time64.h to =
-a LL?
+I've done it slightly differently, I've got raid-5 sat on top of 
+dm-integrity, so if a disk gets corrupted dm-integrity will simply 
+return a read failure, and the raid doesn't have to work out what's been 
+corrupted. I've got a different problem at the moment - my array has 
+assembled itself as three spares, so I've got to fix that ... :-(
 
-thanks
--john
+Cheers,
+Wol
