@@ -1,206 +1,263 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2082.outbound.protection.outlook.com [40.107.220.82])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E9151B85C5;
-	Tue,  3 Jun 2025 23:54:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748994857; cv=fail; b=gPmH6emvv/7mgVDIOC7XNQTsS92bctwi8oYSoEL+YE5Yhpu84k9itIfkR7u98tlT0/F2q/IBLK4QD8KObWu78yJcX23msBSaGSJ5QUpCwikta6CfDHWrXFZwUmD7vjVrhyALxiZTTGm2AI6OJJuQHYX9qMhSAW6sYdkSXGESYTE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748994857; c=relaxed/simple;
-	bh=Vpa4SD/lp1P3HOw9BYkEtucwavH7HwBJyVzkf46Yfzg=;
-	h=Content-Type:Date:Message-Id:Subject:From:To:Cc:References:
-	 In-Reply-To:MIME-Version; b=Z7hf8sb3/Maa6D26jDlOFB7hw1QmuKYs4QB8ThpidpSenEC03KjPXRbGNrq3w0vD4EQf7r0sNJcPlIk9SLDhRgj173UnsQ75nngdV3e8AZS/uW4k+TZ4qLicKqCRSiBhiCPdbjUhPASXuFMzy+uVHKK1df68YzlA7xlmKTW9ovs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=O3o8g+g4; arc=fail smtp.client-ip=40.107.220.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD9E51B85C5;
+	Tue,  3 Jun 2025 23:55:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748994941; cv=none; b=Cc7YF0fIBp2VhqwtUUpJfb72pPaAs/JCcVFfdpg7SmRJxOmV/Acbw2bw1WhEPnczhhnoHXvxZhR8xyKdqdENFuZyaFoJWkGCtTd6RAIB8mww988ycmBWAxIEvRcIfsymiPqV+H2K2xfRmPBVxi1kybuzckJWKbDF/Znn11LD2S0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748994941; c=relaxed/simple;
+	bh=+FY+J2/g1tr0ztOnEC0gjxjzFDNvy158f5kZGrEYGLM=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=N4pjSANxzJMHot54swADguFCxLWoUgN45AbAi1FmtYUS/yqunPvCiPoJP2U+ybmkkVv5bED1znnHCuFbg/WOUo5tDMmlBYG2cWYtwZiXozIXfBeQxFukvtK53+uz/ZMmFdWQ9yziGUQJMS5Hxd1Ig0fwbO+WCgDUTCsmvS1OL+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HHmd5GGV; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="O3o8g+g4"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aU0mXdVerbeMolav5gGtwH2Heej+QXNWZBCmL+jGNkOoxUW4toUJfAlz//slrnD1apYqYX6SOCVaNDLfSRGo1wY3u552LxH09BV9veWiCCbVsMWF/KEltmRYlNQA2l4mBblilxw6rl1a6Em1MQqnw1H7Lm5EWRmFQQtQDTyhASw/c3ZFnaUAslq2rPrxYRnA9oCYMrHTzBBTPDocnGR+o1txEKR5Ikc8G6s71Mbcw5HJRyJtaYGtaC3vfH9fQJ9ZpuMUw36GQECTAmakpMtPThaN8w/rdPOSkw+PBTATyvx4k9R7XcNcBPIHPtGx8lL0xKPSku7LK0i4ZfcuklV+cA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Vpa4SD/lp1P3HOw9BYkEtucwavH7HwBJyVzkf46Yfzg=;
- b=ZM+w+cjBG6Tj84i6VDN5d8F+3UEMrQb76ycRc8vaSejRPKQKoKTIZUFO6ITkIgkiJYzCrxqy1QRwXeXJ6L2koybL1XzaEtjXJe4BPjMRJHxUj8InmWJaRAdgw8vMLTdYjaRxxVD3BIcWbYDupT+R4VTw+4K05fgZXbgUi6gdcy+tZ23eVzp2KvZQfNTLFytRQoyG2prdHCzBuFH/SeTFgqhLYRvv1Geo+YFGS9vtyU+dekwqJXR7a5tySGFi1Avv+02m0v9l6BFWPC9WQ4FGKObG+TU2DWzvHPa8lRCwiI7/bS7cJh5AUdDcLuBOg3blTlZSg41C9+esbU6CFNwAqA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vpa4SD/lp1P3HOw9BYkEtucwavH7HwBJyVzkf46Yfzg=;
- b=O3o8g+g48bXbKVtf8Fw7WNI25Rdb8jYDW2DRbWa1QrVq5fDRr3VV3J/9KaVre0huOPx1edUrlpv/6aTf8xPXb84vfhKHLbB852WkYkYt+Gf73Kayrmx5fTvDvK0s06gJ5Qd3V8HLN6SckUbl/RzuD+XyUag3cOCCt3+C6DOKvzqGxbp5CIIP9Fc43nU+papejHoejxu8GWT5rI9rASr28gSEnTZt4TOb8VFa7Up5a5I81C7iQLPGzqMIyTD9HWCxqrS+eo0xpoMjHTLYYfhQovVxcpjEVGaKLI2xY79Ca7PobuA4ryxJ/up3z0k1nJPe8Fwk5RNYbg2f5Gl2vL8t8A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
- by CY5PR12MB6456.namprd12.prod.outlook.com (2603:10b6:930:34::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Tue, 3 Jun
- 2025 23:54:11 +0000
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8792.034; Tue, 3 Jun 2025
- 23:54:11 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 04 Jun 2025 08:54:06 +0900
-Message-Id: <DADAXGJLZ4LP.27P0GIQB2DKD0@nvidia.com>
-Subject: Re: [PATCH v4 04/20] rust: add new `num` module with useful integer
- operations
-From: "Alexandre Courbot" <acourbot@nvidia.com>
-To: "Benno Lossin" <lossin@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
- <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "David Airlie"
- <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Maarten Lankhorst"
- <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
- "Thomas Zimmermann" <tzimmermann@suse.de>, "John Hubbard"
- <jhubbard@nvidia.com>, "Ben Skeggs" <bskeggs@nvidia.com>, "Joel Fernandes"
- <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>, "Alistair Popple"
- <apopple@nvidia.com>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
- <dri-devel@lists.freedesktop.org>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
- <20250521-nova-frts-v4-4-05dfd4f39479@nvidia.com>
- <DA82KFLNAOG7.R7YT4BHCLNZQ@kernel.org>
- <DA88YHU4AZT7.B8JGZHW9P9L9@nvidia.com>
- <DA8GTD7LT7KO.1A3LBQGEQTCEW@kernel.org> <aD1xVkggDrCvA7ve@pollux>
- <DAD9NDFY2RXV.3LDMFVUYN0IKD@kernel.org>
-In-Reply-To: <DAD9NDFY2RXV.3LDMFVUYN0IKD@kernel.org>
-X-ClientProxiedBy: OS0P286CA0073.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:604:b0::6) To MN2PR12MB3997.namprd12.prod.outlook.com
- (2603:10b6:208:161::11)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HHmd5GGV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748994939; x=1780530939;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+FY+J2/g1tr0ztOnEC0gjxjzFDNvy158f5kZGrEYGLM=;
+  b=HHmd5GGVTr3IxDzyR5nW+jlZ0UiHwBPVIydSYFLRRA0TqTzmGbOwBLAJ
+   +MfHpTw0bbzSDUrskoNQdO5+aR19jb04e/C4kBKymGGiAwtZmq67pyMHc
+   g/d40Aso1eGhYuUkYUNUo6uswcvo4bKEnlkaJYZKl0O5gbaR5ab2BXvXL
+   XHgtsY+MG+8NWC2eSAXpdhCgsvVgcr2XYCkXfKz3CEIE0wDW87RKlcAz6
+   9lHh7U0kypuRqTgqG06scOAJ9JOBno7CrKx1B5OM1254l7VTZUqLzK01W
+   PL8smmbmwDiI6jmq+FXW+dLMaDaBpVtqWdhIyhBghYRjnlM8zDpbQ4x60
+   w==;
+X-CSE-ConnectionGUID: 6CjMWzDATKmKmnsy4e4Lwg==
+X-CSE-MsgGUID: E09Z5Ph1SVe62QMPkFROrw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="50174300"
+X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
+   d="scan'208";a="50174300"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 16:55:39 -0700
+X-CSE-ConnectionGUID: fpV5Al96Sced5f1AMukjDw==
+X-CSE-MsgGUID: C8qxDrrKSTWR/2gCDxWEUg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
+   d="scan'208";a="150163152"
+Received: from unknown (HELO vcostago-mobl3.jf.intel.com) ([10.241.226.49])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 16:55:39 -0700
+From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To: Kristen Accardi <kristen.c.accardi@intel.com>,
+	Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Tom Zanussi <tom.zanussi@linux.intel.com>,
+	linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: iaa - Fix race condition when probing IAA devices
+Date: Tue,  3 Jun 2025 16:55:31 -0700
+Message-ID: <20250603235531.159711-1-vinicius.gomes@intel.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|CY5PR12MB6456:EE_
-X-MS-Office365-Filtering-Correlation-Id: aac6157e-4aed-41cd-59a7-08dda2f9efb0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|10070799003|376014|1800799024|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cFNVNGl4MVpROW43R1I3QUgwUkNwelZiaTA5REI5aWU3T2ZpWnVneERMTzVw?=
- =?utf-8?B?ZEZURk1yamZXUnlWZW1qRXR1VU8yWWxPTDFMaVlWVDZQQUtJYW4wT3VtWXpp?=
- =?utf-8?B?c2NUSThWcFpFVVpjUE5LdEk1cGFFNmZRS3lnWmtOV05zK2ttWlFIMktpam9h?=
- =?utf-8?B?RVNHT2RNcjB5TXkwZEJPeDc0T0h1ZXp1dFRadVVPK2lKUCtPRXp5ZjNteUhR?=
- =?utf-8?B?ZjVKNGdUM0hLKzFqMEdrZkl3NTVZUFlBTDRMTUQ2VXJrdExnUXhVblg3SlBU?=
- =?utf-8?B?THQzdDVzN0JaZ0RIMWhQaitlTE05MVJTZ3doNEw2a1B0R00rQmlibE9GNi93?=
- =?utf-8?B?OHd5ZjRISFk1UWpuTDd1NVBvc0FRQXlkUDVUYytPejNLdWdFd2t5dDVDZTlI?=
- =?utf-8?B?Y0hDeFBvRkRvQ3gvaDNqMGh6NDNxTCtlUkdBSlhmMkkzVzFsS2cvTEJjeDRt?=
- =?utf-8?B?bXpLbko1R3o0TlFrdlU5SUtwSFJvUFRsMlQwc2dXc0JiTTB0WVFQUm9pRk82?=
- =?utf-8?B?RG5GTXhYTThHT29FWitZcVNpY2c4YXRxaWhVM05wMXFaL3lrV1JPNXk5SFZa?=
- =?utf-8?B?M3dqZWd6K094VEFZMFltYlpaSXMxcnFRc09QQlFCUmxFM1FqendHOTZZeDls?=
- =?utf-8?B?cVBmYVJKL2dGeWwydnRNRjZRYnNPS1lFMHZkUGF4U0QwQ3U5bStBQjJVdHZT?=
- =?utf-8?B?T2FGMHRZNjV6R3R1MGZDbk5IZWpzTHQ3RVF6NFJPVUZTbUlJZmZkOEpYblNW?=
- =?utf-8?B?YkI5c0kvZXp5ODllZC9Hc29nUXMzM0xtcTd1T0pRSDkvTWE1bUd1VTN2SHQz?=
- =?utf-8?B?dS81WlU0RUNRTER2SVc1VUVvVEl1NDgzaFEzeTdiNlEzVmNEVHlOSjhZNkpC?=
- =?utf-8?B?MTJTUDJUcVdJTlRtV3dEQ1c4TmF2enlWenh3dURzTCs0dVRwalJRSFZVVzZ1?=
- =?utf-8?B?TnRPZWM5RTRqb1FSaFVkNzRVYW95R0RzQTdaUEFhd3JKU0QwaTBLNjlpeVZY?=
- =?utf-8?B?cFBnN0oyVlFkdS9XbkFTcytCdG1sZTV3T1FoWHRsM1hBV0R0LzhYWUVrdkds?=
- =?utf-8?B?S0xCVysvSnd4WnJhWFhFWVR4ZVdaOWhMcVpQUVo0ZUtNVjFnaS8yckJsUGwr?=
- =?utf-8?B?NmRTcno5cU5va051b3VYMVVnbTljN01DOUJvMWx0SnMrZ3JyMzFnZnJMeTU2?=
- =?utf-8?B?VTJ1T3lDOVhWRnhxV0xTNE5aRXJ1bkV1bGQ0Qm1PckFGKzh2Wnpua0ozK01H?=
- =?utf-8?B?YnFkVWNQVFYxL0owOHI5MkxJRjc5b2NPelR3YWNieWdBVFc2TGx0WjRaT2lU?=
- =?utf-8?B?ZEltMVdlWDZ4VzJDdjdqb3MxUWdWWk55Rmo4Ky9CKzV3MnFvRVhTb2I0OERO?=
- =?utf-8?B?MXFKSlNvMzVKWDd5dXYrTzY3QUhYVk03RGNIZlZlUk0yY3p5RzUxNWdIb2ZT?=
- =?utf-8?B?M3J1NWloVm5Dc0JXNWhzSTB1eGVzWnNzTXhlTnZDQ0F0UTJYZWRhSlpnUFdo?=
- =?utf-8?B?eUNaWjdYK2J2RDlPVzhUU2Y3eG9NeE9lcVQ5TTBiaE4xdjZPOWFlRDlDdkto?=
- =?utf-8?B?dG10UjVJMm1NN2YvVlhCRWd1MThGNmVFUktuNlR5NlUrQ2JJUkdFMHZyY2Fi?=
- =?utf-8?B?MEJ2RUVyZFlnT2kvR1NYRkZZSy9ld2VVbTNFMTQ5VWx6WmRoZ0lPcGVvVVZ1?=
- =?utf-8?B?cUEzRjFSa0NpZlhIQThScGdyWURnVXZUbFdPNk40TkhTV212dVFZc2N4TC9y?=
- =?utf-8?B?bTNSeUxINnZFelJidXZNVm00dnZiWFdKeUhZQU9lOGkrK003ay92N2VVcXFh?=
- =?utf-8?B?M0duTEVIZmNwc25LZTU3bGZmdHJjK0xxZEJkU1I5QkxZU05uZldPRDM4QUpx?=
- =?utf-8?B?NXhCUGkwcVhXNGhFS3IwNGZ0ZjAvRGFGKytSZnpERXdGSjRXdHBSS2Z6VC9w?=
- =?utf-8?Q?pkjqvQlsjtQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(10070799003)(376014)(1800799024)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cFJHOTBSc1NUaWRLQ3E0RTg3c3JXS25OUUJTVVlteDVFSzV1dzZZeWN6dWxE?=
- =?utf-8?B?bGlwY29YOHVVZk43WUpKYVIzQllHY3NzWmV0Q21peld2VUs4QmxuMG51cXE1?=
- =?utf-8?B?TmtCT1NoNzNFdTVvd0dqb2F2aUprbG8rM29nVzlUWWVpYmRTSytYMXBkdDY2?=
- =?utf-8?B?dmZXaHJqWmZFZXQzV2NIbE92K1BkSGt3Q1lxTjZGLzNFV3RZbXVzQS96R0ZB?=
- =?utf-8?B?emNRZnB1STZSSGVRRlNLaHhrWEN2Rm95MVhsVmxDdkdsNTh1YUo5Vk9WNXFq?=
- =?utf-8?B?VnJJWlFEQTUwTzczS1NnQXdUSk5SZlBYWEtqRHI2NVdFaDdxaldlT05LMVF3?=
- =?utf-8?B?RnFvSGwzWmVNN3JHYWRMbVIrSTdOdUJKMFNqY0oxVFdWb0xwZG1Fdlh1THZI?=
- =?utf-8?B?dG9wbWZTWUVsZnd6TS9CWW91dktrM3FXR1ZtdHVCT3pGMis0RkdJaVlFMGpL?=
- =?utf-8?B?ZVZVR1ZWMW1PZlVUYVJsYm5nOWp0U2pZUG9mWVA3OTYyMFI3ajdPZnlNMHNY?=
- =?utf-8?B?NW5jYVRuaXgrSm9KbTJOWTZESlJ0amovZXY2Q21mblBMQnQra3FjalNSSVlL?=
- =?utf-8?B?TXNDN1pUUWx0Zkx1d05XZnV5VHgzNTh3OXhydUtONDNmeXVHM3FmRmtlZW01?=
- =?utf-8?B?OUVzakpMMUFtUk8vU1UzVTh3WHhQdVgxZnJmUmR1b2pQVXRTVW0vbVd0UDR1?=
- =?utf-8?B?M1VUQXBuYWt1WVk2aVMwb096bEJ0RTlwbmhZdHVWMFNJSlRzRW5RcFlVVm81?=
- =?utf-8?B?VWZTNnQyNmJZQnFrRkZ6NDNMeDZ4Snd2R25pbjRhUkF1dlV2aUZRN1BOVHA4?=
- =?utf-8?B?ellXWDh1RGZoTU1ZeEdscUhDSUdkemloSm9qaEROaElUY1JJTmVXSXpjalFt?=
- =?utf-8?B?V2o5eDQ4YjRqY0JacWFtb3FMYWNYcUxjQXBBajE3OTJHcmYvNEdMeUF6emU2?=
- =?utf-8?B?MzllajM5cG02dEIvZ251K3NQKzhyazJUMnVabWhKRDJSeFBmNml5ZjlwQ1ZC?=
- =?utf-8?B?cHNvMEVVd0ZqcEF0cGhGRW1mL0JHbFRQeGNwb3U0NzFEbkxSK0FwdGFUYS9C?=
- =?utf-8?B?MEs5UFJOS1REcDB4c3F1TFZOTFFrVXI1OGhJYXlxSVZMeDVsZExqdjdPL1ZN?=
- =?utf-8?B?bUI0bVoyb2lFSndFVnExWlNIUS8zeHBndDNqQzJjbzM3R0ZtR0luMWtyNGFm?=
- =?utf-8?B?ejNuWVVmdnhtdUljb1Era2RKYXRqMm9xWFUvaW9MWVZpYlIxcXY2VWlhTldz?=
- =?utf-8?B?ZFd6UEEyekxuaTVuQWhQY3FxcElhUEtQdHlWNkE2TnlDZkhDa0tsV3NTQy9B?=
- =?utf-8?B?Rk1Qak9SUENGaWtDTmdpQW5pTUVKdXlPTTViWDlod3VKby91OWlTYkhnRkJ1?=
- =?utf-8?B?Q0FnZVU4MjB3cERRNDJHVDlIcjM2cU1zdzZiYzN4emw1Zjhkd2kyU3hnQnVV?=
- =?utf-8?B?MnJLNlVZWTBwOGNaY0J3emorVkQvdzZtaGszbUJtSDBQeEVLSFFkeHVkMVN0?=
- =?utf-8?B?Q2VYblJWYnRtWExldmhkd2hraHVrb2REMzdLMy94RjFNSTZIcmsxWUkxMmht?=
- =?utf-8?B?S3lYM3R0SE5qNktOMlRpU1h0VWdZS0h5MDQyMGp2YVRsaC9LakNoUGxNaS83?=
- =?utf-8?B?a1JOK3Z3TzhLanVBODVHVFpRQUJMWnRpb2h5anFyZVliNm03cVhhRFJMVDRG?=
- =?utf-8?B?Q1Vob3dKRm9MY3pyT0tCQjMvZ1dnZHhOTytWc1VqUlhEcWJxdWxzNnduN1o5?=
- =?utf-8?B?WnM5SmQ2eGxDOURNS1pHSk9jY2czMTlkK0V3ZVdjS3c0dFRPMEFlbnRRVThL?=
- =?utf-8?B?OTduN0FiYjJxUWl3K3EvelJIRXI0eFhMeElIVEt2N1FKb0ExdjJiZnd3Yk82?=
- =?utf-8?B?clM5b0ttaG5UWEQ2T2ZpMUl0Z291T21RajBzdG9FZUJUTjE5ZisrckVicUV6?=
- =?utf-8?B?K0YyT2NTeG9XazIvSlhYZEtnZE5zYXJsYnFocTdkSWlaK3BDTzUxZEhvdG5B?=
- =?utf-8?B?OFZoL2J2YkRBQ3lTeTJUT0ZVeXk3cUFkSDg0aXhYWHNUSUVjME5pUXhkK3dv?=
- =?utf-8?B?alZ5QXRnd3VKYjU5YTJsWmZVNnc5a0hXTWI3Q2QreTlLcEN3clJzS0YvaFJs?=
- =?utf-8?B?R1NBY3pHd0d0cTFZRFN6dVhSZXJFMFFCczltKzZlVjg1cDQ3cnNDY2laK1ZL?=
- =?utf-8?Q?Sxjk4OpwHGm/FQvQIjSc8yMdxxcTH8WLeZ/CCzfvEbSr?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: aac6157e-4aed-41cd-59a7-08dda2f9efb0
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3997.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2025 23:54:11.4806
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: J06aPJNqT5hXDmlBPWRS/g1dEkYWjhb/4BYqa49yuWQb7pBx5wtsQviidm5WfPDEUZptoE+yX+Pt+TxNOdcEXA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6456
+Content-Transfer-Encoding: 8bit
 
-On Wed Jun 4, 2025 at 7:53 AM JST, Benno Lossin wrote:
-> On Mon Jun 2, 2025 at 11:39 AM CEST, Danilo Krummrich wrote:
->> On Thu, May 29, 2025 at 09:27:33AM +0200, Benno Lossin wrote:
->>> That's also fair, but we lose the constness of `next_multiple_of`, so
->>> you can't use `align_up` in a const function. That might confuse people
->>> and then they write their own const helper function... I'd prefer we us=
-e
->>> all functions that are available in the stdlib.
->>
->> Considering that, what's the suggestion for this trait?
->>
->> I don't think we should have a trait with align_down() and fls() only an=
-d
->> otherwise use next_multiple_of(), i.e. mix things up.
->
-> Agreed.
->
->> I think we should either align with the Rust nomenclature - whatever thi=
-s means
->> for fls() - or implement the trait with all three methods.
->
-> The longterm perspective would be to choose the Rust one. But I'd also
-> understand if people want the kernel's own terms used. Still I prefer
-> the Rust ones :)
+While adding new devices the per-cpu workqueue map are temporarily
+cleared, if a user tries to use them at that point it may fail. That
+is, code calling wq_table_next_wq() may race during probe when
+rebalance_wq_table() is called, which clears before rebuilding the
+workqueue map. Add a spinlock to protect serialize that.
 
-My understanding is that so far we have tried to match the names of C
-counterparts as much as possible when reimplementing stuff. I don't
-think this particular module warrants an exception, which could cause
-confusion to folks coming from the C part of the kernel.
+Add some lockdep asserts to document when this new lock should be
+held.
+
+It was reported that running iaa-deflate selftests using a IAA device
+while another is being probed could fail:
+
+[   45.432348] ------------[ cut here ]------------
+[   45.432350] alg: self-tests for deflate using deflate-iaa failed (rc=-19)
+[   45.432372] WARNING: CPU: 43 PID: 1402 at crypto/testmgr.c:6026 alg_test.part.0+0x493/0x570
+[   45.432387] Modules linked in: iaa_crypto(+) mlx5_core qat_4xxx sr_mod ast igb mlxfw intel_qat cdrom drm_shmem_helper pci_hyperv_intf idxd
+[   45.432405]  dca dh_generic crc8 rpcrdma rdma_cm iw_cm ib_cm sunrpc ib_core
+[   45.432426] CPU: 43 UID: 0 PID: 1402 Comm: cryptomgr_test Not tainted 6.14.0-cwf.bkc.6.14.4.4.6.x86_64 #1
+[   45.432436] RIP: 0010:alg_test.part.0+0x493/0x570
+[   45.432442] Code: ef 8b 48 28 48 8b 50 20 e8 2a f9 ff ff 41 89 c0 e9 10 fe ff ff 44 89 c1 4c 89 e2 4c 89 ee 48 c7 c7 b8 86 3d 83 e8 dd 90 88 ff <0f> 0b 44 8b 44 24 04 e9 a9 fc ff ff 44 8d 7b 01 e9 90 fe ff ff 48
+[   45.432458] RSP: 0018:ffffc90024bb3de8 EFLAGS: 00010286
+[   45.432464] RAX: 0000000000000000 RBX: 000000000000004c RCX: 0000000000000000
+[   45.432469] RDX: 0000000000000002 RSI: ffffffff834ee543 RDI: 00000000ffffffff
+[   45.432472] RBP: 000000000000004d R08: 0000000000003d0e R09: ffffffff833d86e6
+[   45.432476] R10: 0000000000000001 R11: 0000000000000004 R12: ffff88a099be1000
+[   45.432480] R13: ffff88a099be1080 R14: 000000000000004d R15: 0000000000001340
+[   45.432483] FS:  0000000000000000(0000) GS:ffff88bfff8c0000(0000) knlGS:0000000000000000
+[   45.432488] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   45.432492] CR2: 00007fd70ad9c4e0 CR3: 000000000ce36001 CR4: 0000000108f70ef0
+[   45.432495] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   45.432497] DR3: 0000000000000000 DR6: 00000000ffff07f0 DR7: 0000000000000400
+[   45.432501] PKRU: 55555554
+[   45.432504] Call Trace:
+[   45.432508]  <TASK>
+[   45.432513]  ? __warn+0x81/0x130
+[   45.432524]  ? alg_test.part.0+0x493/0x570
+[   45.432529]  ? report_bug+0x1c7/0x1d0
+[   45.432540]  ? handle_bug+0x53/0x90
+[   45.432546]  ? exc_invalid_op+0x18/0x70
+[   45.432550]  ? asm_fred_entrypoint_kernel+0x45/0x60
+[   45.432562]  ? alg_test.part.0+0x493/0x570
+[   45.432570]  ? alg_test.part.0+0x493/0x570
+[   45.432574]  ? _raw_spin_unlock+0x18/0x40
+[   45.432583]  ? finish_task_switch.isra.0+0x97/0x290
+[   45.432594]  ? __schedule+0x2fc/0x7a0
+[   45.432603]  ? preempt_count_add+0x6d/0xa0
+[   45.432611]  ? __pfx_cryptomgr_test+0x10/0x10
+[   45.432619]  cryptomgr_test+0x24/0x40
+[   45.432628]  kthread+0x10f/0x250
+[   45.432636]  ? finish_task_switch.isra.0+0x97/0x290
+[   45.432644]  ? __pfx_kthread+0x10/0x10
+[   45.432650]  ? __pfx_kthread+0x10/0x10
+[   45.432648] initcall iaa_crypto_init_module+0x0/0x2b0 [iaa_crypto] returned 0 after 2388 usecs
+[   45.432657]  ret_from_fork+0x31/0x50
+[   45.432668]  ? __pfx_kthread+0x10/0x10
+[   45.432675]  ret_from_fork_asm+0x1a/0x30
+[   45.432685]  </TASK>
+[   45.432688] ---[ end trace 0000000000000000 ]---
+
+Fixes: 2ec6761df889 ("crypto: iaa - Add support for deflate-iaa compression algorithm")
+Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+---
+ drivers/crypto/intel/iaa/iaa_crypto_main.c | 48 ++++++++++++++++++----
+ 1 file changed, 39 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/crypto/intel/iaa/iaa_crypto_main.c b/drivers/crypto/intel/iaa/iaa_crypto_main.c
+index 23f585219fb4..2185c101bef3 100644
+--- a/drivers/crypto/intel/iaa/iaa_crypto_main.c
++++ b/drivers/crypto/intel/iaa/iaa_crypto_main.c
+@@ -35,28 +35,39 @@ static unsigned int cpus_per_iaa;
+ 
+ /* Per-cpu lookup table for balanced wqs */
+ static struct wq_table_entry __percpu *wq_table;
++static DEFINE_SPINLOCK(wq_table_lock);
+ 
+ static struct idxd_wq *wq_table_next_wq(int cpu)
+ {
+-	struct wq_table_entry *entry = per_cpu_ptr(wq_table, cpu);
++	struct wq_table_entry *entry;
++	struct idxd_wq *wq;
++	int id;
++
++	guard(spinlock)(&wq_table_lock);
++
++	entry = per_cpu_ptr(wq_table, cpu);
+ 
+ 	if (++entry->cur_wq >= entry->n_wqs)
+ 		entry->cur_wq = 0;
+ 
+-	if (!entry->wqs[entry->cur_wq])
++	id = entry->cur_wq;
++	wq = entry->wqs[id];
++
++	if (!wq)
+ 		return NULL;
+ 
+ 	pr_debug("%s: returning wq at idx %d (iaa wq %d.%d) from cpu %d\n", __func__,
+-		 entry->cur_wq, entry->wqs[entry->cur_wq]->idxd->id,
+-		 entry->wqs[entry->cur_wq]->id, cpu);
++		 id, wq->idxd->id, wq->id, cpu);
+ 
+-	return entry->wqs[entry->cur_wq];
++	return wq;
+ }
+ 
+ static void wq_table_add(int cpu, struct idxd_wq *wq)
+ {
+ 	struct wq_table_entry *entry = per_cpu_ptr(wq_table, cpu);
+ 
++	lockdep_assert_held(&wq_table_lock);
++
+ 	if (WARN_ON(entry->n_wqs == entry->max_wqs))
+ 		return;
+ 
+@@ -71,6 +82,8 @@ static void wq_table_free_entry(int cpu)
+ {
+ 	struct wq_table_entry *entry = per_cpu_ptr(wq_table, cpu);
+ 
++	lockdep_assert_held(&wq_table_lock);
++
+ 	kfree(entry->wqs);
+ 	memset(entry, 0, sizeof(*entry));
+ }
+@@ -79,6 +92,8 @@ static void wq_table_clear_entry(int cpu)
+ {
+ 	struct wq_table_entry *entry = per_cpu_ptr(wq_table, cpu);
+ 
++	lockdep_assert_held(&wq_table_lock);
++
+ 	entry->n_wqs = 0;
+ 	entry->cur_wq = 0;
+ 	memset(entry->wqs, 0, entry->max_wqs * sizeof(struct idxd_wq *));
+@@ -702,14 +717,23 @@ static int iaa_wq_put(struct idxd_wq *wq)
+ 	return ret;
+ }
+ 
+-static void free_wq_table(void)
++static void __free_wq_table(void)
+ {
+ 	int cpu;
+ 
++	lockdep_assert_held(&wq_table_lock);
++
+ 	for (cpu = 0; cpu < nr_cpus; cpu++)
+ 		wq_table_free_entry(cpu);
+ 
+ 	free_percpu(wq_table);
++}
++
++static void free_wq_table(void)
++{
++	guard(spinlock)(&wq_table_lock);
++
++	__free_wq_table();
+ 
+ 	pr_debug("freed wq table\n");
+ }
+@@ -719,15 +743,17 @@ static int alloc_wq_table(int max_wqs)
+ 	struct wq_table_entry *entry;
+ 	int cpu;
+ 
+-	wq_table = alloc_percpu(struct wq_table_entry);
++	guard(spinlock)(&wq_table_lock);
++
++	wq_table = alloc_percpu_gfp(struct wq_table_entry, GFP_ATOMIC);
+ 	if (!wq_table)
+ 		return -ENOMEM;
+ 
+ 	for (cpu = 0; cpu < nr_cpus; cpu++) {
+ 		entry = per_cpu_ptr(wq_table, cpu);
+-		entry->wqs = kcalloc(max_wqs, sizeof(*entry->wqs), GFP_KERNEL);
++		entry->wqs = kcalloc(max_wqs, sizeof(*entry->wqs), GFP_ATOMIC);
+ 		if (!entry->wqs) {
+-			free_wq_table();
++			__free_wq_table();
+ 			return -ENOMEM;
+ 		}
+ 
+@@ -836,6 +862,8 @@ static int wq_table_add_wqs(int iaa, int cpu)
+ 	struct pci_dev *pdev;
+ 	struct device *dev;
+ 
++	lockdep_assert_held(&wq_table_lock);
++
+ 	list_for_each_entry(iaa_device, &iaa_devices, list) {
+ 		idxd = iaa_device->idxd;
+ 		pdev = idxd->pdev;
+@@ -902,6 +930,8 @@ static void rebalance_wq_table(void)
+ 	pr_debug("rebalance: nr_nodes=%d, nr_cpus %d, nr_iaa %d, cpus_per_iaa %d\n",
+ 		 nr_nodes, nr_cpus, nr_iaa, cpus_per_iaa);
+ 
++	guard(spinlock)(&wq_table_lock);
++
+ 	clear_wq_table();
+ 
+ 	if (nr_iaa == 1) {
+-- 
+2.49.0
+
