@@ -1,172 +1,282 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573FE42A96;
-	Tue,  3 Jun 2025 07:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B3642A96;
+	Tue,  3 Jun 2025 07:03:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748934190; cv=none; b=bx/drrBquExWVNjzjdFuX53kYGeKcvdzrFVM3LMTZDG7rObr8DuP5MOLv5PyZf4LLww+K7xJoINgiXQC95Z83D3JjyqrJUL2Hp7BFraqz1Z+daBie/QgAVV//VvTEjqNmvkOf0MIg8hxOEfFCjzm55DyTJsqVCJJ1ec7R+ms3io=
+	t=1748934212; cv=none; b=PApi2kpbllmzWWDcwN5B5bBhm8qDq2Eu69Kinp+aLz3jq5SF2b4LtXSNtdi2nGy/wMehcWB9dCn+ZUN4YrBhezudDEjWWcHh2D+lqKB+Fm7xnAihws3mFHhLWN7wy5t7ajWDYXpuIozLgUgBAQpQEFeCBrVlMCkNj7s3w+IXfyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748934190; c=relaxed/simple;
-	bh=M2Xxya/1ZnwwtJTmVRkxDpSQKxDN9xfJL6BiBYJNJMY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q7V92mxzyNHpu4dbHmJCSK/H7KchXZQgcyApyNygrLY+D9nVE3BasiUWCbtNP1E5fZnCxB+8hRHxGsM9/YA9GH5nvd9yTTQGWUF7tFgv7sL4QEYcO15msnPbKvG0U9vLLsqdeoB4Iw+/jAzobmhKziFNvcxD4nbUpxPxp6FtKYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MfFapRus; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748934212; c=relaxed/simple;
+	bh=mEiKmlKFieLojpMWXsguW+Q+nOsw8ifImyjbc8c+WF8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UVBljnI2UzV5YZKtiwPjRrEUVe2LQgNvKfkz0gkZJYTCgKjvx2xhPssBC+AeaVEccpMARlniXtUPoHYqnCAcFllgdyRn08FvKZQX6KslriRvUHrLFLyQk2TLcfA5Ah0YtKxBOXYepqTniaD1RYjlk8bgzyf00sZB+Np/MKUMUfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I4GnDdvQ; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MfFapRus"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D753AC4CEED;
-	Tue,  3 Jun 2025 07:03:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748934189;
-	bh=M2Xxya/1ZnwwtJTmVRkxDpSQKxDN9xfJL6BiBYJNJMY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MfFapRusnhALxbIIJw3w/UyOman+5LnAjY8r12aYf6omFqjJ7M51qQ/eKdvhVfrwL
-	 su06rq1mLGJNVTms8XwHXpnhhqu9yeBkQv1pWEewONdY1Nbl7wzElK31lUmhCJexyg
-	 oRbYYVrSOiR467JHNk5huy/wlAGPH/OQNLne5S1ik944aHf1t+hh1gNPNy1ly4xAQ+
-	 bCeLO716ES2EMFIolP1QIaVESsqTL/tB+vZ3mfQDf3nFFufCR/VYCOoII3mBBezR2r
-	 UwE/UZG1CBPQET2qjMZdG6xpFEtO8OvI9/Jh5gUsmimzJeHQdOJgixbABABBt7tP4f
-	 +eX5pz/5QDepQ==
-Message-ID: <3b22ca31-4a6c-4f94-8623-9b0448699eaa@kernel.org>
-Date: Tue, 3 Jun 2025 09:03:04 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I4GnDdvQ"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-3106217268dso44913031fa.1;
+        Tue, 03 Jun 2025 00:03:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748934208; x=1749539008; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7dT7WqbqtKt8W1daG7MTBJ0atov+qwpnMMDskvCo+QI=;
+        b=I4GnDdvQXd33eL2QH/QJzdRzF6a47+a/xgXaEvV/eJBkpqJNHuJM3aNn9GXAPMN+TK
+         5iRWrIAuRu8hocMCCrucgJno65+ztLqhBaBYkfFe9r4KBXuI0qpLKMzuMULcG3+9lOHf
+         ZLqUJ7+0RoyR7Gr4rytMXH6WJnILMrMyC5gt5BGQmw1ef16qIi69W+TMQhDrVC0z2NIv
+         eqxkEbwMcwH8cEb76RDH9Ee5TRop2menIObU1LwbL3MWn9OL7Hb+tyZvuKDWqujjn24e
+         2yQP6b2QCOUoSgwyPbss3nZuppvKbblqzrLGoPHdsXiCXb0HwfJcakkUPhV7vbPRDNhK
+         77jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748934208; x=1749539008;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7dT7WqbqtKt8W1daG7MTBJ0atov+qwpnMMDskvCo+QI=;
+        b=JilLhW8FGMKY3egg4k2x1DC04X0JpiCyji4Rt2w/YD+pG/O79HXl+lCDbvaOqSzDnY
+         IIrYsBS5ujmwPOuW0aXUdpZsBarLPT4TZgqzPQisO45x1xqWU0vtcLPyLuLatJzO+Wv+
+         XPbsJqkBUAaBOHo1g4RvrYztRsTOzsH8bZwEjIxpkQXJsjAOu3pY/FsaOwPx0DqI2EA5
+         sJgXaYLpr+NuNGT297tpbfyFfL2zHOSzbG733tFUCBj//WDahqJNE9NaB8UUkTjbf1KK
+         zM34BnUt6ckdYDKl/JpqnB55yeKpXyKU13km4kbhwteU/J9Vs0hRF8Rb80RUD8UH+yLK
+         9tcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWdGILKnpyN4V8g+yR48TkXliGKYIBAqj2ImzYAkPVcKlKuttTpETYzg+wO+pSs+3alI7PIsZaz@vger.kernel.org, AJvYcCX3q/TUK50xdU8p/unSy6n2SamUeB7WCRy+A+/oHCyMCnX5olqbVdEgIjo7252i9n3UFptydO8cf0iy7p0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOKUfPp5oFNf3XBuU3yddxuvyQCYIHZYg4+CNSo8jYlrET9yMQ
+	jgDK/FSS3fdadq7b37N9FaPAKfLg3Yrqine5/BHEtVTQzDD8eJIgO2arsP79DvycPFeY0fBI4yp
+	Pp8oY1yHgk7fZvLm495lICmCdANG0PNU=
+X-Gm-Gg: ASbGncuXHGkUzXbnoHv+XgSCsL1S44iMG8Y2tMhdwaECedtRDABF+KJJ4MSAELN11IL
+	G/LkSEvtRPBi4IF4mLKmvJRDadpFJmVcS9Q2LQLX8AcWt2ZerI39+nihT3vcH4XO486VtdFfNJJ
+	BNOI3P9mEyrPLw94U0wAQRS8qPVwepzfhu
+X-Google-Smtp-Source: AGHT+IGnOaoXfRDc8wENHB7ftsUeRKl6dkZW7ROwPATi+QEN4kv+OgZpwURqdvXET1pFOPIM++/PwJLnVxwy01Gkf2s=
+X-Received: by 2002:a05:651c:30c8:b0:32a:604c:504e with SMTP id
+ 38308e7fff4ca-32a9ea7e3d1mr34030951fa.38.1748934208051; Tue, 03 Jun 2025
+ 00:03:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] dt-bindings: gpio: convert gpio-74xx-mmio.txt to yaml
- format
-To: Frank Li <Frank.Li@nxp.com>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, "open list:GPIO SUBSYSTEM"
- <linux-gpio@vger.kernel.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Cc: imx@lists.linux.dev
-References: <20250602145043.945065-1-Frank.Li@nxp.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250602145043.945065-1-Frank.Li@nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250602181419.20478-1-ryncsn@gmail.com> <aD4KyHz_H5WPLLf4@x1.local>
+In-Reply-To: <aD4KyHz_H5WPLLf4@x1.local>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Tue, 3 Jun 2025 15:03:10 +0800
+X-Gm-Features: AX0GCFuWW3YAYCssO1rwk88946aShV5_1GijPSRyW18Gr9SFJkf0tK_p7b5ZjC4
+Message-ID: <CAMgjq7AZXzeDxWhxFsaRS8PdM4ZqDOKyex1f0dwuL97yzV9-Zg@mail.gmail.com>
+Subject: Re: [PATCH v3] mm: userfaultfd: fix race of userfaultfd_move and swap cache
+To: Peter Xu <peterx@redhat.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Barry Song <21cnbao@gmail.com>, Suren Baghdasaryan <surenb@google.com>, 
+	Andrea Arcangeli <aarcange@redhat.com>, David Hildenbrand <david@redhat.com>, 
+	Lokesh Gidra <lokeshgidra@google.com>, stable@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 02/06/2025 16:50, Frank Li wrote:
-> Convert gpio-74xx-mmio.txt to yaml format.
-> 
-> Additional changes:
-> - remove label in example.
+On Tue, Jun 3, 2025 at 4:34=E2=80=AFAM Peter Xu <peterx@redhat.com> wrote:
+>
+> On Tue, Jun 03, 2025 at 02:14:19AM +0800, Kairui Song wrote:
+> > From: Kairui Song <kasong@tencent.com>
+> >
+> > On seeing a swap entry PTE, userfaultfd_move does a lockless swap cache
+> > lookup, and try to move the found folio to the faulting vma when.
+> > Currently, it relies on the PTE value check to ensure the moved folio
+> > still belongs to the src swap entry, which turns out is not reliable.
+> >
+> > While working and reviewing the swap table series with Barry, following
+> > existing race is observed and reproduced [1]:
+> >
+> > ( move_pages_pte is moving src_pte to dst_pte, where src_pte is a
+> >  swap entry PTE holding swap entry S1, and S1 isn't in the swap cache.)
+> >
+> > CPU1                               CPU2
+> > userfaultfd_move
+> >   move_pages_pte()
+> >     entry =3D pte_to_swp_entry(orig_src_pte);
+> >     // Here it got entry =3D S1
+> >     ... < Somehow interrupted> ...
+> >                                    <swapin src_pte, alloc and use folio=
+ A>
+> >                                    // folio A is just a new allocated f=
+olio
+> >                                    // and get installed into src_pte
+> >                                    <frees swap entry S1>
+> >                                    // src_pte now points to folio A, S1
+> >                                    // has swap count =3D=3D 0, it can b=
+e freed
+> >                                    // by folio_swap_swap or swap
+> >                                    // allocator's reclaim.
+> >                                    <try to swap out another folio B>
+> >                                    // folio B is a folio in another VMA=
+.
+> >                                    <put folio B to swap cache using S1 =
+>
+> >                                    // S1 is freed, folio B could use it
+> >                                    // for swap out with no problem.
+> >                                    ...
+> >     folio =3D filemap_get_folio(S1)
+> >     // Got folio B here !!!
+> >     ... < Somehow interrupted again> ...
+> >                                    <swapin folio B and free S1>
+> >                                    // Now S1 is free to be used again.
+> >                                    <swapout src_pte & folio A using S1>
+> >                                    // Now src_pte is a swap entry pte
+> >                                    // holding S1 again.
+> >     folio_trylock(folio)
+> >     move_swap_pte
+> >       double_pt_lock
+> >       is_pte_pages_stable
+> >       // Check passed because src_pte =3D=3D S1
+> >       folio_move_anon_rmap(...)
+> >       // Moved invalid folio B here !!!
+> >
+> > The race window is very short and requires multiple collisions of
+> > multiple rare events, so it's very unlikely to happen, but with a
+> > deliberately constructed reproducer and increased time window, it can b=
+e
+> > reproduced [1].
+> >
+> > It's also possible that folio (A) is swapped in, and swapped out again
+> > after the filemap_get_folio lookup, in such case folio (A) may stay in
+> > swap cache so it needs to be moved too. In this case we should also try
+> > again so kernel won't miss a folio move.
+> >
+> > Fix this by checking if the folio is the valid swap cache folio after
+> > acquiring the folio lock, and checking the swap cache again after
+> > acquiring the src_pte lock.
+> >
+> > SWP_SYNCRHONIZE_IO path does make the problem more complex, but so far
+> > we don't need to worry about that since folios only might get exposed t=
+o
+> > swap cache in the swap out path, and it's covered in this patch too by
+> > checking the swap cache again after acquiring src_pte lock.
+>
+> [1]
+>
+> >
+> > Testing with a simple C program to allocate and move several GB of memo=
+ry
+> > did not show any observable performance change.
+> >
+> > Cc: <stable@vger.kernel.org>
+> > Fixes: adef440691ba ("userfaultfd: UFFDIO_MOVE uABI")
+> > Closes: https://lore.kernel.org/linux-mm/CAMgjq7B1K=3D6OOrK2OUZ0-tqCzi+=
+EJt+2_K97TPGoSt=3D9+JwP7Q@mail.gmail.com/ [1]
+> > Signed-off-by: Kairui Song <kasong@tencent.com>
+> >
+> > ---
+> >
+> > V1: https://lore.kernel.org/linux-mm/20250530201710.81365-1-ryncsn@gmai=
+l.com/
+> > Changes:
+> > - Check swap_map instead of doing a filemap lookup after acquiring the
+> >   PTE lock to minimize critical section overhead [ Barry Song, Lokesh G=
+idra ]
+> >
+> > V2: https://lore.kernel.org/linux-mm/20250601200108.23186-1-ryncsn@gmai=
+l.com/
+> > Changes:
+> > - Move the folio and swap check inside move_swap_pte to avoid skipping
+> >   the check and potential overhead [ Lokesh Gidra ]
+> > - Add a READ_ONCE for the swap_map read to ensure it reads a up to date=
+d
+> >   value.
+> >
+> >  mm/userfaultfd.c | 23 +++++++++++++++++++++--
+> >  1 file changed, 21 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+> > index bc473ad21202..5dc05346e360 100644
+> > --- a/mm/userfaultfd.c
+> > +++ b/mm/userfaultfd.c
+> > @@ -1084,8 +1084,18 @@ static int move_swap_pte(struct mm_struct *mm, s=
+truct vm_area_struct *dst_vma,
+> >                        pte_t orig_dst_pte, pte_t orig_src_pte,
+> >                        pmd_t *dst_pmd, pmd_t dst_pmdval,
+> >                        spinlock_t *dst_ptl, spinlock_t *src_ptl,
+> > -                      struct folio *src_folio)
+> > +                      struct folio *src_folio,
+> > +                      struct swap_info_struct *si, swp_entry_t entry)
+> >  {
+> > +     /*
+> > +      * Check if the folio still belongs to the target swap entry afte=
+r
+> > +      * acquiring the lock. Folio can be freed in the swap cache while
+> > +      * not locked.
+> > +      */
+> > +     if (src_folio && unlikely(!folio_test_swapcache(src_folio) ||
+> > +                               entry.val !=3D src_folio->swap.val))
+> > +             return -EAGAIN;
+> > +
+> >       double_pt_lock(dst_ptl, src_ptl);
+> >
+> >       if (!is_pte_pages_stable(dst_pte, src_pte, orig_dst_pte, orig_src=
+_pte,
+> > @@ -1102,6 +1112,15 @@ static int move_swap_pte(struct mm_struct *mm, s=
+truct vm_area_struct *dst_vma,
+> >       if (src_folio) {
+> >               folio_move_anon_rmap(src_folio, dst_vma);
+> >               src_folio->index =3D linear_page_index(dst_vma, dst_addr)=
+;
+> > +     } else {
+> > +             /*
+> > +              * Check if the swap entry is cached after acquiring the =
+src_pte
+> > +              * lock. Or we might miss a new loaded swap cache folio.
+> > +              */
+> > +             if (READ_ONCE(si->swap_map[swp_offset(entry)]) & SWAP_HAS=
+_CACHE) {
 
-No need to mention trivial changes in example. We ask to describe
-changes in the BINDING.
+Hi Peter, Thanks for the review!
 
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com
+>
+> Do we need data_race() for this, if this is an intentionally lockless rea=
+d?
+>
+> Another pure swap question: the comment seems to imply this whole thing i=
+s
+> protected by src_pte lock, but is it?
 
-...
+It's tricky here, in theory we do need to hold the swap cluster lock
+to read the swap_map, or it will look kind of hackish (which is the
+reason I tried to avoid using that SWAP_HAS_CACHE bit in V1). But
+I think it's OK to be lockless here because the only case where it
+could go wrong is:
+A concurrent swapin allocated a folio for the entry and updated
+the PTE releasing the swap entry, then another swapout left the same
+folio in swap cache and changed the PTE back reusing the entry. PTE
+lock is acquired then released twice here, so holding the PTE lock
+here will surely see the updated swap_map value. In other cases, the
+is_pte_pages_stable check will fail and there is no race issue.
 
-> new file mode 100644
-> index 0000000000000..2ec33248dfce1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/ti,7416374.yaml
-> @@ -0,0 +1,56 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/ti,7416374.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: 74XX MMIO GPIO driver
+> I'm not familiar enough with swap code, but it looks to me the folio can =
+be
+> added into swap cache and set swap_map[] with SWAP_HAS_CACHE as long as t=
+he
+> folio is locked.  It doesn't seem to be directly protected by pgtable loc=
+k.
 
-TI 74XX MMIO GPIO Controller
+You mean "as long as the folio is unlocked" right?
 
-> +
-> +maintainers:
-> +  - Frank Li <Frank.Li@nxp.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ti,741g125 # for 741G125 (1-bit Input),
-> +      - ti,741g174 # for 741G74 (1-bit Output),
-> +      - ti,742g125 # for 742G125 (2-bit Input),
-> +      - ti,7474    # for 7474 (2-bit Output),
-> +      - ti,74125   # for 74125 (4-bit Input),
-> +      - ti,74175   # for 74175 (4-bit Output),
-> +      - ti,74365   # for 74365 (6-bit Input),
-> +      - ti,74174   # for 74174 (6-bit Output),
-> +      - ti,74244   # for 74244 (8-bit Input),
-> +      - ti,74273   # for 74273 (8-bit Output),
-> +      - ti,741624  # for 741624 (16-bit Input),
-> +      - ti,7416374 # for 7416374 (16-bit Output).
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +    const: 2
-> +    description: |
-> +      The first cell is the pin number and
-> +      the second cell is used to specify the GPIO polarity:
-> +        0 = Active High,
-> +        1 = Active Low.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - gpio-controller
-> +  - '#gpio-cells'
-> +
-> +additionalProperties: true
+> Perhaps you meant this: since src_pte lock is held, then it'll serialize
+> with another thread B concurrently swap-in the swap entry, but only _late=
+r_
+> when thread B's do_swap_page() will check again on pte_same(), then it'll
+> see the src pte gone (after thread A uffdio_move happened releasing src_p=
+te
+> lock), hence thread B will release the newly allocated swap cache folio?
 
-This cannot be true.
+The case you described is valid, and there is no bug with that, it's
+not the case I'm fixing here.
 
+> There's another trivial detail that IIUC pte_same() must fail because
+> before/after the uffdio_move the swap entry will be occupied so no way to
+> have it reused, hence src_pte, even if re-populated again after uffdio_mo=
+ve
+> succeeded, cannot become the orig_pte (points to the swap entry in
+> question) that thread B read, hence pte_same() must check fail.
 
-Best regards,
-Krzysztof
+Swap entry can be freed before the uffidio_move's PTE lock: a swapin
+can finish and release it. Then another swapout can reuse it.
