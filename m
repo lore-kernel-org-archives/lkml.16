@@ -1,104 +1,107 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A39922F740;
-	Tue,  3 Jun 2025 13:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE67DE555;
+	Tue,  3 Jun 2025 13:06:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748955936; cv=none; b=Nf5WsoMwkQF15XJwAmyk6PqEnuLGFO7faLCqm7okCtlnw8FnF1VfOG3yUooyJJKXW+V48YykuGUlxq43tEE0rDhNuhRBG414WiHGKEpwASNtdEtDSGIAaYp5DFLXL/Fug6Q2+GddJ1x1zq9HOKY94gbcip4qKiq1k/SJN2YVpQw=
+	t=1748956002; cv=none; b=UC8hX7jiBNdsYzvetctHtBMEvSocHPY3o3Y2aCZcqP7N6kKfClj20iVd3qqpS7aS83qsQVC32F9I9jyWMX5quKJH/0pBqGR4RdFPfACmAq674zGVPm3rm3gOylCEOI0cGsoDxX4XXVB7fMm3O8r3m/LHx/hqew26pE4elu1oycg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748955936; c=relaxed/simple;
-	bh=Zknqswh8USYRXH9E7sikPWaoUxkbdqaBWulo21WEy5M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dm5HpTrgvQT/CTo3TVEHWAX3H4aSsYIUR6pbj+qH970gMyjU5bPLrmeMlPERlqjbezAXW6rId5lCwgIGlDeLowph7DYCXRQOVMA/qWMcADC0s9T/6mIEM58lmkLc5etfygpvUjifbIaoTsbJbQcLBOcc4x1ynE0GZRwMyOyjTPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bBWCv6b7tzKHNFR;
-	Tue,  3 Jun 2025 21:05:31 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 4E9D81A17C1;
-	Tue,  3 Jun 2025 21:05:30 +0800 (CST)
-Received: from hulk-vt.huawei.com (unknown [10.67.174.121])
-	by APP3 (Coremail) with SMTP id _Ch0CgCn+MIQ8z5osdqmOA--.37720S2;
-	Tue, 03 Jun 2025 21:05:30 +0800 (CST)
-From: Chen Ridong <chenridong@huaweicloud.com>
-To: catalin.marinas@arm.com,
-	will@kernel.org,
-	ardb@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	lujialin4@huawei.com,
-	chenridong@huawei.com
-Subject: [PATCH stable 6.6.y] arm64: kaslr: fix nokaslr cmdline parsing
-Date: Tue,  3 Jun 2025 12:52:33 +0000
-Message-Id: <20250603125233.2707474-1-chenridong@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1748956002; c=relaxed/simple;
+	bh=BCr7GIiuUO2pKsPic3aDxYvqICfx1M5/86X3EyLcGx8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M28dDHV4pgeVScK4eMYb/gxwPrVOeSx2RqGSmll9bMnVjJ6nVk3E6gUXbcUKmtGbJkLab8DP9FUFvEhmSi22kPWj3yDsVQAbqot4lZFxrcy5E+Wjgr5Bjloz2T7/3CAifH8nJvr7+P38b9WwurCmTisq0JCdxrws7l14YWCPZKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H8Rtsj3d; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H8Rtsj3d"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-747c2cc3419so2939864b3a.2;
+        Tue, 03 Jun 2025 06:06:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748956000; x=1749560800; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0/f20/458IAFhCzkUWgHcem7N3YGetstsrc6uh9Gjc8=;
+        b=H8Rtsj3dy/LGHBYdM2jsoVXuksNlfrCO9Vc8yVqxHfpGmYwG8jp1DYQgnxuX9wVC/m
+         jC0i1mrUBrO/rMHBGocxJKB3jQpT1t6lP3J+IN0TT5nqfn0kl+caZKvtahCLpVA+lEIV
+         sxeRHxn9WIN6xskrzY5W/xxqOlkeNHlegUITwvIaq/nrfMXrujfP6yEEVPAEzWB5MnAP
+         8ZCZpVsNQMtmE4P9IPvSpvgli6QC4o+yvtcIzPRotWDS9MqxKBKMn1cyoitMoJo4soOy
+         BsMLmTIq9nVwwu1jP37ZoSakyVfKnkTwsI0uk5nDHsfF7pkiZIJ/bgn9aTU2+/RdQFEe
+         AKRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748956000; x=1749560800;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0/f20/458IAFhCzkUWgHcem7N3YGetstsrc6uh9Gjc8=;
+        b=MXs9lIyCSXN2vbUfWmAO+jRelujmqPH3+WarOzqRPok3QTnehHx9T2xJ7YrCA75RiX
+         Zr+jdbi+/Ewyyvw1VCXarhjgEVSr2IgwaeqXbQHS/MEbCrIeqpR0VuWPQIKxCLQbLxbT
+         pGsnHbZ5/I9mYdDS7IxXUJMer9omneZEfgTLIz3XrMih6D6z9wO/ompt95Rz5RjriXK3
+         AM1zmDRO8LAtJAZSe8np6uaZCu8/GyRhL9sfoAEAV7LdOsF1xiD+0eYuXh91xWt52YNe
+         B4T10xIeNFAeTG7sfhn0KnNUHKtoEWtk8MZEQP9ZB14I1ie2/bPYyBaXLKsggcLITE5+
+         61cw==
+X-Forwarded-Encrypted: i=1; AJvYcCU2Ages6nxzDTdR+eTtwvbGopLo2lFRJ09DrMW2ki2/AQMgdUssR5jXNzVEeOV3+hecAqJPbKrl44t4@vger.kernel.org, AJvYcCUWif/snteA45bZtqO13N0q9SJujj7XwxJRRGICCpnpuFQI54aup9WiZcUsC2JrXL2KTiQ5MjOiUv2DcK2a@vger.kernel.org, AJvYcCXGv82edvc3HAZVqzcDGAovELITVcIuLX63VOvpjibr5SksfZ5zlJaUfqS0LjbgXJMhphGT1FNAhsrY@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxKV55WOFQk7Ad+HIJB3ZHlB36qvbv60mJL9vDfvl/va+4Tf8f
+	EuQ9nvX8tSk5PSbRd1u3O1LJsYhMWIIe0RwCDzX/BfHiPOVgH17UtlVV
+X-Gm-Gg: ASbGnctBbb+t1xBAzcVH7G8/KaVqvazDDzMaTCaLx5ckbPwgMAm2rYN8aRPnCgzxkCb
+	BJxes6glPg9gyiW17zvgXwn3JE2OYiAlqRJkH7kE3qDa5D5hmZvE3WMho6VbBRmJ3JO60sWWqZR
+	xje0muCThuSYJbqPZ0DTq1Gj8YC7Wh0UTGQ7+yRe6ITdadvI6VMYXp4FqOIQTuWjNipUz5sNxJE
+	8WqscShiocWyUvdy6+HVEKeh+Nsv9lVLIRM06hwRyWUA7cjBY18SKaYsNqpFcZvYlA+hrHr8Oo/
+	ReBBHGGHOZ6CZcSl518MzwfnuBuECV+cl7+Lap9J50K8wR40k4LrgPF99DTqckGh
+X-Google-Smtp-Source: AGHT+IFS6CTlI8UpfHYxqjdx1tNG8cfSJRAGppMmlPcr/BiaoL+v48NartI8bBJjtEqQATncKxJnKQ==
+X-Received: by 2002:a05:6a21:32a1:b0:1f5:9016:3594 with SMTP id adf61e73a8af0-21adff61278mr25343927637.18.1748955999729;
+        Tue, 03 Jun 2025 06:06:39 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2ecebb6857sm6097535a12.73.2025.06.03.06.06.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 06:06:39 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Tue, 3 Jun 2025 06:06:37 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Cc: Jonathan.Cameron@huawei.com, dan.j.williams@intel.com, rppt@kernel.org,
+	rafael@kernel.org, lenb@kernel.org, akpm@linux-foundation.org,
+	alison.schofield@intel.com, rrichter@amd.com, bfaccini@nvidia.com,
+	haibo1.xu@intel.com, david@redhat.com, chenhuacai@kernel.org,
+	linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	chenbaozi@phytium.com.cn, loongarch@lists.linux.dev
+Subject: Re: [PATCH v3 1/1] mm: numa_memblks: introduce
+ numa_add_reserved_memblk
+Message-ID: <06a0abfd-5508-4fb5-8a96-a13cf3d8aca7@roeck-us.net>
+References: <20250508022719.3941335-1-wangyuquan1236@phytium.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgCn+MIQ8z5osdqmOA--.37720S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7WrWUXr43Ar15tF13AFykGrg_yoW8WrW3pw
-	s8Ww1ayrs5uF1UAa4DX3W5uFW5u393t3sIya4UK34fJay5AryUKFWFqasI9F4UtFyUu3W2
-	yrZI9ryktayUAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyKb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI
-	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY
-	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
-	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
-	1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUFBT5DUUUU
-X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250508022719.3941335-1-wangyuquan1236@phytium.com.cn>
 
-From: Chen Ridong <chenridong@huawei.com>
+Hi,
 
-Currently, when the command line contains "nokaslrxxx", it was incorrectly
-treated as a request to disable KASLR virtual memory. However, the behavior
-is different from physical address handling.
+On Thu, May 08, 2025 at 10:27:19AM +0800, Yuquan Wang wrote:
+> acpi_parse_cfmws() currently adds empty CFMWS ranges to numa_meminfo
+> with the expectation that numa_cleanup_meminfo moves them to
+> numa_reserved_meminfo. There is no need for that indirection when it is
+> known in advance that these unpopulated ranges are meant for
+> numa_reserved_meminfo in support of future hotplug / CXL provisioning.
+> 
+> Introduce and use numa_add_reserved_memblk() to add the empty CFMWS
+> ranges directly.
+> 
+> Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
 
-This issue exists before the commit af73b9a2dd39 ("arm64: kaslr: Use
-feature override instead of parsing the cmdline again"). This patch fixes
-the parsing logic for the 'nokaslr' command line argument. Only the exact
-strings, 'nokaslr', will disable KASLR. Other inputs such as 'xxnokaslr',
-'xxnokaslrxx', or 'xxnokaslr=xx' will not disable KASLR.
+Just on case this has not been reported yet:
 
-Fixes: f80fb3a3d508 ("arm64: add support for kernel ASLR")
-Cc: stable@vger.kernel.org # <= v6.6
-Signed-off-by: Chen Ridong <chenridong@huawei.com>
----
- arch/arm64/kernel/pi/kaslr_early.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Building loongarch:defconfig ... failed
+--------------
+Error log:
+drivers/acpi/numa/srat.c: In function 'acpi_parse_cfmws':
+drivers/acpi/numa/srat.c:467:13: error: implicit declaration of function 'numa_add_reserved_memblk' 
 
-diff --git a/arch/arm64/kernel/pi/kaslr_early.c b/arch/arm64/kernel/pi/kaslr_early.c
-index 17bff6e399e4..731d0a3f1a89 100644
---- a/arch/arm64/kernel/pi/kaslr_early.c
-+++ b/arch/arm64/kernel/pi/kaslr_early.c
-@@ -35,9 +35,14 @@ static char *__strstr(const char *s1, const char *s2)
- static bool cmdline_contains_nokaslr(const u8 *cmdline)
- {
- 	const u8 *str;
-+	size_t len = strlen("nokaslr");
-+	const char *after = cmdline + len;
- 
- 	str = __strstr(cmdline, "nokaslr");
--	return str == cmdline || (str > cmdline && *(str - 1) == ' ');
-+	if ((str == cmdline || (str > cmdline && *(str - 1) == ' ')) &&
-+	    (*after == ' ' || *after == '\0'))
-+		return true;
-+	return false;
- }
- 
- static bool is_kaslr_disabled_cmdline(void *fdt)
--- 
-2.34.1
-
+Guenter
