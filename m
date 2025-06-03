@@ -1,95 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D17522F754;
-	Tue,  3 Jun 2025 13:23:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748957025; cv=none; b=kIU9JfchYEp7/zmv8A9QR7OxfnV44Txiz528JIUGIMd/A+M1MIC8dJQaDRTc4KckXhkIKZUkUuw8CXcQ+Xub8F8lbibc600lPs0qhQzbkMcdI1375uM0iN32tpYW8uNhBQTmyBi9pL4d27Ff1KhgNlKf+UBnGJ5KekF/z6AVvc0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748957025; c=relaxed/simple;
-	bh=HGwYyw4Mesm+h+CsA+i4y5waGWiE+tpQES3zA7dABzE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EAEtCMmdRX5eMOSggVUdq4dpc2ebhRdXW7Lfny5SojoFbUBDwMrdAfRSrT2lnLg/m069lBsjKuhRVSM9o05FH2Zr0EXuc8IjL7OlxVQnEW8DfnWqZ9PhESjVgKYuQi7ecBCv6eA6LCkP0i3DU3aYYkiekAejpiow/JbRWh4LrDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mBhZ0Siv; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE096A937
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 13:24:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.165
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748957079; cv=pass; b=BKLA139aZ45iG+UKH2H9Vf8hfLih1GW7Yo5okDtzKpHgjOPpb0MI68Hcnya0RmfZd2WhWSI271YpI7ObfUJs2U1QP93Tnf/Rly2MFoSws3QWWTncWg1SIepwBphtVCKBp+ApOnHpHP4ZOrroerbofUmSeq8SWX7QL6Y3FbtvPPE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748957079; c=relaxed/simple;
+	bh=zfPixgraChrKlrOtDN03mFy1u9SB7MFeA7PL4QVarWU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=mDZRS+dMkvF1Cus7PVIFbEj8/2xv1rMN3VrVDpuABzB0YCkT31ifBiJQKHfBSmCdGsakpWemtNVP63XLnVb04Aa+FgRg9QAWVVPGnIGQTLavhpH5pMadmac5K+YTShwb8g+3k4FFQn7ejWUGEFW+wOYrEh0MSLMJizDDwfmWb5U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=outer-limits.org; spf=none smtp.mailfrom=outer-limits.org; dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=oSJ8Iglv; dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=cr+VIkhp; arc=pass smtp.client-ip=81.169.146.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=outer-limits.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=outer-limits.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mBhZ0Siv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C03A6C4CEED;
-	Tue,  3 Jun 2025 13:23:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748957024;
-	bh=HGwYyw4Mesm+h+CsA+i4y5waGWiE+tpQES3zA7dABzE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mBhZ0SivRzLRx0FhwwRERCHY+BJgxei4rW8cYIMx60QxPxl7jfCv9LGvUfEi+cMwG
-	 GmAhD62LXJvgYmPTzkUoRfmX4pUkTqwAtmL39e1bP0GFgn87Vmu7Oe0OfCX8TD2gSi
-	 BrCnGMs/ReCuUb7n/BCc1pV1srk3Msu2VpsZs9JmelknTCKr1zd/J2lU23PmrmPvDa
-	 r+MBT32WfZyVuQFP5e5+lsW5jvd+huiDmbffwFQ2dUKKxpz4ZBO5gDFyjK42V1Tvgb
-	 OHCfr+08WMPqb1/tSFG9qNpDvyvb9BFVQ+FlyDmRs9wD+xOlgPmTU1YPg8J6mw6x8l
-	 8NR//4MX1JXJw==
-Date: Tue, 3 Jun 2025 15:23:38 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Igor Korotin <igor.korotin.linux@gmail.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	linux-acpi@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rust: acpi: add `acpi::DeviceId` abstraction
-Message-ID: <aD73Won8t4jlYYs_@cassiopeiae>
-References: <20250530123815.1766726-1-igor.korotin.linux@gmail.com>
- <aDnD_Bb3l6GiI_8K@cassiopeiae>
- <CAG7QV92rtk7NUKzUoApkopv1LF2WVjqyNA9hPt=yCuEvdJjoCA@mail.gmail.com>
- <2025053111-anteater-balsamic-8d01@gregkh>
- <aDrWCBAxPnu7VY0P@pollux>
- <CAG7QV936MPp7RLH_D6+K8mRcgPdpNsGFWF_D10b1C8op7YRtqA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="oSJ8Iglv";
+	dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="cr+VIkhp"
+ARC-Seal: i=1; a=rsa-sha256; t=1748957069; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=PLB936NySOk0FH75KUK+kYWBwqIt2VRb57zEvf15tbRbGGdYIpqFjtY3ryR1ubI/hw
+    r6u+vh1/elS0YNmZ2j0hWbm6e3BVZ/lMZfo8LncYdja1h6jgePiuMV4cVaymtLFUPlQ0
+    aYVmNsBvKmngLm33dSs8kPGRGpu668uZEy38qRf2PJA8S/KabxnEFPsR8LJsD5pkNfan
+    CSC3WaWJhp63TRQ9cX5jp1GLcElxEUPa3+y+mRtRhKZoOTSbsbuvuvKcBmGFBdiYA5s0
+    EVdQhzhUw2nmGkfAj264gKtObrKT4COQEHC0yX44LFzSx3umzceGseheA+PBr1Zp3pTo
+    BlkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1748957069;
+    s=strato-dkim-0002; d=strato.com;
+    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=mCZv9h5y7Ee5tNYV9yYrClTj5aivwr6YfqNK0mRGc2E=;
+    b=hRfQtiNyVPpCQ1QakrlvcICaOmtkSIlJnR3lPcS8+bXsY0Oo9XL7Y3yGHfARuddO94
+    f75OhTwo1GjuE4w9tSj2l923A81Kuvl8WI2jD6pa9KsLMxIIL72dhuDZA/Kxh9ysUaGw
+    N/LjpEhFQVPzDD+n13nS5xSwF8ySNwoKZXmHiVxC7vwE+BMMAxLEXQsq8inZA3tD/NB7
+    P6nLQ1gLjCySAqo/KyjkNPneV/86RwEHQIWE11bcATpE7p3RoEZJTNY212tqSAdZJrJf
+    ioNVBhQ8mFjVcX4r5vECU5M6jgXJFMV45KKbfCe5qU4SCNS+xDppE5Yocq58vGsOVqU4
+    aoMw==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1748957069;
+    s=strato-dkim-0002; d=outer-limits.org;
+    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=mCZv9h5y7Ee5tNYV9yYrClTj5aivwr6YfqNK0mRGc2E=;
+    b=oSJ8IglvLxsXJLYur4vmjylTbcvWVGX5aQ7iuOHEZwWR1wIbHh/stPM6b4tyFb/7om
+    piL7nkH5iqdhowjLYK+sdJ5xIvhcZCOTqXIsYQno+VidaCaPF4T9vat9dctM6kO94FTg
+    vgnJU5rr1nl/mUjqadm8wEvmZXvyDYpPfFtbjRX649Xr1HotIVkE1jCSlqvUciP7MBMb
+    fCu9RRt2X+GsrfSjKAx0QnifTH1rApRIoWa5c/udcU4xFlWpKXTJPQyRbREfyHWqy4So
+    WFIgVbJXgOjw7laPMzi6JJOXCZ5Vrc4KpxdNv0/3+2f8HQtKfIvjSbGw93Zv8WG8vwBJ
+    z3VA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1748957069;
+    s=strato-dkim-0003; d=outer-limits.org;
+    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=mCZv9h5y7Ee5tNYV9yYrClTj5aivwr6YfqNK0mRGc2E=;
+    b=cr+VIkhpKtEddrJYEcyqAdsj8SJ9OJqduhxxO/6f+Wi0KPWhXoAc/vg/X7m6zRtY54
+    A3BQlTWdl/6y99a/ZrCA==
+X-RZG-AUTH: ":JnkIfEGmW/AMJS6HttH4FbRVwc4dHlPLCp4e/IoHo8zEMMHAgwTfqBEHcVJSv9P5mRTGd2ImeA=="
+Received: from ws2104.lan.kalrayinc.com
+    by smtp.strato.de (RZmta 51.3.0 AUTH)
+    with ESMTPSA id J2b110153DOSwQs
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Tue, 3 Jun 2025 15:24:28 +0200 (CEST)
+From: Julian Vetter <julian@outer-limits.org>
+To: Arnd Bergmann <arnd@arndb.de>,
+	"Jason A . Donenfeld" <Jason@zx2c4.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Al Viro <viro@zeniv.linux.org.uk>
+Cc: linux-kernel@vger.kernel.org,
+	Julian Vetter <julian@outer-limits.org>
+Subject: [PATCH] Remove unaligned/packed_struct.h header
+Date: Tue,  3 Jun 2025 15:24:14 +0200
+Message-Id: <20250603132414.3676142-1-julian@outer-limits.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG7QV936MPp7RLH_D6+K8mRcgPdpNsGFWF_D10b1C8op7YRtqA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, Jun 03, 2025 at 01:55:47PM +0100, Igor Korotin wrote:
-> > Alternatively, if you want to upstream this dependency already you can send the
-> > following patches:
-> >
-> >   - this acpi::DeviceId abstraction
-> >   - the glue code for the generic adapter trait in rust/kernel/driver.rs
-> >   - use this glue code in the platform abstraction
-> >   - add acpi support to the platform sample driver
-> >
-> > This way we can already validate that the code works correctly. All this is
-> > required anyways if the I2C device you write a driver for is on the platform
-> > bus.
-> 
-> A few questions if I may:
-> 1. I committed to 4 different files: `acpi.rs`, `driver.rs`,
-> `platform.rs`, platform rust sample driver.
-> Should I commit all of this as one commit or split each part to a
-> separate commit and send it as a patch sequence?
+The functions in this header are deprecated and are not used anymore.
+So, remove the header entirely.
 
-Every entry of my list above should be a separate commit. It might happen that
-writing the glue code for the generic adapter trait in rust/kernel/driver.rs
-breaks the build in the platform abstraction, then you have to fix it up in the
-same commit, i.e. we never break the build. Please also see [1].
+Signed-off-by: Julian Vetter <julian@outer-limits.org>
+---
+ include/linux/unaligned.h               |  1 -
+ include/linux/unaligned/packed_struct.h | 46 -------------------------
+ 2 files changed, 47 deletions(-)
+ delete mode 100644 include/linux/unaligned/packed_struct.h
 
-> 2. From author's point of view, as Danilo noticed, `acpi table`
-> abstraction code is in general just copy-paste from `of table`
-> abstraction code. How should I explicitly mark that fact?
+diff --git a/include/linux/unaligned.h b/include/linux/unaligned.h
+index 4a9651017e3c..18c4b0c00e2a 100644
+--- a/include/linux/unaligned.h
++++ b/include/linux/unaligned.h
+@@ -6,7 +6,6 @@
+  * This is the most generic implementation of unaligned accesses
+  * and should work almost anywhere.
+  */
+-#include <linux/unaligned/packed_struct.h>
+ #include <asm/byteorder.h>
+ #include <vdso/unaligned.h>
+ 
+diff --git a/include/linux/unaligned/packed_struct.h b/include/linux/unaligned/packed_struct.h
+deleted file mode 100644
+index f4c8eaf4d012..000000000000
+--- a/include/linux/unaligned/packed_struct.h
++++ /dev/null
+@@ -1,46 +0,0 @@
+-#ifndef _LINUX_UNALIGNED_PACKED_STRUCT_H
+-#define _LINUX_UNALIGNED_PACKED_STRUCT_H
+-
+-#include <linux/types.h>
+-
+-struct __una_u16 { u16 x; } __packed;
+-struct __una_u32 { u32 x; } __packed;
+-struct __una_u64 { u64 x; } __packed;
+-
+-static inline u16 __get_unaligned_cpu16(const void *p)
+-{
+-	const struct __una_u16 *ptr = (const struct __una_u16 *)p;
+-	return ptr->x;
+-}
+-
+-static inline u32 __get_unaligned_cpu32(const void *p)
+-{
+-	const struct __una_u32 *ptr = (const struct __una_u32 *)p;
+-	return ptr->x;
+-}
+-
+-static inline u64 __get_unaligned_cpu64(const void *p)
+-{
+-	const struct __una_u64 *ptr = (const struct __una_u64 *)p;
+-	return ptr->x;
+-}
+-
+-static inline void __put_unaligned_cpu16(u16 val, void *p)
+-{
+-	struct __una_u16 *ptr = (struct __una_u16 *)p;
+-	ptr->x = val;
+-}
+-
+-static inline void __put_unaligned_cpu32(u32 val, void *p)
+-{
+-	struct __una_u32 *ptr = (struct __una_u32 *)p;
+-	ptr->x = val;
+-}
+-
+-static inline void __put_unaligned_cpu64(u64 val, void *p)
+-{
+-	struct __una_u64 *ptr = (struct __una_u64 *)p;
+-	ptr->x = val;
+-}
+-
+-#endif /* _LINUX_UNALIGNED_PACKED_STRUCT_H */
+-- 
+2.34.1
 
-You don't need to do anything specific here. You authored the commit, even
-though it's based on existing code.
-
-If you want you can add a note in the commit message that your case is based on
-the OF table abstraction. But AFAIC, you don't have to.
-
-[1] https://docs.kernel.org/process/submitting-patches.html#separate-your-changes
