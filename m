@@ -1,118 +1,234 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mta22.hihonor.com (mta22.honor.com [81.70.192.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE99D33E1
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 01:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21CA02C3242;
+	Tue,  3 Jun 2025 01:32:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.192.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748914326; cv=none; b=dMTkq6YnomTuAo3/qFgcIjm6lmJ9k8WTWcGAHvJlmbGfZcMrBMBcnh0+rjQzPJSppv18ndeQRF2lIPUQbmB4bHUzJreUmPGJCo3+9Xznywm4/dWHtt6TI5Q1HurUC/FpCRzKU/1YXY3irq/8i/+7wJk/khwyehtzN2FhfyvVONY=
+	t=1748914366; cv=none; b=SQdtx8tahQPSt1Jgs/zFTTrBVslQKL/wj4Ev1tedr6jN7RC1mTc46HM1p7cTYWTu/vPiUHWqO7Ih6w/Zlc7q8xq2PE/vNUpSmCzmlkXFbLDImNWOHlXNm8ZXbdJVaMbH4hXerlr4nxL1EQpcnKUT5uo5vwmT/EoUCR60rsAxkLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748914326; c=relaxed/simple;
-	bh=vx5ERXTpWormRCzThtuojCvOJ1dhjcAtXpSbb6TVG4A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=unulcdPB6AQ9pISTx67BMYmOVMyCsFqFaG8u7YfR4gXQWs/wcDb/5poWLB/k+EbpzBsbxE5xfJUHuhTiFa2yKLede/VZe70iyO30MVld9J46PDr3luaD/nHJ5hRlOBBUPsZyUKbCD9Fb6Ue+W3gC+9eqRlvkmSZWo2udZGWGbIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HB2QxOFh; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HB2QxOFh"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7376dd56f8fso5823593b3a.2
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 18:32:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748914324; x=1749519124; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4Bojv3M+4ciWgsmcsFZ9XbWm7Qt7ckhMnQSLXNPu4AE=;
-        b=HB2QxOFhy7wxpfb7xZLuzEvNA0rbZlvBkIusmKRp+DzVnLgd3RPZJE754N+kvKjA+g
-         hFwm4DQCo4CRSLhHA4eLWuifxJWkInViIZMiVhEnxiz87ocezhbbfucvWAFyFmWDXUKu
-         ROpfIpDgQolo4bQyXt9lSfM3dfZdKLzhN3J0Xgyj4hD4Yz0S5kb5tFCSxZiBWbWOL8+w
-         UEWL58Y3//KowfhSFnbhVQXmtOt0m2oxoPhIZwIdg0g9tkTvilwnCplUMEAu0mLcc0oi
-         szD7UNVyi8e8zUIILxqyAY/HALtD1psopd51mE2bTc+iZVVtTSKxacy5sxmQ9Xj5Jp4z
-         AxWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748914324; x=1749519124;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4Bojv3M+4ciWgsmcsFZ9XbWm7Qt7ckhMnQSLXNPu4AE=;
-        b=pUvsW6bandDIwCqz+r3dOFZQS0dtZWRYi2mDTKwD+Vkc4wmxWI2SNNaW874uGsbFTj
-         9dIzE/qOd51Dm6ZDBsfxgzdXxacOFRHXlytSSIzMjOqHg5W6bzFJsBTdVON8feJqOCeD
-         xIPg6ZNFxQTZDaue1ut78t0uX8mFvy4EmMSuJE+Y2YfTL4Zri84uhBe+EXI2Uc4jGx9r
-         9TUPBsVPJ5VLAVlhLZf40u3kpGOQoeeA968fUJfc9TYoaTCFPi+H35x6STAmNIobbhkl
-         4mAWuiO8rvnCoj62DwXuZ4zx9coRxrfEUpBL5YV90iHyzDYMNfJRzj6/r1p+r/OBm8+B
-         Zmyw==
-X-Gm-Message-State: AOJu0Yxo4rgfYANl25rJUDj75hbrIc9I6ERYi6xBln5vy0dOhSyV+RL9
-	x0JCPO+ssUfG/Sh9myqYeWdr9YN4e8A0p615ov0CDmdanLV62tF9X89cwnMkUQ==
-X-Gm-Gg: ASbGnct8rMULboXu4utJdZtFbs0httAbew1iC/+lsoqTsArqyIN6BJuLO8GkK6Gdw/U
-	2y6q6PkFBi+R3yCD0WIqlNdAO0vFPYDj4qQ3RZ13uowUzG0NJDex/5gW9Ln9LlfNa0OwLrbmC3G
-	RlE4lVHauFPwxa7y6fXgFoKksC1UJR/QxZmIvKDTVlepzpzz9RaCjjCP/D8yjK+slmTlbaRgbvY
-	P+bAC5IBJemL8jULmJmhE/hZ8ujDxoaFevAUkz1MRRrS+Taah7Kw/NzFGIm9NcTSStVAwYTv8kJ
-	x7FrrxaXvhiNW/FC7DMWlOELHX5+nrz9tymbtq4nR7z0836enKnbSZzPavDoDAeJZ8Zt55jTZne
-	ibqk=
-X-Google-Smtp-Source: AGHT+IEBvCo+zKvd7j7mdsU9DQLa79UighTNoRN94FnbTa2xsd5YbzSKsqrLSptrGQDaJf+xCO0s5A==
-X-Received: by 2002:a05:6a00:2e86:b0:746:2ce5:a491 with SMTP id d2e1a72fcca58-747bd96b90dmr20446518b3a.10.1748914323756;
-        Mon, 02 Jun 2025 18:32:03 -0700 (PDT)
-Received: from Barrys-MBP.hub ([118.92.145.159])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afed33casm8265907b3a.73.2025.06.02.18.31.59
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 02 Jun 2025 18:32:03 -0700 (PDT)
-From: Barry Song <21cnbao@gmail.com>
-To: akpm@linux-foundation.org,
-	linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org,
-	Barry Song <v-songbaohua@oppo.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	David Hildenbrand <david@redhat.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Jann Horn <jannh@google.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Lokesh Gidra <lokeshgidra@google.com>,
-	Tangquan Zheng <zhengtangquan@oppo.com>
-Subject: [PATCH RFC] mm: madvise: use walk_page_range_vma() for madvise_free_single_vma()
-Date: Tue,  3 Jun 2025 13:31:54 +1200
-Message-Id: <20250603013154.5905-1-21cnbao@gmail.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+	s=arc-20240116; t=1748914366; c=relaxed/simple;
+	bh=GY9z3Tmkg8mD3CaNNtVtPmjxBTdn20oVbOl24+EVSj4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ofyTXzk3AzK/15CnJuqJThRHNjGwNXLZyPV+RzMLFogC7c+NOfy6wq3qNJKVnvz27m8OwywXoEWRu/wRprto9JT1HWSQTq2cD9LVMUpJ+rGPFU9IJ4VHCiZmrrKzgn2TbPtaGbJ2TgmM5Z0x0qKgHC+ksOvht+sqruPiq8kHdYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.192.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
+Received: from w001.hihonor.com (unknown [10.68.25.235])
+	by mta22.hihonor.com (SkyGuard) with ESMTPS id 4bBCp73SNVzYl04k;
+	Tue,  3 Jun 2025 09:30:39 +0800 (CST)
+Received: from a010.hihonor.com (10.68.16.52) by w001.hihonor.com
+ (10.68.25.235) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 3 Jun
+ 2025 09:32:35 +0800
+Received: from a010.hihonor.com (10.68.16.52) by a010.hihonor.com
+ (10.68.16.52) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 3 Jun
+ 2025 09:32:35 +0800
+Received: from a010.hihonor.com ([fe80::7127:3946:32c7:6e]) by
+ a010.hihonor.com ([fe80::7127:3946:32c7:6e%14]) with mapi id 15.02.1544.011;
+ Tue, 3 Jun 2025 09:32:34 +0800
+From: wangtao <tao.wangtao@honor.com>
+To: kernel test robot <lkp@intel.com>, "sumit.semwal@linaro.org"
+	<sumit.semwal@linaro.org>, "christian.koenig@amd.com"
+	<christian.koenig@amd.com>, "kraxel@redhat.com" <kraxel@redhat.com>,
+	"vivek.kasireddy@intel.com" <vivek.kasireddy@intel.com>,
+	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, "brauner@kernel.org"
+	<brauner@kernel.org>, "hughd@google.com" <hughd@google.com>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "amir73il@gmail.com"
+	<amir73il@gmail.com>
+CC: "oe-kbuild-all@lists.linux.dev" <oe-kbuild-all@lists.linux.dev>,
+	"benjamin.gaignard@collabora.com" <benjamin.gaignard@collabora.com>,
+	"Brian.Starkey@arm.com" <Brian.Starkey@arm.com>, "jstultz@google.com"
+	<jstultz@google.com>, "tjmercier@google.com" <tjmercier@google.com>,
+	"jack@suse.cz" <jack@suse.cz>, "baolin.wang@linux.alibaba.com"
+	<baolin.wang@linux.alibaba.com>, "linux-media@vger.kernel.org"
+	<linux-media@vger.kernel.org>, "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>, "linaro-mm-sig@lists.linaro.org"
+	<linaro-mm-sig@lists.linaro.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-fsdevel@vger.kernel.org"
+	<linux-fsdevel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"wangbintian(BintianWang)" <bintian.wang@honor.com>, yipengxiang
+	<yipengxiang@honor.com>, liulu 00013167 <liulu.liu@honor.com>, "hanfeng
+ 00012985" <feng.han@honor.com>
+Subject: RE: [PATCH v3 3/4] udmabuf: Implement udmabuf rw_file callback
+Thread-Topic: [PATCH v3 3/4] udmabuf: Implement udmabuf rw_file callback
+Thread-Index: AQHb0U9QXzR8zCVG/0iWOLZdee2y5bPqtG6AgAX2EFA=
+Date: Tue, 3 Jun 2025 01:32:34 +0000
+Message-ID: <dbd3b06611b64900a641a159c12ed37b@honor.com>
+References: <20250530103941.11092-4-tao.wangtao@honor.com>
+ <202505302235.mDzENMSm-lkp@intel.com>
+In-Reply-To: <202505302235.mDzENMSm-lkp@intel.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Barry Song <v-songbaohua@oppo.com>
 
-We've already found the VMA before calling madvise_free_single_vma(),
-so calling walk_page_range() and doing find_vma() again seems
-unnecessary. It also prevents potential optimizations for MADV_FREE
-to use a per-VMA lock.
 
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Jann Horn <jannh@google.com>
-Cc: Suren Baghdasaryan <surenb@google.com>
-Cc: Lokesh Gidra <lokeshgidra@google.com>
-Cc: Tangquan Zheng <zhengtangquan@oppo.com>
-Signed-off-by: Barry Song <v-songbaohua@oppo.com>
----
- mm/madvise.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> -----Original Message-----
+> From: kernel test robot <lkp@intel.com>
+> Sent: Friday, May 30, 2025 10:25 PM
+> To: wangtao <tao.wangtao@honor.com>; sumit.semwal@linaro.org;
+> christian.koenig@amd.com; kraxel@redhat.com; vivek.kasireddy@intel.com;
+> viro@zeniv.linux.org.uk; brauner@kernel.org; hughd@google.com;
+> akpm@linux-foundation.org; amir73il@gmail.com
+> Cc: oe-kbuild-all@lists.linux.dev; benjamin.gaignard@collabora.com;
+> Brian.Starkey@arm.com; jstultz@google.com; tjmercier@google.com;
+> jack@suse.cz; baolin.wang@linux.alibaba.com; linux-media@vger.kernel.org;
+> dri-devel@lists.freedesktop.org; linaro-mm-sig@lists.linaro.org; linux-
+> kernel@vger.kernel.org; linux-fsdevel@vger.kernel.org; linux-
+> mm@kvack.org; wangbintian(BintianWang) <bintian.wang@honor.com>;
+> yipengxiang <yipengxiang@honor.com>; liulu 00013167
+> <liulu.liu@honor.com>; hanfeng 00012985 <feng.han@honor.com>; wangtao
+> <tao.wangtao@honor.com>
+> Subject: Re: [PATCH v3 3/4] udmabuf: Implement udmabuf rw_file callback
+>=20
+> Hi wangtao,
+>=20
+> kernel test robot noticed the following build errors:
+>=20
+> [auto build test ERROR on brauner-vfs/vfs.all] [also build test ERROR on =
+next-
+> 20250530] [cannot apply to linus/master v6.15] [If your patch is applied =
+to the
+> wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>=20
+> url:    https://github.com/intel-lab-lkp/linux/commits/wangtao/fs-allow-
+> cross-FS-copy_file_range-for-memory-backed-files/20250530-184146
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.a=
+ll
+> patch link:    https://lore.kernel.org/r/20250530103941.11092-4-
+> tao.wangtao%40honor.com
+> patch subject: [PATCH v3 3/4] udmabuf: Implement udmabuf rw_file callback
+> config: sparc64-randconfig-002-20250530 (https://download.01.org/0day-
+> ci/archive/20250530/202505302235.mDzENMSm-lkp@intel.com/config)
+> compiler: sparc64-linux-gcc (GCC) 15.1.0 reproduce (this is a W=3D1 build=
+):
+> (https://download.01.org/0day-
+> ci/archive/20250530/202505302235.mDzENMSm-lkp@intel.com/reproduce)
+>=20
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes:
+> | https://lore.kernel.org/oe-kbuild-all/202505302235.mDzENMSm-lkp@intel.
+> | com/
+>=20
+> All error/warnings (new ones prefixed by >>):
+>=20
+Quick note: I don't have local sparc64 compilation setup, so I'll
+explicitly add the header dependencies to ensure safety.
 
-diff --git a/mm/madvise.c b/mm/madvise.c
-index d408ffa404b3..c6a28a2d3ff8 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -826,7 +826,7 @@ static int madvise_free_single_vma(struct madvise_behavior *madv_behavior,
- 
- 	mmu_notifier_invalidate_range_start(&range);
- 	tlb_start_vma(tlb, vma);
--	walk_page_range(vma->vm_mm, range.start, range.end,
-+	walk_page_range_vma(vma, range.start, range.end,
- 			&madvise_free_walk_ops, tlb);
- 	tlb_end_vma(tlb, vma);
- 	mmu_notifier_invalidate_range_end(&range);
--- 
-2.39.3 (Apple Git-146)
-
+Regards,
+Wangtao.
+>    drivers/dma-buf/udmabuf.c: In function 'udmabuf_rw_file':
+> >> drivers/dma-buf/udmabuf.c:298:25: error: storage size of 'iter' isn't
+> >> known
+>      298 |         struct iov_iter iter;
+>          |                         ^~~~
+> >> drivers/dma-buf/udmabuf.c:299:45: error: 'ITER_SOURCE' undeclared
+> >> (first use in this function)
+>      299 |         unsigned int direction =3D is_write ? ITER_SOURCE : IT=
+ER_DEST;
+>          |                                             ^~~~~~~~~~~
+>    drivers/dma-buf/udmabuf.c:299:45: note: each undeclared identifier is
+> reported only once for each function it appears in
+> >> drivers/dma-buf/udmabuf.c:299:59: error: 'ITER_DEST' undeclared
+> >> (first use in this function)
+>      299 |         unsigned int direction =3D is_write ? ITER_SOURCE : IT=
+ER_DEST;
+>          |                                                           ^~~~=
+~~~~~
+> >> drivers/dma-buf/udmabuf.c:327:17: error: implicit declaration of
+> >> function 'iov_iter_bvec'; did you mean 'bvec_iter_bvec'?
+> >> [-Wimplicit-function-declaration]
+>      327 |                 iov_iter_bvec(&iter, direction, bvec, bv_idx, =
+bv_total);
+>          |                 ^~~~~~~~~~~~~
+>          |                 bvec_iter_bvec
+> >> drivers/dma-buf/udmabuf.c:298:25: warning: unused variable 'iter'
+> >> [-Wunused-variable]
+>      298 |         struct iov_iter iter;
+>          |                         ^~~~
+>=20
+>=20
+> vim +298 drivers/dma-buf/udmabuf.c
+>=20
+>    286
+>    287	static ssize_t udmabuf_rw_file(struct dma_buf *dmabuf, loff_t
+> my_pos,
+>    288				struct file *other, loff_t pos,
+>    289				size_t count, bool is_write)
+>    290	{
+>    291		struct udmabuf *ubuf =3D dmabuf->priv;
+>    292		loff_t my_end =3D my_pos + count, bv_beg, bv_end =3D 0;
+>    293		pgoff_t pg_idx =3D my_pos / PAGE_SIZE;
+>    294		pgoff_t pg_end =3D DIV_ROUND_UP(my_end, PAGE_SIZE);
+>    295		size_t i, bv_off, bv_len, bv_num, bv_idx =3D 0, bv_total =3D 0;
+>    296		struct bio_vec *bvec;
+>    297		struct kiocb kiocb;
+>  > 298		struct iov_iter iter;
+>  > 299		unsigned int direction =3D is_write ? ITER_SOURCE : ITER_DEST;
+>    300		ssize_t ret =3D 0, rw_total =3D 0;
+>    301		struct folio *folio;
+>    302
+>    303		bv_num =3D min_t(size_t, pg_end - pg_idx + 1, 1024);
+>    304		bvec =3D kvcalloc(bv_num, sizeof(*bvec), GFP_KERNEL);
+>    305		if (!bvec)
+>    306			return -ENOMEM;
+>    307
+>    308		init_sync_kiocb(&kiocb, other);
+>    309		kiocb.ki_pos =3D pos;
+>    310
+>    311		for (i =3D 0; i < ubuf->nr_pinned && my_pos < my_end; i++) {
+>    312			folio =3D ubuf->pinned_folios[i];
+>    313			bv_beg =3D bv_end;
+>    314			bv_end +=3D folio_size(folio);
+>    315			if (bv_end <=3D my_pos)
+>    316				continue;
+>    317
+>    318			bv_len =3D min(bv_end, my_end) - my_pos;
+>    319			bv_off =3D my_pos - bv_beg;
+>    320			my_pos +=3D bv_len;
+>    321			bv_total +=3D bv_len;
+>    322			bvec_set_page(&bvec[bv_idx], &folio->page, bv_len,
+> bv_off);
+>    323			if (++bv_idx < bv_num && my_pos < my_end)
+>    324				continue;
+>    325
+>    326			/* start R/W if bvec is full or count reaches zero. */
+>  > 327			iov_iter_bvec(&iter, direction, bvec, bv_idx,
+> bv_total);
+>    328			if (is_write)
+>    329				ret =3D other->f_op->write_iter(&kiocb, &iter);
+>    330			else
+>    331				ret =3D other->f_op->read_iter(&kiocb, &iter);
+>    332			if (ret <=3D 0)
+>    333				break;
+>    334			rw_total +=3D ret;
+>    335			if (ret < bv_total || fatal_signal_pending(current))
+>    336				break;
+>    337
+>    338			bv_idx =3D bv_total =3D 0;
+>    339		}
+>    340		kvfree(bvec);
+>    341
+>    342		return rw_total > 0 ? rw_total : ret;
+>    343	}
+>    344
+>=20
+> --
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
