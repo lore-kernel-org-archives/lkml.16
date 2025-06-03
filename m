@@ -1,123 +1,142 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14BEA937
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 13:27:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47DD8A937;
+	Tue,  3 Jun 2025 13:29:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748957265; cv=none; b=rUE1ZJEyOk11dzw9GRQMs56W+wMQDd1kjSzcgEZrIo9zRcxAsG8/e8jffvRxWTGjttX237o6GmvWhpotF/NTCncnF8fKJ7NNw/9k8ZOtKKigxwG9+KQ2LcA/qtHVHdxPtFKkWkFzplgCtSuaTKly7Slu0EoKPEZG5p17W9v10JA=
+	t=1748957342; cv=none; b=jB01zEBSAs2SwMs7PHCnMG+bPAEcQYuge4oBoVy7SgsAcjqrpVkX7kFCdrArMiCd43+0104NQ+R7nl12i7P7SvyrwF7crXyWX5vF2dn6DaX8x0sUZZ1DC2fIk8copJJirU8n2ar2FyBdkHK8VD/GWB+gdHMRvFdnhaN3/XAoh30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748957265; c=relaxed/simple;
-	bh=Xp5tz2MBWTFRNuYRCISAwmh9P/iygUJfc9k7rU5xBQw=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TXc9k6Z6IxBIZlTuN4JRW9f3Hqm8Oi5Hq0RFfwANpQMO5oSGwtuiK1Xxgt5IHtsnVq9Wwtrz8UxQ8mLXLSgQ+rBGZE6fA2kSTMPA7FbL3Ph0fFvb8h3iQ/OPvv3WsWuC3SzbbfeGWyvCi6jgBcerEnhATgjvg4uTXMMoB+ngS7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pvc19Czn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748957342; c=relaxed/simple;
+	bh=F0kJRudsurFWvAfw/NQZAGVoSklCQBdR6GXq+HvgSFw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e2UPHcVURP2srPOFDQssY/UtLGxkmrI+uXQHpaxnz0ok3mhlcCLfRxfhC7ChBnEmlhpY1jP5LGfQTarQq9uYss9XPyQXdwwCzO2tXOB7zQ/2ZeJe4/HSOa22y/eILIFTFjnoqeCLyDndLnQJTN3vSzQu+xJG5ngeGvJNheLnYss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pK/iBtt2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pvc19Czn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9239C4CEED;
-	Tue,  3 Jun 2025 13:27:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pK/iBtt2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0E95C4CEED;
+	Tue,  3 Jun 2025 13:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748957263;
-	bh=Xp5tz2MBWTFRNuYRCISAwmh9P/iygUJfc9k7rU5xBQw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Pvc19CznMU5E1OAFpXn3B8++W0mZpQpcdkXK0Q4pwHZg/5G3OtvqxyecS9ue6oi5O
-	 KhlD4LK1GwjSmGCF1/qGr1jcRRyt1H5ndOPTfrnoAqZEdH4lew91s5Oa0idcsNH1oH
-	 7fzhJnpMzzruywCFhZVUjBm3ZEpUZ4qv1J6PtpNBiT4+4+AEo4DDiS8EGKNetnQamj
-	 KotAjZOwzeoUshRucyqgkwKC3UauVGwBv1rJL2aK0RmmBewPK9Equpc5ddnu0ZKHEh
-	 /qAnYI+cfDhD8Wuu4SfAgHs2585wD1uCUWZm7Cdwj6WnWSYh4+AWN+PrnUZhEpCdBL
-	 xI5/wve4dO1Ng==
-Received: from [149.88.19.236] (helo=lobster-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uMRg4-002qIm-DF;
-	Tue, 03 Jun 2025 14:27:40 +0100
-Date: Tue, 03 Jun 2025 14:27:38 +0100
-Message-ID: <87iklddkfp.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Zenghui Yu <yuzenghui@huawei.com>
-Cc: <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Lorenzo Pieralisi
-	<lpieralisi@kernel.org>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Timothy
- Hayes <timothy.hayes@arm.com>
-Subject: Re: [PATCH v2 3/5] genirq/msi: Move prepare() call to per-device allocation
-In-Reply-To: <f0e9f15a-ade0-e79f-f26c-d9c9db42a0b4@huawei.com>
-References: <20250513163144.2215824-1-maz@kernel.org>
-	<20250513163144.2215824-4-maz@kernel.org>
-	<0b1d7aec-1eac-a9cd-502a-339e216e08a1@huawei.com>
-	<87ldq9dm54.wl-maz@kernel.org>
-	<f0e9f15a-ade0-e79f-f26c-d9c9db42a0b4@huawei.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1748957341;
+	bh=F0kJRudsurFWvAfw/NQZAGVoSklCQBdR6GXq+HvgSFw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pK/iBtt299lLbE8VT7t/nTvPQLQVpuxt5Mgy8NKyug+Kt5+dx9+NGP4u5u+xdIGw7
+	 ErxkyqUEmTwVK8pfVCa230zvl0NCQzrf3gs4jun/ohCWBw8rFBIXlVwzYLwRcsS1Ic
+	 CHh7aoQw4ekcNVsGJPzkCevQ0PH3UFCJowUBmOKXOQmELF49W2lmENetlz4Nvsjhjr
+	 +4fHeeAQTOEU3759B95m8c1QxZZ4T+J1XLEn35Nsvskz2ObDUBGPhFQe2K8vdWYnC2
+	 Yt7RU+p+f31JlTY9kylbg1nKXUV3Gz5ipo+T4Avup6q0JOG9Odz6Rq3rF3E2B8yXf6
+	 5V9tpkm6HY6hQ==
+Date: Tue, 3 Jun 2025 15:28:58 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, 
+	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Frank Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v3 3/8] drm/imagination: Use pwrseq for TH1520 GPU power
+ management
+Message-ID: <20250603-whispering-jaybird-of-thunder-f87867@kuoka>
+References: <20250530-apr_14_for_sending-v3-0-83d5744d997c@samsung.com>
+ <CGME20250529222405eucas1p18ed1254bf1b2d78468734656fec537e1@eucas1p1.samsung.com>
+ <20250530-apr_14_for_sending-v3-3-83d5744d997c@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 149.88.19.236
-X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tglx@linutronix.de, lpieralisi@kernel.org, sascha.bischoff@arm.com, timothy.hayes@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250530-apr_14_for_sending-v3-3-83d5744d997c@samsung.com>
 
-On Tue, 03 Jun 2025 14:07:04 +0100,
-Zenghui Yu <yuzenghui@huawei.com> wrote:
+On Fri, May 30, 2025 at 12:23:50AM GMT, Michal Wilczynski wrote:
+> Update the Imagination PVR DRM driver to leverage the pwrseq framework
+> for managing the power sequence of the GPU on the T-HEAD TH1520 SoC.
 > 
-> Hi Marc,
+> In pvr_device_init(), the driver now attempts to get a handle to the
+> "gpu-power" sequencer target using devm_pwrseq_get(). If successful,
+> the responsibility for powering on and off the GPU's core clocks and
+> resets is delegated to the power sequencer. Consequently, the GPU
+> driver conditionally skips acquiring the GPU reset line if the pwrseq
+> handle is obtained, as the sequencer's match function will acquire it.
+> Clock handles are still acquired by the GPU driver for other purposes
+> like devfreq.
 > 
-> On 2025/6/3 20:50, Marc Zyngier wrote:
-> > Hi Zenghui,
-> > 
-> > On Tue, 03 Jun 2025 09:22:47 +0100,
-> > Zenghui Yu <yuzenghui@huawei.com> wrote:
-> > >
-> > > > +	domain->dev = dev;
-> > > > +	dev->msi.data->__domains[domid].domain = domain;
-> > > > +
-> > > > +	if (msi_domain_prepare_irqs(domain, dev, hwsize, &bundle->alloc_info)) {
-> > >
-> > > Does it work for MSI? hwsize is 1 in the MSI case, without taking
-> > > pci_msi_vec_count() into account.
-> > >
-> > > bool pci_setup_msi_device_domain(struct pci_dev *pdev)
-> > > {
-> > > 	[...]
-> > >
-> > > 	return pci_create_device_domain(pdev, &pci_msi_template, 1);
-> > 
-> > Well spotted.
-> > 
-> > This looks like a PCI bug ignoring Multi-MSI. Can you give the
-> > following a go and let people know whether that fixes your issue?
+> The runtime PM callbacks, pvr_power_device_resume() and
+> pvr_power_device_suspend(), are modified to call pwrseq_power_on() and
+> pwrseq_power_off() respectively when the sequencer is present.  If no
+> sequencer is found, the driver falls back to its existing manual clock
+> and reset management. A helper function,
+> pvr_power_off_sequence_manual(), is introduced to encapsulate the manual
+> power-down logic.
 > 
-> I hit this problem on Kunpeng920 with some HiSilicon SAS (Serial
-> Attached SCSI controller) on it. These controllers are MSI-capable and
-> didn't work after this commit.
-
-That's interesting. It means that the sizing of the irqdomain to 1
-wasn't getting in the way, even if that was obviously wrong. The funny
-thing is that the msi_desc would still be OK, as we only have one for
-MSI, no matter how many vectors are used.
-
->
-> I have the exact same diff to get my box to work again ;-)
-
-Ah ;-)
-
->
-> Tested-by: Zenghui Yu <yuzenghui@huawei.com>
+> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+> ---
+>  drivers/gpu/drm/imagination/Kconfig      |  1 +
+>  drivers/gpu/drm/imagination/pvr_device.c | 33 +++++++++++--
+>  drivers/gpu/drm/imagination/pvr_device.h |  6 +++
+>  drivers/gpu/drm/imagination/pvr_power.c  | 82 +++++++++++++++++++++-----------
+>  4 files changed, 89 insertions(+), 33 deletions(-)
 > 
-> Thanks for your fix!
+> diff --git a/drivers/gpu/drm/imagination/Kconfig b/drivers/gpu/drm/imagination/Kconfig
+> index 3bfa2ac212dccb73c53bdc2bc259bcba636e7cfc..737ace77c4f1247c687cc1fde2f139fc2e118c50 100644
+> --- a/drivers/gpu/drm/imagination/Kconfig
+> +++ b/drivers/gpu/drm/imagination/Kconfig
+> @@ -11,6 +11,7 @@ config DRM_POWERVR
+>  	select DRM_SCHED
+>  	select DRM_GPUVM
+>  	select FW_LOADER
+> +  select POWER_SEQUENCING
 
-Thank you!
+Messed indent.
 
-	M.
+>  	help
+>  	  Choose this option if you have a system that has an Imagination
+>  	  Technologies PowerVR (Series 6 or later) or IMG GPU.
+> diff --git a/drivers/gpu/drm/imagination/pvr_device.c b/drivers/gpu/drm/imagination/pvr_device.c
+> index 8b9ba4983c4cb5bc40342fcafc4259078bc70547..19d48bbc828cf2b8dbead602e90ff88780152124 100644
+> --- a/drivers/gpu/drm/imagination/pvr_device.c
+> +++ b/drivers/gpu/drm/imagination/pvr_device.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/pwrseq/consumer.h>
+>  #include <linux/reset.h>
+>  #include <linux/slab.h>
+>  #include <linux/stddef.h>
+> @@ -631,10 +632,34 @@ pvr_device_init(struct pvr_device *pvr_dev)
+>  	if (err)
+>  		return err;
+>  
+> -	/* Get the reset line for the GPU */
+> -	err = pvr_device_reset_init(pvr_dev);
+> -	if (err)
+> -		return err;
+> +	/*
+> +	 * Try to get a power sequencer. If successful, it will handle clocks
+> +	 * and resets. Otherwise, we fall back to managing them ourselves.
+> +	 */
+> +	pvr_dev->pwrseq = devm_pwrseq_get(dev, "gpu-power");
+> +	if (IS_ERR(pvr_dev->pwrseq)) {
+> +		int pwrseq_err = PTR_ERR(pvr_dev->pwrseq);
+> +
+> +		/*
+> +		 * If the error is -EPROBE_DEFER, it's because the
+> +		 * optional sequencer provider is not present
+> +		 * and it's safe to fall back on manual power-up.
 
--- 
-Jazz isn't dead. It just smells funny.
+It is safe but why it is desirable? The rule is rather to defer the
+probe, assuming this is probe path.
+
+Best regards,
+Krzysztof
+
