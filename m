@@ -1,158 +1,166 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f225.google.com (mail-il1-f225.google.com [209.85.166.225])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261721361
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 18:31:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F2D2BA34
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 18:32:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748975486; cv=none; b=UqegrPJ81/tX9po/3KrEAVT3mV8aGibbrwQnmxo0U4gSkwJbqOYMmIBr2aquSPbJy2+Q7uAqtm5Qv/7Q57F9fB3S65FfPOWioSlS7kJFobvqcMbfzJrDsXbCpU8yBEAqF/ZQYfa77Bo9/1wWruw0wZ/et+PBSqMAqiHdNt1+O3A=
+	t=1748975529; cv=none; b=qkhBMHsY9+ePGZhw+hQZ+EryA+cZQihSOLyJnAGtP4jInC9KXXnbSv4Xveog+6juKE3OMpWoRow1tpxbDigHus5UQ/ybHJoaKoaRMFH5hG4M5zVfIh0Z/Y/VG+1YQ1/ol5EBRxlek4y6ydzRAQ0aqgkPLl3jbT3Qp3peeIEJ4RM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748975486; c=relaxed/simple;
-	bh=+qxoeVod3D5zxT4hhqp8sJpzX071e1yrnwu8xmkCLNc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jb5y6bmBmpruKjNDzblbSgBS7//544EeHlE2ImNkgcg4WGDx4WwCTIoRlZ81EsEHNP5jojs4sqZkPJruxX3IwX3gmWpMspO+UNkL2LdA4zx3fLvKtYu+eYGsEuB7AanKUW6LSebCqPaVZQdc6TY89ti6ZeQMD/5I7GACUKS9OIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ArsAhQzx; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748975529; c=relaxed/simple;
+	bh=VpCnu/vgkMXoRizxEVcXipW9pE06TvbWDwZZnY+eyHI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qPp823UMA4TUFSOwbMTTjvUBFiBVjGC1Kx7XNmEg4y02zfC00a1+PEnasb80z6kCdzy9NQcy1OAdqLrDgnfMVFSFlVtVnFJAWRFMg1FM8Ds3Rv3M/TO+PLKV8hCTJ2nxmGXequWTyMWpogDky7aXMFFqtRlZt21KAjNYMcZvXxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=ACGM6Mix; arc=none smtp.client-ip=209.85.166.225
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ArsAhQzx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748975482;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=m1y2tlzKb/XIoTPJnqteiTg6x4ZTCSc+I1WD6iWm+kk=;
-	b=ArsAhQzx5VlsXQJ7NjIGDup69gDpPW2vzeibcYiizJ+8tsZWVSfuTxfzwhg3ty7hheWMRp
-	GvcqQbYvMWl5Q8z/sVz4E4nivxTdIppJghJkcaCbIJj8JobhxHIqJeaKu4WUd90s9nAxdv
-	nG8NsqidEAjBnfg3xtNUUtdukbr2aqc=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-245-PW6YebnMPhGqtxgAREuh6g-1; Tue, 03 Jun 2025 14:31:20 -0400
-X-MC-Unique: PW6YebnMPhGqtxgAREuh6g-1
-X-Mimecast-MFC-AGG-ID: PW6YebnMPhGqtxgAREuh6g_1748975480
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4a5882b7339so33040561cf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 11:31:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="ACGM6Mix"
+Received: by mail-il1-f225.google.com with SMTP id e9e14a558f8ab-3dd7bef8b22so1114935ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 11:32:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1748975526; x=1749580326; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nSEqmtH8cAoHSrP17Ob/VSrxyz6o4t+D0NIScOXkFbc=;
+        b=ACGM6Mix3TNlXAZ2RDuAUoIiyLd9uTl702TEQiRE1rNSpOyN5U7POcn3qoNV/jbP2y
+         A22nO7s9Hi2lh9TRkk28suEIHsw0XvCUjaH5J7xtlxCjerwXWsg4yjOZ/lKU8tKuNSTD
+         mUsgCwFlclWzJnZadWAj8IvAUkttWtk0Sybq4MMqzYiiT7L7HEvEv+MBDPKEgMVdU9K+
+         5YnxsTSis5rOSFMdQQBuVOEpHj2ec5pb0r46R1xXhEhp50S9v4LbqUeWDJYKjeWWtlYO
+         ngY+AR3haKKEJ9BErtgzo2lmeUFsUgBpKDZv1aDuH1dRrNx1jEmIPpqOKXVsGHawpc1r
+         rZwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748975479; x=1749580279;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m1y2tlzKb/XIoTPJnqteiTg6x4ZTCSc+I1WD6iWm+kk=;
-        b=qgSVaNFXGKqIvYp6zQAPLFepI85+Cue7mH7vJgBSq1k9F8ZFvxwrJEJSTdBUVO82ug
-         lh7pLjnT+lT0cLjayRIQ81wXjqbKABZD4Lr02f7WSoMe1fCFgXwwE4fEobDiWzQ0gaYO
-         iUvCt1uuI1lUW1SNO/c4tpyqqcMtn0Q966sl8MiqXE54YCjPvPODZHE7MNVoFhma2F3B
-         D9+S9okPonGoRo4fRmPavX3n0l/mFzatlUZ1YG9PYg+BaZaCdeZaJ2AQDw2BpFuIxtMZ
-         d8U9Oj/p8R+N2Ngc9X61hJ0d3a4avnd2pBvig0VzRP2+y59jiSy8uKL/y5EJ/vCnZs7b
-         ed9g==
-X-Forwarded-Encrypted: i=1; AJvYcCUyLI8XmH0qcUftxxpbq7n77st28bz+H7PpAyPT2zEyqATkqWGos4JRyHrsf8X/gjjSOzjgh+FRqF3Y6Eo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/wwfFwuWKb209EFurrUuVPIUCqjUtdoMDEY8bG70qCay+wobR
-	HiHJSctrQFZ2uq0vXHXotl0vWV0BUqF0NV70vzRbwaLDoBPfg4rYj1ICRgAQvOjJ5tk0ySHN+Uy
-	78WxOL+twWprU1tARIkhTlzphSp7pFNh0NG5zLm9/YqQ3zYWaIzqgn1kUE3GaF6Octg==
-X-Gm-Gg: ASbGncuaBCaPPX+smNAXRyhzfZWIdS1hF+DZj0jcocOgfpfMZjCx75Zmhpm6E9TGIq6
-	5pKHXN2RBRi7hIUivhDQ2lFgqb/HOm+8lV85aNFr46O2Nm4j4+fl01tYjlVEBPlDBrMYJs+QQV4
-	SQ6ehSor2EP79P396yZC3SntbXJc6WCv331uu28rpLNA6ZNdBDxkvlx2xHHzO5Zjkvk827NVD19
-	dGgaCfh5fmFrewdIsaXb78kYp6/K40DKLyGembKtv/eeMQEZRoN08B+0XjUx7ntlJuzV23my1TQ
-	qQqpFo6hPOH2Jg==
-X-Received: by 2002:a05:622a:590e:b0:4a3:e3df:f9d4 with SMTP id d75a77b69052e-4a4aed6b1a8mr193643721cf.26.1748975479650;
-        Tue, 03 Jun 2025 11:31:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFM20hRlMEpFpUHXs29edcNfUgwlZYFzZVWR++bT/y5MRek1KFlHKwVz1YmhrxFLgjZhAFOOw==
-X-Received: by 2002:a05:622a:590e:b0:4a3:e3df:f9d4 with SMTP id d75a77b69052e-4a4aed6b1a8mr193643341cf.26.1748975479196;
-        Tue, 03 Jun 2025 11:31:19 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a435a840a0sm77609561cf.76.2025.06.03.11.31.18
+        d=1e100.net; s=20230601; t=1748975526; x=1749580326;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nSEqmtH8cAoHSrP17Ob/VSrxyz6o4t+D0NIScOXkFbc=;
+        b=t1VbnHhXMyqCOQhYaqrx4hKdO/COIqbPtB5rmlImkAPgz7/HI65a/0nW6RfdW4Z5Cu
+         Ab2CX1QOewUeGlsZ8/7nwBc47HX0GnNupfhGfzDLQip/3IaFd/Ht8O08Tp5AUEe2Kbsv
+         GeEozrNUtKMoUk7U52s6E1QaNb9O8i9kAdG1bJ5vop8epRW2UZDQrTduvp7xTtKgyRjS
+         IIdfP+oLK012ylKwC89v3kK7PlDqySWx5rjSVms+mX5Y5r68aXKPJtE8urMq+dWse2t3
+         LJmOOPeLuOTwhFsrlGBu+NNIMQ6ZviWpZJyBcXRRKhVEum3eoN92qaq/6gojONmO+6sf
+         k0PA==
+X-Forwarded-Encrypted: i=1; AJvYcCWMsXpnfjvjU4DsS3kvP8ztJyR3P1Tp4puWm23tVnLUGl1nZajBocFRCTawS0/erpIlXXC0fC08htvn1rk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yycy0gG9Bs7mhk3XtjMiwWxGk8X4J6Kwu9T8VSXGxg31sWeHhwc
+	VFwm/E8vDuswNFOdpAHgETBydrHJYgf+6Q/i2/OLSBzcEvZgkoDNFmJM5SOmXmq/yO6AekfwZ5W
+	aaNnfz1BlSy0x/02Uz/GiqalRB7U9t9JnpR31L00DTHAxtNe4Huwh
+X-Gm-Gg: ASbGncsEL9hR0zwelE3ZElA0qDG96vTpfnv2V73R0z9ZwbRVGoqyAw6LUHyYw2FmGK9
+	dhH+VQxWSNN5UuETqKOJbZqzJsZbrJtp+HPh3pulWgtVEsTZsgeeErWFFrdk54MfnRHWUffhQWl
+	l2d4XrW/Zg6oe4M/4uwD8LbowTsEbCPYss1/6S2YPsOrRmBeEq/M5VZiks1nOiorxFefcSagynn
+	sEwB+9YMCXM9adoGPbv7zot3jviKBenz3ynC5kJ2tZ6uJmTifIxqDLokYu3X06t2dD3i7dKYEsS
+	O4+Zr6dNWWVKzV/F+lptQXUx/A+TSw==
+X-Google-Smtp-Source: AGHT+IH1ugbkQ4Bd1c/ELDzPsfBlGebzYbxe7TsT0zkXX3K5ma/cS/EK4OHQptbYEMSeaz4a1vTV0VHHzVR7
+X-Received: by 2002:a05:6e02:1d9a:b0:3dc:811c:db77 with SMTP id e9e14a558f8ab-3dd9bb51700mr53645675ab.5.1748975525910;
+        Tue, 03 Jun 2025 11:32:05 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
+        by smtp-relay.gmail.com with ESMTPS id 8926c6da1cb9f-4fdd7dffa46sm280255173.4.2025.06.03.11.32.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 11:31:18 -0700 (PDT)
-Date: Tue, 3 Jun 2025 14:31:15 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Oscar Salvador <osalvador@suse.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	David Hildenbrand <david@redhat.com>,
-	James Houghton <jthoughton@google.com>,
-	Gavin Guo <gavinguo@igalia.com>, linux-mm@kvack.org,
+        Tue, 03 Jun 2025 11:32:05 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 5E45F34027F;
+	Tue,  3 Jun 2025 12:32:05 -0600 (MDT)
+Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
+	id 5212DE41E07; Tue,  3 Jun 2025 12:31:35 -0600 (MDT)
+From: Caleb Sander Mateos <csander@purestorage.com>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Caleb Sander Mateos <csander@purestorage.com>,
+	linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/3] mm, hugetlb: Clean up locking in hugetlb_fault
- and hugetlb_wp
-Message-ID: <aD8_c9uEMn6NXXAX@x1.local>
-References: <20250602141610.173698-1-osalvador@suse.de>
- <20250602141610.173698-2-osalvador@suse.de>
- <aD2_0qoh1Os6srsA@x1.local>
- <aD4NyEmRc50OCUBy@localhost.localdomain>
- <aD4X68QSmrvI4P_D@x1.local>
- <aD79vg-jQQU69raX@localhost.localdomain>
- <aD8NUSUV5zA4yNY3@x1.local>
+Subject: [PATCH] block: drop direction param from bio_integrity_copy_user()
+Date: Tue,  3 Jun 2025 12:31:32 -0600
+Message-ID: <20250603183133.1178062-1-csander@purestorage.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aD8NUSUV5zA4yNY3@x1.local>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 03, 2025 at 10:57:21AM -0400, Peter Xu wrote:
-> On Tue, Jun 03, 2025 at 03:50:54PM +0200, Oscar Salvador wrote:
-> > On Mon, Jun 02, 2025 at 05:30:19PM -0400, Peter Xu wrote:
-> > > Right, and thanks for the git digging as usual.  I would agree hugetlb is
-> > > more challenge than many other modules on git archaeology. :)
-> > > 
-> > > Even if I mentioned the invalidate_lock, I don't think I thought deeper
-> > > than that. I just wished whenever possible we still move hugetlb code
-> > > closer to generic code, so if that's the goal we may still want to one day
-> > > have a closer look at whether hugetlb can also use invalidate_lock.  Maybe
-> > > it isn't worthwhile at last: invalidate_lock is currently a rwsem, which
-> > > normally at least allows concurrent fault, but that's currently what isn't
-> > > allowed in hugetlb anyway..
-> > > 
-> > > If we start to remove finer grained locks that work will be even harder,
-> > > and removing folio lock in this case in fault path also brings hugetlbfs
-> > > even further from other file systems.  That might be slightly against what
-> > > we used to wish to do, which is to make it closer to others.  Meanwhile I'm
-> > > also not yet sure the benefit of not taking folio lock all across, e.g. I
-> > > don't expect perf would change at all even if lock is avoided.  We may want
-> > > to think about that too when doing so.
-> > 
-> > Ok, I have to confess I was not looking things from this perspective,
-> > but when doing so, yes, you are right, we should strive to find
-> > replacements wherever we can for not using hugetlb-specific code.
-> > 
-> > I do not know about this case though, not sure what other options do we
-> > have when trying to shut concurrent faults while doing other operation.
-> > But it is something we should definitely look at.
-> > 
-> > Wrt. to the lock.
-> > There were two locks, old_folio (taken in hugetlb_fault) and
-> > pagecache_folio one.
-> 
-> There're actually three places this patch touched, the 3rd one is
-> hugetlb_no_page(), in which case I also think we should lock it, not only
-> because file folios normally does it (see do_fault(), for example), but
-> also that's exactly what James mentioned I believe on possible race of
-> !uptodate hugetlb folio being injected by UFFDIO_CONTINUE, along the lines:
-> 
-> 		folio = alloc_hugetlb_folio(vma, vmf->address, false);
->                 ...
-> 		folio_zero_user(folio, vmf->real_address);
-> 		__folio_mark_uptodate(folio);
+direction is determined from bio, which is already passed in. Compute
+op_is_write(bio_op(bio)) directly instead of converting it to an iter
+direction and back to a bool.
 
-I think I was wrong here at least partly..  So what this patch changed is
-only the lookup of the no_page path, hence what I said here doesn't apply.
-This patch also mentioned in the commit message on why James's concern was
-ok - the fault mutex was held.  Yes I agree. Actually even without fault
-mutex, the folio is only injected into page cache after mark uptodate.. so
-it looks fine even without the mutex.
+Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+---
+ block/bio-integrity.c | 17 +++++------------
+ 1 file changed, 5 insertions(+), 12 deletions(-)
 
-Though it's still true there're three paths to be discussed, which should
-include no_page, and it's still needed to be discussed when any of us like
-to remove folio lock even in the lookup path.
-
-For example, I'm not sure whether it's always thread safe to do
-folio_test_hwpoison() when without it, even with the fault mutex.
-
-Sorry for the confusion, Oscar.
-
+diff --git a/block/bio-integrity.c b/block/bio-integrity.c
+index cb94e9be26dc..10912988c8f5 100644
+--- a/block/bio-integrity.c
++++ b/block/bio-integrity.c
+@@ -152,25 +152,24 @@ int bio_integrity_add_page(struct bio *bio, struct page *page,
+ 	return len;
+ }
+ EXPORT_SYMBOL(bio_integrity_add_page);
+ 
+ static int bio_integrity_copy_user(struct bio *bio, struct bio_vec *bvec,
+-				   int nr_vecs, unsigned int len,
+-				   unsigned int direction)
++				   int nr_vecs, unsigned int len)
+ {
+-	bool write = direction == ITER_SOURCE;
++	bool write = op_is_write(bio_op(bio));
+ 	struct bio_integrity_payload *bip;
+ 	struct iov_iter iter;
+ 	void *buf;
+ 	int ret;
+ 
+ 	buf = kmalloc(len, GFP_KERNEL);
+ 	if (!buf)
+ 		return -ENOMEM;
+ 
+ 	if (write) {
+-		iov_iter_bvec(&iter, direction, bvec, nr_vecs, len);
++		iov_iter_bvec(&iter, ITER_SOURCE, bvec, nr_vecs, len);
+ 		if (!copy_from_iter_full(buf, len, &iter)) {
+ 			ret = -EFAULT;
+ 			goto free_buf;
+ 		}
+ 
+@@ -262,24 +261,19 @@ int bio_integrity_map_user(struct bio *bio, struct iov_iter *iter)
+ 	struct request_queue *q = bdev_get_queue(bio->bi_bdev);
+ 	unsigned int align = blk_lim_dma_alignment_and_pad(&q->limits);
+ 	struct page *stack_pages[UIO_FASTIOV], **pages = stack_pages;
+ 	struct bio_vec stack_vec[UIO_FASTIOV], *bvec = stack_vec;
+ 	size_t offset, bytes = iter->count;
+-	unsigned int direction, nr_bvecs;
++	unsigned int nr_bvecs;
+ 	int ret, nr_vecs;
+ 	bool copy;
+ 
+ 	if (bio_integrity(bio))
+ 		return -EINVAL;
+ 	if (bytes >> SECTOR_SHIFT > queue_max_hw_sectors(q))
+ 		return -E2BIG;
+ 
+-	if (bio_data_dir(bio) == READ)
+-		direction = ITER_DEST;
+-	else
+-		direction = ITER_SOURCE;
+-
+ 	nr_vecs = iov_iter_npages(iter, BIO_MAX_VECS + 1);
+ 	if (nr_vecs > BIO_MAX_VECS)
+ 		return -E2BIG;
+ 	if (nr_vecs > UIO_FASTIOV) {
+ 		bvec = kcalloc(nr_vecs, sizeof(*bvec), GFP_KERNEL);
+@@ -298,12 +292,11 @@ int bio_integrity_map_user(struct bio *bio, struct iov_iter *iter)
+ 		kvfree(pages);
+ 	if (nr_bvecs > queue_max_integrity_segments(q))
+ 		copy = true;
+ 
+ 	if (copy)
+-		ret = bio_integrity_copy_user(bio, bvec, nr_bvecs, bytes,
+-					      direction);
++		ret = bio_integrity_copy_user(bio, bvec, nr_bvecs, bytes);
+ 	else
+ 		ret = bio_integrity_init_user(bio, bvec, nr_bvecs, bytes);
+ 	if (ret)
+ 		goto release_pages;
+ 	if (bvec != stack_vec)
 -- 
-Peter Xu
+2.45.2
 
