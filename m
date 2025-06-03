@@ -1,76 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F231148827;
-	Tue,  3 Jun 2025 08:25:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA0E281366;
+	Tue,  3 Jun 2025 08:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748939112; cv=none; b=kYtoIkUaAJdAAZWsE23ioiF3vY2Uvh+U2msg0Umpm0WaRc+WNgQETrD5pfBAn2sxjaOg+ZG1ktHNyrkmgm1hGJyfTIZfjZVy1wdGW9DhnYJ7fKa4UoWfjs/+aAS9D3pdnaiNBwzNX/bwhaXezm/ew78UQ5agb/pqrp0I7caXP+o=
+	t=1748939116; cv=none; b=esrvxSJt8H/zJsvCq9W6StjMhH1BwN/+31MXkX+rjcY1XzAblzeigE0DfTB9ExkF8Aqxcgafz7ZA67NRa0oFTgI0OCSlJtn3Roh5isAKSSHrRggEYEGIKCK4OmEWAmuyeCIukY+f7R7r62/TC3G9EwZb9JqoSpiHKAVP+o895Is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748939112; c=relaxed/simple;
-	bh=aoAe8iVedapS040lkFw85Rv1newQKC2OtLWJSUQlwc8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MPNbD6Ug4mj7gUNq9hwDhqa+j8GlzOTIdwxxKqLILlSwW2LOpBZyBUvf5OCZ8cp3/bA3ZsVTNdXCve7if76idIbkzxhKr6JDUuyRQXy9J2uGHF0fxdAEivj9jnfOfjcs8k9HTAcDNTQ1WcOTZoricUzUXNDFZPENXjY/FXR5/lQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pVCmMbkT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748939116; c=relaxed/simple;
+	bh=mD8VjPyoqaKuC3clq+RCUo799yyJLx4+YF9RhTuOFfU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=T9lIEdlNmG+NdYJ7CcSs9ccyvUVpw/hll7m5a33tyGdDtqrk95mOD4jsC6YYcSbCwiAozKxGQZK6rXZSLf6XxDiAtD0lVSJ7jRarakglnlc+18iGigFRRJBAA9WwfdTp8yGZuq80q+k+DkNerTUCDcmmHo6WorJDton4qAXj7Hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=luMmEvSE; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pVCmMbkT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF220C4CEF2;
-	Tue,  3 Jun 2025 08:25:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748939111;
-	bh=aoAe8iVedapS040lkFw85Rv1newQKC2OtLWJSUQlwc8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pVCmMbkT169eMBuY52YmR+1Z5raDRrunMZuxo6HHGMSe+Jmex6MAAVBv2Ms7F8YYE
-	 +GGkELyrnDUJswN2YFcg8qijaIHxXUfqFQ1zkd2MWMT9lP4t/tBLHggLoGWEF2Cj+8
-	 LKmrN4uBjGo9NJ8+ZpPCib58kpm1ttKkL6cQMSuMVL6e0M6nn8PzndbXsKGti0JSaY
-	 j2mTsj/CLTmF/G9Of1m7rXAdiUojidt8RXLGNAC26SutgdEeSOZ6A6ibb8AD3eeNrj
-	 KG2z+vfOGfcNIi7bK9BpaJZE0YyhCAhRdpiOhal3UIzBakCf3eaH2xV9cihHtrUaof
-	 NjU8HmvItHWlg==
-Date: Tue, 3 Jun 2025 09:25:06 +0100
-From: Simon Horman <horms@kernel.org>
-To: Alok Tiwari <alok.a.tiwari@oracle.com>
-Cc: almasrymina@google.com, bcf@google.com, joshwash@google.com,
-	willemb@google.com, pkaligineedi@google.com, pabeni@redhat.com,
-	kuba@kernel.org, jeroendb@google.com, hramamurthy@google.com,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	darren.kenny@oracle.com
-Subject: Re: [PATCH net v2] gve: add missing NULL check for
- gve_alloc_pending_packet() in TX DQO
-Message-ID: <20250603082506.GZ1484967@horms.kernel.org>
-References: <20250602103450.3472509-1-alok.a.tiwari@oracle.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="luMmEvSE"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 61365433B3;
+	Tue,  3 Jun 2025 08:25:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1748939105;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rvE4v/teYoqJosrINMVYN/Bfwi93R1//+VcwLW4T2aA=;
+	b=luMmEvSELhi+UGbOmANXiklV4WPpfGbOrZbRWqzWnZv+ryVBfow1+xQYqC6QJdzuIfoXBs
+	WhezUoubrT4Lo4HBiIPjCeGNoqduE1CPbf754Q5wTOUHlA79IXwUse72QP+ZPPDTiMnhrn
+	pU7fgs19FqlmZHR9r+SbCjvV19CsRHUI7uGv8lR29U4Or5MviFIwoa1vyazotv8tHXctek
+	lDt++/HXaGT5QZb44G+6XnnE8nlTErnVt+O1hJ4YeTJoSXsOufjeL+PgXICht4F306sgvu
+	0ZSIwvWWkYqCDbea2TeGwBhCtrtS1eVS6phEZdBh2TAL5HtvNZnuZLxE3RnNYA==
+Date: Tue, 3 Jun 2025 10:25:00 +0200
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Jijie Shao <shaojijie@huawei.com>
+Cc: <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski
+ <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>, Heiner Kallweit
+ <hkallweit1@gmail.com>, <netdev@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <thomas.petazzoni@bootlin.com>,
+ <linux-arm-kernel@lists.infradead.org>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
+ Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean
+ <vladimir.oltean@nxp.com>, =?UTF-8?B?S8O2cnk=?= Maincent
+ <kory.maincent@bootlin.com>, Oleksij Rempel <o.rempel@pengutronix.de>,
+ Simon Horman <horms@kernel.org>, Romain Gantois
+ <romain.gantois@bootlin.com>, "shenjian15@huawei.com"
+ <shenjian15@huawei.com>
+Subject: Re: [PATCH net-next v5 07/13] net: phy: phy_caps: Allow looking-up
+ link caps based on speed and duplex
+Message-ID: <20250603102500.4ec743cf@fedora>
+In-Reply-To: <5bbf1201-e803-40ea-a081-c25919f5e89d@huawei.com>
+References: <20250307173611.129125-1-maxime.chevallier@bootlin.com>
+	<20250307173611.129125-8-maxime.chevallier@bootlin.com>
+	<5bbf1201-e803-40ea-a081-c25919f5e89d@huawei.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250602103450.3472509-1-alok.a.tiwari@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdegtddtheculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqredtredtjeenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeuhfefgffgtdfhgffhvdfhhffhteeutdektefghfetveehheejjefgudeiudehudenucfkphepvdduvddruddthedrudehtddrvdehvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvuddvrddutdehrdduhedtrddvhedvpdhhvghlohepfhgvughorhgrpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddupdhrtghpthhtohepshhhrghojhhijhhivgeshhhurgifvghirdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrt
+ ghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomh
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Mon, Jun 02, 2025 at 03:34:29AM -0700, Alok Tiwari wrote:
-> gve_alloc_pending_packet() can return NULL, but gve_tx_add_skb_dqo()
-> did not check for this case before dereferencing the returned pointer.
-> 
-> Add a missing NULL check to prevent a potential NULL pointer
-> dereference when allocation fails.
-> 
-> This improves robustness in low-memory scenarios.
-> 
-> Fixes: a57e5de476be ("gve: DQO: Add TX path")
-> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
-> Reviewed-by: Mina Almasry <almasrymina@google.com>
-> ---
-> v1->v2
-> added Fixes tag and [PATCH net v2]
+Hello again,
 
-This patch is marked as Rejected in patchwork, but it's unclear to me why.
-The patch does look good to me, there was positive review to v1 which
-is addressed in v2, and i see no prior comment on v2. I'm updating it's
-status accordingly. Apologies if I missed something.
+On Thu, 29 May 2025 17:36:11 +0800
+Jijie Shao <shaojijie@huawei.com> wrote:
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+>
+>=20
+> Hi Maxime,  fc81e257d19f ("net: phy: phy_caps: Allow looking-up link caps=
+ based on speed and duplex") might have different behavior than the modific=
+ation.
+> My case is set 10M Half with disable autoneg both sides and I expect it is
+> link in 10M Half. But now, it is link in 10M Full=EF=BC=8Cwhich is not wh=
+at I
+> expect.
+>=20
+> I used followed command and trace how phy worked.
+> 	ethtool -s eth1 autoneg off speed 10 duplex half
+> The log is showed as followed:
+> ethtool-13127	[067]	6164.771853: phy_ethtool_ksettings set: (phy_ethtool =
+ksettings set+0x0/0x200) duplex=3D0 speed=3D10
+> kworker/u322:2-11096	[070]	6164.771853:	_phy_start_aneq: ( _phy_start_ane=
+g+0x0/0xb8) duplex=3D0 speed=3D10
+> kworker/u322:2-11096	[070]	6164.771854:	phy_caps_lookup: (phy_caps_lookup=
++0x0/0xf0) duplex=3D0 speed=3D10
+> kworker/u322:2-11096	[070]	6164.771855:	phy_config_aneg: (phy_config_aneg=
++0x0/0x70) duplex=3D1 speed=3D10
+> kworker/u322:2-11096	[070]	6164.771856:	genphy_config_aneg:	(__genphy_con=
+fig_aneg+0X0/0X270) duplex=3D1 speed=3D10
 
--- 
-pw-bot: under-review
+I managed to get a bit of time to look into this, and indeed I was able
+to reproduce the issue locally.
+
+I'll send a patch ASAP, based on the the prototype patch I gave in the
+previous reply.
+
+Thanks for reporting,
+
+Maxime
