@@ -1,193 +1,143 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CDA522FE0E
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 14:42:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D687E17A2EA;
+	Tue,  3 Jun 2025 14:43:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748961776; cv=none; b=gXy8GeK60f7FLEdot3LDq3iIipNVLT0cGGPzIal/rxtbUdumLqF44fDXrSlbe95t2yGznjyRGTiPvwMDiTdMbug7bTE9JLm7gvqAP27k5NYBlg1fZ3PSkh0OVhCLe5kG/MLz0VfBI1G7OKOUzaiSW4xTgCIvBRUJF25/vmZyuxQ=
+	t=1748961817; cv=none; b=MkKOn5/pN0m/EjUIhM1J//3eDVi93LS7WraDIDJi5M/qYLljG0QbU7rEky1Ez9sxA7LhFhii/JiwJtvRjOHhKM0QLw97BLoxZqtdSIBXSxah1ZZ86da+lqQQG2P4YY5ElMi1m9wEA8aGopMB1f/Qpk6V8mwEt7B9hSnhdFVCHvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748961776; c=relaxed/simple;
-	bh=c6nw/zKVb6cTi4ZCZBsAqQI9vCilD0W6s2t/c/WVVKU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HUJbEIT6WcV8X4Cwm0flTBhbPCXQIJF+/tJaXt3Ijw41RH7wlgJJ9CV+PKGfWwKMoc0OHIe9EdzTtubVe380/7VmV1biNhnfQ4c4JjsXzuKyJsasYayquwQt9KOhoYLJTcUH2z5Soxv8utcG6eqwBEbv0VfmNqi9UZpMMl079K4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xvHsuaLA; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748961817; c=relaxed/simple;
+	bh=z2Ey+9eAkrxDyJHcYoeI+VcGZ12BalGXWl8qfdHCsBg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ma5/xw9+ukne1ZET7/MFcNI/QsTngdpaDwtBUpOLb0Ir55UgbdEUNCDOYhZgns1YlN+hq0bjIwAc37gFJomrMCUYWA2ZAzTfY+pfhOQlGBljarE9fg8DnnBxSC4Pn0m/5qR4AGcydJ0mNb1UNM7J14PunMskZgJW9XFmv354IuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cr/R559a; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xvHsuaLA"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-450ce3a2dd5so50191105e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 07:42:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748961772; x=1749566572; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gSY3d2fHzmf8tz11ZszZbv0h9m7v/xD0XmSTgwQsEm4=;
-        b=xvHsuaLA370R+WgcpekeFiFWTYTc68B1BXMPL23nSJpWkOJY7Kh7V6bmGefCeGtOjF
-         O4aJt9hJh9S1rm4QqyV3q23RnjLvkYlWdZMr/UMrJrRFRmpAzst4oIDYfWKT70ZWDkss
-         IZ42Cjo77UMMMhyW1+3lkSFKvYJJl++FMpi8nMmUg9JdjsjAw3lPj2T0iKWF9MIT8OTP
-         12Fc/wpnzLhw6uaQz8T2RNFQXUyCUTK5mUvKxKE0gb+dzw4jFd9hduTeEo88BmnCc5Uy
-         zBj9I/sbxO1opomDqQh5nd3Bbi1f+iMSHJm2JEfhMyytZDPwZfRbdZZM9tPeQjxbamFQ
-         +l4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748961772; x=1749566572;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gSY3d2fHzmf8tz11ZszZbv0h9m7v/xD0XmSTgwQsEm4=;
-        b=rdUr0hkB8g2JbfWOOxFHjOSf7xmBz/HbYHibGr1I3vZHiAnXCWSPSc4TX/pGeNqRfR
-         smCFTsmULJYIGT8Krw0gMSXg2dnSJtLcrFrjPsNqOypTUHfuJ5YJOA/LULINqBKZ+hdG
-         BkCWhlum+3gk2cR3lFjh/HtST4DFdROnlDKtBg54zpIuVJbodorzwASbpeVcNPzcJqz/
-         c6oKgcEsru9ABGUDtBY69cnDkHE6I2l/7pY/eMPc6VJ8Ph0eaI7vV5bTsEtfDJ+YlNzO
-         It9I0dTg97Mf8xu9AJfjkv+OPwN5ysZ/SflSofgoSKNQM5IHAygldDcKjpSP/jtKaHJV
-         YoIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXBxWuRJF3hYPOk5m6jfO0DBAFVxVRsuQlBKWM9AgYLdEn2z17vtl7i8Z9RROl7Rfu+DuipX7s4esg3wMo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxN3HZE+V6BOqTTdefMzKKZuNLX+Ha41SNdO+jJqxNx/ze2vwZD
-	ywOISZbU8WGugMSMxBF9RF9IUdS3NfNscUgKfBr6+NpxAi7nRY1QHBUmDdBqjanEOXcaXTS1U2W
-	4bINZC9o=
-X-Gm-Gg: ASbGncuQjTAcre1j+3EnmwKJ5RY4924DgoESYuOfZ0WtREmQzuG2hQAH4V+peFbaQoA
-	61Aqycth3cNaHf8/Mqxh4/gLyiyQuWk4P8nPWvtUAQxiwYIhlJiDwOomslCdx3cNrR+SS+4BvFU
-	kgo3WCWTN/h2+pKDsQKIT+544auL+L9NDrPSiX2BBpoRMx0YAbL5I95GnDfIzQQqJT0JEJK52Bc
-	+X9xIHCcvh77Hd2bTsK032+uDoUeHgZVnQO6YWzMYEZGegOLvJHitrj4z2jPNt2AZwXcADvoaEL
-	RjO3XOy0IB20dX/kIofegN/d7m3ua/8ZKRNkef33qiUcCGr/AG11E9E/f77l3SzknT7unfbEUkL
-	jKzP5PR9zRHYROarwUzxhnOSpf7M=
-X-Google-Smtp-Source: AGHT+IEEsISNcafiB1EJ54Q5v26DBzVAy/duUN9sRABDJbDKKNVPalBCusb2bVQQUvJeorr1xZ/fZw==
-X-Received: by 2002:a05:600c:4f05:b0:450:d611:eb95 with SMTP id 5b1f17b1804b1-4511ee150c2mr138571685e9.17.1748961772547;
-        Tue, 03 Jun 2025 07:42:52 -0700 (PDT)
-Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7f8f1e7sm165701595e9.1.2025.06.03.07.42.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jun 2025 07:42:52 -0700 (PDT)
-Message-ID: <b5958e94-7d83-4d87-b5cc-15e40e15eba9@linaro.org>
-Date: Tue, 3 Jun 2025 15:42:50 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cr/R559a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748961816; x=1780497816;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=z2Ey+9eAkrxDyJHcYoeI+VcGZ12BalGXWl8qfdHCsBg=;
+  b=Cr/R559aKBXNvhsI/UE0N6qWz5UjK7s3owxfcTWJ/q+WMOZXs4/ZSZ6L
+   X2o3eF91crySmLb4yu51Wgt33iA7K+wrSse1OZgAPDbzt0R9Aq0abF+Am
+   2K7YCrpEhjNtNFtB/DPlxTUERztzkEM5U1QM+5YGlKba5z1O3FBuA6UsO
+   2uemE7917xy/O3v28EmY/FVE/P3o7EsaAtcVBf/eXcZcuB9pktOlC8HfH
+   zuqx+zzKQI4K0UsMbybr7Yl1wac+nXKWifNld/e4hqHhq8x4E97fE/zP/
+   NSr2Rwpmeiir4ORyd4K9QdVnKsm9ek3QPgCpAlYvxcXw9deyf0oAwph0c
+   g==;
+X-CSE-ConnectionGUID: X7OCtacMRMybL+VZt2lRWA==
+X-CSE-MsgGUID: jOmHPviIQHa3qhAedUUIUg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="61626356"
+X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
+   d="scan'208";a="61626356"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 07:43:14 -0700
+X-CSE-ConnectionGUID: TA6fL8yGTyauOPwLCs93aA==
+X-CSE-MsgGUID: pOTNvgFKSNW+O4/B1v8E2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
+   d="scan'208";a="145373523"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.141])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 07:43:05 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 3 Jun 2025 17:43:02 +0300 (EEST)
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+    =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>, 
+    Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    William McVicker <willmcvicker@google.com>
+Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
+ in sync
+In-Reply-To: <e0833d0d-cf1c-b036-c9f4-d27b933330f0@linux.intel.com>
+Message-ID: <765f092e-10e9-6ac0-5aa4-964cdf3e60ad@linux.intel.com>
+References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com> <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com> <5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org> <8f281667-b4ef-9385-868f-93893b9d6611@linux.intel.com> <3a47fc82-dc21-46c3-873d-68e713304af3@linaro.org>
+ <f6ee05f7-174b-76d4-3dbe-12473f676e4d@linux.intel.com> <867e47dc-9454-c00f-6d80-9718e5705480@linux.intel.com> <a56284a4-755d-4eb4-ba77-9ea30e18d08f@linaro.org> <7e882cfb-a35a-bab0-c333-76a4e79243b6@linux.intel.com> <f2d149c6-41a4-4a9a-9739-1ea1c4b06f4b@linaro.org>
+ <19ccc09c-1d6b-930e-6ed6-398b34020ca1@linux.intel.com> <c1c0bacd-7842-4e9e-aec4-66eb481aa43f@linaro.org> <f8f15489-8b31-4672-9fb9-161c7c4599dc@linaro.org> <a4a5855c-6d58-4fc5-85d7-4727d27efbe0@linaro.org>
+ <e0833d0d-cf1c-b036-c9f4-d27b933330f0@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 7/8] serial: qcom-geni: Enable PM runtime for serial
- driver
-To: Praveen Talari <quic_ptalari@quicinc.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
- devicetree@vger.kernel.org
-Cc: psodagud@quicinc.com, djaggi@quicinc.com, quic_msavaliy@quicinc.com,
- quic_vtanuku@quicinc.com, quic_arandive@quicinc.com,
- quic_mnaresh@quicinc.com, quic_shazhuss@quicinc.com
-References: <20250506180232.1299-1-quic_ptalari@quicinc.com>
- <al7FOrwGsnaq9zGSHVjKj4mANrXQj5ID0LM34V0zaIeaSjIvNVhM7_OnjxWfPCKMnNZow76kfyuMEB_bOEkR0g==@protonmail.internalid>
- <20250506180232.1299-8-quic_ptalari@quicinc.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250506180232.1299-8-quic_ptalari@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="8323328-1106287541-1748961782=:937"
 
-On 06/05/2025 19:02, Praveen Talari wrote:
-> Add Power Management (PM) runtime support to Qualcomm GENI
-> serial driver.
-> 
-> Introduce necessary callbacks and updates to ensure seamless
-> transitions between power states, enhancing overall power
-> efficiency.
-> 
-> Signed-off-by: Praveen Talari <quic_ptalari@quicinc.com>
-> ---
->   drivers/tty/serial/qcom_geni_serial.c | 33 +++++++++++++++++++++++----
->   1 file changed, 29 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-> index 60afee3884a6..9d698c354510 100644
-> --- a/drivers/tty/serial/qcom_geni_serial.c
-> +++ b/drivers/tty/serial/qcom_geni_serial.c
-> @@ -1686,10 +1686,10 @@ static void qcom_geni_serial_pm(struct uart_port *uport,
->   		old_state = UART_PM_STATE_OFF;
-> 
->   	if (new_state == UART_PM_STATE_ON && old_state == UART_PM_STATE_OFF)
-> -		geni_serial_resources_on(uport);
-> +		pm_runtime_resume_and_get(uport->dev);
->   	else if (new_state == UART_PM_STATE_OFF &&
->   			old_state == UART_PM_STATE_ON)
-> -		geni_serial_resources_off(uport);
-> +		pm_runtime_put_sync(uport->dev);
-> 
->   }
-> 
-> @@ -1827,9 +1827,11 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
->   		return ret;
->   	}
-> 
-> +	pm_runtime_enable(port->se.dev);
-> +
->   	ret = uart_add_one_port(drv, uport);
->   	if (ret)
-> -		return ret;
-> +		goto error;
-> 
->   	if (port->wakeup_irq > 0) {
->   		device_init_wakeup(&pdev->dev, true);
-> @@ -1839,11 +1841,15 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
->   			device_init_wakeup(&pdev->dev, false);
->   			ida_free(&port_ida, uport->line);
->   			uart_remove_one_port(drv, uport);
-> -			return ret;
-> +			goto error;
->   		}
->   	}
-> 
->   	return 0;
-> +
-> +error:
-> +	pm_runtime_disable(port->se.dev);
-> +	return ret;
->   }
-> 
->   static void qcom_geni_serial_remove(struct platform_device *pdev)
-> @@ -1855,9 +1861,26 @@ static void qcom_geni_serial_remove(struct platform_device *pdev)
->   	dev_pm_clear_wake_irq(&pdev->dev);
->   	device_init_wakeup(&pdev->dev, false);
->   	ida_free(&port_ida, uport->line);
-> +	pm_runtime_disable(port->se.dev);
->   	uart_remove_one_port(drv, &port->uport);
->   }
-> 
-> +static int qcom_geni_serial_runtime_suspend(struct device *dev)
-> +{
-> +	struct qcom_geni_serial_port *port = dev_get_drvdata(dev);
-> +	struct uart_port *uport = &port->uport;
-> +
-> +	return geni_serial_resources_off(uport);
-> +};
-> +
-> +static int qcom_geni_serial_runtime_resume(struct device *dev)
-> +{
-> +	struct qcom_geni_serial_port *port = dev_get_drvdata(dev);
-> +	struct uart_port *uport = &port->uport;
-> +
-> +	return geni_serial_resources_on(uport);
-> +};
-> +
->   static int qcom_geni_serial_suspend(struct device *dev)
->   {
->   	struct qcom_geni_serial_port *port = dev_get_drvdata(dev);
-> @@ -1901,6 +1924,8 @@ static const struct qcom_geni_device_data qcom_geni_uart_data = {
->   };
-> 
->   static const struct dev_pm_ops qcom_geni_serial_pm_ops = {
-> +	SET_RUNTIME_PM_OPS(qcom_geni_serial_runtime_suspend,
-> +			   qcom_geni_serial_runtime_resume, NULL)
->   	SYSTEM_SLEEP_PM_OPS(qcom_geni_serial_suspend, qcom_geni_serial_resume)
->   };
-> 
-> --
-> 2.17.1
-> 
-> 
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-1106287541-1748961782=:937
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Tue, 3 Jun 2025, Ilpo J=E4rvinen wrote:
+
+> On Tue, 3 Jun 2025, Tudor Ambarus wrote:
+> > On 6/3/25 11:48 AM, Tudor Ambarus wrote:
+> > > On 6/3/25 11:36 AM, Tudor Ambarus wrote:
+> > >> On 6/3/25 9:13 AM, Ilpo J=E4rvinen wrote:
+> > >>> So please test if this patch solves your problem:
+> > >>
+> > >> It fails in a different way, the bridge window resource never gets
+> > >> assigned with the proposed patch.
+> > >>
+> > >> With the patch applied: https://termbin.com/h3w0
+> > >=20
+> > > above is no revert and with the proposed fix. It also contains the
+> > > prints https://termbin.com/g4zn
+> > >=20
+> > > It seems the prints in pbus_size_mem are not longer hit, likely becau=
+se
+> > > of the new condition added: ``!pdev_resources_assignable(dev) ||``,
+> > > pci_dev_for_each_resource() finishes without doing anything.
+> > >=20
+> > >> With the blamed commit reverted: https://termbin.com/3rh6
+> > >=20
+> >=20
+> > I think I found the inconsistency.
+> >=20
+> > __pci_bus_assign_resources()
+> > =09pbus_assign_resources_sorted()
+> > =09=09pdev_sort_resources(dev, &head);
+> >=20
+> > But pdev_sort_resources() is called with a newly LIST_HEAD(head), not
+> > with realloc_head, thus the resources never get sorted.
+>=20
+> pdev_sort_resources() is not supposed to add resources into realloc_head=
+=20
+> but just collects all the relevant resources in the descending order by
+> size.
+
+Small correction, they're ordered by alignment, not by size. For other=20
+than iov resources and bridge window, alignment order effectively the same=
+=20
+as size order.
+
+> There are two main lists here. The head list contains all relevant=20
+> resources we're going to process and realloc_head keeps track which of=20
+> them are optional (or optional in part, that is, some resources have the=
+=20
+> base size and the optional size).
+>=20
+> __assign_resources_sorted() will apply the optional sizes from=20
+> realloc_head and re-sorts the head list while changing the sizes.
+> If not all resources can be assigned, rollback happens and base sizes are=
+=20
+> assigned first, and then reassign_resources_sorted() handles the=20
+> realloc_head ones afterwards for as many resources as possible.
+>=20
+> > pdev_sort_resources() exits early at
+> > =09``if (!pdev_resources_assignable(dev))``
+>=20
+> Yes it does, for 0001:01:00.0.
+>=20
+>=20
+
+--=20
+ i.
+
+--8323328-1106287541-1748961782=:937--
