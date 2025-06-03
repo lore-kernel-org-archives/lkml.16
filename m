@@ -1,117 +1,117 @@
-Received: from smtp161.vfemail.net (smtp161.vfemail.net [146.59.185.161])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D092AD2F
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 20:04:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=146.59.185.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D18A13D531
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 20:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748981087; cv=none; b=hTf09A1WvjBngToD6xT6TGYTIYYSiXECQjlou6v0hOQgLcKGR2pNLrvUQHHM3W/PTV1GD52ISbOJJoAGHD73Uz35hBx3huZ4gYHp9T9wTgW8mgP4bMu+DO8jn0cFfOyEP/SzSQ0KbjrUf0II535ovHxiZfryV0Ur+TYVktUqZFk=
+	t=1748981244; cv=none; b=cFT1clbVrN3Xae40GFe60SkCVJCvXJXNjA/36BceGZnXx95ejkU3ma1eSskXBMUhRjR8KjGgqZ0h4fl4sO2wJ1uTDOWHvIJgDkf6ypxI74ZWxBvllLAzw/ZQl3gQkDfVYWFQCaD8uqmIhk6fPdmfm9hGmAfGomccjw5Dw8hg/q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748981087; c=relaxed/simple;
-	bh=JYj1vNTn15og/+5O5aPag3/4oCOhC1CSroGuCvxIsKI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mNsq+nrtiTt2ExV8M5Yvp9GQy2iW4ZDdddzBFs1Yr8mK7H3OJ3f81kwfQ+5qmHQEVt36NkwYWnZCWF6PP34uemsFifaZ38IwJ3ViRyv14HQwHbnQ2u/ZaoGJdTYO+rd2KCdHXQSS8HEskH/ZQfQebTcpa9IpsbTgKOggkCOYx+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vfemail.net; spf=pass smtp.mailfrom=vfemail.net; dkim=pass (1024-bit key) header.d=vfemail.net header.i=@vfemail.net header.b=on3tHABe; arc=none smtp.client-ip=146.59.185.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vfemail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vfemail.net
+	s=arc-20240116; t=1748981244; c=relaxed/simple;
+	bh=G0iFOUyDV/GAuSohmFJCstbby3ILFFSM5UcwftzcUcg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=kiph40dDZQec7d4BMj2WiceXG9ihzaVPrEDaNNBaj+h0e2ZMPVAkW/3PvVaPD4mLO0DB+2nH1IKKSNWMTUbhxVh5LjeklIJttJNp1u/8dfp6j1si3W6O0L+Y6S8Ko4h4TcWzsPD01U1/xGTRBbN7mBE0vcdKivYkZsSU2zN58u0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=bjuGfDzU; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=vfemail.net header.i=@vfemail.net header.b="on3tHABe"
-Received: (qmail 10199 invoked from network); 3 Jun 2025 20:03:26 +0000
-Received: from localhost (HELO nl101-3.vfemail.net) ()
-  by smtpout.vfemail.net with SMTP; 3 Jun 2025 20:03:26 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=vfemail.net; h=date:from
-	:to:cc:subject:message-id:in-reply-to:references:mime-version
-	:content-type:content-transfer-encoding; s=2018; bh=JYj1vNTn15og
-	/+5O5aPag3/4oCOhC1CSroGuCvxIsKI=; b=on3tHABexCSlgcrXYMYanqqtQPib
-	Hb9iFFqBFDDNS6e0W47drU4hICW9uq332nXgJYdvKOKyfeXms5Lwf5h9RG5S3tnr
-	xP35/kd1Aaxzo/BHPfZD1VzCD10bgTG1BE0YsyCVGizN9c1wEzTmDxPc4t+VN2fh
-	5uCAsDse6RRhGZg=
-Received: (qmail 31100 invoked from network); 3 Jun 2025 15:04:43 -0500
-Received: by simscan 1.4.0 ppid: 30998, pid: 31085, t: 0.3395s
-         scanners:none
-Received: from unknown (HELO bmwxMDEudmZlbWFpbC5uZXQ=) (aGdudGt3aXNAdmZlbWFpbC5uZXQ=@MTkyLjE2OC4xLjE5Mg==)
-  by nl101.vfemail.net with ESMTPA; 3 Jun 2025 20:04:43 -0000
-Date: Tue, 3 Jun 2025 16:04:40 -0400
-From: David Niklas <simd@vfemail.net>
-To: Linux RAID <linux-raid@vger.kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: Need help increasing raid scan efficiency.
-Message-ID: <20250603160415.61c9ca7c@Zen-II-x12.niklas.com>
-In-Reply-To: <24815d81-2e4f-4ddf-b194-b03ea3232b91@youngman.org.uk>
-References: <20250602210514.7acd5325@Zen-II-x12.niklas.com>
-	<24815d81-2e4f-4ddf-b194-b03ea3232b91@youngman.org.uk>
-X-Mailer: Claws Mail 4.3.0git38 (GTK 3.24.24; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bjuGfDzU"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250603200720euoutp015832a428410985484a77f8c6ff1754fd~FoSv3NTLO0423204232euoutp01S
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 20:07:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250603200720euoutp015832a428410985484a77f8c6ff1754fd~FoSv3NTLO0423204232euoutp01S
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1748981240;
+	bh=I9G0dsh/HfxzQk/gcXna/50vSZKPGGK2LiIfw6uO1nQ=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=bjuGfDzUTy9cQ6Kctw7U5Gy8ojzufrQV+RTuK64u0KEuaHzOte1gio3BTTwqhy67c
+	 25f587mHCzCk+ItozavpLgjWs2vw2y8ghqsR+ctUI+UZA3OoB0cFZh0oLduJOAiZoo
+	 8/Qyi4rGJptYEHgAoBaZcmrTpwv6r7i01HEhLaVg=
+Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250603200719eucas1p2a1693746bd398be6f5fd7a661b40a5c8~FoSvDD3kN0233102331eucas1p29;
+	Tue,  3 Jun 2025 20:07:19 +0000 (GMT)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250603200718eusmtip2fffef2b43712841199296d3e62877bda~FoSuBeEet2231322313eusmtip2g;
+	Tue,  3 Jun 2025 20:07:18 +0000 (GMT)
+Message-ID: <471578ae-5605-4051-af46-bae83bf4f44f@samsung.com>
+Date: Tue, 3 Jun 2025 22:07:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250603200440.H9NzN4tlI-91FzsXaXnLrZ3IJQrIa35hE8Ax3NfI3t4@z>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/8] dt-bindings: power: Add T-HEAD TH1520 GPU power
+ sequencer
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Krzysztof Kozlowski
+	<krzk@kernel.org>
+Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei
+	<wefu@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Philipp Zabel
+	<p.zabel@pengutronix.de>, Frank Binns <frank.binns@imgtec.com>, Matt Coster
+	<matt.coster@imgtec.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson <ulf.hansson@linaro.org>, Marek
+	Szyprowski <m.szyprowski@samsung.com>, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <CAMRc=Mc-jjULmc=3fS0qZgXbq9Sgfg8JBoH7peWML1PdyyyH+A@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250603200719eucas1p2a1693746bd398be6f5fd7a661b40a5c8
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250529222403eucas1p1923fe09240be34e3bbadf16822574d75
+X-EPHeader: CA
+X-CMS-RootMailID: 20250529222403eucas1p1923fe09240be34e3bbadf16822574d75
+References: <CGME20250529222403eucas1p1923fe09240be34e3bbadf16822574d75@eucas1p1.samsung.com>
+	<20250530-apr_14_for_sending-v3-0-83d5744d997c@samsung.com>
+	<20250530-apr_14_for_sending-v3-1-83d5744d997c@samsung.com>
+	<CAMRc=Me9cWfe2mL=Q6JQbAFjpd55MOBZuAWC793Us0criiQr4Q@mail.gmail.com>
+	<4519844e-b1c0-40a7-b856-a6e4a80c6334@samsung.com>
+	<20250603-cuddly-certain-mussel-4fbe96@kuoka>
+	<CAMRc=MfXashaEscE1vF_P6cs9iOCBerfNFiB4yC+TX76fZ87nA@mail.gmail.com>
+	<CAMRc=Mc-jjULmc=3fS0qZgXbq9Sgfg8JBoH7peWML1PdyyyH+A@mail.gmail.com>
 
-On Tue, 3 Jun 2025 17:46:01 +0100
-Wol <antlists@youngman.org.uk> wrote:
-> On 03/06/2025 02:05, David Niklas wrote:
-> > So I setup the array into read-only mode and started the array with
-> > only two of the drives. Drives 0 and 1. Then I proceeded to try and
-> > start a second pair, drives 2 and 3, so that I could scan them
-> > simultaneously. With the intent of then switching it over to 0 and 2
-> > and 1 and 3, then 0 and 3 and 1 and 2.  
+
+
+On 6/3/25 16:49, Bartosz Golaszewski wrote:
+> On Tue, Jun 3, 2025 at 3:35 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>>>>
+>>>> The compatible string could be updated like so:
+>>>> "thead,th1520-aon-pwrseq"
+>>>
+>>> Should not be separate node, you already have one for AON.
+>>>
+>>
+>> Agreed. And as far as implementation goes, you can have the same
+>> driver be a PM domain AND pwrseq provider. It just has to bind to the
+>> device node that represents an actual component, not a made-up
+>> "convenience" node.
+>>
 > 
-> BACKUP! BACKUP!! BACKUP!!!
+> I'm seeing that there's already a main driver under
+> drivers/pmdomain/thead/th1520-pm-domains.c and a "logical sub-driver"
+> under drivers/firmware/thead,th1520-aon.c which exposes
+> th1520_aon_init() called by the former. Maybe just follow that
+> pattern, add a module under drivers/power/sequencing/ called
+> pwrseq-th1520-pwrseq.c and call its init function from the pm-domains
+> module?
 
-It's when I was trying to make my yearly backup that I found out it was
-corrupting. I have HDDs I backup to. When I backup, I erase the
-previous year (as I don't have enough room otherwise), then backup the new
-year. As a system, it worked up until now.
+Right, sorry I haven't noticed this and responded to previous message.
+Thanks for the direction !
 
-> Is your array that messed up that it won't assemble? If you can just
-> get it to assemble normally that's your best bet by far. Trying to
-> assemble it as two pairs is throwing away the whole point of a raid 6!
-
-It assembles fine with all the disks, the problem is the data corruption
-that has occurred across the members.
-
-> And make sure you know the order of the drives in the array! I hope you
-> haven't lost that infof.
-
-Everything is written down on paper.
-
-> If your event counts are all similar, then you'll hopefully recover
-> most of your data. Your biggest worry will be the mobo and ram having
-> trashing an in-flight write that corrupts the disk.
-
-Yes, that's my problem. I wanted to try and isolate the disk pairs so
-that I could try and figure out if there is any pattern or differing
-copies that would allow me to restore the corrupted data.
-
-> Then once you've got the array assembled, I can't remember the command,
-> but there is a command that will read the entire stripe, check the
-> paritIES - both of them, and recreate the data. If that fails, your
-> data is probably toast, and nothing you can do will be able to retrieve
-> much :-(
 > 
-> Cheers,
-> Wol
+> Bart
 > 
 
-Searching online turned up raid6check.
-https://unix.stackexchange.com/questions/137384/raid6-scrubbing-mismatch-repair
-
-But the people there also pointed out that Linux's raid repair operation
-only recalculates the parity. I would have thought that it did a best of
-3 option. I mean, that's a big part of why we have RAID6 instead of RAID5,
-right?
-
-I think you misunderstood my original question, how do I assemble the
-RAID6 pairs (RO mode) into two different arrays such that I can read from
-them simultaneously?
-
-If I have to do some coding with respect to the mdadm utility, I'm
-willing. But for all I know, the Linux Kernel might destroy all of my data
-if I try something like that.
-
-Thanks,
-David
+Best regards,
+-- 
+Michal Wilczynski <m.wilczynski@samsung.com>
