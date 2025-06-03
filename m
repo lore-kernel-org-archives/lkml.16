@@ -1,119 +1,131 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CA7C2236F8;
-	Tue,  3 Jun 2025 08:33:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B607228137D;
+	Tue,  3 Jun 2025 08:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748939636; cv=none; b=W4beeeSL7WaJqy7exCbFHVGFrb/tHR5mS638vlrWzHVBYmOtxjXoU1bhoDE+l9uBOhqqg1qqjHVulNaWiHjQtnFD1PKhV7CA8l60pAiks2QITjI8WkR7V1h/5QSz5ZR4yyDNdab0NaSLAsCPvsyC3Dw6okyaCG52TIWkFULCnuQ=
+	t=1748939641; cv=none; b=BsenGov7+peL0Vh8ucASPk3ZVug7PJIYYWyn1BDz58cB9bWzO5DgNGAfHMuNphOFXz/jIQ41nRGncf0L0TNwRX7EsJ3mzelwH+YoH+RecAfUErtmMlnRjqMUJq0A8eBpPCzY8VqxMWSlcEfGyqeNQXVOZzXjhRXClB5nsaKKqws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748939636; c=relaxed/simple;
-	bh=jWw3s1a/AY/y1xwQIxxaCgV83PdUz2ciIda4uyzidXY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oFOVUbZMVMQA2odzWPB3KJd1f/aRD8QmUqNik5X6q1ubDin5orFFNUun/tJEStKanGeEBnPRN947i5iNsYH/ek8fkE1JJrFcSYJkAj6B8OGsAuj01PFrH29dlz+kS1J/A6USKEjO62iOc4OMLLfj+HUOkrL2RxSN0xN3QfJETtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=JCQGZjze; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1748939641; c=relaxed/simple;
+	bh=6I08uDTKcAQGN/a1ejgxT2X3Yj5mTmjSPZuG++wTGII=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D2xPatR5QFYtkHLeBMt7Md0PKT0QSjzjkC4vO2bXIUbQrGJmke31/4lp18V6gl4tJAyNCCl9SkKTHeAh5wzPC7BfGs7b7ygVt/980/1yIZ/ahR8cInNoj9uifHiA6hJYkyVozOeA5n+DGdFO64Q1yySRCA9tdp5xktlLlzX7gw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m5vEW+eC; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="JCQGZjze"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=dD
-	eyhuFFoQ6/K4lWQy4ZVtm1IyFV5jCQTLNwpE/GG9Q=; b=JCQGZjzePj0jp5Xa0n
-	ico3hqH9ZBTeITHXcyHIxUHZn2YONjhOmLYD7P1ffEXen/GE4fm8SQGKU84fCVAS
-	3sRChrT6hWoEQAWo/JhwYpD5zgu5eyAzyC8NOkSGGDgs9ZfvDn/G8sueHW1FUGYc
-	1Ra9VAHpbMYJ+UKPcsVnsluLI=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wDXr+lBsz5oOoiAFw--.27977S4;
-	Tue, 03 Jun 2025 16:33:17 +0800 (CST)
-From: David Wang <00107082@163.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mingo@kernel.org,
-	yeoreum.yun@arm.com,
-	leo.yan@arm.com
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	David Wang <00107082@163.com>
-Subject: [PATCH v2] perf/core: restore __perf_remove_from_context when DETACH_EXIT not set
-Date: Tue,  3 Jun 2025 16:33:04 +0800
-Message-Id: <20250603083304.34132-1-00107082@163.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250603032651.3988-1-00107082@163.com>
-References: <20250603032651.3988-1-00107082@163.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m5vEW+eC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748939640; x=1780475640;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=6I08uDTKcAQGN/a1ejgxT2X3Yj5mTmjSPZuG++wTGII=;
+  b=m5vEW+eCEyFJPT4RpKYBMFC8RSnJmHTHQsthDrWC749C3djQVx780s0K
+   02/D4I6j6Si/2XzeVo8yePvCGirHIjcVcu2rw7KBqxhqJBPFp/abZQiSr
+   kuUpNLwkvMT1a33JSDV8S9QoehPRbQuUheeiChd19mU3c6FcaqWWAl6ET
+   rD3qG9W9ur/Qoaxj2AvvWooAiUIa+hSuzwZIJ8CQDNpoFF0zAVf8wGlif
+   HgnuTg0B8G9aTg6HBTGHqk5oLY4lQUopNx9IE7lrrh9FolQ9z+dVbJeAd
+   ixp+n5seficgFSWpKbnbiPN4VitlfKUmc0LhKbxzU6+svH4XRdCpUKd8c
+   A==;
+X-CSE-ConnectionGUID: rZxcwEPETxaghYYC4lh9Ow==
+X-CSE-MsgGUID: Z9+Q1QQVQI+tZqEbpMu2cg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="73501160"
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="73501160"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 01:33:59 -0700
+X-CSE-ConnectionGUID: q/EF/En/TSSgP7GHtoFsaA==
+X-CSE-MsgGUID: zq5IgQeSQGGApg3ljPIyOQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="145285714"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 01:33:56 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uMN5l-000000035SG-43gV;
+	Tue, 03 Jun 2025 11:33:53 +0300
+Date: Tue, 3 Jun 2025 11:33:53 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Aditya Garg <gargaditya08@live.com>
+Cc: agski33 <agski33@proton.me>,
+	"linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	dmaengine@vger.kernel.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>
+Subject: Re: [REGRESSION] Re: ELAN1206 Touchpad Bugzilla 219799
+Message-ID: <aD6zcaMAK_r0Bei6@smile.fi.intel.com>
+References: <z9A_-FfhGGSZqAHPl-DnF-qPhbI563CsiUUiC8nhdhcZUZYkgpkruvHQ6Vdt8Jt0s0ogm9tCNXFAfn06utR9Zwh_UNTUy4whJ2Z9oVcfPEA=@proton.me>
+ <PN3PR01MB9597C74E424033DC90B6F3B2B862A@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <PN3PR01MB9597F96188E061EB0B7ACBD6B862A@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDXr+lBsz5oOoiAFw--.27977S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW7AF4ftw15uFy3Xw4kAF1DWrg_yoW5JF4kpw
-	s7CrnxK3y0q34qvw4ayr1kWwn8Cw4kJFZ0q3WDKw13XFWrXrW5XF1xKFW3Zrs0yr92qa47
-	tw4093ZrW3yqka7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pREoGPUUUUU=
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0gBhqmg+n-RC7QAJsC
+In-Reply-To: <PN3PR01MB9597F96188E061EB0B7ACBD6B862A@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-commit a3c3c66670ce ("perf/core: Fix child_total_time_enabled accounting
-bug at task exit") made changes to __perf_remove_from_context() to
-coordinate its changes with perf_event_exit_event(), but the change are
-unconditional, it impacts callpaths to __perf_remove_from_context()
-other than from perf_event_exit_event(). One of the impact is to cgroup,
-which is not properly handled and would cause kernel panic with high
-probalibity during reboot on some system[1].
+On Mon, Jun 02, 2025 at 11:37:21PM +0530, Aditya Garg wrote:
+> On 02-06-2025 11:35 pm, Aditya Garg wrote:
+> > On 28-05-2025 07:44 pm, agski33 wrote:
 
-To confine the side effects, make the changes to
-__perf_remove_from_context() conditional, restore to its previous state
-except when DETACH_EXIT is set.
+...
 
-Closes: https://lore.kernel.org/lkml/20250601173603.3920-1-00107082@163.com/ [1]
-Fixes: a3c3c66670ce ("perf/core: Fix child_total_time_enabled accounting bug at task exit")
-Signed-off-by: David Wang <00107082@163.com>
----
-Changes:
-Address yeoreum.yun@arm.com's concern about missing cgroup event.
----
- kernel/events/core.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+> >> I am currently experiencing the issue that was previously reported in the
+> >> following BugZilla
+> >> entry: https://bugzilla.kernel.org/show_bug.cgi?id=219799.  I noticed that
+> >> the bug was marked as NEEDINFO so I attempted to fill in the relevant
+> >> information.
+> >>
+> >>  From my testing, it seems like IDMA transfers relating to the touchpad
+> >> input are taking too long and causing timeouts within hid-multitouch.  
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 95e703891b24..e2c0f34b0789 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2466,7 +2466,7 @@ __perf_remove_from_context(struct perf_event *event,
- 			   void *info)
- {
- 	struct perf_event_pmu_context *pmu_ctx = event->pmu_ctx;
--	enum perf_event_state state = PERF_EVENT_STATE_OFF;
-+	enum perf_event_state exit_state = PERF_EVENT_STATE_EXIT;
- 	unsigned long flags = (unsigned long)info;
- 
- 	ctx_time_update(cpuctx, ctx);
-@@ -2475,19 +2475,20 @@ __perf_remove_from_context(struct perf_event *event,
- 	 * Ensure event_sched_out() switches to OFF, at the very least
- 	 * this avoids raising perf_pending_task() at this time.
- 	 */
--	if (flags & DETACH_EXIT)
--		state = PERF_EVENT_STATE_EXIT;
- 	if (flags & DETACH_DEAD) {
- 		event->pending_disable = 1;
--		state = PERF_EVENT_STATE_DEAD;
-+		exit_state = PERF_EVENT_STATE_DEAD;
- 	}
- 	event_sched_out(event, ctx);
--	perf_event_set_state(event, min(event->state, state));
- 	if (flags & DETACH_GROUP)
- 		perf_group_detach(event);
- 	if (flags & DETACH_CHILD)
- 		perf_child_detach(event);
- 	list_del_event(event, ctx);
-+	if (flags & DETACH_EXIT)
-+		perf_event_set_state(event, min(event->state, exit_state));
-+	if (flags & DETACH_DEAD)
-+		event->state = PERF_EVENT_STATE_DEAD;
- 
- 	if (!pmu_ctx->nr_events) {
- 		pmu_ctx->rotate_necessary = 0;
+Is touchpad interface is I²C?
+
+> >> I contacted ASUS in an attempt to obtain information relating to the
+> >> workings of the touchpad that may assist with this issue, however I
+> >> believe it is unlikely that I will be able to obtain anything useful from
+> >> them.
+> >>
+> >> I am wondering if anyone has any additional suggestions for next debugging
+> >> steps or things that I may try - would be happy to provide any additional
+> >> information or do additional debugging etc.
+> >>
+> >> System Details:
+> >> Device: ASUS Q528EH with ELAN1206 Touchpad
+> >> Kernel versions: 6.9-rc6 is where the issue starts, persists through all
+> >> kernel versions after including latest.
+> >> Symptoms: Touchpad cursor will not move.  
+> >>  Additional Observations: Something of potential interest that I noticed
+> >> was that it appeared the touchpad is sending data byte by byte when doing
+> >> an IDMA transfer, not sure if that is normal or not.
+> >>
+> >> Any suggestions for next steps are appreciated!  Thank you in advance for your time and input.
+> > 
+> > Looking at https://bugzilla.kernel.org/show_bug.cgi?id=219799#c2, dd4478d63b6a2b6891fcc1800eb26ce3f1ead1d4
+> > seems to be the patch causing regression.
+> 
+> My bad, its 9140ce47872bfd89fca888c2f992faa51d20c2bc, the mailing list link is correct though.
+
+It doesn't matter, the patch is technically correct — we do not serve the
+spurious (not ours) interrupts.
+
+> > https://lore.kernel.org/lkml/20240321120453.1360138-1-andriy.shevchenko@linux.intel.com/
+> > 
+> > Ccing relevant folks here.
+
 -- 
-2.39.2
+With Best Regards,
+Andy Shevchenko
+
 
