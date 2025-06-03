@@ -1,121 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF79664C6;
-	Tue,  3 Jun 2025 10:09:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 797F82AD02;
+	Tue,  3 Jun 2025 10:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748945345; cv=none; b=pToPqpMKiC2M/ujCIWFscoev+iYUSbKn8dIs7nx5IlfTcs7OTDVInnD9HcPLmjo57BBTdchf9XlfjdC0Q1eY/vEgwyUTDnWX3WmxVcB2Wwqtf0vbtUnxunhn7+bvPovVxDmMCko/wSdT+EkKamUaVDrxgMgAm7zQQNyErOsrs7A=
+	t=1748945391; cv=none; b=LNRHVzc7shUp4+V8BiF1cjMVry45WLib6Cl4RX6bN4epvTvW9Lx8fiE6+pwxrS5ySww1b7EOZkwhWIrU20VQtzyDIW+wF+RRKPpTGNiwP3SFQizqG6Ovbpx0IdUSvXzlD1ItVbA1v1Fogbo/oGuyHwozDKIKQ8/Y5ylj67S1O2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748945345; c=relaxed/simple;
-	bh=UwI4XUZPbK9PisF4gurC498orwO4ATvOHiOSueoRh7M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kjOaVmcBKV4c2p9LTBVxZSUWFrF/K0PXjYFiHVm9EcTdXXnq4IflnsQb38w36uVJyO2eh9GOhY49o1s8rLCIRK9m5KB5ZECVQBWppiePnikU3w2CP/5crfaNGm6V2O1ZOa/jAQOwck0YiL7mK7nUSss8BysZwWCGoIpaAgR2cHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LPqQCrVB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748945391; c=relaxed/simple;
+	bh=3hjD+iByGvCs6++WOizV3zbi5NJ3S1SQGoT0sztz+k0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=adhqq4clq+7g4vjevBYjLxqVDQ2K7cgVzY3rMg+BJEDI6kqSGZMSp2AD4XiWGwwhFJ2FAf0kooD7wYqMX/+6hAzFr5aZJt0gOhQmL6ik04kQ32iwGPaE1NlotddgB9SWWa3naIGyn2e/mSvWfxq+XuNtTY9FW+wCU9bo74humnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=Xzc2Vqu1 reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LPqQCrVB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E772C4CEED;
-	Tue,  3 Jun 2025 10:09:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748945345;
-	bh=UwI4XUZPbK9PisF4gurC498orwO4ATvOHiOSueoRh7M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LPqQCrVBVIOulCDtCmHVq5P7G3rxEeCe06XDoOMpLf8Cy50ZjUDFVB2ouI8NHaU3b
-	 xKS2p8GGzhqUx7PO3NFHyclntCfVc/dMBzG+eeGsLm4FUIlgrMLr3q5c3Ee+3imp8p
-	 epgPMz5KCJjt9Dl96QlXbvyrRH4qfaSY5mCpVVFX+3/+6PAK2hgAFiv8RoLh/kC06f
-	 7XmEthyo3Z12D5FEMcEoyyTGLS+Lx/9obRo+U/rk7YhBI8+AjrRt+CD9EaxRG4GV7D
-	 JF5UzdmfFj8IDY2EuVPBa58D1r/IFKUyq+NhtPkUVSacqPl8jJYLJY603Ru3w+TZRd
-	 j18VRQEV76Tsg==
-Date: Tue, 3 Jun 2025 12:08:59 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Daniel Almeida <daniel.almeida@collabora.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] rust: irq: add support for request_irq()
-Message-ID: <aD7JuyVRVr5dSqE9@cassiopeiae>
-References: <aCUQ0VWgoxdmIUaS@pollux>
- <aD3PCc6QREqNgBYU@google.com>
- <aD3f1GSZJ6K-RP5r@pollux>
- <aD6yOte8g4_pcks7@google.com>
- <aD62ZGBwqXxTroeX@cassiopeiae>
- <aD64YNuqbPPZHAa5@google.com>
- <aD68BzKRAvmNBLaV@cassiopeiae>
- <CAH5fLgjweugttOtuiyawNp5s2N9JPoo5FTJ+Zs9t_S87ggC1Gg@mail.gmail.com>
- <aD7DvBfAxKi7Fpg_@cassiopeiae>
- <CAH5fLggKL4jMjrJJEYV=Snqftu+oc4-sTNj9spinON5kHVP9xg@mail.gmail.com>
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="Xzc2Vqu1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=wmAC6L4gRowUBaw8J0pObVc7lkFIDWgiRQmNYcnOcqQ=; b=X
+	zc2Vqu11UukjgFyXrRO74Q8uSNFdavDMCVXL52WzOts7ezxlLe7bXZimuxyBRFin
+	RIXcuK3dkPq1eLVzSYA+o6oGa0z4Srcv/Y4Y8cSEfiN1bPZVZSBUinOLhPIyDgwV
+	BBgBXUl4ucVaTfebaOoJPH8l+goA4mSCWiCVI9oRmc=
+Received: from 00107082$163.com ( [111.35.189.95] ) by
+ ajax-webmail-wmsvr-40-120 (Coremail) ; Tue, 3 Jun 2025 18:08:47 +0800 (CST)
+Date: Tue, 3 Jun 2025 18:08:47 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Yeoreum Yun" <yeoreum.yun@arm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, mingo@kernel.org,
+	acme@kernel.org, namhyung@kernel.org, leo.yan@arm.com,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <aD6+RGnAOyIS+tik@e129823.arm.com>
+References: <19514ed5.5692.19734522326.Coremail.00107082@163.com>
+ <aD6Xk2rdBjnVy6DA@e129823.arm.com> <aD6+RGnAOyIS+tik@e129823.arm.com>
+X-NTES-SC: AL_Qu2fCvWfuksp4SiabOkZnEYQheY4XMKyuPkg1YJXOp80qiTS4SchZ25qJnLK9PmtFz2moQmoVjhMwclIUoR1QJiPZ8veOEDDx3N7bvlbBUI/
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH5fLggKL4jMjrJJEYV=Snqftu+oc4-sTNj9spinON5kHVP9xg@mail.gmail.com>
+Message-ID: <619d4d6.a9c9.1973543d6d9.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:eCgvCgD3_+iwyT5o2_0SAA--.37653W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkA9hqmg+uMH2GgAJse
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-On Tue, Jun 03, 2025 at 11:57:22AM +0200, Alice Ryhl wrote:
-> On Tue, Jun 3, 2025 at 11:43 AM Danilo Krummrich <dakr@kernel.org> wrote:
-> >
-> > On Tue, Jun 03, 2025 at 11:18:40AM +0200, Alice Ryhl wrote:
-> > > I don't think that helps. If Devres::drop gets to swap is_available
-> > > before the devm callback performs the swap, then the devm callback is
-> > > just a no-op and the device still doesn't wait for free_irq() to
-> > > finish running.
-> >
-> > True, this will indeed always be racy. The rule from the C API has always been
-> > that devm_{remove,release}_action() must not be called if a concurrent unbind
-> > can't be ruled out. Consequently, the same is true for Revocable::revoke() in
-> > this case.
-> >
-> > I think Devres::drop() shouldn't do anything then and instead we should provide
-> > Devres::release() and Devres::remove(), which require the &Device<Bound>
-> > reference the Devres object was created with, in order to prove that there
-> > can't be a concurrent unbind, just like Devres::access().
-> 
-> What I suggested with the mutex would work if you remove the devm
-> callback *after* calling free_irq.
-> 
->     // drop Registration
->     mutex_lock();
->     free_irq();
->     mutex_unlock();
->     devm_remove_callback();
-
-I think it would need to be
-
-	if (!devm_remove_callback()) {
-		mutex_lock();
-		free_irq();
-		mutex_unlock();
-	}
-
->     // devm callback
->     mutex_lock();
->     free_irq();
->     mutex_unlock();
-
-Yes, we could solve this with a lock as well, but it would be an additional
-lock, just to maintain the current drop() semantics, which I don't see much
-value in.
-
-The common case is that the object wrapped in a Devres is meant to live for the
-entire duration the device is bound to the driver.
-
-> Another simpler option is to just not support unregistering the irq
-> callback except through devm. Then you don't have a registration at
-> all. Creating the callback can take an irq number and a ForeignOwnable
-> to put in the void pointer. The devm callback calls free_irq and drops
-> the ForeignOwnable.
-
-That's basically what Devres::new_foreign_owned() already does.
+CkF0IDIwMjUtMDYtMDMgMTc6MjA6MDQsICJZZW9yZXVtIFl1biIgPHllb3JldW0ueXVuQGFybS5j
+b20+IHdyb3RlOgo+SGkgRGF2aWQsCj4KPj4gPiA+ID4gPgo+PiA+ID4gPiA+IEFsc28sIHlvdXIg
+cGF0Y2ggY291bGRuJ3Qgc29sdmUgYSBwcm9ibGVtIGRlc2NyaWJlIGluCj4+ID4gPiA+ID4gY29t
+bWl0IGEzYzNjNjY2NygicGVyZi9jb3JlOiBGaXggY2hpbGRfdG90YWxfdGltZV9lbmFibGVkIGFj
+Y291bnRpbmcgYnVnIGF0IHRhc2sgZXhpdCIpCj4+ID4gPiA+ID4gZm9yIElOQ0FUSVZFIGV2ZW50
+J3MgdG90YWxfZW5hYmxlX3RpbWUuCj4+ID4gPiA+Cj4+ID4gPiA+IEkgZG8gbm90IHRoaW5rIHNv
+Lgo+PiA+ID4gPiBDb3JyZWN0IG1lIGlmIEkgYW0gbWFraW5nIHNpbGx5ICBtaXN0YWtlcywKPj4g
+PiA+ID4gVGhlIHBhdGNoLCBodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzIwMjUwNjAzMDMy
+NjUxLjM5ODgtMS0wMDEwNzA4MkAxNjMuY29tLwo+PiA+ID4gPiBjYWxscyBwZXJmX2V2ZW50X3Nl
+dF9zdGF0ZSgpIGJhc2VkIG9uIERFVEFDSF9FWElUIGZsYWcsIHdoaWNoIGNvdmVyIHRoZSBJTkFD
+VElWRSBzdGF0ZSwgcmlnaHQ/Cj4+ID4gPiA+IElmIERFVEFDSF9FWElUIGlzIG5vdCB1c2VkIGZv
+ciB0aGlzIHB1cnBvc2U/IFRoZW4gd2h5IHNob3VsZCBpdCBleGlzdCBhdCB0aGUgZmlyc3QgcGxh
+Y2U/Cj4+ID4gPiA+IEkgdGhpbmsgSSBkb2VzIG5vdCByZXZlcnQgdGhlIHB1cnBvc2Ugb2YgY29t
+bWl0IGEzYzNjNjY2Ny4uLi4uQnV0IEkgY291bGQgYmUgd3JvbmcKPj4gPiA+ID4gV291bGQgeW91
+IHNob3cgYSBjYWxsIHBhdGggd2hlcmUgREVUQUNIX0VYSVQgaXMgbm90IHNldCwgYnV0IHRoZSBj
+aGFuZ2VzIGluIGNvbW1pdCBhM2MzYzY2NjcgaXMgc3RpbGwgbmVlZGVkPwo+PiA+ID4gPgo+PiA+
+ID4gPiBTb3JyeSBmb3IgbXkgYmFkIGV4cGxhaW5hdGlvbiB3aXRob3V0IGRldGFpbC4KPj4gPiA+
+ID4gVGhpbmsgYWJvdXQgY3B1IHNwZWNpZmljIGV2ZW50IGFuZCBjbG9zZWQgYnkgdGFzay4KPj4g
+PiA+ID4gSWYgdGhlcmUgaXMgc3BlY2lmaWMgY2hpbGQgY3B1IGV2ZW50IHNwZWNpZmllZCBpbiBj
+cHUgMC4KPj4gPiA+ID4gMS4gY3B1IDAgLT4gYWN0aXZlCj4+ID4gPiA+IDIuIHNjaGV1bGRlZCB0
+byBjcHUxIC0+IGluYWN0aXZlCj4+ID4gPiA+IDMuIGNsb3NlIHRoZSBjcHUgZXZlbnQgZnJvbSBw
+YXJlbnQgLT4gaW5hY3RpdmUgY2xvc2UKPj4gPiA+ID4KPj4gPiA+ID4gQ2FuIGJlIGZhaWxlZCB0
+byBjb3VudCB0b3RhbF9lbmFibGVfdGltZS4KPj4gPiA+Cj4+ID4gPiBJcyB0aGlzIGV4cGxhaW5p
+bmcgdGhlIHB1cnBvc2Ugb2YgY29tbWl0IGEzYzNjNjY2NyA/Cj4+ID4gPiBJIGFtIG5vdCBhcmd1
+aW5nIHdpdGggaXQuIEFuZCBJIGFsc28gbm90IHN1Z2dlc3QgcmV2ZXJ0aW5nIGl0LiAoaXQgaXMg
+anVzdCB0aGF0IHJldmVydGluZyBpdCBjYW4gZml4IHRoZSBrZXJuZWwgcGFuaWMuKQo+PiA+Cj4+
+ID4gSW4gY29tbWl0IGEzYzNjNjY2NywgSSBleHBsYWluIHRoZSBzcGVjaWZpYyBjYXNlIGJ1dCBu
+b3Qgd2l0aCBhYm92ZQo+PiA+IGNhc2UuIEJ1dCB0aGUgY29tbWl0J3MgcHVycG9zZSBpcyAiYWNj
+b3VudCB0b3RhbF9lbmFibGVfdGltZSIgcHJvcGVybHkuCj4+ID4KPj4gPiA+ID4gQW5kIGFsc28s
+IGNvbnNpZGVyaW5nIHRoZSB5b3VyIHBhdGNoLCBmb3IgREVUQUNIX0VYSVQgY2FzZSwKPj4gPiA+
+ID4gSWYgaXQgY2hhbmdlcyB0aGUgc3RhdGUgYmVmb3JlIGxpc3RfZGVsX2V2ZW50KCkgdGhhdCB3
+b3VsZG4ndCBkaXNhYmxlCj4+ID4gPiA+IHJlbGF0ZWQgdG8gdGhlIGNncm91cC4gU28gaXQgd291
+bGQgbWFrZSBjcHVjdHgtPmNncnAgcG9pbnRlciBjb3VsZCBiZSBkYW5nbGVkCj4+ID4gPiA+IGFz
+IHBhdGNoIGRlc2NyaWJlLi4uCj4+ID4gPiBObywgSSBkb24ndCB0aGluayBzby4KPj4gPiA+IGNo
+YW5nZSBzdGF0ZSBiZWZvcmUgbGlzdF9kZWxfZXZlbnQoKSwgdGhpcyBpcyB0aGUgc2FtZSBiZWhh
+dmlvciBiZWZvcmUgY29tbWl0IGEzYzNjNjY2NywgcmlnaHQ/Cj4+ID4gPiBBbmQgbm8gc3VjaCBr
+ZXJuZWwgcGFuaWMgaGFwcGVuZWQgIGJlZm9yZSBjb21taXQgYTNjM2M2NjY3Lgo+Pgo+PiBPaCEg
+SSB3YXMgd3JvbmcsIGJlZm9yZSBjb21taXQgYTNjM2M2NjY3LCAiY2hhbmdlIHN0YXRlIiBoYXBw
+ZW5lZCAqYWZ0ZXIqIGxpc3RfZGVsX2V2ZW50KCkKPj4gPgo+PiA+IFRoYXQncyB3aHkgbGlzdF9k
+ZWxfZXZlbnQoKSBoYW5kbGUgdGhlIHBlcmZfY2dyb3VwX2Rpc2FibGUoKSBiZWZvcmUgdGhlCj4+
+ID4gY29tbWl0IGEzYzNjNjY2Ny4gSG93ZXZlciBiZWNhdXNlIG9mICpteSBtaXN0YWtlKiwgSSd2
+ZSBmb3JnZXQgdG8KPj4gPiBwZXJmX2Nncm91cF9kaXNhYmxlKCkgcHJvcGVybHkgYmVmb3JlIGNo
+YW5nZSB0aGUgZXZlbnQgc3RhdGUuCj4+ID4gWWVzLCB5b3VyIHBhdGNoIGNhbiBtYWtlIGF2b2lk
+IHRoZSBwYW5pYyBzaW5jZSBhcyBzb29uIGFzIGV4aXQsCj4+ID4gdGhlIGV2ZW50LT5jZ3JwIHN3
+aXRjaGVkLgo+Pgo+PiBJIGNhbm5vdCBhZ3JlZSB3aXRoIHRoZSByZWFzb25pbmcsCj4+IFRoZSBw
+YW5pYyBkb3NlIG5vdCBoYXBwZW5lZCB3aGVuIGV4aXQsIGl0IGhhcHBlbmVkIHdoZW4gcmVib290
+L3NodXRkb3duLgo+PiAoSSBjbG9zZSBwZXJmX2V2ZW50X29wZW4gYmVmb3JlIHJlYm9vdCkKPj4g
+Pgo+PiA+IEhvd2V2ZXIsIGFzIEkgc2FpZCwgdGhlIElOQUNUSVZFIGV2ZW50IGNvdWxkIGJlIGZh
+aWxlZCB0byBjb3VudAo+PiA+dG90YWxfZW5hYmxlX3RpbWUuCj4+ID4KPj4gPiBTbywgc2V0IGV2
+ZW50IHNob3VsZCBiZSBvY2N1cmVkIGJlZm9yZSBsaXN0X2RlbF9ldmVudCgpLgo+PiA+QW5kIHNp
+bmNlIGl0J3MgZXZlbnQtPnN0YXRlIGNoYW5nZSBvbiByZW1vdmUuCj4+ID5JdCBzaG91bGRuJ3Qg
+aGF2ZSBhbnkgc2lkZSBlZmZlY3QgdGhlIHN0YXRlIGNoYW5nZSBpc24ndCBjYXVzZSBvZiB5b3Vy
+Cj4+ID4gcGFuaWMuIEJ1dCBtaXNzZWQgcGVyZl9jZ3JvdXBfZGlzYWJsZSgpLgo+Pgo+PiBBbnkg
+cHJvY2VkdXJlIHRvIGJyaW5nIG91dCB0aGUgaW1wYWN0IG9mIHRoaXMgbWlzc2VkIHBlcmZfY2dy
+b3VwX2Rpc2FibGUoKT8KPj4gTXkgc3lzdGVtIHNlZW1zIGFsbCBub3JtYWwsIHdoZXJlIHNob3Vs
+ZCBJIGNoZWNrIGl0Pwo+Cj5IZXJlIGlzIHBvc3NpYmxlIHNlbmFyaW86Cj4gIDEuIHBlcmYgZXZl
+bnQgb3BlbiB3aXRoIGNncm91cC4KPiAgMi4gcGVyZiBldmVudCBvcGVuIHdpdGggY3B1IGV2ZW50
+IChubyBjZ3JvdXApLgo+ICAzLiBhYm92ZSB0YXNrIHNldHMgdGhlIGNwdWN0eC0+Y2dycCB0aGUg
+c2FtZSB0byAoMSkuCj4gIDMuIGNsb3NlICgxKSBldmVudHMuCj4gICAgIGhlcmUsIHBlcmZfY2dy
+b3VwX2V2ZW50X2Rpc2FibGUoKSBpc24ndCBjYWxsZWQsCj4gICAgIGNwdWN0eC0+Y2dycCBzdGls
+bCBwb2ludCB0aGUgY2dyb3VwLgo+ICA0LiBieSBvdGhlciB0YXNrLCB0aGUgY2dyb3VwIGFuZCBp
+cyBkZXN0cm9pZWQuCj4gIDUuIGNsb3NlICgyKSBldmVudHMuCj4gICAgIGhlcmUsIGl0IGlzIGxh
+c3QgZXZlbnQsIGluIF9fcGVyZl9yZW1vdmVfZnJvbV9jb250ZXh0KCkKPiAgICAgYW5kIGxhc3Qg
+ZXZlbnQsIGl0IGNhbGxzIHVwZGF0ZV9jZ3JwX3RpbWVfZnJvbV9jcHVjdHgoKSwKPiAgICAgQW5k
+IHRoaXMgcmVmZXJzIGludmFsaWQgcG9pbnRlci4KCi4uLiBzZWVtcyB0b28gY29tcGxpY2F0ZWQg
+dG8gbWUgdG8gZ2l2ZSBpdCBhIHRyeS4KV291bGQgbm90IGRlc3Ryb3lpbmcgY2dyb3VwIHRyaWdn
+ZXIgc29tZSByZWFjdGlvbiB0byBjcHVjdHg/IApUaGVyZSBoYXMgdG8gYmUgc29tZSBjb25uZWN0
+aW9uIGJldHdlZW4gY2dyb3VwIGxpZmVjeWNsZSBhbmQgcGVyZiBjcHVjdHgtPmNncnAuCkhhdmUg
+eW91IHRyeSBpdCBvdXQ/IG9yIGl0IGlzIGp1c3QgdGhlb3JldGljYWw/IAoKCj4KPj4gQnV0IHRv
+IGZpeCBpdCwgIGlzbid0IGZvbGxvd2luZyBjaGFuZ2UgbGVzcyBhZ2dyZXNzaXZlPwo+PiAgICAg
+ICAgIGV2ZW50X3NjaGVkX291dChldmVudCwgY3R4KTsKPj4gLSAgICAgICBwZXJmX2V2ZW50X3Nl
+dF9zdGF0ZShldmVudCwgbWluKGV2ZW50LT5zdGF0ZSwgc3RhdGUpKTsKPj4gICAgICAgICBpZiAo
+ZmxhZ3MgJiBERVRBQ0hfR1JPVVApCj4+ICAgICAgICAgICAgICAgICBwZXJmX2dyb3VwX2RldGFj
+aChldmVudCk7Cj4+ICAgICAgICAgaWYgKGZsYWdzICYgREVUQUNIX0NISUxEKQo+PiAgICAgICAg
+ICAgICAgICBwZXJmX2NoaWxkX2RldGFjaChldmVudCk7Cj4+ICAgICAgICAgbGlzdF9kZWxfZXZl
+bnQoZXZlbnQsIGN0eCk7Cj4+ICsgICAgICAgcGVyZl9ldmVudF9zZXRfc3RhdGUoZXZlbnQsIG1p
+bihldmVudC0+c3RhdGUsIHN0YXRlKSk7Cj4KPklmIHBlcmZfY2hpbGRfZGV0YWNoKCkgaXMgY2Fs
+bGVkIGZpcnN0IGFuZCBwZXJmX2V2ZW50X3NldF9zdGF0ZSgpIGNhbGwsCj5zaW5jZSB0aGUgcGFy
+ZW50IGlzIHJlbW92ZWQgaW4gcGVyZl9jaGlsZF9kZXRhdGNlZCwKPkl0IHdvdWxkIGJlIGZhaWxl
+ZCB0byBhY2NvdW50IHRoZSB0b3RhbF9lbmFibGVfdGltZSB3aGljaCBjYWN1bGF0aW5nCj5jaGls
+ZF9ldmVudCdzIGVuYWJsZV90aW1lIHRvby4KClRoYW5rcyBmb3IgY2xhcmlmeWluZyB0aGlzLCAK
+U28gdGhlIHdob2xlIHBvaW50ICBpbiBjb21taXQgYTNjM2M2NjY3IGlzIHRvIG1ha2UgIHBlcmZf
+ZXZlbnRfc2V0X3N0YXRlKCkgaGFwcGVucyBiZWZvcmUgcGVyZl9jaGlsZF9kZXRhY2goKSwgcmln
+aHQ/CkkgZmVlbCBJIGdvdCBsb3N0IHNvbWV3aGVyZSB3aGVuIEkgcnVzaCB0byB0aGlzIHN1Z2dl
+c3Rpb24uIEJ1dCBJIHN0aWxsIGRvbid0IHVuZGVyc3RhbmQgd2h5IG15IHBhdGNodjEgIGJyZWFr
+cyBjb21taXQgCmEzYzNjNjY2NywgcmVhbGx5IGNvbmZ1c2VkLgoKCj4KPlRoYW5rcwo+Cj4tLQo+
+U2luY2VyZWx5LAo+WWVvcmV1bSBZdW4K
