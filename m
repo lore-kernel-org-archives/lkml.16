@@ -1,141 +1,105 @@
-Received: from mx0b-00364e01.pphosted.com (mx0b-00364e01.pphosted.com [148.163.139.74])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0095124DD06
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 22:50:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.139.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB4E822688C;
+	Tue,  3 Jun 2025 22:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748991042; cv=none; b=Ftyo8842dIXBSK5bcVKgMUf7udOEQXSTfcwVWcTa+5I3sJiy3fNKBV4Pz9H4HJjMGeGo2t7lpw/pBFB5KxX7/UuD6/jUBqHH5WFfeQiXTuAufeIv8zZ4Eg06bKEDSg/NBbAL2EBd2hZ5YpC26Pcamdua0gOrUWEgYWPT1Q7Q21Q=
+	t=1748991087; cv=none; b=WEtoqdxTG4Lx6f9lt8ioKx173ZvwYjNdYgupaDKjzFNsoFGPoDzcx5xzrS+JJogVzgvrWAXJghFdzfzhsY62ozuUUOZ29A0/Bk87uqNCtGvzkQc9RUevADsQRY0p+eRZ1vVxHuUTg2FjkA9fcltO/PG37w7eZUrtd+iwF059hSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748991042; c=relaxed/simple;
-	bh=i2lx+JkxNZ+W3TCDZnRYDvhiaw/fRSyKyaRCnDad9K4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=d0QMgEmfp9MkcrNjImSSd5EsNjLeNqJmcSGa6dg23IvPBf/bdcltN7+FquRALBwXnpwzBpmwzVifpFWnOIW8FyPSWJkXEIj33uqqvVpSo89hN/wGmvJJSrZdR2VD1HTYZdic0VEGpuBrJi33yT2fAbbhdO9NsTAYRYc2HG1Hbbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu; spf=pass smtp.mailfrom=columbia.edu; dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b=mxYJ7tSe; arc=none smtp.client-ip=148.163.139.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=columbia.edu
+	s=arc-20240116; t=1748991087; c=relaxed/simple;
+	bh=U2fAHShTsPt3xM9RI+E0kyll2X7at0kvzSSVpwpOxt4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Yv3UZOGPgYV6wxfCRRUqqo0P1eyrLmcgCSYyDd8r3WVAe9UOXk0bTultvbF0VBVJTMvNBAPSUeLvowG0GiLDeAti/+2AzSs1MoTyAWFQmzMhYkX0MQHbT6BlK2Xsydupi3LpYbTyT/u7qY8duHS1xeob0j0keUwuTxcN7N8n+oE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=q/sDGbU0; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b="mxYJ7tSe"
-Received: from pps.filterd (m0167074.ppops.net [127.0.0.1])
-	by mx0b-00364e01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 553Mj8hE017751
-	for <linux-kernel@vger.kernel.org>; Tue, 3 Jun 2025 18:50:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=columbia.edu; h=cc :
- content-transfer-encoding : content-type : date : from : message-id :
- mime-version : subject : to; s=pps01;
- bh=mnOINAIPGY/Ou83vSuinfWElCEeIzSaRYKDK+hS7UK4=;
- b=mxYJ7tSeNSr/qKkG5dt7HYyNshWTHjvf+KyWfX0UBtJSjA7y8kJfbNxxRwOznIBK5UnF
- QPwD12fVSOVOjv32y4qe0HJzTHVENSyOQM5FwC6U7Fy/NcVS3SBll2lWBu5DaecN31KU
- zQyUSyFUSm73i3zu52EU0F4G5xtqsBfsNOZZ1/HEkYiWllWp0CrjvnmxsRPuuME0t3i9
- kXn/W7eXiAYYsgShQtWV1uTAmVRE/KrR4v4zFh3GtHuOqcmOvqVQeyBqgXv6ZFJ6qFck
- VRzApgAEtG/HeaR8Bs0ZAdxFCRwou0ddbu+sSKCJ8x6bdz+GPhI/ZQral/bpzB0IiaG6 FQ== 
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0b-00364e01.pphosted.com (PPS) with ESMTPS id 470f2uwbj7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 18:50:34 -0400
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c791987cf6so1191776285a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 15:50:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748991033; x=1749595833;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mnOINAIPGY/Ou83vSuinfWElCEeIzSaRYKDK+hS7UK4=;
-        b=rebk9ikmAlt5hOeHdwUMsUPmejKaTPjP3B9QI9rz35sBTTouVVL2piIUoMSK+NTNaH
-         HpP2uAk+zz/xtJ5jIwrGWQr1bbcsbs2yTtUR3+WbuaWVfvJ0tIC/af97ipnR3mI+9uFA
-         75JyEbuECB75zVEsedkRfMxNTKXHaw+5Ch8QAgIK2WW5B3pKhLsYqBbkIbYvBoqqBuGd
-         ntLKJRIQ0enFhpThSbKzE6+Z7ti1SXal3U4Un867TVtnwjGvT4LYUap6QBBvnlF07B1v
-         jiBrBcx9Z+LJ5afAQwBZJh9BNowBXXWIO4s+YnVd7IevNLR50YWBbtWqSKiaMLfIR7vy
-         W84Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU8zcDkInC5ei8Pq+oTrEvZiirEHQk5L0kXFhnLJcMtWWrwdRQCWa9meODsn8r7/H69B6KiLpJRLZriSI8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzH5PUZ50kFegoOLle4MMmpDQdsVxo11sORn2yuFft8p2iWrQKq
-	TWEJLGBvofZ/SdxOR2IbwR7jRsUWJ6REweC0QzF8DBmPx7GhrTrQSZbx1OER9L2a+rd/BJEaUjA
-	cS09kJfzalTTuvaVCKRoBriO9m1cf5kiw0XrveiCUZLtoBYkv7WTR5R2stNjpwg==
-X-Gm-Gg: ASbGncvV/AVoZxHCqbGMHQH9r40K/FyZ7JsokjiMSx16bob8Tpukff52AJa5ng2AMk2
-	36eGUbWKQhw8CB5O68snC2glZc2WJzliGWPC2zc4Q32EyfqvXkwsjTdYUUXkLxIiD0XyDCD4kLL
-	H7fztLvqbsO11Icci5TuvCib5G55ghSckiB7izFfkilnTYM8ZJxTvWaVHU9TSFVvkHswtsNuSI7
-	MCmF428O1BicYSuiIK5n4tqCKyGmlhccI/yvHNsVXw5Aecq5HSTRpJ556cFEyCwloXwEFIQS4Um
-	R3by4mFMrHlgcbJGxoMVZHoSAbSuGtFOEQ3gj2xKButdc/xX5YygQH98sA==
-X-Received: by 2002:a05:620a:84ca:b0:7d2:18a1:ce8 with SMTP id af79cd13be357-7d2198ef699mr126686385a.26.1748991033493;
-        Tue, 03 Jun 2025 15:50:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHtrJnD/OOKXUtzOLplJe6RJMGdW40f/XS2eC47ExOwD2Rj25DN3kAGNiiVAICHB9OlX7/n1A==
-X-Received: by 2002:a05:620a:84ca:b0:7d2:18a1:ce8 with SMTP id af79cd13be357-7d2198ef699mr126683885a.26.1748991033102;
-        Tue, 03 Jun 2025 15:50:33 -0700 (PDT)
-Received: from [127.0.1.1] (nat-128-59-176-95.net.columbia.edu. [128.59.176.95])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d09a0f9940sm920370085a.44.2025.06.03.15.50.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 15:50:32 -0700 (PDT)
-From: Tal Zussman <tz2294@columbia.edu>
-Date: Tue, 03 Jun 2025 18:50:17 -0400
-Subject: [PATCH] MAINTAINERS: add tlb trace events to MMU GATHER AND TLB
- INVALIDATION
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="q/sDGbU0"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=FQ3DHoKvMraMJ0d27hoH4C3fLV1yEdec7+t3t0+1/Ak=; b=q/sDGbU07pJFA1RX
+	krmkJGueYxlIFGXPG0vz24InA5FimusUCXjcHZ0jsW2sQkHHuuQlYHx2/e20cxiTiOHTjK3iqp4yJ
+	0PxxIrhN0J9LoI0k+NJ2mrpvynxW8kYg10940zdQNFp5UKlO6pWvLrZxGW/sk6glfDHDxEeC516/R
+	Wr6/XzPdtGFABONvoTth8cxoC5svjashhiT7wJiqApNVDP2gYQrJNUmO+YHI0b2VgJMb7DBcZcp2u
+	0TQxjTEg8KmvtBWE3Ws1zUpVN4OlNBRMwU7QjlhOhTUeYzq6q0EFY3mNTynoM2mVKd2gMPE0EdcpP
+	4vpo6OPtAMHfbGZH5w==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1uMaTa-007UXY-1I;
+	Tue, 03 Jun 2025 22:51:22 +0000
+From: linux@treblig.org
+To: mchehab@kernel.org,
+	linux-media@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH] media: v4l2-tpg: Remove unused tpg_fillbuffer
+Date: Tue,  3 Jun 2025 23:51:21 +0100
+Message-ID: <20250603225121.308402-1-linux@treblig.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250603-tlb-maintainers-v1-1-726d193c6693@columbia.edu>
-X-B4-Tracking: v=1; b=H4sIACh8P2gC/x2MQQqAIBAAvxJ7TjAjxb4SHdS2WigLlQjEvycd5
- jCHmQwRA2GEsckQ8KFIl6/StQ243fgNGS3VQXAxcMl7lg7LTkM+VTBEpqRW1gmlhHZQqzvgSu9
- /nOZSPgZRAihhAAAA
-X-Change-ID: 20250603-tlb-maintainers-7697bc27729c
-To: Will Deacon <will@kernel.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tal Zussman <tz2294@columbia.edu>
-X-Mailer: b4 0.14.3-dev-d7477
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748991032; l=864;
- i=tz2294@columbia.edu; s=20250528; h=from:subject:message-id;
- bh=i2lx+JkxNZ+W3TCDZnRYDvhiaw/fRSyKyaRCnDad9K4=;
- b=ELGpz4PKz6KnOE0I1m3t5q/WTtlfcOk9x20TCo/QeW2il8vqxP9bLBoLtBHjB5pbEU6k+LyrL
- S8pI1+lZQGnBatK79aCq7nnjr5+uflg0Jc8VvRruDbdEAjeAtiJsEPE
-X-Developer-Key: i=tz2294@columbia.edu; a=ed25519;
- pk=BIj5KdACscEOyAC0oIkeZqLB3L94fzBnDccEooxeM5Y=
-X-Proofpoint-ORIG-GUID: jNKaSf_lbqd4-FVkAJj_S0zOoaBqhZOz
-X-Proofpoint-GUID: jNKaSf_lbqd4-FVkAJj_S0zOoaBqhZOz
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAzMDE5NyBTYWx0ZWRfX98LRL90iwjZ4 qs7yC1DF1fZPI9Mhwpc99VNYLzgXyi0PtWyWDv/OorVkAtlxGwtGmUSWEiJo1QrxvzRBTtmo7h6 ur0yQ/L75V2dkUl4VWX180ac0I+cn4N3UlhkHNRato26uqCQwhCpjKP+o0ESxVP1QJzTnTSD3/W
- WKwAoj91eh0uaubE+FgceHtB0zAxawea4Wa4fEAYmxGY63GD4TqSjLZvGwUUMR62fcJvVJUIKDe lbFwKwjDAaNk1AhAP/yJEJxIC4xLdzMKK2gKTLDFjR8jdOx2a+WcYxWN8Xgy8mrPb0aBfg4gsKt sz/GvZGchZ1dxWlCKcc5jqKwCxbIxGe2m/4IzlMeyLDN/d6fNQ+EheZr9TcyJSXUeNnuYV5B8Aq w0QxmqcA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-03_03,2025-06-03_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- mlxlogscore=772 phishscore=0 priorityscore=1501 impostorscore=0
- clxscore=1015 mlxscore=0 bulkscore=10 adultscore=0 lowpriorityscore=10
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2505160000 definitions=main-2506030197
+Content-Transfer-Encoding: 8bit
 
-The MMU GATHER AND TLB INVALIDATION entry lists other TLB-related files.
-Add the tlb.h tracepoint file there as well.
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Link: https://lore.kernel.org/linux-mm/ce048e11-f79d-44a6-bacc-46e1ebc34b24@redhat.com/
-Suggested-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Tal Zussman <tz2294@columbia.edu>
+The last use of tpg_fillbuffer() was removed in 2015 by
+commit ddcaee9dd4c0 ("[media] vivid: add support for single buffer planar
+formats")
+
+Remove it.
+
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 ---
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 17 -----------------
+ include/media/tpg/v4l2-tpg.h                  |  2 --
+ 2 files changed, 19 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 98201e1f4ab5..678eae27688b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16653,6 +16653,7 @@ L:	linux-mm@kvack.org
- S:	Maintained
- F:	arch/*/include/asm/tlb.h
- F:	include/asm-generic/tlb.h
-+F:	include/trace/events/tlb.h
- F:	mm/mmu_gather.c
+diff --git a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
+index 931e5dc453b9..d51d8ba99dcb 100644
+--- a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
++++ b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
+@@ -2710,23 +2710,6 @@ void tpg_fill_plane_buffer(struct tpg_data *tpg, v4l2_std_id std,
+ }
+ EXPORT_SYMBOL_GPL(tpg_fill_plane_buffer);
  
- MN88472 MEDIA DRIVER
-
----
-base-commit: 546b1c9e93c2bb8cf5ed24e0be1c86bb089b3253
-change-id: 20250603-tlb-maintainers-7697bc27729c
-
-Best regards,
+-void tpg_fillbuffer(struct tpg_data *tpg, v4l2_std_id std, unsigned p, u8 *vbuf)
+-{
+-	unsigned offset = 0;
+-	unsigned i;
+-
+-	if (tpg->buffers > 1) {
+-		tpg_fill_plane_buffer(tpg, std, p, vbuf);
+-		return;
+-	}
+-
+-	for (i = 0; i < tpg_g_planes(tpg); i++) {
+-		tpg_fill_plane_buffer(tpg, std, i, vbuf + offset);
+-		offset += tpg_calc_plane_size(tpg, i);
+-	}
+-}
+-EXPORT_SYMBOL_GPL(tpg_fillbuffer);
+-
+ MODULE_DESCRIPTION("V4L2 Test Pattern Generator");
+ MODULE_AUTHOR("Hans Verkuil");
+ MODULE_LICENSE("GPL");
+diff --git a/include/media/tpg/v4l2-tpg.h b/include/media/tpg/v4l2-tpg.h
+index a55088921d1d..3e3bd0889b6d 100644
+--- a/include/media/tpg/v4l2-tpg.h
++++ b/include/media/tpg/v4l2-tpg.h
+@@ -248,8 +248,6 @@ void tpg_calc_text_basep(struct tpg_data *tpg,
+ unsigned tpg_g_interleaved_plane(const struct tpg_data *tpg, unsigned buf_line);
+ void tpg_fill_plane_buffer(struct tpg_data *tpg, v4l2_std_id std,
+ 			   unsigned p, u8 *vbuf);
+-void tpg_fillbuffer(struct tpg_data *tpg, v4l2_std_id std,
+-		    unsigned p, u8 *vbuf);
+ bool tpg_s_fourcc(struct tpg_data *tpg, u32 fourcc);
+ void tpg_s_crop_compose(struct tpg_data *tpg, const struct v4l2_rect *crop,
+ 		const struct v4l2_rect *compose);
 -- 
-Tal Zussman <tz2294@columbia.edu>
+2.49.0
 
