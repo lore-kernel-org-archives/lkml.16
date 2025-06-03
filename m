@@ -1,208 +1,114 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbg154.qq.com (smtpbg154.qq.com [15.184.224.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A641879D2
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 06:26:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0E01482E7;
+	Tue,  3 Jun 2025 06:26:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.224.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748931989; cv=none; b=rbsi8uk9sWsFpKY9hRIgvJIy8yG7Oqcwd8PvMlP3DPSsUSzLErY37lLr/kKqyFQYe9lz/+m61KqOPPBdG3FN+pMK+D7SmKnpXgvr3x+iOmrlxlerpOfiLgeuJpmXM3M6SkUrO0iNF3HmHXHMh9Ork6R2PeJP+vbp2bF2yR/Ww+Q=
+	t=1748932007; cv=none; b=WaZLF9TcyYnsOypHnm0ZysxBEbcqNYyLg2+/i1xashDKmE2zUoSKFeNQFrNa3at1PgHT8xPGTfLEUf8KuOXW8GokXu7nETLwuhqElfuJNvNEz75HvCNDKzfyHW7V3mC3eXo+i27O43lM82B0aDS/L/KTzLus1hwIxiLPVDvtb4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748931989; c=relaxed/simple;
-	bh=SwzzN68OzT7nUEHqb0hfK995uCWmM97KnuCfULC3Xf8=;
+	s=arc-20240116; t=1748932007; c=relaxed/simple;
+	bh=R+OerVyVxj6IqrndRPrUYFsv52NUlRFWDcYIsq2Ylpo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G5qJyvpcswJ9S88Maf8FYucxUQjEx2qBa3nTXo+/XfcztuODIJrm1cxkpIgsZ47TItOO/lPxPxSBwdK6qlAAyqG6Ln3/iqbzIK6onCM+ZHl0KjeVPI8RPPXYL8aCJAw7TOiD4DFVqcYz4INauulJlS4faY6FbW0i1+uVjirn87s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Of4boE/n; arc=none smtp.client-ip=209.85.166.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=cpKADcKLust+oZ1rOF4yEtsST32si/UCruTw/3P/9zOuPStqHRgBnYXCCr3zZokRqi3bc4zsdc27biBcj6dktHVfl2ISiE0NKahJvnuuxwHJNTAVczInV0LvSSApDoXIFWYCcHSBt8kDokzxncEEYIwOwvLg47r8wrEwaqAvF1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=UBoLwNWX; arc=none smtp.client-ip=15.184.224.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Of4boE/n"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3dc8897f64cso146555ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 23:26:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748931986; x=1749536786; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y0lrz1F6k8LZ4oKJgAJMIc8RLcQPs64aVnJe+NCmKgM=;
-        b=Of4boE/naqZ3TnN9TajQBZ+nFCeRgHFDqBM8j+LNBaDN/ZxwaxRtVmkJv71NcjG51z
-         x21ZZtnNQpl45K7NRnyvG014mrGRZtTfIibgkBz0Yjej+XyBsznJkWn95bFsDMh65K1c
-         uaIDQ4x43ZvoHDtw629odFJBhQT1pb+mGA6040dMRWa7POziUjcF6cQ2ZE87p852buk0
-         69MbdMNMwZcjdJAL1HIjfgwvzdTpt7JDzzVGnUyAkf5GEs6f+t0Qxu6F4o2wkE+IMtiZ
-         SquVXnpuDMp+8PVtXcAlsD7x3ofzEqgkIobO6FaUYTaws1MR3e/GxGJ1UM24hasMwwHs
-         mpTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748931986; x=1749536786;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Y0lrz1F6k8LZ4oKJgAJMIc8RLcQPs64aVnJe+NCmKgM=;
-        b=Ef2OYciYsYv8GuP2PubAn6j/US3FAlpGCgTRjRfdY6XL7Icxb4d5XERZmuCiqqXjDi
-         vBnauiF8wRC/cMeqfOLybpAGInqVnZjFwzXpTxydl9OGbg3JGMa4YZ0b3Cfh1gmjYXff
-         JKdx+1WBV7nygZqvYrmRalAb3F9MCKsgWezsBZO2p9ckTtMqGd13vkRHlNmATLRhkmzS
-         aFs0ax7qftHn3zAJdmMYmpcq437NuSCU6CHzJXtoamoh9bL0HB1QTFICKmcwUXr15JJv
-         ereAaolCHx2IaGKKBgDRUQIvymw6Nf79VxtzfB5RdJfjIp4UGMC0K2YlOuZXKg6zMRLP
-         0U0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUDk0mxh9bG93iL7cjn4U40TR7XbmqtAm88MgNppCTzoTvlIgD5Q6VP+7I5tzpkRR8CcbJor4+ZhKo8P18=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yymu2ckVFNrYULZWXricrB/Z5OnXXI8HO7hqWePTZs47HlqQt9v
-	M/WaqdurZ6jfgi5nqXTc9NuG2q4G0AJPILTuJP04fY/0Nbatcyev8z77Oaladuw2DfqISkXf0Ku
-	yZaorZUtFxE1x9tjMUyS4qS1M/iOBpR18bgnIGZZV
-X-Gm-Gg: ASbGnctCuyUBf9uSUffkuf+pEC9r51WM79MaGhyZs3+obqxLKx+bZ/a5yqRdbGL0g6S
-	eunoFpmboBFATOCZLaNrp1BC3gmROZxt2KzO96Gu+7A1x8Yv70fkTgqZVovu60/F9pXXieRQEAw
-	qs6/DeXcbXwmNY1e+vij9dyoasA1mSeNmDTArJZdx/kHDV50NBQRpsQ+Y=
-X-Google-Smtp-Source: AGHT+IFN3z4zf2CcZVIN0BqhrTiUFcdc3mVIGzbKuu8egvEgUfrHrtKW9hjnKZoci2OTTB/gVoIE9e44XPnIXMG/IDo=
-X-Received: by 2002:a05:6e02:190f:b0:3d8:18f8:fb02 with SMTP id
- e9e14a558f8ab-3ddb78550d9mr1742315ab.17.1748931985333; Mon, 02 Jun 2025
- 23:26:25 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="UBoLwNWX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1748931987;
+	bh=R+OerVyVxj6IqrndRPrUYFsv52NUlRFWDcYIsq2Ylpo=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To;
+	b=UBoLwNWXsfbw9HMh3GMcLubTcy8o9PD460Gh0Z0RVm3KNaI6yeq7kOy7ZDGxBoxfJ
+	 550Hlbwfe7mEmfqy2vCxXnvzxRUM/r0VaScpusx8gecLTEbVrHSYmU7Z6rK8aAJwcZ
+	 Yq/WBc1D7Du+U1PBB1dwmxMsAz8/E05WT6pouAGY=
+X-QQ-mid: zesmtpgz9t1748931985tb95e0d80
+X-QQ-Originating-IP: i+o66jrVhkv3ZXJ7FFjZMcYF1ZaZk/3iW1joDJQYrWY=
+Received: from mail-yw1-f172.google.com ( [209.85.128.172])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 03 Jun 2025 14:26:23 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 510946114599463882
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-70dd2d35449so40748437b3.3;
+        Mon, 02 Jun 2025 23:26:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVioy45hkq40Gjr51zt3Xo4wr+z5qK2IY7P9qeSUKqHWm3LuUk/qd56LwRLtakJsUtnctblofzP+95szl3R4sn8@vger.kernel.org, AJvYcCXuFJQZ+phbNb/58/Y45/aeNSdT76jmFySoj6VcSF8aN9vvX1O7RnfSbOr7YAN4Ps2epN1If1G/QMaqdp5E@vger.kernel.org, AJvYcCXzfwABnsAW7mre5kLMYyo0X2zCN2Jjo88aU6mqfQXdENGGP+WOGQx42/i+xcRCuM3clLsnFEWUbwQGhwtN@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEvEA78jOTb/Mrq6rn7qsxHFfMhiV9kD0znj6Xb9enGmrmH9Zk
+	N5OzOAxm5ypYz41d8BRyfx9YR8lQw43EnLRhXNMT3usHivg6vRJG+L3t/nUsabZwME9y3Fn0gpg
+	oHSp9I7xmmP2+FzMfNAtjwrOcqWjaRXM=
+X-Google-Smtp-Source: AGHT+IGFv6a8e259ikLqOLxS+7Zsi1dR9R9kdEmpFbse2dsMl6bm+BYsFIg7D+fNCJT5T0VMXAuPEgcSIx+T3sgWG7g=
+X-Received: by 2002:a05:690c:6f81:b0:70e:2c7f:2edd with SMTP id
+ 00721157ae682-71057c1702amr188775307b3.9.1748931982521; Mon, 02 Jun 2025
+ 23:26:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425214008.176100-1-irogers@google.com> <CAP-5=fXiYHbe9gd_TNyy=txzrd+ONxecnpZr+uPeOnF5XxunGw@mail.gmail.com>
- <aD586_XkeOH2_Fes@google.com>
-In-Reply-To: <aD586_XkeOH2_Fes@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 2 Jun 2025 23:26:12 -0700
-X-Gm-Features: AX0GCFuCFIE-Y12sxz3tltslTrHjpttISnGjh1HG7hvbuImPXqNykVJNWvCJvMM
-Message-ID: <CAP-5=fUXJ6fW4738Fnx9AK2mPeA74ZpYKv=Ui6wYLWXE3KRRTQ@mail.gmail.com>
-Subject: Re: [PATCH v3 00/10] Move uid filtering to BPF filters
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Veronika Molnarova <vmolnaro@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
-	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Levi Yun <yeoreum.yun@arm.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Xu Yang <xu.yang_2@nxp.com>, 
-	Tengda Wu <wutengda@huaweicloud.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+References: <20250517012350.10317-2-chenlinxuan@uniontech.com>
+ <57f3f9ec-41bf-4a7b-b4b2-a4dd78ad7801@linuxfoundation.org>
+ <CAC1kPDOH+QZDjg46KRNmQQpH-_yLbQwMUGsiBk9gW1kqjyy9xw@mail.gmail.com> <053cab6e-1898-4948-8f82-ac082d85a20d@linuxfoundation.org>
+In-Reply-To: <053cab6e-1898-4948-8f82-ac082d85a20d@linuxfoundation.org>
+From: Chen Linxuan <chenlinxuan@uniontech.com>
+Date: Tue, 3 Jun 2025 14:26:11 +0800
+X-Gmail-Original-Message-ID: <85BAB723C5A7D075+CAC1kPDNQqTJVXzH4GYJOOmbHsA6Q17j+W5n0Yr2apghzr61spQ@mail.gmail.com>
+X-Gm-Features: AX0GCFs82Z1K6MX8VaHf9i_XOg-ZwKtAnx2bBI9te-zxkwwgfc73GMcNhg8LjEI
+Message-ID: <CAC1kPDNQqTJVXzH4GYJOOmbHsA6Q17j+W5n0Yr2apghzr61spQ@mail.gmail.com>
+Subject: Re: [PATCH v2] selftests: Add functional test for the abort file in fusectl
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Chen Linxuan <chenlinxuan@uniontech.com>, Shuah Khan <shuah@kernel.org>, 
+	Miklos Szeredi <miklos@szeredi.hu>, zhanjun@uniontech.com, niecheng1@uniontech.com, 
+	wentao@uniontech.com, Amir Goldstein <amir73il@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-fsdevel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpgz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
+X-QQ-XMAILINFO: NEuxXjgkfD8wBi/AxbImeAmkRXq1bKHZNH1nk9PdHl2kcQ1vAdjdtnr5
+	kAEDnc+WJ/dDTE6Y55EnALPyx75e5p5OD4mBqUn0HCws3VdVCevnls0vBYsr1WLYqf9SwzW
+	atDo3ZY37zA5XyKRQgvSLeIRgVlpnrqVxfzDnrRM7WZeJBhQYcEoAdzEjqRp6+xQ7Yt1bZh
+	liVtKQ7VOgKbYe5pH0WgYXsdyCFbG/MlLET28nxcb6GnLuwqjYtKDXsx+SSb5szEh7E8JX3
+	EcLPyKa1MLcFPQOSQy4YCQkd1sC/dr8VDo4rnm7GwuNP0PObOCaSkMnbLMiuuMunay8oOQ5
+	HPqPpnlvcn+F6LQAup5rXdTvVWZI+/g2jj1Th2Q8cNHN/mgxF1QgLsbD6L4ru1Qf8bNx+N0
+	7UprgVlCLnjSlxmEGyzto49tM+SbI2DBm7hmNXz/39V8uxai1jdToHiGiVouGVOUc3/z3zx
+	UzEcq06pqNcCYSHPcsJPpQj8NOULpd8dP83UlcBUcN+jz3tVKn7rZSNcoSd4yj1YambG0uI
+	Xe+hfZBmf5s02ijKMTweqsxDpAQLtiTUq2u+lXduu+WFmzM6tBSemVlBG7eiewPSjfSOgpC
+	clHs3XK0VTuQuFcryGxp8vI6g4tC88K6oo3zAcODfjsGju5kKXq9RR5irbEOc+w02raEt6C
+	PfDJL5VN/l0v9NaHLq7WtXJjdvgbiNjjCTqPRVGCOxoBW1/7d2vTpQl9xTL+x79sW1tJWqL
+	uEERNEg2fws8XEZ9MCVAn5yfM8ngD4ToMBAcyNlPkFRfT3hJ2kTwsOpdhhGLgvgdrDOkQmR
+	Lw2vJrNd3OqBRgCRaAq7WUXd/Y6vXnJalePp0oKu8KAkYxpraN5+EZXnJeHBScz9/xkdy8D
+	CBl83hvECLR1xVvcZMKI4VLqTIrOsTgv8ch58mUgZI16gACMnyZcyBMwJw1I+/XaSk/L8Tw
+	9TUVlZ05dQwk0HV88wItF2IbBoKs9UyG0021brzyIS5u/o74ain2fyOc6NAFsPHnChrc7tf
+	OeY1sO4HBbIg3gT0Lzrdux5sb9Cbb6NIRd9HmGKZBnADrkLudoixJMhM1wt3KlegHTOcPid
+	ybRKtAtzD9Z
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-QQ-RECHKSPAM: 0
 
-On Mon, Jun 2, 2025 at 9:41=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
+V3 has been sent. See
+https://lore.kernel.org/all/20250526014226.14192-1-chenlinxuan@uniontech.co=
+m/
+
+On Tue, Jun 3, 2025 at 7:02=E2=80=AFAM Shuah Khan <skhan@linuxfoundation.or=
+g> wrote:
 >
-> Hi Ian,
->
-> On Tue, May 27, 2025 at 01:39:21PM -0700, Ian Rogers wrote:
-> > On Fri, Apr 25, 2025 at 2:40=E2=80=AFPM Ian Rogers <irogers@google.com>=
- wrote:
-> > >
-> > > Rather than scanning /proc and skipping PIDs based on their UIDs, use
-> > > BPF filters for uid filtering. The /proc scanning in thread_map is
-> > > racy as the PID may exit before the perf_event_open causing perf to
-> > > abort. BPF UID filters are more robust as they avoid the race. The
-> > > /proc scanning also misses processes starting after the perf
-> > > command. Add a helper for commands that support UID filtering and wir=
-e
-> > > up. Remove the non-BPF UID filtering support given it doesn't work.
-> > >
-> > > v3: Add lengthier commit messages as requested by Arnaldo. Rebase on
-> > >     tmp.perf-tools-next.
-> > >
-> > > v2: Add a perf record uid test (Namhyung) and force setting
-> > >     system-wide for perf trace and perf record (Namhyung). Ensure the
-> > >     uid filter isn't set on tracepoint evsels.
-> > >
-> > > v1: https://lore.kernel.org/lkml/20250111190143.1029906-1-irogers@goo=
-gle.com/
+> On 5/25/25 19:41, Chen Linxuan wrote:
+> > On Fri, May 23, 2025 at 6:50=E2=80=AFAM Shuah Khan <skhan@linuxfoundati=
+on.org> wrote:
 > >
-> > Ping. Thanks,
+> >> Also if this test requires root previlege, add check for it.
+> >
+> > Currently, this test does not require root privileges.
+> >
+> > Thanks,
+> > Chen Linxuan
 >
-> I'm ok with preferring BPF over /proc scanning, but still hesitate to
-> remove it since some people don't use BPF.  Can you please drop that
-> part and make parse_uid_filter() conditional on BPF?
-
-Hi Namhyung,
-
-The approach of scanning /proc fails as:
-1) processes that start after perf starts will be missed,
-2) processes that terminate between being scanned in /proc and
-perf_event_open will cause perf to fail (essentially the -u option is
-just sugar to scan /proc and then provide the processes as if they
-were a -p option - such an approach doesn't need building into the
-tool).
-
-This patch series adds a test [1] and perf test has lots of processes
-starting and exiting, matching condition (2) above*. If this series
-were changed to an approach that uses BPF and falls back on /proc
-scanning then the -u option would be broken for both reasons above but
-also prove a constant source of test flakes.
-
-Rather than give the users something both frustrating to use (keeps
-quitting due to failed opens) and broken (missing processes) I think
-it is better to quit perf at that point informing the user they need
-more permissions to load the BPF program. This also makes the -u
-option testable.
-
-So the request for a change I don't think is sensible as it provides a
-worse user and testing experience. There is also the cognitive load of
-having the /proc scanning code in the code base, whereas the BPF
-filter is largely isolated.
-
-Thanks,
-Ian
-
-[1] https://lore.kernel.org/lkml/20250425214008.176100-6-irogers@google.com=
-/
-* rescord.sh is marked as exclusive currently, but this shouldn't
-really be necessary.
-
-
-
-> Thanks,
-> Namhyung
+> Thanks. Looks good to me.
+>
+> Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+>
+> thanks,
+> -- Shuah
 >
 >
-> > > Ian Rogers (10):
-> > >   perf parse-events filter: Use evsel__find_pmu
-> > >   perf target: Separate parse_uid into its own function
-> > >   perf parse-events: Add parse_uid_filter helper
-> > >   perf record: Switch user option to use BPF filter
-> > >   perf tests record: Add basic uid filtering test
-> > >   perf top: Switch user option to use BPF filter
-> > >   perf trace: Switch user option to use BPF filter
-> > >   perf bench evlist-open-close: Switch user option to use BPF filter
-> > >   perf target: Remove uid from target
-> > >   perf thread_map: Remove uid options
-> > >
-> > >  tools/perf/bench/evlist-open-close.c        | 36 ++++++++------
-> > >  tools/perf/builtin-ftrace.c                 |  1 -
-> > >  tools/perf/builtin-kvm.c                    |  2 -
-> > >  tools/perf/builtin-record.c                 | 27 ++++++-----
-> > >  tools/perf/builtin-stat.c                   |  4 +-
-> > >  tools/perf/builtin-top.c                    | 22 +++++----
-> > >  tools/perf/builtin-trace.c                  | 27 +++++++----
-> > >  tools/perf/tests/backward-ring-buffer.c     |  1 -
-> > >  tools/perf/tests/event-times.c              |  8 ++-
-> > >  tools/perf/tests/keep-tracking.c            |  2 +-
-> > >  tools/perf/tests/mmap-basic.c               |  2 +-
-> > >  tools/perf/tests/openat-syscall-all-cpus.c  |  2 +-
-> > >  tools/perf/tests/openat-syscall-tp-fields.c |  1 -
-> > >  tools/perf/tests/openat-syscall.c           |  2 +-
-> > >  tools/perf/tests/perf-record.c              |  1 -
-> > >  tools/perf/tests/perf-time-to-tsc.c         |  2 +-
-> > >  tools/perf/tests/shell/record.sh            | 26 ++++++++++
-> > >  tools/perf/tests/switch-tracking.c          |  2 +-
-> > >  tools/perf/tests/task-exit.c                |  1 -
-> > >  tools/perf/tests/thread-map.c               |  2 +-
-> > >  tools/perf/util/bpf-filter.c                |  2 +-
-> > >  tools/perf/util/evlist.c                    |  3 +-
-> > >  tools/perf/util/parse-events.c              | 33 ++++++++-----
-> > >  tools/perf/util/parse-events.h              |  1 +
-> > >  tools/perf/util/python.c                    | 10 ++--
-> > >  tools/perf/util/target.c                    | 54 +++----------------=
---
-> > >  tools/perf/util/target.h                    | 15 ++----
-> > >  tools/perf/util/thread_map.c                | 32 ++----------
-> > >  tools/perf/util/thread_map.h                |  6 +--
-> > >  tools/perf/util/top.c                       |  4 +-
-> > >  tools/perf/util/top.h                       |  1 +
-> > >  31 files changed, 150 insertions(+), 182 deletions(-)
-> > >
-> > > --
-> > > 2.49.0.850.g28803427d3-goog
-> > >
