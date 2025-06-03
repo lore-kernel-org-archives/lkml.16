@@ -1,123 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C876122D7B0
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 10:50:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C021B3725
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 10:52:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748947855; cv=none; b=e38uv0+LdqXdy+SffhnRUMxOhoplv8yCCidEMAEOELRBVqBEiNr1KyGCJ9wsjWtOjtZLo9fwgelAxv3pNNcXTtsmz3wk6CTS+OYs9pSPMYGD59+t0mf04NRAPV4UK/1bL2NtSIrtDjzmwPm7jYFIg0lPsEhoFUH1+Jd6F9TgxhQ=
+	t=1748947922; cv=none; b=opMnWaTWmkAvzjexAyobzq3kPHuE1WcSa0LXXcsJfchZntPSrQb7RVkM0lK+lgRX4WLrfqMFiadokivCrOfZDtNih45XGIyzZVZGsVSOtawFVX6WRwGuslMLx3R8nyWn9ya2Z5gvkabJgkh3jsjaKKzX3v/MDqagBxbvUnCWf9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748947855; c=relaxed/simple;
-	bh=pP732qkBtLWc1YarRschcEvEOBGT5QCpzr6OZsyMpXU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XlQT3SIvtW2cyKeaOp7u8bkYz8xXROtrBlBZPc0LDSWf78jDeSMDWeOzDsO8ciswPyd1T/puwEmHwlqYrAlyhPYEc2Yk3ZG/MijG9aSxnEpi3NySyw2KlFU+u6DfXYuzIOo9sK2sj8ym4jEUtHm6vsRrZZN8KZVDiw1i+Usp5OY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WfMDLrC9; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748947922; c=relaxed/simple;
+	bh=xksPMyRBHmUawJmvrqG72dG1bQL/nqL7/zl7hnCq6mE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O09oUh0YYzgBdkFjuHBDwVIRMbYB9iajy7CZL8cAK0ub7KBOFee4N7I3clKH4d7wG4XcEU8A1nM9t7Y24qiwlI8OHA/paZwhCXu7dXA9sQqnnDqC3uBbxlJlmaW2wR70jsQl8ApJ3UiFq/AYh2v/xBzTaSzBms5Rd8wdnFJ1hug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WaB5EMNC; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WfMDLrC9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748947852;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n0+40Yg0Yos7RVqiMwJQqOocRWrul7ar29oZFeXB2SU=;
-	b=WfMDLrC9Qs6S04He4s/U50A7bOnHn75xMNjWAWOS0YJrpR8ENd8IlKGlUvJLCA93pYRD5F
-	sVLQnGA5gdm/YZOKfKAZjprvDJgv7BeIL+2mP8sLIBzEoeg5Tk6RC8tJvCNMdphKVhc17/
-	IubJ6atTGqUwQpwBoQfoaCl6FDs2imI=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-211-7jtv0d05PqesevrDoOldlQ-1; Tue, 03 Jun 2025 06:50:51 -0400
-X-MC-Unique: 7jtv0d05PqesevrDoOldlQ-1
-X-Mimecast-MFC-AGG-ID: 7jtv0d05PqesevrDoOldlQ_1748947850
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-451e24dfe1dso9089135e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 03:50:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WaB5EMNC"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5539JJHh000560
+	for <linux-kernel@vger.kernel.org>; Tue, 3 Jun 2025 10:52:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=gG6LcmYQ46WfznvSwyEBH55u
+	Vk21hBJH1RbGwGrUNAc=; b=WaB5EMNC6oRdUMCoP7WZm2YeOQ/AFgfgY5GTWEiU
+	1HEBNjw2exJ7dmFwO3Jna7RhzSVVK39cWNeSw5RT09LTIapclaN+Lz/dKfWdJPMR
+	HG4ODwFfCb42HbLbx9T0n2BuyveEq5PXhNAkO3pip5m0a96tfEouC8oaZt/+MnbE
+	ZWo872rV2Pnw7IDciBzN81TDR2Pd4MRAIjSafSz524LaOF8KyZZ8IsEQBHmjPFWV
+	wDMSt5ZS5DJfhtcNOcRF5GkVpLgsoUc31UQq5tP4gWODTV1bmkJMINsvs4dBXSyv
+	WIJaUvFVjnabVsTbvPR030PIh3mQm4H/mazl9ItsAlt3yw==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8taam5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 10:52:00 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d09f7052bcso783482885a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 03:52:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748947850; x=1749552650;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=n0+40Yg0Yos7RVqiMwJQqOocRWrul7ar29oZFeXB2SU=;
-        b=NfNeE1vb3TqPRUfif6v+uR3TNxS9DZkNxM+Nswc03kPsQ/W6lEg7OF9WzaMO/04beC
-         ypdNy/B3rGBVlxcAN+alceuUoQCz7y8rdNZPR7nLHQYs4I03ukmjUDXi2Nsv1hr95qhj
-         YKCVFa82prIH6itm5uA6gyByGYzQV2IwEGoHe38JyVe9ZGKdvJXMdpQ/e5tgvntLa5xQ
-         lQ1EjFbale4VrI+xwtejQ3TKv5uxAV41Q8uJm6NBPVBTyni7wmMAW/deTbZe4zwr/bte
-         fhaksaF6RI8qxN2fABXBnLQirwsk22QGIfjb0hq0WD48GqMqyz1akE3T7uWkt0z26Kb7
-         Ha2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWsS099cHF/8CzVU9gnpHwjQqDu9BdQK21r+gRXQKRaspDpZ+MUDKkOGpumGHvAVv+lWmDgggBCUKJi7XQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1lPxo8VhxFBacPquO8l86mxMb9Ttu1APu4KHIMtTrs6Ia6Xjd
-	JvXr9wZbfShV/GCLUpKTNTXv6OuYWPrpU0xqrfcF4m0qPd4Y+su2RMgTl4meikwhRji0GhfHNtD
-	+xvdpqYlcTqEMtkBB8cOvyUAqbBwOox6KgeMqRQ3mGtBO0a4+AOCOvjKA19HA0LyFSg==
-X-Gm-Gg: ASbGncvlBr+dMZRsdwBFUnEblkztTedT/3c7K1RLSKArew7h/fdvLN9jZIVZA8Ac2JK
-	orwuXWpLOULwse6cfJ+s3mLJ066Rlr+ALe6/41C90o5jeW4r5fTSy6nZno9DbWPvHt9gmcykTrF
-	YrJ+rYdTb+Yh2ptn6LFb08SqFMFcuKHgHsC0KREL3UfEQ56hihkckS+JgqhQcHIdOXrUuiKT322
-	Js7OGJsUTpCtIY17U/Vcg+pPMRoT/XSN7+AQvUZU/NOBrZ4FguKxrKKl4abIQ701tQY9bBmjR2/
-	Dd8iVDCQU/FaRxGNMnqfzJafIqJipqZkYM72gUX2bE+XNFrdeQvESyLj
-X-Received: by 2002:a05:600c:3b10:b0:44a:b478:1387 with SMTP id 5b1f17b1804b1-450d885e485mr167351785e9.17.1748947850294;
-        Tue, 03 Jun 2025 03:50:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEtGECdKa1RWIrVSs41cY4rfCiCynHGO3J9EwYlEtBcnGInHb9ONotRvfoR7OrR5T/NIAl9cQ==
-X-Received: by 2002:a05:600c:3b10:b0:44a:b478:1387 with SMTP id 5b1f17b1804b1-450d885e485mr167351265e9.17.1748947849868;
-        Tue, 03 Jun 2025 03:50:49 -0700 (PDT)
-Received: from ?IPV6:2a0d:3341:cc2d:3210:4b21:7487:446:42ea? ([2a0d:3341:cc2d:3210:4b21:7487:446:42ea])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d80065e0sm163577265e9.29.2025.06.03.03.50.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jun 2025 03:50:49 -0700 (PDT)
-Message-ID: <b8d181e9-d818-4cf4-b470-a54b6df763a4@redhat.com>
-Date: Tue, 3 Jun 2025 12:50:47 +0200
+        d=1e100.net; s=20230601; t=1748947919; x=1749552719;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gG6LcmYQ46WfznvSwyEBH55uVk21hBJH1RbGwGrUNAc=;
+        b=fYHEpTB/+3PalcSp+wAaH4Ix9sapArZCjkmD39XFt7VI0DHjt7SI6nrHMtOeL37EzR
+         LBMDXC8lLHuISuniuPBFweiqEvJtv8lAz3kT7seo+k+gWnPd2lRlD0g0D3aVPnDpWfky
+         8hI7Rm7VCBPpTAfeAFgwLFlBzAd5CDjBzfLdlGh+h4kUjmhnsgNeyjN1tJWCm3vt9x6w
+         yEokarKneDrGK1zWwGoP7sQAqknP4ZZIQm5bZP3NbqQ9DmKnT8iuvcFpqFPTO84j10zy
+         qxr8N2qWExwg5UkTGiJMxKtN1oySHmLtkobo0tNBfhU6sDC9iol0Vn7TZcPm0/ujRlX7
+         ozAw==
+X-Forwarded-Encrypted: i=1; AJvYcCXHI+G1/fsUTaMxHlnpEgezOYrVKAkMjc69QkRQCiYebpi/aeQ/ygampv1g7ILGsJesScc/eZZ9dEAWaOg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMfa+Yb251rozmjkNXJkoM+8nwIExt/ZWPAw66CiWQx+21r3sI
+	1+WrBdPF8TdFyVUeoFb0+vS5Hz8J67S9/4tqqRX9tvVZ208ez0kBsOHW6lZ+FN2eRYP8ssUyY5Q
+	A8ilrhKdQ0ltbMWZJnWkD4dbWkmNNv1UzeTnzfz61Uhu2B+gjAMtehfPYpATQ596ywPw=
+X-Gm-Gg: ASbGncu3cOhvRxHl0S5gB2k73P/4hADGJuDu9NDUluY9GMDrdNc1H6Ax+mWEAp2LpbC
+	XQCfQhd/M/8S00/i6XejaI04FEJI80LLBaHzq/dHzNX4PpstDD7PWxOLf7qMikb6BZ+PfbzE0Dd
+	sfHnFn0cNm/npslgu3vKu23TsWG63jUE79InIrE20jNc4sm8MQ6yTS2oK01R+AyKbtDG+fUzztu
+	Z3kN+TFiSoJBe1OqDzgRLisiUQGDe2QbG5fc44DyueUplUdZ4KTe1vk4GVFE8jxSLR2LDIz02tx
+	CMF4xuoP/43O+5S3UhcoeQDwzF/iA9Jhz37OHlnnJvuREvrgmYl1YWQQS0Q6yW3CEOWL/FVkw+s
+	=
+X-Received: by 2002:a05:620a:190c:b0:7c7:9a85:d395 with SMTP id af79cd13be357-7d0a201cae3mr2458425185a.44.1748947919254;
+        Tue, 03 Jun 2025 03:51:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE2GiN9U2uANhBh2sl7jgw3VrcRzOZN+8sBe5jX67so9Kh/4ZlV1XnhUls63lXZyPIojeacfg==
+X-Received: by 2002:a05:620a:190c:b0:7c7:9a85:d395 with SMTP id af79cd13be357-7d0a201cae3mr2458422285a.44.1748947918924;
+        Tue, 03 Jun 2025 03:51:58 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32a85b35cb6sm17578341fa.43.2025.06.03.03.51.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 03:51:57 -0700 (PDT)
+Date: Tue, 3 Jun 2025 13:51:56 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
+Cc: amitk@kernel.org, thara.gopinath@gmail.com, rafael@kernel.org,
+        daniel.lezcano@linaro.org, rui.zhang@intel.com, lukasz.luba@arm.com,
+        david.collins@oss.qualcomm.com, srinivas.kandagatla@linaro.org,
+        stefan.schmidt@linaro.org, quic_tsoni@quicinc.com,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 5/5] thermal: qcom-spmi-temp-alarm: add support for
+ LITE PMIC peripherals
+Message-ID: <wsvdkte56d2avhhnte2r4udxpdaluz2jegwajhlik72ajk3nw3@l7daoy2lqvd2>
+References: <20250528235026.4171109-1-anjelique.melendez@oss.qualcomm.com>
+ <20250528235026.4171109-6-anjelique.melendez@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] gve: add missing NULL check for
- gve_alloc_pending_packet() in TX DQO
-To: ALOK TIWARI <alok.a.tiwari@oracle.com>, Bailey Forrest <bcf@google.com>,
- Eric Dumazet <edumazet@google.com>
-Cc: Mina Almasry <almasrymina@google.com>, joshwash@google.com,
- willemb@google.com, pkaligineedi@google.com, kuba@kernel.org,
- jeroendb@google.com, hramamurthy@google.com, andrew+netdev@lunn.ch,
- davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- darren.kenny@oracle.com
-References: <20250601193428.3388418-1-alok.a.tiwari@oracle.com>
- <CAHS8izOqWWdsEheAFSwOtzPM98ZudP7gKZMECWUhcU1NCLnwHA@mail.gmail.com>
- <cc05cbf5-0b59-4442-9585-9658d67f9059@oracle.com>
- <bf4f1e06-f692-43bf-9261-30585a1427d7@oracle.com>
- <CANn89iJS9UNvotxXx7f920-OnxLnJ2CjWSUtvaioOMqGKNJdRg@mail.gmail.com>
- <CANH7hM5O7aq=bMybUqgMf5MxgAZm29RvCTO_oSOfAn1efZnKhg@mail.gmail.com>
- <abb065ab-1923-4154-8b79-f47a86a3d30e@oracle.com>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <abb065ab-1923-4154-8b79-f47a86a3d30e@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250528235026.4171109-6-anjelique.melendez@oss.qualcomm.com>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAzMDA5NSBTYWx0ZWRfX7nazeMfWbcTR
+ rL1YHJdvk+G0617EiUaxmKRdkgLSpnBMRm2xqnBng61QS9khBbnhrRJnR5PAtXiJkQrR0V/Phtr
+ 18H28LYs5TxPWNVTeyuxVON3nGAZqh2mZwfV4cBvPON5vRf0ZqekTsr++9rmCZh6FNWeuLPxAwy
+ tWwMSRr6/n79XcqlLBiobOusWGKH754njEevhwC+PuG5W+U/einZUSEzqyfyb6wtsNkZsQxC3XA
+ SmUBHTdUxDPdpYrA7te2WYltSCWXOILsPfg9uF655dg5lpMKRQAGGhlfUWdRH/lwsN/1/1nyUx+
+ OZ5By14qai75LBURb8G5czfN7jflSXrNrpuoZiXQ+s9NNLQbOb8ecOVes3yw2rtHF2Xuv0L851H
+ 0QuMU/f+RlijQ7OxWTi3ENVsN7g2JsFmUFrobvtGZiQp0T0pT1TONJ9zowUkd4FwAZaOengg
+X-Proofpoint-ORIG-GUID: Uz4vcdxzYHhP-3mErJGs9o2UMGI6nzft
+X-Authority-Analysis: v=2.4 cv=OuxPyz/t c=1 sm=1 tr=0 ts=683ed3d0 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=C_YEPuUXS4kB9x-TF1IA:9 a=CjuIK1q_8ugA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-GUID: Uz4vcdxzYHhP-3mErJGs9o2UMGI6nzft
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-03_01,2025-06-02_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 bulkscore=0 malwarescore=0 impostorscore=0 mlxlogscore=999
+ lowpriorityscore=0 spamscore=0 mlxscore=0 suspectscore=0 priorityscore=1501
+ adultscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506030095
 
-On 6/3/25 11:03 AM, ALOK TIWARI wrote:
-> On 03-06-2025 00:54, Bailey Forrest wrote:
->> I think this patch isn't needed. gve_tx_add_skb_dqo() is only called
->> after checking gve_maybe_stop_tx_dqo(), which checks that
->> gve_alloc_pending_packet() will not return NULL.
+On Wed, May 28, 2025 at 04:50:26PM -0700, Anjelique Melendez wrote:
+> Add support for TEMP_ALARM LITE PMIC peripherals. This subtype
+> utilizes a pair of registers to configure a warning interrupt
+> threshold temperature and an automatic hardware shutdown
+> threshold temperature.
 > 
-> Thank you for the clarification,
+> Signed-off-by: David Collins <david.collins@oss.qualcomm.com>
+> Signed-off-by: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
+> ---
+>  drivers/thermal/qcom/qcom-spmi-temp-alarm.c | 208 +++++++++++++++++++-
+>  1 file changed, 207 insertions(+), 1 deletion(-)
 > 
-> Even so, I felt it could be a bit misleading for developers and tools. 
-> But if you believe the patch isn't required,I completely understand.
-> In that case, I kindly request you to provide your NACK on the [PATCH 
-> net v2] mail thread for formal tracking,
-> so that other developers can also be aware of the reasoning and 
-> understand the context.
 
-IMHO it's indeed confusing that the same condition is checked in
-gve_alloc_pending_packet() and ignored by gve_tx_add_skb_dqo().
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-Even gve_alloc_pending_packet() is only called after the
-gve_maybe_stop_tx_dqo().
-
-Either always ignore the NULL condition it in both places (possibly with
-a comment) or always check it.
-
-/P
-
+-- 
+With best wishes
+Dmitry
