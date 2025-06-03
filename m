@@ -1,188 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBAAB139B;
-	Tue,  3 Jun 2025 04:56:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0EF139B;
+	Tue,  3 Jun 2025 04:56:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748926584; cv=none; b=WTDXsCvyx2lnxAuymOib4BdLhMaRY6fVOxc9Kds5TqgTDNeChFqzOf0zvKSevDxojJ93CrzQEfqqXHhQSGjb/CbAwK2t0IzSEkziPpfFOnPVBA1/a3deNGbGYmjasX3ZD/sA2sXQIpM3NKHxMPZ0l4LyAdm7YvolkOUpIdVEjGI=
+	t=1748926612; cv=none; b=U/MpZxWWjsbbJgiJ83y4UTudxnGXzAC2mzM3D/VEmi6+Ap2mJTdExrpE7HEO+dc2oNMzgPMw/cGdmz9ihxVpyXivKRzGpJtj4pAGpW7sNk3NJ6ffB9/8s5emWM0LZ0Bco5c4PJVZAzPKuRCs77q+aIza399C/AeYZiBEv718EOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748926584; c=relaxed/simple;
-	bh=Igko4L0daaGgQYSXk1QMDHStz33o8RX9bl/FJAt5rrg=;
+	s=arc-20240116; t=1748926612; c=relaxed/simple;
+	bh=p6Uliwjeb9aiPXavhCVIq0Xv1uYAO1wNjq9ELL7jF9s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pqO2QQ2rK4OzLbp+L/ymOl9n0/Lg+IKvfWjLuZYOQ1yAtmL7gJe17H+PsmSub+kMPh2nlpzD2Trt5sLAPiW+rl+K8nCKdJ0yqCQuQUoQOowm3fNItZgzrg44kVN3F4aB2PJBFXdPTicB15XeAnOLtJ/DiR+nZ2CUnkZH/1ErSDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Smadgrr1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=enXiSjK5j8pUSneOuFqVMgNKsI+wnh4OudDfWQDPw701ZiF3EdBCpOrjRMgKJWfcBmpERNWCL19M5lI82qlWEdLOrlx6CDAsPPGlVgBh0DEkRQcfe4k4+qzwTmzFd1NsCxJ3rGB1B57FOXF31nvdt8QZ/STB0J//c2+HB2LRELc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q4uLpHRZ; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Smadgrr1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D43DC4CEED;
-	Tue,  3 Jun 2025 04:56:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748926583;
-	bh=Igko4L0daaGgQYSXk1QMDHStz33o8RX9bl/FJAt5rrg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Smadgrr1nY59GEmxpD9U1p+n0bwgct9dFGKJGj8L7jV4VMEu4BuyeHzvwOrzbjRHk
-	 V9VRusdDv41egiT+JUW5gPxhFbsOU5zXHjIBTZLTAU44QBmZ54ARbJ5n64/XjBAqNn
-	 eTMFIiQ5L80X84zNkbas5uP71dkq60l2khd4xtRNYuKC3LOIPJMkUTMUAl37DmiMXy
-	 4exQY7aSw4WGM4Up4Pn8r+2YqzdUf+srcf/H8B/0eJBTPUfXI7n3XUprl0Folz7RkY
-	 NcD0GCUihuZlH+9nBcm6yfFyiElw2636XGf0avtwWhHvmfRBR0Q5Hf1WvYv3qZBpmt
-	 va4yxOCL3CwQg==
-Date: Mon, 2 Jun 2025 21:56:21 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Howard Chu <howardchu95@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, acme@kernel.org,
-	mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com, peterz@infradead.org,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Subject: Re: [RFC PATCH v1] perf trace: Mitigate failures in parallel perf
- trace instances
-Message-ID: <aD6AdQRLNNGhwRSe@google.com>
-References: <20250529065537.529937-1-howardchu95@gmail.com>
- <aDpBTLoeOJ3NAw_-@google.com>
- <CAH0uvojGoLX6mpK9wA1cw-EO-y_fUmdndAU8eZ1pa70Lc_rvvw@mail.gmail.com>
- <20250602181743.1c3dabea@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q4uLpHRZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748926609; x=1780462609;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=p6Uliwjeb9aiPXavhCVIq0Xv1uYAO1wNjq9ELL7jF9s=;
+  b=Q4uLpHRZu/t0o7QfJOdhDhV6k/mFl3qIOzhhkyWbZxaZ34sx1pVIXwB9
+   j0wyzqnhM1W5Ry+uYaPGz8bxBKEzLUy3Gy/1eB8Ol1ou2aRat3itAMMLN
+   rAj87AJfHTFylEuLUsIV+CqdPNKUnVUPXCKu1iWc1TeYyqg4wtPIl0iz4
+   AxDRKdtdoNfSXxHn08T2L8Ahfn4HBixK/ODtOh4UyVAtG5zjQ0jR9iPp7
+   7YPC07LgXHPhu3qAWXQn0QF7tGwjGXFRrbbWl/gY/be8fYRiO7SLAowS4
+   vZGqhfW5OG7Dp+S1/jjY7LO1NvUlFRO5JY0kKem2BYUkQdNgVPi1nBEL9
+   g==;
+X-CSE-ConnectionGUID: 2B4IGweST1Snt6Qjn5bTgA==
+X-CSE-MsgGUID: QYbOKG0KT7i0KBVsbntu2w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="62004247"
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="62004247"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 21:56:48 -0700
+X-CSE-ConnectionGUID: +R3KxD5fSay5O/7fDmdhSg==
+X-CSE-MsgGUID: JbKyM8ULSPaqs7NuuQafDA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="175593681"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa001.fm.intel.com with ESMTP; 02 Jun 2025 21:56:43 -0700
+Date: Tue, 3 Jun 2025 12:50:10 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+Cc: kvm@vger.kernel.org, sumit.semwal@linaro.org, christian.koenig@amd.com,
+	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
+	jgg@nvidia.com, dan.j.williams@intel.com, aik@amd.com,
+	linux-coco@lists.linux.dev, dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	vivek.kasireddy@intel.com, yilun.xu@intel.com,
+	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
+	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
+	zhenzhong.duan@intel.com, tao1.su@intel.com,
+	linux-pci@vger.kernel.org, zhiw@nvidia.com, simona.vetter@ffwll.ch,
+	shameerali.kolothum.thodi@huawei.com, iommu@lists.linux.dev,
+	kevin.tian@intel.com
+Subject: Re: [RFC PATCH 20/30] vfio/pci: Do TSM Unbind before zapping bars
+Message-ID: <aD5/AjaQQOKydUWz@yilunxu-OptiPlex-7050>
+References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
+ <20250529053513.1592088-21-yilun.xu@linux.intel.com>
+ <yq5ar002jlao.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250602181743.1c3dabea@gandalf.local.home>
+In-Reply-To: <yq5ar002jlao.fsf@kernel.org>
 
-Hi Steve,
+On Mon, Jun 02, 2025 at 07:30:15PM +0530, Aneesh Kumar K.V wrote:
+> Xu Yilun <yilun.xu@linux.intel.com> writes:
+> 
+> > When device is TSM Bound, some of its MMIO regions are controlled by
+> > secure firmware. E.g. TDX Connect would require these MMIO regions
+> > mappeed in S-EPT and never unmapped until device Unbound. Zapping bars
+> > irrespective of TSM Bound state may cause unexpected secure firmware
+> > errors. It is always safe to do TSM Unbind first, transiting the device
+> > to shared, then do whatever needed as before.
+> >
+> > Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
+> > ---
+> >  drivers/vfio/pci/vfio_pci_config.c |  4 +++
+> >  drivers/vfio/pci/vfio_pci_core.c   | 41 +++++++++++++++++++-----------
+> >  drivers/vfio/pci/vfio_pci_priv.h   |  3 +++
+> >  3 files changed, 33 insertions(+), 15 deletions(-)
+> >
+> > diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+> > index 7ac062bd5044..4ffe661c9e59 100644
+> > --- a/drivers/vfio/pci/vfio_pci_config.c
+> > +++ b/drivers/vfio/pci/vfio_pci_config.c
+> > @@ -590,6 +590,7 @@ static int vfio_basic_config_write(struct vfio_pci_core_device *vdev, int pos,
+> >  		new_mem = !!(new_cmd & PCI_COMMAND_MEMORY);
+> >  
+> >  		if (!new_mem) {
+> > +			vfio_pci_tsm_unbind(vdev);
+> >  			vfio_pci_zap_and_down_write_memory_lock(vdev);
+> >  			vfio_pci_dma_buf_move(vdev, true);
+> >
+> 
+> For a secure device mmio range instead of vfio_pci_zap_and_down_write_memory_lock()
+> -> unmap_mapping_range() we want the vfio_pci_dma_buf_move right?
 
-On Mon, Jun 02, 2025 at 06:17:43PM -0400, Steven Rostedt wrote:
-> On Fri, 30 May 2025 17:00:38 -0700
-> Howard Chu <howardchu95@gmail.com> wrote:
-> 
-> > Hello Namhyung,
-> > 
-> > On Fri, May 30, 2025 at 4:37 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > Hello,
-> > >
-> > > (Adding tracing folks)  
-> > 
-> > (That's so convenient wow)
-> 
-> Shouldn't the BPF folks be more relevant. I don't see any of the tracing
-> code involved here.
+Yes.
 
-Yep, they are CC'ed too.  And sorry I thought you are involved in this
-part of the code.
+> Also is that expected to get called twice as below?
 
-> 
-> > 
-> > >
-> > > On Wed, May 28, 2025 at 11:55:36PM -0700, Howard Chu wrote:  
-> > > > perf trace utilizes the tracepoint utility, the only filter in perf
-> > > > trace is a filter on syscall type. For example, if perf traces only
-> > > > openat, then it filters all the other syscalls, such as readlinkat,
-> > > > readv, etc.
-> > > >
-> > > > This filtering is flawed. Consider this case: two perf trace
-> > > > instances are running at the same time, trace instance A tracing
-> > > > readlinkat, trace instance B tracing openat. When an openat syscall
-> > > > enters, it triggers both BPF programs (sys_enter) in both perf trace
-> > > > instances, these kernel functions will be executed:
-> > > >
-> > > > perf_syscall_enter
-> > > >   perf_call_bpf_enter
-> > > >     trace_call_bpf
-> 
-> This is in bpf_trace.c (BPF related, not tracing related).
- 
-Ok, noted.
+Yes for TDX Connect. First time zap the private MMIOs during unbind.
+Second time block all mmio mapping.
+
+Other platforms don't need these tsm handlers. They don't have this
+awkwardness.
 
 Thanks,
-Namhyung
+Yilun
 
 > 
-> > > >       bpf_prog_run_array
-> > > >
-> > > > In bpf_prog_run_array:
-> > > > ~~~
-> > > > while ((prog = READ_ONCE(item->prog))) {
-> > > >       run_ctx.bpf_cookie = item->bpf_cookie;
-> > > >       ret &= run_prog(prog, ctx);
-> > > >       item++;
-> > > > }
-> > > > ~~~
-> > > >
-> > > > I'm not a BPF expert, but by tinkering I found that if one of the BPF
-> > > > programs returns 0, there will be no tracepoint sample. That is,
-> > > >
-> > > > (Is there a sample?) = ProgRetA & ProgRetB & ProgRetC
-> > > >
-> > > > Where ProgRetA is the return value of one of the BPF programs in the BPF
-> > > > program array.
-> > > >
-> > > > Go back to the case, when two perf trace instances are tracing two
-> > > > different syscalls, again, A is tracing readlinkat, B is tracing openat,
-> > > > when an openat syscall enters, it triggers the sys_enter program in
-> > > > instance A, call it ProgA, and the sys_enter program in instance B,
-> > > > ProgB, now ProgA will return 0 because ProgA cares about readlinkat only,
-> > > > even though ProgB returns 1; (Is there a sample?) = ProgRetA (0) &
-> > > > ProgRetB (1) = 0. So there won't be a tracepoint sample in B's output,
-> > > > when there really should be one.  
-> > >
-> > > Sounds like a bug.  I think it should run bpf programs attached to the
-> > > current perf_event only.  Isn't it the case for tracepoint + perf + bpf?  
-> > 
-> > I really can't answer that question.
-> > 
-> > >  
-> > > >
-> > > > I also want to point out that openat and readlinkat have augmented
-> > > > output, so my example might not be accurate, but it does explain the
-> > > > current perf-trace-in-parallel dilemma.
-> > > >
-> > > > Now for augmented output, it is different. When it calls
-> > > > bpf_perf_event_output, there is a sample. There won't be no ProgRetA &
-> > > > ProgRetB... thing. So I will send another RFC patch to enable
-> > > > parallelism using this feature. Also, augmented_output creates a sample
-> > > > on it's own, so returning 1 will create a duplicated sample, when
-> > > > augmented, just return 0 instead.  
-> > >
-> > > Yes, it's bpf-output and tracepoint respectively.  Maybe we should
-> > > always return 1 not to drop syscalls unintentionally and perf can
-> > > discard duplicated samples.  
-> > 
-> > I like this.
-> > 
-> > >
-> > > Another approach would be return 0 always and use bpf-output for
-> > > unaugmented syscalls too.  But I'm afraid it'd affect other perf tools
-> > > using tracepoints.  
-> > 
-> > Yep.
-> > 
-> > >  
-> > > >
-> > > > Is this approach perfect? Absolutely not, there will likely be some
-> > > > performance overhead on the kernel side. It is just a quick dirty fix
-> > > > that makes perf trace run in parallel without failing. This patch is an
-> > > > explanation on the reason of failures and possibly, a link used in a
-> > > > nack comment.  
-> > >
-> > > Thanks for your work, but I'm afraid it'd still miss some syscalls as it
-> > > returns 0 sometimes.  
-> > 
-> > My bad... For example this:
-> > 
-> > if (pid_filter__has(&pids_filtered, getpid()))
-> >    return 0;
-> > 
-> > This patch is practically meaningless, but it passes the parallel tests.
-> > 
-> > Thanks,
-> > Howard
+> vfio_pci_tsm_unbind-> pci_tsm_unbind -> tdx_tsm_unbind ->
+> tsm_handler->disable_mmio() -> vfio_pci_core_tsm_disable_mmio -> vfio_pci_dma_buf_move(vdev, true);
 > 
+> -aneesh
