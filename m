@@ -1,130 +1,155 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58DD927FD5D
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 09:57:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51EF52820BF;
+	Tue,  3 Jun 2025 09:58:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748944658; cv=none; b=N9+qbYEd+5Urmk3FKk0mnvBaj8d4/7NUcJ7hgIUIS9UX7aFIYrOk0FsghjAQIEEYKl6U0tYUihBNO/4FVspP6nepkKWSXUjDb925pH7Y2PqJTc2F/HC5MdM7wg6lbxWeL5nBJx916C/HCiL4RHR58XzJOfh7woNGclAA8T1XDBc=
+	t=1748944684; cv=none; b=OL/x2BRJQU0WKMpDwjdI++KAQ/oG4JyYznu2WmXBMYxDbPmAmjzkE3yhE9Zx9dSFrxWK4bW+SlXiiB2/rDAStYiYLz85mCxp/CfevP8In4jaOW1zo4ThkrOJxMPfDhot9jBUjUBypRK/JXAgCYbeB34z89rgWXOru0l9hetnFR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748944658; c=relaxed/simple;
-	bh=HUYg6tnlo6LIuj5RzUJU0Hk0XI6OM9+JcOCISjp77ac=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lZz3znzG9XRiafgS1lfvquDyPj77YMtwClFUm2HLi5s8g2YhzJSQEMee2z00JpJLVlTak7o0JvxwvmVyj8Vr9UPSDiDc3WM4KjdxF3LkmDyIUJC70j60mCBnQTdOLIuSkk4r7aghovYii5QhUSnP3KGnRo8/YXgV8suMaCKBHXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i1+6MtsE; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748944684; c=relaxed/simple;
+	bh=3XG0sxj5R8DyxV+5rYutYvn/kHECbo9oJRySBHMgk1M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Wtxu1Zpvsp8Ie3dcKw6NCXNMjHln3irv3DYDoNRn07VbCIg8nLv1bdTFw6tIlWXzWU/YuLc/LKBnp8JXtJTOuO0aCxsghqAOLYhrGIUDbblZ9yh+GIgJXo5GFLcfp0XkUSVEKAIAl5etmsAI4TpZQNhugJeNN97SkRqdYtoOsNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=W/eg6vh5; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i1+6MtsE"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a361b8a664so5195264f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 02:57:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748944654; x=1749549454; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C6+feKlfKhI5kze4o9p8P4CQwHVLqCyFn82D6V8i7sk=;
-        b=i1+6MtsEUFieETwiWbo/Aj1VEfUjjOgZpRxL8MolGO1QWjEQM/2Ycq6Mi074BfAau7
-         +EFALgUWN/8xEVxLjWAOG6bR4UfWa2GCIQENKED1nDdt7p9b1Vaavf4EjngtXTMJHdLv
-         VOr4oj3JMxHnSsve7VqG4VKBJ2ujE6JsboEj0LqOuelC6xNt5mzAgKAN4/sMY334xHCy
-         X8fRVaHBDs8kQBMKh7HwoF0p5E9M5uG+uPrtRRhUZ7LgxPHs5GyW05+bF0nZ5dXv4Wl4
-         mJNT1Gs+Fvb940eO8KzDcDN+fRGvD2LmFc4fP//rZ7FtZXgtFjEYnLTU2f3RtYGKbpEp
-         tTcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748944654; x=1749549454;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C6+feKlfKhI5kze4o9p8P4CQwHVLqCyFn82D6V8i7sk=;
-        b=hlLEhwIGPlUqCefo05hrZBqNI5BzO3X5GUwSwh768CxC6A3+a/dGPemPIQnEqT2HPE
-         25KhC2yIFRNzinjN4a38rRysrVn8Y6QF1+l1X7smflYkRJcjaCXi+pzK8THKgs/GEP/K
-         he6BGPEzH4W785g58FoS2PI1jPQ0WIA4LHSLgYAwd9XoXa9SjrFzI1d3gJAZU5PTIF24
-         zuORgyJhMCDEkR1LrRACo07Pe/k84k2PmC3qxMQrJyYm7A/FijFIcSdXVHEQiWPLx41B
-         1F653in2grpK4u+FiuTLU3IWElbm/u21r4maJnxETh9tWsvmZ7/Vy6P1pjGrbaeorw4v
-         +pTA==
-X-Forwarded-Encrypted: i=1; AJvYcCXB7zTcgloz/V/pHUYKPO2NzrIL7d2gXeUOWu5oyjdnoeLjRq5R1BS9u1XFLunlDYbgd7Dl3h04Eb+SvlY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsvfxloISVBMW4FR/2Rk4/09AeHhDBmJJv+AzNWlL5wy/nYYW1
-	ZkVLWyRzgqX72Rj6kYrBGC5iIugsGCehhKepSR+bRNLHX9OAK5RBnOWFlDg2DclEutwLAZnn8Gh
-	dqDo6Ombf9MztS8m+3sllUDlJrTSiAuP/qdg3u9tT
-X-Gm-Gg: ASbGncvc9UCR/uusG4AyC96r+WKX68yg4T0pRRhVuQCcJxlDYGgFrshCmHmtXpprXMD
-	wqFWqsNpobypS8mp1dVIRi/ehX2yxl5scnBBtQSsGeRGMQ/ceuPRJWmrn0qrxUzNWjw5yR2Q/Ui
-	mShDKGs/aGKIEH9YXCPEjC/dcaw9Cn+U1uPiAkJfbOBdj/ZVfR3EC9mpPTbqycnpmKoAnyHFD8Q
-	g==
-X-Google-Smtp-Source: AGHT+IFaRpKtfqRwNn+cyqukgUbE7AiFp4RZFCy4cJS/hTiEnKZaWDVSLmPS5HDIyQeVhBx0kCKVfKoLraWlgCMk7Nc=
-X-Received: by 2002:a5d:4e84:0:b0:3a4:f7e6:2b29 with SMTP id
- ffacd0b85a97d-3a4f7e62b33mr11322039f8f.5.1748944654473; Tue, 03 Jun 2025
- 02:57:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="W/eg6vh5"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55378LHh027006;
+	Tue, 3 Jun 2025 09:57:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=YX9LFSa/7QyR6POXyugS4CZIYrOrq8GYyI1/cDzcR
+	xk=; b=W/eg6vh5BA8egru0IT339pYMEcjpglxrRYMAOV1WrRv9IyeeNrd9vKe2O
+	oK5crQrqFGQ9Bpry+EBNxujr+QF3+CRF/F83MW/wHdb64UDfDmwRe1GuAcn+QmlO
+	AURxlFXGTOtM/0UhEN6Z2IfSc7nm1/xO1HuieqPV4DpFersuMNbJ829AcaB/7itl
+	ye1m9AiQxPLZ0EECNYEYkiHt1SREuGeFvDdRzJ3K9dEUbNQkZPeKjgNwaaFIqbE1
+	88m2jsh69l9rrDfskw/nGwZPVnpqgNxA4LHU1rSHQyb1bua+yYvtAA9Th6Uiw6Z4
+	PiOaUjpmo5ysOahOTjLWe5DI4tL6A==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 471gw1ueuq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Jun 2025 09:57:45 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5539vj5p016447;
+	Tue, 3 Jun 2025 09:57:45 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 471gw1ueun-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Jun 2025 09:57:45 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5539vSAv031633;
+	Tue, 3 Jun 2025 09:57:44 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 470cfytahe-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Jun 2025 09:57:44 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5539veUJ21430608
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 3 Jun 2025 09:57:40 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 410842004D;
+	Tue,  3 Jun 2025 09:57:40 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D09AC20040;
+	Tue,  3 Jun 2025 09:57:37 +0000 (GMT)
+Received: from li-fc74f8cc-3279-11b2-a85c-ef5828687581.in.ibm.com (unknown [9.204.203.112])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  3 Jun 2025 09:57:37 +0000 (GMT)
+From: Srish Srinivasan <ssrish@linux.ibm.com>
+To: linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc: maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
+        christophe.leroy@csgroup.eu, naveen@kernel.org, ajd@linux.ibm.com,
+        zohar@linux.ibm.com, nayna@linux.ibm.com, rnsastry@linux.ibm.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/3] Enhancements to the secvar interface in static key management mode
+Date: Tue,  3 Jun 2025 15:27:33 +0530
+Message-ID: <20250603095736.99007-1-ssrish@linux.ibm.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514-topics-tyr-request_irq-v3-0-d6fcc2591a88@collabora.com>
- <20250514-topics-tyr-request_irq-v3-1-d6fcc2591a88@collabora.com>
- <aCUQ0VWgoxdmIUaS@pollux> <aD3PCc6QREqNgBYU@google.com> <aD3f1GSZJ6K-RP5r@pollux>
- <aD6yOte8g4_pcks7@google.com> <aD62ZGBwqXxTroeX@cassiopeiae>
- <aD64YNuqbPPZHAa5@google.com> <aD68BzKRAvmNBLaV@cassiopeiae>
- <CAH5fLgjweugttOtuiyawNp5s2N9JPoo5FTJ+Zs9t_S87ggC1Gg@mail.gmail.com> <aD7DvBfAxKi7Fpg_@cassiopeiae>
-In-Reply-To: <aD7DvBfAxKi7Fpg_@cassiopeiae>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Tue, 3 Jun 2025 11:57:22 +0200
-X-Gm-Features: AX0GCFu2Qb02ePG_vA66oahKh3c5RaA1SFpPb1S4Mza3WCkE8mws-HZ6_8E-yY4
-Message-ID: <CAH5fLggKL4jMjrJJEYV=Snqftu+oc4-sTNj9spinON5kHVP9xg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] rust: irq: add support for request_irq()
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Daniel Almeida <daniel.almeida@collabora.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAzMDA4MyBTYWx0ZWRfXwV5LxK6MPDMW aHchcHZZmDW9L01m+j6ADTsNNakgtKlERqjjPnyXWp1TF+fFvUjtaflt2w0ABkwWzdNj7Oq/dQP 2jMsLn+MLdp59lhPB+Y4MNArujWT1CuZFX42RaMCUBIFdrlcdK1lp7CN70oFI7CL01D2xg5hu5x
+ JnbsL/wkptkf8HfFtXdnQ1KtiqTDClHdBnWpMigf20Bh6n/bpC4cvRK9B4er92ZmhcyFTn6QhBH 2bHec/PZ44uH69S7/e23mK5CrVqruHD5IqRBHPswEMvljGZZrodiqagVSUTTTf3pr5UPYf5y4M+ gjZAgUNgSJIUeEa66TfCM5NVK7d3l5E4voKi3c7B07VN0xNc68BJxLWernCkkrMLA8ExTxQpmIm
+ dbUmYsiSWsTngBJrcwO75zirW31TEaWhqJZk3wtUG7h/t6e+fzVx7vjA0w264g48gHywLBxt
+X-Proofpoint-ORIG-GUID: QFSr4ee-26jKGWkCKXUsKu2R00gsLTtQ
+X-Authority-Analysis: v=2.4 cv=HcIUTjE8 c=1 sm=1 tr=0 ts=683ec719 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=6IFa9wvqVegA:10 a=-GDc6ojF7u6cf32OQp4A:9
+X-Proofpoint-GUID: lb-3DSGmYK8w3mPDGzKgh3DsjvTBU0qu
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-03_01,2025-06-02_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1015 mlxlogscore=999 suspectscore=0 malwarescore=0
+ impostorscore=0 phishscore=0 spamscore=0 bulkscore=0 mlxscore=0
+ adultscore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506030083
 
-On Tue, Jun 3, 2025 at 11:43=E2=80=AFAM Danilo Krummrich <dakr@kernel.org> =
-wrote:
->
-> On Tue, Jun 03, 2025 at 11:18:40AM +0200, Alice Ryhl wrote:
-> > I don't think that helps. If Devres::drop gets to swap is_available
-> > before the devm callback performs the swap, then the devm callback is
-> > just a no-op and the device still doesn't wait for free_irq() to
-> > finish running.
->
-> True, this will indeed always be racy. The rule from the C API has always=
- been
-> that devm_{remove,release}_action() must not be called if a concurrent un=
-bind
-> can't be ruled out. Consequently, the same is true for Revocable::revoke(=
-) in
-> this case.
->
-> I think Devres::drop() shouldn't do anything then and instead we should p=
-rovide
-> Devres::release() and Devres::remove(), which require the &Device<Bound>
-> reference the Devres object was created with, in order to prove that ther=
-e
-> can't be a concurrent unbind, just like Devres::access().
+The PLPKS enabled Power LPAR sysfs exposes all of the secure boot secure
+variables irrespective of the key management mode. There is support for
+both static and dynamic key management and the key management mode can
+be updated using the management console. The user can modify the secure
+boot secvars db, dbx, grubdb, grubdbx, and sbat only in the dynamic key
+mode. But the sysfs interface exposes these secvars even in static key
+mode. This could lead to errors when reading them or writing to them in
+the static key mode.
 
-What I suggested with the mutex would work if you remove the devm
-callback *after* calling free_irq.
+Update the secvar format property based on the key management mode and
+expose only the secure variables relevant to the key management mode.
+Enable loading of signed third-party kernel modules in the static key
+mode when the platform keystore is enabled.
 
-    // drop Registration
-    mutex_lock();
-    free_irq();
-    mutex_unlock();
-    devm_remove_callback();
+Changelog:
 
-    // devm callback
-    mutex_lock();
-    free_irq();
-    mutex_unlock();
+v3:
 
-Another simpler option is to just not support unregistering the irq
-callback except through devm. Then you don't have a registration at
-all. Creating the callback can take an irq number and a ForeignOwnable
-to put in the void pointer. The devm callback calls free_irq and drops
-the ForeignOwnable.
+* Patch 1:
 
-Alice
+  - Minor changes to the documentation based on feedback from Andrew.
+  - Added reviewed-by from Andrew.
+
+v2:
+
+* Patch 1:
+
+  - Updated plpks_get_sb_keymgmt_mode to handle -ENOENT and -EPERM in
+    the case of static key management mode, based on feedback from
+    Andrew.
+  - Moved the documentation changes relevant to the secvar format
+    property from Patch 2 to Patch 1.
+  - Added reviewed-by from Nayna.
+
+* Patch 2:
+
+  - Moved the documentaton changes relevant to secure variables from
+    /sys/firmware/secvar/format to
+    /sys/firmware/secvar/vars/<variable name>.
+  - Added reviewed-by from Nayna and Andrew.
+
+* Patch 3:
+
+  - Added reviewed-by from Nayna and Andrew.
+
+
+Srish Srinivasan (3):
+  powerpc/pseries: Correct secvar format representation for static key
+    management
+  powerpc/secvar: Expose secvars relevant to the key management mode
+  integrity/platform_certs: Allow loading of keys in the static key
+    management mode
+
+ Documentation/ABI/testing/sysfs-secvar        |  16 ++-
+ arch/powerpc/platforms/pseries/plpks-secvar.c | 104 ++++++++++++------
+ .../integrity/platform_certs/load_powerpc.c   |   5 +-
+ 3 files changed, 86 insertions(+), 39 deletions(-)
+
+-- 
+2.47.1
+
