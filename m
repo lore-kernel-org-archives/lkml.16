@@ -1,154 +1,265 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D3B53365
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 17:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748971985; cv=none; b=PzMUxyOYBBqlCrq4CaJUZoEPjufUCZskfVVIswY+EVMV091wP27otSCG8LK6fWC4CWuiGhQPO90t9WIhDnkCXH6H5L2vaN7bbKhGWzbk5HRTNaJmYjIUNYTg3LfUm6kfX1I1Fhqe0pOBLCNwFXNZ02IlXIHCduKNlcBAqJRbp0g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748971985; c=relaxed/simple;
-	bh=IYRTv37f0uAvhgqHBbq58c+XeY9Iity2eS8ZW3GDbsA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XFefIOdF4SN+N2DCDM/vgshhKYzwEQt0mfqi/vtADwWjZhI76StKLYXgS+Wv6k1Ub9Yt20CbmA9s+j8hkVr7jZrCgniJHLg6f6iKnq9w1mfLAEZbHlaSL/6x1moxu2aju8pSF0dhzM5+CZtSLUuezUt9Vjs9TczfKWhymYY/DTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=csHHoOrj; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F725539A;
+	Tue,  3 Jun 2025 17:36:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748972166; cv=fail; b=YXJRwiX60qsU71UcZ71t7jd+u7W33Ju8fIJ++fejkIrMd+fi9jI9mwi2cRHqNvMAeRVB3Z8aIiU5wk7NmBtbaDNk+6guySXPJeUmUsNb4L3lnMOz8EFAvzjiQSTb3FmrupF9bOPLsLK4WseCQjfBh/HTWhS1QoB/Ndcb0CjOexw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748972166; c=relaxed/simple;
+	bh=K+3bjhf1qFjtUhAzRUhA1QJoMqlzkTcEIwyoV/+39p0=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=OxNpg4uHnG5AZat2wGGW+j+Fp8mNLNbDuexW6uiRlu8YbIqT3dFNoTBg3bLCrBu0RX2gE+LXmCQDRuUxy+0w8mAIBRE8Di50FV9xQ6+HuJyMNgM+l2G5/bWn/5zwM1cQjBsY6URSLgoBAUbDXv11TfDGJuW8jxcVeOjsw4GO+5E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mDfhk1qS; arc=fail smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="csHHoOrj"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-450d726f61aso4155e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 10:33:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748971982; x=1749576782; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w3DNB/shSlIZz8dOZO0PAxfLgN7msaxB35LPno5m37A=;
-        b=csHHoOrjUpiwFht0Ui5MNUUp9Ehu7M7ap3sDUBBw+tuqTInvD5lR49Olb4xNeWcNVt
-         U3ZSI8hfYR3yyWXOrsjPvj7DsSxlhifsy6iWq1BNpaJFtSmw8e1ni0HJstRYZU2tVHim
-         cKmjF5vxr+7OFJUstU46uesn2/Wkpru8OEOz5nNa2HVo5d8Br76FBmFKtD7yxmcpHX6b
-         Vcf2afcp6NNsZPfdZsgbdAhSF10ajTJ3AZHgh9z2kC+6DvuumAW6RFvcw9xH2C4mN7Vg
-         Wq/xHITWRDPvR5POk7jQnVgT2TcuLoQ2gff5QzttcOwVSACbyRea2AbV5d/BsEX17rlm
-         GLIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748971982; x=1749576782;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w3DNB/shSlIZz8dOZO0PAxfLgN7msaxB35LPno5m37A=;
-        b=aSD/cM2+x3ecEVZf7ikGzi/K2fbARI5R1z7ug0XP1L8kgtiehNFmXYD6ld6J0HcmNa
-         KCB73TPz+CUM5FzFpD19o+S2KPtl9a3hNYd4BRNAYquBEFrWo6P4M0fsgnZwcLnncHSN
-         yZNg5I+QubvpQljZF3cJgzJMm3CFzbYFW2616F9XDQ3gbCeYab0KYN4zvLozk1MPMidB
-         4qLTNlDsTW5zQJzxHTIpBwpKIj8qB93SI+gbfpKL/6AiukWDPWYlZlXkDboVEEVkPD8d
-         cABCKGIMzLrSCvr3isUKnsA3nNUaqIuEkEaAmniro8ZdBoPO03xN2Fyu+/5T3kGx74fB
-         LruA==
-X-Forwarded-Encrypted: i=1; AJvYcCXL1SqJcLnSCEznYmR25uu4V89YN09NM0OGpZYKIxuJGle7Hv3R61T9yMQn9kYR7PK27upCY1KcXvsHnVU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgcLBuEyu+jfgFDud0M5h63uhFNUcAuBCiGTXCrZHTFhxA52TW
-	KDesJZmvz8w0URsWsb/S1gEb/ePSoKgC1RigzW9EdYU4akscWNx5ECONGFk1dK7UzQz63qHipST
-	jKrEclj0PmI/Pn9H/xWhHxFyZnFsQ68TLjTobW5Y+
-X-Gm-Gg: ASbGnct5yS9v2kAmKA6nO2xZhlM3SvvSXKxeH3BXTFmbwwdMc9L5UhK27Y1vLhHAW5q
-	yKRq4FRlJnVOQIvIDl0/1gPGFHkLkvxJNa+mtjjQqEhyy9FdWeexOJpl4a3Uiy2gdcOZbZLwGJ1
-	zryroNofPNnzzCcDFKHr6jpOBQigwuld1ktU37BaPiYCJPjZ7CB6NZxmOvZlbyfsiZYFlNtTrUp
-	Rs0GQ==
-X-Google-Smtp-Source: AGHT+IE5RpbI9i3VQlMwjstuhtmZuKuBbcLSJceXcPQJ2BYROgUR3GWT65tiB2IFB07QZ5CCVl50ncZ2S5JQxuvnor8=
-X-Received: by 2002:a05:600c:30d4:b0:450:cb25:ead with SMTP id
- 5b1f17b1804b1-451eb58e9c9mr835145e9.7.1748971981642; Tue, 03 Jun 2025
- 10:33:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mDfhk1qS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748972165; x=1780508165;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=K+3bjhf1qFjtUhAzRUhA1QJoMqlzkTcEIwyoV/+39p0=;
+  b=mDfhk1qSZ25edI1oi/8mhtvGwjoazL6ZwAdEamSl9Zo2jWrOyQ9tr5JB
+   vu+OemxZg4VIprf865aM7vF5snVgA58/r1FKS4vVz4RLKar2BbDQXROCc
+   XZWibe9wgSieNKv5ulzK46HHRivFwvnIECgeVY7sOSW4sFc/cRiJRsCw4
+   Tp1h6X0NAKcbtsoAswpb4WqVrFdEmdiZCWB5fKIVFRB1i2+MUYCWSZqxm
+   GV8m21vd513BrwIQqw+aoNnFtJknpshn2aYod64vkjfAtJ1kdbT+bwVrj
+   spBdPgSpcpbx4eYDx819onxg723SHrhj3lh8VU/4fIFbhsbA5muGTrXKl
+   Q==;
+X-CSE-ConnectionGUID: p3CDNQPhQmyqI7g5Uamgyg==
+X-CSE-MsgGUID: 5J/WCxq+Sq69Ofpsf3kNew==
+X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="50721365"
+X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
+   d="scan'208";a="50721365"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 10:36:04 -0700
+X-CSE-ConnectionGUID: fmcjhHFbSgueaHaFu/vcUw==
+X-CSE-MsgGUID: 7IFufVjQTPOn2VTGsZqEqQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
+   d="scan'208";a="149814470"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 10:36:02 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Tue, 3 Jun 2025 10:36:02 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Tue, 3 Jun 2025 10:36:02 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (40.107.220.83)
+ by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Tue, 3 Jun 2025 10:36:01 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Y7V3+SYGEFYKuV8nTnwk3aRBFSJHknsDSz5Gfo3tO5sY1BsxKqKHhMZRtSNrZba3jsEH5KjTdTf5HzZwKdxlrH5gvw5u62DAfK5AvfDdXSowCrDCEPeP5IlOBOvemLgLJs0k4ao3/+rR9mNWKrdp/zWsbKoCLG/lSmdjqwR8333/ZLtaKICbhpkNzGn6gUfrpT/6fNwbeUrHDzKIPWITk4y99728vgHNh5MUoZxYlB3C573ZrgfPeSUAY+WRVi4KDsDw2kUuOfz0VRiGRqF+4KR3W+6k+8k2Q5RkLd+JRnWYhzBd8LhWPOyXNg1iGRE6yjjJeSkn9F/UGegjhRQqUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6J/+1sikRkVg4iSCjJVYf4IUnA/RYdz2zbyNPLfFKMk=;
+ b=xqUO96BDtIqqxMY1P9/lCXbXi7xtR1cHVGyWCGPKJc6ozWFGUVAoIx5L/YM85mpn6RJf3QZMHF4swDm9vuTUomrLLoFNM8Ph/azFNCQbMl3x3+gvmf4353MT9AA1GXonXzzWadWaWrR987JBqxXgA6luvqAjaijgfYyVRuZCwDrX35bC1vn9inoDi8NLGTjgewBUIUpVfXjFsdqbVdV5/A54EBC1onvgMf9OnsTnX8BIs5DroWy+vD+uYLLSbaF1UmixEZ0nAvllp0ag3KNSvzBOOvRUZait6vPV0HOwGVDHyzAjNpr8OHK0ZHwBL3Zg9yAOLozAjH/0XQUB6aDTkA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BYAPR11MB3320.namprd11.prod.outlook.com (2603:10b6:a03:18::25)
+ by DS7PR11MB6272.namprd11.prod.outlook.com (2603:10b6:8:94::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.20; Tue, 3 Jun
+ 2025 17:35:41 +0000
+Received: from BYAPR11MB3320.namprd11.prod.outlook.com
+ ([fe80::e8c4:59e3:f1d5:af3b]) by BYAPR11MB3320.namprd11.prod.outlook.com
+ ([fe80::e8c4:59e3:f1d5:af3b%4]) with mapi id 15.20.8792.034; Tue, 3 Jun 2025
+ 17:35:41 +0000
+Message-ID: <b85964b3-155a-4f08-bb17-9cefbc527a2c@intel.com>
+Date: Tue, 3 Jun 2025 10:35:39 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/9] x86/nmi: Extend the registration interface to
+ include the NMI-source vector
+To: Xin Li <xin@zytor.com>
+CC: "H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>, Sean Christopherson
+	<seanjc@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Kan Liang
+	<kan.liang@linux.intel.com>, Tony Luck <tony.luck@intel.com>, Zhang Rui
+	<rui.zhang@intel.com>, Steven Rostedt <rostedt@goodmis.org>, Andrew Cooper
+	<andrew.cooper3@citrix.com>, "Kirill A . Shutemov"
+	<kirill.shutemov@linux.intel.com>, Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>, "Sandipan
+ Das" <sandipan.das@amd.com>, <linux-perf-users@vger.kernel.org>,
+	<linux-edac@vger.kernel.org>, <kvm@vger.kernel.org>,
+	<linux-pm@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<x86@kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250513203803.2636561-1-sohil.mehta@intel.com>
+ <20250513203803.2636561-4-sohil.mehta@intel.com>
+ <5276d1ff-be9c-4391-ae64-4f7451f6ced8@zytor.com>
+Content-Language: en-US
+From: Sohil Mehta <sohil.mehta@intel.com>
+In-Reply-To: <5276d1ff-be9c-4391-ae64-4f7451f6ced8@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR21CA0014.namprd21.prod.outlook.com
+ (2603:10b6:a03:114::24) To BYAPR11MB3320.namprd11.prod.outlook.com
+ (2603:10b6:a03:18::25)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512091108.2015615-1-skb99@linux.ibm.com>
-In-Reply-To: <20250512091108.2015615-1-skb99@linux.ibm.com>
-From: "T.J. Mercier" <tjmercier@google.com>
-Date: Tue, 3 Jun 2025 10:32:49 -0700
-X-Gm-Features: AX0GCFuqlHrfWIct6r9G90nzVWpgl53GzuxHT0BMpJtXN72k8MqZgekAcGOuib4
-Message-ID: <CABdmKX1nhR3BXKyuLaAoo50KNyBwaexmH+af_s8WxULJUZ9+pA@mail.gmail.com>
-Subject: Re: [RESEND PATCH] selftests/bpf: Fix bpf selftest build error
-To: Saket Kumar Bhaskar <skb99@linux.ibm.com>
-Cc: gregkh@linuxfoundation.org, bpf@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-next@vger.kernel.org, hbathini@linux.ibm.com, maddy@linux.ibm.com, 
-	venkat88@linux.ibm.com, sfr@canb.auug.org.au, alexei.starovoitov@gmail.com, 
-	daniel@iogearbox.net, mykolal@fb.com, yoong.siang.song@intel.com, 
-	martin.lau@linux.dev, song@kernel.org, yonghong.song@linux.dev, 
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
-	haoluo@google.com, jolsa@kernel.org, shuah@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR11MB3320:EE_|DS7PR11MB6272:EE_
+X-MS-Office365-Filtering-Correlation-Id: c1ba874e-daa2-4935-e86a-08dda2c50f67
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?YmFPQWVOQm42YXhEelViS3ZLRjFjL2hzOEpEZFp4bTRJUVFJeEtQUWFwZ3Jm?=
+ =?utf-8?B?N0FEMUozaFJiRzUrNzY2TEM5bkRYTHdFR1dYbE54ektkT1NwMHU3L0E0NDVT?=
+ =?utf-8?B?d1dzczZ3R0IwSDhYbVRINGtmQ1RrQTBwVGthdk1GMGhhOVpmSHErWkV4ckRn?=
+ =?utf-8?B?aXJ4WXRSRHZwRy80R09QdnovSnBrWTJGa093N3cwbWJxeTZpenkrVEdHWity?=
+ =?utf-8?B?dExhM0VaSXBoUWlqNk13KzRSYW9INTY2VDNqWVNXT01wOXNvcTh5Y0FlNGk1?=
+ =?utf-8?B?em5hTDE0TS9iaERQU1hrRVc1U010Y0VGTGN3aGViM2RRclVhcTluY0cwc2ZK?=
+ =?utf-8?B?czJsOUQ0NkhrQU1pak9TeW9HZnBkTXRjcGhLSjFGemdrcmZ4VS9pTlhxRG5P?=
+ =?utf-8?B?SE5EN09mZnR6ejVIR29JY2ZFaFlKalJuejlBSXFnTS9FTFFaRjE5S3lGWWZu?=
+ =?utf-8?B?RmJZMHAyaVNOMytLTnVnam9QZWN2WUZSeDFldnhwUlQ3aWZIdXNIUjVXbVZo?=
+ =?utf-8?B?OXlwV1RHdzBzWVN2SEk2Y293YVJobzlrRVdHOG9KTEN1WEZyL0JkNjJDOFVJ?=
+ =?utf-8?B?WXhXTmhObU1mQmlTaUozTjl3eEIvZjZoNm1ma2ppbVdwZ3BsQzZSWDFOaUsy?=
+ =?utf-8?B?SExyNVRncjFYazdsenFDTTNyWVFYRU5MVkFWOStNZXlJUmNWT1VCYnZyMkFB?=
+ =?utf-8?B?ZVdDU0RQd2hXWitjWHc0bmpydjVSem1ybFV0T0hJcklNNlNCd0c1WDBHME9T?=
+ =?utf-8?B?T3JpaVlFcWEvK2dlZTlBOEN1Q1FWZXJLc0NXRk5pcUlwQlhqZWhicEVwRGtl?=
+ =?utf-8?B?YU1xc2NNdnFsRlZWWjhiZEsyNEF3cmMxRTlBN1lyRUtoY1BuVm5TK254OEdq?=
+ =?utf-8?B?bS83TytzYzVYTDNwaWc3YzZaR2NESHlzZWp4eDRLaFFwbFFxOUd4T2pZVGNx?=
+ =?utf-8?B?a2NnUVRNa09GTWs1Zjk3dFpWTHpSaGZtempTeVF3NkYrRjl3elViSkpjNXpV?=
+ =?utf-8?B?RUNsM0YyQmNSOU0rTWV3OHFNRXBBM1p3YlhUK015THFtTUxmcXVMeUV6UTht?=
+ =?utf-8?B?MmhDb1d6cmNiNlJLbzJsUEFJSTR2UTE4V0lnZFI2VlQ5aGJQajBPeHp0K0ZV?=
+ =?utf-8?B?ajBudFZseWNldGkveDBGRDJjMnBNa05rOVN5UkxMdUhYZC9XOE1xZUpTbFha?=
+ =?utf-8?B?R1drV0RsLzRITWE2cVV2OHl0b3BZZEtDV25rdE9qTGJZWlMrRnMxVit0MWNE?=
+ =?utf-8?B?THA4TEJMdjB0Vk5nOWZvSTRCMDhxRTZsKy8vL1JLcmM4NURYY2llUWV0REN0?=
+ =?utf-8?B?aFdUY1c5ZTY5amEvZUx5S2lyWXhtaXVkbUlHajZiOWR1VUQ3QzhSUUE3U2Fu?=
+ =?utf-8?B?cEJKWjN6LzF3WU9MMXBtcGpEWkFzREhkZDlrbkh2cmlsejVwbFNxamJVZW5E?=
+ =?utf-8?B?VDRDTUNiZzFRRklINmNKNUI0Y20zYVZwSmhtcGx6SUVkdEFkUzVEdFRuMWRD?=
+ =?utf-8?B?emNmdWswT3lyR0Q0S1NhUVZHT2hKNHZhRU1FVmhWeG94WXF1dVdHRzdtZk9k?=
+ =?utf-8?B?UTVQTlNyY1BDRGFkSnFtMXNPaWtLN3lBeDk2YytlUWhXYjA2WjY5Q05pV2pa?=
+ =?utf-8?B?NFpHczRJTnppR3ZHa1UwY3A1cHU4dUF0UFRURW5JU3dsWm1WY2xGUVpiTG5G?=
+ =?utf-8?B?TVUvbDZvRlY4eFZxajhraTNwdXJwZ3pjMjdBWDBmRmJ4QWNKMnY4QWd1ZnM3?=
+ =?utf-8?B?T2dLckQxbUV4a01zbDRRdlIrcXBCcHorOGVzUC9wL1BtSVNtZXRGNCs5K1cx?=
+ =?utf-8?B?Ym5aSlBGWXlnUVV0ZGtHR2NUM3JNRGo1WmpGNEVNc0FkaUFLWDJxdU5QeTBH?=
+ =?utf-8?B?Q1RpZERKYWQ1YndhZHUxejV5cmcrbHAwM2szd241amc1cGJWSjNaWWl3dDNu?=
+ =?utf-8?Q?6F40hEiuSDw=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3320.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?N3EzSk9CMndlVVlCRStzbEZuVGF5Z0UvdjRQTnFHeGZLNi9ySFJ2dTQ4ejVj?=
+ =?utf-8?B?WmJubHNYZ1FpdnVYQTUyN1pidCtjVTRSaHdQNmNLbk9LYXFqalFyckNTbmxK?=
+ =?utf-8?B?UGFUYTFyeS9Mc1M5Y2NFTG52QU0vRm5iZFMxdlcvTDBCZkx6b3QwWnVsYUZQ?=
+ =?utf-8?B?K0t3Qk04UmxOQlU2bG5USVE2RS9vbHFPaGI3aEJuOHZYdHAxTmQ2dGYybzgz?=
+ =?utf-8?B?cll3WlhMdHlXRVY2aE90dG5tMkplOXBpeTI4NENDQWZkVDNLMUUrazZkOVdz?=
+ =?utf-8?B?UWc5OVlyc3diWjlzKy9FeVlyTWhNZmQ5THJsK0EvRWtKWUt5TXN1Z3VvOHlF?=
+ =?utf-8?B?bEZZOGJRTTRDWElST0VialVxOFN0NktRZTFqRDFkTmJjY1d5RmpTVTNWS3ZU?=
+ =?utf-8?B?eFMvUldwYkU1dlAvRUxQWWwzcG9jNVlYVVArMWtRaDRlNW5ZTXRlRUZxS1JQ?=
+ =?utf-8?B?Q0FCSGRXd1FJY0xmMVI1d1EydEJ3Mmg1UVBXbEswTVU4MkpmaE9tb0xYY2x1?=
+ =?utf-8?B?dFF5YWJ2UlpvL1ZLV3ZGUFJOMElraXVTU3NXaU1TZ0FrNUN5aDc4OFVnR0R3?=
+ =?utf-8?B?cnc4UU9pc1Rnek03dHZuVmVqUnhkYzBNek9aYjVMNG93N2ROMHdlMjhCKzEw?=
+ =?utf-8?B?SFZqTnBrMzNFakEreVFEZ1MxdEhwTldMN2dEUlRrTnE4S3BKbmE3UlJmWEVC?=
+ =?utf-8?B?aHNPVmxPVGk2RE1ySXVkMHNmSUN0ZFZVbnJvVGswVDhjQ0F2MDBaYmljVVhU?=
+ =?utf-8?B?Y2VkRElYdGJmU2c5Y094bUd6S2lRSkNicXZRN2txM2tvZDR5Ni82SFZyOUxp?=
+ =?utf-8?B?SHNFRFhFODlLakVrR3Vsc2Fvck14RElRdWFkVW0vb3JoUFJCU0xwREt4dmpH?=
+ =?utf-8?B?R3lMVkRtenNHaXQ1WktTNVgvaUhORFBQUHFqU2hwaitJNW5XZi9RRy8zV09U?=
+ =?utf-8?B?d2FKWlZJb3dURSt1WndLL1BQbEhkVTBIejM0TFgyYlZwYnc2UTM4UzU4V2NJ?=
+ =?utf-8?B?OGVZVisrQi9GeHZmTEVkT0t4UUxKVHF5TDlpMmY1RU9TOU5NN1YvT1BKdFpk?=
+ =?utf-8?B?cGI5THZqS0JIaGlmK3VCU3RuTlhjZ0RZQmxHZFE0MTRmRThFc3I5dTlxTEpK?=
+ =?utf-8?B?YytQMDRyVnZuK1FKc2d0dVNHUm54N2k0MU9MNWdwR1JuQ1k2YWxENzlzdWl6?=
+ =?utf-8?B?L3A1ZnN1U2pZcUprdVk1T0NCY21wdFFxSDhZUmF0RFgwOStsSDZzeVJKVFYr?=
+ =?utf-8?B?TFYxeStYK0FWSFFOeUxwclhlNjA0SEtMbzA5bklncnV2Tzg0ZnBVVld5S2t4?=
+ =?utf-8?B?VE01Mi9ZUlFGSTVWdm9ycWN6K0taYTdYc25od1JjVmZaQWhUTGtDbEcyTjJr?=
+ =?utf-8?B?bmIrWG5wUTBYN05FZHVLTmJrYmdUK2JZMW5RTnlna2NueVpoUXg0eFFtSEpE?=
+ =?utf-8?B?bFFiY3JRb3JVTm4wWFBvb1ZGcTZzMnNUbStQQ2VFcHBDamZzYTNnYkw3OGNI?=
+ =?utf-8?B?VnRGdnhuekd4bXQwMVRkWUZmVGpRVktibjFzQW1hVEpDVWZhRnlCdWhJRkdX?=
+ =?utf-8?B?ZmlrUnYzaDhQY0N1N1lyRmExcTdFZEF6ZjhHOHVNQS8rT2IveFZwc3VCT1NX?=
+ =?utf-8?B?Z2dMMUhHOTlIeGE5TGdyZFZJc0FKL3YwRGpEemtoTTFLc1JWNjBuMWN6ZXV1?=
+ =?utf-8?B?cW9ZVEJpTGpidUt4OGNrWkd6RCtnMGZLZUp1MS8wRzlnQ05DMlIrZUVBcEI4?=
+ =?utf-8?B?REtkdUpPMk50a1M0Z1ZrWVlKT0F4WVNjakF4QlRyR0hxdDR3Vk1WQU16QzJQ?=
+ =?utf-8?B?eFlSRy9DL1g0U2k0eXJIUXlOdVpLMzdjcUV5bExJUEc5OWZGek5YWGxMU3VL?=
+ =?utf-8?B?UUNkcDRqNHN3Y0F5dkJzMXdBOGhBaXA4MTl0bk84WmU4TCtDbXZ6NUdsZG84?=
+ =?utf-8?B?REJTZmJGRjVkUFpsQ2R2cXVOZ3kzelB4SGRvWmFUY1B6WTBaUG8wU2pkenJj?=
+ =?utf-8?B?bkJQa0N3M1RZVGEyRnUxWEZRU1pJakhzVFpXdW82TGdmdUU2QWVNbWsxVkFk?=
+ =?utf-8?B?YWFkZGpVUmh0SnlleUZWYkNIM2d3S1Y4UkRsSGduak5UMnNWK1ZXZHRtQ0JI?=
+ =?utf-8?Q?6u3rbmkZCb304lfRoH0lf1CPt?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1ba874e-daa2-4935-e86a-08dda2c50f67
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3320.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2025 17:35:40.8658
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RtROm9vam5NNbMNgO+6EDgXmmiRrtOAAHInYmtHYuJmG+tMgEUIzWcB3WHQAcE9Z77vqgcSN+scOKwgUVrsynQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB6272
+X-OriginatorOrg: intel.com
 
-On Mon, May 12, 2025 at 2:12=E2=80=AFAM Saket Kumar Bhaskar <skb99@linux.ib=
-m.com> wrote:
->
-> On linux-next, build for bpf selftest displays an error due to
-> mismatch in the expected function signature of bpf_testmod_test_read
-> and bpf_testmod_test_write.
->
-> Commit 97d06802d10a ("sysfs: constify bin_attribute argument of bin_attri=
-bute::read/write()")
-> changed the required type for struct bin_attribute to const struct bin_at=
-tribute.
->
-> To resolve the error, update corresponding signature for the callback.
->
-> Fixes: 97d06802d10a ("sysfs: constify bin_attribute argument of bin_attri=
-bute::read/write()")
-> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-> Closes: https://lore.kernel.org/all/e915da49-2b9a-4c4c-a34f-877f378129f6@=
-linux.ibm.com/
-> Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-> Signed-off-by: Saket Kumar Bhaskar <skb99@linux.ibm.com>
-> ---
->
-> [RESEND]:
->  - Added Fixes and Tested-by tag.
->  - Added Greg as receipent for driver-core tree.
->
-> Original patch: https://lore.kernel.org/all/20250509122348.649064-1-skb99=
-@linux.ibm.com/
->
->  tools/testing/selftests/bpf/test_kmods/bpf_testmod.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c b/tools=
-/testing/selftests/bpf/test_kmods/bpf_testmod.c
-> index 2e54b95ad898..194c442580ee 100644
-> --- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-> +++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-> @@ -385,7 +385,7 @@ int bpf_testmod_fentry_ok;
->
->  noinline ssize_t
->  bpf_testmod_test_read(struct file *file, struct kobject *kobj,
-> -                     struct bin_attribute *bin_attr,
-> +                     const struct bin_attribute *bin_attr,
->                       char *buf, loff_t off, size_t len)
->  {
->         struct bpf_testmod_test_read_ctx ctx =3D {
-> @@ -465,7 +465,7 @@ ALLOW_ERROR_INJECTION(bpf_testmod_test_read, ERRNO);
->
->  noinline ssize_t
->  bpf_testmod_test_write(struct file *file, struct kobject *kobj,
-> -                     struct bin_attribute *bin_attr,
-> +                     const struct bin_attribute *bin_attr,
->                       char *buf, loff_t off, size_t len)
->  {
->         struct bpf_testmod_test_write_ctx ctx =3D {
-> --
-> 2.43.5
->
->
+On 6/3/2025 12:23 AM, Xin Li wrote:
+> 
+> Just two nits below, other than that:
+> 
+> Reviewed-by: Xin Li (Intel) <xin@zytor.com>
 
-The build is broken in Linus's tree right now. We also now need:
+Thanks!
 
-@@ -567,7 +567,7 @@ static void testmod_unregister_uprobe(void)
+>> diff --git a/arch/x86/include/asm/nmi.h b/arch/x86/include/asm/nmi.h
+>> index 79d88d12c8fb..f0a577bf7bba 100644
+>> --- a/arch/x86/include/asm/nmi.h
+>> +++ b/arch/x86/include/asm/nmi.h
+>> @@ -54,6 +54,7 @@ struct nmiaction {
+>>   	u64			max_duration;
+>>   	unsigned long		flags;
+>>   	const char		*name;
+>> +	u8			source_vector;
+>>   };
+>>   
+>>   /**
+>> @@ -62,6 +63,7 @@ struct nmiaction {
+>>    * @fn:   The NMI handler
+>>    * @fg:   Flags associated with the NMI handler
+>>    * @n:    Name of the NMI handler
+>> + * @src:  NMI-source based vector for the NMI handler
+> 
+> "NMI-source based" sounds weird to me.
+> 
 
- static ssize_t
- bpf_testmod_uprobe_write(struct file *file, struct kobject *kobj,
--                        struct bin_attribute *bin_attr,
-+                        const struct bin_attribute *bin_attr,
-                         char *buf, loff_t off, size_t len)
- {
+It sounds odd to me as well. I'll get rid of "based".
 
-Should I send a separate patch, or can we update this and get it to Linus?
+"NMI-source vector for the NMI handler".
+
+>>    * @init: Optional __init* attributes for struct nmiaction
+>>    *
+>>    * Adds the provided handler to the list of handlers for the specified
+>> @@ -75,13 +77,14 @@ struct nmiaction {
+>>    *
+>>    * Return: 0 on success, or an error code on failure.
+>>    */
+>> -#define register_nmi_handler(t, fn, fg, n, init...)	\
+>> +#define register_nmi_handler(t, fn, fg, n, src, init...)	\
+>>   ({							\
+>>   	static struct nmiaction init fn##_na = {	\
+>>   		.list = LIST_HEAD_INIT(fn##_na.list),	\
+>>   		.handler = (fn),			\
+>>   		.name = (n),				\
+>>   		.flags = (fg),				\
+>> +		.source_vector = (src),			\
+>>   	};						\
+>>   	__register_nmi_handler((t), &fn##_na);		\
+>>   })
+> Please keep the line-ending backslashes (\) aligned.
+> 
+
+I somehow missed this. It should be possible to keep them aligned
+without changing the rest of the lines.
+
+> I guess you want to keep the change minimal.
+
