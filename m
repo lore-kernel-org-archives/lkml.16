@@ -1,77 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D21F72631;
-	Tue,  3 Jun 2025 01:30:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE99D33E1
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 01:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748914207; cv=none; b=MYivlLcldXIifr7bkiRB9SmGJtms6IxF90FMRQ5hLqpj568gSSr8OuHc8m2EBZH07OMSQlbBnZX77ZQtKs1BJlq/+DPAogY5o6kuLFdUEcdB/jlX2zODIEEk5+VWHTfSvZdjVpA/AEXrWJA2jl5SpUo5T8Q7IMkYEiXJLbTXYyo=
+	t=1748914326; cv=none; b=dMTkq6YnomTuAo3/qFgcIjm6lmJ9k8WTWcGAHvJlmbGfZcMrBMBcnh0+rjQzPJSppv18ndeQRF2lIPUQbmB4bHUzJreUmPGJCo3+9Xznywm4/dWHtt6TI5Q1HurUC/FpCRzKU/1YXY3irq/8i/+7wJk/khwyehtzN2FhfyvVONY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748914207; c=relaxed/simple;
-	bh=MqyKI93LRJddY/DM3V1MJJpx3swen4DNqllDpBbnZKc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=svi3pZwDgZgvBVNqKbtyoLPjre6e78AjkFosZsBypBbuCXwoaVo21AA/dmMmknXv17cYqBcGpJyXxMnW19klrKjwbKbP09QsFLboidtUAllIffmSSyQmBGG5NlWxBYo4HaCxJD0ZZPqX6cFLadNlO0jPi5BiQEESvILg//HxLws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jpuEGL+6; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748914326; c=relaxed/simple;
+	bh=vx5ERXTpWormRCzThtuojCvOJ1dhjcAtXpSbb6TVG4A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=unulcdPB6AQ9pISTx67BMYmOVMyCsFqFaG8u7YfR4gXQWs/wcDb/5poWLB/k+EbpzBsbxE5xfJUHuhTiFa2yKLede/VZe70iyO30MVld9J46PDr3luaD/nHJ5hRlOBBUPsZyUKbCD9Fb6Ue+W3gC+9eqRlvkmSZWo2udZGWGbIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HB2QxOFh; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jpuEGL+6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748914206; x=1780450206;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=MqyKI93LRJddY/DM3V1MJJpx3swen4DNqllDpBbnZKc=;
-  b=jpuEGL+6wxNUYqk+2QmeYwCATER+z/92fdL62PEaVxvi/jyq/YgwMtF1
-   WnFYZtENckOAkUBl0Iqxzv6b025k8f5WRXqKCwQFcIMFH4fUrebAFdu1K
-   PnHrQ8kRByCJtqRoVfzK5RgThQVt8f03XFE8yX1lA3EI3SIHAnDl1fLCR
-   fZPnMpBtlhta3Hl4dkBvMf+b0J2Y+aYTPvHtUZn1cle73VBRxN8JpE2cA
-   v9YkcujmjYozCKVVcEGDYYqfjHyFk1pXHJ63sZWzg8IOs+550LgQ4Hqgj
-   N/yA/suKR1+2v3E+CrAfJ1KhI2HW98mA4s+sAVVNFBnaRsW2AL+gykyZC
-   w==;
-X-CSE-ConnectionGUID: gvFhvuQKTDCS4wlZ0Cozvw==
-X-CSE-MsgGUID: /Ii5emUTRLaBmrrGw+t2sA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="61197184"
-X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
-   d="scan'208";a="61197184"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 18:30:05 -0700
-X-CSE-ConnectionGUID: NKavtTTOR4e48is9QsdmPg==
-X-CSE-MsgGUID: dJLdDMD0TL6OccNh9TW7Cw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
-   d="scan'208";a="149534367"
-Received: from enasrall-mobl1.amr.corp.intel.com (HELO desk) ([10.125.146.36])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 18:30:05 -0700
-Date: Mon, 2 Jun 2025 18:29:57 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-	Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH 3/5] KVM: VMX: Apply MMIO Stale Data mitigation if KVM
- maps MMIO into the guest
-Message-ID: <20250603012957.kgwfnihs4zkv5y4x@desk>
-References: <20250523011756.3243624-1-seanjc@google.com>
- <20250523011756.3243624-4-seanjc@google.com>
- <20250529042710.crjcc76dqpiak4pn@desk>
- <aDjdagbqcesTcnhc@google.com>
- <20250529234013.fbxruxq44wpfh5w4@desk>
- <aD43icQolCvESIpc@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HB2QxOFh"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7376dd56f8fso5823593b3a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 18:32:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748914324; x=1749519124; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4Bojv3M+4ciWgsmcsFZ9XbWm7Qt7ckhMnQSLXNPu4AE=;
+        b=HB2QxOFhy7wxpfb7xZLuzEvNA0rbZlvBkIusmKRp+DzVnLgd3RPZJE754N+kvKjA+g
+         hFwm4DQCo4CRSLhHA4eLWuifxJWkInViIZMiVhEnxiz87ocezhbbfucvWAFyFmWDXUKu
+         ROpfIpDgQolo4bQyXt9lSfM3dfZdKLzhN3J0Xgyj4hD4Yz0S5kb5tFCSxZiBWbWOL8+w
+         UEWL58Y3//KowfhSFnbhVQXmtOt0m2oxoPhIZwIdg0g9tkTvilwnCplUMEAu0mLcc0oi
+         szD7UNVyi8e8zUIILxqyAY/HALtD1psopd51mE2bTc+iZVVtTSKxacy5sxmQ9Xj5Jp4z
+         AxWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748914324; x=1749519124;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4Bojv3M+4ciWgsmcsFZ9XbWm7Qt7ckhMnQSLXNPu4AE=;
+        b=pUvsW6bandDIwCqz+r3dOFZQS0dtZWRYi2mDTKwD+Vkc4wmxWI2SNNaW874uGsbFTj
+         9dIzE/qOd51Dm6ZDBsfxgzdXxacOFRHXlytSSIzMjOqHg5W6bzFJsBTdVON8feJqOCeD
+         xIPg6ZNFxQTZDaue1ut78t0uX8mFvy4EmMSuJE+Y2YfTL4Zri84uhBe+EXI2Uc4jGx9r
+         9TUPBsVPJ5VLAVlhLZf40u3kpGOQoeeA968fUJfc9TYoaTCFPi+H35x6STAmNIobbhkl
+         4mAWuiO8rvnCoj62DwXuZ4zx9coRxrfEUpBL5YV90iHyzDYMNfJRzj6/r1p+r/OBm8+B
+         Zmyw==
+X-Gm-Message-State: AOJu0Yxo4rgfYANl25rJUDj75hbrIc9I6ERYi6xBln5vy0dOhSyV+RL9
+	x0JCPO+ssUfG/Sh9myqYeWdr9YN4e8A0p615ov0CDmdanLV62tF9X89cwnMkUQ==
+X-Gm-Gg: ASbGnct8rMULboXu4utJdZtFbs0httAbew1iC/+lsoqTsArqyIN6BJuLO8GkK6Gdw/U
+	2y6q6PkFBi+R3yCD0WIqlNdAO0vFPYDj4qQ3RZ13uowUzG0NJDex/5gW9Ln9LlfNa0OwLrbmC3G
+	RlE4lVHauFPwxa7y6fXgFoKksC1UJR/QxZmIvKDTVlepzpzz9RaCjjCP/D8yjK+slmTlbaRgbvY
+	P+bAC5IBJemL8jULmJmhE/hZ8ujDxoaFevAUkz1MRRrS+Taah7Kw/NzFGIm9NcTSStVAwYTv8kJ
+	x7FrrxaXvhiNW/FC7DMWlOELHX5+nrz9tymbtq4nR7z0836enKnbSZzPavDoDAeJZ8Zt55jTZne
+	ibqk=
+X-Google-Smtp-Source: AGHT+IEBvCo+zKvd7j7mdsU9DQLa79UighTNoRN94FnbTa2xsd5YbzSKsqrLSptrGQDaJf+xCO0s5A==
+X-Received: by 2002:a05:6a00:2e86:b0:746:2ce5:a491 with SMTP id d2e1a72fcca58-747bd96b90dmr20446518b3a.10.1748914323756;
+        Mon, 02 Jun 2025 18:32:03 -0700 (PDT)
+Received: from Barrys-MBP.hub ([118.92.145.159])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afed33casm8265907b3a.73.2025.06.02.18.31.59
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 02 Jun 2025 18:32:03 -0700 (PDT)
+From: Barry Song <21cnbao@gmail.com>
+To: akpm@linux-foundation.org,
+	linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org,
+	Barry Song <v-songbaohua@oppo.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	David Hildenbrand <david@redhat.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Jann Horn <jannh@google.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Lokesh Gidra <lokeshgidra@google.com>,
+	Tangquan Zheng <zhengtangquan@oppo.com>
+Subject: [PATCH RFC] mm: madvise: use walk_page_range_vma() for madvise_free_single_vma()
+Date: Tue,  3 Jun 2025 13:31:54 +1200
+Message-Id: <20250603013154.5905-1-21cnbao@gmail.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aD43icQolCvESIpc@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 02, 2025 at 04:45:13PM -0700, Sean Christopherson wrote:
-> Ah, and the s/mmio_stale_data_clear/cpu_buf_vm_clear rename already landed for
-> 6.16-rc1, so we don't have to overthink about the ordering with respect to that
-> change. :-)
+From: Barry Song <v-songbaohua@oppo.com>
 
-Yeah, I noticed that. It went through the x86 tree as bulk of changes were
-outside of KVM.
+We've already found the VMA before calling madvise_free_single_vma(),
+so calling walk_page_range() and doing find_vma() again seems
+unnecessary. It also prevents potential optimizations for MADV_FREE
+to use a per-VMA lock.
+
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Jann Horn <jannh@google.com>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Lokesh Gidra <lokeshgidra@google.com>
+Cc: Tangquan Zheng <zhengtangquan@oppo.com>
+Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+---
+ mm/madvise.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/madvise.c b/mm/madvise.c
+index d408ffa404b3..c6a28a2d3ff8 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -826,7 +826,7 @@ static int madvise_free_single_vma(struct madvise_behavior *madv_behavior,
+ 
+ 	mmu_notifier_invalidate_range_start(&range);
+ 	tlb_start_vma(tlb, vma);
+-	walk_page_range(vma->vm_mm, range.start, range.end,
++	walk_page_range_vma(vma, range.start, range.end,
+ 			&madvise_free_walk_ops, tlb);
+ 	tlb_end_vma(tlb, vma);
+ 	mmu_notifier_invalidate_range_end(&range);
+-- 
+2.39.3 (Apple Git-146)
+
