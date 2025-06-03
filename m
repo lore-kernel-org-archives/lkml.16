@@ -1,143 +1,97 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C6A2853E0
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 18:16:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294FE2853E0;
+	Tue,  3 Jun 2025 18:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748974601; cv=none; b=hKCuTaXz1ty17oJO2fZ7084E8BA1Yzr/tt+9hZtH115R+JuoPbmKINSF5zHwCiEanKstOAUUpAcUxwtA1RiKx9JRm2L7xuNbE/XZr03rfMLll761U61/tm2vUUF1azyx+m3Lwd29C50XZUvESvkQAPlMwI4qyDGClRwt8EiTgW4=
+	t=1748974608; cv=none; b=V+7AtKE2RInpMxGJClQidwzkgUTGUuxkCztiu2pzqHiXcg0/wwCJhP+QrgqERU+We2lwhCEfiXZ/BW8ULsN+AS6YsBiRHCQ54I4T3zJEgG8uwJu8cFqEpaoaVGvGIanNVXY253vG0UBSwgvLrPeYjCGzMiVBp4FOEvXKcFUVTiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748974601; c=relaxed/simple;
-	bh=zzlz0XiaHl9k5I5nTOV3bt+4IyFgiGwUBoM8qCzc6d4=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=fwAd2MytXqx4sNd2sNahefZ7tismiQ/vgLD9Wg3VoX5YKlxTeMaS+5vuoJA1fHOxEC3G90w9moIDhLQGaWX+uyyRvKjRnl9EsVR0K6ayyDm/aKamgAbVwEj8b1j8+3JFDmafrA055FoCsN0qRlwpwoqXqzJPEm8TbkEINzy5e+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=afQCS+m0; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+	s=arc-20240116; t=1748974608; c=relaxed/simple;
+	bh=p1oikR6A7CSugoR4HjSUuEWBgK7rKrZS/huPT73PKfU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=M+ws9QJ/5A6SldDYUUs//LnnT8L1nsNitNDAhU1arqQb7lqqB/iMs/9HV5GkuRF3uFc6OvYxTQjDI2p7ZDKklbFrErG41i+4oJVG4muncq9YXo2nm2d5lchTwxiswJhh6+dwn6ym27MvekCyr5b6856zWl12tq3f2bZiv9tGeW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=WgeGMCfW; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="afQCS+m0"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-234b133b428so41325805ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 11:16:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="WgeGMCfW"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2351ffb669cso48200625ad.2;
+        Tue, 03 Jun 2025 11:16:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748974599; x=1749579399; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=dlaUJQBmuGJwNHdjlVkIdQC8DooPW/OGsJq5Qkj2en0=;
-        b=afQCS+m0fjrTXuEvT0NFk9IqG8Zgbc9ZE4OV/A/IRPb7yaaNQ/Jmcc79yjpjH2kO9b
-         0dY0oOURUOmmngCUnxa1I64cGNNDrKb1c8jYlTrlsErtTkON5zARPe0QRurbQKNAc4so
-         Y4aLBkese4+fLCQAajkgAjui4Ax4Gj2xAz4UzHwYrr34/4a3RSsWdhjZTqya0sU2K8DM
-         Nf7wjL/S0wfvdF7mZL+iu70yCNuVmSej09IOdWBXLj9kO6/REtTKngTi/uiSxvDz6L2f
-         5tpwRpNnkaDHL2vPrfaoetGPARag+Pa6OWF85KO+0o46tY/efsyYPKgYAKEr7t7xrbU3
-         9pFg==
+        d=googlemail.com; s=20230601; t=1748974606; x=1749579406; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=muedraecWG3k6sC4BkfWIIfP1Qhn6jm5riTVBMIqDbo=;
+        b=WgeGMCfWNsQgQbH6s3AziOcGfKJSpfd7SrXjfU9HrVE7iu887hNpQ71Okfzf2Ng83S
+         OZsfmOR/4oLCF6/m2yjhZGpGxhrq/ensB3Fj6drWUtD4BsnDw3B3nOH8k7oiGqXFmQST
+         zY1RJLky5G6t2/01It32qE3VgwpM24EFKyH5K7+vHiPJ/9Sq0HNLO+kB2CKSACaA3XCl
+         BJIGuIKQZsERRU41RlxRtINrhU6WGGL3Z4JEkRRKnDqVltmTVhecqfU3s2QWcAOoKHvJ
+         XuoMj4YmnVMQEItztLayKDU7k+HZeClyBZwXCQV0O676aXbUPGinfHUP5kKVRYVqgvbq
+         MRQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748974599; x=1749579399;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dlaUJQBmuGJwNHdjlVkIdQC8DooPW/OGsJq5Qkj2en0=;
-        b=hfJ/5VboBoUESIR4qYUCNhVuOGd2IitA9J7eVje8N8EqLmpIPvbQbxcBU3nBnxAQLT
-         BFWg7lOKjthO+u6dnbuBzzJ9922ULKY50dMEvr+Af3aSxxkudRcAgde2nDQIyhGVq1Q4
-         nLSUaz9zADVmdLj5ychNMGs+bW2SiqcOz+ym6KDpy18DfvcKcl57NvMMYMk+NNynu3RU
-         9DQAf4HIf9riEu8vKnL0GmcNCxouPb0G+CvTFOqyHwczURz/ylK1+3NDvRfCi/x8eajg
-         W0gbsbYrDwHmgyyF9y4b/m6RBDNx0Kcb+QduHNyY7MyeAngjNXnrEhzYoRzqR8Bcmgi4
-         S/1Q==
-X-Gm-Message-State: AOJu0YzVhqu6JlXODWOr93qwD/fkJDkOe5IZkPV0dJBJjfzeZAA6y1H3
-	2iTLZWe1bXGALUk9JmoaNYMEH6hvBLVbtOPsLv4EjTaTYiJMmLEsGyWJ5kCRJJ5LfYsfIyKvOy3
-	NrAqnWD6ObxkwpXL9DE8Gt3tCNJmX16Xu7cui5o5My4JgJjZ+P+SV5NXQPDMj+C/rhWEMeQ08FV
-	oMgCT8/Mtaxn+pf2PLDqNhru9sdlYMr2h69dJFI8d1guxP
-X-Google-Smtp-Source: AGHT+IGzo+5jSA0iizSd6Tn3gQ4e3xsellXfHop9mUoZhgA5AqQTUoYuEgJH3L+6oxVBfetYe8qPhwiqW9c=
-X-Received: from plblg15.prod.google.com ([2002:a17:902:fb8f:b0:220:d81a:8975])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f611:b0:224:76f:9e4a
- with SMTP id d9443c01a7336-235291f59aamr292314915ad.14.1748974599152; Tue, 03
- Jun 2025 11:16:39 -0700 (PDT)
-Date: Tue,  3 Jun 2025 11:15:53 -0700
+        d=1e100.net; s=20230601; t=1748974606; x=1749579406;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=muedraecWG3k6sC4BkfWIIfP1Qhn6jm5riTVBMIqDbo=;
+        b=QL6kxppAW0DxhVlkEr8XexzWe0jGsUijNBgITYEoim7JMHH8gHJNuLyLqJ0mkKo3jG
+         0CVwrfqgvrLie6pG8Zuy12ZHAV3LPOXRzH77KKsoRfR/VglgpksGg0lkzd3wFOkvR9br
+         dmJTymRt7tGwr/qEVJXGX+Hm8ycxixRBTJtUNAhXo2ZTNCMq5Ia/tKcEAxTbrg31qpL3
+         PL4f7UE07h4RECHSpgnsJAd1a67mI0PtL7OEVra0Ko7EEU/N5T4bSfWk3uf082vF0Zjv
+         ZGzYWHfIOs1iYBTBPcxYVTAcCPw57nbEyAk18BCsfp8CsPxZSS/Id19dOUTvjWmwKvp9
+         rjuA==
+X-Forwarded-Encrypted: i=1; AJvYcCUQ1HnrAe+yF7J0jXH/3e3vFa9pn7TPaotvRPyZGZcPs0NYl+jWLViOECwru0C7ZWtmDzNOMJthPq02YB38@vger.kernel.org, AJvYcCUSqScBygIcSlUQJaXb/2jUp//Py4DPrwjLhV8EGDJXe30yTkH5GXDEUsQ1S/nNzcR2jM9hChp0bXUu/iuJEA==@vger.kernel.org, AJvYcCV5sY+XrZyCnsZWHPopkpqFG8XFf1rVHEiCKwgQ6zIK/sI70AQmcK1EYvOviwjOAjHSc1UbJAB803uj2b4=@vger.kernel.org, AJvYcCVynmWObn4HlH5ry5nwFSoPcgQ39yoCzRZL9Bp3b36yx6pJdnYlO5kb35gmTMGmWyyNzX39Ehdt3Ld6@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdGwBDVxyIdxR5Ar1nbzvolwvndizW5qZ7luO4IAkKb3rBRlbC
+	MbuxZk9LtY+Ek365LFnMFoG+9qyjmnnb6yoeQB5louzbks/WMaH/yDK5kSvLd4YfMWPf8paMpte
+	AXodhOONcpAPpaD1sEpuUJg15dG/1/Po=
+X-Gm-Gg: ASbGncvpIOrOLjWhirG6S1vJC4E1M45eClxemcgKACHYj5DCuBeF2nb0sGTUgRbeP5b
+	VrVPpIuCBrJGQizTuZJzhw4a9QEmesKJAWEibhR0nZx6C2y+AEcd67EWYe6O9LZaJhZBXDLrAPa
+	ycPedmxyamyQp/KGiwJ/sxQ++MdWFyLTcspZ820ILFSdq9MGv0pcZ9v6YtRnrYp6tkL0pvYppJB
+	oKX
+X-Google-Smtp-Source: AGHT+IHr9J8+h+AZ8STPC1y2/qEM2ZZcXzahpAeXjwcKczY154NqfHQ6m3ty2wKy8w/H9uZv/VxmB7VQvs3K1RzoMLk=
+X-Received: by 2002:a17:903:234c:b0:235:779:edfd with SMTP id
+ d9443c01a7336-2355f76c215mr179533115ad.39.1748974606365; Tue, 03 Jun 2025
+ 11:16:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
-Message-ID: <20250603181634.1362626-1-ctshao@google.com>
-Subject: [PATCH v4 1/2] perf: Reveal PMU type in fdinfo
-From: Chun-Tse Shao <ctshao@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Chun-Tse Shao <ctshao@google.com>, Ian Rogers <irogers@google.com>, peterz@infradead.org, 
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, james.clark@linaro.org, howardchu95@gmail.com, 
-	weilin.wang@intel.com, linux-perf-users@vger.kernel.org
+MIME-Version: 1.0
+References: <20250603-dt-bindings-mailbox-cleanup-v1-0-724407563997@linaro.org>
+ <20250603-dt-bindings-mailbox-cleanup-v1-1-724407563997@linaro.org>
+In-Reply-To: <20250603-dt-bindings-mailbox-cleanup-v1-1-724407563997@linaro.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date: Tue, 3 Jun 2025 20:16:35 +0200
+X-Gm-Features: AX0GCFsq34ioWPbcIqxTayHSRdJ5z4uSRbOfAewoz0GwtzdI-PxfH0Fpo31M6tA
+Message-ID: <CAFBinCBSyniWtR5T3XdgohG+n0Ae=6tgmdASSxsnsmoQV4yhQQ@mail.gmail.com>
+Subject: Re: [PATCH 1/5] dt-bindings: mailbox: amlogic,meson-gxbb-mhu: Add
+ missing interrupts maxItems
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
+	Jerome Brunet <jbrunet@baylibre.com>, Nishanth Menon <nm@ti.com>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>, 
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, Hector Martin <marcan@marcan.st>, 
+	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Suman Anna <s-anna@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, asahi@lists.linux.dev, 
+	linux-tegra@vger.kernel.org, linux-arm-msm@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-It gives useful info on knowing which PMUs are reserved by this process.
-Also add config which would be useful.
-Testing cycles:
-
-  $ ./perf stat -e cycles &
-  $ cat /proc/`pidof perf`/fdinfo/3
-  pos:    0
-  flags:  02000002
-  mnt_id: 16
-  ino:    3081
-  perf_event_attr.type:   0
-  perf_event_attr.config: 0
-
-Testing L1-dcache-load-misses:
-
-  $ ./perf stat -e L1-dcache-load-misses &
-  $ cat /proc/`pidof perf`/fdinfo/3
-  pos:    0
-  flags:  02000002
-  mnt_id: 16
-  ino:    1072
-  perf_event_attr.type:   3
-  perf_event_attr.config: 65536
-
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
----
-v4:
-  Removed the first patch in v3 since it is merged.
-  Retested to make sure the patch still work.
-
-v3: lore.kernel.org/20241106003007.2112584-2-ctshao@google.com
-
- kernel/events/core.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 95e703891b24..bad563692d63 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -56,6 +56,7 @@
- #include <linux/buildid.h>
- #include <linux/task_work.h>
- #include <linux/percpu-rwsem.h>
-+#include <linux/seq_file.h>
-
- #include "internal.h"
-
-@@ -7077,6 +7078,14 @@ static int perf_fasync(int fd, struct file *filp, int on)
- 	return 0;
- }
-
-+static void perf_show_fdinfo(struct seq_file *m, struct file *f)
-+{
-+	struct perf_event *event = f->private_data;
-+
-+	seq_printf(m, "perf_event_attr.type:\t%u\n", event->orig_type);
-+	seq_printf(m, "perf_event_attr.config:\t%llu\n", (unsigned long long)event->attr.config);
-+}
-+
- static const struct file_operations perf_fops = {
- 	.release		= perf_release,
- 	.read			= perf_read,
-@@ -7085,6 +7094,7 @@ static const struct file_operations perf_fops = {
- 	.compat_ioctl		= perf_compat_ioctl,
- 	.mmap			= perf_mmap,
- 	.fasync			= perf_fasync,
-+	.show_fdinfo		= perf_show_fdinfo,
- };
-
- /*
---
-2.49.0.1204.g71687c7c1d-goog
-
+On Tue, Jun 3, 2025 at 1:57=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> Lists should have fixed constraint, so add missing maxItems to the
+> "interrupts" property.  Since minItems=3DmaxItems, the minItems is implie=
+d
+> by dtschema so can be dropped.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
