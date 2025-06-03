@@ -1,45 +1,35 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9ACB27F195
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 07:53:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5564227F195;
+	Tue,  3 Jun 2025 07:54:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748937239; cv=none; b=S/Qu28vTGewSNP8NO2JpXKAPAtWMLODi79XFo8lnrN64kuVBa4HpW8XOIyBa9X3A3iYNPLRNDckYACJRcgjxWeEt3TI8r4me2UtXcgpi9xznfKJWFj9rl/k3kwu9BnGsfOAbYtFthBpR+5HrafIbms0DZkc2GDXAZYoxd9P7yJs=
+	t=1748937296; cv=none; b=SWd4rfr2HG7YYT4/NvF/ysdBtlNBF+AfHmbqTzQqnfBadInmPRCoqxl54EBCMFDjGkHeMKUoG70CYnw8ZqItmJCGRRFpB5lT2prswuWYwu3UfzDdNswGcwBXUQbKr+sCjminNTm5zeLAmuRAIznnqLuJ8qJFqpGFvqCqcsdxvuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748937239; c=relaxed/simple;
-	bh=ZCQqiA2PVTAcFSU8RIxSlOzKCai7Hr/vyfTn0gjEBAw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nZlYXUkDZnq2wQs7A6eEE0EfXLF39pb9O4guWAVsiXnmSkA7VmUTD0zoX7uq3XZsPJQvUnFhhhdI2CHQntjUxfKBMHpHu442XjqxmEmAE+P1/qouwcRpEld8+vQry0jXsmt8thIOf8d6GEpflJ9HIAgEcglZ16qMlrLWaL4KTX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dE0h0uzC; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dE0h0uzC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5044BC4CEEE;
-	Tue,  3 Jun 2025 07:53:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748937238;
-	bh=ZCQqiA2PVTAcFSU8RIxSlOzKCai7Hr/vyfTn0gjEBAw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=dE0h0uzCSZ5WChgu8B5IkcGge4aPWN/Hzli6cI8mEmupF1I8vf3+lQ7EeLptooAn5
-	 8OgzY4nfDs2jIW6C6yJ7TdIU5Pb4CZC1Z87o6XVtsJZa2+2xnUVXKEgdUoM4j/kRBe
-	 0Qp4W1U3aw3bNWG60sxsGqZBnvCQBWyoDyLTuZKJUDN3WEVklYjgzgdqbB/RgY4MCr
-	 W2xp7fd1da09MSCKaXCSvvC8xeOajxqsq3/KkPE3vZC8eBzUr5c9odiK/LwsI+SM41
-	 K4y0puiBrUAO6iu0vJF2FN3Amj52tlWSJtKN+kgceTmh2bnUCa1cX3X1OzoWREjVXz
-	 vmZoqFMVllx3g==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Alexander Potapenko <glider@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Marco Elver <elver@google.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Sabyrzhan Tasbolatov <snovitoll@gmail.com>,
-	kasan-dev@googlegroups.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] kmsan: test: add module description
-Date: Tue,  3 Jun 2025 09:53:07 +0200
-Message-Id: <20250603075323.1839608-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1748937296; c=relaxed/simple;
+	bh=z5+m8V0Ms3AUop1fmCfOASFxTcdyt+T6iFmUnrF4Dh0=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HiDcFMERpNDnRhonli8e5GR/MDCrNZZHFUw//SaBE7crCzOWeQthImWpmMGRf27C+m7252zqDLEMxGlYbhJ8TnE4jK66F9iklvsRAHykplT6oLMFr7XRRisTbol6W8NGQqhIl9jq9GPYEPR5E/tkNKY7UVg0J4gkKgA+O4iYy58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Tue, 3 Jun
+ 2025 15:54:50 +0800
+Received: from twmbx02.aspeed.com (192.168.10.13) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
+ Transport; Tue, 3 Jun 2025 15:54:50 +0800
+From: Jammy Huang <jammy_huang@aspeedtech.com>
+To: <jassisinghbrar@gmail.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <joel@jms.id.au>, <andrew@codeconstruct.com.au>,
+	<jammy_huang@aspeedtech.com>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-aspeed@lists.ozlabs.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH v1 0/2] ASPEED: Add mailbox driver for AST2700 series
+Date: Tue, 3 Jun 2025 15:54:48 +0800
+Message-ID: <20250603075450.133604-1-jammy_huang@aspeedtech.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,28 +37,26 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: Arnd Bergmann <arnd@arndb.de>
+Add mailbox controller driver for AST27XX SoCs, which provides
+independent tx/rx mailbox between different processors. There are 4
+channels for each tx/rx mailbox and each channel has an 32-byte FIFO.
 
-Every module should have a description, and kbuild now warns for those
-that don't.
+Jammy Huang (2):
+  dt-bindings: mailbox: Add ASPEED AST2700 series SoC
+  mailbox: aspeed: add mailbox driver for AST27XX series SoC
 
-WARNING: modpost: missing MODULE_DESCRIPTION() in mm/kmsan/kmsan_test.o
+ .../mailbox/aspeed,ast2700-mailbox.yaml       |  61 +++++
+ drivers/mailbox/Kconfig                       |   8 +
+ drivers/mailbox/Makefile                      |   2 +
+ drivers/mailbox/ast2700-mailbox.c             | 226 ++++++++++++++++++
+ 4 files changed, 297 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/aspeed,ast2700-mailbox.yaml
+ create mode 100644 drivers/mailbox/ast2700-mailbox.c
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- mm/kmsan/kmsan_test.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/mm/kmsan/kmsan_test.c b/mm/kmsan/kmsan_test.c
-index 9733a22c46c1..c6c5b2bbede0 100644
---- a/mm/kmsan/kmsan_test.c
-+++ b/mm/kmsan/kmsan_test.c
-@@ -732,3 +732,4 @@ kunit_test_suites(&kmsan_test_suite);
- 
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Alexander Potapenko <glider@google.com>");
-+MODULE_DESCRIPTION("Test cases for KMSAN");
+base-commit: 546b1c9e93c2bb8cf5ed24e0be1c86bb089b3253
 -- 
-2.39.5
+2.25.1
 
