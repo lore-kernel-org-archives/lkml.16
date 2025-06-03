@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253E31D7E54;
-	Tue,  3 Jun 2025 17:11:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CDAC1DE2A0
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 17:11:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748970674; cv=none; b=ZcBEk8g08upxkPhvSOpOtTvgmf6eaJT9oAIPzziBns6kdylKCWiGJ0lTYIJ0mbF9Od8Jd1ZpS0urE0OnEmdYy2hvMw4WBdeBVs4jUF1FUJdS5gb92zaTj38UnlSwnlj6P3jypMUVxdneYC0FzsYumjIZ1G6DyAHB2iqFSIabUgM=
+	t=1748970674; cv=none; b=qL+8Wcbyb27JlHdjwQQNGd/d0cTJlOajUtpwk1U0VWVx22wAdUk9KkVN9Y9t8qBccsKNRP36qbNsLzDHg/CwYF434jADk3FrLs+yoi00apL/SQutdBx3sPnj22MTGkE6PFZKvsV/4YRPD3ALpKUYd3UiiUW8RVieAzGD9v7y96Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748970674; c=relaxed/simple;
-	bh=fiZC9m2o/8iWsIotLzKkDj8RsLh9fnr3AXBC611yQRQ=;
+	bh=aZhK6wG2PGLiBcUue9u+wu3jgnZx7VeVgIvnyB4Vi+g=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=Vw9g5N8iO+MnOchWAOCdt5tKX3JFbCP4ai9Us35Y4vti8tR+VLJ+pWfKy8vCQ5qi6omuhWfW3WlQJdl1Q2V6Og5adhRoVs9+Jl3AlYnc+HsrNRPyh+HnA5JsfESJvl9k8mnQkfzuGuoRhE8mKuH2pxAc+jmU3bgLg8g8UTduoCY=
+	 Content-Type; b=mQOh/ZXXuCVKpU+bAJi/Dmh85gJd6bWbUFTQK+qj6y197+rpvgJnXqkY1kHI+VhE9scHcTHmdDtmhkvPY70el6YekR3AxoMptN7xPaeCXh7f7FgFxfqc97WpAxpuq1IwIvXKE4tJFghRAHlUiAlJJdQ+9lH47fBd6q3vZETKack=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE8AAC4CEF1;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB7B9C4AF09;
 	Tue,  3 Jun 2025 17:11:13 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uMVBc-0000000E3zZ-2PqM;
+	id 1uMVBc-0000000E403-36q6;
 	Tue, 03 Jun 2025 13:12:28 -0400
-Message-ID: <20250603171228.423180093@goodmis.org>
+Message-ID: <20250603171228.597721946@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 03 Jun 2025 13:11:50 -0400
+Date: Tue, 03 Jun 2025 13:11:51 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
- stable@vger.kernel.org,
  Ye Bin <yebin10@huawei.com>
-Subject: [for-linus][PATCH 1/5] ftrace: Fix UAF when lookup kallsym after ftrace disabled
+Subject: [for-linus][PATCH 2/5] ftrace: Dont allocate ftrace module map if ftrace is disabled
 References: <20250603171149.582996770@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -41,110 +40,31 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Ye Bin <yebin10@huawei.com>
 
-The following issue happens with a buggy module:
+If ftrace is disabled, it is meaningless to allocate a module map.
+Add a check in allocate_ftrace_mod_map() to not allocate if ftrace is
+disabled.
 
-BUG: unable to handle page fault for address: ffffffffc05d0218
-PGD 1bd66f067 P4D 1bd66f067 PUD 1bd671067 PMD 101808067 PTE 0
-Oops: Oops: 0000 [#1] SMP KASAN PTI
-Tainted: [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-RIP: 0010:sized_strscpy+0x81/0x2f0
-RSP: 0018:ffff88812d76fa08 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: ffffffffc0601010 RCX: dffffc0000000000
-RDX: 0000000000000038 RSI: dffffc0000000000 RDI: ffff88812608da2d
-RBP: 8080808080808080 R08: ffff88812608da2d R09: ffff88812608da68
-R10: ffff88812608d82d R11: ffff88812608d810 R12: 0000000000000038
-R13: ffff88812608da2d R14: ffffffffc05d0218 R15: fefefefefefefeff
-FS:  00007fef552de740(0000) GS:ffff8884251c7000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffc05d0218 CR3: 00000001146f0000 CR4: 00000000000006f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- ftrace_mod_get_kallsym+0x1ac/0x590
- update_iter_mod+0x239/0x5b0
- s_next+0x5b/0xa0
- seq_read_iter+0x8c9/0x1070
- seq_read+0x249/0x3b0
- proc_reg_read+0x1b0/0x280
- vfs_read+0x17f/0x920
- ksys_read+0xf3/0x1c0
- do_syscall_64+0x5f/0x2e0
- entry_SYSCALL_64_after_hwframe+0x76/0x7e
-
-The above issue may happen as follows:
-(1) Add kprobe tracepoint;
-(2) insmod test.ko;
-(3)  Module triggers ftrace disabled;
-(4) rmmod test.ko;
-(5) cat /proc/kallsyms; --> Will trigger UAF as test.ko already removed;
-ftrace_mod_get_kallsym()
-...
-strscpy(module_name, mod_map->mod->name, MODULE_NAME_LEN);
-...
-
-The problem is when a module triggers an issue with ftrace and
-sets ftrace_disable. The ftrace_disable is set when an anomaly is
-discovered and to prevent any more damage, ftrace stops all text
-modification. The issue that happened was that the ftrace_disable stops
-more than just the text modification.
-
-When a module is loaded, its init functions can also be traced. Because
-kallsyms deletes the init functions after a module has loaded, ftrace
-saves them when the module is loaded and function tracing is enabled. This
-allows the output of the function trace to show the init function names
-instead of just their raw memory addresses.
-
-When a module is removed, ftrace_release_mod() is called, and if
-ftrace_disable is set, it just returns without doing anything more. The
-problem here is that it leaves the mod_list still around and if kallsyms
-is called, it will call into this code and access the module memory that
-has already been freed as it will return:
-
-  strscpy(module_name, mod_map->mod->name, MODULE_NAME_LEN);
-
-Where the "mod" no longer exists and triggers a UAF bug.
-
-Link: https://lore.kernel.org/all/20250523135452.626d8dcd@gandalf.local.home/
-
-Cc: stable@vger.kernel.org
-Fixes: aba4b5c22cba ("ftrace: Save module init functions kallsyms symbols for tracing")
-Link: https://lore.kernel.org/20250529111955.2349189-2-yebin@huaweicloud.com
+Link: https://lore.kernel.org/20250529111955.2349189-3-yebin@huaweicloud.com
 Signed-off-by: Ye Bin <yebin10@huawei.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/ftrace.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ kernel/trace/ftrace.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 1af952cba48d..84fd2f8263fa 100644
+index 84fd2f8263fa..a7291685902e 100644
 --- a/kernel/trace/ftrace.c
 +++ b/kernel/trace/ftrace.c
-@@ -7438,9 +7438,10 @@ void ftrace_release_mod(struct module *mod)
- 
- 	mutex_lock(&ftrace_lock);
- 
--	if (ftrace_disabled)
--		goto out_unlock;
--
-+	/*
-+	 * To avoid the UAF problem after the module is unloaded, the
-+	 * 'mod_map' resource needs to be released unconditionally.
-+	 */
- 	list_for_each_entry_safe(mod_map, n, &ftrace_mod_maps, list) {
- 		if (mod_map->mod == mod) {
- 			list_del_rcu(&mod_map->list);
-@@ -7449,6 +7450,9 @@ void ftrace_release_mod(struct module *mod)
- 		}
- 	}
+@@ -7631,6 +7631,9 @@ allocate_ftrace_mod_map(struct module *mod,
+ {
+ 	struct ftrace_mod_map *mod_map;
  
 +	if (ftrace_disabled)
-+		goto out_unlock;
++		return NULL;
 +
- 	/*
- 	 * Each module has its own ftrace_pages, remove
- 	 * them from the list.
+ 	mod_map = kmalloc(sizeof(*mod_map), GFP_KERNEL);
+ 	if (!mod_map)
+ 		return NULL;
 -- 
 2.47.2
 
