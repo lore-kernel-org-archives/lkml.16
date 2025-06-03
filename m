@@ -1,307 +1,190 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C33E269832
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 07:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008722690F4
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 07:35:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748936070; cv=none; b=rHLUPDmm7HZUfXwe956MiH295rC0Eax8wBpcpwgMkq0tzFa87LIcKFmwEFLoAbREyfPVp3ZbrGQ6uxSBBdx32oZEUH4LyPZCp+N1ukEMEZQcIxoM0LmfVLaHRzaSZdqfgQAbCO+Cx5v+bpJqudAYiYooHFRoWYRJMdiX55GOutM=
+	t=1748936129; cv=none; b=hJosBAJUJgPtyL/Db2jphYCD6kk5QzC3qE/Qzp07co14/2eTho2ZQLmZqh+hqt1plw5ahw0EPXB2lUgh+kemsDEX+aqy/9GzI7BG/eH2ab3xM2/k4VCZKMCeumLCbQVw5dTcyZ7OklOjcx7UxnFcQXSw4PzVtA8/32ZHZc+MdhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748936070; c=relaxed/simple;
-	bh=rW9/yqGiV3S9x9WQao6qghKACpjIMMP8euSf951KQjY=;
+	s=arc-20240116; t=1748936129; c=relaxed/simple;
+	bh=E+QAiazNn9v/r2GaWNXCVc9NzRxjWjvN6HgGF1scPOs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Sqg5JHu4F/41ekJFASnucvaIT7plMZ3uxL2PHbf2p+MUxBXKr5h2KQugSxsKLa59oj94/kP4Uv8Uo/wrEpzEMtCajMeo9wtfpYsmJFXRFeNve3aG60ygiJ2xaJOJPslIuIWDaA2pb44hxheKfOLjE3+yvtxlHZVwHDYXHKgIlWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TaoWiPlM; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=sSTZOAMk6UOWZDdAbxO+4hcthH7SlyJzAEoFHZRqJgcCgk4/0lUm60EAYVLGTKf7PyVfH1R/HY1VA4fzPY0HAD/ESw2gghexYpAIkMWPWfHgH4vvomJTt8hnyyUvnDLbbEiVBErwzX5SFe4/uhRgK9TvaaWlPrR+veVpJMUiruc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Gr19oFt3; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TaoWiPlM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748936067;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DGZ8ov4IZxTG4JISCQwIvXH2B18I0oSFw28Pds6ZzE8=;
-	b=TaoWiPlM8bwEozMGPrNL84FAe34ah7BmiuTmWKpHWkscv6+im0UXozIqo6ZOoDwQk4aSG8
-	bIrxG/NKUmJYEUipWoiHtqHI4c5BtExeKVA51GlN66a8PmWZkjStAnkNkwISwf9RdwP2+M
-	NucpH3LMFAzmx+8fw3KbPtrfLkCQPjg=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-314-3s-Ev6WROW6WuxaQnAal8A-1; Tue, 03 Jun 2025 03:34:26 -0400
-X-MC-Unique: 3s-Ev6WROW6WuxaQnAal8A-1
-X-Mimecast-MFC-AGG-ID: 3s-Ev6WROW6WuxaQnAal8A_1748936065
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a4eb9c80deso2237537f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 00:34:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Gr19oFt3"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5536tB3A007548
+	for <linux-kernel@vger.kernel.org>; Tue, 3 Jun 2025 07:35:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	FecECnu2NheaNqiJX/ORSRrplhA+quPcAjrXUQL/gTk=; b=Gr19oFt30bnti54h
+	gNQk79Ergs0wgCwz30ZHvmZwf5TdCovgO4pWxpr/0hgrjMmdHE2g7OVAmM4kaZ4Z
+	gUUAk7dK0lXyNiIqo6Q/SGnn3hRiigP1KkZKG6PpkCQztChATSCX8N7G6h3sIf3X
+	L15hftjzEejwcDZ3krYgBfyZqO/U+YTUYlpAEXn4WetcNHBJdN2i/6BqTjdIaD5L
+	vFVtA47qs5lQNPdu8TKznCeofD9EGu4t7llEqUifCRuA384JqXbrqmHiAn6DdsDr
+	RG4Km/z/dkSgvKgyQo4MjyCKJg/1VNJ3tBFfecPaX01IT+/z0Xbr+IFUfZJV4jzb
+	X37mfg==
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8t9s03-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 07:35:26 +0000 (GMT)
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-74299055c3dso7015125b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 00:35:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748936065; x=1749540865;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1748936125; x=1749540925;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DGZ8ov4IZxTG4JISCQwIvXH2B18I0oSFw28Pds6ZzE8=;
-        b=FAn3C0jVI2RjZ4/sOe7SZNs8pJ3tFu1tY96ylUENr4vrjH2G6r3JI4pmJetDREjC5u
-         kWUEqzaxkAgW9/9KhXs3G61QhtYYIVndPJuxuBsT/OCVx2TayZqauLiMGfhSDLMce5rq
-         le9YoJ4+eKkbDNca21vFk/lO7KZb8e7ROtfVfSWw3CNwexEo3MCI/KFBv+n1gvlb34/M
-         yldCY9Mlsjw9eFdX8Rg/lTu9AfgUtWd65MkNflZmzzch8ngnCGb2e/4vezb4cCOA5+qu
-         Gx0jZVX93kcYyxsCWeV0R0v2Laepa+px0d266qztO9NuABIlDKZg5lJChDSTCRlxU3mr
-         JTZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV+NjRWEZsuQm9CN6C9T/L6VLyvWroPPJkMzoX4s8oEU/qUMT6rP5vazyPfs3OcG0A1Lb5etc8jvPB539U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyg/t622IH3+7KIMl/PTmCh/sP07uFTohDdQiDqhgSJ8c6eLIty
-	lSHBrygqHKwM0kZBMpKg+sdIy2WQ3qr+Pan8P5n68EUqm7LIG3AKUfqvMiD0pwSO0oIFD/mAWdy
-	arbejwg7At8t+RT4OOEeBV0msmmkGdRkarLs4YHS4YZUO6ps79b6pu6HTxxau2q9V/Q==
-X-Gm-Gg: ASbGnctW1tf2OTG549gib8qdKOylvCHCxJ7ZIm4uVsKGLXfgIwmM4fUaNX+fM+/stLK
-	mLIjg2zLQEtw8wSIJj9w2HWFNIwk8Rq2eUcjp6f0QYa188DIRX1ucA6+enThNlgRVXSgqU4ecMc
-	wqVM7pbh762NBjS6qxrXTLo9vo+N5QKINloJ5L600+R+gC+B7bhEQrDN4+a36MHvDMA5YDWDaPM
-	bDRJvoq+yeNdc3j1VRjjGjyL9V1EUqHLvTyqx+Ez8ImLtg7AY2kgVrTuSnWEUUPmJDVDLTIJ9KY
-	qukjKKIz0zDBi7d2cI9HTPHzkgOrmdWTvu9Z0AD5nbzarGU+wRWJKZ4M
-X-Received: by 2002:a05:6000:2303:b0:3a4:da87:3a73 with SMTP id ffacd0b85a97d-3a4f89dcc3amr10777706f8f.42.1748936064720;
-        Tue, 03 Jun 2025 00:34:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGekbDNecdjQ6X2LglfERanw6xFXa9R4votcNrIbvinDs10plhgGJLYQyYNskjzw++qgcRa7w==
-X-Received: by 2002:a05:6000:2303:b0:3a4:da87:3a73 with SMTP id ffacd0b85a97d-3a4f89dcc3amr10777679f8f.42.1748936064264;
-        Tue, 03 Jun 2025 00:34:24 -0700 (PDT)
-Received: from ?IPV6:2a0d:3341:cc2d:3210:4b21:7487:446:42ea? ([2a0d:3341:cc2d:3210:4b21:7487:446:42ea])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7fa27b4sm147958215e9.15.2025.06.03.00.34.22
+        bh=FecECnu2NheaNqiJX/ORSRrplhA+quPcAjrXUQL/gTk=;
+        b=eMf1FyPaia5CxxzCABMaGdtsySBGC2stfoRrktw6y5MCzHyq6hXQ4XGlAmnPt3u2B6
+         zjyXxWNTeU/GyZuZylKHu0PdkrqHjXu0raAIELXp5wgy1OK4He/o3Y0zaGFvcwp7EwUg
+         O1sy7S8yNt+U9KV00dWoBamOPIcArT4Ifao5FqiVh1J1XDlRSWWaVNRgN0209ck1GeKW
+         tQF9HCnS8oJU0L3zO8Qe9vc5ggd7IaHp8ohheqDsNLsaR10FmTrWvTPY5QjfZ/5I27UT
+         YjG52G58WlMueAgM7f1gXZpy/Kjb7zs/y1EHh31UWpaEdUaPsaffJ/7tR3xbj+3eIhi/
+         nIIA==
+X-Forwarded-Encrypted: i=1; AJvYcCX3ztmvVQ2qwFD/yOxDZpki0Q0GoHgJG6FlazFScQYKp0TDLpApaUHDUO7jdBLaGmUysosqJj5BBu+T46k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwthDk01X1PBXxTSbMLJYPukoX/wW857PU7LB479JMoSMYHePD/
+	RCdERC1VLhbCcrG7/kYI98GsJIeOFt/eftGWuA1AFQVQFlwoAGJ3OGI+WZ1cJ5cNoGzNrySMygJ
+	Bu+GG3CuUM8/fWziE60Pc1UDqkkkaqfDUw2S4bGl17UZnTtCgi2+DhmIVmZTOgY2W+Ks=
+X-Gm-Gg: ASbGncuc7yk20PnnEy5V7vAHKWNCgTL1SbEsqXg06RHiHOowDSqS+UG3zd60hCjkMkl
+	gm9vcjTVLOo8TC5y7oF3B070+h14FHSd7OuTFZZAcsuN1vHPYzdT7n0ZfQ+6VjHYFBQakqcvHfi
+	IBJBaWbOpQWfwsZe3fjf7ADsFHrAeGQOfRZ5Z4SedDxdwQWtEf+e2MJn3xMD52DjI2Ag43mOJBc
+	LCPj+Nzu4F0TWXdGJVUMbwJ4b97zfByK5OIdkrdgeWzNjOVz0Z6Pa4LqvhN4SLNax/8dEAlTNhR
+	2FEwTEHoQpux6JklgnN161BKzr3/iJYl8i6rcmeOVw==
+X-Received: by 2002:a05:6a20:2589:b0:1f5:8b9b:ab54 with SMTP id adf61e73a8af0-21ad95818b7mr27385841637.23.1748936125209;
+        Tue, 03 Jun 2025 00:35:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHbrLjN/LK2D8S83yJequqnD62klgE0P1XAXLcbq1Q+J2LZWaSZQvhy+vzl67jRzKVjcPVj7w==
+X-Received: by 2002:a05:6a20:2589:b0:1f5:8b9b:ab54 with SMTP id adf61e73a8af0-21ad95818b7mr27385809637.23.1748936124761;
+        Tue, 03 Jun 2025 00:35:24 -0700 (PDT)
+Received: from [10.92.214.105] ([202.46.23.19])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2ecebb6b5csm6627188a12.72.2025.06.03.00.35.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jun 2025 00:34:23 -0700 (PDT)
-Message-ID: <d74f610d-679a-4cb2-804b-8c4c40260143@redhat.com>
-Date: Tue, 3 Jun 2025 09:34:16 +0200
+        Tue, 03 Jun 2025 00:35:24 -0700 (PDT)
+Message-ID: <fb1cee63-ec97-d5c7-7a9b-bda503a91875@oss.qualcomm.com>
+Date: Tue, 3 Jun 2025 13:05:17 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [net?] possible deadlock in __netdev_update_features
-To: Stanislav Fomichev <stfomichev@gmail.com>,
- syzbot <syzbot+7e0f89fb6cae5d002de0@syzkaller.appspotmail.com>
-Cc: andrew@lunn.ch, davem@davemloft.net, edumazet@google.com,
- horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-References: <683d677f.a00a0220.d8eae.004b.GAE@google.com>
- <aD5Sfmu0qXuskU-q@mini-arch>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v3 3/3] arm64: qcom: sc7280: Move phy, perst to root port
+ node
 Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <aD5Sfmu0qXuskU-q@mini-arch>
-Content-Type: text/plain; charset=UTF-8
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com,
+        quic_mrana@quicinc.com
+References: <20250419-perst-v3-0-1afec3c4ea62@oss.qualcomm.com>
+ <20250419-perst-v3-3-1afec3c4ea62@oss.qualcomm.com>
+ <r4mtndc6tww6eqfumensnsrnk6j6dw5nljgmiz2azzg2evuoy6@hog3twb22euq>
+ <0e1d8b8e-9dd3-a377-d7e0-93ec77cf397f@oss.qualcomm.com>
+ <pb7rsvlslvyqlheyhwwjgje6iiolgkj6cqfsi6jmvetritc7lr@jxndd5rfzbfy>
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+In-Reply-To: <pb7rsvlslvyqlheyhwwjgje6iiolgkj6cqfsi6jmvetritc7lr@jxndd5rfzbfy>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAzMDA2NSBTYWx0ZWRfX9fE+cI922+HL
+ 86M4Ud54izKr7BjBy5LA6zqTxfOis3RntjAYQWncspRSrqKlLVYFXAxWBQm0v+D3/NtabiPQg6b
+ hBTzctOqOHPb3Jl89JoLurSKg8L/OzNRmzPeUDc8oXBHK4Yp+6h8sgidtw/KKFBYcswb/7JMJtT
+ tCKbLAheJOeq317831v1/Ah7/mxPQIVtQ4cf+hseqgA/3DGsLVm5WKbTO1NvrOwUjIXD0baicPL
+ nsXD6N5fVIhvY2wr6r7wCTO/JQFTbkdi+shiGQ9AFwRTj93t25ocYqsY/6knv2HslnqCsY/0FDI
+ 12GaOohCxjFvvMPv31cbvIqKLGh5mwfv6uD+rNlXtf+YcJNyk6EXdkhswD8+uItvTLMpfiWmjmh
+ QAsU3JihLOcPOrXcusLFY0mwcVcVNaomZqG8EL4NJ5rgOSAI+5TOkCqdOhY9mRiRXsAh8fMo
+X-Proofpoint-ORIG-GUID: kuaDiDsrreQhjXvOPp4LvmukAVlC_NY9
+X-Authority-Analysis: v=2.4 cv=OuxPyz/t c=1 sm=1 tr=0 ts=683ea5be cx=c_pps
+ a=WW5sKcV1LcKqjgzy2JUPuA==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=gzpaoVQaGCppcG2blusA:9 a=QEXdDO2ut3YA:10 a=OpyuDcXvxspvyRM73sMx:22
+X-Proofpoint-GUID: kuaDiDsrreQhjXvOPp4LvmukAVlC_NY9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-03_01,2025-06-02_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 bulkscore=0 malwarescore=0 impostorscore=0 mlxlogscore=999
+ lowpriorityscore=0 spamscore=0 mlxscore=0 suspectscore=0 priorityscore=1501
+ adultscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506030065
 
-On 6/3/25 3:40 AM, Stanislav Fomichev wrote:
-> On 06/02, syzbot wrote:
->> syzbot found the following issue on:
->>
->> HEAD commit:    7d4e49a77d99 Merge tag 'mm-nonmm-stable-2025-05-31-15-28' ..
->> git tree:       upstream
->> console output: https://syzkaller.appspot.com/x/log.txt?x=1298600c580000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=2ea0d63949bc4278
->> dashboard link: https://syzkaller.appspot.com/bug?extid=7e0f89fb6cae5d002de0
->> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
->>
->> Unfortunately, I don't have any reproducer for this issue yet.
->>
->> Downloadable assets:
->> disk image: https://storage.googleapis.com/syzbot-assets/eb4b617767b5/disk-7d4e49a7.raw.xz
->> vmlinux: https://storage.googleapis.com/syzbot-assets/d0be53c5da74/vmlinux-7d4e49a7.xz
->> kernel image: https://storage.googleapis.com/syzbot-assets/9a5769a0ff61/bzImage-7d4e49a7.xz
->>
->> IMPORTANT: if you fix the issue, please add the following tag to the commit:
->> Reported-by: syzbot+7e0f89fb6cae5d002de0@syzkaller.appspotmail.com
->>
->> netdevsim netdevsim1 netdevsim0: unset [0, 0] type 1 family 0 port 8472 - 0
->> netdevsim netdevsim1 netdevsim0: unset [1, 0] type 2 family 0 port 6081 - 0
->> ============================================
->> WARNING: possible recursive locking detected
->> 6.15.0-syzkaller-10769-g7d4e49a77d99 #0 Not tainted
->> --------------------------------------------
->> syz.1.2750/15558 is trying to acquire lock:
->> ffff88805a35cd30 (&dev_instance_lock_key#20){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2756 [inline]
->> ffff88805a35cd30 (&dev_instance_lock_key#20){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:42 [inline]
->> ffff88805a35cd30 (&dev_instance_lock_key#20){+.+.}-{4:4}, at: netdev_sync_lower_features net/core/dev.c:10549 [inline]
->> ffff88805a35cd30 (&dev_instance_lock_key#20){+.+.}-{4:4}, at: __netdev_update_features+0xcb1/0x1a20 net/core/dev.c:10719
->>
->> but task is already holding lock:
->> ffff88805a35cd30 (&dev_instance_lock_key#20){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2756 [inline]
->> ffff88805a35cd30 (&dev_instance_lock_key#20){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:42 [inline]
->> ffff88805a35cd30 (&dev_instance_lock_key#20){+.+.}-{4:4}, at: __dev_ethtool net/ethtool/ioctl.c:3227 [inline]
->> ffff88805a35cd30 (&dev_instance_lock_key#20){+.+.}-{4:4}, at: dev_ethtool+0x716/0x1990 net/ethtool/ioctl.c:3490
->> and the lock comparison function returns 0:
->>
->> other info that might help us debug this:
->>  Possible unsafe locking scenario:
->>
->>        CPU0
->>        ----
->>   lock(&dev_instance_lock_key#20);
->>   lock(&dev_instance_lock_key#20);
->>
->>  *** DEADLOCK ***
->>
->>  May be due to missing lock nesting notation
->>
->> 2 locks held by syz.1.2750/15558:
->>  #0: ffffffff8f50b248 (rtnl_mutex){+.+.}-{4:4}, at: dev_ethtool+0x1d0/0x1990 net/ethtool/ioctl.c:3489
->>  #1: ffff88805a35cd30 (&dev_instance_lock_key#20){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2756 [inline]
->>  #1: ffff88805a35cd30 (&dev_instance_lock_key#20){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:42 [inline]
->>  #1: ffff88805a35cd30 (&dev_instance_lock_key#20){+.+.}-{4:4}, at: __dev_ethtool net/ethtool/ioctl.c:3227 [inline]
->>  #1: ffff88805a35cd30 (&dev_instance_lock_key#20){+.+.}-{4:4}, at: dev_ethtool+0x716/0x1990 net/ethtool/ioctl.c:3490
->>
->> stack backtrace:
->> CPU: 0 UID: 0 PID: 15558 Comm: syz.1.2750 Not tainted 6.15.0-syzkaller-10769-g7d4e49a77d99 #0 PREEMPT(full) 
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
->> Call Trace:
->>  <TASK>
->>  dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
->>  print_deadlock_bug+0x28b/0x2a0 kernel/locking/lockdep.c:3044
->>  check_deadlock kernel/locking/lockdep.c:3096 [inline]
->>  validate_chain+0x1a3f/0x2140 kernel/locking/lockdep.c:3898
->>  __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5240
->>  lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
->>  __mutex_lock_common kernel/locking/mutex.c:602 [inline]
->>  __mutex_lock+0x182/0xe80 kernel/locking/mutex.c:747
->>  netdev_lock include/linux/netdevice.h:2756 [inline]
->>  netdev_lock_ops include/net/netdev_lock.h:42 [inline]
->>  netdev_sync_lower_features net/core/dev.c:10549 [inline]
->>  __netdev_update_features+0xcb1/0x1a20 net/core/dev.c:10719
->>  netdev_change_features+0x72/0xd0 net/core/dev.c:10791
->>  bond_compute_features+0x615/0x680 drivers/net/bonding/bond_main.c:1614
->>  bond_slave_netdev_event drivers/net/bonding/bond_main.c:4112 [inline]
->>  bond_netdev_event+0x72e/0xe80 drivers/net/bonding/bond_main.c:4157
->>  notifier_call_chain+0x1b6/0x3e0 kernel/notifier.c:85
->>  call_netdevice_notifiers_extack net/core/dev.c:2268 [inline]
->>  call_netdevice_notifiers net/core/dev.c:2282 [inline]
->>  netdev_features_change+0x85/0xc0 net/core/dev.c:1571
->>  __dev_ethtool net/ethtool/ioctl.c:3457 [inline]
->>  dev_ethtool+0x1520/0x1990 net/ethtool/ioctl.c:3490
->>  dev_ioctl+0x392/0x1150 net/core/dev_ioctl.c:758
->>  sock_do_ioctl+0x22c/0x300 net/socket.c:1204
->>  sock_ioctl+0x576/0x790 net/socket.c:1311
->>  vfs_ioctl fs/ioctl.c:51 [inline]
->>  __do_sys_ioctl fs/ioctl.c:907 [inline]
->>  __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:893
->>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->>  do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
->>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->> RIP: 0033:0x7fa86e38e969
->> Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
->> RSP: 002b:00007fa86b98f038 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
->> RAX: ffffffffffffffda RBX: 00007fa86e5b6320 RCX: 00007fa86e38e969
->> RDX: 0000200000000080 RSI: 0000000000008946 RDI: 0000000000000006
->> RBP: 00007fa86e410ab1 R08: 0000000000000000 R09: 0000000000000000
->> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
->> R13: 0000000000000000 R14: 00007fa86e5b6320 R15: 00007fa86e6dfa28
->>  </TASK>
+
+
+On 6/3/2025 12:22 PM, Manivannan Sadhasivam wrote:
+> On Tue, Jun 03, 2025 at 12:03:01PM +0530, Krishna Chaitanya Chundru wrote:
 >>
 >>
->> ---
->> This report is generated by a bot. It may contain errors.
->> See https://goo.gl/tpsmEJ for more information about syzbot.
->> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>> On 6/1/2025 12:35 PM, Manivannan Sadhasivam wrote:
+>>> On Sat, Apr 19, 2025 at 10:49:26AM +0530, Krishna Chaitanya Chundru wrote:
+>>>> There are many places we agreed to move the wake and perst gpio's
+>>>> and phy etc to the pcie root port node instead of bridge node[1].
+>>>
+>>> Same comment as binding patch applies here.
+>>>
+>>>>
+>>>> So move the phy, phy-names, wake-gpio's in the root port.
+>>>
+>>> You are not moving any 'wake-gpios' property.
+>>>
+>> ack I will remove it.
+>>>> There is already reset-gpio defined for PERST# in pci-bus-common.yaml,
+>>>> start using that property instead of perst-gpio.
+>>>>
+>>>> [1] https://lore.kernel.org/linux-pci/20241211192014.GA3302752@bhelgaas/
+>>>>
+>>>> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+>>>> ---
+>>>>    arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts   | 5 ++++-
+>>>>    arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi | 5 ++++-
+>>>>    arch/arm64/boot/dts/qcom/sc7280-idp.dtsi       | 5 ++++-
+>>>>    arch/arm64/boot/dts/qcom/sc7280.dtsi           | 6 ++----
+>>>>    4 files changed, 14 insertions(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+>>>> index 7a36c90ad4ec8b52f30b22b1621404857d6ef336..3dd58986ad5da0f898537a51715bb5d0fecbe100 100644
+>>>> --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+>>>> +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+>>>> @@ -709,8 +709,11 @@ &mdss_edp_phy {
+>>>>    	status = "okay";
+>>>>    };
+>>>> +&pcie1_port0 {
+>>>> +	reset-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+>>>> +};
+>>>> +
+>>>>    &pcie1 {
+>>>> -	perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+>>>>    	pinctrl-0 = <&pcie1_reset_n>, <&pcie1_wake_n>;
+>>>>    	pinctrl-names = "default";
+>>>
+>>> What about the pinctrl properties? They should also be moved.
+>>>
+>> pinctrl can still reside in the host bridge node, which has
+>> all the gpio's for all the root ports. If we move them to the
+>> root ports we need to explicitly apply pinctrl settings as these
+>> not tied with the driver yet.
 >>
->> syzbot will keep track of this issue. See:
->> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->>
->> If the report is already addressed, let syzbot know by replying with:
->> #syz fix: exact-commit-title
->>
->> If you want to overwrite report's subsystems, reply with:
->> #syz set subsystems: new-subsystem
->> (See the list of subsystem names on the web dashboard)
->>
->> If the report is a duplicate of another one, reply with:
->> #syz dup: exact-subject-of-another-report
->>
->> If you want to undo deduplication, reply with:
->> #syz undup
 > 
-> I'll keep poking this, but I hope to get a reproducer at some point.
-> The features are evidently changed on the slave device (since it's the
-> netdevsim who's lock is grabbed twice), but I can't understand which
-> ethtool call leads to it.
+> If the DT node is associated with a device, then the driver core should bind the
+> pinctrl pins and configure them. Is that not happening here?
+The root node will not be associated with the driver until enumeration,
+the controller drivers needs these to be configured before enumeration.
 
-FWIW, looking at the console log, the program that triggered the splat is:
-
-447.453794ms ago: executing program 1 (id=2750):
-bpf$BPF_PROG_RAW_TRACEPOINT_LOAD(0x5, 0x0, 0x0)
-syz_emit_ethernet(0x4a, &(0x7f0000000080)={@local, @link_local={0x1,
-0x80, 0xc2, 0x0, 0x0, 0xe}, @void, {@ipv4={0x800, @tcp={{0x5, 0x4, 0x0,
-0x0, 0x3c, 0x0, 0x0, 0x0, 0x6, 0x0, @rand_addr=0x64010102, @local},
-{{0x4001, 0x0, 0x41424344, 0x41424344, 0x0, 0x6, 0xa, 0x0, 0x1, 0x0,
-0x0, {[@md5sig={0x13, 0x12, "473ecfd2106a00"}]}}}}}}}, 0x0)
-socketpair$unix(0x1, 0x3, 0x0,
-&(0x7f0000000080)={<r0=>0xffffffffffffffff, <r1=>0xffffffffffffffff})
-openat$audio(0xffffff9c, 0x0, 0x402, 0x0)
-connect$unix(r0, &(0x7f000057eff8)=@abs, 0x6e)
-sendmmsg$unix(r1, &(0x7f00000bd000), 0x318, 0x0)
-recvmmsg(r0, &(0x7f00000000c0), 0x10106, 0x2, 0x0)
-prctl$PR_SCHED_CORE(0x3e, 0x1, 0x0, 0x2, 0x0)
-socket$netlink(0x10, 0x3, 0xe)
-sendmsg(r1, &(0x7f0000000180)={0x0, 0x0, 0x0}, 0x0)
-sched_setattr(0x0, &(0x7f0000000100)={0x38, 0x5, 0x0, 0x0, 0x0, 0xb49,
-0x9, 0x8, 0x0, 0x3}, 0x0)
-bpf$MAP_CREATE(0x0, 0x0, 0x0)
-socketpair$unix(0x1, 0x1, 0x0, &(0x7f0000000240)={0xffffffffffffffff,
-<r2=>0xffffffffffffffff})
-ioctl$sock_SIOCETHTOOL(r2, 0x8946, &(0x7f0000000080)={'netdevsim0\x00',
-&(0x7f0000000000)=@ethtool_sfeatures={0x3b, 0x2, [{0xfe}, {0xfffffff9}]}})
-bpf$PROG_LOAD(0x5, 0x0, 0x0)
-r3 = socket$netlink(0x10, 0x3, 0x10)
-socketpair$unix(0x1, 0x3, 0x0, 0x0)
-getsockopt$sock_cred(r3, 0x1, 0x11, &(0x7f0000000180)={0x0, <r4=>0x0,
-<r5=>0x0}, &(0x7f0000000240)=0xc)
-bpf$BPF_PROG_RAW_TRACEPOINT_LOAD(0x5, &(0x7f00000006c0)={0x1, 0x4, 0x0,
-&(0x7f0000000040)='GPL\x00', 0x8, 0x0, 0x0, 0x0, 0x0, '\x00', 0x0, 0x0,
-0xffffffffffffffff, 0x8, 0x0, 0x0, 0x10, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-0x0, 0x10, 0x203, @void, @value}, 0x94)
-r6 = syz_open_dev$sndctrl(&(0x7f0000000000), 0x1, 0x0)
-ioctl$SNDRV_CTL_IOCTL_ELEM_READ(r6, 0xc4c85512, &(0x7f0000000280)={{0x6,
-0x0, 0x0, 0x0, 'syz0\x00'}, 0x0, [0x0, 0x0, 0x0, 0xffffffffffffffff,
-0xffffffefffffffff, 0x0, 0x3, 0x0, 0x0, 0x4, 0x0, 0x0,
-0xffffffffbfffffff, 0x0, 0x0, 0x0, 0x3, 0x80000000, 0x3, 0x0, 0x0, 0x4,
-0x0, 0x6, 0x0, 0x40, 0x0, 0xfffffffffffffffd, 0x100200000, 0x0, 0x0,
-0x8, 0x0, 0x0, 0x9, 0x0, 0x10000, 0x1000, 0x0, 0x3, 0xfffffffffffffffd,
-0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x3, 0x0, 0x7, 0x10000, 0x7785, 0x0, 0x4,
-0x4, 0x8, 0x0, 0xfffffffffffffffe, 0x0, 0x8, 0x0, 0x0, 0x80000000000,
-0x0, 0x4, 0x0, 0xfffffffffffffffe, 0x0, 0x0, 0x0, 0xfffffffffffffffe,
-0x0, 0x4000000000, 0x0, 0x80000000000000, 0x0, 0xfffffffffffffffc, 0x0,
-0x0, 0xfffffffffffffffe, 0x0, 0x2000, 0x0, 0x0, 0x0, 0x0, 0x0,
-0xfffffffffffffffd, 0x0, 0x0, 0x0, 0x100, 0x0, 0xfffffffffffffffd, 0x0,
-0x0, 0x0, 0x2, 0x0, 0x0, 0x3, 0x2, 0x0, 0x0, 0xc0c0, 0x0, 0x0, 0x0, 0x0,
-0x1, 0x0, 0x3, 0x0, 0xffffffffffeffffc, 0x0, 0x8000000000001, 0x0, 0x0,
-0x0, 0x0, 0xffffffffffffffff, 0x0, 0x0, 0x0, 0x0, 0x20000000, 0x0, 0x80]})
-bind$netlink(r3, &(0x7f0000514ff4)={0x10, 0x0, 0x2, 0x2ff7afedf}, 0xc)
-mmap(&(0x7f0000000000/0xb36000)=nil, 0xb36000, 0xb635773f06ebbeee,
-0x8031, 0xffffffffffffffff, 0x0)
-mlock(&(0x7f0000000000/0x800000)=nil, 0x800000)
-madvise(&(0x7f0000000000/0x600000)=nil, 0x600003, 0x19)
-mount$fuse(0x0, 0x0, &(0x7f0000002100), 0x0, &(0x7f00000008c0)={{},
-0x2c, {'rootmode', 0x3d, 0x4000}, 0x2c, {'user_id', 0x3d, r4}, 0x2c, {},
-0x2c, {[{@blksize={'blksize', 0x3d, 0x1000}}, {@max_read={'max_read',
-0x3d, 0x3}}, {@blksize={'blksize', 0x3d, 0x1000}},
-{@max_read={'max_read', 0x3d, 0x3}}, {@blksize={'blksize', 0x3d,
-0x1400}}, {@blksize}]}})
-read$FUSE(0xffffffffffffffff, &(0x7f0000006380)={0x2020, 0x0, 0x0, 0x0,
-<r7=>0x0}, 0x2020)
-r8 = socket(0x10, 0x2, 0x0)
-ioctl$KVM_SET_PIT(0xffffffffffffffff, 0x4048aec9,
-&(0x7f0000000080)={[{0x80000000, 0x0, 0x0, 0x3, 0x0, 0x10, 0x6, 0x0,
-0x2, 0x0, 0xa, 0x0, 0x4}, {0xa, 0x0, 0x0, 0x0, 0x40, 0x1, 0x8, 0xff,
-0x7, 0x0, 0x4, 0x0, 0xfffffffffffffff7}, {0x200000, 0xc, 0x21, 0x53,
-0x0, 0x2, 0x0, 0x0, 0x58, 0xb, 0x0, 0x0, 0x8080}], 0x3fb})
-sendmsg$nl_route(r8, &(0x7f0000000140)={0x0, 0x0,
-&(0x7f0000000100)={&(0x7f0000000780)=ANY=[@ANYBLOB="2ea8d2811b2a246ba8a8a78787aee7bb20c96807b6d8761f859ec6fa331e777591ed11248a94c0cfc19c61fe7c081ddaf685d4d5b414a01ac8d511cfb5d75e8878514da879142e585b1f9213b0f04d67baae20dd2e742f1286afc7a9bb0ad44aa05e2e3db382651792f2945409e7c6dda83d14fef1fb50a3cb8d0a189d28277f501a04c5d4414479db27bd23c1fbdf28124c317129fe42ebf9",
-@ANYRES8, @ANYRES64, @ANYRESOCT=r2, @ANYRES32, @ANYRES16=r7,
-@ANYRESDEC=r5], 0x30}, 0x1, 0x0, 0x0, 0xc885}, 0x4000880)
-
-and the suspect ethtool operation should be:
-
-ioctl$sock_SIOCETHTOOL(r2, 0x8946, &(0x7f0000000080)={'netdevsim0\x00',
-&(0x7f0000000000)=@ethtool_sfeatures={0x3b, 0x2, [{0xfe}, {0xfffffff9}]}})
-
-Since syzkaller has no reproducer, I guess the splat depends on some
-additional state/race, but I don't see how/where the lower -> bond ->
-lowers features update chain is (should be) interrupted to break this
-double lock.
-
-/P
-
+- Krishna Chaitanya.
+> 
+> - Mani
+> 
