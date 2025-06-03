@@ -1,68 +1,46 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0EF139B;
-	Tue,  3 Jun 2025 04:56:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B823F2C3261;
+	Tue,  3 Jun 2025 05:03:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748926612; cv=none; b=U/MpZxWWjsbbJgiJ83y4UTudxnGXzAC2mzM3D/VEmi6+Ap2mJTdExrpE7HEO+dc2oNMzgPMw/cGdmz9ihxVpyXivKRzGpJtj4pAGpW7sNk3NJ6ffB9/8s5emWM0LZ0Bco5c4PJVZAzPKuRCs77q+aIza399C/AeYZiBEv718EOk=
+	t=1748927009; cv=none; b=sVDQBVYEAdcjA2WZMsnFIlN5cdSF1Mke7/4XOZt+QnQH0YckVtATEXqtXLffuSVkiF+gtWzK0sg8VGG47HKLuifuZiDBH9RqKq80Or9lRp1579OpFFO/xgt1i++HD/zMXJQQ10vG59jo6KfB2LbbMGW1+GVnLRkXHBrJ7+I7YhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748926612; c=relaxed/simple;
-	bh=p6Uliwjeb9aiPXavhCVIq0Xv1uYAO1wNjq9ELL7jF9s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=enXiSjK5j8pUSneOuFqVMgNKsI+wnh4OudDfWQDPw701ZiF3EdBCpOrjRMgKJWfcBmpERNWCL19M5lI82qlWEdLOrlx6CDAsPPGlVgBh0DEkRQcfe4k4+qzwTmzFd1NsCxJ3rGB1B57FOXF31nvdt8QZ/STB0J//c2+HB2LRELc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q4uLpHRZ; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748927009; c=relaxed/simple;
+	bh=W0OlLUg24npmRbi7FaBwFQJ8Sz1kEcWRUPcpU8Fsw+4=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=iXLMDcOkQmR1y5W52L1uB/tEjbXbjPouUwi1Ym40Z/Rve+LLOBnFj8DVfOTCJa54M7qiMy3SZjMJgxZg14MhwQjhT8/XnCvaBW81u03lfybTibTv03kn5dsVFQ/+vq0JNMtaoRwV0nryg7nRGZflTRNxae36ApICyFFuC27z9Fo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=aDovO5fi; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q4uLpHRZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748926609; x=1780462609;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=p6Uliwjeb9aiPXavhCVIq0Xv1uYAO1wNjq9ELL7jF9s=;
-  b=Q4uLpHRZu/t0o7QfJOdhDhV6k/mFl3qIOzhhkyWbZxaZ34sx1pVIXwB9
-   j0wyzqnhM1W5Ry+uYaPGz8bxBKEzLUy3Gy/1eB8Ol1ou2aRat3itAMMLN
-   rAj87AJfHTFylEuLUsIV+CqdPNKUnVUPXCKu1iWc1TeYyqg4wtPIl0iz4
-   AxDRKdtdoNfSXxHn08T2L8Ahfn4HBixK/ODtOh4UyVAtG5zjQ0jR9iPp7
-   7YPC07LgXHPhu3qAWXQn0QF7tGwjGXFRrbbWl/gY/be8fYRiO7SLAowS4
-   vZGqhfW5OG7Dp+S1/jjY7LO1NvUlFRO5JY0kKem2BYUkQdNgVPi1nBEL9
-   g==;
-X-CSE-ConnectionGUID: 2B4IGweST1Snt6Qjn5bTgA==
-X-CSE-MsgGUID: QYbOKG0KT7i0KBVsbntu2w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="62004247"
-X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
-   d="scan'208";a="62004247"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 21:56:48 -0700
-X-CSE-ConnectionGUID: +R3KxD5fSay5O/7fDmdhSg==
-X-CSE-MsgGUID: JbKyM8ULSPaqs7NuuQafDA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
-   d="scan'208";a="175593681"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa001.fm.intel.com with ESMTP; 02 Jun 2025 21:56:43 -0700
-Date: Tue, 3 Jun 2025 12:50:10 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: kvm@vger.kernel.org, sumit.semwal@linaro.org, christian.koenig@amd.com,
-	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
-	jgg@nvidia.com, dan.j.williams@intel.com, aik@amd.com,
-	linux-coco@lists.linux.dev, dri-devel@lists.freedesktop.org,
-	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-	vivek.kasireddy@intel.com, yilun.xu@intel.com,
-	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
-	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
-	zhenzhong.duan@intel.com, tao1.su@intel.com,
-	linux-pci@vger.kernel.org, zhiw@nvidia.com, simona.vetter@ffwll.ch,
-	shameerali.kolothum.thodi@huawei.com, iommu@lists.linux.dev,
-	kevin.tian@intel.com
-Subject: Re: [RFC PATCH 20/30] vfio/pci: Do TSM Unbind before zapping bars
-Message-ID: <aD5/AjaQQOKydUWz@yilunxu-OptiPlex-7050>
-References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
- <20250529053513.1592088-21-yilun.xu@linux.intel.com>
- <yq5ar002jlao.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="aDovO5fi"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=Content-Type:MIME-Version:Message-ID:Subject:To:From:Date:
+	Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=ojVvU2aglR1btkL9Xcwy4+f2CauLOAnpQP+oJKyOOz8=; b=aDovO5fiGQuOBmVN7vw84eHsT4
+	XPgHv/7Yx9H/W/mhSdX6C39qkUhGbTyfYJmwCRGq/ejPYosJnqSz30DURJB9JWo4UbIIkB4RvVhTp
+	Q1oxLxwBsxAQZlYFQG5fNXYRzYoBAyUSNET6FUKfaRbGCagvGr07NuAq9XJRJg+YUUDy2WqmHTjq1
+	PVDcaVwY5UMkt2Krbpesctqgo5qebdBBYm2tBHqOG9JHBdL3b/axzaHlBnG7rYPYrX2dUE3xcGEjN
+	M9uOlmb4Bmp49UCyjC3tdFqGBsSlwP28Srh67pRfoui0PPJ1P4dFWhJp6XT6yeHErNoQlHTeV+kb+
+	yLjG2RDw==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uMJny-00AU2T-2y;
+	Tue, 03 Jun 2025 13:03:20 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Tue, 03 Jun 2025 13:03:18 +0800
+Date: Tue, 3 Jun 2025 13:03:18 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Subject: [GIT PULL] Crypto Fixes for 6.16
+Message-ID: <aD6CFvN-fgiCs_-6@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,56 +49,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <yq5ar002jlao.fsf@kernel.org>
 
-On Mon, Jun 02, 2025 at 07:30:15PM +0530, Aneesh Kumar K.V wrote:
-> Xu Yilun <yilun.xu@linux.intel.com> writes:
-> 
-> > When device is TSM Bound, some of its MMIO regions are controlled by
-> > secure firmware. E.g. TDX Connect would require these MMIO regions
-> > mappeed in S-EPT and never unmapped until device Unbound. Zapping bars
-> > irrespective of TSM Bound state may cause unexpected secure firmware
-> > errors. It is always safe to do TSM Unbind first, transiting the device
-> > to shared, then do whatever needed as before.
-> >
-> > Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
-> > ---
-> >  drivers/vfio/pci/vfio_pci_config.c |  4 +++
-> >  drivers/vfio/pci/vfio_pci_core.c   | 41 +++++++++++++++++++-----------
-> >  drivers/vfio/pci/vfio_pci_priv.h   |  3 +++
-> >  3 files changed, 33 insertions(+), 15 deletions(-)
-> >
-> > diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-> > index 7ac062bd5044..4ffe661c9e59 100644
-> > --- a/drivers/vfio/pci/vfio_pci_config.c
-> > +++ b/drivers/vfio/pci/vfio_pci_config.c
-> > @@ -590,6 +590,7 @@ static int vfio_basic_config_write(struct vfio_pci_core_device *vdev, int pos,
-> >  		new_mem = !!(new_cmd & PCI_COMMAND_MEMORY);
-> >  
-> >  		if (!new_mem) {
-> > +			vfio_pci_tsm_unbind(vdev);
-> >  			vfio_pci_zap_and_down_write_memory_lock(vdev);
-> >  			vfio_pci_dma_buf_move(vdev, true);
-> >
-> 
-> For a secure device mmio range instead of vfio_pci_zap_and_down_write_memory_lock()
-> -> unmap_mapping_range() we want the vfio_pci_dma_buf_move right?
+Hi Linus:
 
-Yes.
+The following changes since commit 0a84874c7e7dde5cdddc80a82093120e924a348b:
 
-> Also is that expected to get called twice as below?
+  crypto: shash - Fix buffer overrun in import function (2025-05-27 13:43:32 +0800)
 
-Yes for TDX Connect. First time zap the private MMIOs during unbind.
-Second time block all mmio mapping.
+are available in the Git repository at:
 
-Other platforms don't need these tsm handlers. They don't have this
-awkwardness.
+  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git tags/v6.16-p3
+
+for you to fetch changes up to b9802b54d41bbe98f673e08bc148b0c563fdc02e:
+
+  asm-generic: Add sched.h inclusion in simd.h (2025-05-30 20:56:48 +0800)
+
+----------------------------------------------------------------
+This push fixes a loongarch header regression and a module name
+collision on s390.
+----------------------------------------------------------------
+
+Eric Biggers (1):
+      crypto: s390/sha256 - rename module to sha256-s390
+
+Huacai Chen (1):
+      asm-generic: Add sched.h inclusion in simd.h
+
+ arch/s390/lib/crypto/Makefile | 3 ++-
+ include/asm-generic/simd.h    | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
 Thanks,
-Yilun
-
-> 
-> vfio_pci_tsm_unbind-> pci_tsm_unbind -> tdx_tsm_unbind ->
-> tsm_handler->disable_mmio() -> vfio_pci_core_tsm_disable_mmio -> vfio_pci_dma_buf_move(vdev, true);
-> 
-> -aneesh
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
