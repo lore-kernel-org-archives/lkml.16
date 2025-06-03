@@ -1,113 +1,147 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0632C327E;
-	Tue,  3 Jun 2025 09:16:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC792C327A;
+	Tue,  3 Jun 2025 09:18:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748942215; cv=none; b=V59MC8LeEebvsaz53rjJDTsbIAZLLHsKiOfP6V6HYhwKCbP8yXq1uIVCd1mJsVebsoedRJveN6LWRPLgUph3j+/gdSwogsd9DTIA7KDOn8KwvfqyMM4PjLVGZJ3NkMbUgFeA8Kk6r7IFsRMO6jSnP4H/3X+pucx20X/8gmUdK3E=
+	t=1748942329; cv=none; b=YAdCkskWqB1gaQmlYgSDXumLC6tv1hFmwo5N7gJwSm1q2GoXA2gLqUzIFxqV/7JzYfwDFisMmdcJIfdmsUWhDssNB+RAFngMH0zI++7lQIeyVfP0kBW+1/lTGY9LMkdj2QiFhDYFRPEWm68LEKc/5xccy+pSIs3hvJ3q4B6IUDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748942215; c=relaxed/simple;
-	bh=+1/2I1Os9ZNKwrX5iOOSp0mo0Ii54pjkD7fTn+LRgwE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UEyJyzWHZBh8DA8+pzxhs2K4QLNlT3CiRkpdUjF378ixpuGsQrwsvhFEMIbqz+a8IQwx4K3b2F7RulfoXwROfNPCJoqtOwnQVEWwmYmmG8UGGa+E9q9CI1OyY3FrIyfi6/O7fvB/oBnQaR6yEzFd9kDjpd0k+UsYO98piJa4Qfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mGbqmQiC; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748942329; c=relaxed/simple;
+	bh=6QEcL01YpnCqvbTuBXO0Xe3eoIxPT1gt6bMAM3bpvdk=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=fB/D9O7PPjfjNbvTjJHZGLuWuXcRKrUmTNPjmkc2wcOXh5N9z/f3v1KViczdaComspfhPFRkbAyh+00tG+YpARoXO58NMeK8V9i2KVR95AEngDZqClHgcgfyhSC3XJKiwiox4TT21+uDZ/cIHOztrsVel4GjOF2dsW/mpGCE7+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PhkqckiJ; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mGbqmQiC"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a5058d46ceso1285591f8f.0;
-        Tue, 03 Jun 2025 02:16:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748942211; x=1749547011; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+jh1UYwF4o07fYlh6QkTVYQ9s6WEqHiVdVyiHbQC+v0=;
-        b=mGbqmQiCCGD8ZsdCQvI5Ue+485AT2IpgPq2PrFXC1tEuSG6iNGMxgmzlTcD2QD0c+F
-         Tck28EB16hK0Sviah1Dwegtv0jqI9MVAp02+FUZVo2K9iiTjp37X+fxvVrS9WorDfAx7
-         9t0Ko41L7Z4KNseLgHJbRoxeI/b1mcgsRnGFR+J0AWQjQwAkmOeAOzrXauFKu7guknAU
-         +fK3liXdt9ANyrFQfT9cbXjlFCN/i2SlzVHaQl9CLFJ4OPZOFK3bWlXqPtUuUJ76cp/8
-         Mac3B2F1KIHAYhYt5zJAyEUFdPIZvOxMpv73ft63zKiRwTNkriOD+otaOID1YqRiTsPK
-         1DJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748942211; x=1749547011;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+jh1UYwF4o07fYlh6QkTVYQ9s6WEqHiVdVyiHbQC+v0=;
-        b=FtbzF/RIlG+rWN5UYO+6Z7Bg54OUNE/0pVLHCW7t53Ewr1LrHo5TdbgoKvqlSMIGZl
-         g+wFyAn0YscWspssI+n+lZaf0IA7gPbgIcXaqN4LZUPsUJZgQCEVGkiwsnTUyLGYDSmN
-         ImeWF9ucxXH4tWqODDJHkFhTaJANVXpsLcjFZ2QsNEd1EYjF8MaUUep/E4UNJ9EErqO6
-         StqmtP4ypoUvPApAMMfIeP/J1hgN8Wm2OEIGMAkNCiXe2lAvX/ap8AHvVPkRJfusSLFL
-         685XDl3T/mDCuEsM5yu4VvVcQaGTp6yfboDao/s9dPmBeg/gxU7/a1rllxToR7UWWJuD
-         i32w==
-X-Forwarded-Encrypted: i=1; AJvYcCUMt0H3lA3//vmy0UEimVqwB84I9nZyiDSyL92AFzi9sSwuFz39XpMcYIuww0CoFr0oafoeDY9t4h2dieFH@vger.kernel.org, AJvYcCUrLTFhpt4n5Q7HavDbmSSVgq6BAGbrdz8/ceLnlN+dX1VpmTQRJIYwCF1d5y81uzmsABGL2uCSGVa/aSrs@vger.kernel.org, AJvYcCVSzvZ67z08lw9ePaM+AdoEf6X1AI3aW4CxrW0KVqG8jh9U5gMivBrUy/dojcwLlIo4J8JwIaVgFIbm@vger.kernel.org
-X-Gm-Message-State: AOJu0YxG/UfTJNSqJ4Wy89VCJzMLdV/QCmaR3Op34LWX3cYlkE++tN9r
-	hX9OnSCY5JFAYyCWNtWu+i5xi3igF3FZXwrWNGBazD6xDYjeQr1rGJuU9FfDJA==
-X-Gm-Gg: ASbGncsUpg1FkDGbPok8G+GHNYKXnKpFdTTUEWarDsctKvgnJ2QvM1ezcKQHMc6pYKZ
-	+98N6KDFjeCVbT6dBP/RIc/PHO2N79urqsUYysXVrZWifYDBIjXdm0J3DKC80xXnS/udELNwWBh
-	CBhvdvVsepM9cHiINYBfteUKMuDmF8rAotLZm6M6EAWuY1tEDoQ8wnFxS5HDKBzsR+ghtLEj0bZ
-	JVtAu7wx0XlQn3KZvgk8SltizzunPxayMhPiKiU4B+zMzLT4Crj+GUTR+gC4s1gWUy3g/ASBIXb
-	tZUFUj+B4qLAoPReys+lWasEKxdDyRyYRK6Ce7zZsfZRNA5Cq80SX+rBns/C3NjqNImfsST+ncB
-	yLGqJ2LYWYBw7L/ZX
-X-Google-Smtp-Source: AGHT+IE/MmCkDw7zCq3ur3i1vuJxdnSH1+it9qEiuWWWBKHTcyCC908pg1AngYiOBUPTs/E/DeZd6w==
-X-Received: by 2002:a05:6000:2407:b0:3a4:e082:c8f4 with SMTP id ffacd0b85a97d-3a4f89e2ec5mr12889553f8f.47.1748942210472;
-        Tue, 03 Jun 2025 02:16:50 -0700 (PDT)
-Received: from [192.168.20.170] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe5b8besm17789682f8f.16.2025.06.03.02.16.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jun 2025 02:16:50 -0700 (PDT)
-Message-ID: <08ef60a0-b78c-47a8-abb7-2de08303ae4d@gmail.com>
-Date: Tue, 3 Jun 2025 11:16:49 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PhkqckiJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748942328; x=1780478328;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=6QEcL01YpnCqvbTuBXO0Xe3eoIxPT1gt6bMAM3bpvdk=;
+  b=PhkqckiJY6vnSY446mZF1Gd4uX/3oKWDDHQ8cSwtYY8O963YIAq17qsl
+   iokuq5a3KE/ff0aSbUTJhpYW6FxfGzs07shgj7hMej0i41OIlDy3Cg8Dk
+   jHUNFq5PSN7zgwEXH74RPKV4/k6dFPrPbgaA7EHIxsd56644IS1ftCA9T
+   4+SitXstjFrfm6SuvE35C1lGXu4n4UOrfXsGjywDKWikCBrArRSGa+n5r
+   ra9C4afF96wnxtviD0gELCM7qv2dAXakgNeyk2I18mlYvr7OuaLdechIv
+   aFQpiwpavXLLh/F+yWDerw5j10qZ7vBmjWFPAqMHQp27vyRUFXKZmDDzI
+   g==;
+X-CSE-ConnectionGUID: 2bOkv3h+TCWaUerzlztUQw==
+X-CSE-MsgGUID: 8YNgsErbRpiP8F5G8KVrlQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="38600390"
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="38600390"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 02:18:47 -0700
+X-CSE-ConnectionGUID: nEIonyeOSYKEDWSoQw2zlQ==
+X-CSE-MsgGUID: a00KUzj8R+mGwBWPoiFS3g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="145429410"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.141])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 02:18:43 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 3 Jun 2025 12:18:39 +0300 (EEST)
+To: Hans Zhang <18255117159@163.com>
+cc: lpieralisi@kernel.org, bhelgaas@google.com, 
+    manivannan.sadhasivam@linaro.org, kw@linux.com, cassel@kernel.org, 
+    robh@kernel.org, jingoohan1@gmail.com, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v12 1/6] PCI: Introduce generic bus config read helper
+ function
+In-Reply-To: <20250514161258.93844-2-18255117159@163.com>
+Message-ID: <d6eeb0b5-53b3-5c40-00df-f79aa2619711@linux.intel.com>
+References: <20250514161258.93844-1-18255117159@163.com> <20250514161258.93844-2-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] mtd: nand: qpic_common: prevent out of bounds
- access of BAM arrays
-Content-Language: hu
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Mark Brown <broonie@kernel.org>, Md Sadre Alam <quic_mdalam@quicinc.com>,
- Varadarajan Narayanan <quic_varada@quicinc.com>,
- Sricharan Ramabadhran <quic_srichara@quicinc.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- Lakshmi Sowjanya D <quic_laksd@quicinc.com>
-References: <20250529-qpic-snand-avoid-mem-corruption-v2-0-2f0d13afc7d2@gmail.com>
- <KuueBg3qliXMt9QN9kV_5_on2xJV-BEWZAsktO_Ce-Fq1iBAPCFypbYUVZxlV4LjF0AUZG57KqiXZZ3uefQrXw==@protonmail.internalid>
- <20250529-qpic-snand-avoid-mem-corruption-v2-2-2f0d13afc7d2@gmail.com>
- <68c54d56-3e44-4f43-8bd6-f6b7fa1f379b@linaro.org>
- <28db650d-a911-4df9-9ad4-f926ea0683e6@gmail.com> <87a56qp7um.fsf@bootlin.com>
-From: Gabor Juhos <j4g8y7@gmail.com>
-In-Reply-To: <87a56qp7um.fsf@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-2025. 06. 02. 15:54 keltezéssel, Miquel Raynal írta:
-> 
-> On 30/05/2025 at 13:07:35 +02, Gabor Juhos <j4g8y7@gmail.com> wrote:
-> 
->> 2025. 05. 30. 10:56 keltezéssel, Bryan O'Donoghue írta:
->>
->> ...
->>
->>> This one doesn't apply to -next
->>
->> It is because the series is based on the SPI tree, and -next contains another
->> change for 'drivers/mtd/nand/qpic_common.c' which comes from the MTD tree.
->>
->> It can be applied by specifying the 'M' switch for b4 shazam.
-> 
-> I suggest you rebase on -rc1 (when it's out) and resend to simplify
-> Mark's life.
+On Thu, 15 May 2025, Hans Zhang wrote:
 
-I will do that, thanks!
+> The primary PCI config space accessors are tied to the size of the read
+> (byte/word/dword). Upcoming refactoring of PCI capability discovery logic
+> requires passing a config accessor function that must be able to perform
+> read with different sizes.
+> 
+> Add any size config space read accessor pci_bus_read_config() to allow
+> giving it as the config space accessor to the upcoming PCI capability
+> discovery macro.
+> 
+> Reconstructs the PCI function discovery logic to prepare for unified
+> configuration of access modes. No function changes are intended.
+> 
+> Signed-off-by: Hans Zhang <18255117159@163.com>
+> ---
+> Changes since v9 ~ v11:
+> - None
+> 
+> Changes since v8:
+> - The new split is patch 1/6.
+> - The patch commit message were modified.
+> ---
+>  drivers/pci/access.c | 17 +++++++++++++++++
+>  drivers/pci/pci.h    |  2 ++
+>  2 files changed, 19 insertions(+)
+> 
+> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> index b123da16b63b..603332658ab3 100644
+> --- a/drivers/pci/access.c
+> +++ b/drivers/pci/access.c
+> @@ -85,6 +85,23 @@ EXPORT_SYMBOL(pci_bus_write_config_byte);
+>  EXPORT_SYMBOL(pci_bus_write_config_word);
+>  EXPORT_SYMBOL(pci_bus_write_config_dword);
+>  
+> +int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32 size,
+> +			u32 *val)
+> +{
+> +	struct pci_bus *bus = priv;
+> +	int ret;
+> +
+> +	if (size == 1)
+> +		ret = pci_bus_read_config_byte(bus, devfn, where, (u8 *)val);
+> +	else if (size == 2)
+> +		ret = pci_bus_read_config_word(bus, devfn, where, (u16 *)val);
+> +	else
+> +		ret = pci_bus_read_config_dword(bus, devfn, where, val);
 
-Regards,
-Gabor
+Perhaps this should check also size == 4 and return 
+PCIBIOS_BAD_REGISTER_NUMBER in case size is wrong.
+
+> +
+> +	return ret;
+
+
+> +}
+> +EXPORT_SYMBOL_GPL(pci_bus_read_config);
+
+Does this even need to be exported? Isn't the capability search always 
+built in?
+
+>  int pci_generic_config_read(struct pci_bus *bus, unsigned int devfn,
+>  			    int where, int size, u32 *val)
+>  {
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index b81e99cd4b62..5e1477d6e254 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -88,6 +88,8 @@ extern bool pci_early_dump;
+>  bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
+>  bool pcie_cap_has_lnkctl2(const struct pci_dev *dev);
+>  bool pcie_cap_has_rtctl(const struct pci_dev *dev);
+> +int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32 size,
+> +			u32 *val);
+>  
+>  /* Functions internal to the PCI core code */
+>  
+> 
+
+-- 
+ i.
+
