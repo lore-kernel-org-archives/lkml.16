@@ -1,107 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0E71A5B95;
-	Tue,  3 Jun 2025 04:12:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BCC885626;
+	Tue,  3 Jun 2025 04:15:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748923923; cv=none; b=l6mBSZVeEDZTbPldNMEN2jbOGPRklsNeAC17mROhS8v3QDNT+zDQQ2e6z68dKbJG7DFAc533W8CHmMk6eITYRo5B58xIbbO0VOHVJNEfYvFot3vm/12hijzM6uuUL8BFTgUciMi6E2bPS5M8eWjXRiXG1jjjhydeRf+I/8yfn20=
+	t=1748924158; cv=none; b=mQLyRnWlfCvG7MObHrfWDNpsuT8fRe2/JTUOsDlUyl3gCXEaFyuXFNnoWzLcEwHBn55Jqhd+6HoKjfwmRs+ILAjrZE5pFbP4LIXEa/PC1xSuydzN5LPG8LaZkJeuFNAh1d4+hbMz0O1mOXt2/UOHZ0vSaLZwku8+IELc05h3t0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748923923; c=relaxed/simple;
-	bh=eH7LWOmmL1anId5z2wZhvvJt6A5G/MNr+wNHWrMB2So=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vc97c6EijxhxRQBhnxmar7VmGAIjMW3IurcHJKj8Zm7xdLT7kyvbUcDOvpemfunvkhEZpUNNAOFdO4ei4lveHVBR1OOf6sFCWUIVvyPUH3uSBwHjqaR/AAkOO3tdv/d83oOmlOR/zLdC6hHPK24kUbovCAwWbxhe6HHrpZIJK8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mn5HTkKW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748924158; c=relaxed/simple;
+	bh=MlvvGTpdzSKTap3TlPhsvcx+1M0T4uoo2j8237yeDO4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PeSMiwx5nFDcppOH55IHXAhh2y50dqqYYFrFm5bmwzzQAwrniKEtn/p5A/8esobiNOKB4JU4MsdmwmEIg9CdBrSOqu3tNx37N1iiuVeAB5jzvmj3BGs1noiMbqNvmVhJT1bhwjffd+0742qVEEUb/cpoDqHglQKKm97o5T7lT5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Oj6zAqAm; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mn5HTkKW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8094C4CEF3;
-	Tue,  3 Jun 2025 04:12:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748923922;
-	bh=eH7LWOmmL1anId5z2wZhvvJt6A5G/MNr+wNHWrMB2So=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mn5HTkKWy8TqffJMMcHGw2AT7jOqA40bv0HBM9y2bspWZhxv0UBdHg9FQHOokjziW
-	 kqVP7KwOXfjZt9d6o93SNX9NEn3fyzfVnQ/bulYin10ouBxIADQJFx/WL2hjqHu8Z9
-	 1x6vf0AAHLbxIOS09sgd5GMnhfiysFcCqivcqnECs4//flKjtG4O6MRxrJYnG5xbto
-	 6xue6gGU222aFvGg8TZEPvnhkHzHgKfEGKqwyvNkiML74VmzC3Z+qDKwNjaY/sVUy8
-	 hABvYPLnBL6wIXP3wffwI4ZU3TKwCj6vq8Jk/Rx6JiNxLL1CRjdtnH+YrH0l0P0syY
-	 oSduBF6o72jgw==
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-604f5691bceso9234238a12.0;
-        Mon, 02 Jun 2025 21:12:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUQD4MluL7Ybq2DNzBOS1UuYEDnDLY51XKAWQkFQC5JmoWGmO2xjTPDMC50KRp4lIsT7J5I/aATLMDeWrk=@vger.kernel.org, AJvYcCX0AKW1KUkPTaTS3NI6dKlBcMbaRtXHYmDQkSkCq/YlgbbwCA0CMd4Czir+pxwDATjx2xZwBi7m@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKHLx/7SBXcJDIZrs9mvU4SaTxgRAcQUFJ6VhgGUxiiBusW9/S
-	aXWTL4pRLEfiLAeQh08gkeszsq4osZxsLVmGS1gRxhaZIjjxOTRERR6kqloTmNi3gMaczJWfzs3
-	HWPQeMhJ99LBpi0xLcrinjoa4YvpJtHI=
-X-Google-Smtp-Source: AGHT+IFC3hZdYHnSXCAINF0e85twNdshEaSayERpY7dehkXv4qNlJa5HjD+1EG/20i3L++8LHTZqVITFe/NbV6v/Xpw=
-X-Received: by 2002:a05:6402:5112:b0:604:e602:77a5 with SMTP id
- 4fb4d7f45d1cf-6056df4758fmr13815147a12.15.1748923921501; Mon, 02 Jun 2025
- 21:12:01 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Oj6zAqAm"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 601172113A6F; Mon,  2 Jun 2025 21:15:56 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 601172113A6F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1748924156;
+	bh=sCEuSoHnaBxencTvRdXH37MacmVEDhNuJiuJCs23a8s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Oj6zAqAmiLKz00j9lZzHmKwI7rMl1QTY/LTfV0lL0UJLFuQ5jwKJ4MFMqJ/jre5mH
+	 Mq3GVtYkXESB7XkTIfE1U+koP+QrXp9dcUwgs8FlAr8AwyK2E9QOI8kpnr/ipOeK8Z
+	 kk9FxAblfeHtNqyEeP2KJly2d2fqHfWIBxYAm88w=
+Date: Mon, 2 Jun 2025 21:15:56 -0700
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Simon Horman <horms@kernel.org>
+Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>,
+	Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof Wilczy???~Dski <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH v4 0/5] Allow dyn MSI-X vector allocation of MANA
+Message-ID: <20250603041556.GA7800@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1748361453-25096-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <20250528185508.GK1484967@horms.kernel.org>
+ <20250529132845.GE27681@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <20250530180732.GS1484967@horms.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250531113851.21426-1-ziyao@disroot.org> <20250531113851.21426-2-ziyao@disroot.org>
-In-Reply-To: <20250531113851.21426-2-ziyao@disroot.org>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 3 Jun 2025 12:11:48 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7pvaz5N0-EfvhDNHAXJtR13p9Xi5hfgDxOpeXi9zMbTQ@mail.gmail.com>
-X-Gm-Features: AX0GCFvre-UhQqbT7tbRl4VbSXuk5rN06luar9i31Dym01mPU6UQN37YMzcM_AY
-Message-ID: <CAAhV-H7pvaz5N0-EfvhDNHAXJtR13p9Xi5hfgDxOpeXi9zMbTQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] platform/loongarch: laptop: Get brightness setting
- from EC on probe
-To: Yao Zi <ziyao@disroot.org>
-Cc: Jianmin Lv <lvjianmin@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250530180732.GS1484967@horms.kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Sat, May 31, 2025 at 7:39=E2=80=AFPM Yao Zi <ziyao@disroot.org> wrote:
+On Fri, May 30, 2025 at 07:07:32PM +0100, Simon Horman wrote:
+> On Thu, May 29, 2025 at 06:28:45AM -0700, Shradha Gupta wrote:
+> > On Wed, May 28, 2025 at 07:55:08PM +0100, Simon Horman wrote:
+> > > On Tue, May 27, 2025 at 08:57:33AM -0700, Shradha Gupta wrote:
+> > > > In this patchset we want to enable the MANA driver to be able to
+> > > > allocate MSI-X vectors in PCI dynamically.
+> > > > 
+> > > > The first patch exports pci_msix_prepare_desc() in PCI to be able to
+> > > > correctly prepare descriptors for dynamically added MSI-X vectors.
+> > > > 
+> > > > The second patch adds the support of dynamic vector allocation in
+> > > > pci-hyperv PCI controller by enabling the MSI_FLAG_PCI_MSIX_ALLOC_DYN
+> > > > flag and using the pci_msix_prepare_desc() exported in first patch.
+> > > > 
+> > > > The third patch adds a detailed description of the irq_setup(), to
+> > > > help understand the function design better.
+> > > > 
+> > > > The fourth patch is a preparation patch for mana changes to support
+> > > > dynamic IRQ allocation. It contains changes in irq_setup() to allow
+> > > > skipping first sibling CPU sets, in case certain IRQs are already
+> > > > affinitized to them.
+> > > > 
+> > > > The fifth patch has the changes in MANA driver to be able to allocate
+> > > > MSI-X vectors dynamically. If the support does not exist it defaults to
+> > > > older behavior.
+> > > 
+> > > Hi Shradha,
+> > > 
+> > > It's unclear what the target tree for this patch-set is.
+> > > But if it is net-next, which seems likely given the code under
+> > > drivers/net/, then:
+> > > 
+> > > Please include that target in the subject of each patch in the patch-set.
+> > > 
+> > > 	Subject: [PATCH v5 net-next 0/5] ...
+> > > 
+> > > And, moreover, ...
+> > > 
+> > > ## Form letter - net-next-closed
+> > > 
+> > > The merge window for v6.16 has begun and therefore net-next is closed
+> > > for new drivers, features, code refactoring and optimizations. We are
+> > > currently accepting bug fixes only.
+> > > 
+> > > Please repost when net-next reopens after June 8th.
+> > > 
+> > > RFC patches sent for review only are obviously welcome at any time.
+> > 
+> > Thank you Simon.
+> > 
+> > While posting this patchset I was a bit confused about what should be
+> > the target tree. That's why in the cover letter of the V1 for this
+> > series, I had requested more clarity on the same (since there are patches
+> > from PCI and net-next both).
+> > 
+> > In such cases how do we decide which tree to target?
+> 
+> Yes, that isn't entirely clear to me either.
+> Hopefully the maintainers can negotiate this.
 >
-> Previously 1 is unconditionally taken as current brightness value. This
-> causes problems since it's required to restore brightness settings on
-> resumption, and a value that doesn't match EC's state before suspension
-> will cause surprising changes of screen brightness.
-laptop_backlight_register() isn't called at resuming, so I think your
-problem has nothing to do with suspend (S3).
 
-But there is really a problem about hibernation (S4): the brightness
-is 1 during booting, but when switching to the target kernel, the
-brightness may jump to the old value.
-
-If the above case is what you meet, please update the commit message.
-
-Huacai
-
->
-> Let's get brightness from EC and take it as the current brightness on
-> probe of the laptop driver to avoid the surprising behavior. Tested on
-> TongFang L860-T2 3A5000 laptop.
->
-> Cc: stable@vger.kernel.org
-> Fixes: 6246ed09111f ("LoongArch: Add ACPI-based generic laptop driver")
-> Signed-off-by: Yao Zi <ziyao@disroot.org>
-> ---
->  drivers/platform/loongarch/loongson-laptop.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/platf=
-orm/loongarch/loongson-laptop.c
-> index 99203584949d..828bd62e3596 100644
-> --- a/drivers/platform/loongarch/loongson-laptop.c
-> +++ b/drivers/platform/loongarch/loongson-laptop.c
-> @@ -392,7 +392,7 @@ static int laptop_backlight_register(void)
->         if (!acpi_evalf(hotkey_handle, &status, "ECLL", "d"))
->                 return -EIO;
->
-> -       props.brightness =3D 1;
-> +       props.brightness =3D ec_get_brightness();
->         props.max_brightness =3D status;
->         props.type =3D BACKLIGHT_PLATFORM;
->
-> --
-> 2.49.0
->
->
+Thanks Simon. also since teh target tree is not entirely clear, can I
+still send out an updated version with suggested changes?
+ 
+> > 
+> > Also, noted about the next merge window for net-next :-)
+> > 
+> > Regards,
+> > Shradha.
+> > 
