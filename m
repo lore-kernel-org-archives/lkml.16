@@ -1,148 +1,272 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F012F2D
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 14:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B57412F2D;
+	Tue,  3 Jun 2025 14:32:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748961066; cv=none; b=OdbMWun8L61CZwLefCLs32csLtLhPJT+ucXcbhXEScobvsJejJ1UssdMeGAWl+oC+y9EqfStYPwsiaqqchHacyWxuIvAn84Lqr0QqPXKup69iynxp/DF4jmTIiBG268OknRGaZOMkw0niopmAE/U6kZsxr4ciLETCE8Y06Ab2MI=
+	t=1748961156; cv=none; b=N7G/I3ixYuXw0HP0rMAlUXKswbvAHjUBC9gMM66iiAUnBQ/jiZrzora61ALDnUiBs98aZ5netyeslnmzoAVq1VRYz2mzGlLzJaxqNttnC/n5LkvpSY9qmFiOLh3j9gUMFS40neUDkEe6+MZnQ1qrNSkDVJNe6rRelWwZf31w2eo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748961066; c=relaxed/simple;
-	bh=6NNo+pvF/dHKDwGSOV/TA10QNoZmenREAqrjMtkqFXs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qDk5ahZoGn/BPUM99WWxsM/3xQZmGgOunk1EEhkL7bg8Hn2clS/B/+UgLygcXb+0qVo8NGNDwsLXbAcn0DbcVQu+c90N4AD1OyUUUHE7sWW/IYKyHCGv2mOZkysstmVoVO2xmAfPCYQdI8JCdz2eTl+QqfYahCF1ZmN2Fr0x5sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mIsyMEYj; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748961156; c=relaxed/simple;
+	bh=Er43LVCfm7TQ+NTUlYRePBhzMmQPDYhHStZrJmnmvNg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TEIud4hxuNHF9oYdI8754WMWjy9lVxZMr4RIzdx3W3wwq7ym+Dplog5sZww8sfaseOU7J7VXJpKpKYIn40b69lXzV0dlpUcEhc4p4xsgfR/00M/pMKriGYOstYR/91Itj4ja+g6z8X4joRCK2hEb9JXWHCw/KAKUwHDBgxmkamM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QvxmytoX; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mIsyMEYj"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-70df67e1b17so53315767b3.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 07:31:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748961064; x=1749565864; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zoEEammRMNXgpQPQrPR9ZfAnkri+pzRkn1GdyQ+ROtU=;
-        b=mIsyMEYj6DKKYlfumBzi2/Xg3IctoEz+VXomJgFOLh3ge6hlWb9z+by6G/tOBTQ+3w
-         j/UuHZ8U5FcEnIMCBKQlI8rak/xTHmJXSKFvtG0FWErc4ORLleinPBmuK50mq3sIfKmv
-         Clx6vGYzcQuqG16S72yIyI5qmunEcWGhocdJhhJNa1JpYcxjt/lPWEgly1HqMWLrZAD4
-         YDjKWkmRHOLk8u9/9vv377RfSOvc5dsJ4tqi7u7XNuW4shMBA5whnKLABtC3fGbzZb+X
-         suim3KqXiVpGh+he2PgkyNuVeOGzHxJb0DVsAy2uDrjEgHbmFESO18C9QnVkKWCav6jA
-         r4Jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748961064; x=1749565864;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zoEEammRMNXgpQPQrPR9ZfAnkri+pzRkn1GdyQ+ROtU=;
-        b=rkyrdY1q5r1l/YG2nA25vspVi2ULXl/NRELdKXdWKCyxQhKnRRFbkZ6XnM/yLnw9BO
-         IBDf+NHGJsaBDsge1dLrF9PdwVxroZ7z1prvbmAnEIJAQypAj7hr9eZ5k8yAnqQARa/X
-         376WU8tjBS+FfrI/hf00ywbirP8jguAfwO1cVwo1lDTILR39wWFE/CxGDsfGA3qwUyoe
-         oOMeiDAdmGfdT7BrBMOsOQpZhuX4R3wDLpJ+lMegpJOJqlnPFA2Lyam8ln0qGtAPmocz
-         z2ZpILxWCwHDddRTbMEG8TxQSAfoNgHIuM7CQuiuWhVldinqhWX39cri5BAkF0k/e0tW
-         TwIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXHJXmSsGoOUiQOA5eKzMiy/afybg92rjr0SSyI1B4TyY1/SQdjYdDzwjVnXk3DV/3p8nDncSua1t5cTt8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyZJDGZJK+aICGQ9pPJE3WCe4UgAsWKNMXdKK21/PRXwz0wX3h
-	o06u/WZnmD73moSwKKGVhGc4SRCxGc5q5NaQuGvft2zNwUWBl2elf5z1n1agYw==
-X-Gm-Gg: ASbGnctYNH003flFu6zSxdCha2qB9tXf2V1Wonx9Q71wnKAzJTsnorDPzndnQsNs+oH
-	GF5BKGJNiNrb5GMI8nirEzjs1OFI/VbnOZvCYh+Fnf35rx1RfXAC6QAkWlOrDJlDsBuGZqYcx22
-	qP6CLBUIbT5NkgHx6sQg8FVm71vhlttzjC9uPRoniK5bsxSuylLfGbm4ncvjNS1qbn+HcbTkaqb
-	XdFhiYEsdndBjaXyT5u7y0cHiBd6k7P/ogRvADqkCbOUKK0jacL9md3q/s9FDAjiLp+w+NnfCRI
-	5fBmBGYI/Q/i/y4gfBLYkHHG+nxAc8bRGNAZuk8Izn8c7rduWWw=
-X-Google-Smtp-Source: AGHT+IHsk1RcYi7vSjqqd/5hsrEkV88SxfHjr9SD115HXad5863u6FxD3TtpgsUoH/o6Jj1rWrIkuA==
-X-Received: by 2002:a05:690c:380e:b0:70d:f47a:7e21 with SMTP id 00721157ae682-71097c2a902mr182608127b3.1.1748961063965;
-        Tue, 03 Jun 2025 07:31:03 -0700 (PDT)
-Received: from localhost ([2a03:2880:25ff:71::])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-70f8ad2439asm25380787b3.125.2025.06.03.07.31.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 07:31:03 -0700 (PDT)
-From: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: "Huang, Ying" <ying.huang@linux.alibaba.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Gregory Price <gourry@gourry.net>,
-	David Hildenbrand <david@redhat.com>,
-	Zi Yan <ziy@nvidia.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Rakie Kim <rakie.kim@sk.com>,
-	Byungchul Park <byungchul@sk.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH 2/2] mm/mempolicy: Skip unnecessary synchronize_rcu()
-Date: Tue,  3 Jun 2025 07:31:00 -0700
-Message-ID: <20250603143101.1231739-1-joshua.hahnjy@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <87h60xtw0p.fsf@DESKTOP-5N7EMDA>
-References: 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QvxmytoX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748961154; x=1780497154;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Er43LVCfm7TQ+NTUlYRePBhzMmQPDYhHStZrJmnmvNg=;
+  b=QvxmytoX9v5cuR+k9I1ox88oOFByTka9qo8+m+TjHbchZfcifZX31yQ/
+   dfj5s/3oIq3hKtZZhAsIP2+nEZFXw89FT2MTYZgML5IMaqHxG3wbcWM4Q
+   3ey6v7t2RpxdLjVO0pGgzMsPRNWRSeMOIRT4sDBJsTbcvqwaRokSevNFx
+   4uw0avh7Gmsy05TEWq+r8d8IWMaO0QKGKZzjy2vDc6nvkF1Piv1y1pm9Z
+   FpSonTVUl3bFA4lRO34P13grZ8Khx9vAsekglc3lsMsx+Yf3cU3XM+WvS
+   tPYJNgm6ndV/QIwivQG/bcRohn3Nq/rgDk3fr1VdevZDzkyqVKIORHZua
+   g==;
+X-CSE-ConnectionGUID: GGV7hHbmTsSRZp4VC43J7A==
+X-CSE-MsgGUID: EekfFtf8Qa66Z8xG3XBDEg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="61270012"
+X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
+   d="scan'208";a="61270012"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 07:32:33 -0700
+X-CSE-ConnectionGUID: PYJvZTbfQA+UZkREiaV6ZQ==
+X-CSE-MsgGUID: VqljPof8SJynX8C8qEFhmw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
+   d="scan'208";a="144905813"
+Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.110.198]) ([10.125.110.198])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 07:32:32 -0700
+Message-ID: <226ecbd8-af44-49e8-9d4c-1f2294832897@intel.com>
+Date: Tue, 3 Jun 2025 07:32:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] dmaengine: idxd: Fix race condition between WQ
+ enable and reset paths
+To: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+ Shuai Xue <xueshuai@linux.alibaba.com>, fenghuay@nvidia.com, vkoul@kernel.org
+Cc: dmaengine@vger.kernel.org, colin.i.king@gmail.com,
+ linux-kernel@vger.kernel.org
+References: <20250522063329.51156-1-xueshuai@linux.alibaba.com>
+ <20250522063329.51156-2-xueshuai@linux.alibaba.com>
+ <a03e4f97-2289-4af7-8bfc-ad2d38ec8677@intel.com>
+ <b2153756-a57e-4054-bde2-deb8865c9e59@linux.alibaba.com>
+ <4cd53b91-bd20-46a1-854c-9bf0950ea496@intel.com>
+ <87234fab-081e-4e2e-9ef1-0414b23601ce@linux.alibaba.com>
+ <874ix5bhkz.fsf@intel.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <874ix5bhkz.fsf@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Tue, 03 Jun 2025 10:10:46 +0800 "Huang, Ying" <ying.huang@linux.alibaba.com> wrote:
 
-> Joshua Hahn <joshua.hahnjy@gmail.com> writes:
-> 
-> > By unconditionally setting wi_state to NULL and conditionally calling
-> > synchronize_rcu(), we can save an unncessary call when there is no
-> > old_wi_state.
-> 
-> Per my understanding, in the original code, if !old_wi_state, we will
-> return immediately instead of calling synchronize_rcu() too.  Or I miss
-> something?
-> 
-> The patch itself is a nice cleanup with reduced line number.  Feel free
-> to add my
-> 
-> Reviewed-by: Huang Ying <ying.huang@linux.alibaba.com>
 
-Hi Ying, you are correct. I was thinking in my mind to write "save an
-unnecessary goto" but my mind must have slipped. Thank you for the catch,
-and thank you for reviewing always. Have a great day!
-Joshua
+On 5/27/25 7:21 PM, Vinicius Costa Gomes wrote:
+> Shuai Xue <xueshuai@linux.alibaba.com> writes:
+> 
+>> 在 2025/5/23 22:54, Dave Jiang 写道:
+>>>
+>>>
+>>> On 5/22/25 10:20 PM, Shuai Xue wrote:
+>>>>
+>>>>
+>>>> 在 2025/5/22 22:55, Dave Jiang 写道:
+>>>>>
+>>>>>
+>>>>> On 5/21/25 11:33 PM, Shuai Xue wrote:
+>>>>>> A device reset command disables all WQs in hardware. If issued while a WQ
+>>>>>> is being enabled, it can cause a mismatch between the software and hardware
+>>>>>> states.
+>>>>>>
+>>>>>> When a hardware error occurs, the IDXD driver calls idxd_device_reset() to
+>>>>>> send a reset command and clear the state (wq->state) of all WQs. It then
+>>>>>> uses wq_enable_map (a bitmask tracking enabled WQs) to re-enable them and
+>>>>>> ensure consistency between the software and hardware states.
+>>>>>>
+>>>>>> However, a race condition exists between the WQ enable path and the
+>>>>>> reset/recovery path. For example:
+>>>>>>
+>>>>>> A: WQ enable path                   B: Reset and recovery path
+>>>>>> ------------------                 ------------------------
+>>>>>> a1. issue IDXD_CMD_ENABLE_WQ
+>>>>>>                                      b1. issue IDXD_CMD_RESET_DEVICE
+>>>>>>                                      b2. clear wq->state
+>>>>>>                                      b3. check wq_enable_map bit, not set
+>>>>>> a2. set wq->state = IDXD_WQ_ENABLED
+>>>>>> a3. set wq_enable_map
+>>>>>>
+>>>>>> In this case, b1 issues a reset command that disables all WQs in hardware.
+>>>>>> Since b3 checks wq_enable_map before a2, it doesn't re-enable the WQ,
+>>>>>> leading to an inconsistency between wq->state (software) and the actual
+>>>>>> hardware state (IDXD_WQ_DISABLED).
+>>>>>
+>>>>>
+>>>>> Would it lessen the complication to just have wq enable path grab the device lock before proceeding?
+>>>>>
+>>>>> DJ
+>>>>
+>>>> Yep, how about add a spin lock to enable wq and reset device path.
+>>>>
+>>>> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+>>>> index 38633ec5b60e..c0dc904b2a94 100644
+>>>> --- a/drivers/dma/idxd/device.c
+>>>> +++ b/drivers/dma/idxd/device.c
+>>>> @@ -203,6 +203,29 @@ int idxd_wq_enable(struct idxd_wq *wq)
+>>>>   }
+>>>>   EXPORT_SYMBOL_GPL(idxd_wq_enable);
+>>>>   
+>>>> +/*
+>>>> + * This function enables a WQ in hareware and updates the driver maintained
+>>>> + * wq->state to IDXD_WQ_ENABLED. It should be called with the dev_lock held
+>>>> + * to prevent race conditions with IDXD_CMD_RESET_DEVICE, which could
+>>>> + * otherwise disable the WQ without the driver's state being properly
+>>>> + * updated.
+>>>> + *
+>>>> + * For IDXD_CMD_DISABLE_DEVICE, this function is safe because it is only
+>>>> + * called after the WQ has been explicitly disabled, so no concurrency
+>>>> + * issues arise.
+>>>> + */
+>>>> +int idxd_wq_enable_locked(struct idxd_wq *wq)
+>>>> +{
+>>>> +       struct idxd_device *idxd = wq->idxd;
+>>>> +       int ret;
+>>>> +
+>>>> +       spin_lock(&idxd->dev_lock);
+>>>
+>>> Let's start using the new cleanup macro going forward:
+>>> guard(spinlock)(&idxd->dev_lock);
+>>>
+>>> On a side note, there's been a cleanup on my mind WRT this driver's locking. I think we can replace idxd->dev_lock with idxd_confdev(idxd) device lock. You can end up just do:
+>>> guard(device)(idxd_confdev(idxd));
+>>
+>> Then we need to replace the lock from spinlock to mutex lock?
+> 
+> We still need a (spin) lock that we could hold in interrupt contexts.
+> 
+>>
+>>>
+>>> And also drop the wq->wq_lock and replace with wq_confdev(wq) device lock:
+>>> guard(device)(wq_confdev(wq));
+>>>
+>>> If you are up for it that is.
+>>
+>> We creates a hierarchy: pdev -> idxd device -> wq device.
+>> idxd_confdev(idxd) is the parent of wq_confdev(wq) because:
+>>
+>>      (wq_confdev(wq))->parent = idxd_confdev(idxd);
+>>
+>> Is it safe to grap lock of idxd_confdev(idxd) under hold
+>> lock of wq_confdev(wq)?
+>>
+>> We have mounts of code use spinlock of idxd->dev_lock under
+>> hold of wq->wq_lock.
+>>
+> 
+> I agree with Dave that the locking could be simplified, but I don't
+> think that we should hold this series because of that. That
+> simplification can be done later.
 
-> in the future version.
+I agree. Just passing musing on the current code.
+
 > 
-> > Suggested-by: David Hildenbrand <david@redhat.com>
-> > Signed-off-by: Joshua Hahn <joshua.hahnjy@gmail.com>
-> > ---
-> >  mm/mempolicy.c | 13 +++++--------
-> >  1 file changed, 5 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> > index 3b1dfd08338b..b0619d0020c9 100644
-> > --- a/mm/mempolicy.c
-> > +++ b/mm/mempolicy.c
-> > @@ -3703,18 +3703,15 @@ static void wi_state_free(void)
-> >  	struct weighted_interleave_state *old_wi_state;
-> >  
-> >  	mutex_lock(&wi_state_lock);
-> > -
-> >  	old_wi_state = rcu_dereference_protected(wi_state,
-> >  			lockdep_is_held(&wi_state_lock));
-> > -	if (!old_wi_state) {
-> > -		mutex_unlock(&wi_state_lock);
-> > -		return;
-> > -	}
-> > -
-> >  	rcu_assign_pointer(wi_state, NULL);
-> >  	mutex_unlock(&wi_state_lock);
-> > -	synchronize_rcu();
-> > -	kfree(old_wi_state);
-> > +
-> > +	if (old_wi_state) {
-> > +		synchronize_rcu();
-> > +		kfree(old_wi_state);
-> > +	}
-> >  }
-> >  
-> >  static struct kobj_attribute wi_auto_attr =
+>>>
+>>>
+>>>> +       ret = idxd_wq_enable_locked(wq);
+>>>> +       spin_unlock(&idxd->dev_lock);
+>>>> +
+>>>> +       return ret;
+>>>> +}
+>>>> +
+>>>>   int idxd_wq_disable(struct idxd_wq *wq, bool reset_config)
+>>>>   {
+>>>>          struct idxd_device *idxd = wq->idxd;
+>>>> @@ -330,7 +353,7 @@ int idxd_wq_set_pasid(struct idxd_wq *wq, int pasid)
+>>>>   
+>>>>          __idxd_wq_set_pasid_locked(wq, pasid);
+>>>>   
+>>>> -       rc = idxd_wq_enable(wq);
+>>>> +       rc = idxd_wq_enable_locked(wq);
+>>>>          if (rc < 0)
+>>>>                  return rc;
+>>>>   
+>>>> @@ -380,7 +403,7 @@ int idxd_wq_disable_pasid(struct idxd_wq *wq)
+>>>>          iowrite32(wqcfg.bits[WQCFG_PASID_IDX], idxd->reg_base + offset);
+>>>>          spin_unlock(&idxd->dev_lock);
+>>>>   
+>>>> -       rc = idxd_wq_enable(wq);
+>>>> +       rc = idxd_wq_enable_locked(wq);
+>>>>          if (rc < 0)
+>>>>                  return rc;
+>>>>   
+>>>> @@ -644,7 +667,11 @@ int idxd_device_disable(struct idxd_device *idxd)
+>>>>   
+>>>>   void idxd_device_reset(struct idxd_device *idxd)
+>>>>   {
+>>>> +
+>>>> +       spin_lock(&idxd->dev_lock);
+>>>>          idxd_cmd_exec(idxd, IDXD_CMD_RESET_DEVICE, 0, NULL);
+>>>> +       spin_unlock(&idxd->dev_lock);
+>>>> +
+>>>>
+>>>
+>>> I think you just need the wq_enable locked and also in idxd_device_clear_state(), extend the lock to the whole function. Locking the reset function around just the command execute won't protect the wq enable path against the changing of the software states on the reset side.
+>>
+>> Quite agreed.
+>>
+>>>
+>>> DJ
+>>>
+>>>> (The dev_lock should also apply to idxd_wq_enable(), I did not paste here)
+>>>>
+>>>> Also, I found a new bug that idxd_device_config() is called without
+>>>> hold idxd->dev_lock.
+>>>>> idxd_device_config() explictly asserts the hold of idxd->dev_lock.
+>>>>
+>>>> +++ b/drivers/dma/idxd/irq.c
+>>>> @@ -33,12 +33,17 @@ static void idxd_device_reinit(struct work_struct *work)
+>>>>   {
+>>>>          struct idxd_device *idxd = container_of(work, struct idxd_device, work);
+>>>>          struct device *dev = &idxd->pdev->dev;
+>>>> -       int rc, i;
+>>>> +       int rc = 0, i;
+>>>>   
+>>>>          idxd_device_reset(idxd);
+>>>> -       rc = idxd_device_config(idxd);
+>>>> -       if (rc < 0)
+>>>> +       spin_lock(&idxd->dev_lock);
+>>> I wonder if you should also just lock the idxd_device_reset() and the idxd_device_enable() as well in this case as you don't anything to interfere with the entire reinit path.
+>>
+>> During reset, any operation to enable wq should indeed be avoided,
+>> but there isn't a suitable lock currently. idxd->dev_lock is a
+>> lightweight lock, only used when updating the device state, and
+>> it's used while holding wq->wq_lock. Therefore, holding idxd->dev_lock
+>> currently cannot form mutual exclusion with wq->wq_lock.
+>>
+>> And the sub caller of idxd_device_reset(), e.g. idxd_device_clear_state()
+>> also spins to hold idxd->dev_lock.
+>>
+>> A hack way it to grab wq_lock of all wqs before before reinit, but
+>> this is hardly elegant (:
+>>
+>> Thanks.
+>> Have a nice holiday!
+>>
+>> Best regards,
+>> Shuai
+>>
 > 
-> ---
-> Best Regards,
-> Huang, Ying
+> 
+> Cheers,
+
