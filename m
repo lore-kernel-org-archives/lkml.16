@@ -1,109 +1,115 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA0E281366;
-	Tue,  3 Jun 2025 08:25:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6F62AEF1;
+	Tue,  3 Jun 2025 08:27:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748939116; cv=none; b=esrvxSJt8H/zJsvCq9W6StjMhH1BwN/+31MXkX+rjcY1XzAblzeigE0DfTB9ExkF8Aqxcgafz7ZA67NRa0oFTgI0OCSlJtn3Roh5isAKSSHrRggEYEGIKCK4OmEWAmuyeCIukY+f7R7r62/TC3G9EwZb9JqoSpiHKAVP+o895Is=
+	t=1748939235; cv=none; b=hmfjjez44NT3PXL6YcLIntMHqpVLLYtkbE1EF90SXTaV3zofsRt1oYPUJK0oqP2lgudM+sxYjfuSEqZPZZSqQxwO+HM4bUAtbgMI+5bfPA+0RHxG0zQwnHKClIi+Y2vnkw8lJc9qAiUMrvMPF3z9BNLJFlhNFnajeCD4VtCyO80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748939116; c=relaxed/simple;
-	bh=mD8VjPyoqaKuC3clq+RCUo799yyJLx4+YF9RhTuOFfU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T9lIEdlNmG+NdYJ7CcSs9ccyvUVpw/hll7m5a33tyGdDtqrk95mOD4jsC6YYcSbCwiAozKxGQZK6rXZSLf6XxDiAtD0lVSJ7jRarakglnlc+18iGigFRRJBAA9WwfdTp8yGZuq80q+k+DkNerTUCDcmmHo6WorJDton4qAXj7Hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=luMmEvSE; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="luMmEvSE"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 61365433B3;
-	Tue,  3 Jun 2025 08:25:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1748939105;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rvE4v/teYoqJosrINMVYN/Bfwi93R1//+VcwLW4T2aA=;
-	b=luMmEvSELhi+UGbOmANXiklV4WPpfGbOrZbRWqzWnZv+ryVBfow1+xQYqC6QJdzuIfoXBs
-	WhezUoubrT4Lo4HBiIPjCeGNoqduE1CPbf754Q5wTOUHlA79IXwUse72QP+ZPPDTiMnhrn
-	pU7fgs19FqlmZHR9r+SbCjvV19CsRHUI7uGv8lR29U4Or5MviFIwoa1vyazotv8tHXctek
-	lDt++/HXaGT5QZb44G+6XnnE8nlTErnVt+O1hJ4YeTJoSXsOufjeL+PgXICht4F306sgvu
-	0ZSIwvWWkYqCDbea2TeGwBhCtrtS1eVS6phEZdBh2TAL5HtvNZnuZLxE3RnNYA==
-Date: Tue, 3 Jun 2025 10:25:00 +0200
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Jijie Shao <shaojijie@huawei.com>
-Cc: <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski
- <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>, Heiner Kallweit
- <hkallweit1@gmail.com>, <netdev@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <thomas.petazzoni@bootlin.com>,
- <linux-arm-kernel@lists.infradead.org>, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
- Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean
- <vladimir.oltean@nxp.com>, =?UTF-8?B?S8O2cnk=?= Maincent
- <kory.maincent@bootlin.com>, Oleksij Rempel <o.rempel@pengutronix.de>,
- Simon Horman <horms@kernel.org>, Romain Gantois
- <romain.gantois@bootlin.com>, "shenjian15@huawei.com"
- <shenjian15@huawei.com>
-Subject: Re: [PATCH net-next v5 07/13] net: phy: phy_caps: Allow looking-up
- link caps based on speed and duplex
-Message-ID: <20250603102500.4ec743cf@fedora>
-In-Reply-To: <5bbf1201-e803-40ea-a081-c25919f5e89d@huawei.com>
-References: <20250307173611.129125-1-maxime.chevallier@bootlin.com>
-	<20250307173611.129125-8-maxime.chevallier@bootlin.com>
-	<5bbf1201-e803-40ea-a081-c25919f5e89d@huawei.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1748939235; c=relaxed/simple;
+	bh=BRrKnqgLltf6ieKDODpgazGoNdNRWTnRKZsItlQWc2c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k4HqfFcZwwJRERBXpSObJ9wMrz7SoCNeUTLgGfXCq4DeF+9AwNjMCMNtwj8vNGSiKGbowqn7pZafw86EN/MvQ6KjkUyvne1HoUc12PKVobELhZ9ptylZWLzz1rpNQUnVDcNPPZM50ztoE4zz9U2UDuiLoEo8pela8A4+iIAbZw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: gHAVPs2CSTOgDiGH5drWsQ==
+X-CSE-MsgGUID: bhEds/3pTN6KmTGCAMv3HA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="54632278"
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="54632278"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 01:27:14 -0700
+X-CSE-ConnectionGUID: i4BkCzHLR0Khp5rrO1zrTQ==
+X-CSE-MsgGUID: FLtNlArMRwyfc5yGc8HpFw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="167968931"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 01:27:09 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1uMMzC-000000035FG-0tXf;
+	Tue, 03 Jun 2025 11:27:06 +0300
+Date: Tue, 3 Jun 2025 11:27:05 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ana-Maria Cusco <ana-maria.cusco@analog.com>, jic23@kernel.org,
+	lars@metafoo.de, Michael.Hennerich@analog.com,
+	dlechner@baylibre.com, nuno.sa@analog.com, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
+	brgl@bgdev.pl
+Subject: Re: [PATCH v4 02/11] iio: adc: Add basic support for AD4170
+Message-ID: <aD6x2caTMd1eBInM@smile.fi.intel.com>
+References: <cover.1748829860.git.marcelo.schmitt@analog.com>
+ <e79f9a126672b33b8a7c01f650fee43a68c74029.1748829860.git.marcelo.schmitt@analog.com>
+ <aD27cobHWeBX8o30@smile.fi.intel.com>
+ <aD3XQfUfxIiz62ZU@debian-BULLSEYE-live-builder-AMD64>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdegtddtheculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqredtredtjeenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeuhfefgffgtdfhgffhvdfhhffhteeutdektefghfetveehheejjefgudeiudehudenucfkphepvdduvddruddthedrudehtddrvdehvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvuddvrddutdehrdduhedtrddvhedvpdhhvghlohepfhgvughorhgrpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddupdhrtghpthhtohepshhhrghojhhijhhivgeshhhurgifvghirdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrt
- ghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomh
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aD3XQfUfxIiz62ZU@debian-BULLSEYE-live-builder-AMD64>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hello again,
+On Mon, Jun 02, 2025 at 01:54:25PM -0300, Marcelo Schmitt wrote:
 
-On Thu, 29 May 2025 17:36:11 +0800
-Jijie Shao <shaojijie@huawei.com> wrote:
+...
 
->
->=20
-> Hi Maxime,  fc81e257d19f ("net: phy: phy_caps: Allow looking-up link caps=
- based on speed and duplex") might have different behavior than the modific=
-ation.
-> My case is set 10M Half with disable autoneg both sides and I expect it is
-> link in 10M Half. But now, it is link in 10M Full=EF=BC=8Cwhich is not wh=
-at I
-> expect.
->=20
-> I used followed command and trace how phy worked.
-> 	ethtool -s eth1 autoneg off speed 10 duplex half
-> The log is showed as followed:
-> ethtool-13127	[067]	6164.771853: phy_ethtool_ksettings set: (phy_ethtool =
-ksettings set+0x0/0x200) duplex=3D0 speed=3D10
-> kworker/u322:2-11096	[070]	6164.771853:	_phy_start_aneq: ( _phy_start_ane=
-g+0x0/0xb8) duplex=3D0 speed=3D10
-> kworker/u322:2-11096	[070]	6164.771854:	phy_caps_lookup: (phy_caps_lookup=
-+0x0/0xf0) duplex=3D0 speed=3D10
-> kworker/u322:2-11096	[070]	6164.771855:	phy_config_aneg: (phy_config_aneg=
-+0x0/0x70) duplex=3D1 speed=3D10
-> kworker/u322:2-11096	[070]	6164.771856:	genphy_config_aneg:	(__genphy_con=
-fig_aneg+0X0/0X270) duplex=3D1 speed=3D10
+> > > +static bool ad4170_setup_eq(struct ad4170_setup *a, struct ad4170_setup *b)
+> > > +{
+> > > +	/*
+> > > +	 * The use of static_assert() here is to make sure that the comparison
+> > > +	 * is adapted whenever struct ad4170_setup is changed.
+> > > +	 */
+> > > +	static_assert(sizeof(*a) ==
+> > > +		      sizeof(struct {
+> > > +				     u16 misc;
+> > > +				     u16 afe;
+> > > +				     u16 filter;
+> > > +				     u16 filter_fs;
+> > > +				     u32 offset;
+> > > +				     u32 gain;
+> > > +			     }));
+> > 
+> > I think it doesn't make much sense unless one uses memcpy().
+> 
+> memcpy() is used to update the setups after reg write succeeds.
+> Also, previously, memcmp() was used to compare setups.
+> Since struct ad4170_setup has only unsigned integers (no floating point fields
+> like ad7124 had [1]), ad4170 works properly when comparing setups with memcmp().
+> Though, it was asked to do explicit field matching on previous reviews [2] so
+> that's how it had been since then. Well, both ways work for ad4170. We can
+> compare setup with memcmp(), or do the comparison field by field. I don't mind
+> changing it again if requested. I guess we only need to reach an agreement about
+> what to go with.
 
-I managed to get a bit of time to look into this, and indeed I was able
-to reproduce the issue locally.
+The question was "why do you need the static_assert() now?"
 
-I'll send a patch ASAP, based on the the prototype patch I gave in the
-previous reply.
+> [1]: https://lore.kernel.org/all/20250303114659.1672695-13-u.kleine-koenig@baylibre.com/
+> [2]: https://lore.kernel.org/linux-iio/20250504192117.5e19f44b@jic23-huawei/
+> 
+> > > +	if (a->misc != b->misc ||
+> > > +	    a->afe != b->afe ||
+> > > +	    a->filter != b->filter ||
+> > > +	    a->filter_fs != b->filter_fs ||
+> > > +	    a->offset != b->offset ||
+> > > +	    a->gain != b->gain)
+> > > +		return false;
+> > > +
+> > > +	return true;
+> > > +}
 
-Thanks for reporting,
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Maxime
+
