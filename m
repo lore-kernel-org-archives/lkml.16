@@ -1,103 +1,111 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C49342A96
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 08:19:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825A218E1F;
+	Tue,  3 Jun 2025 08:20:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748938745; cv=none; b=gNXswUGksV8q2W24J4sp84a6PNeeoAeRwsrXUFBDxoSa1tT5ZZEn1SGPrNnKCws7+ZRbef0rIkpdovouPCISVaYC77CRLAzgK4UNpcr6UnsSi64R1htL5s2yJ/17+boY0+vMnYA2aYJXkRJ1rXxvR6EK2igsjoB+6QisuJDdar8=
+	t=1748938821; cv=none; b=e1w8PzqNHgby7BS2IPJI6P4joVllLXEnaqb0QNpgnZFJF2zm1xMNQPN/08yUYWImuYuJKeuO6kwPR5f+Xy/iLyU1EodiswrUBw6w4ySdKG4K7HLw9LcSr5WLsKxYerd1N1JMtG6tfDGwthek3QQxeuBok+OGV8vUM1X938ydT60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748938745; c=relaxed/simple;
-	bh=OGlsd1kCiQhTkZBlgIak8v9rv+EKOwBMcl5ptB5aqr0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CkovHMBCh2O1nZ7P9va1H4xWerO4JX7SDPT+X7e5pzePJ/B+JpBbQ6oAnSzE8UFFXd76oE66UsiZtseJ+4z3FOZy2HMcvUsBOORk5aMuJtOtVjJifnYhWm0M2UbJkV5fBAo1d4vQMpSxlZlLF5nn7clliMcwHksVf9rPvlR9c1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XCXsKZt1; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748938821; c=relaxed/simple;
+	bh=V766QfVIPo2Fq0Fscd2gihyKLHyoBdox2rZ6FnqVc2w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h7QMM7CaNUY+jzH8tPVy+PvsPTBewiw34FPypAwWIIFOJZGJqTAWI8jxNajPaoeI+OrtBEKvdAzMmcbAE8JkwVpmD4JsBYwI2Su3EYQ/JBsUvUfaCekjp80UR6vRS9ZyDiIqQKa7DPZwuUc6Tp6OeXp5Zh0GEMiwESqthVadSds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UGfQMCwW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XCXsKZt1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748938742;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OGlsd1kCiQhTkZBlgIak8v9rv+EKOwBMcl5ptB5aqr0=;
-	b=XCXsKZt1Lq6jLLvp6UaDMxMc1AwY02JlfZRHt5BtP9RZZiOIPDHqEX6zJwgc0nEp73HZKB
-	c0A1GBaFQ2nV6Y+asfxS8MSZXBqhttj7sdIEqrparNpbnN/UtIczoszEOZD7Iw5jsgFi9S
-	tFhpq2iPfpn2SAt0P3+7bs8I826KjEA=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-635-oXiUklXiMPOlqGniGcCt8g-1; Tue, 03 Jun 2025 04:19:01 -0400
-X-MC-Unique: oXiUklXiMPOlqGniGcCt8g-1
-X-Mimecast-MFC-AGG-ID: oXiUklXiMPOlqGniGcCt8g_1748938740
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4eec544c6so2391435f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 01:19:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748938740; x=1749543540;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OGlsd1kCiQhTkZBlgIak8v9rv+EKOwBMcl5ptB5aqr0=;
-        b=gWy7sgJDHo6R4SkMDC/KeXVbBAxDLu5eEuOqJFlogFofeH4BYIP4Y11F+c33qQ7XJ0
-         oD59QMb+DiVP835Yfd2wMTYNiw6QJO039VVfXW5NMjkc97oN+RxKOkBZEVtiS2Sz176R
-         yt2fHEtXMntjo6T/8dpebU2v9E9IL1R8XCDoBVSGVSax7ouJj8YlJK9yXaaiwbTWzoQB
-         o2bmvzdIOVTwBS1lkPlDqRe4COXxLp/sX2F4r24RD1LpCXQgmAU8icjWgzbPG1f5C4r+
-         C7VW7jxzySc6/cPymFO4XKqweyw+g9OfoiSsqv+6Hyu4cbVkNqwynwSRHC6fPIhrcUbh
-         D9IA==
-X-Forwarded-Encrypted: i=1; AJvYcCVfJq2jMIfqz0l5EmfJ8Gn200DwZH9KT3MrviHxpNzk0NANM2fW+0TCZ3/oI6JJq04qBpN2Eug4GPJwch8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcyTgxxIrQIp8TrUYe8qse64ejVeMTu9r4GE1D0KqkBz7E+u61
-	R/uJrJ431oneLgh+PmgxtZFxeZU/BCupm1g8h8XVKjerL7QHgiGDRJ30JKQBAO/TW/kwtyDSn2k
-	nLlR9I9ajtqmoc5jbj+A0+06O7uc3rjG1KI+b3iDtTxCs2U0lYHW/Fl68hzLmw5wsng==
-X-Gm-Gg: ASbGncu+G6F2dsPWiMhZk8jFn77OzGQ/vwRX2/8gVdE7g3O/3Ct1xcLEjJ/z6HEMRwY
-	DBpoPZP27JbuudMqvCV58Qr3G1kXwAsRkfrhKwBo7dqnAbGX2tSBzQSeAe8CMdw3Fzdzq6H9O6V
-	quTKvROlOPT3u+rADkvMmQGWmbKKGd/JreOAgr1orO2w8uaelfRoN9Z3Zw88kyWZxYw0Ikb6nJm
-	N/ELiF1POZOvuC0ROYKupvEuS4TfYR/7UVFSSvmE4vYdsdrLV9xzC8iaYRV8Dm+ZJSukfmPxvuZ
-	8OIaF8fzEhPQbX2eQ1KYlwVeSAIRCa1mf5c7R3TO/CDZ9rG6qRUal/N1
-X-Received: by 2002:a05:6000:230b:b0:3a4:ef47:99d0 with SMTP id ffacd0b85a97d-3a4f7a64251mr13220922f8f.27.1748938740220;
-        Tue, 03 Jun 2025 01:19:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGUfadbp/PLXy3tAU2yIoE7CN2SdcmUB1sLgD/yyO9/LHvTHncHp1k/sONJWjZJYXD98Egarg==
-X-Received: by 2002:a05:6000:230b:b0:3a4:ef47:99d0 with SMTP id ffacd0b85a97d-3a4f7a64251mr13220896f8f.27.1748938739820;
-        Tue, 03 Jun 2025 01:18:59 -0700 (PDT)
-Received: from ?IPV6:2a0d:3341:cc2d:3210:4b21:7487:446:42ea? ([2a0d:3341:cc2d:3210:4b21:7487:446:42ea])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7fc1a84sm154592205e9.35.2025.06.03.01.18.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jun 2025 01:18:59 -0700 (PDT)
-Message-ID: <440438c8-8cef-4114-9d5a-3a80faa5fcd2@redhat.com>
-Date: Tue, 3 Jun 2025 10:18:57 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UGfQMCwW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80170C4CEED;
+	Tue,  3 Jun 2025 08:20:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748938820;
+	bh=V766QfVIPo2Fq0Fscd2gihyKLHyoBdox2rZ6FnqVc2w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UGfQMCwWbM7fsn61JAfgM0lgkHNuAxI60VItIuDAS6ZWgaRvXLLr/lweiXWAntybm
+	 mDa3c751LVCgqgMJVcdhjKk4XhOObsnqwmysrxof6pqMw4koGraHdFOLRZOggAIjiy
+	 sGpWAmsgaGov1dL66W4ZBJTAVtcEwY52NQ3sTwMY1O6zBd/HBFniwaHWaecVFFRhs1
+	 785LNKwksjlOFoOJ8+f2Opx5s6dIXyVH7oU0mtn/FlAkblzHosOKwk5wg0jWRjpS+s
+	 Rk3MY9ZsepgQVAU/vGg7FFPRAu4F5V0hjWJGptiBennulcP/UEYnbBGvy5UUsEJSSm
+	 MV4/LWhGCWPsw==
+Date: Tue, 3 Jun 2025 10:20:17 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc: "jdelvare@suse.com" <jdelvare@suse.com>, 
+	"linux@roeck-us.net" <linux@roeck-us.net>, "robh@kernel.org" <robh@kernel.org>, 
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
+	"linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+Subject: Re: [PATCH v7 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm properties
+Message-ID: <afiirmp4q4txm5ibiaa4nvzl6tlj7merc3ienvt4o4zhmbcuua@f6r6fyg2jviz>
+References: <20240722221737.3407958-1-chris.packham@alliedtelesis.co.nz>
+ <20240722221737.3407958-2-chris.packham@alliedtelesis.co.nz>
+ <jzxu6mcbxf5zwyirnb2jjpm2i7sln3v5mz3gyhc5xhpqexicvb@atrcjvh7wuh5>
+ <bc99a27e-74ec-45a0-b77c-48f993269586@alliedtelesis.co.nz>
+ <jmxmxzzfyobuheqe75lj7qcq5rlt625wddb3rlhiernunjdodu@tgxghvfef4tl>
+ <4858ce06-2081-4335-af09-f118872317ea@alliedtelesis.co.nz>
+ <dirkbdd5oeofjhy5pk6jiaixbuhmuq7axewhrd7bdghc3dp5x6@ok2uhywwz5ls>
+ <d538cd42-f8b3-43cb-897d-d60c3af57300@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] macsec: MACsec SCI assignment for ES = 0
-To: Carlos Fernandez <carlos.fernandez@technica-engineering.de>
-Cc: Sabrina Dubroca <sd@queasysnail.net>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250529124455.2761783-1-carlos.fernandez@technica-engineering.de>
- <20250603080618.1727268-1-carlos.fernandez@technica-engineering.de>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250603080618.1727268-1-carlos.fernandez@technica-engineering.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="guut3mpnwuespg6c"
+Content-Disposition: inline
+In-Reply-To: <d538cd42-f8b3-43cb-897d-d60c3af57300@alliedtelesis.co.nz>
 
-On 6/3/25 10:06 AM, Carlos Fernandez wrote:
-> I'll ammend the patch and send it to net-next instead.
 
-While at it:
-- please include the changelog comprising a reference (URL) to the prior
-discussion after the tag area and a '---' separator
-- please include the patch revision in the subj prefix (v5 AFAICS)
-- consider extracting the active sci lookup logic in a separate helper,
-will probably simplify the code and will reduce the indentation.
+--guut3mpnwuespg6c
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v7 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm properties
+MIME-Version: 1.0
 
-Thanks,
+Hello Chris,
 
-Paolo
+On Mon, Jun 02, 2025 at 08:52:56PM +0000, Chris Packham wrote:
+> On 30/05/2025 21:38, Uwe Kleine-K=F6nig wrote:
+> > I wonder how other similar devices determine the default duty cycle.
+> > Isn't the norm to make the fan rotate at max speed and then when
+> > userspace takes over it's speeded down?
+>=20
+> Yes that is the normal (and sensible thing do to). But occasionally=20
+> hardware designers like to use incredibly over spec'd=A0 fans that are=20
+> just ridiculously noisy. On some products I've worked on we added basic=
+=20
+> fan control to u-boot so we could silence the fans early in the boot. I=
+=20
+> also gather that in the PC world the fan control is often done=20
+> externally to the OS. In the specific case were I needed this=20
+> functionality it was an embedded x86_64 so I had neither U-Boot nor a BMC.
 
+So you're saying that Linux is the first instance that is able to setup
+the fan -- no BIOS, right?
+
+I think that's quite normal and the fan is only noisy until userspace
+takes over. So I still think that is what should happen here.
+
+In case this is really too noisy, I'd prefer the driver to know itself
+how to setup the fan and not put that policy into the device tree.
+
+Best regards
+Uwe
+
+--guut3mpnwuespg6c
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmg+sD4ACgkQj4D7WH0S
+/k4xrgf+OMIC6cym6UhCCGXK1EqDRciHWKcVjqBzAoaNmEXCKSTuzcs9lP6h/abm
+DIMUSTgoO8UjQZp8bQJiLiOmWy8+pKeYLE4TTf8155p+4gW1b7gQZ/l2lSNal90M
+Z9LzcxGueVhj+yzE0XCYMpDbVzyXLeYltMUXEjsDdeBMoLUYiRNtwZvP35WXsveX
+ACM3bPLkVDTw1j13gbV1Bi8ISTCDfG12Jq/fN7yYcQKM0y0+fy24IIfCIl0VaGbn
+SgisHfVDrZK8jkbtuzuDHicFH6DxHRMh6++/fcg7MURgQ3WUobrRT2oiydMoKacp
+M+Lf+bivSjXN+MbUnHKVBO8PtPDSLw==
+=7cXp
+-----END PGP SIGNATURE-----
+
+--guut3mpnwuespg6c--
