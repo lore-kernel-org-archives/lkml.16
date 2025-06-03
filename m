@@ -1,150 +1,452 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8230446B8;
-	Tue,  3 Jun 2025 12:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE20746B8
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 12:02:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748952094; cv=none; b=o8dVoTsNOdChcmxe3jlFBX8d5zBBH9Gvp5leT/WXkgIZDfES7nwbO/8FJLQ233gWErVxaG8XfMMzM1/mGqYmyrAg4reK1OJdf7FAr56rLpVnB+Ojzq0/Ukf4BIIciv3k1VXYqtPHFZEodGteXwAlaxP8UFAzRTufIMVEhPJ9H4w=
+	t=1748952159; cv=none; b=sHtbLJtreEMvozENpQ2yZ1Vs3m+SZTnXsVd2XjmEAxxnFM6TvI14BXzXDQzusGiVNCDIULsK29ea1yJKUMSAgGvciLBFx3bUs0V11opnx41jSMcgidCbuRwQ3sr2QsXIZMU4Wrrh06ld1XYxnn3OByT8WorCPs7srS+k9jTmva4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748952094; c=relaxed/simple;
-	bh=h92UUlXMO/KLL58P3PSjFD/SbuRQD19YhC6UgkrFuhM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FNAK3qMdUcN/NgGTjbbAZlAlBKd4CaP1jiEg6K8SZs2FxQ7GjL/dJ55E4bnutiuzQUmU+WX6SNOE/DnB3806+QDvXikNrhwPZEeFGfeLyLrIE9CbMA9GWJ47Hfl5vGGCdP1EsBnLgOTRy1SmIQrxXOUM4hbeJNk1XOEkUWQhBiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wi9pdO/v; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748952159; c=relaxed/simple;
+	bh=ySecT7oudCi62ydAA9H9f0Ik2okzEegA1oZYeqkiocA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LvcYg6D8H+5N67jtW+ph30yuwcmDGFEm/2S0llyjoCZQLdj9SIhvr36PftXVJ4ghdNniut2IDIpKM/zErMhr6jv0HAzmc3OXK9JT45xCzfGQThH/xYIAsHmgdRcTSr0FKDR2zDDSrFlM5qjpd0Z1TBGWDQy0+HMBeq51NVU5Udo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vayavyalabs.com; spf=pass smtp.mailfrom=vayavyalabs.com; dkim=pass (1024-bit key) header.d=vayavyalabs.com header.i=@vayavyalabs.com header.b=iDSwMKXD; arc=none smtp.client-ip=209.85.160.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vayavyalabs.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vayavyalabs.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wi9pdO/v"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4a56cc0def0so44893551cf.3;
-        Tue, 03 Jun 2025 05:01:32 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=vayavyalabs.com header.i=@vayavyalabs.com header.b="iDSwMKXD"
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2cc89c59cc0so3836960fac.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 05:02:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748952091; x=1749556891; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y5gk2lwOOOLeohREzJWg+/TaGpOi69oLrNHUYeAZNaU=;
-        b=Wi9pdO/vzywpOzQrpkzHt0NbVVukb8zemqSMNuT2YhAPRYBvLxVA07wa9BzxOzory3
-         yXFRmJEtb+KlHwx0Brvelt3bO5mIu/aJphk+lc1J98wKmyJYYqFPoCsCc76ELX/eTq6T
-         UpBds4Q9BPvSsIazN8T5ss1+yphLzRoYf0GLNavvGl+VBfkknK0jAlY0f4owi7thQML/
-         gyK/sfBkl5qsiJNwMxZyywTMcjWclX5PNH7D/eAd5oAgAMRdIijGHQJqTIJldhQWyXjn
-         x/03LBWDzPWuNRvtn7/JLJUdTziHE/R1z+uqj8w4sxTF5f52QbvG3kIRD/MD9ZfSchYh
-         Vypg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748952091; x=1749556891;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=vayavyalabs.com; s=google; t=1748952157; x=1749556957; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Y5gk2lwOOOLeohREzJWg+/TaGpOi69oLrNHUYeAZNaU=;
-        b=Z5756HJjI32ZL7qU1cy52JuJn6m30LKMSbhdO9Kumze9VjlF89DDm3YUv4iwAJZ/Gl
-         omFFNu7Qy/LKvXEgqXSY3O7eZISPQS+ynbvjcVRqtv/+a79GjDJO46315YT6ZCeBQk9y
-         BpbOyevjqfdF9YmEFC39I7PcxP0CL05T+GyXWUeu/o/YIESRvzvBvkjo8oXB1TrHuv5v
-         W4dhRihvesqtp4QL+Oz1TgzSVrXA1hCN3TVj69VdKAXjC3Dk+Pb9zMvTZd5w/tXwlw43
-         ONYv1UVEYjm19al6yLZct9oA0AubarU1ylGEJlE3AnzIe52f1MlZ/T+NIwfSjH1clrao
-         BUmw==
-X-Forwarded-Encrypted: i=1; AJvYcCU89QKfa15J57Wk6VdmS5DoiGqn0EfYvpVdYB7EM+asO4CPsETc8UMr8vjUw26s92lmUdP/V2x2/Fap@vger.kernel.org, AJvYcCVkCl9xsh0nE7HoNvHit4sIewvJ2fKLoWCDYlWE/7fJnNcF11PhDCh9021KfNDrlI9IjSk61b8rocQu@vger.kernel.org, AJvYcCW1D+h5d25nx+iDCUCym2SgvqOVDZH/XLwhXB/OX+qhPRxpzq7AaR9THJnjYVW8sYHBUiGiPgz8hhX7QfQX@vger.kernel.org, AJvYcCWY9LZTbK6pirrxJuh9Cv0Fvnirvhd6ZV/+vZQIV/7/u9rGfbqqkw8aJ9sXvAj9a4DNIYfKQQN6hSvuQw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2A7xJ8kpMH1JFKK/d82eZYPbm4AvLsp4sjGQMqPmzYCCeKtkj
-	iGJM8r3X+RH9wDS+LvMNg6im4njjfSQB7W7oZW884/BQQk8v+p0+PqrbKbOKLoceUOk=
-X-Gm-Gg: ASbGnct8lx0KKUGtdCYaND6I4/M0OooaWsW+C6BrhpGJZ8wlTPSJVW0rGj7qXXa6u0X
-	Ke6X0e3VZz9MV5RARh9BxcNXUPk+nE3smnoYX8FFGIrQnJ7UVWQ84GqV5Z5TzjlCodouC9A+5xl
-	BCbJhJinpdJfB4H4ktozozbiysfVkN1fv+7cbLcA/WTt5j36cqlx9tJYgMtmLZH90ff0jRTGlg0
-	StwxoQhLTWZrLvdMJFqk5CV2+TZMZjTAwn2R+pDL7JtSd0TBs9oS8EB5Am82bksQhrB1CWCOTag
-	eO/Tf4ByY49o12Am2pyhriuvDC+JOK9yDdITqurGY3bMqBlzOl7hsFHf+9vUU12riyAejQ==
-X-Google-Smtp-Source: AGHT+IHkd3xP0AuVWx7aZOobspQQuluiMGh3RGmXtKIFGOpQiJHf47IF+VP77KmJCWKRTBLn9KS7lA==
-X-Received: by 2002:a05:6102:949:b0:4e6:f7e9:c4a5 with SMTP id ada2fe7eead31-4e701ccd25emr8903178137.22.1748952080349;
-        Tue, 03 Jun 2025 05:01:20 -0700 (PDT)
-Received: from localhost ([2804:30c:406b:9100:2a26:16f5:c81:e61f])
-        by smtp.gmail.com with UTF8SMTPSA id ada2fe7eead31-4e64e9f7ff2sm8433407137.27.2025.06.03.05.01.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 05:01:19 -0700 (PDT)
-Date: Tue, 3 Jun 2025 09:02:56 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ana-Maria Cusco <ana-maria.cusco@analog.com>, jic23@kernel.org,
-	lars@metafoo.de, Michael.Hennerich@analog.com,
-	dlechner@baylibre.com, nuno.sa@analog.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
-	brgl@bgdev.pl
-Subject: Re: [PATCH v4 02/11] iio: adc: Add basic support for AD4170
-Message-ID: <aD7kcFupREh4lW0s@debian-BULLSEYE-live-builder-AMD64>
-References: <cover.1748829860.git.marcelo.schmitt@analog.com>
- <e79f9a126672b33b8a7c01f650fee43a68c74029.1748829860.git.marcelo.schmitt@analog.com>
- <aD27cobHWeBX8o30@smile.fi.intel.com>
- <aD3XQfUfxIiz62ZU@debian-BULLSEYE-live-builder-AMD64>
- <aD6x2caTMd1eBInM@smile.fi.intel.com>
+        bh=l28DzIkqr4LEntW5mAp5FkeCY/PQV5pWO6CRFrpZ3n4=;
+        b=iDSwMKXDrZdADo6shR67KH5gemOxSmhF5uAXvuxY2mYkAtUtR6Ig2FDANKKRMm7fco
+         OjFbZhDJipDFoufWo3jYD+6pwAj4mBfZMV+2t8xYOOqbXvex6QoSyOKpK7vXxm1YVSsI
+         jJYGHnMcubliFRa1Oxx5+o3Kg4TfOkFh4OUSM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748952157; x=1749556957;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=l28DzIkqr4LEntW5mAp5FkeCY/PQV5pWO6CRFrpZ3n4=;
+        b=Zf+1hxtrHzVNzoq6h3yE1YmxU1IQhCSqVurTNYaFjWS7ZezcBxfVuo3Lv54NE2BgVH
+         YIn/+1+UGWfpLzHOrakgcVHyrbKJXlwDhYzyPy8a/yUJ/LDbnv7IRNZHbWUCE+J8DOfA
+         d4qOkJS9v43quTxzphMeydKd2z2NSm/T00oHmQquyllOKLc1GLFX3XSUJZgvvyWabGQq
+         swATF05ohWnvUk7dom4rXRa6wPAPVtKZfAugdss5flImQdcXKPcFjvLtq1W6gj+TACq1
+         Ynif3vF39wmDbXoSrWSBaycCT1M7XKuQberQGRPr7mHu2FDZAXhm0iB5FKJc9sE4RI27
+         C8jA==
+X-Forwarded-Encrypted: i=1; AJvYcCVn0ez5Pgb3w9P/qHT2l8Gj+jVlCxBPHsAqK0d8Lw9ylvyUErw8OzmJPtuF6UKy90LgGgrS+AuHqepzz3g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHZoM0hz6YMOjXNhdY+RmmXy61nnUGQ5scVz8P7bLE8tJMnjRJ
+	SK/zX9OEPqDBH+VVr5X3+X0OX691dKPgvYqvUPhXi2CmKy5k4jo6ZWplJF+pLxTjgBz2neGLMaA
+	rRTJxP3O6PXXszQQlcCkU5wa8xzqxzF5VWsHH8Ofi1XD0DXBI+N+ek4NVjg==
+X-Gm-Gg: ASbGncupHFODFfUiMBRbeUGGKDKzbwvwytAcjRnG0LgFWijaQqhVactsHvYS7cq/IXF
+	ta9i4Z9B08OUzMMpl4et8KdKScvx4Iaq5WivL8OShfS/i1frK5/HJdJxhG/aBsZPDqqQJtvXkmu
+	74gDMp/gZuIRNiK71fI9pfRiROVMRIwaIf2OI9arcq2WVj
+X-Google-Smtp-Source: AGHT+IH90LSqAhHHbxsryMPOBXHIM+oacXfr+Ou9Le9aECoKuqARpni6suYK1t3MEspshUGQKSRE8tFDeNvwiZvRRg0=
+X-Received: by 2002:a05:6830:7201:b0:734:f8d1:6ab3 with SMTP id
+ 46e09a7af769-7385906511bmr1302534a34.0.1748952146469; Tue, 03 Jun 2025
+ 05:02:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aD6x2caTMd1eBInM@smile.fi.intel.com>
+References: <20250602053231.403143-1-pavitrakumarm@vayavyalabs.com>
+ <20250602053231.403143-3-pavitrakumarm@vayavyalabs.com> <9f6b4442-1fb0-479d-9514-410d4d8bfd98@kernel.org>
+In-Reply-To: <9f6b4442-1fb0-479d-9514-410d4d8bfd98@kernel.org>
+From: Pavitrakumar Managutte <pavitrakumarm@vayavyalabs.com>
+Date: Tue, 3 Jun 2025 17:32:15 +0530
+X-Gm-Features: AX0GCFtmQ3LxaxdSxQJE58tRGgH3M_sO7OJwM7eQB8o9k6zn20ZEaWVsKEKH-DE
+Message-ID: <CALxtO0kitR0MnjzPwVT8nsuYThTRX+fbyOH9i2z1KKnCPg1dqg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/6] Add SPAcc Skcipher support
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, herbert@gondor.apana.org.au, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, Ruud.Derwig@synopsys.com, 
+	manjunath.hadli@vayavyalabs.com, adityak@vayavyalabs.com, 
+	Shweta Raikar <shwetar@vayavyalabs.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 06/03, Andy Shevchenko wrote:
-> On Mon, Jun 02, 2025 at 01:54:25PM -0300, Marcelo Schmitt wrote:
-> 
-> ...
-> 
-> > > > +static bool ad4170_setup_eq(struct ad4170_setup *a, struct ad4170_setup *b)
-> > > > +{
-> > > > +	/*
-> > > > +	 * The use of static_assert() here is to make sure that the comparison
-> > > > +	 * is adapted whenever struct ad4170_setup is changed.
-> > > > +	 */
-Does the reason given in the comment justify the use of static_assert?
+Hi Krzysztof,
+  Thank you for your inputs. My comments are embedded below.
 
-> > > > +	static_assert(sizeof(*a) ==
-> > > > +		      sizeof(struct {
-> > > > +				     u16 misc;
-> > > > +				     u16 afe;
-> > > > +				     u16 filter;
-> > > > +				     u16 filter_fs;
-> > > > +				     u32 offset;
-> > > > +				     u32 gain;
-> > > > +			     }));
-> > > 
-> > > I think it doesn't make much sense unless one uses memcpy().
-> > 
-> > memcpy() is used to update the setups after reg write succeeds.
-> > Also, previously, memcmp() was used to compare setups.
-> > Since struct ad4170_setup has only unsigned integers (no floating point fields
-> > like ad7124 had [1]), ad4170 works properly when comparing setups with memcmp().
-> > Though, it was asked to do explicit field matching on previous reviews [2] so
-> > that's how it had been since then. Well, both ways work for ad4170. We can
-> > compare setup with memcmp(), or do the comparison field by field. I don't mind
-> > changing it again if requested. I guess we only need to reach an agreement about
-> > what to go with.
-> 
-> The question was "why do you need the static_assert() now?"
+Warm regards,
+PK
 
-To ensure that the comparison function gets updated if struct ad4170_setup is
-ever modified? This intends to be similar to what was implemented in ad7124
-driver as the chips have similar channel configuration mechanisms. We also
-have ad7173 and ad4130 using static_assert for analogous purpose. There was
-also a comment about static_assert above.
+On Mon, Jun 2, 2025 at 11:35=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.or=
+g> wrote:
+>
+> On 02/06/2025 07:32, Pavitrakumar Managutte wrote:
+> > +
+> > +static int spacc_init_device(struct platform_device *pdev)
+> > +{
+> > +     int vspacc_id =3D -1;
+> > +     u64 timer =3D 100000;
+> > +     void __iomem *baseaddr;
+> > +     struct pdu_info   info;
+> > +     struct spacc_priv *priv;
+> > +     int err =3D 0;
+> > +     int oldmode;
+> > +     int irq_num;
+> > +     const u64 oldtimer =3D 100000;
+> > +
+> > +     /* initialize DDT DMA pools based on this device's resources */
+> > +     if (pdu_mem_init(&pdev->dev)) {
+> > +             dev_err(&pdev->dev, "Could not initialize DMA pools\n");
+> > +             return -ENOMEM;
+> > +     }
+> > +
+> > +     priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> > +     if (!priv) {
+> > +             err =3D -ENOMEM;
+> > +             goto free_ddt_mem_pool;
+> > +     }
+> > +
+> > +     /* default to little-endian */
+> > +     priv->spacc.config.big_endian    =3D false;
+> > +     priv->spacc.config.little_endian =3D true;
+> > +
+> > +     if (of_property_read_u32(pdev->dev.of_node, "snps,vspacc-id",
+> > +                              &vspacc_id)) {
+> > +             dev_err(&pdev->dev, "No virtual spacc id specified\n");
+>
+> This makes no sense. It's not a required property. Just look at your
+> binding.
 
-Best regards,
-Marcelo
+PK: My bad, this is a required property. I will fix that.
 
-> 
-> > [1]: https://lore.kernel.org/all/20250303114659.1672695-13-u.kleine-koenig@baylibre.com/
-> > [2]: https://lore.kernel.org/linux-iio/20250504192117.5e19f44b@jic23-huawei/
-> > 
-> > > > +	if (a->misc != b->misc ||
-> > > > +	    a->afe != b->afe ||
-> > > > +	    a->filter != b->filter ||
-> > > > +	    a->filter_fs != b->filter_fs ||
-> > > > +	    a->offset != b->offset ||
-> > > > +	    a->gain != b->gain)
-> > > > +		return false;
-> > > > +
-> > > > +	return true;
-> > > > +}
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+>
+> > +             err =3D -EINVAL;
+> > +             goto free_ddt_mem_pool;
+> > +     }
+> > +
+> > +     priv->spacc.config.idx =3D vspacc_id;
+> > +     priv->spacc.config.oldtimer =3D oldtimer;
+> > +
+> > +     if (of_property_read_u64(pdev->dev.of_node, "spacc-internal-count=
+er",
+>
+> You never tested this.
+
+PK: This has been tested, but on failure it picks up the default value
+for the counter. I will fix that sting.
+
+>
+> > +                              &timer)) {
+> > +             dev_dbg(&pdev->dev, "No spacc-internal-counter specified\=
+n");
+> > +             dev_dbg(&pdev->dev, "Default internal-counter: (100000)\n=
+");
+> > +             timer =3D 100000;
+> > +     }
+> > +     priv->spacc.config.timer =3D timer;
+> > +
+> > +     baseaddr =3D devm_platform_ioremap_resource(pdev, 0);
+> > +     if (IS_ERR(baseaddr)) {
+> > +             dev_err(&pdev->dev, "Unable to map iomem\n");
+> > +             err =3D PTR_ERR(baseaddr);
+> > +             goto free_ddt_mem_pool;
+> > +     }
+> > +
+> > +     pdu_get_version(baseaddr, &info);
+> > +
+> > +     dev_dbg(&pdev->dev, "EPN %04X : virt [%d]\n",
+> > +             info.spacc_version.project,
+> > +             info.spacc_version.vspacc_id);
+> > +
+> > +     /*
+> > +      * Validate virtual spacc index with vspacc count read from
+> > +      * VERSION_EXT.VSPACC_CNT. Thus vspacc count=3D3, gives valid ind=
+ex 0,1,2
+> > +      */
+> > +     if (vspacc_id !=3D info.spacc_version.vspacc_id) {
+> > +             dev_err(&pdev->dev, "DTS vspacc_id mismatch read value\n"=
+);
+> > +             err =3D -EINVAL;
+> > +             goto free_ddt_mem_pool;
+> > +     }
+> > +
+> > +     if (vspacc_id < 0 || vspacc_id > (info.spacc_config.num_vspacc - =
+1)) {
+> > +             dev_err(&pdev->dev, "Invalid vspacc index specified\n");
+> > +             err =3D -EINVAL;
+> > +             goto free_ddt_mem_pool;
+> > +     }
+> > +
+> > +     err =3D spacc_init(baseaddr, &priv->spacc, &info);
+> > +     if (err !=3D 0) {
+> > +             dev_err(&pdev->dev, "Failed to initialize SPAcc device\n"=
+);
+> > +             err =3D -ENXIO;
+>
+> No, use real errors.
+
+PK: I will fix that
+
+>
+> > +             goto free_ddt_mem_pool;
+> > +     }
+> > +
+> > +     /* Set the priority from kernel config */
+> > +     priv->spacc.config.priority =3D CONFIG_CRYPTO_DEV_SPACC_PRIORITY;
+> > +     dev_dbg(&pdev->dev, "VSPACC priority set from config: %u\n",
+> > +             priv->spacc.config.priority);
+> > +
+> > +     /* Set the priority for this virtual SPAcc instance */
+> > +     spacc_set_priority(&priv->spacc, priv->spacc.config.priority);
+> > +
+> > +     priv->spacc_wq =3D alloc_workqueue("spacc_workqueue", WQ_UNBOUND,=
+ 0);
+> > +     if (!priv->spacc_wq) {
+> > +             dev_err(&pdev->dev, "failed to allocated workqueue\n");
+>
+> Memory allocations NEVER result in error messages.
+
+PK: I will fix that
+
+>
+> Please run standard kernel tools for static analysis, like coccinelle,
+> smatch and sparse, and fix reported warnings. Also please check for
+> warnings when building with W=3D1 for gcc and clang. Most of these
+> commands (checks or W=3D1 build) can build specific targets, like some
+> directory, to narrow the scope to only your code. The code here looks
+> like it needs a fix. Feel free to get in touch if the warning is not clea=
+r.
+>
+> > +             err =3D -ENOMEM;
+> > +             goto free_spacc_ctx;
+> > +     }
+> > +
+> > +     spacc_irq_glbl_disable(&priv->spacc);
+> > +     INIT_WORK(&priv->pop_jobs, spacc_pop_jobs);
+> > +
+> > +     priv->spacc.dptr =3D &pdev->dev;
+> > +     platform_set_drvdata(pdev, priv);
+> > +
+> > +     irq_num =3D platform_get_irq(pdev, 0);
+> > +     if (irq_num < 0) {
+> > +             dev_err(&pdev->dev, "No irq resource for spacc\n");
+> > +             err =3D -ENXIO;
+>
+> No, you must use actual error code.
+
+PK: I will fix that
+
+>
+> > +             goto free_spacc_workq;
+> > +     }
+> > +
+> > +     /* determine configured maximum message length */
+> > +     priv->max_msg_len =3D priv->spacc.config.max_msg_size;
+> > +
+> > +     if (devm_request_irq(&pdev->dev, irq_num, spacc_irq_handler,
+> > +                          IRQF_SHARED, dev_name(&pdev->dev),
+> > +                          &pdev->dev)) {
+> > +             dev_err(&pdev->dev, "Failed to request IRQ\n");
+> > +             err =3D -EBUSY;
+>
+> No, you must use actual error code.
+
+PK: I will fix that
+
+>
+> > +             goto free_spacc_workq;
+> > +     }
+> > +
+> > +     priv->spacc.irq_cb_stat =3D spacc_stat_process;
+> > +     priv->spacc.irq_cb_cmdx =3D spacc_cmd_process;
+> > +     oldmode                 =3D priv->spacc.op_mode;
+> > +     priv->spacc.op_mode     =3D SPACC_OP_MODE_IRQ;
+> > +
+> > +     /* Enable STAT and CMD interrupts */
+> > +     spacc_irq_stat_enable(&priv->spacc, 1);
+> > +     spacc_irq_cmdx_enable(&priv->spacc, 0, 1);
+> > +     spacc_irq_stat_wd_disable(&priv->spacc);
+> > +     spacc_irq_glbl_enable(&priv->spacc);
+> > +
+> > +#if IS_ENABLED(CONFIG_CRYPTO_DEV_SPACC_AUTODETECT)
+>
+> Drop all such conditionals from the code.
+
+PK: This is needed in the driver since SPAcc has two configuration
+modes, "Auto-detect" and "Static" configuration. In the case of
+"Auto-detect mode we have a golden input and golden output for
+matching based on a sample operation on the SPAcc device. Whereas in
+case of static configuration the algos are enabled based on an input
+list.
+
+>
+> > +
+> > +     err =3D spacc_autodetect(&priv->spacc);
+> > +     if (err < 0) {
+> > +             spacc_irq_glbl_disable(&priv->spacc);
+> > +             goto free_spacc_workq;
+> > +     }
+> > +#else
+> > +     err =3D spacc_static_config(&priv->spacc);
+> > +     if (err < 0) {
+> > +             spacc_irq_glbl_disable(&priv->spacc);
+> > +             goto free_spacc_workq;
+> > +     }
+> > +#endif
+> > +
+> > +     priv->spacc.op_mode =3D oldmode;
+> > +     if (priv->spacc.op_mode =3D=3D SPACC_OP_MODE_IRQ) {
+> > +             priv->spacc.irq_cb_stat =3D spacc_stat_process;
+> > +             priv->spacc.irq_cb_cmdx =3D spacc_cmd_process;
+> > +
+> > +             /* Enable STAT and CMD interrupts */
+> > +             spacc_irq_stat_enable(&priv->spacc, 1);
+> > +             spacc_irq_cmdx_enable(&priv->spacc, 0, 1);
+> > +             spacc_irq_glbl_enable(&priv->spacc);
+> > +     } else {
+> > +             priv->spacc.irq_cb_stat =3D spacc_stat_process;
+> > +             priv->spacc.irq_cb_stat_wd =3D spacc_stat_process;
+> > +
+> > +             spacc_irq_stat_enable(&priv->spacc,
+> > +                                   priv->spacc.config.ideal_stat_level=
+);
+> > +
+> > +             /* Enable STAT and WD interrupts */
+> > +             spacc_irq_cmdx_disable(&priv->spacc, 0);
+> > +             spacc_irq_stat_wd_enable(&priv->spacc);
+> > +             spacc_irq_glbl_enable(&priv->spacc);
+> > +
+> > +             /* enable the wd by setting the wd_timer =3D 100000 */
+> > +             spacc_set_wd_count(&priv->spacc,
+> > +                                priv->spacc.config.wd_timer =3D
+> > +                                             priv->spacc.config.timer)=
+;
+> > +     }
+> > +
+> > +     /* unlock normal */
+> > +     if (priv->spacc.config.is_secure_port) {
+> > +             u32 t;
+> > +
+> > +             t =3D readl(baseaddr + SPACC_REG_SECURE_CTRL);
+> > +             t &=3D ~(1UL << 31);
+> > +             writel(t, baseaddr + SPACC_REG_SECURE_CTRL);
+> > +     }
+> > +
+> > +     /* unlock device by default */
+> > +     writel(0, baseaddr + SPACC_REG_SECURE_CTRL);
+> > +
+> > +     return err;
+> > +
+> > +free_spacc_workq:
+> > +     flush_workqueue(priv->spacc_wq);
+> > +     destroy_workqueue(priv->spacc_wq);
+> > +
+> > +free_spacc_ctx:
+> > +     spacc_fini(&priv->spacc);
+> > +
+> > +free_ddt_mem_pool:
+> > +     pdu_mem_deinit(&pdev->dev);
+> > +
+> > +
+> > +     return err;
+> > +}
+> > +
+> > +static void spacc_unregister_algs(void)
+> > +{
+> > +#if IS_ENABLED(CONFIG_CRYPTO_DEV_SPACC_HASH)
+> > +     spacc_unregister_hash_algs();
+> > +#endif
+> > +#if  IS_ENABLED(CONFIG_CRYPTO_DEV_SPACC_AEAD)
+> > +     spacc_unregister_aead_algs();
+> > +#endif
+> > +#if IS_ENABLED(CONFIG_CRYPTO_DEV_SPACC_CIPHER)
+> > +     spacc_unregister_cipher_algs();
+> > +#endif
+> > +}
+> > +
+> > +static int spacc_crypto_probe(struct platform_device *pdev)
+> > +{
+> > +     int rc =3D 0;
+> > +
+> > +     rc =3D spacc_init_device(pdev);
+> > +     if (rc < 0)
+> > +             goto err;
+> > +
+> > +#if IS_ENABLED(CONFIG_CRYPTO_DEV_SPACC_HASH)
+> > +     rc =3D spacc_probe_hashes(pdev);
+> > +     if (rc < 0)
+> > +             goto err;
+> > +#endif
+> > +
+> > +#if IS_ENABLED(CONFIG_CRYPTO_DEV_SPACC_CIPHER)
+> > +     rc =3D spacc_probe_ciphers(pdev);
+> > +     if (rc < 0)
+> > +             goto err;
+> > +#endif
+> > +
+> > +#if IS_ENABLED(CONFIG_CRYPTO_DEV_SPACC_AEAD)
+> > +     rc =3D spacc_probe_aeads(pdev);
+> > +     if (rc < 0)
+> > +             goto err;
+> > +#endif
+> > +
+> > +     return 0;
+> > +err:
+> > +     spacc_unregister_algs();
+> > +
+> > +     return rc;
+> > +}
+> > +
+> > +static void spacc_crypto_remove(struct platform_device *pdev)
+> > +{
+> > +     struct spacc_priv *priv =3D platform_get_drvdata(pdev);
+> > +
+> > +     if (priv->spacc_wq) {
+> > +             flush_workqueue(priv->spacc_wq);
+> > +             destroy_workqueue(priv->spacc_wq);
+> > +     }
+> > +
+> > +     spacc_unregister_algs();
+> > +     spacc_remove(pdev);
+> > +}
+> > +
+> > +static const struct of_device_id snps_spacc_id[] =3D {
+> > +     {.compatible =3D "snps,nsimosci-hs-spacc" },
+> > +     { /* sentinel */        }
+> > +};
+> > +
+> > +MODULE_DEVICE_TABLE(of, snps_spacc_id);
+> > +
+> > +static struct platform_driver spacc_driver =3D {
+> > +     .probe  =3D spacc_crypto_probe,
+> > +     .remove =3D spacc_crypto_remove,
+> > +     .driver =3D {
+> > +             .name  =3D "spacc",
+> > +             .of_match_table =3D snps_spacc_id,
+> > +             .owner =3D THIS_MODULE,
+>
+> This is some ancient downstream code. Base your work (means START from)
+> a new, recent drivers. This was fixed many years ago.
+
+PK: Sure, I will update this as per the recent driver changes.
+
+>
+> Please run standard kernel tools for static analysis, like coccinelle,
+> smatch and sparse, and fix reported warnings. Also please check for
+> warnings when building with W=3D1 for gcc and clang. Most of these
+> commands (checks or W=3D1 build) can build specific targets, like some
+> directory, to narrow the scope to only your code. The code here looks
+> like it needs a fix. Feel free to get in touch if the warning is not clea=
+r.
+>
+> > +     },
+> > +};
+> > +
+> > +module_platform_driver(spacc_driver);
+> > +
+>
+>
+> Best regards,
+> Krzysztof
