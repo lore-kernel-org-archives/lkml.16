@@ -1,134 +1,189 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0087B173
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 05:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21FC4AD23;
+	Tue,  3 Jun 2025 05:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748929972; cv=none; b=iMjWGFiLzlOXfs+QoXnGikf7xntVuF9X0hPKUjJ3sL91eYpOJW6b2biM2yElv/FdyoJfTNbFQgCGy/xsMCmBS1Um4M1p5vNmDTW/nqXYyqdBgxnNgiyFOwNOIKsnFdAj6gCN135AILF5hF74v7kLekqvJi1OdxWVr8UtZWFfogo=
+	t=1748930348; cv=none; b=h+UQFNJcV+EF/5Ot/rc0rMXUT62si+gWuq+9NASrOI0XOOs+8+lJM8y0Wf1K4FqmU/dq5AH0nliijnA/GhGp9HfXH4e218CMKgQjpNyK7RM7do+FvS36XU74JYcAxXnwemv9ewO0r8RwIBYs1zHARq2EH45I3v4ovVQBdM88uiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748929972; c=relaxed/simple;
-	bh=L+ELz69jUFptNnqIky4yrspsl0rBiFTFr5FiTSmQAqQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=t1LaUFS0/YEr1Xjnfo1lkPFr6EbK7L5M66/7c8n8u3R3LVxTuiOwjkqgxn0qcViZxqujvjP5YD4jSmQl8vjBBcn0LL6mB71mkhCgbY1H7HArNm2S+OtOgCHYdmCIf52+aZzfHXhTGtkT6v8a6isX8fF6UjgRRGk2e97/o6f16Mc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=hmIvBDy/; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1748930348; c=relaxed/simple;
+	bh=0SZMc9RMAD3OL6AmtIwhsT0nSCxX2GAwLNNSSQsvmVE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OihkIAVqqIQAyL8+T2B9Urj3ZXxdHyjEGPuoowRqm3fFIaTe6U6NAYvdGSWbWIssZHNipTU9ASqnNlfngAAhXVhM8o6O8fYVkx99nJGy0kUykF3rqAkM0DY1t6jwZpg7wjfctU52yVdDZckPBJWIff780EzFA4DQR9wQCjp5gbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QJZp+y+T; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="hmIvBDy/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1748929962;
-	bh=L+ELz69jUFptNnqIky4yrspsl0rBiFTFr5FiTSmQAqQ=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=hmIvBDy/fhmokIfbZgUwFM/S/DySSWlNBFsLMvctKkqsuqgfbAh3lW+sTbBIUvf1N
-	 pyi8LkMtCeeq0EU8OMmgbYviozIGhMw8Xgacm2ioc7nhpGmOEzH2SeEb+rLiHznPeO
-	 s4K461QL8NuOSkMaiv5JNdh6hWzFJZYqRfZmgLYY=
-Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 63FB565F62;
-	Tue,  3 Jun 2025 01:52:41 -0400 (EDT)
-Message-ID: <e41eaaee52b57f279a47f68745bc79c6178daac9.camel@xry111.site>
-Subject: Re: [PATCH 2/2] platform/loongarch: laptop: Support backlight power
- control
-From: Xi Ruoyao <xry111@xry111.site>
-To: WANG Xuerui <kernel@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>, 
- Yao Zi <ziyao@disroot.org>
-Cc: Jianmin Lv <lvjianmin@loongson.cn>, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit
-	 <kexybiscuit@aosc.io>
-Date: Tue, 03 Jun 2025 13:52:39 +0800
-In-Reply-To: <77dc0324-ce8d-4af4-9aaf-815bb9a1bd82@xen0n.name>
-References: <20250531113851.21426-1-ziyao@disroot.org>
-	 <20250531113851.21426-3-ziyao@disroot.org>
-	 <CAAhV-H7RBcaAP8WjjrX20cvuMixarqyeTLoMPdb8QMztz_648g@mail.gmail.com>
-	 <77dc0324-ce8d-4af4-9aaf-815bb9a1bd82@xen0n.name>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QJZp+y+T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748930346; x=1780466346;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0SZMc9RMAD3OL6AmtIwhsT0nSCxX2GAwLNNSSQsvmVE=;
+  b=QJZp+y+TuD6DioW1ZnNJN+Vv5LTYFg30TbcYOLPkw4SVaKvavKo3wuMN
+   vDTeu72cK+lb2igvCsmaAmoBbohx8STE58XW+FXJimD8MfhIxf+nQYru5
+   xVAQmfcVOjx9gFuYFINdU335rJcR5PQ/uPwEvE1ArWB9dOiGnFYt8766J
+   g2YEtDKMXkoASqJcZJkK4q9WE7/amQaak9u74+GbkAfs2b6JSCfnZ0cQS
+   TJbEqL3t12h9KVXEQrJ/h3SytEWsPMnA/VFKoa5+vbTR1nXCUOYZ3JgCA
+   LA1loEizQJmBtJXB4TpLP3HWgViDasokrziWhSH7fEjZYcDzfR4gdXM+z
+   w==;
+X-CSE-ConnectionGUID: X8aoT0lzRAGRUHs6oRWDRQ==
+X-CSE-MsgGUID: 1rAQj+B6Qf64D/uuccvPeg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="73485490"
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="73485490"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 22:59:05 -0700
+X-CSE-ConnectionGUID: YBlVT30SRWmnzwryX2WviQ==
+X-CSE-MsgGUID: Ve/oAFGISO6sRzGF6gBGcA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="149801571"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa004.jf.intel.com with ESMTP; 02 Jun 2025 22:58:59 -0700
+Date: Tue, 3 Jun 2025 13:52:27 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+Cc: kvm@vger.kernel.org, sumit.semwal@linaro.org, christian.koenig@amd.com,
+	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
+	jgg@nvidia.com, dan.j.williams@intel.com, aik@amd.com,
+	linux-coco@lists.linux.dev, dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	vivek.kasireddy@intel.com, yilun.xu@intel.com,
+	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
+	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
+	zhenzhong.duan@intel.com, tao1.su@intel.com,
+	linux-pci@vger.kernel.org, zhiw@nvidia.com, simona.vetter@ffwll.ch,
+	shameerali.kolothum.thodi@huawei.com, iommu@lists.linux.dev,
+	kevin.tian@intel.com
+Subject: Re: [RFC PATCH 27/30] PCI/TSM: Add PCI driver callbacks to handle
+ TSM requirements
+Message-ID: <aD6Nm7bBGddTc+pr@yilunxu-OptiPlex-7050>
+References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
+ <20250529053513.1592088-28-yilun.xu@linux.intel.com>
+ <yq5att4yjns2.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <yq5att4yjns2.fsf@kernel.org>
 
-On Tue, 2025-06-03 at 13:44 +0800, WANG Xuerui wrote:
-> On 6/3/25 12:16, Huacai Chen wrote:
-> > On Sat, May 31, 2025 at 7:39=E2=80=AFPM Yao Zi <ziyao@disroot.org> wrot=
-e:
-> > >=20
-> > > loongson_laptop_turn_{on,off}_backlight() are designed for controllin=
-g
-> > > power of the backlight, but they aren't really used in the driver
-> > > previously.
-> > >=20
-> > > Unify these two functions since they only differ in arguments passed =
-to
-> > > ACPI method, and wire up loongson_laptop_backlight_update() to update
-> > > power state of the backlight as well. Tested on TongFang L860-T2 3A50=
-00
-> > > laptop.
-> > >=20
-> > > Signed-off-by: Yao Zi <ziyao@disroot.org>
-> > > ---
-> > > =C2=A0 drivers/platform/loongarch/loongson-laptop.c | 53 +++++++-----=
---------
-> > > =C2=A0 1 file changed, 19 insertions(+), 34 deletions(-)
-> > >=20
-> > > [snip]
-> > >=20
-> > > -int loongson_laptop_turn_on_backlight(void)
-> > > -{
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int status;
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 union acpi_object arg0 =3D { AC=
-PI_TYPE_INTEGER };
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct acpi_object_list args =
-=3D { 1, &arg0 };
-> > > -
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 arg0.integer.value =3D 1;
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 status =3D acpi_evaluate_object=
-(NULL, "\\BLSW", &args, NULL);
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ACPI_FAILURE(status)) {
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 pr_info("Loongson lvds error: 0x%x\n", status);
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 return -ENODEV;
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> > > -
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
-> > > -}
-> > > -
-> > > -int loongson_laptop_turn_off_backlight(void)
-> > > -{
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int status;
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 union acpi_object arg0 =3D { AC=
-PI_TYPE_INTEGER };
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct acpi_object_list args =
-=3D { 1, &arg0 };
-> > > -
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 arg0.integer.value =3D 0;
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 status =3D acpi_evaluate_object=
-(NULL, "\\BLSW", &args, NULL);
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ACPI_FAILURE(status)) {
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 pr_info("Loongson lvds error: 0x%x\n", status);
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 return -ENODEV;
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> > > -
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
-> > > -}
-> > I prefer to keep them, in downstream kernels there are users of them,
-> > I don't want to add them back if one day those users are upstream.
->=20
-> Then these symbols should be properly EXPORT_SYMBOL_GPL marked?
+On Mon, Jun 02, 2025 at 06:36:37PM +0530, Aneesh Kumar K.V wrote:
+> Xu Yilun <yilun.xu@linux.intel.com> writes:
+> 
+> > Add optional PCI driver callbacks to notify TSM events. For now, these
+> > handlers may be called during pci_tsm_unbind(). By calling these
+> > handlers, TSM driver askes for external collaboration to finish entire
+> > TSM unbind flow.
+> >
+> > If platform TSM driver could finish TSM bind/unbind all by itself, don't
+> > call these handlers.
+> >
+> > Host may need to configure various system components according to
+> > platform trusted firmware's requirements. E.g. for Intel TDX Connect,
+> > host should do private MMIO mapping in S-EPT, trusted DMA setup, device
+> > ownership claiming and device TDISP state transition. Some operations are
+> > out of control of PCI TSM, so need collaboration by external components
+> > like IOMMU driver, KVM.
+> >
+> > Further more, trusted firmware may enforce executing these operations
+> > in a fixed sequence. E.g. Intel TDX Connect enforces the following
+> > sequences for TSM unbind:
+> >
+> >   1. STOP TDI via TDISP message STOP_INTERFACE
+> >   2. Private MMIO unmap from Secure EPT
+> >   3. Trusted Device Context Table cleanup for the TDI
+> >   4. TDI ownership reclaim and metadata free
+> >
+> > PCI TSM could do Step 1 and 4, but need KVM for Step 2 and IOMMU driver
+> > for Step 3. While it is possible TSM provides finer grained APIs like
+> > tdi_stop() & tdi_free(), and the caller ensures the sequence, it is
+> > better these specific enforcement could be managed in platform TSM
+> > driver. By introducing TSM handlers, platform TSM driver controls the
+> > operation sequence and notify other components to do the real work.
+> >
+> > Currently add 3 callbacks for TDX Connect. disable_mmio() is for
+> > VFIO to invalidate MMIO so that KVM could unmap them from S-EPT.
+> > recover_mmio() is to re-validate MMIO so that KVM could map them
+> > again for shared assigned device. disable_trusted_dma() is to cleanup
+> > trusted IOMMU setup.
+> >
+> > Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
+> > ---
+> >  include/linux/pci-tsm.h | 7 +++++++
+> >  include/linux/pci.h     | 3 +++
+> >  2 files changed, 10 insertions(+)
+> >
+> > diff --git a/include/linux/pci-tsm.h b/include/linux/pci-tsm.h
+> > index 737767f8a9c5..ed549724eb5b 100644
+> > --- a/include/linux/pci-tsm.h
+> > +++ b/include/linux/pci-tsm.h
+> > @@ -157,6 +157,13 @@ struct pci_tsm_ops {
+> >  	int (*accept)(struct pci_dev *pdev);
+> >  };
+> >  
+> > +/* pci drivers callbacks for TSM */
+> > +struct pci_tsm_handlers {
+> > +	void (*disable_mmio)(struct pci_dev *dev);
+> > +	void (*recover_mmio)(struct pci_dev *dev);
+> > +	void (*disable_trusted_dma)(struct pci_dev *dev);
+> > +};
+> > +
+> >  enum pci_doe_proto {
+> >  	PCI_DOE_PROTO_CMA = 1,
+> >  	PCI_DOE_PROTO_SSESSION = 2,
+> > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > index 5f37957da18f..4f768b4658e8 100644
+> > --- a/include/linux/pci.h
+> > +++ b/include/linux/pci.h
+> > @@ -545,6 +545,7 @@ struct pci_dev {
+> >  #endif
+> >  #ifdef CONFIG_PCI_TSM
+> >  	struct pci_tsm *tsm;		/* TSM operation state */
+> > +	void *trusted_dma_owner;
+> >  #endif
+> >  	u16		acs_cap;	/* ACS Capability offset */
+> >  	u8		supported_speeds; /* Supported Link Speeds Vector */
+> > @@ -957,6 +958,7 @@ struct module;
+> >   * @sriov_get_vf_total_msix: PF driver callback to get the total number of
+> >   *              MSI-X vectors available for distribution to the VFs.
+> >   * @err_handler: See Documentation/PCI/pci-error-recovery.rst
+> > + * @tsm_handler: Optional driver callbacks to handle TSM requirements.
+> >   * @groups:	Sysfs attribute groups.
+> >   * @dev_groups: Attributes attached to the device that will be
+> >   *              created once it is bound to the driver.
+> > @@ -982,6 +984,7 @@ struct pci_driver {
+> >  	int  (*sriov_set_msix_vec_count)(struct pci_dev *vf, int msix_vec_count); /* On PF */
+> >  	u32  (*sriov_get_vf_total_msix)(struct pci_dev *pf);
+> >  	const struct pci_error_handlers *err_handler;
+> > +	struct pci_tsm_handlers *tsm_handler;
+> >  	const struct attribute_group **groups;
+> >  	const struct attribute_group **dev_groups;
+> >  	struct device_driver	driver;
+> > -- 
+> > 2.25.1
+> 
+> It looks like the TSM feature is currently interacting with several
+> components: struct pci_driver, VFIO, iommufd, and pci_tsm_ops.
+> 
+> Should we consider limiting this scattering? Would it make sense to
+> encapsulate this logic within pci_tsm_ops?
 
-I guess those downstream works are kernel forks, not separated modules,
-thus an export is not needed.
+I'm keeping on trying which is a better solution. Encapsulating all in
+pci_tsm_ops is the most attactive one from SW POV, but only if the TSM
+operations has no impact/dependency to other components. Unfortunately
+it is not true, e.g. the private MMIO mapping/unmapping is actually
+a writting to leaf S-EPT entry, but it requires non-leaf page-table-page
+management in KVM.
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Thanks,
+Yilun
+
+> 
+> -aneesh
