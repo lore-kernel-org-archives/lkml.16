@@ -1,195 +1,235 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 822653D69;
-	Tue,  3 Jun 2025 00:46:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC664372;
+	Tue,  3 Jun 2025 00:54:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748911579; cv=none; b=fGhF8s3frWI0/L17KznxC5N2tebGulOVJ++fqO/LWvmyzW3YYwarH82cxO5As+WWbWOBwo2TWFDLJMVLGUQ4aE9nf5V3U+YOfVHkBYFgZ8c7/y4etvP32dQ+Vk8xtEfFMphmBFKfZaFknaeqrCbxMHqugJE7rlnit/D+osxR3kI=
+	t=1748912075; cv=none; b=gcCfKICEnkO4Z0Kpya4rp4/+OdPAbMc6r88uC/nUZnG6ySRHHdv2Ay3aL5X2Gi3rR9cfyieRoS8uBMDYgu8sjrzde2ugGZEovb9v+SE5X+bY7OmeeeRvcMHblO9KJ7mgU5CmdfKA4buou1Egp31dDPFcEX0GVA4IhK4pszKUx+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748911579; c=relaxed/simple;
-	bh=1tR8/wB1zKboTJWd2RDzMsGRNx+Cphe6eUAfMGQVnV4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rUpq5muh6CQrqSpuj2NfsV77e/uVDOks2vbMUiuWPU8TafIq9XhwVnAXMeSk0GGEl34GD3FkqI33UWqsy3plzo1d2MlIi2VCWK6PL0I/V6OX9hlPW0FQCTzVdcjiilv7kErOcMRwNhwy/JfAYlYw/0M/cFMZMVZyhSh+2rjf5RE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=nW4f7Mky; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1748912075; c=relaxed/simple;
+	bh=7+gygiq5R8sUDs1GPqrVEdunqF5B0n8zpsyKw46Jr7A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nFqJMLyICRphiHQC5F6RHL0Ow/VVCjMG8nATMdVa7BmSbukC79pRcEDxpnpoabJFPcLy9cFNtOvF4X1UsWL4xjjO/0nqCtUn8RQioxmEtS2KohwW4StPi+sweGEvjvrFi+5xZlNmp589bjNNmqd+T7/+F8XD4ZIj9CxKia9Rq7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FsQDUsaT; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nW4f7Mky"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1748911572;
-	bh=cv2VpyTzKzyu1TBNw4wtq5j4reqO5VDeYWqjYf6jIYc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=nW4f7MkyeaTTqMbArZcNtO2U7p/PGc+cXUDDkRdPeGQMc1lNg2uNj/LtqY9Jd6/5R
-	 2Xxh2LrcSWefzVK4d3P1M+yrms9nR/IoZImJDFORzdhdlNTs/nftldoyW11AElc7Ua
-	 yoIctoroYT8Py6GBHGCSiqJr2elxm7lSj6WJj0AhOwg5gGJz942b76vhFl91HklCc/
-	 KZ4N+NslqVMmplX3jzMExEu7uCw9wM3HhD3GtWNIxPCOzV53Ec2Y7qEhamc565k3Xe
-	 1+beMI/s7ON4d0sQiMKawzczAnanpDCQ2i06XgBwYy+eLavhIv50wNShtUXUifKJFG
-	 0pWIfzPpVqPxg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bBBpp4tp9z4xMy;
-	Tue,  3 Jun 2025 10:46:10 +1000 (AEST)
-Date: Tue, 3 Jun 2025 10:46:09 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Namhyung Kim
- <namhyung@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Arnaldo Carvalho de Melo <acme@redhat.com>, "Borislav Petkov (AMD)"
- <bp@alien8.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>, "Xin Li (Intel)"
- <xin@zytor.com>
-Subject: Re: linux-next: manual merge of the tip tree with the perf tree
-Message-ID: <20250603104609.37e00497@canb.auug.org.au>
-In-Reply-To: <20250528103418.3da40a9f@canb.auug.org.au>
-References: <20250526145015.615882b0@canb.auug.org.au>
-	<20250528103418.3da40a9f@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FsQDUsaT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748912073; x=1780448073;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=7+gygiq5R8sUDs1GPqrVEdunqF5B0n8zpsyKw46Jr7A=;
+  b=FsQDUsaT88c4dI22KkQt9r1j6YPTOoVvEgOhye2zNcgfR7vHJL6wc7vj
+   FhAjLNCfcO3n6svlrTGzkigEE3Vl67UIQ2+XhUVYplE6U4l7xXHxoKwDM
+   E5qNz8e77uJ77TH6Y8aslgFMtZw07EPqzgTJamBh6gwplasA4/vCfdv9D
+   Q0GKEkALIOZeocsKsj550Zr5/UPUpYBl07m/GPiPFl9A9xRU0eGHNoPt+
+   bOuUFfHeWXM4E4YHTZuFy3kickzvlNv1oL2JjnUi21tc9M5k+QIXPJQru
+   VQCjgziFoJqqP6E3TGf+AUqKyj7YrmS1HlX2RC11Om/F3gmB1Df2m9rrC
+   Q==;
+X-CSE-ConnectionGUID: avbSuSSMTkeoAftThURGoQ==
+X-CSE-MsgGUID: VxlXLfF7QTWafoOWiZOIcw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="50631035"
+X-IronPort-AV: E=Sophos;i="6.16,204,1744095600"; 
+   d="scan'208";a="50631035"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 17:54:32 -0700
+X-CSE-ConnectionGUID: /oRaHirXSbWuZ1E+mJ7q3w==
+X-CSE-MsgGUID: 0kNnjuy9RZyvuctCxrOqng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,204,1744095600"; 
+   d="scan'208";a="175649909"
+Received: from unknown (HELO [10.238.0.239]) ([10.238.0.239])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 17:54:10 -0700
+Message-ID: <923d57f1-55f1-411f-b659-9fe4fafa734a@linux.intel.com>
+Date: Tue, 3 Jun 2025 08:54:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/m6I/Ewqt6nRqaxI4V/=__ha";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 04/51] KVM: guest_memfd: Introduce
+ KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
+To: Ackerley Tng <ackerleytng@google.com>
+Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com,
+ ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com,
+ anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu,
+ bfoster@redhat.com, brauner@kernel.org, catalin.marinas@arm.com,
+ chao.p.peng@intel.com, chenhuacai@kernel.org, dave.hansen@intel.com,
+ david@redhat.com, dmatlack@google.com, dwmw@amazon.co.uk,
+ erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, graf@amazon.com,
+ haibo1.xu@intel.com, hch@infradead.org, hughd@google.com,
+ ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz,
+ james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com,
+ jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com,
+ jun.miao@intel.com, kai.huang@intel.com, keirf@google.com,
+ kent.overstreet@linux.dev, kirill.shutemov@intel.com,
+ liam.merwick@oracle.com, maciej.wieczor-retman@intel.com,
+ mail@maciej.szmigiero.name, maz@kernel.org, mic@digikod.net,
+ michael.roth@amd.com, mpe@ellerman.id.au, muchun.song@linux.dev,
+ nikunj@amd.com, nsaenz@amazon.es, oliver.upton@linux.dev,
+ palmer@dabbelt.com, pankaj.gupta@amd.com, paul.walmsley@sifive.com,
+ pbonzini@redhat.com, pdurrant@amazon.co.uk, peterx@redhat.com,
+ pgonda@google.com, pvorel@suse.cz, qperret@google.com,
+ quic_cvanscha@quicinc.com, quic_eberman@quicinc.com,
+ quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com,
+ quic_pheragu@quicinc.com, quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com,
+ richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, rientjes@google.com,
+ roypat@amazon.co.uk, rppt@kernel.org, seanjc@google.com, shuah@kernel.org,
+ steven.price@arm.com, steven.sistare@oracle.com, suzuki.poulose@arm.com,
+ tabba@google.com, thomas.lendacky@amd.com, vannapurve@google.com,
+ vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com,
+ wei.w.wang@intel.com, will@kernel.org, willy@infradead.org,
+ xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com,
+ yuzenghui@huawei.com, zhiquan1.li@intel.com
+References: <cover.1747264138.git.ackerleytng@google.com>
+ <d3832fd95a03aad562705872cbda5b3d248ca321.1747264138.git.ackerleytng@google.com>
+ <b66c38ba-ca16-44c5-b498-7c8eb533d805@linux.intel.com>
+ <diqzsekl6esc.fsf@ackerleytng-ctop.c.googlers.com>
+Content-Language: en-US
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <diqzsekl6esc.fsf@ackerleytng-ctop.c.googlers.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
---Sig_/m6I/Ewqt6nRqaxI4V/=__ha
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-On Wed, 28 May 2025 10:34:18 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->=20
-> On Mon, 26 May 2025 14:50:15 +1000 Stephen Rothwell <sfr@canb.auug.org.au=
-> wrote:
-> >=20
-> > Today's linux-next merge of the tip tree got a conflict in:
-> >=20
-> >   tools/arch/x86/include/asm/cpufeatures.h
-> >=20
-> > between commit:
-> >=20
-> >   444f03645f14 ("tools headers x86 cpufeatures: Sync with the kernel so=
-urces to pick ZEN6 and Indirect Target Selection (ITS) bits")
-> >=20
-> > from the perf tree and commits:
-> >=20
-> >   282cc5b67623 ("x86/cpufeatures: Clean up formatting")
-> >   13327fada7ff ("x86/cpufeatures: Shorten X86_FEATURE_CLEAR_BHB_LOOP_ON=
-_VMEXIT")
-> >   3aba0b40cacd ("x86/cpufeatures: Shorten X86_FEATURE_AMD_HETEROGENEOUS=
-_CORES")
-> >=20
-> > from the tip tree.
-> >=20
-> > I fixed it up (see below) and can carry the fix as necessary. This
-> > is now fixed as far as linux-next is concerned, but any non trivial
-> > conflicts should be mentioned to your upstream maintainer when your tree
-> > is submitted for merging.  You may also want to consider cooperating
-> > with the maintainer of the conflicting tree to minimise any particularly
-> > complex conflicts.
-> >=20
-> >=20
-> > diff --cc tools/arch/x86/include/asm/cpufeatures.h
-> > index 30144ef9ef02,bc81b9d1aeca..000000000000
-> > --- a/tools/arch/x86/include/asm/cpufeatures.h
-> > +++ b/tools/arch/x86/include/asm/cpufeatures.h
-> > @@@ -476,12 -476,11 +476,12 @@@
-> >   #define X86_FEATURE_CLEAR_BHB_LOOP	(21*32+ 1) /* Clear branch history=
- at syscall entry using SW loop */
-> >   #define X86_FEATURE_BHI_CTRL		(21*32+ 2) /* BHI_DIS_S HW control avai=
-lable */
-> >   #define X86_FEATURE_CLEAR_BHB_HW	(21*32+ 3) /* BHI_DIS_S HW control e=
-nabled */
-> > - #define X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT (21*32+ 4) /* Clear bran=
-ch history at vmexit using SW loop */
-> > - #define X86_FEATURE_AMD_FAST_CPPC	(21*32 + 5) /* Fast CPPC */
-> > - #define X86_FEATURE_AMD_HETEROGENEOUS_CORES (21*32 + 6) /* Heterogene=
-ous Core Topology */
-> > - #define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32 + 7) /* Workload Classi=
-fication */
-> > - #define X86_FEATURE_PREFER_YMM		(21*32 + 8) /* Avoid ZMM registers du=
-e to downclocking */
-> > - #define X86_FEATURE_INDIRECT_THUNK_ITS	(21*32 + 9) /* Use thunk for i=
-ndirect branches in lower half of cacheline */
-> > + #define X86_FEATURE_CLEAR_BHB_VMEXIT	(21*32+ 4) /* Clear branch histo=
-ry at vmexit using SW loop */
-> > + #define X86_FEATURE_AMD_FAST_CPPC	(21*32+ 5) /* Fast CPPC */
-> > + #define X86_FEATURE_AMD_HTR_CORES	(21*32+ 6) /* Heterogeneous Core To=
-pology */
-> > + #define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32+ 7) /* Workload Classif=
-ication */
-> > + #define X86_FEATURE_PREFER_YMM		(21*32+ 8) /* Avoid ZMM registers due=
- to downclocking */
-> > ++#define X86_FEATURE_INDIRECT_THUNK_ITS	(21*32+ 9) /* Use thunk for in=
-direct branches in lower half of cacheline */
-> >  =20
-> >   /*
-> >    * BUG word(s)
-> > @@@ -528,12 -527,10 +528,12 @@@
-> >   #define X86_BUG_TDX_PW_MCE		X86_BUG(31) /* "tdx_pw_mce" CPU may incur=
- #MC if non-TD software does partial write to TDX private memory */
-> >  =20
-> >   /* BUG word 2 */
-> > - #define X86_BUG_SRSO			X86_BUG(1*32 + 0) /* "srso" AMD SRSO bug */
-> > - #define X86_BUG_DIV0			X86_BUG(1*32 + 1) /* "div0" AMD DIV0 speculati=
-on bug */
-> > - #define X86_BUG_RFDS			X86_BUG(1*32 + 2) /* "rfds" CPU is vulnerable =
-to Register File Data Sampling */
-> > - #define X86_BUG_BHI			X86_BUG(1*32 + 3) /* "bhi" CPU is affected by B=
-ranch History Injection */
-> > - #define X86_BUG_IBPB_NO_RET	   	X86_BUG(1*32 + 4) /* "ibpb_no_ret" IB=
-PB omits return target predictions */
-> > - #define X86_BUG_SPECTRE_V2_USER		X86_BUG(1*32 + 5) /* "spectre_v2_use=
-r" CPU is affected by Spectre variant 2 attack between user processes */
-> > - #define X86_BUG_ITS			X86_BUG(1*32 + 6) /* "its" CPU is affected by I=
-ndirect Target Selection */
-> > - #define X86_BUG_ITS_NATIVE_ONLY		X86_BUG(1*32 + 7) /* "its_native_onl=
-y" CPU is affected by ITS, VMX is not affected */
-> > + #define X86_BUG_SRSO			X86_BUG( 1*32+ 0) /* "srso" AMD SRSO bug */
-> > + #define X86_BUG_DIV0			X86_BUG( 1*32+ 1) /* "div0" AMD DIV0 speculati=
-on bug */
-> > + #define X86_BUG_RFDS			X86_BUG( 1*32+ 2) /* "rfds" CPU is vulnerable =
-to Register File Data Sampling */
-> > + #define X86_BUG_BHI			X86_BUG( 1*32+ 3) /* "bhi" CPU is affected by B=
-ranch History Injection */
-> > + #define X86_BUG_IBPB_NO_RET		X86_BUG( 1*32+ 4) /* "ibpb_no_ret" IBPB =
-omits return target predictions */
-> > + #define X86_BUG_SPECTRE_V2_USER		X86_BUG( 1*32+ 5) /* "spectre_v2_use=
-r" CPU is affected by Spectre variant 2 attack between user processes */
-> > ++#define X86_BUG_ITS			X86_BUG( 1*32+ 6) /* "its" CPU is affected by I=
-ndirect Target Selection */
-> > ++#define X86_BUG_ITS_NATIVE_ONLY		X86_BUG( 1*32+ 7) /* "its_native_onl=
-y" CPU is affected by ITS, VMX is not affected */
-> >   #endif /* _ASM_X86_CPUFEATURES_H */ =20
->=20
-> This is now a conflict between the perf tree and Linus' tree.
+On 5/31/2025 4:10 AM, Ackerley Tng wrote:
+> Binbin Wu <binbin.wu@linux.intel.com> writes:
+>
+>> On 5/15/2025 7:41 AM, Ackerley Tng wrote:
+>>
+>> [...]
+>>> +
+>>> +static int kvm_gmem_convert_range(struct file *file, pgoff_t start,
+>>> +				  size_t nr_pages, bool shared,
+>>> +				  pgoff_t *error_index)
+>>> +{
+>>> +	struct conversion_work *work, *tmp, *rollback_stop_item;
+>>> +	LIST_HEAD(work_list);
+>>> +	struct inode *inode;
+>>> +	enum shareability m;
+>>> +	int ret;
+>>> +
+>>> +	inode = file_inode(file);
+>>> +
+>>> +	filemap_invalidate_lock(inode->i_mapping);
+>>> +
+>>> +	m = shared ? SHAREABILITY_ALL : SHAREABILITY_GUEST;
+>>> +	ret = kvm_gmem_convert_compute_work(inode, start, nr_pages, m, &work_list);
+>>> +	if (ret || list_empty(&work_list))
+>>> +		goto out;
+>>> +
+>>> +	list_for_each_entry(work, &work_list, list)
+>>> +		kvm_gmem_convert_invalidate_begin(inode, work);
+>>> +
+>>> +	list_for_each_entry(work, &work_list, list) {
+>>> +		ret = kvm_gmem_convert_should_proceed(inode, work, shared,
+>>> +						      error_index);
+>> Since kvm_gmem_invalidate_begin() begins to handle shared memory,
+>> kvm_gmem_convert_invalidate_begin() will zap the table.
+>> The shared mapping could be zapped in kvm_gmem_convert_invalidate_begin() even
+>> when kvm_gmem_convert_should_proceed() returns error.
+>> The sequence is a bit confusing to me, at least in this patch so far.
+>>
+> It is true that zapping of pages from the guest page table will happen
+> before we figure out whether conversion is allowed.
+>
+> For a shared-to-private conversion, we will definitely unmap from the
+> host before checking if conversion is allowed, and there's no choice
+> there since conversion is allowed if there are no unexpected refcounts,
+> and the way to eliminate expected refcounts is to unmap from the host.
+>
+> Since we're unmapping before checking if conversion is allowed, I
+> thought it would be fine to also zap from guest page tables before
+> checking if conversion is allowed.
+>
+> Conversion is not meant to happen very regularly, and even if it is
+> unmapped or zapped, the next access will fault in the page anyway, so
+> there is a performance but not a functionality impact.
+Yes, it's OK for shared mapping.
 
-This is now a conflict between the perf-current tree and Linus' tree.
+>
+> Hope that helps.
 
---=20
-Cheers,
-Stephen Rothwell
+It helped, thanks!
 
---Sig_/m6I/Ewqt6nRqaxI4V/=__ha
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> Is it still odd to zap before checking if conversion
+> should proceed?
+>
+>>> +		if (ret)
+>>> +			goto invalidate_end;
+>>> +	}
+>>> +
+>>> +	list_for_each_entry(work, &work_list, list) {
+>>> +		rollback_stop_item = work;
+>>> +		ret = kvm_gmem_shareability_apply(inode, work, m);
+>>> +		if (ret)
+>>> +			break;
+>>> +	}
+>>> +
+>>> +	if (ret) {
+>>> +		m = shared ? SHAREABILITY_GUEST : SHAREABILITY_ALL;
+>>> +		list_for_each_entry(work, &work_list, list) {
+>>> +			if (work == rollback_stop_item)
+>>> +				break;
+>>> +
+>>> +			WARN_ON(kvm_gmem_shareability_apply(inode, work, m));
+>>> +		}
+>>> +	}
+>>> +
+>>> +invalidate_end:
+>>> +	list_for_each_entry(work, &work_list, list)
+>>> +		kvm_gmem_convert_invalidate_end(inode, work);
+>>> +out:
+>>> +	filemap_invalidate_unlock(inode->i_mapping);
+>>> +
+>>> +	list_for_each_entry_safe(work, tmp, &work_list, list) {
+>>> +		list_del(&work->list);
+>>> +		kfree(work);
+>>> +	}
+>>> +
+>>> +	return ret;
+>>> +}
+>>> +
+>> [...]
+>>> @@ -186,15 +490,26 @@ static void kvm_gmem_invalidate_begin(struct kvm_gmem *gmem, pgoff_t start,
+>>>    	unsigned long index;
+>>>    
+>>>    	xa_for_each_range(&gmem->bindings, index, slot, start, end - 1) {
+>>> +		enum kvm_gfn_range_filter filter;
+>>>    		pgoff_t pgoff = slot->gmem.pgoff;
+>>>    
+>>> +		filter = KVM_FILTER_PRIVATE;
+>>> +		if (kvm_gmem_memslot_supports_shared(slot)) {
+>>> +			/*
+>>> +			 * Unmapping would also cause invalidation, but cannot
+>>> +			 * rely on mmu_notifiers to do invalidation via
+>>> +			 * unmapping, since memory may not be mapped to
+>>> +			 * userspace.
+>>> +			 */
+>>> +			filter |= KVM_FILTER_SHARED;
+>>> +		}
+>>> +
+>>>    		struct kvm_gfn_range gfn_range = {
+>>>    			.start = slot->base_gfn + max(pgoff, start) - pgoff,
+>>>    			.end = slot->base_gfn + min(pgoff + slot->npages, end) - pgoff,
+>>>    			.slot = slot,
+>>>    			.may_block = true,
+>>> -			/* guest memfd is relevant to only private mappings. */
+>>> -			.attr_filter = KVM_FILTER_PRIVATE,
+>>> +			.attr_filter = filter,
+>>>    		};
+>>>    
+>>>    		if (!found_memslot) {
+>>> @@ -484,11 +799,49 @@ EXPORT_SYMBOL_GPL(kvm_gmem_memslot_supports_shared);
+>>>    #define kvm_gmem_mmap NULL
+>>>    #endif /* CONFIG_KVM_GMEM_SHARED_MEM */
+>>>    
+>> [...]
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg+RdEACgkQAVBC80lX
-0Gyfywf/SNY4KZ8IDAYNj7NXWgyNMu+vnqTFFRPQcjCtzjEMpOi6FhBXNjBRPpB8
-6oW8nZaGsSddDeDkh25wFbFSynhUrbDzJx4W1eEHQ2YbxBWX5UvGGj8Cwhs5roYC
-AnLuWskZ27XqIR/4nXWqQ/KJJDjMgK0YSAK+2DQ4XcD1gceH/jiBXB2uw6v66Ghv
-EOc7PT2gAk9mPbkdKK+DY8FQI0uYHVLKT2g2PgxXK4w9A/0ysBJoQjlc6BLzIuEx
-FwARPbEtzvc1dHkxybJhF1jcVEDuiIeBtfJhUGxSJrL1py6jPpzkxCWcsOp1zx8E
-u2WC6lYXi5GWHTQve+q3ZLRyoimRjw==
-=sFwR
------END PGP SIGNATURE-----
-
---Sig_/m6I/Ewqt6nRqaxI4V/=__ha--
