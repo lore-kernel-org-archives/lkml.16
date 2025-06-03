@@ -1,197 +1,200 @@
-Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011001.outbound.protection.outlook.com [40.107.130.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D2122F39B;
-	Tue,  3 Jun 2025 11:26:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.1
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748950014; cv=fail; b=HIQeJ1MDXVGNF0d2wAfL+pJg2BlEH18K87AmtTKYEg7HWJ49Y212ReZeeQYQ5cTSacJgUINovGUzlMTL5f43WrpbMeFTH+JAfj1xY/vsC/0Lh0/YwVjieSPD7sJiupoVLzSb4ZQe6DIM39RzMvvLWhJ+PuaicTI2NUJpFQ8K4LY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748950014; c=relaxed/simple;
-	bh=8U4SvROMkSjC4PEXp9i/E8Pp6GcNBWzBoy/s5OFI1PM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bVc3bV5pKyEihqmhWkJW9SUiQvg9gjTWZ8JmTCRLwFCLNstLX29ZFVWS5sLS54pF65PNCQ3AO6MWE23+ATTBNpbTVAIoggsaOHd+64FE1sHQGGzqUAAZANOeNZxPzAWSf/NLnI7vzCRlIZXNdTRnbT5OJ8gnBj+ScmHI4ofNk/M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=GCSkXgPR; arc=fail smtp.client-ip=40.107.130.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1686322A7E8;
+	Tue,  3 Jun 2025 11:27:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748950046; cv=none; b=R1blS70RKxPw+Ys+pV5LUBvGXYDBYL6X59j8c/OgTKqKVit/jD/vLkorRXl8FjMiDVX+dwG7j2TvhvJzE/ZL+CP3sy+rcW0GSnMVK5JEY3RJJkUGrAc++F2ZqFVtjU4n+bLyJ+I7ISMrKa8tshTuEpnPfw5yEUzrJTOAGDE+Bdk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748950046; c=relaxed/simple;
+	bh=34TUZi3qOElaSed4nw9qb+k1ylFQGi/Eb0a+fyUwQac=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=O7P4O8sa75hORKxD4Pf2OjO4+gngfBRbqe5y2uoNsn/WCEBUG6T5kdGOlWrMAcBpmefMn86fi47gRGThnQPc5cT3o1DPN4oP3IgnPnsWivv/QosIS9pyElKhP3BV3kv0l9QGVbM6DbvWB6/xnzrTOP8nerj1RHE4MwA4ONQzf54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ASunSOly; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="GCSkXgPR"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FeOux3KZl0ZTwd61puu+/m8JallQiZRCUX5p8fRiBYbTHkHBgWhIFdCdmMU7LkNIKtydRaP/27lQxBHOr17zDaOmP8ffgKuki1VoOEgr2NNJ5y/APDhDle/8YSxntz+tM4Q84Y6IytWhpLR6FtHgvfEDMDxS6X7A2IVrJySwUcDkYp2cL37H5ml3hBx8Kf568DW0WLZKRl6rYB456CzSBs6GmFaG19DyiRUyfzBdTSwZVdvj8IZ8FSX75wZuqYRlN4c+ATNXKCJgyY8qVbnnx7Veuf4UkRiPpmKr6m+0PM6xAo+ppLUTNgBgyxVzER5H627JPIOl/eMLsOMFhYsc8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nm1E+R+L9UnncfifsNBCAzR4xiI/U5o7ho+UPyXbeP8=;
- b=cCwCtJGfJIu9ULib4arvm9KOp1W9VaGwmyhg2jSYnfloLIYnRj9sDYC266m6EUU2GuBAt72Gs5WLtea6MR/BbmEvyu/sjKoVn/USkyZcYOj/P7CYTJeTLf8/co18Q4m9hImXnrBeUkPl/Ub2mK/3Ub76wixXnvdUB9UHFI9xG4WOvTp4vhSo5y3DtWnK4lV14HaiKvDM51QSLLS+mrmkZTz5FIjmvxHWZ5rtOaL367HKfJmtp4+TZhbYOoy5aqEjmI1obUbVlPn13VTndBbgU5xffqhoxTvmOu0r8rril7OntLlXq/sCsseFFpM+aE1hiQsQ2z6cMvbhiQmZuN8aDg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nm1E+R+L9UnncfifsNBCAzR4xiI/U5o7ho+UPyXbeP8=;
- b=GCSkXgPRsJWFSqDUEG3SETWM1Wbr/i0D6JF329qho/y+REpnAZ+pSxnIbaanzdv4SFRC08WsyUdA2z1c1kOMTsu82qrHkIedqQOePPDgPdbu/TQ/sibm+SHAhH53faDJscWftQhH/ZoCW1F0MWLV/g+ylMuiOM59KRjzHHlUytX2ZLzmcH8O4GWC9Hnn0UV9rRzKfn6InEENpvi7Pdwpyj11TeXhilJSEHHhN3D5uBAe779yst2PhOsB4rX+bi/FzCd98C2lrO5dtjCYg40CZICV7u45GxGIFwwbVeQOiJ2GffHZ/6hyzObb8zWunHtoex6pt+sQw6bVaWDc3auQ8g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from DU7PR04MB11163.eurprd04.prod.outlook.com (2603:10a6:10:5b3::14)
- by GV1PR04MB10079.eurprd04.prod.outlook.com (2603:10a6:150:1ab::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.37; Tue, 3 Jun
- 2025 11:26:48 +0000
-Received: from DU7PR04MB11163.eurprd04.prod.outlook.com
- ([fe80::3a74:80e4:4144:62db]) by DU7PR04MB11163.eurprd04.prod.outlook.com
- ([fe80::3a74:80e4:4144:62db%4]) with mapi id 15.20.8769.035; Tue, 3 Jun 2025
- 11:26:48 +0000
-From: florin.leotescu@oss.nxp.com
-To: Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Florin Leotescu <florin.leotescu@nxp.com>,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: viorel.suman@nxp.com,
-	carlos.song@nxp.com,
-	daniel.baluta@nxp.com,
-	linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev,
-	festevam@gmail.com
-Subject: [PATCH 4/4] hwmon: emc2305: Set initial PWM minimum value during probe based on thermal state
-Date: Tue,  3 Jun 2025 14:31:25 +0300
-Message-Id: <20250603113125.3175103-5-florin.leotescu@oss.nxp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250603113125.3175103-1-florin.leotescu@oss.nxp.com>
-References: <20250603113125.3175103-1-florin.leotescu@oss.nxp.com>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: AM0P190CA0016.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:208:190::26) To DU7PR04MB11163.eurprd04.prod.outlook.com
- (2603:10a6:10:5b3::14)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ASunSOly"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87EC5C4CEED;
+	Tue,  3 Jun 2025 11:27:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748950045;
+	bh=34TUZi3qOElaSed4nw9qb+k1ylFQGi/Eb0a+fyUwQac=;
+	h=From:Subject:Date:To:Cc:From;
+	b=ASunSOly7J4Mqj/R4Dbic+5bLYBEEJoUROtJbK5x8jsVfW/Kd2EvuqyehnhimKKFw
+	 Icl6K13MUvU3Ghj7B/weDMkJRr3PihA63oo2ZUxJioFvs256ktZ5d14xeQU6XFEDpI
+	 2x9BEZrSXsV0kENwWAmROqnftlW2D3B/yuqfciBmjSgWTb32xVq1LwjwQOEPcuto4+
+	 rpOJR63jlW6pTKFu9eXJu2+Jep5pPloVr7/0zGzPK8qworjMXicRlgCoaVZ1leDqcD
+	 GpGlPtI3veJVcHDqw7T6Q1wXvD6MMv3qOU1xpUu0Dji3qGs/DpyMN2Ig0Jih4LJbat
+	 QGvHuBsWl2lGw==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v13 0/9] ref_tracker: add ability to register a debugfs
+ file for a ref_tracker_dir
+Date: Tue, 03 Jun 2025 07:27:11 -0400
+Message-Id: <20250603-reftrack-dbgfs-v13-0-7b2a425019d8@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU7PR04MB11163:EE_|GV1PR04MB10079:EE_
-X-MS-Office365-Filtering-Correlation-Id: cfe9cb71-aa1c-4dc8-60fa-08dda29186f6
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?iso-8859-1?Q?h8h6kAl10o3XwCyDLin/czJpK9vEJhSdQ3S7VNTYuqwqEUzzkY1H0lNpOa?=
- =?iso-8859-1?Q?KKBybIGHMGvsb6NAmQUNN4D9s+DGy5RFasO7vGdD48/3ZmP4I73AI/ZQD8?=
- =?iso-8859-1?Q?m8Wj8zrrPcX9Q8+qaeY5YXIy3wi/zd2Tsg1N/gbNTlL+HgMPNyqeDLRZ3U?=
- =?iso-8859-1?Q?yVZNCqK62ZWISW61S/e2qUQAy/hto5haIUxghYI5g8sKDYSPm5wAgrWnQI?=
- =?iso-8859-1?Q?4cO50ke365v0P/md761p+JKOh2JfU/0ElCRf8bK6BPx5A1msatFLsXZUpY?=
- =?iso-8859-1?Q?q7Q8JQr+z641naDpdlprynMI3qGjwvTHXnL8BByfiG3In01Y8ZhuRA4n0m?=
- =?iso-8859-1?Q?RDlRtTN0ruXAoWoEMJhUFNlG6pnZrq/c6Vxct93VdAQ7+kmb5TkH/rBnNX?=
- =?iso-8859-1?Q?3S2bH6LNPSf/pDgk4jQ1nqfD48xr7BBNDA2mfFP8AtBuQ0FTisMgra8L/u?=
- =?iso-8859-1?Q?BGftg9UYq+R7Cg2wmglyWx/VUx5/DcKn9Ik/skTPTHTkTdXkhd9bO4wOq4?=
- =?iso-8859-1?Q?3F2mReM6o2Jw84tvuoDR0bT/EoKRsXqIZonA8ANV2JoGuqS1LvBadqZ1nZ?=
- =?iso-8859-1?Q?w4Qbb3sPm9Fl5/67agpzlMMabsgYuI87tVfvvaoQn4KwTPOc7CAyUck8cw?=
- =?iso-8859-1?Q?eQWwQ6owweHm8A+GhF7EWS22l4ydSNQP1BdLIKFhENN0zH3S0gLKv0A9yW?=
- =?iso-8859-1?Q?PSqRixUsG7xNSY6bHwMs94LEJIgnrvIszqrKIHBghIdhV5ewEEjM+LP+kq?=
- =?iso-8859-1?Q?EfgvVR/4tAmxSGHVchGA3ymqgeGkBMxGrQ85CMRabd9Ee4Oymg+DrzBAaW?=
- =?iso-8859-1?Q?Zwoh6E2nN8DmZsEOhQScjWLUW/4SrnTZw1I6wJ4Yt8QMwq74tk3UKfhZYw?=
- =?iso-8859-1?Q?vFXndyLShINspLFvtUEFd6hr4NWX6N11Z+LCI4qFxfongCsuCjpEW00ztA?=
- =?iso-8859-1?Q?EDr2ak8/v2oOJEjDaajrg6wbEVPxYmZ5hOXxo2mlJMVrmTEWZxHulq/4CD?=
- =?iso-8859-1?Q?pTG5XzqA7XiWZaQ4mR1HQKEFUQq6+SesBFhjAAh5qa13BXXslMMRUdNPoH?=
- =?iso-8859-1?Q?u198n8Zx96R6u34M+uKi3v9aRS+rPwWW76Eg5VVkxaIsp/H5zbLmt6YJhe?=
- =?iso-8859-1?Q?5Q37c5urDyW6MhwjiROEcmgqoJdtPXbgiRr75s7V7y71m0QidPlz4k+6vd?=
- =?iso-8859-1?Q?b93oziPStQgTn58WxRZ+yRCtZ29dhp9Ple22E1AXoPJRwcN9d3HeQgkML8?=
- =?iso-8859-1?Q?hGzZIhfY39tegc/JMSiJAPYqLyVZYp/3mrs5vvdO4V/hytdLfIxx2sYiVG?=
- =?iso-8859-1?Q?BH1hKCQXAw6IYbd1eI+dqJKr9FFND6VyAYBV54noPxGZlNob6ZgA/RkKX9?=
- =?iso-8859-1?Q?NAdLpKsILOdTpC+8L2B7FSCJDvXRghnBQJVk8cijXNXmD1NQv2tuFvKiUT?=
- =?iso-8859-1?Q?sctdcK95dqvFn08V/jieUgeSG9qCQd1l3KlS8xH6srb5e3DH3Xyzqfz43q?=
- =?iso-8859-1?Q?c=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU7PR04MB11163.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?iso-8859-1?Q?0jTEsVnS0g6ssrK1AAGpoeUt0LeoNoj8wegOo1RB0ol3aw1idSfFxdbJMI?=
- =?iso-8859-1?Q?miNP8n+kA4PTDmJeb8T7qnJ+mq/ezRmYf7jGUcQMpdmh1GCLsVV/sl9hKf?=
- =?iso-8859-1?Q?lC3ae8cmD4i0RiRncn+WfjdmVZvU0AQEWC0bkeR20JOOcvMdPm2P992TrE?=
- =?iso-8859-1?Q?z0geyDJP6pi8wHLcigiYPXzNg1QLrWLtjkA9wuepBoS1FcTw/paFIcXvLR?=
- =?iso-8859-1?Q?iplmpGiyNvpldLlGpc5gKNCGmJPqYkyQGpr+uU9YuBOcJvIn7Bex9KcQYz?=
- =?iso-8859-1?Q?WCsRWRmVL0UU/oK79yLVENYCBfb+LalC3fjKoo3egaqy3+8p2E91577Y+5?=
- =?iso-8859-1?Q?Zr2D+0sBDNV2zHIFFrui6inDKnObbXNSEN+RAnFwd6LPqWRZV4TKgTZXRJ?=
- =?iso-8859-1?Q?zkdiA5yhjpREQYNVV2JwQFoLrpDgv0bqpOkLE1qz1zUxnIHaGARJTmGZGW?=
- =?iso-8859-1?Q?rWuFsMqdU1Stwd/x6rG7i+fRma/J2kyICiQa7Ez3bRttMNX+ze0zmDwVss?=
- =?iso-8859-1?Q?ek/Tn6ywZLtIqVIQ8SHrioQGMmAXnbtjfQsKS1g8+pMHYhjOagkQYiiN1R?=
- =?iso-8859-1?Q?9V+20Nw85rjWm1HpOdzOAzpyABFGXrAgjilsbx2dvqfwSE+9jozIoWwo/2?=
- =?iso-8859-1?Q?+iWtn8AwRL3vhTzxnXTywsnpGaOIytFMY2jYR8CI3p3IlWUfg+mIUDOmJs?=
- =?iso-8859-1?Q?dbOGAGDyHcQ0oZ1fcc5/YehTl78l0BQmHqs+RBX61Ye/LkNy91uGTbDujs?=
- =?iso-8859-1?Q?U4LFaiZJMj6fvNDZozpmyivuxnNQwYyGXEQ/NoHBRuj6MADpCY6L/OA/5n?=
- =?iso-8859-1?Q?z3gvRPZqvRZydgHtpK0o/ycsCm1kCOYF+ux6jwPc5MQjhs03fu0LnIXY9V?=
- =?iso-8859-1?Q?DZiZXi1e5kU7yl/9Tu/cy0azSsPXJ0nByYjr/xOpfZuWOHNvlpmAcF8EaT?=
- =?iso-8859-1?Q?GHiTSj6LkyjEcmCF7Rrh0qRAJOhjA/3fYF3VbM/T1jCF+dHkZ9dZjArbCT?=
- =?iso-8859-1?Q?o8BsWDNYnUSWnhNnZPEe5LFgGCqAe9odNovPm686yq3DMA6URvuCI9SzmI?=
- =?iso-8859-1?Q?8iaTrUG4+oJ0dEcOuQtank+ugwc76AVn3VReGkVXZH0I817RmgXgA1pNfm?=
- =?iso-8859-1?Q?9DneOR0iBgPw7GZNeUCPNn1kJZxBOQeH3Yd1ouRc5t2HVoZ+uamMJoRMVH?=
- =?iso-8859-1?Q?TqgRy7XJY1MQl0WxHKH14457nSAoXLQ8wGUdB9CfPtKEun3bMmvlvrvPpx?=
- =?iso-8859-1?Q?xrcHMNvByNhWoX38SbWF9BQqlZE9yf9HFm1YaQSpXU0tlDZuIyb14GxfdI?=
- =?iso-8859-1?Q?lRTmy35GSpg/F96vDq5l0RmC5o0xDJ+YZBaZ9izYxf4OkCXWtro4llATjI?=
- =?iso-8859-1?Q?UC5XuHbbKpPZVpwrIzMjUVCGOsKLDzPsl5DiSOhP54cfweIPcJBlEdaCsC?=
- =?iso-8859-1?Q?/ZZxlmhotWpQXm6awHPNPixxgrzC82A2UFGFId7feGOLNE6oALxzMVUFaj?=
- =?iso-8859-1?Q?mthOrqwZIkwBgRaoNaj3pXjiKK6vROgRJBeysOVSxd1a+z8u1PNVX2/d3b?=
- =?iso-8859-1?Q?FXr9cgt5PNtO5WBCSU4sGl9HQj+rTD5sH28lCTWN2A3yMztUhotUlMxw+8?=
- =?iso-8859-1?Q?uqKNBEOtZcPIVbkT2H32cJFv453lmPme64?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cfe9cb71-aa1c-4dc8-60fa-08dda29186f6
-X-MS-Exchange-CrossTenant-AuthSource: DU7PR04MB11163.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2025 11:26:47.9538
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5EOXJ1pL/CG9hvXy9ZdNc20quzoyxnTk8afCuaLL9t8+vrsEDyy1BM65OPdqFN8ey8nTDimsav4OMNCrVmUH0A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10079
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAA/cPmgC/23SS07DMBCA4atUWRPksT32mBX3QCz8bKOiFiVVB
+ Kp6dyaVEIZBWdnR98d2fB2WOk91GZ5212Gu67RM5xMPwDzshnyIp30dp8ITg1YalQUzzrVd5pi
+ PY0n7tozGO5+MMlW3ODB65/fTx7348srjw7RczvPn/QMrbLPfKfs3tcKoxqYMEpLRWpnnY51P9
+ e3xPO+HrbXq3qPwmn0CyjamAlo34U3vvfCGfTaAwWrK1JLwtvckvGWPOWL2FAJaKzx2XkuP7CG
+ nVBpvnlIR3nXeKOEde3I+6xAbn2MU3v94foT32/l7yliCTzlLT72X50fsnfIefDEpBRI+9D4IH
+ 7b1x0RE0aK2cv+guoCWCwDFhZIRm/cKXQBZgL4gfwFsdzDYWFUCh2T/Kei+IDcB2y0ESMFklVV
+ y9Vfhdrt9ARLnXiR0AwAA
+X-Change-ID: 20250413-reftrack-dbgfs-3767b303e2fa
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Jani Nikula <jani.nikula@linux.intel.com>, 
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+ Tvrtko Ursulin <tursulin@ursulin.net>
+Cc: Krzysztof Karas <krzysztof.karas@intel.com>, 
+ Kuniyuki Iwashima <kuniyu@amazon.com>, Qasim Ijaz <qasdev00@gmail.com>, 
+ Nathan Chancellor <nathan@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
+ Jeff Layton <jlayton@kernel.org>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5469; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=34TUZi3qOElaSed4nw9qb+k1ylFQGi/Eb0a+fyUwQac=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBoPtwUF2tKexk0NfHIfXSZPIZOlSmCxiQ5FejrQ
+ tjwBwHhzGSJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaD7cFAAKCRAADmhBGVaC
+ FegvD/46d+gMoksFRhuUk1ZZYj25LCaNXcygpg3KBTarN2QpiUyCaVrYEvBo/46Br+s0BXH4Dej
+ 3V7QT64jUWIyXkhrEgJCIPN6NGbkjyxTSFab3Ko5y8EHzrX4RutVUKZmE8s/E4DiCJil2oZBlBJ
+ UKex+Wk6shlzgq1VfyPLbMRWlvuq1Hj3vAfrDqzKC4X/EyHNSnr1H0ES+I7pUV/HmGWbFr4Ljk2
+ Cpy0XufVKLk5zg2B2I/4rJnQghG1EkGFdI5i1aVaqNo2XjGzfnN3Gu6tnQCwyGG+q1i6+lxElmx
+ nOHDTT6dJu1WEshqYVTMNPpaofWG6gzwC4HJbp6IUc0/Oeu8j3CS03FpLGaWAutj/oKfp9RVH7e
+ tBJM5bMVUrlOwjlcmXumuku8HD0rHZHtbUjXoiSNt4DRNHc2hJ4uwVyv8sU0Z+U+d2jmv3D2c7k
+ EXJ50EuWx6zz1TgDWmNC/GgQiTzfher4YqWUIgG2i87KrzIEiF3b9X3pywu6njL4r791DmXVTWV
+ IYWH3yDddd2FkRe9Yf622NLH6YDxM5GtFTJ6LVWldjkrrntfPh2yahNMM56GUNAqQ7PyzF3v6IB
+ 5XHdTu6H7Kn+HEdPqvUkV/y4e1j6fyZ4jo/3wXciWlGzStd4aP2eH+dkfxdsbmdNIbGK0Kf9um3
+ PWD64hGgdJcdsIg==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-From: Florin Leotescu <florin.leotescu@nxp.com>
+For those just joining in, this series adds a new top-level
+"ref_tracker" debugfs directory, and has each ref_tracker_dir register a
+file in there as part of its initialization. It also adds the ability to
+register a symlink with a more human-usable name that points to the
+file, and does some general cleanup of how the ref_tracker object names
+are handled.
 
-Prevent the PWM value from being set to minimum when thermal zone
-temperature exceeds any trip point during driver probe. Otherwise, the
-PWM fan speed will remains at minimum speed and not respond to
-temperature changes.
+This reposting is mostly to address Krzysztof's comments. I've dropped
+the i915 patch, and rebased the rest of the series on top.
 
-Signed-off-by: Florin Leotescu <florin.leotescu@nxp.com>
+Note that I still see debugfs: warnings in the i915 driver even when we
+gate the registration of the debugfs file on the classname pointer being
+NULL. Here is a CI report from v12:
+
+    https://intel-gfx-ci.01.org/tree/drm-tip/Patchwork_148490v8/bat-arls-6/igt@i915_selftest@live@workarounds.html
+
+I think the i915 driver is doing something it shouldn't with these
+objects. They seem to be initialized more than once, which could lead
+to leaked ref_tracker objects. It would be good for one of the i915
+maintainers to comment on whether this is a real problem.
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- drivers/hwmon/emc2305.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Changes in v13:
+- drop i915 patch
+- Link to v12: https://lore.kernel.org/r/20250529-reftrack-dbgfs-v12-0-11b93c0c0b6e@kernel.org
 
-diff --git a/drivers/hwmon/emc2305.c b/drivers/hwmon/emc2305.c
-index db65c3177f29..60809289f816 100644
---- a/drivers/hwmon/emc2305.c
-+++ b/drivers/hwmon/emc2305.c
-@@ -317,6 +317,12 @@ static int emc2305_set_single_tz(struct device *dev, struct device_node *fan_nod
- 		dev_err(dev, "Failed to register cooling device %s\n", emc2305_fan_name[idx]);
- 		return PTR_ERR(data->cdev_data[cdev_idx].cdev);
- 	}
-+
-+	if (data->cdev_data[cdev_idx].cur_state > 0)
-+		/* Update pwm when temperature is above trips */
-+		pwm = EMC2305_PWM_STATE2DUTY(data->cdev_data[cdev_idx].cur_state,
-+					     data->max_state, EMC2305_FAN_MAX);
-+
- 	/* Set minimal PWM speed. */
- 	if (data->pwm_separate) {
- 		ret = emc2305_set_pwm(dev, pwm, cdev_idx);
-@@ -330,10 +336,10 @@ static int emc2305_set_single_tz(struct device *dev, struct device_node *fan_nod
- 		}
- 	}
- 	data->cdev_data[cdev_idx].cur_state =
--		EMC2305_PWM_DUTY2STATE(data->pwm_min[cdev_idx], data->max_state,
-+		EMC2305_PWM_DUTY2STATE(pwm, data->max_state,
- 				       EMC2305_FAN_MAX);
- 	data->cdev_data[cdev_idx].last_hwmon_state =
--		EMC2305_PWM_DUTY2STATE(data->pwm_min[cdev_idx], data->max_state,
-+		EMC2305_PWM_DUTY2STATE(pwm, data->max_state,
- 				       EMC2305_FAN_MAX);
- 	return 0;
- }
+Changes in v12:
+- drop redundant pr_warn() calls. Debugfs already warns when these ops fail
+- Link to v11: https://lore.kernel.org/r/20250528-reftrack-dbgfs-v11-0-94ae0b165841@kernel.org
+
+Changes in v11:
+- don't call ref_tracker_dir_init() more than once for same i915 objects
+- use %llx in format for net_cookie in symlink name
+- Link to v10: https://lore.kernel.org/r/20250527-reftrack-dbgfs-v10-0-dc55f7705691@kernel.org
+
+Changes in v10:
+- drop the i915 symlink patch
+- Link to v9: https://lore.kernel.org/r/20250509-reftrack-dbgfs-v9-0-8ab888a4524d@kernel.org
+
+Changes in v9:
+- fix typo in ref_tracker_dir_init() kerneldoc header
+- Link to v8: https://lore.kernel.org/r/20250507-reftrack-dbgfs-v8-0-607717d3bb98@kernel.org
+
+Changes in v8:
+- fix up compiler warnings that the KTR warned about
+- ensure builds with CONFIG_DEBUG_FS=n and CONFIG_REF_TRACKER=y work
+- Link to v7: https://lore.kernel.org/r/20250505-reftrack-dbgfs-v7-0-f78c5d97bcca@kernel.org
+
+Changes in v7:
+- include net->net_cookie in netns symlink name
+- add __ostream_printf to ref_tracker_dir_symlink() stub function
+- remove unneeded #include of seq_file.h
+- Link to v6: https://lore.kernel.org/r/20250430-reftrack-dbgfs-v6-0-867c29aff03a@kernel.org
+
+Changes in v6:
+- clean up kerneldoc comment for ref_tracker_dir_debugfs()
+- add missing stub function for ref_tracker_dir_symlink()
+- temporary __maybe_unused on ref_tracker_dir_seq_print() to silence compiler warning
+- Link to v5: https://lore.kernel.org/r/20250428-reftrack-dbgfs-v5-0-1cbbdf2038bd@kernel.org
+
+Changes in v5:
+- add class string to each ref_tracker_dir
+- auto-register debugfs file for every tracker in ref_tracker_dir_init
+- add function to allow adding a symlink for each tracker
+- add patches to create symlinks for netns's and i915 entries
+- change output format to print class@%p instead of name@%p
+- eliminate the name field in ref_tracker_dir
+- fix off-by-one bug when NULL terminating name string
+- Link to v4: https://lore.kernel.org/r/20250418-reftrack-dbgfs-v4-0-5ca5c7899544@kernel.org
+
+Changes in v4:
+- Drop patch to widen ref_tracker_dir_.name, use NAME_MAX+1 (256) instead since this only affects dentry name
+- Link to v3: https://lore.kernel.org/r/20250417-reftrack-dbgfs-v3-0-c3159428c8fb@kernel.org
+
+Changes in v3:
+- don't overwrite dir->name in ref_tracker_dir_debugfs
+- define REF_TRACKER_NAMESZ and use it when setting name
+- Link to v2: https://lore.kernel.org/r/20250415-reftrack-dbgfs-v2-0-b18c4abd122f@kernel.org
+
+Changes in v2:
+- Add patch to do %pK -> %p conversion in ref_tracker.c
+- Pass in output function to pr_ostream() instead of if statement
+- Widen ref_tracker_dir.name to 64 bytes to accomodate unique names
+- Eliminate error handling with debugfs manipulation
+- Incorporate pointer value into netdev name
+- Link to v1: https://lore.kernel.org/r/20250414-reftrack-dbgfs-v1-0-f03585832203@kernel.org
+
+---
+Jeff Layton (9):
+      ref_tracker: don't use %pK in pr_ostream() output
+      ref_tracker: add a top level debugfs directory for ref_tracker
+      ref_tracker: have callers pass output function to pr_ostream()
+      ref_tracker: add a static classname string to each ref_tracker_dir
+      ref_tracker: allow pr_ostream() to print directly to a seq_file
+      ref_tracker: automatically register a file in debugfs for a ref_tracker_dir
+      ref_tracker: add a way to create a symlink to the ref_tracker_dir debugfs file
+      net: add symlinks to ref_tracker_dir for netns
+      ref_tracker: eliminate the ref_tracker_dir name field
+
+ drivers/gpu/drm/display/drm_dp_tunnel.c |   2 +-
+ drivers/gpu/drm/i915/intel_runtime_pm.c |   4 +-
+ drivers/gpu/drm/i915/intel_wakeref.c    |   3 +-
+ include/linux/ref_tracker.h             |  58 ++++++++++-
+ lib/ref_tracker.c                       | 176 +++++++++++++++++++++++++++++---
+ net/core/dev.c                          |   2 +-
+ net/core/net_namespace.c                |  34 +++++-
+ 7 files changed, 253 insertions(+), 26 deletions(-)
+---
+base-commit: 90b83efa6701656e02c86e7df2cb1765ea602d07
+change-id: 20250413-reftrack-dbgfs-3767b303e2fa
+
+Best regards,
 -- 
-2.34.1
+Jeff Layton <jlayton@kernel.org>
 
