@@ -1,163 +1,128 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E971231833;
-	Tue,  3 Jun 2025 16:12:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7C734545
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 16:15:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748967150; cv=none; b=m2NBRjlloPLjFCWSqEUDMPRG5w61h8uzhrtHXLUX82Z8H8L9YJWnOQ+yZRi6IAVsDW3E+g45BsiE8nB7bYiG0V2ZQMrTsoGiCldiAFlujSOP2CSawHPRCAolhScnkqj2OFKY8jMzIDvVqBsVGWQpOrle3JDYmE3aD00HERRpysE=
+	t=1748967337; cv=none; b=k6KSQZRe30KvGPjUs5R9+5eODB80ZLvxL1bF6+Kl42Nb3vH+YNeOcQGeo5ea4ABukhK06TO1FKmJLDzNQBqaoScTNLYCP6BN1SlNlMpLTeaThRe6wpQn5Ix3uXkm8UZIcogor14n7F6OZRVOOdfYee3x53psdkZ3bXbZTCuW5hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748967150; c=relaxed/simple;
-	bh=ShjHAUQPeBP4/WMOm5I7X7G6jt1PtVLiEdxsJRmu7bs=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sQNhHcE1uju7MDpbA8ID1enMi1SiFzvl5vgEmj7G0nTqgeJaaNQCz2TfUzRUfb2Kuqzu+qtoDoEWjQAqCpaorGnCGpbhmOFNbyx6buW8g8uXGIj68TY+YL3FzbAO9Xk2ZJndNMRBXsomUjHoxu7XPYScLGRBcZSok8jLJJ+Zf50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WucwF30l; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WucwF30l"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-451e2f0d9c2so122505e9.1;
-        Tue, 03 Jun 2025 09:12:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748967147; x=1749571947; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=uyQHmp3e+dW7x8h9m6zLVBuIFgaw/awy6rHkm7iIyWU=;
-        b=WucwF30lgCf/12I7DIcmLJcsEigeYzWJIPyGi8kuuI47Q6HnHToQbiZv9KHIXt1jCg
-         0LRHufREmdzBTa8dyW+SKO/23w2pg+H9ecc9cK5eKpz/dIwWApV+qqmKW1qxiqELaxZm
-         p1Puv822AviAzGHFZFPRJX1dhjPPNOez7unIsG2xRApLJ+L9f/X8GeKU/WH8nYeBnSxQ
-         WtNP0iNqXxFQ2HdaiImPHOqNDRcLv2TUI9Av42ev1uc5OKqJ0PeC1QpilvJ4DvUj/mQi
-         l5TH9Wh1JWaLoCghbiiOZr22PnAI69UkihpBzNxHCCGg5gPEAPiAbBrdlOoYLV6SmKJj
-         nKqg==
+	s=arc-20240116; t=1748967337; c=relaxed/simple;
+	bh=w+cYj+bZFDm9P7nXNSWeYs9M2oMy2QoF+kzDd6xE5Ak=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=M2wiTo3MQoW8Twj9waRP/g6X5xiSXjUUUXcGYAHPTfxTOnzK4y5O/7HjiyvkMh3LbqPbKSpN2AVim9fwh2rNQpx2XZHhWxuqdwE9WBl+vwjTBGUN4KWx2stTxQNRhsz3tnn8T2YeRcj9FrdufbUpKbn+14oHXFHHhBE5tbIQt70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3dcd10297d5so89337355ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 09:15:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748967147; x=1749571947;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uyQHmp3e+dW7x8h9m6zLVBuIFgaw/awy6rHkm7iIyWU=;
-        b=HT0MEj/g3mdvQa/78pqZf2mMbtJzTtubwGBPvsz6AE7dg+JTcaL0+RCTmEIn0XMavj
-         3dF5M79kELK8Cb9sULO70wj7QuWTVt9M6bgWmXYq6l0yCn9regIP+78axJsoh/vCWw/t
-         Yp5RYIhWy5EmTpJaJCfAxOZ+67T5jwdHSOUeZ9+0G6V2XDy5UGsrTAHQDQjhBE+X4tmU
-         F5fRgFYUuQrVaRycFk4Zrq6dKR3mMNTWYOmQ/he8y5WFIRI7ecXPBP8Fd36SI5LDPbGs
-         2SH9V/fYz2QgzLUOAm6N7MUSSk3ZxaQSX9MRonmY1ARVV3L/wgwXvXrJIasjvdKcakDD
-         eCmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWNQSMbr0VVRsDh4UjdssR9hRYCkwAvoLKtU+UyAb3Fe3Y7uGUIYHSEQ8XD6r+VnOoKJ+GOiTrdq2bNDB6V@vger.kernel.org, AJvYcCXEPFUDsSwCzQL1IRIlVxjK++M5Nqa6d+QHx6i48OByuXh0XHp6zpZO3BVrlCF3phhVyGU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywjrs+TIHCScHXBxEy4FZ5bSgql/vqHk8vIXZtqNPQH084wGux+
-	KbbWHZj9/c1XeHifbuDpTYzdToFwHXFvxW4dyX+//iQ9JmvtJDpsXUoB
-X-Gm-Gg: ASbGncsEvwvAFtajDzJf53p7lDcjK6KEnLGrpjRX924xQcA71yQa+rs4T0kgZinNpmd
-	EFE3IFAui1pqaRknTdrDtFy3LfrII6sD1sKHiwvGzb6ErC37kHKnmNqZfdj7byN4KfVCA9bAL9I
-	1Pcn50CL5SyuZzvt9OGoGTujaf3w21t1P8mPn+LvT640rhWfQrxjSAw4dtyoyju5qihenTfgBTx
-	+qhnVFKYsUMB92PhPywAQYVaIL+hZ93nVrjDbfD3Z022OCf12UjZbTh4/YuZMkwGO60UtM+Jq2f
-	DlnfMfG6SLhKTlIvWlVxJKq5F0FeDkp1z5PO/cTorkH2CxRM4w==
-X-Google-Smtp-Source: AGHT+IHIKsSvSfa1+ZbUDNCYKlsyDC3jcKsp3idlMiqBnS+Tnv1Cp4R3C7DPDnAvmyuSnvhG2XJnXA==
-X-Received: by 2002:a05:600c:21c6:b0:450:c9e3:91fe with SMTP id 5b1f17b1804b1-451e6145d37mr25093085e9.0.1748967146524;
-        Tue, 03 Jun 2025 09:12:26 -0700 (PDT)
-Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f00972d9sm19279289f8f.64.2025.06.03.09.12.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 09:12:26 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 3 Jun 2025 18:12:24 +0200
-To: Tao Chen <chen.dylane@linux.dev>
-Cc: Yonghong Song <yonghong.song@linux.dev>, ast@kernel.org,
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
-	eddyz87@gmail.com, song@kernel.org, john.fastabend@gmail.com,
-	kpsingh@kernel.org, sdf@fomichev.me, qmo@kernel.org,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next v2 1/3] bpf: Add cookie to raw_tp bpf_link_info
-Message-ID: <aD8e6BU1qMeQFay0@krava>
-References: <20250603022610.3005963-1-chen.dylane@linux.dev>
- <48e85d82-e5c7-463a-aef3-f1ecbe863524@linux.dev>
- <029e657a-cbf5-4db1-9ddb-5fbf75ea8f4e@linux.dev>
+        d=1e100.net; s=20230601; t=1748967335; x=1749572135;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=76X/DdAmGEp03OYcwF3qW6PE+GuefCWrC1PptIUvkEw=;
+        b=wxFhwsLNl+KAcNE7xFIB/uwHhRAV6dW1mWAEHi3P63wqd142shK47nc/NjBmce0pRx
+         lVd1InvYqR9Led99JxfKiXUCR51auyCImMuLiSWch3feoq00GY6eSK/6OBeZTm29h2OB
+         F4MMCjtfPDLeNmZ0seZZobG1mBRDHZD2HAV04ZO+7NHe1kvHCA3yiEbrfkRINXN3Dovf
+         jr+uvq0Oa+xpbVE6COlmbfeW4XRgdEcgfe9rPJ1DHH2KE3W+UmFXzupvgupS31/Oi8OR
+         aBh3G2UsZ1vvmd4bPo+jbi4dn6jW+YgNKgeNIcYEskqZtN7rSQs6o8WxaGg18QwY5oh3
+         JBSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWRFw2QjaFhWrRy6LKtyX3A7y5ByZq/npV512k3Eum5JQUOqEY0SPGtYyEmKMCvQqhr3GVNkBJgZI4hHgc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHYWPpALY3H/aVtbd5cBwG4MpiYiEkpCLr/P+u7uN5r3T7dkBg
+	RXfoOthQ+0XX7Z0S/jWTZgxlLGMOAQZ/pZQ5K4bzJdLiB8H+keX2X8dEUNTHNAYrkaRd/ehrEPK
+	MnmMaLTm4iTcHXkKgSuJ8hOoxEfUOeRllIr8oIdtOD+quu1gEEtw+Pn1OMUA=
+X-Google-Smtp-Source: AGHT+IEeYHEFfYjc0zLBj+UxmFFz22As+TynOI7W6GEuDGXDb6Sc/mswRPV1NBw/uU0lh9iw0rkUIRYH0QQamN+sfReImq6YsOW3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <029e657a-cbf5-4db1-9ddb-5fbf75ea8f4e@linux.dev>
+X-Received: by 2002:a05:6e02:3c8a:b0:3dd:b762:ed1d with SMTP id
+ e9e14a558f8ab-3ddb762f05bmr34986295ab.14.1748967335335; Tue, 03 Jun 2025
+ 09:15:35 -0700 (PDT)
+Date: Tue, 03 Jun 2025 09:15:35 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <683f1fa7.a00a0220.d8eae.0071.GAE@google.com>
+Subject: [syzbot] [cgroups?] WARNING in css_rstat_flush
+From: syzbot <syzbot+7a605e85e5b5a7e4a5e3@syzkaller.appspotmail.com>
+To: cgroups@vger.kernel.org, hannes@cmpxchg.org, linux-kernel@vger.kernel.org, 
+	mkoutny@suse.com, netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
+	tj@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jun 03, 2025 at 11:07:03PM +0800, Tao Chen wrote:
-> 在 2025/6/3 22:52, Yonghong Song 写道:
-> > 
-> > 
-> > On 6/2/25 7:26 PM, Tao Chen wrote:
-> > > After commit 68ca5d4eebb8 ("bpf: support BPF cookie in raw tracepoint
-> > > (raw_tp, tp_btf) programs"), we can show the cookie in bpf_link_info
-> > > like kprobe etc.
-> > > 
-> > > Signed-off-by: Tao Chen <chen.dylane@linux.dev>
-> > > ---
-> > >   include/uapi/linux/bpf.h       | 2 ++
-> > >   kernel/bpf/syscall.c           | 1 +
-> > >   tools/include/uapi/linux/bpf.h | 2 ++
-> > >   3 files changed, 5 insertions(+)
-> > > 
-> > > Change list:
-> > > - v1 -> v2:
-> > >      - fill the hole in bpf_link_info.(Jiri)
-> > > - v1:
-> > >      https://lore.kernel.org/bpf/20250529165759.2536245-1-
-> > > chen.dylane@linux.dev
-> > > 
-> > > diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> > > index 07ee73cdf9..f3e2aae302 100644
-> > > --- a/include/uapi/linux/bpf.h
-> > > +++ b/include/uapi/linux/bpf.h
-> > > @@ -6644,6 +6644,8 @@ struct bpf_link_info {
-> > >           struct {
-> > >               __aligned_u64 tp_name; /* in/out: tp_name buffer ptr */
-> > >               __u32 tp_name_len;     /* in/out: tp_name buffer len */
-> > > +            __u32 reserved; /* just fill the hole */
-> > 
-> > See various examples in uapi/linux/bpf.h, '__u32 :32;' is the preferred
-> > apporach to fill the hole.
-> 
-> Well, it looks better, will change it in v3, thanks.
+Hello,
 
-ugh, sry.. forgot about this one
+syzbot found the following issue on:
 
-jirka
+HEAD commit:    90b83efa6701 Merge tag 'bpf-next-6.16' of git://git.kernel..
+git tree:       bpf
+console output: https://syzkaller.appspot.com/x/log.txt?x=1034f482580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=262b2977ef00756b
+dashboard link: https://syzkaller.appspot.com/bug?extid=7a605e85e5b5a7e4a5e3
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
 
-> 
-> > 
-> > > +            __u64 cookie;
-> > >           } raw_tracepoint;
-> > >           struct {
-> > >               __u32 attach_type;
-> > > diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-> > > index 9794446bc8..1c3dbe44ac 100644
-> > > --- a/kernel/bpf/syscall.c
-> > > +++ b/kernel/bpf/syscall.c
-> > > @@ -3687,6 +3687,7 @@ static int
-> > > bpf_raw_tp_link_fill_link_info(const struct bpf_link *link,
-> > >           return -EINVAL;
-> > >       info->raw_tracepoint.tp_name_len = tp_len + 1;
-> > > +    info->raw_tracepoint.cookie = raw_tp_link->cookie;
-> > >       if (!ubuf)
-> > >           return 0;
-> > > diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/
-> > > linux/bpf.h
-> > > index 07ee73cdf9..f3e2aae302 100644
-> > > --- a/tools/include/uapi/linux/bpf.h
-> > > +++ b/tools/include/uapi/linux/bpf.h
-> > > @@ -6644,6 +6644,8 @@ struct bpf_link_info {
-> > >           struct {
-> > >               __aligned_u64 tp_name; /* in/out: tp_name buffer ptr */
-> > >               __u32 tp_name_len;     /* in/out: tp_name buffer len */
-> > > +            __u32 reserved; /* just fill the hole */
-> > > +            __u64 cookie;
-> > >           } raw_tracepoint;
-> > >           struct {
-> > >               __u32 attach_type;
-> > 
-> 
-> 
-> -- 
-> Best Regards
-> Tao Chen
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/d5357fcb09e6/disk-90b83efa.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/dcb0f12e4d5a/vmlinux-90b83efa.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/278fcadd7519/bzImage-90b83efa.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+7a605e85e5b5a7e4a5e3@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 10 at kernel/cgroup/rstat.c:302 css_rstat_updated_list kernel/cgroup/rstat.c:302 [inline]
+WARNING: CPU: 0 PID: 10 at kernel/cgroup/rstat.c:302 css_rstat_flush+0x76f/0x1fa0 kernel/cgroup/rstat.c:413
+Modules linked in:
+CPU: 0 UID: 0 PID: 10 Comm: kworker/0:1 Not tainted 6.15.0-syzkaller-g90b83efa6701 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Workqueue: cgroup_destroy css_free_rwork_fn
+RIP: 0010:css_rstat_updated_list kernel/cgroup/rstat.c:302 [inline]
+RIP: 0010:css_rstat_flush+0x76f/0x1fa0 kernel/cgroup/rstat.c:413
+Code: df 80 3c 08 00 74 08 4c 89 e7 e8 4c 3a 6a 00 49 8b 1c 24 48 3b 5c 24 38 74 22 e8 9c 1c 07 00 e9 72 ff ff ff e8 92 1c 07 00 90 <0f> 0b 90 eb bd e8 87 1c 07 00 45 31 e4 e9 bb 03 00 00 e8 7a 1c 07
+RSP: 0018:ffffc900000f7780 EFLAGS: 00010093
+RAX: ffffffff81b8de5e RBX: ffffffff99c36880 RCX: ffff88801d2b1e00
+RDX: 0000000000000000 RSI: ffffffff8be263a0 RDI: ffffffff8be26360
+RBP: ffffc900000f79b8 R08: ffffffff8fa0b1b7 R09: 1ffffffff1f41636
+R10: dffffc0000000000 R11: fffffbfff1f41637 R12: ffff8880b8642758
+R13: ffffffff99c36880 R14: ffffffff8db91c60 R15: ffff888125c66008
+FS:  0000000000000000(0000) GS:ffff888125c66000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f350fc65760 CR3: 0000000032e5c000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ css_rstat_exit+0xa9/0x320 kernel/cgroup/rstat.c:479
+ css_free_rwork_fn+0x8b/0xc50 kernel/cgroup/cgroup.c:5449
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3321
+ worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
+ kthread+0x70e/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
