@@ -1,142 +1,78 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 797F82AD02;
-	Tue,  3 Jun 2025 10:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B5D2AD02;
+	Tue,  3 Jun 2025 10:09:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748945391; cv=none; b=LNRHVzc7shUp4+V8BiF1cjMVry45WLib6Cl4RX6bN4epvTvW9Lx8fiE6+pwxrS5ySww1b7EOZkwhWIrU20VQtzyDIW+wF+RRKPpTGNiwP3SFQizqG6Ovbpx0IdUSvXzlD1ItVbA1v1Fogbo/oGuyHwozDKIKQ8/Y5ylj67S1O2A=
+	t=1748945396; cv=none; b=jFUXGI02334n84PZhnOs1tgqPR+8SfZWihBHNXvWmkJ93wzuXep/gZYSyE8LsNwGrtNtmUQ979QIY0YV0i0BLkgLTSp6kz6ouD6EzabMGs/cKAjduARiX2tAVOZvfzfY6fqpYCd6jlwQXn/nkJoCNh/Q2ThEEo5l9sl+2aKzOUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748945391; c=relaxed/simple;
-	bh=3hjD+iByGvCs6++WOizV3zbi5NJ3S1SQGoT0sztz+k0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=adhqq4clq+7g4vjevBYjLxqVDQ2K7cgVzY3rMg+BJEDI6kqSGZMSp2AD4XiWGwwhFJ2FAf0kooD7wYqMX/+6hAzFr5aZJt0gOhQmL6ik04kQ32iwGPaE1NlotddgB9SWWa3naIGyn2e/mSvWfxq+XuNtTY9FW+wCU9bo74humnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=Xzc2Vqu1 reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1748945396; c=relaxed/simple;
+	bh=oh0bRcCIykJVRc1cbwHbTCypspvbnK4XaoO2CqyBCaI=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=I8PmOYi+YZZ4sHIlDuTcHWb/us4nLXjVz0viV2SB+v0pxvTiw01fXMHhcXjq2PSR8xJp4hR22uVrv9cVI+1PjYdOHZCjtRvxsNnVohjA67/OSypQcKqTM/5sggEbkRs5u5jRNe3j1BD+8uRl+lpx73m2AP/oApv97yci2WulAIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E7fq+/LR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="Xzc2Vqu1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=wmAC6L4gRowUBaw8J0pObVc7lkFIDWgiRQmNYcnOcqQ=; b=X
-	zc2Vqu11UukjgFyXrRO74Q8uSNFdavDMCVXL52WzOts7ezxlLe7bXZimuxyBRFin
-	RIXcuK3dkPq1eLVzSYA+o6oGa0z4Srcv/Y4Y8cSEfiN1bPZVZSBUinOLhPIyDgwV
-	BBgBXUl4ucVaTfebaOoJPH8l+goA4mSCWiCVI9oRmc=
-Received: from 00107082$163.com ( [111.35.189.95] ) by
- ajax-webmail-wmsvr-40-120 (Coremail) ; Tue, 3 Jun 2025 18:08:47 +0800 (CST)
-Date: Tue, 3 Jun 2025 18:08:47 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Yeoreum Yun" <yeoreum.yun@arm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, mingo@kernel.org,
-	acme@kernel.org, namhyung@kernel.org, leo.yan@arm.com,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <aD6+RGnAOyIS+tik@e129823.arm.com>
-References: <19514ed5.5692.19734522326.Coremail.00107082@163.com>
- <aD6Xk2rdBjnVy6DA@e129823.arm.com> <aD6+RGnAOyIS+tik@e129823.arm.com>
-X-NTES-SC: AL_Qu2fCvWfuksp4SiabOkZnEYQheY4XMKyuPkg1YJXOp80qiTS4SchZ25qJnLK9PmtFz2moQmoVjhMwclIUoR1QJiPZ8veOEDDx3N7bvlbBUI/
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E7fq+/LR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB7A0C4CEED;
+	Tue,  3 Jun 2025 10:09:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748945395;
+	bh=oh0bRcCIykJVRc1cbwHbTCypspvbnK4XaoO2CqyBCaI=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=E7fq+/LRC1Trg3RPBUdKCLNUsEl0wnDkPUnI9dnGH9e4dj8+ch5E5G516D+d29Ehz
+	 7NAe4VpxHmGGDaQCxpuKn4qwV+346zM26f0y0s71aoQAzNbRBOYORJUJmjxQcawwie
+	 8wz87Ym0hwXtKvg/xh+n9xLxuLtdp74iii/DjFuoC9zTxKEnDIsmueSx9NhclqpfQq
+	 jpB5jnQki6IegNUuS53wn45MN7unqsV4QKYW7W/+j8/cnNtxCxPENRu0VFO/X91fud
+	 7bNJz32RJbFnw7rNyyKT6P03vW10SV9O+l4Y+Z6b571VRkcGPq05D0ahm/ChB/IQAZ
+	 9u3lKnputHqqw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70CDE380DBEC;
+	Tue,  3 Jun 2025 10:10:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <619d4d6.a9c9.1973543d6d9.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:eCgvCgD3_+iwyT5o2_0SAA--.37653W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkA9hqmg+uMH2GgAJse
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v4] vmxnet3: correctly report gso type for UDP tunnels
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174894542826.1452627.13316542259674401176.git-patchwork-notify@kernel.org>
+Date: Tue, 03 Jun 2025 10:10:28 +0000
+References: <20250530152701.70354-1-ronak.doshi@broadcom.com>
+In-Reply-To: <20250530152701.70354-1-ronak.doshi@broadcom.com>
+To: Ronak Doshi <ronak.doshi@broadcom.com>
+Cc: netdev@vger.kernel.org, guolin.yang@broadcom.com,
+ bcm-kernel-feedback-list@broadcom.com, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ linux-kernel@vger.kernel.org
 
-CkF0IDIwMjUtMDYtMDMgMTc6MjA6MDQsICJZZW9yZXVtIFl1biIgPHllb3JldW0ueXVuQGFybS5j
-b20+IHdyb3RlOgo+SGkgRGF2aWQsCj4KPj4gPiA+ID4gPgo+PiA+ID4gPiA+IEFsc28sIHlvdXIg
-cGF0Y2ggY291bGRuJ3Qgc29sdmUgYSBwcm9ibGVtIGRlc2NyaWJlIGluCj4+ID4gPiA+ID4gY29t
-bWl0IGEzYzNjNjY2NygicGVyZi9jb3JlOiBGaXggY2hpbGRfdG90YWxfdGltZV9lbmFibGVkIGFj
-Y291bnRpbmcgYnVnIGF0IHRhc2sgZXhpdCIpCj4+ID4gPiA+ID4gZm9yIElOQ0FUSVZFIGV2ZW50
-J3MgdG90YWxfZW5hYmxlX3RpbWUuCj4+ID4gPiA+Cj4+ID4gPiA+IEkgZG8gbm90IHRoaW5rIHNv
-Lgo+PiA+ID4gPiBDb3JyZWN0IG1lIGlmIEkgYW0gbWFraW5nIHNpbGx5ICBtaXN0YWtlcywKPj4g
-PiA+ID4gVGhlIHBhdGNoLCBodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzIwMjUwNjAzMDMy
-NjUxLjM5ODgtMS0wMDEwNzA4MkAxNjMuY29tLwo+PiA+ID4gPiBjYWxscyBwZXJmX2V2ZW50X3Nl
-dF9zdGF0ZSgpIGJhc2VkIG9uIERFVEFDSF9FWElUIGZsYWcsIHdoaWNoIGNvdmVyIHRoZSBJTkFD
-VElWRSBzdGF0ZSwgcmlnaHQ/Cj4+ID4gPiA+IElmIERFVEFDSF9FWElUIGlzIG5vdCB1c2VkIGZv
-ciB0aGlzIHB1cnBvc2U/IFRoZW4gd2h5IHNob3VsZCBpdCBleGlzdCBhdCB0aGUgZmlyc3QgcGxh
-Y2U/Cj4+ID4gPiA+IEkgdGhpbmsgSSBkb2VzIG5vdCByZXZlcnQgdGhlIHB1cnBvc2Ugb2YgY29t
-bWl0IGEzYzNjNjY2Ny4uLi4uQnV0IEkgY291bGQgYmUgd3JvbmcKPj4gPiA+ID4gV291bGQgeW91
-IHNob3cgYSBjYWxsIHBhdGggd2hlcmUgREVUQUNIX0VYSVQgaXMgbm90IHNldCwgYnV0IHRoZSBj
-aGFuZ2VzIGluIGNvbW1pdCBhM2MzYzY2NjcgaXMgc3RpbGwgbmVlZGVkPwo+PiA+ID4gPgo+PiA+
-ID4gPiBTb3JyeSBmb3IgbXkgYmFkIGV4cGxhaW5hdGlvbiB3aXRob3V0IGRldGFpbC4KPj4gPiA+
-ID4gVGhpbmsgYWJvdXQgY3B1IHNwZWNpZmljIGV2ZW50IGFuZCBjbG9zZWQgYnkgdGFzay4KPj4g
-PiA+ID4gSWYgdGhlcmUgaXMgc3BlY2lmaWMgY2hpbGQgY3B1IGV2ZW50IHNwZWNpZmllZCBpbiBj
-cHUgMC4KPj4gPiA+ID4gMS4gY3B1IDAgLT4gYWN0aXZlCj4+ID4gPiA+IDIuIHNjaGV1bGRlZCB0
-byBjcHUxIC0+IGluYWN0aXZlCj4+ID4gPiA+IDMuIGNsb3NlIHRoZSBjcHUgZXZlbnQgZnJvbSBw
-YXJlbnQgLT4gaW5hY3RpdmUgY2xvc2UKPj4gPiA+ID4KPj4gPiA+ID4gQ2FuIGJlIGZhaWxlZCB0
-byBjb3VudCB0b3RhbF9lbmFibGVfdGltZS4KPj4gPiA+Cj4+ID4gPiBJcyB0aGlzIGV4cGxhaW5p
-bmcgdGhlIHB1cnBvc2Ugb2YgY29tbWl0IGEzYzNjNjY2NyA/Cj4+ID4gPiBJIGFtIG5vdCBhcmd1
-aW5nIHdpdGggaXQuIEFuZCBJIGFsc28gbm90IHN1Z2dlc3QgcmV2ZXJ0aW5nIGl0LiAoaXQgaXMg
-anVzdCB0aGF0IHJldmVydGluZyBpdCBjYW4gZml4IHRoZSBrZXJuZWwgcGFuaWMuKQo+PiA+Cj4+
-ID4gSW4gY29tbWl0IGEzYzNjNjY2NywgSSBleHBsYWluIHRoZSBzcGVjaWZpYyBjYXNlIGJ1dCBu
-b3Qgd2l0aCBhYm92ZQo+PiA+IGNhc2UuIEJ1dCB0aGUgY29tbWl0J3MgcHVycG9zZSBpcyAiYWNj
-b3VudCB0b3RhbF9lbmFibGVfdGltZSIgcHJvcGVybHkuCj4+ID4KPj4gPiA+ID4gQW5kIGFsc28s
-IGNvbnNpZGVyaW5nIHRoZSB5b3VyIHBhdGNoLCBmb3IgREVUQUNIX0VYSVQgY2FzZSwKPj4gPiA+
-ID4gSWYgaXQgY2hhbmdlcyB0aGUgc3RhdGUgYmVmb3JlIGxpc3RfZGVsX2V2ZW50KCkgdGhhdCB3
-b3VsZG4ndCBkaXNhYmxlCj4+ID4gPiA+IHJlbGF0ZWQgdG8gdGhlIGNncm91cC4gU28gaXQgd291
-bGQgbWFrZSBjcHVjdHgtPmNncnAgcG9pbnRlciBjb3VsZCBiZSBkYW5nbGVkCj4+ID4gPiA+IGFz
-IHBhdGNoIGRlc2NyaWJlLi4uCj4+ID4gPiBObywgSSBkb24ndCB0aGluayBzby4KPj4gPiA+IGNo
-YW5nZSBzdGF0ZSBiZWZvcmUgbGlzdF9kZWxfZXZlbnQoKSwgdGhpcyBpcyB0aGUgc2FtZSBiZWhh
-dmlvciBiZWZvcmUgY29tbWl0IGEzYzNjNjY2NywgcmlnaHQ/Cj4+ID4gPiBBbmQgbm8gc3VjaCBr
-ZXJuZWwgcGFuaWMgaGFwcGVuZWQgIGJlZm9yZSBjb21taXQgYTNjM2M2NjY3Lgo+Pgo+PiBPaCEg
-SSB3YXMgd3JvbmcsIGJlZm9yZSBjb21taXQgYTNjM2M2NjY3LCAiY2hhbmdlIHN0YXRlIiBoYXBw
-ZW5lZCAqYWZ0ZXIqIGxpc3RfZGVsX2V2ZW50KCkKPj4gPgo+PiA+IFRoYXQncyB3aHkgbGlzdF9k
-ZWxfZXZlbnQoKSBoYW5kbGUgdGhlIHBlcmZfY2dyb3VwX2Rpc2FibGUoKSBiZWZvcmUgdGhlCj4+
-ID4gY29tbWl0IGEzYzNjNjY2Ny4gSG93ZXZlciBiZWNhdXNlIG9mICpteSBtaXN0YWtlKiwgSSd2
-ZSBmb3JnZXQgdG8KPj4gPiBwZXJmX2Nncm91cF9kaXNhYmxlKCkgcHJvcGVybHkgYmVmb3JlIGNo
-YW5nZSB0aGUgZXZlbnQgc3RhdGUuCj4+ID4gWWVzLCB5b3VyIHBhdGNoIGNhbiBtYWtlIGF2b2lk
-IHRoZSBwYW5pYyBzaW5jZSBhcyBzb29uIGFzIGV4aXQsCj4+ID4gdGhlIGV2ZW50LT5jZ3JwIHN3
-aXRjaGVkLgo+Pgo+PiBJIGNhbm5vdCBhZ3JlZSB3aXRoIHRoZSByZWFzb25pbmcsCj4+IFRoZSBw
-YW5pYyBkb3NlIG5vdCBoYXBwZW5lZCB3aGVuIGV4aXQsIGl0IGhhcHBlbmVkIHdoZW4gcmVib290
-L3NodXRkb3duLgo+PiAoSSBjbG9zZSBwZXJmX2V2ZW50X29wZW4gYmVmb3JlIHJlYm9vdCkKPj4g
-Pgo+PiA+IEhvd2V2ZXIsIGFzIEkgc2FpZCwgdGhlIElOQUNUSVZFIGV2ZW50IGNvdWxkIGJlIGZh
-aWxlZCB0byBjb3VudAo+PiA+dG90YWxfZW5hYmxlX3RpbWUuCj4+ID4KPj4gPiBTbywgc2V0IGV2
-ZW50IHNob3VsZCBiZSBvY2N1cmVkIGJlZm9yZSBsaXN0X2RlbF9ldmVudCgpLgo+PiA+QW5kIHNp
-bmNlIGl0J3MgZXZlbnQtPnN0YXRlIGNoYW5nZSBvbiByZW1vdmUuCj4+ID5JdCBzaG91bGRuJ3Qg
-aGF2ZSBhbnkgc2lkZSBlZmZlY3QgdGhlIHN0YXRlIGNoYW5nZSBpc24ndCBjYXVzZSBvZiB5b3Vy
-Cj4+ID4gcGFuaWMuIEJ1dCBtaXNzZWQgcGVyZl9jZ3JvdXBfZGlzYWJsZSgpLgo+Pgo+PiBBbnkg
-cHJvY2VkdXJlIHRvIGJyaW5nIG91dCB0aGUgaW1wYWN0IG9mIHRoaXMgbWlzc2VkIHBlcmZfY2dy
-b3VwX2Rpc2FibGUoKT8KPj4gTXkgc3lzdGVtIHNlZW1zIGFsbCBub3JtYWwsIHdoZXJlIHNob3Vs
-ZCBJIGNoZWNrIGl0Pwo+Cj5IZXJlIGlzIHBvc3NpYmxlIHNlbmFyaW86Cj4gIDEuIHBlcmYgZXZl
-bnQgb3BlbiB3aXRoIGNncm91cC4KPiAgMi4gcGVyZiBldmVudCBvcGVuIHdpdGggY3B1IGV2ZW50
-IChubyBjZ3JvdXApLgo+ICAzLiBhYm92ZSB0YXNrIHNldHMgdGhlIGNwdWN0eC0+Y2dycCB0aGUg
-c2FtZSB0byAoMSkuCj4gIDMuIGNsb3NlICgxKSBldmVudHMuCj4gICAgIGhlcmUsIHBlcmZfY2dy
-b3VwX2V2ZW50X2Rpc2FibGUoKSBpc24ndCBjYWxsZWQsCj4gICAgIGNwdWN0eC0+Y2dycCBzdGls
-bCBwb2ludCB0aGUgY2dyb3VwLgo+ICA0LiBieSBvdGhlciB0YXNrLCB0aGUgY2dyb3VwIGFuZCBp
-cyBkZXN0cm9pZWQuCj4gIDUuIGNsb3NlICgyKSBldmVudHMuCj4gICAgIGhlcmUsIGl0IGlzIGxh
-c3QgZXZlbnQsIGluIF9fcGVyZl9yZW1vdmVfZnJvbV9jb250ZXh0KCkKPiAgICAgYW5kIGxhc3Qg
-ZXZlbnQsIGl0IGNhbGxzIHVwZGF0ZV9jZ3JwX3RpbWVfZnJvbV9jcHVjdHgoKSwKPiAgICAgQW5k
-IHRoaXMgcmVmZXJzIGludmFsaWQgcG9pbnRlci4KCi4uLiBzZWVtcyB0b28gY29tcGxpY2F0ZWQg
-dG8gbWUgdG8gZ2l2ZSBpdCBhIHRyeS4KV291bGQgbm90IGRlc3Ryb3lpbmcgY2dyb3VwIHRyaWdn
-ZXIgc29tZSByZWFjdGlvbiB0byBjcHVjdHg/IApUaGVyZSBoYXMgdG8gYmUgc29tZSBjb25uZWN0
-aW9uIGJldHdlZW4gY2dyb3VwIGxpZmVjeWNsZSBhbmQgcGVyZiBjcHVjdHgtPmNncnAuCkhhdmUg
-eW91IHRyeSBpdCBvdXQ/IG9yIGl0IGlzIGp1c3QgdGhlb3JldGljYWw/IAoKCj4KPj4gQnV0IHRv
-IGZpeCBpdCwgIGlzbid0IGZvbGxvd2luZyBjaGFuZ2UgbGVzcyBhZ2dyZXNzaXZlPwo+PiAgICAg
-ICAgIGV2ZW50X3NjaGVkX291dChldmVudCwgY3R4KTsKPj4gLSAgICAgICBwZXJmX2V2ZW50X3Nl
-dF9zdGF0ZShldmVudCwgbWluKGV2ZW50LT5zdGF0ZSwgc3RhdGUpKTsKPj4gICAgICAgICBpZiAo
-ZmxhZ3MgJiBERVRBQ0hfR1JPVVApCj4+ICAgICAgICAgICAgICAgICBwZXJmX2dyb3VwX2RldGFj
-aChldmVudCk7Cj4+ICAgICAgICAgaWYgKGZsYWdzICYgREVUQUNIX0NISUxEKQo+PiAgICAgICAg
-ICAgICAgICBwZXJmX2NoaWxkX2RldGFjaChldmVudCk7Cj4+ICAgICAgICAgbGlzdF9kZWxfZXZl
-bnQoZXZlbnQsIGN0eCk7Cj4+ICsgICAgICAgcGVyZl9ldmVudF9zZXRfc3RhdGUoZXZlbnQsIG1p
-bihldmVudC0+c3RhdGUsIHN0YXRlKSk7Cj4KPklmIHBlcmZfY2hpbGRfZGV0YWNoKCkgaXMgY2Fs
-bGVkIGZpcnN0IGFuZCBwZXJmX2V2ZW50X3NldF9zdGF0ZSgpIGNhbGwsCj5zaW5jZSB0aGUgcGFy
-ZW50IGlzIHJlbW92ZWQgaW4gcGVyZl9jaGlsZF9kZXRhdGNlZCwKPkl0IHdvdWxkIGJlIGZhaWxl
-ZCB0byBhY2NvdW50IHRoZSB0b3RhbF9lbmFibGVfdGltZSB3aGljaCBjYWN1bGF0aW5nCj5jaGls
-ZF9ldmVudCdzIGVuYWJsZV90aW1lIHRvby4KClRoYW5rcyBmb3IgY2xhcmlmeWluZyB0aGlzLCAK
-U28gdGhlIHdob2xlIHBvaW50ICBpbiBjb21taXQgYTNjM2M2NjY3IGlzIHRvIG1ha2UgIHBlcmZf
-ZXZlbnRfc2V0X3N0YXRlKCkgaGFwcGVucyBiZWZvcmUgcGVyZl9jaGlsZF9kZXRhY2goKSwgcmln
-aHQ/CkkgZmVlbCBJIGdvdCBsb3N0IHNvbWV3aGVyZSB3aGVuIEkgcnVzaCB0byB0aGlzIHN1Z2dl
-c3Rpb24uIEJ1dCBJIHN0aWxsIGRvbid0IHVuZGVyc3RhbmQgd2h5IG15IHBhdGNodjEgIGJyZWFr
-cyBjb21taXQgCmEzYzNjNjY2NywgcmVhbGx5IGNvbmZ1c2VkLgoKCj4KPlRoYW5rcwo+Cj4tLQo+
-U2luY2VyZWx5LAo+WWVvcmV1bSBZdW4K
+Hello:
+
+This patch was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
+
+On Fri, 30 May 2025 15:27:00 +0000 you wrote:
+> Commit 3d010c8031e3 ("udp: do not accept non-tunnel GSO skbs landing
+> in a tunnel") added checks in linux stack to not accept non-tunnel
+> GRO packets landing in a tunnel. This exposed an issue in vmxnet3
+> which was not correctly reporting GRO packets for tunnel packets.
+> 
+> This patch fixes this issue by setting correct GSO type for the
+> tunnel packets.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net,v4] vmxnet3: correctly report gso type for UDP tunnels
+    https://git.kernel.org/netdev/net/c/982d30c30eaa
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
