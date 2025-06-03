@@ -1,140 +1,134 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7E0214A74;
-	Tue,  3 Jun 2025 05:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0087B173
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 05:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748929898; cv=none; b=OxDb5nXSVlkj9t5cXPDqJZhU4u+XBHSQw7f/Q9/jJakciZVzUCh4A8yQeSn2nE/uu5ey2tt5zP8XIpwO2KgsqZRLPssqDjAEhHyyqTu9JeYPgoZsEBmdDW0c1V/IiQoJ5lfBXpIWltAqCsyWJfu/VgcWykvSWxXA4Af4wTjt9xA=
+	t=1748929972; cv=none; b=iMjWGFiLzlOXfs+QoXnGikf7xntVuF9X0hPKUjJ3sL91eYpOJW6b2biM2yElv/FdyoJfTNbFQgCGy/xsMCmBS1Um4M1p5vNmDTW/nqXYyqdBgxnNgiyFOwNOIKsnFdAj6gCN135AILF5hF74v7kLekqvJi1OdxWVr8UtZWFfogo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748929898; c=relaxed/simple;
-	bh=49TcfAQOEeJv/qCSz4O3cG+DCVUoRxfZZc4KzERXSmY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=C9UtgWS1NA16w6eIlFv5EpALIR0jq3j9TfCD50VNzsjy+4/vwxw35y7d6UhTN2namV8ECC+BGrjQ/wSBBEqZKw1ElSIb+6p9f1B04DwbXBddPUdtuf3pCYZ7xVqdfQE6BOuFhAuQ9l5VzeQByRXGarYuqo+C1nY1H0ODQWfGFTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: cd018a2c403e11f0b29709d653e92f7d-20250603
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:d00fb2fc-8931-4d82-af9f-370910dd06d0,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:6493067,CLOUDID:82159c751699e0b2a3d463d53031854c,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3,IP:
-	nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,L
-	ES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: cd018a2c403e11f0b29709d653e92f7d-20250603
-Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
-	(envelope-from <aichao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 918867262; Tue, 03 Jun 2025 13:51:32 +0800
-Received: from node4.com.cn (localhost [127.0.0.1])
-	by node4.com.cn (NSMail) with SMTP id B8ECC16001A00;
-	Tue,  3 Jun 2025 13:51:31 +0800 (CST)
-X-ns-mid: postfix-683E8D63-59658677
-Received: from kylin-pc.. (unknown [172.25.130.133])
-	by node4.com.cn (NSMail) with ESMTPA id B945916001CC7;
-	Tue,  3 Jun 2025 05:51:29 +0000 (UTC)
-From: Ai Chao <aichao@kylinos.cn>
-To: perex@perex.cz,
-	tiwai@suse.com,
-	kuninori.morimoto.gx@renesas.com,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	jbrunet@baylibre.com,
-	neil.armstrong@linaro.org,
-	khilman@baylibre.com,
-	martin.blumenstingl@googlemail.com,
-	shengjiu.wang@gmail.com,
-	Xiubo.Lee@gmail.com,
-	festevam@gmail.com,
-	nicoleotsuka@gmail.com,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de
-Cc: linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
-	Ai Chao <aichao@kylinos.cn>
-Subject: [PATCH v4 4/4] ASoC: imx-card: Use helper function for_each_child_of_node_scoped()
-Date: Tue,  3 Jun 2025 13:51:09 +0800
-Message-ID: <20250603055109.3154061-5-aichao@kylinos.cn>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250603055109.3154061-1-aichao@kylinos.cn>
-References: <20250603055109.3154061-1-aichao@kylinos.cn>
+	s=arc-20240116; t=1748929972; c=relaxed/simple;
+	bh=L+ELz69jUFptNnqIky4yrspsl0rBiFTFr5FiTSmQAqQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=t1LaUFS0/YEr1Xjnfo1lkPFr6EbK7L5M66/7c8n8u3R3LVxTuiOwjkqgxn0qcViZxqujvjP5YD4jSmQl8vjBBcn0LL6mB71mkhCgbY1H7HArNm2S+OtOgCHYdmCIf52+aZzfHXhTGtkT6v8a6isX8fF6UjgRRGk2e97/o6f16Mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=hmIvBDy/; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="hmIvBDy/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1748929962;
+	bh=L+ELz69jUFptNnqIky4yrspsl0rBiFTFr5FiTSmQAqQ=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=hmIvBDy/fhmokIfbZgUwFM/S/DySSWlNBFsLMvctKkqsuqgfbAh3lW+sTbBIUvf1N
+	 pyi8LkMtCeeq0EU8OMmgbYviozIGhMw8Xgacm2ioc7nhpGmOEzH2SeEb+rLiHznPeO
+	 s4K461QL8NuOSkMaiv5JNdh6hWzFJZYqRfZmgLYY=
+Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 63FB565F62;
+	Tue,  3 Jun 2025 01:52:41 -0400 (EDT)
+Message-ID: <e41eaaee52b57f279a47f68745bc79c6178daac9.camel@xry111.site>
+Subject: Re: [PATCH 2/2] platform/loongarch: laptop: Support backlight power
+ control
+From: Xi Ruoyao <xry111@xry111.site>
+To: WANG Xuerui <kernel@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>, 
+ Yao Zi <ziyao@disroot.org>
+Cc: Jianmin Lv <lvjianmin@loongson.cn>, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit
+	 <kexybiscuit@aosc.io>
+Date: Tue, 03 Jun 2025 13:52:39 +0800
+In-Reply-To: <77dc0324-ce8d-4af4-9aaf-815bb9a1bd82@xen0n.name>
+References: <20250531113851.21426-1-ziyao@disroot.org>
+	 <20250531113851.21426-3-ziyao@disroot.org>
+	 <CAAhV-H7RBcaAP8WjjrX20cvuMixarqyeTLoMPdb8QMztz_648g@mail.gmail.com>
+	 <77dc0324-ce8d-4af4-9aaf-815bb9a1bd82@xen0n.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
 
-The for_each_child_of_node_scoped() helper provides a scope-based
-clean-up functionality to put the device_node automatically, and
-as such, there is no need to call of_node_put() directly.
+On Tue, 2025-06-03 at 13:44 +0800, WANG Xuerui wrote:
+> On 6/3/25 12:16, Huacai Chen wrote:
+> > On Sat, May 31, 2025 at 7:39=E2=80=AFPM Yao Zi <ziyao@disroot.org> wrot=
+e:
+> > >=20
+> > > loongson_laptop_turn_{on,off}_backlight() are designed for controllin=
+g
+> > > power of the backlight, but they aren't really used in the driver
+> > > previously.
+> > >=20
+> > > Unify these two functions since they only differ in arguments passed =
+to
+> > > ACPI method, and wire up loongson_laptop_backlight_update() to update
+> > > power state of the backlight as well. Tested on TongFang L860-T2 3A50=
+00
+> > > laptop.
+> > >=20
+> > > Signed-off-by: Yao Zi <ziyao@disroot.org>
+> > > ---
+> > > =C2=A0 drivers/platform/loongarch/loongson-laptop.c | 53 +++++++-----=
+--------
+> > > =C2=A0 1 file changed, 19 insertions(+), 34 deletions(-)
+> > >=20
+> > > [snip]
+> > >=20
+> > > -int loongson_laptop_turn_on_backlight(void)
+> > > -{
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int status;
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 union acpi_object arg0 =3D { AC=
+PI_TYPE_INTEGER };
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct acpi_object_list args =
+=3D { 1, &arg0 };
+> > > -
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 arg0.integer.value =3D 1;
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 status =3D acpi_evaluate_object=
+(NULL, "\\BLSW", &args, NULL);
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ACPI_FAILURE(status)) {
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 pr_info("Loongson lvds error: 0x%x\n", status);
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 return -ENODEV;
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+> > > -
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+> > > -}
+> > > -
+> > > -int loongson_laptop_turn_off_backlight(void)
+> > > -{
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int status;
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 union acpi_object arg0 =3D { AC=
+PI_TYPE_INTEGER };
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct acpi_object_list args =
+=3D { 1, &arg0 };
+> > > -
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 arg0.integer.value =3D 0;
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 status =3D acpi_evaluate_object=
+(NULL, "\\BLSW", &args, NULL);
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ACPI_FAILURE(status)) {
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 pr_info("Loongson lvds error: 0x%x\n", status);
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 return -ENODEV;
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+> > > -
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+> > > -}
+> > I prefer to keep them, in downstream kernels there are users of them,
+> > I don't want to add them back if one day those users are upstream.
+>=20
+> Then these symbols should be properly EXPORT_SYMBOL_GPL marked?
 
-Signed-off-by: Ai Chao <aichao@kylinos.cn>
----
- sound/soc/fsl/imx-card.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+I guess those downstream works are kernel forks, not separated modules,
+thus an export is not needed.
 
-diff --git a/sound/soc/fsl/imx-card.c b/sound/soc/fsl/imx-card.c
-index 9e668ae68039..ea5dbb54b584 100644
---- a/sound/soc/fsl/imx-card.c
-+++ b/sound/soc/fsl/imx-card.c
-@@ -513,7 +513,6 @@ static int imx_card_parse_of(struct imx_card_data *da=
-ta)
- 	struct device_node *platform =3D NULL;
- 	struct device_node *codec =3D NULL;
- 	struct device_node *cpu =3D NULL;
--	struct device_node *np;
- 	struct device *dev =3D card->dev;
- 	struct snd_soc_dai_link *link;
- 	struct dai_link_data *link_data;
-@@ -552,11 +551,10 @@ static int imx_card_parse_of(struct imx_card_data *=
-data)
- 	link =3D card->dai_link;
- 	link_data =3D data->link_data;
-=20
--	for_each_child_of_node(dev->of_node, np) {
-+	for_each_child_of_node_scoped(dev->of_node, np) {
- 		dlc =3D devm_kzalloc(dev, 2 * sizeof(*dlc), GFP_KERNEL);
- 		if (!dlc) {
--			ret =3D -ENOMEM;
--			goto err_put_np;
-+			return -ENOMEM;
- 		}
-=20
- 		link->cpus	=3D &dlc[0];
-@@ -567,8 +565,8 @@ static int imx_card_parse_of(struct imx_card_data *da=
-ta)
-=20
- 		ret =3D of_property_read_string(np, "link-name", &link->name);
- 		if (ret) {
--			dev_err(card->dev, "error getting codec dai_link name\n");
--			goto err_put_np;
-+			return dev_err_probe(card->dev, ret,
-+					     "error getting codec dai_link name\n");
- 		}
-=20
- 		cpu =3D of_get_child_by_name(np, "cpu");
-@@ -725,8 +723,7 @@ static int imx_card_parse_of(struct imx_card_data *da=
-ta)
- 	of_node_put(cpu);
- 	of_node_put(codec);
- 	of_node_put(platform);
--err_put_np:
--	of_node_put(np);
-+
- 	return ret;
- }
-=20
 --=20
-2.47.1
-
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
