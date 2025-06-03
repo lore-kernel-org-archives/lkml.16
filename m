@@ -1,73 +1,64 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ECBD1DFF8
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 17:19:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D4631991B2
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 17:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748971161; cv=none; b=CIPSlsH1uORxOmq2fiI5CCVgTorGMqQMv7108tXWu4eTIsGo1n6vZYFHWieKC0djDndUdkP4KoWmLyMPx5o9l9ksII+uMcH/MRFOtz8G1whAt13GuGqG1xipENGKjIsaazHoD7aJmVJfmd6Ee7B4xcjc6h+XKFl286Ee+I+rnDM=
+	t=1748971229; cv=none; b=IqWSeNwbd6KTwM+IyORvaHQ8IDfOtc3sZEeDwVEjbOs9KiDqvR4BgoejymCyWIYqZU7JU6YcO3nkT17W6aeORXtn0GiNh7sUbHSN+jq95TzYQ4ShPy82TP7EaWS6i+S7KfnCdXdkn5s8ORWQEYH7lMrdAw/FtUlh9LCBnfR/8Vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748971161; c=relaxed/simple;
-	bh=PO/2kFw69AY9PvEPOU4HMlQRdDhrbZ/vZ/RQTnFDlVo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kZjY0gp0gZmOeyZBN+H7RXOVniPpdKog1LbZBXHA9N+DCZmusCGoeAHhgTswkyJ/sgQ9eWzwAUWeg+KvdhVTJsY84LXWJEo0dFJEtbXoiTOjgbVgYQUH0vCXtDYoeY1IvyUd1vQll6YUr8YeYo4ILrp7zZGAyc/vAzX18HgxBiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Fw6SQfFV; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748971229; c=relaxed/simple;
+	bh=CFBfoh5wNsEiCsgkVQYLfPpafMury/KyY0c3wv/BjSQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=t9CDX4ob9SmiAGENfEyWEKZLZBTwMtTPNAhwUZ+U1hWWhYpuFHl6w9xgPQFyM/Nd6F75kb5iFd2b7rauWVDN1Prbb0vsXtKfg0LIRXHowu+4jtCjnvcdk+AczYK61Tf6qD9gQgviuIyp/syvL2rPBIMuku26UsPYHlPx2nDUUzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=vGaJcKQ8; arc=none smtp.client-ip=209.85.167.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fw6SQfFV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748971158;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=qUU4OFf74ZE0Vbi2j5eSNHQKfn59GptFs3ll0pDTE+4=;
-	b=Fw6SQfFV3Hf5XYbPLavIqXpezxsgZU20E5NEqYlWPsET7b4FBtnq9pyKQbzmmdvVcD7mSq
-	8XxvlWlaKLDbqH4Ba5jMAnD5YanPZ9JiPl/dhx1aMRSlrgogIsZObWezAVMCTa6rh0fJDD
-	6MKYJPhKZCfpxy/x5NGIMAvc01pUKDc=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-65-8CLlt4qmMoq-LnZUq8-sSw-1; Tue, 03 Jun 2025 13:19:16 -0400
-X-MC-Unique: 8CLlt4qmMoq-LnZUq8-sSw-1
-X-Mimecast-MFC-AGG-ID: 8CLlt4qmMoq-LnZUq8-sSw_1748971155
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-442f90418b0so31619325e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 10:19:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="vGaJcKQ8"
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-40656384d30so3684897b6e.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 10:20:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1748971224; x=1749576024; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=TSSfYehOKDI+ybIJ7s0ERtfUjRzm93GR1fou52nUJzE=;
+        b=vGaJcKQ8405aVmUeqRO0ZKOAeKSoK5d3kE9x+gZQ1B8duozrXNP6ilYpjQgwRwBnMA
+         nbOEWlUI81V1H8tPZsuy0cSEHYBIioY8UurMHb9/GQbhh/61fmuQIxOc/hTAbXVk6AIo
+         4jw2tqfiJ0Udog3XOIhpa33mOgG2SbBD+GNxQvleO0/VcvFtAJwLWXgk35T8rNYqJfBM
+         ADRdL8kKBe4b3G0GEuTzV+xLUutyRoDSFY3QhX+uzRZpzjPa72M54GIlpDLjnP8hxFzA
+         A2etQpyrZ6ab0i+FigwHkgSN6+B2mpqHpWkns4IfLibvYHqlABqQmRa1NsaomeZ8/OMh
+         husg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748971155; x=1749575955;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=qUU4OFf74ZE0Vbi2j5eSNHQKfn59GptFs3ll0pDTE+4=;
-        b=sX7AQextz9o4azn5vgwDDO91hFeLSAhcudX93OZYstzqt4fwqzHNr746NNcLRHQOWR
-         pIDXaYOwvkNl223bg6PUwP9338CQsq50On0PctXjwVQpYF76NFABttP6sqJe6M6Mk3UA
-         pUYTQFGlSWjoYS/+hKClUMrAExhhVOW0PUUG4UtJjzrl+hAQPzhzJjT5pXd/25IhmAaS
-         zx7Dw58CAe/6r3MHh8akJ/1mP2exUFt/VNiSY3XgBVwD0dfNdtEOpboK2BDAGRHVIoJ7
-         /nAQKWZnemIGZaWJVZUmtGI/VjY5m6/UhKJVckPR9DE/fCnA6YpOxcUFm+dXjmBmGEAv
-         qnnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUqKKGzNbSPEBgtavPaJb0mHd1iyrA15XEWuUp1XoUOXij5zBS71uyTRVSBzhCQ9UzsWYBLL3r2b1zE03w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJsVfT7pTXhD2jmreI9iuNm/iBcS29EBmo57xHqvAk3am2zG1/
-	E4g32cJsahPKodYtmAe1gVFF4NviKEF3EC2xk8y/irORoVLmmJO2s4d5FcUN5oXxlctZ/eC+ywG
-	iWJxONJZBfH6qcqKIGrbxOrEUgAXS+K+MDeRKkdkdxISKVWkhAdxhL4ICClOuuGT/mQ==
-X-Gm-Gg: ASbGncto2xeJP8FnuvbET5FTtkrGOaiIS2I+jVye6pS1Qe604QtB4nC3XVTWL7ja1QH
-	n8mZwo43+mjelHoTHtl7ctdLsS/mdRGQDLMDm0ezEcjRT+v9O40K1v/c3zT4LZQGyZCkNYmb1bA
-	lmCQCormEiivzwDilVGRj7/1b7TwQwvItAwYhXOXVm76Y1WE5i3O3CNyGBICs+c2Y9Qi3pnkJDl
-	kR3A8ILktLC1to6Xy2nayyRv70LOPvYOdHL/VJC9dPCOvfcvr1CyfF97zTlAA2BSScPXZYLrXUQ
-	8xRJzFri56vIgKhun3ZGphbornSn+qYv+0LJnrFXoL+nZU+JMzmrIB3QvCp2P7gJFqaAOWac1PB
-	fQ8wNR48HJEVSNTbHNk/lGroFlu/kXhMFpnnpusg=
-X-Received: by 2002:a05:600c:3596:b0:43d:160:cd97 with SMTP id 5b1f17b1804b1-4511edf2167mr105293405e9.25.1748971155359;
-        Tue, 03 Jun 2025 10:19:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFj7GIZlVjMRe5WGKxNpZPxEoYl4Ep47THdwCv36w36DKQBMvC50/+cJNUD1tUkHQAZp+l14w==
-X-Received: by 2002:a05:600c:3596:b0:43d:160:cd97 with SMTP id 5b1f17b1804b1-4511edf2167mr105293095e9.25.1748971154970;
-        Tue, 03 Jun 2025 10:19:14 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f0d:f000:eec9:2b8d:4913:f32a? (p200300d82f0df000eec92b8d4913f32a.dip0.t-ipconnect.de. [2003:d8:2f0d:f000:eec9:2b8d:4913:f32a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451e505c350sm29892395e9.0.2025.06.03.10.19.14
+        d=1e100.net; s=20230601; t=1748971224; x=1749576024;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TSSfYehOKDI+ybIJ7s0ERtfUjRzm93GR1fou52nUJzE=;
+        b=pymKIuSgIoIsG6NYEoJqTxETJLFhNlOFT8OwD5uiSvdz+b71B27EZSbV7fCHvAgKwk
+         uUmaOEqND+S8sCIhbIaiCefehfocvAI/oFr/FBKZ8UZqzAufNFPb5lruPKmXoD3VJeUk
+         GtviHTzjTO6wG1i/5jrx7Y0Ca/EGaEBPdBrJJAwinRYALJMUIfcaYW5b4PqxKmTCrSV/
+         smblVdfK5LdT8k35gthMe29gMnNb5nIxLW0ojWXNIWCe+eF1pjmW9ebAtx3KNZliWb7S
+         GQAowj7kHEtNeIfdsAXTQqmApahQ5+rxboIAPdNHwtackZFzauwTexLp3az6Kmrr6deE
+         4HYg==
+X-Forwarded-Encrypted: i=1; AJvYcCUZk62eIdHcwx5aPD4ItCmtmeUKUasULDpjwOtOETjveZDB0euTW9bkyTnkUhOMAV7sEnxcf2JRbL3NxOE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8d5WGBCygMGqLTw8AWNMR2GoZJeNosXfnjMM7DAt3YWYZNbBd
+	5TYvLmEYuz5olY6TVy4BaktRSYqoezBei++Bqplq5s9/GZzdpr+CEUWYfNJ7Zt98EPs=
+X-Gm-Gg: ASbGnctLkCqvQCFzmVTIyPZ/b8laG1rR4JwlCrdQ/+PcQ1fPi+qdDBH+yt247p/6+cq
+	711vEwDy8Fa6LST3ApRMpuL0P4BaO0mvKAx1ccLydUhvauOThY8RKc9T0sWypEANSjjKrnHIPIs
+	D457e6fsVXz7vWssinIwwHqOEMyypzyKPgOwP5e2eOignpQ3+HFN5gGVlV2IC4INZrjoUbcYJod
+	zeKxcBD6CKyTg9ZEyZ7g/frFJqyJZI4KSRlBVdaqjAdJZCpRFFZxp/xapy9FrJ5lKoqby5KFNnP
+	83VpiypqFWy1xBlHlVY8gr+JJYmKnt6tkQ+314eeFCFjbIU=
+X-Google-Smtp-Source: AGHT+IECa0Z+0O4h7VCIhY3gU2RXBqAflFUjF2aWRPf1NSdqzw3nFEv+7mXuPApUrSjiokakH0NxYA==
+X-Received: by 2002:a05:6870:2107:b0:2d5:25b6:ec14 with SMTP id 586e51a60fabf-2e9212b1d72mr10552894fac.15.1748971224470;
+        Tue, 03 Jun 2025 10:20:24 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fdd7f24b74sm2292060173.143.2025.06.03.10.20.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jun 2025 10:19:14 -0700 (PDT)
-Message-ID: <1602a87b-b1bc-4b53-abe7-dce8adddbe46@redhat.com>
-Date: Tue, 3 Jun 2025 19:19:13 +0200
+        Tue, 03 Jun 2025 10:20:23 -0700 (PDT)
+Message-ID: <f031d35b-13e3-4dec-a89c-f221331be735@kernel.dk>
+Date: Tue, 3 Jun 2025 11:20:23 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,125 +66,153 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/3] mm, hugetlb: Clean up locking in hugetlb_fault
- and hugetlb_wp
-To: Peter Xu <peterx@redhat.com>
-Cc: Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>,
- Muchun Song <muchun.song@linux.dev>, James Houghton <jthoughton@google.com>,
- Gavin Guo <gavinguo@igalia.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250602141610.173698-1-osalvador@suse.de>
- <20250602141610.173698-2-osalvador@suse.de> <aD2_0qoh1Os6srsA@x1.local>
- <aD4NyEmRc50OCUBy@localhost.localdomain> <aD4X68QSmrvI4P_D@x1.local>
- <aD79vg-jQQU69raX@localhost.localdomain> <aD8NUSUV5zA4yNY3@x1.local>
- <fd10b2b3-064c-4ee2-ad7d-e30a0e194533@redhat.com> <aD8Yy0xfJdvLKp4X@x1.local>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [syzbot] [mm?] kernel BUG in sanity_check_pinned_pages
+To: David Hildenbrand <david@redhat.com>,
+ syzbot <syzbot+1d335893772467199ab6@syzkaller.appspotmail.com>,
+ akpm@linux-foundation.org, jgg@ziepe.ca, jhubbard@nvidia.com,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, peterx@redhat.com,
+ syzkaller-bugs@googlegroups.com
+References: <683f1551.050a0220.55ceb.0017.GAE@google.com>
+ <d072f05e-576e-466d-89df-d69103074bb1@redhat.com>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <aD8Yy0xfJdvLKp4X@x1.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <d072f05e-576e-466d-89df-d69103074bb1@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
->> As stated elsewhere, the mapcount check + folio_move_anon_rmap need the
->> folio lock.
+On 6/3/25 10:22 AM, David Hildenbrand wrote:
+> On 03.06.25 17:31, syzbot wrote:
+>> Hello,
+>>
+>> syzbot found the following issue on:
+>>
+>> HEAD commit:    d7fa1af5b33e Merge branch 'for-next/core' into for-kernelci
+>> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=1457d80c580000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=89c13de706fbf07a
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=1d335893772467199ab6
+>> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+>> userspace arch: arm64
+>>
+>> Unfortunately, I don't have any reproducer for this issue yet.
+>>
+>> Downloadable assets:
+>> disk image: https://storage.googleapis.com/syzbot-assets/da97ad659b2c/disk-d7fa1af5.raw.xz
+>> vmlinux: https://storage.googleapis.com/syzbot-assets/659e123552a8/vmlinux-d7fa1af5.xz
+>> kernel image: https://storage.googleapis.com/syzbot-assets/6ec5dbf4643e/Image-d7fa1af5.gz.xz
+>>
+>> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+>> Reported-by: syzbot+1d335893772467199ab6@syzkaller.appspotmail.com
+>>
+>> head: ffffffff000001fe 0000000000000028 0000000000000000 0000000000000200
+>> page dumped because: VM_BUG_ON_PAGE(!PageAnonExclusive(&folio->page) && !PageAnonExclusive(page))
+>> ------------[ cut here ]------------
+>> kernel BUG at mm/gup.c:70!
+>> Internal error: Oops - BUG: 00000000f2000800 [#1]  SMP
+>> Modules linked in:
+>>
+>> CPU: 1 UID: 0 PID: 115 Comm: kworker/u8:4 Not tainted 6.15.0-rc7-syzkaller-gd7fa1af5b33e #0 PREEMPT
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+>> Workqueue: iou_exit io_ring_exit_work
+>> pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+>> pc : sanity_check_pinned_pages+0x7cc/0x7d0 mm/gup.c:69
+>> lr : sanity_check_pinned_pages+0x7cc/0x7d0 mm/gup.c:69
+>> sp : ffff800097f17640
+>> x29: ffff800097f17660 x28: dfff800000000000 x27: 1fffffbff87da000
+>> x26: 05ffc0000002107c x25: 05ffc0000002107c x24: fffffdffc3ed0000
+>> x23: fffffdffc3ed0000 x22: ffff800097f176e0 x21: 05ffc0000002107c
+>> x20: 0000000000000000 x19: ffff800097f176e0 x18: 1fffe0003386f276
+>> x17: 703e2d6f696c6f66 x16: ffff80008adbe9e4 x15: 0000000000000001
+>> x14: 1fffe0003386f2e2 x13: 0000000000000000 x12: 0000000000000000
+>> x11: ffff60003386f2e3 x10: 0000000000ff0100 x9 : c8ccd30be98f3f00
+>> x8 : c8ccd30be98f3f00 x7 : 0000000000000001 x6 : 0000000000000001
+>> x5 : ffff800097f16d58 x4 : ffff80008f415ba0 x3 : ffff8000807b4b68
+>> x2 : 0000000000000001 x1 : 0000000100000000 x0 : 0000000000000061
+>> Call trace:
+>>   sanity_check_pinned_pages+0x7cc/0x7d0 mm/gup.c:69 (P)
+>>   unpin_user_page+0x80/0x10c mm/gup.c:191
+>>   io_release_ubuf+0x84/0xf8 io_uring/rsrc.c:113
+>>   io_buffer_unmap io_uring/rsrc.c:140 [inline]
+>>   io_free_rsrc_node+0x250/0x57c io_uring/rsrc.c:513
+>>   io_put_rsrc_node io_uring/rsrc.h:103 [inline]
+>>   io_rsrc_data_free+0x148/0x298 io_uring/rsrc.c:197
+>>   io_sqe_buffers_unregister+0x84/0xa0 io_uring/rsrc.c:607
+>>   io_ring_ctx_free+0x48/0x430 io_uring/io_uring.c:2723
+>>   io_ring_exit_work+0x6c4/0x73c io_uring/io_uring.c:2962
+>>   process_one_work+0x7e8/0x156c kernel/workqueue.c:3238
+>>   process_scheduled_works kernel/workqueue.c:3319 [inline]
+>>   worker_thread+0x958/0xed8 kernel/workqueue.c:3400
+>>   kthread+0x5fc/0x75c kernel/kthread.c:464
+>>   ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
+>> Code: 900523a1 910e0021 aa1703e0 97fff8a9 (d4210000)
+>> ---[ end trace 0000000000000000 ]---
 > 
-> Could you elaborate what would go wrong if we do folio_move_anon_rmap()
-> without folio lock here?  Just to make sure we're on the same page: we
-> already have pgtable lock held, and we decided to reuse an anonymous
-> hugetlb page.
+> So we lost a PAE bit for a pinned folio.
+> 
+> [   97.640225][  T115] page: refcount:512 mapcount:0 mapping:0000000000000000 index:0x20000 pfn:0x13b400
+> [   97.640378][  T115] head: order:9 mapcount:511 entire_mapcount:0 nr_pages_mapped:511 pincount:1
+> 
+> The folio is indeed pinned, and it is PTE-mapped (511 PTEs are mapped).
+> 
+> The page we are using for unpinning is not mapped (mapcount:0).
+> 
+> pfn:0x13b400 indicates that the page we are provided is actually the head page (folio->page).
+> 
+> 
+> [   97.640414][  T115] memcg:ffff0000f36b6000
+> [   97.640435][  T115] anon flags: 0x5ffc0000002107c(referenced|uptodate|dirty|lru|arch_1|head|swapbacked|node=0|zone=2|lastcpupid=0x7ff)
+> [   97.640468][  T115] raw: 05ffc0000002107c fffffdffc37be1c8 fffffdffc3d75f08 ffff0000d50c0ee1
+> [   97.640490][  T115] raw: 0000000000020000 0000000000000000 00000200ffffffff ffff0000f36b6000
+> [   97.640514][  T115] head: 05ffc0000002107c fffffdffc37be1c8 fffffdffc3d75f08 ffff0000d50c0ee1
+> [   97.640536][  T115] head: 0000000000020000 0000000000000000 00000200ffffffff ffff0000f36b6000
+> [   97.640559][  T115] head: 05ffc00000010a09 fffffdffc3ed0001 000001ff000001fe 00000001ffffffff
+> [   97.640581][  T115] head: ffffffff000001fe 0000000000000028 0000000000000000 0000000000000200
+> [   97.640600][  T115] page dumped because: VM_BUG_ON_PAGE(!PageAnonExclusive(&folio->page) && !PageAnonExclusive(page))
+> 
+> So we effectively only test the head page. Here we don't have the bit
+> set for that page.
+> 
+> 
+> In gup_fast() we perform a similar sanity check, which didn't trigger
+> at the time we pinned the folio. io_uring ends up calling
+> io_pin_pages() where we call pin_user_pages_fast(), so GUP-fast might
+> indeed trigger.
+> 
+> 
+> What could trigger this (in weird scenarios, though) is if we used
+> pin_user_page() to obtain a page, then did folio = page_folio(page)
+> and called unpin_user_page(&folio->page) instead of using
+> unpin_folio(). Or using any other page that we didn't pin. It would be
+> a corner case, though.
+> 
+> Staring at io_release_ubuf(), that's also not immediately what's
+> happening.
+> 
+> There is this coalescing code in
+> io_sqe_buffer_register()->io_check_coalesce_buffer(), maybe ...
+> something is going wrong there?
+> 
+> 
+> 
+> Otherwise, I could only envision (a) some random memory overwrite
+> clearing the bit or (b) some weird race between GUP-fast and PAE
+> clearing that we didn't run into so far. But these sanity checks have
+> been around for a loooong time at this point.
+> 
+> Unfortunately, no reproducer :(
 
-For now we have
+Too bad there's no reproducer... Since this looks recent, I'd suspect
+the recent changes there. Most notably:
 
-VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
+commit f446c6311e86618a1f81eb576b56a6266307238f
+Author: Jens Axboe <axboe@kernel.dk>
+Date:   Mon May 12 09:06:06 2025 -0600
 
-right at the beginning of folio_move_anon_rmap().
+    io_uring/memmap: don't use page_address() on a highmem page
 
-That dates back to
-
-commit c44b674323f4a2480dbeb65d4b487fa5f06f49e0
-Author: Rik van Riel <riel@redhat.com>
-Date:   Fri Mar 5 13:42:09 2010 -0800
-
-     rmap: move exclusively owned pages to own anon_vma in do_wp_page()
-     
-     When the parent process breaks the COW on a page, both the original which
-     is mapped at child and the new page which is mapped parent end up in that
-     same anon_vma.  Generally this won't be a problem, but for some workloads
-     it could preserve the O(N) rmap scanning complexity.
-     
-     A simple fix is to ensure that, when a page which is mapped child gets
-     reused in do_wp_page, because we already are the exclusive owner, the page
-     gets moved to our own exclusive child's anon_vma.
-
-
-My recollection is that the folio lock protects folio->mapping. So relevant rmap walks
-that hold the folio lock can assume that folio->mapping and
-thereby folio_anon_vma() cannot change.
-
-folio_lock_anon_vma_read() documents something regarding the folio lock protecting the
-anon_vma.
-
-I can only speculate that locking the folio is cheaper than locking the relevant anon_vma, and
-that rmap code depends on that.
-
-
-I'll note that in the introducing commit we didn't use the WRITE_ONCE, though. That was added in
-
-commit 16f5e707d6f6f7644ff07e583b8f18c3dcc5499f
-Author: Alex Shi <alexs@kernel.org>
-Date:   Tue Dec 15 12:33:42 2020 -0800
-
-     mm/rmap: stop store reordering issue on page->mapping
-
-But I don't think that the folio lock was a replacement to that WRITE_ONCE.
+which seems a bit odd, as this is arm64 and there'd be no highmem. This
+went into the 6.15 kernel release. Let's hope a reproducer is
+forthcoming.
 
 -- 
-Cheers,
-
-David / dhildenb
-
+Jens Axboe
