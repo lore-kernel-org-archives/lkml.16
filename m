@@ -1,130 +1,150 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF033211
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 01:18:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F672628D
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 01:20:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748913484; cv=none; b=jftAp38EMOYaOWXCLKseiQkWXEhfCuSX5KIwXMEVgWvQ6DZrxnSCBYl8Cnxr4Y9wkfjg0iFtHCkdp3vV01RsObNlqV9SexPJ8yzNaBrtmBLMpqWJa4flAY6lovCL39UVrmDpKZROph9cuxZ+8nR1xEapYe5TzyqSTG7Y76+agCw=
+	t=1748913650; cv=none; b=VFF6YKFPsuKaijopFk5TbunGtTEhXGhygjVq1CeIkwtXubLD4iUkHmFsfEwMoBBn7mESGqc/+azCYhYsa4ZYxXxpE9XQ2dwJCF3uA4NwVUVMsCufdDgSOKmyCj8HpreaIaUKq05hkYEGmMHEvuNfbBkcYT1Ao0WGdFBOI7gRMV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748913484; c=relaxed/simple;
-	bh=rrX0DJqkZjUhX3eOhvumqsMmg25jIm3f+Hwnd4A64PU=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=IjWwo4dwMEqE2Ph9v2in1OQ3vOIlaDwWi7VdPmTWsoTLrp3mkabONusB51WCPvx6T2rZJ6/LkpwKt3LVgFh3qmgi7G+Sdnnj+eijyZSdCLzAS6Qaaa9pZircy9QXW1phTNEved9+q2jaSJub5GhFvjB1rSRj2epEeQpDkgh9J6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bBCWP49JYzYQvDK
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 09:17:53 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id A2E331A0F7E
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 09:17:52 +0800 (CST)
-Received: from [10.174.99.169] (unknown [10.174.99.169])
-	by APP2 (Coremail) with SMTP id Syh0CgDX4WQ+TT5omVrgOA--.1798S2;
-	Tue, 03 Jun 2025 09:17:52 +0800 (CST)
-Subject: Re: [RFC PATCH] MAINTAINERS: add mm swap section
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Yu Zhao <yuzhao@google.com>, Kairui Song <kasong@tencent.com>,
- Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>,
- Barry Song <baohua@kernel.org>, Chris Li <chrisl@kernel.org>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20250602152015.54366-1-lorenzo.stoakes@oracle.com>
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-Message-ID: <0599e483-fe41-f8b4-ace4-d570ba10c9d5@huaweicloud.com>
-Date: Tue, 3 Jun 2025 09:17:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1748913650; c=relaxed/simple;
+	bh=VE+nhMtYbDV/EMRZgRGQbRzYzLn6vPrGVdIaal0ehfU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uZyig7bei7rvF4MbPrrINJPsJgvfPTXwmEkhShPK5EmW2N3MPPJBFxk5LbTGcK7AbeJTjJn+DrSkVnIXX/tjTNebJbJeShqZ2HRSUv7VgogPyDb91+n/CSQRf0tgKwVOZ1dB8WOIvbxvP76Z6xEs4bJYY7no9LYqgT0QEIgkZ9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=EZBepW4K; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="EZBepW4K"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 552JiojK021213
+	for <linux-kernel@vger.kernel.org>; Tue, 3 Jun 2025 01:20:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	VE+nhMtYbDV/EMRZgRGQbRzYzLn6vPrGVdIaal0ehfU=; b=EZBepW4KEcCOwDK0
+	YqEAt9rqJs9WVD8leP92Thg1nts+tR55uj3RujIlrW3lOY73E1T33YV7JR6kMUxw
+	oN+xzxdlq5uam6MGcTejVxiGlzrVKuR+FDDV6Bsxp4KS1iBVQ//K+vdfz6glX9GB
+	FRxvupUo8/LmV/FVdth/01hhROgHSlCpt0fnEtESOK9XnhSyr4kL6kSWzv87OwR4
+	r1NzlqY1MWVnrBpT5zYfaU6av0Ljct3wzfTLy5eXDTb26guvDruj6WzWl7GEMlzo
+	fDsK1sWOm/WYCKKLM2lOIvDGMnO+mMhUu1hA7NlWskaK7m49xJu5xY6tse0QaTih
+	0TMujA==
+Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com [209.85.128.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8t8xd4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 01:20:47 +0000 (GMT)
+Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-70e7f66cd58so65394997b3.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 18:20:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748913646; x=1749518446;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VE+nhMtYbDV/EMRZgRGQbRzYzLn6vPrGVdIaal0ehfU=;
+        b=pgrDt46cZlTzPUbcUoiL6fU53uNWuDVHYcZ4/P55zvvRYsdRbjLqUrC6aUqH8qMiTg
+         pJ6Ml5707uSGZUKirPXecvYMp6TxF+d5gda7bKmtnKsBvhAtvWKPzms9vFAuASdkObFY
+         lUVaXL/HDSzmrlJETnBzBeemuE3RJYG8kqS3jJTuZAvFpLVrPOiPKuvnP4/AU0M+fP/z
+         EkiDTlD1xxAtsg/UxZlRtwC6BImcq7eoOXbfz/DPz5VsEz3HR47fWjUFw9LjxqyMwfop
+         vPXJuHiqPRwGwIC0fWU/tcdlCu6e54q5zE/VQp8b+Fz+T70WfSTK7HpDdQxxQ9N4bQ38
+         VvSw==
+X-Forwarded-Encrypted: i=1; AJvYcCWEpO3Exuj+Cm1f+4rDUpl6M9sjC0vnZzIMCQevrI4FUyIzkyvK2fgNYwozrsAnPg7MCK59zrchUfxqnLI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCdbSNbFPC2x6kWTwlab5SW1W4ptHoax3szV14s7QBTOGgGXfm
+	j9mOK2H//Ua7fCKyiv2hK/gFgdsW2/vllkBwy/OlN8bbuObzcjUy6MQU+jZyCA0QGUcNP6Yazlh
+	G2zi09qoNDWEhCB7bDe8CeHbdUaIVgS3Q82frg+v/IrOWzbX8rGD6EJU6UoepyFDOYYucCU4HTd
+	B1gwMDJJnJ3UMBB4NINSQESWdGxKpJFdKx/pJqQ7OEKLNLMBefm5j7
+X-Gm-Gg: ASbGncsrVShtPgm6tqpAkGWFYnqSOZJ+p5NbVJiiJPADOSU2wKt/miES5IyqbBOUW8v
+	Y1mTTCcumBRWmar+i04heXRkDkAWQCfepzKjAmJVyRvtUgZckCeWrGiXqmUtDKBULxuPafQ==
+X-Received: by 2002:a05:6902:1003:b0:e7d:7e4a:24dd with SMTP id 3f1490d57ef6-e7f821a2fc5mr22012109276.45.1748913646342;
+        Mon, 02 Jun 2025 18:20:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFPmAlxmvcMTiK/XDr0rnfNiCP56keNN/57x6ceV4nEFPyGnFA1vocZoTQcJKiotEyeUzmiKqgvZWovkOBQytI=
+X-Received: by 2002:a05:6902:1003:b0:e7d:7e4a:24dd with SMTP id
+ 3f1490d57ef6-e7f821a2fc5mr22012088276.45.1748913645973; Mon, 02 Jun 2025
+ 18:20:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250602152015.54366-1-lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:Syh0CgDX4WQ+TT5omVrgOA--.1798S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7AF1fKrW8Aw1xXF45Jw4DCFg_yoW8Zr47pF
-	4kGrn5Crs7JryIyr1Sga4Iyw1rursYkr1UXFZrCw18AF9FqrnIv3WkKF15CFWDCr1SkrW5
-	X3y2g348Ww4jvFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU92b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
-	e2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4I
-	kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
-	WwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
-	0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWU
-	JVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYx
-	BIdaVFxhVjvjDU0xZFpf9x07UAwIDUUUUU=
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+References: <20250201-topic-ignore_unused_warn-v1-1-f29db78cea3a@oss.qualcomm.com>
+ <93b5004dacfe1151ca3abbb0fa31eaa6.sboyd@kernel.org> <87241686-90b5-44fe-b4e9-1a59451e3575@broadcom.com>
+ <CAA8EJppgU7_BoVCDfTuKVveBnnhtHUN6jEzkUaAou7=aypD-Dw@mail.gmail.com>
+In-Reply-To: <CAA8EJppgU7_BoVCDfTuKVveBnnhtHUN6jEzkUaAou7=aypD-Dw@mail.gmail.com>
+From: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+Date: Mon, 2 Jun 2025 20:20:35 -0500
+X-Gm-Features: AX0GCFuHluwTsP7oLiyvKLnMzG_WoD3tJgykr805F96nO8UQuJnf--QyhpYzhjU
+Message-ID: <CADLxj5QnVKkRotvKXNFaORqiQJ1oNPm=SpDzWgnOpWgOcXse5Q@mail.gmail.com>
+Subject: Re: [PATCH] clk: Warn (and therefore taint the kernel) on clk_ignore_unused
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAzMDAxMCBTYWx0ZWRfX/bJsShhu1Udr
+ +Kicqym2a6sRlyMkF7tC0bgsIJlrS7XK2hfBHvXiSWYyf5FZLP9a+tFkbc55q80IlfIQJgWMqqp
+ qWl2d3GxZrtsRLFbMvak6IrMS+Ey3nf/YNY6Yo6a+xXlZtQVpnHw/I7otRoHwBMdkvgyMCBaA1L
+ ptpEOzpEm0om+iUx9GTuYSUOeT2TJ9eAoq+b294sa26mc3R2Y6RveRvunVZcyKLS+5JV8xH8hpf
+ cpes7DtD5P7EkWgEYy093dzlNDDm0WnL4zI1e64uXDUOu+Gd5copOm1Kl27kgFRs2525EFr6jhz
+ VPkBJEetTSyzgbuynD6lhhrQrT91yl+CEx+QtQwJSd4c556oeM1CO55ABlmdxj2DtCl2BP0aJWe
+ nIPFX/GnQj+N4Ci5Kec4gSUOQ6VIxEojUOW/Y55sBPvjma72jhC0NHfoADExQPnk9GDzHjnW
+X-Proofpoint-ORIG-GUID: tRwRJcFtEzaxhhVNW2YVznsw59uzeFwA
+X-Authority-Analysis: v=2.4 cv=OuxPyz/t c=1 sm=1 tr=0 ts=683e4def cx=c_pps
+ a=0mLRTIufkjop4KoA/9S1MA==:117 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
+ a=KKAkSRfTAAAA:8 a=Q-fNiiVtAAAA:8 a=EUspDBNiAAAA:8 a=ecN6cws7RnC_jEw2w0AA:9
+ a=QEXdDO2ut3YA:10 a=WgItmB6HBUc_1uVUp3mg:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: tRwRJcFtEzaxhhVNW2YVznsw59uzeFwA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-02_08,2025-06-02_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 bulkscore=0 malwarescore=0 impostorscore=0 mlxlogscore=999
+ lowpriorityscore=0 spamscore=0 mlxscore=0 suspectscore=0 priorityscore=1501
+ adultscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506030010
 
+On Mon, Mar 3, 2025 at 5:17=E2=80=AFPM Dmitry Baryshkov
+<dmitry.baryshkov@linaro.org> wrote:
+>
+> On Tue, 4 Mar 2025 at 00:16, Florian Fainelli
+> <florian.fainelli@broadcom.com> wrote:
+> >
+> > On 3/3/25 14:48, Stephen Boyd wrote:
+> > > Quoting Konrad Dybcio (2025-02-01 08:52:30)
+> > >> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+[..]
+> > >
+> > > What is a user supposed to do about this warning stack? We already pr=
+int
+> > > a warning. I don't see us dumping the stack when a driver is unfinish=
+ed
+> > > and doesn't implement runtime PM to save power.
+> > >
+> >
+> > Agreed, I don't think this is tremendously helpful given that it does
+> > not even tell you what part is incomplete, it's just a broad warning fo=
+r
+> > the entire system.
+> >
+> > Assuming you have a clock provided that can be used to turn clocks off,
+> > and you did not boot with 'clk_ignore_unused' set on the kernel command
+> > line, then you should discover pretty quickly which driver is not
+> > managing the clocks as it should no?
+>
+> Unfortunately it's sometimes not that easy. And some developers
+> pretend that 'clk_ignore_unused' is a viable way to run the system.
+>
 
+A bit late to the discussion, but I think you got that "pretend" part backw=
+ards.
+Some folks pretend that you can run the Linux kernel on a platform
+with clock provider or consumer drivers built as modules without
+clk_ignore_unused and have a reliable outcome.
 
-on 6/2/2025 11:20 PM, Lorenzo Stoakes wrote:
-> In furtherance of ongoing efforts to ensure people are aware of who
-> de-facto maintains/has an interest in specific parts of mm, as well trying
-> to avoid get_maintainers.pl listing only Andrew and the mailing list for
-> mm files - establish a swap memory management section and add relevant
-> maintainers/reviewers.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> ---
-> REVIEWERS NOTE:
-> 
-> I have taken a look at recent work on the swap and chosen a list of people
-> who seem to be regular and recent contributors/reviewers.
-> 
-> Please let me know if I missed anybody, or if anybody doesn't wish to be
-> added here.
-> 
-> I also realise we have a bunch of non-swap stuff living in some of these
-> files - we will have to address this separately :)
-> 
-> Thanks!
-> 
->  MAINTAINERS | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e66460861bdf..3386272f6bf4 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15674,6 +15674,25 @@ S:	Maintained
->  F:	include/linux/secretmem.h
->  F:	mm/secretmem.c
-> 
-> +MEMORY MANAGEMENT - SWAP
-> +M:	Andrew Morton <akpm@linux-foundation.org>
-> +R:	Yu Zhao <yuzhao@google.com>
-> +R:	Kemeng Shi <shikemeng@huaweicloud.com>
-> +R:	Kairui Song <kasong@tencent.com>
-> +R:	Nhat Pham <nphamcs@gmail.com>
-> +R:	Baoquan He <bhe@redhat.com>
-> +R:	Barry Song <baohua@kernel.org>
-> +R:	Chris Li <chrisl@kernel.org>
-> +L:	linux-mm@kvack.org
-> +S:	Maintained
-> +F:	include/linux/swap.h
-> +F:	include/linux/swapfile.h
-> +F:	include/linux/swapops.h
-> +F:	mm/swap.c
-> +F:	mm/swap.h
-> +F:	mm/swap_state.c
-> +F:	mm/swapfile.c
-> +
->  MEMORY MANAGEMENT - THP (TRANSPARENT HUGE PAGE)
->  M:	Andrew Morton <akpm@linux-foundation.org>
->  M:	David Hildenbrand <david@redhat.com>
-> --
-> 2.49.0
-> 
-I'm happy to help review the swap code. Thanks!
-
-Acked-by: Kemeng Shi <shikemeng@huaweicloud.com>
-
+Regards,
+Bjorn
