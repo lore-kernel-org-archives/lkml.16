@@ -1,129 +1,130 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A832A18E1F;
-	Tue,  3 Jun 2025 01:13:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF033211
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 01:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748913220; cv=none; b=CXyPaY6lF+mLQDxivWW+Ewc1FZ2MAUCLEu7MuqRF+ihBb6dFoMs05TYucZa9Z/j93ey2EOhc+30yYIv0GKo1IVYfpcXuMItgVQX4qZxDjkqtCtQwgFbUj6Dg67qA6n7aGH5+VmycQj6fBHjmb6F3Y8Md5XN71plQXzfrs98f1kQ=
+	t=1748913484; cv=none; b=jftAp38EMOYaOWXCLKseiQkWXEhfCuSX5KIwXMEVgWvQ6DZrxnSCBYl8Cnxr4Y9wkfjg0iFtHCkdp3vV01RsObNlqV9SexPJ8yzNaBrtmBLMpqWJa4flAY6lovCL39UVrmDpKZROph9cuxZ+8nR1xEapYe5TzyqSTG7Y76+agCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748913220; c=relaxed/simple;
-	bh=7gW/dRisZqbtC8go1YjHU5L3xN47zBsjlDB9d4iq/c0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LnUvA/19glW4fc9V2ob9IhOPnO3hzKHvNlQnnnOLLEqVuO+7n9gIS6ch64Wcc01jhXvopMML9eZibBXLSFJRTsMgKhrecpfEDvsrcmNdoqEaDE/8JB/dZM8wDevMtxUCswSSptcATNS8ToXjg3wqbJTsJ8M7XAKB5edVUJhh5/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NxW00P2m; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NxW00P2m"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22e16234307so41650365ad.0;
-        Mon, 02 Jun 2025 18:13:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748913218; x=1749518018; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MLsnidusTvR2g2p7JxRCWvRNvNPCXXCDIPIAxQbtlsg=;
-        b=NxW00P2m5t3DZKZmm/5YvueJlwh2ep3kaJFgiaNZ4E1NTQU9K5qQYHCyix95f5CXhP
-         kkwXwJYYasdK+8S5YR4whETjnl7FRLckJrOImtcRye2u0kJcR/UrNV7iiskCQQytF65a
-         C382FsXiXfZjHBW9Z1mv8+mD7xHgeWEsdDwQxM1j1dVb0kA8EXDDu/1UmyoTRiDPMnxN
-         5D/cf2tuBqtDw4033h1sR5lyql3Xl+mfGXAtYy6U+uUFjtHL0B9RP2Fdewpix07BsdGH
-         RMkn1OQGVT6TfoM/Vxe/DeM3nagX7Lbg9eG1ztB5jwdddNpCOalDHAJhXN1NK9DVhHZz
-         WEuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748913218; x=1749518018;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MLsnidusTvR2g2p7JxRCWvRNvNPCXXCDIPIAxQbtlsg=;
-        b=FIALOMfvH2RwWa3G43OfxHVaLACF67NwZ8pfvg5h5oQPN3CuQ6xZS2VMEztR/mHrO0
-         9fqxJiF0ni/aqi6K8Ojnjy2Jne203yFX5ehaHenDy6kKFKq8XbmvCTJ1YnXSvyu8iyCV
-         BWhjNRMze3PXy5WUjNiaSMjmYPK81gV3nHlJZtQljFKqutQmatUgMrDaMpZyFMEjjTY+
-         zltyU6i8Nes0E6M8pYP2GRFf9xYByCucemtQqZy9MaYK5vIouxn3yRXeVUya93C7IhFq
-         XgDzRo3Ftysb08l/dSF6pDSoLHMjM5q1bCOcdCpHqqicZ3GTdKMU/5YyqI3i1Hc7EvnT
-         515A==
-X-Forwarded-Encrypted: i=1; AJvYcCXAjaBWKrFXmJ0X9pVP0X8HODuheEdPP1Tv5D+VuHUToH5ccwfvzzs8i27KEiT/txWKdMt1vLhCTdEVD6Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxr3YhqWxjRkvccsvXfxtuJn/7EWef0u0pFsNhvt638T1d5LLyX
-	HduLTKdkWH2QBhjK/tvvzSYnsU0i+Nxi1DGgRSt0DP/+pmmQOu4ltDUT
-X-Gm-Gg: ASbGncv8OdtYV+nENQIt1yRbO/MEGMMRtTisNmNZ2E9qFxXozLr2OCZMVcHW3NE4V2T
-	US6gUWYD0Y0nXS16Iqk7a/o58esQc36qqE+A3WcRmnJzsdZZHGvMicEtfP4oVDjI2YQir75dw0U
-	FqgV5G5eAbpsIrNokXrLPLFFm6IJ4fhjgrRD61/HUvu+yKHnFo6Cb3SdsJrgiMX8ii1p7hQMGDq
-	K/6QA/mowGSwLOMIGxS6dsgmwijL2awcRZm/GDJgCXQ8Lzjx0QcQ5NtLrTKnYpFvPNKQn9une/v
-	CZNi2/JyKF8Mj7WkNXuHZ1wnj/sqe8nvjML+FWMhwa2nxPt6RlxcBpKjXxeeBYtpZuJfqPDYPvX
-	fj7r60wCTk+TrJGhSrjVh6iY3yIGgUUek
-X-Google-Smtp-Source: AGHT+IFQvZb3YCe5mONSwwMrv/moJQOEwSytvKy8rOoLUr+Yx17u6dqL4dCaKJzozptQM8fXjFvkqw==
-X-Received: by 2002:a17:903:2611:b0:234:a05f:46df with SMTP id d9443c01a7336-235c9adf362mr7411335ad.7.1748913217538;
-        Mon, 02 Jun 2025 18:13:37 -0700 (PDT)
-Received: from ?IPV6:2a03:83e0:1156:a:8ca:52cd:33e8:b9b8? ([2620:10d:c090:500::4:6528])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e2c29b8sm6238975a91.13.2025.06.02.18.13.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Jun 2025 18:13:37 -0700 (PDT)
-Message-ID: <11d3be92-a934-439e-be36-6d898b437681@gmail.com>
-Date: Mon, 2 Jun 2025 18:13:33 -0700
+	s=arc-20240116; t=1748913484; c=relaxed/simple;
+	bh=rrX0DJqkZjUhX3eOhvumqsMmg25jIm3f+Hwnd4A64PU=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=IjWwo4dwMEqE2Ph9v2in1OQ3vOIlaDwWi7VdPmTWsoTLrp3mkabONusB51WCPvx6T2rZJ6/LkpwKt3LVgFh3qmgi7G+Sdnnj+eijyZSdCLzAS6Qaaa9pZircy9QXW1phTNEved9+q2jaSJub5GhFvjB1rSRj2epEeQpDkgh9J6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bBCWP49JYzYQvDK
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 09:17:53 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id A2E331A0F7E
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 09:17:52 +0800 (CST)
+Received: from [10.174.99.169] (unknown [10.174.99.169])
+	by APP2 (Coremail) with SMTP id Syh0CgDX4WQ+TT5omVrgOA--.1798S2;
+	Tue, 03 Jun 2025 09:17:52 +0800 (CST)
+Subject: Re: [RFC PATCH] MAINTAINERS: add mm swap section
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Yu Zhao <yuzhao@google.com>, Kairui Song <kasong@tencent.com>,
+ Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>,
+ Barry Song <baohua@kernel.org>, Chris Li <chrisl@kernel.org>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250602152015.54366-1-lorenzo.stoakes@oracle.com>
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+Message-ID: <0599e483-fe41-f8b4-ace4-d570ba10c9d5@huaweicloud.com>
+Date: Tue, 3 Jun 2025 09:17:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests: Add version file to kselftest installation dir
-To: Shuah Khan <skhan@linuxfoundation.org>, shuah@kernel.org
-Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250529003417.468478-1-1997cui@gmail.com>
- <4a28c302-b37e-4963-86c2-87c5793c2661@linuxfoundation.org>
-Content-Language: en-US
-From: Tianyi Cui <1997cui@gmail.com>
-In-Reply-To: <4a28c302-b37e-4963-86c2-87c5793c2661@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250602152015.54366-1-lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:Syh0CgDX4WQ+TT5omVrgOA--.1798S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7AF1fKrW8Aw1xXF45Jw4DCFg_yoW8Zr47pF
+	4kGrn5Crs7JryIyr1Sga4Iyw1rursYkr1UXFZrCw18AF9FqrnIv3WkKF15CFWDCr1SkrW5
+	X3y2g348Ww4jvFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU92b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
+	e2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4I
+	kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
+	WwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
+	0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWU
+	JVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYx
+	BIdaVFxhVjvjDU0xZFpf9x07UAwIDUUUUU=
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-On 6/2/25 3:48 PM, Shuah Khan wrote:
-> On 5/28/25 18:33, Tianyi Cui wrote:
->> As titled, adding version file to kselftest installation dir, so the user
->> of the tarball can know which kernel version the tarball belongs to.
->>
->> Signed-off-by: Tianyi Cui <1997cui@gmail.com>
->> ---
->>   tools/testing/selftests/Makefile | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/tools/testing/selftests/Makefile b/tools/testing/
->> selftests/Makefile
->> index a0a6ba47d600..246e9863b45b 100644
->> --- a/tools/testing/selftests/Makefile
->> +++ b/tools/testing/selftests/Makefile
->> @@ -291,6 +291,12 @@ ifdef INSTALL_PATH
->>           $(MAKE) -s --no-print-directory OUTPUT=$$BUILD_TARGET
->> COLLECTION=$$TARGET \
->>               -C $$TARGET emit_tests >> $(TEST_LIST); \
->>       done;
->> +    @if git describe HEAD > /dev/null 2>&1; then \
->> +        git describe HEAD > $(INSTALL_PATH)/VERSION; \
->> +        printf "Version saved to $(INSTALL_PATH)/VERSION\n"; \
->> +    else \
->> +        printf "Unable to get version from git describe\n"; \
->> +    fi
->>   else
->>       $(error Error: set INSTALL_PATH to use install)
->>   endif
+
+
+on 6/2/2025 11:20 PM, Lorenzo Stoakes wrote:
+> In furtherance of ongoing efforts to ensure people are aware of who
+> de-facto maintains/has an interest in specific parts of mm, as well trying
+> to avoid get_maintainers.pl listing only Andrew and the mailing list for
+> mm files - establish a swap memory management section and add relevant
+> maintainers/reviewers.
 > 
-> Why not use "make kernelrelease" to get the version?
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> ---
+> REVIEWERS NOTE:
+> 
+> I have taken a look at recent work on the swap and chosen a list of people
+> who seem to be regular and recent contributors/reviewers.
+> 
+> Please let me know if I missed anybody, or if anybody doesn't wish to be
+> added here.
+> 
+> I also realise we have a bunch of non-swap stuff living in some of these
+> files - we will have to address this separately :)
+> 
+> Thanks!
+> 
+>  MAINTAINERS | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e66460861bdf..3386272f6bf4 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15674,6 +15674,25 @@ S:	Maintained
+>  F:	include/linux/secretmem.h
+>  F:	mm/secretmem.c
+> 
+> +MEMORY MANAGEMENT - SWAP
+> +M:	Andrew Morton <akpm@linux-foundation.org>
+> +R:	Yu Zhao <yuzhao@google.com>
+> +R:	Kemeng Shi <shikemeng@huaweicloud.com>
+> +R:	Kairui Song <kasong@tencent.com>
+> +R:	Nhat Pham <nphamcs@gmail.com>
+> +R:	Baoquan He <bhe@redhat.com>
+> +R:	Barry Song <baohua@kernel.org>
+> +R:	Chris Li <chrisl@kernel.org>
+> +L:	linux-mm@kvack.org
+> +S:	Maintained
+> +F:	include/linux/swap.h
+> +F:	include/linux/swapfile.h
+> +F:	include/linux/swapops.h
+> +F:	mm/swap.c
+> +F:	mm/swap.h
+> +F:	mm/swap_state.c
+> +F:	mm/swapfile.c
+> +
+>  MEMORY MANAGEMENT - THP (TRANSPARENT HUGE PAGE)
+>  M:	Andrew Morton <akpm@linux-foundation.org>
+>  M:	David Hildenbrand <david@redhat.com>
+> --
+> 2.49.0
+> 
+I'm happy to help review the swap code. Thanks!
 
-Thank you for your attention for my first patch! There are mainly two
-reasons:
-
- 1. We'd like to have the `VERSION` file written to to the tarball. This
-is because driver hardware tests needs to be run on specific hardware so
-that tarball is copied onto the DUT and we can compare the running
-kernel version and the test version.`make kernelrelease` only print it
-on screen, so we still need a way to store it into the tarball.
-
- 2. `make kernelrelease` requires the kernel repo to be configured and
-prepared, while `make -C tools/testing/selftests` can run standalone. As
-a result, I don't want above to depend on `make kernelrelease`, which
-may break compatibility of people's existing CI systems.
-
-> thanks,
-> -- Shuah
+Acked-by: Kemeng Shi <shikemeng@huaweicloud.com>
 
