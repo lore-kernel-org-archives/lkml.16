@@ -1,114 +1,424 @@
-Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2332C3272
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 03:48:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC0E1547CC;
+	Tue,  3 Jun 2025 03:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748922533; cv=none; b=mxYKouActW+xS84lq+MBN6PM22HEoKibMKZUJ7Slx+b84Pl6qiyCcVrYvkDCkszJKo+yccoDvdwVA/s6vzYUd9iEM9LsZCfr802hIBbS05VklPyaFsAk9UAu34Nnlm1/gozF7LJB5AzyVMcpO2BvDXWVPAYy0E3qbQI09Oqa35Q=
+	t=1748922781; cv=none; b=ZbkQ7kaluP7HyPxVDa1u/WyZLbw/bSQhz1Tvt1dREBhDCj+D+8pkl+v1HDm3wUAvSLc1kAHVuKFiEEXPTAv++MKgMz9Uqb3m7VtZJJJ4dCBmZoLungHRO/0bsp4659UPfEvtt1vld7+Sibh9ZXWnJ/NAwQjwI51h91zj28TqHyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748922533; c=relaxed/simple;
-	bh=bWBEuRcbXq8aJsRkCOuRq3h3zFdmbbpqBSOVwmVgcyc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=jr47xokYvzvlBlQslGn6oSv0eroFqoDwb5Og4HICssqIPx7KcFNZtTNB234rzrOTnbxLOqssOCoQZzoEKI0dOdU/ODtHRCvroZMcD2mXNDd2Kcuxi+Z//HkrQK07XwmHly3kyCF1ERXM98rWTdvGNP6iOq6CkMJ93aag/GNLkxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maskray.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maskray.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-6062e41916dso2378386eaf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 20:48:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748922530; x=1749527330;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZdL6Pc63Mfaws2Erg/4lSldp2avlQyahxxSrxGNP9Ww=;
-        b=J7o+peRME+EccQgwkpuWQtLwWUkQxD9AlwHnZy+LF2ww9gcnsGoFOWxLfRURSPGR8B
-         SvYW7nhB501lXLOz48wFPaR+nmoiYTanCLzHgab0gIIwledpVkxOxQYHIc9NIb/IynIh
-         xvkQM1KJM+4pX20lX5Krjm93Ae+xrtMC7Plrenz0g9PoEaQFcIsxEnWYbQZER+AK8lSb
-         PuWTkbEk+DdN+68sxbKO9RjMCBK5xI2GZ3ff5DuZ4q4hSQICK9cbX7b3ZU7Q+LolHCwM
-         1Eqt256UeO6U9bIPAH8VzKS8QxA42iOCyxzjQkw0T3oa6nrq8oC2m8S1syV3E7GUXG02
-         gc9A==
-X-Forwarded-Encrypted: i=1; AJvYcCXiXWsEAbZBBE2Uq9YnwlDcBugJKThiPNNIfNyCk16JnqsEFAVypgTUeoYjtpNbC3VP6qFZeuIb2rCJQfc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx19Snfc8ZXSiLHaVJ+Hl3JE6aHRigcQEmxqjjh2Afy/5NKREOB
-	BiNBat7yArbpRAhvv1BnaEc19+cJGN4sZ81ZFOpxhS33vv8Nu+PxCOKn
-X-Gm-Gg: ASbGncsh96Y3DpTo0Lk/emq/lkgTbXLa/g3i7gpCebOGMuXRA6gi90DIy3baqDf1nxo
-	v/wIuVU1O+hRVmPKEUerCfldF6tWZgRAi2xUOrxg68DDrdZ27YE/Q/an/wusJv6wQ/MLumRfSC1
-	tZLD95N2qKZV6xIX+VmtafwdB95Bi4Wm+IYmEbe6Vvk6QgH4CDV6TKSAGbdItmiUhNak7SdBQcw
-	bDKXUzvK5Tv3AGrDz1gYICUBPSAMHCbcBt9UUs6Upq1YXga45o/9GGglXTBpP0xFctLas0ZMszv
-	PAToIU3E62bIYIu3DC9AHlPwB7i/QLGIh2zJLDiqOJC1hVG3QzS7j5XDEkTq/QFT293pxSFs6kv
-	Jx0ZJkOleAl59YX4=
-X-Google-Smtp-Source: AGHT+IFJ0a0/7zpdoajtkBcLg0pJalyYk1624WDxYssQNRcHtUpuFOsvwX5Z/G9JDfUurD4GyikbgQ==
-X-Received: by 2002:a05:6820:2782:b0:60b:aeb2:988c with SMTP id 006d021491bc7-60d52db217dmr7757340eaf.1.1748922530242;
-        Mon, 02 Jun 2025 20:48:50 -0700 (PDT)
-Received: from localhost (37-72-172-174.static.hvvc.us. [37.72.172.174])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-60c14c7122bsm1740655eaf.14.2025.06.02.20.48.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 20:48:49 -0700 (PDT)
-From: Fangrui Song <i@maskray.me>
-Date: Mon, 02 Jun 2025 20:48:44 -0700
-Subject: [PATCH] riscv: vdso: Exclude .rodata from the PT_DYNAMIC segment
+	s=arc-20240116; t=1748922781; c=relaxed/simple;
+	bh=3GzzoqyGWJHpwlcI2zrvuLpf3wJOuywQpbyUpi19BI4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f6NCTh7MXoC7aQer1TBbPQVS+FuWkzwqNw1DIb0xXgR2Z8AK3tszZKPD0qMdHoORvcI52qTWcrefIjWl06udL2tgjI8hqH14ba2iAk6DY/oFnl5+h9xYO3Zltc9m6RjQqMzOxSRHtLshZh2gttk+mZhJJQcyRqfcUKKJhhE2LMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kxumlCYv; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kxumlCYv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748922779; x=1780458779;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=3GzzoqyGWJHpwlcI2zrvuLpf3wJOuywQpbyUpi19BI4=;
+  b=kxumlCYvzVm14Cb8P7c+1Xvj7IVcfMjcLF/YQhjsE/4naT7y+htH12CV
+   n7ul9T+IXFUE60WY/TgIB1b8elPmw4ktJW3nUOCIuKNp4Ql5HaXSJwzT1
+   2pIGAxiu0uP1qN4inz+yI4/K2Rm9/s/tdpWAKpaC9K45Px/tMT18fRiyl
+   UDE5YeBbymqOhID5xVWFdOG6+XT7RschfKY3J1UzNEZpylYZSY2xEwb0q
+   /ulUPGQl/2Pzizd0ytWrV0JjSyvf81GxQ4AJBm53dZKboaswGT7on/mCp
+   /suaQQx6X99tkzD3DvX4bQ6VURlF445mQvMPiLb977TRJVNH/Ijb72lhW
+   g==;
+X-CSE-ConnectionGUID: sJwiu5UgR6u1L6o219JPdQ==
+X-CSE-MsgGUID: f2KhPDzsS9+PV0f5v6MlhA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="51091618"
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="51091618"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 20:52:58 -0700
+X-CSE-ConnectionGUID: CHo+rePZQKqtYl6t+eFUHg==
+X-CSE-MsgGUID: hdBp5Jv3QS2SZcW/zBEwBA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="145064341"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.144]) ([10.124.245.144])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 20:52:56 -0700
+Message-ID: <e75da0ce-670a-4a01-b68a-81201babe1bf@linux.intel.com>
+Date: Tue, 3 Jun 2025 11:52:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250602-riscv-vdso-v1-1-0620cf63cff0@maskray.me>
-X-B4-Tracking: v=1; b=H4sIAJtwPmgC/x3MTQqAIBBA4avIrBP8q0VXiRaiY81GwwEJxLsnL
- b/Fex0YKyHDLjpUbMRU8oReBITb5wslxWkwyqxqU0ZW4tBki1yktpgionXeOJjBUzHR+8+Oc4w
- P+u4HylwAAAA=
-X-Change-ID: 20250602-riscv-vdso-13efdee34a24
-To: Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Ghiti <alex@ghiti.fr>, Nathan Chancellor <nathan@kernel.org>, 
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
- llvm@lists.linux.dev, Fangrui Song <i@maskray.me>
-X-Mailer: b4 0.14.2
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 16/28] KVM: VMX: Manually recalc all MSR intercepts on
+ userspace MSR filter change
+To: Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Borislav Petkov <bp@alien8.de>, Xin Li <xin@zytor.com>,
+ Chao Gao <chao.gao@intel.com>
+References: <20250529234013.3826933-1-seanjc@google.com>
+ <20250529234013.3826933-17-seanjc@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250529234013.3826933-17-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-.rodata is implicitly included in the PT_DYNAMIC segment due to
-inheriting the segment of the preceding .dynamic section (in both GNU ld
-and LLD).  When the .rodata section's size is not a multiple of 16
-bytes on riscv64, llvm-readelf will report a "PT_DYNAMIC dynamic table
-is invalid" warning.  Note: in the presence of the .dynamic section, GNU
-readelf and llvm-readelf's -d option decodes the dynamic section using
-the section.
 
-This issue arose after commit 8f8c1ff879fab60f80f3a7aec3000f47e5b03ba9
-("riscv: vdso.lds.S: remove hardcoded 0x800 .text start addr"), which
-placed .rodata directly after .dynamic by removing .eh_frame.
+On 5/30/2025 7:40 AM, Sean Christopherson wrote:
+> On a userspace MSR filter change, recalculate all MSR intercepts using the
+> filter-agnostic logic instead of maintaining a "shadow copy" of KVM's
+> desired intercepts.  The shadow bitmaps add yet another point of failure,
+> are confusing (e.g. what does "handled specially" mean!?!?), an eyesore,
+> and a maintenance burden.
+>
+> Given that KVM *must* be able to recalculate the correct intercepts at any
+> given time, and that MSR filter updates are not hot paths, there is zero
+> benefit to maintaining the shadow bitmaps.
+>
+> Link: https://lore.kernel.org/all/aCdPbZiYmtni4Bjs@google.com
+> Link: https://lore.kernel.org/all/20241126180253.GAZ0YNTdXH1UGeqsu6@fat_crate.local
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Xin Li <xin@zytor.com>
+> Cc: Chao Gao <chao.gao@intel.com>
+> Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 184 +++++++++++------------------------------
+>  arch/x86/kvm/vmx/vmx.h |   7 --
+>  2 files changed, 47 insertions(+), 144 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 8f7fe04a1998..6ffa2b2b85ce 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -166,31 +166,6 @@ module_param(allow_smaller_maxphyaddr, bool, S_IRUGO);
+>  	RTIT_STATUS_ERROR | RTIT_STATUS_STOPPED | \
+>  	RTIT_STATUS_BYTECNT))
+>  
+> -/*
+> - * List of MSRs that can be directly passed to the guest.
+> - * In addition to these x2apic, PT and LBR MSRs are handled specially.
+> - */
+> -static u32 vmx_possible_passthrough_msrs[MAX_POSSIBLE_PASSTHROUGH_MSRS] = {
+> -	MSR_IA32_SPEC_CTRL,
+> -	MSR_IA32_PRED_CMD,
+> -	MSR_IA32_FLUSH_CMD,
+> -	MSR_IA32_TSC,
+> -#ifdef CONFIG_X86_64
+> -	MSR_FS_BASE,
+> -	MSR_GS_BASE,
+> -	MSR_KERNEL_GS_BASE,
+> -	MSR_IA32_XFD,
+> -	MSR_IA32_XFD_ERR,
+> -#endif
+> -	MSR_IA32_SYSENTER_CS,
+> -	MSR_IA32_SYSENTER_ESP,
+> -	MSR_IA32_SYSENTER_EIP,
+> -	MSR_CORE_C1_RES,
+> -	MSR_CORE_C3_RESIDENCY,
+> -	MSR_CORE_C6_RESIDENCY,
+> -	MSR_CORE_C7_RESIDENCY,
+> -};
+> -
+>  /*
+>   * These 2 parameters are used to config the controls for Pause-Loop Exiting:
+>   * ple_gap:    upper bound on the amount of time between two successive
+> @@ -672,40 +647,6 @@ static inline bool cpu_need_virtualize_apic_accesses(struct kvm_vcpu *vcpu)
+>  	return flexpriority_enabled && lapic_in_kernel(vcpu);
+>  }
+>  
+> -static int vmx_get_passthrough_msr_slot(u32 msr)
+> -{
+> -	int i;
+> -
+> -	switch (msr) {
+> -	case 0x800 ... 0x8ff:
+> -		/* x2APIC MSRs. These are handled in vmx_update_msr_bitmap_x2apic() */
+> -		return -ENOENT;
+> -	case MSR_IA32_RTIT_STATUS:
+> -	case MSR_IA32_RTIT_OUTPUT_BASE:
+> -	case MSR_IA32_RTIT_OUTPUT_MASK:
+> -	case MSR_IA32_RTIT_CR3_MATCH:
+> -	case MSR_IA32_RTIT_ADDR0_A ... MSR_IA32_RTIT_ADDR3_B:
+> -		/* PT MSRs. These are handled in pt_update_intercept_for_msr() */
+> -	case MSR_LBR_SELECT:
+> -	case MSR_LBR_TOS:
+> -	case MSR_LBR_INFO_0 ... MSR_LBR_INFO_0 + 31:
+> -	case MSR_LBR_NHM_FROM ... MSR_LBR_NHM_FROM + 31:
+> -	case MSR_LBR_NHM_TO ... MSR_LBR_NHM_TO + 31:
+> -	case MSR_LBR_CORE_FROM ... MSR_LBR_CORE_FROM + 8:
+> -	case MSR_LBR_CORE_TO ... MSR_LBR_CORE_TO + 8:
+> -		/* LBR MSRs. These are handled in vmx_update_intercept_for_lbr_msrs() */
+> -		return -ENOENT;
+> -	}
+> -
+> -	for (i = 0; i < ARRAY_SIZE(vmx_possible_passthrough_msrs); i++) {
+> -		if (vmx_possible_passthrough_msrs[i] == msr)
+> -			return i;
+> -	}
+> -
+> -	WARN(1, "Invalid MSR %x, please adapt vmx_possible_passthrough_msrs[]", msr);
+> -	return -ENOENT;
+> -}
+> -
+>  struct vmx_uret_msr *vmx_find_uret_msr(struct vcpu_vmx *vmx, u32 msr)
+>  {
+>  	int i;
+> @@ -4015,25 +3956,12 @@ void vmx_disable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
+>  {
+>  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+>  	unsigned long *msr_bitmap = vmx->vmcs01.msr_bitmap;
+> -	int idx;
+>  
+>  	if (!cpu_has_vmx_msr_bitmap())
+>  		return;
+>  
+>  	vmx_msr_bitmap_l01_changed(vmx);
+>  
+> -	/*
+> -	 * Mark the desired intercept state in shadow bitmap, this is needed
+> -	 * for resync when the MSR filters change.
+> -	 */
+> -	idx = vmx_get_passthrough_msr_slot(msr);
+> -	if (idx >= 0) {
+> -		if (type & MSR_TYPE_R)
+> -			__clear_bit(idx, vmx->shadow_msr_intercept.read);
+> -		if (type & MSR_TYPE_W)
+> -			__clear_bit(idx, vmx->shadow_msr_intercept.write);
+> -	}
+> -
 
-This patch resolves the implicit inclusion into PT_DYNAMIC by explicitly
-specifying the :text output section phdr.
+The patch looks good to me. Only a minor code refine on
+vmx_disable_intercept_for_msr().
 
-Reported-by: Nathan Chancellor <nathan@kernel.org>
-Closes: https://github.com/ClangBuiltLinux/linux/issues/2093
-Signed-off-by: Fangrui Song <i@maskray.me>
----
- arch/riscv/kernel/vdso/vdso.lds.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 9a83d5b174c8..e898ff296fd5 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -4041,23 +4041,19 @@ void vmx_disable_intercept_for_msr(struct kvm_vcpu
+*vcpu, u32 msr, int type)
+                        clear_bit(idx, vmx->shadow_msr_intercept.write);
+        }
 
-diff --git a/arch/riscv/kernel/vdso/vdso.lds.S b/arch/riscv/kernel/vdso/vdso.lds.S
-index abc69cda0445b1f500a89b47deefa31349103f08..62e0410f69f09e2bbf27101c000d604193f525cb 100644
---- a/arch/riscv/kernel/vdso/vdso.lds.S
-+++ b/arch/riscv/kernel/vdso/vdso.lds.S
-@@ -30,7 +30,7 @@ SECTIONS
- 		*(.data .data.* .gnu.linkonce.d.*)
- 		*(.dynbss)
- 		*(.bss .bss.* .gnu.linkonce.b.*)
--	}
-+	}						:text
- 
- 	.note		: { *(.note.*) }		:text	:note
- 
+-       if ((type & MSR_TYPE_R) &&
+-           !kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_READ)) {
+-               vmx_set_msr_bitmap_read(msr_bitmap, msr);
+-               type &= ~MSR_TYPE_R;
++       if (type & MSR_TYPE_R) {
++               if (!kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_READ))
++                       vmx_set_msr_bitmap_read(msr_bitmap, msr);
++               else
++                       vmx_clear_msr_bitmap_read(msr_bitmap, msr);
+        }
 
----
-base-commit: 1a3f6980889df3fc90ad3e4a525061d2c138adba
-change-id: 20250602-riscv-vdso-13efdee34a24
+-       if ((type & MSR_TYPE_W) &&
+-           !kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_WRITE)) {
+-               vmx_set_msr_bitmap_write(msr_bitmap, msr);
+-               type &= ~MSR_TYPE_W;
++       if (type & MSR_TYPE_W) {
++               if (!kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_WRITE))
++                       vmx_set_msr_bitmap_write(msr_bitmap, msr);
++               else
++                       vmx_clear_msr_bitmap_write(msr_bitmap, msr);
+        }
+-
+-       if (type & MSR_TYPE_R)
+-               vmx_clear_msr_bitmap_read(msr_bitmap, msr);
+-
+-       if (type & MSR_TYPE_W)
+-               vmx_clear_msr_bitmap_write(msr_bitmap, msr);
+ }
 
-Best regards,
--- 
-Fangrui Song <i@maskray.me>
+It looks simpler and easily understood.
 
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+
+
+
+>  	if ((type & MSR_TYPE_R) &&
+>  	    !kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_READ)) {
+>  		vmx_set_msr_bitmap_read(msr_bitmap, msr);
+> @@ -4057,25 +3985,12 @@ void vmx_enable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
+>  {
+>  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+>  	unsigned long *msr_bitmap = vmx->vmcs01.msr_bitmap;
+> -	int idx;
+>  
+>  	if (!cpu_has_vmx_msr_bitmap())
+>  		return;
+>  
+>  	vmx_msr_bitmap_l01_changed(vmx);
+>  
+> -	/*
+> -	 * Mark the desired intercept state in shadow bitmap, this is needed
+> -	 * for resync when the MSR filter changes.
+> -	 */
+> -	idx = vmx_get_passthrough_msr_slot(msr);
+> -	if (idx >= 0) {
+> -		if (type & MSR_TYPE_R)
+> -			__set_bit(idx, vmx->shadow_msr_intercept.read);
+> -		if (type & MSR_TYPE_W)
+> -			__set_bit(idx, vmx->shadow_msr_intercept.write);
+> -	}
+> -
+>  	if (type & MSR_TYPE_R)
+>  		vmx_set_msr_bitmap_read(msr_bitmap, msr);
+>  
+> @@ -4159,35 +4074,59 @@ void pt_update_intercept_for_msr(struct kvm_vcpu *vcpu)
+>  	}
+>  }
+>  
+> -void vmx_msr_filter_changed(struct kvm_vcpu *vcpu)
+> +static void vmx_recalc_msr_intercepts(struct kvm_vcpu *vcpu)
+>  {
+> -	struct vcpu_vmx *vmx = to_vmx(vcpu);
+> -	u32 i;
+> -
+>  	if (!cpu_has_vmx_msr_bitmap())
+>  		return;
+>  
+> -	/*
+> -	 * Redo intercept permissions for MSRs that KVM is passing through to
+> -	 * the guest.  Disabling interception will check the new MSR filter and
+> -	 * ensure that KVM enables interception if usersepace wants to filter
+> -	 * the MSR.  MSRs that KVM is already intercepting don't need to be
+> -	 * refreshed since KVM is going to intercept them regardless of what
+> -	 * userspace wants.
+> -	 */
+> -	for (i = 0; i < ARRAY_SIZE(vmx_possible_passthrough_msrs); i++) {
+> -		u32 msr = vmx_possible_passthrough_msrs[i];
+> -
+> -		if (!test_bit(i, vmx->shadow_msr_intercept.read))
+> -			vmx_disable_intercept_for_msr(vcpu, msr, MSR_TYPE_R);
+> -
+> -		if (!test_bit(i, vmx->shadow_msr_intercept.write))
+> -			vmx_disable_intercept_for_msr(vcpu, msr, MSR_TYPE_W);
+> +	vmx_disable_intercept_for_msr(vcpu, MSR_IA32_TSC, MSR_TYPE_R);
+> +#ifdef CONFIG_X86_64
+> +	vmx_disable_intercept_for_msr(vcpu, MSR_FS_BASE, MSR_TYPE_RW);
+> +	vmx_disable_intercept_for_msr(vcpu, MSR_GS_BASE, MSR_TYPE_RW);
+> +	vmx_disable_intercept_for_msr(vcpu, MSR_KERNEL_GS_BASE, MSR_TYPE_RW);
+> +#endif
+> +	vmx_disable_intercept_for_msr(vcpu, MSR_IA32_SYSENTER_CS, MSR_TYPE_RW);
+> +	vmx_disable_intercept_for_msr(vcpu, MSR_IA32_SYSENTER_ESP, MSR_TYPE_RW);
+> +	vmx_disable_intercept_for_msr(vcpu, MSR_IA32_SYSENTER_EIP, MSR_TYPE_RW);
+> +	if (kvm_cstate_in_guest(vcpu->kvm)) {
+> +		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C1_RES, MSR_TYPE_R);
+> +		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C3_RESIDENCY, MSR_TYPE_R);
+> +		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
+> +		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
+>  	}
+>  
+>  	/* PT MSRs can be passed through iff PT is exposed to the guest. */
+>  	if (vmx_pt_mode_is_host_guest())
+>  		pt_update_intercept_for_msr(vcpu);
+> +
+> +	if (vcpu->arch.xfd_no_write_intercept)
+> +		vmx_disable_intercept_for_msr(vcpu, MSR_IA32_XFD, MSR_TYPE_RW);
+> +
+> +
+> +	vmx_set_intercept_for_msr(vcpu, MSR_IA32_SPEC_CTRL, MSR_TYPE_RW,
+> +				  !to_vmx(vcpu)->spec_ctrl);
+> +
+> +	if (kvm_cpu_cap_has(X86_FEATURE_XFD))
+> +		vmx_set_intercept_for_msr(vcpu, MSR_IA32_XFD_ERR, MSR_TYPE_R,
+> +					  !guest_cpu_cap_has(vcpu, X86_FEATURE_XFD));
+> +
+> +	if (boot_cpu_has(X86_FEATURE_IBPB))
+> +		vmx_set_intercept_for_msr(vcpu, MSR_IA32_PRED_CMD, MSR_TYPE_W,
+> +					  !guest_has_pred_cmd_msr(vcpu));
+> +
+> +	if (boot_cpu_has(X86_FEATURE_FLUSH_L1D))
+> +		vmx_set_intercept_for_msr(vcpu, MSR_IA32_FLUSH_CMD, MSR_TYPE_W,
+> +					  !guest_cpu_cap_has(vcpu, X86_FEATURE_FLUSH_L1D));
+> +
+> +	/*
+> +	 * x2APIC and LBR MSR intercepts are modified on-demand and cannot be
+> +	 * filtered by userspace.
+> +	 */
+> +}
+> +
+> +void vmx_msr_filter_changed(struct kvm_vcpu *vcpu)
+> +{
+> +	vmx_recalc_msr_intercepts(vcpu);
+>  }
+>  
+>  static int vmx_deliver_nested_posted_interrupt(struct kvm_vcpu *vcpu,
+> @@ -7537,26 +7476,6 @@ int vmx_vcpu_create(struct kvm_vcpu *vcpu)
+>  		evmcs->hv_enlightenments_control.msr_bitmap = 1;
+>  	}
+>  
+> -	/* The MSR bitmap starts with all ones */
+> -	bitmap_fill(vmx->shadow_msr_intercept.read, MAX_POSSIBLE_PASSTHROUGH_MSRS);
+> -	bitmap_fill(vmx->shadow_msr_intercept.write, MAX_POSSIBLE_PASSTHROUGH_MSRS);
+> -
+> -	vmx_disable_intercept_for_msr(vcpu, MSR_IA32_TSC, MSR_TYPE_R);
+> -#ifdef CONFIG_X86_64
+> -	vmx_disable_intercept_for_msr(vcpu, MSR_FS_BASE, MSR_TYPE_RW);
+> -	vmx_disable_intercept_for_msr(vcpu, MSR_GS_BASE, MSR_TYPE_RW);
+> -	vmx_disable_intercept_for_msr(vcpu, MSR_KERNEL_GS_BASE, MSR_TYPE_RW);
+> -#endif
+> -	vmx_disable_intercept_for_msr(vcpu, MSR_IA32_SYSENTER_CS, MSR_TYPE_RW);
+> -	vmx_disable_intercept_for_msr(vcpu, MSR_IA32_SYSENTER_ESP, MSR_TYPE_RW);
+> -	vmx_disable_intercept_for_msr(vcpu, MSR_IA32_SYSENTER_EIP, MSR_TYPE_RW);
+> -	if (kvm_cstate_in_guest(vcpu->kvm)) {
+> -		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C1_RES, MSR_TYPE_R);
+> -		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C3_RESIDENCY, MSR_TYPE_R);
+> -		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
+> -		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
+> -	}
+> -
+>  	vmx->loaded_vmcs = &vmx->vmcs01;
+>  
+>  	if (cpu_need_virtualize_apic_accesses(vcpu)) {
+> @@ -7842,18 +7761,6 @@ void vmx_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+>  		}
+>  	}
+>  
+> -	if (kvm_cpu_cap_has(X86_FEATURE_XFD))
+> -		vmx_set_intercept_for_msr(vcpu, MSR_IA32_XFD_ERR, MSR_TYPE_R,
+> -					  !guest_cpu_cap_has(vcpu, X86_FEATURE_XFD));
+> -
+> -	if (boot_cpu_has(X86_FEATURE_IBPB))
+> -		vmx_set_intercept_for_msr(vcpu, MSR_IA32_PRED_CMD, MSR_TYPE_W,
+> -					  !guest_has_pred_cmd_msr(vcpu));
+> -
+> -	if (boot_cpu_has(X86_FEATURE_FLUSH_L1D))
+> -		vmx_set_intercept_for_msr(vcpu, MSR_IA32_FLUSH_CMD, MSR_TYPE_W,
+> -					  !guest_cpu_cap_has(vcpu, X86_FEATURE_FLUSH_L1D));
+> -
+>  	set_cr4_guest_host_mask(vmx);
+>  
+>  	vmx_write_encls_bitmap(vcpu, NULL);
+> @@ -7869,6 +7776,9 @@ void vmx_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+>  		vmx->msr_ia32_feature_control_valid_bits &=
+>  			~FEAT_CTL_SGX_LC_ENABLED;
+>  
+> +	/* Recalc MSR interception to account for feature changes. */
+> +	vmx_recalc_msr_intercepts(vcpu);
+> +
+>  	/* Refresh #PF interception to account for MAXPHYADDR changes. */
+>  	vmx_update_exception_bitmap(vcpu);
+>  }
+> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+> index 0afe97e3478f..a26fe3d9e1d2 100644
+> --- a/arch/x86/kvm/vmx/vmx.h
+> +++ b/arch/x86/kvm/vmx/vmx.h
+> @@ -294,13 +294,6 @@ struct vcpu_vmx {
+>  	struct pt_desc pt_desc;
+>  	struct lbr_desc lbr_desc;
+>  
+> -	/* Save desired MSR intercept (read: pass-through) state */
+> -#define MAX_POSSIBLE_PASSTHROUGH_MSRS	16
+> -	struct {
+> -		DECLARE_BITMAP(read, MAX_POSSIBLE_PASSTHROUGH_MSRS);
+> -		DECLARE_BITMAP(write, MAX_POSSIBLE_PASSTHROUGH_MSRS);
+> -	} shadow_msr_intercept;
+> -
+>  	/* ve_info must be page aligned. */
+>  	struct vmx_ve_information *ve_info;
+>  };
