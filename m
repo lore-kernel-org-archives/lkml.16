@@ -1,322 +1,140 @@
-Received: from mail-24420.protonmail.ch (mail-24420.protonmail.ch [109.224.244.20])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2131.outbound.protection.outlook.com [40.107.20.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 405FE27F728;
-	Tue,  3 Jun 2025 08:05:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748937962; cv=none; b=XWW7mEgAB2kplS+IHltGe2c3Kmb/HrNuEG8rxuS7eivmBZgffBYwS6AtBTlX/AFJ33iAaeKutl7RdllDcaK8/53w0B+zgZdftjItlQP3P6iTcheZ0YfrX7KtHTvEkXW1TNAc5LSNh/WZ8zZKZfrla6C4eHL7PomFCGAdfDoQH5A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748937962; c=relaxed/simple;
-	bh=h8xM7Wq6+qjVZ3DBnkcHEoOOJLF2fsBp0pGSWQQOcuY=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tyaDE1eWclqOszJONcrhA/skHzTfCSO6kEkZr1z9VrMqsbLzFongNr3VnFAYyDN2gJhg86zY47xNAprZ/T1FLjKkeJ7h0xg1mnTmrODDh601I5Vn5m67Ac+J7H+cYRSoVE8xCF7q6SHOoGIsDIBNRiBgfI41vl57dmmX43aswZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=nxsw.ie; spf=pass smtp.mailfrom=nxsw.ie; dkim=pass (2048-bit key) header.d=nxsw.ie header.i=@nxsw.ie header.b=DNKrBj7e; arc=none smtp.client-ip=109.224.244.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=nxsw.ie
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxsw.ie
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B27280026;
+	Tue,  3 Jun 2025 08:06:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.131
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748937985; cv=fail; b=MF/ogUCWs+GYNib1KpxXogYnlUlMTGgYbMZ2N1cymS2+j+GMi8Og+PaGEtA4d8tmA4xL+VptFZFRxTCUbpFgRcMKroLcxZD+3jAIW/tyZmG3OccWrb8dBhCXdBB5/Nqaz1PDS1lylR45W1oSIkDk801ggyPRLlv4NCtT3PtQuxI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748937985; c=relaxed/simple;
+	bh=3GLSlHT3JIT0QedShjch37FFJYYfyBbRShRJecDl+hY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sKUOlk1tatPghHLyfjaM32AodhPHreIb+9iYAKOAIslYu5b+dkxfxYXEpw62btBmn9OVHfgeV6yR57et2DKg3AEb9nha/oLazt0fsWWRSTtAly605VxaHy2d0Zmlu8Hnuz1I9VzqTDJmRdnAFfcd/cvaYY/Hc7V0+hMRcGcvFiM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=technica-engineering.de; spf=pass smtp.mailfrom=technica-engineering.de; dkim=pass (1024-bit key) header.d=technica-engineering.de header.i=@technica-engineering.de header.b=V/XGBVhI; arc=fail smtp.client-ip=40.107.20.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=technica-engineering.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=technica-engineering.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxsw.ie header.i=@nxsw.ie header.b="DNKrBj7e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxsw.ie;
-	s=protonmail2; t=1748937958; x=1749197158;
-	bh=Sq9HcazlldadxsbigxS4uwVdL4EGMPGLCLgMT9h3n9g=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=DNKrBj7e0TSKcKobr1Oy6YdbWWRsU7cBdkLcguH8JRnJUWn0W9cW1dbEHvOfYz7Iq
-	 8KsVdPFWNp22RPmK82jc26TngVq+tXB/kqI2PS1GAM838mlYHnEXf5MTQWpdfQPDbW
-	 LZpnc2FSmQxWX8VdkRN6PoEcpf7KiDK/dsVGFM8/1Cfq1HMwT2ZWNG6i59gZd42WrS
-	 Agfz7xKBtLj/awJth3rWGEbGuLFFEBef/V1dOdtjkZThYZ3XpV7uK/tVENPWxFNoBU
-	 KmkzyiIu8gD3VBTlGIKXskAy1KlGUDWZAmUcVKRwYh+2uloejWZPwHhupCGVdudFQo
-	 sEcrLHrzX06Wg==
-Date: Tue, 03 Jun 2025 08:05:51 +0000
-To: Jagadeesh Kona <quic_jkona@quicinc.com>, Bjorn Andersson <andersson@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>, Dmitry Baryshkov <lumag@kernel.org>
-From: Bryan O'Donoghue <bod.linux@nxsw.ie>
-Cc: Ajit Pandey <quic_ajipan@quicinc.com>, Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>, Satya Priya Kakitapalli <quic_skakitap@quicinc.com>, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v5 09/18] clk: qcom: camcc-sm8450: Move PLL & clk configuration to really probe
-Message-ID: <e602e789-2391-4812-bc2b-e3ef594b106e@nxsw.ie>
-In-Reply-To: <20250530-videocc-pll-multi-pd-voting-v5-9-02303b3a582d@quicinc.com>
-References: <20250530-videocc-pll-multi-pd-voting-v5-0-02303b3a582d@quicinc.com> <20250530-videocc-pll-multi-pd-voting-v5-9-02303b3a582d@quicinc.com>
-Feedback-ID: 136405006:user:proton
-X-Pm-Message-ID: bf111c8de727848e072502c907d4dc929fc80e0a
+	dkim=pass (1024-bit key) header.d=technica-engineering.de header.i=@technica-engineering.de header.b="V/XGBVhI"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cnPm70GoOozlPqbiecYsX+CiWaMG10boUeL6p8sj322aqEoRv3BXhjtRtzX4a0y5dWILLkcRi3lKCYzVjQyENRnlv4SrDhrjPorsL7Ld7ziigjPxsKI9bitEF+1b8IowVCixunceZUjAnuh/igZ9OYEn9cg1wTNSqasB+r4g1DGOlv4qnx43nZ5a0jsr3yMiGSbCuQaFYJ6WD96LnScYm4apkJEO8FDY3vvy6m0Dfdkox3oLmDMrI3car7caQloeSSqIdJlZ+rfaF1OIZKjMTyrlsw12kndSDpmN14DHZ0+QIk5saWGN/WKXEzI1x4F7/2TDAkkMCtR5BPicBsLcmA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5LR48PESnHB9W9EkFIA2R5uuwgfcF0hQ8w+j+RrJ+Kk=;
+ b=nNAVVwmUCNca+IGx5PISwQ+nYq3ZB4GLyiu71CeILvpBFFgC+Kduwv5kguOPQ6itnb2nFH1IiOkqWujElAaZQny8Ncxb4478RelZ0Kev5T6Pg6eh+eHKVF7nkawo+u6yK8slGK05xXhhpUmWtEqPmOEl+yhhkINd9VxQJFQQqlIAiWCFkFFR974p/laLlv/ptEVhkUWkildDo4Rw5ZzvbOWJ2BHt/aJj7Ggmn9CHNS2dPSbjPRNSzw59fZuRhkHwqx/7zHM4dO3HOc1Xvuf3V8UeQN6IBmFoyBljJpBj78yrMuiChqqudYMdVdbk44FAxPqRDeThxuJPWBqBp6Kg8g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 2.136.200.136) smtp.rcpttodomain=davemloft.net
+ smtp.mailfrom=technica-engineering.de; dmarc=fail (p=reject sp=reject
+ pct=100) action=oreject header.from=technica-engineering.de; dkim=none
+ (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=technica-engineering.de; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5LR48PESnHB9W9EkFIA2R5uuwgfcF0hQ8w+j+RrJ+Kk=;
+ b=V/XGBVhIF0Kx4hxkncO1dA4kjFruoDRvUt372PaCJ0mjTyy1jI0ALFaK0gBSQEJJtrPkjlsqUExnNy1bfJp3LIvSE1oCA1wdPe22sadE1rdx237gn2K0TgF+lj68/YQwjhjAB9PHeyVtb65jExLcynhYFKfAHjImnuRsi5tHrNE=
+Received: from DU2PR04CA0066.eurprd04.prod.outlook.com (2603:10a6:10:232::11)
+ by DU0PR08MB7882.eurprd08.prod.outlook.com (2603:10a6:10:3b2::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.34; Tue, 3 Jun
+ 2025 08:06:20 +0000
+Received: from DU6PEPF0000A7DD.eurprd02.prod.outlook.com
+ (2603:10a6:10:232:cafe::70) by DU2PR04CA0066.outlook.office365.com
+ (2603:10a6:10:232::11) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.26 via Frontend Transport; Tue,
+ 3 Jun 2025 08:06:20 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 2.136.200.136)
+ smtp.mailfrom=technica-engineering.de; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=oreject header.from=technica-engineering.de;
+Received-SPF: Fail (protection.outlook.com: domain of technica-engineering.de
+ does not designate 2.136.200.136 as permitted sender)
+ receiver=protection.outlook.com; client-ip=2.136.200.136;
+ helo=jump.ad.technica-electronics.es;
+Received: from jump.ad.technica-electronics.es (2.136.200.136) by
+ DU6PEPF0000A7DD.mail.protection.outlook.com (10.167.8.37) with Microsoft SMTP
+ Server id 15.20.8792.29 via Frontend Transport; Tue, 3 Jun 2025 08:06:19
+ +0000
+Received: from dalek.ad.technica-electronics.es (unknown [10.10.2.101])
+	by jump.ad.technica-electronics.es (Postfix) with ESMTP id 8DBB0400EB;
+	Tue,  3 Jun 2025 10:06:19 +0200 (CEST)
+From: Carlos Fernandez <carlos.fernandez@technica-engineering.de>
+To:
+Cc: carlos.fernandez@technica-engineering.de,
+	Sabrina Dubroca <sd@queasysnail.net>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] macsec: MACsec SCI assignment for ES = 0
+Date: Tue,  3 Jun 2025 10:06:13 +0200
+Message-ID: <20250603080618.1727268-1-carlos.fernandez@technica-engineering.de>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250529124455.2761783-1-carlos.fernandez@technica-engineering.de>
+References: <20250529124455.2761783-1-carlos.fernandez@technica-engineering.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU6PEPF0000A7DD:EE_|DU0PR08MB7882:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: dc3294fe-5ab7-47e3-0bd7-08dda275860f
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?kflxdrGbpH3hMWpz82+yrs4tSRz2iNnG+MfXOFrIQKLjgQwY9B0loyH04j/9?=
+ =?us-ascii?Q?b+bNGoSrd/+d5w6lTUGnLPLKmqMAlmoqPES86haEYek/beUz4nnqTnQMShZi?=
+ =?us-ascii?Q?0e+TR3WX0ZYAPveaJ6ioRRyoqZjdbHDtRVbJt4YUMiTKrGGUlbmCWU+yEN22?=
+ =?us-ascii?Q?q8hGGNdk8bWcit3psnMawqALmOQsA9IHsTn1rjXWTdL80IAeI24kGwSLxVpb?=
+ =?us-ascii?Q?p8DZCWWgGlKYd7v2E3cwWSi9jz42xFtz5c7ZtGZvVDhyyKrsvcna1NkXj4Rv?=
+ =?us-ascii?Q?2t1gG3A0GBFu8J727UWDpWku1YWrdgfrEBnMh6OWVk34wvhPb1Co+7AdAYj0?=
+ =?us-ascii?Q?A0AkH/9xubBdcYWstz14IE5Kb/OYTtKAD+5OKtIxjcmYNa+4hWwfnCyXX6Kb?=
+ =?us-ascii?Q?CAWt2NAMPtB/HEiTqZntsuRSHh0U9e85WmEEnzp7C9/uOAfIxKjeAe0TZU3/?=
+ =?us-ascii?Q?vofYCXysXQx1c5Xs68VKnHx/0EzC0HaxxRuF752bZNn3+a39ev37NRc623S/?=
+ =?us-ascii?Q?oVS6cfLOetSvaK+bizdDZLPsz8yHbH0hQA/bSsy8Nz1mGQscMFWu8J3urv6X?=
+ =?us-ascii?Q?S0Qt/Tti3EhgXR9M2iiDoa4ob5Vis//vCZdvX0zl5uP57YLVXhveJCQ+RAJX?=
+ =?us-ascii?Q?mKspaE3KLTQtQ9SMYh97mI9JHmg9CTBZb68SQOJwBU6cQ42qe4lNRBs5d1/M?=
+ =?us-ascii?Q?jM/Nz8Y0UcwEY9eb0iCCUKghMhwt49g/Ec6A6VFY7HqHEE9SgbVATmbuHJos?=
+ =?us-ascii?Q?r4hOzZRHuhAIGlPBC3nq9C7JTB4Isxp7CfMTJJa7c/RJ+mHXLzE6wNkmMSQW?=
+ =?us-ascii?Q?OtZC9o42RHtA+L2gOMwIRvN2BNNHCN9WVwvHi95hDodPoVBUMCLpxlg7FZQJ?=
+ =?us-ascii?Q?HTpWc0lwslW/fsdE3+AsphxF1EC6YB3d3ZGoRo2ocJRLX9ihapJ5aR0mUr3a?=
+ =?us-ascii?Q?EjPPZQXC0g1V8zFf6aKk1hcU6i4KaW63PFw/KtDW6ndHKQIVx/xsn4WM6u/z?=
+ =?us-ascii?Q?cuiVdcOfDT+s4aQH/Oh1qfdLd33QTC8IKESdKqgpYn5lU53D+YWsnUSmrKMZ?=
+ =?us-ascii?Q?SAps4dMSJ3LSSIWhpfoszQ5rqlLGWtB0rBR7uf8RHLtp6V0yD+BD9Dc19ht4?=
+ =?us-ascii?Q?M7ZAcThhPzy+rLUlrEO0/Gim/VKlB9DrdoWKGzvBOVOBxYezqlPWco/rL9cj?=
+ =?us-ascii?Q?QXwPGEyrZ8PP/b5nVH62bV8Y1iFO0kIkxGfgL3uUpZ1W9nskn08WfUWWSkLf?=
+ =?us-ascii?Q?VY15noUTC36t6JhFFq/tX3ARisbXVbZp8arODdp2HuyevL6ktvldik5PS42j?=
+ =?us-ascii?Q?2L0HaJLF+vUaqlOuIw3A+D5fO80ZLkjAuIgszTe61XnU2ltIsLpfyyFb1FTP?=
+ =?us-ascii?Q?x4rBuh+Uax7ruO7W/+RItTcCP1jhnnXpYWD394pU7d9c8VU3130xA6wL1vhd?=
+ =?us-ascii?Q?C50034PWy3cpurZ2vsDiRTz9ovTfNxSiUnePPh7ljmEr7NHiBSRpqdteoYKL?=
+ =?us-ascii?Q?NunlUM/pSksCxfxfmGGqghWvbwXSCS4Ca1h0?=
+X-Forefront-Antispam-Report:
+	CIP:2.136.200.136;CTRY:ES;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:jump.ad.technica-electronics.es;PTR:136.red-2-136-200.staticip.rima-tde.net;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(1800799024);DIR:OUT;SFP:1102;
+X-OriginatorOrg: technica-engineering.de
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2025 08:06:19.9213
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: dc3294fe-5ab7-47e3-0bd7-08dda275860f
+X-MS-Exchange-CrossTenant-Id: 1f04372a-6892-44e3-8f58-03845e1a70c1
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=1f04372a-6892-44e3-8f58-03845e1a70c1;Ip=[2.136.200.136];Helo=[jump.ad.technica-electronics.es]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DU6PEPF0000A7DD.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB7882
 
-On 30/05/2025 14:20, Jagadeesh Kona wrote:
-> Camera PLLs on SM8450/SM8475 require both MMCX and MXC rails to be
-> kept ON to configure the PLLs properly. Hence move runtime power
-> management, PLL configuration and enable critical clocks to
-> qcom_cc_really_probe() which ensures all required power domains are in
-> enabled state before configuring the PLLs or enabling the clocks.
->=20
-> This change also removes the modelling for cam_cc_gdsc_clk and keeps it
-> always ON from probe since using CLK_IS_CRITICAL will prevent the clock
-> controller associated power domains from collapsing due to clock framewor=
-k
-> invoking clk_pm_runtime_get() during prepare.
->=20
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
-> ---
->   drivers/clk/qcom/camcc-sm8450.c | 89 ++++++++++++++++++++--------------=
--------
->   1 file changed, 44 insertions(+), 45 deletions(-)
->=20
-> diff --git a/drivers/clk/qcom/camcc-sm8450.c b/drivers/clk/qcom/camcc-sm8=
-450.c
-> index 08982737e4901c0703e19f8dd2d302e24748210c..4dd8be8cc9881c890d2e7c3a1=
-2f12816a9ab47dc 100644
-> --- a/drivers/clk/qcom/camcc-sm8450.c
-> +++ b/drivers/clk/qcom/camcc-sm8450.c
-> @@ -86,6 +86,7 @@ static const struct alpha_pll_config sm8475_cam_cc_pll0=
-_config =3D {
->=20
->   static struct clk_alpha_pll cam_cc_pll0 =3D {
->   =09.offset =3D 0x0,
-> +=09.config =3D &cam_cc_pll0_config,
->   =09.vco_table =3D lucid_evo_vco,
->   =09.num_vco =3D ARRAY_SIZE(lucid_evo_vco),
->   =09.regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_LUCID_EVO],
-> @@ -191,6 +192,7 @@ static const struct alpha_pll_config sm8475_cam_cc_pl=
-l1_config =3D {
->=20
->   static struct clk_alpha_pll cam_cc_pll1 =3D {
->   =09.offset =3D 0x1000,
-> +=09.config =3D &cam_cc_pll1_config,
->   =09.vco_table =3D lucid_evo_vco,
->   =09.num_vco =3D ARRAY_SIZE(lucid_evo_vco),
->   =09.regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_LUCID_EVO],
-> @@ -257,6 +259,7 @@ static const struct alpha_pll_config sm8475_cam_cc_pl=
-l2_config =3D {
->=20
->   static struct clk_alpha_pll cam_cc_pll2 =3D {
->   =09.offset =3D 0x2000,
-> +=09.config =3D &cam_cc_pll2_config,
->   =09.vco_table =3D rivian_evo_vco,
->   =09.num_vco =3D ARRAY_SIZE(rivian_evo_vco),
->   =09.regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_RIVIAN_EVO],
-> @@ -296,6 +299,7 @@ static const struct alpha_pll_config sm8475_cam_cc_pl=
-l3_config =3D {
->=20
->   static struct clk_alpha_pll cam_cc_pll3 =3D {
->   =09.offset =3D 0x3000,
-> +=09.config =3D &cam_cc_pll3_config,
->   =09.vco_table =3D lucid_evo_vco,
->   =09.num_vco =3D ARRAY_SIZE(lucid_evo_vco),
->   =09.regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_LUCID_EVO],
-> @@ -368,6 +372,7 @@ static const struct alpha_pll_config sm8475_cam_cc_pl=
-l4_config =3D {
->=20
->   static struct clk_alpha_pll cam_cc_pll4 =3D {
->   =09.offset =3D 0x4000,
-> +=09.config =3D &cam_cc_pll4_config,
->   =09.vco_table =3D lucid_evo_vco,
->   =09.num_vco =3D ARRAY_SIZE(lucid_evo_vco),
->   =09.regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_LUCID_EVO],
-> @@ -440,6 +445,7 @@ static const struct alpha_pll_config sm8475_cam_cc_pl=
-l5_config =3D {
->=20
->   static struct clk_alpha_pll cam_cc_pll5 =3D {
->   =09.offset =3D 0x5000,
-> +=09.config =3D &cam_cc_pll5_config,
->   =09.vco_table =3D lucid_evo_vco,
->   =09.num_vco =3D ARRAY_SIZE(lucid_evo_vco),
->   =09.regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_LUCID_EVO],
-> @@ -512,6 +518,7 @@ static const struct alpha_pll_config sm8475_cam_cc_pl=
-l6_config =3D {
->=20
->   static struct clk_alpha_pll cam_cc_pll6 =3D {
->   =09.offset =3D 0x6000,
-> +=09.config =3D &cam_cc_pll6_config,
->   =09.vco_table =3D lucid_evo_vco,
->   =09.num_vco =3D ARRAY_SIZE(lucid_evo_vco),
->   =09.regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_LUCID_EVO],
-> @@ -584,6 +591,7 @@ static const struct alpha_pll_config sm8475_cam_cc_pl=
-l7_config =3D {
->=20
->   static struct clk_alpha_pll cam_cc_pll7 =3D {
->   =09.offset =3D 0x7000,
-> +=09.config =3D &cam_cc_pll7_config,
->   =09.vco_table =3D lucid_evo_vco,
->   =09.num_vco =3D ARRAY_SIZE(lucid_evo_vco),
->   =09.regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_LUCID_EVO],
-> @@ -656,6 +664,7 @@ static const struct alpha_pll_config sm8475_cam_cc_pl=
-l8_config =3D {
->=20
->   static struct clk_alpha_pll cam_cc_pll8 =3D {
->   =09.offset =3D 0x8000,
-> +=09.config =3D &cam_cc_pll8_config,
->   =09.vco_table =3D lucid_evo_vco,
->   =09.num_vco =3D ARRAY_SIZE(lucid_evo_vco),
->   =09.regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_LUCID_EVO],
-> @@ -1476,24 +1485,6 @@ static struct clk_rcg2 cam_cc_xo_clk_src =3D {
->   =09},
->   };
->=20
-> -static struct clk_branch cam_cc_gdsc_clk =3D {
-> -=09.halt_reg =3D 0x1320c,
-> -=09.halt_check =3D BRANCH_HALT,
-> -=09.clkr =3D {
-> -=09=09.enable_reg =3D 0x1320c,
-> -=09=09.enable_mask =3D BIT(0),
-> -=09=09.hw.init =3D &(const struct clk_init_data) {
-> -=09=09=09.name =3D "cam_cc_gdsc_clk",
-> -=09=09=09.parent_hws =3D (const struct clk_hw*[]) {
-> -=09=09=09=09&cam_cc_xo_clk_src.clkr.hw,
-> -=09=09=09},
-> -=09=09=09.num_parents =3D 1,
-> -=09=09=09.flags =3D CLK_IS_CRITICAL | CLK_SET_RATE_PARENT,
-> -=09=09=09.ops =3D &clk_branch2_ops,
-> -=09=09},
-> -=09},
-> -};
-> -
->   static struct clk_branch cam_cc_bps_ahb_clk =3D {
->   =09.halt_reg =3D 0x1004c,
->   =09.halt_check =3D BRANCH_HALT,
-> @@ -2819,7 +2810,6 @@ static struct clk_regmap *cam_cc_sm8450_clocks[] =
-=3D {
->   =09[CAM_CC_CSIPHY4_CLK] =3D &cam_cc_csiphy4_clk.clkr,
->   =09[CAM_CC_CSIPHY5_CLK] =3D &cam_cc_csiphy5_clk.clkr,
->   =09[CAM_CC_FAST_AHB_CLK_SRC] =3D &cam_cc_fast_ahb_clk_src.clkr,
-> -=09[CAM_CC_GDSC_CLK] =3D &cam_cc_gdsc_clk.clkr,
->   =09[CAM_CC_ICP_AHB_CLK] =3D &cam_cc_icp_ahb_clk.clkr,
->   =09[CAM_CC_ICP_CLK] =3D &cam_cc_icp_clk.clkr,
->   =09[CAM_CC_ICP_CLK_SRC] =3D &cam_cc_icp_clk_src.clkr,
-> @@ -2913,6 +2903,22 @@ static const struct qcom_reset_map cam_cc_sm8450_r=
-esets[] =3D {
->   =09[CAM_CC_SFE_1_BCR] =3D { 0x13094 },
->   };
->=20
-> +static struct clk_alpha_pll *cam_cc_sm8450_plls[] =3D {
-> +=09&cam_cc_pll0,
-> +=09&cam_cc_pll1,
-> +=09&cam_cc_pll2,
-> +=09&cam_cc_pll3,
-> +=09&cam_cc_pll4,
-> +=09&cam_cc_pll5,
-> +=09&cam_cc_pll6,
-> +=09&cam_cc_pll7,
-> +=09&cam_cc_pll8,
-> +};
-> +
-> +static u32 cam_cc_sm8450_critical_cbcrs[] =3D {
-> +=090x1320c, /* CAM_CC_GDSC_CLK */
-> +};
-> +
->   static const struct regmap_config cam_cc_sm8450_regmap_config =3D {
->   =09.reg_bits =3D 32,
->   =09.reg_stride =3D 4,
-> @@ -3021,6 +3027,13 @@ static struct gdsc *cam_cc_sm8450_gdscs[] =3D {
->   =09[TITAN_TOP_GDSC] =3D &titan_top_gdsc,
->   };
->=20
-> +static struct qcom_cc_driver_data cam_cc_sm8450_driver_data =3D {
-> +=09.alpha_plls =3D cam_cc_sm8450_plls,
-> +=09.num_alpha_plls =3D ARRAY_SIZE(cam_cc_sm8450_plls),
-> +=09.clk_cbcrs =3D cam_cc_sm8450_critical_cbcrs,
-> +=09.num_clk_cbcrs =3D ARRAY_SIZE(cam_cc_sm8450_critical_cbcrs),
-> +};
-> +
->   static const struct qcom_cc_desc cam_cc_sm8450_desc =3D {
->   =09.config =3D &cam_cc_sm8450_regmap_config,
->   =09.clks =3D cam_cc_sm8450_clocks,
-> @@ -3029,6 +3042,8 @@ static const struct qcom_cc_desc cam_cc_sm8450_desc=
- =3D {
->   =09.num_resets =3D ARRAY_SIZE(cam_cc_sm8450_resets),
->   =09.gdscs =3D cam_cc_sm8450_gdscs,
->   =09.num_gdscs =3D ARRAY_SIZE(cam_cc_sm8450_gdscs),
-> +=09.use_rpm =3D true,
-> +=09.driver_data =3D &cam_cc_sm8450_driver_data,
->   };
->=20
->   static const struct of_device_id cam_cc_sm8450_match_table[] =3D {
-> @@ -3040,12 +3055,6 @@ MODULE_DEVICE_TABLE(of, cam_cc_sm8450_match_table)=
-;
->=20
->   static int cam_cc_sm8450_probe(struct platform_device *pdev)
->   {
-> -=09struct regmap *regmap;
-> -
-> -=09regmap =3D qcom_cc_map(pdev, &cam_cc_sm8450_desc);
-> -=09if (IS_ERR(regmap))
-> -=09=09return PTR_ERR(regmap);
-> -
->   =09if (of_device_is_compatible(pdev->dev.of_node, "qcom,sm8475-camcc"))=
- {
->   =09=09/* Update CAMCC PLL0 */
->   =09=09cam_cc_pll0.regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_LUCID_=
-OLE];
-> @@ -3092,28 +3101,18 @@ static int cam_cc_sm8450_probe(struct platform_de=
-vice *pdev)
->   =09=09cam_cc_pll8_out_even.regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TY=
-PE_LUCID_OLE];
->   =09=09cam_cc_pll8_out_even.clkr.hw.init =3D &sm8475_cam_cc_pll8_out_eve=
-n_init;
->=20
-> -=09=09clk_lucid_ole_pll_configure(&cam_cc_pll0, regmap, &sm8475_cam_cc_p=
-ll0_config);
-> -=09=09clk_lucid_ole_pll_configure(&cam_cc_pll1, regmap, &sm8475_cam_cc_p=
-ll1_config);
-> -=09=09clk_rivian_evo_pll_configure(&cam_cc_pll2, regmap, &sm8475_cam_cc_=
-pll2_config);
-> -=09=09clk_lucid_ole_pll_configure(&cam_cc_pll3, regmap, &sm8475_cam_cc_p=
-ll3_config);
-> -=09=09clk_lucid_ole_pll_configure(&cam_cc_pll4, regmap, &sm8475_cam_cc_p=
-ll4_config);
-> -=09=09clk_lucid_ole_pll_configure(&cam_cc_pll5, regmap, &sm8475_cam_cc_p=
-ll5_config);
-> -=09=09clk_lucid_ole_pll_configure(&cam_cc_pll6, regmap, &sm8475_cam_cc_p=
-ll6_config);
-> -=09=09clk_lucid_ole_pll_configure(&cam_cc_pll7, regmap, &sm8475_cam_cc_p=
-ll7_config);
-> -=09=09clk_lucid_ole_pll_configure(&cam_cc_pll8, regmap, &sm8475_cam_cc_p=
-ll8_config);
-> -=09} else {
-> -=09=09clk_lucid_evo_pll_configure(&cam_cc_pll0, regmap, &cam_cc_pll0_con=
-fig);
-> -=09=09clk_lucid_evo_pll_configure(&cam_cc_pll1, regmap, &cam_cc_pll1_con=
-fig);
-> -=09=09clk_rivian_evo_pll_configure(&cam_cc_pll2, regmap, &cam_cc_pll2_co=
-nfig);
-> -=09=09clk_lucid_evo_pll_configure(&cam_cc_pll3, regmap, &cam_cc_pll3_con=
-fig);
-> -=09=09clk_lucid_evo_pll_configure(&cam_cc_pll4, regmap, &cam_cc_pll4_con=
-fig);
-> -=09=09clk_lucid_evo_pll_configure(&cam_cc_pll5, regmap, &cam_cc_pll5_con=
-fig);
-> -=09=09clk_lucid_evo_pll_configure(&cam_cc_pll6, regmap, &cam_cc_pll6_con=
-fig);
-> -=09=09clk_lucid_evo_pll_configure(&cam_cc_pll7, regmap, &cam_cc_pll7_con=
-fig);
-> -=09=09clk_lucid_evo_pll_configure(&cam_cc_pll8, regmap, &cam_cc_pll8_con=
-fig);
-> +=09=09cam_cc_pll0.config =3D &sm8475_cam_cc_pll0_config;
-> +=09=09cam_cc_pll1.config =3D &sm8475_cam_cc_pll1_config;
-> +=09=09cam_cc_pll2.config =3D &sm8475_cam_cc_pll2_config;
-> +=09=09cam_cc_pll3.config =3D &sm8475_cam_cc_pll3_config;
-> +=09=09cam_cc_pll4.config =3D &sm8475_cam_cc_pll4_config;
-> +=09=09cam_cc_pll5.config =3D &sm8475_cam_cc_pll5_config;
-> +=09=09cam_cc_pll6.config =3D &sm8475_cam_cc_pll6_config;
-> +=09=09cam_cc_pll7.config =3D &sm8475_cam_cc_pll7_config;
-> +=09=09cam_cc_pll8.config =3D &sm8475_cam_cc_pll8_config;
->   =09}
->=20
-> -=09return qcom_cc_really_probe(&pdev->dev, &cam_cc_sm8450_desc, regmap);
-> +=09return qcom_cc_probe(pdev, &cam_cc_sm8450_desc);
->   }
->=20
->   static struct platform_driver cam_cc_sm8450_driver =3D {
->=20
-> --
-> 2.34.1
->=20
->=20
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Hi, 
 
+I'll ammend the patch and send it to net-next instead.
+
+Thanks, 
+Carlos
