@@ -1,143 +1,129 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E27E22B8BD
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 12:27:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D70922A4E1;
+	Tue,  3 Jun 2025 12:27:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748953669; cv=none; b=O+eOhcS4c3csPjzslkuChxt7ipFUibz5feaU9iOOAjS+Kif/kiMt0ifYYTnMLzHpDxfeEEN++w+9Zb1Cf8/PPHgT8xfqnfn6o8j/PosOhLJ2882A3ubWnZnzWRaGIU9XQCo5wtp9Wzk0LCLzPJqqV5igiE6cYwY8aGNdkXwj3Eo=
+	t=1748953673; cv=none; b=qznryzFK9D4vquc01hyIhEpCFqCd85uFEgxiQGrd/29ny/4TJQN2WvKv36YAyf2Yfu5r/lj1iaWSflGyERFMGJy+SIah2mfEJJtH7T6MfS3k/uWir2a1PsWsjdWRJLucW7BFA+JQKA8vh7n13HlpEuHzeL6KTcQRu53yaZhObEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748953669; c=relaxed/simple;
-	bh=U9TZhzl9LGoUPww5lpOtQmKYBtkSSXsm2J5aXtd5Vbk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EQO4ASDZ1XdPhb+DdWKeE3pJ+AnBN7JVp2uwzQVMY7kRtLrLcAWg6YlIrO4urc9jzuCdHaDnibcRHP3yLD7ik/8HpTgn7qmk0frxdS4GasD+hiPuPvLGQ+K1O4HBhQkWpOmBPjKHnyDq7FYjv9VwfjdSXPPTmhDKBEaT8V0ixfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cQQao7Av; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748953673; c=relaxed/simple;
+	bh=zr1JUK23RXYA5T6rrebgjJ8nEH90XmPRIpyQKBoRtRM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gjfH904IeGBAtGIWex/zsYkfev7+9dLQW2oQFwaDzubWnc9JZeDHSV/oebEhu9fXHn1nsi/bE0yWkb5Zx9BAShUx9o5wtTdffbO8AA1xtxINwMwjbZnWsTSLCmU50Bs7vUz4jRqS3fD9otf6k1zxZCo/1qzhdDJgp0Hd5DCR5/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=moYHNIfQ; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cQQao7Av"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e7b3410e122so4840989276.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 05:27:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748953667; x=1749558467; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=zkBUpTusJpTA0VXTt0i8mXorEGwS/Hyqj+o9q7jAdU0=;
-        b=cQQao7Avf2nKTsXVByFZd6nXqpN0S6lZb4dJ3bv4Ijb1FYWc6rego/h6maf8yGp55j
-         L4WZNKhXD4V7il3neMw2eIsAfpm79+dv7R2oj/JVOQ0YYBxXEpjoZYfX6iK0M3dKmqRq
-         qPc86RyXwH0XqSjbuC0+Wewdx1lNgFMVkQV+b0fevNMbjZ0XreRnvKpFYfKCfiy9AYBq
-         HgiYhCAxmqxKqphUg24OwK6Zi8TDwGWq8VgCg6PlZNzYu6b9yCBSNgdRIDKTO7mKfxxq
-         hdrhXQ/s6X5PiLJRdVUmi6gzPOF2Dx++70AdRZ1VZzo8V7ZM1WokBNL74O3QnPCySUxt
-         iY4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748953667; x=1749558467;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zkBUpTusJpTA0VXTt0i8mXorEGwS/Hyqj+o9q7jAdU0=;
-        b=dKWY/tPn3mKSYYpbXcG1apTpjLu7uwgwicYyLJOLcpviaQ60PpWUAThkyHvkzpQqDU
-         hFYknCCbs6/OvF+5F5p9yKMccZauqDNB7mObcARq4MlYbQ2clKDiFnHYN1pR2NrjJxK8
-         BRmQnHojEOXkHXC6+mJP0oLJipGW6dJ2jicGrTDgASlp97RpKhUWFh69ERVBEki38lxy
-         zUy8CzvSDpaEW7Aalh5BHXEhsKMWbX5ceaWoo2IC8FSdD20o+JKRKdkTNcdxdw4rgkNE
-         5/RMhfGRaWpXdCkmhHZzmEMyaw5dYJvNkyozFAQqyYn3WkIvm3FaaDjCmfLvlk8y96B+
-         AdQg==
-X-Forwarded-Encrypted: i=1; AJvYcCWJfghvuf1YW9m5fifiD5yoAj9x2anJpWyRmsdurAyU/y6ZFSt2YyvHHKrFcoWTei++d8sZeibtSyWiNjk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZaafHocTGNdQdUEVS/1ME5NOh2M7iSLjbJlz7rYvkpbFuZhuN
-	kiRBuEvt2o3Sr62FKqyWi19QndVn+Lmh4HOG0YCXErzEtBtQ7iBimgfDC4P3skqeAeOu19XKPzZ
-	RqmImXzBdevbJB4rTc61EKAFQuKyQT3wpSv+wFtpXaA==
-X-Gm-Gg: ASbGncumJIUtdBtR50phfgzADOcEdzze/za2d9eufuL6iWzAxYjUsJYnMIQzVs2Yab2
-	Z7/w5w7b1QKGtNYMI/3nPWRhWZ9wHKc60f+xYU2D0y23UA9v4jxviTfrAoqATGucoMf53WkDKPD
-	OzByMX0scj4m1hUSGcAYvyzn/sQ+p5EWDi
-X-Google-Smtp-Source: AGHT+IHrpeHkj+2BBo06F52MCRNOttN7I/OSF6yK1xPb3e+88rZaXmBzR2xH+shfwb8QDbG4StP/a4Wb3x5cAxCSx/4=
-X-Received: by 2002:a05:6902:6b10:b0:e7d:b0b6:1bf6 with SMTP id
- 3f1490d57ef6-e7f81dfaa44mr21941753276.12.1748953666949; Tue, 03 Jun 2025
- 05:27:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="moYHNIfQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=3R4jvd6JYkZHXfkzmmFwAMxCRYwFoMqOrLZIQkaTPxE=; b=moYHNIfQIoN8CK1g/hcybM5tuo
+	o4MPAARPnntUblpOUGgjxW5AajPumT+Oq0L38C9Uo+KK1wZb6iAk1+REG0qSEug147hKkuRuVgG/8
+	I/rQGkLcS6NpmbxBmGpR2voROPO3yIwpNWdltMfwMjV7NpuzXDaeVEjGHPsBlVcaGyvhaQqLgpio0
+	/l4ZwZlx2c827MLMGqObG9Dxp3xwiXtgImWl79FgLpJH+JjMK2bbiLQDFIJtPUPVO1ibFpZFB+Iat
+	G2stxWCnxQqAS4fGB5HTsw1a2lNUcho3sN11RKqpR/7oQ1BAU/ELWo44oVgQtt0e9WuSGP5/C3/D8
+	51u3WPgQ==;
+Received: from [81.79.92.254] (helo=[192.168.0.101])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uMQjo-00Gfg8-3b; Tue, 03 Jun 2025 14:27:28 +0200
+Message-ID: <fae980fa-e173-4921-90e2-6a4f6b8833a8@igalia.com>
+Date: Tue, 3 Jun 2025 13:27:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20250529222410eucas1p2e1d41a2fc717caef1aed51367a7db944@eucas1p2.samsung.com>
- <20250530-apr_14_for_sending-v3-0-83d5744d997c@samsung.com> <20250530-apr_14_for_sending-v3-7-83d5744d997c@samsung.com>
-In-Reply-To: <20250530-apr_14_for_sending-v3-7-83d5744d997c@samsung.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 3 Jun 2025 14:27:11 +0200
-X-Gm-Features: AX0GCFuhikVc4rQPnpXMCgeyFTV30-WWzpds7-nPqvmmTrY7jKqhLTeVB-8SqLA
-Message-ID: <CAPDyKFpYfZNthdRN=pCv4FEdFCzrKEH4aFBy4ew-xLKtpbJ5Tg@mail.gmail.com>
-Subject: Re: [PATCH v3 7/8] riscv: dts: thead: th1520: Add IMG BXM-4-64 GPU node
-To: Michal Wilczynski <m.wilczynski@samsung.com>
-Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Frank Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, linux-riscv@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/6] drm/sched: Avoid memory leaks by canceling
+ job-by-job
+To: Philipp Stanner <phasta@kernel.org>, Lyude Paul <lyude@redhat.com>,
+ Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Matthew Brost <matthew.brost@intel.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
+Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+References: <20250603093130.100159-2-phasta@kernel.org>
+Content-Language: en-GB
+From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+In-Reply-To: <20250603093130.100159-2-phasta@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, 30 May 2025 at 00:24, Michal Wilczynski
-<m.wilczynski@samsung.com> wrote:
->
-> Add a device tree node for the IMG BXM-4-64 GPU present in the T-HEAD
-> TH1520 SoC used by the Lichee Pi 4A board. This node enables support for
-> the GPU using the drm/imagination driver.
->
-> By adding this node, the kernel can recognize and initialize the GPU,
-> providing graphics acceleration capabilities on the Lichee Pi 4A and
-> other boards based on the TH1520 SoC.
->
-> Add fixed clock gpu_mem_clk, as the MEM clock on the T-HEAD SoC can't be
-> controlled programatically.
->
-> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
-> ---
->  arch/riscv/boot/dts/thead/th1520.dtsi | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->
-> diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
-> index 6170eec79e919b606a2046ac8f52db07e47ef441..ee937bbdb7c08439a70306f035b1cc82ddb4bae2 100644
-> --- a/arch/riscv/boot/dts/thead/th1520.dtsi
-> +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
-> @@ -225,6 +225,13 @@ aonsys_clk: clock-73728000 {
->                 #clock-cells = <0>;
->         };
->
-> +       gpu_mem_clk: mem-clk {
-> +               compatible = "fixed-clock";
-> +               clock-frequency = <0>;
-> +               clock-output-names = "gpu_mem_clk";
-> +               #clock-cells = <0>;
-> +       };
-> +
->         stmmac_axi_config: stmmac-axi-config {
->                 snps,wr_osr_lmt = <15>;
->                 snps,rd_osr_lmt = <15>;
-> @@ -504,6 +511,21 @@ clk: clock-controller@ffef010000 {
->                         #clock-cells = <1>;
->                 };
->
-> +               gpu: gpu@ffef400000 {
-> +                       compatible = "thead,th1520-gpu", "img,img-bxm-4-64",
-> +                                    "img,img-rogue";
-> +                       reg = <0xff 0xef400000 0x0 0x100000>;
-> +                       interrupt-parent = <&plic>;
-> +                       interrupts = <102 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&clk_vo CLK_GPU_CORE>,
-> +                                <&gpu_mem_clk>,
-> +                                <&clk_vo CLK_GPU_CFG_ACLK>;
-> +                       clock-names = "core", "mem", "sys";
-> +                       power-domains = <&aon TH1520_GPU_PD>;
-> +                       power-domain-names = "a";
 
-If the power-domain-names are really needed, please pick a
-useful/descriptive name.
+On 03/06/2025 10:31, Philipp Stanner wrote:
+> An alternative version to [1], based on Tvrtko's suggestion from [2].
+> 
+> I tested this for Nouveau. Works.
+> 
+> I'm having, however, bigger problems properly porting the unit tests and
+> have seen various explosions. In the process I noticed that some things
+> in the unit tests aren't right and a bit of a larger rework will be
+> necessary (for example, the timedout job callback must signal the
+> timedout fence, remove it from the list and so on).
 
-[...]
+General approach I follow when implementing any mock component is to 
+implement only as much is needed for a test to pass. Only add more and 
+rework when a test/functionality is added which requires it.
 
-Kind regards
-Uffe
+Specifically for timedout callback signaling I see that I had exactly 
+that added in the patch you linked as [2].
+  > Anyways. Please comment on the general idea.
+
+I am obviously okay with it. :) Especially now that you verified it 
+works well for nouveau.
+
+What I am not that ecstatic about is only getting the Suggested-by 
+credit in 1/6. Given it is basically my patch with some cosmetic changes 
+like the kernel doc and the cancel loop extracted to a helper.
+
+> @Tvrtko: As briefly brainstormed about on IRC, if you'd be willing to
+> take care of the unit tests patch, I could remove that one (and,
+> maaaaybe, the warning print patch) from the series and we could merge
+> this RFC's successor version %N once it's ready. What do you think?
+
+Okay in principle but the first thing I would suggest you could try is 
+to take my unit tests adaptations from [2] verbatim. Benefit of keeping 
+everything in one series is more confidence we are merging a solid 
+thing. But I can take it on myself as a follow up too if you want.
+
+Regards,
+
+Tvrtko
+
+> 
+> P.
+> 
+> [1] https://lore.kernel.org/dri-devel/20250522082742.148191-2-phasta@kernel.org/
+> [2] https://lore.kernel.org/dri-devel/20250418113211.69956-1-tvrtko.ursulin@igalia.com/
+> 
+> Philipp Stanner (6):
+>    drm/sched: Avoid memory leaks with cancel_job() callback
+>    drm/sched/tests: Implement cancel_job()
+>    drm/sched: Warn if pending list is not empty
+>    drm/nouveau: Make fence container helper usable driver-wide
+>    drm/nouveau: Add new callback for scheduler teardown
+>    drm/nouveau: Remove waitque for sched teardown
+> 
+>   drivers/gpu/drm/nouveau/nouveau_fence.c       | 35 +++++----
+>   drivers/gpu/drm/nouveau/nouveau_fence.h       |  7 ++
+>   drivers/gpu/drm/nouveau/nouveau_sched.c       | 35 +++++----
+>   drivers/gpu/drm/nouveau/nouveau_sched.h       |  9 +--
+>   drivers/gpu/drm/nouveau/nouveau_uvmm.c        |  8 +--
+>   drivers/gpu/drm/scheduler/sched_main.c        | 37 ++++++----
+>   .../gpu/drm/scheduler/tests/mock_scheduler.c  | 71 +++++++------------
+>   drivers/gpu/drm/scheduler/tests/sched_tests.h |  4 +-
+>   include/drm/gpu_scheduler.h                   |  9 +++
+>   9 files changed, 115 insertions(+), 100 deletions(-)
+> 
+
