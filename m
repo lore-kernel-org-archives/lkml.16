@@ -1,452 +1,163 @@
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE20746B8
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 12:02:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B067246B8;
+	Tue,  3 Jun 2025 12:03:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748952159; cv=none; b=sHtbLJtreEMvozENpQ2yZ1Vs3m+SZTnXsVd2XjmEAxxnFM6TvI14BXzXDQzusGiVNCDIULsK29ea1yJKUMSAgGvciLBFx3bUs0V11opnx41jSMcgidCbuRwQ3sr2QsXIZMU4Wrrh06ld1XYxnn3OByT8WorCPs7srS+k9jTmva4=
+	t=1748952222; cv=none; b=nhUvMkN4PeFh8z9rQ8BWhR3Q4/Bj/FIesUHPXMQDb838lzbhhrcB1Wisr2QSAg1Syg1eB82mCmCE4hp7JTX/hOHiKEVAR5EAwbvDSv/Q1+nB89JsctLioiryYImb6k/CovMErfZlyMIdHl7gF293neismOEtMEcH1KAjanG1O4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748952159; c=relaxed/simple;
-	bh=ySecT7oudCi62ydAA9H9f0Ik2okzEegA1oZYeqkiocA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LvcYg6D8H+5N67jtW+ph30yuwcmDGFEm/2S0llyjoCZQLdj9SIhvr36PftXVJ4ghdNniut2IDIpKM/zErMhr6jv0HAzmc3OXK9JT45xCzfGQThH/xYIAsHmgdRcTSr0FKDR2zDDSrFlM5qjpd0Z1TBGWDQy0+HMBeq51NVU5Udo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vayavyalabs.com; spf=pass smtp.mailfrom=vayavyalabs.com; dkim=pass (1024-bit key) header.d=vayavyalabs.com header.i=@vayavyalabs.com header.b=iDSwMKXD; arc=none smtp.client-ip=209.85.160.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vayavyalabs.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vayavyalabs.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=vayavyalabs.com header.i=@vayavyalabs.com header.b="iDSwMKXD"
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2cc89c59cc0so3836960fac.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 05:02:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vayavyalabs.com; s=google; t=1748952157; x=1749556957; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l28DzIkqr4LEntW5mAp5FkeCY/PQV5pWO6CRFrpZ3n4=;
-        b=iDSwMKXDrZdADo6shR67KH5gemOxSmhF5uAXvuxY2mYkAtUtR6Ig2FDANKKRMm7fco
-         OjFbZhDJipDFoufWo3jYD+6pwAj4mBfZMV+2t8xYOOqbXvex6QoSyOKpK7vXxm1YVSsI
-         jJYGHnMcubliFRa1Oxx5+o3Kg4TfOkFh4OUSM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748952157; x=1749556957;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=l28DzIkqr4LEntW5mAp5FkeCY/PQV5pWO6CRFrpZ3n4=;
-        b=Zf+1hxtrHzVNzoq6h3yE1YmxU1IQhCSqVurTNYaFjWS7ZezcBxfVuo3Lv54NE2BgVH
-         YIn/+1+UGWfpLzHOrakgcVHyrbKJXlwDhYzyPy8a/yUJ/LDbnv7IRNZHbWUCE+J8DOfA
-         d4qOkJS9v43quTxzphMeydKd2z2NSm/T00oHmQquyllOKLc1GLFX3XSUJZgvvyWabGQq
-         swATF05ohWnvUk7dom4rXRa6wPAPVtKZfAugdss5flImQdcXKPcFjvLtq1W6gj+TACq1
-         Ynif3vF39wmDbXoSrWSBaycCT1M7XKuQberQGRPr7mHu2FDZAXhm0iB5FKJc9sE4RI27
-         C8jA==
-X-Forwarded-Encrypted: i=1; AJvYcCVn0ez5Pgb3w9P/qHT2l8Gj+jVlCxBPHsAqK0d8Lw9ylvyUErw8OzmJPtuF6UKy90LgGgrS+AuHqepzz3g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHZoM0hz6YMOjXNhdY+RmmXy61nnUGQ5scVz8P7bLE8tJMnjRJ
-	SK/zX9OEPqDBH+VVr5X3+X0OX691dKPgvYqvUPhXi2CmKy5k4jo6ZWplJF+pLxTjgBz2neGLMaA
-	rRTJxP3O6PXXszQQlcCkU5wa8xzqxzF5VWsHH8Ofi1XD0DXBI+N+ek4NVjg==
-X-Gm-Gg: ASbGncupHFODFfUiMBRbeUGGKDKzbwvwytAcjRnG0LgFWijaQqhVactsHvYS7cq/IXF
-	ta9i4Z9B08OUzMMpl4et8KdKScvx4Iaq5WivL8OShfS/i1frK5/HJdJxhG/aBsZPDqqQJtvXkmu
-	74gDMp/gZuIRNiK71fI9pfRiROVMRIwaIf2OI9arcq2WVj
-X-Google-Smtp-Source: AGHT+IH90LSqAhHHbxsryMPOBXHIM+oacXfr+Ou9Le9aECoKuqARpni6suYK1t3MEspshUGQKSRE8tFDeNvwiZvRRg0=
-X-Received: by 2002:a05:6830:7201:b0:734:f8d1:6ab3 with SMTP id
- 46e09a7af769-7385906511bmr1302534a34.0.1748952146469; Tue, 03 Jun 2025
- 05:02:26 -0700 (PDT)
+	s=arc-20240116; t=1748952222; c=relaxed/simple;
+	bh=giLjSiS06S2p3iW3XtomXSbobX9IDJkEJ8D7v5SJ0Mw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=UW9RYJSlgze0/b80kWqJQmyhpvucpcCvV8GUXXMjmW/KeaxdZXSsJFREDipHG0RUCVNqWwqpZE/9CI89cA4xl3gcgD0dcm9G/TId0REJX+NXQE+P55FAbacV1XQv3KduGNXbTIjr0Rn1m1u5aOq3u86gKDqJJS6loU852t1Cnzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4bBTsQ6gKDz27hfy;
+	Tue,  3 Jun 2025 20:04:26 +0800 (CST)
+Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id D06C0180043;
+	Tue,  3 Jun 2025 20:03:35 +0800 (CST)
+Received: from kwepemn100009.china.huawei.com (7.202.194.112) by
+ dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 3 Jun 2025 20:03:35 +0800
+Received: from [10.67.121.59] (10.67.121.59) by kwepemn100009.china.huawei.com
+ (7.202.194.112) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 3 Jun
+ 2025 20:03:34 +0800
+Message-ID: <c2034f07-5422-4ab1-952e-f7d74d0675a7@huawei.com>
+Date: Tue, 3 Jun 2025 20:03:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250602053231.403143-1-pavitrakumarm@vayavyalabs.com>
- <20250602053231.403143-3-pavitrakumarm@vayavyalabs.com> <9f6b4442-1fb0-479d-9514-410d4d8bfd98@kernel.org>
-In-Reply-To: <9f6b4442-1fb0-479d-9514-410d4d8bfd98@kernel.org>
-From: Pavitrakumar Managutte <pavitrakumarm@vayavyalabs.com>
-Date: Tue, 3 Jun 2025 17:32:15 +0530
-X-Gm-Features: AX0GCFtmQ3LxaxdSxQJE58tRGgH3M_sO7OJwM7eQB8o9k6zn20ZEaWVsKEKH-DE
-Message-ID: <CALxtO0kitR0MnjzPwVT8nsuYThTRX+fbyOH9i2z1KKnCPg1dqg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/6] Add SPAcc Skcipher support
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, herbert@gondor.apana.org.au, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, Ruud.Derwig@synopsys.com, 
-	manjunath.hadli@vayavyalabs.com, adityak@vayavyalabs.com, 
-	Shweta Raikar <shwetar@vayavyalabs.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v20 1/1] mctp pcc: Implement MCTP over PCC
+ Transport
+To: Adam Young <admiyo@amperemail.onmicrosoft.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Sudeep Holla
+	<sudeep.holla@arm.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	<admiyo@os.amperecomputing.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David
+ S. Miller" <davem@davemloft.net>, Jeremy Kerr <jk@codeconstruct.com.au>,
+	"Eric Dumazet" <edumazet@google.com>, Matt Johnston
+	<matt@codeconstruct.com.au>, Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski
+	<kuba@kernel.org>
+References: <20250423220142.635223-1-admiyo@os.amperecomputing.com>
+ <20250423220142.635223-2-admiyo@os.amperecomputing.com>
+ <497a60df-c97e-48b7-bf0f-decbee6ed732@huawei.com>
+ <a9f67a55-3471-46b3-bd02-757b0796658a@amperemail.onmicrosoft.com>
+ <807e5ea9-ed04-4203-b4a6-bf90952e7934@huawei.com>
+ <9e3e0739-b859-4a62-954e-2b13f7d5dd85@amperemail.onmicrosoft.com>
+From: "lihuisong (C)" <lihuisong@huawei.com>
+In-Reply-To: <9e3e0739-b859-4a62-954e-2b13f7d5dd85@amperemail.onmicrosoft.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ kwepemn100009.china.huawei.com (7.202.194.112)
 
-Hi Krzysztof,
-  Thank you for your inputs. My comments are embedded below.
 
-Warm regards,
-PK
-
-On Mon, Jun 2, 2025 at 11:35=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.or=
-g> wrote:
+在 2025/6/3 4:51, Adam Young 写道:
 >
-> On 02/06/2025 07:32, Pavitrakumar Managutte wrote:
-> > +
-> > +static int spacc_init_device(struct platform_device *pdev)
-> > +{
-> > +     int vspacc_id =3D -1;
-> > +     u64 timer =3D 100000;
-> > +     void __iomem *baseaddr;
-> > +     struct pdu_info   info;
-> > +     struct spacc_priv *priv;
-> > +     int err =3D 0;
-> > +     int oldmode;
-> > +     int irq_num;
-> > +     const u64 oldtimer =3D 100000;
-> > +
-> > +     /* initialize DDT DMA pools based on this device's resources */
-> > +     if (pdu_mem_init(&pdev->dev)) {
-> > +             dev_err(&pdev->dev, "Could not initialize DMA pools\n");
-> > +             return -ENOMEM;
-> > +     }
-> > +
-> > +     priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> > +     if (!priv) {
-> > +             err =3D -ENOMEM;
-> > +             goto free_ddt_mem_pool;
-> > +     }
-> > +
-> > +     /* default to little-endian */
-> > +     priv->spacc.config.big_endian    =3D false;
-> > +     priv->spacc.config.little_endian =3D true;
-> > +
-> > +     if (of_property_read_u32(pdev->dev.of_node, "snps,vspacc-id",
-> > +                              &vspacc_id)) {
-> > +             dev_err(&pdev->dev, "No virtual spacc id specified\n");
+> On 5/30/25 02:19, lihuisong (C) wrote:
+>>
+>> 在 2025/4/29 2:48, Adam Young 写道:
+>>>
+>>> On 4/24/25 09:03, lihuisong (C) wrote:
+>>>>> +    rc = mctp_pcc_initialize_mailbox(dev, &mctp_pcc_ndev->inbox,
+>>>>> +                     context.inbox_index);
+>>>>> +    if (rc)
+>>>>> +        goto free_netdev;
+>>>>> +    mctp_pcc_ndev->inbox.client.rx_callback = 
+>>>>> mctp_pcc_client_rx_callback;
+>>>> It is good to move the assignemnt of  rx_callback pointer to 
+>>>> initialize inbox mailbox.
+>>>
+>>>
+>>> The other changes are fine, but this one I do not agree with.
+>>>
+>>> The rx callback only makes sense for one of the two mailboxes, and 
+>>> thus is not appropriate for a generic function.
+>>>
+>>> Either  initialize_mailbox needs more complex logic, or would 
+>>> blindly assign the callback to both mailboxes, neither of which 
+>>> simplifies or streamlines the code.  That function emerged as a way 
+>>> to reduce duplication.  Lets keep it that way.
+>>>
+>> It depends on you. But please reply my below comment. I didn't see 
+>> any change about it in next version.
+>>
+>> -->
+>>
+>>> +static netdev_tx_t mctp_pcc_tx(struct sk_buff *skb, struct 
+>>> net_device *ndev)
+>>> +{
+>>> +    struct mctp_pcc_ndev *mpnd = netdev_priv(ndev);
+>>> +    struct mctp_pcc_hdr *mctp_pcc_header;
+>>> +    void __iomem *buffer;
+>>> +    unsigned long flags;
+>>> +    int len = skb->len;
+>>> +    int rc;
+>>> +
+>>> +    rc = skb_cow_head(skb, sizeof(struct mctp_pcc_hdr));
+>>> +    if (rc)
+>>> +        goto err_drop;
+>>> +
+>>> +    mctp_pcc_header = skb_push(skb, sizeof(struct mctp_pcc_hdr));
+>>> +    mctp_pcc_header->signature = cpu_to_le32(PCC_MAGIC | 
+>>> mpnd->outbox.index);
+>>> +    mctp_pcc_header->flags = cpu_to_le32(PCC_HEADER_FLAGS);
+>>> +    memcpy(mctp_pcc_header->mctp_signature, MCTP_SIGNATURE,
+>>> +           MCTP_SIGNATURE_LENGTH);
+>>> +    mctp_pcc_header->length = cpu_to_le32(len + 
+>>> MCTP_SIGNATURE_LENGTH);
+>>> +
+>>> +    spin_lock_irqsave(&mpnd->lock, flags);
+>>> +    buffer = mpnd->outbox.chan->shmem;
+>>> +    memcpy_toio(buffer, skb->data, skb->len);
+>>> + 
+>>> mpnd->outbox.chan->mchan->mbox->ops->send_data(mpnd->outbox.chan->mchan,
+>>> +                            NULL);
+>>> +    spin_unlock_irqrestore(&mpnd->lock, flags);
+>>> +
+>> Why does it not need to know if the packet is sent successfully?
+>> It's possible for the platform not to finish to send the packet after 
+>> executing this unlock.
+>> In this moment, the previous packet may be modified by the new packet 
+>> to be sent.
 >
-> This makes no sense. It's not a required property. Just look at your
-> binding.
-
-PK: My bad, this is a required property. I will fix that.
-
+> I think you missed version  21.
 >
-> > +             err =3D -EINVAL;
-> > +             goto free_ddt_mem_pool;
-> > +     }
-> > +
-> > +     priv->spacc.config.idx =3D vspacc_id;
-> > +     priv->spacc.config.oldtimer =3D oldtimer;
-> > +
-> > +     if (of_property_read_u64(pdev->dev.of_node, "spacc-internal-count=
-er",
->
-> You never tested this.
-
-PK: This has been tested, but on failure it picks up the default value
-for the counter. I will fix that sting.
-
->
-> > +                              &timer)) {
-> > +             dev_dbg(&pdev->dev, "No spacc-internal-counter specified\=
-n");
-> > +             dev_dbg(&pdev->dev, "Default internal-counter: (100000)\n=
-");
-> > +             timer =3D 100000;
-> > +     }
-> > +     priv->spacc.config.timer =3D timer;
-> > +
-> > +     baseaddr =3D devm_platform_ioremap_resource(pdev, 0);
-> > +     if (IS_ERR(baseaddr)) {
-> > +             dev_err(&pdev->dev, "Unable to map iomem\n");
-> > +             err =3D PTR_ERR(baseaddr);
-> > +             goto free_ddt_mem_pool;
-> > +     }
-> > +
-> > +     pdu_get_version(baseaddr, &info);
-> > +
-> > +     dev_dbg(&pdev->dev, "EPN %04X : virt [%d]\n",
-> > +             info.spacc_version.project,
-> > +             info.spacc_version.vspacc_id);
-> > +
-> > +     /*
-> > +      * Validate virtual spacc index with vspacc count read from
-> > +      * VERSION_EXT.VSPACC_CNT. Thus vspacc count=3D3, gives valid ind=
-ex 0,1,2
-> > +      */
-> > +     if (vspacc_id !=3D info.spacc_version.vspacc_id) {
-> > +             dev_err(&pdev->dev, "DTS vspacc_id mismatch read value\n"=
-);
-> > +             err =3D -EINVAL;
-> > +             goto free_ddt_mem_pool;
-> > +     }
-> > +
-> > +     if (vspacc_id < 0 || vspacc_id > (info.spacc_config.num_vspacc - =
-1)) {
-> > +             dev_err(&pdev->dev, "Invalid vspacc index specified\n");
-> > +             err =3D -EINVAL;
-> > +             goto free_ddt_mem_pool;
-> > +     }
-> > +
-> > +     err =3D spacc_init(baseaddr, &priv->spacc, &info);
-> > +     if (err !=3D 0) {
-> > +             dev_err(&pdev->dev, "Failed to initialize SPAcc device\n"=
-);
-> > +             err =3D -ENXIO;
->
-> No, use real errors.
-
-PK: I will fix that
-
->
-> > +             goto free_ddt_mem_pool;
-> > +     }
-> > +
-> > +     /* Set the priority from kernel config */
-> > +     priv->spacc.config.priority =3D CONFIG_CRYPTO_DEV_SPACC_PRIORITY;
-> > +     dev_dbg(&pdev->dev, "VSPACC priority set from config: %u\n",
-> > +             priv->spacc.config.priority);
-> > +
-> > +     /* Set the priority for this virtual SPAcc instance */
-> > +     spacc_set_priority(&priv->spacc, priv->spacc.config.priority);
-> > +
-> > +     priv->spacc_wq =3D alloc_workqueue("spacc_workqueue", WQ_UNBOUND,=
- 0);
-> > +     if (!priv->spacc_wq) {
-> > +             dev_err(&pdev->dev, "failed to allocated workqueue\n");
->
-> Memory allocations NEVER result in error messages.
-
-PK: I will fix that
-
->
-> Please run standard kernel tools for static analysis, like coccinelle,
-> smatch and sparse, and fix reported warnings. Also please check for
-> warnings when building with W=3D1 for gcc and clang. Most of these
-> commands (checks or W=3D1 build) can build specific targets, like some
-> directory, to narrow the scope to only your code. The code here looks
-> like it needs a fix. Feel free to get in touch if the warning is not clea=
-r.
->
-> > +             err =3D -ENOMEM;
-> > +             goto free_spacc_ctx;
-> > +     }
-> > +
-> > +     spacc_irq_glbl_disable(&priv->spacc);
-> > +     INIT_WORK(&priv->pop_jobs, spacc_pop_jobs);
-> > +
-> > +     priv->spacc.dptr =3D &pdev->dev;
-> > +     platform_set_drvdata(pdev, priv);
-> > +
-> > +     irq_num =3D platform_get_irq(pdev, 0);
-> > +     if (irq_num < 0) {
-> > +             dev_err(&pdev->dev, "No irq resource for spacc\n");
-> > +             err =3D -ENXIO;
->
-> No, you must use actual error code.
-
-PK: I will fix that
-
->
-> > +             goto free_spacc_workq;
-> > +     }
-> > +
-> > +     /* determine configured maximum message length */
-> > +     priv->max_msg_len =3D priv->spacc.config.max_msg_size;
-> > +
-> > +     if (devm_request_irq(&pdev->dev, irq_num, spacc_irq_handler,
-> > +                          IRQF_SHARED, dev_name(&pdev->dev),
-> > +                          &pdev->dev)) {
-> > +             dev_err(&pdev->dev, "Failed to request IRQ\n");
-> > +             err =3D -EBUSY;
->
-> No, you must use actual error code.
-
-PK: I will fix that
-
->
-> > +             goto free_spacc_workq;
-> > +     }
-> > +
-> > +     priv->spacc.irq_cb_stat =3D spacc_stat_process;
-> > +     priv->spacc.irq_cb_cmdx =3D spacc_cmd_process;
-> > +     oldmode                 =3D priv->spacc.op_mode;
-> > +     priv->spacc.op_mode     =3D SPACC_OP_MODE_IRQ;
-> > +
-> > +     /* Enable STAT and CMD interrupts */
-> > +     spacc_irq_stat_enable(&priv->spacc, 1);
-> > +     spacc_irq_cmdx_enable(&priv->spacc, 0, 1);
-> > +     spacc_irq_stat_wd_disable(&priv->spacc);
-> > +     spacc_irq_glbl_enable(&priv->spacc);
-> > +
-> > +#if IS_ENABLED(CONFIG_CRYPTO_DEV_SPACC_AUTODETECT)
->
-> Drop all such conditionals from the code.
-
-PK: This is needed in the driver since SPAcc has two configuration
-modes, "Auto-detect" and "Static" configuration. In the case of
-"Auto-detect mode we have a golden input and golden output for
-matching based on a sample operation on the SPAcc device. Whereas in
-case of static configuration the algos are enabled based on an input
-list.
-
->
-> > +
-> > +     err =3D spacc_autodetect(&priv->spacc);
-> > +     if (err < 0) {
-> > +             spacc_irq_glbl_disable(&priv->spacc);
-> > +             goto free_spacc_workq;
-> > +     }
-> > +#else
-> > +     err =3D spacc_static_config(&priv->spacc);
-> > +     if (err < 0) {
-> > +             spacc_irq_glbl_disable(&priv->spacc);
-> > +             goto free_spacc_workq;
-> > +     }
-> > +#endif
-> > +
-> > +     priv->spacc.op_mode =3D oldmode;
-> > +     if (priv->spacc.op_mode =3D=3D SPACC_OP_MODE_IRQ) {
-> > +             priv->spacc.irq_cb_stat =3D spacc_stat_process;
-> > +             priv->spacc.irq_cb_cmdx =3D spacc_cmd_process;
-> > +
-> > +             /* Enable STAT and CMD interrupts */
-> > +             spacc_irq_stat_enable(&priv->spacc, 1);
-> > +             spacc_irq_cmdx_enable(&priv->spacc, 0, 1);
-> > +             spacc_irq_glbl_enable(&priv->spacc);
-> > +     } else {
-> > +             priv->spacc.irq_cb_stat =3D spacc_stat_process;
-> > +             priv->spacc.irq_cb_stat_wd =3D spacc_stat_process;
-> > +
-> > +             spacc_irq_stat_enable(&priv->spacc,
-> > +                                   priv->spacc.config.ideal_stat_level=
-);
-> > +
-> > +             /* Enable STAT and WD interrupts */
-> > +             spacc_irq_cmdx_disable(&priv->spacc, 0);
-> > +             spacc_irq_stat_wd_enable(&priv->spacc);
-> > +             spacc_irq_glbl_enable(&priv->spacc);
-> > +
-> > +             /* enable the wd by setting the wd_timer =3D 100000 */
-> > +             spacc_set_wd_count(&priv->spacc,
-> > +                                priv->spacc.config.wd_timer =3D
-> > +                                             priv->spacc.config.timer)=
-;
-> > +     }
-> > +
-> > +     /* unlock normal */
-> > +     if (priv->spacc.config.is_secure_port) {
-> > +             u32 t;
-> > +
-> > +             t =3D readl(baseaddr + SPACC_REG_SECURE_CTRL);
-> > +             t &=3D ~(1UL << 31);
-> > +             writel(t, baseaddr + SPACC_REG_SECURE_CTRL);
-> > +     }
-> > +
-> > +     /* unlock device by default */
-> > +     writel(0, baseaddr + SPACC_REG_SECURE_CTRL);
-> > +
-> > +     return err;
-> > +
-> > +free_spacc_workq:
-> > +     flush_workqueue(priv->spacc_wq);
-> > +     destroy_workqueue(priv->spacc_wq);
-> > +
-> > +free_spacc_ctx:
-> > +     spacc_fini(&priv->spacc);
-> > +
-> > +free_ddt_mem_pool:
-> > +     pdu_mem_deinit(&pdev->dev);
-> > +
-> > +
-> > +     return err;
-> > +}
-> > +
-> > +static void spacc_unregister_algs(void)
-> > +{
-> > +#if IS_ENABLED(CONFIG_CRYPTO_DEV_SPACC_HASH)
-> > +     spacc_unregister_hash_algs();
-> > +#endif
-> > +#if  IS_ENABLED(CONFIG_CRYPTO_DEV_SPACC_AEAD)
-> > +     spacc_unregister_aead_algs();
-> > +#endif
-> > +#if IS_ENABLED(CONFIG_CRYPTO_DEV_SPACC_CIPHER)
-> > +     spacc_unregister_cipher_algs();
-> > +#endif
-> > +}
-> > +
-> > +static int spacc_crypto_probe(struct platform_device *pdev)
-> > +{
-> > +     int rc =3D 0;
-> > +
-> > +     rc =3D spacc_init_device(pdev);
-> > +     if (rc < 0)
-> > +             goto err;
-> > +
-> > +#if IS_ENABLED(CONFIG_CRYPTO_DEV_SPACC_HASH)
-> > +     rc =3D spacc_probe_hashes(pdev);
-> > +     if (rc < 0)
-> > +             goto err;
-> > +#endif
-> > +
-> > +#if IS_ENABLED(CONFIG_CRYPTO_DEV_SPACC_CIPHER)
-> > +     rc =3D spacc_probe_ciphers(pdev);
-> > +     if (rc < 0)
-> > +             goto err;
-> > +#endif
-> > +
-> > +#if IS_ENABLED(CONFIG_CRYPTO_DEV_SPACC_AEAD)
-> > +     rc =3D spacc_probe_aeads(pdev);
-> > +     if (rc < 0)
-> > +             goto err;
-> > +#endif
-> > +
-> > +     return 0;
-> > +err:
-> > +     spacc_unregister_algs();
-> > +
-> > +     return rc;
-> > +}
-> > +
-> > +static void spacc_crypto_remove(struct platform_device *pdev)
-> > +{
-> > +     struct spacc_priv *priv =3D platform_get_drvdata(pdev);
-> > +
-> > +     if (priv->spacc_wq) {
-> > +             flush_workqueue(priv->spacc_wq);
-> > +             destroy_workqueue(priv->spacc_wq);
-> > +     }
-> > +
-> > +     spacc_unregister_algs();
-> > +     spacc_remove(pdev);
-> > +}
-> > +
-> > +static const struct of_device_id snps_spacc_id[] =3D {
-> > +     {.compatible =3D "snps,nsimosci-hs-spacc" },
-> > +     { /* sentinel */        }
-> > +};
-> > +
-> > +MODULE_DEVICE_TABLE(of, snps_spacc_id);
-> > +
-> > +static struct platform_driver spacc_driver =3D {
-> > +     .probe  =3D spacc_crypto_probe,
-> > +     .remove =3D spacc_crypto_remove,
-> > +     .driver =3D {
-> > +             .name  =3D "spacc",
-> > +             .of_match_table =3D snps_spacc_id,
-> > +             .owner =3D THIS_MODULE,
->
-> This is some ancient downstream code. Base your work (means START from)
-> a new, recent drivers. This was fixed many years ago.
-
-PK: Sure, I will update this as per the recent driver changes.
-
->
-> Please run standard kernel tools for static analysis, like coccinelle,
-> smatch and sparse, and fix reported warnings. Also please check for
-> warnings when building with W=3D1 for gcc and clang. Most of these
-> commands (checks or W=3D1 build) can build specific targets, like some
-> directory, to narrow the scope to only your code. The code here looks
-> like it needs a fix. Feel free to get in touch if the warning is not clea=
-r.
->
-> > +     },
-> > +};
-> > +
-> > +module_platform_driver(spacc_driver);
-> > +
+> Version 21 of this function ends with:
+>         memcpy_toio(buffer, skb->data, skb->len);
+>         rc = mpnd->outbox.chan->mchan->mbox->ops->send_data
+>                 (mpnd->outbox.chan->mchan, NULL);
+>         spin_unlock_irqrestore(&mpnd->lock, flags);
+>         if ACPI_FAILURE(rc)
+>                 goto err_drop;
+>         dev_dstats_tx_add(ndev, len);
+>         dev_consume_skb_any(skb);
+>         return NETDEV_TX_OK;
+> err_drop:
+>         dev_dstats_tx_dropped(ndev);
+>         kfree_skb(skb);
+>         return NETDEV_TX_OK;
 >
 >
-> Best regards,
-> Krzysztof
+> Once the memcpy_toio completes, the driver will not look at the packet 
+> again.  if the Kernel did change it at this point, it would not affect 
+> the flow.  The send of the packet is checked vi rc returned from 
+> send_data, and it tags the packet as dropped.  Is this not sufficient?
+>
+Yes, it is not enough.
+Once send_data() return success, platform can receive an interrupt，but 
+the processing of the platform has not ended.
+This processing includes handling data and then triggering an interrupt 
+to notify OS.
+>
+>
+>
