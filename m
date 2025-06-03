@@ -1,460 +1,205 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C685418DB24
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 20:17:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF0B71FAC37
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 20:17:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748981844; cv=none; b=uyCdf2MXxfztk+I8fv1LMM1IGBRWclJ8LN0QrcUBKM+hKUYaYJ/xVJ0LBKUAc7zpjijk1Q5qOt4sirrAcf9j1CIvaoHgiftvC0RcdMT6G+bVAsKrLWNidF48s/Vg1TA2+0t3qbsy8f12U+vtzb2JboV705Ag5dajTMbzGfyJnU8=
+	t=1748981877; cv=none; b=UA4r0upFOeZURw58Hgr1Kb16KCS3iX5h7N1LJNNooDYz5I6TJl9au5oZJtEMfVPCd2ziDfq2F33Au4szjaivJ8AqmSgyNylaTgWKBwdkSkmeH4gXgtVgZaXiolZYwPcED8hSagwe+bPUusCp1r7fvqYzbHI8uMQsnal9lhIrkqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748981844; c=relaxed/simple;
-	bh=EXPKnkTNu2tfNE1gGb2k5CeN3vxL1iyJLU/9isBAfSY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oH8L3F9cchkISR1TVfSkyJvoc2joLFeVf/XQQEgFnKBM7NVriII6yx/RHF4W453gv+54s8A2vLSU3mty+58chucr02LHRmryM1v5I8ZHV+0OzQ8JYvvvm62l5aBZBQR2D6K7OtA9IvzuD19dU2J0cNBBHjlELmmNT9rdlc8vyo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vipHZjrh; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748981877; c=relaxed/simple;
+	bh=d90Ta5+c/WFr0pt5UN2Sds86i7j+Dc1DUW0ZpKhXcks=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S4uUpuBsuevSk4q7GW5RjvpOhW6BfO6lWee0r3Iru4WCx7n1VQsXio/fmtskLUIRjoC4WfWFCF9bs1bsmBfwistprSxHSwpKcNIDosP67Fu5+nDlY0dO5yiiHmj9Y7ZbaEoLiomjIBahMYRRkYp5oZB6TI9duPtzI7Cdu7iJSSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XvRMfaHe; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vipHZjrh"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4a433f52485so118971cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 13:17:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748981841; x=1749586641; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RWNWJILrl8zMyCKCeNWlZdeGTw+/BxsN341ZE/ALRtY=;
-        b=vipHZjrh9EsRAwNw/VQ25jT67rYZcuS40dAY510lDBCz2xTC52qJ+n/N0KTUKgbBCs
-         E9ROF+p08C0ibqamf9sa1TWKJxyBU7cFg2XZBscoUDp9d9vpXGJQMA8zHzxB5ASuDD3k
-         NAcQTpvJ0MWgqiHphzlFyTRj919y4SuXJPHr/8jElsa0Ou5ECzSK7U50hogyNp6nOMuk
-         lnDnqm4mi3reEDIKCRZAHawXkDFm6eOaMotqJgPpGN3d4vX/PPTsd2DI+CtjSjju9G9b
-         gG33YcM0/eg0EqAbZqTvibcUhvXXQFWFtKESAH7XWhI5MnIMbP6U6dl6TfT0oZzqa9nA
-         V6zQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XvRMfaHe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748981874;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=+1RY0HD1hn+NYzthB/zompikE+mEYPZqKqX1tH5KHaY=;
+	b=XvRMfaHe1/k9t4zawF1KvhCzQgPVRNwTwMvGmQKY1Mmsu3DeqjcuqvUKM2my/mUvJ59Ry2
+	lhMppi07uaBlCB7GUzXSgdjNaUMm1w5s6tSbnvO0f8n1ilojKUU+u5S0qsb+d1SOqm0v4x
+	m5Mi7R4VZeGoFB46W2vQmilnxfunXuI=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-561-3VYorPnoPkaTqAK1wQibsA-1; Tue, 03 Jun 2025 16:17:53 -0400
+X-MC-Unique: 3VYorPnoPkaTqAK1wQibsA-1
+X-Mimecast-MFC-AGG-ID: 3VYorPnoPkaTqAK1wQibsA_1748981872
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-450db029f2aso21324855e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 13:17:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748981841; x=1749586641;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RWNWJILrl8zMyCKCeNWlZdeGTw+/BxsN341ZE/ALRtY=;
-        b=XsurVPK9L+i5BFwrPEiARFF//Zabq9FEImVLiSFlS638lERszLehglKivVS9JsCaYJ
-         YLxP0yY/5Y7sCFJqpZEgnjiQDIL98JNa4GKGOwPVFPc4T2km+aszfiv+lR7JhVzQH6iP
-         LTwpQ4FRMg6TDonKiRUblexUPpXTsvniL2BgieRWQX9BBf72lZFSO6YRehWrlPuMbcK2
-         QBkVz67TiozOmI+h8/gxh6LAumozRwnW2kHbLNcoaw0twS8uFHbpLQ9oxt4zFnskvP+u
-         F+9z4sux5weJUzTeF4faaxtg3lE5H0BZE8e2ZyELU61LRC91INLArmTSuEgv7luCcpBq
-         /Opw==
-X-Forwarded-Encrypted: i=1; AJvYcCWjRjECsgIjmBPIwq+PZQvgyKmOBFse5J7U+4NbeWH2CY4Vqe0YWPRH75i5xj1dAPDWkmPc0EbGbodQF18=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJzOLoK1PYiXogbGoQEQaCBXUPsn9wO6YkVpi+OjwfbAh9pKC8
-	rdvA2j+bpH5nHJQECSoARDRkErh07zpcFxfq+Q3rHQKgaxcUcQXrrxGnuPm6IzjBeBHkaaVKhXT
-	TS5hysnYROOQBmYPV5rGFR+9iG/4sb51gfAxnMOWs
-X-Gm-Gg: ASbGncvRbyJ8wrvgHxSDtdOvwH1k6jwfKaeMvUPBzD8e8oRVKk2k8JD0jT3XjNFHuK4
-	aYMx3TcIwJ6iZVmM58aLGhz3OLoFmR1Pc+0ya8ck+TMOcAfleHQ1bmVRBClmzXi4Tuvhtduc7D2
-	98iqcZVvpwV0ksJrHOoL+5H/CH4QBHihLWVq2F4cRdd+FqqqJ9+ukm3Y69xgcu+od9oGnHECTN
-X-Google-Smtp-Source: AGHT+IFL03qfsrnADtjwe9NyPXflxFWItUlS46fmT+Zu7AmB4ymfCv7GSbWpC1a+jK7Di0S0cEMqJ9H21LfsdSTkork=
-X-Received: by 2002:a05:622a:a70e:b0:47d:4e8a:97f0 with SMTP id
- d75a77b69052e-4a5a53f89c1mr476291cf.29.1748981841245; Tue, 03 Jun 2025
- 13:17:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748981872; x=1749586672;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+1RY0HD1hn+NYzthB/zompikE+mEYPZqKqX1tH5KHaY=;
+        b=YTiOxZDvwH6nNwD1eHusnaftXtw9kwq3CcBc7zkIAhCWIVwr44W6ITlTTxe2nAaXmT
+         BV9pf407J9rJnEURPKmLLqHc5msZCjdcHv7XCaqb1+/VhOg3xXyH95btvXU9KYlBCCUb
+         hraUbSLlBNGtIuAJ9bmhyr4GwTa1mKzU2l8OqztbmtQzZ2oDGWGSUHbAOorK41NuXlny
+         VkeK6PlmZdyd2+Mi/KFI5nkYIwVLxfnOfM8W0P4vRbq+W6V7TpT3ri1Le7u4HedCHLAu
+         6xR6onsQAYY1lct40QmRVCWuVT3znA2hEfm7iksfN+N6JM2jnK1nF3bQq0j2bJh3PBsx
+         IcMw==
+X-Forwarded-Encrypted: i=1; AJvYcCV1afpSdwFgNbK8zvousF4RzDLK8ukHivq4r/jCVcTMZXk3ECzdVt/luDKdaPVgbw5XRmlFZq+BkEOXonA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxi+wlhYkMmBDV2bIwfWX3bYAoHnTc+8XPPWilITrOBNrTLEqlY
+	+hIZlP+Qwbpk5XOIIA0RF3xE+pCZ/mv3r8YGqxbYOknW/8pdnIFnsdjFE9MMew+DdMpxIdGkA01
+	4TiWHJpsQ7y+85oJVDHjrhMYgLkaNct14AE1XFFAfI+3pQfMaUNCVi0GI4dL27Zb7iw==
+X-Gm-Gg: ASbGncu5mH8V7YG09FrjFfa8bnbZjRdOOI9iA0fDdmktebqS/HhV/KYaVx3tDmgyBZB
+	VvC4oJP0hBBn6tURm5BNQywwReBizoF3gfuc3vcErXy1g2opN38DK/HaLX1wz1tQCEQdj0/7SzN
+	Lj5mNwZeFJ3OfMkhxEvW4yZEf90w89KskZ0J42mXpd/e/B1JqnrzPDXRBTpSHQNEjMCTffGS7iv
+	+thUYMkvpDSRcfBpL1/mf0E0HyQcl6ELKBc5veiEVroEmRJ9otAVxC2n5kAw+jGztkCpzgQI0h+
+	KtiLIOG5ANa1VgoS6F2rm5/85wxnoOx6PtriFXT9M96Sq6FHcyqdkRsfcWA7Z+8wD3oUdL9yf2v
+	Oa/u4zOr/lvl4JTT1u8dcGoL5JeXDFLZUSRmu7d4=
+X-Received: by 2002:a05:600c:4e01:b0:442:f4a3:b5ec with SMTP id 5b1f17b1804b1-451f0a64f08mr817265e9.4.1748981872237;
+        Tue, 03 Jun 2025 13:17:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEI+PPvXmScqjXvKy8YY53Kw8ucqabBmzAl8IGnjFusqugiTsGUr0vRqgzAeBk4ls8nsgjCCw==
+X-Received: by 2002:a05:600c:4e01:b0:442:f4a3:b5ec with SMTP id 5b1f17b1804b1-451f0a64f08mr817025e9.4.1748981871817;
+        Tue, 03 Jun 2025 13:17:51 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f0d:f000:eec9:2b8d:4913:f32a? (p200300d82f0df000eec92b8d4913f32a.dip0.t-ipconnect.de. [2003:d8:2f0d:f000:eec9:2b8d:4913:f32a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7fb0654sm172866835e9.21.2025.06.03.13.17.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Jun 2025 13:17:51 -0700 (PDT)
+Message-ID: <ddad0a93-e9f2-4b3b-afa9-53f0c8315ac1@redhat.com>
+Date: Tue, 3 Jun 2025 22:17:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530104439.64841-1-21cnbao@gmail.com> <0b96ce61-a52c-4036-b5b6-5c50783db51f@lucifer.local>
-In-Reply-To: <0b96ce61-a52c-4036-b5b6-5c50783db51f@lucifer.local>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Tue, 3 Jun 2025 13:17:10 -0700
-X-Gm-Features: AX0GCFtmE9iOS-BWDiyxVniMExXEGtq8o7sqRnk-B4Ne6fjJYbiGuM1qncdfZr0
-Message-ID: <CAJuCfpEaG8WuGboxgc6xB6s5==Lx8QT=UwzgNXJNxDH0-KMqzg@mail.gmail.com>
-Subject: Re: [PATCH RFC v2] mm: use per_vma lock for MADV_DONTNEED
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, David Hildenbrand <david@redhat.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, Lokesh Gidra <lokeshgidra@google.com>, 
-	Tangquan Zheng <zhengtangquan@oppo.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] mm/memory: ensure fork child sees coherent memory
+ snapshot
+To: Jann Horn <jannh@google.com>
+Cc: Matthew Wilcox <willy@infradead.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ linux-mm@kvack.org, Peter Xu <peterx@redhat.com>,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20250603-fork-tearing-v1-0-a7f64b7cfc96@google.com>
+ <20250603-fork-tearing-v1-1-a7f64b7cfc96@google.com>
+ <aD8--plab38qiQF8@casper.infradead.org>
+ <db2268f0-7885-471d-94a3-8ae4641ba2e5@redhat.com>
+ <CAG48ez2NX-L0Wq-DQDB2vb3CvOJ1uTmJOqmbMW=FOTtxVoouxg@mail.gmail.com>
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <CAG48ez2NX-L0Wq-DQDB2vb3CvOJ1uTmJOqmbMW=FOTtxVoouxg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 3, 2025 at 11:43=E2=80=AFAM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
->
-> Hi Barry,
->
-> As promised, I enclose a patch to give a sense of how I think we might
-> thread state through this operation.
->
-> There's a todo on the untagged stuff so you can figure that out. This is
-> based on the v1 so it might not encompass everything you addressed in the
-> v2.
->
-> Passing in madv_behavior to madvise_walk_vmas() twice kinda sucks, I
-> _despise_ the void *arg function ptr stuff there added just for the anon
-> vma name stuff (ughhh) so might be the only sensible way of threading
-> state.
->
-> I don't need any attribution, so please use this patch as you see
-> fit/adapt/delete/do whatever with it, just an easier way for me to show t=
-he
-> idea!
->
-> I did some very basic testing and it seems to work, but nothing deeper.
->
-> Cheers, Lorenzo
->
-> ----8<----
-> From ff4ba0115cb31a0630b6f8c02c68f11b3fb71f7a Mon Sep 17 00:00:00 2001
-> From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Date: Tue, 3 Jun 2025 18:22:55 +0100
-> Subject: [PATCH] mm/madvise: support VMA read locks for MADV_DONTNEED[_LO=
-CKED]
->
-> Refactor the madvise() code to retain state about the locking mode utilis=
-ed
-> for traversing VMAs.
->
-> Then use this mechanism to permit VMA locking to be done later in the
-> madvise() logic and also to allow altering of the locking mode to permit
-> falling back to an mmap read lock if required.
->
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> ---
->  mm/madvise.c | 174 +++++++++++++++++++++++++++++++++++++--------------
->  1 file changed, 127 insertions(+), 47 deletions(-)
->
-> diff --git a/mm/madvise.c b/mm/madvise.c
-> index 5f7a66a1617e..a3a6d73d0bd5 100644
-> --- a/mm/madvise.c
-> +++ b/mm/madvise.c
-> @@ -48,38 +48,19 @@ struct madvise_walk_private {
->         bool pageout;
->  };
->
-> +enum madvise_lock_mode {
-> +       MADVISE_NO_LOCK,
-> +       MADVISE_MMAP_READ_LOCK,
-> +       MADVISE_MMAP_WRITE_LOCK,
-> +       MADVISE_VMA_READ_LOCK,
-> +};
-> +
->  struct madvise_behavior {
->         int behavior;
->         struct mmu_gather *tlb;
-> +       enum madvise_lock_mode lock_mode;
->  };
->
-> -/*
-> - * Any behaviour which results in changes to the vma->vm_flags needs to
-> - * take mmap_lock for writing. Others, which simply traverse vmas, need
-> - * to only take it for reading.
-> - */
-> -static int madvise_need_mmap_write(int behavior)
-> -{
-> -       switch (behavior) {
-> -       case MADV_REMOVE:
-> -       case MADV_WILLNEED:
-> -       case MADV_DONTNEED:
-> -       case MADV_DONTNEED_LOCKED:
-> -       case MADV_COLD:
-> -       case MADV_PAGEOUT:
-> -       case MADV_FREE:
-> -       case MADV_POPULATE_READ:
-> -       case MADV_POPULATE_WRITE:
-> -       case MADV_COLLAPSE:
-> -       case MADV_GUARD_INSTALL:
-> -       case MADV_GUARD_REMOVE:
-> -               return 0;
-> -       default:
-> -               /* be safe, default to 1. list exceptions explicitly */
-> -               return 1;
-> -       }
-> -}
-> -
->  #ifdef CONFIG_ANON_VMA_NAME
->  struct anon_vma_name *anon_vma_name_alloc(const char *name)
->  {
-> @@ -1486,6 +1467,43 @@ static bool process_madvise_remote_valid(int behav=
-ior)
->         }
->  }
->
-> +/*
-> + * Try to acquire a VMA read lock if possible.
-> + *
-> + * We only support this lock over a single VMA, which the input range mu=
-st
-> + * span.either partially or fully.
-> + *
-> + * This function always returns with an appropriate lock held. If a VMA =
-read
-> + * lock could be acquired, we return the locked VMA.
-> + *
-> + * If a VMA read lock could not be acquired, we return NULL and expect c=
-aller to
+On 03.06.25 21:09, Jann Horn wrote:
+> On Tue, Jun 3, 2025 at 8:37 PM David Hildenbrand <david@redhat.com> wrote:
+>> On 03.06.25 20:29, Matthew Wilcox wrote:
+>>> On Tue, Jun 03, 2025 at 08:21:02PM +0200, Jann Horn wrote:
+>>>> When fork() encounters possibly-pinned pages, those pages are immediately
+>>>> copied instead of just marking PTEs to make CoW happen later. If the parent
+>>>> is multithreaded, this can cause the child to see memory contents that are
+>>>> inconsistent in multiple ways:
+>>>>
+>>>> 1. We are copying the contents of a page with a memcpy() while userspace
+>>>>      may be writing to it. This can cause the resulting data in the child to
+>>>>      be inconsistent.
+>>>> 2. After we've copied this page, future writes to other pages may
+>>>>      continue to be visible to the child while future writes to this page are
+>>>>      no longer visible to the child.
+>>>>
+>>>> This means the child could theoretically see incoherent states where
+>>>> allocator freelists point to objects that are actually in use or stuff like
+>>>> that. A mitigating factor is that, unless userspace already has a deadlock
+>>>> bug, userspace can pretty much only observe such issues when fancy lockless
+>>>> data structures are used (because if another thread was in the middle of
+>>>> mutating data during fork() and the post-fork child tried to take the mutex
+>>>> protecting that data, it might wait forever).
+>>>
+>>> Um, OK, but isn't that expected behaviour?  POSIX says:
+>>>
+>>> : A process shall be created with a single thread. If a multi-threaded
+>>> : process calls fork(), the new process shall contain a replica of the
+>>> : calling thread and its entire address space, possibly including the
+>>> : states of mutexes and other resources. Consequently, the application
+>>> : shall ensure that the child process only executes async-signal-safe
+>>> : operations until such time as one of the exec functions is successful.
+>>>
+>>> It's always been my understanding that you really, really shouldn't call
+>>> fork() from a multithreaded process.
+>>
+>> I have the same recollection, but rather because of concurrent O_DIRECT
+>> and locking (pthread_atfork ...).
+>>
+>> Using the allocator above example: what makes sure that no other thread
+>> is halfway through modifying allocator state? You really have to sync
+>> somehow before calling fork() -- e.g., grabbing allocator locks in
+>> pthread_atfork().
+> 
+> Yeah, like what glibc does for its malloc implementation to prevent
+> allocator calls from racing with fork(), so that malloc() keeps
+> working after fork(), even though POSIX says that the libc doesn't
+> have to guarantee that.
 
-Worth mentioning that the function itself will fall back to taking
-mmap_read_lock in such a case.
+I mean, the patch here is simple, and there is already a performance 
+penalty when allocating+copying the page, so it's not really the common 
+hot path.
 
-> + * fallback to mmap lock behaviour.
-> + */
-> +static struct vm_area_struct *try_vma_read_lock(struct mm_struct *mm,
-> +               struct madvise_behavior *madv_behavior,
-> +               unsigned long start, unsigned long end)
-> +{
-> +       struct vm_area_struct *vma;
-> +
-> +       if (!madv_behavior || madv_behavior->lock_mode !=3D MADVISE_VMA_R=
-EAD_LOCK)
+Merely a question if this was ever officially supported and warrents a 
+"Fixes:".
 
-nit: I think it would be better to do this check before calling
-try_vma_read_lock(). IMHO it does not make sense to call
-try_vma_read_lock() when lock_mode !=3D MADVISE_VMA_READ_LOCK. It also
-makes reading this function easier. The first time I looked at it and
-saw "return NULL" in one place that takes mmap_read_lock() and another
-place which returns the same NULL but does not take mmap_lock really
-confused me.
+-- 
+Cheers,
 
-> +               return NULL;
-> +
-> +       vma =3D lock_vma_under_rcu(mm, start);
-> +       if (!vma)
-> +               goto take_mmap_read_lock;
-> +       /* We must span only a single VMA, uffd unsupported. */
-> +       if (end > vma->vm_end || userfaultfd_armed(vma)) {
+David / dhildenb
 
-vma->vm_end is not inclusive, so the above condition I think should be
-(end >=3D vma->vm_end || ...)
-
-> +               vma_end_read(vma);
-> +               goto take_mmap_read_lock;
-> +       }
-> +       return vma;
-> +
-> +take_mmap_read_lock:
-> +       mmap_read_lock(mm);
-> +       madv_behavior->lock_mode =3D MADVISE_MMAP_READ_LOCK;
-> +       return NULL;
-> +}
-> +
->  /*
->   * Walk the vmas in range [start,end), and call the visit function on ea=
-ch one.
->   * The visit function will get start and end parameters that cover the o=
-verlap
-> @@ -1496,7 +1514,8 @@ static bool process_madvise_remote_valid(int behavi=
-or)
->   */
->  static
->  int madvise_walk_vmas(struct mm_struct *mm, unsigned long start,
-> -                     unsigned long end, void *arg,
-> +                     unsigned long end, struct madvise_behavior *madv_be=
-havior,
-> +                     void *arg,
->                       int (*visit)(struct vm_area_struct *vma,
->                                    struct vm_area_struct **prev, unsigned=
- long start,
->                                    unsigned long end, void *arg))
-> @@ -1505,6 +1524,15 @@ int madvise_walk_vmas(struct mm_struct *mm, unsign=
-ed long start,
->         struct vm_area_struct *prev;
->         unsigned long tmp;
->         int unmapped_error =3D 0;
-> +       int error;
-> +
-> +       /* If VMA read lock supported, we apply advice to a single VMA on=
-ly. */
-> +       vma =3D try_vma_read_lock(mm, madv_behavior, start, end);
-> +       if (vma) {
-> +               error =3D visit(vma, &prev, start, end, arg);
-> +               vma_end_read(vma);
-> +               return error;
-> +       }
->
->         /*
->          * If the interval [start,end) covers some unmapped address
-> @@ -1516,8 +1544,6 @@ int madvise_walk_vmas(struct mm_struct *mm, unsigne=
-d long start,
->                 prev =3D vma;
->
->         for (;;) {
-> -               int error;
-> -
->                 /* Still start < end. */
->                 if (!vma)
->                         return -ENOMEM;
-> @@ -1598,34 +1624,86 @@ int madvise_set_anon_name(struct mm_struct *mm, u=
-nsigned long start,
->         if (end =3D=3D start)
->                 return 0;
->
-> -       return madvise_walk_vmas(mm, start, end, anon_name,
-> +       return madvise_walk_vmas(mm, start, end, anon_name, NULL,
->                                  madvise_vma_anon_name);
->  }
->  #endif /* CONFIG_ANON_VMA_NAME */
->
-> -static int madvise_lock(struct mm_struct *mm, int behavior)
-> +
-> +/*
-> + * Any behaviour which results in changes to the vma->vm_flags needs to
-> + * take mmap_lock for writing. Others, which simply traverse vmas, need
-> + * to only take it for reading.
-> + */
-> +static enum madvise_lock_mode get_lock_mode(struct madvise_behavior *mad=
-v_behavior)
->  {
-> +       int behavior =3D madv_behavior->behavior;
-> +
->         if (is_memory_failure(behavior))
-> -               return 0;
-> +               return MADVISE_NO_LOCK;
->
-> -       if (madvise_need_mmap_write(behavior)) {
-> +       switch (behavior) {
-> +       case MADV_REMOVE:
-> +       case MADV_WILLNEED:
-> +       case MADV_COLD:
-> +       case MADV_PAGEOUT:
-> +       case MADV_FREE:
-> +       case MADV_POPULATE_READ:
-> +       case MADV_POPULATE_WRITE:
-> +       case MADV_COLLAPSE:
-> +       case MADV_GUARD_INSTALL:
-> +       case MADV_GUARD_REMOVE:
-> +               return MADVISE_MMAP_READ_LOCK;
-> +       case MADV_DONTNEED:
-> +       case MADV_DONTNEED_LOCKED:
-> +               return MADVISE_VMA_READ_LOCK;
-> +       default:
-> +               return MADVISE_MMAP_WRITE_LOCK;
-> +       }
-> +}
-> +
-> +static int madvise_lock(struct mm_struct *mm,
-> +               struct madvise_behavior *madv_behavior)
-> +{
-> +       enum madvise_lock_mode lock_mode =3D get_lock_mode(madv_behavior)=
-;
-> +
-> +       switch (lock_mode) {
-> +       case MADVISE_NO_LOCK:
-> +               break;
-> +       case MADVISE_MMAP_WRITE_LOCK:
->                 if (mmap_write_lock_killable(mm))
->                         return -EINTR;
-> -       } else {
-> +               break;
-> +       case MADVISE_MMAP_READ_LOCK:
->                 mmap_read_lock(mm);
-> +               break;
-> +       case MADVISE_VMA_READ_LOCK:
-> +               /* We will acquire the lock per-VMA in madvise_walk_vmas(=
-). */
-> +               break;
->         }
-> +
-> +       madv_behavior->lock_mode =3D lock_mode;
->         return 0;
->  }
->
-> -static void madvise_unlock(struct mm_struct *mm, int behavior)
-> +static void madvise_unlock(struct mm_struct *mm,
-> +               struct madvise_behavior *madv_behavior)
->  {
-> -       if (is_memory_failure(behavior))
-> +       switch (madv_behavior->lock_mode) {
-> +       case  MADVISE_NO_LOCK:
->                 return;
-> -
-> -       if (madvise_need_mmap_write(behavior))
-> +       case MADVISE_MMAP_WRITE_LOCK:
->                 mmap_write_unlock(mm);
-> -       else
-> +               break;
-> +       case MADVISE_MMAP_READ_LOCK:
->                 mmap_read_unlock(mm);
-> +               break;
-> +       case MADVISE_VMA_READ_LOCK:
-> +               /* We will drop the lock per-VMA in madvise_walk_vmas(). =
-*/
-> +               break;
-> +       }
-> +
-> +       madv_behavior->lock_mode =3D MADVISE_NO_LOCK;
->  }
->
->  static bool madvise_batch_tlb_flush(int behavior)
-> @@ -1721,6 +1799,8 @@ static int madvise_do_behavior(struct mm_struct *mm=
-,
->
->         if (is_memory_failure(behavior))
->                 return madvise_inject_error(behavior, start, start + len_=
-in);
-> +
-> +       // TODO: handle untagged stuff here...
->         start =3D untagged_addr(start); //untagged_addr_remote(mm, start)=
-;
->         end =3D start + PAGE_ALIGN(len_in);
->
-> @@ -1729,7 +1809,7 @@ static int madvise_do_behavior(struct mm_struct *mm=
-,
->                 error =3D madvise_populate(mm, start, end, behavior);
->         else
->                 error =3D madvise_walk_vmas(mm, start, end, madv_behavior=
-,
-> -                                         madvise_vma_behavior);
-> +                                         madv_behavior, madvise_vma_beha=
-vior);
->         blk_finish_plug(&plug);
->         return error;
->  }
-> @@ -1817,13 +1897,13 @@ int do_madvise(struct mm_struct *mm, unsigned lon=
-g start, size_t len_in, int beh
->
->         if (madvise_should_skip(start, len_in, behavior, &error))
->                 return error;
-> -       error =3D madvise_lock(mm, behavior);
-> +       error =3D madvise_lock(mm, &madv_behavior);
->         if (error)
->                 return error;
->         madvise_init_tlb(&madv_behavior, mm);
->         error =3D madvise_do_behavior(mm, start, len_in, &madv_behavior);
->         madvise_finish_tlb(&madv_behavior);
-> -       madvise_unlock(mm, behavior);
-> +       madvise_unlock(mm, &madv_behavior);
->
->         return error;
->  }
-> @@ -1847,7 +1927,7 @@ static ssize_t vector_madvise(struct mm_struct *mm,=
- struct iov_iter *iter,
->
->         total_len =3D iov_iter_count(iter);
->
-> -       ret =3D madvise_lock(mm, behavior);
-> +       ret =3D madvise_lock(mm, &madv_behavior);
->         if (ret)
->                 return ret;
->         madvise_init_tlb(&madv_behavior, mm);
-> @@ -1880,8 +1960,8 @@ static ssize_t vector_madvise(struct mm_struct *mm,=
- struct iov_iter *iter,
->
->                         /* Drop and reacquire lock to unwind race. */
->                         madvise_finish_tlb(&madv_behavior);
-> -                       madvise_unlock(mm, behavior);
-> -                       ret =3D madvise_lock(mm, behavior);
-> +                       madvise_unlock(mm, &madv_behavior);
-> +                       ret =3D madvise_lock(mm, &madv_behavior);
->                         if (ret)
->                                 goto out;
->                         madvise_init_tlb(&madv_behavior, mm);
-> @@ -1892,7 +1972,7 @@ static ssize_t vector_madvise(struct mm_struct *mm,=
- struct iov_iter *iter,
->                 iov_iter_advance(iter, iter_iov_len(iter));
->         }
->         madvise_finish_tlb(&madv_behavior);
-> -       madvise_unlock(mm, behavior);
-> +       madvise_unlock(mm, &madv_behavior);
->
->  out:
->         ret =3D (total_len - iov_iter_count(iter)) ? : ret;
-> --
-> 2.49.0
