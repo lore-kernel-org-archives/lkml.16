@@ -1,102 +1,188 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 271DD139B;
-	Tue,  3 Jun 2025 04:52:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBAAB139B;
+	Tue,  3 Jun 2025 04:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748926348; cv=none; b=qPsagJyIpqTBZtDPcqzqiQ6Veo5YWiAqPz7jXK4tv80rgW7poE8j3vMIfq1UJxraITJhs7azBBHmEKsW/w+87Vm6C7kpsMHqatUwLuz9X+YudlD6L2ejAetTxSF0EkRupLzuwYNbjdRwBoPbuXHtDbu98FMRSMr4r6hGkfWdzQU=
+	t=1748926584; cv=none; b=WTDXsCvyx2lnxAuymOib4BdLhMaRY6fVOxc9Kds5TqgTDNeChFqzOf0zvKSevDxojJ93CrzQEfqqXHhQSGjb/CbAwK2t0IzSEkziPpfFOnPVBA1/a3deNGbGYmjasX3ZD/sA2sXQIpM3NKHxMPZ0l4LyAdm7YvolkOUpIdVEjGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748926348; c=relaxed/simple;
-	bh=9JfipAlH31/Nfl/rtapCnYoip2jYXWlwbar7ZO14jI8=;
+	s=arc-20240116; t=1748926584; c=relaxed/simple;
+	bh=Igko4L0daaGgQYSXk1QMDHStz33o8RX9bl/FJAt5rrg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=efoI0vzT3xjuqbWkTbKYsJUvnckfd1uwtD1570L62jzsh1yOAJU69dLiYgf0PsjyspZq3TXzKgBR9bIvdDa0ZALn8ZwfRXkC9YTDWIxbGEOhuWYM/EyNgTTfi18MbDAjFrAZ5XMLFHIuDBcizix8dAm/euwaxql7kZuUhCf4RHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=B3P8Y2kD; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=pqO2QQ2rK4OzLbp+L/ymOl9n0/Lg+IKvfWjLuZYOQ1yAtmL7gJe17H+PsmSub+kMPh2nlpzD2Trt5sLAPiW+rl+K8nCKdJ0yqCQuQUoQOowm3fNItZgzrg44kVN3F4aB2PJBFXdPTicB15XeAnOLtJ/DiR+nZ2CUnkZH/1ErSDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Smadgrr1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B3P8Y2kD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=2HXdpwNFEIc5X8bhVnayNQJw7eGMBpc7Yo7s6dM4VOc=; b=B3P8Y2kDHXidjM2mVVCC4kBNNF
-	Qz89tdzXTMecebZG7XmRmDmZwVxd749GOy/SzyY/EpmsmfsqSNw/cnSgrpSTVCApUquqkhPfVkAc8
-	kieG2QRArS7d2eif4k5WqxYt4D0T0IvW8HLaOTbXkSr40XTEVz8CgyPpGf052cciIXiuAonVHjKp5
-	ca8tnKvTKMeAP4pWA1TQQgCniiO5gADuWYcy575ZsQpE9t3qic8U9fIg53T2QtSkg9Caxfp7AVxdf
-	qRln17kTFNcHJEKM2R61la51Q5Mz0A+L2g/j3ozbDXhSHyJ/Sl2JQG5pkhq4oDDJmJzkj4ZENkv79
-	jz/R5CFQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uMJdM-00000009izV-3hPv;
-	Tue, 03 Jun 2025 04:52:20 +0000
-Date: Mon, 2 Jun 2025 21:52:20 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com,
-	ajones@ventanamicro.com, akpm@linux-foundation.org,
-	amoorthy@google.com, anthony.yznaga@oracle.com, anup@brainfault.org,
-	aou@eecs.berkeley.edu, bfoster@redhat.com,
-	binbin.wu@linux.intel.com, brauner@kernel.org,
-	catalin.marinas@arm.com, chao.p.peng@intel.com,
-	chenhuacai@kernel.org, dave.hansen@intel.com, david@redhat.com,
-	dmatlack@google.com, dwmw@amazon.co.uk, erdemaktas@google.com,
-	fan.du@intel.com, fvdl@google.com, graf@amazon.com,
-	haibo1.xu@intel.com, hch@infradead.org, hughd@google.com,
-	ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz,
-	james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca,
-	jgowans@amazon.com, jhubbard@nvidia.com, jroedel@suse.de,
-	jthoughton@google.com, jun.miao@intel.com, kai.huang@intel.com,
-	keirf@google.com, kent.overstreet@linux.dev,
-	kirill.shutemov@intel.com, liam.merwick@oracle.com,
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name,
-	maz@kernel.org, mic@digikod.net, michael.roth@amd.com,
-	mpe@ellerman.id.au, muchun.song@linux.dev, nikunj@amd.com,
-	nsaenz@amazon.es, oliver.upton@linux.dev, palmer@dabbelt.com,
-	pankaj.gupta@amd.com, paul.walmsley@sifive.com, pbonzini@redhat.com,
-	pdurrant@amazon.co.uk, peterx@redhat.com, pgonda@google.com,
-	pvorel@suse.cz, qperret@google.com, quic_cvanscha@quicinc.com,
-	quic_eberman@quicinc.com, quic_mnalajal@quicinc.com,
-	quic_pderrin@quicinc.com, quic_pheragu@quicinc.com,
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com,
-	richard.weiyang@gmail.com, rick.p.edgecombe@intel.com,
-	rientjes@google.com, roypat@amazon.co.uk, rppt@kernel.org,
-	seanjc@google.com, shuah@kernel.org, steven.price@arm.com,
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com,
-	thomas.lendacky@amd.com, vannapurve@google.com, vbabka@suse.cz,
-	viro@zeniv.linux.org.uk, vkuznets@redhat.com, wei.w.wang@intel.com,
-	will@kernel.org, willy@infradead.org, xiaoyao.li@intel.com,
-	yan.y.zhao@intel.com, yilun.xu@intel.com, yuzenghui@huawei.com,
-	zhiquan1.li@intel.com
-Subject: Re: [PATCH 1/2] fs: Provide function that allocates a secure
- anonymous inode
-Message-ID: <aD5_hL-caOZjSk8x@infradead.org>
-References: <cover.1748890962.git.ackerleytng@google.com>
- <c03fbe18c3ae90fb3fa7c71dc0ee164e6cc12103.1748890962.git.ackerleytng@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Smadgrr1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D43DC4CEED;
+	Tue,  3 Jun 2025 04:56:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748926583;
+	bh=Igko4L0daaGgQYSXk1QMDHStz33o8RX9bl/FJAt5rrg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Smadgrr1nY59GEmxpD9U1p+n0bwgct9dFGKJGj8L7jV4VMEu4BuyeHzvwOrzbjRHk
+	 V9VRusdDv41egiT+JUW5gPxhFbsOU5zXHjIBTZLTAU44QBmZ54ARbJ5n64/XjBAqNn
+	 eTMFIiQ5L80X84zNkbas5uP71dkq60l2khd4xtRNYuKC3LOIPJMkUTMUAl37DmiMXy
+	 4exQY7aSw4WGM4Up4Pn8r+2YqzdUf+srcf/H8B/0eJBTPUfXI7n3XUprl0Folz7RkY
+	 NcD0GCUihuZlH+9nBcm6yfFyiElw2636XGf0avtwWhHvmfRBR0Q5Hf1WvYv3qZBpmt
+	 va4yxOCL3CwQg==
+Date: Mon, 2 Jun 2025 21:56:21 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Howard Chu <howardchu95@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, acme@kernel.org,
+	mingo@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com, peterz@infradead.org,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Subject: Re: [RFC PATCH v1] perf trace: Mitigate failures in parallel perf
+ trace instances
+Message-ID: <aD6AdQRLNNGhwRSe@google.com>
+References: <20250529065537.529937-1-howardchu95@gmail.com>
+ <aDpBTLoeOJ3NAw_-@google.com>
+ <CAH0uvojGoLX6mpK9wA1cw-EO-y_fUmdndAU8eZ1pa70Lc_rvvw@mail.gmail.com>
+ <20250602181743.1c3dabea@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <c03fbe18c3ae90fb3fa7c71dc0ee164e6cc12103.1748890962.git.ackerleytng@google.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250602181743.1c3dabea@gandalf.local.home>
 
-On Mon, Jun 02, 2025 at 12:17:54PM -0700, Ackerley Tng wrote:
-> +struct inode *alloc_anon_secure_inode(struct super_block *s, const char *name)
-> +{
-> +	return anon_inode_make_secure_inode(s, name, NULL, true);
-> +}
-> +EXPORT_SYMBOL_GPL(alloc_anon_secure_inode);
+Hi Steve,
 
-What is "secure" about this inode?
+On Mon, Jun 02, 2025 at 06:17:43PM -0400, Steven Rostedt wrote:
+> On Fri, 30 May 2025 17:00:38 -0700
+> Howard Chu <howardchu95@gmail.com> wrote:
+> 
+> > Hello Namhyung,
+> > 
+> > On Fri, May 30, 2025 at 4:37 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > >
+> > > Hello,
+> > >
+> > > (Adding tracing folks)  
+> > 
+> > (That's so convenient wow)
+> 
+> Shouldn't the BPF folks be more relevant. I don't see any of the tracing
+> code involved here.
 
-A kerneldoc explaining that would probably help.
+Yep, they are CC'ed too.  And sorry I thought you are involved in this
+part of the code.
 
-> +extern struct inode *alloc_anon_secure_inode(struct super_block *, const char *);
+> 
+> > 
+> > >
+> > > On Wed, May 28, 2025 at 11:55:36PM -0700, Howard Chu wrote:  
+> > > > perf trace utilizes the tracepoint utility, the only filter in perf
+> > > > trace is a filter on syscall type. For example, if perf traces only
+> > > > openat, then it filters all the other syscalls, such as readlinkat,
+> > > > readv, etc.
+> > > >
+> > > > This filtering is flawed. Consider this case: two perf trace
+> > > > instances are running at the same time, trace instance A tracing
+> > > > readlinkat, trace instance B tracing openat. When an openat syscall
+> > > > enters, it triggers both BPF programs (sys_enter) in both perf trace
+> > > > instances, these kernel functions will be executed:
+> > > >
+> > > > perf_syscall_enter
+> > > >   perf_call_bpf_enter
+> > > >     trace_call_bpf
+> 
+> This is in bpf_trace.c (BPF related, not tracing related).
+ 
+Ok, noted.
 
-No need for the extern here.  Spelling out the parameter names in
-protypes is nice, though. (and fix the long line while you're at it).
+Thanks,
+Namhyung
 
+> 
+> > > >       bpf_prog_run_array
+> > > >
+> > > > In bpf_prog_run_array:
+> > > > ~~~
+> > > > while ((prog = READ_ONCE(item->prog))) {
+> > > >       run_ctx.bpf_cookie = item->bpf_cookie;
+> > > >       ret &= run_prog(prog, ctx);
+> > > >       item++;
+> > > > }
+> > > > ~~~
+> > > >
+> > > > I'm not a BPF expert, but by tinkering I found that if one of the BPF
+> > > > programs returns 0, there will be no tracepoint sample. That is,
+> > > >
+> > > > (Is there a sample?) = ProgRetA & ProgRetB & ProgRetC
+> > > >
+> > > > Where ProgRetA is the return value of one of the BPF programs in the BPF
+> > > > program array.
+> > > >
+> > > > Go back to the case, when two perf trace instances are tracing two
+> > > > different syscalls, again, A is tracing readlinkat, B is tracing openat,
+> > > > when an openat syscall enters, it triggers the sys_enter program in
+> > > > instance A, call it ProgA, and the sys_enter program in instance B,
+> > > > ProgB, now ProgA will return 0 because ProgA cares about readlinkat only,
+> > > > even though ProgB returns 1; (Is there a sample?) = ProgRetA (0) &
+> > > > ProgRetB (1) = 0. So there won't be a tracepoint sample in B's output,
+> > > > when there really should be one.  
+> > >
+> > > Sounds like a bug.  I think it should run bpf programs attached to the
+> > > current perf_event only.  Isn't it the case for tracepoint + perf + bpf?  
+> > 
+> > I really can't answer that question.
+> > 
+> > >  
+> > > >
+> > > > I also want to point out that openat and readlinkat have augmented
+> > > > output, so my example might not be accurate, but it does explain the
+> > > > current perf-trace-in-parallel dilemma.
+> > > >
+> > > > Now for augmented output, it is different. When it calls
+> > > > bpf_perf_event_output, there is a sample. There won't be no ProgRetA &
+> > > > ProgRetB... thing. So I will send another RFC patch to enable
+> > > > parallelism using this feature. Also, augmented_output creates a sample
+> > > > on it's own, so returning 1 will create a duplicated sample, when
+> > > > augmented, just return 0 instead.  
+> > >
+> > > Yes, it's bpf-output and tracepoint respectively.  Maybe we should
+> > > always return 1 not to drop syscalls unintentionally and perf can
+> > > discard duplicated samples.  
+> > 
+> > I like this.
+> > 
+> > >
+> > > Another approach would be return 0 always and use bpf-output for
+> > > unaugmented syscalls too.  But I'm afraid it'd affect other perf tools
+> > > using tracepoints.  
+> > 
+> > Yep.
+> > 
+> > >  
+> > > >
+> > > > Is this approach perfect? Absolutely not, there will likely be some
+> > > > performance overhead on the kernel side. It is just a quick dirty fix
+> > > > that makes perf trace run in parallel without failing. This patch is an
+> > > > explanation on the reason of failures and possibly, a link used in a
+> > > > nack comment.  
+> > >
+> > > Thanks for your work, but I'm afraid it'd still miss some syscalls as it
+> > > returns 0 sometimes.  
+> > 
+> > My bad... For example this:
+> > 
+> > if (pid_filter__has(&pids_filtered, getpid()))
+> >    return 0;
+> > 
+> > This patch is practically meaningless, but it passes the parallel tests.
+> > 
+> > Thanks,
+> > Howard
+> 
