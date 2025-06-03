@@ -1,98 +1,125 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41809173;
-	Tue,  3 Jun 2025 04:25:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94797173;
+	Tue,  3 Jun 2025 04:27:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748924712; cv=none; b=eHxO7O2LeaYGTc/H3Y+A2Lw96u1os/7d4v6Zm5uKacA6PC0838BV3MwY5ariGJZxo84iwfxrOmoPQWiRZ6MA2IjsWb4WBGzA2cNSP9PrytlSVx+0srvaDAvmMOS9Niu8T6nRdiTS0u8UuFl5mtWk32xAlU6AoaczcdjaDg2Jj2c=
+	t=1748924858; cv=none; b=Q6ZWhUvKsX7lnZTvKZ4zXgpf0oaLvcHWmkon3yVX1OPgX1tWycpsSJlZAOvHVESEruHLP1E769xkTJqvu/k9l5lFyANMUCPIhfB6tzFukr9v0rVy76r/nCwju+OcivhS04XDsuB9VWih81CP/rvm7xyDOpWfhnMof0LiCc2SMyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748924712; c=relaxed/simple;
-	bh=3RkXxcODg9tTzCDdEa7WPsKx/lfr+T6zdhtXKxk+LGE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pm+wwJVtRg/I9cscVi+SbV0+uxSncc1XK/0i030BUfyvDOl1F+Bk9HRpHoH9VLH9rqHa/sJ+r5W/ihfvbDvWzs2tnYAUVHmCgXspNISIPn5ZWNABozlc046N6XTfxmniig1nJcOjFW8Ft/qe5XFf/0bnUmKLlUdV41dTFV+slJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=bEX1Qu6R; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1748924858; c=relaxed/simple;
+	bh=mFKbqTKrOWdaKQobo/BncdjSnIChCDEf7FoGojpDD2M=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=B/w4CVJizDCIhwdV+Tq14L6SEujJBH0z+cKeBS002tpV98U6fL6eH9ltEmbUXHkP0ox9vEQlOlU+vM2cfLIL598zI0bK7cjwcPQWBTFy+ap5uTXBW8se8cLAhaVkSL5X5/eGddB4lBF+SVwSeKr8OTLDGAESHnTu0e0BFuNQaIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=RC9Qwwbx; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bEX1Qu6R"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 5534OrUg355270;
-	Mon, 2 Jun 2025 23:24:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1748924693;
-	bh=n6NxpDwg1mf1bOuUw2WDky2Q1KZ624qdIJUn8ZlY//o=;
-	h=From:To:CC:Subject:Date;
-	b=bEX1Qu6RpmvpwdD4L0uZYgoUwsapvT76TezuO2ksHm/rjJKoFuiCc8lzz8sqbtrsY
-	 g9NshKtWoZeAwk6if4Vg/Rj3+rtAu8BDGgQFAJW2Khyf4vnmcp8fqPfXeW0Mk2cHHb
-	 HamrvsIoFFrwnczrlqEcM3QuO5BlxcI6LmC1geb0=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 5534OrJU3348192
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Mon, 2 Jun 2025 23:24:53 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 2
- Jun 2025 23:24:53 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 2 Jun 2025 23:24:52 -0500
-Received: from udit-HP-Z2-Tower-G9-Workstation-Desktop-PC.dhcp.ti.com (udit-hp-z2-tower-g9-workstation-desktop-pc.dhcp.ti.com [10.24.69.198])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5534OnfH4063997;
-	Mon, 2 Jun 2025 23:24:50 -0500
-From: Udit Kumar <u-kumar1@ti.com>
-To: <nm@ti.com>, <vigneshr@ti.com>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <u-kumar1@ti.com>, <b-padhi@ti.com>
-Subject: [RESEND PATCH] arm64: dts: ti: k3-j784s4-mcu-wakeup: Configure wkup_uart0 with clock settings
-Date: Tue, 3 Jun 2025 09:54:48 +0530
-Message-ID: <20250603042448.783956-1-u-kumar1@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RC9Qwwbx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1748924851;
+	bh=C1QWK1JZcLIQ9k3n48xFjIAiFC4pxjDkSghW5mWvMmI=;
+	h=Date:From:To:Cc:Subject:From;
+	b=RC9QwwbxQTzaP/TgFtPK1kY35JWcigxlRryN0rPMndm8RoGhhTqco1d2j0dDiIaa2
+	 XYW4DW/YTJNLKCBvUVCmW41e3l5+tseQVMdruyOwyE8VzoiapeJuKeCmsSc82hZZBY
+	 pUCuSaT6F6WjkWk4nwRDzG1DhSP2333cCaMljf2Bm3VLd0RvUkfnAAxW3KPebAsBBh
+	 iWfV/ElPCQRhsT8X9M/x3yNVSSrCgdmDre3fFRNR03K3ALek03pPs2dRy6H5efkfoo
+	 QN6rgRvu7BAEwOmoG0Hwko3vlHDuLlsaXyZIie/w/Oo6aZgT0hEZZZRFognrSgkgUq
+	 CfRZuQBkf3FmQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bBHkC0fdsz4xcT;
+	Tue,  3 Jun 2025 14:27:30 +1000 (AEST)
+Date: Tue, 3 Jun 2025 14:27:30 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>, Florian
+ Fainelli <f.fainelli@gmail.com>
+Cc: Akshay Gupta <akshay.gupta@amd.com>, Andrea della Porta
+ <andrea.porta@suse.com>, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the char-misc tree with the broadcom
+ tree
+Message-ID: <20250603142730.084cf0a4@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: multipart/signed; boundary="Sig_/UZTyZjK8c2jVAG3qy/fWr59";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-From: Bhavya Kapoor <b-kapoor@ti.com>
+--Sig_/UZTyZjK8c2jVAG3qy/fWr59
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This commit adds the assigned-clocks and assigned-clock-parents
-properties for wkup_uart0 in J784S4. Specifically, the assigned-clocks
-property is set to reference the clock identified by
-"wkup_usart_mcupll_bypass_out0", ensuring the UART operates with the
-correct clock source.
+Hi all,
 
-The assigned-clock-parents property specifies "wkup_usart_clksel_out0"
-as the parent clock. This configuration is critical for establishing
-the proper clocking hierarchy, enabling the UART device to function
-reliably across different baud rates.
+Today's linux-next merge of the char-misc tree got conflicts in:
 
-Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
----
-Link to v1: https://lore.kernel.org/all/20241009072056.3511346-1-b-kapoor@ti.com/
+  drivers/misc/Kconfig
+  drivers/misc/Makefile
 
- arch/arm64/boot/dts/ti/k3-j784s4-j742s2-mcu-wakeup-common.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+between commit:
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-mcu-wakeup-common.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-mcu-wakeup-common.dtsi
-index 52e2965a3bf5..1146bc5990ea 100644
---- a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-mcu-wakeup-common.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-mcu-wakeup-common.dtsi
-@@ -310,6 +310,8 @@ wkup_uart0: serial@42300000 {
- 		interrupts = <GIC_SPI 897 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&k3_clks 397 0>;
- 		clock-names = "fclk";
-+		assigned-clocks = <&k3_clks 397 0>;
-+		assigned-clock-parents = <&k3_clks 397 1>;
- 		power-domains = <&k3_pds 397 TI_SCI_PD_EXCLUSIVE>;
- 		status = "disabled";
- 	};
--- 
-2.34.1
+  d04abc60a903 ("misc: rp1: RaspberryPi RP1 misc driver")
 
+from the broadcom tree and commit:
+
+  e15658676405 ("hwmon/misc: amd-sbi: Move core sbrmi from hwmon to misc")
+
+from the char-misc tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/misc/Kconfig
+index e12e445a10fa,0de7c35f6fe5..000000000000
+--- a/drivers/misc/Kconfig
++++ b/drivers/misc/Kconfig
+@@@ -660,5 -647,5 +659,6 @@@ source "drivers/misc/uacce/Kconfig
+  source "drivers/misc/pvpanic/Kconfig"
+  source "drivers/misc/mchp_pci1xxxx/Kconfig"
+  source "drivers/misc/keba/Kconfig"
+ +source "drivers/misc/rp1/Kconfig"
++ source "drivers/misc/amd-sbi/Kconfig"
+  endmenu
+diff --cc drivers/misc/Makefile
+index 9ed1c3d8dc06,b628044fb74e..000000000000
+--- a/drivers/misc/Makefile
++++ b/drivers/misc/Makefile
+@@@ -75,4 -73,4 +74,5 @@@ lan966x-pci-objs		:=3D lan966x_pci.
+  lan966x-pci-objs		+=3D lan966x_pci.dtbo.o
+  obj-$(CONFIG_MCHP_LAN966X_PCI)	+=3D lan966x-pci.o
+  obj-y				+=3D keba/
+ +obj-$(CONFIG_MISC_RP1)		+=3D rp1/
++ obj-y				+=3D amd-sbi/
+
+--Sig_/UZTyZjK8c2jVAG3qy/fWr59
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg+ebIACgkQAVBC80lX
+0GwMswf8ChoyTMgsY8DSrhMeUjF2lk/kUhEY4LFrh6W9JA3eBCtFlZRnDEU9+rx1
+yYy6kyb/z+AKmDHMk2jG/hpEwsKUw1gAdWTG7Em2zKkvFwxa0m+K833yNRASsgFq
+twNhHaC3dCCC/BU4y/k1KFZmdt1zO4NI7lpze6+/FRUfweuCfps/mMgGcx2pcrmL
+OQckfaTTZj2B5qlfxd92OrWMSPSQ2z10HXhRb6h5DoshQWVeQxyk6uUcWBrLU9Et
+bc8nmw3K/9IKfLon0tpQG/odJ/DqszNlwkcVYVe0hfBAfvfsM5CqOqge5Ict8gic
+GW2IvwAUx4tTw14Js95LUPXYCPCMTQ==
+=RFjI
+-----END PGP SIGNATURE-----
+
+--Sig_/UZTyZjK8c2jVAG3qy/fWr59--
