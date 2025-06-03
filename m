@@ -1,119 +1,168 @@
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C88A288C04
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 18:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB896288C20
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 18:24:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748975042; cv=none; b=TiLR7s2I9LivXR5qdTw/mQL59JXEKujfoD7uvLEgXVMqBirnQzOfLG79LQ1phc/F+l7He8Z5XColKFDx8XzloWJESTpX5bPxG88ILPPHrCWNy2sCjtUcu8RUFTnDcyTe9cWJcnnBQALVBkMvWIzL77v2e8Lhj1OfFlYBapwq+6Y=
+	t=1748975073; cv=none; b=lyUOAkzZyMlVm44PlSRjq5SR+nmbLQ4RX35GK3sWI5kSfvESRaHEFPinJdyi4WKUjJ5tGdLGX+6Mv9gYSt5f4QbHtz56yq2jrHoWksLBScKNEk5ytgRrfLFN+CK2K9Kepd3Mc7QYY/QUvECwzaHwgVrE6cfj2JjexdoW70GK/ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748975042; c=relaxed/simple;
-	bh=eiutlgQbbFswcPoUKxtmnu9MmBbg4ONzk6H4t4P4Txs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jebtoqxQRIB3fnq1sL61stiWoXHWdwNc7w0islugsXLZvrDTa1GYlpPQdim7fEklC/i9LMJTuI1VyZfWRRPmeWSrYtOrET3IBb0i0OYNNezeiWB7+VNZ4lZF8BnASWZzKikRDGO68EtEN+CXO8ihkLEbEcMVQcGYz5HE6h7LQv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dVOpRlVH; arc=none smtp.client-ip=209.85.217.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748975073; c=relaxed/simple;
+	bh=T36C3GsRgsr6OwMtorVnDOys6s2toz1ydMSQ2WrXXKk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=BInQaQ2OblxFZSI3vy/Tp+btHGp4cStK81xsxXBBzv6uHurMF/zrtPTe00BfRbmC/llM6Mt9VzWz74QxrsVbWpLXfwDt91wt/hABHM6jpngm3711hWfpcml7mwIcrFm7T1eeSFOdqQ2OU36FLiGK0F3dp30JHU3zohkrND38U4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=iA4GzKnx; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dVOpRlVH"
-Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-4e5adc977ecso1812615137.3
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 11:24:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748975040; x=1749579840; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eiutlgQbbFswcPoUKxtmnu9MmBbg4ONzk6H4t4P4Txs=;
-        b=dVOpRlVHAcBXHpJQhH4vcXcBNz/Ol0E20S1mx2ADnDuicz5BYNsak535bHcfiUILTZ
-         TozmzIR1z9aQYODGbJFlBuervl8Pzid/5R6W1DgQcxFgwOinOVXQgt/0/1w6ZSQQ+ful
-         r5h0rB0lAX2nVuhtosyRRiee6ocD7tOSdIgDXNeVkvmCaS/pk4ZYUpTXwRfUwMLJioxt
-         UtCa4K357gfvhwoTARf2BHM3fBrvPig2HIn9pVIM3yjrP/kO3PACF+I857lGwVylPySc
-         PxVEPlFNZLpeAbCsgQzQiWK5F5u9D0YTINMaD4lfB+x8O+iTgRAqvG4BTrfKIWsg3J3Q
-         sglg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748975040; x=1749579840;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eiutlgQbbFswcPoUKxtmnu9MmBbg4ONzk6H4t4P4Txs=;
-        b=m4k5cQ7wDSqDhoLkk5Bvy9LjzDoEf4+ItkbLErCi8Xf6GEiVCHLTpfuUfu9+DL480O
-         XYslUVWH78DlDBYQkc9iCyQv9cntWEwA2iElqOgdAtRcEb4zi4EuT+NvLdXSmzMHarsN
-         86f3lD0fyzCgkv+caaAKtKcXcHg7Hu6X1TlfTaeBG6aU/9xHvwMw2MkYEV/S3wA+72cf
-         tgQ7aDHptaKuEHrLopBCv3FjGEypgDH+uGYKAuu0l3BT4mccujRmqEGRQdU6NbCwjtZK
-         WIc22qdfhxCWbohQ80NYyJ/Z+v9lgsDSVPpk1O8MtHjUj5fvx0RhW1S5HSJTPVJRFqzH
-         ZyPw==
-X-Forwarded-Encrypted: i=1; AJvYcCW0p5rGrKLgLs9/dQJE9o1mwUb21aUlBe1K1Me0Wo2m+xFKdQdYG1jUxySsrE2qorT4mZIl5yqTkvdbiO8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+QsRgjOirmCZP3TvII7wZZXW3MC/GAAxmdxoyJDgyDOSpCbQ6
-	l39X0JkQLNxZ1Yu2TU6MiNgArUv0P1LM6EDD9zrpIY44woE2tc03UNQn6lHZ3QElkcVBWjLHYxh
-	X5UuSmdPWhO7BiMLmQBE1eE+c50AC8bWdv1XeafFz
-X-Gm-Gg: ASbGnctI/nJkYfwoLKO4ErIm2GJnk/pNMepugQBHki/rM7IQqjKPpmthH9cnAoLtKms
-	41FGpMAXpHZT+uLON6RnaSyKCCoUCuFb6d7yzwnBoiARAJ7lrIC+bh3nQaoBrT+BkeAl//cbfgS
-	PRnRW6MqDyQVKnwqtbEszZMFNJDCwn3kjvCLhz94Bklb5lVBef4dvzEam7Tkfp6vQHabHEPs+iQ
-	tetMunzqlo=
-X-Google-Smtp-Source: AGHT+IGu3iGfbqqsG3F9IVzijCh7yIShG1fCIQdA9Dgix1KcAW3sFId+iZ1kuCoUZV8YX2AkrDLGqQebTSC/08SGhzM=
-X-Received: by 2002:a05:6102:ccf:b0:4c5:1c2e:79f5 with SMTP id
- ada2fe7eead31-4e701b94cecmr9613373137.16.1748975039606; Tue, 03 Jun 2025
- 11:23:59 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="iA4GzKnx"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250603182423euoutp02248795ad28cc5a87d1f14f8bafe1459b~Fm422pgJ40560205602euoutp02B
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 18:24:23 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250603182423euoutp02248795ad28cc5a87d1f14f8bafe1459b~Fm422pgJ40560205602euoutp02B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1748975063;
+	bh=I9e3KbPtuQdRh0VtmLF9WESqN+R+XWureDH0vUnXmdY=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=iA4GzKnxiptjW+b/gwD83/vaXDnS0BlmGhU25+HOeOiLKCxrlX8d1BxK9WER4GC3B
+	 6DPsPN2nPW5R2O9C1+1So29mPkgm22F51lh8gYNCuyiWZwsSapVdKPBvYcHHaSOmCz
+	 dwBmZEzawEh4QASOWQCko4G60TRSRYP5wZOiGLcg=
+Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250603182421eucas1p2351055ed90656b28b876b1c4a6dc94cb~Fm41kpyHs1113611136eucas1p2N;
+	Tue,  3 Jun 2025 18:24:21 +0000 (GMT)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250603182420eusmtip20472ecd551d9e7a1c5da71b8f1a864c1~Fm40lvNhj2610326103eusmtip2W;
+	Tue,  3 Jun 2025 18:24:20 +0000 (GMT)
+Message-ID: <05aa1fad-acf6-4cea-9a20-e54a2a4669b7@samsung.com>
+Date: Tue, 3 Jun 2025 20:24:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521222725.3895192-1-blakejones@google.com>
- <20250521222725.3895192-2-blakejones@google.com> <aC9iF4_eASPkPxXd@x1>
- <CAP_z_Cg_vH1+BAm87U4gYQ0hDRGtHkkYb2DHtTRSd_QNvg3ZLQ@mail.gmail.com>
- <CAP_z_ChErhmooT5rhyXH8L-Ltkz3xdJ7PG20UKDpn9usMUgqTA@mail.gmail.com>
- <aDntjJcJsrQWfPkB@google.com> <CAP_z_CjLtMq_FvmijnFUQbD5UUw=T9jP_pHWCw5fS=38dgSh9g@mail.gmail.com>
-In-Reply-To: <CAP_z_CjLtMq_FvmijnFUQbD5UUw=T9jP_pHWCw5fS=38dgSh9g@mail.gmail.com>
-From: Blake Jones <blakejones@google.com>
-Date: Tue, 3 Jun 2025 11:23:48 -0700
-X-Gm-Features: AX0GCFszGyqeZR0Dklu6vwdsbGkQkC3kk6Dhkl4_uVAGYzvPlnmcKX43Rvyctf4
-Message-ID: <CAP_z_Ch8hKvGvot7140ShuCZOxkb+7M7Wpa4AY-D-Arp9P5ffg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] perf: add support for printing BTF character arrays
- as strings
-To: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
-	James Clark <james.clark@linaro.org>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, Leo Yan <leo.yan@arm.com>, 
-	Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Ben Gainey <ben.gainey@arm.com>, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/8] dt-bindings: power: Add T-HEAD TH1520 GPU power
+ sequencer
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Krzysztof Kozlowski
+	<krzk@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei
+	<wefu@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Philipp Zabel
+	<p.zabel@pengutronix.de>, Frank Binns <frank.binns@imgtec.com>, Matt Coster
+	<matt.coster@imgtec.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson <ulf.hansson@linaro.org>, Marek
+	Szyprowski <m.szyprowski@samsung.com>, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <CAMRc=MfXashaEscE1vF_P6cs9iOCBerfNFiB4yC+TX76fZ87nA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250603182421eucas1p2351055ed90656b28b876b1c4a6dc94cb
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250529222403eucas1p1923fe09240be34e3bbadf16822574d75
+X-EPHeader: CA
+X-CMS-RootMailID: 20250529222403eucas1p1923fe09240be34e3bbadf16822574d75
+References: <CGME20250529222403eucas1p1923fe09240be34e3bbadf16822574d75@eucas1p1.samsung.com>
+	<20250530-apr_14_for_sending-v3-0-83d5744d997c@samsung.com>
+	<20250530-apr_14_for_sending-v3-1-83d5744d997c@samsung.com>
+	<CAMRc=Me9cWfe2mL=Q6JQbAFjpd55MOBZuAWC793Us0criiQr4Q@mail.gmail.com>
+	<4519844e-b1c0-40a7-b856-a6e4a80c6334@samsung.com>
+	<20250603-cuddly-certain-mussel-4fbe96@kuoka>
+	<CAMRc=MfXashaEscE1vF_P6cs9iOCBerfNFiB4yC+TX76fZ87nA@mail.gmail.com>
 
-The libbpf patch set is under discussion right now. Once it converges,
-is there a way to include those patches in the perf tree without
-waiting for them to go up to the main tree and then back down? Could I
-resend them here, or include them as the first part of my next patch
-series?
 
-Thanks in advance for the guidance.
 
-Blake
+On 6/3/25 15:35, Bartosz Golaszewski wrote:
+> On Tue, Jun 3, 2025 at 3:19 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>
+>> On Mon, Jun 02, 2025 at 10:29:13PM GMT, Michal Wilczynski wrote:
+>>>>> +description: |
+>>>>> +  This binding describes the power sequencer for the T-HEAD TH1520 GPU.
+>>>>> +  This sequencer handles the specific power-up and power-down sequences
+>>>>> +  required by the GPU, including managing clocks and resets from both the
+>>>>> +  sequencer and the GPU device itself.
+>>>>> +
+>>>>> +properties:
+>>>>> +  compatible:
+>>>>> +    const: thead,th1520-gpu-pwrseq
+>>>>> +
+>>>>
+>>>> Before I review the rest: is this actually a physical device that
+>>>> takes care of the power sequencing? Some kind of a power management
+>>>> unit for the GPU? If so, I bet it's not called "power sequencer" so
+>>>> let's use its actual name as per the datasheet?
+>>>
+>>> Hi Bart,
+>>> Thanks for your feedback.
+>>>
+>>> The hardware block responsible for powering up the components in the
+>>> TH1520 SoC datasheet is called AON (Always On). However, we already have
+>>> a DT node named aon that serves as a power domain provider
+>>> (Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml).
+>>
+>> So no. One device, one device node (sometimes with cildren nodes). You
+>> do not get another device node just because someone wrote incomplete
+>> binding or because driver looks differently.
 
-On Sat, May 31, 2025 at 12:26=E2=80=AFAM Blake Jones <blakejones@google.com=
-> wrote:
->
-> Hi Namhyung,
->
-> On Fri, May 30, 2025 at 10:40=E2=80=AFAM Namhyung Kim <namhyung@kernel.or=
-g> wrote:
-> > I think it's better to go to the bpf tree although it'd take longer to
-> > get your perf patches.
->
-> Thanks for the suggestion. I've sent this patch to the bpf tree, and I'll
-> resend the rest of this series once that change makes its way to this tre=
-e.
->
-> Blake
+The child option could potentially be an option here, as it would make
+some sense, at least for me - since the child pwrseq DT node would
+describe part of the AON block.
+
+>>
+>>>
+>>> Following the discussion [1] about needing a separate DT node for the
+>>> power sequencing capabilities of this AON block, and thinking further
+>>> about it, I think the binding should be more generic. The AON block can
+>>> manage power sequences for more than just the GPU (e.g. NPU, AUDIO,
+>>> DSP).
+>>>
+>>> The compatible string could be updated like so:
+>>> "thead,th1520-aon-pwrseq"
+>>
+>> Should not be separate node, you already have one for AON.
+>>
+> 
+> Agreed. And as far as implementation goes, you can have the same
+> driver be a PM domain AND pwrseq provider. It just has to bind to the
+> device node that represents an actual component, not a made-up
+> "convenience" node.
+
+Sure - this can be done using existing AON node.
+
+To keep the pwrseq code organized in drivers/power/sequencing/, a
+similar approach to our th1520-pd driver interfacing with the AON
+firmware library (drivers/firmware/thead,th1520-aon.c) could work.
+
+The idea would be to treat code like pwrseq-thead-aon.c (changed from a
+current pwrseq-thead-gpu.c) as a library. It would export its necessary
+functions (e.g., for specific sequence init/deinit steps) using
+EXPORT_SYMBOL_GPL. The main AON driver would then call these to provide
+the pwrseq functionality.
+
+This will introduce a compile-time dependency, as expected.
+
+An alternative would be to keep the driver in drivers/power/sequencing/
+as a platform driver and start it up using, for example, an auxiliary
+bus. This is similar to what the JH7110 clock driver
+(drivers/clk/starfive/clk-starfive-jh7110-sys.c) is doing with a reset
+driver. This could offer a cleaner separation of roles if that's
+preferred.
+
+Please let me know which way would be preferred.
+
+> 
+> Bartosz
+> 
+
+Best regards,
+-- 
+Michal Wilczynski <m.wilczynski@samsung.com>
