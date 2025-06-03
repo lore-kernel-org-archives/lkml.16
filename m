@@ -1,187 +1,218 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F244A2253FE;
-	Tue,  3 Jun 2025 10:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D938222ACF3;
+	Tue,  3 Jun 2025 10:56:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748947972; cv=none; b=GXlOw6Qcu5qabMa0NHFcmhGygxYQgUMLMKMvt1oI+Kf2gJh2H5zpXK2mUJSItcBrjCxBTDbU+NQeg+/s9Ii9LDsbFHKdy4sngN5npMb0gik65X66GAVuFRNVgD1jFfHqNDCV9uRRUUzcY0406GzOfAoGL5wb2rhw16da2gZUgn4=
+	t=1748948216; cv=none; b=sypD9qiLsQRju6j+F651fvfLZ99WpE2aJQkD1AQMepAAXe1FmoyVIL0cKONZdyqzFxCBfus9V9kO0FPAiO/LodAFHMr5PUKJ1HqzFBwj+2ObPdl/73SAIv1Pk41Fl4pRcOpxXtmkRyob8lV2OK4iFUcZLl64tZp6NNZrBl6m5Co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748947972; c=relaxed/simple;
-	bh=pI06o53MXSAYjJgLN6pTlxYEitrsHwOgvKawLM9sSEM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=kzcuMbguTiQPFKLqzxLNEOf77ok/a8mG//w1xyOqxBeU+T/jvHuLeJugkDYxpqEmsg+yXQgtYWFSkddbZiMP263iuxqVabR5SD2dgRYyi1Nm9OYJVJvsSTeRP3UhO8tSRO81ksiaB5X2yY1QIeYsVnn225bFewTBaiXVCS423wY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=O4jOfXRh; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1748948216; c=relaxed/simple;
+	bh=Ur6vVLpxNkxNbe7dEIuP263XbOpSu+doBc10oy7vIqg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iT/sj6XaCrSJYHeDoiEHacBD6YbOl94o1F7TC+SMs00V4meUsxQjOXIUq242pUCRIH6kI6Eferu68z//TZ2VKIhSv10/30bSHx/YT4dktoQda8DUD+MGqGQ3RTCXW0pgy2ejQ+svgljyXE62CzoPxiPCsJ0HguN/9UxsmiyJHkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WxsHB3Mi; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="O4jOfXRh"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5539JLps007516;
-	Tue, 3 Jun 2025 10:52:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	PMCjvR03QgSZdLfpCuMjqLMPO4INCEpPdDDU/B9aHz4=; b=O4jOfXRhytA54wdr
-	EcwfuglfdJ77xESYdbEGNKSIZ7YJ1AMbOuG0pBwuB/x+EH2sIgTgn5qYAzie1wGi
-	NH91gA+Ol/SITyK+xvU7MnVfHwuRqGxI2xTAsUL7q/TfSmS1WRpM03nYQ7XEUCr4
-	2c2HIfaVgEpOCDVj3rgiVlps01T5W7QWt88bjpfzkKNQKyXPtv3hDOI3Pn0sTCgK
-	OiQ9E9gVx77yuYpKeZbHbrmjQKWs5qkYjM2IPjCzDa5RbCD1IUvMn0XCXczidkA9
-	9bNRg/ZrcUp6V051Q+QCmg7g88CIBeSNVh4SJ/nsLbF/prPoXe5RvBT7ATCFtlFW
-	dRXI+A==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8st9m4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Jun 2025 10:52:45 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 553AqinO020650
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 3 Jun 2025 10:52:44 GMT
-Received: from [10.231.195.67] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 3 Jun 2025
- 03:52:40 -0700
-Message-ID: <5268c9ba-16cf-4d3a-87df-bbe0ddd3d584@quicinc.com>
-Date: Tue, 3 Jun 2025 18:52:37 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WxsHB3Mi"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-addcea380eeso354551766b.0;
+        Tue, 03 Jun 2025 03:56:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748948213; x=1749553013; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/7blXBO4JKraFXyZYVYjtLes0xIhtY9NoXA5LD7gBEk=;
+        b=WxsHB3Mi2xyaN+Ch+hqxTtwIM15ZZ8nFVMbY8KqIXbHoxTMHJL5JJmpNEWdjGSVwEL
+         RO/f3LUlbLFJt/aPS1IwUy9EpCIJiJ0Pp1+Z1IcPeuUPjjmFvUEP1QHMWIwjNv1GW4MS
+         Bn4GFzUvIDgNGlD8IqQzSa9hef4/iyIX/Wkdjto0BndP9a1VvSpuhCz5eG2mL4U0Z2fG
+         5qIgaZX0QpwYw9uSDLjoXZU7yBcFNC8UU5+xIQ6BnrRz8M5A2NRyIMMXPMa7B8kWY1Yp
+         lidrS++Q+DJvbF64JweuGkpYK7uNOKyAB7K1ioilm8U66jp457qGKZYjO9zdDdEwioCJ
+         mzIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748948213; x=1749553013;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/7blXBO4JKraFXyZYVYjtLes0xIhtY9NoXA5LD7gBEk=;
+        b=RcfdwUzEiBNDYs1ZgGEXFpueZCf5IAJ8tQh++VMjZvgP5+NQSBdi6ts8/A2ak+0ieR
+         k+RIo8f9jC9Y5Jovpt0jy0QBeAw5mDOwFrAEBq9DcmfIuezKpgt7gEmxOV6FpJxZKBOh
+         Ik3s/fxgt7YJ+CkfPOwa2596wR+uTaUgF+N35HXxdFvjCOPHy5ezFxssPMPCJYJ8iPzE
+         jGfbRaFRNoAvGgZcbcHvaZmbeoglMfpw27eOB7ZWFeo+p7IwYYpBXC4t5PC0U8rdhFLo
+         BinyRf/D3gfD9mQyPkmIwOTSeO47XLotXxS1M5/UPvQqRzbDXhpTPGSOVuydf/BzzQDD
+         m+5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVPjIr9i6a5ZRPd5EPn0VAMqGbL/gO/vTHM9sZzHoxemXl3GP0Vhfh1SmsRjAefVlZLR5OP6JiswYo+33jo@vger.kernel.org, AJvYcCVt73TN3oZTlurl2CaGveBnOmhVoxzV+a0qn/R5X7HwDjNPplFd7V5DsHUUeLDJNG4eiE3wKmLUzSfiq9Cj@vger.kernel.org, AJvYcCWe1Hg6vagO094ZdkUEFQNpdFMFkmDFGJKWK6ETvkx2bpXFQvJTZQ62E17CRZns1UVA9ePiRFXhAnB3OcA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmEglB7h2UcVx3Ant0yzngolMvzR0z8YGZehi1Ov6llMkgrvg6
+	JFbX1iYltG+dkphZFyhhKJxJWmYqG+J8y+ef+/NanR9LppvdHTz6PLnl4V36F34gjnQD9tKqb/c
+	GL7j6P6g2Of5gYNN/FjQSutGNj97PIoA=
+X-Gm-Gg: ASbGncsJzPgWAhYlDv81OiHu1MZcbrLRBjCVp/7UOnJZrdJSni5X4QF1+ZSVr9jgZ0Y
+	qIARXsO0g+i/ICEDDP7oi6+k/bZnDAqU1+NGeg1PNk0s8v9yC99R8onbINOooJc/MSw6TEREXzL
+	MlNo+2F0+CE5KW2KQM3BDetmOzMTdxtMAQ
+X-Google-Smtp-Source: AGHT+IGpvLn8hqrgPkcWVTHoe15k+0yqKJqtqmp3PMmzbuAIudjHSPH95skJXXoflNa4a233DOM5y2pvJ1SiAlHm6rU=
+X-Received: by 2002:a17:907:da9:b0:ad8:97d8:a52e with SMTP id
+ a640c23a62f3a-adb495983admr1239171966b.55.1748948212831; Tue, 03 Jun 2025
+ 03:56:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] wifi: ath11k: fix dest ring-buffer corruption
-To: Johan Hovold <johan@kernel.org>, Miaoqing Pan <quic_miaoqing@quicinc.com>
-CC: Johan Hovold <johan+linaro@kernel.org>,
-        Jeff Johnson
-	<jjohnson@kernel.org>, <linux-wireless@vger.kernel.org>,
-        <ath11k@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>
-References: <20250526114803.2122-1-johan+linaro@kernel.org>
- <20250526114803.2122-2-johan+linaro@kernel.org>
- <026b710f-b50f-4302-ad4f-36932c2558ff@quicinc.com>
- <aD1axxSAJsbUfnHH@hovoldconsulting.com>
-Content-Language: en-US
-From: Baochen Qiang <quic_bqiang@quicinc.com>
-In-Reply-To: <aD1axxSAJsbUfnHH@hovoldconsulting.com>
+References: <20250603095245.17478-1-tao.wangtao@honor.com> <20250603095245.17478-2-tao.wangtao@honor.com>
+In-Reply-To: <20250603095245.17478-2-tao.wangtao@honor.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Tue, 3 Jun 2025 12:56:41 +0200
+X-Gm-Features: AX0GCFvUGt-jkPjKb-TaQfCiyDY6ri9AEn30VaTl2bfo8Rvzx6IYm2tIEQwOB0U
+Message-ID: <CAOQ4uxgYmSLY25WtQjHxvViG0eNSSsswF77djBJZsSJCq1OyLA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/4] fs: allow cross-FS copy_file_range for memory file
+ with direct I/O
+To: wangtao <tao.wangtao@honor.com>
+Cc: sumit.semwal@linaro.org, christian.koenig@amd.com, kraxel@redhat.com, 
+	vivek.kasireddy@intel.com, viro@zeniv.linux.org.uk, brauner@kernel.org, 
+	hughd@google.com, akpm@linux-foundation.org, benjamin.gaignard@collabora.com, 
+	Brian.Starkey@arm.com, jstultz@google.com, tjmercier@google.com, jack@suse.cz, 
+	baolin.wang@linux.alibaba.com, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org, bintian.wang@honor.com, yipengxiang@honor.com, 
+	liulu.liu@honor.com, feng.han@honor.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=RMizH5i+ c=1 sm=1 tr=0 ts=683ed3fd cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
- a=fuL3aosLTfx4rvEMTfQA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAzMDA5NSBTYWx0ZWRfX2HzFVb7TXzyr
- S7MAbFzAZ0Qr3dXyQwMIJDqp7/q2Na8jggz2eUialEuHzDVQ7mPvmXKDTbo4HG4EJSVcqytlQ/g
- JJmJjiwMgp001nb8tzc8ND+CtavgKEkOxIUd3DXLdkKhF5QwWDeuqtWCNr34gGPc/2BcMyWhlFD
- OAhTaZqnUlDRZs7uPCojgpRO/T9mUs6GnMzLOcbxPls7BLF5yyJgFZjVAnhkR8+7bYCXD3ZwZXV
- rDnqpRFKN7uI9BbOyJR32YItrz29sw5/o+3o8mH6x3jsJcD6dhOIVXYxywfwPFTdsHALrqP3Eyo
- 6JRSFJSEmKWDSOtu14iaFHRpzOCvGF2Oh/498DxjR+bQOiwmNOMF/hHcxHNDVjIrkfzGcZ5RAB5
- xNvcJIhKdBWmkX6ZPnqBL1DPIvya2WfthnsUudOhKR45O5fXzkcshzy6DBEMctOsbBox9yQR
-X-Proofpoint-GUID: 8Q8AepfSfv8Y5YMLfpk3eDiXt3_KX_3R
-X-Proofpoint-ORIG-GUID: 8Q8AepfSfv8Y5YMLfpk3eDiXt3_KX_3R
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-03_01,2025-06-02_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 phishscore=0 spamscore=0 lowpriorityscore=0 malwarescore=0
- bulkscore=0 suspectscore=0 adultscore=0 mlxlogscore=857 mlxscore=0
- clxscore=1011 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506030095
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Jun 3, 2025 at 11:53=E2=80=AFAM wangtao <tao.wangtao@honor.com> wro=
+te:
+>
+> Memory files can optimize copy performance via copy_file_range callbacks:
+> -Compared to mmap&read: reduces GUP (get_user_pages) overhead
+> -Compared to sendfile/splice: eliminates one memory copy
+> -Supports dma-buf direct I/O zero-copy implementation
+>
+> Suggested by: Christian K=C3=B6nig <christian.koenig@amd.com>
+> Suggested by: Amir Goldstein <amir73il@gmail.com>
+> Signed-off-by: wangtao <tao.wangtao@honor.com>
+> ---
+>  fs/read_write.c    | 64 +++++++++++++++++++++++++++++++++++++---------
+>  include/linux/fs.h |  2 ++
+>  2 files changed, 54 insertions(+), 12 deletions(-)
+>
+> diff --git a/fs/read_write.c b/fs/read_write.c
+> index bb0ed26a0b3a..ecb4f753c632 100644
+> --- a/fs/read_write.c
+> +++ b/fs/read_write.c
+> @@ -1469,6 +1469,31 @@ COMPAT_SYSCALL_DEFINE4(sendfile64, int, out_fd, in=
+t, in_fd,
+>  }
+>  #endif
+>
+> +static const struct file_operations *memory_copy_file_ops(
+> +                       struct file *file_in, struct file *file_out)
+> +{
+> +       if ((file_in->f_op->fop_flags & FOP_MEMORY_FILE) &&
+> +           (file_in->f_mode & FMODE_CAN_ODIRECT) &&
+> +           file_in->f_op->copy_file_range && file_out->f_op->write_iter)
+> +               return file_in->f_op;
+> +       else if ((file_out->f_op->fop_flags & FOP_MEMORY_FILE) &&
+> +                (file_out->f_mode & FMODE_CAN_ODIRECT) &&
+> +                file_in->f_op->read_iter && file_out->f_op->copy_file_ra=
+nge)
+> +               return file_out->f_op;
+> +       else
+> +               return NULL;
+> +}
+> +
+> +static int essential_file_rw_checks(struct file *file_in, struct file *f=
+ile_out)
+> +{
+> +       if (!(file_in->f_mode & FMODE_READ) ||
+> +           !(file_out->f_mode & FMODE_WRITE) ||
+> +           (file_out->f_flags & O_APPEND))
+> +               return -EBADF;
+> +
+> +       return 0;
+> +}
+> +
+>  /*
+>   * Performs necessary checks before doing a file copy
+>   *
+> @@ -1484,9 +1509,16 @@ static int generic_copy_file_checks(struct file *f=
+ile_in, loff_t pos_in,
+>         struct inode *inode_out =3D file_inode(file_out);
+>         uint64_t count =3D *req_count;
+>         loff_t size_in;
+> +       bool splice =3D flags & COPY_FILE_SPLICE;
+> +       const struct file_operations *mem_fops;
+>         int ret;
+>
+> -       ret =3D generic_file_rw_checks(file_in, file_out);
+> +       /* The dma-buf file is not a regular file. */
+> +       mem_fops =3D memory_copy_file_ops(file_in, file_out);
+> +       if (splice || mem_fops =3D=3D NULL)
 
+nit: use !mem_fops please
 
-On 6/2/2025 4:03 PM, Johan Hovold wrote:
-> On Thu, May 29, 2025 at 03:03:38PM +0800, Miaoqing Pan wrote:
->> On 5/26/2025 7:48 PM, Johan Hovold wrote:
->>> Add the missing memory barriers to make sure that destination ring
->>> descriptors are read after the head pointers to avoid using stale data
->>> on weakly ordered architectures like aarch64.
-> 
->>> @@ -3851,6 +3851,9 @@ int ath11k_dp_process_rx_err(struct ath11k_base *ab, struct napi_struct *napi,
->>>   
->>>   	ath11k_hal_srng_access_begin(ab, srng);
->>>   
->>> +	/* Make sure descriptor is read after the head pointer. */
->>> +	dma_rmb();
->>> +
->>
->> Thanks Johan, for continuing to follow up on this issue. I have some 
->> different opinions.
->>
->> This change somewhat deviates from the fix approach described in 
->> https://lore.kernel.org/all/20250321095219.19369-1-johan+linaro@kernel.org/. 
->> In this case, the descriptor might be accessed before it is updated or 
->> while it is still being updated. Therefore, a dma_rmb() should be added 
->> after the call to ath11k_hal_srng_dst_get_next_entry() and before 
->> accessing ath11k_hal_ce_dst_status_get_length(), to ensure that the DMA 
->> has completed before reading the descriptor.
->>
->> However, in this patch, the memory barrier is used to protect the head 
->> pointer (HP). I don't think a memory barrier is necessary for HP, 
->> because even if an outdated HP is fetched, 
->> ath11k_hal_srng_dst_get_next_entry() will return NULL and exit safely. 
-> 
-> No, the barrier is needed between reading the head pointer and accessing
-> descriptor fields, that's what matters.
-> 
-> You can still end up with reading stale descriptor data even when
-> ath11k_hal_srng_dst_get_next_entry() returns non-NULL due to speculation
-> (that's what happens on the X13s).
+Considering that the flag COPY_FILE_SPLICE is not allowed
+from userspace and is only called by nfsd and ksmbd
+I think we should assert and deny the combination of
+mem_fops && splice because it is very much unexpected.
 
-The fact is that a dma_rmb() does not even prevent speculation, no matter where it is
-placed, right? If so the whole point of dma_rmb() is to prevent from compiler reordering
-or CPU reordering, but is it really possible?
+After asserting this, it would be nicer to write as:
+        if (mem_fops)
+               ret =3D essential_file_rw_checks(file_in, file_out);
+        else
+               ret =3D generic_file_rw_checks(file_in, file_out);
 
-The sequence is
+> +       else
+> +               ret =3D essential_file_rw_checks(file_in, file_out);
+>         if (ret)
+>                 return ret;
+>
+> @@ -1500,8 +1532,10 @@ static int generic_copy_file_checks(struct file *f=
+ile_in, loff_t pos_in,
+>          * and several different sets of file_operations, but they all en=
+d up
+>          * using the same ->copy_file_range() function pointer.
+>          */
+> -       if (flags & COPY_FILE_SPLICE) {
+> +       if (splice) {
+>                 /* cross sb splice is allowed */
+> +       } else if (mem_fops !=3D NULL) {
 
-	1# reading HP
-		srng->u.dst_ring.cached_hp = READ_ONCE(*srng->u.dst_ring.hp_addr);
+With the assertion that splice && mem_fops is not allowed
+if (splice || mem_fops) {
 
-	2# validate HP
-		if (srng->u.dst_ring.tp == srng->u.dst_ring.cached_hp)
-			return NULL;
+would go well together because they both allow cross-fs
+copy not only cross sb.
 
-	3# get desc
-		desc = srng->ring_base_vaddr + srng->u.dst_ring.tp;
+> +               /* cross-fs copy is allowed for memory file. */
+>         } else if (file_out->f_op->copy_file_range) {
+>                 if (file_in->f_op->copy_file_range !=3D
+>                     file_out->f_op->copy_file_range)
+> @@ -1554,6 +1588,7 @@ ssize_t vfs_copy_file_range(struct file *file_in, l=
+off_t pos_in,
+>         ssize_t ret;
+>         bool splice =3D flags & COPY_FILE_SPLICE;
+>         bool samesb =3D file_inode(file_in)->i_sb =3D=3D file_inode(file_=
+out)->i_sb;
+> +       const struct file_operations *mem_fops;
+>
+>         if (flags & ~COPY_FILE_SPLICE)
+>                 return -EINVAL;
+> @@ -1574,18 +1609,27 @@ ssize_t vfs_copy_file_range(struct file *file_in,=
+ loff_t pos_in,
+>         if (len =3D=3D 0)
+>                 return 0;
+>
+> +       if (splice)
+> +               goto do_splice;
+> +
+>         file_start_write(file_out);
+>
 
-	4# accessing desc
-		ath11k_hal_desc_reo_parse_err(... desc, ...)
+goto do_splice needs to be after file_start_write
 
-Clearly each step depends on the results of previous steps. In this case the compiler/CPU
-is expected to be smart enough to not do any reordering, isn't it?
+Please wait for feedback from vfs maintainers before posting another
+version addressing my review comments.
 
-> 
-> Whether to place it before or after (or inside)
-> ath11k_hal_srng_dst_get_next_entry() is a trade off between readability, 
-> maintainability and whether we want to avoid unnecessary barriers in
-> cases like the above where we strictly only need one barrier before the
-> loop (or if we want to avoid the barrier in case the ring is ever
-> empty).
-> 
->> So, placing the memory barrier inside 
->> ath11k_hal_srng_dst_get_next_entry() would be more appropriate.
->>
->> @@ -678,6 +678,8 @@ u32 *ath11k_hal_srng_dst_get_next_entry(struct 
->> ath11k_base *ab,
->>          if (srng->flags & HAL_SRNG_FLAGS_CACHED)
->>                  ath11k_hal_srng_prefetch_desc(ab, srng);
->>
->> +       dma_rmb();
->> +
->>          return desc;
->>   }
-> 
-> So this will add a barrier in each iteration of the loop, but we only
-> need a single one after reading the head pointer.
-> 
-> [ Also note that ath11k_hal_srng_dst_peek() would similarly need a
-> barrier if we were to move them into those helpers. ]
-> 
-> Johan
-> 
-
+Thanks,
+Amir.
