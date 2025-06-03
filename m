@@ -1,131 +1,122 @@
-Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC07189F20
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 15:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DCBE189F20;
+	Tue,  3 Jun 2025 15:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748965546; cv=none; b=iqZrprqBF0gusE6A6Jlnq6uwCjI7gEkSHoy24dlDw60uJtgzY+cwMktCloMo7fT8zq8N+Ax8p6cwOmBj4uK80eBNMnUzHCjnHwSLWftPilvI9dAjfbmTb4cgIC655xoeSH/DqzuX78feRuBgcA4aX3V7x3bKcJ5OMf2IMHtM4nk=
+	t=1748965582; cv=none; b=pkFxWu4rDjO3WLYvuVvYPivpFCeGIDk6+PUVK1kvsx8273lwqS0WaOpfSJC9/Ou13CGEbzc2Ufong1rIwZsqM5LG2EvQf6CQN/t0ME3CicKPaUL0jzvlaYoYJEX647GQB6bnVka9b+x4THnIQ8O0bL4HD8J4fYdPCbCBQ163HGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748965546; c=relaxed/simple;
-	bh=eGLBU5Crh+XobfNjtR640S9EorM9CF+b4a8zt0WCYFY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Sl7GayOKVG4fplaig9/jaW4dxrRBtKN3cMM8xAw35Qt3hlr5mH9Hd+MXLSFGeh40vFd4Lclghfgv3OevxeIWaqDL1AjJ2t0/zkPrutjp32cribOm1eYHPbAo2y770sN9l68hAbaFku5PWkaERZ4P+h1eCwOQhHK3nmUwlFxnhtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Sk3m2LWv; arc=none smtp.client-ip=209.85.128.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1748965582; c=relaxed/simple;
+	bh=7W40XcPbIp9auuYKPsUESX4uR0NXpKHXqGhBdPTYtQo=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JEfBSB3BhuDWwdLORqyxobH7QjNnsSWzUKGMrzgArL2+GRjKW1ZTk1aD3W6NHBWKmItYucvcsmLR/op1fjxiIGmzz5BxYO4kGIG7jK++c03sXGMNhYkMGpUU6JjzjiVXjRU0kPkX5Do7tNLIHVCIGyf/tkewOrnquPDzQU+I7AY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=LAIDzCaG; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Sk3m2LWv"
-Received: by mail-wm1-f67.google.com with SMTP id 5b1f17b1804b1-450cfb6a794so36311815e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 08:45:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1748965542; x=1749570342; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=aYCUJ5XErr9UBRSuF7B/2bm/XCId19PjW+/NwwVgzs8=;
-        b=Sk3m2LWvtzjHBuZtvhbOFHLA1HN96iu/McHNU13zZbnbnpWjhObmJbXyESGutN6+1y
-         QKL+cI+F2OCRPppxqkoz04/prSgYGjv74Tk31yEOA6bXh5EUAEfvTmdWRtzvb7RgYakI
-         QV49ceEd6767GZC39YQaA8ha70NPFYiCG3Y+weQcZI3hygJnDWOtMVPY7Ps0hACuSEkI
-         V7phIvqZWtSsYVLwp+z2l61BallDPIfMJ1wef8wIYRpa9wF8A4oNHJfOUpmYYHuryaPS
-         iFQsemKjktQHxQd/qoSCQ+2CySjieBaoE34QmXTBbMlxKc2cfkFU0Vv3+DTnc+dOX3dK
-         ktCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748965542; x=1749570342;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aYCUJ5XErr9UBRSuF7B/2bm/XCId19PjW+/NwwVgzs8=;
-        b=kj55jv0qsAVyu0yFKfrKmIX4NmI4xI41ERwAKKcnPlPEKzKq1BmAclo1Bs1qxte8AQ
-         kd22Gbdebh9vXDH12U13tsRlswZUQOOnzZHJWMAu5xZstbmEXC/iXbifN49IM2fdsPzg
-         7+iWdP9zdpXoVD6kkxxxoPQr1xWDb7D8AH/ajyo7ZLdAjiHIBfhFPiU3FkA+DfulVR+O
-         wQ+XO5r/BIF/8P5sBNApvkHJlv48iYMoCoo1gXbzzqzpiggge58wpCHDr0WjfAMguoXu
-         gt1SyycpOxmQH0O0oOpOMGeCe3s8KgEKEeC5XZ/2L09EeLqs4DMZ9N9hgnhwOGHjbaWi
-         Y3Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCXbVKXTZBuGEdkHNRhpZRvGWRgD+8s1rvlVu/3D46nEkYAsQFqMDmzGF9/SFEyh+dswDMlUqrrMfonnrqA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxRzKlDp3sof2qPiRS8AGhfgzRuhqyTCrlxwvgq5wLtyAzRnqn
-	8G6PGb28bWHYZ0qykPv9fBl0Qg5VxkDpHQ8dQ1hjid4KXz/yzihpMaEUvbOgLBrqSJQ=
-X-Gm-Gg: ASbGncuLR5sMZyP7ncsN0/5rbZAunO/RmtZqAw6JF5XICeP+0ZypaiB4omuk37AEyap
-	ku+NZomu0QYkO8kU4S84oqgwS3Fad6O4N/l0nFGPgHxsqqLWDCMsRxUCAc0Rt7y22O8G0Wu0OFF
-	gGqQlrJT2TEMf5ujiU6zLw93kQqnCDJSeWRkNIGCV5az/0Fzk19ptZ36Wsv4A/Dks/RiaAcXWzo
-	VqTVsIPiIghSQ7R8oaIX97hajKWwfK7B+A1yYDv7lhp5WVoaB6jEDeQcI7a0hO3/0zBVI9+GL1o
-	HDyep5PFziomlPy7Ktte8AOLtHLPiI4ki3ulKMEeVltu8UMi+2EF0w==
-X-Google-Smtp-Source: AGHT+IFbA0YnJHJhQOXozYnQDP6QUHiCWnvi883uqWMIH3Z9yWJVTCPbll5VydzvLsFF5Sn0ybR3oQ==
-X-Received: by 2002:a05:600c:3b8e:b0:450:c210:a01b with SMTP id 5b1f17b1804b1-450d6504a0cmr182782255e9.17.1748965542562;
-        Tue, 03 Jun 2025 08:45:42 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450dcc18a80sm160128875e9.38.2025.06.03.08.45.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 08:45:42 -0700 (PDT)
-From: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
-To: cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Pablo Neira Ayuso <pablo@netfilter.org>,
-	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	Tejun Heo <tj@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>
-Subject: [PATCH] cgroup: Drop sock_cgroup_classid() dummy implementation
-Date: Tue,  3 Jun 2025 17:45:27 +0200
-Message-ID: <20250603154528.807949-1-mkoutny@suse.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LAIDzCaG"
+Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 553Fjb4Y3549572;
+	Tue, 3 Jun 2025 10:45:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1748965537;
+	bh=k79/t0nkrynCfBdnkrMBZYitRqiJPksoN+vCidZA6tg=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=LAIDzCaGtrG7BOYxjg2Zy5SWUgjPSOlLbzKuTEjYh/xUtaU3Ngn30qsYvcZeXbOUf
+	 e+PmZpftIyyC5AdxoaRviwrh6UP/f9H/+jYz5OBXeqxh8jy9KDtEkTt8BBAZKQZ3E3
+	 KTlOUYZnkGYFn/ST7gI7cjN8yWxgA+R8JAAFv+pk=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 553FjbLd3852667
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Tue, 3 Jun 2025 10:45:37 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 3
+ Jun 2025 10:45:36 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 3 Jun 2025 10:45:36 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 553Fja5C649814;
+	Tue, 3 Jun 2025 10:45:36 -0500
+Date: Tue, 3 Jun 2025 10:45:36 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+CC: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Kevin Hilman
+	<khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin
+ Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Chen-Yu Tsai
+	<wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland
+	<samuel@sholland.org>, Sven Peter <sven@svenpeter.dev>,
+        Janne Grunau
+	<j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Neal Gompa
+	<neal@gompa.dev>, Hector Martin <marcan@marcan.st>,
+        Thierry Reding
+	<thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>, Suman
+ Anna <s-anna@ti.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>, <linux-sunxi@lists.linux.dev>,
+        <asahi@lists.linux.dev>, <linux-tegra@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>
+Subject: Re: [PATCH 2/5] dt-bindings: mailbox: ti,secure-proxy: Add missing
+ reg maxItems
+Message-ID: <20250603154536.cfa6galvuwkq2qxp@recipient>
+References: <20250603-dt-bindings-mailbox-cleanup-v1-0-724407563997@linaro.org>
+ <20250603-dt-bindings-mailbox-cleanup-v1-2-724407563997@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250603-dt-bindings-mailbox-cleanup-v1-2-724407563997@linaro.org>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-The semantic of returning 0 is unclear when !CONFIG_CGROUP_NET_CLASSID.
-Since there are no callers of sock_cgroup_classid() with that config
-anymore we can undefine the helper at all and enforce all (future)
-callers to handle cases when !CONFIG_CGROUP_NET_CLASSID.
+On 13:57-20250603, Krzysztof Kozlowski wrote:
+> Lists should have fixed constraint, so add missing maxItems to the "reg"
+> property.  Since minItems=maxItems, the minItems is implied by dtschema
+> so can be dropped.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/mailbox/ti,secure-proxy.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/ti,secure-proxy.yaml b/Documentation/devicetree/bindings/mailbox/ti,secure-proxy.yaml
+> index eea822861804c259068aa8c4598188db28895518..682ccd76f5c25fc13bb3375007d39e6208cdddc0 100644
+> --- a/Documentation/devicetree/bindings/mailbox/ti,secure-proxy.yaml
+> +++ b/Documentation/devicetree/bindings/mailbox/ti,secure-proxy.yaml
+> @@ -36,7 +36,7 @@ properties:
+>        - const: scfg
+>  
+>    reg:
+> -    minItems: 3
+> +    maxItems: 3
+>  
+>    interrupt-names:
+>      minItems: 1
+> 
+> -- 
+> 2.45.2
+> 
+Reviewed-by: Nishanth Menon <nm@ti.com>
 
-Signed-off-by: Michal Koutný <mkoutny@suse.com>
-Link: https://lore.kernel.org/r/Z_52r_v9-3JUzDT7@calendula/
-Acked-by: Tejun Heo <tj@kernel.org>
----
- include/linux/cgroup-defs.h | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
-
-diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
-index e61687d5e496d..cd7f093e34cd7 100644
---- a/include/linux/cgroup-defs.h
-+++ b/include/linux/cgroup-defs.h
-@@ -898,14 +898,12 @@ static inline u16 sock_cgroup_prioidx(const struct sock_cgroup_data *skcd)
- #endif
- }
- 
-+#ifdef CONFIG_CGROUP_NET_CLASSID
- static inline u32 sock_cgroup_classid(const struct sock_cgroup_data *skcd)
- {
--#ifdef CONFIG_CGROUP_NET_CLASSID
- 	return READ_ONCE(skcd->classid);
--#else
--	return 0;
--#endif
- }
-+#endif
- 
- static inline void sock_cgroup_set_prioidx(struct sock_cgroup_data *skcd,
- 					   u16 prioidx)
-@@ -915,13 +913,13 @@ static inline void sock_cgroup_set_prioidx(struct sock_cgroup_data *skcd,
- #endif
- }
- 
-+#ifdef CONFIG_CGROUP_NET_CLASSID
- static inline void sock_cgroup_set_classid(struct sock_cgroup_data *skcd,
- 					   u32 classid)
- {
--#ifdef CONFIG_CGROUP_NET_CLASSID
- 	WRITE_ONCE(skcd->classid, classid);
--#endif
- }
-+#endif
- 
- #else	/* CONFIG_SOCK_CGROUP_DATA */
- 
-
-base-commit: cd2e103d57e5615f9bb027d772f93b9efd567224
 -- 
-2.49.0
-
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
