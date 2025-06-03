@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9F042C3242;
-	Tue,  3 Jun 2025 16:30:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15E3192584;
+	Tue,  3 Jun 2025 16:30:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748968249; cv=none; b=RNTX61cucnaITNHBDma6VmX/QINM3kAfxHZX6SzG4o06H90w+QHaIPYX2hIaT0W8FlSVZQ6UGamWt7oesF7Pm/4AKYLntHdmAksEdzjOMC6jU+Puha142DOrXGdX69jA6imq/x5wOkoxtXD4digGA2S2RJFDN+uRgK80K2ZxLxc=
+	t=1748968253; cv=none; b=hj+gd/vmB4kCdmjGJVgC+QTdRrMFvvC+IgPYf2s4hcX0MDeJ4WflPlPLSz0asWTfI5Osm7KDTqH+thEdHcYAX0hUxSYNqWsnS0oOjgRxyZzOKNRH+OtKrbdNDJkl2nVDIEbLQ7e8Xx0sNYUlIr2Feqc4Y85EjtHJ+071INsTzzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748968249; c=relaxed/simple;
-	bh=PCgIhnSep9ViZT7n3gtixMlm7RcFhoDpPDAgoGLiszQ=;
+	s=arc-20240116; t=1748968253; c=relaxed/simple;
+	bh=VakH29ZlMouOtB4a3xThI4GPGWQ6lenTCF6LOCe3J9o=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=g7L5efHDNmzHtZu3xonb1qxrocVrRGvdwc8AquxJY7gAq5pWK6Y1nUC/La32iAS6MmIwU2hEqigraYPo9bgT0tre8rFme+rXVNQAi+Rg/jaJ8F6RaUSFCjtNzWAO1+2qUblzzTgELYoaM4sfK48cJR0/U4xamdWqQ1xXChAvsAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HreULZbP; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=HjHGOCP12nwJ1AdRSjK5azJBd2ongvkU/o+idpYEs4TuQSNNp0Lnn2BLhFwe7LwYZ5LEHn6K0TTrzD7Rm3JBQ90Sbq2FcErvTYo5r0fRC2m3+isN/tPn+hz5eQHNUTdw9L66nhpjTuH/GJ9YjnR7fF7ITI5lneZjW4Zpv3DkxQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gAWePvLz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HreULZbP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63145C4CEED;
-	Tue,  3 Jun 2025 16:30:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gAWePvLz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B77D3C4CEEE;
+	Tue,  3 Jun 2025 16:30:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748968249;
-	bh=PCgIhnSep9ViZT7n3gtixMlm7RcFhoDpPDAgoGLiszQ=;
+	s=k20201202; t=1748968253;
+	bh=VakH29ZlMouOtB4a3xThI4GPGWQ6lenTCF6LOCe3J9o=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=HreULZbPDfk3TBXQbL9/w0OT9KKCHdpBsD1+hbkstbIXJ8yqeztuc2qkGtaWR+E99
-	 S0psa+J+rn83V7jYKY76qWCFXJufchwkdym/osvV3HlGdnqkuyk6SJAVJVoTj+6iI+
-	 v0Xn27Ifw49fGZYGiTwiEaLwK20S1tNoMcqvLNpVUBVhvv9FCNUznthxe2QSQHDy5M
-	 0VioQPWqAW4IgsIT1CDw4qO7xCABZJKX8W2V4/yzUPEZUaWqb1a09m7pPcjRa785sH
-	 Cd+cvFSTjBqV+pKCoT9xCxedI8+GKrlPUdu6PDCUd+30ADBIV1vjx9VT3Cj3Axv1nL
-	 Y9iH/d4HxhP+Q==
+	b=gAWePvLz++FzEdnb4CI9ExB3zI2sYeogn1OgtJCMGR9iJIS8N6UcwAINb+43ANf7E
+	 W0UdMajSDYJR5/mEPAJ+aRVeUYnAtZBneMtxnX8LaB4HrIlEnUcH3PqcvzOUz6/QIQ
+	 42hzaC9s2nqG7XYIAEkFgAysif6nWfAPUESaRiRtDuZLI0+68BMUAT8JYyHuGGESpv
+	 Hi2DcfHZpO/OcVhiT2xANdVjp6uDra3Tng+VJCtZvbTsqEP3qaSg9zOP1jJHiB9oJV
+	 Bh7vrG7iq2WjgVPusor/iI4ukYJWGL7cjjIf0wSvcx5udcvkzztF54tzjX2QS2Ta4w
+	 Aj/VmotOEBFdQ==
 From: Andreas Hindborg <a.hindborg@kernel.org>
 To: "FUJITA Tomonori" <fujita.tomonori@gmail.com>
 Cc: <rust-for-linux@vger.kernel.org>,  <boqun.feng@gmail.com>,
@@ -35,62 +35,67 @@ Cc: <rust-for-linux@vger.kernel.org>,  <boqun.feng@gmail.com>,
   <bjorn3_gh@protonmail.com>,  <benno.lossin@proton.me>,
   <aliceryhl@google.com>,  <tmgross@umich.edu>,  <dakr@kernel.org>,
   <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 4/5] rust: time: Make HasHrTimer generic over
- HrTimerMode
-In-Reply-To: <20250603.230815.1426696742567640092.fujita.tomonori@gmail.com>
-	(FUJITA Tomonori's message of "Tue, 03 Jun 2025 23:08:15 +0900")
-References: <HhGhHOv9fvWu0G7TihU0V5UMif0USODr5QagKogYlf-zE9P6uyPWYdEckCaFi747sl_vkLi5XDB_O9BFcwsjow==@protonmail.internalid>
-	<20250504045959.238068-5-fujita.tomonori@gmail.com>
-	<877c1u71uh.fsf@kernel.org>
-	<GyIbRv_q5Qad7r6Z5oZhc5eB09uakUEWAT1aOts9fPiSSLHVLVqImq47rRPN20rQ0-rh-rtcx3-IiwtuEAirIA==@protonmail.internalid>
-	<20250603.230815.1426696742567640092.fujita.tomonori@gmail.com>
+Subject: Re: [PATCH v1 3/5] rust: time: Add HrTimerExpires trait
+In-Reply-To: <20250603.225143.1147206358060510971.fujita.tomonori@gmail.com>
+	(FUJITA Tomonori's message of "Tue, 03 Jun 2025 22:51:43 +0900")
+References: <20250504045959.238068-1-fujita.tomonori@gmail.com>
+	<20250504045959.238068-4-fujita.tomonori@gmail.com>
+	<87ecw61c8v.fsf@kernel.org>
+	<rAqrmy9vCIFRwqGIzvQuVlv1F-jKMF8QBKvfhxqPCqygqE81k9JkbIFhWFgg7VBeq6rfYTy_WtlBnBMOdhTCxQ==@protonmail.internalid>
+	<20250603.225143.1147206358060510971.fujita.tomonori@gmail.com>
 User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Tue, 03 Jun 2025 18:30:27 +0200
-Message-ID: <87wm9s4wkc.fsf@kernel.org>
+Date: Tue, 03 Jun 2025 18:28:04 +0200
+Message-ID: <875xhc6b8r.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 "FUJITA Tomonori" <fujita.tomonori@gmail.com> writes:
 
-> On Mon, 02 Jun 2025 14:41:10 +0200
+> On Fri, 30 May 2025 15:04:00 +0200
 > Andreas Hindborg <a.hindborg@kernel.org> wrote:
 >
->>> @@ -579,12 +604,16 @@ macro_rules! impl_has_hr_timer {
->>>          impl$({$($generics:tt)*})?
->>>              HasHrTimer<$timer_type:ty>
->>>              for $self:ty
->>> -        { self.$field:ident }
->>> +        {
->>> +            mode = $mode:ty,
->>> +            self.$field:ident
+>>> +/// Defines a new `HrTimerMode` implementation with a given expiration=
+ type and C mode.
+>>> +#[doc(hidden)]
+>>> +macro_rules! define_hrtimer_mode {
+>>> +    (
+>>> +        $(#[$meta:meta])*
+>>> +        $vis:vis struct $name:ident<$clock:ident> {
+>>> +            c =3D $mode:ident,
+>>> +            expires =3D $expires:ty
+>>> +        }
+>>> +    ) =3D> {
+>>> +        $(#[$meta])*
+>>> +        $vis struct $name<$clock: $crate::time::ClockSource>(
+>>> +            ::core::marker::PhantomData<$clock>
+>>> +        );
 >>
->> How about:
+>> I think a macro is too much here. The code would be easier to read
+>> without the macro, and the macro does not remove much code here.
 >>
->>   mode = $mode:ty,
->>   field = self.$field:ident
+>> Could you try to do the trait implementations without the macro?
 >
-> Works fo me.
+> Something like the following, right? If so, I'll do in the next
+> version. I'm also fine with that way.
 >
->> So that there is some sort of red line when calling this. We could also
->> consider adopting another syntax for association:
->>
->>   mode: $mode:ty,
->>   field: self.$field:ident
+> /// Timer that expires at a fixed point in time.
+> pub struct AbsoluteMode<C: ClockSource>(PhantomData<C>);
 >
-> Looks fine too.
+> impl<C: ClockSource> HrTimerMode for AbsoluteMode<C> {
+>     const C_MODE: bindings::hrtimer_mode =3D bindings::hrtimer_mode_HRTIM=
+ER_MODE_ABS;
 >
->> or something else like `<-` or `->` ?
->
-> I personally prefer one of the two options above, but I'm also ok with
-> `<-` or `->`.
+>     type Clock =3D C;
+>     type Expires =3D Instant<C>;
+> }
 
-OK, let's go with struct initializer syntax then (:). We can always
-change it later if someone has a different opinion.
+OK, let's do that then =F0=9F=91=8D
 
 
 Best regards,
