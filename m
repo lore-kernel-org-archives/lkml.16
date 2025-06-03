@@ -1,24 +1,24 @@
 Received: from mta20.hihonor.com (mta20.honor.com [81.70.206.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 949EA2820BF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC0727FD5D;
 	Tue,  3 Jun 2025 09:53:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.206.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748944441; cv=none; b=ebukuInO0clMdH16FtJ+2z6GWp3x6Q5qZ1DHT42KiVZ50LxCie/kX02A67kwxLOXvZCAvGjznt+Di6Tg10fPIi20YkIoSfZ61ZuukTx9GVzL35CRDWGmMsOGL4WK1Gb9apF3jjhr/6eVDvDkIDCuwWkUR3DTrLQ08x19wV/yIdE=
+	t=1748944442; cv=none; b=PmzZ7JKV0FZDq9htPasnx6MftpgN35KuuetExF5T9V+CP9yFIFsVPftfE0LdTzEjYdttTkue3hx4z+Hlen0sbwY6sKPH+f66MNUWbh4N4UOw+XyTM1uC4IQa85h/rnRIg25csx1fs0/loCpo8OH4hB5KwUGassZYe23d5yHT6K4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748944441; c=relaxed/simple;
-	bh=yUi7+p00jMqRela2NQwhtGNLkrlaHVdgOe80QIGCYOU=;
+	s=arc-20240116; t=1748944442; c=relaxed/simple;
+	bh=Y++8qSubKRI1uL5yLvAVlryoFONB0hDV8WuLRPeWXZY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JYEm//TFq9LpzWXwTdR2e9pq/gLV66i8mnHMVPS3ne5x2LB5gLgoXJO5sJNWvsrj4GZH86Z/NaobWSZg+yOGCKgSgJRXRo9GuhY0VbR0Osdg5KSsAE+4ViRAtmTeqxF+uyjpgzY+NMXTKIJa9OB2jc2TuEfdSMHUNIpJmSg2VCI=
+	 MIME-Version:Content-Type; b=DgwmY83nFo9AM4PSGAOj8SdHc0GlHHwY1cxTu+iTt6JOBGdueNFY70KsDoNYvb+Qxe6o2cQG+I/qhhgmxVkJyhxQHr03DVzgwodUuAqBC+r/Ibd4VAlPFAfnevKdt4fTdr2kuCXHW30veov8owqzvPkcG4ZzZpanFlxHRaX78Fg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.206.69
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
-Received: from w002.hihonor.com (unknown [10.68.28.120])
-	by mta20.hihonor.com (SkyGuard) with ESMTPS id 4bBQw53G5YzYlP5Y;
+Received: from w012.hihonor.com (unknown [10.68.27.189])
+	by mta20.hihonor.com (SkyGuard) with ESMTPS id 4bBQw571wWzYlP63;
 	Tue,  3 Jun 2025 17:51:33 +0800 (CST)
-Received: from a010.hihonor.com (10.68.16.52) by w002.hihonor.com
- (10.68.28.120) with Microsoft SMTP Server (version=TLS1_2,
+Received: from a010.hihonor.com (10.68.16.52) by w012.hihonor.com
+ (10.68.27.189) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 3 Jun
  2025 17:53:50 +0800
 Received: from localhost.localdomain (10.144.18.117) by a010.hihonor.com
@@ -37,9 +37,9 @@ CC: <benjamin.gaignard@collabora.com>, <Brian.Starkey@arm.com>,
 	<linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
 	<linux-mm@kvack.org>, <bintian.wang@honor.com>, <yipengxiang@honor.com>,
 	<liulu.liu@honor.com>, <feng.han@honor.com>, wangtao <tao.wangtao@honor.com>
-Subject: [PATCH v4 1/4] fs: allow cross-FS copy_file_range for memory file with direct I/O
-Date: Tue, 3 Jun 2025 17:52:42 +0800
-Message-ID: <20250603095245.17478-2-tao.wangtao@honor.com>
+Subject: [PATCH v4 3/4] udmabuf: Implement udmabuf direct I/O
+Date: Tue, 3 Jun 2025 17:52:44 +0800
+Message-ID: <20250603095245.17478-4-tao.wangtao@honor.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20250603095245.17478-1-tao.wangtao@honor.com>
 References: <20250603095245.17478-1-tao.wangtao@honor.com>
@@ -49,165 +49,121 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-ClientProxiedBy: w002.hihonor.com (10.68.28.120) To a010.hihonor.com
  (10.68.16.52)
 
-Memory files can optimize copy performance via copy_file_range callbacks:
--Compared to mmap&read: reduces GUP (get_user_pages) overhead
--Compared to sendfile/splice: eliminates one memory copy
--Supports dma-buf direct I/O zero-copy implementation
+Construct bio_vec from folios, then call the other file's
+r/w callbacks for IO operations.
+Test data shows direct I/O copy_file_range improves performance by
+over 50% vs direct I/O mmap&read (2557 vs 1534).
 
-Suggested by: Christian König <christian.koenig@amd.com>
-Suggested by: Amir Goldstein <amir73il@gmail.com>
+Test data:
+|    32x32MB Read 1024MB  |Creat-ms|Close-ms|  I/O-ms|I/O-MB/s| I/O%
+|-------------------------|--------|--------|--------|--------|-----
+| 1)Beg udmabuf buffer R/W|    580 |    323 |   1238 |    867 | 100%
+| 2)     dmabuf buffer R/W|     48 |      5 |   1149 |    934 | 107%
+| 3) udma+memfd buffer R/W|    597 |    340 |   2157 |    497 |  57%
+| 4) udma+memfd direct R/W|    573 |    340 |    700 |   1534 | 176%
+| 5) u+mfd buffer sendfile|    577 |    340 |   1204 |    891 | 102%
+| 6) u+mfd direct sendfile|    567 |    339 |   2272 |    472 |  54%
+| 7)   u+mfd buffer splice|    570 |    337 |   1114 |    964 | 111%
+| 8)   u+mfd direct splice|    564 |    335 |    793 |   1355 | 156%
+| 9)  udmabuf buffer c_f_r|    577 |    323 |   1059 |   1014 | 116%
+|10)  udmabuf direct c_f_r|    582 |    325 |    420 |   2557 | 294%
+|11)End udmabuf buffer R/W|    586 |    323 |   1188 |    903 | 104%
+
 Signed-off-by: wangtao <tao.wangtao@honor.com>
 ---
- fs/read_write.c    | 64 +++++++++++++++++++++++++++++++++++++---------
- include/linux/fs.h |  2 ++
- 2 files changed, 54 insertions(+), 12 deletions(-)
+ drivers/dma-buf/udmabuf.c | 54 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
-diff --git a/fs/read_write.c b/fs/read_write.c
-index bb0ed26a0b3a..ecb4f753c632 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -1469,6 +1469,31 @@ COMPAT_SYSCALL_DEFINE4(sendfile64, int, out_fd, int, in_fd,
- }
- #endif
+diff --git a/drivers/dma-buf/udmabuf.c b/drivers/dma-buf/udmabuf.c
+index e74e36a8ecda..511567b15340 100644
+--- a/drivers/dma-buf/udmabuf.c
++++ b/drivers/dma-buf/udmabuf.c
+@@ -15,6 +15,8 @@
+ #include <linux/udmabuf.h>
+ #include <linux/vmalloc.h>
+ #include <linux/iosys-map.h>
++#include <linux/bvec.h>
++#include <linux/uio.h>
  
-+static const struct file_operations *memory_copy_file_ops(
-+			struct file *file_in, struct file *file_out)
-+{
-+	if ((file_in->f_op->fop_flags & FOP_MEMORY_FILE) &&
-+	    (file_in->f_mode & FMODE_CAN_ODIRECT) &&
-+	    file_in->f_op->copy_file_range && file_out->f_op->write_iter)
-+		return file_in->f_op;
-+	else if ((file_out->f_op->fop_flags & FOP_MEMORY_FILE) &&
-+		 (file_out->f_mode & FMODE_CAN_ODIRECT) &&
-+		 file_in->f_op->read_iter && file_out->f_op->copy_file_range)
-+		return file_out->f_op;
-+	else
-+		return NULL;
-+}
-+
-+static int essential_file_rw_checks(struct file *file_in, struct file *file_out)
-+{
-+	if (!(file_in->f_mode & FMODE_READ) ||
-+	    !(file_out->f_mode & FMODE_WRITE) ||
-+	    (file_out->f_flags & O_APPEND))
-+		return -EBADF;
-+
-+	return 0;
-+}
-+
- /*
-  * Performs necessary checks before doing a file copy
-  *
-@@ -1484,9 +1509,16 @@ static int generic_copy_file_checks(struct file *file_in, loff_t pos_in,
- 	struct inode *inode_out = file_inode(file_out);
- 	uint64_t count = *req_count;
- 	loff_t size_in;
-+	bool splice = flags & COPY_FILE_SPLICE;
-+	const struct file_operations *mem_fops;
- 	int ret;
- 
--	ret = generic_file_rw_checks(file_in, file_out);
-+	/* The dma-buf file is not a regular file. */
-+	mem_fops = memory_copy_file_ops(file_in, file_out);
-+	if (splice || mem_fops == NULL)
-+		ret = generic_file_rw_checks(file_in, file_out);
-+	else
-+		ret = essential_file_rw_checks(file_in, file_out);
- 	if (ret)
- 		return ret;
- 
-@@ -1500,8 +1532,10 @@ static int generic_copy_file_checks(struct file *file_in, loff_t pos_in,
- 	 * and several different sets of file_operations, but they all end up
- 	 * using the same ->copy_file_range() function pointer.
- 	 */
--	if (flags & COPY_FILE_SPLICE) {
-+	if (splice) {
- 		/* cross sb splice is allowed */
-+	} else if (mem_fops != NULL) {
-+		/* cross-fs copy is allowed for memory file. */
- 	} else if (file_out->f_op->copy_file_range) {
- 		if (file_in->f_op->copy_file_range !=
- 		    file_out->f_op->copy_file_range)
-@@ -1554,6 +1588,7 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
- 	ssize_t ret;
- 	bool splice = flags & COPY_FILE_SPLICE;
- 	bool samesb = file_inode(file_in)->i_sb == file_inode(file_out)->i_sb;
-+	const struct file_operations *mem_fops;
- 
- 	if (flags & ~COPY_FILE_SPLICE)
- 		return -EINVAL;
-@@ -1574,18 +1609,27 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
- 	if (len == 0)
- 		return 0;
- 
-+	if (splice)
-+		goto do_splice;
-+
- 	file_start_write(file_out);
- 
- 	/*
- 	 * Cloning is supported by more file systems, so we implement copy on
- 	 * same sb using clone, but for filesystems where both clone and copy
- 	 * are supported (e.g. nfs,cifs), we only call the copy method.
-+	 * For copy to/from memory file, we alway call the copy method of the
-+	 * memory file.
- 	 */
--	if (!splice && file_out->f_op->copy_file_range) {
-+	mem_fops = memory_copy_file_ops(file_in, file_out);
-+	if (mem_fops) {
-+		ret = mem_fops->copy_file_range(file_in, pos_in,
-+					file_out, pos_out, len, flags);
-+	} else if (file_out->f_op->copy_file_range) {
- 		ret = file_out->f_op->copy_file_range(file_in, pos_in,
--						      file_out, pos_out,
--						      len, flags);
--	} else if (!splice && file_in->f_op->remap_file_range && samesb) {
-+						file_out, pos_out,
-+						len, flags);
-+	} else if (file_in->f_op->remap_file_range && samesb) {
- 		ret = file_in->f_op->remap_file_range(file_in, pos_in,
- 				file_out, pos_out,
- 				min_t(loff_t, MAX_RW_COUNT, len),
-@@ -1603,6 +1647,7 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
- 	if (!splice)
- 		goto done;
- 
-+do_splice:
- 	/*
- 	 * We can get here for same sb copy of filesystems that do not implement
- 	 * ->copy_file_range() in case filesystem does not support clone or in
-@@ -1786,12 +1831,7 @@ int generic_file_rw_checks(struct file *file_in, struct file *file_out)
- 	if (!S_ISREG(inode_in->i_mode) || !S_ISREG(inode_out->i_mode))
- 		return -EINVAL;
- 
--	if (!(file_in->f_mode & FMODE_READ) ||
--	    !(file_out->f_mode & FMODE_WRITE) ||
--	    (file_out->f_flags & O_APPEND))
--		return -EBADF;
--
--	return 0;
-+	return essential_file_rw_checks(file_in, file_out);
+ static int list_limit = 1024;
+ module_param(list_limit, int, 0644);
+@@ -284,6 +286,55 @@ static int end_cpu_udmabuf(struct dma_buf *buf,
+ 	return 0;
  }
  
- int generic_atomic_write_valid(struct kiocb *iocb, struct iov_iter *iter)
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 016b0fe1536e..37df1b497418 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2187,6 +2187,8 @@ struct file_operations {
- #define FOP_ASYNC_LOCK		((__force fop_flags_t)(1 << 6))
- /* File system supports uncached read/write buffered IO */
- #define FOP_DONTCACHE		((__force fop_flags_t)(1 << 7))
-+/* Supports cross-FS copy_file_range for memory file */
-+#define FOP_MEMORY_FILE		((__force fop_flags_t)(1 << 8))
++static ssize_t udmabuf_rw_file(struct dma_buf *dmabuf, loff_t my_pos,
++			struct file *other, loff_t pos,
++			size_t count, bool is_write)
++{
++	struct udmabuf *ubuf = dmabuf->priv;
++	loff_t my_end = my_pos + count, bv_beg, bv_end = 0;
++	size_t i, bv_off, bv_len, bv_idx = 0;
++	struct bio_vec *bvec;
++	struct kiocb kiocb;
++	struct iov_iter iter;
++	unsigned int direction = is_write ? ITER_SOURCE : ITER_DEST;
++	ssize_t ret = 0;
++	struct folio *folio;
++
++	bvec = kvcalloc(ubuf->nr_pinned, sizeof(*bvec), GFP_KERNEL);
++	if (!bvec)
++		return -ENOMEM;
++
++	init_sync_kiocb(&kiocb, other);
++	kiocb.ki_pos = pos;
++
++	for (i = 0; i < ubuf->nr_pinned; i++) {
++		folio = ubuf->pinned_folios[i];
++		bv_beg = bv_end;
++		if (bv_beg >= my_end)
++			break;
++		bv_end += folio_size(folio);
++		if (bv_end <= my_pos)
++			continue;
++
++		bv_len = min(bv_end, my_end) - max(my_pos, bv_beg);
++		bv_off = my_pos > bv_beg ? my_pos - bv_beg : 0;
++		bvec_set_page(&bvec[bv_idx], &folio->page, bv_len, bv_off);
++		++bv_idx;
++	}
++
++	if (bv_idx > 0) {
++		/* start R/W. */
++		iov_iter_bvec(&iter, direction, bvec, bv_idx, count);
++		if (is_write)
++			ret = other->f_op->write_iter(&kiocb, &iter);
++		else
++			ret = other->f_op->read_iter(&kiocb, &iter);
++	}
++	kvfree(bvec);
++
++	return ret;
++}
++
+ static const struct dma_buf_ops udmabuf_ops = {
+ 	.cache_sgt_mapping = true,
+ 	.map_dma_buf	   = map_udmabuf,
+@@ -294,6 +345,7 @@ static const struct dma_buf_ops udmabuf_ops = {
+ 	.vunmap		   = vunmap_udmabuf,
+ 	.begin_cpu_access  = begin_cpu_udmabuf,
+ 	.end_cpu_access    = end_cpu_udmabuf,
++	.rw_file = udmabuf_rw_file,
+ };
  
- /* Wrap a directory iterator that needs exclusive inode access */
- int wrap_directory_iterator(struct file *, struct dir_context *,
+ #define SEALS_WANTED (F_SEAL_SHRINK)
+@@ -455,6 +507,8 @@ static long udmabuf_create(struct miscdevice *device,
+ 		ret = PTR_ERR(dmabuf);
+ 		goto err;
+ 	}
++	/* Support direct I/O */
++	dmabuf->file->f_mode |= FMODE_CAN_ODIRECT;
+ 	/*
+ 	 * Ownership of ubuf is held by the dmabuf from here.
+ 	 * If the following dma_buf_fd() fails, dma_buf_put() cleans up both the
 -- 
 2.17.1
 
