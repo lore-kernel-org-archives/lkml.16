@@ -1,82 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from hr2.samba.org (hr2.samba.org [144.76.82.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996AD271461;
-	Tue,  3 Jun 2025 09:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67608271461;
+	Tue,  3 Jun 2025 09:23:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.82.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748942591; cv=none; b=kC0GxcNyTXqOek38AfUDBvvHyucfvJ4IVyQSXlyCGXbJ51K2FQBfGqmR2aZ6fqa2WqeGSbaYYuHtx9qTDC+C/cWvJgiYENb/Cp6Ppaa8cec2nYWP14xjhCs1Fp6EzVOZrH5vihi/KRgxek6sJHkxyblRIoCHLOdcfwjxzrZR9Fs=
+	t=1748942602; cv=none; b=fXEUBiQoPuO8cccYCcEpDqyMLdSTwt1ejWbgRMX4odHL7A9UHnKyhiB7Tf+B6x7nUEp/4GtxGq83ZxtedkrxOHvx1t7bwMBkjMepaTdP6OldwfYnkxTGY70P5j4EMnOIB97/jAnbuDGokLYtfgiqj4xN25MmzVaKB2fkI7aUO4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748942591; c=relaxed/simple;
-	bh=IGxkwBHaTsBUHdsGu2r4HU2W/z03tesVyjqacAklwc4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z2ab11Ub5uVU85B0sa8avTbxU77SHbG/GLAU6Fyk/JCk7jg/w9DmRoj0Aq9N0nbEklSt7MVfJRzVKTPA3RQwUGvwphrW5OdWVqXeHUwszD0194GZBbb30u7K34I1Pswmcv29ZNR/hy7ooWM4MdOF50XACBfOPHypKNwZZYBOLA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TJIjiZSu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748942602; c=relaxed/simple;
+	bh=f1wdr64U+YYAAV0A3q+bTnD7EkymhsUJyrNJvoSnqdo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l8rmaNUadsV1v1US8s6kFySgt37tR2s1OR3L5M1zqx3kN7FQfV48FqRsEEDHzMHzaGuZa0vB87u7o7XOQYqxQsGrPKmGXJFNYIuJg65gY+z04Qzbdt+92LW5FT+Iz7goJn74mDzg57IwBBWGfPECWQD0awBMy8LlaBhnJzv6cFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org; spf=pass smtp.mailfrom=samba.org; dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b=t0wsoKtB; arc=none smtp.client-ip=144.76.82.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samba.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TJIjiZSu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA9E6C4CEED;
-	Tue,  3 Jun 2025 09:23:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748942591;
-	bh=IGxkwBHaTsBUHdsGu2r4HU2W/z03tesVyjqacAklwc4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TJIjiZSu5Mmd4zBgad4lFUUywDnQ8aqALWcWOcN9xypQlWDrglDSbXRr6yWioumlP
-	 y/gjMAZ6/m/y7erZl7pfc+Gbnf6NPaAVZjmCeUvFEjwuOSKCpsxsEFnxdhR+L3A7SI
-	 qh6E/J1sg4lR4SHPICRoAhbVvfVbVcEuvKie7GXo8NtAMnN5ok/w0x1rGcIXA/ftU/
-	 F0Zf3ej0zvbQ1gN26Vlg7n+pTZNUYQrIVhm0x7mgXo8UKlA4hk37qyscNZkLJKZ8Xh
-	 4lrrUROyudaXnoobHgHz8CGcbGhljCWRZs71zgfv5I2xJsnysBh5eL/ao8d9O/sHuQ
-	 zDYSGt5pn861w==
-Date: Tue, 3 Jun 2025 10:23:05 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com
-Subject: Re: [PATCH 6.15 00/49] 6.15.1-rc1 review
-Message-ID: <da42848e-4ee7-42c1-b291-8bf3c1c80c31@sirena.org.uk>
-References: <20250602134237.940995114@linuxfoundation.org>
+	dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b="t0wsoKtB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=samba.org;
+	s=42; h=From:Cc:To:Date:Message-ID;
+	bh=kpNhsEEpaYakShgasw+Rs4IOzaFp5Kk2My7Haocu3t4=; b=t0wsoKtBwKT9CwUbMEuG0OPMeV
+	bfboWh5elw9hgOKpjq4QoQeDr50rs2VfLs/ibdPhM987M31bXfsbQy8oV9ulX12gWhvv2gwOZeBUX
+	i19Im8r/Jz1iQcqFo0Tpnw/+fRxKbCKTedoDJO4VqsZxCnS0Q0BW4qKo2BC6wrEJIH32sYhonVYnK
+	lHbOj0nyX+EVUBeLB9vEct7s0xiUNQkKbfy1jTtpCydjEBGt9CNA9stxdHMguMSYjhs7c6xekV+Q7
+	u4idbz2m/Q7XUl/KdAq+4armM27FudgMZB6LvRchCFHfUqvMOGwxi2ymhnO2mvp3/RiLEgJ2KMS04
+	OOCU9cao5DrTS4ajyu2aD+6sFGJlXTN7InR5I90dDKTeV0L0Jc1cSfuICdaCNAgU9s2AbAkBv1PdP
+	i5Us12UGeh+Y1uMKFVKIzRxt3rIGRtduXdii8BOpubPD9E6S1mbCyKgR6CLpg9El8pXylH9sF9f1V
+	6oiagtxX5oANV2cxND3sx9iN;
+Received: from [127.0.0.2] (localhost [127.0.0.1])
+	by hr2.samba.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__ECDSA_SECP256R1_SHA256__CHACHA20_POLY1305:256)
+	(Exim)
+	id 1uMNrR-008gCi-1d;
+	Tue, 03 Jun 2025 09:23:09 +0000
+Message-ID: <3df479c7-e42f-41e1-bc5e-88f3d783c5d1@samba.org>
+Date: Tue, 3 Jun 2025 11:22:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pPvxfX2beJbnEfrA"
-Content-Disposition: inline
-In-Reply-To: <20250602134237.940995114@linuxfoundation.org>
-X-Cookie: Avec!
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v3 01/18] netmem: introduce struct netmem_desc mirroring
+ struct page
+To: Mina Almasry <almasrymina@google.com>, Byungchul Park <byungchul@sk.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, kernel_team@skhynix.com,
+ kuba@kernel.org, ilias.apalodimas@linaro.org, harry.yoo@oracle.com,
+ hawk@kernel.org, akpm@linux-foundation.org, davem@davemloft.net,
+ john.fastabend@gmail.com, andrew+netdev@lunn.ch, asml.silence@gmail.com,
+ toke@redhat.com, tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com,
+ saeedm@nvidia.com, leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+ david@redhat.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+ vbabka@suse.cz, rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+ horms@kernel.org, linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+ vishal.moola@gmail.com
+References: <20250529031047.7587-1-byungchul@sk.com>
+ <20250529031047.7587-2-byungchul@sk.com>
+ <CAHS8izNBjkMLbQsP++0r+fbkW2q7gGOdrbmE7gH-=jQUMCgJ1g@mail.gmail.com>
+ <20250530011002.GA3093@system.software.com>
+ <CAHS8izNPSHR7B24Y3RZiBeZHkPyzKAKdZbQgXwqwgs01HzxDTw@mail.gmail.com>
+Content-Language: en-US
+From: Stefan Metzmacher <metze@samba.org>
+In-Reply-To: <CAHS8izNPSHR7B24Y3RZiBeZHkPyzKAKdZbQgXwqwgs01HzxDTw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+Hi Mina,
 
---pPvxfX2beJbnEfrA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>> Do you mean?
+>>
+>>    struct net_iov {
+>>      /* Union for anonymous aliasing: */
+>>      union {
+>>        struct netmem_desc desc;
+>>        struct {
+>>           unsigned long _flags;
+>>           unsigned long pp_magic;
+>>           struct page_pool *pp;
+>>           unsigned long _pp_mapping_pad;
+>>           unsigned long dma_addr;
+>>           atomic_long_t pp_ref_count;
+>>        };
+>>      };
+>>      struct net_iov_area *owner;
+>>      enum net_iov_type type;
+>>    };
+>>
+>> Right?  If so, I will.
+>>
+> 
+> Yes, sounds good.
+> 
+> Also, maybe having a union with the same fields for anonymous aliasing
+> can be error prone if someone updates netmem_desc and forgets to
+> update the mirror in struct net_iov. If you can think of a way to deal
+> with that, great, if not lets maybe put a comment on top of struct
+> netmem_desc:
 
-On Mon, Jun 02, 2025 at 03:46:52PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.15.1 release.
-> There are 49 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+I haven't looked at the patch in detail, but to me it sounds
+a bit like the checks io_uring_init is doing.
 
-Tested-by: Mark Brown <broonie@kernel.org>
+I hope this is in same way helpful here :-)
 
---pPvxfX2beJbnEfrA
-Content-Type: application/pgp-signature; name="signature.asc"
+metze
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmg+vvgACgkQJNaLcl1U
-h9BYuwf8CwrLq+WhMB2xH0Otrum69fwpXeZGNK6BiOSMjfaSUOr7mUUA1Phte+pJ
-gVvblK3vEitA0zCR/s2RtCoLC0qj2C93gP5RVzbqbe2mBANDm13Ifyfyg3cR7YbK
-kkTXIfj3l8VreVQSHPZQr9T5BWlzrpk0PDAqDFwEvyStTfjW3Zg2C18WTBBeZOzY
-OXziGvH8hbQ9+4h0IGgRYO8xAWaGcvduR5dOSGfulsPL8KHEQRVldjYgC3yEdjSD
-tBqKt6fKimoj0Qwta9sELIP30ImbcKJc0/gBVJFpUWB9VczxLpnXtA9Jn/5b8Y05
-paAnSD9pZmfsa4Y6VIhyyXBRiULJrw==
-=lDDW
------END PGP SIGNATURE-----
-
---pPvxfX2beJbnEfrA--
