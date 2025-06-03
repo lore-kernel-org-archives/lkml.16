@@ -1,219 +1,185 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012028.outbound.protection.outlook.com [52.101.71.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366FE11CAF;
-	Tue,  3 Jun 2025 12:45:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748954744; cv=none; b=k5e7unMJriSEdoAM4UeNNmEblIbNe5+oBMAPSDYo95wyOxyXxsQFKzaYyw6QiUJILB2ps/tvdS6s061h+Y25ZVPSLLT6Qk7/L3VPFkNDEh9gxRaUy3VxzxqcfVDSCPOQjKHr+UUgym6K9JOGQjJa/vfvpLsN121O2mRKXiSo5JU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748954744; c=relaxed/simple;
-	bh=V5UWiQ2cd2GZDq83YkJb6HXdl0zlt3Ihyk4bCUmA5jM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SssQKzCowDDbH2LC7rTIoTjWOgl3PrGWzYafMiTGICNy5FLwA3bpraaGQ/Oy1z651yGi3JPut9j1kMmEm8/zLeSbBwTQFvSBa+3TF/v6MS+iRrhGuI9lmvK4DImipQvrrgRAa+x6T1ELYL7PVJsm1D33oeklbdaKBJ9iJK31ww8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EDhvxov/; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2600411CAF;
+	Tue,  3 Jun 2025 12:47:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.28
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748954852; cv=fail; b=oCQ/fIA6I04/0QmiuIeGJ33V/veXc1RMqVpd9cWMLiLC5aoIFkkqal0CnPor6rPHYMdSru3mucu0GoJwi7pho7s1gUPcd9HKPngSfPdK/vf/5NKTEVvQg6S3b97BO9lpw9dLsbunqNxhDPSPqPoKOOOP/u9g513v2FML0+3lPRk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748954852; c=relaxed/simple;
+	bh=VVzHdSoWBjLzTAug6qlQIa9jhEmT0+pZgv/5ETFVPww=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=kxiQacKgEquKEF0F0KkgQhdwalronybSzpr863PgQVhemH08WBkB2pmj1gT8u+jeEFEsfJlfQBMS/LkuldNIn+9d/QJd/GwPflkjmKQIGrVMILIV/VTbOXP91mAdoUE6VGwNK/dnITJ5uoG7wJtyXWtzGsWhYqpxGW3u0qONeUI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nokia.com; spf=fail smtp.mailfrom=nokia.com; dkim=pass (2048-bit key) header.d=nokia.com header.i=@nokia.com header.b=A8kLr2cJ; arc=fail smtp.client-ip=52.101.71.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nokia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nokia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EDhvxov/"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5536wXxH031594;
-	Tue, 3 Jun 2025 12:45:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=WsTFJJ
-	zNvHeSfLCtA5LsOyoO3yuPGZRu4LtJ9glu2r4=; b=EDhvxov/Rop/AWT5c5F+ev
-	my5OFqkmYmTK2+hlaZ1/Ph5dYe8FxzqzxdKgKjn+QiOtexPGH9IER9GliDwe3r2J
-	PTQz2vZKcLU6dmknRXG0jlKtj9ws2SLjmQ+FHpNmYeXsNSYj/SDmO11maXaCiMYr
-	22ZeWg8JJJucMlq1xhh/HlbMnlp/yczpHPtzSKX0ThWBOAkxNEi9r7AIc4A4sx1j
-	QcHZh0sDZV1oKr1qvn0m4+nzTi7HWyL/7bdbO/UQeBUPUpCt3TYvsSZH6ChoTHsq
-	W00J8JBt1mjMoBrQru6oIAR5wXFXfb9R5wANAz4PW8TtRIzOyFzTu+7k6+pp86xw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 471gf04d4f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Jun 2025 12:45:29 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 553Cf60m023086;
-	Tue, 3 Jun 2025 12:45:24 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 471gf04d4a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Jun 2025 12:45:24 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 553A81qm028479;
-	Tue, 3 Jun 2025 12:45:24 GMT
-Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 470eakakv2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Jun 2025 12:45:24 +0000
-Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
-	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 553CjMEM32834256
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 3 Jun 2025 12:45:22 GMT
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1D5BA5805E;
-	Tue,  3 Jun 2025 12:45:22 +0000 (GMT)
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2022A58052;
-	Tue,  3 Jun 2025 12:45:18 +0000 (GMT)
-Received: from [9.61.248.228] (unknown [9.61.248.228])
-	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  3 Jun 2025 12:45:17 +0000 (GMT)
-Message-ID: <8e8f51d8-af64-4d9e-934b-c0ee9f131293@linux.ibm.com>
-Date: Tue, 3 Jun 2025 18:15:16 +0530
+	dkim=pass (2048-bit key) header.d=nokia.com header.i=@nokia.com header.b="A8kLr2cJ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EERHB1LXr6dyFTZT2o8magZJ3bxmq0Arb8Rfn6hCv8Wr/txESum64X0jqHxCO2Jaebi7V8PjbEVWGeGwS1ZoizglIvfCSSEQKxT7xbi53XAGLwjJeJ6nidAWhy2pMxUoTTOJzCbJpnyz4ymRiTUllDq63mx2cynlTmAZCkfg7p91Z7K8sM9pJizRe6R0W04afaUQqn1JIBQh6dY7UNByqBuh6V+o6bYV6y20Nb7s5ZogxbPsMM3dLtSuTTVIqkyjrTluzMy7prislBovFmgdw8ooD+fsqVtRRJeffkKJ7xCR5jjld9H+eJFU0v59IoNaPVbsQy3DwPpOLv579b2AlA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DI+GH9EHg/bJQmwm+CI+t21umN2AwnOZyRTlXOToPmY=;
+ b=eV7Uw1kQSIcdPs4wLlOC4ecyDqwIPjw6zIobbgIDW0Ymnu4CecdUa+8uClrZZcclUGPyMdQ9oAXVnncPVrDdEZBQw5nx/Fi4elOQAxIZ71CvhN/efH8wdPodgCovb2h/Tbew9q4sbf18mgjy3WJ/ERmsC9gouBhw0VKhv6erb0uRaGgloPEfjbCdkNg9z1r/BAVU1DuIO68qVcPPuuR3jihX9vntjfGuWsK3vRtkyf3eMqRlr2bQCblXeUbyPZ5Ql77BhSBOQ50e1b6xJQion7qHnq/0jGa1C1OuTPuO7Y5PLpHfwMhe4TpaTfuKr3Dbh2TDtw8tfhF1cu31drMPYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
+ dkim=pass header.d=nokia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DI+GH9EHg/bJQmwm+CI+t21umN2AwnOZyRTlXOToPmY=;
+ b=A8kLr2cJeNhDc5q5+1ps16P6OgG33aZP5DFriKqTUo3Qto5m4aPpcZQI7GfyCb647jaZrGMmnas4tFbfUitrC9I4xPdHYBVI49VXY6I8kTuUMpY+fS9S+SU/4XIsLS7VXBCxdP5KkIoRwamGb6sxbDis4hXmJ/ALmnBBj6jlJwmbxfyAdlXxPbTqhGBr3nrjxUfx8S6oEApGrOhb0MCA2Op8ezEtKBdZ/AmvF5Ee8PEjEOYKGvkZJ4k+MFwYaEMZ22i8UgEph32JUMOX88q2lKQQNmyzsoq5LGGhULO4rGTm3OqqUqrJ1R6xCXKQZEtIrTxoaotpkAAg1GDLPLw+Cw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nokia.com;
+Received: from AM0PR0702MB3794.eurprd07.prod.outlook.com
+ (2603:10a6:208:19::23) by AS8PR07MB7510.eurprd07.prod.outlook.com
+ (2603:10a6:20b:2ac::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.37; Tue, 3 Jun
+ 2025 12:47:26 +0000
+Received: from AM0PR0702MB3794.eurprd07.prod.outlook.com
+ ([fe80::aea5:bbb4:c75:9faa]) by AM0PR0702MB3794.eurprd07.prod.outlook.com
+ ([fe80::aea5:bbb4:c75:9faa%2]) with mapi id 15.20.8792.034; Tue, 3 Jun 2025
+ 12:47:25 +0000
+From: Wojciech Siudy <wojciech.siudy@nokia.com>
+To: linux-kernel@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	peda@axentia.se
+Cc: andi.shyti@kernel.org,
+	mariusz.madej@nokia.com,
+	Wojciech Siudy <wojciech.siudy@nokia.com>
+Subject: [PATCH v6 RESEND 0/2] i2c: muxes: pca954x: Reset if (de)select fails
+Date: Tue,  3 Jun 2025 14:47:19 +0200
+Message-Id: <20250603124721.449739-1-wojciech.siudy@nokia.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: FR4P281CA0138.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:b8::12) To AM0PR0702MB3794.eurprd07.prod.outlook.com
+ (2603:10a6:208:19::23)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2] perf: Fix the throttle error of some clock events
-To: kan.liang@linux.intel.com, peterz@infradead.org, mingo@redhat.com,
-        namhyung@kernel.org, irogers@google.com, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Athira Rajeev <atrajeev@linux.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>
-Cc: eranian@google.com, ctshao@google.com, tmricht@linux.ibm.com,
-        leo.yan@arm.com, Aishwarya TCV <aishwarya.tcv@arm.com>
-References: <20250528175832.2999139-1-kan.liang@linux.intel.com>
-Content-Language: en-GB
-From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-In-Reply-To: <20250528175832.2999139-1-kan.liang@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: wyXliENgdp2QtoF2R1PL3Sa3uY9peLpc
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAzMDEwOSBTYWx0ZWRfX8TXD4jvfA4++ D0y/ZXk99erNTDSxVkxJZD7aCVBmolNKr98ezndg18v5RftIJsBC0mtmF+pZ5hINDNYoSm99b+t am4YMjPIGu6Uf+UKis5YCv8wq1HwdBZnHcOIRfqgUzQ+dYh1rJCPea5z7z4oF+p+i2ToEt8iscW
- yeXqdH+GpqnOgcJH+P5lbxFditQZp2w2EY4sDCEaq0KXwJZPrYV6KBbebBYXDO38BGAnTQWeD43 8EHkwkTvPgIxA9+EuPrithRfySO2k876vPSkp+wTkhXG0/JbzvdoBSlaNHj9DyEPbO5vgDwVZNz XzWLljzksSX1DchhnUtwjCy6YnQbtnmG8t3uRJQd4EDp4Xem6m7Gsz+oQEamsNwdBPsLW25PJwC
- lf9PWoehoAmirIvfbSLn2IN8tPiKjbv3dLH2AdKQsNXINfo9AF7cyfWNn5ncTNZRkZcNl6RY
-X-Proofpoint-ORIG-GUID: Ak6jrcKSPN8OTB08XFQouZ6p0dAYbvDi
-X-Authority-Analysis: v=2.4 cv=c+WrQQ9l c=1 sm=1 tr=0 ts=683eee69 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=7CQSdrXTAAAA:8 a=QyXUC8HyAAAA:8 a=VnNF1IyMAAAA:8
- a=KJf0t8lbo5Kj145lKHwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=a-qgeE7W1pNrGK8U0ZQC:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-03_01,2025-06-02_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- priorityscore=1501 mlxlogscore=999 phishscore=0 adultscore=0 clxscore=1011
- lowpriorityscore=0 malwarescore=0 suspectscore=0 bulkscore=0
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506030109
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM0PR0702MB3794:EE_|AS8PR07MB7510:EE_
+X-MS-Office365-Filtering-Correlation-Id: 60bc2ea4-fe2f-432d-3910-08dda29cca70
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?scc/wXzwHrxbcQfRJ0VKaBeKfPQiRGYUhmtiyk1DG0mZl189T6mKIQA5M7ay?=
+ =?us-ascii?Q?ANyv1248h8WhHZPe4Q3p1etbAlbAlaWJ/la2hbKe9vBly4rPjmhISG1XM/dI?=
+ =?us-ascii?Q?kszgfy3+ykkv2trnmsr5MBoDon0siMQ6D2nn1oMxgQZ3tRJuoaPKQ1Jtk0kX?=
+ =?us-ascii?Q?aq7Twl7c8Br9kSKFyIECcgt0BNIEv/fCZs0esPEGwjiPF6HM0vWz3rWA2Peu?=
+ =?us-ascii?Q?9pTTgD57SG8uNkCD4zKD1AUjSYlc5gw7Jx0t7lcVkLvYcb7fHqJ1dp6hHTsp?=
+ =?us-ascii?Q?SvlDyYTApxDcXEcfWL5SL9RELu1Jd//Vk7h7tZbgohRA1jGH8tfekUir3igB?=
+ =?us-ascii?Q?8PU8fQBUUwq41w8I1q6UMueYiU9g4eWEflv0MYG+PpI2BvinHjQKjYOMRM9f?=
+ =?us-ascii?Q?Tc7jWlwNvMEKN37PO1ne9+/AlsNZop8sc1Ni2Fq1pJG6jFkOQIQjiJf1Z2kc?=
+ =?us-ascii?Q?Z1cc5LYUTZHgwiFVNbrcuLs2Cl4/fbooQr3zSdAlKakMOGAidvbfKe7Es4kk?=
+ =?us-ascii?Q?l2riXRycK74jf0u0OQwxrsPjn022hulwgTiySLbDbpHb9sVy+vtZ2yQLzX/T?=
+ =?us-ascii?Q?MeCirzZkrWsa/v8P98xHAhSyHsPb11/RFk5okW+neWvUjpF6ImBBTNC0EWL+?=
+ =?us-ascii?Q?mmN379J3t4+Vp1bSMymSIrau7y+nDqfXJdfHnwNturkgZYibzBA2w7CWwb9o?=
+ =?us-ascii?Q?VIoLNVUvkMYjfZT1/ju99OCaR5des4ajxcPovCNYD7Smm/7PLqgMF/wfdDaK?=
+ =?us-ascii?Q?Fs0M3GNmWBrhRjkk2mchoAaBsAjKWCWxxPT+pFGDJz7ruh5wn0RvnJgBXZw3?=
+ =?us-ascii?Q?QdW+ICo5PA0rdILWxTUMcEzF82hOMSEMMnNEpHcFwtXlznxIP+CT48ykr8zJ?=
+ =?us-ascii?Q?Hi7o8eurr1dPR0nwqDgxYW75AUP++nayaKUHc1+IpMJTpaJkW1dkP8olNkSK?=
+ =?us-ascii?Q?vDkF8Pc1+9/MpdyEIPtNVZJ7Ty3pwHoISydEorIcqEYbOlZw3+zVLJki5dlE?=
+ =?us-ascii?Q?08gvfP7aU6ENVxRNhAvOgW+PTOYozJD7uN794Unbina6z3NMvyt/4bGNjDyn?=
+ =?us-ascii?Q?PpvpmDy13mLOA6Ji2KdsgWcDXx7UWZ09zRVSKdHj+GGZ4ueYP29Uz7STl8iX?=
+ =?us-ascii?Q?/Zl8I9LY0v/Ve5V62WBbcQB9GkW9ULlBu9+jaI9W+0BeyXJ004fhyMp/mwCd?=
+ =?us-ascii?Q?p34KarV6s/JVzZMBVLm4elj8QkUwWxABxnhU4mE1GqAcCFXlM6PfsqrK/8/8?=
+ =?us-ascii?Q?PEkh0VJvLbr6v0at10/tEjeaxZOgHUCA++nUHDbJIjFFYz5bKIxeV7VxVd1b?=
+ =?us-ascii?Q?ONQi7tjGo0dbmgauoDqDTfWdfLGJ85HmPNXnDdnW1Sq5WDplsIXIoTc6VmaL?=
+ =?us-ascii?Q?HG356kXVS025I0QfluZSXBI3wuOjeX6iyY3ol/4MH4+NIqrO6xkyLnENRJg+?=
+ =?us-ascii?Q?zb+8yZ5hnlU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR0702MB3794.eurprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?kPzaW4bWf6bo1Y68EtmT0+7n0t8JhSrXmjUUWErSJqPpWVL5BxYjqb1+nDeO?=
+ =?us-ascii?Q?bJNk3MLMs7HSC/eo03MO5KfjaL5Qrtu1XIqgqrICfw2s6JW4SNtGnmOB7LI0?=
+ =?us-ascii?Q?JDX5+DcTdtRFE61YtkwZMT4KZkh+nub1K52s7ECEpvFJNffM0psDkHs18LSu?=
+ =?us-ascii?Q?M5H9Ztl7xzlGd/GLni3PpF8TR2P5iyukEVZB/I7gs7BbpniKlSbgdFLldGkT?=
+ =?us-ascii?Q?fp9MV5V40+hObj8vvbw2/apRVIMU1JR/osxqKQ50XmdRrK39w5DeGN2lgpW2?=
+ =?us-ascii?Q?YwUISu7Fdn2zb7G6kjIOHpQG3Rz/wGQ8EUNloIegSmL1r8JRi274+1bqJYOo?=
+ =?us-ascii?Q?BBVibB7CACwNErPWsO8kltNm3m5N90p5BDYW2zBfudHY7EyeCAU4XZCH8sAp?=
+ =?us-ascii?Q?nmPiuNbPx5ROZq+/8AldyeEzdVy64hgdWJ8NPsX/TO3i5FxaXVWn/nQHo8NP?=
+ =?us-ascii?Q?H2zvsQqWPQm2NQ+u6xGZptFwZ+2hmiNL6u+mwnhuTaT8x+af8me9WZBTjPbQ?=
+ =?us-ascii?Q?E6Ns81RcZAudtHyufgySNCSl7oZZAlk+Dm9ak49bntQ2Ube9EegiDVvNtzvs?=
+ =?us-ascii?Q?PKsGtHrad7JEr+CZLEgrILsjtawoxq4fQGbNxMRf57yCgV2xao2m2SUVCo7p?=
+ =?us-ascii?Q?hSR2gPlZlfJFW9RuQNsspFqDauDMvRNEzrtQiftmHHmVXnYS+8QeN6U4PhZ/?=
+ =?us-ascii?Q?FF/hzS0vFt6tKcPQ0yGSGLeuOUwGWqJR59zUHF4MqSebaQDxWaDDVU/5IByE?=
+ =?us-ascii?Q?iNc48Y2s3BKHQ9vEAsSqqFanBu7b+KZFPqad1sYx3XaI5wtPWWBZ5HMolOtG?=
+ =?us-ascii?Q?eEOzc/KyEtSMUludck26SLUZ9LFqzsaoJuWkExZRWiwgRf/B5JeMLoL8VtuV?=
+ =?us-ascii?Q?qB2xmfzxIJlCvTL3ft6Pn0grX//0MFTBJaP4dOI2DPSk5JIvPz5hectvpv6j?=
+ =?us-ascii?Q?PPN0i89liZvSh7INXf3P1Zvo8XW/tE4UXJNkh8vw3Em+gnvJbkHY0yUAgPt6?=
+ =?us-ascii?Q?FrlO7bcKgUcwoX9qT05O2oD0qmfiAI2FXMxGqzrjFXEu58y4gEMAQNZJ498w?=
+ =?us-ascii?Q?EhEpHwiw2OnyLEfqplI0tL1jfD9WTIs6oG/lYQ5JtrF5QcCFcUShPVcZND0T?=
+ =?us-ascii?Q?UJWVxnSaj6J2y8Wx+keB9131i0vPMmmqNhOAYij40o+ZJKL4r6Px9sQZi8EC?=
+ =?us-ascii?Q?7BOg57A97/DSRego17Vc5f47zVTJis4yf/Rk1mInZIAT8+lwdi1tRJaBl1iH?=
+ =?us-ascii?Q?89xnB9sdPDkmZEgLihtD7Qj2TRKH6IzdBhMxnZQS9QfljGtlBgGS//nvP/7V?=
+ =?us-ascii?Q?BZ2uxaljqr9508+5nijw42KEYePsVwWUL3Sxm/vNGmrvBrmY1ZBFaemm0LWE?=
+ =?us-ascii?Q?fGlzHxJQAIF5IlL1rcwpnZ2yUdtbUqVzay4XjFn+6q142TWrRlotX67+EM0d?=
+ =?us-ascii?Q?VbabWDthm8bVNeNmVQL85ibK0QocGKsIIru33WC/OwQ+9Itl/hHyBgLouZry?=
+ =?us-ascii?Q?Mj9SlPYyi9R42YegKRlqIOuZH3TfIKxVsd5/P9xLOiGsOn3Cdwo2NKZFrvS3?=
+ =?us-ascii?Q?O2kUnO+yqO3whuOXr/4fRgMIJJawR061pc7tDtVcfF8+dKMBA6sxzWFdtEJV?=
+ =?us-ascii?Q?aA=3D=3D?=
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 60bc2ea4-fe2f-432d-3910-08dda29cca70
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR0702MB3794.eurprd07.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2025 12:47:25.3444
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KKx97J1/TfRszhLzHH9pSpWEtn8cWrPpc2+ypBWZYWhyeRw+f2Gv3bzIrfLIjOqw5gKRHeBtY4IiwXLoyYxFj+WJhp7Q2SeAs5CyZSj6/Es=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR07MB7510
 
+The pca954x mux might not respond under certain circumstances, like
+device behind it holding SDA after recovery loop or some internal issue
+in mux itself. Those situations are indicated by ETIMEDOUT returned
+from I2C transaction attempting selecting or deselecting the channel.
+According to device documentation the reset pulse restores I2C
+subsystem of the mux and deselects the channel.
 
-On 28/05/25 11:28 pm, kan.liang@linux.intel.com wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
->
-> The Arm CI reports RCU stall, which can be reproduced by the below perf
-> command.
->    perf record -a -e cpu-clock -- sleep 2
+Since the mux switches using transistor switches, the failure of line
+behind mux that is currently connected prevents sending commands to mux
+itself, so external reset signal is required. 
 
+The following series of patches removes legacy gpio-based reset calls,
+because reset controller framework already uses reset-gpios property
+and resets the device when channel selection or deselection fails.
 
-This issue is reported on IBM CI as well. But the issue is hit, while 
-running perf test (specifically while running  76: perf list tests)
+Even through the current transaction will fail anyway, the next will
+be possible to perform without resetting the whole system.
 
->
-> The cpu-clock and task_clock are two special SW events, which rely on
-> the hrtimer. Instead of invoking the stop(), the HRTIMER_NORESTART is
-> returned to stop the timer. Because the hrtimer interrupt handler cannot
-> cancel itself, which causes infinite loop.
->
-> There may be two ways to fix it.
-> - Add a check of MAX_INTERRUPTS in the event_stop. Return immediately if
-> the stop is invoked by the throttle.
-> - Introduce a PMU flag to track the case. Avoid the event_stop in
-> perf_event_throttle() if the flag is detected.
->
-> The latter looks more generic. It may be used if there are more other
-> cases that want to avoid the stop later. The latter is implemented.
+---
+Changelog:
+v2:
+  * Removed mail header from the commit log
+  * Decreased reset pulse hold time from 10 to 1 ms
+v3:
+  * Make this functionality enabled by appropriate property in
+    devicetree
+v4:
+  * Fix missing condition check from devicetree
+v5:
+  * Declare dependency of a new property
+v6:
+  * Don't add any new properties, use reset controller only
+---
 
+Wojciech Siudy (2):
+  i2c: muxes: pca954x: Use reset controller only
+  i2c: muxes: pca954x: Reset if (de)select fails
 
-Tested this patch by applying on the linux-mainline kernel on IBM Power9 
-system, and it fixes the issue. Hence,
+ drivers/i2c/muxes/i2c-mux-pca954x.c | 49 ++++++++++++++++-------------
+ 1 file changed, 27 insertions(+), 22 deletions(-)
 
+-- 
+2.34.1
 
-Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-
-
-
-Regards,
-
-Venkat.
-
->
-> Reported-by: Leo Yan <leo.yan@arm.com>
-> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
-> Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm.com/
-> Tested-by: Leo Yan <leo.yan@arm.com>
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> ---
->
-> Changes since V1:
-> - Rebase on top of the latest tip.git
-> - Add Tested-by from Leo
->
->   include/linux/perf_event.h |  1 +
->   kernel/events/core.c       | 23 ++++++++++++++++++++---
->   2 files changed, 21 insertions(+), 3 deletions(-)
->
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index 52dc7cfab0e0..97a747a97a50 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -305,6 +305,7 @@ struct perf_event_pmu_context;
->   #define PERF_PMU_CAP_EXTENDED_HW_TYPE	0x0100
->   #define PERF_PMU_CAP_AUX_PAUSE		0x0200
->   #define PERF_PMU_CAP_AUX_PREFER_LARGE	0x0400
-> +#define PERF_PMU_CAP_NO_THROTTLE_STOP	0x0800
->   
->   /**
->    * pmu::scope
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index f34c99f8ce8f..abd19bb571e3 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -2656,7 +2656,22 @@ static void perf_event_unthrottle(struct perf_event *event, bool start)
->   
->   static void perf_event_throttle(struct perf_event *event)
->   {
-> -	event->pmu->stop(event, 0);
-> +	/*
-> +	 * Some PMUs, e.g., cpu-clock and task_clock, may rely on
-> +	 * a special mechanism (hrtimer) to manipulate counters.
-> +	 * The regular stop doesn't work, since the hrtimer interrupt
-> +	 * handler cannot cancel itself.
-> +	 *
-> +	 * The stop should be avoided for such cases. Let the
-> +	 * driver-specific code handle it.
-> +	 *
-> +	 * The counters will eventually be disabled in the driver-specific
-> +	 * code. In unthrottle, they still need to be re-enabled.
-> +	 * There is no handling for PERF_PMU_CAP_NO_THROTTLE_STOP in
-> +	 * the perf_event_unthrottle().
-> +	 */
-> +	if (!(event->pmu->capabilities & PERF_PMU_CAP_NO_THROTTLE_STOP))
-> +		event->pmu->stop(event, 0);
->   	event->hw.interrupts = MAX_INTERRUPTS;
->   	if (event == event->group_leader)
->   		perf_log_throttle(event, 0);
-> @@ -11848,7 +11863,8 @@ static int cpu_clock_event_init(struct perf_event *event)
->   static struct pmu perf_cpu_clock = {
->   	.task_ctx_nr	= perf_sw_context,
->   
-> -	.capabilities	= PERF_PMU_CAP_NO_NMI,
-> +	.capabilities	= PERF_PMU_CAP_NO_NMI |
-> +			  PERF_PMU_CAP_NO_THROTTLE_STOP,
->   	.dev		= PMU_NULL_DEV,
->   
->   	.event_init	= cpu_clock_event_init,
-> @@ -11930,7 +11946,8 @@ static int task_clock_event_init(struct perf_event *event)
->   static struct pmu perf_task_clock = {
->   	.task_ctx_nr	= perf_sw_context,
->   
-> -	.capabilities	= PERF_PMU_CAP_NO_NMI,
-> +	.capabilities	= PERF_PMU_CAP_NO_NMI |
-> +			  PERF_PMU_CAP_NO_THROTTLE_STOP,
->   	.dev		= PMU_NULL_DEV,
->   
->   	.event_init	= task_clock_event_init,
