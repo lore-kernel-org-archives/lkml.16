@@ -1,230 +1,101 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6640823C8D3;
-	Tue,  3 Jun 2025 15:06:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748963218; cv=pass; b=e1BZQYXTawpnDBz8TGwdCbJaKwdtPPqOgJirO56rw1qvwDSIRTkgUukhIbx4aKvkA2ohKSt3kfFr5rxpZ2W1eSplJHn0/8AkvO1c5r0ncG+iWvSI/2g3sgi8/bRhs5P2L2BCC0aAWon+rY3GbO2xVucXGPF3q7PYzs3g09G/5vk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748963218; c=relaxed/simple;
-	bh=tNDU1zQaU6Vz1VnAGr2VhrYE55byTD9pxyb2mb+b+pc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZIksscxD/xpsMDbTCSMWyMLSvAIRBSTb0jqCsOHxA/TVmSQHtzThjUe3OQDNPt+8bQKMsR2Ene+S2XEKsaZu1Vs3G0730mY+eO0OLCtm2e8EqTD+dWZr9iHmkTIvMbcgwKe5YFHlEva5Q3aijBec72tID8fn8/hlxLMHRjgjoS8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=Fe+Kfbb4; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2EEC23D2B1
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 15:07:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748963222; cv=none; b=YWtkgKfOPsKvJXRh3J9h9KLHTmRZ84DILoUe0wS/IsrfoXZ4KKQ3IZ+o82kYfn6IlCZr5XfF3etvxOd6nNHIyPgFR2Ku1Pp6Dh3PHaQ9xK/clr/62r+tWH3zk2fO2ErS1gpa5z9eCiemAAWka3iti1lBw+/4FHMspubNmK5k08w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748963222; c=relaxed/simple;
+	bh=4IZ5oKC84SpAytK+/YroVFmKZEVsGLuTlwAkjUMiYWI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ou6xtCxxR/gpWmNYR3WPKw2Tw8/nbaqaVpWUQhnm7FL4ZdTdjeJETVl2kTEedet65GOUIkaqZcJvTuGnt8YYA6fxeHI4eAEkOoUKWtK/TViUjnQwkbZ+/zu10CGUOkm/lgCpoNrxusWYRl1yrG6Q/LwB0GBYI+irApHspLhXiyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=hzVFUIqV; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="Fe+Kfbb4"
-ARC-Seal: i=1; a=rsa-sha256; t=1748963193; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=UwZzo9d2NxnOcZ7epV72WqcACuHdEeIIOqFQBcz85i99jQ7MPjYyY7iWk3zh+ZEmvDSBbGdS9VQOwgz0ayP26s19utiCUyrNaaaRtvvjn0t4Cx8AzFskiGWukiri/rUx0pMa2P4lA63KaXNcHdOEpxaxabeOEptvFuxL5MtJyRw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1748963193; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=T3yU8CXxTLuipg5JsHWMG+be2YfylB3fwzElXc1ikec=; 
-	b=DRBAgnJX3IX6iQqZfXPIKGZTi9CspcbDKJYTW0otjGr56B47LQj++/j2UsHmjenY1V2ma+K9AJahsHitzdHRiNco/uEM53Bzq72bLlo+tH+3eI5AAnypYQPWRk1aY3UH7sB6MaRr/yEB8tjIqT/KyFG3Y+rM05fXtFGhcOx9XoA=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1748963193;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=T3yU8CXxTLuipg5JsHWMG+be2YfylB3fwzElXc1ikec=;
-	b=Fe+Kfbb4i0ZUbWJ9rTpWm5jw8+yqPDJqwENjFvs6Hu5QNqUk1MA5tXmbvfXb88Gz
-	nVzh8WA/5WbtV+qy8bruwKWOtDgFOk3ymDs3GzjWp99fCqoxpz3l1n8r8k+tyygOHCz
-	Tx8Jv0euHmdXbEMMmDWmU8iSx8lvmyHlt7o52Xaw=
-Received: by mx.zohomail.com with SMTPS id 1748963189882603.10385779974;
-	Tue, 3 Jun 2025 08:06:29 -0700 (PDT)
-From: Daniel Almeida <daniel.almeida@collabora.com>
-Date: Tue, 03 Jun 2025 12:05:30 -0300
-Subject: [PATCH v9 4/4] rust: platform: allow ioremap of platform resources
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="hzVFUIqV"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4a440a72584so41307801cf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 08:07:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1748963219; x=1749568019; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sBcw9pAxeIim4PFbO0EsYyzCi4VNpAby8oYVEtJWvZY=;
+        b=hzVFUIqVrw65EjFUk0HQs2c+IoiqsdJiCTQE9lISAaB0vo7eP2zMFlsHxzXguLR9PJ
+         PD7W01Ba34025x1bsISeCHU6oM3vPtnhs8zWnioU9AY8kxy11dWAkUWsbaGBlqVyu+LZ
+         dwk1tA9klJgebjA5myvGCECIv8OxXJn22mBgQNtdO5fYRFbzXZ86ykY8klLurL/Xex3s
+         O+0U3bmzGOXhxppKqJOdqN0BS0AgaZmcG4irktdY3bUT1yCxkLKVplOzlN+uHzkeEesu
+         dpCxktWTM2l3znsymWNdcIevr7h0yA1hNHzpiwF7bg38Ot1iym5r8SWpkmi8vX8LRSHO
+         PUVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748963219; x=1749568019;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sBcw9pAxeIim4PFbO0EsYyzCi4VNpAby8oYVEtJWvZY=;
+        b=txTWSzZRe4H5OwYY8plGBn+Nfp8JlMHPUgK4vvg3TW7n+8vB0TFknPGdBpxBEBgxGY
+         Ot2wFx7nBry6Uf855wZzjHUhVz7I5zEDzwe8Sp084KVkN2tElGj9z7CuaMCJHDzlpR72
+         PmpcI4PgBa79PlV0MmTg+ZEpe3DvJgrHA1RIUF/698VeZONCY3SI5w8z4o1aAMVJmTM2
+         dujdNYtJujUaRX1ICBDnmsngNZj6P/pRKfOqwx090LyPBBQ+m6kYdM27znrpa2xPyi0q
+         uIQnk2QUrtTYmcVd3Xspto0yM7vTUclocd6WJSMB9aTQzQSF30THJsp+EslApcR1vmVk
+         Vw6w==
+X-Forwarded-Encrypted: i=1; AJvYcCUSoVoYlQmR6T5TeTXBdoFizeuIrEECv22ET2QCXXbwCByY9AYgM4SPp8xp9zuew2l20udYTMeznznefH0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzW3RRtmNjiiwNkpISQhWVKkdPkybgQ7H0NV+iAp/rDT4u4HoHU
+	h/U+HZQXIdX+sSaZBsWZ24uVqXW0pvsqGy/Yub+/mMbz6ETw6BNbhgfHOQEt0Gsd2uI=
+X-Gm-Gg: ASbGncvm1s/536rY5Sy1TYhfFuPJdN+F4Jlaz4hcebBCvtSSjHEQZRTK1Dui77APaW7
+	c9B7G6lSM+SDtHpcyEIqJW91LcXOAm1A72WS3mNKelQcsVDmeHhlH4ZjHkk6lwf0K7mT1smKMoe
+	IN6ZxJ6YGPXvc2755Yxg+NoBZmKtGgjOQy9xDg2hKhiEINUjLvs07Sj3PfiBw4gBmgGkZw7jyGz
+	AwZYYhihtKKZ8GPUwBIOhhRxcF/r6CBjeTnsed4a+kg2nT1+SGv3R5Lkzc6mHP81WmG2w8+HqJF
+	7hdZmJCxpsHZ6SkGPeJ7Cb+NU4PpPM4fGMHtw5TrPyVb/7+DFfSWt4/KWusO8S1YXcxLQTiv6V+
+	aYH7ZZS31XcQZLtQvkJcnZdeCRDY=
+X-Google-Smtp-Source: AGHT+IHhqCppZOqzSDLECb61u7AtZD5CcJCcyFWN2hijSJ8HSCck7H8cbHGZnWZ5+BV2Y7fY8nJzRw==
+X-Received: by 2002:a05:622a:4c8c:b0:4a4:3fc0:6df5 with SMTP id d75a77b69052e-4a443dc4efcmr210075641cf.10.1748963217999;
+        Tue, 03 Jun 2025 08:06:57 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a435a8435esm74774761cf.78.2025.06.03.08.06.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 08:06:57 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uMTE9-00000001ipJ-03XW;
+	Tue, 03 Jun 2025 12:06:57 -0300
+Date: Tue, 3 Jun 2025 12:06:56 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Wei Wang <wei.w.wang@intel.com>
+Cc: baolu.lu@linux.intel.com, kevin.tian@intel.com, yi.l.liu@intel.com,
+	dwmw2@infradead.org, jroedel@suse.de, linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev
+Subject: Re: [PATCH v1] iommu/vt-d: Remove dead code in
+ intel_iommu_domain_alloc_paging_flags()
+Message-ID: <20250603150656.GA407166@ziepe.ca>
+References: <20250530091325.694456-1-wei.w.wang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250603-topics-tyr-platform_iomem-v9-4-a27e04157e3e@collabora.com>
-References: <20250603-topics-tyr-platform_iomem-v9-0-a27e04157e3e@collabora.com>
-In-Reply-To: <20250603-topics-tyr-platform_iomem-v9-0-a27e04157e3e@collabora.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- Mika Westerberg <mika.westerberg@linux.intel.com>, 
- Ying Huang <huang.ying.caritas@gmail.com>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
- Daniel Almeida <daniel.almeida@collabora.com>
-X-Mailer: b4 0.14.2
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250530091325.694456-1-wei.w.wang@intel.com>
 
-The preceding patches added support for resources, and for a general
-IoMem abstraction, but thus far there is no way to access said IoMem
-from drivers, as its creation is unsafe and depends on a resource that
-must be acquired from some device first.
+On Fri, May 30, 2025 at 05:13:25PM +0800, Wei Wang wrote:
+> When dirty_tracking is enabled, first_stage is set to false to use the
+> second stage translation table. dmar_domain->use_first_level, which is
+> assigned from first_page, is guaranteed to be false when the execution
+> reaches the location of the code to be removed by this patch. So the
+> handling for dmar_domain->use_first_level being true there will never
+> be executed.
+> 
+> Signed-off-by: Wei Wang <wei.w.wang@intel.com>
+> ---
+>  drivers/iommu/intel/iommu.c | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
 
-Now, allow the ioremap of platform resources themselves, thereby making
-the IoMem available to platform drivers.
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
-Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
----
- rust/kernel/platform.rs | 123 +++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 121 insertions(+), 2 deletions(-)
+I noticed this too
 
-diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
-index 427bc706f4349083b6bab81a02cb8ed803903590..57414fd0db296e412f45fbefd7707b338b37332a 100644
---- a/rust/kernel/platform.rs
-+++ b/rust/kernel/platform.rs
-@@ -5,9 +5,14 @@
- //! C header: [`include/linux/platform_device.h`](srctree/include/linux/platform_device.h)
- 
- use crate::{
--    bindings, container_of, device, driver,
-+    bindings, container_of, device,
-+    devres::Devres,
-+    driver,
-     error::{to_result, Result},
--    io::resource::Resource,
-+    io::{
-+        mem::{ExclusiveIoMem, IoMem},
-+        resource::Resource,
-+    },
-     of,
-     prelude::*,
-     str::CStr,
-@@ -227,6 +232,120 @@ pub fn resource_by_name(&self, name: &CStr) -> Option<&Resource> {
-     }
- }
- 
-+impl Device<device::Bound> {
-+    /// Maps a platform resource where the size is known at compile time.
-+    ///
-+    /// This uses the
-+    /// [`ioremap()`](https://docs.kernel.org/driver-api/device-io.html#getting-access-to-the-device)
-+    /// C API.
-+    ///
-+    /// # Examples
-+    ///
-+    /// ```no_run
-+    /// # use kernel::{bindings, c_str, platform, of, device::Core};
-+    /// # struct SampleDriver;
-+    ///
-+    /// impl platform::Driver for SampleDriver {
-+    ///    # type IdInfo = ();
-+    ///    # const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = None;
-+    ///
-+    ///    fn probe(
-+    ///       pdev: &platform::Device<Core>,
-+    ///       info: Option<&Self::IdInfo>,
-+    ///    ) -> Result<Pin<KBox<Self>>> {
-+    ///       let offset = 0; // Some offset.
-+    ///
-+    ///       // If the size is known at compile time, use [`Self::iomap_resource_sized`].
-+    ///       //
-+    ///       // No runtime checks will apply when reading and writing.
-+    ///       let resource = pdev.resource_by_index(0).ok_or(ENODEV)?;
-+    ///       let iomem = pdev.iomap_resource_sized::<42>(&resource)?;
-+    ///       let io = iomem.access(pdev.as_ref())?;
-+    ///
-+    ///       // Read and write a 32-bit value at `offset`. Calling `try_access()` on
-+    ///       // the `Devres` makes sure that the resource is still valid.
-+    ///       let data = io.read32_relaxed(offset);
-+    ///
-+    ///       iomem.try_access().ok_or(ENODEV)?.write32_relaxed(data, offset);
-+    ///
-+    ///       # let sample_driver = KBox::new(SampleDriver, GFP_KERNEL).map_err(|_| ENOMEM)?;
-+    ///       # Ok(sample_driver.into())
-+    ///     }
-+    /// }
-+    /// ```
-+    pub fn iomap_resource_sized<const SIZE: usize>(
-+        &self,
-+        resource: &Resource,
-+    ) -> Result<Devres<IoMem<SIZE>>> {
-+        IoMem::new(resource, self.as_ref())
-+    }
-+
-+    /// Same as [`Self::iomap_resource_sized`] but with exclusive access to the
-+    /// underlying region.
-+    ///
-+    /// This uses the
-+    /// [`ioremap()`](https://docs.kernel.org/driver-api/device-io.html#getting-access-to-the-device)
-+    /// C API.
-+    pub fn iomap_resource_exclusive_sized<const SIZE: usize>(
-+        &self,
-+        resource: &Resource,
-+    ) -> Result<Devres<ExclusiveIoMem<SIZE>>> {
-+        ExclusiveIoMem::new(resource, self.as_ref())
-+    }
-+
-+    /// Maps a platform resource through iomap().
-+    ///
-+    /// This uses the
-+    /// [`ioremap()`](https://docs.kernel.org/driver-api/device-io.html#getting-access-to-the-device)
-+    /// C API.
-+    ///
-+    /// # Examples
-+    ///
-+    /// ```no_run
-+    /// # use kernel::{bindings, c_str, platform, of, device::Core};
-+    /// # struct SampleDriver;
-+    ///
-+    /// impl platform::Driver for SampleDriver {
-+    ///    # type IdInfo = ();
-+    ///    # const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = None;
-+    ///
-+    ///    fn probe(
-+    ///       pdev: &platform::Device<Core>,
-+    ///       info: Option<&Self::IdInfo>,
-+    ///    ) -> Result<Pin<KBox<Self>>> {
-+    ///       let offset = 0; // Some offset.
-+    ///
-+    ///       // Unlike [`Self::iomap_resource_sized`], here the size of the memory region
-+    ///       // is not known at compile time, so only the `try_read*` and `try_write*`
-+    ///       // family of functions should be used, leading to runtime checks on every
-+    ///       // access.
-+    ///       let resource = pdev.resource_by_index(0).ok_or(ENODEV)?;
-+    ///       let iomem = pdev.iomap_resource(&resource)?;
-+    ///       let io = iomem.access(pdev.as_ref())?;
-+    ///
-+    ///       let data = io.try_read32_relaxed(offset)?;
-+    ///
-+    ///       io.try_write32_relaxed(data, offset)?;
-+    ///
-+    ///       # let sample_driver = KBox::new(SampleDriver, GFP_KERNEL).map_err(|_| ENOMEM)?;
-+    ///       # Ok(sample_driver.into())
-+    ///     }
-+    /// }
-+    /// ```
-+    pub fn iomap_resource(&self, resource: &Resource) -> Result<Devres<IoMem<0>>> {
-+        self.iomap_resource_sized::<0>(resource)
-+    }
-+
-+    /// Same as [`Self::iomap_resource`] but with exclusive access to the underlying
-+    /// region.
-+    pub fn iomap_resource_exclusive(
-+        &self,
-+        resource: &Resource,
-+    ) -> Result<Devres<ExclusiveIoMem<0>>> {
-+        self.iomap_resource_exclusive_sized::<0>(resource)
-+    }
-+}
-+
- // SAFETY: `Device` is a transparent wrapper of a type that doesn't depend on `Device`'s generic
- // argument.
- kernel::impl_device_context_deref!(unsafe { Device });
-
--- 
-2.49.0
-
+Jason
