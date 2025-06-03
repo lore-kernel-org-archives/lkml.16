@@ -1,237 +1,134 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2083.outbound.protection.outlook.com [40.107.244.83])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B690A16E863;
-	Tue,  3 Jun 2025 19:03:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748977420; cv=fail; b=eepJynen4GAtPPcdmMqBwrNX1cylabP7JW/FfZ6GvAeCurPbBmUVMQ1lwS9MXm+SZx9tgVYhO2F1PR8E9LUAlypAXCuTXiUhjtDlic/FvMMxkx31qW6NMfZwTG63zzkc2eR3JVNpXgGPnl50rUZKMhpgABkDkWFpSzLlBrwtsBk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748977420; c=relaxed/simple;
-	bh=IKzVBhks7N0s65in8bEQIh8J3OQAZ2/T/a4p29WgELM=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=nfd2sKoruI1cDzEbFobe1xpccEWl5PIhwOFR5l7iCXmDUGdocgBWM1o02ZaE3VrV/vPhCzplu/y7PsFonR1j0KRmLbrGhpK6DshdtbBg0stYyzUiKKHMIEZ28y08/IJoniaY2xtUiKDnvNz31GbSGMOd/bV/cRtZkS/eq3o67Bw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=biiQBts7; arc=fail smtp.client-ip=40.107.244.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98949202F65
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 19:04:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748977468; cv=none; b=BXQ5jArDjeZng0RvPzXjFCBeTchaDnCFRG/Ab+2jkGhEahuJ1VOsQK3r1shwN5Gdk9AiO1/Y+NPnjvMWjaOXZbP5CO197UGurW785Q4AKRyDuScjgx/gac/fMCBv8K+rEcvpeFDH2NrYwOPFoGdR6Hl0+K2h/eud7kUGplz7ips=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748977468; c=relaxed/simple;
+	bh=Be9rZg2wVm5Jh98zlevbaUzkraeXZD+KJ2pLFhtjhK8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tWXDalvW7LebuZCuHDD+Ql8rZC6/gZcDV26xuXifLUXZCv+Ybe99Pkk9/LApTPYRNXaLp+/xz2jEdp55oQe7iobhrAvnhk/70Fg+y0t3g7DMMrJjaO9qiy7bDMe75rSNrhCM07AgC9z780KrD2W8fHlWTHlXLsKJHTFxso5r8cM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=u9BMIIzL; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="biiQBts7"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AMaq+dHyI7hoEF+opr1JZxNuU1W70Od8N2f3CUY8DjJf+JSzFmjUUrqRHRB1xHiuOmbwnsSqDNtS41nXkpNEVi0Ut9VTHT4RTrrD8NJz1AnBTFiJt6CW8Yl8obItVbhpet+eloXYIuUgOEeCM+ulUyTYewRJ8MhPR217/zOgPoQusQxiA5ofm/8DVV0VQZPdLEK7nUpogE7Zy2QYpjSlpCuCD/M3nTi9mRUcUPQpnhJnEyzxrdcDSFm2Rk+9eMXenZR4XazSVzQ7q+1ZyRXkqedGJvzr8EoNJo/sc5bUHkBZY3UTGeE++U4tNH9n+Vth3zXhZ7QCUrGUheS9+c5vbA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=C8ZWzRrXXK1Ok0ByhkPeT9EeT0tpWfARxPTumTiToyw=;
- b=EU3JYQNGDNYNS/l0ifA5bu3gu7s4LFDZWfFCSQCi41EurTkvw6DMk2KQYBsI1oa/kRsI6+SZSq2/oQHDEtflXN540/HR1ubGowiB8jRIXP0wP9wn2OT9CLkTnFmIhf1UxRdH9Q9xKB0tqhn0XFZyy9pWGhnJL0BgoHj4ikmfTJX/nD2akMxFaHDs8qJ3rLYI5gdYLMoQWl+Qj7LEx2gtqjPQQou94poVIz8ykUmhl9Zh/WpB7XCf3QC+sacQQc196Uh6c2I7o7LHXvoh5IlfcOkDEHAyPDLRC2N3QmhN1c7eu0JSg74yypTmwxGnJ69Y1lbKXq98bdXbRtBIQtlv6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C8ZWzRrXXK1Ok0ByhkPeT9EeT0tpWfARxPTumTiToyw=;
- b=biiQBts7KyK1qTf+hNPQRRkyIbbZYvo0f+whIatYYcE0sV1wjcfnxAIFSRF6LjxmIx03qHSE+jw8XiRxOy9ZHKvBdOMljtdbqPNrE2lyekPXHi127Hmsam4ItEN1hrXp50AvaTnLWejaoL5zlQPWQyAqZkNdhj4vy3upwmMAD7SIrC6+PgzTqXA2aKr4i6bfa5flOAFZoWtFrcltWaClROWiaVVIOQ4QGGNlJFFWg4WSwsm3abOiWLcSbMs97ovHL19gKH/DpOj4KmcS9cExIbksTy4KaNpAXX3s4WNdMAr8nrsqCloJFWCNDemg/GSX3oTP78r87WejN2AeMrTJwA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
- by DS0PR12MB8018.namprd12.prod.outlook.com (2603:10b6:8:149::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.32; Tue, 3 Jun
- 2025 19:03:33 +0000
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91%3]) with mapi id 15.20.8769.025; Tue, 3 Jun 2025
- 19:03:33 +0000
-Message-ID: <066e8121-c6c5-48ac-b35a-e6430d986dff@nvidia.com>
-Date: Tue, 3 Jun 2025 15:03:30 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [QUESTION] problems report: rcu_read_unlock_special() called in
- irq_exit() causes dead loop
-From: Joel Fernandes <joelagnelf@nvidia.com>
-To: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Cc: Joel Fernandes <joel@joelfernandes.org>, ankur.a.arora@oracle.com,
- Frederic Weisbecker <frederic@kernel.org>,
- "Paul E . McKenney" <paulmck@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
- neeraj.upadhyay@kernel.org, urezki@gmail.com, rcu@vger.kernel.org,
- linux-kernel@vger.kernel.org, xiqi2@huawei.com,
- "Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>
-References: <9acd5f9f-6732-7701-6880-4b51190aa070@huawei.com>
- <CAEXW_YRC=f6i3KOd_uhuH=xAOCG7mW7-LwtA4+_fc8FMjfRHeg@mail.gmail.com>
- <3ce6f3ce-5dfb-8c59-cb7b-4619b70f8d25@huawei.com>
- <20250603185939.GA1109523@joelnvbox>
-Content-Language: en-US
-In-Reply-To: <20250603185939.GA1109523@joelnvbox>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BL1PR13CA0304.namprd13.prod.outlook.com
- (2603:10b6:208:2c1::9) To SN7PR12MB8059.namprd12.prod.outlook.com
- (2603:10b6:806:32b::7)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u9BMIIzL"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso2102a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 12:04:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748977465; x=1749582265; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=upW65V3EzmhIq53ol8W+l4SqDfLitB19YO+d44FV2Xc=;
+        b=u9BMIIzLIRTs5wjnCE24rtIDCehwmizNEi0JabC5233Tsao6QLSBYdZAbIfd18CROQ
+         l2uMrQQ26q37WIib3A0kp7HO9xNV+Ub4NO0JVT/xXZIfLGPyoY9THW5MVhwfpHoK/TM0
+         +BPy8J3/hWUuhZXS+y1ERIV6msySDLDyDs7CZ7v/z7BxKZSpMh2WsIpcADD//c30//qZ
+         iCeSUZC+HPZOORXbvEQuNIwZcwhbEAinn4GSoke6RhcHQl9oDivkJesduuDBMYPhl0P6
+         epvt71hFvqQ2tgqDUNODiaiI2ThPs41zxOwcUbWq///D5C8ItCfhF0C67FVJlWIdi8Mn
+         L63A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748977465; x=1749582265;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=upW65V3EzmhIq53ol8W+l4SqDfLitB19YO+d44FV2Xc=;
+        b=UZuDLSbnOgDbhAUCdUNzzW2MA2n3EoVIZ91PHTgv4c77a+sfAKd/OMErTc4tjklCYn
+         hESzgNjPMaGjQFp7rP1GBd4jtrps+7VLrcYDOiJpBx8fmSIfZo9j8bXgry0UFx+FS10y
+         guihTFDrhSxrrsEKlgo7dUnWpE51gvhKhYuLJuYjUlUFXTRwOdt9Lr2+xF89vNhGr8IV
+         b6GdR0GfcgydXR/S+j0M3AXA31AapR1DW3G3u/xvEMBf+WUw/yS6gaQH92b6JcmGkRxZ
+         7n1/ps3eCpgiiwQhPDSxjRa3IfT5BA4K0mFp1FaTDxOS6+OEkq/Y9/dk//6EiPVzwO7r
+         YQfA==
+X-Forwarded-Encrypted: i=1; AJvYcCVzz7kBhFHIXJQfnfP3WSZRAp5MsRUF7WcC97P/i36pp5IRtOREuorP4RIURnQ39oRYj4IVwPDVvTY8vDs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7f1IH/iYvI0d5wjB91xWVzy8rylre4v46Yc78e0VeeCeT7ogB
+	Ddj3n01BPtDP3IUJVi3GhaPwr4SGX2or4jugfs1NTYXFxEvSo7iH9dT9VAmlpym+ZrQ+9J0QV0+
+	2fgtvyvKd++iAPSe4j+nHuXi3Yak3hz6/k8JHy+7h
+X-Gm-Gg: ASbGncuTvt6cTEkl0Xulp/gp7sWe3suj4WmErPkB97fm015QDe4Vg7h1I7a90vTVBrP
+	vFT9vcNE29CNUaUAVnIwIpb+GdOn6HT9xC/XSpBHstk5t8Ji8k8R+dPCrG29Qbw6sPaQQ2MUN7O
+	+4w95L5N6TzMIpQBgt5d6UIczakK7OCfo8Hk+gO8OQP0htuA12FH3Af3tk55Alqt9Q/1OtIA==
+X-Google-Smtp-Source: AGHT+IF27moEhGBhsm/ksC0oM3TPqemrqOpUYPAOkCX+3zVbgLX/VHp3AFay/v6jG66/ME7gmjt84tbCZzSThScYaow=
+X-Received: by 2002:aa7:d4cf:0:b0:604:58e9:516c with SMTP id
+ 4fb4d7f45d1cf-606e887b718mr4783a12.5.1748977464523; Tue, 03 Jun 2025 12:04:24
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|DS0PR12MB8018:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8a9d6318-45a3-4f81-17ab-08dda2d155dd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?L0d0bFVMcmpjUXk5S2JQWkd4RHRkY0dDVVNaY1Z2K3BEVjhIL0ZiQ3R4UTk4?=
- =?utf-8?B?Rmh1cGlWR2krWjN2eXlCY3V3a3dZZDAxdzBhMTJkLy9EVHRqVkN0SFRRdHdy?=
- =?utf-8?B?NW9YZXNqRkwwUjczOGhsOVE4UUtySnR3NHFzZWIyZ0lLeVpvL01DSXZKcVA1?=
- =?utf-8?B?UTdOYXpTeGFCZ2JPSnFCRm5RUzNDai9QSVlicG1YNWQ4d2xxQmp5ZC9ia3FL?=
- =?utf-8?B?TlRnZERjTWZIZDNPK0hHYlFORzQvVDZRcVhPV3dKSjBSMWc1SEUyK2gwL0Vw?=
- =?utf-8?B?aGZxdTdZZDFPR3VNR3VwOEpVV0htalhLQ3M3bVVlWG5MWDhkQllHdWN0OUNw?=
- =?utf-8?B?dzFUMHQzYnBhQXFUcG1LM3VrMlFNOENWemlUQk1GUEdyTmNlaXdLZmRZZ1g1?=
- =?utf-8?B?UW5jaG1xQ3hJUGViTEN5ODR5UTJ5R0RibUNVY2JRNEZiT0ViUVVzMGxLNU5u?=
- =?utf-8?B?b3AyRjV4SElILzh6eGFYbGhsNWpFSlJCMmk2bEJabTlQVGpHaGE2NENRWGNS?=
- =?utf-8?B?dGwzVHFIMVY5MjZzL1FkbGpER1BVMXBnd04vNWZDTStndTM3NktLRzVZUUdN?=
- =?utf-8?B?aFUvdWpEcGQ1QTd4SEFmbndML2dPL1g4QlZtcXZvUzF5TGtjbzRhQytEQkdz?=
- =?utf-8?B?UzRyb3BQVkEzcmQ3dVFidnF6eHl2Z1pnbG50bDFVa3NzVEhISVNIb3FVc290?=
- =?utf-8?B?b2ZXTnFCTE9GY3VrZmZ0S0xTQUlJL1VvM3ZmNEJHbktvcjFhSlpOMGprZTRC?=
- =?utf-8?B?RVc5QW4vc0lNNGd5RURtMGZ6M3Y4MmNWc1Bpc0JGclc4bjR4b04za3dEUlgx?=
- =?utf-8?B?Rk8xTVMyb29CMDN6a2JZb2wrdWFiSG9KZndobEtZSWZOUWJFcVFyTDlRdldI?=
- =?utf-8?B?SCtNMVdTQWphNGV4TDA1Z3M3RXI5Q2Q1cW1LdnMyandUOGROUnV6emlnVVg5?=
- =?utf-8?B?UDRQT3hWV014V3oyMUVtUWMxalVmc2NUNGljYVBjbUh3aHBYSmNYQjM3NDlS?=
- =?utf-8?B?dmE0SGoxcm5xSmdWaTR1R1IrcmRIMlBuanZXbmc5azJWOEhOR1I5NDFUSFF4?=
- =?utf-8?B?bld5TkVpbm9EVm9qaTc0YjIwY1V3a0JyZWVYZWhVWERwTVYwTVhTdG5HMlRu?=
- =?utf-8?B?Y3I1TXZJd2EvNmd2czA0dGkzZmNBMllUbi9zd3FRSk9sYkcwTXVXb3lMNnRp?=
- =?utf-8?B?OSs3aXREd3VLaHpIYWRKR2dxRmVleWdscDM4UGp4Sm5VVExGT2czYjRxQmdB?=
- =?utf-8?B?Z1pPcjFOVkc4TTYwWkwxcmFSNnJpZDMxSXZVWTBQMEN6YlZFTE8xMjJhSm85?=
- =?utf-8?B?ZkxvYnlOVjBFbWRCRUQ1dlBpZzlreXhyK1FGRzlTaGxXR0J5S0F4SUl1Rmgz?=
- =?utf-8?B?KzNxbTRMdXhqQWpwbUtSOWRnMW5ueDRZU3MxVFdzN3pZN1h5b3VvdkVQQmVm?=
- =?utf-8?B?MnEyWFNnM3ZzRTNIQVBTcFF6dERxU3dvL1N3MGFvRjRZSm9Fb1piNzhPdDNJ?=
- =?utf-8?B?NFhxeDhkY0xSU0VXNGprbWt2WTZTanpURGE3L0tpNXV6SnNvV3dPZzJVd2Ft?=
- =?utf-8?B?YVo3UjIyMFgvUURkRjMwMnVuM0gvaHVieGJXSGdsZi9wNThxZDQ0eEdhT2xL?=
- =?utf-8?B?Y1RkdUN1QTRCNG1IU28vTFd6WUNDYy9zaFdrSFRDTmtpbk11ZTNObUxPSGpU?=
- =?utf-8?B?QlZjc2tLNDBQVU5DYVVNZWVTbUoxRzd2b0E5NnRrTXBWS2hQVVZEUEd4Q2VI?=
- =?utf-8?B?Sm43bENlam95SmlVQ0FmRzErVUh5ZXJ6eStXTDhLbkwyY0lpSkcrV0czSlMr?=
- =?utf-8?B?dXpjck5yZ2VYMVpsZGNxMnFaUS9XZ2cyc0xJOEFZaXMzODJZeW1ob1RBZ2wv?=
- =?utf-8?B?MnhwMG5JNkQ5SnJtRnRidHcrcWtFMGJqQ1dJeDRsU1llLzRubFRyTXpWN0cr?=
- =?utf-8?Q?8/qEIY6wezI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cGoxM3BZbi9FTFlkOHFDZUN0ZEc3Mjg4UGFvN2tUTkFqYmU0TTZkbHM1YklF?=
- =?utf-8?B?YVVNQU94UDVubHJYUWtzMGJhUXVqRDIydlBPc0ZwTlFlaVRjWVorbk9ta3Rj?=
- =?utf-8?B?TThQNjlKNXg5K2xsL3VVL1JsNmZDUFpIQjdkc1k1ZCtwTWNiREszUURvOHZh?=
- =?utf-8?B?ZXJMTXFDZ0VmZ0FmUGR5TnczNHB2dnl2V0s1ZDUvYk9ubHJFMkZLMlRaR0hJ?=
- =?utf-8?B?NlQySSsyekk1TlNVMmNpd0kxYTRRYTRSM1FFVEtOdld0T0ttNVFxcDVVOVlN?=
- =?utf-8?B?NVN3SzcwaU9tOTFZVE9uRGxUZHpzMmR5OVNkMFR3VW5uL0NmVSt4NGorRGdu?=
- =?utf-8?B?VWhRTUZsRUtFYm1ZKzllVmY2eXlKeG5meCtoV1kzUEdrNENTZ3R0SEkrNjZI?=
- =?utf-8?B?bnpZWFlEK1FnWDM2RCthcS92UFJjUjdMajlLT0R2YXpqeFJ4aERPK05Fd3VE?=
- =?utf-8?B?aDh1Q1ZLWUJyT2lMSVRVWmJwaml6aG5MS0ZRdHErMnZacm1meU5sR0RBSzV2?=
- =?utf-8?B?ZEFyVXdBTFdKRVVwaER4WlU3VE5iWVMrZ2dLYzdqK2dXb3BsYzZnTmxRLzVt?=
- =?utf-8?B?a1kyZFM4M214K0ErRldVb01WSnZBT0pldnlaRFEwYllGczd0T1RxV2UrL1pm?=
- =?utf-8?B?aHR0Q0syd0ZORDNDWE9POEZqMGJRdjlEOTIxdXdGSFlsSW9kUGdQTlduQy8r?=
- =?utf-8?B?bWhzOFlETHA0cGtIMjBGZGlFVUNrejhITUlQNjRsWlU2WFZOQUwwSWZWa2pH?=
- =?utf-8?B?a1R2eXFrT0d4NUpoaG1OTEs5T2ltcEdjSC82cXJzdHIxTFoyRjhETVkwTTNR?=
- =?utf-8?B?ZmVtbHlSYVBSL05YNFM3N3pGYlZ2Tm5iSzNlSmMvcGxtY2JQbXFmRUQ0aVhv?=
- =?utf-8?B?d0h6Wi9Ta2FxZ0ZIT2Fzek1GM2FWcjdkdXNjbWVIcCtXRHk0am40a3ZSVEpK?=
- =?utf-8?B?QjBtUDRLYnI1VWlGZW1BM21SZE9pZDkvbFNIa2ZodGZWTC9PS0YzTXVqMEJE?=
- =?utf-8?B?bTJOS1AweWw4NWtmMDR3RExBbmcwM0FqS3RYcUYrZjFkZnlJcVV5dmpZRm5n?=
- =?utf-8?B?UlRMZkpxc0Vka0t5QkF4bkkxUmZpemtjRlJOUmQ0aFV5dWZmMGxISHlYbCtJ?=
- =?utf-8?B?Tno2RzlCNjV1UTNEMWtieU9rY1lWNktkRkpoek9KMXpZVDUxZWtSYSt2Mi9E?=
- =?utf-8?B?RUdGZUxoWG5nTXBaeXp0d2w3dXhUeWVGaFlvcEZjeFVwVkVIL3hVQjkyUlBL?=
- =?utf-8?B?dmtqSktSVjNaTXB2d1QxRlpKbTlXZ0hCUzRyOXBLYU1yS0ZxY3poNElTYjAv?=
- =?utf-8?B?TFJ4Nkk5NGUxL1hoVUIxbks4bDMxYTZYMVk0R2RCM0QvQkZjRUxCTStWamF5?=
- =?utf-8?B?emdSS3dCRmNvTXZQQ0gvWUphVHdPa1NJM3lrUTI2RUZ6bWJMbEQyMWo5SE44?=
- =?utf-8?B?WXJ0NVNQR2Z0VWxGWVp6Q1RCRjQwQy8rcDB3Y3F6TlUrV1hoL00vbzQ5QWZs?=
- =?utf-8?B?Tnl1Sy9zNDRzdU4wTjhQRGZxNktKRzVINk0vSjllNk1Kc2dBREJiMXJTeWZm?=
- =?utf-8?B?WUVPSFJmWFVNdmtuNnlXZGlKNW9TZkR3SmhsejVLRFk5Ri81cUlXdWhWU2dx?=
- =?utf-8?B?YzZseTl5eDdjMVhEMzl1aEdhSlRwTUNKT2I3VW5ZZFVFYkpVdEZyQVNUN1Yx?=
- =?utf-8?B?ODY1SExRY0dUVzk2V1kyVlZKV3AyMW81U1VXUmYwVXJ6U29sZDJyeXRTSEY0?=
- =?utf-8?B?MkI1U3lrOVpiZVl4SktGZGRPWE4xQ0ZrNDlCS2NXeFVQZ1NOY3hmTVNrQUNZ?=
- =?utf-8?B?cTVUbUp2bWNCSXNZNXVFc0l1dWl3b2QxenZaNnIwOTJocUlJNmRkYVRGSEdx?=
- =?utf-8?B?UTVkVHhBS3NZUGM0a0tKUlZwZlhhQW84THB4Z01UR040VWpleS9SeW9BUHR4?=
- =?utf-8?B?cWQ5SS9BeDZmdG1VMEM3SDJiVGJQK2p3VDJaeXNkZWNMdlRYRXpxdnpFNU00?=
- =?utf-8?B?TU5OSkJuMSsvR3pjUkd6ekRYZDVxeWd5WHp1enlObklBMjFYMEdsb3FOYjVl?=
- =?utf-8?B?REZuZ1psd1MxVWZ1LzlPTlE0cldZK2Y3L2NRZXlhSGlVdU1xSW9VOWF4WG1T?=
- =?utf-8?Q?c7LarKVQHGHfqXJ2iOFYgsG+7?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a9d6318-45a3-4f81-17ab-08dda2d155dd
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2025 19:03:33.0484
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BhColUg4Ld/XacZJaJLVveq8nrwzPO+Xe0T4c31WoPMGUHRCRbG6rU95R6C9wnk7AbY7jUW1Rl1ztmL3K3GYvQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8018
+References: <20250603-fork-tearing-v1-0-a7f64b7cfc96@google.com>
+ <20250603-fork-tearing-v1-1-a7f64b7cfc96@google.com> <aD8--plab38qiQF8@casper.infradead.org>
+In-Reply-To: <aD8--plab38qiQF8@casper.infradead.org>
+From: Jann Horn <jannh@google.com>
+Date: Tue, 3 Jun 2025 21:03:48 +0200
+X-Gm-Features: AX0GCFuy6Pe40ZC9PMfricVFy-j_0bakFIrtt-vNxRDcTJvFrwsni0IVhkAOpww
+Message-ID: <CAG48ez36t3ZaG7DsDCw1xLpdOhKVWQMjcH-hwP66Cbd8p4eTAA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mm/memory: ensure fork child sees coherent memory snapshot
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org, Peter Xu <peterx@redhat.com>, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Jun 3, 2025 at 8:29=E2=80=AFPM Matthew Wilcox <willy@infradead.org>=
+ wrote:
+> On Tue, Jun 03, 2025 at 08:21:02PM +0200, Jann Horn wrote:
+> > When fork() encounters possibly-pinned pages, those pages are immediate=
+ly
+> > copied instead of just marking PTEs to make CoW happen later. If the pa=
+rent
+> > is multithreaded, this can cause the child to see memory contents that =
+are
+> > inconsistent in multiple ways:
+> >
+> > 1. We are copying the contents of a page with a memcpy() while userspac=
+e
+> >    may be writing to it. This can cause the resulting data in the child=
+ to
+> >    be inconsistent.
+> > 2. After we've copied this page, future writes to other pages may
+> >    continue to be visible to the child while future writes to this page=
+ are
+> >    no longer visible to the child.
+> >
+> > This means the child could theoretically see incoherent states where
+> > allocator freelists point to objects that are actually in use or stuff =
+like
+> > that. A mitigating factor is that, unless userspace already has a deadl=
+ock
+> > bug, userspace can pretty much only observe such issues when fancy lock=
+less
+> > data structures are used (because if another thread was in the middle o=
+f
+> > mutating data during fork() and the post-fork child tried to take the m=
+utex
+> > protecting that data, it might wait forever).
+>
+> Um, OK, but isn't that expected behaviour?  POSIX says:
 
+I don't think it is expected behavior that locklessly-updated data
+structures in application code could break.
 
-On 6/3/2025 2:59 PM, Joel Fernandes wrote:
-> On Fri, May 30, 2025 at 09:55:45AM +0800, Xiongfeng Wang wrote:
->> Hi Joel,
->>
->> On 2025/5/29 0:30, Joel Fernandes wrote:
->>> On Wed, May 21, 2025 at 5:43 AM Xiongfeng Wang
->>> <wangxiongfeng2@huawei.com> wrote:
->>>>
->>>> Hi RCU experts,
->>>>
->>>> When I ran syskaller in Linux 6.6 with CONFIG_PREEMPT_RCU enabled, I got
->>>> the following soft lockup. The Calltrace is too long. I put it in the end.
->>>> The issue can also be reproduced in the latest kernel.
->>>>
->>>> The issue is as follows. CPU3 is waiting for a spin_lock, which is got by CPU1.
->>>> But CPU1 stuck in the following dead loop.
->>>>
->>>> irq_exit()
->>>>   __irq_exit_rcu()
->>>>     /* in_hardirq() returns false after this */
->>>>     preempt_count_sub(HARDIRQ_OFFSET)
->>>>     tick_irq_exit()
->>>>       tick_nohz_irq_exit()
->>>>             tick_nohz_stop_sched_tick()
->>>>               trace_tick_stop()  /* a bpf prog is hooked on this trace point */
->>>>                    __bpf_trace_tick_stop()
->>>>                       bpf_trace_run2()
->>>>                             rcu_read_unlock_special()
->>>>                               /* will send a IPI to itself */
->>>>                               irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
->>>>
->>>> /* after interrupt is enabled again, the irq_work is called */
->>>> asm_sysvec_irq_work()
->>>>   sysvec_irq_work()
->>>> irq_exit() /* after handled the irq_work, we again enter into irq_exit() */
->>>>   __irq_exit_rcu()
->>>>     ...skip...
->>>>            /* we queue a irq_work again, and enter a dead loop */
->>>>            irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
->>>
->>> This seems legitimate, Boqun and I were just talking about it. He may
->>> share more thoughts but here are a few:
->>>
->>> Maybe we can delay subsequent clearing of the flag in
->>> rcu_preempt_deferred_qs_handler() using a timer and an exponential
->>> back-off? That way we are not sending too many self-IPIs.
->>>
->>> And reset the process at the end of a grace period.
->>>
->>> Or just don't send subsequent self-IPIs if we just sent one for the
->>> rdp. Chances are, if we did not get the scheduler's attention during
->>> the first one, we may not in subsequent ones I think. Plus we do send
->>> other IPIs already if the grace period was over extended (from the FQS
->>> loop), maybe we can tweak that?
->>
->> Thanks a lot for your reply. I think it's hard for me to fix this issue as
->> above without introducing new bugs. I barely understand the RCU code. But I'm
->> very glad to help test if you have any code modifiction need to. I have
->> the VM and the syskaller benchmark which can reproduce the problem.
-> 
-> Sure, I understand. This is already incredibly valuable so thank you again.
-> Will request for your testing help soon. I also have a test module now which
-> can sort-off reproduce this. Keep you posted!
-Oh sorry I meant to ask - could you provide the full kernel log and also is
-there a standalone reproducer syzcaller binary one can run to reproduce it in a VM?
+> : A process shall be created with a single thread. If a multi-threaded
+> : process calls fork(), the new process shall contain a replica of the
+> : calling thread and its entire address space, possibly including the
+> : states of mutexes and other resources. Consequently, the application
+> : shall ensure that the child process only executes async-signal-safe
+> : operations until such time as one of the exec functions is successful.
 
-Thanks a lot.
+I think that is only talking about ways in which you can interact with
+libc, and does not mean that application code couldn't access its own
+lockless data structures or such.
 
+Though admittedly that is a fairly theoretical point, since in
+practice the most likely place where you'd encounter this kind of
+issue would be in an allocator implementation or such.
+
+> It's always been my understanding that you really, really shouldn't call
+> fork() from a multithreaded process.
