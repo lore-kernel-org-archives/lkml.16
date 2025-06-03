@@ -1,89 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8118C22688C;
-	Tue,  3 Jun 2025 22:54:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C15C1A2643;
+	Tue,  3 Jun 2025 22:57:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748991242; cv=none; b=jlsukX7qP5DYUSloG7BoDW0yBD1kEDMOYCHW6+7hzOWT1864H8rOKrSbWfu8lhtZp3tfWxabrGwbNvvLrZ109ppACp+Z5c9fFzVXppaSzv7UN2upSLYxoljmqhBoOlrWBpWi4qTdgW8WZRADlwFOMGTi+1sFaKvjz8tLCDMPnA8=
+	t=1748991476; cv=none; b=GDF1BiVcTVERagPsXqa8E8zfwbWZUuZ6mXRVFrPNcgJ8fc5wXvzxrXHk7qiHEILIwHot8gLBbAyKQfMXGNs6BF7mc8fNb2nRDhX+yZhXgCpuJYKpULKxFbRaKh6ED7J3KjmCgzLfWZFU0Hpk0SSfpwA9Kn48I+5BuQM1fl+pop0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748991242; c=relaxed/simple;
-	bh=/WogzThYcDrkaGD5+tbfG99pqzoVtuU8upkXweLfeGg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=QsAk1BhMCYiAyOZbWtcLzaLTH0TdoA/5QnlBN7r0UzAjSgUvFcymbfLpNXdFbwAoZU6DXwpaO4+SQcboteUVcMp4VGa7u00OO/io7d6OAIK/ABUPsVzNysHgxYdt0YDjhEEe4cPUKMMMj/ghVC7LJ8y+0BIIXTtW1aRtD43bTuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vR4WSSkw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748991476; c=relaxed/simple;
+	bh=mfHYMr+11h25XsQDyANpiLb2jQGWQgM6lpmUpf4GY2A=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WLAM2sNLMT3czARjUUsoHNnSwSY5d8z7k8ef46WQeIDfkrfOveCVmvED7/izpFlT3JfYOUtZ4LYb30QG2a1at+GISiochQfj1FSIt/UD0lxtfrSoM/YzNPQm2PAE1Fm969jDspIUlAe3+XL/Dfn2cc7IIujIonFJkjUEDpN4rRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=kR9UTzT3; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vR4WSSkw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ACD1C4CEED;
-	Tue,  3 Jun 2025 22:53:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748991242;
-	bh=/WogzThYcDrkaGD5+tbfG99pqzoVtuU8upkXweLfeGg=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=vR4WSSkwjWc7+MIDx5kQ7h1lUGN9qHfwZaooBTnk/6jljnxEf7hIBnCavCXqPy66J
-	 g3p0hWqc8Og46r80WqG/38Gq3HwyBJGBbnZGvS7uxDvo9oEymBi5+IiPpnP4+RXlx8
-	 Xp9ueXLfWQTAA3lrebMVjTL8OtM6F7hqMehMefM7GW8f3Y3QTmraILDfnmgE69LEe6
-	 fIqGDpAFMDB1U1poNrQaGZQZdkjFNd2zG/FHoioroboHQjxY24rMRAs2BT4ZKHOjYk
-	 BcbfQ/6yvZYiSRkNYVu62yPX9WrGdhc2ls2/hmsXxnlvL7VzsZqLwG+PD5YX/IIsXb
-	 A2O/oYXdRRVWA==
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kR9UTzT3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1748991466;
+	bh=4IRj4XnLCWXGXfbFdoH9RyIeDX5InpmpdZH6opIp2pM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kR9UTzT3QdFhz+aRkXi9PtVQpQ2vR4X2xspD2SG0VtNwsZWwE+yYogcDgEfPinchn
+	 n+9pJGeQ6+GZgX7pb923MtLVZt4ImlSKaT8YnKdVJkAMW0ezqqcvODIGBP8UlZQo6r
+	 Pb2X0OSOBd/e0OcFu6+2O190vjx78qLTiaCOJv8+N6p6KIwIVmW7kFC3snMf/UTp3d
+	 8zyxH2pFGDLLtoOXrL9ZvVsNSEfkuPO9/X7a8Lgu8v6IF3HtqFDGCdRmCsV71O59qe
+	 L9oZ1+p+qA/27BK9JHfOoB36V39hfqZKZDGa2KUyu5clfxp1sIy4ehC+FFTsOVbf+K
+	 3v09ngtOHr67A==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bBmMG1lX0z4x6p;
+	Wed,  4 Jun 2025 08:57:46 +1000 (AEST)
+Date: Wed, 4 Jun 2025 08:57:44 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Alex Deucher <alexdeucher@gmail.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>, Yihan Zhu <Yihan.Zhu@amd.com>,
+ Zaeem Mohamed <zaeem.mohamed@amd.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the amdgpu tree
+Message-ID: <20250604085744.3584e17d@canb.auug.org.au>
+In-Reply-To: <20250422203338.3ff1ce14@canb.auug.org.au>
+References: <20250422203338.3ff1ce14@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/dnyC3i4/CtbNtkDh2u5unN5";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/dnyC3i4/CtbNtkDh2u5unN5
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 04 Jun 2025 00:53:55 +0200
-Message-Id: <DAD9NDFY2RXV.3LDMFVUYN0IKD@kernel.org>
-Cc: "Alexandre Courbot" <acourbot@nvidia.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "David Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>,
- "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime Ripard"
- <mripard@kernel.org>, "Thomas Zimmermann" <tzimmermann@suse.de>, "John
- Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs" <bskeggs@nvidia.com>, "Joel
- Fernandes" <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>,
- "Alistair Popple" <apopple@nvidia.com>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
- <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v4 04/20] rust: add new `num` module with useful integer
- operations
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Danilo Krummrich" <dakr@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
- <20250521-nova-frts-v4-4-05dfd4f39479@nvidia.com>
- <DA82KFLNAOG7.R7YT4BHCLNZQ@kernel.org>
- <DA88YHU4AZT7.B8JGZHW9P9L9@nvidia.com>
- <DA8GTD7LT7KO.1A3LBQGEQTCEW@kernel.org> <aD1xVkggDrCvA7ve@pollux>
-In-Reply-To: <aD1xVkggDrCvA7ve@pollux>
 
-On Mon Jun 2, 2025 at 11:39 AM CEST, Danilo Krummrich wrote:
-> On Thu, May 29, 2025 at 09:27:33AM +0200, Benno Lossin wrote:
->> That's also fair, but we lose the constness of `next_multiple_of`, so
->> you can't use `align_up` in a const function. That might confuse people
->> and then they write their own const helper function... I'd prefer we use
->> all functions that are available in the stdlib.
+Hi all,
+
+On Tue, 22 Apr 2025 20:33:38 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
 >
-> Considering that, what's the suggestion for this trait?
->
-> I don't think we should have a trait with align_down() and fls() only and
-> otherwise use next_multiple_of(), i.e. mix things up.
+> After merging the amdgpu tree, today's linux-next build (htmldocs)
+> produced this warning:
+>=20
+> WARNING: drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:1068 struct member '=
+mcm' not described in 'mpc_funcs'
+> WARNING: drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:1068 struct member '=
+rmcm' not described in 'mpc_funcs'
+>=20
+> Introduced by commit
+>=20
+>   652968d996d7 ("drm/amd/display: DCN42 RMCM and MCM 3DLUT support")
 
-Agreed.
+I am still seeing these warnings.
 
-> I think we should either align with the Rust nomenclature - whatever this=
- means
-> for fls() - or implement the trait with all three methods.
-
-The longterm perspective would be to choose the Rust one. But I'd also
-understand if people want the kernel's own terms used. Still I prefer
-the Rust ones :)
-
----
+--=20
 Cheers,
-Benno
+Stephen Rothwell
+
+--Sig_/dnyC3i4/CtbNtkDh2u5unN5
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg/fekACgkQAVBC80lX
+0GzkuQgAja3ZeLrkuJBzY/upPHetUNnnLu4LGnwK+OOjK0sP52HwZyGjk8FZve0r
+6vLqt1kLmx9PAsA3BzPB4kG6DPmS5HhGRzOniev0kzOm+6MHytH1xpLwkGp3Mftt
+upBIydH1eZokUs0uqbTjyb+UQFUHL6svBoDL2gjNiD9sgZqn6h6FlzSvVWx5OE8F
+47WCIq2kt8b0tBHg78hAaKhKATmC1miEGVwGPjtmNn33Fv+Jj3iq2j+sSURuWZfY
+ZuBNukop5GMZegPcJhpOQGF+x1kJfqkgBJYnPRSxVg2rAEZ0u3nHFQ5KRH7inz7G
+MPGXDgvrGg3UFTlRgr0cJox7EY0KOw==
+=eSFu
+-----END PGP SIGNATURE-----
+
+--Sig_/dnyC3i4/CtbNtkDh2u5unN5--
