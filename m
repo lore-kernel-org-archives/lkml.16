@@ -1,93 +1,150 @@
-Received: from mailgate02.uberspace.is (mailgate02.uberspace.is [185.26.156.114])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C591F3FE8
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 12:00:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.26.156.114
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8230446B8;
+	Tue,  3 Jun 2025 12:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748952016; cv=none; b=VgbeOpHfcTd4DMNHWBH2wfBCbv0ua2aaDQkxax6m+Co0rEtYcMtgDAzIk2KLF3WhlNQ6KD9h7ykf3p7UrfE3Xs+qHfBUrSbMW1PpSX46RcIrwsK26peuiO6waJUt1wjbZHjAmszvWTHaQhnl5kdLSvpQ8yLTyNUtCryvWzLK3fo=
+	t=1748952094; cv=none; b=o8dVoTsNOdChcmxe3jlFBX8d5zBBH9Gvp5leT/WXkgIZDfES7nwbO/8FJLQ233gWErVxaG8XfMMzM1/mGqYmyrAg4reK1OJdf7FAr56rLpVnB+Ojzq0/Ukf4BIIciv3k1VXYqtPHFZEodGteXwAlaxP8UFAzRTufIMVEhPJ9H4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748952016; c=relaxed/simple;
-	bh=73RwoBDloBa/5yrmdHD6O1u61kmLT0teB/Uc/mv+vIo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R2yRxJwpe3DTysXAU87yHCQw+CEbQw5xKlmtYy4eoH7iHGoMQcTjZmBZ6/SfnL190cw48wgh1y5dEfmXN6Q1JxoxbU4WeztTEP+y4NgUxZWb7mFKFD2x64w72CW4dUcAC5jG5yITQhxGYDK+dWj4Qs/O9kghYCkZK6ZLXFNzpgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lublin.se; spf=pass smtp.mailfrom=lublin.se; dkim=fail (0-bit key) header.d=lublin.se header.i=@lublin.se header.b=rmM4KwKP reason="key not found in DNS"; arc=none smtp.client-ip=185.26.156.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lublin.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lublin.se
+	s=arc-20240116; t=1748952094; c=relaxed/simple;
+	bh=h92UUlXMO/KLL58P3PSjFD/SbuRQD19YhC6UgkrFuhM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FNAK3qMdUcN/NgGTjbbAZlAlBKd4CaP1jiEg6K8SZs2FxQ7GjL/dJ55E4bnutiuzQUmU+WX6SNOE/DnB3806+QDvXikNrhwPZEeFGfeLyLrIE9CbMA9GWJ47Hfl5vGGCdP1EsBnLgOTRy1SmIQrxXOUM4hbeJNk1XOEkUWQhBiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wi9pdO/v; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=lublin.se header.i=@lublin.se header.b="rmM4KwKP"
-Received: from dysnomia.uberspace.de (dysnomia.uberspace.de [185.26.156.223])
-	by mailgate02.uberspace.is (Postfix) with ESMTPS id 26C2118019F
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 13:51:05 +0200 (CEST)
-Received: (qmail 22471 invoked by uid 989); 3 Jun 2025 11:51:05 -0000
-Authentication-Results: dysnomia.uberspace.de;
-	auth=pass (plain)
-Received: from unknown (HELO unkown) (::1)
-	by dysnomia.uberspace.de (Haraka/3.0.1) with ESMTPSA; id 377011C0030; Tue, 03 Jun 2025 13:51:04 +0200 (CEST)
-From: Daniel Lublin <daniel@lublin.se>
-To: David Howells <dhowells@redhat.com>,
-	David Woodhouse <dwmw2@infradead.org>
-Cc: Daniel Lublin <daniel@lublin.se>,
-	keyrings@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] sign-file: Show -k flag in usage when built for CMS signing
-Date: Tue,  3 Jun 2025 13:50:49 +0200
-Message-ID: <e66415d1953fbb074e2e32f0e6cdcaa0d027b550.1748951428.git.daniel@lublin.se>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wi9pdO/v"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4a56cc0def0so44893551cf.3;
+        Tue, 03 Jun 2025 05:01:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748952091; x=1749556891; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y5gk2lwOOOLeohREzJWg+/TaGpOi69oLrNHUYeAZNaU=;
+        b=Wi9pdO/vzywpOzQrpkzHt0NbVVukb8zemqSMNuT2YhAPRYBvLxVA07wa9BzxOzory3
+         yXFRmJEtb+KlHwx0Brvelt3bO5mIu/aJphk+lc1J98wKmyJYYqFPoCsCc76ELX/eTq6T
+         UpBds4Q9BPvSsIazN8T5ss1+yphLzRoYf0GLNavvGl+VBfkknK0jAlY0f4owi7thQML/
+         gyK/sfBkl5qsiJNwMxZyywTMcjWclX5PNH7D/eAd5oAgAMRdIijGHQJqTIJldhQWyXjn
+         x/03LBWDzPWuNRvtn7/JLJUdTziHE/R1z+uqj8w4sxTF5f52QbvG3kIRD/MD9ZfSchYh
+         Vypg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748952091; x=1749556891;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y5gk2lwOOOLeohREzJWg+/TaGpOi69oLrNHUYeAZNaU=;
+        b=Z5756HJjI32ZL7qU1cy52JuJn6m30LKMSbhdO9Kumze9VjlF89DDm3YUv4iwAJZ/Gl
+         omFFNu7Qy/LKvXEgqXSY3O7eZISPQS+ynbvjcVRqtv/+a79GjDJO46315YT6ZCeBQk9y
+         BpbOyevjqfdF9YmEFC39I7PcxP0CL05T+GyXWUeu/o/YIESRvzvBvkjo8oXB1TrHuv5v
+         W4dhRihvesqtp4QL+Oz1TgzSVrXA1hCN3TVj69VdKAXjC3Dk+Pb9zMvTZd5w/tXwlw43
+         ONYv1UVEYjm19al6yLZct9oA0AubarU1ylGEJlE3AnzIe52f1MlZ/T+NIwfSjH1clrao
+         BUmw==
+X-Forwarded-Encrypted: i=1; AJvYcCU89QKfa15J57Wk6VdmS5DoiGqn0EfYvpVdYB7EM+asO4CPsETc8UMr8vjUw26s92lmUdP/V2x2/Fap@vger.kernel.org, AJvYcCVkCl9xsh0nE7HoNvHit4sIewvJ2fKLoWCDYlWE/7fJnNcF11PhDCh9021KfNDrlI9IjSk61b8rocQu@vger.kernel.org, AJvYcCW1D+h5d25nx+iDCUCym2SgvqOVDZH/XLwhXB/OX+qhPRxpzq7AaR9THJnjYVW8sYHBUiGiPgz8hhX7QfQX@vger.kernel.org, AJvYcCWY9LZTbK6pirrxJuh9Cv0Fvnirvhd6ZV/+vZQIV/7/u9rGfbqqkw8aJ9sXvAj9a4DNIYfKQQN6hSvuQw==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2A7xJ8kpMH1JFKK/d82eZYPbm4AvLsp4sjGQMqPmzYCCeKtkj
+	iGJM8r3X+RH9wDS+LvMNg6im4njjfSQB7W7oZW884/BQQk8v+p0+PqrbKbOKLoceUOk=
+X-Gm-Gg: ASbGnct8lx0KKUGtdCYaND6I4/M0OooaWsW+C6BrhpGJZ8wlTPSJVW0rGj7qXXa6u0X
+	Ke6X0e3VZz9MV5RARh9BxcNXUPk+nE3smnoYX8FFGIrQnJ7UVWQ84GqV5Z5TzjlCodouC9A+5xl
+	BCbJhJinpdJfB4H4ktozozbiysfVkN1fv+7cbLcA/WTt5j36cqlx9tJYgMtmLZH90ff0jRTGlg0
+	StwxoQhLTWZrLvdMJFqk5CV2+TZMZjTAwn2R+pDL7JtSd0TBs9oS8EB5Am82bksQhrB1CWCOTag
+	eO/Tf4ByY49o12Am2pyhriuvDC+JOK9yDdITqurGY3bMqBlzOl7hsFHf+9vUU12riyAejQ==
+X-Google-Smtp-Source: AGHT+IHkd3xP0AuVWx7aZOobspQQuluiMGh3RGmXtKIFGOpQiJHf47IF+VP77KmJCWKRTBLn9KS7lA==
+X-Received: by 2002:a05:6102:949:b0:4e6:f7e9:c4a5 with SMTP id ada2fe7eead31-4e701ccd25emr8903178137.22.1748952080349;
+        Tue, 03 Jun 2025 05:01:20 -0700 (PDT)
+Received: from localhost ([2804:30c:406b:9100:2a26:16f5:c81:e61f])
+        by smtp.gmail.com with UTF8SMTPSA id ada2fe7eead31-4e64e9f7ff2sm8433407137.27.2025.06.03.05.01.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 05:01:19 -0700 (PDT)
+Date: Tue, 3 Jun 2025 09:02:56 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ana-Maria Cusco <ana-maria.cusco@analog.com>, jic23@kernel.org,
+	lars@metafoo.de, Michael.Hennerich@analog.com,
+	dlechner@baylibre.com, nuno.sa@analog.com, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
+	brgl@bgdev.pl
+Subject: Re: [PATCH v4 02/11] iio: adc: Add basic support for AD4170
+Message-ID: <aD7kcFupREh4lW0s@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1748829860.git.marcelo.schmitt@analog.com>
+ <e79f9a126672b33b8a7c01f650fee43a68c74029.1748829860.git.marcelo.schmitt@analog.com>
+ <aD27cobHWeBX8o30@smile.fi.intel.com>
+ <aD3XQfUfxIiz62ZU@debian-BULLSEYE-live-builder-AMD64>
+ <aD6x2caTMd1eBInM@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Bar: +
-X-Rspamd-Report: BAYES_HAM(-0.171035) MIME_GOOD(-0.1) MID_CONTAINS_FROM(1) FORGED_SENDER(0.3) R_MISSING_CHARSET(0.5)
-X-Rspamd-Score: 1.528964
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=lublin.se; s=uberspace;
-	h=from:to:cc:subject:date;
-	bh=73RwoBDloBa/5yrmdHD6O1u61kmLT0teB/Uc/mv+vIo=;
-	b=rmM4KwKPeIQuV/p1kyLIrzduvqMY/TtN9ejrj2+XXOB0PaEw38NR4WRUPZXeUk71gHslSR7L+J
-	+jTrF6AvCUSaFrWpSP6TTv5IbAUdD8rFFiqhCwJUu+j2CEAAxUNQqa2q7nq0wKGhMp1WpkLbwHof
-	pEhEhDZHLWTBfNkiVWsZnsQd7Nkl/zYin4KGgLnTjiFPCPTF/LctXZiyiAYiS6OU8CsTv2F1RVFv
-	s/+7iWA07b6zhfFAKQnvmJ9cqYm5vgIHQ1Za1ksvkudG9QBS8dnX+gEW2KwLkEW3cipG7koq+lIP
-	8zThaXLMixUAZcVNYinvuooD6LYPR108ZbGnLY/h8UxjPRyjdIj6lorLR1cttqpYurtrEoQsNbpJ
-	yfVeHJBoFY4MJ8szHN3cDXhQE2aUmD+C0qFQ4IUNcFBt9rGiRxulPcxd7px1klrgh2UwY3nRRQ30
-	2hhkbSdAYchWCqAO1LeeN05S4hTlU1yGjZ8tjG2Vii3izNWG6lac/6MjWFo8+gET2gY7+nWNNbsY
-	jZcM+Z2kpRVz1zUYHVWR0oVRQoG86Ud52fertUl1C9OzD01vw5diqgHj1SvDvs/3jEmHR/5R/W1O
-	4KIDstVr/9Wrf4SUgLS5v7P7v9xED33kMX2fU3MQcEBOmPoZgSQpx/btC/jY90r7+K2bpwx3hPbt
-	c=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aD6x2caTMd1eBInM@smile.fi.intel.com>
 
-When sign-file is built for CMS signing (when USE_PKCS7 is undefined) it
-handles the -k flag, so show that in the usage. The -k (keyid) flag is
-not cared for used when -s rawsig is used, so that usage is not altered.
+On 06/03, Andy Shevchenko wrote:
+> On Mon, Jun 02, 2025 at 01:54:25PM -0300, Marcelo Schmitt wrote:
+> 
+> ...
+> 
+> > > > +static bool ad4170_setup_eq(struct ad4170_setup *a, struct ad4170_setup *b)
+> > > > +{
+> > > > +	/*
+> > > > +	 * The use of static_assert() here is to make sure that the comparison
+> > > > +	 * is adapted whenever struct ad4170_setup is changed.
+> > > > +	 */
+Does the reason given in the comment justify the use of static_assert?
 
-This change also makes it more obvious whether or not a sign-file binary
-actually has been built for CMS signing.
+> > > > +	static_assert(sizeof(*a) ==
+> > > > +		      sizeof(struct {
+> > > > +				     u16 misc;
+> > > > +				     u16 afe;
+> > > > +				     u16 filter;
+> > > > +				     u16 filter_fs;
+> > > > +				     u32 offset;
+> > > > +				     u32 gain;
+> > > > +			     }));
+> > > 
+> > > I think it doesn't make much sense unless one uses memcpy().
+> > 
+> > memcpy() is used to update the setups after reg write succeeds.
+> > Also, previously, memcmp() was used to compare setups.
+> > Since struct ad4170_setup has only unsigned integers (no floating point fields
+> > like ad7124 had [1]), ad4170 works properly when comparing setups with memcmp().
+> > Though, it was asked to do explicit field matching on previous reviews [2] so
+> > that's how it had been since then. Well, both ways work for ad4170. We can
+> > compare setup with memcmp(), or do the comparison field by field. I don't mind
+> > changing it again if requested. I guess we only need to reach an agreement about
+> > what to go with.
+> 
+> The question was "why do you need the static_assert() now?"
 
-Signed-off-by: Daniel Lublin <daniel@lublin.se>
----
- scripts/sign-file.c | 5 +++++
- 1 file changed, 5 insertions(+)
+To ensure that the comparison function gets updated if struct ad4170_setup is
+ever modified? This intends to be similar to what was implemented in ad7124
+driver as the chips have similar channel configuration mechanisms. We also
+have ad7173 and ad4130 using static_assert for analogous purpose. There was
+also a comment about static_assert above.
 
-diff --git a/scripts/sign-file.c b/scripts/sign-file.c
-index 7070245edfc1..0b9a3af9115f 100644
---- a/scripts/sign-file.c
-+++ b/scripts/sign-file.c
-@@ -79,8 +79,13 @@ static char magic_number[] = "~Module signature appended~\n";
- static __attribute__((noreturn))
- void format(void)
- {
-+#ifndef USE_PKCS7
-+	fprintf(stderr,
-+		"Usage: scripts/sign-file [-dpk] <hash algo> <key> <x509> <module> [<dest>]\n");
-+#else
- 	fprintf(stderr,
- 		"Usage: scripts/sign-file [-dp] <hash algo> <key> <x509> <module> [<dest>]\n");
-+#endif
- 	fprintf(stderr,
- 		"       scripts/sign-file -s <raw sig> <hash algo> <x509> <module> [<dest>]\n");
- 	exit(2);
--- 
-2.49.0
+Best regards,
+Marcelo
 
+> 
+> > [1]: https://lore.kernel.org/all/20250303114659.1672695-13-u.kleine-koenig@baylibre.com/
+> > [2]: https://lore.kernel.org/linux-iio/20250504192117.5e19f44b@jic23-huawei/
+> > 
+> > > > +	if (a->misc != b->misc ||
+> > > > +	    a->afe != b->afe ||
+> > > > +	    a->filter != b->filter ||
+> > > > +	    a->filter_fs != b->filter_fs ||
+> > > > +	    a->offset != b->offset ||
+> > > > +	    a->gain != b->gain)
+> > > > +		return false;
+> > > > +
+> > > > +	return true;
+> > > > +}
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
