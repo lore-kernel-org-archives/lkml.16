@@ -1,149 +1,432 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973438494;
-	Tue,  3 Jun 2025 06:02:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 725821547CC
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 06:04:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748930527; cv=none; b=iG6TxKiS449aNMsV65vg5F4UEqV3PQ93S9jufj9yyf1kXKpTzy+DdnJulcySbDaeiYYZ3lUIWKliVA74Isew5Yho3/mtP/D2bCx0W1xeDfvfjGijkeVT+FfQ0pNguWjug7iQ9SqxfKYrVLFB1goXPnuFIpwxtFaX7PrrXtMBCd4=
+	t=1748930694; cv=none; b=BszQF3U/Iqzq1YCTAXKYr96L6MHECDXVvUx5cS6wft6KC2u8LA2x/AOU2EySSsPbORHyNk9kpe3bd9JVLGJwjDqn3euth0nyuxCq9XAh6GpFQbr/opkQ7Ul6dihKPhnAL2vjq+uo1v0nxxw3MvRi3V915HE9lCIIv5eQ3oVIz+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748930527; c=relaxed/simple;
-	bh=5Fg+3ynTLDNZ7r/CjS+aXA53C0xkliXz/Kk3S6GgcAs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DbI9HGTv5blRdEX2p2DTtzbjulXcCx21Z9tPMOkIe0xt0F0P5VgbYD049smXmQjG6rlqpqMDJZEGm+8Gfu9eWbDToBMSdYUKTZufwJU6Kqt18yM83ldU0iBCmyVTMjH7auePyjHvOwhASbZ1P756EtjLIvOqz0ObWoky/zOYUNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=m6YHCxbC; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1748930694; c=relaxed/simple;
+	bh=Qo4akI9pR3dvyqNI6pWSC4c7hDgCxvLhLMc26YWUNqI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WpPNeVDeYb7vwlyOvBoBok7/OJXxVt5w0RvlXjyPY8HiSl0hFBIdN0yZ8VAwIPb7FBCrg8iS/jgUJ9mKd+CZzRPHovMwfWroYuYvJNhY541b9R8DOiBVwFBtTbXffqSN1dfE8Xjn5+tCazPnWFrq9gpsf+/iDrKQxflFpyp3BhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QRqr5lHS; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="m6YHCxbC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=H0mSjLSUUlxN+gOU+AZ84fBGYKTcQw03ke0u1pwk2wg=; b=m6YHCxbCYT6qPI9mMsYrkZLcDQ
-	UOGH5ndMMkB9ouAFpZDfVMLsVzl2kUgMuNSN2uKtURIXkz1XjH3aoBF8qu1iAQVKs2uMKqVQCbYuh
-	+5wO2oU8t0+OvyIHR9VlpHCHc9rgt703AP5scMRFExTPPbGsLt5YiigMMEGANu6N0mraaMQ+9+4UE
-	Ew5tkLtHz+oNPQCbqoOIOA7cC675qttIOQBarrTZu/8T0TjPmKAAehEFKUrswXQOWeFcpeyS0s7o9
-	KNqr6f/qskxIdbb15jcDVWyhIIbFpi5HwW44cDtCCjk5n+XUFIW6IkUwokdtM/UQE2ednGAsilTXT
-	9sSWhY9A==;
-Received: from [58.29.143.236] (helo=[192.168.1.6])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uMKiZ-00GY5E-UM; Tue, 03 Jun 2025 08:01:48 +0200
-Message-ID: <4263e586-f1ea-4797-8789-116d173058d9@igalia.com>
-Date: Tue, 3 Jun 2025 15:01:38 +0900
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QRqr5lHS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748930690;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C4kk7REJPo5LVVCXYeE4H5PmhzE5bRIo4VhFMQx+60A=;
+	b=QRqr5lHSPXko/RHBHVfeJcDdkQRJTn0HFMyNjCzb6YRQrrXRP3YckxURvVCLBBW3GiGnCT
+	AjCQRlyh2l8ZkrI/P948Pi5itqyOLxV/WLyBUr43tI30IiiugWMXd8QAuaqqSr3TyzDm90
+	htOfTod3LUC8Ph+KhYUQgkVTiCzOWs0=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-353-Mdt1YZIOMGWviuv8Lpcd4A-1; Tue, 03 Jun 2025 02:04:48 -0400
+X-MC-Unique: Mdt1YZIOMGWviuv8Lpcd4A-1
+X-Mimecast-MFC-AGG-ID: Mdt1YZIOMGWviuv8Lpcd4A_1748930687
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ad5697c4537so486419366b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 23:04:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748930687; x=1749535487;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=C4kk7REJPo5LVVCXYeE4H5PmhzE5bRIo4VhFMQx+60A=;
+        b=mfhKknwuDTqqy5IOi9hPAw3IT2YHU23l7afvTvp9TBUEJU5Eyho215TVuWGdIKSpze
+         7TlNDoNyFt04xQETyKk443UNf5DuZ3Gh72hKNnjxYLFFlCZiqiaGYkfIbACHo3fun1OP
+         ol752d7O8/IedtuyNTjQZW6T0CS96gs0XEKGli1Sfz8JE/xkCDUwHuLoZqgkKx9mvSYR
+         bOYowh9URS3Tff7YjK+zFylV4yZDNcflbTVhhZaigmisHg8peyG3JH9E97wQCisGpGl1
+         DW9fMQS47qX75VHupkuVs8UiMaMxxw38zO/4sDEIMXvL1V9NkNSRRFq5PzFBIsXRKkyD
+         f5Cg==
+X-Forwarded-Encrypted: i=1; AJvYcCWPSwIiEmV5XavlswGJQmrM4PSx6FXQaVUDVZyO5gXsUGYQe/xxJJIL3Iksw57f7vpM6pG6q14jP1aiDlM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqTt6pJbQpVmYfNBRvzQ22US+ar4hyyOOAlj2Oj2KRkA0bGIEt
+	4Ih5vXHb/ABbszGwNgcNyfCulFL35Vp+o4f4EiM5jwb+24FODuBfQJWmbnoWa63ICDS4VhEGJQu
+	nU1o2RMTND6hYequy2vCUHv/7tvEv5tvGDvu0HF2iIH5zeR4wM2fXpTX8U1zDlXlRfhRHPHIkjp
+	tf+6XKWSdcyrehgm0DM9vTIflO7D8p8G2oKD/FpUE6
+X-Gm-Gg: ASbGnctT1axsfFsRpYfdTWG/uKw3cXcXhl7dYXCf1N9KtTmI/h1VoiXWMAOQRuwVYCo
+	x1v3dC20fi8VoLz7XE4UqjtXpIL4Ku0utR0WYtuuTqBCbbhM1ORrGsP7RgV6is3ViJ6YVMHgGqn
+	vAzaii
+X-Received: by 2002:a17:907:5c1:b0:ad5:431d:fb32 with SMTP id a640c23a62f3a-adde5f1c71emr122576566b.14.1748930686610;
+        Mon, 02 Jun 2025 23:04:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEDqGWcsBEiyI8G77qxQfY9LRPjS9n1Y1MiStZVBpJF5sxgkeiT2avlQHgnMYEIngQ5ArsJOBo20scIAw00DaE=
+X-Received: by 2002:a17:907:5c1:b0:ad5:431d:fb32 with SMTP id
+ a640c23a62f3a-adde5f1c71emr122573266b.14.1748930686102; Mon, 02 Jun 2025
+ 23:04:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/11] PM: EM: Add a skeleton code for netlink
- notification.
-To: Lukas Wunner <lukas@wunner.de>
-Cc: lukasz.luba@arm.com, rafael@kernel.org, len.brown@intel.com,
- pavel@kernel.org, christian.loehle@arm.com, tj@kernel.org,
- kernel-dev@igalia.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250529001315.233492-1-changwoo@igalia.com>
- <20250529001315.233492-3-changwoo@igalia.com> <aD4BOga3GvPewnqI@wunner.de>
-From: Changwoo Min <changwoo@igalia.com>
-Content-Language: en-US, ko-KR, en-US-large, ko
-In-Reply-To: <aD4BOga3GvPewnqI@wunner.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250527161904.75259-1-minhquangbui99@gmail.com>
+ <20250527161904.75259-2-minhquangbui99@gmail.com> <CACGkMEvAJziO3KW3Nk9+appXmR92ixcTeWY_XEZz4Qz1MwrhYA@mail.gmail.com>
+ <d572e8b6-e25c-480e-9d05-8c7eeb396b12@gmail.com> <CACGkMEvBPaqXxnmNqZAbAbYFh=9gONva+dpouAeW-sd1pzK58Q@mail.gmail.com>
+In-Reply-To: <CACGkMEvBPaqXxnmNqZAbAbYFh=9gONva+dpouAeW-sd1pzK58Q@mail.gmail.com>
+From: Lei Yang <leiyang@redhat.com>
+Date: Tue, 3 Jun 2025 14:04:09 +0800
+X-Gm-Features: AX0GCFsfXLm2TC8NF-uKkDeAms9B2pKJaVSC9CISoMN6lat5FOQdoiwAow7ih7g
+Message-ID: <CAPpAL=yYweFPtA-E_vwPiHFjQpXXb2_v9yiPkfCP3WHnDZBqPQ@mail.gmail.com>
+Subject: Re: [RFC PATCH net-next v2 1/2] virtio-net: support zerocopy multi
+ buffer XDP in mergeable
+To: Bui Quang Minh <minhquangbui99@gmail.com>
+Cc: netdev@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>, Jason Wang <jasowang@redhat.com>, 
+	John Fastabend <john.fastabend@gmail.com>, virtualization@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Lukas,
+Tested this patch with virtio-net regression tests, everything works fine.
 
-Thank you for the comments!
+Tested-by: Lei Yang <leiyang@redhat.com>
 
-On 6/3/25 04:53, Lukas Wunner wrote:
->> diff --git a/include/uapi/linux/energy_model.h b/include/uapi/linux/energy_model.h
->> new file mode 100644
->> index 000000000000..42a19e614c7d
->> --- /dev/null
->> +++ b/include/uapi/linux/energy_model.h
->> @@ -0,0 +1,40 @@
->> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
->> +#ifndef _UAPI_LINUX_ENERGY_MODEL_H
->> +#define _UAPI_LINUX_ENERGY_MODEL_H
->> +
-> 
-> It looks like you created the header file manually.
+On Tue, Jun 3, 2025 at 10:57=E2=80=AFAM Jason Wang <jasowang@redhat.com> wr=
+ote:
+>
+> On Thu, May 29, 2025 at 8:28=E2=80=AFPM Bui Quang Minh <minhquangbui99@gm=
+ail.com> wrote:
+> >
+> > On 5/29/25 12:59, Jason Wang wrote:
+> > > On Wed, May 28, 2025 at 12:19=E2=80=AFAM Bui Quang Minh
+> > > <minhquangbui99@gmail.com> wrote:
+> > >> Currently, in zerocopy mode with mergeable receive buffer, virtio-ne=
+t
+> > >> does not support multi buffer but a single buffer only. This commit =
+adds
+> > >> support for multi mergeable receive buffer in the zerocopy XDP path =
+by
+> > >> utilizing XDP buffer with frags.
+> > >>
+> > >> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
+> > >> ---
+> > >>   drivers/net/virtio_net.c | 123 +++++++++++++++++++++--------------=
+----
+> > >>   1 file changed, 66 insertions(+), 57 deletions(-)
+> > >>
+> > >> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> > >> index e53ba600605a..a9558650f205 100644
+> > >> --- a/drivers/net/virtio_net.c
+> > >> +++ b/drivers/net/virtio_net.c
+> > >> @@ -45,6 +45,8 @@ module_param(napi_tx, bool, 0644);
+> > >>   #define VIRTIO_XDP_TX          BIT(0)
+> > >>   #define VIRTIO_XDP_REDIR       BIT(1)
+> > >>
+> > >> +#define VIRTNET_MAX_ZC_SEGS    8
+> > >> +
+> > >>   /* RX packet size EWMA. The average packet size is used to determi=
+ne the packet
+> > >>    * buffer size when refilling RX rings. As the entire RX ring may =
+be refilled
+> > >>    * at once, the weight is chosen so that the EWMA will be insensit=
+ive to short-
+> > >> @@ -1232,65 +1234,53 @@ static void xsk_drop_follow_bufs(struct net_=
+device *dev,
+> > >>          }
+> > >>   }
+> > >>
+> > >> -static int xsk_append_merge_buffer(struct virtnet_info *vi,
+> > >> -                                  struct receive_queue *rq,
+> > >> -                                  struct sk_buff *head_skb,
+> > >> -                                  u32 num_buf,
+> > >> -                                  struct virtio_net_hdr_mrg_rxbuf *=
+hdr,
+> > >> -                                  struct virtnet_rq_stats *stats)
+> > >> +static int virtnet_build_xsk_buff_mrg(struct virtnet_info *vi,
+> > >> +                                     struct receive_queue *rq,
+> > >> +                                     u32 num_buf,
+> > >> +                                     struct xdp_buff *xdp,
+> > >> +                                     struct virtnet_rq_stats *stats=
+)
+> > >>   {
+> > >> -       struct sk_buff *curr_skb;
+> > >> -       struct xdp_buff *xdp;
+> > >> -       u32 len, truesize;
+> > >> -       struct page *page;
+> > >> +       unsigned int len;
+> > >>          void *buf;
+> > >>
+> > >> -       curr_skb =3D head_skb;
+> > >> +       if (num_buf < 2)
+> > >> +               return 0;
+> > >> +
+> > >> +       while (num_buf > 1) {
+> > >> +               struct xdp_buff *new_xdp;
+> > >>
+> > >> -       while (--num_buf) {
+> > >>                  buf =3D virtqueue_get_buf(rq->vq, &len);
+> > >> -               if (unlikely(!buf)) {
+> > >> -                       pr_debug("%s: rx error: %d buffers out of %d=
+ missing\n",
+> > >> -                                vi->dev->name, num_buf,
+> > >> -                                virtio16_to_cpu(vi->vdev,
+> > >> -                                                hdr->num_buffers));
+> > >> +               if (!unlikely(buf)) {
+> > >> +                       pr_debug("%s: rx error: %d buffers missing\n=
+",
+> > >> +                                vi->dev->name, num_buf);
+> > >>                          DEV_STATS_INC(vi->dev, rx_length_errors);
+> > >> -                       return -EINVAL;
+> > >> -               }
+> > >> -
+> > >> -               u64_stats_add(&stats->bytes, len);
+> > >> -
+> > >> -               xdp =3D buf_to_xdp(vi, rq, buf, len);
+> > >> -               if (!xdp)
+> > >> -                       goto err;
+> > >> -
+> > >> -               buf =3D napi_alloc_frag(len);
+> > >> -               if (!buf) {
+> > >> -                       xsk_buff_free(xdp);
+> > >> -                       goto err;
+> > >> +                       return -1;
+> > >>                  }
+> > >>
+> > >> -               memcpy(buf, xdp->data - vi->hdr_len, len);
+> > >> -
+> > >> -               xsk_buff_free(xdp);
+> > >> +               new_xdp =3D buf_to_xdp(vi, rq, buf, len);
+> > >> +               if (!new_xdp)
+> > >> +                       goto drop_bufs;
+> > >>
+> > >> -               page =3D virt_to_page(buf);
+> > >> +               /* In virtnet_add_recvbuf_xsk(), we ask the host to =
+fill from
+> > >> +                * xdp->data - vi->hdr_len with both virtio_net_hdr =
+and data.
+> > >> +                * However, only the first packet has the virtio_net=
+_hdr, the
+> > >> +                * following ones do not. So we need to adjust the f=
+ollowing
+> > > Typo here.
+> >
+> > I'm sorry, could you clarify which word contains the typo?
+> >
+> > >
+> > >> +                * packets' data pointer to the correct place.
+> > >> +                */
+> > > I wonder what happens if we don't use this trick? I meant we don't
+> > > reuse the header room for the virtio-net header. This seems to be fin=
+e
+> > > for a mergeable buffer and can help to reduce the trick.
+> >
+> > I don't think using the header room for virtio-net header creates this
+> > case handling. In my opinion, it comes from the slightly difference in
+> > the recvbuf between single buffer and multi-buffer. When we have n
+> > single-buffer packets, each buffer will have its own virtio-net header.
+> > But when we have 1 multi-buffer packet (which spans across n buffers),
+> > only the first buffer has virtio-net header, the following buffers do n=
+ot.
+> >
+> > There 2 important pointers here. The pointer we announce to the vhost
+> > side to fill the data, let's call it announced_addr, and xdp_buff->data
+> > which is expected to point the the start of Ethernet frame. Currently,
+> >
+> >      announced_addr =3D xdp_buff->data - hdr_len
+> >
+> > The host side will write the virtio-net header to announced_addr then
+> > the Ethernet frame's data in the first buffer. In case of multi-buffer
+> > packet, in the following buffers, host side writes the Ethernet frame's
+> > data to the announced_addr no virtio-net header. So in the virtio-net,
+> > we need to subtract xdp_buff->data, otherwise, we lose some Ethernet
+> > frame's data.
+> >
+> > I think a slightly better solution is that we set announced_addr =3D
+> > xdp_buff->data then we only need to xdp_buff->data +=3D hdr_len for the
+> > first buffer and do need to adjust xdp_buff->data of the following buff=
+ers.
+>
+> Exactly my point.
+>
+> >
+> > >
+> > >> +               new_xdp->data -=3D vi->hdr_len;
+> > >> +               new_xdp->data_end =3D new_xdp->data + len;
+> > >>
+> > >> -               truesize =3D len;
+> > >> +               if (!xsk_buff_add_frag(xdp, new_xdp))
+> > >> +                       goto drop_bufs;
+> > >>
+> > >> -               curr_skb  =3D virtnet_skb_append_frag(head_skb, curr=
+_skb, page,
+> > >> -                                                   buf, len, truesi=
+ze);
+> > >> -               if (!curr_skb) {
+> > >> -                       put_page(page);
+> > >> -                       goto err;
+> > >> -               }
+> > >> +               num_buf--;
+> > >>          }
+> > >>
+> > >>          return 0;
+> > >>
+> > >> -err:
+> > >> +drop_bufs:
+> > >>          xsk_drop_follow_bufs(vi->dev, rq, num_buf, stats);
+> > >> -       return -EINVAL;
+> > >> +       return -1;
+> > >>   }
+> > >>
+> > >>   static struct sk_buff *virtnet_receive_xsk_merge(struct net_device=
+ *dev, struct virtnet_info *vi,
+> > >> @@ -1307,23 +1297,42 @@ static struct sk_buff *virtnet_receive_xsk_m=
+erge(struct net_device *dev, struct
+> > >>          num_buf =3D virtio16_to_cpu(vi->vdev, hdr->num_buffers);
+> > >>
+> > >>          ret =3D XDP_PASS;
+> > >> +       if (virtnet_build_xsk_buff_mrg(vi, rq, num_buf, xdp, stats))
+> > >> +               goto drop;
+> > >> +
+> > >>          rcu_read_lock();
+> > >>          prog =3D rcu_dereference(rq->xdp_prog);
+> > >> -       /* TODO: support multi buffer. */
+> > >> -       if (prog && num_buf =3D=3D 1)
+> > >> -               ret =3D virtnet_xdp_handler(prog, xdp, dev, xdp_xmit=
+, stats);
+> > > Without this patch it looks like we had a bug:
+> > >
+> > >          ret =3D XDP_PASS;
+> > >          rcu_read_lock();
+> > >          prog =3D rcu_dereference(rq->xdp_prog);
+> > >          /* TODO: support multi buffer. */
+> > >          if (prog && num_buf =3D=3D 1)
+> > >                  ret =3D virtnet_xdp_handler(prog, xdp, dev, xdp_xmit=
+, stats);
+> > >          rcu_read_unlock();
+> > >
+> > > This implies if num_buf is greater than 1, we will assume XDP_PASS?
+> >
+> > Yes, I think XDP_DROP should be returned in that case.
+>
+> Care to post a patch and cc stable?
+>
+> >
+> > >
+> > >> +       if (prog) {
+> > >> +               /* We are in zerocopy mode so we cannot copy the mul=
+ti-buffer
+> > >> +                * xdp buff to a single linear xdp buff. If we do so=
+, in case
+> > >> +                * the BPF program decides to redirect to a XDP sock=
+et (XSK),
+> > >> +                * it will trigger the zerocopy receive logic in XDP=
+ socket.
+> > >> +                * The receive logic thinks it receives zerocopy buf=
+fer while
+> > >> +                * in fact, it is the copy one and everything is mes=
+sed up.
+> > >> +                * So just drop the packet here if we have a multi-b=
+uffer xdp
+> > >> +                * buff and the BPF program does not support it.
+> > >> +                */
+> > >> +               if (xdp_buff_has_frags(xdp) && !prog->aux->xdp_has_f=
+rags)
+> > >> +                       ret =3D XDP_DROP;
+> > > Could we move the check before trying to build a multi-buffer XDP buf=
+f?
+> >
+> > Yes, I'll fix this in next version.
+> >
+> > >
+> > >> +               else
+> > >> +                       ret =3D virtnet_xdp_handler(prog, xdp, dev, =
+xdp_xmit,
+> > >> +                                                 stats);
+> > >> +       }
+> > >>          rcu_read_unlock();
+> > >>
+> > >>          switch (ret) {
+> > >>          case XDP_PASS:
+> > >> -               skb =3D xsk_construct_skb(rq, xdp);
+> > >> +               skb =3D xdp_build_skb_from_zc(xdp);
+> > > Is this better to make this change a separate patch?
+> >
+> > Okay, I'll create a separate patch to convert the current XDP_PASS
+> > handler to use xdp_build_skb_from_zc helper.
+>
+> That would be better.
+>
+> >
+> > >
+> > >>                  if (!skb)
+> > >> -                       goto drop_bufs;
+> > >> +                       break;
+> > >>
+> > >> -               if (xsk_append_merge_buffer(vi, rq, skb, num_buf, hd=
+r, stats)) {
+> > >> -                       dev_kfree_skb(skb);
+> > >> -                       goto drop;
+> > >> -               }
+> > >> +               /* Later, in virtnet_receive_done(), eth_type_trans(=
+)
+> > >> +                * is called. However, in xdp_build_skb_from_zc(), i=
+t is called
+> > >> +                * already. As a result, we need to reset the data t=
+o before
+> > >> +                * the mac header so that the later call in
+> > >> +                * virtnet_receive_done() works correctly.
+> > >> +                */
+> > >> +               skb_push(skb, ETH_HLEN);
+> > >>
+> > >>                  return skb;
+> > >>
+> > >> @@ -1332,14 +1341,11 @@ static struct sk_buff *virtnet_receive_xsk_m=
+erge(struct net_device *dev, struct
+> > >>                  return NULL;
+> > >>
+> > >>          default:
+> > >> -               /* drop packet */
+> > >> -               xsk_buff_free(xdp);
+> > >> +               break;
+> > >>          }
+> > >>
+> > >> -drop_bufs:
+> > >> -       xsk_drop_follow_bufs(dev, rq, num_buf, stats);
+> > >> -
+> > >>   drop:
+> > >> +       xsk_buff_free(xdp);
+> > >>          u64_stats_inc(&stats->drops);
+> > >>          return NULL;
+> > >>   }
+> > >> @@ -1396,6 +1402,8 @@ static int virtnet_add_recvbuf_xsk(struct virt=
+net_info *vi, struct receive_queue
+> > >>                  return -ENOMEM;
+> > >>
+> > >>          len =3D xsk_pool_get_rx_frame_size(pool) + vi->hdr_len;
+> > >> +       /* Reserve some space for skb_shared_info */
+> > >> +       len -=3D SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+> > >>
+> > >>          for (i =3D 0; i < num; ++i) {
+> > >>                  /* Use the part of XDP_PACKET_HEADROOM as the virtn=
+et hdr space.
+> > >> @@ -6734,6 +6742,7 @@ static int virtnet_probe(struct virtio_device =
+*vdev)
+> > >>          dev->netdev_ops =3D &virtnet_netdev;
+> > >>          dev->stat_ops =3D &virtnet_stat_ops;
+> > >>          dev->features =3D NETIF_F_HIGHDMA;
+> > >> +       dev->xdp_zc_max_segs =3D VIRTNET_MAX_ZC_SEGS;
+> > >>
+> > >>          dev->ethtool_ops =3D &virtnet_ethtool_ops;
+> > >>          SET_NETDEV_DEV(dev, &vdev->dev);
+> > >> --
+> > >> 2.43.0
+> > >>
+> > > Thanks
+> > >
+> >
+>
+> Thanks
+>
+>
 
-Right, I followed the structure and design of thermal_netlink.{ch}.
-
->                                                     There is tooling
-> to auto-generate all the boilerplate code from a YAML description in
-> Documentation/netlink/specs/ and my (limited) understanding is that
-> using it is mandatory for all newly introduced Netlink protocols.
-
-Thank you for the suggestion! Using YNL will definitely be easier
-to maintain in the long run. I will work on defining the YNL and
-generating the boilerplate code using YNL. It will require some
-reorg of files to keep the autogenerated files intact.
-
-Besides the boilerplate generation, what do you think about the
-current commands and events defined? Does it look reasonable? If
-you have any feedback, I will incorporate it in the next version.
-
-> 
-> I just had to wrap my head around all that for SPDM (a device
-> authentication protocol), see the top-most commit on this branch,
-> which is in a WIP state though:
-> 
-> https://github.com/l1k/linux/commits/doe
-> 
-> Basically you create the uapi and kernel header files plus kernel source
-> like this:
-> 
-> tools/net/ynl/pyynl/ynl_gen_c.py --spec Documentation/netlink/specs/em.yaml \
->    --mode uapi --header
-> tools/net/ynl/pyynl/ynl_gen_c.py --spec Documentation/netlink/specs/em.yaml \
->    --mode kernel --header
-> tools/net/ynl/pyynl/ynl_gen_c.py --spec Documentation/netlink/specs/em.yaml \
->    --mode kernel --source
-> 
-> And then you add both the YAML file as well as the generated files to
-> the commit.  The reason you have to do that is because Python is
-> optional for building the kernel per Documentation/process/changes.rst,
-> so the files cannot be generated at compile time.  It is possible though
-> to regenerate them with tools/net/ynl/ynl-regen.sh whenever the YAML file
-> is changed.
-> 
-> The tooling is somewhat brittle, see 396786af1cea.  In theory ynl_gen_c.py
-> is capable of auto-generating code for user space applications as well
-> but it crashed when parsing my YAML file.  So there are more bugs,
-> just haven't had the time yet to fix them.
-> 
-> 
->> +int __init em_netlink_init(void)
->> +{
->> +	return genl_register_family(&em_genl_family);
->> +}
->> +
->> +void __init em_netlink_exit(void)
->> +{
->> +	genl_unregister_family(&em_genl_family);
->> +}
->> +
-> 
-> It looks like em_netlink_exit() isn't invoked anywhere, so why define
-> it in the first place?  You only need this if the feature can be modular
-> (which it cannot - it's gated by a bool Kconfig option).  Then you'd
-> call em_netlink_exit() in module_exit().
-
-You are right. I will drop em_netlink_exit().
-
-> 
-> Also, you may want to consider moving this to patch [03/11], where
-> em_netlink_init() is actually invoked.  And you may want to move the
-> postcore_initcall() to this file so that you can declare em_netlink_init()
-> static, don't need em_init() and don't need the empty inline stubs.
-
-Thanks for the suggestion. That's simpler. I will change it as suggested.
-
-Regards,
-Changwoo Min
