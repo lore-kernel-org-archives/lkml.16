@@ -1,75 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0684E18DB24;
-	Tue,  3 Jun 2025 18:43:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E2A288C23;
+	Tue,  3 Jun 2025 18:43:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748976182; cv=none; b=r+8RPfKXNG6yYXtduVfR1CmGaLl/cZlM65ALSPwk2XUUH8ky/Syn+2E6/yvnPnH2zwlz0nQ/+xwoUSRBv7XOI8dUlrh7HMlNHcqdEf/wcwJhlux10m85+I5jfQtJHuotg2NFtgYCq1AC5KY+OKZbnVUBOe/jP1ULcB3VcApPr0I=
+	t=1748976226; cv=none; b=OU0oXicmh2tDEgT2GIeTRqgzO1woV++aGf5AmB2n1RFtHxlR+e5mdhW5vMEVnV/tuvV5it7e22rC4k+32/B3HA/JOFffYzt1LERJqFoRM7WicH6LM84Lisk9uIK1P+0e1XN+rIcAU4tpkKKd8/bcSFKtAIq82BmSZ/6B3n90nR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748976182; c=relaxed/simple;
-	bh=nNiKNQY+MIhCiea5NHlLT+IwR1EGNB+D4oonGblbQqg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=G36DoVDRPsEdvo7eMic8ce4MOcsN5ApZy6S+g7YT18fwQZLuc+1mPERsAq/0tejmlsiuLtFL4xbU35yBG/td0kD5bgBbW609b4vprr1oURdrok7+oIyQ3X47RLk2FSOh0VOWvS9CAQXPgFJci50UestHrmGxvGXWS461Ts37ma0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m+cmvMvL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748976226; c=relaxed/simple;
+	bh=kch8Nb5zEEuVRy69il7fuRGCjksvYPemCS0QdMlvh9o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sbs2EI6Hbrr/S+0pfRX6/mPzPzi1LJrTifHLHealaEhQDIU1kOqSKLUrq5kudqSUwIXqCy+B4fnHel47EdFplnvlCyORF+USz4D/aiUA6/4fs3snjZhGaGueKCFUr+T5BPta54ieiAJKoSFQm6+7gCi2ynPj8clI958XCe8ZQR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RZ1SFDya; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m+cmvMvL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56474C4CEEE;
-	Tue,  3 Jun 2025 18:43:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748976181;
-	bh=nNiKNQY+MIhCiea5NHlLT+IwR1EGNB+D4oonGblbQqg=;
-	h=Date:From:To:Cc:Subject:From;
-	b=m+cmvMvLGb5Sy5BlKDq3L7MxkGKhW/G8mpAXGtZZ1F8Xa41nYz/g93Q8KkrDBKtir
-	 6Rrz7JxwKBPw+Mkfuq2F6U0zLVl8EA6+RbUIoVLedZE3Dq/XaCBl5JQ8xtbB9N0TwZ
-	 /AZ2+IJUOwEqFjGPJ8o0oD+44hpLiZXbwsDwFXqYy4hM5gRkPX/Id8vLdu57RkOqAw
-	 fwlhCwf4Jicb9Ar+Qgfpr43Vh0GMDrA+VE/fGn7Swxhy46dpi4Iz7qIn9u6Rkhvlk5
-	 YMIDvYL6SWV5uo/JzURcOgyg0qZ3DRsV4oI93bu6+dSa9/pBKCMuAY7MoaZx3kxa8V
-	 5PnTV78Z+12Jw==
-Date: Tue, 3 Jun 2025 08:42:55 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	JP Kobryn <inwardvessel@gmail.com>
-Subject: [GIT PULL] cgroup: A fix for v6.16-rc1
-Message-ID: <aD9CL3oO5LFgKNXY@slm.duckdns.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RZ1SFDya"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a4f72cba73so130440f8f.1;
+        Tue, 03 Jun 2025 11:43:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748976223; x=1749581023; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kch8Nb5zEEuVRy69il7fuRGCjksvYPemCS0QdMlvh9o=;
+        b=RZ1SFDya8Wh30DIZdv/yFFD6VYMHeiXoTSqVVuNLZHvtuMEZHua+zssM/hzclu00Lm
+         G5Y756/A53gn29St7a1vH3x5ET8scAT5JV+Q+MBw4zA2tsJMcaC0nfd+3UzL5FrnBT4p
+         6y5IFp9hOhBwQyL1e8jJIbf7YbUvbRta1EkAqBLjksPcsSj35fZDXw1g+dOsOomRPb4n
+         FJP/D4Wde6li3qVUWLZtx7ZmveBcA0pa5TUWGSVVkz7apkjKjndvEIJXxPJVcel/T6Fh
+         QG87q1a2yd5QfE1xtArT6WK3OYC3jMuqth1E2hyC+Nt9BKKDFw5kWR4UG7E7qlZnAQ9R
+         3yhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748976223; x=1749581023;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kch8Nb5zEEuVRy69il7fuRGCjksvYPemCS0QdMlvh9o=;
+        b=KNlMojUM+PsxzvGYRUOU7fci3RvU4+j8/Fv2C4xWKPtvDPKZ/vafo0O/1schqYnHUG
+         HCepfvmxv6iV83L32bsdKSyPomq7XpCz9NSWAtl+nh3oLubQ3A7vzU4rQeg9/Ll99aGy
+         2h7AkARJf/IY9q4Ve2URaCgOESwpqs1PqRni99VKLshuZpjWMCnpCiRxtcxNst2jcBKP
+         ZuLLp+QahQVgHmviqBZKD6+LP+uEUALMWHAKHNYyCJeWkZB3BAfPLIwC9aNxCEtgQjCL
+         izJzhOcRCrO4KdQT/Xac25YyKzcGA9YSG/EbPKFu0k/GcK9xIEcHLRynnEy5qnWJL4s+
+         46wQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUKb2oTkW6RlJWkJYkEXI6dVWI5bV4cebdFVoZi/klk2Ie36sknoHzNn8dAKIoZ/2vaxmM=@vger.kernel.org, AJvYcCV1f5FP+mpRcGma13IkM6u9q2e5WUeOinP3NR03xsaGp6unbs4qWY0QWF4JSn7CG45Pwyaybg9TMAK5Q6YiF5Lb1w==@vger.kernel.org, AJvYcCXft3HM3L8wqFT2OGJhmkNOV9kg4Tl6un3LulczlVu9M1DO3FqncD+nYX9/ZcQGIDitxd0uNWDqZlVmQYbI@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7aTAOa+7d8Rm70u+aylc1f3n+EwYQsnimpXHgiZippUKDtPBt
+	KyKf04Plq9noBALw1Vw6OmugxMbrBAzWXuk9o8FpVw721JS80pDU2VflCv9ASBHrMqJdws7NhOJ
+	nvcQc0tsT4AmQT8KuZWiI5MtiOXzpYZ4=
+X-Gm-Gg: ASbGnct0rBH8IlewOX+uyMu70uODgO5MTH81VwpeumRhrEKUB09wAlKFWz5PgB6Rv9f
+	mvZeF66j4hJSY/yz2dpukHyQ5O1sRURs0JxVvQGb/EwPqHUHHwR8C6wwoLlLqRFgKR7wn/cnps6
+	AqPRS22HQB9gtK8Mck1hn1Of/6h9T6HOwlO4RmLWpXWTEEaH+qS+jDHik0v6g=
+X-Google-Smtp-Source: AGHT+IHtAF6H5lxG7AUR9eWXQtiTtAAlk2tzZWQDxyPjZxQeyvoi6n/3OdG5W8tknilp89tmpfnxn3B+hx96ybhtJIo=
+X-Received: by 2002:a5d:5847:0:b0:3a4:ed9a:7016 with SMTP id
+ ffacd0b85a97d-3a5141cfce3mr3213641f8f.26.1748976222612; Tue, 03 Jun 2025
+ 11:43:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250521222725.3895192-1-blakejones@google.com>
+ <20250521222725.3895192-2-blakejones@google.com> <aC9iF4_eASPkPxXd@x1>
+ <CAP_z_Cg_vH1+BAm87U4gYQ0hDRGtHkkYb2DHtTRSd_QNvg3ZLQ@mail.gmail.com>
+ <CAP_z_ChErhmooT5rhyXH8L-Ltkz3xdJ7PG20UKDpn9usMUgqTA@mail.gmail.com>
+ <aDntjJcJsrQWfPkB@google.com> <CAP_z_CjLtMq_FvmijnFUQbD5UUw=T9jP_pHWCw5fS=38dgSh9g@mail.gmail.com>
+ <CAP_z_Ch8hKvGvot7140ShuCZOxkb+7M7Wpa4AY-D-Arp9P5ffg@mail.gmail.com>
+In-Reply-To: <CAP_z_Ch8hKvGvot7140ShuCZOxkb+7M7Wpa4AY-D-Arp9P5ffg@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 3 Jun 2025 11:43:29 -0700
+X-Gm-Features: AX0GCFsPfQN6jWaDMpO2qBFUYadYsNqbhI_iC3UvHyKkQ97waCljVp6CsG0xuY4
+Message-ID: <CAADnVQ+pnP-L7WOxBHGfiT2yF5WBWa_6=UccnYib8ugm+o6G3Q@mail.gmail.com>
+Subject: Re: [PATCH 1/3] perf: add support for printing BTF character arrays
+ as strings
+To: Blake Jones <blakejones@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Chun-Tse Shao <ctshao@google.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
+	James Clark <james.clark@linaro.org>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, Leo Yan <leo.yan@arm.com>, 
+	Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Ben Gainey <ben.gainey@arm.com>, 
+	LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The following changes since commit 0f70f5b08a47a3bc1a252e5f451a137cde7c98ce:
+On Tue, Jun 3, 2025 at 11:24=E2=80=AFAM Blake Jones <blakejones@google.com>=
+ wrote:
+>
+> The libbpf patch set is under discussion right now. Once it converges,
+> is there a way to include those patches in the perf tree without
+> waiting for them to go up to the main tree and then back down? Could I
+> resend them here, or include them as the first part of my next patch
+> series?
 
-  Merge tag 'pull-automount' of git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs (2025-05-30 15:38:29 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git/ tags/cgroup-for-6.16-rc1-fixes
-
-for you to fetch changes up to c853d18706de8c9525126b362f747d2e480e93df:
-
-  cgroup: adjust criteria for rstat subsystem cpu lock access (2025-05-30 14:36:13 -1000)
-
-----------------------------------------------------------------
-cgroup: A fix for v6.16-rc1
-
-rstat per-subsystem split change skipped per-cpu allocation on UP configs;
-however even on UP, depending on config options, the size of the percpu
-struct may not be zero leading to crashes. Fix it by conditionalizing the
-per-cpu area allocation and usage on the size of the per-cpu struct.
-
-----------------------------------------------------------------
-JP Kobryn (1):
-      cgroup: adjust criteria for rstat subsystem cpu lock access
-
- kernel/cgroup/rstat.c | 25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
-
--- 
-tejun
+Not really. libbpf is developed in kernel tree, sync to github
+and released from github.
