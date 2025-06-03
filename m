@@ -1,107 +1,168 @@
-Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E791E86E;
-	Tue,  3 Jun 2025 12:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BBFD1B393C;
+	Tue,  3 Jun 2025 12:24:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748953414; cv=none; b=STG9Vx113itm2e5Lx/1vbbjrnG0i8Y24SUzCWWjRgYkR4vwUhYF3fcuCpK44/WyKJ14hsPdG7GPNsgNbiXSXdEcVpKL4Lizm6M1aMiegLijAtJpvB7nTr4tb33r3nGL1QFZUG9G0aG9ELhSkdK8Bme3+tIREnuH3NYcf4BfiR6M=
+	t=1748953444; cv=none; b=TMpXECWct9cYst34mOIhX3aOStTqltt9eFiWsvCy6xvJqFK4l7xc1QZJvFXGRI4w6czlFIZ6zSN0A7Bp/yh0YHJdHNWViTQWokdLTJNcUTtfe988nT/mbACJ2sQEW6IstN+EBV4hEMRGZvL7w7rV6cAk4U2fGZ8jxUEMCiPe/yM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748953414; c=relaxed/simple;
-	bh=OEK/f5CaiNyz/xBuv7aXXmmL7lR6fhPK/6FW1pebLD0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oRbniHx/tBmgf+0ZaHxWVdNYV/zDdBM/+ATGTJLNINkQNejC65Z1qmfri0AKSkjRxSBYAsUzHX6lrneVtfQPSa44KC/ggNNKoB9tGlt4ShFKBUOoTxNoPnYXWB7GdKeIpVaK/WsbM7UWRRU9XNkqLp2ymrYcW3W4zkZEHOJknuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=K/xGcdWJ; arc=none smtp.client-ip=18.169.211.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1748953444; c=relaxed/simple;
+	bh=7QLGbXdkxks7XLfFk2zDgD3AFaXdmO+aci/PG1X2O+E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jcSb5GMioJY6RRlb+QmmMmbQQjoJGWgw3u4QjuJY816U4MpDmiflOXaoDukkgOI1ls1egqLwji5zUKLUa2YqR1kFlOjOxONXl3j/N1FBevJFYbe+V7w0RZf1+M3YfwNhjMVC8bt2LXkF0tSOBBgtiJgGu4zv0cTjfFwhpBfIXRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WQjE+ct9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="K/xGcdWJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1748953391;
-	bh=TsmZxwNJubi/l+jWw99A1gx9yAKtIS3NFyNUO+RUoRY=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=K/xGcdWJDTz7iLo++wJ5XLW0SlsezN723IiILkBxO8/AX0OzuiW97FQso1zkjZKQs
-	 9I1lxuvDMDK03ouMlYeBpCfaowwtUOQFDFOIA1yh+JUGFHwT3jOIhpuOqmFppUy0RS
-	 73Prqna51spqey+KTJr0r4Fa4POkGheVT0tyXdY8=
-X-QQ-mid: esmtpgz16t1748953352td528b7f0
-X-QQ-Originating-IP: zpN3+3M470aN4tNXJoS4ynIC7LHmh4K27nTY8IT6MbY=
-Received: from localhost.localdomain ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 03 Jun 2025 20:22:30 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 16096456668742914142
-EX-QQ-RecipientCnt: 7
-From: Wentao Guan <guanwentao@uniontech.com>
-To: rafael@kernel.org,
-	linux-acpi@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	wangyuli@uniontech.com,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	Wentao Guan <guanwentao@uniontech.com>
-Subject: [PATCH] ACPI: resource: Use IRQ override on MACHENIKE 16P
-Date: Tue,  3 Jun 2025 20:20:59 +0800
-Message-Id: <20250603122059.1072790-1-guanwentao@uniontech.com>
-X-Mailer: git-send-email 2.20.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WQjE+ct9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 909BEC4CEF0;
+	Tue,  3 Jun 2025 12:24:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748953443;
+	bh=7QLGbXdkxks7XLfFk2zDgD3AFaXdmO+aci/PG1X2O+E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=WQjE+ct9AxxT9/mOMimmEdNtBD3/0al0sOHnJeZzg6GgT7qj1wXzmicAf56V8CgWi
+	 xigwCrFjQeUVK+EmR3jcmZd5k43XhzIQOcmdIEK7wzvNFcUR2VkOv4wlxGZMLtoOeM
+	 2owVfSUzh8coCfjaOFr25c5BEZhTP4918VPH6CzWgekllHlt+KfNn6VahP5EOzGh89
+	 D5uFfa0muoMxj55JYfQjH/u7jLMzhy5zkTMWKhndb9AjawGLCb1UiKkAVah6uMFKH6
+	 CI3AT+1W16FkiM0eJqH5ITgUqR39SSlpoBRdmDvlV/BvctnUx/k3HLhubtruBh9LMc
+	 Bw5P8wIzZSwug==
+Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4e5aa697e7eso3313870137.1;
+        Tue, 03 Jun 2025 05:24:03 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUvoDSfljc3QCNKVj7A7QoVxzZV/4MrfN83z6En05rx4SJ5iGkp8GCYyg4oXftMK0eVuDNAm2M+naI=@vger.kernel.org, AJvYcCX79OokpFABvf41+1l8zp5dUW79jbRfBBX6Pyb2vAyz0Vv/BDuHRpmAefn7iCUKWAGBftzD7jXG/k/vhgA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyJJ8Q3EI74VEkwWi4VPHAN5KRhHnX0GeLKx1okSUjS99EJ/zg
+	gfMZDoHefqRXG5MQlFPQDp6BPOLIWteg0uzbnYEPrxnN2Wah/bvVeFcylMLt1p22xafJ46zhN6g
+	3WT09r3FaxZasy+gh6ZR+UJS3kHtS8yk=
+X-Google-Smtp-Source: AGHT+IFNf83vfCXnhXoj7PNcjEM/Y3fO7C/IOPvyM+NChi36n2vzN7U3cpUD1bzhXl7kFo1Bgst8AhF8A2fRgZjJTMU=
+X-Received: by 2002:a05:6808:1789:b0:401:bb42:700c with SMTP id
+ 5614622812f47-408e36c0748mr1412570b6e.19.1748953431946; Tue, 03 Jun 2025
+ 05:23:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpgz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-0
-X-QQ-XMAILINFO: NOIkHYnr7Vzd+aCjip4r30sFNVwkqJJHJg4RriXDVhdHi7wVBPTvT2dH
-	2e0Lj7SvPr812hK2E0v0PL5xqabDRO5IYLIJBnkXkPhxk/sWCSHnV5P82QBI/DSFFZGFWru
-	YJgMj/vk42hsdBqhxDtd/PuaZZb3DooAl5GWbAvG1FJSw4XpACe+dRgSAJ8HOgZKEwZqvqK
-	wEwEhr0pn1EX4PxmmNd85e1qOiUaP+/X+RCorG+lub8O888uIg2KIhdEnqzSG+zxKD0xLEA
-	Ae/SVLkFFGaNXzQYhYNGrR5a6oUEqz8EdAjjbhuuXObyl1edOEvkSvsWV6X/CfQZbZyDOi5
-	2AB3f8RQUF3upeqWzwAj3/4azdAsuKa1tzCMXLdbdaCry6zyrYiohyr1bibSZOt7IFRqtRI
-	3xUEFaaJRVmWY3RGQYdA1JSapgCV0vo+RbIzO8xlm0t0wwjcpKQaO1+qFEgG5NFxufXOQgh
-	gEUfN2Ogm9i9910YZ9n8FVGIKS795LKmk25cJrVkgEV38BvLjkz7u4cNKgc0zu666R5OKp/
-	iLtRPhAOll0GuP7FO1r0kzcOVYytfqkt4khFAQBX5z2BK9aXdp6Lp1qsa2S5bNCu0xeBF/n
-	LoS3mC577GKT3wVeq4eOIMP00rIHSCPRPlSbjh+rwnGzmZ4wribx81p3rGb2cPgNszrot9N
-	BgZAaxCkXqSZeWK7KfC6HNd+apulAL8sSLkGRajDsWKS5XQ+1g/09gTlMviENbqU6cssJq0
-	pxE0z31756JsFI3jhpa47FHVr7ZoVIGccNwvak+uM+6QSFYvQ9KGNwYlJ61OV0uSBw0g4QR
-	UOJ0Va8ih7jOCc2bBC24KWqYoozJfX76At0thHXVpC08Ms+tFUSxzeDZW02niG3S+34v+8G
-	mGh9RGTIKRgZ24+XjGe3Gq1qzH/yv9O5zZMx5VQQ932DoQwHt7Dh3jZmEbwMxe0uYg9tB8T
-	dBODgunVhQwo9HLr8hjfUN+Zxi2JQIhC6whrC3BfJgsNheGBOvXHhIRRHeP9uEQl9e6yX+T
-	+d4QeQb5AybKTZ48yTYc7d4TLzZlYUFXm6ZNJAyHPO09geVassbqe1ff32xcsI8f+LoEU+t
-	w==
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-X-QQ-RECHKSPAM: 0
+References: <aD2U3VIhf8vDkl09@debian.local> <CAJZ5v0h-nrVamqiAJ957aYjHqaeAZUUW7BRi0WxPgCFc40M5cQ@mail.gmail.com>
+ <7f0e2865-d35e-4a13-8617-8679afb4b23f@kernel.org> <CAJZ5v0gL3rW8dOxXdPWYjZuq5kAaD8qTa4vZ5++k9+0WniNAdQ@mail.gmail.com>
+ <CAJZ5v0jDZQaR8S6Kn_RoXHBU86+tpjp=qgyxm5h03YEe2S=nPg@mail.gmail.com>
+ <aD7L0RD4HT-mEtBc@debian.local> <CAJZ5v0h65Gt1Fw35vp2k8kKu62+goCD8WF8u-tvhfWW6a7xHxQ@mail.gmail.com>
+ <CAJZ5v0ggPHhYcdNos2o8savvq+-zpPTaQunjOkR36k3VwF3_CA@mail.gmail.com>
+ <CAJZ5v0gF=ewooE0cUrNfe5_inhnzq6bqw8VTjkFwr56_wrptJQ@mail.gmail.com>
+ <CAJZ5v0hpJSVdiCN29=kbV8KfgU1y1d3hFfshtBoMpVFXf+LvBQ@mail.gmail.com> <aD7nOMP3xA9BR781@debian.local>
+In-Reply-To: <aD7nOMP3xA9BR781@debian.local>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 3 Jun 2025 14:23:40 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gAcohRWuSZbFWvyfAU9Vjc7nRyj+AFRYQ7hcGEXdPxyQ@mail.gmail.com>
+X-Gm-Features: AX0GCFtHfgoEkBkaJCucBFxe92zc09KeHz7xeAlRFNLtr6kTo9V07rizcEW5UeM
+Message-ID: <CAJZ5v0gAcohRWuSZbFWvyfAU9Vjc7nRyj+AFRYQ7hcGEXdPxyQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/5] PM: sleep: Suspend async parents after suspending children
+To: Chris Bainbridge <chris.bainbridge@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Mario Limonciello <superm1@kernel.org>, 
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Alan Stern <stern@rowland.harvard.edu>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Johan Hovold <johan@kernel.org>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Jon Hunter <jonathanh@nvidia.com>, 
+	Saravana Kannan <saravanak@google.com>, amd-gfx@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Use ACPI IRQ override on MACHENIKE laptop to make the internal
-keyboard work.
+On Tue, Jun 3, 2025 at 2:15=E2=80=AFPM Chris Bainbridge
+<chris.bainbridge@gmail.com> wrote:
+>
+> On Tue, Jun 03, 2025 at 01:39:01PM +0200, Rafael J. Wysocki wrote:
+> > On Tue, Jun 3, 2025 at 1:37=E2=80=AFPM Rafael J. Wysocki <rafael@kernel=
+.org> wrote:
+> > >
+> > > On Tue, Jun 3, 2025 at 12:30=E2=80=AFPM Rafael J. Wysocki <rafael@ker=
+nel.org> wrote:
+> > > >
+> > > > On Tue, Jun 3, 2025 at 12:29=E2=80=AFPM Rafael J. Wysocki <rafael@k=
+ernel.org> wrote:
+> > > > >
+> > > > > On Tue, Jun 3, 2025 at 12:17=E2=80=AFPM Chris Bainbridge
+> > > > > <chris.bainbridge@gmail.com> wrote:
+> > > > > >
+> > > > > > On Tue, Jun 03, 2025 at 11:38:37AM +0200, Rafael J. Wysocki wro=
+te:
+> > > > > > >
+> > > > > > > Chris, please check if the attached patch helps.  I'm going t=
+o post it
+> > > > > > > as a fix anyway later today, but it would be good to verify t=
+hat it is
+> > > > > > > sufficient.
+> > > > > >
+> > > > > > This did not fix my test case, pstore crash log was:
+> > > > >
+> > > > > OK, so can you please enable PM debug messages:
+> > > > >
+> > > > > # echo 1 > /sys/power/pm_debug/messages
+> > > >
+> > > > This should be
+> > > >
+> > > > # echo 1 > /sys/power/pm_debug_messages
+> > > >
+> > > > sorry.
+> > > >
+> > > > > and enabled dynamic debug in drivers/base/power/main.c:
+> > > > >
+> > > > > # echo "file drivers/base/power/main.c +p" > /proc/dynamic_debug/=
+control
+> > > > >
+> > > > > repeat the test and capture the log?
+> > >
+> > > Actually, no need to do this, there is an obvious bug:
+> > > list_splice_init() should be used instead of list_splice() when the
+> > > emptied list is going to be used again.  Ugh.
+> > >
+> > > Please check if the attached patch along with the previous one makes
+> > > the issue go away entirely.
+> >
+> > Really attached this time, sorry.
+>
+> > ---
+> >  drivers/base/power/main.c |    6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> >
+> > --- a/drivers/base/power/main.c
+> > +++ b/drivers/base/power/main.c
+> > @@ -1458,7 +1458,7 @@
+> >                        * Move all devices to the target list to resume =
+them
+> >                        * properly.
+> >                        */
+> > -                     list_splice(&dpm_late_early_list, &dpm_noirq_list=
+);
+> > +                     list_splice_init(&dpm_late_early_list, &dpm_noirq=
+_list);
+> >                       break;
+> >               }
+> >       }
+> > @@ -1660,7 +1660,7 @@
+> >                        * Move all devices to the target list to resume =
+them
+> >                        * properly.
+> >                        */
+> > -                     list_splice(&dpm_suspended_list, &dpm_late_early_=
+list);
+> > +                     list_splice_init(&dpm_suspended_list, &dpm_late_e=
+arly_list);
+> >                       break;
+> >               }
+> >       }
+> > @@ -1953,7 +1953,7 @@
+> >                        * Move all devices to the target list to resume =
+them
+> >                        * properly.
+> >                        */
+> > -                     list_splice(&dpm_prepared_list, &dpm_suspended_li=
+st);
+> > +                     list_splice_init(&dpm_prepared_list, &dpm_suspend=
+ed_list);
+> >                       break;
+> >               }
+> >       }
+>
+> This patch does fix the list corruption, but the "Unbalanced
+> pm_runtime_enable" still occurs:
 
-Add a new entry to the irq1_edge_low_force_override structure, similar
-to the existing ones.
-
-Link: https://bbs.deepin.org.cn/zh/post/287628
-Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
----
- drivers/acpi/resource.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
-index 531684a69c645..e12a318b38bec 100644
---- a/drivers/acpi/resource.c
-+++ b/drivers/acpi/resource.c
-@@ -653,6 +653,13 @@ static const struct dmi_system_id lg_laptop[] = {
- 			DMI_MATCH(DMI_BOARD_NAME, "GMxHGxx"),
- 		},
- 	},
-+	{
-+		/* MACHENIKE L16P/L16P */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "MACHENIKE"),
-+			DMI_MATCH(DMI_BOARD_NAME, "L16P"),
-+		},
-+	},
- 	{
- 		/*
- 		 * TongFang GM5HG0A in case of the SKIKK Vanaheim relabel the
--- 
-2.20.1
-
+Have you applied it together with the previous patch?
