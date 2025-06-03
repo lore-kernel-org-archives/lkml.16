@@ -1,152 +1,142 @@
-Received: from mx-rz-1.rrze.uni-erlangen.de (mx-rz-1.rrze.uni-erlangen.de [131.188.11.20])
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4F354918;
-	Tue,  3 Jun 2025 21:20:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53E0E221FB8
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 21:20:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748985649; cv=none; b=g0BuiC9K4tsB6P4xVkvwhnXdnnuTJ0tcUWI+iyACXimOMd+jx6AdwyVJsmULRKumD8oHWwX8pedk5nhdS9CLKbBEBW/3Yc2kqZB06imvpYHGJdpLOEounf2dPoZDIMsjmGPoRfTBIIHQz7/QhMpWL8UdBPfrgQfjspdKv7xrJDo=
+	t=1748985673; cv=none; b=iEw4ab7qU8svKANWjPeM9mlG9QjKs9W1UWFkLyW6uNBqtV7cYmy9kFk/FgvbFdSvI4aBWYAzt8Wh1QHmzyElpzB2Yd0E55j+QdyPwxOIT8jO5MNkwGVci7dnmkKLzm0JF6P7qx4rJ1A8jHaCeEwLq5aZ8L4nfafsMk/s0f0OYrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748985649; c=relaxed/simple;
-	bh=GCgJpdGC8x1aplCDloOk8f68QuQClfLMbfW8gs00A04=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jpNt9+qV8bVkA5RRcDG9Ge07KlmKYrwkz8WqrXTFh7PlfY/U9c5+PUyvcGS2XAc5wdVXAajX/V4z558GKJHsNKEdKuuxjKB41N6JSIiBfZ0AADpq46w3+47Fh2N7xnokdcXo/axTs5CdbjDcLTJQamzZ3V6/m9Gy6vqVoWKepq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=ZxTobW4P; arc=none smtp.client-ip=131.188.11.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
+	s=arc-20240116; t=1748985673; c=relaxed/simple;
+	bh=LyeV54vpV4SlPfuND5DzwNX2+FspgFhM+LUndq/KNy8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=sUwF8oefDB+EOUUQCtlxLFV8X4Iezn8fH2ygVrYvTwXPGGUJCS32zagOazt/bNaDXZhss0F0+kE3PIBA1ihq/OnsM9e/MPPlGctEmlDKVbMXscIB0NrDjK89asUw6DUbHwkPpT4R+ftjcAnClwEKiA0W937YJIDtvbxMJwnSCoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=surriel.com; dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b=m9ie5QWD; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=surriel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="ZxTobW4P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
-	t=1748985645; bh=aLkGL0PRMc+wzevKsgum6EPqlwzuAjn0TCVg62AcMaU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From:To:CC:
-	 Subject;
-	b=ZxTobW4PE3pM/tpTf8BNM3K8XxSmHxvkMXDoj4HnsgnDr/ZjCdBfbWjm5kXjFrfpb
-	 pLw0T6rthXXulNltdG3KRYrPicTsTJ0igkLqasWFt9iYyCW6awL2K77vBdO2+Y9ZoS
-	 Aw5uSovDn/6lqObO171M5TPSNe3fSQmeOvlsOvFw4zAwkXhWR4MTLTf07cpeEdUIDT
-	 m7uRwKk2rZRbOW0I6Rveb5kpvyD/VfnSyw74lWWYT09lFN+7gmTp9W+B1lFx3yZrAx
-	 BgfJR4w9xf6Lfxz2LMvcnAfycFPncdvY+yZLXtLw5kiEuQMw6QXUk3sB2bDxQc+id/
-	 Yqt1Q0K+GUW8Q==
-Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-rz-1.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4bBkCK0kxtz8sqC;
-	Tue,  3 Jun 2025 23:20:45 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at boeck2.rrze.uni-erlangen.de (RRZE)
-X-RRZE-Flag: Not-Spam
-X-RRZE-Submit-IP: 2001:9e8:3639:fe00:a21f:4ce4:8495:5578
-Received: from luis-tp.fritz.box (unknown [IPv6:2001:9e8:3639:fe00:a21f:4ce4:8495:5578])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: U2FsdGVkX1+uyXrtNenjCYPjNclS8sO6XydtJohY3+E=)
-	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4bBkCF2WYTz8ssj;
-	Tue,  3 Jun 2025 23:20:41 +0200 (CEST)
-From: Luis Gerhorst <luis.gerhorst@fau.de>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Xu Kuohai <xukuohai@huaweicloud.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Hari Bathini <hbathini@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Luis Gerhorst <luis.gerhorst@fau.de>,
-	Henriette Herzog <henriette.herzog@rub.de>,
-	Saket Kumar Bhaskar <skb99@linux.ibm.com>,
-	Cupertino Miranda <cupertino.miranda@oracle.com>,
-	Jiayuan Chen <mrpre@163.com>,
-	Matan Shachnai <m.shachnai@gmail.com>,
-	Dimitar Kanaliev <dimitar.kanaliev@siteground.com>,
-	Shung-Hsi Yu <shung-hsi.yu@suse.com>,
-	Daniel Xu <dxu@dxuuu.xyz>,
-	bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kselftest@vger.kernel.org
-Cc: Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	Maximilian Ott <ott@cs.fau.de>,
-	Milan Stephan <milan.stephan@fau.de>
-Subject: [PATCH bpf-next v4 6/9] bpf: Rename sanitize_stack_spill to nospec_result
-Date: Tue,  3 Jun 2025 23:20:24 +0200
-Message-ID: <20250603212024.338154-1-luis.gerhorst@fau.de>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250603205800.334980-1-luis.gerhorst@fau.de>
-References: <20250603205800.334980-1-luis.gerhorst@fau.de>
+	dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b="m9ie5QWD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
+	; s=mail; h=MIME-Version:Content-Transfer-Encoding:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=mXPdnENMs/KSEO1dsvQeTKZUbaZFwcjOKMVCR/26ZuU=; b=m9ie5QWDxk5FSOoTNYW1ZKluda
+	DnKGY4fhtTufbWUT4NBEncpkcG6Bb98fwaT+Y+v01pZAsXw4VVtJl/NhKLd94HvSr6f7xlcw2bD2y
+	Xt22aiR5t6jOruS1hqIPYA6njRntPejjB8t+5xMnlkmDSe8iT3fcR/00w+aoyssfQKySQqfm+T2z0
+	FM3gI1iuSpZodfEfAcYHU+ZLZLL1SSBS+JkjX4Zf/U+mFohkkADc3F1u8U6fzShkyIZWRaKxmOn6z
+	/iq0iGUtZ7diJJiLxdm2z2OojTroozVQwi+Lz1gqbSo7Le/4F3P++ehM4YuMHnx5JWJkoqLfYIv4E
+	cL7KWQ6g==;
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@surriel.com>)
+	id 1uMZ44-000000002V9-1z6J;
+	Tue, 03 Jun 2025 17:20:56 -0400
+Message-ID: <5987ac95e4011c2b71d1c3cce13872571cff3ac7.camel@surriel.com>
+Subject: Re: [PATCH 1/3] x86/mm: Fix potential overflow in
+ user_pcid_flush_mask
+From: Rik van Riel <riel@surriel.com>
+To: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org
+Cc: kernel-team@meta.com, dave.hansen@linux.intel.com, luto@kernel.org, 
+	peterz@infradead.org, bp@alien8.de, x86@kernel.org, yu-cheng.yu@intel.com,
+ Rik van Riel <riel@meta.com>, stable@kernel.org
+Date: Tue, 03 Jun 2025 17:20:56 -0400
+In-Reply-To: <83a671ed-4862-4a0f-b91d-d4598b4a82d7@intel.com>
+References: <20250602133402.3385163-1-riel@surriel.com>
+	 <20250602133402.3385163-2-riel@surriel.com>
+	 <83a671ed-4862-4a0f-b91d-d4598b4a82d7@intel.com>
+Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
+ keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
+ eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
+ Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
+ lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
+ dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
+ mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
+ gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
+ r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
+ WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
+ 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
+ Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
+ +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
+ g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
+ KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
+ fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
+ 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
+ G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
+ okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
+ TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
+ cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
+ omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
+ QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
+ c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-This is made to clarify that this flag will cause a nospec to be added
-after this insn and can therefore be relied upon to reduce speculative
-path analysis.
+On Mon, 2025-06-02 at 09:55 -0700, Dave Hansen wrote:
+> On 6/2/25 06:30, Rik van Riel wrote:
+> >=20
+> > @@ -149,6 +166,15 @@ struct tlb_state {
+> > =C2=A0	 * context 0.
+> > =C2=A0	 */
+> > =C2=A0	struct tlb_context ctxs[TLB_NR_DYN_ASIDS];
+> > +
+> > +#ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
+> > +	/*
+> > +	 * Mask that contains TLB_NR_DYN_ASIDS+1 bits to indicate
+> > +	 * the corresponding user PCID needs a flush next time we
+> > +	 * switch to it; see SWITCH_TO_USER_CR3.
+> > +	 */
+> > +	unsigned long user_pcid_flush_mask[CR3_AVAIL_PCID_LONGS];
+> > +#endif
+> > =C2=A0};
+> > =C2=A0DECLARE_PER_CPU_ALIGNED(struct tlb_state, cpu_tlbstate);
+>=20
+> This adds an #ifdef. I guess it makes sense to do it for the now
+> larger
+> user_pcid_flush_mask[] while it didn't for a single long. But that's
+> another logically separate bit that adds complexity to reading this
+> whole mess.
+>=20
+> Honestly, I'd just leave this out for the bug fix. If someone really
+> cares, we can come back and fix it up in mainline.
 
-Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
-Acked-by: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Cc: Henriette Herzog <henriette.herzog@rub.de>
-Cc: Maximilian Ott <ott@cs.fau.de>
-Cc: Milan Stephan <milan.stephan@fau.de>
----
- include/linux/bpf_verifier.h | 2 +-
- kernel/bpf/verifier.c        | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+I added the #ifdef at Ingo's request.
 
-diff --git a/include/linux/bpf_verifier.h b/include/linux/bpf_verifier.h
-index 256274acb1d8..2b0954202226 100644
---- a/include/linux/bpf_verifier.h
-+++ b/include/linux/bpf_verifier.h
-@@ -580,7 +580,7 @@ struct bpf_insn_aux_data {
- 	u64 map_key_state; /* constant (32 bit) key tracking for maps */
- 	int ctx_field_size; /* the ctx field size for load insn, maybe 0 */
- 	u32 seen; /* this insn was processed by the verifier at env->pass_cnt */
--	bool sanitize_stack_spill; /* subject to Spectre v4 sanitation */
-+	bool nospec_result; /* result is unsafe under speculation, nospec must follow */
- 	bool zext_dst; /* this insn zero extends dst reg */
- 	bool needs_zext; /* alu op needs to clear upper bits */
- 	bool storage_get_func_atomic; /* bpf_*_storage_get() with atomic memory alloc */
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 46cf737acad5..af79f4d7692f 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -5026,7 +5026,7 @@ static int check_stack_write_fixed_off(struct bpf_verifier_env *env,
- 		}
- 
- 		if (sanitize)
--			env->insn_aux_data[insn_idx].sanitize_stack_spill = true;
-+			env->insn_aux_data[insn_idx].nospec_result = true;
- 	}
- 
- 	err = destroy_if_dynptr_stack_slot(env, state, spi);
-@@ -20921,7 +20921,7 @@ static int convert_ctx_accesses(struct bpf_verifier_env *env)
- 		}
- 
- 		if (type == BPF_WRITE &&
--		    env->insn_aux_data[i + delta].sanitize_stack_spill) {
-+		    env->insn_aux_data[i + delta].nospec_result) {
- 			struct bpf_insn patch[] = {
- 				*insn,
- 				BPF_ST_NOSPEC(),
--- 
-2.49.0
+I am happy to do the code in any way you two can
+agree on, but we should probably avoid the back
+and forth over many versions thing :)
 
+>=20
+> > diff --git a/arch/x86/kernel/asm-offsets.c b/arch/x86/kernel/asm-
+> > offsets.c
+> > index 6259b474073b..8c41a2e5a53e 100644
+> > --- a/arch/x86/kernel/asm-offsets.c
+> > +++ b/arch/x86/kernel/asm-offsets.c
+> > @@ -103,8 +103,10 @@ static void __used common(void)
+> > =C2=A0	BLANK();
+> > =C2=A0	DEFINE(PTREGS_SIZE, sizeof(struct pt_regs));
+> > =C2=A0
+> > +#ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
+> > =C2=A0	/* TLB state for the entry code */
+> > =C2=A0	OFFSET(TLB_STATE_user_pcid_flush_mask, tlb_state,
+> > user_pcid_flush_mask);
+> > +#endif
+>=20
+> Because it necessitates this hunk too...
+
+I agree this isn't the prettiest, but then again
+asm-offsets.c isn't code people will be reading
+a lot?
+
+
+--=20
+All Rights Reversed.
