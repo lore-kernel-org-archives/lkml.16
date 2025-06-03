@@ -1,169 +1,100 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2B5190498
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 10:28:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C2C21C177;
+	Tue,  3 Jun 2025 10:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748946489; cv=none; b=OHeXyUjeso+thSK7Lzxa4AeyA3gBy+ckXl4eqjcWhmZwT6lpDSVva9iU2qEvXTzcdSDxt5mGdGV50gBbSrWIq8OJ/TF6DOoqzWxOa1iMmHPg/XH+vsbsiyu44d8bobp4BfdC2wVEPydsi1JBftbp8Mt7uw7vgdrN2aRSYhFHjuo=
+	t=1748946516; cv=none; b=Hpa2vfzFcMfAUsjD9YJb8X5N7BUeyCGBfXziqvy90ENYj1sHv4ShDuRyaNNs0idArbxfHtvuA8ZBppvhTOOUwQw7AogF2q68Y+ZtscJFBPupwe5lZdbHyuoZC6wNuFzVcC0dNHtRvFbaiCm17KWZqr9eHsU20T81t7nNncVPL8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748946489; c=relaxed/simple;
-	bh=NqZddVCVJU/pv09IR4A6CrG5yZeWaojhzJvlGvi8C/Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BYwsYbtvtQWuYpgJUNSCvVdvrpVEaYGFxOwplos9EjTd00R4wcyg3/2igJz1uruYuB7OTL8rN58SjTevw8ADo4U6iUwZjdBjSh228+jfig7PX5dVRDy2BoO4iPbfL+1JFpRpZNzLauJWIpSpbsC2NbUAQVPzWaJpGvALCIpJowI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=b9KS/Be9; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1748946516; c=relaxed/simple;
+	bh=23ShOGSo7SmmzbIDnNs/ih+q8VmQpKuIWu1ZnoFocz0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PEHdLe4WsAY0F+ys8Iu8qu7NQBq++L0DdRS6JkAwcXBqc4DRxHQGJiWojAvANsHec7DO2c2PFQYIRKv8RLFy9ttU8LKoAqzxDJUoK355qXH8BBASncPyGisokLJ7APNJaUW3NVXSbjo3JTk2Hi9npUfSirhUtQ2PFB2hsmW1y2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hvlTS3sl; arc=none smtp.client-ip=209.85.161.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="b9KS/Be9"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ad8a6c202ffso1051802966b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 03:28:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hvlTS3sl"
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-606477d77easo3178041eaf.1;
+        Tue, 03 Jun 2025 03:28:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1748946485; x=1749551285; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RkpDFfZ5i7HOcQGzQzekKRtKGEewYp9impWw2CyWJbU=;
-        b=b9KS/Be92yKj06AYZtXcR1bx/I449hONd5kETY5kh8J02PSJ05RW9b4fsoiY8ro0Sb
-         nhw2BpZS62JJKB8kYu+7NZNqZGiLaxHHWS+aOtlptfqn8h067XsLXYQ2KwGDYnRNITWa
-         5N/7i7RJ4cw/vmK13XMwiT6UIrjCrwtpXNg852c5BVTFweLU/xeGUaXN5vgbwfiJRHlq
-         8MOyBtBHgEu7qTBOMCtlpKjWnaM+pr0JZ8PcrY0NJCSfy0D0mJPBzhzGx3p5v9FYAL/w
-         3MDoKlKZYJjzF54Nh6x9fBztw8C2WgjBrh1ENjTCkXnXaCRJxpNgNe3+WLf7+FDj9OwN
-         ZjJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748946485; x=1749551285;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1748946513; x=1749551313; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RkpDFfZ5i7HOcQGzQzekKRtKGEewYp9impWw2CyWJbU=;
-        b=rGoWUkmfOOhVxtvzmBtL0XMomMYpExsuP7OANZRHtO8IQrPdooVdxa4EXT6/9EKUAI
-         cnT4aBre4TPJ5MixRqzHnjYBlTgg4+/2bWNwJ9femDNLWqwklgpjHlkbrjAh9jvkUPnM
-         ORdy53Boct4RdnYgJ/OYkO26A+mVCCeff2fhjQ9hhxMVORnyxsv2Sk8d/u2ohYFNelef
-         Tip0l5BS75qvH+bEJvI/eXORJshhMVYx+U+4FQe+go5By8P/Wsr3IR8w4HOhL5fCHqou
-         r5HLHmyFMbEz8WmxYwt+8b9BaiEBLZrRxVX1jtEvx/HL90XdnWJIlzC/EQuPIWVzCV3P
-         cu0g==
-X-Forwarded-Encrypted: i=1; AJvYcCXv4uYZB6jWKjM+e2Xgim6dpi4YQRynGHEY523/Dz0r7+qpiONmLNSRUtPS5eQl6gF52Xpm344n30Sqskg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxlo00npHo8SIrYo6E+PusLIqJ+5gcfpvgw1ZjOFpOR0DHCYBd0
-	qRabV5fzpVM9/qABaMYDykFLl+p4pplZW7fqB+k0ATEMKZGpH4LfqcTSQ4gLXrQ8VU6vyIAnsCF
-	PbGb9
-X-Gm-Gg: ASbGncsCBQ/x/SOEsrmGcgLgZQFoY5u/YGxyb8pgaP6U8ip7RLe3e3bDGxSHnfxUJaX
-	hkuSm1TytevT7rIwD3RB4pUJrgilV83r6zsjKPSjgAVrw/oK2xgvyehmwSMcp3un9I1tv/YLzKh
-	61UX3hj+NPu93wHsn0D7NGBfGvPGXOrY4tC1td6dDD5c9EwB7/3OCcmxMHafa9BUyuH0tQU0Bm6
-	DCfeNWDMtbccUMNtCmdUr6/4iAH37tR2dFs9AviZHQLzQmjJNvbn5VHHZHXg2MULiqP3XtW81Ji
-	o0/O6Chl4SYCmYhoQ+pP59293bjS6CQG/rZTmABUMTWmukYx50YJVInFYYlWpX7J
-X-Google-Smtp-Source: AGHT+IG04Ee/QV805aMBgvuJh4sGVhSL2Bzx/FAjKhiAOV0XyyL256xfcGp+5HFVq2BopoUl+KthNg==
-X-Received: by 2002:a17:907:96a2:b0:adb:335b:decb with SMTP id a640c23a62f3a-adb493e14d1mr1116718066b.24.1748946484834;
-        Tue, 03 Jun 2025 03:28:04 -0700 (PDT)
-Received: from localhost (109-81-89-112.rct.o2.cz. [109.81.89.112])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ada6ad6ac28sm924861566b.164.2025.06.03.03.28.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 03:28:04 -0700 (PDT)
-Date: Tue, 3 Jun 2025 12:28:03 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, david@redhat.com,
-	shakeel.butt@linux.dev, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, donettom@linux.ibm.com, aboorvad@linux.ibm.com,
-	sj@kernel.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: fix the inaccurate memory statistics issue for users
-Message-ID: <aD7OM5Mrg5jnEnBc@tiehlicka>
-References: <4f0fd51eb4f48c1a34226456b7a8b4ebff11bf72.1748051851.git.baolin.wang@linux.alibaba.com>
- <20250529205313.a1285b431bbec2c54d80266d@linux-foundation.org>
- <aDm1GCV8yToFG1cq@tiehlicka>
- <72f0dc8c-def3-447c-b54e-c390705f8c26@linux.alibaba.com>
- <aD6vHzRhwyTxBqcl@tiehlicka>
- <ef2c9e13-cb38-4447-b595-f461f3f25432@linux.alibaba.com>
+        bh=bjl0/MR/LbmXztwG4PJPakxZYI1EygtglW0+NwZ37aI=;
+        b=hvlTS3slrnDtiX8vKO5zskWEwbJY/qo/wH+zMNthOwbg4iCm7KYw2D0oHEpPXXlPu7
+         QskKmTMZENqzGIpECVYZpZTjymEmbzc6u0hOmQby0NfyMUZdZ9UvBRO45XTmV2UjQlvg
+         qx9WT0/L03tTyYTgHVVVR55b/uyImYbsAbfndqemjnBlLVzjXQaHsD1zMkFKjPE3z0CJ
+         fAUmt3gv/vaxIEgNKpYV/qbWqg5CVFckNS5w3GdPRsJojbd8RNqZnaJ+hNjQMsdT4G8y
+         97FpupPE1w6ooRjmDuCaefQ63NEFZAsKCAo4IIlINxGBrQD072S5zAHENg8UPAGKc94Q
+         XzPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748946513; x=1749551313;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bjl0/MR/LbmXztwG4PJPakxZYI1EygtglW0+NwZ37aI=;
+        b=O6m88wNJ56bCX3EKf02FJgXLEjrUS0vUYi0mUu7vhXtylffkie94n1pzNrdD3K3FWP
+         8ZnCwMGRPI2bB0aXTUcNWsnpbh7QpfdOx0DAv6w0Ak9UFMNqtl+ufOvDSseUNvhdpVRV
+         4XXakkufLWkQRH1y4gYUFhdwkSVUMRvW+q1oyDRlmgNaTQcPJDZD5T/nFsXPzuQzilML
+         YBZ5nQB3Q38VNNwDuB6m8XV3lQrst8kb38Q3WgcVAa99Nnk6s7rZ19OADOFZVwN0GqmT
+         k3yNq+c1mGJLJsz6uDcigxRG+5LoJMDdL6Ze4jPaoXFztBKrJzZQr13XLdSlVOvn9UFw
+         jV1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWXoOXbLtQZwNT81HFXBwxaNkPYXU73455Se8HVU4fegrAG9eQCP++YQMHlhtFQ/rVlxosgJGnJYzSUNgr46ZwG@vger.kernel.org, AJvYcCXBP6diErjU9RLIrymie3Y8JEgWP3+VpERV8lKyCO2DbL941HDPQMB/g9K6X8dYcuItpK/Doiceb8Fftc8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4Mrc5MsbdZ3Gtt2OcVu+PbmXc7SMfpLc1jkYSM6MS6BwyLSGs
+	NpUofEZlgnlq87IJqglZ9OKQgkhVowLEnN8yIURLbJlMuf8y5i2MQfWteiQpqqphv9RTNdJkBJY
+	0koNPoILrHF1Ja++9AbV+aa2luHgkap4=
+X-Gm-Gg: ASbGnctnnti4wX7hItVpK8gTsfghvGH7wW0RJ0BXMk851ZS3L5D6T9fFmX/0SjVVvYT
+	9JaYWl9+jn5tiZGKpzWu7Ef0spZbdIOJ2fhWGdhRsMw/mNcYCzQGxamN1XVQwlAxH6kwpi018mY
+	iqJP+IL8OsOTUE0cjBYOrGJMonSXTAq/KjglVoYNgzf04p+SIc7O28IX7BhAbCQEEWqDA=
+X-Google-Smtp-Source: AGHT+IGehz0pplNAnK9ZijKBUuiZF+ogbbTTsccK99IRbmEXSOsAqOAfWRxVvhz2B8goO+2yfuOx4EyzXhyG7yqtZ18=
+X-Received: by 2002:a05:6820:c04:b0:60b:cd42:7a0c with SMTP id
+ 006d021491bc7-60efdd48335mr748935eaf.3.1748946513397; Tue, 03 Jun 2025
+ 03:28:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ef2c9e13-cb38-4447-b595-f461f3f25432@linux.alibaba.com>
+References: <20250531070140.24287-1-sef1548@gmail.com> <53586971-e67c-4b10-b42c-4aec8fc4fff7@linuxfoundation.org>
+In-Reply-To: <53586971-e67c-4b10-b42c-4aec8fc4fff7@linuxfoundation.org>
+From: nick Huang <sef1548@gmail.com>
+Date: Tue, 3 Jun 2025 18:28:21 +0800
+X-Gm-Features: AX0GCFvTQCAGIpsAV4rva6pAOGFAWYVx8OzKEMELWIGJuQTUkrX50pox5qfjJSs
+Message-ID: <CABZAGRFzntrDSvO4C+LG=GM0ot=X-pBPWKn1K6JYd=9X=X=8qg@mail.gmail.com>
+Subject: Re: [PATCH] selftests: ipc: Replace fail print statements with ksft_test_result_fail
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: shuah@kernel.org, linux-kselftest@vger.kernel.org, 
+	usama.anjum@collabora.com, zhangjiao2@cmss.chinamobile.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue 03-06-25 16:32:35, Baolin Wang wrote:
-> 
-> 
-> On 2025/6/3 16:15, Michal Hocko wrote:
-> > On Tue 03-06-25 16:08:21, Baolin Wang wrote:
-> > > 
-> > > 
-> > > On 2025/5/30 21:39, Michal Hocko wrote:
-> > > > On Thu 29-05-25 20:53:13, Andrew Morton wrote:
-> > > > > On Sat, 24 May 2025 09:59:53 +0800 Baolin Wang <baolin.wang@linux.alibaba.com> wrote:
-> > > > > 
-> > > > > > On some large machines with a high number of CPUs running a 64K pagesize
-> > > > > > kernel, we found that the 'RES' field is always 0 displayed by the top
-> > > > > > command for some processes, which will cause a lot of confusion for users.
-> > > > > > 
-> > > > > >       PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
-> > > > > >    875525 root      20   0   12480      0      0 R   0.3   0.0   0:00.08 top
-> > > > > >         1 root      20   0  172800      0      0 S   0.0   0.0   0:04.52 systemd
-> > > > > > 
-> > > > > > The main reason is that the batch size of the percpu counter is quite large
-> > > > > > on these machines, caching a significant percpu value, since converting mm's
-> > > > > > rss stats into percpu_counter by commit f1a7941243c1 ("mm: convert mm's rss
-> > > > > > stats into percpu_counter"). Intuitively, the batch number should be optimized,
-> > > > > > but on some paths, performance may take precedence over statistical accuracy.
-> > > > > > Therefore, introducing a new interface to add the percpu statistical count
-> > > > > > and display it to users, which can remove the confusion. In addition, this
-> > > > > > change is not expected to be on a performance-critical path, so the modification
-> > > > > > should be acceptable.
-> > > > > > 
-> > > > > > Fixes: f1a7941243c1 ("mm: convert mm's rss stats into percpu_counter")
-> > > > > 
-> > > > > Three years ago.
-> > > > > 
-> > > > > > Tested-by Donet Tom <donettom@linux.ibm.com>
-> > > > > > Reviewed-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
-> > > > > > Tested-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
-> > > > > > Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
-> > > > > > Acked-by: SeongJae Park <sj@kernel.org>
-> > > > > > Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> > > > > 
-> > > > > Thanks, I added cc:stable to this.
-> > > > 
-> > > > I have only noticed this new posting now. I do not think this is a
-> > > > stable material. I am also not convinced that the impact of the pcp lock
-> > > > exposure to the userspace has been properly analyzed and documented in
-> > > > the changelog. I am not nacking the patch (yet) but I would like to see
-> > > > a serious analyses that this has been properly thought through.
-> > > 
-> > > Good point. I did a quick measurement on my 32 cores Arm machine. I ran two
-> > > workloads, one is the 'top' command: top -d 1 (updating every second).
-> > > Another workload is kernel building (time make -j32).
-> > > 
-> > >  From the following data, I did not see any significant impact of the patch
-> > > changes on the execution of the kernel building workload.
-> > 
-> > I do not think this is really representative of an adverse workload. I
-> > believe you need to have a look which potentially sensitive kernel code
-> > paths run with the lock held how would a busy loop over affected proc
-> > files influence those in the worst case. Maybe there are none of such
-> > kernel code paths to really worry about. This should be a part of the
-> > changelog though.
-> 
-> IMO, kernel code paths usually have batch caching to avoid lock contention,
-> so I think the impact on kernel code paths is not that obvious.
+Thank you for taking the time to review this.
 
-This is a very generic statement. Does this refer to the existing pcp
-locking usage in the kernel? Have you evaluated existing users?
+Best regards,
+Nick
 
-> Therefore, I
-> also think it's hard to find an adverse workload.
-> 
-> How about adding the following comments in the commit log?
-> "
-> I did a quick measurement on my 32 cores Arm machine. I ran two workloads,
-> one is the 'top' command: top -d 1 (updating every second). Another workload
-> is kernel building (time make -j32).
-
-This test doesn't really do much to trigger an actual lock contention as
-already mentioned.
-
--- 
-Michal Hocko
-SUSE Labs
+Shuah Khan <skhan@linuxfoundation.org> =E6=96=BC 2025=E5=B9=B46=E6=9C=883=
+=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=886:17=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+>
+> On 5/31/25 01:01, Nick Huang wrote:
+> > Use the standard kselftest failure report function to ensure consistent
+> > test output formatting. This improves readability and integration with
+> > automated test frameworks.
+> >
+> > Signed-off-by: Nick Huang <sef1548@gmail.com>
+> > ---
+> >   tools/testing/selftests/ipc/msgque.c | 47 ++++++++++++++-------------=
+-
+> >   1 file changed, 23 insertions(+), 24 deletions(-)
+> >
+>
+> Looks good to me. I will apply this after merge window closes.
+>
+> thanks,
+> -- Shuah
