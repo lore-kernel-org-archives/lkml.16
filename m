@@ -1,102 +1,105 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7833979EA
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 03:20:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E33BC4C92;
+	Tue,  3 Jun 2025 03:21:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748920824; cv=none; b=vBma60xOKHQGRzm0WB6cgNcrnglgE0SXD6oQSFoDDXmhF1jE+U2B6wMaa4lqDOYLP2OtTdbqvo+WLrS07g0GMjgdfVwcw6js2luIlonnZ01Nt4lBDsA7MVyL3Qc85gbzB0SdQr9afabp98ujs0WFONT8MV7OjzMVMLpwBj8GIFI=
+	t=1748920889; cv=none; b=ThVRHmNw2/5BtaZF3Flnrfm4qUVUOWBHzxTI6Z7xl4CntG+YRuPKKHqqhDMqSSHN10d2VjbXb89nN5qGseMl/EV7OSWi3mcNcH5PdPInWWqpIisXEWbTAx/CPvkcJj4sGf47IaT6yFDLDdznxWY8et+g9Xapy3bmWgm6shLD7Ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748920824; c=relaxed/simple;
-	bh=SuUuFxKyZLAGBzKOOo1OIiQNWaS91RBjDVMCFq+b1Ug=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UBfzcPFQSjMkth9gfcFblf0H0/j0U3hfjkkoosS14r/kmVPu7cjpqWQWOccdTDeirrAXA1z/hb+fcwUjQuTa0ndmfqXDSQUamlkku7OY8a2TgSzYhcqjE2LafaAXZ9Z4CD5q/Jr2dy2gMH4m8rYLAIHZlnLuRvBXbHrRKcmXjjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d7If9sb6; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748920889; c=relaxed/simple;
+	bh=+MCGyiFoj163GQ4SdScgslfTtU1bGfCxA1Id5r9orj4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JLrfu4AfC88pjRKMWXA1tFQSL473ArB7kvWy535UneT++OXDFsssudcY8IEgy0wnLZRC+btdTB36uJVvAnHHLV6XHOiJDvrZRcjqoihi8xvIWtF3kFbSIiLhQkxGh+EPs6r5noqq0PTOjvxFJlKKK36phxHmqnGVJDuq2uXoJ7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e3WixAD+; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d7If9sb6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748920821;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SuUuFxKyZLAGBzKOOo1OIiQNWaS91RBjDVMCFq+b1Ug=;
-	b=d7If9sb6+afNWKzYLjDqKRyT+eg0w37wWOnN+DhKxz/P6qcCVPtGFL6Bu3JopkjLeS4ne2
-	TFAN+cq6Dw3Qrly28qASP0MDsJPKkmvFAzfAlTGpk48hq+zdws1ti9bM48BQ+EspJfrzd+
-	O1FmfsX+mMzN1BF8+94uY/yc48sWaNM=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-551-0Hctf6-KOQ2qE37AsTxsfA-1; Mon, 02 Jun 2025 23:20:20 -0400
-X-MC-Unique: 0Hctf6-KOQ2qE37AsTxsfA-1
-X-Mimecast-MFC-AGG-ID: 0Hctf6-KOQ2qE37AsTxsfA_1748920819
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-31220ecc586so4372972a91.2
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 20:20:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e3WixAD+"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso6462293b3a.2;
+        Mon, 02 Jun 2025 20:21:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748920887; x=1749525687; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tTnaGWdB4hgkfh8Hd2ADSGObagE2/WLWzPn+jkGndp8=;
+        b=e3WixAD+pXhDEE4EEEyNEmbdYYKP7WpxLPiD8SR8pztjIkWARhlFX0Bgan0q4PAzPV
+         vgahTcOckWgwAzFpDsd5OJceTwdw8xT3Nr3/nnDmd1RbrysSYOkw2ahfxaU1STpJ/88G
+         0X2FjSgbdxQHWfKT32OqoOpAry7sI0IEKVGKU7Pzt59hZKDvH1jaXyEPRRKbuwnQG2xI
+         6/hPc3V7DAkCkV8lh/k9RWBi4/NNLNOLO774+KPrGe1RN81eGTXbqlyf24cxqrYgpuBm
+         +N4gTXAOFCKCf/3j/YAdkltMGFXTEbGbMxj5zHn6SFX+cX+hbHA4ddSnriSuXwchGaQ5
+         Sbbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748920819; x=1749525619;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SuUuFxKyZLAGBzKOOo1OIiQNWaS91RBjDVMCFq+b1Ug=;
-        b=vVaywzltI27qID+4AinOgcRM87F3XGsf++h+li+gU/VkENrk51qYeHiYqrA9y8oS8w
-         eI0RzQUAF1BfhB5TMkUz7pZ18G2rJOmIt2Hbk3b5U6SItRu9MGQ1Clem3S/3n0cocrHT
-         8BQ1ORKd1NGHROBQ3W+HWfh2RyvF4WW8UfFYBxMwTL2lUaDt04elmV9Jkl12tndZ5muw
-         xnGmp7GFNsV0oLD9eFTlHZWT5PGL/VPpQHsfdJTL6cYFqyguM11swXYD73t2R7tMQ7rt
-         4Z7Upd6znel7sNfQPMkuK8Z2Pv5Lp+lkvX8Jusmqgo0DvZfpC1aFv0IQONwHzFsbIVyH
-         5Iwg==
-X-Forwarded-Encrypted: i=1; AJvYcCWHMVg8wrB5FKp/F0rSYyS6HwTN4szbGHPCpWpMt2Q1/D+qWt1E97HywuTNnKwzqYXeemJsrmY6VkjTbk0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqTRgdgKL65Kggt69b1i8cSIzFi0S9+sCtq9HP/jdfiXnh2Ixe
-	w0mnTnlIxXuF18IQr/LxKVgHalLv4FCnN241VOZ4J/wqy+rwjUadMVaJ7t595d4+0vAlSxehnaA
-	CMavtQMGLj5M23Tw89lng/mQ8sZLApIbS0O3VD9nuaeT/xKowqa7sVcvwDVx+7NxuC62oovWXem
-	8KaCh/Lwps5BoCUpWqqE+xhuNOVPBe9jdZQanpU/5n
-X-Gm-Gg: ASbGnctwlV6RdQHIh+VJczLc58nvKCFMqrUep51/xMAMz+slVTaDcOQE57BT7LWO4H4
-	PuXjgkLosSYFZR87iKnHinfBZ/qmQdLkEBaO6FkQGDLNnMSEhFrgPAIYhYM5AhUKeJwZFWA==
-X-Received: by 2002:a17:90b:2e45:b0:311:ea13:2e6a with SMTP id 98e67ed59e1d1-3124150cd29mr24182681a91.13.1748920819230;
-        Mon, 02 Jun 2025 20:20:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHMKoDoVhANJXhkEH8PMyc1LxUezj6sEzlWUU8w4Uyd+7t0SdHYB02l6iAUnHMY64ChUWPuoGBpUpLK5iNRSqc=
-X-Received: by 2002:a17:90b:2e45:b0:311:ea13:2e6a with SMTP id
- 98e67ed59e1d1-3124150cd29mr24182639a91.13.1748920818809; Mon, 02 Jun 2025
- 20:20:18 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748920887; x=1749525687;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tTnaGWdB4hgkfh8Hd2ADSGObagE2/WLWzPn+jkGndp8=;
+        b=S+Llm0/udOFQQFE8hvTvcxBsbzG6R9E/dEzGoXGz/Pla9HFNxPWI+HINrllt9VDX3P
+         DBIUumO/i0PlG6lBNv+piUf8HPbOGq88yOz5JPU4FisycPxVPEnKZTWqJa5KjY/ABE+x
+         5jpiqm3HNT+e2uaL/qJoAERi/zMndNnv7RzkXpIfKMDgcWSdHeajH2d1ib3GDWcn0Uj3
+         of7HIfzwn67+eBzx0ZvaQgN3mnZW3lYmtnok0Ho+NCgg36bFs2mkElCQ/US5U0no4YUp
+         YUZhHQ1h6MTI6yg7QjvFrB5ycx44TQ7dfvihBIMxzvEVcO2+H4Q9JwpckOMwOQZxYXPk
+         ljFA==
+X-Forwarded-Encrypted: i=1; AJvYcCW/R+b4P1u+qV5UHpF5ffGVEKp0E9GYesWe8G0mtSolqajk2PynYajhJi7oprqVAx/I9l32WaAKfJk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/nsbwwfqfp7CTNkiskgWKcOoaQKVUN9bsG3kBjZl93VAdsAep
+	x6ynvHaUPJ8KOs7Hewq5zekXkC/ycnUd/LmDX10rw88jHS1AeYVOA99Q
+X-Gm-Gg: ASbGncumr/Q5749/w11OQ72buI1w+8z8rzFcGkjCbCsN0sh7YYhpB2GEG43pmCkLZGT
+	rG5wCpExtXLhKKyVtqDsbAnOIM2jVPPKoh4QsYztIXiBAh4zdZSsijO4/CBSR0Zo+ZRRccEFYZX
+	v+9yevJZTCxs4J6yWkBRt03jQ9q5Y3zv0HcqKkJVOks+0WfNc+8XN536qpnWCa+hGQysXFminRp
+	62+ko7DQeSe85W9fvn8o5mXrqG0pbRwUL6+tNorHfN+mnwjFrT5iJUREbkKXirOtwcj1abztshL
+	efFNw7jGWSG/1ZJ0VXRCw6OjSHQcpRath5RQzMP5FcGl47Z4Rdi8a8yzRT/7f510pX94AUU5jXS
+	hMfYEqW2FGjq46bYl/o/Xgl1O9qe6qdjQt7s4QXVASx7rs00+jplJTEcNoUqD4FdxIw==
+X-Google-Smtp-Source: AGHT+IHqaQMicBQLryNa4dKPf3wUERioG1d+CGxGRw3kiVwNTF1000JWavPYx38aQpXZgDpseqislA==
+X-Received: by 2002:a05:6a00:22cc:b0:740:9a42:a356 with SMTP id d2e1a72fcca58-747c1bc8985mr19773383b3a.11.1748920887008;
+        Mon, 02 Jun 2025 20:21:27 -0700 (PDT)
+Received: from cs00-MS-7C09.. (2001-b400-e38d-e87b-a123-c29d-1136-f01d.emome-ip6.hinet.net. [2001:b400:e38d:e87b:a123:c29d:1136:f01d])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afff33cbsm8387602b3a.158.2025.06.02.20.21.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Jun 2025 20:21:26 -0700 (PDT)
+From: hsyemail2@gmail.com
+X-Google-Original-From: syhuang3@nuvoton.com
+To: Johan Hovold <johan@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	Sheng-Yuan Huang <syhuang3@nuvoton.com>
+Subject: [PATCH v1 0/1] USB: serial: add support for Nuvoton USB adapter
+Date: Tue,  3 Jun 2025 11:20:56 +0800
+Message-ID: <20250603032057.5174-1-syhuang3@nuvoton.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530-rss-v12-0-95d8b348de91@daynix.com> <20250530-rss-v12-2-95d8b348de91@daynix.com>
-In-Reply-To: <20250530-rss-v12-2-95d8b348de91@daynix.com>
-From: Jason Wang <jasowang@redhat.com>
-Date: Tue, 3 Jun 2025 11:20:06 +0800
-X-Gm-Features: AX0GCFvi3ezIBQa7yKxnmidSOgr8eNk-oM266seJU5yCRwglxX_y22dfD-57w2A
-Message-ID: <CACGkMEuwb+EcT=W5OwbZ=HOf=d56cZFKF5aYPx0iCLOZ630qNQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v12 02/10] net: flow_dissector: Export flow_keys_dissector_symmetric
-To: Akihiko Odaki <akihiko.odaki@daynix.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
-	Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, kvm@vger.kernel.org, 
-	virtualization@lists.linux-foundation.org, linux-kselftest@vger.kernel.org, 
-	Yuri Benditovich <yuri.benditovich@daynix.com>, Andrew Melnychenko <andrew@daynix.com>, 
-	Stephen Hemminger <stephen@networkplumber.org>, gur.stavi@huawei.com, 
-	Lei Yang <leiyang@redhat.com>, Simon Horman <horms@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 30, 2025 at 12:50=E2=80=AFPM Akihiko Odaki <akihiko.odaki@dayni=
-x.com> wrote:
->
-> flow_keys_dissector_symmetric is useful to derive a symmetric hash
-> and to know its source such as IPv4, IPv6, TCP, and UDP.
->
-> Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
-> Tested-by: Lei Yang <leiyang@redhat.com>
-> ---
+From: Sheng-Yuan Huang <syhuang3@nuvoton.com>
 
-Acked-by: Jason Wang <jasowang@redhat.com>
+Hi all,
 
-Thanks
+This patch adds a new driver for Nuvoton USB-to-serial adapters
+in drivers/usb/serial.
+
+The driver supports multiple virtual serial ports over a single
+USB interface. It configures the device using vendor-specific
+control messages, and handles data transmission via bulk endpoints.
+Port status is reported either through an interrupt-in or a bulk-in
+endpoint, depending on the hardware configuration.
+
+Any feedback or suggestions would be greatly appreciated.
+
+Best regards,  
+Sheng-Yuan Huang
+
+Sheng-Yuan Huang (1):
+  USB: serial: nct_usb_serial: add support for Nuvoton USB adapter
+
+ drivers/usb/serial/nct_usb_serial.c | 1523 +++++++++++++++++++++++++++
+ 1 file changed, 1523 insertions(+)
+ create mode 100644 drivers/usb/serial/nct_usb_serial.c
+
+-- 
+2.43.0
 
