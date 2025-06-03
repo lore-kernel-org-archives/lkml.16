@@ -1,223 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE4F27FD7A;
-	Tue,  3 Jun 2025 09:42:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE9C1F30BB;
+	Tue,  3 Jun 2025 09:43:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748943763; cv=none; b=gR3amBfStcsP+wf8jg2mz8Udyzjbars1+O1JRJkzn3uPKT9+S1Tz409tSJtWCrAf02kZ21r0ibCfxu6xzRnwngOW01mBlu53s8fZ/FZWEHIt2SHYtftmD6zEzaFEcJh4s/Jl98MlGe5z/B/wwd8P6FwyjVFPy3oG1zRBXVM0HP8=
+	t=1748943811; cv=none; b=Rx0xIC690XQ8trxEH7vvd1Wupm8XXGoHVqz+N8n5aCb4shbk8IbYCgpZAfJs8JGGC3fR6TrKYprYzQ0Yx2XXtBiweVkbTmRgum4oFYP4NMQw86P6dHok8v0Fkt4gk6YIdeha9UJp196W6q7GrdKE9MEXoxwzgJ/GK118P+NBeWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748943763; c=relaxed/simple;
-	bh=kcKdMQutOEKgdmq7s01p3u7WAiPjAfl0BL1BiOFHomo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=IgRPJFayT25LL96qiEFstiUE3Vxu6xJrn8oS1/pjeJJ4BtVtxQCzkjEz6x+iQGrYjklTyNEPcpkibpPOycDkaHcKGEBFcZbsDTT+TglOW64gqrLEuHnyVI4ehZaXjed6ztDXj7VtJ0+S7NnQXJSzeys014sEp1XOrZs0FTmC0nE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BR841ixi; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BR841ixi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748943762; x=1780479762;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=kcKdMQutOEKgdmq7s01p3u7WAiPjAfl0BL1BiOFHomo=;
-  b=BR841ixisZ7jvhFZ2n7+dHj8sOyvdTOnapxMVEI+u5jXiMRbqCj+xcV7
-   A+jby5rLo4zquTzHFAPXOj9XCIuTkSK/dO3fovoOTfrBE14Vesh5gOJ5s
-   uv5ewBMzxPJyzG39dt9eBR5zSkHh9SDQG0moF43/RqyKOh7lwEIEb+jtw
-   O/ZNakXuXPd6G/Th/de+M0tM08DfC6//Jjcxea0R7GKNAfhP5qxkZgUhE
-   7Wx/NcA7vmxOtMngiqAY4kbIIzY58xX4QW8D/ugMnW4B3de5ouU58T+ZD
-   tfA09lf4eNNX74LnWLwsEZ3UEjOA6RhX+8dszM+uih15yLUjp+H/ehvz7
-   w==;
-X-CSE-ConnectionGUID: C/rIUyQzQDKu18FGHwli9A==
-X-CSE-MsgGUID: Ms3707WsQi+dHPauflmfjg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="50893338"
-X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
-   d="scan'208";a="50893338"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 02:42:41 -0700
-X-CSE-ConnectionGUID: +ZfSINAUTeWbfXcmTHC2wg==
-X-CSE-MsgGUID: 2RPOSoCgS3mDxMKlAqjW6w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
-   d="scan'208";a="167988022"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.141])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 02:42:36 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 3 Jun 2025 12:42:33 +0300 (EEST)
-To: Hans Zhang <18255117159@163.com>
-cc: lpieralisi@kernel.org, bhelgaas@google.com, 
-    manivannan.sadhasivam@linaro.org, kw@linux.com, cassel@kernel.org, 
-    robh@kernel.org, jingoohan1@gmail.com, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v12 4/6] PCI: dwc: Use common PCI host bridge APIs for
- finding the capabilities
-In-Reply-To: <20250514161258.93844-5-18255117159@163.com>
-Message-ID: <4f23df8e-bebe-149c-a638-be7208c8c71a@linux.intel.com>
-References: <20250514161258.93844-1-18255117159@163.com> <20250514161258.93844-5-18255117159@163.com>
+	s=arc-20240116; t=1748943811; c=relaxed/simple;
+	bh=ISNgnd29PMBrvsUWw5jw8nPncxgXW5hH7ePZLNkAFiU=;
+	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=FklG3pZyXDw4u9yEMdrHPe2sR4uosrEA7nyUKe0mwzDrDQiWzHTVZFXwneV8fiymgug/JtO6Lh5jLp/ehUfc4WisSevMKUA+d1wQnuZdXeAAEk9GcIktufKxJeIaW5CTTvVn6WQuhPo3RF/rdXc2Jw8OgvcCSaYLoCLa/J3aKcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bBQdv0hj8zQlK2;
+	Tue,  3 Jun 2025 17:39:15 +0800 (CST)
+Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id ADBF91800B4;
+	Tue,  3 Jun 2025 17:43:24 +0800 (CST)
+Received: from [10.67.120.192] (10.67.120.192) by
+ kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 3 Jun 2025 17:43:23 +0800
+Message-ID: <8467f587-7111-420c-ba10-604b5ab44cc9@huawei.com>
+Date: Tue, 3 Jun 2025 17:43:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+CC: <shaojijie@huawei.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <thomas.petazzoni@bootlin.com>, Simon Horman
+	<horms@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+	<linux@armlinux.org.uk>, Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Herve Codina <herve.codina@bootlin.com>, Romain Gantois
+	<romain.gantois@bootlin.com>
+Subject: Re: [PATCH net] net: phy: phy_caps: Don't skip better duplex macth on
+ non-exact match
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>, <davem@davemloft.net>,
+	Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>, Eric Dumazet
+	<edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
+References: <20250603083541.248315-1-maxime.chevallier@bootlin.com>
+From: Jijie Shao <shaojijie@huawei.com>
+In-Reply-To: <20250603083541.248315-1-maxime.chevallier@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ kwepemk100013.china.huawei.com (7.202.194.61)
 
-On Thu, 15 May 2025, Hans Zhang wrote:
 
-> Use the PCI core is now exposing generic macros for the host bridges to
-> search for the PCIe capabilities, make use of them in the DWC driver.
-> 
-> Signed-off-by: Hans Zhang <18255117159@163.com>
+on 2025/6/3 16:35, Maxime Chevallier wrote:
+> When performing a non-exact phy_caps lookup, we are looking for a
+> supported mode that matches as closely as possible the passed speed/duplex.
+>
+> Blamed patch broke that logic by returning a match too early in case
+> the caller asks for half-duplex, as a full-duplex linkmode may match
+> first, and returned as a non-exact match without even trying to mach on
+> half-duplex modes.
+>
+> Reported-by: Jijie Shao <shaojijie@huawei.com>
+> Closes: https://lore.kernel.org/netdev/20250603102500.4ec743cf@fedora/T/#m22ed60ca635c67dc7d9cbb47e8995b2beb5c1576
+> Fixes: fc81e257d19f ("net: phy: phy_caps: Allow looking-up link caps based on speed and duplex")
+> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+
+Tested-by: Jijie Shao <shaojijie@huawei.com>
+
 > ---
-> Changes since v11:
-> - Resolve compilation errors. s/dw_pcie_read_dbi/dw_pcie_read*_dbi
-> 
-> Changes since v10:
-> - None
-> 
-> Changes since v9:
-> - Resolved [v9 4/6] compilation error.
->   The latest 6.15 rc1 merge __dw_pcie_find_vsec_capability, which uses 
->   dw_pcie_find_next_ext_capability.
-> 
-> Changes since v8:
-> - None
-> 
-> Changes since v7:
-> - Resolve compilation errors.
-> 
-> Changes since v6:
-> https://lore.kernel.org/linux-pci/20250323164852.430546-3-18255117159@163.com/
-> 
-> - The patch commit message were modified.
-> 
-> Changes since v5:
-> https://lore.kernel.org/linux-pci/20250321163803.391056-3-18255117159@163.com/
-> 
-> - Kconfig add "select PCI_HOST_HELPERS"
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c | 81 ++++----------------
->  1 file changed, 14 insertions(+), 67 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 97d76d3dc066..7939411a24eb 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -205,83 +205,30 @@ void dw_pcie_version_detect(struct dw_pcie *pci)
->  		pci->type = ver;
->  }
->  
-> -/*
-> - * These interfaces resemble the pci_find_*capability() interfaces, but these
-> - * are for configuring host controllers, which are bridges *to* PCI devices but
-> - * are not PCI devices themselves.
-> - */
-> -static u8 __dw_pcie_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
-> -				  u8 cap)
-> +static int dw_pcie_read_cfg(void *priv, int where, int size, u32 *val)
->  {
-> -	u8 cap_id, next_cap_ptr;
-> -	u16 reg;
-> -
-> -	if (!cap_ptr)
-> -		return 0;
-> +	struct dw_pcie *pci = priv;
->  
-> -	reg = dw_pcie_readw_dbi(pci, cap_ptr);
-> -	cap_id = (reg & 0x00ff);
-> -
-> -	if (cap_id > PCI_CAP_ID_MAX)
-> -		return 0;
-> -
-> -	if (cap_id == cap)
-> -		return cap_ptr;
-> +	if (size == 4)
-> +		*val = dw_pcie_readl_dbi(pci, where);
-> +	else if (size == 2)
-> +		*val = dw_pcie_readw_dbi(pci, where);
-> +	else if (size == 1)
-> +		*val = dw_pcie_readb_dbi(pci, where);
-
-Maybe here as well return error if the given size is invalid.
->  
-> -	next_cap_ptr = (reg & 0xff00) >> 8;
-> -	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
-> +	return PCIBIOS_SUCCESSFUL;
->  }
->  
->  u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
->  {
-> -	u8 next_cap_ptr;
-> -	u16 reg;
-> -
-> -	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
-> -	next_cap_ptr = (reg & 0x00ff);
-> -
-> -	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
-> +	return PCI_FIND_NEXT_CAP_TTL(dw_pcie_read_cfg, PCI_CAPABILITY_LIST, cap,
-> +				     pci);
->  }
->  EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
->  
-> -static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci, u16 start,
-> -					    u8 cap)
-> -{
-> -	u32 header;
-> -	int ttl;
-> -	int pos = PCI_CFG_SPACE_SIZE;
-> -
-> -	/* minimum 8 bytes per capability */
-> -	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
-> -
-> -	if (start)
-> -		pos = start;
-> -
-> -	header = dw_pcie_readl_dbi(pci, pos);
-> -	/*
-> -	 * If we have no capabilities, this is indicated by cap ID,
-> -	 * cap version and next pointer all being 0.
-> -	 */
-> -	if (header == 0)
-> -		return 0;
-> -
-> -	while (ttl-- > 0) {
-> -		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
-> -			return pos;
-> -
-> -		pos = PCI_EXT_CAP_NEXT(header);
-> -		if (pos < PCI_CFG_SPACE_SIZE)
-> -			break;
-> -
-> -		header = dw_pcie_readl_dbi(pci, pos);
-> -	}
-> -
-> -	return 0;
-> -}
-> -
->  u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
->  {
-> -	return dw_pcie_find_next_ext_capability(pci, 0, cap);
-> +	return PCI_FIND_NEXT_EXT_CAPABILITY(dw_pcie_read_cfg, 0, cap, pci);
->  }
->  EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
->  
-> @@ -294,8 +241,8 @@ static u16 __dw_pcie_find_vsec_capability(struct dw_pcie *pci, u16 vendor_id,
->  	if (vendor_id != dw_pcie_readw_dbi(pci, PCI_VENDOR_ID))
->  		return 0;
->  
-> -	while ((vsec = dw_pcie_find_next_ext_capability(pci, vsec,
-> -						       PCI_EXT_CAP_ID_VNDR))) {
-> +	while ((vsec = PCI_FIND_NEXT_EXT_CAPABILITY(
-> +			dw_pcie_read_cfg, vsec, PCI_EXT_CAP_ID_VNDR, pci))) {
-
-Start the arguments from the first line and align the continuations to (.
-
->  		header = dw_pcie_readl_dbi(pci, vsec + PCI_VNDR_HEADER);
->  		if (PCI_VNDR_HEADER_ID(header) == vsec_id)
->  			return vsec;
-> 
-
--- 
- i.
-
+>   drivers/net/phy/phy_caps.c | 15 +++++++++------
+>   1 file changed, 9 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/net/phy/phy_caps.c b/drivers/net/phy/phy_caps.c
+> index 703321689726..d80f6a37edf1 100644
+> --- a/drivers/net/phy/phy_caps.c
+> +++ b/drivers/net/phy/phy_caps.c
+> @@ -195,7 +195,7 @@ const struct link_capabilities *
+>   phy_caps_lookup(int speed, unsigned int duplex, const unsigned long *supported,
+>   		bool exact)
+>   {
+> -	const struct link_capabilities *lcap, *last = NULL;
+> +	const struct link_capabilities *lcap, *match = NULL, *last = NULL;
+>   
+>   	for_each_link_caps_desc_speed(lcap) {
+>   		if (linkmode_intersects(lcap->linkmodes, supported)) {
+> @@ -204,16 +204,19 @@ phy_caps_lookup(int speed, unsigned int duplex, const unsigned long *supported,
+>   			if (lcap->speed == speed && lcap->duplex == duplex) {
+>   				return lcap;
+>   			} else if (!exact) {
+> -				if (lcap->speed <= speed)
+> -					return lcap;
+> +				if (!match && lcap->speed <= speed)
+> +					match = lcap;
+> +
+> +				if (lcap->speed < speed)
+> +					break;
+>   			}
+>   		}
+>   	}
+>   
+> -	if (!exact)
+> -		return last;
+> +	if (!match && !exact)
+> +		match = last;
+>   
+> -	return NULL;
+> +	return match;
+>   }
+>   EXPORT_SYMBOL_GPL(phy_caps_lookup);
+>   
