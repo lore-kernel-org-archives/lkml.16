@@ -1,112 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF61F2AEF1;
-	Tue,  3 Jun 2025 09:08:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCEA22AEF1;
+	Tue,  3 Jun 2025 09:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748941712; cv=none; b=SLT6XsgNoJzSoy1VEn/OzceLu6R6jfHAlS1TUG9VGb9a3doXhn6Qogg5lg8E7KiKt3Qjl6a1CCXeyjWTX5iB45pQIx7yCoasQfaxUA9mMV/1PcjPWMmi3Ge2kzIGfUd20sh4Alh0M5reo/kUMlIrHLMIcIEZjjAk5dqa8bcD5Yk=
+	t=1748941837; cv=none; b=Ka8rYkzXLJtubrLC9D1ZOTZYE8tIPGdrz9RWJSyUexTGGRx1bSEdlDNWc3VZuII9TeDtburIZcK8hdAeTp+1egTKfb8ltzdD/Jlg2b135AdlADTihGcgIYYrWOuaGvUc8fftDS/CyhZh7k5pvk9xAfIlBJEw5dIr3X5KXkEV5B4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748941712; c=relaxed/simple;
-	bh=IswifkJ14b6Qj/KMAySJWElie407gnu73HSYulfH4kM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=FiRN/Nf03jbdNUPF4z7LzDJIMlz6kr8ol3vWswSZZwzmISnT6rgTVot6kGk43ZoUVHQC+27/hdVKXzOw+Vj9mvbFv7Y9IIOKcEYbwssugNMQl3q32yksvi9Tz3kLFwP93k41YhiGDeSdHT4w9dfJ9mGPCRj/TQ716EReP+Nf2Ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ITlbR5yU; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748941837; c=relaxed/simple;
+	bh=mfT3zZm2UCkzq7F5XZ5058+cZdEASTo8PzB4aEiBNzc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K1qmC5RNVbyODqKgRvKgvZSQ+vz0IeWrJ8bqmgItQStwGweeVuL11BLGy5gFw76T8lopJg+l32QviyuUqjfxtepUGxB5ukjQhXi5r33CJcJ5svXd5MCHgFLvXZNinKXuTdTfB83/wxF1AfZiFzFf5/OgWXC26T9U8e51Mh0JbLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H73Y8iUc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ITlbR5yU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748941711; x=1780477711;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=IswifkJ14b6Qj/KMAySJWElie407gnu73HSYulfH4kM=;
-  b=ITlbR5yUaX1/wTKrvrM1sMynaFe+dQLDGDWDXJBq0EeFAlkgGlc3wSGy
-   YLAdwGuxf5gJi+Llu7V6moxWM5llfKu6GkcYwzO/5rhZ8pCLdRBVIXvxF
-   0IhB1ENZH0FzeaUheIg70bGoMUOLB2+Sjjmb1qfLQ0i3KUzVYjhibXUAv
-   c+Y0OcNsFzq2N6G5HYhy0t80Fu9tvPFQNyDZ9UGV5TvtBYQZ9bNlrOZnq
-   +FMWAUjZhdej7DA00EHssu+MWcwGNb9ogfSnJjM1/jY54swgaLFVp2miX
-   4U56XEDfHfWev/deYVc13CtGnm5TuwH9nhD9V/mULRIdFSHJnb2dHfIUF
-   w==;
-X-CSE-ConnectionGUID: T0WgC+HSTqeKlcRfgHqW4g==
-X-CSE-MsgGUID: mjS6cPlFTSmT6xPayl1/Ww==
-X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="62029074"
-X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
-   d="scan'208";a="62029074"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 02:08:29 -0700
-X-CSE-ConnectionGUID: QtfAGtGwRh6h3icI3bvXTg==
-X-CSE-MsgGUID: vgUXOCIfT2Kpiwo/W0UnbA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
-   d="scan'208";a="145757589"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.141])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 02:08:25 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 3 Jun 2025 12:08:22 +0300 (EEST)
-To: Hans Zhang <18255117159@163.com>
-cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
-    krzk+dt@kernel.org, manivannan.sadhasivam@linaro.org, jingoohan1@gmail.com, 
-    robh@kernel.org, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] PCI: Add PCIE_SPEED2LNKCTL2_TLS_ENC conversion
- macro
-In-Reply-To: <20250519163156.217567-2-18255117159@163.com>
-Message-ID: <9bc475b4-4924-1b0f-af3e-ec4fa8140765@linux.intel.com>
-References: <20250519163156.217567-1-18255117159@163.com> <20250519163156.217567-2-18255117159@163.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H73Y8iUc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E1C0C4CEED;
+	Tue,  3 Jun 2025 09:10:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748941837;
+	bh=mfT3zZm2UCkzq7F5XZ5058+cZdEASTo8PzB4aEiBNzc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H73Y8iUcHOEdrdJbDPItdabDhVnXXe2Dj9XkzwoC+jkSVsuTRyZ5qRbiqdNhOLS6m
+	 YcmmmlfMRu8uuKRtFszTIEDhLZo88f7RRLey/R9MJYcrDCHY2d3s/zdOjN5pcsdk/2
+	 1/OrOICbG9ZeY+iTMWdVxQbpT7b7dy4iUy9aA9dP6rHpYpdQ2Zt7jp4tZ5edwVkiKQ
+	 eprLdRLhVHrhPzZSn7y6kvSccw8yB/Z+T0EO6iYX+KzrFC6cR8LerQaZ0HUQfYZ/jw
+	 mWrPGRSzbqP1gaSJJnKTi71h4I+Vv4c9fdjBn/Xk2i+uuXE4X2R9baPUK1wn2MTlog
+	 0MDDjYxGTJvgQ==
+Date: Tue, 3 Jun 2025 11:10:31 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Daniel Almeida <daniel.almeida@collabora.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] rust: irq: add support for request_irq()
+Message-ID: <aD68BzKRAvmNBLaV@cassiopeiae>
+References: <20250514-topics-tyr-request_irq-v3-0-d6fcc2591a88@collabora.com>
+ <20250514-topics-tyr-request_irq-v3-1-d6fcc2591a88@collabora.com>
+ <aCUQ0VWgoxdmIUaS@pollux>
+ <aD3PCc6QREqNgBYU@google.com>
+ <aD3f1GSZJ6K-RP5r@pollux>
+ <aD6yOte8g4_pcks7@google.com>
+ <aD62ZGBwqXxTroeX@cassiopeiae>
+ <aD64YNuqbPPZHAa5@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aD64YNuqbPPZHAa5@google.com>
 
-On Tue, 20 May 2025, Hans Zhang wrote:
-
-> Introduce PCIE_SPEED2LNKCTL2_TLS_ENC macro to standardize the conversion
-
-Use () parenthesis like you'd use them in C so functions and macros in 
-changelog should have them appended.
-
-> between PCIe speed enumerations and LNKCTL2_TLS register values. This
-> centralizes speed-to-register mapping logic, eliminating duplicated
-> conversion code across multiple drivers.
+On Tue, Jun 03, 2025 at 08:54:56AM +0000, Alice Ryhl wrote:
+> On Tue, Jun 03, 2025 at 10:46:28AM +0200, Danilo Krummrich wrote:
+> > On Tue, Jun 03, 2025 at 08:28:42AM +0000, Alice Ryhl wrote:
+> > > That optimization sounds like something we definitely want, but I have
+> > > one question: is free_irq() safe to use in atomic context / inside
+> > > rcu_read_lock()? What about the threaded-irq variant?
+> > 
+> > No, free_irq() must not be called from atomic context. Hence, it's not valid to
+> > call it from within an RCU read-side critical section.
+> > 
+> > I assume you're confusing something, free_irq() is called from the destructor of
+> > the irq::Registration object, hence it is either called when the object itself
+> > is dropped or from the devres callback, which is called after the
+> > synchronize_rcu(), but not from an RCU read-side critical section.
 > 
-> Signed-off-by: Hans Zhang <18255117159@163.com>
-> ---
->  drivers/pci/pci.h | 9 +++++++++
->  1 file changed, 9 insertions(+)
+> Ok hold on ... I guess the issue I thought was there manifests itself in
+> another way. What about this situation?
 > 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index f92928dadc6a..b7e2d08825c6 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -415,6 +415,15 @@ void pci_bus_put(struct pci_bus *bus);
->  	 (lnkctl2) == PCI_EXP_LNKCTL2_TLS_2_5GT ? PCIE_SPEED_2_5GT : \
->  	 PCI_SPEED_UNKNOWN)
->  
-> +#define PCIE_SPEED2LNKCTL2_TLS_ENC(speed) \
-
-I'm not a big fan of including that _ENC there, it just makes the long 
-name even longer and doesn't really provide added value, IMO.
-
-Other than those, this change logs fine.
-
-> +	((speed) == PCIE_SPEED_2_5GT ? PCI_EXP_LNKCTL2_TLS_2_5GT : \
-> +	 (speed) == PCIE_SPEED_5_0GT ? PCI_EXP_LNKCTL2_TLS_5_0GT : \
-> +	 (speed) == PCIE_SPEED_8_0GT ? PCI_EXP_LNKCTL2_TLS_8_0GT : \
-> +	 (speed) == PCIE_SPEED_16_0GT ? PCI_EXP_LNKCTL2_TLS_16_0GT : \
-> +	 (speed) == PCIE_SPEED_32_0GT ? PCI_EXP_LNKCTL2_TLS_32_0GT : \
-> +	 (speed) == PCIE_SPEED_64_0GT ? PCI_EXP_LNKCTL2_TLS_64_0GT : \
-> +	 0)
-> +
->  /* PCIe speed to Mb/s reduced by encoding overhead */
->  #define PCIE_SPEED2MBS_ENC(speed) \
->  	((speed) == PCIE_SPEED_64_0GT ? 64000*1/1 : \
+> Thread 1                 Thread 2
+> device removal starts
+>                          Drop for Devres starts running
+>                          devm_remove_action() = 0
+> device is fully unbound
+>                          free_irq()
 > 
+> Now the call to free_irq() happens too late, because there's nothing in
+> the devm callback stack to wait for it.
 
--- 
- i.
+This is indeed a flaw in the Devres implementation.
 
+In my initial implementation I even thought of this, but then obviously forgot
+about it and introduced this bug in commit 8ff656643d30 ("rust: devres: remove
+action in `Devres::drop`").
+
+In order to fix this, we should just revert this commit -- thanks for catching
+this!
