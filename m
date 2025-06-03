@@ -1,308 +1,280 @@
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2077.outbound.protection.outlook.com [40.107.93.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A662823C4ED
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 15:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748965933; cv=none; b=YitGGmVEL8p4ub9s9Bn2V7sKhBXo3O9vJPwOXc6pdJU1uVcbLzmi0+8c9TWk1tKcSKwk5e6mP1/GXh0cR7mfLzehjIIM3IMBy5+FxmJYXQjoOfR6O2ssRp6gg7jbuPq8S/AH3aQdb9g2KnpJqRQkgWRSF86uBZ/Au6LewgRc12Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748965933; c=relaxed/simple;
-	bh=B/nAD6AdfuQ75e2MBabWGMF6/ocLULn1XFpYA5+J6fg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TXaQrHOqa1Wceb/2Uigzk4YUCOpx8P5jf+OrxjxHdQ+v+zQsqib+8MlytyYXP5+hi2328bCWieQkI4JDNkXuVS9Rhv6pHkBhaygLCSWTR7ko8IYuPwN2pKwVgwySLx92SFk8OhL9D/FGyZLHr0QyLCfi1CieTyn3TpRJfFI6jgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=DcOey/rx; arc=none smtp.client-ip=209.85.160.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2848823BCFA;
+	Tue,  3 Jun 2025 15:52:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.77
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748965966; cv=fail; b=KxqEbknscsskXMrEmqXrH/wohhGGqhZqt5eqwWtQf9qATA4W3KWUN2k+ga7nq72Esqek51IfgFSPSNJKr8xsSmnIJqr+0rEkluw9dWVGHr//3oJ98ozrtvbd2YN7VbsC85FJVdjo5UIjCY05lxX1uXCSGruJuizM+RwN4eKObAw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748965966; c=relaxed/simple;
+	bh=StiXz4sQArcKUWbDbIyH1NhVOyQTRn8NtusN13stmm8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=BydY/hmXWlD17+8vPnIZCylg6LIVrbX8rU9oNpNdCfwxfNBXvC20H6mgweiGRC6vilT0/Rv7ncS2cCpJx5NRm840veRqejiCkbMfBzXAZGaZoYmXN9cTT65gnnTDN4FmzFDMJSvUxl17dOSD2uPgfFAb27SVzeHiBMuHEiFWDBg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=bEBDtTlD; arc=fail smtp.client-ip=40.107.93.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="DcOey/rx"
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2d09d495c6cso1255837fac.3
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 08:52:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748965929; x=1749570729; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YZ+JUXoSO+vIrYi8VTnQeOUxjfv3ek7WnXtZxEwnZfs=;
-        b=DcOey/rxVGGec2hIT0lyu7gvghGv6IHIEP0a2zUaxSaEEFn5rirH/2xjTSFzfFflAo
-         xbdHXjtQzND7ApbVQZ5CmB4uIRVipidUFzEPTRaypsz72akYkz0OUMHhBfMB+gFuwb9p
-         sPq9FU1H33YGTQnJjUE8t7GFw3ofNNh8UBysYk6JlXF+j1ZsXWa5vIdN+LDuMGTusyXl
-         n2W6/DLcuCGXfjarwBDpmHjaafmpCP6NnFP/eky1jfo7Tx65T56lCew+RXClCPKd2o/Q
-         XHxMqFHHiT7mk9xt2ydmR93R9oFrC4KfkBcxLUXwidUGhL+coOA5238RfAC7Wkv5/MxA
-         /eHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748965929; x=1749570729;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YZ+JUXoSO+vIrYi8VTnQeOUxjfv3ek7WnXtZxEwnZfs=;
-        b=sPvuoqQuWRI9DJRm1Tnzb8PAGRqNCpwbuFfXPRrbCI6kFtAlGu9OQdvJxupl3N0rik
-         8tqbQOirG3bo8+3qaUmOruHmzSLTZSaz4ZqWa2N2QApp+Xubo8lZXRPHQLmxkbOg7B4x
-         Wngfhm9I1XUhbGP0gGzyEDjdtK67efNKWhX/dNWAesKN1l5CKwxfmyWFkMEzb5HIe7iM
-         /t0pn2G1pXN0X5xmEay/Mw10pfDjBysdG9WyODD+bjJvuEnKXDW9NYTVEQKrUsAdkHc/
-         YZLFSo3SSqFIvHtsxKZQmWGr/5QlgfhHSxyozzQ90KjjsoLQGMFz4ZN+yNnuK0U8KWnI
-         bdDg==
-X-Forwarded-Encrypted: i=1; AJvYcCVUiM2U2pIqC7DLdskkDeP8beXWW4S6omXpd4/q8oZcXYHNdTyr6Lo2HmtLRY3gjulIOtSA8ObXwX+DeG4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBR48o8UcR5zZsIACTraoSTgKGIw+roGlyYtIRxUnGiEFoAlTA
-	WfRaW7qwGzaKSYYihCeiS6ONjl1LhQtZN0m+nKFhdUMxuq3p5TeVXT96S2yM0cofj9U=
-X-Gm-Gg: ASbGnculBALfHcYugactsgRd235fj0eV51QDqnbFtMDaWih908xFKgnT4/dXflWyNk1
-	Zr4H0uXykn8ExxiDY+frW27rVIPnz2WpJuCgks6bK2W/d40P6phmN0zOGQCKVveJz3GDQrJIs0y
-	np41xWgdRlx2hJmsAHZ6zDmTIrrMhk/JWJgiF9XK/YVKBkERrwijHo08mNUWdjbR1oZ9/TaUvUO
-	Ff2U5IOyNMa4J/uOstRCl39h4el7ON5BNN5ozvmWgbPHhr/gPlpO1nybAy9xL7B0llNI0Rjha3R
-	9HnLRAMUGKpCAUjqfkPm6VBZJDMbzoAsJOpwEs7Qqav6SK3mbbHcEbcuzNNHJjuon2PjwN1I799
-	gdPFGN9njZV2WKoKTLjyW4D/Q5z5AKWW5KojV
-X-Google-Smtp-Source: AGHT+IFmmiAtHmbyTwYNGTdrO3ErD/rnYdR4DEzbtZByS5yxSX9f+Dnu/BkXtS/pA+tGNWGGjhkyLg==
-X-Received: by 2002:a05:6870:648a:b0:29f:a0b8:6f7f with SMTP id 586e51a60fabf-2e92a21ffe7mr9812334fac.12.1748965929437;
-        Tue, 03 Jun 2025 08:52:09 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:e835:af77:41c:3a1f? ([2600:8803:e7e4:1d00:e835:af77:41c:3a1f])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2e906b8080esm2265977fac.31.2025.06.03.08.52.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jun 2025 08:52:07 -0700 (PDT)
-Message-ID: <ebdc963c-d1f7-41fd-a49e-803bfb7a4408@baylibre.com>
-Date: Tue, 3 Jun 2025 10:52:06 -0500
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="bEBDtTlD"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IRTG6Sy8qOZ/QalDAaErKK19VJuWHnzOTz22paN9QHz78m7cqBm4p+BhuJE+Yz+K//7frDWpo864gU0Qz9R3AjgYbH1w6+y6lpRueDrr6Ni39zN4qANQC9i8HySkhg3LVW4cRT6dgThVOiOzUlcwwM3Np0LVump6btWc2WK+Xw6zl67LUna6SDTrp9CMJwLRku/YGGASrnGTsby/R/lV7NPB9CWTi+lhDsGOr/P5r5BpPGk/elcTvi9b8r/fPs7QbQ7jJennBX+3z19LpmDftjlrs29cnL8RmvL+oL7vATN/1luhrsZPyxWkQgKjBBl06U0u4xJ5PXtDzP+K7CAmPA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9eRRrUlZwtKiXUWlFFPadW7fzbyY6sOowMxR4RQ7Sig=;
+ b=Ne4cbciync97taYyWP94wYss7C726Xfc/JalgGVqz1Pok8sIdkxjc2kqdiuK5kpL7kgxMjWUzTs/5WEQKc/duopngu6xTk9npGLPCa3P3NJb2I0J0g64qnEcWBR4nBuaHGwCcQ+Cw5YZDLwET838HFAcsKhC4htBt1JEhYs4/YfkJd+ntioZgcVjxZj4AmkrhGEC5vBKL/up1VNY+lpUgNX8iBzHbzusSLGDF8MS3u7X2GxO9bsx+QgFwyXIqFjZfxUQscM6P8QMKIsb+ysF7eeHe6zfTa/Ny/20c5Hx2TZU8p7x0wGjcXqx94+Q81063nT7tplABGrqGkKi7CO/zQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9eRRrUlZwtKiXUWlFFPadW7fzbyY6sOowMxR4RQ7Sig=;
+ b=bEBDtTlDTiaM6Oo893oAgYDsFo7/BldAHXR58yxOnfo1dbpxkpZFOoVOlDgvTFAtcMf52H7jIGVf31ARBTnDlcaxMPGxZNzb1Ce5vQ51BtKwfpq9pU63Y0OsB05o/zUGcqju4dKoO8fu7nvGGdE9kCalboF0Nw8ROD6B2XlyFuU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
+ by IA1PR12MB8261.namprd12.prod.outlook.com (2603:10b6:208:3f7::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.37; Tue, 3 Jun
+ 2025 15:52:40 +0000
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e%7]) with mapi id 15.20.8792.034; Tue, 3 Jun 2025
+ 15:52:40 +0000
+Message-ID: <1905a57f-3a0b-7106-111a-8231a6ec9380@amd.com>
+Date: Tue, 3 Jun 2025 10:52:37 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v4 4/5] KVM: SEV: Introduce new min,max sev_es and sev_snp
+ asid variables
+Content-Language: en-US
+To: Ashish Kalra <Ashish.Kalra@amd.com>, seanjc@google.com,
+ pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, herbert@gondor.apana.org.au
+Cc: x86@kernel.org, john.allen@amd.com, davem@davemloft.net,
+ michael.roth@amd.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-crypto@vger.kernel.org
+References: <cover.1747696092.git.ashish.kalra@amd.com>
+ <0196b4b50a01312097a18bc86014d9f47c22e640.1747696092.git.ashish.kalra@amd.com>
+From: Tom Lendacky <thomas.lendacky@amd.com>
+In-Reply-To: <0196b4b50a01312097a18bc86014d9f47c22e640.1747696092.git.ashish.kalra@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BLAPR05CA0035.namprd05.prod.outlook.com
+ (2603:10b6:208:335::16) To DM4PR12MB5070.namprd12.prod.outlook.com
+ (2603:10b6:5:389::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 6/6] iio: adc: ad7606: add gain calibration support
-To: Angelo Dureghello <adureghello@baylibre.com>,
- Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20250603-wip-bl-ad7606-calibration-v8-0-2371e7108f32@baylibre.com>
- <20250603-wip-bl-ad7606-calibration-v8-6-2371e7108f32@baylibre.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250603-wip-bl-ad7606-calibration-v8-6-2371e7108f32@baylibre.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|IA1PR12MB8261:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9e3eef9b-e8e4-46ac-dfe7-08dda2b6abb1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Z09tN2NTa3lyYTZlWFRJTlhrWUl2NmRHeGJyY1VReU01ckV3bUY5UEdwMkRC?=
+ =?utf-8?B?MVZYbEt0QkgzK0VzVlhBVUR6ODRkY2hEQ1BFRmdGaDFHVHpucTFrVzVPZkti?=
+ =?utf-8?B?TGtQYmpDQStEMzdiM2tTa2F3V0Y1bTBpN2hhcFZpTHh6ZW5mMlpwYSsxRFMx?=
+ =?utf-8?B?b0ZoR05pelpjQWFDT2NFUW4reGtjbzhaRDBhZUVPVUNKdVkxVGIyQTZhZFhD?=
+ =?utf-8?B?d21ERWhDU3lhVzhjWVg2bWZtRFhFNVU5d3I3VVVQcUxjQVBva0V2eWJQeTEx?=
+ =?utf-8?B?aEt2MmJwbjRvUTE2S0l4MlJmZUs0b0p6N0Z4NnU4V25XRXYyNHlpeXZvU0dj?=
+ =?utf-8?B?YlpoU0FObXQwNVlscDNqRnY4M2YyRVp1cjVSZmd2cGZJdWh0ZHNZRExneG5U?=
+ =?utf-8?B?bFkzY0ZGQzYwTVc1Y1NGMW5TM2hhKy90cEMzY2Jack1CUlBkc29IOXZoR1NV?=
+ =?utf-8?B?QS9TMUVHRjJMTHExTVozQTFqclQ1K3l3NTU4MG5CUCtyMlNnZ1VBMUdEZWll?=
+ =?utf-8?B?V05aREc0TkpRMFdXMjE1dG12ZXVhS0tzQTV1OVJuanRlYXg4bUFqNkZKYzJQ?=
+ =?utf-8?B?ejU5VVZPQUlMOU5QY2d1U29CQThnRHoyWFl3L3JoRjg5VnNla2VhbXpUSCs1?=
+ =?utf-8?B?OUIvcFUzMVA0OGl6YWFjcjQzREdsSnpFeU9xWVVOcUYyQis1WDhqNStaaVBx?=
+ =?utf-8?B?TkZ1dE4xY09mQjVLQTMzUUJ1YjR0TTF4emRWTk55ZW9uNDlNOHJiUjdxcnVz?=
+ =?utf-8?B?Smx4ank2NlZOOGJsYTV2TGxjLzJWblFCbjNFbHlORk5nb3I2aDc2ZnJHSVZ4?=
+ =?utf-8?B?bnhIWE0zeXZvUVlmUmp0K0s5WVdEbERncWZRQlJHMzJROXNHOTlOMHJmK3lk?=
+ =?utf-8?B?dFhsRXNMSDJHNDV4MjdZaW5BK2xVUEh0dS9vT1QyK0N2d0xJSStSUlRySTBJ?=
+ =?utf-8?B?enVCZmxlcFRCaW9oZnF3UzB0aDBybmdjRmlmdWNZVXJFRy84Ly9TU1lubFFZ?=
+ =?utf-8?B?SEx0MjZQNFBFcEsyaXMrdnJHbk5LZkZreDh0aTZDODdZalIyaVkxY0hEM0Rz?=
+ =?utf-8?B?b2p5WDlpRUdsVU56SllRNDIyRDl3RGF1c3o3VUZWbFN5YVNpZ1R4blJVQWsx?=
+ =?utf-8?B?RGlhNXhjSCtibTJGaUkwcFdjdjFKM09TeTh1WmNFaEkyV1hwczFYTlZ3cHJP?=
+ =?utf-8?B?aEdqQnk4Ry82UVRPR1lDeklUb21UUklWN3d3ZUJEVEdXUHA4am1INGE3ZWJI?=
+ =?utf-8?B?Qm9xdE9TZk0wQUkyTWtuRkVCRGZobnIreExGTU5oai8vZ2wxcmRKN3o1cnVJ?=
+ =?utf-8?B?ampTZDlHR2c0MExTc01IbGRNbDE1WkhBODk3REFQM2dHNEM4dHJGRy92YjQ3?=
+ =?utf-8?B?eUk4ekxuTlZYcEE2NTJ6ZnVyYjVnR0NrU1I2ZXFzU1Zlem5pSTdvNkFPRng2?=
+ =?utf-8?B?Zk8wK0RmWExweENOMGpxbUJDWmtRazFaRlBwYzVCZm14TEVFQ0hJYWV3NTYz?=
+ =?utf-8?B?NG8wNDlWY0RNMCthVkdmUzlLTnAvYVQ3dFJtM2cxV0VINmxKTjdHWkRvS3Z5?=
+ =?utf-8?B?bDByRklwZ2Nrc3hmc1cweko3RTNmVk5XUUJMWlRGZ3g0MDhSY0tSaTNJdzBF?=
+ =?utf-8?B?L0FCTmRxNDRGcGgzbXlTM0xmbHBQVGVVejZtY09DTXZsekNwN1VQa0ZSTkJZ?=
+ =?utf-8?B?Z0NlZDg2MzNGaWdnQnZCcWZkT05xdXljV2RZa1hLdlJJVmRUWkN2WUV1alkz?=
+ =?utf-8?B?NjJSVUZZYkN6UlJaamZPQ2dyd0IwVmZMaVc5NkRmTmFnQVVBVXlSb012Q0c5?=
+ =?utf-8?B?R2Y5V1N6NVRTVFFqdWxtWC82NGEzRzF5RnFZbHAzSTZ2Nitnc0YvQjZPRG5F?=
+ =?utf-8?B?cTBDeTdIMndSVnJ0NTdBWEN2dGVKZG1lNElPQXpkU3AxZ0dDOHB2NFZjSzVG?=
+ =?utf-8?Q?BYe8bxpJdj4=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZTVnakdMeVRYaC9zSW9HNTRyT0Mvekp5Q2J5RkJTejBBdjZnTGd2VTlBd2hN?=
+ =?utf-8?B?S2RSd211S2EycU9FRXNSZitkeDNTd2hpeXB4Tml0d1Y1SHVJVVQwdmNmb3hX?=
+ =?utf-8?B?S1pNd2d1OXNoSTBQMEZ5QXpCSlpiVnQ1NUxDWTV4ci85aldRVkQvdFBOTHRJ?=
+ =?utf-8?B?NjNaZGh6aXNIMjhKZVNTQUIzR1pUMDloWmNkRHVZc0YxTlBYSGVPN3BIcGdO?=
+ =?utf-8?B?VU9IN0pGN3pEWHFiYmRMNi9vZWV6bW82eHdNZDdoMklUQVRGd0NYbGhCYjI3?=
+ =?utf-8?B?aWJ3UDB2aWpqZGtKR3Iwb2pycEVHTU9UV2FMUVE3Slk3RDZ4QjZaYlpBb1l0?=
+ =?utf-8?B?TDlsaW5xODZuZnh1aHNPVjN6YmwrWllSR3ZzVGd5L2ZlTmpoVStIVFVwYm1o?=
+ =?utf-8?B?TXJlRWpOTHFtT1dzNWtCK3NOekJpeHJ6UDhBU1NxaHpEOFFBSUVxUGlNS3Nv?=
+ =?utf-8?B?Um5MUENQNzMzODBVVUNPTDc5WUlCSElGbTQxV1RocUl2YStHbGdjaGtCekRF?=
+ =?utf-8?B?R0RFckVBOHFuSHNXY3VINFB4R1BCaGpua2VHTlFpYWJkcUhlSXhkVmVYbktU?=
+ =?utf-8?B?MkIvS2hpb2lqekxreWpIL0FNUmZlY2c2akhRYzFSYkRtNUxYLzJTY3RTTEJW?=
+ =?utf-8?B?dHhvb3BsOUhrZGVrYUFaRVpuUXdpK01qWG50K3laZ3VLK2M4N0lTOFFsZFcz?=
+ =?utf-8?B?eHM5dCthc2IzVGw3ZlVONFd0ZS9aUXg3WG1LM0Z4cWZqRU5uMUo0MDByZUpJ?=
+ =?utf-8?B?TkEyRC9aaUs1T2tSeXVhUmJBanlzR29HT0Znc0NtWUl1L2QyZWtNcHVXd09H?=
+ =?utf-8?B?emQxYU8xanNGSit4Qnl1aVQvVWtGdExVMjR6Q2I2ZWRiM1dnelFJUlZlc1B1?=
+ =?utf-8?B?VTRmdEpvNHFzbTA1S0dxQkhMeHJPWmdlZFNMem9ZaXlvTnhIUVZ1ZC9ob1Bo?=
+ =?utf-8?B?dWxKZzRzdDFyYTZkWWZ5N1Zsc1d6TWNENmlFYy9WM2NheTNSN0thZ2hidXFF?=
+ =?utf-8?B?aE9GYVlzcVE5QU1DZmRLcjhVOGVaN3RQODU1SWZCSWFSWG0zQjhJZDBaWkZ6?=
+ =?utf-8?B?VEVNUHVyWmFKZ1BoZzV2MFF1RlBqL29PdGVudlQ4VDBEUDV6YUdITkRwK2NZ?=
+ =?utf-8?B?d3QzTkl6dGwzQkQ4ckRCcVQrSnVHQ2g5M0w1bVpDZm1oTW9yWlFHQ2M0L0pL?=
+ =?utf-8?B?OXIwRW1zS2ErZ1JqU0o0TjhIUCtZOGp5ZW92REltVFd2ajVVNC90SUJYd1Uz?=
+ =?utf-8?B?cGFIOHNxQ25pRGtVckhyTjRoR0RWb2tnSVJnZStwYWxpbGkxUU1tVDY1YVc3?=
+ =?utf-8?B?cVQ1QnRzcnRlRnZ0MURHRFVpajBLWGZ6eTBqSzdLSlhsUTFMV3ZCMWpIZVdm?=
+ =?utf-8?B?LzAxQjR1Z0l3R2ZiaUZoYmNueWRjTzN3c1haR01UVXhKb3pGdkdVMWF3Vm5F?=
+ =?utf-8?B?QXI4WUpmNTFSS3RJN3JVZWZoYWdnb2laZlpkR1Vya1htQ3NyNmt1K1NOejQ5?=
+ =?utf-8?B?NW0zOUdIbzFNajVuNCtlbVBSb0xEam9yU21UM3k1bmdwR2VTcEFMSkNFQ3Qr?=
+ =?utf-8?B?ejhiNDNCbXNhaWpUclUrSDIzVEE1aFBiLzZwTFpjczAvQ1UrZmx5aVA2anhU?=
+ =?utf-8?B?MHlMVldMc3JoUTlLc0J4cVk4REtXR0UwdS8rVU1Uak56dU1JVjJsbTBFenBZ?=
+ =?utf-8?B?Q25PUTZoeG4yMVFzOTlUblZqekFOU1hZZVVhdG5WYTNVTEJ6NHVaS1NsbGdJ?=
+ =?utf-8?B?WnVDcnFSWFpjMlBRWnVkeSs3NXdGTEc0RjBUbWFSanFmV0owOXRCU3VqZ2tG?=
+ =?utf-8?B?c2hTaHY1MG56Y1ZPMEtKNkUxZVJqRDN6bEszSVlRTUNRQkVSeWlSQkd3WmJT?=
+ =?utf-8?B?c3J3NnFvWkdRRGtPWWhjVDI5eUIyeVNGbHE0VkdibmlPWFBvaXFsTDBnenlG?=
+ =?utf-8?B?Q1ZyaDlmWTliM0JvTXdSZUpaSDFCMGJ5UElhT1ZYN0tmRWtwVXJVNldLZzNW?=
+ =?utf-8?B?K2xXY2F5UlBMalJadHZsU3BXZFJsMmVRZGUwSFphQnpUVTRNY2UrZjZVemJs?=
+ =?utf-8?B?THlsQUF2SlB6VWlrajJKMjdhZGdQNTQ4MUZXenhhUy9GWk85QzY3YVRReDAw?=
+ =?utf-8?Q?t3MU5GyZPCxlLYk94b7RrKmm/?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9e3eef9b-e8e4-46ac-dfe7-08dda2b6abb1
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2025 15:52:40.7232
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fFZxU5cZN5fdYhLuBRzap3yvX99Uk4jFdUbEJsVHWypN3nKj33bExdhBMDNBp8/gcnJBZ466ULCyFNoamuSnXA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8261
 
-On 6/3/25 9:36 AM, Angelo Dureghello wrote:
-> From: Angelo Dureghello <adureghello@baylibre.com>
+On 5/19/25 18:57, Ashish Kalra wrote:
+> From: Ashish Kalra <ashish.kalra@amd.com>
 > 
-> Add gain calibration support, using resistor values set on devicetree,
-> values to be set accordingly with ADC external RFilter, as explained in
-> the ad7606c-16 datasheet, rev0, page 37.
+> Introduce new min, max sev_es_asid and sev_snp_asid variables.
 > 
-> Usage example in the fdt yaml documentation.
+> The new {min,max}_{sev_es,snp}_asid variables along with existing
+> {min,max}_sev_asid variable simplifies partitioning of the
+> SEV and SEV-ES+ ASID space.
 > 
-> Tested-by: David Lechner <dlechner@baylibre.com>
-> Reviewed-by: Nuno Sá <nuno.sa@analog.com>
-
-The patch has changed significantly since these tags were given, so
-these tags should have been dropped.
-
-> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+> Suggested-by: Sean Christopherson <seanjc@google.com>
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
 > ---
->  drivers/iio/adc/ad7606.c | 66 ++++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/iio/adc/ad7606.h |  6 +++++
->  2 files changed, 72 insertions(+)
+>  arch/x86/kvm/svm/sev.c | 37 ++++++++++++++++++++++++++++---------
+>  1 file changed, 28 insertions(+), 9 deletions(-)
 > 
-> diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
-> index e0a666cc0e14255754e74daa9e1e88bc4ad1665c..22dcb52ced57d4305db6401605c064fc438d5be4 100644
-> --- a/drivers/iio/adc/ad7606.c
-> +++ b/drivers/iio/adc/ad7606.c
-> @@ -33,6 +33,10 @@
->  
->  #include "ad7606.h"
->  
-> +#define AD7606_CALIB_GAIN_MIN	0
-> +#define AD7606_CALIB_GAIN_STEP	1024
-> +#define AD7606_CALIB_GAIN_MAX	(63 * AD7606_CALIB_GAIN_STEP)
-> +
->  /*
->   * Scales are computed as 5000/32768 and 10000/32768 respectively,
->   * so that when applied to the raw values they provide mV values.
-> @@ -125,6 +129,7 @@ static int ad7609_chan_scale_setup(struct iio_dev *indio_dev,
->  				   struct iio_chan_spec *chan);
->  static int ad7616_sw_mode_setup(struct iio_dev *indio_dev);
->  static int ad7606b_sw_mode_setup(struct iio_dev *indio_dev);
-> +static int ad7606_chan_calib_gain_setup(struct iio_dev *indio_dev);
->  
->  const struct ad7606_chip_info ad7605_4_info = {
->  	.max_samplerate = 300 * KILO,
-> @@ -180,6 +185,7 @@ const struct ad7606_chip_info ad7606b_info = {
->  	.scale_setup_cb = ad7606_16bit_chan_scale_setup,
->  	.sw_setup_cb = ad7606b_sw_mode_setup,
->  	.offload_storagebits = 32,
-> +	.calib_gain_setup_cb = ad7606_chan_calib_gain_setup,
->  	.calib_offset_avail = ad7606_calib_offset_avail,
->  	.calib_phase_avail = ad7606b_calib_phase_avail,
->  };
-> @@ -195,6 +201,7 @@ const struct ad7606_chip_info ad7606c_16_info = {
->  	.scale_setup_cb = ad7606c_16bit_chan_scale_setup,
->  	.sw_setup_cb = ad7606b_sw_mode_setup,
->  	.offload_storagebits = 32,
-> +	.calib_gain_setup_cb = ad7606_chan_calib_gain_setup,
->  	.calib_offset_avail = ad7606_calib_offset_avail,
->  	.calib_phase_avail = ad7606c_calib_phase_avail,
->  };
-> @@ -246,6 +253,7 @@ const struct ad7606_chip_info ad7606c_18_info = {
->  	.scale_setup_cb = ad7606c_18bit_chan_scale_setup,
->  	.sw_setup_cb = ad7606b_sw_mode_setup,
->  	.offload_storagebits = 32,
-> +	.calib_gain_setup_cb = ad7606_chan_calib_gain_setup,
->  	.calib_offset_avail = ad7606c_18bit_calib_offset_avail,
->  	.calib_phase_avail = ad7606c_calib_phase_avail,
->  };
-> @@ -355,6 +363,36 @@ static int ad7606_get_chan_config(struct iio_dev *indio_dev, int ch,
->  	return 0;
+> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> index dea9480b9ff6..383db1da8699 100644
+> --- a/arch/x86/kvm/svm/sev.c
+> +++ b/arch/x86/kvm/svm/sev.c
+> @@ -85,6 +85,10 @@ static DECLARE_RWSEM(sev_deactivate_lock);
+>  static DEFINE_MUTEX(sev_bitmap_lock);
+>  unsigned int max_sev_asid;
+>  static unsigned int min_sev_asid;
+> +static unsigned int max_sev_es_asid;
+> +static unsigned int min_sev_es_asid;
+> +static unsigned int max_snp_asid;
+> +static unsigned int min_snp_asid;
+>  static unsigned long sev_me_mask;
+>  static unsigned int nr_asids;
+>  static unsigned long *sev_asid_bitmap;
+> @@ -172,20 +176,32 @@ static void sev_misc_cg_uncharge(struct kvm_sev_info *sev)
+>  	misc_cg_uncharge(type, sev->misc_cg, 1);
 >  }
 >  
-> +static int ad7606_chan_calib_gain_setup(struct iio_dev *indio_dev)
-> +{
-> +	struct ad7606_state *st = iio_priv(indio_dev);
-> +	unsigned int num_channels = st->chip_info->num_adc_channels;
-> +	struct device *dev = st->dev;
-> +	int ret;
-> +
-> +	device_for_each_child_node_scoped(dev, child) {
-
-Now that I had a deep dive into this in v7, I'm wondering what is the
-benefit of having a separate function and iterating over child nodes
-a second time compared to just having a bool flag in chip_info and
-doing this in the existing iterator in ad7606_probe_channels().
-
-It seems like we could do the same thing in much fewer lines of code
-if we avoid adding a callback.
-
-> +		u32 reg, r_gain;
-> +
-> +		ret = fwnode_property_read_u32(child, "reg", &reg);
-> +		if (ret)
-> +			return ret;
-> +
-> +		/* Chan reg is a 1-based index. */
-> +		if (reg < 1 || reg > num_channels)
-> +			return -EINVAL;
-> +
-> +		r_gain = 0;
-> +		ret = fwnode_property_read_u32(child, "adi,rfilter-ohms",
-> +					       &r_gain);
-
-ret is set but never read here.
-
-> +		if (r_gain > AD7606_CALIB_GAIN_MAX)
-> +			return -EINVAL;
-> +
-> +		st->r_gain[reg - 1] = r_gain;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int ad7606c_18bit_chan_scale_setup(struct iio_dev *indio_dev,
->  					  struct iio_chan_spec *chan)
+> -static int sev_asid_new(struct kvm_sev_info *sev)
+> +static int sev_asid_new(struct kvm_sev_info *sev, unsigned long vm_type)
 >  {
-> @@ -1352,6 +1390,21 @@ static int ad7606b_sw_mode_setup(struct iio_dev *indio_dev)
->  	return st->bops->sw_mode_config(indio_dev);
->  }
+>  	/*
+>  	 * SEV-enabled guests must use asid from min_sev_asid to max_sev_asid.
+>  	 * SEV-ES-enabled guest can use from 1 to min_sev_asid - 1.
+> -	 * Note: min ASID can end up larger than the max if basic SEV support is
+> -	 * effectively disabled by disallowing use of ASIDs for SEV guests.
+>  	 */
+> -	unsigned int min_asid = sev->es_active ? 1 : min_sev_asid;
+> -	unsigned int max_asid = sev->es_active ? min_sev_asid - 1 : max_sev_asid;
+> -	unsigned int asid;
+> +	unsigned int min_asid, max_asid, asid;
+>  	bool retry = true;
+>  	int ret;
 >  
-> +static int ad7606_set_gain_calib(struct ad7606_state *st)
-> +{
-> +	int i, ret;
-> +
-> +	for (i = 0; i < st->chip_info->num_adc_channels; i++) {
-> +		ret = st->bops->reg_write(st, AD7606_CALIB_GAIN(i),
-> +					  DIV_ROUND_CLOSEST(st->r_gain[i],
-> +					  AD7606_CALIB_GAIN_STEP));
-
-I think typical kernel style would be to have at least one more tab
-on this line (assuming aligning to "(" makes the line too long).
-
-> +		if (ret)
-> +			return ret;
+> +	if (vm_type == KVM_X86_SNP_VM) {
+> +		min_asid = min_snp_asid;
+> +		max_asid = max_snp_asid;
+> +	} else if (sev->es_active) {
+> +		min_asid = min_sev_es_asid;
+> +		max_asid = max_sev_es_asid;
+> +	} else {
+> +		min_asid = min_sev_asid;
+> +		max_asid = max_sev_asid;
 > +	}
 > +
-> +	return 0;
-> +}
+> +	/*
+> +	 * The min ASID can end up larger than the max if basic SEV support is
+> +	 * effectively disabled by disallowing use of ASIDs for SEV guests.
+> +	 */
 > +
->  static int ad7606_probe_channels(struct iio_dev *indio_dev)
->  {
->  	struct ad7606_state *st = iio_priv(indio_dev);
-> @@ -1444,6 +1497,13 @@ static int ad7606_probe_channels(struct iio_dev *indio_dev)
->  	if (slow_bus)
->  		channels[i] = (struct iio_chan_spec)IIO_CHAN_SOFT_TIMESTAMP(i);
+
+Remove blank line.
+
+>  	if (min_asid > max_asid)
+>  		return -ENOTTY;
 >  
-> +	/* Getting gain calibration values for all channels. */
-> +	if (st->sw_mode_en && st->chip_info->calib_gain_setup_cb) {
-> +		ret = st->chip_info->calib_gain_setup_cb(indio_dev);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
->  	indio_dev->channels = channels;
+> @@ -439,7 +455,7 @@ static int __sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp,
+>  	if (vm_type == KVM_X86_SNP_VM)
+>  		sev->vmsa_features |= SVM_SEV_FEAT_SNP_ACTIVE;
 >  
->  	return 0;
-> @@ -1620,6 +1680,12 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
->  		st->chip_info->sw_setup_cb(indio_dev);
+> -	ret = sev_asid_new(sev);
+> +	ret = sev_asid_new(sev, vm_type);
+>  	if (ret)
+>  		goto e_no_asid;
+>  
+> @@ -3029,6 +3045,9 @@ void __init sev_hardware_setup(void)
+>  		goto out;
 >  	}
 >  
-> +	if (st->sw_mode_en && st->chip_info->calib_gain_setup_cb) {
-> +		ret = ad7606_set_gain_calib(st);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
->  	return devm_iio_device_register(dev, indio_dev);
->  }
->  EXPORT_SYMBOL_NS_GPL(ad7606_probe, "IIO_AD7606");
-> diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
-> index f613583a7fa4095115b0b28e3f8e51cd32b93524..a5b0d318e2f4d73d3708288536e807957c5de68c 100644
-> --- a/drivers/iio/adc/ad7606.h
-> +++ b/drivers/iio/adc/ad7606.h
-> @@ -50,6 +50,7 @@ struct ad7606_state;
->  typedef int (*ad7606_scale_setup_cb_t)(struct iio_dev *indio_dev,
->  				       struct iio_chan_spec *chan);
->  typedef int (*ad7606_sw_setup_cb_t)(struct iio_dev *indio_dev);
-> +typedef int (*ad7606_calib_gain_setup_cb_t)(struct iio_dev *indio_dev);
->  
->  /**
->   * struct ad7606_chip_info - chip specific information
-> @@ -66,6 +67,7 @@ typedef int (*ad7606_sw_setup_cb_t)(struct iio_dev *indio_dev);
->   * @init_delay_ms:	required delay in milliseconds for initialization
->   *			after a restart
->   * @offload_storagebits: storage bits used by the offload hw implementation
-> + * @calib_gain_setup_cb: callback to setup of gain calibration
->   * @calib_offset_avail: pointer to offset calibration range/limits array
->   * @calib_phase_avail:  pointer to phase calibration range/limits array
->   */
-> @@ -81,6 +83,7 @@ struct ad7606_chip_info {
->  	bool				os_req_reset;
->  	unsigned long			init_delay_ms;
->  	u8				offload_storagebits;
-> +	ad7606_calib_gain_setup_cb_t	calib_gain_setup_cb;
->  	const int			*calib_offset_avail;
->  	const int			(*calib_phase_avail)[2];
->  };
-> @@ -131,6 +134,7 @@ struct ad7606_chan_scale {
->   * @data:		buffer for reading data from the device
->   * @offload_en:		SPI offload enabled
->   * @bus_data:		bus-specific variables
-> + * @r_gain:		array to store gain calibration resistor value in ohm
->   * @d16:		be16 buffer for reading data from the device
->   */
->  struct ad7606_state {
-> @@ -161,6 +165,8 @@ struct ad7606_state {
->  	bool				offload_en;
->  	void				*bus_data;
->  
-> +	int				r_gain[AD760X_MAX_CHANNELS];
+> +	min_sev_es_asid = min_snp_asid = 1;
+> +	max_sev_es_asid = max_snp_asid = min_sev_asid - 1;
 
-This isn't used outside of probe, so we could possibly get away with
-putting it somewhere else.
+Should these be moved to after the min_sev_asid == 1 check ...
 
 > +
->  	/*
->  	 * DMA (thus cache coherency maintenance) may require the
->  	 * transfer buffers to live in their own cache lines.
-> 
+>  	/* Has the system been allocated ASIDs for SEV-ES? */
+>  	if (min_sev_asid == 1)
+>  		goto out;
+> @@ -3048,11 +3067,11 @@ void __init sev_hardware_setup(void)
+>  	if (boot_cpu_has(X86_FEATURE_SEV_ES))
+>  		pr_info("SEV-ES %s (ASIDs %u - %u)\n",
+>  			str_enabled_disabled(sev_es_supported),
+> -			min_sev_asid > 1 ? 1 : 0, min_sev_asid - 1);
+> +			min_sev_es_asid, max_sev_es_asid);
 
+... so that this becomes 0 and 0 if min_sev_asid == 1 ? (like before)
+
+>  	if (boot_cpu_has(X86_FEATURE_SEV_SNP))
+>  		pr_info("SEV-SNP %s (ASIDs %u - %u)\n",
+>  			str_enabled_disabled(sev_snp_supported),
+> -			min_sev_asid > 1 ? 1 : 0, min_sev_asid - 1);
+> +			min_snp_asid, max_snp_asid);
+
+Ditto
+
+Thanks,
+Tom
+
+>  >  	sev_enabled = sev_supported;
+>  	sev_es_enabled = sev_es_supported;
