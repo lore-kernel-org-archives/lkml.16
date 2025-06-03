@@ -1,61 +1,63 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D194B19ABC3;
-	Tue,  3 Jun 2025 20:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A41221F31;
+	Tue,  3 Jun 2025 20:49:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748983748; cv=none; b=kSTEFaOFohXcAKjQbLvvYXhPRXCCKfn5HgOt9x1TYsiZVwYV06liUJ1nNmGbTe1q7kBwE970UsubO7DtvjM4kV0LciTtCaIlyKy0tHL87NLWamni3RwbBX78mQxVHdymnD9H8Zeb8EujmIOd+7gqqilYbKn+RkkiZCKk/bEC2ho=
+	t=1748983750; cv=none; b=XufwDOieye2scnX1XcO7EXgY/RYIMqnB25uU5vz+pvz1lCcs3s5MlthhordKW4fh0k+gfxd+ldRu/q176YP60HMAKdxH+9fgwaU0qh0rRu2lYu1ko2+oJvWFr3jSGfBXikh5tXWo94arJbPL6/3fsWtYaoxBM/J4hmAi3P42MWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748983748; c=relaxed/simple;
-	bh=uamU+kMXc6rwhWtx3UJUQaoWboHSUmWfDCk9ETTsXRk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=nKK3sPTzBykj7F7BPoFXX+5aGVof491YioGDx6VwN7zEQQzEzGFVYp+FCzcrdgVXEPUS5Gh0C1bHofjmH2hmL+aUwoWutcrR8DpsubYgB9TJfsQBnRpulm6bu1MmpacDGWyAUIISzueplex3HjzZCLNi6HQs4D5I0Dos5u9k0tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gdWCfhf5; arc=none smtp.client-ip=209.85.221.42
+	s=arc-20240116; t=1748983750; c=relaxed/simple;
+	bh=bLdRTIaXhaS74UWomOCqZxJGucm8brlKdCwRnDtbXt8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P2wOQVrruq/LvLDBKnXYySHIPSbdYWd2t6aaG3noxJygdj86bh5nXikxiEitXqKpepXIKtggNqORhDoAo3VfpeXll3N3XnSv3xjtoP08IosYxyFt7qwW67cOY2Ih4aN2MySHerqtEQNGtI4mOeeygsq2hcYzCbrn4Has0hFuKoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M2+53Fn9; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gdWCfhf5"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a4fdc27c4aso2163915f8f.3;
-        Tue, 03 Jun 2025 13:49:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2+53Fn9"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-441ab63a415so67346415e9.3;
+        Tue, 03 Jun 2025 13:49:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748983744; x=1749588544; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=c7W3ZF4Xa0Bh8TC5ljpqLlRfaqMimqDP2/UGKib5BDo=;
-        b=gdWCfhf5J+hdCrO9LswXIUL3QmEuBsRIj3u1Jd1DlQhul3uRhJT9/IGPXtQQj6ZLvz
-         xVy1YJ6OTwPCvd50zJl5MhOC+ZDvHW6VSmTL725daGj19GHm9rwZunQNPQWke/CUU6KJ
-         aJGO4Dt7txEalgK1WSpSPE5FXi8GGVt/3LxoCizuVCEKAO7kGzLR72+hjHF1PIt6p5vk
-         l1qlSNLdj+7ha1W4gfKuASGOt2PX+3AZ3fZn0ILuDnUSpGXb14mEOIVXnVHVUs/4411J
-         Ll0bJONjS4gVX0uoDcE/sqywl9iys/T0oeOiMyQtE1RhbDAarg0LAgSfCWuPL2GsGskc
-         f6Uw==
+        d=gmail.com; s=20230601; t=1748983746; x=1749588546; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6veEb/KWAhbZcVIjM6zW31T3gcz+Ugy3LtpGhiCo/hE=;
+        b=M2+53Fn9jLcEcy77o0TYOvLWslNCswYF+94+sDdlTuYz+0wzoo0N//yFF7bWoH0tAx
+         z25f2so57I3l/RRx1/U1xlhvRmKh6Rzs9T+krvTSmtHBMmQvTjj9/nCPveQDDgqJwDVM
+         nIcT/vrmbNbDuIiOjJRRL9W0w94LrAMkom4A6IiH+37spjqAMOTP1ai+R06XQ8c8GDeD
+         bncxvH96+WEw0tRdfFbpIhF1cemK/FLmt3iyCutU2w50Y2ORhlXuR9/3PHhexAU6oMYW
+         lgwohDA1Q0atWMu9zn55gOJ6ANen2TpczebffSKSBGZMiEUHGVxQiYjq4khEhNagSwO2
+         Z+Jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748983744; x=1749588544;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=c7W3ZF4Xa0Bh8TC5ljpqLlRfaqMimqDP2/UGKib5BDo=;
-        b=u7ek3Q1g006tcaz7ywmZJgR8AU8j8xZbmzoWGF7FRmTeLrWTAJ/KFl2Cc7lFBnlS6y
-         VjNvHz+DoE10XODZtJA9u1oefDK40dijib3f6KoTxCzWX/pw59OCBIsDkVsPEr8/CgIa
-         Iu5/Ewq6e0+XPRHebQZMY/oP8n79E+8+PHiQZ4zVJW8HTGO6kVCTZ7GdBks1JnBk5v8j
-         Rix3vpYefCRp06U+RqHB/pHt+wvs2YEni+bhExsDLuUUoPPmfRXp0+4+1IH208lFhKye
-         FWbXFXPs3/lnjW5uylNX0pZBv9gg0kRGBTFJLc6r0tgjDHtI12fsGmQn0wQnEFlWoaOW
-         vJXw==
-X-Forwarded-Encrypted: i=1; AJvYcCWIxBrDHTvOe1/4pwWRdNkkd+GYDK4IUuxTKANTT84XTVeF+K0KcsN27E3a0ZDkMhz0AiKlKmmd@vger.kernel.org, AJvYcCXdP23bgnuS+C63KpgKGMIJMnrwaA1d2WA9BzTi9AX6IhbNf9RiXEfEii28U/Artt8gwTod15ksMYpBTV4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMXH1XY+0rmENN7oJp/tdeAHGm8MqG/xA1aK9fqBdTeZ3M+jQZ
-	yF4yrZlaND9A9KoZDOxa/BE7bb+dkJQb6EMJF6yt8Qaxwx23TSAcZhYC
-X-Gm-Gg: ASbGncv989Gy2d0xXebl3RtlE1e5KcWddeaMJ+SYM4+jgpyf+UEC2rZd+UHc/4kMot7
-	4ig1akZX+FzYWvVw06NJjgyVKcSw8ajbiDrDrdpzJD/gYye8qB0wxtM+QRvqN53BCP3n2rkJMCD
-	OhM2/Cy+bir6s4w9Zgsca3n+mTr7ZeV08j1hTrpfEXP0hHTio5ALJCQLYfKKIGvYBSy3jdxVGNP
-	fZ2nqckv5FEObQu3MKn+12rg+ydOG9/eNsUjIdeGAM16VTSfx8j6oTN6a19admtMbPQcTyffjWf
-	2J4rvTDYbJNGCwGC3kXjRzW47OH5raMmV5DNA5RzGKo6KdaYqu3TE/IAuZRnO/WVDB4ncwIMTJr
-	pSZA2Xsy9uvI+7yA9CIDulghVYNz6K3DbQ8qrgIpH8IGso4xQshm2
-X-Google-Smtp-Source: AGHT+IFxODhTA4FjCqfl65GUPD+pt5gWwWMPs4JCLRSuz21Se5qOusbYl27aSwKwb4mAgm5Gk8NfNA==
-X-Received: by 2002:a05:6000:1887:b0:3a4:c6bc:995b with SMTP id ffacd0b85a97d-3a51d961c14mr156915f8f.35.1748983743831;
-        Tue, 03 Jun 2025 13:49:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748983746; x=1749588546;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6veEb/KWAhbZcVIjM6zW31T3gcz+Ugy3LtpGhiCo/hE=;
+        b=Wn5KoaW4BBtvBfQXAt5Kn4zity3ioNR0apVPFZuFUl6g+Knrl3hPasgtT/Msfi65D1
+         SUGTF+e2af6cNeCCdmAbu7nAgZt0Mx5KyDkGBUxYAmILRCKt/bQ8o9vJfWmJ4ArP6yid
+         jT1N/WbUUGifZIx4/NZaR36ykd0LsRX7z8H+DMqzkUUkf2b4UXcr/uB39qhR1tvfjrDo
+         J2YSh32SbG7zVDLncNMWrcevsvCJHuEXScDgRGRtWKshxm7WB0s+vxMSTguDkcslzxOE
+         UNCSDrV4hScRlp6cLVK3UcZXJqWV8pNiL7By+gnBn8J054VmIE+OtFOGDSJ1cg6Bp12L
+         Einw==
+X-Forwarded-Encrypted: i=1; AJvYcCVfmmHHtAZOQ8KIUQyRZtMvE4sNCnrT6y9n2W2rSrgNI3yNy4OXodsl/vyTV9JYnnYjS/x5LVlY@vger.kernel.org, AJvYcCWtj/2QcYINnkAJLkDP+8faLcHiLnP/d8FjQFOmp1DSozQGGP5bTKnkUNAanNbpb2XPSn0vXuQuqvyxsb8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3tjF4/DpbCph5FOSDBYkva0LxvzlUvoTfWU1239RDwsQXj7Lh
+	qWS5CE0Qp71V7uVBOftavzbi3OuL4z32wNtjToz2fC6gSYb8mDo7x5Fa
+X-Gm-Gg: ASbGncsDL09NhNbAEmr5/uc/71DR9OrjzVmTHYwtArkCewsKJCgJoPuGU2fUV+dslDq
+	gs/MYS+vj3NDOrFqJLfpKzXeoWGSfXu3xlB6jiB2qa/qjrIWHNonDpmwL9FpkBrRHHwfU4v2R7R
+	eDamJ/OT95Rfm+PjT1w6z0wq8TLULIdsm0RRyH4T6Czx17WqK1bMSNvMD0pZc3W45LFK1EGEN9l
+	FvPTFQjn/XQD6l4NRLXLZIbLM/iwpQ0F1RM6hrd7eQJsZFYbY2IuacIwq0NdPWjQfXsReaATGeE
+	To+YUK9vTbwBWNYkuZxeNoZ8P1rGw42BBHNqHzI3cjyzSUXrUxyscYTG5R0IVwLms36aAIiL4NU
+	+V+cSiypAiyX3MWSBW59Wmd72vf7mdjhfKaSEm9bSxaO1JFwvm0/H
+X-Google-Smtp-Source: AGHT+IE6EeQhG2oVrPlF9Ndqe3xtMBUoMmticZC935ob8iZom3JHsUGpc45T6lYCyebDP3AMe5cSgA==
+X-Received: by 2002:a05:600c:1e8b:b0:43d:fa59:af97 with SMTP id 5b1f17b1804b1-451f0b45248mr1079835e9.32.1748983746302;
+        Tue, 03 Jun 2025 13:49:06 -0700 (PDT)
 Received: from skynet.lan (2a02-9142-4580-1500-0000-0000-0000-0008.red-2a02-914.customerbaf.ipv6.rima-tde.net. [2a02:9142:4580:1500::8])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451e58c348asm26258225e9.3.2025.06.03.13.49.02
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451e58c348asm26258225e9.3.2025.06.03.13.49.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 13:49:03 -0700 (PDT)
+        Tue, 03 Jun 2025 13:49:05 -0700 (PDT)
 From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
 To: jonas.gorski@gmail.com,
 	florian.fainelli@broadcom.com,
@@ -70,10 +72,12 @@ To: jonas.gorski@gmail.com,
 	linux-kernel@vger.kernel.org,
 	dgcbueu@gmail.com
 Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
-Subject: [RFC PATCH net-next v2 00/10] net: dsa: b53: fix BCM5325 support
-Date: Tue,  3 Jun 2025 22:48:48 +0200
-Message-Id: <20250603204858.72402-1-noltari@gmail.com>
+Subject: [RFC PATCH net-next v2 02/10] net: dsa: b53: prevent FAST_AGE access on BCM5325
+Date: Tue,  3 Jun 2025 22:48:50 +0200
+Message-Id: <20250603204858.72402-3-noltari@gmail.com>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250603204858.72402-1-noltari@gmail.com>
+References: <20250603204858.72402-1-noltari@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,41 +87,51 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-These patches get the BCM5325 switch working with b53.
+BCM5325 doesn't implement FAST_AGE registers so we should avoid reading or
+writing them.
 
-I'm not really sure that everything here is correct since I don't work for
-Broadcom and all this is based on the public datasheet available for the
-BCM5325 and my own experiments with a Huawei HG556a (BCM6358).
+Fixes: 967dd82ffc52 ("net: dsa: b53: Add support for Broadcom RoboSwitch")
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+---
+ drivers/net/dsa/b53/b53_common.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
- v2: introduce changes requested by Jonas, Florian and Vladimir:
-  - Add b53_arl_to_entry_25 function.
-  - Add b53_arl_from_entry_25 function.
-  - Add b53_arl_read_25 function, fixing usage of ARLTBL_VALID_25 and
-    ARLTBL_VID_MASK_25.
-  - Change b53_set_forwarding function flow.
-  - Disallow BR_LEARNING on b53_br_flags_pre() for BCM5325.
-  - Drop rate control registers.
-  - Move B53_PD_MODE_CTRL_25 to b53_setup_port().
+ v2: no changes.
 
-Florian Fainelli (1):
-  net: dsa: b53: add support for FDB operations on 5325/5365
-
-Álvaro Fernández Rojas (9):
-  net: dsa: b53: prevent FAST_AGE access on BCM5325
-  net: dsa: b53: prevent SWITCH_CTRL access on BCM5325
-  net: dsa: b53: fix IP_MULTICAST_CTRL on BCM5325
-  net: dsa: b53: prevent DIS_LEARNING access on BCM5325
-  net: dsa: b53: prevent BRCM_HDR access on BCM5325
-  net: dsa: b53: prevent GMII_PORT_OVERRIDE_CTRL access on BCM5325
-  net: dsa: b53: fix unicast/multicast flooding on BCM5325
-  net: dsa: b53: fix b53_imp_vlan_setup for BCM5325
-  net: dsa: b53: ensure BCM5325 PHYs are enabled
-
- drivers/net/dsa/b53/b53_common.c | 255 ++++++++++++++++++++++++-------
- drivers/net/dsa/b53/b53_priv.h   |  29 ++++
- drivers/net/dsa/b53/b53_regs.h   |  24 ++-
- 3 files changed, 250 insertions(+), 58 deletions(-)
-
+diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
+index feea531732c7b..525306193f80e 100644
+--- a/drivers/net/dsa/b53/b53_common.c
++++ b/drivers/net/dsa/b53/b53_common.c
+@@ -486,6 +486,9 @@ static int b53_flush_arl(struct b53_device *dev, u8 mask)
+ {
+ 	unsigned int i;
+ 
++	if (is5325(dev))
++		return 0;
++
+ 	b53_write8(dev, B53_CTRL_PAGE, B53_FAST_AGE_CTRL,
+ 		   FAST_AGE_DONE | FAST_AGE_DYNAMIC | mask);
+ 
+@@ -510,6 +513,9 @@ static int b53_flush_arl(struct b53_device *dev, u8 mask)
+ 
+ static int b53_fast_age_port(struct b53_device *dev, int port)
+ {
++	if (is5325(dev))
++		return 0;
++
+ 	b53_write8(dev, B53_CTRL_PAGE, B53_FAST_AGE_PORT_CTRL, port);
+ 
+ 	return b53_flush_arl(dev, FAST_AGE_PORT);
+@@ -517,6 +523,9 @@ static int b53_fast_age_port(struct b53_device *dev, int port)
+ 
+ static int b53_fast_age_vlan(struct b53_device *dev, u16 vid)
+ {
++	if (is5325(dev))
++		return 0;
++
+ 	b53_write16(dev, B53_CTRL_PAGE, B53_FAST_AGE_VID_CTRL, vid);
+ 
+ 	return b53_flush_arl(dev, FAST_AGE_VLAN);
 -- 
 2.39.5
 
