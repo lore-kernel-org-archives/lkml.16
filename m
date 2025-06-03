@@ -1,183 +1,174 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2076.outbound.protection.outlook.com [40.107.94.76])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F51F235041
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 13:38:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748957923; cv=fail; b=Lz1lg/45ZO03bxinTiMH6zXTIDwOCyfWAjtIdWvlzlLCd0Rqm2YFnwbCaRU17M5B3VDAGidOABl3vcTZqdGDeIrNa5K6Svp38/qbeCSKS+cq6tDVxrlNCPQS4ib6CmmHryseDMZL7d2Wm2iY81eq1dx1Paw0wnWhtp1/Qa+nGMY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748957923; c=relaxed/simple;
-	bh=j82EuV+nkEF+ojfogsqKF/ZF9BpQn3/CmN64PolvRLM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=bn8+D+ASyQgf97DsDKZtGw1yIBc85Spxkg4r/QVV0xlrH272W/mXqotvxtRO2yHuolMmLyObGL8oPU3hKqDi6xg0BruEjXIRcHgj2d/4Gg8ob1bf4ig4eLk9Q7VUjw8pMznQJLq6W3nyMllkOirrkIkEP1rHotQG5GAqbl94m+U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=SFBb9cC4; arc=fail smtp.client-ip=40.107.94.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BDC822FF22;
+	Tue,  3 Jun 2025 13:41:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748958075; cv=none; b=gVvwhNOtflFbBmswkzetoUjt24ZTiE3JIIMtkJtW4TY3oHC3nfJ1tz10CHRkLoUsRwu5HSt7FXecQflqz+zchKbuWJ6tKRlXDAM6yECMKJFv4EHFIJa4BcbORFlfwB4227XNUxJfEZkdL7ccb4LJp+R/x7yzmMW6gDHBl0TBqXM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748958075; c=relaxed/simple;
+	bh=Ld/DmiOsr/GIjO8Gve7Gwa5r9+0LnmJEzLNU8zeFIpw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uwwFrJbRu+zvCyS0e+DOGZlAh5X9IIw+eJfUBfK69XmTenu4TGmFwdC43siCacI1qsQJWBlmCv624r1AlJr4sk677qJ2rdHdZTxhlsNA/uHtwNXSeQkm9P7e9+qn0rn/OYPR3gycyYLEzelfftB/0e3OEP5shFGxOnlNTUEusvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n4t4mUV4; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="SFBb9cC4"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZwcG456PwuLf+Ed04fzxDCsBmH+MvxKhaLOuBYOjExFFn9fHxFsJNRqnNxLH/LgwbrO8TWCn4LiVBYCokeJwNUvQkkudLg4FaKaWStQz6f8zPsJuNP7gDihgZhLuQ+AVRfAejSxJb7rW1x9riMQfpSiRIwQ7ukZzhsemMY18+AnuxZxec4vMHJOqFJmp9GjEku0tbZkStXlxyuQbuIJU4hdaPGxVOScUxn6ytZoUmNCIERPeGSRK3hWqZB5bVEmofMjI5Rn45WGRKO/uflotf9aQ2C10AL7r1JFDtpv2yuGaIaknYaDGP3NhGlGquiTxSn2mR40/knbXf0hx1CJDaQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QQXLRpL7hkJbIxLiywQ6dVBy22ySZm4IYMQfQVvkwuQ=;
- b=cmFQRgeQq34fUHZWI1Be8YIyvjCVda3rnBPGI/PaidkRORwH8YgpvO+XTt6+P7S3eY90c8VLirE30dS2QiWOlH5/e4qIP9hr9CbJdp2BubPFIk5/gxbH+KxPpiQahYuPGyYSoD4XAosfmsUTNdPrBzN6U2V+acwKUoW0eMdixuufqLaez9cgSKaQzR6/saTzTsM6Re/CPmkBk4jeWzGWW9mC2wO5e3oRjBpPbR5GC4RDOGK4AynuFo3SezxAn14viT5mGKp+sluI255MF90cKRdj02ZqumHEvTC5DmH1X2XFlmlxkvTDWHEgVZ4QrXw7QwYhlsk1NH/Ntce9FhbOWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QQXLRpL7hkJbIxLiywQ6dVBy22ySZm4IYMQfQVvkwuQ=;
- b=SFBb9cC45SLDN0VEaveOvls9whqBr7XIxfi0zF+/WrhLOpUNc2xYwupYQ5z1lo5PaJ14JSt8NrK4VjemUO1IPLogqFoI/oKjODyPy4pFz98PzH03B42a1v+dghgEgwwBnAiytqRCIROsNYm54N6WHfyN6xemdvKNX4GmPhtDBaMhVyAUriVP6Ao9jZAnCrLgab2Ytx0b7DdvLp9EtOW8FP2VnAsVBQALgTz1zOAQjw2kNIGN5UqDCIqnbnrY7KnqZ069PwmUgr+baD6g2R7GkAjy2N9hwr1BVEc2SB/NNeTcsY1CGvNtGgLOGkX9ZZW6M1wxk8RBek5yFVetZyjgSQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
- by DS7PR12MB8082.namprd12.prod.outlook.com (2603:10b6:8:e6::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Tue, 3 Jun
- 2025 13:38:38 +0000
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91%3]) with mapi id 15.20.8769.025; Tue, 3 Jun 2025
- 13:38:38 +0000
-Message-ID: <63fed4b9-1c04-49ac-b4c9-f1e5359d8550@nvidia.com>
-Date: Tue, 3 Jun 2025 09:38:35 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 01/10] sched: Add support to pick functions to take rf
-To: Tejun Heo <tj@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
- Changwoo Min <changwoo@igalia.com>
-References: <20250602180110.816225-1-joelagnelf@nvidia.com>
- <20250602180110.816225-2-joelagnelf@nvidia.com>
- <aD48Zq2FdYlBJAk2@slm.duckdns.org>
-Content-Language: en-US
-From: Joel Fernandes <joelagnelf@nvidia.com>
-In-Reply-To: <aD48Zq2FdYlBJAk2@slm.duckdns.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BN0PR02CA0037.namprd02.prod.outlook.com
- (2603:10b6:408:e5::12) To SN7PR12MB8059.namprd12.prod.outlook.com
- (2603:10b6:806:32b::7)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n4t4mUV4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748958074; x=1780494074;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Ld/DmiOsr/GIjO8Gve7Gwa5r9+0LnmJEzLNU8zeFIpw=;
+  b=n4t4mUV4Egsa9n0z+ZRTTESCOnMD9YG83JaD6l/DRQ5V5amUaa7NEALD
+   6kxOEnLPxHlg4bwhny/x8N2/eOMoEX5EDeG8gW7QPbuaJKWiZYZuotzhD
+   B+gRrJyodcqCaDda21soXegjpF9Jgz2ud+GNRdr9ww91AXcpcRMcp66jn
+   ihqJ3N3zoDFcVmof0Q1faNadE0mx83/e79hvlLKfPARaHRExuxSuUClV3
+   PyaUISbhePp1RRDB5/+H2gnZyRWxeVF/uvJXgaoFV/9WNU4lJhdoB6rEi
+   th9W5vz9KkbUBa5DunFMr/A+j9k1zZxIkzki4jo3DVovcprhHlomLGVmI
+   A==;
+X-CSE-ConnectionGUID: jX+4bTatRoOH68ovH/7cKA==
+X-CSE-MsgGUID: RH2MfgJcRBqDKPEv309iMw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="50693253"
+X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
+   d="scan'208";a="50693253"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 06:41:13 -0700
+X-CSE-ConnectionGUID: Ksv9muBGQaGp28i285/M4Q==
+X-CSE-MsgGUID: Xh9d85mtRBWw5r1/a3RPuA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
+   d="scan'208";a="145823921"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 03 Jun 2025 06:41:08 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uMRt4-0002Sv-1r;
+	Tue, 03 Jun 2025 13:41:06 +0000
+Date: Tue, 3 Jun 2025 21:40:11 +0800
+From: kernel test robot <lkp@intel.com>
+To: "irving.ch.lin" <irving-ch.lin@mediatek.com>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, nfraprado@collabora.com
+Cc: oe-kbuild-all@lists.linux.dev, angelogioacchino.delregno@collabora.com,
+	Project_Global_Chrome_Upstream_Group@mediatek.com,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-pm@vger.kernel.org, netdev@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	Irving lin <irving-ch.lin@mediatek.corp-partner.google.com>
+Subject: Re: [1/5] clk: mt8189: Porting driver for clk
+Message-ID: <202506032107.zewlKCY5-lkp@intel.com>
+References: <20250602083624.1849719-1-irving-ch.lin@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|DS7PR12MB8082:EE_
-X-MS-Office365-Filtering-Correlation-Id: a5c5621b-269c-41be-5da6-08dda2a3f203
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SjBXS0tFSGo0NXR5UmFFVUNEa3hQNE9TTE9SWUpidHFGNXl0Vm84WFd5VTBQ?=
- =?utf-8?B?aDRkdUM1bmtHZGF2Y01vMmliQVoxbkQvMGk3WkRpUUFxdHNLaVhFK0ppYzRr?=
- =?utf-8?B?RDBjZTVSUVI5MFJkZVl6TnBrNXhJeVJmWUI3cmFCbWM1cUpreG1NbXAxUEdS?=
- =?utf-8?B?MHJiK2ZHMW5DaElSOVNKUTA1MEZ6Mks4bURobHlBMTJJTDA4OTZYaXFEQUtU?=
- =?utf-8?B?dzMrSVB3SUs2ZFVuRnNuaStHZm1HVGprYnVuVWNSMGozcElyUWtYTHlDczY1?=
- =?utf-8?B?aCsrS2h0SXNUcTV4eE5Gc0xOaytOOEdsNG5PUkpxZnJJaXpHUDJ6K05VMTVx?=
- =?utf-8?B?aFNEQnAwQ3ZjWkw1TFo4NUp5RW43dXh0OEJHT1FFbzN6TlFUbGRxbkNiT0dH?=
- =?utf-8?B?eW10SytlcncrWmRRWEMyeitIMjlrQk43Z0dSdjRjRWMzT2pTdkhWMjErT1VL?=
- =?utf-8?B?bWJVV3R0NkdCN3RCTU1MRWZKWWlKUUNFUnUzTnRzUmhuRkprY3RaQkpscksz?=
- =?utf-8?B?czFsemxDVk5hVjcrZy9RdHNsNkk4Z3NKSnFnUFRHai8vcFJxV3gvbTBrS3ZY?=
- =?utf-8?B?MGIrYm9mTzh1aitUbHpuN1NNMXVubFB3dHdyTzhjNkhBUDJaQ0JySXpmN3Ey?=
- =?utf-8?B?MlFwNGJXcERqYy9CYS93TXJ2d1FoZnV5Q2RaM0tCWkloODR0NHRHaFBBaEtn?=
- =?utf-8?B?OEdmR3FsYmJwVzVKZWxPOTQyT3R0bC9rUzVQbGp1d3M1TTduTytOWVNYSXln?=
- =?utf-8?B?QUUwTS90dVJnNFRxK0NRN0V4Zy9PQTgvWDNPTndsZThyZG9VeU1WemVaNm93?=
- =?utf-8?B?dVZQcHZacTJkMTBJb3gwR3RRYVBKVDhJZHArci9CajRTRC9qZWJTNytkeXNk?=
- =?utf-8?B?R3JKR2I1cUhia2RQYnEwRFB0cWJLNkZyOE1IK1hGVkZ3d1JNdUFCakVTUmlT?=
- =?utf-8?B?UHZodGdOaGpRMkV4a3VKbE8wbnFUZncwVG9XT0drRGpIQ1hJVk9BTVA2bEFy?=
- =?utf-8?B?R0RSMTR6T0lnMi9wNmNxbWQ2czBSUHhyZ2FHWmJVRkQ2eGtDMDdJcHlIeGMx?=
- =?utf-8?B?S2o4cFNNbTV6V2hOUG5qWnBoMzM4T2JSaXRCMVpoR1NZWkhWMDQ3cEhYK05k?=
- =?utf-8?B?VkZBNlFydDZHNFZiSEh1OXdKSnl0aHhiN1pWakkxd3Z2ZXZleHdvUTR3VVho?=
- =?utf-8?B?aGhUWkR0UUJianp2cGh5TWpUS3U2VTU2L2ljTEx0dk5Wd1VFSTA5OGpKQjYy?=
- =?utf-8?B?TnBuN0ljcnpWUDlKZjlJNnUweUMzWWFYcHhYRUhlRzR2ZkN0YnY2eWd5VHdB?=
- =?utf-8?B?K1J5RnY5WWtCQm9zV3FTVElodnlic0dzOE02MkxJQWYwbWxqTmM1RHJReFlW?=
- =?utf-8?B?aGFCUE12blFlNS9EVnNTVEJLOVVpK2Rkd2N6WFlsU1NHbGNuYmtDUWRpRmtq?=
- =?utf-8?B?bjBCZjNtVDEyMEZhWTM4ZFBSVk1weUx0NXo2d3JLU0J6Q2JKVTJIaG9FdS8v?=
- =?utf-8?B?Ny8zNkhVQW52eXBIS3lVR2NjQnZOMEkvN3Y3aGIrWXRUWGhINEtrRFQ2OW5p?=
- =?utf-8?B?WFJPcFRqazU1S1dzR1J0cE5XL0t6T0d0ZFJKS3lCK3NyN0xhdnExdVViZi9T?=
- =?utf-8?B?K2JrLzAwbmY2RjkxMXI5bWkwU21YaXdXOCtOSEdFZ2RsZDJTSGk3UnptWmNo?=
- =?utf-8?B?b3E4MVRqZGRieE1GdTZ3L1lDN3M2U3BOMHNrK1VCeTZ6b1A3ckducTVUR1E0?=
- =?utf-8?B?WFdUZmp3b3gzMnNBT3JxaVd2MmtQRTc4d3ZjdUZ4cU1SUU0zaCtQOTA1eGRr?=
- =?utf-8?B?YnhPNW5jbDcra3Z5TGg2NVRVVGdrU1pSakNmcm1KM1hBRDlyN0doUVduWmdm?=
- =?utf-8?B?K2J2Y2JGa1d5VEMvZnhkVjQ3RkxybzVUN2x6V3VvMGZ5NUFxalBrbGJ4VFlv?=
- =?utf-8?Q?/RqosBjV/2Q=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WmFTM0VQWTdCT1I3QWE2cE1ySjd3RW5EbDZVMWFtaDF4RWtTU2ZNeXRZRmJS?=
- =?utf-8?B?T0tPSERDaklVQWcycG5oYy9pdW1uYTlER2QrN3JnMzdGVmFidmxHaVJLYTBk?=
- =?utf-8?B?R2Y1aGlLa0JGVXB6SnhyUHpwdm9XSThYczVqNm9vaXlDRmZCVklQOEpaKy9L?=
- =?utf-8?B?SitpMitaUDVFTEZQRlJiNitKVVVPSVJDK3B4azJmT1dnS1B1MnJOUEQ2VFQ3?=
- =?utf-8?B?NDFKUFNtaHpvOFk0YkV5U1J2bVZSczZQYWJhNzU1YWRBZ05PUnRQSGxTSTls?=
- =?utf-8?B?d2IzRzlSbnZRUzVoWVZhTEh6U2hOTWpCQVJLZU50T2hLT2ozQlZOcGlWZVoz?=
- =?utf-8?B?cy8wOFJLSitJU0MrMG1RSk8zb09nOVV5RExsckpFK2FidUFzbGk2UXVtSWMy?=
- =?utf-8?B?QThGV0dKT1NwQm94aE4yQ2FOOENUV2JhRkovMFVMa1F6UGN3TmpHMmVJUVJz?=
- =?utf-8?B?cTdqbnFoMnJLbE5TV3Z3YnE2U2ZCQ3daTUtycm16U3FyaC9mZllSaFRCMjVZ?=
- =?utf-8?B?eVpTV2NuRVU1UysyU2tVUDdmQytKc2pqelRVWlZIUXk5TWJrYkNLZGFwaFdB?=
- =?utf-8?B?bGNod2VxS1RhaDNtcFVYL1hacTRaUkhoV2VnalNEVzBoVElBTExLWUtXUFI2?=
- =?utf-8?B?U0VyKzZLQ3BibjJEcCtOT2F1MW03b3IwTEJvVXpEdkxEREx6WVcvbi9iRUhM?=
- =?utf-8?B?MEtKUTZnTHJWd211bVpEVjI4d0lKaHVmQk5PcVU4SFJWSHFSakcvTDhKVi93?=
- =?utf-8?B?K1F0Um1OZG1EeWNjTXpjSWZwNnNpVWRXYWN2VXRSWFNoWkowMklYQlpyUVlq?=
- =?utf-8?B?OHJuQTFLYzVDRE1DektqV08wS2NpeWVCcnZUYjZtNWpvRGttOTBrQ0tZNWhR?=
- =?utf-8?B?RGNBaFZMbmIwam1HTklxWFArci9aTEJBUGpOL201d0l1NzJjaDZJVjJPWXhQ?=
- =?utf-8?B?d2dsS2lVZXhIdERRNzA4Z0VjT2Y0Zi9EV3I3ZXZZQXhGU1gzL0h2b2V3M04w?=
- =?utf-8?B?RWVMZGo0b0k3WjVVVXhTUkdhdDZqRThUMStFWk5BNHdEN3lFVWlpUU9zYkY0?=
- =?utf-8?B?bCtWTi82Y1FkMVYzK1I3WitDTTYwc21QRVVFTkhmMGc1dVcvcXA1NWNXSXYv?=
- =?utf-8?B?SDBSTnVlU0xPaXZ3SW1obFJ3R3Q5SzNISDVEdjRYOHJlZHVoTDErcHhjWXp2?=
- =?utf-8?B?RWJhbFQvNlJQOEdFU1ltajRONFhJUmN3N2NqYjFEZ2cxcFVobE5SZGRPeWNJ?=
- =?utf-8?B?K3BCK3pLRm9EUDMzUHZzU2RvQ2ZCeGFFWjhJelQrZlN2clVidDI3aFd2T3lk?=
- =?utf-8?B?aUt3QzVYa0FqTDN0dkJURWFnekFrSHNKbE9LL3hFb05ZRkNBbmZZSzg2SUZq?=
- =?utf-8?B?eS9JWXRmQkFhc25CRlUwdmJpeXc2eGRMTmF0ZUxlamRBSnFLUVNYOXhHaVM0?=
- =?utf-8?B?SDhJR2t0R2NpN3ZGSlE5M1JSeHkxQWx3YzdoZXdBZUZKeUlXT21uWkZRd0lk?=
- =?utf-8?B?U0NPdVRzUVJMdnE0YUtZSllHYmhJMEVBREJXOTVrdHVvaUlrZ2VYMjJCQVMr?=
- =?utf-8?B?Z0NwNjBGQWVROGJHZlh2NThHOFh5cXk2MS9hT2ttR2Z2by9QMHM2YnpnK2lv?=
- =?utf-8?B?SkhwdkV4WGNNSHprbHFHWmUxc3I1Z2pCT2ZuU2w1M1dZWmcwMEtzSjFsa05L?=
- =?utf-8?B?NVlPV281cHVYT3NacmJ6VmgxeTFlcE05Y0liVWlrN0ZKRGRXR2RQMm5HQUk1?=
- =?utf-8?B?aXFERWZrSUlNZGdPZzlZU0lNREo2ampMNkVvMUl5RUtpVjBuYjRjcFdyNngr?=
- =?utf-8?B?WVMyNlJ5K21VSmVxOVBxWktKVS9WTVFLaVJpeWd0dUtYbHAySFE4ZWljcHht?=
- =?utf-8?B?R1RRYytDeDZCWThkREJITUtvN1pzNy81aWZWUGJyTmVuRVhyR2xPamJ5VEFR?=
- =?utf-8?B?R2FWWUoyNjdLMjZncVRUZU8rcWEzSVQ5bEl0Z2k0KzlvQW54T2hBVUVzMEhm?=
- =?utf-8?B?dUVuQUpEcTErNGNHc2EwRkZ5a0RpRlZCRmpOV1laTmJZNVQvMGFBRVJTUExy?=
- =?utf-8?B?cVZQOXBaUitqblFNOVM4WFJNc2pDY051TGxqS0JodGRyL3V2djhndFdmRTd3?=
- =?utf-8?Q?w3yPlcMtX9YoFvQ1nf0km2aEf?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a5c5621b-269c-41be-5da6-08dda2a3f203
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2025 13:38:38.2022
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fKZejr5kvl3aTOidlsQr/1iLI05DVsIqh+yXPx6B0GE/WBa8rko4wk00uQwXadMqJovEDSxOzCiZCNm1ibcL9g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8082
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250602083624.1849719-1-irving-ch.lin@mediatek.com>
 
-On 6/2/2025 8:05 PM, Tejun Heo wrote:
-> Hello,
-> 
-> On Mon, Jun 02, 2025 at 02:00:57PM -0400, Joel Fernandes wrote:
->> Some pick functions like the internal pick_next_task_fair() already take
->> rf but some others dont. We need this for scx's server pick function.
->> Prepare for this by having pick functions accept it.
-> 
-> Hmm.. after the whole patch series is applied, pick_task_scx() still doesn't
-> seem to use @rf. What am I missing?
-I need it for scx *server*'s pick_task, i.e. ext_server_pick_task().
+Hi irving.ch.lin,
 
-Sure we're not using it in pick_task_scx(), but I added it there for consistency
-since pick_task_dl() needs it, due to ext_server_pick_task() needing it.
+kernel test robot noticed the following build warnings:
 
-Thanks.
+[auto build test WARNING on clk/clk-next]
+[also build test WARNING on linus/master v6.15 next-20250530]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
+url:    https://github.com/intel-lab-lkp/linux/commits/irving-ch-lin/clk-mt8189-Porting-driver-for-clk/20250603-105623
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
+patch link:    https://lore.kernel.org/r/20250602083624.1849719-1-irving-ch.lin%40mediatek.com
+patch subject: [1/5] clk: mt8189: Porting driver for clk
+config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20250603/202506032107.zewlKCY5-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250603/202506032107.zewlKCY5-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506032107.zewlKCY5-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/clk/mediatek/clk-bringup.c: In function '__bring_up_enable':
+   drivers/clk/mediatek/clk-bringup.c:18:50: error: invalid use of undefined type 'struct platform_device'
+      18 |         clk_con = of_count_phandle_with_args(pdev->dev.of_node, "clocks",
+         |                                                  ^~
+   drivers/clk/mediatek/clk-bringup.c:22:38: error: invalid use of undefined type 'struct platform_device'
+      22 |                 clk = of_clk_get(pdev->dev.of_node, i);
+         |                                      ^~
+   drivers/clk/mediatek/clk-bringup.c: In function 'clk_post_ao_probe':
+   drivers/clk/mediatek/clk-bringup.c:48:40: error: invalid use of undefined type 'struct platform_device'
+      48 |         struct device_node *node = pdev->dev.of_node;
+         |                                        ^~
+   drivers/clk/mediatek/clk-bringup.c: In function 'bring_up_probe':
+   drivers/clk/mediatek/clk-bringup.c:78:51: error: invalid use of undefined type 'struct platform_device'
+      78 |         clk_probe = of_device_get_match_data(&pdev->dev);
+         |                                                   ^~
+   drivers/clk/mediatek/clk-bringup.c:84:17: error: implicit declaration of function 'dev_err' [-Werror=implicit-function-declaration]
+      84 |                 dev_err(&pdev->dev,
+         |                 ^~~~~~~
+   drivers/clk/mediatek/clk-bringup.c:84:30: error: invalid use of undefined type 'struct platform_device'
+      84 |                 dev_err(&pdev->dev,
+         |                              ^~
+   drivers/clk/mediatek/clk-bringup.c:86:29: error: invalid use of undefined type 'struct platform_device'
+      86 |                         pdev->name, r);
+         |                             ^~
+   drivers/clk/mediatek/clk-bringup.c: At top level:
+   drivers/clk/mediatek/clk-bringup.c:96:15: error: variable 'bring_up' has initializer but incomplete type
+      96 | static struct platform_driver bring_up = {
+         |               ^~~~~~~~~~~~~~~
+   drivers/clk/mediatek/clk-bringup.c:97:10: error: 'struct platform_driver' has no member named 'probe'
+      97 |         .probe          = bring_up_probe,
+         |          ^~~~~
+   drivers/clk/mediatek/clk-bringup.c:97:27: warning: excess elements in struct initializer
+      97 |         .probe          = bring_up_probe,
+         |                           ^~~~~~~~~~~~~~
+   drivers/clk/mediatek/clk-bringup.c:97:27: note: (near initialization for 'bring_up')
+   drivers/clk/mediatek/clk-bringup.c:98:10: error: 'struct platform_driver' has no member named 'remove'
+      98 |         .remove         = bring_up_remove,
+         |          ^~~~~~
+   drivers/clk/mediatek/clk-bringup.c:98:27: warning: excess elements in struct initializer
+      98 |         .remove         = bring_up_remove,
+         |                           ^~~~~~~~~~~~~~~
+   drivers/clk/mediatek/clk-bringup.c:98:27: note: (near initialization for 'bring_up')
+   drivers/clk/mediatek/clk-bringup.c:99:10: error: 'struct platform_driver' has no member named 'driver'
+      99 |         .driver         = {
+         |          ^~~~~~
+   drivers/clk/mediatek/clk-bringup.c:99:27: error: extra brace group at end of initializer
+      99 |         .driver         = {
+         |                           ^
+   drivers/clk/mediatek/clk-bringup.c:99:27: note: (near initialization for 'bring_up')
+   drivers/clk/mediatek/clk-bringup.c:99:27: warning: excess elements in struct initializer
+   drivers/clk/mediatek/clk-bringup.c:99:27: note: (near initialization for 'bring_up')
+   drivers/clk/mediatek/clk-bringup.c:106:1: warning: data definition has no type or storage class
+     106 | module_platform_driver(bring_up);
+         | ^~~~~~~~~~~~~~~~~~~~~~
+   drivers/clk/mediatek/clk-bringup.c:106:1: error: type defaults to 'int' in declaration of 'module_platform_driver' [-Werror=implicit-int]
+>> drivers/clk/mediatek/clk-bringup.c:106:1: warning: parameter names (without types) in function declaration
+   drivers/clk/mediatek/clk-bringup.c:96:31: error: storage size of 'bring_up' isn't known
+      96 | static struct platform_driver bring_up = {
+         |                               ^~~~~~~~
+   drivers/clk/mediatek/clk-bringup.c:96:31: warning: 'bring_up' defined but not used [-Wunused-variable]
+   cc1: some warnings being treated as errors
+
+
+vim +106 drivers/clk/mediatek/clk-bringup.c
+
+   105	
+ > 106	module_platform_driver(bring_up);
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
