@@ -1,68 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A47323BCF0;
-	Tue,  3 Jun 2025 18:27:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDEEA288CA2
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 18:27:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748975268; cv=none; b=Vp8UkOfk609rvk8MyZyRisEll/ZXtVLyhjkqSFqVfhKH8AUSZVaPOQAyDgD9OILvYJWndX6BKzCQg2J9+8jG337ute4LYfnYOfscRjloA20QBafP0TFvXZyCd+vFi3ByjUC+EX/PqY+0D8jLQZnoihEC+NKeG6/As3kJGp/YD4I=
+	t=1748975271; cv=none; b=ePMqxt2VACAc+BeXs8K2VflQudK3F8eQcxm3GEvBEtLjP2vqMOHK4o+EuiprRGMePCeqg2z43NIjXIhHAuzqx/OynfbgJnEbd2ElU+joSWeZxhepG+I0RI/wxIU0jUvhwAYJYs5Z9jCzG8tX8B+sagobYM91Rl1/tq+08370/14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748975268; c=relaxed/simple;
-	bh=2ojqRapvZQ0p/zj56F1HLnrtVP2feRC6AnAIidMhuZQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sBOLSBHhsIKWiKNNTP98DqSNii4KXUy3bhPe4cirvKpbK/pym118TOq7dAPcF85OuuCZLT4d5bKXyIbrPjH2brRVnJkTmaKW061V4IEGGTcRy3joQS7KEO4vYB0x8hsMGKEhFC6p3mJJt6VNEe759b3RY3Vj9Ut+7MqPC87vG2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CVkdhqsb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748975271; c=relaxed/simple;
+	bh=iGeXfLl7IWjLNNVm59Z7FuRkNW0L3x382uxZjTlgwJ4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pYznyfkNk/wx/miQ2LcCIEtgpp9Yd3iIHft4ccPOQvbYRRiBwQs1GINvg5tnDNqzUQBrUjEEjEPY6v3ago3oNkSLceM72qWFVByLK9DSgYsEjRHV3P00n7dJEIkx13vWpuPQ6g24mISWnFKq6URiWk3EcohPZazWiY3GNvnSO00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=riscv-rocks.de; spf=pass smtp.mailfrom=tometzki.de; dkim=pass (2048-bit key) header.d=riscv-rocks.de header.i=@riscv-rocks.de header.b=NZYs77jj; arc=none smtp.client-ip=209.85.221.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=riscv-rocks.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tometzki.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CVkdhqsb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79CE2C4CEED;
-	Tue,  3 Jun 2025 18:27:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748975266;
-	bh=2ojqRapvZQ0p/zj56F1HLnrtVP2feRC6AnAIidMhuZQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CVkdhqsbIlkhwIV5CHtX8HaDVTrcwvoY0ZaT0Es5gepPuEL7ZYkwAxIBX3iIsY0Xf
-	 wsrYRzWIF2BtJLxes/nh9/UtiBTablWOLf0paOZLNLcIFM4/waL+cxRz6iTmF8LeUI
-	 5YQTLByB4Wp/+tctBSP9AbBaS1ErKG+CGNYNm+idtnbjPC/uX4hzVGA99E/evvklez
-	 kCaI6Lcs+K+PsfxuoIosAMm5Q2mi6IMyK8X6z/Cb3acjiMXuhEil5HCY6zpJ+1dYJl
-	 g+iYZHlgJCQh4RLkVOj7LdRiL9B8UfHo2jsffzcp8fbwUtta+nvKsR+eNMlE+OiseQ
-	 cwy8/R3lun31Q==
-Date: Tue, 3 Jun 2025 08:27:45 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Cc: cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Pablo Neira Ayuso <pablo@netfilter.org>,
-	Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [PATCH] cgroup: Drop sock_cgroup_classid() dummy implementation
-Message-ID: <aD8-oZ-Rl8AnXTi_@slm.duckdns.org>
-References: <20250603154528.807949-1-mkoutny@suse.com>
- <aD87xm9H_wiQK_S2@slm.duckdns.org>
+	dkim=pass (2048-bit key) header.d=riscv-rocks.de header.i=@riscv-rocks.de header.b="NZYs77jj"
+Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-5307e208234so3246123e0c.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 11:27:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscv-rocks.de; s=google; t=1748975269; x=1749580069; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F84xp5anr9EIAmscjiL0kEmCw2MqV+hSPCs19dt7n58=;
+        b=NZYs77jjFGa0tjkcMjzVodcG/hjvGbWOHyitf4m9SGiyVsB+Ms5fK+EKug0pFqsxEL
+         bk1hBB8nr3jd3JLw65xSINNFO6qeI+sP4UCY4DalHA4nStkK1oEqh6oLDAo8baO1oqQw
+         xIB4z2AbuICaGWFLMSEfAxiy4SqvPW1Yxs9Y1i4qSb62xcnyKUqooAnh3swT58NBbaJX
+         tXHG52cBXfiPWO2OFp7de4lC7G1cZN6z4NZ6upGBLBBB+CfWcF6g8+HXGHVNJvagRZ/s
+         NRNipRnXncKO0oH22Rp69tYFvkO9m5h1rJpqERy5pbIbtFiAU8VKXcxZxN3woS2feZni
+         ufLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748975269; x=1749580069;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=F84xp5anr9EIAmscjiL0kEmCw2MqV+hSPCs19dt7n58=;
+        b=qiDhhufOoMICTAdbcQi/zTn4fRVRk214UwRGHNR21CxPOy7FuowVxUzS7LJc6YRiac
+         uNIKAHEG1cFxNgonMxCWUxuWb2pQ+UfJO6b890t9zRr3cR5thcweVNgRAYOL2Jgrtu5k
+         Uot1olo+wWmFJHO7A4GhzHi+yxFJUjtpHPbLZg5AI23U5hmdl8IXNuhlZ9GRDykP3E55
+         6nKNJ4xyxT9NhY1/5lBjM4l3EV6jfhAwEwpFlsFIp7HcEqTnZLvpPp/NAO3CtRtfeArD
+         Zu3JL29FgMvrEYECTI4GDMeo7gTPdhmWRZMRKtux5oGfS5htdDF9pqmdrNelH5GV7pT3
+         CU4g==
+X-Forwarded-Encrypted: i=1; AJvYcCV72Im1D/Kc4Tc7ONDtSgTxOOXXHlaIxDlpfH3fjGyuDHagzKmQe9TBa+WJBccNd1SGxLgwyrESKB08R8g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXSqHdX4DFiykYv5yU60QaR+ptCWcu+SKARkhrQA1en0kiqf3p
+	l4WIrBb/RYZJ4BF2t95ktwI9ShcI7lucQ1YKVORNKbKUffbMxRVhm961I4Ai1PishfMAO3QSXKe
+	J4oiUuz6TrIsMpRxeBBWkuNfY/VZ6zRr++cgpvMuQqA==
+X-Gm-Gg: ASbGncv+2LjeVSme2/RFgnI91Vuh33WSpxKpNCUBeolt6CqGNIQdk9liD2EagQyJaHA
+	BDmuM8t+vFVuYR5GWzFRZ2dvTffd7skailgQUZrXxTT+Nu5ZL/MfD9ePY2rCshdF45fVixRK5Tz
+	hJ8ufqM+kU+K2SyXEYhYSK37731CrtcnKFm2fvgDS7IP0tDekmCAEJXKp4hFXovxM6lYBwfP6FK
+	s0=
+X-Google-Smtp-Source: AGHT+IFv8GHk0B9iWYVCI5VP7cxO969puIxjjsFGSnK2bTrRJmgjBMCCrvl+7lxurp59nHqxat5XTMnZs2jJfWTVEQ8=
+X-Received: by 2002:a05:6122:a20:b0:523:e2bd:b937 with SMTP id
+ 71dfb90a1353d-530c7228a4bmr21638e0c.3.1748975268814; Tue, 03 Jun 2025
+ 11:27:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aD87xm9H_wiQK_S2@slm.duckdns.org>
+References: <0107019736e3a599-79e58a4a-0dfa-4f43-aeaf-4a4208845b32-000000@eu-central-1.amazonses.com>
+ <DM3PPF63A6024A98E210FB9D166A3CD1316A36DA@DM3PPF63A6024A9.namprd11.prod.outlook.com>
+ <CAL=B37=-q=Veghr7bo2GGiy1eyKP_xF0g8SeK5Lu6uKTVZgxoQ@mail.gmail.com> <DM3PPF63A6024A97BAB8D43C0FAEB7078BCA36DA@DM3PPF63A6024A9.namprd11.prod.outlook.com>
+In-Reply-To: <DM3PPF63A6024A97BAB8D43C0FAEB7078BCA36DA@DM3PPF63A6024A9.namprd11.prod.outlook.com>
+From: Damian Tometzki <damian@riscv-rocks.de>
+Date: Tue, 3 Jun 2025 20:27:37 +0200
+X-Gm-Features: AX0GCFuB4_rQMwEL07mw7f3u5FtJK_CUHLQmdUhe4u0U3JD39iRyYmLxlHpgGoc
+Message-ID: <CAL=B37mvp3jfTbsg1DjEMxv5UU-sg27N+vkuUY5059yrzTQz0w@mail.gmail.com>
+Subject: Re: [wireless] WARNING in iwl_mvm_sta_rx_agg+0x9d3/0xb70 [iwlmvm]
+To: "Korenblit, Miriam Rachel" <miriam.rachel.korenblit@intel.com>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 03, 2025 at 08:15:34AM -1000, Tejun Heo wrote:
-> On Tue, Jun 03, 2025 at 05:45:27PM +0200, Michal Koutný wrote:
-> > The semantic of returning 0 is unclear when !CONFIG_CGROUP_NET_CLASSID.
-> > Since there are no callers of sock_cgroup_classid() with that config
-> > anymore we can undefine the helper at all and enforce all (future)
-> > callers to handle cases when !CONFIG_CGROUP_NET_CLASSID.
-> > 
-> > Signed-off-by: Michal Koutný <mkoutny@suse.com>
-> > Link: https://lore.kernel.org/r/Z_52r_v9-3JUzDT7@calendula/
-> > Acked-by: Tejun Heo <tj@kernel.org>
-> 
-> Applied to cgroup/for-6.16-fixes.
+On Tue, Jun 3, 2025 at 8:22=E2=80=AFPM Korenblit, Miriam Rachel
+<miriam.rachel.korenblit@intel.com> wrote:
+>
+> > If you need a kernel trace, I can provide a trace-cmd log. Please confi=
+rm which
+> > events are relevant ?
+> > My idee ?
+> > sudo trace-cmd record -e mac80211 -e cfg80211
+>
+> trace-cmd record  -T -e cfg80211 -e mac80211 -e iwlwifi_ucode  -e iwlwifi=
+ -e console -e iwlwifi_msg -e mac80211_msg
+>
+Hi
+the most events in the trace-com doesnt exist. Need something to add
+into the kernel config ?
 
-Make that for-6.17.
-
-Thanks.
-
--- 
-tejun
+Damian
