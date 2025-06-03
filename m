@@ -1,195 +1,211 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2051.outbound.protection.outlook.com [40.107.93.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94DE280A2F;
-	Tue,  3 Jun 2025 08:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748938201; cv=fail; b=iAjdbWdvNfi2p7Vye32WwneGucL7IZB7a7F6r2s8D4QEHeufwGf+QfXflSmq/IOYcXJBjC3/bWWntd0o+uUW+s+CtWXL3ivLv/p3gT0OOEZDCSCUagunjufxhodQTt8RJ/5dW7dhfZe2aj/fqBG5yl8S4kWFYpHBrAwYbUcKeEw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748938201; c=relaxed/simple;
-	bh=fk7LirMYmCoi10saU5u4gx32LIT9qzfafpOWdS0a/AU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=e3jx0c9ZuxEwdMJJe3MugMIiDYf7PTElM34VA0E+7Q58h/7aYzFnV1TrIXFDiQv6fcKPXxP+U1kzthmKjj03HSJIBOarpKBiNhPbq2RMXlJBbnBJvkuynfLm5VtQ7+BaUBQF+n7pe4W6V7LHCpJRjlIEIeNaXSjnLtMh2LdVJcA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gehealthcare.com; spf=pass smtp.mailfrom=gehealthcare.com; dkim=pass (2048-bit key) header.d=gehealthcare.com header.i=@gehealthcare.com header.b=Pzvzk5+V; arc=fail smtp.client-ip=40.107.93.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gehealthcare.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gehealthcare.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1D1280321
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 08:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748938264; cv=none; b=eI5bWv+gzuP0qFHZAHmcwWvV61/EjhZdN0gnio74JcNkJsOm9R14gS396+MHnbElNHZx7/muQk4CrUNsj9/Uw4NV85Pqp/ZYZVdhePLyV+7emXKFaFiqv3EVTCffyiPiUmqngE2VvnYibgk+d0cH/kQ8bs+aSyYTQBXYgtAejiw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748938264; c=relaxed/simple;
+	bh=jUmM6kwyLUdPbLKXSy2k6sMf1vokiKUNKs1IpfSBBNw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iOnaPb962TpV1YxsjsALPnrDCxVJudsDCYUC8Qd8Wc2/74AI7gQjwi+b/j5ojW2NUdGbzPjeI1CJ/6B+lM623UTnl5a0wckJhZwNMPRupWEykQe8RZjMl9lrCYTvxbtrAjB1vtRO8VSHEdQhzG4twGLaE6qiWyl2o6Mnc2d2EO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LVOUcXeh; arc=none smtp.client-ip=209.85.222.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gehealthcare.com header.i=@gehealthcare.com header.b="Pzvzk5+V"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jrOPDQr2cX8ZLxfsk655ysMQcDXb0r1LU4ewY+yYoyglBfRuHhytOZtk7vOXFsAVkkn9tE45AwVNM/BtFqlkQx471VIVwNjFAXHtbQOo3DERjJIMazcSBUOF1NE/F37wCCcGU6EMRKyEXjulVzrGLvE2GF3A4q0zhg8kvb5Xxw02fYeCwH1PPXNoS7kN5mj9KbJ/dhDtGBQ/rAwo3k6e+ZzbrL/1jIFhwsH2Wzp5sdrv8LxkqNq/6ruezaAUFHojE4YOyRHVDQNyf4EwWWDidI2hKhyEicn4IYToZkT+y2dsqtw9DOx7siiFZYXsNPde4hp7OtDLYggs1Hzzvj1QjQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=p6QdSHRQibY5GhEPYBs11/eRb5U50DqEtSR6+Z646mc=;
- b=NBEaNtPUu68BPO8y7TOolhZXzQD/lZiDOvuuyugN5WAj5OiLOdSv1GZ6AmFpLbiDgM6+2Pnhi3MJUG9TRC7gX9LRsEtFTTQxJtrXLLsUuRIEaGtikp3LDFldeOd+9BbmHqpLn0seWLJHVhfnCEDyuB/ZVhfwWlE6eWv8hTrEz8hmGGnA86iNRyrNXr4lLFa7uezPvkV/L5Ax3sVohWEjE7mTelodaERE9Ox1QVPFoW4DEQgb95J7lCa1ryw9gHhqweq6DVdDwESntGMn0lt61rfrIEdVQ1S4Q2pf5g22JiIzKr+OATtTCXxcV6oLDzkKSeS85IUsOSgK77HbqXn8Pg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 165.85.157.49) smtp.rcpttodomain=vger.kernel.org
- smtp.mailfrom=gehealthcare.com; dmarc=fail (p=quarantine sp=quarantine
- pct=100) action=quarantine header.from=gehealthcare.com; dkim=none (message
- not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gehealthcare.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p6QdSHRQibY5GhEPYBs11/eRb5U50DqEtSR6+Z646mc=;
- b=Pzvzk5+VckQ4c//1TpKbTW+HZR7uZnZ6oy8XGGJzcBZQD4FcNpbweS7Krzz9tFgnY+3+EoJI3suf6lfp/f1mKDXEqmXm7ZJhrkJAIzNtpSJpxEjbucBkShBKdkRH/ujnIZ/vGTBsYW3xYSy9ETBHo1RnoiSzDg+lcajFiSvKO54ojbPSkWoSbUmRkXnFMgp9Vv402yxQHzwIRupwyu3sl0CPpfKeQfiZPRmYeQwsfBS6o2oIp6REATdBwY8MrKUkqn/PnmLVYGwU8oInXSQM9U7N9JKT2bkZXucK3jb0ltQjfnlZvJdF/bN8G/N68fM2Gql755RKS/FLx1nQozyQMw==
-Received: from BYAPR01CA0038.prod.exchangelabs.com (2603:10b6:a03:94::15) by
- CYYPR22MB4313.namprd22.prod.outlook.com (2603:10b6:930:c7::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8746.40; Tue, 3 Jun 2025 08:09:56 +0000
-Received: from SJ5PEPF00000203.namprd05.prod.outlook.com (2603:10b6:a03:94::4)
- by BYAPR01CA0038.outlook.office365.com (2603:10b6:a03:94::15) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.24
- via Frontend Transport; Tue, 3 Jun 2025 08:09:52 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 165.85.157.49)
- smtp.mailfrom=gehealthcare.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=quarantine header.from=gehealthcare.com;
-Received-SPF: Fail (protection.outlook.com: domain of gehealthcare.com does
- not designate 165.85.157.49 as permitted sender)
- receiver=protection.outlook.com; client-ip=165.85.157.49;
- helo=mkerelay1.compute.ge-healthcare.net;
-Received: from mkerelay1.compute.ge-healthcare.net (165.85.157.49) by
- SJ5PEPF00000203.mail.protection.outlook.com (10.167.244.36) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8792.29 via Frontend Transport; Tue, 3 Jun 2025 08:09:56 +0000
-Received: from 56525d0f2b9b.fihel.lab.ge-healthcare.net (zoo13.fihel.lab.ge-healthcare.net [10.168.174.111])
-	by builder1.fihel.lab.ge-healthcare.net (Postfix) with ESMTP id 72556CFB7B;
-	Tue,  3 Jun 2025 11:09:53 +0300 (EEST)
-From: Ian Ray <ian.ray@gehealthcare.com>
-To: horms@kernel.org,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: brian.ruley@gehealthcare.com,
-	Ian Ray <ian.ray@gehealthcare.com>,
-	intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] igb: Fix watchdog_task race with shutdown
-Date: Tue,  3 Jun 2025 11:09:49 +0300
-Message-ID: <20250603080949.1681-1-ian.ray@gehealthcare.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LVOUcXeh"
+Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-87def342791so979844241.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 01:11:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748938260; x=1749543060; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iJvNtw55BnHmyAVpfP1EHOhy3chABBvF/TrseOesELs=;
+        b=LVOUcXeh7ILkQMLU1An71mgxeJGV57ApJuMa7O6Y8e5P8P2ZDdBXgFQSFITff5jUZT
+         IKN2il3YM1bNgJEvt9HQg8FYBIK6P00dXQ9/htTRab08rPQA1y/7nO0TW6ZDv7uw7fEq
+         fhU3O3UFOHeQu8uoFcRoYngPGu2JdKPlcChiSm196yNhOEhsbN+wVA5/gEt85pdAmlzu
+         lgytb0x0kB40XjYykx4PGGfpORtJxkwCrhb0CvCWciBjdQQhjuwYlWMINnwTD8F3/x16
+         WCbO16Fm9G5LEw3oR5c8KaTEPfVKGk6Sl6iXnEoFUzU/Uznx76dO4BJr3EX48PxFlTWM
+         w/cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748938260; x=1749543060;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iJvNtw55BnHmyAVpfP1EHOhy3chABBvF/TrseOesELs=;
+        b=qC/H6xeeOGA6n+jIcQB0FAWg3QMBBsTohhKS9o7rJLo63rx961KFp+e2J3OtuiTcSZ
+         eiwNaJsCzv7HDHSiBZfxhMjj0zsIENW3qQQ2vfRsGcB292ATgttXjYGfPz2WDZd6RExB
+         MYnFyYW1gaKJGHhfK04R4JvZ7ewfX8kFq3gHHov/3NeFABFkH0nTbsCfxpu3AToYPk8B
+         ZAPsx599cQDglI4NXNhNEaR0i/I0jlDLBt3vYfrpHc5bHAlTp57fyh/GWrW5CYat++qp
+         3ozzRQXEMhHR3l6aiPhCVLDQo24i0PpijX+xRkjRkx50r0byX5PvQVGQjbxtFa6FCWEs
+         vDvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWU+Ge3NXjD+lSGUMg6+zJk78cqKUIIAe0xiPdCmxcy1qSEIQ5I1E1oZuNe0Vfx9MfqLHJ266mCCCnpYGs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhenMgfHmS9qwnWHzBOtelLPGm2fU3Df3sTlemol+lNNLTF24k
+	/kgNYyb9eeCdwrSmd8hMIx2ljKuiip30ndnVwCwuSTQERwtw1ywjrZIp7fQAhZeevQylikav4kx
+	d3jbWiNp79pSSeiIUuU0LwkEJVuhxY2FPGOaxCklRjg==
+X-Gm-Gg: ASbGncv8MsROaKkcAu9ENXhOsGAEu0Ft0afYyeDmTekMeRm9fy9fAhipGJl79pe+Pn6
+	v0Prn13PGu/1Nj0ccba+/pD083ahPYpJh+B36sxBrM8hIyfAzgSsAwQrTMV7uo/yHVSQ8xxM1Y0
+	8joUU2a/raPLindvdTFAKJ6SVNvLLNvik=
+X-Google-Smtp-Source: AGHT+IGCjVs4dMM3MqoDJk9DJ8c8U+dd/1B+c44BJ3TUOdOFILG4zbRELFKWajaB/m4NX5D1opMnugTamOsgMmdpw2k=
+X-Received: by 2002:a05:6102:290a:b0:4de:d08f:6727 with SMTP id
+ ada2fe7eead31-4e6e410aefcmr12879939137.13.1748938260246; Tue, 03 Jun 2025
+ 01:11:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF00000203:EE_|CYYPR22MB4313:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 21e9bf95-3b70-4c08-bab9-08dda276074e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|1800799024|82310400026|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?UKQA0d+Ltk5DvIIrvCg79ltA8D9sUgZdyMfMRXs85stj301CVLGATyHDacB5?=
- =?us-ascii?Q?fc/2mtMKUypvwZgbrVe7npI4Q1HTLJ6TrCOLVZOH9E8QIUebJbG4tg6gBr+u?=
- =?us-ascii?Q?Zp47roHfxVPnPRmVqPRtsP8dLis/hoTV26mhhtlu9Ik7HI3i782fl+rOFj0j?=
- =?us-ascii?Q?oXllMbU8/cT1QGqdlEM8UvUZy9+XfVC2rJI+TzBFvK1udN8TftW996os4/3F?=
- =?us-ascii?Q?qSk+sNxEgCZcuz4XlRM+KjnnrVZyuTRoWzzVMGMOU61ZhI82Cpu6kmpJj7CS?=
- =?us-ascii?Q?D7zs+nXU6MaREJABQg0NfBByMmdd6NXB/60ENVakiD2F9TEWqZ0/G6TxY1dY?=
- =?us-ascii?Q?kE1mhbAqfa75HG0guBTdug3VXA2MqlhOJEZYSubl08AtazgM7PcsN9qarzw3?=
- =?us-ascii?Q?sZEzd++iXdaJVZO4wBfdGuY8MInP/atkLHwaBB8Jfbjm3qSBHIRQ1Nq/YozS?=
- =?us-ascii?Q?DtR8fKNWG0FdZ7g5VkOlKaLfq0wYJvvKR8IbGQWIQnrlh5TjbGQSItioY49Z?=
- =?us-ascii?Q?zmYSTcb8FPIfWp2dCAtomk/jw3v8Hi2rcMtubIUK8XsAFJuUQfrQMM8iHVm6?=
- =?us-ascii?Q?kc1/49YqT2csDbAI/Hu/X3wplJGOgjvOs9j+VEjHt0YUo+fAMVposyer+E42?=
- =?us-ascii?Q?F+mnzqDo0RF/Nj0xCspZbZSVDNcjF1dFe5Y6qNOseCsY7ef43VUGTg/pbK7m?=
- =?us-ascii?Q?cSXX5F2A8wMP60hWd3Tabm5l1HJyWo58lI+nSSX6lpN8N5jdoZvwhMRdRcg8?=
- =?us-ascii?Q?Erwd8IoPW1KepB5icNC6JbIlsDMsRI7LJvFBUrliV3Hm9Gu5pZjz9N2eHhoz?=
- =?us-ascii?Q?bx8S6brES0HZHP40RMOHS/EfFNoUQ8XC0a2ke0GcBWgu/rXMVK39yjJcG/1E?=
- =?us-ascii?Q?xykdtTt0wPRHdKGwJqPjltHGqOrWYd7AFyYYQsK7++ozY4qYMVtxdtk5Q3yv?=
- =?us-ascii?Q?S7+4wQM3IRhYhDF0qBmayQHPMWqwIs9uPTSPYTMVug1BI3B/WXMY676TnJ2k?=
- =?us-ascii?Q?KGYDayOZ+XkihmIdHV0NL/TKkWuaLf/amtsUkEDjaFa+v7UsCYKvCVfY/laL?=
- =?us-ascii?Q?wgjx5VkxS2QAYB+ryb1VW4MMLqujL0HwLEIEWL6swwRmgoX0kOvnKQlXSo6B?=
- =?us-ascii?Q?7bKLrok2nSrHT7qK1TY9PLh9p9U9Tr7E0LeBXuwNhDhGIDTTKQB0+PVTiiXq?=
- =?us-ascii?Q?RCv0KV7tBNxicB+smJjrbk5jwCZhZbyRz/l2SpsrZr18Ou8nkb3Q92hMUs/1?=
- =?us-ascii?Q?4QOcZt5o0LUZDP1+A1tJ4fw3E//qqqCY8kZI72hklmsGiIFtxs8aO8yXdfSY?=
- =?us-ascii?Q?ppv+qPhmfUTWMaRRv+Ge79uT+JYr5mteU5DmkFLVQLe96fNol+hFDTyODbQM?=
- =?us-ascii?Q?xpTrXEDwjrS6z7RkzKwtiIu6oew0dogUolzXCvT5xlK8G1df9/hbTeRaRW63?=
- =?us-ascii?Q?H9JEcXWKrpfU4KioRtWAgoBOHUZaXlJhlWIkPVPfPQCxMUy8kQjTAmUVo2v+?=
- =?us-ascii?Q?yn/kYkTPTrmkVgPoipDPbFbTgtfZ5k4HCUVh?=
-X-Forefront-Antispam-Report:
-	CIP:165.85.157.49;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mkerelay1.compute.ge-healthcare.net;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(1800799024)(82310400026)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: gehealthcare.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2025 08:09:56.5597
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 21e9bf95-3b70-4c08-bab9-08dda276074e
-X-MS-Exchange-CrossTenant-Id: 9a309606-d6ec-4188-a28a-298812b4bbbf
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=9a309606-d6ec-4188-a28a-298812b4bbbf;Ip=[165.85.157.49];Helo=[mkerelay1.compute.ge-healthcare.net]
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-SJ5PEPF00000203.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR22MB4313
+References: <20250602134319.723650984@linuxfoundation.org>
+In-Reply-To: <20250602134319.723650984@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 3 Jun 2025 13:40:48 +0530
+X-Gm-Features: AX0GCFvaxqWfgagp1ffOVYDvYD0c_wS9sizPQ3RqMcYEeBwQFBqHVjlDChAbOcU
+Message-ID: <CA+G9fYse-qFqJDg17B_syP--b60iHbi4jH7=E6c8R_=F2Pkonw@mail.gmail.com>
+Subject: Re: [PATCH 6.1 000/325] 6.1.141-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-A rare [1] race condition is observed between the igb_watchdog_task and
-shutdown on a dual-core i.MX6 based system with two I210 controllers.
+On Mon, 2 Jun 2025 at 20:33, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.1.141 release.
+> There are 325 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 04 Jun 2025 13:42:20 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.1.141-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.1.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Using printk, the igb_watchdog_task is hung in igb_read_phy_reg because
-__igb_shutdown has already called __igb_close.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-The fix is to delete timer and cancel the work after settting IGB_DOWN.
-This approach mirrors igb_up.
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-reboot             kworker
+## Build
+* kernel: 6.1.141-rc1
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
+rc.git
+* git commit: 1c3f3a4d0cca7742a95419a6c91fff4326a2de1c
+* git describe: v6.1.140-326-g1c3f3a4d0cca
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.1=
+40-326-g1c3f3a4d0cca
 
-__igb_shutdown
-  rtnl_lock
-  __igb_close
-  :                igb_watchdog_task
-  :                :
-  :                igb_read_phy_reg (hung)
-  rtnl_unlock
+## Test Regressions (compared to v6.1.139-98-g1fb2f21fca77)
 
-[1] Note that this is easier to reproduce with 'initcall_debug' logging
-and additional and printk logging in igb_main.
+## Metric Regressions (compared to v6.1.139-98-g1fb2f21fca77)
 
-Signed-off-by: Ian Ray <ian.ray@gehealthcare.com>
----
-Changes in v2:
-- Change strategy to avoid taking RTNL.
-- Link to v1: https://lore.kernel.org/all/20250428115450.639-1-ian.ray@gehealthcare.com/
----
- drivers/net/ethernet/intel/igb/igb_main.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+## Test Fixes (compared to v6.1.139-98-g1fb2f21fca77)
 
-diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-index 9e9a5900e6e5..a65ae7925ae8 100644
---- a/drivers/net/ethernet/intel/igb/igb_main.c
-+++ b/drivers/net/ethernet/intel/igb/igb_main.c
-@@ -2175,10 +2175,14 @@ void igb_down(struct igb_adapter *adapter)
- 	u32 tctl, rctl;
- 	int i;
+## Metric Fixes (compared to v6.1.139-98-g1fb2f21fca77)
 
--	/* signal that we're down so the interrupt handler does not
--	 * reschedule our watchdog timer
-+	/* The watchdog timer may be rescheduled, so explicitly
-+	 * disable watchdog from being rescheduled.
- 	 */
- 	set_bit(__IGB_DOWN, &adapter->state);
-+	timer_delete_sync(&adapter->watchdog_timer);
-+	timer_delete_sync(&adapter->phy_info_timer);
-+
-+	cancel_work_sync(&adapter->watchdog_task);
+## Test result summary
+total: 219869, pass: 201359, fail: 3409, skip: 14877, xfail: 224
 
- 	/* disable receives in the hardware */
- 	rctl = rd32(E1000_RCTL);
-@@ -2210,9 +2214,6 @@ void igb_down(struct igb_adapter *adapter)
- 		}
- 	}
+## Build Summary
+* arc: 5 total, 5 passed, 0 failed
+* arm: 133 total, 133 passed, 0 failed
+* arm64: 41 total, 41 passed, 0 failed
+* i386: 21 total, 21 passed, 0 failed
+* mips: 26 total, 25 passed, 1 failed
+* parisc: 4 total, 4 passed, 0 failed
+* powerpc: 32 total, 31 passed, 1 failed
+* riscv: 11 total, 11 passed, 0 failed
+* s390: 14 total, 14 passed, 0 failed
+* sh: 10 total, 10 passed, 0 failed
+* sparc: 7 total, 7 passed, 0 failed
+* x86_64: 33 total, 33 passed, 0 failed
 
--	timer_delete_sync(&adapter->watchdog_timer);
--	timer_delete_sync(&adapter->phy_info_timer);
--
- 	/* record the stats before reset*/
- 	spin_lock(&adapter->stats64_lock);
- 	igb_update_stats(adapter);
+## Test suites summary
+* boot
+* commands
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-exec
+* kselftest-fpu
+* kselftest-futex
+* kselftest-intel_pstate
+* kselftest-kcmp
+* kselftest-kvm
+* kselftest-livepatch
+* kselftest-membarrier
+* kselftest-mincore
+* kselftest-mqueue
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* kvm-unit-tests
+* lava
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* modules
+* perf
+* rcutorture
+
 --
-2.49.0
-
+Linaro LKFT
+https://lkft.linaro.org
