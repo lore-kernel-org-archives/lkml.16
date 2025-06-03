@@ -1,52 +1,50 @@
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960511F78E0
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 07:43:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074512701CA;
+	Tue,  3 Jun 2025 07:44:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748936613; cv=none; b=jenRvCUvDkJ6COEQctC7JHdh4E3Kl1YzzC4GX8FH7q3KhFAWgU6O1+NTmHY/ivnOZar8zWoNzDSk+mzn0s30NTwSFmJ0MRjfLNR2GofDrhFqsH/X5IAEdQMttTiaFVEAouJblhoQfA1Dg41+H0nVwjksvbbjUw0u+MSPN37FiZM=
+	t=1748936663; cv=none; b=LEPSz0hZ0iIJ4wrrt9Htt569ZC4eIHAWdUHC7tufRFO6fYtONs6zAqB2dhTnLYNDOcDYmYiRYTpSTM/WQRvxdC4s0E2XUXOWP/S3D/WaqHKFpq6Z2PiduhwnItLWeYHQtiRi7WJTZoQ5MeQSAEuIAK+wNqEtjJWQGy55ynFuf5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748936613; c=relaxed/simple;
-	bh=yS4mv+JxO21QKaxhp2hFv4h3uZS3RJjesAtqe5PgnOY=;
+	s=arc-20240116; t=1748936663; c=relaxed/simple;
+	bh=UpRslWg9pkIdLUbErUepkqcrN/Ri7GcT0ZXvqzK9Dbg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H+svvymVhYafQBEBlt3KJPzn7wzefJxnxMv4TkwEJjdXhNuZ/z6Jey7RPwfwBL0I+TFUs4ob6zbboxAjELCL4EcLAHMhzz9AoNw+49YU8dBJlAs75WkVQkgjlwRiGZHHald+fWAiGtvOQycSCEpSLeY5IURJdlYkueloDinbms8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=J/PbtZRf; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	 In-Reply-To:Content-Type; b=rGzFRo7GXxJ1HABCqwc5d47GF3pAeCMwGlGMo1LfWCJKMEZeybetKWffr+uRxRpwznnas8ecqBGtmSe93EDGhl7FARTlHGJOYeO2fmtL2vbjsu44/EHKYqwwXtQLtmfcfUaJ4iQczGQIGPaKAFbiu98otpHzWcZG3LTTT2D+J1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mx2v9pM9; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="J/PbtZRf"
-Received: from eig-obgw-6001a.ext.cloudfilter.net ([10.0.30.140])
-	by cmsmtp with ESMTPS
-	id ML0Nuz80bMETlMMIvuwcqv; Tue, 03 Jun 2025 07:43:25 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id MMIvuVlFRgFaXMMIvuyBDP; Tue, 03 Jun 2025 07:43:25 +0000
-X-Authority-Analysis: v=2.4 cv=DbzcqetW c=1 sm=1 tr=0 ts=683ea79d
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=Wh1V8bzkS9CpCxOpQUxp:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=HhoJFD9y0GdeyuwBXJtk3soczcT7TDdsKr4ofTKY5Pc=; b=J/PbtZRflgTgKmEoPJfTrlaZQv
-	Rdl5Aq5UCQ4EkgCMQmVwdwnvOp6p8Pizzh77UKvVs2LOnxzLUqXwF2Xj//r1N3Xi5T0kAMH+nToO3
-	X6syadcm3Hk6NQScr+cbD9o/55sOUbG1xr9Ll0S0+6E8XowAciIZlIn4lu6ztCqTibeFtvNBThmst
-	Jk067gSD8JKNGXZp9XzqKVdYVZCFV0TkdZNE4w2lxkymQWY8vg51aMONqSoziT7woVjlWLZIUvgGX
-	/lOuVlLSSccjAxQ+iyglYoUnabkZO8h0OZNfG9/F1UUR17Rq1OIIjzHUTSxrmCs4CD4tOrwbZnzQZ
-	FYLeb40g==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:45348 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <re@w6rz.net>)
-	id 1uMMIt-00000002XTk-26Ut;
-	Tue, 03 Jun 2025 01:43:23 -0600
-Message-ID: <4dd70bbf-4d4a-46fe-ba87-5dc5a7aa32c5@w6rz.net>
-Date: Tue, 3 Jun 2025 00:43:20 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mx2v9pM9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748936663; x=1780472663;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=UpRslWg9pkIdLUbErUepkqcrN/Ri7GcT0ZXvqzK9Dbg=;
+  b=mx2v9pM9/bey/s6GzqJJoaMcVEsCAmszIgfQk9BRKPCZu1nFdVC5/wq8
+   AWfqr0zGOfDCPdo8I5OcLXE1KACB1KqzX/y/PPaSmFhASovSfKnYzjqM4
+   NkQ01rX/Kj9w7+iQWFXFUcE1WmGrbeuja1+u03O3yEb3/oyKBmEnfEvJ+
+   8VC1r61qicIG2AR8qTlb8MuW7C+lmwwYisPZeGoWx1BYWUuPTD2Uwz+R1
+   fMtGAHaS76oeGbu/w3ajrqWuOYOai9J5kggL+aHNeI5/1g066v9lUhUhz
+   1dS7MqtAWTKGXkdLcFcVxhVKbpFjwSS/i7m+J0WxE5Y1EQ+3WKF1+Bumb
+   A==;
+X-CSE-ConnectionGUID: aBo1HETgRLiENWCa4Wfgqg==
+X-CSE-MsgGUID: OP7KxDaCSNiS9Qo5/A5TOQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="50658915"
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="50658915"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 00:44:21 -0700
+X-CSE-ConnectionGUID: CjIy0pOCTVaGKVXeABbVtA==
+X-CSE-MsgGUID: u2fHNmR1SmipYHN6PBBHdA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="144670277"
+Received: from unknown (HELO [10.238.0.239]) ([10.238.0.239])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 00:43:59 -0700
+Message-ID: <d0b582cc-0cf7-4cdc-b148-d8f61dea7253@linux.intel.com>
+Date: Tue, 3 Jun 2025 15:43:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,61 +52,75 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.6 000/444] 6.6.93-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250602134340.906731340@linuxfoundation.org>
+Subject: Re: [RFC PATCH v2 33/51] KVM: guest_memfd: Allocate and truncate from
+ custom allocator
+To: Ackerley Tng <ackerleytng@google.com>
+Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com,
+ ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com,
+ anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu,
+ bfoster@redhat.com, brauner@kernel.org, catalin.marinas@arm.com,
+ chao.p.peng@intel.com, chenhuacai@kernel.org, dave.hansen@intel.com,
+ david@redhat.com, dmatlack@google.com, dwmw@amazon.co.uk,
+ erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, graf@amazon.com,
+ haibo1.xu@intel.com, hch@infradead.org, hughd@google.com,
+ ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz,
+ james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com,
+ jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com,
+ jun.miao@intel.com, kai.huang@intel.com, keirf@google.com,
+ kent.overstreet@linux.dev, kirill.shutemov@intel.com,
+ liam.merwick@oracle.com, maciej.wieczor-retman@intel.com,
+ mail@maciej.szmigiero.name, maz@kernel.org, mic@digikod.net,
+ michael.roth@amd.com, mpe@ellerman.id.au, muchun.song@linux.dev,
+ nikunj@amd.com, nsaenz@amazon.es, oliver.upton@linux.dev,
+ palmer@dabbelt.com, pankaj.gupta@amd.com, paul.walmsley@sifive.com,
+ pbonzini@redhat.com, pdurrant@amazon.co.uk, peterx@redhat.com,
+ pgonda@google.com, pvorel@suse.cz, qperret@google.com,
+ quic_cvanscha@quicinc.com, quic_eberman@quicinc.com,
+ quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com,
+ quic_pheragu@quicinc.com, quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com,
+ richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, rientjes@google.com,
+ roypat@amazon.co.uk, rppt@kernel.org, seanjc@google.com, shuah@kernel.org,
+ steven.price@arm.com, steven.sistare@oracle.com, suzuki.poulose@arm.com,
+ tabba@google.com, thomas.lendacky@amd.com, usama.arif@bytedance.com,
+ vannapurve@google.com, vbabka@suse.cz, viro@zeniv.linux.org.uk,
+ vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org,
+ willy@infradead.org, xiaoyao.li@intel.com, yan.y.zhao@intel.com,
+ yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
+References: <cover.1747264138.git.ackerleytng@google.com>
+ <e9aaf20d31281d00861b1805404dbed40024f824.1747264138.git.ackerleytng@google.com>
 Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250602134340.906731340@linuxfoundation.org>
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <e9aaf20d31281d00861b1805404dbed40024f824.1747264138.git.ackerleytng@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1uMMIt-00000002XTk-26Ut
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:45348
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 92
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfM9M/yuk+FM3G+cCFlhq8AFOu2GN83ghWS9P/Y52UWWYbG4kvZYuJaFDF+eNyALFCldeKckjSr6oxZXsDBcaxHShBbIAiCdCjvjAroTFggWmpEPNOJdo
- SPFUPPoBB1sL64/TyAa2q7bSmd7NbA0EGv3lcyNrxbOsJO3iWjhhoBHfrm+GWdA/1ad8xnAqGgO6S0Q6LZeJVzWifnkV7VTPf1s=
 
-On 6/2/25 06:41, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.93 release.
-> There are 444 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 04 Jun 2025 13:42:20 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.93-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
 
-Tested-by: Ron Economos <re@w6rz.net>
+On 5/15/2025 7:42 AM, Ackerley Tng wrote:
+[...]
+>   
+>   	list_for_each_entry(gmem, gmem_list, entry)
+>   		kvm_gmem_invalidate_end(gmem, start, end);
+> @@ -776,6 +879,16 @@ static long kvm_gmem_allocate(struct inode *inode, loff_t offset, loff_t len)
+>   
+>   	start = offset >> PAGE_SHIFT;
+>   	end = (offset + len) >> PAGE_SHIFT;
+> +	if (kvm_gmem_has_custom_allocator(inode)) {
+> +		size_t nr_pages;
+> +		void *p;
+> +
+> +		p = kvm_gmem_allocator_private(inode);
+> +		nr_pages = kvm_gmem_allocator_ops(inode)->nr_pages_in_folio(p);
+> +
+> +		start = round_down(start, nr_pages);
+> +		end = round_down(end, nr_pages);
+It's weird here.
+Should the end be round_up()?
 
+> +	}
+>   
+>   	r = 0;
+>   	for (index = start; index < end; ) {
+>
+[...]
