@@ -1,230 +1,213 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953DEBA34;
-	Tue,  3 Jun 2025 18:33:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748975597; cv=fail; b=RMU8zFG6hDGUHjL4jPpMsc/XgGWGXRGxNEcuxuqq31st/xCPapiXIfRG1OzT3I+tVnRpW67cIrOhMdPU+qnhgFxKqZwKNesvFiZF/nZYdF/D8cVYiIqyOOHAM5FJeiarSJdUB9LN4dAlRAa5/gkZrD40dz+JGC5Aozs3FvK27Ok=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748975597; c=relaxed/simple;
-	bh=YqfungKu0dqko8TH94ER//s0zFsK6oGW1vrHk3JM9Ow=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=LCE3xxEAT/OAqLYtbAn6BI1wRw5xPsDGwWR9B6xZvLD1iKeQMQZ9Dtmb2832xq0Pezdfr9boWyQqXoh9qyo+SQIzcBMuWntYpPxrGfb6DUyVJHUJ0mAShf++TQ/O7PvvJZUMAizy9193qCQ5NqDINtFBy971dDW1pdtJuIP6z/Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gRlozdbA; arc=fail smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 506021DF751
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 18:33:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748975614; cv=none; b=qOEbazxXu4byFSuxvhpjhdJPu5jok9d96X84+lbCKreDUaQ/QSRIHPC3tgrJsROk4pKGJMzziPgWW7tuvI3sT4X2OKJ6D2jB2R/z/Ie2nw0qpyl0ioGf9sza1Fd4eSsTn8XHsaBdAsYRYC2fs722yEfIfws97Gov20HCOHzU/jY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748975614; c=relaxed/simple;
+	bh=wIm+hDtp2W7YmFrQLEcLFeDFGVJ0j9AutM/kiw828ng=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ivsCWeCVtlfpfoVn8G1TOwHTx135iWhht/WLgBHixAN+maa6obsVPCiURT1lxELVwTS3TYxr1nlg9ZVv5tU4QQ5Qva5VsNeqefX0qLE0SUAsdiJs96XTWNKzbGcmxC0CUcKxw3bgcwTGfpNTLHfEXzW530/iHksN5tFv4zogHWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q2GyJCtx; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gRlozdbA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748975596; x=1780511596;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=YqfungKu0dqko8TH94ER//s0zFsK6oGW1vrHk3JM9Ow=;
-  b=gRlozdbALRs3rUVM0uOQKcc60LzpLM7jdmoTVCe7RmlnCpi2R58K/tFW
-   CLX2XFcx11pm4Hva6CUiXrofxs7tjZy3SGLZxk4nbvKk2jV7rKdwl8fPr
-   L38nL2aL2xwDgg9msG33Q2ZJdYSinO/jrM07WOvlO24/GLIlhZnigAYm/
-   1eSQUK9EYkIY7Y+GcAg5gY82D/gJFtaid2cZMToZ/FSr+wD7qvWKnsBfY
-   F2FqhHAF25Cu9zCAiGYdJgp0OSH0zp6nQYVN+QUr00igOGlhStuwZcaR1
-   UF7epdfaGGHNspegYjZ9HZW8HlegGvIplbrBGHpUKgBMSYq5EQzbeT8zY
-   Q==;
-X-CSE-ConnectionGUID: tu/jNhEWSJ2JEjWhIh9rgQ==
-X-CSE-MsgGUID: Y75Uh0oITRCuIvF3GZ1w2A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="54695020"
-X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
-   d="scan'208";a="54695020"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 11:33:15 -0700
-X-CSE-ConnectionGUID: 2XyBWyD4TkeiL6xxrSSS/Q==
-X-CSE-MsgGUID: Z6aiwyEtRu+r/T4HBbyg4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
-   d="scan'208";a="144832196"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 11:33:15 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Tue, 3 Jun 2025 11:33:14 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Tue, 3 Jun 2025 11:33:14 -0700
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (40.107.102.49)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Tue, 3 Jun 2025 11:33:13 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NHIIRoGWcKGxfuv+uPO2yV1222FfnfRiR7HaU2nqHV061LT+1K3hdTxg4Tjiac4M5nwVQ5RQLceU/+PGxm7G+162KZGXLJsSHuZSXK/zeHrpcnpU/hNSQCJbz4W7ycTcBxsHE1hNp5imw/wEdRsu8VVqEM/3zDTaqzhrsqK2IkveNH3t7Skoc399cgpWl8lib7RPQ71eI9MmgGj1K8NRhdtNq/igfgSacbdtq7u0iMcLYodgwuVWbGoyg0/KDuOaUrWn41FZZUgVp0sfLfq/Jd9ZGMnoMcDlzDC22gLgkC274viNdm+t7mBjA9tJDN2SmtlV+p0oBezO9LYxd8jJog==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AlyF62OaPF4ewKL2456NLT4fINBR9lzXrMlHX6acyaQ=;
- b=CtluIVMO3OFTyZ1FPzUqy2oBTveP/w1lPmT3waavgOoAumYGjfXx1gD8pvapBdYgYHvB0+FzPWY4d8GDfgRKOtlwZqk2bXNtQ6l71BX+Sk5WcaKC2SGGPneGdoGKlgzY5FfaiVUhjejaMQCHOv2VMNfq/p4+CMLegt/x1MQLf9R+SWUOm/9jYR0FithMVZm+Q9k3HYPeKMxI1GSOEIlQLzdumnBvRzWTp3xfZDz/ZRfClNRrTlV+M/NFikrWaIBfbFjoscPTBoObxrDN0aO5XWGJncxXdctw3cpl0qQbyRisqHlRwg8knq0EC020gGiqdVIjDHX+sFF3XWdSWTtKGQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS0PR11MB7925.namprd11.prod.outlook.com (2603:10b6:8:f8::18) by
- PH7PR11MB7146.namprd11.prod.outlook.com (2603:10b6:510:1ed::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8769.32; Tue, 3 Jun 2025 18:32:57 +0000
-Received: from DS0PR11MB7925.namprd11.prod.outlook.com
- ([fe80::b1ef:c95b:554d:19c9]) by DS0PR11MB7925.namprd11.prod.outlook.com
- ([fe80::b1ef:c95b:554d:19c9%6]) with mapi id 15.20.8769.029; Tue, 3 Jun 2025
- 18:32:57 +0000
-Message-ID: <0d9d3317-ad0f-4080-9b24-230b76006d91@intel.com>
-Date: Tue, 3 Jun 2025 11:32:52 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 0/6] Introduce CET supervisor state support
-To: Chao Gao <chao.gao@intel.com>
-CC: Dave Hansen <dave.hansen@intel.com>, Sean Christopherson
-	<seanjc@google.com>, <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<kvm@vger.kernel.org>, <tglx@linutronix.de>, <pbonzini@redhat.com>,
-	<peterz@infradead.org>, <rick.p.edgecombe@intel.com>,
-	<weijiang.yang@intel.com>, <john.allen@amd.com>, <bp@alien8.de>,
-	<xin3.li@intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, Eric Biggers
-	<ebiggers@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar
-	<mingo@redhat.com>, Kees Cook <kees@kernel.org>, Maxim Levitsky
-	<mlevitsk@redhat.com>, Mitchell Levy <levymitchell0@gmail.com>, "Nikolay
- Borisov" <nik.borisov@suse.com>, Oleg Nesterov <oleg@redhat.com>, Sohil Mehta
-	<sohil.mehta@intel.com>, Stanislav Spassov <stanspas@amazon.de>, "Vignesh
- Balasubramanian" <vigbalas@amd.com>
-References: <20250522151031.426788-1-chao.gao@intel.com>
- <aDCo_SczQOUaB2rS@google.com>
- <f575567b-0d1f-4631-ad48-1ef5aaca1f75@intel.com> <aDWbctO/RfTGiCg3@intel.com>
- <434810d9-1b36-496d-a10d-41c6c068375e@intel.com> <aD6Ukwqz2Q5RKpEm@intel.com>
-Content-Language: en-US
-From: "Chang S. Bae" <chang.seok.bae@intel.com>
-In-Reply-To: <aD6Ukwqz2Q5RKpEm@intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR03CA0234.namprd03.prod.outlook.com
- (2603:10b6:a03:39f::29) To DS0PR11MB7925.namprd11.prod.outlook.com
- (2603:10b6:8:f8::18)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q2GyJCtx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748975611;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=PNZ0o97LOFUx59kTjPtSNbAB77tQUnMQ3HnF8L8iiYE=;
+	b=Q2GyJCtxVnXB7Gxabj76RbUJA1F6uH88G2ASGkbvM6Z+QZ9JxdsXBsDnU8Ih8SIAv0l42h
+	3kp9vSO+RhjlA4FSM8y3MN7tpj7mHNeE4PO7wgD3L+Cw5+tVw0t5MRASYK6QcGqey33H6n
+	rIBE8cvHQNH98lQxCneWCpw5oLNWJvA=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-277-60-x-FLmMHGZmD-4pG-agA-1; Tue, 03 Jun 2025 14:33:29 -0400
+X-MC-Unique: 60-x-FLmMHGZmD-4pG-agA-1
+X-Mimecast-MFC-AGG-ID: 60-x-FLmMHGZmD-4pG-agA_1748975609
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4e9252ba0so3564373f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 11:33:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748975609; x=1749580409;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PNZ0o97LOFUx59kTjPtSNbAB77tQUnMQ3HnF8L8iiYE=;
+        b=W2SSAoA0+v5SAnP/qDzsMNa5UPQLTey0s56qUp90XV1At3VLsjs6GRiqZtLQlTEhYw
+         5YOBnCbCiieu2B6TBP2tTGg8hfNYLq6rb9XytMYr6c+OOaU5DsRWCpkcMyOq65R3CC9R
+         XS86rLUfE0HzUDfHoT0061uBCcokDLfrLijr8msQMoj3J92dPDYVCQ7SSL5+UFiSUpvx
+         OaDCfc0s++HAJctvycW0tcGfv28rGH64jtv5vmKkP/dF3+qpa5VnBAe+JocOWqIQJvqc
+         MQQfyjs2x0ZPE7mnxkOZqt8rh9q1Kx6OG27ddxR20g+b2cmPBFGdj12W4y1rGpQ0Sxmm
+         icbw==
+X-Forwarded-Encrypted: i=1; AJvYcCWypmaqHKPuW7H8w2FFPi1HXNuT6Ym3A5QwCPvdmGAWcot7ns89oCcHOqmhM4c5gxAQWue+vev8YxYU55g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsOSe91G4ZNsB8FiEgwrK4/aU7DIR6dfQLKQ3zWf5dCYxNwZ3t
+	60dM60x90Fsaln4XqJ9SzOUk3q3+z3dI1IkqJVBzV56mVcuWvTmhu9fzi2ApWu8Ppv3Wr2JLZMo
+	kqZje+QmlCG6VfnsSLJZEep5DqX+Qn6lM5WLeUjE2D4tp+A2Z41KmoUzKkKdaK0vRcQ==
+X-Gm-Gg: ASbGncvHWUre1LTSXVFWDxQbOsNIgCLdIYoNQ43KfnGbiSU6cNPN6is29GBJDpvD0Yf
+	rMgL8aNAGUW4pNxYHK0nRK3P4P1i7JShizq13ABybtYvgeNYACrFUqX8gPM2InQrCPkvKJAp6mj
+	0sHGr8WyGFObC7dKx2v9R51EhD8OsrJYPI/yCla8gFIoHFWvPtHKQopEUMsHDxGH1j9bqGlmucD
+	Gwzc5jr9o/zPzY+MAoEH1PSR6vuLac3o13kaJ1lRUAkbCxGfoGZwBRgxQrnpeo5rw/zHZ0oqjF/
+	qE/mmUZE0UiJi1rk1ncmnLxI9PS32xwwS+bLr+iNtX2oIZQl1Tj6LT/nRwdLJi0xO/VO9gqmeG3
+	WicrwnAsg0FvOX1veFJSMRY4YLWSils8sziCilVE=
+X-Received: by 2002:a05:6000:4010:b0:3a4:eb7a:2cda with SMTP id ffacd0b85a97d-3a4f89cd20emr12493825f8f.30.1748975608775;
+        Tue, 03 Jun 2025 11:33:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF9KD9hWCR7oU9bBLRs1WfzBb+VHuOSgcxTY1ZxhBCs9hGUg0ZNTDdICeezsbGXvuvzehW8lA==
+X-Received: by 2002:a05:6000:4010:b0:3a4:eb7a:2cda with SMTP id ffacd0b85a97d-3a4f89cd20emr12493804f8f.30.1748975608318;
+        Tue, 03 Jun 2025 11:33:28 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f0d:f000:eec9:2b8d:4913:f32a? (p200300d82f0df000eec92b8d4913f32a.dip0.t-ipconnect.de. [2003:d8:2f0d:f000:eec9:2b8d:4913:f32a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7f8ed32sm168983085e9.1.2025.06.03.11.33.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Jun 2025 11:33:27 -0700 (PDT)
+Message-ID: <ba334288-298d-43fb-93ba-c159de3cee32@redhat.com>
+Date: Tue, 3 Jun 2025 20:33:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR11MB7925:EE_|PH7PR11MB7146:EE_
-X-MS-Office365-Filtering-Correlation-Id: ea75db3b-48fa-4b07-fc63-08dda2cd0fba
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?TGlNYkhzVm9Ca2NGd0Q1SzBoM3M2QnVmR2pDSUF5cDdJYUtldTFwd1lkbC9q?=
- =?utf-8?B?aHkwQ3Y3azRIZDdtTnR5c1BDZFJlRGM3aDBQMVlQclRGWVlJcFVJdmlZb3dP?=
- =?utf-8?B?WTdRNmZlVzUxZ3pqeFFBaWU4Mm9LMnUwb0doZkFsU2w5SVhEYzdvbXlyQ0hv?=
- =?utf-8?B?dUYyTEF6c3Vrdlc3VmtoeFBRZXVFamFNWm9IZ0RuanA0MVN6MzN2YkpaWDhC?=
- =?utf-8?B?SXIxd25yV0xtUkJmV1RSYStIV0E2NDNFZHo0YmdIS0xld3BEU2VpOUxOM0l3?=
- =?utf-8?B?aHBQRktWeUF3d0ZBb2xycUpQVGY1c0ZremVqUlpGR2hDbkdUZ3lvbzRneHM2?=
- =?utf-8?B?Rm5YeENqVVF4TjE5ZGRuV1pZS0xRVEE3WVRYSXhZTEVBY0hHL2JWcnFZRzE0?=
- =?utf-8?B?Sk04VGltSm1RQStwaXZFNFNnYXNKcUxVTGIrNlhoODhXWmZjQUcxOUVrZTgv?=
- =?utf-8?B?VVNhOGlpZU1lMEFISHhvTDZzNWFtUWt0Sjl5SDJlTGQzVHV1VUVZQ1A2ZlQ0?=
- =?utf-8?B?L2wxVWlvLy9XdWVWYVJwMmdTRzdDcXhUOG56YmRJYVhnUHVsTWJTK2RYbUlK?=
- =?utf-8?B?S01FRmhZZ2xDUjAvN1ZYYjJLeEdxWVpweGI4bUxBQ3FIM3htcVhPa2d5YUV1?=
- =?utf-8?B?TGcxQWFRM2pIZ0dGQzIxM3o5YzhoeDVRZUsvZThrRG1XZ0tXaFhlVGxVQ05y?=
- =?utf-8?B?T0JnN0xNNkJKbjREN0l3OS84a0tuZjQ5a2hsQ0dJYmJ3aDFXOTJkM2FBSFBU?=
- =?utf-8?B?TzRHM0NacVpIUGh5emFPQ2RqSk1USmJlVVIwUTNuWnlsRk1pSyt5NDByaE9s?=
- =?utf-8?B?a1hpRzBlMmpxUDc3WW52K0ZvZ0F4RXZzNE1hMTJ4RmYzRTkraEoyWU9nVXN0?=
- =?utf-8?B?azFTS1lUcFFWMFk0M3hSamV0ZVI3dVhWcUVSYmc0bk82NzdBdGlWWjJBbndk?=
- =?utf-8?B?SWVwd001ZnBSNEJ5NG94c1JLSmJkeTdhRjJQK056cTUwOEdNVHFPaUJUMTQ0?=
- =?utf-8?B?TVB3VDk4RmVqbG5QclZ0em1RdHZ3bVBaTXFlcEhFc29Ud2xQb3BJaEhzVk5y?=
- =?utf-8?B?UUN5QnMyM0NyeXBWdmpNM1kraW96WFl5bGxrTzUvMGpiNU5adkdoa202UUlq?=
- =?utf-8?B?NlMyS25xak9LaWQ5d1pzeVlSTHJCeFhrbHYraXZWSWlwOG1rcVpId2RtNkRN?=
- =?utf-8?B?TjQ4Um9yVVZsNGpnRGRSYmtxaTA3eERUMFE1QW1zazdzVnl3TEV5NzNsSXpL?=
- =?utf-8?B?bUVjOXlpU2NQTkk1My9ENG4zalFhb3ZveGtUVUk3dU5EeE9vMlYvcWR2TjZn?=
- =?utf-8?B?ZHdQZ0g0bllOeldaZVlReUUvd3d5Qm5OMExWVjBnSlBTeHJxZlZ2NDNJa2tt?=
- =?utf-8?B?TXpLNnFCSUpkR1JyN2I1TDRKQk9WWEhQZ0RxQVdsUm1ZOHNkb0pvM3NUWHpX?=
- =?utf-8?B?dTlLd21YTzJHMVhIY08zd0o5MXlVb0pjT3pZWmlZYlgyZTljVEVKUC9rMmZB?=
- =?utf-8?B?OWU0VEcrODlEREwxYy9wWVZxR0VYTDVPZ2hmZUxSVGVJNUJnUXFSV1F6M3RF?=
- =?utf-8?B?cFoxa0hUUllFSy9XY0hCV0lQSisxV0NFL2s3T1M4OTRCbnVGVTBHaTJ4RURq?=
- =?utf-8?B?QzBvajBqM0Y5TlpESDJUcWUzNlBPRFV4MFlsMWZPUzEwMEFnOE8vRUFnWU1Z?=
- =?utf-8?B?akUxWjZ5ZHZyekVXUkVzUng4Vzd1amlrTUxTcUpEU3pDNDY1Vm00WDk0Mlhv?=
- =?utf-8?B?S0NxTmxKR1cvM1J4ZUx1dG1RTjZqSVNaQlByODFsREhtVEdVMldkeVlRdEl3?=
- =?utf-8?B?SnFkR2Zoc3NlSXlUNlhSREFrUFBaODIxVThoUmZnRFkyTFF5MW1kcENVWXdZ?=
- =?utf-8?B?RDBzemxGdVZER2g3QkpNQ2loRWNOdTZJOGxzelJ4TTlqbVFCZ1dCK2NhWnRr?=
- =?utf-8?Q?nelS/67bkLc=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB7925.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NHgvWjNEWjVLUlRzdFhsZEZCVUhiK003dmZ2dFBEN2xvVUh4eU16U0w4YmRU?=
- =?utf-8?B?elNxcDE5SmdRa29XRlRSZzRzTW9Gem5zYXpYTURia284K0IvM0swUkVPU1dT?=
- =?utf-8?B?VXBaSXVlc0FocmZzRUJNSlpsbDFKZFY3Yk1LUGlqOUJQT1N2cjJTdytoNmpz?=
- =?utf-8?B?ZzIxMEtBYjJYZzJXNW9DcUdzc0kyY215azNxRDRKaTBjRFFmVThuTi8wSlNp?=
- =?utf-8?B?ZDdCU1Jxekt6eTNoMFZOVmNXcDFvWUJXYmxrc1VHcmZiaFFTYml0R2htL2FG?=
- =?utf-8?B?OU41MzRKQjJhVWNJYjBvOHdEM3BFZVhLd2k3ZkE3OU9jK1ZZSU9OVU9qRVJK?=
- =?utf-8?B?NzdneHNPVlJwczdvcGRIVlFLckJZMU1Rbmd4ZVRSYXhJRGY4ZjlkVkFoSUVK?=
- =?utf-8?B?RHAzTC9taVpEVUFyR0JURFBtU0pQWEMzdG4rSTdoRlZ1UGIxMm9HZ2Npa1BT?=
- =?utf-8?B?SkJFZi9FRDRKMUo1cVg4ZE9sZ0xIc2VWZDVZRnMrcHAzb3BpQVI3encycmRo?=
- =?utf-8?B?T2IzT2JUL2l2WmJwYis2QnJkdHk5UHZjK2c3ODhJa2Q3b1hzQmtxYTlUZXhB?=
- =?utf-8?B?cWhFM3FWdXhWTjRUVDZGWmxCUzlESkhqVjdha2xtMEpzRjJwalluMmJUbHQx?=
- =?utf-8?B?ZWs4TFFkaGVNTXhyTjVlQkZyV1IvaHQxN0pNcCtiYTZTYXozZm9DTFg4eWFt?=
- =?utf-8?B?SkE4VWJwSllQMjhaRm1GVGs3eGJpZnppc0NYYW9CUWRzdURtUHVsUER6UUp1?=
- =?utf-8?B?WlRRV01YLy9VU0VBMzNrUUhXVkNvWkZmaStOWUFrODA4WFArWWZTN084a0xE?=
- =?utf-8?B?amI2SzQxL3h0elpFK005MVJxd2hFZElxcW9nVFVsek05eFNOT045MDAvQ2V2?=
- =?utf-8?B?YmlTSEFxS29XZFczZ1QzS0M3NHd1WlM5K3phVG5aY0VIL2IxNzJtVmw5WE9E?=
- =?utf-8?B?bUlETEYrWnNlc1FaRi9HOXpUZHFUK1dHRHhnMTV2SGdkb1R4cmRRMTV4NFBy?=
- =?utf-8?B?TlVqeHBGWDdPYTgySndZNWcxcStzbnU1TXBzeHA4QnpGYXFNWjVFQXhBd3U0?=
- =?utf-8?B?Z1BwR0gyM2ZFdWlzQ3crS2psaUxpQjZmQVowNzFjcVEvSkwxNHl5dkNESU9Y?=
- =?utf-8?B?QXliK2k4OHFmMnVkUjFLQkd3TnBsK09qQlBzRTRySnpZLzhyMEh1czlDdEJZ?=
- =?utf-8?B?VGNrRDloSFVNK1NIVUlxNU9WVXpZYlczNnJYaDJGVnVtS3RKbHJ6cTYvaENO?=
- =?utf-8?B?NGVLQ3VGK1JSMXVYWGEzV2hLblhLZE13TkFJUmpqbmgzK0lZQUVyTHdsR0hy?=
- =?utf-8?B?cytpT0hHdHdvcEhmUUNYWVlZcnAvTXYrc1YzRk85RVgzMFZKekNWdk9ESE9o?=
- =?utf-8?B?TlJOSklnRnV2YWtCdVlQRFNtaFQybHBVcHd5NlNEU24zWGhNeGFyTzhYWjNv?=
- =?utf-8?B?K2N0WE1KVmVCeWlpWWhhRFI3N1dDNnV2L0tEUUhTNUNsVmY2TFdNSEVXcTlV?=
- =?utf-8?B?WG1KeU1GaU4zU2JKVzB2aGcwZzJBeFcycVJjQ0pRK1dtcmZtVVpaWXZxdVB3?=
- =?utf-8?B?U1A0UENRcUpHNEl4eFVqZk1PdllnM2JMZW15TmpaMDRyeGNmZnlTWUVXTTJo?=
- =?utf-8?B?eW1tQjRkbXBFSlFQc09SdHYwV2lkbldMcU8xTjZwcnlLUmVpMEIzWm5UWEJE?=
- =?utf-8?B?N1M5R1RGdmFtQlJBTURSVkt6WXFaL25IMWEraUV6MFNzUEtsRUs4d1JyZkE2?=
- =?utf-8?B?RTRHN1dPSEZ0R1hGWHJkdkpDTExkMEIwbU1jeVU4L3pZZlBJZTBkZ3ZuSEpV?=
- =?utf-8?B?SHRid284STFETmt5b2crRk1uVk84R2puSUdSeWdFOU1zb1AwTWFnWS9qY0Jy?=
- =?utf-8?B?OTJtai9Yd1V2Qk5nL3F4azlpN0g1NHhSOThsK2VYckg4MHFhUmVRZmJJeWZ0?=
- =?utf-8?B?aXRhZWFCeTArSDNXbllrdWlzUVYzSmE0bVFJWDNFa2ZVZWdZT3M3U3FqV2Vn?=
- =?utf-8?B?YnUvdkhDZVpudk5IaXo1RzZLd0xUTTFYN2ZIREEvRWdGZjZBaCtrVkhxRGJp?=
- =?utf-8?B?dzVXL1d2TXh2azFDZTN2dUhTbTBLcUZ5WlVjcUhGSzlIOGdKZEhTVHdORXE4?=
- =?utf-8?B?cFEyVWgvaXpYRTFrLzIyU0s4MWExTy9rYjBObFZMcHpIa0VFaVRpWXowR3BK?=
- =?utf-8?B?M3c9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: ea75db3b-48fa-4b07-fc63-08dda2cd0fba
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB7925.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2025 18:32:57.4833
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SvpQ+1WYucgKcy4TReZSYUazHnoX3PryzGTW5iShyQa+2VvTQ68sfFw3sw1tzkL8CD5uYyH+g5SiY/VMF6T3BDtHm3oiB1tk6pjkt9yKh+w=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7146
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] mm/memory: ensure fork child sees coherent memory
+ snapshot
+To: Jann Horn <jannh@google.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ linux-mm@kvack.org
+Cc: Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20250603-fork-tearing-v1-0-a7f64b7cfc96@google.com>
+ <20250603-fork-tearing-v1-1-a7f64b7cfc96@google.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250603-fork-tearing-v1-1-a7f64b7cfc96@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 6/2/2025 11:22 PM, Chao Gao wrote:
+On 03.06.25 20:21, Jann Horn wrote:
+> When fork() encounters possibly-pinned pages, those pages are immediately
+> copied instead of just marking PTEs to make CoW happen later. If the parent
+> is multithreaded, this can cause the child to see memory contents that are
+> inconsistent in multiple ways:
 > 
-> Aside from the splat, task #2 could execute AMX instructions without
-> requesting permissions, but its AMX state would be discarded during the
-> next FPU switch, as RFBM[18] is cleared when executing XSAVES. And, in the
+> 1. We are copying the contents of a page with a memcpy() while userspace
+>     may be writing to it. This can cause the resulting data in the child to
+>     be inconsistent.
+ > 2. After we've copied this page, future writes to other pages may> 
+  continue to be visible to the child while future writes to this page are
+>     no longer visible to the child.
+ > > This means the child could theoretically see incoherent states where
+> allocator freelists point to objects that are actually in use or stuff like
+> that. A mitigating factor is that, unless userspace already has a deadlock
+> bug, userspace can pretty much only observe such issues when fancy lockless
+> data structures are used (because if another thread was in the middle of
+> mutating data during fork() and the post-fork child tried to take the mutex
+> protecting that data, it might wait forever).
+> 
 
-Right, AMX instructions can be executed when XFD is disarmed. But in 
-this case, it's inside a signal handler. On sigreturn, XTILE_DATA will 
-be reloaded with the init state, since fpstate::user_xfeatures[18] is zero.
+Hmm, interesting.
 
-> "flipped" scenario you mentioned, task #2 might receive an extra #NM, after
-> which its fpstate would be re-allocated (although the size won't increase
-> further).
+> On top of that, this issue is only observable when pages are either
+> DMA-pinned or appear false-positive-DMA-pinned due to a page having >=1024
+> references and the parent process having used DMA-pinning at least once
+> before.
 
-Yes.
+Right.
 
-> So, for well-behaved tasks that never use AMX, there is no impact; tasks
-> that use AMX may receive extra #NM. There won't be any unexpected #PF,
-> memory corruption, or kernel panic.
+> 
+> Fixes: 70e806e4e645 ("mm: Do early cow for pinned pages during fork() for ptes")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Jann Horn <jannh@google.com>
+> ---
+>   mm/memory.c | 18 ++++++++++++++++++
+>   1 file changed, 18 insertions(+)
+> 
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 49199410805c..b406dfda976b 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -917,7 +917,25 @@ copy_present_page(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma
+>   	/*
+>   	 * We have a prealloc page, all good!  Take it
+>   	 * over and copy the page & arm it.
+> +	 *
+> +	 * One nasty aspect is that we could be in a multithreaded process or
+> +	 * such, where another thread is in the middle of writing to memory
+> +	 * while this thread is forking. As long as we're just marking PTEs as
+> +	 * read-only to make copy-on-write happen *later*, that's easy; we just
+> +	 * need to do a single TLB flush before dropping the mmap/VMA locks, and
+> +	 * that's enough to guarantee that the child gets a coherent snapshot of
+> +	 * memory.
+> +	 * But here, where we're doing an immediate copy, we must ensure that
+> +	 * threads in the parent process can no longer write into the page being
+> +	 * copied until we're done forking.
+> +	 * This means that we still need to mark the source PTE as read-only,
+> +	 * with an immediate TLB flush.
+> +	 * (To make the source PTE writable again after fork() is done, we can
+> +	 * rely on the page fault handler to do that lazily, thanks to
+> +	 * PageAnonExclusive().)
+>   	 */
+> +	ptep_set_wrprotect(src_vma->vm_mm, addr, src_pte);
+> +	flush_tlb_page(src_vma, addr);
 
-A signal handler is expected to stay within the bounds of 
-async-signal-safe functions, so using AMX in that context is highly 
-unlikely in practice. While the issue has existed, its real-world impact 
-appears quite minimal in my view.
+Would we need something similar for hugetlb, or is that already handled?
 
-Thanks,
-Chang
+-- 
+Cheers,
+
+David / dhildenb
+
