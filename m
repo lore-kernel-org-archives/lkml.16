@@ -1,252 +1,376 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B5C22FDFF;
-	Tue,  3 Jun 2025 11:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5C03597C;
+	Tue,  3 Jun 2025 11:49:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748951186; cv=none; b=F9GnbtQPoNVDMC7XmdG5ygCKKyOUu0mIwYK3NHUaZoi8k2EcGEHWx/fQuE8qfiQatSX8Pu+OAAo3UVv/DgJ7CHs84068n9j10VfjFovS1VCwMObAMrARhSXx1s1e3rQaBQv/d1S4aqufu7wCYoqHgkorKV+htzNnCRrearci/8A=
+	t=1748951352; cv=none; b=TBNidhoUQ5HXwIOe7paI3ik+gK1ghDLBR7WT5k58Xb14cm3yYvoZa8lvQYrdVAuW5b9Yg2VT7l1XH6I7XKLxD/LMM30Yh8nMuoyRBLE8VS8mapY4/hGQwkfv9ZN/RZroUrAVZAayAZiljklD4hLn/QvmPgJ1k8peRSXA5MEvckY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748951186; c=relaxed/simple;
-	bh=46z+CHp5FplvdxQZLMRvZ4Je4WlVrniIZ170jmL7wlU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nzlImnXZpTVPQdvvskicvEe1MpH4onUdGJ4iteDKEAyK22uu8/hGzm866h1b2rPtRa8+tZW0QyPLMz2YdUx8zUVUN5eMjQlHuOdKkZze1MZsVNRqfJcsDYWg9x9CKjMzALzLEWkoLU1FcadtsPNvQWEyn19Lj41hwNovBefNk0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WYoRmVvk; arc=none smtp.client-ip=209.85.210.179
+	s=arc-20240116; t=1748951352; c=relaxed/simple;
+	bh=YFRAfVQT/IsrC7NSXrBMkZvKbXmwtLxA+4zLmBoHs28=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TaKJq6kTZDdZdAIqbb4u+/N3X2n15SjH8JL3JsRFHsjpCmt/yfgEHkGxwAAbOSElEpdxAAjvP7XmiMzVjOg1PhNf+1CroQgGJILQV6J3JBk3ZhWSuOZzM+pvjXnfRclZQN0GYulj7Z43MhBg9ZkZ+VLaaN7pfo3FC9Eu5cqb+6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CD3U2aQ/; arc=none smtp.client-ip=209.85.208.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WYoRmVvk"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-747fc77bb2aso640352b3a.3;
-        Tue, 03 Jun 2025 04:46:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CD3U2aQ/"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-32a6a91f0easo19269511fa.0;
+        Tue, 03 Jun 2025 04:49:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748951184; x=1749555984; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aNqV/c3DG1fBhuN3qww4p36YlFduC0lkwktHJcC6OkA=;
-        b=WYoRmVvkFZgYFGbO8EEApTHd4FtemtPX9IvEeO8OPtewuUisAPF7EbQtsYnitxM4kE
-         vk2f0GYXT3HNw3PLjiDoiuug0Bl29YwZeZU9RJF/76WBP4HStwqvS8HFXAvvv0WeXAVB
-         v4JC+N2OPejNgKAbSzbB32bmZa3OkhkQ+hTGVV7EPSjb3EjQ/Sm/D3fQzLvFUr9Gktet
-         RzJ/lZnQXRPc0D3lof5eN2+67LNSXG4LX7bIxF9gqPYa01Uq2uQ0RpoDxsDb/wX/+Zz2
-         u23XrINb4xRx1l+iwVV8WKiorGplEfF0NCyuPOV/boBTHY5UiSSPrhAvNefxLxyeHPoE
-         Z0DQ==
+        d=gmail.com; s=20230601; t=1748951348; x=1749556148; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CDRcA+T6Fi9CfWPBz64dW6ekkPgHNPPDc7aXpEK7++Y=;
+        b=CD3U2aQ/IzPDCgctsrJr8CtSpIcrUsWP45k4NLzDOpBKMlbbwBO1VHvUM7j17wiWDI
+         CwYEg4btbDoeGb74H81HWupn8j1lLyz1uW5DiQ8fbUky6puUJx6CQ+cjohriirTSckha
+         y89UHxVJvlLJywEf9jCgVzQElFyTVbKKKIW9m6CANh2OWwtV61UKqbLHj0nFXCAO5zZ7
+         I8wSPSaznALYsdkhsGWUma0VUuQx84+puBJ3fLUccvJW7FMBSv2UVJ4/4IjYFWOqhlGM
+         Iw9XRbVsmhBMvbPPWoh7lfDaJwrDjS460dN+O5uiWUzXWo+k6cn24w23tPGu2HXxuCUa
+         aaJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748951184; x=1749555984;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1748951348; x=1749556148;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aNqV/c3DG1fBhuN3qww4p36YlFduC0lkwktHJcC6OkA=;
-        b=oF0c8NYlavqVcGNKwWavXXJcYYC69cN+2L11utLD/9Wpv5Yd0roP3MQYhGw+J+a1mN
-         bw9VPDduIA5AN8uiVvXaJ9/4tjemWVZg1qp2CqPJTCPQfdrnaYba4pfzTekU5/cgPLg5
-         ciSh8rQgPHvEq1kkYEG+XlDIjWGYq8wCB56fLdnkLKyEUlNFlqcbwzeipfh1qFTvefvk
-         KinSP6/nlrZclyttOOiSuwI+AqrostoQZHOwVleLJPPM6sGip12FuUhBbl3HoUqG8/rn
-         7HBglwJLxyX7K1Cums8pGTlfVf4hCyJSGtZtSE+MZGpado7fYZeV0EVfaTioblWVnzvu
-         RDGw==
-X-Forwarded-Encrypted: i=1; AJvYcCU7DS7Lk9XaTkFI7jJsvdCH6qqE+DDLyH52V9X34LCdv8FoPP2odp2gAFcixYpb4WaiiQA07I4OYhzE@vger.kernel.org, AJvYcCVNcZSzvi1evWdFpgU2hJVkXlAaP6t4URt1xkPjrEn/+5hdiwVo0YZdhaNri0yedTJH4wcrK+vVZVFEP3/u@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZnE7MEpbY8KDg+w7Rs6pfxVBNvg6h99cLhbg++8UWu92Bbn0W
-	xr/MZDC6TE9iTxxaSatkvg1WEeqv7IvTkCySoBK4WgYjx9QyVfVQxKCp
-X-Gm-Gg: ASbGnct5PNbcz/bYxafXnTnmosv8zsm8vmVCL8kWqHq8ouSGIYO55P+68De0jMk0tjJ
-	TLdQiHiwQh2xDIFF0rnuVa7vqCyj/H/C7e13JvsNvHN2FzfTAUb5yP9ePme/97XRWSymyTXvJTK
-	URBlMCwjV8FQ1zJzjviJqCCPlonj21OsDLgl+/DNbe4eh9uelqhSh8ONDzWYmDGjTMq79Nw6YGd
-	nradPI5uD08R7DsUScdqsVXuxr4ZI5mJI80uUjEZnclDCoHal0H/KxQdF/+tSDDVtGBx0uPZWDR
-	Wc+xofubYR8w4K9yA0/X7vvyVX5KnMC1xtr5TXLpJXpKgkycU9sShVrtQb3qJLeKVZhr5xrTFp6
-	THHVWy0SWAgRUr2w36h6g
-X-Google-Smtp-Source: AGHT+IGgSnNZEK3IDe5Uoa0aO9rllMo7czQcZuW+XjqLX+PNb4Ok39zD+MBqKXA2h5FXnbvZ+n5sEg==
-X-Received: by 2002:a05:6a00:178b:b0:742:a111:ee6f with SMTP id d2e1a72fcca58-747c1a8610fmr20422329b3a.10.1748951184114;
-        Tue, 03 Jun 2025 04:46:24 -0700 (PDT)
-Received: from joaog-nb.corp.toradex.com ([67.159.246.222])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afeadbb8sm9446459b3a.66.2025.06.03.04.46.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 04:46:23 -0700 (PDT)
-From: =?utf-8?q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <jpaulo.silvagoncalves@gmail.com>
-Date: Tue, 03 Jun 2025 08:44:56 -0300
-Subject: [PATCH v2 3/3] hwmon: (amc6821) Add cooling device support
+        bh=CDRcA+T6Fi9CfWPBz64dW6ekkPgHNPPDc7aXpEK7++Y=;
+        b=aSpE/dhXWqRTvQ7GkgNQDG5sxa8jl/FHp/Abjb83VGoTER+jUuYvkkwLucelYrVAnc
+         pmBAMBVH1k+SyM2jJ5UZB5ST0roMl55lOTDOCT0+67KApqTD7nAG82P9RxLrIyFwbKwA
+         mvCfNge3mWDeTH1SFSjZyZGP5Hns5F3D3svirGmuAZDvklvmmbAkVxlDfIUD68hovQhA
+         WGlQmGJxkNGK4ZfE0dRavDzAPpH6KzTLv51uVsobcBdfItvSMgGsvWj9Oz4zhkMqDhnK
+         TykoFjeuu3fFJH3L7vX6QNhY6S6xx9o9aG4Sm448O+sm3XMuozxQhfAmgt2L9WbSeOBC
+         XnfA==
+X-Forwarded-Encrypted: i=1; AJvYcCUPZjKzMKH6e6IK+D5YsCrzbsmiADOBrrjgg6ElYVrOW5Mik7YV1o0PZWbrNVaVrz7TjkmQ0wbf@vger.kernel.org, AJvYcCUoR9yDBvjsF4/KqUpbqUDK+WBHFQK5cnRGMQF9dMeCimugVkPwfAcpcORcoQQLW8NmH2uZHLRGv4SyfLk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxX3sna9fHlz6k7JeE5C+TpyjgLduRItqeb5T0ic2EhgtfRZX0W
+	LcjM1VKZOYt61UFyKFd93oFALsbFr0n7WUFIac1vnAZ1/C+nEhbwB4f6YTh53dwD8usYClg5+F4
+	Hkq7d56XctBaG5yicLml0FWr2evUKA5A54gF9TWs=
+X-Gm-Gg: ASbGnctdGBRIuR+GLTDbp3A7Y2PH1y6iahYgHAGhCFITItQQ3i4BYaFCpyGXNA/nO17
+	qtC9nHqbHwq4VdFzhiN1eZeBy1agdWTqlMMnNZCX9Fd/ABwY5W0o5nLJwrjMXkxK8fEeJpOztdD
+	E3tWlOjAfzcXnp47TsZBLu7zVPNVP9LDygwXzLCNTqCqY=
+X-Google-Smtp-Source: AGHT+IGM/SASzWhhUTrY3uUzMWyJSMweqBgIdXZyU0E7noNfgJkGiCnAdF8at5x8bukX8dJz5+IH+N1p4N9YAoNkADk=
+X-Received: by 2002:a2e:bc19:0:b0:32a:7a2d:a589 with SMTP id
+ 38308e7fff4ca-32a906cec93mr41852711fa.13.1748951347781; Tue, 03 Jun 2025
+ 04:49:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250603-b4-amc6821-cooling-device-support-v2-3-74943c889a2d@toradex.com>
-References: <20250603-b4-amc6821-cooling-device-support-v2-0-74943c889a2d@toradex.com>
-In-Reply-To: <20250603-b4-amc6821-cooling-device-support-v2-0-74943c889a2d@toradex.com>
-To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Farouk Bouabid <farouk.bouabid@cherry.de>, 
- Quentin Schulz <quentin.schulz@cherry.de>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>
-X-Mailer: b4 0.14.2
+References: <20250602181419.20478-1-ryncsn@gmail.com> <aD4KyHz_H5WPLLf4@x1.local>
+ <CAGsJ_4wbU=4ECxNPEB0dKGXibrAKuR-N3i8wwmVCYAgWCuupnQ@mail.gmail.com>
+In-Reply-To: <CAGsJ_4wbU=4ECxNPEB0dKGXibrAKuR-N3i8wwmVCYAgWCuupnQ@mail.gmail.com>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Tue, 3 Jun 2025 19:48:49 +0800
+X-Gm-Features: AX0GCFvpZgb4jbkGTHBdzZSITw6Z_SdDPq42ADh9_afW-sX_weoyjolG37LBaHQ
+Message-ID: <CAMgjq7C_nVynRpMV8xkyVuhpyDY6qZX_ShzxChen5Fh5gXSJVg@mail.gmail.com>
+Subject: Re: [PATCH v3] mm: userfaultfd: fix race of userfaultfd_move and swap cache
+To: Barry Song <21cnbao@gmail.com>
+Cc: Peter Xu <peterx@redhat.com>, linux-mm@kvack.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Andrea Arcangeli <aarcange@redhat.com>, David Hildenbrand <david@redhat.com>, 
+	Lokesh Gidra <lokeshgidra@google.com>, stable@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: João Paulo Gonçalves <joao.goncalves@toradex.com>
+On Tue, Jun 3, 2025 at 6:08=E2=80=AFAM Barry Song <21cnbao@gmail.com> wrote=
+:
+>
+> On Tue, Jun 3, 2025 at 8:34=E2=80=AFAM Peter Xu <peterx@redhat.com> wrote=
+:
+> >
+> > On Tue, Jun 03, 2025 at 02:14:19AM +0800, Kairui Song wrote:
+> > > From: Kairui Song <kasong@tencent.com>
+> > >
+> > > On seeing a swap entry PTE, userfaultfd_move does a lockless swap cac=
+he
+> > > lookup, and try to move the found folio to the faulting vma when.
+> > > Currently, it relies on the PTE value check to ensure the moved folio
+> > > still belongs to the src swap entry, which turns out is not reliable.
+> > >
+> > > While working and reviewing the swap table series with Barry, followi=
+ng
+> > > existing race is observed and reproduced [1]:
+> > >
+> > > ( move_pages_pte is moving src_pte to dst_pte, where src_pte is a
+> > >  swap entry PTE holding swap entry S1, and S1 isn't in the swap cache=
+.)
+> > >
+> > > CPU1                               CPU2
+> > > userfaultfd_move
+> > >   move_pages_pte()
+> > >     entry =3D pte_to_swp_entry(orig_src_pte);
+> > >     // Here it got entry =3D S1
+> > >     ... < Somehow interrupted> ...
+> > >                                    <swapin src_pte, alloc and use fol=
+io A>
+> > >                                    // folio A is just a new allocated=
+ folio
+> > >                                    // and get installed into src_pte
+> > >                                    <frees swap entry S1>
+> > >                                    // src_pte now points to folio A, =
+S1
+> > >                                    // has swap count =3D=3D 0, it can=
+ be freed
+> > >                                    // by folio_swap_swap or swap
+> > >                                    // allocator's reclaim.
+> > >                                    <try to swap out another folio B>
+> > >                                    // folio B is a folio in another V=
+MA.
+> > >                                    <put folio B to swap cache using S=
+1 >
+> > >                                    // S1 is freed, folio B could use =
+it
+> > >                                    // for swap out with no problem.
+> > >                                    ...
+> > >     folio =3D filemap_get_folio(S1)
+> > >     // Got folio B here !!!
+> > >     ... < Somehow interrupted again> ...
+> > >                                    <swapin folio B and free S1>
+> > >                                    // Now S1 is free to be used again=
+.
+> > >                                    <swapout src_pte & folio A using S=
+1>
+> > >                                    // Now src_pte is a swap entry pte
+> > >                                    // holding S1 again.
+> > >     folio_trylock(folio)
+> > >     move_swap_pte
+> > >       double_pt_lock
+> > >       is_pte_pages_stable
+> > >       // Check passed because src_pte =3D=3D S1
+> > >       folio_move_anon_rmap(...)
+> > >       // Moved invalid folio B here !!!
+> > >
+> > > The race window is very short and requires multiple collisions of
+> > > multiple rare events, so it's very unlikely to happen, but with a
+> > > deliberately constructed reproducer and increased time window, it can=
+ be
+> > > reproduced [1].
+> > >
+> > > It's also possible that folio (A) is swapped in, and swapped out agai=
+n
+> > > after the filemap_get_folio lookup, in such case folio (A) may stay i=
+n
+> > > swap cache so it needs to be moved too. In this case we should also t=
+ry
+> > > again so kernel won't miss a folio move.
+> > >
+> > > Fix this by checking if the folio is the valid swap cache folio after
+> > > acquiring the folio lock, and checking the swap cache again after
+> > > acquiring the src_pte lock.
+> > >
+> > > SWP_SYNCRHONIZE_IO path does make the problem more complex, but so fa=
+r
+> > > we don't need to worry about that since folios only might get exposed=
+ to
+> > > swap cache in the swap out path, and it's covered in this patch too b=
+y
+> > > checking the swap cache again after acquiring src_pte lock.
+> >
+> > [1]
+> >
+> > >
+> > > Testing with a simple C program to allocate and move several GB of me=
+mory
+> > > did not show any observable performance change.
+> > >
+> > > Cc: <stable@vger.kernel.org>
+> > > Fixes: adef440691ba ("userfaultfd: UFFDIO_MOVE uABI")
+> > > Closes: https://lore.kernel.org/linux-mm/CAMgjq7B1K=3D6OOrK2OUZ0-tqCz=
+i+EJt+2_K97TPGoSt=3D9+JwP7Q@mail.gmail.com/ [1]
+> > > Signed-off-by: Kairui Song <kasong@tencent.com>
+> > >
+> > > ---
+> > >
+> > > V1: https://lore.kernel.org/linux-mm/20250530201710.81365-1-ryncsn@gm=
+ail.com/
+> > > Changes:
+> > > - Check swap_map instead of doing a filemap lookup after acquiring th=
+e
+> > >   PTE lock to minimize critical section overhead [ Barry Song, Lokesh=
+ Gidra ]
+> > >
+> > > V2: https://lore.kernel.org/linux-mm/20250601200108.23186-1-ryncsn@gm=
+ail.com/
+> > > Changes:
+> > > - Move the folio and swap check inside move_swap_pte to avoid skippin=
+g
+> > >   the check and potential overhead [ Lokesh Gidra ]
+> > > - Add a READ_ONCE for the swap_map read to ensure it reads a up to da=
+ted
+> > >   value.
+> > >
+> > >  mm/userfaultfd.c | 23 +++++++++++++++++++++--
+> > >  1 file changed, 21 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+> > > index bc473ad21202..5dc05346e360 100644
+> > > --- a/mm/userfaultfd.c
+> > > +++ b/mm/userfaultfd.c
+> > > @@ -1084,8 +1084,18 @@ static int move_swap_pte(struct mm_struct *mm,=
+ struct vm_area_struct *dst_vma,
+> > >                        pte_t orig_dst_pte, pte_t orig_src_pte,
+> > >                        pmd_t *dst_pmd, pmd_t dst_pmdval,
+> > >                        spinlock_t *dst_ptl, spinlock_t *src_ptl,
+> > > -                      struct folio *src_folio)
+> > > +                      struct folio *src_folio,
+> > > +                      struct swap_info_struct *si, swp_entry_t entry=
+)
+> > >  {
+> > > +     /*
+> > > +      * Check if the folio still belongs to the target swap entry af=
+ter
+> > > +      * acquiring the lock. Folio can be freed in the swap cache whi=
+le
+> > > +      * not locked.
+> > > +      */
+> > > +     if (src_folio && unlikely(!folio_test_swapcache(src_folio) ||
+> > > +                               entry.val !=3D src_folio->swap.val))
+> > > +             return -EAGAIN;
+> > > +
+> > >       double_pt_lock(dst_ptl, src_ptl);
+> > >
+> > >       if (!is_pte_pages_stable(dst_pte, src_pte, orig_dst_pte, orig_s=
+rc_pte,
+> > > @@ -1102,6 +1112,15 @@ static int move_swap_pte(struct mm_struct *mm,=
+ struct vm_area_struct *dst_vma,
+> > >       if (src_folio) {
+> > >               folio_move_anon_rmap(src_folio, dst_vma);
+> > >               src_folio->index =3D linear_page_index(dst_vma, dst_add=
+r);
+> > > +     } else {
+> > > +             /*
+> > > +              * Check if the swap entry is cached after acquiring th=
+e src_pte
+> > > +              * lock. Or we might miss a new loaded swap cache folio=
+.
+> > > +              */
+> > > +             if (READ_ONCE(si->swap_map[swp_offset(entry)]) & SWAP_H=
+AS_CACHE) {
+> >
+> > Do we need data_race() for this, if this is an intentionally lockless r=
+ead?
+>
+> Not entirely sure. But I recommend this pattern, borrowed from
+> zap_nonpresent_ptes() -> free_swap_and_cache_nr(),
+> where the PTL is also held and READ_ONCE is used.
+>
+>                 if (READ_ONCE(si->swap_map[offset]) =3D=3D SWAP_HAS_CACHE=
+) {
+>                        ..
+>                         nr =3D __try_to_reclaim_swap(si, offset,
+>                                                    TTRS_UNMAPPED | TTRS_F=
+ULL);
+>
+>                         if (nr =3D=3D 0)
+>                                 nr =3D 1;
+>                         else if (nr < 0)
+>                                 nr =3D -nr;
+>                         nr =3D ALIGN(offset + 1, nr) - offset;
+>                 }
 
-Add support for using the AMC6821 as a cooling device. The AMC6821
-registers with the thermal framework only if the `cooling-levels`
-property is present in the fan device tree child node. Existing behavior
-is unchanged, so the AMC6821 can still be used without the thermal
-framework (hwmon only).
+Thanks for the explanation, I also agree that holding PTL here is good
+enough here.
 
-Signed-off-by: João Paulo Gonçalves <joao.goncalves@toradex.com>
----
-v2: Unchanged
-v1: https://lore.kernel.org/lkml/20250530-b4-v1-amc6821-cooling-device-support-b4-v1-0-7bb98496c969@toradex.com/
----
- drivers/hwmon/amc6821.c | 97 ++++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 92 insertions(+), 5 deletions(-)
+>
+> I think we could use this to further optimize the existing
+> filemap_get_folio(), since in the vast majority of cases we don't
+> have a swapcache, yet we still always call filemap_get_folio().
+>
+> diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+> index bc473ad21202..c527ec73c3b4 100644
+> --- a/mm/userfaultfd.c
+> +++ b/mm/userfaultfd.c
+>
+> @@ -1388,7 +1388,7 @@ static int move_pages_pte(struct mm_struct *mm,
+> pmd_t *dst_pmd, pmd_t *src_pmd,
+>                  * folios in the swapcache. This issue needs to be resolv=
+ed
+>                  * separately to allow proper handling.
+>                  */
+>
+> -               if (!src_folio)
+> +               if (!src_folio & (swap_map[offset] & SWAP_HAS_CACHE))
+>                         folio =3D filemap_get_folio(swap_address_space(en=
+try),
+>                                         swap_cache_index(entry));
+>                 if (!IS_ERR_OR_NULL(folio)) {
+>
+> To be future-proof, we may want to keep the READ_ONCE to ensure
+> the compiler doesn't skip the second read inside move_swap_pte().
 
-diff --git a/drivers/hwmon/amc6821.c b/drivers/hwmon/amc6821.c
-index 850a42510649279fba23ed504826384e1d8e335c..218efa0d405b87e838874c273cff7f2872a02448 100644
---- a/drivers/hwmon/amc6821.c
-+++ b/drivers/hwmon/amc6821.c
-@@ -26,6 +26,7 @@
- #include <linux/pwm.h>
- #include <linux/regmap.h>
- #include <linux/slab.h>
-+#include <linux/thermal.h>
- 
- #include <dt-bindings/pwm/pwm.h>
- 
-@@ -126,6 +127,9 @@ module_param(init, int, 0444);
- struct amc6821_data {
- 	struct regmap *regmap;
- 	struct mutex update_lock;
-+	unsigned long fan_state;
-+	unsigned long fan_max_state;
-+	unsigned int *fan_cooling_levels;
- 	enum pwm_polarity pwm_polarity;
- };
- 
-@@ -805,6 +809,56 @@ static const struct hwmon_chip_info amc6821_chip_info = {
- 	.info = amc6821_info,
- };
- 
-+static int amc6821_get_max_state(struct thermal_cooling_device *cdev, unsigned long *state)
-+{
-+	struct amc6821_data *data = cdev->devdata;
-+
-+	if (!data)
-+		return -EINVAL;
-+
-+	*state = data->fan_max_state;
-+
-+	return 0;
-+}
-+
-+static int amc6821_get_cur_state(struct thermal_cooling_device *cdev, unsigned long *state)
-+{
-+	struct amc6821_data *data = cdev->devdata;
-+
-+	if (!data)
-+		return -EINVAL;
-+
-+	*state = data->fan_state;
-+
-+	return 0;
-+}
-+
-+static int amc6821_set_cur_state(struct thermal_cooling_device *cdev, unsigned long state)
-+{
-+	struct amc6821_data *data = cdev->devdata;
-+	int ret;
-+
-+	if (!data || state > data->fan_max_state)
-+		return -EINVAL;
-+
-+	ret = regmap_write(data->regmap, AMC6821_REG_DCY,
-+			   data->fan_cooling_levels[state]);
-+	if (ret)
-+		return ret;
-+
-+	data->fan_state = state;
-+
-+	/* Change to manual mode (software DCY) */
-+	return regmap_update_bits(data->regmap, AMC6821_REG_CONF1,
-+				  AMC6821_CONF1_FDRC0 | AMC6821_CONF1_FDRC1, 0);
-+}
-+
-+static const struct thermal_cooling_device_ops amc6821_cooling_ops = {
-+	.get_max_state = amc6821_get_max_state,
-+	.get_cur_state = amc6821_get_cur_state,
-+	.set_cur_state = amc6821_set_cur_state,
-+};
-+
- /* Return 0 if detection is successful, -ENODEV otherwise */
- static int amc6821_detect(struct i2c_client *client, struct i2c_board_info *info)
- {
-@@ -877,11 +931,29 @@ static enum pwm_polarity amc6821_pwm_polarity(struct i2c_client *client,
- 	return polarity;
- }
- 
--static void amc6821_of_fan_read_data(struct i2c_client *client,
--				     struct amc6821_data *data,
--				     struct device_node *fan_np)
-+static int amc6821_of_fan_read_data(struct i2c_client *client,
-+				    struct amc6821_data *data,
-+				    struct device_node *fan_np)
- {
-+	int num;
-+
- 	data->pwm_polarity = amc6821_pwm_polarity(client, fan_np);
-+
-+	num = of_property_count_u32_elems(fan_np, "cooling-levels");
-+	if (num <= 0)
-+		return 0;
-+
-+	data->fan_max_state = num - 1;
-+
-+	data->fan_cooling_levels = devm_kcalloc(&client->dev, num,
-+						sizeof(u32),
-+						GFP_KERNEL);
-+
-+	if (!data->fan_cooling_levels)
-+		return -ENOMEM;
-+
-+	return of_property_read_u32_array(fan_np, "cooling-levels",
-+					  data->fan_cooling_levels, num);
- }
- 
- static int amc6821_init_client(struct i2c_client *client, struct amc6821_data *data)
-@@ -962,10 +1034,14 @@ static int amc6821_probe(struct i2c_client *client)
- 
- 	fan_np = of_get_child_by_name(dev->of_node, "fan");
- 	if (fan_np) {
--		amc6821_of_fan_read_data(client, data, fan_np);
-+		err = amc6821_of_fan_read_data(client, data, fan_np);
- 		of_node_put(fan_np);
- 	}
- 
-+	if (err)
-+		return dev_err_probe(dev, err,
-+				     "Failed to read fan device tree data\n");
-+
- 	err = amc6821_init_client(client, data);
- 	if (err)
- 		return err;
-@@ -980,7 +1056,18 @@ static int amc6821_probe(struct i2c_client *client)
- 	hwmon_dev = devm_hwmon_device_register_with_info(dev, client->name,
- 							 data, &amc6821_chip_info,
- 							 amc6821_groups);
--	return PTR_ERR_OR_ZERO(hwmon_dev);
-+	if (IS_ERR(hwmon_dev))
-+		return dev_err_probe(dev, PTR_ERR(hwmon_dev),
-+				     "Failed to initialize hwmon\n");
-+
-+	if (IS_ENABLED(CONFIG_THERMAL) && fan_np && data->fan_cooling_levels)
-+		return PTR_ERR_OR_ZERO(devm_thermal_of_cooling_device_register(dev,
-+									       fan_np,
-+									       client->name,
-+									       data,
-+									       &amc6821_cooling_ops));
-+
-+	return 0;
- }
- 
- static const struct i2c_device_id amc6821_id[] = {
+Maybe we can do this optimization in another patch I think.
 
--- 
-2.43.0
+>
+> >
+> > Another pure swap question: the comment seems to imply this whole thing=
+ is
+> > protected by src_pte lock, but is it?
+> >
+> > I'm not familiar enough with swap code, but it looks to me the folio ca=
+n be
+> > added into swap cache and set swap_map[] with SWAP_HAS_CACHE as long as=
+ the
+> > folio is locked.  It doesn't seem to be directly protected by pgtable l=
+ock.
+> >
+> > Perhaps you meant this: since src_pte lock is held, then it'll serializ=
+e
+> > with another thread B concurrently swap-in the swap entry, but only _la=
+ter_
+> > when thread B's do_swap_page() will check again on pte_same(), then it'=
+ll
+> > see the src pte gone (after thread A uffdio_move happened releasing src=
+_pte
+> > lock), hence thread B will release the newly allocated swap cache folio=
+?
+> >
+> > There's another trivial detail that IIUC pte_same() must fail because
+> > before/after the uffdio_move the swap entry will be occupied so no way =
+to
+> > have it reused, hence src_pte, even if re-populated again after uffdio_=
+move
+> > succeeded, cannot become the orig_pte (points to the swap entry in
+> > question) that thread B read, hence pte_same() must check fail.
+>
+> in v1 of this patch, we had some similar discussions [1][2]:
+>
+> [1] https://lore.kernel.org/linux-mm/CAGsJ_4wBMxQSeoTwpKoWwEGRAr=3DiohbYf=
+64aYyJ55t0Z11FkwA@mail.gmail.com/
+> [2] https://lore.kernel.org/linux-mm/CAGsJ_4wM8Tph0Mbc-1Y9xNjgMPL7gqEjp=
+=3DArBuv3cJijHVXe6w@mail.gmail.com/
+>
+> At the very least, [2] is possible, although the probability is extremely=
+ low.
+>
+> "It seems also possible for the sync zRAM device.
+>
+>  step 1: src pte points to a swap entry S without swapcache
+>  step 2: we call move_swap_pte()
+>  step 3: someone swap-in src_pte by sync path, no swapcache; swap slot
+> S is freed.
+>              -- for zRAM;
+>  step 4: someone swap-out src_pte, get the exactly same swap slot S as st=
+ep 1,
+>              adds folio to swapcache due to swapout;
+>  step 5: move_swap_pte() gets ptl and finds page tables are stable
+> since swap-out
+>              happens to have the same swap slot as step1;
+>  step 6: we clear src_pte, move src_pte to dst_pte; but miss to move the =
+folio.
+>
+> Yep, we really need to re-check pte for swapcache after holding PTL.
+> "
+>
+> Personally, I agree that improving the changelog or the comments
+> would be more helpful. In fact, there are two bugs here, and Kairui=E2=80=
+=99s
+> changelog clearly describes the first one.
 
+Yeah, the first one is quite a long and complex race already, so I
+made the description on the second issue shorter. I thought it
+wouldn't be too difficult to understand given the first example. I can
+add some more details.
