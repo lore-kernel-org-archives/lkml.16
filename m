@@ -1,123 +1,199 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29B727FB29;
-	Tue,  3 Jun 2025 09:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC83281346
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 09:06:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748941559; cv=none; b=YLfnqs5M5cS5fNwltT2c/iRO8IYJp1VcWC3y1eSHjRMRAs161zBjDRlTKKCrRK9peIiK86Jm6Ny/tbGteftrCO07rv7OL3ORT3aPBMliCuOZX8qd841RCrvNO7mXlgmaNnbLFLJ5Oc4LDqzqGMXvrp/QCGSqg8BID1Ix3CXjhGg=
+	t=1748941565; cv=none; b=IGsMH34PxnOYgoJs35TqHUZq8xM8XJ9pmVZ3ucW7+aKAOaVZTw1/pGj0mgC33KCZD7oeJk9sQxZl9hi7TGk1aKZTdL5TjrTcoLaDLMehMkzJUQGN1nBFc8lak1VcPP2ByEjth+Gl3F1PWyJrKgF32ZPckphBYm+wExvTwUg5dS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748941559; c=relaxed/simple;
-	bh=DR7AQjMWleAsYDwxcMyXNFCZmaObbc7AOpQv2aK2wPM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BFArH28vbxSGdsjtSuk9GzesekonbOp6+wQ64DhC+/tea0JlM9M7Sb/ihTlqICuCNfclmt1s/s+TLb4+Me69YkoRepTW04fEj5jUZFb53+zp2ztz98z5iLZhEXrcaX+pAmWc+DQO8VPjmKRddTayJ24nCyUtTFb+f1YtafbeJ5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=OtHV+BUx; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1748941565; c=relaxed/simple;
+	bh=sRP0LmdX2jCQmP9M0y80Vq5CWeHDEBh8oibADEXpCms=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=rjJ0Kk2gRkr2pjRA7iW+e4VMI+syV8JQIVvREdQ6YWeF5sjWIgwLG8wGPydjLAd+xjk+T6uJOye9yrNdqOWCdEsLbHIFJrTNeW4fa3OGIB4SXhXEFD6R3bGFGLltB0mGxo86OSvLFcNaf6imThMXYMvO3cetdodpq9xa7YycwII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=mIY945E/; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="OtHV+BUx"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1F3C940E01B3;
-	Tue,  3 Jun 2025 09:05:53 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id K0iu0KJE_bea; Tue,  3 Jun 2025 09:05:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1748941548; bh=+QaxPVYGiWt7mB9m4DsoMvxZpkgJLcaRJ1KKz+wbYdg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OtHV+BUx7HNlS6dpAM95SE7mQGT3JdPGXqWH9wtCmvdAG5a1RhJms6YNo31fyxMUu
-	 rP3bLzG2FjNXsiATg3WpZBEnYdAl9FpTY+nPbbCB8FphKglfKV19oW6zn5ja8AhWYV
-	 5l6ODc2SeqvOXVtQ9qnzpdwvNnZvoIHdR2KrrSz5rnsrlZKni7kLND2Jn+x+NXIFxs
-	 8ZYTPfuPZFPdsdYQoh1a71DpZG8v/4T0WhiOEX3MiurVswt8syEoBYfUaF5/j0Ko9Y
-	 4NCGy3NxeuUXg5HpcLNljXAbRR0axrsOsqhidwrF+FaMEMIfbU2sugPTSbKrwVxwZ2
-	 I1ktLXpthcIkkAQWcrrq8LnHYtDdILR/4UJWExCzphWQFrd4kceO2ZEygQbOq0dn0G
-	 vJu7Iuvn6vyP9PEzfU8cQhMVVL36Wc8AvX0WukfhOKj3TZsveK0GRbxCbQFI9YoNbz
-	 XjrbxWsz+WNPrrO7E5jPgZc9N2wP5reYeAurbNbkTKVtSUY1dr6+ET3e3oscFOiiwT
-	 QOXkN4StUOJFviC0ADcjz7qncNkKBHKPbTDtyYHSO9CilwRiYQHUVxDvqFXaOFcWIk
-	 EJHDDXyoEWiQlIXAmv8Soks8UqyLfu9J4VbkcKn6i+brb/plhjQufJ7XjXezAaikpB
-	 0+OIy00SRzXfKUgUmlg21waw=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D9A1640E0163;
-	Tue,  3 Jun 2025 09:05:37 +0000 (UTC)
-Date: Tue, 3 Jun 2025 11:05:36 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org, git@amd.com,
-	Michal Simek <michal.simek@amd.com>,
-	Tony Luck <tony.luck@intel.com>, James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>
-Subject: Re: [PATCH] EDAC/synopsys: Clear the ecc counters at init
-Message-ID: <20250603090536.GCaD664IbJB5IoR06g@fat_crate.local>
-References: <20250528065650.27646-1-shubhrajyoti.datta@amd.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="mIY945E/"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5537a3AZ012225
+	for <linux-kernel@vger.kernel.org>; Tue, 3 Jun 2025 09:06:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=7sA02YbbHjaA+JbHO5CG9q
+	0PR/A+phKOqR9jUxXEpgk=; b=mIY945E/Nixe3WOBhlIRDU5i5UpgwuRVaoCB2l
+	MX+qsL5CLzFZ3SgzU4H5+0bYLiob8X1rZmRM3V+SEtx+FWSbKyAB+fIXdS9Z3zou
+	rONaZgWRhLShdJLuZ6oUn+ccmJaY2HXxwjHBceDWQvRf7rKXkQgvGenxZ56rtwWt
+	FpqsZu7JN6s4NTBo+NCj/qWryN2yTm/87N+hM7tU7HP8YOUg4aGuxQdXGX+Mwk7D
+	0lLLIm+zGW9IT4Ic/CPz+f7qqLmkAp7GCtRGUGqDkeqNiCn6QCwkyDx2eplzyu3T
+	S+j5L1RxUwbp0RZM6NCQFxedp1qp8AvYsl5WtYXDkWMj3nsA==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8ssymu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 09:06:00 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-235842baba4so19123505ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 02:06:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748941560; x=1749546360;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7sA02YbbHjaA+JbHO5CG9q0PR/A+phKOqR9jUxXEpgk=;
+        b=CRTfs6VVJPbpDI6iN18v070lqrt3EiPo+BggjnqmD4C5Czza/eUWwBmdOyi1MJZFKn
+         uxl1KKj4hMyAjew1Nw1jmeTb/Nucbm8sXdyzBdyDTN2ZmpdEQhf4BX2dXeNAzPEtccNb
+         X9VhqCmoHBEPMhhKwHuoFR7/qN6ZqQ0/sTG8UdGEOaxuOC/4VkvcOtkiC5bdmXEImwkh
+         rMdCUhl0CKfJnaOZlt6yuc73/wc9FEGurINnWgyPn6fPTzvrfi1bvN1Da4S+o5O0uXKO
+         qtqt205QWfhksD830+aAq/+JzJ80je5Hk/+HCuvQsXOr3PoSROat2rBEytUXsJtDXH0A
+         iWNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVQj2Qk92gXnC/rSZBX0OW54P2854nCJAXEkb7DTjD1rQNowanza79m+Zj2C0hMBnM1r9BOysUsNClUMhU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyt9ALNMFjDwPenzN2a5FGYy1C+zZrWUR/uCR6bIRzaJ11I8nQZ
+	LrWtID6gLcIXQQskQxLrbp1lzBHQzxcor3vs7S3I9l9KPgw5Qu6VHWUS5Mb/SjXex/GdtM+SYQ2
+	Oq2ZKYheVjJBmR8Xid4anYRKabY/lttKUG2PBjB+d/bg9gd9uewWs5kIe3KGW3ZgXRxM=
+X-Gm-Gg: ASbGnctw9M8ArBje2U5rZDzmE3MjCqlks3MjLMJ5TnAXZiPoCcqZZLvCjbS7FfuFvZT
+	Mp504oESLBdI2t56mipbdgyFrh/++5NPEJJglixidA2xmd51FVxWETHwNsmHiwIgCR8pGM1Q9aK
+	Q9mSm0oLIxCQ+KD68Uj5WrbB8uqpS1ZPhs0CKMg83L/4XsAW3qjAFKmrES1zJvoMFazJmUTGpKC
+	xV5TmFfcZdSiY68pA08G7nmi5mRggC3jKsmjt8/7VNIt+OmvoO54rPFWGibVn7GFPNEnLAn1fNy
+	udqeFFsg+jS0g95li37v174paywCqcFvoU2Srymjn6SXm9huRQ+SWlDVPY8=
+X-Received: by 2002:a17:903:1787:b0:234:9374:cfae with SMTP id d9443c01a7336-23528ef5e4amr263371365ad.19.1748941559876;
+        Tue, 03 Jun 2025 02:05:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH43qHpeF9M3nXB838OHaxee4EJLTnaL3rTc6DrjrHyUUCJy0UJLGrjFgiWIWbpdhKwpiwebA==
+X-Received: by 2002:a17:903:1787:b0:234:9374:cfae with SMTP id d9443c01a7336-23528ef5e4amr263371025ad.19.1748941559493;
+        Tue, 03 Jun 2025 02:05:59 -0700 (PDT)
+Received: from hu-qianyu-lv.qualcomm.com (Global_NAT1.qualcomm.com. [129.46.96.20])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bd92f8sm83215375ad.88.2025.06.03.02.05.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 02:05:59 -0700 (PDT)
+From: Qiang Yu <qiang.yu@oss.qualcomm.com>
+Date: Tue, 03 Jun 2025 02:05:44 -0700
+Subject: [PATCH v2] mhi: host: Add standard elf image download
+ functionality
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250528065650.27646-1-shubhrajyoti.datta@amd.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250603-standard_elf_image_load_support-v2-1-cce97644e99e@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAOe6PmgC/x3NQQ6CMBCF4auQrh1DKyJ15T2MaSbtAJNACy0YD
+ eHuVnbv2/xvE4kiUxL3YhOR3pw4+Ax1KoTt0XcE7LKFKtW1rMsLpAW9w+gMDa3hETsyQ0Bn0jp
+ NIS7gUKOydaUrKUWuTJFa/hwPz1d2G8MISx8Jj66sG63Lm2w0KNlUFUjoeIFE3gGNyAPMK1szM
+ /rv+vhv9vZswyj2/QeKeMgVvQAAAA==
+X-Change-ID: 20250603-standard_elf_image_load_support-da9a2c649411
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        jeff.hugo@oss.qualcomm.com
+Cc: mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, quic_bqiang@quicinc.com,
+        can.guo@oss.qualcomm.com, Mayank Rana <mayank.rana@oss.qualcomm.com>,
+        Qiang Yu <qiang.yu@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748941558; l=3167;
+ i=qiang.yu@oss.qualcomm.com; s=20250513; h=from:subject:message-id;
+ bh=z/rZNOS6LYQellsLP6isZYxfUEFgjKzlMB6X/v9Z/Ck=;
+ b=imRxSsFqBjNS1t0JMKVAOiQENHjRfq7lUvuCtX4/D8wlTYXORDjeJd/xZ7uUwofbyfFHV2VAk
+ DuS6GJwvt0qBbEWvygUxhu1hFletJu8L212DP1DfmjdYFpVe7xplTW+
+X-Developer-Key: i=qiang.yu@oss.qualcomm.com; a=ed25519;
+ pk=Rr94t+fykoieF1ngg/bXxEfr5KoQxeXPtYxM8fBQTAI=
+X-Proofpoint-ORIG-GUID: GuWNsFhpagTR868o3Oyq11NRY95ccyhL
+X-Authority-Analysis: v=2.4 cv=EPcG00ZC c=1 sm=1 tr=0 ts=683ebaf8 cx=c_pps
+ a=JL+w9abYAAE89/QcEU+0QA==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8
+ a=EUspDBNiAAAA:8 a=o8HkkU2S3lM798f_WwQA:9 a=QEXdDO2ut3YA:10
+ a=324X-CrmTo6CU4MGRt3R:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: GuWNsFhpagTR868o3Oyq11NRY95ccyhL
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAzMDA3OSBTYWx0ZWRfXzOUf+zoCnyls
+ F/+6Wtv6CECMBM8QHF4MTk4JMXPG5MAsR52cbJUQH5hoV1jal2YPb9YS2z3PxZpdXYImgWguWEn
+ CjA9X2zz0aNWTwcT8YSSD0A6PuVyPNWGJ3NSEXLjnXjCIODc4Iw1ZzJCFUZbhj4JfKCygLk+z+W
+ GEqNzgQWroDWEvmgEFwpplbW1aFkU8mCX1fQyPBh21CcBp79YNZwTC91nGOaPmYVWKSTSGHRZnD
+ J4S69EeR73wDHYaTsh9IaFs1sV/FYDPcIadbK/1lnyaewwnyf/hroMya/WmOQ0QJbR2Slt2G2tb
+ nP0fSwZbbLBb8iSAY+GHD/voC8SLyPP64i+qeRqm/EGFn3cct9ASKJAlUuPb1NtU2upKqPDYkMW
+ yWGzuFozGF9hgZK3MJsC2OVVPHnr4jk2B7/UZE1Hji4UqwlitFkAd83jZ3dPodhcN4lZGGyi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-03_01,2025-06-02_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 suspectscore=0 bulkscore=0 priorityscore=1501 phishscore=0
+ impostorscore=0 lowpriorityscore=0 adultscore=0 malwarescore=0 mlxscore=0
+ clxscore=1011 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506030079
 
-On Wed, May 28, 2025 at 12:26:50PM +0530, Shubhrajyoti Datta wrote:
-> Subject: Re: [PATCH] EDAC/synopsys: Clear the ecc counters at init
+From: Mayank Rana <mayank.rana@oss.qualcomm.com>
 
-s/ecc/ECC/g
+Currently, the FBC image is a non-standard ELF file that contains a single
+ELF header, followed by segments for SBL, RDDM, and AMSS. Some devices are
+unable to process this non-standard ELF format and therefore require
+special handling during image loading.
 
-> Clear ECC error and counter registers at init to ensure a clean state
-> by clearing all ECC error and counter registers before registering
-> the controller with the EDAC framework.
-> 
-> This avoids reporting stale errors that may have occurred during
-> boot or prior configuration.
+Add standard_elf_image flag to determine whether the device can process
+the non-standard ELF format. If this flag is set, a standard ELF image
+must be loaded, meaning the first 512 KB of the FBC image should be
+skipped when loading the AMSS image over the BHIe interface. Note that
+this flag does not affect the SBL image download process.
 
-Run this commit message through AI and ask it to shorten it and write it in
-imperative tone.
+Signed-off-by: Mayank Rana <mayank.rana@oss.qualcomm.com>
+Co-developed-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
+Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
+---
+Changes in v2:
+- V1 patch is paused because of no user. WLAN team plan to add support for
+  new WLAN chip that requires this patch, so send v2.
+- Change author and SOB with new mail address.
+- Reword commit message.
+- Place standard_elf_image flag after wake_set in struct mhi_controller
+- Link to v1: https://lore.kernel.org/mhi/1689907189-21844-1-git-send-email-quic_qianyu@quicinc.com/
+---
+ drivers/bus/mhi/host/boot.c | 7 +++++++
+ include/linux/mhi.h         | 4 ++++
+ 2 files changed, 11 insertions(+)
 
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
-> ---
-> 
->  drivers/edac/synopsys_edac.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
-> index 5ed32a3299c4..ebd2d6e771a1 100644
-> --- a/drivers/edac/synopsys_edac.c
-> +++ b/drivers/edac/synopsys_edac.c
-> @@ -755,7 +755,7 @@ static bool zynq_get_ecc_state(void __iomem *base)
->  static bool zynqmp_get_ecc_state(void __iomem *base)
->  {
->  	enum dev_type dt;
-> -	u32 ecctype;
-> +	u32 ecctype, clearval;
->  
->  	dt = zynqmp_get_dtype(base);
->  	if (dt == DEV_UNKNOWN)
-> @@ -763,8 +763,13 @@ static bool zynqmp_get_ecc_state(void __iomem *base)
->  
->  	ecctype = readl(base + ECC_CFG0_OFST) & SCRUB_MODE_MASK;
->  	if ((ecctype == SCRUB_MODE_SECDED) &&
-> -	    ((dt == DEV_X2) || (dt == DEV_X4) || (dt == DEV_X8)))
-> +	    ((dt == DEV_X2) || (dt == DEV_X4) || (dt == DEV_X8))) {
-> +		clearval = readl(base + ECC_CLR_OFST) |
-> +				ECC_CTRL_CLR_CE_ERR | ECC_CTRL_CLR_CE_ERRCNT |
-> +				ECC_CTRL_CLR_UE_ERR | ECC_CTRL_CLR_UE_ERRCNT;
-> +		writel(clearval, base + ECC_CLR_OFST);
+diff --git a/drivers/bus/mhi/host/boot.c b/drivers/bus/mhi/host/boot.c
+index efa3b6dddf4d2f937535243bd8e8ed32109150a4..f1686a8e0681d49f778838820b44f4c845ddbd1f 100644
+--- a/drivers/bus/mhi/host/boot.c
++++ b/drivers/bus/mhi/host/boot.c
+@@ -584,6 +584,13 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
+ 	 * device transitioning into MHI READY state
+ 	 */
+ 	if (fw_load_type == MHI_FW_LOAD_FBC) {
++		dev_dbg(dev, "standard_elf_image:%s\n",
++			(mhi_cntrl->standard_elf_image ? "True" : "False"));
++		if (mhi_cntrl->standard_elf_image) {
++			fw_data += mhi_cntrl->sbl_size;
++			fw_sz -= mhi_cntrl->sbl_size;
++		}
++
+ 		ret = mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->fbc_image, fw_sz);
+ 		if (ret) {
+ 			release_firmware(firmware);
+diff --git a/include/linux/mhi.h b/include/linux/mhi.h
+index dd372b0123a6da5107b807ff8fe940c567eb2030..48f2b50038519111aed2075f01d0704adfc8989e 100644
+--- a/include/linux/mhi.h
++++ b/include/linux/mhi.h
+@@ -360,6 +360,9 @@ struct mhi_controller_config {
+  * @bounce_buf: Use of bounce buffer
+  * @fbc_download: MHI host needs to do complete image transfer (optional)
+  * @wake_set: Device wakeup set flag
++ * @standard_elf_image: Flag to determine whether the first 512 KB of the FBC
++ *                      image need to be skipped when loading AMSS image over
++ *                      BHIe interface (optional)
+  * @irq_flags: irq flags passed to request_irq (optional)
+  * @mru: the default MRU for the MHI device
+  *
+@@ -445,6 +448,7 @@ struct mhi_controller {
+ 	bool bounce_buf;
+ 	bool fbc_download;
+ 	bool wake_set;
++	bool standard_elf_image;
+ 	unsigned long irq_flags;
+ 	u32 mru;
+ };
 
-A getter function clears registers and commit message talks about "at init"?!?!
+---
+base-commit: 6348f62ef7ecc5855b710a7d4ea682425c38bb80
+change-id: 20250603-standard_elf_image_load_support-da9a2c649411
 
-This looks like a hack.
-
+Best regards,
 -- 
-Regards/Gruss,
-    Boris.
+Qiang Yu <qiang.yu@oss.qualcomm.com>
 
-https://people.kernel.org/tglx/notes-about-netiquette
