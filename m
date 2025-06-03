@@ -1,74 +1,64 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2079.outbound.protection.outlook.com [40.107.212.79])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31941228CB8;
-	Tue,  3 Jun 2025 21:47:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748987238; cv=fail; b=j0LlRO86PC2Bbga5cYNbUiBiVkIi3JONx31yPvYPuevN02TWzW/J1YWFzLr5HLp3R3yGYwRolUOhsaE9qd70kzDYzp23vJZAOAbVHBfQl73/vqmoDRzPJxGcjCADlSoe2m5O62M47zLreFUruNf4e0Z3YoHolEFq5sErw29Cwnc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748987238; c=relaxed/simple;
-	bh=7zA2Q4st5GonzsQtXmlaT8VgBTu8gNp8q9hH8Fc4TIQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NunM+gn2ZtsDU+lQHFRP67wGEoftK4RDs5Rga47UDoBoyJxEotM7TV1m1WlQ+b1V0UjUakuaVVKopyzk67vw44o/zfYdK8xwfZiJmQFv9I0lozFcnXE6jknx9aHz5c+3k1AWpZXkiSVT3dMN45E9VJDDbcaS3SzQaJpf7DyUHqw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PjiZ2zAW; arc=fail smtp.client-ip=40.107.212.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C38226D1E;
+	Tue,  3 Jun 2025 21:48:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748987320; cv=none; b=Us1w2Tu7f8lru5AfKzb2+II8Xy3Gap6BGqvN5U5YoZKvZNso82kwhtYWci9mbCst1kzkOAI0XNyzMWLoAJzwRh6RtdCc2W6dTj7hLeRwePPAXvDFXDehVd3yswJMfDXdRFkBJQKIaccHwmctYraALEIogKxqE1tCORwz7p1n2ms=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748987320; c=relaxed/simple;
+	bh=yUbCb+Ctu1riXH+pW2liC2Tgugc0HGwAuwLzAqBtQa0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L/Zi6law6TYqA7mdcjFUmbPuZ7SZPATgrV9LKuNKLR3cdzoRE+Jrj/S029cGhImx/QPERW8PlPdbMutRwdL8+NIPbpFU7eOPnOACn/xH6myTe0iTt9Rmo3uUnCgJJSYEr+Nlun1gqF4emVHwKBG93OlcDFvyc+7KFQu5d+qsI2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=SHFmoPRC; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PjiZ2zAW"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qIwF6TaeUJ1OSSdrOYL6Bvg81IwPEztbCun8IumCEINr7keXLCZW4NawMkjy64lJGS4YyIxOwvAqruU6GgoWbWkocQGDXlYurYVsWa/K2+/zrQ4bgi/DZhlKFjmaaKWLeaaNdbaogtGHgd8xfxVxi7jRIsBHgBdpqwzQnhKlFJfbEoPaKh5TcslL/jflhZByUXim0xRXIbwLE6B1imRBtaEVZU1CqmhL7R569LdNK5DAPi04g8taOsX6YSxI0p4kYd4WrrEmQIlhIBYRWg0jYQSSgTjfsLLDIDbImlWMt3KSz2JdmhVzzUNujXYi9mDMGLpPxaLFkvqrDROZGn6DlQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Oow/ifob46Ag4yR+jB4UukJjTk9cxilBemzAgMqe7ok=;
- b=V64rmEJB6kAw5TSq0DPIOrJFfzFaUIVr/YXptGNpG6rEKHem+CUHmv8EqeAlduKNDYBM8siLzrjWXgjsVHHzmvXX7mPKH9JJdtiqiEbk/BeYVh0e3GjSDyDbverZotxtpkct0pzKBVasRDEykcaDyuo4sWfBrA4nlWYJHBtH3jaxGsPx6SFrOegDauTu5n9uBjbJ7SuPSg+qo4Mc7R0Scj1HA5nzxxeJySih6HdgZnunQTJ6+eY9eeJOxxFhW+7Q6dnlR6++IbtztAvgz5aJhpVWlcG0WrndGXzHxMT1ac7GPoN9bC+0CnzAQSTxbW/Pu9TldzYeqG0XH1DeJ5oB/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Oow/ifob46Ag4yR+jB4UukJjTk9cxilBemzAgMqe7ok=;
- b=PjiZ2zAWrskKR97hInf320XbkJ/UptMemN/F9o9xRyffgDhwI1Rch0l0GsoARATKnXVFw/NfLQthkMuvpkJD2JMPLu90dJQuhjB5H3ITr9mCo2E5XYgOv/u1v0ritxw0oggxyg4ZzHz+sED9S3zPXba32hLUViyrdSLYgK4v3pY=
-Received: from SA1P222CA0127.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:3c2::17)
- by BL1PR12MB5946.namprd12.prod.outlook.com (2603:10b6:208:399::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.32; Tue, 3 Jun
- 2025 21:47:08 +0000
-Received: from SA2PEPF00003F64.namprd04.prod.outlook.com
- (2603:10b6:806:3c2:cafe::52) by SA1P222CA0127.outlook.office365.com
- (2603:10b6:806:3c2::17) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.23 via Frontend Transport; Tue,
- 3 Jun 2025 21:47:08 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SA2PEPF00003F64.mail.protection.outlook.com (10.167.248.39) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8792.29 via Frontend Transport; Tue, 3 Jun 2025 21:47:08 +0000
-Received: from maple-stxh-linux-10.amd.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Tue, 3 Jun 2025 16:47:07 -0500
-From: Pratap Nirujogi <pratap.nirujogi@amd.com>
-To: <andi.shyti@kernel.org>, <rdunlap@infradead.org>, <hdegoede@redhat.com>,
-	<ilpo.jarvinen@linux.intel.com>, <mario.limonciello@amd.com>,
-	<sfr@canb.auug.org.au>, <linux-next@vger.kernel.org>
-CC: <linux-i2c@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <benjamin.chan@amd.com>, <bin.du@amd.com>,
-	<gjorgji.rosikopulos@amd.com>, <king.li@amd.com>, <dantony@amd.com>, "Pratap
- Nirujogi" <pratap.nirujogi@amd.com>
-Subject: [PATCH v2 2/3] i2c: amd-isp: Initialize unique adpater name
-Date: Tue, 3 Jun 2025 17:40:12 -0400
-Message-ID: <20250603214611.3039787-3-pratap.nirujogi@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250603214611.3039787-1-pratap.nirujogi@amd.com>
-References: <20250603214611.3039787-1-pratap.nirujogi@amd.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SHFmoPRC"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 553HY2s4014215;
+	Tue, 3 Jun 2025 21:48:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=cu/BVBcspytBjGwz1R42iClswynE3
+	pQaW0YdKGIbiG4=; b=SHFmoPRCLMaHnqCroYbdi19tRb5mXoEKY+TcAAaCTr2/F
+	0+HAx5wwL8cT8RNyp9oP8wpSS6zn+oB/3XsD9ypSHeLlFL6xDR4RcWuy5NUuzN92
+	UVtxwXx0MMQMdqfimSCCF3rfCJYpJUnKNvr+U0qMpjxaPIOrgRlLBa4VR7x2r6Fb
+	bXhAkVX1gKrhdb8RT0owkI+GrsIWMIF/MQmem8D54TQ96HMJu2QkFJfaknN8gRQI
+	QH+vWp8pQDbK+tycm4305BTI41pjUQv1plKL16IxhabverhZCV8GWViCNGMDlRbE
+	n798961kAys62ZyGPLG+VSOCkv0yN96m7CPmRp6ug==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 471g8bjthe-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 03 Jun 2025 21:48:18 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 553Lfbkf034993;
+	Tue, 3 Jun 2025 21:48:17 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46yr7a7nk6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 03 Jun 2025 21:48:17 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 553Lkl43039979;
+	Tue, 3 Jun 2025 21:48:16 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 46yr7a7njr-1;
+	Tue, 03 Jun 2025 21:48:16 +0000
+From: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+To: David Rhodes <david.rhodes@cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Stuart Henderson <stuarth@opensource.cirrus.com>,
+        Piotr Stankiewicz <piotrs@opensource.cirrus.com>,
+        Qi Zhou <qi.zhou@cirrus.com>, linux-sound@vger.kernel.org,
+        patches@opensource.cirrus.com, linux-kernel@vger.kernel.org
+Cc: dan.carpenter@linaro.org, kernel-janitors@vger.kernel.org,
+        error27@gmail.com, harshit.m.mogalapalli@oracle.com
+Subject: [PATCH] ASoC: cs48l32: Fix a signedness bug in cs48l32_hw_params()
+Date: Tue,  3 Jun 2025 14:48:13 -0700
+Message-ID: <20250603214813.197346-1-harshit.m.mogalapalli@oracle.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,111 +66,55 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00003F64:EE_|BL1PR12MB5946:EE_
-X-MS-Office365-Filtering-Correlation-Id: dca9d224-720c-4d56-1305-08dda2e830a1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|82310400026|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?rbPDAoTU7gcaOS5VRECqxSPFb1GS+kIJRDo+5x6Ez50A07wlMLXHgPThu/Lx?=
- =?us-ascii?Q?snfzg+PAB039LuIu/m2/JJ48rmFsbTMT6gHbq+iQKMG8DkWFjr7zWhKJ9U4b?=
- =?us-ascii?Q?7eGsGa2NPZqTrvMhQ2KQ/zfxtD9clqHA76CMqUhV8gYqM9MgHjqFJTrOcq5p?=
- =?us-ascii?Q?ZxHLxFVXqLsE7xH+dopxiEKWE2fvtVGsYlUKLHk/nP9lAVCJmJsfBmIouDD5?=
- =?us-ascii?Q?ATxS9NK8tSOdQWGGO+kqUk6qLGtB+wgAquQ9WZelNhgrcpdbe+p/+m8FDqBd?=
- =?us-ascii?Q?y6IHkBNTauGtUSRI7MCrhWr49bWYq77705Am9B7D9hkXCzsvKHL9XqV8pj/t?=
- =?us-ascii?Q?zfk1F/RcYodQ8F13Vq78f8UAq4OPOZIXnv2Of9Kw4KqoWZSio3Vw262y9yYn?=
- =?us-ascii?Q?TWvD6WSxQb6mkiV6d9lcSzWSrBjCuyWuBB/g8pgCmvXD9E8I35VtmAxKjX+E?=
- =?us-ascii?Q?u/leOJPrE353PJ89v63Hf2pZmBFLWufv8jjITsI/t1XaHexKxSegIP3kSRAH?=
- =?us-ascii?Q?8tGgcZdy1jCg640GpD6GXxDjDyFsyaxAD6EciKN7Lg8lKEYETJ3mVob+BtUa?=
- =?us-ascii?Q?klUc9GrfwQqB/b1nuFlEGqExe1/Mo3/rY7G8dwK9iZ2724U1J7LeF2rrZRhp?=
- =?us-ascii?Q?UlXO5pOOj/zcq0eLqcj8+ACZNDH/gZnJFkHy+IgOWCJ7/wDSEA57/sP4ApA/?=
- =?us-ascii?Q?5jq8Q9Hv3jlCvUVfF2v5G7FyFuaVibWT2OfNlxLBLDHAHD92dMzy/5eEH2cL?=
- =?us-ascii?Q?rt2ygjIUzfXuidhbpP/jMnKy3I3/fWmoyIcvJ3hm83KoJ4NPa6jMNbB56OT2?=
- =?us-ascii?Q?tLIkfGN1ByHczBHYhondEjWOX2tyfxVDJLoVdshfGgVbDzi8GB5bQ3TKpNtD?=
- =?us-ascii?Q?kpxZvwcemUYAc4owirYB+Znje80J1ctmWJmVIYHFRcSqnq0sw5nwr+JRkXJt?=
- =?us-ascii?Q?hXZEyOIJ+1P1Cxfn3t6oP6eo8kXfcEuw125wPHIuSv1+Hua4e95dtErz1oA2?=
- =?us-ascii?Q?ernU0ROAMaki0gAuz84kI5lFvSUdUKDQKzDzVJF2jM7hZhrvFcvaYf8jDnGJ?=
- =?us-ascii?Q?fWQ3Eh4Sqzpx6/SLn8bByxCswiH/r4tTTB7RsoIoT6Tv/jT7rNM+UWURuASs?=
- =?us-ascii?Q?LoNArXpoBRcfvJsauQVyPiPmqn5CCe2e+DQnCee5hgiR0jaFjSOh0ujoUhAt?=
- =?us-ascii?Q?0wc/Hmkhy1s9nW03Ba95HVG1DrsmAmctlx3RI9yVQIIL4ugU923Ora9xIU0o?=
- =?us-ascii?Q?WtsH6oEU9crvd93c8rkf722JyIutbeg9+im7d3lC5Lya82WFirPk4AuQmT3C?=
- =?us-ascii?Q?CWKgMjlaMdZcbwQhTyyJC0V/vm/sC8guoTzNIt4/9vC4Z15qUfH9P5yM4/cU?=
- =?us-ascii?Q?+uf6GSK61UQ1WIwFo27BFfmP66Cxx7WvtHq5fdzwLvokCTNm2jEqdy09i30+?=
- =?us-ascii?Q?7X3Tk1l3WS/pUOL5CxNu/k9j9D85X86leN201EkyD3XqmfDHH4D/h2gAivuh?=
- =?us-ascii?Q?29wLn3STNy8V/a0ioD3zFd4xaNiI3ox6+JZe?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2025 21:47:08.7721
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: dca9d224-720c-4d56-1305-08dda2e830a1
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00003F64.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5946
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-03_03,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999
+ bulkscore=0 spamscore=0 suspectscore=0 malwarescore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505160000 definitions=main-2506030188
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAzMDE4OCBTYWx0ZWRfXwUP4gZjp2tRx m65Ij7HEZGJ41dOZUFZunhK0ov3aBq6wLq1/z+8pO23TXoW3r0xno4dE3ZR50JRGwoaX0nSNctN vKYHEVqfTbve3P3tM6SE6Fk+82ZWejJ2O3nLYQ3u7c70rT3HjVt9sAPvU5yrYD5zhBcT838NePH
+ LUzTipWskevbtvze7xv22TtVa1nl5QDvnOdeXUNAGJF1gK8sE7EdpLO0A/l+NH+p+WcuwDUlNhl NNN+v3Tr4ZJC8plTzOb6gcoJPhDEIuiG2a4sRhdym/JTCZdwNGYfMvxgeGk8/Xxi3mZ4MQDtHKD HNI+v704ugyurWDiWFtBaUghji76lHwqMhc+DdxmR4DGcWC8dWpWvdC2L1hWQ4uBspbb4FWvpGZ
+ Jn/d/B3/H4CfANUR18pSFjx+WOWLNwuc7iMQhNcNKpxCGR1ekhRsO+eVf3XYh6vzlOzgZY1j
+X-Proofpoint-GUID: wwRIlk9uXZ45jzUac2hlg7TL-g4bcF7X
+X-Proofpoint-ORIG-GUID: wwRIlk9uXZ45jzUac2hlg7TL-g4bcF7X
+X-Authority-Analysis: v=2.4 cv=H+Dbw/Yi c=1 sm=1 tr=0 ts=683f6da2 b=1 cx=c_pps a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=3p5qKXADCijJtyuCSnUA:9
 
-Initialize unique name for amdisp i2c adapter, which is used
-in the platform driver to detect the matching adapter for
-i2c_client creation.
+There is a type promotion that can happen when freq(u32) variable is
+comapared with sclk_target(integer), when sclk_target is a negative
+value it promotes to a large postive integer which might not be a
+problem in this particular case as the condition evaluates to false
+when that happens, but bail out early when sclk_target has negative
+error codes.
 
-Add definition of amdisp i2c adapter name in a new header file
-(include/linux/soc/amd/isp4_misc.h) as it is referred in different
-driver modules.
+	cs48l32_sclk_rates[i].freq >= sclk_target
 
-Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
+Fix this by adding a negative error check when
+snd_soc_tdm_params_to_bclk() fails
+
+Fixes: e2bcbf99d045 ("ASoC: cs48l32: Add driver for Cirrus Logic CS48L32 audio DSP")
+Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
 ---
- drivers/i2c/busses/i2c-designware-amdisp.c |  2 ++
- include/linux/soc/amd/isp4_misc.h          | 12 ++++++++++++
- 2 files changed, 14 insertions(+)
- create mode 100644 include/linux/soc/amd/isp4_misc.h
+This is found using static analysis with Smatch, only compile tested.
+---
+ sound/soc/codecs/cs48l32.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-designware-amdisp.c b/drivers/i2c/busses/i2c-designware-amdisp.c
-index ad6f08338124..450793d5f839 100644
---- a/drivers/i2c/busses/i2c-designware-amdisp.c
-+++ b/drivers/i2c/busses/i2c-designware-amdisp.c
-@@ -8,6 +8,7 @@
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
-+#include <linux/soc/amd/isp4_misc.h>
+diff --git a/sound/soc/codecs/cs48l32.c b/sound/soc/codecs/cs48l32.c
+index 90a795230d27..9bdd48aab42a 100644
+--- a/sound/soc/codecs/cs48l32.c
++++ b/sound/soc/codecs/cs48l32.c
+@@ -2162,6 +2162,10 @@ static int cs48l32_hw_params(struct snd_pcm_substream *substream,
+ 		n_slots_multiple = 1;
  
- #include "i2c-designware-core.h"
+ 	sclk_target = snd_soc_tdm_params_to_bclk(params, slotw, n_slots, n_slots_multiple);
++	if (sclk_target < 0) {
++		cs48l32_asp_err(dai, "Invalid parameters\n");
++		return sclk_target;
++	}
  
-@@ -62,6 +63,7 @@ static int amd_isp_dw_i2c_plat_probe(struct platform_device *pdev)
- 
- 	adap = &isp_i2c_dev->adapter;
- 	adap->owner = THIS_MODULE;
-+	scnprintf(adap->name, sizeof(adap->name), AMDISP_I2C_ADAP_NAME);
- 	ACPI_COMPANION_SET(&adap->dev, ACPI_COMPANION(&pdev->dev));
- 	adap->dev.of_node = pdev->dev.of_node;
- 	/* use dynamically allocated adapter id */
-diff --git a/include/linux/soc/amd/isp4_misc.h b/include/linux/soc/amd/isp4_misc.h
-new file mode 100644
-index 000000000000..6738796986a7
---- /dev/null
-+++ b/include/linux/soc/amd/isp4_misc.h
-@@ -0,0 +1,12 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+
-+/*
-+ * Copyright (C) 2025 Advanced Micro Devices, Inc.
-+ */
-+
-+#ifndef __SOC_ISP4_MISC_H
-+#define __SOC_ISP4_MISC_H
-+
-+#define AMDISP_I2C_ADAP_NAME "AMDISP DesignWare I2C adapter"
-+
-+#endif
+ 	for (i = 0; i < ARRAY_SIZE(cs48l32_sclk_rates); i++) {
+ 		if ((cs48l32_sclk_rates[i].freq >= sclk_target) &&
 -- 
-2.43.0
+2.39.3
 
