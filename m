@@ -1,92 +1,138 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16F221F5434;
-	Tue,  3 Jun 2025 06:43:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E4E1F5434;
+	Tue,  3 Jun 2025 06:44:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748933031; cv=none; b=fLjrUWg28OVfxDcqK0cspNboTOpRQuH+3QmhMFNtjQUV2djiO0qdZQCkaJKBzhL90FRFzhPyof5g5RLx62I25WxaY5GH+y7KtAWE8XNgAuVQQgNXnYEjpHqCWDeaG7tlO+aEJM80vr78mFN5ZTTHKVTjc1nGxDkJPHMh7+KSmgU=
+	t=1748933094; cv=none; b=ro6GmoWBIxCmEAvqXvjXULUIQCLof0oa9fufmKbVRNCxqdWFvshjfIpLtQpgBO6/US/SeUhRNtSPOppdiORtpbTsOKdIvz9kff7Yoed0SWxWMlPCba8cSAdya9FaCF1nB8dJx9dsHZXLybM8zQMEcNQ1DZiangmB+Oj5ip1akUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748933031; c=relaxed/simple;
-	bh=Y7/rdOvJv+OyFP6IYlnGIXp9XhL0vcnUkspyUuCL/4o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=IBXJhKSSZT29eyHS/yKb62+OZ3ZRfxHQNHhClrPVG6Wc5TAD1Ay0IV+0zwk/NyxB4KDN84conP8VGL9X5O233PcT9A6ILoPybnjfnv33pVNBTsLtZS/wok2o/aiGJgug6Kd0momznNkP1LK8Kr1yAO0LHYvxEIBQBrTIO2chCN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=W7o39eNJ reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1748933094; c=relaxed/simple;
+	bh=UVp0LbQx8sBlvoHqjY1yfV+T6PtviStZ9VovgcKpHh0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p2B3A67fX16UElQJhk5LnAvSB2mb8c3O7uTQD6piUdXqV/OPSOE0LCkfzkkTb/+5FaodR0RWXpbaCIyGlIw3MlA58CXM7w0DUBbzKuXxCvNJIMVWaGA/iUGTGhsE0BoGh3ZJajLVT8TmimS7pwzFlJOiy/09bk3nqkHCihp8jGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=kN3/iB2M; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="W7o39eNJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=NJzwztshk1K+O6yW7svw0/bxaRb7Clc2JFqcaILc+gQ=; b=W
-	7o39eNJ0dHesCweDEyUIAbyICpcLV63JhdQLMJqpedVSCXttBfNWV8NUVItQdxDW
-	c3y3ZvnopV/SC3CUndBlVovKd/xDL7hgKEGcQ9H1QclBBYGnEuRjuY4eLJiTX41P
-	DoI8Bmo4f0yXVMChkdfpFqFgyn8pdHf7CfctrE36KI=
-Received: from 00107082$163.com ( [111.35.189.95] ) by
- ajax-webmail-wmsvr-40-138 (Coremail) ; Tue, 3 Jun 2025 14:42:50 +0800 (CST)
-Date: Tue, 3 Jun 2025 14:42:50 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Yeoreum Yun" <yeoreum.yun@arm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, mingo@kernel.org,
-	acme@kernel.org, namhyung@kernel.org, leo.yan@arm.com,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <aD6Xk2rdBjnVy6DA@e129823.arm.com>
-References: <aD6Xk2rdBjnVy6DA@e129823.arm.com>
-X-NTES-SC: AL_Qu2fCvWYvUEs5iCeZ+kZnEYQheY4XMKyuPkg1YJXOp80iCXQ3wodeXBxJkTkwcOOJiWSvxe8aSZS7+RTe4BFYbCc4d9Jz2f4Rj+jg9I0Cwlc
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="kN3/iB2M"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 7C96025E04;
+	Tue,  3 Jun 2025 08:44:44 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id CfiClaMm0-wl; Tue,  3 Jun 2025 08:44:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1748933083; bh=UVp0LbQx8sBlvoHqjY1yfV+T6PtviStZ9VovgcKpHh0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=kN3/iB2MXKttgpnuUEEUJMJPyEyGSQ9GzuKNbSfEfOu1Ts6kBOWvbPHShh4vtEL/8
+	 XBY+k1wM3sxrQuida/SOfm9HWiNd+TRZ1Z47s5leTpSyx8JbGjgBymy568VgNLuudn
+	 BHY+ON5CUsGzBAOGYLoTTxDoHDMXhPm9Gv61c2k44JHYxRZKi/PLOtwDk4Q6wW6KrY
+	 3fGdjKNSohf8wLeKSR90RBirmacuHshHOiGwGOHbrth6opLhDWLWZEbMMWhutSYvI+
+	 s+TirXSkyU/EzXye8RCHn4kABgayMToGCDNX6mvAqcvwKIa/fLG9pImHs+J9iooJaK
+	 WY76iZft5GCpw==
+Date: Tue, 3 Jun 2025 06:44:31 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Jianmin Lv <lvjianmin@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH 1/2] platform/loongarch: laptop: Get brightness setting
+ from EC on probe
+Message-ID: <aD6Zz8L9WJRXvwaW@pie.lan>
+References: <20250531113851.21426-1-ziyao@disroot.org>
+ <20250531113851.21426-2-ziyao@disroot.org>
+ <CAAhV-H7pvaz5N0-EfvhDNHAXJtR13p9Xi5hfgDxOpeXi9zMbTQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <4939eff.64be.19734874658.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:iigvCgDHr9prmT5ov6oSAA--.26836W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkBJhqmg+kwHr9AADsR
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H7pvaz5N0-EfvhDNHAXJtR13p9Xi5hfgDxOpeXi9zMbTQ@mail.gmail.com>
 
-CkF0IDIwMjUtMDYtMDMgMTQ6MzQ6NTksICJZZW9yZXVtIFl1biIgPHllb3JldW0ueXVuQGFybS5j
-b20+IHdyb3RlOgo+SGkgRGF2aWQsCj4+ID4gYXR0YWNoX3N0YXRlIGRvZXNuJ3QgcmVsYXRlZCBm
-b3IgZXZlbnQtPnN0YXRlIGNoYW5nZS4KPj4gPiBpZiBvbmUgZXZlbnQgYWxyZWFkeSBjbGVhcmVk
-IFBFUkZfQVRUQUNIX0NPTlRFWFQsIHRoYXQgZXZlbnQgaXMgY2FsbGVkCj4+ID4gdmlhIGxpc3Rf
-ZGVsX2V2ZW50KCkKPj4KPj4gTWF5YmUgdGhpcyBjb25jZXJuIGNvdWxkIGJlIGNsYXJpZmllZCwg
-d2hhdCBhYm91dCBvdGhlciBzdWJ0bGUgaW1wYWN0cy4KPj4gVGhlIGNoYW5nZSBzaG91bGQgYmUg
-dGhvcm91Z2ggcmV2aWV3ZWQsIGlmIHlvdSB3YW50IHRvIHB1c2ggaXQgZnVydGhlci4KPj4KPj4g
-SXQgdGFrZXMgbWUgbW9yZSB0aGFuIGEgbW9udGggdG8gZmlndXJlIG91dCBhIHByb2NlZHVyZSB0
-byByZXByb2R1Y2UgdGhlIGtlcm5lbCBwYW5pYyBidWcsCj4+IEl0IGlzICBqdXN0IHZlcnkgaGFy
-ZCB0byBjYXB0dXJlIGEgYnVnIGhhcHBlbnMgaW4gcmFyZSBzaXR1YXRpb24uCj4+Cj4+IEFuZCB5
-b3VyIHBhdGNoIGhhcyBhIGdsb2JhbCBpbXBhY3QsIGl0IGNoYW5nZXMgYmVoYXZpb3IgdW5uZWNl
-c3NhcmlseS4KPgo+VEJILCB0aGlzIHBhdGNoIGp1c3QgY2hhbmdlIG9mIHRpbWUgb2YgImV2ZW50
-LT5zdGF0ZSIgd2hpbGUgZG9pbmcsCj5BcyBteSBiYWQgbWlzcyB0aGUgZGlzYWJsZSBjZ29ydXAg
-cGVyZi4KPkkgdGhpbmsgdGhlcmUgc2VlbXMgbm8gb3RoZXIgc2lkZSBlZmZlY3QgZm9yIGNoYW5p
-bmcgc3RhdGUgd2hpbGUgaW4KPnJlbW92aW5nIGV2ZW50Lgo+QnV0LCBMZXQncyB3YWl0IGZvciBv
-dGhlciBwZW9wbGUncyByZXZpZXcuCj4KPj4gPgo+PiA+IEFsc28sIHlvdXIgcGF0Y2ggY291bGRu
-J3Qgc29sdmUgYSBwcm9ibGVtIGRlc2NyaWJlIGluCj4+ID4gY29tbWl0IGEzYzNjNjY2NygicGVy
-Zi9jb3JlOiBGaXggY2hpbGRfdG90YWxfdGltZV9lbmFibGVkIGFjY291bnRpbmcgYnVnIGF0IHRh
-c2sgZXhpdCIpCj4+ID4gZm9yIElOQ0FUSVZFIGV2ZW50J3MgdG90YWxfZW5hYmxlX3RpbWUuCj4+
-Cj4+IEkgZG8gbm90IHRoaW5rIHNvLgo+PiBDb3JyZWN0IG1lIGlmIEkgYW0gbWFraW5nIHNpbGx5
-ICBtaXN0YWtlcywKPj4gVGhlIHBhdGNoLCBodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzIw
-MjUwNjAzMDMyNjUxLjM5ODgtMS0wMDEwNzA4MkAxNjMuY29tLwo+PiBjYWxscyBwZXJmX2V2ZW50
-X3NldF9zdGF0ZSgpIGJhc2VkIG9uIERFVEFDSF9FWElUIGZsYWcsIHdoaWNoIGNvdmVyIHRoZSBJ
-TkFDVElWRSBzdGF0ZSwgcmlnaHQ/Cj4+IElmIERFVEFDSF9FWElUIGlzIG5vdCB1c2VkIGZvciB0
-aGlzIHB1cnBvc2U/IFRoZW4gd2h5IHNob3VsZCBpdCBleGlzdCBhdCB0aGUgZmlyc3QgcGxhY2U/
-Cj4+IEkgdGhpbmsgSSBkb2VzIG5vdCByZXZlcnQgdGhlIHB1cnBvc2Ugb2YgY29tbWl0IGEzYzNj
-NjY2Ny4uLi4uQnV0IEkgY291bGQgYmUgd3JvbmcKPj4gV291bGQgeW91IHNob3cgYSBjYWxsIHBh
-dGggd2hlcmUgREVUQUNIX0VYSVQgaXMgbm90IHNldCwgYnV0IHRoZSBjaGFuZ2VzIGluIGNvbW1p
-dCBhM2MzYzY2NjcgaXMgc3RpbGwgbmVlZGVkPwo+Cj5Tb3JyeSBmb3IgbXkgYmFkIGV4cGxhaW5h
-dGlvbiB3aXRob3V0IGRldGFpbC4KPlRoaW5rIGFib3V0IGNwdSBzcGVjaWZpYyBldmVudCBhbmQg
-Y2xvc2VkIGJ5IHRhc2suCj5JZiB0aGVyZSBpcyBzcGVjaWZpYyBjaGlsZCBjcHUgZXZlbnQgc3Bl
-Y2lmaWVkIGluIGNwdSAwLgo+ICAxLiBjcHUgMCAtPiBhY3RpdmUKPiAgMi4gc2NoZXVsZGVkIHRv
-IGNwdTEgLT4gaW5hY3RpdmUKPiAgMy4gY2xvc2UgdGhlIGNwdSBldmVudCBmcm9tIHBhcmVudCAt
-PiBpbmFjdGl2ZSBjbG9zZQo+Cj5DYW4gYmUgZmFpbGVkIHRvIGNvdW50IHRvdGFsX2VuYWJsZV90
-aW1lLgoKSXMgdGhpcyBleHBsYWluaW5nIHRoZSBwdXJwb3NlIG9mIGNvbW1pdCBhM2MzYzY2Njcg
-PwpJIGFtIG5vdCBhcmd1aW5nIHdpdGggaXQuIEFuZCBJIGFsc28gbm90IHN1Z2dlc3QgcmV2ZXJ0
-aW5nIGl0LiAoaXQgaXMganVzdCB0aGF0IHJldmVydGluZyBpdCBjYW4gZml4IHRoZSBrZXJuZWwg
-cGFuaWMuKQoKPgo+VGhhbmtzLgo+LS0KPlNpbmNlcmVseSwKPlllb3JldW0gWXVuCg==
+On Tue, Jun 03, 2025 at 12:11:48PM +0800, Huacai Chen wrote:
+> On Sat, May 31, 2025 at 7:39 PM Yao Zi <ziyao@disroot.org> wrote:
+> >
+> > Previously 1 is unconditionally taken as current brightness value. This
+> > causes problems since it's required to restore brightness settings on
+> > resumption, and a value that doesn't match EC's state before suspension
+> > will cause surprising changes of screen brightness.
+> laptop_backlight_register() isn't called at resuming, so I think your
+> problem has nothing to do with suspend (S3).
+
+It does have something to do with it. In loongson_hotkey_resume() which
+is called when leaving S3 (suspension), the brightness is restored
+according to props.brightness,
+
+        bd = backlight_device_get_by_type(BACKLIGHT_PLATFORM);
+        if (bd) {
+                loongson_laptop_backlight_update(bd) ?
+                pr_warn("Loongson_backlight: resume brightness failed") :
+                pr_info("Loongson_backlight: resume brightness %d\n", bd->props
+.brightness);
+        }
+
+and without this patch, props.brightness is always set to 1 when the
+driver probes, but actually (at least with the firmware on my laptop)
+the screen brightness is set to 80 instead of 1 on cold boot, IOW, a
+brightness value that doesn't match hardware state is set to
+props.brightness.
+
+On resumption, loongson_hotkey_resume() restores the brightness
+settings according to props.brightness. But as the value isn't what is
+used by hardware before suspension. the screen brightness will look very
+different (1 v.s. 80) comparing to the brightness before suspension.
+
+Some dmesg proves this as well, without this patch it says
+
+	loongson_laptop: Loongson_backlight: resume brightness 1
+
+but before suspension, reading
+/sys/class/backlight/loongson3_laptop/actual_brightness yields 80.
+
+> But there is really a problem about hibernation (S4): the brightness
+> is 1 during booting, but when switching to the target kernel, the
+> brightness may jump to the old value.
+> 
+> If the above case is what you meet, please update the commit message.
+> 
+> Huacai
+
+Thanks,
+Yao Zi
+
+> >
+> > Let's get brightness from EC and take it as the current brightness on
+> > probe of the laptop driver to avoid the surprising behavior. Tested on
+> > TongFang L860-T2 3A5000 laptop.
+> >
+> > Cc: stable@vger.kernel.org
+> > Fixes: 6246ed09111f ("LoongArch: Add ACPI-based generic laptop driver")
+> > Signed-off-by: Yao Zi <ziyao@disroot.org>
+> > ---
+> >  drivers/platform/loongarch/loongson-laptop.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/platform/loongarch/loongson-laptop.c
+> > index 99203584949d..828bd62e3596 100644
+> > --- a/drivers/platform/loongarch/loongson-laptop.c
+> > +++ b/drivers/platform/loongarch/loongson-laptop.c
+> > @@ -392,7 +392,7 @@ static int laptop_backlight_register(void)
+> >         if (!acpi_evalf(hotkey_handle, &status, "ECLL", "d"))
+> >                 return -EIO;
+> >
+> > -       props.brightness = 1;
+> > +       props.brightness = ec_get_brightness();
+> >         props.max_brightness = status;
+> >         props.type = BACKLIGHT_PLATFORM;
+> >
+> > --
+> > 2.49.0
+> >
+> >
