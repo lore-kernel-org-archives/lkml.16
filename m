@@ -1,160 +1,156 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF6328150A
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 09:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F24C1F4289;
+	Tue,  3 Jun 2025 09:30:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748942852; cv=none; b=Dyf1jcPC8KobvfTrMMCDkfMzYfNt0L5wV9PNvFsMx0OLeKiR9BN5Gg6CIctcgAwJ9ZCnhbUm7tYhjxZZBSnE9/G+brxqUwXy7golJVg/wrRUP+hs1jUCCG8NyLOprV6u0XDQKC+68+HwuL/bQ7Rb+bFAgd14CGiL0x+zIfzQ3fs=
+	t=1748943054; cv=none; b=ZRhdWLm2mPhEdxnGZl5p/FwFINMmN5qkTw0NLFwmt6+TwuYiLKgcm+0rDqnXidF4oUY6hFxfWkMpSXjq8wBAGoYm/q8F5JDJmOXzc1lvH8dO/Ud5J065mfix7g3rjJuS4wBSjJM8sy/6zhQXEISM80XGcZHQFPyp8gFb2wB0RDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748942852; c=relaxed/simple;
-	bh=2hMem/KqDeI9GDbv4TmP7Cw42i8qowh8O7PAaxFouC4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h+ozINOWt3ttZ/jQRA4VPpDvpRbgjodagL5MpttxC9kkojTEAYGlh/5f5s2tnU6vV2xXICtMVhh993RMErCjk8V80SUpiFkY3iIIYG8of9g0Y0u9iEG8Yz3L2AZEkIKZYxcv9B1bEJqqkct3P/+IG1QZjI8u1R8kri274Y4i66Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Buq8iDpA; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748943054; c=relaxed/simple;
+	bh=/1i9ZYWp3klV4pFiYytXoQo5aHEEJ7NwFK1134MFvqU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=KkFDnhypZCg2bk/rseo156BjvLE1F31ppNPJrotSig9x49wGQEi7gNWQ9a+ldWVwA2Iczg5dWXfQwcn1UfDJXRw1911Gs4kCcC34PP/syxa1a1xYPWloAKCpeig4q0SW8aSXuEz93HdINZk8lm+medXEKohRfv31GHzj+d3bd3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PSzE5wEI; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Buq8iDpA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748942849;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V8enqeYQbzg4jaVPoTSHLBVjvDlbQarwlHPEkIaRNBE=;
-	b=Buq8iDpAv+CM/bestkI9obWx/bo9Zju6NQsNKukAu+/NN5cjFl9Ufgu+utxLmeAXU+MVxk
-	/0+/sHNRViKOxsDqOwL8VajuGMnlZxGSTOCpqJnclGUSCvDO9h/1IdBHYbQil21LB5zmq4
-	ryS0vMr/S7WgeJnlbYuDuY+2RZ2nmag=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-515-_ttKFQ1-NUqwnWPzMhpBoA-1; Tue, 03 Jun 2025 05:27:26 -0400
-X-MC-Unique: _ttKFQ1-NUqwnWPzMhpBoA-1
-X-Mimecast-MFC-AGG-ID: _ttKFQ1-NUqwnWPzMhpBoA_1748942845
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-450d6768d4dso28400865e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 02:27:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748942845; x=1749547645;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V8enqeYQbzg4jaVPoTSHLBVjvDlbQarwlHPEkIaRNBE=;
-        b=HIHME528vjbcysy57L5L4V7We35uazO/TrgVnQqh1xyrdCTbAmA142UgyPI1SWZjtS
-         VnY32PIciWsUwM/NzKqQas/qVz2QjgyIjKoWeI+rYAmBsNR/n0zTV+i4T2fZb8/Lpkep
-         VMovh4h5u8VUCQpX4mMTALtL8wSWW7RxSvKX+v0pkVED0XaahVeeJrF2VMxmbAPcIF+x
-         9n7U245gj9jfGp/NN1W1SbN4KTqMXGyY5y/8eCPFI1P8NtQ0cAVxqwOnaL8servkEOFq
-         u02B4ocNMfGd+Qbao/CHn6knODia4wogT6zr71uZuwB7jD/8B1VnQVChyOGWSthfhFX0
-         ntFg==
-X-Forwarded-Encrypted: i=1; AJvYcCW+bm+ELPw54G3JUHK+WInhZOYi6Ii+8LDzkkWK5WOJ80b+46hT8GpB8U16jLtpgIqQF+599AEXpBoyB3Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXL0DCVYjnt2kTq/fkyI/7GDdkCgmRg8qTuUoULuM2sxOWDTfD
-	C/ixLjWzJaatfQXxKsNAkmM1l3yHC9iJFQr3D3C+UeGqdIaMWyGi5x9/jNhNuCAVdvg1sB0gWfd
-	K+A2H+zyo95bwieXa/DXDNXLia0LnkeseJ9IOILlubSjYNPkP5ZvhuyxyPpDD+CJu5Q==
-X-Gm-Gg: ASbGncsoZ7DXXZJg7/6MHcVM+VUG7v8QkjjyiJj/PgWQm3vgD4qjg4GTtIIUTb06pm/
-	qESG1JmiQLWF9tcwCDLniEHyv8sOSCMk7qursMd9MvJhMBSYWjwKMjNds3r+3KcFXFRevS3t1Mw
-	liDnNaZdLbyGRhUye9iVRgdovZoNCu93qI5+PYrX15Dd/kB94SYa8J0TkdYIRWepfKWLhMNMWP3
-	rzup7wNc3anOWLOskxnQW88b124Fe9z/KUaqSxZpqD8POxDqfB5yjoWCnMuIxb/SyHBYxbMkEYP
-	CMlNRqSGkwn1DSWxVvf5D6P19UU9N+WjZparny1Wbad2nxH9jY761QCl
-X-Received: by 2002:a5d:4e85:0:b0:3a4:f911:8d93 with SMTP id ffacd0b85a97d-3a4f9118ed0mr9886367f8f.31.1748942845469;
-        Tue, 03 Jun 2025 02:27:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF3E8LnB/PqSELpQDG+6H33vKSzf9Q13hS9eE9fktyrONE+k1arXEMdhNoJ6Q9Zr/vUTIyhyw==
-X-Received: by 2002:a5d:4e85:0:b0:3a4:f911:8d93 with SMTP id ffacd0b85a97d-3a4f9118ed0mr9886338f8f.31.1748942845062;
-        Tue, 03 Jun 2025 02:27:25 -0700 (PDT)
-Received: from ?IPV6:2a0d:3341:cc2d:3210:4b21:7487:446:42ea? ([2a0d:3341:cc2d:3210:4b21:7487:446:42ea])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f00972aasm17987538f8f.66.2025.06.03.02.27.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jun 2025 02:27:24 -0700 (PDT)
-Message-ID: <6440a277-536e-402f-a47e-43ee182b22c7@redhat.com>
-Date: Tue, 3 Jun 2025 11:27:18 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PSzE5wEI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748943053; x=1780479053;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=/1i9ZYWp3klV4pFiYytXoQo5aHEEJ7NwFK1134MFvqU=;
+  b=PSzE5wEIQk7/H9Xlve7qFHQSFHBxKMKPRe8ilNTi2WD6Al2qZqm27tSK
+   5Raom60wcpmhG6AC/VCky9C9JiyFmU/FPIV2iwUJUgTsM7vlAF1aiTOqG
+   4b2He6t1MDJWr9wn32SedwKF82Auw93rANAQR6NwoEOaDMn3dsdN+duUM
+   rZce5EJGXtObOodNksKFqif50bAHyRpHDlvRa8PLdIipNbn7LNSWkcN4+
+   KniZU2a1Pv/ypwXqjw27KqixjAtp6DmpGwuhuM12mtA5M4lRqWrbdAk1c
+   0Fdqok76HKa4+wwL7KOCtoGIgXDDNTYzPtGdTL+ml/f7UsKpRQPRSV44F
+   A==;
+X-CSE-ConnectionGUID: 7WqsUtMNQAeYkvAaSqcGJA==
+X-CSE-MsgGUID: cjhf9wbrRBKU0phzKd8QXw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="61635809"
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="61635809"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 02:30:53 -0700
+X-CSE-ConnectionGUID: dsjSgBcWTKq25N+n8Qbvfw==
+X-CSE-MsgGUID: KPzy5toeTCKIcMQy2nGD0A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="175668150"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.141])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 02:30:20 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 3 Jun 2025 12:30:16 +0300 (EEST)
+To: Hans Zhang <18255117159@163.com>
+cc: lpieralisi@kernel.org, bhelgaas@google.com, 
+    manivannan.sadhasivam@linaro.org, kw@linux.com, cassel@kernel.org, 
+    robh@kernel.org, jingoohan1@gmail.com, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v12 2/6] PCI: Clean up __pci_find_next_cap_ttl()
+ readability
+In-Reply-To: <20250514161258.93844-3-18255117159@163.com>
+Message-ID: <987609ec-7a1b-057c-1e3b-8bf564965036@linux.intel.com>
+References: <20250514161258.93844-1-18255117159@163.com> <20250514161258.93844-3-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v4] vmxnet3: correctly report gso type for UDP tunnels
-To: Simon Horman <horms@kernel.org>, Ronak Doshi <ronak.doshi@broadcom.com>
-Cc: netdev@vger.kernel.org, Guolin Yang <guolin.yang@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20250530152701.70354-1-ronak.doshi@broadcom.com>
- <20250603072308.GW1484967@horms.kernel.org>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250603072308.GW1484967@horms.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
-On 6/3/25 9:23 AM, Simon Horman wrote:
-> On Fri, May 30, 2025 at 03:27:00PM +0000, Ronak Doshi wrote:
->> Commit 3d010c8031e3 ("udp: do not accept non-tunnel GSO skbs landing
->> in a tunnel") added checks in linux stack to not accept non-tunnel
->> GRO packets landing in a tunnel. This exposed an issue in vmxnet3
->> which was not correctly reporting GRO packets for tunnel packets.
->>
->> This patch fixes this issue by setting correct GSO type for the
->> tunnel packets.
->>
->> Currently, vmxnet3 does not support reporting inner fields for LRO
->> tunnel packets. The issue is not seen for egress drivers that do not
->> use skb inner fields. The workaround is to enable tnl-segmentation
->> offload on the egress interfaces if the driver supports it. This
->> problem pre-exists this patch fix and can be addressed as a separate
->> future patch.
->>
->> Fixes: dacce2be3312 ("vmxnet3: add geneve and vxlan tunnel offload support")
->> Signed-off-by: Ronak Doshi <ronak.doshi@broadcom.com>
->> Acked-by: Guolin Yang <guolin.yang@broadcom.com>
->>
->> Changes v1-->v2:
->>   Do not set encapsulation bit as inner fields are not updated
->> Changes v2-->v3:
->>   Update the commit message explaining the next steps to address
->>   segmentation issues that pre-exists this patch fix.
->> Changes v3->v4:
->>   Update the commit message to clarify the workaround.
->> ---
->>  drivers/net/vmxnet3/vmxnet3_drv.c | 26 ++++++++++++++++++++++++++
->>  1 file changed, 26 insertions(+)
->>
->> diff --git a/drivers/net/vmxnet3/vmxnet3_drv.c b/drivers/net/vmxnet3/vmxnet3_drv.c
->> index c676979c7ab9..287b7c20c0d6 100644
->> --- a/drivers/net/vmxnet3/vmxnet3_drv.c
->> +++ b/drivers/net/vmxnet3/vmxnet3_drv.c
->> @@ -1568,6 +1568,30 @@ vmxnet3_get_hdr_len(struct vmxnet3_adapter *adapter, struct sk_buff *skb,
->>  	return (hlen + (hdr.tcp->doff << 2));
->>  }
->>  
->> +static void
->> +vmxnet3_lro_tunnel(struct sk_buff *skb, __be16 ip_proto)
->> +{
->> +	struct udphdr *uh = NULL;
->> +
->> +	if (ip_proto == htons(ETH_P_IP)) {
->> +		struct iphdr *iph = (struct iphdr *)skb->data;
->> +
->> +		if (iph->protocol == IPPROTO_UDP)
->> +			uh = (struct udphdr *)(iph + 1);
->> +	} else {
->> +		struct ipv6hdr *iph = (struct ipv6hdr *)skb->data;
->> +
->> +		if (iph->nexthdr == IPPROTO_UDP)
->> +			uh = (struct udphdr *)(iph + 1);
->> +	}
+On Thu, 15 May 2025, Hans Zhang wrote:
+
+> Refactor the __pci_find_next_cap_ttl() to improve code clarity:
+> - Replace magic number 0x40 with PCI_STD_HEADER_SIZEOF.
+> - Use ALIGN_DOWN() for position alignment instead of manual bitmask.
+> - Extract PCI capability fields via FIELD_GET() with standardized masks.
+> - Add necessary headers (linux/align.h).
 > 
-> Hi Ronak,
+> The changes are purely non-functional cleanups, ensuring behavior remains
+> identical to the original implementation.
+
+If you want a simpler wording for this, this is often used:
+
+No functional changes intended.
+
 > 
-> Possibly a naive question, but does skb->data always contain an iphdr
-> or ipv6hdr? Or perhaps more to the point, is it safe to assume IPv6
-> is ip_proto is not ETH_P_IP?
+> Signed-off-by: Hans Zhang <18255117159@163.com>
+> ---
+> Changes since v11:
+> - None
+> 
+> Changes since v10:
+> - Remove #include <uapi/linux/pci_regs.h> and add macro definition comments.
+> 
+> Changes since v9:
+> - None
+> 
+> Changes since v8:
+> - Split into patch 1/6, patch 2/6.
+> - The
+> ---
+>  drivers/pci/pci.c             | 9 +++++----
+>  include/uapi/linux/pci_regs.h | 2 ++
+>  2 files changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e77d5b53c0ce..27d2adb18a30 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -9,6 +9,7 @@
+>   */
+>  
+>  #include <linux/acpi.h>
+> +#include <linux/align.h>
+>  #include <linux/kernel.h>
+>  #include <linux/delay.h>
+>  #include <linux/dmi.h>
+> @@ -432,17 +433,17 @@ static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
+>  	pci_bus_read_config_byte(bus, devfn, pos, &pos);
+>  
+>  	while ((*ttl)--) {
+> -		if (pos < 0x40)
+> +		if (pos < PCI_STD_HEADER_SIZEOF)
+>  			break;
+> -		pos &= ~3;
+> +		pos = ALIGN_DOWN(pos, 4);
+>  		pci_bus_read_config_word(bus, devfn, pos, &ent);
+>  
+> -		id = ent & 0xff;
+> +		id = FIELD_GET(PCI_CAP_ID_MASK, ent);
+>  		if (id == 0xff)
+>  			break;
+>  		if (id == cap)
+>  			return pos;
+> -		pos = (ent >> 8);
+> +		pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, ent);
+>  	}
+>  	return 0;
+>  }
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index ba326710f9c8..35051f9ac16a 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -206,6 +206,8 @@
+>  /* 0x48-0x7f reserved */
+>  
+>  /* Capability lists */
+> +#define PCI_CAP_ID_MASK		0x00ff	/* Capability ID mask */
+> +#define PCI_CAP_LIST_NEXT_MASK	0xff00	/* Next Capability Pointer mask */
+>  
+>  #define PCI_CAP_LIST_ID		0	/* Capability ID */
 
-I think it's safe, or at least the guest can assume that. Otherwise
-there is a bug in the hypervisor cooking the descriptor, and the guest
-can do little to nothing is such scenario.
+I'd add those here with the extra space before name and add empty line in 
+between them and the capability id list.
 
-/P
+>  #define  PCI_CAP_ID_PM		0x01	/* Power Management */
+> 
+
+-- 
+ i.
 
