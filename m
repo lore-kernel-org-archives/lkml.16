@@ -1,101 +1,124 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689BF2AF00
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 13:26:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24382AF00
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 13:27:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748957215; cv=none; b=gzYNtyf1phvr78owxWZtild97B+nxAPvUJKTm78Uc+G7ZheaRzyyi7dJLOuIdnYVQmEPO7BXvJO2qPioA5VXkd84lDSC59FOWAX9d4rHvWXVLtfeQxkz1v7PqWpWKF5LA6WUJg5QXVn2njFL1W0zvMl92VnLTjuaFpaQlKm874A=
+	t=1748957228; cv=none; b=O60B4mEH0PdO+sIZBxIU23t4GaVIeXYIie6hkuXeztWR7gwwWHAwvgOcpkZpWDNzdNw0rHD+bijfGF/gz822cDofGCHnZn3D9DGEULRMw/bKk3huh78pn28H41UnLZuEVi5PWjCjyQa58Hmddang6mbJgB3JSiS0G8pz/gXZDG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748957215; c=relaxed/simple;
-	bh=L7+qtgykgPi3lroglO8RwZIW+N2GCF2llGYrBQ0oYU4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=I06KmGTW+oJVqX9yNNoIZhVO45ESGmdWqxDZK+xhff4Wy9hjhsdhptuK+YiPko+ZfLLbSvKu7snOeKZcH5IAUgifgnZ4PUY5F6T7D67DH5E309hGt0HGRVvVH7QPzlQmIgJUKyRubChMjSH0b9srpV2cH6mYvlZ0TEXeuhVg9+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bZRTT9Vy; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1748957228; c=relaxed/simple;
+	bh=oCJK7p/BlKZRpWnLoHe83P+kE08K+tutSYOVgN67ERM=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=q21Bo5AFc0BMTv2KnprNIwt5UCFgzWobrsWJsM3QGYEogt6DCHnS458LengJ5P3K8FIGY+6TDf/8sdysoepR9hkScolqW5qzM7g6W8z9CiXDohfTeL9tGIWb5zPP4il0k/TPZyUU11knxUu8i0rlBJBVaBu0m016ecllC4ykg7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Vd0kow07; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bZRTT9Vy"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-74299055c3dso7438087b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 06:26:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vd0kow07"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-450cb2ddd46so35920295e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 06:27:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748957213; x=1749562013; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6BEXJHtjU9V+ltSdQUZb8ZRixRuCJWu7iAmqz2qP5bA=;
-        b=bZRTT9VyNS5GOAu5dKxNgweEqHqrjrxNvdKa92aHhEuIlMwIgDw+wyTmDF6Dm91gtN
-         K7pu79f59edwUgdzPOKvdy2O12XcHo0Hi9SAKn4IPmh/+WqdQapbKfJrJEAxE01ogzYb
-         hD7GfMUOrsBYba0nxt8USynWQWBJE7VTuDgG1qnQVHXvKPEfz2AR+F4sOFMj3GLYVEQy
-         7vNngqQQnWoQ+P4PBTBVY0LDQeUKJKgo9wG6u7/6xeVWOsjv4g7BXYVsnkwabYTg/JQI
-         49X2xPUKmuJUX4/C9+xpPPhpxsHQfREDiOkpm1JbVVfUWz3E6PMdfE0TYm1S6Lb1fxX5
-         PAWw==
+        d=linaro.org; s=google; t=1748957224; x=1749562024; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oihVtB+1SEPxR6wMy6kxrIZOmkj3G4LorB9xvDbO3Qs=;
+        b=Vd0kow07jWpWm9OrR+kOmMj4JwX6c2asw2TIz+rKMkV8ihKiTEPxhhqKXZBXeqLj/5
+         gsDlZnXnXWjm4uj/r7J35vDyqvTi+qHx8MVspblIbQcGNj4CaZIoDVNAOUe26YyX/O4T
+         0jNoe23/nnSv50e8bF9NZLKNPPio063iH0QRrZsRKo9DuMuH+vMl3FIAAqClbXQzrf9f
+         6wyqEm5wIQIw+snLkO7ioRIWuCl0ZbOpwIS0MBsQjlS1E9PSKHnNQYJFvq+6Fq2zP/Je
+         qQ2a8ug2lKuV2usMvbprGiiEo/2i/OxT/COhnWQp8hdv8D+CutXhF7YXgxBE+2TfIi8Q
+         mj3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748957213; x=1749562013;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6BEXJHtjU9V+ltSdQUZb8ZRixRuCJWu7iAmqz2qP5bA=;
-        b=LfMrZ39onD7hJRJErRY3DF7jnkKI8MiOK02JFddqrk2AKDEW/9AzDHiXNn3E0SolGS
-         GoCmK1/xOnAIDsLt2whGTo4xaMGXe0F9kssYthtxXxHBwBBYi3BR7c65jLJvgazu2J/f
-         MH9ViPYmLsVOlgcxVpLfl6qObG2Eag0wJQ01+VyDmt19gEJ2WZbf0O3NfKjPBm7awNqH
-         7xabnGjF12ID7U8sZkOGNMcsZCXiMAE3++y2eaOVkOR4gc2ge7ZGS47YUScCQEe2kKg1
-         c3Ys71tbyTO4vz1ECKOPPDX3AbUTPNm6gvNZmtYsbRdCSOxUMBoDZ2hTrG01B1Zx44HV
-         SUrg==
-X-Forwarded-Encrypted: i=1; AJvYcCXMKOx4X3nRUBrGoWrIxSAasN1LCo9N7inyz8n+SMmcmLnV1NQeL6RtHRpvr2FSowxfBsRWpYww1XLo5go=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjaTJPdpDS08SGTNf32UdwCYceI0ewEQTNnW3eht93apMPsLwh
-	hbvlN17oXtcKOYlCyEQHZj5BEhLwmQNt9uIeDBPm3ZFOcRbRZp0X81vdgHz+khpdt2UjCm7Id4W
-	m2MSc+A==
-X-Google-Smtp-Source: AGHT+IGaWOJYzlEyg0eyG1P05zKPEo0H8ydP/NrBdiTTYiphzAFMaccGUkuQON6CduTUYVcs2AW60bOD4f8=
-X-Received: from pfvo25.prod.google.com ([2002:a05:6a00:1b59:b0:746:1931:952a])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:3418:b0:215:e60b:3bd3
- with SMTP id adf61e73a8af0-21ad9799478mr26954618637.29.1748957213638; Tue, 03
- Jun 2025 06:26:53 -0700 (PDT)
-Date: Tue, 3 Jun 2025 06:26:51 -0700
-In-Reply-To: <aD6tFSu5dvEQs8dJ@intel.com>
+        d=1e100.net; s=20230601; t=1748957224; x=1749562024;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oihVtB+1SEPxR6wMy6kxrIZOmkj3G4LorB9xvDbO3Qs=;
+        b=iaSPdeMOLbThVvHVBgyEhX25QQslzVDSFZ+ksVgEH6f/27pMQBl5+IOKfQZ/XHPGL9
+         uwicSXKnAVAe/CFOBAd5ck5C4iBlhVAEWHoFdXERI8l8KRF9w2je8bK9eBXEbGq6Ch0a
+         hKJr0bqBqM//lxoGwU/wyJLq1EkOJ12/hlUsG2BR2vJ9gM6nRRCRF4jzFRlRd315OxvU
+         FnX6NYnA5PeTRTSEBDKETFDERYWa7S2kiPCgNhU7nl/3axQ/IDKjIz+x+DEgV0CUactP
+         cMMEmKKYuiCZf2t6j+JsMAJgdoheL7bpVjottY3UxoPNT0fPDXr4xen2P+GyVxfWiFjr
+         /lWA==
+X-Forwarded-Encrypted: i=1; AJvYcCUc0ad+WH1qm6i+o1xab/KMjFacgFsxUZ5xSyqUDOwRVCOzZT6RfKYhHo5z+act8j5pug6JGx5tGCbsENs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5F1sKBLcalce1/pdD6M0TSV6D9fSg4a8NcOGrGJDxWeWuyUBO
+	ZtvK+ZO7B7wLWqTjm76rAM3nK9APyk6kp+r+CXULDOaFB+DJo92qWbGTxnCkyelzQby5yp8OHD+
+	vuzfb
+X-Gm-Gg: ASbGncvotVhDJYQnrDzvqLPZBxvLaX+blV9/7TBudvK3EXDUUd4SezD+9hxvSq93xhw
+	u0c69BYvPvyC6F9V396NSG2lfo3xEn1zM4RHO/wdy1yvsUXKxpntLfm83FDrSKW3bx45wNBSYDr
+	iks7L1Nu/0zyG16opRSPamNI+QXtEquX7pHuOpgs6mVZm7omnJ/9JzqVBkqQ5+iq5YujVRjXusH
+	CwoksIU7dRcxnzvPsk/EKUQYLCZ3Ikwf9gIbh1lSQACHupV2pcj2q7q1eXm3pe5ec68s11k7aIL
+	uG57a3cZl4Gj70QOaeVSCGf+cjmcNoI0oXRmbKvblasjxejKc6F5CAbRRzviuIebJ0IhwCT+G7y
+	3vRPyyZs=
+X-Google-Smtp-Source: AGHT+IGa7mbwcZXtdjmxN4fEKLTzriqSJh2XpWZKE/sUSl2iqQEeeTppliDDInLxLyB5zAkgBnX6bQ==
+X-Received: by 2002:a05:600c:4e0b:b0:442:f4d4:53a with SMTP id 5b1f17b1804b1-450d64c322amr189283025e9.2.1748957224078;
+        Tue, 03 Jun 2025 06:27:04 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d8000d8csm161701305e9.24.2025.06.03.06.27.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 06:27:03 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, 
+ Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20250424084721.105113-1-krzysztof.kozlowski@linaro.org>
+References: <20250424084721.105113-1-krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH] arm64: dts: amlogic: Align wifi node name with
+ bindings
+Message-Id: <174895722336.2922018.7146209463305009352.b4-ty@linaro.org>
+Date: Tue, 03 Jun 2025 15:27:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250529234013.3826933-1-seanjc@google.com> <20250529234013.3826933-5-seanjc@google.com>
- <aD6tFSu5dvEQs8dJ@intel.com>
-Message-ID: <aD74GyZmU4Z0dMn1@google.com>
-Subject: Re: [PATCH 04/28] KVM: SVM: Kill the VM instead of the host if MSR
- interception is buggy
-From: Sean Christopherson <seanjc@google.com>
-To: Chao Gao <chao.gao@intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Borislav Petkov <bp@alien8.de>, Xin Li <xin@zytor.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On Tue, Jun 03, 2025, Chao Gao wrote:
-> On Thu, May 29, 2025 at 04:39:49PM -0700, Sean Christopherson wrote:
-> >WARN and kill the VM instead of panicking the host if KVM attempts to set
-> >or query MSR interception for an unsupported MSR.  Accessing the MSR
-> >interception bitmaps only meaningfully affects post-VMRUN behavior, and
-> >KVM_BUG_ON() is guaranteed to prevent the current vCPU from doing VMRUN,
-> >i.e. there is no need to panic the entire host.
-> >
-> >Signed-off-by: Sean Christopherson <seanjc@google.com>
-> >---
-> > arch/x86/kvm/svm/svm.c | 6 ++++--
-> > 1 file changed, 4 insertions(+), 2 deletions(-)
-> >
-> >diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> >index 36a99b87a47f..d5d11cb0c987 100644
-> >--- a/arch/x86/kvm/svm/svm.c
-> >+++ b/arch/x86/kvm/svm/svm.c
-> >@@ -827,7 +827,8 @@ static bool msr_write_intercepted(struct kvm_vcpu *vcpu, u32 msr)
-> > 	bit_write = 2 * (msr & 0x0f) + 1;
-> > 	tmp       = msrpm[offset];
+Hi,
+
+On Thu, 24 Apr 2025 10:47:21 +0200, Krzysztof Kozlowski wrote:
+> Since commit 3c3606793f7e ("dt-bindings: wireless: bcm4329-fmac: Use
+> wireless-controller.yaml schema"), bindings expect 'wifi' as node name:
 > 
-> not an issue with this patch. but shouldn't the offset be checked against
-> MSR_INVALID before being used to index msrpm[]?
+>   meson-gxm-rbox-pro.dtb: brcmf@1: $nodename:0: 'brcmf@1' does not match '^wifi(@.*)?$'
+> 
+> 
 
-Oof, yes.  To some extent, it _is_ a problem with this patch, because using
-KVM_BUG_ON() makes the OOB access less fatal.  Though it's just a load, and code
-that should be unreachable, but still worth cleaning up.
+Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.17/arm64-dt)
 
-Anyways, I'll place the KVM_BUG_ON()s in the right location as part of this patch.
+[1/1] arm64: dts: amlogic: Align wifi node name with bindings
+      https://git.kernel.org/amlogic/c/117993fc40d96ee3a7697d916a2a0424467e9dcf
 
-Thanks!
+These changes has been applied on the intermediate git tree [1].
+
+The v6.17/arm64-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
+for inclusion in their intermediate git branches in order to be sent to Linus during
+the next merge window, or sooner if it's a set of fixes.
+
+In the cases of fixes, those will be merged in the current release candidate
+kernel and as soon they appear on the Linux master branch they will be
+backported to the previous Stable and Long-Stable kernels [2].
+
+The intermediate git branches are merged daily in the linux-next tree [3],
+people are encouraged testing these pre-release kernels and report issues on the
+relevant mailing-lists.
+
+If problems are discovered on those changes, please submit a signed-off-by revert
+patch followed by a corrective changeset.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+
+-- 
+Neil
+
