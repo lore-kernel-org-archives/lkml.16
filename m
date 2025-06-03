@@ -1,74 +1,332 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5EB01B85C5;
-	Tue,  3 Jun 2025 23:36:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F4361E411C
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 23:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748993798; cv=none; b=JElu8N6JB3PmrjKBsCpWQvfj18J5IDAy+S6iYI+ZFvwNqBvvh3SuYOqzvrr/LM5lofdV5b2+UHq8npWC1KgVMbtWUVkH3adRfQ48I4vC6z8NQr2PZU1D+gMsagE/Qi7zJAD9x99TEravcx3KQaqrlmPh3OAAcDe+Odhop7hZjUs=
+	t=1748993809; cv=none; b=eeKfNc7W2Sf+qvXu7RerOwoiytjHwqzTw0gq1mPfmLjMKBagR56Gg1/Z1kE3kUcRZZ6YtjrL6RWwj8AKB2oYKY3bt55Bb7RVc80IuEdpARvGQVvQPvS4nHp5M9eNc+QxRDoee7ZKRjWuFTAoO2e56SSdSHXTQTrCLvXWu+RHCRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748993798; c=relaxed/simple;
-	bh=gm1y3HjSbfjetP2qj6SkQ/PvAerOiP935sq/jHQIUpg=;
+	s=arc-20240116; t=1748993809; c=relaxed/simple;
+	bh=KOOTXxNZfFhrryc0eqoBUfl6o0n5COLoEk7HHsfPwXg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pguQ9es52cUCvrg9H0B12SrQubQXUTvz89Gp/EQedB8txbQMn82wkBwU3Vu+d/jk8wQfG3HFZPidsPfw3cHjsaoc+lD0tq1Lzk+opBmm1iLUHhBDCqiYQeuo9muEwhvKjehshQwxQbrTGZYjpCJFAYaxd0nbJU5FicbEiB16td8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=naEzItGR; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=ZT3eVR/9zpo6J5em0h6nervgxODWGer1+C6xb3DMyYQcvXEiDB/9gk3sCwaYk9xIlvSAu5HVCdI5bvI7ltmeyeuj6LTWENz576AjCH/HI2otzYS0RwQ3TUqpVxQzYF6u5Ad+expvVHqS1hEF2RY6rlNlrj20rso6dKc2r2nQ4i0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Kz6ANSl4; arc=none smtp.client-ip=209.85.166.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="naEzItGR"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ad89f9bb725so1237472166b.2;
-        Tue, 03 Jun 2025 16:36:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kz6ANSl4"
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3dc8897f64cso50845ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 16:36:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748993795; x=1749598595; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=gm1y3HjSbfjetP2qj6SkQ/PvAerOiP935sq/jHQIUpg=;
-        b=naEzItGRZXUELH63yA1fgrfLBi3h/MuZfQ/4Gv0NLB0IlVu4rEuof7Ytht6/o4aEwy
-         b7lmbbAJAxr/5WIlEPr6vza8Ujwt7eoGwPaNvsXYv1pQTK+61F3FsZZfw4SW3YSYsgXT
-         ZGLe9sE8SyES79ArBIKRmYHEogMFStKaSSc/I0Nl0ghbagdLs4Bbsl+PNhzio584qoPv
-         0ggXbxxvKaEHvrTtscAP12Z/3j1Q9cVoWHY99Kvklht9vc9GmFKQei260YZdh8P6i7yF
-         OB+rc8smn9ebr0LoF75buhXPFMk1x1MQ9XQkLOd9pT0/BzahChSRYwuaWRRsmdhxkCRw
-         KsKQ==
+        d=google.com; s=20230601; t=1748993806; x=1749598606; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QxYf0g5vs/wlSFORXFumXiTP8TDS/kIyizwfD/bUBi8=;
+        b=Kz6ANSl4nZn7UrvRhoM/Ko00eqJ3ZL+6S8qLK9Q8BIN729GKxZy+mLKL0kEKx3YW0W
+         gEkXyzi8gNifs0P8XLzUTnkWBiufv0Lf+F7E21fAnt6ER8aYqU4+sEYQJYu+mygNWSrX
+         5rKe4XEOEPWzyuWlBbgffeKgbMJGWu2/14njZGP5XfqPbyU3tMhkJ+6D3/o3u7zw5wDd
+         uDaaZKS/Upx/0CjRSav4TEY/Y87jn0bHeb2vH0spjSJL2eRdxmk4LqIjJ4arVvi/O9Oh
+         8e6OwL37kC+Gg7ehybgf9NoCPfPR4bSqaNWrW+TTSIGedLDett99jBpvjJ7gNyTq9+zZ
+         IJ5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748993795; x=1749598595;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gm1y3HjSbfjetP2qj6SkQ/PvAerOiP935sq/jHQIUpg=;
-        b=GLG2j/dmTCsOFIhm7KKBhObq+fqkuhMZ8y50bn/kr26dbPKonrSU12Z2ry+ULVojCk
-         vsyv/5MVsVVDX7PPo4f/Woyi8p9UOt6oG1fpWv9HONRj+bl7S/5wUHusY55yLty87v+x
-         jWXzGAIO1a7Bwtn0KCfgEbDDz7bi5gHhFnRTcbugH4whhcV1sIzxeMpHrfiD+OqH/P+I
-         qxI2qVFBRPVWt6enm6hcWq3A+R23+QZSYMFyZnVp6H2n835Yv+ACbv/eUYeBOHxQeV9I
-         d1BOOuH865aoafdQalfuf9judNUzDgHz3bfRjunIanbGTc1udZ7y9dKh01cBTZ/0CtEV
-         jEUg==
-X-Forwarded-Encrypted: i=1; AJvYcCVmrdLUvcXvGw2rBtMirHZyLj6S1psnnL3aWq45tS/iO+jWJQbpHgf+3esbSr978m8/W2bKo8/9CM9HprGg@vger.kernel.org, AJvYcCXNfVOQaOfyAmR9tRtqQAVcc8/2GEO1+N4vrKtVqPFv6vlnJrzpfbySSRkR35e1DTIegZYul1AHg3bNoQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzC505FoAKmj18lvoQEBE8ppwhnRuH2GqZjffCDZiIdxFjNIRK/
-	HG/9lFDlvSqXWndz4VlxzOe7zx3ldPJtQuXvwO3/UDOasVoqbiT8d2rSox12+hgF6yIG7pJsmbk
-	e3/tKc6W+TNa8u9tqnL4qi149ILSWeQ==
-X-Gm-Gg: ASbGncvJHp12KmmYHYdROH9wxYniVJIX7Bdaoa+99/FVM3PKsePEdh6IJH2twdC80eb
-	TcUOSZEfVx6QvgGng/Iz+jITvCtX2xc9jM2xn0naYF+9Rwd3LE7WeW78qRly//ZLKb8t8uj2C6+
-	VffJMAo9WkLl6x8RHzfRTEeZEhcBdlx5TD9i5nj11eIkZRCqmn2aHjz0PcTL/a3fEelUAu02UOn
-	yaLAYIWT7o2
-X-Google-Smtp-Source: AGHT+IGpgofeEjM/2yrs1izJ62rbrSRbfvypEK9Kgum/HdJpoT/YJ0nOAGUL/tlHWb4n1jJSlFkhZVV1UZNoaspahtQ=
-X-Received: by 2002:a17:906:9fca:b0:ad2:24e5:27c9 with SMTP id
- a640c23a62f3a-addf8f698e8mr45977566b.44.1748993794661; Tue, 03 Jun 2025
- 16:36:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748993806; x=1749598606;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QxYf0g5vs/wlSFORXFumXiTP8TDS/kIyizwfD/bUBi8=;
+        b=RLZ/gtF3FiMn4ytID5UWHDzBxBQFPcrz3i4ND4dMoQiqhj2glrGRvrmnOW9etjp3Dx
+         VYbu84zROpr5XvU2Hul5Izs9tgJoUIOtrNC8H20HRMCMqWZs+Q+xTmdAlzqATosgLUag
+         JvI+5eqeOYi5dpZlARTP3xPP35UCFsYy53BvaC6MKL91t8xu41GDIjyG066G0DpFrv3U
+         X2KAciNzujdoKCCBHgxD3lQPQdoJruLiuRSoBLmESIyNb/HfuX/f/Z4VUPgCVfh4nzjN
+         PN17pRWoYHrHnqwnTcNsZc9ogJbkIfnDl/foa4xWbEbOhXdlk2ZrpYzf2EL5XHbpydws
+         KKQg==
+X-Forwarded-Encrypted: i=1; AJvYcCWgGo8eyEB5Y0m7AJORXa9zSKLn9/Mz0IJG2zNISk/kpXNdJIfhpLKUEujKcB72AhS7Jr5vdhyC93K1dA4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWjVgZ8fUIXCW+eH9Cq2BxPGlp0JzREyNtm4rVsXvh4RXEaw5/
+	jQcGi+5btN+oMZk2Pg03DIooCbIMOGtS2ZuRAMXq41DMgJ/mUdmFy1P6ZUAUTMIDRI7Ws5baPwY
+	0gDrSlHlevQX93JSj/ghhY0TGLT5WrDQZA4f4TJvj
+X-Gm-Gg: ASbGnctB/zw4GvesAthCLQFMK9h6OiXQtSb4lUENVfuS5AZsq8Mp/N8rsfb3z9s0V6n
+	Z1PfIIv9i81NHv4fApVG2wUcdx0AilDvkBOYQjOHzkNELFSIJF4qfWgRN1AZf/rS52wQ5AyDx+h
+	83VFkrzwY3JBZixPi14MVpbk4lszsW7kTJ+hJpzWqPmcfeRv5z4WR4oLJ2efaVCT7Wur70r37K
+X-Google-Smtp-Source: AGHT+IEZmjjYfoH3l/ceReenGuq+Jr53qCGYocTPZpPCtJUvjb3YSNabs5SkeQGuUWyiVjQgExJozw3Bz/026HZYR9w=
+X-Received: by 2002:a05:6e02:1645:b0:3db:854b:9f52 with SMTP id
+ e9e14a558f8ab-3ddbf9812b0mr632475ab.7.1748993805896; Tue, 03 Jun 2025
+ 16:36:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250603184752.1185676-1-csander@purestorage.com>
-In-Reply-To: <20250603184752.1185676-1-csander@purestorage.com>
-From: Anuj gupta <anuj1072538@gmail.com>
-Date: Wed, 4 Jun 2025 05:05:56 +0530
-X-Gm-Features: AX0GCFvzFm1-HXMLV4Mved_hkP6zM4mTmQrxpJFOBdv7dIhfetUc9Oji1q7eopw
-Message-ID: <CACzX3At8V7rCTrWnZvhFh8ZCw+7JQ7y2azZW2dhzUuTsXZGtxg@mail.gmail.com>
-Subject: Re: [PATCH] block: flip iter directions in blk_rq_integrity_map_user()
-To: Caleb Sander Mateos <csander@purestorage.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20250416045117.876775-1-irogers@google.com> <CAP-5=fU3VW1MjHMiaPG+JirLCCunMC6bEWpsJ3h0E7bTDkh9cA@mail.gmail.com>
+ <aD54ptuIFHcKPkRQ@google.com> <CAP-5=fWSfFa6ncV6JkKSN4ByQ9HR+2ff4+uzwpMO5n-GaNbwxQ@mail.gmail.com>
+ <aD98NFhyTcEU_qim@google.com>
+In-Reply-To: <aD98NFhyTcEU_qim@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 3 Jun 2025 16:36:34 -0700
+X-Gm-Features: AX0GCFt3pwJD8zHzPE28GoAVkadQ9gKiS_WxAt0gj5GzUTrVaj2-7jBil6pyPp8
+Message-ID: <CAP-5=fW0LKk1UyJr=feQd6nbNZC-ZLtUde=qX=-c9nqvDoqu-A@mail.gmail.com>
+Subject: Re: [PATCH v8 0/4] Prefer sysfs/JSON events also when no PMU is provided
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, Leo Yan <leo.yan@arm.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, Atish Patra <atishp@rivosinc.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Anuj Gupta <anuj20.g@samsung.com>
+On Tue, Jun 3, 2025 at 3:50=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> On Mon, Jun 02, 2025 at 11:08:34PM -0700, Ian Rogers wrote:
+> > On Mon, Jun 2, 2025 at 9:23=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
+g> wrote:
+> > >
+> > > Hi Ian,
+> > >
+> > > On Tue, May 27, 2025 at 01:50:32PM -0700, Ian Rogers wrote:
+> > > > On Tue, Apr 15, 2025 at 9:51=E2=80=AFPM Ian Rogers <irogers@google.=
+com> wrote:
+> > > > >
+> > > > > At the RISC-V summit the topic of avoiding event data being in th=
+e
+> > > > > RISC-V PMU kernel driver came up. There is a preference for sysfs=
+/JSON
+> > > > > events being the priority when no PMU is provided so that legacy
+> > > > > events maybe supported via json. Originally Mark Rutland also
+> > > > > expressed at LPC 2023 that doing this would resolve bugs on ARM A=
+pple
+> > > > > M? processors, but James Clark more recently tested this and beli=
+eves
+> > > > > the driver issues there may not have existed or have been resolve=
+d. In
+> > > > > any case, it is inconsistent that with a PMU event names avoid le=
+gacy
+> > > > > encodings, but when wildcarding PMUs (ie without a PMU with the e=
+vent
+> > > > > name) the legacy encodings have priority.
+> > > > >
+> > > > > The situation is further inconsistent as legacy events are case
+> > > > > sensitive, so on Intel that provides a sysfs instructions event, =
+the
+> > > > > instructions event without a PMU and lowercase is legacy while wi=
+th
+> > > > > uppercase letters it matches with sysfs which is case insensitive=
+. Are
+> > > > > there legacy events with upper case letters? Yes there are, the c=
+ache
+> > > > > ones mix case freely:
+> > > > >
+> > > > > L1-dcache|l1-d|l1d|L1-data|L1-icache|l1-i|l1i|L1-instruction|LLC|=
+L2|dTLB|d-tlb|Data-TLB|iTLB|i-tlb|Instruction-TLB|branch|branches|bpu|btb|b=
+pc|node
+> > > > >
+> > > > > meaning LLC that means L2 (which is wrong) both match as part of =
+a
+> > > > > legacy cache name but llc and l2 would only match sysfs/json
+> > > > > events. The whole thing just points at the ridiculous nature of l=
+egacy
+> > > > > events and why we'd want them to be preffered I don't know. Why s=
+hould
+> > > > > case of a letter or having a PMU prefix impact the encoding in th=
+e
+> > > > > perf_event_attr?
+> > > > >
+> > > > > The patch doing this work was reverted in a v6.10 release candida=
+te
+> > > > > as, even though the patch was posted for weeks and had been on
+> > > > > linux-next for weeks without issue, Linus was in the habit of usi=
+ng
+> > > > > explicit legacy events with unsupported precision options on his
+> > > > > Neoverse-N1. This machine has SLC PMU events for bus and CPU cycl=
+es
+> > > > > where ARM decided to call the events bus_cycles and cycles, the l=
+atter
+> > > > > being also a legacy event name. ARM haven't renamed the cycles ev=
+ent
+> > > > > to a more consistent cpu_cycles and avoided the problem. With the=
+se
+> > > > > changes the problematic event will now be skipped, a large warnin=
+g
+> > > > > produced, and perf record will continue for the other PMU events.=
+ This
+> > > > > solution was proposed by Arnaldo.
+> > > > >
+> > > > > v8: Change removing of failed to open events that are tracking so=
+ that
+> > > > >     the tracking moves to the next event. Make software events ab=
+le to
+> > > > >     specified with a PMU. Change the perf_api_probe to not load a=
+ll
+> > > > >     PMUs through scanning, specify a PMU when parsing events.
+> > > > >
+> > > > > v7: Expand cover letter, fix a missed core_ok check in the v6
+> > > > >     rebase. Note, as with v6 there is an alternate series that
+> > > > >     prioritizes legacy events but that is silly and I'd prefer we
+> > > > >     didn't do it.
+> > > > >
+> > > > > v6: Rebase of v5 (dropping already merged patches):
+> > > > >     https://lore.kernel.org/lkml/20250109222109.567031-1-irogers@=
+google.com/
+> > > > >     that unusually had an RFC posted for it:
+> > > > >     https://lore.kernel.org/lkml/Z7Z5kv75BMML2A1q@google.com/
+> > > > >     Note, this patch conflicts/contradicts:
+> > > > >     https://lore.kernel.org/lkml/20250312211623.2495798-1-irogers=
+@google.com/
+> > > > >     that I posted so that we could either consistently prioritize
+> > > > >     sysfs/json (these patches) or legacy events (the other
+> > > > >     patches). That lack of event printing and encoding inconsiste=
+ncy
+> > > > >     is most prominent in the encoding of events like "instruction=
+s"
+> > > > >     which on hybrid are reported as "cpu_core/instructions/" but
+> > > > >     "instructions" before these patches gets a legacy encoding wh=
+ile
+> > > > >     "cpu_core/instructions/" gets a sysfs/json encoding. These pa=
+tches
+> > > > >     make "instructions" always get a sysfs/json encoding while th=
+e
+> > > > >     alternate patches make it always get a legacy encoding.
+> > > > >
+> > > > > v5: Follow Namhyung's suggestion and ignore the case where comman=
+d
+> > > > >     line dummy events fail to open alongside other events that al=
+l
+> > > > >     fail to open. Note, the Tested-by tags are left on the series=
+ as
+> > > > >     v4 and v5 were changing an error case that doesn't occur in
+> > > > >     testing but was manually tested by myself.
+> > > > >
+> > > > > v4: Rework the no events opening change from v3 to make it handle
+> > > > >     multiple dummy events. Sadly an evlist isn't empty if it just
+> > > > >     contains dummy events as the dummy event may be used with "pe=
+rf
+> > > > >     record -e dummy .." as a way to determine whether permission
+> > > > >     issues exist. Other software events like cpu-clock would suff=
+ice
+> > > > >     for this, but the using dummy genie has left the bottle.
+> > > > >
+> > > > >     Another problem is that we appear to have an excessive number=
+ of
+> > > > >     dummy events added, for example, we can likely avoid a dummy =
+event
+> > > > >     and add sideband data to the original event. For auxtrace mor=
+e
+> > > > >     dummy events may be opened too. Anyway, this has led to the
+> > > > >     approach taken in patch 3 where the number of dummy parsed ev=
+ents
+> > > > >     is computed. If the number of removed/failing-to-open non-dum=
+my
+> > > > >     events matches the number of non-dummy events then we want to
+> > > > >     fail, but only if there are no parsed dummy events or if ther=
+e was
+> > > > >     one then it must have opened. The math here is hard to read, =
+but
+> > > > >     passes my manual testing.
+> > > > >
+> > > > > v3: Make no events opening for perf record a failure as suggested=
+ by
+> > > > >     James Clark and Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>. Also,
+> > > > >     rebase.
+> > > > >
+> > > > > v2: Rebase and add tested-by tags from James Clark, Leo Yan and A=
+tish
+> > > > >     Patra who have tested on RISC-V and ARM CPUs, including the
+> > > > >     problem case from before.
+> > > >
+> > > > Ping. Thanks,
+> > > > Ian
+> > > >
+> > > > > Ian Rogers (4):
+> > > > >   perf record: Skip don't fail for events that don't open
+> > > > >   perf parse-events: Reapply "Prefer sysfs/JSON hardware events o=
+ver
+> > > > >     legacy"
+> > > > >   perf parse-events: Allow software events to be terms
+> > > > >   perf perf_api_probe: Avoid scanning all PMUs, try software PMU =
+first
+> > >
+> > > Sorry for the delay.  But I think we wanted to move to this instead:
+> > >
+> > > https://lore.kernel.org/linux-perf-users/20250312211623.2495798-1-iro=
+gers@google.com/
+> >
+> > Hi Namhyung,
+> >
+> > The preference for sysfs/json over legacy was done as a bug fix and
+> > because ARM (Mark Rutland) argued strongly that it was the most
+> > sensible priority. Intel (Kan Liang) approved the change in priority.
+> > RISC-V have wanted this behavior as it enables the migration of event
+> > mappings from the driver to the tool. As the primary maintainer of the
+> > event parsing and metric code I prefer the priority as legacy events
+> > are weird, for example they aren't case insensitive in their naming.
+> > For example, on Intel with legacy events as the priority cpu-cycles
+> > would be a legacy event, but cpu-Cyles a sysfs one. On ARM cpu_cycles
+> > would be a sysfs event, but cpu-cycles a legacy one. A minor character
+> > difference and very different and imo surprising event encodings.
+>
+> Yeah, but it has worked like that for a long time.
+>
+> >
+> > On your RFC thread Arnaldo and James said that legacy events somehow
+> > enabled a form of drill down. As event parsing is mapping a name to a
+> > perf_event_attr I completely don't see this as the mapping is opaque.
+>
+> Is it opaque?  (I'd say it standard event rather than legacy event.)  I
+> think the mapping for the standard events are clearly defined.
+
+Which standard events? Going through them (abbreviated to avoid repetition)=
+:
+ - PERF_COUNT_HW_CPU_CYCLES, ok.
+ - PERF_COUNT_HW_INSTRUCTIONS, well does that include speculatively
+executed instructions or not?
+ - ...
+ - PERF_COUNT_HW_STALLED_CYCLES_FRONTEND, what does this count on an
+in order CPU?
+ - ...
+
+The hardware cache events are far worse as things like LLC mean the L2
+cache, however, it is far more typical for this to mean L3 these days.
+Standard and clearly defined, sorry absolutely not. They are a
+minefield of well intentioned event name components waiting to explode
+when a vendor inadvertently creates a combination that happens to
+match a combination perf thinks is significant.
+
+There was a similar attempt for raw events where you can go r123 for
+the hex 123 event config, it was missed that rEAD is a valid hex raw
+event as well as a useful event name. The event parsing now has a lot
+of special handling to avoid exploding on this - and yes the priority
+is that sysfs/json has priority over the raw event encoding.
+
+> >
+> > I strongly believe we need consistency. If `perf stat -e cycles .. `
+> > prints cpu_core/cycles/ as the event name on a hybrid Intel, then
+> > `perf stat -e cpu_core/cycles/ .. ` should have the same
+> > perf_event_attr. Both patch series achieve this but this one does it
+> > with consistency, and from what I see it, the support of 3 vendors.
+>
+> Right, it's not consistent.  Maybe we need a different uniq event name
+> for extended (standard) events.  How about "cycles(cpu_core)"?  I guess
+> we don't want to add a space between the PMU and event names to avoid
+> potential user impact when they parse the output.
+
+We could and it would very likely break tooling. The intent is that
+cpu-cycles matches cpu_core/cpu-cycles/ and cpu_atom/cpu-cycles/ and
+they are expected to all be the same event. Currently with the PMU
+they are sysfs encoded but without a PMU they are legacy encoded but
+printed (uniquified) as if they were with a PMU and sysfs encoded.
+This is misleading.
+
+Thanks,
+Ian
+
+> Thanks,
+> Namhyung
+>
