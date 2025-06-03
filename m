@@ -1,214 +1,362 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx-rz-2.rrze.uni-erlangen.de (mx-rz-2.rrze.uni-erlangen.de [131.188.11.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C2823BCE2
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 21:16:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DFE3225792;
+	Tue,  3 Jun 2025 21:17:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748985405; cv=none; b=nCbKzpjwcfY6HOs6w8vSrRFs/6lZqg6h7ADLWJEwvH1WlJJHYMaCZWg2adbq48dTf157ss197n7h6t8ZpqV0rhN49ScPyNMV7IaldkttCszI88Crgq59bzmBAAM8JEPrmLEtJiLxh7lbLBO1Zy727fsvaqV8CrREZODwVjR3xOg=
+	t=1748985439; cv=none; b=YVQrSpV0gabhYCm+Nsyh0eVhe2N57iFknrLcY9hrkcXjYZH/8U0dq6yX7poaRwlNSDwQ5U2MJ0ugj9WiUbGxvaONulEYg7cpW1/43hWst+SXMiStB7GJg92jU2oNRBYKh9QDP4JtKGJogjRDlLPDXCDW125XeIS7Ud+eaynLZoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748985405; c=relaxed/simple;
-	bh=YiuIbH1YicSvYtWptE6HogEJ1VuNCKkLtGqFeSs9x1E=;
+	s=arc-20240116; t=1748985439; c=relaxed/simple;
+	bh=jV7gCpI03Am4DpiZtxSjBZzR00tXFBN9D2mswwkNkok=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GUtOlJ3tgZAR6feor5EPSyBaKKVWxxdE+Pn/pVXVBLe8jt/YD3/mABnu+jYVDziG/7yhN+wq1utuBs516rz51QbWjyxuwCf6cwjthK94iSzqmTFwX1IiMilmR5Q5Ixbe6bWfBfbsNX41gzTIUIDGDsO/zXD5ZVLcM2FTiU/PMYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B5jxMj5Q; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 MIME-Version:Content-Type; b=dyXEsQ21NHqWiSY2pEyxi7w9ycCrc3snhm1fhGrTSp0ohJ9WS+WfMYQBAMDYBcNZsmOBheTS1Nd3Mma/kIb8sjjeh4l2YCb7RbrGrfQJE/rAhM1R8v0FxIVosayNk+ExYpmBUD0P//HeG/4UpTYFajR2m7n7Tqe2K1eTVNQ0Rgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=VdwI+qCs; arc=none smtp.client-ip=131.188.11.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B5jxMj5Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748985403;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=odfwWYBsPrR2NiRATGhjsNB6SzvCCkIpMqMTiNvN67g=;
-	b=B5jxMj5QTqr8qfXbDCJSwd0kZxmlDA2qGCpepKRD3pMIZ35AwkqcX1dun7xlZEy1/tDRsd
-	Am/qi18Rni5Oek4S/nTrOqjjRdEfAB8Zmkl6F7clMfJA45BReDG38dnq8gFRazej8uV1KC
-	hSlDacCyFbLQYpW6m4XOM8a4rU1Ns0E=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-631-4r0q3JOrN52zBVRj6egaAA-1; Tue, 03 Jun 2025 17:16:42 -0400
-X-MC-Unique: 4r0q3JOrN52zBVRj6egaAA-1
-X-Mimecast-MFC-AGG-ID: 4r0q3JOrN52zBVRj6egaAA_1748985401
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-450d021b9b1so25248855e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 14:16:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748985401; x=1749590201;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=odfwWYBsPrR2NiRATGhjsNB6SzvCCkIpMqMTiNvN67g=;
-        b=m+n+tqrMGB5cDs5qpcJaR5FYmPQ/WyehVjFsCqp7zFrAudBIuZhTBN/W58d6YOWPCz
-         qLYqpCMoWzMz42gHNFS5jGdhYrvG4Kb3DV2lju6C6nrw767VP9frKPPHSgiUWczpRrEQ
-         32szh9x3I/CygJ+j3WpD3xY8T08nypHruuFGho1o2eBu+Ky2I59RkO79UUCh3vF6azQH
-         L+Mb0zm0ybUkXJYqvySI76b8h1WOmOlRFzDLTWVYBcHizyL5m/4brYumb90wbEWlwh41
-         jiIAGGw8gJtVLje5UVv1YVCva6w9mJH/Cl+g5Qq1liStCuJY2lCKk1HIEYM08/Cgbs2w
-         15/w==
-X-Gm-Message-State: AOJu0YyKfo99z+0fQeKL7GIzIb6F1+NaMsnebOFrDbQXs20hSi9eSxFc
-	/kqdHZ5nOc1CEdJubp+sJqQGxqvaLm9ps7vQu+VLnj0sW0T21MjyrtqTgjuWENfXNRDJ8Feumgb
-	OHyaHp1m2oDiwmSpPFmrbLkFHeOwSsQnupfKhnKZFzAjuvr+stn8jbOrQlEnpPiV5DMI5KzDwXz
-	T7Tu8ewygqvoaMuXhLgWe3GPWDIWarSDoqasrAYJrQcZmVbBXny1s=
-X-Gm-Gg: ASbGncvkoGyR/jvAKm4ivjcD227O773M7QD+ArJNnCFIcvvw+IBKj53rDfYEwq8MaAS
-	C68ExiNawp2pJFRhOYJtsUevoRNcyMGATL3D1eQp9pLvrrsK2ADfjpG4GTiBsgoVKwAPQl2AmPs
-	sNXeOwJ8Xys5KS0DeY+adZoPXVLrYc/maiLIs1iNkWoiXWn6n/2DGPMOxHUg70L4PBrOH6XmxFE
-	qpxuP58nLpeV3cceRvtSllRrsb7hnKTU0mTk3uFCN1wfLk+X4FZezIm006k+h3IQpItlGt91fRa
-	sr0coQc5/sgnnEJI9BwaaisTrXhPjN3uQSMS77BUAnkuSZ2gqH0UprZ6ZCgiNkPWTJadWO5rrQa
-	8TG3SpFo=
-X-Received: by 2002:a05:600c:8b53:b0:450:d386:1afb with SMTP id 5b1f17b1804b1-451f0a77343mr1734695e9.9.1748985400774;
-        Tue, 03 Jun 2025 14:16:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGU0uCWB4mipEA75Rgm+06vlkE4Cg+21PNhH9TeTgvc29mcVV+kilTSDzcCPjrD9lEWlpu3Rw==
-X-Received: by 2002:a05:600c:8b53:b0:450:d386:1afb with SMTP id 5b1f17b1804b1-451f0a77343mr1734345e9.9.1748985400273;
-        Tue, 03 Jun 2025 14:16:40 -0700 (PDT)
-Received: from localhost (p200300d82f0df000eec92b8d4913f32a.dip0.t-ipconnect.de. [2003:d8:2f0d:f000:eec9:2b8d:4913:f32a])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a4efe5b96fsm19175970f8f.8.2025.06.03.14.16.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jun 2025 14:16:39 -0700 (PDT)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alistair Popple <apopple@nvidia.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Nico Pache <npache@redhat.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>,
-	Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH v1 2/2] mm/huge_memory: don't mark refcounted pages special in vmf_insert_folio_pud()
-Date: Tue,  3 Jun 2025 23:16:34 +0200
-Message-ID: <20250603211634.2925015-3-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="VdwI+qCs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
+	t=1748985433; bh=6kulVUqZ3Sz9/D6ZyDu4KR/IeYIBjf/9FGGPysGsUN4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From:To:CC:
+	 Subject;
+	b=VdwI+qCs6yEe6Vrm1ttgl5XymmYa5QI87StdbvDilgCpTNBB/TA45s/SSBmLNq73t
+	 gFpUMfu6iKx8tqs8QhLXvUwvs4Qdx3SjvSo0IVjc+kbnsn6trt2XTLoFG0L5+ZRf4S
+	 Qv22AS9UHue8YaSDin/TZSRbxk/kfGmWDBek+1W41qtxN7tA/+C9nZ1pquEiqpoSL3
+	 bcBgLRV/hDSJYtTmBcLSnV464/0yVYMk/CWVCzoelJ8hhBDSpFGMc5NHUGuRYQuD/u
+	 +EZPigcjdzl1vJ1fvifGiYyn0Om8KF9d+X8LGbz1dEXGb9j3WHDOd0E6zjQcBcqjoW
+	 fjmZ2qSMBDADw==
+Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-rz-2.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4bBk7F4HDVzPk7d;
+	Tue,  3 Jun 2025 23:17:13 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at boeck1.rrze.uni-erlangen.de (RRZE)
+X-RRZE-Flag: Not-Spam
+X-RRZE-Submit-IP: 2001:9e8:3639:fe00:a21f:4ce4:8495:5578
+Received: from luis-tp.fritz.box (unknown [IPv6:2001:9e8:3639:fe00:a21f:4ce4:8495:5578])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: U2FsdGVkX1/crT903BhwJVO52aTy1iLoysW5QidJY9E=)
+	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4bBk791VHJzPk63;
+	Tue,  3 Jun 2025 23:17:09 +0200 (CEST)
+From: Luis Gerhorst <luis.gerhorst@fau.de>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Puranjay Mohan <puranjay@kernel.org>,
+	Xu Kuohai <xukuohai@huaweicloud.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Hari Bathini <hbathini@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Luis Gerhorst <luis.gerhorst@fau.de>,
+	Henriette Herzog <henriette.herzog@rub.de>,
+	Saket Kumar Bhaskar <skb99@linux.ibm.com>,
+	Cupertino Miranda <cupertino.miranda@oracle.com>,
+	Jiayuan Chen <mrpre@163.com>,
+	Matan Shachnai <m.shachnai@gmail.com>,
+	Dimitar Kanaliev <dimitar.kanaliev@siteground.com>,
+	Shung-Hsi Yu <shung-hsi.yu@suse.com>,
+	Daniel Xu <dxu@dxuuu.xyz>,
+	bpf@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-kselftest@vger.kernel.org
+Cc: Maximilian Ott <ott@cs.fau.de>,
+	Milan Stephan <milan.stephan@fau.de>
+Subject: [PATCH bpf-next v4 5/9] bpf, arm64, powerpc: Change nospec to include v1 barrier
+Date: Tue,  3 Jun 2025 23:17:03 +0200
+Message-ID: <20250603211703.337860-1-luis.gerhorst@fau.de>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250603211634.2925015-1-david@redhat.com>
-References: <20250603211634.2925015-1-david@redhat.com>
+In-Reply-To: <20250603205800.334980-1-luis.gerhorst@fau.de>
+References: <20250603205800.334980-1-luis.gerhorst@fau.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Marking PUDs that map a "normal" refcounted folios as special is
-against our rules documented for vm_normal_page().
+This changes the semantics of BPF_NOSPEC (previously a v4-only barrier)
+to always emit a speculation barrier that works against both Spectre v1
+AND v4. If mitigation is not needed on an architecture, the backend
+should set bpf_jit_bypass_spec_v4/v1().
 
-Fortunately, there are not that many pud_special() check that can be
-mislead and are right now rather harmless: e.g., none so far
-bases decisions whether to grab a folio reference on that decision.
+As of now, this commit only has the user-visible implication that unpriv
+BPF's performance on PowerPC is reduced. This is the case because we
+have to emit additional v1 barrier instructions for BPF_NOSPEC now.
 
-Well, and GUP-fast will fallback to GUP-slow. All in all, so far no big
-implications as it seems.
+This commit is required for a future commit to allow us to rely on
+BPF_NOSPEC for Spectre v1 mitigation. As of this commit, the feature
+that nospec acts as a v1 barrier is unused.
 
-Getting this right will get more important as we introduce
-folio_normal_page_pud() and start using it in more place where we
-currently special-case based on other VMA flags.
+Commit f5e81d111750 ("bpf: Introduce BPF nospec instruction for
+mitigating Spectre v4") noted that mitigation instructions for v1 and v4
+might be different on some archs. While this would potentially offer
+improved performance on PowerPC, it was dismissed after the following
+considerations:
 
-Fix it by just inlining the relevant code, making the whole
-pud_none() handling cleaner.
+* Only having one barrier simplifies the verifier and allows us to
+  easily rely on v4-induced barriers for reducing the complexity of
+  v1-induced speculative path verification.
 
-Add folio_mk_pud() to mimic what we do with folio_mk_pmd().
+* For the architectures that implemented BPF_NOSPEC, only PowerPC has
+  distinct instructions for v1 and v4. Even there, some insns may be
+  shared between the barriers for v1 and v4 (e.g., 'ori 31,31,0' and
+  'sync'). If this is still found to impact performance in an
+  unacceptable way, BPF_NOSPEC can be split into BPF_NOSPEC_V1 and
+  BPF_NOSPEC_V4 later. As an optimization, we can already skip v1/v4
+  insns from being emitted for PowerPC with this setup if
+  bypass_spec_v1/v4 is set.
 
-While at it, make sure that the pud that is non-none is actually present
-before comparing PFNs.
+Vulnerability-status for BPF_NOSPEC-based Spectre mitigations (v4 as of
+this commit, v1 in the future) is therefore:
 
-Fixes: dbe54153296d ("mm/huge_memory: add vmf_insert_folio_pud()")
-Signed-off-by: David Hildenbrand <david@redhat.com>
+* x86 (32-bit and 64-bit), ARM64, and PowerPC (64-bit): Mitigated - This
+  patch implements BPF_NOSPEC for these architectures. The previous
+  v4-only version was supported since commit f5e81d111750 ("bpf:
+  Introduce BPF nospec instruction for mitigating Spectre v4") and
+  commit b7540d625094 ("powerpc/bpf: Emit stf barrier instruction
+  sequences for BPF_NOSPEC").
+
+* LoongArch: Not Vulnerable - Commit a6f6a95f2580 ("LoongArch, bpf: Fix
+  jit to skip speculation barrier opcode") is the only other past commit
+  related to BPF_NOSPEC and indicates that the insn is not required
+  there.
+
+* MIPS: Vulnerable (if unprivileged BPF is enabled) -
+  Commit a6f6a95f2580 ("LoongArch, bpf: Fix jit to skip speculation
+  barrier opcode") indicates that it is not vulnerable, but this
+  contradicts the kernel and Debian documentation. Therefore, I assume
+  that there exist vulnerable MIPS CPUs (but maybe not from Loongson?).
+  In the future, BPF_NOSPEC could be implemented for MIPS based on the
+  GCC speculation_barrier [1]. For now, we rely on unprivileged BPF
+  being disabled by default.
+
+* Other: Unknown - To the best of my knowledge there is no definitive
+  information available that indicates that any other arch is
+  vulnerable. They are therefore left untouched (BPF_NOSPEC is not
+  implemented, but bypass_spec_v1/v4 is also not set).
+
+I did the following testing to ensure the insn encoding is correct:
+
+* ARM64:
+  * 'dsb nsh; isb' was successfully tested with the BPF CI in [2]
+  * 'sb' locally using QEMU v7.2.15 -cpu max (emitted sb insn is
+    executed for example with './test_progs -t verifier_array_access')
+
+* PowerPC: The following configs were tested locally with ppc64le QEMU
+  v8.2 '-machine pseries -cpu POWER9':
+  * STF_BARRIER_EIEIO + CONFIG_PPC_BOOK32_64
+  * STF_BARRIER_SYNC_ORI (forced on) + CONFIG_PPC_BOOK32_64
+  * STF_BARRIER_FALLBACK (forced on) + CONFIG_PPC_BOOK32_64
+  * CONFIG_PPC_E500 (forced on) + STF_BARRIER_EIEIO
+  * CONFIG_PPC_E500 (forced on) + STF_BARRIER_SYNC_ORI (forced on)
+  * CONFIG_PPC_E500 (forced on) + STF_BARRIER_FALLBACK (forced on)
+  * CONFIG_PPC_E500 (forced on) + STF_BARRIER_NONE (forced on)
+  Most of those cobinations should not occur in practice, but I was not
+  able to get an PPC e6500 rootfs (for testing PPC_E500 without forcing
+  it on). In any case, this should ensure that there are no unexpected
+  conflicts between the insns when combined like this. Individual v1/v4
+  barriers were already emitted elsewhere.
+
+Hari's ack is for the PowerPC changes only.
+
+[1] https://gcc.gnu.org/git/?p=gcc.git;a=commit;h=29b74545531f6afbee9fc38c267524326dbfbedf
+    ("MIPS: Add speculation_barrier support")
+[2] https://github.com/kernel-patches/bpf/pull/8576
+
+Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
+Acked-by: Hari Bathini <hbathini@linux.ibm.com>
+Cc: Henriette Herzog <henriette.herzog@rub.de>
+Cc: Maximilian Ott <ott@cs.fau.de>
+Cc: Milan Stephan <milan.stephan@fau.de>
 ---
- include/linux/mm.h | 15 +++++++++++++++
- mm/huge_memory.c   | 33 +++++++++++++++++++++++----------
- 2 files changed, 38 insertions(+), 10 deletions(-)
+ arch/arm64/net/bpf_jit.h          |  5 +++
+ arch/arm64/net/bpf_jit_comp.c     |  9 +++--
+ arch/powerpc/net/bpf_jit_comp64.c | 59 ++++++++++++++++++++++---------
+ include/linux/filter.h            |  2 +-
+ kernel/bpf/core.c                 | 17 ++++-----
+ 5 files changed, 65 insertions(+), 27 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 0ef2ba0c667af..047c8261d4002 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1816,6 +1816,21 @@ static inline pmd_t folio_mk_pmd(struct folio *folio, pgprot_t pgprot)
- {
- 	return pmd_mkhuge(pfn_pmd(folio_pfn(folio), pgprot));
- }
+diff --git a/arch/arm64/net/bpf_jit.h b/arch/arm64/net/bpf_jit.h
+index a3b0e693a125..bbea4f36f9f2 100644
+--- a/arch/arm64/net/bpf_jit.h
++++ b/arch/arm64/net/bpf_jit.h
+@@ -325,4 +325,9 @@
+ #define A64_MRS_SP_EL0(Rt) \
+ 	aarch64_insn_gen_mrs(Rt, AARCH64_INSN_SYSREG_SP_EL0)
+ 
++/* Barriers */
++#define A64_SB aarch64_insn_get_sb_value()
++#define A64_DSB_NSH (aarch64_insn_get_dsb_base_value() | 0x7 << 8)
++#define A64_ISB aarch64_insn_get_isb_value()
 +
-+/**
-+ * folio_mk_pud - Create a PUD for this folio
-+ * @folio: The folio to create a PUD for
-+ * @pgprot: The page protection bits to use
-+ *
-+ * Create a page table entry for the first page of this folio.
-+ * This is suitable for passing to set_pud_at().
-+ *
-+ * Return: A page table entry suitable for mapping this folio.
-+ */
-+static inline pud_t folio_mk_pud(struct folio *folio, pgprot_t pgprot)
-+{
-+	return pud_mkhuge(pfn_pud(folio_pfn(folio), pgprot));
-+}
- #endif
- #endif /* CONFIG_MMU */
+ #endif /* _BPF_JIT_H */
+diff --git a/arch/arm64/net/bpf_jit_comp.c b/arch/arm64/net/bpf_jit_comp.c
+index 2cab9063f563..b6c42b5c9668 100644
+--- a/arch/arm64/net/bpf_jit_comp.c
++++ b/arch/arm64/net/bpf_jit_comp.c
+@@ -1630,9 +1630,14 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx,
+ 			return ret;
+ 		break;
  
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index f9e23dfea76f8..7b66a23089381 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -1629,6 +1629,7 @@ vm_fault_t vmf_insert_folio_pud(struct vm_fault *vmf, struct folio *folio,
- 	pud_t *pud = vmf->pud;
- 	struct mm_struct *mm = vma->vm_mm;
- 	spinlock_t *ptl;
-+	pud_t entry;
- 
- 	if (addr < vma->vm_start || addr >= vma->vm_end)
- 		return VM_FAULT_SIGBUS;
-@@ -1637,20 +1638,32 @@ vm_fault_t vmf_insert_folio_pud(struct vm_fault *vmf, struct folio *folio,
- 		return VM_FAULT_SIGBUS;
- 
- 	ptl = pud_lock(mm, pud);
--
--	/*
--	 * If there is already an entry present we assume the folio is
--	 * already mapped, hence no need to take another reference. We
--	 * still call insert_pfn_pud() though in case the mapping needs
--	 * upgrading to writeable.
--	 */
--	if (pud_none(*vmf->pud)) {
-+	if (pud_none(*pud)) {
- 		folio_get(folio);
- 		folio_add_file_rmap_pud(folio, &folio->page, vma);
- 		add_mm_counter(mm, mm_counter_file(folio), HPAGE_PUD_NR);
-+
-+		entry = folio_mk_pud(folio, vma->vm_page_prot);
-+		if (write) {
-+			entry = pud_mkyoung(pud_mkdirty(entry));
-+			entry = maybe_pud_mkwrite(entry, vma);
-+		}
-+		set_pud_at(mm, addr, pud, entry);
-+		update_mmu_cache_pud(vma, addr, pud);
-+	} else if (pud_present(*pud) && write) {
-+		/*
-+		 * We only allow for upgrading write permissions if the
-+		 * same folio is already mapped.
-+		 */
-+		if (pud_pfn(*pud) == folio_pfn(folio)) {
-+			entry = pud_mkyoung(*pud);
-+			entry = maybe_pud_mkwrite(pud_mkdirty(entry), vma);
-+			if (pudp_set_access_flags(vma, addr, pud, entry, 1))
-+				update_mmu_cache_pud(vma, addr, pud);
+-	/* speculation barrier */
++	/* speculation barrier against v1 and v4 */
+ 	case BPF_ST | BPF_NOSPEC:
+-		/* See bpf_jit_bypass_spec_v4() */
++		if (alternative_has_cap_likely(ARM64_HAS_SB)) {
++			emit(A64_SB, ctx);
 +		} else {
-+			WARN_ON_ONCE(1);
++			emit(A64_DSB_NSH, ctx);
++			emit(A64_ISB, ctx);
 +		}
- 	}
--	insert_pfn_pud(vma, addr, vmf->pud, pfn_to_pfn_t(folio_pfn(folio)),
--		write);
- 	spin_unlock(ptl);
+ 		break;
  
- 	return VM_FAULT_NOPAGE;
+ 	/* ST: *(size *)(dst + off) = imm */
+diff --git a/arch/powerpc/net/bpf_jit_comp64.c b/arch/powerpc/net/bpf_jit_comp64.c
+index a4335761b7f9..3665ff8bb4bc 100644
+--- a/arch/powerpc/net/bpf_jit_comp64.c
++++ b/arch/powerpc/net/bpf_jit_comp64.c
+@@ -414,6 +414,7 @@ int bpf_jit_build_body(struct bpf_prog *fp, u32 *image, u32 *fimage, struct code
+ 		       u32 *addrs, int pass, bool extra_pass)
+ {
+ 	enum stf_barrier_type stf_barrier = stf_barrier_type_get();
++	bool sync_emitted, ori31_emitted;
+ 	const struct bpf_insn *insn = fp->insnsi;
+ 	int flen = fp->len;
+ 	int i, ret;
+@@ -806,26 +807,52 @@ int bpf_jit_build_body(struct bpf_prog *fp, u32 *image, u32 *fimage, struct code
+ 
+ 		/*
+ 		 * BPF_ST NOSPEC (speculation barrier)
++		 *
++		 * The following must act as a barrier against both Spectre v1
++		 * and v4 if we requested both mitigations. Therefore, also emit
++		 * 'isync; sync' on E500 or 'ori31' on BOOK3S_64 in addition to
++		 * the insns needed for a Spectre v4 barrier.
++		 *
++		 * If we requested only !bypass_spec_v1 OR only !bypass_spec_v4,
++		 * we can skip the respective other barrier type as an
++		 * optimization.
+ 		 */
+ 		case BPF_ST | BPF_NOSPEC:
+-			switch (stf_barrier) {
+-			case STF_BARRIER_EIEIO:
+-				EMIT(PPC_RAW_EIEIO() | 0x02000000);
+-				break;
+-			case STF_BARRIER_SYNC_ORI:
++			sync_emitted = false;
++			ori31_emitted = false;
++#ifdef CONFIG_PPC_E500
++			if (!bpf_jit_bypass_spec_v1()) {
++				EMIT(PPC_RAW_ISYNC());
+ 				EMIT(PPC_RAW_SYNC());
+-				EMIT(PPC_RAW_LD(tmp1_reg, _R13, 0));
+-				EMIT(PPC_RAW_ORI(_R31, _R31, 0));
+-				break;
+-			case STF_BARRIER_FALLBACK:
+-				ctx->seen |= SEEN_FUNC;
+-				PPC_LI64(_R12, dereference_kernel_function_descriptor(bpf_stf_barrier));
+-				EMIT(PPC_RAW_MTCTR(_R12));
+-				EMIT(PPC_RAW_BCTRL());
+-				break;
+-			case STF_BARRIER_NONE:
+-				break;
++				sync_emitted = true;
++			}
++#endif
++			if (!bpf_jit_bypass_spec_v4()) {
++				switch (stf_barrier) {
++				case STF_BARRIER_EIEIO:
++					EMIT(PPC_RAW_EIEIO() | 0x02000000);
++					break;
++				case STF_BARRIER_SYNC_ORI:
++					if (!sync_emitted)
++						EMIT(PPC_RAW_SYNC());
++					EMIT(PPC_RAW_LD(tmp1_reg, _R13, 0));
++					EMIT(PPC_RAW_ORI(_R31, _R31, 0));
++					ori31_emitted = true;
++					break;
++				case STF_BARRIER_FALLBACK:
++					ctx->seen |= SEEN_FUNC;
++					PPC_LI64(_R12, dereference_kernel_function_descriptor(bpf_stf_barrier));
++					EMIT(PPC_RAW_MTCTR(_R12));
++					EMIT(PPC_RAW_BCTRL());
++					break;
++				case STF_BARRIER_NONE:
++					break;
++				}
+ 			}
++#ifdef CONFIG_PPC_BOOK3S_64
++			if (!bpf_jit_bypass_spec_v1() && !ori31_emitted)
++				EMIT(PPC_RAW_ORI(_R31, _R31, 0));
++#endif
+ 			break;
+ 
+ 		/*
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index f5cf4d35d83e..eca229752cbe 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -82,7 +82,7 @@ struct ctl_table_header;
+ #define BPF_CALL_ARGS	0xe0
+ 
+ /* unused opcode to mark speculation barrier for mitigating
+- * Speculative Store Bypass
++ * Spectre v1 and v4
+  */
+ #define BPF_NOSPEC	0xc0
+ 
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index f9bd9625438b..e536a34a32c8 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -2102,14 +2102,15 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn)
+ #undef COND_JMP
+ 	/* ST, STX and LDX*/
+ 	ST_NOSPEC:
+-		/* Speculation barrier for mitigating Speculative Store Bypass.
+-		 * In case of arm64, we rely on the firmware mitigation as
+-		 * controlled via the ssbd kernel parameter. Whenever the
+-		 * mitigation is enabled, it works for all of the kernel code
+-		 * with no need to provide any additional instructions here.
+-		 * In case of x86, we use 'lfence' insn for mitigation. We
+-		 * reuse preexisting logic from Spectre v1 mitigation that
+-		 * happens to produce the required code on x86 for v4 as well.
++		/* Speculation barrier for mitigating Speculative Store Bypass,
++		 * Bounds-Check Bypass and Type Confusion. In case of arm64, we
++		 * rely on the firmware mitigation as controlled via the ssbd
++		 * kernel parameter. Whenever the mitigation is enabled, it
++		 * works for all of the kernel code with no need to provide any
++		 * additional instructions here. In case of x86, we use 'lfence'
++		 * insn for mitigation. We reuse preexisting logic from Spectre
++		 * v1 mitigation that happens to produce the required code on
++		 * x86 for v4 as well.
+ 		 */
+ 		barrier_nospec();
+ 		CONT;
 -- 
 2.49.0
 
