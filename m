@@ -1,91 +1,223 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC8B27FD7A;
-	Tue,  3 Jun 2025 09:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE4F27FD7A;
+	Tue,  3 Jun 2025 09:42:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748943754; cv=none; b=ur3dMR1hJpjqLYWebqRE7uMxzNYA5dnewdrAYQ43VY9owb43V1fXySmp8ixhafAUjlfVUe2nU70+x4j/M6e4Hy8i+JHwdgP4iwBKPTx/ZMZQk3kI94ocBFaTN7AH1vGQRE8TEYoHV+Fr92YPjDFCDvHxrpLcoArpF+miUq9c1Vc=
+	t=1748943763; cv=none; b=gR3amBfStcsP+wf8jg2mz8Udyzjbars1+O1JRJkzn3uPKT9+S1Tz409tSJtWCrAf02kZ21r0ibCfxu6xzRnwngOW01mBlu53s8fZ/FZWEHIt2SHYtftmD6zEzaFEcJh4s/Jl98MlGe5z/B/wwd8P6FwyjVFPy3oG1zRBXVM0HP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748943754; c=relaxed/simple;
-	bh=dbV/utlJZsAmXKza9Scy8Pvl3ynRvyPanNSPnq6zrJg=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=kyTHITm1aCM+nr6bp5FL1bpXQfNh6rqVr/VhgVQTLWELmctmE1UhVWsWB/TXpMo7+M4+rz2A1smga7Unsg9jY7VlacafDUmu3qpINdJTDWtVNrKpVNUH3jklz5Jm4yRtoq570f7NtNtdi3mfv/Kz/G6dhQtrtXUft78lQxZJ4U4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hkite6jM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748943763; c=relaxed/simple;
+	bh=kcKdMQutOEKgdmq7s01p3u7WAiPjAfl0BL1BiOFHomo=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=IgRPJFayT25LL96qiEFstiUE3Vxu6xJrn8oS1/pjeJJ4BtVtxQCzkjEz6x+iQGrYjklTyNEPcpkibpPOycDkaHcKGEBFcZbsDTT+TglOW64gqrLEuHnyVI4ehZaXjed6ztDXj7VtJ0+S7NnQXJSzeys014sEp1XOrZs0FTmC0nE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BR841ixi; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hkite6jM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DCF6C4CEED;
-	Tue,  3 Jun 2025 09:42:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748943754;
-	bh=dbV/utlJZsAmXKza9Scy8Pvl3ynRvyPanNSPnq6zrJg=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=Hkite6jMMxAGOm50Ea2u62+Aep6JFDMPsX1jjU94Oe8lbTEiQTz9l5H137JrOLWBa
-	 5fYPC67RSKTfte0X06ogcsaKBQ4iPotQCQMbY14IOv87Tp69e0Hgp7ecAlVZR77qEO
-	 XOne9yF+muIfRfuHG/LxGd+GiBC221jT6MHtyf9CwOFd6ju9pbeVGL5xRWrK4SmzE4
-	 Dm9pifWH9JD6cg7H9y3xl/zZcGvHalV/hWiuo6M3MjjPEF8E1p3HdIjAHHuMSGtSPG
-	 tP98ZDF1uXOaaIS928Q+u+Gvym9V1Z1Stdb7anXKpHMM9t/mBSkH4OMGTjoXwBGB0u
-	 fxlFJ4rNI0TDg==
-Date: Tue, 03 Jun 2025 04:42:32 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BR841ixi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748943762; x=1780479762;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=kcKdMQutOEKgdmq7s01p3u7WAiPjAfl0BL1BiOFHomo=;
+  b=BR841ixisZ7jvhFZ2n7+dHj8sOyvdTOnapxMVEI+u5jXiMRbqCj+xcV7
+   A+jby5rLo4zquTzHFAPXOj9XCIuTkSK/dO3fovoOTfrBE14Vesh5gOJ5s
+   uv5ewBMzxPJyzG39dt9eBR5zSkHh9SDQG0moF43/RqyKOh7lwEIEb+jtw
+   O/ZNakXuXPd6G/Th/de+M0tM08DfC6//Jjcxea0R7GKNAfhP5qxkZgUhE
+   7Wx/NcA7vmxOtMngiqAY4kbIIzY58xX4QW8D/ugMnW4B3de5ouU58T+ZD
+   tfA09lf4eNNX74LnWLwsEZ3UEjOA6RhX+8dszM+uih15yLUjp+H/ehvz7
+   w==;
+X-CSE-ConnectionGUID: C/rIUyQzQDKu18FGHwli9A==
+X-CSE-MsgGUID: Ms3707WsQi+dHPauflmfjg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="50893338"
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="50893338"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 02:42:41 -0700
+X-CSE-ConnectionGUID: +ZfSINAUTeWbfXcmTHC2wg==
+X-CSE-MsgGUID: 2RPOSoCgS3mDxMKlAqjW6w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="167988022"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.141])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 02:42:36 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 3 Jun 2025 12:42:33 +0300 (EEST)
+To: Hans Zhang <18255117159@163.com>
+cc: lpieralisi@kernel.org, bhelgaas@google.com, 
+    manivannan.sadhasivam@linaro.org, kw@linux.com, cassel@kernel.org, 
+    robh@kernel.org, jingoohan1@gmail.com, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v12 4/6] PCI: dwc: Use common PCI host bridge APIs for
+ finding the capabilities
+In-Reply-To: <20250514161258.93844-5-18255117159@163.com>
+Message-ID: <4f23df8e-bebe-149c-a638-be7208c8c71a@linux.intel.com>
+References: <20250514161258.93844-1-18255117159@163.com> <20250514161258.93844-5-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: krzk+dt@kernel.org, devicetree@vger.kernel.org, 
- linux-aspeed@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, 
- joel@jms.id.au, linux-kernel@vger.kernel.org, jassisinghbrar@gmail.com, 
- conor+dt@kernel.org, andrew@codeconstruct.com.au
-To: Jammy Huang <jammy_huang@aspeedtech.com>
-In-Reply-To: <20250603075450.133604-2-jammy_huang@aspeedtech.com>
-References: <20250603075450.133604-1-jammy_huang@aspeedtech.com>
- <20250603075450.133604-2-jammy_huang@aspeedtech.com>
-Message-Id: <174894375223.360822.13996455735829436919.robh@kernel.org>
-Subject: Re: [PATCH v1 1/2] dt-bindings: mailbox: Add ASPEED AST2700 series
- SoC
+Content-Type: text/plain; charset=US-ASCII
 
+On Thu, 15 May 2025, Hans Zhang wrote:
 
-On Tue, 03 Jun 2025 15:54:49 +0800, Jammy Huang wrote:
-> Introduce the mailbox module for AST27XX series SoC, which is responsible
-> for interchanging messages between asymmetric processors.
+> Use the PCI core is now exposing generic macros for the host bridges to
+> search for the PCIe capabilities, make use of them in the DWC driver.
 > 
-> Signed-off-by: Jammy Huang <jammy_huang@aspeedtech.com>
+> Signed-off-by: Hans Zhang <18255117159@163.com>
 > ---
->  .../mailbox/aspeed,ast2700-mailbox.yaml       | 61 +++++++++++++++++++
->  1 file changed, 61 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/aspeed,ast2700-mailbox.yaml
+> Changes since v11:
+> - Resolve compilation errors. s/dw_pcie_read_dbi/dw_pcie_read*_dbi
+> 
+> Changes since v10:
+> - None
+> 
+> Changes since v9:
+> - Resolved [v9 4/6] compilation error.
+>   The latest 6.15 rc1 merge __dw_pcie_find_vsec_capability, which uses 
+>   dw_pcie_find_next_ext_capability.
+> 
+> Changes since v8:
+> - None
+> 
+> Changes since v7:
+> - Resolve compilation errors.
+> 
+> Changes since v6:
+> https://lore.kernel.org/linux-pci/20250323164852.430546-3-18255117159@163.com/
+> 
+> - The patch commit message were modified.
+> 
+> Changes since v5:
+> https://lore.kernel.org/linux-pci/20250321163803.391056-3-18255117159@163.com/
+> 
+> - Kconfig add "select PCI_HOST_HELPERS"
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.c | 81 ++++----------------
+>  1 file changed, 14 insertions(+), 67 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 97d76d3dc066..7939411a24eb 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -205,83 +205,30 @@ void dw_pcie_version_detect(struct dw_pcie *pci)
+>  		pci->type = ver;
+>  }
+>  
+> -/*
+> - * These interfaces resemble the pci_find_*capability() interfaces, but these
+> - * are for configuring host controllers, which are bridges *to* PCI devices but
+> - * are not PCI devices themselves.
+> - */
+> -static u8 __dw_pcie_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
+> -				  u8 cap)
+> +static int dw_pcie_read_cfg(void *priv, int where, int size, u32 *val)
+>  {
+> -	u8 cap_id, next_cap_ptr;
+> -	u16 reg;
+> -
+> -	if (!cap_ptr)
+> -		return 0;
+> +	struct dw_pcie *pci = priv;
+>  
+> -	reg = dw_pcie_readw_dbi(pci, cap_ptr);
+> -	cap_id = (reg & 0x00ff);
+> -
+> -	if (cap_id > PCI_CAP_ID_MAX)
+> -		return 0;
+> -
+> -	if (cap_id == cap)
+> -		return cap_ptr;
+> +	if (size == 4)
+> +		*val = dw_pcie_readl_dbi(pci, where);
+> +	else if (size == 2)
+> +		*val = dw_pcie_readw_dbi(pci, where);
+> +	else if (size == 1)
+> +		*val = dw_pcie_readb_dbi(pci, where);
+
+Maybe here as well return error if the given size is invalid.
+>  
+> -	next_cap_ptr = (reg & 0xff00) >> 8;
+> -	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
+> +	return PCIBIOS_SUCCESSFUL;
+>  }
+>  
+>  u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
+>  {
+> -	u8 next_cap_ptr;
+> -	u16 reg;
+> -
+> -	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
+> -	next_cap_ptr = (reg & 0x00ff);
+> -
+> -	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
+> +	return PCI_FIND_NEXT_CAP_TTL(dw_pcie_read_cfg, PCI_CAPABILITY_LIST, cap,
+> +				     pci);
+>  }
+>  EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
+>  
+> -static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci, u16 start,
+> -					    u8 cap)
+> -{
+> -	u32 header;
+> -	int ttl;
+> -	int pos = PCI_CFG_SPACE_SIZE;
+> -
+> -	/* minimum 8 bytes per capability */
+> -	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
+> -
+> -	if (start)
+> -		pos = start;
+> -
+> -	header = dw_pcie_readl_dbi(pci, pos);
+> -	/*
+> -	 * If we have no capabilities, this is indicated by cap ID,
+> -	 * cap version and next pointer all being 0.
+> -	 */
+> -	if (header == 0)
+> -		return 0;
+> -
+> -	while (ttl-- > 0) {
+> -		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
+> -			return pos;
+> -
+> -		pos = PCI_EXT_CAP_NEXT(header);
+> -		if (pos < PCI_CFG_SPACE_SIZE)
+> -			break;
+> -
+> -		header = dw_pcie_readl_dbi(pci, pos);
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+>  u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
+>  {
+> -	return dw_pcie_find_next_ext_capability(pci, 0, cap);
+> +	return PCI_FIND_NEXT_EXT_CAPABILITY(dw_pcie_read_cfg, 0, cap, pci);
+>  }
+>  EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
+>  
+> @@ -294,8 +241,8 @@ static u16 __dw_pcie_find_vsec_capability(struct dw_pcie *pci, u16 vendor_id,
+>  	if (vendor_id != dw_pcie_readw_dbi(pci, PCI_VENDOR_ID))
+>  		return 0;
+>  
+> -	while ((vsec = dw_pcie_find_next_ext_capability(pci, vsec,
+> -						       PCI_EXT_CAP_ID_VNDR))) {
+> +	while ((vsec = PCI_FIND_NEXT_EXT_CAPABILITY(
+> +			dw_pcie_read_cfg, vsec, PCI_EXT_CAP_ID_VNDR, pci))) {
+
+Start the arguments from the first line and align the continuations to (.
+
+>  		header = dw_pcie_readl_dbi(pci, vsec + PCI_VNDR_HEADER);
+>  		if (PCI_VNDR_HEADER_ID(header) == vsec_id)
+>  			return vsec;
 > 
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-Error: Documentation/devicetree/bindings/mailbox/aspeed,ast2700-mailbox.example.dts:29.27-28 syntax error
-FATAL ERROR: Unable to parse input tree
-make[2]: *** [scripts/Makefile.dtbs:131: Documentation/devicetree/bindings/mailbox/aspeed,ast2700-mailbox.example.dtb] Error 1
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1519: dt_binding_check] Error 2
-make: *** [Makefile:248: __sub-make] Error 2
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250603075450.133604-2-jammy_huang@aspeedtech.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+-- 
+ i.
 
