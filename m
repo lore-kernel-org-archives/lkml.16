@@ -1,182 +1,362 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 398CC4C98
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 16:39:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E097F19C554
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 16:42:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748968796; cv=none; b=Qlj2Vifo0a7dUoA6DVH4NQvRcbN198qYNhBAM++SJIiCZUaXaSd6qlekr57+JPy8y4rxk/Fyk1FxegukzRjBBrMHj6p9tRXas77dGMFZFx1/eFkhWp2J/uwxk4t/2xs6yl6EuUjgfGGnWHZhqT/os/64QGeqrOdXDPYRt9zHV7I=
+	t=1748968931; cv=none; b=qIOqKF0+7mjzp9PTivZwn2wU+PExNz9uQJwGV/RUq5Ss0U0eKXlxnAZ80FdEERCXXZAe1iihu5NljgMxplzjc4nMWlWjAxCReWCVSW4p+6d5EcW7utST7WtWpeYwHWLUUbxUXpoj77nmp7kRgS+xT+AMDw1KKzg/ysqGWTA8epk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748968796; c=relaxed/simple;
-	bh=3oGZ0bCqtcXEfaMpat3M8zjURdp9ufeZObFypBxWjh4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=BwFMOlVj8D3KaI2XZ0RNdfVKQKg+kBIFRqYXWA0YU+vUZ8kpmvqcCNbREbY5nVy87pCUYBcbUwwZ64qNwM9RjIUXiLHvU6bbPnzEYfhN5CVQiXVKYtLTovcVm8y+eZVCq96LpU97FL7awb47DNRhthId9cgY9UZOGca/WJuvC7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=PPGNg801; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1748968931; c=relaxed/simple;
+	bh=zrKNirMsdjziCcAGApD/8ntDTx6uQnaRHnHcj6e/C6g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WGxcMgWVoOefQlqY7QWyVZQRvmiGUdY3Fj8OIr9Yg3YZ0E0+YucYSfTSrsJ13kXSHjRea5v6DjZuN0A08YPxaxDHaKrvH5g2JxmIvfgIz163GWLvDTAa4hmLK7LQ72a9T+YlIRa8b+XRSniXdxYhnFh1gjN5zVifgpaUgQgcPDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CTGCW58v; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PPGNg801"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 553FYCoA027571;
-	Tue, 3 Jun 2025 16:39:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=nK2gtG
-	y8nJgAy6Lqq0a/2oiQcZetp9Jonp+U9rtmqqk=; b=PPGNg801xWbMdU/pi/cF9U
-	RRmojYNcBGJ+rXdR7+LXOT2VIu9L26+U33dgdha0v+OiXSAy+3fUUpFxGwdT/SQp
-	814XZlRXEYwJqvKyVE/pmiuGLOC26LvQoC6xRlY4mzVFZ36xCZ38nOsOtRrvLmEe
-	Crh/3KUxbJSfiBTJHlWItNUZ1e4MmRLxCKORZDdCDHUMT03dIupS5p8hyTK5x/k6
-	U/6d4RlHzheMH4GEgCXnV8IwSrHqiLOP0fHxsDHx/mmQAKVajKGC1WjixxLUh/oV
-	OSko4HJYPlkTLhAUaRfWt+ZIj3uLOl8PwGSJn/V2N6COA68chK31IM2ilISzc7CA
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 471gw1wkhu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Jun 2025 16:39:41 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 553Dwmim028472;
-	Tue, 3 Jun 2025 16:39:41 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 470eakbg39-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Jun 2025 16:39:40 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 553GdbRH17629670
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 3 Jun 2025 16:39:37 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5067B20040;
-	Tue,  3 Jun 2025 16:39:37 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9278D20043;
-	Tue,  3 Jun 2025 16:39:33 +0000 (GMT)
-Received: from [9.43.67.159] (unknown [9.43.67.159])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  3 Jun 2025 16:39:33 +0000 (GMT)
-Message-ID: <47196e67-6533-4015-95db-63a76c1c0c5c@linux.ibm.com>
-Date: Tue, 3 Jun 2025 22:09:30 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CTGCW58v"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748968927;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XW5iA+IcoMvqOf0ndcrgPMgu4TWbTOSU4Ckyq0Vi+RE=;
+	b=CTGCW58vP4drg/zcLkrf/GXhq0MbaxtDA4fNHKJObZ5G6CaxvUVb1IBEp0WxjrTzP0Z+Tx
+	zeCAW9eauvev8oog7QkUFOGFz9bJMxekAs+p+KcF8n7keKZYeSnLypIUV6JUaJlXMSuJDz
+	0ksjr+m67QQU5G+mm3zX+RIrNpLLiPc=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-587-QUx9NeRNMqucTWmP5vySmw-1; Tue, 03 Jun 2025 12:42:06 -0400
+X-MC-Unique: QUx9NeRNMqucTWmP5vySmw-1
+X-Mimecast-MFC-AGG-ID: QUx9NeRNMqucTWmP5vySmw_1748968925
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5e28d0cc0so905090085a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 09:42:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748968925; x=1749573725;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XW5iA+IcoMvqOf0ndcrgPMgu4TWbTOSU4Ckyq0Vi+RE=;
+        b=tvFtzZCSDjELl4NZEVOXim2oQf+t9MWwjHh/uEFGZ2vMyykl8IHlCJHwrZN84L7BEq
+         I6/2wFY74KqTwZyph1t20qkgN8nOkdZjYe9ipFFaKhrPvxH0uxVcwkseeRaR3n8vse57
+         c5mU+PrCa6TME/nTSAi8e6yARvD1TZ48Qlr9DuTXX6ooDot7QPmbCca7TGD2Pe5wCiEc
+         QrA9N664gm/jxbXVTEr9Ssv5vhggp+9EEDjs7Mh8bxiqrzYX4pMBXrlBGg/wcJ0jIops
+         9ihRgnlSezlFXdTiaBTGNjzzmjRdaTnHyQSiODID7C2pZOSQnA3giM7/CQoCUuRf19aM
+         lpoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW98EnX0nYsn6x7jwrerjWi1SjFgvAJLu5mJyNX8wwqrVcPp/y3SkQEBWrjN7Kzpuu9gpm80S2n0NhZTAw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtthmzFchmqWuCOdkRROJAzFkeShjHlABOYQdFW6Brrw7ZmbYu
+	zzfhDR40F4pP2zfTbWEA6X0WeNow+vD7l6rxg/WePr7q0JhoukXUBC7Gb+Ym40shBF5t4Blcohk
+	2/Yldg8YzsLu7Q4RF8x6Ls5UMeikRkwnekWBiT5S9SgDd2CGbVQHHS4U+8aNAx5p88g==
+X-Gm-Gg: ASbGncvI8rNgTs2aiFaTN9vigkB4A7GBO0DkFB7T674EWX/QtV2Y5NM9iRiKVhbQCzW
+	uVIqWIqcH6EiMHf+GzYzlf/qTU9uiS9hRItpOu0r66yyRN0GLj8g535nZ7bM2Mn08GMXmWABx8Z
+	bb0gzO2gZQMfUmzkMeHNeae0u7pACP1e0wZRMkU4ZcGQCSgl/vDXRZlSLNmv8//j2HDs60SZ+6b
+	l8DsECWZHwISnKZFOB1bRhz2LQmoI+JA8bxajtaDyJG8GwzQ0U/UPZ1W/aldfMnhVlLmVhFAT4J
+	ccA=
+X-Received: by 2002:a05:620a:190c:b0:7d0:9da7:6941 with SMTP id af79cd13be357-7d0a201df56mr2833923785a.37.1748968924988;
+        Tue, 03 Jun 2025 09:42:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHNlgjeVsUhFeMqMzPsr8hOvznmRm5eUNpcsj+yPaaFc3gu0L6wkGYTMZrQGhj5zHFGM43GxA==
+X-Received: by 2002:a05:620a:190c:b0:7d0:9da7:6941 with SMTP id af79cd13be357-7d0a201df56mr2833919985a.37.1748968924554;
+        Tue, 03 Jun 2025 09:42:04 -0700 (PDT)
+Received: from x1.local ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fac6d33901sm82985226d6.18.2025.06.03.09.42.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 09:42:04 -0700 (PDT)
+Date: Tue, 3 Jun 2025 12:42:01 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Kairui Song <ryncsn@gmail.com>
+Cc: Barry Song <21cnbao@gmail.com>, linux-mm@kvack.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Andrea Arcangeli <aarcange@redhat.com>,
+	David Hildenbrand <david@redhat.com>,
+	Lokesh Gidra <lokeshgidra@google.com>, stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] mm: userfaultfd: fix race of userfaultfd_move and
+ swap cache
+Message-ID: <aD8l2ajsoAyAmonu@x1.local>
+References: <20250602181419.20478-1-ryncsn@gmail.com>
+ <aD4KyHz_H5WPLLf4@x1.local>
+ <CAGsJ_4wbU=4ECxNPEB0dKGXibrAKuR-N3i8wwmVCYAgWCuupnQ@mail.gmail.com>
+ <CAMgjq7C_nVynRpMV8xkyVuhpyDY6qZX_ShzxChen5Fh5gXSJVg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] kernel/rcu/tree_stall: add
- /sys/kernel/rcu_stall_count
-To: akpm@linux-foundation.org, Max Kellermann <max.kellermann@ionos.com>,
-        song@kernel.org, joel.granados@kernel.org, dianders@chromium.org,
-        cminyard@mvista.com, linux-kernel@vger.kernel.org
-References: <20250504180831.4190860-1-max.kellermann@ionos.com>
- <20250504180831.4190860-3-max.kellermann@ionos.com>
-Content-Language: en-US
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <20250504180831.4190860-3-max.kellermann@ionos.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAzMDE0MCBTYWx0ZWRfX6pOHfZ8oaXTy IiPvFbIJn/23IknO7658GgNehV+Xs0kkel6ich2VUJn3Twb5guiS7FZ6pCKNpiFLNC+po3/F6/n D8cxmWwjC1KFiaPpFpFTEnsnhTTpRzYUGA2MkuHpLUJl179jh1by/2sdx0ZYvG8TpOcdp1yqeuS
- 4R9cjuneeJfnICotbJATZUh4yFWXCU5ufORfxtqUVbfJ787X3OFIulAaav3Ce2/NnLF5bYZwn7S gb4dCRQLfsEOwscApSA55WkC+tAQ3csUi6hXrQqFS+5DWFiWqeME+ogdOVIrVzOHfvTrU/We1kv nYz23/vxLqjXXxi+VuyDqj0G/1j4/4Cjt7DfneHnrOZ43OGXX4AkHOe4cmwJ/f0eomEu92x/n9C
- fkhQdIEeZuvbzRvb8rLVvymHy+x2ebcsLRinjFBfx5C6dZ9hkT3ansQjJ0055f79W6kheyuA
-X-Proofpoint-ORIG-GUID: OGn1qN9b2Fsq-_ROqbI68IhVgb5YJHwG
-X-Authority-Analysis: v=2.4 cv=HcIUTjE8 c=1 sm=1 tr=0 ts=683f254d cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=UgJECxHJAAAA:8 a=VwQbUJbxAAAA:8 a=Y_zN7klmYV0XI4u_UmgA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=-El7cUbtino8hM1DCn8D:22
-X-Proofpoint-GUID: OGn1qN9b2Fsq-_ROqbI68IhVgb5YJHwG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-03_01,2025-06-02_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1011 mlxlogscore=999 suspectscore=0 malwarescore=0
- impostorscore=0 phishscore=0 spamscore=0 bulkscore=0 mlxscore=0
- adultscore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506030140
+In-Reply-To: <CAMgjq7C_nVynRpMV8xkyVuhpyDY6qZX_ShzxChen5Fh5gXSJVg@mail.gmail.com>
 
-Hello Andrew,
+On Tue, Jun 03, 2025 at 07:48:49PM +0800, Kairui Song wrote:
+> On Tue, Jun 3, 2025 at 6:08 AM Barry Song <21cnbao@gmail.com> wrote:
+> >
+> > On Tue, Jun 3, 2025 at 8:34 AM Peter Xu <peterx@redhat.com> wrote:
+> > >
+> > > On Tue, Jun 03, 2025 at 02:14:19AM +0800, Kairui Song wrote:
+> > > > From: Kairui Song <kasong@tencent.com>
+> > > >
+> > > > On seeing a swap entry PTE, userfaultfd_move does a lockless swap cache
+> > > > lookup, and try to move the found folio to the faulting vma when.
+> > > > Currently, it relies on the PTE value check to ensure the moved folio
+> > > > still belongs to the src swap entry, which turns out is not reliable.
+> > > >
+> > > > While working and reviewing the swap table series with Barry, following
+> > > > existing race is observed and reproduced [1]:
+> > > >
+> > > > ( move_pages_pte is moving src_pte to dst_pte, where src_pte is a
+> > > >  swap entry PTE holding swap entry S1, and S1 isn't in the swap cache.)
+> > > >
+> > > > CPU1                               CPU2
+> > > > userfaultfd_move
+> > > >   move_pages_pte()
+> > > >     entry = pte_to_swp_entry(orig_src_pte);
+> > > >     // Here it got entry = S1
+> > > >     ... < Somehow interrupted> ...
+> > > >                                    <swapin src_pte, alloc and use folio A>
+> > > >                                    // folio A is just a new allocated folio
+> > > >                                    // and get installed into src_pte
+> > > >                                    <frees swap entry S1>
+> > > >                                    // src_pte now points to folio A, S1
+> > > >                                    // has swap count == 0, it can be freed
+> > > >                                    // by folio_swap_swap or swap
+> > > >                                    // allocator's reclaim.
+> > > >                                    <try to swap out another folio B>
+> > > >                                    // folio B is a folio in another VMA.
+> > > >                                    <put folio B to swap cache using S1 >
+> > > >                                    // S1 is freed, folio B could use it
+> > > >                                    // for swap out with no problem.
+> > > >                                    ...
+> > > >     folio = filemap_get_folio(S1)
+> > > >     // Got folio B here !!!
+> > > >     ... < Somehow interrupted again> ...
+> > > >                                    <swapin folio B and free S1>
+> > > >                                    // Now S1 is free to be used again.
+> > > >                                    <swapout src_pte & folio A using S1>
+> > > >                                    // Now src_pte is a swap entry pte
+> > > >                                    // holding S1 again.
+> > > >     folio_trylock(folio)
+> > > >     move_swap_pte
+> > > >       double_pt_lock
+> > > >       is_pte_pages_stable
+> > > >       // Check passed because src_pte == S1
+> > > >       folio_move_anon_rmap(...)
+> > > >       // Moved invalid folio B here !!!
+> > > >
+> > > > The race window is very short and requires multiple collisions of
+> > > > multiple rare events, so it's very unlikely to happen, but with a
+> > > > deliberately constructed reproducer and increased time window, it can be
+> > > > reproduced [1].
+> > > >
+> > > > It's also possible that folio (A) is swapped in, and swapped out again
+> > > > after the filemap_get_folio lookup, in such case folio (A) may stay in
+> > > > swap cache so it needs to be moved too. In this case we should also try
+> > > > again so kernel won't miss a folio move.
+> > > >
+> > > > Fix this by checking if the folio is the valid swap cache folio after
+> > > > acquiring the folio lock, and checking the swap cache again after
+> > > > acquiring the src_pte lock.
+> > > >
+> > > > SWP_SYNCRHONIZE_IO path does make the problem more complex, but so far
+> > > > we don't need to worry about that since folios only might get exposed to
+> > > > swap cache in the swap out path, and it's covered in this patch too by
+> > > > checking the swap cache again after acquiring src_pte lock.
+> > >
+> > > [1]
+> > >
+> > > >
+> > > > Testing with a simple C program to allocate and move several GB of memory
+> > > > did not show any observable performance change.
+> > > >
+> > > > Cc: <stable@vger.kernel.org>
+> > > > Fixes: adef440691ba ("userfaultfd: UFFDIO_MOVE uABI")
+> > > > Closes: https://lore.kernel.org/linux-mm/CAMgjq7B1K=6OOrK2OUZ0-tqCzi+EJt+2_K97TPGoSt=9+JwP7Q@mail.gmail.com/ [1]
+> > > > Signed-off-by: Kairui Song <kasong@tencent.com>
+> > > >
+> > > > ---
+> > > >
+> > > > V1: https://lore.kernel.org/linux-mm/20250530201710.81365-1-ryncsn@gmail.com/
+> > > > Changes:
+> > > > - Check swap_map instead of doing a filemap lookup after acquiring the
+> > > >   PTE lock to minimize critical section overhead [ Barry Song, Lokesh Gidra ]
+> > > >
+> > > > V2: https://lore.kernel.org/linux-mm/20250601200108.23186-1-ryncsn@gmail.com/
+> > > > Changes:
+> > > > - Move the folio and swap check inside move_swap_pte to avoid skipping
+> > > >   the check and potential overhead [ Lokesh Gidra ]
+> > > > - Add a READ_ONCE for the swap_map read to ensure it reads a up to dated
+> > > >   value.
+> > > >
+> > > >  mm/userfaultfd.c | 23 +++++++++++++++++++++--
+> > > >  1 file changed, 21 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+> > > > index bc473ad21202..5dc05346e360 100644
+> > > > --- a/mm/userfaultfd.c
+> > > > +++ b/mm/userfaultfd.c
+> > > > @@ -1084,8 +1084,18 @@ static int move_swap_pte(struct mm_struct *mm, struct vm_area_struct *dst_vma,
+> > > >                        pte_t orig_dst_pte, pte_t orig_src_pte,
+> > > >                        pmd_t *dst_pmd, pmd_t dst_pmdval,
+> > > >                        spinlock_t *dst_ptl, spinlock_t *src_ptl,
+> > > > -                      struct folio *src_folio)
+> > > > +                      struct folio *src_folio,
+> > > > +                      struct swap_info_struct *si, swp_entry_t entry)
+> > > >  {
+> > > > +     /*
+> > > > +      * Check if the folio still belongs to the target swap entry after
+> > > > +      * acquiring the lock. Folio can be freed in the swap cache while
+> > > > +      * not locked.
+> > > > +      */
+> > > > +     if (src_folio && unlikely(!folio_test_swapcache(src_folio) ||
+> > > > +                               entry.val != src_folio->swap.val))
+> > > > +             return -EAGAIN;
+> > > > +
+> > > >       double_pt_lock(dst_ptl, src_ptl);
+> > > >
+> > > >       if (!is_pte_pages_stable(dst_pte, src_pte, orig_dst_pte, orig_src_pte,
+> > > > @@ -1102,6 +1112,15 @@ static int move_swap_pte(struct mm_struct *mm, struct vm_area_struct *dst_vma,
+> > > >       if (src_folio) {
+> > > >               folio_move_anon_rmap(src_folio, dst_vma);
+> > > >               src_folio->index = linear_page_index(dst_vma, dst_addr);
+> > > > +     } else {
+> > > > +             /*
+> > > > +              * Check if the swap entry is cached after acquiring the src_pte
+> > > > +              * lock. Or we might miss a new loaded swap cache folio.
+> > > > +              */
+> > > > +             if (READ_ONCE(si->swap_map[swp_offset(entry)]) & SWAP_HAS_CACHE) {
+> > >
+> > > Do we need data_race() for this, if this is an intentionally lockless read?
+> >
+> > Not entirely sure. But I recommend this pattern, borrowed from
 
-On 04/05/25 23:38, Max Kellermann wrote:
-> Exposing a simple counter to userspace for monitoring tools.
->
-> Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
-> ---
-> v1 -> v2: added documentation
-> ---
->   .../ABI/testing/sysfs-kernel-rcu_stall_count  |  6 +++++
->   kernel/rcu/tree_stall.h                       | 26 +++++++++++++++++++
->   2 files changed, 32 insertions(+)
->   create mode 100644 Documentation/ABI/testing/sysfs-kernel-rcu_stall_count
->
-> diff --git a/Documentation/ABI/testing/sysfs-kernel-rcu_stall_count b/Documentation/ABI/testing/sysfs-kernel-rcu_stall_count
-> new file mode 100644
-> index 000000000000..a4a97a7f4a4d
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-kernel-rcu_stall_count
-> @@ -0,0 +1,6 @@
-> +What:		/sys/kernel/rcu_stall_count
-> +Date:		May 2025
-> +KernelVersion:	6.16
-> +Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
-> +Description:
-> +		Shows how many times the system has detected an RCU stall since last boot.
-> diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
-> index 925fcdad5dea..158330524795 100644
-> --- a/kernel/rcu/tree_stall.h
-> +++ b/kernel/rcu/tree_stall.h
-> @@ -20,6 +20,28 @@
->   int sysctl_panic_on_rcu_stall __read_mostly;
->   int sysctl_max_rcu_stall_to_panic __read_mostly;
->   
-> +#ifdef CONFIG_SYSFS
-> +
-> +static unsigned int rcu_stall_count;
-> +
-> +static ssize_t rcu_stall_count_show(struct kobject *kobj, struct kobj_attribute *attr,
-> +				    char *page)
-> +{
-> +	return sysfs_emit(page, "%u\n", rcu_stall_count);
-> +}
-> +
-> +static struct kobj_attribute rcu_stall_count_attr = __ATTR_RO(rcu_stall_count);
-> +
-> +static __init int kernel_rcu_stall_sysfs_init(void)
-> +{
-> +	sysfs_add_file_to_group(kernel_kobj, &rcu_stall_count_attr.attr, NULL);
-> +	return 0;
-> +}
-> +
-> +late_initcall(kernel_rcu_stall_sysfs_init);
-> +
-> +#endif // CONFIG_SYSFS
-> +
->   #ifdef CONFIG_PROVE_RCU
->   #define RCU_STALL_DELAY_DELTA		(5 * HZ)
->   #else
-> @@ -784,6 +806,10 @@ static void check_cpu_stall(struct rcu_data *rdp)
->   		if (kvm_check_and_clear_guest_paused())
->   			return;
->   
-> +#ifdef CONFIG_SYSFS
-> +		++rcu_stall_count;
-> +#endif
-> +
->   		rcu_stall_notifier_call_chain(RCU_STALL_NOTIFY_NORM, (void *)j - gps);
->   		if (READ_ONCE(csd_lock_suppress_rcu_stall) && csd_lock_is_stuck()) {
->   			pr_err("INFO: %s detected stall, but suppressed full report due to a stuck CSD-lock.\n", rcu_state.name);
+AFAIU data_race() is only for KCSAN.  READ_ONCE/WRITE_ONCE will also be
+needed.  The doc actually explicitly mentioned this case:
 
-It seems like this patch was not applied properly to the upstream tree.
+/*
+ * ...
+ * be atomic *and* KCSAN should ignore the access, use both data_race()
+ * and READ_ONCE(), for example, data_race(READ_ONCE(x)).
+ */
+#define data_race(expr)							\
 
-Out of the three hunks in this patch, only the first one is applied; the 
-second
-and third hunks are missing.
+I'm ok if there're existing references of swap_map[], so even if it's good
+to have data_race() we can do that later until someone complains at all the
+spots..
 
-commit 2536c5c7d6ae5e1d844aa21f28b326b5e7f815ef
-Author: Max Kellermann <max.kellermann@ionos.com>
-Date:   Sun May 4 20:08:31 2025 +0200
+> > zap_nonpresent_ptes() -> free_swap_and_cache_nr(),
+> > where the PTL is also held and READ_ONCE is used.
+> >
+> >                 if (READ_ONCE(si->swap_map[offset]) == SWAP_HAS_CACHE) {
+> >                        ..
+> >                         nr = __try_to_reclaim_swap(si, offset,
+> >                                                    TTRS_UNMAPPED | TTRS_FULL);
+> >
+> >                         if (nr == 0)
+> >                                 nr = 1;
+> >                         else if (nr < 0)
+> >                                 nr = -nr;
+> >                         nr = ALIGN(offset + 1, nr) - offset;
+> >                 }
+> 
+> Thanks for the explanation, I also agree that holding PTL here is good
+> enough here.
+> 
+> >
+> > I think we could use this to further optimize the existing
+> > filemap_get_folio(), since in the vast majority of cases we don't
+> > have a swapcache, yet we still always call filemap_get_folio().
+> >
+> > diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+> > index bc473ad21202..c527ec73c3b4 100644
+> > --- a/mm/userfaultfd.c
+> > +++ b/mm/userfaultfd.c
+> >
+> > @@ -1388,7 +1388,7 @@ static int move_pages_pte(struct mm_struct *mm,
+> > pmd_t *dst_pmd, pmd_t *src_pmd,
+> >                  * folios in the swapcache. This issue needs to be resolved
+> >                  * separately to allow proper handling.
+> >                  */
+> >
+> > -               if (!src_folio)
+> > +               if (!src_folio & (swap_map[offset] & SWAP_HAS_CACHE))
+> >                         folio = filemap_get_folio(swap_address_space(entry),
+> >                                         swap_cache_index(entry));
+> >                 if (!IS_ERR_OR_NULL(folio)) {
+> >
+> > To be future-proof, we may want to keep the READ_ONCE to ensure
+> > the compiler doesn't skip the second read inside move_swap_pte().
+> 
+> Maybe we can do this optimization in another patch I think.
+> 
+> >
+> > >
+> > > Another pure swap question: the comment seems to imply this whole thing is
+> > > protected by src_pte lock, but is it?
+> > >
+> > > I'm not familiar enough with swap code, but it looks to me the folio can be
+> > > added into swap cache and set swap_map[] with SWAP_HAS_CACHE as long as the
+> > > folio is locked.  It doesn't seem to be directly protected by pgtable lock.
+> > >
+> > > Perhaps you meant this: since src_pte lock is held, then it'll serialize
+> > > with another thread B concurrently swap-in the swap entry, but only _later_
+> > > when thread B's do_swap_page() will check again on pte_same(), then it'll
+> > > see the src pte gone (after thread A uffdio_move happened releasing src_pte
+> > > lock), hence thread B will release the newly allocated swap cache folio?
+> > >
+> > > There's another trivial detail that IIUC pte_same() must fail because
+> > > before/after the uffdio_move the swap entry will be occupied so no way to
+> > > have it reused, hence src_pte, even if re-populated again after uffdio_move
+> > > succeeded, cannot become the orig_pte (points to the swap entry in
+> > > question) that thread B read, hence pte_same() must check fail.
+> >
+> > in v1 of this patch, we had some similar discussions [1][2]:
+> >
+> > [1] https://lore.kernel.org/linux-mm/CAGsJ_4wBMxQSeoTwpKoWwEGRAr=iohbYf64aYyJ55t0Z11FkwA@mail.gmail.com/
+> > [2] https://lore.kernel.org/linux-mm/CAGsJ_4wM8Tph0Mbc-1Y9xNjgMPL7gqEjp=ArBuv3cJijHVXe6w@mail.gmail.com/
+> >
+> > At the very least, [2] is possible, although the probability is extremely low.
+> >
+> > "It seems also possible for the sync zRAM device.
+> >
+> >  step 1: src pte points to a swap entry S without swapcache
+> >  step 2: we call move_swap_pte()
+> >  step 3: someone swap-in src_pte by sync path, no swapcache; swap slot
+> > S is freed.
+> >              -- for zRAM;
+> >  step 4: someone swap-out src_pte, get the exactly same swap slot S as step 1,
+> >              adds folio to swapcache due to swapout;
+> >  step 5: move_swap_pte() gets ptl and finds page tables are stable
+> > since swap-out
+> >              happens to have the same swap slot as step1;
+> >  step 6: we clear src_pte, move src_pte to dst_pte; but miss to move the folio.
+> >
+> > Yep, we really need to re-check pte for swapcache after holding PTL.
+> > "
+> >
+> > Personally, I agree that improving the changelog or the comments
+> > would be more helpful. In fact, there are two bugs here, and Kairui’s
+> > changelog clearly describes the first one.
+> 
+> Yeah, the first one is quite a long and complex race already, so I
+> made the description on the second issue shorter. I thought it
+> wouldn't be too difficult to understand given the first example. I can
+> add some more details.
 
-     kernel/rcu/tree_stall: add /sys/kernel/rcu_stall_count
+IMHO it's not about how the race happens that is hard to follow.  To me,
+it's harder to follow on how src_pte lock can prove READ_ONCE() of
+swap_map[] is valid.  Especially, on why it's okay to read even false
+negative (relies on the other thread retry properly in do_swap_page).
 
-     Expose a simple counter to userspace for monitoring tools.
-
+It'll be much appreciated if you could add something into either comments
+or git commit message on this. Maybe a link to this specific lore
+discussion (or v1's) would be helpful.
 
 Thanks,
-Sourabh Jain
+
+-- 
+Peter Xu
+
