@@ -1,224 +1,217 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37027281524
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 09:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 891A818DB29;
+	Tue,  3 Jun 2025 09:20:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748942410; cv=none; b=L3SGNzU0/3Fy3z4Du1A5fAXmA79wdRU2TgXWizRh6rla3q9FZ0KNMumR8tahDi05WOtFJjo9scPLvGGb8uXe3mlhdZK6qWZw9MBygzt6rV7QM0p9qMu3BmH7BgxOVgGfvLtbpq+7aN+SsIfa7SHNX2QPyvCD2W5X4mkgiKyDaZc=
+	t=1748942439; cv=none; b=L6fqDWHBODVtvHFAiNBxphL9WxZZM5IWs/rSxdWGAPwxn47e1Gi+jb3K1Q64PqW4ECfc0cCWAVV9LoCDddt08dr3F1AQdZ7i5gQLuV3edU4J6WOoveTWLLs4Sv7YFtpWJiepigcsot0DoTicDroP6wP+iFanfWFtK3vyZtkIzPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748942410; c=relaxed/simple;
-	bh=XNyKE9JYr7iSbl1N3+GFaNhJw2CoHiZvplDWoLBvPPE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JGkplh+j4ze4F/AJTOEakkuHAPcjj6Vy/P4fOYhPNSayuA18v75ZgdYY8zylutRXwtqm9eIeeC/FE3GgwUX+FxC5nAWMYm9GrQMW5DLGyB5aJIPeNdWfH1x+p4S8xILaTb5pfdVMIj1c75xw5tvwK9rcDXqeHMHh2AH7jm/NUnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PrOXRRZ/; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PrOXRRZ/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748942407;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=d7M1AZ3966x5zRLHqsBAGaKfG5mjdKDTJHZg7JOKy6U=;
-	b=PrOXRRZ/nPCizAn4yqMZnfgjJhMgNDRoeq6RkxRYhsGRyKTDiXBu+jNsFQpY5qoFhyoS8G
-	1QaD5B2RchFZsI/5+V1CpKmtCRpHyLbwJWgOE8Kpe44HT5si5C/Jwf5SFZQeVygOnWX5h3
-	ezxOFmtaVQNPsszF9RS/54u4ADp3Sg4=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-440-lZ36ZsLgMIWjBWnIaudKQw-1; Tue,
- 03 Jun 2025 05:20:02 -0400
-X-MC-Unique: lZ36ZsLgMIWjBWnIaudKQw-1
-X-Mimecast-MFC-AGG-ID: lZ36ZsLgMIWjBWnIaudKQw_1748942400
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B42DA180034A;
-	Tue,  3 Jun 2025 09:19:59 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.44.33.45])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 88E9F1955D95;
-	Tue,  3 Jun 2025 09:19:52 +0000 (UTC)
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
-To: x86@kernel.org
-Cc: linux-efi@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Peter Jones <pjones@redhat.com>,
-	Daniel Berrange <berrange@redhat.com>,
-	Emanuele Giuseppe Esposito <eesposit@redhat.com>,
-	Gerd Hoffmann <kraxel@redhat.com>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Luca Boccassi <bluca@debian.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Matthew Garrett <mjg59@srcf.ucam.org>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Eric Snowberg <eric.snowberg@oracle.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND v3] x86/efi: Implement support for embedding SBAT data for x86
-Date: Tue,  3 Jun 2025 11:19:51 +0200
-Message-ID: <20250603091951.57775-1-vkuznets@redhat.com>
+	s=arc-20240116; t=1748942439; c=relaxed/simple;
+	bh=p9NjpU4OCCgM7bTR4DIZZaxlvncFkcQUC79/F9rivEk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ktMNihGruZIl+v801DfnzEGsvbnBcDg07lqpFfl+cTCGlfdDSlg+4pLnrqpTxRMqyMGdoq4Nz1lWAqHpp37gf3gvJtNNPKzjAMnvhN8EX1vDaocq4IwXinQKZAY9Q9XtDXF55JE1VWYy7atztnjnagryWesvhWPUezM05EpQ6Ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4bBPbv4FNNz9s92;
+	Tue,  3 Jun 2025 10:52:27 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id U7IUxrE3Y_nw; Tue,  3 Jun 2025 10:52:27 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4bBPbm3Y1Nz9vY6;
+	Tue,  3 Jun 2025 10:52:20 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 742888B765;
+	Tue,  3 Jun 2025 10:52:20 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id IcNMaBpAWABq; Tue,  3 Jun 2025 10:52:20 +0200 (CEST)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id CD8958B763;
+	Tue,  3 Jun 2025 10:52:19 +0200 (CEST)
+Message-ID: <840249c5-2602-4178-a408-f7d502111f79@csgroup.eu>
+Date: Tue, 3 Jun 2025 10:52:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] powerpc/ftrace: support CONFIG_FUNCTION_GRAPH_RETVAL
+To: Aditya Bodkhe <adityab1@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
+ rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com,
+ Aditya Bodkhe <aditya.b1@linux.ibm.com>
+References: <20250528134820.74121-1-adityab1@linux.ibm.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20250528134820.74121-1-adityab1@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Similar to zboot architectures, implement support for embedding SBAT data
-for x86. Put '.sbat' section in between '.data' and '.text' as the former
-also covers '.bss' and '.pgtable' and thus must be the last one in the
-file.
 
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
-The patch was previously sent as part of "[PATCH v3 0/2] efi: Add a
- mechanism for embedding SBAT section" series. The main patch has
-already made it upstream through Ard's 'efi' tree (see commit 0f9a1739dd0e
-"efi: zboot specific mechanism for embedding SBAT section") but x86 part
-is still pending. Resending so it doesn't get lost.
 
- arch/x86/boot/Makefile                 |  2 +-
- arch/x86/boot/compressed/Makefile      |  5 +++++
- arch/x86/boot/compressed/sbat.S        |  7 ++++++
- arch/x86/boot/compressed/vmlinux.lds.S |  8 +++++++
- arch/x86/boot/header.S                 | 31 ++++++++++++++++++--------
- drivers/firmware/efi/Kconfig           |  2 +-
- 6 files changed, 44 insertions(+), 11 deletions(-)
- create mode 100644 arch/x86/boot/compressed/sbat.S
+Le 28/05/2025 à 15:48, Aditya Bodkhe a écrit :
+> [Vous ne recevez pas souvent de courriers de adityab1@linux.ibm.com. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
+> 
+> From: Aditya Bodkhe <aditya.b1@linux.ibm.com>
+> 
+> commit a1be9ccc57f0 ("function_graph: Support recording and printing the
+> return value of function") introduced support for function graph return
+> value tracing.
+> 
+> Additionally, commit a3ed4157b7d8 ("fgraph: Replace fgraph_ret_regs with
+> ftrace_regs") further refactored and optimized the implementation,
+> making `struct fgraph_ret_regs` unnecessary.
+> 
+> This patch enables the above modifications for powerpc64, ensuring that
+> function graph return value tracing is available on this architecture.
 
-diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
-index 640fcac3af74..3f9fb3698d66 100644
---- a/arch/x86/boot/Makefile
-+++ b/arch/x86/boot/Makefile
-@@ -71,7 +71,7 @@ $(obj)/vmlinux.bin: $(obj)/compressed/vmlinux FORCE
- 
- SETUP_OBJS = $(addprefix $(obj)/,$(setup-y))
- 
--sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [a-zA-Z] \(startup_32\|efi.._stub_entry\|efi\(32\)\?_pe_entry\|input_data\|kernel_info\|_end\|_ehead\|_text\|_e\?data\|z_.*\)$$/\#define ZO_\2 0x\1/p'
-+sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [a-zA-Z] \(startup_32\|efi.._stub_entry\|efi\(32\)\?_pe_entry\|input_data\|kernel_info\|_end\|_ehead\|_text\|_e\?data\|_e\?sbat\|z_.*\)$$/\#define ZO_\2 0x\1/p'
- 
- quiet_cmd_zoffset = ZOFFSET $@
-       cmd_zoffset = $(NM) $< | sed -n $(sed-zoffset) > $@
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index f4f7b22d8113..3a38fdcdb9bd 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -106,6 +106,11 @@ vmlinux-objs-$(CONFIG_UNACCEPTED_MEMORY) += $(obj)/mem.o
- vmlinux-objs-$(CONFIG_EFI) += $(obj)/efi.o
- vmlinux-libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
- vmlinux-libs-$(CONFIG_X86_64)	+= $(objtree)/arch/x86/boot/startup/lib.a
-+vmlinux-objs-$(CONFIG_EFI_SBAT) += $(obj)/sbat.o
-+
-+ifdef CONFIG_EFI_SBAT
-+$(obj)/sbat.o: $(CONFIG_EFI_SBAT_FILE)
-+endif
- 
- $(obj)/vmlinux: $(vmlinux-objs-y) $(vmlinux-libs-y) FORCE
- 	$(call if_changed,ld)
-diff --git a/arch/x86/boot/compressed/sbat.S b/arch/x86/boot/compressed/sbat.S
-new file mode 100644
-index 000000000000..838f70a997dd
---- /dev/null
-+++ b/arch/x86/boot/compressed/sbat.S
-@@ -0,0 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Embed SBAT data in the kernel.
-+ */
-+	.pushsection ".sbat", "a", @progbits
-+	.incbin CONFIG_EFI_SBAT_FILE
-+	.popsection
-diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-index 3b2bc61c9408..587ce3e7c504 100644
---- a/arch/x86/boot/compressed/vmlinux.lds.S
-+++ b/arch/x86/boot/compressed/vmlinux.lds.S
-@@ -43,6 +43,14 @@ SECTIONS
- 		*(.rodata.*)
- 		_erodata = . ;
- 	}
-+#ifdef CONFIG_EFI_SBAT
-+	.sbat : ALIGN(0x1000) {
-+		_sbat = . ;
-+		*(.sbat)
-+		_esbat = ALIGN(0x1000);
-+		. = _esbat;
-+	}
-+#endif
- 	.data :	ALIGN(0x1000) {
- 		_data = . ;
- 		*(.data)
-diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
-index e1f4fd5bc8ee..9bea5a1e2c52 100644
---- a/arch/x86/boot/header.S
-+++ b/arch/x86/boot/header.S
-@@ -179,15 +179,11 @@ pecompat_fstart:
- #else
- 	.set	pecompat_fstart, setup_size
- #endif
--	.ascii	".text"
--	.byte	0
--	.byte	0
--	.byte	0
--	.long	ZO__data
--	.long	setup_size
--	.long	ZO__data			# Size of initialized data
--						# on disk
--	.long	setup_size
-+	.ascii	".text\0\0\0"
-+	.long	textsize            		# VirtualSize
-+	.long	setup_size			# VirtualAddress
-+	.long	textsize			# SizeOfRawData
-+	.long	setup_size			# PointerToRawData
- 	.long	0				# PointerToRelocations
- 	.long	0				# PointerToLineNumbers
- 	.word	0				# NumberOfRelocations
-@@ -196,6 +192,23 @@ pecompat_fstart:
- 		IMAGE_SCN_MEM_READ		| \
- 		IMAGE_SCN_MEM_EXECUTE		# Characteristics
- 
-+#ifdef CONFIG_EFI_SBAT
-+	.ascii	".sbat\0\0\0"
-+	.long	ZO__esbat - ZO__sbat            # VirtualSize
-+	.long	setup_size + ZO__sbat           # VirtualAddress
-+	.long	ZO__esbat - ZO__sbat            # SizeOfRawData
-+	.long	setup_size + ZO__sbat           # PointerToRawData
-+
-+	.long	0, 0, 0
-+	.long	IMAGE_SCN_CNT_INITIALIZED_DATA	| \
-+		IMAGE_SCN_MEM_READ		| \
-+		IMAGE_SCN_MEM_DISCARDABLE	# Characteristics
-+
-+	.set	textsize, ZO__sbat
-+#else
-+	.set	textsize, ZO__data
-+#endif
-+
- 	.ascii	".data\0\0\0"
- 	.long	ZO__end - ZO__data		# VirtualSize
- 	.long	setup_size + ZO__data		# VirtualAddress
-diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
-index db8c5c03d3a2..16baa038d412 100644
---- a/drivers/firmware/efi/Kconfig
-+++ b/drivers/firmware/efi/Kconfig
-@@ -286,7 +286,7 @@ config EFI_SBAT
- 
- config EFI_SBAT_FILE
- 	string "Embedded SBAT section file path"
--	depends on EFI_ZBOOT
-+	depends on EFI_ZBOOT || (EFI_STUB && X86)
- 	help
- 	  SBAT section provides a way to improve SecureBoot revocations of UEFI
- 	  binaries by introducing a generation-based mechanism. With SBAT, older
--- 
-2.49.0
+Why only powerpc64 ?
+
+I see nothing specific to powerpc64 in your patch, will it work on 
+powerpc32 too ?
+
+> 
+> After this patch, v6.14+ kernel can also be built with FPROBE on powerpc
+> but there are a few other build and runtime dependencies for FPROBE to
+> work properly. The next patch addresses them.
+> 
+> Signed-off-by: Aditya Bodkhe <aditya.b1@linux.ibm.com>
+> ---
+>   arch/powerpc/Kconfig                     |  1 +
+>   arch/powerpc/include/asm/ftrace.h        | 15 +++++++++
+>   arch/powerpc/kernel/trace/ftrace_entry.S | 41 ++++++++++++++----------
+>   3 files changed, 40 insertions(+), 17 deletions(-)
+> 
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index c3e0cc83f120..9163521bc4b9 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -250,6 +250,7 @@ config PPC
+>          select HAVE_FUNCTION_ARG_ACCESS_API
+>          select HAVE_FUNCTION_DESCRIPTORS        if PPC64_ELF_ABI_V1
+>          select HAVE_FUNCTION_ERROR_INJECTION
+> +       select HAVE_FUNCTION_GRAPH_FREGS
+>          select HAVE_FUNCTION_GRAPH_TRACER
+>          select HAVE_FUNCTION_TRACER             if !COMPILE_TEST && (PPC64 || (PPC32 && CC_IS_GCC))
+>          select HAVE_GCC_PLUGINS                 if GCC_VERSION >= 50200   # plugin support on gcc <= 5.1 is buggy on PPC
+> diff --git a/arch/powerpc/include/asm/ftrace.h b/arch/powerpc/include/asm/ftrace.h
+> index 82da7c7a1d12..6ffc9c9cf4e3 100644
+> --- a/arch/powerpc/include/asm/ftrace.h
+> +++ b/arch/powerpc/include/asm/ftrace.h
+> @@ -50,6 +50,21 @@ static __always_inline struct pt_regs *arch_ftrace_get_regs(struct ftrace_regs *
+>                  asm volatile("mfmsr %0" : "=r" ((_regs)->msr)); \
+>          } while (0)
+> 
+> +#undef ftrace_regs_get_return_value
+> +static __always_inline unsigned long
+> +ftrace_regs_get_return_value(const struct ftrace_regs *fregs)
+> +{
+> +       return arch_ftrace_regs(fregs)->regs.gpr[3];
+> +}
+> +#define ftrace_regs_get_return_value ftrace_regs_get_return_value
+> +
+> +#undef ftrace_regs_get_frame_pointer
+> +static __always_inline unsigned long
+> +ftrace_regs_get_frame_pointer(const struct ftrace_regs *fregs)
+> +{
+> +       return arch_ftrace_regs(fregs)->regs.gpr[1];
+> +}
+> +
+
+Why unset and redefine ftrace_regs_get_return_value() and 
+ftrace_regs_get_frame_pointer() ? Please explain why the default ones 
+can't be used on powerpc.
+
+>   static __always_inline void
+>   ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs,
+>                                      unsigned long ip)
+> diff --git a/arch/powerpc/kernel/trace/ftrace_entry.S b/arch/powerpc/kernel/trace/ftrace_entry.S
+> index 3565c67fc638..eafbfb7584ed 100644
+> --- a/arch/powerpc/kernel/trace/ftrace_entry.S
+> +++ b/arch/powerpc/kernel/trace/ftrace_entry.S
+> @@ -409,23 +409,30 @@ EXPORT_SYMBOL(_mcount)
+>   _GLOBAL(return_to_handler)
+>          /* need to save return values */
+>   #ifdef CONFIG_PPC64
+> -       std     r4,  -32(r1)
+> -       std     r3,  -24(r1)
+> +       stdu    r1, -SWITCH_FRAME_SIZE(r1)
+> +       std     r4, GPR4(r1)
+> +       std     r3, GPR3(r1)
+> +  /* Save previous stack pointer (r1) */
+> +       addi    r3, r1, SWITCH_FRAME_SIZE
+> +       std     r3, GPR1(r1)
+>          /* save TOC */
+> -       std     r2,  -16(r1)
+> -       std     r31, -8(r1)
+> +       std     r2,  24(r1)
+> +       std     r31, 32(r1)
+>          mr      r31, r1
+> -       stdu    r1, -112(r1)
+> -
+> +  /* pass ftrace_regs/pt_regs to ftrace_return_to_handler */
+> +       addi    r3,  r1, STACK_INT_FRAME_REGS
+
+Some of the changes seems to only be renaming and should be done in a 
+cleanup/preparatory patch in order to only focus on real necessary 
+changes in this patch.
+
+>          /*
+>           * We might be called from a module.
+>           * Switch to our TOC to run inside the core kernel.
+>           */
+>          LOAD_PACA_TOC()
+>   #else
+> -       stwu    r1, -16(r1)
+> -       stw     r3, 8(r1)
+> -       stw     r4, 12(r1)
+> +       stwu    r1, -SWITCH_FRAME_SIZE(r1)
+
+Why do we need such a big frame size just to save two registers ?
+
+> +       stw     r4, GPR4(r1)
+> +       stw     r3, GPR3(r1)
+> +       addi    r3, r1, SWITCH_FRAME_SIZE
+> +       stw     r3, GPR1(r1)
+ > +       addi    r3, r1, STACK_INT_FRAME_REGS
+
+Why is this needed ?
+
+>   #endif
+> 
+>          bl      ftrace_return_to_handler
+> @@ -435,15 +442,15 @@ _GLOBAL(return_to_handler)
+>          mtlr    r3
+> 
+>   #ifdef CONFIG_PPC64
+> -       ld      r1, 0(r1)
+> -       ld      r4,  -32(r1)
+> -       ld      r3,  -24(r1)
+> -       ld      r2,  -16(r1)
+> -       ld      r31, -8(r1)
+> +       ld      r4,  GPR4(r1)
+> +       ld      r3,  GPR3(r1)
+> +       ld      r2,  24(r1)
+> +       ld      r31, 32(r1)
+> +       ld      r1,  0(r1)
+>   #else
+> -       lwz     r3, 8(r1)
+> -       lwz     r4, 12(r1)
+> -       addi    r1, r1, 16
+> +       lwz     r3, GPR3(r1)
+> +       lwz     r4, GPR4(r1)
+> +       addi    r1, r1, SWITCH_FRAME_SIZE
+>   #endif
+> 
+>          /* Jump back to real return address */
+> --
+> 2.43.5
+> 
 
