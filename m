@@ -1,139 +1,173 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2B71E5B9A
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 17:55:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5AAF1E885A
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 17:55:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748973321; cv=none; b=cPXUsYi7nqGXhu0ynuIj8bXhWanELtT+qq4tKrDgtVyQb6jbLGBFOGLfsmZs+j6mYDwFdfAKkg6GFgMrRpSQnqMD9qb2kCNqzCiFu8hB+bg4tgjvNM/Qwn9ehLCLjHvsMvekinb2Lr3uZzIE1ZCpG9cQcwHsXprno3512nrRMCY=
+	t=1748973330; cv=none; b=MTr5wyfN+vHe7e9Hb/rTX3Z+pq9zLB4BtipfLoWGNaufqcApBVZOUkbKYigDrah2sJSj4BQpTp7xDn9CjdlHJrLBheIVqGY4Rn2qLLzZQwu6SeehkPTn9vqNrlQ3+rGDndFEvh9OurDe++j0PnxIUXj1S66YBgsyVmebW73M8Js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748973321; c=relaxed/simple;
-	bh=Zynt2xYe4yLXyl+ZNUkX5fnAcUYRdDyO5jFQWOfl0z4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IB2xEoii5XEsvlD5U18BkoM2kNk1i5EWBRe1SeUNRLEkBz55xD8NxwaXETf2aF2/LZwSHCgn/xkg8xajFcKTtHN0RWAPr1KDZHKcYhcIF8MzaJq7xv/UfEqrhPz4jXU4KEmz51prZ9mSwuPnXpRsjJ8XsER9RR7lMclFbUA9SAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Uai4lAgN; arc=none smtp.client-ip=209.85.214.169
+	s=arc-20240116; t=1748973330; c=relaxed/simple;
+	bh=c45GtF2NgyQzejp5bMuW+j3uJNUfGruUk0n0QKANtRg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ASYYHNLTsEi4hDVlaZNteM/hru+xqMv3zCTea93898/L+gNdrhYFNSubtO+c1GWLtiX8bzP3kkeQS00O8YPMh/gPcK6qqs5k3I7YME0qbwKZYPUAQhUgIjSve8LlA8agm4Ir9KWZdrX9wlZZY136hkzvp1wA+CnLoA1QWnVbwPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BjkV/1HZ; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Uai4lAgN"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-234fcadde3eso70818055ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 10:55:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BjkV/1HZ"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-450d726f61aso6475e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 10:55:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748973319; x=1749578119; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wmWUl9C985EL5CPivjVUp+r9x59BJAZUaKZ7PmzbsT0=;
-        b=Uai4lAgNjGyKwfWkEPE2cR3ZTrsSVshwOqYsCF+PlZ2RqV2VP+FoWgmCmEIFuYnu2b
-         aF9c+OQGaqOPbQb403yHwjMECDOzH9FOrxUm2dCBb3Yy2ncGOGbkKeDThJt2ouE35BOm
-         C20LcYOxWlIKeU2m7j8paCifnMt6xe+UbAD+nuO9dkyrVN8pl//y8rNrzIhWKQWOXSdk
-         njYQkkSvd6wAEYXn4TUTN+77V7oaaHk1pKTTyE1BUdO02cOVySY93zsUEkGeLeFwDgbO
-         HUOaVi+H437sW9/LPjODC7iJh1yUDHaapqDRTkJVb67wlYu3RCBMbHbzsCXW6TI92ZUI
-         0kXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748973319; x=1749578119;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1748973327; x=1749578127; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wmWUl9C985EL5CPivjVUp+r9x59BJAZUaKZ7PmzbsT0=;
-        b=bSPZASn/cJ07wW3OTJEwZVNPBcPXa7TuHvs3Rx30Lj4RMl1BXuHR7tWjn/HOwnFluL
-         6bGATLQlLIuYXMZTni8eqj40oXFJ5PY9/03Vi/rjL3qZSQuVD2yn3gYezELzchxCpp2A
-         h8KTSTGWRko9flnSDselnWImjos1lIgyMHCfnG3JW+UbnNTqCKXggAnyKspPDM16my1N
-         0lfb77jeasYxD7BeOzvQBFRJbNLIyopAf5hdLSdChkudtT4gl+zydHK786WId/bOgGTo
-         CmB6joZ12J2v5gv/Q29AqsLrZdi1/9jEFIPjx9s2RwPdM+acjqY8od0I6TaqdEMyUEq5
-         8nzg==
-X-Forwarded-Encrypted: i=1; AJvYcCWJ8KqvZwn25L1FQD2l/dlogKo7LTTfM53K+2pI3/fO8S4jpdB9sJLP+2NSy3OLkw58zTpQczwcq0ZfIUo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywGLGGaD+q7UUjP9wgC5tHpcgagGJQ2/cHIdbCB556lOR3ws01
-	dUhoEUUFYxRWg27WEh5O+zhEdofRXzXJBVpbB9Xc9XoxVkm+IGpO36el75U5ss2nEQ==
-X-Gm-Gg: ASbGncvzOJxz2DGmrsYOBr+dPNeTqbX/PGPnUHVe44f/+PAqoeGlkCyzB+JELY7Xq65
-	SM+VDn1bmjT/P1u1Dt3h/y/RGwqoqVjDurMf7+IiJ0jbYuG/24Waj8Og0vE/YeT5t68e2f/cKPS
-	pydi+mzrOgGuXtRV5X8plZCsBduivnrh+5YM0S58sjyAC6wNB+m2AK/up0tfIJV69ckIYRAbNmT
-	zAzpBCdIkn9pkymYjdvhVY822kModsVQFgQHmrUV1xjY2a+bggXn5gO2ZFGA4WdEnXkPMaui2BU
-	I9HTnA2NM8dHteILa0sVfRtnfkKTyS+jFxfNOdk9sKyjSlU1/cJYIRePDh2IY1cA7dcVgtC8DWl
-	+GI/zqVGwD0fAnnpuSpJcBAXx0tU=
-X-Google-Smtp-Source: AGHT+IEL8qWQXsZH17HCYlbbIw9UGPDhlEkxpYMP6+pX9reecYXFMezlkTqgJADRlqe4EFkksHLW1w==
-X-Received: by 2002:a17:903:b50:b0:235:779:ede3 with SMTP id d9443c01a7336-2355f9ef557mr237428345ad.41.1748973318650;
-        Tue, 03 Jun 2025 10:55:18 -0700 (PDT)
-Received: from google.com (128.65.83.34.bc.googleusercontent.com. [34.83.65.128])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506d14bcfsm90207425ad.236.2025.06.03.10.55.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 10:55:18 -0700 (PDT)
-Date: Tue, 3 Jun 2025 10:55:14 -0700
-From: William McVicker <willmcvicker@google.com>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: tglx@linutronix.de, Jim Cromie <jim.cromie@gmail.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Marco Elver <elver@google.com>, Nam Cao <namcao@linutronix.de>,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-tegra@vger.kernel.org, John Stulz <jstultz@google.com>,
-	Peter Griffin <peter.griffin@linaro.org>,
-	Saravan Kanna <saravanak@google.com>
-Subject: Re: [PATCH v1 3/7] clocksource/drivers/sun5i: Add module owner
-Message-ID: <aD83ArjAx463xOx2@google.com>
-References: <20250602151853.1942521-1-daniel.lezcano@linaro.org>
- <20250602151853.1942521-4-daniel.lezcano@linaro.org>
+        bh=ojV48z9aXEdGn2OT2DKHUp0OlbWYdZap6cRg6lS1OBc=;
+        b=BjkV/1HZAo2oT1JGkXxZBce8uxOv95DeNkjDV0I7zMUK0qPs52mUeS86fEvDkSkvHU
+         pS1+VbnG6TPtIy3nOBfjYmch46u39kv8O4/9S015gYq72h4hXTyTG1uokcW3BHovLvxT
+         Pg817zZcGs3HGBowvlgWBFj/cUVJXHx0QjSu1t7H69vVrcm+p+3IkC7TfXH7olyxVhLF
+         r1NN0bhoEaLncaKB52jCeI4Y1uZ3tIljddrtDpFF87ZEDCSiXpGqKCjvlje4P2pTbKQZ
+         UX8zvLufsMvFsOsXtaogmruKlC+f5KRmUMkQLRaGTsRaFHR4NhLN24Gtn9bJvTIY+3Hl
+         BzHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748973327; x=1749578127;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ojV48z9aXEdGn2OT2DKHUp0OlbWYdZap6cRg6lS1OBc=;
+        b=QKZkgD+/fhHBANeA/tXjNlSv3K+owTFz1dvJsC4dDNOyo4N08tsgItlPgMrM6/zlOh
+         oujOPDXGWB/W0Mm6HUkta8b4gf4LRAqsrbXK2DacSIrf7WV0yxkBn0oie1KNXj4Nx+Bx
+         BKoxlG1l3PYyr4hqlptVfX/+DaP4azh1owDfWXvvANSi1VEI9SRlVeSFDD2Tah4qEEBE
+         ue1EptYOWaydoXaZJWXpRpZ6QkdGmL/eQ07vLMTdsCT3zUMJt0TzvLyivkNZRYF1lYXB
+         SqYR/IjlXTzZ4cIX0yMM24YzGG7Az1o7DPzQEm+stnV2udpn/5xG/2G7Jr9Qi+rbA/dc
+         4CZg==
+X-Forwarded-Encrypted: i=1; AJvYcCUihBIa5KPBRfzGLLSsEMupms1C3y8/mNbFfZq4/Hem2f7vvBpe0hDXtuEt2Bt/jl9bGg9LrgkpO/v+V7k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJV/3LuThGiIjUiDrVBPGwnuGzzq6IxHRHhcxLYHg4QMJsa55O
+	ljby2Fp30CS9KtXVLzT63CRg6iKwgKywL/YOLLAeEpEDHlD/Uy1HGsY10UGj8EGg6wGzgCDGHEf
+	pDWqtc5FFdrLWKzTT4eBlscjKjt5KklwUXPqfZ+m5
+X-Gm-Gg: ASbGncsujX9hhgeQLhCsFpmD/tBpc3rwsas9CYAkD5eryoj1UUi+ZeOeuGszI1XpgoV
+	oLUgfXED9IXkHXzvZHanY7H2xIP3j/XuF1QfN2fFrhi0zMEWwYChNOjcLryl6GBtKeGktZpDhhO
+	zLObiMekyhMUnggUuBJGgpcmyMmSDaRtBmH8KpbwWbbd5WDyNtLpDCgf0gda911+n4POsAnekYG
+	rTspA==
+X-Google-Smtp-Source: AGHT+IFn+MXcQMSx5ZelVSBHPMB42FF4a5qIDNqQvvUWSmhllHrAaiDMiLd4+ulqAvDPp91tPekjTDAKq0N4QZWV80M=
+X-Received: by 2002:a05:600c:4510:b0:450:ceac:62cf with SMTP id
+ 5b1f17b1804b1-451e5fe840fmr2009315e9.5.1748973326911; Tue, 03 Jun 2025
+ 10:55:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250602151853.1942521-4-daniel.lezcano@linaro.org>
+References: <20250512091108.2015615-1-skb99@linux.ibm.com> <CABdmKX1nhR3BXKyuLaAoo50KNyBwaexmH+af_s8WxULJUZ9+pA@mail.gmail.com>
+ <CAPhsuW7pyQuLgq6S7+KQ3K-MdavmCzBb-tNhg9J_56X_yYug3g@mail.gmail.com>
+In-Reply-To: <CAPhsuW7pyQuLgq6S7+KQ3K-MdavmCzBb-tNhg9J_56X_yYug3g@mail.gmail.com>
+From: "T.J. Mercier" <tjmercier@google.com>
+Date: Tue, 3 Jun 2025 10:55:14 -0700
+X-Gm-Features: AX0GCFv_Lt9ScU6hcdIgKqcgflEyVE0GtXfNhaXJacaRBEaJF17vb8aAJZOjoU0
+Message-ID: <CABdmKX0thb23TPqyuFvDeTXh56e6r6bT-QGabQu_FL2S=ScOPw@mail.gmail.com>
+Subject: Re: [RESEND PATCH] selftests/bpf: Fix bpf selftest build error
+To: Song Liu <song@kernel.org>
+Cc: Saket Kumar Bhaskar <skb99@linux.ibm.com>, gregkh@linuxfoundation.org, bpf@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-next@vger.kernel.org, hbathini@linux.ibm.com, maddy@linux.ibm.com, 
+	venkat88@linux.ibm.com, sfr@canb.auug.org.au, alexei.starovoitov@gmail.com, 
+	daniel@iogearbox.net, mykolal@fb.com, yoong.siang.song@intel.com, 
+	martin.lau@linux.dev, yonghong.song@linux.dev, john.fastabend@gmail.com, 
+	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, 
+	shuah@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 06/02/2025, Daniel Lezcano wrote:
-> The conversion to modules requires a correct handling of the module
-> refcount in order to prevent to unload it if it is in use. That is
-> especially true with the clockevents where there is no function to
-> unregister them.
-> 
-> The core time framework correctly handles the module refcount with the
-> different clocksource and clockevents if the module owner is set.
-> 
-> Add the module owner to make sure the core framework will prevent
-> stupid things happening when the driver will be converted into a
-> module.
-> 
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+On Tue, Jun 3, 2025 at 10:50=E2=80=AFAM Song Liu <song@kernel.org> wrote:
+>
+> On Tue, Jun 3, 2025 at 10:33=E2=80=AFAM T.J. Mercier <tjmercier@google.co=
+m> wrote:
+> >
+> > On Mon, May 12, 2025 at 2:12=E2=80=AFAM Saket Kumar Bhaskar <skb99@linu=
+x.ibm.com> wrote:
+> > >
+> > > On linux-next, build for bpf selftest displays an error due to
+> > > mismatch in the expected function signature of bpf_testmod_test_read
+> > > and bpf_testmod_test_write.
+> > >
+> > > Commit 97d06802d10a ("sysfs: constify bin_attribute argument of bin_a=
+ttribute::read/write()")
+> > > changed the required type for struct bin_attribute to const struct bi=
+n_attribute.
+> > >
+> > > To resolve the error, update corresponding signature for the callback=
+.
+> > >
+> > > Fixes: 97d06802d10a ("sysfs: constify bin_attribute argument of bin_a=
+ttribute::read/write()")
+> > > Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+> > > Closes: https://lore.kernel.org/all/e915da49-2b9a-4c4c-a34f-877f37812=
+9f6@linux.ibm.com/
+> > > Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+> > > Signed-off-by: Saket Kumar Bhaskar <skb99@linux.ibm.com>
+> > > ---
+> > >
+> > > [RESEND]:
+> > >  - Added Fixes and Tested-by tag.
+> > >  - Added Greg as receipent for driver-core tree.
+> > >
+> > > Original patch: https://lore.kernel.org/all/20250509122348.649064-1-s=
+kb99@linux.ibm.com/
+> > >
+> > >  tools/testing/selftests/bpf/test_kmods/bpf_testmod.c | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c b/t=
+ools/testing/selftests/bpf/test_kmods/bpf_testmod.c
+> > > index 2e54b95ad898..194c442580ee 100644
+> > > --- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
+> > > +++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
+> > > @@ -385,7 +385,7 @@ int bpf_testmod_fentry_ok;
+> > >
+> > >  noinline ssize_t
+> > >  bpf_testmod_test_read(struct file *file, struct kobject *kobj,
+> > > -                     struct bin_attribute *bin_attr,
+> > > +                     const struct bin_attribute *bin_attr,
+> > >                       char *buf, loff_t off, size_t len)
+> > >  {
+> > >         struct bpf_testmod_test_read_ctx ctx =3D {
+> > > @@ -465,7 +465,7 @@ ALLOW_ERROR_INJECTION(bpf_testmod_test_read, ERRN=
+O);
+> > >
+> > >  noinline ssize_t
+> > >  bpf_testmod_test_write(struct file *file, struct kobject *kobj,
+> > > -                     struct bin_attribute *bin_attr,
+> > > +                     const struct bin_attribute *bin_attr,
+> > >                       char *buf, loff_t off, size_t len)
+> > >  {
+> > >         struct bpf_testmod_test_write_ctx ctx =3D {
+> > > --
+> > > 2.43.5
+> > >
+> > >
+> >
+> > The build is broken in Linus's tree right now. We also now need:
+> >
+> > @@ -567,7 +567,7 @@ static void testmod_unregister_uprobe(void)
+> >
+> >  static ssize_t
+> >  bpf_testmod_uprobe_write(struct file *file, struct kobject *kobj,
+> > -                        struct bin_attribute *bin_attr,
+> > +                        const struct bin_attribute *bin_attr,
+> >                          char *buf, loff_t off, size_t len)
+> >  {
+> >
+> > Should I send a separate patch, or can we update this and get it to Lin=
+us?
+>
+> A fix is already in the bpf tree, with this fix as well:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git/commit/?id=3D=
+4b65d5ae971430287855a89635a184c489bd02a5
+>
+> Thanks,
+> Song
 
-Reviewed-by: Will McVicker <willmcvicker@google.com>
-
-Thanks,
-Will
-
-> ---
->  drivers/clocksource/timer-sun5i.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/clocksource/timer-sun5i.c b/drivers/clocksource/timer-sun5i.c
-> index 6b48a9006444..f827d3f98f60 100644
-> --- a/drivers/clocksource/timer-sun5i.c
-> +++ b/drivers/clocksource/timer-sun5i.c
-> @@ -185,6 +185,7 @@ static int sun5i_setup_clocksource(struct platform_device *pdev,
->  	cs->clksrc.read = sun5i_clksrc_read;
->  	cs->clksrc.mask = CLOCKSOURCE_MASK(32);
->  	cs->clksrc.flags = CLOCK_SOURCE_IS_CONTINUOUS;
-> +	cs->clksrc.owner = THIS_MODULE;
->  
->  	ret = clocksource_register_hz(&cs->clksrc, rate);
->  	if (ret) {
-> @@ -214,6 +215,7 @@ static int sun5i_setup_clockevent(struct platform_device *pdev,
->  	ce->clkevt.rating = 340;
->  	ce->clkevt.irq = irq;
->  	ce->clkevt.cpumask = cpu_possible_mask;
-> +	ce->clkevt.owner = THIS_MODULE;
->  
->  	/* Enable timer0 interrupt */
->  	val = readl(base + TIMER_IRQ_EN_REG);
-> -- 
-> 2.43.0
-> 
+Thanks, I was looking for it in driver-core.
