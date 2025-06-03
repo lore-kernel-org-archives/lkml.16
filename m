@@ -1,122 +1,105 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64B0FA47;
-	Tue,  3 Jun 2025 02:02:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C8A78F5D
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 02:10:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748916167; cv=none; b=E3tjExriiNufCAr0MWzOiPy8hHH4bC58TM4cXMDsuJqswIDQlJy3SD8+UjbfMZ094uPoLL7aOJ0KZlvwOrn8WylSw41NnTAQWsPaZx6A9L38zT/CLAeonvpM2OHFqFS4TAuIIJ5TyeMnAAPCtEWLxNIxE9QKBawol9fALX0PDAM=
+	t=1748916659; cv=none; b=BaUs+cdtvtnRGHc0vkSQdV2VzKjD213tpUiVN2IO/SOsZmb3RB0nty0ZiuJ43JemmAjH/oz2HIPrh63sWzI588icHcIt4qBnu4/kV1nC7HHo1lMb+28cvB1EeYPuz+gVGtaFRpZKetLM7eiNWHzf1K9eIP3SC8/XGxgihYvpheA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748916167; c=relaxed/simple;
-	bh=AB7taGPJNVOMSUMHjBNx630ACxRkKV1NT/QYiCEgMOc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=WqMdvxRaRiO2Gyo4DjvlqgVJkx/ISB1M9et0anAHINU4FPuLbJXxLt/T0hMVO8vdvSA89sFg79shafx1Lcjasms28EkY80p7aY9D17Um5usOFq9EEpuN+EtKgcxJrYiQDmYlI3X72LsuF9RNah2iz97cNVQkXRke64+zCvk/LMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=j2ug0Aif reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1748916659; c=relaxed/simple;
+	bh=BG05zrtL+ag8QGOlP4H11g2uHPEH9YGqUh+sySIAGlM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=M0m2IFo33SgyuDxvLdoQklCD1FL28vuWhN8cIYgGGAdlVC29wDPPKIEIuL/SOh2hP3bfmx78xzKNq16uqXNBpJ5qHQ0UjiF+nEsXLTkm9F6+1MsTieYGQKVK5I26d+PGsF7zCKs4kYJPFByEgtjE2ulf32slD6i+XR1IAFW4ZFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=s7mvsFMF; arc=none smtp.client-ip=115.124.30.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="j2ug0Aif"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=mcHfqe8UU8sPOJgw3g1JkNrG9x9xp2dzQdh7oL2hRWk=; b=j
-	2ug0Aif310C5jJRny/XEbwKq0X33xtI/Hu5KEQ8r2Dht3rp+TFV5hLo5BEGdw+gk
-	nP26TjSGiZyF9ASECKVfV9tuP1OSG380bL/Xe8O6GPuaq716IgqcBVYt4An8CcG3
-	qu4Umv3nbLiF2pZ2oOwialAnd0hyxDwFgr0Yr9uOXI=
-Received: from 00107082$163.com ( [111.35.189.95] ) by
- ajax-webmail-wmsvr-40-143 (Coremail) ; Tue, 3 Jun 2025 10:01:41 +0800 (CST)
-Date: Tue, 3 Jun 2025 10:01:41 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Yeoreum Yun" <yeoreum.yun@arm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, mingo@kernel.org,
-	acme@kernel.org, namhyung@kernel.org, leo.yan@arm.com,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re:[PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <20250602184049.4010919-1-yeoreum.yun@arm.com>
-References: <20250602184049.4010919-1-yeoreum.yun@arm.com>
-X-NTES-SC: AL_Qu2fCvWauUkr5yabYekZnEYQheY4XMKyuPkg1YJXOp80tybH4g4deXB7AFDkwcOjICOSvxerYgBD5MNQQahTc7z6s2g4/iiNDCQCd8LO/hSD
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="s7mvsFMF"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1748916648; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	bh=72XDkbzC/wXQpsbDw74c4MWn/z/F1UtJXOqYZHsNj0A=;
+	b=s7mvsFMFGukHoiglDmlnhu7gQ4lmWHFiRDGM90FrWYYhTClA84Oqz1e1t1+USs7yUFiBwi/ilPdKWcD8eoH+qLRQgHGDhguWh9JG+AjGs4lZNAc0A+CgrayvSPxoLCfmgFjKFgTT7wTE5Zno5WXFHDUgFEv9BVmYOM2A5wlTPvc=
+Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0WcgVTZP_1748916646 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 03 Jun 2025 10:10:47 +0800
+From: "Huang, Ying" <ying.huang@linux.alibaba.com>
+To: Joshua Hahn <joshua.hahnjy@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,  Gregory Price
+ <gourry@gourry.net>,  David Hildenbrand <david@redhat.com>,  Zi Yan
+ <ziy@nvidia.com>,  Matthew Brost <matthew.brost@intel.com>,  Rakie Kim
+ <rakie.kim@sk.com>,  Byungchul Park <byungchul@sk.com>,  Alistair Popple
+ <apopple@nvidia.com>,  linux-mm@kvack.org,  linux-kernel@vger.kernel.org,
+  kernel-team@meta.com
+Subject: Re: [PATCH 2/2] mm/mempolicy: Skip unnecessary synchronize_rcu()
+In-Reply-To: <20250602162345.2595696-2-joshua.hahnjy@gmail.com> (Joshua Hahn's
+	message of "Mon, 2 Jun 2025 09:23:40 -0700")
+References: <20250602162345.2595696-1-joshua.hahnjy@gmail.com>
+	<20250602162345.2595696-2-joshua.hahnjy@gmail.com>
+Date: Tue, 03 Jun 2025 10:10:46 +0800
+Message-ID: <87h60xtw0p.fsf@DESKTOP-5N7EMDA>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <3842c9a5.20ee.1973385e209.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:jygvCgD3n22GVz5ojVISAA--.54749W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0hBgqmg+LTFWbAAEs8
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=ascii
 
-CkF0IDIwMjUtMDYtMDMgMDI6NDA6NDksICJZZW9yZXVtIFl1biIgPHllb3JldW0ueXVuQGFybS5j
-b20+IHdyb3RlOgo+Y29tbWl0IGEzYzNjNjY2NygicGVyZi9jb3JlOiBGaXggY2hpbGRfdG90YWxf
-dGltZV9lbmFibGVkIGFjY291bnRpbmcgYnVnIGF0IHRhc2sgZXhpdCIpCj5jaGFuZ2VzIHRoZSBl
-dmVudC0+c3RhdGUgdXBkYXRlIGJlZm9yZSBsaXN0X2RlbF9ldmVudCgpLgo+VGhpcyBjaGFuZ2Ug
-cHJldmVudHMgY2FsbGluZyBwZXJmX2Nncm91cF9ldmVudF9kaXNhYmxlKCkgYXMgYSByZXN1bHQs
-Cj5jcHVjdHgtPmNncnAgY2FuJ3QgYmUgY2xlYXJlZCBwcm9wZXJseSBhbmQgcG9pbnQgdG8gZGFu
-Z2xpbmcgcG9pbnQgb2YgY2dyb3VwLgo+Cj5CZWNhdXNlIG9mIHRoaXMgcHJvYmxlbSwgc29tZSBt
-YWNoaW4gbWVldHMgdGhlIGJlbG93IHBhbmljWzBdOgo+Cj44NjMuODgxOTYwXSBzeXN2ZWRfY2Fs
-bF9mdW5jdGlvbl9zaW5nIGxlKzB4NGMvMHhjMAo+ODYzLjg4MTMwMV0gYXNtX3N5c3ZlY19jYWxs
-X2Z1bmN0aW9uX3NpbmdsZSsweDE2LzB4MjAKPjg2OS44ODEzNDRdIFJJUDogMDYzMzoweDdmOWFs
-Y2VhMzM2Nwo+NjYzLjY4MTM3M10gQ29kZTogMDAgNjYgOTkgYjggZmYgZmYgZmYgZmYgYzMgNjYg
-Li4uLgo+ODYzLjg4MTUyNF0gUlNQOiAwMDJiOjAwMDA3ZmZmYTUyNmZjZjggRUZMQUdTOiAwMDAw
-MDI0Ngo+ODY5Ljg4MTU2N10gUkFYOiAwMDAwNTYyMDYwYzk2MmQwIFJCWDogMDAwMDAwMDAwMDAw
-MDAwMiBSQ1g6IDAwMDA3ZjlhMWNmZjFjNjAKPjg2My44ODE2MjVdIFJEWDogMDAwMDdmOWEwYzAw
-MDAzMCBSU0k6IDAwMDA3ZjlhbGNmZjFjNjAgUkRJOiAwMDAwN2Y5YTFjYTkxYzIwCj44NjMuMDgx
-NjgyXSBSQlA6IDAwMDAwMDAwMDAwMDAwMDEgUjA4OiAwMDAwMDAwMDAwMDAwMDAwIFIwOTogMDAw
-MDdmOWExZDYyMTdhMAo+ODY5Ljg4MTc0MF0gUjEwOiAwMDAwN2Y5YWxjYTkxYzEwIFIxMTogMDAw
-MDAwMDAwMDAwMDI0NiBSMTI6IDAwMDA3ZjlhMWQ3MGMwMjAKPjg2OS44ODE3OThdIFIxMzogMDAw
-MDdmZmZhNTI3MDAzMCBSMTQ6IDAwMDA3ZmZmYTUyNmZkMDAgUjE1OiAwMDAwMDAwMDAwMDAwMDAw
-Cj44NjMuODgxODYwXSA8L1RBU0s+Cj44NjMuODgxODc2KSBNb2R1bGVzIGxpbmtlZCBpbjogc25k
-X3NlcV9kdW1teSAoRSkgc25kX2hydGltZXIgKEUpLi4uCj4uLi4KPjg2My44ODcxNDJdIGJ1dHRv
-biAoRSkKPjg2My45MTIxMjddIENSMjogZmZmZmU0YWZjYzA3OTY1MAo+ODYzLjkxNDU5M10gLS0t
-IFsgZW5kIHRyYWNlIDAwMDAwMDAwMDAwMDAwMDAgMS0tCj44NjQuMDQyNzUwXSBSSVA6IDAwMTA6
-Y3R4X3NjaGVkX291dCsweDFjZS8weDIxMAo+ODY0LjA0NTIxNF0gQ29kZTogODkgYzYgNGMgOGIg
-YjkgZGUgMDAgMDAgMDAgNDggLi4uCj44NjQuMDUwMzQzXSBSU1A6IDAwMDA6ZmZmZmFhNGVjMGYz
-ZmU2MCBFRkxBR1M6IDAwMDEwMDg2Cj44NjQuMDUyOTI5XSBSQVg6IDAwMDAwMDAwMDAwMDAwMDIg
-UkJYOiBmZmZmOGU4ZWVlZDJhNTgwIFJDWDogZmZmZjhlOGJkZWQ5YmYwMAo+ODY0LjA1NTUxOF0g
-UkRYOiAwMDAwMDBjOTIzNDBiMDUxIFJTSTogMDAwMDAwYzkyMzQwYjA1MSBSREk6IGZmZmYKPjg2
-NC4wNTgwOTNdIFJCUDogMDAwMDAwMDAwMDAwMDAwMCBSMDg6IDAwMDAwMDAwMDAwMDAwMDIgUjA5
-OiAwMAo+ODY0LjA2MDY1NF0gUjEwOiAwMDAwMDAwMDAwMDAwMDAwIFIxMTogMDAwMDAwMDAwMDAw
-MDAwMCBSMTI6IDAwMAo+ODY0LjA2MzE4M10gUjEzOiBmZmZmOGU4ZWVlZDJhNTgwIFIxNDogMDAw
-MDAwMDAwMDAwMDAwNyBSMTU6IGZmZmZlNGFmY2MwNzk2NTAKPjg2NC4wNjU3MjldIEZTOiAwMDAw
-N2Y5YTFjYTkxOTQwICgwMDAwKSBHUzpmZmZmOGU4ZjZiMWMzMDAwKDAwMDApIGtuSUdTOjAwMDAw
-MDAwMDAwMDAwMDAKPjg2NC4wNjgzMTJdIENTOiAwMDEwIERTOiAwMDAwIEVTOiAwMDAwIENSTzog
-MDAwMDAwMDA4MDA1MDAzMwo+ODY0LjA3MDg5OF0gQ1IyOiBmZmZmZTRhZmNjMDc5NjUwIENSMzog
-MDAwMDAwMDExMzZkODAwMCBDUjQ6IDAwMDAwMDAwMDAzNTBlZjAKPjg2NC42NzM1MjNdIEtlcm5l
-bCBwYW5pYyAtIG5vdCBzeW5jaW5nOiBGYXRhbCBleGNlcHRpb24gaW4gaW50ZXJydXB0Cj44NjQu
-MDc2NDEwXSBLZXJuZWwgT2Zmc2V0OiAweGMwMDAwMCBmcm9tIDB4ZmZmZmZmZmY4MTAwMDAwMCAo
-cmVsb2NhdGlvbiByYW5nZTogMHhmZgo+ODY0LjIwNTQwMV0gLS0tIFsgZW5kIEtlcm5lbCBwYW5p
-YyAtIG5vdCBzeW5jaW5nOiBGYXRhbCBleGNlcHRpb24gaW4gaW50ZXJydXB0IF0tLS0KPgo+VG8g
-YWRkcmVzcyB0aGlzIGNhbGwgdGhlIHBlcmZfY2dyb3VwX2V2ZW50X2Rpc2FibGUoKSBwcm9wZXJs
-eSBiZWZvcmUKPmxpc3RfZGVsX2V2ZW50KCkgaW4gX19wZXJmX3JlbW92ZV9mcm9tX2NvbnRleHQo
-KS4KPgo+TGluazogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxsL2FEMlRzcEtIJTJGN3l2Zllv
-T0BlMTI5ODIzLmFybS5jb20vIFswXQo+Rml4ZXM6IGEzYzNjNjY2NygicGVyZi9jb3JlOiBGaXgg
-Y2hpbGRfdG90YWxfdGltZV9lbmFibGVkIGFjY291bnRpbmcgYnVnIGF0IHRhc2sgZXhpdCIpCj5T
-aWduZWQtb2ZmLWJ5OiBZZW9yZXVtIFl1biA8eWVvcmV1bS55dW5AYXJtLmNvbT4KPlRlc3RlZC1i
-eTogRGF2aWQgV2FuZyA8MDAxMDcwODJAMTYzLmNvbT4KPi0tLQo+IGtlcm5lbC9ldmVudHMvY29y
-ZS5jIHwgNCArKysrCj4gMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKQo+Cj5kaWZmIC0t
-Z2l0IGEva2VybmVsL2V2ZW50cy9jb3JlLmMgYi9rZXJuZWwvZXZlbnRzL2NvcmUuYwo+aW5kZXgg
-ZjM0Yzk5ZjhjZThmLi45MDliOWQ1YTY1YzEgMTAwNjQ0Cj4tLS0gYS9rZXJuZWwvZXZlbnRzL2Nv
-cmUuYwo+KysrIGIva2VybmVsL2V2ZW50cy9jb3JlLmMKPkBAIC0yNDk4LDYgKzI0OTgsMTAgQEAg
-X19wZXJmX3JlbW92ZV9mcm9tX2NvbnRleHQoc3RydWN0IHBlcmZfZXZlbnQgKmV2ZW50LAo+IAkJ
-c3RhdGUgPSBQRVJGX0VWRU5UX1NUQVRFX0RFQUQ7Cj4gCX0KPiAJZXZlbnRfc2NoZWRfb3V0KGV2
-ZW50LCBjdHgpOwo+Kwo+KwlpZiAoZXZlbnQtPnN0YXRlID4gUEVSRl9FVkVOVF9TVEFURV9PRkYp
-Cj4rCQlwZXJmX2Nncm91cF9ldmVudF9kaXNhYmxlKGV2ZW50LCBjdHgpOwo+Kwo+IAlwZXJmX2V2
-ZW50X3NldF9zdGF0ZShldmVudCwgbWluKGV2ZW50LT5zdGF0ZSwgc3RhdGUpKTsKPiAKPiAJaWYg
-KGZsYWdzICYgREVUQUNIX0dST1VQKQo+LS0gCj5MRVZJOntDM0Y0N0YzNy03NUQ4LTQxNEEtQThC
-QS0zOTgwRUM4QTQ2RDd9CgpJIHRoaW5rIHRoaXMgcGF0Y2ggaXMgbm8gYmV0dGVyIHRoYW4gbXkg
-cGF0Y2ggaW4gdGhlIG9yaWdpbmFsIHJlcG9ydApodHRwczovL2xvcmUua2VybmVsLm9yZy9hbGwv
-MjAyNTA2MDExNzM2MDMuMzkyMC0xLTAwMTA3MDgyQDE2My5jb20vCgoKVGhpcyBwYXRjaCBpcyBt
-b3JlIGFnZ3Jlc3NpdmUsICBpdCBhZGQgbW9yZSBjaGFuZ2VzIHRvIG9yaWdpbmFsIGxvZ2ljLCBz
-YW1lIHByYWN0aWNlIAphcyBpbiB0aGUgb2ZmZW5kaW5nIGNvbW1pdC4gIHdvdWxkIHJhaXNlIG1v
-cmUgY29uY2VybnMgYWJvdXQgaGlkZGVuIHNpZGUtZWZmZWN0LgoKRm9yIGV4YW1wbGUsIHRoaXMg
-Y29kZSAgaW4gbGlzdF9kZWxfZXZlbnQgc2hvdWxkIHJhaXNlIGNvbmNlcm4gYWJvdXQgdGhpcyBw
-YXRjaAogMjA5OSAgICAgICAgICAqIFdlIGNhbiBoYXZlIGRvdWJsZSBkZXRhY2ggZHVlIHRvIGV4
-aXQvaG90LXVucGx1ZyArIGNsb3NlLgogMjEwMCAgICAgICAgICAqLwogMjEwMSAgICAgICAgIGlm
-ICghKGV2ZW50LT5hdHRhY2hfc3RhdGUgJiBQRVJGX0FUVEFDSF9DT05URVhUKSkKIDIxMDIgICAg
-ICAgICAgICAgICAgIHJldHVybjsKCgpUaGFua3MKRGF2aWQK
+Joshua Hahn <joshua.hahnjy@gmail.com> writes:
+
+> By unconditionally setting wi_state to NULL and conditionally calling
+> synchronize_rcu(), we can save an unncessary call when there is no
+> old_wi_state.
+
+Per my understanding, in the original code, if !old_wi_state, we will
+return immediately instead of calling synchronize_rcu() too.  Or I miss
+something?
+
+The patch itself is a nice cleanup with reduced line number.  Feel free
+to add my
+
+Reviewed-by: Huang Ying <ying.huang@linux.alibaba.com>
+
+in the future version.
+
+> Suggested-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+> ---
+>  mm/mempolicy.c | 13 +++++--------
+>  1 file changed, 5 insertions(+), 8 deletions(-)
+>
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index 3b1dfd08338b..b0619d0020c9 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -3703,18 +3703,15 @@ static void wi_state_free(void)
+>  	struct weighted_interleave_state *old_wi_state;
+>  
+>  	mutex_lock(&wi_state_lock);
+> -
+>  	old_wi_state = rcu_dereference_protected(wi_state,
+>  			lockdep_is_held(&wi_state_lock));
+> -	if (!old_wi_state) {
+> -		mutex_unlock(&wi_state_lock);
+> -		return;
+> -	}
+> -
+>  	rcu_assign_pointer(wi_state, NULL);
+>  	mutex_unlock(&wi_state_lock);
+> -	synchronize_rcu();
+> -	kfree(old_wi_state);
+> +
+> +	if (old_wi_state) {
+> +		synchronize_rcu();
+> +		kfree(old_wi_state);
+> +	}
+>  }
+>  
+>  static struct kobj_attribute wi_auto_attr =
+
+---
+Best Regards,
+Huang, Ying
