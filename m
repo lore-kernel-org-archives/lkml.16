@@ -1,173 +1,196 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDEB4281346
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 09:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19DED271452;
+	Tue,  3 Jun 2025 09:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748942061; cv=none; b=t2uhYZAQr93gvIB2Y+TPsWxKGkAcEbKfvpwGOqy+nmPpqRtkzeqoBIDWVC8ztOoMKStbZ3E1hvTwr1k783toLP5EpANhk+FrQLThLMlmNhjcihYzBNdTChFlqMHI3UPqVVANwv5ohbGBVn4t+tcj5YhcFzJy+JoKnHCDQAkTt2c=
+	t=1748942114; cv=none; b=Ksfr5fTj+X2i9rpb5uBwESTTPvc+qyiSwpeEQqusIvtW7FlgGU54FwL5JYyre1OkGgFCBueum5LHMLhHNlAUktPTHXtlwR3H+4Tet/SK2Gvpp5xD4MsKwfh8zqcRrFL4ghACF/uMBOc2uXFYHJy5rKJ/vnuUJlO0cOh42ZmtP/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748942061; c=relaxed/simple;
-	bh=bKFfuFTXnXcW0MLjqKGPAcDHK2f0CqjHudlM3qXsI1g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SH2LDixtksDIohfF/oxNn2j6NQ5XAEnaTCri6nzuuevYg4003J20WDvKNjMUmc1RddayJ3T1UBKp1I39RlOwa8nehkmXxtVJK++BF50W9JFWtTyJuWRJOUPh3nJzOWGQ0FCtSX8UctxZ/Crg9eVMfXBstrCWfOIMRR9z/I3zj+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UaKBoU+8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vHCmXQgR; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UaKBoU+8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vHCmXQgR; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1748942114; c=relaxed/simple;
+	bh=90J89FRoLbaCkl5i5DlgQt/UDCz7Fg3Kq4DQuJxYYY0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QDJIum2VTlJic+/angBIaivG4yORzBNb5eSHOuFYndBDTeSLvGIEOrjZfPL4I3COCfIANjI0ZNoPLxpj27uB4XUFjf1VsMO/8H86Vz1o54X6sviu/ogrmEVfKHSXadwAf4i24YS9F8ddc4YoXTicG+/cCp2Ex5BflikQvg4QKUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EpBJBlMd; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UaKBoU+8";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vHCmXQgR";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UaKBoU+8";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vHCmXQgR"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id BAD8221286;
-	Tue,  3 Jun 2025 09:14:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1748942057; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FbA0e9GDhuLELcDxxAWKeQuIzyYscoH3Gi2NgunVPl0=;
-	b=UaKBoU+8dBFAQ6ayk9+iOW4CmDj2qF7gWJMplyXNLulooxqO3Bc9EXu9XGwNH5lOnl8d00
-	IextmIVD3gYtXNCH5w5K5lo1WoNIAgDLDMT4zjrVjDX0IOecxN52T60Y3MhNrk1SvHU9Ca
-	nO+RdtHWwciPjSzwZHAeyf56YSWUk3E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1748942057;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FbA0e9GDhuLELcDxxAWKeQuIzyYscoH3Gi2NgunVPl0=;
-	b=vHCmXQgRPny02YyX1TtuchySYFIbiUdT99ZJX7CmoYpJSbBae13k6ERFPgZCq/21Nuw7Yx
-	3tbSTNaQmL3CuvDA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=UaKBoU+8;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=vHCmXQgR
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1748942057; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FbA0e9GDhuLELcDxxAWKeQuIzyYscoH3Gi2NgunVPl0=;
-	b=UaKBoU+8dBFAQ6ayk9+iOW4CmDj2qF7gWJMplyXNLulooxqO3Bc9EXu9XGwNH5lOnl8d00
-	IextmIVD3gYtXNCH5w5K5lo1WoNIAgDLDMT4zjrVjDX0IOecxN52T60Y3MhNrk1SvHU9Ca
-	nO+RdtHWwciPjSzwZHAeyf56YSWUk3E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1748942057;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FbA0e9GDhuLELcDxxAWKeQuIzyYscoH3Gi2NgunVPl0=;
-	b=vHCmXQgRPny02YyX1TtuchySYFIbiUdT99ZJX7CmoYpJSbBae13k6ERFPgZCq/21Nuw7Yx
-	3tbSTNaQmL3CuvDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0D6C313A1D;
-	Tue,  3 Jun 2025 09:14:17 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ixtvAOm8PmiaNwAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Tue, 03 Jun 2025 09:14:17 +0000
-Date: Tue, 3 Jun 2025 11:14:07 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: Honggyu Kim <honggyu.kim@sk.com>
-Cc: Gregory Price <gourry@gourry.net>, kernel_team@skhynix.com,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Rakie Kim <rakie.kim@sk.com>, Harry Yoo <harry.yoo@oracle.com>,
-	dan.carpenter@linaro.org
-Subject: Re: [PATCH v3 2/3] mm,memory_hotplug: Implement numa node notifier
-Message-ID: <aD683wrmR12g5xB9@localhost.localdomain>
-References: <20250502083624.49849-1-osalvador@suse.de>
- <20250502083624.49849-3-osalvador@suse.de>
- <aBTkgnYYSN0SMQCU@gourry-fedora-PF4VCD3F>
- <3ad3bcba-b8b6-4e30-8ad9-adba5761e923@sk.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EpBJBlMd"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-450cfb6a794so32591605e9.1;
+        Tue, 03 Jun 2025 02:15:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748942111; x=1749546911; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LqNY6j4SjmSasikzYTEU+CWGtge3RNhUNmH36kstVFM=;
+        b=EpBJBlMdBkr0fvAC3FLGRWHTbZsGDIgc69YLLFg+pxPfjogBnM9ZRpQk6rs1oqXwD2
+         XloIAWzNa31Z/NF5DkhTvD3y/FmDCZEDINuoUtE9oxYC4uNIwLiUY9C/JpNiNgJxBnxH
+         roXLNZyXEl6jpmkF6NGyM56Mr5HsOYkqyZUlLf058KqdZoRA2oCwAncjpOASML2kaj8h
+         yzYNYQSB3mRSgFjJfSLvs4OgJHcoLttavnBTpt8AxA9vsTl3UvA27f4KHDwns4zBUgIb
+         bCDf7KrJCu9U/MAflSwwNaJenCYWxX8m2tWE8yVuxnxhAcrHnR86sXC59oZ4zZMgbaJQ
+         axYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748942111; x=1749546911;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LqNY6j4SjmSasikzYTEU+CWGtge3RNhUNmH36kstVFM=;
+        b=oMVXZUysT+hKlsDPjoqZBQfcAg3dhNijeWABUzXj4FMB8dyi+W4Ra9Pqr71waNjraJ
+         XDV0x44tmLF0gAGBU5o2YKPKhOhueodXA0vb/9fgk+pZV4mGQo4BWMRFfW97u1y7ufIG
+         GSEG+qM+n0pneU3t8kBG3pSUaqRBSqLglRnr1E5PTLnEQYRMsHRyOafvE4KapvzRoPQH
+         L2FyxIy9LaTVhn+/niz5f6vC8AYG8Uy4HbVSyH2rYMWMKG/YCX77jWy44G0GsYAq3R7p
+         Nhhss2FyxPnYwg1ax2oA+y5kbnt3Dnfaz/owIGyEZI6iZ/EdPfv1nV6rwtM2n021qJC7
+         R8Fg==
+X-Forwarded-Encrypted: i=1; AJvYcCW407I7yCzOTUUppzKJyxMFIinqP6f7rfFloJ01LyfOOZRV0pOz6oBcLBHe8sp8N8LEjTIMy8AR48ksTHU4@vger.kernel.org, AJvYcCXdKdRjDTr5z31r/MJsG1IejvSlLLim7bBukkyHD2ECFrcaOImUNyAsbjAEDtDLCKQOsi4837AkKHceDChe@vger.kernel.org
+X-Gm-Message-State: AOJu0YyW2jc+F5AYWu7o8/IQv2jJmggc/4wuxPPHtHsC/gQ9NDqdpL1q
+	H+4LUmS+n5llL4es/xYv/X0NpClw18jwgp1YlVSwZGasRDKFte5Y7zVfdlpGwQ==
+X-Gm-Gg: ASbGnctTbeQlkJlyfUf0WJXVvxBG2VUhsnWOv6JJYTCvpBy60hqfuUQV8A3nOtT7A/V
+	b2nf9zwkdj5LOmYjVHX/bs3621Au1DgVgFdXSrgrCIp7Ki3dqhkhcEx1TqzAA78ippbsI9eF5CW
+	g7KSWpCRY1CWUXOyq/IqAUANa4JqowRKTYJIqFfrPpqHCd2iFNFHw0h/eCB+r9FmWcAt32QPPeU
+	rj6KtFLVYLrNGRU4BfvJCXrNX6FXItYGF9P0l889KZXdQXunixH8zsAUqvXwZy/8/TG9XhjiF18
+	ZCzXgC2fhPoG+1dAHkWEnL4oBqTJK+nhF+X0bP3goqYxC5XtFqnqjH8N4sDtGRNwhjqI+BmkWY6
+	YQtDpMbYxZKIdehMN
+X-Google-Smtp-Source: AGHT+IGlciBL7ibK9r1TZdS0EGS445Io4fw9r6wQOCycQseCqwJpofmOfXb5C/grck1buIn+MTnYUA==
+X-Received: by 2002:a05:600c:810c:b0:441:ac58:ead5 with SMTP id 5b1f17b1804b1-450d6560164mr165346345e9.31.1748942110854;
+        Tue, 03 Jun 2025 02:15:10 -0700 (PDT)
+Received: from [192.168.20.170] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe6c842sm17349917f8f.29.2025.06.03.02.15.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Jun 2025 02:15:10 -0700 (PDT)
+Message-ID: <75a46897-040f-4608-88f5-22c99c8bed97@gmail.com>
+Date: Tue, 3 Jun 2025 11:15:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3ad3bcba-b8b6-4e30-8ad9-adba5761e923@sk.com>
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_CC(0.00)[gourry.net,skhynix.com,linux-foundation.org,redhat.com,kvack.org,vger.kernel.org,suse.cz,gmail.com,huawei.com,sk.com,oracle.com,linaro.org];
-	DKIM_TRACE(0.00)[suse.de:+];
-	TO_DN_SOME(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
-	TAGGED_RCPT(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: BAD8221286
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -3.01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] interconnect: avoid memory allocation when 'icc_bw_lock'
+ is held
+Content-Language: hu
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Georgi Djakov <djakov@kernel.org>,
+ Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>
+Cc: linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <TIkPOGVjPeCjPzjVtlSb6V5CIcpaXf2-6WG6HjAyaOW59Hj01-9VK7Z8DKadakOKr6fJeQICi6h0Z8mft9DQyg==@protonmail.internalid>
+ <20250529-icc-bw-lockdep-v1-1-3d714b6a9374@gmail.com>
+ <ca9f7308-4b92-4d23-bfe7-f8d18d20de10@linaro.org>
+From: Gabor Juhos <j4g8y7@gmail.com>
+In-Reply-To: <ca9f7308-4b92-4d23-bfe7-f8d18d20de10@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 28, 2025 at 11:23:53AM +0900, Honggyu Kim wrote:
-> The 'err' of sysfs_wi_node_add() wasn't propagated to its caller before
-> this change as discussed with David at the following.
-> https://lore.kernel.org/198f2cbe-b1cb-4239-833e-9aac33d978fa@redhat.com
-> 
-> But as Gregory mentioned, we can pass 'err' now with this numa node notifier
-> so for this hunk, shouldn't we add the following change on top of this?
-> 
-> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index 3a7717e09506..3073ebd4e7ee 100644
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -3792,7 +3792,7 @@ static int sysfs_wi_node_add(int nid)
->  static int wi_node_notifier(struct notifier_block *nb,
->                                unsigned long action, void *data)
->  {
-> -       int err;
-> +       int err = 0;
->         struct node_notify *arg = data;
->         int nid = arg->status_change_nid;
-> 
-> @@ -3811,7 +3811,7 @@ static int wi_node_notifier(struct notifier_block *nb,
->                 break;
->         }
-> 
-> -       return NOTIFY_OK;
-> +       return notifier_from_errno(err);
+Hello Bryan,
 
-I do not think so.
-NODE_BECAME_MEM_AWARE is already too late to react.
-We only tell the system that __now__ we are in this state, so there is
-no rollback possible from this point forward.
+Sorry for the late reply, I missed your mail.
 
+2025. 05. 30. 11:16 keltezéssel, Bryan O'Donoghue írta:
+> On 29/05/2025 15:46, Gabor Juhos wrote:
+>> The 'icc_bw_lock' mutex is introduced in commit af42269c3523
+>> ("interconnect: Fix locking for runpm vs reclaim") in order
+>> to decouple serialization of bw aggregation from codepaths
+>> that require memory allocation.
+>>
+>> However commit d30f83d278a9 ("interconnect: core: Add dynamic
+>> id allocation support") added a devm_kasprintf() call into a
+>> path protected by the 'icc_bw_lock' which causes this lockdep
+>> warning (at least on the IPQ9574 platform):
+> 
+> Missing a Fixes tag.
 
--- 
-Oscar Salvador
-SUSE Labs
+Erm, it is before my s-o-b tag.
+
+...
+
+>> Move the memory allocation part of the code outside of the protected
+>> path to eliminate the warning. Also add a note about why it is moved
+>> to there,
+>>
+>> Fixes: d30f83d278a9 ("interconnect: core: Add dynamic id allocation support")
+>> Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+>> ---
+>>   drivers/interconnect/core.c | 14 ++++++++++----
+>>   1 file changed, 10 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+>> index
+>> 1a41e59c77f85a811f78986e98401625f4cadfa3..acdb3b8f1e54942dbb1b71ec2b170b08ad709e6b 100644
+>> --- a/drivers/interconnect/core.c
+>> +++ b/drivers/interconnect/core.c
+>> @@ -1023,6 +1023,16 @@ void icc_node_add(struct icc_node *node, struct
+>> icc_provider *provider)
+>>           return;
+>>
+>>       mutex_lock(&icc_lock);
+>> +
+>> +    if (node->id >= ICC_DYN_ID_START) {
+>> +        /*
+>> +         * Memory allocation must be done outside of codepaths
+>> +         * protected by icc_bw_lock.
+>> +         */
+>> +        node->name = devm_kasprintf(provider->dev, GFP_KERNEL, "%s@%s",
+>> +                        node->name, dev_name(provider->dev));
+>> +    }
+>> +
+>>       mutex_lock(&icc_bw_lock);
+>>
+>>       node->provider = provider;
+>> @@ -1038,10 +1048,6 @@ void icc_node_add(struct icc_node *node, struct
+>> icc_provider *provider)
+>>       node->avg_bw = node->init_avg;
+>>       node->peak_bw = node->init_peak;
+>>
+>> -    if (node->id >= ICC_DYN_ID_START)
+>> -        node->name = devm_kasprintf(provider->dev, GFP_KERNEL, "%s@%s",
+>> -                        node->name, dev_name(provider->dev));
+>> -
+>>       if (node->avg_bw || node->peak_bw) {
+>>           if (provider->pre_aggregate)
+>>               provider->pre_aggregate(node);
+>>
+>> ---
+>> base-commit: 5fed7fe33c2cd7104fc87b7bc699a7be892befa2
+>> change-id: 20250529-icc-bw-lockdep-ed030d892a19
+>>
+>> Best regards,
+>> -- 
+>> Gabor Juhos <j4g8y7@gmail.com>
+>>
+>>
+> 
+> The locking in this code is a mess.
+> 
+> Which data-structures does icc_lock protect node* pointers I think and which
+> data-structures does icc_bw_lock protect - "bw" data structures ?
+> 
+> Hmm.
+> 
+> Looking at this code I'm not sure at all what icc_lock was introduced to do.
+
+Initially, only the 'icc_lock' mutex was here, and that protected 'everything'.
+The 'icc_bw_lock' has been introduced later by commit af42269c3523
+("interconnect: Fix locking for runpm vs reclaim") as part of the
+"drm/msm+PM+icc: Make job_run() reclaim-safe" series [1].
+
+Here is the reason copied from the original commit message:
+
+    "For cases where icc_bw_set() can be called in callbaths that could
+    deadlock against shrinker/reclaim, such as runpm resume, we need to
+    decouple the icc locking.  Introduce a new icc_bw_lock for cases where
+    we need to serialize bw aggregation and update to decouple that from
+    paths that require memory allocation such as node/link creation/
+    destruction."
+
+> Can we not just drop it entirely ?
+
+I'm not an expert in locking, but I doubt that we can easily drop any of the two
+mutexes without reintroducing the problem fixed by the change mentioned above.
+
+[1] https://lore.kernel.org/all/20230807171148.210181-1-robdclark@gmail.com/
+
+Regards,
+Gabor
+
