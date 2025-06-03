@@ -1,110 +1,113 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172ED23BCE2
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 15:37:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6712B22B5A3
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 15:39:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748965032; cv=none; b=k1qSNR8JSVF4AmTM/Z232Vvt+kFnQj7cucW82QWDlaEgptA8E7JTzxvEu/7YDWzYe/t5AT36OAkVix/H0U6KnA3blfKBfuitseOVGY+RkPgMauvZmYs5gw1CyBWSqEI5xGwhx9qabTUId46z25JtWcZcs66QkzPl4vHNy/1CzjQ=
+	t=1748965179; cv=none; b=Xe/gjGmtRVvIV2cjIffk7bBmHNRDeUZnpJfYCWsBn4YHzLCv6K6MbnE6H2DSElzINdntQJjC9J/STWE1GjW2W1LpP4QvQNUMDlSJUME55fdoZHQGg5IHEC4sEX2hDuAoYd68nfvXQSJIsftz8ZI6VJKrSbqEeKhRZtLzMcXOAEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748965032; c=relaxed/simple;
-	bh=N+pMCHYIBKQlPeyxJ/f+uTZ5/U92w6mRcGd7hTstQlk=;
+	s=arc-20240116; t=1748965179; c=relaxed/simple;
+	bh=UuT5g9Si2iw2CIgCkdkvrI6apMY4EOTkxGjsvbaoGu0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Fz5tn23dI+K+AuL7zJzqG2zBPLfwu7p+cEsboa6Md4muKkLvqgP+gFf2YDJARAgap72A77wBKuUZKL8/LQejo9DNsEd8U9IUwV3pk8M3BIPBr4g/KfVsJXDlSNOGKj00wGsDHh+/SVRvhXWMGNFIdfR9tEuBILwtEA9ETEY4RYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YtVJbX01; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=WAeBeeoN2dcfMAvEjoaC6Hkq17dRFTor2DpiJTEQqxH9eLglEq2b2FuMIBXTz6VPl6zX6FRNpUusyG35hoBwrH/ybawBHpImLu7PmLFqwBocQKGQbWqrU/sFsvyvBCZOIXp/Ghvv91gCV5sVcVJqsTibGVwOUZuIn1c4sQ9ymTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=27ezcxZ4; arc=none smtp.client-ip=209.85.221.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YtVJbX01"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-70e3e0415a7so54062237b3.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 08:37:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="27ezcxZ4"
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-52b2290e292so1924034e0c.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 08:39:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748965030; x=1749569830; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748965176; x=1749569976; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=N+pMCHYIBKQlPeyxJ/f+uTZ5/U92w6mRcGd7hTstQlk=;
-        b=YtVJbX01KgM0uu9Btn7EipBFatiROVjnd9vAKG3DMCXw+AgoFmEBEI08+6KoPXMU9q
-         5GI9J1n3Rl3XVbGM+7FQJACA2dmuledvEkw40jWnm/sgVwr8pkxODyA8wK7u0qrieUTV
-         Vj2nNW2212S3ugXObFwX6TVMlmZgdRHDA9smAWuemdUaIktZ+tpZ9Mm650qzOziVY6pp
-         evHWAkyEWYhAHbUp3SbVYISamVoNbRJuux0+zs8Oe2HmOutw5au4wsow42rkknf19DNe
-         dqXnfpgaGF5K3MNd0qIfii5N2lqhkTKN6+dvLCFjR1/hmd5OvQf6ibx7QTJXFfHCclWX
-         vreQ==
+        bh=KI0KUCc4GKGFyOQz+VkwvXZxmWd+cX7dW8bnjIdqNfw=;
+        b=27ezcxZ44/B6MjglwU0uJ1RKQRT6nZgV4VxjMh0AHeBnMB4xp8J5nuXXTMCIG/CSuW
+         D0nB/w8CTZbiGIi8/X0jNrZkVaAMvtCzUNlG0yFfX1NCJmsPJlL1Iqj05LVwP+vCm+XD
+         6iDO3k/mB7gUqB9Pr1V0xLCf6SIx8kSmFwPp7Z5u8kGgvWSKrkpmcKxsFC6RgsORqa2U
+         7Cwikva6jEYjqGJW/UZBXaGHVLl85lWx8YYe/RJ4saGabX2f1XV1XvWQSOSvlb07Vg+F
+         K10BZMrWGZtxT7Lw/2Eov+hM+EuP68dbI78QpzBwR0lDvgKpxOhmlfEpszJa3E8ywU98
+         OHww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748965030; x=1749569830;
+        d=1e100.net; s=20230601; t=1748965176; x=1749569976;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=N+pMCHYIBKQlPeyxJ/f+uTZ5/U92w6mRcGd7hTstQlk=;
-        b=O5W9KUr6obhJ/2rxKaWWho19NQKRxETWBaCQx9WlWBPauCOt7rsxLTHl6RN2Rhw1VV
-         FDbEvoQidOLybIHG1oFfrXcr0yhRNmjUN5hU3L5YmGT6g3bOFW91NGfmvHemXv3M5BgZ
-         l2pxyP8NmeO7IDHIJLKJKEDPaxDTHYvUS47na6bUZMme2njkiqytysTg+7LV/3ub6CRQ
-         ct/XWC1FtnS3Me/5KlO+UFe6TOPnLqYAXj3XP5NM8TkIDMzzqBt06gt+VbW9pHlxkyfD
-         NN+S8cOo+NFADpzHQ0gFNmJlj1J8pKJ01fzlbB1GXCjezLWa54KvUg2C0UDEdy7oB1oB
-         b24Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVYyWEhAWO3RhBzQb03RFiKk/R9C9IwBzK2kLcwwNOto6c9wxER5sNLIggAuAbO9vGJ0ox+IzuDMcnfK0c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuiPp6SQrG+iRXPTjC8gZMRTdC25Z3PQlC/YYYr/rDQY4hfXIF
-	2Oe2+thFT6X2WCLPAQHVmYYkCHa/3TLucxWbuyGM0+eP60wdKKXEc3ZW+OoF0tVHBkB9bVKLVDu
-	nzB/i6bmdihF3SCXpb117q28w2/kIgtnKFImisEK7AQ==
-X-Gm-Gg: ASbGncvveHuXS3AvcCpuZMZRB0CPN3U9RVF/ZEsZfrYzGYFXY8+MHS6fuZKtIA32YJ4
-	ZDB5o0aYRdMF9NJrEnIlpUg1rpneqn54gi7lZZHIFWQd7Jwn9Q5DIHGQaRe85OChuSUfGoH7dJh
-	8VDHOZ01eMLmpyiWhkWRQE0FKS4f23fixedI5CtbCNn8fB
-X-Google-Smtp-Source: AGHT+IHpl+65a6HRSkGvLRf1r7jeLyLNnGo4sF7oK21xHyQD9U7Bn8mpXIZIDnMPRBSl5Rocwg7he9JmFD+OdOd/90s=
-X-Received: by 2002:a05:690c:67c4:b0:70e:3e3d:cfe5 with SMTP id
- 00721157ae682-710c9c93987mr35904557b3.4.1748965030033; Tue, 03 Jun 2025
- 08:37:10 -0700 (PDT)
+        bh=KI0KUCc4GKGFyOQz+VkwvXZxmWd+cX7dW8bnjIdqNfw=;
+        b=BoU2zzByecWObJLPXwycAxEOZTQ0+AP7OP60kPkLluOkCdM7cH5JP50tTIFPP9keVT
+         RhzoCgjtZcDvSzmTvekGgc/vS2xA2jtF7nLQq4tzieSpBkhNPVMc8JZdUK0gQEzpNFkV
+         BXTqClR1bltAoOWSTEylnMtwj1r7/mDb8QHeKtSRl9je2IA72pJt5egDksTa7acWIgtC
+         nKorpI6yeMfM7IfL7ZfIKr3OxR1Bku6n0ERQyJQSfHLDTTMkQd6qCRpQ9zkQvAmR2NrK
+         yxpTY6TI67z8TwW4hIs5bFLAjtUTw6royrHqeJXnwZS/tucmN9j80/E1bxdZqOxMQ93Y
+         jASQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVliomkIMDRZv0Qw3HCllu162DlB84G7QPUC2gdURBBDYnCBxSnPXaz29TL9QGrUaKAoXFjnplNzp/FtBw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9d36vZ+o0Ct+yr+UuuvIjWihqBOPpYYAlk4qW2f0QeAa6RexL
+	AXj0I+fez5Mq/MSBRA3Pdc3GkPRGeTi4Oa84ieKyCd8UljlU/pJhWT6DX2r0sfN36LdIlgTMB7a
+	1KjexUFhKxSff7IzG9XjsnsKPx6AlFP5P3DLLEHXD
+X-Gm-Gg: ASbGncvnwxDiEfy5ybOyVS2GZWRd8C117LlprlwygaH+cdIujOknaQl4cLmAYaNfmeg
+	mu0HOcssC6WAlGuQPmvV10yMhTVmnEeKtssBF26O4NHFILPwFO9QskznTc7pDiXz1fxgBM0ogPs
+	7sGVWJSKyv3qFcs3ZlNc8jnxQ/jhafjWNO5ERqrybyt58=
+X-Google-Smtp-Source: AGHT+IFP1W8JY2mCchvmzAj895DlittXPX7dwIqkrpqJOi2cGxL0MhFgoA+lb/sIi6f+nQXajzDBlAkwp1cCik+mccg=
+X-Received: by 2002:a05:6122:17a8:b0:530:5f5a:1362 with SMTP id
+ 71dfb90a1353d-53084d9df14mr11975682e0c.10.1748965171447; Tue, 03 Jun 2025
+ 08:39:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250513-gicv5-host-v4-0-b36e9b15a6c3@kernel.org>
- <20250513-gicv5-host-v4-1-b36e9b15a6c3@kernel.org> <aDhWlytLCxONZdF9@lpieralisi>
- <CAFEAcA_3YLMSy+OsSsRayaRciQ1+jjh-dGzEjrh2Wa8BqdmqrA@mail.gmail.com>
- <aD6ouVAXy5qcZtM/@lpieralisi> <CAL_JsqJ5N2ZUBeAes=wexq=EstRSZ5=heF1_6crAw76yZ9uXog@mail.gmail.com>
-In-Reply-To: <CAL_JsqJ5N2ZUBeAes=wexq=EstRSZ5=heF1_6crAw76yZ9uXog@mail.gmail.com>
-From: Peter Maydell <peter.maydell@linaro.org>
-Date: Tue, 3 Jun 2025 16:36:58 +0100
-X-Gm-Features: AX0GCFvwPjD5ocl7QOfNaTZVaVH9zG-qYJmIWZHqE7gqRYhb1E9PXLq0OwGv4Ko
-Message-ID: <CAFEAcA-JrS0BiT66iin-pRVFadrY-pnJZ8TkDNxcjErknSCnUA@mail.gmail.com>
-Subject: Re: [PATCH v4 01/26] dt-bindings: interrupt-controller: Add Arm GICv5
-To: Rob Herring <robh@kernel.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Conor Dooley <conor+dt@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, andre.przywara@arm.com, 
-	Arnd Bergmann <arnd@arndb.de>, Sascha Bischoff <sascha.bischoff@arm.com>, 
-	Timothy Hayes <timothy.hayes@arm.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, suzuki.poulose@arm.com
+References: <20250603044813.88265-1-blakejones@google.com> <aD72CVq-kWr3G4S3@krava>
+In-Reply-To: <aD72CVq-kWr3G4S3@krava>
+From: Blake Jones <blakejones@google.com>
+Date: Tue, 3 Jun 2025 08:39:20 -0700
+X-Gm-Features: AX0GCFuztqxiBrROMefdagMnpx8xS7mbzVyRECRkSzeDsnAU9IK_GlaCTp_q3q0
+Message-ID: <CAP_z_CgAAAaAPGfYY2DErT_V2-E2e8E+fDHcGPVSaOq+_D9EeQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] libbpf: add support for printing BTF character
+ arrays as strings
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	Ihor Solodrai <ihor.solodrai@linux.dev>, Namhyung Kim <namhyung@kernel.org>, 
+	Ian Rogers <irogers@google.com>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 3 Jun 2025 at 16:15, Rob Herring <robh@kernel.org> wrote:
+On Tue, Jun 3, 2025 at 6:18=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrote=
+:
+> > +static int btf_dump_string_data(struct btf_dump *d,
+> > +                             const struct btf_type *t,
+> > +                             __u32 id,
+> > +                             const void *data)
+> > +{
+> > +     const struct btf_array *array =3D btf_array(t);
+> > +     __u32 i;
+> > +
+> > +     btf_dump_data_pfx(d);
+> > +     btf_dump_printf(d, "\"");
+> > +
+> > +     for (i =3D 0; i < array->nelems; i++, data++) {
+> > +             char c;
+> > +
+> > +             if (data >=3D d->typed_dump->data_end)
+> > +                     return -E2BIG;
 >
-> On Tue, Jun 3, 2025 at 2:48=E2=80=AFAM Lorenzo Pieralisi <lpieralisi@kern=
-el.org> wrote:
-> >
-> > On Thu, May 29, 2025 at 02:17:26PM +0100, Peter Maydell wrote:
-> > > secure.txt says:
-> > > # The general principle of the naming scheme for Secure world binding=
-s
-> > > # is that any property that needs a different value in the Secure wor=
-ld
-> > > # can be supported by prefixing the property name with "secure-". So =
-for
-> > > # instance "secure-foo" would override "foo".
->
-> Today I would say a 'secure-' prefix is a mistake. To my knowledge,
-> it's never been used anyways. But I don't have much visibility into
-> what secure world firmware is doing.
+> curious, is this just string array without null terminating byte?
+> should we just print " and return 0 instead of E2BIG error ?
 
-QEMU uses it for communicating with the secure firmware if
-you run secure firmware on the virt board. It's done that
-since we introduced that binding. Indeed that use case is *why*
-the binding is there. It works fine for the intended purpose,
-which is "most devices are visible in both S and NS, but a few
-things are S only (UART, a bit of RAM, secure-only flash").
+Good question. That E2BIG error would happen, for example, if we tried
+to print the array "{ 'a', 'b', 'c' }" when the type was "char[4]".
+I'd say your proposed behavior would be consistent with the semantic of
+".emit_strings should display strings in an intuitively useful way",
+and I'd be in favor of doing that (replacing "return -E2BIG" with "break").
+If others agree (specifically Andrii, who had comments about the semantics
+yesterday), I'll make that change.
 
--- PMM
+Blake
