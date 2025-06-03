@@ -1,113 +1,145 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F02A8821;
-	Tue,  3 Jun 2025 01:52:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD29C72616
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 01:54:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748915586; cv=none; b=qkxXQOdVU7oXOHfTBPToa/03R6P6CWb8pQhPOLlwo3zaAEgx2y9zEK2c1PK3vHkiuwT3+taYKTeBrN4vo2mh/ryyclM4Sn4rGX4Mxkx4ieSTZHQiDlQ+bzREhhzw2KQqqsaxWU0bUKY0u2o/Km4KA9slnpmjftXsGDRCuWLiKS0=
+	t=1748915684; cv=none; b=Ey/X9f+/QV/OnT3JkCthsioe1uu7TIHATauwbbhAdGZlL7W+wxNJwpyZIiWQpbKX+I0xp3kPTeZf2vGo/T/NWfv7htE9SxXfFUEl0H45lo3Zzr4jkJDN1ittQZFMtspxdNSbSHP8iU2j3sTf9KFIJbVLCJAeqPRQRkrYVvoGth4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748915586; c=relaxed/simple;
-	bh=hYRruDmtOjNIuVDQLtYfCEvEpP8qmXJ4rfczd3OA6H0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=lzRzdMyzE+pKGfTHotX8MjEZl9YenvlnVmEMsqWWHeKkszSe/ICYanusAaJsG78eVh2VHLedAqMpPtRTbOn8QdfCuRvUuEAl94hrzMRab/OpHriAiY01vh4Ixq9aEyGc4duNoKLeueDj0cXrwP+8kWFHzLNnbiZuTNL5IujjL3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=npwiKQAX; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1748915684; c=relaxed/simple;
+	bh=alGQUYdJ7trYc+bJw23IUMXpmOQ3ryN14Uf6s6Qh71Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=enrXa0maZWP6lcvDK4pOIuiy3xIj3QWu/IfHzj4BUC4UMUtVEAofyyij5Bop/7mwXFBXKctHdiy3ij7jOSmTrsB7PfPA57Ajpn7gPRZ7YGqlzz8/2emFeaJoGAAxhyuDfBKX77hMWIVqCxV81sXi7sUtajic3DaDNtIUP/355Q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Ta0WeT5i; arc=none smtp.client-ip=209.85.161.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="npwiKQAX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1748915577;
-	bh=3JdGYRjP2qSbaWnd4ZVnqvxDguVIobygpTLZVQDHTsk=;
-	h=Date:From:To:Cc:Subject:From;
-	b=npwiKQAX/+i2e2Qro10ml33ySajRYYKrul+6xzzNh6CVse/sJun05jLUzVQe+53p1
-	 hMpM4iCnb4NlIjBot/dn8OCG+VyKbA6q7I4Mqvip2DmFsyvssrgofHZtea8/4QtcO8
-	 5osKHzkZMMjsI8x0gEEZP7kSTK31bOvuGulFKC5K12rfjFYbHDFOwcAcNIC69G4xNe
-	 TAIlUORFw3ec//AqwHSCsfx5SWIVlZZts0XPvP520+vSYAudsAbibr1BaA6GLqdTQn
-	 rhQfG39+RfTE+QCgkiwohA8iT1/jB9XiWKCvSYbS00WtmjjvoYDm+3ieTSnbU2Y/u4
-	 XMxehG5O9x2Jw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bBDHr4GbRz4x8X;
-	Tue,  3 Jun 2025 11:52:56 +1000 (AEST)
-Date: Tue, 3 Jun 2025 11:52:55 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Andrea della Porta <andrea.porta@suse.com>, Dominik Haller
- <d.haller@phytec.de>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>, Nishanth Menon <nm@ti.com>
-Subject: linux-next: manual merge of the broadcom tree with Linus' tree
-Message-ID: <20250603115255.5639c99b@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Ta0WeT5i"
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-60be827f2b7so2767755eaf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 18:54:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1748915680; x=1749520480; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pagyp+jy4clkriYFxGjoAVDUibh4LVZC+hrhARyI5s8=;
+        b=Ta0WeT5iiQ5OH+9BslVuXv1ecPPVsP3FhBEpnD39kVZBmKeb0mKtMhhOh45+D58Hky
+         sp26klPWJiVSoqGSrfZRPxWNJ3ZSPbZTlhFt2QNX73PsabJNiU5MVnGK6FaEG03H3n1M
+         yN9f52EfE4xcZR4dLPS1NpNSCBF/dEusDWFsV11leWM2PxV3pYY20wisLpaGi3KkCNXo
+         4hnaq4fPyFODSQdrglA8m2csnrnw7xoCogBrfZH3FO1b8EiiBf++2aQw7FfgYXAaYhJR
+         oHO6N4u5nMq4gOlrBg60gzc0Xcfn+N2pJ5MShIq0KAbxtR9MYq521r37YiUYcPOfkNmG
+         d5Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748915680; x=1749520480;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pagyp+jy4clkriYFxGjoAVDUibh4LVZC+hrhARyI5s8=;
+        b=D9VmanyafXtQA/DjnbNhtUQc2bFoN7zvWiVUWyhIBPIHT9LunACrKyK9pEj9aDJppk
+         Wq2xXNgw7FDU0iuBlilxAcr41q+esyAhd7Vg95VKwZ29ZXtJ9KV+8mWtjbuNCKeZLGcp
+         2exX3kGNyBAKH5V0XAXcW7rVY2BHjNcBS3K/yHDk04my5wTye9x4qOMV1fM49X0uS1mU
+         LJ082gJNE33QcsBV6x/If53u/A1L5nBH0NIdysaDNeyG6OmwpzuNNnYyWRBABKEr5cHZ
+         W/Wbv3OUqXnfTicBYRvwW/Pfq2KDRhpjw9a//zuv5FqT+zSgEK0A9dC4yLJMyXvK7Jq6
+         E2eQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUw0m7HGl+F3pWSs14pQJ3t45KzbfdwH1wA0gdSnScGNMVgtUffHRBCj8MagjDE9tumKaU5Bdbng0eXK6U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFReVxG1XhjLBnXonZ747lzqr0M9JweMzSBmFm4FxoMK/Jj4uu
+	m2U27iMByAGAxfKiOywQOj2dIglJdsKtxI60ZdJM6rj2m5Ko4+othdfU3u4YokNvFd8zQZxVgP7
+	e5K+pzV9Nnb5Bk66X7PxV4mhLOqiokEsnRR5ictLW7Q==
+X-Gm-Gg: ASbGncvfZKuY/fmUXXrRtcCcf03T0Cmsg17b87ziri3Na9bWljIN5oxTrr2Awm3sx9W
+	dxdfuTFXn/6rTYgGDvNLGkGQ92rZYuF22zFYLM0lTjzbLca8PiC2aEndrMqVbdUcBf02v3IfevY
+	2KSRjZzUiEvwtpHNI/z9XRZqHJpHRfygabH5qLAc8=
+X-Google-Smtp-Source: AGHT+IHokecYTXxG97x/iEYQEeVys4OUT+S2pF48txreKp9kEQYN3ckg6nwxD/UKwBZMIe1z4CBO6my3eb/78TGVGa0=
+X-Received: by 2002:a05:6871:606:b0:2b8:608d:5dd1 with SMTP id
+ 586e51a60fabf-2e99e2b9aadmr335785fac.18.1748915680571; Mon, 02 Jun 2025
+ 18:54:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/V+iGUx+5DwQp3wvv5Wehax_";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/V+iGUx+5DwQp3wvv5Wehax_
-Content-Type: text/plain; charset=US-ASCII
+References: <20250528062609.25104-1-cuiyunhui@bytedance.com>
+In-Reply-To: <20250528062609.25104-1-cuiyunhui@bytedance.com>
+From: yunhui cui <cuiyunhui@bytedance.com>
+Date: Tue, 3 Jun 2025 09:54:29 +0800
+X-Gm-Features: AX0GCFudggujZacN9nRMZj0f-WQ_kk_mz1M7j0wdjQFNq3HWDe6-bTmazI6qunI
+Message-ID: <CAEEQ3wnEN0GVjmGTGoRa2eTGnKoQ2gp3okx8m_XcgiwMvGwzPg@mail.gmail.com>
+Subject: Re: [PATCH v7 1/4] serial: 8250: fix panic due to PSLVERR
+To: arnd@arndb.de, andriy.shevchenko@linux.intel.com, 
+	benjamin.larsson@genexis.eu, cuiyunhui@bytedance.com, 
+	gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, 
+	ilpo.jarvinen@linux.intel.com, jirislaby@kernel.org, 
+	jkeeping@inmusicbrands.com, john.ogness@linutronix.de, 
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
+	markus.mayer@linaro.org, matt.porter@linaro.org, namcao@linutronix.de, 
+	paulmck@kernel.org, pmladek@suse.com, schnelle@linux.ibm.com, 
+	sunilvl@ventanamicro.com, tim.kryger@linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Hi All,
 
-Today's linux-next merge of the broadcom tree got a conflict in:
+Gentle ping. Any comments on this patchset?
 
-  arch/arm64/configs/defconfig
 
-between commit:
+On Wed, May 28, 2025 at 2:26=E2=80=AFPM Yunhui Cui <cuiyunhui@bytedance.com=
+> wrote:
+>
+> When the PSLVERR_RESP_EN parameter is set to 1, the device generates
+> an error response if an attempt is made to read an empty RBR (Receive
+> Buffer Register) while the FIFO is enabled.
+>
+> In serial8250_do_startup(), calling serial_port_out(port, UART_LCR,
+> UART_LCR_WLEN8) triggers dw8250_check_lcr(), which invokes
+> dw8250_force_idle() and serial8250_clear_and_reinit_fifos(). The latter
+> function enables the FIFO via serial_out(p, UART_FCR, p->fcr).
+> Execution proceeds to the serial_port_in(port, UART_RX).
+> This satisfies the PSLVERR trigger condition.
+>
+> When another CPU (e.g., using printk()) is accessing the UART (UART
+> is busy), the current CPU fails the check (value & ~UART_LCR_SPAR) =3D=3D
+> (lcr & ~UART_LCR_SPAR) in dw8250_check_lcr(), causing it to enter
+> dw8250_force_idle().
+>
+> Put serial_port_out(port, UART_LCR, UART_LCR_WLEN8) under the port->lock
+> to fix this issue.
+>
+> Panic backtrace:
+> [    0.442336] Oops - unknown exception [#1]
+> [    0.442343] epc : dw8250_serial_in32+0x1e/0x4a
+> [    0.442351]  ra : serial8250_do_startup+0x2c8/0x88e
+> ...
+> [    0.442416] console_on_rootfs+0x26/0x70
+>
+> Fixes: c49436b657d0 ("serial: 8250_dw: Improve unwritable LCR workaround"=
+)
+> Link: https://lore.kernel.org/all/84cydt5peu.fsf@jogness.linutronix.de/T/
+> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+> ---
+>  drivers/tty/serial/8250/8250_port.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/825=
+0/8250_port.c
+> index 6d7b8c4667c9c..07fe818dffa34 100644
+> --- a/drivers/tty/serial/8250/8250_port.c
+> +++ b/drivers/tty/serial/8250/8250_port.c
+> @@ -2376,9 +2376,10 @@ int serial8250_do_startup(struct uart_port *port)
+>         /*
+>          * Now, initialize the UART
+>          */
+> -       serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
+>
+>         uart_port_lock_irqsave(port, &flags);
+> +       serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
+> +
+>         if (up->port.flags & UPF_FOURPORT) {
+>                 if (!up->port.irq)
+>                         up->port.mctrl |=3D TIOCM_OUT1;
+> --
+> 2.39.5
+>
 
-  8d8f28da8f90 ("arm64: defconfig: Enable TMP102 as module")
-
-from Linus' tree and commit:
-
-  10c68f40b86e ("arm64: defconfig: Enable RP1 misc/clock/gpio drivers")
-
-from the broadcom tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/arm64/configs/defconfig
-index 1e99db100607,ccf2f50673a3..000000000000
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@@ -706,7 -703,7 +707,8 @@@ CONFIG_SENSORS_RASPBERRYPI_HWMON=3D
-  CONFIG_SENSORS_SL28CPLD=3Dm
-  CONFIG_SENSORS_INA2XX=3Dm
-  CONFIG_SENSORS_INA3221=3Dm
- +CONFIG_SENSORS_TMP102=3Dm
-+ CONFIG_MISC_RP1=3Dm
-  CONFIG_THERMAL_GOV_POWER_ALLOCATOR=3Dy
-  CONFIG_CPU_THERMAL=3Dy
-  CONFIG_DEVFREQ_THERMAL=3Dy
-
---Sig_/V+iGUx+5DwQp3wvv5Wehax_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg+VXcACgkQAVBC80lX
-0Gzb1Af+IKE39mbMEuA/NenEQwJpnEkPbFlhIBULbrXCJFWiYkqdr7aOyQpod68Z
-cn2Ljt3SUmwVf73rfCoq01JnxOFmC7wQwMvrEdF/iAtBJXz3T0h+rIdya6IIn5Po
-LZs9SIohlXTlrjA+EgrHG9dxiuBrS0QhwowmWr/uQqHDv4zRA9Qd8UMuwzXo7l2P
-3CkJ/kSvTyOfTosAZm0aK64Q7RSZvNI7qKEbj5wVF28ibnVP4mmkBHMDth/XwpgU
-CeliH1pXKFbxrCjhDxkq97BKmTVOEvhnesCLnlEsKykQ/9l0TGFOHGSiAaT3q/Wj
-rtbn8/zLGoBYduKoaHOBMFT8TUad4w==
-=3zjv
------END PGP SIGNATURE-----
-
---Sig_/V+iGUx+5DwQp3wvv5Wehax_--
+Thanks,
+Yunhui
