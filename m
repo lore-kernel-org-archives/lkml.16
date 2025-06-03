@@ -1,127 +1,115 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434BA2B2CF
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 12:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795CC146A66;
+	Tue,  3 Jun 2025 12:07:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748952366; cv=none; b=onITKibDRjzFLqM/ImTFqUehEKzcOi1e2gEdi5zzAZUxtAZBm7dh0wYoFptldmdfQ1zroe4Z6c/WaNtHm2jlb/bOHytM0zYGk4N+bb/FKj06IvE3GoLDdJAbM5U1SXVIxSvg0J8u9fqIoCjpUCFgt/tAqwItKgFjinVyYC9t6rY=
+	t=1748952462; cv=none; b=RlfsCAGBQ/cL90uiivchCLGW0e8IyYuQcX6tMr/yyQd5l18Fu0BXfNHdnMOEvO4BIuWdKjazjKEdalywnk+r6556HP/QKydPppe5mNhJVAqZc9FErj54qNfvNbQIX1JTVVELZXq0Tv/lF9hdoicLQD6OqxUvGLdF4F7koc0hek8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748952366; c=relaxed/simple;
-	bh=fPmKHi75xwI/I4zLEnhov/ZVHLXU+TfLkgaePipJgwk=;
+	s=arc-20240116; t=1748952462; c=relaxed/simple;
+	bh=BbD8Z3F2Z41vAioRdlDjKkkvrHAem1eOimWX5TqDL6w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mAyrtzB+BXK+4XBFS0xfZhHfPjEEBuHC6gNikxZrjGNNNvORhYERqZ5QduZs2MyZllhd8XWMM+T54wnc2RxeMYyFzoTpr5YyvqMfS4xONBEvfbae88bMYi6z4ON54Ur+4RYGm8HwY9CgY1wtx9mQIIDQq+iJCtcpPRcMFHOPgH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rjf9dCmd; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=i3Nza/i1vFISmkkoKoFfe7k6830c7puFrA1Sd084qPRNmHGo/w0dlG8E447CufkGdrNAfY8kAeOkFyGIdQ7VATKgLz+4Kk+1Nhz1lOO0rkodI58cell/7wHsqBpu0NPHp5r5CHGuM3EujTvjjMe+KpE5bryZa6iBk9s7F6eBvEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bZ1tIPBC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rjf9dCmd"
-Message-ID: <2f41a74e-06a6-4dc3-806b-a88783d26c8f@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748952359;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mOTHkJYnIu7YqcktCvF/rulIgNRIgccYCV1pgoiilTw=;
-	b=rjf9dCmd/OIdOpetURczVXrOVdxR8NdeLpzrBFv14occaGV0KjibZpFG4s2D2+m3pc/zzA
-	ljirg6ZNcFpNo8wbEaTvrODKzEvJhrXBFxRtnoyhh5dQmT7c1Fc8Mqu8BmklgdadNRCXAa
-	q2N0tHQM/Ltt2e5V7upSMEYxYuwhTuY=
-Date: Tue, 3 Jun 2025 20:05:51 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bZ1tIPBC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96808C4CEEF;
+	Tue,  3 Jun 2025 12:07:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748952461;
+	bh=BbD8Z3F2Z41vAioRdlDjKkkvrHAem1eOimWX5TqDL6w=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=bZ1tIPBCMC0FV0OvYa4IU2MI/zLxD6HAAJ/fn3ZQ+kC9SxgorXCRZkF7HWoXqEK0n
+	 iAUDRNsvbeHoYigOApXD/k43x+CXVPQ3n9oDBwYZZffCLBEEqfB1PfpYx9Y3hJ9hXU
+	 hVej6reVni5cdK8W5VOfHAxJLh/bYcfqAAuabxzwug1kXfUlMOrZfzgkq/YUWfF0TH
+	 fB8Jy9pBgprYgPdAxioRfm/9W0rVDFCbfWILT3l/j630UfqzWRXTtcZT2Z47Einhkc
+	 Ky5GLbIPIcidz7PtV6EeAhFEP3IaCAhYrnEn0f7QeqN9wBAPoMPFwVWUYSrCeI5hMn
+	 ULpe6x+Vrd1Wg==
+Message-ID: <ba13c2f1-9b08-4ba7-8093-d55c16143cb2@kernel.org>
+Date: Tue, 3 Jun 2025 14:07:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v2 3/3] bpftool: Display cookie for raw_tp link
- probe
-To: Quentin Monnet <qmo@kernel.org>, ast@kernel.org, daniel@iogearbox.net,
- andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
- sdf@fomichev.me, jolsa@kernel.org
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250603022610.3005963-1-chen.dylane@linux.dev>
- <20250603022610.3005963-3-chen.dylane@linux.dev>
- <c3b326ea-8d79-47c1-82b7-a9f2f46ab0c3@kernel.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Chen <chen.dylane@linux.dev>
-In-Reply-To: <c3b326ea-8d79-47c1-82b7-a9f2f46ab0c3@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/6] Add SPAcc Skcipher support
+To: Pavitrakumar Managutte <pavitrakumarm@vayavyalabs.com>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, herbert@gondor.apana.org.au, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, Ruud.Derwig@synopsys.com,
+ manjunath.hadli@vayavyalabs.com, adityak@vayavyalabs.com,
+ Shweta Raikar <shwetar@vayavyalabs.com>
+References: <20250602053231.403143-1-pavitrakumarm@vayavyalabs.com>
+ <20250602053231.403143-3-pavitrakumarm@vayavyalabs.com>
+ <9f6b4442-1fb0-479d-9514-410d4d8bfd98@kernel.org>
+ <CALxtO0kitR0MnjzPwVT8nsuYThTRX+fbyOH9i2z1KKnCPg1dqg@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <CALxtO0kitR0MnjzPwVT8nsuYThTRX+fbyOH9i2z1KKnCPg1dqg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-在 2025/6/3 17:36, Quentin Monnet 写道:
-> On 03/06/2025 03:26, Tao Chen wrote:
->> Display cookie for raw_tp link probe, in plain mode:
->>
->>   #bpftool link
->>
->> 22: raw_tracepoint  prog 14
->>          tp 'sys_enter'  cookie 23925373020405760
->>          pids test_progs(176)
->>
->> And in json mode:
->>
->>   #bpftool link -j | jq
->>
->> [
->>    {
->>      "id": 47,
->>      "type": "raw_tracepoint",
->>      "prog_id": 79,
->>      "tp_name": "sys_enter",
->>      "cookie": 23925373020405760,
->>      "pids": [
->>        {
->>          "pid": 274,
->>          "comm": "test_progs"
->>        }
->>      ]
->>    }
->> ]
->>
->> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
->> ---
->>   tools/bpf/bpftool/link.c | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/tools/bpf/bpftool/link.c b/tools/bpf/bpftool/link.c
->> index 52fd2c9fac..bd37f364be 100644
->> --- a/tools/bpf/bpftool/link.c
->> +++ b/tools/bpf/bpftool/link.c
->> @@ -484,6 +484,7 @@ static int show_link_close_json(int fd, struct bpf_link_info *info)
->>   	case BPF_LINK_TYPE_RAW_TRACEPOINT:
->>   		jsonw_string_field(json_wtr, "tp_name",
->>   				   u64_to_ptr(info->raw_tracepoint.tp_name));
->> +		jsonw_lluint_field(json_wtr, "cookie", info->raw_tracepoint.cookie);
->>   		break;
->>   	case BPF_LINK_TYPE_TRACING:
->>   		err = get_prog_info(info->prog_id, &prog_info);
->> @@ -876,6 +877,8 @@ static int show_link_close_plain(int fd, struct bpf_link_info *info)
->>   	case BPF_LINK_TYPE_RAW_TRACEPOINT:
->>   		printf("\n\ttp '%s'  ",
-> 
-> 
-> Nit: See how we use a double space at the end of the string here, to
-> separate the different fields in the plain output...
-> 
-> 
->>   		       (const char *)u64_to_ptr(info->raw_tracepoint.tp_name));
->> +		if (info->raw_tracepoint.cookie)
->> +			printf("cookie %llu ", info->raw_tracepoint.cookie);
-> 
-> 
-> ... Please use a double space here in a similar way, at the end of your
-> "cookie %llu  " format string.
-> 
+On 03/06/2025 14:02, Pavitrakumar Managutte wrote:
 
-Will fix it in v3, thanks.
+>> Please run standard kernel tools for static analysis, like coccinelle,
+>> smatch and sparse, and fix reported warnings. Also please check for
+>> warnings when building with W=1 for gcc and clang. Most of these
+>> commands (checks or W=1 build) can build specific targets, like some
+>> directory, to narrow the scope to only your code. The code here looks
+>> like it needs a fix. Feel free to get in touch if the warning is not clear.
+>>
+Confirm that you understood this. You sent us code with obvious flaws
+which would be found with tools. It's a proof you did not run these
+static tools. It's not the job of community reviewers to replace the
+tools. Using us instead of tools is... well, a mistake but if you think
+about our limited time then kind of close to inappropriate request. So
+did you understand the need of using tools BEFORE you post it?
 
-> Looks good otherwise. Thanks,
-> Quentin
-
-
--- 
-Best Regards
-Tao Chen
+Best regards,
+Krzysztof
