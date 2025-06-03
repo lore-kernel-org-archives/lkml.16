@@ -1,154 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1901F23099F;
-	Tue,  3 Jun 2025 11:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816DF1C5D72
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 11:43:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748950955; cv=none; b=JCPY+dSZAdJIAP4chd+6NVfX2K/jyD5ZrxJjjG1+yIbOmHqPOjAZJPu0wkElS7zZijeImWf/W/84l57XAHvG1D+curfxq8r2Up5wSfQnGSS9GCk27hcxp/meO2TkncHpVm8xz5K2IF6z0tJ0E61LYx+3cXAW9aBpzuHTwlOofGQ=
+	t=1748951024; cv=none; b=nCsh1PkPY31iHjOnFO+hVF3kE7tVHkPGD9DI8OPIMmEZMCN3n8J+uRIuUp7xjInVqGl3vcF2UAjMbgnRnLKQ4Ve0biEccfSujHS2ZNKR/cQL8amM+CQ+43EbSplWC8Wj1yU0M9KdpZs2Hzw82/DSZqwA+u1WatDs4/6zpbqxFVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748950955; c=relaxed/simple;
-	bh=FvY8QaoJqci3tuIuqKZdMMJaO5JY+0JaOUDV7Pkhs24=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=U/jOcrLPMH7e06QxJI5qgcDVUtNadCcxAkA0peBRQATGSve3fcwoWDa/dpMc9yIhu6UI0Rbk4TH4eEuAuH3zzj2b+Hkv9ki9mMuq8RqthVVpsY4Up6e3Ovl0T9pznzF6WK5iexP8vQwrzE62aZ9j6rTRooK3lK1FFKn+ZauhiKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZvB4PwUA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748951024; c=relaxed/simple;
+	bh=PNBCbtHacciRjGJIUshcSY6wyXemX0p2lmL+yLw6v1g=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=i8GvPUL7x03EgRQxye2yZUMCN5osR0VCCXwM6EO5nLkZlZR9L3GN9S8Obr9BVhgL5hMt7czGaexpKoZBk0CJyeBvrd50WEqruMhfo9s+XrVju5/3Gycw9Zs8OYCz1HA/uBFkvbUg7YcWy8R8xrbTJFqHZfJ2y6mY6agyUVo3qIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=x9tbXX+X; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZvB4PwUA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C299C4CEF3;
-	Tue,  3 Jun 2025 11:42:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748950954;
-	bh=FvY8QaoJqci3tuIuqKZdMMJaO5JY+0JaOUDV7Pkhs24=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ZvB4PwUAdTN7Z5Uuxgy2GtMLshUsW414n418u0MLUGBGzR2GGH37pXkD0dchrabtV
-	 F0OFa9bVB/hD7ULExkI0Zmy51oB2kFhEHk+48ISdtX2T8p0WsZ/NNwJjmbxWIuOvm1
-	 lMcKv6XRq+6aJmh6QO8zP363vlEwcuXCOG3cx3UlclFaidVMe4j+daraELr/OjfYlc
-	 6pI5zmAQZh426i09N0JltNssVVOItPaD4M4wDKR6mKrJrlEQL2imj5tOfBCkHSC51h
-	 v7OCnzzyRZSvmarguVjH43KSVCH1wWjkszCR0kPxEc7MKGJ/msyGAUH4u7nm5PqN1o
-	 DKKFH1cYn3/kQ==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Tue, 03 Jun 2025 07:42:25 -0400
-Subject: [PATCH 3/4] nfs: new tracepoint in nfs_delegation_need_return
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x9tbXX+X"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-60477f1a044so9351424a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 04:43:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748951021; x=1749555821; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ubw5qr1vqTEQqkyLWzcVCvsavrNjo50AY7n8fFMjQxc=;
+        b=x9tbXX+XfH2nSEw133b2razXgHKNwcxaEeOyTFB8/3XIHosEkXOE7Xje2VQLhzDNUA
+         ufU38/ry8olVOggfEyz3l0e7p6sJgxWQrQRXB+Vp50KWW1hbhX1A5jjgo1BECMCQxzUI
+         DJ2wcnsQRlJdgxSBtooNDa0DGCK8teCuLUGyKfdXFhWM6Wkm10qAA6So9FPDTlAOfaYG
+         R9702pF2pgieQzn4yDAf0rDkO2r21caXxeJvMV5li0HjE6WtmAgFHKFCygzSGgSQbQSr
+         bVg3QmG2HW6qZAISH/fa6ziun7kvfnRLMaJDAuS9oC3icjh7NUZxqpQF0aELbNlrXd3n
+         ALlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748951021; x=1749555821;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ubw5qr1vqTEQqkyLWzcVCvsavrNjo50AY7n8fFMjQxc=;
+        b=HZduZ6xNuA3k7MnTGt/AKdJDI8b+5JmQ3p+Xrj4YwcHR/tAehKVtyG9TqrSeznkyzn
+         sGxx9lqDEMAP6oElyuFsy3+Rr9/TWJqvT/TSAFed1XGF8e+ELLacM96tz5/dzIIehvDj
+         myzBHOhkWICZ2BP+fDnuZot/VpPowUWIRXcUp7/XMr3vzz2GbZf5jmBUGLf8L1CZiWzw
+         J6A4b+hEtL5bBjsrxvNXYNxoiSELd9VsFN1KjrtK5aHDsftgCa+z3fJROC3I9BpKrHaV
+         H1CJqk8hKF7bI1n3rnoRk7rJpgg0outwcu49CFQwAfBelDyp2j+8f0TUpDNxvkLLA/qp
+         98Jw==
+X-Forwarded-Encrypted: i=1; AJvYcCWO+IbglL1aAK3+GbU0qP9JHjP8ZpKpCJOTD1p0VSg9eqBbEvDsv4sMai7Apj5SbaRBRIovQ5vxilOkwco=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjRzESg7QeNw94dUSWd56pq1BI3Nvna/kg5+ZvxXcgvtkS1syp
+	trJUwhikOgP26NVS+BOStKoQKw3itQzL9wJTndZGSsaivjcm3rwZFFmkONBJ63j4qMA=
+X-Gm-Gg: ASbGncsNXbwrbXuMRt+fVxmz4wldGhF+pi6Sl0kBrbUMFyH4hDia+ddApvWuGPZD7ef
+	Kg2jBAN+z6wzm9C4vLXRGDIsJEiujN23SAMmmy4/FHhER1Lg3I8skwAkC2HviUclOUnmAbzZyNs
+	zCi2cpiu3QXHUp9vgBo19qgiVcWt/AstWh69QBY40FANZca5uwAAC5vZTozRM8E5Nbk3pARHrBK
+	XXydTvvePQnCNeSiGXL6zYDS7AStiijDgOgyICnsNqyO+8+hePxEVFWcTA4FV+Uj/kAqfwg7oNV
+	bgo0EZYM+71yTmoXbV6mm+KrMmG75qdy5fsj9fwpUWnA+MRfFExbs4q0pght
+X-Google-Smtp-Source: AGHT+IGnG6VIuLl9nqDMaZzRwmhoM9nz6ogi2ZgDE95nbti3Gup7V8oVPqG3h7hrx+FWDi59W2Bv6g==
+X-Received: by 2002:a05:6402:5106:b0:604:e33f:e5c0 with SMTP id 4fb4d7f45d1cf-605b7b6b7ccmr12087155a12.30.1748951020735;
+        Tue, 03 Jun 2025 04:43:40 -0700 (PDT)
+Received: from [192.168.0.14] ([79.115.63.247])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60567169810sm7354284a12.78.2025.06.03.04.43.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Jun 2025 04:43:40 -0700 (PDT)
+Message-ID: <a4a5855c-6d58-4fc5-85d7-4727d27efbe0@linaro.org>
+Date: Tue, 3 Jun 2025 12:43:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250603-nfs-tracepoints-v1-3-d2615f3bbe6c@kernel.org>
-References: <20250603-nfs-tracepoints-v1-0-d2615f3bbe6c@kernel.org>
-In-Reply-To: <20250603-nfs-tracepoints-v1-0-d2615f3bbe6c@kernel.org>
-To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3050; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=FvY8QaoJqci3tuIuqKZdMMJaO5JY+0JaOUDV7Pkhs24=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBoPt+nUIl0NFrrN2dL02077gxtjmmO1RGPSM474
- FsiSwlYFcqJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaD7fpwAKCRAADmhBGVaC
- FW51D/44YTUIPIjBsdVVRGDtIt28ZG1RHlTF/kRKj6YwsOOcgYoMLaX+h+w+wJcL2OQRioKyObt
- qFx8cQEdyI78XFQdm2e/y6DEYAE56ZpIwY03/jI0Pokgmu3UdlY7FIZPVc2JM1HI2w1rsNkoZgP
- GFKRRv+tK75xg8qVQWAxb60gfdfV6Uye4v5LQo9d44iA0YPbDYBhdftcQc60duz/RPYFTdezTsf
- 4nYgsUjxXzO/2gv4Z2DPdH8Egcd2X5moFXP5M/+1U8vxpqvkS17BwPmc0YAXg2Z99GSswZD8XCY
- YgBz+gg0ERl9yKrRX26MIHHnQUmcO0KLOWbTqQPtDU7O7u7dr/1r/P6kTFu+rstqW4hBCkiOgav
- 74cvTiZG4XQViK4e3uEAgQ7CmQGGtjIHkJyzLoGulkB0C1BUQTile9YYOl6jhTCGQJUwLIFpMNR
- BCTHZ4MODofMtCTJpsZ2EE7GN8U830QZ9+DPGjw1IY0sh/Am0/aW9Q9VJJaVjd2d91iCzX9By/D
- 8etL3biCwUrcH1nIyDxrwOD7SEGtZyUYx4Ygif+B8vkE2pcilzxM1kDxibZS4yoGD0vMLhDXd7K
- 0qTy2ijTI0QMzjHnT3iBmBiX5OgBhSFBRNaBf83Smlc1I11qHD5FhTJVGWtq61LEnIHaGAhQ5/M
- 5yThsmqKZeg+6eQ==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
+ in sync
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+ =?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>,
+ Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ William McVicker <willmcvicker@google.com>
+References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
+ <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com>
+ <5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org>
+ <8f281667-b4ef-9385-868f-93893b9d6611@linux.intel.com>
+ <3a47fc82-dc21-46c3-873d-68e713304af3@linaro.org>
+ <f6ee05f7-174b-76d4-3dbe-12473f676e4d@linux.intel.com>
+ <867e47dc-9454-c00f-6d80-9718e5705480@linux.intel.com>
+ <a56284a4-755d-4eb4-ba77-9ea30e18d08f@linaro.org>
+ <7e882cfb-a35a-bab0-c333-76a4e79243b6@linux.intel.com>
+ <f2d149c6-41a4-4a9a-9739-1ea1c4b06f4b@linaro.org>
+ <19ccc09c-1d6b-930e-6ed6-398b34020ca1@linux.intel.com>
+ <c1c0bacd-7842-4e9e-aec4-66eb481aa43f@linaro.org>
+ <f8f15489-8b31-4672-9fb9-161c7c4599dc@linaro.org>
+Content-Language: en-US
+In-Reply-To: <f8f15489-8b31-4672-9fb9-161c7c4599dc@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Add a tracepoint in the function that decides whether to return a
-delegation to the server.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfs/delegation.c |  2 ++
- fs/nfs/nfs4trace.h  | 47 +++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 49 insertions(+)
 
-diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index 78a97d340bbd98390ca8302176c17caf08dcab4a..6f136c47eed7f1801af337f0e88f1a6bf477d0c6 100644
---- a/fs/nfs/delegation.c
-+++ b/fs/nfs/delegation.c
-@@ -594,6 +594,8 @@ static bool nfs_delegation_need_return(struct nfs_delegation *delegation)
- {
- 	bool ret = false;
- 
-+	trace_nfs_delegation_need_return(delegation);
-+
- 	if (test_and_clear_bit(NFS_DELEGATION_RETURN, &delegation->flags))
- 		ret = true;
- 	if (test_bit(NFS_DELEGATION_RETURNING, &delegation->flags) ||
-diff --git a/fs/nfs/nfs4trace.h b/fs/nfs/nfs4trace.h
-index 6e1c4590ef9bf60eac994e85be816e82f5e0c741..73a6b60a848066546c2ae98b4982b0ab36bb0f73 100644
---- a/fs/nfs/nfs4trace.h
-+++ b/fs/nfs/nfs4trace.h
-@@ -14,6 +14,8 @@
- #include <trace/misc/fs.h>
- #include <trace/misc/nfs.h>
- 
-+#include "delegation.h"
-+
- #define show_nfs_fattr_flags(valid) \
- 	__print_flags((unsigned long)valid, "|", \
- 		{ NFS_ATTR_FATTR_TYPE, "TYPE" }, \
-@@ -958,6 +960,51 @@ DEFINE_NFS4_SET_DELEGATION_EVENT(nfs4_set_delegation);
- DEFINE_NFS4_SET_DELEGATION_EVENT(nfs4_reclaim_delegation);
- DEFINE_NFS4_SET_DELEGATION_EVENT(nfs4_detach_delegation);
- 
-+#define show_delegation_flags(flags) \
-+	__print_flags(flags, "|", \
-+		{ BIT(NFS_DELEGATION_NEED_RECLAIM), "NEED_RECLAIM" }, \
-+		{ BIT(NFS_DELEGATION_RETURN), "RETURN" }, \
-+		{ BIT(NFS_DELEGATION_RETURN_IF_CLOSED), "RETURN_IF_CLOSED" }, \
-+		{ BIT(NFS_DELEGATION_REFERENCED), "REFERENCED" }, \
-+		{ BIT(NFS_DELEGATION_RETURNING), "RETURNING" }, \
-+		{ BIT(NFS_DELEGATION_REVOKED), "REVOKED" }, \
-+		{ BIT(NFS_DELEGATION_TEST_EXPIRED), "TEST_EXPIRED" }, \
-+		{ BIT(NFS_DELEGATION_INODE_FREEING), "INODE_FREEING" }, \
-+		{ BIT(NFS_DELEGATION_RETURN_DELAYED), "RETURN_DELAYED" })
-+
-+DECLARE_EVENT_CLASS(nfs4_delegation_event,
-+		TP_PROTO(
-+			const struct nfs_delegation *delegation
-+		),
-+
-+		TP_ARGS(delegation),
-+
-+		TP_STRUCT__entry(
-+			__field(u32, fhandle)
-+			__field(unsigned int, fmode)
-+			__field(unsigned long, flags)
-+		),
-+
-+		TP_fast_assign(
-+			__entry->fhandle = nfs_fhandle_hash(NFS_FH(delegation->inode));
-+			__entry->fmode = delegation->type;
-+			__entry->flags = delegation->flags;
-+		),
-+
-+		TP_printk(
-+			"fhandle=0x%08x fmode=%s flags=%s",
-+			__entry->fhandle, show_fs_fmode_flags(__entry->fmode),
-+			show_delegation_flags(__entry->flags)
-+		)
-+);
-+#define DEFINE_NFS4_DELEGATION_EVENT(name) \
-+	DEFINE_EVENT(nfs4_delegation_event, name, \
-+			TP_PROTO( \
-+				const struct nfs_delegation *delegation \
-+			), \
-+			TP_ARGS(delegation))
-+DEFINE_NFS4_DELEGATION_EVENT(nfs_delegation_need_return);
-+
- TRACE_EVENT(nfs4_delegreturn_exit,
- 		TP_PROTO(
- 			const struct nfs4_delegreturnargs *args,
+On 6/3/25 11:48 AM, Tudor Ambarus wrote:
+> 
+> 
+> On 6/3/25 11:36 AM, Tudor Ambarus wrote:
+>>
+>>
+>> On 6/3/25 9:13 AM, Ilpo Järvinen wrote:
+>>> So please test if this patch solves your problem:
+>>
+>> It fails in a different way, the bridge window resource never gets
+>> assigned with the proposed patch.
+>>
+>> With the patch applied: https://termbin.com/h3w0
+> 
+> above is no revert and with the proposed fix. It also contains the
+> prints https://termbin.com/g4zn
+> 
+> It seems the prints in pbus_size_mem are not longer hit, likely because
+> of the new condition added: ``!pdev_resources_assignable(dev) ||``,
+> pci_dev_for_each_resource() finishes without doing anything.
+> 
+>> With the blamed commit reverted: https://termbin.com/3rh6
+> 
 
--- 
-2.49.0
+I think I found the inconsistency.
+
+__pci_bus_assign_resources()
+	pbus_assign_resources_sorted()
+		pdev_sort_resources(dev, &head);
+
+But pdev_sort_resources() is called with a newly LIST_HEAD(head), not
+with realloc_head, thus the resources never get sorted.
+
+pdev_sort_resources() exits early at
+	``if (!pdev_resources_assignable(dev))``
+
 
