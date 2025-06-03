@@ -1,50 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074512701CA;
-	Tue,  3 Jun 2025 07:44:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68A84272E43
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 07:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748936663; cv=none; b=LEPSz0hZ0iIJ4wrrt9Htt569ZC4eIHAWdUHC7tufRFO6fYtONs6zAqB2dhTnLYNDOcDYmYiRYTpSTM/WQRvxdC4s0E2XUXOWP/S3D/WaqHKFpq6Z2PiduhwnItLWeYHQtiRi7WJTZoQ5MeQSAEuIAK+wNqEtjJWQGy55ynFuf5o=
+	t=1748936667; cv=none; b=ROmCcfuc4JdC1AXgMouM/JbP91FYh2gpOyqh3Ylxva+bxvy1efOtDcXpDZaejE5+F2d11uTgUKVxeT9lLGtma7u4PaFlsHOX3uBVgLLFpHV2Xv4kun4BT4bxyUc1H5+a+lh4vPgHwxPZ1JUpw25WaZ6kkrO+wk/nwua9OHeprdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748936663; c=relaxed/simple;
-	bh=UpRslWg9pkIdLUbErUepkqcrN/Ri7GcT0ZXvqzK9Dbg=;
+	s=arc-20240116; t=1748936667; c=relaxed/simple;
+	bh=y0jUcTC77CUXKo3bG8hEpMNQCGBWWRSo2vRIuwhA9D8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rGzFRo7GXxJ1HABCqwc5d47GF3pAeCMwGlGMo1LfWCJKMEZeybetKWffr+uRxRpwznnas8ecqBGtmSe93EDGhl7FARTlHGJOYeO2fmtL2vbjsu44/EHKYqwwXtQLtmfcfUaJ4iQczGQIGPaKAFbiu98otpHzWcZG3LTTT2D+J1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mx2v9pM9; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=LBTotvCND2fdtqUEEtO7Um1k8pimJ+RO2Ikv26honubE2EvHTC0PuWRSm3lAqlu9TgD7In7nDSwRnLQSOfj03XgRV7yaJLIetTV6kvz6Zd/0KWjRcwfoTMK/Tf3Cf0Lo5u4Ug/EhmLREIToZi/Bji9TUBVbQrDz2626+CmiXNXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XGJMRbwt; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mx2v9pM9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748936663; x=1780472663;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=UpRslWg9pkIdLUbErUepkqcrN/Ri7GcT0ZXvqzK9Dbg=;
-  b=mx2v9pM9/bey/s6GzqJJoaMcVEsCAmszIgfQk9BRKPCZu1nFdVC5/wq8
-   AWfqr0zGOfDCPdo8I5OcLXE1KACB1KqzX/y/PPaSmFhASovSfKnYzjqM4
-   NkQ01rX/Kj9w7+iQWFXFUcE1WmGrbeuja1+u03O3yEb3/oyKBmEnfEvJ+
-   8VC1r61qicIG2AR8qTlb8MuW7C+lmwwYisPZeGoWx1BYWUuPTD2Uwz+R1
-   fMtGAHaS76oeGbu/w3ajrqWuOYOai9J5kggL+aHNeI5/1g066v9lUhUhz
-   1dS7MqtAWTKGXkdLcFcVxhVKbpFjwSS/i7m+J0WxE5Y1EQ+3WKF1+Bumb
-   A==;
-X-CSE-ConnectionGUID: aBo1HETgRLiENWCa4Wfgqg==
-X-CSE-MsgGUID: OP7KxDaCSNiS9Qo5/A5TOQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="50658915"
-X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
-   d="scan'208";a="50658915"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 00:44:21 -0700
-X-CSE-ConnectionGUID: CjIy0pOCTVaGKVXeABbVtA==
-X-CSE-MsgGUID: u2fHNmR1SmipYHN6PBBHdA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
-   d="scan'208";a="144670277"
-Received: from unknown (HELO [10.238.0.239]) ([10.238.0.239])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 00:43:59 -0700
-Message-ID: <d0b582cc-0cf7-4cdc-b148-d8f61dea7253@linux.intel.com>
-Date: Tue, 3 Jun 2025 15:43:56 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XGJMRbwt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748936664;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=SG6mTtKanLkSL9gF6goSw81A6MzIykOU0fNCSqg+tps=;
+	b=XGJMRbwtsNHqBrSSQV05ByUqrulxrgsSPaYnJgx9T1Q6nWhb3wCFdUKtIxwXeeHg5RhI1T
+	iXy80HgQtm3ZiuCwOcqwo/T3IrKR8f4jlbRCxBZ5jVwI98b87F58nKHQBRyAaTWnmCJ8UY
+	YB5ZkvCq3piBvR4mAxOYIpClRKalZh4=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-681-xt5KvgUnMX2B3-_RIfO-Dg-1; Tue, 03 Jun 2025 03:44:19 -0400
+X-MC-Unique: xt5KvgUnMX2B3-_RIfO-Dg-1
+X-Mimecast-MFC-AGG-ID: xt5KvgUnMX2B3-_RIfO-Dg_1748936658
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a5058f9ef4so801760f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 00:44:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748936658; x=1749541458;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=SG6mTtKanLkSL9gF6goSw81A6MzIykOU0fNCSqg+tps=;
+        b=vuekb6S7CH52Yd1RwG0A+AvQ2nQFUovRjIErOow9QAJnDUDeEFsniiUWPesspWdhC+
+         l/VRFcNj1IqzWv9hFgAa9bFDMJCck9zHFnhqyiaLxxpKc83lFesxeO00uOXcApik2GIV
+         rVM4Q1kQJOoLcxmwJDqDrHj3cnzk0kFDyJD2y05AGsBkhaRrYO0mTPgglIhSm2mdi68j
+         /n/dDVQUmlVux1uQmxVVOd9xFckNJI17TFdZD4vDVcsuA4p6YGwhMDhy68TTQglBsxeE
+         vkgppKmJcSxGZpY8kFD4u4sUULxbnOxsbOOV6pkByu9hCTn9qbnRF4MFfZ0q/kd7DXr9
+         2sig==
+X-Gm-Message-State: AOJu0YyobLavMoUbL1vhlSjEpE/TxOC2FmF6WA8XJDh4YJy+ODdbydWp
+	Petw58UjUhglrpg2J1d3rCYUCyThJmAzJbJ1AkApVMuZGBXowhGDaU0lZq/P85sEMPdNCov6el/
+	EilTd6dGPtAcGHV/S3KRkoJevLS1yPuJVJcPRTyy0DMZRnpaNKQUwqwLynu9r7cEpWA==
+X-Gm-Gg: ASbGncvb77vuzowwoeU0KLriTrTB+VynxUvg/mC61Mb5+gRvhKcXYoyChWT9c3D8TwN
+	yHC/J9MjRmjczz0iKd+ps9ObeRm4e8QhbBadGsxD814BYULdOhTUS6L9MmqdknXSPKsD4OtbRhB
+	jQ1BeV9dAxw2HuPSRY3YLZMYBWw3HF2iGvJ7gWdUHAOldpWaV9VbridG0rFv2hwfZdPiDMyYgPH
+	kkXyFTQMMdkqsaStH7A8hcRHT7fCBg1Sf+P1PgYdaGqMYtIPv+gtGpq5gEf4mv4dLDzULTwlGpW
+	Pvo0udC/uAfegynftOIAB2en1Vo7PBIYsw38+h/ysbhDmUcho/a1Pzu0sqt00KsTL8AVsdPdo/y
+	54tzb0a5+E2FTUcJvJ1FzxGxFkLMTsDfw29vzxiE=
+X-Received: by 2002:a05:6000:1a8f:b0:3a4:f786:acc8 with SMTP id ffacd0b85a97d-3a4f7a023admr12719501f8f.7.1748936658393;
+        Tue, 03 Jun 2025 00:44:18 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFjJJ9way87jDnzJBj4N9lNHw7SNKH1oMFyEekMgNpE2iFEScqcgGmu5upP2vBF8O/aiqEkyQ==
+X-Received: by 2002:a05:6000:1a8f:b0:3a4:f786:acc8 with SMTP id ffacd0b85a97d-3a4f7a023admr12719476f8f.7.1748936658013;
+        Tue, 03 Jun 2025 00:44:18 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f0d:f000:eec9:2b8d:4913:f32a? (p200300d82f0df000eec92b8d4913f32a.dip0.t-ipconnect.de. [2003:d8:2f0d:f000:eec9:2b8d:4913:f32a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe7440asm17674702f8f.58.2025.06.03.00.44.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Jun 2025 00:44:17 -0700 (PDT)
+Message-ID: <5cdeb7c8-1f5b-486a-9406-1865f533b246@redhat.com>
+Date: Tue, 3 Jun 2025 09:44:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,75 +74,91 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 33/51] KVM: guest_memfd: Allocate and truncate from
- custom allocator
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com,
- ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com,
- anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu,
- bfoster@redhat.com, brauner@kernel.org, catalin.marinas@arm.com,
- chao.p.peng@intel.com, chenhuacai@kernel.org, dave.hansen@intel.com,
- david@redhat.com, dmatlack@google.com, dwmw@amazon.co.uk,
- erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, graf@amazon.com,
- haibo1.xu@intel.com, hch@infradead.org, hughd@google.com,
- ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz,
- james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com,
- jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com,
- jun.miao@intel.com, kai.huang@intel.com, keirf@google.com,
- kent.overstreet@linux.dev, kirill.shutemov@intel.com,
- liam.merwick@oracle.com, maciej.wieczor-retman@intel.com,
- mail@maciej.szmigiero.name, maz@kernel.org, mic@digikod.net,
- michael.roth@amd.com, mpe@ellerman.id.au, muchun.song@linux.dev,
- nikunj@amd.com, nsaenz@amazon.es, oliver.upton@linux.dev,
- palmer@dabbelt.com, pankaj.gupta@amd.com, paul.walmsley@sifive.com,
- pbonzini@redhat.com, pdurrant@amazon.co.uk, peterx@redhat.com,
- pgonda@google.com, pvorel@suse.cz, qperret@google.com,
- quic_cvanscha@quicinc.com, quic_eberman@quicinc.com,
- quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com,
- quic_pheragu@quicinc.com, quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com,
- richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, rientjes@google.com,
- roypat@amazon.co.uk, rppt@kernel.org, seanjc@google.com, shuah@kernel.org,
- steven.price@arm.com, steven.sistare@oracle.com, suzuki.poulose@arm.com,
- tabba@google.com, thomas.lendacky@amd.com, usama.arif@bytedance.com,
- vannapurve@google.com, vbabka@suse.cz, viro@zeniv.linux.org.uk,
- vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org,
- willy@infradead.org, xiaoyao.li@intel.com, yan.y.zhao@intel.com,
- yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
-References: <cover.1747264138.git.ackerleytng@google.com>
- <e9aaf20d31281d00861b1805404dbed40024f824.1747264138.git.ackerleytng@google.com>
+Subject: Re: [PATCH RFC] mm: madvise: use walk_page_range_vma() for
+ madvise_free_single_vma()
+To: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org,
+ linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Suren Baghdasaryan <surenb@google.com>, Lokesh Gidra
+ <lokeshgidra@google.com>, Tangquan Zheng <zhengtangquan@oppo.com>
+References: <20250603013154.5905-1-21cnbao@gmail.com>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <e9aaf20d31281d00861b1805404dbed40024f824.1747264138.git.ackerleytng@google.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250603013154.5905-1-21cnbao@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
+On 03.06.25 03:31, Barry Song wrote:
+> From: Barry Song <v-songbaohua@oppo.com>
+> 
+> We've already found the VMA before calling madvise_free_single_vma(),
+> so calling walk_page_range() and doing find_vma() again seems
+> unnecessary. It also prevents potential optimizations for MADV_FREE
+> to use a per-VMA lock.
+> 
+> Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+> Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Jann Horn <jannh@google.com>
+> Cc: Suren Baghdasaryan <surenb@google.com>
+> Cc: Lokesh Gidra <lokeshgidra@google.com>
+> Cc: Tangquan Zheng <zhengtangquan@oppo.com>
+> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+> ---
 
+Acked-by: David Hildenbrand <david@redhat.com>
 
-On 5/15/2025 7:42 AM, Ackerley Tng wrote:
-[...]
->   
->   	list_for_each_entry(gmem, gmem_list, entry)
->   		kvm_gmem_invalidate_end(gmem, start, end);
-> @@ -776,6 +879,16 @@ static long kvm_gmem_allocate(struct inode *inode, loff_t offset, loff_t len)
->   
->   	start = offset >> PAGE_SHIFT;
->   	end = (offset + len) >> PAGE_SHIFT;
-> +	if (kvm_gmem_has_custom_allocator(inode)) {
-> +		size_t nr_pages;
-> +		void *p;
-> +
-> +		p = kvm_gmem_allocator_private(inode);
-> +		nr_pages = kvm_gmem_allocator_ops(inode)->nr_pages_in_folio(p);
-> +
-> +		start = round_down(start, nr_pages);
-> +		end = round_down(end, nr_pages);
-It's weird here.
-Should the end be round_up()?
+-- 
+Cheers,
 
-> +	}
->   
->   	r = 0;
->   	for (index = start; index < end; ) {
->
-[...]
+David / dhildenb
+
