@@ -1,113 +1,80 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE9C1F30BB;
-	Tue,  3 Jun 2025 09:43:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40382820B5;
+	Tue,  3 Jun 2025 09:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748943811; cv=none; b=Rx0xIC690XQ8trxEH7vvd1Wupm8XXGoHVqz+N8n5aCb4shbk8IbYCgpZAfJs8JGGC3fR6TrKYprYzQ0Yx2XXtBiweVkbTmRgum4oFYP4NMQw86P6dHok8v0Fkt4gk6YIdeha9UJp196W6q7GrdKE9MEXoxwzgJ/GK118P+NBeWY=
+	t=1748943810; cv=none; b=ZWxjbAGviJbGK1Ds9fcBq3sWWF1z/+KvNVVwxEosaxPuLwcMflgY4JhMPQDNEQw3PIejtbtqcoAn5xKE+bJpjCqOosXaTJ8qAqngv0Uyr9sfU1VDWbZB4+QJjQ8Rxl2BJhLkleHgqOpAYdh6ir5POzJsfWnRsL+WpdZ6NdRKHHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748943811; c=relaxed/simple;
-	bh=ISNgnd29PMBrvsUWw5jw8nPncxgXW5hH7ePZLNkAFiU=;
-	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=FklG3pZyXDw4u9yEMdrHPe2sR4uosrEA7nyUKe0mwzDrDQiWzHTVZFXwneV8fiymgug/JtO6Lh5jLp/ehUfc4WisSevMKUA+d1wQnuZdXeAAEk9GcIktufKxJeIaW5CTTvVn6WQuhPo3RF/rdXc2Jw8OgvcCSaYLoCLa/J3aKcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bBQdv0hj8zQlK2;
-	Tue,  3 Jun 2025 17:39:15 +0800 (CST)
-Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id ADBF91800B4;
-	Tue,  3 Jun 2025 17:43:24 +0800 (CST)
-Received: from [10.67.120.192] (10.67.120.192) by
- kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 3 Jun 2025 17:43:23 +0800
-Message-ID: <8467f587-7111-420c-ba10-604b5ab44cc9@huawei.com>
-Date: Tue, 3 Jun 2025 17:43:23 +0800
+	s=arc-20240116; t=1748943810; c=relaxed/simple;
+	bh=qP17+3iWiPn1wGGHbP/Gtri9Gy08Qm0Dsdo2SoPMpSs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RLvwxzWrCSvzdIvNDIcxUuBmIyBY4F/yPaMLXnMsrRq0yO/4hpjgm8ziRg4YLzFefKB04wHljNoga5gERlkCEMISHmd3Mssfojtxma/+OZ2+T0rdERCOsv0fdJboYMXZlPTkHbCrCrGZJGd2XtRxdiK7QW9qOJLewHXiwMO8uqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c7ICk3tL; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c7ICk3tL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 476C6C4CEED;
+	Tue,  3 Jun 2025 09:43:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748943810;
+	bh=qP17+3iWiPn1wGGHbP/Gtri9Gy08Qm0Dsdo2SoPMpSs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=c7ICk3tLO9R4sLjArr0+9M04GtCdBXbVXXgJ/WRCKq9Eq8Fq3bgff2DvVzwiykFtF
+	 kWxf2ZDo9M/BklvxbtKgNDUkO1Ead5wWC8A9Z8QZcoXKQwx97BEECgcJWEHlDOJqHx
+	 AtC7DtYDKnayGzs3MZilAsHfpGl/YLOHzJNl7ybaLTfqJmGSFugcMKGGkqqaCwh3ss
+	 FJLXU4WyD6i7bvTOWoHiA9ObffAo651e2NP7rXAf54+NDhKd7MGDt8gXJwOlDLnBUF
+	 Xr5NcRI4vXlOTTgm/ywsbSWCtkkus7B1Y0FPVseN08OhZyai3bXwRMzNtPmlcl+9D6
+	 l4+v3jN9lVlPg==
+Date: Tue, 3 Jun 2025 11:43:24 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Daniel Almeida <daniel.almeida@collabora.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] rust: irq: add support for request_irq()
+Message-ID: <aD7DvBfAxKi7Fpg_@cassiopeiae>
+References: <20250514-topics-tyr-request_irq-v3-0-d6fcc2591a88@collabora.com>
+ <20250514-topics-tyr-request_irq-v3-1-d6fcc2591a88@collabora.com>
+ <aCUQ0VWgoxdmIUaS@pollux>
+ <aD3PCc6QREqNgBYU@google.com>
+ <aD3f1GSZJ6K-RP5r@pollux>
+ <aD6yOte8g4_pcks7@google.com>
+ <aD62ZGBwqXxTroeX@cassiopeiae>
+ <aD64YNuqbPPZHAa5@google.com>
+ <aD68BzKRAvmNBLaV@cassiopeiae>
+ <CAH5fLgjweugttOtuiyawNp5s2N9JPoo5FTJ+Zs9t_S87ggC1Gg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-CC: <shaojijie@huawei.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <thomas.petazzoni@bootlin.com>, Simon Horman
-	<horms@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
-	<linux@armlinux.org.uk>, Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Herve Codina <herve.codina@bootlin.com>, Romain Gantois
-	<romain.gantois@bootlin.com>
-Subject: Re: [PATCH net] net: phy: phy_caps: Don't skip better duplex macth on
- non-exact match
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>, <davem@davemloft.net>,
-	Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>, Eric Dumazet
-	<edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
-References: <20250603083541.248315-1-maxime.chevallier@bootlin.com>
-From: Jijie Shao <shaojijie@huawei.com>
-In-Reply-To: <20250603083541.248315-1-maxime.chevallier@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
- kwepemk100013.china.huawei.com (7.202.194.61)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAH5fLgjweugttOtuiyawNp5s2N9JPoo5FTJ+Zs9t_S87ggC1Gg@mail.gmail.com>
 
+On Tue, Jun 03, 2025 at 11:18:40AM +0200, Alice Ryhl wrote:
+> I don't think that helps. If Devres::drop gets to swap is_available
+> before the devm callback performs the swap, then the devm callback is
+> just a no-op and the device still doesn't wait for free_irq() to
+> finish running.
 
-on 2025/6/3 16:35, Maxime Chevallier wrote:
-> When performing a non-exact phy_caps lookup, we are looking for a
-> supported mode that matches as closely as possible the passed speed/duplex.
->
-> Blamed patch broke that logic by returning a match too early in case
-> the caller asks for half-duplex, as a full-duplex linkmode may match
-> first, and returned as a non-exact match without even trying to mach on
-> half-duplex modes.
->
-> Reported-by: Jijie Shao <shaojijie@huawei.com>
-> Closes: https://lore.kernel.org/netdev/20250603102500.4ec743cf@fedora/T/#m22ed60ca635c67dc7d9cbb47e8995b2beb5c1576
-> Fixes: fc81e257d19f ("net: phy: phy_caps: Allow looking-up link caps based on speed and duplex")
-> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+True, this will indeed always be racy. The rule from the C API has always been
+that devm_{remove,release}_action() must not be called if a concurrent unbind
+can't be ruled out. Consequently, the same is true for Revocable::revoke() in
+this case.
 
-Tested-by: Jijie Shao <shaojijie@huawei.com>
-
-> ---
->   drivers/net/phy/phy_caps.c | 15 +++++++++------
->   1 file changed, 9 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/net/phy/phy_caps.c b/drivers/net/phy/phy_caps.c
-> index 703321689726..d80f6a37edf1 100644
-> --- a/drivers/net/phy/phy_caps.c
-> +++ b/drivers/net/phy/phy_caps.c
-> @@ -195,7 +195,7 @@ const struct link_capabilities *
->   phy_caps_lookup(int speed, unsigned int duplex, const unsigned long *supported,
->   		bool exact)
->   {
-> -	const struct link_capabilities *lcap, *last = NULL;
-> +	const struct link_capabilities *lcap, *match = NULL, *last = NULL;
->   
->   	for_each_link_caps_desc_speed(lcap) {
->   		if (linkmode_intersects(lcap->linkmodes, supported)) {
-> @@ -204,16 +204,19 @@ phy_caps_lookup(int speed, unsigned int duplex, const unsigned long *supported,
->   			if (lcap->speed == speed && lcap->duplex == duplex) {
->   				return lcap;
->   			} else if (!exact) {
-> -				if (lcap->speed <= speed)
-> -					return lcap;
-> +				if (!match && lcap->speed <= speed)
-> +					match = lcap;
-> +
-> +				if (lcap->speed < speed)
-> +					break;
->   			}
->   		}
->   	}
->   
-> -	if (!exact)
-> -		return last;
-> +	if (!match && !exact)
-> +		match = last;
->   
-> -	return NULL;
-> +	return match;
->   }
->   EXPORT_SYMBOL_GPL(phy_caps_lookup);
->   
+I think Devres::drop() shouldn't do anything then and instead we should provide
+Devres::release() and Devres::remove(), which require the &Device<Bound>
+reference the Devres object was created with, in order to prove that there
+can't be a concurrent unbind, just like Devres::access().
