@@ -1,158 +1,151 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2EB1B95B
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 22:23:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0669738DD1
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 22:23:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748989397; cv=none; b=EQYeBqsEH4ylpCX4ICD7/fAJ16qfWjq/8AMoLVkvZ8szgwtuRX04I7p5keV8r2HvMgvN8BRF7NZJqw+rlA+sOxG3wuYiI8qPBoetqz9XWa+LfoBeLlqYrecM58mRKVyU18LVek11qrsn+nn171xVFdy/+pm7oqno5asLvafxnpM=
+	t=1748989407; cv=none; b=U1km+h0Tf9OTeNDojBYur85fHYhyyuMU+QSJeDKlGzQl9cLbT2bLsnSwVcT5THsfWxG4cbJtvj6lNWpkfnrQ7Q4PPnUEjfcTUouJNbeDjpIzoOx6iYMTQvbcscHWHOIgOBVVrBPAzMzhyHrnDuEYe6VRtLeD+Htl8kIAE47DF7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748989397; c=relaxed/simple;
-	bh=ujR7+YNFVwdyJod/Ln3HICzV48zkmFm+xlMOBh2rkXY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ri+TcgBx1yw8WI+6UkjPGgt0o/gJlklTbkBeN4Zb/LuqfRgA2ORkauSZt45VfjkX64KOwLd5x9cIK2UHBZPgkG9JbWOafw5emc68UGLztBr8NNcOWSkh+i8/NX8d+OSR85Zf2Zek39bhfMUtzwBQhecBjKGcEW0vGhZMl32OzGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TBve22C1; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748989407; c=relaxed/simple;
+	bh=/MhTDh1qESFrZExtR+SCTFFsKrkDxVGO6OCMPivcISk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AH26o/zmGMBxfPxDyiYpu0VN8Ep/T8lKE6fzNI3u2BqFGCZ3xRQhE++uFrMYvQl5dEbwPu5L4tVOWru+vinK5xOruXIKUBOd675oUcdtzQv+sWnSf4gZxiiSJJRkNbdcgi30YaUmq4kQ+qXTkldsrD2e/0XocqEsuod89hJ6xpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=eRimniX8; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TBve22C1"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a4fd1ba177so255216f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 15:23:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748989393; x=1749594193; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cf7cdnxo/lNWyds1JKJmBHm432KIhVOdVcIeUTbnMfo=;
-        b=TBve22C1QW6W5OJcfaASdvElTT8sNz/ML6S2tep1JnAAIavE5IO49PmHrto21cSBAF
-         uZyZw3EnbA25k8iL5aQ1WCNjCvU2JWnZzyLCeP3R+gp4i+hWOzSrJGKyo3K0nBTuVF7H
-         KvNSEjBDKBf0eIhDE3TAcZIHZmjsSftepsdhOdEfvwLuVON5fIoaDRrGBA3wdEr2Lf3C
-         +k5PntvXCbY5sECwVwu6sKLpgk/99tf1AD/heQEdmKsrF5emEfMlVXrBSOIq4pmKsiWn
-         yhzc5KEK1cNcAGJTD1DAqaDzlx3InfIVUdsQFB5IoOQ3VxbQGfFu+ZG2J+g3awG56IDz
-         tZgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748989393; x=1749594193;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cf7cdnxo/lNWyds1JKJmBHm432KIhVOdVcIeUTbnMfo=;
-        b=I9u7Nwr/v6qmJbAu70fnrlGmWchLlJwqr3VTLKq4oPDqOAJvgVhfDWScFc6+Ayk7Vc
-         OWFRCoMJzNQGjRAsP7e0pjyEjbFOZ/++pj00/l2JjcL3yfUYolBJeSBL8maVEj8zN7YH
-         EqqSBQlLpWVr2CFsv15FAAvruEQl0tMyCnCTMvkw41lQuIhA4IfEu4qqzYLWrLlr7g74
-         NCke0FiEznuFr41gDsDUSwlo0t3eCGPn7KBxTw5Poq6IHN54sEuDPB2xPO4ID/jQehjb
-         mIoorJRQN8wtuit6WW8Q16LSsUxjxWETie8UgMubx2UxLvolKAA+atmvN93EwAHpM/AE
-         X30A==
-X-Forwarded-Encrypted: i=1; AJvYcCVH1aTN/z6sLq5nMwt17Bp0+gSa2hZ/qzixYJeGB1WueCgehYbBTcA3/BABh/65l7U1Fx6lFtD74nTR5xk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHSjcsfkSNmiwRBtXqtQow1wnq131DVxhCAaDukzFBincgDVbS
-	04IA7US0h9rzemUscVdUxM7Em73+4ZmrIOthj+IkLhVolOVsPHO5khho
-X-Gm-Gg: ASbGnctMHk4A697LMpFuYXY9DTJC5WYjX0Q8RUGuMsuC2JJ88sFTzaI1HkXVMFac5i0
-	n6ZrpgWcdGpvYXUA3jOnqD5findyQgw3fGKXur4NVCRlDjmszaX9ESLfx3o7JjX8MM/EFpZX8BT
-	dOsdJdG7DibqnQtnLH+tI3wkS626wI92eSxjnKgWMDda9psUtoIPPB7cYwnG2FbsDUyAxHFBPLl
-	hi5nLyb/7z6yTidNTwq/z0txxZfe9Rd5yanQkz0ASW/8jslraZUlcCV1Am01knkgmwfjcg3y5pl
-	eA0+XUZuXoaHwXY/An3Gt+yREurYd9agQb0UuCHrLLITdcgeFOi5sqY5bV1b+lrC8tI7lM0qzpN
-	wrYNNOFUUVT0lTIuhhYz9zhmM
-X-Google-Smtp-Source: AGHT+IEGYsxfnq75yBV046eCf2C6bfv4GXEyK+rhrzPBHWrsHGEFRWDcZKf+jRLmD17a/VFJaVfeuQ==
-X-Received: by 2002:a5d:5f54:0:b0:3a4:f7ae:77c9 with SMTP id ffacd0b85a97d-3a51d507bf6mr449428f8f.5.1748989393563;
-        Tue, 03 Jun 2025 15:23:13 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f00a00f5sm19745427f8f.95.2025.06.03.15.23.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 15:23:13 -0700 (PDT)
-Date: Tue, 3 Jun 2025 23:23:12 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linuxfoundation.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org, kees@kernel.org, acarmina@redhat.com,
- jpoimboe@kernel.org, mark.rutland@arm.com
-Subject: Re: [RFC 6/8] x86_64/bug: Implement __WARN_printf()
-Message-ID: <20250603232312.73ab608c@pumpkin>
-In-Reply-To: <20250603130455.GL21197@noisy.programming.kicks-ass.net>
-References: <20250602144201.301974933@infradead.org>
-	<20250602144755.928750774@infradead.org>
-	<CAHk-=whkD=pveK6X_5gtVbJ62+86oBOr9JokneYpSJyxjHFBpQ@mail.gmail.com>
-	<20250602154943.GB30486@noisy.programming.kicks-ass.net>
-	<CAHk-=wiYHv2duN1Aj3E5UD3zH=z6A9YpGJ1Mxj_CWL7_FRMKgw@mail.gmail.com>
-	<20250602215725.GA39782@noisy.programming.kicks-ass.net>
-	<CAHk-=whOEyTJb6MAcy2ojN98RrEzU5TW031sGpHMhMMFAg5bnw@mail.gmail.com>
-	<20250603130455.GL21197@noisy.programming.kicks-ass.net>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="eRimniX8"
+Date: Tue, 3 Jun 2025 15:22:54 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748989402;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=niaSUpNhBQ89KPyB0pVEOrY4XFpNCP0lf6WviOejFww=;
+	b=eRimniX8eSc5OSQy+LM1nI6Dhv3MYnIr4b0Kj8coGDibHna3u81l7v23qFFDHdwinARZa8
+	xMuELseQUnvc+hrp9LYmF5h20GBKCGCcaLBq7LdbJM3ZbJB56zDxKeEoegbVsE5HltYeQg
+	j/YwAqMYBnAAtov23jZAIUGTZntaGa8=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Colton Lewis <coltonlewis@google.com>
+Cc: kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Mark Rutland <mark.rutland@arm.com>, Shuah Khan <shuah@kernel.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 10/17] KVM: arm64: Writethrough trapped PMEVTYPER register
+Message-ID: <aD91vp8QXdIjs1Nh@linux.dev>
+References: <20250602192702.2125115-1-coltonlewis@google.com>
+ <20250602192702.2125115-11-coltonlewis@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250602192702.2125115-11-coltonlewis@google.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, 3 Jun 2025 15:04:55 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
-
-> On Mon, Jun 02, 2025 at 04:10:16PM -0700, Linus Torvalds wrote:
-> > On Mon, 2 Jun 2025 at 14:57, Peter Zijlstra <peterz@infradead.org> wrote:  
-> > >
-> > > So if I stuff the asm macro in a global asm() block then GCC ends up
-> > > looking like so:  
-> > 
-> > Better, but as then the clang thing looks like a horrendous disaster.
-> > 
-> > How about we simply make this all *code* instead of playing games with
-> > register numbers?
-> > 
-> > Why not just push the arguments by hand on the stack, and make that be
-> > the interface? A 'push %reg' is like a byte or two. And you'd do it in
-> > the cold section, so nobody cares.
-> > 
-> > And the asm would look somewhat sane, instead of being crazy noise due
-> > to crazy macros.
-> > 
-> > Or so I imagine, because I didn't actually try it.  
+On Mon, Jun 02, 2025 at 07:26:55PM +0000, Colton Lewis wrote:
+> With FGT in place, the remaining trapped registers need to be written
+> through to the underlying physical registers as well as the virtual
+> ones. Failing to do this means delaying when guest writes take effect.
 > 
-> Yeah, I can make that work. 
+> Signed-off-by: Colton Lewis <coltonlewis@google.com>
+> ---
+>  arch/arm64/kvm/sys_regs.c | 27 +++++++++++++++++++++++++--
+>  1 file changed, 25 insertions(+), 2 deletions(-)
 > 
-> I've been trying to make __WARN_printk() (or similar) do a tail-call to
-> a "UD2; RET;" stub. But doing printk() in a function makes GCC generate
-> wild code that refuses to actually tail-call :/
+> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> index d368eeb4f88e..afd06400429a 100644
+> --- a/arch/arm64/kvm/sys_regs.c
+> +++ b/arch/arm64/kvm/sys_regs.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/printk.h>
+>  #include <linux/uaccess.h>
+>  #include <linux/irqchip/arm-gic-v3.h>
+> +#include <linux/perf/arm_pmu.h>
+>  #include <linux/perf/arm_pmuv3.h>
+>  
+>  #include <asm/arm_pmuv3.h>
+> @@ -942,7 +943,11 @@ static bool pmu_counter_idx_valid(struct kvm_vcpu *vcpu, u64 idx)
+>  {
+>  	u64 pmcr, val;
+>  
+> -	pmcr = kvm_vcpu_read_pmcr(vcpu);
+> +	if (kvm_vcpu_pmu_is_partitioned(vcpu))
+> +		pmcr = read_pmcr();
+
+Reading PMCR_EL0 from EL2 is not going to have the desired effect.
+PMCR_EL0.N only returns HPMN when read from the guest.
+
+> +	else
+> +		pmcr = kvm_vcpu_read_pmcr(vcpu);
+> +
+>  	val = FIELD_GET(ARMV8_PMU_PMCR_N, pmcr);
+>  	if (idx >= val && idx != ARMV8_PMU_CYCLE_IDX) {
+>  		kvm_inject_undefined(vcpu);
+> @@ -1037,6 +1042,22 @@ static bool access_pmu_evcntr(struct kvm_vcpu *vcpu,
+>  	return true;
+>  }
+>  
+> +static void writethrough_pmevtyper(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
+> +				   u64 reg, u64 idx)
+> +{
+> +	u64 evmask = kvm_pmu_evtyper_mask(vcpu->kvm);
+> +	u64 val = p->regval & evmask;
+> +
+> +	__vcpu_sys_reg(vcpu, reg) = val;
+> +
+> +	if (idx == ARMV8_PMU_CYCLE_IDX)
+> +		write_pmccfiltr(val);
+> +	else if (idx == ARMV8_PMU_INSTR_IDX)
+> +		write_pmicfiltr(val);
+> +	else
+> +		write_pmevtypern(idx, val);
+> +}
+> +
+
+How are you preventing the VM from configuring an event counter to count
+at EL2?
+
+I see that you're setting MDCR_EL2.HPMD (which assumes FEAT_PMUv3p1) but
+due to an architecture bug there's no control to prohibit the cycle
+counter until FEAT_PMUv3p5 (MDCR_EL2.HCCD).
+
+Since you're already trapping PMCCFILTR you could potentially configure
+the hardware value in such a way that it filters EL2.
+
+>  static bool access_pmu_evtyper(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
+>  			       const struct sys_reg_desc *r)
+>  {
+> @@ -1063,7 +1084,9 @@ static bool access_pmu_evtyper(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
+>  	if (!pmu_counter_idx_valid(vcpu, idx))
+>  		return false;
+>  
+> -	if (p->is_write) {
+> +	if (kvm_vcpu_pmu_is_partitioned(vcpu) && p->is_write) {
+> +		writethrough_pmevtyper(vcpu, p, reg, idx);
+
+What about the vPMU event filter?
+
+> +	} else if (p->is_write) {
+>  		kvm_pmu_set_counter_event_type(vcpu, p->regval, idx);
+>  		kvm_vcpu_pmu_restore_guest(vcpu);
+>  	} else {
+> -- 
+> 2.49.0.1204.g71687c7c1d-goog
 > 
-> The next crazy idea was to make a variant of __WARN_printk() that takes
-> a struct bug_entry * as first argument such that it has access to the
-> bug entry and then take the trap on the way out (while keeping the
-> pointer in the first argument) and then have the trap handler complete
-> things.
-> 
-> That way it would all 'just work'. Except I can't seem to force GCC to
-> emit that tail-call :-(
-> 
-> I'll prod at it some more.
 
-How about a slightly less generic macro, something that could be:
-#define WARN_IF(a, op, b, msg) \
-	if (unlikely((a) op (b)) { \
-		printf("WARN: %s (%x " #op " %x)\n", \
-			msg ? msg : "(" #a ") " #op " (" #b ")", (a), (b)); \
-	}
-but could just be:
-	if (unlikely((a) op (b)) {
-		asm(	" ud2; cmp %0, %1"
-			" .asciz msg; .asciz #op"
-			:: "r" (a), "r" (b));
-	}
-So a ud2 followed by a reg-reg compare (should be REX/D16 prefix followed
-by '3[89ab] /r') and two strings (literals or addresses).
-With a suitable exception table entry.
-
-That saves the problem of a generic printf format while still giving the
-values of the variables associated with the failing test (for simple tests).
-It should also avoid destroying register assignment for the rest of the
-function.
-
-If gcc refuses to do a jump for the 'if (unlikely...))' try adding an 'else'
-clause containing an asm comment.
-I've done that in the past to convert a backwards conditional jump (predicted taken)
-into a forwards jump (predicted not taken) to an unconditional jump to the
-actual target.
-(I had a very tight clock limit for the 'worst case' path.)
-
-	David
-
-
+Thanks,
+Oliver
