@@ -1,50 +1,58 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E4E1F5434;
-	Tue,  3 Jun 2025 06:44:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6222844C77;
+	Tue,  3 Jun 2025 06:47:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748933094; cv=none; b=ro6GmoWBIxCmEAvqXvjXULUIQCLof0oa9fufmKbVRNCxqdWFvshjfIpLtQpgBO6/US/SeUhRNtSPOppdiORtpbTsOKdIvz9kff7Yoed0SWxWMlPCba8cSAdya9FaCF1nB8dJx9dsHZXLybM8zQMEcNQ1DZiangmB+Oj5ip1akUY=
+	t=1748933248; cv=none; b=AgCmlbtWk1Fo+r1u2VScr/WhVqjhwWAeD0UuYxISW5+T5W2aBnjdeq5l1fwGnfXVPB7mXSY1tePlzTlCXEvU519hOSRfpikpbjpREprRrwRg1Exwc7XTD+BhnSKQH54u3+DTrYalZhDCXgZF8U8ctypPOOPJtLG48T0/uRCvvsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748933094; c=relaxed/simple;
-	bh=UVp0LbQx8sBlvoHqjY1yfV+T6PtviStZ9VovgcKpHh0=;
+	s=arc-20240116; t=1748933248; c=relaxed/simple;
+	bh=yp+9sKIhPdDXtas9pZoS0jPZviUSGnyYWahyc9QKxkw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p2B3A67fX16UElQJhk5LnAvSB2mb8c3O7uTQD6piUdXqV/OPSOE0LCkfzkkTb/+5FaodR0RWXpbaCIyGlIw3MlA58CXM7w0DUBbzKuXxCvNJIMVWaGA/iUGTGhsE0BoGh3ZJajLVT8TmimS7pwzFlJOiy/09bk3nqkHCihp8jGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=kN3/iB2M; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=IaFoObumPNLD+4YLHBh6Nl4KB5JKJdiCXPPKAlt6y65aG/tbPc6PwUEYcyCj/1+zsmQ1LfyAGdp1M0Fq68GIegWPJgwSYGy9epZrh1wUNUH8mH70wA6hv/UvhIyU5nXmnS49GzBpUrsWmN8dhkY9tQ/fmO2tAdbThEO+5iQbebo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mYHKaXUN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=x3wkdYho; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="kN3/iB2M"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 7C96025E04;
-	Tue,  3 Jun 2025 08:44:44 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id CfiClaMm0-wl; Tue,  3 Jun 2025 08:44:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1748933083; bh=UVp0LbQx8sBlvoHqjY1yfV+T6PtviStZ9VovgcKpHh0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=kN3/iB2MXKttgpnuUEEUJMJPyEyGSQ9GzuKNbSfEfOu1Ts6kBOWvbPHShh4vtEL/8
-	 XBY+k1wM3sxrQuida/SOfm9HWiNd+TRZ1Z47s5leTpSyx8JbGjgBymy568VgNLuudn
-	 BHY+ON5CUsGzBAOGYLoTTxDoHDMXhPm9Gv61c2k44JHYxRZKi/PLOtwDk4Q6wW6KrY
-	 3fGdjKNSohf8wLeKSR90RBirmacuHshHOiGwGOHbrth6opLhDWLWZEbMMWhutSYvI+
-	 s+TirXSkyU/EzXye8RCHn4kABgayMToGCDNX6mvAqcvwKIa/fLG9pImHs+J9iooJaK
-	 WY76iZft5GCpw==
-Date: Tue, 3 Jun 2025 06:44:31 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Jianmin Lv <lvjianmin@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] platform/loongarch: laptop: Get brightness setting
- from EC on probe
-Message-ID: <aD6Zz8L9WJRXvwaW@pie.lan>
-References: <20250531113851.21426-1-ziyao@disroot.org>
- <20250531113851.21426-2-ziyao@disroot.org>
- <CAAhV-H7pvaz5N0-EfvhDNHAXJtR13p9Xi5hfgDxOpeXi9zMbTQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mYHKaXUN";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="x3wkdYho"
+Date: Tue, 3 Jun 2025 08:47:22 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1748933244;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yp+9sKIhPdDXtas9pZoS0jPZviUSGnyYWahyc9QKxkw=;
+	b=mYHKaXUN/RI6kgOykdtQ7nN3v2FCJFLwmFAMu3VzzaExTUM3fl6rBlzw7iuRcbo7rL3T97
+	irsOFIkOPmn/u8EtPsCxrU6UH/hZ1E0Y5bRXL3wL1gB/XksySofsQQmbkvbNEGdnBJLAkI
+	ZxU42Xg4Telth6u61KoU3qIvFHUcvuVtkfGDy+Xj4yl2HBUsux1mpOIbNlW+EhsW+b3QWV
+	zZMrj42hUhQeVPklVdQED1D+0onNjD7O1YZrlLcOR+mQdbxN/7O5POO2I5MzTm4hHSJ5bF
+	Luy4UFspBoFxzn8pB8toIpl0D3hcULof7diWzBC4PQaZsx1BsSeJvKA7RiftZQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1748933244;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yp+9sKIhPdDXtas9pZoS0jPZviUSGnyYWahyc9QKxkw=;
+	b=x3wkdYhoiYUOw9zR/PzGBRoE1g5iWseODMlYnLNAS8laCtgGl+RE961n0evV74K2ZAzVXp
+	dZwe0fXLqO8ISeCw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Mateusz =?utf-8?Q?Jo=C5=84czyk?= <mat.jonczyk@o2.pl>
+Cc: Chris Bainbridge <chris.bainbridge@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>, linux-rtc@vger.kernel.org,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	lkml <linux-kernel@vger.kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [DRAFT PATCH] rtc-cmos: use spin_lock_irqsave in cmos_interrupt
+Message-ID: <20250603064722.xpshWggM@linutronix.de>
+References: <74bcd576-d410-45b2-aaf0-05aedf96b8be@o2.pl>
+ <20250602202019.625331-1-mat.jonczyk@o2.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,86 +61,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H7pvaz5N0-EfvhDNHAXJtR13p9Xi5hfgDxOpeXi9zMbTQ@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250602202019.625331-1-mat.jonczyk@o2.pl>
 
-On Tue, Jun 03, 2025 at 12:11:48PM +0800, Huacai Chen wrote:
-> On Sat, May 31, 2025 at 7:39 PM Yao Zi <ziyao@disroot.org> wrote:
-> >
-> > Previously 1 is unconditionally taken as current brightness value. This
-> > causes problems since it's required to restore brightness settings on
-> > resumption, and a value that doesn't match EC's state before suspension
-> > will cause surprising changes of screen brightness.
-> laptop_backlight_register() isn't called at resuming, so I think your
-> problem has nothing to do with suspend (S3).
+On 2025-06-02 22:20:19 [+0200], Mateusz Jo=C5=84czyk wrote:
+> cmos_interrupt() can also be called also in non-interrupt contexts, such
+> as in ACPI handlers via rtc_handler(). Therefore, usage of
+> spin_lock(&rtc_lock) is insecure. Use spin_lock_irqsave() / etc.
+> instead.
+>=20
+> Remove the local_irq_disable() hacks in cmos_check_wkalrm() and add a
+> comment so that these _irqsave / _irqrestore will not be disabled again,
+> as in
 
-It does have something to do with it. In loongson_hotkey_resume() which
-is called when leaving S3 (suspension), the brightness is restored
-according to props.brightness,
+This also broke PREEMPT_RT due to disable-IRQ -> spinlock_t.
 
-        bd = backlight_device_get_by_type(BACKLIGHT_PLATFORM);
-        if (bd) {
-                loongson_laptop_backlight_update(bd) ?
-                pr_warn("Loongson_backlight: resume brightness failed") :
-                pr_info("Loongson_backlight: resume brightness %d\n", bd->props
-.brightness);
-        }
+> commit 6950d046eb6e ("rtc: cmos: Replace spin_lock_irqsave with spin_lock=
+ in hard IRQ")
+>=20
+> Untested yet.
+>=20
+> Signed-off-by: Mateusz Jo=C5=84czyk <mat.jonczyk@o2.pl>
+> Fixes: 13be2efc390a ("rtc: cmos: Disable irq around direct invocation of =
+cmos_interrupt()")
 
-and without this patch, props.brightness is always set to 1 when the
-driver probes, but actually (at least with the firmware on my laptop)
-the screen brightness is set to 80 instead of 1 on cold boot, IOW, a
-brightness value that doesn't match hardware state is set to
-props.brightness.
+Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-On resumption, loongson_hotkey_resume() restores the brightness
-settings according to props.brightness. But as the value isn't what is
-used by hardware before suspension. the screen brightness will look very
-different (1 v.s. 80) comparing to the brightness before suspension.
-
-Some dmesg proves this as well, without this patch it says
-
-	loongson_laptop: Loongson_backlight: resume brightness 1
-
-but before suspension, reading
-/sys/class/backlight/loongson3_laptop/actual_brightness yields 80.
-
-> But there is really a problem about hibernation (S4): the brightness
-> is 1 during booting, but when switching to the target kernel, the
-> brightness may jump to the old value.
-> 
-> If the above case is what you meet, please update the commit message.
-> 
-> Huacai
-
-Thanks,
-Yao Zi
-
-> >
-> > Let's get brightness from EC and take it as the current brightness on
-> > probe of the laptop driver to avoid the surprising behavior. Tested on
-> > TongFang L860-T2 3A5000 laptop.
-> >
-> > Cc: stable@vger.kernel.org
-> > Fixes: 6246ed09111f ("LoongArch: Add ACPI-based generic laptop driver")
-> > Signed-off-by: Yao Zi <ziyao@disroot.org>
-> > ---
-> >  drivers/platform/loongarch/loongson-laptop.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/platform/loongarch/loongson-laptop.c
-> > index 99203584949d..828bd62e3596 100644
-> > --- a/drivers/platform/loongarch/loongson-laptop.c
-> > +++ b/drivers/platform/loongarch/loongson-laptop.c
-> > @@ -392,7 +392,7 @@ static int laptop_backlight_register(void)
-> >         if (!acpi_evalf(hotkey_handle, &status, "ECLL", "d"))
-> >                 return -EIO;
-> >
-> > -       props.brightness = 1;
-> > +       props.brightness = ec_get_brightness();
-> >         props.max_brightness = status;
-> >         props.type = BACKLIGHT_PLATFORM;
-> >
-> > --
-> > 2.49.0
-> >
-> >
+Sebastian
