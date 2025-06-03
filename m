@@ -1,115 +1,324 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88FD3374F1;
-	Tue,  3 Jun 2025 05:40:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83DAD14D283;
+	Tue,  3 Jun 2025 05:40:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748929227; cv=none; b=gt2KzkeA0B8qqixX7XA3mVL7E7lev9mfChEjIeoHZugeCuaFfc8U2BmuEww2tyBW7o45tAOqkwzXf16aTuAo1W84ewb8OKalIEaXr722MY8qgX5T4byAlcHYwz3lAK0iwJgXe5kNxlwRcplAZK762SyPhsQusOFFrvYqU90Pxvc=
+	t=1748929243; cv=none; b=k4Isc49pRhMSCMm+75EyzhzdKK/sjGKlAIwMwRas8cCyeYe6U0loAJnlKZZV4lQ3VdqCAyMaGfJ0d0A3ZSTQAxf69zxLwQgBDbQkKsPHNSiTUO0XO8Yr2WuH/q+ZEbBEZugV9YNgc5yZjjc8V7DrIHSn8RE0ApK51tHu+ZtOELU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748929227; c=relaxed/simple;
-	bh=DwYxn9vDpODMOTH/h4CocQx34sCVwHNa/e51oSaYH84=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PrK7UDNOYgLG4C/FcqVwt9iQdYn4IdvJ9sL4WOkjirGGDi7QfhAbjBI74onMksRd85aalQcSEw2JBdSYD88Mmiy9UWBa7YfYQhmYOQrrGz3UE9joSvigtbiMZf0N20tfvRorTQaZ4pQuFnHh73XZYqAYoNvMfr+sLC3/VIHX8gM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IRgup8qg; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748929243; c=relaxed/simple;
+	bh=orcCBaamsSERDoi7qai47HxjugBPBL27PF9gsOhpZx0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lN+Ke1jiyifl9Wv7fWFwnX2oCUwaHPRM6bwYqFplJPCONt/PtKrnAkP0ZM+VLyBOya2SYZna0aJad9zK/Wbuf7B6l/MqVRx3o5n1jAdD0iY01WDAKJO1TkCqpRNd4pLVcVd+XDOV5NzRfuGPIqO98qhZTlxWeuMxwy7g1ev7BRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WyGz/syy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IRgup8qg"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-451d54214adso18165805e9.3;
-        Mon, 02 Jun 2025 22:40:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748929224; x=1749534024; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4TIC2bvXSPjeQjwa8QuCsDYTY0EZfD1mls4YldcSio0=;
-        b=IRgup8qgh2gLNJfZruG+XV/3sFZYdQ47Lpqv9DvVsNDMaAcuGl7FHaRtx+yTHy9AOg
-         7U9lH6lUyHvwH+6U/Ue0QYzrhK/X6kDWk/5AGeK4ok2g0YsHnFxed0Elj9xmA6q5lCnY
-         rKX9nnSiW3Q5Q7liFGmSH0XG5xyB2niEzgh09DiDAzIO5KLbTVKYmI0fLfcuW3DbpdNg
-         Cn7qPDb8YUNuU9MpuRsjoYA/hrRewM8xP2NK9GDyY039qOcYleYfNzwFBjv88/QanKOb
-         ssitM43Z5u3B20ysWSs1IC7ZFeaYXNPw817zLhkyRYAdn2X4m5V+k3V6lk8JIBvzN/y1
-         jTlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748929224; x=1749534024;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4TIC2bvXSPjeQjwa8QuCsDYTY0EZfD1mls4YldcSio0=;
-        b=rsmsoSMcEvx1hwf8KnkOKJPp+KySHxCuEkSoz8naqUqB5TFIj0RTK/YD8dHctiR46B
-         hBcJUyW6TTlvtAW+NHL9trA6nAxwn/cI/PQeDF3Y/RZPXr0CEeCc2y+bPCxP0TOnjF3B
-         Np+/mD7NOj+/dgonRYGtyDuuwpv0SINtrZWVj60mp4gCEfHmmuNmsmdTXGYrQ2L5e9AZ
-         XtIO9AI8JWNq7wl+erfv8QxM//FTgr7NJxgTc+36VayiaqLW6QK7YBk41ikwlm/j72Jt
-         QI7MvVJkArVwhUG0al/C1MLttJcCQeyeFbpwOzGPec8zKhIr2ZI0985QM+dnvabQAdIr
-         iirA==
-X-Forwarded-Encrypted: i=1; AJvYcCVAu9WT6qe66YKKwTgMKcLswlmcLv/GVR5TxCtZHzgQJh63ItGlY2SiL5RUI9QyuP164+YHtr1pIhKi@vger.kernel.org, AJvYcCVv5NrrqKdAkwQP/09y2SST0TuWTSB2VLFxxGg6mBrulRaMBmaq5NOFPOROwfnJixkSl0nbjPFFtKmdONTb@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAY/6rE87e8EHreQLaLnkI0SYOLrwzSaLjbfcyJszqUA3EuLX5
-	WhxuwmqxYMRatMFnDOsCdHK6jH+S9RwyqQ8Nqzzt5jO5VfcD4q5eGiPO
-X-Gm-Gg: ASbGnctbfkUW7tVbVrlbW5oDMTFvyHqoZduRqdPx5dhbUoQgS3rJnel15ww8CkPEStm
-	ZrLQaNgziepDuT9Te3mXEuRdNFH8pIPfwUqkb37pKshZKXh9sHPUdgeF2Ijycw7EIXRFVbKlG/K
-	E3LQGpIOYu55uA0cz9kQ7xyXP+oE0IuC8ahyL2IMabGZX52l+IrlT+VtP3vx/3SF86bqg1w8yBE
-	C7VJHSGPIX5F9Iwno/oKtK3KJDFwZPWg5n7AjVSczr9FtXGLtdvifEYrO3oB9dFj5RCexS9ZJEE
-	T5uXtbCvKd0g1hQap/zgxIFFLJepInkGAWsCk/lYWnFB3Bklh+pwwqBwqbtbdHGlitP69TzI4wT
-	2y2/G4Dn05q4=
-X-Google-Smtp-Source: AGHT+IEm+DBDRYxs/BtdjDM10vW8OQRQhVgDKy5nrR+eNf7ewrHEoW8Z6836tRJmEeVTNyiNKjwEOA==
-X-Received: by 2002:a05:6000:1a8e:b0:3a4:d8f8:fba6 with SMTP id ffacd0b85a97d-3a4f7a3dc8bmr11491978f8f.6.1748929223590;
-        Mon, 02 Jun 2025 22:40:23 -0700 (PDT)
-Received: from masalkhi.. (ip-109-43-115-37.web.vodafone.de. [109.43.115.37])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f00971efsm17469585f8f.62.2025.06.02.22.40.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 22:40:23 -0700 (PDT)
-From: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-To: robh@kernel.org
-Cc: abd.masalkhi@gmail.com,
-	arnd@arndb.de,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	gregkh@linuxfoundation.org,
-	krzk+dt@kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WyGz/syy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 287ABC4CEED;
+	Tue,  3 Jun 2025 05:40:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748929243;
+	bh=orcCBaamsSERDoi7qai47HxjugBPBL27PF9gsOhpZx0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WyGz/syyaGK30dCAq9zElQ0Ym2g8cLKfom6usnuoIL6NrDMerKkbQG7HKaCgXGjjn
+	 9twMHX+fJoYWul0PV59aVxPJ15Tre8goEL9tr07AYUcpYuLW5cMsATKb/XpUN8x4b6
+	 O6XsZvJVeV9XnIQOzK5S+fHqT2e1KZHAx0uEVdH7frTBle3vNhwLu7TSCHbuXNRtqg
+	 gsd3BWhZiVLOXGOe0tSLcqu6/zNWZJcXu61BsZ4ui2gLB2LHubYwCs6J7LI5L+SGek
+	 vgO8myyRw5ndogVbMQ+C8PBXm7cCiZ6/Y2yaYVatIqh1ExVBZ+d7AMASuSdyTTMq4W
+	 Jnum07AaNzPdg==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-scsi@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: eeprom: Add ST M24LR control interface
-Date: Tue,  3 Jun 2025 05:40:20 +0000
-Message-ID: <20250603054020.2030216-1-abd.masalkhi@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <174879559905.2719478.15392001971491179573.robh@kernel.org>
-References: <174879559905.2719478.15392001971491179573.robh@kernel.org>
+Subject: [PATCH v2] sd: Add timeout_sec and max_retries module parameter for sd
+Date: Tue,  3 Jun 2025 14:40:39 +0900
+Message-ID:  <174892923909.3887244.10526006121005369450.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Hi Rob,
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Thanks for the feedback.
+Sometimes a USB storage connection is unstable and the probing
+takes longer time than the hung check timeout. Since the probing
+runs under device_lock(dev), if there is another task tries to
+acquire the same device_lock() (e.g. udevd, in this case), that
+task hits the hung_task error and will lead a kernel panic.
 
-> yamllint warnings/errors:
-> 
-> dtschema/dtc warnings/errors:
-> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/eeprom/st,m24lr.example.dtb: eeprom@53 > (atmel,24c04): pagesize: 4 is not one of [1, 8, 16, 32, 64, 128, 256]
-> 	from schema $id: http://devicetree.org/schemas/eeprom/at24.yaml#
-> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/eeprom/st,m24lr.example.dtb: eeprom@53 > (atmel,24c04): Unevaluated properties are not allowed ('pagesize' was unexpected)
-> 	from schema $id: http://devicetree.org/schemas/eeprom/at24.yaml#
-> 
-> doc reference errors (make refcheckdocs):
-> 
-> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250601153022.2027919-2-abd.masalkhi@gmail.com
-> 
-> The base for the series is generally the latest rc1. A different dependency
-> should be noted in *this* patch.
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure 'yamllint' is installed and dt-schema is up to
-> date:
-> 
-> pip3 install dtschema --upgrade
+For example, enabling CONFIG_DETECT_HUNG_TASK_BLOCKER, I got an
+error message something like below (Note that this is 6.1 kernel
+example, so the function names are a bit different.);
 
-I had already updated dtschema to the latest version and ensured that
-yamllint was installed, as advised in the previous version. i have
-executed 'make dt_binding_check' as you guided me, but still it did not
-emit any errors.
+ INFO: task udevd:5301 blocked for more than 122 seconds.
+...
+ INFO: task udevd:5301 is blocked on a mutex likely owned by task kworker/u4:1:11.
+ task:kworker/u4:1state:D stack:0 pid:11ppid:2  flags:0x00004000
+ Workqueue: events_unbound async_run_entry_fn
+ Call Trace:
+  <TASK>
+  schedule+0x438/0x1490
+  ? blk_mq_do_dispatch_ctx+0x70/0x1c0
+  schedule_timeout+0x253/0x790
+  ? try_to_del_timer_sync+0xb0/0xb0
+  io_schedule_timeout+0x3f/0x80
+  wait_for_common_io+0xb4/0x160
+  blk_execute_rq+0x1bd/0x210
+  __scsi_execute+0x156/0x240
+  sd_revalidate_disk+0xa2a/0x2360
+  ? kobject_uevent_env+0x158/0x430
+  sd_probe+0x364/0x47
+  really_probe+0x15a/0x3b0
+  __driver_probe_device+0x78/0xc0
+  driver_probe_device+0x24/0x1a0
+  __device_attach_driver+0x131/0x160
+  ? coredump_store+0x50/0x50
+  bus_for_each_drv+0x9d/0xf0
+  __device_attach_async_helper+0x7e/0xd0  <=== device_lock()
+...
 
-Best regards,
-Abd-Alrhman Masalkhi
+In this case, device_lock() was locked in
+__device_attach_async_helper(), and it ran driver_probe_device()
+for each driver, and eventually send a scsi command which took
+very long time.
+
+This is because we use a long timeout and retries for sd_probe().
+To avoid it, makes the default timeout and max retries tunable.
+Since the sd.ko can be loaded right before the broken device is
+probed, pass the default value as module parameters, so that
+user can set it via modules.conf.
+
+If we set these values 10 times smaller (e.g. timeout_sec=3),
+sd_probe can detect wrong devices/connection before causing
+hung_task error.
+
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ Changes in v2:
+  - Add `write_same_timeout_sec` parameter.
+---
+ drivers/scsi/sd.c |   57 +++++++++++++++++++++++++++++++++--------------------
+ 1 file changed, 36 insertions(+), 21 deletions(-)
+
+diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+index 950d8c9fb884..a4ef210aaa80 100644
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -100,6 +100,21 @@ MODULE_ALIAS_SCSI_DEVICE(TYPE_MOD);
+ MODULE_ALIAS_SCSI_DEVICE(TYPE_RBC);
+ MODULE_ALIAS_SCSI_DEVICE(TYPE_ZBC);
+ 
++/* timeout_sec defines the default value of the SCSI command timeout in second. */
++static int sd_timeout_sec = SD_TIMEOUT / HZ;
++module_param_named(timeout_sec, sd_timeout_sec, int, 0644);
++
++/*
++ * write_same_timeout_sec defines the default value of the WRITE SAME SCSI
++ * command timeout in second.
++ */
++static int sd_write_same_timeout_sec = SD_WRITE_SAME_TIMEOUT / HZ;
++module_param_named(write_same_timeout_sec, sd_write_same_timeout_sec, int, 0644);
++
++/* max_retries defines the default value of the max of SCSI command retries.*/
++static int sd_max_retries = SD_MAX_RETRIES;
++module_param_named(max_retries, sd_max_retries, int, 0644);
++
+ #define SD_MINORS	16
+ 
+ static void sd_config_discard(struct scsi_disk *sdkp, struct queue_limits *lim,
+@@ -184,7 +199,7 @@ cache_type_store(struct device *dev, struct device_attribute *attr,
+ 		return count;
+ 	}
+ 
+-	if (scsi_mode_sense(sdp, 0x08, 8, 0, buffer, sizeof(buffer), SD_TIMEOUT,
++	if (scsi_mode_sense(sdp, 0x08, 8, 0, buffer, sizeof(buffer), sd_timeout_sec * HZ,
+ 			    sdkp->max_retries, &data, NULL))
+ 		return -EINVAL;
+ 	len = min_t(size_t, sizeof(buffer), data.length - data.header_length -
+@@ -202,7 +217,7 @@ cache_type_store(struct device *dev, struct device_attribute *attr,
+ 	 */
+ 	data.device_specific = 0;
+ 
+-	ret = scsi_mode_select(sdp, 1, sp, buffer_data, len, SD_TIMEOUT,
++	ret = scsi_mode_select(sdp, 1, sp, buffer_data, len, sd_timeout_sec * HZ,
+ 			       sdkp->max_retries, &data, &sshdr);
+ 	if (ret) {
+ 		if (ret > 0 && scsi_sense_valid(&sshdr))
+@@ -729,7 +744,7 @@ static int sd_sec_submit(void *data, u16 spsp, u8 secp, void *buffer,
+ 	put_unaligned_be32(len, &cdb[6]);
+ 
+ 	ret = scsi_execute_cmd(sdev, cdb, send ? REQ_OP_DRV_OUT : REQ_OP_DRV_IN,
+-			       buffer, len, SD_TIMEOUT, sdkp->max_retries,
++			       buffer, len, sd_timeout_sec * HZ, sdkp->max_retries,
+ 			       &exec_args);
+ 	return ret <= 0 ? ret : -EIO;
+ }
+@@ -930,7 +945,7 @@ static blk_status_t sd_setup_unmap_cmnd(struct scsi_cmnd *cmd)
+ 
+ 	cmd->allowed = sdkp->max_retries;
+ 	cmd->transfersize = data_len;
+-	rq->timeout = SD_TIMEOUT;
++	rq->timeout = sd_timeout_sec * HZ;
+ 
+ 	return scsi_alloc_sgtables(cmd);
+ }
+@@ -1016,7 +1031,7 @@ static blk_status_t sd_setup_write_same16_cmnd(struct scsi_cmnd *cmd,
+ 
+ 	cmd->allowed = sdkp->max_retries;
+ 	cmd->transfersize = data_len;
+-	rq->timeout = unmap ? SD_TIMEOUT : SD_WRITE_SAME_TIMEOUT;
++	rq->timeout = unmap ? sd_timeout_sec * HZ : sd_write_same_timeout_sec * HZ;
+ 
+ 	return scsi_alloc_sgtables(cmd);
+ }
+@@ -1043,7 +1058,7 @@ static blk_status_t sd_setup_write_same10_cmnd(struct scsi_cmnd *cmd,
+ 
+ 	cmd->allowed = sdkp->max_retries;
+ 	cmd->transfersize = data_len;
+-	rq->timeout = unmap ? SD_TIMEOUT : SD_WRITE_SAME_TIMEOUT;
++	rq->timeout = unmap ? sd_timeout_sec * HZ : sd_write_same_timeout_sec * HZ;
+ 
+ 	return scsi_alloc_sgtables(cmd);
+ }
+@@ -1739,7 +1754,7 @@ static unsigned int sd_check_events(struct gendisk *disk, unsigned int clearing)
+ 	if (scsi_block_when_processing_errors(sdp)) {
+ 		struct scsi_sense_hdr sshdr = { 0, };
+ 
+-		retval = scsi_test_unit_ready(sdp, SD_TIMEOUT, sdkp->max_retries,
++		retval = scsi_test_unit_ready(sdp, sd_timeout_sec * HZ, sdkp->max_retries,
+ 					      &sshdr);
+ 
+ 		/* failed to execute TUR, assume media not present */
+@@ -1952,7 +1967,7 @@ static int sd_pr_in_command(struct block_device *bdev, u8 sa,
+ 	put_unaligned_be16(data_len, &cmd[7]);
+ 
+ 	result = scsi_execute_cmd(sdev, cmd, REQ_OP_DRV_IN, data, data_len,
+-				  SD_TIMEOUT, sdkp->max_retries, &exec_args);
++				  sd_timeout_sec * HZ, sdkp->max_retries, &exec_args);
+ 	if (scsi_status_is_check_condition(result) &&
+ 	    scsi_sense_valid(&sshdr)) {
+ 		sdev_printk(KERN_INFO, sdev, "PR command failed: %d\n", result);
+@@ -2063,7 +2078,7 @@ static int sd_pr_out_command(struct block_device *bdev, u8 sa, u64 key,
+ 	data[20] = flags;
+ 
+ 	result = scsi_execute_cmd(sdev, cmd, REQ_OP_DRV_OUT, &data,
+-				  sizeof(data), SD_TIMEOUT, sdkp->max_retries,
++				  sizeof(data), sd_timeout_sec * HZ, sdkp->max_retries,
+ 				  &exec_args);
+ 
+ 	if (scsi_status_is_check_condition(result) &&
+@@ -2435,7 +2450,7 @@ sd_spinup_disk(struct scsi_disk *sdkp)
+ 		scsi_failures_reset_retries(&failures);
+ 
+ 		the_result = scsi_execute_cmd(sdkp->device, cmd, REQ_OP_DRV_IN,
+-					      NULL, 0, SD_TIMEOUT,
++					      NULL, 0, sd_timeout_sec * HZ,
+ 					      sdkp->max_retries, &exec_args);
+ 
+ 
+@@ -2498,7 +2513,7 @@ sd_spinup_disk(struct scsi_disk *sdkp)
+ 				sd_printk(KERN_NOTICE, sdkp, "Spinning up disk...");
+ 				scsi_execute_cmd(sdkp->device, start_cmd,
+ 						 REQ_OP_DRV_IN, NULL, 0,
+-						 SD_TIMEOUT, sdkp->max_retries,
++						 sd_timeout_sec * HZ, sdkp->max_retries,
+ 						 &exec_args);
+ 				spintime_expire = jiffies + 100 * HZ;
+ 				spintime = 1;
+@@ -2649,7 +2664,7 @@ static int read_capacity_16(struct scsi_disk *sdkp, struct scsi_device *sdp,
+ 		memset(buffer, 0, RC16_LEN);
+ 
+ 		the_result = scsi_execute_cmd(sdp, cmd, REQ_OP_DRV_IN,
+-					      buffer, RC16_LEN, SD_TIMEOUT,
++					      buffer, RC16_LEN, sd_timeout_sec * HZ,
+ 					      sdkp->max_retries, &exec_args);
+ 		if (the_result > 0) {
+ 			if (media_not_present(sdkp, &sshdr))
+@@ -2760,7 +2775,7 @@ static int read_capacity_10(struct scsi_disk *sdkp, struct scsi_device *sdp,
+ 	memset(buffer, 0, 8);
+ 
+ 	the_result = scsi_execute_cmd(sdp, cmd, REQ_OP_DRV_IN, buffer,
+-				      8, SD_TIMEOUT, sdkp->max_retries,
++				      8, sd_timeout_sec * HZ, sdkp->max_retries,
+ 				      &exec_args);
+ 
+ 	if (the_result > 0) {
+@@ -2948,7 +2963,7 @@ sd_do_mode_sense(struct scsi_disk *sdkp, int dbd, int modepage,
+ 		len = 8;
+ 
+ 	return scsi_mode_sense(sdkp->device, dbd, modepage, 0, buffer, len,
+-			       SD_TIMEOUT, sdkp->max_retries, data, sshdr);
++			       sd_timeout_sec * HZ, sdkp->max_retries, data, sshdr);
+ }
+ 
+ /*
+@@ -3206,7 +3221,7 @@ static bool sd_is_perm_stream(struct scsi_disk *sdkp, unsigned int stream_id)
+ 	put_unaligned_be32(sizeof(buf), &cdb[10]);
+ 
+ 	res = scsi_execute_cmd(sdev, cdb, REQ_OP_DRV_IN, &buf, sizeof(buf),
+-			       SD_TIMEOUT, sdkp->max_retries, &exec_args);
++			       sd_timeout_sec * HZ, sdkp->max_retries, &exec_args);
+ 	if (res < 0)
+ 		return false;
+ 	if (scsi_status_is_check_condition(res) && scsi_sense_valid(&sshdr))
+@@ -3231,7 +3246,7 @@ static void sd_read_io_hints(struct scsi_disk *sdkp, unsigned char *buffer)
+ 		return;
+ 
+ 	res = scsi_mode_sense(sdp, /*dbd=*/0x8, /*modepage=*/0x0a,
+-			      /*subpage=*/0x05, buffer, SD_BUF_SIZE, SD_TIMEOUT,
++			      /*subpage=*/0x05, buffer, SD_BUF_SIZE, sd_timeout_sec * HZ,
+ 			      sdkp->max_retries, &data, &sshdr);
+ 	if (res < 0)
+ 		return;
+@@ -3274,7 +3289,7 @@ static void sd_read_app_tag_own(struct scsi_disk *sdkp, unsigned char *buffer)
+ 	if (sdkp->protection_type == 0)
+ 		return;
+ 
+-	res = scsi_mode_sense(sdp, 1, 0x0a, 0, buffer, 36, SD_TIMEOUT,
++	res = scsi_mode_sense(sdp, 1, 0x0a, 0, buffer, 36, sd_timeout_sec * HZ,
+ 			      sdkp->max_retries, &data, &sshdr);
+ 
+ 	if (res < 0 || !data.header_length ||
+@@ -3682,7 +3697,7 @@ static void sd_read_block_zero(struct scsi_disk *sdkp)
+ 	}
+ 
+ 	scsi_execute_cmd(sdkp->device, cmd, REQ_OP_DRV_IN, buffer, buf_len,
+-			 SD_TIMEOUT, sdkp->max_retries, NULL);
++			 sd_timeout_sec * HZ, sdkp->max_retries, NULL);
+ 	kfree(buffer);
+ }
+ 
+@@ -3957,13 +3972,13 @@ static int sd_probe(struct device *dev)
+ 	sdkp->device = sdp;
+ 	sdkp->disk = gd;
+ 	sdkp->index = index;
+-	sdkp->max_retries = SD_MAX_RETRIES;
++	sdkp->max_retries = sd_max_retries;
+ 	atomic_set(&sdkp->openers, 0);
+ 	atomic_set(&sdkp->device->ioerr_cnt, 0);
+ 
+ 	if (!sdp->request_queue->rq_timeout) {
+ 		if (sdp->type != TYPE_MOD)
+-			blk_queue_rq_timeout(sdp->request_queue, SD_TIMEOUT);
++			blk_queue_rq_timeout(sdp->request_queue, sd_timeout_sec * HZ);
+ 		else
+ 			blk_queue_rq_timeout(sdp->request_queue,
+ 					     SD_MOD_TIMEOUT);
+@@ -4131,7 +4146,7 @@ static int sd_start_stop_device(struct scsi_disk *sdkp, int start)
+ 	if (!scsi_device_online(sdp))
+ 		return -ENODEV;
+ 
+-	res = scsi_execute_cmd(sdp, cmd, REQ_OP_DRV_IN, NULL, 0, SD_TIMEOUT,
++	res = scsi_execute_cmd(sdp, cmd, REQ_OP_DRV_IN, NULL, 0, sd_timeout_sec * HZ,
+ 			       sdkp->max_retries, &exec_args);
+ 	if (res) {
+ 		sd_print_result(sdkp, "Start/Stop Unit failed", res);
+
