@@ -1,91 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB2E11C32FF;
-	Tue,  3 Jun 2025 10:46:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5DC718FDBE
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 10:48:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748947573; cv=none; b=JHyanoRqNFgV7yK+DEX2+hpFGNkzQZftRgKFviKA0GECGRbBxRXvFOlWfPbykHUNaiSuNkRCMLH43tqBUrT0s35O8GUh6AsNIruPVg6ckzvpW4LE1JktCTG8POXZ8tTwBApt+kuNKSON31uhK+zoBgmOo1aYFIy6k350X3bpgPw=
+	t=1748947729; cv=none; b=G4w6RJ/ia2PPaqFfYccya04Tezwm7sMTWyQsgr4glJIJnczCJYEjoVeExYRj/UF0Di8r6IIsikx1PT7yQi48hldEepT3bzufyRDbXMKfrBh4Ihdeh0vv/aFEKG9uIyJ724/Vh/z73J6x6pBXNgeU8EU/rIC3yWxfdXTiHORCF+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748947573; c=relaxed/simple;
-	bh=u7+rGQR8YnbIhg+Ut8CGfnXe/MVcQN46BQ98CcOI8fY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=saM9m2rcLzNkchLZ8/mhMKbVt0crMrM0uTWHs+YOf97B2U0q1eP42IN42EVN88Ptt8WVUQQ5ac32ZQN2GbavxtZTbALW5LoYyPc9B2IhG7lzMeAjwyjxMRJIcXwobPvcQIZUBA9asaANO2rf+wdagZxp22xy8SZtx5B4EQZJCx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ulgtjzp2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748947729; c=relaxed/simple;
+	bh=0/t4VZHHaghPD92lE20B6G38trWGNzHFkAze729VO0U=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=UfPv4UR32YR/6sGLIXlmllFvxVWOOS4BCkWRhvfIxQSep7LW7swK4Cjrza5SACKl2QrZMWQG94pid/NMeO6V0ZNqwnZ8lBBCUXwp/9c6LmXl1o+83pFKPoYhFAVqOiFIrH4Wre2napEt5Z/6cO3ajhcZGTOCAWlh/IJeSDIegFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dNxMv2s+; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ulgtjzp2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E94E5C4CEEF;
-	Tue,  3 Jun 2025 10:46:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748947572;
-	bh=u7+rGQR8YnbIhg+Ut8CGfnXe/MVcQN46BQ98CcOI8fY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ulgtjzp2AB78bDGrXDgZ274uy3DfdBwjyd0AjuHDZyzxbEPsBjCxpRfmHavIXog+Q
-	 Qp37E+MPWPok+dKPp08aa+37hMNKi6E7/yoK9KCW+KEyUsYmRGdh/uhacUAowWPIW0
-	 bjnLKnGJIZt6Yz2DgCtZAo0Fanowx31vB2phdEkLjW+3jcxFGyRUWMC4jDjNC31HUQ
-	 eu5gM7jduEotuBIv26BscgF71F+iwgB6LeaqNrBZLVR6mwn9t40wWIpMUU5TcDaEAT
-	 TGNFMBwnrOUspBxb7f6yVgGL5wB7RW6OqoSjqHY34aq+LKqhU8R4mQ/R9R43RjuH/r
-	 esGRfOsnGHtUA==
-Date: Tue, 3 Jun 2025 11:46:06 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com
-Subject: Re: [PATCH 5.10 000/270] 5.10.238-rc1 review
-Message-ID: <4ba58b4c-414d-480b-b02b-c1724f6761f9@sirena.org.uk>
-References: <20250602134307.195171844@linuxfoundation.org>
- <6dd7aac1-4ca1-46c5-8a07-22a4851a9b34@sirena.org.uk>
- <2025060302-reflected-tarot-acfc@gregkh>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dNxMv2s+"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-442e9c00bf4so35604675e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 03:48:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748947726; x=1749552526; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Cx6O8nTXD/s0DawuWtPSuDjWjpCAIEUB9q4GWgLMpfY=;
+        b=dNxMv2s+UeY+HlzD8WCyBdFdM02S2388Eh9QBqgxSmkamwdt+uJ32e/3N+o806can0
+         OT7CNCyVehE3Kjqx0j6RosGEGY7QByoOkcrFO262wq8RMOObi/KmuOIkv1Z0TqWKWq+M
+         Vjkt+1OXxg7MUHIDUPlX5FUheEE+2fRlVRagOunGNhNRsghsfeio/ZFyF8NtBfqU5b02
+         wDSxBh7daq6XdvedjPNal4FgV43gLNdImZViVUwJr22Th9h3KXLMgllzanqGhUFMjdDp
+         Qh/oGyntnWjbDwOBPG7DD4aQoz6xbmO1J7zFZonbYjYcYvGH8eUmY0h2p7JqOiUunTSA
+         /Xsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748947726; x=1749552526;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cx6O8nTXD/s0DawuWtPSuDjWjpCAIEUB9q4GWgLMpfY=;
+        b=oeU3QTsZDiRouJ+aC9U6Lb7I09dhrAfzZVmoAF8pouTNQNRTnqYPGPFMS2VYy3pwGb
+         7dCg+LsPA/m0xtWUCcjmgO5O3vnCk3soYfYU9BByEcz7kk/aId9o/a6MSH3UGl3OD2I0
+         M21whi/Ca3iaFH46B1wuoEN3y/nc1iJtWVOh5Jrvu6z2TDstd2gY1k5bZSfetu1KIz27
+         F6QA3wLY5P0NZn5MHTJNwe0TGOl/Mx/w3LkNJ+9Cjxxff356WFVyNh5SWUjeybXTY2t9
+         CwiYh5g1ySvL8s3yPwO3fPZciOgjIxdyjerbP+BO9FFM+Ae7G8i31ih7ph8y3d07FZuW
+         e2lw==
+X-Forwarded-Encrypted: i=1; AJvYcCXxiOu5oZou8GMVbziEu1/16w9kPQQrv17iFigqF8rLN94BQ1OJ+KK/s5q7Ys5AGqqaXUmg9CfxlcwGXN0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzncNFwTbacDV07fbEJN746asVAyAAHtDx/b4uhtD5kYZcbo8eb
+	CYEG62PUKioqUWvStwc5fYiD1WAx9ydyLORIBg1FyhhAfwkujjOaspaoDHaghuWPkA8=
+X-Gm-Gg: ASbGncuMMf9f/3gug8ADLpEJQe64VnQuyGXtINuP2XjDC18hztNMfpyMk9B38jfNX8m
+	Hg5KX29TwwyLcQzLQ+sKpxtcVxx4CWHMnLy71W2ovcZ086VIIZ0fOWULZtyzmf7oNyZLKBdKxEq
+	bQRI2egwZpCGXCYUK22rK2oYy0sKYwtURqXPOINboIUsWSeE36bApLLyyH6g+D4We+IFy0Q/lFy
+	O/vXrm3QR84BXdwKUHXHY9niT2DHXHeCi4tabFjwSe5ayQa0HwHV6U2li89oKIXstn059frbo8D
+	+pvwlvC5cD7rKuWLB+KUxoBJM/6VU3mn+nRxjrGbksyOsxvVCU84TGOKYDkAld9u8OL8UUs=
+X-Google-Smtp-Source: AGHT+IEwWHNi7IQsbUhRzTa5EaiN1kvuKqLSnlU0bMScHgsa6KhYkSTpXYrAZ3MhbyuWmkaFjc4G2g==
+X-Received: by 2002:a05:600c:a51:b0:450:cfcb:5c9b with SMTP id 5b1f17b1804b1-450d880ac83mr121438035e9.1.1748947726161;
+        Tue, 03 Jun 2025 03:48:46 -0700 (PDT)
+Received: from [192.168.0.14] ([79.115.63.247])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7fb05bbsm154084245e9.22.2025.06.03.03.48.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Jun 2025 03:48:45 -0700 (PDT)
+Message-ID: <f8f15489-8b31-4672-9fb9-161c7c4599dc@linaro.org>
+Date: Tue, 3 Jun 2025 11:48:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="oKdheFR3ZFNHnJa7"
-Content-Disposition: inline
-In-Reply-To: <2025060302-reflected-tarot-acfc@gregkh>
-X-Cookie: Avec!
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
+ in sync
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+ =?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>,
+ Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ William McVicker <willmcvicker@google.com>
+References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
+ <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com>
+ <5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org>
+ <8f281667-b4ef-9385-868f-93893b9d6611@linux.intel.com>
+ <3a47fc82-dc21-46c3-873d-68e713304af3@linaro.org>
+ <f6ee05f7-174b-76d4-3dbe-12473f676e4d@linux.intel.com>
+ <867e47dc-9454-c00f-6d80-9718e5705480@linux.intel.com>
+ <a56284a4-755d-4eb4-ba77-9ea30e18d08f@linaro.org>
+ <7e882cfb-a35a-bab0-c333-76a4e79243b6@linux.intel.com>
+ <f2d149c6-41a4-4a9a-9739-1ea1c4b06f4b@linaro.org>
+ <19ccc09c-1d6b-930e-6ed6-398b34020ca1@linux.intel.com>
+ <c1c0bacd-7842-4e9e-aec4-66eb481aa43f@linaro.org>
+Content-Language: en-US
+In-Reply-To: <c1c0bacd-7842-4e9e-aec4-66eb481aa43f@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
---oKdheFR3ZFNHnJa7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Tue, Jun 03, 2025 at 12:06:34PM +0200, Greg Kroah-Hartman wrote:
-> On Tue, Jun 03, 2025 at 10:45:34AM +0100, Mark Brown wrote:
+On 6/3/25 11:36 AM, Tudor Ambarus wrote:
+> 
+> 
+> On 6/3/25 9:13 AM, Ilpo Järvinen wrote:
+>> So please test if this patch solves your problem:
+> 
+> It fails in a different way, the bridge window resource never gets
+> assigned with the proposed patch.
+> 
+> With the patch applied: https://termbin.com/h3w0
 
-> > This fails to boot with a NFS root on Raspberry Pi 3b+, due to
-> > 558a48d4fabd70213117ec20f476adff48f72365 ("net: phy: microchip: force
-> > IRQ polling mode for lan88xx") as was also a problem for other stables.
+above is no revert and with the proposed fix. It also contains the
+prints https://termbin.com/g4zn
 
-> Odd, I see it in the 5.15.y released tree, so did we get a fix for it
-> with a different commit or should it just be dropped entirely from the
-> 5.10.y queue?
+It seems the prints in pbus_size_mem are not longer hit, likely because
+of the new condition added: ``!pdev_resources_assignable(dev) ||``,
+pci_dev_for_each_resource() finishes without doing anything.
 
-There's a revert in the v5.15 tree as 2edc296e2107a003e383f87cdc7e29bddcb6b17e,
-IIRC it went it while I was on holiday so I didn't test the release it
-went into.
+> With the blamed commit reverted: https://termbin.com/3rh6
 
---oKdheFR3ZFNHnJa7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmg+0m0ACgkQJNaLcl1U
-h9Dozwf+PW62Yrq5PadUHzc2/xbOeKGHAIUPf6zvLH7xXV1V7F39peA/1jlAEXnt
-iwV45c255KpF5qTI/kOJKNscoERg+Rukzs0a2KXxuINbPYY0vfMGuFdPy9Dd7JFG
-OMg8L/D0Tz8XDNfqOp1oAohGoMqSa58/XPwa7KW5Y8q33jZj35/BfwoaF2cDo22K
-txzmADAfl4i44adRzbS41ArO3zn4bFiX5HpHfPdj6b0z24VcDoE0ckc7ayUOGRmv
-cCZUjsHspC1nMvodOazhvWg9eNgbaI8fI/dMjjMLBbf51W2wZahuN/WREgTzTHXC
-PIm4rEwDMbbrM4dv2i7eGRUeh8TIsA==
-=a9cn
------END PGP SIGNATURE-----
-
---oKdheFR3ZFNHnJa7--
