@@ -1,221 +1,107 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D5718E1F
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 01:05:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6AE1946F
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 01:06:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748912748; cv=none; b=FfVDsKHlDKzHBGAwk1j02LKYZliFzF5dVORswaFSYEd+feqH0oSmaqzJF1HFvpRdvoVkGwGnDnzxQU0r2tyhT3FPY147gzSpcd4xLpEBUXDEFsjYcy11EOh8ARzig/vuX3QcpwxvLKymWtV7IlUHMm8rKvWvtKxiIW7uKnpw5EM=
+	t=1748912789; cv=none; b=Vtl+FpzImTOSRzQLsIgGC3VE912y68ayfXSiF8KYIz5Jy3KZxMMT/4Wk5BHuma1vkqKFhSfC9+PcLb6rkuL4POLuaXq0QZkvqspW471QbGO6zzCsT30g9SsapoqOf5/BxcAIO3NlL70o9qifr3voRRYyx6df1me8Y8GJ9dqWdYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748912748; c=relaxed/simple;
-	bh=I8IwxSho+6YXNOBnfXRszVbVX0OXf2eoTv3BfCDsssc=;
+	s=arc-20240116; t=1748912789; c=relaxed/simple;
+	bh=RMWJOZogaV2etWlkqjrll2es/GxO7IMRXY6bKWAVxg8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uv/9JhZ4FCVFegL1K12zcZ/+0xYJ7eRPdqgSxD5f5j5KSFnO4eYNw6o7GYTco+vB//tcGJuiAoP96Df24TVU7nN5Qw6VUEAsoa2WVPgYxFE6bYq+f+J8kOAxB/7a+3FeWSlsP08upnWxFFVPhA6WwLCiVc1d6kMzinZdw81IcdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2uyqwEG2; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=hQ5kUoQKC+yNblHrgcUKDhmXhVUXgW9LCDpwRA33v779N3OEgZsAbIc/tWD/Go7HImQ0xR1uuTRrHfugqlsk65JuPrS3Z2DkvShcza403GUlo6RZaDaZangQtO/uBL88SzDygrmSpb/hIvGMfVb1bQfCuqEfVS064czVp3i1v4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jDx+yzuL; arc=none smtp.client-ip=209.85.222.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2uyqwEG2"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2348ac8e0b4so63605ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 18:05:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jDx+yzuL"
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-87e7c306fc4so441553241.3
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 18:06:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748912745; x=1749517545; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748912786; x=1749517586; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3zA8i3SvMx3WliW0WUY0TLhornaCo9nNs4r4P4DLJp8=;
-        b=2uyqwEG2r8mJchNjr4laJd+L760xa0+3qP/yREnuVg2XyzVDoiDdkxycC05hUZ+FeD
-         MPOnw1ygnUL52mUnK9mPFfeIYMt0qf7Zm8iB5WRdrvg1BqW0xuvQhPaOn65eEWlqSK0U
-         7zzv6H1zgUOYKvnFHgV7ILox0wLIq7+epMjlaXvfZzt66WFujre/jJUwVbSzZxW4BwU0
-         37uHV/n6TdOTNmYp0nmcG45hUqK5WVKE2JP79XO8ToP/PeYyv9fSTy9G6TGJIQ9K8mlq
-         aWN5VQj7Og6ch9BiX6EVIdqbQRZbR+kYo56uCVbuv0drNcwN/sUHgMRx4xm38TUZZ1pQ
-         kDCA==
+        bh=RMWJOZogaV2etWlkqjrll2es/GxO7IMRXY6bKWAVxg8=;
+        b=jDx+yzuL/kUfL1/CMZGAw2dz9Ookh5jciYPjyUvJB5M7QEVpUlncdjeZl9P1Hh4lJq
+         b/fK7kEw8MaSO1j5Hmk2ASXNOcOynlJQMQvuYI7wQHkRE4Y/0xejpPV+zqyLbKU4FccJ
+         GFiSbj3WzSdrP8TCqAiGQUXE+JxNO/TfIlfSmk+uJtbnQ/U/8UO8ZawwRacStnLrdkAZ
+         I375NJjg7S+T3A0LXTZnVx+IqhohBXgBbGl0jLKIMcoyfMHL3RnzKuuL+SWcok6X5YGK
+         cnOxWwtr0buCYBtb/1zYhUBujMtcWPr033Z/6lX2lugRiJw8CoZlSf9Yo1jK4hKrlL6k
+         0uCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748912745; x=1749517545;
+        d=1e100.net; s=20230601; t=1748912786; x=1749517586;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3zA8i3SvMx3WliW0WUY0TLhornaCo9nNs4r4P4DLJp8=;
-        b=iHLBWZIcE/AiEV+UdsVGpc7CVKm9+kOe1pTgV+rie41BPMNl/rRCAT8ixY8CaoF5dq
-         vp9ZaBsb3BaZt85iBMkl8K16gF18U7bDzNA0v27atJUvaJsPpktWhftyjYoPx7TyU2Cf
-         i67kouhgKyZIK2ITw1gmbj9XNRgHFFO4z9Ut6CjlFWLDFw9REuiwsHrtTKHAjTdmORnJ
-         uT0kHNSxRdDa/5kAPS73AI3Nm34qTc7cKXveQ1RIbOCMiHYTc1o75Ki3c0OKSf8Trw5y
-         O9lM6/YLNV6iYSNc6iDYEN6Y8nw9SvoChdWFlJzynvj41yjS+ctcw2LOUdJFWjj15Yjn
-         g16g==
-X-Forwarded-Encrypted: i=1; AJvYcCUL3tiPm4GwuRlULISyEX6nJv8g1Etl02dXTu4PTLzUD1CwAiJpo2czW5zSBrnfEmsfN7usIC9hQZJxsoQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYBDqMJH/IGnSqGx6GKkySiUBih95J7iPoA9AURfCTgfgyD2Hj
-	45KQVJtJVNf+fexgfINA8f8GK9KZak1zF7y4rT3+FKuv/YTG/WF29ZLk7mGLKsYBuuF0lh8/vbF
-	9+eMEe/utj5JQXUZDgacmRXVnqMu5CkE6qC1UJtkK
-X-Gm-Gg: ASbGnctegGWBGCBBqEvwp6d5zi8NQ5Es9VSJwwr5giCVwYwqQO2ztje+55I/t0zFIPz
-	NpvHnlNJDk4jDO6bZvjVEw2lHlvgiMx8L71N/Gfg6sz6VeZk3ej+8gvXxAIf3W2bLMxasadxvcB
-	rKq1PRQ5c5FZfst3COynSDuBZv2pjM5FQS0YgG2XV3EELwLQ+/zHAKd4Et1QFHfpTo4VfpgswPB
-	A==
-X-Google-Smtp-Source: AGHT+IF8Jp/U2+xc+07146dXlpTbASvoteEnNJEFuewV+ucbySXUxWAeNEdlDnnAVbVMzXVfjIYziZx78rbAmXvzJ98=
-X-Received: by 2002:a17:902:ec90:b0:234:c2e7:a0e7 with SMTP id
- d9443c01a7336-235c83a1796mr1458355ad.4.1748912745102; Mon, 02 Jun 2025
- 18:05:45 -0700 (PDT)
+        bh=RMWJOZogaV2etWlkqjrll2es/GxO7IMRXY6bKWAVxg8=;
+        b=P/Bq/Yt8dpsN24EPFPxdgBB/dT2LPCz5UMTEdE3BwqOYLoibMfF4ofKuTGuTxJoSFg
+         gwTHIgX2J/voKQUZVIrqR1JaTuh6FIkYwW9fIruRWtmrrwlVDlIWVSA2AtcwWzOxBNLP
+         p2709K0BOLyuL6lYGXsxB96LohUAO3jBWksPvwc2elioYu68Np5hhzJhNpb6KNpjjrjM
+         3D+s+Sw9AOzHKyrzYFbsJO6/bPti+GXq0jMgH1MmRBLbAFkerqmAr1ytL7dd+/1pFh+w
+         4WcsTHDZanaE4wMmnq5rtsw+Mbe3BwGua1F/2QUTei2ojwYW/nXBZ70qqqxQI+GTMBZq
+         nEVw==
+X-Forwarded-Encrypted: i=1; AJvYcCXodsYbhozRN1iTOjR/V5u/VB0AT+ZsPzfN5UmrbtmdXCzUu2aghjdpTGGahxB6tShDTxWggXvS6HYRkGU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxc/qHJSlO5x7XIkIvelZ79nFko2PgSQBau5kzSD18vwSAk07nq
+	F0Dk6kEPlHfMYaG7prN8Ft47C6NZBLyOVWsWxvWaM/rSM+k94v0IxR4FzfSHNCVPv8CTz5a69JR
+	KC6kg+m+vLWniZCNd5C95QKpj628LaLI=
+X-Gm-Gg: ASbGncth7bW4kUnBS5ds2uoehGgFiOtDUgldNmAVYCMjoq4maXnyPGfggpQFuuiXxNX
+	oLkjgAzRpb17MH1bFP1ggWIMFnDZF1/TcM6VzxVT38Ryi0joY7FqY143HzaQTVQeRzR7zA97KzU
+	qJAyecOHD4w/9jzIWO7CYbL0+Jkk1yVUCnLQ==
+X-Google-Smtp-Source: AGHT+IFv1DDQlBCn1QAD/Dswpbv0WSJDOOcrkdSUJ0DqRBgPDUm+GITEq9c9Vmq3Itwa3dtZJOKBJZi7cMsZkgXSbWg=
+X-Received: by 2002:a05:6102:dd0:b0:4e5:997a:748f with SMTP id
+ ada2fe7eead31-4e6ece6d01fmr11278344137.22.1748912786462; Mon, 02 Jun 2025
+ 18:06:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <diqzjz7azkmf.fsf@ackerleytng-ctop.c.googlers.com>
- <diqz8qmsfs5u.fsf@ackerleytng-ctop.c.googlers.com> <aC1221wU6Mby3Lo3@yzhao56-desk.sh.intel.com>
-In-Reply-To: <aC1221wU6Mby3Lo3@yzhao56-desk.sh.intel.com>
-From: Vishal Annapurve <vannapurve@google.com>
-Date: Mon, 2 Jun 2025 18:05:32 -0700
-X-Gm-Features: AX0GCFtnJZatjpGKUUpgyUTxkmXtEoTmNaLkinCtwBCaHY9YrfWtQsfvQRQkcEw
-Message-ID: <CAGtprH_chB5_D3ba=yqgg-ZGGE2ONpoMdB=4_O4S6k7jXcoHHw@mail.gmail.com>
-Subject: Re: [PATCH 3/5] KVM: gmem: Hold filemap invalidate lock while
- allocating/preparing folios
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: Ackerley Tng <ackerleytng@google.com>, michael.roth@amd.com, kvm@vger.kernel.org, 
-	linux-coco@lists.linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	jroedel@suse.de, thomas.lendacky@amd.com, pbonzini@redhat.com, 
-	seanjc@google.com, vbabka@suse.cz, amit.shah@amd.com, 
-	pratikrajesh.sampat@amd.com, ashish.kalra@amd.com, liam.merwick@oracle.com, 
-	david@redhat.com, quic_eberman@quicinc.com
+References: <20250530104439.64841-1-21cnbao@gmail.com> <CAG48ez11zi-1jicHUZtLhyoNPGGVB+ROeAJCUw48bsjk4bbEkA@mail.gmail.com>
+ <002aa917-d952-491d-800c-88a0476ac02f@lucifer.local> <CAG48ez0kb+on=erofZL2ZwB9CqtrSCJVND7K7=ww1prMUGXDRg@mail.gmail.com>
+ <23edf435-7cfe-49d1-9432-aee64c0096ab@lucifer.local>
+In-Reply-To: <23edf435-7cfe-49d1-9432-aee64c0096ab@lucifer.local>
+From: Barry Song <21cnbao@gmail.com>
+Date: Tue, 3 Jun 2025 13:06:15 +1200
+X-Gm-Features: AX0GCFvkC_IF6P1FnyYJWeX09mDj2GXyu33xJdbnsR1KIBqWnbKfL868T9IukPE
+Message-ID: <CAGsJ_4znsRvV4CeAkiCdN5snusbUGo4j+b3vhuEfiQrNxnGG_g@mail.gmail.com>
+Subject: Re: [PATCH RFC v2] mm: use per_vma lock for MADV_DONTNEED
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Jann Horn <jannh@google.com>, akpm@linux-foundation.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, David Hildenbrand <david@redhat.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>, 
+	Lokesh Gidra <lokeshgidra@google.com>, Tangquan Zheng <zhengtangquan@oppo.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 20, 2025 at 11:49=E2=80=AFPM Yan Zhao <yan.y.zhao@intel.com> wr=
-ote:
+Hi Lorenzo,
+
+On Mon, Jun 2, 2025 at 11:50=E2=80=AFPM Lorenzo Stoakes
+<lorenzo.stoakes@oracle.com> wrote:
 >
-> On Mon, May 19, 2025 at 10:04:45AM -0700, Ackerley Tng wrote:
-> > Ackerley Tng <ackerleytng@google.com> writes:
-> >
-> > > Yan Zhao <yan.y.zhao@intel.com> writes:
-> > >
-> > >> On Fri, Mar 14, 2025 at 05:20:21PM +0800, Yan Zhao wrote:
-> > >>> This patch would cause host deadlock when booting up a TDX VM even =
-if huge page
-> > >>> is turned off. I currently reverted this patch. No further debug ye=
-t.
-> > >> This is because kvm_gmem_populate() takes filemap invalidation lock,=
- and for
-> > >> TDX, kvm_gmem_populate() further invokes kvm_gmem_get_pfn(), causing=
- deadlock.
-> > >>
-> > >> kvm_gmem_populate
-> > >>   filemap_invalidate_lock
-> > >>   post_populate
-> > >>     tdx_gmem_post_populate
-> > >>       kvm_tdp_map_page
-> > >>        kvm_mmu_do_page_fault
-> > >>          kvm_tdp_page_fault
-> > >>       kvm_tdp_mmu_page_fault
-> > >>         kvm_mmu_faultin_pfn
-> > >>           __kvm_mmu_faultin_pfn
-> > >>             kvm_mmu_faultin_pfn_private
-> > >>               kvm_gmem_get_pfn
-> > >>                 filemap_invalidate_lock_shared
-> > >>
-> > >> Though, kvm_gmem_populate() is able to take shared filemap invalidat=
-ion lock,
-> > >> (then no deadlock), lockdep would still warn "Possible unsafe lockin=
-g scenario:
-> > >> ...DEADLOCK" due to the recursive shared lock, since commit e9181886=
-11f0
-> > >> ("locking: More accurate annotations for read_lock()").
-> > >>
-> > >
-> > > Thank you for investigating. This should be fixed in the next revisio=
-n.
-> > >
-> >
-> > This was not fixed in v2 [1], I misunderstood this locking issue.
-> >
-> > IIUC kvm_gmem_populate() gets a pfn via __kvm_gmem_get_pfn(), then call=
+> Barry - would you mind if I went off and wrote a quick patch to separate
+> walk_page_range_novma() into walk_page_range_kernel() and
+> walk_page_range_user_novma()?
+>
+> I realise this is a pain, but I feel strongly that having them together i=
 s
-> > part of the KVM fault handler to map the pfn into secure EPTs, then
-> > calls the TDX module for the copy+encrypt.
-> >
-> > Regarding this lock, seems like KVM'S MMU lock is already held while TD=
-X
-> > does the copy+encrypt. Why must the filemap_invalidate_lock() also be
-> > held throughout the process?
-> If kvm_gmem_populate() does not hold filemap invalidate lock around all
-> requested pages, what value should it return after kvm_gmem_punch_hole() =
-zaps a
-> mapping it just successfully installed?
+> a source of confusion and having us special case a -only used in ptdump-
+> case like this is not great.
 >
-> TDX currently only holds the read kvm->mmu_lock in tdx_gmem_post_populate=
-() when
-> CONFIG_KVM_PROVE_MMU is enabled, due to both slots_lock and the filemap
-> invalidate lock being taken in kvm_gmem_populate().
+> It wouldn't include any VMA locking stuff from this patch, which you coul=
+d
+> then rebase on that.
+>
+> I think it'd make sense as a separate series and I can throw that out
+> fairly quickly...
+>
+> But I don't want to step on any toes so just let me know!
 
-Does TDX need kvm_gmem_populate path just to ensure SEPT ranges are
-not zapped during tdh_mem_page_add and tdh_mr_extend operations? Would
-holding KVM MMU read lock during these operations sufficient to avoid
-having to do this back and forth between TDX and gmem layers?
+Feel free to proceed with the patch. I can rebase on top of your
+walk_page_range_kernel() changes.
 
->
-> Looks sev_gmem_post_populate() does not take kvm->mmu_lock either.
->
-> I think kvm_gmem_populate() needs to hold the filemap invalidate lock at =
-least
-> around each __kvm_gmem_get_pfn(), post_populate() and kvm_gmem_mark_prepa=
-red().
->
-> > If we don't have to hold the filemap_invalidate_lock() throughout,
-> >
-> > 1. Would it be possible to call kvm_gmem_get_pfn() to get the pfn
-> >    instead of calling __kvm_gmem_get_pfn() and managing the lock in a
-> >    loop?
-> >
-> > 2. Would it be possible to trigger the kvm fault path from
-> >    kvm_gmem_populate() so that we don't rebuild the get_pfn+mapping
-> >    logic and reuse the entire faulting code? That way the
-> >    filemap_invalidate_lock() will only be held while getting a pfn.
-> The kvm fault path is invoked in TDX's post_populate() callback.
-> I don't find a good way to move it to kvm_gmem_populate().
->
-> > [1] https://lore.kernel.org/all/cover.1747264138.git.ackerleytng@google=
-.com/T/
-> >
-> > >>> > @@ -819,12 +827,16 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struc=
-t kvm_memory_slot *slot,
-> > >>> >         pgoff_t index =3D kvm_gmem_get_index(slot, gfn);
-> > >>> >         struct file *file =3D kvm_gmem_get_file(slot);
-> > >>> >         int max_order_local;
-> > >>> > +       struct address_space *mapping;
-> > >>> >         struct folio *folio;
-> > >>> >         int r =3D 0;
-> > >>> >
-> > >>> >         if (!file)
-> > >>> >                 return -EFAULT;
-> > >>> >
-> > >>> > +       mapping =3D file->f_inode->i_mapping;
-> > >>> > +       filemap_invalidate_lock_shared(mapping);
-> > >>> > +
-> > >>> >         /*
-> > >>> >          * The caller might pass a NULL 'max_order', but internal=
-ly this
-> > >>> >          * function needs to be aware of any order limitations se=
-t by
-> > >>> > @@ -838,6 +850,7 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct =
-kvm_memory_slot *slot,
-> > >>> >         folio =3D __kvm_gmem_get_pfn(file, slot, index, pfn, &max=
-_order_local);
-> > >>> >         if (IS_ERR(folio)) {
-> > >>> >                 r =3D PTR_ERR(folio);
-> > >>> > +               filemap_invalidate_unlock_shared(mapping);
-> > >>> >                 goto out;
-> > >>> >         }
-> > >>> >
-> > >>> > @@ -845,6 +858,7 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct =
-kvm_memory_slot *slot,
-> > >>> >                 r =3D kvm_gmem_prepare_folio(kvm, file, slot, gfn=
-, folio, max_order_local);
-> > >>> >
-> > >>> >         folio_unlock(folio);
-> > >>> > +       filemap_invalidate_unlock_shared(mapping);
-> > >>> >
-> > >>> >         if (!r)
-> > >>> >                 *page =3D folio_file_page(folio, index);
-> > >>> > --
-> > >>> > 2.25.1
-> > >>> >
-> > >>> >
-> >
+Thanks
+Barry
