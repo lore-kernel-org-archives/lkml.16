@@ -1,15 +1,16 @@
 Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5564227F195;
-	Tue,  3 Jun 2025 07:54:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E5F27F74C;
+	Tue,  3 Jun 2025 07:54:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748937296; cv=none; b=SWd4rfr2HG7YYT4/NvF/ysdBtlNBF+AfHmbqTzQqnfBadInmPRCoqxl54EBCMFDjGkHeMKUoG70CYnw8ZqItmJCGRRFpB5lT2prswuWYwu3UfzDdNswGcwBXUQbKr+sCjminNTm5zeLAmuRAIznnqLuJ8qJFqpGFvqCqcsdxvuE=
+	t=1748937300; cv=none; b=LFnp3oyEId/QvRc0NbctmnEieZ3/dBeckQ+Kt15SamtO1ziE2pppXz7E98socRiD3ZDZ3Fjvio6mOCGka0V2fJAOZ7yqp/deKRSxsI92uyBPYMUEQVezURnTLMGOH5hE8yevLj2WChRRINMnOa1vNADXKfWGeRFW3Vo2QgBEF/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748937296; c=relaxed/simple;
-	bh=z5+m8V0Ms3AUop1fmCfOASFxTcdyt+T6iFmUnrF4Dh0=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HiDcFMERpNDnRhonli8e5GR/MDCrNZZHFUw//SaBE7crCzOWeQthImWpmMGRf27C+m7252zqDLEMxGlYbhJ8TnE4jK66F9iklvsRAHykplT6oLMFr7XRRisTbol6W8NGQqhIl9jq9GPYEPR5E/tkNKY7UVg0J4gkKgA+O4iYy58=
+	s=arc-20240116; t=1748937300; c=relaxed/simple;
+	bh=8KVg/+vGTCswt/5uCkkCrSkBLWuSEHIb8bVC5fMEAxI=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hmPKVwAv6z13ZsFZxsvlskfyAGBYcn3XT6lYMBVhUXPWp+pg9yPkYNsBkd8sXqjBlUftvXVOI87xpJzxhDRi/mJmotO7ja0a5UwW/jtjm/6yBriXJNdvxWaC2Fwe4cybVBw6oPsc6XpJptGxcOaB5DIJTfvYcjZ9svSs5653jGM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
@@ -26,10 +27,12 @@ To: <jassisinghbrar@gmail.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
 	<jammy_huang@aspeedtech.com>, <devicetree@vger.kernel.org>,
 	<linux-arm-kernel@lists.infradead.org>, <linux-aspeed@lists.ozlabs.org>,
 	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v1 0/2] ASPEED: Add mailbox driver for AST2700 series
-Date: Tue, 3 Jun 2025 15:54:48 +0800
-Message-ID: <20250603075450.133604-1-jammy_huang@aspeedtech.com>
+Subject: [PATCH v1 1/2] dt-bindings: mailbox: Add ASPEED AST2700 series SoC
+Date: Tue, 3 Jun 2025 15:54:49 +0800
+Message-ID: <20250603075450.133604-2-jammy_huang@aspeedtech.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250603075450.133604-1-jammy_huang@aspeedtech.com>
+References: <20250603075450.133604-1-jammy_huang@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,24 +42,82 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-Add mailbox controller driver for AST27XX SoCs, which provides
-independent tx/rx mailbox between different processors. There are 4
-channels for each tx/rx mailbox and each channel has an 32-byte FIFO.
+Introduce the mailbox module for AST27XX series SoC, which is responsible
+for interchanging messages between asymmetric processors.
 
-Jammy Huang (2):
-  dt-bindings: mailbox: Add ASPEED AST2700 series SoC
-  mailbox: aspeed: add mailbox driver for AST27XX series SoC
-
- .../mailbox/aspeed,ast2700-mailbox.yaml       |  61 +++++
- drivers/mailbox/Kconfig                       |   8 +
- drivers/mailbox/Makefile                      |   2 +
- drivers/mailbox/ast2700-mailbox.c             | 226 ++++++++++++++++++
- 4 files changed, 297 insertions(+)
+Signed-off-by: Jammy Huang <jammy_huang@aspeedtech.com>
+---
+ .../mailbox/aspeed,ast2700-mailbox.yaml       | 61 +++++++++++++++++++
+ 1 file changed, 61 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/mailbox/aspeed,ast2700-mailbox.yaml
- create mode 100644 drivers/mailbox/ast2700-mailbox.c
 
-
-base-commit: 546b1c9e93c2bb8cf5ed24e0be1c86bb089b3253
+diff --git a/Documentation/devicetree/bindings/mailbox/aspeed,ast2700-mailbox.yaml b/Documentation/devicetree/bindings/mailbox/aspeed,ast2700-mailbox.yaml
+new file mode 100644
+index 000000000000..27738c462e33
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/aspeed,ast2700-mailbox.yaml
+@@ -0,0 +1,61 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mailbox/aspeed,ast2700-mailbox.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ASPEED AST2700 mailbox controller
++
++maintainers:
++  - Jammy Huang <jammy_huang@aspeedtech.com>
++
++description:
++  ASPEED AST2700 has multiple processors that need to communicate with each
++  other. The mailbox controller provides a way for these processors to send
++  messages to each other. It is a hardware-based inter-processor communication
++  mechanism that allows processors to send and receive messages through
++  dedicated channels.
++  The mailbox's tx/rx are independent, meaning that one processor can send a
++  message while another processor is receiving a message simultaneously.
++  There are 4 channels available for both tx and rx operations. Each channel
++  has a FIFO buffer that can hold messages of a fixed size (32 bytes in this
++  case).
++  The mailbox controller also supports interrupt generation, allowing
++  processors to notify each other when a message is available or when an event
++  occurs.
++
++properties:
++  compatible:
++    const: aspeed,ast2700-mailbox
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  "#mbox-cells":
++    const: 1
++    description: |
++      <&phandle channel>
++      phandle : Label name of mailbox controller
++      channel : 0-3, Channel index
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - "#mbox-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    mbox@12c1c200 {
++        compatible = "aspeed,ast2700-mailbox";
++        reg = <0x0 0x12c1c200 0x0 0x200>;
++        interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
++        #mbox-cells = <1>;
++    };
 -- 
 2.25.1
 
