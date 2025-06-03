@@ -1,236 +1,161 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4744628030E
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 08:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B3D280319
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 08:07:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748938052; cv=none; b=XfaP4CoSrsysCghlFObMqWJyOsUylqjyiShRfqqlNEdtZbNL/0h2v1eRm4EFEZpqIetuszgY0V+s3aR/M8Pc1YDB52Fn5pl3N3CGR6DX3ym3Z1oPZ4UuHUvxKBLC6hLZg6MATCKtnw6G0ljxMycQPko3h52iZuaUE2eY8l4iAYE=
+	t=1748938060; cv=none; b=WSPifrvKal+3G/92oUhEfQVsAaTczWC3uvyWkfMG7LkmQhWk9bvBi0YIk+pkppxUR6kmj63YBhV9NmIonn/6KyUyl7UfEFF6yoY8kUqOuFwTQlRl2+DImInoRYoStDzDIVMDBSogKEfLnwwp+47oN6oeM0YgtPTO03URnTXYius=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748938052; c=relaxed/simple;
-	bh=a0efNbPkFoFMZQuJlsXwZa0OvWZ5LKfKa8oXf/iTQGo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u9dmJo2NeTM3we7EwszZuo1nC+CM0Tri0kuk2fYkHfeW+DZf9OGNdppnYh80M7axeU550/8RYXbXhRcXmfgt85YcNlPcHxkg4bJFdX3HRQcUm116WyT6XC55kW9omcvDypKkCTK22Yany83PWWSeABt9WVsC+QFZIS00sgcnP5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hPM5t7yA; arc=none smtp.client-ip=209.85.222.51
+	s=arc-20240116; t=1748938060; c=relaxed/simple;
+	bh=FUWBKradpds5Eq8Ee5H4q/ArrYDMcD+S9L8vK8skA4c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iKMGGb7rSCL7i44h8C3+d3ttcEMrFgjl4NwOlg0kERhbawuNNMgEmX7Lpf4FqZ9qAZAwlv/pxHijO/j7bHk0wJh7wxh0Vxq356fKrx4SoLwRrYsQoqHb4/+Y3olEDKpdvV+0qj0AzkpVFvwKGaU5HTdPPV8ZwaqF703V0w4ExAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e+VD3fU5; arc=none smtp.client-ip=209.85.210.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hPM5t7yA"
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-87dfe906a87so1381589241.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 01:07:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e+VD3fU5"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-747fc7506d4so477344b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 01:07:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748938048; x=1749542848; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fDGBSduyXbHQ46IAjI466E3jzdFbbBUSkhtvK40jR68=;
-        b=hPM5t7yAAZuB2ayIUYULDnTRUOiTFCttHUSGROS2Muv5mPAIR9pSlHxoKC3vGOT9eH
-         NAAJyxXH1N+4tSPkDSfoIFVCbBLD95PiR43r+7pHItIBUe5iJRTKsgaHpCwCe6vZmNCw
-         nZWpLRyFINUvUOC+TgBTCxCAzavZoEdSgcJ7rqQmfKA9qJvU30Gpq9miJ+QIf8d3PbBs
-         utwEq8X2GkAbNNpBHVmqLc+BRmgvSHvRu3qoOC9nXQQ7mbzS4VhoeU0lDDi0TRiaac/s
-         +llVJt86Vhw6DLRiAimj2/iLNbE7S/5IISYle3ceIr5HGSyej15IHd0TVzrbNdAovqAh
-         lUag==
+        d=linaro.org; s=google; t=1748938058; x=1749542858; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=RgRK11s6JB+JjyTicXAF2ZwBxFCvxZL8yavFM8SLLjA=;
+        b=e+VD3fU5ECdDr/658fUZ7tcnwaduT0d6KnRS+JxgtaBo0w07fGEhyGYpkoEfBX9eKL
+         Rlw1O3f0yobVRjv8p+zT1MdYeikftZB7d0kTQSGS8UkVxZ2jE7quyv6cC7achGISOSWP
+         z90qAAtwD+4Ju1a1SSJxcSfrXcYfO+uiRrJ1rpMFlwYrzDGm4rLDTf98xfL2zQTp1GkC
+         7plsFVzliiE5ILvOzPPeaw9L8mHet8oKOEq03pejhcopK2XqfR09MpQgtvPtsYN/NhjO
+         MLFcFMqGgDIsW4PYgDe8JVKGOlzDnquvgSwNDBgfQc764kzZfCWCDIGAMpgPzImsRhRw
+         Mn7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748938048; x=1749542848;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fDGBSduyXbHQ46IAjI466E3jzdFbbBUSkhtvK40jR68=;
-        b=OUyBC9+uZUBOf+kynORoVsYKtXj88zu84a4aaPzBMkepwUR8S0dpbKGDTwQfBucZiq
-         BMewT8ryHeEciNAk16pjiFF8tl2wbSguDGO5iBSxDAbb31EVpKUxKHj/chtlpu/ywbLP
-         sJkrnBPv21r7LBi2NmSsE+l6eqXs01E6bsSJ4JXJKPbbHnhhVlcq/MjNI+0Qr2KJvNsT
-         yfWyUivHststTwHHr63vLm8jVG0jat7yWeQllLjw8Agp24fJjCmNS1yq3aUJ6yZTWmDo
-         IaHlfrgYFWeDaHbFKmuLoNNkKImlwHMYMHSgXmQd/nweKgC1RmaIVJDSW70VTNmIbEee
-         eRmw==
-X-Forwarded-Encrypted: i=1; AJvYcCUrWiTmNRiBLsIKLgyDy7Vzk8L3RDQkbccsOBdC7DMLYxYbNQUm8S5BNcdDx17JkvlFzfi5xjlMM6v6Qtg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyb0lQ5F3UHljFW/aAoypLghd2dJJO54XQgG9yIPrjvDaNoHHZS
-	GB2AzqAdqrKieBEGo2V4U1WEe/2Yq9B2fogzR8nSO4RHDFCy6CIuz/6L0vfKfGB5QhpdzEqaYyk
-	0skyWgWD+npXhextaiODiahtYZkPfF9lHcAZzcpt7Bg==
-X-Gm-Gg: ASbGncvW+OAUOIXr6BspuPD1A6XrksYoiECEmmI7GlnBcUIaLUrda13Ux/6CY9GZWyy
-	sITRBkrNyIWOkQDnlVNfMdqm8FDo4iB+RJoh9VkVzaohHsleK8fRVjgruVHBPtPMNhhHzOJGrFr
-	95827+VGRre2YFVQrp6srrQhWlKdkp+jdEdj/a1WJL2cMeg5EcNPnT
-X-Google-Smtp-Source: AGHT+IGyYkGVv3WmXmsTELKM5fLdDqlySf6QWUPXvdaCbaMbtPacfL3f8TZdtRnc1C4HVxQDJTCAbW/51uVvOY57VPk=
-X-Received: by 2002:a05:6102:a47:b0:4e5:ac0f:582c with SMTP id
- ada2fe7eead31-4e6ece33e74mr11898093137.13.1748938048053; Tue, 03 Jun 2025
- 01:07:28 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748938058; x=1749542858;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RgRK11s6JB+JjyTicXAF2ZwBxFCvxZL8yavFM8SLLjA=;
+        b=tR+iBcEqMcz1soyWsxZPiTutw6iizWi/0Q650QwPN+ONQYsC1bSXoH94zwBR8R+DK5
+         YW7tGJN3HiqAc4VfqGcgnMyiExDic9cL896xIgJi4J1+nFlzrhUL3E6pK6NXvLRjDKV/
+         K2TsLvZAy35dnB6PqSqFJWuWk9nW/rrjfXr75U07BD8K2+2uX275mxFWnQIrMZT/+4uT
+         3AbNEXSeI2qO0R1STXSyh6n4wmoUQDuO3I6pnQWK9xyI9s+hpg628BMioW/7gAsG2nag
+         dnTLYMl0ZIF8SCqOym153PbFJv1O8yJFuyhoj5I7l0MV81xGdtzPx7s6lgXIH7ZOZm6h
+         jJEg==
+X-Forwarded-Encrypted: i=1; AJvYcCWvTRDvNuTAmxftYmhMx482TsfUbIeLFXwmEDyQaj4iZEBrAOTC6NQm6wYTubPAtRl57KoN/tZLUpyMq+U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxuFlej6OTmftQESip/5tOpiBllrCfmdvjDTfhgtJFbgaMxwy3
+	w00DLlw4nVVBY5sB1FcGNnDvP5vaTcUpm1tvlmf64bb0s/hS0zMUSdrCdmbxBLzAww==
+X-Gm-Gg: ASbGncvDFyKV05AwW9nOEGQ/DE/E9gJJSfVklMUB8fpDjEYke49bAKf3T95Q3mXUbJ+
+	fnIM4CaTnzINYgF5tF+Gy66N7cRBTv2QVUsfIL1otO9tgeqSadFDHewyEwDJknEJb2w+kP3LmUb
+	oLjHuCwe2aiB76fCMp3WFOkikjMdlbzZqH4NHWFHqcAzCFqIcw7sP9JAHy3iAIiCNxp3BV/abcy
+	Hauul/fazhrkqFgi9GzaxZcxSOcCis0SwR2EgAwrC1fWmseV6fUGqd5RfENYXWgk3+kgGhpMDlb
+	EQ0XZOKI2qnPG3UObxYKPVTp2ei6Q3nQKCKzGkYRADou+y0TbRishgTwc/MJD0zs
+X-Google-Smtp-Source: AGHT+IHCOslACAtsUuopTlmOMx0XidS3UtDrBqXgyJnxMB7I6vxxOXPErDBVm2jpZjtzNKVMFePkTQ==
+X-Received: by 2002:a05:6a00:cc9:b0:742:aecc:c472 with SMTP id d2e1a72fcca58-747d181cd0emr14550507b3a.2.1748938058081;
+        Tue, 03 Jun 2025 01:07:38 -0700 (PDT)
+Received: from thinkpad ([220.158.156.133])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afe9680bsm9087026b3a.18.2025.06.03.01.07.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 01:07:37 -0700 (PDT)
+Date: Tue, 3 Jun 2025 13:37:30 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
+Subject: Re: [PATCH v3 3/3] arm64: qcom: sc7280: Move phy, perst to root port
+ node
+Message-ID: <uz4muqjo3mhso3wlzfl6hmo3c6nns2ekfin76y2443tt5nzfcs@5j66ihrw2nvc>
+References: <20250419-perst-v3-0-1afec3c4ea62@oss.qualcomm.com>
+ <20250419-perst-v3-3-1afec3c4ea62@oss.qualcomm.com>
+ <r4mtndc6tww6eqfumensnsrnk6j6dw5nljgmiz2azzg2evuoy6@hog3twb22euq>
+ <0e1d8b8e-9dd3-a377-d7e0-93ec77cf397f@oss.qualcomm.com>
+ <pb7rsvlslvyqlheyhwwjgje6iiolgkj6cqfsi6jmvetritc7lr@jxndd5rfzbfy>
+ <fb1cee63-ec97-d5c7-7a9b-bda503a91875@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250602134255.449974357@linuxfoundation.org>
-In-Reply-To: <20250602134255.449974357@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 3 Jun 2025 13:37:16 +0530
-X-Gm-Features: AX0GCFvDqmMU1x0jRj0cXE5UtEj8pF1EDN8rIh8q3pvOM5Nfh8pK7cZocZqKyDk
-Message-ID: <CA+G9fYt_vx2f+3SG4Y7RfXnw6NDMJJuP2Mt1fNCEBBCBbxigKw@mail.gmail.com>
-Subject: Re: [PATCH 5.4 000/204] 5.4.294-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
-	Jeongjun Park <aha310510@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fb1cee63-ec97-d5c7-7a9b-bda503a91875@oss.qualcomm.com>
 
-On Mon, 2 Jun 2025 at 19:56, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.4.294 release.
-> There are 204 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 04 Jun 2025 13:42:20 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.4.294-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Tue, Jun 03, 2025 at 01:05:17PM +0530, Krishna Chaitanya Chundru wrote:
+> 
+> 
+> On 6/3/2025 12:22 PM, Manivannan Sadhasivam wrote:
+> > On Tue, Jun 03, 2025 at 12:03:01PM +0530, Krishna Chaitanya Chundru wrote:
+> > > 
+> > > 
+> > > On 6/1/2025 12:35 PM, Manivannan Sadhasivam wrote:
+> > > > On Sat, Apr 19, 2025 at 10:49:26AM +0530, Krishna Chaitanya Chundru wrote:
+> > > > > There are many places we agreed to move the wake and perst gpio's
+> > > > > and phy etc to the pcie root port node instead of bridge node[1].
+> > > > 
+> > > > Same comment as binding patch applies here.
+> > > > 
+> > > > > 
+> > > > > So move the phy, phy-names, wake-gpio's in the root port.
+> > > > 
+> > > > You are not moving any 'wake-gpios' property.
+> > > > 
+> > > ack I will remove it.
+> > > > > There is already reset-gpio defined for PERST# in pci-bus-common.yaml,
+> > > > > start using that property instead of perst-gpio.
+> > > > > 
+> > > > > [1] https://lore.kernel.org/linux-pci/20241211192014.GA3302752@bhelgaas/
+> > > > > 
+> > > > > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> > > > > ---
+> > > > >    arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts   | 5 ++++-
+> > > > >    arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi | 5 ++++-
+> > > > >    arch/arm64/boot/dts/qcom/sc7280-idp.dtsi       | 5 ++++-
+> > > > >    arch/arm64/boot/dts/qcom/sc7280.dtsi           | 6 ++----
+> > > > >    4 files changed, 14 insertions(+), 7 deletions(-)
+> > > > > 
+> > > > > diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> > > > > index 7a36c90ad4ec8b52f30b22b1621404857d6ef336..3dd58986ad5da0f898537a51715bb5d0fecbe100 100644
+> > > > > --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> > > > > +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> > > > > @@ -709,8 +709,11 @@ &mdss_edp_phy {
+> > > > >    	status = "okay";
+> > > > >    };
+> > > > > +&pcie1_port0 {
+> > > > > +	reset-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+> > > > > +};
+> > > > > +
+> > > > >    &pcie1 {
+> > > > > -	perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+> > > > >    	pinctrl-0 = <&pcie1_reset_n>, <&pcie1_wake_n>;
+> > > > >    	pinctrl-names = "default";
+> > > > 
+> > > > What about the pinctrl properties? They should also be moved.
+> > > > 
+> > > pinctrl can still reside in the host bridge node, which has
+> > > all the gpio's for all the root ports. If we move them to the
+> > > root ports we need to explicitly apply pinctrl settings as these
+> > > not tied with the driver yet.
+> > > 
+> > 
+> > If the DT node is associated with a device, then the driver core should bind the
+> > pinctrl pins and configure them. Is that not happening here?
+> The root node will not be associated with the driver until enumeration,
+> the controller drivers needs these to be configured before enumeration.
+> 
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Hmm. I'm working on moving the PERST# deassert to pwrctrl drivers, but even then
+the PERST# assert needs to happen in the controller driver for initialization.
+And moving them to root port node would cause the pin state to be changed
+in-between. So I agree, let's leave them in controller node itself.
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+- Mani
 
-NOTE:
-As other reported,
-Here is the build warning on arm with clang-20 and gcc-12
-
-kernel/trace/trace.c:6334:8: warning: comparison of distinct pointer
-types ('typeof ((size_t)trace_seq_used(&iter->seq)) *' (aka 'unsigned
-int *') and 'typeof (((1UL) << 12)) *' (aka 'unsigned long *'))
-[-Wcompare-distinct-pointer-types]
- 6334 |
-min((size_t)trace_seq_used(&iter->seq),
-      |
-^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 6335 |                                                   PAGE_SIZE));
-      |                                                   ~~~~~~~~~~
-
-This build warning is due to,
-  tracing: Fix oob write in trace_seq_to_buffer()
-  commit f5178c41bb43444a6008150fe6094497135d07cb upstream.
-
-## Build arm log
-Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2xxMDrYn=
-M37m3B0qZbAdLmnoeQ6/
-Build config: https://storage.tuxsuite.com/public/linaro/lkft/builds/2xxMDr=
-YnM37m3B0qZbAdLmnoeQ6/config
-
-## steps to reproduce
- - tuxmake --runtime podman --target-arch arm --toolchain clang-20
---kconfig vexpress_defconfig LLVM=3D1 LLVM_IAS=3D0
-
-## Build
-* kernel: 5.4.294-rc1
-* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
-rc.git
-* git commit: dbf9e583326d679bc41fbbee9302d2f0ec8e01b2
-* git describe: v5.4.293-205-gdbf9e583326d
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.4.y/build/v5.4.2=
-93-205-gdbf9e583326d
-
-## Test Regressions (compared to v5.4.292-180-gd5e62da0f6d5)
-
-## Metric Regressions (compared to v5.4.292-180-gd5e62da0f6d5)
-
-## Test Fixes (compared to v5.4.292-180-gd5e62da0f6d5)
-
-## Metric Fixes (compared to v5.4.292-180-gd5e62da0f6d5)
-
-## Test result summary
-total: 45395, pass: 32893, fail: 2231, skip: 10140, xfail: 131
-
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 131 total, 131 passed, 0 failed
-* arm64: 31 total, 29 passed, 2 failed
-* i386: 18 total, 13 passed, 5 failed
-* mips: 25 total, 25 passed, 0 failed
-* parisc: 3 total, 0 passed, 3 failed
-* powerpc: 26 total, 26 passed, 0 failed
-* riscv: 9 total, 3 passed, 6 failed
-* s390: 6 total, 6 passed, 0 failed
-* sh: 10 total, 10 passed, 0 failed
-* sparc: 6 total, 6 passed, 0 failed
-* x86_64: 27 total, 27 passed, 0 failed
-
-## Test suites summary
-* boot
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-exec
-* kselftest-fpu
-* kselftest-futex
-* kselftest-intel_pstate
-* kselftest-kcmp
-* kselftest-livepatch
-* kselftest-membarrier
-* kselftest-mincore
-* kselftest-mqueue
-* kselftest-openat2
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-x86
-* kunit
-* lava
-* libhugetlbfs
-* log-parser-boot
-* log-parser-build-clang
-* log-parser-build-gcc
-* log-parser-test
-* ltp-capability
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-smoke
-* ltp-syscalls
-* ltp-tracing
-* perf
-* rcutorture
-
---
-Linaro LKFT
-https://lkft.linaro.org
+-- 
+மணிவண்ணன் சதாசிவம்
