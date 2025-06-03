@@ -1,105 +1,158 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E33BC4C92;
-	Tue,  3 Jun 2025 03:21:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52BC7154BF5;
+	Tue,  3 Jun 2025 03:23:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748920889; cv=none; b=ThVRHmNw2/5BtaZF3Flnrfm4qUVUOWBHzxTI6Z7xl4CntG+YRuPKKHqqhDMqSSHN10d2VjbXb89nN5qGseMl/EV7OSWi3mcNcH5PdPInWWqpIisXEWbTAx/CPvkcJj4sGf47IaT6yFDLDdznxWY8et+g9Xapy3bmWgm6shLD7Ec=
+	t=1748921003; cv=none; b=LJgIfrbDV01B02+Hc7bH0du4w9t/brKw8ac5q0xTtBPCZZ9ebG/8rpM3wlAZV+uVYW36LaNCJkRbrGlU/N7ULhKnAYolzRfvBviI20lcvV1QN1ro8b2ZYREivXc+58e9+0VLSpXiR9VX11pze2TCmhDWjXS/AXuzxQwoFnOH2oI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748920889; c=relaxed/simple;
-	bh=+MCGyiFoj163GQ4SdScgslfTtU1bGfCxA1Id5r9orj4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JLrfu4AfC88pjRKMWXA1tFQSL473ArB7kvWy535UneT++OXDFsssudcY8IEgy0wnLZRC+btdTB36uJVvAnHHLV6XHOiJDvrZRcjqoihi8xvIWtF3kFbSIiLhQkxGh+EPs6r5noqq0PTOjvxFJlKKK36phxHmqnGVJDuq2uXoJ7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e3WixAD+; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748921003; c=relaxed/simple;
+	bh=0rEg4DrplYKhUWOwuGj5vyZesTcBcoXsJW2uFI5e+pk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=AVeqizCZfah+mVz3G2WjT0pr5bMwu15h+YyJvKCZkYykE6csmiLtXAJDCJ8OK8mBCkGXHKHNxg+AckKl13DP3QQm0TyjQKuI7TdKMskxQFeAu39iRAP6VpUf/7RDv6zJHpqoVVpDcT7+EvcQrxOyJ5ii/GCQI46YyCyrxGX3Q7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=B3hhedS/; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e3WixAD+"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso6462293b3a.2;
-        Mon, 02 Jun 2025 20:21:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748920887; x=1749525687; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tTnaGWdB4hgkfh8Hd2ADSGObagE2/WLWzPn+jkGndp8=;
-        b=e3WixAD+pXhDEE4EEEyNEmbdYYKP7WpxLPiD8SR8pztjIkWARhlFX0Bgan0q4PAzPV
-         vgahTcOckWgwAzFpDsd5OJceTwdw8xT3Nr3/nnDmd1RbrysSYOkw2ahfxaU1STpJ/88G
-         0X2FjSgbdxQHWfKT32OqoOpAry7sI0IEKVGKU7Pzt59hZKDvH1jaXyEPRRKbuwnQG2xI
-         6/hPc3V7DAkCkV8lh/k9RWBi4/NNLNOLO774+KPrGe1RN81eGTXbqlyf24cxqrYgpuBm
-         +N4gTXAOFCKCf/3j/YAdkltMGFXTEbGbMxj5zHn6SFX+cX+hbHA4ddSnriSuXwchGaQ5
-         Sbbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748920887; x=1749525687;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tTnaGWdB4hgkfh8Hd2ADSGObagE2/WLWzPn+jkGndp8=;
-        b=S+Llm0/udOFQQFE8hvTvcxBsbzG6R9E/dEzGoXGz/Pla9HFNxPWI+HINrllt9VDX3P
-         DBIUumO/i0PlG6lBNv+piUf8HPbOGq88yOz5JPU4FisycPxVPEnKZTWqJa5KjY/ABE+x
-         5jpiqm3HNT+e2uaL/qJoAERi/zMndNnv7RzkXpIfKMDgcWSdHeajH2d1ib3GDWcn0Uj3
-         of7HIfzwn67+eBzx0ZvaQgN3mnZW3lYmtnok0Ho+NCgg36bFs2mkElCQ/US5U0no4YUp
-         YUZhHQ1h6MTI6yg7QjvFrB5ycx44TQ7dfvihBIMxzvEVcO2+H4Q9JwpckOMwOQZxYXPk
-         ljFA==
-X-Forwarded-Encrypted: i=1; AJvYcCW/R+b4P1u+qV5UHpF5ffGVEKp0E9GYesWe8G0mtSolqajk2PynYajhJi7oprqVAx/I9l32WaAKfJk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/nsbwwfqfp7CTNkiskgWKcOoaQKVUN9bsG3kBjZl93VAdsAep
-	x6ynvHaUPJ8KOs7Hewq5zekXkC/ycnUd/LmDX10rw88jHS1AeYVOA99Q
-X-Gm-Gg: ASbGncumr/Q5749/w11OQ72buI1w+8z8rzFcGkjCbCsN0sh7YYhpB2GEG43pmCkLZGT
-	rG5wCpExtXLhKKyVtqDsbAnOIM2jVPPKoh4QsYztIXiBAh4zdZSsijO4/CBSR0Zo+ZRRccEFYZX
-	v+9yevJZTCxs4J6yWkBRt03jQ9q5Y3zv0HcqKkJVOks+0WfNc+8XN536qpnWCa+hGQysXFminRp
-	62+ko7DQeSe85W9fvn8o5mXrqG0pbRwUL6+tNorHfN+mnwjFrT5iJUREbkKXirOtwcj1abztshL
-	efFNw7jGWSG/1ZJ0VXRCw6OjSHQcpRath5RQzMP5FcGl47Z4Rdi8a8yzRT/7f510pX94AUU5jXS
-	hMfYEqW2FGjq46bYl/o/Xgl1O9qe6qdjQt7s4QXVASx7rs00+jplJTEcNoUqD4FdxIw==
-X-Google-Smtp-Source: AGHT+IHqaQMicBQLryNa4dKPf3wUERioG1d+CGxGRw3kiVwNTF1000JWavPYx38aQpXZgDpseqislA==
-X-Received: by 2002:a05:6a00:22cc:b0:740:9a42:a356 with SMTP id d2e1a72fcca58-747c1bc8985mr19773383b3a.11.1748920887008;
-        Mon, 02 Jun 2025 20:21:27 -0700 (PDT)
-Received: from cs00-MS-7C09.. (2001-b400-e38d-e87b-a123-c29d-1136-f01d.emome-ip6.hinet.net. [2001:b400:e38d:e87b:a123:c29d:1136:f01d])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afff33cbsm8387602b3a.158.2025.06.02.20.21.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 20:21:26 -0700 (PDT)
-From: hsyemail2@gmail.com
-X-Google-Original-From: syhuang3@nuvoton.com
-To: Johan Hovold <johan@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	Sheng-Yuan Huang <syhuang3@nuvoton.com>
-Subject: [PATCH v1 0/1] USB: serial: add support for Nuvoton USB adapter
-Date: Tue,  3 Jun 2025 11:20:56 +0800
-Message-ID: <20250603032057.5174-1-syhuang3@nuvoton.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="B3hhedS/"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 552HJp0J030985;
+	Tue, 3 Jun 2025 03:23:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	B6I9aT70ThpCc4Zm1RlBMipp1lBbPvY+r5gRPRkVScQ=; b=B3hhedS/CcDX82iD
+	e2s36lpftIWnhrU1i8zqdexrzpdkRGoUiLrJ4Gz1OTNJodqoEF41SM6RQETSia1u
+	hJ5oMJi1lz/uODyY5Vw2eK27wanW0nr0ASonfWKBQ8UUpxXyjugz34Uq4zRkrvQS
+	UPJtbjVxa/L4U+7W7MvO2XMRI+pfbjRUseVeyPeLI73GMWl6KeOGXW3PfV83+8XB
+	IQ28tD0qCEEmBjcmnZwU+imWKu/nLNoYjAZhg7S437y2eSymSzTj+w9EbkyfvBz4
+	tZzSBsJQeCD/4kwtJ2B8FoORDamx2M9sihdq5aKa4UHiFO8oI55NY+VfDYpshPaL
+	OgERTw==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8ts56v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Jun 2025 03:23:05 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5533N4EI001090
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 3 Jun 2025 03:23:04 GMT
+Received: from [10.239.133.114] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 2 Jun 2025
+ 20:23:00 -0700
+Message-ID: <eb7dbabf-d878-468b-9945-36d8b14a4e65@quicinc.com>
+Date: Tue, 3 Jun 2025 11:22:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/2] coresight: add coresight Trace Network On Chip
+ driver
+To: Leo Yan <leo.yan@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>
+CC: Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>,
+        <kernel@oss.qualcomm.com>, <linux-arm-msm@vger.kernel.org>,
+        <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250522-trace-noc-v6-0-f5a9bcae90ee@quicinc.com>
+ <20250522-trace-noc-v6-2-f5a9bcae90ee@quicinc.com>
+ <3a19197d-b534-458c-b4d7-51fd9d2c954d@arm.com>
+ <40599afc-4342-467c-87d8-3f53cbcfd242@quicinc.com>
+ <20250523085655.GD2566836@e132581.arm.com>
+ <4d54e620-abb9-4a36-bab0-3970c7e30a5f@arm.com>
+ <62d1e4cb-cc13-4333-a160-66a280dca5f6@quicinc.com>
+ <17abf8b5-8a2e-4573-a870-e2f98ad866a6@arm.com>
+ <20250530125944.GB666854@e132581.arm.com>
+Content-Language: en-US
+From: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+In-Reply-To: <20250530125944.GB666854@e132581.arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: zxbsBjZotBgpF1CDtEDMk5fOTP9tTSlt
+X-Authority-Analysis: v=2.4 cv=Qspe3Uyd c=1 sm=1 tr=0 ts=683e6a99 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=roaXpTnMcXxoyfGzR8sA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAzMDAyOCBTYWx0ZWRfXxwg1tayofc/q
+ 3S7cFoWgTyC39NeeXOlsLXf9mWyGBQyI6YyVe14X9Fr/+5/hqT9COz4ZinJ9VIiHVnyqfqtitQk
+ Z+udSGq2OIr19MRHXRm6IJL9V2f4nFDW6dnHZSwsVExW8yOpcV+ynL0YaF77/HhcIYfj17hkdtS
+ 7azvHwhWvBOnN9qUNRClLbEvZStx5ef7jTl0eEABNvE4clIAdovDNNB2VtW4qtQFkX/HacYxA8V
+ wrKc8x5+5LIIpyAkVsbwMAch29yJjcOJx0fSWuAAcmmmefniPTX6FLzcPAMPKZj+/EInWnqtqTo
+ 4OHvhcMZOxE5cZG/qaubsGPc7wEAmTgl/wAsMAvpBe8xNcz+XZftoUjtrA0ow+kDMnwxXwXQVY0
+ 2/ASQhbEaoPzxEBq5s+zrZwG5r9vYKDJxOuqmcIzgj8LUpslHheD/uLXLO4s5rkvS/PGkzK/
+X-Proofpoint-ORIG-GUID: zxbsBjZotBgpF1CDtEDMk5fOTP9tTSlt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-02_08,2025-06-02_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 mlxscore=0 spamscore=0 priorityscore=1501 mlxlogscore=999
+ lowpriorityscore=0 suspectscore=0 impostorscore=0 malwarescore=0
+ clxscore=1015 adultscore=0 phishscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506030028
 
-From: Sheng-Yuan Huang <syhuang3@nuvoton.com>
 
-Hi all,
 
-This patch adds a new driver for Nuvoton USB-to-serial adapters
-in drivers/usb/serial.
+On 5/30/2025 8:59 PM, Leo Yan wrote:
+> On Fri, May 30, 2025 at 12:32:23PM +0100, Suzuki Kuruppassery Poulose wrote:
+> 
+> [...]
+> 
+>>>> 2) How does the source driver know the TraceID for exposing via sysfs ?
+>>>> Does it expose its own traceid ?
+>>> No, sources connecting to TNOC don't have their own traceid, it expose the ATID which allocated in TNOC.
+>>> TNOC will maintain the ID in coresight_path:: trace_id, when enable source, the source can get it from path.
+>>>
+>>> Here is the patch to expose id in source:
+>>> https://patchwork.kernel.org/project/linux-arm-kernel/patch/20250530-showtraceid-v1-1-2761352cf7b4@quicinc.com/
+>>
+>> Please don't do that. We don't have to fake a traceid for all sources.
+>> It is only of use to the decoder, with manual input from the user. So,
+>> someone using the TNOC based system must be aware of how to collect the
+>> traceid and as such expose it from the TNOC and not all the other
+>> sources connected to it.
+>>
+>> Simply expose it on the TNOC device node
+> 
+> [...]
+> 
+>>>> Good question, since we have the "path" maintaining the TraceID, we
+>>>> should use that here for the TNOC. But the other question is, can there be multiple sources connected to a single TNOC ? (I am guessing, yes!. And thus it may not work with what you are proposing.
+>>>>
+>>> yes, there can be multiple sources connected to one TNOC, and these sources share one Trace ID which allocate in TNOC.
+>>> To decode the scenario relay on TraceID + Inport number, TraceID identifies the TNOC, the decoder maintains a table that maps each TNOC inport to its corresponding source.
+> 
+> If the Trace ID is only used to identify a TNOC, I am just wandering
+> if can use self-contained method.
+> 
+> For example, you can generate a ID number based on the register base
+> address, something like:
+> 
+>    /* TNOC physical address */
+>    drvdata->paddr = res->start;
+> 
+>    if (IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT))
+>        drvdata->atid = (drvdata->paddr >> 32) ^ (drvdata->paddr & 0xffffffffUL);
+>    else
+>        drvdata->atid = drvdata->paddr;
+> 
+> Then, you can get a unique ID for each TNOC in the system, and the
+> ID is determined by the pyshical address and can be calculated
+> directly by decoder.
+> 
+> Leo
 
-The driver supports multiple virtual serial ports over a single
-USB interface. It configures the device using vendor-specific
-control messages, and handles data transmission via bulk endpoints.
-Port status is reported either through an interrupt-in or a bulk-in
-endpoint, depending on the hardware configuration.
-
-Any feedback or suggestions would be greatly appreciated.
-
-Best regards,  
-Sheng-Yuan Huang
-
-Sheng-Yuan Huang (1):
-  USB: serial: nct_usb_serial: add support for Nuvoton USB adapter
-
- drivers/usb/serial/nct_usb_serial.c | 1523 +++++++++++++++++++++++++++
- 1 file changed, 1523 insertions(+)
- create mode 100644 drivers/usb/serial/nct_usb_serial.c
-
--- 
-2.43.0
-
+Using both dynamic and self-contained IDs within the same system can result in ID conflicts, which may cause decoding failures.
