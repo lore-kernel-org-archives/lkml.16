@@ -1,100 +1,103 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C2723BCF0
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 18:26:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B7A23BCF0;
+	Tue,  3 Jun 2025 18:27:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748975186; cv=none; b=AQ2MzaE3rcaE2WpmxDDo4VxqATwEsqV4JwhRN4G8rf1E8XAT1D1abHzvU+3Gh4JaSZOutASZHrJTnPmvQQpopF5OQq2zAiyEm3QfK0zA4mg9KJKnYji0TTgBPP2Ea4MctmoAr735FTyb1W/GvcOOAJiS0MzFT4wpqLElnVkIYXM=
+	t=1748975246; cv=none; b=P5uB2/HB/1/8cUJg6Kfx4Gvx/4Ff3ZBEhM1UJrgzUUi5U4I4XRk8HhJpdqXNZ8gpVVfJjZywZiWtYlQJ9QRk7uO6SUjLk5HQ0+4dbDYJBUmsv26BUUzxz6sqh4i2jQB99Xw4WPpoJzhqqO/TnG7JUh1ARg8knxvh2Y7HV8cRr9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748975186; c=relaxed/simple;
-	bh=oe6xJ8BnfZaumhjQk1NyeDNFhfsFblmvprmbedJHhvo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=XMF7RRK8D1VUBNFn0kE78r+vQnQZA0rQ9wBk1/TXCYXpXh608mYWXA3ymI9IBhm3uq/W7Wthn9P5NaSlmLm8LdORQ+qPqFyv1l6G2FjZun2V3LlYa+mXmhKodsaoSQa5ovFDuAldBQjtzKNde3tbshANxFkohJeLakkqMkWGK7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=X9e2hQff; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1748975246; c=relaxed/simple;
+	bh=ckhw827S1BHIzOOsklyV4f5zZYq6GzhskiPmH9tlxgI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BmOFF+DxRH9XJS47k8wiwJ8rSvAsgEIxM9ALBNITMX4N2ZKE++dQMvnDI5k8N0moxbHmYpi6HpENTUoLlYTm425dUNaWH641SbQFihliQA7su02SHofI+ULwBajRj4eB7UNytUrJQ3UMtUMqPnU2JyDjdq5XJhHch77ASIpYw5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VJApOzfh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="X9e2hQff"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250603182623euoutp02a9025fe5f4821ddf19428f06dd7dd62c~Fm6nCjEmJ2909029090euoutp022
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 18:26:23 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250603182623euoutp02a9025fe5f4821ddf19428f06dd7dd62c~Fm6nCjEmJ2909029090euoutp022
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1748975183;
-	bh=HsAkslRZ/mz8R7VriYKhtD3qm8Kb4EqG51Yi+AM4RuA=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=X9e2hQffXHlcBs3dfvPvkQrLggEYJTsmAe+8+QAKfAamU06ubnEV3bIyL+D4ltPox
-	 G4DGPvC1TvwssjozwyIWtxDrvwoOZnLmXqA2zBrImFqWErLhwCm1c8+tlnMXkSp8Jl
-	 dK/QZHYAI/ksP+kLCq2xD1j916KCBl/QXiJHhxe4=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250603182622eucas1p20957d890c72a4bb63dc75d022c0ff0a5~Fm6mRz4zH1760017600eucas1p2B;
-	Tue,  3 Jun 2025 18:26:22 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250603182621eusmtip2f45e802a2c7fce8fbe1d6462a0bb7a75~Fm6lQK_r50715807158eusmtip2Q;
-	Tue,  3 Jun 2025 18:26:21 +0000 (GMT)
-Message-ID: <a9233f51-6f2d-42a2-ad70-20e3f2890683@samsung.com>
-Date: Tue, 3 Jun 2025 20:26:21 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VJApOzfh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C77AC4CEED;
+	Tue,  3 Jun 2025 18:27:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748975246;
+	bh=ckhw827S1BHIzOOsklyV4f5zZYq6GzhskiPmH9tlxgI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VJApOzfhV9fbEzynGEdok9VjWoCb7Zo0WIq1Yo4MAW8HsrK5lfqLh3IgF33b0Oyo5
+	 UQn885AEGJZfooJizhCV84rKMjABAFcv1NuxQ2W9gACRBxXg184Hyo2Hr9luVRFk41
+	 dcdPfQYGPjbn2tLoeZGofz7MauWnlJ/pajRWdMKX4gue+RSHF3CS/rZwmsT6fryRiz
+	 D9W/83FRVkjQSd462IuobALHZE8IPZR86PEZjaQ7tqsF6NkycgvoHM7hMqIDhRSxnB
+	 NYabQVJDdJSLO0Qskpz8l+ETWZlY3RgCBP3Kxq/Aswh/sXqx9bqwwnFTypxx6yZn7f
+	 i8NPPUHDYBakQ==
+Date: Tue, 3 Jun 2025 19:27:20 +0100
+From: Mark Brown <broonie@kernel.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] selftests/mm: Add helper for logging test start
+ and results
+Message-ID: <5e00c276-2d3b-4004-9f98-4703e2d642f9@sirena.org.uk>
+References: <20250527-selftests-mm-cow-dedupe-v2-0-ff198df8e38e@kernel.org>
+ <20250527-selftests-mm-cow-dedupe-v2-2-ff198df8e38e@kernel.org>
+ <63e00cf8-8592-4117-bb27-42bc8c1f8921@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/8] riscv: dts: thead: th1520: Add missing reset
- controller header include
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei
-	<wefu@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Bartosz
-	Golaszewski <brgl@bgdev.pl>, Philipp Zabel <p.zabel@pengutronix.de>, Frank
-	Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
-	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Paul Walmsley
-	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson
-	<ulf.hansson@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <20250603-tactful-valiant-mackerel-bfb6be@kuoka>
-Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20250603182622eucas1p20957d890c72a4bb63dc75d022c0ff0a5
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250529222407eucas1p233be883d7e84e5a000e4d44b37cf7265
-X-EPHeader: CA
-X-CMS-RootMailID: 20250529222407eucas1p233be883d7e84e5a000e4d44b37cf7265
-References: <20250530-apr_14_for_sending-v3-0-83d5744d997c@samsung.com>
-	<CGME20250529222407eucas1p233be883d7e84e5a000e4d44b37cf7265@eucas1p2.samsung.com>
-	<20250530-apr_14_for_sending-v3-5-83d5744d997c@samsung.com>
-	<20250603-tactful-valiant-mackerel-bfb6be@kuoka>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="U87MoMgTYp3o0nhz"
+Content-Disposition: inline
+In-Reply-To: <63e00cf8-8592-4117-bb27-42bc8c1f8921@redhat.com>
+X-Cookie: Avec!
 
 
+--U87MoMgTYp3o0nhz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 6/3/25 15:20, Krzysztof Kozlowski wrote:
-> On Fri, May 30, 2025 at 12:23:52AM GMT, Michal Wilczynski wrote:
->> TH1520_RESET_ID_GPU_CLKGEN and TH1520_RESET_ID_GPU are required for GPU
->> power sequencing to work.  To make these symbols available, add the
->> necessary include for the T-HEAD TH1520 reset controller bindings.
-> 
-> How would it compile/build without it? If there are no users, then do
-> not add unused header just to add it.
+On Tue, Jun 03, 2025 at 02:37:41PM +0200, David Hildenbrand wrote:
+> On 27.05.25 18:04, Mark Brown wrote:
 
-The patch 7 in the series need it, so I've added the header.
+> > +static char test_name[1024];
+> > +
+> > +static inline void log_test_start(const char *name, ...)
+> > +{
+> > +	va_list args;
+> > +	va_start(args, name);
+> > +
+> > +	vsnprintf(test_name, sizeof(test_name), name, args);
+> > +	ksft_print_msg("[RUN] %s\n", test_name);
 
-> 
-> Best regards,
-> Krzysztof
-> 
-> 
+> We could allocate the array in log_test_start() and free it in
+> log_test_result(). Then, we could assert more easily that we always have a
+> log_test_result() follow exactly one log_test_start() etc.
 
-Best regards,
--- 
-Michal Wilczynski <m.wilczynski@samsung.com>
+We could, however we don't have vasprintf() in nolibc and people have
+been doing work towards making nolibc more generally useful as a libc
+for the selftests (and/or the selftest interfaces more friendly to
+nolibc).  I don't really know what the end goal with that is but given
+the fairly small gain and the hope that this won't be a long term
+framework for anything I'd rather not add something that gets in the way
+of whatever's going on there.
+
+Ideally the test programs would be refactored and these helpers deleted,
+but as we said previously that's a bigger job that neither of us is
+likely to get to in the short term :(
+
+--U87MoMgTYp3o0nhz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmg/PogACgkQJNaLcl1U
+h9B5Kgf5AUmj3DzX7FVW0uxuQnTuNoG9OfKh4yzJffzPIA7Z+MnjQgY9tahrBn81
+wgz4LO7oLOyIy7fKV4YJqDKzxa5HluHG2uNQ7eHxMpgjD4vVD3/BjM4yWlWPMA0h
+KYXvf60i08dIoKyK67/XnWO8Vu1l8oz7ecj91UGMD962hzRDU6ZkTpq/eOAww5vC
+zA4eSj1fHA+HBINxxrOfd1FWvTUEOF2pemHv5W96eZXVukmCYb1C4uPCProQ2nqy
+jNIrIkZdII3SwcurjSZWn2FEpwMgeTJR3iDo/XSfYN9gfx4np+HATvvCbmx4nkd+
+GDPOC/WHvte6MK6g4NopNT+ZUkTZ4Q==
+=VuyZ
+-----END PGP SIGNATURE-----
+
+--U87MoMgTYp3o0nhz--
