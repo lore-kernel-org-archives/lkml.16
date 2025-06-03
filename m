@@ -1,115 +1,114 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0061123D2B5;
-	Tue,  3 Jun 2025 15:31:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4AF81537DA;
+	Tue,  3 Jun 2025 15:32:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748964696; cv=none; b=tjLtKF6DrmN6fuGXX7jqt67UWj8Ech66i7RoWXNj9PHJy14See7jOXsT7XjwdUwrF6MBlT712pl8JKh7zDseL45OEU2rPKRWMPx7tFDoacDBywdgLOBJj/K05RKPEheeii+JkaAvmDL8HuJ9nwL9shGdOzF81L49AYyelIEhUlY=
+	t=1748964744; cv=none; b=Mgppa724eIALZFrxw3TP6Cdc/u+JIYnyQGiI4gPWa8qauPX8BO7ml27jrm9OeDbA/JfeWkhgydfqwT3Wbrseeuh8ILGovmvf5LLq4EQo/MFgSPxPLqYrzhoVtGmVQYFzFXFsl38c96L+gNBGXDzEwNBzM8ZDsNf2/NWedffvgMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748964696; c=relaxed/simple;
-	bh=d08uzOt1VGoqfeJIgallA9cokl1Sjskad74nVOQBGWM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ONbIgBa3pkA3RnNKSoz9GxndIrIRTmwWMbvJdBB87f/46tSevebx68W1+6qbOJsz3+34spQ3ZEnPE+PfkHT5qmOlivldMEmfkJe10Nb9IIMGrZ1Vd8CDUsoXJq0TkA0RmKqi7Qe2Axh0rfVN1eLP7m60RAXXR7s1Rmfx7Ezy4Vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=rQWhBu8I; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	s=arc-20240116; t=1748964744; c=relaxed/simple;
+	bh=n2G3L/1cppZUNXCPoJuyAcelWsbwiVmnTyGSvW/NvHM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aTss5P3dMJAJj39BfUpaodSvSeqAssIJ9U/uFR18fCq9ZnaAYuzxxyjzPJOdGoN5KjUsTBYQHG+/hWE3b7lo4pY4+beLjm7l8rY3ov8gxupXXXShsW0x8LE1TJQcLu2No5I3KKoXlqX5ay5tHeFs3eudeFDVPU1Zo+cJ8ibnV1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=YTiSAETJ; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="rQWhBu8I"
-Received: from fedora.intra.ispras.ru (unknown [10.10.165.12])
-	by mail.ispras.ru (Postfix) with ESMTPSA id 5AE62552F539;
-	Tue,  3 Jun 2025 15:31:31 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 5AE62552F539
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1748964691;
-	bh=HOMZ46XwuOVuNK3GluB5hiNrhNDhEtpIHBQJiSl126w=;
-	h=From:To:Cc:Subject:Date:From;
-	b=rQWhBu8IbNp2aEw1yGkHmkH/fABhcDcPqyjQzsnUgL1E3uonSTiGzjxrSSxsV3+sI
-	 Zj+p9GVtiv8zpkx3ZqxXvXZOGMASXL7ZkNaHmfpfRcwM17aW7/ng3mJo/pu6QjC1LO
-	 XGe4Scb5H7aIjWf85dMse5cii36+YONMTAfOBEQs=
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: Ping-Ke Shih <pkshih@realtek.com>
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
-	linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: [PATCH rtw-next] wifi: rtw89: fix spelling mistake of RTW89_FLAG_FORBIDDEN_TRACK_WORK
-Date: Tue,  3 Jun 2025 18:31:23 +0300
-Message-ID: <20250603153124.188755-1-pchelkin@ispras.ru>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="YTiSAETJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=hURbiKG9dQjvo1z7louEbs80FaEACCtaK1pYxGcQybk=;
+	b=YTiSAETJcwDb5JB6n2x1gSB0GLykGqtbhOEyae8cLdqkA3sCPvL7QaXjpuDEQl
+	kpk3oeA4NJkUluZLUKGArxRxtpMoUiMWb4YIYi1zPGu8U7MTbhqGjZg1ul3RbmQG
+	Ghgxpc/Z8EaMQkPiblSJH+EYw4RcCkz8ufRo3XpWcQRCE=
+Received: from [192.168.71.94] (unknown [])
+	by gzsmtp4 (Coremail) with SMTP id PygvCgBnxyxTFT9oBzsNBw--.483S2;
+	Tue, 03 Jun 2025 23:31:32 +0800 (CST)
+Message-ID: <7191e865-4aa1-4de3-aa50-f32ea2786b5f@163.com>
+Date: Tue, 3 Jun 2025 23:31:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] PCI: Add PCIE_SPEED2LNKCTL2_TLS_ENC conversion macro
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+ krzk+dt@kernel.org, manivannan.sadhasivam@linaro.org, jingoohan1@gmail.com,
+ robh@kernel.org, linux-pci@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20250519163156.217567-1-18255117159@163.com>
+ <20250519163156.217567-2-18255117159@163.com>
+ <9bc475b4-4924-1b0f-af3e-ec4fa8140765@linux.intel.com>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <9bc475b4-4924-1b0f-af3e-ec4fa8140765@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PygvCgBnxyxTFT9oBzsNBw--.483S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7KFyfuF1rGFWfCF1UAr4rAFb_yoW8CrW3pa
+	43CFy5AFW8Ww13Cas0gas2qa4FqFs3WF4UuF47Wr98XFyft3Z5Gr12yFWUKr9rZr4vkrW0
+	va17trWUCF12kFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRAsqXUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwRho2g-AT4TzgABs9
 
-Rename RTW89_FLAG_FORBIDDEN_TRACK_WROK -> RTW89_FLAG_FORBIDDEN_TRACK_WORK.
 
-Found by Linux Verification Center (linuxtesting.org).
 
-Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
----
- drivers/net/wireless/realtek/rtw89/core.c     | 2 +-
- drivers/net/wireless/realtek/rtw89/core.h     | 2 +-
- drivers/net/wireless/realtek/rtw89/mac80211.c | 6 +++---
- 3 files changed, 5 insertions(+), 5 deletions(-)
+On 2025/6/3 17:08, Ilpo Järvinen wrote:
+> On Tue, 20 May 2025, Hans Zhang wrote:
+> 
+>> Introduce PCIE_SPEED2LNKCTL2_TLS_ENC macro to standardize the conversion
+> 
+> Use () parenthesis like you'd use them in C so functions and macros in
+> changelog should have them appended.
+> 
 
-diff --git a/drivers/net/wireless/realtek/rtw89/core.c b/drivers/net/wireless/realtek/rtw89/core.c
-index 49447668cbf3..e54f3dc97e7e 100644
---- a/drivers/net/wireless/realtek/rtw89/core.c
-+++ b/drivers/net/wireless/realtek/rtw89/core.c
-@@ -3742,7 +3742,7 @@ static void rtw89_track_work(struct wiphy *wiphy, struct wiphy_work *work)
- 
- 	lockdep_assert_wiphy(wiphy);
- 
--	if (test_bit(RTW89_FLAG_FORBIDDEN_TRACK_WROK, rtwdev->flags))
-+	if (test_bit(RTW89_FLAG_FORBIDDEN_TRACK_WORK, rtwdev->flags))
- 		return;
- 
- 	if (!test_bit(RTW89_FLAG_RUNNING, rtwdev->flags))
-diff --git a/drivers/net/wireless/realtek/rtw89/core.h b/drivers/net/wireless/realtek/rtw89/core.h
-index 1c8f3b9b7c4c..a081fce1466f 100644
---- a/drivers/net/wireless/realtek/rtw89/core.h
-+++ b/drivers/net/wireless/realtek/rtw89/core.h
-@@ -4912,7 +4912,7 @@ enum rtw89_flags {
- 	RTW89_FLAG_CRASH_SIMULATING,
- 	RTW89_FLAG_SER_HANDLING,
- 	RTW89_FLAG_WOWLAN,
--	RTW89_FLAG_FORBIDDEN_TRACK_WROK,
-+	RTW89_FLAG_FORBIDDEN_TRACK_WORK,
- 	RTW89_FLAG_CHANGING_INTERFACE,
- 	RTW89_FLAG_HW_RFKILL_STATE,
- 
-diff --git a/drivers/net/wireless/realtek/rtw89/mac80211.c b/drivers/net/wireless/realtek/rtw89/mac80211.c
-index a47971003bd4..a8e8b098cc9c 100644
---- a/drivers/net/wireless/realtek/rtw89/mac80211.c
-+++ b/drivers/net/wireless/realtek/rtw89/mac80211.c
-@@ -1698,13 +1698,13 @@ static int rtw89_ops_suspend(struct ieee80211_hw *hw,
- 
- 	lockdep_assert_wiphy(hw->wiphy);
- 
--	set_bit(RTW89_FLAG_FORBIDDEN_TRACK_WROK, rtwdev->flags);
-+	set_bit(RTW89_FLAG_FORBIDDEN_TRACK_WORK, rtwdev->flags);
- 	wiphy_delayed_work_cancel(hw->wiphy, &rtwdev->track_work);
- 
- 	ret = rtw89_wow_suspend(rtwdev, wowlan);
- 	if (ret) {
- 		rtw89_warn(rtwdev, "failed to suspend for wow %d\n", ret);
--		clear_bit(RTW89_FLAG_FORBIDDEN_TRACK_WROK, rtwdev->flags);
-+		clear_bit(RTW89_FLAG_FORBIDDEN_TRACK_WORK, rtwdev->flags);
- 		return 1;
- 	}
- 
-@@ -1722,7 +1722,7 @@ static int rtw89_ops_resume(struct ieee80211_hw *hw)
- 	if (ret)
- 		rtw89_warn(rtwdev, "failed to resume for wow %d\n", ret);
- 
--	clear_bit(RTW89_FLAG_FORBIDDEN_TRACK_WROK, rtwdev->flags);
-+	clear_bit(RTW89_FLAG_FORBIDDEN_TRACK_WORK, rtwdev->flags);
- 	wiphy_delayed_work_queue(hw->wiphy, &rtwdev->track_work,
- 				 RTW89_TRACK_WORK_PERIOD);
- 
--- 
-2.49.0
+Dear Ilpo,
+
+Thank you very much for your reply and reminder. Will change.
+
+>> between PCIe speed enumerations and LNKCTL2_TLS register values. This
+>> centralizes speed-to-register mapping logic, eliminating duplicated
+>> conversion code across multiple drivers.
+>>
+>> Signed-off-by: Hans Zhang <18255117159@163.com>
+>> ---
+>>   drivers/pci/pci.h | 9 +++++++++
+>>   1 file changed, 9 insertions(+)
+>>
+>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+>> index f92928dadc6a..b7e2d08825c6 100644
+>> --- a/drivers/pci/pci.h
+>> +++ b/drivers/pci/pci.h
+>> @@ -415,6 +415,15 @@ void pci_bus_put(struct pci_bus *bus);
+>>   	 (lnkctl2) == PCI_EXP_LNKCTL2_TLS_2_5GT ? PCIE_SPEED_2_5GT : \
+>>   	 PCI_SPEED_UNKNOWN)
+>>   
+>> +#define PCIE_SPEED2LNKCTL2_TLS_ENC(speed) \
+> 
+> I'm not a big fan of including that _ENC there, it just makes the long
+> name even longer and doesn't really provide added value, IMO.
+> 
+
+Will delete _ENC.
+
+Best regards,
+Hans
+
+> Other than those, this change logs fine.
+> 
+>> +	((speed) == PCIE_SPEED_2_5GT ? PCI_EXP_LNKCTL2_TLS_2_5GT : \
+>> +	 (speed) == PCIE_SPEED_5_0GT ? PCI_EXP_LNKCTL2_TLS_5_0GT : \
+>> +	 (speed) == PCIE_SPEED_8_0GT ? PCI_EXP_LNKCTL2_TLS_8_0GT : \
+>> +	 (speed) == PCIE_SPEED_16_0GT ? PCI_EXP_LNKCTL2_TLS_16_0GT : \
+>> +	 (speed) == PCIE_SPEED_32_0GT ? PCI_EXP_LNKCTL2_TLS_32_0GT : \
+>> +	 (speed) == PCIE_SPEED_64_0GT ? PCI_EXP_LNKCTL2_TLS_64_0GT : \
+>> +	 0)
+>> +
+>>   /* PCIe speed to Mb/s reduced by encoding overhead */
+>>   #define PCIE_SPEED2MBS_ENC(speed) \
+>>   	((speed) == PCIE_SPEED_64_0GT ? 64000*1/1 : \
+>>
+> 
 
