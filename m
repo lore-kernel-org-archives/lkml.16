@@ -1,105 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15E3192584;
-	Tue,  3 Jun 2025 16:30:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FAEF2C3242;
+	Tue,  3 Jun 2025 16:32:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748968253; cv=none; b=hj+gd/vmB4kCdmjGJVgC+QTdRrMFvvC+IgPYf2s4hcX0MDeJ4WflPlPLSz0asWTfI5Osm7KDTqH+thEdHcYAX0hUxSYNqWsnS0oOjgRxyZzOKNRH+OtKrbdNDJkl2nVDIEbLQ7e8Xx0sNYUlIr2Feqc4Y85EjtHJ+071INsTzzw=
+	t=1748968324; cv=none; b=BvkxkRdrz34pLeNRIb+44dzSLy1/VLzYXbWXz47wxjeYaJ2eTRu+GPA8ES7YJ2f/9Vw6s2r0GevYhcs+vCEdwANWFCk4nLtq79fbhmvh3rIfOPjZ6VLdbbUhgeNMmrKrheSOaHkSccxaV9T77zpDs4FSL9hizDDgQrYYPQPfgTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748968253; c=relaxed/simple;
-	bh=VakH29ZlMouOtB4a3xThI4GPGWQ6lenTCF6LOCe3J9o=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=HjHGOCP12nwJ1AdRSjK5azJBd2ongvkU/o+idpYEs4TuQSNNp0Lnn2BLhFwe7LwYZ5LEHn6K0TTrzD7Rm3JBQ90Sbq2FcErvTYo5r0fRC2m3+isN/tPn+hz5eQHNUTdw9L66nhpjTuH/GJ9YjnR7fF7ITI5lneZjW4Zpv3DkxQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gAWePvLz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748968324; c=relaxed/simple;
+	bh=dCGhtmVvM/XGvCYNKFnYkZA07C0vcUG9iLEuRQO1qag=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b4h0THiQWlFiznh+2UYuTQTV7Y2ffIM2ONVSX2Qgm7ypmsQLJTarXu1XkpBH4WkztjKsEBBLFRRALqITJmcz567Bg29yRvUZLVZ4v15PiaphoutwMlZGvBEuFKnjiZPpXrHe2t1NP9mGr9XEeBZeZzl32X50EODCImO9IuT7Wf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L837ZvdM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gAWePvLz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B77D3C4CEEE;
-	Tue,  3 Jun 2025 16:30:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L837ZvdM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2006DC4CEF1;
+	Tue,  3 Jun 2025 16:32:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748968253;
-	bh=VakH29ZlMouOtB4a3xThI4GPGWQ6lenTCF6LOCe3J9o=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=gAWePvLz++FzEdnb4CI9ExB3zI2sYeogn1OgtJCMGR9iJIS8N6UcwAINb+43ANf7E
-	 W0UdMajSDYJR5/mEPAJ+aRVeUYnAtZBneMtxnX8LaB4HrIlEnUcH3PqcvzOUz6/QIQ
-	 42hzaC9s2nqG7XYIAEkFgAysif6nWfAPUESaRiRtDuZLI0+68BMUAT8JYyHuGGESpv
-	 Hi2DcfHZpO/OcVhiT2xANdVjp6uDra3Tng+VJCtZvbTsqEP3qaSg9zOP1jJHiB9oJV
-	 Bh7vrG7iq2WjgVPusor/iI4ukYJWGL7cjjIf0wSvcx5udcvkzztF54tzjX2QS2Ta4w
-	 Aj/VmotOEBFdQ==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "FUJITA Tomonori" <fujita.tomonori@gmail.com>
-Cc: <rust-for-linux@vger.kernel.org>,  <boqun.feng@gmail.com>,
-  <frederic@kernel.org>,  <lyude@redhat.com>,  <tglx@linutronix.de>,
-  <anna-maria@linutronix.de>,  <jstultz@google.com>,  <sboyd@kernel.org>,
-  <ojeda@kernel.org>,  <alex.gaynor@gmail.com>,  <gary@garyguo.net>,
-  <bjorn3_gh@protonmail.com>,  <benno.lossin@proton.me>,
-  <aliceryhl@google.com>,  <tmgross@umich.edu>,  <dakr@kernel.org>,
-  <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 3/5] rust: time: Add HrTimerExpires trait
-In-Reply-To: <20250603.225143.1147206358060510971.fujita.tomonori@gmail.com>
-	(FUJITA Tomonori's message of "Tue, 03 Jun 2025 22:51:43 +0900")
-References: <20250504045959.238068-1-fujita.tomonori@gmail.com>
-	<20250504045959.238068-4-fujita.tomonori@gmail.com>
-	<87ecw61c8v.fsf@kernel.org>
-	<rAqrmy9vCIFRwqGIzvQuVlv1F-jKMF8QBKvfhxqPCqygqE81k9JkbIFhWFgg7VBeq6rfYTy_WtlBnBMOdhTCxQ==@protonmail.internalid>
-	<20250603.225143.1147206358060510971.fujita.tomonori@gmail.com>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Tue, 03 Jun 2025 18:28:04 +0200
-Message-ID: <875xhc6b8r.fsf@kernel.org>
+	s=k20201202; t=1748968324;
+	bh=dCGhtmVvM/XGvCYNKFnYkZA07C0vcUG9iLEuRQO1qag=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=L837ZvdMIfXmjrkzeEnAa6cXG+FYBM2Zc/QNcRTICqHKZeaxVQvtEXfxpjLHcd1TW
+	 CEbHRoD5U3x5WQmgcTrnVaxXTuOumWtNh5COczKPRuQT9lWvQmHN6KGpFnzhIy/gpO
+	 7xPyyaKzTa1ZT+LQccMCWELYijrv18K4paAUBm+bL/jRT5QG1F3jUBSCVKt/jHMnqi
+	 q0z+EeldS/igDBNVhKExNj51OvH0RYt8kdOW6CV42tRxBpmzpJumMe0HS5yqEyTs+Q
+	 Z/u6yEozImn0bLq1qlAkeYa4bqiGL3lfvc5+zDJ/ZKJg1BJv3M/bgjFzzJr/aUccFZ
+	 J4eXhxPYLDa6A==
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-606648c3f9eso1623182eaf.3;
+        Tue, 03 Jun 2025 09:32:04 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWeo+RrRY/7MC+HBE/s47pfdNfLrY5WfjaID240ixYemDU53Tb1Wul7sitTmQvMyv2mAA+QzdCYTaBe7DM=@vger.kernel.org, AJvYcCWv0Y2L5unBJ8xyQid0IzCl/NkdvTjHjnlYIM0zNK9YM7ndfPrLjeDjWELT1EsZMqJwsEDvdvUdTCM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxydWynB1MGZQ2XxGnSp7/SB/VteJbkgG83Zy02CIW/0cA/D6Gx
+	gHpNA1LSxaXFtDYW/S6X4qxJe2PQMT+2cijqq7+274/T+U7a4UcL/4DfbafBa5vRi98KUw0zchw
+	qY1xRV2f6xrLAaZoih7FRXPYWO8tKHBY=
+X-Google-Smtp-Source: AGHT+IFxtxWRK1PfCg4KFwjfObqHs+j5eKqnOu/GrvQDuXc/YfVYBrhfMoTDhrthe6TXwrtVeLYO72tLrsIan25akbs=
+X-Received: by 2002:a05:6820:2015:b0:60e:fd0f:cfe3 with SMTP id
+ 006d021491bc7-60efd0fd09amr2414845eaf.3.1748968323471; Tue, 03 Jun 2025
+ 09:32:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <6166108.lOV4Wx5bFT@rjwysocki.net> <13779172.uLZWGnKmhe@rjwysocki.net>
+ <5572ce41-fc9d-4c62-bb70-a8684f8ba989@amd.com>
+In-Reply-To: <5572ce41-fc9d-4c62-bb70-a8684f8ba989@amd.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 3 Jun 2025 18:31:52 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hXnLY8p8ZJKu57PwM8dsAYGmjhQc9tz5UbmL8worveyw@mail.gmail.com>
+X-Gm-Features: AX0GCFtT1CXKeVq2C5lmsGWsgrmU35kkqblNc02xNCmjW9fX0sg1tUXindOFH3g
+Message-ID: <CAJZ5v0hXnLY8p8ZJKu57PwM8dsAYGmjhQc9tz5UbmL8worveyw@mail.gmail.com>
+Subject: Re: [PATCH v1 3/3] PM: sleep: Add locking to dpm_async_resume_children()
+To: "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	Chris Bainbridge <chris.bainbridge@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Saravana Kannan <saravanak@google.com>, Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-"FUJITA Tomonori" <fujita.tomonori@gmail.com> writes:
-
-> On Fri, 30 May 2025 15:04:00 +0200
-> Andreas Hindborg <a.hindborg@kernel.org> wrote:
+On Tue, Jun 3, 2025 at 6:27=E2=80=AFPM Limonciello, Mario
+<Mario.Limonciello@amd.com> wrote:
 >
->>> +/// Defines a new `HrTimerMode` implementation with a given expiration=
- type and C mode.
->>> +#[doc(hidden)]
->>> +macro_rules! define_hrtimer_mode {
->>> +    (
->>> +        $(#[$meta:meta])*
->>> +        $vis:vis struct $name:ident<$clock:ident> {
->>> +            c =3D $mode:ident,
->>> +            expires =3D $expires:ty
->>> +        }
->>> +    ) =3D> {
->>> +        $(#[$meta])*
->>> +        $vis struct $name<$clock: $crate::time::ClockSource>(
->>> +            ::core::marker::PhantomData<$clock>
->>> +        );
->>
->> I think a macro is too much here. The code would be easier to read
->> without the macro, and the macro does not remove much code here.
->>
->> Could you try to do the trait implementations without the macro?
+> On 6/3/25 11:21 AM, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > Commit 0cbef962ce1f ("PM: sleep: Resume children after resuming the
+> > parent") introduced a subtle concurrency issue that may lead to a kerne=
+l
+> > crash if system suspend is aborted and may also slow down asynchronous
+> > device resume otherwise.
+> >
+> > Namely, the initial list walks in dpm_noirq_resume_devices(),
+> > dpm_resume_early(), and dpm_resume() call dpm_clear_async_state() for
+> > every device and attepmt to asynchronously resume it if it has no
 >
-> Something like the following, right? If so, I'll do in the next
-> version. I'm also fine with that way.
->
-> /// Timer that expires at a fixed point in time.
-> pub struct AbsoluteMode<C: ClockSource>(PhantomData<C>);
->
-> impl<C: ClockSource> HrTimerMode for AbsoluteMode<C> {
->     const C_MODE: bindings::hrtimer_mode =3D bindings::hrtimer_mode_HRTIM=
-ER_MODE_ABS;
->
->     type Clock =3D C;
->     type Expires =3D Instant<C>;
-> }
+> s/attepmt/attempts/
 
-OK, let's do that then =F0=9F=91=8D
+It is plural, but yes, s/attepmt/attempt/
 
-
-Best regards,
-Andreas Hindborg
-
-
-
+Will fix when applying, thanks!
