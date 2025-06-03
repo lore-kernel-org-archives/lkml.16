@@ -1,99 +1,252 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D54D23BE
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 00:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619E735977
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 00:23:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748910221; cv=none; b=ImP0UYHJYaw+/aILznHM1qjH245C0gKw8KtGvAqQrRY4lNewatkNJQ2pk46k1Dh0uDvrcfHI6l70d/OAOmiVOgWJATNQqDBHuZlfuACi4SAHqIx7/4wO8xxqvapAI/9GMqR6b7qUfU2s4GrEugfoaz6XKtJ9O7k4C6Eo9Ix+rk8=
+	t=1748910240; cv=none; b=m9qwa/Dq7Te4yt3KirKrIthA9IA95wo6j6XbyFzQq2HPeGdYzknX8vCuCOR1J8+ElW5wypr/1+K3CnAzxPK4xUll+T6N499uUfinFXWZ0IC15pkShoXrMKsbM3OkK45adgpJ/NiJKEmmsqEmUy7MqacQc7npA5bbmOjGDDptIog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748910221; c=relaxed/simple;
-	bh=W0HW+oIJn/tT52McazkjRUQvktof+Bt6uPdHp+gUXcs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kkS6AIlMW+D9OkfF2r4ZTTliVT6oNOVjFxjBqM/PZu1wKpQ3HMZH1jioYuKN4UOq9fdIuQO24P5MxXzTl/xlSDbPYbdqn4Zt5qRxe+FTgTS8ayGoWxOIoMYkusXUqkoyttrX6PF+FMyKgqyiwBa2dq6koE1u/CM0L/ESPyyoaIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F01p+ScU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748910240; c=relaxed/simple;
+	bh=AImNFqbk31yDcxGWtqtu6Ckfs89ZrwsGNsbwdSE3RCo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XJUrT1BpNNjdJ7WGs2myYdAUrXXSchNIPObKm/pL+YEtY6IgsKCAMvv1wPgpBFLxE/BUqQYkwweZWaEMPUrhW0q1VAdVdMvr7+k/8Nz+EPdGHaKhHFhvJ9YCQBHIzDd4Saa1FAialcv2ZWJezQbfnzbaw4U+H/SIx1XX1kY+spc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aDfbh6B+; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F01p+ScU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1793C4CEEB;
-	Tue,  3 Jun 2025 00:23:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748910220;
-	bh=W0HW+oIJn/tT52McazkjRUQvktof+Bt6uPdHp+gUXcs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F01p+ScUqlIZySGT/6D1XUQgWNjw8I3S99K9KZE2HA4olWbFr191i8I/gY6NoSesd
-	 I4pU8w49ibLOhSOcIwj8JVpUcXQcD3WlW+QHc0bi6HFY6fA19aFyUqzfXwOpIDacIX
-	 C8uR9OJbyko69imEURZW/sKNO1KYjhx1WpH0v1CqxVECsAl4rxyrZkl5+LQjV3MNNN
-	 s5d0lNKEHlqND3GwyaW3HN5xuJxygLrdHdQs282i2diUpYMhZbrlE8xu+KYTx290hG
-	 WPDFWupsQixRpMuXh0Q/rGvtvbwNolVA6M13wPT+Fn3O9LyDMuxDVm5NURM9t0YlnG
-	 R96uA8+5MLTpQ==
-Date: Mon, 2 Jun 2025 14:23:39 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>,
-	Luigi De Matteis <ldematteis123@gmail.com>
-Subject: Re: [PATCH v2 03/10] sched/ext: Add a DL server for sched_ext tasks
-Message-ID: <aD5Ai3xJdnV5SxG0@slm.duckdns.org>
-References: <20250602180110.816225-1-joelagnelf@nvidia.com>
- <20250602180110.816225-4-joelagnelf@nvidia.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aDfbh6B+"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54acc0cd458so6205349e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 17:23:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748910236; x=1749515036; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5FOpMiYLMMX182EYvmPfUF40zpuQGKvY/VPcmu9Q4Ac=;
+        b=aDfbh6B+hS3/5rFMeoefUXQaHJvv4vJVWXZWfCm427HmV2P/CU04T7v2mMkSrHTnOD
+         PB+wgTzCSx1B2kFET9YviXZXmmzvqwne1DX8D5WhdNBVDoibeuOOeL2nduqn4Jm1YcGa
+         MK5MZ4X9qfBDRdtigKL7aZVxhTI6Q3gIbj5j3iasgfdzqxrZHmTlgjW4oDb5xFaJfMnS
+         VF7Wew6zWgT6/wI7NFJuPUHifeMO1aZwpQ6TyWBGaQNUokrdxoddAs8G6zdsX1pp54a5
+         MZPPFgCfrymrDXCaEwAdh1itBBdQCfF2hP4MtfmqMM7dI/2Ps28YhW0mOG3yThmFSfyu
+         jEvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748910236; x=1749515036;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5FOpMiYLMMX182EYvmPfUF40zpuQGKvY/VPcmu9Q4Ac=;
+        b=sDSqALQylnzUrQi03N1kMFpdfjXJq+XIISrv4782oxJ4RoyZcAVZmLHUmDxSD4N9tK
+         3UA74QTu7lj09qNmRasCCkSzn7B6cfO2Qx5iyoksCEwXZ5rWEQEtKJh28mv9I2dio76a
+         +VFF0u3sOnS32queThXmC/aDIvf7ZL05GFYHaSb7pI/9Yvo3J2bkFYGA3zs41VAwae8v
+         r2LRytWA1+2eH2yECqQ4PHauYG1EYAMF61YpLaWzf/8TSqgUkSh0RfYnlRFBR1SbPaBG
+         9BtN4jN4/33PexPtXb6c2OdMwC4Zq2zGCgG+yrZDucS73ZUv41Ps7DVnrYPuao8GsOmg
+         UMww==
+X-Forwarded-Encrypted: i=1; AJvYcCUi5TZ4NpkQmmYemdNQNbu/dMNSzZ5EEgJkpTRDVMAp1gQ0c7IEfF1M7CDshyeyC51NuXfSqIhQiKaVZ0s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWLoss4leWH0W+/gEYphK+6XlwdsQxeXZ+ATji3YX/iOQg1wFr
+	RyQ1+zJVqJVzOOxmylAGHr81VAazyZOUEbi6jmtXD1sEXi/2gS6UFudLv0kyHDLnXGDeaASI8oQ
+	vvZh2UB9oqQ0eu2KPoohHks8dGJUhSv9JRL0k/Ijk
+X-Gm-Gg: ASbGncvBtvv52yIVzorJ6RsDqc/cppsDZIjA4OOtDDVQADZL3oqsVs49RurqKZXDMv7
+	tb4rXOEs2+NxIUlaf1O3B/dIOXV8pr1U0uLV3VJhaZUjFhfjXYFqXTGW6PLZStCtUXuqovJeIxL
+	ikl67h1UyzAJHLcOLbp7gbTa30uI1+eyu6ooZBhpvGaDycP+MOA6k2Afbp4zMW975P4qO6AB8ZN
+	Cc0qyggwQhsqnE=
+X-Google-Smtp-Source: AGHT+IF0eNhrWbj9hQxfD1unRyrkdD0kp+Z0yS9s1IOEtVghOX4coHO+O1yKo9y4gO22c3TpyInE02NwNDsomxX6gBM=
+X-Received: by 2002:a05:6512:b86:b0:553:291f:92e with SMTP id
+ 2adb3069b0e04-5533b92e470mr4356320e87.39.1748910235984; Mon, 02 Jun 2025
+ 17:23:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250602180110.816225-4-joelagnelf@nvidia.com>
+References: <20250523134025.75130-1-ulf.hansson@linaro.org> <20250523134025.75130-3-ulf.hansson@linaro.org>
+In-Reply-To: <20250523134025.75130-3-ulf.hansson@linaro.org>
+From: Saravana Kannan <saravanak@google.com>
+Date: Mon, 2 Jun 2025 17:23:19 -0700
+X-Gm-Features: AX0GCFs2XcbroxtBQgFIVghV_VdooKR0d1OXApi_zYrHQREB3E38JByH61YRbu0
+Message-ID: <CAGETcx-hsKb_BDPLuSM3A_ac0x6Z4NOq2pCmjKKJHTYbYZPwcA@mail.gmail.com>
+Subject: Re: [PATCH v2 02/21] pmdomain: core: Add a bus and a driver for genpd providers
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Michael Grzeschik <m.grzeschik@pengutronix.de>, Bjorn Andersson <andersson@kernel.org>, 
+	Abel Vesa <abel.vesa@linaro.org>, Peng Fan <peng.fan@oss.nxp.com>, 
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Johan Hovold <johan@kernel.org>, 
+	Maulik Shah <maulik.shah@oss.qualcomm.com>, Michal Simek <michal.simek@amd.com>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 02, 2025 at 02:00:59PM -0400, Joel Fernandes wrote:
-...
-> @@ -2308,6 +2311,15 @@ static void enqueue_task_scx(struct rq *rq, struct task_struct *p, int enq_flags
->  	if (enq_flags & SCX_ENQ_WAKEUP)
->  		touch_core_sched(rq, p);
->  
-> +	if (rq->scx.nr_running == 1) {
-> +		/* Account for idle runtime */
-> +		if (!rq->nr_running)
-> +			dl_server_update_idle_time(rq, rq->curr, &rq->ext_server);
+On Fri, May 23, 2025 at 6:40=E2=80=AFAM Ulf Hansson <ulf.hansson@linaro.org=
+> wrote:
+>
+> When we create a genpd via pm_genpd_init() we are initializing a
+> corresponding struct device for it, but we don't add the device to any
+> bus_type. It has not really been needed as the device is used as cookie t=
+o
+> help us manage OPP tables.
+>
+> However, to prepare to make better use of the device let's add a new genp=
+d
+> provider bus_type and a corresponding genpd provider driver. Subsequent
+> changes will make use of this.
+>
+> Suggested-by: Saravana Kannan <saravanak@google.com>
+> Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> ---
+>  drivers/pmdomain/core.c | 89 ++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 88 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
+> index 9a66b728fbbf..da515350c65b 100644
+> --- a/drivers/pmdomain/core.c
+> +++ b/drivers/pmdomain/core.c
+> @@ -27,6 +27,11 @@
+>  /* Provides a unique ID for each genpd device */
+>  static DEFINE_IDA(genpd_ida);
+>
+> +/* The parent for genpd_provider devices. */
+> +static struct device genpd_provider_bus =3D {
+> +       .init_name =3D "genpd_provider",
+> +};
 > +
-> +		/* Start dl_server if this is the first task being enqueued */
-> +		dl_server_start(&rq->ext_server);
-> +	}
+>  #define GENPD_RETRY_MAX_MS     250             /* Approximate */
+>
+>  #define GENPD_DEV_CALLBACK(genpd, type, callback, dev)         \
+> @@ -44,6 +49,14 @@ static DEFINE_IDA(genpd_ida);
+>  static LIST_HEAD(gpd_list);
+>  static DEFINE_MUTEX(gpd_list_lock);
+>
+> +#define to_genpd_provider_drv(d) container_of(d, struct genpd_provider_d=
+rv, drv)
+> +
+> +struct genpd_provider_drv {
+> +       struct device_driver drv;
+> +       int (*probe)(struct device *dev);
+> +       void (*remove)(struct device *dev);
+> +};
+> +
+>  struct genpd_lock_ops {
+>         void (*lock)(struct generic_pm_domain *genpd);
+>         void (*lock_nested)(struct generic_pm_domain *genpd, int depth);
+> @@ -2225,6 +2238,26 @@ static int genpd_set_default_power_state(struct ge=
+neric_pm_domain *genpd)
+>         return 0;
+>  }
+>
+> +static int genpd_provider_bus_probe(struct device *dev)
+> +{
+> +       struct genpd_provider_drv *drv =3D to_genpd_provider_drv(dev->dri=
+ver);
+> +
+> +       return drv->probe(dev);
+> +}
+> +
+> +static void genpd_provider_bus_remove(struct device *dev)
+> +{
+> +       struct genpd_provider_drv *drv =3D to_genpd_provider_drv(dev->dri=
+ver);
+> +
+> +       drv->remove(dev);
+> +}
 
-The following patch from Peter isn't upstream yet but SCX probably should do
-something similar. Otherwise, the start/stop overhead can become pretty
-expensive:
+Not sure if I'm missing some corner case you found out, but you don't
+need these stubs just to call the drv ops. Driver core does it anyway
+if the bus probe/remove functions are missing.
 
- https://lore.kernel.org/all/20250520094538.086709102@infradead.org/
+> +
+> +static const struct bus_type genpd_provider_bus_type =3D {
+> +       .name           =3D "genpd_provider",
+> +       .probe          =3D genpd_provider_bus_probe,
+> +       .remove         =3D genpd_provider_bus_remove,
+> +};
+> +
+>  static void genpd_provider_release(struct device *dev)
+>  {
+>         /* nothing to be done here */
+> @@ -2262,6 +2295,8 @@ static int genpd_alloc_data(struct generic_pm_domai=
+n *genpd)
+>         genpd->gd =3D gd;
+>         device_initialize(&genpd->dev);
+>         genpd->dev.release =3D genpd_provider_release;
+> +       genpd->dev.bus =3D &genpd_provider_bus_type;
+> +       genpd->dev.parent =3D &genpd_provider_bus;
+>
+>         if (!genpd_is_dev_name_fw(genpd)) {
+>                 dev_set_name(&genpd->dev, "%s", genpd->name);
+> @@ -3355,9 +3390,61 @@ int of_genpd_parse_idle_states(struct device_node =
+*dn,
+>  }
+>  EXPORT_SYMBOL_GPL(of_genpd_parse_idle_states);
+>
+> +static int genpd_provider_probe(struct device *dev)
+> +{
+> +       return 0;
+> +}
+> +
+> +static void genpd_provider_remove(struct device *dev)
+> +{
+> +}
 
-Another thing which is worth considering is that while rq->nr_running based
-test would work in a lot of cases, it won't work in all cases for SCX as the
-BPF scheduler may choose to not dispatch to the particular CPU even if a
-task is currently associated with it.
+Same might apply here.
 
-For example, a soft partitioning scheduler might change partition CPU
-allocations after enqueue() is complete and a task may end up associated
-with a CPU that's no longer in its partition and when dispatch() is called
-from the CPU, the BPF scheduler may not consume that task. This can become a
-problem for the dl server based forward progress guarantee as that task is
-enabling the dl server only on the rq that it's currently associated with.
+-Saravana
 
-This shouldn't be too common and the proposed patch puts us back in the same
-state as the original RT bandwidth control, so no need to hold this series
-for this issue but I think the right solution would be adding an optional
-SCX operation so that the BPF scheduler can decide which CPUs should be
-running the dl server.
-
-Thanks.
-
--- 
-tejun
+> +
+> +static void genpd_provider_sync_state(struct device *dev)
+> +{
+> +}
+> +
+> +static struct genpd_provider_drv genpd_provider_drv =3D {
+> +       .drv =3D {
+> +               .name =3D "genpd_provider",
+> +               .bus =3D &genpd_provider_bus_type,
+> +               .sync_state =3D genpd_provider_sync_state,
+> +               .suppress_bind_attrs =3D true,
+> +       },
+> +       .probe =3D genpd_provider_probe,
+> +       .remove =3D genpd_provider_remove,
+> +};
+> +
+>  static int __init genpd_bus_init(void)
+>  {
+> -       return bus_register(&genpd_bus_type);
+> +       int ret;
+> +
+> +       ret =3D device_register(&genpd_provider_bus);
+> +       if (ret) {
+> +               put_device(&genpd_provider_bus);
+> +               return ret;
+> +       }
+> +
+> +       ret =3D bus_register(&genpd_provider_bus_type);
+> +       if (ret)
+> +               goto err_dev;
+> +
+> +       ret =3D bus_register(&genpd_bus_type);
+> +       if (ret)
+> +               goto err_prov_bus;
+> +
+> +       ret =3D driver_register(&genpd_provider_drv.drv);
+> +       if (ret)
+> +               goto err_bus;
+> +
+> +       return 0;
+> +
+> +err_bus:
+> +       bus_unregister(&genpd_bus_type);
+> +err_prov_bus:
+> +       bus_unregister(&genpd_provider_bus_type);
+> +err_dev:
+> +       device_unregister(&genpd_provider_bus);
+> +       return ret;
+>  }
+>  core_initcall(genpd_bus_init);
+>
+> --
+> 2.43.0
+>
