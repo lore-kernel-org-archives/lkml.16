@@ -1,166 +1,250 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D06227EB9;
-	Tue,  3 Jun 2025 21:58:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C591A8405;
+	Tue,  3 Jun 2025 22:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748987899; cv=none; b=hFYGgJ2M2sVGCa0QqC4ocpZ404+FCuFEi83Vi2oj02Z13s57/VCcEQn93aOrQwlfUpPToB3A2ZYD9ryc0/90Eco8qEwZPxJPdwX4/sOjo62BAb0uGfS7rkTzsP8aepuQ1soHYYGKqBPmh+6kzH6mFTTeERgikFG2b+aXcrp/MLg=
+	t=1748988134; cv=none; b=g5bvujmMOpX13ph+ASHOdQyi+fDS7ubwDc6F/XADm/TKSbhjOTIGnHDJQEAawSrZgtaQBlA6XTq0rdSOTuyyjjsEHtjzio6MU6SnmLNCCL9UAsU7N3Ar1/yyKIeIFuy6ZsRKOpjYlkKZfIHW/+HH6sCxSVwbkOwS9FaZc+RtANE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748987899; c=relaxed/simple;
-	bh=0bypknFRjoL9Ib1Hfa6MS00x/TRJzsKSt3pRBLF3B5Q=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=bcSbkVembv5kuQHEckAsnThZcy/su2Li43fKXoEDttfxtyEDnqqLebIz6BSwtIHH3ZvYWoXcrzzheqdjUij7DzIhEhmtc7dS5Jgkbi2X5zmMyg9odFN1k24w+mX3LO0/a8UhoXOF4M+9W1Jf4qHCsHfUKMQtT+5qq4Zv4mBDZV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RTU3lelr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748988134; c=relaxed/simple;
+	bh=/N4x6JH/JcTx6ATrdbbDoNwqNE7XakA7w925Ax5H8L8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=B4qzMyUQQFlXYeorYa2niiP1F+c0tgpp/FaeJVLVqQsW1xJP/m3fM0vIURFrPomXA20XU4tcK+InlEw7t5j+sLIZ5EjvBCaIIN48VD6GlAf2skCUr3vj0SDXnOmNrPhY5jRnZhkTHqVmZtnaVI+moRb1ZZ/xIpem9bOxW1d/5ig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LEo94ASV; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RTU3lelr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DF0FC4CEED;
-	Tue,  3 Jun 2025 21:58:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748987897;
-	bh=0bypknFRjoL9Ib1Hfa6MS00x/TRJzsKSt3pRBLF3B5Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=RTU3lelrbqZDnw64X6eKGYqyqQZawG8uyAvhOlLbz1DiZn4g/qV/MIULXMo6EyOQp
-	 JubQ/HxNCHLKqm8dX4rIxdK1saVxr1yX3TDrwV3r5ZLsq/FlfITR+zK4PAw/GUrPT/
-	 1taeLAeuLdUHj4evznLp8Jsj5M9ce7x2U6v0V1+kBZ77WF1J1BFL9FNBPcOPl++NDM
-	 dQT4QwDpD995JsA1MWrihlC5RI11Afv7/QFqPZC+9Hk2XR0EgY1GeT2cpBfe0vUOpW
-	 +3Y1sy/xHd/djLVb3apcuec1M6fbmjDMOaLZmsxxkeUa6PjVasP81WA13twnLQabdE
-	 vjldFjqBXoVPA==
-Date: Wed, 4 Jun 2025 06:58:14 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] tracing: ring_buffer: Rewind persistent ring
- buffer when reboot
-Message-Id: <20250604065814.a9df1d1944390d4c262852bd@kernel.org>
-In-Reply-To: <20250603120049.692d48b4@gandalf.local.home>
-References: <174792927500.496143.10668210464102033012.stgit@mhiramat.tok.corp.google.com>
-	<174792928413.496143.17979267710069360561.stgit@mhiramat.tok.corp.google.com>
-	<20250603120049.692d48b4@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LEo94ASV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748988132; x=1780524132;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=/N4x6JH/JcTx6ATrdbbDoNwqNE7XakA7w925Ax5H8L8=;
+  b=LEo94ASV5rx15GZK+NRpwZyj423a+h5kgqulwhZawxOwaBG/G/c0Z1cT
+   ZZAQAeIrEHsP8JmrGuhgiYSzGFE+T3np2rHAenvi10+mG6N29H1WEtcVI
+   QxOYNJT8fJvrbw509dn3kt5WWnctvx9dwETt+tImi89nLzgVsSHS6vTcm
+   jY7iHuOh9TuRwE6mZQne92oeObHTJJHgNY9Z2HVAF8hO92G1DHxGKpMHX
+   hw/xui7hKnJO1/WfUzBGD/n8oIt9hXRJhyyVfijlbyWLcYyijjdAff6p2
+   M3ry0lSzyd0bqFkTFmOq5bO63YVH9VUMwhEamMszk6sR9i5w1RCoCNQul
+   A==;
+X-CSE-ConnectionGUID: /EnHfYBoSSaAZ+sI7etcdw==
+X-CSE-MsgGUID: kgzR3a4ERt6Xc8NnuBixqA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="61669521"
+X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
+   d="scan'208";a="61669521"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 15:02:11 -0700
+X-CSE-ConnectionGUID: FxcTjBUdQ8Soeyc/hlK4pw==
+X-CSE-MsgGUID: DEj5LGPGRP2Su+aM3klY8g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
+   d="scan'208";a="145308795"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 15:02:10 -0700
+Received: from [10.124.221.22] (unknown [10.124.221.22])
+	by linux.intel.com (Postfix) with ESMTP id ACFB220B5736;
+	Tue,  3 Jun 2025 15:02:08 -0700 (PDT)
+Message-ID: <0619c83f-84d9-4dcd-866d-d6df1da4d1c9@linux.intel.com>
+Date: Tue, 3 Jun 2025 15:02:08 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 02/16] PCI/AER: Report CXL or PCIe bus error type in
+ trace logging
+To: Terry Bowman <terry.bowman@amd.com>, PradeepVineshReddy.Kodamati@amd.com,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, bp@alien8.de,
+ ming.li@zohomail.com, shiju.jose@huawei.com, dan.carpenter@linaro.org,
+ Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
+ yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
+ uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
+ ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+ <20250603172239.159260-3-terry.bowman@amd.com>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250603172239.159260-3-terry.bowman@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Tue, 3 Jun 2025 12:00:49 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Fri, 23 May 2025 00:54:44 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> > @@ -6642,7 +6739,6 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
-> >  		cpu_buffer->read_bytes += rb_page_size(reader);
-> >  
-> >  		/* swap the pages */
-> > -		rb_init_page(bpage);
-> >  		bpage = reader->page;
-> >  		reader->page = data_page->data;
-> >  		local_set(&reader->write, 0);
-> 
-> Here's the bug we were looking for. We definitely need to keep the
-> rb_init_page() here!
+On 6/3/25 10:22 AM, Terry Bowman wrote:
+> The AER service driver and aer_event tracing currently log 'PCIe Bus Type'
+> for all errors. Update the driver and aer_event tracing to log 'CXL Bus
+> Type' for CXL device errors.
+>
+> This requires the AER can identify and distinguish between PCIe errors and
+> CXL errors.
+>
+> Introduce boolean 'is_cxl' to 'struct aer_err_info'. Add assignment in
+> aer_get_device_error_info() and pci_print_aer().
+>
+> Update the aer_event trace routine to accept a bus type string parameter.
+>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> ---
+>   drivers/pci/pci.h       |  6 ++++++
+>   drivers/pci/pcie/aer.c  | 18 ++++++++++++------
+>   include/ras/ras_event.h |  9 ++++++---
+>   3 files changed, 24 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index b81e99cd4b62..d6296500b004 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -588,6 +588,7 @@ static inline bool pci_dev_test_and_set_removed(struct pci_dev *dev)
+>   struct aer_err_info {
+>   	struct pci_dev *dev[AER_MAX_MULTI_ERR_DEVICES];
+>   	int error_dev_num;
+> +	bool is_cxl;
 
-Ah, thanks for finding the bug!
+Do you really need this member ? Why not just use pcie_is_cxl() in aer_err_bus()?
 
-> 
-> That's because this is the } else { part of the if condition that on true
-> will do a copy and not a swap of the reader page.
-> 
-> ring_buffer_read_page() has:
-> 
-> 	if (read || (len < (commit - read)) ||
-> 	    cpu_buffer->reader_page == cpu_buffer->commit_page ||
-> 	    cpu_buffer->mapped) {
-> 
-> 		// Copy the buffer to the passed in data_page
-> 
-> 	} else {
-> 
-> 		// swap the data_page with the reader page
-> 
-> 	}
-> 
-> The else part is here, and it's swapping the passed in data_page with the
-> current reader_page. We have to initialize the data_page here.
-
-Oops, I confused the "swap" meant reader <-> head, but that should be
-done in rb_get_reader_page(), not here.
-
-> 
-> What we see happening is:
-> 
-> 	info->spare = ring_buffer_alloc_read_page(); <-- this is the data_page
-> 
-> 	[..]
-> 
-> 	ret = ring_buffer_read_page(..., info->spare, ...);
-> 
-> Since this is a normal buffer, we swap the reader_page with info->spare,
-> where info->spare now has the reader_page.
-> 
-> It consumes the data via:
-> 
-> 	trace_data = ring_buffer_read_data(info->spare);
-> 
-> Then reads the buffer again:
-> 
-> 	ret = ring_buffer_read_page(..., info->spare, ...);
-> 
-> Now it hits the if statement again:
-> 
-> 	if (read || (len < (commit - read)) ||
-> 	    cpu_buffer->reader_page == cpu_buffer->commit_page ||
-> 	    cpu_buffer->mapped) {
-> 
-> 		// Copy the buffer to the passed in data_page
-
-So all mapped buffers (including persistent ring buffer) pass
-this block.
-
-> 
-> 	} else {
-> 
-> 		// swap the data_page with the reader page
-> 
-> ---->> here it just swaps the last data_page with the current one.
-
-So the data_page should not have any data. its commit should be 0.
-
-> 
-> 	}
-> 
-> 
-> As we never clear the "commit" part of the page, it still thinks it has
-> content on the page as the "read" was set to zero, and it reads the old
-> content again.
-
-Got it.
-
-> 
-> There's no reason not to clear the "commit" of the data_page passed in. It
-> is not old data that is about to be lost. We most definitely need to call
-> rb_init_page() on it.
-
-Yeah, that data should be considered as cleared.
-
-> 
-> After adding that back, trace-cmd record works properly again.
-> 
-> Care to send a v4 without removing this rb_init_page(bpage); ?
-
-OK, let me remove that (also remove timestamp check).
-
-Thank you!
-
-> 
-> -- Steve
-
+>   
+>   	unsigned int id:16;
+>   
+> @@ -604,6 +605,11 @@ struct aer_err_info {
+>   	struct pcie_tlp_log tlp;	/* TLP Header */
+>   };
+>   
+> +static inline const char *aer_err_bus(struct aer_err_info *info)
+> +{
+> +	return info->is_cxl ? "CXL" : "PCIe";
+> +}
+> +
+>   int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
+>   void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
+>   
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index a1cf8c7ef628..adb4b1123b9b 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -698,13 +698,14 @@ static void __aer_print_error(struct pci_dev *dev,
+>   
+>   void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>   {
+> +	const char *bus_type = aer_err_bus(info);
+>   	int layer, agent;
+>   	int id = pci_dev_id(dev);
+>   	const char *level;
+>   
+>   	if (!info->status) {
+> -		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
+> -			aer_error_severity_string[info->severity]);
+> +		pci_err(dev, "%s Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
+> +			bus_type, aer_error_severity_string[info->severity]);
+>   		goto out;
+>   	}
+>   
+> @@ -713,8 +714,8 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>   
+>   	level = (info->severity == AER_CORRECTABLE) ? KERN_WARNING : KERN_ERR;
+>   
+> -	aer_printk(level, dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
+> -		   aer_error_severity_string[info->severity],
+> +	aer_printk(level, dev, "%s Bus Error: severity=%s, type=%s, (%s)\n",
+> +		   bus_type, aer_error_severity_string[info->severity],
+>   		   aer_error_layer[layer], aer_agent_string[agent]);
+>   
+>   	aer_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
+> @@ -729,7 +730,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>   	if (info->id && info->error_dev_num > 1 && info->id == id)
+>   		pci_err(dev, "  Error of this Agent is reported first\n");
+>   
+> -	trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask),
+> +	trace_aer_event(dev_name(&dev->dev), bus_type, (info->status & ~info->mask),
+>   			info->severity, info->tlp_header_valid, &info->tlp);
+>   }
+>   
+> @@ -763,6 +764,7 @@ EXPORT_SYMBOL_GPL(cper_severity_to_aer);
+>   void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>   		   struct aer_capability_regs *aer)
+>   {
+> +	const char *bus_type;
+>   	int layer, agent, tlp_header_valid = 0;
+>   	u32 status, mask;
+>   	struct aer_err_info info;
+> @@ -784,6 +786,9 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>   	info.status = status;
+>   	info.mask = mask;
+>   	info.first_error = PCI_ERR_CAP_FEP(aer->cap_control);
+> +	info.is_cxl = pcie_is_cxl(dev);
+> +
+> +	bus_type = aer_err_bus(&info);
+>   
+>   	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
+>   	__aer_print_error(dev, &info);
+> @@ -797,7 +802,7 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>   	if (tlp_header_valid)
+>   		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
+>   
+> -	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
+> +	trace_aer_event(dev_name(&dev->dev), bus_type, (status & ~mask),
+>   			aer_severity, tlp_header_valid, &aer->header_log);
+>   }
+>   EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
+> @@ -1215,6 +1220,7 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
+>   	/* Must reset in this function */
+>   	info->status = 0;
+>   	info->tlp_header_valid = 0;
+> +	info->is_cxl = pcie_is_cxl(dev);
+>   
+>   	/* The device might not support AER */
+>   	if (!aer)
+> diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
+> index 14c9f943d53f..080829d59c36 100644
+> --- a/include/ras/ras_event.h
+> +++ b/include/ras/ras_event.h
+> @@ -297,15 +297,17 @@ TRACE_EVENT(non_standard_event,
+>   
+>   TRACE_EVENT(aer_event,
+>   	TP_PROTO(const char *dev_name,
+> +		 const char *bus_type,
+>   		 const u32 status,
+>   		 const u8 severity,
+>   		 const u8 tlp_header_valid,
+>   		 struct pcie_tlp_log *tlp),
+>   
+> -	TP_ARGS(dev_name, status, severity, tlp_header_valid, tlp),
+> +	TP_ARGS(dev_name, bus_type, status, severity, tlp_header_valid, tlp),
+>   
+>   	TP_STRUCT__entry(
+>   		__string(	dev_name,	dev_name	)
+> +		__string(	bus_type,	bus_type	)
+>   		__field(	u32,		status		)
+>   		__field(	u8,		severity	)
+>   		__field(	u8, 		tlp_header_valid)
+> @@ -314,6 +316,7 @@ TRACE_EVENT(aer_event,
+>   
+>   	TP_fast_assign(
+>   		__assign_str(dev_name);
+> +		__assign_str(bus_type);
+>   		__entry->status		= status;
+>   		__entry->severity	= severity;
+>   		__entry->tlp_header_valid = tlp_header_valid;
+> @@ -325,8 +328,8 @@ TRACE_EVENT(aer_event,
+>   		}
+>   	),
+>   
+> -	TP_printk("%s PCIe Bus Error: severity=%s, %s, TLP Header=%s\n",
+> -		__get_str(dev_name),
+> +	TP_printk("%s %s Bus Error: severity=%s, %s, TLP Header=%s\n",
+> +		__get_str(dev_name), __get_str(bus_type),
+>   		__entry->severity == AER_CORRECTABLE ? "Corrected" :
+>   			__entry->severity == AER_FATAL ?
+>   			"Fatal" : "Uncorrected, non-fatal",
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
