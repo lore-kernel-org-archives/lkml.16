@@ -1,64 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3881284B33;
-	Tue,  3 Jun 2025 18:15:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C6A2853E0
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 18:16:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748974536; cv=none; b=OFwOHWImEfwnCM7MvoOaAm1jYfO3cwC8pge2npjELXdXbsxaBwBdIoAwowUuWGjUHOv+I9eHJKXJInw70t9lA9Vu4G34j+CmMwP6HVkOS98BnZAjnuEtNq0flwgSiU00TfY8jX4bUkVbbmqSfSgOPEBwgZZ3WYu/p5GRmwNlrtg=
+	t=1748974601; cv=none; b=hKCuTaXz1ty17oJO2fZ7084E8BA1Yzr/tt+9hZtH115R+JuoPbmKINSF5zHwCiEanKstOAUUpAcUxwtA1RiKx9JRm2L7xuNbE/XZr03rfMLll761U61/tm2vUUF1azyx+m3Lwd29C50XZUvESvkQAPlMwI4qyDGClRwt8EiTgW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748974536; c=relaxed/simple;
-	bh=oS0oU3PHGXcrufSiI1cSmPk3kZhUyal3rJUuQNhMDbI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QbHsaJ7vtZt2gbXllmEF5XBe1wKfhQ4UaW05F0u7wi5irBEGLGG0tBT7yk4mAiVicCDpQGPxF4t2P69p7F3Nd7iomzq4dt6yGk5ofH65kQeKK63cSIiN5SSy0NeTECVpeo4FaT5s57CzjNyAIb+7klqF4Ivl+X89WlhLx32VnjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PM7COI6v; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748974601; c=relaxed/simple;
+	bh=zzlz0XiaHl9k5I5nTOV3bt+4IyFgiGwUBoM8qCzc6d4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=fwAd2MytXqx4sNd2sNahefZ7tismiQ/vgLD9Wg3VoX5YKlxTeMaS+5vuoJA1fHOxEC3G90w9moIDhLQGaWX+uyyRvKjRnl9EsVR0K6ayyDm/aKamgAbVwEj8b1j8+3JFDmafrA055FoCsN0qRlwpwoqXqzJPEm8TbkEINzy5e+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=afQCS+m0; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PM7COI6v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B74AC4CEEF;
-	Tue,  3 Jun 2025 18:15:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748974535;
-	bh=oS0oU3PHGXcrufSiI1cSmPk3kZhUyal3rJUuQNhMDbI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PM7COI6vkiKUagz3nGTHM3WehM5bnPJzipFTd6J/aYw63XAnA6bthdf/4dn+Gm7RC
-	 9Et6kvNy7nEyzoBELS/1+s/40SXQ29NsgYmHUsNlCWbuyTmq73iT52Mttkzx0OXbVk
-	 EFYvbl8aLYdTy/6lvnRTC3s0aslykfkJtk3sjH3aRul0cm8jHUDmBENFGRAdFfsLu+
-	 Db/JIA6aJYMOv4nwdHzwdkYP5J8vHRsroWA5Um/U/QRJewUv8Td+e7qO+B88Xfvxvr
-	 WrhsibB4vv17gQogckTlhhmIPlb3A/iVqjXWxep10VfCOTtuPEqQ7574t4CubQt8R0
-	 nL90N/YtOM5nQ==
-Date: Tue, 3 Jun 2025 08:15:34 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Cc: cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Pablo Neira Ayuso <pablo@netfilter.org>,
-	Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [PATCH] cgroup: Drop sock_cgroup_classid() dummy implementation
-Message-ID: <aD87xm9H_wiQK_S2@slm.duckdns.org>
-References: <20250603154528.807949-1-mkoutny@suse.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="afQCS+m0"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-234b133b428so41325805ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 11:16:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748974599; x=1749579399; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=dlaUJQBmuGJwNHdjlVkIdQC8DooPW/OGsJq5Qkj2en0=;
+        b=afQCS+m0fjrTXuEvT0NFk9IqG8Zgbc9ZE4OV/A/IRPb7yaaNQ/Jmcc79yjpjH2kO9b
+         0dY0oOURUOmmngCUnxa1I64cGNNDrKb1c8jYlTrlsErtTkON5zARPe0QRurbQKNAc4so
+         Y4aLBkese4+fLCQAajkgAjui4Ax4Gj2xAz4UzHwYrr34/4a3RSsWdhjZTqya0sU2K8DM
+         Nf7wjL/S0wfvdF7mZL+iu70yCNuVmSej09IOdWBXLj9kO6/REtTKngTi/uiSxvDz6L2f
+         5tpwRpNnkaDHL2vPrfaoetGPARag+Pa6OWF85KO+0o46tY/efsyYPKgYAKEr7t7xrbU3
+         9pFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748974599; x=1749579399;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dlaUJQBmuGJwNHdjlVkIdQC8DooPW/OGsJq5Qkj2en0=;
+        b=hfJ/5VboBoUESIR4qYUCNhVuOGd2IitA9J7eVje8N8EqLmpIPvbQbxcBU3nBnxAQLT
+         BFWg7lOKjthO+u6dnbuBzzJ9922ULKY50dMEvr+Af3aSxxkudRcAgde2nDQIyhGVq1Q4
+         nLSUaz9zADVmdLj5ychNMGs+bW2SiqcOz+ym6KDpy18DfvcKcl57NvMMYMk+NNynu3RU
+         9DQAf4HIf9riEu8vKnL0GmcNCxouPb0G+CvTFOqyHwczURz/ylK1+3NDvRfCi/x8eajg
+         W0gbsbYrDwHmgyyF9y4b/m6RBDNx0Kcb+QduHNyY7MyeAngjNXnrEhzYoRzqR8Bcmgi4
+         S/1Q==
+X-Gm-Message-State: AOJu0YzVhqu6JlXODWOr93qwD/fkJDkOe5IZkPV0dJBJjfzeZAA6y1H3
+	2iTLZWe1bXGALUk9JmoaNYMEH6hvBLVbtOPsLv4EjTaTYiJMmLEsGyWJ5kCRJJ5LfYsfIyKvOy3
+	NrAqnWD6ObxkwpXL9DE8Gt3tCNJmX16Xu7cui5o5My4JgJjZ+P+SV5NXQPDMj+C/rhWEMeQ08FV
+	oMgCT8/Mtaxn+pf2PLDqNhru9sdlYMr2h69dJFI8d1guxP
+X-Google-Smtp-Source: AGHT+IGzo+5jSA0iizSd6Tn3gQ4e3xsellXfHop9mUoZhgA5AqQTUoYuEgJH3L+6oxVBfetYe8qPhwiqW9c=
+X-Received: from plblg15.prod.google.com ([2002:a17:902:fb8f:b0:220:d81a:8975])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f611:b0:224:76f:9e4a
+ with SMTP id d9443c01a7336-235291f59aamr292314915ad.14.1748974599152; Tue, 03
+ Jun 2025 11:16:39 -0700 (PDT)
+Date: Tue,  3 Jun 2025 11:15:53 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250603154528.807949-1-mkoutny@suse.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
+Message-ID: <20250603181634.1362626-1-ctshao@google.com>
+Subject: [PATCH v4 1/2] perf: Reveal PMU type in fdinfo
+From: Chun-Tse Shao <ctshao@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Chun-Tse Shao <ctshao@google.com>, Ian Rogers <irogers@google.com>, peterz@infradead.org, 
+	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, james.clark@linaro.org, howardchu95@gmail.com, 
+	weilin.wang@intel.com, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jun 03, 2025 at 05:45:27PM +0200, Michal Koutný wrote:
-> The semantic of returning 0 is unclear when !CONFIG_CGROUP_NET_CLASSID.
-> Since there are no callers of sock_cgroup_classid() with that config
-> anymore we can undefine the helper at all and enforce all (future)
-> callers to handle cases when !CONFIG_CGROUP_NET_CLASSID.
-> 
-> Signed-off-by: Michal Koutný <mkoutny@suse.com>
-> Link: https://lore.kernel.org/r/Z_52r_v9-3JUzDT7@calendula/
-> Acked-by: Tejun Heo <tj@kernel.org>
+It gives useful info on knowing which PMUs are reserved by this process.
+Also add config which would be useful.
+Testing cycles:
 
-Applied to cgroup/for-6.16-fixes.
+  $ ./perf stat -e cycles &
+  $ cat /proc/`pidof perf`/fdinfo/3
+  pos:    0
+  flags:  02000002
+  mnt_id: 16
+  ino:    3081
+  perf_event_attr.type:   0
+  perf_event_attr.config: 0
 
-Thanks.
+Testing L1-dcache-load-misses:
 
--- 
-tejun
+  $ ./perf stat -e L1-dcache-load-misses &
+  $ cat /proc/`pidof perf`/fdinfo/3
+  pos:    0
+  flags:  02000002
+  mnt_id: 16
+  ino:    1072
+  perf_event_attr.type:   3
+  perf_event_attr.config: 65536
+
+Reviewed-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+---
+v4:
+  Removed the first patch in v3 since it is merged.
+  Retested to make sure the patch still work.
+
+v3: lore.kernel.org/20241106003007.2112584-2-ctshao@google.com
+
+ kernel/events/core.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 95e703891b24..bad563692d63 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -56,6 +56,7 @@
+ #include <linux/buildid.h>
+ #include <linux/task_work.h>
+ #include <linux/percpu-rwsem.h>
++#include <linux/seq_file.h>
+
+ #include "internal.h"
+
+@@ -7077,6 +7078,14 @@ static int perf_fasync(int fd, struct file *filp, int on)
+ 	return 0;
+ }
+
++static void perf_show_fdinfo(struct seq_file *m, struct file *f)
++{
++	struct perf_event *event = f->private_data;
++
++	seq_printf(m, "perf_event_attr.type:\t%u\n", event->orig_type);
++	seq_printf(m, "perf_event_attr.config:\t%llu\n", (unsigned long long)event->attr.config);
++}
++
+ static const struct file_operations perf_fops = {
+ 	.release		= perf_release,
+ 	.read			= perf_read,
+@@ -7085,6 +7094,7 @@ static const struct file_operations perf_fops = {
+ 	.compat_ioctl		= perf_compat_ioctl,
+ 	.mmap			= perf_mmap,
+ 	.fasync			= perf_fasync,
++	.show_fdinfo		= perf_show_fdinfo,
+ };
+
+ /*
+--
+2.49.0.1204.g71687c7c1d-goog
+
