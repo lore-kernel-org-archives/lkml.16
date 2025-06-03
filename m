@@ -1,57 +1,41 @@
-Received: from smtp-bc0b.mail.infomaniak.ch (smtp-bc0b.mail.infomaniak.ch [45.157.188.11])
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5503C1E519
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 12:57:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF2722DF86
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 12:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748955439; cv=none; b=j8n9Wn4WwTCSWtxAvbEcsa9oo0yKLiPt036DQP+Tl9rml54PD2XmZVRVPBQkEakORUriLQUf2nvCVInTgKYydRdcbGQxqSy+NAF3Q0Jt7Lj66uXvEanzxXY+xacV1OYAgLM8Q740kcvUlXI8WAWtBACyRXpFIAhibcXZdu+o9OA=
+	t=1748955503; cv=none; b=pDoFytIBdviheSfYVwsO7z022MTSxYUXn4RZmW1Aos9CKRR1aQN3SJ5xC0vsiwiDyGy0PijTYpy2FdzgSySVRvTgcFrWdccLIuBENE8R0o/s+6aEMj+ZNqEL4Uzx0+BgWlzdXPACrhsjm+r0D81q9renxZpFL2PmrIJ2fQDctUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748955439; c=relaxed/simple;
-	bh=YpSUlje0QFo8fAg0UbMHlFaUYLWtmOn9kosehVUWl2c=;
+	s=arc-20240116; t=1748955503; c=relaxed/simple;
+	bh=p4JnDlOmih0OzX+pPsxvMIp+zh45nssxugve+wFbQE4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mQQ38HhqTiPvisiNMs0Nq2kAxitxUWaDXzUA4lLHx920+cBbCznpLgJg5RGDRUF3y6+mX4QScewbqIOS/W1tyaA667ukEGwLsyGIy0X2bHIbcRBOoorT5/PXqtzmUViRd68zutxAZi3nwCqxh7CmVJp5FmIRYLAcCBQKaPa+kRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=GhiFs+Oa; arc=none smtp.client-ip=45.157.188.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=POCYhl7R3VBsm8Kbug9+O/Szv986+PXVYq8pN+Ew/Vd1QoirMef7x48T/fEhQsSNrNGLQ7z1aVSZzXL0P2IpymyWs7kKMxZfsateULmb3tfHDGC+HIP0TD0lcX2Egdhxm3hnR0iva+IX3k2tHfQ+4HFf9uJMh4FPc0WI18+rS/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=s1Y/Knqr; arc=none smtp.client-ip=95.215.58.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="GhiFs+Oa"
-Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10::a6c])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bBVs24Wlqz19Nm;
-	Tue,  3 Jun 2025 14:49:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1748954950;
-	bh=f3sEmdCXf265fZdW3agrYCmOKfWp1F1brT5D1vfWqXM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GhiFs+OagmKnjzrO37+j/bRCJRvL9X3nchSdSAL8QZU93u7utA+y7M8Amp3tayn7Y
-	 IO9csEQOJKBi0mYDUlEtitpv2pCrsfPbqVoQ3xYe9TAcL3iY//3waB8c/VPB78CrOt
-	 4joM5dCTU2faTdJvacgFSKLJK8cYRtNhLvtQiqA4=
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4bBVs15hNzzDkc;
-	Tue,  3 Jun 2025 14:49:09 +0200 (CEST)
-Date: Tue, 3 Jun 2025 14:49:09 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Jan Kara <jack@suse.cz>
-Cc: Song Liu <song@kernel.org>, 
-	Alexei Starovoitov <alexei.starovoitov@gmail.com>, Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>, 
-	Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	LSM List <linux-security-module@vger.kernel.org>, Kernel Team <kernel-team@meta.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard <eddyz87@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Christian Brauner <brauner@kernel.org>, KP Singh <kpsingh@kernel.org>, 
-	Matt Bobrowski <mattbobrowski@google.com>, Amir Goldstein <amir73il@gmail.com>, repnop@google.com, 
-	Jeff Layton <jlayton@kernel.org>, Josef Bacik <josef@toxicpanda.com>, 
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Jann Horn <jannh@google.com>
-Subject: Re: [PATCH bpf-next 3/4] bpf: Introduce path iterator
-Message-ID: <20250603.be1ahteePh8z@digikod.net>
-References: <20250528222623.1373000-1-song@kernel.org>
- <20250528222623.1373000-4-song@kernel.org>
- <20250528223724.GE2023217@ZenIV>
- <yti2dilasy7b3tu6iin5pugkn6oevdswrwoy6gorudb7x2cqhh@nqb3gcyxg4by>
- <CAPhsuW4tg+bXU41fhAaS0n74d_a_KCFGvy_vkQOj7v4VLie2wg@mail.gmail.com>
- <CAADnVQ+UGsvfAM8-E8Ft3neFkz4+TjE=rPbP1sw1m5_4H9BPNg@mail.gmail.com>
- <CAPhsuW78L8WUkKz8iJ1whrZ2gLJR+7Kh59eFrSXvrxP0DwMGig@mail.gmail.com>
- <20250530.oh5pahH9Nui9@digikod.net>
- <vumjuw5ha6jtxtadsr5vwjtuneeqfg3vpydciczsn75qdg2ekv@464a4dxtxx27>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="s1Y/Knqr"
+Date: Tue, 3 Jun 2025 14:57:53 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748955490;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BpANthuvMveJrREHZgfh7mmlUdbLls+qAEWmysf/Nwk=;
+	b=s1Y/KnqrCgBMqWFnr5b2Zl2S5G4rE/wu9u8eyrfpGqot18JTMAMoksver2AFlHZhZ19sdI
+	VfzH02+kbbXQez064YoLe5m8vy/V0itDqSF1AZOzvSfmsjUQGPA8sfIKNldrwZW7ZZVAve
+	9kuPMaax1q8o2W7aRQrzyZba6HnHE0o=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Nicolas Schier <nicolas.schier@linux.dev>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+	Nathan Chancellor <nathan@kernel.org>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] kbuild: set y instead of 1 to
+ KBUILD_{BUILTIN,MODULES}
+Message-ID: <20250603-hilarious-rare-sponge-af172c@l-nschier-aarch64>
+References: <20250602181256.529033-1-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,78 +44,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <vumjuw5ha6jtxtadsr5vwjtuneeqfg3vpydciczsn75qdg2ekv@464a4dxtxx27>
-X-Infomaniak-Routing: alpha
+In-Reply-To: <20250602181256.529033-1-masahiroy@kernel.org>
+Organization: AVM GmbH
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Jun 03, 2025 at 11:46:22AM +0200, Jan Kara wrote:
-> On Fri 30-05-25 16:20:39, Mickaël Salaün wrote:
-> > On Thu, May 29, 2025 at 10:05:59AM -0700, Song Liu wrote:
-> > > On Thu, May 29, 2025 at 9:57 AM Alexei Starovoitov
-> > > <alexei.starovoitov@gmail.com> wrote:
-> > > [...]
-> > > > >
-> > > > > How about we describe this as:
-> > > > >
-> > > > > Introduce a path iterator, which safely (no crash) walks a struct path.
-> > > > > Without malicious parallel modifications, the walk is guaranteed to
-> > > > > terminate. The sequence of dentries maybe surprising in presence
-> > > > > of parallel directory or mount tree modifications and the iteration may
-> > > > > not ever finish in face of parallel malicious directory tree manipulations.
-> > > >
-> > > > Hold on. If it's really the case then is the landlock susceptible
-> > > > to this type of attack already ?
-> > > > landlock may infinitely loop in the kernel ?
-> > > 
-> > > I think this only happens if the attacker can modify the mount or
-> > > directory tree as fast as the walk, which is probably impossible
-> > > in reality.
-> > 
-> > Yes, so this is not an infinite loop but an infinite race between the
-> > kernel and a very fast malicious user space process with an infinite
-> > number of available nested writable directories, that would also require
-> > a filesystem (and a kernel) supporting infinite pathname length.
+On Tue, Jun 03, 2025 at 03:12:53AM +0900, Masahiro Yamada wrote:
+> KBUILD_BUILTIN is set to 1 unless you are building only modules.
 > 
-> Well, you definitely don't need infinite pathname length. Example:
-> 
-> Have a dir hierarchy like:
-> 
->   A
->  / \
-> B   C
-> |
-> D
-> 
-> Start iterating from A/B/D, you climb up to A/B. In parallel atacker does:
-> 
-> mv A/B/ A/C/; mkdir A/B
-> 
-> Now by following parent you get to A/C. In parallel attaker does:
-> 
-> mv A/C/ A/B/; mkdir A/C
-> 
-> And now you are essentially where you've started so this can repeat
-> forever.
+> KBUILT_MODULES is set to 1 when you are building only modules
 
-Yes, this is the scenario I had in mind talking about "infinite race"
-(instead of infinite loop).  For this to work it will require the
-filesystem to support an infinite number of nested directories, but I'm
-not sure which FS could be eligible.
+T -> D: KBUILD_MODULES
 
-Anyway, what would would be the threat model for this infinite race?
-
-> 
-> As others wrote this particular timing might be hard enough to hit for it
-> to not be a practical attack but I would not bet much on somebody not being
-> able to invent some variant that works, in particular with BPF iterator.
-
-There might exist corner cases that could be an issue but would the
-impact be different than with other kinds of path walk?
-
-What could we do to avoid or limit such issue?
-
-> 
-> 								Honza
-> -- 
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
+Reviewed-by: Nicolas Schier <n.schier@avm.de>
