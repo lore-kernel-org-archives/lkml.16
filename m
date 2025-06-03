@@ -1,81 +1,204 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91D5B28468E;
-	Tue,  3 Jun 2025 09:46:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704D6287507
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 09:46:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748943988; cv=none; b=cH0UMsbD2GxyAaWi1LoLp7fWIjhDo4fWAscFZTGF0dFHfezVs7+NU4OmsC0bPgH/bavefjJ0jVSQ1th4mOA2dRijyJG5sU+wihXCivBwasfQtZjzS9fmpEzn5uCoW7gyV1d/KXYeKarhDB8OEeDJf2Y9/NFbg7qarOJYVfNsBSY=
+	t=1748943991; cv=none; b=SBHYsc5yKdoe83S+1POZTGMPf45m1ypImvo0hIIHRpc4QLFEa3rCEmOYCnahxIwcM/1Kbw/znGlXiOpYmcAHrJLQbfK999VNrzHY+skFKrEkyaDM8bJrR+T0sP5YRi8WqCiJ2f+V+HST9tvcn2uJlGakfwEQLu57xoBtgLjVxTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748943988; c=relaxed/simple;
-	bh=kQftfHPBDsUUTI3JW3uAzM2EfMR08UoYntTLsU4QPLA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cAoLcs+pY/aZwsArDvfY+tYiSnXjR8+VkcCVNin4nwBO1xA69xkT7cWLmIqVe2MTaSFnxKP63MToFQJZNQq5tBm1veMiKDVJh0CQj9QcIYaSzvi4/L7c7g/gwSefGaglbdNz92WDOCckMv5pPrtI2leh6dGOgtlfb75epQn6gB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8AxmnFjxD5oSQwKAQ--.32749S3;
-	Tue, 03 Jun 2025 17:46:11 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMDxH+VfxD5ot8gGAQ--.23188S2;
-	Tue, 03 Jun 2025 17:46:07 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xianglai Li <lixianglai@loongson.cn>
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/7] LoongArch: KVM: Enhancement about eiointc emulation
-Date: Tue,  3 Jun 2025 17:45:59 +0800
-Message-Id: <20250603094606.1053622-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1748943991; c=relaxed/simple;
+	bh=hfsUb86ujRf+ShwgSQXb0UcIkrqAV6maD581wcZj0Kg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h76I3smKQA/W2DGioUMVCYf679D/zNYFOBnz7gVgct9mi1oQoFJuud3fJvkbBxhquYbqz/X8NlLCUdj8TCYEEPwveRxs2BUyV/AvCMFb1fAF5hlS/RX+l3vzN8JTdFjB6vEUH3rpgCaVCGs/LvnRjzHV3zffGiaGoQMR+aBPwzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=vfJ11Vcv; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=EdrsGWdo; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=vfJ11Vcv; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=EdrsGWdo; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="vfJ11Vcv";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="EdrsGWdo";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="vfJ11Vcv";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="EdrsGWdo"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 1EDFB218D6;
+	Tue,  3 Jun 2025 09:46:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748943987; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8NMcdzlNx3C6x3AzJjjDWk/TvaFCiwWRANaj0JTW0wM=;
+	b=vfJ11Vcv4ehGI9fGHmeQenIn7s/QuwmG2yb2o4Sjf1fhmsRCpK56gijJAXVkMFvuXOJO1z
+	VElS5BnGg1y4zY9xJc/2do+HLGeAUHo/Xb2nmcV4Q2zmLyee0VxwrwFfWuPGsifmvat9df
+	dhSrMRSGTCgJ3M2N9e+czGkjGxKkPkQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748943987;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8NMcdzlNx3C6x3AzJjjDWk/TvaFCiwWRANaj0JTW0wM=;
+	b=EdrsGWdopIPNC6+RaFzOoUEo/h5ZH3QBqFl4D2Mzt7HQQB3/zqWUnXl6ZWjVZigbTCd40i
+	ojRVNZN9fJ91UiBA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=vfJ11Vcv;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=EdrsGWdo
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748943987; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8NMcdzlNx3C6x3AzJjjDWk/TvaFCiwWRANaj0JTW0wM=;
+	b=vfJ11Vcv4ehGI9fGHmeQenIn7s/QuwmG2yb2o4Sjf1fhmsRCpK56gijJAXVkMFvuXOJO1z
+	VElS5BnGg1y4zY9xJc/2do+HLGeAUHo/Xb2nmcV4Q2zmLyee0VxwrwFfWuPGsifmvat9df
+	dhSrMRSGTCgJ3M2N9e+czGkjGxKkPkQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748943987;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8NMcdzlNx3C6x3AzJjjDWk/TvaFCiwWRANaj0JTW0wM=;
+	b=EdrsGWdopIPNC6+RaFzOoUEo/h5ZH3QBqFl4D2Mzt7HQQB3/zqWUnXl6ZWjVZigbTCd40i
+	ojRVNZN9fJ91UiBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1223F13A92;
+	Tue,  3 Jun 2025 09:46:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id wxdnBHPEPmiqQgAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 03 Jun 2025 09:46:27 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id BCC67A08DD; Tue,  3 Jun 2025 11:46:22 +0200 (CEST)
+Date: Tue, 3 Jun 2025 11:46:22 +0200
+From: Jan Kara <jack@suse.cz>
+To: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+Cc: Song Liu <song@kernel.org>, 
+	Alexei Starovoitov <alexei.starovoitov@gmail.com>, Jan Kara <jack@suse.cz>, Al Viro <viro@zeniv.linux.org.uk>, 
+	bpf <bpf@vger.kernel.org>, Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, LSM List <linux-security-module@vger.kernel.org>, 
+	Kernel Team <kernel-team@meta.com>, Andrii Nakryiko <andrii@kernel.org>, Eduard <eddyz87@gmail.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Christian Brauner <brauner@kernel.org>, 
+	KP Singh <kpsingh@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
+	Amir Goldstein <amir73il@gmail.com>, repnop@google.com, Jeff Layton <jlayton@kernel.org>, 
+	Josef Bacik <josef@toxicpanda.com>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>
+Subject: Re: [PATCH bpf-next 3/4] bpf: Introduce path iterator
+Message-ID: <vumjuw5ha6jtxtadsr5vwjtuneeqfg3vpydciczsn75qdg2ekv@464a4dxtxx27>
+References: <20250528222623.1373000-1-song@kernel.org>
+ <20250528222623.1373000-4-song@kernel.org>
+ <20250528223724.GE2023217@ZenIV>
+ <yti2dilasy7b3tu6iin5pugkn6oevdswrwoy6gorudb7x2cqhh@nqb3gcyxg4by>
+ <CAPhsuW4tg+bXU41fhAaS0n74d_a_KCFGvy_vkQOj7v4VLie2wg@mail.gmail.com>
+ <CAADnVQ+UGsvfAM8-E8Ft3neFkz4+TjE=rPbP1sw1m5_4H9BPNg@mail.gmail.com>
+ <CAPhsuW78L8WUkKz8iJ1whrZ2gLJR+7Kh59eFrSXvrxP0DwMGig@mail.gmail.com>
+ <20250530.oh5pahH9Nui9@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxH+VfxD5ot8gGAQ--.23188S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+In-Reply-To: <20250530.oh5pahH9Nui9@digikod.net>
+X-Spamd-Result: default: False [-2.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_COUNT_THREE(0.00)[3];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,suse.cz,zeniv.linux.org.uk,vger.kernel.org,meta.com,iogearbox.net,linux.dev,google.com,toxicpanda.com];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 1EDFB218D6
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -2.51
 
-This series fix four issues about kernel eiointc emulation list as
-follows:
-  1. The first patch fixes type forced assignment issue.
-  2. The second patch fixes interrupt route with physical cpu.
-  3. The third patch disables update property num_cpu and feature
-  4. The fourth patch adds validation check about num_cpu from user
-     space.
+On Fri 30-05-25 16:20:39, Mickaël Salaün wrote:
+> On Thu, May 29, 2025 at 10:05:59AM -0700, Song Liu wrote:
+> > On Thu, May 29, 2025 at 9:57 AM Alexei Starovoitov
+> > <alexei.starovoitov@gmail.com> wrote:
+> > [...]
+> > > >
+> > > > How about we describe this as:
+> > > >
+> > > > Introduce a path iterator, which safely (no crash) walks a struct path.
+> > > > Without malicious parallel modifications, the walk is guaranteed to
+> > > > terminate. The sequence of dentries maybe surprising in presence
+> > > > of parallel directory or mount tree modifications and the iteration may
+> > > > not ever finish in face of parallel malicious directory tree manipulations.
+> > >
+> > > Hold on. If it's really the case then is the landlock susceptible
+> > > to this type of attack already ?
+> > > landlock may infinitely loop in the kernel ?
+> > 
+> > I think this only happens if the attacker can modify the mount or
+> > directory tree as fast as the walk, which is probably impossible
+> > in reality.
+> 
+> Yes, so this is not an infinite loop but an infinite race between the
+> kernel and a very fast malicious user space process with an infinite
+> number of available nested writable directories, that would also require
+> a filesystem (and a kernel) supporting infinite pathname length.
 
-Also there is code cleanup with kernel eiointc emulation.
+Well, you definitely don't need infinite pathname length. Example:
 
----
-v1 ... v2:
-  1. Add extra fix in patch 3 and patch 4, add num_cpu validation check
-  2. Name of stat information keeps unchanged, only move it from VM stat
-     to vCPU stat.
----
-Bibo Mao (7):
-  LoongArch: KVM: Fix interrupt route update with eiointc
-  LoongArch: KVM: Check interrupt route from physical cpu with eiointc
-  LoongArch: KVM: Disable update property num_cpu and feature with
-    eiointc
-  LoongArch: KVM: Check validation of num_cpu from user space
-  LoongArch: KVM: Use standard bitops API with eiointc
-  LoongArch: KVM: Remove unused parameter len
-  LoongArch: KVM: Add stat information with kernel irqchip
+Have a dir hierarchy like:
 
- arch/loongarch/include/asm/kvm_host.h |  12 +--
- arch/loongarch/kvm/intc/eiointc.c     | 129 ++++++++++++++++----------
- arch/loongarch/kvm/intc/ipi.c         |  28 +-----
- arch/loongarch/kvm/intc/pch_pic.c     |   4 +-
- arch/loongarch/kvm/vcpu.c             |   8 +-
- 5 files changed, 97 insertions(+), 84 deletions(-)
+  A
+ / \
+B   C
+|
+D
 
+Start iterating from A/B/D, you climb up to A/B. In parallel atacker does:
 
-base-commit: fe4281644c62ce9385d3b9165e27d6c86ae0a845
+mv A/B/ A/C/; mkdir A/B
+
+Now by following parent you get to A/C. In parallel attaker does:
+
+mv A/C/ A/B/; mkdir A/C
+
+And now you are essentially where you've started so this can repeat
+forever.
+
+As others wrote this particular timing might be hard enough to hit for it
+to not be a practical attack but I would not bet much on somebody not being
+able to invent some variant that works, in particular with BPF iterator.
+
+								Honza
 -- 
-2.39.3
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
