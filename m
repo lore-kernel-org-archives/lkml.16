@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CAF23F26A;
-	Tue,  3 Jun 2025 16:08:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA8323D29A
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 16:08:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748966929; cv=none; b=hdWQ6X6SMn4vibTznzHGDRJwgK0g9nU/95YL7UMm1uAK5Je+cZfW2SwKLYVAGI5EPeBvDJdbCb5q4m0ul4NswLTomzYtca7hvITcv46IGJwWhWKK3IzNLX9j959ipsgDadc9SjCK1EsdJS/h3AoQOeZtWiuq5yTTfWXQfedGCYc=
+	t=1748966933; cv=none; b=dqRavJ5EkRV8hYvTJZ0PrKxlRtazECwvHp9ozpy3ojDYg3rmeoPSiQbDm3oflm1oCYAErP8JddCH41bS5ovga4qQ4YybiqR8CO2L97lclSoPJ+f1Bi0HrEgF9Clhb90JoWIm8dzlK1fROgPkPFnjBOQsfoh9WGsvqw31j7jF0rY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748966929; c=relaxed/simple;
-	bh=ag6yM55zS2LLWLzt/J2bH3xIErdualVaQuSPyas6euM=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=KEHqB7TRGR1+bqGvki2KqYD6X0z14V3ZPL3I+Ae3ZcV2WBKUXo82Fn9dzn7rFO8c1judwA1oNI9r0R19n1w1cz1Yexl4bDnapu4o8RPniAu+6yJLNFWr863fRaJ10r/vgD2CaQ6/a+3mT52fkFrVV5ZK4UTC/tfeZ1HIMbaBtsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AJ16LM1J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748966933; c=relaxed/simple;
+	bh=8tlYnJbFhRyO2996bUeGVNCRe6luyaLSTq41N5Kmd6M=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=simKowQV0I8duYDLumgj7R8muvcHxKUh/GZy2rCDcbgJQCiaSoeDvGHLF//oINd5MK5xRBeeEj43KH4PCzqdGxCJwWwKWusWvzC+IrVJTBJmMWuQWvrybZBum9IAhDp6rSDUQ2Woq8/xZUE/oPPFM/W738A/2On8YTjnJ774osw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HkF5DIxS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AJ16LM1J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AB50C4CEED;
-	Tue,  3 Jun 2025 16:08:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HkF5DIxS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89BC1C4CEEE;
+	Tue,  3 Jun 2025 16:08:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748966929;
-	bh=ag6yM55zS2LLWLzt/J2bH3xIErdualVaQuSPyas6euM=;
+	s=k20201202; t=1748966932;
+	bh=8tlYnJbFhRyO2996bUeGVNCRe6luyaLSTq41N5Kmd6M=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=AJ16LM1JSh84mp02u7Ck2DZ3ASf0hCl74y4TIT0Yv4YJvfsfZR+aBSgggvUrdZ67r
-	 mX84cU7ExugqMh7UrbtCPAyNi74BzPtwtLPMcdAAtSLcWKMJoNPZaRlqroiy/G7jjt
-	 s+yg5lF7YlaPBW84lTKinB/WqgpkHn8wnLq4qc2W6G+XnUuht3ic+80HqbLzoM1T1P
-	 beU5G4QqVUUIAackp/PklJWzzb6V/EHNjF2p9yvCLff0unw5O/K4s6i+Qxn0WiKxJ7
-	 VjmzU+2mF9lVHKy+z7rQQtuD9gYyn1dHPWjO85rte/xXGVY8eQkqB8iZ8nWqMD+aR5
-	 mE1CzYdheAU3g==
+	b=HkF5DIxSTNDjlisIxDiAEbDB7aOn1Do+OwyONVrqX+UihmkbIKQR24NcSIawm8esd
+	 yG7WXKr66M1W2uvQPAvQG9h1hq59MVIeY8amDSai5jRG4cnw4QRupqys0mXTcC/kPU
+	 SBW+X4A4nHEu9Sh2MoTRuZ51E9Qkn4/cnzHbkfRc7a46Lb1+TPmxX3j+xYVIkBrsZE
+	 3/dlKeJ5qdT09ss3Co2Pw3PQDHTL+zwcyGeqcO5p7Gcxmo8ZexYv142mh20MEgs7bS
+	 Ob1geXh/1q+u5qa9rUaGoEeuyr+x99Sy6HmSBYbF2xZiwJvTBQykTsRTO4F4LqExdk
+	 e/VYdsIR/kc4Q==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAE44380DBEC;
-	Tue,  3 Jun 2025 16:09:22 +0000 (UTC)
-Subject: Re: [GIT PULL] Hyper-V patches for 6.16
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33C02380DBEC;
+	Tue,  3 Jun 2025 16:09:26 +0000 (UTC)
+Subject: Re: [PULL 0/3] xtensa updates for v6.16
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <aD6Rq7Hm499y5ybR@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-References: <aD6Rq7Hm499y5ybR@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+In-Reply-To: <20250603110351.1583773-1-jcmvbkbc@gmail.com>
+References: <20250603110351.1583773-1-jcmvbkbc@gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <aD6Rq7Hm499y5ybR@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed-20250602
-X-PR-Tracked-Commit-Id: 96959283a58d91ae20d025546f00e16f0a555208
+X-PR-Tracked-Message-Id: <20250603110351.1583773-1-jcmvbkbc@gmail.com>
+X-PR-Tracked-Remote: https://github.com/jcmvbkbc/linux-xtensa.git tags/xtensa-20250603
+X-PR-Tracked-Commit-Id: 3d6d238851dff53f49ff88d280ab9fc45eaec60a
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c00b28502470b7677c2f4ee2e9c899205fa78e27
-Message-Id: <174896696159.1571592.11934860779251289748.pr-tracker-bot@kernel.org>
-Date: Tue, 03 Jun 2025 16:09:21 +0000
-To: Wei Liu <wei.liu@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Wei Liu <wei.liu@kernel.org>, Linux on Hyper-V List <linux-hyperv@vger.kernel.org>, Linux Kernel List <linux-kernel@vger.kernel.org>, kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com
+X-PR-Merge-Commit-Id: f5164456c604f6b7cdc5d8ee2cf792b10fba3aa2
+Message-Id: <174896696473.1571592.5501684770973187084.pr-tracker-bot@kernel.org>
+Date: Tue, 03 Jun 2025 16:09:24 +0000
+To: Max Filippov <jcmvbkbc@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Tue, 3 Jun 2025 06:09:47 +0000:
+The pull request you sent on Tue,  3 Jun 2025 04:03:51 -0700:
 
-> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed-20250602
+> https://github.com/jcmvbkbc/linux-xtensa.git tags/xtensa-20250603
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c00b28502470b7677c2f4ee2e9c899205fa78e27
+https://git.kernel.org/torvalds/c/f5164456c604f6b7cdc5d8ee2cf792b10fba3aa2
 
 Thank you!
 
