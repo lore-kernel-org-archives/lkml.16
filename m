@@ -1,84 +1,48 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF27C22FF22
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 13:38:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5941B237173
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 13:38:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748957921; cv=none; b=lWkAJUzr9K3mwObfYLFT4vUo2nxL3SDrRHJl3GlM9Pj3MLWza+Sn5Gdea5NSL576filmP6H142Z07gtSF/hNoFX7fUp+KO9RwhP58TobUDdUf4vrfRvA/xAGcEFqsCMYufmst3J2Rygnw19oeE+BlPn+KsW5/707iRslHp24lQ8=
+	t=1748957925; cv=none; b=k6utUjUlP+CeCn4v1ca/JmvJDR4doLQhQ4rWvIuuE9ysVse11oy9DQL8Olg9HE9jcBKne62D5dMKM6RbSmHuTRLPSHPyVw39yqITMw7G0imh77v8ei3IZ9RJnoO+SlMqGJeCGZ8I5SqGAx/aTBg9Vs8F6Q7eaZeDBRohwLBWyU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748957921; c=relaxed/simple;
-	bh=FJcBKj5IOAP4zBarRXTdKou4i5eFgR4+RYmNBOBDDmA=;
+	s=arc-20240116; t=1748957925; c=relaxed/simple;
+	bh=BX/jykdhzQ67WKSMCkGsFaj4BonMbQRI+Tb2DDSAq2g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hbXVAkjrSr2T+9nMGXF3us/5wV2TLFFt6cWnbBy82gov9ug5ThJZwuWcA4PFQSmdKV+hPX21InMb1n6BIwvxPXE3V5KH/Y7hVXt2QDwNadlut+EC4YgsqMtAexdTGeqUYLlxfwwY3ELjXamD7MgO5mgMPkQRwesR+qKh2iGYdRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=LvjshFQd; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="LvjshFQd"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6fad4a1dc33so40437906d6.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 06:38:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1748957919; x=1749562719; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2YoBzO9/Vr83m9kWgElnZwYJY0cXKTy7GFrgVmwfY4k=;
-        b=LvjshFQdboJOpxr+fB+fWrWhsunI9eeF4CbIQoy588EWAkzdFlgW2ulud0QOLPt26s
-         6+PgfGnnw/oyKJHU0QVcB0yUH5b4yx0aMkjI6rJE/SCLq97nnZ5KM0QVqvtvDGC5nHyu
-         Wwzk7vssC4s8Jw6WaGJUPLroYsdOKq9vO3byex6fd5NgL0ljJeWOP0neFYHZBQdh9aVl
-         1yVrZLUig/vc1Srd4fTVyB1w/JIumebqwlNiowovwMIVaZvQjn1RG7c+bPOFaykPwtLe
-         b7nIMyfXi+EC/zVXO77jX2CahfKKPwlV7rE9q+zpmLUMzSPkZ31zjIh9aiG+GXaKR1OW
-         QVkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748957919; x=1749562719;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2YoBzO9/Vr83m9kWgElnZwYJY0cXKTy7GFrgVmwfY4k=;
-        b=GrbD7h8xJmT9FoqiU0A7gG7PG/DbAUAXTKrI5btyCztzfUAxTQFpJRV1zlNT3ENKjf
-         lxXzIjoZ+NEhSoZpnu6cl+UryATgSfkmQ+7TBz5QJet+RVoKj3fla19BXqq6Ge5MOJZ7
-         Kewhdej9r2qro5TOb564lZ12yZcwaNNo/I/nXUu/lOsSTEXKBIiZsqpBbkHueZRaqajr
-         td24SHCe+ts9uZtQ22wPzLvOmQOnucI0LFp6bkwQaxuxq8mNmu3f5YT1CX3a6kACKS1r
-         tYJUX+gYIkf8VPh/ZV5sy9sarbloRQIl5xssqHY/Tnkm2H4KItu4rNx9dcoBoaYzKqWm
-         Cu4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUKKFumfa5Be0TYylFd+GzSW8XsLnwmZ0x86dd35lM52Jv9mHaBG6xyCKEImEPNF5FkpTEBTmsL1Z46MwY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMv/UehAtNFb+XpMmTvwL069Uw2FbJzERnLJQ2Sgd2VNDUpD6m
-	xz79izDKJa16fdR5nsFRFrWsqLLtTtnbBk9Za9bIhJV/Mm4whhZHBVwf+hk7oA0moNU=
-X-Gm-Gg: ASbGncs3LjbSDNAHz22ZHulK+e5bJxh/GxXagV2tD34wgP8IcFUir44yr9f+p1GWimV
-	Fbc9OxsEe1NJIdnOBfApikR6iR3cG1p7mEbvnlFu2TBUCbqbIsD16ss9zWAAkWAlVmWHik4+9ci
-	4oXYWc8O3KVd68s+ceI/W4eXokGHFxoAy8SF1R8EksuZQKUlFD+MJ3DnBCXc1RixXMD9lXYybYy
-	FdMV6wzSMqDwXmhrvVZg7406dajGPW0aCfN6bYHQOWw7+UEVZSzk2ha1Z16P0Wjr8yt26cjQSm5
-	42whVBg/bYWnv2PllA8Wiqt99iVijYzsZbSp76o4zkxEqpM4wMWuj16Sct6Fdr68FThK63XIqqy
-	UNGuf0DrxsACvFWuvsIW5PbIKAV8=
-X-Google-Smtp-Source: AGHT+IFNNgr1gOgNIDIKGgPc3bhuHOtoZeZOnCuhf1c+LALW25Lvqo21bVxhfooiSUL50e5IoEYUCA==
-X-Received: by 2002:a05:6214:194d:b0:6f5:3a79:a4b2 with SMTP id 6a1803df08f44-6fad191b357mr264142056d6.14.1748957918424;
-        Tue, 03 Jun 2025 06:38:38 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fac6e1a681sm80140746d6.98.2025.06.03.06.38.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 06:38:37 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1uMRqf-00000001h6M-29EG;
-	Tue, 03 Jun 2025 10:38:37 -0300
-Date: Tue, 3 Jun 2025 10:38:37 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Alistair Popple <apopple@nvidia.com>
-Cc: linux-mm@kvack.org, gerald.schaefer@linux.ibm.com,
-	dan.j.williams@intel.com, willy@infradead.org, david@redhat.com,
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-	linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
-	zhang.lyra@gmail.com, debug@rivosinc.com, bjorn@kernel.org,
-	balbirs@nvidia.com, lorenzo.stoakes@oracle.com,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	John@groves.net
-Subject: Re: [PATCH 05/12] mm: Remove remaining uses of PFN_DEV
-Message-ID: <20250603133837.GF386142@ziepe.ca>
-References: <cover.541c2702181b7461b84f1a6967a3f0e823023fcc.1748500293.git-series.apopple@nvidia.com>
- <ee89c9f307c6a508fe8495038d6c3aa7ce65553b.1748500293.git-series.apopple@nvidia.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=kpkqRbMPynmxTIyAOniJ3/JXYEBinh5FjOxJ1k4yg76nGBtmpd3NpsIUR7fQ4YD58Y8Y04/YlmY+wrkfJMd8PZ74Ogl2buroFlXDKl8m1SJjnZr8Sax2/Z1Lrpe62zfv8nGmp+x4KKefQ4AsnVcuVUJKR1x1Ccfr3QWCBbzkq4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <sha@pengutronix.de>)
+	id 1uMRqF-0005gf-9F; Tue, 03 Jun 2025 15:38:11 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <sha@pengutronix.de>)
+	id 1uMRqE-001d8a-1d;
+	Tue, 03 Jun 2025 15:38:10 +0200
+Received: from sha by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <sha@pengutronix.de>)
+	id 1uMRqE-008dA2-1A;
+	Tue, 03 Jun 2025 15:38:10 +0200
+Date: Tue, 3 Jun 2025 15:38:10 +0200
+From: Sascha Hauer <s.hauer@pengutronix.de>
+To: Bryan Brattlof <bb@ti.com>
+Cc: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] arm64: dts: ti: k3-am62l: add initial
+ infrastructure
+Message-ID: <aD76wjgGqDSzinT5@pengutronix.de>
+References: <20250507-am62lx-v5-0-4b57ea878e62@ti.com>
+ <20250507-am62lx-v5-2-4b57ea878e62@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,30 +51,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ee89c9f307c6a508fe8495038d6c3aa7ce65553b.1748500293.git-series.apopple@nvidia.com>
+In-Reply-To: <20250507-am62lx-v5-2-4b57ea878e62@ti.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Thu, May 29, 2025 at 04:32:06PM +1000, Alistair Popple wrote:
-> PFN_DEV was used by callers of dax_direct_access() to figure out if the
-> returned PFN is associated with a page using pfn_t_has_page() or
-> not. However all DAX PFNs now require an assoicated ZONE_DEVICE page so can
-> assume a page exists.
-> 
-> Other users of PFN_DEV were setting it before calling
-> vmf_insert_mixed(). This is unnecessary as it is no longer checked, instead
-> relying on pfn_valid() to determine if there is an associated page or not.
-> 
-> Signed-off-by: Alistair Popple <apopple@nvidia.com>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/gpu/drm/gma500/fbdev.c     |  2 +-
->  drivers/gpu/drm/omapdrm/omap_gem.c |  5 ++---
->  drivers/s390/block/dcssblk.c       |  3 +--
->  drivers/vfio/pci/vfio_pci_core.c   |  6 ++----
->  fs/cramfs/inode.c                  |  2 +-
->  include/linux/pfn_t.h              | 25 ++-----------------------
->  mm/memory.c                        |  4 ++--
->  7 files changed, 11 insertions(+), 36 deletions(-)
+Hi Bryan,
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+On Wed, May 07, 2025 at 10:09:20PM -0500, Bryan Brattlof wrote:
+ +
+> +	usbss0: dwc3-usb@f900000 {
+> +		compatible = "ti,am62-usb";
+> +		reg = <0x00 0x0f900000 0x00 0x800>,
+> +		      <0x00 0x0f908000 0x00 0x400>;
+> +		clocks = <&scmi_clk 329>;
+> +		clock-names = "ref";
+> +		power-domains = <&scmi_pds 95>;
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +		ti,syscon-phy-pll-refclk = <&wkup_conf 0x45000>;
 
-Jason
+This doesn't fit together. The register referenced here...
+
+> +		status = "disabled";
+> +
+> +		usb0: usb@31000000 {
+> +			compatible = "snps,dwc3";
+> +			reg = <0x00 0x31000000 0x00 0x50000>;
+> +			interrupts = <GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>, /* irq.0 */
+> +				     <GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>; /* irq.0 */
+> +			interrupt-names = "host", "peripheral";
+> +			maximum-speed = "high-speed";
+> +			dr_mode = "otg";
+> +			snps,usb2-gadget-lpm-disable;
+> +			snps,usb2-lpm-disable;
+> +			bootph-all;
+> +		};
+> +	};
+> +
+> +	wkup_conf: syscon@43000000 {
+> +		compatible = "syscon", "simple-mfd";
+> +		reg = <0x00 0x43000000 0x00 0x20000>;
+
+...is outside the register range specified here. Consequently the DWC3
+driver doesn't probe. Increasing the register range here fixes this.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
