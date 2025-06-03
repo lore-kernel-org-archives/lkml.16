@@ -1,101 +1,112 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F2EA21171D
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 19:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD9DD1A3178;
+	Tue,  3 Jun 2025 19:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748977217; cv=none; b=pMyffDLljExUlHOIuJkPmwX7eKsROgo3/T/9QLmivc1+hpCVQXcdxPJthjsJ+bMg20101rUk87gnN3cVIj60DOI9QLBFxMAYequNJin8peQhHXJck0j6bTYH3h3kb+Tx465CxXwc40bzO03XXFPBP3Inj1HA9o7Ms8nK5oiSNfU=
+	t=1748977220; cv=none; b=EZ4uahoJMej3vf+te7s4BA933iYbmZS76OiCWcqxBBk5j1TsdN1IrWHIA4zwOIDjsZXXrVL+bd/csXR9d+P9MdU3ji2lDjwXRVsEATZXnUW/0OmdMMxkLo3FFZ7QQmo3AyjrjHUxebzmNRDaHv5G1uxSN7aVksrUNlVpqPPmAR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748977217; c=relaxed/simple;
-	bh=m5TJF0jIIbgCGQuk4aBQNxWcU+kLuEmnNdEOoqpXnrQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=d3s2DX4Fdc05xXvAerLA1N46OTwGDVbIDqUxWUQjVyaoaDxJTirYGdHvjs/0hmPmEpLgask1YLfvMsyVJwds84u5tDt2ZlPaB7c24dowjh/wue1b/yHmns6b7YLvFt9+DzTJIX65wVOW3ilHPG9OXZnZCJiF8xQcQdwPMD3QiBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WRY23oDe; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1748977220; c=relaxed/simple;
+	bh=0ThIYWugwuVZKAjCoEU3PumpWrdP9PlnZ9dppkzr9lg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=nfhnd7/S4mwcbboIhL3AUqYk2JImJYRT4iuIswhUXTAEEj3NHeaD/01+tGaXH8sM5Wv+VH2fHqtucVBD1wRry7T4LG62k4LssgX34mbwsYwvPDzXuTZTvTTfUFjCF0BnUAcQJfwu1vnbk5c/F1gMLQWMvPLUMIByf5SdRfIwQgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ln0hiuPx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WRY23oDe"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-311f4f2e761so5937258a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 12:00:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748977214; x=1749582014; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LRI+kvPhnbWyNuALR5/UlU1wn44Og69LXb9THAFowqQ=;
-        b=WRY23oDecMff6YNj6gN/NDeipVqbx5edVn6J0LA4PggtMeku73nQlull2jJ+yTfPLT
-         vvrNc1IVgTnorA8I/vPtfrMwmamxNz6yqlL8mQKMXBoZ8QKLREUkqZMUaQkFrWu7uHW8
-         Rclk0ZIrxtVo4nzFvtMg8jnbch5LG7C21H1aG60ksAAaHstakDQfGNxtPleJUJq/3ED9
-         tS8vH3xpyNGRMDd8Ee16Ops4kOfF9z0wSteRhhAb2k0EzJqnGlUFbF/Gwo/YKb5AQ4n8
-         FBl+ypc8rw5yLR6qr+RQvVDuOlZ0gJg3glAxgu6FZk9AZWHcPmFnKbFcDVhj2rmqIGVk
-         7vCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748977214; x=1749582014;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=LRI+kvPhnbWyNuALR5/UlU1wn44Og69LXb9THAFowqQ=;
-        b=j/yWZAnxEy/KVCs0HnVlszVZiDGc+zK+oKd4EcL/ZXzUrwnVjFhh8ipFkPCZhjmKi6
-         QOqr5t7QMjkvNUHLZ3uHEVqik4RgS6DgaqgvsFQQR5cT78ND9JLA54kolxni9pU40TPI
-         SXn20uZ9zoPMPEG0799ttEx6zdpJUXFdtImimNjXOzszwM93aHo2wI8zSSxAiIyMVjhc
-         YjFre132tG4m8C91nJlXAzjtlJgnv+rbW7qm7CHTM6EgYXm5WegJr6W7EvGko1jrtDTL
-         lk8ATKtZS3V9keTLLKv6QSbfjpLi9NyvmIP385LmrgeWT23Xmfq7Peq9PPqaMREW0fMJ
-         j93Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWQ9WkaV3721f2mC/9iswXvdxzLNb2llgu+EzBGbF/boxDprEMW3n23vC8qYaQyenniWI9onfK0VCPFxYI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrYSDT11HlrmdcGLQz5aUiXjRrF3LTJb4BeeYebbM4YVnPa8Q+
-	MvSh+XawTFeFwTLXWrQ/tmlg6KveeGza4XuBDOtTk8EvM0ZrdIkdn6heKpEzPdxTynKVGfjadyv
-	yR7ic/g==
-X-Google-Smtp-Source: AGHT+IFxfWW/66Xi/qsd8HDqTJ/6I2NynwNI53ATDTHnfVAav9b9q4IUuy06fJqORMG8yPjMT9M/PLVLHaw=
-X-Received: from pjbsy7.prod.google.com ([2002:a17:90b:2d07:b0:310:f76d:7b8d])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2804:b0:311:e4ff:1810
- with SMTP id 98e67ed59e1d1-3130ccf511cmr257256a91.3.1748977214333; Tue, 03
- Jun 2025 12:00:14 -0700 (PDT)
-Date: Tue, 3 Jun 2025 12:00:12 -0700
-In-Reply-To: <CADrL8HWvYwxTvRQFzk33aaDLgnSzgBvCaTW_1vP-fBuaC_K4Sw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ln0hiuPx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADD69C4CEED;
+	Tue,  3 Jun 2025 19:00:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748977220;
+	bh=0ThIYWugwuVZKAjCoEU3PumpWrdP9PlnZ9dppkzr9lg=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=ln0hiuPxPevOC/LhGkZ4W42p7YKwlMda76qGZRna/O8KtQ0+NjSLeFEQjX/ce1ejf
+	 EcqbM267WgeZEnqw14s4Xm4bXFjcJYvK3+7RXHFBehfzUT9hyH+4affh5z9xNJGmOy
+	 SqIh+ogNj5rIjJCRHY6f0L9V703za8eYlaR58PvZFcBV/4CMvPTVOoHmNfIG3kFRkM
+	 O+RPP3dfJw599FHPTB8+L2P9+r3FWtu/rPOoA5I+TTPWBKa10bwvRAmZ6DMGgeTa2b
+	 L7HvlkIQ2QnVFy1wB3yJWdNVQC86dxM2GSYuzIWANsJdEsI7WMj/7l8Aw3TRvTLxmt
+	 rWC1UkH0ztVdg==
+Message-ID: <9803c165-fa2f-44ba-a6fb-f11852c319e1@kernel.org>
+Date: Tue, 3 Jun 2025 21:00:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250602224459.41505-1-seanjc@google.com> <20250602224459.41505-2-seanjc@google.com>
- <CADrL8HWvYwxTvRQFzk33aaDLgnSzgBvCaTW_1vP-fBuaC_K4Sw@mail.gmail.com>
-Message-ID: <aD9GPPz9U5JU89b-@google.com>
-Subject: Re: [PATCH 1/2] KVM: SVM: Reject SEV{-ES} intra host migration if
- vCPU creation is in-flight
-From: Sean Christopherson <seanjc@google.com>
-To: James Houghton <jthoughton@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Alexander Potapenko <glider@google.com>, Peter Gonda <pgonda@google.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/3] dt-bindings: i2c: nvidia,tegra20-i2c: Specify the
+ required properties
+To: Akhil R <akhilrajeev@nvidia.com>, andi.shyti@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, thierry.reding@gmail.com,
+ jonathanh@nvidia.com, ldewangan@nvidia.com, digetx@gmail.com,
+ p.zabel@pengutronix.de, linux-i2c@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250603153022.39434-1-akhilrajeev@nvidia.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250603153022.39434-1-akhilrajeev@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 03, 2025, James Houghton wrote:
-> On Mon, Jun 2, 2025 at 3:45=E2=80=AFPM Sean Christopherson <seanjc@google=
-.com> wrote:
-> > ---
-> >  arch/x86/kvm/svm/sev.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-> > index a7a7dc507336..93d899454535 100644
-> > --- a/arch/x86/kvm/svm/sev.c
-> > +++ b/arch/x86/kvm/svm/sev.c
-> > @@ -2032,6 +2032,10 @@ static int sev_check_source_vcpus(struct kvm *ds=
-t, struct kvm *src)
-> >         struct kvm_vcpu *src_vcpu;
-> >         unsigned long i;
-> >
-> > +       if (src->created_vcpus !=3D atomic_read(&src->online_vcpus) ||
-> > +           dst->created_vcpus !=3D atomic_read(&dst->online_vcpus))
-> > +               return -EINVAL;
->=20
-> I think -EBUSY (or perhaps -EAGAIN) might be a more proper return code.
+On 03/06/2025 17:30, Akhil R wrote:
+> Specify the properties which are essential and which are not for the
+> Tegra I2C driver to function correctly. This was not added correctly when
+> the TXT binding was converted to yaml. All the existing DT nodes have
+> these properties already and hence this does not break the ABI.
+> 
+> dmas and dma-names which were specified as a must in the TXT binding
+> is now made optional since the driver can work in PIO mode if dmas are
+> missing.
+> 
+> Fixes: f10a9b722f80 ("dt-bindings: i2c: tegra: Convert to json-schema”)
+> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
 
-Yeah, I was 50/50 on EBUSY vs EINVAL.  I think I went with EINVAL mostly ou=
-t of
-spite :-)
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-I'll change it to EBUSY.
+Best regards,
+Krzysztof
