@@ -1,43 +1,38 @@
-Received: from mail-24421.protonmail.ch (mail-24421.protonmail.ch [109.224.244.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB4D2040B6
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 10:01:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A9977111
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 10:02:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748944904; cv=none; b=blgPPm6Zwp/CSz5CPght7xpp9a/XOJsU46dllk1V0IeyGQ1UG91gV6V3pNSU5kZr+Ieuxq30rfuz6l2VbXApAQDz/0mSJ2QOS5uhte7T9CpF884Ne4s3OWB0HZHKm8mUjAAkbQ5DaNGFgyci6tQ1hLABXuutv8KyL3s5GzMyQIs=
+	t=1748944959; cv=none; b=DgqLq53/sTUFaxBC1QX+BHQJxOzT92JU+7uhpVfHJQRQysco/uT6yolvrTLOeWyKQH1xiRdu5uj9/Z97E/AR8zEsaJQyIamWwNxd1SJ7VSjmrrWLfyHbnIkdklspNf6EqKEjYCwrQFsJU7HphaOwwx0LLeaFAu2JkS3fSo0vLjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748944904; c=relaxed/simple;
-	bh=nCeqPXWEeQGgg8PQ5vWOHsYXK+FLWcyCgzaPhfe2CpU=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z0l7SrAXSpM6o+rdbSOqKOxT6zPyEnJR8Iuz0ie6j7+WRXgohd7e8Js4xiY/YxhK1v+wkUrxdOD9/5UE83L5+tx7CO4SIBHWMpi7Qa8rQx6vtpyuoyChf4/LsIsqLUlZsh3PIcgy0RvbP9UBq1I0QytYozq7uZYK2M8/K+Ee5lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=nxsw.ie; spf=pass smtp.mailfrom=nxsw.ie; dkim=pass (2048-bit key) header.d=nxsw.ie header.i=@nxsw.ie header.b=QP31pX6E; arc=none smtp.client-ip=109.224.244.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=nxsw.ie
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxsw.ie
+	s=arc-20240116; t=1748944959; c=relaxed/simple;
+	bh=5PKIFHRzec6lAxHM2SRU66PHIbwaH9IVizeIwvP3LEw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=icTgKKMNqjOkclwhMP3qA1UwPfWeDSTEWa+UkZJHcDJYSazw4SnJTtRz4/mpho7HwXgjSx9Zdhpyf+Wco5Puk4K5UsgVSOP2C75qOmSWORxL9iOG4arAiLqmIo+DOvE2QahkU28Ax3SnozV9nSDOtGWj72Jv2mwrKa9IS4FMd28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TVNr+7Z6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxsw.ie header.i=@nxsw.ie header.b="QP31pX6E"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxsw.ie;
-	s=protonmail2; t=1748944897; x=1749204097;
-	bh=CBAH/23nxlGM/ZU/D/m7DXgdjxhIQMXn6Xg7PJlyxmc=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=QP31pX6EMqJiIyY6ciLORrW5ZjTg7jPcfvbJkb4CcNDLoe9Gy5vFCz4FN/7tnYwBf
-	 PDUCksJjO6qiXzm5rhpddUMmG/j0+jOUXeaGODxQeQb7d0gquC9GSVLdum3If8pO1c
-	 Jvt2BoRAhrxeRJ6kwuZU86YSzol/XGB5a3ZP9p9/KOie5e/1eCwqRkuewvJZrKn//L
-	 dqCl0OMT0lhZn0p3uj9hSbf7FgC4llqfttzFFsGQf1C4Eptg4D+SxAMFv5O9ggQeFu
-	 JBKhl7EOk0AXTgOVrydcEA8wHVSrkUFvKwsqXXZr+T8f3rpcnmRNT8/zvWtvLFCPoK
-	 QrTBxMJ44gScQ==
-Date: Tue, 03 Jun 2025 10:01:31 +0000
-To: Gabor Juhos <j4g8y7@gmail.com>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Georgi Djakov <djakov@kernel.org>, Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>
-From: Bryan O'Donoghue <bod.linux@nxsw.ie>
-Cc: linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] interconnect: avoid memory allocation when 'icc_bw_lock' is held
-Message-ID: <04ab699e-b344-4ba1-9ca1-04b6e50beefe@nxsw.ie>
-In-Reply-To: <75a46897-040f-4608-88f5-22c99c8bed97@gmail.com>
-References: <TIkPOGVjPeCjPzjVtlSb6V5CIcpaXf2-6WG6HjAyaOW59Hj01-9VK7Z8DKadakOKr6fJeQICi6h0Z8mft9DQyg==@protonmail.internalid> <20250529-icc-bw-lockdep-v1-1-3d714b6a9374@gmail.com> <ca9f7308-4b92-4d23-bfe7-f8d18d20de10@linaro.org> <75a46897-040f-4608-88f5-22c99c8bed97@gmail.com>
-Feedback-ID: 136405006:user:proton
-X-Pm-Message-ID: 6c201d29837aedc835aef573575e37b6eb34dd3b
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TVNr+7Z6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9CBAC4CEED;
+	Tue,  3 Jun 2025 10:02:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748944958;
+	bh=5PKIFHRzec6lAxHM2SRU66PHIbwaH9IVizeIwvP3LEw=;
+	h=Date:From:To:Cc:Subject:From;
+	b=TVNr+7Z6p8Afj5ExGqD/UB98gcKR8o/mwWIUItN5T7ARLx/nVrg0x0sigr9fblYIU
+	 VVWiD68wvyIGB1BRRoQmeNu3F9ECL9HgzrngU7uFJ39l7/WcYO4vH3Pl5npIcKDLyb
+	 3Uvl9GNJ3wq0ostpJKVRQYWJqthRsUt4tOngOKSXGMd4NZfKt64uiDxOSIjsL0ga7p
+	 oi2uDpu7RUUmhy+OeRQaacxDCrYlzU9a6sFrKy12aQEIruKQ3IKONWACvBi7DMXWLi
+	 8ppvLgaGoBF0zzAPPCjCdV0nN3tg/J9SKUA4wmke2O9amD0u2lfBrNrAzj1FsJ4wd/
+	 yYcY/kWaY0Mnw==
+Date: Tue, 3 Jun 2025 11:02:34 +0100
+From: Lee Jones <lee@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Daniel Thompson <danielt@kernel.org>
+Subject: [GIT PULL] Backlight for v6.16
+Message-ID: <20250603100234.GE7758@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,181 +40,103 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On 03/06/2025 10:15, Gabor Juhos wrote:
-> Hello Bryan,
->=20
-> Sorry for the late reply, I missed your mail.
->=20
-> 2025. 05. 30. 11:16 keltez=C3=A9ssel, Bryan O'Donoghue =C3=ADrta:
->> On 29/05/2025 15:46, Gabor Juhos wrote:
->>> The 'icc_bw_lock' mutex is introduced in commit af42269c3523
->>> ("interconnect: Fix locking for runpm vs reclaim") in order
->>> to decouple serialization of bw aggregation from codepaths
->>> that require memory allocation.
->>>
->>> However commit d30f83d278a9 ("interconnect: core: Add dynamic
->>> id allocation support") added a devm_kasprintf() call into a
->>> path protected by the 'icc_bw_lock' which causes this lockdep
->>> warning (at least on the IPQ9574 platform):
->>
->> Missing a Fixes tag.
->=20
-> Erm, it is before my s-o-b tag.
+Good morning Linus,
 
-Great thank you I see that.
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
-> ...
->=20
->>> Move the memory allocation part of the code outside of the protected
->>> path to eliminate the warning. Also add a note about why it is moved
->>> to there,
->>>
->>> Fixes: d30f83d278a9 ("interconnect: core: Add dynamic id allocation sup=
-port")
->>> Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
->>> ---
->>>  =C2=A0 drivers/interconnect/core.c | 14 ++++++++++----
->>>  =C2=A0 1 file changed, 10 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
->>> index
->>> 1a41e59c77f85a811f78986e98401625f4cadfa3..acdb3b8f1e54942dbb1b71ec2b170=
-b08ad709e6b 100644
->>> --- a/drivers/interconnect/core.c
->>> +++ b/drivers/interconnect/core.c
->>> @@ -1023,6 +1023,16 @@ void icc_node_add(struct icc_node *node, struct
->>> icc_provider *provider)
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
->>>
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_lock(&icc_lock);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 if (node->id >=3D ICC_DYN_ID_START) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Memory allocation m=
-ust be done outside of codepaths
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * protected by icc_bw=
-_lock.
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 node->name =3D devm_kasprin=
-tf(provider->dev, GFP_KERNEL, "%s@%s",
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 no=
-de->name, dev_name(provider->dev));
->>> +=C2=A0=C2=A0=C2=A0 }
->>> +
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_lock(&icc_bw_lock);
->>>
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 node->provider =3D provider;
->>> @@ -1038,10 +1048,6 @@ void icc_node_add(struct icc_node *node, struct
->>> icc_provider *provider)
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 node->avg_bw =3D node->init_avg;
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 node->peak_bw =3D node->init_peak;
->>>
->>> -=C2=A0=C2=A0=C2=A0 if (node->id >=3D ICC_DYN_ID_START)
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 node->name =3D devm_kasprin=
-tf(provider->dev, GFP_KERNEL, "%s@%s",
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 no=
-de->name, dev_name(provider->dev));
->>> -
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (node->avg_bw || node->peak_bw) {
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (provider->p=
-re_aggregate)
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 provider->pre_aggregate(node);
->>>
->>> ---
->>> base-commit: 5fed7fe33c2cd7104fc87b7bc699a7be892befa2
->>> change-id: 20250529-icc-bw-lockdep-ed030d892a19
->>>
->>> Best regards,
->>> --
->>> Gabor Juhos <j4g8y7@gmail.com>
->>>
->>>
->>
->> The locking in this code is a mess.
->>
->> Which data-structures does icc_lock protect node* pointers I think and w=
-hich
->> data-structures does icc_bw_lock protect - "bw" data structures ?
->>
->> Hmm.
->>
->> Looking at this code I'm not sure at all what icc_lock was introduced to=
- do.
->=20
-> Initially, only the 'icc_lock' mutex was here, and that protected 'everyt=
-hing'.
-> The 'icc_bw_lock' has been introduced later by commit af42269c3523
-> ("interconnect: Fix locking for runpm vs reclaim") as part of the
-> "drm/msm+PM+icc: Make job_run() reclaim-safe" series [1].
->=20
-> Here is the reason copied from the original commit message:
->=20
->      "For cases where icc_bw_set() can be called in callbaths that could
->      deadlock against shrinker/reclaim, such as runpm resume, we need to
->      decouple the icc locking.  Introduce a new icc_bw_lock for cases whe=
-re
->      we need to serialize bw aggregation and update to decouple that from
->      paths that require memory allocation such as node/link creation/
->      destruction."
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
 
-Right but reading this code.
+are available in the Git repository at:
 
-icc_set_bw();
-icc_lock_bw - protects struct icc_node *
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/backlight.git backlight-next-6.16
 
-icc_put();
-icc_lock - locks
-icc_lock_bw -locks directly after protects struct icc_node *
+for you to fetch changes up to e12d3e1624a02706cdd3628bbf5668827214fa33:
 
-icc_node_add current:
-icc_lock - locks
-icc_lock_bw - locks
-     node->name =3D devm_kasprintf();
+  backlight: pm8941: Add NULL check in wled_configure() (2025-04-15 18:27:38 +0100)
 
-After your change
+----------------------------------------------------------------
+Backlight for v6.16
 
-icc_node_add current:
-icc_lock - locks
-     node->name =3D devm_kasprintf();
-icc_lock_bw - locks
-     owns node->provider - or whatever
+  * Framebuffer Subsystem (fbdev):
+    * The display's blanking status is now tracked in `struct fb_info`
+    * `framebuffer_alloc()` initializes the blank state to `FB_BLANK_UNBLANK`
+    * `register_framebuffer()` sets the state to `FB_BLANK_POWERDOWN` if an `fb_blank`
+      callback exists, ensuring `FB_EVENT_BLANK` listeners correctly see the display
+      being turned on during the first modeset
+    * The `FB_EVENT_BLANK` event data now includes both the new and the old blank states
+  * Qualcomm WLED Backlight:
+    * Added a NULL check after `devm_kasprintf()` in `wled_configure()` to prevent a
+      potential NULL pointer dereference if memory allocation fails
 
-And this is what is prompting my question. Which locks own which data here =
-?
+  * Framebuffer Subsystem (fbdev):
+    * `fb_blank()` has been reworked to return early on errors, without functional
+      changes, in preparation for further state tracking improvements
+    * Fbdev now calls dedicated functions in the backlight subsystems to notify them
+      of blank state changes, instead of relying on fbdev event notifiers
+    * For LCDs, fbdev also calls a dedicated function to notify of mode changes
+  * Backlight Subsystem:
+    * Implemented fbdev blank state tracking using the (newly enhanced) blank state
+      information provided directly by `FB_EVENT_BLANK`
+    * Removed internal blank state tracking fields (`fb_bl_on`) from
+      `struct backlight_device`
+    * Moved the handling of blank-state updates into a separate internal helper
+      function, `backlight_notify_blank()`
+    * Removed support for fbdev events and replaced it with a dedicated function call
+      interface (`backlight_notify_blank()` and `backlight_notify_blank_all()`) for
+      display drivers to update backlight status
+  * LCD Subsystem:
+    * Moved the handling of display updates (blank events and mode changes) from
+      fbdev event notifiers to separate internal helper functions (`lcd_notify_blank`,
+      `lcd_notify_mode_change`)
+    * Removed support for fbdev events and replaced it with dedicated function call
+      interfaces (`lcd_notify_blank_all()`, `lcd_notify_mode_change_all()`)
+    * The LCD subsystem now maintains its own internal list of LCD devices instead of
+      relying on fbdev notifiers
+  * LED Backlight Trigger:
+    * Moved the handling of blank-state updates into a separate internal helper,
+      `ledtrig_backlight_notify_blank()`
+    * Removed support for fbdev events and replaced it with a dedicated function call,
+      `ledtrig_backlight_blank()`, for fbdev to notify trigger of blank state changes
+    * The LED backlight trigger now maintains its own internal list of triggers
+      instead of relying on fbdev notifiers
 
-I think we should sort that out, either by removing one of the locks or=20
-by at the very least documenting beside the mutex declarations which=20
-locks protect what.
+  * Framebuffer Subsystem (fbdev):
+    * Removed the definitions for the unused fbdev event constants
+      `FB_EVENT_MODE_CHANGE` and `FB_EVENT_BLANK` from the header file
 
----
-bod
+----------------------------------------------------------------
+Henry Martin (1):
+      backlight: pm8941: Add NULL check in wled_configure()
 
+Thomas Zimmermann (11):
+      fbdev: Rework fb_blank()
+      fbdev: Track display blanking state
+      fbdev: Send old blank state in FB_EVENT_BLANK
+      backlight: Implement fbdev tracking with blank state from event
+      backlight: Move blank-state handling into helper
+      backlight: Replace fb events with a dedicated function call
+      backlight: lcd: Move event handling into helpers
+      backlight: lcd: Replace fb events with a dedicated function call
+      leds: backlight trigger: Move blank-state handling into helper
+      leds: backlight trigger: Replace fb events with a dedicated function call
+      fbdev: Remove constants of unused events
 
+ drivers/leds/trigger/ledtrig-backlight.c |  48 +++++++-------
+ drivers/video/backlight/backlight.c      |  93 ++++++--------------------
+ drivers/video/backlight/lcd.c            | 108 ++++++++++++-------------------
+ drivers/video/backlight/qcom-wled.c      |   6 +-
+ drivers/video/fbdev/core/fb_backlight.c  |  12 ++++
+ drivers/video/fbdev/core/fb_info.c       |   1 +
+ drivers/video/fbdev/core/fbmem.c         |  82 +++++++++++++++++++----
+ drivers/video/fbdev/core/fbsysfs.c       |   8 +--
+ include/linux/backlight.h                |  32 ++++-----
+ include/linux/fb.h                       |  12 ++--
+ include/linux/lcd.h                      |  21 +++++-
+ include/linux/leds.h                     |   6 ++
+ 12 files changed, 219 insertions(+), 210 deletions(-)
 
->> Can we not just drop it entirely ?
->=20
-> I'm not an expert in locking, but I doubt that we can easily drop any of =
-the two
-> mutexes without reintroducing the problem fixed by the change mentioned a=
-bove.
->=20
-> [1] https://lore.kernel.org/all/20230807171148.210181-1-robdclark@gmail.c=
-om/
->=20
-> Regards,
-> Gabor
->=20
->=20
-
-Right - if this were a struct we would declare what these individual=20
-mutexes lock.
-
-That's my question here, as I review this code, which mutex protects what ?
-
-I don't think that is particularly clear.
-
+-- 
+Lee Jones [李琼斯]
