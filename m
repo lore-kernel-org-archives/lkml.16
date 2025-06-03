@@ -1,99 +1,188 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f202.google.com (mail-il1-f202.google.com [209.85.166.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D961A8405;
-	Tue,  3 Jun 2025 21:32:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C60221F09
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 21:32:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748986330; cv=none; b=oUXDhl18JIzdQe7V5JfJjU5Fyg0I1Vj6pIBAcdxYPNpNpR2zjOArufWTBsyn6xZoAJCUPG4kQlrcquAo56LTHvV+W7ncjFVdOljNQ41bYsQuKxUboN7Ug1h3R1lFcTxow0W6B0R+d0anPUJaGissD1BX1QJp41ozsgyBuTvBkw4=
+	t=1748986365; cv=none; b=RQ4E77/ci+tlj6OfSVxyGd0MgF7RN9y9p8euhnj05HAhrtP621YDiqgr16+oWlpM6oRQSWGUmHOTf8Ew5N4KFGc59QS36oj5NNLuSLNqM8/SMlIsIK4ckZEr8CpP3QTCh4Z2pxIenP2JyMxMBBqeknNHzThGsR4QGT66S65fYbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748986330; c=relaxed/simple;
-	bh=Jss5g9npedZTDFWuPuZqcGQ4qelof1pkUcNtSIxUI0k=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LIP9ERolD6R952Rod/tV7x4LigJN59ivieF2E/wrBLXWrsgazY6feACCcw08v5mfXj2jQ+2w/EuYRmXe9MzEQ5Buz4Xk55mx58HrMwOjmK/O1jh/HAa1MzvvvcwtNO+f7d29Te2YhnPyFx828scKnDH/1VltonUcGKS/z4i9VqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=MaZ9vsL0; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1748986365; c=relaxed/simple;
+	bh=mRmmFnlPCP5qmGp8cqulc+n4NmAySDPtVlsv8iPw48Q=;
+	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=p8K2RUNSOOoew+sVLDJBqP2Nkj2xxdfpC06SCB+S2Qnq3/cVIlsry61O+xlwzIOeX52QCKVNXiHezlpKcJSlqdLqB6RYA9dPguSPa4rUghFvohn2boqa0pPtGdYRF2YveOepuZ1WewidMJCfPcOMVJ/FllxEmOYqxwRcD8RJ5X4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K8FA1uSf; arc=none smtp.client-ip=209.85.166.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MaZ9vsL0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1748986318;
-	bh=YXJifQgVfyCRhkpdle8Kp435xD880whtOSxBMS0Ih54=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=MaZ9vsL0X5Kk30mYEXscfWDBSLxk7pcYzbNsWk1HwMt3Cbzgh0kTYkC4cVKBv28Qf
-	 nBASVGshjDK8uuA0+Cldej6g3xXG8l/ONznix5GNJ6pvC6LrbHS2weVTJIGhlAXR85
-	 Tzj+sabj2CISLq4u+i9sxM2u93RNiv5OdB+8OSgiuqvEF60fKscd4WpMuRdTCX/npe
-	 Ss4H1p6SO0DY8RqhAeN0Z5zcKEkYQV0hZUVdy1eni9wBefl5yFSfUANt/8bE+Mjlbo
-	 B/4DK6vAnt8xAMEZ1yepyUCuPhV7ATBKLezYaHu+1i41i9nR/Ity9stxmjCFKLpnL8
-	 H6xGRuynGTazQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bBkSG1l9rz4xc6;
-	Wed,  4 Jun 2025 07:31:58 +1000 (AEST)
-Date: Wed, 4 Jun 2025 07:31:18 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Thorsten Leemhuis <linux@leemhuis.info>, linux-kernel@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: Re: REGRESSION: armv7 build mismatched types
-Message-ID: <20250604073118.4205f303@canb.auug.org.au>
-In-Reply-To: <CANiq72=+qUNJu5j+uoveMrTbngwA89+ScwjUPd9OyVGqps54aw@mail.gmail.com>
-References: <700ebe13-c2d3-48e3-800f-8dc327efb6fc@gmail.com>
-	<CANiq72mFL4dn+0JppLLfxyKnM+xYwKeduFw2j07hUfxWVVHdUw@mail.gmail.com>
-	<f5d5b84c-0850-4df9-bad7-61fff12c4248@leemhuis.info>
-	<CANiq72=+qUNJu5j+uoveMrTbngwA89+ScwjUPd9OyVGqps54aw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K8FA1uSf"
+Received: by mail-il1-f202.google.com with SMTP id e9e14a558f8ab-3dca2d01b84so122031615ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 14:32:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748986362; x=1749591162; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=A0l5G93fC29AgVAtcdaJmVpgHO/IQHFXQv4WdPYaaHE=;
+        b=K8FA1uSfxXYjE7M/3EGc5Xqz1jBw8GcDGVwsHp27n1ZI7vHBo0QWT2qQjdijACY7BA
+         lwqOv2PA2bN5COEHIj2Wn68GG+8L7U6PfTrmvhlaXGpyEgz/xHgfGsQwKWU+X06EG/UE
+         2V8F6qw1w5fm+Ivo5jH9xnc9Mfk55rKMzVmVPqFSu6ppANUTxsRslGaFaCLNyadaEoxB
+         MdC5tLrVwVffEBkfLJYlp6EDqSKGHLSk/wqER1yM6wUATYBMlgrWkEGdCdrUK1yC7AmZ
+         mPOWsVnwgF7Gz0feqkFGxRyAB34+dtwPJMGpv1EPafIAEfKeeLEJ0Yoy/TEW/tygeHzU
+         ETQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748986362; x=1749591162;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=A0l5G93fC29AgVAtcdaJmVpgHO/IQHFXQv4WdPYaaHE=;
+        b=Q6SREaSabNxlZz0jlZoUbU36rNe+a7l0ZhiKY2CqCENcWu4Ned2cvCx0eHQ9z5MX/f
+         qRBX8KYmNo47UheRRGGBvGEDWld1D+cDGvWPv9zjaaSy/aNEbYZH/OJ9tb/G90bd1Up4
+         FjiL19MuUK7pkRe4X8XakCcb0XOu1eVrlRLhAeOfVDDiLSuSLjVL9Ucaav1VwGvLvPOI
+         JQP1P6Y1OUTGzAAZ6r7JhwDp3Knv5CO04htzCb3wj+kAHbf+F38gKWWpCxF6yeZl9VHa
+         ESHpZO1ah/iNN8wTtFTaL6XxtyVETO9KKLvfdXDp2UHz9YHbguYCTk8tVGEDhXihrCdp
+         z/FA==
+X-Forwarded-Encrypted: i=1; AJvYcCWz7PLZCQAfD7m1SP6gfgXQSH0HcuV9GWUjAtrcK1M4waKwkUB7vGb+XIV8Yw7qSYtkxzQvmbsHSI+/oHE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZuDyUGJmCDnxCN9xy5S4/KpDbFq/RTESS2rF3b2pS4ZyQqOtR
+	H6qYosyJXt3mIvf+MRayt/rGf1E648Bx8Jl1qUd5Csr1DG/FhsENZrSnP1QBYpRKwdudEJq8Nn0
+	LyMbBKO6WNV6+j3aNQ8pDOWTZKg==
+X-Google-Smtp-Source: AGHT+IEpZcrefEWDzzUjOLjOnRYEdIFZat5s3G0oLfOvn/O8rphYPOQ1GWMYf3Wj71ilVVre/pSRPvqRpgjiaR79Qg==
+X-Received: from ilbbm14.prod.google.com ([2002:a05:6e02:330e:b0:3d9:2b64:6884])
+ (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a92:c241:0:b0:3dc:7a9a:44d5 with SMTP id e9e14a558f8ab-3ddbedc8c8fmr6231205ab.22.1748986362621;
+ Tue, 03 Jun 2025 14:32:42 -0700 (PDT)
+Date: Tue, 03 Jun 2025 21:32:41 +0000
+In-Reply-To: <aD4llDZwb_sC_Ptj@linux.dev> (message from Oliver Upton on Mon, 2
+ Jun 2025 15:28:36 -0700)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/lh=kQjAukULzSZZYDl2ICpu";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0
+Message-ID: <gsnt4iww3406.fsf@coltonlewis-kvm.c.googlers.com>
+Subject: Re: [PATCH 06/17] KVM: arm64: Introduce method to partition the PMU
+From: Colton Lewis <coltonlewis@google.com>
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net, 
+	linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, 
+	maz@kernel.org, joey.gouly@arm.com, suzuki.poulose@arm.com, 
+	yuzenghui@huawei.com, mark.rutland@arm.com, shuah@kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 
---Sig_/lh=kQjAukULzSZZYDl2ICpu
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Oliver Upton <oliver.upton@linux.dev> writes:
 
-Hi Miguel,
+> On Mon, Jun 02, 2025 at 07:26:51PM +0000, Colton Lewis wrote:
+>>   static void kvm_arm_setup_mdcr_el2(struct kvm_vcpu *vcpu)
+>>   {
+>> +	u8 hpmn = vcpu->kvm->arch.arm_pmu->hpmn;
+>> +
+>>   	preempt_disable();
 
-On Tue, 3 Jun 2025 15:04:02 +0200 Miguel Ojeda <miguel.ojeda.sandonis@gmail=
-.com> wrote:
->
-> On Tue, Jun 3, 2025 at 2:51=E2=80=AFPM Thorsten Leemhuis <linux@leemhuis.=
-info> wrote:
-> >
-> > Or is this heading towards mainline really soon now anyway? =20
->=20
-> The Rust PR is, but it would be nice to have the fix in -next before
-> sending the PR (I will give Linus a test merge anyway, but it is nice
-> to know everything is OK in -next too, and to have another reference
-> point for Linus).
+>>   	/*
+>>   	 * This also clears MDCR_EL2_E2PB_MASK and MDCR_EL2_E2TB_MASK
+>>   	 * to disable guest access to the profiling and trace buffers
+>>   	 */
+>> -	vcpu->arch.mdcr_el2 = FIELD_PREP(MDCR_EL2_HPMN,
+>> -					 *host_data_ptr(nr_event_counters));
+>> -	vcpu->arch.mdcr_el2 |= (MDCR_EL2_TPM |
+>> +	vcpu->arch.mdcr_el2 = FIELD_PREP(MDCR_EL2_HPMN, hpmn);
+>> +	vcpu->arch.mdcr_el2 |= (MDCR_EL2_HPMD |
+>> +				MDCR_EL2_TPM |
 
-Damn!  I knew I would forget.  Sorry about that, it will be applied
-today.
---=20
-Cheers,
-Stephen Rothwell
+> This isn't safe, as there's no guarantee that kvm_arch::arm_pmu is
+> pointing that the PMU for this CPU. KVM needs to derive HPMN from some
+> per-CPU state, not anything tied to the VM/vCPU.
 
---Sig_/lh=kQjAukULzSZZYDl2ICpu
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+I'm confused. Isn't this function preparing to run the vCPU on this
+CPU? Why would it be pointing at a different PMU?
 
------BEGIN PGP SIGNATURE-----
+And HPMN is something that we only want set when running a vCPU, so
+there isn't any per-CPU state saying it should be anything but the
+default value (number of counters) outside that context.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg/aaYACgkQAVBC80lX
-0GxoSgf/bawM8QgK3MOoFaT2gHDO8PiXvv5971lHtGpy2qhxliT5XDXWZCAEbKJm
-BzuZfZJ6EXxwJG06fT1eB3mNRuQngFRzHNXjKWrCEYjq2cK7zlCIMhxlmk6bP2nH
-glcgix+v71OSXD6hI2TD5qywlsnVzOB/wCFCkLOOcBjfgsDBYIMdp5jqpGAyYbhW
-cqWDZ2ERGt5DaumVPVxtn4gHrunLD5TlWApKTPRVfxXeNa2O2fhkCr95O8OhsALP
-kmmOeGYByTB5QSd+cRo3/Kpc8cl86+tfVqankyCVOaV3QOr147IViitWfPkpHdTE
-qr9dAZBIRMwu9Zv37JQwIlbPro4s1A==
-=BbwS
------END PGP SIGNATURE-----
+Unless you just mean I should check the number of counters again and
+make sure HPMN is not an invalid value.
 
---Sig_/lh=kQjAukULzSZZYDl2ICpu--
+>> +/**
+>> + * kvm_pmu_partition() - Partition the PMU
+>> + * @pmu: Pointer to pmu being partitioned
+>> + * @host_counters: Number of host counters to reserve
+>> + *
+>> + * Partition the given PMU by taking a number of host counters to
+>> + * reserve and, if it is a valid reservation, recording the
+>> + * corresponding HPMN value in the hpmn field of the PMU and clearing
+>> + * the guest-reserved counters from the counter mask.
+>> + *
+>> + * Passing 0 for @host_counters has the effect of disabling  
+>> partitioning.
+>> + *
+>> + * Return: 0 on success, -ERROR otherwise
+>> + */
+>> +int kvm_pmu_partition(struct arm_pmu *pmu, u8 host_counters)
+>> +{
+>> +	u8 nr_counters;
+>> +	u8 hpmn;
+>> +
+>> +	if (!kvm_pmu_reservation_is_valid(host_counters))
+>> +		return -EINVAL;
+>> +
+>> +	nr_counters = *host_data_ptr(nr_event_counters);
+>> +	hpmn = kvm_pmu_hpmn(host_counters);
+>> +
+>> +	if (hpmn < nr_counters) {
+>> +		pmu->hpmn = hpmn;
+>> +		/* Inform host driver of available counters */
+>> +		bitmap_clear(pmu->cntr_mask, 0, hpmn);
+>> +		bitmap_set(pmu->cntr_mask, hpmn, nr_counters);
+>> +		clear_bit(ARMV8_PMU_CYCLE_IDX, pmu->cntr_mask);
+>> +		if (pmuv3_has_icntr())
+>> +			clear_bit(ARMV8_PMU_INSTR_IDX, pmu->cntr_mask);
+>> +
+>> +		kvm_debug("Partitioned PMU with HPMN %u", hpmn);
+>> +	} else {
+>> +		pmu->hpmn = nr_counters;
+>> +		bitmap_set(pmu->cntr_mask, 0, nr_counters);
+>> +		set_bit(ARMV8_PMU_CYCLE_IDX, pmu->cntr_mask);
+>> +		if (pmuv3_has_icntr())
+>> +			set_bit(ARMV8_PMU_INSTR_IDX, pmu->cntr_mask);
+>> +
+>> +		kvm_debug("Unpartitioned PMU");
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+
+> Hmm... Just in terms of code organization I'm not sure I like having KVM
+> twiddling with *host* support for PMUv3. Feels like the ARM PMU driver
+> should own partitioning and KVM just takes what it can get.
+
+Okay. I can move the code.
+
+>> @@ -239,6 +245,13 @@ void kvm_host_pmu_init(struct arm_pmu *pmu)
+>>   	if (!pmuv3_implemented(kvm_arm_pmu_get_pmuver_limit()))
+>>   		return;
+
+>> +	if (reserved_host_counters) {
+>> +		if (kvm_pmu_partition_supported())
+>> +			WARN_ON(kvm_pmu_partition(pmu, reserved_host_counters));
+>> +		else
+>> +			kvm_err("PMU Partition is not supported");
+>> +	}
+>> +
+
+> Hasn't the ARM PMU been registered with perf at this point? Surely the
+> driver wouldn't be very pleased with us ripping counters out from under
+> its feet.
+
+AFAICT nothing in perf registration cares about the number of counters
+the PMU has. The PMUv3 driver tracks its own available counters through
+cntr_mask and I modify that during partition.
+
+Since this is still initialization of the PMU, I don't believe anything
+has had a chance to use a counter yet that will be ripped away.
+
+Aesthetically It makes since to change this if I move the partitioning
+code to the PMUv3 driver, but I think it's inconsequential to the
+function.
