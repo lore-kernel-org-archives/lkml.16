@@ -1,134 +1,250 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816DF1C5D72
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 11:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D104C3597C
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 11:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748951024; cv=none; b=nCsh1PkPY31iHjOnFO+hVF3kE7tVHkPGD9DI8OPIMmEZMCN3n8J+uRIuUp7xjInVqGl3vcF2UAjMbgnRnLKQ4Ve0biEccfSujHS2ZNKR/cQL8amM+CQ+43EbSplWC8Wj1yU0M9KdpZs2Hzw82/DSZqwA+u1WatDs4/6zpbqxFVY=
+	t=1748951147; cv=none; b=evPuQNhofgFAdJw9tGmbyo1dfCQfAwkv30ga/x9Rs8aGAcm8g+8gxGDdxQQj2TRLyz5/CuvtrnPZK/GsP4BlXx6cQ+ZG72pHZSQIEKeB/i04eAIdUGpJDkAFo/aOJYzaz+pTpHUUQlu5SvYR71MS0d7iSqvYHfXfX3M5rwNq0W0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748951024; c=relaxed/simple;
-	bh=PNBCbtHacciRjGJIUshcSY6wyXemX0p2lmL+yLw6v1g=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=i8GvPUL7x03EgRQxye2yZUMCN5osR0VCCXwM6EO5nLkZlZR9L3GN9S8Obr9BVhgL5hMt7czGaexpKoZBk0CJyeBvrd50WEqruMhfo9s+XrVju5/3Gycw9Zs8OYCz1HA/uBFkvbUg7YcWy8R8xrbTJFqHZfJ2y6mY6agyUVo3qIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=x9tbXX+X; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748951147; c=relaxed/simple;
+	bh=Wtk6AFHWfq6XPA5wRUyQI9qTTYvmaR7EWEbBvQSTd4A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FWIXTXF2PtMbP0IWUN+3Ufl+8MFbliWI20rGdEU7Q1Fn7cltcfqN/xgmgKp1JNxEZJ8+iFf29P8FPNMVocsE3b8XCiqtKlkvE+z3MArnwJNfnDwd85koM6pcyoGlhCiXeKnqB4l2FMy3tpSy1pweU8uMUvEN7spRgIHd5zuOJPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vayavyalabs.com; spf=pass smtp.mailfrom=vayavyalabs.com; dkim=pass (1024-bit key) header.d=vayavyalabs.com header.i=@vayavyalabs.com header.b=HAHggRZ7; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vayavyalabs.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vayavyalabs.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x9tbXX+X"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-60477f1a044so9351424a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 04:43:42 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=vayavyalabs.com header.i=@vayavyalabs.com header.b="HAHggRZ7"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e7db5c13088so4771841276.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 04:45:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748951021; x=1749555821; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ubw5qr1vqTEQqkyLWzcVCvsavrNjo50AY7n8fFMjQxc=;
-        b=x9tbXX+XfH2nSEw133b2razXgHKNwcxaEeOyTFB8/3XIHosEkXOE7Xje2VQLhzDNUA
-         ufU38/ry8olVOggfEyz3l0e7p6sJgxWQrQRXB+Vp50KWW1hbhX1A5jjgo1BECMCQxzUI
-         DJ2wcnsQRlJdgxSBtooNDa0DGCK8teCuLUGyKfdXFhWM6Wkm10qAA6So9FPDTlAOfaYG
-         R9702pF2pgieQzn4yDAf0rDkO2r21caXxeJvMV5li0HjE6WtmAgFHKFCygzSGgSQbQSr
-         bVg3QmG2HW6qZAISH/fa6ziun7kvfnRLMaJDAuS9oC3icjh7NUZxqpQF0aELbNlrXd3n
-         ALlw==
+        d=vayavyalabs.com; s=google; t=1748951143; x=1749555943; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WU2jL29VSYgtyt74swmZUn3uXnZniaAi4pgLdOtSj3A=;
+        b=HAHggRZ7FlxI9loqStLqrmv+eEe0P0pHJ+oXG//ZhWVZ1Hl2NnLBGHR8jMsMoTUNYY
+         WXCwLNhmOSNPPuFmRGHV+wUaqdQUS11ybAzvQCQqW5h0ou75kRQh6ADOBUD3jwShKqUu
+         MyHu87I1ERWHZYnIM9mRYrquW31KKH6+HAGsQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748951021; x=1749555821;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ubw5qr1vqTEQqkyLWzcVCvsavrNjo50AY7n8fFMjQxc=;
-        b=HZduZ6xNuA3k7MnTGt/AKdJDI8b+5JmQ3p+Xrj4YwcHR/tAehKVtyG9TqrSeznkyzn
-         sGxx9lqDEMAP6oElyuFsy3+Rr9/TWJqvT/TSAFed1XGF8e+ELLacM96tz5/dzIIehvDj
-         myzBHOhkWICZ2BP+fDnuZot/VpPowUWIRXcUp7/XMr3vzz2GbZf5jmBUGLf8L1CZiWzw
-         J6A4b+hEtL5bBjsrxvNXYNxoiSELd9VsFN1KjrtK5aHDsftgCa+z3fJROC3I9BpKrHaV
-         H1CJqk8hKF7bI1n3rnoRk7rJpgg0outwcu49CFQwAfBelDyp2j+8f0TUpDNxvkLLA/qp
-         98Jw==
-X-Forwarded-Encrypted: i=1; AJvYcCWO+IbglL1aAK3+GbU0qP9JHjP8ZpKpCJOTD1p0VSg9eqBbEvDsv4sMai7Apj5SbaRBRIovQ5vxilOkwco=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjRzESg7QeNw94dUSWd56pq1BI3Nvna/kg5+ZvxXcgvtkS1syp
-	trJUwhikOgP26NVS+BOStKoQKw3itQzL9wJTndZGSsaivjcm3rwZFFmkONBJ63j4qMA=
-X-Gm-Gg: ASbGncsNXbwrbXuMRt+fVxmz4wldGhF+pi6Sl0kBrbUMFyH4hDia+ddApvWuGPZD7ef
-	Kg2jBAN+z6wzm9C4vLXRGDIsJEiujN23SAMmmy4/FHhER1Lg3I8skwAkC2HviUclOUnmAbzZyNs
-	zCi2cpiu3QXHUp9vgBo19qgiVcWt/AstWh69QBY40FANZca5uwAAC5vZTozRM8E5Nbk3pARHrBK
-	XXydTvvePQnCNeSiGXL6zYDS7AStiijDgOgyICnsNqyO+8+hePxEVFWcTA4FV+Uj/kAqfwg7oNV
-	bgo0EZYM+71yTmoXbV6mm+KrMmG75qdy5fsj9fwpUWnA+MRfFExbs4q0pght
-X-Google-Smtp-Source: AGHT+IGnG6VIuLl9nqDMaZzRwmhoM9nz6ogi2ZgDE95nbti3Gup7V8oVPqG3h7hrx+FWDi59W2Bv6g==
-X-Received: by 2002:a05:6402:5106:b0:604:e33f:e5c0 with SMTP id 4fb4d7f45d1cf-605b7b6b7ccmr12087155a12.30.1748951020735;
-        Tue, 03 Jun 2025 04:43:40 -0700 (PDT)
-Received: from [192.168.0.14] ([79.115.63.247])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60567169810sm7354284a12.78.2025.06.03.04.43.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jun 2025 04:43:40 -0700 (PDT)
-Message-ID: <a4a5855c-6d58-4fc5-85d7-4727d27efbe0@linaro.org>
-Date: Tue, 3 Jun 2025 12:43:38 +0100
+        d=1e100.net; s=20230601; t=1748951143; x=1749555943;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WU2jL29VSYgtyt74swmZUn3uXnZniaAi4pgLdOtSj3A=;
+        b=ihA6HNxOctpKG+Ew7ZBJNcpNU8gqmswNDylS2m+o6rR/Sr37usXvkGvCkQ0Fg8qzhk
+         oPbfcbqrup6LKEElmK6Ftzf6E34olOcto8oDiNZoi0813qH9fYkP24niKpCbUMn83t3x
+         /VZw/z/h1cX8bGz7C5fhLe+EYzB0JANKf9r9rFLuDTREVXx8S79l9t1LfNGF31Vh4RZC
+         koY44haJc598JH436BBURpq3Gg+RDLzg3sUHEjEE2UwZJhuxwMfckzwyHWLpstUPp79y
+         rPgoyen5ze8dUb08SSAnU9kKO3APXThcE1nNG2CJpfIXMJBoP5Q4yzAMOBhA1OjR/Og/
+         uggw==
+X-Forwarded-Encrypted: i=1; AJvYcCWU4K17auaw1ZJKl2iWt3Uif2GSsC3YVxNHYs3A1giFGWL1T0D3HyC1A3E1fMMNAmaFeCD1eGYEovhCvsc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxKzalKywOPFQhRCI8uClbyvQdijxM4NvrDp7ro9bhjrwwpeCf
+	WVM9aEWT3lPLJi6vm+ruxwnBPrWPDFeSVgE0KksNZvDU/YTgQPcM+/Z3UFFfVEivOgqNAKbKoJT
+	lOiaaGNtPT4/5ykgN5bMDKf2LvoizS0HkmbspWA0Z+A==
+X-Gm-Gg: ASbGncuHQohAMGAqzRtdZS3mu30gHrGHWa1gc38a3i0tkqs1GJSUE6Fnbfiea7bVxtG
+	whJucmGOF3wNDN0n2ldRlF4xgTuVZ2otmz/Plxmc2gfZ9qXCWQpkHd/o1TJ0/RavOPN0eEzKUjA
+	WjTG7Ciii9aF/b4Ywtk8Y6LN5GlB0dggCFow==
+X-Google-Smtp-Source: AGHT+IFZFuVWzeSCYr5E7m41i/9aDNVpyn69bOnsaB/aNiCiM41tO005L0j039m41q399lOdfjixO5eaHFaDG/FfEfo=
+X-Received: by 2002:a05:6902:4911:b0:e7d:c9e1:170d with SMTP id
+ 3f1490d57ef6-e8161e52682mr2384135276.11.1748951142488; Tue, 03 Jun 2025
+ 04:45:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
- in sync
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
- =?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>,
- Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- William McVicker <willmcvicker@google.com>
-References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
- <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com>
- <5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org>
- <8f281667-b4ef-9385-868f-93893b9d6611@linux.intel.com>
- <3a47fc82-dc21-46c3-873d-68e713304af3@linaro.org>
- <f6ee05f7-174b-76d4-3dbe-12473f676e4d@linux.intel.com>
- <867e47dc-9454-c00f-6d80-9718e5705480@linux.intel.com>
- <a56284a4-755d-4eb4-ba77-9ea30e18d08f@linaro.org>
- <7e882cfb-a35a-bab0-c333-76a4e79243b6@linux.intel.com>
- <f2d149c6-41a4-4a9a-9739-1ea1c4b06f4b@linaro.org>
- <19ccc09c-1d6b-930e-6ed6-398b34020ca1@linux.intel.com>
- <c1c0bacd-7842-4e9e-aec4-66eb481aa43f@linaro.org>
- <f8f15489-8b31-4672-9fb9-161c7c4599dc@linaro.org>
-Content-Language: en-US
-In-Reply-To: <f8f15489-8b31-4672-9fb9-161c7c4599dc@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250602053231.403143-1-pavitrakumarm@vayavyalabs.com>
+ <20250602053231.403143-2-pavitrakumarm@vayavyalabs.com> <fae97f84-bdb9-42de-b292-92d2b262f16a@kernel.org>
+In-Reply-To: <fae97f84-bdb9-42de-b292-92d2b262f16a@kernel.org>
+From: Pavitrakumar Managutte <pavitrakumarm@vayavyalabs.com>
+Date: Tue, 3 Jun 2025 17:15:31 +0530
+X-Gm-Features: AX0GCFsi1_WhsXRy4U7lWQV3XKiZq8jOsIJ1nSTGBjFSBrQaz8ZfGBHLoV3EgL4
+Message-ID: <CALxtO0mpQtqPB0h_Wff2dLGo=Mxk02JJQkK4rn+=TuScNdSfxQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/6] dt-bindings: crypto: Document support for SPAcc
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, herbert@gondor.apana.org.au, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, Ruud.Derwig@synopsys.com, 
+	manjunath.hadli@vayavyalabs.com, adityak@vayavyalabs.com, 
+	Bhoomika Kadabi <bhoomikak@vayavyalabs.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Krzysztof,
+  Thanks for the inputs, my comments are embedded below.
 
+Warm regards,
+PK
 
-On 6/3/25 11:48 AM, Tudor Ambarus wrote:
-> 
-> 
-> On 6/3/25 11:36 AM, Tudor Ambarus wrote:
->>
->>
->> On 6/3/25 9:13 AM, Ilpo Järvinen wrote:
->>> So please test if this patch solves your problem:
->>
->> It fails in a different way, the bridge window resource never gets
->> assigned with the proposed patch.
->>
->> With the patch applied: https://termbin.com/h3w0
-> 
-> above is no revert and with the proposed fix. It also contains the
-> prints https://termbin.com/g4zn
-> 
-> It seems the prints in pbus_size_mem are not longer hit, likely because
-> of the new condition added: ``!pdev_resources_assignable(dev) ||``,
-> pci_dev_for_each_resource() finishes without doing anything.
-> 
->> With the blamed commit reverted: https://termbin.com/3rh6
-> 
+On Mon, Jun 2, 2025 at 11:28=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.or=
+g> wrote:
+>
+> On 02/06/2025 07:32, Pavitrakumar Managutte wrote:
+> > Add DT bindings related to the SPAcc driver for Documentation.
+> > DWC Synopsys Security Protocol Accelerator(SPAcc) Hardware Crypto
+> > Engine is a crypto IP designed by Synopsys.
+> >
+> > Co-developed-by: Bhoomika Kadabi <bhoomikak@vayavyalabs.com>
+> > Signed-off-by: Bhoomika Kadabi <bhoomikak@vayavyalabs.com>
+> > Signed-off-by: Pavitrakumar Managutte <pavitrakumarm@vayavyalabs.com>
+> > Acked-by: Ruud Derwig <Ruud.Derwig@synopsys.com>
+>
+> Where was this Ack given? It's not on the lists, it's not public, so it
+> cannot be after your SoB.
 
-I think I found the inconsistency.
+PK: Yes, its not on the mailing list. I will remove that.
 
-__pci_bus_assign_resources()
-	pbus_assign_resources_sorted()
-		pdev_sort_resources(dev, &head);
+>
+> > ---
+> >  .../bindings/crypto/snps,dwc-spacc.yaml       | 77 +++++++++++++++++++
+> >  1 file changed, 77 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/crypto/snps,dwc-s=
+pacc.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/crypto/snps,dwc-spacc.ya=
+ml b/Documentation/devicetree/bindings/crypto/snps,dwc-spacc.yaml
+> > new file mode 100644
+> > index 000000000000..2780b3db2182
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/crypto/snps,dwc-spacc.yaml
+> > @@ -0,0 +1,77 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/crypto/snps,dwc-spacc.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Synopsys DesignWare Security Protocol Accelerator(SPAcc) Crypto=
+ Engine
+> > +
+> > +maintainers:
+> > +  - Ruud Derwig <Ruud.Derwig@synopsys.com>
+> > +
+> > +description: |
+> > +  This binding describes the Synopsys DWC Security Protocol Accelerato=
+r (SPAcc),
+>
+> Don't say that binding describes a binding.  Describe here hardware.
 
-But pdev_sort_resources() is called with a newly LIST_HEAD(head), not
-with realloc_head, thus the resources never get sorted.
+PK: Sure, I will fix that.
 
-pdev_sort_resources() exits early at
-	``if (!pdev_resources_assignable(dev))``
+>
+> > +  which is a hardware IP designed to accelerate cryptographic operatio=
+ns, such
+> > +  as encryption, decryption, and hashing.
+> > +
+> > +  The SPAcc supports virtualization where a single physical SPAcc can =
+be
+> > +  accessed as multiple virtual SPAcc instances, each with its own regi=
+ster set.
+> > +  These virtual instances can be assigned different priorities.
+> > +
+> > +  In this configuration, the SPAcc IP is instantiated within the Synop=
+sys
+> > +  NSIMOSCI virtual SoC platform, a SystemC simulation environment used=
+ for
+> > +  software development and testing. The device is accessed as a memory=
+-mapped
+> > +  peripheral and generates interrupts to the ARC interrupt controller.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - const: snps,nsimosci-hs-spacc
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +  snps,vspacc-id:
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +    description: |
+> > +      Virtual SPAcc instance identifier.
+> > +      The SPAcc hardware supports multiple virtual instances (determin=
+ed by
+> > +      ELP_SPACC_CONFIG_VSPACC_CNT parameter), and this ID is used to i=
+dentify
+> > +      which virtual instance this node represents.
+>
+> No, IDs are not accepted.
 
+PK: This represents the specific virtual SPAcc that is being used in
+the current configuration. It is used to index into the register banks
+and the context memories of the virtual SPAcc that is being used. The
+SPAcc IP can be configured as dedicated virtual SPAccs in
+heterogeneous environments.
 
+This was also discssed with Rob Herring and updated from
+"vpsacc-index" to "vspacc-id" based on Rob's inputs
+https://lore.kernel.org/linux-crypto/CALxtO0mkmyaDYta0tfx9Q1qi_GY0OwUoFDDVm=
+cL15UH_fEZ25w@mail.gmail.com/
+
+>
+> > +    minimum: 0
+> > +    maximum: 7
+> > +
+> > +  snps,spacc-internal-counter:
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +    description: |
+> > +      Hardware counter that generates an interrupt based on a count va=
+lue.
+> > +      This counter starts ticking when there is a completed job sittin=
+g on
+> > +      the status fifo to be serviced. This makes sure that no jobs are
+> > +      starved of processing.
+>
+> Not a DT property.
+
+PK: This is a hardware counter which starts ticking when a processed
+job is sitting on the STAT FIFO. This makes sure a JOB does not stay
+in STATUS FIFO unprocessed.
+
+This was called watchdog timer - wdtimer, which we renamed to
+"spacc-internal-counter" based on your inputs.
+https://lore.kernel.org/linux-crypto/CALxtO0k4RkopERap_ykrMTZ4Qtdzm8hEPJGLC=
+Q2pknQGjfQ4Eg@mail.gmail.com/
+
+If you think this "does not qualify" as a DT property, I will make
+this into a Kconfig input for the driver.
+
+>
+> > +    minimum: 0x19000
+> > +    maximum: 0xFFFFF
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +
+>
+> Drop blank line.
+
+PK: I will fix that
+
+>
+> > +    crypto@40000000 {
+> > +        compatible =3D "snps,nsimosci-hs-spacc";
+> > +        reg =3D <0x40000000 0x3FFFF>;
+>
+> Lowercase hex only.
+
+PK: I will fix that
+
+>
+>
+>
+> Best regards,
+> Krzysztof
