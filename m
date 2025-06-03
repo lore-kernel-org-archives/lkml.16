@@ -1,34 +1,51 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D84C22A1D5
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 13:00:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C439130100;
+	Tue,  3 Jun 2025 13:00:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748955621; cv=none; b=ojlN5oN67ikMipzlPI4LWk09ioDJnddh7d9d+GBEvFdYDCmy4KOLA3n9/+entW47ZdFaOp28b4wpkdW0zqbCj6NuI1XM5Asc/QOWae8y0hksHm4NT3DSzHXAw0bNnunGDxngZZhZCxIqi8EKTxFQj0ntZzjsH7yHWqOTC0PjvDA=
+	t=1748955659; cv=none; b=c8m3+icGzDnIYmZhXIEbzzluyF4d4gr3gamGj6/pFB2W4Kxi16A5CwPfURQatHsI5EVDejor3LaP+4BNBlos0CNIpN7m5bzCHndfPveG4wAYouUDY5JvyWZiG+SMZn08td5u/6AjnTITpCgg54fHSpVadkNqrHCF72mryPVvP9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748955621; c=relaxed/simple;
-	bh=+r26A8QzZrY+Q2YDej0baKI+zIox4YxtZqAeozpOkS8=;
+	s=arc-20240116; t=1748955659; c=relaxed/simple;
+	bh=jCb8MjzKqnSSvBISyPEr68pWSxze6cYxQdDQYeMGOwc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YL7CPtH2hH4Ip+iSKGr++VPAui7PTaaEVqCnrhZOqVNjiRpeZljHSg+pT4SDEROD2QjgE+DIfbhXMljE+AeUdU8F1kA8+kf5aDSYRsgMBwEdfxfp8ztcTWbEDhGZyC8471qzcgZMZRSKLKmvBJcpP+57/z1FCj28ZpTBNzFnJP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CCCA612FC;
-	Tue,  3 Jun 2025 05:59:59 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4B0DE3F59E;
-	Tue,  3 Jun 2025 06:00:15 -0700 (PDT)
-Date: Tue, 3 Jun 2025 14:00:12 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-	Bill Mills <bill.mills@linaro.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] firmware: arm_ffa: Fix struct ffa_indirect_msg_hdr
-Message-ID: <20250603-jovial-whimsical-vole-029c39@sudeepholla>
-References: <28a624fbf416975de4fbe08cfbf7c2db89cb630e.1748948911.git.viresh.kumar@linaro.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=iDK28Rz5h9NVXg//jqCaxfOBqosDV9CAyX7Dhns5RhtBRYxQiYh2H31a82mXkESUnTjoKvG4u2+wS1Tr6EpAUzGj3fYw3VzOL63X0+xIO7fe/PBho20t+mSHpDzxCbhjxbg8Cu5HxyciUqx0RUwn0a6huwT3QsP9zL4mN7xiXqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=IPmsxnFJ; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IPmsxnFJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=k1XPNptp9fZRgF5DPHVBqQdEmjS4I5KaqBv2b545vMo=; b=IPmsxnFJvpQV/07pXtCij5n7+B
+	dFvjHtMPi4nMCn+YxfA9D4q9Mo8YX4qbhw9zesK8Ye1oTQFfXOQZ/IA9OTm0ofT2D1sgqFw43T4hL
+	t8XZQGHRymH3mU/lN+Upl0Igc/rCnrDLMNshOBwuZUtJ1LHLchLQtozjfj5mzVUeg8cD6mSy5Nh0p
+	zbvkyHiVp/2iCP4XT81nCh1MtbWZzZ4rqlF4c2CZyQIU/QqowJP/EvfXW0UDpU8D3v8iVKN1pCE5A
+	IYie6a2i83wKfvsj7leN7vjLIHruu6zzcxDvLTGGBgxgEYC3HBCEueUdJ/FNW7uw9voCx/Tgzd17j
+	emTU48WA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uMRG1-0000000Aypb-1Zk1;
+	Tue, 03 Jun 2025 13:00:45 +0000
+Date: Tue, 3 Jun 2025 06:00:45 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: wangtao <tao.wangtao@honor.com>
+Cc: sumit.semwal@linaro.org, christian.koenig@amd.com, kraxel@redhat.com,
+	vivek.kasireddy@intel.com, viro@zeniv.linux.org.uk,
+	brauner@kernel.org, hughd@google.com, akpm@linux-foundation.org,
+	amir73il@gmail.com, benjamin.gaignard@collabora.com,
+	Brian.Starkey@arm.com, jstultz@google.com, tjmercier@google.com,
+	jack@suse.cz, baolin.wang@linux.alibaba.com,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	bintian.wang@honor.com, yipengxiang@honor.com, liulu.liu@honor.com,
+	feng.han@honor.com
+Subject: Re: [PATCH v4 0/4] Implement dmabuf direct I/O via copy_file_range
+Message-ID: <aD7x_b0hVyvZDUsl@infradead.org>
+References: <20250603095245.17478-1-tao.wangtao@honor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,20 +54,10 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <28a624fbf416975de4fbe08cfbf7c2db89cb630e.1748948911.git.viresh.kumar@linaro.org>
+In-Reply-To: <20250603095245.17478-1-tao.wangtao@honor.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Tue, Jun 03, 2025 at 04:38:53PM +0530, Viresh Kumar wrote:
-> As per the spec, one 32 bit reserved entry is missing here, add it.
-> 
+This is a really weird interface.  No one has yet to explain why dmabuf
+is so special that we can't support direct I/O to it when we can support
+it to otherwise exotic mappings like PCI P2P ones.
 
-Nice catch! Not sure how it was missed.
-
-If there is no objection, we must add
-
-Fixes: 910cc1acc9b4 ("firmware: arm_ffa: Add support for passing UUID in FFA_MSG_SEND2")
-
-I will fix up when applying.
-
--- 
-Regards,
-Sudeep
