@@ -1,161 +1,150 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A06D9229B0F
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 10:50:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9485322CBD8;
+	Tue,  3 Jun 2025 10:50:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748947849; cv=none; b=ZE7fDoTMEI6+LaOT6qc/bWfKV78uacaqTVwXQWkUMHDUVJep8Kt27KxHgLUsBDfsnZc2LOzJm+nC8djC43loVEEROyqD4UvyVK/3bvbvCCIHp8BbBxMkpQi7z62Sdet0HFohYHoaOgS2fXiSrnyKAlU23jd1eDnoeMpTVhNwPhI=
+	t=1748947853; cv=none; b=Al+R0rCXd3btih80qK2t5Poq/y82E4drzily5WksBgfNnZIK1VIUyLyU13zhsdvOCSWJnV2cIWo3ZoGNishiZv452OanWkZXf+2qhyzPiHzKlYkIl8G6s9WjoUN5my2zSGG1jf4pSxvWGVCP9iiLJ/2wRT4FbFj+9uRRU1XQsr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748947849; c=relaxed/simple;
-	bh=RzXQoeY8OBWNIwxdR6qtplFIQ/IFmhyVe8iUNlNmbNw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WYcp/pxUQAv741OMeiMxJH4O1Z4rTRnwXrBggMAh6QkkQ/WEdt7qHkf2NLCeftjbDBWuu3SDQgUYeaGx1sHi6oH58rMXWsK8A9KVtg+sDK2FNTl9OEnst7GCL1nOG/5lzvt8og2KSLQLDzYz/KNsNr/8k5xlzcoFsfa4vyLfj4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=BQ6o68R2; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1748947853; c=relaxed/simple;
+	bh=cDFJ50B5U5uPFJC9elUkw7oiF8dm2hb1XYKgiCw75mk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KCss9et7ZorC/shyNYtXnEhDL+uFCcZ38B3RnVhGPmRtX9HdfG7xla3KQy6eh4qcxVxEfvjvaRtEucoDwAHmdgkgXWv8swijB2DDIbZuF1QyD/c6DUj3HRo3JlVDuvAFAyEtwCoRgC3r24hryUfaovUEEOV8ANDW0a2RNRtD8HM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=itG7Po/r; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="BQ6o68R2"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5539JIbV028422
-	for <linux-kernel@vger.kernel.org>; Tue, 3 Jun 2025 10:50:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=Vm4mnfktEosvn9wSbQ9LX58d
-	m00u7H1ye4NwgmSgVjI=; b=BQ6o68R2EVlEg4rFOgwuwxSoiRjVBsRq27wya4JW
-	YKU9gIg4ALQHg+OKo7go6U2oh3N6+7vwwOWR3XVI9pQxFp/RE4wUPleaq4u/ycYD
-	czm/qWHttrhfiFbssW1TBhHUEWuJVkfSSd0w4CCyJ6UpSg/JDFjmdPT39WNRU/aF
-	o45ZM3QGESGbAmUN6W9s84k5OHyh0Fw7SnDc2TUOaLyVEzhHPvgWrer9dUEjHZ/p
-	/1S0U5fD0xiQ5mtSCFzNhdg4iAUfCOrgkdYCY8yFY/j9eYTECDz26vg1/Nkes8KN
-	eivAkNnVG9TBxK5z6xtW5srrzIgjmBAJKOhcOiWkRtl6SA==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8tta19-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 10:50:46 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5d608e6f5so1437098985a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 03:50:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748947845; x=1749552645;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="itG7Po/r"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-73c17c770a7so5961710b3a.2;
+        Tue, 03 Jun 2025 03:50:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748947851; x=1749552651; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Vm4mnfktEosvn9wSbQ9LX58dm00u7H1ye4NwgmSgVjI=;
-        b=OQCYCJInEkytCGQ4vEq8D3NGNvuLP8T+Vj5MDwoOn0pDfQozGBJiW/ttj3YClCtRvu
-         Sd5BzUUnVFx1JFbkjhAxrMKfoZLbprKdoAtsPwzhHYmHWzig418+hupxSHu0Z07TlwG7
-         fpIQ5oTW2FAwxRuVdcyzOqxJo5PNWMDywUt+nDfm7StcffBfUytS5EaBTxnzjt2Eh+xF
-         jYgXXedn0ABkXqvr69OXizwqPIAu+9fVboZTiZrznY734IY44JjmMQdPEAdrRgEPEci6
-         OTMdXQQUzieiZMLX7SREwj417HKjFwzKP/rb1ozwGhnc66N2BkU90bT+L/Py6XY+4E6x
-         Y6jg==
-X-Forwarded-Encrypted: i=1; AJvYcCWyfhZpudGpblgJZVwTfUez+d3M+qzKjeqHnxQ3i9oItOJ99yeKEYx7JodcEnUcRr5w8tC4YrfyTkTSCuM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBp5H8umNdJ3rdaxLa7upoMwNMVvXF9PCIDTlJPqwHLhYWFqlv
-	svm1vRozFOyExhhu+gCsHz6hTY+48ngNiIAEDyPD7HSWveT7QXgCRFe7Evuy+/nvFQh3IU/J/j/
-	IaXVyA0NZCVzp7F8wURIuBg5Q5oNhVUEJJFTK7mUzjU0tSLXlWOs80MyYbdR+zBH/Ito=
-X-Gm-Gg: ASbGncsSMBQjFGI0qKigXYZ3265qOeGP1yhVai96Vf36x19qvFYrcdCF2M5Wmh+ZF5F
-	5qV/QiFFPjM5RPN6+wwa2Jm2xfQsyF/knX65a+e6L17wVBt6Zm+akYmF0HilTeOuL6c4V2Ad0/M
-	/NHFOdecpIDUTG6TT45KFLTNZIMWsINPUviCgxAZbIzov/TyL46CyhTxfxi1ypYh6YXtKWMS2Fz
-	1LDh6EjBLqWl6cpg8Hmpj8tC3bqGa12ea9+ATNvI6CEmd0OBi7xyqI2mt9onwNuul0wW3uBYr9a
-	JjSiSWua3hjtEZk796U5NN5spQiacQncXNNqnmelvvQjyttJKdgfI8oDPVONx3ktaND7Bzzh8Zr
-	5YjVth40ifw==
-X-Received: by 2002:a05:620a:1a83:b0:7c7:b60f:ebd8 with SMTP id af79cd13be357-7d0a4af321emr2309211185a.24.1748947845575;
-        Tue, 03 Jun 2025 03:50:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF6/Ai8VNOZ5j/lNeuLKY2LQit0DXGz1yVy635bM9pzD1rNIoOXopJpQt0KqrADunHS/Py7IQ==
-X-Received: by 2002:a05:620a:1a83:b0:7c7:b60f:ebd8 with SMTP id af79cd13be357-7d0a4af321emr2309207385a.24.1748947845077;
-        Tue, 03 Jun 2025 03:50:45 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32a85a30c9esm18242121fa.0.2025.06.03.03.50.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 03:50:44 -0700 (PDT)
-Date: Tue, 3 Jun 2025 13:50:42 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>, amitk@kernel.org,
-        thara.gopinath@gmail.com, rafael@kernel.org, daniel.lezcano@linaro.org,
-        rui.zhang@intel.com, lukasz.luba@arm.com,
-        david.collins@oss.qualcomm.com, srinivas.kandagatla@linaro.org,
-        stefan.schmidt@linaro.org, quic_tsoni@quicinc.com,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] thermal: qcom-spmi-temp-alarm: enable stage 2
- shutdown when required
-Message-ID: <i6xy6b2seaxkrpktpyh32fqyxctcvvpk2u6ptpjs727n5fnlak@jcvlqg3ooaxg>
-References: <20250528235026.4171109-1-anjelique.melendez@oss.qualcomm.com>
- <0nJRx6-RgYybx3jhgUDcxC9hIxr02feRJuYYgLa6lpO3DOSuQidQkRKKoqvQoV0x26UVeiV6G5XN8cMTZ9Ol5g==@protonmail.internalid>
- <20250528235026.4171109-2-anjelique.melendez@oss.qualcomm.com>
- <895a0004-04df-4b7e-9855-bc0033ca650b@linaro.org>
+        bh=cc4NM6pw6KNZGmpFvBeiKc9tgGdf6YiQE3mYffB4/Vo=;
+        b=itG7Po/rOZqRn72oGVo0+yoyg9OqDAkTEIxxWwq/mFYOQnMN5REFc44L3+FxKTduIn
+         w9NtC3w2HpQkRxyroHSBYreuPSkvOLoYSJsXOiBqBOFGb4T6v9/omoV49ZV7klEPC8Is
+         0Ex7UA8iJzB8dcBLOhrrFjMnKp292KBRKQh3g2PxWHfXJn3JHa1QCk3qj/CwVC/M3R1i
+         qlepKiw+OvvpQJi+n5E1cuWNpAGwW1y2HiofT+NvxJfQPSJsJjHoH+6w1vp/qbcCcDvA
+         xTY/fE7Sb8Bbo8bbcCzCgs0Y95IzudcErMieowDMi1TSlIcOFp4jIvbf8sQe4VnRHWEt
+         N4YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748947851; x=1749552651;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cc4NM6pw6KNZGmpFvBeiKc9tgGdf6YiQE3mYffB4/Vo=;
+        b=ckgus4cIqBlKC2lGHywK/LOMlI9G+dxw5z/H9LYs7EA4HixnaGh/3ICatUFIPbqrda
+         j/00JJfY+BF5e0IL6RpF5Bhq25Tni9B27s6CfYFB5nwviBIQi+FArvEfrX6HVxPwxX6m
+         6US89P69+2avCliuK7XBUUf4OoevyEM+yaQu1VtEkoavAABi5hjGgeJcdQdtIz5jWsKX
+         vRhvZlnE/V1lgcbvuy6899t1zENrh3ofXywvh/EAlEgfE8AiYyPJlTYlNn/C2DDRarTB
+         PnKMAqDo1TpiLF3gmXekok+b4A9nMz3BotzwZXG5Qkej1RFjImgWNvIwn+6KiNBTQfq4
+         +niA==
+X-Forwarded-Encrypted: i=1; AJvYcCUC+XoVh7MNVWoiJ6reul1eAznE+jWcxVod0CoGWO95DbFSo0auO/rLETpiyAn5CppQYo+myxUT@vger.kernel.org, AJvYcCWidYWQsFUM1p16VJDVhA4lApwB7lLTaP/y2qZ0cF8y2aqjZJMbGsoTFifhgYTtQy6mdVWZRRjEmGFfCpE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfAl+rax0ye8SRXyp/pXhvFMyA/sf9uOGU66/oPkIzZpFxXeUs
+	Yw4rGNkbwRSarryc8aHAPriyP7YJnDJIt01JRCHLVcPmrEQ21BJdKlDebmyFKainjPp31r1dadP
+	HvI0YaKXyIB/Ezjb5/7D34CcvzdtaKlw=
+X-Gm-Gg: ASbGncuQfbR9F3BSFN10vtAYfRVqp9Tt6gtJUhxYkdBZH4aSX6oknWoBNv0gOzsrepO
+	ryCmvvimBOWop4XlrECnT4r+xZyKteDEOb9LFQm7NQDP6umTnWoeRVlj3zgQ0JZgNZixxi9D/KO
+	qkG640kZWGx3N8HhoScwodPjP7rHBKS2gpMfMVsL4V9WBt1T+jJTa3jgcYyjsowtR/bPA=
+X-Google-Smtp-Source: AGHT+IGTbWhP/8bCjLKFc+xQ5UOtSCO1oPELL/wgDD8ixi2TzBLinTpBoWavERvATIn8QDsvso1eJD1WxnXgyG+uqn4=
+X-Received: by 2002:a05:6a21:3996:b0:218:59b:b2f4 with SMTP id
+ adf61e73a8af0-21bad1ed9f9mr16343458637.42.1748947850766; Tue, 03 Jun 2025
+ 03:50:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <895a0004-04df-4b7e-9855-bc0033ca650b@linaro.org>
-X-Proofpoint-GUID: D-qy5n23K2sv6H-bwvrJVLU2Vi3holz4
-X-Authority-Analysis: v=2.4 cv=Qspe3Uyd c=1 sm=1 tr=0 ts=683ed386 cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=7P3EZGi6tQuJdicK0tQA:9 a=CjuIK1q_8ugA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAzMDA5NSBTYWx0ZWRfX6/Q7b9gU3IKr
- hdkYCD30dclIuJVAeYQk2FXGAo38g3RbnWllCPaRMaHfqe46UOX8ZFXnwdoA2zWEl+hKVIeDZtB
- qsknR48uci6Jmrjm2PpLH4dcw3pzG6lYdfs2T7tj6RyDqQY+BchWu3r7aj8lDU1e7LF7n1f+xXO
- 77PPVsWuezD11oJ8lG3qILfBdmetc82Ass1oxDq/J2Um9933yFSaSudJWtmgYBSoWKb4c+aUWQp
- J67S72Kb3FQAper2owKmiYbr2VortPxW+GUgSzigcJt+fpjVHBCo4rKutXsApQM8g2WKR2MohSL
- k6aqHlgNzKT5zQZJLyuWaqJ1cZhCEfFq5/yIjMM9KyGtn8RlaoF5oXT1zemEioRcplXGZSkjjxs
- pyD6a4pakyL7mDWr4KMLbXgYgDG5xxEjKmKXkcenbT42s9uviZIA/rQnLRd65Gv/bvvDbi2W
-X-Proofpoint-ORIG-GUID: D-qy5n23K2sv6H-bwvrJVLU2Vi3holz4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-03_01,2025-06-02_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 mlxscore=0 spamscore=0 priorityscore=1501 mlxlogscore=999
- lowpriorityscore=0 suspectscore=0 impostorscore=0 malwarescore=0
- clxscore=1015 adultscore=0 phishscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506030095
+References: <20250531101308.155757-1-noltari@gmail.com> <20250531101308.155757-5-noltari@gmail.com>
+ <5d3d04c0-d9e4-4f80-8ab3-7bedb81505b3@broadcom.com> <CAOiHx=nQiYs43oHXJpOhUn1dJ-tzD-TPdB22zcHFxjUBKXeVng@mail.gmail.com>
+In-Reply-To: <CAOiHx=nQiYs43oHXJpOhUn1dJ-tzD-TPdB22zcHFxjUBKXeVng@mail.gmail.com>
+From: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
+Date: Tue, 3 Jun 2025 12:50:14 +0200
+X-Gm-Features: AX0GCFuyiT_d8KNPW7k3g6jK43WaZrm7DEmW-LSpZjMyWBPw6tbzjqspbMpdzbU
+Message-ID: <CAKR-sGfepgD7fKpG4H2fN4B1e7eVpmdv4r3hBH-XHKprNigVtA@mail.gmail.com>
+Subject: Re: [RFC PATCH 04/10] net: dsa: b53: fix IP_MULTICAST_CTRL on BCM5325
+To: Jonas Gorski <jonas.gorski@gmail.com>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>, andrew@lunn.ch, olteanv@gmail.com, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	vivien.didelot@gmail.com, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, dgcbueu@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 29, 2025 at 11:34:27AM +0100, Bryan O'Donoghue wrote:
-> On 29/05/2025 00:50, Anjelique Melendez wrote:
-> > From: David Collins <david.collins@oss.qualcomm.com>
-> > 
-> > Certain TEMP_ALARM GEN2 PMIC peripherals need over-temperature
-> > stage 2 automatic PMIC partial shutdown to be enabled in order to
-> 
-> stage 2 should be hyphenated to stage-2
-> 
-> > avoid repeated faults in the event of reaching over-temperature
-> > stage 3.  Modify the stage 2 shutdown control logic to ensure that
-> > stage 2 shutdown is enabled on all affected PMICs.  Read the
-> > digital major and minor revision registers to identify these
-> > PMICs.
-> > 
-> > Signed-off-by: David Collins <david.collins@oss.qualcomm.com>
-> > Signed-off-by: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
-> > ---
-> >   drivers/thermal/qcom/qcom-spmi-temp-alarm.c | 32 +++++++++++++++++++--
-> >   1 file changed, 29 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/thermal/qcom/qcom-spmi-temp-alarm.c b/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
-> > index a81e7d6e865f..47248a843591 100644
-> > --- a/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
-> > +++ b/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
-> > @@ -1,6 +1,7 @@
-> >   // SPDX-License-Identifier: GPL-2.0-only
-> >   /*
-> >    * Copyright (c) 2011-2015, 2017, 2020, The Linux Foundation. All rights reserved.
-> > + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
-> 
-> Should have the year in it.
+Hi Jonas,
 
-Not per the new policy...
+El lun, 2 jun 2025 a las 21:59, Jonas Gorski
+(<jonas.gorski@gmail.com>) escribi=C3=B3:
+>
+> On Mon, Jun 2, 2025 at 8:06=E2=80=AFPM Florian Fainelli
+> <florian.fainelli@broadcom.com> wrote:
+> >
+> > On 5/31/25 03:13, =C3=81lvaro Fern=C3=A1ndez Rojas wrote:
+> > > BCM5325 doesn't implement B53_UC_FWD_EN, B53_MC_FWD_EN or B53_IPMC_FW=
+D_EN.
+> > >
+> > > Fixes: 53568438e381 ("net: dsa: b53: Add support for port_egress_floo=
+ds callback")
+> > > Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+> > > ---
+> > >   drivers/net/dsa/b53/b53_common.c | 13 +++++++++----
+> > >   drivers/net/dsa/b53/b53_regs.h   |  1 +
+> > >   2 files changed, 10 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b=
+53_common.c
+> > > index f314aeb81643..6b2ad82aa95f 100644
+> > > --- a/drivers/net/dsa/b53/b53_common.c
+> > > +++ b/drivers/net/dsa/b53/b53_common.c
+> > > @@ -367,11 +367,16 @@ static void b53_set_forwarding(struct b53_devic=
+e *dev, int enable)
+> > >               b53_write8(dev, B53_CTRL_PAGE, B53_SWITCH_CTRL, mgmt);
+> > >       }
+> > >
+> > > -     /* Look at B53_UC_FWD_EN and B53_MC_FWD_EN to decide whether
+> > > -      * frames should be flooded or not.
+> > > -      */
+> > >       b53_read8(dev, B53_CTRL_PAGE, B53_IP_MULTICAST_CTRL, &mgmt);
+> > > -     mgmt |=3D B53_UC_FWD_EN | B53_MC_FWD_EN | B53_IPMC_FWD_EN;
+> > > +     if (is5325(dev)) {
+> > > +             /* Enable IP multicast address scheme. */
+> > > +             mgmt |=3D B53_IP_MCAST_25;
+> > > +     } else {
+> > > +             /* Look at B53_UC_FWD_EN and B53_MC_FWD_EN to decide wh=
+ether
+> > > +              * frames should be flooded or not.
+> > > +              */
+> > > +             mgmt |=3D B53_UC_FWD_EN | B53_MC_FWD_EN | B53_IPMC_FWD_=
+EN;
+> > > +     }
+> > >       b53_write8(dev, B53_CTRL_PAGE, B53_IP_MULTICAST_CTRL, mgmt);
+>
+> Since the only common thing is the register name, maybe it would make
+> more sense to have the flow here
+>
+> if (is5325) {
+>     enable IP_MULTICAST
+> }  else {
+>     enable DUMB_FWD_EN
+>     enable {UC,MC,IPMC}_FWD_EN
+> }
 
-> 
-> grep -r Copyright * | grep Qualcomm
-> 
-> >    */
-> > 
-> >   #include <linux/bitops.h>
+OK, then I will do that by merging this patch with #3.
 
--- 
-With best wishes
-Dmitry
+>
+> >
+> > I don't think B53_IPM_MULTICAST_CTRL is a valid register offset within
+> > B53_CTRL_PAGE, or elsewhere for that matter, do you have a datasheet
+> > that says this exists?
+>
+> 5325E-DS14-R, page 83 (or 105 in pdf paging) on the top.
+>
+> Regards,
+> Jonas
+
+Best regards,
+=C3=81lvaro.
