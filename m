@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD9DD1A3178;
-	Tue,  3 Jun 2025 19:00:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DF616E863;
+	Tue,  3 Jun 2025 19:01:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748977220; cv=none; b=EZ4uahoJMej3vf+te7s4BA933iYbmZS76OiCWcqxBBk5j1TsdN1IrWHIA4zwOIDjsZXXrVL+bd/csXR9d+P9MdU3ji2lDjwXRVsEATZXnUW/0OmdMMxkLo3FFZ7QQmo3AyjrjHUxebzmNRDaHv5G1uxSN7aVksrUNlVpqPPmAR8=
+	t=1748977312; cv=none; b=l+sLG90+d5adVoC/uPDkeBMm1jxBfnel0EXBSKZaLBduB69LW1s2vEVIX3BDa/2LeU6iUR725ToB4SdQNnaM6z+IhD0HFORsAvLEX9gJbdwabcnBb5GXJhg5wCo5voM/wjuQ42D09yq0AnN9U5TrrfxBtICqMKxIEqMNYXktUEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748977220; c=relaxed/simple;
-	bh=0ThIYWugwuVZKAjCoEU3PumpWrdP9PlnZ9dppkzr9lg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=nfhnd7/S4mwcbboIhL3AUqYk2JImJYRT4iuIswhUXTAEEj3NHeaD/01+tGaXH8sM5Wv+VH2fHqtucVBD1wRry7T4LG62k4LssgX34mbwsYwvPDzXuTZTvTTfUFjCF0BnUAcQJfwu1vnbk5c/F1gMLQWMvPLUMIByf5SdRfIwQgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ln0hiuPx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748977312; c=relaxed/simple;
+	bh=c/UTLqD9DydJ/qJJI0guAN/88hV8mPnt6WlnWIuoELE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Usq5gC/0YryQAjUkNKpNoYmd0Aj/bjQ41NNfj64CU2eaymgzHayTJ1SkHx5ZYW9/5wDoLJEOB/rc7/p9FBH8GKreq8grSuYiORfzS2zO9YGaOQMd6A3Sn1zxLFMJc7BiUTRIrSJVxEWpptQls5dU50BGq7sj4RlMyj7okr9YyHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QqT4KAou; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ln0hiuPx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADD69C4CEED;
-	Tue,  3 Jun 2025 19:00:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QqT4KAou"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37722C4CEEE;
+	Tue,  3 Jun 2025 19:01:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748977220;
-	bh=0ThIYWugwuVZKAjCoEU3PumpWrdP9PlnZ9dppkzr9lg=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=ln0hiuPxPevOC/LhGkZ4W42p7YKwlMda76qGZRna/O8KtQ0+NjSLeFEQjX/ce1ejf
-	 EcqbM267WgeZEnqw14s4Xm4bXFjcJYvK3+7RXHFBehfzUT9hyH+4affh5z9xNJGmOy
-	 SqIh+ogNj5rIjJCRHY6f0L9V703za8eYlaR58PvZFcBV/4CMvPTVOoHmNfIG3kFRkM
-	 O+RPP3dfJw599FHPTB8+L2P9+r3FWtu/rPOoA5I+TTPWBKa10bwvRAmZ6DMGgeTa2b
-	 L7HvlkIQ2QnVFy1wB3yJWdNVQC86dxM2GSYuzIWANsJdEsI7WMj/7l8Aw3TRvTLxmt
-	 rWC1UkH0ztVdg==
-Message-ID: <9803c165-fa2f-44ba-a6fb-f11852c319e1@kernel.org>
-Date: Tue, 3 Jun 2025 21:00:14 +0200
+	s=k20201202; t=1748977312;
+	bh=c/UTLqD9DydJ/qJJI0guAN/88hV8mPnt6WlnWIuoELE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QqT4KAouLssAqlSqVLKnxnb5e/k0V6oMMLTCaZ3Oi1VB9v0jXW06V5ePPWGbpUjlz
+	 avJ+JLq+mGFJ+W34RAfOI3ETzaaKpqe00AbCgwViwXqRiUq+TEaW2nn4vBzQOHUN/k
+	 gwxGnOLm4xDO38YS1bG1hR2zscCuRUFfa6CeHu3ovXoATWSZ3xzZML+eFBX4a7uv1E
+	 8lVahd4JV8ZALFXfW1epE0fgZAND1ZhWgjVsLUryjYHY80ICOtx637aWYUPmURKN0f
+	 Dqxb7SMe6FzapwgoDQhUZZhFUOr+2MbJHJw0rhSkudKQ8jHCi+Ne6ebrm9gX1qabaT
+	 JRVC7nt4GNY/w==
+Message-ID: <aa9ee815-3a3c-4f7d-aab7-1930750efe9e@kernel.org>
+Date: Tue, 3 Jun 2025 21:01:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,15 +35,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/3] dt-bindings: i2c: nvidia,tegra20-i2c: Specify the
- required properties
-To: Akhil R <akhilrajeev@nvidia.com>, andi.shyti@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, thierry.reding@gmail.com,
- jonathanh@nvidia.com, ldewangan@nvidia.com, digetx@gmail.com,
- p.zabel@pengutronix.de, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250603153022.39434-1-akhilrajeev@nvidia.com>
+Subject: Re: [PATCH v2 1/1] dt-bindings: gpio: convert gpio-74xx-mmio.txt to
+ yaml format
+To: Frank Li <Frank.Li@nxp.com>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, "open list:GPIO SUBSYSTEM"
+ <linux-gpio@vger.kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: imx@lists.linux.dev, wahrenst@gmx.net
+References: <20250603151725.1068064-1-Frank.Li@nxp.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -89,22 +91,25 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250603153022.39434-1-akhilrajeev@nvidia.com>
+In-Reply-To: <20250603151725.1068064-1-Frank.Li@nxp.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 03/06/2025 17:30, Akhil R wrote:
-> Specify the properties which are essential and which are not for the
-> Tegra I2C driver to function correctly. This was not added correctly when
-> the TXT binding was converted to yaml. All the existing DT nodes have
-> these properties already and hence this does not break the ABI.
-> 
-> dmas and dma-names which were specified as a must in the TXT binding
-> is now made optional since the driver can work in PIO mode if dmas are
-> missing.
-> 
-> Fixes: f10a9b722f80 ("dt-bindings: i2c: tegra: Convert to json-schema”)
-> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+On 03/06/2025 17:17, Frank Li wrote:
+> diff --git a/Documentation/devicetree/bindings/gpio/ti,7416374.yaml b/Documentation/devicetree/bindings/gpio/ti,7416374.yaml
+> new file mode 100644
+> index 0000000000000..62bd371616daf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/ti,7416374.yaml
+> @@ -0,0 +1,56 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/ti,7416374.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: TI 74XX MMIO GPIO driver
+You still have here "driver" which I asked to remove correct. Heh.
 
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
