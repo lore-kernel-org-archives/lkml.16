@@ -1,73 +1,73 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1FA7C2E0
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 20:18:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B873C2E0
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 20:21:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748981920; cv=none; b=dD7DbEnu/ebaLmyJZnzITB47YwNBfxu7uy6Lmys3OvujZt6ok0Mtay33jGKT0ZNvk+hhXJ4CH1iW4kLqw74BE+Jd4x6kDW1LKm0ScC8NZnrmo+wcMjABbac8Q5FkM61TVtUzkvFDDw0Nix1+bouvFQIGyBGjha4fDKbx6l1SSCE=
+	t=1748982116; cv=none; b=rz1BWgZAwT0QRy5YrK9TuD6+SQtW0Jxm7zPy9K+h/P86O9cNBj5a2UZGsmgx3CX3CcSKzdfUUmO3bIK1TivKMw2S00QUWaTfaLSdo/fQGuRMjKAa605m1nHlaKkRDFC9bfgP9bmXLwM3TFTiaPo3Mc2pDphegvDgM1QEs/X97C8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748981920; c=relaxed/simple;
-	bh=PhnGju2FaAl/Ou4Mi4eqXEqaDfOHiRecarv05XteqWo=;
+	s=arc-20240116; t=1748982116; c=relaxed/simple;
+	bh=4Fz5TH77TNLCD+9oczh5JRAo8TzIo5lXkUA61YEuykA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QU6uR7xMpAkGjFDb3Xs1boHmfqOdvCRfHvJJKQJJbLdfzTomPbVqphJLwO58133c0dLZuGkVwdcU9gRfDMLbN12W05sI/b9kd8R6n7ekPmX2CbUgzxXGSJiZkrfdghZTE803Hw9blU0k9DVdPbR4RnA1KQuo0bu7PsPFb9fZmv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jDak6r9Z; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=Vr1rwusXdruuQgmxeaz/hN7BIKYAptY6jQahAs9M/W2yomUT61jb8d7m/cQQY7hf28kWpsdBAp/AEUlJZ3m7FbPLEWQLdZKfstEI7hwRpbJkan34CFLqqDjmR0JMF9xJygZlASbObD+umIWdY8hkLKgnnMiM9z9xmIDcNfzHKRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NZEqk3QB; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jDak6r9Z"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NZEqk3QB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748981917;
+	s=mimecast20190719; t=1748982114;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=dmdW4bmka8D9iCjUm0LgPnNY9QDzyr1/KIwj6yPU5Nc=;
-	b=jDak6r9Zic24Q4eJ/gUPKjq584a7uQTuM77fZlS0XSMzHgJX8JuJc1nHnZSXVzpOyMKr8I
-	nFqrFl0qkyzfOY87gNiUHEJn/4xKWPBCtJeFIX3xjmHeitjvCcsyRo55oIqaZt/P6AvJud
-	JRLMpPhnwp29VacRgq8F6bZFezSzqu8=
+	bh=qLcBjgtnlUgpXPCy7MHXi7SDjB9CHWmBHWFcHhiH6Fc=;
+	b=NZEqk3QB/nZsF6sJQphvwFXVHTSt9T7hSYfxE6Pht64yvDi+g5gpcLZye0e/0vd4zCsWlX
+	NYzvqt+pnKbsNzXLWLwLDaIeutO0Mpw41qYkufry7LUjQD64tzirBil1WkxMuIupLt+V30
+	qo9CJA9KolKviufPlQN6m7G9NWd/pVk=
 Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
  [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-39-qAmp9_dYM2q6KFohtkezHg-1; Tue, 03 Jun 2025 16:18:36 -0400
-X-MC-Unique: qAmp9_dYM2q6KFohtkezHg-1
-X-Mimecast-MFC-AGG-ID: qAmp9_dYM2q6KFohtkezHg_1748981915
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-450eaae2934so27996485e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 13:18:36 -0700 (PDT)
+ us-mta-255-e-R9wa_zNhmOnYF9QsIZRw-1; Tue, 03 Jun 2025 16:21:52 -0400
+X-MC-Unique: e-R9wa_zNhmOnYF9QsIZRw-1
+X-Mimecast-MFC-AGG-ID: e-R9wa_zNhmOnYF9QsIZRw_1748982112
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-441c122fa56so31225905e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 13:21:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748981915; x=1749586715;
+        d=1e100.net; s=20230601; t=1748982112; x=1749586912;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=dmdW4bmka8D9iCjUm0LgPnNY9QDzyr1/KIwj6yPU5Nc=;
-        b=XWLEoNKAhzYGhqJKVLKnOTvXEGFeI+gZj+nFIMqxZdXaXA8nFiCRdr7GJVoUtcju+d
-         H4jO60oleCoRtQvtp8D9b3sEPt8D/ovFEN00n9bmrG5V6BgIVVamxodbJnPxgtER1Itd
-         QSpH+zTDnEHJhZ6NMwc4XFBNkYTKsB+Xjs65rFD9h63KFxNJDSvK2OV/TRp1rBRjO9ld
-         tww6Tka4f0CkAMmnVImtJFuDFUMocAea4tkcBaH4rtsdf2TIeAjs8xpHQxBfVI69AIbF
-         K0aEplUgZIBZ2pZWWUeVVvCGrlzFiIZZ3BgY1chgtwkluiKUg26+FPioGOL/5SAzDTXN
-         Fzig==
-X-Forwarded-Encrypted: i=1; AJvYcCW+Nh9ZymG9IsjzpCFr7kT1n0YuOTiQY50/0Mua7Y6WN4+wX93V+f/a6SIooPYV+yqW6yGEEmX9uwve5Ns=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFvMiItxuX7CqKbtJOZsxQH+upjjGMLBHPJWzgUrSbiC3oOsuF
-	g0IbX/bfr/X/0LRC7g0Wstk+OWHoxhD1rprip8ljUafTov/pYXgE5Mu8Z+vXYLvIVRTQPcM5h4o
-	PwO9C1tD62+sqhCu2LBMAg+HLBAi4uzXPxyPiKzFvs0OVw55SGzgWhEw7IB/ivTErCQ==
-X-Gm-Gg: ASbGncvj3wzD/1zjXXFmXimeeg1lVhGH/zH7qRRHSl6VD9Uj5l0N7OQoXQe5/R7aTf6
-	wEphdc56UdUejaTAVfbNH5RloaLzUjiQb1QTxGbl29qUIXxZTQIfAq/uiydie3KGcy4bNFTk4C6
-	2DSWOkAUn96UPvhPBRGfsbK+pfbvpKwrHf9/fX0Osar9wGyNp8jIQpJ5/IO2sIVhIDThIiq8UWo
-	HXjHtTMUoD7bcOgmopw3Lj8vN2TBY2k+Uk0TWfxngJvqD3lpk+T4QK1soTQH2viEZS09mFpQnlc
-	kDdS3ffKw4iYmKHpZsDfYrAUuzUu+6B5WE+4UAmjESNileivNaaW05PL/qt/tHrZM8g2pHdrhuG
-	07g54K/7WKOLvofhPb5t59LAYt2SEWQ3xS5gieYY=
-X-Received: by 2002:a05:600c:818e:b0:440:6a5f:c308 with SMTP id 5b1f17b1804b1-451f0a772b1mr800245e9.13.1748981915241;
-        Tue, 03 Jun 2025 13:18:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEFoZbzZ9OiBB+hfEam1+vq0MIwdg8ikG1TlX+hLCXBEfbkk5dPOMwLME6VFx/Iyp28v7K66w==
-X-Received: by 2002:a05:600c:818e:b0:440:6a5f:c308 with SMTP id 5b1f17b1804b1-451f0a772b1mr800135e9.13.1748981914874;
-        Tue, 03 Jun 2025 13:18:34 -0700 (PDT)
+        bh=qLcBjgtnlUgpXPCy7MHXi7SDjB9CHWmBHWFcHhiH6Fc=;
+        b=M58XpGSo0VPUvbm6rWBza9lfUn/3pqm2C0veSPuZXOAHHA8VtOQnpVmXL3Gl0Gw7sH
+         52ugMYSIjilqCfls+zheLWzWdAAw5dITiKuhCCZPA+cHB8ciwHNJJwf6BTn1mJOir5Xg
+         FWXIrlFTMszKSR3cxNoRgFoN86TOFOzK0uNvbD5f2AXJE2hg2SewndT50XFcK2Mm9sdy
+         t3xOqAGsSfm+YJQLavknWG9TldAhyLVaq6+5wJnAzpzh5gjwtrAyMGpRaUnKyxqXxq5w
+         bzsD6dMqSL1NXWLfzz3k/m6OQ8/VDjTGKSN7my9GPxB4dCEMxvZFT3QRZfDo37ejJmvs
+         PWmw==
+X-Forwarded-Encrypted: i=1; AJvYcCXs0Ow+9UEWtmJv5Vz+razLkpKzNHdOJLBZgJLeJCAo8KYZ7XKxbHy5Ol29f1l6/GkPZ7TmUr7Bd39+vEk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTF+3fETTOckYp8CHyZp6VNEsB3TMhhgRig04+zw0No9ee6zdy
+	8tfaoDs4+P4GXx6RWKrp2Ck9+qvF3mOKSi9PJMjbDZkOGXBWngTuE/ehMH2neFV4YMa2pBHvY3q
+	5OjJxR9N+Lh1q53H9UHzA9sLv9CuN2CrHrFEZflM9HLcj9a7MJ8A7mM2vDipMrBV32g==
+X-Gm-Gg: ASbGnctJX5PaJas4Ue8ZoNm06WLrmBg9KYmWEozVbxdPLh+k1ulpkf3/BBo2JOWqLQc
+	XB7tmKyqlMBmaklkm52DckCsOHwMEoP4g2Qq7nhaNj8fT1dfzXflHwJ26nYy0SKAq/F/Pk1VIb4
+	xz11uK3GG/TcmhuqAi1oje3EyVNXF56/QSWVhOFYlbZYlbv/a6pBwaWMiuB8TzzKyBX+lWKdEKj
+	UBcouO1+iNkOBTWAyMOyzhVBzGL7MSIOb9KdgN26ifb6rp0RuEFy1EaSgr6Viub7yvC+hLD9mcy
+	PbX01Ek3q4RDp1Jr/q/sx0TaMvBsik3HE1NnWRZMWLvVbS20G8ygUdnM1DvzLCn92UD0j6zayA0
+	3eMt/cYBAFtIxdB3RiyCvOL7G6+f7F2wCayY149c=
+X-Received: by 2002:a05:600c:310e:b0:44a:ac77:26d5 with SMTP id 5b1f17b1804b1-451f0a7c518mr863825e9.14.1748982110291;
+        Tue, 03 Jun 2025 13:21:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF+96eBgpaWG54RursRXNAWSJJEuPTAoVA/5AzWcaySDNPnRaZ6RZz/Ebsj/IWqmWFYMpb0Qw==
+X-Received: by 2002:a05:600c:310e:b0:44a:ac77:26d5 with SMTP id 5b1f17b1804b1-451f0a7c518mr863175e9.14.1748982108429;
+        Tue, 03 Jun 2025 13:21:48 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f0d:f000:eec9:2b8d:4913:f32a? (p200300d82f0df000eec92b8d4913f32a.dip0.t-ipconnect.de. [2003:d8:2f0d:f000:eec9:2b8d:4913:f32a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7fb09a3sm171214265e9.24.2025.06.03.13.18.33
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d8006ff8sm171891555e9.34.2025.06.03.13.21.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jun 2025 13:18:33 -0700 (PDT)
-Message-ID: <d7c61e25-f09e-4260-8228-d28f0289795a@redhat.com>
-Date: Tue, 3 Jun 2025 22:18:32 +0200
+        Tue, 03 Jun 2025 13:21:47 -0700 (PDT)
+Message-ID: <299dc39a-63ff-496c-a45f-38934e4441f1@redhat.com>
+Date: Tue, 3 Jun 2025 22:21:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,16 +75,23 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] selftests/mm: Add helper for logging test start
- and results
+Subject: Re: [PATCH v2 3/4] selftests/mm: Report unique test names for each
+ cow test
 To: Mark Brown <broonie@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>,
  Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, linux-mm@kvack.org,
  linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20250527-selftests-mm-cow-dedupe-v2-0-ff198df8e38e@kernel.org>
- <20250527-selftests-mm-cow-dedupe-v2-2-ff198df8e38e@kernel.org>
- <63e00cf8-8592-4117-bb27-42bc8c1f8921@redhat.com>
- <5e00c276-2d3b-4004-9f98-4703e2d642f9@sirena.org.uk>
+ <20250527-selftests-mm-cow-dedupe-v2-3-ff198df8e38e@kernel.org>
+ <c43347ce-433b-498e-bfd7-f09b8e781197@redhat.com>
+ <9961082f-848d-43d3-b97d-3df675ca4415@sirena.org.uk>
+ <4676a010-a977-4d5a-b42a-edbbea7d356d@redhat.com>
+ <e3d584fe-6297-403d-84f3-397a0fe459c5@sirena.org.uk>
+ <df85fba8-826f-41fb-8850-077a4e4dd240@redhat.com>
+ <e1d20dbf-734f-4a2c-915a-86c9fbac998a@sirena.org.uk>
+ <27f74a9c-8bf9-4877-ba14-82dcd79f6d0d@redhat.com>
+ <d35bdd4d-d210-434d-b259-97a4bb93c64e@sirena.org.uk>
+ <2117dfe4-befc-4fe4-9b5f-184433299494@sirena.org.uk>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -132,41 +139,37 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <5e00c276-2d3b-4004-9f98-4703e2d642f9@sirena.org.uk>
+In-Reply-To: <2117dfe4-befc-4fe4-9b5f-184433299494@sirena.org.uk>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 03.06.25 20:27, Mark Brown wrote:
-> On Tue, Jun 03, 2025 at 02:37:41PM +0200, David Hildenbrand wrote:
->> On 27.05.25 18:04, Mark Brown wrote:
+On 03.06.25 19:55, Mark Brown wrote:
+> On Tue, Jun 03, 2025 at 06:48:19PM +0100, Mark Brown wrote:
+>> On Tue, Jun 03, 2025 at 06:57:38PM +0200, David Hildenbrand wrote:
 > 
->>> +static char test_name[1024];
->>> +
->>> +static inline void log_test_start(const char *name, ...)
->>> +{
->>> +	va_list args;
->>> +	va_start(args, name);
->>> +
->>> +	vsnprintf(test_name, sizeof(test_name), name, args);
->>> +	ksft_print_msg("[RUN] %s\n", test_name);
-> 
->> We could allocate the array in log_test_start() and free it in
->> log_test_result(). Then, we could assert more easily that we always have a
->> log_test_result() follow exactly one log_test_start() etc.
-> 
-> We could, however we don't have vasprintf() in nolibc and people have
-> been doing work towards making nolibc more generally useful as a libc
-> for the selftests (and/or the selftest interfaces more friendly to
-> nolibc).  I don't really know what the end goal with that is but given
-> the fairly small gain and the hope that this won't be a long term
-> framework for anything I'd rather not add something that gets in the way
-> of whatever's going on there.
-> 
-> Ideally the test programs would be refactored and these helpers deleted,
-> but as we said previously that's a bigger job that neither of us is
-> likely to get to in the short term :(
+>>> I agree that printing something in case KSFT_PASS does not make sense
+>>> indeed.
+>>>
+>>> But if something goes wrong (KSFT_FAIL/KSFT_SKIP) I would expect a reason in
+>>> all cases.
+>>>
+>>> IIRC kselftest_harness.h behaves that way:
+>>
+>> That's mostly just it being chatty because it uses an assert based idiom
+>> rather than explicit pass/fail reports, it's a lot less common for
+>> things written directly to kselftest.h where it's for example fairly
+>> common to see a result detected directly in a ksft_result() call.
+>> That does tend to be quite helpful when looking at the results, you
+>> don't need to dig out the logs so often.
 
-Jup ...
+Right, and if the test fails, you immediately know why. So I am a big 
+fan of the test telling you why it failed, not assuming "it's the last 
+check, so the user can go figure out that it's the last check in that 
+file and we just don't tell him that".
+
+In any case, I hoe this will be gone at some point, and 
+kselftest_harness.h will provide that to us automatically.
+
 
 -- 
 Cheers,
