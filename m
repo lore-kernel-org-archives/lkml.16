@@ -1,43 +1,89 @@
-Received: from mail-0201.mail-europe.com (mail-0201.mail-europe.com [51.77.79.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977682253EC;
-	Tue,  3 Jun 2025 13:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.77.79.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE51231826;
+	Tue,  3 Jun 2025 13:36:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748957798; cv=none; b=qq8H6ZfSpexaXIRkecPEAxIl6JbvcGaA/uXyBoDM44nRwZMQ2KBuI3uZHelhrN4PM3LBEuoZSS6xw0h/RiYYxRtNp0UTFyQn6eHUrFiIQXr920vNRXquroxi91yM95mvkuTZCEIoDkmYSLz8RK+STHIUeCGu43lSSCYYgkfF3kc=
+	t=1748957816; cv=none; b=ZvoHiW9PAMvUXQuzbBTpdFg2YrRJBB49Z03Iz6hd6qdVL9qV9lqwi0Nx4To3ZI3ua/bM+bMCq03yM7NgW0iIXNX0Jm+LA50FTskPj+O+N/U9y9uzT0nfW4Oa8dKCSPCpgBqSsK7knJzhlCmEckyGeb9S5sbXtHXITECWqpVQPTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748957798; c=relaxed/simple;
-	bh=u8bo3OjBKLU25bFgIAgJKN30zbeJrVdkYwBGgX+OFbU=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Pix9yBTQvUkvLe2lOjMUSkoKk0P5keY4XFecAXOoQzpjHUYAztO6AhpJwEdL087Oy2NVq0rCHEDhhKKDzd4WSM9wtO58KmivbZOVBz93RlkUoEw0YAHQUQn5ic20aR1jKqkKQD1CWpnc4ho4Z99lp/ZJ7pxUiiqwtq2lPuB/Wsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=QhJAu2f1; arc=none smtp.client-ip=51.77.79.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
+	s=arc-20240116; t=1748957816; c=relaxed/simple;
+	bh=le5QR41xeH5K5QxGsVQri/RDT/2BLTURcIV+cKyLXfg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PeYyJVriG7ljD1DlnnfTHVfCll6Rf7Aqs7dOhc3w0mbpvORBFzeOxak7D2NPc5F5+aoTVikH8AD0n2Iz8yRBp7ymE83YtBUgzszk6oyxnpw65UktYV5b9oE8lPGIr9uD6AHC1xPOTO19FcVTgq/oNkBpulTbcm2hgYo5mslgArk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VrwXo6N6; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="QhJAu2f1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=geanix.com;
-	s=protonmail; t=1748957781; x=1749216981;
-	bh=u8bo3OjBKLU25bFgIAgJKN30zbeJrVdkYwBGgX+OFbU=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=QhJAu2f16w6861P/LsAFJGRMIXZtAYN4wFH99SwJ90CKVVjL8XYxGdvoZRB2Hek3G
-	 0lN1SZDnfAVw8d4PSoQFM7yYv0VZ+N9JboN4Si5voIMhMThN4qELqngbIl8Wm+sCxI
-	 I2Zy3mSLsf2qY+1w7Awd85JL2mcCUqn3fKNhWEwqQNcaUr1mV5kJEfMcgpFRwicWEW
-	 oWo3FUkcuYHGs2Ji4lw/qadN+orbh8XuYRGa8+OEdARVcLPHY80ntfDJ1G3hT4CDSz
-	 jVmCM8RKaYNZRL9qpyvSq2X+uTJ2JshzqJH+G79gPo5AOUsWwHlkwOYpR7SuJMW+v/
-	 Ie4EChrPu/TpA==
-Date: Tue, 03 Jun 2025 13:36:15 +0000
-To: David Lechner <dlechner@baylibre.com>
-From: Sean Nyekjaer <sean@geanix.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, =?utf-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2] iio: accel: fxls8962af: Fix use after free in fxls8962af_fifo_flush
-Message-ID: <5zdrnf75n2nfuk3bjzynnj2b57fkptk3lltjf4xaloxorzk27w@6qwdcn5tfynz>
-In-Reply-To: <b1f0dbee-13bd-4e5c-90b9-c6d88cb15971@baylibre.com>
-References: <20250603-fxlsrace-v2-1-5381b36ba1db@geanix.com> <b1f0dbee-13bd-4e5c-90b9-c6d88cb15971@baylibre.com>
-Feedback-ID: 134068486:user:proton
-X-Pm-Message-ID: bea842e6bfb0e313869a8703f93e9a8f3731ba7e
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VrwXo6N6"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so65365625e9.2;
+        Tue, 03 Jun 2025 06:36:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748957813; x=1749562613; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=XwaOA2UFIdL6uhmEEF3zq5uKFSYlQf1QNo+y/xH05aY=;
+        b=VrwXo6N6GUzTFMR8BX0VInjiMpGuyzAj6kv98URXp8LjZi3vZ+OSJ1XsiFCkNqXxMM
+         q0ic76K1o3+QMasx0MkEHwWtEMVfSAsbPpt4G3Y2DfOim9VOj0oVcrBM5N8dVNAir4us
+         3t5t445VP333qrC46zMudLH5VqHJJUGhrN7gLgohJp2RAfyyIHVYVYvdPJGcExNuLM/Y
+         rS7ikHuMkh4wHyraUnKlVG/uMB0x0mSJGvPU3xoson8m9KPdYQ0YL7EZmyaBC+c8FBCk
+         5by/MJg7jP/6LEfFLxX37sJZusQbtt8QL9qaMK9pm0vBYrskTjMjXa2W74bxEw7lTpBz
+         xtzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748957813; x=1749562613;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XwaOA2UFIdL6uhmEEF3zq5uKFSYlQf1QNo+y/xH05aY=;
+        b=ZmE9C6tor85KNQwCo4s3ELO1Uc356q40BkPlgxh7irTGqZ73f1mIrusRvrm9sbEyyM
+         sJ8tU5th43k1ZG5nbtHXtzOARdh9YU2q4r1wqm4rLxF22ZmXmJ4qCS9fEnPSTwqH6zg8
+         Oxvnt4AQ/cEZpFDuaAz2yHckxDxcwwgAZPYkqtxbOKyQYVCqbY1gFFCqwuXQ5FzXol4K
+         aIUXNwZle/WzxNUzI3rta6WozS2i/GANTMNy9Q8E6UP7Wu7gojpRRwVYfXg5wT6ONupC
+         UicGu8xMq/QUBUYzN44GT9Qk+Ldu9WHa+rHkLcwNL23y6MO1ieWCAZ3Okm40Lg5Xd+gS
+         D26A==
+X-Forwarded-Encrypted: i=1; AJvYcCWJKZ4Tq2uRUjbReyrd4FniYg7LoFdcjZ1Cs10eX7IykFwsHFgND+sDwZoFGX7tik38a10q5OYQY8g=@vger.kernel.org, AJvYcCWyz7nebBLlRQZ8D41507tY21wHomCFVFc4A5XGDHV2JvPP7H3CVRIuBQx+FTaRU+bb9MrCubRDhkxg+A0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzbr6KpyLSTrlW+qhYKUOqlNvon074Es8AjXCZJH/JVtZ5PrGEb
+	7iJftdaWCxEsqCNB17E38Njt8Vukbxze7c/cd1BNVWdzB8WCU/EaajfK
+X-Gm-Gg: ASbGncvUeRrKepyuXl2Ia7xNMSsFCk0rDk2twP+Ci4n1ZBp7P3dn5Giv/93sIsfeHJI
+	fRFObntnWanamxY+10KN4L63uBpFlou/kEo0bpaLzcYaHrXT/EA9EFjkBXjK2OKx5mC7fTbJIan
+	SksAmP+HnU8woyw4Y9Xvq+hIDXXxIWprpBMv7ttq+y6j6zSHHhX68VybafbX4gNnZkhojL12mOM
+	1gxdZjBSHXSG35YwKF0FxaMOWq9wj/Jk04hLrUGB866TW1sO6mdKJQZTfv2L8ndqWWPypNztBfF
+	CzIyUdNubouToJVANQuDQlOXndng9dHPxwM05UV1YNEAfqblYF5UtRR6QZ59
+X-Google-Smtp-Source: AGHT+IHlffBpVFQtzIlEFJvBh6YUPRlNSnuEKeo8Dt5LtNWl5139bqwkGJfzkGnuetqW1tpQrNzwAg==
+X-Received: by 2002:a05:600c:8b11:b0:450:d4ad:b7de with SMTP id 5b1f17b1804b1-4511ecb9cd9mr122631155e9.3.1748957811494;
+        Tue, 03 Jun 2025 06:36:51 -0700 (PDT)
+Received: from debian.local ([81.78.104.57])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7fa27b4sm159437275e9.15.2025.06.03.06.36.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 06:36:50 -0700 (PDT)
+Date: Tue, 3 Jun 2025 14:36:48 +0100
+From: Chris Bainbridge <chris.bainbridge@gmail.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Mario Limonciello <superm1@kernel.org>,
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>,
+	Linux PM <linux-pm@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Johan Hovold <johan@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Saravana Kannan <saravanak@google.com>,
+	amd-gfx@lists.freedesktop.org
+Subject: Re: [PATCH v3 2/5] PM: sleep: Suspend async parents after suspending
+ children
+Message-ID: <aD76cCE5qyALjKHc@debian.local>
+References: <CAJZ5v0jDZQaR8S6Kn_RoXHBU86+tpjp=qgyxm5h03YEe2S=nPg@mail.gmail.com>
+ <aD7L0RD4HT-mEtBc@debian.local>
+ <CAJZ5v0h65Gt1Fw35vp2k8kKu62+goCD8WF8u-tvhfWW6a7xHxQ@mail.gmail.com>
+ <CAJZ5v0ggPHhYcdNos2o8savvq+-zpPTaQunjOkR36k3VwF3_CA@mail.gmail.com>
+ <CAJZ5v0gF=ewooE0cUrNfe5_inhnzq6bqw8VTjkFwr56_wrptJQ@mail.gmail.com>
+ <CAJZ5v0hpJSVdiCN29=kbV8KfgU1y1d3hFfshtBoMpVFXf+LvBQ@mail.gmail.com>
+ <aD7nOMP3xA9BR781@debian.local>
+ <CAJZ5v0gAcohRWuSZbFWvyfAU9Vjc7nRyj+AFRYQ7hcGEXdPxyQ@mail.gmail.com>
+ <CAP-bSRbVjcXBvxDT6ZQuoRB+JF6A4LhdMVnNqnaQC0bg-xg2BQ@mail.gmail.com>
+ <CAJZ5v0gTRtPzrROdkxRjTeXv4BsRyUkyGpCWmh-gHNx3X2L9RA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,66 +91,31 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0gTRtPzrROdkxRjTeXv4BsRyUkyGpCWmh-gHNx3X2L9RA@mail.gmail.com>
 
-On Tue, Jun 03, 2025 at 08:29:51AM +0100, David Lechner wrote:
-> On 6/3/25 7:25 AM, Sean Nyekjaer wrote:
-> > fxls8962af_fifo_flush() uses indio_dev->active_scan_mask (with
-> > iio_for_each_active_channel()) without making sure the indio_dev
-> > stays in buffer mode.
-> > There is a race if indio_dev exits buffer mode in the middle of the
-> > interrupt that flushes the fifo. Fix this by calling
-> > synchronize_irq() to ensure that no interrupt is currently running when
-> > disabling buffer mode.
+On Tue, Jun 03, 2025 at 03:04:33PM +0200, Rafael J. Wysocki wrote:
+> On Tue, Jun 3, 2025 at 2:27 PM Chris Bainbridge
+> <chris.bainbridge@gmail.com> wrote:
 > >
-> > Unable to handle kernel NULL pointer dereference at virtual address 000=
-00000 when read
-> > [...]
-> > _find_first_bit_le from fxls8962af_fifo_flush+0x17c/0x290
-> > fxls8962af_fifo_flush from fxls8962af_interrupt+0x80/0x178
-> > fxls8962af_interrupt from irq_thread_fn+0x1c/0x7c
-> > irq_thread_fn from irq_thread+0x110/0x1f4
-> > irq_thread from kthread+0xe0/0xfc
-> > kthread from ret_from_fork+0x14/0x2c
+> > On Tue, 3 Jun 2025 at 13:24, Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > >
+> > > > This patch does fix the list corruption, but the "Unbalanced
+> > > > pm_runtime_enable" still occurs:
+> > >
+> > > Have you applied it together with the previous patch?
 > >
-> > Fixes: 79e3a5bdd9ef ("iio: accel: fxls8962af: add hw buffered sampling"=
-)
-> > Cc: stable@vger.kernel.org
-> > Suggested-by: David Lechner <dlechner@baylibre.com>
-> > Signed-off-by: Sean Nyekjaer <sean@geanix.com>
-> > ---
-> > Changes in v2:
-> > - As per David's suggestion; switched to use synchronize_irq() instead.
-> > - Link to v1: https://lore.kernel.org/r/20250524-fxlsrace-v1-1-dec506dc=
-87ae@geanix.com
-> Were you able to find a way to reproduce the bug well enough to
-> test this?
->=20
+> > Yes
+> 
+> So it looks like some devices have power.is_suspended set from the
+> previous cycle which causes device_resume() to attempt to resume them
+> even though they have not been suspended in the current cycle yet.
+> 
+> Please try the attached patch in addition to the previous 2 patches.
+> 
+> Thanks!
 
-Yeah. Sorry I didn't included the reproducer :)
+That fixed it. Passed 30 attempted suspends without error.
 
-I added:
-diff --git a/drivers/iio/accel/fxls8962af-core.c b/drivers/iio/accel/fxls89=
-62af-core.c
-index f2558fba491d..ce9a14245f83 100644
---- a/drivers/iio/accel/fxls8962af-core.c
-+++ b/drivers/iio/accel/fxls8962af-core.c
-@@ -1040,6 +1040,8 @@ static irqreturn_t fxls8962af_interrupt(int irq, void=
- *p)
- =09unsigned int reg;
- =09int ret;
-=20
-+=09usleep_range(10000, 15000);
-+
- =09ret =3D regmap_read(data->regmap, FXLS8962AF_INT_STATUS, &reg);
- =09if (ret)
- =09=09return IRQ_NONE;
-
-And it was reproduceable within 10 secs:
-root@localhost:/sys/bus/iio/devices/iio:device0/buffer0#
-while true; do echo 1 > enable; sleep 1; echo 0 > enable; sleep 1; done
-
-With synchronize_irq(data->irq); I have not been able to reproduce it.
-
-/Sean
-
+Reported-and-tested-by: Chris Bainbridge <chris.bainbridge@gmail.com>
