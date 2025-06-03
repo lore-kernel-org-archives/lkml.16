@@ -1,119 +1,118 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C55AE239E6F;
-	Tue,  3 Jun 2025 14:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A30B231835
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 14:08:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748959715; cv=none; b=rf9IiGcx6RCd3ipX6Lkke2eXkK6FLM8xiZufI+1yn9Ae6+3IZRj4fcH5sC0UhjceXY4CrxRVF7gMT0WQ7niYP9w05UF9EDk0D1jL4oHycSC/T3HXJc66faXAhy1Xl0P6k6KfORkds3LzRtsq+uEoPeNE1iTiGofhFKoTac4yyaA=
+	t=1748959739; cv=none; b=XU6f93yQVpdNlBosN55mpUHVRvNhUpN8TChQmYy9U2TgAqIoszucmKxLi2tLakFprK+NRgw2vjQi2WYGaAxSk+9OR7FIud+oiPCJ3XfGRGKbJeRDLLgL9+dgcSP1GbrYbi3x/jy/f7Es7zj1xQxvYerNSBL8+yqjoD7fNjLpEYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748959715; c=relaxed/simple;
-	bh=5x/f0EZuI/JqhMxT7VHKCt5FkLTKEV6h9MAJTamDwh8=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=inpktmFjxtg4/idHSc5KoGBlo8ExH6oqSIk1AJgaaGzw2GbE5r55N1jBQ+D+/mPzgNKAKNkmvFr73mhcdOQ5bYr6+XNWsIG+73sEgzHxEp78eAzGc9WPx4ZHRdEh+QXFGnDIcZ4X8HaUFE7/+7+upepB9nr6GEt0V3mtzgOD/7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WJIFBuS6; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748959739; c=relaxed/simple;
+	bh=OlwtmLY1WNbhrrXFyRfa7IAa9h6HaHr459rqJj8wtLk=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UUTYlPoJ+hML7tumHwk/pnfAZbEON6rVpj7hH6+aj6fUx4dXL0XS5ZXRHxyIIhIlKmDkSPAcOrBhPBlKLk2QVwNG5s0ZUnc+puoQR7xTJxzJtoOA8K2lGzp66LS4gylAO14voCgi8dVfiK/TvRbDtblYe7CniKvTpg7dnaubSIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e9mXz4Wf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WJIFBuS6"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b271f3ae786so3977363a12.3;
-        Tue, 03 Jun 2025 07:08:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748959712; x=1749564512; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fQQ/cv1hJEUU0b2kO6L2aGXF38EM9DHmWuiQsHfN/k8=;
-        b=WJIFBuS6gnqDmlngSQjULCaTP8VY4lXtrI0s3+fQ26ewTmiaSa1eOdW9BNPOkfB/AN
-         hixaAxmo0JHNuaPhSz1+785Y4v0JrOCTMC0AZ+SjwF4uUQ8YvBtkiYmkXFtyW/79Bg5a
-         FZVsjko21LzlbcVjaLLLSwG+cbCy5vqTvbkR+8Bps/EbE0pPRBcsyVJ3A7YQ3Y0Tnrh4
-         1DcqpwUPcnPvlPNNAh9hy5/dlTMyiaNNeJ7k+RAx2K4eQ9oqGIR388URzROsVu+LW3Wy
-         7iKiWZUIrPhlm7sde2IxDp0eIo9ZkusAIsZcZjmcEgI6SGsqQ09Mjw5HKvj70VlnXHYP
-         DFPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748959712; x=1749564512;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=fQQ/cv1hJEUU0b2kO6L2aGXF38EM9DHmWuiQsHfN/k8=;
-        b=AtVkvb0wXLyGnW5lpzx1xVm9okxIBMzgliyda140lMSqe+E2NMKCyn+zdWu/c1pLWc
-         55AbWe5MKABJelZoQstMC+r+ktM4zm3fbxf+xJLwADxTR37AeEbnvSx43E9gXsKJbFTA
-         RhV8Hj4/UsOWSnRKNj0WdxknBVmsuEreQu5kBju54O1YM9i5TdmE9uFbl3RIQyOAeobo
-         +OTe0MQcXit6vGkSrqSnYcaYARs7BTr0+KIPJ3AbgJHLnxzZ6Bfp/coNxJJWdYcFPYtp
-         GHH4yajmne0cuePqOZ1Qthgt2KlrtwAYR0NxYahX9BL2ZQHOhgrneo4ZGsMRBuCrOxs7
-         5jFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUS7L28a8ZFcjO+c60DDpLbKPKV625SbuOpsrJl/ivvefE7r2ZcHm1qams87DaJsodJ4cJmdNPRo3izBE1cGmo=@vger.kernel.org, AJvYcCWcHw+s1rJBOPfA+Z/3cLAtnwjlS+/rd2nausySHYNOW6d7VLYRLaaOeYHCFjmMufgAKrfHhsxHpCv4b6c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3E7cRsmjOuf/o0wCRtf6WnqV0rfdpqUCo35eV8x4wqW0xZM8Q
-	Tzccen9ZiZYaJCZxmB6kECmYCgQCXI4WfB/hcpu+CmCpnvLVboc5mbSA
-X-Gm-Gg: ASbGnctfycuXtTh0qq9LZd6ph5vxsCktcOzYOjHr664/HXZcGE85YPySEabMfiB+d1R
-	hyQM9u/WzuQhKesTJ3gWyxQ4FkckSB15VhCLT0tWbxBCHvasBpyzmAJGjotxmw1YGUW7fMPyOxx
-	pvmsZhE+VMyBRkG1bCErgMLrOr1ow2gWntYKcvLLIToiQ3esGexpIy6cpxeMzcxEK577ntEP5zu
-	IPpFUFLdHHgt40m0b1wgN83+Mui7zy9/P7tVt+VKUCeFxZGrZK+pmuRCGIkAsLVZEOhIXLBMTvm
-	z+dFzFLxfCC0S9jozqh6Hk7ztYXIIeQiADKm61Ug96bAjHKhd2LFWGP1HbLZC3lw/dmBxQ1zqAx
-	xvzFh3HcyENUiVxfWslqjeuHOJRvFmcuUW28XRtliJMKi
-X-Google-Smtp-Source: AGHT+IGh2ZcHlAX/bFqZ4WSwa/ggCYCIcvpet9Y90iHPYRTenGfyss3jsjmeb5QPinu/zA94b6EwrQ==
-X-Received: by 2002:a05:6a20:4388:b0:1f5:6abb:7cbb with SMTP id adf61e73a8af0-21ad95c0ac3mr27308808637.23.1748959711639;
-        Tue, 03 Jun 2025 07:08:31 -0700 (PDT)
-Received: from localhost (p4138183-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.129.206.183])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2eceb28ea8sm7155211a12.18.2025.06.03.07.08.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 07:08:31 -0700 (PDT)
-Date: Tue, 03 Jun 2025 23:08:15 +0900 (JST)
-Message-Id: <20250603.230815.1426696742567640092.fujita.tomonori@gmail.com>
-To: a.hindborg@kernel.org
-Cc: fujita.tomonori@gmail.com, rust-for-linux@vger.kernel.org,
- boqun.feng@gmail.com, frederic@kernel.org, lyude@redhat.com,
- tglx@linutronix.de, anna-maria@linutronix.de, jstultz@google.com,
- sboyd@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
- gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
- aliceryhl@google.com, tmgross@umich.edu, dakr@kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 4/5] rust: time: Make HasHrTimer generic over
- HrTimerMode
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <877c1u71uh.fsf@kernel.org>
-References: <HhGhHOv9fvWu0G7TihU0V5UMif0USODr5QagKogYlf-zE9P6uyPWYdEckCaFi747sl_vkLi5XDB_O9BFcwsjow==@protonmail.internalid>
-	<20250504045959.238068-5-fujita.tomonori@gmail.com>
-	<877c1u71uh.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e9mXz4Wf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7E17C4CEED;
+	Tue,  3 Jun 2025 14:08:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748959738;
+	bh=OlwtmLY1WNbhrrXFyRfa7IAa9h6HaHr459rqJj8wtLk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=e9mXz4WfQJHliuVYxmJFfPPB/T39ya3TyRloaF7hBQ26SCILVz4H6Z9XY6hegwwcp
+	 V4ymDCr9RBza6v8mbG7uUFBfOpSR/xVnUdxVHbqE7kyUEFWk70OW+KyDXiq58FnK55
+	 LzvEE/EpF2/0ZO39svzhL8HwoEsZV3b/qM5Ock6DNhX5p3Zh84qADYS9vNxsYO/Vub
+	 euwo+WEtFMjtt4REvSUX6Duuy5a534vNBBYfPF2OMozlCmxgYvIBDEto2+MRhTum7n
+	 w7aYC1Jy47sC/V9gnBJ83+XGdYskPT0hnItTeZp9OtP01YJPrHBNfg9ztHUQSJ0VLG
+	 BSLbR6Yplp3jw==
+Received: from [149.88.19.236] (helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uMSK0-002rHL-6y;
+	Tue, 03 Jun 2025 15:08:56 +0100
+Date: Tue, 03 Jun 2025 15:08:54 +0100
+Message-ID: <87frggex3d.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Zenghui Yu <yuzenghui@huawei.com>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>
+Subject: Re: [PATCH v2 3/5] genirq/msi: Move prepare() call to per-device allocation
+In-Reply-To: <87h60wexch.wl-maz@kernel.org>
+References: <20250513163144.2215824-1-maz@kernel.org>
+	<20250513163144.2215824-4-maz@kernel.org>
+	<0b1d7aec-1eac-a9cd-502a-339e216e08a1@huawei.com>
+	<87ldq9dm54.wl-maz@kernel.org>
+	<aD741hI7MfTmi7Rl@lpieralisi>
+	<87h60wexch.wl-maz@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 149.88.19.236
+X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, yuzenghui@huawei.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tglx@linutronix.de, sascha.bischoff@arm.com, timothy.hayes@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Mon, 02 Jun 2025 14:41:10 +0200
-Andreas Hindborg <a.hindborg@kernel.org> wrote:
-
->> @@ -579,12 +604,16 @@ macro_rules! impl_has_hr_timer {
->>          impl$({$($generics:tt)*})?
->>              HasHrTimer<$timer_type:ty>
->>              for $self:ty
->> -        { self.$field:ident }
->> +        {
->> +            mode = $mode:ty,
->> +            self.$field:ident
+On Tue, 03 Jun 2025 15:03:26 +0100,
+Marc Zyngier <maz@kernel.org> wrote:
 > 
-> How about:
+> On Tue, 03 Jun 2025 14:29:58 +0100,
+> Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+> > 
+> > > +	if (!pci_setup_msi_device_domain(dev, nvec))
+> > 
+> > If pci_msi_vec_count(dev) > maxvec we would cap nvec and size the
+> > domain with the capped value.
+> > 
+> > In __pci_enable_msix_range() we are sizing the device according to
+> > pci_msix_vec_count(dev) regardless of maxvec, if I read the code correctly.
+> > 
+> > While fixing it it would be good to make them consistent unless there is
+> > a reason why they should not.
 > 
->   mode = $mode:ty,
->   field = self.$field:ident
-
-Works fo me.
-
-> So that there is some sort of red line when calling this. We could also
-> consider adopting another syntax for association:
+> This is indeed odd, but that'd be a separate fix. Something like:
 > 
->   mode: $mode:ty,
->   field: self.$field:ident
+> diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
+> index 2090eef64b14..6ede55a7c5e6 100644
+> --- a/drivers/pci/msi/msi.c
+> +++ b/drivers/pci/msi/msi.c
+> @@ -439,9 +439,6 @@ int __pci_enable_msi_range(struct pci_dev *dev, int minvec, int maxvec,
+>  	if (nvec < minvec)
+>  		return -ENOSPC;
+>  
+> -	if (nvec > maxvec)
+> -		nvec = maxvec;
+> -
+>  	rc = pci_setup_msi_context(dev);
+>  	if (rc)
+>  		return rc;
+> @@ -449,6 +446,9 @@ int __pci_enable_msi_range(struct pci_dev *dev, int minvec, int maxvec,
+>  	if (!pci_setup_msi_device_domain(dev, nvec))
+>  		return -ENODEV;
+>  
+> +	if (nvec > maxvec)
+> +		nvec = maxvec;
+> +
+>  	for (;;) {
+>  		if (affd) {
+>  			nvec = irq_calc_affinity_vectors(minvec, nvec, affd);
+> 
 
-Looks fine too.
+Actually, let's lump the two together. There is no reason to wait.
 
-> or something else like `<-` or `->` ?
+	M.
 
-I personally prefer one of the two options above, but I'm also ok with
-`<-` or `->`.
-
-
+-- 
+Jazz isn't dead. It just smells funny.
