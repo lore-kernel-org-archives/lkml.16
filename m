@@ -1,105 +1,177 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 207FC22F770;
-	Tue,  3 Jun 2025 15:28:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9446023C4F8
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 15:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748964514; cv=none; b=TxaXN24B0Ya+1Cfeaj8JwdbvLCB5aGyeQhkE6pjIQukcjib9kQiaQzgMkbC2lMVNZ/+q4dbrNwzXeqMXkMJTq8PBauIeg1d/9LI5FQ5R3uSXyKmXweMJfLCMwZ1OuaZWYJbUE8QZl5sPx3ZJTa0ZUZFnQ8/CvlW/OcerXkJRYzA=
+	t=1748964518; cv=none; b=ceSAiksSk6qbgNDzZzgDqu2XU3ZpKDriyWLMMGIzc5FwwFXvSv/FRx5s64T689OizCHAziiKahedAydd84zdj0f4u58VBYlFDtkK3qTYYr9WzXqMQykPtHg+S3DF5fLX8tWXzleKG12Jb8pLohDuOhVsXeF/6FYXkqaaGC5SNcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748964514; c=relaxed/simple;
-	bh=RQYoR9q7weFmEpLoxRlV5vuOX4M623nbX7QdC5Pgbas=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=H+5PkMlHUnb40jVZDjQP3zxGSOso1nRjet4JuSkuATURzPQg4epNUgSWLhvFQY21aT0YcfpiYAdwoA/rRNSwzMQN3/aMgnWoJ8T59qTuZEE3xNsWlLIpjcnMEZCFOAfkH5GG0hX3aYoJ6Cj5IGgN3aBUT7c9VE4hRl6ieJ2t5gI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=s1ybJjFr; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1748964518; c=relaxed/simple;
+	bh=qmPdDWSTOwTSot8fCLtTTdaZtqWsv6aeSE2dPEdSZEM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=AaflBpgXs/F5H0Z2u1Yzz473NjT1FThG54BFBvrh9xFyFFdlG4h4wotcnog36Sm3dm87StFmxHYE8Tx97GUoH3lxIhqU7eIEbnWgxp1UgqqR8UJDSAAjdrltgqvk2uYDpy2euYGBKR7wIDWwoN3NOSgBTR5qw4kAyn+kY6n7Me8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EEXJxnfz; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="s1ybJjFr"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 1915D41ED0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1748964512; bh=cFEuxrACn2RIdjxvK8dTxNQyuRrUj671AkYFigBqf0g=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=s1ybJjFrFJHy22uuXPs+8VncyaHlDpCvd2LTlFpxfzn4KkTW+Cvs229egVFFKRz9b
-	 lATeAHjqKx/yIwtxhXTqxgeARDCV7lrHXL0TEif0RIvbpTKME6JyFdf7RgEY1BCz3U
-	 gT3ia2zSFClbsBG04xl4qcZNY3OA9FxC6Tx/TFGW5J/XaQqkPgzV6wT2msVGEqZctx
-	 eq7YoO0SWDkeWydDeZ1FxxO7cCr3Ji+0rp5ljYNFRe9ZPLefAYGMzevl1MED/qcMW4
-	 +Hy3WzcIuMo2JqrjM4f2SIbcd+terefOQun2PQbOjGfUzrLAKq+D+kWcshAma1Ec5g
-	 osnXWEDDwMRbA==
-Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 1915D41ED0;
-	Tue,  3 Jun 2025 15:28:32 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Suren Baghdasaryan
- <surenb@google.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Shakeel Butt <shakeel.butt@linux.dev>,
- Jann Horn <jannh@google.com>, Qi Zheng <zhengqi.arch@bytedance.com>,
- linux-mm@kvack.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs/mm: expand vma doc to highlight pte freeing,
- non-vma traversal
-In-Reply-To: <334c9145-0adc-4fb6-ab0e-4ef7d6e09952@lucifer.local>
-References: <20250602210710.106159-1-lorenzo.stoakes@oracle.com>
- <87bjr59634.fsf@trenco.lwn.net>
- <9fc9ac50-abce-48bd-979f-2e00b26917b5@lucifer.local>
- <8734cg9auh.fsf@trenco.lwn.net>
- <ea8c2be9-0af0-445b-b7fe-fd9e80bd6a65@lucifer.local>
- <87tt4w7uxo.fsf@trenco.lwn.net>
- <1b340b71-6664-48ff-b783-aa89fa5b0b16@lucifer.local>
- <87ldq87tmr.fsf@trenco.lwn.net>
- <334c9145-0adc-4fb6-ab0e-4ef7d6e09952@lucifer.local>
-Date: Tue, 03 Jun 2025 09:28:31 -0600
-Message-ID: <874iww7skg.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EEXJxnfz"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30ea0e890ccso5547921a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 08:28:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748964516; x=1749569316; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jLkVKQg4yOg2dr4pMLuqSISZP1MeYrKX1y9HX2oJJOI=;
+        b=EEXJxnfznvF6PkyQrsg6t6zCT5Y+JP9Gtl9maMIXLuOJiwF/3e3+i05qOce1l4+yfG
+         57rxBTKD/9dD6/1Ga8ovC6ReMbJDNgpUUdIwbKWVo+u19/8efJBcxtyI9wZR2O01BE+D
+         WuZ4hbIJxJZsrS/gKmXBoZTf9BTTBE4stvZywaxc4jkKb58G4MDBmXekQPiYgTcZQklV
+         Y47H7ScInUNnRniigAbMdZMUBA9Qv/i1as6nUmbw00tLM0XDn/S5EVhpJklWaGLdyzbR
+         fQMOCdFwjc3KwrzCvyjQse9iELXlGAdzUQzqhtpisZv7ky391MATVf7KTqEVDhROkuRI
+         S+9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748964516; x=1749569316;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jLkVKQg4yOg2dr4pMLuqSISZP1MeYrKX1y9HX2oJJOI=;
+        b=Ws6lZNbWHwnNFJtwukkxVEAQUL0p1z31zt6waTBUpsubrdZu9Wz1wpsNAq4IXoey0U
+         OUchzwSC+FChtDPvtSo/dBg8alhljnzpcXtpNSRjrWfYhCOCqeZaXN7L+sleRKyOYenT
+         VrXIBNTSRlqAX+ITEQALvr54oT1dFg99CyuxwodDPnsYsi1Ex5qcVFULY6Z0zhEshtRU
+         4CNE+ld2zBtIosAkbgW2gc6dhfLj4dG/rIV+T6ezGrCMgnStyQmMV6mvkJd61875QPKZ
+         Yy46AM9mF6agz6e+g67b8kV541Lnd1dbQ6jK9d+/PUhtt70nR/aRL/C7cCRMtPKtaL9r
+         aayQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXHNh0Vw78EH1m9vGHUitiiWBicSLv5SsxvmC+Z7cA8IcLiyMTQyqHLUcXc4RUo45d0Evdwhn023y9q1oI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2SRTfIXPJ1SZ411WM3pLpHd2kKaGC3NFiB/W1BQ1FuUzY4Fye
+	oL9PAll62hdeuLVqmKo1oG30vpB4gzoSdgEaOf3kDkychLAShXV6UWXwd5v6Lg8ZMq83Pnm4BCH
+	tC3VPbw==
+X-Google-Smtp-Source: AGHT+IF82nqL2mUxTftf8FQtLee3AahcOHV8xncjfgA2yaeSu4fuvqQFrUW7Lah+3mDq1caaIw2qikGWIBw=
+X-Received: from pjbqj7.prod.google.com ([2002:a17:90b:28c7:b0:311:ea2a:3919])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:17c6:b0:312:3af8:d4fd
+ with SMTP id 98e67ed59e1d1-31250413c8fmr27065472a91.18.1748964515892; Tue, 03
+ Jun 2025 08:28:35 -0700 (PDT)
+Date: Tue, 3 Jun 2025 08:28:34 -0700
+In-Reply-To: <aD6hhTABOQstdlBL@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
+Mime-Version: 1.0
+References: <20250529234013.3826933-1-seanjc@google.com> <20250529234013.3826933-2-seanjc@google.com>
+ <aD6hhTABOQstdlBL@intel.com>
+Message-ID: <aD8UolpjmE2zYOEB@google.com>
+Subject: Re: [PATCH 01/28] KVM: SVM: Don't BUG if setting up the MSR intercept
+ bitmaps fails
+From: Sean Christopherson <seanjc@google.com>
+To: Chao Gao <chao.gao@intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Borislav Petkov <bp@alien8.de>, Xin Li <xin@zytor.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Lorenzo Stoakes <lorenzo.stoakes@oracle.com> writes:
+On Tue, Jun 03, 2025, Chao Gao wrote:
+> On Thu, May 29, 2025 at 04:39:46PM -0700, Sean Christopherson wrote:
+> >WARN and reject module loading if there is a problem with KVM's MSR
+> >interception bitmaps.  Panicking the host in this situation is inexcusable
+> >since it is trivially easy to propagate the error up the stack.
+> >
+> >Signed-off-by: Sean Christopherson <seanjc@google.com>
+> >---
+> > arch/x86/kvm/svm/svm.c | 27 +++++++++++++++------------
+> > 1 file changed, 15 insertions(+), 12 deletions(-)
+> >
+> >diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> >index 0ad1a6d4fb6d..bd75ff8e4f20 100644
+> >--- a/arch/x86/kvm/svm/svm.c
+> >+++ b/arch/x86/kvm/svm/svm.c
+> >@@ -945,7 +945,7 @@ static void svm_msr_filter_changed(struct kvm_vcpu *vcpu)
+> > 	}
+> > }
+> > 
+> >-static void add_msr_offset(u32 offset)
+> >+static int add_msr_offset(u32 offset)
+> > {
+> > 	int i;
+> > 
+> >@@ -953,7 +953,7 @@ static void add_msr_offset(u32 offset)
+> > 
+> > 		/* Offset already in list? */
+> > 		if (msrpm_offsets[i] == offset)
+> >-			return;
+> >+			return 0;
+> > 
+> > 		/* Slot used by another offset? */
+> > 		if (msrpm_offsets[i] != MSR_INVALID)
+> >@@ -962,17 +962,13 @@ static void add_msr_offset(u32 offset)
+> > 		/* Add offset to list */
+> > 		msrpm_offsets[i] = offset;
+> > 
+> >-		return;
+> >+		return 0;
+> > 	}
+> > 
+> >-	/*
+> >-	 * If this BUG triggers the msrpm_offsets table has an overflow. Just
+> >-	 * increase MSRPM_OFFSETS in this case.
+> >-	 */
+> >-	BUG();
+> >+	return -EIO;
+> 
+> Would -ENOSPC be more appropriate here?
 
-> OK thanks for clarifying, so let's do a take 2 of the action items:
->
-> 1. Once I am confident I have correctly addressed Jann's feedback I'll
->    respin a v2 with the various 'sins' in place for the time being.
->
-> 2. I will also drop the 'since v6.14' stuff you rightly raised in this
-> respin.
->
-> 3. I will create a follow-up series to address these issues in this file
->    -in general-.
->
-> 4. Drop '!' from every reference so we get automated cross-referencing (with the
->    ** struct ** hack as needed).
->
-> 5. Where possible see if we have functions documented, and if so avoid the
->    :c:... noise. If we can't avoid it for now, note down the functions and add
->    to todo to get documented. We can remove the gunk as we go...
+Hmm, yeah.  IIRC, I initially had -ENOSPC, but switched to -EIO to be consistent
+with how KVM typically reports its internal issues during module load.  But as
+you point out, the error code isn't propagated up the stack.
 
-This one I don't get - what is the noise you are talking about?  Again,
-you shouldn't need :c:func: at all...?
+> And, instead of returning an integer, using a boolean might be better since
+> the error code isn't propagated upwards.
 
-There will surely be functions (and structs) that are not documented;
-trying to do them all probably leads to a point of diminishing returns.
-But forward progress on the more important ones is always good.
+I strongly prefer to return 0/-errno in any function that isn't a clear cut
+predicate, e.g. "return -EIO" is very obviously an error path (and -ENOSPC is
+even better), whereas understanding "return false" requires reading the rest of
+the function (and IMO this code isn't all that intuitive).
 
-> A couple questions on point 5:
->
-> - When you say 'documentation', do you mean the /** kernel-doc stuff?
+> > }
+> > 
+> >-static void init_msrpm_offsets(void)
+> >+static int init_msrpm_offsets(void)
+> > {
+> > 	int i;
+> > 
+> >@@ -982,10 +978,13 @@ static void init_msrpm_offsets(void)
+> > 		u32 offset;
+> > 
+> > 		offset = svm_msrpm_offset(direct_access_msrs[i].index);
+> >-		BUG_ON(offset == MSR_INVALID);
+> >+		if (WARN_ON(offset == MSR_INVALID))
+> >+			return -EIO;
+> > 
+> >-		add_msr_offset(offset);
+> >+		if (WARN_ON_ONCE(add_msr_offset(offset)))
+> >+			return -EIO;
+> > 	}
+> >+	return 0;
+> > }
+> > 
+> > void svm_copy_lbrs(struct vmcb *to_vmcb, struct vmcb *from_vmcb)
+> >@@ -5511,7 +5510,11 @@ static __init int svm_hardware_setup(void)
+> > 	memset(iopm_va, 0xff, PAGE_SIZE * (1 << order));
+> > 	iopm_base = __sme_page_pa(iopm_pages);
+> > 
+> >-	init_msrpm_offsets();
+> >+	r = init_msrpm_offsets();
+> >+	if (r) {
+> >+		__free_pages(__sme_pa_to_page(iopm_base), get_order(IOPM_SIZE));
+> 
+> __free_pages(iopm_pages, order);
 
-Yes, that is the documentation that will be cross-referenced.
+Oh, yeah, good call.
 
-> - Does running `make SPHINXDIRS=mm htmldocs` suffice to have this script run? As
->   this is how I've been previewing my changes so far!
+> And we can move init_msrpm_offsets() above the allocation of iopm_pages to
+> avoid the need for rewinding. But I don't have a strong opinion on this, as
+> it goes beyond a simple change to the return type.
 
-Yes, the automarkup extension runs with any Sphinx build.
-
-Thanks,
-
-jon
+I considered that too.  I decided not to bother since this code goes away by the
+end of the series.  I thought about skipping this patch entirely, but I kept it
+since it should be easy to backport, e.g. if someone wants make their tree more
+developer friendly, and on the off chance the patches later in the series need to
+be droppped or reverted.
