@@ -1,113 +1,120 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653B3253347;
-	Tue,  3 Jun 2025 22:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F0B2C3253;
+	Tue,  3 Jun 2025 22:48:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748990669; cv=none; b=aVh6co6uFlXhuVj5OOAnV2oJDFjLJlj7PCJcnSMrRL1+d7VAJuvzpCjhngF6hecaTu8l/vi5ojSur/v1KWtekoT/VB5xvwdYcvHTnj56EVGisN2YL6wCBNc89ly5K29U1drPW39Gc+DQZ+/nHj85xjerH/hatUmuccp/sIVELBQ=
+	t=1748990922; cv=none; b=AXZR5wHJGcLVwaM9bdm7Q9S2V9VQloC2plAk7TUmOrHk4Mv08kCwEyJJHBNuNCbi73HzvPai/sCvsB8uRkQkGqDutonANxxIquDSTFuAWqfG6h2ytwK9Zv0JgV9JjkiN9l5FUI1axfrhjibpDIOaHhFmN5k/MF7Qm+c3TmHBaXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748990669; c=relaxed/simple;
-	bh=LLoqeM/UCB0mh20l/3/Xv9BmLg+WjY+M+SHRDQyeuwA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pi7WqimRRSOyYt2OfDt2wmOBJdrbTR9l3bUFPcC2NBbKLfOSmb02tzDRqzm0n+9TLDl+kLAwYkIiLCx1wsIrscSagRyUAAyf835FuL9ZukRdVCO05mbiB7BQJwsDZm2hcXJwBVMXvCwHwiVWg8j//9Ahf7iq2FpNlppcMzdsml0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lzCIQEGZ; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748990922; c=relaxed/simple;
+	bh=clJQUNwdwlX60yAaKsNhWdwwXmyiCmre5oh/U1SAchE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cJNMBI9f1qCQtcuZ7btZVFNQU2KP++h6tCyoAWTxJGuZQw33ZgvNbGKjQwkckqdYtVIGh9+Mhh6ebG2FqXhksDEcuxG8UD2BwmpRrHalPTGHMw11Zd4L93T/J/9eCyfdCtY/FBBjzRpqWeoaRvyGaurPXfJuV7lcY5VSR3z312M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=f1OBsMcQ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lzCIQEGZ"
-Date: Tue, 3 Jun 2025 15:43:58 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748990654;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GoKlMc1lHrduXpDbBbVFy4M8aj5m5zbNDdssxMr5tdc=;
-	b=lzCIQEGZ9FI8wt89dqHEjgAakygFlEyD4l9ip53qVy9LfjTGPS95wVhPcy/2qmUyOYVAjE
-	JRaFapvUKpqg/O3lcUMMPEcYcp7ibaVQc7D6mRAMyy7cTKnSFcjae5MS7anwW9DSr5vcUV
-	rFDNBe0JSQRHTY/ygvKnzMkxuvVGfU8=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Colton Lewis <coltonlewis@google.com>
-Cc: kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Mark Rutland <mark.rutland@arm.com>, Shuah Khan <shuah@kernel.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 00/17] ARM64 PMU Partitioning
-Message-ID: <aD96rn78BSUDbEu1@linux.dev>
-References: <20250602192702.2125115-1-coltonlewis@google.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="f1OBsMcQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=SrYBN3CmnWpYR3NhQM6Kd9jk26siZ5bSwDLCv5Pgh8A=; b=f1OBsMcQH/n0npzP2qozZCdFaw
+	RhIQJ6AVWEM83ZqVdmb9MMyn0sryR+FggxsIZdJjT8oiUNmc/9KOUvsi+kGVzDMEQXE8vgA7Refvg
+	f+t9kRIt/LRBCA5w0Ng6JSWchkq5tvwlZr0kKxNGTaAK/Oq0SZEBe24Ip2b8/ltpiQgZYoHEn1Ckl
+	bgzOT03pBqlXOxBKqaQPQo0VZfbnAFUB89SJDGMSwHG9pbbwE8kZOyil20w+1ue/RhPO//jxv/Svj
+	sc10MuR1SClw5U0V3Va1X1zxISx1+4QDuAbHvyuOcLgXDf1iTMieHsIM4roUp4DQaZYTSTXoVPFZp
+	ludJ0CRA==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uMaQp-00000002VsN-41Hy;
+	Tue, 03 Jun 2025 22:48:32 +0000
+Message-ID: <f80360f4-0d17-4464-8ede-21bae10dcfd8@infradead.org>
+Date: Tue, 3 Jun 2025 15:48:28 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250602192702.2125115-1-coltonlewis@google.com>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] i2c: amd-isp: Initialize unique adpater name
+To: Pratap Nirujogi <pratap.nirujogi@amd.com>, andi.shyti@kernel.org,
+ hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
+ mario.limonciello@amd.com, sfr@canb.auug.org.au, linux-next@vger.kernel.org
+Cc: linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org, benjamin.chan@amd.com, bin.du@amd.com,
+ gjorgji.rosikopulos@amd.com, king.li@amd.com, dantony@amd.com
+References: <20250603214611.3039787-1-pratap.nirujogi@amd.com>
+ <20250603214611.3039787-3-pratap.nirujogi@amd.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250603214611.3039787-3-pratap.nirujogi@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 02, 2025 at 07:26:45PM +0000, Colton Lewis wrote:
-> Caveats:
+
+
+On 6/3/25 2:40 PM, Pratap Nirujogi wrote:
+> Initialize unique name for amdisp i2c adapter, which is used
+> in the platform driver to detect the matching adapter for
+> i2c_client creation.
 > 
-> Because the most consistent and performant thing to do was untrap
-> PMCR_EL0, the number of counters visible to the guest via PMCR_EL0.N
-> is always equal to the value KVM sets for MDCR_EL2.HPMN. Previously
-> allowed writes to PMCR_EL0.N via {GET,SET}_ONE_REG no longer affect
-> the guest.
+> Add definition of amdisp i2c adapter name in a new header file
+> (include/linux/soc/amd/isp4_misc.h) as it is referred in different
+> driver modules.
 > 
-> These improvements come at a cost to 7-35 new registers that must be
-> swapped at every vcpu_load and vcpu_put if the feature is enabled. I
-> have been informed KVM would like to avoid paying this cost when
-> possible.
+> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
+
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+
+Thanks.
+
+> ---
+>  drivers/i2c/busses/i2c-designware-amdisp.c |  2 ++
+>  include/linux/soc/amd/isp4_misc.h          | 12 ++++++++++++
+>  2 files changed, 14 insertions(+)
+>  create mode 100644 include/linux/soc/amd/isp4_misc.h
 > 
-> One solution is to make the trapping changes and context swapping lazy
-> such that the trapping changes and context swapping only take place
-> after the guest has actually accessed the PMU so guests that never
-> access the PMU never pay the cost.
+> diff --git a/drivers/i2c/busses/i2c-designware-amdisp.c b/drivers/i2c/busses/i2c-designware-amdisp.c
+> index ad6f08338124..450793d5f839 100644
+> --- a/drivers/i2c/busses/i2c-designware-amdisp.c
+> +++ b/drivers/i2c/busses/i2c-designware-amdisp.c
+> @@ -8,6 +8,7 @@
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/soc/amd/isp4_misc.h>
+>  
+>  #include "i2c-designware-core.h"
+>  
+> @@ -62,6 +63,7 @@ static int amd_isp_dw_i2c_plat_probe(struct platform_device *pdev)
+>  
+>  	adap = &isp_i2c_dev->adapter;
+>  	adap->owner = THIS_MODULE;
+> +	scnprintf(adap->name, sizeof(adap->name), AMDISP_I2C_ADAP_NAME);
+>  	ACPI_COMPANION_SET(&adap->dev, ACPI_COMPANION(&pdev->dev));
+>  	adap->dev.of_node = pdev->dev.of_node;
+>  	/* use dynamically allocated adapter id */
+> diff --git a/include/linux/soc/amd/isp4_misc.h b/include/linux/soc/amd/isp4_misc.h
+> new file mode 100644
+> index 000000000000..6738796986a7
+> --- /dev/null
+> +++ b/include/linux/soc/amd/isp4_misc.h
+> @@ -0,0 +1,12 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +
+> +/*
+> + * Copyright (C) 2025 Advanced Micro Devices, Inc.
+> + */
+> +
+> +#ifndef __SOC_ISP4_MISC_H
+> +#define __SOC_ISP4_MISC_H
+> +
+> +#define AMDISP_I2C_ADAP_NAME "AMDISP DesignWare I2C adapter"
+> +
+> +#endif
 
-You should try and model this similar to how we manage the debug
-breakpoints/watchpoints. In that case the debug register context is
-loaded if either:
-
- (1) Self-hosted debug is actively in use by the guest, or
-
- (2) The guest has accessed a debug register since the last vcpu_load()
-
-> This is not done here because it is not crucial to the primary
-> functionality and I thought review would be more productive as soon as
-> I had something complete enough for reviewers to easily play with.
-> 
-> However, this or any better ideas are on the table for inclusion in
-> future re-rolls.
-
-One of the other things that I'd like to see is if we can pare down the
-amount of CPU feature dependencies for a partitioned PMU. Annoyingly,
-there aren't a lot of machines out there with FEAT_FGT yet, and you
-should be able to make all of this work in VHE + FEAT_PMUv3p1.
-
-That "just" comes at the cost of extra traps (leaving TPM and
-potentially TPMCR set). You can mitigate the cost of this by emulating
-accesses in the fast path that don't need to go out to a kernel context
-to be serviced. Same goes for requiring FEAT_HPMN0 to expose 0 event
-counters, we can fall back to TPM traps if needed.
-
-Taking perf out of the picture should still give you a significant
-reduction vPMU overheads.
-
-Last thing, let's table guest support for FEAT_PMUv3_ICNTR for the time
-being. Yes, it falls in the KVM-owned range, but we can just handle it
-with a fine-grained undef for now. Once the core infrastructure has
-landed upstream we can start layering new features into the partitioned
-implementation.
-
-Thanks,
-Oliver
+-- 
+~Randy
