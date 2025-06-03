@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5118E4C74
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 21:33:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12D68221FBE;
+	Tue,  3 Jun 2025 21:33:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748986429; cv=none; b=oCI2dWOswKoSkvOScGtqXYET4EMr/1LKMF3FVyUSltJeTPLLU6jmnHzLmk7uL01XWS59e/uWucsdp2X/UCCu6M3HGxel4XqXWeKVe5m7ZEyrh1QliiHzpYtZaTPRSvUhyTuqRHnKtQBUbitwMcMGphyzKMfqOSZRDUQVlpcYRIs=
+	t=1748986431; cv=none; b=a5TvvHatVaf1jkpmMvEI1WK+F3mJdxhrvmMfYvUvFCAQXITrfsD4Ho8cpen0n6BnaDE+RW9Fz+z4OYxs8T4eSSNG7cxc8Shv8CQ8daEoAdSGMvOvLsjyLbxa4jHpEbvPBqzjSEjL369Kzj1CfiRzrElhGxwKRJG9eEcBWHMSB4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748986429; c=relaxed/simple;
-	bh=Atwlr150hgQd8ivGFuPyMqwpItfB9vosEFcJFauthTM=;
+	s=arc-20240116; t=1748986431; c=relaxed/simple;
+	bh=/72GejJlyaFyHD9yEsDhR0fa1xsa7AXd9PwGG3Wdsz4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OJZTOrXJWQbWxv8qUAQtzfro/AYy1F/DfMeRG/OuTsZEdGU83FUOYQhQFV7nk/QY0SHzlQPAxcadE1RHrjeGhV452Vq9ytM38fIVV8RhCxS+oCXWvGuI903qKre2kx/NadLFVdu9uSJfc7yvGp8YsXcIMuAludy9lxhMmBFoLdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nXhPfMJS; arc=none smtp.client-ip=192.198.163.13
+	 In-Reply-To:Content-Type; b=I2k3eD5tMjWpSD5hm/uMYnoM++fFNkYs7pHC/jrzLskI9pNE6XiN8MlbS1iv9og75cnNI6nYEIrD7zUuex+JbTxzbOhiKKKpDVI7rRBUgkGIae573HP+/iRzBFMjHH9dHZocKVhEK5cBQ9XeXVnkabqVoIPW+4UDbKWmu+F5fHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QWDwzK2/; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nXhPfMJS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QWDwzK2/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748986428; x=1780522428;
+  t=1748986430; x=1780522430;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=Atwlr150hgQd8ivGFuPyMqwpItfB9vosEFcJFauthTM=;
-  b=nXhPfMJSY9g9fabn+HOgA8f4nKq5QoYRjYwvSskU2PRYSkM9ouXk0dtc
-   1bE/S6DzNsaDs9RLgqMKgLnveKCOJ5AMnV9e6JBCW1OBAYTWi38VOsbT+
-   ivyGirzxCIxLSoBDrHTYPul6yXXAm+t1PuzBRAMeUcK10YvnFwvqcRPMt
-   E3VtwzsvSTPIO/P3mgmfSXbSxNnR3kugbyaHhfnO3YXHfZzO4Ou76gMsF
-   i0FcxrsFm9JuME2x1nh4iyGJIgaJCgcXwkkrDR9B7FQuGbZl1EE7XCLOa
-   2urR/nhpY1cVQKf/yc6o94bWcOqyUmHB2vYPX7RZlqYA254VevJ5qmD2J
-   g==;
-X-CSE-ConnectionGUID: rVCnJJTXRPKu/gTi+OZH1g==
-X-CSE-MsgGUID: rU7gl74PRJOVUjN6NjOJ9A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="53673594"
+  bh=/72GejJlyaFyHD9yEsDhR0fa1xsa7AXd9PwGG3Wdsz4=;
+  b=QWDwzK2/G5j1RjaJ7yP596/k0fzjc9VgEZIgRE/XifyH5GyPCp6U4k5s
+   Oia6o+AkFlFkhtvHbxlr3Asacve8Q6x1Op7ECWq/nEwfgiV+nA1IZCeGi
+   lSBypfaF1nwicEOHtd6Fz6a+LptzsOp1yZiwO8RlrFl5sBWDMiUNNQE8p
+   yQYSx4TiDoZkps6PITc7B7C9YW1AJCS73PhP00Y7dH82omf4ltyLiHrgK
+   pho8PRuriBjHrD4NV5fjxVQIfQz88di85ZQR8FeTQq29LEwCvR4FCK8on
+   eRrFJXFUrU7kZMw57zV8Rv/eQY5gv+zOT8kS3E2Cx4ZdN0uG6gC9QPmh/
+   Q==;
+X-CSE-ConnectionGUID: QbT6qrhWQ9+gxPmfhA6/+A==
+X-CSE-MsgGUID: NbYKk5SnT26FS+m/nzGX3w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="53673598"
 X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
-   d="scan'208";a="53673594"
+   d="scan'208";a="53673598"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 14:33:47 -0700
-X-CSE-ConnectionGUID: 3sJOVrcvRSyC6xISR5WQbw==
-X-CSE-MsgGUID: Ufn66af2SOaQ1oe3eSEqyw==
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 14:33:48 -0700
+X-CSE-ConnectionGUID: 9kvR+v10RH2jObpB+rgN1w==
+X-CSE-MsgGUID: 2OaDTlvjT92NxmD7SquWZg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
-   d="scan'208";a="175921904"
-Received: from tjmaciei-mobl5.ger.corp.intel.com (HELO [10.125.110.192]) ([10.125.110.192])
+   d="scan'208";a="175921907"
+Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.110.198]) ([10.125.110.198])
   by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 14:33:46 -0700
-Message-ID: <944968c1-a2a3-430a-bc9a-51ac431a0835@intel.com>
-Date: Tue, 3 Jun 2025 14:33:46 -0700
+Message-ID: <788af5cd-4e2d-4949-9d5a-9943f13da481@intel.com>
+Date: Tue, 3 Jun 2025 14:33:43 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,76 +52,150 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] x86/mm: Fix potential overflow in
- user_pcid_flush_mask
-To: Rik van Riel <riel@surriel.com>, linux-kernel@vger.kernel.org
-Cc: kernel-team@meta.com, dave.hansen@linux.intel.com, luto@kernel.org,
- peterz@infradead.org, bp@alien8.de, x86@kernel.org, yu-cheng.yu@intel.com,
- Rik van Riel <riel@meta.com>, stable@kernel.org
-References: <20250602133402.3385163-1-riel@surriel.com>
- <20250602133402.3385163-2-riel@surriel.com>
- <83a671ed-4862-4a0f-b91d-d4598b4a82d7@intel.com>
- <5987ac95e4011c2b71d1c3cce13872571cff3ac7.camel@surriel.com>
-From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH 3/4 v3] ACPI: extlog: Trace CPER PCI Express Error Section
+To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+ linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-cxl@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-pci@vger.kernel.org, linux-edac@vger.kernel.org
+Cc: Yazen Ghannam <yazen.ghannam@amd.com>
+References: <20250603155536.577493-1-fabio.m.de.francesco@linux.intel.com>
+ <20250603155536.577493-4-fabio.m.de.francesco@linux.intel.com>
 Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <5987ac95e4011c2b71d1c3cce13872571cff3ac7.camel@surriel.com>
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250603155536.577493-4-fabio.m.de.francesco@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 6/3/25 14:20, Rik van Riel wrote:
->> Honestly, I'd just leave this out for the bug fix. If someone really
->> cares, we can come back and fix it up in mainline.
-> I added the #ifdef at Ingo's request.
+
+
+On 6/3/25 8:54 AM, Fabio M. De Francesco wrote:
+> I/O Machine Check Architecture events may signal failing PCIe components
+> or links. The AER event contains details on what was happening on the wire
+> when the error was signaled.
 > 
-> I am happy to do the code in any way you two can
-> agree on, but we should probably avoid the back
-> and forth over many versions thing 🙂
+> Trace the CPER PCIe Error section (UEFI v2.10, Appendix N.2.7) reported
+> by the I/O MCA.
+> 
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
 
-Ingo, I don't think the #ifdef is worth it, especially for what needs to
-go to stable@. The PTI config option is enabled quite widely, so it's
-not doing much practically. If you feel strongly that it's required for
-this series, then it needs to be broken out as a prerequisite and not
-intermingled with the actual bug fix.
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  drivers/acpi/Kconfig       |  1 +
+>  drivers/acpi/acpi_extlog.c | 32 ++++++++++++++++++++++++++++++++
+>  drivers/pci/pcie/aer.c     |  2 +-
+>  include/linux/aer.h        |  8 ++++++--
+>  4 files changed, 40 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+> index 7bc40c2735ac0..2bbd9e4868ad7 100644
+> --- a/drivers/acpi/Kconfig
+> +++ b/drivers/acpi/Kconfig
+> @@ -493,6 +493,7 @@ config ACPI_EXTLOG
+>  	tristate "Extended Error Log support"
+>  	depends on X86_MCE && X86_LOCAL_APIC && EDAC
+>  	select UEFI_CPER
+> +	select ACPI_APEI_PCIEAER
+>  	help
+>  	  Certain usages such as Predictive Failure Analysis (PFA) require
+>  	  more information about the error than what can be described in
+> diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
+> index 47d11cb5c9120..b2928ff297eda 100644
+> --- a/drivers/acpi/acpi_extlog.c
+> +++ b/drivers/acpi/acpi_extlog.c
+> @@ -132,6 +132,34 @@ static int print_extlog_rcd(const char *pfx,
+>  	return 1;
+>  }
+>  
+> +static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
+> +			      int severity)
+> +{
+> +	struct aer_capability_regs *aer;
+> +	struct pci_dev *pdev;
+> +	unsigned int devfn;
+> +	unsigned int bus;
+> +	int aer_severity;
+> +	int domain;
+> +
+> +	if (!(pcie_err->validation_bits & CPER_PCIE_VALID_DEVICE_ID ||
+> +	      pcie_err->validation_bits & CPER_PCIE_VALID_AER_INFO))
+> +		return;
+> +
+> +	aer_severity = cper_severity_to_aer(severity);
+> +	aer = (struct aer_capability_regs *)pcie_err->aer_info;
+> +	domain = pcie_err->device_id.segment;
+> +	bus = pcie_err->device_id.bus;
+> +	devfn = PCI_DEVFN(pcie_err->device_id.device,
+> +			  pcie_err->device_id.function);
+> +	pdev = pci_get_domain_bus_and_slot(domain, bus, devfn);
+> +	if (!pdev)
+> +		return;
+> +
+> +	pci_print_aer(KERN_DEBUG, pdev, aer_severity, aer);
+> +	pci_dev_put(pdev);
+> +}
+> +
+>  static int extlog_print(struct notifier_block *nb, unsigned long val,
+>  			void *data)
+>  {
+> @@ -183,6 +211,10 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
+>  			if (gdata->error_data_length >= sizeof(*mem))
+>  				trace_extlog_mem_event(mem, err_seq, fru_id, fru_text,
+>  						       (u8)gdata->error_severity);
+> +		} else if (guid_equal(sec_type, &CPER_SEC_PCIE)) {
+> +			struct cper_sec_pcie *pcie_err = acpi_hest_get_payload(gdata);
+> +
+> +			extlog_print_pcie(pcie_err, gdata->error_severity);
+>  		} else {
+>  			void *err = acpi_hest_get_payload(gdata);
+>  
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index d0ebf7c15afa9..627fcf4346983 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -801,7 +801,7 @@ void pci_print_aer(char *level, struct pci_dev *dev, int aer_severity,
+>  	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
+>  			aer_severity, tlp_header_valid, &aer->header_log);
+>  }
+> -EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
+> +EXPORT_SYMBOL_GPL(pci_print_aer);
+>  
+>  /**
+>   * add_error_device - list device to be handled
+> diff --git a/include/linux/aer.h b/include/linux/aer.h
+> index 45d0fb2e2e759..6ce433cee4625 100644
+> --- a/include/linux/aer.h
+> +++ b/include/linux/aer.h
+> @@ -56,16 +56,20 @@ struct aer_capability_regs {
+>  #if defined(CONFIG_PCIEAER)
+>  int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
+>  int pcie_aer_is_native(struct pci_dev *dev);
+> +void pci_print_aer(char *level, struct pci_dev *dev, int aer_severity,
+> +		   struct aer_capability_regs *aer);
+>  #else
+>  static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+>  {
+>  	return -EINVAL;
+>  }
+>  static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
+> +static inline void pci_print_aer(char *level, struct pci_dev *dev,
+> +				 int aer_severity,
+> +				 struct aer_capability_regs *aer)
+> +{ }
+>  #endif
+>  
+> -void pci_print_aer(char *level, struct pci_dev *dev, int aer_severity,
+> -		   struct aer_capability_regs *aer);
+>  int cper_severity_to_aer(int cper_severity);
+>  void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
+>  		       int severity, struct aer_capability_regs *aer_regs);
+
