@@ -1,303 +1,125 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E63A726B973
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 07:11:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FABB2686A0;
+	Tue,  3 Jun 2025 07:12:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748934710; cv=none; b=Qm4fuFbbetgm53nqxijX+fGAAdKm6hBBaGj8XxK+s7RRGNLunbMt1J5JjI77oq5gia5rELmyH3YH6eQlq5WVgyLifSJ5GWsEsCWrj4Kumycd9QeMwqy9o+i8ZhZyOBcWrl/rt5LXdqrL2hMoD2cSAEfCPaBVktphxoKD902yu9c=
+	t=1748934776; cv=none; b=h12mxao2dgin06FPlwhy9d+co5ZjQshHUN6J+Anrprq7lZjYMTqsAADAmwjoqtKOywAmVgcx1YPkiWeO1yCNHLPfaoKD5S6TyLJAgICHddgLdxqOleSlTSanMlK7eV3SZHVocJue473Y+YTostbSppY/Ehg1sJgLmaK1clDkSF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748934710; c=relaxed/simple;
-	bh=kcUU9krrxz4wWXbCSdYpKCBaoyDMroYVrjFc9QNVoz4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ub7xk3l6YMHsJ8Me1kUm0FqbYF4HCznY3nxuArDh+GXIImW81BPp41Dj0wvMQyWvZNXKPfGMLscJZZpON/+wo1/fDGM0jP+p2iWm24hBwpvUl7x7I5zjCeLUwdmWROGT8H5Z/xhSUeMeMky2lfzGlfFfetE8gsS2JHQ8WcPyKWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sIty1Esz; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748934776; c=relaxed/simple;
+	bh=NX3QBD9ToUMzd3pu1RX4acaj0zG0PVwf8YybhZuaA/k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dzlC/XeKxzaKWmbIQlGrDNNOAYAYsi5iVLJTu5v8lo1tZKPTUNqFoXesYHPNz/GBQRde/FL9wkgk9rUuS1WsMq/+GAO7LtqQtSjeRT2eWwK00ufYTeM051fMXMzxKWDdZoDwf2qfzgulDeyIje1ZMqYQuO/VLmjOvfNYA8DmomE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iRYgIM0C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sIty1Esz"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-73bf5aa95e7so4136741b3a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 00:11:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748934708; x=1749539508; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OhII2By9W5/ZH38QC2aGImrbUspJ4sEI9fSz/8giFeU=;
-        b=sIty1Eszkzpo3eJosMqwlKESpDsr8zgMTABKfX8bLrOb7B3U6eOePVEnW1KGkZbzLZ
-         kqIDoRNuD/OeD7P7WgoLjx0KCPqGhLiWj4fT1EGNnf25V9oMr1fxpABSiNFHvX2I58U1
-         XYysdLj38Erjp2p+3ydmUN5abtSevSk756McFsRGIuqc8VpWKCAj4c7y1OhKHeknOkkQ
-         h6baMjZxAgp1N7NCtHLE4GRLEX7PKM3f8FVJ1FxmPfQeFLdLvowCR49GxpADDH1ktotd
-         BTHbKAi7KrNj377yQbC574IB687e6VP6pyrG91vmgYUsI4gQrVC0Evpfl7g3I+WOUNqm
-         bwUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748934708; x=1749539508;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OhII2By9W5/ZH38QC2aGImrbUspJ4sEI9fSz/8giFeU=;
-        b=h1y2mVN2ajZVA3N57y8Br0xWsc30d8gNtHhblUUuIn2Ui1niW76pWBwXkYzvelyxpb
-         F+WkznTIJt1uz1Uvtn3CJOLz8AI8KOXFzl14+vz3qKpaxo8vnj0LMnPlYbNr20rbjIsa
-         TMKG2yrdMMBUSXosvTmJ42ImaGPC/goUd+warDSNRgRsUOmMpInzZ+8DviMl2yPAlqas
-         l6dtqJlvx81QKTebFcABxZ0MY7xQKj2+BEOqOHWfHHDKzoTdyiqFqI3PGH0V4wKmaQbj
-         U4t0TZ0NF5RO7HlWkK2ZHZ/vauB8MfY0wyRuN5RDxk/zDhKJxtDTuUG6iCxrt/pa6j3L
-         9Jdw==
-X-Forwarded-Encrypted: i=1; AJvYcCWNUtigRQGk+20Fn0jn3d7CMPcfsNmyMY9PSjDadLBpL5Q7Ihz0EVTTo8cTev8ohSkAI9igseGWc22rTBs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyOx3EoP5bPPpsiCPMfJptccShLdGiF36Zvo4pcnX2c8P2qsnA
-	wMNAvZaBib3lM7fkeLNWbrgusT7cQ0oltdRA2HJqSTd10JcCQNouZLleZC3lNCAV4hE=
-X-Gm-Gg: ASbGncvJmelYVerFd5IR3R6DwSEh86pWT25dPz4E7Fo1Lytq4e/DfzLTizHec6WVJP6
-	iz/CfNtumeJQfML/JuAPWW9imfUg7lSPlZxlfojXmNqvkOL9rNZXoy23d0OL65IkmJrpps7dC7h
-	0MWhSuavxYmvMwjjSUIWFnTozxGwsn8qFjBUBVnxJRP2xs1pRodxJG1BOz1LsWXKn4ROh2dl61b
-	PGWckhqSpnYBq9Z7q9lAvkJkim0njs+tCLOvwcVwv5w+y+mhbVstzmKxgfL/G+86KiWJ4r/LqaG
-	GPcmn7ifQ7ji5XPXPOu6cY5Pe5UJGRVncsdM2pdQ781A2uyMNA==
-X-Google-Smtp-Source: AGHT+IGZ1vFZiRnUrMGZqZtUL3p/ymw+NR1xlIcDgImN633Lneldm38+jd8hQJ/pvuQMolUdgnLgQA==
-X-Received: by 2002:a05:6a00:148e:b0:736:32d2:aa82 with SMTP id d2e1a72fcca58-747d1ae1e5cmr14874972b3a.23.1748934708167;
-        Tue, 03 Jun 2025 00:11:48 -0700 (PDT)
-Received: from [127.0.1.1] ([104.234.225.11])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afed360fsm8746481b3a.81.2025.06.03.00.11.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 00:11:47 -0700 (PDT)
-From: Jun Nie <jun.nie@linaro.org>
-Date: Tue, 03 Jun 2025 15:10:11 +0800
-Subject: [PATCH v11 12/12] drm/msm/dpu: Enable quad-pipe for DSC and
- dual-DSI case
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iRYgIM0C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73451C4CEEF;
+	Tue,  3 Jun 2025 07:12:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748934775;
+	bh=NX3QBD9ToUMzd3pu1RX4acaj0zG0PVwf8YybhZuaA/k=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=iRYgIM0CPiwpEr6zeQYx3tvHgiLyM6d3sgWOLYlJcCfMiEgRS9Y4yjh7G5vYlNf1j
+	 KgIjQI8BWjaKaGxKWwKw9znTEPzO80NCblBmzgEcFGlX5Z7tMaH0+070dKg/yyGAlU
+	 4wxks2L13DGV52iC0CzNLNdT61jvGKs20ee7Uw4SO1OvgagpyxhQKXYxS0I4fgGSyd
+	 asXONyULQJWHR+DRsR30vb+5tvDDo+dXkfS1rabCQymaw8qG90h2sCEYKgp02NnXwH
+	 d/dbo68oC4w8prnR/PBom1GS1jqBFtHN7Sci1LPd6X0aXdCU4YnsIlA4Hj7osHn3rk
+	 /yn3NUyOnKVKg==
+Message-ID: <df320682-7641-4e32-ba72-26da5fe55f21@kernel.org>
+Date: Tue, 3 Jun 2025 09:12:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] dt-bindings: trivial-devices: Add compatible string
+ synaptics,synaptics_i2c
+To: Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Guenter Roeck <linux@roeck-us.net>,
+ Noah Wang <noahwang.wang@outlook.com>, Michal Simek <michal.simek@amd.com>,
+ Naresh Solanki <naresh.solanki@9elements.com>,
+ Fabio Estevam <festevam@gmail.com>, Rodrigo Gobbi
+ <rodrigo.gobbi.7@gmail.com>, Grant Peltier <grantpeltier93@gmail.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: imx@lists.linux.dev
+References: <20250529184828.787082-1-Frank.Li@nxp.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250529184828.787082-1-Frank.Li@nxp.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250603-v6-15-quad-pipe-upstream-v11-12-c3af7190613d@linaro.org>
-References: <20250603-v6-15-quad-pipe-upstream-v11-0-c3af7190613d@linaro.org>
-In-Reply-To: <20250603-v6-15-quad-pipe-upstream-v11-0-c3af7190613d@linaro.org>
-To: Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Dmitry Baryshkov <lumag@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Jun Nie <jun.nie@linaro.org>, Dmitry Baryshkov <lumag@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748934620; l=8147;
- i=jun.nie@linaro.org; s=20240403; h=from:subject:message-id;
- bh=kcUU9krrxz4wWXbCSdYpKCBaoyDMroYVrjFc9QNVoz4=;
- b=Hyntbdqty8QnSsAJr0PJclPTbDiKe74xkVW2IpJ7oEf6ixRz2yLTPKGf7wak49BuSCJX3tYud
- 9B+/hpVbAFoAFDZmgG4INko51TBC4bJouXySKCv7XY2wfoXKTfTNWx1
-X-Developer-Key: i=jun.nie@linaro.org; a=ed25519;
- pk=MNiBt/faLPvo+iJoP1hodyY2x6ozVXL8QMptmsKg3cc=
 
-To support high-resolution cases that exceed the width limitation of
-a pair of SSPPs, or scenarios that surpass the maximum MDP clock rate,
-additional pipes are necessary to enable parallel data processing
-within the SSPP width constraints and MDP clock rate.
+On 29/05/2025 20:48, Frank Li wrote:
+> Add compatible string synaptics,synaptics_i2c for synaptics touch pad. It
+> match existed driver drivers/input/mouse/synaptics_i2c.c.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
+> index 38bc1937ff3c9..dbec1300bb7ed 100644
+> --- a/Documentation/devicetree/bindings/trivial-devices.yaml
+> +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+> @@ -362,6 +362,8 @@ properties:
+>            - sparkfun,qwiic-joystick
+>              # Sierra Wireless mangOH Green SPI IoT interface
+>            - swir,mangoh-iotport-spi
+> +            # Synaptics I2C touchpad
+> +          - synaptics,synaptics_i2c
+That's a wrong prefix, so assuming we want to keep everything working
+you need to document it in vendor prefixes with "deprecated: true". See
+Synopsys for example.
 
-Request 4 mixers and 4 DSCs for high-resolution cases where both DSC
-and dual interfaces are enabled. More use cases can be incorporated
-later if quad-pipe capabilities are required.
-
-Signed-off-by: Jun Nie <jun.nie@linaro.org>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c         | 27 +++++++++++++++++------
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h         |  6 ++---
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c      | 28 ++++++++----------------
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h |  2 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h   |  2 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h      |  2 +-
- 6 files changed, 35 insertions(+), 32 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-index 47ab43dfec76acc058fb275d1928603e8e8e7fc6..67534cec9bf48f2fa368553be6b3a0bbc307e861 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-@@ -200,7 +200,7 @@ static int dpu_crtc_get_lm_crc(struct drm_crtc *crtc,
- 		struct dpu_crtc_state *crtc_state)
- {
- 	struct dpu_crtc_mixer *m;
--	u32 crcs[CRTC_DUAL_MIXERS];
-+	u32 crcs[CRTC_QUAD_MIXERS];
- 
- 	int rc = 0;
- 	int i;
-@@ -1298,6 +1298,7 @@ static struct msm_display_topology dpu_crtc_get_topology(
- 	struct drm_display_mode *mode = &crtc_state->adjusted_mode;
- 	struct msm_display_topology topology = {0};
- 	struct drm_encoder *drm_enc;
-+	u32 num_rt_intf;
- 
- 	drm_for_each_encoder_mask(drm_enc, crtc->dev, crtc_state->encoder_mask)
- 		dpu_encoder_update_topology(drm_enc, &topology, crtc_state->state,
-@@ -1311,11 +1312,14 @@ static struct msm_display_topology dpu_crtc_get_topology(
- 	 * Dual display
- 	 * 2 LM, 2 INTF ( Split display using 2 interfaces)
- 	 *
-+	 * If DSC is enabled, try to use 4:4:2 topology if there is enough
-+	 * resource. Otherwise, use 2:2:2 topology.
-+	 *
- 	 * Single display
- 	 * 1 LM, 1 INTF
- 	 * 2 LM, 1 INTF (stream merge to support high resolution interfaces)
- 	 *
--	 * If DSC is enabled, use 2 LMs for 2:2:1 topology
-+	 * If DSC is enabled, use 2:2:1 topology
- 	 *
- 	 * Add dspps to the reservation requirements if ctm is requested
- 	 *
-@@ -1327,14 +1331,23 @@ static struct msm_display_topology dpu_crtc_get_topology(
- 	 * (mode->hdisplay > MAX_HDISPLAY_SPLIT) check.
- 	 */
- 
--	if (topology.num_intf == 2 && !topology.cwb_enabled)
--		topology.num_lm = 2;
--	else if (topology.num_dsc == 2)
-+	num_rt_intf = topology.num_intf;
-+	if (topology.cwb_enabled)
-+		num_rt_intf--;
-+
-+	if (topology.num_dsc) {
-+		if (dpu_kms->catalog->dsc_count >= num_rt_intf * 2)
-+			topology.num_dsc = num_rt_intf * 2;
-+		else
-+			topology.num_dsc = num_rt_intf;
-+		topology.num_lm = topology.num_dsc;
-+	} else if (num_rt_intf == 2) {
- 		topology.num_lm = 2;
--	else if (dpu_kms->catalog->caps->has_3d_merge)
-+	} else if (dpu_kms->catalog->caps->has_3d_merge) {
- 		topology.num_lm = (mode->hdisplay > MAX_HDISPLAY_SPLIT) ? 2 : 1;
--	else
-+	} else {
- 		topology.num_lm = 1;
-+	}
- 
- 	if (crtc_state->ctm)
- 		topology.num_dspp = topology.num_lm;
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
-index 6eaba5696e8e6bd1246a9895c4c8714ca6589b10..455073c7025b0bcb970d8817f197d9bcacc6dca5 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
-@@ -210,7 +210,7 @@ struct dpu_crtc_state {
- 
- 	bool bw_control;
- 	bool bw_split_vote;
--	struct drm_rect lm_bounds[CRTC_DUAL_MIXERS];
-+	struct drm_rect lm_bounds[CRTC_QUAD_MIXERS];
- 
- 	uint64_t input_fence_timeout_ns;
- 
-@@ -218,10 +218,10 @@ struct dpu_crtc_state {
- 
- 	/* HW Resources reserved for the crtc */
- 	u32 num_mixers;
--	struct dpu_crtc_mixer mixers[CRTC_DUAL_MIXERS];
-+	struct dpu_crtc_mixer mixers[CRTC_QUAD_MIXERS];
- 
- 	u32 num_ctls;
--	struct dpu_hw_ctl *hw_ctls[CRTC_DUAL_MIXERS];
-+	struct dpu_hw_ctl *hw_ctls[CRTC_QUAD_MIXERS];
- 
- 	enum dpu_crtc_crc_source crc_source;
- 	int crc_frame_skip_count;
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index 8b6fa7ef78e2c0fb38daef9090dbf747c7ba111d..456e62ebc795b6c50c96d1ffcea2be566fb8d51c 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -55,7 +55,7 @@
- #define MAX_PHYS_ENCODERS_PER_VIRTUAL \
- 	(MAX_H_TILES_PER_DISPLAY * NUM_PHYS_ENCODER_TYPES)
- 
--#define MAX_CHANNELS_PER_ENC 2
-+#define MAX_CHANNELS_PER_ENC 4
- #define MAX_CWB_PER_ENC 2
- 
- #define IDLE_SHORT_TIMEOUT	1
-@@ -675,22 +675,12 @@ void dpu_encoder_update_topology(struct drm_encoder *drm_enc,
- 
- 	dsc = dpu_encoder_get_dsc_config(drm_enc);
- 
--	/* We only support 2 DSC mode (with 2 LM and 1 INTF) */
--	if (dsc) {
--		/*
--		 * Use 2 DSC encoders, 2 layer mixers and 1 or 2 interfaces
--		 * when Display Stream Compression (DSC) is enabled,
--		 * and when enough DSC blocks are available.
--		 * This is power-optimal and can drive up to (including) 4k
--		 * screens.
--		 */
--		WARN(topology->num_intf > 2,
--		     "DSC topology cannot support more than 2 interfaces\n");
--		if (topology->num_intf >= 2 || dpu_kms->catalog->dsc_count >= 2)
--			topology->num_dsc = 2;
--		else
--			topology->num_dsc = 1;
--	}
-+	/*
-+	 * Set DSC number as 1 to mark the enabled status, will be adjusted
-+	 * in dpu_crtc_get_topology()
-+	 */
-+	if (dsc)
-+		topology->num_dsc = 1;
- 
- 	connector = drm_atomic_get_new_connector_for_encoder(state, drm_enc);
- 	if (!connector)
-@@ -2178,8 +2168,8 @@ static void dpu_encoder_helper_reset_mixers(struct dpu_encoder_phys *phys_enc)
- 	struct dpu_hw_mixer_cfg mixer;
- 	int i, num_lm;
- 	struct dpu_global_state *global_state;
--	struct dpu_hw_blk *hw_lm[2];
--	struct dpu_hw_mixer *hw_mixer[2];
-+	struct dpu_hw_blk *hw_lm[MAX_CHANNELS_PER_ENC];
-+	struct dpu_hw_mixer *hw_mixer[MAX_CHANNELS_PER_ENC];
- 	struct dpu_hw_ctl *ctl = phys_enc->hw_ctl;
- 
- 	memset(&mixer, 0, sizeof(mixer));
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
-index 61b22d9494546885db609efa156222792af73d2a..09395d7910ac87c035b65cf476350bf6c9619612 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
-@@ -302,7 +302,7 @@ static inline enum dpu_3d_blend_mode dpu_encoder_helper_get_3d_blend_mode(
- 
- 	/* Use merge_3d unless DSC MERGE topology is used */
- 	if (phys_enc->split_role == ENC_ROLE_SOLO &&
--	    dpu_cstate->num_mixers == CRTC_DUAL_MIXERS &&
-+	    (dpu_cstate->num_mixers != 1) &&
- 	    !dpu_encoder_use_dsc_merge(phys_enc->parent))
- 		return BLEND_3D_H_ROW_INT;
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-index 01dd6e65f777f3b92f41e2ccb08f279650d50425..1348f70183602e2ced7bc0658636759413af8d13 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-@@ -24,7 +24,7 @@
- #define DPU_MAX_IMG_WIDTH 0x3fff
- #define DPU_MAX_IMG_HEIGHT 0x3fff
- 
--#define CRTC_DUAL_MIXERS	2
-+#define CRTC_QUAD_MIXERS	4
- 
- #define MAX_XIN_COUNT 16
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-index e4875a1f638db6f1983d9c51cb399319d27675e9..5cedcda285273a46cd6e11da63cde92cab94b9f4 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-@@ -34,7 +34,7 @@
- #define DPU_MAX_PLANES			4
- #endif
- 
--#define STAGES_PER_PLANE		1
-+#define STAGES_PER_PLANE		2
- #define PIPES_PER_STAGE			2
- #define PIPES_PER_PLANE			(PIPES_PER_STAGE * STAGES_PER_PLANE)
- #ifndef DPU_MAX_DE_CURVES
-
--- 
-2.34.1
-
+Best regards,
+Krzysztof
