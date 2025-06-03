@@ -1,184 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D601F268C62;
-	Tue,  3 Jun 2025 06:52:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F4A267AF2
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 06:52:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748933525; cv=none; b=bYwDGfH1ZBnctXPzWrHPE0sqDuuqasCWEADqOgTOG+ABtzEoE84ZkGTNb/Z4N05BnZYxMocz0Iy8Db+Maor2HOAU8wNI9L9gdXbqaqBwWeenmXhErPzXqhUdRVVheCFqhvZSFgdNL/ll+hGjzJKV+SyffTQF/wE+ro8/kyQry3U=
+	t=1748933571; cv=none; b=m1e+wbSPvS0lPzF6NFUfZHmbib/bdODFi2jC8pk84uyWDYB3BTsn9urvhFkITOJPVjWNQy7s3tuye8o6HKjy+pZ+bJeg6WA7u3ZQnM0Lnzm6yBoUrAVXUbXeOsme18k5I8udWWyCtQSRI4LYu6nQ8rKYEN4Y552or6220+K0kic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748933525; c=relaxed/simple;
-	bh=lzFWTJcfuXOBClAas9MZhq4SE623nomGZJJDIWUBeao=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qdB42TvL/hsHjf1WoCtcSGJ3Rp/s9Creq1im+BdmIoJn3mw+pmr64Ag3C6KtAnkSPROuD5eD5uLvivyPZNZRfeMOOvX19raT0sBl1jQTj2DbAoBfGbKjLBWBTY+VlIIQCz6AvipIUe8HPw/MFq4LZOF+3lRcktL24uA2zaRG270=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pQsEk4KY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748933571; c=relaxed/simple;
+	bh=a2Xhzzi3QY9KeC6g0mvy+JMY/3ewUcjrru9xzEIQsXM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PLIVTkoS2UUBdxPAbs7+9D2x4a/4HfJBGrgvMCvENOy9kU1brPsZHG58NJdY+1I4/CdxPJFd5GlBlSCkr8NwDQWEukJfV6vzMnmJMJP1WU6Rxx/V2TnwUem7KqZrCL5r8svGs3CGsbdREFsBoz/hCT4y6yUlsGcNIJM9ZMJZ/ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JulYCSmX; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pQsEk4KY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDBFBC4CEF1;
-	Tue,  3 Jun 2025 06:52:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748933524;
-	bh=lzFWTJcfuXOBClAas9MZhq4SE623nomGZJJDIWUBeao=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pQsEk4KYKFv043uT2ksf1vsov/djJPEWvFanpxuaJ8nYi7AJbOloqeL3kboeYQnbM
-	 BfVX0BmuEPU3p9IG2/yHSI49SXq9uYDrHEVz2i6pI5RdzPe9iiCORY7wBRpkS7/oO6
-	 YZURw3M2DMthp07VDM1SRGbA0/HRUAJrt7yGPuNpGRI90gefrStaDM6FTugZ2XBPzG
-	 /eFvprl1WnQvMvu4r9YcgbK/0IDYY/IlOAu7d5vJYVXwwG2JLKVb2EEzyke+hvAy+H
-	 cawXnY0fB15gvaHKHcfpSxhFTW9vRe0XH2CwJyo/wDGdGXkVbuzjf5x/Npsw4b0VVc
-	 iG2ZekZ407B6A==
-Message-ID: <0fb4b411-1b27-43fc-8d48-e5220fc85478@kernel.org>
-Date: Tue, 3 Jun 2025 08:51:59 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JulYCSmX"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b2d46760950so5044882a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 23:52:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748933569; x=1749538369; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=wxJyD1Wr6giGGGMhwdcwxe8wm378R6kiZUi+LdBaw9U=;
+        b=JulYCSmXmnzIfSHXAWo8n6FCZuy+TYeBCvu5wclg24pD7lmI5rGOCqifUTR3mN2UMJ
+         7d4qLPY+wMnhZnhTRmHQgWJUshuPEt0ggjxFDzMjtjjusJYzA3qcWX42PTFD0oPhW4LX
+         EAeZX8YZt40tip6eo4RAbmNM4mzRPlxo10uN6XqpL7Fjmg5ee3Skkvp1d/p73n8/9rNh
+         7PM+3bVu4ay4eK3pXw2btIqkKLV+M1B9g8JYWTVm3iD8a9MoMdeMu2IZYKJ8VOnrwfv/
+         vWbEIFTqiKjHefFZkW6qgq+Tb5y2flIkxKfZiHBgdmANicfAGDt5goPPDUXQQnEn41Ke
+         ndHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748933569; x=1749538369;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wxJyD1Wr6giGGGMhwdcwxe8wm378R6kiZUi+LdBaw9U=;
+        b=AxrfSgkTn5rxz81Eqn2yt1gqU6iE6Bmg0bUCEB+eboQUjaY8MmU8NYiSzjopVB6WvC
+         26M+4zErH/kMCumSZf7MiBQcWG/GlwruV2cEQcPEWU11RAVq0/RwFOqlz3GoGZU0/nrs
+         QoNKYrywjYt01n1MmgX/MdnURym0zV8RfEr6zKKLcIsJu+u2BR3qww7sJskEWrwttxq7
+         QSiSTfPc0NV58La6E1rCt5Ncv7W/mx9vvxfYLrdA+tKVLov9PRLbmRDbOFKfVB7UjjRI
+         TAxUHLNJ3JEHDWEMfqhEa4zi3OaueQFdAjtGrEqmA6dhJzr4vUT0zXozA0p4d88JEIaT
+         nZPA==
+X-Forwarded-Encrypted: i=1; AJvYcCVvKUC8Fkd0oGHKQYVub8UJbiyQOQtgj4N03+2FNXhKEa2/USvZr+64RJGyF5hZuLT2Fkq8fNPxE6geEYM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyOdv2AKeTkW366D2SOsAkbj/TYbSg+dYEL6faUD8Jj9oVqgLr
+	yuXauwo4cYPgmUSpR9YBxc1fb8H2lpWBL1bPB57al2juNLiIWlo3vcDwgKasu8AOag==
+X-Gm-Gg: ASbGncvak+pfhXv//qNBeG8GFNSZLlN0Rcp3UnAeIhLRiThgr7QpOoLmV8d6Z1/UFak
+	/PHmRDQqY5ZxDFdLPQEeAcPBpo4MMrwWKf2k9YhD/JTxKcoeB8ySM7TQ1x5uz8T2VS4Km/Hj/td
+	I0q3+90b/6LaPyZwaz8rcVflebbZ6LbkdE1I8UmeQpDFEqTW9VKdSR9637oiNukm6fxNwH74H27
+	NUddw2o7TjCPybRhlX1HhC+/KymJO8FzOmfxCabdCcJFvUqBMN6AgwblBhd9yUf9ktmu+kPveJJ
+	H7gPRdQUUFndiufEO2ohEg5LJVzWE4eyjRNrhMreqr8OoXCsCv9JQq/W+aZNdl3f
+X-Google-Smtp-Source: AGHT+IHYXjOCnfjKFDJMsvXQhP7ZQM81wMsQjlNn1UPAKq3ILM9rjBY85bZGaOI3BGHiLdo5YQgppg==
+X-Received: by 2002:a17:90b:5790:b0:311:c1ec:7d11 with SMTP id 98e67ed59e1d1-3127c73d3c9mr19065135a91.18.1748933568932;
+        Mon, 02 Jun 2025 23:52:48 -0700 (PDT)
+Received: from thinkpad ([220.158.156.133])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e30cb3bsm6616776a91.38.2025.06.02.23.52.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Jun 2025 23:52:48 -0700 (PDT)
+Date: Tue, 3 Jun 2025 12:22:41 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
+Subject: Re: [PATCH v3 3/3] arm64: qcom: sc7280: Move phy, perst to root port
+ node
+Message-ID: <pb7rsvlslvyqlheyhwwjgje6iiolgkj6cqfsi6jmvetritc7lr@jxndd5rfzbfy>
+References: <20250419-perst-v3-0-1afec3c4ea62@oss.qualcomm.com>
+ <20250419-perst-v3-3-1afec3c4ea62@oss.qualcomm.com>
+ <r4mtndc6tww6eqfumensnsrnk6j6dw5nljgmiz2azzg2evuoy6@hog3twb22euq>
+ <0e1d8b8e-9dd3-a377-d7e0-93ec77cf397f@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] dt-bindings: mfd: Add power-button option for TI
- TPS6594 PMIC
-To: Job Sava <jsava@criticallink.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Julien Panis <jpanis@baylibre.com>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
- jcormier@criticallink.com
-References: <20250520-linux-stable-tps6594-pwrbutton-v1-0-0cc5c6e0415c@criticallink.com>
- <20250520-linux-stable-tps6594-pwrbutton-v1-1-0cc5c6e0415c@criticallink.com>
- <20250521-wandering-tested-porpoise-acbef7@kuoka>
- <CAKMwjwTP=xSsX3UuK02sKbXWaU7y-ErytNYCL_P0UveDytQW2A@mail.gmail.com>
- <20250529-wise-tremendous-stork-a7d091@kuoka>
- <CAKMwjwQOBE651A-5VVjwcv5TspO2eNZfgwWzMpTTWxhR3nGKUw@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <CAKMwjwQOBE651A-5VVjwcv5TspO2eNZfgwWzMpTTWxhR3nGKUw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <0e1d8b8e-9dd3-a377-d7e0-93ec77cf397f@oss.qualcomm.com>
 
-On 02/06/2025 15:07, Job Sava wrote:
-> On Thu, May 29, 2025 at 5:26 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>
->> On Fri, May 23, 2025 at 09:46:49AM GMT, Job Sava wrote:
->>> On Wed, May 21, 2025 at 6:01 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>>>
->>>> On Tue, May 20, 2025 at 01:43:36PM GMT, Job Sava wrote:
->>>>> The TPS6594 power-button option permits users to enter STANDBY or
->>>>> ACTIVE state by a push, release, or short push button request.
->>>>>
->>>>> Signed-off-by: Job Sava <jsava@criticallink.com>
->>>>> ---
->>>>>  Documentation/devicetree/bindings/mfd/ti,tps6594.yaml | 15 +++++++++++++++
->>>>>  1 file changed, 15 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml b/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml
->>>>> index 6341b6070366..a40808fd2747 100644
->>>>> --- a/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml
->>>>> +++ b/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml
->>>>> @@ -37,6 +37,21 @@ properties:
->>>>>        device on the SPMI bus, and the secondary PMICs are the target devices
->>>>>        on the SPMI bus.
->>>>>
->>>>> +  ti,power-button:
->>>>> +    type: boolean
->>>>> +    description: |
->>>>> +      Optional property that sets the EN/PB/VSENSE pin to be a
->>>>> +      power-button.
->>>>> +      TPS6594 has a multipurpose pin called EN/PB/VSENSE that can be either
->>>>> +      1. EN in which case it functions as an enable pin.
->>>>> +      2. VSENSE which compares the voltages and triggers an automatic
->>>>> +      on/off request.
->>>>> +      3. PB in which case it can be configured to trigger an interrupt
->>>>> +      to the SoC.
->>>>> +      ti,power-button reflects the last one of those options
->>>>> +      where the board has a button wired to the pin and triggers
->>>>> +      an interrupt on pressing it.
->>>>
->>>> Don't you need to handle two other cases as well? I assume you copied
->>>> this from the other binding, but all three options are valid?
->>>>
->>>> Best regards,
->>>> Krzysztof
->>>>
->>> Hello Krzysztof,
->>>
->>> Thank you for your response!
->>>
->>> I agree that the other two cases are valid options. However, for this
->>> particular patch series, they may be out of scope. The primary goal of
->>> this patch is to enable push-button functionality, rather than
->>> addressing the VSENSE or EN modes.
->>
->> Binding should be complete, because if you design this as bool, it
->> cannot be later changed to three-state (enum).
->>
->> I don't know if the EN and VSENSE modes are anyhow useful, maybe people
->> interested in this hardware should say.
->>
->> Best regards,
->> Krzysztof
->>
+On Tue, Jun 03, 2025 at 12:03:01PM +0530, Krishna Chaitanya Chundru wrote:
 > 
-> Hi Krzysztof,
 > 
-> Thanks again for the feedback.
+> On 6/1/2025 12:35 PM, Manivannan Sadhasivam wrote:
+> > On Sat, Apr 19, 2025 at 10:49:26AM +0530, Krishna Chaitanya Chundru wrote:
+> > > There are many places we agreed to move the wake and perst gpio's
+> > > and phy etc to the pcie root port node instead of bridge node[1].
+> > 
+> > Same comment as binding patch applies here.
+> > 
+> > > 
+> > > So move the phy, phy-names, wake-gpio's in the root port.
+> > 
+> > You are not moving any 'wake-gpios' property.
+> > 
+> ack I will remove it.
+> > > There is already reset-gpio defined for PERST# in pci-bus-common.yaml,
+> > > start using that property instead of perst-gpio.
+> > > 
+> > > [1] https://lore.kernel.org/linux-pci/20241211192014.GA3302752@bhelgaas/
+> > > 
+> > > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> > > ---
+> > >   arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts   | 5 ++++-
+> > >   arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi | 5 ++++-
+> > >   arch/arm64/boot/dts/qcom/sc7280-idp.dtsi       | 5 ++++-
+> > >   arch/arm64/boot/dts/qcom/sc7280.dtsi           | 6 ++----
+> > >   4 files changed, 14 insertions(+), 7 deletions(-)
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> > > index 7a36c90ad4ec8b52f30b22b1621404857d6ef336..3dd58986ad5da0f898537a51715bb5d0fecbe100 100644
+> > > --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> > > +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> > > @@ -709,8 +709,11 @@ &mdss_edp_phy {
+> > >   	status = "okay";
+> > >   };
+> > > +&pcie1_port0 {
+> > > +	reset-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+> > > +};
+> > > +
+> > >   &pcie1 {
+> > > -	perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+> > >   	pinctrl-0 = <&pcie1_reset_n>, <&pcie1_wake_n>;
+> > >   	pinctrl-names = "default";
+> > 
+> > What about the pinctrl properties? They should also be moved.
+> > 
+> pinctrl can still reside in the host bridge node, which has
+> all the gpio's for all the root ports. If we move them to the
+> root ports we need to explicitly apply pinctrl settings as these
+> not tied with the driver yet.
 > 
-> I modeled this binding after the TPS65219 PMIC, which uses a boolean
 
-Yeah, that's what I meant in my first reply.
+If the DT node is associated with a device, then the driver core should bind the
+pinctrl pins and configure them. Is that not happening here?
 
-> for ti,power-button, despite the same EN/PB/VSENSE options. Since this
-> patch only enables PB mode, I felt a boolean was appropriate and
-> consistent.
+- Mani
 
-Properties should have only one type, so that would be a different
-property. Someone knowing the device should come with arguments whether
-other states for this are useful at all. Or not useful and then argument
-that in commit msg for example.
-
-
-Best regards,
-Krzysztof
+-- 
+மணிவண்ணன் சதாசிவம்
