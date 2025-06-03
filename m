@@ -1,255 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50DBB268C7F;
-	Tue,  3 Jun 2025 06:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC21A1F4CA4
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 07:00:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748933997; cv=none; b=sR7PLzaIcitWFDXlvJ3HGbqGYCZyZvfPSQMuQIxJ0Qj9bdVGD9BhnuWtA5ek8IT0xmcNrUPQdfY0dBeQz12u++yPsQmUMDYeqTKThY5icWVPqI3XHr8kOEeT/sEfkQmuyHqQRgCyhoUt8sdIsuoGXLdlEjPY9uyBmaKGmSRTjbY=
+	t=1748934032; cv=none; b=KLTxva1UgJpBjSa1wCx6bJHWX9z/G/VfSrgPkRYIkincaBQJzhXSyGyZr6zQM4CueBCcTJWOvWj2iUH5S24j/qDH5TeH3QWZPLhG8f2j06HdwXTKY2WaenlXlxtx3rDs7a+eW/gsHMmvbEFdopli6y0RDYXxtAWsXv4qAEDAqxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748933997; c=relaxed/simple;
-	bh=ZvJ2xMZlhu1ON5brft5paCaAhefbbaXbiA98oslx0SQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S4mD6Gl2gkCq/S3LANIfqA5lmqYezFE8J69hnmInTU6QzPKsVoEkyNh6pmrUvWiFSkUrpVxr3hSJRFHX3zrTwSSxbyHYpHhPTLO1ELzVv/hGf8rRbeb/ANZNlg0Xo9FzLmHf+RAwxvwPnhkrjYBb9h26pmKXnh79Wu5TGwPx0yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bw8+RBSM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748934032; c=relaxed/simple;
+	bh=neMNioGQcMY/ThDZFH+CvN16qQngobk9skAxVe3CuBE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uda2oTakg1am+wWmNM8ySBUB7clIREPi3YQS4opeVBz1Zy2322ZxnE+KwMdipMqMlCz4sOdlSm9X4mw5k17A6m8tDx6qADorDGeHr0ou/axlMXn9jp1k7quZf3FvxgPGKCmJdAvhgDpnYNMRJqUyP/5BEHLnWncz6iXK0eVABQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=jf110Vpq; arc=none smtp.client-ip=44.202.169.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bw8+RBSM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9BB6C4CEEF;
-	Tue,  3 Jun 2025 06:59:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748933995;
-	bh=ZvJ2xMZlhu1ON5brft5paCaAhefbbaXbiA98oslx0SQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bw8+RBSMp5aJNZtTJZiOiPUJRDoO1OJvdeC9NhCfdscjClFlOsNEAFp0eqCSIkTRN
-	 UID3+GDpxR773Jmht/MuJEbKPotLQu5d2LO8UHhKIJCpZ2myc1Vf66y6BfHcdT5Y8o
-	 K/upQoat2R3qkcM8QbngJXTfdhi3uUMPiA0VU11BqFN5ymLBFECrYyGAsqhCvCUf5+
-	 +EQKYAkStxRB9VgReGLLmaVViwx0WLAjj9oOnyvhSafsi49f4KQK0ZPgUATcQv1azy
-	 MWMqPLMtsPp93G/a7GJZ79tghTPhsfc6YFLk7DkFYcd/Z9M+2s9aX14cSJd36xf3L5
-	 QuzIc2WAmZRsQ==
-From: Song Liu <song@kernel.org>
-To: bpf@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org
-Cc: kernel-team@meta.com,
-	andrii@kernel.org,
-	eddyz87@gmail.com,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	martin.lau@linux.dev,
-	viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz,
-	kpsingh@kernel.org,
-	mattbobrowski@google.com,
-	amir73il@gmail.com,
-	repnop@google.com,
-	jlayton@kernel.org,
-	josef@toxicpanda.com,
-	mic@digikod.net,
-	gnoack@google.com,
-	m@maowtm.org,
-	Song Liu <song@kernel.org>
-Subject: [PATCH v2 bpf-next 4/4] selftests/bpf: Add tests for bpf path iterator
-Date: Mon,  2 Jun 2025 23:59:20 -0700
-Message-ID: <20250603065920.3404510-5-song@kernel.org>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250603065920.3404510-1-song@kernel.org>
-References: <20250603065920.3404510-1-song@kernel.org>
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="jf110Vpq"
+Received: from eig-obgw-6003a.ext.cloudfilter.net ([10.0.30.151])
+	by cmsmtp with ESMTPS
+	id M9k1uuAi1iuzSMLdHutYk3; Tue, 03 Jun 2025 07:00:23 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id MLdFuGKjSh9ZxMLdGud2vC; Tue, 03 Jun 2025 07:00:22 +0000
+X-Authority-Analysis: v=2.4 cv=GODDEfNK c=1 sm=1 tr=0 ts=683e9d86
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
+ a=-Qcm0AZxhyoZnww38z8A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=Wh1V8bzkS9CpCxOpQUxp:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=VGk5+FWq4dsiLV3+8wImbmAjQ0FM6wtq95qD7L+zx7k=; b=jf110Vpqxs5Xhxhf5+BFdSrtnl
+	8ZFwQIJDpULaVGziH7UdSpfVh+L2jhH3kWM6dzSLO4UwDuZcO8eHOyBTrWyxaDtjO84+jJihS7Cq6
+	VanT9fdEULfrndl2fGOEe5JweLVu/mP/lQRtj5XclmYj8uDnNgk8HkVBhacXutvWJSl1gpfQ6naNt
+	NKpcEXqaPNlXQWaGYyGqir/ZtyWEKYKfxiyJD4zA112Dkh1YcQlDSM9Ex8pxG1+SnFXlTg5/R8H7H
+	Qnh/wbZEBad6iDrMypxMEWfqfmLTjTViTMWCy4bt+I3nVSaORq5WTAMB2l1ONMhE9hGy/qRS5mb9T
+	peMeZmbg==;
+Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:34732 helo=[10.0.1.116])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <re@w6rz.net>)
+	id 1uMLdD-00000001pAm-3aWd;
+	Tue, 03 Jun 2025 01:00:19 -0600
+Message-ID: <e3201002-8157-4fe4-9b21-39f3e5e5054a@w6rz.net>
+Date: Tue, 3 Jun 2025 00:00:16 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5.15 000/207] 5.15.185-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250602134258.769974467@linuxfoundation.org>
+Content-Language: en-US
+From: Ron Economos <re@w6rz.net>
+In-Reply-To: <20250602134258.769974467@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 73.223.253.157
+X-Source-L: No
+X-Exim-ID: 1uMLdD-00000001pAm-3aWd
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:34732
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 16
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfBRxTtNxiHWK6tfGGR1AUf4Oo5uATkZDt/jy52PdBvHhQHKnbSAfpcYDNacIr83uZLDW77bOFV6m+vztUwighCTwqMxpwR7CdRcDruYz5nrngV6figU6
+ Hn+ubWJp4D3ly83cJHjiujo+KtosL/i7on36C4oLb3o0KItcbf38r4d/AoaWT82lH+UryiktTtoR7zA8Eon/finiCYzTWxvCqgw=
 
-Add tests for bpf path iterator, including test cases similar to real
-workload (call bpf_path_d_path and bpf_get_dentry_xattr), and test cases
-where the verifier rejects invalid use of the iterator.
+On 6/2/25 06:46, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.15.185 release.
+> There are 207 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 04 Jun 2025 13:42:20 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.185-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Signed-off-by: Song Liu <song@kernel.org>
----
- .../testing/selftests/bpf/bpf_experimental.h  |   6 +
- .../selftests/bpf/prog_tests/path_iter.c      |  12 ++
- tools/testing/selftests/bpf/progs/path_iter.c | 134 ++++++++++++++++++
- 3 files changed, 152 insertions(+)
- create mode 100644 tools/testing/selftests/bpf/prog_tests/path_iter.c
- create mode 100644 tools/testing/selftests/bpf/progs/path_iter.c
+Build failure on RISC-V.
 
-diff --git a/tools/testing/selftests/bpf/bpf_experimental.h b/tools/testing/selftests/bpf/bpf_experimental.h
-index 5e512a1d09d1..cbb759b473df 100644
---- a/tools/testing/selftests/bpf/bpf_experimental.h
-+++ b/tools/testing/selftests/bpf/bpf_experimental.h
-@@ -596,4 +596,10 @@ extern int bpf_iter_dmabuf_new(struct bpf_iter_dmabuf *it) __weak __ksym;
- extern struct dma_buf *bpf_iter_dmabuf_next(struct bpf_iter_dmabuf *it) __weak __ksym;
- extern void bpf_iter_dmabuf_destroy(struct bpf_iter_dmabuf *it) __weak __ksym;
- 
-+struct bpf_iter_path;
-+extern int bpf_iter_path_new(struct bpf_iter_path *it, struct path *start,
-+			     __u64 flags) __weak __ksym;
-+extern struct path *bpf_iter_path_next(struct bpf_iter_path *it) __weak __ksym;
-+extern void bpf_iter_path_destroy(struct bpf_iter_path *it) __weak __ksym;
-+
- #endif
-diff --git a/tools/testing/selftests/bpf/prog_tests/path_iter.c b/tools/testing/selftests/bpf/prog_tests/path_iter.c
-new file mode 100644
-index 000000000000..3c99c24fbd96
---- /dev/null
-+++ b/tools/testing/selftests/bpf/prog_tests/path_iter.c
-@@ -0,0 +1,12 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2025 Meta Platforms, Inc. and affiliates. */
-+
-+#include <test_progs.h>
-+#include <bpf/libbpf.h>
-+#include <bpf/btf.h>
-+#include "path_iter.skel.h"
-+
-+void test_path_iter(void)
-+{
-+	RUN_TESTS(path_iter);
-+}
-diff --git a/tools/testing/selftests/bpf/progs/path_iter.c b/tools/testing/selftests/bpf/progs/path_iter.c
-new file mode 100644
-index 000000000000..be804fb4302c
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/path_iter.c
-@@ -0,0 +1,134 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2025 Meta Platforms, Inc. and affiliates. */
-+
-+#include "vmlinux.h"
-+#include <bpf/bpf_helpers.h>
-+#include <bpf/bpf_tracing.h>
-+#include "bpf_misc.h"
-+#include "bpf_experimental.h"
-+
-+char _license[] SEC("license") = "GPL";
-+
-+char path_name[256];
-+char xattr_val[64];
-+
-+static __always_inline void access_path_dentry(struct path *p)
-+{
-+	struct bpf_dynptr ptr;
-+	struct dentry *dentry;
-+
-+	if (!p)
-+		return;
-+
-+	bpf_dynptr_from_mem(xattr_val, sizeof(xattr_val), 0, &ptr);
-+	bpf_path_d_path(p, path_name, sizeof(path_name));
-+
-+	dentry = p->dentry;
-+	if (dentry)
-+		bpf_get_dentry_xattr(dentry, "user.xattr", &ptr);
-+}
-+
-+SEC("lsm.s/file_open")
-+__success
-+int BPF_PROG(open_code, struct file *f)
-+{
-+	struct bpf_iter_path path_it;
-+	struct path *p;
-+	int ret;
-+
-+	ret = bpf_iter_path_new(&path_it, &f->f_path, 0);
-+	if (ret) {
-+		bpf_iter_path_destroy(&path_it);
-+		return 0;
-+	}
-+
-+	p = bpf_iter_path_next(&path_it);
-+	access_path_dentry(p);
-+	bpf_iter_path_destroy(&path_it);
-+
-+	return 0;
-+}
-+
-+SEC("lsm.s/file_open")
-+__success
-+int BPF_PROG(for_each, struct file *f)
-+{
-+	struct path *p;
-+
-+	bpf_for_each(path, p, &f->f_path, 0)
-+		access_path_dentry(p);
-+
-+	return 0;
-+}
-+
-+SEC("lsm.s/file_open")
-+__failure __msg("Unreleased reference")
-+int BPF_PROG(missing_destroy, struct file *f)
-+{
-+	struct bpf_iter_path path_it;
-+
-+	bpf_iter_path_new(&path_it, &f->f_path, 0);
-+
-+	return 0;
-+}
-+
-+SEC("lsm.s/file_open")
-+__failure __msg("expected an initialized iter_path")
-+int BPF_PROG(missing_new, struct file *f)
-+{
-+	struct bpf_iter_path path_it;
-+
-+	bpf_iter_path_destroy(&path_it);
-+	return 0;
-+}
-+
-+SEC("lsm.s/file_open")
-+__failure __msg("expected uninitialized iter_path")
-+int BPF_PROG(new_twice, struct file *f)
-+{
-+	struct bpf_iter_path path_it;
-+
-+	bpf_iter_path_new(&path_it, &f->f_path, 0);
-+	bpf_iter_path_new(&path_it, &f->f_path, 0);
-+	bpf_iter_path_destroy(&path_it);
-+	return 0;
-+}
-+
-+SEC("lsm.s/file_open")
-+__failure __msg("expected an initialized iter_path")
-+int BPF_PROG(destroy_twice, struct file *f)
-+{
-+	struct bpf_iter_path path_it;
-+
-+	bpf_iter_path_new(&path_it, &f->f_path, 0);
-+	bpf_iter_path_destroy(&path_it);
-+	bpf_iter_path_destroy(&path_it);
-+	return 0;
-+}
-+
-+SEC("lsm.s/file_open")
-+__success
-+int BPF_PROG(reuse_path_iter, struct file *f)
-+{
-+	struct bpf_iter_path path_it;
-+
-+	bpf_iter_path_new(&path_it, &f->f_path, 0);
-+	bpf_iter_path_destroy(&path_it);
-+	bpf_iter_path_new(&path_it, &f->f_path, 0);
-+	bpf_iter_path_destroy(&path_it);
-+	return 0;
-+}
-+
-+SEC("lsm.s/file_open")
-+__failure __msg("invalid read from stack off")
-+int BPF_PROG(invalid_read_path_iter, struct file *f)
-+{
-+	struct bpf_iter_path path_it;
-+	struct bpf_iter_path path_it_2;
-+
-+
-+	bpf_iter_path_new(&path_it, &f->f_path, 0);
-+	path_it_2 = path_it;
-+	bpf_iter_path_destroy(&path_it_2);
-+	return 0;
-+}
--- 
-2.47.1
+drivers/clocksource/timer-riscv.c: In function 'riscv_timer_dying_cpu':
+drivers/clocksource/timer-riscv.c:82:9: error: implicit declaration of 
+function 'riscv_clock_event_stop' [-Werror=implicit-function-declaration]
+    82 |         riscv_clock_event_stop();
+       |         ^~~~~~~~~~~~~~~~~~~~~~
+
+Caused by the patch "clocksource/drivers/timer-riscv: Stop stimecmp when 
+cpu hotplug" commit 60a72ebfdd28510eee8f53a7aadecca1349d4603
+
+The function riscv_clock_event_stop() wasn't added until v6.7-rc1, so 
+this patch should be dropped.
 
