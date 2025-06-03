@@ -1,212 +1,334 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2056.outbound.protection.outlook.com [40.107.237.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA7179EA;
-	Tue,  3 Jun 2025 03:18:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.56
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748920737; cv=fail; b=q1VDJ4OyIIE7O1YgShjSr3FQs+hT03X2sZ2Wf1xMFmbtUpVIFQf496gZGTLSXZAxBEyewWOIyb/v2Ys+cuYIAqY4jHCw2xEkEpu+RyWighphy/Wj76pbVYNl0nuvF0nuP/jlg+jFyygqi0D/pVXklS4XSgz1oFpSlszkGNVOMqw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748920737; c=relaxed/simple;
-	bh=pCHaghHOx3Vrk0pTKa1by61EbDLoOjbqjmfn5EtgTV8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ja4aO4lhFMbwQ1+GCjzia8pNAy0f4E1OpKriFqi6r9UdAZ7pj1hi4dMyUtHao80H1iMZAKtmpnVe15RVvOBu3njUGOJitboLFCB9xcbfzpeqZgdMJ9jMY9OvEw3furYkjIw1VOrZpfQ3JhwTLhPSR9OYY/TQllavnqbsFzSvA04=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=b9lRjKVP; arc=fail smtp.client-ip=40.107.237.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF6B154BF5
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 03:19:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748920760; cv=none; b=EiGnu1Oi7r49KVlzNWEiRD1AuqXhQM1uKFJi5lOhZNUHVTYEYL0oFJJYQfbKD0YKHZK2ZfI4B7+4++Zkr5nrT7pdCNT1Q/9xebaabywl0E2dmz4rePEQLlokjBKZ4j2zgnLM4LLDK2SELOTN/BGusiYME9o/B/LyJdLCPSMS84M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748920760; c=relaxed/simple;
+	bh=ulahXhuT8yDizo0bw9N/2oF8mAlXjmDARNszSAnWgEs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cj+4aI0MxTarepcJqlL8HdVn19eBaPS2zSsl9dGkMe4rHy8vM1+TXO1TZxW1hM3tkyGNt7IC6rDWsjDaq2x8JH10Q0IHG2O+mAy9N4E7Qs1boOtT58CYtC0GhQ1QuJCjwJm7hKzH1Cfo/VvE0RB6OLQ24rreWPhJY7UQ57vqiCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c9kmRvo/; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="b9lRjKVP"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wezqwVnTwh/RgcjQZYZIb2RuEBn+2tLOPUMEDiZgY/gi490eE4M3J50alS6DwSisX2Hm1/lXuCAhG3ez6MThLbz1YlQknbCusKrAMLKXTlgKLkQ9Q6iJMBeEB2qtAKDrZwxdDX0sOQRxka0ySHwxREgvwURxp3z+6DIrTVfAe510pPdlTftY7Z7guEiHZklH1LEEXS03qzqJIHLn4vmSrnA4tj2+tAFsn/611vXFDmaZH4Sjh0dXUDyHwa1k3/WDtrVogoqJ4EHQZD7ic0ebzAR2xC2OK/UZ7h6Lyv1Xm3cHhquohnjAnkxt3BJvD1prewxYxDRryvzeXCPKK51D7w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8BT21sTQpjFGFUNNIfOalyzAbrRkmcPleXuDiCjYyh4=;
- b=g4XdF78V13zoczPIIuANrNYCCEl4Gg3ePdZbo3a2vk57lteAXbbepn6qFa0HujhgqiHAfp2uPXKDvtBGySYOR1nrY0pBAoX4IlvGGcf2vTUNktYP60hU7rPvmgnweL90K6ckos/sKRM6rRDna+w1R1YMli6QbABfu9wiW5q1NwDxQJm6zBZHXKXe3o3XeTUY63ukLwsBa7N2TiTI5hvLgL26cHpauk3nty3NAGMV/xCVkKZDE6iWu89+6zuqejuK9RG3I7++rNx8HracAtxJINz5iP5BX7gYWKatsTGct+y8TZP2xkRRoYK3VafwT+ntCk0QCs/59YyGr0BLX6VCsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8BT21sTQpjFGFUNNIfOalyzAbrRkmcPleXuDiCjYyh4=;
- b=b9lRjKVPX+FQIU1uRaAEqj3ogoss9qWe1jYLBItaMbLVw6lCyKDy2D/dqUN5vyGDvlMlTAnR6N77AO7owtB60kE40EUIp6FlclFW5e7cYAiFLZQQ1mRZjqo2I24+5wBr4DMBPXjr7goQqIB+XfMaMrc95l4MzDX5v/v/ZmFtLak=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS0PR12MB6440.namprd12.prod.outlook.com (2603:10b6:8:c8::18) by
- LV2PR12MB5726.namprd12.prod.outlook.com (2603:10b6:408:17e::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8769.37; Tue, 3 Jun 2025 03:18:53 +0000
-Received: from DS0PR12MB6440.namprd12.prod.outlook.com
- ([fe80::6576:7d84:1c66:1620]) by DS0PR12MB6440.namprd12.prod.outlook.com
- ([fe80::6576:7d84:1c66:1620%5]) with mapi id 15.20.8722.031; Tue, 3 Jun 2025
- 03:18:53 +0000
-Message-ID: <6e764150-2a37-42fa-9e6d-1d5dafcf1e5b@amd.com>
-Date: Mon, 2 Jun 2025 23:18:49 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] i2c: designware: Initialize adapter name only when
- not set
-Content-Language: en-GB
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Pratap Nirujogi <pratap.nirujogi@amd.com>
-Cc: rdunlap@infradead.org, Hans de Goede <hdegoede@redhat.com>,
- sfr@canb.auug.org.au, linux-next@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- benjamin.chan@amd.com, bin.du@amd.com, gjorgji.rosikopulos@amd.com,
- king.li@amd.com, dantony@amd.com
-References: <20250530200234.1539571-1-pratap.nirujogi@amd.com>
- <20250530200234.1539571-2-pratap.nirujogi@amd.com>
- <e75a0e17-8a1b-14f0-a33d-e59c0f692651@linux.intel.com>
-From: "Nirujogi, Pratap" <pnirujog@amd.com>
-In-Reply-To: <e75a0e17-8a1b-14f0-a33d-e59c0f692651@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: YT2PR01CA0015.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:38::20) To DS0PR12MB6440.namprd12.prod.outlook.com
- (2603:10b6:8:c8::18)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c9kmRvo/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748920757;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aLUswlGrIATyOOlI6fhYu4jJYFEad2pBjyge/hX+nFY=;
+	b=c9kmRvo/bTbgE2fbYbh7Z4pyeARezSCdE3nHcglQD0Q7/eZtFtpFh1wDYY3718cgouArSd
+	pa6wuilqGcz93kvHgfDmo5S+eXIixRpNqFKVVx3fBMoYFFwJ4fAwjXme5/rN+2FVLe18IZ
+	arzkNu+P08srjPMg+BT1iDVrh5tjmsI=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-590-T8cgprD6Poy9nEAgD3Qjsg-1; Mon, 02 Jun 2025 23:19:16 -0400
+X-MC-Unique: T8cgprD6Poy9nEAgD3Qjsg-1
+X-Mimecast-MFC-AGG-ID: T8cgprD6Poy9nEAgD3Qjsg_1748920755
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2355651d204so25256965ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 20:19:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748920755; x=1749525555;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aLUswlGrIATyOOlI6fhYu4jJYFEad2pBjyge/hX+nFY=;
+        b=J3mBfs2q6hoHz++QkXhYBRExN8FsWAG+jjfPrjNat/3Cqq1gnGt0vjzRGIGxHx560V
+         HlBKvjGj6KDyyRqo6BMZwmOYSIhg2h4DwisqM+uAx9jfUCFXlZr06eQ9UFr9IXKZU8Xd
+         NaEHb+OhRXN8x2wcML19/E40hWWF708oorbChIN4qJ3molV1TqUGZzvgQRAS2Nzi4zr9
+         O8sxV4M+uqp1K0Ru8XwrrotEl2bCxJ55qNHVkSTgwEwb4b3yO/r9/V7/sjRtiNGR7xub
+         YNTuTOukwz6/NzvpgHpgPa+5ov+YvnyORuKtAwvWXhui/92FfAhF0GarsE2mE+JEsjmA
+         XbPw==
+X-Forwarded-Encrypted: i=1; AJvYcCVJldQM+wCRPAXbdGCYkehMRGkLSXmkmBf2PGvhU01sw+7HAJP4d8XUDHxj/4FzO6yDswbpSiGyBE2jQyo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2qbG59J+KGHiosAKW1VZ+xAWWszmJUK/cItUjFBbndeT9ulxc
+	9/x0SFouEvFgJd5RPQDWMk4VaCf3NXN0BLFV8gAG9oNC8sSmW21wTHUTocMFsiXjsaMf3LgOZMs
+	rLbzgTmqQpXC8g3RR3EI/AN/xgdQo9DbL4CuN3QsLmbJcIUIiw0Dl1t3F+ZdmhCorspLH+23ihc
+	lRjrfhocVZnE10O+HfUEOV2GioDx7oagZChYDTBLZz
+X-Gm-Gg: ASbGncvodvT/42zqtwm68tZw1yXXVKVHpbVghN42zCm5iRMZBhqjJXfrohpHqZZI7zU
+	uaV0JKaiAaJ3G1VQ5X7VOvk9QaRF19jVgVMswYYhTWbqLoCGlGXkmpGQLvKpoYIqQN2/BlA==
+X-Received: by 2002:a17:902:e849:b0:234:8a4a:ada5 with SMTP id d9443c01a7336-23529904f21mr247668285ad.37.1748920755080;
+        Mon, 02 Jun 2025 20:19:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHywPCLM/Qh3jSdbKsF9dOuO472rVd+vIBVeTePaa/6GUJRTTw4v5rkd8bePaost/OoMXAMwCrz5QAOrqb7r5E=
+X-Received: by 2002:a17:902:e849:b0:234:8a4a:ada5 with SMTP id
+ d9443c01a7336-23529904f21mr247667985ad.37.1748920754675; Mon, 02 Jun 2025
+ 20:19:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB6440:EE_|LV2PR12MB5726:EE_
-X-MS-Office365-Filtering-Correlation-Id: e5a87765-9e9b-4e0f-ac5b-08dda24d5d88
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MVZNaFZtTEhjK2JFRDBYRFM1L2x6a0JGN0VCamFUbmFtczNwRTIzWGZmTUFj?=
- =?utf-8?B?ajU5d3BUcU1qRnpBWXpSUVRvTE90NXByY0N1ZHhZK0FpMHlxZ05lWUZNWnlV?=
- =?utf-8?B?R0twTDdYdTNmWlJ6VTIyRkkxalcvZU9kTFRCZlhqMWNHcVZWaUZWNy9kcmVZ?=
- =?utf-8?B?bllvcUVRdnVGbVRuazhYU0wzOUZYOFpTalQwR1VYeWRuazhIUkJhdkdidkh0?=
- =?utf-8?B?dmxwQzE2Rmcxb3krRXN0TlZkaWVuaUZyOHlBcG1RRmhjMFhNNkNueUNQUGkx?=
- =?utf-8?B?U3JzTUJQOVZNNDk5bEdhMzRyRTBLRHBxTXFqZS9rdG9wQ1hLSnI5eGRlMit0?=
- =?utf-8?B?MzNwVGZUUFZoM3UzSlRkVldJTVl4aldOREJ0MDZ6M3BwUFliRlZLdmJBNHFk?=
- =?utf-8?B?ak5lME8yTmdScDRJb0Y3Z2tlY1VIQ3ZVbUtKNzI3bW5SU2toVDhTc0tmSWpE?=
- =?utf-8?B?NC9Yd0MwdS9ZTWJHdTRVSkx2b3N5eEw0QzR4TFNYUDRnRVJncjd6d0Q2aUhJ?=
- =?utf-8?B?MVVlZ1gydXdSaWVOa0hmYVB4c0E3L0FXRjlicDhuSWFSaW5mSjBqanVNMnN2?=
- =?utf-8?B?cTlrajBsYUtNVmdtaklCUG50bUdjVnRHb28vcDZYMG5GZXFSSGJjbUlMT1hu?=
- =?utf-8?B?MTAwaTBDSFM2Y29XUEFOTDRWckxvYnRVS0JmZEJrNXJydkhvdlo3aWVVQ2Ix?=
- =?utf-8?B?MlZ6OGhTMWtCZ1h3MThLZGd3dUVjRG1FeW9ucS9mWjZhZVlkeFM0TTNxMVhX?=
- =?utf-8?B?MVVsUmYzRU8xK3dxZU42b3k1Qk1Ld0hiK0lySnJXUXU5dzVtbUVIMmhDMVdM?=
- =?utf-8?B?KzRqdmZld0NIZUVReG5yb1k5KzA1NkRjVXN2M09yYXRYZkVhYkFBZk0zOXlN?=
- =?utf-8?B?TlRDTHJubGpQUk5XSkdJL2JnajVGZXhwOVd0UGhxSXlSVUw1OEpYTU02SDZw?=
- =?utf-8?B?eWJvZFJrbm9YZGpPaFVpRjdZYlg5Y2orQ3JLenU1STR6TXRTenUrUzB3ZWg5?=
- =?utf-8?B?Q2NDZmc0dW5rWXp4SmNQVzd6NUN5eGtsRENsajR1dTd2RUxOSFN6M1R1T3Zr?=
- =?utf-8?B?YXVZQ0ZUWUhxcXp2Yzk4MkpyQWNQWWkyb3ZoR0FoY2tiT3d4bDVKallXYjha?=
- =?utf-8?B?eks5dk9BQU5VOXRlcmRLUTlrcGF3TFRvS0V1TVgvazJ6UkRyR2Nqa2Fiek5p?=
- =?utf-8?B?ZUhESkNDQ2VjcmVBQ2poWDNSYVFIRjUrU2NoN3hDOHpYSkptemg5T1FvMUZ6?=
- =?utf-8?B?Nk4yaVF4MUp1UWpaOGVLSXpQaHVxbk1QUGZKUUhoN2tlcUJwdWtKdlZHejlK?=
- =?utf-8?B?Q3FZa09yMzlralBpMWJjTTJ3a1BwNGRKMkw4aXRuUk5VazM4azFzVHBWSWZL?=
- =?utf-8?B?RVljaW5hdm9Uc1Z3MUZsRDFJVEptQ1FrVjhqMDM1WVVEbm5NL29wMC9DS0hW?=
- =?utf-8?B?QVpmUTNOVXhIY1pGMisvdkkxeWF2ckI2VUtycDg2ZWk2ZVJjbE5WbE9DdGxN?=
- =?utf-8?B?VTZtdERpN2dNdFhDbnYxWllxNTdvYU43UEpuczFsdjNUZEdpamJtMWpJYWxr?=
- =?utf-8?B?Wm9ERWxUcStkR2tuc0J3WlgvZlRMbzAzZS9oblBmR2tJUGNKd0I3Rmt3YTAz?=
- =?utf-8?B?STducWZST3JMd1JjUDF2bXpXVkQ5eFZJN3NDVTJXTHhJNjZnK1JLTS91cUg1?=
- =?utf-8?B?OFV5elRGaDBOTXVzQitzRFpURnNWSGtTNmZEaEJWeENwR05UbjNLcG4vMkMy?=
- =?utf-8?B?VDQ4RDNuajkrL3NUM1pIMllKZzdUR2lEZjZuMjdRdnhWVVJTc2FXOW5BaTlj?=
- =?utf-8?B?ZzJ3OWRZMmwzdERMZk1XaStVb0taemNGbTZuakI4YklmbmQwdVlKL0ZKd2ZR?=
- =?utf-8?B?TU43cGdMRmxJWnJKL1JLMmxGS1Z2UitpVFRFS3pMaThyNXVJelN0V0dLcjZa?=
- =?utf-8?Q?mAcHfjJBFMA=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6440.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?LzRBcUFKb3FqYXpCR3R6Z1loRnBhT055TVZUeGNyVVU2S2R6bW9Yak85NUNt?=
- =?utf-8?B?TVpwbTRXeE9KM2ViTmM0cE5mZ2QyVVNGQjU4SDMveldrWG5jZW9pc3poUnRp?=
- =?utf-8?B?bGlqNkZReHl4bi9nYzRQM3RCanRtUXVUcTRzVHBrYk5UZDBhM1Y1WTllT0pv?=
- =?utf-8?B?UWF6LzdpcVNJUlh1K3prRWxSQ1RZQTNDMWRMRzJXQlk4T2txTzZXWUZ1aXFz?=
- =?utf-8?B?a3N0aThraCtEOWNmNFR1ZnNGRm55cWo1NExNS0h3U1ZLZFlGQVN1bDlKNkJ1?=
- =?utf-8?B?aEE0Z1J2c0dmZmhwOVUxNzBmMlRSZ3Y1SENsWU55VFBTT1lmR053eU5MYXJy?=
- =?utf-8?B?bUErQWJVZE4ya0JXTUJmSjd0c2pDTFpoQnRVRmtmbnI0VGNJRGxpWGlNeUpW?=
- =?utf-8?B?U1BRWlBCalpGVno0RTA0clB2UEg3QTJzd216MGl6U1U4b25CU2dHL1UxSGNX?=
- =?utf-8?B?bzRFMG5CdUJhK3NBdCthWSs5NUl1RkE5VEs5TElScTNEcmVtUnA2eE83TVl5?=
- =?utf-8?B?OXNQTkpIWERCbExJUjlWQVBoNDdXc1RnMDJzTk4zQ0tXckMyR3ZUNTNvVTdD?=
- =?utf-8?B?VWlvQkQvdCtLUVkzaUc1Z2R5TWZVR0FjQ0MvR1FkQjVPU0hkTGViMDJVRDh2?=
- =?utf-8?B?L0JLd2xxalNOTXg2Njc5Q012dDFuZXUrcWVkS25UYVRDSjlQa0dQbVlVU0pT?=
- =?utf-8?B?K1djTkM2aFIvanhjcGlDakoxYm1KeU5YU0RxZ3o1dTBUTEZlbmVYelRjQy9O?=
- =?utf-8?B?Vm95VWk0eE5sTHB1N1pZa2lsMC9LekdEYk92ZEJzTUxZYnVlVGNqc0tMWEtB?=
- =?utf-8?B?MGg5KzVNS0pZLzdZckxVeVViTEFXdFpOc2NJaWJINmFDRzl4SXNTaWtaNlgw?=
- =?utf-8?B?WU1DVlFsUUhQYVdGbHE0UVRvMEU1Z0lyOVcrM0RDSk1RdVRReDRNc09qYVRv?=
- =?utf-8?B?emFXVXBKVzJzaXJRN2hKRVBNK3BDNGhaQUhEM2xSeHRjSXUvYzU2M0oxTGk0?=
- =?utf-8?B?ckpTYmpUeHQ0Smx4YVFNWVJrYkVtVUVRaHg5dmFHUHN6bkV3b1FTeUViYklU?=
- =?utf-8?B?SmRhaVNNSk1sdjdFblRHTmdBTExENkt1RUxVNlJnRGMxNkU3Ky9CRkNSYklz?=
- =?utf-8?B?QUMyNlZ3S1MwbTlLdWVOVXRtSTkrWk9XaStvK3NCdWZiQzdHSHRBNHoxbC9Q?=
- =?utf-8?B?TjZEVFhGdml2eVRZc01ydkUvTy9yLytpZHBhK2swQzlqSE92dEp5eHFxUWVy?=
- =?utf-8?B?OHE0WHVhYnp0L3RERHYwSEJVaTRUWExBRXFzK25xamRqY1hoN0M1MU9mNDFP?=
- =?utf-8?B?cjU1ZkRLZk9hRXBjbVV3V1NLZlA2WjRsYzUzS25QZzdha0ZlbUJlTmJjdXJ3?=
- =?utf-8?B?cUZka0FpSWZObUIwdU5OVlp5THlRY21DSnBTQy9nZVNjejdGSWU0OEx3SkVi?=
- =?utf-8?B?TXRJUTdGSUtxbzErK1FzNmNpaTlPWnh2TE11ZFJxeUVzcjRXeWt6MlQvalVB?=
- =?utf-8?B?UG5PYTJzMDRvUVhwdkxkeVhiTnlzUWNnR2xPV0ZSMVZuR2s3Vy8zcmRESGlJ?=
- =?utf-8?B?cDFqT1NaQ3VxWXBRYWVzSGt0K0gyRjFmN1dOZ1c4NXBkMXU1NWV3NHdjcmZP?=
- =?utf-8?B?U0c5WWVLRko0VlIxcWNuMFNXeXhHVGkrbVcvQlRFK2o3Smkxa0JHVDFoQlhF?=
- =?utf-8?B?cXdpN3Arc1JHLysyR2M0SlpzbTZ2VmU4eHg0bTlNSExSNUIrMFJiR2c2VWpH?=
- =?utf-8?B?NnZ4amRoenMvdEZUS0pkSWVFbi9ZcHFtbkNKOFdVRU9RNitGeDF1c3V3Ry9l?=
- =?utf-8?B?bVRyd0NDRWIrajJjTmhpS2FtcDlGcUZuWFJKUzVRQnltSnNFR3FJYXQva3Bx?=
- =?utf-8?B?aVFvR3J2bGd6akU4K0pXdElQMi9EZ2hobnJiQ0lOOGFCTFNIVzhJd3l0ejdF?=
- =?utf-8?B?a2NiSXBRL0hweENSWlp1cUl5Z2lzUmRlQUV4QWVTek56TWFVL2NEKytndWQ0?=
- =?utf-8?B?ZlVrbWo0RE1TSnFIcFpiTjF1T0kwemtCK1RFK3hkejN4bElUa0FCZCtTM1lC?=
- =?utf-8?B?aGxxU1BUQmdCRkl0c0JWditneXZiTHB1WlNxUnl3WkxVamFhWW4wMTE4R3Bt?=
- =?utf-8?Q?LLWPUqXwHqvwsB5XqG1h1YFUD?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e5a87765-9e9b-4e0f-ac5b-08dda24d5d88
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6440.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2025 03:18:52.8264
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WxPegKd3m5RLL4TMJrB7yrAjA/sbYyuorpnvtCRSl0ctv8ZTkYSd0aVyT+s5lRweF/jOteuH0A3YuE8KU4xq6w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5726
+References: <20250530-rss-v12-0-95d8b348de91@daynix.com> <20250530-rss-v12-1-95d8b348de91@daynix.com>
+In-Reply-To: <20250530-rss-v12-1-95d8b348de91@daynix.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Tue, 3 Jun 2025 11:19:03 +0800
+X-Gm-Features: AX0GCFv2w2DYNXanInKBc5HQRF8lqBk-gAKp63FMQ8nnSSAfo4iUv1CXTbXlSAw
+Message-ID: <CACGkMEufffSj1GQMqwf598__-JgNtXRpyvsLtjSbr3angLmJXg@mail.gmail.com>
+Subject: Re: [PATCH net-next v12 01/10] virtio_net: Add functions for hashing
+To: Akihiko Odaki <akihiko.odaki@daynix.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, kvm@vger.kernel.org, 
+	virtualization@lists.linux-foundation.org, linux-kselftest@vger.kernel.org, 
+	Yuri Benditovich <yuri.benditovich@daynix.com>, Andrew Melnychenko <andrew@daynix.com>, 
+	Stephen Hemminger <stephen@networkplumber.org>, gur.stavi@huawei.com, 
+	Lei Yang <leiyang@redhat.com>, Simon Horman <horms@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Ilpo,
+On Fri, May 30, 2025 at 12:50=E2=80=AFPM Akihiko Odaki <akihiko.odaki@dayni=
+x.com> wrote:
+>
+> They are useful to implement VIRTIO_NET_F_RSS and
+> VIRTIO_NET_F_HASH_REPORT.
+>
+> Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
+> Tested-by: Lei Yang <leiyang@redhat.com>
+> ---
+>  include/linux/virtio_net.h | 188 +++++++++++++++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 188 insertions(+)
+>
+> diff --git a/include/linux/virtio_net.h b/include/linux/virtio_net.h
+> index 02a9f4dc594d..426f33b4b824 100644
+> --- a/include/linux/virtio_net.h
+> +++ b/include/linux/virtio_net.h
+> @@ -9,6 +9,194 @@
+>  #include <uapi/linux/tcp.h>
+>  #include <uapi/linux/virtio_net.h>
+>
+> +struct virtio_net_hash {
+> +       u32 value;
+> +       u16 report;
+> +};
+> +
+> +struct virtio_net_toeplitz_state {
+> +       u32 hash;
+> +       const u32 *key;
+> +};
+> +
+> +#define VIRTIO_NET_SUPPORTED_HASH_TYPES (VIRTIO_NET_RSS_HASH_TYPE_IPv4 |=
+ \
+> +                                        VIRTIO_NET_RSS_HASH_TYPE_TCPv4 |=
+ \
+> +                                        VIRTIO_NET_RSS_HASH_TYPE_UDPv4 |=
+ \
+> +                                        VIRTIO_NET_RSS_HASH_TYPE_IPv6 | =
+\
+> +                                        VIRTIO_NET_RSS_HASH_TYPE_TCPv6 |=
+ \
+> +                                        VIRTIO_NET_RSS_HASH_TYPE_UDPv6)
+> +
+> +#define VIRTIO_NET_RSS_MAX_KEY_SIZE 40
+> +
+> +static inline void virtio_net_toeplitz_convert_key(u32 *input, size_t le=
+n)
+> +{
+> +       while (len >=3D sizeof(*input)) {
+> +               *input =3D be32_to_cpu((__force __be32)*input);
+> +               input++;
+> +               len -=3D sizeof(*input);
+> +       }
+> +}
+> +
+> +static inline void virtio_net_toeplitz_calc(struct virtio_net_toeplitz_s=
+tate *state,
+> +                                           const __be32 *input, size_t l=
+en)
+> +{
+> +       while (len >=3D sizeof(*input)) {
+> +               for (u32 map =3D be32_to_cpu(*input); map; map &=3D (map =
+- 1)) {
+> +                       u32 i =3D ffs(map);
+> +
+> +                       state->hash ^=3D state->key[0] << (32 - i) |
+> +                                      (u32)((u64)state->key[1] >> i);
+> +               }
+> +
+> +               state->key++;
+> +               input++;
+> +               len -=3D sizeof(*input);
+> +       }
+> +}
+> +
+> +static inline u8 virtio_net_hash_key_length(u32 types)
+> +{
+> +       size_t len =3D 0;
+> +
+> +       if (types & VIRTIO_NET_HASH_REPORT_IPv4)
+> +               len =3D max(len,
+> +                         sizeof(struct flow_dissector_key_ipv4_addrs));
+> +
+> +       if (types &
+> +           (VIRTIO_NET_HASH_REPORT_TCPv4 | VIRTIO_NET_HASH_REPORT_UDPv4)=
+)
+> +               len =3D max(len,
+> +                         sizeof(struct flow_dissector_key_ipv4_addrs) +
+> +                         sizeof(struct flow_dissector_key_ports));
+> +
+> +       if (types & VIRTIO_NET_HASH_REPORT_IPv6)
+> +               len =3D max(len,
+> +                         sizeof(struct flow_dissector_key_ipv6_addrs));
+> +
+> +       if (types &
+> +           (VIRTIO_NET_HASH_REPORT_TCPv6 | VIRTIO_NET_HASH_REPORT_UDPv6)=
+)
+> +               len =3D max(len,
+> +                         sizeof(struct flow_dissector_key_ipv6_addrs) +
+> +                         sizeof(struct flow_dissector_key_ports));
+> +
+> +       return len + sizeof(u32);
+> +}
+> +
+> +static inline u32 virtio_net_hash_report(u32 types,
+> +                                        const struct flow_keys_basic *ke=
+ys)
+> +{
+> +       switch (keys->basic.n_proto) {
+> +       case cpu_to_be16(ETH_P_IP):
+> +               if (!(keys->control.flags & FLOW_DIS_IS_FRAGMENT)) {
+> +                       if (keys->basic.ip_proto =3D=3D IPPROTO_TCP &&
+> +                           (types & VIRTIO_NET_RSS_HASH_TYPE_TCPv4))
+> +                               return VIRTIO_NET_HASH_REPORT_TCPv4;
+> +
+> +                       if (keys->basic.ip_proto =3D=3D IPPROTO_UDP &&
+> +                           (types & VIRTIO_NET_RSS_HASH_TYPE_UDPv4))
+> +                               return VIRTIO_NET_HASH_REPORT_UDPv4;
+> +               }
+> +
+> +               if (types & VIRTIO_NET_RSS_HASH_TYPE_IPv4)
+> +                       return VIRTIO_NET_HASH_REPORT_IPv4;
+> +
+> +               return VIRTIO_NET_HASH_REPORT_NONE;
+> +
+> +       case cpu_to_be16(ETH_P_IPV6):
+> +               if (!(keys->control.flags & FLOW_DIS_IS_FRAGMENT)) {
+> +                       if (keys->basic.ip_proto =3D=3D IPPROTO_TCP &&
+> +                           (types & VIRTIO_NET_RSS_HASH_TYPE_TCPv6))
+> +                               return VIRTIO_NET_HASH_REPORT_TCPv6;
+> +
+> +                       if (keys->basic.ip_proto =3D=3D IPPROTO_UDP &&
+> +                           (types & VIRTIO_NET_RSS_HASH_TYPE_UDPv6))
+> +                               return VIRTIO_NET_HASH_REPORT_UDPv6;
+> +               }
+> +
+> +               if (types & VIRTIO_NET_RSS_HASH_TYPE_IPv6)
+> +                       return VIRTIO_NET_HASH_REPORT_IPv6;
+> +
+> +               return VIRTIO_NET_HASH_REPORT_NONE;
+> +
+> +       default:
+> +               return VIRTIO_NET_HASH_REPORT_NONE;
+> +       }
+> +}
+> +
+> +static inline void virtio_net_hash_rss(const struct sk_buff *skb,
+> +                                      u32 types, const u32 *key,
+> +                                      struct virtio_net_hash *hash)
+> +{
+> +       struct virtio_net_toeplitz_state toeplitz_state =3D { .key =3D ke=
+y };
+> +       struct flow_keys flow;
+> +       struct flow_keys_basic flow_basic;
+> +       u16 report;
+> +
+> +       if (!skb_flow_dissect_flow_keys(skb, &flow, 0)) {
+> +               hash->report =3D VIRTIO_NET_HASH_REPORT_NONE;
+> +               return;
+> +       }
+> +
+> +       flow_basic =3D (struct flow_keys_basic) {
+> +               .control =3D flow.control,
+> +               .basic =3D flow.basic
+> +       };
+> +
+> +       report =3D virtio_net_hash_report(types, &flow_basic);
+> +
+> +       switch (report) {
+> +       case VIRTIO_NET_HASH_REPORT_IPv4:
+> +               virtio_net_toeplitz_calc(&toeplitz_state,
+> +                                        (__be32 *)&flow.addrs.v4addrs,
+> +                                        sizeof(flow.addrs.v4addrs));
+> +               break;
+> +
+> +       case VIRTIO_NET_HASH_REPORT_TCPv4:
+> +               virtio_net_toeplitz_calc(&toeplitz_state,
+> +                                        (__be32 *)&flow.addrs.v4addrs,
+> +                                        sizeof(flow.addrs.v4addrs));
+> +               virtio_net_toeplitz_calc(&toeplitz_state, &flow.ports.por=
+ts,
+> +                                        sizeof(flow.ports.ports));
+> +               break;
+> +
+> +       case VIRTIO_NET_HASH_REPORT_UDPv4:
+> +               virtio_net_toeplitz_calc(&toeplitz_state,
+> +                                        (__be32 *)&flow.addrs.v4addrs,
+> +                                        sizeof(flow.addrs.v4addrs));
+> +               virtio_net_toeplitz_calc(&toeplitz_state, &flow.ports.por=
+ts,
+> +                                        sizeof(flow.ports.ports));
+> +               break;
+> +
+> +       case VIRTIO_NET_HASH_REPORT_IPv6:
+> +               virtio_net_toeplitz_calc(&toeplitz_state,
+> +                                        (__be32 *)&flow.addrs.v6addrs,
+> +                                        sizeof(flow.addrs.v6addrs));
+> +               break;
+> +
+> +       case VIRTIO_NET_HASH_REPORT_TCPv6:
+> +               virtio_net_toeplitz_calc(&toeplitz_state,
+> +                                        (__be32 *)&flow.addrs.v6addrs,
+> +                                        sizeof(flow.addrs.v6addrs));
+> +               virtio_net_toeplitz_calc(&toeplitz_state, &flow.ports.por=
+ts,
+> +                                        sizeof(flow.ports.ports));
+> +               break;
+> +
+> +       case VIRTIO_NET_HASH_REPORT_UDPv6:
+> +               virtio_net_toeplitz_calc(&toeplitz_state,
+> +                                        (__be32 *)&flow.addrs.v6addrs,
+> +                                        sizeof(flow.addrs.v6addrs));
+> +               virtio_net_toeplitz_calc(&toeplitz_state, &flow.ports.por=
+ts,
+> +                                        sizeof(flow.ports.ports));
+> +               break;
+> +
+> +       default:
+> +               hash->report =3D VIRTIO_NET_HASH_REPORT_NONE;
+> +               return;
 
-On 5/31/2025 1:14 AM, Ilpo Järvinen wrote:
-> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
-> 
-> 
-> On Fri, 30 May 2025, Pratap Nirujogi wrote:
-> 
->> Check if the adapter name is already set in the driver prior
->> to initializing with generic name in i2c_dw_probe_master().
->>
->> Fixes: 90b85567e457 ("platform/x86: Add AMD ISP platform config for OV05C10")
->> Reported-by: Randy Dunlap <rdunlap@infradead.org>
->> Link: https://lore.kernel.org/all/04577a46-9add-420c-b181-29bad582026d@infradead.org
->> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
->> ---
->>   drivers/i2c/busses/i2c-designware-master.c | 5 +++--
->>   1 file changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/i2c/busses/i2c-designware-master.c b/drivers/i2c/busses/i2c-designware-master.c
->> index c5394229b77f..ab03943d6aaf 100644
->> --- a/drivers/i2c/busses/i2c-designware-master.c
->> +++ b/drivers/i2c/busses/i2c-designware-master.c
->> @@ -1042,8 +1042,9 @@ int i2c_dw_probe_master(struct dw_i2c_dev *dev)
->>        if (ret)
->>                return ret;
->>
->> -     snprintf(adap->name, sizeof(adap->name),
->> -              "Synopsys DesignWare I2C adapter");
->> +     if (!adap->name[0])
->> +             snprintf(adap->name, sizeof(adap->name),
->> +                      "Synopsys DesignWare I2C adapter");
-> 
-> I'd convert this to scnprintf() here as well and add to the changelog:
-> 
-> While at it, convert to scnprintf() that is preferred over snprintf().
-> 
-> As with the other patch, this too is missing receipients (as indicated
-> by the get_maintainers script).
-> 
-Thank you, I will use scnprintf() inplace of snprintf() in v2 and will 
-make sure to include all the intended receipients while sending the patch.
+So I still think we need a comment here to explain why this is not an
+issue if the device can report HASH_XXX_EX. Or we need to add the
+support, since this is the code from the driver side, I don't think we
+need to worry about the device implementation issues.
 
-Thanks,
-Pratap
+For the issue of the number of options, does the spec forbid fallback
+to VIRTIO_NET_HASH_REPORT_NONE? If not, we can do that.
+
+Thanks
+
+> +       }
+> +
+> +       hash->value =3D toeplitz_state.hash;
+> +       hash->report =3D report;
+> +}
+> +
+>  static inline bool virtio_net_hdr_match_proto(__be16 protocol, __u8 gso_=
+type)
+>  {
+>         switch (gso_type & ~VIRTIO_NET_HDR_GSO_ECN) {
+>
 > --
->   i.
-> 
+> 2.49.0
+>
 
