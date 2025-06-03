@@ -1,135 +1,98 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E428494
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 18:46:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD0818C03D
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 18:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748976364; cv=none; b=PHtGmaxE9Bs36KFzGEF9Ot1MfzNlL/7vD5txWCZkVxThJIuafjKnIqBi+PKPMFt5N+MmzyZryf5T9FX4EYezzGID7M4rhoVfncooYLYd5RmMuUW6n8PJE+arbO5JBO8XHi39w5l81oGfwl06S485wKRWd0ZQhANBhIXCeuBKxnE=
+	t=1748976370; cv=none; b=lbV/yOReVQYQWXUznAh2Lj194A3cSFDgG+77FvAzixswXxdzBWsMVE6OYAdWKmj4x0YO5EEelSm0dmFvscAlMg27eeE4C1LRAOXreaJVKBxfpRMFKkGvuO7DdGQHFdNil+Kn3G7MP4EbiNXoGcJyo3Nw+dKOoCW8Dknj+OJ0omM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748976364; c=relaxed/simple;
-	bh=jU9dqXzJ/B2/saKgXQkuraibY8ps+BTSs/N0EFDVbu4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=ISV+BTwL/X5s3NTAk/lkTyV7+adX8GVs3sil2coMa4t7LjasJN5f0mnTPv+Iluiz9vP+LyrT0cHKDZa0mvI41bDpdyKMjT9JvHPXmyG7Plso38alSORVVpb2eGEqeWlzZr7gS6bpmpAwkGodBfsewUBdY8pYJOQJFs4cIRyGaoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=p6R6G1I/; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1748976370; c=relaxed/simple;
+	bh=BGGyoOAitopUbOF8JRNp9e7ymTkcBN2zyfb0bX51Xpg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=TPOV4DWK9I5bPWk1sFHDq4IrZ36rSacfUgyt2IS3bV+GTuOk8obJU9LNdXL3eWkPNMdM9LSjbgW7O0SNHtWyjjBQrYNSdmWhKLty+egAYC2SeYnbOWXNUAwqk39eQDtfTVCnFteeD7GulJ5i6uLmvUyv/d2D1UbvYW+7fi/2gkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=B7Q7s2Kk; arc=none smtp.client-ip=209.85.166.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="p6R6G1I/"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250603184559euoutp026a984b15aebbbfc73919081d3be23404~FnLtvrGXB1370413704euoutp02G
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 18:45:59 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250603184559euoutp026a984b15aebbbfc73919081d3be23404~FnLtvrGXB1370413704euoutp02G
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1748976359;
-	bh=uQI33aeDB3YvTs31NM2w9GJCDXa/2VEkwRCdI0P0nAY=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=p6R6G1I/UJlWGGgHhiFgapjrXWtpYAp0wFUx+fMIeVC0whJhUVE4iLcwGu6uJQPDX
-	 tbymJJR4kt4AxTqJInTfFfiW/lTUg8oDgKpcT8YaXuF+Wcy7NCxP5XcIu6LOegllpE
-	 FPNMEGF9lWfUX5vjxWznVNzeajEcJYE5LuvBrQxA=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250603184558eucas1p179c610c48e6f475d839e9e25585cbe2a~FnLs7Ny4R3131431314eucas1p1h;
-	Tue,  3 Jun 2025 18:45:58 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250603184557eusmtip2e68f8fe1c77ac8990d75a102efcf9f08~FnLr3jqqk0715807158eusmtip2N;
-	Tue,  3 Jun 2025 18:45:57 +0000 (GMT)
-Message-ID: <c49ae9f2-3c3c-4253-be85-8fe5bbb4b42e@samsung.com>
-Date: Tue, 3 Jun 2025 20:45:56 +0200
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="B7Q7s2Kk"
+Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-86a55400913so175208339f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 11:46:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1748976367; x=1749581167; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ytv+YWv+S75md5rXeB13AvL/fqgyAAlIGtDQ7fSe6gs=;
+        b=B7Q7s2Kkj6QHX53bh5al5jCj8QpshWVCGlPDoY88fUOhvMtkPbUJc4KyLFj8keoNXM
+         w9RixbUMRL+7fB7oyxH8gG8i1P75qaSN6/dN4YVcxULWxXtLwLKv7Ldx7dlOIiW5dC9w
+         G1LCzO/dietahsMXcI+PjpYRZQ2ru39oJbclFibP/3bK1KLo1koFwGVDpVt1UGEp0Jsw
+         f4INUvbXHt2BTjFWctgxg7F7xHk2g4jV9xGbN7blsFCYkMEUPTM9VVA73EeTNSx+Qiv3
+         pbYvSRbki072xIRr+Hk7kEGoms3ATPnKJiOhEI54iWmZj9g9S4hLU6os+F5Np9AUbr5k
+         YvYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748976367; x=1749581167;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ytv+YWv+S75md5rXeB13AvL/fqgyAAlIGtDQ7fSe6gs=;
+        b=g/B8e+RhW4b0tXMlsvktqtzge4gAsysQ16Q5/f41vZH3BRSAX848sv9k2mC74h2Way
+         1zOLnsrU0vgaDyYwfPVxYmUE4xrd6w8oIJOyWnLdw9RD8WkS5SH3TFxOnnVdOZw31SL0
+         7tOvVw75QGloIJw3XVycNc+wW/V2pS1E0fv7TXgdmKwI10ru1zuw90MRHApRRZQ/erm7
+         kM3rdsx1UrAockiRXToUZpVzOZhzg7INrAZUjzw90fdkPiRwxWmohpZczKTegjmRTtap
+         ecP8EfNa8wyWhj1mN1LQUg2+/z88n2oXUKmalPQC5+DwKuxu/bGh8mPL7rKt9lNZJwVY
+         obcA==
+X-Forwarded-Encrypted: i=1; AJvYcCVOMVy40y+nk4nz3++jV9pv/J5tHEzM0cdEAC3jAQfhFBvFIXopaM/u5DGb2+tyGXGk6TsuiM6d6jK3apo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+dwKsKeBCoS2aitpyoYHG7RSgHGhbBRywFecDO1LxLG+v/Bwg
+	tMWetayBa0dBNWDMGDJL/q7HRstM2l97LGrKjbIJivi+BnpboMFGcyCKqGBK+Rs4RGdnDMPvNrR
+	eDTu2
+X-Gm-Gg: ASbGnctYNAecF0fg2A5RIAjvVVGCbl2RzTglz16ooxDbxMAzWyIClAdTRbn7ggpXJ5M
+	+t0IcH11ZogijaC09ZU/GhEQYClXoEJ5PM/QjVbFfonjPzPxO5rZ3i8dzJIAeltBpLig8wHtNAr
+	vQFeNelIGviU3FCp0X2mYj5CELwRkd+mQMB60Kgh282zRaY8gR1RlnWwejGzsYTTv/oMaSn/kCz
+	+2KBSSgYMR2P+XUiA+liptNjtJHyc6703HjGxyKkgjboASd/PaHJgapBrzJP8QE5h+jimJO5qYa
+	ruKQOM5xMX9GwHsCDiso7CDU5pdnIB59Agw5AtpxMg==
+X-Google-Smtp-Source: AGHT+IGQVJBhh4r6CbR3SMBMSOpcdLANMW7TJEkb1UHjw6n0V54ffSovSdkLt6VoVn1npFg4sbriNg==
+X-Received: by 2002:a05:6602:721a:b0:86c:f2ea:d8d3 with SMTP id ca18e2360f4ac-8731c643e38mr5739139f.10.1748976366844;
+        Tue, 03 Jun 2025 11:46:06 -0700 (PDT)
+Received: from [127.0.0.1] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-86cf5e51d99sm232212639f.7.2025.06.03.11.46.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 11:46:06 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: Caleb Sander Mateos <csander@purestorage.com>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250603183133.1178062-1-csander@purestorage.com>
+References: <20250603183133.1178062-1-csander@purestorage.com>
+Subject: Re: [PATCH] block: drop direction param from
+ bio_integrity_copy_user()
+Message-Id: <174897636598.14684.15850235224325997999.b4-ty@kernel.dk>
+Date: Tue, 03 Jun 2025 12:46:05 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 6/8] riscv: dts: thead: Add GPU power sequencer node
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei
-	<wefu@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Bartosz
-	Golaszewski <brgl@bgdev.pl>, Philipp Zabel <p.zabel@pengutronix.de>, Frank
-	Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
-	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Paul Walmsley
-	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson
-	<ulf.hansson@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <20250603-gleaming-mammoth-of-kindness-538add@kuoka>
-Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20250603184558eucas1p179c610c48e6f475d839e9e25585cbe2a
-X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250529222408eucas1p20f62cea4c9c64bb5dda6db1fd38fb333
-X-EPHeader: CA
-X-CMS-RootMailID: 20250529222408eucas1p20f62cea4c9c64bb5dda6db1fd38fb333
-References: <20250530-apr_14_for_sending-v3-0-83d5744d997c@samsung.com>
-	<CGME20250529222408eucas1p20f62cea4c9c64bb5dda6db1fd38fb333@eucas1p2.samsung.com>
-	<20250530-apr_14_for_sending-v3-6-83d5744d997c@samsung.com>
-	<20250603-gleaming-mammoth-of-kindness-538add@kuoka>
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3-dev-7b9b9
 
 
+On Tue, 03 Jun 2025 12:31:32 -0600, Caleb Sander Mateos wrote:
+> direction is determined from bio, which is already passed in. Compute
+> op_is_write(bio_op(bio)) directly instead of converting it to an iter
+> direction and back to a bool.
+> 
+> 
 
-On 6/3/25 15:22, Krzysztof Kozlowski wrote:
-> On Fri, May 30, 2025 at 12:23:53AM GMT, Michal Wilczynski wrote:
->> Add the device tree node for the T-HEAD TH1520 GPU power sequencer
->> (gpu_pwrseq) to the th1520.dtsi file.
->>
->> This node instantiates the thead,th1520-gpu-pwrseq driver, which
-> 
-> Explain the hardware, not what drivers do.
-> 
->> is responsible for managing the GPU's power-on/off sequence. The node
->> specifies the gpu-clkgen reset, which is one of the resources
->> controlled by this sequencer.
->>
->> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
->> ---
->>  arch/riscv/boot/dts/thead/th1520.dtsi | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
->> index bdbb1b985b0b76cf669a9bf40c6ec37258329056..6170eec79e919b606a2046ac8f52db07e47ef441 100644
->> --- a/arch/riscv/boot/dts/thead/th1520.dtsi
->> +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
->> @@ -238,6 +238,12 @@ aon: aon {
->>  		#power-domain-cells = <1>;
->>  	};
->>  
->> +	gpu_pwrseq: pwrseq {
-> 
-> Node names should be generic. See also an explanation and list of
-> examples (not exhaustive) in DT specification:
-> https://protect2.fireeye.com/v1/url?k=a53ea5d3-c4434f50-a53f2e9c-74fe48600158-c81092475ef416b3&q=1&e=d333d06b-0b06-493e-a358-e29ca542dfe7&u=https%3A%2F%2Fdevicetree-specification.readthedocs.io%2Fen%2Flatest%2Fchapter2-devicetree-basics.html%23generic-names-recommendation
-> 
->> +		compatible = "thead,th1520-gpu-pwrseq";
->> +		resets = <&rst TH1520_RESET_ID_GPU_CLKGEN>;
->> +		reset-names = "gpu-clkgen";
-> 
-> What is the point of pwrseq if there is no consumer/user of it? Looks
-> like simple placeholder and anyway maybe the future consumer should just
-> use reset directly.
+Applied, thanks!
 
-Yeah I think you're right, I wanted to explore adding the pwrseq
-provider in separate node per discussion in v2 [1]. But for the v4 I
-think I'll revert to the v2 way of handling this reset [2].
-
-[1] - https://lore.kernel.org/all/CAPDyKFpi6_CD++a9sbGBvJCuBSQS6YcpNttkRQhQMTWy1yyrRg@mail.gmail.com/
-[2] - https://lore.kernel.org/all/20250414-apr_14_for_sending-v2-2-70c5af2af96c@samsung.com/
-
-> 
-> Best regards,
-> Krzysztof
-> 
-> 
+[1/1] block: drop direction param from bio_integrity_copy_user()
+      commit: c09a8b00f850d3ca0af998bff1fac4a3f6d11768
 
 Best regards,
 -- 
-Michal Wilczynski <m.wilczynski@samsung.com>
+Jens Axboe
+
+
+
