@@ -1,90 +1,109 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F9D2C3271;
-	Tue,  3 Jun 2025 08:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77BF62C3271;
+	Tue,  3 Jun 2025 08:32:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748939491; cv=none; b=AE9tEDs7co1thftwXAetyh/OQIMbNJCEhkh26xHtIaFix+94FVJ0C9kw8DiP1IabeGKH3h8LbIcstJ3fom/pVoIj6q5oeyBuw7QBi4QO9ujhXanHoJSxCPyprtmFK2z7OzrTi/g1CHeHWuSEdEO1zE/SaQ/NA4M9zKhJcAvB6JE=
+	t=1748939556; cv=none; b=asgtekvNIj0wXYHBl7ySIZT5t3yNgd9vjYBLVa+0vIbivt79dWWr7erxOE0eu9VOXXFBWty5nYr+XoSPxka882vNMEe8ZTmj2wDfl41q6wKxUlBpqHhFYY13wyfSCYKRbw+SIUFfAngLHxKcEGQ+Gi3Yofn7M3VVON2X4JJ3tjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748939491; c=relaxed/simple;
-	bh=HheOo5YuAtAmDCb1jF4h9J8lfz20UvG6MpDloPcdgOo=;
+	s=arc-20240116; t=1748939556; c=relaxed/simple;
+	bh=yHGaE1OTEpeQQ4gsYu4gvSam/RgWFQyoLvAOVXlQrW4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BrG9xXezI9vSO2RTY2wdnyTi9LJ+VDvOL/ct05r/RiSajYmFEyPnUn+gqdqgiJhhRzW3tWodZEN61Z9c+eX1sqQ07AlFTuC42DiOpMMUX+mgCtY6VX0SFg9nCOjTLyG5KAOKjJvBNfDsDlxxfQ9d6HiwejxazIJndQkKzMoDvdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=QNO7LIhT; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=E4JwIIV6MmcOqn3nwF6ooLVa/gXjhefP/LDsJeg7lQw3vPLejiafpjc2OZYxrarD0qAEnpnGu8EnMeZjohvltzuetfI1dB8q1voNcog1ZkY/hhCDCLpGgnSAohrlRthNE/aHI4/qaynHZGn+YA/6boJt1xNt5jr1jIzb+6cbS6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ibDcVAEV; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="QNO7LIhT"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 3F8D210397298;
-	Tue,  3 Jun 2025 10:31:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1748939485; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=lwtgiEj0l4NYmB8WZdoVL03wHDt5Np7apMU6CZvW0wg=;
-	b=QNO7LIhT4A4iafBbsksg0aWiONC1M2YtiG1tjgCbPPLP0ndtWsHnZDfuSXlS3mwm78TUt8
-	a6Wjyfiiz2WP9WxTto+YY1exAlrLI8+rbLUSzCqDkidYlIqchY+OfbNmmMLnDMdXdYXdaO
-	HJYhhLupp139iesY+v/jhMeuSWe9/mKXikgF6RxBUrtQM4/+dMZlC+Mh6cYbvfHIqekZf0
-	7Lel/226XMm8w5WXYnCqcMg7tCEvbLzx+nxOzTzQAE9ng1p3mZzyB/06eUqYP4CmimaPkL
-	hOG3wUh/cVNttqYCg9S0PQsHVdpiXweN8aHM4QUdigwwstRbOew3z4MizpCWxg==
-Date: Tue, 3 Jun 2025 10:31:18 +0200
-From: Pavel Machek <pavel@denx.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 6.1 000/325] 6.1.141-rc1 review
-Message-ID: <aD6y1skdsk62obc1@duo.ucw.cz>
-References: <20250602134319.723650984@linuxfoundation.org>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ibDcVAEV"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E164140E01A0;
+	Tue,  3 Jun 2025 08:32:23 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id R-jqQBazJ1f3; Tue,  3 Jun 2025 08:32:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1748939540; bh=uSTsJyP+dNpREMtqhis9XtwrNy3656bwDJMkEsaZjPg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ibDcVAEVYUbVRIZzxABOqWDfjhCywQTaNqo3Wc8czzBXR6BDUCmo8oWet5vr4R71b
+	 PKhH2VoU1Hv39L1UtOzOQVbMF1j2qB7oTf5QUFDy77uWvrT1CSKdSGbBbfD5UedPXB
+	 BY0K4sHBTbM1QUy6B4nBNnkjJIQlzOuwOSNif0J7FN4aBkvtFR3DyLsyh+bcl/KXI2
+	 mTmFhoAWA5hFjK108RdvahHfiwcAHKUWGRmNAHa0JaM7O3IkyqoUPIb6O7YdOaeboH
+	 tsSAI90uUedmB4kAOC7D1hvkPa77vSnezVATJ5aWeWJfmVAk4r0pNPn03Azc6TI4uT
+	 M33BGTm6ZJYAzy+bNdn//cWeP5tqW/wooXBdFJx2Zf74bIp0uWBQfumpELovZIVCS7
+	 bdrVj3dxm0+79YqI5eA/lNTOS39QPnH2yq71rg0/pF9iCSpXSJ3FqN7vfwFu8BuBdx
+	 UTU5hBGYnKJMHOFpZ20PgLvSHCYbdeOt5cVBZiHnOrSCKoxL957XrDz0XQfT8Q1b8n
+	 el9cHOVzRQv4mHH8kJiNx6rSmOzhZWOWvU/u1fZQz96qf9yHnEuztah5wtukdzSN8M
+	 NKEhGBne8SvIikogWqwLCTelkBaaHOAtGOkdANTS5G/Rk5LpS+V+/xXG+HB4/ZBFAP
+	 ovCzbBnncZ9brCmWPpWY3kks=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C4B3440E01AB;
+	Tue,  3 Jun 2025 08:32:03 +0000 (UTC)
+Date: Tue, 3 Jun 2025 10:31:57 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Luck, Tony" <tony.luck@intel.com>
+Cc: Zaid Alali <zaidal@os.amperecomputing.com>, rafael@kernel.org,
+	lenb@kernel.org, james.morse@arm.com, robert.moore@intel.com,
+	Jonathan.Cameron@huawei.com, ira.weiny@intel.com,
+	Benjamin.Cheatham@amd.com, dan.j.williams@intel.com, arnd@arndb.de,
+	Avadhut.Naik@amd.com, john.allen@amd.com,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	acpica-devel@lists.linux.dev
+Subject: Re: [PATCH v7 9/9] ACPI: APEI: EINJ: Update the documentation for
+ EINJv2 support
+Message-ID: <20250603083157.GAaD6y_fec2X_hTnav@fat_crate.local>
+References: <20250506213814.2365788-1-zaidal@os.amperecomputing.com>
+ <20250506213814.2365788-10-zaidal@os.amperecomputing.com>
+ <20250530102711.GAaDmH_1O7lc6kuveY@fat_crate.local>
+ <aDoal24J-BMTIBCq@agluck-desk3>
+ <20250531092050.GBaDrJ8iw7cNcpOKeA@fat_crate.local>
+ <aDuBjopy_nE9A-ph@agluck-desk3>
+ <20250601102554.GAaDwqsgCODzEne7Ow@fat_crate.local>
+ <aD3ZFyBW4SCyaGI9@agluck-desk3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JGDaLo4SJN7NeVGd"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250602134319.723650984@linuxfoundation.org>
-X-Last-TLS-Session-Version: TLSv1.3
+In-Reply-To: <aD3ZFyBW4SCyaGI9@agluck-desk3>
 
+On Mon, Jun 02, 2025 at 10:02:15AM -0700, Luck, Tony wrote:
+> The actual structure passed to BIOS is the same each time. Just the
+> set_error_type_with_address::einjv2_struct::component_arr_count
+> changed to indicate how many errors to inject.  In theory the
+> driver could allocate and copy a correctly sized structure, but
+> Zaid's code here is simpler, an this is hardly a critical path.
 
---JGDaLo4SJN7NeVGd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Right, allocate it once on driver init and keep massaging it on every
+injection. Simple.
 
-Hi!
+> This is just an improvement on my "option 1" (improved because all-ones
+> for the component ID is going to be invalid for sure, while all zeroes
+> could be a valid component).
 
-> This is the start of the stable review cycle for the 6.1.141 release.
-> There are 325 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Right, you need to know at injection time which of the components are valid
+and which are not.
 
-CIP testing did not find any problems here:
+> Or just stop collecting on the first invalid one.
 
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
-6.1.y
+That would mean that you punish the user at the first typo. :-P
 
-Tested-by: Pavel Machek (CIP) <pavel@denx.de>
+Considering how complex those interfaces become perhaps not such a good
+idea...
 
-Best regards,
-                                                                Pavel
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Thx.
 
---JGDaLo4SJN7NeVGd
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+Regards/Gruss,
+    Boris.
 
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaD6y1gAKCRAw5/Bqldv6
-8lZeAJ0dfPXzrP4su6T3bKZC0ZQbuHJEoQCgj5zajr+tqbEvP9yB9ylLZe7jGu8=
-=f08x
------END PGP SIGNATURE-----
-
---JGDaLo4SJN7NeVGd--
+https://people.kernel.org/tglx/notes-about-netiquette
