@@ -1,243 +1,195 @@
-Received: from mail-24421.protonmail.ch (mail-24421.protonmail.ch [109.224.244.21])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2051.outbound.protection.outlook.com [40.107.93.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0BBD268FFF;
-	Tue,  3 Jun 2025 08:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.21
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748938199; cv=none; b=jLO1dmfCDe6yV1q2tzVGacMXP/j+S09IvEsfa2bNH1og20FsgJ8+5WvTpKpz59HWQ7srdpyb0WP5H+JZCWe0DyR0nqJe1IWntR+23MmViLGdjPwx8ttDHtufPiZGdVi0RVtPgVm9x9rSOHq5SWOhLUdGJkWjAfZFiGvkjIfFe98=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748938199; c=relaxed/simple;
-	bh=OCI+PpWASD7sLo2MJgDQvdo2o++17YjCGFcKCFyLdqk=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DBt+PtGkYrR8J4bRD2sz6lWfJxzBJfXny14k/Ze2E445Q2etV5QiLH6WByFfFdlmPBuRpXXWPZfsxChwf+mmM1QcJkp0NmUBrhC3F3XTFMiK5++ccqB7LAgmaih6i6Kx3LZkF1pmntJwnW2sMItCNcQrE3rryjCMWlafkmgXsvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=nxsw.ie; spf=pass smtp.mailfrom=nxsw.ie; dkim=pass (2048-bit key) header.d=nxsw.ie header.i=@nxsw.ie header.b=SAsE3CV4; arc=none smtp.client-ip=109.224.244.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=nxsw.ie
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxsw.ie
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94DE280A2F;
+	Tue,  3 Jun 2025 08:09:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748938201; cv=fail; b=iAjdbWdvNfi2p7Vye32WwneGucL7IZB7a7F6r2s8D4QEHeufwGf+QfXflSmq/IOYcXJBjC3/bWWntd0o+uUW+s+CtWXL3ivLv/p3gT0OOEZDCSCUagunjufxhodQTt8RJ/5dW7dhfZe2aj/fqBG5yl8S4kWFYpHBrAwYbUcKeEw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748938201; c=relaxed/simple;
+	bh=fk7LirMYmCoi10saU5u4gx32LIT9qzfafpOWdS0a/AU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=e3jx0c9ZuxEwdMJJe3MugMIiDYf7PTElM34VA0E+7Q58h/7aYzFnV1TrIXFDiQv6fcKPXxP+U1kzthmKjj03HSJIBOarpKBiNhPbq2RMXlJBbnBJvkuynfLm5VtQ7+BaUBQF+n7pe4W6V7LHCpJRjlIEIeNaXSjnLtMh2LdVJcA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gehealthcare.com; spf=pass smtp.mailfrom=gehealthcare.com; dkim=pass (2048-bit key) header.d=gehealthcare.com header.i=@gehealthcare.com header.b=Pzvzk5+V; arc=fail smtp.client-ip=40.107.93.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gehealthcare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gehealthcare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxsw.ie header.i=@nxsw.ie header.b="SAsE3CV4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxsw.ie;
-	s=protonmail2; t=1748938195; x=1749197395;
-	bh=MBcwTN9fNybth9Y9nK84MLeY8D6MbSYYsWdQF3WzHVs=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=SAsE3CV4OzDwdospsTtUH7Xwi6u6Uzqyc2Bov2rplKWv7BQQ1IJCYmfuVPJUaIPkU
-	 3ooWajezDqDyBOoLp5/L8SHStdylECeXMNzEONyKMO3+Xmdf0YGnosdJpIhpDxoD4t
-	 Arghxqe1ixXRDTxIRlTFbHDzyiVD/Yz5z2cJWBrHVYydWvkIOWugp2J38CHADrKZWs
-	 aNfbezbcqlz/0wOHbctuLmOl/5xOMeurL4u/3ISOBUe5eGrMp2k4MQZAS8kGt7x634
-	 dVrMcIKwg6XifXhkSM6TmWLzvmcRWdH18SDA3Gmd3XNfjRW0wfL6zLzSvymRFB8leS
-	 h8WgRsseqO8lw==
-Date: Tue, 03 Jun 2025 08:09:49 +0000
-To: Jagadeesh Kona <quic_jkona@quicinc.com>, Bjorn Andersson <andersson@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>, Dmitry Baryshkov <lumag@kernel.org>
-From: Bryan O'Donoghue <bod.linux@nxsw.ie>
-Cc: Ajit Pandey <quic_ajipan@quicinc.com>, Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>, Satya Priya Kakitapalli <quic_skakitap@quicinc.com>, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v5 00/18] clk: qcom: Add support to attach multiple power domains in cc probe
-Message-ID: <2b44e799-3b15-4dfd-96c6-8bb38a5175de@nxsw.ie>
-In-Reply-To: <20250530-videocc-pll-multi-pd-voting-v5-0-02303b3a582d@quicinc.com>
-References: <20250530-videocc-pll-multi-pd-voting-v5-0-02303b3a582d@quicinc.com>
-Feedback-ID: 136405006:user:proton
-X-Pm-Message-ID: 6398c13e0a361bd5342a6606cc523563453aa089
+	dkim=pass (2048-bit key) header.d=gehealthcare.com header.i=@gehealthcare.com header.b="Pzvzk5+V"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jrOPDQr2cX8ZLxfsk655ysMQcDXb0r1LU4ewY+yYoyglBfRuHhytOZtk7vOXFsAVkkn9tE45AwVNM/BtFqlkQx471VIVwNjFAXHtbQOo3DERjJIMazcSBUOF1NE/F37wCCcGU6EMRKyEXjulVzrGLvE2GF3A4q0zhg8kvb5Xxw02fYeCwH1PPXNoS7kN5mj9KbJ/dhDtGBQ/rAwo3k6e+ZzbrL/1jIFhwsH2Wzp5sdrv8LxkqNq/6ruezaAUFHojE4YOyRHVDQNyf4EwWWDidI2hKhyEicn4IYToZkT+y2dsqtw9DOx7siiFZYXsNPde4hp7OtDLYggs1Hzzvj1QjQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=p6QdSHRQibY5GhEPYBs11/eRb5U50DqEtSR6+Z646mc=;
+ b=NBEaNtPUu68BPO8y7TOolhZXzQD/lZiDOvuuyugN5WAj5OiLOdSv1GZ6AmFpLbiDgM6+2Pnhi3MJUG9TRC7gX9LRsEtFTTQxJtrXLLsUuRIEaGtikp3LDFldeOd+9BbmHqpLn0seWLJHVhfnCEDyuB/ZVhfwWlE6eWv8hTrEz8hmGGnA86iNRyrNXr4lLFa7uezPvkV/L5Ax3sVohWEjE7mTelodaERE9Ox1QVPFoW4DEQgb95J7lCa1ryw9gHhqweq6DVdDwESntGMn0lt61rfrIEdVQ1S4Q2pf5g22JiIzKr+OATtTCXxcV6oLDzkKSeS85IUsOSgK77HbqXn8Pg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 165.85.157.49) smtp.rcpttodomain=vger.kernel.org
+ smtp.mailfrom=gehealthcare.com; dmarc=fail (p=quarantine sp=quarantine
+ pct=100) action=quarantine header.from=gehealthcare.com; dkim=none (message
+ not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gehealthcare.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p6QdSHRQibY5GhEPYBs11/eRb5U50DqEtSR6+Z646mc=;
+ b=Pzvzk5+VckQ4c//1TpKbTW+HZR7uZnZ6oy8XGGJzcBZQD4FcNpbweS7Krzz9tFgnY+3+EoJI3suf6lfp/f1mKDXEqmXm7ZJhrkJAIzNtpSJpxEjbucBkShBKdkRH/ujnIZ/vGTBsYW3xYSy9ETBHo1RnoiSzDg+lcajFiSvKO54ojbPSkWoSbUmRkXnFMgp9Vv402yxQHzwIRupwyu3sl0CPpfKeQfiZPRmYeQwsfBS6o2oIp6REATdBwY8MrKUkqn/PnmLVYGwU8oInXSQM9U7N9JKT2bkZXucK3jb0ltQjfnlZvJdF/bN8G/N68fM2Gql755RKS/FLx1nQozyQMw==
+Received: from BYAPR01CA0038.prod.exchangelabs.com (2603:10b6:a03:94::15) by
+ CYYPR22MB4313.namprd22.prod.outlook.com (2603:10b6:930:c7::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8746.40; Tue, 3 Jun 2025 08:09:56 +0000
+Received: from SJ5PEPF00000203.namprd05.prod.outlook.com (2603:10b6:a03:94::4)
+ by BYAPR01CA0038.outlook.office365.com (2603:10b6:a03:94::15) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.24
+ via Frontend Transport; Tue, 3 Jun 2025 08:09:52 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 165.85.157.49)
+ smtp.mailfrom=gehealthcare.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=quarantine header.from=gehealthcare.com;
+Received-SPF: Fail (protection.outlook.com: domain of gehealthcare.com does
+ not designate 165.85.157.49 as permitted sender)
+ receiver=protection.outlook.com; client-ip=165.85.157.49;
+ helo=mkerelay1.compute.ge-healthcare.net;
+Received: from mkerelay1.compute.ge-healthcare.net (165.85.157.49) by
+ SJ5PEPF00000203.mail.protection.outlook.com (10.167.244.36) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8792.29 via Frontend Transport; Tue, 3 Jun 2025 08:09:56 +0000
+Received: from 56525d0f2b9b.fihel.lab.ge-healthcare.net (zoo13.fihel.lab.ge-healthcare.net [10.168.174.111])
+	by builder1.fihel.lab.ge-healthcare.net (Postfix) with ESMTP id 72556CFB7B;
+	Tue,  3 Jun 2025 11:09:53 +0300 (EEST)
+From: Ian Ray <ian.ray@gehealthcare.com>
+To: horms@kernel.org,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: brian.ruley@gehealthcare.com,
+	Ian Ray <ian.ray@gehealthcare.com>,
+	intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] igb: Fix watchdog_task race with shutdown
+Date: Tue,  3 Jun 2025 11:09:49 +0300
+Message-ID: <20250603080949.1681-1-ian.ray@gehealthcare.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF00000203:EE_|CYYPR22MB4313:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 21e9bf95-3b70-4c08-bab9-08dda276074e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|1800799024|82310400026|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?UKQA0d+Ltk5DvIIrvCg79ltA8D9sUgZdyMfMRXs85stj301CVLGATyHDacB5?=
+ =?us-ascii?Q?fc/2mtMKUypvwZgbrVe7npI4Q1HTLJ6TrCOLVZOH9E8QIUebJbG4tg6gBr+u?=
+ =?us-ascii?Q?Zp47roHfxVPnPRmVqPRtsP8dLis/hoTV26mhhtlu9Ik7HI3i782fl+rOFj0j?=
+ =?us-ascii?Q?oXllMbU8/cT1QGqdlEM8UvUZy9+XfVC2rJI+TzBFvK1udN8TftW996os4/3F?=
+ =?us-ascii?Q?qSk+sNxEgCZcuz4XlRM+KjnnrVZyuTRoWzzVMGMOU61ZhI82Cpu6kmpJj7CS?=
+ =?us-ascii?Q?D7zs+nXU6MaREJABQg0NfBByMmdd6NXB/60ENVakiD2F9TEWqZ0/G6TxY1dY?=
+ =?us-ascii?Q?kE1mhbAqfa75HG0guBTdug3VXA2MqlhOJEZYSubl08AtazgM7PcsN9qarzw3?=
+ =?us-ascii?Q?sZEzd++iXdaJVZO4wBfdGuY8MInP/atkLHwaBB8Jfbjm3qSBHIRQ1Nq/YozS?=
+ =?us-ascii?Q?DtR8fKNWG0FdZ7g5VkOlKaLfq0wYJvvKR8IbGQWIQnrlh5TjbGQSItioY49Z?=
+ =?us-ascii?Q?zmYSTcb8FPIfWp2dCAtomk/jw3v8Hi2rcMtubIUK8XsAFJuUQfrQMM8iHVm6?=
+ =?us-ascii?Q?kc1/49YqT2csDbAI/Hu/X3wplJGOgjvOs9j+VEjHt0YUo+fAMVposyer+E42?=
+ =?us-ascii?Q?F+mnzqDo0RF/Nj0xCspZbZSVDNcjF1dFe5Y6qNOseCsY7ef43VUGTg/pbK7m?=
+ =?us-ascii?Q?cSXX5F2A8wMP60hWd3Tabm5l1HJyWo58lI+nSSX6lpN8N5jdoZvwhMRdRcg8?=
+ =?us-ascii?Q?Erwd8IoPW1KepB5icNC6JbIlsDMsRI7LJvFBUrliV3Hm9Gu5pZjz9N2eHhoz?=
+ =?us-ascii?Q?bx8S6brES0HZHP40RMOHS/EfFNoUQ8XC0a2ke0GcBWgu/rXMVK39yjJcG/1E?=
+ =?us-ascii?Q?xykdtTt0wPRHdKGwJqPjltHGqOrWYd7AFyYYQsK7++ozY4qYMVtxdtk5Q3yv?=
+ =?us-ascii?Q?S7+4wQM3IRhYhDF0qBmayQHPMWqwIs9uPTSPYTMVug1BI3B/WXMY676TnJ2k?=
+ =?us-ascii?Q?KGYDayOZ+XkihmIdHV0NL/TKkWuaLf/amtsUkEDjaFa+v7UsCYKvCVfY/laL?=
+ =?us-ascii?Q?wgjx5VkxS2QAYB+ryb1VW4MMLqujL0HwLEIEWL6swwRmgoX0kOvnKQlXSo6B?=
+ =?us-ascii?Q?7bKLrok2nSrHT7qK1TY9PLh9p9U9Tr7E0LeBXuwNhDhGIDTTKQB0+PVTiiXq?=
+ =?us-ascii?Q?RCv0KV7tBNxicB+smJjrbk5jwCZhZbyRz/l2SpsrZr18Ou8nkb3Q92hMUs/1?=
+ =?us-ascii?Q?4QOcZt5o0LUZDP1+A1tJ4fw3E//qqqCY8kZI72hklmsGiIFtxs8aO8yXdfSY?=
+ =?us-ascii?Q?ppv+qPhmfUTWMaRRv+Ge79uT+JYr5mteU5DmkFLVQLe96fNol+hFDTyODbQM?=
+ =?us-ascii?Q?xpTrXEDwjrS6z7RkzKwtiIu6oew0dogUolzXCvT5xlK8G1df9/hbTeRaRW63?=
+ =?us-ascii?Q?H9JEcXWKrpfU4KioRtWAgoBOHUZaXlJhlWIkPVPfPQCxMUy8kQjTAmUVo2v+?=
+ =?us-ascii?Q?yn/kYkTPTrmkVgPoipDPbFbTgtfZ5k4HCUVh?=
+X-Forefront-Antispam-Report:
+	CIP:165.85.157.49;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mkerelay1.compute.ge-healthcare.net;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(1800799024)(82310400026)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: gehealthcare.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2025 08:09:56.5597
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 21e9bf95-3b70-4c08-bab9-08dda276074e
+X-MS-Exchange-CrossTenant-Id: 9a309606-d6ec-4188-a28a-298812b4bbbf
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=9a309606-d6ec-4188-a28a-298812b4bbbf;Ip=[165.85.157.49];Helo=[mkerelay1.compute.ge-healthcare.net]
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-SJ5PEPF00000203.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR22MB4313
 
-On 30/05/2025 14:20, Jagadeesh Kona wrote:
-> In recent QCOM chipsets, PLLs require more than one power domain to be
-> kept ON to configure the PLL. But the current code doesn't enable all
-> the required power domains while configuring the PLLs, this leads to
-> functional issues due to suboptimal settings of PLLs.
->=20
-> To address this, add support for handling runtime power management,
-> configuring plls and enabling critical clocks from qcom_cc_really_probe.
-> The clock controller can specify PLLs, critical clocks, and runtime PM
-> requirements using the descriptor data. The code in qcom_cc_really_probe(=
-)
-> ensures all necessary power domains are enabled before configuring PLLs
-> or critical clocks.
->=20
-> This series fixes the below warning reported in SM8550 venus testing due
-> to video_cc_pll0 not properly getting configured during videocc probe
->=20
-> [   46.535132] Lucid PLL latch failed. Output may be unstable!
->=20
-> The patch adding support to configure the PLLs from common code is
-> picked from below series and updated it.
-> https://lore.kernel.org/all/20250113-support-pll-reconfigure-v1-0-1fae6bc=
-1062d@quicinc.com/
->=20
-> This series is dependent on bindings patch in below Vladimir's series, he=
-nce
-> included the Vladimir's series patches also in this series and updated th=
-em.
-> https://lore.kernel.org/all/20250303225521.1780611-1-vladimir.zapolskiy@l=
-inaro.org/
->=20
-> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
-> ---
-> Changes in v5:
-> - Reversed order of patches 2 & 3 to add MXC support in SM8450
->    camcc bindings first and then moved SC8280XP camcc to SA8775P
->    camcc to have single power domain support for it.
-> - Added return code for qcom_cc_clk_pll_configure() and
->    returned -EINVAL in case if PLL config or registers is
->    NULL in patch 6 [Bryan]
-> - Added separate CBCR's list for SM8650 videocc and
->    updated clk_cbcrs list based on compatible in patch 8[Konrad]
-> - Added R-By tags received on v4
-> - Link to v4: https://lore.kernel.org/r/20250515-videocc-pll-multi-pd-vot=
-ing-v4-0-571c63297d01@quicinc.com
->=20
-> Changes in v4:
-> - Updated the SC8280XP camcc bindings patch to fix the
->    required-opps warning reported by kernel bot
-> - Updated the description of power-domains, required-opps of SM8450 camcc
->    bindings as per review comments on v3 [Bryan]
-> - Moved the PLL config checks to calling function code [Dmitry]
-> - Removed qcom_clk_reg_setting struct and regmap_update_bits() code.
->    Added a .clk_regs_configure() callback that clock drivers can implemen=
-t
->    if they require to update some misc register settings [Dmitry]
-> - Moved the PLLs and CBCRs data to a separate qcom_cc_driver_data
->    struct to avoid bloating up the CC descriptor structure
-> - Updated the videocc and camcc driver patches to incorporate above
->    qcom_cc_driver_data change
-> - Updated the commit text of DT patches [Bryan]
-> - Added the R-By, T-By tags received on v3
-> - Link to v3: https://lore.kernel.org/r/20250327-videocc-pll-multi-pd-vot=
-ing-v3-0-895fafd62627@quicinc.com
->=20
-> Changes in v3:
->   - Updated the videocc bindings patch to add required-opps for MXC power=
- domain [Dmitry]
->     and added Bryan & Rob R/A-By tags received for this patch on v1.
->   - Included the Vladimir's bindings patch for SM8450 camcc bindings to
->     add multiple PD support and updated them to fix the bot warnings.
->   - Moved SC8280XP camcc bindings to SA8775P camcc since SC8280XP only
->     require single MMCX power domain
->   - Split runtime PM and PLL configuration to separate patches [Dmitry]
->   - Removed direct regmap_update_bits to configure clock CBCR's and
->     using clock helpers to configure the CBCR registers [Dmitry, Bryan]
->   - Added new helpers to configure all PLLs & update misc clock
->     register settings from common code [Dmitry, Bryan]
->   - Updated the name of qcom_clk_cfg structure to qcom_clk_reg_setting [K=
-onrad]
->   - Updated the fields in structure from unsigned int to u32 and added
->     val field to this structure [Konrad]
->   - Added a new u32 array for cbcr branch clocks & num_clk_cbcrs fields
->     to maintain the list of critical clock cbcrs in clock controller
->     descriptor [Konrad]
->   - Updated the plls field to alpha_plls in descriptor structure [Konrad]
->   - Added WARN() in PLL configure function if PLL type passed is not
->     supported. The suggestion is to use BUG(), but updated it to
->     WARN() to avoid checkpatch warning. [Bjorn]
->   - Moved the pll configure and helper macros to PLL code from common cod=
-e [Bjorn]
->   - Updated camcc drivers for SM8450, SM8550, SM8650 and X1E80100 targets
->     with support to configure PLLs from common code and added MXC power
->     domain in corresponding camcc DT nodes. [Bryan]
->   - Added Dmitry and Bryan R-By tags received on videocc DT node changes =
-in v1
->   - Link to v2: https://lore.kernel.org/r/20250306-videocc-pll-multi-pd-v=
-oting-v2-0-0cd00612bc0e@quicinc.com
->=20
-> Changes in v2:
->   - Added support to handle rpm, PLL configuration and enable critical
->     clocks from qcom_cc_really_probe() in common code as per v1 commments
->     from Bryan, Konrad and Dmitry
->   - Added patches to configure PLLs from common code
->   - Updated the SM8450, SM8550 videocc patches to use the newly
->     added support to handle rpm, configure PLLs from common code
->   - Split the DT change for each target separately as per
->     Dmitry comments
->   - Added R-By and A-By tags received on v1
-> - Link to v1: https://lore.kernel.org/r/20250218-videocc-pll-multi-pd-vot=
-ing-v1-0-cfe6289ea29b@quicinc.com
->=20
-> ---
-> Jagadeesh Kona (15):
->        dt-bindings: clock: qcom,sm8450-videocc: Add MXC power domain
->        dt-bindings: clock: qcom,sm8450-camcc: Move sc8280xp camcc to sa87=
-75p camcc
->        clk: qcom: common: Handle runtime power management in qcom_cc_real=
-ly_probe
->        clk: qcom: common: Add support to configure clk regs in qcom_cc_re=
-ally_probe
->        clk: qcom: videocc-sm8450: Move PLL & clk configuration to really =
-probe
->        clk: qcom: videocc-sm8550: Move PLL & clk configuration to really =
-probe
->        clk: qcom: camcc-sm8450: Move PLL & clk configuration to really pr=
-obe
->        clk: qcom: camcc-sm8550: Move PLL & clk configuration to really pr=
-obe
->        clk: qcom: camcc-sm8650: Move PLL & clk configuration to really pr=
-obe
->        clk: qcom: camcc-x1e80100: Move PLL & clk configuration to really =
-probe
->        arm64: dts: qcom: sm8450: Additionally manage MXC power domain in =
-videocc
->        arm64: dts: qcom: sm8550: Additionally manage MXC power domain in =
-videocc
->        arm64: dts: qcom: sm8650: Additionally manage MXC power domain in =
-videocc
->        arm64: dts: qcom: sm8450: Additionally manage MXC power domain in =
-camcc
->        arm64: dts: qcom: sm8650: Additionally manage MXC power domain in =
-camcc
->=20
-> Taniya Das (1):
->        clk: qcom: clk-alpha-pll: Add support for common PLL configuration=
- function
->=20
-> Vladimir Zapolskiy (2):
->        dt-bindings: clock: qcom,sm8450-camcc: Allow to specify two power =
-domains
->        arm64: dts: qcom: sm8550: Additionally manage MXC power domain in =
-camcc
->=20
->   .../bindings/clock/qcom,sa8775p-camcc.yaml         | 15 ++++
->   .../bindings/clock/qcom,sm8450-camcc.yaml          | 20 +++--
->   .../bindings/clock/qcom,sm8450-videocc.yaml        | 18 +++--
->   arch/arm64/boot/dts/qcom/sm8450.dtsi               | 12 ++-
->   arch/arm64/boot/dts/qcom/sm8550.dtsi               | 12 ++-
->   arch/arm64/boot/dts/qcom/sm8650.dtsi               |  6 +-
->   drivers/clk/qcom/camcc-sm8450.c                    | 89 +++++++++++----=
--------
->   drivers/clk/qcom/camcc-sm8550.c                    | 85 +++++++++++----=
-------
->   drivers/clk/qcom/camcc-sm8650.c                    | 83 ++++++++++-----=
------
->   drivers/clk/qcom/camcc-x1e80100.c                  | 67 ++++++++-------=
--
->   drivers/clk/qcom/clk-alpha-pll.c                   | 57 ++++++++++++++
->   drivers/clk/qcom/clk-alpha-pll.h                   |  3 +
->   drivers/clk/qcom/common.c                          | 81 +++++++++++++++=
-++---
->   drivers/clk/qcom/common.h                          | 10 +++
->   drivers/clk/qcom/videocc-sm8450.c                  | 58 ++++++--------
->   drivers/clk/qcom/videocc-sm8550.c                  | 66 ++++++++-------=
--
->   16 files changed, 421 insertions(+), 261 deletions(-)
-> ---
-> base-commit: 138cfc44b3c4a5fb800388c6e27be169970fb9f7
-> change-id: 20250218-videocc-pll-multi-pd-voting-d614dce910e7
->=20
-> Best regards,
-> --
-> Jagadeesh Kona <quic_jkona@quicinc.com>
->=20
->=20
+A rare [1] race condition is observed between the igb_watchdog_task and
+shutdown on a dual-core i.MX6 based system with two I210 controllers.
 
-Can we merge this series now.
+Using printk, the igb_watchdog_task is hung in igb_read_phy_reg because
+__igb_shutdown has already called __igb_close.
 
-Looks ready.
+The fix is to delete timer and cancel the work after settting IGB_DOWN.
+This approach mirrors igb_up.
 
+reboot             kworker
+
+__igb_shutdown
+  rtnl_lock
+  __igb_close
+  :                igb_watchdog_task
+  :                :
+  :                igb_read_phy_reg (hung)
+  rtnl_unlock
+
+[1] Note that this is easier to reproduce with 'initcall_debug' logging
+and additional and printk logging in igb_main.
+
+Signed-off-by: Ian Ray <ian.ray@gehealthcare.com>
 ---
-bod
+Changes in v2:
+- Change strategy to avoid taking RTNL.
+- Link to v1: https://lore.kernel.org/all/20250428115450.639-1-ian.ray@gehealthcare.com/
+---
+ drivers/net/ethernet/intel/igb/igb_main.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+index 9e9a5900e6e5..a65ae7925ae8 100644
+--- a/drivers/net/ethernet/intel/igb/igb_main.c
++++ b/drivers/net/ethernet/intel/igb/igb_main.c
+@@ -2175,10 +2175,14 @@ void igb_down(struct igb_adapter *adapter)
+ 	u32 tctl, rctl;
+ 	int i;
+
+-	/* signal that we're down so the interrupt handler does not
+-	 * reschedule our watchdog timer
++	/* The watchdog timer may be rescheduled, so explicitly
++	 * disable watchdog from being rescheduled.
+ 	 */
+ 	set_bit(__IGB_DOWN, &adapter->state);
++	timer_delete_sync(&adapter->watchdog_timer);
++	timer_delete_sync(&adapter->phy_info_timer);
++
++	cancel_work_sync(&adapter->watchdog_task);
+
+ 	/* disable receives in the hardware */
+ 	rctl = rd32(E1000_RCTL);
+@@ -2210,9 +2214,6 @@ void igb_down(struct igb_adapter *adapter)
+ 		}
+ 	}
+
+-	timer_delete_sync(&adapter->watchdog_timer);
+-	timer_delete_sync(&adapter->phy_info_timer);
+-
+ 	/* record the stats before reset*/
+ 	spin_lock(&adapter->stats64_lock);
+ 	igb_update_stats(adapter);
+--
+2.49.0
 
