@@ -1,270 +1,329 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2058.outbound.protection.outlook.com [40.107.220.58])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB375173
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 04:29:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748924977; cv=fail; b=q2dm+ECQeq2iYrxfG/dPeJFnZDjnqfAn4NzyJ4gW4vt+0h+/sbL1O8Zeb4l+UXKvuprvknYfpyZWfqtAdxete6uS1bgiQjGgkSDCWdeMzVauqHidD9fxo8dzwfr6ZXZheQGv0GNjWr0mNHcWYXWV4Fd2cY7M64rBe5zLo9fx8To=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748924977; c=relaxed/simple;
-	bh=Pn+SBR9hp0JtBYohRzsqwJ9v9dfwZqNEEiikt6bqNiA=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=CN1oF8jfknJPc6vNPiSGtYRo90Cdr3LBEAhspC2lgsGS+pLrMg5wQTL6Hr+WpPtg6zcJEByaCESxONkoUVmHtr2tvIDaMRP+eMd7xH5W/6vXdQpnB2p0rSWvazmxe6UUZW98LOrxRX5iXy9Uq955qxMWSSBzDeRm9qVExL+ZWvc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=f616Yfbs; arc=fail smtp.client-ip=40.107.220.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4A32F2D;
+	Tue,  3 Jun 2025 04:38:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748925517; cv=none; b=X9zfeTIYF0Zu4mnefHb+A0Ft+qDQ9Ur8W9ywcsD6O6KVu5rpFCtxkzu3hxh0qSxlkQTrEMFquUtBrUo+5oerx2Aqp1stOPQSROB9tj/fRi3+WCxE9g+uFNETslkCSi8wm90lPBP/p5qRvumhcTdKkHUQXyjNR2n2qfsMeK5NnmM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748925517; c=relaxed/simple;
+	bh=nf6rippSCtPnu9Qu7l3fVOckpNN52C+dzO+b0/V03kU=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=hVkThCwF+50ms1Jjwj86cxEWsvnBKRCwy8U/XcnOs32SttnqAUFPZNbNsnmBaeseyZ4awyR6jV6fylMhcPx7uARHjOEsNA9mlnnrV7liE88sdlfVxNvWa1Rlr4hUGd2IUl0ubJ4MAyLPXh1Fn0oE62iwAQgQhyqIsyz+TWj8LUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IfOUnTwh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="f616Yfbs"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=s4FvRkaI6G+RDxvCZVn2NU3Ll/mWWL2ZPPv4tKZGtjz8QBB7WfNjYeI5zfHprYsgOT+T56ZSZeqda76EiLqoHvsCW0jymMpZ8SUBIBgy36E9BhxyWvDJ5Bx9X1mY+dq9qBNkc56CsSedUcGYKLq99WBniXFNqEQCs5EoloLNkQbzmZGe51yvuuVFpUg7JAQDQx//CMY+kA9aSTkcmMhMMI+3zNy8P7/0wVT9fCYGfzDtJJdr4jR0BlljZicZvNZdsJg2qxuWyuL6iy792A73lfz7rOqYElbWAZ+e9LVGbWnAWLmdHxHt29AHHGVPEtyqHAGKUrE9QJW8Y0TXMV0BGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=k0gUySX+pue8CBJ60Akcggx+yjjOWHB0TdOzbMixpmw=;
- b=oWup8YwRso7Prsx57EYZDRJ/NSpAVf9tPWp2198tqoD6F9PSk/u0gP56lJTPYjsMqXMSiZYQ9JxFTlbCJFOkmWZSimMuhpollgGMyBs4/Ezy/OuLMYfI1Js5G0XY0wT35lMARuDVln7QqMXqSkKBsD2c6mbyazL01Ew2blR2XRPsbPObI//hWk7eUP9qaa0KAT8KgjOprzvBha9ysn0Sig18WsXdXUL+WfDWyzYsg5DJlJOXRaHld0cspj3/i7YtHgsniS0IO1YhZES5V0p37HuSDgeATB+5MPzyUjt0CxTHlskxhE7M2nt/eDZeNbGujzqXeu1gIt+yMsvGyo1KRg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k0gUySX+pue8CBJ60Akcggx+yjjOWHB0TdOzbMixpmw=;
- b=f616YfbsLHBD8SfobcwrxZp/sMY5cYS9+mj7NKLn1A3lWSvgP3apOFlbcqfbRzEMtFvke875oQsRyAPEGd6BzKSDCylMKQ7+2qMMGj4o7lgdwBFUe8Ox5Fn+bdGM69d6xrOwSEugaVa5njGGe7a5UrvTxftuOq/EGxdUk9gFRpSJMfARO+sEvN0LYJgbW4wanrWTr056hZdxoXs9Lv+Qwj/Xb2FeVmXD40g9NLdr5IqTBDoQoJJSbLNNvgfgtO6Ewvxga7soCzUcBWgKmaYwNnGy8Ss/B/e9efOs+ya7SP7owCtfqQQMoh4/9272YGjL9cAud5TCfHRwoUNkBFTybw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
- by MW3PR12MB4396.namprd12.prod.outlook.com (2603:10b6:303:59::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.37; Tue, 3 Jun
- 2025 04:29:33 +0000
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91%3]) with mapi id 15.20.8769.025; Tue, 3 Jun 2025
- 04:29:33 +0000
-Message-ID: <97260b2e-3f27-4eb2-a66f-86868a44c58a@nvidia.com>
-Date: Tue, 3 Jun 2025 00:29:29 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 09/10] sched/ext: Relinquish DL server reservations
- when not needed
-To: linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
- David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
- Changwoo Min <changwoo@igalia.com>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>
-References: <20250602180110.816225-1-joelagnelf@nvidia.com>
- <20250602180110.816225-10-joelagnelf@nvidia.com>
-Content-Language: en-US
-From: Joel Fernandes <joelagnelf@nvidia.com>
-In-Reply-To: <20250602180110.816225-10-joelagnelf@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MN0P221CA0029.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:208:52a::20) To SN7PR12MB8059.namprd12.prod.outlook.com
- (2603:10b6:806:32b::7)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IfOUnTwh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25190C4CEED;
+	Tue,  3 Jun 2025 04:38:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748925517;
+	bh=nf6rippSCtPnu9Qu7l3fVOckpNN52C+dzO+b0/V03kU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=IfOUnTwh4gJ65Y2qDp+ZEJhiPmtToC2Mf1cIbZn+Z1oWZIwEAZGiJsKR5G9jM/AZ9
+	 6jvaY/lsf9l9DT8UKfm6D8sC9uHqYwY829WNVoWgFmvJD6EqXm11acCVoKxJGiJVmZ
+	 5D5/2PQAlKIle6kjaijkrIfhC4V95Tol6mD52ennz8U8h1XI41ooREaM/r49jx7t8+
+	 bPctl1qLbaJJPKJt5TjoZJs5IUHlXSsGvjVwStY7ppwDuDC9Om10gSVxqeR3t445/x
+	 2wxy+BYmGGBNH3hjiWxg8FBG7rRabqvxIsXMs2TErNOYhT1R0Hxf38H8/1mNWbkfxK
+	 FU9q5nGtD0z3A==
+Date: Tue, 3 Jun 2025 13:38:34 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K . Petersen" <martin.petersen@oracle.com>, Sergey Senozhatsky
+ <senozhatsky@chromium.org>, linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sd: Add timeout_sec and max_retries module parameter
+ for sd
+Message-Id: <20250603133834.130f5c92183a486fccafed3c@kernel.org>
+In-Reply-To: <174891816691.3598746.4969251260451409086.stgit@mhiramat.tok.corp.google.com>
+References: <174891816691.3598746.4969251260451409086.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|MW3PR12MB4396:EE_
-X-MS-Office365-Filtering-Correlation-Id: f509a3e5-9c8a-4a7f-df58-08dda2573d4b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?L3pvYnR6dFR4dkxzRzU2RHpubWFKQTYrWE5GTXQwMVBuQ0t0VXd5WCtKeDAz?=
- =?utf-8?B?ZWxnVG12eUhoVjVBYTYvanZkYlAxRXIxa3VzNE1EZTRVaVByeFBDSS9xWkR0?=
- =?utf-8?B?dlpSMWtXQTNhZjc3R1BDck1aQ08wb3dEN21tZzBuQ01tU21Jby9oVEQyQ2pZ?=
- =?utf-8?B?dEhCcEMrMktMQnZsRmtFRitVY2h1MFd1K3BsTXpMUU4wYWQrWnFIbU5iRW9t?=
- =?utf-8?B?OXpXTGZqYzJnS3pXcEpGQnFMVm5oNUhwcUJPa2VRVGNqZTZuYWU3eUJpV2RC?=
- =?utf-8?B?SCs4Z3B6YWhyaksrREVOYnZpRFZ2RVFpR0R1SzZIVVhUNUpsVjJ4WHY1V1B3?=
- =?utf-8?B?TVFBYkdOb3pBZEVBUUJwdmpVSFA3bzh3SXJ2L1h0N2pYMjhHZUNKOVcxazhP?=
- =?utf-8?B?SWMvQUdwVWJWN2NUSHV5NWJrN2dlUEswY0Jnb21WQVd1bmYwZUJBaXo2ME1D?=
- =?utf-8?B?VVltbFl6ODQ3a2taTW15emtLMmU1aXUzbWkzVnBSRy9HTCttWHZTSEU3S3BO?=
- =?utf-8?B?SmZFUCt2SlV6S1BwWStJSDVMYmNKQmZrNGg2MUgva1ZXTlVadjd5STZ4bGNH?=
- =?utf-8?B?S1psWGtQUTY2eFZjUjhOMVpGc243QkFUSzVGWmNER3FHN2RKU3N3UXlJa0Qw?=
- =?utf-8?B?RVFIRDNvN1dScmwxbUNLZFEzR0ErbnRtbnhWb3R5YU5sK0Frd1dOWUZxNGFT?=
- =?utf-8?B?eXdLRDFHSU1rSWgvZ2grcmEwRzRiRmRPWDFUUGxnOURmYUNldGt1UVFad2tK?=
- =?utf-8?B?WEIxTnlzdGpnV0h2TE5GUC9mUUdLcksyMzh0MzhqYVpwa0U1Qk9jL0RZYUkx?=
- =?utf-8?B?T1BEVWY4WWJyckt6VVRUazM1UEJ2dGhjektRTjNjNkoyOWFpTUZmSjNjQ2dW?=
- =?utf-8?B?SmNBZ1NNc3A0eDNDMkcwVGY2VDhSclhsYWF5TnorNWExQWJKNDA4SEhDdEFp?=
- =?utf-8?B?NHR6NThOK01pYVNCSXl0L0hTcTV6NGFKcmRoeEtyTWNkRkd2U1N3VWdzRGNB?=
- =?utf-8?B?Zm9MV3BrdzFwOTlSZmpoRUZ4cnk1ZFh0WExCNXlIUW9VdllEQnNDTTFQZE8w?=
- =?utf-8?B?TVRsdUVRdTQ1UzRFS3pZOVo5cFNWaDhMTWtkdjlIRzlLbW1vdS9pbUVyYjIz?=
- =?utf-8?B?UVNORnBHVWtBWEVSeVJlVEhXZHR0VERzcDUxM3pONkkyamtpSEFUVVdYTkFp?=
- =?utf-8?B?VEtaYnNBK3pPcE5zTVA3NytJb1FteEl3WUJEUWtFTllqeHdBcEdySzYrWjM1?=
- =?utf-8?B?Rmp0Q2pLWWx0RjJKNzRpQTJlMmFRY3NMcThUakVWRWMzZUUxdy8vRG9Ud3Yw?=
- =?utf-8?B?RCtYWWlvSEgweGo3V0hyc0JQWExCV3ZUNjhCK1h6VWVBaDI2Q0YxWlhPL1pC?=
- =?utf-8?B?YitsaGhObmEyYWNXaXNSd0JpNTlWL0pjSDRYR1ZHcWk3SWNISXpmby8rb0pH?=
- =?utf-8?B?Mjg4a1NuOVI5NzlQVC9pTlJNVnN0YzVqbGVPVDJ6UHlqdEFOdDU2bGhEaENS?=
- =?utf-8?B?bHZsMm5ZaDJWcFI5dmJzaHFrSnplbFNYLzNDSjVRb2hxN09MdkFwZ1dkTGRJ?=
- =?utf-8?B?K09XWklkRmx4c3NCNk4wR25sbVl4YXFCc0gzak5rdWtuZkM4bmwyR0lVbWRP?=
- =?utf-8?B?WU5LU2JDdTZuWEJuQjA1c2xHL3Zmd0NlRlZUOUZheVJxa1VLQTYwbDhhcStp?=
- =?utf-8?B?aUt6dXdwQWN0M3hZejN1Nld3Rm5jMlNEQmo4Ykh6Y3hVOEUwSEtoa0dQYkVY?=
- =?utf-8?B?QnNJeEVsN2xHU3B4bkVSLzM4L2RzSWtXdlJLUVJNQmRadlZBd05Gdy9oUVBM?=
- =?utf-8?B?dW1PdUVxK1pLT3p5NFQ3K0ZRUUZrSHhlNXROdGFpaUdHV1dyMlM4QjZDNlUv?=
- =?utf-8?B?NXY5VU03SndhbFdZN0tBQ2hMMUpLVHZLaGljNm5EL1UxeWxWT2tJbFMybnRT?=
- =?utf-8?B?R2R3RWVNckRwMnpqK203dzVDSENDV2IyUloyVTRFVzNSU05ROWV0R0hld2lx?=
- =?utf-8?B?RHRqZjNlQ1lRPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MmJaVU5iSmNnUndpaS9ZTCsrbnlHa2VwbloyUUdaT3hUbjhuTHdkSXdkTUxH?=
- =?utf-8?B?elNPMWRuY0NKWEx3eW4yOHVlbC8rRDZqL0JWVlowWW5Qdk9YeUd4RHZFazlX?=
- =?utf-8?B?OXRKYmRmVUo3TktoalE1bXdhQ05yQVRIcDNnWjBIS2VnSkJLREFXanFtM2J5?=
- =?utf-8?B?b3JCbFMvU1pRTUwxQTZGMlg0VThrck1YSjBYZzF4ZXR3TGpMckhOK2pKNlhH?=
- =?utf-8?B?aFVvdG5aNmk2L29VWFBjNW9Ic1l4TERHTXlKSFJocFI4OVAyRTViTW5LV0Q5?=
- =?utf-8?B?RW5SS1dYTjVqODRXNmpaQ3c3OVl5SGZ5T2tDc0U2dzF1SW5vK0V6OFM0WXZ4?=
- =?utf-8?B?M2s4RGpTSS9DNlV4MmNmdE9yWDk5d2lnMzMxMHNkWFBYQk5jTk0vSXJNbkxE?=
- =?utf-8?B?S1plRjVBY3RGSVV5ci9uSUJEdGVhMUwzY0xOYnlkb0loUmNnaTkweXM5NElr?=
- =?utf-8?B?RDhsRDFkZ2JKbHhuS3ZBQWdJeHFSZ2pMa2l5ZmZ1U20zejZGTVJzd0tKVmpI?=
- =?utf-8?B?RDZsd3FJSHJhaXlIL3g0TGVuUnBvd0RIZGlIWDZKNElKazkvMmN1SStGbjBx?=
- =?utf-8?B?eitpSjBmY0JrMjl5clg0UFRtdEJuTDhqT0l2MTdZMVRLay93T3RIMUNIYzZI?=
- =?utf-8?B?ZlVlUUJDTkh5RzErWC91THFXMndJMTVKd1YyMmp1c1F1Z3RnM3l6TG5Ua1B2?=
- =?utf-8?B?K29MMEUydzFhR2J2cDRxMnNabktvdDcvckMrNUwrM0N3VXEzOUJ3L0lFQ1hi?=
- =?utf-8?B?dzMyQTIyZWUvNGxDdVpTTGdoUlkxK0ZpZWlhVGF2TmhTOHQ5SFhyUmtIcFJU?=
- =?utf-8?B?Vm9HTm9Td3V0a1NiRXd5bXVUdXJsL3h6Um5LWDhUMjZta3VXZWdCc3plcng4?=
- =?utf-8?B?MXVXVEFENXU0ekIrNTBDWEZmRGtoM2w5ajdqdHRYejdWMTdUdzZtcTMwQ2FM?=
- =?utf-8?B?cVdmUzdVbk9vZG9TZEhiWkhKZkE4azZYalVFZlRncFo3d1BUNUYwY1U0M2J4?=
- =?utf-8?B?cVQ4WkI2SUpzNHdqNVV5aUtKcUI0L0VDNHdVNHV6SjNPaHZsdzlDdUFXWVBF?=
- =?utf-8?B?eUxXRjdCTUVDald1eGNzbklNdHhmaHN3ckFTd1VzNE1nMGlncGhrNFhaSmg5?=
- =?utf-8?B?VUVuYTBkL0V2dHVxdFY2QTh5YmZHRDdTRjd6cXlaUlpUcHU2NVdMSVlUZDVq?=
- =?utf-8?B?dUNIR0VyTElwcklVb0N1RTJqUUNYUi9Wc21XcUhDNDNSa1lYQXlIUWs5ZFli?=
- =?utf-8?B?SXFnT0VaVUJPTmY5Ty93TGhnQ0pVbE0zZ2ZJRVM4cWd3bG5XdE01dFJtM29a?=
- =?utf-8?B?ZEk0RHNhRWtXSGxzajhlc2paQzA0TjNSNkVPNEdoTWNLeEZUaG4wOCtacktt?=
- =?utf-8?B?RDh0RVRRb3g1eHlmdXB2R2puSWljdDBkQTVjV0pRT204M1ZWbFNKdzViS3VD?=
- =?utf-8?B?VTU5Tm1mTnRHaXN4OVhXMmREamZrTzhJRng4UkxUNjFwdll5MGt2enZTSFdl?=
- =?utf-8?B?dWpDRXh0Mys4YVNZZzFSazVmZi9rdlViemRGRmI2VzJEU1k4YWh2T1hmUmlC?=
- =?utf-8?B?WGMrZnFrT1AwTTlsMlJobmtveUtVdTk2SG5sUlFIZDVOVUhhbEgrK2MrQWNR?=
- =?utf-8?B?bTJndVd0aG9vY0s3UXBQdHlEV3E5RFQ4WW1HNUkyR1V3TUpxY29COTk4WDhl?=
- =?utf-8?B?UFMrYTlSc2RSNnRheTlYcDBMd2d2MUVkN1JLMG5qdTA1Y1RmZTFmRmcvTmJI?=
- =?utf-8?B?YmMzSDVaciswaUxYWnlVanBLMm5qSTdnNmdPczlxbXpkMFYyV1F3czl6RUUz?=
- =?utf-8?B?blJiZmUzSHRiNWVTU3VCbmJMRzF5UmVIM0hIY0Z3eVZlNGFIK1NBbDQzajFN?=
- =?utf-8?B?NDlvcGNFWDQyalRtcjVFUVRyb00ranF2S3Q2SjVOWjd5NUhoSDZTSkF6T1Nw?=
- =?utf-8?B?ZFBNVGdId1VKUC9RVksxL2NydklyRGIvNTdmZDJLdTRwcE5Iek5NOTMrWVA5?=
- =?utf-8?B?SVhIZVhpZTNNdUJzL0tPMFgvR3B2aTV2eTBZRjhFeVljT0djek5sUkQvYk1z?=
- =?utf-8?B?elhjSTE3ai9ITWZmTmlnTXZvZkdzV1I4VGRheVB0WkJLcXNWUzRoUkdDWnRO?=
- =?utf-8?Q?mjtnoQeSc9Fm38ghFAPl7Ocju?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f509a3e5-9c8a-4a7f-df58-08dda2573d4b
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2025 04:29:33.2738
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LxzXIzEXsvDMZLAyYw3hA82NMWch9ZbM58zrZK+totxIQOgPQQWxN7NHbXtjG4JA6cUfYKmxv8uvEs2fjUAGmQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4396
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Tue,  3 Jun 2025 11:36:07 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-
-On 6/2/2025 2:01 PM, Joel Fernandes wrote:
-> I tested loading a test SCX program and verifying the bandwidth both
-> before and after applying the patch:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> Without patch:
-> Before loading scx:
->   .dl_bw->total_bw               : 1887408
-> After unloading scx:
->   .dl_bw->total_bw               : 3774816
+> Sometimes a USB storage connection is unstable and the probing
+> takes longer time than the hung check timeout. Since the probing
+> runs under device_lock(dev), if there is another task tries to
+> acquire the same device_lock() (e.g. udevd, in this case), that
+> task hits the hung_task error and will lead a kernel panic.
 > 
-> After patch:
-> Before loading scx:
->   .dl_bw->total_bw               : 1887408
-> After unloading scx:
->   .dl_bw->total_bw               : 1887408
+> For example, enabling CONFIG_DETECT_HUNG_TASK_BLOCKER, I got an
+> error message something like below (Note that this is 6.1 kernel
+> example, so the function names are a bit different.);
 > 
-> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
+>  INFO: task udevd:5301 blocked for more than 122 seconds.
+> ...
+>  INFO: task udevd:5301 is blocked on a mutex likely owned by task kworker/u4:1:11.
+>  task:kworker/u4:1state:D stack:0 pid:11ppid:2  flags:0x00004000
+>  Workqueue: events_unbound async_run_entry_fn
+>  Call Trace:
+>   <TASK>
+>   schedule+0x438/0x1490
+>   ? blk_mq_do_dispatch_ctx+0x70/0x1c0
+>   schedule_timeout+0x253/0x790
+>   ? try_to_del_timer_sync+0xb0/0xb0
+>   io_schedule_timeout+0x3f/0x80
+>   wait_for_common_io+0xb4/0x160
+>   blk_execute_rq+0x1bd/0x210
+>   __scsi_execute+0x156/0x240
+>   sd_revalidate_disk+0xa2a/0x2360
+>   ? kobject_uevent_env+0x158/0x430
+>   sd_probe+0x364/0x47
+>   really_probe+0x15a/0x3b0
+>   __driver_probe_device+0x78/0xc0
+>   driver_probe_device+0x24/0x1a0
+>   __device_attach_driver+0x131/0x160
+>   ? coredump_store+0x50/0x50
+>   bus_for_each_drv+0x9d/0xf0
+>   __device_attach_async_helper+0x7e/0xd0  <=== device_lock()
+> ...
+> 
+> In this case, device_lock() was locked in
+> __device_attach_async_helper(), and it ran driver_probe_device()
+> for each driver, and eventually send a scsi command which took
+> very long time.
+> 
+> This is because we use a long timeout and retries for sd_probe().
+> To avoid it, makes the default timeout and max retries tunable.
+> Since the sd.ko can be loaded right before the broken device is
+> probed, pass the default value as module parameters, so that
+> user can set it via modules.conf.
+> 
+> If we set these values 10 times smaller (e.g. timeout_sec=3),
+> sd_probe can detect wrong devices/connection before causing
+> hung_task error.
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > ---
->  kernel/sched/ext.c | 44 ++++++++++++++++++++++++++++++++++++++++----
->  1 file changed, 40 insertions(+), 4 deletions(-)
+>  drivers/scsi/sd.c |   50 +++++++++++++++++++++++++++++---------------------
+>  1 file changed, 29 insertions(+), 21 deletions(-)
 > 
-> diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-> index 52f98c3944ed..c938a19cd44f 100644
-> --- a/kernel/sched/ext.c
-> +++ b/kernel/sched/ext.c
-> @@ -4784,13 +4784,28 @@ static void scx_ops_disable_workfn(struct kthread_work *work)
->  	scx_task_iter_stop(&sti);
->  	percpu_up_write(&scx_fork_rwsem);
+> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+> index 950d8c9fb884..5021bad3bd40 100644
+> --- a/drivers/scsi/sd.c
+> +++ b/drivers/scsi/sd.c
+> @@ -100,6 +100,14 @@ MODULE_ALIAS_SCSI_DEVICE(TYPE_MOD);
+>  MODULE_ALIAS_SCSI_DEVICE(TYPE_RBC);
+>  MODULE_ALIAS_SCSI_DEVICE(TYPE_ZBC);
 >  
-> -	/*
-> -	 * Invalidate all the rq clocks to prevent getting outdated
-> -	 * rq clocks from a previous scx scheduler.
-> -	 */
->  	for_each_possible_cpu(cpu) {
->  		struct rq *rq = cpu_rq(cpu);
-> +		struct rq_flags rf;
+> +/* timeout_sec defines the default value of the SCSI command timeout in second. */
+> +static int sd_timeout_sec = SD_TIMEOUT / HZ;
+> +module_param_named(timeout_sec, sd_timeout_sec, int, 0644);
 > +
-> +		/*
-> +		 * Invalidate all the rq clocks to prevent getting outdated
-> +		 * rq clocks from a previous scx scheduler.
-> +		 */
->  		scx_rq_clock_invalidate(rq);
+> +/* max_retries defines the default value of the max of SCSI command retries.*/
+> +static int sd_max_retries = SD_MAX_RETRIES;
+> +module_param_named(max_retries, sd_max_retries, int, 0644);
 > +
-> +		/*
-> +		 * We are unloading the sched_ext scheduler, we do not need its
-> +		 * DL server bandwidth anymore, remove it for all CPUs. Whenever
-> +		 * the first SCX task is enqueued (when scx is re-loaded), its DL
-> +		 * server bandwidth will be re-initialized.
-> +		 */
-> +		rq_lock(rq, &rf);
-> +		if (dl_server_active(&rq->ext_server)) {
-> +			dl_server_stop(&rq->ext_server);
-> +		}
-> +		dl_server_remove_params(&rq->ext_server);
-> +		rq_unlock(rq, &rf);
-
-I am sorry - this bit also needs to use the irq-disable locking:
-		rq_lock_irqsave(rq, &rf);
-                ...
-		rq_unlock_irqrestore(rq, &rf);
-
-Otherwise the sched_ext self-test hangs. I have squashed it in my tree for next
-revision.
-
-thanks,
-
- - Joel
-
-
+>  #define SD_MINORS	16
+>  
+>  static void sd_config_discard(struct scsi_disk *sdkp, struct queue_limits *lim,
+> @@ -184,7 +192,7 @@ cache_type_store(struct device *dev, struct device_attribute *attr,
+>  		return count;
 >  	}
 >  
->  	/* no task is on scx, turn off all the switches and flush in-progress calls */
-> @@ -5547,6 +5562,27 @@ static int scx_ops_enable(struct sched_ext_ops *ops, struct bpf_link *link)
->  		check_class_changed(task_rq(p), p, old_class, p->prio);
->  	}
->  	scx_task_iter_stop(&sti);
-> +
-> +	if (scx_switching_all) {
-> +		for_each_possible_cpu(cpu) {
-> +			struct rq *rq = cpu_rq(cpu);
-> +			struct rq_flags rf;
-> +
-> +			/*
-> +			 * We are switching all fair tasks to the sched_ext scheduler,
-> +			 * we do not need fair server's DL bandwidth anymore, remove it
-> +			 * for all CPUs. Whenever the first CFS task is enqueued (when
-> +			 * scx is unloaded), the fair server's DL bandwidth will be
-> +			 * re-initialized.
-> +			 */
-> +			rq_lock_irqsave(rq, &rf);
-> +			if (dl_server_active(&rq->fair_server))
-> +				dl_server_stop(&rq->fair_server);
-> +			dl_server_remove_params(&rq->fair_server);
-> +			rq_unlock_irqrestore(rq, &rf);
-> +		}
-> +	}
-> +
->  	percpu_up_write(&scx_fork_rwsem);
+> -	if (scsi_mode_sense(sdp, 0x08, 8, 0, buffer, sizeof(buffer), SD_TIMEOUT,
+> +	if (scsi_mode_sense(sdp, 0x08, 8, 0, buffer, sizeof(buffer), sd_timeout_sec * HZ,
+>  			    sdkp->max_retries, &data, NULL))
+>  		return -EINVAL;
+>  	len = min_t(size_t, sizeof(buffer), data.length - data.header_length -
+> @@ -202,7 +210,7 @@ cache_type_store(struct device *dev, struct device_attribute *attr,
+>  	 */
+>  	data.device_specific = 0;
 >  
->  	scx_ops_bypass(false);
+> -	ret = scsi_mode_select(sdp, 1, sp, buffer_data, len, SD_TIMEOUT,
+> +	ret = scsi_mode_select(sdp, 1, sp, buffer_data, len, sd_timeout_sec * HZ,
+>  			       sdkp->max_retries, &data, &sshdr);
+>  	if (ret) {
+>  		if (ret > 0 && scsi_sense_valid(&sshdr))
+> @@ -729,7 +737,7 @@ static int sd_sec_submit(void *data, u16 spsp, u8 secp, void *buffer,
+>  	put_unaligned_be32(len, &cdb[6]);
+>  
+>  	ret = scsi_execute_cmd(sdev, cdb, send ? REQ_OP_DRV_OUT : REQ_OP_DRV_IN,
+> -			       buffer, len, SD_TIMEOUT, sdkp->max_retries,
+> +			       buffer, len, sd_timeout_sec * HZ, sdkp->max_retries,
+>  			       &exec_args);
+>  	return ret <= 0 ? ret : -EIO;
+>  }
+> @@ -930,7 +938,7 @@ static blk_status_t sd_setup_unmap_cmnd(struct scsi_cmnd *cmd)
+>  
+>  	cmd->allowed = sdkp->max_retries;
+>  	cmd->transfersize = data_len;
+> -	rq->timeout = SD_TIMEOUT;
+> +	rq->timeout = sd_timeout_sec * HZ;
+>  
+>  	return scsi_alloc_sgtables(cmd);
+>  }
+> @@ -1016,7 +1024,7 @@ static blk_status_t sd_setup_write_same16_cmnd(struct scsi_cmnd *cmd,
+>  
+>  	cmd->allowed = sdkp->max_retries;
+>  	cmd->transfersize = data_len;
+> -	rq->timeout = unmap ? SD_TIMEOUT : SD_WRITE_SAME_TIMEOUT;
+> +	rq->timeout = unmap ? sd_timeout_sec * HZ : SD_WRITE_SAME_TIMEOUT;
 
+Ah, there is a fixed timeout (SD_WRITE_SAME_TIMEOUT) yet.
+Let me make it another knob too.
+
+Thanks!
+
+>  
+>  	return scsi_alloc_sgtables(cmd);
+>  }
+> @@ -1043,7 +1051,7 @@ static blk_status_t sd_setup_write_same10_cmnd(struct scsi_cmnd *cmd,
+>  
+>  	cmd->allowed = sdkp->max_retries;
+>  	cmd->transfersize = data_len;
+> -	rq->timeout = unmap ? SD_TIMEOUT : SD_WRITE_SAME_TIMEOUT;
+> +	rq->timeout = unmap ? sd_timeout_sec * HZ : SD_WRITE_SAME_TIMEOUT;
+>  
+>  	return scsi_alloc_sgtables(cmd);
+>  }
+> @@ -1739,7 +1747,7 @@ static unsigned int sd_check_events(struct gendisk *disk, unsigned int clearing)
+>  	if (scsi_block_when_processing_errors(sdp)) {
+>  		struct scsi_sense_hdr sshdr = { 0, };
+>  
+> -		retval = scsi_test_unit_ready(sdp, SD_TIMEOUT, sdkp->max_retries,
+> +		retval = scsi_test_unit_ready(sdp, sd_timeout_sec * HZ, sdkp->max_retries,
+>  					      &sshdr);
+>  
+>  		/* failed to execute TUR, assume media not present */
+> @@ -1952,7 +1960,7 @@ static int sd_pr_in_command(struct block_device *bdev, u8 sa,
+>  	put_unaligned_be16(data_len, &cmd[7]);
+>  
+>  	result = scsi_execute_cmd(sdev, cmd, REQ_OP_DRV_IN, data, data_len,
+> -				  SD_TIMEOUT, sdkp->max_retries, &exec_args);
+> +				  sd_timeout_sec * HZ, sdkp->max_retries, &exec_args);
+>  	if (scsi_status_is_check_condition(result) &&
+>  	    scsi_sense_valid(&sshdr)) {
+>  		sdev_printk(KERN_INFO, sdev, "PR command failed: %d\n", result);
+> @@ -2063,7 +2071,7 @@ static int sd_pr_out_command(struct block_device *bdev, u8 sa, u64 key,
+>  	data[20] = flags;
+>  
+>  	result = scsi_execute_cmd(sdev, cmd, REQ_OP_DRV_OUT, &data,
+> -				  sizeof(data), SD_TIMEOUT, sdkp->max_retries,
+> +				  sizeof(data), sd_timeout_sec * HZ, sdkp->max_retries,
+>  				  &exec_args);
+>  
+>  	if (scsi_status_is_check_condition(result) &&
+> @@ -2435,7 +2443,7 @@ sd_spinup_disk(struct scsi_disk *sdkp)
+>  		scsi_failures_reset_retries(&failures);
+>  
+>  		the_result = scsi_execute_cmd(sdkp->device, cmd, REQ_OP_DRV_IN,
+> -					      NULL, 0, SD_TIMEOUT,
+> +					      NULL, 0, sd_timeout_sec * HZ,
+>  					      sdkp->max_retries, &exec_args);
+>  
+>  
+> @@ -2498,7 +2506,7 @@ sd_spinup_disk(struct scsi_disk *sdkp)
+>  				sd_printk(KERN_NOTICE, sdkp, "Spinning up disk...");
+>  				scsi_execute_cmd(sdkp->device, start_cmd,
+>  						 REQ_OP_DRV_IN, NULL, 0,
+> -						 SD_TIMEOUT, sdkp->max_retries,
+> +						 sd_timeout_sec * HZ, sdkp->max_retries,
+>  						 &exec_args);
+>  				spintime_expire = jiffies + 100 * HZ;
+>  				spintime = 1;
+> @@ -2649,7 +2657,7 @@ static int read_capacity_16(struct scsi_disk *sdkp, struct scsi_device *sdp,
+>  		memset(buffer, 0, RC16_LEN);
+>  
+>  		the_result = scsi_execute_cmd(sdp, cmd, REQ_OP_DRV_IN,
+> -					      buffer, RC16_LEN, SD_TIMEOUT,
+> +					      buffer, RC16_LEN, sd_timeout_sec * HZ,
+>  					      sdkp->max_retries, &exec_args);
+>  		if (the_result > 0) {
+>  			if (media_not_present(sdkp, &sshdr))
+> @@ -2760,7 +2768,7 @@ static int read_capacity_10(struct scsi_disk *sdkp, struct scsi_device *sdp,
+>  	memset(buffer, 0, 8);
+>  
+>  	the_result = scsi_execute_cmd(sdp, cmd, REQ_OP_DRV_IN, buffer,
+> -				      8, SD_TIMEOUT, sdkp->max_retries,
+> +				      8, sd_timeout_sec * HZ, sdkp->max_retries,
+>  				      &exec_args);
+>  
+>  	if (the_result > 0) {
+> @@ -2948,7 +2956,7 @@ sd_do_mode_sense(struct scsi_disk *sdkp, int dbd, int modepage,
+>  		len = 8;
+>  
+>  	return scsi_mode_sense(sdkp->device, dbd, modepage, 0, buffer, len,
+> -			       SD_TIMEOUT, sdkp->max_retries, data, sshdr);
+> +			       sd_timeout_sec * HZ, sdkp->max_retries, data, sshdr);
+>  }
+>  
+>  /*
+> @@ -3206,7 +3214,7 @@ static bool sd_is_perm_stream(struct scsi_disk *sdkp, unsigned int stream_id)
+>  	put_unaligned_be32(sizeof(buf), &cdb[10]);
+>  
+>  	res = scsi_execute_cmd(sdev, cdb, REQ_OP_DRV_IN, &buf, sizeof(buf),
+> -			       SD_TIMEOUT, sdkp->max_retries, &exec_args);
+> +			       sd_timeout_sec * HZ, sdkp->max_retries, &exec_args);
+>  	if (res < 0)
+>  		return false;
+>  	if (scsi_status_is_check_condition(res) && scsi_sense_valid(&sshdr))
+> @@ -3231,7 +3239,7 @@ static void sd_read_io_hints(struct scsi_disk *sdkp, unsigned char *buffer)
+>  		return;
+>  
+>  	res = scsi_mode_sense(sdp, /*dbd=*/0x8, /*modepage=*/0x0a,
+> -			      /*subpage=*/0x05, buffer, SD_BUF_SIZE, SD_TIMEOUT,
+> +			      /*subpage=*/0x05, buffer, SD_BUF_SIZE, sd_timeout_sec * HZ,
+>  			      sdkp->max_retries, &data, &sshdr);
+>  	if (res < 0)
+>  		return;
+> @@ -3274,7 +3282,7 @@ static void sd_read_app_tag_own(struct scsi_disk *sdkp, unsigned char *buffer)
+>  	if (sdkp->protection_type == 0)
+>  		return;
+>  
+> -	res = scsi_mode_sense(sdp, 1, 0x0a, 0, buffer, 36, SD_TIMEOUT,
+> +	res = scsi_mode_sense(sdp, 1, 0x0a, 0, buffer, 36, sd_timeout_sec * HZ,
+>  			      sdkp->max_retries, &data, &sshdr);
+>  
+>  	if (res < 0 || !data.header_length ||
+> @@ -3682,7 +3690,7 @@ static void sd_read_block_zero(struct scsi_disk *sdkp)
+>  	}
+>  
+>  	scsi_execute_cmd(sdkp->device, cmd, REQ_OP_DRV_IN, buffer, buf_len,
+> -			 SD_TIMEOUT, sdkp->max_retries, NULL);
+> +			 sd_timeout_sec * HZ, sdkp->max_retries, NULL);
+>  	kfree(buffer);
+>  }
+>  
+> @@ -3957,13 +3965,13 @@ static int sd_probe(struct device *dev)
+>  	sdkp->device = sdp;
+>  	sdkp->disk = gd;
+>  	sdkp->index = index;
+> -	sdkp->max_retries = SD_MAX_RETRIES;
+> +	sdkp->max_retries = sd_max_retries;
+>  	atomic_set(&sdkp->openers, 0);
+>  	atomic_set(&sdkp->device->ioerr_cnt, 0);
+>  
+>  	if (!sdp->request_queue->rq_timeout) {
+>  		if (sdp->type != TYPE_MOD)
+> -			blk_queue_rq_timeout(sdp->request_queue, SD_TIMEOUT);
+> +			blk_queue_rq_timeout(sdp->request_queue, sd_timeout_sec * HZ);
+>  		else
+>  			blk_queue_rq_timeout(sdp->request_queue,
+>  					     SD_MOD_TIMEOUT);
+> @@ -4131,7 +4139,7 @@ static int sd_start_stop_device(struct scsi_disk *sdkp, int start)
+>  	if (!scsi_device_online(sdp))
+>  		return -ENODEV;
+>  
+> -	res = scsi_execute_cmd(sdp, cmd, REQ_OP_DRV_IN, NULL, 0, SD_TIMEOUT,
+> +	res = scsi_execute_cmd(sdp, cmd, REQ_OP_DRV_IN, NULL, 0, sd_timeout_sec * HZ,
+>  			       sdkp->max_retries, &exec_args);
+>  	if (res) {
+>  		sd_print_result(sdkp, "Start/Stop Unit failed", res);
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
