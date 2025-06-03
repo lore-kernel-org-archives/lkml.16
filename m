@@ -1,114 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C636B2066CF;
-	Tue,  3 Jun 2025 23:20:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30131CAA4;
+	Tue,  3 Jun 2025 23:21:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748992816; cv=none; b=YKYONHMzflehBS6Zzq7BIJAFqXeP+IrK210VxGgYsePKgQFStDCXNDkiKoFcqMjKhA2X53k01Vv+M6lmue81d55OZIKVuWRYN7RDTymlK2S4+ngvDxuZe2IMob9ARBGiO0SpiWfDwiQPVWOiDazzyjqoejVAa2y5WiB67FkXeAU=
+	t=1748992877; cv=none; b=LE1t2XOuQ1LczuH439pdZUr6giX4T5sax1iZgFjQt19m1iWP6MhGWU8vyRWnyDYS3+kza9dNVe0pYQcjGslyXk/cQuZ6Ie0Y1BS+MQfGDiOmBKVOXeVcjL/wudlEoOTAGSGrM8sz1pdEdbJ0K8/0u3WwVgAuFCquJOjJhn+527Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748992816; c=relaxed/simple;
-	bh=G6HTrgY8s0ABn2090OgkfKLlCb3pzWh2OSW5n7m8PzU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WgaLtKMk8UbYuTPPv0jQQfwU//4wwdzZBWasMPiNW8hSFjjyjHbI83h7KU4TbP7DHrFMkxE2TpNeWKZabjJQps+sY3kw4riS9t3stW8ZvrMRL3RszKK9irnzJGKr9bdOk3O2b12IY3Wv/IYdBRA5pkDsP6NUU0j9/E4skUwLlt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NbUmJx91; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748992877; c=relaxed/simple;
+	bh=bFG5b1AMa/2P9t68S10S8ansVI+Q8NxdN/Hbdj7MEg4=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=rPHixttW9O0vPG4lDgrHD3zkPJnfdO3xI45kQ1uzo3kP34kdJrjwaDOwjc4avi3s3AhIbzGCIuG79V/ge149G9KcHbBaQCrgfDAKM79IU/4z1gL3lsDgt8/d+sPU9Uoiq+nzm4T1UNbcut0l9qNtZM1MvSES8oqkG+YKIRP2Bgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f5yrBzvd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NbUmJx91"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A68C8C4CEEF;
-	Tue,  3 Jun 2025 23:20:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f5yrBzvd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90F36C4CEED;
+	Tue,  3 Jun 2025 23:21:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748992816;
-	bh=G6HTrgY8s0ABn2090OgkfKLlCb3pzWh2OSW5n7m8PzU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=NbUmJx91iy/w/IK5R0+Cdo5UJz/LFbcnT4kT26yxDO+HIDcIQWmscRvwBeN3eN52x
-	 4Z7rHysC5lPHkqfpR3w6mYy4n5UbBx2OZ249PdP9tT9pZ6vmjsELhLKNav7NIuP3h5
-	 bT+S3PVFceH1+FUaPMcooMXfp6MmN5gJRFsGGKDP9zmoBJ+tLXTq2VoXE5WyctIk4j
-	 3BQeKPVuiC7BL8V9CS8HS8LnU60DReTxo11SrPParwnSaXnjbQ1ePz02Vit5Gli3pY
-	 XqWQL5pPrLieasMjfmWU6lzHGsVlBLD0to4ZoWDUDx18xurRTVoCalCq/OdJHvPuyo
-	 vE6GZqk9OGYug==
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4a44b3526e6so54923671cf.0;
-        Tue, 03 Jun 2025 16:20:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUjswvYVf0Whm2YcUMbqVObWgLSFcDt4jFgU7nOcUYxhFqAiu3c2oDXGV8DyzRM9RFfGrhJHkTbfRCXWj0p@vger.kernel.org, AJvYcCUzjYGhbH6kwDG3fgH8DNWzm9YVang8tBqSbezlF7JGhBM3c3hwydvYPmIk+ExdlZJbx45B+r8iCfVhkIYU@vger.kernel.org, AJvYcCXETEJztUs11k7ewwVcZA4fFV/mAHVZObdp54YhILMIxzMNgCCAMvk6OmFa7P2lBru1VWAOjnY1p80EmRX+98BW8HDIFogv@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEbvK+XClsLMtZPFFo8HnH1x9dMc0NgqeCig8LlW7sq3JLimrO
-	ynkSWWydroiLrUctuLdeN76ogs8fUr1EqGk//YqwRrA7c3CVmpVo3/IwP3lofk6X0Utqyau+3Sm
-	fxbQyC4huQhVy7RfuivFDKidoPTsjZ78=
-X-Google-Smtp-Source: AGHT+IH4Kd1zp8ji2+OmIj64se2PS6DJY05aRquelehbqiinjRk4WB/znGty+R9MDWOshmgqyXVU24LS5KDCLoNBSEU=
-X-Received: by 2002:a05:622a:544b:b0:476:980c:10a9 with SMTP id
- d75a77b69052e-4a5a57fc70bmr13760421cf.21.1748992815883; Tue, 03 Jun 2025
- 16:20:15 -0700 (PDT)
+	s=k20201202; t=1748992877;
+	bh=bFG5b1AMa/2P9t68S10S8ansVI+Q8NxdN/Hbdj7MEg4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=f5yrBzvdBZ2wnuamQuYLpQju8cI5gdBu/YCO76MrCqaMY1goSmvDx4mCdf7befH6H
+	 pOcffD+gFJ9mqU4QbZUxG9AucW1tEBx9synScVM8PL8YYx/NOccD6aFDqe0TZi8twZ
+	 Z3HkmFTUBKqsexad6QfYlJvMyScJNbR/XX2GiQq5kOpgeRqd1pOge8EbrMrGSFCoJl
+	 ne/ZdSGmGII3VyaWdfah3NLB/cwweS0wAyksZ8TKnzkYceRlAACWgZR0V4Ip9Dc+2h
+	 tXNuj5TD+Qfolhd8ulRPnJ4meizFid4X2GJfjDWAFeMamLWcTAEks/kkKYwgjL/wM5
+	 IFFwcThxI51hg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33C87380DBEC;
+	Tue,  3 Jun 2025 23:21:51 +0000 (UTC)
+Subject: Re: [GIT PULL] smb3 client fixes
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <CAH2r5mt-jcxLBK96EiF_w_QtOM1-2DHH4QAYKhikWSOkD1t-mA@mail.gmail.com>
+References: <CAH2r5mt-jcxLBK96EiF_w_QtOM1-2DHH4QAYKhikWSOkD1t-mA@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-cifs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAH2r5mt-jcxLBK96EiF_w_QtOM1-2DHH4QAYKhikWSOkD1t-mA@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.samba.org/sfrench/cifs-2.6.git tags/v6.16-rc-part1-smb-client-fixes
+X-PR-Tracked-Commit-Id: 8a5ebd2be99a1f4630d0382f7fdf581561d317cd
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 6d9b5f6b81ace1b2b0830271ad46628d6fad31bb
+Message-Id: <174899291048.1701538.15350807995643547916.pr-tracker-bot@kernel.org>
+Date: Tue, 03 Jun 2025 23:21:50 +0000
+To: Steve French <smfrench@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, CIFS <linux-cifs@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250603065920.3404510-1-song@kernel.org> <20250603065920.3404510-4-song@kernel.org>
- <CAEf4BzasOmqHDnuKd7LCT_FEBVMuJxmVNgvs52y5=qLd1bB=rg@mail.gmail.com>
- <CAPhsuW7mwut7SYubAUa5Ji7meDP1Bn8ZD9s+4sqjBDim7jGrWA@mail.gmail.com> <CAEf4Bzbm=mnRM=PYBLDTogrb+bNk2TnTj-kGr3=oFNEyQm8hKw@mail.gmail.com>
-In-Reply-To: <CAEf4Bzbm=mnRM=PYBLDTogrb+bNk2TnTj-kGr3=oFNEyQm8hKw@mail.gmail.com>
-From: Song Liu <song@kernel.org>
-Date: Tue, 3 Jun 2025 16:20:02 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW6rdJpP4pqtgU2WC8-KOkNObeY5ELMy_ga_0YjJJj0NaA@mail.gmail.com>
-X-Gm-Features: AX0GCFv8ElnQFepo78HRXo57cLt23SB-SkBGmvc12qF61wcH0yiwIRcZkJdh_7E
-Message-ID: <CAPhsuW6rdJpP4pqtgU2WC8-KOkNObeY5ELMy_ga_0YjJJj0NaA@mail.gmail.com>
-Subject: Re: [PATCH v2 bpf-next 3/4] bpf: Introduce path iterator
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, 
-	daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk, 
-	brauner@kernel.org, jack@suse.cz, kpsingh@kernel.org, 
-	mattbobrowski@google.com, amir73il@gmail.com, repnop@google.com, 
-	jlayton@kernel.org, josef@toxicpanda.com, mic@digikod.net, gnoack@google.com, 
-	m@maowtm.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 3, 2025 at 2:45=E2=80=AFPM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Tue, Jun 3, 2025 at 2:09=E2=80=AFPM Song Liu <song@kernel.org> wrote:
-> >
-> > On Tue, Jun 3, 2025 at 11:40=E2=80=AFAM Andrii Nakryiko
-> > <andrii.nakryiko@gmail.com> wrote:
-> > [...]
-> > > > +__bpf_kfunc struct path *bpf_iter_path_next(struct bpf_iter_path *=
-it)
-> > > > +{
-> > > > +       struct bpf_iter_path_kern *kit =3D (void *)it;
-> > > > +       struct path root =3D {};
-> > > > +
-> > > > +       if (!path_walk_parent(&kit->path, &root))
-> > > > +               return NULL;
-> > > > +       return &kit->path;
-> > > > +}
-> > > > +
-> > > > +__bpf_kfunc void bpf_iter_path_destroy(struct bpf_iter_path *it)
-> > > > +{
-> > > > +       struct bpf_iter_path_kern *kit =3D (void *)it;
-> > > > +
-> > > > +       path_put(&kit->path);
-> > >
-> > > note, destroy() will be called even if construction of iterator fails
-> > > or we exhausted iterator. So you need to make sure that you have
-> > > bpf_iter_path state where you can detect that there is no path presen=
-t
-> > > and skip path_put().
-> >
-> > In bpf_iter_path_next(), when path_walk_parent() returns false, we
-> > still hold reference to kit->path, then _destroy() will release it. So =
-we
-> > should be fine, no?
->
-> you still need to handle iterators that failed to be initialized,
-> though? And one can argue that if path_walk_parent() returns false, we
-> need to put that last path before returning NULL, no?
+The pull request you sent on Tue, 3 Jun 2025 10:36:55 -0500:
 
-kit->path is zero'ed on initialization failures, so we can path_put() it
-safely. For _next() returns NULL case, we can either put kit->path
-in _destroy(), which is the logic now, or put kit->path in the last
-_next() call and make _destroy() a no-op in that case. I don't have
-a strong preference either way.
+> git://git.samba.org/sfrench/cifs-2.6.git tags/v6.16-rc-part1-smb-client-fixes
 
-Thanks,
-Song
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/6d9b5f6b81ace1b2b0830271ad46628d6fad31bb
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
