@@ -1,61 +1,38 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5ACB1AA786;
-	Tue,  3 Jun 2025 04:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FAEF173;
+	Tue,  3 Jun 2025 04:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748924257; cv=none; b=b4LELm8xKIq9zXyMeJFVY8InJGpeuTmugGHne/sBlH5J8IHApy6U4jw5UmCL6t2gXPFvAXmsH67K5DQdn399gPnrklXhco6Aq16cyTaj3aQUow7bV1bnCnGyvRG5zMF3OLfcUxj3PMBSxc2jjdV8QsFeh4qE8cjHEqaRslLC9ro=
+	t=1748924388; cv=none; b=LwPaH/x94kJROKMk8RNGdZBo4ZsbMagYo3jKHj1EtTNekBYSwOn5nkoq0PRFuuxk1qiMN23erbkdqyAqfoSMlJPLaRHufB+i+NxJo+CDXkKghr62VYOwFQLYQgYZQmK4tJq3miAxeh1dRZdIUNGAUmiIsYGFAxGsfMQNFMLCNvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748924257; c=relaxed/simple;
-	bh=ycGo7RzzC7vhYYPN9z63/zrBeE40PUT+akrPoMnS4fI=;
+	s=arc-20240116; t=1748924388; c=relaxed/simple;
+	bh=phYCs0zFBYWqHjj30gw1zW5eFZwI1o8rpsapA3My3jo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q2v4ePWfPIRy70fI75ln1qYOjza9Xlhg7zc13k3ysqdfUieJEStwHEhCjtIXXok2CySwBQdPSF+T8BbVfz107160+5FLMWOncf3q1+CgtgW+H4eJDhMbmjmW2nos3xufD8o0wMr/gHdQfe+Ffn7FCRlaCk2SPt4iqbA+hCA4Gno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=BqSpttGb; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=gUZC+AIHiCDqysAYbIj7G/D2ZujjJg1ru/u6mRIDtq578YNUp5hstz673PsJaRfMEcfiRS57fBAp9TgirzG8u+WajxpjuFsF/tgYnhpKQXMV05iOn/c1zJBwaRJ5Fvg6aJxInZcZ5zumqC3c9qUaDHC3WbWfvbqEdf4rOYHMtwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=JxXsdVNL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BqSpttGb"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 4DC7C203EE28; Mon,  2 Jun 2025 21:17:35 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4DC7C203EE28
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1748924255;
-	bh=wpy1isVRElmxhOZ0MSIsbH5dkq0/w80DUem5S1do/2w=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="JxXsdVNL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CC8FC4CEED;
+	Tue,  3 Jun 2025 04:19:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1748924387;
+	bh=phYCs0zFBYWqHjj30gw1zW5eFZwI1o8rpsapA3My3jo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BqSpttGbtUI0KwodL1lXJxMJXFmNqPo/CS3ICqASbqfgHxAFD8UJ280KY6kCJ3FUs
-	 pwI5KPD4DRJkVemJkvdn7PYvN5CdswE12aCR3OdEiwosFQDP+mokl9Pyb3DHhpWHdL
-	 dzMoGZzXcg/+YgtfpqaD5M9TxuusLg8/DprV616c=
-Date: Mon, 2 Jun 2025 21:17:35 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Zhu Yanjun <yanjun.zhu@linux.dev>
-Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>,
-	Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Wilczy???~Dski <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v4 0/5] Allow dyn MSI-X vector allocation of MANA
-Message-ID: <20250603041735.GA8300@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1748361453-25096-1-git-send-email-shradhagupta@linux.microsoft.com>
- <83244641-8fab-4f05-9d31-c5881fa1660c@linux.dev>
+	b=JxXsdVNLZEbn46WTMHKuX7VhfV4fEmUWmUUU1X8TkS8bM7wPd3/WZwqCrAvaYgiXc
+	 afttOuqD1DqB68dTTEhXDMYgBT9cK1FgKKvMOc7Ak4sq1rGYEJdFT8AWrSmVQFjEsD
+	 ppRHyVIgNEcIuZC1kZGGHUY6HshDvtWMQv+F/u+8=
+Date: Tue, 3 Jun 2025 06:19:44 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: hsyemail2@gmail.com
+Cc: Johan Hovold <johan@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org, Sheng-Yuan Huang <syhuang3@nuvoton.com>
+Subject: Re: [PATCH v1 1/1] USB: serial: nct_usb_serial: add support for
+ Nuvoton USB adapter
+Message-ID: <2025060325-everyone-padlock-931a@gregkh>
+References: <20250603032057.5174-1-syhuang3@nuvoton.com>
+ <20250603032057.5174-2-syhuang3@nuvoton.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,104 +41,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <83244641-8fab-4f05-9d31-c5881fa1660c@linux.dev>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20250603032057.5174-2-syhuang3@nuvoton.com>
 
-On Sun, Jun 01, 2025 at 04:53:31PM +0200, Zhu Yanjun wrote:
-> ??? 2025/5/27 17:57, Shradha Gupta ??????:
-> >In this patchset we want to enable the MANA driver to be able to
-> >allocate MSI-X vectors in PCI dynamically.
-> >
-> >The first patch exports pci_msix_prepare_desc() in PCI to be able to
-> >correctly prepare descriptors for dynamically added MSI-X vectors.
-> >
-> >The second patch adds the support of dynamic vector allocation in
-> >pci-hyperv PCI controller by enabling the MSI_FLAG_PCI_MSIX_ALLOC_DYN
-> >flag and using the pci_msix_prepare_desc() exported in first patch.
-> >
-> >The third patch adds a detailed description of the irq_setup(), to
-> >help understand the function design better.
-> >
-> >The fourth patch is a preparation patch for mana changes to support
-> >dynamic IRQ allocation. It contains changes in irq_setup() to allow
-> >skipping first sibling CPU sets, in case certain IRQs are already
-> >affinitized to them.
-> >
-> >The fifth patch has the changes in MANA driver to be able to allocate
-> >MSI-X vectors dynamically. If the support does not exist it defaults to
-> >older behavior.
-> >---
-> >  Change in v4
-> >  * add a patch describing the functionality of irq_setup() through a
-> >    comment
-> >  * In irq_setup(), avoid using a label next_cpumask:
-> >  * modify the changes in MANA patch about restructuring the error
-> >    handling path in mana_gd_setup_dyn_irqs()
-> >  * modify the mana_gd_setup_irqs() to simplify handling around
-> >    start_irq_index
-> >  * add warning if an invalid gic is returned
-> >  * place the xa_destroy() cleanup in mana_gd_remove
-> >---
-> >  Changes in v3
-> >  * split the 3rd patch into preparation patch around irq_setup() and
-> >    changes in mana driver to allow dynamic IRQ allocation
-> >  * Add arm64 support for dynamic MSI-X allocation in pci_hyperv
-> >    controller
-> >---
-> >  Changes in v2
-> >  * split the first patch into two(exporting the preapre_desc
-> >    func and using the function and flag in pci-hyperv)
-> >  * replace 'pci vectors' by 'MSI-X vectors'
-> >  * Change the cover letter description to align with changes made
-> >---
-> >
-> >Shradha Gupta (5):
-> >   PCI/MSI: Export pci_msix_prepare_desc() for dynamic MSI-X allocations
-> >   PCI: hv: Allow dynamic MSI-X vector allocation
-> >   net: mana: explain irq_setup() algorithm
-> >   net: mana: Allow irq_setup() to skip cpus for affinity
-> >   net: mana: Allocate MSI-X vectors dynamically
-> 
-> In this patchset, base-commit seems missing.
-> 
-> Please see this link:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.15#n868
-> 
-> "
-> When you open ``outgoing/0000-cover-letter.patch`` for editing, you will
-> notice that it will have the ``base-commit:`` trailer at the very
-> bottom, which provides the reviewer and the CI tools enough information
-> to properly perform ``git am`` without worrying about conflicts::
-> "
-> 
-> When creating patches:
-> "
-> git format-patch --base=main origin/main
-> "
-> 
-> This will include a base-commit: line in each patch file:
-> 
-> "
-> base-commit: abcdef1234567890...
-> "
-> 
-> This is useful when submitting patches to mailing lists or other tooling.
-> 
-> Please follow the submitting-patches.rst to add base-commit.
-> 
-> Best Regards,
-> Zhu Yanjun
->
+At quick glance, this looks good, but one thing overall stood out:
 
-Thank you, I will make the necessary changes in the next version.
+On Tue, Jun 03, 2025 at 11:20:57AM +0800, hsyemail2@gmail.com wrote:
+> +	if (size > NCT_MAX_VENDOR_READ_SIZE)
+> +		dev_err(dev, NCT_DRVNAME ": %s - failed to read [%04x]: over size %d\n",
+> +			__func__, cmd.p.cmd, size);
 
-Regards,
-Shradha. 
-> >
-> >  .../net/ethernet/microsoft/mana/gdma_main.c   | 356 ++++++++++++++----
-> >  drivers/pci/controller/pci-hyperv.c           |   5 +-
-> >  drivers/pci/msi/irqdomain.c                   |   5 +-
-> >  include/linux/msi.h                           |   2 +
-> >  include/net/mana/gdma.h                       |   8 +-
-> >  5 files changed, 293 insertions(+), 83 deletions(-)
-> >
+When using dev_*() functions, you do not need a "driver prefix" here
+like NCT_DRVNAME as it already is in the string that is sent to the
+kernel log.  So that all can be removed from all of these.
+
+Also:
+
+> +	dev_dbg(&intf->dev, NCT_DRVNAME ": %s tty baud: 0x%X\n", __func__,
+> +		(cflag & CBAUD));
+
+The __func__ is already in the dev_dbg() output, so no need to repeat it
+again please.
+
+This should be done for all of the calls like this in the driver.
+
+> +	dev_info(&intf->dev, NCT_DRVNAME ": %s Enabled devices mask:%X\n",
+> +		 __func__, buf[0]);
+
+When drivers are working properly, they are quiet, so no need for this
+line at all.
+
+thanks,
+
+greg k-h
