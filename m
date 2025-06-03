@@ -1,105 +1,67 @@
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C8A78F5D
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 02:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65529AD23;
+	Tue,  3 Jun 2025 02:12:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748916659; cv=none; b=BaUs+cdtvtnRGHc0vkSQdV2VzKjD213tpUiVN2IO/SOsZmb3RB0nty0ZiuJ43JemmAjH/oz2HIPrh63sWzI588icHcIt4qBnu4/kV1nC7HHo1lMb+28cvB1EeYPuz+gVGtaFRpZKetLM7eiNWHzf1K9eIP3SC8/XGxgihYvpheA=
+	t=1748916737; cv=none; b=kXXVXXPCb5vQPqEizu6uLaJNIfnur03a1kv2J7IXUzdQTDKNdXr1BCCuUb/tFaIJon5CXehD99vP6L/lvBGGGiqa7xVKo7ATaVyRiGozi+Vlbnn4zQa2dW5/BJa6oPLHybwXsgG8tN6CJpfSlyWiigx9ztLiBsIr6iUEhkWYcFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748916659; c=relaxed/simple;
-	bh=BG05zrtL+ag8QGOlP4H11g2uHPEH9YGqUh+sySIAGlM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=M0m2IFo33SgyuDxvLdoQklCD1FL28vuWhN8cIYgGGAdlVC29wDPPKIEIuL/SOh2hP3bfmx78xzKNq16uqXNBpJ5qHQ0UjiF+nEsXLTkm9F6+1MsTieYGQKVK5I26d+PGsF7zCKs4kYJPFByEgtjE2ulf32slD6i+XR1IAFW4ZFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=s7mvsFMF; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1748916737; c=relaxed/simple;
+	bh=iSnNBGbsqCxVEZgDWP/TPN2p1e/vwAekYOJXt2gIxzo=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=mNQmMvzf0Docqc8AwNOKTfWM39eIipLwiAPMOPvO9D4Wi3S8CKT4IQRxYlAvH0peK4bsJto/YEs6fJUVGSmemlGC1+Ti+ermO9QqXjJJ2sx8DtpBul0xfSrJ7vrg2+LGt8OcYB2b+HJmqAYff0qfgvpifu+pTZREmusmuf540qY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=j//vDRUu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="s7mvsFMF"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1748916648; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	bh=72XDkbzC/wXQpsbDw74c4MWn/z/F1UtJXOqYZHsNj0A=;
-	b=s7mvsFMFGukHoiglDmlnhu7gQ4lmWHFiRDGM90FrWYYhTClA84Oqz1e1t1+USs7yUFiBwi/ilPdKWcD8eoH+qLRQgHGDhguWh9JG+AjGs4lZNAc0A+CgrayvSPxoLCfmgFjKFgTT7wTE5Zno5WXFHDUgFEv9BVmYOM2A5wlTPvc=
-Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0WcgVTZP_1748916646 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 03 Jun 2025 10:10:47 +0800
-From: "Huang, Ying" <ying.huang@linux.alibaba.com>
-To: Joshua Hahn <joshua.hahnjy@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,  Gregory Price
- <gourry@gourry.net>,  David Hildenbrand <david@redhat.com>,  Zi Yan
- <ziy@nvidia.com>,  Matthew Brost <matthew.brost@intel.com>,  Rakie Kim
- <rakie.kim@sk.com>,  Byungchul Park <byungchul@sk.com>,  Alistair Popple
- <apopple@nvidia.com>,  linux-mm@kvack.org,  linux-kernel@vger.kernel.org,
-  kernel-team@meta.com
-Subject: Re: [PATCH 2/2] mm/mempolicy: Skip unnecessary synchronize_rcu()
-In-Reply-To: <20250602162345.2595696-2-joshua.hahnjy@gmail.com> (Joshua Hahn's
-	message of "Mon, 2 Jun 2025 09:23:40 -0700")
-References: <20250602162345.2595696-1-joshua.hahnjy@gmail.com>
-	<20250602162345.2595696-2-joshua.hahnjy@gmail.com>
-Date: Tue, 03 Jun 2025 10:10:46 +0800
-Message-ID: <87h60xtw0p.fsf@DESKTOP-5N7EMDA>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="j//vDRUu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA438C4CEF0;
+	Tue,  3 Jun 2025 02:12:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1748916736;
+	bh=iSnNBGbsqCxVEZgDWP/TPN2p1e/vwAekYOJXt2gIxzo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=j//vDRUuMhEfxOx/h4IuIYPd0uqddYAJvS7lWqPYH9eopkxR8qbZYuKCi3/Oykobu
+	 LljW5ZJGknEkKtHyZW29tHF2z1EwCIbZ58Qht/kCOMaKO31HKHs7oQylOpZsNkaw78
+	 X5Ua/IqKPtqQMzfvyq9UfcDs4NqRZoAg+jX+2PVk=
+Date: Mon, 2 Jun 2025 19:12:16 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Khaled Elnaggar <khaledelnaggarlinux@gmail.com>
+Cc: linux-mm@kvack.org, linux-kernel-mentees@lists.linux.dev,
+ shuah@kernel.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND] selftests/mm/run_vmtests.sh: skip hugevm tests
+ if write_to_hugetlbfs is missing
+Message-Id: <20250602191216.7173b77e4f9ab5f659d1a448@linux-foundation.org>
+In-Reply-To: <20250602232233.224099-1-khaledelnaggarlinux@gmail.com>
+References: <20250523184312.2647781-1-khaledelnaggarlinux@gmail.com>
+	<20250602232233.224099-1-khaledelnaggarlinux@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Joshua Hahn <joshua.hahnjy@gmail.com> writes:
+On Tue,  3 Jun 2025 02:22:32 +0300 Khaled Elnaggar <khaledelnaggarlinux@gmail.com> wrote:
 
-> By unconditionally setting wi_state to NULL and conditionally calling
-> synchronize_rcu(), we can save an unncessary call when there is no
-> old_wi_state.
+> The hugevm tests 'charge_reserved_hugetlb.sh' and 'hugetlb_reparenting_test.sh'
+> depend on the 'write_to_hugetlbfs' binary to simulate writes to hugetlbfs
+> while checking reservations asynchronously in the background.
+> 
+> When this binary is missing (e.g., excluded from the build), these tests hang
+> for up to 180 seconds. During this time, run_vmtests.sh is eventually killed
+> due to timeout, aborting all subsequent tests.
+> 
+> This patch skips these tests if the binary is not found, preventing delays
+> and ensuring that the test suite runs to completion.
 
-Per my understanding, in the original code, if !old_wi_state, we will
-return immediately instead of calling synchronize_rcu() too.  Or I miss
-something?
+OK, but why is write_to_hugetlbfs missing?  If we're in a situation
+where we _could_ run it then we _should_ run it!  The user wants to
+test stuff so we should test as much as we can.
 
-The patch itself is a nice cleanup with reduced line number.  Feel free
-to add my
+So I'm thinking that it would be preferable to make sure the dang thing
+is there?
 
-Reviewed-by: Huang Ying <ying.huang@linux.alibaba.com>
-
-in the future version.
-
-> Suggested-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Joshua Hahn <joshua.hahnjy@gmail.com>
-> ---
->  mm/mempolicy.c | 13 +++++--------
->  1 file changed, 5 insertions(+), 8 deletions(-)
->
-> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index 3b1dfd08338b..b0619d0020c9 100644
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -3703,18 +3703,15 @@ static void wi_state_free(void)
->  	struct weighted_interleave_state *old_wi_state;
->  
->  	mutex_lock(&wi_state_lock);
-> -
->  	old_wi_state = rcu_dereference_protected(wi_state,
->  			lockdep_is_held(&wi_state_lock));
-> -	if (!old_wi_state) {
-> -		mutex_unlock(&wi_state_lock);
-> -		return;
-> -	}
-> -
->  	rcu_assign_pointer(wi_state, NULL);
->  	mutex_unlock(&wi_state_lock);
-> -	synchronize_rcu();
-> -	kfree(old_wi_state);
-> +
-> +	if (old_wi_state) {
-> +		synchronize_rcu();
-> +		kfree(old_wi_state);
-> +	}
->  }
->  
->  static struct kobj_attribute wi_auto_attr =
-
----
-Best Regards,
-Huang, Ying
