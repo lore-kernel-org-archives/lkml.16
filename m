@@ -1,112 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C66E555;
-	Tue,  3 Jun 2025 13:04:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311CE231828
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 13:04:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748955887; cv=none; b=cERXxbfC6SznHVFq2VP9KMMTn783gC/9kA/vyuUe7QVX6TV2MdshnpXrJB9KgZUQ6B4aATaQNe7V8M4MvMJdKyUhEIhp6uwXOoNhe7BUG25WK75V2gDvU+RcZlkG/8CRJIkndRaWsusdAuZRKlg8bG+0xBpkg33WGGF3uaDVToo=
+	t=1748955901; cv=none; b=qCYn0yt/QqsqKvm+WhYQioAPychy5rBy/MTAFcuHqm3DHn/DrgTXW7+mIcjc/gIf4JTeHLxTRXGxfcPc5rPBpYXJmILy13O9WR5ThcVWCgCjObFk4m0kglv3+uc1dLp0au4GvyrJRgs8lH7kKgr3if6gPz3uyx7zlR/izxIRjX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748955887; c=relaxed/simple;
-	bh=DoAXo4OnDoZDuAMbwm5BIR0ENeifjBrBXXHSJzqMr00=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bgLPtY1l/7iJEgdWyZADmlfAATGynl2lCVzW9jWsaUo9tUUKuzTFdwyKDIppv+d1fAvbnb1sLcjxrqXmEsgJQbJm9Nq417v++A9KejSv1W51g/MEw/YdJqZEA6KtCPQj2NpJ7oaOjOPVKqTZPy/R6UvIrIqmdz3GyUyNdFXwk5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CpiLr4Yy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748955901; c=relaxed/simple;
+	bh=iQKF5hrDuJBQ4PkIXBZ6ljd7awLeBmhX72y2XF5yaiY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vob8zqMIJcglA9cj9DvjcHfJ2y41TNuYK0aYNBByZoLAtCdrqmme8axz6rur9/lYCj83R/SJyl/4Pkqa26VHhgfQCx5jdbLC5e2rv0jAOkp7RKyLC/Ar8Ur5OJNmk5DLB76y7fMGkBVHPkzlBTDFvEwytDYE2z0FYXJiKuhXXkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JrEsGnIr; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CpiLr4Yy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A0DAC4CEF5;
-	Tue,  3 Jun 2025 13:04:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748955887;
-	bh=DoAXo4OnDoZDuAMbwm5BIR0ENeifjBrBXXHSJzqMr00=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=CpiLr4YylX3AxM3o89JCo1GxXmRkLiF4MIJZ36P1QJdEE6P9wwpUEEdk90h1xOOz4
-	 OyKP2I7pYha6q1nX8GBDsrZ5+tmILfYUePakFLi+YVJzCL6VwPnFOmfG+YUr79Z7G5
-	 fsB47LyIVIuP5+S4tsLbvdcOySExmu+R3r7O2vi3zImiuEah5F0hu0wIkjKcgoYAh/
-	 etfpsd4z3GHD2LS3u1UatP/m8U0Fjj0FZrBZ/2CG+4yzc8ha2n6a4FmVX5e+xcpUCn
-	 jhVvODiXfOSdD4UmMGnM9tpVfnxO4ergaPZBQIUb2otdzeABcLtot2mLnVtqHAYJNU
-	 Q7erll6/4CpFw==
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-6066c02cd92so2631928eaf.2;
-        Tue, 03 Jun 2025 06:04:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUxwtU7qEcpaB8LIZlCqupsIUqkUdI9oTlwzhmS9ZbnL9QsLdicI71FZfFqHwUVwE/9TEMhV/WSDRA=@vger.kernel.org, AJvYcCXtZaUi1iIxdfpSKgdIJEB/6wp3WWfLOjvvLB1uTliavLgOCWABblEmytSvduyjWspLfFlZRXR4PVnkNRs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGnP96UmHMNDoPZmzZWCBLEyGu1QHCCKkOSGk7lmXBy4JEPlHS
-	Lx5iNasmZGSkxXOYXcFwM6EEKxbMu8d3Z/zv3SP/ALXxSPjy0119Y9unLlzPivghiGWplLfY7jv
-	7I92ixL1TLPMeEBTD50mHlbkP6WbeQ1c=
-X-Google-Smtp-Source: AGHT+IH70pTjoyraAJHi2TFHPJtOz3pkE8jHNSJbFcVKb6HyzZg4kpHwMOUUaBz8jHmx5I+H0d1MTCu/TuC6HKfEFb8=
-X-Received: by 2002:a05:6820:270f:b0:60b:d692:7c53 with SMTP id
- 006d021491bc7-60c4d747a4cmr9965476eaf.8.1748955886491; Tue, 03 Jun 2025
- 06:04:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JrEsGnIr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=d1j5QjLR2SqzARCF6ZZJISUDQKix3QT3kzdA/KQWUY0=; b=JrEsGnIrRKwGy1H2BQxTGzFeCb
+	Ky+o3Ohe5NXInY/GCRTRyvcbuYxqRIlAZQ8IKKnSfqcipxQm2C3LgHobYP16Wok98n6wYRT0HObij
+	/Wb7ICVDZYVtOibZFXUx2dp3LkvrFP1vGhRgLbBQNTwp59JFzHRkESaleOifff3VBHuP+i5nEUufh
+	aj0N3ldpMpWgUmjzIJ0PFhTXcYntKeBIQcd7BGaCz7pu1qp5OdYyE5lRGVz+sM6nM3qP3vXi3i0ET
+	P2T97cM70ev4glFOhdK0+sMyvmI4by9Uh41poSiYalQ1UWAjzMxlfo0GnpZZR9TRlH8KNCkrPQ/OZ
+	PIxAsYQw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uMRK4-00000000l5T-0HG9;
+	Tue, 03 Jun 2025 13:04:56 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 82DDC3005AF; Tue,  3 Jun 2025 15:04:55 +0200 (CEST)
+Date: Tue, 3 Jun 2025 15:04:55 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Linus Torvalds <torvalds@linuxfoundation.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, kees@kernel.org,
+	acarmina@redhat.com, jpoimboe@kernel.org, mark.rutland@arm.com
+Subject: Re: [RFC 6/8] x86_64/bug: Implement __WARN_printf()
+Message-ID: <20250603130455.GL21197@noisy.programming.kicks-ass.net>
+References: <20250602144201.301974933@infradead.org>
+ <20250602144755.928750774@infradead.org>
+ <CAHk-=whkD=pveK6X_5gtVbJ62+86oBOr9JokneYpSJyxjHFBpQ@mail.gmail.com>
+ <20250602154943.GB30486@noisy.programming.kicks-ass.net>
+ <CAHk-=wiYHv2duN1Aj3E5UD3zH=z6A9YpGJ1Mxj_CWL7_FRMKgw@mail.gmail.com>
+ <20250602215725.GA39782@noisy.programming.kicks-ass.net>
+ <CAHk-=whOEyTJb6MAcy2ojN98RrEzU5TW031sGpHMhMMFAg5bnw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aD2U3VIhf8vDkl09@debian.local> <CAJZ5v0h-nrVamqiAJ957aYjHqaeAZUUW7BRi0WxPgCFc40M5cQ@mail.gmail.com>
- <7f0e2865-d35e-4a13-8617-8679afb4b23f@kernel.org> <CAJZ5v0gL3rW8dOxXdPWYjZuq5kAaD8qTa4vZ5++k9+0WniNAdQ@mail.gmail.com>
- <CAJZ5v0jDZQaR8S6Kn_RoXHBU86+tpjp=qgyxm5h03YEe2S=nPg@mail.gmail.com>
- <aD7L0RD4HT-mEtBc@debian.local> <CAJZ5v0h65Gt1Fw35vp2k8kKu62+goCD8WF8u-tvhfWW6a7xHxQ@mail.gmail.com>
- <CAJZ5v0ggPHhYcdNos2o8savvq+-zpPTaQunjOkR36k3VwF3_CA@mail.gmail.com>
- <CAJZ5v0gF=ewooE0cUrNfe5_inhnzq6bqw8VTjkFwr56_wrptJQ@mail.gmail.com>
- <CAJZ5v0hpJSVdiCN29=kbV8KfgU1y1d3hFfshtBoMpVFXf+LvBQ@mail.gmail.com>
- <aD7nOMP3xA9BR781@debian.local> <CAJZ5v0gAcohRWuSZbFWvyfAU9Vjc7nRyj+AFRYQ7hcGEXdPxyQ@mail.gmail.com>
- <CAP-bSRbVjcXBvxDT6ZQuoRB+JF6A4LhdMVnNqnaQC0bg-xg2BQ@mail.gmail.com>
-In-Reply-To: <CAP-bSRbVjcXBvxDT6ZQuoRB+JF6A4LhdMVnNqnaQC0bg-xg2BQ@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 3 Jun 2025 15:04:33 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gTRtPzrROdkxRjTeXv4BsRyUkyGpCWmh-gHNx3X2L9RA@mail.gmail.com>
-X-Gm-Features: AX0GCFtu4dUDCitADOsGBJLQC6GA0pUrhBB1aNLhVDidgU_jWioLD5HwF13ubQo
-Message-ID: <CAJZ5v0gTRtPzrROdkxRjTeXv4BsRyUkyGpCWmh-gHNx3X2L9RA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/5] PM: sleep: Suspend async parents after suspending children
-To: Chris Bainbridge <chris.bainbridge@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Mario Limonciello <superm1@kernel.org>, 
-	"Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Alan Stern <stern@rowland.harvard.edu>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Johan Hovold <johan@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Jon Hunter <jonathanh@nvidia.com>, 
-	Saravana Kannan <saravanak@google.com>, amd-gfx@lists.freedesktop.org
-Content-Type: multipart/mixed; boundary="00000000000057bb180636aa868e"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whOEyTJb6MAcy2ojN98RrEzU5TW031sGpHMhMMFAg5bnw@mail.gmail.com>
 
---00000000000057bb180636aa868e
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jun 3, 2025 at 2:27=E2=80=AFPM Chris Bainbridge
-<chris.bainbridge@gmail.com> wrote:
->
-> On Tue, 3 Jun 2025 at 13:24, Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > >
-> > > This patch does fix the list corruption, but the "Unbalanced
-> > > pm_runtime_enable" still occurs:
+On Mon, Jun 02, 2025 at 04:10:16PM -0700, Linus Torvalds wrote:
+> On Mon, 2 Jun 2025 at 14:57, Peter Zijlstra <peterz@infradead.org> wrote:
 > >
-> > Have you applied it together with the previous patch?
->
-> Yes
+> > So if I stuff the asm macro in a global asm() block then GCC ends up
+> > looking like so:
+> 
+> Better, but as then the clang thing looks like a horrendous disaster.
+> 
+> How about we simply make this all *code* instead of playing games with
+> register numbers?
+> 
+> Why not just push the arguments by hand on the stack, and make that be
+> the interface? A 'push %reg' is like a byte or two. And you'd do it in
+> the cold section, so nobody cares.
+> 
+> And the asm would look somewhat sane, instead of being crazy noise due
+> to crazy macros.
+> 
+> Or so I imagine, because I didn't actually try it.
 
-So it looks like some devices have power.is_suspended set from the
-previous cycle which causes device_resume() to attempt to resume them
-even though they have not been suspended in the current cycle yet.
+Yeah, I can make that work. 
 
-Please try the attached patch in addition to the previous 2 patches.
+I've been trying to make __WARN_printk() (or similar) do a tail-call to
+a "UD2; RET;" stub. But doing printk() in a function makes GCC generate
+wild code that refuses to actually tail-call :/
 
-Thanks!
+The next crazy idea was to make a variant of __WARN_printk() that takes
+a struct bug_entry * as first argument such that it has access to the
+bug entry and then take the trap on the way out (while keeping the
+pointer in the first argument) and then have the trap handler complete
+things.
 
---00000000000057bb180636aa868e
-Content-Type: text/x-patch; charset="US-ASCII"; name="pm-sleep-is_suspended-cleanup.patch"
-Content-Disposition: attachment; 
-	filename="pm-sleep-is_suspended-cleanup.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_mbgj46x00>
-X-Attachment-Id: f_mbgj46x00
+That way it would all 'just work'. Except I can't seem to force GCC to
+emit that tail-call :-(
 
-LS0tCiBkcml2ZXJzL2Jhc2UvcG93ZXIvbWFpbi5jIHwgICAgMyArKy0KIDEgZmlsZSBjaGFuZ2Vk
-LCAyIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKCi0tLSBhL2RyaXZlcnMvYmFzZS9wb3dl
-ci9tYWluLmMKKysrIGIvZHJpdmVycy9iYXNlL3Bvd2VyL21haW4uYwpAQCAtOTkyLDYgKzk5Miw4
-IEBACiAJaWYgKCFkZXYtPnBvd2VyLmlzX3N1c3BlbmRlZCkKIAkJZ290byBDb21wbGV0ZTsKIAor
-CWRldi0+cG93ZXIuaXNfc3VzcGVuZGVkID0gZmFsc2U7CisKIAlpZiAoZGV2LT5wb3dlci5kaXJl
-Y3RfY29tcGxldGUpIHsKIAkJLyoKIAkJICogQWxsb3cgbmV3IGNoaWxkcmVuIHRvIGJlIGFkZGVk
-IHVuZGVyIHRoZSBkZXZpY2UgYWZ0ZXIgdGhpcwpAQCAtMTA1NCw3ICsxMDU2LDYgQEAKIAogIEVu
-ZDoKIAllcnJvciA9IGRwbV9ydW5fY2FsbGJhY2soY2FsbGJhY2ssIGRldiwgc3RhdGUsIGluZm8p
-OwotCWRldi0+cG93ZXIuaXNfc3VzcGVuZGVkID0gZmFsc2U7CiAKIAlkZXZpY2VfdW5sb2NrKGRl
-dik7CiAJZHBtX3dhdGNoZG9nX2NsZWFyKCZ3ZCk7Cg==
---00000000000057bb180636aa868e--
+I'll prod at it some more.
