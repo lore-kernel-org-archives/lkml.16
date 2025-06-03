@@ -1,63 +1,53 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84B624C664
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 22:10:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC0FA18DB24;
+	Tue,  3 Jun 2025 22:11:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748988609; cv=none; b=S3h80NjpKwxs3+26tRlRn/EeGPSj3efFtnfLPQKQv47/Lm3gi2yIpk4ltFmL1dPYl1ge5WBIhkRUIczGup5J6f/FE9XzjdDQUC+BKHTP3n3TW7Yja7T8Lh8sccRpJ/g/9aScaa9eToFHWGjjMP/vD/BBVx9NfzB2IaMTB3apTRc=
+	t=1748988700; cv=none; b=E51+Xs58n/E92QVxrahUuQn4rGGm2VqMML9w41AkxPHBPUt73mpNpwKJqXb3toXuMICJ1BmnLuS/JgfXmCCVt92MY8r+UDloc1p4cozo9FgjIhzD+TFrDlnpy+VZ2WbaTFz8lgHBGAaFlNha9WbvJhzXe/ZgLoWUlPWtZ7bNiG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748988609; c=relaxed/simple;
-	bh=D4BNPFyXw8YmMxTGf0cIhoo97jch6QwsAvNNNQZDsQU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=NXRJPS6vclM10UQg8Ojima/X4CQGhr8cj4Cl3hO7prg3vC4aW4AkScmooNQPDuWSPjtHC9fh5Rk9hqtiAgdn21ciOp97sAlOgXICwYbAZwAWzS6DGTdXmptiUb5J3Arii/FaJsExEjhXApKyo9FLm1R4zWbzq/gtcYvRjkiCxbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Jc0zGUHO; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1748988700; c=relaxed/simple;
+	bh=/qJb0d3KxnUJqkywwyO+tlUKTUjKh39xC0iCWnoBKPQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gmG1BlZDVyTQjC0LtP3V62nkHZkDVE8HPmv9bF43gbDmyi1OP0UMhHVgGY3Dr6NMyHZpr5HpgO69yXKBQnP3Q1k0Vc51jUNECLwQNQplbA3rV4vzoxPnD/OVQhR8f3uDYul2c6rZo/9JgxsCjABnQYfVrFTtP0kfMZltTrLpkY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TJDs9qMh; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Jc0zGUHO"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b2c4476d381so336200a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 15:10:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1748988607; x=1749593407; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=oCZ69tNf5F/nH9gg/JK+KCJHpj+nRd8zzomueksqFYs=;
-        b=Jc0zGUHOBWmKBiZM0ui/g1Sdqh/YVt9g17mUCgnPTOe1GpknzfIq3KZDPNh2vn2ebM
-         IxxrhsEf6BjzTNKtdVSP9Fx/9XgID9/ci9F6yN/VNAxHGB31qzImfEGl0XP7onidbnuD
-         ayaEqtDOsvLClgRtendsOH9BNmjYqiXB3gAwg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748988607; x=1749593407;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oCZ69tNf5F/nH9gg/JK+KCJHpj+nRd8zzomueksqFYs=;
-        b=LZL9yDiNVOOoK23CGmAypDcykq6lVGT6tviF9YP0b9y0xIoiYJuVdmBdX90tYKec5n
-         eh53LJfp7NmBo/hE/vrojGLvn8FCQIf/i80fTdaO81bxUmo5pYos2+u/cvBMZ8uwK5Tp
-         ItiT/0ML8Jsq6V/3Ybm/FQVOTjSbrT1Ch8ar4/1mho1/0Mg5SbXhD3yxYl6uLCNUEtWu
-         4ilEKoGwl/n+GmQa0W+fmybdswSclaAsT72p7U1jQgEYHaOOgsN3vVH2QoUJfhZHCtre
-         bI+NVSt1esNIBDxfxmzNWTqTIbBCuvNIwiz/hHQETBwxaXJK6qhuKU7ibispQNLlCauz
-         rECg==
-X-Forwarded-Encrypted: i=1; AJvYcCU0iqayZIrGGWirQttSME2bq2++2Fw5WkFFW66+KjlEUo/b2w0NwLBZEsY2T8U/IgcuIg005PAo5UvKCGs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3O5mJApvnB3ntmZ6civYehxxW+eEkv2t2ZSxamqaI08PrAB7c
-	2BgXf/ABBFXxhzglstGLP8ms/idcR7ei0BQZ4oXkSt2AFDLupDvz7XzGQUb/s6bWjQ==
-X-Gm-Gg: ASbGncuj6QRNB/bu2JI7fhizO+a2VCScQA8FeLyAcfVhlXJEe87bEb7Z+FkOmB9R0V+
-	G5i2qb9hhDBjSYDMiZhO/0l0lx7V6DN09iw2PDWs4NDwt25NAur1RnDxx2PS427Pf2sq1wAZw7N
-	Plr5wnIonvFkNTXNkzQIHLJq53iLy2ZCUm64H3Q/VTMTtiNcwL8u1JWXfPx4tPH/A1QKERu7GBI
-	oirvFJqc66XemoUFfSI0AQodMsDfSDj1gSCVZamHxeTaLuxA5vdlvtnfXdFt9iSuJcl1REV4X51
-	+JtblGoxmdyoL8OsCp7VRiu9YPDlmQn+ngTn1LALhq/S+osxuD4gfr9zPtOK+OnJangIyAGSWhv
-	E8EW5+p2OrK5stvgjexjfeegVDQ==
-X-Google-Smtp-Source: AGHT+IFUc2/MB2me6Q0F4p+ojx6fjolGHIbVISR6ynDA5066KSNqwO5Jisc9OWXMc0F8jOKyYsadJQ==
-X-Received: by 2002:a17:90b:5112:b0:30e:3737:7c87 with SMTP id 98e67ed59e1d1-3130db414dcmr805466a91.5.1748988606871;
-        Tue, 03 Jun 2025 15:10:06 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bd945esm92372945ad.94.2025.06.03.15.10.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jun 2025 15:10:05 -0700 (PDT)
-Message-ID: <507a09f6-8b6e-4800-8c90-f2b1662cafa2@broadcom.com>
-Date: Tue, 3 Jun 2025 15:10:04 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TJDs9qMh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748988699; x=1780524699;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=/qJb0d3KxnUJqkywwyO+tlUKTUjKh39xC0iCWnoBKPQ=;
+  b=TJDs9qMhY5+X9fGRT+YNXVew4UcXY4HsFuCgK70BcUmmavXkiKfdfHVw
+   38ZIwvTuF0tCO2ivLOd4lRdvMwLulrWSfjuKHP/r67sb21LzslPNcP4/4
+   UQp98nu8ndUZDI6UwWwLRuCch/i8FAfD9o3UTsBbb6ZccDH1TMFnrnyZz
+   1s0S6AkSgGAM7fzn82ee4SsJpC4qYylnln+nyp6maPO6sP/CnoVrXKPM7
+   yl/17RFEqcAqU8ZlAC6SAGCh1CQs19R/LCzQgrOClyiLkf/dijK9VkfUb
+   iet/KapRAKZTI9kT+3czmeBUk5aMJaBepwhHmNHvZG396S9fM4FuZUehR
+   w==;
+X-CSE-ConnectionGUID: sBT6C0P6Q8Wp08w/fxu7Vg==
+X-CSE-MsgGUID: qplPESOZRQGi+lb4e11n5A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="68485709"
+X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
+   d="scan'208";a="68485709"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 15:11:38 -0700
+X-CSE-ConnectionGUID: 5DHWgVfNT86uu3dgCq7/5A==
+X-CSE-MsgGUID: Kr40BjkLTIewR1u3X46eZQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
+   d="scan'208";a="175856255"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 15:11:37 -0700
+Received: from [10.124.221.22] (unknown [10.124.221.22])
+	by linux.intel.com (Postfix) with ESMTP id 4761420B5736;
+	Tue,  3 Jun 2025 15:11:36 -0700 (PDT)
+Message-ID: <4a0f5b75-d6d4-4914-bb17-16d717803aa5@linux.intel.com>
+Date: Tue, 3 Jun 2025 15:11:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,89 +55,179 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH net-next v2 01/10] net: dsa: b53: add support for FDB
- operations on 5325/5365
-To: =?UTF-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>,
- jonas.gorski@gmail.com, florian.fainelli@broadcom.com, andrew@lunn.ch,
- olteanv@gmail.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, vivien.didelot@gmail.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, dgcbueu@gmail.com
-References: <20250603204858.72402-1-noltari@gmail.com>
- <20250603204858.72402-2-noltari@gmail.com>
+Subject: Re: [PATCH 4/4 v3] ACPI: extlog: Trace CPER CXL Protocol Error
+ Section
+To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+ linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-cxl@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-pci@vger.kernel.org, linux-edac@vger.kernel.org
+Cc: Yazen Ghannam <yazen.ghannam@amd.com>
+References: <20250603155536.577493-1-fabio.m.de.francesco@linux.intel.com>
+ <20250603155536.577493-5-fabio.m.de.francesco@linux.intel.com>
 Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20250603204858.72402-2-noltari@gmail.com>
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250603155536.577493-5-fabio.m.de.francesco@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 6/3/25 13:48, Álvaro Fernández Rojas wrote:
-> From: Florian Fainelli <f.fainelli@gmail.com>
-> 
-> BCM5325 and BCM5365 are part of a much older generation of switches which,
-> due to their limited number of ports and VLAN entries (up to 256) allowed
-> a single 64-bit register to hold a full ARL entry.
-> This requires a little bit of massaging when reading, writing and
-> converting ARL entries in both directions.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+
+On 6/3/25 8:54 AM, Fabio M. De Francesco wrote:
+> When Firmware First is enabled, BIOS handles errors first and then it makes
+> them available to the kernel via the Common Platform Error Record (CPER)
+> sections (UEFI 2.10 Appendix N). Linux parses the CPER sections via one of
+> two similar paths, either ELOG or GHES. The errors managed by ELOG are
+> signaled to the BIOS by the I/O Machine Check Architecture (I/O MCA).
+>
+> Currently, ELOG and GHES show some inconsistencies in how they report to
+> userspace via trace events.
+>
+> Therefore, make the two mentioned paths act similarly by tracing the CPER
+> CXL Protocol Error Section (UEFI v2.10, Appendix N.2.13).
+>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
 > ---
 
-[snip]
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
->   static int b53_arl_op(struct b53_device *dev, int op, int port,
->   		      const unsigned char *addr, u16 vid, bool is_valid)
->   {
-> @@ -1795,14 +1834,18 @@ static int b53_arl_op(struct b53_device *dev, int op, int port,
+>   drivers/acpi/acpi_extlog.c | 64 ++++++++++++++++++++++++++++++++++++++
+>   drivers/cxl/core/ras.c     |  6 ++++
+>   include/cxl/event.h        |  2 ++
+>   3 files changed, 72 insertions(+)
+>
+> diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
+> index b2928ff297eda..de4f617f32d49 100644
+> --- a/drivers/acpi/acpi_extlog.c
+> +++ b/drivers/acpi/acpi_extlog.c
+> @@ -12,6 +12,7 @@
+>   #include <linux/ratelimit.h>
+>   #include <linux/edac.h>
+>   #include <linux/ras.h>
+> +#include <cxl/event.h>
+>   #include <acpi/ghes.h>
+>   #include <asm/cpu.h>
+>   #include <asm/mce.h>
+> @@ -160,6 +161,62 @@ static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
+>   	pci_dev_put(pdev);
+>   }
 >   
->   	/* Perform a read for the given MAC and VID */
->   	b53_write48(dev, B53_ARLIO_PAGE, B53_MAC_ADDR_IDX, mac);
-> -	b53_write16(dev, B53_ARLIO_PAGE, B53_VLAN_ID_IDX, vid);
-> +	if (!is5325(dev))
-> +		b53_write16(dev, B53_ARLIO_PAGE, B53_VLAN_ID_IDX, vid);
+> +static void
+> +extlog_cxl_cper_handle_prot_err(struct cxl_cper_sec_prot_err *prot_err,
+> +				int severity)
+> +{
+> +#ifdef CONFIG_ACPI_APEI_PCIEAER
+> +	struct cxl_cper_prot_err_work_data wd;
+> +	u8 *dvsec_start, *cap_start;
+> +
+> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_AGENT_ADDRESS)) {
+> +		pr_err_ratelimited("CXL CPER invalid agent type\n");
+> +		return;
+> +	}
+> +
+> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_ERROR_LOG)) {
+> +		pr_err_ratelimited("CXL CPER invalid protocol error log\n");
+> +		return;
+> +	}
+> +
+> +	if (prot_err->err_len != sizeof(struct cxl_ras_capability_regs)) {
+> +		pr_err_ratelimited("CXL CPER invalid RAS Cap size (%u)\n",
+> +				   prot_err->err_len);
+> +		return;
+> +	}
+> +
+> +	if ((prot_err->agent_type == RCD || prot_err->agent_type == DEVICE ||
+> +	     prot_err->agent_type == LD || prot_err->agent_type == FMLD) &&
+> +	    !(prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER))
+> +		pr_warn(FW_WARN "CXL CPER no device serial number\n");
+> +
+> +	switch (prot_err->agent_type) {
+> +	case RCD:
+> +	case DEVICE:
+> +	case LD:
+> +	case FMLD:
+> +	case RP:
+> +	case DSP:
+> +	case USP:
+> +		memcpy(&wd.prot_err, prot_err, sizeof(wd.prot_err));
+> +
+> +		dvsec_start = (u8 *)(prot_err + 1);
+> +		cap_start = dvsec_start + prot_err->dvsec_len;
+> +
+> +		memcpy(&wd.ras_cap, cap_start, sizeof(wd.ras_cap));
+> +		wd.severity = cper_severity_to_aer(severity);
+> +		break;
+> +	default:
+> +		pr_err_ratelimited("CXL CPER reserved agent type: %d\n",
+> +				   prot_err->agent_type);
+> +		return;
+> +	}
+> +
+> +	cxl_cper_ras_handle_prot_err(&wd);
+> +
+> +#endif
+> +}
+> +
+>   static int extlog_print(struct notifier_block *nb, unsigned long val,
+>   			void *data)
+>   {
+> @@ -211,6 +268,12 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
+>   			if (gdata->error_data_length >= sizeof(*mem))
+>   				trace_extlog_mem_event(mem, err_seq, fru_id, fru_text,
+>   						       (u8)gdata->error_severity);
+> +		} else if (guid_equal(sec_type, &CPER_SEC_CXL_PROT_ERR)) {
+> +			struct cxl_cper_sec_prot_err *prot_err =
+> +				acpi_hest_get_payload(gdata);
+> +
+> +			extlog_cxl_cper_handle_prot_err(prot_err,
+> +							gdata->error_severity);
+>   		} else if (guid_equal(sec_type, &CPER_SEC_PCIE)) {
+>   			struct cper_sec_pcie *pcie_err = acpi_hest_get_payload(gdata);
+>   
+> @@ -378,3 +441,4 @@ module_exit(extlog_exit);
+>   MODULE_AUTHOR("Chen, Gong <gong.chen@intel.com>");
+>   MODULE_DESCRIPTION("Extended MCA Error Log Driver");
+>   MODULE_LICENSE("GPL");
+> +MODULE_IMPORT_NS("CXL");
+> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+> index 485a831695c70..56db290c88d35 100644
+> --- a/drivers/cxl/core/ras.c
+> +++ b/drivers/cxl/core/ras.c
+> @@ -98,6 +98,12 @@ static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
+>   		cxl_cper_trace_uncorr_prot_err(pdev, data->ras_cap);
+>   }
+>   
+> +void cxl_cper_ras_handle_prot_err(struct cxl_cper_prot_err_work_data *wd)
+> +{
+> +	cxl_cper_handle_prot_err(wd);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_cper_ras_handle_prot_err, "CXL");
+> +
+>   static void cxl_cper_prot_err_work_fn(struct work_struct *work)
+>   {
+>   	struct cxl_cper_prot_err_work_data wd;
+> diff --git a/include/cxl/event.h b/include/cxl/event.h
+> index f9ae1796da85f..aef906e260330 100644
+> --- a/include/cxl/event.h
+> +++ b/include/cxl/event.h
+> @@ -285,4 +285,6 @@ static inline int cxl_cper_prot_err_kfifo_get(struct cxl_cper_prot_err_work_data
+>   }
+>   #endif
+>   
+> +void cxl_cper_ras_handle_prot_err(struct cxl_cper_prot_err_work_data *wd);
+> +
+>   #endif /* _LINUX_CXL_EVENT_H */
 
-I used the 5325M-DS113-RDS datasheet for this code initially but the 
-5325E-DS14-R datasheet shows that this register is defined. It's not 
-clear to me how to differentiate the two kinds of switches. The 5325M 
-would report itself as:
-
-0x00406330
-
-in the integrated PHY PHYSID1/2 registers, whereas a 5325E would report 
-itself as 0x0143bc30. Maybe we can use that to key off the very first 
-generation 5325 switches?
 -- 
-Florian
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
