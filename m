@@ -1,327 +1,193 @@
-Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012003.outbound.protection.outlook.com [52.101.71.3])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3374D22A813;
-	Tue,  3 Jun 2025 15:06:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.3
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748963169; cv=fail; b=d01LUIhws41lvrxyMvpWQFetFBZsXhkwdkKqZ6QuJbWnVTRcwLz5NhQZ9siDrfH8rheEPngubexeCFDawRcUfV5Xu2ORNPgSSeeWzPNsuX/9xXHQabe6w0y7TjmAHlx3gkqAahZI4UketoptCOWEu0bPaxfvermAjbF1W6i8elU=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748963169; c=relaxed/simple;
-	bh=vpe3C/qVdeiJhPJCOrW1XWEal7MiUBkRu9dHYWLzqIE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=TywUMSlW5UJk2EeNMfOFVb1iGIkQ+aW2VHdm9liOLy+aPxqTVE1L2d5NzndDO7K4QglBUOla4/jAe27dQXvAeyX+2RJpubQ1sAFIACYcZ/tzXI1Xbd9wHff8Dwin99kJJUTsn0msYJvHBPn46Ozg5EArM9XpJRyCcl4BkOFiyeU=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=l4LvCNIM; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=l4LvCNIM; arc=fail smtp.client-ip=52.101.71.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC6C22A813
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 15:06:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748963185; cv=none; b=rVTc770KcRwDEk9xhfgp+C9ffQ7yCrCiC8fShGfhA1dHZxFBAY3h9R9qv5etyeQU0V8fFLZ4mu9Ctu1qcD7vauTPb1VfqquraZWY25InND2n67UmFMFbvsJ68v7nz1FL9YuHmxIg8cMyBAPlSjaJcKtvo4Y5lYUuo7QGmBfztjY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748963185; c=relaxed/simple;
+	bh=Seyjc5vTxL1mkB7rjyOKB6ScVF1DZNG6ib5bKFof+bM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=vGfdXgJGkyT3w4Qg7DBew+iqQ1QlLIdDviB70YYLTqcsi1LvIHpiieQ2ce05vHdaOI/q1epUv0morU6iAOn50wiRBu+tqSEJaUwREW5Z4B02GaNa4G/1wAAHDxrYtTsnF3ekvHBAir+dPDyY0oH0HG/OOOGj1m0RECXKEEr3AC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e2Snq6CM; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="l4LvCNIM";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="l4LvCNIM"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=S6INAqJvPZqn1inuadxUYG0gk0IoMPNJL9lMvc8szHDVHKOtqeIpf5ZbI98HVbTJ2GMuQFECBt9nfe1C3ILW66PpiAyKe6MzIywlbLyiCsltgDZRqBhE8ld3n23iP6BRJiLufoJleriBkx5BvSX6XfIXJhgYkTojL7nXFgsy/gYjj2fJjC0EkdrRy7XtSCxf2iDmwFdERytNKg9F6nTg6dR9JOIQc3sgsa7kRNRi6eGwXQqIH7N96h1hW66Io6IaXOvC1WKjHIbKgQWpH80nPAcFtPVqR0e+BV1bDq1SziMJOt2S1RGfPSKr4D2wf3WreEkFMEf6lT+1N70iAY2bNA==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AFA7a8DWsl5/jyNXuL1kNIobEM6FJw9JjJI+k5owzJ0=;
- b=SihvvCzVcOLf02xuSp667+8K266E277B5if0Iy0+x3cmcjb4aUxhG4k0luAl++IGA2gWUXgpjKDVxvJ7IIjJaXe/u2RdaXTNBaH8YKGCaiOqjy2BAO3m4Ua2e3GED5TNciayF/8kFGImV5RfFTLmHcI/wdtaC9HJVpDf+jvxv4PWbb+gkdPc4OT4uzwAtSTmK4bK6+v9nJsO0Rltd28S8xaGQlRZG21aqXRgQiG1G4N3fre38f3cJdeO868mlaYq+KkAQ00ZxkHeyj0LUkGlg60mI0FzExmKAQMA8U0iVneK95WiNYTDoWp69NZ3uffAGuVskXhKA2HeBiBmfqAZeA==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=infradead.org smtp.mailfrom=arm.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
- dkim=pass (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AFA7a8DWsl5/jyNXuL1kNIobEM6FJw9JjJI+k5owzJ0=;
- b=l4LvCNIMyf7k77iaEPY2tBLMO8eFsAOe0rRYEagN3Buahdntk34gy00Og+nbctK5t1KxsImxbuKZUdcFsYyF4aMTZOgBogLqlH6cW7d2j9K3Pnq60ZAVKDZARhfk1FcGJgsWhVvpOwmknDlCDHTuJo2wcZdwataZUAyNYrt6+Ng=
-Received: from DU6P191CA0011.EURP191.PROD.OUTLOOK.COM (2603:10a6:10:540::25)
- by AS2PR08MB8783.eurprd08.prod.outlook.com (2603:10a6:20b:5e7::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Tue, 3 Jun
- 2025 15:06:01 +0000
-Received: from DB5PEPF00014B92.eurprd02.prod.outlook.com
- (2603:10a6:10:540:cafe::4e) by DU6P191CA0011.outlook.office365.com
- (2603:10a6:10:540::25) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.24 via Frontend Transport; Tue,
- 3 Jun 2025 15:06:01 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- DB5PEPF00014B92.mail.protection.outlook.com (10.167.8.230) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.29
- via Frontend Transport; Tue, 3 Jun 2025 15:06:00 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=r5Wh3cZV53mAjGdy6N0HqALtThvWnHnvu9a8TpAetVxO1PmxoxFWF7jDZv/+zSfY7KSLxJGvVitkhUU07KnmDXMftO8Ucr0pNhVeNibQTu29Fjc6pEE9B+sI6fCiFZa87fBEygoJoUjG3SR0q7AecdoRf5t4LC2e68X6r0Z2Se3b/0k4PrU+A/4cBy6lSA1VGJ2OpyR3BRd3MdmH1N8XRajNmwEvxjkdYNu2zRB4V+0+ODI/dQNkQkO64N3s6b9eltmil78xpIeAaPwRJVz+/+SATiJN6SWnMNMZlBJLC6GK0NmqyV982hVGmqWWTdpDlPrA8JvI8ysFwFzSbibjyQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AFA7a8DWsl5/jyNXuL1kNIobEM6FJw9JjJI+k5owzJ0=;
- b=vfI+c9Q2gHOnjYG8C6fzmCW5t5I7kH5JtLW/X2VFvUNY0WIzbBp416sjoObz3zSdCQjLZ0XzghItnJU/Uga3JNM7+Yp063Xh8t5JmU1wY58mqH7VhnXGWsyKIiNG0omHVUIWJGd4dCOZf82gpOAECB54wcVS2O3hbUqYK1GlqUzvsSm8nQ0GD5pfVvmuLXl0MJSsxPXrHs3A8fV3dX+NFZEzUtiof6ztWyQKGcwpmieQyHkCVZMeB0IS8ykhCEAUzkmNKF6ib6HGkSSxoqBvSSDGclwO6efqAJbZhpdDVzwaNzO6wPMOvbo6Eb4yWTjrO9RV5vsxdxav4Xw84SgH7Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AFA7a8DWsl5/jyNXuL1kNIobEM6FJw9JjJI+k5owzJ0=;
- b=l4LvCNIMyf7k77iaEPY2tBLMO8eFsAOe0rRYEagN3Buahdntk34gy00Og+nbctK5t1KxsImxbuKZUdcFsYyF4aMTZOgBogLqlH6cW7d2j9K3Pnq60ZAVKDZARhfk1FcGJgsWhVvpOwmknDlCDHTuJo2wcZdwataZUAyNYrt6+Ng=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
- (2603:10a6:150:163::20) by AS4PR08MB7432.eurprd08.prod.outlook.com
- (2603:10a6:20b:4e4::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.34; Tue, 3 Jun
- 2025 15:05:27 +0000
-Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
- ([fe80::d430:4ef9:b30b:c739]) by GV1PR08MB10521.eurprd08.prod.outlook.com
- ([fe80::d430:4ef9:b30b:c739%7]) with mapi id 15.20.8792.033; Tue, 3 Jun 2025
- 15:05:27 +0000
-Date: Tue, 3 Jun 2025 16:05:23 +0100
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: Leo Yan <leo.yan@arm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, mingo@kernel.org,
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, David Wang <00107082@163.com>
-Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
-Message-ID: <aD8PM7qx7vCDhs8a@e129823.arm.com>
-References: <20250602184049.4010919-1-yeoreum.yun@arm.com>
- <20250603140040.GB8020@e132581.arm.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250603140040.GB8020@e132581.arm.com>
-X-ClientProxiedBy: LO4P265CA0154.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2c7::11) To GV1PR08MB10521.eurprd08.prod.outlook.com
- (2603:10a6:150:163::20)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e2Snq6CM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748963182;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=+IDnu3HxZinHnGOlo/4w3jT7mB19VJYiXAiyvOcajjs=;
+	b=e2Snq6CMjGsVoZGqlgIk/fJDNUksVkIQAVA2Y7aAzXIH/X6pT3vZ+Dd8Pzl90svYzOIXy4
+	WetXMMlZUFXI5L5XqkplcBV225Y39qyD45AuVReHwpsdXsqjFK6nl8hKwKabFlvSBekxNk
+	gY/ZgoyiKt9xgRir/K8lZ8vHCfg0iWk=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-308-TdmqvML9OxiKPIqSjxyBZg-1; Tue, 03 Jun 2025 11:06:21 -0400
+X-MC-Unique: TdmqvML9OxiKPIqSjxyBZg-1
+X-Mimecast-MFC-AGG-ID: TdmqvML9OxiKPIqSjxyBZg_1748963180
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4e713e05bso2778689f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 08:06:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748963180; x=1749567980;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=+IDnu3HxZinHnGOlo/4w3jT7mB19VJYiXAiyvOcajjs=;
+        b=cLeu9Bh9EInSC4cdpELemvU4ePSjYNarGxs+XSba0/AGt6RDJFMnhzk/kUfePbqLdq
+         gMxtmWNlsuNbrM8ISbEu5i2mdXHDhH4voV6AH5qLBeTX8b+QpgwRtMZlvlqoDLLt2Bce
+         QEuu18we8vv2z5pcJYt1OgzBuPtv5vx28fhYInl2V04sBk77oPntTq3S0H/0hWpyV8lW
+         4J5ADkIvNatvBn/rwvCG71RUQHIbMTNKf8llVJf2JyrESYQIGs7SMfKWofzaFzBlSWv3
+         5kZcwdT2YkuP/nFogRTOSfoXOXJrCnfCOiw4G7/IVBWbNkohymFnz2jxEc4T3qXq89MO
+         K6kg==
+X-Forwarded-Encrypted: i=1; AJvYcCXMkJN9Ln6+E1Um+DJOkZLZwt/6+lWoGC665e8QxzdRHkDhh+YaJAhcR9+u4EnaS3TPCV44+W0ARyaWZY4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw803F9yQSGF5R0BAdarcMjcM5qQXN/fGCKWTXl1Dgvf6yWjmTH
+	BWAHwp+8yHIiCZ9MaxlmcSiEpaDi1R1Hszlx9iU5W3x5vR5CJuWCABXHxQlVmtT57920RaPafXn
+	yuCR5D1VDwdavaLq14bl+QYRbZNSLM0x7xSQv5YBSdKgdFZ6A8RdrIKqlcpaGGpfnWuCaoS9BUi
+	za
+X-Gm-Gg: ASbGncsaV/72mtT2cTVIuyEiiXBaKmKN87BaZu2e8KAbolXKYKNch7MylgEd8m13Qyl
+	9Qh3BL1q8BaZLEGNgqm2PvSId/uSQu+jhx9fTmQPHMe+VfvJB6KMhpQDsEIlc29ERGDJLkXFHLR
+	fkpC0N8JiYEv6RgCy+aiJpyqdfeoK4u5Ha6P6A0PWuSZwdLCewEx/Wl5Vz5nWFkidZlTJh2GuQc
+	w2MuKdKr1zybIvkvSP0eACs4PG+Sc1g5SwF9f/jS6DLcE3cU2gzjfvyV13+h+GuI4qqFeS3lGDZ
+	n+U9nkzY5cr+Nd0agsx0XwfqpwNM+wWwTOq1qyMpy+QK8XdIPFUnIjYUD0UkxbNlbu7HyiL0jnz
+	hnSSEA53Wp5hAtk4y1PsEKS3VKWEwHZe43fa+ocPnzZDqcrO9UQ==
+X-Received: by 2002:a05:6000:2511:b0:3a4:f6cc:a8c8 with SMTP id ffacd0b85a97d-3a4fe3a7decmr10116629f8f.51.1748963179702;
+        Tue, 03 Jun 2025 08:06:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFOWCebAzAqIR1f1Iem5WqF2v6FDj/UiOd99keJ5jx81zJTABKQoXYo+9VaL5cadMRmx4+O3w==
+X-Received: by 2002:a05:6000:2511:b0:3a4:f6cc:a8c8 with SMTP id ffacd0b85a97d-3a4fe3a7decmr10116574f8f.51.1748963179132;
+        Tue, 03 Jun 2025 08:06:19 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f0d:f000:eec9:2b8d:4913:f32a? (p200300d82f0df000eec92b8d4913f32a.dip0.t-ipconnect.de. [2003:d8:2f0d:f000:eec9:2b8d:4913:f32a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe6c866sm18866643f8f.32.2025.06.03.08.06.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Jun 2025 08:06:18 -0700 (PDT)
+Message-ID: <df85fba8-826f-41fb-8850-077a4e4dd240@redhat.com>
+Date: Tue, 3 Jun 2025 17:06:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	GV1PR08MB10521:EE_|AS4PR08MB7432:EE_|DB5PEPF00014B92:EE_|AS2PR08MB8783:EE_
-X-MS-Office365-Filtering-Correlation-Id: d30cb376-5b2b-4d3f-f665-08dda2b02698
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info-Original:
- =?us-ascii?Q?6aq14Qww/3jQqHR+JLwtyzDW3c3d9GS1hCUjSdVWUw/x2b+kXwiMrFrgPZuX?=
- =?us-ascii?Q?DUV/S4jACUrgwKyzEY7xfZW1JTswSRv2unVHHuIJKqDqry9PETrKpajOlZPy?=
- =?us-ascii?Q?8QbBvFQtDYEXMtXg510K3D1U9IxtFyGZO47g2RzdDYWNgNIhuoU95faJavCS?=
- =?us-ascii?Q?RzWYW9fU995DGKK1tSztbhROTNtjDQxsr7SmNAvfX6b1tZKDm55gAQqUsfqv?=
- =?us-ascii?Q?7iAoW4sUytLmcm3MPfzGjYzzu1wL2Yzy3TwIfG5Zbg8DZp/BstLEc1eiJMFf?=
- =?us-ascii?Q?X/tTWRjTkX+UqPI1WTBEWel4mJV/ezCgrbesiZ8bS9AcAAenQ+MQEr3NKWuB?=
- =?us-ascii?Q?95NG3aYia89K4c99VWcNiCzozammVgZ11qJLt32PXWlkrMWzCmhwPAUf7nvk?=
- =?us-ascii?Q?Tx+mpwq1NFeF1yWhKgYMF5QsTnGBNAl3vSiUPturizKBaRehJgLY37jk6gGa?=
- =?us-ascii?Q?MIzw4LbSc87czzqmKgjY1elGdtRKUhvLhg6/MjFVGKCbSl0NbobSKctE0sKb?=
- =?us-ascii?Q?PjPh3bzL01gsLo/HSMT5aWeDQmcGAxArVYJujU+Fw5YoEPipdFe+cO+BJa7x?=
- =?us-ascii?Q?PdWQGUyPr9sh3gr8Txv7FqdULzXKEeRd2aKx09lPPMRiYfaimhP7TjSwcHAl?=
- =?us-ascii?Q?V99czXDmduP27U/StBHDyTaDFQHhO0OTgv1GAczwPhXD2xBnhQprCdLOUtq5?=
- =?us-ascii?Q?K69oZP94sT7GUmEEuQB8PBP6spb2kn509kpYiC4dylH3PghSFXFPaDrnkCV8?=
- =?us-ascii?Q?7lYYNy6SxDYxhykVLa0GP2HlD7bLhsiJnjeSz4mjtpYlM/lPYNs4m/xS6RJT?=
- =?us-ascii?Q?g1XPlrSI4ms1dEgpPMYC36KlZDUI9daeJKD6w272T+xzoxukJuWZg35Tm6Bp?=
- =?us-ascii?Q?ztDKCM2XSrMu1dPCwqZtV9QQooSCQ4JOFw++bvhIHq4O8jQZd2ANVEfOUozm?=
- =?us-ascii?Q?cZFVngHY5Fiq060DoVg2HiFGYVuC3qmctw0HdbIUWK2Gf7B9sbTVb7SON2j1?=
- =?us-ascii?Q?VT3SHSbMbTqiobrL4VWlN3p4bnvsnVZU8b5xONaSarCc4pMEZ77E9XEEZUb6?=
- =?us-ascii?Q?eB8Eaex6nn+drM+QpcTqojDBr6FM65cLfIKM6H5pQWH/66L44LMwvG7LwUgQ?=
- =?us-ascii?Q?YhL5GTR+v9Wlpr6ghZc8ZdJ6iPCYXFxWkW/KzQULpg8Pbt11elPm9NoPC1hy?=
- =?us-ascii?Q?NswtKKHQUG7RBw+/qHQfIbmMMpfKPVISRpZBLdVV6CsUcCiwxY1iWy1AnaH0?=
- =?us-ascii?Q?BJ+zsJ+hVPQoRDxHCGg5h8ulw2MisA0F10BaMWghxolnkhRCMhxePG2h+7I8?=
- =?us-ascii?Q?i5k9VS//FST7SNCghPWLJtULALgXt4S02WXHjCy4DrzDW0p8EeCxOYxFdDUI?=
- =?us-ascii?Q?T+2bMHM=3D?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB10521.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR08MB7432
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DB5PEPF00014B92.eurprd02.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	e3bd53a9-5019-41dc-2f75-08dda2b012ac
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|35042699022|82310400026|1800799024|7416014|376014|14060799003;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?DqYL0ze0HfjMVHMyzjmUf3mxzUr+9RraTZnVuzq6Z8zkpnBZWhTJPXWcqH1z?=
- =?us-ascii?Q?WfFQtGw7L07hgg3pWL4egh3ktqXtuo2axhonK+VSAh33xHPRIsLthfFipKLl?=
- =?us-ascii?Q?CEVAuOKXqTbLw9BGhplG1mT1tJYMndEpV3WzN6OBAG2M7KaS3fNjDZB+qYEl?=
- =?us-ascii?Q?6FMW5V2XA6n/kbWaSpmE8Gzp4jqBPSBVENVeKIgKddpfTBnhQ+fWCYEPFMhu?=
- =?us-ascii?Q?hwUf3P24lC/ZiBD1nXFVlpgSXPQn5ueQOC8XBsiqqtLi2xRcoOmERJx7Z2zM?=
- =?us-ascii?Q?wZWZLXcmB+H6KURaIJR+AaET6tEoY62m3rQ2AW6onCW5Kmp/D/tyj97IsU46?=
- =?us-ascii?Q?ygoxtXhdNqWn0WMubaEMgfTKx/CFRryMk6uqi/TfAlMy5ewylOESQgqtkuwe?=
- =?us-ascii?Q?+hhCMYWPeU0OfoItH+cQPP1uBkZ9+fnsvBrOl0Re93njoneDduKQclHpI4Lx?=
- =?us-ascii?Q?UCuepL7G6qgjvMlLZRjGABv+xDdBPFXT2zp8vK/UmgJBq/zmkenEPgu0XD5t?=
- =?us-ascii?Q?V35sjycndQG/SnfRyogQab5GyN6TjTB4qjh8wtVzADnILxbAKW2r7UhOi6Wu?=
- =?us-ascii?Q?6BTBhqAUpdT0N6wPvpw8KgjQHH+TCsKwgjOLOOZEJT+UekLS2QYpsfZyFf+Y?=
- =?us-ascii?Q?MIgKh4Ih+0NQxKt186nnO9uEumEzEYOukFAReiBqUcGYvfVQSaF0El4aY3L5?=
- =?us-ascii?Q?a2HNrIs6OYpvqZbq7mJdqFAe/T8fJql1/iK6+2L57MpL+qPZe7ZWvb8V2buZ?=
- =?us-ascii?Q?KHw7V47rhopkBlY1CDIyAzqLGAjZ4KEFUlIgxwuQliAXa2GT7nMRJC96jdqQ?=
- =?us-ascii?Q?VjKlRPdeTJBnvWPdV5WRa7wiiwcIhnKYZXr/VF30N81ZWxQpOH5VtROFYN/+?=
- =?us-ascii?Q?Bn7kmVhsk7B2QHe2ZS5rijPbjHdJPWYdeoC8HzNWnr4nTLzczVw31j8yyp6k?=
- =?us-ascii?Q?OQIa7TRMERcSte7zhpWeoDE/iP+b0hHY6W6zSo4E65slE4cFM2CshB1zMKTC?=
- =?us-ascii?Q?a8fy9hsTkOi7antXFvoqomjXyNKVd7DACMynSWjd/bDEFhhIiph+G69niY0S?=
- =?us-ascii?Q?UV98n51tXc74ik7h/iRgtNc+bRlkOf8SNqm1rDpNqTLZuvuALUwfbCGaK6+S?=
- =?us-ascii?Q?ia7q/SM5DrUVc/EP3eCwgG5eFA+vJJbs5dvmsVcq5/9hm8ZB6I/nXNnntOw3?=
- =?us-ascii?Q?k468tKgExkjS/kmOYsCAD06Mg4viJqfGq86ZHAmowKC8uZm8DZBSa2MfX4wl?=
- =?us-ascii?Q?EvsQpOHZXdWEKPchpoodvlpt5R5QiVE06MgkzdUTPzhWigbaKVWc256vVzzQ?=
- =?us-ascii?Q?n/d/+qbC9uJzt0aUulUNBsFJnpic2cdA6pEkR3QgCd7kTRQ94X6DdHdosNF3?=
- =?us-ascii?Q?ZQSzCAu9l9fKQGN+6sAq4hYF17eR5Tbv/mEpiHv0zA6IOwjzl0Xm3nUPrNfg?=
- =?us-ascii?Q?Fa9105eHSr6chUqqmrcVSmnd5CungZk7Min8sxgGL+w3PRxrNuczbw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(35042699022)(82310400026)(1800799024)(7416014)(376014)(14060799003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2025 15:06:00.0787
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d30cb376-5b2b-4d3f-f665-08dda2b02698
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB5PEPF00014B92.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR08MB8783
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] selftests/mm: Report unique test names for each
+ cow test
+To: Mark Brown <broonie@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250527-selftests-mm-cow-dedupe-v2-0-ff198df8e38e@kernel.org>
+ <20250527-selftests-mm-cow-dedupe-v2-3-ff198df8e38e@kernel.org>
+ <c43347ce-433b-498e-bfd7-f09b8e781197@redhat.com>
+ <9961082f-848d-43d3-b97d-3df675ca4415@sirena.org.uk>
+ <4676a010-a977-4d5a-b42a-edbbea7d356d@redhat.com>
+ <e3d584fe-6297-403d-84f3-397a0fe459c5@sirena.org.uk>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <e3d584fe-6297-403d-84f3-397a0fe459c5@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Leo,
->
-> On Mon, Jun 02, 2025 at 07:40:49PM +0100, Yeoreum Yun wrote:
-> > commit a3c3c6667("perf/core: Fix child_total_time_enabled accounting bug at task exit")
-> > changes the event->state update before list_del_event().
-> > This change prevents calling perf_cgroup_event_disable() as a result,
-> > cpuctx->cgrp can't be cleared properly and point to dangling point of cgroup.
-> >
-> > Because of this problem, some machin meets the below panic[0]:
-> >
-> > 863.881960] sysved_call_function_sing le+0x4c/0xc0
-> > 863.881301] asm_sysvec_call_function_single+0x16/0x20
-> > 869.881344] RIP: 0633:0x7f9alcea3367
-> > 663.681373] Code: 00 66 99 b8 ff ff ff ff c3 66 ....
-> > 863.881524] RSP: 002b:00007fffa526fcf8 EFLAGS: 00000246
-> > 869.881567] RAX: 0000562060c962d0 RBX: 0000000000000002 RCX: 00007f9a1cff1c60
-> > 863.881625] RDX: 00007f9a0c000030 RSI: 00007f9alcff1c60 RDI: 00007f9a1ca91c20
-> > 863.081682] RBP: 0000000000000001 R08: 0000000000000000 R09: 00007f9a1d6217a0
-> > 869.881740] R10: 00007f9alca91c10 R11: 0000000000000246 R12: 00007f9a1d70c020
-> > 869.881798] R13: 00007fffa5270030 R14: 00007fffa526fd00 R15: 0000000000000000
-> > 863.881860] </TASK>
-> > 863.881876) Modules linked in: snd_seq_dummy (E) snd_hrtimer (E)...
-> > ...
-> > 863.887142] button (E)
-> > 863.912127] CR2: ffffe4afcc079650
-> > 863.914593] --- [ end trace 0000000000000000 1--
-> > 864.042750] RIP: 0010:ctx_sched_out+0x1ce/0x210
-> > 864.045214] Code: 89 c6 4c 8b b9 de 00 00 00 48 ...
-> > 864.050343] RSP: 0000:ffffaa4ec0f3fe60 EFLAGS: 00010086
-> > 864.052929] RAX: 0000000000000002 RBX: ffff8e8eeed2a580 RCX: ffff8e8bded9bf00
-> > 864.055518] RDX: 000000c92340b051 RSI: 000000c92340b051 RDI: ffff
-> > 864.058093] RBP: 0000000000000000 R08: 0000000000000002 R09: 00
-> > 864.060654] R10: 0000000000000000 R11: 0000000000000000 R12: 000
-> > 864.063183] R13: ffff8e8eeed2a580 R14: 0000000000000007 R15: ffffe4afcc079650
-> > 864.065729] FS: 00007f9a1ca91940 (0000) GS:ffff8e8f6b1c3000(0000) knIGS:0000000000000000
-> > 864.068312] CS: 0010 DS: 0000 ES: 0000 CRO: 0000000080050033
-> > 864.070898] CR2: ffffe4afcc079650 CR3: 00000001136d8000 CR4: 0000000000350ef0
-> > 864.673523] Kernel panic - not syncing: Fatal exception in interrupt
-> > 864.076410] Kernel Offset: 0xc00000 from 0xffffffff81000000 (relocation range: 0xff
-> > 864.205401] --- [ end Kernel panic - not syncing: Fatal exception in interrupt ]---
-> >
-> > To address this call the perf_cgroup_event_disable() properly before
-> > list_del_event() in __perf_remove_from_context().
-> >
-> > Link: https://lore.kernel.org/all/aD2TspKH%2F7yvfYoO@e129823.arm.com/ [0]
-> > Fixes: a3c3c6667("perf/core: Fix child_total_time_enabled accounting bug at task exit")
-> > Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
-> > Tested-by: David Wang <00107082@163.com>
-> > ---
-> >  kernel/events/core.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index f34c99f8ce8f..909b9d5a65c1 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -2498,6 +2498,10 @@ __perf_remove_from_context(struct perf_event *event,
-> >  		state = PERF_EVENT_STATE_DEAD;
-> >  	}
-> >  	event_sched_out(event, ctx);
-> > +
-> > +	if (event->state > PERF_EVENT_STATE_OFF)
-> > +		perf_cgroup_event_disable(event, ctx);
-> > +
->
-> As we discussed, seems to me, the issue is caused by an ambigous state
-> machine transition:
->
-> When a PMU event state is PERF_EVENT_STATE_EXIT, the current code does
-> not transite the state to PERF_EVENT_STATE_OFF. As a result, the
-> list_del_event() function skips to clean up cgroup pointer for non OFF
-> states. This is different from the code prior to the commit a3c3c6667,
-> which transits states EXIT -> INACTIVE -> OFF.
+On 03.06.25 16:58, Mark Brown wrote:
+> On Tue, Jun 03, 2025 at 04:15:42PM +0200, David Hildenbrand wrote:
+>> On 03.06.25 15:21, Mark Brown wrote:
+> 
+>>>>>     	} else {
+>>>>> -		ksft_test_result_fail("Leak from parent into child\n");
+> 
+>>>> Same here and in other cases below (I probably didn't catch all).
+> 
+>>>> We should log that somehow to indicate what exactly is going wrong, likely
+>>>> using ksft_print_msg().
+> 
+>>> Can you send a patch with the logging that you think would be clear
+>>> please?
+>>> I dropped these because they just seemed to be reporting the> overall
+>> point of the test, unlike the cases where we ran into some error
+>>> during the setup and didn't actually manage to perform the test we were
+>>> trying to do.  Perhaps the tests should be renamed.
+> 
+>> ksft_print_msg("Leak from parent into child");
+> 
+> Can you send a patch showing when/where you want this printing please?
 
-Just for correct this, prior to commit a3c3c6667,
-Isn't the state change INACTIVE -> OFF -> EXIT?
+I'm really busy right now, unfortunately.
 
-when I saw the perf_event_exit_event(),
-  perf_remove_from_context(event, detacg_flags
-  ...
-  perf_event_set_state(event, PERF_EVENT_STATE_EXIT),
+> Like I said I suspect the test name is just unclear here...
 
-So,
+I would hope we find some mechanical replacement.
 
-  1. event_sched_out() -> INACTIVE
-  2. list_del_event() -> OFF
-  3. perf_event_set_state() -> EXIT.
+E.g.,
 
-Therefore, the final event state is "PREF_EVENT_STATE_EXIT"
+ksft_test_result_pass("No leak from parent into child\n");
 
-Therefore, I think calling "perf_cgroup_event_disable()" is called
-as soon as event_sched_out() since commit a3c3c6667 change the state
-INCATIVE -> EXIT.
+becomes
 
-so, the middle state of OFF is gone and I think this middle state "OFF"
-doesn't affect any race condition since the removed event "wakeup" is
-also called after it changed to "final state" -- in this case, the
-PERF_EVENT_STATE_EXIT.
+ksft_print_msg("No leak from parent into child\n");
+log_test_result(KSFT_PASS);
 
->
-> My suggestion is not reliable. Roughly read code, except for the
-> PERF_EVENT_STATE_EXIT case, I think other error cases should also clean
-> up the cgroup pointer.  The reason is I don't see other places to
-> clean up the cgroup pointer for these error cases:
->
->   PERF_EVENT_STATE_REVOKED
->   PERF_EVENT_STATE_DEAD
->
-> Only in the PERF_EVENT_STATE_ERROR state, we don't need to cleanup
-> cgroup as this has already been handled in merge_sched_in().
->
-> So a correct condition would be:
->
->     if (event->state > PERF_EVENT_STATE_OFF ||
->         event->state <= PERF_EVENT_STATE_EXIT)
->         perf_cgroup_event_disable(event, ctx);
->
-> And we need to remove the perf_cgroup_event_disable() from
-> list_del_event() to avoid duplicate code.
+and
 
-If we sustain perf_cgroup_event_disable()'s call in *list_del_event()*
-But, Should it be? I think its enough to call as soon as after event_sched_out().
+ksft_test_result_xfail("Leak from parent into child\n");
 
->
-> Perhaps a better approach for code consolidation would be to modify
-> the conditions in list_del_event() to ensure the cgroup pointer is
-> cleaned up in error cases. However, I'm not confident that this is the
-> correct direction, so I would wait for suggestions from the maintainers.
->
-> Thanks,
-> Leo
-[...]
+becomes
 
---
-Sincerely,
-Yeoreum Yun
+ksft_print_msg("Leak from parent into child\n");
+log_test_result(KSFT_FAIL);
+
+-- 
+Cheers,
+
+David / dhildenb
+
