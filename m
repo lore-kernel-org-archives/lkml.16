@@ -1,211 +1,208 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F98E25D201
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 06:25:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A641879D2
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 06:26:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748931936; cv=none; b=DfAOQZLV7U4Q6W2P3IWW3clmIAVfUWf9S7d2SaRquqKTspNoIKRM8Og+CefyD6fSwynTW/I79+jjowAelmcYP4She9HuvInFsPU4rgalGBRlo3tG1V30ScDnTb6R1KOD3RydofcjMZOSbzzcjjMEl7rRWTsqdgxvNpgqfdXtcrA=
+	t=1748931989; cv=none; b=rbsi8uk9sWsFpKY9hRIgvJIy8yG7Oqcwd8PvMlP3DPSsUSzLErY37lLr/kKqyFQYe9lz/+m61KqOPPBdG3FN+pMK+D7SmKnpXgvr3x+iOmrlxlerpOfiLgeuJpmXM3M6SkUrO0iNF3HmHXHMh9Ork6R2PeJP+vbp2bF2yR/Ww+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748931936; c=relaxed/simple;
-	bh=tHEq19w5o7E/Yt7tms7pdglFkgf2KGqzNo9T06DgvAQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mdx1v0cKLIxWFC1qMMRFq1i6v+yH8+XuAifXhNUfWjaU3tyV7RsNKsNA6OK8DHG/00VHAxj+30gyMjQZJlc8TXdZ837QF0ZeYtyYR2nwkrdTwYAgJxbD+UhRX1JjNqdPMS9/p14fg+J/T93M+5SQA5KyBxRBMpsIBS3YD1RJ4As=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RGfUUgAp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=syc0Mgqr; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RGfUUgAp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=syc0Mgqr; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1748931989; c=relaxed/simple;
+	bh=SwzzN68OzT7nUEHqb0hfK995uCWmM97KnuCfULC3Xf8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G5qJyvpcswJ9S88Maf8FYucxUQjEx2qBa3nTXo+/XfcztuODIJrm1cxkpIgsZ47TItOO/lPxPxSBwdK6qlAAyqG6Ln3/iqbzIK6onCM+ZHl0KjeVPI8RPPXYL8aCJAw7TOiD4DFVqcYz4INauulJlS4faY6FbW0i1+uVjirn87s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Of4boE/n; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RGfUUgAp";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="syc0Mgqr";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RGfUUgAp";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="syc0Mgqr"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B8B962126A;
-	Tue,  3 Jun 2025 06:25:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1748931925; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=DqlhqDH+e2vFicbuco4eCCmjcNtipVk/C0dg4d70Inc=;
-	b=RGfUUgAp+m5lbTIpdHpByrBu0pni1JoL1uq6PSeKaibC23WxQx7J1p6TIYnj5Uw5/IVANn
-	mFeNed/yV6OgNeeBtjwl7Tma0K5JD29HrnVXsL9XFrd24cyNOMTJ4FFKu0amuxCUO9xfW5
-	IKpe+BBCTKaiQFWM3+9PjnyQiZMalcM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1748931925;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=DqlhqDH+e2vFicbuco4eCCmjcNtipVk/C0dg4d70Inc=;
-	b=syc0Mgqr+wgCce7/H3q7Lx8OCxTExO6Z5nJO5Ge04dgb119/BGQANYLHrcRVdijEfTCKNq
-	0hTZh+bkkKbVu3Dw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=RGfUUgAp;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=syc0Mgqr
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1748931925; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=DqlhqDH+e2vFicbuco4eCCmjcNtipVk/C0dg4d70Inc=;
-	b=RGfUUgAp+m5lbTIpdHpByrBu0pni1JoL1uq6PSeKaibC23WxQx7J1p6TIYnj5Uw5/IVANn
-	mFeNed/yV6OgNeeBtjwl7Tma0K5JD29HrnVXsL9XFrd24cyNOMTJ4FFKu0amuxCUO9xfW5
-	IKpe+BBCTKaiQFWM3+9PjnyQiZMalcM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1748931925;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=DqlhqDH+e2vFicbuco4eCCmjcNtipVk/C0dg4d70Inc=;
-	b=syc0Mgqr+wgCce7/H3q7Lx8OCxTExO6Z5nJO5Ge04dgb119/BGQANYLHrcRVdijEfTCKNq
-	0hTZh+bkkKbVu3Dw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2B4B513A1D;
-	Tue,  3 Jun 2025 06:25:25 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id f/MgCFWVPmi1egAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Tue, 03 Jun 2025 06:25:25 +0000
-Message-ID: <c0b91a50-d3e7-44f9-b9c5-9c3b29639428@suse.de>
-Date: Tue, 3 Jun 2025 08:25:24 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Of4boE/n"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3dc8897f64cso146555ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 23:26:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748931986; x=1749536786; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y0lrz1F6k8LZ4oKJgAJMIc8RLcQPs64aVnJe+NCmKgM=;
+        b=Of4boE/naqZ3TnN9TajQBZ+nFCeRgHFDqBM8j+LNBaDN/ZxwaxRtVmkJv71NcjG51z
+         x21ZZtnNQpl45K7NRnyvG014mrGRZtTfIibgkBz0Yjej+XyBsznJkWn95bFsDMh65K1c
+         uaIDQ4x43ZvoHDtw629odFJBhQT1pb+mGA6040dMRWa7POziUjcF6cQ2ZE87p852buk0
+         69MbdMNMwZcjdJAL1HIjfgwvzdTpt7JDzzVGnUyAkf5GEs6f+t0Qxu6F4o2wkE+IMtiZ
+         SquVXnpuDMp+8PVtXcAlsD7x3ofzEqgkIobO6FaUYTaws1MR3e/GxGJ1UM24hasMwwHs
+         mpTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748931986; x=1749536786;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Y0lrz1F6k8LZ4oKJgAJMIc8RLcQPs64aVnJe+NCmKgM=;
+        b=Ef2OYciYsYv8GuP2PubAn6j/US3FAlpGCgTRjRfdY6XL7Icxb4d5XERZmuCiqqXjDi
+         vBnauiF8wRC/cMeqfOLybpAGInqVnZjFwzXpTxydl9OGbg3JGMa4YZ0b3Cfh1gmjYXff
+         JKdx+1WBV7nygZqvYrmRalAb3F9MCKsgWezsBZO2p9ckTtMqGd13vkRHlNmATLRhkmzS
+         aFs0ax7qftHn3zAJdmMYmpcq437NuSCU6CHzJXtoamoh9bL0HB1QTFICKmcwUXr15JJv
+         ereAaolCHx2IaGKKBgDRUQIvymw6Nf79VxtzfB5RdJfjIp4UGMC0K2YlOuZXKg6zMRLP
+         0U0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUDk0mxh9bG93iL7cjn4U40TR7XbmqtAm88MgNppCTzoTvlIgD5Q6VP+7I5tzpkRR8CcbJor4+ZhKo8P18=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yymu2ckVFNrYULZWXricrB/Z5OnXXI8HO7hqWePTZs47HlqQt9v
+	M/WaqdurZ6jfgi5nqXTc9NuG2q4G0AJPILTuJP04fY/0Nbatcyev8z77Oaladuw2DfqISkXf0Ku
+	yZaorZUtFxE1x9tjMUyS4qS1M/iOBpR18bgnIGZZV
+X-Gm-Gg: ASbGnctCuyUBf9uSUffkuf+pEC9r51WM79MaGhyZs3+obqxLKx+bZ/a5yqRdbGL0g6S
+	eunoFpmboBFATOCZLaNrp1BC3gmROZxt2KzO96Gu+7A1x8Yv70fkTgqZVovu60/F9pXXieRQEAw
+	qs6/DeXcbXwmNY1e+vij9dyoasA1mSeNmDTArJZdx/kHDV50NBQRpsQ+Y=
+X-Google-Smtp-Source: AGHT+IFN3z4zf2CcZVIN0BqhrTiUFcdc3mVIGzbKuu8egvEgUfrHrtKW9hjnKZoci2OTTB/gVoIE9e44XPnIXMG/IDo=
+X-Received: by 2002:a05:6e02:190f:b0:3d8:18f8:fb02 with SMTP id
+ e9e14a558f8ab-3ddb78550d9mr1742315ab.17.1748931985333; Mon, 02 Jun 2025
+ 23:26:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] fbdev/deferred-io: Support contiguous kernel
- memory framebuffers
-To: Michael Kelley <mhklinux@outlook.com>,
- David Hildenbrand <david@redhat.com>, "simona@ffwll.ch" <simona@ffwll.ch>,
- "deller@gmx.de" <deller@gmx.de>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "kys@microsoft.com" <kys@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Cc: "weh@microsoft.com" <weh@microsoft.com>, "hch@lst.de" <hch@lst.de>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>
-References: <20250523161522.409504-1-mhklinux@outlook.com>
- <20250523161522.409504-4-mhklinux@outlook.com>
- <de0f2cb8-aed6-436f-b55e-d3f7b3fe6d81@redhat.com>
- <SN6PR02MB41573C075152ECD8428CAF5ED46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <SN6PR02MB41573C075152ECD8428CAF5ED46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FREEMAIL_TO(0.00)[outlook.com,redhat.com,ffwll.ch,gmx.de,microsoft.com,kernel.org,linux-foundation.org];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FREEMAIL_ENVRCPT(0.00)[gmx.de,outlook.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: B8B962126A
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.51
+References: <20250425214008.176100-1-irogers@google.com> <CAP-5=fXiYHbe9gd_TNyy=txzrd+ONxecnpZr+uPeOnF5XxunGw@mail.gmail.com>
+ <aD586_XkeOH2_Fes@google.com>
+In-Reply-To: <aD586_XkeOH2_Fes@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 2 Jun 2025 23:26:12 -0700
+X-Gm-Features: AX0GCFuCFIE-Y12sxz3tltslTrHjpttISnGjh1HG7hvbuImPXqNykVJNWvCJvMM
+Message-ID: <CAP-5=fUXJ6fW4738Fnx9AK2mPeA74ZpYKv=Ui6wYLWXE3KRRTQ@mail.gmail.com>
+Subject: Re: [PATCH v3 00/10] Move uid filtering to BPF filters
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, Veronika Molnarova <vmolnaro@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
+	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Levi Yun <yeoreum.yun@arm.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
+	Dominique Martinet <asmadeus@codewreck.org>, Xu Yang <xu.yang_2@nxp.com>, 
+	Tengda Wu <wutengda@huaweicloud.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi
-
-Am 03.06.25 um 03:49 schrieb Michael Kelley:
-[...]
->> Will the VMA have VM_PFNMAP or VM_MIXEDMAP set? PFN_SPECIAL is a
->> horrible hack.
->>
->> In another thread, you mention that you use PFN_SPECIAL to bypass the
->> check in vm_mixed_ok(), so VM_MIXEDMAP is likely not set?
-> The VMA has VM_PFNMAP set, not VM_MIXEDMAP.  It seemed like
-> VM_MIXEDMAP is somewhat of a superset of VM_PFNMAP, but maybe that's
-> a wrong impression. vm_mixed_ok() does a thorough job of validating the
-> use of __vm_insert_mixed(), and since what I did was allowed, I thought
-> perhaps it was OK. Your feedback has set me straight, and that's what I
-> needed. :-)
+On Mon, Jun 2, 2025 at 9:41=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
 >
-> But the whole approach is moot with Alistair Popple's patch set that
-> eliminates pfn_t. Is there an existing mm API that will do mkwrite on a
-> special PTE in a VM_PFNMAP VMA? I didn't see one, but maybe I missed
-> it. If there's not one, I'll take a crack at adding it in the next version of my
-> patch set.
-
-What is the motivation behind this work? The driver or fbdev as a whole 
-does not have much of a future anyway.
-
-I'd like to suggest removing hyperv_fb entirely in favor of hypervdrm?
-
-Best regards
-Thomas
-
+> Hi Ian,
 >
-> Michael
+> On Tue, May 27, 2025 at 01:39:21PM -0700, Ian Rogers wrote:
+> > On Fri, Apr 25, 2025 at 2:40=E2=80=AFPM Ian Rogers <irogers@google.com>=
+ wrote:
+> > >
+> > > Rather than scanning /proc and skipping PIDs based on their UIDs, use
+> > > BPF filters for uid filtering. The /proc scanning in thread_map is
+> > > racy as the PID may exit before the perf_event_open causing perf to
+> > > abort. BPF UID filters are more robust as they avoid the race. The
+> > > /proc scanning also misses processes starting after the perf
+> > > command. Add a helper for commands that support UID filtering and wir=
+e
+> > > up. Remove the non-BPF UID filtering support given it doesn't work.
+> > >
+> > > v3: Add lengthier commit messages as requested by Arnaldo. Rebase on
+> > >     tmp.perf-tools-next.
+> > >
+> > > v2: Add a perf record uid test (Namhyung) and force setting
+> > >     system-wide for perf trace and perf record (Namhyung). Ensure the
+> > >     uid filter isn't set on tracepoint evsels.
+> > >
+> > > v1: https://lore.kernel.org/lkml/20250111190143.1029906-1-irogers@goo=
+gle.com/
+> >
+> > Ping. Thanks,
+>
+> I'm ok with preferring BPF over /proc scanning, but still hesitate to
+> remove it since some people don't use BPF.  Can you please drop that
+> part and make parse_uid_filter() conditional on BPF?
 
--- 
+Hi Namhyung,
+
+The approach of scanning /proc fails as:
+1) processes that start after perf starts will be missed,
+2) processes that terminate between being scanned in /proc and
+perf_event_open will cause perf to fail (essentially the -u option is
+just sugar to scan /proc and then provide the processes as if they
+were a -p option - such an approach doesn't need building into the
+tool).
+
+This patch series adds a test [1] and perf test has lots of processes
+starting and exiting, matching condition (2) above*. If this series
+were changed to an approach that uses BPF and falls back on /proc
+scanning then the -u option would be broken for both reasons above but
+also prove a constant source of test flakes.
+
+Rather than give the users something both frustrating to use (keeps
+quitting due to failed opens) and broken (missing processes) I think
+it is better to quit perf at that point informing the user they need
+more permissions to load the BPF program. This also makes the -u
+option testable.
+
+So the request for a change I don't think is sensible as it provides a
+worse user and testing experience. There is also the cognitive load of
+having the /proc scanning code in the code base, whereas the BPF
+filter is largely isolated.
+
+Thanks,
+Ian
+
+[1] https://lore.kernel.org/lkml/20250425214008.176100-6-irogers@google.com=
+/
+* rescord.sh is marked as exclusive currently, but this shouldn't
+really be necessary.
+
+
+
+> Thanks,
+> Namhyung
+>
+>
+> > > Ian Rogers (10):
+> > >   perf parse-events filter: Use evsel__find_pmu
+> > >   perf target: Separate parse_uid into its own function
+> > >   perf parse-events: Add parse_uid_filter helper
+> > >   perf record: Switch user option to use BPF filter
+> > >   perf tests record: Add basic uid filtering test
+> > >   perf top: Switch user option to use BPF filter
+> > >   perf trace: Switch user option to use BPF filter
+> > >   perf bench evlist-open-close: Switch user option to use BPF filter
+> > >   perf target: Remove uid from target
+> > >   perf thread_map: Remove uid options
+> > >
+> > >  tools/perf/bench/evlist-open-close.c        | 36 ++++++++------
+> > >  tools/perf/builtin-ftrace.c                 |  1 -
+> > >  tools/perf/builtin-kvm.c                    |  2 -
+> > >  tools/perf/builtin-record.c                 | 27 ++++++-----
+> > >  tools/perf/builtin-stat.c                   |  4 +-
+> > >  tools/perf/builtin-top.c                    | 22 +++++----
+> > >  tools/perf/builtin-trace.c                  | 27 +++++++----
+> > >  tools/perf/tests/backward-ring-buffer.c     |  1 -
+> > >  tools/perf/tests/event-times.c              |  8 ++-
+> > >  tools/perf/tests/keep-tracking.c            |  2 +-
+> > >  tools/perf/tests/mmap-basic.c               |  2 +-
+> > >  tools/perf/tests/openat-syscall-all-cpus.c  |  2 +-
+> > >  tools/perf/tests/openat-syscall-tp-fields.c |  1 -
+> > >  tools/perf/tests/openat-syscall.c           |  2 +-
+> > >  tools/perf/tests/perf-record.c              |  1 -
+> > >  tools/perf/tests/perf-time-to-tsc.c         |  2 +-
+> > >  tools/perf/tests/shell/record.sh            | 26 ++++++++++
+> > >  tools/perf/tests/switch-tracking.c          |  2 +-
+> > >  tools/perf/tests/task-exit.c                |  1 -
+> > >  tools/perf/tests/thread-map.c               |  2 +-
+> > >  tools/perf/util/bpf-filter.c                |  2 +-
+> > >  tools/perf/util/evlist.c                    |  3 +-
+> > >  tools/perf/util/parse-events.c              | 33 ++++++++-----
+> > >  tools/perf/util/parse-events.h              |  1 +
+> > >  tools/perf/util/python.c                    | 10 ++--
+> > >  tools/perf/util/target.c                    | 54 +++----------------=
 --
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
-
+> > >  tools/perf/util/target.h                    | 15 ++----
+> > >  tools/perf/util/thread_map.c                | 32 ++----------
+> > >  tools/perf/util/thread_map.h                |  6 +--
+> > >  tools/perf/util/top.c                       |  4 +-
+> > >  tools/perf/util/top.h                       |  1 +
+> > >  31 files changed, 150 insertions(+), 182 deletions(-)
+> > >
+> > > --
+> > > 2.49.0.850.g28803427d3-goog
+> > >
