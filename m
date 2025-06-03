@@ -1,143 +1,137 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7001023C511
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 16:24:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 271844B5AE
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 16:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748967856; cv=none; b=WBKuEpf5SuiU3PlQk3GkBnD+LpYi+xOyqq4nB8nAMv47+F/W9J5TBIPn4V+iRe9A1nndnopQS0D0ZKGIvDI91QfGETwNSzI8q6FCuw5E+JO+geGF0sdsPB0HmN88Nfe5FWCOExudv+wEUbeK/XcK79smSFdFuz7lc/3xAJQpHj4=
+	t=1748967952; cv=none; b=L00argXLC3aH6YTxRX211ZHKWlP6V41uhu4lU1liCKAyopjLvAcBVPCPq9PJc+vuEYwY4n39P2qAgGuTX6IGgDAwBS0tiWAGO7cHPpuwpXJ899kA4cSFn5r15SijE2DOTSt6jXg1xnB3oPQzrC8/RLv4plqO4iSbwu6V3lB6TOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748967856; c=relaxed/simple;
-	bh=N7BCQ3oqAnCjFSJnJmZX5Dctlb/sTvgV4iyi3FNvIgM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=V7MJpuBnQe+jrMw+o/VAG2+lh4nA6vzM/kJlAyMIYRNczbePDJxEJfDsrLEzgt2IW+tVrGFdnGgtImLom+G/mSrTS1vXaVmBJVrXXqrpk9urhoQyZYgmfXUOJKOeD11womXO3n5GA8GLrLYkJOTTyydf0qP7qgfNpAuYvV5/tvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Frdbpzwg; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1748967952; c=relaxed/simple;
+	bh=nC+Bv9/NganYljGeVVxYnBz8mf2/6tXL3NetE9KkmX8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YWrt/5x1dEqTJh1DMSJ4Ou85usK0aK77quy32Q3abUGh+sTEwT8WTH3Jk7VVQUsuKiMf0umuUuM/0n8W6BYAsIKDkFwlRG34asrDlsgqQPMhXP9au2F7AD1HWBKWzuRkM67DiVAaEEpp6uzIilQ93buOHyi3SrPK/btHOZpIJ9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=kBvTA5PD; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Frdbpzwg"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7376dd56f8fso6780437b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 09:24:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1748967854; x=1749572654; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=PsTtB+z1bvDl4NGrrXN+rO6t/978g31yCeEcylF7R2E=;
-        b=FrdbpzwgDBWEn3irvUPXUHH7YYdy2zc+s2m8OhB1WvvOHxTCHZfwFWFdfOnQJC4cQg
-         /K3GdgLZ/cpFusd6EAivhwfGnGPCDoNT3YCBE+cqM7LEBDhfuSsseBxueequc675nkGz
-         VyePX0v5s1y1jAYZJnhqnlAZ72Dce/EqrHdwE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748967854; x=1749572654;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PsTtB+z1bvDl4NGrrXN+rO6t/978g31yCeEcylF7R2E=;
-        b=tYptjmuissO1Vvo+DUJ50/7q9i1oUl5OPcZL+CckAnEPRTh1kMWTh/UA+IcTAyrp3G
-         +wXF7DkvMDpbxA+KGUtk/9nBL2mLJfiPRo7p/lu3OJ/IaEKMO2bcSd4KH/4Z1hifzAcC
-         847L+7AwkIMzI9AKeW7ck0fW6Fzmat0pU/rVU5PxKuCRXpFnotjgbsHDssZgJa1rX17f
-         OFLowdBKlttf9fblLvFGuC4Q/FkvWekC3HCup3Ed/4Q11AnYBNYEn1sA346jg7pLznUP
-         65xcsaAKVR+nrsjqtDbVwR/jvwozhgYP7DswXUOSwuxKcSJCQ0sg02SaWI1LGHMezzOC
-         fnVg==
-X-Forwarded-Encrypted: i=1; AJvYcCXoHFX9WDAezWw0eIH/7rzYoyNn7Q+jZLJB16tAt8XaigSiX0bVVNdxOcqbYfu4cnPZmPImxQRUGvsIkFw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcZ+yomkF+KA1xgdZo++iu8hPK7yQ6Uk9pO4S6Q35OKDnp/DPN
-	V9j4Lj9oKXvLkfWLTK+rzmmeFVTC3izJShHCkueB7Gn6uhWojmZmNy+qRShZ+Dh00Q==
-X-Gm-Gg: ASbGncvXlSpfILAHGKJ/r/FC9fv2Dw8fviHAgnuThbdmscnYx3II8BP1jTplxjej9pX
-	2StTKpOqboSmLoOPRQjGNnkxFTtV0EP90098HH1W9py6WJ6TpeWsRN87AcC2WMWwKiZUFrkHZuG
-	iD1mEIXUb2EZ5d6pckUvk65FOphlMHWv4JV0U1wyajrBiwGWnDnEBx8cYTjBTKz2Gzg2bCTd/eV
-	o41PyuK1FNqx/2xcauHZNlAO7cNEO6X08OvprchycNYd4JSpsylQ4eqXAG/HDy+18cwckVYxcdn
-	lbYBHTWKT8IzPCZXkhnnKezPj/mhNtVJ0uGV/vDnh8b9a+HI+MI2/DH81a1q4oEEK3MpNDdVniq
-	lfI8XpyewlYpneOM=
-X-Google-Smtp-Source: AGHT+IFKXHZ6CeWKl/ulfOEKEnune82cj+P2dFCkcmW9aLp6lK2qD/Lt2Jxz06XEpxzVljkgg6VJ0A==
-X-Received: by 2002:a05:6a00:b49:b0:736:6043:69f9 with SMTP id d2e1a72fcca58-747bd9e6d31mr25070378b3a.19.1748967854532;
-        Tue, 03 Jun 2025 09:24:14 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afeadda3sm9579151b3a.71.2025.06.03.09.24.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jun 2025 09:24:13 -0700 (PDT)
-Message-ID: <2f79ae4e-6349-472c-b0cc-ea774b8ac7cf@broadcom.com>
-Date: Tue, 3 Jun 2025 09:24:11 -0700
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kBvTA5PD"
+Received: from DESKTOP-0403QTC. (unknown [52.148.171.5])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 51C682027DF7;
+	Tue,  3 Jun 2025 09:25:50 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 51C682027DF7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1748967950;
+	bh=yspkoK5rLJ1JmlLuXQ45Xhp8lcZ/b0jUx0Pk7pIVba8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Reply-To:From;
+	b=kBvTA5PDLq2cs2KZRWSwjcKiE+yEw7jfIJqulV/pF3mhXtcnN+cIHvFUC8kb1j1Rw
+	 njX433D6VM0ZfnHM+Xn+SXXwu8Tn0+lXdkry1M05GPOg5E/sFzPkAKJH4r2ZPNGZ40
+	 kGXsNXDL8gYJTm2Ow3dRVrAenfjv9RpeFb78A/44=
+Date: Tue, 3 Jun 2025 09:25:49 -0700
+From: Jacob Pan <jacob.pan@linux.microsoft.com>
+To: Yi Liu <yi.l.liu@intel.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>, <linux-kernel@vger.kernel.org>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>, Alex Williamson
+ <alex.williamson@redhat.com>, "Zhang Yu" <zhangyu1@microsoft.com>, Easwar
+ Hariharan <eahariha@linux.microsoft.com>, jacob.pan@linux.microsoft.com
+Subject: Re: [PATCH 1/2] vfio: Fix unbalanced vfio_df_close call in no-iommu
+ mode
+Message-ID: <20250603092549.4fbbed92@DESKTOP-0403QTC.>
+In-Reply-To: <dcd0cf4b-1907-4c27-a8f6-3dddf8313f6b@intel.com>
+References: <20250516164522.51905-1-jacob.pan@linux.microsoft.com>
+	<20250527000511.GK61950@nvidia.com>
+	<dcd0cf4b-1907-4c27-a8f6-3dddf8313f6b@intel.com>
+Reply-To: jacob.pan@linux.microsoft.com, Saurabh Sengar
+ <ssengar@linux.microsoft.com>
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: PCI: brcm,stb-pcie: Add num-lanes
- property
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-rpi-kernel@lists.infradead.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-References: <20250530224035.41886-1-james.quinlan@broadcom.com>
- <20250530224035.41886-2-james.quinlan@broadcom.com>
- <6c3ec1c3-8f62-4d76-86d3-c1bbe3e1418f@broadcom.com>
-Content-Language: en-US
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <6c3ec1c3-8f62-4d76-86d3-c1bbe3e1418f@broadcom.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 5/30/25 16:32, Florian Fainelli wrote:
-> On 5/30/25 15:40, Jim Quinlan wrote:
->> Add optional num-lanes property Broadcom STB PCIe host controllers.
->>
->> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+Hi Yi,
+
+On Wed, 28 May 2025 15:16:57 +0800
+Yi Liu <yi.l.liu@intel.com> wrote:
+
+> On 2025/5/27 08:05, Jason Gunthorpe wrote:
+> > On Fri, May 16, 2025 at 09:45:21AM -0700, Jacob Pan wrote:  
+> >> For no-iommu enabled devices working under IOMMUFD VFIO compat
+> >> mode, the group open path does not call vfio_df_open() and the
+> >> open_count is 0. So calling vfio_df_close() in the group close
+> >> path will trigger warning in vfio_assert_device_open(device);
+> >>
+> >> E.g. The following warning can be seen by running VFIO test.
+> >> https://github.com/awilliam/tests/blob/master/vfio-noiommu-pci-device-open.c
+> >> CONFIG_VFIO_CONTAINER = n
+> >> [   29.094781] vfio-pci 0000:02:01.0: vfio-noiommu device opened
+> >> by user (vfio-noiommu-pc:164) Failed to get device info
+> >> [   29.096540] ------------[ cut here ]------------
+> >> [   29.096616] WARNING: CPU: 1 PID: 164 at
+> >> drivers/vfio/vfio_main.c:487 vfio_df_close+0xac/0xb4
+> >>
+> >> This patch adds checks for no-iommu mode and open_count to skip
+> >> calling vfio_df_close.  
 > 
-> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> thanks for catching it. :)
+> 
+> >> Signed-off-by: Jacob Pan <jacob.pan@linux.microsoft.com>
+> >> ---
+> >>   drivers/vfio/group.c | 7 ++++---
+> >>   1 file changed, 4 insertions(+), 3 deletions(-)  
+> > 
+> > Sorry, this should have a fixes line:
+> > 
+> > I think it is probably
+> > 
+> > Fixes: 6086efe73498 ("vfio-iommufd: Move noiommu compat validation
+> > out of vfio_iommufd_bind()")
+> > 
+> > By the look of it, since that is what started skipping the
+> > vfio_df_open()
+> > 
+> > But after looking at that patch I'm now doubting that this is the
+> > right fix.
+> > 
+> > Previously we'd still do vfio_df_device_first_open(), just the
+> > vfio_df_iommufd_bind() was skipped.
+> > 
+> > Now we skip all of vfio_df_device_first_open() which also means we
+> > skip:
+> > 
+> > 	if (!try_module_get(device->dev->driver->owner))
+> > 		return -ENODEV;
+> > 
+> > and
+> > 	if (device->ops->open_device) {
+> > 		ret = device->ops->open_device(device);
+> > 
+> > Which seems wrong to me?? We only want to skip the bind, we should
+> > still do open_device! At least that is how it was before 6086e
+> > 
+> > So.. This may not be the right fix.  
+> 
+> yes. this makes sense. If not opened, userspace is not able to use the
+> device.
+> 
+Put this bug aside for now, I'm still unclear on why we do not allow
+bind for no-IOMMU devices. Per my understanding, no-IOMMU only means no
+translation. But since device still has been granted access, we should
+be able to allow binding device in no-IOMMU mode with IOMMU-FD
+context while simply disallowing IOAS attachment?
 
-Sorry I take that back, I think this should be:
+The reason I am asking is that I am working on enabling cdev with
+noiommu mode based on Yi's patch
+(https://lore.kernel.org/kvm/20230601082413.22a55ac4.alex.williamson@redhat.com/),
+it seems having iommufd implicit ownership model is key to enable PCI
+HOT RESET. Our goal is to leverage persistent iommufd context for kexec
+handle off (KHO) usage, we currently have noiommu mode. This requires
+binding of device with iommufd ctx (can be marked as persistent) AFAIK,
+any suggestions?"
 
-num-lanes:
-   enum: [ 1, 2, 4 ]
 
-We are basically documenting the allowed values, not specifying that we 
-can repeat the num-lames property between 1 and 4 times.
--- 
-Florian
+Thanks,
+
+Jacob
