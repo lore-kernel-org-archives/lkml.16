@@ -1,150 +1,280 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 230F514D283
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 05:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30DBA1F3BBB
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 05:48:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748929699; cv=none; b=gzSGQvFCZZfYVjUeUHFZojg+ioJBiZurMZzi3k3MRd1pNsbmlff2U/o+94OlyCB9XT79lc+mSPM4dN0MaJ+S4etBesVsHxhp8IMcc1X8rUPVfFsR+/7UnSD1M7eyKQrDalOxn03Ph0PcDCn/8B9V6Qpxg9izRqUjP9r9Q8/041A=
+	t=1748929730; cv=none; b=pvNc3l6uPH7C4xWcZIv6PFaArjod6a4TLcEHVfJl+ApBHybqVb8WJzy5qk26VA8IYzZot90uTHiDyo8sjKCnNO+RkhsBvOrTAG7QPjU5E9URT1AJkR9ha37jXgBlKrq+y2mi7Xu+Ix4NrYeo8pzx7N4u6EeJXdrTxkBIXaYKMP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748929699; c=relaxed/simple;
-	bh=aKj4GZ6PPp/Nz5rkizthBgyRPAg8m37h2Nts/v5Lkpg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UEHJmKl8eL2z1xolId2J56b2+TSNkB/2SOJDPlZcadRtXpsmcpQ0twCZe08BmRW3YMa3nLiNm5GBrkrCLsvcYSNM6TTaRoepv10npIKFlmasC1gFa7B9sDgJIFk5H0bNte2zWwgJrR+ErfKFXPmTWI1eK2UtFiVZ2EDU4NHM3P4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PMMeDjDY; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1748929730; c=relaxed/simple;
+	bh=7jWU94ik0QbWpSiooVhPx/UIP9kCzHJhH1gbv4/E8qw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YfCCB4PeIC9He+gfiuBEXCymbU25D2FvzDWLrInd9fy+ZuvgzFB4/ON0hlxs2hl7zZS7ZcBNK7fyY2QehTleGn4ZN1ACYV4lAErYElAPEUuBB0zwrc7dsFowlmSKOzB84M/CoAohG10+FMgmpeNzBGBZbNc6B3iYpwOtheRNlt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=v0p6kvfL; arc=none smtp.client-ip=209.85.221.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PMMeDjDY"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 552HKNA4013344
-	for <linux-kernel@vger.kernel.org>; Tue, 3 Jun 2025 05:48:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	x60maCMmz6HZ7Ug8+bGFKM1JZXBpI0KP2xH2KVmpU+w=; b=PMMeDjDY3puQMxys
-	t1Ii+iOdBbmKvmXBEdyK7nxAO1FI5EEy1lEK5F7d/3S+HNBMYgjxlJjGGW2XLnid
-	mFtD4lobaqq2j8un3/a3hsdtZcZmOpkdkLNJKInyHbOdqilKPbZztW5sbfgqxE3h
-	uhyo0uxCRH1yn6tnRcWn85vPhRklBwxGZWBsoFkymbgg++MVFN7D5qdaR1TbNC9z
-	P/GtNcVK5v3p9XnxdpLILzQ4NkTKWqpgLt0nk5hScwd1TLpzB8BtCdMU5OwBt4GV
-	nA5tT/7lcEtvzYQYo9xQnGX1IhGTryeCjD5F4jXfN7IVThU8qsKZcvoGH+0e8FQI
-	2bUDfA==
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8t1fcg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 05:48:17 +0000 (GMT)
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-747d125bb9eso1106277b3a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 22:48:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v0p6kvfL"
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-530bdd90964so45457e0c.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 22:48:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748929726; x=1749534526; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=CaaJTsDGCShy9NH8Xsdsynpcxp9Oj/lPPlRCEtkrCPY=;
+        b=v0p6kvfLs52dT0vp4hngO+CPMgP4kdiolD9OkOtGXTDOay0XGOJHwdqznJvS+DQZYF
+         8cPPXMIyXSnru9ADzZvD8K3rruk5VCi3bLDpSQq838QOy1rjf5EL7DdvQFuslPnQtPDf
+         q2ATA5ZfMiCdx/dvOEuEZkk61Il0ZZYFHpP89vDtX+i6Ldomp/ILVg3lQESYuzJ8aNwm
+         lDINZI4c7Xr+5OoN4q5doEMg2f/yR78+cKR7el6dobdyjC0/2FF+SwirfsJMpr8R1uvn
+         pu0KCQNZBqd8rMA2O4ICocS5V8XkzPLD8w98cfrzeSs/LrATYSGaVf61dEgB6fjO9paW
+         fsGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748929696; x=1749534496;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=x60maCMmz6HZ7Ug8+bGFKM1JZXBpI0KP2xH2KVmpU+w=;
-        b=qhHM4hCQBlQoYkmWjxR1TBuqqVFn/gJF9CodJv16dmV7yIJoM8+rzXCfgj9BflgZtJ
-         O5FDTO/KkX99u2tz3A817suUAf5FD8Yn8H4t48EaXwQLkxySU/D+NF5FyrbtvdhG0pDx
-         GjfkorfCixlHjRPauJdt+kqFOJT/5dGq696goUFQGN4ckdpI9vEu0lISoa6yDvo8N693
-         f7+rMRJ8N+7q4zuKYoJnpwr0KhflGtlTw5BsKxHNh5kCIlnnUGOkEPOfjmAqfM6hdfrX
-         EEpYyo2HzxGvz9bR6dlVjzBuADbPuT7lrTyFiOm3cUqG1FAOhsqiQiTeMVjQOyjxDQca
-         ZA1w==
-X-Forwarded-Encrypted: i=1; AJvYcCVEVqK3actWUkeR4beZTk8D1+hEkPOWz5tBgPZ4JQ15PMlTgnEAa2st6vrg3vjct+0kj9IT+NksyEDJqJc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSY2MR3wd9zrCVmnnxK4IeO4g4UjBIf30S8xa+5w0JklL52TRA
-	/vUc7bQsuwktX/jjc2kfl/8d+gLtobLttmVa8bu94QlOLaGOqYw1M/bkRwL8uKkzZ7YlsdIyG9v
-	XHaJVqpcoLZYWwvMWhoo6VbOmZDzr47fCHxN3dijpUguSY5lA0FDnf43OfwCnechviho=
-X-Gm-Gg: ASbGnctkbU7UNVGS7U7T4mej3bivmL5li11Z2xNYBV68ah1JMhWaBlWy+hLjl2qAMcV
-	dNmsy5/500jykuBSsNMsuzTDxTvqNiQNg6L+o/tgwLQWad0fjtN5aFdJGpoIIzeroo0s2cyqBpL
-	+cMUxxnk/N2UDTO/RTujeMkZAJtlBqaX/YmBVw4BLDPLKXtmm5FHwjcOWI7XM+qVIn25phfSiyK
-	/KkI3LAsnyrkE1SknjAZtuPUFPtbFgFx1n6Xl3iAwqQYKoLs4dEoqp5on6clVFQL0jp+wdk6aFI
-	lkcfAO1pWrGU8HDFdk3uxaoLZdU6s9J1AFkOpfEPTfQmwBuENAlvx1fZY7qO+ADLocKB61kuEL/
-	UQdoMsURrLF0=
-X-Received: by 2002:a05:6a21:164e:b0:1fd:f8dc:83f6 with SMTP id adf61e73a8af0-21ae00ce7bdmr25596977637.40.1748929696383;
-        Mon, 02 Jun 2025 22:48:16 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEAtEPb0qgjBapOIIc/FVtRuoOheBabfhP2QQGPgPqaMfCZMRqkfWJocE5Xr1V3SkSH42ofug==
-X-Received: by 2002:a05:6a21:164e:b0:1fd:f8dc:83f6 with SMTP id adf61e73a8af0-21ae00ce7bdmr25596940637.40.1748929696012;
-        Mon, 02 Jun 2025 22:48:16 -0700 (PDT)
-Received: from [10.133.33.127] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afff7464sm8636060b3a.180.2025.06.02.22.48.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Jun 2025 22:48:15 -0700 (PDT)
-Message-ID: <8bb3a056-c00f-4ae0-a790-d742d31f229a@oss.qualcomm.com>
-Date: Tue, 3 Jun 2025 13:48:11 +0800
+        d=1e100.net; s=20230601; t=1748929726; x=1749534526;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CaaJTsDGCShy9NH8Xsdsynpcxp9Oj/lPPlRCEtkrCPY=;
+        b=XBCYEXcjwRMUhURwMvoDGzSdZvxBmGfdCsl9y0ZA5ZTzY5901g92OEVHoACXHB0iwu
+         ARAUi5fcvy8eLV3ekZzvjsSpbHUYSzaVn58/ChDu2YLrGDAKpb5YROlLu6bm8vkHkPKl
+         33ym0eLOHLg8xdndCVrBzFc32JN8nOQBQu+6G9piT29OX8T+6YXZrBgD3h77VQl3VLlq
+         yJDdgkwDoL+OE5ZbUo55W6hlV97fFk0vzUa2GBY98YLf9hW61k54cCmDlFR00wCVnP4/
+         05eWKJA9vZM3ffSqYoBIKbTVT3RS574jXhXnLFrj196YEAiMwwWZ5IV1+zci+3bNq251
+         iDHA==
+X-Forwarded-Encrypted: i=1; AJvYcCXKVaHjEdqr0XdNkXW3uPjYBBY7j6EfkkgciBvYb6qLSC3PCe5Hb/kov8tPNbbH1NzosGKa5sXJ2lfLz3g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvOJUvIUG2hpsj2p0BmXPnbbkLm83zYcZZDgnUHywxcsTyRy1D
+	Hsp96q9En58CKEfoEiJexVUAB40qDm0MnIvfpOQhSI4Xq8zjV1bjWx62tqW5RksccrddlWDKfiN
+	RhCAFp23Wb6l9ojh+QmoCEnWttg/eanRdIowd/My/tQ==
+X-Gm-Gg: ASbGncvzFKQBbz+Ycn+U9WdsFn0Z+oI+iuzV9Z/9zZT4ZzJ1D8+HjEtDOZiaAFmuPGD
+	UYIm/uTMFvAEpTH0G9AfN7bdSKYndozF8f4A25/AWyVitj7epDbgB/h3+nKrs6B7GL1a2nd4kNU
+	oFVpJMd0xScoIPsad5wvE/9WdNf2sswqk=
+X-Google-Smtp-Source: AGHT+IEE/W3g2hwG4gBEVSF+Iek3RiiwVhogHCqvDg/sShN7bI2AYBy6Y0DQ9iTRS3tglw6ByUzvKUeEdmZvkZarTk0=
+X-Received: by 2002:a05:6122:a2a:b0:530:5a43:db61 with SMTP id
+ 71dfb90a1353d-53080f59017mr14951319e0c.2.1748929725864; Mon, 02 Jun 2025
+ 22:48:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/8] power: supply: qcom_battmgr: Add charge control
- support
-To: =?UTF-8?Q?Gy=C3=B6rgy_Kurucz?= <me@kuruczgy.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Subbaraman Narayanamurthy <subbaraman.narayanamurthy@oss.qualcomm.com>,
-        David Collins <david.collins@oss.qualcomm.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, kernel@oss.qualcomm.com,
-        devicetree@vger.kernel.org, linux-usb@vger.kernel.org
-References: <20250530-qcom_battmgr_update-v2-0-9e377193a656@oss.qualcomm.com>
- <20250530-qcom_battmgr_update-v2-5-9e377193a656@oss.qualcomm.com>
- <f2e0f1da-c626-4cf0-8158-8a5805138871@kuruczgy.com>
-Content-Language: en-US
-From: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
-In-Reply-To: <f2e0f1da-c626-4cf0-8158-8a5805138871@kuruczgy.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=eJQTjGp1 c=1 sm=1 tr=0 ts=683e8ca1 cx=c_pps
- a=mDZGXZTwRPZaeRUbqKGCBw==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=g1VTAUynFBCLE_zrBTUA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=zc0IvFSfCIW2DFIPzwfm:22
-X-Proofpoint-ORIG-GUID: BpDK7QMpf5DwsLM6EFBAh8_wEaKq_lEJ
-X-Proofpoint-GUID: BpDK7QMpf5DwsLM6EFBAh8_wEaKq_lEJ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAzMDA0NyBTYWx0ZWRfX69QUQuIOj+3x
- I7D8/qHSShkpXt4H/Aun0jHgJIhS7EjRAAs0Pf6Z6WJ37QJPBb6gWkP3QsG3PE6QxnzwjUrSC8x
- dWt+C0tyE/2Oz81Ykwgxn1+qIA98hlWHj22mNW8c7ovByPrFd2FcTd/s2Dduw/g0WC2CsK5qH5x
- IN4bQ8z5MzaOvgomeiBl0qWV41ZGDZHpKdVgMLLBxCY3x99HO8i4iuDsJyDDs40ihFBFhWNRSh5
- 1hgILWQg078EfCZ7bsWqfiJt/aWBkyeioYiBy29IHRlvfudRRA+WIyYuFLixOLYyUJfaF2H8bMj
- beKjlBFdQ7PkvGPWH702X7Td+Ik5Sm4lzcp85BmR3KkAUp8jcv7N1IY778QzseYFCjIqSYO/LuP
- lyJJptrLvSxCSLjeiKBl8zf5GJlI+BiISDsLXQMWQxbeWWqhqeuziHEOn6Mcuw2dq88lCl8M
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-03_01,2025-06-02_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 adultscore=0 lowpriorityscore=0 clxscore=1015
- priorityscore=1501 bulkscore=0 mlxlogscore=678 impostorscore=0 spamscore=0
- phishscore=0 mlxscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506030047
+References: <20250602134307.195171844@linuxfoundation.org>
+In-Reply-To: <20250602134307.195171844@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 3 Jun 2025 11:18:34 +0530
+X-Gm-Features: AX0GCFu7rs0fy7qq0P5qjPajChCgj4kaqGSHnyRwSFbbdU0gilubxy8DH1XzJEY
+Message-ID: <CA+G9fYvkMUv4vFcde9A_chiiKOSkRiydGwnahgZauGExdmWEtQ@mail.gmail.com>
+Subject: Re: [PATCH 5.10 000/270] 5.10.238-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-
-On 5/31/2025 6:36 PM, György Kurucz wrote:
->> Add charge control support for SM8550 and X1E80100.
+On Mon, 2 Jun 2025 at 20:08, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> Thank you for this, tested on my Lenovo Yoga Slim 7x, the limiting 
-> works well, I finally don't have to worry about leaving my laptop 
-> plugged in for too long.
+> This is the start of the stable review cycle for the 5.10.238 release.
+> There are 270 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> One small thing I noticed is that after setting the sysfs values and 
-> rebooting, they report 0 again. The limiting appears to stay in effect 
-> though, so it seems that the firmware does keep the values, but Linux 
-> does not read them back. Indeed, looking at the code, it seems that 
-> actually reading back the values is only implemented for the SM8550.
-
-Right.
-
-Based on offline information, X1E80100 doesn't support reading back 
-those threshold values in battery management firmware, so I can only use 
-the cached values for sysfs read.
-
+> Responses should be made by Wed, 04 Jun 2025 13:42:20 +0000.
+> Anything received after that time might be too late.
 >
-> Anyway, this is just a small nitpick, this does not really affect the 
-> functionality, and I would support merging this series regardless of 
-> whether the read back values are always correct.
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.238-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
+> and the diffstat can be found below.
 >
-> György
+> thanks,
+>
+> greg k-h
+
+There are two issues,
+
+1)
+Regressions on riscv defconfig builds failing with gcc-12, gcc-8 and
+clang-20 toolchains on 5.10.238-rc1.
+
+Regression Analysis:
+ - New regression? Yes
+ - Reproducible? Yes
+
+Build regression: riscv defconfig timer-riscv.c:82:2: error: implicit
+declaration of function 'riscv_clock_event_stop'
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+Build log:
+---------
+drivers/clocksource/timer-riscv.c:82:2: error: implicit declaration of
+function 'riscv_clock_event_stop'
+[-Werror,-Wimplicit-function-declaration]
+   82 |         riscv_clock_event_stop();
+      |         ^
+1 error generated.
+
+This patch caused the build error,
+
+  clocksource/drivers/timer-riscv: Stop stimecmp when cpu hotplug
+  [ Upstream commit 70c93b026ed07078e933583591aa9ca6701cd9da ]
+
+## Steps to reproduce
+ - tuxmake --runtime podman --target-arch riscv --toolchain clang-20
+--kconfig defconfig LLVM=1 LLVM_IAS=1
+
+## Build riscv
+* Build log: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.10.y/build/v5.10.237-271-g8bfb88108193/testrun/28635871/suite/build/test/clang-20-defconfig/log
+* Build details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.10.y/build/v5.10.237-271-g8bfb88108193/testrun/28635871/suite/build/test/clang-20-defconfig/details/
+* Build history:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.10.y/build/v5.10.237-271-g8bfb88108193/testrun/28635871/suite/build/test/clang-20-defconfig/history/
+* architecture: riscv
+* toolchain: gcc-8, gcc-12, clang-20
+* config : defconfig
+* Build config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2xxPulf5bqlsj7nSlN9PnLY9NXG/config
+* Build: https://storage.tuxsuite.com/public/linaro/lkft/builds/2xxPulf5bqlsj7nSlN9PnLY9NXG/
+
+
+2) The following build warnings were noticed on arm with clang-20.
+
+Build regression: arm at91_dt_defconfig warning comparison of distinct
+pointer types ('typeof (nblocks) *' (aka 'unsigned int *') and 'typeof
+(num_node_state(N_ONLINE) * ((1UL) << 12) / locksz) *' (aka 'unsigned
+long *')) [-Wcompare-distinct-pointer-types]
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+Build warnings on arm:
+---------
+net/ipv4/inet_hashtables.c:946:12: warning: comparison of distinct
+pointer types ('typeof (nblocks) *' (aka 'unsigned int *') and 'typeof
+(num_node_state(N_ONLINE) * ((1UL) << 12) / locksz) *' (aka 'unsigned
+long *')) [-Wcompare-distinct-pointer-types]
+  946 |         nblocks = max(nblocks, num_online_nodes() * PAGE_SIZE / locksz);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.
+
+This commit is causing build warnings,
+  tcp: bring back NUMA dispersion in inet_ehash_locks_alloc()
+  [ Upstream commit f8ece40786c9342249aa0a1b55e148ee23b2a746 ]
+
+# Steps to reproduce
+ - tuxmake --runtime podman --target-arch arm --toolchain clang-20
+--kconfig at91_dt_defconfig LLVM=1 LLVM_IAS=0
+
+## Build arm
+* architecture: arm
+* toolchain: clang-20
+* config: at91_dt_defconfig
+* Build config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2xxPtpUSdrY70QnawZR0ftSwhPt/config
+* Build: https://storage.tuxsuite.com/public/linaro/lkft/builds/2xxPtpUSdrY70QnawZR0ftSwhPt/
+
+## Build
+* kernel: 5.10.238-rc1
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+* git commit: 8bfb881081935b7a621f358516e28f4470af3296
+* git describe: v5.10.237-271-g8bfb88108193
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.10.y/build/v5.10.237-271-g8bfb88108193
+
+## Test Regressions (compared to v5.10.236-287-gce0fd5a9f1a4)
+* riscv, build
+  - clang-20-defconfig
+  - gcc-12-defconfig
+  - gcc-8-defconfig
+
+
+## Metric Regressions (compared to v5.10.236-287-gce0fd5a9f1a4)
+
+## Test Fixes (compared to v5.10.236-287-gce0fd5a9f1a4)
+
+## Metric Fixes (compared to v5.10.236-287-gce0fd5a9f1a4)
+
+## Test result summary
+total: 36900, pass: 27422, fail: 1956, skip: 7366, xfail: 156
+
+## Build Summary
+* arc: 5 total, 5 passed, 0 failed
+* arm: 100 total, 100 passed, 0 failed
+* arm64: 28 total, 28 passed, 0 failed
+* i386: 20 total, 20 passed, 0 failed
+* mips: 22 total, 22 passed, 0 failed
+* parisc: 3 total, 0 passed, 3 failed
+* powerpc: 21 total, 21 passed, 0 failed
+* riscv: 9 total, 6 passed, 3 failed
+* s390: 9 total, 9 passed, 0 failed
+* sh: 10 total, 10 passed, 0 failed
+* sparc: 6 total, 6 passed, 0 failed
+* x86_64: 24 total, 24 passed, 0 failed
+
+## Test suites summary
+* boot
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-exec
+* kselftest-fpu
+* kselftest-futex
+* kselftest-intel_pstate
+* kselftest-kcmp
+* kselftest-membarrier
+* kselftest-mincore
+* kselftest-mqueue
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* lava
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-crypto
+* ltp-cve
+* ltp-fcntl-locktests
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* perf
+* rcutorture
+
+--
+Linaro LKFT
+https://lkft.linaro.org
