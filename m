@@ -1,137 +1,204 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8495288C0E;
-	Tue,  3 Jun 2025 18:19:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C2F6288C04
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 18:21:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748974764; cv=none; b=oEQY2ewBBb1fXKlRcuKczeYvVhqQ43BX9CyIm/kxOIcAySrEh/woNObGRfK4RVosRu4MNsSJEUBPM9RIOXbnx1oXs+m0iNJ69nAhGEkC2Z9gkvpGjp/dvu9GjmshAX6zjRqkdqu/YlLQBErLnl7HMCSqkFzsqxUySAz0tdryL5c=
+	t=1748974877; cv=none; b=r53kLDegqzw2+107xilglCTAzh/G30BOlbQTcTJkNHw93SMFCkoqmfVhmsKOpzsZkp60MHM1IHtfqb3BFt/O2GTbgXDNYppgK74JlSUUFECZ3ryQuYONjkuXs33WSbZwgpqOlcFt6ZdzGknOeJ3Mrt+sZiZSL9pNyUL5/r8V6AY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748974764; c=relaxed/simple;
-	bh=gh71zRs/2E/BEL0+uv3/UbmZsGGeaVLnfUHJOlBtkeI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P2iO1d5VtHEAxvQEBMVaSe99To9cB8yAYKPriVCiYbxNs7jxdeV0UkQkvO/GNrbU5UvJSs1KIdfDrhm6ujd2i2+s2Xy1H32GlsyjAD4nDtzvpuGT9eCTutJms54UxTYf+9yY+/EsTZRtaRQjVGFj1EClNwkxGWNsdaeWzdEDbRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CPc2QOUH; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748974877; c=relaxed/simple;
+	bh=NbsRwYQsU0CO1ZXV6KbvBQ+Yr8Kwk1GnONKaodwEyNw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=olmCbCrF3JUIbXJOXgawgahalyFrWmWze/MfkoWeCl3ZN5+HfsOIZQ8VEFBWDUNkEf3ILlnMOcnUuSdn3Yg75gpz1x9ny4pME0lUxKoVcnFD1hwiZ5sUc0G7IkjoaNnAcOLF2NEs2T1BMqGCKEU3kRrgws4ajfu1FhCw85TsyjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=la3G76Ji; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CPc2QOUH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748974762; x=1780510762;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=gh71zRs/2E/BEL0+uv3/UbmZsGGeaVLnfUHJOlBtkeI=;
-  b=CPc2QOUHYe5SLpbDz3uMv93wu602RLSriOBbV61ndIk36p7bbeI7HGDM
-   /PXYLIPRSvLzObmKlYxIdzh+zaQAGdnwU0wbfo2y6rKPRUsGqxLN7peFR
-   usRn+8xFzM5/Jak9vjXn71CmTd1z3wCjAc0ljOiQYVo1tiTPFNFJ6AN7X
-   F3svYVL7TjsEgM4EKv4Xk2Y8gBFt3WMADxNS/CuEn0bvwibIgrMxgVu9f
-   rvASxAp9W5gyMb8tgsfJXbAAQDfyD9XqpGRT725jxtMPZBmeFrN7kkKvf
-   mYhdkbCoY01z+tLcNysjxS/BAiCVsz57WZN5x3B70+PYZmS/mBvPwV6hY
-   g==;
-X-CSE-ConnectionGUID: 3ScUM0HBTO+sSRFI7P3Ldw==
-X-CSE-MsgGUID: HVOYQm7QSuuDOp2gxnu6JA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="61294947"
-X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
-   d="scan'208";a="61294947"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 11:19:22 -0700
-X-CSE-ConnectionGUID: hs/MmAIIRQCO14oRK3ofWw==
-X-CSE-MsgGUID: VsnGh/oCQjel/7kccRxIPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
-   d="scan'208";a="144963741"
-Received: from tjmaciei-mobl5.ger.corp.intel.com (HELO [10.125.110.192]) ([10.125.110.192])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 11:19:21 -0700
-Message-ID: <0982b21a-6861-4955-a6a4-4c9ee1aa5a72@intel.com>
-Date: Tue, 3 Jun 2025 11:19:20 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="la3G76Ji"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-450d726f61aso9195e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 11:21:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748974874; x=1749579674; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TYuYabL4uCVwF/1h/26iRiOfzm4Zqn6YpsGjqJSyXvU=;
+        b=la3G76JiWYsMQTeLGs8A02FT2OT39GbDKyxZke5SegzdXFbb2pce94VWqhLrIhcYp8
+         L2Wsba3oQHfv3cqlQg+6VMs9Nv1VQZFSWIF8yxCz22PzWxsJjXaFge0PpJeNvBr4A3Wh
+         cME99zFbvGjF13GZEkiLPrFMiKMMoRJ3kq4n0PNJqlyFpUnWQDngmqnKmr2W0rYysWKt
+         Z0eVGf0AKSiE6BE0lRwQWMa6EehTRXvpDF+hws0tBEHzzwN3x2pt0gQDyA0A1h9+YGZz
+         CNXRnKgrCuj3mmjSPDmm/nBNWoA9FpSrQ1ZkbKbrM8uAjoTpN11hFCkI3U5M3QISaSlt
+         a39g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748974874; x=1749579674;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TYuYabL4uCVwF/1h/26iRiOfzm4Zqn6YpsGjqJSyXvU=;
+        b=iU28dmUJXrzU9wALPISkL9wz4Iw9U9Qus6Ox/ffgi8gVyrWkzIxSpD+E6tbFoEmJ1l
+         vB099/ZdtQA8qXDmZrslSE8WGH7um+SAomtdLRmDOihrfXwRrih2AFATO0IjN/zJfADv
+         4FMMOhrWAnVXpyReZ7LTBznRGZhZnx1xKMOal+RxV2pQRIzVqQe6qdAgRNtCNOXskJXv
+         QVmjavY/A3cUC2RwnAKGjwDCMUjXvhbfQWn8/CL90s8x/j4eHZaJ88fAgLvjjlruzmPU
+         nR4i24AMNnaiOeAiXWO2xzkdpl0+PNQtmFC8zyQ6Oq17RzR5QRGYCJdEl3eBp/lRdNPp
+         x2mQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVeJjuecmdi3gIDQJyVvb5+qniOkO97RxDeSKKDK2l5hQTv42SmXGbJbWyufigqL29+vNZ82X41Iwn/EyQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHkhTB6EDHyBP6lRXQ8LekdYVgfPV58yqYOIHeVV1QWjVG2WZE
+	Bos1nuFfzg797WAWBqPFVHMh5CtiR5QN5j89NU06gf7HRVchwgvlb+JxjXEw+JyUUA==
+X-Gm-Gg: ASbGncvCin6bk2zVy1ZtTgTHJ5CSdxpItqtcJxbGyjayIYkYu0OdsaVqwZwg0DMQdjv
+	GITfajJ5DW/6Vv7e4kL4F1Wn4rUZP9/Qw66CZD+p0NcG90OJfzaJOP9ENqa7usM+NxVTLjGD5lD
+	F5pGoPFRNCMSuUu/zEk7a6EQTxKy2TLUEOUjW/2p9gzpLL3MDAr1973rL2SwtK2vo4dVx+MsgOy
+	EkiXPzw/YldOG7xs2h3SfODvp3dVIQ3LkQb1fkCPgDUUkFXAgcPws1sKCYi6LnvLTZGU43I1sCZ
+	+9337hn1fbrudfMrfZB0CH/J1bVXVN+ASCQG3a+nzo3aW8H5iQ==
+X-Google-Smtp-Source: AGHT+IG9QBvMlzUUOGyuqXUZorlJfOhUQuguzF3v93oEKgimDs5OZohrwpuPd+bRSqntMdeynS2QHA==
+X-Received: by 2002:a05:600c:1ca8:b0:43b:b106:bb1c with SMTP id 5b1f17b1804b1-451ef7e9a53mr91075e9.0.1748974873164;
+        Tue, 03 Jun 2025 11:21:13 -0700 (PDT)
+Received: from localhost ([2a00:79e0:9d:4:796:935b:268f:1be4])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a4efe73eadsm18772731f8f.41.2025.06.03.11.21.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 11:21:12 -0700 (PDT)
+From: Jann Horn <jannh@google.com>
+Subject: [PATCH 0/2] mm/memory: fix memory tearing on threaded fork
+Date: Tue, 03 Jun 2025 20:21:01 +0200
+Message-Id: <20250603-fork-tearing-v1-0-a7f64b7cfc96@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/9] x86/nmi: Extend the registration interface to
- include the NMI-source vector
-To: Sohil Mehta <sohil.mehta@intel.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Xin Li <xin@zytor.com>, "H . Peter Anvin" <hpa@zytor.com>,
- Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Sean Christopherson <seanjc@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Tony Luck <tony.luck@intel.com>,
- Zhang Rui <rui.zhang@intel.com>, Steven Rostedt <rostedt@goodmis.org>,
- Andrew Cooper <andrew.cooper3@citrix.com>,
- "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
- Jacob Pan <jacob.pan@linux.microsoft.com>, Andi Kleen <ak@linux.intel.com>,
- Kai Huang <kai.huang@intel.com>, Sandipan Das <sandipan.das@amd.com>,
- linux-perf-users@vger.kernel.org, linux-edac@vger.kernel.org,
- kvm@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <20250513203803.2636561-1-sohil.mehta@intel.com>
- <20250513203803.2636561-4-sohil.mehta@intel.com>
- <4e6d865c-597f-4281-a07b-94aeffe938d6@intel.com>
- <cd6e6d88-944c-40b2-a343-3d81415d9b64@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <cd6e6d88-944c-40b2-a343-3d81415d9b64@intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAA09P2gC/x3MQQqAIBBA0avIrBPUkKCrRAvR0YZAY4wIxLsnL
+ d/i/wYVmbDCKhowPlSp5AE9CfCHywklhWEwylhlZyVj4VPe6JhykosOzmjtrPIRRnIxRnr/3bb
+ 3/gGPwrtFXgAAAA==
+X-Change-ID: 20250530-fork-tearing-71da211a50cf
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ David Hildenbrand <david@redhat.com>, 
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+ linux-mm@kvack.org
+Cc: Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org, 
+ Jann Horn <jannh@google.com>, stable@vger.kernel.org
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748974869; l=3953;
+ i=jannh@google.com; s=20240730; h=from:subject:message-id;
+ bh=NbsRwYQsU0CO1ZXV6KbvBQ+Yr8Kwk1GnONKaodwEyNw=;
+ b=CEriTtRE9yncVYoRCEU/fpeoyPzoqk9fL+0QVRI2F8lYHb21cJQeJv92F4uUlLp55s/mlmvKu
+ ilhnIkFMxMQBC3pYEy2fMblw+YD+gjExNxykStTn24IHo4n/TsnP5tX
+X-Developer-Key: i=jannh@google.com; a=ed25519;
+ pk=AljNtGOzXeF6khBXDJVVvwSEkVDGnnZZYqfWhP1V+C8=
 
-On 6/3/25 11:02, Sohil Mehta wrote:
-> The 3rd parameter pertains to handler "flags". The only flag in use
-> right now is NMI_FLAG_FIRST. Assuming that more flags might get added
-> later, the 0 should probably correspond to NMI_FLAG_NONE. Agree?
-> 
-> The other option would be NMI_FLAG_LAST, which would be the opposite of
-> NMI_FLAG_FIRST, but that seems shortsighted.
-I don't feel as strongly about the flags. But this code has been there
-for over a decade as-is, so I don't think we need to be planning to add
-a bunch more flags.
+The first patch is a fix with an explanation of the issue, you should
+read that first.
+The second patch adds a comment to document the rules because figuring
+this out from scratch causes brain pain.
+
+Accidentally hitting this issue and getting negative consequences from
+it would require several stars to line up just right; but if someone out
+there is using a malloc() implementation that uses lockless data
+structures across threads or such, this could actually be a problem.
+
+In case someone wants a testcase, here's a very artificial one:
+
+```
+ #include <pthread.h>
+ #include <err.h>
+ #include <stdio.h>
+ #include <unistd.h>
+ #include <sys/syscall.h>
+ #include <sys/uio.h>
+ #include <sys/mman.h>
+ #include <sys/wait.h>
+ #include <linux/io_uring.h>
+
+ #define SYSCHK(x) ({          \
+  typeof(x) __res = (x);      \
+  if (__res == (typeof(x))-1) \
+    err(1, "SYSCHK(" #x ")"); \
+  __res;                      \
+})
+
+ #define NUM_SQ_PAGES 4
+static int uring_init(struct io_uring_sqe **sqesp, void **cqesp) {
+  struct io_uring_sqe *sqes = SYSCHK(mmap(NULL, NUM_SQ_PAGES*0x1000, PROT_READ|PROT_WRITE, MAP_SHARED|MAP_ANONYMOUS, -1, 0));
+  void *cqes = SYSCHK(mmap(NULL, NUM_SQ_PAGES*0x1000, PROT_READ|PROT_WRITE, MAP_SHARED|MAP_ANONYMOUS, -1, 0));
+  *(volatile unsigned int *)(cqes+4) = 64 * NUM_SQ_PAGES;
+  struct io_uring_params params = {
+    .flags = IORING_SETUP_NO_MMAP|IORING_SETUP_NO_SQARRAY,
+    .sq_off = { .user_addr = (unsigned long)sqes },
+    .cq_off = { .user_addr = (unsigned long)cqes }
+  };
+  int uring_fd = SYSCHK(syscall(__NR_io_uring_setup, /*entries=*/10, &params));
+  if (sqesp)
+    *sqesp = sqes;
+  if (cqesp)
+    *cqesp = cqes;
+  return uring_fd;
+}
+
+static char *bufmem[0x3000] __attribute__((aligned(0x1000)));
+
+static void *thread_fn(void *dummy) {
+  unsigned long i = 0;
+  while (1) {
+    *(volatile unsigned long *)(bufmem + 0x0000) = i;
+    *(volatile unsigned long *)(bufmem + 0x0f00) = i;
+    *(volatile unsigned long *)(bufmem + 0x1000) = i;
+    *(volatile unsigned long *)(bufmem + 0x1f00) = i;
+    *(volatile unsigned long *)(bufmem + 0x2000) = i;
+    *(volatile unsigned long *)(bufmem + 0x2f00) = i;
+    i++;
+  }
+}
+
+int main(void) {
+ #if 1
+  int uring_fd = uring_init(NULL, NULL);
+  struct iovec reg_iov = { .iov_base = bufmem, .iov_len = 0x2000 };
+  SYSCHK(syscall(__NR_io_uring_register, uring_fd, IORING_REGISTER_BUFFERS, &reg_iov, 1));
+ #endif
+
+  pthread_t thread;
+  if (pthread_create(&thread, NULL, thread_fn, NULL))
+    errx(1, "pthread_create");
+
+  sleep(1);
+  int child = SYSCHK(fork());
+  if (child == 0) {
+    printf("bufmem values:\n");
+    printf("  0x0000: 0x%lx\n", *(volatile unsigned long *)(bufmem + 0x0000));
+    printf("  0x0f00: 0x%lx\n", *(volatile unsigned long *)(bufmem + 0x0f00));
+    printf("  0x1000: 0x%lx\n", *(volatile unsigned long *)(bufmem + 0x1000));
+    printf("  0x1f00: 0x%lx\n", *(volatile unsigned long *)(bufmem + 0x1f00));
+    printf("  0x2000: 0x%lx\n", *(volatile unsigned long *)(bufmem + 0x2000));
+    printf("  0x2f00: 0x%lx\n", *(volatile unsigned long *)(bufmem + 0x2f00));
+    return 0;
+  }
+  int wstatus;
+  SYSCHK(wait(&wstatus));
+  return 0;
+}
+```
+
+Without this series, the child will usually print results that are
+apart by more than 1, which is not a state that ever occurred in
+the parent; in my opinion, that counts as a bug.
+If you change the "#if 1" to "#if 0", the bug won't manifest.
+
+Signed-off-by: Jann Horn <jannh@google.com>
+---
+Jann Horn (2):
+      mm/memory: ensure fork child sees coherent memory snapshot
+      mm/memory: Document how we make a coherent memory snapshot
+
+ kernel/fork.c | 34 ++++++++++++++++++++++++++++++++++
+ mm/memory.c   | 18 ++++++++++++++++++
+ 2 files changed, 52 insertions(+)
+---
+base-commit: 8477ab143069c6b05d6da4a8184ded8b969240f5
+change-id: 20250530-fork-tearing-71da211a50cf
+
+-- 
+Jann Horn <jannh@google.com>
+
