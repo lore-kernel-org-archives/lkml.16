@@ -1,72 +1,73 @@
 Received: from mx0a-00364e01.pphosted.com (mx0a-00364e01.pphosted.com [148.163.135.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 020D21A00F0
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 22:15:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B0B19D8AC
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 22:15:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748988929; cv=none; b=O7JyoTrGLIe85pu6LgH09Vi7LqopIyRbbP6nyhCveECgi/jHd1RH8daDlK4lA4yL3GeN0EO+AldH/ENnSWgkFsabFUYEoBlsqiB9fFjMJ1gq5Ut9TfrYvvk9KQ7M6S/Z7Y7k9GR0ET4IYBZ8wjWLpbk5C6SJ/kVsijgGVZK47yU=
+	t=1748988933; cv=none; b=c0QkBHebGh2/mOOmZD0XKAoScnRKonzRDJ//LP+trz5ttTLfbFKrNOphwLuW2Jf6kyTyxWMB/wqXCdJbTQqrQxeJFb58ct8GbQSzMfcIH6pIN7OdmFgBBK4SwXe2VFUkWECAbAEduoelYIM7qebh9Sc5ErUYHqJgM03F5w3hvbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748988929; c=relaxed/simple;
-	bh=Mhu5UgsGKVBtr694zPgKzOcZMIqd8uhkAolGEdGjAxM=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=nrHov+/ErjhDtGbc7rnixb1fo85aKpgqrQkjlrexE7N/cOxR6Sz8o2v7V0IaSuYWy1CAIo7GfM9m+dNg4weOE+zBY6vZMMEwO1niu2rQARGzXJC2xyfr6T1zPIbJQXNpxvkL6zW6K1cheUmrWmoSFWpP/eHMuePlJr0EwP9UW7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu; spf=pass smtp.mailfrom=columbia.edu; dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b=u4dmPpXI; arc=none smtp.client-ip=148.163.135.74
+	s=arc-20240116; t=1748988933; c=relaxed/simple;
+	bh=g27oyTD6/jrBAqdANGNVmDLwLJKx2ZUNNdLuTW4r2Xc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=I+1Eu6xT5U6GfXPTGlJbsVdTNsgdecwHJp1qood8s+Pc54T4U+/9s4rLKmj9CAl2TTfWcsyMQmHRd3tQnUMJPZMRzrMSMdiRhLn8Xb7RfVKKH2AgOM7gWO5R2mgm3zPXYXYSIwfCfAuPQTuRI+50xBw0eoyWxTstRwWLVN0DcWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu; spf=pass smtp.mailfrom=columbia.edu; dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b=ILYYPhNM; arc=none smtp.client-ip=148.163.135.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=columbia.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b="u4dmPpXI"
-Received: from pps.filterd (m0167071.ppops.net [127.0.0.1])
-	by mx0a-00364e01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 553L6OgD016387
-	for <linux-kernel@vger.kernel.org>; Tue, 3 Jun 2025 18:15:27 -0400
+	dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b="ILYYPhNM"
+Received: from pps.filterd (m0167072.ppops.net [127.0.0.1])
+	by mx0a-00364e01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 553LApID028416
+	for <linux-kernel@vger.kernel.org>; Tue, 3 Jun 2025 18:15:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=columbia.edu; h=cc :
- content-transfer-encoding : content-type : date : from : message-id :
- mime-version : subject : to; s=pps01;
- bh=pR5/XontXtxtAuJG6F7B70YU8ZyR64gw9geu5D2VmVw=;
- b=u4dmPpXIIMS133fFgojn5PBhvFIVLpvbaURdXnQd6TGtBsW8Vx9r4H2Y8307ukB8ehF7
- OAzWB3LLvxfrKVjw6XQRK7NjkeG6ucOFIQhgIcjUTIPy7AzxjpfBmo85VmEFBp01XOR6
- zM5eE3KlQx0lISUODrN4pg3JiDK6EHmujL1TdgSWHVqHOT7s9+CGYhOoEugpb+4BxHBs
- ko89rPM0+gxL89jDS+R2/9uw5QWN/PNvlMAxMeRDoyUVj45bfoeyKsZ9ELcCl+9cHIeN
- cp6A9AgQR8bltwiCVN7HgPpJ3OI6mZp/o6cT1DGMxL0zMiNs2fiox3XSVl6TbsgLPFyh yw== 
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-	by mx0a-00364e01.pphosted.com (PPS) with ESMTPS id 46yxqt8vdn-1
+ content-transfer-encoding : content-type : date : from : in-reply-to :
+ message-id : mime-version : references : subject : to; s=pps01;
+ bh=Lfp69DiYOeQKA1pcsNzgw4KPGHdSjVYUj1VSH3quNCM=;
+ b=ILYYPhNMp9nd+ku4UA3Gik0QL3CXW5MM7ZS4qPGtIsMBAg2oyfYY6TvaseOOpfP6IYaq
+ GLR1AtGDrP48EQ8LMzaKlvhxk/j+wFbAHWfiEE9NObS0vQCtD6qnRjKKd39ldsSVGDCa
+ OxbGy1xKxClLMZSScE4BEgPgpRP22G+TYGc2dvAvZqF+XwxyX/tqQbteda/zrAOr66Lg
+ QOMU+4UAHKI4Kpo8t1lQvp6aWBWw37iIbWZUsZvBMdk3/cGHNGhToPTkQHAwGsuFwANm
+ 2tBDOzS81w2hIlsUIZyEiAp7+33qEZGk0N6ubGbkzcSpVx/4GAPMTnM8X1dUY1Vt4buQ iA== 
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-00364e01.pphosted.com (PPS) with ESMTPS id 46ywy0gy20-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 18:15:26 -0400
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4a44e392584so87567291cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 15:15:26 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 18:15:30 -0400
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4a58f455cdbso31354501cf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 15:15:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748988904; x=1749593704;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pR5/XontXtxtAuJG6F7B70YU8ZyR64gw9geu5D2VmVw=;
-        b=BFHjChvJJC888fOCv2R19+YTdUcvrP9bU/gCubJhe4vXyrwpFbfRhLXuN7+KX3uj0S
-         D5cRqXt+RFLfp64HyCM24eR550MzZbE599JkyswcnCw7gQ5tNZw1Zm91rl/Qe1x7tWni
-         A572SwHuJ8aFQxFq1CP2fxmQ8Ahd+UEKCeuSM95Uc4N7nchxr40S/2kH8HVrVI1PMJRm
-         qRG68syMKbFPa/9/yEgRtpFfe+KVvq1EKPjMU1Zx90dXDdD18rz+sK84LUz/3bgQ954Q
-         8MNPyuh+uWkC1MOcGWTaDW3GopkuXsZAjL9tr69gfEHJ9vZ8+XpsgryR5ajPBLC+oOmb
-         uQ5w==
-X-Forwarded-Encrypted: i=1; AJvYcCVopa//L/6CC+nQukBt+NknxSWl0vpqGWBOHzJ6ckyb4mT2p37yNfxFlMej1LBcmPBEJGF28lxChkRGdHc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1iJ5intPs9Q7STlK959OQQQgrFQdhme/ENNac0+O5nLCrkhAY
-	zx/ilMqca+g/D7ZdyeqUkOmucW6k0YnFQdQ7VDlzum5sqdrlXWd9aZXyzHyGH9lug5rEW4TFYvK
-	vx6gQQmM1cVf40A1HOm5Tj1iVFnUbNb+yvWOYfeyOsHuJ4V5s51JkJSKt3p5Ykg==
-X-Gm-Gg: ASbGncuVuxSG//WRHy6ncQDfmIm8XAuHKTdvJDhQqe1khEtvkr+i83xZw94YdyMoB3l
-	KP2opQ5op1ewFizXzIRqQtu1tygl4DADsvbxogdmB28Ev6Fqhk7uKh7AY/EEG2oHdBL4Zs5eLdq
-	xPJzZKraoonRpRj9jFY0WU3Bz2DddjKHsiD+WULZIl2u8rNua+h1xTtDn2C5LUSj6aGVXb/gMmq
-	Z/LFmX3MVEz6f9a69+uO0MJIG34HlTrRRIjCh9QeFbIUBRXgFwOIcgxKK3JehwSm8hVVvKAlATn
-	O87XujmuWzgy4p6GtHayHJbbhQCzeRaWnq8mn/yNGA8tJqFrhRE5ye5VcQ==
-X-Received: by 2002:a05:622a:4184:b0:494:993d:ec30 with SMTP id d75a77b69052e-4a5a57f0bcdmr10800291cf.16.1748988903724;
-        Tue, 03 Jun 2025 15:15:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHxNXrwYeZso4epO+Rxc5EeKdK7iBln5yFli1M2Ii71UtbPVNvQj17eNdr9KOBrhoWgtfOe+A==
-X-Received: by 2002:a05:622a:4184:b0:494:993d:ec30 with SMTP id d75a77b69052e-4a5a57f0bcdmr10799791cf.16.1748988903278;
-        Tue, 03 Jun 2025 15:15:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748988906; x=1749593706;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Lfp69DiYOeQKA1pcsNzgw4KPGHdSjVYUj1VSH3quNCM=;
+        b=cOwtSFtIO8WbHSk5iBC7dkh+YTZdXYqrMjmaCh3t7VnRzST3JdYFbl0D009fZgKK4H
+         KJiPs3eye7BRig8UXfRMvd3vDJHVpI3GY/eQ9WNbOvKXVabOrB+cZ3VodFH28FQ2U5N3
+         YQFRJdR+24vwHgOocY2/uR/blmhjgvUE43Y2tKxr+ysjVu1NvhX+2rATee3abFzc5YqB
+         W7o/Soi8pr0T1mAkH7zC2TK2uMLtb8jG52tIYrm6RUrbep/bX7raCMOZCmcQXaZYu5FO
+         6O+JaYqyySx2R1m1I1Pb/HK8wVdXhRQ192cBfa01dtidqakWdtr7vmDG4OfBAhsKcIPH
+         vo8w==
+X-Forwarded-Encrypted: i=1; AJvYcCVOAFcQw5soZ1v9M+TY3+pPHwtfjFTO/IsWrDQhUHpZFYEMzWbTRp++4kfNGwL8eA5Lz5SUNmFNMui9igk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpQfp5DpDPkpu9VCVC8NfLBDBHZ1DlIYRQYf1iQIKibziJDx07
+	Qc5p++w3jI5FB1oFIaOTf055LlWEpMaQ7BZK/7pD/NRSnX8qJX+90Ayrxoy2tuKvLNG7tMbTOIt
+	0Este0OrhTEMYpUapR5/08mw6MgWb8WiUJbUPppSpeJTq3XyRW3WgBlkIS2X1ZQ==
+X-Gm-Gg: ASbGncushgnf0FgLhkkhS08k1UKIA/qFSMnAx3M69kM7gLOUFy+cuZAou8UhOsnp+7J
+	iaG1P+UIul69v0vTK7XKTbzwpj73C073EGYEAnbJnib34Up/zFCBo0HLMex77hyqwS71FgWwC+V
+	gu3Eh1wTxmkS2Yek4yHwZFDQBrbq6zLmbxwU6oGDgBPyjJeR3mQG/7a5Qc1MvOWSGMAM0LMtUbY
+	8H+XUJdVt7+oqQj1kN1KN/PxBFwzvc+iBBEMLO8F5ZiO/Qy8x5GFdDIJfbShoy+8x5UTYLmKs6N
+	vzMmPBZnPgb8QrPhRN7qEYG1DmPBYUZ419ugMs8It+54Jl/ROYSx31HZAw==
+X-Received: by 2002:a05:622a:4819:b0:494:b914:d140 with SMTP id d75a77b69052e-4a5a57f0ef2mr8844671cf.43.1748988906186;
+        Tue, 03 Jun 2025 15:15:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH3r+PJxJ7QkVzaMR5o9MP2GSalSCVTrXWtLu6GU0AT2AKuvSzgDe0WZeGkRGDRbidaKgnbkQ==
+X-Received: by 2002:a05:622a:4819:b0:494:b914:d140 with SMTP id d75a77b69052e-4a5a57f0ef2mr8844291cf.43.1748988905724;
+        Tue, 03 Jun 2025 15:15:05 -0700 (PDT)
 Received: from [127.0.1.1] (nat-128-59-176-95.net.columbia.edu. [128.59.176.95])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a5919064dbsm33085741cf.53.2025.06.03.15.15.02
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a5919064dbsm33085741cf.53.2025.06.03.15.15.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 15:15:02 -0700 (PDT)
+        Tue, 03 Jun 2025 15:15:05 -0700 (PDT)
 From: Tal Zussman <tz2294@columbia.edu>
-Subject: [PATCH 0/3] mm: userfaultfd: assorted fixes and cleanups
-Date: Tue, 03 Jun 2025 18:14:19 -0400
-Message-Id: <20250603-uffd-fixes-v1-0-9c638c73f047@columbia.edu>
+Date: Tue, 03 Jun 2025 18:14:22 -0400
+Subject: [PATCH 3/3] userfaultfd: remove UFFD_CLOEXEC, UFFD_NONBLOCK, and
+ UFFD_FLAGS_SET
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,10 +76,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIALtzP2gC/x2LQQqAIBAAvyJ7TnA1O/SV6FC51l4slCIQ/97Sc
- ZiZCoUyU4FRVcj0cOEzCWCnYDuWtJPmIAzWWG+8Q33HGHTkl4rG3jqHK3oaHMhwZfqF9NPc2gc
- VvqtFXAAAAA==
-X-Change-ID: 20250531-uffd-fixes-142331b15e63
+Message-Id: <20250603-uffd-fixes-v1-3-9c638c73f047@columbia.edu>
+References: <20250603-uffd-fixes-v1-0-9c638c73f047@columbia.edu>
+In-Reply-To: <20250603-uffd-fixes-v1-0-9c638c73f047@columbia.edu>
 To: Andrew Morton <akpm@linux-foundation.org>, Peter Xu <peterx@redhat.com>,
         "Jason A. Donenfeld" <Jason@zx2c4.com>,
         David Hildenbrand <david@redhat.com>,
@@ -89,47 +89,66 @@ To: Andrew Morton <akpm@linux-foundation.org>, Peter Xu <peterx@redhat.com>,
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, Tal Zussman <tz2294@columbia.edu>
 X-Mailer: b4 0.14.3-dev-d7477
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748988902; l=861;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748988902; l=1458;
  i=tz2294@columbia.edu; s=20250528; h=from:subject:message-id;
- bh=Mhu5UgsGKVBtr694zPgKzOcZMIqd8uhkAolGEdGjAxM=;
- b=4q8yWH3RUQtdW6CPPg1ymoUjwCjvIh7v83CMiLiZGVa2qENAAcH/07MkUGP97IU1TtObvFyjV
- YN5DzKGNRbWCpE2mOJNC05z6Ya0oPs1o89uhFUs+wuVkFsiZHUJCoyT
+ bh=g27oyTD6/jrBAqdANGNVmDLwLJKx2ZUNNdLuTW4r2Xc=;
+ b=/XIMrYtbF5Y68qcMiwHj35HHywny0Un8ee+I0CUXo50KzxtW2KYaTD4j2taaBviXzq47kEjjp
+ v0QqS3mP22GAE07Teo5dLuKCi931LxkSWAeIzPAUiVFzfkda3ZYvYQR
 X-Developer-Key: i=tz2294@columbia.edu; a=ed25519;
  pk=BIj5KdACscEOyAC0oIkeZqLB3L94fzBnDccEooxeM5Y=
-X-Proofpoint-GUID: t9uCSLIdRRJZyS3R3zzLAK9tfgGSpkDE
-X-Proofpoint-ORIG-GUID: t9uCSLIdRRJZyS3R3zzLAK9tfgGSpkDE
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAzMDE5MyBTYWx0ZWRfX6kESaGLNa61h LtnftGW3Sn0YesKg2w86+om/qhnrkbBaly43XPxvx3pyswiMeU/ac+lYJXzZcQa79vAmL7uKQjr 7Qiw1XOhwiCqx2MWH1BgJdZOzYod2BUIC1ZBPIZ+jjrL/f9CF5Lq2T6Z51Yu08xYjz3ZC0gNSgK
- Ii5od1Mq+Gntcb71oxB52debYLzGx//wFJSHLV7UjgO0BqcFxdHTkgturU8avh8K53XsOO4JuEV 1z+1d9nxJvjpqfMb8DjR0+s71BAvBfNyc46lXSu4HghSMoJVJqMVGBisDCA7lvbf4pSycg61H3C 8B8tJcFfKtrPdtO93VuwCBk3KoPW5Ms8XSNjLVWXFCOlVs2dd+6K0S/opQhMQAYd9pEFaKmjM37 FPVJdv9R
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAzMDE5MyBTYWx0ZWRfX9vEyWNg3F9Bf nv6IvZLbZ8/Prt7T7c/BD0wmkqHoxbC5AywVBO80zDp0ST06xgXJf3UrDYZR5aVMfUi3hY/+L93 5HFIbgWgap2yGuaOyk7EzRHZE90CkdmHlrhfMlAe9EdEB61Os9P5arvzUY3QYXPyD35G5SNHEx8
+ 4RtOSa9H4UotbJufh9nj1+UNWmQazCBay5onBJPtbwDY4ftO8u84KmixHlnyt83N0xnd5lobhjA lz3HGMhFSIB8s4VH/mgEZeHr1l8mjXaKh2WWA75KEsx30qu+HgmjG8SRg847Z3gdTOXkolAoyZp gp9PwTihEzyJL40FpJ/Ex6MvweMFg5WUJXahmsv9VBuYtJtw070RRepaGlsj9veDNghCVfJFZBu gbpHikri
+X-Proofpoint-GUID: fbQ9TsYKOfCCcrbZ6nKiJDQypkjOsBQ6
+X-Proofpoint-ORIG-GUID: fbQ9TsYKOfCCcrbZ6nKiJDQypkjOsBQ6
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-06-03_03,2025-06-03_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=10 adultscore=0
- suspectscore=0 phishscore=0 mlxscore=0 malwarescore=0 mlxlogscore=439
- clxscore=1015 impostorscore=0 spamscore=0 lowpriorityscore=10
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=10 suspectscore=0 mlxlogscore=468 clxscore=1015 spamscore=0
+ mlxscore=0 lowpriorityscore=10 malwarescore=0 impostorscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2505160000 definitions=main-2506030193
 
-Two fixes and one cleanup for userfaultfd.
+UFFD_CLOEXEC, UFFD_NONBLOCK, and UFFD_FLAGS_SET have been unused since they
+were added in commit 932b18e0aec6 ("userfaultfd: linux/userfaultfd_k.h").
+Remove them and the associated BUILD_BUG_ON() checks.
 
-The second patch is a more of an RFC, as it changes previously allowed
-user behavior. However, being able to unregister memory through a uffd
-different from the uffd it was originally registered with seems odd enough
-that I'd argue it's a bug :)
-
+Signed-off-by: Tal Zussman <tz2294@columbia.edu>
 ---
-Tal Zussman (3):
-      userfaultfd: correctly prevent registering VM_DROPPABLE regions
-      userfaultfd: prevent unregistering VMAs through a different userfaultfd
-      userfaultfd: remove UFFD_CLOEXEC, UFFD_NONBLOCK, and UFFD_FLAGS_SET
+ fs/userfaultfd.c              | 2 --
+ include/linux/userfaultfd_k.h | 4 ----
+ 2 files changed, 6 deletions(-)
 
- fs/userfaultfd.c              | 17 +++++++++++++----
- include/linux/userfaultfd_k.h |  6 +-----
- 2 files changed, 14 insertions(+), 9 deletions(-)
----
-base-commit: 546b1c9e93c2bb8cf5ed24e0be1c86bb089b3253
-change-id: 20250531-uffd-fixes-142331b15e63
+diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+index 9289e30b24c4..00c6662ed9a5 100644
+--- a/fs/userfaultfd.c
++++ b/fs/userfaultfd.c
+@@ -2121,8 +2121,6 @@ static int new_userfaultfd(int flags)
+ 
+ 	/* Check the UFFD_* constants for consistency.  */
+ 	BUILD_BUG_ON(UFFD_USER_MODE_ONLY & UFFD_SHARED_FCNTL_FLAGS);
+-	BUILD_BUG_ON(UFFD_CLOEXEC != O_CLOEXEC);
+-	BUILD_BUG_ON(UFFD_NONBLOCK != O_NONBLOCK);
+ 
+ 	if (flags & ~(UFFD_SHARED_FCNTL_FLAGS | UFFD_USER_MODE_ONLY))
+ 		return -EINVAL;
+diff --git a/include/linux/userfaultfd_k.h b/include/linux/userfaultfd_k.h
+index f3b3d2c9dd5e..ccad58602846 100644
+--- a/include/linux/userfaultfd_k.h
++++ b/include/linux/userfaultfd_k.h
+@@ -30,11 +30,7 @@
+  * from userfaultfd, in order to leave a free define-space for
+  * shared O_* flags.
+  */
+-#define UFFD_CLOEXEC O_CLOEXEC
+-#define UFFD_NONBLOCK O_NONBLOCK
+-
+ #define UFFD_SHARED_FCNTL_FLAGS (O_CLOEXEC | O_NONBLOCK)
+-#define UFFD_FLAGS_SET (EFD_SHARED_FCNTL_FLAGS)
+ 
+ /*
+  * Start with fault_pending_wqh and fault_wqh so they're more likely
 
-Best regards,
 -- 
-Tal Zussman <tz2294@columbia.edu>
+2.39.5
 
