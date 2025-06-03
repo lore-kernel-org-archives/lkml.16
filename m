@@ -1,294 +1,100 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2943722A4FC;
-	Tue,  3 Jun 2025 10:13:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748945635; cv=pass; b=SrNV1NMr6dG7eBsV2gu0AzIMEWOPBfU/vMnAHv3U6DNr9NwYXbrdE52tF0DjF1RhvupngVbGTrkk/EZKGx3cmQRiy0L2zJdLA7jbhG7T4Hd5w2Z9y3n7GUqq5I4j0BGK5JPA2w0NPQH9B5/2BcMh6wYFomTX5eHlG+ukgkOCHnE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748945635; c=relaxed/simple;
-	bh=3hbgeQMO20AXbYBNRIF/LMQUpdiCdmrtF/+9j/D7ULU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M4Lnuk+llVFDJs6dIRnM7Su29fkHT2iG+2sh+PKs7feHjC3dd77ns1fkMOysSUr03lPQkm4+O5RUmiN7hNP8Q04cWlqMH4UEPRgbezU8BxDitJ00V3wroYniqI3ZmlyABErMAa+rR/xVImeMybeRl8cSMHblWNdt0MYDHZfMDAA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=blXzyMWZ; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671341DC9BB;
+	Tue,  3 Jun 2025 10:14:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748945665; cv=none; b=CAM5wjHKZfam/5w12CzUldfq87DFv7eSAP0sE9fciGJc7OXTfOy8pqkhJPuDslWYOCMx+waKyW0aW/y3RDceBhhWdsv59lrZTm0oy2eFpH5U0bUn8tH3W9ouzBhHJigWVLrdIePSYwe44SaGkCVZN3z1D/TkZiVKq1aSc2D1d8U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748945665; c=relaxed/simple;
+	bh=SwDfqV8KrvkovA/Y/yyycICdpiYK8FWzTfV8vFk4lOk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m2sFBRUdoJG+Cx/x5kt2s2d8Bgc9SapD7AHOnQVXA74MQL2QxatH4AnDKop/9kQKHH1KZ/UlSw7uwXTlyMwLZ3cEoCRJzx4oi55z7sLzP0mU9rvnCrpxU8Q+6+aXi1UVzMF/sNnXvbYATPCRRciLqYm/rSn2i2Ze8WE98jZeAoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Px+wcPLy; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="blXzyMWZ"
-ARC-Seal: i=1; a=rsa-sha256; t=1748945620; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=OcBZmEkmvTfywzjYe82bhgXz5P2DRzUvA4wZUYfD2G+jBGLUN20IeyenZIg1JkX8RMt//h9KXYnvCT7xKH8eltYugFl20xKVHvXhkpmn9lLH+/j/+8/nCs4NUZWj67Tg3eluHAbL1nxlbpXipkYXk8XUyP0S3yjbUvOSURxpzOg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1748945620; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=+4HYeoGoUbgVgUqayCNTEyZvsBNc/KTGIf1j1gYINU4=; 
-	b=SX3LV1HQPTtgo+7UDDMM1hWb+fzqBV4KY1MhHY0Uy9zXW3/TjA7ollwYajh827FlonzPt+vhoSQiDMfIRyYoUsy0un9xVqh/trmLQe45GCX/gVMKPSFH45RS6a8EtrnJKOJ0a3BI9uw6VgVoMi7QfTeTpBqZPiBhAPlaC0EWRkM=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1748945620;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=+4HYeoGoUbgVgUqayCNTEyZvsBNc/KTGIf1j1gYINU4=;
-	b=blXzyMWZwHVwYQuT+Oa/ZJ9X94rdln+59dD0ancaSekjdHIgAjX2GthtTNMbcuwj
-	8ElRfluoeXMkhr3ckfLzS+7Ug6WBUfl3mIIHtZQ6nZFGQT8qDYBgJVVU+UAmvTErdb/
-	i7mpgsxMbp8yZRg8JUZM1mlx17YHrAxNcf2xa+hw=
-Received: by mx.zohomail.com with SMTPS id 1748945619522479.2458452401762;
-	Tue, 3 Jun 2025 03:13:39 -0700 (PDT)
-Message-ID: <8a9459c5-a4d7-4e8a-8e0c-505b19a74dd3@zohomail.com>
-Date: Tue, 3 Jun 2025 18:13:35 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Px+wcPLy"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-b26df8f44e6so5826054a12.2;
+        Tue, 03 Jun 2025 03:14:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748945663; x=1749550463; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SwDfqV8KrvkovA/Y/yyycICdpiYK8FWzTfV8vFk4lOk=;
+        b=Px+wcPLy2yJFKqKxVgap8jU2qjDYx20ld+Gjkx6gIY2PxAGNBCFZcRBPy70RtFhul5
+         MWKVIoNJvdoZdyZAOxLgA318WOUmmg/bTgMKHh2qoiYNQeFOnLfEQHvZYwT+54ABXSHR
+         7+/ySlOPKK7KiEunuSz/ZvOfbBw4tSupsUEtX7Lh2Q0CoeKzg+WNSKb62y4Z3DEgoD0b
+         oLctbh6auL4K3Gt0V2+BF9LCv5FlmdIAM2XhpXlWosBfquoaj7wE6mrpX0qS0qW8Cm5O
+         4UtvvA2UOtt26QzGCB5DecjUDja5BfII7nr5K7MCWkg++dwu+HkZ3M43E3EIdvs/1Luy
+         maUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748945663; x=1749550463;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SwDfqV8KrvkovA/Y/yyycICdpiYK8FWzTfV8vFk4lOk=;
+        b=cnA1ynMGh6I3fsdeeUYK4+hqT+6e0SvrYasHZmhoD8FKpjYxlMcqsgnsC5pyP6Rb5U
+         3pzQJOBX+SsokXCpZpN9ZaI4UaHhghH0HYHCRfkYEgnAbM7XsvmodlWy+JAKqoZSrvQu
+         5Qv/NOW9mBCixAnsTp6mvtJ78XbzQqsW3Mi5qFYwHWegx0IpgkYl8ZzL+DoGU4MqgXKZ
+         Oeq0tUWKEltSrYZUGPmUQ4lFdtlO4IHZyyhPSdcOq09Rjm1HGe1Sc6XlRz9aX9Pl7r2R
+         u1xLSbq1o+h++onPSNdzzYNBV9Dk/7W1O8NaQ4+jcK+1FcAXa00kHCzj8ihzmaxBAozu
+         S+Gg==
+X-Forwarded-Encrypted: i=1; AJvYcCVP5fiyhpJBaOzPkjElHcEroaHNmc3qLE2VmT3oenZi7aHf89fBQEvSLASgUQRRpd8p6iUsYWnmHA+WC0c=@vger.kernel.org, AJvYcCWhRTFrT/bUN6ChMW/uhJrmIUx/Nu24GT/p447DxXoCjogHouv3e8ZWIAQQPeLh393egrzDi2tM@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFkXoSUVHaKmp7E/DXWcdvX2g1VjxYJdCs8zUDnWabGimu9eKV
+	AntxtRpPIX9VBa6egxPY25/ia4qbDBuU9Pdxx7R9su9esdzIb07EXfX96wywsAwfOJrt1yqHMgp
+	tVI0d/Z/0ZamPe6d0AO5iOZmK+e9fDXw=
+X-Gm-Gg: ASbGncss8ZDNd0v5C35DY4M/O2z+AoacK2sUMc34oOnvu6KnReHodKGb3QAki2+py8q
+	KD4ZiQBExL/Nz7k6DvVQJTPe+pbKt+EVjUr+kRjayCDuvyH+D/4vcNbiOawm9uBrMCv6Qxlm5+j
+	OnSasA4vaC/d0gH2K6FURCYzhHsLIooAO8uJLAS1Tj0O4SzWEtVkve09R92JV4LVTj2Zk=
+X-Google-Smtp-Source: AGHT+IFkU/rtMFcEfCGQgAXeoinXY072kvOEm9KaFp9HZuJsqzno0tiN7dudO/VQza3ZbsxxGjOBifLpqeLSLv0S20M=
+X-Received: by 2002:a17:90b:2e50:b0:311:cc4e:516f with SMTP id
+ 98e67ed59e1d1-3127c870734mr16735156a91.31.1748945663531; Tue, 03 Jun 2025
+ 03:14:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/1] cxl/edac: Fix the min_scrub_cycle of a region
- miscalculation
-To: Shiju Jose <shiju.jose@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>
-Cc: "dave@stgolabs.net" <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- "dave.jiang@intel.com" <dave.jiang@intel.com>,
- "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
- "ira.weiny@intel.com" <ira.weiny@intel.com>,
- "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250530122852.10139-1-ming.li@zohomail.com>
- <aDn4o8Fw91vQ9D-D@aschofie-mobl2.lan>
- <bba0fc4616d54babb2b0113967acc95f@huawei.com>
- <aD3V1MbVV7RZmbu0@aschofie-mobl2.lan>
- <d036c22fc0e348a3ba7ecb0b4dbf35ba@huawei.com>
- <96fedb6e-6184-4609-b249-4289f61d5003@zohomail.com>
- <97301a67e111449a8ee1edb2fc59b3df@huawei.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <97301a67e111449a8ee1edb2fc59b3df@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Feedback-ID: rr080112271ef8409cf70d27e81896320700009306d213424a3352e2c4e17dd8a3d286d2784d9d46e644470d:zu0801122721f3708c20c18f95e61e9edd0000b31ad0d0452389e8c8b06abfd5b13c7fff0cd7d8964efd7d45:rf0801122dd4fbd2c5e361e726157484670000e04155425aeaa221390830ddeb88e75f40bbef839ed8278f4a1171a9a4ce01:ZohoMail
-X-ZohoMailClient: External
+References: <20250531101308.155757-1-noltari@gmail.com> <20250531101308.155757-11-noltari@gmail.com>
+ <d7dd8b1d-0e36-43e7-abc1-74a477dba06d@broadcom.com>
+In-Reply-To: <d7dd8b1d-0e36-43e7-abc1-74a477dba06d@broadcom.com>
+From: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
+Date: Tue, 3 Jun 2025 12:13:50 +0200
+X-Gm-Features: AX0GCFu0OsjAe-iuIqR5ud4LbDYOnjGFk-V-K4wXs4u7V24gNhT8oAGJQ2GoTXw
+Message-ID: <CAKR-sGf7tfLY3DpMCce1MaL-dAPejN2x3G=0BS7e+skmMdf3tA@mail.gmail.com>
+Subject: Re: [RFC PATCH 10/10] net: dsa: b53: ensure BCM5325 PHYs are enabled
+To: Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: jonas.gorski@gmail.com, andrew@lunn.ch, olteanv@gmail.com, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	vivien.didelot@gmail.com, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, dgcbueu@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/3/2025 6:11 PM, Shiju Jose wrote:
->> -----Original Message-----
->> From: Li Ming <ming.li@zohomail.com>
->> Sent: 03 June 2025 00:57
->> To: Shiju Jose <shiju.jose@huawei.com>; Alison Schofield
->> <alison.schofield@intel.com>
->> Cc: dave@stgolabs.net; Jonathan Cameron <jonathan.cameron@huawei.com>;
->> dave.jiang@intel.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
->> dan.j.williams@intel.com; linux-cxl@vger.kernel.org; linux-
->> kernel@vger.kernel.org
->> Subject: Re: [RFC PATCH 1/1] cxl/edac: Fix the min_scrub_cycle of a region
->> miscalculation
->>
->> On 6/3/2025 1:25 AM, Shiju Jose wrote:
->>>> -----Original Message-----
->>>> From: Alison Schofield <alison.schofield@intel.com>
->>>> Sent: 02 June 2025 17:48
->>>> To: Shiju Jose <shiju.jose@huawei.com>
->>>> Cc: Li Ming <ming.li@zohomail.com>; dave@stgolabs.net; Jonathan
->>>> Cameron <jonathan.cameron@huawei.com>; dave.jiang@intel.com;
->>>> vishal.l.verma@intel.com; ira.weiny@intel.com;
->>>> dan.j.williams@intel.com; linux- cxl@vger.kernel.org;
->>>> linux-kernel@vger.kernel.org
->>>> Subject: Re: [RFC PATCH 1/1] cxl/edac: Fix the min_scrub_cycle of a
->>>> region miscalculation
->>>>
->>>> On Mon, Jun 02, 2025 at 08:23:34AM +0000, Shiju Jose wrote:
->>>>>> -----Original Message-----
->>>>>> From: Alison Schofield <alison.schofield@intel.com>
->>>>>> Sent: 30 May 2025 19:28
->>>>>> To: Li Ming <ming.li@zohomail.com>
->>>>>> Cc: dave@stgolabs.net; Jonathan Cameron
->>>>>> <jonathan.cameron@huawei.com>; dave.jiang@intel.com;
->>>>>> vishal.l.verma@intel.com; ira.weiny@intel.com;
->>>>>> dan.j.williams@intel.com; Shiju Jose <shiju.jose@huawei.com>;
->>>>>> linux- cxl@vger.kernel.org; linux-kernel@vger.kernel.org
->>>>>> Subject: Re: [RFC PATCH 1/1] cxl/edac: Fix the min_scrub_cycle of a
->>>>>> region miscalculation
->>>>>>
->>>>>> On Fri, May 30, 2025 at 08:28:52PM +0800, Li Ming wrote:
->>>>>>> When trying to update the scrub_cycle value of a cxl region, which
->>>>>>> means updating the scrub_cycle value of each memdev under a cxl
->>>>>>> region. cxl driver needs to guarantee the new scrub_cycle value is
->>>>>>> greater than the min_scrub_cycle value of a memdev, otherwise the
->>>>>>> updating operation will fail(Per Table 8-223 in CXL r3.2 section
->>>> 8.2.10.9.11.1).
->>>>>>> Current implementation logic of getting the min_scrub_cycle value
->>>>>>> of a cxl region is that getting the min_scrub_cycle value of each
->>>>>>> memdevs under the cxl region, then using the minimum
->>>>>>> min_scrub_cycle value as the region's min_scrub_cycle. Checking if
->>>>>>> the new scrub_cycle value is greater than this value. If yes,
->>>>>>> updating the new scrub_cycle value to each memdevs. The issue is
->>>>>>> that the new scrub_cycle value is possibly greater than the
->>>>>>> minimum min_scrub_cycle value of all memdevs but less than the
->>>>>>> maximum min_scrub_cycle value of all memdevs if memdevs have a
->>>>>>> different min_scrub_cycle value. The updating operation will
->>>>>>> always fail on these memdevs which have a greater min_scrub_cycle
->>>>>>> than the new
->>>> scrub_cycle.
->>>>>>> The correct implementation logic is to get the maximum value of
->>>>>>> these memdevs' min_scrub_cycle, check if the new scrub_cycle value
->>>>>>> is greater than the value. If yes, the new scrub_cycle value is
->>>>>>> fit for the
->>>> region.
->>>>>>> The change also impacts the result of
->>>>>>> cxl_patrol_scrub_get_min_scrub_cycle(), the interface returned the
->>>>>>> minimum min_scrub_cycle value among all memdevs under the region
->>>>>>> before the change. The interface will return the maximum
->>>>>>> min_scrub_cycle value among all memdevs under the region with the
->>>> change.
->>>>>>> Signed-off-by: Li Ming <ming.li@zohomail.com>
->>>>>>> ---
->>>>>>> I made this change based on my understanding on the SPEC and
->>>>>>> current CXL EDAC code, but I am not sure if it is a bug or it is
->>>>>>> designed this
->>>> way.
->>>>>> The attribute is defined to show (per
->>>>>> Documentation/ABI/testing/sysfs-edac-
->>>>>> scrub)
->>>>>>   "Supported minimum scrub cycle duration in seconds by the memory
->>>>>> scrubber."
->>>>>>
->>>>>> Your fix, making the min the max of the mins, looks needed.
->>>>>>
->>>>>> I took a look at the max attribute. If the min is the max on the
->>>>>> mins, then the max should be the max of the maxes. But, not true.
->>>>>> We do
->>>> this:
->>>>>> instead: *max = U8_MAX * 3600; /* Max set by register size */
->>>>>>
->>>>>> The comment isn't helping me, esp since the sysfs description
->>>>>> doesn't explain that we are using a constant max.
->>>>> CXL spec r3.2 Table 8-222. Device Patrol Scrub Control Feature
->>>>> Readable Attributes does not define a field for "max scrub cycle
->>>>> supported".  Thus for max scrub cycle, returning max value of
->>>>> (U8_MAX) of
->>>> patrol scrub cycle field.
->>>>
->>>> Understand that now, thanks. I'm still wondering if both these
->>>> deserve more explanation in
->>>> Documentation/ABI/testing/sysfs-edac-scrub
->>>> explaining the calculations. Like if the device represents an
->>>> aggregate of devices, like a region, the min scrub cycle is the max
->>>> of the mins, whereas if the device is a single, it's exactly what the
->>>> device returned.  And for max, explaining what you replied above.
->>> Not sure is it appropriate to add these CXL scrub specific details to the generic
->> file
->>> Documentation/ABI/testing/sysfs-edac-scrub?
->>>
->>> CXL region specific details were added under section 1.2. Region based
->>> scrubbing of Documentation/edac/scrub.rst. May be better add these
->>> details for CXL specific min and max scrub cycle calculation to the
->> Documentation/edac/scrub.rst?
->>> How do you want to post these suggested doc changes, in a follow-up patch
->> now?
->>> Thanks,
->>> Shiju
->> I can include the doc changes in next version.
-> Thanks Ming.
+Hi Florian,
+
+El lun, 2 jun 2025 a las 18:00, Florian Fainelli
+(<florian.fainelli@broadcom.com>) escribi=C3=B3:
 >
-> May be like this?
+> On 5/31/25 03:13, =C3=81lvaro Fern=C3=A1ndez Rojas wrote:
+> > According to the datasheet, BCM5325 uses B53_PD_MODE_CTRL_25 register t=
+o
+> > disable clocking to individual PHYs.
+> >
+> > Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
 >
-> diff --git a/Documentation/ABI/testing/sysfs-edac-scrub b/Documentation/ABI/testing/sysfs-edac-scrub
-> index c43be90deab4..ab6014743da5 100644
-> --- a/Documentation/ABI/testing/sysfs-edac-scrub
-> +++ b/Documentation/ABI/testing/sysfs-edac-scrub
-> @@ -49,6 +49,12 @@ Description:
->                 (RO) Supported minimum scrub cycle duration in seconds
->                 by the memory scrubber.
->  
-> +               Device-based scrub: returns the minimum scrub cycle
-> +               supported by the memory device.
-> +
-> +               Region-based scrub: returns the max of minimum scrub cycles
-> +               supported by individual memory devices that back the region.
-> +
->  What:          /sys/bus/edac/devices/<dev-name>/scrubX/max_cycle_duration
->  Date:          March 2025
->  KernelVersion: 6.15
-> @@ -57,6 +63,16 @@ Description:
->                 (RO) Supported maximum scrub cycle duration in seconds
->                 by the memory scrubber.
->  
-> +               Device-based scrub: returns the maximum scrub cycle supported
-> +               by the memory device.
-> +
-> +               Region-based scrub: returns the min of maximum scrub cycles
-> +               supported by individual memory devices that back the region.
-> +
-> +               If the memory device does not provide maximum scrub cycle
-> +               information, return the maximum supported value of the scrub
-> +               cycle field.
-> +
->  What:          /sys/bus/edac/devices/<dev-name>/scrubX/current_cycle_duration
->  Date:          March 2025
->  KernelVersion: 6.15
+> Would this be more natural and power efficient to move to
+> b53_port_setup() instead?
+
+OK, I will move this to b53_setup_port on v2.
+
+> --
+> Florian
 >
-Sure, will do it, thanks.
 
-
-Ming
-
->>
->> Thanks
->>
->> Ming
->>
->>
->>>> Regardless of this noise I'm making about the Docs.. I think Ming
->>>> should go ahead and v1 the fix for the min calc.
->>>>
->>>> --Alison
->>>>
->>>>> Thanks,
->>>>> Shiju
->>>>>>> base-commit: 9f153b7fb5ae45c7d426851f896487927f40e501 cxl/next
->>>>>>> ---
->>>>>>>  drivers/cxl/core/edac.c | 8 ++++++--
->>>>>>>  1 file changed, 6 insertions(+), 2 deletions(-)
->>>>>>>
->>>>>>> diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
->>>>>>> index
->>>>>>> 2cbc664e5d62..ad243cfe00e7 100644
->>>>>>> --- a/drivers/cxl/core/edac.c
->>>>>>> +++ b/drivers/cxl/core/edac.c
->>>>>>> @@ -103,10 +103,10 @@ static int cxl_scrub_get_attrbs(struct
->>>>>> cxl_patrol_scrub_context *cxl_ps_ctx,
->>>>>>>  				u8 *cap, u16 *cycle, u8 *flags, u8 *min_cycle)
->>>>>> {
->>>>>>>  	struct cxl_mailbox *cxl_mbox;
->>>>>>> -	u8 min_scrub_cycle = U8_MAX;
->>>>>>>  	struct cxl_region_params *p;
->>>>>>>  	struct cxl_memdev *cxlmd;
->>>>>>>  	struct cxl_region *cxlr;
->>>>>>> +	u8 min_scrub_cycle = 0;
->>>>>>>  	int i, ret;
->>>>>>>
->>>>>>>  	if (!cxl_ps_ctx->cxlr) {
->>>>>>> @@ -133,8 +133,12 @@ static int cxl_scrub_get_attrbs(struct
->>>>>> cxl_patrol_scrub_context *cxl_ps_ctx,
->>>>>>>  		if (ret)
->>>>>>>  			return ret;
->>>>>>>
->>>>>>> +		/*
->>>>>>> +		 * The min_scrub_cycle of a region is the maximum
->> value
->>>>>> among
->>>>>>> +		 * the min_scrub_cycle of all the memdevs under the
->> region.
->>>>>>> +		 */
->>>>>>>  		if (min_cycle)
->>>>>>> -			min_scrub_cycle = min(*min_cycle, min_scrub_cycle);
->>>>>>> +			min_scrub_cycle = max(*min_cycle,
->> min_scrub_cycle);
->>>>>>>  	}
->>>>>>>
->>>>>>>  	if (min_cycle)
->>>>>>> --
->>>>>>> 2.34.1
->>>>>>>
-
+Best regards,
+=C3=81lvaro.
