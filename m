@@ -1,252 +1,211 @@
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2088.outbound.protection.outlook.com [40.107.92.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA2F8821
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 01:56:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748915767; cv=none; b=gaVIu4Z/GuhPyuVoMhj1ocUPw/Q2F+58rDr/t08D/3s2HYz3XZ9CFB2UUB9mBYlCyNlTstL5r6nVZLXlFoqI8kfolBGrggh813zI0FKfNS2p9vO1A0Okc+uy8xZkigTz7ViCeXj/9VYB/GMknRN024BwIPyQE88fewtAfiTImxY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748915767; c=relaxed/simple;
-	bh=gk3zfkmAoeD6qX6HjvVBFlNWyoDhuHtYGOXvCTI3R3I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CuDSM+7byV9IJBEaadXuWZfL4Thj8ReTSLV7ZcTowGKfaMeeRDZvcDkVBQ+Bpkqpbgm/8ISsEsdngGeOD+SJXl0UaJgl4393Q5fNzPh02mmOZUPlRKePV7GMh+KqvyGNaPdGc1udACRdkFUO4JUnWFKP81xL3Cr4MaY7qtW1GVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gj9PMC98; arc=none smtp.client-ip=209.85.222.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9111915278E
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 01:56:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748915773; cv=fail; b=GW2Lq/nokwsFt1dW14L+tQY78PPAVmEl0PbNUpk+8mkBUoN7SNyw/FCc69Dabg9zldzVMJt4IcUNsdSaBYkGxRhGXsxZXMIAXgafnC9ONGQJquLMnQhxmSiaEjAuFLPtKszy6/rw98hFn0asEL6RvlL6C63s4fQ/VFL31frcIlc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748915773; c=relaxed/simple;
+	bh=sgSWNuYhuWo+C1/KFqhHqFPFwfOP3r73XUfa88nbAKU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=rY41AV3nWI8XZCt7D0sM5wLiGPsZmsxy99XKIPl45cQ4ZHmvvDzE6aFjtf8ePX0SaPGwvQ/WDOyECxNP15IZs6ABNX5Gpf7lcWTLrAUuVepI/1a2NWPcoQqpy2OpW35WB32NT2LtiGTIqs6Mb4wrB/9+i7NvNvUTBg9ckJdDiUc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=lX3C/oNg; arc=fail smtp.client-ip=40.107.92.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gj9PMC98"
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-87df048fda8so2453936241.3
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 18:56:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748915765; x=1749520565; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yjwz7K+3C5Y9HHx06yESpqFLa2bL0hzbV0H1wyWAxzY=;
-        b=gj9PMC98OEy0uuCpPpin2DutjfVgSlCuPlcH2qoueqt1havJk2hu5Zg2TGP0ttPvmq
-         DwYKTBIwhC9u3dEWXEoQJTBhCBeAeejQccYJa+Hrr+m4R7kT37qcG53iTTAhWwx9BFzG
-         LTw7HE75ASQkk0lXbljZEOlHW3WBqeN8TFnclNttvK5Niw8U3ygJZcK97X7AO1z/BhSd
-         cx1YZkG4DZnesME4YIahkDBhcXKE2aUQvidsWF/40QE3xPcNI+EQ56isoW4/Kl/UoVSU
-         TXO67L8+H/RIv812cI3uAItaRkrpx8t11cMGK9tgCZwf7VxcjU435s6/E+c5njsalJUW
-         vr9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748915765; x=1749520565;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yjwz7K+3C5Y9HHx06yESpqFLa2bL0hzbV0H1wyWAxzY=;
-        b=liDNswUGl4ovDhVblF9WAsSsIaqtwwZfoA8MwzFnMouxshtIOxHpZuRQe3KncktSh9
-         0MIQOQINVhcKvT8l3LJLZg8r37iyfx5qFO9LsWqYpXY5S5GTErUhnPFMYcGmMoPXsxlk
-         A/h8kdnPWtLogt1WifcjBDL1v7JOY8hPE3lATAFw990g9zzzdutfwVAkg8xpXKWHf1VG
-         Y0kBS/Q98WL6pjLCqw3bUtPmFyzwUqFLJOKOIFvIaUdMaTuuTa19VUwb9+3r8ppvsoBw
-         BIbhPT46yTMBdavjcA+GP1fC7f7/SZzviLI0BTKy6y2pH8svZl/NSxlW/CKgPZETmo11
-         hIXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWh9MXq1jtp0qbh53DLG1bkmKsiCBmBS8pNpFfMchmYegolLtvhJMOQXYH/lQd8aW7sN+FYgLECHfj872g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwV77F6m9MQcbch8Z83Ld3x3ShzxZpi7ej2lW274NP6XnU9tYSH
-	VK7f38jNK2shiP2DbZ5ER2Gru64+Bx0oxgc7cYRnOvst6tecBUjWF2kmvxM90LhzepIcyRMLbmR
-	YGPkVVLpyr/4GHmCvArLF6Kln4FGgVjv/aMOV
-X-Gm-Gg: ASbGnct7RoZ/ctdKkhsiHw8TZCz1XTcGaEs+p7DDXBe+yjXDHGhsx2LUAM4ghWitpVJ
-	ypqvqaxJ/K7cUgJUEjCUx236KGBj4bEFMvT2gn+1MCa2Z33/KqBbA8REVxCcjABc1dudTu2JZML
-	OaG7gDAEh3p8nUkKyv7Wqs3Gq8RAv+CmX4xw==
-X-Google-Smtp-Source: AGHT+IE0T9BO6q1wzLTJ95JtVQFrX3//75v+ctXp12UmlWdewLG/VBORVzYwyBSCoOuDuKGPa7/9WY/NaGFUHwwFnzk=
-X-Received: by 2002:a05:6102:cd3:b0:4e5:a837:b0d2 with SMTP id
- ada2fe7eead31-4e701a2842emr8699909137.3.1748915742691; Mon, 02 Jun 2025
- 18:55:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="lX3C/oNg"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=TxzGSJJcq4cFkLISJu/OyK68Qq+K8dOd8U7cEMxZwPKdQgmW6UIhN6GDTN45uimsm3qNFCFsl+z0rhOvbsY6Ay5gvvsgixWtrwV4UHwn5OjJnY6N4BcLDjs5td0B1WkA3nguJ0w3WaT7ry1L+8KK8LilAvQ+/CVASFRaseKm7NJOiv67Qh9KwPLYGiJXZBLFjR0UWpW1hI7/tGLyz+hIcej9lNjoVR8wISdE3ADiznFkLIVVZi3Cynxd9SW+akAwMqmq0hSXyFup26pZlLFT5aAiFQT0oMBzT8caNi5QbkzZnKXlE+xP3lTd+AVqpppO997Lgs/Udyw/X3bKGHxJuQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=b05IuyF2zKPa3pD34iQ7cEn2IE6VSr3HMZ6XIRdJCZg=;
+ b=t/jB/H31oCueeoECCrweS11k9W1REy4f4xeUZCV5vCBo/YTdX6R/841FkULNx59stdjdUWZDy/ZPdMAi3QUqX6j+0orBk2JQ5N7YjqHxXE+7ztBosdO+T/jbjqpGfQTgh3xrvairAC4nP5Wqa7NX5i51M8u0t0XuwqpZCVC9FLKWahCgAHoCUWPy1SnLZ+zOm8zTDYb6Zho0xG9lw8J02qeQaLPIctGXVc7g0Sc+kt3iKQHQjKXn9yYRgBEC9mrfMtFcKWRombfwClbwjddu1gieiATb3JPRzr+TXDcKE0bdbCTrYqLcossiB4yXRzhOwq+ioUlCQf6LvrHpIQy48A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b05IuyF2zKPa3pD34iQ7cEn2IE6VSr3HMZ6XIRdJCZg=;
+ b=lX3C/oNgVDSlxUatrQvRgBGbyENyKl6nieoz94ruKQ4cYUdpWkRCOnD5tSfnyh78Nde7hB0aFC1wF7FSIjHQL+gPWqW6dIpruiknKg8ytF7apgwY5JdvSVQJFUmZVrw0+7pK5HmQUiXr8PjfKCGFxMZxPpGu1wEHceny+15IXCEwjJajsWz6RCv/eB2XQV9FwlFO0Nri/60IGls0V4ITfaLyINdg53XFAFHQMKG9Kvvrifo5R26iXGwe0dsXM5a4bPsu4QyxUsHtNURB4tIzoEXN8jW6g/SsFPv+nQd0ht++FOQxKJOo2eo0FZ9VR+OyO7zyrn+3ImaTEIJrCA5IEw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ MW6PR12MB7072.namprd12.prod.outlook.com (2603:10b6:303:238::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.33; Tue, 3 Jun
+ 2025 01:56:06 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8792.034; Tue, 3 Jun 2025
+ 01:56:06 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org
+Cc: Oscar Salvador <osalvador@suse.de>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ Mel Gorman <mgorman@techsingularity.net>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Brendan Jackman <jackmanb@google.com>, Richard Chang <richardycc@google.com>,
+ linux-kernel@vger.kernel.org, Zi Yan <ziy@nvidia.com>
+Subject: Re: [PATCH v8 3/6] mm/page_alloc: add support for initializing
+ pageblock as isolated.
+Date: Mon, 02 Jun 2025 21:56:04 -0400
+X-Mailer: MailMate (2.0r6255)
+Message-ID: <56683268-92C8-4FAE-9BAF-645C35227F24@nvidia.com>
+In-Reply-To: <20250602235247.1219983-4-ziy@nvidia.com>
+References: <20250602235247.1219983-1-ziy@nvidia.com>
+ <20250602235247.1219983-4-ziy@nvidia.com>
+Content-Type: text/plain
+X-ClientProxiedBy: MN2PR02CA0008.namprd02.prod.outlook.com
+ (2603:10b6:208:fc::21) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530152445.2430295-1-ryan.roberts@arm.com>
- <20250602120042.GB1227@willie-the-truck> <8ef5cadd-2f9b-4a19-a85c-18e17d7edfbc@arm.com>
-In-Reply-To: <8ef5cadd-2f9b-4a19-a85c-18e17d7edfbc@arm.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Tue, 3 Jun 2025 13:55:31 +1200
-X-Gm-Features: AX0GCFuxwlQ8o1crYF9fsectv4nxVSCChPH3dMA3wh1aXX5xOBowo2lsIa0tFBM
-Message-ID: <CAGsJ_4zZdfgiy0k+kK3Gqg5KvuFs8Rx3zQXLhkLk-K-+Hf0grw@mail.gmail.com>
-Subject: Re: [PATCH v1] arm64/mm: Close theoretical race where stale TLB entry
- remains valid
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Will Deacon <will@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Yicong Yang <yangyicong@hisilicon.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Mel Gorman <mgorman@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|MW6PR12MB7072:EE_
+X-MS-Office365-Filtering-Correlation-Id: cd8adcdd-d743-48f6-18dd-08dda241cdd4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?wqlPdJYoe7hENOGAcXeHPqecXyj0oJ5d1NVdhyrJIeoPBZ7zOtJIEm8VcP+r?=
+ =?us-ascii?Q?QwfAD+4TJFiaepqqBw4HTms1RDqjiKlQX5vu5dSi3FkYjeRMXt44pVk0uB2G?=
+ =?us-ascii?Q?EJgY1iJyjffbyBF+zzLAy9YVfi5fRl1gqoh5p0sbn/gbw8K2iV8svC+uoa6P?=
+ =?us-ascii?Q?UZlwkOJoTgQA66FngyTZEdgsDVJdxHHHGHBAwAxcinF9CASpohqDXC8au7gx?=
+ =?us-ascii?Q?bexCxMHhvoAwvTZmLf2uS2b8fiMXFOsmOeLqn9hyYI7exDWt9r/ZHEyEJ+ho?=
+ =?us-ascii?Q?WCkwFAkPLoOVigRkv2kQW9NkRrrggnPNnTjXOtGk4DbjWv9e4RT8sOZtq+FU?=
+ =?us-ascii?Q?yKOnyTYkdduH7lLgWZ2Ry+HNQZV7zUnL/S2qdmV4v2OhEx8jah2ZPsV/eUOX?=
+ =?us-ascii?Q?uJ5Izr1FBbXhcyDYXcSzWid9AxIuBV2vmfBPEW663OtbZk3OvfzM7Omsd5Xj?=
+ =?us-ascii?Q?M2smpnVyfwh2ikEZvJzPJIfIHfE+Fsx8KtJKoXd+lmhlyqc4gTuAE7SfNVu+?=
+ =?us-ascii?Q?Dzfo2isK2ukXqc1NJmNrIQYiw6wh2Q7uURtxgxUi3siKDpHam9hIC/l819hu?=
+ =?us-ascii?Q?C4xEa1ICsPbpyC/Ac9iRBuQy9o1QxF2BQKRKX4gJXX95fnuKxoeYFVzDpoVR?=
+ =?us-ascii?Q?uR2+sVRelaDC2Ry4540KYK2qkCpcQ+yJCEcakex5zFQLtfr+wvhCdJjL+BML?=
+ =?us-ascii?Q?WrSWRocF18ivRZm49iQwFEZgqyItbr+NG15U4xWG/WUrbfoRewsRjjAKkPpd?=
+ =?us-ascii?Q?/8GL8B4ssxKUMcxDErAHsdeTabsyJrJTqOZl0llGGhfdS5kvLQotnkUZublG?=
+ =?us-ascii?Q?5UjdUQKbRgyikDqeZKnWZq0lxN4JW7buOS3ajO1gqLkHqpYjYueBVBWkOljU?=
+ =?us-ascii?Q?iEhlHVurFBRxMk0qNTJBnnh/ck2PQNBM3PtNygT1xYjRSQes29caWzg91QpF?=
+ =?us-ascii?Q?VkoRP3BIJyshLUmZzmhFbBLxqdIRuOtycqG0kaawaMhJx4laPFXp+JJKnaSI?=
+ =?us-ascii?Q?voiOU7KHEfCr0jzDpoMVtKO8S0xAtpKqAyPhGvdtUDzT41Cz00T+GGnjyYof?=
+ =?us-ascii?Q?eLC3yBprbjLJx6/epVvCsBgxLTBiAbml8qXLcTPWLkaHl8u85lZ9FEu9gXnn?=
+ =?us-ascii?Q?WwcN4XaOrSDcvpXmlVg6I3/ErclBvbNSSpMfyo93uQlOYt/LlcxEMIpYa2wh?=
+ =?us-ascii?Q?JjayLHzRj/ZNuUuMkGVulldmRziCeswhTbs1Lk1OYu7zhEEYOnFGyXV6rChu?=
+ =?us-ascii?Q?55c5DrDEQtVXyA4OKWhATWyCQvWdJa6CdmNi9rdEi94C395ePsjxAKR2N1o+?=
+ =?us-ascii?Q?rvOwgngjdodPahXZmsKq6Bzc1TF3in8TXu72Uyuou3kD5xZOILJMwaGFtpwe?=
+ =?us-ascii?Q?v+zT26d8EetftGD6EGxA9OGiLkwHwQAysECZTmJwhbxBMauPpfSc5hvVOm9N?=
+ =?us-ascii?Q?+wJ0xJ/kvNw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?v8HV4c/qGS69qibPdfK7gfdoq1sbsemT0v3nu0fX+cH12v7XaKSxU0yMDORN?=
+ =?us-ascii?Q?QYii6zhgPifMGGzG2PShCi+/2u411GOk7NKj9E9FjF4y5SwHyenvU6Zdy07A?=
+ =?us-ascii?Q?6Y2dh69ZH7x6L32Ga4T+lSgrkXatOJdTMJn1oHDTLeF7DeUpnjP184b1Ez4C?=
+ =?us-ascii?Q?81ERHitSek9pyQAEXKnPxEVGovHpM/9CeaOpgCnAKT0X4LUrv5w0Ur9WiZhx?=
+ =?us-ascii?Q?2gEVpiwhHdkwEr5LfpUG/OpH/dkdrDZdb+9NJbe1t7IRzyxBTlDsqEkW0R7N?=
+ =?us-ascii?Q?77Ngyvh9oldM6aoAOOGHBBq6XOVjgxCC8ZTzmW1QcRYWcij/+3/nXgXROg9U?=
+ =?us-ascii?Q?lI6uHUF04jty5Ed+4a40ReQ1YMAS4Hnb6Rop26nK/xXnXHu9ERLcb6bxNY+A?=
+ =?us-ascii?Q?zEhZbYDpumljBZU1u5iKsErFJsM3J5ike0mYIEtT2Xwubq4UjgLhaotCO/Fk?=
+ =?us-ascii?Q?uUnxZDlRfU5ykKeoRmczKKhiyF5A9yy6MwEhMVHuIZLTpkL1CEpbw705nAGz?=
+ =?us-ascii?Q?FTfG5e6+Q4FGVLKYisBgY/Lrsqk9ZyIDP5m/l7GX/ckc8+QPd9lgEAuxHmMC?=
+ =?us-ascii?Q?reWndWrcIY4wu18F7WieNq5l3sXa5LrqSoL3fS7XbE1TfjJLc5eP79uuyuTH?=
+ =?us-ascii?Q?frD74jgyJqh+GiTmIfKAoMLPViP/5UbYrZhSYAmr5CJdM10gLFeL/FdOQg6K?=
+ =?us-ascii?Q?SBnmKSe35UfFpuq7ZjjbaF7cTMVpPnt7Uqdx/Hl/w4QzBJcAhrNrtzMpcXAi?=
+ =?us-ascii?Q?m3TVZQoqKtUpBC0nUHB6c4wFqEVclwwy7ZLLSuqE4dYdJsE8iBlGMFcPpbb3?=
+ =?us-ascii?Q?tPb0+rvb3Ir9kGocXLNB7otdLAiJfpYUhefaC9ahqs2yudMBbumDWkX8qx8V?=
+ =?us-ascii?Q?34Rx8asUN18grW2uAwq+QJJgZGZPcqZmarP2QZzuTH657oOK8KwuHaGgqCE2?=
+ =?us-ascii?Q?CIKS5GtVv9NbORBuQ8I+b62u/9bmqVl4JhkM2VitvbKmUng39tG3vAvy9PKM?=
+ =?us-ascii?Q?PDlYjpccaHqy6U7JOI5qSOMPT33SMYTiU3t96Mlll4lLTL/o2msKdpo0EClz?=
+ =?us-ascii?Q?4LxW/FIjGcf8JobRZLD2PDe/SdQ2LCzHs4V8RdRIujBxdQowYnIpzrONcCtd?=
+ =?us-ascii?Q?oNFW6r5EMkovyaPY0iLeRj1tQrSTtWKpB2Xu5gNO5cMq6BS8n+XHnM0nco05?=
+ =?us-ascii?Q?1Rls1JKyxJHDUFC8A6MIZSoTJWEV26d/5oBd2kDhA9KNk/99/or81qmzSL0a?=
+ =?us-ascii?Q?vwM4KvxVVRrqm5cm2BT1ib2/WVUpsMoEIOEYuWWJsupM3umkIV3/3DxW8ywt?=
+ =?us-ascii?Q?FXMSxFiUXaWdQ3iro2++rrYawWSwG5A0zeLgdVozUA5lmi+rBAcGcPlSt4Zt?=
+ =?us-ascii?Q?fR9mONm7nXddkUL6pnEXqtM2pD3RDs2rmKIs8HsixkIrFKD9YR1Vwa5/61DS?=
+ =?us-ascii?Q?QLzR7xBXL0g5CNDcG+Xll63IMvJRZ9J3sE77GorMFts5Uc5knumNqAq+aDcu?=
+ =?us-ascii?Q?RAfQUy8CNb5aO8yD4oCJauPPmgDkmEELsp7Rqip+UgNEyLiHjRKw1rQpivX/?=
+ =?us-ascii?Q?CO6tO0DM1twS+H/eWXgOnsaSdtdfRoKqQ0zZy0Yg?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd8adcdd-d743-48f6-18dd-08dda241cdd4
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2025 01:56:06.7399
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ekXtST7kOzflmDUVQTB11f6G10hMzT+pTcqqKq367HRnCsp9xHlIqTUVR0YuZeNY
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB7072
 
-On Tue, Jun 3, 2025 at 2:00=E2=80=AFAM Ryan Roberts <ryan.roberts@arm.com> =
-wrote:
->
-> On 02/06/2025 13:00, Will Deacon wrote:
-> > On Fri, May 30, 2025 at 04:23:47PM +0100, Ryan Roberts wrote:
-> >> Commit 3ea277194daa ("mm, mprotect: flush TLB if potentially racing wi=
-th
-> >> a parallel reclaim leaving stale TLB entries") describes a race that,
-> >> prior to the commit, could occur between reclaim and operations such a=
-s
-> >> mprotect() when using reclaim's tlbbatch mechanism. See that commit fo=
-r
-> >> details but the summary is:
-> >>
-> >> """
-> >> Nadav Amit identified a theoritical race between page reclaim and
-> >> mprotect due to TLB flushes being batched outside of the PTL being hel=
-d.
-> >>
-> >> He described the race as follows:
-> >>
-> >>      CPU0                            CPU1
-> >>      ----                            ----
-> >>                                      user accesses memory using RW PTE
-> >>                                      [PTE now cached in TLB]
-> >>      try_to_unmap_one()
-> >>      =3D=3D> ptep_get_and_clear()
-> >>      =3D=3D> set_tlb_ubc_flush_pending()
-> >>                                      mprotect(addr, PROT_READ)
-> >>                                      =3D=3D> change_pte_range()
-> >>                                      =3D=3D> [ PTE non-present - no fl=
-ush ]
-> >>
-> >>                                      user writes using cached RW PTE
-> >>      ...
-> >>
-> >>      try_to_unmap_flush()
-> >> """
-> >>
-> >> The solution was to insert flush_tlb_batched_pending() in mprotect() a=
-nd
-> >> friends to explcitly drain any pending reclaim TLB flushes. In the
-> >> modern version of this solution, arch_flush_tlb_batched_pending() is
-> >> called to do that synchronisation.
-> >>
-> >> arm64's tlbbatch implementation simply issues TLBIs at queue-time
-> >> (arch_tlbbatch_add_pending()), eliding the trailing dsb(ish). The
-> >> trailing dsb(ish) is finally issued in arch_tlbbatch_flush() at the en=
-d
-> >> of the batch to wait for all the issued TLBIs to complete.
-> >>
-> >> Now, the Arm ARM states:
-> >>
-> >> """
-> >> The completion of the TLB maintenance instruction is guaranteed only b=
-y
-> >> the execution of a DSB by the observer that performed the TLB
-> >> maintenance instruction. The execution of a DSB by a different observe=
-r
-> >> does not have this effect, even if the DSB is known to be executed aft=
-er
-> >> the TLB maintenance instruction is observed by that different observer=
-.
-> >> """
-> >>
-> >> arch_tlbbatch_add_pending() and arch_tlbbatch_flush() conform to this
-> >> requirement because they are called from the same task (either kswapd =
-or
-> >> caller of madvise(MADV_PAGEOUT)), so either they are on the same CPU o=
-r
-> >> if the task was migrated, __switch_to() contains an extra dsb(ish).
-> >>
-> >> HOWEVER, arm64's arch_flush_tlb_batched_pending() is also implemented =
-as
-> >> a dsb(ish). But this may be running on a CPU remote from the one that
-> >> issued the outstanding TLBIs. So there is no architectural gurantee of
-> >> synchonization. Therefore we are still vulnerable to the theoretical
-> >> race described in Commit 3ea277194daa ("mm, mprotect: flush TLB if
-> >> potentially racing with a parallel reclaim leaving stale TLB entries")=
-.
-> >>
-> >> Fix this by flushing the entire mm in arch_flush_tlb_batched_pending()=
-.
-> >> This aligns with what the other arches that implement the tlbbatch
-> >> feature do.
-> >>
-> >> Fixes: 43b3dfdd0455 ("arm64: support batched/deferred tlb shootdown du=
-ring page reclamation/migration")
-> >
-> > Barry -- it would be great if you could re-run some of the benchmarks
-> > from that commit with this fix applied.
->
-> Worth rerunning if possible, but I would guess that those benchmarks will=
- still
-> show the similar improvement because they are measuring the cost of doing=
- the
-> TLB flushing. But with the fix, there is an extra cost that those benchma=
-rks
-> probably won't measure; subsequent work within the target mm will have no=
- VAs
-> cached in the TLB so the miss rate will be much higher.
+On 2 Jun 2025, at 19:52, Zi Yan wrote:
 
-Right, not sure if we have a suitable benchmark to measure the
-side effect, but I assume reclamation speed is more important
-when we're reclaiming memory.
+> MIGRATE_ISOLATE is a standalone bit, so a pageblock cannot be initialized
+> to just MIGRATE_ISOLATE. Add init_pageblock_migratetype() to enable
+> initialize a pageblock with a migratetype and isolated.
+>
+> Signed-off-by: Zi Yan <ziy@nvidia.com>
+> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+> Acked-by: David Hildenbrand <david@redhat.com>
+> ---
+>  include/linux/memory_hotplug.h |  3 ++-
+>  include/linux/page-isolation.h |  3 +++
+>  mm/hugetlb.c                   |  4 ++--
+>  mm/internal.h                  |  3 ++-
+>  mm/memory_hotplug.c            | 12 ++++++++----
+>  mm/memremap.c                  |  2 +-
+>  mm/mm_init.c                   | 24 +++++++++++++++---------
+>  mm/page_alloc.c                | 24 ++++++++++++++++++++++++
+>  8 files changed, 57 insertions(+), 18 deletions(-)
 
-This was originally introduced in commit 3ea277194daae
-("mm, mprotect: flush TLB if potentially racing with a parallel
-reclaim leaving stale TLB entries").
 
-Cc'ing Mel to see if he has any comments.
 
->
-> >
-> >> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-> >> ---
-> >>  arch/arm64/include/asm/tlbflush.h | 9 +++++----
-> >>  1 file changed, 5 insertions(+), 4 deletions(-)
-> >>
-> >> diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/as=
-m/tlbflush.h
-> >> index eba1a98657f1..7d564c2a126f 100644
-> >> --- a/arch/arm64/include/asm/tlbflush.h
-> >> +++ b/arch/arm64/include/asm/tlbflush.h
-> >> @@ -323,13 +323,14 @@ static inline bool arch_tlbbatch_should_defer(st=
-ruct mm_struct *mm)
-> >>  }
-> >>
-> >>  /*
-> >> - * If mprotect/munmap/etc occurs during TLB batched flushing, we need=
- to
-> >> - * synchronise all the TLBI issued with a DSB to avoid the race menti=
-oned in
-> >> - * flush_tlb_batched_pending().
-> >> + * If mprotect/munmap/etc occurs during TLB batched flushing, we need=
- to ensure
-> >> + * all the previously issued TLBIs targeting mm have completed. But s=
-ince we
-> >> + * can be executing on a remote CPU, a DSB cannot guarrantee this lik=
-e it can
-> >> + * for arch_tlbbatch_flush(). Our only option is to flush the entire =
-mm.
-> >>   */
-> >>  static inline void arch_flush_tlb_batched_pending(struct mm_struct *m=
-m)
-> >>  {
-> >> -    dsb(ish);
-> >> +    flush_tlb_mm(mm);
-> >>  }
-> >
-> > Thanks, Ryan. I'll pick this as a fix, but perhaps the core code should
-> > do this given that all the architectures selecting
-> > ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH now have an identical implementation
-> > of arch_flush_tlb_batched_pending()?
->
-> Ha, yes... infact it looks like that's what it did prior to commit db6c1f=
-6f236d
-> ("mm/tlbbatch: introduce arch_flush_tlb_batched_pending()").
+From 0e48cfc8fc9e10c1d2fe9bc080af737b4f852347 Mon Sep 17 00:00:00 2001
+From: Zi Yan <ziy@nvidia.com>
+Date: Mon, 2 Jun 2025 21:51:25 -0400
+Subject: [PATCH] fixup: make init_pageblock_migratetype() set right
+ migratetype.
 
-Yep, it was just a flush_tlb_mm(mm) inside flush_tlb_batched_pending().
+when page_group_by_mobility_disabled is 1.
 
->
-> I'll do that tidy up once this fix appears in mm-unstable.
->
-> Thanks,
-> Ryan
->
->
-> >
-> > Will
->
+Signed-off-by: Zi Yan <ziy@nvidia.com>
+---
+ mm/page_alloc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Thanks
-Barry
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 0867e2b2e187..ff098523a501 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -552,12 +552,14 @@ void __meminit init_pageblock_migratetype(struct page *page,
+ 					  enum migratetype migratetype,
+ 					  bool isolate)
+ {
+-	unsigned long flags = migratetype;
++	unsigned long flags;
+
+ 	if (unlikely(page_group_by_mobility_disabled &&
+ 		     migratetype < MIGRATE_PCPTYPES))
+ 		migratetype = MIGRATE_UNMOVABLE;
+
++	flags = migratetype;
++
+ #ifdef CONFIG_MEMORY_ISOLATION
+ 	if (migratetype == MIGRATE_ISOLATE) {
+ 		VM_WARN_ONCE(
+-- 
+2.47.2
+
+
+
+
+Best Regards,
+Yan, Zi
