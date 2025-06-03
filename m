@@ -1,140 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86C1823BCE4;
-	Tue,  3 Jun 2025 21:54:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0A623BCE2
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 21:55:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748987674; cv=none; b=KOF/jZi2qkRTwI7sKn59TnpR9fib86xH7ivjBkFTWYGFI/mzYdKgltmLy0fiB6zwKx01T7QMyJMLZaD2rG5W1dyNutOp/P9NwzsvdjhKUC0YtH1ei+uFOUgzJOueTsHqe4ddhyBH+0NMAz1BLKgMYIT3Z2XSIYAd0NFf6O888Rw=
+	t=1748987704; cv=none; b=KfrEcSAbBLo9lzbU0NvdexwD5L5+8m5m2BPaD/3kcGePZZaa6l1zr2lOracuFCA7KgcP2JfexfI5Y2/NJtKGrHJNkQ+FuShBpzyeIbVo9zEqmZrNZLo5wU+lFtRZYUlP1Hw09V3aBB+IGsed2AuCzOhx+JgRm7IG/zX6Gx2ZeVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748987674; c=relaxed/simple;
-	bh=zZE3sqGdwymSsm8+G9zuai/4BA8hi6aRGnzezn7VdJ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QAznPn4jGw3PqLzfksQAfLE9ZdYGzXqa4dzYEc6OuLgItxZT3hUcUVmnSAilQUJ7GPY4nNfwIelLcktrxlrIPHxfJiEG+QeVuHu1cYyVjwU6ZbniE4Pg8h2SO+enVeGHdqKv/eJErK8wPLrqHdTgp0lirWeWxlk9MA+sHWdEB1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hYClOzA/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748987704; c=relaxed/simple;
+	bh=M2XddcoG9PvQvUc5qK5I74/V0vhQT/NdRMUW0iOYGxo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ynm/5ztG/YlH93sPwXS0DPOQ+jdsO8QNVdXVDKDE1cXDBBGt88rmawM+EnDhQrEoQJxqc1wvxAlL+NqphBvA+aTipoTdjwSzpS5iZC6yxLawZlG+mJGyFFyC1MTRyL4KuBBRxsTt1KQMD7AtdmajVxStoE1yXWeYSAw6kzBwFiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y8C34UnB; arc=none smtp.client-ip=209.85.222.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hYClOzA/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02954C4CEED;
-	Tue,  3 Jun 2025 21:54:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748987673;
-	bh=zZE3sqGdwymSsm8+G9zuai/4BA8hi6aRGnzezn7VdJ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hYClOzA/a9OT+R6dBzOMSbI5dMErWu7R/kDsvMsAQYMoNrBrvaXnUHokvssDKwCRd
-	 nDA7KtQmADZUVCuu06x0sa/NtSgtwO8t97nhzCI5ly21Tpcnofs0eynZcSbnXYURA3
-	 X9gNoXcU7q9AmP8DY6ybe92149TdmM4e6TsEF9cQnHXCfmvbqOoESC6Du/Swh7iKnH
-	 tx3tPBjSmPXOmvv3FGOmY2SfLQSliUmzRmYHLzDlXXEYNlUGeM+Xg2Wh/t/2/TB+s4
-	 PN8by/Z6/Y3h6siNP2SpPNFG8GbLMxAtNqR2mnwWnTjrFF0OKIRUOcXDrvuvM5B0zl
-	 K66u0FRPFlRcw==
-Date: Tue, 3 Jun 2025 14:54:27 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-	Theodore Ts'o <tytso@mit.edu>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] LoongArch: vDSO: correctly use asm parameters in syscall
- wrappers
-Message-ID: <20250603215427.GB3631276@ax162>
-References: <20250603-loongarch-vdso-syscall-v1-1-6d12d6dfbdd0@linutronix.de>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y8C34UnB"
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-87ded9c6eb4so232570241.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 14:55:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748987702; x=1749592502; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K9WTUUrdCRqQFAEsgXpM/vXRnyBSDopcd6mTa19SWV8=;
+        b=y8C34UnB3Wp0ERqshL+RaWbzIH856q8aHDCyXMgC4m6vdnroEPNeuYGCnFUCwkmS4h
+         LZupBjzJAaEIOHmlwtJwzchc1NCXkSVchFqgboO7VfLISOs3lsWjtPnhWv2/k4dFrupa
+         +27DFUVoOZoVzBVCh+QdwdYe+bdQlivu8ZvJ8mzbfPEaArW8AtiJcYkeYQYJfw7YWXbA
+         pKP4thvmozg0cMxy1NypxiV20adEUf11yjw010/7Qbuow93P5fShMUCIPZVdMdIPEHTU
+         A0TSzGG9+plpsrnSuJ9hh24QtiG00U+LDJRjq+qBM3ubJdUwL2MmQ1bCbHMHyZ7UoSe9
+         0snQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748987702; x=1749592502;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K9WTUUrdCRqQFAEsgXpM/vXRnyBSDopcd6mTa19SWV8=;
+        b=Zk0cbpZ9EsZZc/dqsyOziUvR8/QeemDNvrkSrH/w2e1xr61a0S+KI5S2L9/03Fbkf6
+         BBDakb5khOUnU7cm/Ye48LF4tIb7hp9+9nf1nkY5A4dbGRBUNPzjMYbSlhMdrV8O01NL
+         MTmMY7EChXBczq4fc7ZwCOctSmMc02PIGUfvCDT0RkvV2awHg/j7aXmZG7hRgtvQ/ASB
+         Vr1+TUkBOai705CnxOV9zbRXE+vjQETLD5VCLe5rYv5RdBLU6s5WsTWdAXJ8Cwu7Wa9W
+         Q6yzEVz4BToIyq7vdI6zp/OcpQ1B1bkFT2Z/8Qlm9oQXKWjQfpUlcaKSYLL3Trn7MVIO
+         89PQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXGtsznOwQAGhSzpnqwz/HtSRLt9Imr9wM3yR2a55EYBifa9ZObaYSA7rOWV37yFaU7/DCaqNFxne+DrJs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKZ2X3tzBkImLyOAZM1L313IxeMqnvQ3hw2ui0ISabKaI3rubC
+	6AJfL1i/ephOv1x7XzCzZeCTapj5hyox3l0VzkACWBnzIRLefK1iZFXDwWKPKOqQNKYNsZSy+6k
+	S30Hv5ylRDA4d9YITEQLinOCZIQZBiDEy72HHFiuw
+X-Gm-Gg: ASbGncvyH4YimdQCPa4K/sCBC8MLRU3ajQUZUZ9BosXmfEe7paTEZ8xvfjihCR3r7kF
+	GmxEwqlZP+cFO1Kj4N58SGQ6sxvOsF6gzalNhgsnLF+PIzxFCJnlpSfCYG7ZXVq6UKZMPIKCX8o
+	8F0hePdQhobIqA2oJPLOYo21rzWwIYzfwVrVL6XoBMJlp9C3OGa4RGPG086Y2ZGOQ+EQxZh3dLW
+	Q==
+X-Google-Smtp-Source: AGHT+IFnXDOFHa3mhYH2gzN7+DXpty3pkVkRbYJUm2hF3Btkmzwc6QS/7cxkEtVQaRcLoGHKssgYk+Sf5Ohq9SaiIdU=
+X-Received: by 2002:a05:6102:4585:b0:4e5:8d83:c50e with SMTP id
+ ada2fe7eead31-4e73616269fmr3053464137.10.1748987701736; Tue, 03 Jun 2025
+ 14:55:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250603-loongarch-vdso-syscall-v1-1-6d12d6dfbdd0@linutronix.de>
+References: <20250521222725.3895192-1-blakejones@google.com>
+ <20250521222725.3895192-3-blakejones@google.com> <aD9Xxhwqpm8BDeKe@google.com>
+ <CAP_z_Cj_8uTBGzaoFmi1f956dXi1qDnF4kqc49MSn0jDHYFfxg@mail.gmail.com> <aD9sxuFwwxwHGzNi@google.com>
+In-Reply-To: <aD9sxuFwwxwHGzNi@google.com>
+From: Blake Jones <blakejones@google.com>
+Date: Tue, 3 Jun 2025 14:54:50 -0700
+X-Gm-Features: AX0GCFscGBoWh-HQp20CLzl7V2idOwD3hN6O2fQxMHUnyvVWw0sFKDosABnxZx0
+Message-ID: <CAP_z_Cg+mPpdzxg-d+VV5J9t7vTTNXQmKLdnfuNETm1H40OA+g@mail.gmail.com>
+Subject: Re: [PATCH 2/3] perf: collect BPF metadata from existing BPF programs
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Chun-Tse Shao <ctshao@google.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
+	James Clark <james.clark@linaro.org>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, Leo Yan <leo.yan@arm.com>, 
+	Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Ben Gainey <ben.gainey@arm.com>, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 03, 2025 at 01:48:54PM +0200, Thomas Weiﬂschuh wrote:
-> The syscall wrappers use the "a0" register for two different register
-> variables, both the first argument and the return value. The "ret"
-> variable is used as both input and output while the argument register is
-> only used as input. Clang treats the conflicting input parameters as
-> undefined behaviour and optimizes away the argument assignment.
-> 
-> The code seems to work by chance for the most part today but that may
-> change in the future. Specifically clock_gettime_fallback() fails with
-> clockids from 16 to 23, as implemented by the upcoming auxiliary clocks.
-> 
-> Switch the "ret" register variable to a pure output, similar to the other
-> architectures' vDSO code. This works in both clang and GCC.
-> 
-> Link: https://lore.kernel.org/lkml/20250602102825-42aa84f0-23f1-4d10-89fc-e8bbaffd291a@linutronix.de/
-> Link: https://lore.kernel.org/lkml/20250519082042.742926976@linutronix.de/
-> Fixes: c6b99bed6b8f ("LoongArch: Add VDSO and VSYSCALL support")
-> Fixes: 18efd0b10e0f ("LoongArch: vDSO: Wire up getrandom() vDSO implementation")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+Hi Namhyung,
 
-This is definitely an odd interaction because of the register variables
-using the same value.
+On Tue, Jun 3, 2025 at 2:44=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+> > > IIUC the metadata is collected for each BPF program which may have
+> > > multiple subprograms.  Then this patch creates multiple PERF_RECORD_
+> > > BPF_METADATA for each subprogram, right?
+> > >
+> > > Can it be shared using the BPF program ID?
+> >
+> > In theory, yes, it could be shared. But I want to be able to correlate =
+them
+> > with the corresponding PERF_RECORD_KSYMBOL events, and KSYMBOL events f=
+or
+> > subprograms don't have the full-program ID, so I wouldn't be able to do=
+ that.
+>
+> It's unfortunate that KSYMBOL doesn't have the program ID, but IIRC the
+> following BPF_EVENT should have it.  I think it's safe to think KSYMBOLs
+> belong to the BPF_EVENT when they are from the same thread.
 
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Hmmm. Is that documented and tested anywhere? Offhand it sounds like an
+implementation detail that I wouldn't feel great about depending on -
+certainly not without a strong guarantee that it wouldn't change.
 
-> ---
->  arch/loongarch/include/asm/vdso/getrandom.h    | 2 +-
->  arch/loongarch/include/asm/vdso/gettimeofday.h | 6 +++---
->  2 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/loongarch/include/asm/vdso/getrandom.h b/arch/loongarch/include/asm/vdso/getrandom.h
-> index 48c43f55b039b42168698614d0479b7a872d20f3..a81724b69f291ee49dd1f46b12d6893fc18442b8 100644
-> --- a/arch/loongarch/include/asm/vdso/getrandom.h
-> +++ b/arch/loongarch/include/asm/vdso/getrandom.h
-> @@ -20,7 +20,7 @@ static __always_inline ssize_t getrandom_syscall(void *_buffer, size_t _len, uns
->  
->  	asm volatile(
->  	"      syscall 0\n"
-> -	: "+r" (ret)
-> +	: "=r" (ret)
->  	: "r" (nr), "r" (buffer), "r" (len), "r" (flags)
->  	: "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8",
->  	  "memory");
-> diff --git a/arch/loongarch/include/asm/vdso/gettimeofday.h b/arch/loongarch/include/asm/vdso/gettimeofday.h
-> index 88cfcf13311630ed5f1a734d23a2bc3f65d79a88..f15503e3336ca1bdc9675ec6e17bbb77abc35ef4 100644
-> --- a/arch/loongarch/include/asm/vdso/gettimeofday.h
-> +++ b/arch/loongarch/include/asm/vdso/gettimeofday.h
-> @@ -25,7 +25,7 @@ static __always_inline long gettimeofday_fallback(
->  
->  	asm volatile(
->  	"       syscall 0\n"
-> -	: "+r" (ret)
-> +	: "=r" (ret)
->  	: "r" (nr), "r" (tv), "r" (tz)
->  	: "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7",
->  	  "$t8", "memory");
-> @@ -44,7 +44,7 @@ static __always_inline long clock_gettime_fallback(
->  
->  	asm volatile(
->  	"       syscall 0\n"
-> -	: "+r" (ret)
-> +	: "=r" (ret)
->  	: "r" (nr), "r" (clkid), "r" (ts)
->  	: "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7",
->  	  "$t8", "memory");
-> @@ -63,7 +63,7 @@ static __always_inline int clock_getres_fallback(
->  
->  	asm volatile(
->  	"       syscall 0\n"
-> -	: "+r" (ret)
-> +	: "=r" (ret)
->  	: "r" (nr), "r" (clkid), "r" (ts)
->  	: "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7",
->  	  "$t8", "memory");
-> 
-> ---
-> base-commit: 546b1c9e93c2bb8cf5ed24e0be1c86bb089b3253
-> change-id: 20250603-loongarch-vdso-syscall-f585a99bea03
-> 
-> Best regards,
-> -- 
-> Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> 
+Can you say more about why the duplicated records concern you?
+
+Blake
