@@ -1,129 +1,89 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FB951EF38E;
-	Tue,  3 Jun 2025 05:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A8802940B;
+	Tue,  3 Jun 2025 05:45:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748929468; cv=none; b=kYcb1Uf/LfMx1ZEdOGou2x3YbmDMBBX1MnIcnIFYBP9/X4/XSCoEoH7+CfNY+i/KymZeGfMwMgFNq/OUkdE1gzF7XoyZQic5drYTGdP69P9WQ3wdUp1sHnMOSmkr2y+GD7teYHK7eEk6Hv20+KvVm7w/NGx4gCN8GhjHAWglDH4=
+	t=1748929538; cv=none; b=n0O309DqPi7XCzSCubVJ2t2ippOKpUnF3vlkFPNgymKlYLU8AK4PBhBlAhWToa0lhKd6+DWDBaFDYGPV3UIp7UekCGi2MyLYEJFr5mUDFvQ9P6COLzJrDfTfsFO55vbQoW+GZ3sAihWrctGsP/GtYlzib7yZU9trEFpmWSf0DDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748929468; c=relaxed/simple;
-	bh=dPPB+e2AKQjQRxjQXvvyG2LTlZlQK8dCkvNjuc80I34=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DcVhnOocKvdIol2Z3fUjfv+sT56L8g6+RhWQ962+sJEM7kdNlFundj0NqyCWVPc8qXnvtxBVXZBCGwBdEkAHfQJs/H0Vf+Ii8ISbsiD/A0W33ibEQUOiLcnbjkjYCFErfBgzRFcUqw30Eg6/hVpPmSyo9QCOU7Oqa9e1J0hDvm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E0vXruVq; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748929538; c=relaxed/simple;
+	bh=CYCGRuhTa4KtUmbE3vts5S7yHCuIAzDmAh5o9A12UcI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=hBTii6Ov8kgL7UbxhRd6UqW698ck/qKOWKroalbIIGlk1CBc5QjB6xt86+UzAm1iXOJxpNso+vsvwQ6seutRJPu78c5YxqRBGp9TWa7i5DVB1dNPeI1P9dS9Z7rN8ac8wBWWu1XWTrTW1IsnrfPVx+DwfKQryEvEyATSoR2S2yY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=g5WSTILh reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E0vXruVq"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-23508d30142so54172885ad.0;
-        Mon, 02 Jun 2025 22:44:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748929466; x=1749534266; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aKpAgpUCHhlrOnuYk46IsDIW82QvDojs8/hkNeBtlKc=;
-        b=E0vXruVqDK5soXNv6pczlBhcQn75raIbiZOKN3sNIca6hXVIPvwdkWbgdNsMvsGNwh
-         IrD1J71yCuIS79QfpY5KpyExICYjGG7+cM3cslxmEp+H7uMIsLyhxe9q4fBzRmaL8WtA
-         FL50Q6aC3s2ZAF9fOynRlfQ1SyMfymwZUE/Qp6XzOgFROZ8KDWqVpjjKY4NbSzELBDLC
-         2UTnvB2nf3VZU7hTlest9/vKWFzIgV614ZDwj0qrpiTgb5hB0a0dIhn0kovtDLNrkpNu
-         D1ypE1lLQCWhWjd+E3s26akRnioigwwy+tRCBnTr2y6eUoQai5uS7Zolvl4PrrZXFD/I
-         +6Qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748929466; x=1749534266;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aKpAgpUCHhlrOnuYk46IsDIW82QvDojs8/hkNeBtlKc=;
-        b=pR9nSLk/lWKTIen90pVTvnIbq2sCvCjAILl5XHcpQNFv8mhu95mxUZq3+gsPi9e/i3
-         OpH9VMjQumzbhBAzV4RxtiA2X6ygPOzP/uR316RBfk0BRuLfJmptwYYBfYqFe0C2E6pw
-         bNKpqyuPr925RzjhJLiOlz9C/dmdII0zdKwlRE/GheVw6u/g6D8S9/+rgooWHd7QK28c
-         beUJcsMuWs49Zd7HLWVpP8KozEDtdZaf9K2Gy45Eg5DubC7njJJdDed0X9Hq2VRRX5te
-         VlPlKDYq/dOJYxhdtfw3HlJeKZ+lYM9/JFyTNgeY7jGCVgA2Gm9Rf/7ZlPzjOCePqbaH
-         LFjg==
-X-Forwarded-Encrypted: i=1; AJvYcCUh1VIbyLAwrg1LQpSacmk/ShrdmMWZ3xD9/gWlu64nYvz7sosfXT0IhDduftY6lAGyS4Eq3aFcwLCgQqpB@vger.kernel.org, AJvYcCVzR5iCWNS7C2kDPuOEC2w1DXCLSWNY3QlAoW0e+tSLCmNYwLSpav3G7gy4ciET9VCEXR+9DWZrIvhw0lWs@vger.kernel.org, AJvYcCXu7OkwhCNK//Qa1lAUH9DtxZnX6oBkTjedc9ZTcpm/8tAVfIR3YgGyYz80ZhhSS/UnUKEYJCXxuGKk@vger.kernel.org
-X-Gm-Message-State: AOJu0YwInFGi0aEoYVzSuo1SXB1PpRQX0casBdk22C/RfDlJ7uOODsoV
-	zyhQTLrZtUtwTqX4jN/DbCjn8X4EdLVdyvoQ6mKfp7U5+TqHtynevh+x
-X-Gm-Gg: ASbGncu+B553jzdGtHZjcm8vzmPrE/HH83Usulf+PhtuMlKBIm9YgzqXsjJ4pzeyACm
-	S3htJ2fHQciyoB+mu7aoS8fV6krmVEgMAMgigGLli0Wt9Fr3hg2tcBBsi/Nh1ECmo8YqJkgdhkS
-	dpgYYS954Gp52VwXLTka/urAN5mmCXgf7p7vxEN60JvoDV29aI/3Hf0BwtFDZX3Sp5RZNC9mDQY
-	qNZHQetk8vR6OJSSwYGN/PcyF2znnsC0wN2svldMlRliaXP1PUTAT51teYc8GmMNB/I5DKrCFJ9
-	ms00jiegQiCr+/TRfrvBtI/aHvf4tYDbEXpdOpuBXCqOl0xLcmI4QsKJNx3cJHOg
-X-Google-Smtp-Source: AGHT+IE1VqfVkYV88+WJOAzxaRArGW9u48gtcbqgzCXLWxDE7uKmXgDwxTUrlP+CCGErpeNTzvEQxg==
-X-Received: by 2002:a17:902:e94d:b0:234:eb6:a35d with SMTP id d9443c01a7336-235395a1e69mr204174135ad.27.1748929466385;
-        Mon, 02 Jun 2025 22:44:26 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bc88a7sm80031165ad.39.2025.06.02.22.44.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 22:44:25 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Mon, 2 Jun 2025 22:44:25 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@gmail.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	linux-arch@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Biggers <ebiggers@kernel.org>, linux-crypto@vger.kernel.org,
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="g5WSTILh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=hZ4OI3h5BZOm9FiTMfdV+zwC2HXeHr1OnNLrmtNoTUA=; b=g
+	5WSTILhNW95yNBr08TjNEaYIMpd9igvvL2xhtVRsqBSge8I19eRpXu0vVlbCLFEU
+	Ks7btgWV7N4+0sxRRPDygeeUWgF+nJpqBuVVXiga+It6SG/2fg4X0zxmfFR4yE32
+	OzxQZqG9gCpjp8BbThOoE7tyKl5FYN8zNxf5zhYuPU=
+Received: from 00107082$163.com ( [111.35.189.95] ) by
+ ajax-webmail-wmsvr-40-138 (Coremail) ; Tue, 3 Jun 2025 13:44:47 +0800 (CST)
+Date: Tue, 3 Jun 2025 13:44:47 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Yeoreum Yun" <yeoreum.yun@arm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, mingo@kernel.org,
+	acme@kernel.org, namhyung@kernel.org, leo.yan@arm.com,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] asm-generic: Add sched.h inclusion in simd.h
-Message-ID: <4c787fc1-637d-41dd-84eb-d11fbd71ddfb@roeck-us.net>
-References: <20250530041658.909576-1-chenhuacai@loongson.cn>
+Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <aD5+C41dsjvu9ZNP@e129823.arm.com>
+References: <aD5+C41dsjvu9ZNP@e129823.arm.com>
+X-NTES-SC: AL_Qu2fCvWZtkwj4SacbOkZnEYQheY4XMKyuPkg1YJXOp80iCXQ3wodeXBxJkTkwcOOJiWSvxe8aSZS7+RTe4BFYbAa3IrUHJfyeLXrOMPPSboW
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250530041658.909576-1-chenhuacai@loongson.cn>
+Message-ID: <19514ed5.5692.19734522326.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:iigvCgDXX9DQiz5oJ5gSAA--.25089W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkAhhqmg+fYgVoAAHsC
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-On Fri, May 30, 2025 at 12:16:58PM +0800, Huacai Chen wrote:
-> Commit 7ba8df47810f073 ("asm-generic: Make simd.h more resilient")
-> causes a build error for PREEMPT_RT kernels:
-> 
->   CC      lib/crypto/sha256.o
-> In file included from ./include/asm-generic/simd.h:6,
->                  from ./arch/loongarch/include/generated/asm/simd.h:1,
->                  from ./include/crypto/internal/simd.h:9,
->                  from ./include/crypto/internal/sha2.h:6,
->                  from lib/crypto/sha256.c:15:
-> ./include/asm-generic/simd.h: In function 'may_use_simd':
-> ./include/linux/preempt.h:111:34: error: 'current' undeclared (first use in this function)
->   111 | # define softirq_count()        (current->softirq_disable_cnt & SOFTIRQ_MASK)
->       |                                  ^~~~~~~
-> ./include/linux/preempt.h:112:82: note: in expansion of macro 'softirq_count'
->   112 | # define irq_count()            ((preempt_count() & (NMI_MASK | HARDIRQ_MASK)) | softirq_count())
->       |                                                                                  ^~~~~~~~~~~~~
-> ./include/linux/preempt.h:143:34: note: in expansion of macro 'irq_count'
->   143 | #define in_interrupt()          (irq_count())
->       |                                  ^~~~~~~~~
-> ./include/asm-generic/simd.h:18:17: note: in expansion of macro 'in_interrupt'
->    18 |         return !in_interrupt();
->       |                 ^~~~~~~~~~~~
-> 
-> So add sched.h inclusion in simd.h to fix it.
-> 
-> Fixes: 7ba8df47810f073 ("asm-generic: Make simd.h more resilient")
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-
-Tested-by: Guenter Roeck <linux@roeck-us.net>
-
-> ---
->  include/asm-generic/simd.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/include/asm-generic/simd.h b/include/asm-generic/simd.h
-> index ac29a22eb7cf..70c8716ad32a 100644
-> --- a/include/asm-generic/simd.h
-> +++ b/include/asm-generic/simd.h
-> @@ -4,6 +4,7 @@
->  
->  #include <linux/compiler_attributes.h>
->  #include <linux/preempt.h>
-> +#include <linux/sched.h>
->  #include <linux/types.h>
->  
->  /*
+CkF0IDIwMjUtMDYtMDMgMTI6NDY6MDMsICJZZW9yZXVtIFl1biIgPHllb3JldW0ueXVuQGFybS5j
+b20+IHdyb3RlOgo+SGkgRGF2aWEsCj4KPj4gSSB0aGluayB0aGlzIHBhdGNoIGlzIG5vIGJldHRl
+ciB0aGFuIG15IHBhdGNoIGluIHRoZSBvcmlnaW5hbCByZXBvcnQKPj4gaHR0cHM6Ly9sb3JlLmtl
+cm5lbC5vcmcvYWxsLzIwMjUwNjAxMTczNjAzLjM5MjAtMS0wMDEwNzA4MkAxNjMuY29tLwo+Pgo+
+PiBUaGlzIHBhdGNoIGlzIG1vcmUgYWdncmVzc2l2ZSwgIGl0IGFkZCBtb3JlIGNoYW5nZXMgdG8g
+b3JpZ2luYWwgbG9naWMsIHNhbWUgcHJhY3RpY2UKPj4gYXMgaW4gdGhlIG9mZmVuZGluZyBjb21t
+aXQuICB3b3VsZCByYWlzZSBtb3JlIGNvbmNlcm5zIGFib3V0IGhpZGRlbiBzaWRlLWVmZmVjdC4K
+Pj4KPj4gRm9yIGV4YW1wbGUsIHRoaXMgY29kZSAgaW4gbGlzdF9kZWxfZXZlbnQgc2hvdWxkIHJh
+aXNlIGNvbmNlcm4gYWJvdXQgdGhpcyBwYXRjaAo+PiAyMDk5ICAgICAgICAgICogV2UgY2FuIGhh
+dmUgZG91YmxlIGRldGFjaCBkdWUgdG8gZXhpdC9ob3QtdW5wbHVnICsgY2xvc2UuCj4+ICAyMTAw
+ICAgICAgICAgICovCj4+ICAyMTAxICAgICAgICAgaWYgKCEoZXZlbnQtPmF0dGFjaF9zdGF0ZSAm
+IFBFUkZfQVRUQUNIX0NPTlRFWFQpKQo+PiAgMjEwMiAgICAgICAgICAgICAgICAgcmV0dXJuOwo+
+Cj5hdHRhY2hfc3RhdGUgZG9lc24ndCByZWxhdGVkIGZvciBldmVudC0+c3RhdGUgY2hhbmdlLgo+
+aWYgb25lIGV2ZW50IGFscmVhZHkgY2xlYXJlZCBQRVJGX0FUVEFDSF9DT05URVhULCB0aGF0IGV2
+ZW50IGlzIGNhbGxlZAo+dmlhIGxpc3RfZGVsX2V2ZW50KCkKCk1heWJlIHRoaXMgY29uY2VybiBj
+b3VsZCBiZSBjbGFyaWZpZWQsIHdoYXQgYWJvdXQgb3RoZXIgc3VidGxlIGltcGFjdHMuClRoZSBj
+aGFuZ2Ugc2hvdWxkIGJlIHRob3JvdWdoIHJldmlld2VkLCBpZiB5b3Ugd2FudCB0byBwdXNoIGl0
+IGZ1cnRoZXIuCgpJdCB0YWtlcyBtZSBtb3JlIHRoYW4gYSBtb250aCB0byBmaWd1cmUgb3V0IGEg
+cHJvY2VkdXJlIHRvIHJlcHJvZHVjZSB0aGUga2VybmVsIHBhbmljIGJ1ZywKSXQgaXMgIGp1c3Qg
+dmVyeSBoYXJkIHRvIGNhcHR1cmUgYSBidWcgaGFwcGVucyBpbiByYXJlIHNpdHVhdGlvbi4KCkFu
+ZCB5b3VyIHBhdGNoIGhhcyBhIGdsb2JhbCBpbXBhY3QsIGl0IGNoYW5nZXMgYmVoYXZpb3IgdW5u
+ZWNlc3NhcmlseS4KCj4KPkFsc28sIHlvdXIgcGF0Y2ggY291bGRuJ3Qgc29sdmUgYSBwcm9ibGVt
+IGRlc2NyaWJlIGluCj5jb21taXQgYTNjM2M2NjY3KCJwZXJmL2NvcmU6IEZpeCBjaGlsZF90b3Rh
+bF90aW1lX2VuYWJsZWQgYWNjb3VudGluZyBidWcgYXQgdGFzayBleGl0IikKPmZvciBJTkNBVElW
+RSBldmVudCdzIHRvdGFsX2VuYWJsZV90aW1lLgoKSSBkbyBub3QgdGhpbmsgc28uCkNvcnJlY3Qg
+bWUgaWYgSSBhbSBtYWtpbmcgc2lsbHkgIG1pc3Rha2VzLApUaGUgcGF0Y2gsIGh0dHBzOi8vbG9y
+ZS5rZXJuZWwub3JnL2xrbWwvMjAyNTA2MDMwMzI2NTEuMzk4OC0xLTAwMTA3MDgyQDE2My5jb20v
+CmNhbGxzIHBlcmZfZXZlbnRfc2V0X3N0YXRlKCkgYmFzZWQgb24gREVUQUNIX0VYSVQgZmxhZywg
+d2hpY2ggY292ZXIgdGhlIElOQUNUSVZFIHN0YXRlLCByaWdodD8KSWYgREVUQUNIX0VYSVQgaXMg
+bm90IHVzZWQgZm9yIHRoaXMgcHVycG9zZT8gVGhlbiB3aHkgc2hvdWxkIGl0IGV4aXN0IGF0IHRo
+ZSBmaXJzdCBwbGFjZT8KSSB0aGluayBJIGRvZXMgbm90IHJldmVydCB0aGUgcHVycG9zZSBvZiBj
+b21taXQgYTNjM2M2NjY3Li4uLi5CdXQgSSBjb3VsZCBiZSB3cm9uZwpXb3VsZCB5b3Ugc2hvdyBh
+IGNhbGwgcGF0aCB3aGVyZSBERVRBQ0hfRVhJVCBpcyBub3Qgc2V0LCBidXQgdGhlIGNoYW5nZXMg
+aW4gY29tbWl0IGEzYzNjNjY2NyBpcyBzdGlsbCBuZWVkZWQ/CgoKRGF2aWQKCgo+Cj5UaGFua3Mu
+Cj4KPi0tCj5TaW5jZXJlbHksCj5ZZW9yZXVtIFl1bgo=
