@@ -1,163 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB73281525;
-	Tue,  3 Jun 2025 09:20:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5995A2C327A;
+	Tue,  3 Jun 2025 09:21:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748942460; cv=none; b=nqdY0UkTrBJbm/wZ0SiJaFpPcxuVusg11JB78JqpyrofDcHGFgXBpMbmz0xFuTShJKLQv5Qtt6fwHTWhgf4uffLfAkG+C7kQv7bL/cJ2GoacxDotR2fYJEaSXKu6eG9zuo8aUwspi3qV63atJYHxyy8HpLTw7ODUy820HbTGQFs=
+	t=1748942516; cv=none; b=lj0P8pjxKgbO2pzUfBuy/hbgD9moMyvuLg4iw/vwp1SXyxCwoyvjlUK1cu25HhKLa6QqyewjWT5dMbO0r+AA7Ti/iZ3Yku8hUIc4HW6idh14ILwqbBMYIv1sf8BxnW4Jm8jU78LodcO3UuVYsRtQJAzABGTpO8oPzJ7dW02CUXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748942460; c=relaxed/simple;
-	bh=5Q2I59NE9+CY7+YJCg/Hc9K/P5/Ft8Q5YrHc4Tp+YtA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WCzdjdJX+CcyXjiqQeWA/743rOiynuLmp4GFNMj0lpmymuS2aDt80Vi7pE9rrcHjeUvkITyhP0A0gaUdIyhjf+TqXRgQLGIiPOqcGOJfjJo4F/HWp6SWvF/WlrYzee1WP92lDfKgYLANyDNR5H7TaG+fJh0x2hNCBBtwzq74Tbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=EbUNfneh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748942516; c=relaxed/simple;
+	bh=PYgH8ZouwZAnmjYl7YyPQ0wAj9nKCxAhyBzwcs3OqRQ=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=pf83F2eOzlTjg+r+9flVx0blYgMmjThcMjPqF8egmJE9qqPDyAzqg3BMEAsMtN9lg3QTJsf1BM9IGytWZG+4c87o35NRFeMgsJPed5AeDJfKZZTKr9Ks35HsCABzGSTx6JT4e99lqPx7+/NZn76oG0p9ZM2hm1zgB+tA2LSli/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F5dhN3aq; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="EbUNfneh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F03DAC4CEED;
-	Tue,  3 Jun 2025 09:20:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1748942459;
-	bh=5Q2I59NE9+CY7+YJCg/Hc9K/P5/Ft8Q5YrHc4Tp+YtA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EbUNfneh0eKJSArmtyIOrZoX72K5gEw9TRmhOrkDGs65ptVd3gHiBEfKgYNLLAfOE
-	 tV1ZvvWDFYhQuCfmiLa2z9oecIUNUFhhJ51NLRbis9RYTSOlNPEBy2LV923PnPfIHk
-	 Nf3JguQnUrZNtQHRWBcV9Ai49nhTCv0wxGT3dNbg=
-Date: Tue, 3 Jun 2025 09:58:53 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-	hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 5.10 000/270] 5.10.238-rc1 review
-Message-ID: <2025060344-kiwi-anagram-fc9e@gregkh>
-References: <20250602134307.195171844@linuxfoundation.org>
- <4c608184-5a64-4814-a70a-d2395662d437@gmail.com>
- <52e321d9-2695-4677-b8bf-4be99fc0d681@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F5dhN3aq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748942516; x=1780478516;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=PYgH8ZouwZAnmjYl7YyPQ0wAj9nKCxAhyBzwcs3OqRQ=;
+  b=F5dhN3aq1NItEzLfFR59mU3b8JWKYaAgL7AFC4WZBQPO4WQ9aLLe1Vf9
+   AC1FZSpBQkAxvosjjirmkVNAfykMcK1zSIx+p3tVtN+8QqYrI3VMLDVzV
+   J4Pc8eyQsHoiW8ROfYq73iy9HKyYEvErn1W10ogaUYdKEcCsMmkJohnxm
+   /nPFMmgGCRyfhl4gjE1LSg3xdMq9Z1CyRJWlfG0VlGQfAfJV4Cp1ckHHU
+   0XsAmSU5MRSUe1N/tPslVacsRoMFo0aLZ+E4WR8gYX+FxedJe1BKbR3nV
+   K3Fh/dfuFZa30nQTg/gd6mmyfirZmWtIuDklqLx6O5KiBJtO6i2nm0qPS
+   g==;
+X-CSE-ConnectionGUID: hOZtJAE9QAehetOnrj74gg==
+X-CSE-MsgGUID: ie3/vL0uQZWTl8eKmufoZA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="54776800"
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="54776800"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 02:21:54 -0700
+X-CSE-ConnectionGUID: bRDcFgofRsGTQWVvt1fq/Q==
+X-CSE-MsgGUID: u2rW9rOzTyeUrEQcuwfvEQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="144685825"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.141])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 02:21:50 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 3 Jun 2025 12:21:46 +0300 (EEST)
+To: Hans Zhang <18255117159@163.com>
+cc: lpieralisi@kernel.org, bhelgaas@google.com, 
+    manivannan.sadhasivam@linaro.org, kw@linux.com, cassel@kernel.org, 
+    robh@kernel.org, jingoohan1@gmail.com, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v12 1/6] PCI: Introduce generic bus config read helper
+ function
+In-Reply-To: <d6eeb0b5-53b3-5c40-00df-f79aa2619711@linux.intel.com>
+Message-ID: <e486d187-e869-98b5-a0cb-8bd463540312@linux.intel.com>
+References: <20250514161258.93844-1-18255117159@163.com> <20250514161258.93844-2-18255117159@163.com> <d6eeb0b5-53b3-5c40-00df-f79aa2619711@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <52e321d9-2695-4677-b8bf-4be99fc0d681@gmail.com>
+Content-Type: multipart/mixed; boundary="8323328-132017667-1748942506=:937"
 
-On Mon, Jun 02, 2025 at 09:50:24AM -0700, Florian Fainelli wrote:
-> On 6/2/25 09:49, Florian Fainelli wrote:
-> > On 6/2/25 06:44, Greg Kroah-Hartman wrote:
-> > > This is the start of the stable review cycle for the 5.10.238 release.
-> > > There are 270 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, please
-> > > let me know.
-> > > 
-> > > Responses should be made by Wed, 04 Jun 2025 13:42:20 +0000.
-> > > Anything received after that time might be too late.
-> > > 
-> > > The whole patch series can be found in one patch at:
-> > >     https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/
-> > > patch-5.10.238-rc1.gz
-> > > or in the git tree and branch at:
-> > >     git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-
-> > > rc.git linux-5.10.y
-> > > and the diffstat can be found below.
-> > > 
-> > > thanks,
-> > > 
-> > > greg k-h
-> > 
-> > On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on
-> > BMIPS_GENERIC:
-> > 
-> > Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
-> > 
-> > Similar build warning as reported for 5.4, due to the same commit:
-> > 
-> > commit b47e6abc7dc5772ecb45383d9956f9fcb7fdf33c
-> > Author: Jeongjun Park <aha310510@gmail.com>
-> > Date:   Tue Apr 22 20:30:25 2025 +0900
-> > 
-> >      tracing: Fix oob write in trace_seq_to_buffer()
-> > 
-> >      commit f5178c41bb43444a6008150fe6094497135d07cb upstream.
-> > 
-> > In file included from ./include/linux/kernel.h:15,
-> >                   from ./include/asm-generic/bug.h:20,
-> >                   from ./arch/arm/include/asm/bug.h:60,
-> >                   from ./include/linux/bug.h:5,
-> >                   from ./include/linux/mmdebug.h:5,
-> >                   from ./include/linux/mm.h:9,
-> >                   from ./include/linux/ring_buffer.h:5,
-> >                   from kernel/trace/trace.c:15:
-> > kernel/trace/trace.c: In function 'tracing_splice_read_pipe':
-> > ./include/linux/minmax.h:20:35: warning: comparison of distinct pointer
-> > types lacks a cast
-> >     20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
-> >        |                                   ^~
-> > ./include/linux/minmax.h:26:18: note: in expansion of macro '__typecheck'
-> >     26 |                 (__typecheck(x, y) && __no_side_effects(x, y))
-> >        |                  ^~~~~~~~~~~
-> > ./include/linux/minmax.h:36:31: note: in expansion of macro '__safe_cmp'
-> >     36 |         __builtin_choose_expr(__safe_cmp(x, y), \
-> >        |                               ^~~~~~~~~~
-> > ./include/linux/minmax.h:45:25: note: in expansion of macro '__careful_cmp'
-> >     45 | #define min(x, y)       __careful_cmp(x, y, <)
-> >        |                         ^~~~~~~~~~~~~
-> > kernel/trace/trace.c:6688:43: note: in expansion of macro 'min'
-> >   6688 | min((size_t)trace_seq_used(&iter->seq),
-> >        |                                           ^~~
-> > 
-> 
-> And also this one:
-> 
-> commit e0a3a33cecd3ce2fde1de4ff0e223dc1db484a8d
-> Author: Eric Dumazet <edumazet@google.com>
-> Date:   Wed Mar 5 13:05:50 2025 +0000
-> 
->     tcp: bring back NUMA dispersion in inet_ehash_locks_alloc()
-> 
->     [ Upstream commit f8ece40786c9342249aa0a1b55e148ee23b2a746 ]
-> 
-> 
-> on ARM64:
-> 
-> In file included from ./include/linux/kernel.h:15,
->                  from ./include/linux/list.h:9,
->                  from ./include/linux/module.h:12,
->                  from net/ipv4/inet_hashtables.c:12:
-> net/ipv4/inet_hashtables.c: In function 'inet_ehash_locks_alloc':
-> ./include/linux/minmax.h:20:35: warning: comparison of distinct pointer
-> types lacks a cast
->    20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
->       |                                   ^~
-> ./include/linux/minmax.h:26:18: note: in expansion of macro '__typecheck'
->    26 |                 (__typecheck(x, y) && __no_side_effects(x, y))
->       |                  ^~~~~~~~~~~
-> ./include/linux/minmax.h:36:31: note: in expansion of macro '__safe_cmp'
->    36 |         __builtin_choose_expr(__safe_cmp(x, y), \
->       |                               ^~~~~~~~~~
-> ./include/linux/minmax.h:52:25: note: in expansion of macro '__careful_cmp'
->    52 | #define max(x, y)       __careful_cmp(x, y, >)
->       |                         ^~~~~~~~~~~~~
-> net/ipv4/inet_hashtables.c:946:19: note: in expansion of macro 'max'
->   946 |         nblocks = max(nblocks, num_online_nodes() * PAGE_SIZE /
-> locksz);
->       |                   ^~~
-> 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-For both of these, I'll just let them be as they are ok, it's just the
-mess of our min/max macro unwinding causes these issues.
+--8323328-132017667-1748942506=:937
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Unless they really bother someone, and in that case, a patch to add the
-correct type to the backport to make the noise go away would be greatly
-appreciated.
+On Tue, 3 Jun 2025, Ilpo J=E4rvinen wrote:
 
-thanks,
+> On Thu, 15 May 2025, Hans Zhang wrote:
+>=20
+> > The primary PCI config space accessors are tied to the size of the read
+> > (byte/word/dword). Upcoming refactoring of PCI capability discovery log=
+ic
+> > requires passing a config accessor function that must be able to perfor=
+m
+> > read with different sizes.
+> >=20
+> > Add any size config space read accessor pci_bus_read_config() to allow
+> > giving it as the config space accessor to the upcoming PCI capability
+> > discovery macro.
+> >=20
+> > Reconstructs the PCI function discovery logic to prepare for unified
+> > configuration of access modes. No function changes are intended.
+> >=20
+> > Signed-off-by: Hans Zhang <18255117159@163.com>
+> > ---
+> > Changes since v9 ~ v11:
+> > - None
+> >=20
+> > Changes since v8:
+> > - The new split is patch 1/6.
+> > - The patch commit message were modified.
+> > ---
+> >  drivers/pci/access.c | 17 +++++++++++++++++
+> >  drivers/pci/pci.h    |  2 ++
+> >  2 files changed, 19 insertions(+)
+> >=20
+> > diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> > index b123da16b63b..603332658ab3 100644
+> > --- a/drivers/pci/access.c
+> > +++ b/drivers/pci/access.c
+> > @@ -85,6 +85,23 @@ EXPORT_SYMBOL(pci_bus_write_config_byte);
+> >  EXPORT_SYMBOL(pci_bus_write_config_word);
+> >  EXPORT_SYMBOL(pci_bus_write_config_dword);
+> > =20
+> > +int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32=
+ size,
+> > +=09=09=09u32 *val)
+> > +{
+> > +=09struct pci_bus *bus =3D priv;
+> > +=09int ret;
+> > +
+> > +=09if (size =3D=3D 1)
+> > +=09=09ret =3D pci_bus_read_config_byte(bus, devfn, where, (u8 *)val);
+> > +=09else if (size =3D=3D 2)
+> > +=09=09ret =3D pci_bus_read_config_word(bus, devfn, where, (u16 *)val);
+> > +=09else
+> > +=09=09ret =3D pci_bus_read_config_dword(bus, devfn, where, val);
+>=20
+> Perhaps this should check also size =3D=3D 4 and return=20
+> PCIBIOS_BAD_REGISTER_NUMBER in case size is wrong.
+>=20
+> > +
+> > +=09return ret;
 
-greg k-h
+I'd also forgo ret variable and return directly.
+
+> > +}
+> > +EXPORT_SYMBOL_GPL(pci_bus_read_config);
+>=20
+> Does this even need to be exported? Isn't the capability search always=20
+> built in?
+>=20
+> >  int pci_generic_config_read(struct pci_bus *bus, unsigned int devfn,
+> >  =09=09=09    int where, int size, u32 *val)
+> >  {
+> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > index b81e99cd4b62..5e1477d6e254 100644
+> > --- a/drivers/pci/pci.h
+> > +++ b/drivers/pci/pci.h
+> > @@ -88,6 +88,8 @@ extern bool pci_early_dump;
+> >  bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
+> >  bool pcie_cap_has_lnkctl2(const struct pci_dev *dev);
+> >  bool pcie_cap_has_rtctl(const struct pci_dev *dev);
+> > +int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32=
+ size,
+> > +=09=09=09u32 *val);
+> > =20
+> >  /* Functions internal to the PCI core code */
+> > =20
+> >=20
+>=20
+>=20
+
+--=20
+ i.
+
+--8323328-132017667-1748942506=:937--
