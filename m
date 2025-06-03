@@ -1,222 +1,198 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6AA1223321
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 20:37:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B6517C224;
+	Tue,  3 Jun 2025 20:39:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748983032; cv=none; b=doix9NQMUUfunQMgrWyhqwCkEdp+rWd9QxQkJ6xHm+FtnxV231a/fK6HwBeDP0kN5A88u5ZMf/Gtb895Ll9MEnx7oeEUez9dGU9E1WiP0fl6l3yxP+9trn+3la96wHwT8XLz87dqJzaJIAXSthFp23erCBC8VI5V/lmfr0S8zOs=
+	t=1748983161; cv=none; b=UwIcrL7UhsRlEQGbdtZQdwMWcCpoxnfBCtzW2X6ivNq0hocAjrJvELQk4eESL2eomThZfCeF98OGS3vsqmslJDtoUKB0HjeRdTLE2i51Sz2mgeEXXv9FJzXCHbEtPZEHL16mY9IDyjIUXm4GVwks7KVC7k4Zz5Gw9SENRiViNTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748983032; c=relaxed/simple;
-	bh=gqSJGxI77ova7wU9IMyEeHN+g1roA4YnQitS9pfMhjM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=QZyD+AIvEBMqJOs8zdQJNZWEzBpnaZP0lrlcfw/+lNhRXQuH88fGpKuZ/obQ2tQDeMx+OlPoTCNQGh/kBAvrneLxNKxNZRQFi9JT6NvnUr9xchfunHi6QzGXUxlXpD2DyPNELmMJRNtR0dV9XsCmOj6A6/PBFy1rixKaNgZdsPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--blakejones.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4boJJ0sO; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--blakejones.bounces.google.com
+	s=arc-20240116; t=1748983161; c=relaxed/simple;
+	bh=lrn9yhVHbHWZ5mXEe9CH6pC/dm0YLGaICm/gri4Dj9A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FZgVN6sUVLQfGWRfiO8p0BgkH6KpbFpJZNZfBCsgqLKEnr3B7M1TPvCuVORKAWbI9W9DXSqLLW2B6q/PiNM7/W60DQGRWWebXIUGV3lrbvgeFwEmtQ8XRQeh3VoUZllkdaCTI8FruTVVkRVLYxM4p9MAV6jKBMhCrUgcGJ8jzPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=sgk0VBiU; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4boJJ0sO"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b26e4fe0c08so3913033a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 13:37:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748983029; x=1749587829; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9CErTHxr78ea0SPK/YFJebxnqtvqxlB3jDGvOS7Th0c=;
-        b=4boJJ0sOVqRYwqB4QOXe9Z0hrtHijUZxDqeidlO6Az5oXVB6+QKTWwiTX8zMlBNc67
-         uGo103i+7uXrkPzYoiAwktc8dRZgQXH5PXi3CpLkpeTKqK5aDFYbj1m0gmoI0HXgIPg4
-         8JcsxEQAk731NWjfb7811tNgGjmYnWJvgPGgxa7EeEsblglgp1UpYBNSb16FVp9QVdc+
-         frhLx4eFhTM5P5bVi4CDsJkGQgJZHpQB3qrHyKeOmqlptIpmpPRtJpWW0oaVWw5X5/Kk
-         Q5KQSbhWT3GE/Tr0ugyt0gGrLmw/c4W7F/+eY0OUU/3gDpQ7fZAD61mCPtGOdmKysL5P
-         tj4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748983029; x=1749587829;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9CErTHxr78ea0SPK/YFJebxnqtvqxlB3jDGvOS7Th0c=;
-        b=fOn4yjgdvw2SWxNQt0gO5WEAz4XYHnmOiqDEm0TE7TXzw6LYzZFmZ2eKGryL8MMDlZ
-         FSNF3Pnw3DGxNOQWMOoue0VazFjsyVROTsA20fDguh3PDqen8hE7VOka/wbCMvIfC9La
-         bQqFfPp0EVeRfuNy9WL9NRk71JgQ9z+SBgcZcdVnpDcFXS6JLjpg1SAM9DETrV/HuH7Y
-         39ov7ni6p3B2hDy3kASz5kJvXk+yNv5q+K01hU01ugOcl5iUeVbXduFw9Zybz+5Xm0u5
-         9N0I0WAFjN7cKH9NJOB5LXfBgBjPSR1D+3Kduv227IT6FfVb6YzT2akjcjALAceh6IpX
-         HMqw==
-X-Forwarded-Encrypted: i=1; AJvYcCV8aXGxzW3yCSgXwcVQSncWB2+tci+bBBMkFgFdPYMgNFZRd4hQ7cnsHVqH97oO1CcZ/veKB3OLzqM3RL0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYRoIQJH+tZzE451S5IcWrwGlGy57igVt+psza4MFMLkq/f4mH
-	pv4MapimXlQ5btM/Gq2oKjtfehgqhK97VLIf+680U3r2Dy2DC7EBgAZZ1eapxU945vrHktyLNdL
-	//PRsr3rkJsq12oCMYSud4Q==
-X-Google-Smtp-Source: AGHT+IHr9HxQ/k8ZqblCIZvmJnegYT+R4B5ll7Jl1wsb6v5KQTF03QA9q0We0QuRqUYtpS1qSTmmjc9Fn4szQ8Br
-X-Received: from pjbnw10.prod.google.com ([2002:a17:90b:254a:b0:311:ff32:a85d])
- (user=blakejones job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:2641:b0:311:9c1f:8522 with SMTP id 98e67ed59e1d1-3130ccbf5a0mr764462a91.10.1748983029161;
- Tue, 03 Jun 2025 13:37:09 -0700 (PDT)
-Date: Tue,  3 Jun 2025 13:37:01 -0700
-In-Reply-To: <20250603203701.520541-1-blakejones@google.com>
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="sgk0VBiU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=Bay90DQT92IuqmHtqLW5SL201i6ewsYeFfNYqS0IHf4=; b=sgk0VBiUEWhXTmfR
+	yqQdx0YdmKK87a8TZVf++8Ve/7Aj8IvwXwObDNDZLwMLQWawxVSBdUUe44hxcc38pi4YzoMVery+Y
+	VAHTVDDHYFQ/wepIOrmsx5oPRDErmJ0RJGrz4cbONYjInP9vGqors7YVlNzi7FnWlOrPPnxBXXvJR
+	LnixHqi/efuDJ4H23674/cNLbRBvx3pYWntoy9qxgBcCwx85hNchcNyqR1fLghE7HeoIE4yC5/0MH
+	yykmE0pAmX7AcbkDOFj2Hvg6w+i9+jiX9zOwUfyVSFgo//O9iiqyBv5Wsdrj1d8jyerOHelrv0kEw
+	k98plQc7vacY1N8bzg==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1uMYPa-007TPC-2Q;
+	Tue, 03 Jun 2025 20:39:06 +0000
+From: linux@treblig.org
+To: thierry.reding@gmail.com,
+	jonathanh@nvidia.com,
+	gregkh@linuxfoundation.org
+Cc: linux-usb@vger.kernel.org,
+	linux-tegra@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH] usb: phy: tegra: Remove unused functions
+Date: Tue,  3 Jun 2025 21:39:05 +0100
+Message-ID: <20250603203905.279307-1-linux@treblig.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250603203701.520541-1-blakejones@google.com>
-X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
-Message-ID: <20250603203701.520541-2-blakejones@google.com>
-Subject: [PATCH v3 2/2] Tests for the ".emit_strings" functionality in the BTF dumper.
-From: Blake Jones <blakejones@google.com>
-To: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	Ihor Solodrai <ihor.solodrai@linux.dev>, Namhyung Kim <namhyung@kernel.org>, 
-	Ian Rogers <irogers@google.com>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, Blake Jones <blakejones@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-When this mode is turned on, "emit_zeroes" and "compact" have no effect,
-and embedded NUL characters always terminate printing of an array.
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Signed-off-by: Blake Jones <blakejones@google.com>
+tegra_ehci_phy_restore_start() and tegra_ehci_phy_restore_end()
+last use was removed in 2013 by
+commit a4faa54e3aa2 ("USB: EHCI: tegra: remove all power management")
+
+tegra_usb_phy_preresume() and tegra_usb_phy_postresume() last
+use was removed in 2020 by
+commit c3590c7656fb ("usb: host: ehci-tegra: Remove the driver")
+(Although that one makes me wonder how much of the rest of the file
+is actually used)
+
+Remove both sets.
+
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 ---
- .../selftests/bpf/prog_tests/btf_dump.c       | 118 ++++++++++++++++++
- 1 file changed, 118 insertions(+)
+ drivers/usb/phy/phy-tegra-usb.c   | 89 -------------------------------
+ include/linux/usb/tegra_usb_phy.h |  9 ----
+ 2 files changed, 98 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/btf_dump.c b/tools/testing/selftests/bpf/prog_tests/btf_dump.c
-index c0a776feec23..82903585c870 100644
---- a/tools/testing/selftests/bpf/prog_tests/btf_dump.c
-+++ b/tools/testing/selftests/bpf/prog_tests/btf_dump.c
-@@ -879,6 +879,122 @@ static void test_btf_dump_var_data(struct btf *btf, struct btf_dump *d,
- 			  "static int bpf_cgrp_storage_busy = (int)2", 2);
+diff --git a/drivers/usb/phy/phy-tegra-usb.c b/drivers/usb/phy/phy-tegra-usb.c
+index bee222967f6b..fb9031628d39 100644
+--- a/drivers/usb/phy/phy-tegra-usb.c
++++ b/drivers/usb/phy/phy-tegra-usb.c
+@@ -711,58 +711,6 @@ static int utmi_phy_power_off(struct tegra_usb_phy *phy)
+ 	return utmip_pad_power_off(phy);
  }
  
-+struct btf_dump_string_ctx {
-+	struct btf *btf;
-+	struct btf_dump *d;
-+	char *str;
-+	struct btf_dump_type_data_opts *opts;
-+	int array_id;
-+};
-+
-+static int btf_dump_one_string(struct btf_dump_string_ctx *ctx,
-+			       char *ptr, size_t ptr_sz,
-+			       const char *expected_val)
-+{
-+	size_t type_sz;
-+	int ret;
-+
-+	ctx->str[0] = '\0';
-+	type_sz = btf__resolve_size(ctx->btf, ctx->array_id);
-+	ret = btf_dump__dump_type_data(ctx->d, ctx->array_id, ptr, ptr_sz, ctx->opts);
-+	if (type_sz <= ptr_sz) {
-+		if (!ASSERT_EQ(ret, type_sz, "failed/unexpected type_sz"))
-+			return -EINVAL;
-+	}
-+	if (!ASSERT_STREQ(ctx->str, expected_val, "ensure expected/actual match"))
-+		return -EFAULT;
-+	return 0;
-+}
-+
-+static void btf_dump_strings(struct btf_dump_string_ctx *ctx)
-+{
-+	struct btf_dump_type_data_opts *opts = ctx->opts;
-+
-+	opts->emit_strings = true;
-+
-+	opts->compact = true;
-+	opts->emit_zeroes = false;
-+
-+	opts->skip_names = false;
-+	btf_dump_one_string(ctx, "foo", 4, "(char[4])\"foo\"");
-+
-+	opts->skip_names = true;
-+	btf_dump_one_string(ctx, "foo", 4, "\"foo\"");
-+
-+	/* This should have no effect. */
-+	opts->emit_zeroes = false;
-+	btf_dump_one_string(ctx, "foo", 4, "\"foo\"");
-+
-+	/* This should have no effect. */
-+	opts->compact = false;
-+	btf_dump_one_string(ctx, "foo", 4, "\"foo\"");
-+
-+	/* Non-printable characters come out as hex. */
-+	btf_dump_one_string(ctx, "fo\xff", 4, "\"fo\\xff\"");
-+	btf_dump_one_string(ctx, "fo\x7", 4, "\"fo\\x07\"");
-+
-+	/*
-+	 * Strings that are too long for the specified type ("char[4]")
-+	 * should fall back to the current behavior.
-+	 */
-+	opts->compact = true;
-+	btf_dump_one_string(ctx, "abcde", 6, "['a','b','c','d',]");
-+
-+	/*
-+	 * Strings that are too short for the specified type ("char[4]")
-+	 * should work normally.
-+	 */
-+	btf_dump_one_string(ctx, "ab", 3, "\"ab\"");
-+
-+	/* Non-NUL-terminated arrays don't get printed as strings. */
-+	char food[4] = { 'f', 'o', 'o', 'd' };
-+	char bye[3] = { 'b', 'y', 'e' };
-+
-+	btf_dump_one_string(ctx, food, 4, "['f','o','o','d',]");
-+	btf_dump_one_string(ctx, bye, 3, "['b','y','e',]");
-+
-+	/* The embedded NUL should terminate the string. */
-+	char embed[4] = { 'f', 'o', '\0', 'd' };
-+
-+	btf_dump_one_string(ctx, embed, 4, "\"fo\"");
-+}
-+
-+static void test_btf_dump_string_data(void)
-+{
-+	struct test_ctx t = {};
-+	char str[STRSIZE];
-+	struct btf_dump *d;
-+	DECLARE_LIBBPF_OPTS(btf_dump_type_data_opts, opts);
-+	struct btf_dump_string_ctx ctx;
-+	int char_id, int_id, array_id;
-+
-+	if (test_ctx__init(&t))
-+		return;
-+
-+	d = btf_dump__new(t.btf, btf_dump_snprintf, str, NULL);
-+	if (!ASSERT_OK_PTR(d, "could not create BTF dump"))
-+		return;
-+
-+	/* Generate BTF for a four-element char array. */
-+	char_id = btf__add_int(t.btf, "char", 1, BTF_INT_CHAR);
-+	ASSERT_EQ(char_id, 1, "char_id");
-+	int_id = btf__add_int(t.btf, "int", 4, BTF_INT_SIGNED);
-+	ASSERT_EQ(int_id, 2, "int_id");
-+	array_id = btf__add_array(t.btf, int_id, char_id, 4);
-+	ASSERT_EQ(array_id, 3, "array_id");
-+
-+	ctx.btf = t.btf;
-+	ctx.d = d;
-+	ctx.str = str;
-+	ctx.opts = &opts;
-+	ctx.array_id = array_id;
-+
-+	btf_dump_strings(&ctx);
-+
-+	btf_dump__free(d);
-+	test_ctx__free(&t);
-+}
-+
- static void test_btf_datasec(struct btf *btf, struct btf_dump *d, char *str,
- 			     const char *name, const char *expected_val,
- 			     void *data, size_t data_sz)
-@@ -970,6 +1086,8 @@ void test_btf_dump() {
- 		test_btf_dump_struct_data(btf, d, str);
- 	if (test__start_subtest("btf_dump: var_data"))
- 		test_btf_dump_var_data(btf, d, str);
-+	if (test__start_subtest("btf_dump: string_data"))
-+		test_btf_dump_string_data();
- 	btf_dump__free(d);
- 	btf__free(btf);
+-static void utmi_phy_preresume(struct tegra_usb_phy *phy)
+-{
+-	void __iomem *base = phy->regs;
+-	u32 val;
+-
+-	val = readl_relaxed(base + UTMIP_TX_CFG0);
+-	val |= UTMIP_HS_DISCON_DISABLE;
+-	writel_relaxed(val, base + UTMIP_TX_CFG0);
+-}
+-
+-static void utmi_phy_postresume(struct tegra_usb_phy *phy)
+-{
+-	void __iomem *base = phy->regs;
+-	u32 val;
+-
+-	val = readl_relaxed(base + UTMIP_TX_CFG0);
+-	val &= ~UTMIP_HS_DISCON_DISABLE;
+-	writel_relaxed(val, base + UTMIP_TX_CFG0);
+-}
+-
+-static void utmi_phy_restore_start(struct tegra_usb_phy *phy,
+-				   enum tegra_usb_phy_port_speed port_speed)
+-{
+-	void __iomem *base = phy->regs;
+-	u32 val;
+-
+-	val = readl_relaxed(base + UTMIP_MISC_CFG0);
+-	val &= ~UTMIP_DPDM_OBSERVE_SEL(~0);
+-	if (port_speed == TEGRA_USB_PHY_PORT_SPEED_LOW)
+-		val |= UTMIP_DPDM_OBSERVE_SEL_FS_K;
+-	else
+-		val |= UTMIP_DPDM_OBSERVE_SEL_FS_J;
+-	writel_relaxed(val, base + UTMIP_MISC_CFG0);
+-	usleep_range(1, 10);
+-
+-	val = readl_relaxed(base + UTMIP_MISC_CFG0);
+-	val |= UTMIP_DPDM_OBSERVE;
+-	writel_relaxed(val, base + UTMIP_MISC_CFG0);
+-	usleep_range(10, 100);
+-}
+-
+-static void utmi_phy_restore_end(struct tegra_usb_phy *phy)
+-{
+-	void __iomem *base = phy->regs;
+-	u32 val;
+-
+-	val = readl_relaxed(base + UTMIP_MISC_CFG0);
+-	val &= ~UTMIP_DPDM_OBSERVE;
+-	writel_relaxed(val, base + UTMIP_MISC_CFG0);
+-	usleep_range(10, 100);
+-}
+-
+ static int ulpi_phy_power_on(struct tegra_usb_phy *phy)
+ {
+ 	void __iomem *base = phy->regs;
+@@ -1123,43 +1071,6 @@ static int tegra_usb_phy_init(struct usb_phy *u_phy)
+ 	return err;
+ }
  
+-void tegra_usb_phy_preresume(struct usb_phy *u_phy)
+-{
+-	struct tegra_usb_phy *phy = to_tegra_usb_phy(u_phy);
+-
+-	if (!phy->is_ulpi_phy)
+-		utmi_phy_preresume(phy);
+-}
+-EXPORT_SYMBOL_GPL(tegra_usb_phy_preresume);
+-
+-void tegra_usb_phy_postresume(struct usb_phy *u_phy)
+-{
+-	struct tegra_usb_phy *phy = to_tegra_usb_phy(u_phy);
+-
+-	if (!phy->is_ulpi_phy)
+-		utmi_phy_postresume(phy);
+-}
+-EXPORT_SYMBOL_GPL(tegra_usb_phy_postresume);
+-
+-void tegra_ehci_phy_restore_start(struct usb_phy *u_phy,
+-				  enum tegra_usb_phy_port_speed port_speed)
+-{
+-	struct tegra_usb_phy *phy = to_tegra_usb_phy(u_phy);
+-
+-	if (!phy->is_ulpi_phy)
+-		utmi_phy_restore_start(phy, port_speed);
+-}
+-EXPORT_SYMBOL_GPL(tegra_ehci_phy_restore_start);
+-
+-void tegra_ehci_phy_restore_end(struct usb_phy *u_phy)
+-{
+-	struct tegra_usb_phy *phy = to_tegra_usb_phy(u_phy);
+-
+-	if (!phy->is_ulpi_phy)
+-		utmi_phy_restore_end(phy);
+-}
+-EXPORT_SYMBOL_GPL(tegra_ehci_phy_restore_end);
+-
+ static int read_utmi_param(struct platform_device *pdev, const char *param,
+ 			   u8 *dest)
+ {
+diff --git a/include/linux/usb/tegra_usb_phy.h b/include/linux/usb/tegra_usb_phy.h
+index e6c14f2b1f9b..40afcee8b4f5 100644
+--- a/include/linux/usb/tegra_usb_phy.h
++++ b/include/linux/usb/tegra_usb_phy.h
+@@ -80,13 +80,4 @@ struct tegra_usb_phy {
+ 	bool powered_on;
+ };
+ 
+-void tegra_usb_phy_preresume(struct usb_phy *phy);
+-
+-void tegra_usb_phy_postresume(struct usb_phy *phy);
+-
+-void tegra_ehci_phy_restore_start(struct usb_phy *phy,
+-				 enum tegra_usb_phy_port_speed port_speed);
+-
+-void tegra_ehci_phy_restore_end(struct usb_phy *phy);
+-
+ #endif /* __TEGRA_USB_PHY_H */
 -- 
-2.49.0.1204.g71687c7c1d-goog
+2.49.0
 
