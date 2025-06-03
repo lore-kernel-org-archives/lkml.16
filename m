@@ -1,229 +1,110 @@
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D926B224AF3
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 12:30:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024EE1A0BE0;
+	Tue,  3 Jun 2025 12:35:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748953852; cv=none; b=gbjv6DPSMU59b3jG4+bzar1ewF4a77AnUWIlhIUrHnua+SLb6gH7J683naLqTdu6FNdioBVpaC3ohclN0OlIyWlO4gjRl91Z620FCv1+GOh7iF1yTIbL7H747cdEbsoLbmf12cLqbqtZvacW8BR4OqScJj34cUhwE+NpoLvsGCk=
+	t=1748954107; cv=none; b=U8dRoIkDJv7NsAaSNa/4Cz0Af+9WBzwttnu+EEUswtNo8G9d4lmV9mUOL8GU3eucV88KfMNZcm0j8IzDCwzlMiMhCAGhdtHunEfAo8YajyMhN3Ko5CfNcUJS20HnDM1JXpLASOORfvhTsb1Q/VXXN95I9kumR+fG2kQx4+TXcbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748953852; c=relaxed/simple;
-	bh=EmQ/A9vSfKWWPB/K/T8g8cr639C8K9rcW3d2OXMslYI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tZaGk/ocvjICz7nt0nvFZ1BYPgyHfkdB62xFJhdU6lYofIQrBWQMBoHIUz2bbnwProYLajd+ExyEztCc9Lmh7KYwJbj7fCOBw3Q2cvobrkAeu7GZMK29IHWI+FjudWpDmTnqpo1cgfj8HUuRb2NpVTVRqk9i6fQIwSUtRkOT6Xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LKvP3EzW; arc=none smtp.client-ip=209.85.222.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LKvP3EzW"
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-87df4dc0e54so1104328241.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 05:30:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748953850; x=1749558650; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LY/1nUmGBa6dpDChrxvy7BQ7e4yIy3xA/coyZFocW/0=;
-        b=LKvP3EzWGddE4uWuB7OfVy5oDwkJQu8QXp+kbSInopfsq0Dt/ulzjij3bknit7gUH3
-         9COBmnOrbiJ+hrIkCRvQTRQ8WLqCYpzNA3wSybQw9Wlag1pzanfyizd1xNNuJMT5f46l
-         hJ9iB6lE66bI7x8ClQznWI2GW58iivl2fBIcMOalw2QlY40USWLDf0cq6lhPlPiXx+g1
-         Aze9ZbE32pc1JOufsj+UA4jLRMsc68minAvhz0/Ca0RiVaw77b46aKr0JIODAF0aPNaC
-         DUTQu/zlNzX4HsMa+2dSzcz4MM/3McAjU2fgWoKCzRO841yEblS2mHuXi3p0x8Zx6Fu0
-         r35A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748953850; x=1749558650;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LY/1nUmGBa6dpDChrxvy7BQ7e4yIy3xA/coyZFocW/0=;
-        b=eS1v/HwyRJnY+gk/Cq/iRFCavO3Et1lAX/IJJsu4cteTriNRFkXPuWKVQkKdSFUuxj
-         sbP7odWbqGbVlNmNSNvnjSQPPgBjSICtecUyEDbVrFIeth/AGOQCTrGv3iDD3DGTZjgH
-         Cg8vQ7uZhfz51aedswM0VAaO8gRSYVSrszw8tNTCWql/JFOIfvaKWxMQDEb7Kf7/YUdl
-         z0xnrjb/239i/yLAYiagolyYUE+gHmgp0o/TWJN3FrGqCo75GRvX8ZuniT8Noc5ZatLt
-         pZh4cXmQWjO14asZuvvqJY3UMrd6Jw9u1U8GuhtOYO0GfXx8uL4xQavmAg8ONOeNlJ8s
-         AbyA==
-X-Forwarded-Encrypted: i=1; AJvYcCXVWzks9WJAVRZ0lF51leziGamzfj+sBgXtJ/A7RclaVx/j41h/+UOK8ANYWyjYLNa1G9315tqX+Y1f0/E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyChY458bv1keW4GYYJVdEAupWwTZxPDAo3FdZFOxLCI20VJA5H
-	AHT12I/oQNDDqOOYs8qdWjnV/lZHHcTT/Cvutr9Ot7EGp6iAZi+iBpo6eZfIIspzWgzI18XFfKm
-	koFk+lAzp8NtgHdsjRF5awMUFZ5dQR1MZFrsJ7oGWqQ==
-X-Gm-Gg: ASbGncv/HxC5Bnto+4p3PuKh5LXnBjRco43FEzbx/xpZRPEb5eqa7LsLhSAcwFI6NJj
-	PWYytked8H0jrvSJVMhBaX0jkU8slLcultODOGm1vWCSQ60LPowgjImhpIzoqVZYlugjG8QxZo4
-	cVzwWbnTyN0b5WOZo4ZRD4RTShAKgsnms=
-X-Google-Smtp-Source: AGHT+IHTosQvOBKF0L3D0Inb+MoWZZ3cSRXCp014dL+KqAo8fezAvJU5scdjR5Ga9Sawg0g6JBdjG2QGVG+FJzLfAfg=
-X-Received: by 2002:a05:6122:1ad4:b0:52c:4eb0:118d with SMTP id
- 71dfb90a1353d-53084be0280mr12838886e0c.4.1748953849537; Tue, 03 Jun 2025
- 05:30:49 -0700 (PDT)
+	s=arc-20240116; t=1748954107; c=relaxed/simple;
+	bh=34ur0U6vtA9C6kezmUaRFXNbvfQ0KUk517aG4VIHXww=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=SUtymYOuzoTIYHMmERoDDVywxoQG2TUxPcXxWtXePx8lNP2eXp8b0FLqbFrBgkX4Enw+itYWs29OSR/oo/obY9s+IM7n/D++Y56ptp0vwBuvJfaDvsIwIqTYHSnneOvAndEm94Gy2FnDY1rDs5OcQziIj3scYQlyGTnUda5n9fA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4bBVSK3nP7z1BFhD;
+	Tue,  3 Jun 2025 20:31:13 +0800 (CST)
+Received: from kwepemk200017.china.huawei.com (unknown [7.202.194.83])
+	by mail.maildlp.com (Postfix) with ESMTPS id 78D9318007F;
+	Tue,  3 Jun 2025 20:35:01 +0800 (CST)
+Received: from [10.174.178.219] (10.174.178.219) by
+ kwepemk200017.china.huawei.com (7.202.194.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 3 Jun 2025 20:35:00 +0800
+Subject: Re: [PATCH v2 0/3] KVM: arm64: selftests: arch_timer_edge_cases fixes
+To: Sebastian Ott <sebott@redhat.com>
+CC: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+	Colton Lewis <coltonlewis@google.com>, Ricardo Koller <ricarkol@google.com>,
+	Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Shuah Khan <shuah@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<kvmarm@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>
+References: <20250527142434.25209-1-sebott@redhat.com>
+From: Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <adf8b877-7ca2-f60b-fb59-578c70d0e3c0@huawei.com>
+Date: Tue, 3 Jun 2025 20:35:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250602134241.673490006@linuxfoundation.org>
-In-Reply-To: <20250602134241.673490006@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 3 Jun 2025 18:00:38 +0530
-X-Gm-Features: AX0GCFumOsdVyieNJlmgoVB__zbTkcpeuCdAKy4COLBbvEc6SfoIbneNR7OPeWM
-Message-ID: <CA+G9fYtrUYsAtZgJg4b8ZxCUzWmekp9v0USDVC5dKgZ3XNe7UA@mail.gmail.com>
-Subject: Re: [PATCH 6.14 00/73] 6.14.10-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250527142434.25209-1-sebott@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ kwepemk200017.china.huawei.com (7.202.194.83)
 
-On Mon, 2 Jun 2025 at 19:28, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.14.10 release.
-> There are 73 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 04 Jun 2025 13:42:20 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.14.10-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.14.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Hi Sebastian,
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+On 2025/5/27 22:24, Sebastian Ott wrote:
+> Some small fixes for arch_timer_edge_cases that I stumbled upon
+> while debugging failures for this selftest on ampere-one.
+> 
+> Changes since v1: modified patch 3 based on suggestions from Marc.
+> 
+> I've done some tests with this on various machines - seems to be all
+> good, however on ampere-one I now hit this in 10% of the runs:
+> ==== Test Assertion Failure ====
+>   arm64/arch_timer_edge_cases.c:481: timer_get_cntct(timer) >= DEF_CNT + (timer_get_cntfrq() * (uint64_t)(delta_2_ms) / 1000)
+>   pid=166657 tid=166657 errno=4 - Interrupted system call
+>      1  0x0000000000404db3: test_run at arch_timer_edge_cases.c:933
+>      2  0x0000000000401f9f: main at arch_timer_edge_cases.c:1062
+>      3  0x0000ffffaedd625b: ?? ??:0
+>      4  0x0000ffffaedd633b: ?? ??:0
+>      5  0x00000000004020af: _start at ??:?
+>   timer_get_cntct(timer) >= DEF_CNT + msec_to_cycles(delta_2_ms)
+> 
+> This is not new, it was just hidden behind the other failure. I'll
+> try to figure out what this is about (seems to be independent of
+> the wait time)..
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Not sure if you have figured it out. I can easily reproduce it on my box
+and I *guess* it is that we have some random XVAL values when we enable
+the timer..
 
-## Build
-* kernel: 6.14.10-rc1
-* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
-rc.git
-* git commit: d9764ae2492695b2e87e4cd07bf1c61426d3693d
-* git describe: v6.14.9-74-gd9764ae24926
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.14.y/build/v6.14=
-.9-74-gd9764ae24926
+test_reprogramming_timer()
+{
+	local_irq_disable();
+	reset_timer_state(timer, DEF_CNT);
 
-## Test Regressions (compared to v6.14.8-784-g10804dbee7fa)
+	/* Program the timer to DEF_CNT + delta_1_ms. */
+	set_tval_irq(timer, msec_to_cycles(delta_1_ms), CTL_ENABLE);
 
-## Metric Regressions (compared to v6.14.8-784-g10804dbee7fa)
+	[...]
+}
 
-## Test Fixes (compared to v6.14.8-784-g10804dbee7fa)
+set_tval_irq()
+{
+	timer_set_ctl(timer, ctl);
 
-## Metric Fixes (compared to v6.14.8-784-g10804dbee7fa)
+	// There is a window that we enable the timer with *random* XVAL
+	// values and we may get the unexpected interrupt.. And it's
+	// unlikely that KVM can be aware of TVAL's change (and
+	// re-evaluate the interrupt's pending state) before hitting the
+	// GUEST_ASSERT().
 
-## Test result summary
-total: 332025, pass: 306599, fail: 4596, skip: 20041, xfail: 789
+	timer_set_tval(timer, tval_cycles);
+}
 
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 139 total, 137 passed, 2 failed
-* arm64: 57 total, 56 passed, 1 failed
-* i386: 18 total, 18 passed, 0 failed
-* mips: 34 total, 33 passed, 1 failed
-* parisc: 4 total, 4 passed, 0 failed
-* powerpc: 40 total, 40 passed, 0 failed
-* riscv: 25 total, 22 passed, 3 failed
-* s390: 22 total, 22 passed, 0 failed
-* sh: 5 total, 5 passed, 0 failed
-* sparc: 4 total, 3 passed, 1 failed
-* x86_64: 49 total, 48 passed, 1 failed
+I'm not familiar with the test so I'm not 100% sure that this is the
+root cause. But I hope this helps with your analysis ;-) .
 
-## Test suites summary
-* boot
-* commands
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-kcmp
-* kselftest-kvm
-* kselftest-livepatch
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-mincore
-* kselftest-mm
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-mptcp
-* kselftest-openat2
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-rust
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-tc-testing
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-x86
-* kunit
-* kvm-unit-tests
-* lava
-* libgpiod
-* libhugetlbfs
-* log-parser-boot
-* log-parser-build-clang
-* log-parser-build-gcc
-* log-parser-test
-* ltp-capability
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-smoke
-* ltp-syscalls
-* ltp-tracing
-* modules
-* perf
-* rcutorture
-* rt-tests-cyclicdeadline
-* rt-tests-pi-stress
-* rt-tests-pmqtest
-* rt-tests-rt-migrate-test
-* rt-tests-signaltest
-
---
-Linaro LKFT
-https://lkft.linaro.org
+Thanks,
+Zenghui
