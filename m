@@ -1,362 +1,317 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E097F19C554
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 16:42:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C2AC2E0
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 16:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748968931; cv=none; b=qIOqKF0+7mjzp9PTivZwn2wU+PExNz9uQJwGV/RUq5Ss0U0eKXlxnAZ80FdEERCXXZAe1iihu5NljgMxplzjc4nMWlWjAxCReWCVSW4p+6d5EcW7utST7WtWpeYwHWLUUbxUXpoj77nmp7kRgS+xT+AMDw1KKzg/ysqGWTA8epk=
+	t=1748969617; cv=none; b=XVMq8MBEAZ84rxArLsSzd4cjVLvhprHkwsDVxvAIW6my8wiPISLXBOh867oanT9oIOIkyArZquvli56D+SAS0MKMZWwdZ2BDbmRsuqqt8TuRg3sqFZvybEGSmeQnqX9ivaIO5P5o8BtFMAPWfJKgYYZQKn3GAtLAFUeghSex8BE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748968931; c=relaxed/simple;
-	bh=zrKNirMsdjziCcAGApD/8ntDTx6uQnaRHnHcj6e/C6g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WGxcMgWVoOefQlqY7QWyVZQRvmiGUdY3Fj8OIr9Yg3YZ0E0+YucYSfTSrsJ13kXSHjRea5v6DjZuN0A08YPxaxDHaKrvH5g2JxmIvfgIz163GWLvDTAa4hmLK7LQ72a9T+YlIRa8b+XRSniXdxYhnFh1gjN5zVifgpaUgQgcPDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CTGCW58v; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748969617; c=relaxed/simple;
+	bh=YzPCDM4J3v1EDag0WEsJprASWJ+tsRl6742oVfNq3ho=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OBgtiTLcG2ol7xUxfJEj++hVgoZuOh7xCptxa4zQ7+SC0Ud+42MBbsZyqAL+AlFEQkPIU5Q0erqEFzVuEIj/JchM393whuEA1njjLodIgv2NSgZa2um2E/LACMO4a4DncgOBeRpupdutTtwXQJTokJC7d07Dlx3FSOJw6dMu7iU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=e5lc+Ojb; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CTGCW58v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748968927;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XW5iA+IcoMvqOf0ndcrgPMgu4TWbTOSU4Ckyq0Vi+RE=;
-	b=CTGCW58vP4drg/zcLkrf/GXhq0MbaxtDA4fNHKJObZ5G6CaxvUVb1IBEp0WxjrTzP0Z+Tx
-	zeCAW9eauvev8oog7QkUFOGFz9bJMxekAs+p+KcF8n7keKZYeSnLypIUV6JUaJlXMSuJDz
-	0ksjr+m67QQU5G+mm3zX+RIrNpLLiPc=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-587-QUx9NeRNMqucTWmP5vySmw-1; Tue, 03 Jun 2025 12:42:06 -0400
-X-MC-Unique: QUx9NeRNMqucTWmP5vySmw-1
-X-Mimecast-MFC-AGG-ID: QUx9NeRNMqucTWmP5vySmw_1748968925
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5e28d0cc0so905090085a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 09:42:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e5lc+Ojb"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-601a67c6e61so406a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 09:53:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748969613; x=1749574413; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wQRQzkESXtxwAedI/ayC9kgQGUTy61o9qZHR4qLBeQw=;
+        b=e5lc+Ojb1hnAqPJW39SBFu+rZGar0MiioiiAmLQ+Aa9IpTQQbCBkDzH0Fgf4sgCBad
+         Ju/m/wvcyavle/mBwLQVLGydYRf4DnrWKjIXUJx9IWQ196H9HSO+lFpcvAbuT82utqrC
+         UUwdTiXaTW6TsVTSWX6Hl8+tEdbo31JH57dd9HDvo5IOB0Rl3KcTXnk2YsQCCswDd1h3
+         xSwVLVQOfGfOyjEfH8JTde7G3Pre1yQI3mcTDJFCfDvy1b3I9nnzY5Zs+fkduCDqu70P
+         f25MLS1DhPSVldkw/nU4E8BT3iLYEiEGTU7UIsPo6yDHMJnV0SJ4ZAemxQY54jLbFbhn
+         AtqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748968925; x=1749573725;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XW5iA+IcoMvqOf0ndcrgPMgu4TWbTOSU4Ckyq0Vi+RE=;
-        b=tvFtzZCSDjELl4NZEVOXim2oQf+t9MWwjHh/uEFGZ2vMyykl8IHlCJHwrZN84L7BEq
-         I6/2wFY74KqTwZyph1t20qkgN8nOkdZjYe9ipFFaKhrPvxH0uxVcwkseeRaR3n8vse57
-         c5mU+PrCa6TME/nTSAi8e6yARvD1TZ48Qlr9DuTXX6ooDot7QPmbCca7TGD2Pe5wCiEc
-         QrA9N664gm/jxbXVTEr9Ssv5vhggp+9EEDjs7Mh8bxiqrzYX4pMBXrlBGg/wcJ0jIops
-         9ihRgnlSezlFXdTiaBTGNjzzmjRdaTnHyQSiODID7C2pZOSQnA3giM7/CQoCUuRf19aM
-         lpoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW98EnX0nYsn6x7jwrerjWi1SjFgvAJLu5mJyNX8wwqrVcPp/y3SkQEBWrjN7Kzpuu9gpm80S2n0NhZTAw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtthmzFchmqWuCOdkRROJAzFkeShjHlABOYQdFW6Brrw7ZmbYu
-	zzfhDR40F4pP2zfTbWEA6X0WeNow+vD7l6rxg/WePr7q0JhoukXUBC7Gb+Ym40shBF5t4Blcohk
-	2/Yldg8YzsLu7Q4RF8x6Ls5UMeikRkwnekWBiT5S9SgDd2CGbVQHHS4U+8aNAx5p88g==
-X-Gm-Gg: ASbGncvI8rNgTs2aiFaTN9vigkB4A7GBO0DkFB7T674EWX/QtV2Y5NM9iRiKVhbQCzW
-	uVIqWIqcH6EiMHf+GzYzlf/qTU9uiS9hRItpOu0r66yyRN0GLj8g535nZ7bM2Mn08GMXmWABx8Z
-	bb0gzO2gZQMfUmzkMeHNeae0u7pACP1e0wZRMkU4ZcGQCSgl/vDXRZlSLNmv8//j2HDs60SZ+6b
-	l8DsECWZHwISnKZFOB1bRhz2LQmoI+JA8bxajtaDyJG8GwzQ0U/UPZ1W/aldfMnhVlLmVhFAT4J
-	ccA=
-X-Received: by 2002:a05:620a:190c:b0:7d0:9da7:6941 with SMTP id af79cd13be357-7d0a201df56mr2833923785a.37.1748968924988;
-        Tue, 03 Jun 2025 09:42:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHNlgjeVsUhFeMqMzPsr8hOvznmRm5eUNpcsj+yPaaFc3gu0L6wkGYTMZrQGhj5zHFGM43GxA==
-X-Received: by 2002:a05:620a:190c:b0:7d0:9da7:6941 with SMTP id af79cd13be357-7d0a201df56mr2833919985a.37.1748968924554;
-        Tue, 03 Jun 2025 09:42:04 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fac6d33901sm82985226d6.18.2025.06.03.09.42.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 09:42:04 -0700 (PDT)
-Date: Tue, 3 Jun 2025 12:42:01 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Kairui Song <ryncsn@gmail.com>
-Cc: Barry Song <21cnbao@gmail.com>, linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Andrea Arcangeli <aarcange@redhat.com>,
-	David Hildenbrand <david@redhat.com>,
-	Lokesh Gidra <lokeshgidra@google.com>, stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] mm: userfaultfd: fix race of userfaultfd_move and
- swap cache
-Message-ID: <aD8l2ajsoAyAmonu@x1.local>
-References: <20250602181419.20478-1-ryncsn@gmail.com>
- <aD4KyHz_H5WPLLf4@x1.local>
- <CAGsJ_4wbU=4ECxNPEB0dKGXibrAKuR-N3i8wwmVCYAgWCuupnQ@mail.gmail.com>
- <CAMgjq7C_nVynRpMV8xkyVuhpyDY6qZX_ShzxChen5Fh5gXSJVg@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1748969613; x=1749574413;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wQRQzkESXtxwAedI/ayC9kgQGUTy61o9qZHR4qLBeQw=;
+        b=j+NewDKFzoC+m+VoBAkcQsDRKrh75TTdBvkNKjq+7j8jbVFaTlpz+itE2ccEBSBmow
+         ZyZ5FeDWxO5ZCBJOXd8BnD7gOnPZq0WTrTKjSMZnryQbTjVxxD3P+1LHVCwntfpqoFWj
+         lHLnCXfXWKsuIpuL3Xxv+0BMIQB8GYvaulrrEMXelXvzmB1fTyjJrS07XjHUH0/DYISh
+         xVGl3ArSebhK7jOteGAKG0xcRb/cogWmui4ux8oRkh9q1B7Ty31tUTp1F3lbEN3Fb4PS
+         QNRaBwnwVqGifH6wP4gbDm5ErYNJVWIts6DnU/qowjS2eTLTtigT56RkN4kflZQtQ3PW
+         Vj4w==
+X-Forwarded-Encrypted: i=1; AJvYcCVpECfIf7PzstOyH7bo+wt3ZIhW8wuTgCYhP9wSW9SXfMWjrJcYWYLKuK5F17rlIWug+7RbBiFHtb2G/tY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycZw9ozA5x/WRWT4RJCqHrBGnNvq/61MZRL7mGwrLOF8HVBCEn
+	68CLGtUGfcPAO9eMKMqsF2ckdZdtKEOxjlRByqq4/2JKD8dppHJ2bQ6yOiQqIW7BucnqEmzacnp
+	wRgsK1v7xUjOmiql45PZuLEZzMOmQKgzAtJiqfWDA
+X-Gm-Gg: ASbGncvmVdhDc4QI3Gj9iSHNbkG4aIZ7Ha+GT7oP800DZ8nsMgiEGex3YONwtugrFzr
+	/WF4wIaR0bofUAYu1nkxRxfMFW0rXM21nK9z/9iKm/XjcUPBV93O4b8eBUZXhqFx7h4ODVp9smi
+	Y1s6LbEh59DWZ2QjMOCjdZkpZNnQAQ531ZuTvmlyNXOPVqJwNHPdzTMLmmHTtK1ryIcSQ=
+X-Google-Smtp-Source: AGHT+IEjyPVAixvQ48Mf5PcyJ0C13KrE2bBZOk0v6HCuqfJ6L3mrWzcICGIyt7ZXGdHIHOcTSK1RGAoiTIp6X9YbW4M=
+X-Received: by 2002:aa7:c313:0:b0:601:233a:4f4d with SMTP id
+ 4fb4d7f45d1cf-606a90c1e5emr139670a12.2.1748969613185; Tue, 03 Jun 2025
+ 09:53:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMgjq7C_nVynRpMV8xkyVuhpyDY6qZX_ShzxChen5Fh5gXSJVg@mail.gmail.com>
+References: <20250530104439.64841-1-21cnbao@gmail.com> <CAG48ez11zi-1jicHUZtLhyoNPGGVB+ROeAJCUw48bsjk4bbEkA@mail.gmail.com>
+ <002aa917-d952-491d-800c-88a0476ac02f@lucifer.local> <CAG48ez0kb+on=erofZL2ZwB9CqtrSCJVND7K7=ww1prMUGXDRg@mail.gmail.com>
+ <CAGsJ_4y0LJRdMg3-0NC6n9-UvRXAEuwHzEL7KMJ3dD1CUkQa9w@mail.gmail.com>
+In-Reply-To: <CAGsJ_4y0LJRdMg3-0NC6n9-UvRXAEuwHzEL7KMJ3dD1CUkQa9w@mail.gmail.com>
+From: Jann Horn <jannh@google.com>
+Date: Tue, 3 Jun 2025 18:52:55 +0200
+X-Gm-Features: AX0GCFt6JfcbuOOtCdeDDbdlzWDOtBwMsi7UT2u1gikHKgUMJVf-UXRivyKhNEM
+Message-ID: <CAG48ez0L_dRjArd_NMVSeQ3eJ5pGLJgNppsHxpBuBQbQHPU57w@mail.gmail.com>
+Subject: Re: [PATCH RFC v2] mm: use per_vma lock for MADV_DONTNEED
+To: Barry Song <21cnbao@gmail.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, akpm@linux-foundation.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Barry Song <v-songbaohua@oppo.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	David Hildenbrand <david@redhat.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Suren Baghdasaryan <surenb@google.com>, Lokesh Gidra <lokeshgidra@google.com>, 
+	Tangquan Zheng <zhengtangquan@oppo.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 03, 2025 at 07:48:49PM +0800, Kairui Song wrote:
-> On Tue, Jun 3, 2025 at 6:08 AM Barry Song <21cnbao@gmail.com> wrote:
-> >
-> > On Tue, Jun 3, 2025 at 8:34 AM Peter Xu <peterx@redhat.com> wrote:
+On Tue, Jun 3, 2025 at 9:06=E2=80=AFAM Barry Song <21cnbao@gmail.com> wrote=
+:
+> On Sat, May 31, 2025 at 8:41=E2=80=AFAM Jann Horn <jannh@google.com> wrot=
+e:
+> > On Fri, May 30, 2025 at 4:34=E2=80=AFPM Lorenzo Stoakes
+> > <lorenzo.stoakes@oracle.com> wrote:
+> > > On Fri, May 30, 2025 at 04:06:30PM +0200, Jann Horn wrote:
+> > > > On Fri, May 30, 2025 at 12:44=E2=80=AFPM Barry Song <21cnbao@gmail.=
+com> wrote:
+> > > > One important quirk of this is that it can, from what I can see, ca=
+use
+> > > > freeing of page tables (through pt_reclaim) without holding the mma=
+p
+> > > > lock at all:
+> > > >
+> > > > do_madvise [behavior=3DMADV_DONTNEED]
+> > > >   madvise_lock
+> > > >     lock_vma_under_rcu
+> > > >   madvise_do_behavior
+> > > >     madvise_single_locked_vma
+> > > >       madvise_vma_behavior
+> > > >         madvise_dontneed_free
+> > > >           madvise_dontneed_single_vma
+> > > >             zap_page_range_single_batched [.reclaim_pt =3D true]
+> > > >               unmap_single_vma
+> > > >                 unmap_page_range
+> > > >                   zap_p4d_range
+> > > >                     zap_pud_range
+> > > >                       zap_pmd_range
+> > > >                         zap_pte_range
+> > > >                           try_get_and_clear_pmd
+> > > >                           free_pte
+> > > >
+> > > > This clashes with the assumption in walk_page_range_novma() that
+> > > > holding the mmap lock in write mode is sufficient to prevent
+> > > > concurrent page table freeing, so it can probably lead to page tabl=
+e
+> > > > UAF through the ptdump interface (see ptdump_walk_pgd()).
 > > >
-> > > On Tue, Jun 03, 2025 at 02:14:19AM +0800, Kairui Song wrote:
-> > > > From: Kairui Song <kasong@tencent.com>
-> > > >
-> > > > On seeing a swap entry PTE, userfaultfd_move does a lockless swap cache
-> > > > lookup, and try to move the found folio to the faulting vma when.
-> > > > Currently, it relies on the PTE value check to ensure the moved folio
-> > > > still belongs to the src swap entry, which turns out is not reliable.
-> > > >
-> > > > While working and reviewing the swap table series with Barry, following
-> > > > existing race is observed and reproduced [1]:
-> > > >
-> > > > ( move_pages_pte is moving src_pte to dst_pte, where src_pte is a
-> > > >  swap entry PTE holding swap entry S1, and S1 isn't in the swap cache.)
-> > > >
-> > > > CPU1                               CPU2
-> > > > userfaultfd_move
-> > > >   move_pages_pte()
-> > > >     entry = pte_to_swp_entry(orig_src_pte);
-> > > >     // Here it got entry = S1
-> > > >     ... < Somehow interrupted> ...
-> > > >                                    <swapin src_pte, alloc and use folio A>
-> > > >                                    // folio A is just a new allocated folio
-> > > >                                    // and get installed into src_pte
-> > > >                                    <frees swap entry S1>
-> > > >                                    // src_pte now points to folio A, S1
-> > > >                                    // has swap count == 0, it can be freed
-> > > >                                    // by folio_swap_swap or swap
-> > > >                                    // allocator's reclaim.
-> > > >                                    <try to swap out another folio B>
-> > > >                                    // folio B is a folio in another VMA.
-> > > >                                    <put folio B to swap cache using S1 >
-> > > >                                    // S1 is freed, folio B could use it
-> > > >                                    // for swap out with no problem.
-> > > >                                    ...
-> > > >     folio = filemap_get_folio(S1)
-> > > >     // Got folio B here !!!
-> > > >     ... < Somehow interrupted again> ...
-> > > >                                    <swapin folio B and free S1>
-> > > >                                    // Now S1 is free to be used again.
-> > > >                                    <swapout src_pte & folio A using S1>
-> > > >                                    // Now src_pte is a swap entry pte
-> > > >                                    // holding S1 again.
-> > > >     folio_trylock(folio)
-> > > >     move_swap_pte
-> > > >       double_pt_lock
-> > > >       is_pte_pages_stable
-> > > >       // Check passed because src_pte == S1
-> > > >       folio_move_anon_rmap(...)
-> > > >       // Moved invalid folio B here !!!
-> > > >
-> > > > The race window is very short and requires multiple collisions of
-> > > > multiple rare events, so it's very unlikely to happen, but with a
-> > > > deliberately constructed reproducer and increased time window, it can be
-> > > > reproduced [1].
-> > > >
-> > > > It's also possible that folio (A) is swapped in, and swapped out again
-> > > > after the filemap_get_folio lookup, in such case folio (A) may stay in
-> > > > swap cache so it needs to be moved too. In this case we should also try
-> > > > again so kernel won't miss a folio move.
-> > > >
-> > > > Fix this by checking if the folio is the valid swap cache folio after
-> > > > acquiring the folio lock, and checking the swap cache again after
-> > > > acquiring the src_pte lock.
-> > > >
-> > > > SWP_SYNCRHONIZE_IO path does make the problem more complex, but so far
-> > > > we don't need to worry about that since folios only might get exposed to
-> > > > swap cache in the swap out path, and it's covered in this patch too by
-> > > > checking the swap cache again after acquiring src_pte lock.
+> > > Hmmmmmm is this because of the series that allows page table freeing =
+on
+> > > zap... I think Zi's?
+> >
+> > Yeah, that was Qi Zheng's
+> > https://lore.kernel.org/all/92aba2b319a734913f18ba41e7d86a265f0b84e2.17=
+33305182.git.zhengqi.arch@bytedance.com/
+> > .
+> >
+> > > We need to update the documentation on this then... which currently s=
+tates
+> > > the VMA need only be stable.
 > > >
-> > > [1]
+> > > I guess this is still the case except for the novma walker you mentio=
+n.
 > > >
-> > > >
-> > > > Testing with a simple C program to allocate and move several GB of memory
-> > > > did not show any observable performance change.
-> > > >
-> > > > Cc: <stable@vger.kernel.org>
-> > > > Fixes: adef440691ba ("userfaultfd: UFFDIO_MOVE uABI")
-> > > > Closes: https://lore.kernel.org/linux-mm/CAMgjq7B1K=6OOrK2OUZ0-tqCzi+EJt+2_K97TPGoSt=9+JwP7Q@mail.gmail.com/ [1]
-> > > > Signed-off-by: Kairui Song <kasong@tencent.com>
-> > > >
-> > > > ---
-> > > >
-> > > > V1: https://lore.kernel.org/linux-mm/20250530201710.81365-1-ryncsn@gmail.com/
-> > > > Changes:
-> > > > - Check swap_map instead of doing a filemap lookup after acquiring the
-> > > >   PTE lock to minimize critical section overhead [ Barry Song, Lokesh Gidra ]
-> > > >
-> > > > V2: https://lore.kernel.org/linux-mm/20250601200108.23186-1-ryncsn@gmail.com/
-> > > > Changes:
-> > > > - Move the folio and swap check inside move_swap_pte to avoid skipping
-> > > >   the check and potential overhead [ Lokesh Gidra ]
-> > > > - Add a READ_ONCE for the swap_map read to ensure it reads a up to dated
-> > > >   value.
-> > > >
-> > > >  mm/userfaultfd.c | 23 +++++++++++++++++++++--
-> > > >  1 file changed, 21 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-> > > > index bc473ad21202..5dc05346e360 100644
-> > > > --- a/mm/userfaultfd.c
-> > > > +++ b/mm/userfaultfd.c
-> > > > @@ -1084,8 +1084,18 @@ static int move_swap_pte(struct mm_struct *mm, struct vm_area_struct *dst_vma,
-> > > >                        pte_t orig_dst_pte, pte_t orig_src_pte,
-> > > >                        pmd_t *dst_pmd, pmd_t dst_pmdval,
-> > > >                        spinlock_t *dst_ptl, spinlock_t *src_ptl,
-> > > > -                      struct folio *src_folio)
-> > > > +                      struct folio *src_folio,
-> > > > +                      struct swap_info_struct *si, swp_entry_t entry)
-> > > >  {
-> > > > +     /*
-> > > > +      * Check if the folio still belongs to the target swap entry after
-> > > > +      * acquiring the lock. Folio can be freed in the swap cache while
-> > > > +      * not locked.
-> > > > +      */
-> > > > +     if (src_folio && unlikely(!folio_test_swapcache(src_folio) ||
-> > > > +                               entry.val != src_folio->swap.val))
-> > > > +             return -EAGAIN;
-> > > > +
-> > > >       double_pt_lock(dst_ptl, src_ptl);
-> > > >
-> > > >       if (!is_pte_pages_stable(dst_pte, src_pte, orig_dst_pte, orig_src_pte,
-> > > > @@ -1102,6 +1112,15 @@ static int move_swap_pte(struct mm_struct *mm, struct vm_area_struct *dst_vma,
-> > > >       if (src_folio) {
-> > > >               folio_move_anon_rmap(src_folio, dst_vma);
-> > > >               src_folio->index = linear_page_index(dst_vma, dst_addr);
-> > > > +     } else {
-> > > > +             /*
-> > > > +              * Check if the swap entry is cached after acquiring the src_pte
-> > > > +              * lock. Or we might miss a new loaded swap cache folio.
-> > > > +              */
-> > > > +             if (READ_ONCE(si->swap_map[swp_offset(entry)]) & SWAP_HAS_CACHE) {
+> > > Relatedly, It's worth looking at Dev's series which introduces a conc=
+erning
+> > > new 'no lock at all' mode to the page table walker explicitly for nov=
+ma. I
+> > > cc'd you :) See [0].
 > > >
-> > > Do we need data_race() for this, if this is an intentionally lockless read?
+> > > [0]: https://lore.kernel.org/linux-mm/6a60c052-9935-489e-a38e-1b03a1a=
+79155@lucifer.local/
 > >
-> > Not entirely sure. But I recommend this pattern, borrowed from
-
-AFAIU data_race() is only for KCSAN.  READ_ONCE/WRITE_ONCE will also be
-needed.  The doc actually explicitly mentioned this case:
-
-/*
- * ...
- * be atomic *and* KCSAN should ignore the access, use both data_race()
- * and READ_ONCE(), for example, data_race(READ_ONCE(x)).
- */
-#define data_race(expr)							\
-
-I'm ok if there're existing references of swap_map[], so even if it's good
-to have data_race() we can do that later until someone complains at all the
-spots..
-
-> > zap_nonpresent_ptes() -> free_swap_and_cache_nr(),
-> > where the PTL is also held and READ_ONCE is used.
-> >
-> >                 if (READ_ONCE(si->swap_map[offset]) == SWAP_HAS_CACHE) {
-> >                        ..
-> >                         nr = __try_to_reclaim_swap(si, offset,
-> >                                                    TTRS_UNMAPPED | TTRS_FULL);
-> >
-> >                         if (nr == 0)
-> >                                 nr = 1;
-> >                         else if (nr < 0)
-> >                                 nr = -nr;
-> >                         nr = ALIGN(offset + 1, nr) - offset;
-> >                 }
-> 
-> Thanks for the explanation, I also agree that holding PTL here is good
-> enough here.
-> 
-> >
-> > I think we could use this to further optimize the existing
-> > filemap_get_folio(), since in the vast majority of cases we don't
-> > have a swapcache, yet we still always call filemap_get_folio().
-> >
-> > diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-> > index bc473ad21202..c527ec73c3b4 100644
-> > --- a/mm/userfaultfd.c
-> > +++ b/mm/userfaultfd.c
-> >
-> > @@ -1388,7 +1388,7 @@ static int move_pages_pte(struct mm_struct *mm,
-> > pmd_t *dst_pmd, pmd_t *src_pmd,
-> >                  * folios in the swapcache. This issue needs to be resolved
-> >                  * separately to allow proper handling.
-> >                  */
-> >
-> > -               if (!src_folio)
-> > +               if (!src_folio & (swap_map[offset] & SWAP_HAS_CACHE))
-> >                         folio = filemap_get_folio(swap_address_space(entry),
-> >                                         swap_cache_index(entry));
-> >                 if (!IS_ERR_OR_NULL(folio)) {
-> >
-> > To be future-proof, we may want to keep the READ_ONCE to ensure
-> > the compiler doesn't skip the second read inside move_swap_pte().
-> 
-> Maybe we can do this optimization in another patch I think.
-> 
+> > Yeah, I saw that you CC'ed me; at a first glance that seems relatively
+> > innocuous to me as long as it's only done for kernel mappings where
+> > all the rules are different.
 > >
 > > >
-> > > Another pure swap question: the comment seems to imply this whole thing is
-> > > protected by src_pte lock, but is it?
+> > > >
+> > > > I think before this patch can land, you'll have to introduce some n=
+ew
+> > > > helper like:
+> > > >
+> > > > void mmap_write_lock_with_all_vmas(struct mm_struct *mm)
+> > > > {
+> > > >   mmap_write_lock(mm);
+> > > >   for_each_vma(vmi, vma)
+> > > >     vma_start_write(vma);
+> > > > }
+> > > >
+> > > > and use that in walk_page_range_novma() for user virtual address sp=
+ace
+> > > > walks, and update the comment in there.
 > > >
-> > > I'm not familiar enough with swap code, but it looks to me the folio can be
-> > > added into swap cache and set swap_map[] with SWAP_HAS_CACHE as long as the
-> > > folio is locked.  It doesn't seem to be directly protected by pgtable lock.
+> > > What dude? No, what? Marking literally all VMAs write locked? :/
 > > >
-> > > Perhaps you meant this: since src_pte lock is held, then it'll serialize
-> > > with another thread B concurrently swap-in the swap entry, but only _later_
-> > > when thread B's do_swap_page() will check again on pte_same(), then it'll
-> > > see the src pte gone (after thread A uffdio_move happened releasing src_pte
-> > > lock), hence thread B will release the newly allocated swap cache folio?
+> > > I think this could have unexpected impact no? We're basically disabli=
+ng VMA
+> > > locking when we're in novma, that seems... really silly?
+> >
+> > I mean, walk_page_range_novma() being used on user virtual address
+> > space is pretty much a debug-only thing, I don't think it matters if
+> > it has to spend time poking flags in a few thousand VMAs. I guess the
+> > alternative would be to say "ptdump just doesn't show entries between
+> > VMAs, which shouldn't exist in the first place", and change ptdump to
+> > do a normal walk that skips over userspace areas not covered by a VMA.
+> > Maybe that's cleaner.
+> >
+> > But FWIW, we already do worse than what I proposed here when
+> > installing MMU notifiers, with mm_take_all_locks().
+> >
+> > > > > +       else
+> > > > > +               __madvise_unlock(mm, madv_behavior->behavior);
+> > > > > +}
+> > > > > +
+> > > > >  static bool madvise_batch_tlb_flush(int behavior)
+> > > > >  {
+> > > > >         switch (behavior) {
+> > > > > @@ -1714,19 +1770,24 @@ static int madvise_do_behavior(struct mm_=
+struct *mm,
+> > > > >                 unsigned long start, size_t len_in,
+> > > > >                 struct madvise_behavior *madv_behavior)
+> > > > >  {
+> > > > > +       struct vm_area_struct *vma =3D madv_behavior->vma;
+> > > > >         int behavior =3D madv_behavior->behavior;
+> > > > > +
+> > > > >         struct blk_plug plug;
+> > > > >         unsigned long end;
+> > > > >         int error;
+> > > > >
+> > > > >         if (is_memory_failure(behavior))
+> > > > >                 return madvise_inject_error(behavior, start, star=
+t + len_in);
+> > > > > -       start =3D untagged_addr_remote(mm, start);
+> > > > > +       start =3D untagged_addr(start);
+> > > >
+> > > > Why is this okay? I see that X86's untagged_addr_remote() asserts t=
+hat
+> > > > the mmap lock is held, which is no longer the case here with your
+> > > > patch, but untagged_addr() seems wrong here, since we can be operat=
+ing
+> > > > on another process. I think especially on X86 with 5-level paging a=
+nd
+> > > > LAM, there can probably be cases where address bits are used for pa=
+rt
+> > > > of the virtual address in one task while they need to be masked off=
+ in
+> > > > another task?
+> > > >
+> > > > I wonder if you'll have to refactor X86 and Risc-V first to make th=
+is
+> > > > work... ideally by making sure that their address tagging state
+> > > > updates are atomic and untagged_area_remote() works locklessly.
 > > >
-> > > There's another trivial detail that IIUC pte_same() must fail because
-> > > before/after the uffdio_move the swap entry will be occupied so no way to
-> > > have it reused, hence src_pte, even if re-populated again after uffdio_move
-> > > succeeded, cannot become the orig_pte (points to the swap entry in
-> > > question) that thread B read, hence pte_same() must check fail.
+> > > Yeah I don't know why we're doing this at all? This seems new unless =
+I
+> > > missed it?
 > >
-> > in v1 of this patch, we had some similar discussions [1][2]:
+> > Because untagged_addr_remote() has a mmap_assert_locked(mm) on x86 and
+> > reads data that is updated under the mmap lock, I think? So without
+> > this change you should get a lockdep splat on x86.
 > >
-> > [1] https://lore.kernel.org/linux-mm/CAGsJ_4wBMxQSeoTwpKoWwEGRAr=iohbYf64aYyJ55t0Z11FkwA@mail.gmail.com/
-> > [2] https://lore.kernel.org/linux-mm/CAGsJ_4wM8Tph0Mbc-1Y9xNjgMPL7gqEjp=ArBuv3cJijHVXe6w@mail.gmail.com/
+> > > > (Or you could try to use something like the
+> > > > mmap_write_lock_with_all_vmas() I proposed above for synchronizing
+> > > > against untagged_addr(), first write-lock the MM and then write-loc=
+k
+> > > > all VMAs in it...)
+> > >
+> > > This would completely eliminate the point of this patch no? The whole=
+ point
+> > > is not taking these locks... And I'm very much not in favour of
+> > > write-locking literally every single VMA. under any circumstances.
 > >
-> > At the very least, [2] is possible, although the probability is extremely low.
-> >
-> > "It seems also possible for the sync zRAM device.
-> >
-> >  step 1: src pte points to a swap entry S without swapcache
-> >  step 2: we call move_swap_pte()
-> >  step 3: someone swap-in src_pte by sync path, no swapcache; swap slot
-> > S is freed.
-> >              -- for zRAM;
-> >  step 4: someone swap-out src_pte, get the exactly same swap slot S as step 1,
-> >              adds folio to swapcache due to swapout;
-> >  step 5: move_swap_pte() gets ptl and finds page tables are stable
-> > since swap-out
-> >              happens to have the same swap slot as step1;
-> >  step 6: we clear src_pte, move src_pte to dst_pte; but miss to move the folio.
-> >
-> > Yep, we really need to re-check pte for swapcache after holding PTL.
-> > "
-> >
-> > Personally, I agree that improving the changelog or the comments
-> > would be more helpful. In fact, there are two bugs here, and Kairui’s
-> > changelog clearly describes the first one.
-> 
-> Yeah, the first one is quite a long and complex race already, so I
-> made the description on the second issue shorter. I thought it
-> wouldn't be too difficult to understand given the first example. I can
-> add some more details.
+> > I'm talking about doing this heavyweight locking in places like
+> > arch_prctl(ARCH_ENABLE_TAGGED_ADDR, ...) that can, if I understand
+> > correctly, essentially reconfigure the size of the virtual address
+> > space of a running process from 56-bit to 47-bit at the hardware level
+> > and cause address bits that were previously part of the virtual
+> > address to be ignored. READ_ONCE()/WRITE_ONCE() might do the job too,
+> > but then we'll have to keep in mind that two subsequent invocations of
+> > untagged_addr() can translate a userspace-specified virtual address
+> > into two different virtual addresses at the page table level.
+>
+> I=E2=80=99m confused about how arch_prctl(ARCH_ENABLE_TAGGED_ADDR, ...) c=
+an
+> reconfigure a running process from using 56-bit addresses to 47-bit.
+> I read the code and see the x86 kernel only supports LAM U57, and not
+> LAM U48 at all:
+>
+> static int prctl_enable_tagged_addr(struct mm_struct *mm, unsigned long n=
+r_bits)
+> {
+>         ...
+>
+>         if (!nr_bits || nr_bits > LAM_U57_BITS) {
+>                 mmap_write_unlock(mm);
+>                 return -EINVAL;
+>         }
+>
+>         mm_enable_lam(mm);
+>         mmap_write_unlock(mm);
+>
+>         return 0;
+> }
 
-IMHO it's not about how the race happens that is hard to follow.  To me,
-it's harder to follow on how src_pte lock can prove READ_ONCE() of
-swap_map[] is valid.  Especially, on why it's okay to read even false
-negative (relies on the other thread retry properly in do_swap_page).
+Oh, you're right, currently only LAM U57 is supported by Linux, I was
+making bad assumptions.
 
-It'll be much appreciated if you could add something into either comments
-or git commit message on this. Maybe a link to this specific lore
-discussion (or v1's) would be helpful.
+commit 2f8794bd087e, which introduced that code, also mentions that
+"For now only LAM_U57 is supported, with 6 tag bits".
 
-Thanks,
+> I still don't fully understand why x86 differs from ARM64,
+> where the same bit mask is always applied unconditionally.
+>
+> On ARM64, we can even enable or disable PROT_MTE on a per-VMA basis
+> using mmap or mprotect. However, the same bitmask operation is
+> always executed regardless of whether memory tags are present for a
+> given VMA.
 
--- 
-Peter Xu
+Hmm, true, that does look like a weird difference.
 
+> I mean, on arm64, if a process or a VMA doesn't have tag access
+> enabled, and we pass an address with high bits to madvise,
+> untagged_addr() will still strip the tag. But wouldn't that address
+> be invalid for a process or VMA that doesn't have TBI enabled?
+
+Yeah, I guess in that regard it might be fine to always strip the bits...
+
+Maybe the situation on arm64 is simpler, in that these bits are always
+either tag bits or unused on arm64, while my understanding is that on
+X86, the CPU supports changing the meaning of address bits between
+"part of virtual address" and "ignored tag bits". So I think stripping
+the bits might work fine for LAM U57, but not for LAM U48, and maybe
+the code is trying to be future-proof in case someone wants to add
+support for LAM U48?
+
+It is arguably also a bit more robust to reject garbage addresses
+instead of ignoring bits that would cause the CPU to treat the address
+as noncanonical, but I guess doing that just in MM code is not a big
+problem. (Unless someone relies on seccomp filters that block
+manipulation of specific virtual address ranges via munmap() and such,
+but I think almost nobody does that. I think I've only seen that once
+in some rarely-used component of the Tor project.)
+
+But I am out of my depth here and might be severely misunderstanding
+what's going on.
