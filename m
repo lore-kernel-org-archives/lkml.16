@@ -1,116 +1,161 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5DC718FDBE
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 10:48:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A06D9229B0F
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 10:50:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748947729; cv=none; b=G4w6RJ/ia2PPaqFfYccya04Tezwm7sMTWyQsgr4glJIJnczCJYEjoVeExYRj/UF0Di8r6IIsikx1PT7yQi48hldEepT3bzufyRDbXMKfrBh4Ihdeh0vv/aFEKG9uIyJ724/Vh/z73J6x6pBXNgeU8EU/rIC3yWxfdXTiHORCF+E=
+	t=1748947849; cv=none; b=ZE7fDoTMEI6+LaOT6qc/bWfKV78uacaqTVwXQWkUMHDUVJep8Kt27KxHgLUsBDfsnZc2LOzJm+nC8djC43loVEEROyqD4UvyVK/3bvbvCCIHp8BbBxMkpQi7z62Sdet0HFohYHoaOgS2fXiSrnyKAlU23jd1eDnoeMpTVhNwPhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748947729; c=relaxed/simple;
-	bh=0/t4VZHHaghPD92lE20B6G38trWGNzHFkAze729VO0U=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=UfPv4UR32YR/6sGLIXlmllFvxVWOOS4BCkWRhvfIxQSep7LW7swK4Cjrza5SACKl2QrZMWQG94pid/NMeO6V0ZNqwnZ8lBBCUXwp/9c6LmXl1o+83pFKPoYhFAVqOiFIrH4Wre2napEt5Z/6cO3ajhcZGTOCAWlh/IJeSDIegFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dNxMv2s+; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748947849; c=relaxed/simple;
+	bh=RzXQoeY8OBWNIwxdR6qtplFIQ/IFmhyVe8iUNlNmbNw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WYcp/pxUQAv741OMeiMxJH4O1Z4rTRnwXrBggMAh6QkkQ/WEdt7qHkf2NLCeftjbDBWuu3SDQgUYeaGx1sHi6oH58rMXWsK8A9KVtg+sDK2FNTl9OEnst7GCL1nOG/5lzvt8og2KSLQLDzYz/KNsNr/8k5xlzcoFsfa4vyLfj4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=BQ6o68R2; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dNxMv2s+"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-442e9c00bf4so35604675e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 03:48:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748947726; x=1749552526; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Cx6O8nTXD/s0DawuWtPSuDjWjpCAIEUB9q4GWgLMpfY=;
-        b=dNxMv2s+UeY+HlzD8WCyBdFdM02S2388Eh9QBqgxSmkamwdt+uJ32e/3N+o806can0
-         OT7CNCyVehE3Kjqx0j6RosGEGY7QByoOkcrFO262wq8RMOObi/KmuOIkv1Z0TqWKWq+M
-         Vjkt+1OXxg7MUHIDUPlX5FUheEE+2fRlVRagOunGNhNRsghsfeio/ZFyF8NtBfqU5b02
-         wDSxBh7daq6XdvedjPNal4FgV43gLNdImZViVUwJr22Th9h3KXLMgllzanqGhUFMjdDp
-         Qh/oGyntnWjbDwOBPG7DD4aQoz6xbmO1J7zFZonbYjYcYvGH8eUmY0h2p7JqOiUunTSA
-         /Xsg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="BQ6o68R2"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5539JIbV028422
+	for <linux-kernel@vger.kernel.org>; Tue, 3 Jun 2025 10:50:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=Vm4mnfktEosvn9wSbQ9LX58d
+	m00u7H1ye4NwgmSgVjI=; b=BQ6o68R2EVlEg4rFOgwuwxSoiRjVBsRq27wya4JW
+	YKU9gIg4ALQHg+OKo7go6U2oh3N6+7vwwOWR3XVI9pQxFp/RE4wUPleaq4u/ycYD
+	czm/qWHttrhfiFbssW1TBhHUEWuJVkfSSd0w4CCyJ6UpSg/JDFjmdPT39WNRU/aF
+	o45ZM3QGESGbAmUN6W9s84k5OHyh0Fw7SnDc2TUOaLyVEzhHPvgWrer9dUEjHZ/p
+	/1S0U5fD0xiQ5mtSCFzNhdg4iAUfCOrgkdYCY8yFY/j9eYTECDz26vg1/Nkes8KN
+	eivAkNnVG9TBxK5z6xtW5srrzIgjmBAJKOhcOiWkRtl6SA==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8tta19-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 10:50:46 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5d608e6f5so1437098985a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 03:50:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748947726; x=1749552526;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Cx6O8nTXD/s0DawuWtPSuDjWjpCAIEUB9q4GWgLMpfY=;
-        b=oeU3QTsZDiRouJ+aC9U6Lb7I09dhrAfzZVmoAF8pouTNQNRTnqYPGPFMS2VYy3pwGb
-         7dCg+LsPA/m0xtWUCcjmgO5O3vnCk3soYfYU9BByEcz7kk/aId9o/a6MSH3UGl3OD2I0
-         M21whi/Ca3iaFH46B1wuoEN3y/nc1iJtWVOh5Jrvu6z2TDstd2gY1k5bZSfetu1KIz27
-         F6QA3wLY5P0NZn5MHTJNwe0TGOl/Mx/w3LkNJ+9Cjxxff356WFVyNh5SWUjeybXTY2t9
-         CwiYh5g1ySvL8s3yPwO3fPZciOgjIxdyjerbP+BO9FFM+Ae7G8i31ih7ph8y3d07FZuW
-         e2lw==
-X-Forwarded-Encrypted: i=1; AJvYcCXxiOu5oZou8GMVbziEu1/16w9kPQQrv17iFigqF8rLN94BQ1OJ+KK/s5q7Ys5AGqqaXUmg9CfxlcwGXN0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzncNFwTbacDV07fbEJN746asVAyAAHtDx/b4uhtD5kYZcbo8eb
-	CYEG62PUKioqUWvStwc5fYiD1WAx9ydyLORIBg1FyhhAfwkujjOaspaoDHaghuWPkA8=
-X-Gm-Gg: ASbGncuMMf9f/3gug8ADLpEJQe64VnQuyGXtINuP2XjDC18hztNMfpyMk9B38jfNX8m
-	Hg5KX29TwwyLcQzLQ+sKpxtcVxx4CWHMnLy71W2ovcZ086VIIZ0fOWULZtyzmf7oNyZLKBdKxEq
-	bQRI2egwZpCGXCYUK22rK2oYy0sKYwtURqXPOINboIUsWSeE36bApLLyyH6g+D4We+IFy0Q/lFy
-	O/vXrm3QR84BXdwKUHXHY9niT2DHXHeCi4tabFjwSe5ayQa0HwHV6U2li89oKIXstn059frbo8D
-	+pvwlvC5cD7rKuWLB+KUxoBJM/6VU3mn+nRxjrGbksyOsxvVCU84TGOKYDkAld9u8OL8UUs=
-X-Google-Smtp-Source: AGHT+IEwWHNi7IQsbUhRzTa5EaiN1kvuKqLSnlU0bMScHgsa6KhYkSTpXYrAZ3MhbyuWmkaFjc4G2g==
-X-Received: by 2002:a05:600c:a51:b0:450:cfcb:5c9b with SMTP id 5b1f17b1804b1-450d880ac83mr121438035e9.1.1748947726161;
-        Tue, 03 Jun 2025 03:48:46 -0700 (PDT)
-Received: from [192.168.0.14] ([79.115.63.247])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7fb05bbsm154084245e9.22.2025.06.03.03.48.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jun 2025 03:48:45 -0700 (PDT)
-Message-ID: <f8f15489-8b31-4672-9fb9-161c7c4599dc@linaro.org>
-Date: Tue, 3 Jun 2025 11:48:44 +0100
+        d=1e100.net; s=20230601; t=1748947845; x=1749552645;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vm4mnfktEosvn9wSbQ9LX58dm00u7H1ye4NwgmSgVjI=;
+        b=OQCYCJInEkytCGQ4vEq8D3NGNvuLP8T+Vj5MDwoOn0pDfQozGBJiW/ttj3YClCtRvu
+         Sd5BzUUnVFx1JFbkjhAxrMKfoZLbprKdoAtsPwzhHYmHWzig418+hupxSHu0Z07TlwG7
+         fpIQ5oTW2FAwxRuVdcyzOqxJo5PNWMDywUt+nDfm7StcffBfUytS5EaBTxnzjt2Eh+xF
+         jYgXXedn0ABkXqvr69OXizwqPIAu+9fVboZTiZrznY734IY44JjmMQdPEAdrRgEPEci6
+         OTMdXQQUzieiZMLX7SREwj417HKjFwzKP/rb1ozwGhnc66N2BkU90bT+L/Py6XY+4E6x
+         Y6jg==
+X-Forwarded-Encrypted: i=1; AJvYcCWyfhZpudGpblgJZVwTfUez+d3M+qzKjeqHnxQ3i9oItOJ99yeKEYx7JodcEnUcRr5w8tC4YrfyTkTSCuM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBp5H8umNdJ3rdaxLa7upoMwNMVvXF9PCIDTlJPqwHLhYWFqlv
+	svm1vRozFOyExhhu+gCsHz6hTY+48ngNiIAEDyPD7HSWveT7QXgCRFe7Evuy+/nvFQh3IU/J/j/
+	IaXVyA0NZCVzp7F8wURIuBg5Q5oNhVUEJJFTK7mUzjU0tSLXlWOs80MyYbdR+zBH/Ito=
+X-Gm-Gg: ASbGncsSMBQjFGI0qKigXYZ3265qOeGP1yhVai96Vf36x19qvFYrcdCF2M5Wmh+ZF5F
+	5qV/QiFFPjM5RPN6+wwa2Jm2xfQsyF/knX65a+e6L17wVBt6Zm+akYmF0HilTeOuL6c4V2Ad0/M
+	/NHFOdecpIDUTG6TT45KFLTNZIMWsINPUviCgxAZbIzov/TyL46CyhTxfxi1ypYh6YXtKWMS2Fz
+	1LDh6EjBLqWl6cpg8Hmpj8tC3bqGa12ea9+ATNvI6CEmd0OBi7xyqI2mt9onwNuul0wW3uBYr9a
+	JjSiSWua3hjtEZk796U5NN5spQiacQncXNNqnmelvvQjyttJKdgfI8oDPVONx3ktaND7Bzzh8Zr
+	5YjVth40ifw==
+X-Received: by 2002:a05:620a:1a83:b0:7c7:b60f:ebd8 with SMTP id af79cd13be357-7d0a4af321emr2309211185a.24.1748947845575;
+        Tue, 03 Jun 2025 03:50:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF6/Ai8VNOZ5j/lNeuLKY2LQit0DXGz1yVy635bM9pzD1rNIoOXopJpQt0KqrADunHS/Py7IQ==
+X-Received: by 2002:a05:620a:1a83:b0:7c7:b60f:ebd8 with SMTP id af79cd13be357-7d0a4af321emr2309207385a.24.1748947845077;
+        Tue, 03 Jun 2025 03:50:45 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32a85a30c9esm18242121fa.0.2025.06.03.03.50.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 03:50:44 -0700 (PDT)
+Date: Tue, 3 Jun 2025 13:50:42 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>, amitk@kernel.org,
+        thara.gopinath@gmail.com, rafael@kernel.org, daniel.lezcano@linaro.org,
+        rui.zhang@intel.com, lukasz.luba@arm.com,
+        david.collins@oss.qualcomm.com, srinivas.kandagatla@linaro.org,
+        stefan.schmidt@linaro.org, quic_tsoni@quicinc.com,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/5] thermal: qcom-spmi-temp-alarm: enable stage 2
+ shutdown when required
+Message-ID: <i6xy6b2seaxkrpktpyh32fqyxctcvvpk2u6ptpjs727n5fnlak@jcvlqg3ooaxg>
+References: <20250528235026.4171109-1-anjelique.melendez@oss.qualcomm.com>
+ <0nJRx6-RgYybx3jhgUDcxC9hIxr02feRJuYYgLa6lpO3DOSuQidQkRKKoqvQoV0x26UVeiV6G5XN8cMTZ9Ol5g==@protonmail.internalid>
+ <20250528235026.4171109-2-anjelique.melendez@oss.qualcomm.com>
+ <895a0004-04df-4b7e-9855-bc0033ca650b@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
- in sync
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
- =?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>,
- Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- William McVicker <willmcvicker@google.com>
-References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
- <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com>
- <5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org>
- <8f281667-b4ef-9385-868f-93893b9d6611@linux.intel.com>
- <3a47fc82-dc21-46c3-873d-68e713304af3@linaro.org>
- <f6ee05f7-174b-76d4-3dbe-12473f676e4d@linux.intel.com>
- <867e47dc-9454-c00f-6d80-9718e5705480@linux.intel.com>
- <a56284a4-755d-4eb4-ba77-9ea30e18d08f@linaro.org>
- <7e882cfb-a35a-bab0-c333-76a4e79243b6@linux.intel.com>
- <f2d149c6-41a4-4a9a-9739-1ea1c4b06f4b@linaro.org>
- <19ccc09c-1d6b-930e-6ed6-398b34020ca1@linux.intel.com>
- <c1c0bacd-7842-4e9e-aec4-66eb481aa43f@linaro.org>
-Content-Language: en-US
-In-Reply-To: <c1c0bacd-7842-4e9e-aec4-66eb481aa43f@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <895a0004-04df-4b7e-9855-bc0033ca650b@linaro.org>
+X-Proofpoint-GUID: D-qy5n23K2sv6H-bwvrJVLU2Vi3holz4
+X-Authority-Analysis: v=2.4 cv=Qspe3Uyd c=1 sm=1 tr=0 ts=683ed386 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=7P3EZGi6tQuJdicK0tQA:9 a=CjuIK1q_8ugA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAzMDA5NSBTYWx0ZWRfX6/Q7b9gU3IKr
+ hdkYCD30dclIuJVAeYQk2FXGAo38g3RbnWllCPaRMaHfqe46UOX8ZFXnwdoA2zWEl+hKVIeDZtB
+ qsknR48uci6Jmrjm2PpLH4dcw3pzG6lYdfs2T7tj6RyDqQY+BchWu3r7aj8lDU1e7LF7n1f+xXO
+ 77PPVsWuezD11oJ8lG3qILfBdmetc82Ass1oxDq/J2Um9933yFSaSudJWtmgYBSoWKb4c+aUWQp
+ J67S72Kb3FQAper2owKmiYbr2VortPxW+GUgSzigcJt+fpjVHBCo4rKutXsApQM8g2WKR2MohSL
+ k6aqHlgNzKT5zQZJLyuWaqJ1cZhCEfFq5/yIjMM9KyGtn8RlaoF5oXT1zemEioRcplXGZSkjjxs
+ pyD6a4pakyL7mDWr4KMLbXgYgDG5xxEjKmKXkcenbT42s9uviZIA/rQnLRd65Gv/bvvDbi2W
+X-Proofpoint-ORIG-GUID: D-qy5n23K2sv6H-bwvrJVLU2Vi3holz4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-03_01,2025-06-02_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 mlxscore=0 spamscore=0 priorityscore=1501 mlxlogscore=999
+ lowpriorityscore=0 suspectscore=0 impostorscore=0 malwarescore=0
+ clxscore=1015 adultscore=0 phishscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506030095
 
-
-
-On 6/3/25 11:36 AM, Tudor Ambarus wrote:
+On Thu, May 29, 2025 at 11:34:27AM +0100, Bryan O'Donoghue wrote:
+> On 29/05/2025 00:50, Anjelique Melendez wrote:
+> > From: David Collins <david.collins@oss.qualcomm.com>
+> > 
+> > Certain TEMP_ALARM GEN2 PMIC peripherals need over-temperature
+> > stage 2 automatic PMIC partial shutdown to be enabled in order to
 > 
+> stage 2 should be hyphenated to stage-2
 > 
-> On 6/3/25 9:13 AM, Ilpo Järvinen wrote:
->> So please test if this patch solves your problem:
+> > avoid repeated faults in the event of reaching over-temperature
+> > stage 3.  Modify the stage 2 shutdown control logic to ensure that
+> > stage 2 shutdown is enabled on all affected PMICs.  Read the
+> > digital major and minor revision registers to identify these
+> > PMICs.
+> > 
+> > Signed-off-by: David Collins <david.collins@oss.qualcomm.com>
+> > Signed-off-by: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
+> > ---
+> >   drivers/thermal/qcom/qcom-spmi-temp-alarm.c | 32 +++++++++++++++++++--
+> >   1 file changed, 29 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/thermal/qcom/qcom-spmi-temp-alarm.c b/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
+> > index a81e7d6e865f..47248a843591 100644
+> > --- a/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
+> > +++ b/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
+> > @@ -1,6 +1,7 @@
+> >   // SPDX-License-Identifier: GPL-2.0-only
+> >   /*
+> >    * Copyright (c) 2011-2015, 2017, 2020, The Linux Foundation. All rights reserved.
+> > + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 > 
-> It fails in a different way, the bridge window resource never gets
-> assigned with the proposed patch.
+> Should have the year in it.
+
+Not per the new policy...
+
 > 
-> With the patch applied: https://termbin.com/h3w0
+> grep -r Copyright * | grep Qualcomm
+> 
+> >    */
+> > 
+> >   #include <linux/bitops.h>
 
-above is no revert and with the proposed fix. It also contains the
-prints https://termbin.com/g4zn
-
-It seems the prints in pbus_size_mem are not longer hit, likely because
-of the new condition added: ``!pdev_resources_assignable(dev) ||``,
-pci_dev_for_each_resource() finishes without doing anything.
-
-> With the blamed commit reverted: https://termbin.com/3rh6
-
+-- 
+With best wishes
+Dmitry
