@@ -1,216 +1,236 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F30268FFF;
-	Tue,  3 Jun 2025 08:07:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748938035; cv=fail; b=Yzu9M84LnDiqtoE26oJXczPcCZs7awph+z1n68Z9061fWe3oemNe2w3+2Hc8G9DMgzZ1GsJY+Ax9LNebGCWTRu5mppA2PY9yIiIKo3tfbDw4ZU+Nb+PUA6DZuLr/ADJb/vVVVcouM/Fxafrq+V1f7QiQzHL0y4WwvTpv7mMob60=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748938035; c=relaxed/simple;
-	bh=x+e6cX+h3ZDEdik89OPMKEh/elDeZI4GAYDvcHHycu8=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Hho2kdzZ23oiUnXA3T1hharG2kJi6fbmNtznX++BxB3LpBdurX9OY7Y0vyOWLr0TPcQO4fOeEnzdWZiiASWKBNiy9Bkvg/QlFJ7teQI0F3RS89ndThKWh8tZBVoAn39LHVTYNWGEIPMbZp9powUH7rw9bF8eFmRBFkkFpgPPZtM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iMNNvEfI; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4744628030E
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 08:07:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748938052; cv=none; b=XfaP4CoSrsysCghlFObMqWJyOsUylqjyiShRfqqlNEdtZbNL/0h2v1eRm4EFEZpqIetuszgY0V+s3aR/M8Pc1YDB52Fn5pl3N3CGR6DX3ym3Z1oPZ4UuHUvxKBLC6hLZg6MATCKtnw6G0ljxMycQPko3h52iZuaUE2eY8l4iAYE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748938052; c=relaxed/simple;
+	bh=a0efNbPkFoFMZQuJlsXwZa0OvWZ5LKfKa8oXf/iTQGo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u9dmJo2NeTM3we7EwszZuo1nC+CM0Tri0kuk2fYkHfeW+DZf9OGNdppnYh80M7axeU550/8RYXbXhRcXmfgt85YcNlPcHxkg4bJFdX3HRQcUm116WyT6XC55kW9omcvDypKkCTK22Yany83PWWSeABt9WVsC+QFZIS00sgcnP5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hPM5t7yA; arc=none smtp.client-ip=209.85.222.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iMNNvEfI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748938034; x=1780474034;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=x+e6cX+h3ZDEdik89OPMKEh/elDeZI4GAYDvcHHycu8=;
-  b=iMNNvEfI0L8sJTO0MzAu16AdmQPRKMx0KGD2pVkRb7PrNvODWwcb++LV
-   AqMAgGfB/uqQ8S3rfEqqgt6najHRRj9h88nT/ER+FNgm9Yrpe4hSUzXA9
-   d/lzVNVEYRFIEP1SBEUZjHeMybpk3LGt7Qsg2ByYpN9nUcwy+m8uFfxs8
-   DlxdXdkS43Bm3jkjTZSbvI0ewetboio0pZy7W6APQy0HQcLYr7vNyYf25
-   8OoseXnD+KuD6mMJNAclq2a68hfq6u60TH9W10CyohtM/PY1neMzkEl94
-   Vb32U+C1NHecV0jYkuQjEM1e0wuq/cZGyej19B+aQ1qZ3SwAu6KcX4An3
-   g==;
-X-CSE-ConnectionGUID: W/feKuSmQCenMdpRtIU2BA==
-X-CSE-MsgGUID: 0kqqFlv1T5GkJWR6N1Jh5A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="61585498"
-X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
-   d="scan'208";a="61585498"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 01:07:11 -0700
-X-CSE-ConnectionGUID: M7sDqFByT+qMR7YYly6KnA==
-X-CSE-MsgGUID: qgOxm8qISZ+Z640t7QEYcA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
-   d="scan'208";a="175740236"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 01:07:11 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Tue, 3 Jun 2025 01:07:10 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Tue, 3 Jun 2025 01:07:10 -0700
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (40.107.95.66) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Tue, 3 Jun 2025 01:07:09 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jVxOhDGm02r6OUuSCjTcWdyLShF2ZhHnOYCE6g0AuRt5gVz6A+wpSFnuZRHuSW14ZDmDhSgAqHIWIb48JAPUyZopZ9Q2GxLYwHqHNNfdH+MwAO7FRhOnxhR+TDSV+uMzjDQa2aK7EFqOqp3r4+3z3O18zjr/COX37+0qvtPEW+v8UcsQxMC7BL5RxsDnJMQcwCTCIjmRxkrutSd0mn5m92RkjTKZzOzHdpXqYQov9asDnFHyzd3XZcu5Kp/R76bZgiaQqpcy1Q4/0Kv2Fdi3T1H45I1JRt0ZRhDg7EqdD30NmLLqUD8Br+3a3hoA1OWbkjOM6mHrxMppJe2cEiXYUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BGI/sIpOk46aTWSBuCr6VlL9aMk6Fkk96xF68u2n5Ro=;
- b=ACXwS+v5N869lCv8YR34XChcFEkil/5ze/jCu4CCqvPMU2fctBoL++yCypEitLWi6bjRz6Edd4nhwZeFFNZ/E7RAIznzNitdNQpPIMw51wxcL+4COdEbSTi5q37aDGB1dUDR9iafhzCMVfkTtseCjr/NoHVpKNLczo7yd89mMwd8XxqnHQjdYGH0aNbEBjKUCsWSF1w+ny7htFNVY3CaG0CVfgLj2r24cB3TrWFv+vxyHalwZena9H6cB3CMu1uddVFffkx2K/zZ8Syx37n9A5VWG96lBZYHCyRsmEAmZ4N0+4E+iv7AmQ/RlDWR9qLpzluDDKAivDwLJZnnxjaGQQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CH3PR11MB8660.namprd11.prod.outlook.com (2603:10b6:610:1ce::13)
- by SA1PR11MB7112.namprd11.prod.outlook.com (2603:10b6:806:2b7::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.32; Tue, 3 Jun
- 2025 08:06:54 +0000
-Received: from CH3PR11MB8660.namprd11.prod.outlook.com
- ([fe80::cfad:add4:daad:fb9b]) by CH3PR11MB8660.namprd11.prod.outlook.com
- ([fe80::cfad:add4:daad:fb9b%4]) with mapi id 15.20.8769.031; Tue, 3 Jun 2025
- 08:06:54 +0000
-Date: Tue, 3 Jun 2025 16:06:45 +0800
-From: Chao Gao <chao.gao@intel.com>
-To: Sean Christopherson <seanjc@google.com>
-CC: Paolo Bonzini <pbonzini@redhat.com>, <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, Xin Li
-	<xin@zytor.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: Re: [PATCH 04/28] KVM: SVM: Kill the VM instead of the host if MSR
- interception is buggy
-Message-ID: <aD6tFSu5dvEQs8dJ@intel.com>
-References: <20250529234013.3826933-1-seanjc@google.com>
- <20250529234013.3826933-5-seanjc@google.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250529234013.3826933-5-seanjc@google.com>
-X-ClientProxiedBy: SG2PR06CA0242.apcprd06.prod.outlook.com
- (2603:1096:4:ac::26) To CH3PR11MB8660.namprd11.prod.outlook.com
- (2603:10b6:610:1ce::13)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hPM5t7yA"
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-87dfe906a87so1381589241.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 01:07:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748938048; x=1749542848; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fDGBSduyXbHQ46IAjI466E3jzdFbbBUSkhtvK40jR68=;
+        b=hPM5t7yAAZuB2ayIUYULDnTRUOiTFCttHUSGROS2Muv5mPAIR9pSlHxoKC3vGOT9eH
+         NAAJyxXH1N+4tSPkDSfoIFVCbBLD95PiR43r+7pHItIBUe5iJRTKsgaHpCwCe6vZmNCw
+         nZWpLRyFINUvUOC+TgBTCxCAzavZoEdSgcJ7rqQmfKA9qJvU30Gpq9miJ+QIf8d3PbBs
+         utwEq8X2GkAbNNpBHVmqLc+BRmgvSHvRu3qoOC9nXQQ7mbzS4VhoeU0lDDi0TRiaac/s
+         +llVJt86Vhw6DLRiAimj2/iLNbE7S/5IISYle3ceIr5HGSyej15IHd0TVzrbNdAovqAh
+         lUag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748938048; x=1749542848;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fDGBSduyXbHQ46IAjI466E3jzdFbbBUSkhtvK40jR68=;
+        b=OUyBC9+uZUBOf+kynORoVsYKtXj88zu84a4aaPzBMkepwUR8S0dpbKGDTwQfBucZiq
+         BMewT8ryHeEciNAk16pjiFF8tl2wbSguDGO5iBSxDAbb31EVpKUxKHj/chtlpu/ywbLP
+         sJkrnBPv21r7LBi2NmSsE+l6eqXs01E6bsSJ4JXJKPbbHnhhVlcq/MjNI+0Qr2KJvNsT
+         yfWyUivHststTwHHr63vLm8jVG0jat7yWeQllLjw8Agp24fJjCmNS1yq3aUJ6yZTWmDo
+         IaHlfrgYFWeDaHbFKmuLoNNkKImlwHMYMHSgXmQd/nweKgC1RmaIVJDSW70VTNmIbEee
+         eRmw==
+X-Forwarded-Encrypted: i=1; AJvYcCUrWiTmNRiBLsIKLgyDy7Vzk8L3RDQkbccsOBdC7DMLYxYbNQUm8S5BNcdDx17JkvlFzfi5xjlMM6v6Qtg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyb0lQ5F3UHljFW/aAoypLghd2dJJO54XQgG9yIPrjvDaNoHHZS
+	GB2AzqAdqrKieBEGo2V4U1WEe/2Yq9B2fogzR8nSO4RHDFCy6CIuz/6L0vfKfGB5QhpdzEqaYyk
+	0skyWgWD+npXhextaiODiahtYZkPfF9lHcAZzcpt7Bg==
+X-Gm-Gg: ASbGncvW+OAUOIXr6BspuPD1A6XrksYoiECEmmI7GlnBcUIaLUrda13Ux/6CY9GZWyy
+	sITRBkrNyIWOkQDnlVNfMdqm8FDo4iB+RJoh9VkVzaohHsleK8fRVjgruVHBPtPMNhhHzOJGrFr
+	95827+VGRre2YFVQrp6srrQhWlKdkp+jdEdj/a1WJL2cMeg5EcNPnT
+X-Google-Smtp-Source: AGHT+IGyYkGVv3WmXmsTELKM5fLdDqlySf6QWUPXvdaCbaMbtPacfL3f8TZdtRnc1C4HVxQDJTCAbW/51uVvOY57VPk=
+X-Received: by 2002:a05:6102:a47:b0:4e5:ac0f:582c with SMTP id
+ ada2fe7eead31-4e6ece33e74mr11898093137.13.1748938048053; Tue, 03 Jun 2025
+ 01:07:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR11MB8660:EE_|SA1PR11MB7112:EE_
-X-MS-Office365-Filtering-Correlation-Id: 95f0483d-1bbe-4711-4867-08dda2759a40
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?Ol1wulrjv6qHDTxXoUaBCUgw9NA0I14AYKprML3b1JCVUG0A/dCG33V8d8fZ?=
- =?us-ascii?Q?vQJJiFGoslUhZXrSsZ39mQ/m5PasUU8Gxoh4XqmgeaEJKHMVNhNHHIkxfZjO?=
- =?us-ascii?Q?9CkZmSpwyoKzB9MzfLCfKGRAn3hmjMXprcCwDkdXCr5FG6zjOvgMDpNqJwTe?=
- =?us-ascii?Q?8hqgDvN464HAaVIFcYeXX+atJFDVX2DPIRxYrulbCJTvuUWgijnDpzZXJzFL?=
- =?us-ascii?Q?AnonPRWXtz62yiYzaZvG0EbadmVuF4073f/8dwTIGLC/igc7bckb97hTotIC?=
- =?us-ascii?Q?pOUfgwiiq1HSvbSTXBFUtWzElAiT+F7X17QaKInYjqvf7A4utGIVMCYk1bjE?=
- =?us-ascii?Q?q5m+imqafQI0CYKvqDC5sEWZv+mXONLZ7Ndmxl9PU8v61bguzlpMsiUXFLvx?=
- =?us-ascii?Q?g9xfmLNQPv6scL1vzMUGxbvjBVZtrr89CfkmMsf2a+qbEiJjEbaPOWNWr8FX?=
- =?us-ascii?Q?dmYsJerI10kog5Emas9c7b61C92tg1vvTuoVBrvAAczS4qlYHd1/sO0OeQGZ?=
- =?us-ascii?Q?/Xoy3D01CJS/4isgUZh5v+qeK4OzMfWByUde2mf3MhvZd4jNFtBDIT5omgOf?=
- =?us-ascii?Q?9oTxMOfjXoItcOzG9VYtAZfsVrAVfi2UqiLz7EXRw/eUmnhrWHKnz6hljU3m?=
- =?us-ascii?Q?msM3aiEGwtnJRaFxcCJKe0uBCanCmXc6b5ERaG6mpaWui4wE9qejvGMgcK86?=
- =?us-ascii?Q?KR4ZtDv0AjTKw8R4mBOpL7q8PX7fYilOq2BMoaVBhjkEGn+qs0rZFb+sus9m?=
- =?us-ascii?Q?dYFRLfrNGpKFSQyKyHGDg+TVFtcns5EJJ+z0ieBrQCLTWOZXMu9I2BcrvWYC?=
- =?us-ascii?Q?iCY4eDLDqEtO7hBo+ZAgaQMVrVCaRFdvGT7UzEN11OKzdwLPFulsEA/TNM8r?=
- =?us-ascii?Q?kOYS9CMYjoQ+UUpc5Kxmosa1yI/cTOf+iLyQQ3CXStos17ZMrfcE591F7g2J?=
- =?us-ascii?Q?jQKltZzmT49isKCnIIujYWm5f6XW/BaCQ/NrJ8/of22rswVhMyO148Sbx+p8?=
- =?us-ascii?Q?H6dAbMaKFseiX8bS+2uNOejv/Y1C/G+XdscYumkOVHFhhuEr7Anu0wXzFKEq?=
- =?us-ascii?Q?UAr8L8f0GG2UtyEVUBX4q2Sy+OjSO1+Rmy0WOVBNuYr5wvJajL5U4uZk9Wlm?=
- =?us-ascii?Q?JCp8+nrYW8yOij229C6WmJU1+gL9gY4hQFbVsLzcbD6tEsS7XbHhVZT0I2ZN?=
- =?us-ascii?Q?adRr1K7TzO8QWRdYjz6l5/ATVp+gjrGz1Dc4TzK6FuPxgIieGrkYhf4FjqPl?=
- =?us-ascii?Q?tQVz+LhvwvQJh6z3pR24LhNe/cPjjTKRoY+BdBI0B5opAPFUmBEFkTa94AA7?=
- =?us-ascii?Q?iuvoaEkoXsQT2ItYR0aPDKrZR2st7gA5dOXBto/TLutnIcpIPpKuARR9+rnW?=
- =?us-ascii?Q?9Ug0eYmxdOz0g5GRYrV+vqFEwPh/VnnkcdY5t4qkY3dRBP7ZKiI2JXa6+RH/?=
- =?us-ascii?Q?8q52qWpAD1c=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8660.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?7Dp05uPBOfN86/cMXJokJoGptCTM7k3QugK6/DX5NPm2aZhTVmnH3V1jQFmk?=
- =?us-ascii?Q?7dkAf6AE7lDS3HKwFJ6SW87bFEQQtC3a4/R9OOfc/50r1tItv3GXdnV8NAeG?=
- =?us-ascii?Q?PyBI2LGge+AXgtihvQ7DaJ5PC/iWiJLkzAdp/mOc16m29SN5LjM4LhrnlDji?=
- =?us-ascii?Q?Eum/D9eWnUHJekIMXkLL6DYcQDAHtmueiAcB9Dcws37iCEhduUJmozTPZXMf?=
- =?us-ascii?Q?jhTlBUngBgVHby2gZfnUu2fv19J+FlKar+J+2hYRwHR/pZxDezG8KV1aGEDk?=
- =?us-ascii?Q?geVwign31z0f1mBz1HZvxMho8a38Lz3g4w3jfA8HqC2Q73haF4a37m5j4VTe?=
- =?us-ascii?Q?Tiqc8vD2mXCYBDVDeEhQZAdX0Q/K8OTkPz9fcUeitLhU33MkGsfK2XEPWeLp?=
- =?us-ascii?Q?foyPW6L8s+CWfp0g3944cxsZQqAcUHO9uwMTKmbxMTxaXS30NBWWpmyij+HB?=
- =?us-ascii?Q?0GkbmoHq79/36nwM3PUqiATwIcBewvzZ0lppKA1SChXlJ8yTFv6Fb1nIBYjZ?=
- =?us-ascii?Q?0KbrhPwNBc8flM0rAOIIQMfmCUdst1GxDyA649+9/0OU2qsJHrpQhYSydkCv?=
- =?us-ascii?Q?ZbAetFEtMlLo8EoyddPHwLCKQOZKH/4ocimvTZ7rZHo+ZeezJ/E1WhkfsZWK?=
- =?us-ascii?Q?+jX7vEUvVCPNH2eUKdETc5+456DUGKP3wmX4rO5ANxcXNEGDD0+M3g9376FY?=
- =?us-ascii?Q?DnLUEQEpeMd1ZMrYhRJP7NRqKlJQ5j//dy7W72IDIxTAuzAcuZ+Qy7OBFr+R?=
- =?us-ascii?Q?CJZJiRWuKUb16jfksmEAaK8Vu26JKoau8h6/Z1kBWjSodz/UdpGKi4UCXaKs?=
- =?us-ascii?Q?CN/eppsR4xPeEdh7cEJoeYA77wbpK+pOjpgca4b83RUawLlcYWjP1uJ4VFrz?=
- =?us-ascii?Q?BUKEM+wYGzUL3tC+h6/0e+NValKLUNBOxG05bowCMH2GgG8gWVvAgUUiPZiz?=
- =?us-ascii?Q?VhNL5KU31o9Hr79cPBF62foSGQC87S0YOKx+jrhfJMvYSTBMnXVm+9bgZZmX?=
- =?us-ascii?Q?/mQnuBd2V275G3MeaxeH2an578p8iCLulR9myhAVrC3vhCEXus7LfiqOlNC2?=
- =?us-ascii?Q?0O140KrgWfJIfmu8cfuOCrLb3HhOcfkN0mZvo1Th15ZXFpnSM0WhNOSrDKPN?=
- =?us-ascii?Q?eMQ8kSoYJwX1TPJWvPQkHAnP4SynhXSre1fMuRyxhxrRG4KcKbrKEm2QUnvq?=
- =?us-ascii?Q?djj3Ce9fd5r0MJmfgjW8axCiIkFajN6PjF58glIc/vWDOopQr6r+CO79Em8o?=
- =?us-ascii?Q?JoVuMKA7ag/8b6C4qVxvR5+vxvasshgg8J3ht33jUnfFEUP2aGXosm+zrcVE?=
- =?us-ascii?Q?9HVZuPIw67UgqYsVhB1HXwsyg84BMtx/DWIhTj4GImogYalWSjD+M6C0Wf18?=
- =?us-ascii?Q?X7n9+jPBKXMthOym9Xdk2Nh61gaPGNC0bdQa3eRohUpEuz+AAwgwLcRVxyeL?=
- =?us-ascii?Q?AAFJKi5Qkgd8CFK0CqI5DFs3YE5DBWDBsW5UEbTYjkP0CsdsxI0EzeAffj0A?=
- =?us-ascii?Q?P9sWPCl07TKavlMfeZj62aKutxcpZn7cTcplHbV2YRl15/JTZPcsWKMpB4Va?=
- =?us-ascii?Q?5bnJp7GS4PvFYPhcCy+H8RBJlO84rvqX2IA0cjIZ?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 95f0483d-1bbe-4711-4867-08dda2759a40
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8660.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2025 08:06:54.1378
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DS7Jdc6F7jBiOgTcsuEmI5N9Oc9xWZB/GM5wyUWYQ0IZapcKSGUeNRyRQbkxNE26wwBneZLO39d8QL1c90Bgaw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB7112
-X-OriginatorOrg: intel.com
+References: <20250602134255.449974357@linuxfoundation.org>
+In-Reply-To: <20250602134255.449974357@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 3 Jun 2025 13:37:16 +0530
+X-Gm-Features: AX0GCFvDqmMU1x0jRj0cXE5UtEj8pF1EDN8rIh8q3pvOM5Nfh8pK7cZocZqKyDk
+Message-ID: <CA+G9fYt_vx2f+3SG4Y7RfXnw6NDMJJuP2Mt1fNCEBBCBbxigKw@mail.gmail.com>
+Subject: Re: [PATCH 5.4 000/204] 5.4.294-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
+	Jeongjun Park <aha310510@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 29, 2025 at 04:39:49PM -0700, Sean Christopherson wrote:
->WARN and kill the VM instead of panicking the host if KVM attempts to set
->or query MSR interception for an unsupported MSR.  Accessing the MSR
->interception bitmaps only meaningfully affects post-VMRUN behavior, and
->KVM_BUG_ON() is guaranteed to prevent the current vCPU from doing VMRUN,
->i.e. there is no need to panic the entire host.
+On Mon, 2 Jun 2025 at 19:56, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
->Signed-off-by: Sean Christopherson <seanjc@google.com>
->---
-> arch/x86/kvm/svm/svm.c | 6 ++++--
-> 1 file changed, 4 insertions(+), 2 deletions(-)
+> This is the start of the stable review cycle for the 5.4.294 release.
+> There are 204 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
->diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
->index 36a99b87a47f..d5d11cb0c987 100644
->--- a/arch/x86/kvm/svm/svm.c
->+++ b/arch/x86/kvm/svm/svm.c
->@@ -827,7 +827,8 @@ static bool msr_write_intercepted(struct kvm_vcpu *vcpu, u32 msr)
-> 	bit_write = 2 * (msr & 0x0f) + 1;
-> 	tmp       = msrpm[offset];
+> Responses should be made by Wed, 04 Jun 2025 13:42:20 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.4.294-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-not an issue with this patch. but shouldn't the offset be checked against
-MSR_INVALID before being used to index msrpm[]?
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-> 
->-	BUG_ON(offset == MSR_INVALID);
->+	if (KVM_BUG_ON(offset == MSR_INVALID, vcpu->kvm))
->+		return false;
-> 
-> 	return test_bit(bit_write, &tmp);
-> }
->@@ -858,7 +859,8 @@ static void set_msr_interception_bitmap(struct kvm_vcpu *vcpu, u32 *msrpm,
-> 	bit_write = 2 * (msr & 0x0f) + 1;
-> 	tmp       = msrpm[offset];
-> 
->-	BUG_ON(offset == MSR_INVALID);
->+	if (KVM_BUG_ON(offset == MSR_INVALID, vcpu->kvm))
->+		return;
-> 
-> 	read  ? clear_bit(bit_read,  &tmp) : set_bit(bit_read,  &tmp);
-> 	write ? clear_bit(bit_write, &tmp) : set_bit(bit_write, &tmp);
->-- 
->2.49.0.1204.g71687c7c1d-goog
->
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+NOTE:
+As other reported,
+Here is the build warning on arm with clang-20 and gcc-12
+
+kernel/trace/trace.c:6334:8: warning: comparison of distinct pointer
+types ('typeof ((size_t)trace_seq_used(&iter->seq)) *' (aka 'unsigned
+int *') and 'typeof (((1UL) << 12)) *' (aka 'unsigned long *'))
+[-Wcompare-distinct-pointer-types]
+ 6334 |
+min((size_t)trace_seq_used(&iter->seq),
+      |
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 6335 |                                                   PAGE_SIZE));
+      |                                                   ~~~~~~~~~~
+
+This build warning is due to,
+  tracing: Fix oob write in trace_seq_to_buffer()
+  commit f5178c41bb43444a6008150fe6094497135d07cb upstream.
+
+## Build arm log
+Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2xxMDrYn=
+M37m3B0qZbAdLmnoeQ6/
+Build config: https://storage.tuxsuite.com/public/linaro/lkft/builds/2xxMDr=
+YnM37m3B0qZbAdLmnoeQ6/config
+
+## steps to reproduce
+ - tuxmake --runtime podman --target-arch arm --toolchain clang-20
+--kconfig vexpress_defconfig LLVM=3D1 LLVM_IAS=3D0
+
+## Build
+* kernel: 5.4.294-rc1
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
+rc.git
+* git commit: dbf9e583326d679bc41fbbee9302d2f0ec8e01b2
+* git describe: v5.4.293-205-gdbf9e583326d
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.4.y/build/v5.4.2=
+93-205-gdbf9e583326d
+
+## Test Regressions (compared to v5.4.292-180-gd5e62da0f6d5)
+
+## Metric Regressions (compared to v5.4.292-180-gd5e62da0f6d5)
+
+## Test Fixes (compared to v5.4.292-180-gd5e62da0f6d5)
+
+## Metric Fixes (compared to v5.4.292-180-gd5e62da0f6d5)
+
+## Test result summary
+total: 45395, pass: 32893, fail: 2231, skip: 10140, xfail: 131
+
+## Build Summary
+* arc: 5 total, 5 passed, 0 failed
+* arm: 131 total, 131 passed, 0 failed
+* arm64: 31 total, 29 passed, 2 failed
+* i386: 18 total, 13 passed, 5 failed
+* mips: 25 total, 25 passed, 0 failed
+* parisc: 3 total, 0 passed, 3 failed
+* powerpc: 26 total, 26 passed, 0 failed
+* riscv: 9 total, 3 passed, 6 failed
+* s390: 6 total, 6 passed, 0 failed
+* sh: 10 total, 10 passed, 0 failed
+* sparc: 6 total, 6 passed, 0 failed
+* x86_64: 27 total, 27 passed, 0 failed
+
+## Test suites summary
+* boot
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-exec
+* kselftest-fpu
+* kselftest-futex
+* kselftest-intel_pstate
+* kselftest-kcmp
+* kselftest-livepatch
+* kselftest-membarrier
+* kselftest-mincore
+* kselftest-mqueue
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* lava
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* perf
+* rcutorture
+
+--
+Linaro LKFT
+https://lkft.linaro.org
