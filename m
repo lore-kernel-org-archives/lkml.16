@@ -1,148 +1,155 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C851D4C98
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 16:34:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC47434545;
+	Tue,  3 Jun 2025 16:35:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748968448; cv=none; b=BBLu7WuYNwwGMynMYCqf81Xs7M5n1WxLY8qLeKCDNAuqg3INHA/iWDv4hyT50GIIqumjzDffcWPFOfNxlRspb4wixOblqcEIv9UohHzCPq+VhCQTjDxnylnYrGylWVzVG5JsbrMAGNYcvMw0muM5aCcD5zXYK4KRjB5swfS7xmo=
+	t=1748968521; cv=none; b=FgbImmidFWocfdkQ4tiFDh/dk2LxRbrdn9SMKdjqVBxNU94EtahaZr6cMr73qgnAOAz82/beBF1otiMBk45FtwvkQvMzfA326dLhv8XwGbS8eSQ4Mr9uL4wJz04rZNRaV16LEwh6Xd9cNxq1wVADbaFGipNkA9hNGOPJ8qbUu7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748968448; c=relaxed/simple;
-	bh=nlLPe4JNT/I7zrGVVpCD4KiakPXWJEJV8KoS2+0nDE8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NBMWxPK/Ay95lVdZ/c366hTDHB6TxS9S921PX/+wqgbXIyVUSN5HzhMuN+XdDyWSBXxmxD8JVaghwhH0nFWIUuaQiMaDj+ZoYUYpKm0+70XGy03cs+YvY03DU7mcd448vljvdxapCJVmpy/AEFTv//QdFqsEPqweyESJVqarWNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=dL3X8bF1; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	s=arc-20240116; t=1748968521; c=relaxed/simple;
+	bh=nxaCfdWauzjNiTIgCxophxKa0Ige88EfFoo8WmagOwk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mIOJu5WerhNuLDzT1V8v+hVJ1OTvAql8sCOFyuJjhPkRB1b2t4wVX/jJ5cTfEokjBow2rIkRIG10MjaF693a9LY+DgXvkbCjlIL4DBW8jFFjX3grzn+fKMrul+6j7RV8hcTxq3DJctJq655VJOJxzd8acMRzbf/Xc72j9jBTxGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=YU5sBwUz; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="dL3X8bF1"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-23228b9d684so62019225ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 09:34:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1748968446; x=1749573246; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LVPg9RSU5+0wf5EHqV7EnA6nX7rFFrDnz8hGU29mQNM=;
-        b=dL3X8bF1bN8aazE/WVkQOSJUQBEQvuckfDCxs+yNAwNdl3CqFTiEvclmuSBobZkfXO
-         hoRlSPrlpGx/e2AeXU9jrBSYk4gDcAgEbPebP/bVnLw+9JRe6EiDao5MbzEX8SwtZKbo
-         1LUVF23tmslwhhEArYozqPRE3iUsFN04Kb+XA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748968446; x=1749573246;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LVPg9RSU5+0wf5EHqV7EnA6nX7rFFrDnz8hGU29mQNM=;
-        b=j1InkEs9CqiZ1s5nJbpFW/CJ484UVVdbJXNz9DNPjrIcAkJgDLEqDWLJ8AW9dMALyb
-         gKbF8n+fRR7b4p+HkBpKS/mOzk36FBl62cwWg0Rtsj134iw1yTQc2gdCwJcYQSWoUOaA
-         vQIVyhW1AEaiOKdQ5LfXHQkL+yeTXV6Sbm00utT7c07ueww8GHXPWplc7RHzzIzjmcpF
-         vWjGx11Oi7XUZrCRQA/RZ7egnlG55CDGQbdLJz0sQvbLx/tum5nqBlIQcNb/mGw7gBa+
-         VyqU6ltCN+6FeFXalhRKywW6ot4U7nxnFyw2mlFhKTutuVYHKusOUx2VtyDGxtWIqk4t
-         slsw==
-X-Forwarded-Encrypted: i=1; AJvYcCXEszcWjY3JoXseAnd0OEW3k+bs7zXNVBrHwTXGByyoMpuCdTPsKz0deo6pw/16msYR0/bfD9niczojTEk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxq5Amc7BTIin3hjzUSvdpSQr4H9wgF5wDoK2olAX8UceeBv3hT
-	L1TfPfXj3f06CTombyUgMeySZc5gnwJezBYkSHimYdYJJj4drZvxrD/eg77EH6Cg1lU=
-X-Gm-Gg: ASbGnctWlqriMKTnvlr0Eil4Iqs5ZBcODkX8nS5UmjG6+QXaTEjgxcvmmp/VBD8dTiz
-	oSkMQ30qZPjIOBSD8g55kVONkZOIdg+ndMonM32vfGMZ1U2xXVA51sk2sCWh/OcN0rwxjW2o0e0
-	towfpsYAjHyfcRm0zayMi2cQx0Eff6cn1Ev89QRzVX0RrwY9vX7JfVYByEYziBZgwEsqi8c97ZT
-	iTrgK2FuUxDHFL4NJNiRD+7gbWowbInloW5Xa1hIXIrOUJD+t6Pd5ybRRFqZOR4PGjTq1Tu/JTz
-	fcc3rzahOKS07ANKkvD0tTszGg4dLPaOzAkp4EMyXy+VC7L6Nl3bwbdsMao=
-X-Google-Smtp-Source: AGHT+IEsG8RwJJ/qUZ31YozpAFPSnp5YLObkgNdPKm6K9ikVW9NpcBa7mfYOTaEM2xDXXZhOeTyawQ==
-X-Received: by 2002:a17:902:f642:b0:234:de0a:b36e with SMTP id d9443c01a7336-23539648068mr242371285ad.49.1748968446027;
-        Tue, 03 Jun 2025 09:34:06 -0700 (PDT)
-Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cd3723sm89477255ad.133.2025.06.03.09.34.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 09:34:05 -0700 (PDT)
-From: Joe Damato <jdamato@fastly.com>
-To: netdev@vger.kernel.org
-Cc: kuba@kernel.org,
-	john.cs.hey@gmail.com,
-	jacob.e.keller@intel.com,
-	stfomichev@gmail.com,
-	Joe Damato <jdamato@fastly.com>,
-	syzbot+846bb38dc67fe62cc733@syzkaller.appspotmail.com,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	intel-wired-lan@lists.osuosl.org (moderated list:INTEL ETHERNET DRIVERS),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH iwl-net v2] e1000: Move cancel_work_sync to avoid deadlock
-Date: Tue,  3 Jun 2025 16:34:01 +0000
-Message-ID: <20250603163402.116321-1-jdamato@fastly.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="YU5sBwUz"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 553GYR2v3906763
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 3 Jun 2025 09:34:28 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 553GYR2v3906763
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025052101; t=1748968479;
+	bh=B4whhvRWBFRCoJ6hVF+KD7HMcx0awQWFQvakW3OGf4s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YU5sBwUzJA0fHvoPTdDw7FhsWEYRZK4g72VOSHCcdCFCiV150jNxjEO3uz+G6o7an
+	 voHH+OdGZvMTqANn6sJHxVJ7RaSCdxfDEdXJSj06CHtfk7zu7T6LiAg12rawuZ1Ap5
+	 DW7SJGAKuGccnPD980W1wh9jcmFdWaUKJW5FHnZD5u1CJtqZjiKH0yzo/Xxh5V58Pi
+	 V2p2Y4K+UYvNEDovZ9cZ4+mKmFYAps9lHtuwSx7aOZZjDyrDpAAiE3QrQTLI56hsCR
+	 Wvl7zYm1rM/j8OpZwidt/pnU6Mc/A5rGE6BMzFcjbl0Ru2EgRYUSO/jZ7zeWHA4XSW
+	 HAT7481f5BVWg==
+Message-ID: <9950dc5a-05ab-4a7c-a4e8-34012ef98549@zytor.com>
+Date: Tue, 3 Jun 2025 09:34:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 4/9] x86/nmi: Assign and register NMI-source vectors
+To: Sohil Mehta <sohil.mehta@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc: "H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <seanjc@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>, Tony Luck <tony.luck@intel.com>,
+        Zhang Rui <rui.zhang@intel.com>, Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Jacob Pan <jacob.pan@linux.microsoft.com>,
+        Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
+        Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org,
+        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20250513203803.2636561-1-sohil.mehta@intel.com>
+ <20250513203803.2636561-5-sohil.mehta@intel.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ xsDNBGUPz1cBDACS/9yOJGojBFPxFt0OfTWuMl0uSgpwk37uRrFPTTLw4BaxhlFL0bjs6q+0
+ 2OfG34R+a0ZCuj5c9vggUMoOLdDyA7yPVAJU0OX6lqpg6z/kyQg3t4jvajG6aCgwSDx5Kzg5
+ Rj3AXl8k2wb0jdqRB4RvaOPFiHNGgXCs5Pkux/qr0laeFIpzMKMootGa4kfURgPhRzUaM1vy
+ bsMsL8vpJtGUmitrSqe5dVNBH00whLtPFM7IbzKURPUOkRRiusFAsw0a1ztCgoFczq6VfAVu
+ raTye0L/VXwZd+aGi401V2tLsAHxxckRi9p3mc0jExPc60joK+aZPy6amwSCy5kAJ/AboYtY
+ VmKIGKx1yx8POy6m+1lZ8C0q9b8eJ8kWPAR78PgT37FQWKYS1uAroG2wLdK7FiIEpPhCD+zH
+ wlslo2ETbdKjrLIPNehQCOWrT32k8vFNEMLP5G/mmjfNj5sEf3IOKgMTMVl9AFjsINLHcxEQ
+ 6T8nGbX/n3msP6A36FDfdSEAEQEAAc0WWGluIExpIDx4aW5Aenl0b3IuY29tPsLBDQQTAQgA
+ NxYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89XBQkFo5qAAhsDBAsJCAcFFQgJCgsFFgID
+ AQAACgkQa70OVx2uN1HUpgv/cM2fsFCQodLArMTX5nt9yqAWgA5t1srri6EgS8W3F+3Kitge
+ tYTBKu6j5BXuXaX3vyfCm+zajDJN77JHuYnpcKKr13VcZi1Swv6Jx1u0II8DOmoDYLb1Q2ZW
+ v83W55fOWJ2g72x/UjVJBQ0sVjAngazU3ckc0TeNQlkcpSVGa/qBIHLfZraWtdrNAQT4A1fa
+ sWGuJrChBFhtKbYXbUCu9AoYmmbQnsx2EWoJy3h7OjtfFapJbPZql+no5AJ3Mk9eE5oWyLH+
+ QWqtOeJM7kKvn/dBudokFSNhDUw06e7EoVPSJyUIMbYtUO7g2+Atu44G/EPP0yV0J4lRO6EA
+ wYRXff7+I1jIWEHpj5EFVYO6SmBg7zF2illHEW31JAPtdDLDHYcZDfS41caEKOQIPsdzQkaQ
+ oW2hchcjcMPAfyhhRzUpVHLPxLCetP8vrVhTvnaZUo0xaVYb3+wjP+D5j/3+hwblu2agPsaE
+ vgVbZ8Fx3TUxUPCAdr/p73DGg57oHjgezsDNBGUPz1gBDAD4Mg7hMFRQqlzotcNSxatlAQNL
+ MadLfUTFz8wUUa21LPLrHBkUwm8RujehJrzcVbPYwPXIO0uyL/F///CogMNx7Iwo6by43KOy
+ g89wVFhyy237EY76j1lVfLzcMYmjBoTH95fJC/lVb5Whxil6KjSN/R/y3jfG1dPXfwAuZ/4N
+ cMoOslWkfZKJeEut5aZTRepKKF54T5r49H9F7OFLyxrC/uI9UDttWqMxcWyCkHh0v1Di8176
+ jjYRNTrGEfYfGxSp+3jYL3PoNceIMkqM9haXjjGl0W1B4BidK1LVYBNov0rTEzyr0a1riUrp
+ Qk+6z/LHxCM9lFFXnqH7KWeToTOPQebD2B/Ah5CZlft41i8L6LOF/LCuDBuYlu/fI2nuCc8d
+ m4wwtkou1Y/kIwbEsE/6RQwRXUZhzO6llfoN96Fczr/RwvPIK5SVMixqWq4QGFAyK0m/1ap4
+ bhIRrdCLVQcgU4glo17vqfEaRcTW5SgX+pGs4KIPPBE5J/ABD6pBnUUAEQEAAcLA/AQYAQgA
+ JhYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89ZBQkFo5qAAhsMAAoJEGu9DlcdrjdR4C0L
+ /RcjolEjoZW8VsyxWtXazQPnaRvzZ4vhmGOsCPr2BPtMlSwDzTlri8BBG1/3t/DNK4JLuwEj
+ OAIE3fkkm+UG4Kjud6aNeraDI52DRVCSx6xff3bjmJsJJMb12mWglN6LjdF6K+PE+OTJUh2F
+ dOhslN5C2kgl0dvUuevwMgQF3IljLmi/6APKYJHjkJpu1E6luZec/lRbetHuNFtbh3xgFIJx
+ 2RpgVDP4xB3f8r0I+y6ua+p7fgOjDLyoFjubRGed0Be45JJQEn7A3CSb6Xu7NYobnxfkwAGZ
+ Q81a2XtvNS7Aj6NWVoOQB5KbM4yosO5+Me1V1SkX2jlnn26JPEvbV3KRFcwV5RnDxm4OQTSk
+ PYbAkjBbm+tuJ/Sm+5Yp5T/BnKz21FoCS8uvTiziHj2H7Cuekn6F8EYhegONm+RVg3vikOpn
+ gao85i4HwQTK9/D1wgJIQkdwWXVMZ6q/OALaBp82vQ2U9sjTyFXgDjglgh00VRAHP7u1Rcu4
+ l75w1xInsg==
+In-Reply-To: <20250513203803.2636561-5-sohil.mehta@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Previously, e1000_down called cancel_work_sync for the e1000 reset task
-(via e1000_down_and_stop), which takes RTNL.
+On 5/13/2025 1:37 PM, Sohil Mehta wrote:
+> Prior to NMI-source support, the vector information was ignored by the
+> hardware while delivering NMIs. With NMI-source, the architecture
+> currently supports a 16-bit source bitmap to identify the source of the
+> NMI. Upon receiving an NMI, this bitmap is delivered as part of the FRED
+> event delivery mechanism to the kernel.
+> 
+> Assign a vector space of 0-15 that is specific to NMI-source and
+> independent of the IDT vector space of 0-255. Being a bitmap, the
+> NMI-source vectors do not have any inherent priority associated with
+> them. The order of executing the NMI handlers is up to the kernel.
 
-As reported by users and syzbot, a deadlock is possible in the following
-scenario:
+I'm thinking should we mention that the bitmap could be extended more
+than 16 bits in future?  Or we just don't emphasize 16-bit or 0~15?
 
-CPU 0:
-  - RTNL is held
-  - e1000_close
-  - e1000_down
-  - cancel_work_sync (cancel / wait for e1000_reset_task())
 
-CPU 1:
-  - process_one_work
-  - e1000_reset_task
-  - take RTNL
+> 
+> Existing NMI handling already has a priority mechanism for the NMI
+> handlers, with CPU-specific (NMI_LOCAL) handlers executed first,
+> followed by platform NMI handlers and unknown NMI (NMI_UNKNOWN) handlers
+> being last. Within each of these NMI types, the handlers registered with
+> NMI_FLAG_FIRST are given priority.
+> 
+> NMI-source follows the same priority scheme to avoid unnecessary
+> complexity. Therefore, the NMI-source vectors are assigned arbitrarily,
+> except for vectors 0 and 2.
+> 
+> Vector 0 is set by the hardware whenever a source vector was not used
+> while generating an NMI or the originator could not be reliably
+> identified. Do not assign it to any handler.
+> 
+> Vector 2 is reserved for external NMIs corresponding to Local APIC -
+> LINT1. Some third-party chipsets may send NMI messages with a hardcoded
+> vector of 2, which would result in vector 2 being set in the NMI-source
+> bitmap. To avoid confusion, do not assign vector 2 to any handler.
+> 
+> NMI-source vectors are only assigned for NMI_LOCAL type handlers.
+> Platform NMI handlers have a single handler registered per type. They
+> don't need additional source information to differentiate among them.
+> 
+> Use the assigned vectors to register the respective NMI handlers. Warn
+> if the vector values are unexpected.
+> 
+> A couple of NMI handlers, such as the microcode rendezvous and the crash
+> reboot, do not use the typical NMI registration interface. Leave them
+> as-is for now.
+> 
+> Originally-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
 
-To remedy this, avoid calling cancel_work_sync from e1000_down
-(e1000_reset_task does nothing if the device is down anyway). Instead,
-call cancel_work_sync for e1000_reset_task when the device is being
-removed.
-
-Fixes: e400c7444d84 ("e1000: Hold RTNL when e1000_down can be called")
-Reported-by: syzbot+846bb38dc67fe62cc733@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/netdev/683837bf.a00a0220.52848.0003.GAE@google.com/
-Reported-by: John <john.cs.hey@gmail.com>
-Closes: https://lore.kernel.org/netdev/CAP=Rh=OEsn4y_2LvkO3UtDWurKcGPnZ_NPSXK=FbgygNXL37Sw@mail.gmail.com/
-Signed-off-by: Joe Damato <jdamato@fastly.com>
-Acked-by: Stanislav Fomichev <sdf@fomichev.me>
-Acked-by: Jacob Keller <jacob.e.keller@intel.com>
----
- drivers/net/ethernet/intel/e1000/e1000_main.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
-index 3f089c3d47b2..d8595e84326d 100644
---- a/drivers/net/ethernet/intel/e1000/e1000_main.c
-+++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
-@@ -477,10 +477,6 @@ static void e1000_down_and_stop(struct e1000_adapter *adapter)
- 
- 	cancel_delayed_work_sync(&adapter->phy_info_task);
- 	cancel_delayed_work_sync(&adapter->fifo_stall_task);
--
--	/* Only kill reset task if adapter is not resetting */
--	if (!test_bit(__E1000_RESETTING, &adapter->flags))
--		cancel_work_sync(&adapter->reset_task);
- }
- 
- void e1000_down(struct e1000_adapter *adapter)
-@@ -1266,6 +1262,10 @@ static void e1000_remove(struct pci_dev *pdev)
- 
- 	unregister_netdev(netdev);
- 
-+	/* Only kill reset task if adapter is not resetting */
-+	if (!test_bit(__E1000_RESETTING, &adapter->flags))
-+		cancel_work_sync(&adapter->reset_task);
-+
- 	e1000_phy_hw_reset(hw);
- 
- 	kfree(adapter->tx_ring);
-
-base-commit: b56bbaf8c9ffe02468f6ba8757668e95dda7e62c
--- 
-2.43.0
-
+Reviewed-by: Xin Li (Intel) <xin@zytor.com>
