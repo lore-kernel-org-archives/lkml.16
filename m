@@ -1,109 +1,122 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431C71DB366;
-	Tue,  3 Jun 2025 14:33:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070BD1DB366;
+	Tue,  3 Jun 2025 14:36:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748961238; cv=none; b=f+Bw4uAMnsdmC1HgtB9uh9+ZWXEwEEqYsXkMNIH+lHNl6iYZFOMEJxoGBfe15GVQr3lv2BFlCsofCx1vaezLlBpHBAH7qdbYg9TGCxUbyvy8chEt1yx3NSmij2SKZpJ93i/Ak4Ke/RtmY/TyvMRR7/Tbe3KLv+MP5plIt8husNs=
+	t=1748961409; cv=none; b=o9guluLIRhq7dnahjsUqUXoKdywd4riOnHPm5D3C4AwRmJWdJ32ePds5dUEBR9Bcm4KNa+X6CcTwMl5g1K+FOPJD+Xo4rcR8wIyHmA3OyD5BngXZ9Ej94Jufr/y7HxZIpGp1UzgbRofzEDUqNwSCBqL7kYM/IT4PZiYrOh7ysgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748961238; c=relaxed/simple;
-	bh=Pax7Wp8g4EBK5lfGZTNO6TWJfzNxTHPQp6fy7syi1Lk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Pq43idy+5Q6sNnf7mYkkgMcgJqrVQs/geFoqVzeNO+Agzdhgs5oCldYcHVRRiS2bDCJ2pO5u6MnY/Zc1fsVoVFtyVhqFNx3prxjE34e8F7qDIFKo0mnwe1WkuHqMt2Q5BEB4QwP+PNf7d+79S7TtxCZRvyTHE2pW1+qSz0Ikrp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=bjuvxdBO; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1748961409; c=relaxed/simple;
+	bh=chuk0IazGmGSV4OgO+a1HkDeBrU6hVZtfNkD4mhEae4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dle6dqisQsolNroZhzQK5D7HYm9XHb3XTMfVwNfhYfEf0daxBRIarGN300bQC5UmttVZ+R2HXz1KYOpvFy1W4v5h/ZB8/+7x4WD3yytHsFDwiVJwfKaKx0WRLNHtYPIvcF0USbu44A9l4n+kXO8RwOef46rXDYS+cTxvznFQcGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=msAFfD4F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="bjuvxdBO"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 2C74141ED0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1748961236; bh=xuzJ6pVHRkOA6mC6eSB047dEohJN/pd9soeYCZQRrNY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=bjuvxdBOkFWFGc9lPwDAFgGPB1xqaSZmxICh+WhRoqYTpFzqQ3UsZtYRwl1o7W3XQ
-	 1v09x5i1ajdt//pT9RuhWYc07eOq4VHR3IyVj2yrMi0V7GISj/1ScS2DBt5LzSV+xA
-	 PhUR6ddS3kXbntmYGyH8Dih6G/UZb+FnrM8YF9eOT/BFNx2ixsOydPxunVxvNw/2x4
-	 2pZy6hU8gIkML3r7FPR4YANeqSzl4gwELRxATwefXtl2phZVdRu1yc0U1QMzTHEmqD
-	 u0ux7dcw8WXFX/+g6iDKHp2r6ecGLcx5Rk7gQJDGwy0HmBce7QdC9szyGV5aaF+CRI
-	 O3Dduxgjs/8Ag==
-Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 2C74141ED0;
-	Tue,  3 Jun 2025 14:33:56 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Suren Baghdasaryan
- <surenb@google.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Shakeel Butt <shakeel.butt@linux.dev>,
- Jann Horn <jannh@google.com>, Qi Zheng <zhengqi.arch@bytedance.com>,
- linux-mm@kvack.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs/mm: expand vma doc to highlight pte freeing,
- non-vma traversal
-In-Reply-To: <28f53f7e-5ac2-4ef4-8944-6741161e6870@lucifer.local>
-References: <20250602210710.106159-1-lorenzo.stoakes@oracle.com>
- <87bjr59634.fsf@trenco.lwn.net>
- <9fc9ac50-abce-48bd-979f-2e00b26917b5@lucifer.local>
- <38bcf562-86dc-42b2-9ffc-53cbc5d8ac22@lucifer.local>
- <877c1s9b6p.fsf@trenco.lwn.net>
- <28f53f7e-5ac2-4ef4-8944-6741161e6870@lucifer.local>
-Date: Tue, 03 Jun 2025 08:33:55 -0600
-Message-ID: <87y0u87v3g.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="msAFfD4F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C0BEC4CEED;
+	Tue,  3 Jun 2025 14:36:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748961408;
+	bh=chuk0IazGmGSV4OgO+a1HkDeBrU6hVZtfNkD4mhEae4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=msAFfD4F47qbZ1+4PfMXz//gQiIv2ar8v3PYfcVcHL0PTVWlUFmMG7JKZqMQbPmDj
+	 WmeStKDIIq6FigoPVWYLVW112Ls5/mNkWTANbCnEvHwEdb3QpphfpewF+2qJablnBk
+	 lQrXOkCdD4kB/9pS/P1APj0sXAxI5woN2zsh5gNc8cLkEXVgDZgw3AkPLD6MZtTUSE
+	 YoPVGzl4xgbeO9y9ecCse+3g4P2j+O59h06mIL1FfssPYVQ6NK8unF0KuozFhQhARi
+	 nmL5t4Q445AWF4jE9CDSJFyEedaxyJfLwA+yNtOAm+Hy2/AZsCPwXn1sG6o4gO4e5U
+	 ggsMdA1PBvheg==
+Date: Tue, 3 Jun 2025 17:36:41 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	=?utf-8?B?Su+/vXJnZW4=?= Gro <jgross@suse.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Thomas Gleixner <tglx@linutronix.de>, Xin Li <xin@zytor.com>,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	x86@kernel.org
+Subject: Re: [PATCH 4/5] x86/its: explicitly manage permissions for ITS pages
+Message-ID: <aD8IeQLZUDvgoQZm@kernel.org>
+References: <20250603111446.2609381-1-rppt@kernel.org>
+ <20250603111446.2609381-5-rppt@kernel.org>
+ <20250603135845.GA38114@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250603135845.GA38114@noisy.programming.kicks-ass.net>
 
-Lorenzo Stoakes <lorenzo.stoakes@oracle.com> writes:
+On Tue, Jun 03, 2025 at 03:58:45PM +0200, Peter Zijlstra wrote:
+> On Tue, Jun 03, 2025 at 02:14:44PM +0300, Mike Rapoport wrote:
+> > From: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+> > 
+> > execmem_alloc() sets permissions differently depending on the kernel
+> > configuration, CPU support for PSE and whether a page is allocated
+> > before or after mark_rodata_ro().
+> > 
+> > Add tracking for pages allocated for ITS when patching the core kernel
+> > and make sure the permissions for ITS pages are explicitly managed for
+> > both kernel and module allocations.
+> > 
+> > Fixes: 872df34d7c51 ("x86/its: Use dynamic thunks for indirect branches")
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> > ---
+> 
+> How about something like this on top?
 
->> OK ... If you look at what's going on, some of the functions will be
->> marked, others not.  The difference is that there is no markup for
->> functions where a cross-reference cannot be made (because they are
->> undocumented).
->>
->> We could easily change the automarkup code to always do the markup; the
->> problem with that (which is also a problem with the existing markup
->> under Documentation/mm) is you'll have rendered text that looks like a
->> cross-reference link, but which is not.  We also lose a clue as to which
->> functions are still in need of documentation.
->
-> Isn't it a pretty egregious requirement to require documentation of every
-> referenced function?
->
-> I mean if that were a known requirement I'd simply not have written this
-> document at all, frankly.
+Works for me :)
 
-Who said anything about it being a requirement?  I think we have gone
-way off track here.
+> --- a/arch/x86/kernel/alternative.c
+> +++ b/arch/x86/kernel/alternative.c
+> @@ -121,7 +121,6 @@ struct its_array its_pages;
+>  static void *__its_alloc(struct its_array *pages)
+>  {
+>  	void *page __free(execmem) = execmem_alloc(EXECMEM_MODULE_TEXT, PAGE_SIZE);
+> -
+>  	if (!page)
+>  		return NULL;
+>  
+> @@ -172,6 +171,9 @@ static void *its_init_thunk(void *thunk,
+>  
+>  static void its_pages_protect(struct its_array *pages)
+>  {
+> +	if (!IS_ENABLED(CONFIG_STRICT_KERNEL_RWX))
+> +		return;
+> +
 
-Certainly it would be *nice* to have all of that stuff documented, and I
-think there is value in giving a visual clue for stuff that lacks
-documentation, but I never said anything about requirements.
+But modules generally use STRICT_MODULE_RWX.
+Do you want to make the its pages stricter than normal module text?
 
->> The right answer might be to mark them up differently, I guess.
->
-> But... what I'm doing here, and what mm does elsewhere works perfectly fine? Why
-> do we need something new?
+>  	for (int i = 0; i < pages->num; i++) {
+>  		void *page = pages->pages[i];
+>  		execmem_restore_rox(page, PAGE_SIZE);
+> @@ -180,8 +182,7 @@ static void its_pages_protect(struct its
+>  
+>  static void its_fini_core(void)
+>  {
+> -	if (IS_ENABLED(CONFIG_STRICT_KERNEL_RWX))
+> -		its_pages_protect(&its_pages);
+> +	its_pages_protect(&its_pages);
+>  	kfree(its_pages.pages);
+>  }
+>  
+> @@ -207,8 +208,7 @@ void its_fini_mod(struct module *mod)
+>  	its_page = NULL;
+>  	mutex_unlock(&text_mutex);
+>  
+> -	if (IS_ENABLED(CONFIG_STRICT_MODULE_RWX))
+> -		its_pages_protect(&mod->arch.its_pages);
+> +	its_pages_protect(&mod->arch.its_pages);
+>  }
 
-Because you're thinking in terms of the rendered docs, and not the
-people who read the plain text.  "function()" is far more readable than
-":c:func:`!function()`", don't you agree?  And rather easier to write as
-well.
-
-> Surely this cross-referencing stuff is more useful for API documentation
-> that explicitly intends to describe functions like this?
-
-The cross-referencing is *to* the API documentation.  Again, you are
-mentioning a function, why would you *not* want to let the system
-automatically link to that function's documentation?  Especially since
-you're using markup that is explicitly provided for exactly that
-purpose?  Does the link cause some sort of harm?
-
-Thanks,
-
-jon
+-- 
+Sincerely yours,
+Mike.
