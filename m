@@ -1,192 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3804C213237;
-	Tue,  3 Jun 2025 21:10:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23AB7224B05;
+	Tue,  3 Jun 2025 21:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748985025; cv=none; b=B4gVTA3oMxfliONA8RevWZqHsNc+KNsXhhc5Y38OHwSpcevPIXZ3Ozz4aE/hTAmDe2sgNN+B7UZENwDcoqnbLlxD+iSAGePMz7DwNPWmZRAyt0MlfzC/OhU1ebHHBAcJ51JVxntB9yguiaToaCNnYmc2OVwSkgQ+QGWwugKbu0c=
+	t=1748985210; cv=none; b=tcGHAES+HTQePnOp0ahxqcBEYSDoISs0WI4R/wiXyuimUYJPjHt+b771v1kp4EgDXRk9PUczHFpo2DKQg+wT17+KB0kKL44P5hKGPLXmb33DtY3v3fSEgpsA8rJm6G5gVs9D7wOZ0eNKrJij44c3AFnLbRSCPmbOq44M/8iIfaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748985025; c=relaxed/simple;
-	bh=h3cLuoEUE/50Te7YWq29TTae1E9++w3W5acEVIN3myM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pyAirw89tj2uyQ3gu/80595f5Vq2E6q8r6NI8DHM+Az9HY4mgyS1dLsLQRJ9U4WfJ0272dexJ3XIMdeRWpK5kYF6UD6HCAldsbFN2LgbFKhzIAp85f52sk6bEAML6ZhO9x8XPeHr1RTMSgMeIYXeKT74Gkx3J4eFtcX9DCqQi4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HOyl7ZXa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748985210; c=relaxed/simple;
+	bh=1BcdnyMHgieTxm8ahEYkMYtEjs8zmaa3HiTW1iXKbeU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rgw/gbXtkf61pZK3dmIHSEhIgXIU6mykyYwi5+IzdFXqTaQulaAWQAIiTHoKC6wRAkJryKBQ/EZjSKv4vflDVYMgFvVbnlbYmjqpXdl5R54h6JaU6nHBNxezM2Fv6c+Ap9NgNqy676+PX0EsxBT150V95kfiuAhwL41RcbNzb6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=azw+oXlD; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HOyl7ZXa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A25C2C4CEF7;
-	Tue,  3 Jun 2025 21:10:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748985024;
-	bh=h3cLuoEUE/50Te7YWq29TTae1E9++w3W5acEVIN3myM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=HOyl7ZXaStbHPEZDd/Yi0y1gznEJwQlhPSJPB20fSbT5ukqZy8D6nInyNGGXu3obs
-	 IHt1MIZSqCb5omRkViky88mEl8GzDwsQkK+65SuaFdjRBLlkCijLNVawiop92uwyuq
-	 ZzgJqYotkJr1quBCMbjHSrU5NzNhVDAd3huh5Nq3XMB01wIqx7sPylMk+pNF8PmU3s
-	 xKHrlXDUNbnG4DZ49lniwAyMp0YgUwAkZ8CpS3ZFWpldc5S3QtIQftyFFkmbpVyI5/
-	 sk7Kp1zc5/h+OExDij2jO4pC+SSktihnV/j4hBC0eyLXo+E6MOO0Da4HcMlwD9Gm9q
-	 mtx7dpgxsGu1w==
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6fac7147cb8so120403266d6.1;
-        Tue, 03 Jun 2025 14:10:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUqLUPRsLN93QWvxDL0BwYHuJ+nXBraGCfZ6OJOJHAHJ8g/NOh4k/b0jB8czZ1vqRpB7OPRNDsQK8jQRSfDm3pKAmuggJcV@vger.kernel.org, AJvYcCVD9K8qhlN2i0bsU7RZWhVhqazIfIikG2Csmbec+pbM1+Fzj5ESzrLd2F/B/KAPTPNbqVKNf2Tyv3gyLomnNQ==@vger.kernel.org, AJvYcCVozB8Dza3br/AM7d4uewrA1uOFaEoPZDC6OY7wZyapScTHN5Nj7v5TeXrPUt7m5DVUH4+pl0kZfWz30SQS@vger.kernel.org, AJvYcCWP0uNwW7RBEFRfhN2dz0EA/QT9d9tT06qXr8rZ55Ur5DgVwfuRhCK1TSFZF7MBq6gf+kM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yztp/W2KSMwylp4dNxrY1xLHiiRgrQ9dVHlWRSV+PjzVyuO7cEk
-	oxLaGmNckl9qfCSVPWcbd8j13alKhdV7IWLM24talrUFThJnxbhe6eCU5eZ32TRpjjAoS/NQSGT
-	W9HlDOWDORls8TJeQCnFYc/0kDMvaUhk=
-X-Google-Smtp-Source: AGHT+IHDFIMs4lgEgDBnBmdvP8vxeRYYAbWlPwSRwDiLT24Tw0T9unW3nE6fwnkvsPCrU9dlUaWuNS35Ygi2bxvBNck=
-X-Received: by 2002:ad4:4ee9:0:b0:6fa:c41e:ccee with SMTP id
- 6a1803df08f44-6faf7007ae8mr4967716d6.19.1748985023786; Tue, 03 Jun 2025
- 14:10:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="azw+oXlD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=bmhcf/j9uEBvFmWrno3AXxDLOTU31ZRPLYTptLNTT4I=; b=azw+oXlDU8KhpqtJ+QZTyDEzek
+	az9+bvyrejgDDwDnTYRrsNnwEs/tNrrUkkuW2q6FVstjBRCXHKJ1Rha0xADMT/ZaRsPfeXYTGioDW
+	JhA2xTwSl+wqPb6q+4y9wIrCuWJ3WVuT0C9jEYplZAxw5Qr0XmCD5li7WJfsRwvQllyqBmqsL8B9u
+	dGu/JNl4QIglQ4Qg++Vrr0UtAJDvnvBEWpXisPFirXaG0fki932y5iiP/TqxRAd46JQRK7X9ONHUO
+	rQ77av6uBKHAbqLIpPT7t4sLG58DhRvsc9R1OXyp4vFkr/B7V3a6LcCsBdptVtFcczQOMAhX5enZS
+	VxB5v87A==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:35734)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uMYwY-0006Qr-1W;
+	Tue, 03 Jun 2025 22:13:10 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uMYwP-0000Ug-2N;
+	Tue, 03 Jun 2025 22:13:01 +0100
+Date: Tue, 3 Jun 2025 22:13:01 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: "Abhishek Chauhan (ABC)" <quic_abchauha@quicinc.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Wei Fang <wei.fang@nxp.com>,
+	andrew@lunn.ch, hkallweit1@gmail.com, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	xiaolei.wang@windriver.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev
+Subject: Re: [PATCH v2 net] net: phy: clear phydev->devlink when the link is
+ deleted
+Message-ID: <aD9lXa1JVRyJKuP_@shell.armlinux.org.uk>
+References: <20250523083759.3741168-1-wei.fang@nxp.com>
+ <8b947cec-f559-40b4-a0e0-7a506fd89341@gmail.com>
+ <d696a426-40bb-4c1a-b42d-990fb690de5e@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250603065920.3404510-1-song@kernel.org> <20250603065920.3404510-4-song@kernel.org>
- <CAEf4BzasOmqHDnuKd7LCT_FEBVMuJxmVNgvs52y5=qLd1bB=rg@mail.gmail.com> <4c60e0e4-0bb8-4ae4-b7c3-f29af926f6a0@linux.dev>
-In-Reply-To: <4c60e0e4-0bb8-4ae4-b7c3-f29af926f6a0@linux.dev>
-From: Song Liu <song@kernel.org>
-Date: Tue, 3 Jun 2025 14:10:11 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW5QVDST2xr56BnffqELh2WEBG_BVtXbzAfro3dK9DSDzQ@mail.gmail.com>
-X-Gm-Features: AX0GCFs_vq_fD1nD7Nw313IhvEwydQmcKGRWy-PS7EzuprNqQJSP3Kd3DRdDuOQ
-Message-ID: <CAPhsuW5QVDST2xr56BnffqELh2WEBG_BVtXbzAfro3dK9DSDzQ@mail.gmail.com>
-Subject: Re: [PATCH v2 bpf-next 3/4] bpf: Introduce path iterator
-To: Yonghong Song <yonghong.song@linux.dev>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, bpf@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, kernel-team@meta.com, 
-	andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, daniel@iogearbox.net, 
-	martin.lau@linux.dev, viro@zeniv.linux.org.uk, brauner@kernel.org, 
-	jack@suse.cz, kpsingh@kernel.org, mattbobrowski@google.com, 
-	amir73il@gmail.com, repnop@google.com, jlayton@kernel.org, 
-	josef@toxicpanda.com, mic@digikod.net, gnoack@google.com, m@maowtm.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d696a426-40bb-4c1a-b42d-990fb690de5e@quicinc.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Tue, Jun 3, 2025 at 1:50=E2=80=AFPM Yonghong Song <yonghong.song@linux.d=
-ev> wrote:
->
->
->
-> On 6/3/25 11:40 AM, Andrii Nakryiko wrote:
-> > On Mon, Jun 2, 2025 at 11:59=E2=80=AFPM Song Liu <song@kernel.org> wrot=
-e:
-> >> Introduce a path iterator, which reliably walk a struct path toward
-> >> the root. This path iterator is based on path_walk_parent. A fixed
-> >> zero'ed root is passed to path_walk_parent(). Therefore, unless the
-> >> user terminates it earlier, the iterator will terminate at the real
-> >> root.
+On Tue, Jun 03, 2025 at 01:39:47PM -0700, Abhishek Chauhan (ABC) wrote:
+> 
+> 
+> On 5/23/2025 8:19 AM, Florian Fainelli wrote:
+> > 
+> > 
+> > On 5/23/2025 1:37 AM, Wei Fang wrote:
+> >> There is a potential crash issue when disabling and re-enabling the
+> >> network port. When disabling the network port, phy_detach() calls
+> >> device_link_del() to remove the device link, but it does not clear
+> >> phydev->devlink, so phydev->devlink is not a NULL pointer. Then the
+> >> network port is re-enabled, but if phy_attach_direct() fails before
+> >> calling device_link_add(), the code jumps to the "error" label and
+> >> calls phy_detach(). Since phydev->devlink retains the old value from
+> >> the previous attach/detach cycle, device_link_del() uses the old value,
+> >> which accesses a NULL pointer and causes a crash. The simplified crash
+> >> log is as follows.
 > >>
-> >> Signed-off-by: Song Liu <song@kernel.org>
-> >> ---
-> >>   kernel/bpf/Makefile    |  1 +
-> >>   kernel/bpf/helpers.c   |  3 +++
-> >>   kernel/bpf/path_iter.c | 58 ++++++++++++++++++++++++++++++++++++++++=
-++
-> >>   kernel/bpf/verifier.c  |  5 ++++
-> >>   4 files changed, 67 insertions(+)
-> >>   create mode 100644 kernel/bpf/path_iter.c
+> >> [   24.702421] Call trace:
+> >> [   24.704856]  device_link_put_kref+0x20/0x120
+> >> [   24.709124]  device_link_del+0x30/0x48
+> >> [   24.712864]  phy_detach+0x24/0x168
+> >> [   24.716261]  phy_attach_direct+0x168/0x3a4
+> >> [   24.720352]  phylink_fwnode_phy_connect+0xc8/0x14c
+> >> [   24.725140]  phylink_of_phy_connect+0x1c/0x34
 > >>
-> >> diff --git a/kernel/bpf/Makefile b/kernel/bpf/Makefile
-> >> index 3a335c50e6e3..454a650d934e 100644
-> >> --- a/kernel/bpf/Makefile
-> >> +++ b/kernel/bpf/Makefile
-> >> @@ -56,6 +56,7 @@ obj-$(CONFIG_BPF_SYSCALL) +=3D kmem_cache_iter.o
-> >>   ifeq ($(CONFIG_DMA_SHARED_BUFFER),y)
-> >>   obj-$(CONFIG_BPF_SYSCALL) +=3D dmabuf_iter.o
-> >>   endif
-> >> +obj-$(CONFIG_BPF_SYSCALL) +=3D path_iter.o
+> >> Therefore, phydev->devlink needs to be cleared when the device link is
+> >> deleted.
 > >>
-> >>   CFLAGS_REMOVE_percpu_freelist.o =3D $(CC_FLAGS_FTRACE)
-> >>   CFLAGS_REMOVE_bpf_lru_list.o =3D $(CC_FLAGS_FTRACE)
-> >> diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-> >> index b71e428ad936..b190c78e40f6 100644
-> >> --- a/kernel/bpf/helpers.c
-> >> +++ b/kernel/bpf/helpers.c
-> >> @@ -3397,6 +3397,9 @@ BTF_ID_FLAGS(func, bpf_iter_dmabuf_next, KF_ITER=
-_NEXT | KF_RET_NULL | KF_SLEEPAB
-> >>   BTF_ID_FLAGS(func, bpf_iter_dmabuf_destroy, KF_ITER_DESTROY | KF_SLE=
-EPABLE)
-> >>   #endif
-> >>   BTF_ID_FLAGS(func, __bpf_trap)
-> >> +BTF_ID_FLAGS(func, bpf_iter_path_new, KF_ITER_NEW | KF_SLEEPABLE)
-> >> +BTF_ID_FLAGS(func, bpf_iter_path_next, KF_ITER_NEXT | KF_RET_NULL | K=
-F_SLEEPABLE)
-> >> +BTF_ID_FLAGS(func, bpf_iter_path_destroy, KF_ITER_DESTROY | KF_SLEEPA=
-BLE)
-> >>   BTF_KFUNCS_END(common_btf_ids)
-> >>
-> >>   static const struct btf_kfunc_id_set common_kfunc_set =3D {
-> >> diff --git a/kernel/bpf/path_iter.c b/kernel/bpf/path_iter.c
-> >> new file mode 100644
-> >> index 000000000000..0d972ec84beb
-> >> --- /dev/null
-> >> +++ b/kernel/bpf/path_iter.c
-> >> @@ -0,0 +1,58 @@
-> >> +// SPDX-License-Identifier: GPL-2.0-only
-> >> +/* Copyright (c) 2025 Meta Platforms, Inc. and affiliates. */
-> >> +#include <linux/bpf.h>
-> >> +#include <linux/bpf_mem_alloc.h>
-> >> +#include <linux/namei.h>
-> >> +#include <linux/path.h>
-> >> +
-> >> +/* open-coded iterator */
-> >> +struct bpf_iter_path {
-> >> +       __u64 __opaque[3];
-> >> +} __aligned(8);
-> >> +
-> >> +struct bpf_iter_path_kern {
-> >> +       struct path path;
-> >> +       __u64 flags;
-> >> +} __aligned(8);
-> >> +
-> >> +__bpf_kfunc_start_defs();
-> >> +
-> >> +__bpf_kfunc int bpf_iter_path_new(struct bpf_iter_path *it,
-> >> +                                 struct path *start,
-> >> +                                 __u64 flags)
-> >> +{
-> >> +       struct bpf_iter_path_kern *kit =3D (void *)it;
-> >> +
-> >> +       BUILD_BUG_ON(sizeof(*kit) > sizeof(*it));
-> >> +       BUILD_BUG_ON(__alignof__(*kit) !=3D __alignof__(*it));
-> >> +
-> >> +       if (flags) {
-> >> +               memset(&kit->path, 0, sizeof(struct path));
-> >> +               return -EINVAL;
-> >> +       }
-> >> +
-> >> +       kit->path =3D *start;
-> >> +       path_get(&kit->path);
-> >> +       kit->flags =3D flags;
-> >> +
-> >> +       return 0;
-> >> +}
-> >> +
-> >> +__bpf_kfunc struct path *bpf_iter_path_next(struct bpf_iter_path *it)
-> >> +{
-> >> +       struct bpf_iter_path_kern *kit =3D (void *)it;
-> >> +       struct path root =3D {};
-> >> +
-> >> +       if (!path_walk_parent(&kit->path, &root))
-> >> +               return NULL;
-> >> +       return &kit->path;
-> >> +}
-> >> +
-> >> +__bpf_kfunc void bpf_iter_path_destroy(struct bpf_iter_path *it)
-> >> +{
-> >> +       struct bpf_iter_path_kern *kit =3D (void *)it;
-> >> +
-> >> +       path_put(&kit->path);
-> > note, destroy() will be called even if construction of iterator fails
-> > or we exhausted iterator. So you need to make sure that you have
-> > bpf_iter_path state where you can detect that there is no path present
-> > and skip path_put().
->
-> In rare cases, it is possible &kit->path address could be destroyed
-> and reused, right? Maybe we need more state in kit to detect the change?
+> >> Fixes: bc66fa87d4fd ("net: phy: Add link between phy dev and mac dev")
+> >> Signed-off-by: Wei Fang <wei.fang@nxp.com>
+> > 
+> @Wei 
+> What happens in case of shared mdio ? 
+> 
+> 1. Device 23040000 has the mdio node of both the ethernet phy and device 23000000 references the phy-handle present in the Device 23040000
+> 2. When rmmod of the driver happens 
+> 3. the parent devlink is already deleted. 
+> 4. This cause the child mdio to access an entry causing a corruption. 
+> 5. Thought this fix would help but i see that its not helping the case. 
+> 
+> Wondering if this is a legacy issue with shared mdio framework. 
 
-kit->path is always referenced, so this should not happen.
+The device link does nothing for this as it has DL_FLAG_STATELESS set,
+which only affects suspend/resume/shutdown ordering, and with
+DL_FLAG_PM_RUNTIME also set, runtime PM.
 
-Thanks,
-Song
+The device probe/removal ordering is unaffected. Maybe that's a
+problem, but it needs careful consideration to change.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
