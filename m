@@ -1,160 +1,101 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.165])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE096A937
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 13:24:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.165
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748957079; cv=pass; b=BKLA139aZ45iG+UKH2H9Vf8hfLih1GW7Yo5okDtzKpHgjOPpb0MI68Hcnya0RmfZd2WhWSI271YpI7ObfUJs2U1QP93Tnf/Rly2MFoSws3QWWTncWg1SIepwBphtVCKBp+ApOnHpHP4ZOrroerbofUmSeq8SWX7QL6Y3FbtvPPE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748957079; c=relaxed/simple;
-	bh=zfPixgraChrKlrOtDN03mFy1u9SB7MFeA7PL4QVarWU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=mDZRS+dMkvF1Cus7PVIFbEj8/2xv1rMN3VrVDpuABzB0YCkT31ifBiJQKHfBSmCdGsakpWemtNVP63XLnVb04Aa+FgRg9QAWVVPGnIGQTLavhpH5pMadmac5K+YTShwb8g+3k4FFQn7ejWUGEFW+wOYrEh0MSLMJizDDwfmWb5U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=outer-limits.org; spf=none smtp.mailfrom=outer-limits.org; dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=oSJ8Iglv; dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=cr+VIkhp; arc=pass smtp.client-ip=81.169.146.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=outer-limits.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=outer-limits.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689BF2AF00
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 13:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748957215; cv=none; b=gzYNtyf1phvr78owxWZtild97B+nxAPvUJKTm78Uc+G7ZheaRzyyi7dJLOuIdnYVQmEPO7BXvJO2qPioA5VXkd84lDSC59FOWAX9d4rHvWXVLtfeQxkz1v7PqWpWKF5LA6WUJg5QXVn2njFL1W0zvMl92VnLTjuaFpaQlKm874A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748957215; c=relaxed/simple;
+	bh=L7+qtgykgPi3lroglO8RwZIW+N2GCF2llGYrBQ0oYU4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=I06KmGTW+oJVqX9yNNoIZhVO45ESGmdWqxDZK+xhff4Wy9hjhsdhptuK+YiPko+ZfLLbSvKu7snOeKZcH5IAUgifgnZ4PUY5F6T7D67DH5E309hGt0HGRVvVH7QPzlQmIgJUKyRubChMjSH0b9srpV2cH6mYvlZ0TEXeuhVg9+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bZRTT9Vy; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="oSJ8Iglv";
-	dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="cr+VIkhp"
-ARC-Seal: i=1; a=rsa-sha256; t=1748957069; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=PLB936NySOk0FH75KUK+kYWBwqIt2VRb57zEvf15tbRbGGdYIpqFjtY3ryR1ubI/hw
-    r6u+vh1/elS0YNmZ2j0hWbm6e3BVZ/lMZfo8LncYdja1h6jgePiuMV4cVaymtLFUPlQ0
-    aYVmNsBvKmngLm33dSs8kPGRGpu668uZEy38qRf2PJA8S/KabxnEFPsR8LJsD5pkNfan
-    CSC3WaWJhp63TRQ9cX5jp1GLcElxEUPa3+y+mRtRhKZoOTSbsbuvuvKcBmGFBdiYA5s0
-    EVdQhzhUw2nmGkfAj264gKtObrKT4COQEHC0yX44LFzSx3umzceGseheA+PBr1Zp3pTo
-    BlkA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1748957069;
-    s=strato-dkim-0002; d=strato.com;
-    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
-    bh=mCZv9h5y7Ee5tNYV9yYrClTj5aivwr6YfqNK0mRGc2E=;
-    b=hRfQtiNyVPpCQ1QakrlvcICaOmtkSIlJnR3lPcS8+bXsY0Oo9XL7Y3yGHfARuddO94
-    f75OhTwo1GjuE4w9tSj2l923A81Kuvl8WI2jD6pa9KsLMxIIL72dhuDZA/Kxh9ysUaGw
-    N/LjpEhFQVPzDD+n13nS5xSwF8ySNwoKZXmHiVxC7vwE+BMMAxLEXQsq8inZA3tD/NB7
-    P6nLQ1gLjCySAqo/KyjkNPneV/86RwEHQIWE11bcATpE7p3RoEZJTNY212tqSAdZJrJf
-    ioNVBhQ8mFjVcX4r5vECU5M6jgXJFMV45KKbfCe5qU4SCNS+xDppE5Yocq58vGsOVqU4
-    aoMw==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1748957069;
-    s=strato-dkim-0002; d=outer-limits.org;
-    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
-    bh=mCZv9h5y7Ee5tNYV9yYrClTj5aivwr6YfqNK0mRGc2E=;
-    b=oSJ8IglvLxsXJLYur4vmjylTbcvWVGX5aQ7iuOHEZwWR1wIbHh/stPM6b4tyFb/7om
-    piL7nkH5iqdhowjLYK+sdJ5xIvhcZCOTqXIsYQno+VidaCaPF4T9vat9dctM6kO94FTg
-    vgnJU5rr1nl/mUjqadm8wEvmZXvyDYpPfFtbjRX649Xr1HotIVkE1jCSlqvUciP7MBMb
-    fCu9RRt2X+GsrfSjKAx0QnifTH1rApRIoWa5c/udcU4xFlWpKXTJPQyRbREfyHWqy4So
-    WFIgVbJXgOjw7laPMzi6JJOXCZ5Vrc4KpxdNv0/3+2f8HQtKfIvjSbGw93Zv8WG8vwBJ
-    z3VA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1748957069;
-    s=strato-dkim-0003; d=outer-limits.org;
-    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
-    bh=mCZv9h5y7Ee5tNYV9yYrClTj5aivwr6YfqNK0mRGc2E=;
-    b=cr+VIkhpKtEddrJYEcyqAdsj8SJ9OJqduhxxO/6f+Wi0KPWhXoAc/vg/X7m6zRtY54
-    A3BQlTWdl/6y99a/ZrCA==
-X-RZG-AUTH: ":JnkIfEGmW/AMJS6HttH4FbRVwc4dHlPLCp4e/IoHo8zEMMHAgwTfqBEHcVJSv9P5mRTGd2ImeA=="
-Received: from ws2104.lan.kalrayinc.com
-    by smtp.strato.de (RZmta 51.3.0 AUTH)
-    with ESMTPSA id J2b110153DOSwQs
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Tue, 3 Jun 2025 15:24:28 +0200 (CEST)
-From: Julian Vetter <julian@outer-limits.org>
-To: Arnd Bergmann <arnd@arndb.de>,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Al Viro <viro@zeniv.linux.org.uk>
-Cc: linux-kernel@vger.kernel.org,
-	Julian Vetter <julian@outer-limits.org>
-Subject: [PATCH] Remove unaligned/packed_struct.h header
-Date: Tue,  3 Jun 2025 15:24:14 +0200
-Message-Id: <20250603132414.3676142-1-julian@outer-limits.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bZRTT9Vy"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-74299055c3dso7438087b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 06:26:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748957213; x=1749562013; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6BEXJHtjU9V+ltSdQUZb8ZRixRuCJWu7iAmqz2qP5bA=;
+        b=bZRTT9VyNS5GOAu5dKxNgweEqHqrjrxNvdKa92aHhEuIlMwIgDw+wyTmDF6Dm91gtN
+         K7pu79f59edwUgdzPOKvdy2O12XcHo0Hi9SAKn4IPmh/+WqdQapbKfJrJEAxE01ogzYb
+         hD7GfMUOrsBYba0nxt8USynWQWBJE7VTuDgG1qnQVHXvKPEfz2AR+F4sOFMj3GLYVEQy
+         7vNngqQQnWoQ+P4PBTBVY0LDQeUKJKgo9wG6u7/6xeVWOsjv4g7BXYVsnkwabYTg/JQI
+         49X2xPUKmuJUX4/C9+xpPPhpxsHQfREDiOkpm1JbVVfUWz3E6PMdfE0TYm1S6Lb1fxX5
+         PAWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748957213; x=1749562013;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6BEXJHtjU9V+ltSdQUZb8ZRixRuCJWu7iAmqz2qP5bA=;
+        b=LfMrZ39onD7hJRJErRY3DF7jnkKI8MiOK02JFddqrk2AKDEW/9AzDHiXNn3E0SolGS
+         GoCmK1/xOnAIDsLt2whGTo4xaMGXe0F9kssYthtxXxHBwBBYi3BR7c65jLJvgazu2J/f
+         MH9ViPYmLsVOlgcxVpLfl6qObG2Eag0wJQ01+VyDmt19gEJ2WZbf0O3NfKjPBm7awNqH
+         7xabnGjF12ID7U8sZkOGNMcsZCXiMAE3++y2eaOVkOR4gc2ge7ZGS47YUScCQEe2kKg1
+         c3Ys71tbyTO4vz1ECKOPPDX3AbUTPNm6gvNZmtYsbRdCSOxUMBoDZ2hTrG01B1Zx44HV
+         SUrg==
+X-Forwarded-Encrypted: i=1; AJvYcCXMKOx4X3nRUBrGoWrIxSAasN1LCo9N7inyz8n+SMmcmLnV1NQeL6RtHRpvr2FSowxfBsRWpYww1XLo5go=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjaTJPdpDS08SGTNf32UdwCYceI0ewEQTNnW3eht93apMPsLwh
+	hbvlN17oXtcKOYlCyEQHZj5BEhLwmQNt9uIeDBPm3ZFOcRbRZp0X81vdgHz+khpdt2UjCm7Id4W
+	m2MSc+A==
+X-Google-Smtp-Source: AGHT+IGaWOJYzlEyg0eyG1P05zKPEo0H8ydP/NrBdiTTYiphzAFMaccGUkuQON6CduTUYVcs2AW60bOD4f8=
+X-Received: from pfvo25.prod.google.com ([2002:a05:6a00:1b59:b0:746:1931:952a])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:3418:b0:215:e60b:3bd3
+ with SMTP id adf61e73a8af0-21ad9799478mr26954618637.29.1748957213638; Tue, 03
+ Jun 2025 06:26:53 -0700 (PDT)
+Date: Tue, 3 Jun 2025 06:26:51 -0700
+In-Reply-To: <aD6tFSu5dvEQs8dJ@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250529234013.3826933-1-seanjc@google.com> <20250529234013.3826933-5-seanjc@google.com>
+ <aD6tFSu5dvEQs8dJ@intel.com>
+Message-ID: <aD74GyZmU4Z0dMn1@google.com>
+Subject: Re: [PATCH 04/28] KVM: SVM: Kill the VM instead of the host if MSR
+ interception is buggy
+From: Sean Christopherson <seanjc@google.com>
+To: Chao Gao <chao.gao@intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Borislav Petkov <bp@alien8.de>, Xin Li <xin@zytor.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset="us-ascii"
 
-The functions in this header are deprecated and are not used anymore.
-So, remove the header entirely.
+On Tue, Jun 03, 2025, Chao Gao wrote:
+> On Thu, May 29, 2025 at 04:39:49PM -0700, Sean Christopherson wrote:
+> >WARN and kill the VM instead of panicking the host if KVM attempts to set
+> >or query MSR interception for an unsupported MSR.  Accessing the MSR
+> >interception bitmaps only meaningfully affects post-VMRUN behavior, and
+> >KVM_BUG_ON() is guaranteed to prevent the current vCPU from doing VMRUN,
+> >i.e. there is no need to panic the entire host.
+> >
+> >Signed-off-by: Sean Christopherson <seanjc@google.com>
+> >---
+> > arch/x86/kvm/svm/svm.c | 6 ++++--
+> > 1 file changed, 4 insertions(+), 2 deletions(-)
+> >
+> >diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> >index 36a99b87a47f..d5d11cb0c987 100644
+> >--- a/arch/x86/kvm/svm/svm.c
+> >+++ b/arch/x86/kvm/svm/svm.c
+> >@@ -827,7 +827,8 @@ static bool msr_write_intercepted(struct kvm_vcpu *vcpu, u32 msr)
+> > 	bit_write = 2 * (msr & 0x0f) + 1;
+> > 	tmp       = msrpm[offset];
+> 
+> not an issue with this patch. but shouldn't the offset be checked against
+> MSR_INVALID before being used to index msrpm[]?
 
-Signed-off-by: Julian Vetter <julian@outer-limits.org>
----
- include/linux/unaligned.h               |  1 -
- include/linux/unaligned/packed_struct.h | 46 -------------------------
- 2 files changed, 47 deletions(-)
- delete mode 100644 include/linux/unaligned/packed_struct.h
+Oof, yes.  To some extent, it _is_ a problem with this patch, because using
+KVM_BUG_ON() makes the OOB access less fatal.  Though it's just a load, and code
+that should be unreachable, but still worth cleaning up.
 
-diff --git a/include/linux/unaligned.h b/include/linux/unaligned.h
-index 4a9651017e3c..18c4b0c00e2a 100644
---- a/include/linux/unaligned.h
-+++ b/include/linux/unaligned.h
-@@ -6,7 +6,6 @@
-  * This is the most generic implementation of unaligned accesses
-  * and should work almost anywhere.
-  */
--#include <linux/unaligned/packed_struct.h>
- #include <asm/byteorder.h>
- #include <vdso/unaligned.h>
- 
-diff --git a/include/linux/unaligned/packed_struct.h b/include/linux/unaligned/packed_struct.h
-deleted file mode 100644
-index f4c8eaf4d012..000000000000
---- a/include/linux/unaligned/packed_struct.h
-+++ /dev/null
-@@ -1,46 +0,0 @@
--#ifndef _LINUX_UNALIGNED_PACKED_STRUCT_H
--#define _LINUX_UNALIGNED_PACKED_STRUCT_H
--
--#include <linux/types.h>
--
--struct __una_u16 { u16 x; } __packed;
--struct __una_u32 { u32 x; } __packed;
--struct __una_u64 { u64 x; } __packed;
--
--static inline u16 __get_unaligned_cpu16(const void *p)
--{
--	const struct __una_u16 *ptr = (const struct __una_u16 *)p;
--	return ptr->x;
--}
--
--static inline u32 __get_unaligned_cpu32(const void *p)
--{
--	const struct __una_u32 *ptr = (const struct __una_u32 *)p;
--	return ptr->x;
--}
--
--static inline u64 __get_unaligned_cpu64(const void *p)
--{
--	const struct __una_u64 *ptr = (const struct __una_u64 *)p;
--	return ptr->x;
--}
--
--static inline void __put_unaligned_cpu16(u16 val, void *p)
--{
--	struct __una_u16 *ptr = (struct __una_u16 *)p;
--	ptr->x = val;
--}
--
--static inline void __put_unaligned_cpu32(u32 val, void *p)
--{
--	struct __una_u32 *ptr = (struct __una_u32 *)p;
--	ptr->x = val;
--}
--
--static inline void __put_unaligned_cpu64(u64 val, void *p)
--{
--	struct __una_u64 *ptr = (struct __una_u64 *)p;
--	ptr->x = val;
--}
--
--#endif /* _LINUX_UNALIGNED_PACKED_STRUCT_H */
--- 
-2.34.1
+Anyways, I'll place the KVM_BUG_ON()s in the right location as part of this patch.
 
+Thanks!
