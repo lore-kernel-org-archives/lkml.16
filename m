@@ -1,138 +1,108 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AFA23D3B8
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 18:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03C6F16F8E5
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 18:02:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748973693; cv=none; b=D8cNxraUfOr1Qmz7i+pi2fF3uijHsUrRSKEQ2ZeEG1HlCEJRGQToizHWlu1dgq3Tyqc2ew+jfrjL1ii3A2jv1NeF+5vPYeD1WIMeOb5W+fFyUFQ6NfcfaFAV32KL+d0mzG6X0dXlazCYLxgfwANCOQ1wsFxTYvTTFKDJ+QCRUac=
+	t=1748973752; cv=none; b=KjXvukyNzOWTt91d/Bkz1vLGw6zLXiY4PWqKx9XIkMcYzhWBw9y/h+UUajh+7NDJBhJh1aIeE1ULkjVNjr+XA3Nam+ambDnVNxwUl/3/kaq/Ml4CBh7CKDojk2NmxlkkpaiR4JgSJiPE8RNWK+1yFdC/XvsGsQ+B/AS+n4o/Z6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748973693; c=relaxed/simple;
-	bh=2dyMbRz1h7s7edNrWCTXDbYuBWjwzW91GnsgeY0rtXI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FQtMYZ8zg1rVUYgdbK9ELsmkfvfLkh0K+hj37nmy/+50b1N80Azeo+33LReQfpq03IV1ZWELY+UcuIssZ+lVePoAYLO++H17jJ+sgy00h7HnGZfFXwstrJBRrL0gYO1ZzhnC0Px9T2skSkh+x3L61FcXT5jFtsk0Zr9kb4NG9qU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M9sg7lLP; arc=none smtp.client-ip=209.85.216.49
+	s=arc-20240116; t=1748973752; c=relaxed/simple;
+	bh=lxbHwT89FX0z6KinlP67fsFpath/+Mc4Kx0XnmT7D+o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=q9z+XxhstWMU0dHFRZ82/Oez5XLmHKz8VoV5UBnrBv5seKusmYeUWji2MjARVvMRo1Qw1YW0Z3S0XA3EJAPJhAWjE2xAnsjBrA2sHkKrv0akpbNnlkA3iQ46+mZaqDvTOyOXUejOm2oVj0eFcZmqVJRCdejcnDpZbtrpenjPew8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dHSs+hbs; arc=none smtp.client-ip=209.85.160.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M9sg7lLP"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-3122368d7c4so4667693a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 11:01:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dHSs+hbs"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4a433f52485so53981cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 11:02:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748973691; x=1749578491; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Oio5+oLisctncuh+HzW9YUjFC1egO1KiH1XNbWO+K7k=;
-        b=M9sg7lLPk1EeherbHWIWt8jSEd1Iqy2v8XSxNICn72cIQDij7UlXQbLLzjGtkYPLdz
-         ePJEiyIpForhngS3UGLObw2qCENh9/V5HAhV8HFAjv/HYQgcVYPguKDby1nIcoq4zLmx
-         gMfjjrXRZkk9ZK67g07jrHyggnTcHtf6UZM6SnUWy7yvwncFMcXfkIPY1wn1ttjibkOG
-         7rmOXE/rAhdgpvsN3Mr+NtoGRUxsbTD0djzgl3xrLvfdh9BogOMi9eDichX0dS5yuTKX
-         gouv6iIY/4MNHy2vp5Nf5Raf9vgZCqU6Vm4NrcvyRQtcA8rfJwVwdVmFxkJPIZNzx7Vl
-         K87A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748973691; x=1749578491;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1748973750; x=1749578550; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Oio5+oLisctncuh+HzW9YUjFC1egO1KiH1XNbWO+K7k=;
-        b=nUlQd1vo9xJEaCvGvxstkS8w6h55ZAEqW4+KA5iq8i/xUTBGbZnHPQJywfRBX1LkHK
-         HoTxHy127BrXWr3g4LDIY10QWHDJROzhLWobKLeo0/ImpyT5cVBL2hexdKtBRA7nMbn5
-         RNnhuP4u8jkre9p7fmdiiHCJ2ro9ib6nVo4yWXOSYoT7GaoklsfG18x8rpuGNfmi67dP
-         cpeKBkSrOqysKAf0PrhyrOvt4AHCSsg6gplRjHzysP40uEGZsRZrxUYK2nD8dIJLizNM
-         QmcwO+Bv6ZZvIF1rnBzDEss4VqRHug6LqKgELlVyAvrPkAkZdT2IP64dbisqGMgOL09e
-         JlXA==
-X-Forwarded-Encrypted: i=1; AJvYcCVowF4a3jwGdCDz9Or4q3ld7sKfQd/aY99p8mGQU/l9Hp3AEFS+13zGC52Ym9QEzOPxsb40bL9R8o5eN5E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLiL5EZzmSaciqgb5KrXUGTgJabAPtrNKVU33I6HsUwSY81MxM
-	0jTJ9vqlU/8EBFE/5nNc+0jhRMbLaY9Fdevku8zieoJUIiCsXztD6G2NrMq/olT+qg==
-X-Gm-Gg: ASbGncuHnWUTDeUy0xFIvgFdWs8/WseakemazQfApCxHcXonpAb7wCbe3zgUVEtBuF5
-	LBBM4ARbbjfVYJzuwRFQZX4djP7lL5Ng0gDnrzJMQ89vQxfsav0m+yVj5kL3LDHodfg9eoRIKQ+
-	G1dT7U4XOnQg9+SAbQGV49e3nHf4qMV5JOwRn4zQj6AsQA2YkkMHN/gwFfmzzHdPw5xTwThB77i
-	fYWvdAjJo/fudvWNSaySMkoW0Rnd/tjdyxKpCJgowZg9SkBQHqnC2gGXBZE0AXvamIvcF8lb7YH
-	WcAFClLYCWufeKR/N7emceGNbHWzkGyDms3DQn5DAgcufj671B86A9wQJwj/DtHjAdd3PtF/K74
-	hmbkV7IE5XQHHGWfx17PvrkuybfQ=
-X-Google-Smtp-Source: AGHT+IGJVe96mQDhzEhZqYJnC27O9vMFUAoTp1xS/H2NANso8WpCr6YJ9fd9Q8qaZg1NI2W+7g1xJw==
-X-Received: by 2002:a17:90b:3f10:b0:312:f263:954a with SMTP id 98e67ed59e1d1-3130ccaa125mr73097a91.5.1748973691331;
-        Tue, 03 Jun 2025 11:01:31 -0700 (PDT)
-Received: from google.com (128.65.83.34.bc.googleusercontent.com. [34.83.65.128])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e29f899sm7572695a91.6.2025.06.03.11.01.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 11:01:30 -0700 (PDT)
-Date: Tue, 3 Jun 2025 11:01:27 -0700
-From: William McVicker <willmcvicker@google.com>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: tglx@linutronix.de, Jim Cromie <jim.cromie@gmail.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Marco Elver <elver@google.com>, Nam Cao <namcao@linutronix.de>,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-tegra@vger.kernel.org, John Stulz <jstultz@google.com>,
-	Peter Griffin <peter.griffin@linaro.org>,
-	Saravan Kanna <saravanak@google.com>
-Subject: Re: [PATCH v1 7/7] time: Export symbol for sched_clock register
- function
-Message-ID: <aD84d4WArf_terBP@google.com>
-References: <20250602151853.1942521-1-daniel.lezcano@linaro.org>
- <20250602151853.1942521-8-daniel.lezcano@linaro.org>
+        bh=lxbHwT89FX0z6KinlP67fsFpath/+Mc4Kx0XnmT7D+o=;
+        b=dHSs+hbsYzmGbAXtxaMGKVVggAooZEUuWawjbljTgc6g7XpyRttaRbG7dQVcQvM99N
+         pWTj07q/HesjpS6LuQPTVsUQiD6ZYtuZI7L2XsA1IRLBKdHTsUqTxSGp09zsIJYRmwYe
+         ZbgagaFQZD0Eqt1qnZswHzD5xbzQ+I2JV7bMr2HF266RzCh26aCJgERSMp4GZ5lVSEHV
+         uk2BrghLVhd68HNlx1BRES1589fPHH0uwRvVKHwE6TmEeqvPCl7obwYFg6efH5ZAzuQ/
+         4QjNl7ky++J7cg+1m4fa7vSLam1QJO8AlFD7fGSHJ5N7G9a1OzUfWgV1qEt4OcMzJnPf
+         bbqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748973750; x=1749578550;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lxbHwT89FX0z6KinlP67fsFpath/+Mc4Kx0XnmT7D+o=;
+        b=Rp1q4OEj53EfUYxxK5OAiCIsz0CQd5NVutEZVwdUqJVuJ30xihZu7fRE8e+oaCuqO8
+         DbM6KiYKcsRETLUASRH8DKArRILW9sVcg6QJmDNefY2VuAS2ZMc3dCaZ6169+iCTLu17
+         eCP/RUgw8mtXQXw6aCD00s9r790PMcOqFmXMAUjjoMuOJAmr+VlsTg+VM9tue1BJoJiO
+         B4gTJFYr85Yvphvqv14xOew5kvmJCW3AAn4gmgO/QW5kq+MwpbBYWvlt+8Dt/S+xLiCJ
+         irs/jYkc1STf7nwCQl66Ki8qUAJC01DODCrY5RGfQUca/kJ4FZvHDD/WxE/IZl6IHXGJ
+         ay/g==
+X-Forwarded-Encrypted: i=1; AJvYcCUFzfXX3cBQ60iPkErsFmwGn9qllYnAVbSZ9peipRmrE/XMkKwRfN05g8v57fY22VAESmzM3ycIw9koAGk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbYtB7gV9AaKS9nmVOFYSaKVIxFpru8UKHiD2GJAYiA0VmBp9V
+	jfBfIFJ36gOiWFAkHqHStGUjV/ijcfF54+5l9TPKC7TTdhawdWh/6vM48CA8Ey3HBd/RvNdXQB2
+	GuXX6d5i0jGSIQA5IoEj6JcOat/XVVnJNwZUtsmr6
+X-Gm-Gg: ASbGncsXdp+evqzi5KoeH0paS/EmKvW3WLyBg7GZUW4RTwF9yxJxgezHjVruLQrNYLt
+	gSauGpXv19N9tGatQ0BPufGXUtGIpa4r8E5DYK7Kz950Df/3A241gtdY0lsxLDwCxooZhYuuCe6
+	nE0dsaEFnKXNb6vZ01Ehb3pGGQvAD1GcZBnePqMOaDh8ejXXjhU7xCv93mUpQtSc5C6ft/42GNe
+	Qyk8J2fGlI=
+X-Google-Smtp-Source: AGHT+IFWo0uebQD7O3vcbTkA5s8t/G6RW4hquWATsZdfasRC+XMVOD0P/z1omQuoCPaDsmXd89sKt/OjC23eBGfsbrQ=
+X-Received: by 2002:a05:622a:488a:b0:49b:72e2:4058 with SMTP id
+ d75a77b69052e-4a5a53ca761mr11511cf.11.1748973749501; Tue, 03 Jun 2025
+ 11:02:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250602151853.1942521-8-daniel.lezcano@linaro.org>
+References: <20250601193428.3388418-1-alok.a.tiwari@oracle.com>
+ <CAHS8izOqWWdsEheAFSwOtzPM98ZudP7gKZMECWUhcU1NCLnwHA@mail.gmail.com>
+ <cc05cbf5-0b59-4442-9585-9658d67f9059@oracle.com> <bf4f1e06-f692-43bf-9261-30585a1427d7@oracle.com>
+ <CANn89iJS9UNvotxXx7f920-OnxLnJ2CjWSUtvaioOMqGKNJdRg@mail.gmail.com>
+ <CANH7hM5O7aq=bMybUqgMf5MxgAZm29RvCTO_oSOfAn1efZnKhg@mail.gmail.com>
+ <abb065ab-1923-4154-8b79-f47a86a3d30e@oracle.com> <b8d181e9-d818-4cf4-b470-a54b6df763a4@redhat.com>
+In-Reply-To: <b8d181e9-d818-4cf4-b470-a54b6df763a4@redhat.com>
+From: Bailey Forrest <bcf@google.com>
+Date: Tue, 3 Jun 2025 11:02:18 -0700
+X-Gm-Features: AX0GCFvwHb5Lvh_26htHBAviwi6fz_uyPaSQ1gsaqfUjJJHI7tGGz3kpr2lLVIs
+Message-ID: <CANH7hM6qyU4+uEB06FSAiQyitQ8jyuBXzzTD0QkoH7vYca71mw@mail.gmail.com>
+Subject: Re: [PATCH] gve: add missing NULL check for gve_alloc_pending_packet()
+ in TX DQO
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: ALOK TIWARI <alok.a.tiwari@oracle.com>, Eric Dumazet <edumazet@google.com>, 
+	Mina Almasry <almasrymina@google.com>, joshwash@google.com, willemb@google.com, 
+	pkaligineedi@google.com, kuba@kernel.org, jeroendb@google.com, 
+	hramamurthy@google.com, andrew+netdev@lunn.ch, davem@davemloft.net, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, darren.kenny@oracle.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 06/02/2025, Daniel Lezcano wrote:
-> The timer drivers could be converted into modules. The different
-> functions to register the clocksource or the clockevent are already
-> exporting their symbols for modules but the sched_clock_register()
-> function is missing.
-> 
-> Export the symbols so the drivers using this function can be converted
-> into modules.
-> 
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+On Tue, Jun 3, 2025 at 3:50=E2=80=AFAM Paolo Abeni <pabeni@redhat.com> wrot=
+e:
+> IMHO it's indeed confusing that the same condition is checked in
+> gve_alloc_pending_packet() and ignored by gve_tx_add_skb_dqo().
+>
+> Even gve_alloc_pending_packet() is only called after the
+> gve_maybe_stop_tx_dqo().
+>
+> Either always ignore the NULL condition it in both places (possibly with
+> a comment) or always check it.
 
-Reviewed-by: Will McVicker <willmcvicker@google.com>
+It's probably not harmful to go ahead with this patch, I agree this
+will make it easier for readers.
 
-Thanks,
-Will
+My point was it's not technically a bug, so it doesn't need (Fixes ...)
 
-> ---
->  kernel/time/sched_clock.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/time/sched_clock.c b/kernel/time/sched_clock.c
-> index cc15fe293719..cc1afec306b3 100644
-> --- a/kernel/time/sched_clock.c
-> +++ b/kernel/time/sched_clock.c
-> @@ -174,8 +174,7 @@ static enum hrtimer_restart sched_clock_poll(struct hrtimer *hrt)
->  	return HRTIMER_RESTART;
->  }
->  
-> -void __init
-> -sched_clock_register(u64 (*read)(void), int bits, unsigned long rate)
-> +void sched_clock_register(u64 (*read)(void), int bits, unsigned long rate)
->  {
->  	u64 res, wrap, new_mask, new_epoch, cyc, ns;
->  	u32 new_mult, new_shift;
-> @@ -247,6 +246,7 @@ sched_clock_register(u64 (*read)(void), int bits, unsigned long rate)
->  
->  	pr_debug("Registered %pS as sched_clock source\n", read);
->  }
-> +EXPORT_SYMBOL_GPL(sched_clock_register);
->  
->  void __init generic_sched_clock_init(void)
->  {
-> -- 
-> 2.43.0
-> 
+If we do make this change we can now remove the comment on gve_tx_add_skb_d=
+qo()
+
+ * Before this function is called, the caller must ensure
+ * gve_has_pending_packet(tx) returns true.
+ */
+
+Reviewed-by: Bailey Forrest <bcf@google.com>
