@@ -1,103 +1,143 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274146BFC0
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 02:40:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6203FE4
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 02:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748918433; cv=none; b=nYpbrcRqozPpj2M+EVrL8a6adjYCkjYHafrf66aYWPBY8dlnaWFZ4pCLXpIxGOhU8nScPN7UCQ686HdnAqftJjTEhC660UWIH+zeWMBKau0012aK+271JCg5JTF7rcOLAo0nvuaNdM9tnH7DM3gEcDmVhunh7azM4f/gHbT1xVc=
+	t=1748919033; cv=none; b=kI8Lmg1fxkM945RDpm2AVeH+eh3xeF8YM6pInwhSUwhUa0tE4WOjh69Q+w+QMwqJWGn6ZTc2E0cpXB4L+bRjpNLb5/y2I022nFKnhVHjliEJfZlDexROeyN1N7tb4PKnI21AismlSbTcavs2cIuNpDLhnb+aAaVDDipgL0dcnUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748918433; c=relaxed/simple;
-	bh=z79HJX12PybKRm03vtiVeVVDeotWtfjwn701t6R8GZU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=m7TNLnDLqaiC69KaEQ7WBzN+WfCZeRR8263tg0t2K/yYhLojyYFMtg8lujOrTBHya3CchGwUk1eUs+MiADrRdg11pwwgj9xJxIK6ToZPh2fxh1nSOnaDmRS75Jf7oAMfXCn/wCpRpZQLMVGPWHUOvMwyTYgq1mBx6HdOuhMLrls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YeApfnW3; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748919033; c=relaxed/simple;
+	bh=7gM3WsyQl3OXulJsCBVCmHL/Usyzz4BlHrBhYw77ZOU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Q4SOWVe67B3SZyWN8Dl8LYsXTgHQP2MH1PmCSKNgMXgDCGaDfX2d8z5X3T6XtR2TNbddNZufm1LtARoBlYTze3Noxr/4vdHvVWpR1vGulZUkR3o1AOx9wOsi35QaJ7eoioHMl3k/d1eXIQxNGug8gFuCwHogHJ9Wh0gsaKYm7vA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PAyZGgSt; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YeApfnW3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748918430; x=1780454430;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=z79HJX12PybKRm03vtiVeVVDeotWtfjwn701t6R8GZU=;
-  b=YeApfnW3jBk8AXat04PrnuaTVkXB/ccORKZjjaf8To/de51mTntlWuUE
-   MNuPB96TFumCP61f8+hKjCXzWAbgEiKj0oQ2/C1NoIna1K2ibPfW5h4c1
-   3rlYknwrBd6JrfZCVkmNWQnTj/nScE+yZkrHEQJZDhQTyBM6hmoqPyQ78
-   XrGogRknZ4PkElOxcdpYXPimeIljCYSQIWG0kveySYfjtxzRKpnczAJu1
-   JGK1OfSzy+/Oa/jJuYE1ryD8rf3FGx8eWL6RNYziF46PIB6byvahNeAJ0
-   eUAYKveIldHisX9PtnF3ZwzDUOac3oGOeuKQFyzQl/SulvcZouTAsOQ88
-   Q==;
-X-CSE-ConnectionGUID: I+ZZeb1ZTFibk4H8O0ymEg==
-X-CSE-MsgGUID: 7LGal5FnSwav4/t6FYXAjA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="62297143"
-X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
-   d="scan'208";a="62297143"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 19:40:29 -0700
-X-CSE-ConnectionGUID: 7ZX6FMdwR5uzqPvWGK3BWg==
-X-CSE-MsgGUID: F8yA2VMbSaa8f8MVamXl1w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
-   d="scan'208";a="149872896"
-Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 19:40:27 -0700
-Message-ID: <f1f55968-28e0-4c5d-876b-1c5499b3c01a@linux.intel.com>
-Date: Tue, 3 Jun 2025 10:39:51 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PAyZGgSt"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-310447fe59aso51774481fa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 19:50:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748919030; x=1749523830; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VjQkEmhOVmgQNDc/WM9/lHKV6x/q3IXLWLf64AP17Ww=;
+        b=PAyZGgStXZGBpMk47c5a9pvVCzIEHchZ6gXqsPLTxGA/CQOdPkOdsZB18htq7bhzKY
+         61tyn9sOCsgQ0sHjUnKCt2E5hMTuOYCkI+j/bnAMvFkubc/2HBmlH1Xpa7le0BPvZc+5
+         Vbza5W0iATIqCwCA/XkxzicfUwOYfwIPBrAZAPu9Zw7fnCYnMkE+JjWNtLbiLxYEocRK
+         MNmAGMu8QVVq7PKI4jcjkkgj5i97UNTKpBhxHCWyVJ6HW1v5w0wi8MrVMay70NV8HJ9o
+         azPNkO+r6Q6tbS7mvalc9kccy4x1DvaVATczsovTML/fEiCETryaJ+v2bxvfLIB2d1P3
+         8pWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748919030; x=1749523830;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VjQkEmhOVmgQNDc/WM9/lHKV6x/q3IXLWLf64AP17Ww=;
+        b=UmOqEYFFiqXV8X5DwIGewBjLaOq8c+bjuD6+B9JliKiCywq36AWqfkF0AOaKgdiGdy
+         yBoqv+VtKRlXqzLUTeJvCZsvlhxCtIKplURMoGsCi/qeUtvhtMMciMp6d3nA6a58OXua
+         tbCPr7TtPXVl1koONfYgwwwTpQU4pw+tW89njL0yworsBrX+KgF9putoMWFFDnpvFet0
+         EObh2sNBuSGQKGEB18w/Kx0ZBVPhhFJ2TiwlI0Tr/sv3l7ZCYCqHXJSR3iVHzDkApgEc
+         fDWXmCLWBhmQJTtUjwnboc5/IQ+gtoSo6SFsoUB8RgqG8dFEZyIjN1GJONGNpF2AjFAX
+         Xbzw==
+X-Forwarded-Encrypted: i=1; AJvYcCUx8329icx4RwiwOGEpBW1Db9hpa2V64tKoTyEf2rWaidzhs2HgWUSEQMGx8dxrQrMnRSZ2o0iy7fhqJbs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEN3O7mfSvvRf+jIe0E82Dx0FivZSYQtL4zk5SOln3izONeTEd
+	2OlV4xIVRwhNel5VFedgkZHHW9bcZKZdoZmRmaOsotiXH25/atNO8a/uGH5+02boAajN0jJW+Ur
+	VQPZb2UbVTtsXLaPucHoTqEEfTohIi1I=
+X-Gm-Gg: ASbGnct1kzHi+ezz1+RDPZUfDH29gDv/25EtSQwPHr1W25b2cltR6FHTMg2pGxFtoKM
+	qsgOQyPjMeYwqi2+PN8l/qLiYVDTm45oDTcG7m9Gy2X7TSY4GedvrT9OkOMh67V4WIbeUqkLhF6
+	y82Pdu54cRCC/p/U1jlI4vYnhOfNIKosGrbfODV7guIA==
+X-Google-Smtp-Source: AGHT+IEGxj9mYfTPGRIlqomwSuHiJWoaUmXfD+EWP2jSjdgLN6cVfQUMCpnlrvPQ5RKIXxZLvwwU01IxeCXF46TzViY=
+X-Received: by 2002:a05:651c:556:b0:32a:8aac:e469 with SMTP id
+ 38308e7fff4ca-32a9ea7a588mr25230991fa.35.1748919029295; Mon, 02 Jun 2025
+ 19:50:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] iommu/vt-d: Remove dead code in
- intel_iommu_domain_alloc_paging_flags()
-To: Wei Wang <wei.w.wang@intel.com>, kevin.tian@intel.com,
- yi.l.liu@intel.com, dwmw2@infradead.org, jroedel@suse.de,
- linux-kernel@vger.kernel.org, iommu@lists.linux.dev
-References: <20250530091325.694456-1-wei.w.wang@intel.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <20250530091325.694456-1-wei.w.wang@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250602152015.54366-1-lorenzo.stoakes@oracle.com>
+In-Reply-To: <20250602152015.54366-1-lorenzo.stoakes@oracle.com>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Tue, 3 Jun 2025 10:50:12 +0800
+X-Gm-Features: AX0GCFtbaHjwfuzfx_KG05VMGlfne3pn_jA4ltfzh8puNL65xaGhevHPdcFGMLQ
+Message-ID: <CAMgjq7AdJbeVTPfAY3P735hnNoNOLYLj431igMcOXh=0SKetKA@mail.gmail.com>
+Subject: Re: [RFC PATCH] MAINTAINERS: add mm swap section
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Yu Zhao <yuzhao@google.com>, 
+	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
+	Baoquan He <bhe@redhat.com>, Barry Song <baohua@kernel.org>, Chris Li <chrisl@kernel.org>, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/30/25 17:13, Wei Wang wrote:
-> When dirty_tracking is enabled, first_stage is set to false to use the
-> second stage translation table. dmar_domain->use_first_level, which is
-> assigned from first_page, is guaranteed to be false when the execution
-> reaches the location of the code to be removed by this patch. So the
-> handling for dmar_domain->use_first_level being true there will never
-> be executed.
-> 
-> Signed-off-by: Wei Wang<wei.w.wang@intel.com>
+On Mon, Jun 2, 2025 at 11:22=E2=80=AFPM Lorenzo Stoakes
+<lorenzo.stoakes@oracle.com> wrote:
+>
+> In furtherance of ongoing efforts to ensure people are aware of who
+> de-facto maintains/has an interest in specific parts of mm, as well tryin=
+g
+> to avoid get_maintainers.pl listing only Andrew and the mailing list for
+> mm files - establish a swap memory management section and add relevant
+> maintainers/reviewers.
+>
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 > ---
->   drivers/iommu/intel/iommu.c | 7 +------
->   1 file changed, 1 insertion(+), 6 deletions(-)
-> 
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index cb0b993bebb4..1145567c60f9 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -3418,13 +3418,8 @@ intel_iommu_domain_alloc_paging_flags(struct device *dev, u32 flags,
->   		spin_lock_init(&dmar_domain->s1_lock);
->   	}
->   
-> -	if (dirty_tracking) {
-> -		if (dmar_domain->use_first_level) {
+> REVIEWERS NOTE:
+>
+> I have taken a look at recent work on the swap and chosen a list of peopl=
+e
+> who seem to be regular and recent contributors/reviewers.
+>
+> Please let me know if I missed anybody, or if anybody doesn't wish to be
+> added here.
+>
+> I also realise we have a bunch of non-swap stuff living in some of these
+> files - we will have to address this separately :)
+>
+> Thanks!
+>
+>  MAINTAINERS | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e66460861bdf..3386272f6bf4 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15674,6 +15674,25 @@ S:     Maintained
+>  F:     include/linux/secretmem.h
+>  F:     mm/secretmem.c
+>
+> +MEMORY MANAGEMENT - SWAP
+> +M:     Andrew Morton <akpm@linux-foundation.org>
+> +R:     Yu Zhao <yuzhao@google.com>
+> +R:     Kemeng Shi <shikemeng@huaweicloud.com>
+> +R:     Kairui Song <kasong@tencent.com>
 
-This *explicit* check enforces that dirty tracking cannot be supported
-for a domain that relies on first-stage translation due to the lack of
-enabling/disabling dirty tracking support.
+Glad to help review swap related codes, thanks!
 
-While this might appear redundant, this prevents potential issues
-if related code is modified without awareness of this dependency.
+Acked-by: Kairui Song <kasong@tencent.com>
 
-> -			iommu_domain_free(domain);
-> -			return ERR_PTR(-EOPNOTSUPP);
-> -		}
-
-Thanks,
-baolu
+> +R:     Nhat Pham <nphamcs@gmail.com>
+> +R:     Baoquan He <bhe@redhat.com>
+> +R:     Barry Song <baohua@kernel.org>
+> +R:     Chris Li <chrisl@kernel.org>
+> +L:     linux-mm@kvack.org
+> +S:     Maintained
+> +F:     include/linux/swap.h
+> +F:     include/linux/swapfile.h
+> +F:     include/linux/swapops.h
+> +F:     mm/swap.c
+> +F:     mm/swap.h
+> +F:     mm/swap_state.c
+> +F:     mm/swapfile.c
+> +
+>  MEMORY MANAGEMENT - THP (TRANSPARENT HUGE PAGE)
+>  M:     Andrew Morton <akpm@linux-foundation.org>
+>  M:     David Hildenbrand <david@redhat.com>
+> --
+> 2.49.0
+>
