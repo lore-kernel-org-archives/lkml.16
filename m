@@ -1,114 +1,137 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB376849C
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 07:23:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF95849C;
+	Tue,  3 Jun 2025 07:23:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748935384; cv=none; b=MjfYGkn+yTl3fbRuYMdo/NyofrW3otOT5gu+QmyUZJ3dhTak0f/0FAeRp51ZNwVK1XgaVbogBcN5XHqKs0tE0865PmfbS+9fmu6+xjoTnFEzzlbo8IyqqW/mfJVkajRiAEzNkz0f+9xVPZgWVF3fsHCYba8PWr6THEGD21AhaNg=
+	t=1748935393; cv=none; b=K4IHyglzWSSSbkj0w5zWZsn8jjJLo0NR8YlDvo5+C2vpr12QXvCmdKRKsMEhDYndfSL1mCKmrD5P/xXcpugTrUMS0l3usfzcD7QKzI4lFedO3xJLGrt04xsn1UjTFDmIEPY9BZGzD6KCfOFEheKQB8eCYJyCj9DmlEa7t1meHnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748935384; c=relaxed/simple;
-	bh=kMedSjh4qD7sCMhw/GVSZeXZFdA97A2UdCNKFWFSQdc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mdb+xjsdZI/LvSp8xz5A62uDhG/SLqS5KEqAqjJd1qmkkh2S6z9uFVpAig3gQyePZBXYX3Ka2c+M4Tiy+5282bbj8CzOwB1ABioPRnftPoIWp0/A/PaiIxj6QxQv+QkZGaJ8+W4eHH0a2MwJUTQSLzt46RqCPJrmJTlVouk0NRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=Wfwkc2aN; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1748935393; c=relaxed/simple;
+	bh=liSBMkhtYRvVo/I68B65sk7/MBVBJ0KQsB2GKGJwAyg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C9fIVeJ1h4TXc4/rn6Y3L7s4Tf/CgIK9fAzBrZnJATFJIN1U3dXrej+bjYrl+7WdfyMGLmIa+yGVHoLt+/3vqUf2XHTGLtiUJPlUQfi/sgji5JTaY8DzcuNeJj55ZSa/v13ssDQxweAfXpBkhk/y7CjzoP0UAcgiKcewP2YxwaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iIWvsQmK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="Wfwkc2aN"
-Received: from eig-obgw-5008a.ext.cloudfilter.net ([10.0.29.246])
-	by cmsmtp with ESMTPS
-	id M7a3uHUq5AfjwMLz5uaiJj; Tue, 03 Jun 2025 07:22:55 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id MLz4uhVVXCFxwMLz4up3sQ; Tue, 03 Jun 2025 07:22:55 +0000
-X-Authority-Analysis: v=2.4 cv=AfG3HWXG c=1 sm=1 tr=0 ts=683ea2cf
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=Wh1V8bzkS9CpCxOpQUxp:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=MubuTtp0basKrZJvMoE6HA4DEOw3MB294adiixRNLzw=; b=Wfwkc2aNIdZ+IOd/S2XjUim0NU
-	jgT6A1/WfhzRjTgcmi9qGh/TVirraxb0RdNr5uzypv5CXmyCa+VKdBn+6XviKoial0N41vMvHDaCr
-	pJiBgA0Hn15y77YUSd1XzB+821bFayrPXAiPUGcLlVx74Vn5RKHEdckrhLJhLIbWuiI2nIasF93dR
-	isD8cfpwqy4nh7rshMXh4hrSRGBRb8Uxzg2p+1HZZuufCFEDR0IGwXRLFRbk3EAYoZ7jpf6zNi1Xg
-	mw/rZ3pbb75ZKmJSKbzSzkWRr/lLB4g0tficwgtZysZ3EbrErmpeIXYxbqD+FH6bCeHR4fySPtx9O
-	WciWZkpA==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:43432 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <re@w6rz.net>)
-	id 1uMLz2-00000002N7i-2ZAx;
-	Tue, 03 Jun 2025 01:22:52 -0600
-Message-ID: <35b44054-7d47-4db8-b573-7e945dc052f1@w6rz.net>
-Date: Tue, 3 Jun 2025 00:22:49 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iIWvsQmK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1468AC4CEED;
+	Tue,  3 Jun 2025 07:23:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748935393;
+	bh=liSBMkhtYRvVo/I68B65sk7/MBVBJ0KQsB2GKGJwAyg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iIWvsQmK9inIdht0I2MPla+pCpAekj2unXR9xa63WlyTXxcY5XmqCPBOA1EauWuA5
+	 lJUseeubcbn52QwHshyc8A/wjJJ4yzXnxxXLbSucUIM+yjfYrkZlJunGK8J6nb3aqf
+	 GmBp1DlzwWT5SPj48bXgxpRtBgfQkI5Za/8EZxrzsKU2PtJxtLhHg+1b17GchjgNcf
+	 WA08VrP1mNBavjZqwoYFBFB1Ta5pNKKm47zgsksuEFlVPBqHlcyyONAQmwnV0H7TQ5
+	 fpa3+xkyg3ziCazjEZjOeZyoG1GjUijQ+PT/YDd0SwwtegO9J9FTC8wsJlFIoOPHXg
+	 BOI1aH3boMCzw==
+Date: Tue, 3 Jun 2025 08:23:08 +0100
+From: Simon Horman <horms@kernel.org>
+To: Ronak Doshi <ronak.doshi@broadcom.com>
+Cc: netdev@vger.kernel.org, Guolin Yang <guolin.yang@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net v4] vmxnet3: correctly report gso type for UDP tunnels
+Message-ID: <20250603072308.GW1484967@horms.kernel.org>
+References: <20250530152701.70354-1-ronak.doshi@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.15 00/49] 6.15.1-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250602134237.940995114@linuxfoundation.org>
-Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250602134237.940995114@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1uMLz2-00000002N7i-2ZAx
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:43432
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 35
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfFEj/QFyJ/e5fwN8BiDhNnSMhnv67znuXX4c4GSf/XW44ilVkj3kgGUc52ZPoMGPXPfC/5rCkbuj9rXXMZPNZUSvYQ56j1Y0xMG3+Oe8PaiJF6niiPpk
- FdZezCbq1UUlS70q6iPntPihs90+06d7HkWqm/fBWpSz8LKBW/30J0IIwWB7mmCKltaatzwpDpKWvVB2Y661sZOCLX2Ih4mtQNc=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250530152701.70354-1-ronak.doshi@broadcom.com>
 
-On 6/2/25 06:46, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.15.1 release.
-> There are 49 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 04 Jun 2025 13:42:20 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.15.1-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.15.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Fri, May 30, 2025 at 03:27:00PM +0000, Ronak Doshi wrote:
+> Commit 3d010c8031e3 ("udp: do not accept non-tunnel GSO skbs landing
+> in a tunnel") added checks in linux stack to not accept non-tunnel
+> GRO packets landing in a tunnel. This exposed an issue in vmxnet3
+> which was not correctly reporting GRO packets for tunnel packets.
+> 
+> This patch fixes this issue by setting correct GSO type for the
+> tunnel packets.
+> 
+> Currently, vmxnet3 does not support reporting inner fields for LRO
+> tunnel packets. The issue is not seen for egress drivers that do not
+> use skb inner fields. The workaround is to enable tnl-segmentation
+> offload on the egress interfaces if the driver supports it. This
+> problem pre-exists this patch fix and can be addressed as a separate
+> future patch.
+> 
+> Fixes: dacce2be3312 ("vmxnet3: add geneve and vxlan tunnel offload support")
+> Signed-off-by: Ronak Doshi <ronak.doshi@broadcom.com>
+> Acked-by: Guolin Yang <guolin.yang@broadcom.com>
+> 
+> Changes v1-->v2:
+>   Do not set encapsulation bit as inner fields are not updated
+> Changes v2-->v3:
+>   Update the commit message explaining the next steps to address
+>   segmentation issues that pre-exists this patch fix.
+> Changes v3->v4:
+>   Update the commit message to clarify the workaround.
+> ---
+>  drivers/net/vmxnet3/vmxnet3_drv.c | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/drivers/net/vmxnet3/vmxnet3_drv.c b/drivers/net/vmxnet3/vmxnet3_drv.c
+> index c676979c7ab9..287b7c20c0d6 100644
+> --- a/drivers/net/vmxnet3/vmxnet3_drv.c
+> +++ b/drivers/net/vmxnet3/vmxnet3_drv.c
+> @@ -1568,6 +1568,30 @@ vmxnet3_get_hdr_len(struct vmxnet3_adapter *adapter, struct sk_buff *skb,
+>  	return (hlen + (hdr.tcp->doff << 2));
+>  }
+>  
+> +static void
+> +vmxnet3_lro_tunnel(struct sk_buff *skb, __be16 ip_proto)
+> +{
+> +	struct udphdr *uh = NULL;
+> +
+> +	if (ip_proto == htons(ETH_P_IP)) {
+> +		struct iphdr *iph = (struct iphdr *)skb->data;
+> +
+> +		if (iph->protocol == IPPROTO_UDP)
+> +			uh = (struct udphdr *)(iph + 1);
+> +	} else {
+> +		struct ipv6hdr *iph = (struct ipv6hdr *)skb->data;
+> +
+> +		if (iph->nexthdr == IPPROTO_UDP)
+> +			uh = (struct udphdr *)(iph + 1);
+> +	}
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+Hi Ronak,
 
-Tested-by: Ron Economos <re@w6rz.net>
+Possibly a naive question, but does skb->data always contain an iphdr
+or ipv6hdr? Or perhaps more to the point, is it safe to assume IPv6
+is ip_proto is not ETH_P_IP?
 
+> +	if (uh) {
+> +		if (uh->check)
+> +			skb_shinfo(skb)->gso_type |= SKB_GSO_UDP_TUNNEL_CSUM;
+> +		else
+> +			skb_shinfo(skb)->gso_type |= SKB_GSO_UDP_TUNNEL;
+> +	}
+> +}
+> +
+>  static int
+>  vmxnet3_rq_rx_complete(struct vmxnet3_rx_queue *rq,
+>  		       struct vmxnet3_adapter *adapter, int quota)
+> @@ -1881,6 +1905,8 @@ vmxnet3_rq_rx_complete(struct vmxnet3_rx_queue *rq,
+>  			if (segCnt != 0 && mss != 0) {
+>  				skb_shinfo(skb)->gso_type = rcd->v4 ?
+>  					SKB_GSO_TCPV4 : SKB_GSO_TCPV6;
+> +				if (encap_lro)
+> +					vmxnet3_lro_tunnel(skb, skb->protocol);
+>  				skb_shinfo(skb)->gso_size = mss;
+>  				skb_shinfo(skb)->gso_segs = segCnt;
+>  			} else if ((segCnt != 0 || skb->len > mtu) && !encap_lro) {
+> -- 
+> 2.45.2
+> 
+> 
