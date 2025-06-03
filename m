@@ -1,102 +1,252 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CACDB78C91;
-	Tue,  3 Jun 2025 04:02:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E6A19DF5F
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 04:02:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748923353; cv=none; b=lc0vHevCzFskcmqcQc6YOffZtr5kpm8aTx63weNamYiAbbwhg3Yxx1+TuBCeQxolrlhKgnI50l1HCf44Oa6yI7W4fzeVjwiIm1wcPKpFDi18zEZm6MOM1heaKZP9QQFL+NqUcP3rrtZ4lqPoU5tQMykf1NKU+IyWG2TYsJMSbWg=
+	t=1748923358; cv=none; b=UkBTdzRC0b/3CsWTB2ZRDXzgS53YAzs5tCZq8fjGS/+hPrLlda4DMEBVqs7JUUOeXXsYo/2DJq6I7SJuBrl+OPemUyEdl+N9JgkHtJZo2p9qG1CI9+6VIk0hn5T9EAw3XbhIhtzz5snNFo8PAhK/tZDQGwuoIEtyK74XfgX1ze4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748923353; c=relaxed/simple;
-	bh=8wtqj87pK4TUaKkyg3gX/q+LmyRidkRREKbbJzfSO2A=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=fd6R25X8w7WSC6g11+3Wc/EBKz4CsvXUVdToeJDZcTpe5sN/milnuce5vPnPmMp395RPks8+VpNtcNoiR85eYxNa4RvZCvprRPgJzsswf2DrSz7jqtyfrb9fqYIdzOUDQf14082ZTWz1OFCGTrgBpJT+eE14MsWXGhU8ufKYV1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Yk0eEXQL; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1748923358; c=relaxed/simple;
+	bh=jCNGG60p46LaPYgfFJ5QpGYJ+h4VGB1FBMJKm5y2Qlo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SZownJLgxC2jSbuXZ4J2nguvIv1vHRtfw0QuWC09HUNk2MeVOqKVIM127V81GFNrPvMfL6ZAD0gMubVTbbWzIZJG+JRSHSiHe2dyvmbX+aQnB1TGyQsNpeqzoQvMlZ9cFCHOmhFmEGb6EBSI5ksfevjQsrT/Hwd1eyMBnvTiVXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fqHySapO; arc=none smtp.client-ip=209.85.217.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Yk0eEXQL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1748923348;
-	bh=iNRJprdEXnpmhBp7VXMM3qE8P2t0SxPIXVcfOU/81WE=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Yk0eEXQLd9QeolHLfpBV5jf1dWUkQqMnXL2WZWbDEJ1HHFwZzjeP4qg7Lcn4lVxB6
-	 Cg0Yz/ArwgAYfKA6TxPMCUACY1QntKGiJJhJfV8KlqxyBLyF7d+5awSPBssFpcX57l
-	 aGw4f7bCneil5udOIAOwhpxnqMLaNrlanU988+kLDulM5WjysKzWPmmHch0g/7rM7X
-	 kHQtdLN4mWId7L1w/OKBQnpnfV5upi3jUQWaDQfRtVDvDBDjMUC/SW5X13fST9T71F
-	 bkqGaCzDh1PWaTl5e/AgGeurK6muGpCI/BAVATlrbPSdqncQFoh5ACSi7JraOnFZfj
-	 615RXvWH7czjQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bBH9H0PJ4z4xc7;
-	Tue,  3 Jun 2025 14:02:26 +1000 (AEST)
-Date: Tue, 3 Jun 2025 14:02:26 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg
- <johan.hedberg@gmail.com>, David Miller <davem@davemloft.net>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: Networking <netdev@vger.kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: duplicate patches in the bluetooth tree
-Message-ID: <20250603140226.796352c5@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fqHySapO"
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4e5a0ec639dso3384998137.3
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 21:02:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748923355; x=1749528155; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=CZSYANcoh02egzStrY3RoKo9uj8NAmebnQzKfityk0Y=;
+        b=fqHySapOowOglf5FDYRSKTQLKikokvcisMMXo1SSVo16V5Sw0stGHepO8gDs9xiCe5
+         ZWYno0/BlTB9tn3obspMgwtAFQH21V47R4XOdQzPItW0+KKa8dp9BszGjaXwpqLuJ6O4
+         R9L0zS07xqv0Io2nipYvb6g3UVf/N6MfliMToLOStosOarlmkgcvnDuJOxKpPAdicEqM
+         iG7MRKWzTSF990PNBJfnQx8zFw5uh6mTYk36xAPrbEkkthy7GX+K2rmbpSwvfI395Mh5
+         Jz155plEbwoDCgJvABQSeaB0ovWA34MPa/Pln0iv82xJTuJMmODsCoCcI3cZkkjONjuO
+         X3Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748923355; x=1749528155;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CZSYANcoh02egzStrY3RoKo9uj8NAmebnQzKfityk0Y=;
+        b=n/rcCy9p85fm0qypSsQ64grvAoEzcxH5ZhjwYaFiRyifVTnxaXaLq5VLuII7TTjt+t
+         0eL3hTT+M3EQzOK8CB6PW8G13bSSZYuCi9irrHsoNO/NFGNRRENB+QyWi+NRSOKhj/Cu
+         Ptp3fnytQbHCyMxxDGB0ZSvmrOaudb2e+orfN7I/gslpSSDefNyWD2Bgd8qRJF1kwYxz
+         B+k2vnrk6sY3OkeCaWLCT7WR9DWo2askObe6/x+OCmq1DIFptD0BUxNfMXnHlFbFP8oX
+         oz3v/lyEcRK/4QQStY7eviv18Sn4GQcTvdNfpco7SiBmtPN45YpWQjh7KEyVcn+iUUzV
+         ZvmA==
+X-Forwarded-Encrypted: i=1; AJvYcCU6xMyPsginCYq5/4f9loY+c1Ic37/49JmsSOj2EXFQpZUXomPEAWFiLrr5hoqAmoShCXgS02f2OCer0iw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPOyOVv8zCBiJl6osxfYcBAy2ra/ej4w4NeTTg8rvpPiwXkd0G
+	ftoRm8Ti6p1fN02yJ894l01hcMys2UvklL+p5C1PDwD/HUMNKqpCIvOZKcVhhChyinBJ7dWaFq0
+	ki9bh9CzFAuRK85o9FAyUNAK/efyiK6MMN1fq3DgpuA==
+X-Gm-Gg: ASbGncuvnGLTXL+wYVMq+UlqHKqP+KTg/0SEZ4fPf/DIUiewf3k5Pmn3TNlN18UF81q
+	l/53b59DC2Fr6ZiSFsWQDYaEdndmMRt7PsM1KymiVpa05YyPQb0MNtvsP4e0PzAejgeGO21vQfU
+	o5xG0++vZKHQhLl/Tj/SyyFSrqI5p48Lc=
+X-Google-Smtp-Source: AGHT+IGkOetwlNnX5s8zn15GQEFGskzIFZQZi0/612ZECsIcqYmnwLKcrK2xZfNc9zdTQogG+rVr9fN7sa6upW9SCoo=
+X-Received: by 2002:a05:6102:2acf:b0:4df:4a04:8d5e with SMTP id
+ ada2fe7eead31-4e6e40f71admr14095821137.8.1748923354768; Mon, 02 Jun 2025
+ 21:02:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/lC.IL81GQF8XA_q+l_xRBPb";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20250602134258.769974467@linuxfoundation.org>
+In-Reply-To: <20250602134258.769974467@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 3 Jun 2025 09:32:22 +0530
+X-Gm-Features: AX0GCFvenA7GD9lGj2DxjtvBcXycpF-ABe7XpXNK4CElwwYaFXsTFnpt3eZB3Aw
+Message-ID: <CA+G9fYt12w2ZvFdGf-m5d1y4BKd6rZXYya_2-++s1qLqZT=Dcg@mail.gmail.com>
+Subject: Re: [PATCH 5.15 000/207] 5.15.185-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Nick Hu <nick.hu@sifive.com>, Anup Patel <anup@brainfault.org>, 
+	Alexandre Ghiti <alexghiti@rivosinc.com>
+Content-Type: text/plain; charset="UTF-8"
 
---Sig_/lC.IL81GQF8XA_q+l_xRBPb
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, 2 Jun 2025 at 20:22, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.15.185 release.
+> There are 207 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 04 Jun 2025 13:42:20 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.185-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Hi all,
 
-The following commits are also in the net tree as different commits
-(but the same patches):
+Regressions on riscv defconfig builds failing with gcc-12, gcc-8 and
+clang-20 toolchains on 5.15.185-rc1.
 
-  a731614b3044 ("Bluetooth: L2CAP: Fix not responding with L2CAP_CR_LE_ENCR=
-YPTION")
-  8df2c74d466c ("Bluetooth: hci_qca: move the SoC type check to the right p=
-lace")
-  4e221e2b5ee0 ("Bluetooth: btnxpuart: Fix missing devm_request_irq() retur=
-n value check")
-  2ab3abab237b ("Bluetooth: MGMT: reject malformed HCI_CMD_SYNC commands")
+Regression Analysis:
+ - New regression? Yes
+ - Reproducible? Yes
 
-These are commits
+Build regression: riscv defconfig timer-riscv.c:82:2: error: implicit
+declaration of function 'riscv_clock_event_stop'
 
-  03dba9cea72f ("Bluetooth: L2CAP: Fix not responding with L2CAP_CR_LE_ENCR=
-YPTION")
-  0fb410c914eb ("Bluetooth: hci_qca: move the SoC type check to the right p=
-lace")
-  edc14f2adc64 ("Bluetooth: btnxpuart: Fix missing devm_request_irq() retur=
-n value check")
-  03f1700b9b4d ("Bluetooth: MGMT: reject malformed HCI_CMD_SYNC commands")
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-in the net tree.
 
---=20
-Cheers,
-Stephen Rothwell
+Build log:
+---------
+drivers/clocksource/timer-riscv.c:82:2: error: implicit declaration of
+function 'riscv_clock_event_stop'
+[-Werror,-Wimplicit-function-declaration]
+   82 |         riscv_clock_event_stop();
+      |         ^
+1 error generated.
 
---Sig_/lC.IL81GQF8XA_q+l_xRBPb
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+This patch caused the build error,
 
------BEGIN PGP SIGNATURE-----
+  clocksource/drivers/timer-riscv: Stop stimecmp when cpu hotplug
+  [ Upstream commit 70c93b026ed07078e933583591aa9ca6701cd9da ]
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg+c9IACgkQAVBC80lX
-0GxkkAf/YLTifI9802jD9mRdVvuuf5r+k5q3+a9Wj7sZnOvsPQ8mrrJY+GfQKTVD
-Imlrd+P3RbuPqgDXO9wVCz9dMG6B1WBPw8cVafWNS+RlmjKnqM5iNwU6TmRianNH
-+7GWA95TKfAFE04E4FwHMq6a/hex0Ui7JU6qRwjqIinNpAd7eZx2C/mtp61pYMh7
-w4CTAf7yVsL/U7mcaF4T80hwnxahKBSJXmGTxJooe7nk6cpUh22r+5/dxKeoWTs5
-DhASrS1xTVLCuvboGlYhbSW3wSrBw8eqkaaDcsTWHUjezcOBxcRorcagaJGdCAga
-wXSSYQ97ovI9yEnAbVRGf0sR/QGZwg==
-=3ZVC
------END PGP SIGNATURE-----
 
---Sig_/lC.IL81GQF8XA_q+l_xRBPb--
+## Boot log
+* Build log: https://qa-reports.linaro.org/api/testruns/28635911/log_file/
+* Build details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.15.y/build/v5.15.184-208-g5f6a7d9dc0f9/testrun/28635907/suite/build/test/clang-20-defconfig/details/
+* Build history:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.15.y/build/v5.15.184-208-g5f6a7d9dc0f9/testrun/28635907/suite/build/test/clang-20-defconfig/history/
+* architecture: riscv
+* toolchain: gcc-8, gcc-12, clang-20
+* config : defconfig
+* Build config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2xxPvfQW4MFgulEP3Uu0GG4r5ra/config
+* Build: https://storage.tuxsuite.com/public/linaro/lkft/builds/2xxPvfQW4MFgulEP3Uu0GG4r5ra/
+
+
+## Steps to reproduce
+ - tuxmake --runtime podman --target-arch riscv --toolchain clang-20
+--kconfig defconfig LLVM=1 LLVM_IAS=1
+
+## Build
+* kernel: 5.15.185-rc1
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+* git commit: 5f6a7d9dc0f9396244df99f4b257b066f41d1f4f
+* git describe: v5.15.184-208-g5f6a7d9dc0f9
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.15.y/build/v5.15.184-208-g5f6a7d9dc0f9
+
+## Test Regressions (compared to v5.15.183-60-gba6ee53cdfad)
+* riscv, build
+  - clang-20-defconfig
+  - gcc-12-defconfig
+  - gcc-8-defconfig
+
+## Metric Regressions (compared to v5.15.183-60-gba6ee53cdfad)
+
+## Test Fixes (compared to v5.15.183-60-gba6ee53cdfad)
+
+## Metric Fixes (compared to v5.15.183-60-gba6ee53cdfad)
+
+## Test result summary
+total: 50016, pass: 38348, fail: 1860, skip: 9551, xfail: 257
+
+## Build Summary
+* arc: 5 total, 5 passed, 0 failed
+* arm: 101 total, 101 passed, 0 failed
+* arm64: 28 total, 28 passed, 0 failed
+* i386: 18 total, 18 passed, 0 failed
+* mips: 22 total, 22 passed, 0 failed
+* parisc: 3 total, 3 passed, 0 failed
+* powerpc: 22 total, 22 passed, 0 failed
+* riscv: 8 total, 5 passed, 3 failed
+* riscv: 9 total, 9 passed, 0 failed
+* sh: 10 total, 10 passed, 0 failed
+* sparc: 6 total, 6 passed, 0 failed
+* x86_64: 24 total, 24 passed, 0 failed
+
+## Test suites summary
+* boot
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-exec
+* kselftest-fpu
+* kselftest-futex
+* kselftest-intel_pstate
+* kselftest-kcmp
+* kselftest-membarrier
+* kselftest-mincore
+* kselftest-mm
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-mptcp
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-seccomp
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-tc-testing
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* kvm-unit-tests
+* lava
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-crypto
+* ltp-cve
+* ltp-fcntl-locktests
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* perf
+* rcutorture
+
+--
+Linaro LKFT
+https://lkft.linaro.org
