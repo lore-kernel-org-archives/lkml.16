@@ -1,208 +1,253 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from b224-17.smtp-out.eu-central-1.amazonses.com (b224-17.smtp-out.eu-central-1.amazonses.com [69.169.224.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61D3C1C1AAA
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 17:41:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 672A91361;
+	Tue,  3 Jun 2025 17:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=69.169.224.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748972495; cv=none; b=Rynj3h2gmunTbiUhy6bUd89XVM7+6eaLujXyhvvr+a9DDR5oT79020/+cZLvzqGghXIZ3Orrs5my9AQCCbFi2/enu1RBhRojjwQqLl3TgL6kHqiqGzeTOL2ogP7/GupR5iEqUhla/UM8QaUeC8c/Sf9tsChe5K2iIKZuBX/h6t8=
+	t=1748972583; cv=none; b=NyyrBW+56lOISfKXQS4JwtPtRxpFlI6k7eZLtxNVRZJFmocv2lF/LmGpHDzgOKOOHg09xL2+zgpuGeEC4Vjl1P+RwaISH0fJgh+rtN4IPv3BG5y/YYCTwuDhR7VzzZrH8jNsjYgFs/vBt5ZjVwtB5hBER8NOU+0KELMDdkc74iY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748972495; c=relaxed/simple;
-	bh=Sc8MQqtz6fnvJS5fR7oLAfyaF6gQ/B5iw8Wk/X78j3M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k09aaB57McTv3AR8X4uEupnz4O3O3JD0zBuTIXVMomvj0s557B4Q2xNeKH8r0piKW0xxMeT2lWWeeZ/DJOtoPlo1nhp9RKrumzgiOam8Z6AWhaan1+jLN8K8Drk0Spg64I1FOn3+0HUEtY0uKlEHJ2yX/swtT74XVEzdn0h8gDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=GPp4/Dvw; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1748972583; c=relaxed/simple;
+	bh=hKGYfvlJxweczRRYlxKKsLZLtXS51ZdVOGBkabKEgCM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=DP4YFpDVoiQbOJnSoJma0OWBANuamRoZE1LUvqE6Rdj8+0akvi9M67j21sc4gkDl2jo/zVzP/UX4qRzuY3jW874MRG7dHF6cTnUxPvwkMGfdo0xVXQHaQNR9c9oT1aWqM2DLZTMxW1cAMNXnC0E5ZR+pbzY8LevvjPFi6Endmb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=riscv-rocks.de; spf=pass smtp.mailfrom=mail.riscv-rocks.de; dkim=pass (2048-bit key) header.d=riscv-rocks.de header.i=@riscv-rocks.de header.b=MmNL1mfx; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=JDOzg0Cg; arc=none smtp.client-ip=69.169.224.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=riscv-rocks.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.riscv-rocks.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="GPp4/Dvw"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-451e24dfe1aso15479935e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 10:41:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748972491; x=1749577291; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=v17ygnkahOl8aK1nqKOWLN3shaj1c17h4br6h80J3cE=;
-        b=GPp4/DvwScT6mI4BQN6wMvSNqPzuvPOZZWouJ77lMFW4srsG2fajkI3GrgjpYz8af+
-         Scv3Lb0xYXTt/+8SX7us3SmUmPQF7s5L58hzybElgvz4r1sEaIcJT/xzjH1ruasIB8fl
-         przraEGZKbwI++v3ImtgHvk5oyefVDcFSTpEtTSFvUPHQd7c4xpL4YT69weBUzW/NRo/
-         rvmM4TYc7r6qiFrR+cCMsXp9Aq4mYO5ffvX03nb0NxWzukmIEI8Ll9blf9oQH1GoaKRp
-         jPOZWxA8r3yuRZ5IAy7p1bmyjUAAAI0XL/WDUfV0Kh+bj57NKUGz+pKBbF+dTHq9pO0B
-         o3+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748972491; x=1749577291;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v17ygnkahOl8aK1nqKOWLN3shaj1c17h4br6h80J3cE=;
-        b=SGF82V3elLvPT/PoD7rlTo8GffcGAm/gafrKvzLC6YEqmX5GMi7xCaAZJ+kPpZiwJ+
-         lU3ziyJ84eOV8jhxu7n4ZKllVPiF4HDnGwKFOdSU4Y5c2+SYIZj3Yo9DFOQUp2VTLDUj
-         J1sFHQZwRgEdLujCfKNG4Er2q745gixlKsSjpeFhnhJYCzr9vhJBz279D8wHoW42eKQf
-         eoRteCj+2PMBNYPTusrduHrXI2NFeQVRRN+gzSLoiR11al2CtmTRhN1nhcVf9yJxjZJY
-         hbtV3ZoolUUfJivHq+WkM3U5GdnVlKO/s8F5nVQFCac46Af0h2a9+ArgcPdEhcd9KkvJ
-         ygag==
-X-Forwarded-Encrypted: i=1; AJvYcCVxFdfkQz3ordgETbD3kZerN3Lr33UzVW5OaeVkMMEHvMjl1rMO1vQUjkbflCXZZhH6tnd0PuaCJ13mX3M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQqIUpEdiDaINDEEq2bQqQKiJtuMGjjpxTagzl+geLJhygmUyn
-	HfMoWNG0yjmrlhDVFiqaH65SqZlTSzQVhFfHaPnDs26tXfLDN6VhCTEXT9d3a6NgXRE=
-X-Gm-Gg: ASbGnct/9fz7mIYczruVZ6UWV08rJ2RuAgccrB3I9+UBH7Pl5jPnJa3majP9c+o3Zd9
-	D6f02iSYZfmnCX1LT4ZRfgC+qLvq7ktFjKlSyuCbz5M+MrNwzRcduaBmEVHIMkyF5LqLwXqWDL+
-	xR57Q/TX2D9aazBT2cKzXIu8ParmZFu1U7ARWpKL5jXjft9JC0K6BU7DbkNNWyAi8XjHa0/xelr
-	4OPIZKWZwqIh2rSTe/eRUE4KHbK0a68oVf/DozmTAJkers1e1ou8QxCi7zRQVywu3ZCSpTEt4e7
-	rEdSl2SOl3CcG6x2xzbY5yNcHIzXPgYtQk+ksP6sRXXrdeYc/vaVbOAncCPPghUpJI3NdrwPWLU
-	myQcGo9yqJ2A7fw3CGw==
-X-Google-Smtp-Source: AGHT+IFYtypXcuIceGvwjxuac6BwvbR7xGL6xmwnPpX6addhpz53IWTJ71z2bH3kDmNWY67XQdzWdA==
-X-Received: by 2002:a05:600c:1d0b:b0:439:8c80:6af4 with SMTP id 5b1f17b1804b1-450d64ffea7mr141076015e9.19.1748972490563;
-        Tue, 03 Jun 2025 10:41:30 -0700 (PDT)
-Received: from localhost (p200300f65f13c80400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f13:c804::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a4efe73f67sm18682208f8f.47.2025.06.03.10.41.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 10:41:30 -0700 (PDT)
-Date: Tue, 3 Jun 2025 19:41:28 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Sean Anderson <sean.anderson@seco.com>, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Subject: New default binding for PWM devices? [Was: Re: [PATCH] dt-bindings:
- timer: xlnx,xps-timer: Make PWM in example usable]
-Message-ID: <crk42dsypmbyqk7avldghjq32vslmalfmmouwxzgtdci4agfhz@rkbmxj5z22fx>
-References: <20250527171504.346696-2-u.kleine-koenig@baylibre.com>
- <a14be34c-de2a-4bea-9282-1fac7780b9a4@kernel.org>
+	dkim=pass (2048-bit key) header.d=riscv-rocks.de header.i=@riscv-rocks.de header.b="MmNL1mfx";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="JDOzg0Cg"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=2kaovp6zxy5nzp5wqunvdq5vkiqbeqln; d=riscv-rocks.de; t=1748972578;
+	h=Date:From:To:Cc:Subject:Message-ID:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=hKGYfvlJxweczRRYlxKKsLZLtXS51ZdVOGBkabKEgCM=;
+	b=MmNL1mfxlO/BQy8PH4lxAHXo+dEE+gpedV8xgENjh8q6aZhDPA7hX6EahW7+nA22
+	rG7djHsXatiuc2Ky8GH5KjPp23tl1idodklC+y/a3duejDMkwp4ORztA3X7Hfr5PJ3M
+	xruSPqrEdKwig/ntrTwhXZ83yKJ1BhIFlRWnwehxNZU11RRCiaXrZuuvY9CjlzfSDkm
+	cjoUeE3l8itRVdKulVGzjRZOZHY+gh3kYeHcDn7QKUpi9XM9sDaJj+ipi1UsAOcxaVZ
+	CmkjW34ityPMeV6c8/xIAlctRwGlMVqSi6Rt3+XD7+p5/MELpaaypY7Dglg5avHDe6G
+	aH3jxLnI6g==
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=54ecsf3zk7z4mwxwwox7z7bg6e5gwjsz; d=amazonses.com; t=1748972578;
+	h=Date:From:To:Cc:Subject:Message-ID:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID;
+	bh=hKGYfvlJxweczRRYlxKKsLZLtXS51ZdVOGBkabKEgCM=;
+	b=JDOzg0Cg+9zQea6+I7owsUeRwAd41/jcnqOI+7gCBgSMbXiZGDM22XOjPaHnZ7xG
+	bXBQ2+vmsYdqTwrC0TS7UDgu2p7ACOBVPPl8AEwA+2CuQt6ib8mAwWfU/knJkNLKpqi
+	RDOy/PlNPPU0PEnFE5Cjh7q7l4inPGFHMdh5ChOA=
+Date: Tue, 3 Jun 2025 17:42:58 +0000
+From: Damian Tometzki <damian@riscv-rocks.de>
+To: miriam.rachel.korenblit@intel.com
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [wireless] WARNING in iwl_mvm_sta_rx_agg+0x9d3/0xb70 [iwlmvm]
+Message-ID: <0107019736e3a599-79e58a4a-0dfa-4f43-aeaf-4a4208845b32-000000@eu-central-1.amazonses.com>
+Reply-To: Damian Tometzki <damian@riscv-rocks.de>
+Mail-Followup-To: miriam.rachel.korenblit@intel.com,
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="mlsk4nchawdtgzth"
-Content-Disposition: inline
-In-Reply-To: <a14be34c-de2a-4bea-9282-1fac7780b9a4@kernel.org>
-
-
---mlsk4nchawdtgzth
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: New default binding for PWM devices? [Was: Re: [PATCH] dt-bindings:
- timer: xlnx,xps-timer: Make PWM in example usable]
-MIME-Version: 1.0
+User-Agent: Mutt
+X-Operating-System: Linux Fedora release 42 (Adams) (Kernel
+ 6.14.9-300.fc42.x86_64)
+Organization: Linux hacker
+Feedback-ID: ::1.eu-central-1.yMcBPu/jK26Vj3HVmCFyFk75QMsS8V3QY5HbXP/Qrys=:AmazonSES
+X-SES-Outgoing: 2025.06.03-69.169.224.17
 
-Hello,
+Hello together,
+in the current build tree from linus i get the followinng warning:=20
+On kernel 6.15.0+  (PREEMPT, tainted: G U W), I repeatedly get the followin=
+g warning in iwl_mvm_sta_rx_agg():
 
-On Wed, May 28, 2025 at 09:43:48AM +0200, Krzysztof Kozlowski wrote:
-> On 27/05/2025 19:15, Uwe Kleine-K=F6nig wrote:
-> > With #pwm-cells =3D <0> no usable reference to that PWM can be created.
-> > Even though a xlnx,xps-timer device only provides a single PWM line, Li=
-nux
-> > would fail to determine the right (pwmchip, pwmnumber) combination.
-> >=20
-> > Fix the example to use the recommended value 3 for #pwm-cells.
-> >=20
-> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
-> > ---
-> >  Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> And what about the binding itself? It allows any arbitrary value.
-> Setting it to const=3D3 would not break the ABI, as long as driver does
-> not care.
+WARNING: CPU: 4 PID: 4724 at drivers/net/wireless/intel/iwlwifi/mvm/sta.c:2=
+990 iwl_mvm_sta_rx_agg+0x9d3/0xb70 [iwlmvm]a
+Reproducibility:
+Happens intermittently during normal WiFi use (triggers after suspend).
 
-Oh indeed. Now I wonder about myself that I didn't notice that without a
-hint.
+[   87.639112] ------------[ cut here ]------------
+[   87.639114] WARNING: CPU: 4 PID: 4724 at drivers/net/wireless/intel/iwlw=
+ifi/mvm/sta.c:2990 iwl_mvm_sta_rx_agg+0x9d3/0xb70 [iwlmvm]
+[   87.639151] Modules linked in: uinput rfcomm snd_seq_dummy snd_hrtimer n=
+f_conntrack_netlink veth xt_conntrack xt_MASQUERADE bridge stp llc xt_set x=
+t_addrtype nls_utf8 cifs cifs_arc4 nls_ucs2_utils cifs_md4 dns_resolver net=
+fs overlay xt_comment nft_compat nf_conntrack_netbios_ns nf_conntrack_broad=
+cast nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reje=
+ct_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack =
+nf_defrag_ipv6 nf_defrag_ipv4 ip_set nf_tables sunrpc qrtr snd_soc_skl_hda_=
+dsp snd_soc_intel_sof_board_helpers snd_sof_probes snd_soc_intel_hda_dsp_co=
+mmon snd_hda_codec_realtek snd_hda_codec_generic snd_hda_scodec_component b=
+infmt_misc snd_soc_dmic snd_sof_pci_intel_tgl snd_sof_pci_intel_cnl snd_sof=
+_intel_hda_generic soundwire_intel snd_sof_intel_hda_sdw_bpt vfat snd_sof_i=
+ntel_hda_common fat snd_soc_hdac_hda snd_sof_intel_hda_mlink snd_sof_intel_=
+hda snd_hda_codec_hdmi soundwire_cadence snd_sof_pci snd_sof_xtensa_dsp snd=
+_sof snd_sof_utils snd_soc_acpi_intel_match
+[   87.639208]  snd_soc_acpi_intel_sdca_quirks soundwire_generic_allocation=
+ snd_soc_acpi crc8 soundwire_bus snd_soc_sdca snd_soc_avs snd_soc_hda_codec=
+ snd_hda_ext_core snd_soc_core snd_compress ac97_bus snd_pcm_dmaengine snd_=
+hda_intel iwlmvm snd_intel_dspcfg snd_intel_sdw_acpi uvcvideo snd_hda_codec=
+ intel_uncore_frequency uvc intel_uncore_frequency_common videobuf2_vmalloc=
+ intel_tcc_cooling videobuf2_memops x86_pkg_temp_thermal snd_hda_core video=
+buf2_v4l2 intel_powerclamp snd_hwdep mac80211 videobuf2_common coretemp rap=
+l snd_seq iTCO_wdt snd_seq_device intel_pmc_bxt videodev processor_thermal_=
+device_pci_legacy think_lmi iTCO_vendor_support spi_nor processor_thermal_d=
+evice intel_cstate mtd mei_pxp mei_hdcp intel_rapl_msr libarc4 intel_uncore=
+ pcspkr mc firmware_attributes_class processor_thermal_wt_hint snd_pcm wmi_=
+bmof iwlwifi platform_temperature_control processor_thermal_rfim i2c_i801 p=
+rocessor_thermal_rapl spi_intel_pci snd_ctl_led spi_intel cfg80211 intel_ra=
+pl_common snd_timer i2c_smbus mei_me thunderbolt mei
+[   87.639266]  thinkpad_acpi idma64 processor_thermal_wt_req processor_the=
+rmal_power_floor processor_thermal_mbox igen6_edac intel_soc_dts_iosf platf=
+orm_profile snd int3403_thermal soundcore int340x_thermal_zone soc_button_a=
+rray intel_pmc_core intel_hid pmt_telemetry sparse_keymap int3400_thermal a=
+cpi_thermal_rel pmt_class intel_pmc_ssram_telemetry acpi_pad acpi_tad joyde=
+v loop nfnetlink zram lz4hc_compress lz4_compress xe drm_ttm_helper drm_sub=
+alloc_helper gpu_sched drm_gpuvm drm_exec drm_gpusvm bnep btusb btrtl btint=
+el btbcm btmtk bluetooth rfkill i915 i2c_algo_bit hid_multitouch drm_buddy =
+nvme ttm nvme_core drm_display_helper polyval_clmulni ghash_clmulni_intel v=
+ideo sha512_ssse3 nvme_keyring sha1_ssse3 nvme_auth cec intel_vsec i2c_hid_=
+acpi i2c_hid ucsi_acpi typec_ucsi typec wmi pinctrl_tigerlake serio_raw fuse
+[   87.639324] CPU: 4 UID: 0 PID: 4724 Comm: kworker/u32:20 Tainted: G     =
+U  W           6.15.0 #422 PREEMPT(lazy)=20
+[   87.639328] Tainted: [U]=3DUSER, [W]=3DWARN
+[   87.639330] Hardware name: LENOVO 20XWCTO1WW/20XWCTO1WW, BIOS N32ET96W (=
+1.72 ) 03/04/2025
+[   87.639331] Workqueue: events_unbound cfg80211_wiphy_work [cfg80211]
+[   87.639391] RIP: 0010:iwl_mvm_sta_rx_agg+0x9d3/0xb70 [iwlmvm]
+[   87.639424] Code: e9 f3 fc ff ff 79 c4 31 db e9 54 fa ff ff 0f 89 e0 fc =
+ff ff e9 49 fa ff ff 0f 0b 41 b9 ea ff ff ff e9 f6 f9 ff ff 0f 0b eb f1 <0f=
+> 0b e9 e9 fe ff ff 48 8b 3f 48 c7 c6 34 96 dd c1 e8 f7 0e a1 ff
+[   87.639426] RSP: 0018:ffffcb03e11dfb80 EFLAGS: 00010286
+[   87.639429] RAX: ffff896a05ce0000 RBX: ffff896c6b2c0000 RCX: ffffffffc1d=
+c5940
+[   87.639431] RDX: 0000000000000005 RSI: 0000000000000000 RDI: ffff896a028=
+020c8
+[   87.639432] RBP: ffffcb03e11dfc40 R08: ffffffffc1dd0210 R09: 00000000000=
+00000
+[   87.639434] R10: 0000000000000005 R11: ffffcb03e11dfb30 R12: ffff896a0c9=
+daa90
+[   87.639436] R13: ffff896a0b89a008 R14: 0000000000000009 R15: 00000000000=
+00000
+[   87.639438] FS:  0000000000000000(0000) GS:ffff896daf6af000(0000) knlGS:=
+0000000000000000
+[   87.639440] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   87.639441] CR2: 00007f8e0980b460 CR3: 0000000129aa8006 CR4: 0000000000f=
+70ef0
+[   87.639443] PKRU: 55555554
+[   87.639445] Call Trace:
+[   87.639446]  <TASK>
+[   87.639450]  ? iwl_mvm_mac_ampdu_action+0xf9/0x270 [iwlmvm]
+[   87.639477]  iwl_mvm_mac_ampdu_action+0xf9/0x270 [iwlmvm]
+[   87.639504]  drv_ampdu_action+0xdc/0x1a0 [mac80211]
+[   87.639605]  __ieee80211_start_rx_ba_session+0x4c6/0x760 [mac80211]
+[   87.639719]  ieee80211_process_addba_request+0x9b/0xd0 [mac80211]
+[   87.639804]  ieee80211_iface_work+0x6f/0x1b0 [mac80211]
+[   87.639882]  cfg80211_wiphy_work+0x11e/0x190 [cfg80211]
+[   87.639944]  process_one_work+0x18f/0x350
+[   87.639950]  worker_thread+0x25a/0x3a0
+[   87.639954]  ? __pfx_worker_thread+0x10/0x10
+[   87.639958]  kthread+0xfc/0x240
+[   87.639961]  ? __pfx_kthread+0x10/0x10
+[   87.639964]  ? __pfx_kthread+0x10/0x10
+[   87.639967]  ret_from_fork+0x14f/0x180
+[   87.639971]  ? __pfx_kthread+0x10/0x10
+[   87.639973]  ret_from_fork_asm+0x1a/0x30
+[   87.639979]  </TASK>
+[   87.639980] ---[ end trace 0000000000000000 ]---
+[   87.640455] ------------[ cut here ]------------
+[   87.640456] WARNING: CPU: 4 PID: 4724 at drivers/net/wireless/intel/iwlw=
+ifi/mvm/sta.c:2990 iwl_mvm_sta_rx_agg+0x9d3/0xb70 [iwlmvm]
+[   87.640495] Modules linked in: uinput rfcomm snd_seq_dummy snd_hrtimer n=
+f_conntrack_netlink veth xt_conntrack xt_MASQUERADE bridge stp llc xt_set x=
+t_addrtype nls_utf8 cifs cifs_arc4 nls_ucs2_utils cifs_md4 dns_resolver net=
+fs overlay xt_comment nft_compat nf_conntrack_netbios_ns nf_conntrack_broad=
+cast nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reje=
+ct_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack =
+nf_defrag_ipv6 nf_defrag_ipv4 ip_set nf_tables sunrpc qrtr snd_soc_skl_hda_=
+dsp snd_soc_intel_sof_board_helpers snd_sof_probes snd_soc_intel_hda_dsp_co=
+mmon snd_hda_codec_realtek snd_hda_codec_generic snd_hda_scodec_component b=
+infmt_misc snd_soc_dmic snd_sof_pci_intel_tgl snd_sof_pci_intel_cnl snd_sof=
+_intel_hda_generic soundwire_intel snd_sof_intel_hda_sdw_bpt vfat snd_sof_i=
+ntel_hda_common fat snd_soc_hdac_hda snd_sof_intel_hda_mlink snd_sof_intel_=
+hda snd_hda_codec_hdmi soundwire_cadence snd_sof_pci snd_sof_xtensa_dsp snd=
+_sof snd_sof_utils snd_soc_acpi_intel_match
+[   87.640552]  snd_soc_acpi_intel_sdca_quirks soundwire_generic_allocation=
+ snd_soc_acpi crc8 soundwire_bus snd_soc_sdca snd_soc_avs snd_soc_hda_codec=
+ snd_hda_ext_core snd_soc_core snd_compress ac97_bus snd_pcm_dmaengine snd_=
+hda_intel iwlmvm snd_intel_dspcfg snd_intel_sdw_acpi uvcvideo snd_hda_codec=
+ intel_uncore_frequency uvc intel_uncore_frequency_common videobuf2_vmalloc=
+ intel_tcc_cooling videobuf2_memops x86_pkg_temp_thermal snd_hda_core video=
+buf2_v4l2 intel_powerclamp snd_hwdep mac80211 videobuf2_common coretemp rap=
+l snd_seq iTCO_wdt snd_seq_device intel_pmc_bxt videodev processor_thermal_=
+device_pci_legacy think_lmi iTCO_vendor_support spi_nor processor_thermal_d=
+evice intel_cstate mtd mei_pxp mei_hdcp intel_rapl_msr libarc4 intel_uncore=
+ pcspkr mc firmware_attributes_class processor_thermal_wt_hint snd_pcm wmi_=
+bmof iwlwifi platform_temperature_control processor_thermal_rfim i2c_i801 p=
+rocessor_thermal_rapl spi_intel_pci snd_ctl_led spi_intel cfg80211 intel_ra=
+pl_common snd_timer i2c_smbus mei_me thunderbolt mei
+[   87.640611]  thinkpad_acpi idma64 processor_thermal_wt_req processor_the=
+rmal_power_floor processor_thermal_mbox igen6_edac intel_soc_dts_iosf platf=
+orm_profile snd int3403_thermal soundcore int340x_thermal_zone soc_button_a=
+rray intel_pmc_core intel_hid pmt_telemetry sparse_keymap int3400_thermal a=
+cpi_thermal_rel pmt_class intel_pmc_ssram_telemetry acpi_pad acpi_tad joyde=
+v loop nfnetlink zram lz4hc_compress lz4_compress xe drm_ttm_helper drm_sub=
+alloc_helper gpu_sched drm_gpuvm drm_exec drm_gpusvm bnep btusb btrtl btint=
+el btbcm btmtk bluetooth rfkill i915 i2c_algo_bit hid_multitouch drm_buddy =
+nvme ttm nvme_core drm_display_helper polyval_clmulni ghash_clmulni_intel v=
+ideo sha512_ssse3 nvme_keyring sha1_ssse3 nvme_auth cec intel_vsec i2c_hid_=
+acpi i2c_hid ucsi_acpi typec_ucsi typec wmi pinctrl_tigerlake serio_raw fuse
+[   87.640669] CPU: 4 UID: 0 PID: 4724 Comm: kworker/u32:20 Tainted: G     =
+U  W           6.15.0 #422 PREEMPT(lazy)=20
+[   87.640674] Tainted: [U]=3DUSER, [W]=3DWARN
+[   87.640675] Hardware name: LENOVO 20XWCTO1WW/20XWCTO1WW, BIOS N32ET96W (=
+1.72 ) 03/04/2025
+[   87.640677] Workqueue: events_unbound cfg80211_wiphy_work [cfg80211]
+[   87.640726] RIP: 0010:iwl_mvm_sta_rx_agg+0x9d3/0xb70 [iwlmvm]
+[   87.640757] Code: e9 f3 fc ff ff 79 c4 31 db e9 54 fa ff ff 0f 89 e0 fc =
+ff ff e9 49 fa ff ff 0f 0b 41 b9 ea ff ff ff e9 f6 f9 ff ff 0f 0b eb f1 <0f=
+> 0b e9 e9 fe ff ff 48 8b 3f 48 c7 c6 34 96 dd c1 e8 f7 0e a1 ff
+[   87.640760] RSP: 0018:ffffcb03e11dfb80 EFLAGS: 00010286
+[   87.640762] RAX: ffff896a052a0000 RBX: ffff896c69260000 RCX: ffffffffc1d=
+c5940
+[   87.640764] RDX: 0000000000000006 RSI: 0000000000000000 RDI: ffff896a028=
+020c8
+[   87.640766] RBP: ffffcb03e11dfc40 R08: ffffffffc1dd0210 R09: 00000000000=
+00000
+[   87.640767] R10: 0000000000000006 R11: ffffcb03e11dfb30 R12: ffff896a0c9=
+daa90
+[   87.640769] R13: ffff896a0b89a008 R14: 0000000000000009 R15: 00000000000=
+00000
+[   87.640771] FS:  0000000000000000(0000) GS:ffff896daf6af000(0000) knlGS:=
+0000000000000000
+[   87.640773] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   87.640775] CR2: 00007f8e0980b460 CR3: 0000000129aa8006 CR4: 0000000000f=
+70ef0
+[   87.640777] PKRU: 55555554
+[   87.640778] Call Trace:
+[   87.640780]  <TASK>
+[   87.640784]  ? iwl_mvm_mac_ampdu_action+0xf9/0x270 [iwlmvm]
+[   87.640820]  iwl_mvm_mac_ampdu_action+0xf9/0x270 [iwlmvm]
+[   87.640853]  drv_ampdu_action+0xdc/0x1a0 [mac80211]
+[   87.640928]  __ieee80211_start_rx_ba_session+0x4c6/0x760 [mac80211]
+[   87.641007]  ieee80211_process_addba_request+0x9b/0xd0 [mac80211]
+[   87.641103]  ieee80211_iface_work+0x6f/0x1b0 [mac80211]
+[   87.641182]  cfg80211_wiphy_work+0x11e/0x190 [cfg80211]
+[   87.641236]  process_one_work+0x18f/0x350
+[   87.641242]  worker_thread+0x25a/0x3a0
+[   87.641246]  ? __pfx_worker_thread+0x10/0x10
+[   87.641250]  kthread+0xfc/0x240
+[   87.641253]  ? __pfx_kthread+0x10/0x10
+[   87.641256]  ? __pfx_kthread+0x10/0x10
+[   87.641259]  ret_from_fork+0x14f/0x180
+[   87.641262]  ? __pfx_kthread+0x10/0x10
+[   87.641265]  ret_from_fork_asm+0x1a/0x30
+[   87.641271]  </TASK>
+[   87.641272] ---[ end trace 0000000000000000 ]---
 
-So with the intention to move all drivers to #pwm-cells =3D <3>, the patch
-to create here is:
-
-diff --git a/Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml b/=
-Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml
-index b1597db04263..8d7a87fb2d35 100644
---- a/Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml
-+++ b/Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml
-@@ -26,7 +26,8 @@ properties:
-   reg:
-     maxItems: 1
-=20
--  '#pwm-cells': true
-+  '#pwm-cells':
-+    const: 3
-=20
-   xlnx,count-width:
-     $ref: /schemas/types.yaml#/definitions/uint32
-@@ -82,7 +83,7 @@ examples:
-     };
-=20
-     timer@800f0000 {
--        #pwm-cells =3D <0>;
-+        #pwm-cells =3D <3>;
-         clock-names =3D "s_axi_aclk";
-         clocks =3D <&zynqmp_clk 71>;
-         compatible =3D "xlnx,xps-timer-1.00.a";
-
-There is however one concern that I want to get resolved first to
-prevent churn:
-
-In principle I think it's bad that a phandle to a PWM must contain a
-period and flags specifying the polarity. For some use cases the period
-might not matter or is implicitly given or more than one period length
-is relevant.
-
-So I wonder if instead of unifying all PWM bindings to #pwm-cells =3D <3>
-I should instead go to something like
-
-	mypwm: pwm {
-		compatible =3D "...."
-		#pwm-cells =3D <1>;
-	};
-
-	fan {
-		compatible =3D "pwm-fan";
-		pwms =3D <&mypwm 1>;
-		assigned-pwms =3D <&mypwm>;
-		assigned-pwm-default-period-lengths-ns =3D <40000>;
-		assigned-pwm-default-flags =3D <PWM_POLARITY_INVERTED>;
-	};
-
-(where the single cell specifies the index of the PWM's output).
-
-I already suggested that in
-https://lore.kernel.org/linux-pwm/jmxmxzzfyobuheqe75lj7qcq5rlt625wddb3rlhie=
-rnunjdodu@tgxghvfef4tl/.
-When I asked about that in #armlinux Rob said "no. We don't need a 2nd
-way to set period and flags." Is this still a bad idea if the
-traditional binding with 3 cells will be deprecated for all PWM
-devices? If this would be ok then, I'm also open for improvements to
-the new concept. Maybe something like:
-
-	fan {
-		compatible =3D "pwm-fan";
-		pwms =3D <&mypwm 1>;
-		pwm-default-period-lengths-ns =3D <40000>;
-		pwm-default-flags =3D <PWM_POLARITY_INVERTED>;
-	};
-
-?
-
-Looking forward to your feedback.
-
-Best regards
-Uwe
-
---mlsk4nchawdtgzth
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmg/M8UACgkQj4D7WH0S
-/k76pQf+KKR79KrBT1QNBsD6yIkYAzmD7T/8LIvQqgixRXVryFFLygmqnoGwUwBd
-iA97beE65dEkV7UC1KA/yL1/mSCEAQVWF2xLuj2t18MIoolf5vkxPfl6TGI7Nwl0
-xLXXg/Uk5gv+DecbWS4NHMva8sAl3kg/uO+saDHPB1WkSzjGsJi2H2mXk0/mt1b2
-18b1a6lKEjaqGb5i8nBjM2LQ4s3NnZvjp6ENwJazXJS/7D+oBVEan7RxR0FY0KO8
-4IE4jUMuJL2u+EyIh14MF/ZU960SDb5Dhyf+wkVl8RPUBFUl6qFxA5Yit7dJ8/IH
-4/QZU/YghjSpmfBo8BMdZoHv1wJ9Ig==
-=+Sib
------END PGP SIGNATURE-----
-
---mlsk4nchawdtgzth--
+--=20
+VG
+Damian Tometzki
