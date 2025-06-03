@@ -1,67 +1,39 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47BB5CDF1
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 13:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43623230BD4;
+	Tue,  3 Jun 2025 13:22:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748956973; cv=none; b=SHC4iGip5hTOhcpKHeUMnWUewlcrTLL0fqOHNYONkB/kuQZckFatF9DDH3sbWNaZ8fILSM0XzjupEiF1XQdVlHQxoi4UOlrIO3cTkINX+JXZkI7qEjkWt47jtHz2e8kMAptYGExBcvoIH15yxVRHnRHNNDNhcoBuCqMmop1HXZQ=
+	t=1748956981; cv=none; b=Jql+3PZTvZZx/6EH1p9yhbTbK6qIpImbfgjcbeS8PwLwmBkJ+I+ZeI1CHIgg4Jd5deUQK4o+seU6MIqbLJoaRkAgSU3ZPLqDfEUbWCarvTvE4X/EcbyDiYnqvx4xLyfUkGldN517g//grtuonmJjSCAhRvYfTHfttm5mjpMeLQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748956973; c=relaxed/simple;
-	bh=S1oHPZ7gws5NN0CNhqDkGo3WqwE8z+Icusut02QCQqU=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=fDq8YtIxBAe83VcfDJi7xxWrlqSWRPv8RaADpC3Tpn2lHpSam3qawEApvxpFVqFvHhYu1J+oD9f85bNBRD6X7pkDjYE7k+aFQnPKrORAyfLw6XBENsOK4mujZjTkpQ5B+UGLA9jY/zXzZWZzvLHO2gBiWdqtdbkfH4uvFNFcKYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gh56Cndt; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748956981; c=relaxed/simple;
+	bh=fnkZG4fUiYH27YYi3be0ESBZWsoCI9tzkPb/0NiZcAI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uaiAAX5pSrG8hIwqNvcZ77ekOrTADE2rZ0HVs68kK1q7irXUpVae3jKeSrVItpj0ySzUR7gctD+2A6Tw7wnShRLMqliCj2Vl3TV+vzIerrKQhyt+lQC5kgKxzDpsXu5I9+VX8lsaTE9DtNTuTzFuuKMLi+9IM9n09XFn6MSrbGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=C2El2JD9; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gh56Cndt"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a3798794d3so4749797f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 06:22:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748956970; x=1749561770; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9o1OG5gJMnbyvyc0DC5kIEpva13qObOrgWmt6a2YYaM=;
-        b=gh56CndtNQsmHG1BEDh91744ajyWIp8Hp8wMgFYBr0Lyot6UWJXpdg2X8nQwuSzuQs
-         x8159Y/PT68fX6O7pol5TE5VT5UQiinJ3vbVMjSu3N6P9hdJ47TxtGz81agxBGWg6t/5
-         Smoy81te9PW7r5i+/9xTS4QkEZUxmaRDBoSHOvOQgVgHepWkhuNoNnDAP4wvTWCKAX4L
-         THN9ZSU5hRfBQ0YEvEmIvhcDL2ZLoav1xyxw6Je+p7eoMqfDnPIG+h0HYhDeZi5LrJ3c
-         vOSt+S7geHgn7Nc3n+qH6fIXIh/IUfL/5I0eakQ3eaWIkDQD6fjLJgqalQOmXKA4Btbb
-         nQHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748956970; x=1749561770;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9o1OG5gJMnbyvyc0DC5kIEpva13qObOrgWmt6a2YYaM=;
-        b=r4aToE7+lKNd430v0axx93C6ZUlumBzVugQyh9y4UIaGA14u5UQUDzkIHa7PTprW62
-         lcMzZFy7aJ/hUPLQO9V2cDVRRHuVjUjEAtmGODmpgehn/VATqIPXI8YvTIqvyh475d9E
-         /qXbyA+Xc0HO1N/9XI4+SDdozebvgAkSLkGswCxJcr12hkanilLwcmun2YL69znF3Gr0
-         LMpvn+EhsxL+owoI/0Z6oi+VtEbic8585jaT6BS8xlFlJ8vXRa4v2ckiaQPlxbHiSwz8
-         8/iHf2dQUhwizQhqjaj/vFnPgtKNb9cGMx+F7KzcUkiLMUB35EEThdD/G+6FVsQIjo9N
-         14Rg==
-X-Forwarded-Encrypted: i=1; AJvYcCVskAWgcFMCFWJkV0stfF2V+xME6Omf/gN+cIZjhiuSHMUwNtZVONhMysT5aieDMKLLCqhgUGRL4VwpSXI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/iuRvFv2XG4Ut0sE8FHtU8Lo6Fjh045F/68AE7eXjISZJgLGX
-	rQ8xbA/m6+tIZklvvyjc4BknpkxOkmGM2T/h9QxWkuqLSi7qXMP0gNRx94l9JLTEIgA=
-X-Gm-Gg: ASbGncugWm5KE8Cy3ubQczCPBdO6JD0teCRVbfQxc3YD3QBAKQVGal5F+vVO1HNt+vj
-	uz+X/wA8x0Ql4sIutkDMpgUaTWOJBKWEJwOwNZ7NStYBR8HrAL7Ptvobm6VEIW6b6hm0rjNbbm6
-	g9ZLOWnwjYv7Jqm8qA2qjguHmpBUhu+zfVp9ogizyzabUpThng5y4k9B/JnZZfPlj9pNXSFNl9I
-	LQpPZPZij5sQbAUHujB50ow+8Vdr+DlpZ+GVt+6YsPqo3ueYMtmBd68XjpFluBnBeeSqWbQpwNL
-	Lhp9BHXMd4pzf5yyhXcXJovZ532lQIdPci8aIL5SZ5uL9clT8T0jgEnl/p1fQyS6Y+3b7WrqbtM
-	vmGNdKfE2C36UsWQPC90TzP0pR/YuHQBT9Y70
-X-Google-Smtp-Source: AGHT+IGwM1OzgbnP1nAlLY2AaZkYQUoZH8oN0rymNrDg+49LiXGRY5PKTqcJSZ1tfnP2AMJFUo1T8Q==
-X-Received: by 2002:a05:6000:230d:b0:3a4:f8e9:cef2 with SMTP id ffacd0b85a97d-3a4fe39363cmr9636222f8f.36.1748956969885;
-        Tue, 03 Jun 2025 06:22:49 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:563:3654:17de:c930? ([2a01:e0a:3d9:2080:563:3654:17de:c930])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f00972f3sm18588651f8f.69.2025.06.03.06.22.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jun 2025 06:22:49 -0700 (PDT)
-Message-ID: <d950d77a-2bc0-4f8d-88c0-3d4da9cc772e@linaro.org>
-Date: Tue, 3 Jun 2025 15:22:48 +0200
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="C2El2JD9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=xNyEHGRWVx5wQoM6WyQwXxbRi5u/oo3Fp4uebsLvVr8=; b=C2El2JD95SXo0DjUQ7L0MjuYsZ
+	7Nz5V1iSmhvrKwxeiajVqXxDSpU3mizBRhAyhDU9GOWonsXqlMBXAS8JZObbI9n4Ck4lK6wMVD6PQ
+	2ArpJVxTGZ9YCC0WIIADiwCfzLwN2TuRGkWSDbOk52LSlmKnkJCTcMho10kovOQ1RBD0+pwn0c4/X
+	BawfQN7ZNNnhUqisXaJKmzwKuDAHbOYCDKjM54VUqtO4y5cYxy8K5gilleeETdS7fExv8WjTBLjDn
+	Z9rj11Gk/J3t/i2Fy2m0Loz+y20CqYu8vjFE1p1XRx0RXtYaEVT0jVWfwEdDOY8GBuQfWHnYT+0EK
+	KVcUhMPA==;
+Received: from [81.79.92.254] (helo=[192.168.0.101])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uMRbB-00GgkT-V3; Tue, 03 Jun 2025 15:22:38 +0200
+Message-ID: <f65d9f96-68f8-4883-b6bd-20bf5b145cb9@igalia.com>
+Date: Tue, 3 Jun 2025 14:22:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,66 +41,137 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH] arm64: dts: amlogic: meson-gxm-rbox-pro: fix wifi node
- name
-To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
- Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250603-topic-amlogic-upstream-bindings-fixes-dts-round-3-v1-1-2d54a476757d@linaro.org>
- <366cdccf-571c-4f7f-ae26-2e529de5d5ec@kernel.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <366cdccf-571c-4f7f-ae26-2e529de5d5ec@kernel.org>
+Subject: Re: [RFC PATCH 1/6] drm/sched: Avoid memory leaks with cancel_job()
+ callback
+To: Philipp Stanner <phasta@kernel.org>, Lyude Paul <lyude@redhat.com>,
+ Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Matthew Brost <matthew.brost@intel.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
+Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+References: <20250603093130.100159-2-phasta@kernel.org>
+ <20250603093130.100159-3-phasta@kernel.org>
+Content-Language: en-GB
+From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+In-Reply-To: <20250603093130.100159-3-phasta@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 03/06/2025 11:50, Krzysztof Kozlowski wrote:
-> On 03/06/2025 09:47, Neil Armstrong wrote:
->> This fixes the following error:
->> meson-gxm-rbox-pro.dtb: brcmf@1: $nodename:0: 'brcmf@1' does not match '^wifi(@.*)?$'
->> 	from schema $id: http://devicetree.org/schemas/net/wireless/brcm,bcm4329-fmac.yaml#
->>
-> 
-> I already sent it:
-> https://lore.kernel.org/linux-arm-kernel/3c3c3652-be5f-4f54-a0b8-4829f9549116@linaro.org/
-> 
-> Can you pick that one instead?
 
-Sorry I forgot, of course I'll pick yours.
-
-Neil
-
+On 03/06/2025 10:31, Philipp Stanner wrote:
+> Since its inception, the GPU scheduler can leak memory if the driver
+> calls drm_sched_fini() while there are still jobs in flight.
 > 
-> Best regards,
-> Krzysztof
+> The simplest way to solve this in a backwards compatible manner is by
+> adding a new callback, drm_sched_backend_ops.cancel_job(), which
+> instructs the driver to signal the hardware fence associated with the
+> job. Afterwards, the scheduler can savely use the established free_job()
+> callback for freeing the job.
+> 
+> Implement the new backend_ops callback cancel_job().
+> 
+> Suggested-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+> Signed-off-by: Philipp Stanner <phasta@kernel.org>
+> ---
+>   drivers/gpu/drm/scheduler/sched_main.c | 34 ++++++++++++++++----------
+>   include/drm/gpu_scheduler.h            |  9 +++++++
+>   2 files changed, 30 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
+> index d20726d7adf0..3f14f1e151fa 100644
+> --- a/drivers/gpu/drm/scheduler/sched_main.c
+> +++ b/drivers/gpu/drm/scheduler/sched_main.c
+> @@ -1352,6 +1352,18 @@ int drm_sched_init(struct drm_gpu_scheduler *sched, const struct drm_sched_init_
+>   }
+>   EXPORT_SYMBOL(drm_sched_init);
+>   
+> +static void drm_sched_kill_remaining_jobs(struct drm_gpu_scheduler *sched)
+
+Only some bikeshedding comments, no need to act on them.
+
+1)
+I would maybe s/kill/cancel/ to align with the ->cancel_job naming.
+
+2)
+Would the callback presence check look better inside this helper so it 
+is all consolidated and streamlined?
+
+Regards,
+
+Tvrtko
+
+> +{
+> +	struct drm_sched_job *job, *tmp;
+> +
+> +	/* All other accessors are stopped. No locking necessary. */
+> +	list_for_each_entry_safe_reverse(job, tmp, &sched->pending_list, list) {
+> +		sched->ops->cancel_job(job);
+> +		list_del(&job->list);
+> +		sched->ops->free_job(job);
+> +	}
+> +}
+> +
+>   /**
+>    * drm_sched_fini - Destroy a gpu scheduler
+>    *
+> @@ -1359,19 +1371,11 @@ EXPORT_SYMBOL(drm_sched_init);
+>    *
+>    * Tears down and cleans up the scheduler.
+>    *
+> - * This stops submission of new jobs to the hardware through
+> - * drm_sched_backend_ops.run_job(). Consequently, drm_sched_backend_ops.free_job()
+> - * will not be called for all jobs still in drm_gpu_scheduler.pending_list.
+> - * There is no solution for this currently. Thus, it is up to the driver to make
+> - * sure that:
+> - *
+> - *  a) drm_sched_fini() is only called after for all submitted jobs
+> - *     drm_sched_backend_ops.free_job() has been called or that
+> - *  b) the jobs for which drm_sched_backend_ops.free_job() has not been called
+> - *     after drm_sched_fini() ran are freed manually.
+> - *
+> - * FIXME: Take care of the above problem and prevent this function from leaking
+> - * the jobs in drm_gpu_scheduler.pending_list under any circumstances.
+> + * This stops submission of new jobs to the hardware through &struct
+> + * drm_sched_backend_ops.run_job. If &struct drm_sched_backend_ops.cancel_job
+> + * is implemented, all jobs will be canceled through it and afterwards cleaned
+> + * up through &struct drm_sched_backend_ops.free_job. If cancel_job is not
+> + * implemented, memory could leak.
+>    */
+>   void drm_sched_fini(struct drm_gpu_scheduler *sched)
+>   {
+> @@ -1401,6 +1405,10 @@ void drm_sched_fini(struct drm_gpu_scheduler *sched)
+>   	/* Confirm no work left behind accessing device structures */
+>   	cancel_delayed_work_sync(&sched->work_tdr);
+>   
+> +	/* Avoid memory leaks if supported by the driver. */
+> +	if (sched->ops->cancel_job)
+> +		drm_sched_kill_remaining_jobs(sched);
+> +
+>   	if (sched->own_submit_wq)
+>   		destroy_workqueue(sched->submit_wq);
+>   	sched->ready = false;
+> diff --git a/include/drm/gpu_scheduler.h b/include/drm/gpu_scheduler.h
+> index e62a7214e052..81dcbfc8c223 100644
+> --- a/include/drm/gpu_scheduler.h
+> +++ b/include/drm/gpu_scheduler.h
+> @@ -512,6 +512,15 @@ struct drm_sched_backend_ops {
+>            * and it's time to clean it up.
+>   	 */
+>   	void (*free_job)(struct drm_sched_job *sched_job);
+> +
+> +	/**
+> +	 * @cancel_job: Used by the scheduler to guarantee remaining jobs' fences
+> +	 * get signaled in drm_sched_fini().
+> +	 *
+> +	 * Drivers need to signal the passed job's hardware fence with
+> +	 * -ECANCELED in this callback. They must not free the job.
+> +	 */
+> +	void (*cancel_job)(struct drm_sched_job *sched_job);
+>   };
+>   
+>   /**
 
