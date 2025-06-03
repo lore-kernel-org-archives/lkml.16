@@ -1,250 +1,114 @@
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D104C3597C
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 11:45:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B393597C;
+	Tue,  3 Jun 2025 11:46:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748951147; cv=none; b=evPuQNhofgFAdJw9tGmbyo1dfCQfAwkv30ga/x9Rs8aGAcm8g+8gxGDdxQQj2TRLyz5/CuvtrnPZK/GsP4BlXx6cQ+ZG72pHZSQIEKeB/i04eAIdUGpJDkAFo/aOJYzaz+pTpHUUQlu5SvYR71MS0d7iSqvYHfXfX3M5rwNq0W0=
+	t=1748951179; cv=none; b=bOwFQGgL3XTfZQMKUwH8jOa3XBi6XEIXetSGKuKKQhzn5C6XbBV+FdS5pyxKDw+xrrp9Oah4QcJVmPxUgMSbk9IVDyYLCtWzFK8NMLFq7brebXINAQJuDmp+RqSIMszC8XLK8mLhAQTqWDWPh1EDdFqJwODc/PcM7OaMwY9k7CI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748951147; c=relaxed/simple;
-	bh=Wtk6AFHWfq6XPA5wRUyQI9qTTYvmaR7EWEbBvQSTd4A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FWIXTXF2PtMbP0IWUN+3Ufl+8MFbliWI20rGdEU7Q1Fn7cltcfqN/xgmgKp1JNxEZJ8+iFf29P8FPNMVocsE3b8XCiqtKlkvE+z3MArnwJNfnDwd85koM6pcyoGlhCiXeKnqB4l2FMy3tpSy1pweU8uMUvEN7spRgIHd5zuOJPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vayavyalabs.com; spf=pass smtp.mailfrom=vayavyalabs.com; dkim=pass (1024-bit key) header.d=vayavyalabs.com header.i=@vayavyalabs.com header.b=HAHggRZ7; arc=none smtp.client-ip=209.85.219.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vayavyalabs.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vayavyalabs.com
+	s=arc-20240116; t=1748951179; c=relaxed/simple;
+	bh=ifKsQ2uocZtDqykYVoV2XkbRJ741T0KpmsTEF6FlxAo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=IrQZW+h6SIwPSXx4x5016a4bZROu/ZRnSirU7TkpOuOtDXptj0NPXs8zFZDalzXuhSPpFRnALUtO26Wm/lu2wK/65cj73DCDqIL2uPRkK03Kfvu5X5251sU6DNzR6AH4KUkdrr6enAs50dc9/cDEeahUx+LPgAj+Qwf/8hSwfiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QrGQEQ6a; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=vayavyalabs.com header.i=@vayavyalabs.com header.b="HAHggRZ7"
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e7db5c13088so4771841276.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 04:45:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QrGQEQ6a"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso4100457b3a.2;
+        Tue, 03 Jun 2025 04:46:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vayavyalabs.com; s=google; t=1748951143; x=1749555943; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WU2jL29VSYgtyt74swmZUn3uXnZniaAi4pgLdOtSj3A=;
-        b=HAHggRZ7FlxI9loqStLqrmv+eEe0P0pHJ+oXG//ZhWVZ1Hl2NnLBGHR8jMsMoTUNYY
-         WXCwLNhmOSNPPuFmRGHV+wUaqdQUS11ybAzvQCQqW5h0ou75kRQh6ADOBUD3jwShKqUu
-         MyHu87I1ERWHZYnIM9mRYrquW31KKH6+HAGsQ=
+        d=gmail.com; s=20230601; t=1748951175; x=1749555975; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=n2/X3xPBsMNy2pCcmhvB5NbHHd/N5CiCRmq2yAjEjIc=;
+        b=QrGQEQ6aHT2SXeAUiomLRK7NK7GGy9dby0dJi9IxpWBDKMv4nUSnLZqAGtJooYRwGo
+         3KApJaHllltGyfe6bIs7Z3Ffr57RbXyZZI48pmmCBYNznj9N3C57vhy3eBCmb4TgbWjN
+         uBYz94nxt2kScHTYVe2UlKzb1vqBHzZcuB2SGfrW7HSWuORKm93fo9HkLLRv8aqmc2Dn
+         tPoLd/6ErRpRKo1NPBF2KTAmKs/KnX3/Gm35ddM4E9QLTIs9rPitUtzCFGNnm7H/Qhil
+         ijrkVBi5sONeRo6kZ2pmFBzTiy1nf3C4drJ2jpG7U1U6tVf4WDTEiEonsiUriP0J6bsb
+         RYUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748951143; x=1749555943;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WU2jL29VSYgtyt74swmZUn3uXnZniaAi4pgLdOtSj3A=;
-        b=ihA6HNxOctpKG+Ew7ZBJNcpNU8gqmswNDylS2m+o6rR/Sr37usXvkGvCkQ0Fg8qzhk
-         oPbfcbqrup6LKEElmK6Ftzf6E34olOcto8oDiNZoi0813qH9fYkP24niKpCbUMn83t3x
-         /VZw/z/h1cX8bGz7C5fhLe+EYzB0JANKf9r9rFLuDTREVXx8S79l9t1LfNGF31Vh4RZC
-         koY44haJc598JH436BBURpq3Gg+RDLzg3sUHEjEE2UwZJhuxwMfckzwyHWLpstUPp79y
-         rPgoyen5ze8dUb08SSAnU9kKO3APXThcE1nNG2CJpfIXMJBoP5Q4yzAMOBhA1OjR/Og/
-         uggw==
-X-Forwarded-Encrypted: i=1; AJvYcCWU4K17auaw1ZJKl2iWt3Uif2GSsC3YVxNHYs3A1giFGWL1T0D3HyC1A3E1fMMNAmaFeCD1eGYEovhCvsc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxKzalKywOPFQhRCI8uClbyvQdijxM4NvrDp7ro9bhjrwwpeCf
-	WVM9aEWT3lPLJi6vm+ruxwnBPrWPDFeSVgE0KksNZvDU/YTgQPcM+/Z3UFFfVEivOgqNAKbKoJT
-	lOiaaGNtPT4/5ykgN5bMDKf2LvoizS0HkmbspWA0Z+A==
-X-Gm-Gg: ASbGncuHQohAMGAqzRtdZS3mu30gHrGHWa1gc38a3i0tkqs1GJSUE6Fnbfiea7bVxtG
-	whJucmGOF3wNDN0n2ldRlF4xgTuVZ2otmz/Plxmc2gfZ9qXCWQpkHd/o1TJ0/RavOPN0eEzKUjA
-	WjTG7Ciii9aF/b4Ywtk8Y6LN5GlB0dggCFow==
-X-Google-Smtp-Source: AGHT+IFZFuVWzeSCYr5E7m41i/9aDNVpyn69bOnsaB/aNiCiM41tO005L0j039m41q399lOdfjixO5eaHFaDG/FfEfo=
-X-Received: by 2002:a05:6902:4911:b0:e7d:c9e1:170d with SMTP id
- 3f1490d57ef6-e8161e52682mr2384135276.11.1748951142488; Tue, 03 Jun 2025
- 04:45:42 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748951175; x=1749555975;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=n2/X3xPBsMNy2pCcmhvB5NbHHd/N5CiCRmq2yAjEjIc=;
+        b=bXQK+2wmciaoq7jSdTI5gwQrvlrbe8F+d3XNkmKRPRSKwobXl6GBvy6MQIWuzZJJ/R
+         3O/WSREb4CrrxYJYyn3xVSEJ5emXSL/Ki5NijMR161SNr19Gd9YUZvKAWe0SMrKXUTDM
+         jBbKc5yzV7TlIoiocdKr8v2tDXy99iSH9Muo6dOeIRrg48nKS6Z8VjYRm8Iec5CDm9Ni
+         Rgyuzta2V03mHjv506moJnmVuA7352g0UgROSNCqYj4F3ynydgab6ZRMvIw5sqoQ85+U
+         Z0vRFi/a1UXwD72gwemnUBE4GKh7Qg+dpHy5pFX/j0pNwbFV9Lo4JFmJWKe9PINW19ZI
+         olwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU3NUGoocORo0g3K4Ax/eYk1sdzgsWTL7eDp6U5WGi/pPy897VCtnUdQaa69CKTtDeVohw/74bKGQQOMp23@vger.kernel.org, AJvYcCW+GTioxJ2AZY/4/Q0Y2zLOE0MrP/4z8I7b/9PZOXH05vFdfPw/rEW3stFnnjXFT5Fj4941qzyzPymT@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSdfzutPAiFYzKughQSfrue88tY/Y5GD892OXcDxWh2BA7kEao
+	z8/v5FKS9DcNKSgh3I4a4iBZ4ajaS3qq4N/F8kXyUaC3kbWhkRilpNzl
+X-Gm-Gg: ASbGnctDDqQsTBhroRp29z1VGLvKkYxMgD4UoL0YyFxMwm+r41PehAV9f0Io5BjhwTy
+	h8hnLtBES4pBCn68Q/d4fbbqa3DipLWIva3+hZQ5bKXPArO2luT0mCyNw+xPDSLkHfq8gdw1WYp
+	mUlsgQTflWncLYwecEPuZEgkRPqJorQSM7O845rS7n/h4ict/cEIEc2wOBMxpLtoelDwEpzS5eK
+	RATY7rrNvazyZUxTz8sXZPiFuzMiLyieVOo3fkU0S6BVGxudQaCvru/ukX0xHDzXCBLYjnC/Kio
+	6255wxnvN/9hFB0/GQTgptQcFx97GM2A/y07sXGv2vEJJgpqrdAKERVotggXswfpIgHqt35WEb5
+	QkQb3HGFzLhLniYBsf/zn
+X-Google-Smtp-Source: AGHT+IFuqgYDw4qpLD7iMBYCaosHLzaBzYy1x871vGKtSqREWNk6OZjBkmNzVB1dmfydYu89nGvlWA==
+X-Received: by 2002:a05:6a00:7491:b0:740:6615:33c7 with SMTP id d2e1a72fcca58-747c1c83852mr16387325b3a.23.1748951174960;
+        Tue, 03 Jun 2025 04:46:14 -0700 (PDT)
+Received: from joaog-nb.corp.toradex.com ([67.159.246.222])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afeadbb8sm9446459b3a.66.2025.06.03.04.46.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 04:46:14 -0700 (PDT)
+From: =?utf-8?q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <jpaulo.silvagoncalves@gmail.com>
+Subject: [PATCH v2 0/3] hwmon: (amc6821) Add Cooling device support
+Date: Tue, 03 Jun 2025 08:44:53 -0300
+Message-Id: <20250603-b4-amc6821-cooling-device-support-v2-0-74943c889a2d@toradex.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250602053231.403143-1-pavitrakumarm@vayavyalabs.com>
- <20250602053231.403143-2-pavitrakumarm@vayavyalabs.com> <fae97f84-bdb9-42de-b292-92d2b262f16a@kernel.org>
-In-Reply-To: <fae97f84-bdb9-42de-b292-92d2b262f16a@kernel.org>
-From: Pavitrakumar Managutte <pavitrakumarm@vayavyalabs.com>
-Date: Tue, 3 Jun 2025 17:15:31 +0530
-X-Gm-Features: AX0GCFsi1_WhsXRy4U7lWQV3XKiZq8jOsIJ1nSTGBjFSBrQaz8ZfGBHLoV3EgL4
-Message-ID: <CALxtO0mpQtqPB0h_Wff2dLGo=Mxk02JJQkK4rn+=TuScNdSfxQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/6] dt-bindings: crypto: Document support for SPAcc
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, herbert@gondor.apana.org.au, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, Ruud.Derwig@synopsys.com, 
-	manjunath.hadli@vayavyalabs.com, adityak@vayavyalabs.com, 
-	Bhoomika Kadabi <bhoomikak@vayavyalabs.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIADbgPmgC/x2NQQ6CMBAAv0L27CbrIgh+hXgoy4qbaNu0YEwIf
+ 6fhOIeZ2SBrMs3wqDZI+rNswRfgSwXydn5WtKkwMHFDLTGON3RfaTu+ooTwMT/jVDxRzGuMIS0
+ oVI/kur6vmzuUTkz6sv/5GJ77fgBaqO6acwAAAA==
+X-Change-ID: 20250602-b4-amc6821-cooling-device-support-c03b0a899357
+To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Farouk Bouabid <farouk.bouabid@cherry.de>, 
+ Quentin Schulz <quentin.schulz@cherry.de>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>
+X-Mailer: b4 0.14.2
 
-Hi Krzysztof,
-  Thanks for the inputs, my comments are embedded below.
+Add support for using the AMC6821 as a cooling device. The AMC6821
+registers with the thermal framework only if the `cooling-levels`
+property is present in the fan device tree child node. Existing behavior
+is unchanged, so the AMC6821 can still be used without the thermal
+framework (hwmon only).
 
-Warm regards,
-PK
+v2:
+- Remove devm_action on release and call of_node_put() manually
+- Change of_pwm_polarity to store resulting pwm polarity on driver private data
+v1:
+- https://lore.kernel.org/lkml/20250530-b4-v1-amc6821-cooling-device-support-b4-v1-0-7bb98496c969@toradex.com/
 
-On Mon, Jun 2, 2025 at 11:28=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.or=
-g> wrote:
->
-> On 02/06/2025 07:32, Pavitrakumar Managutte wrote:
-> > Add DT bindings related to the SPAcc driver for Documentation.
-> > DWC Synopsys Security Protocol Accelerator(SPAcc) Hardware Crypto
-> > Engine is a crypto IP designed by Synopsys.
-> >
-> > Co-developed-by: Bhoomika Kadabi <bhoomikak@vayavyalabs.com>
-> > Signed-off-by: Bhoomika Kadabi <bhoomikak@vayavyalabs.com>
-> > Signed-off-by: Pavitrakumar Managutte <pavitrakumarm@vayavyalabs.com>
-> > Acked-by: Ruud Derwig <Ruud.Derwig@synopsys.com>
->
-> Where was this Ack given? It's not on the lists, it's not public, so it
-> cannot be after your SoB.
+Signed-off-by: João Paulo Gonçalves <joao.goncalves@toradex.com>
+---
+João Paulo Gonçalves (3):
+      dt-bindings: hwmon: amc6821: Add cooling levels
+      hwmon: (amc6821) Move reading fan data from OF to a function
+      hwmon: (amc6821) Add cooling device support
 
-PK: Yes, its not on the mailing list. I will remove that.
+ .../devicetree/bindings/hwmon/ti,amc6821.yaml      |   6 ++
+ drivers/hwmon/amc6821.c                            | 115 +++++++++++++++++++--
+ 2 files changed, 112 insertions(+), 9 deletions(-)
+---
+base-commit: 7e801aa73daa456c4404fde177d3fc397661abf0
+change-id: 20250602-b4-amc6821-cooling-device-support-c03b0a899357
 
->
-> > ---
-> >  .../bindings/crypto/snps,dwc-spacc.yaml       | 77 +++++++++++++++++++
-> >  1 file changed, 77 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/crypto/snps,dwc-s=
-pacc.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/crypto/snps,dwc-spacc.ya=
-ml b/Documentation/devicetree/bindings/crypto/snps,dwc-spacc.yaml
-> > new file mode 100644
-> > index 000000000000..2780b3db2182
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/crypto/snps,dwc-spacc.yaml
-> > @@ -0,0 +1,77 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/crypto/snps,dwc-spacc.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Synopsys DesignWare Security Protocol Accelerator(SPAcc) Crypto=
- Engine
-> > +
-> > +maintainers:
-> > +  - Ruud Derwig <Ruud.Derwig@synopsys.com>
-> > +
-> > +description: |
-> > +  This binding describes the Synopsys DWC Security Protocol Accelerato=
-r (SPAcc),
->
-> Don't say that binding describes a binding.  Describe here hardware.
+Best regards,
+-- 
+João Paulo Gonçalves <joao.goncalves@toradex.com>
 
-PK: Sure, I will fix that.
-
->
-> > +  which is a hardware IP designed to accelerate cryptographic operatio=
-ns, such
-> > +  as encryption, decryption, and hashing.
-> > +
-> > +  The SPAcc supports virtualization where a single physical SPAcc can =
-be
-> > +  accessed as multiple virtual SPAcc instances, each with its own regi=
-ster set.
-> > +  These virtual instances can be assigned different priorities.
-> > +
-> > +  In this configuration, the SPAcc IP is instantiated within the Synop=
-sys
-> > +  NSIMOSCI virtual SoC platform, a SystemC simulation environment used=
- for
-> > +  software development and testing. The device is accessed as a memory=
--mapped
-> > +  peripheral and generates interrupts to the ARC interrupt controller.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - const: snps,nsimosci-hs-spacc
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +  snps,vspacc-id:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description: |
-> > +      Virtual SPAcc instance identifier.
-> > +      The SPAcc hardware supports multiple virtual instances (determin=
-ed by
-> > +      ELP_SPACC_CONFIG_VSPACC_CNT parameter), and this ID is used to i=
-dentify
-> > +      which virtual instance this node represents.
->
-> No, IDs are not accepted.
-
-PK: This represents the specific virtual SPAcc that is being used in
-the current configuration. It is used to index into the register banks
-and the context memories of the virtual SPAcc that is being used. The
-SPAcc IP can be configured as dedicated virtual SPAccs in
-heterogeneous environments.
-
-This was also discssed with Rob Herring and updated from
-"vpsacc-index" to "vspacc-id" based on Rob's inputs
-https://lore.kernel.org/linux-crypto/CALxtO0mkmyaDYta0tfx9Q1qi_GY0OwUoFDDVm=
-cL15UH_fEZ25w@mail.gmail.com/
-
->
-> > +    minimum: 0
-> > +    maximum: 7
-> > +
-> > +  snps,spacc-internal-counter:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description: |
-> > +      Hardware counter that generates an interrupt based on a count va=
-lue.
-> > +      This counter starts ticking when there is a completed job sittin=
-g on
-> > +      the status fifo to be serviced. This makes sure that no jobs are
-> > +      starved of processing.
->
-> Not a DT property.
-
-PK: This is a hardware counter which starts ticking when a processed
-job is sitting on the STAT FIFO. This makes sure a JOB does not stay
-in STATUS FIFO unprocessed.
-
-This was called watchdog timer - wdtimer, which we renamed to
-"spacc-internal-counter" based on your inputs.
-https://lore.kernel.org/linux-crypto/CALxtO0k4RkopERap_ykrMTZ4Qtdzm8hEPJGLC=
-Q2pknQGjfQ4Eg@mail.gmail.com/
-
-If you think this "does not qualify" as a DT property, I will make
-this into a Kconfig input for the driver.
-
->
-> > +    minimum: 0x19000
-> > +    maximum: 0xFFFFF
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +
->
-> Drop blank line.
-
-PK: I will fix that
-
->
-> > +    crypto@40000000 {
-> > +        compatible =3D "snps,nsimosci-hs-spacc";
-> > +        reg =3D <0x40000000 0x3FFFF>;
->
-> Lowercase hex only.
-
-PK: I will fix that
-
->
->
->
-> Best regards,
-> Krzysztof
