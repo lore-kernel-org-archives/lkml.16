@@ -1,48 +1,92 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F26F42C324C;
-	Tue,  3 Jun 2025 09:13:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDEB4281346
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 09:14:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748942041; cv=none; b=TkEmpWQBFkoL7izGUUyNg01zKV6sH4yazwfK9n/Slcp2agPiolmxCShOjNZP0O6h7XTGy8WSc8cf/KPXDVUowZqF8pe8YxVA594a3jOjih3b2oGrCzM39aupSmvX5N7NOeTzhvATAElrpg7d8hH1ny59rP/wnIxGIa2dBdInbCE=
+	t=1748942061; cv=none; b=t2uhYZAQr93gvIB2Y+TPsWxKGkAcEbKfvpwGOqy+nmPpqRtkzeqoBIDWVC8ztOoMKStbZ3E1hvTwr1k783toLP5EpANhk+FrQLThLMlmNhjcihYzBNdTChFlqMHI3UPqVVANwv5ohbGBVn4t+tcj5YhcFzJy+JoKnHCDQAkTt2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748942041; c=relaxed/simple;
-	bh=m1CYRoFP7GdOXWY6GfCe8KAfcwT4NpaKLyPcSYGgEx4=;
+	s=arc-20240116; t=1748942061; c=relaxed/simple;
+	bh=bKFfuFTXnXcW0MLjqKGPAcDHK2f0CqjHudlM3qXsI1g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ll3OzDqmGsT0YBUUAbtJ1sZCRGFlHzWNJoQALW6a3g0LxgJyEaCgH+v95EAxYT+WOQKg74HOeISQ1zmDqopZ9mFzO99/kCLRv7UUibUam5/lHK+NfR1cuGduVrCaHmwA63XEhYp3pVtKuipX2r5AiBzJrySyAYXIjal8pDQyEVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uvyObkpv; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=SH2LDixtksDIohfF/oxNn2j6NQ5XAEnaTCri6nzuuevYg4003J20WDvKNjMUmc1RddayJ3T1UBKp1I39RlOwa8nehkmXxtVJK++BF50W9JFWtTyJuWRJOUPh3nJzOWGQ0FCtSX8UctxZ/Crg9eVMfXBstrCWfOIMRR9z/I3zj+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UaKBoU+8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vHCmXQgR; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UaKBoU+8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vHCmXQgR; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uvyObkpv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=PTK4EZERvcyf/RV0NxqSFkpa2G5REi4wJsL3hiP579g=; b=uvyObkpvJyqvFxKjg5iZKzDiXb
-	YVDhA7OPC05buNgxpPSOZ9QCyM69N/lpBlMK6RJTPRGMXM7sf8rq2HqrFTlS0KXZZKAYcwKqsPuMY
-	mL7A/epEcuGQbOcgps26J9UcLc/N6uQlMqkc7X8DnHhsh3Vgn/isHmD3ocwMqmzLUDtSz2SyitUlq
-	POudBwk+rzmOCPdZUznIhO26lxyOeXn5M8FLcOKsSb/vx4dEnwCjka7QTJqXztzoA0TGJbR2g8AmE
-	+uCUmFW38cwd4C8RohL03hy4UvgmyfEZ9baemvH1QzEcUSmjl9PvdpG7F2jOxaDwqh4fg5SdmGoJl
-	Ei0h1dwA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uMNiT-00000001qer-0VnF;
-	Tue, 03 Jun 2025 09:13:53 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 7F8773005AF; Tue,  3 Jun 2025 11:13:52 +0200 (CEST)
-Date: Tue, 3 Jun 2025 11:13:52 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: David Wang <00107082@163.com>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	mingo@kernel.org, yeoreum.yun@arm.com, leo.yan@arm.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf/core: restore __perf_remove_from_context when
- DETACH_EXIT not set
-Message-ID: <20250603091352.GJ21197@noisy.programming.kicks-ass.net>
-References: <20250603032651.3988-1-00107082@163.com>
- <20250603083304.34132-1-00107082@163.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UaKBoU+8";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vHCmXQgR";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UaKBoU+8";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vHCmXQgR"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id BAD8221286;
+	Tue,  3 Jun 2025 09:14:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1748942057; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FbA0e9GDhuLELcDxxAWKeQuIzyYscoH3Gi2NgunVPl0=;
+	b=UaKBoU+8dBFAQ6ayk9+iOW4CmDj2qF7gWJMplyXNLulooxqO3Bc9EXu9XGwNH5lOnl8d00
+	IextmIVD3gYtXNCH5w5K5lo1WoNIAgDLDMT4zjrVjDX0IOecxN52T60Y3MhNrk1SvHU9Ca
+	nO+RdtHWwciPjSzwZHAeyf56YSWUk3E=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1748942057;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FbA0e9GDhuLELcDxxAWKeQuIzyYscoH3Gi2NgunVPl0=;
+	b=vHCmXQgRPny02YyX1TtuchySYFIbiUdT99ZJX7CmoYpJSbBae13k6ERFPgZCq/21Nuw7Yx
+	3tbSTNaQmL3CuvDA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=UaKBoU+8;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=vHCmXQgR
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1748942057; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FbA0e9GDhuLELcDxxAWKeQuIzyYscoH3Gi2NgunVPl0=;
+	b=UaKBoU+8dBFAQ6ayk9+iOW4CmDj2qF7gWJMplyXNLulooxqO3Bc9EXu9XGwNH5lOnl8d00
+	IextmIVD3gYtXNCH5w5K5lo1WoNIAgDLDMT4zjrVjDX0IOecxN52T60Y3MhNrk1SvHU9Ca
+	nO+RdtHWwciPjSzwZHAeyf56YSWUk3E=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1748942057;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FbA0e9GDhuLELcDxxAWKeQuIzyYscoH3Gi2NgunVPl0=;
+	b=vHCmXQgRPny02YyX1TtuchySYFIbiUdT99ZJX7CmoYpJSbBae13k6ERFPgZCq/21Nuw7Yx
+	3tbSTNaQmL3CuvDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0D6C313A1D;
+	Tue,  3 Jun 2025 09:14:17 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ixtvAOm8PmiaNwAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Tue, 03 Jun 2025 09:14:17 +0000
+Date: Tue, 3 Jun 2025 11:14:07 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Honggyu Kim <honggyu.kim@sk.com>
+Cc: Gregory Price <gourry@gourry.net>, kernel_team@skhynix.com,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Rakie Kim <rakie.kim@sk.com>, Harry Yoo <harry.yoo@oracle.com>,
+	dan.carpenter@linaro.org
+Subject: Re: [PATCH v3 2/3] mm,memory_hotplug: Implement numa node notifier
+Message-ID: <aD683wrmR12g5xB9@localhost.localdomain>
+References: <20250502083624.49849-1-osalvador@suse.de>
+ <20250502083624.49849-3-osalvador@suse.de>
+ <aBTkgnYYSN0SMQCU@gourry-fedora-PF4VCD3F>
+ <3ad3bcba-b8b6-4e30-8ad9-adba5761e923@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,84 +95,79 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250603083304.34132-1-00107082@163.com>
+In-Reply-To: <3ad3bcba-b8b6-4e30-8ad9-adba5761e923@sk.com>
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_CC(0.00)[gourry.net,skhynix.com,linux-foundation.org,redhat.com,kvack.org,vger.kernel.org,suse.cz,gmail.com,huawei.com,sk.com,oracle.com,linaro.org];
+	DKIM_TRACE(0.00)[suse.de:+];
+	TO_DN_SOME(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
+	TAGGED_RCPT(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: BAD8221286
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -3.01
 
-On Tue, Jun 03, 2025 at 04:33:04PM +0800, David Wang wrote:
-> commit a3c3c66670ce ("perf/core: Fix child_total_time_enabled accounting
-> bug at task exit") made changes to __perf_remove_from_context() to
-> coordinate its changes with perf_event_exit_event(), but the change are
-> unconditional, it impacts callpaths to __perf_remove_from_context()
-> other than from perf_event_exit_event(). One of the impact is to cgroup,
-> which is not properly handled and would cause kernel panic with high
-> probalibity during reboot on some system[1].
-
-Sorry, but no. This does not describe the problem adequately. I would
-have to go read your [1] to figure out what is actually broken.
-
-That is, having read the above, I'm still clueless as to what the actual
-problem is.
-
-> To confine the side effects, make the changes to
-> __perf_remove_from_context() conditional, restore to its previous state
-> except when DETACH_EXIT is set.
+On Wed, May 28, 2025 at 11:23:53AM +0900, Honggyu Kim wrote:
+> The 'err' of sysfs_wi_node_add() wasn't propagated to its caller before
+> this change as discussed with David at the following.
+> https://lore.kernel.org/198f2cbe-b1cb-4239-833e-9aac33d978fa@redhat.com
 > 
-> Closes: https://lore.kernel.org/lkml/20250601173603.3920-1-00107082@163.com/ [1]
-> Fixes: a3c3c66670ce ("perf/core: Fix child_total_time_enabled accounting bug at task exit")
-> Signed-off-by: David Wang <00107082@163.com>
-> ---
-> Changes:
-> Address yeoreum.yun@arm.com's concern about missing cgroup event.
-> ---
->  kernel/events/core.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
+> But as Gregory mentioned, we can pass 'err' now with this numa node notifier
+> so for this hunk, shouldn't we add the following change on top of this?
 > 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 95e703891b24..e2c0f34b0789 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -2466,7 +2466,7 @@ __perf_remove_from_context(struct perf_event *event,
->  			   void *info)
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index 3a7717e09506..3073ebd4e7ee 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -3792,7 +3792,7 @@ static int sysfs_wi_node_add(int nid)
+>  static int wi_node_notifier(struct notifier_block *nb,
+>                                unsigned long action, void *data)
 >  {
->  	struct perf_event_pmu_context *pmu_ctx = event->pmu_ctx;
-> -	enum perf_event_state state = PERF_EVENT_STATE_OFF;
-> +	enum perf_event_state exit_state = PERF_EVENT_STATE_EXIT;
->  	unsigned long flags = (unsigned long)info;
->  
->  	ctx_time_update(cpuctx, ctx);
-> @@ -2475,19 +2475,20 @@ __perf_remove_from_context(struct perf_event *event,
->  	 * Ensure event_sched_out() switches to OFF, at the very least
->  	 * this avoids raising perf_pending_task() at this time.
->  	 */
-> -	if (flags & DETACH_EXIT)
-> -		state = PERF_EVENT_STATE_EXIT;
->  	if (flags & DETACH_DEAD) {
->  		event->pending_disable = 1;
-> -		state = PERF_EVENT_STATE_DEAD;
-> +		exit_state = PERF_EVENT_STATE_DEAD;
->  	}
->  	event_sched_out(event, ctx);
-> -	perf_event_set_state(event, min(event->state, state));
->  	if (flags & DETACH_GROUP)
->  		perf_group_detach(event);
->  	if (flags & DETACH_CHILD)
->  		perf_child_detach(event);
->  	list_del_event(event, ctx);
-> +	if (flags & DETACH_EXIT)
-> +		perf_event_set_state(event, min(event->state, exit_state));
-> +	if (flags & DETACH_DEAD)
-> +		event->state = PERF_EVENT_STATE_DEAD;
+> -       int err;
+> +       int err = 0;
+>         struct node_notify *arg = data;
+>         int nid = arg->status_change_nid;
+> 
+> @@ -3811,7 +3811,7 @@ static int wi_node_notifier(struct notifier_block *nb,
+>                 break;
+>         }
+> 
+> -       return NOTIFY_OK;
+> +       return notifier_from_errno(err);
 
-Urgh, no. Trying to reverse engineer the above, the intent appears to be
-to not set OFF.
+I do not think so.
+NODE_BECAME_MEM_AWARE is already too late to react.
+We only tell the system that __now__ we are in this state, so there is
+no rollback possible from this point forward.
 
-This can be achieved by doing:
 
--       enum perf_event_state state = PERF_EVENT_STATE_OFF;
-+       enum perf_event_state state = event->state;
-
-No other changes required. You also move the location of
-perf_event_set_state(), but it is entirely unclear to me if that is
-actually needed.
-
-Worse, you split the means of setting state -- that is entirely uncalled
-for.
+-- 
+Oscar Salvador
+SUSE Labs
