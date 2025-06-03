@@ -1,101 +1,156 @@
-Received: from smtp-bc0b.mail.infomaniak.ch (smtp-bc0b.mail.infomaniak.ch [45.157.188.11])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670A6230BE3
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 12:47:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F91711CAF
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 12:48:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748954870; cv=none; b=fKrXveVXKXnCLigl+nkktP3PWS//muyhaI2PZoteopkt7M/ZeWUVjdk3/O3JFjuACh+xcbrwFbdMAee7UXcWi1/TG7/S8orNWiAGACVbHFjhmaMJsbyL5q5Zjk+9X3c50usrPQnNrvPzQVi8btR6EPq3of+xATxIsMQ7YEiaVWE=
+	t=1748954903; cv=none; b=ZmupJ2OrF/IUv39qoq3wewyK5VsA0W3JphJS+UKgf2JPGF5bdzTU78sXijwyBHHUF6n5au4lktQgZmtzTyqCryS4tKkiDOCJH2GEOtlWHtXzF9AYBF+WHNrQum0OHiMUu6HwnyzSRPFIiX0mNvcrzygUJRmmkdqVcnu/6rLVmbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748954870; c=relaxed/simple;
-	bh=66SovfWGN9Zxx8wjldJ7efmNnw7GrmCwtfjfNwHmRMQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kGLjSNOcVcmr/PKHwbkJTbKoJlkE7B91I2Q4I09PVImRP0CdEsigkLfumn/cH/5DkvmlZh1BIxIAN88U2jmxVp41QFWtKGsSy8L4iX5RtXH79Y992gCP5zYjcqmW8AZ3vW/PqB4+7ydnOIdPSmiFV4Nn8YvPZdXFt1rOW/Rfkxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=L3Tby4ME; arc=none smtp.client-ip=45.157.188.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1748954903; c=relaxed/simple;
+	bh=k3VF4HiD/2i620zOkBGzXVfjwNAJs9pzu3fWxBJ9q9M=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=SGxN09HWxaHqqt4nrmI59P4gUMvt9kxiTPf4N44egKY1UhBXB9MwDJCRuAkZNSGcIZzvyHjicdQv7uldsv2nAT6uXotAgUzvD4uZWk+/Fi0/679eSJG2XaKQCi0+C6EVYa1Mf7fkuUcHUmP3x34HLrU5Jv5B6W4Un4yCuLEcAj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=YNndBMrG; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="L3Tby4ME"
-Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10::a6c])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bBVqH4VDZz18W6;
-	Tue,  3 Jun 2025 14:47:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1748954859;
-	bh=6bFgdneUrLdUXI8k0T/OnlBfpWZz00dJVHS7SYqxRSc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L3Tby4ME/IxgnXg/9Y5+/rVyeBpxij3Ym52HAHLkdrdpA4UF3pHH0xsvhE7RMkkch
-	 IcWWuxYqynt1kVcozhgbuO23z/axTe2VhkuQUsmTO2jLfIolvqcTj6gP8mIq8kNXwg
-	 GpGrxyCt/XXaw6oZGAKp7h5i4kTouPikCUyrA2n4=
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4bBVqG2vMPzVjy;
-	Tue,  3 Jun 2025 14:47:38 +0200 (CEST)
-Date: Tue, 3 Jun 2025 14:47:37 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Song Liu <song@kernel.org>
-Cc: Tingmao Wang <m@maowtm.org>, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, 
-	daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk, 
-	brauner@kernel.org, jack@suse.cz, kpsingh@kernel.org, mattbobrowski@google.com, 
-	amir73il@gmail.com, repnop@google.com, jlayton@kernel.org, josef@toxicpanda.com, 
-	gnoack@google.com
-Subject: Re: [PATCH bpf-next 2/4] landlock: Use path_parent()
-Message-ID: <20250603.uavoo2aBucoh@digikod.net>
-References: <20250528222623.1373000-1-song@kernel.org>
- <20250528222623.1373000-3-song@kernel.org>
- <027d5190-b37a-40a8-84e9-4ccbc352bcdf@maowtm.org>
- <CAPhsuW5BhAJ2md8EgVgKM4yiAgafnhxT9aj_a4HQkr=+=vug-g@mail.gmail.com>
- <CAPhsuW6W+HR8BOVTCbM+AVYCEzuoSR21RWUpaEE0xvOpv8Zbog@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="YNndBMrG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1748954899;
+	bh=be0lML8aTZW4E4Ing1VFrv8AHF+jgbhUUfX0JPhKOXM=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=YNndBMrG6qOvSbDqbcdZXRiRtkqmMq4ebR6guSj1GLDHCHcU4hCF+rVkD+dPQRM27
+	 ACqHA7lI0HUDPgXI007V4fDUlIEvOgxvn+eSzij8KaRzCsFq2tUPXD8a2JBtyoMBxx
+	 x407JtrMTJnJIbSJLisUQPCoF9QZR8a6FvBA9KI4=
+Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id A07E565F62;
+	Tue,  3 Jun 2025 08:48:16 -0400 (EDT)
+Message-ID: <0f0eb024d7ed062141a8aa048017e6f7ef7c1fd4.camel@xry111.site>
+Subject: Re: [PATCH v2] RISC-V: vDSO: Wire up getrandom() vDSO implementation
+From: Xi Ruoyao <xry111@xry111.site>
+To: Alexandre Ghiti <alex@ghiti.fr>, Thomas =?ISO-8859-1?Q?Wei=DFschuh?=
+	 <thomas.weissschuh@linutronix.de>, Nathan Chancellor <nathan@kernel.org>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>, Paul Walmsley
+	 <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Guo Ren
+	 <guoren@kernel.org>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Date: Tue, 03 Jun 2025 20:48:15 +0800
+In-Reply-To: <71f093d5-4823-4bc6-b9ee-23433bd8c60c@ghiti.fr>
+References: <20250411024600.16045-1-xry111@xry111.site>
+	 <20250411095103-2aad099a-e4a1-4efb-8374-dd27bf05b668@linutronix.de>
+	 <a2477829-f3a5-4763-89f3-8c2c1f4716b8@ghiti.fr>
+	 <7f840a23ab8865d7f205caec56817c660e237d64.camel@xry111.site>
+	 <71f093d5-4823-4bc6-b9ee-23433bd8c60c@ghiti.fr>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPhsuW6W+HR8BOVTCbM+AVYCEzuoSR21RWUpaEE0xvOpv8Zbog@mail.gmail.com>
-X-Infomaniak-Routing: alpha
 
-On Mon, Jun 02, 2025 at 05:10:21PM -0700, Song Liu wrote:
-> On Mon, Jun 2, 2025 at 6:36 AM Song Liu <song@kernel.org> wrote:
-> >
-> > On Sat, May 31, 2025 at 6:51 AM Tingmao Wang <m@maowtm.org> wrote:
-> > [...]
-> > > I'm not sure if the original behavior was intentional, but since this
-> > > technically counts as a functional changes, just pointing this out.
-> >
-> > Thanks for pointing it out! I think it is possible to keep current
-> > behavior. Or we can change the behavior and state that clearly
-> > in the commit log. Mickaël, WDYT?
-> >
-> > >
-> > > Also I'm slightly worried about the performance overhead of doing
-> > > path_connected for every hop in the iteration (but ultimately it's
-> > > Mickaël's call).  At least for Landlock, I think if we want to block all
-> >
-> > Maybe we need a flag to path_parent (or path_walk_parent) so
-> > that we only check for path_connected when necessary.
-> 
-> More thoughts on path_connected(). I think it makes sense for
-> path_parent (or path_walk_parent) to continue walking
-> with path_connected() == false. This is because for most security
-> use cases, it makes sense for umounted bind mount to fall back
-> to the permissions of the original mount OTOH, it also makes sense
-> for follow_dotdot to reject this access at path lookup time. If the
-> user of path_walk_parent decided to stop walking at disconnected
-> path, another check can be added at the caller side.
+On Fri, 2025-05-23 at 12:06 +0200, Alexandre Ghiti wrote:
+> On 5/23/25 10:02, Xi Ruoyao wrote:
+> > On Fri, 2025-05-23 at 10:01 +0200, Alexandre Ghiti wrote:
+> > > Hi Xi,
+> > >=20
+> > > On 4/11/25 10:04, Thomas Wei=C3=9Fschuh wrote:
+> > > > On Fri, Apr 11, 2025 at 10:46:00AM +0800, Xi Ruoyao wrote:
+> > > > > Hook up the generic vDSO implementation to the generic vDSO
+> > > > > getrandom
+> > > > > implementation by providing the required
+> > > > > __arch_chacha20_blocks_nostack
+> > > > > and getrandom_syscall implementations. Also wire up the selftests=
+.
+> > > > >=20
+> > > > > The benchmark result:
+> > > > >=20
+> > > > > 	vdso: 25000000 times in 2.466341333 seconds
+> > > > > 	libc: 25000000 times in 41.447720005 seconds
+> > > > > 	syscall: 25000000 times in 41.043926672 seconds
+> > > > >=20
+> > > > > 	vdso: 25000000 x 256 times in 162.286219353 seconds
+> > > > > 	libc: 25000000 x 256 times in 2953.855018685 seconds
+> > > > > 	syscall: 25000000 x 256 times in 2796.268546000 seconds
+> > > > >=20
+> > > > > Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+> > > > > ---
+> > > > >=20
+> > > > > [v1]->v2:
+> > > > > - Fix the commit message.
+> > > > > - Only build the vDSO getrandom code if CONFIG_VDSO_GETRANDOM, to
+> > > > > =C2=A0=C2=A0=C2=A0 unbreak RV32 build.
+> > > > > - Likewise, only enable the selftest if __riscv_xlen =3D=3D 64.
+> > > > >=20
+> > > > > [v1]:
+> > > > > https://lore.kernel.org/all/20250224122541.65045-1-xry111@xry111.=
+site/
+> > > > >=20
+> > > > > =C2=A0=C2=A0 arch/riscv/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
+> > > > > =C2=A0=C2=A0 arch/riscv/include/asm/vdso/getrandom.h=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 30 +++
+> > > > > =C2=A0=C2=A0 arch/riscv/kernel/vdso/Makefile=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 12 =
++
+> > > > > =C2=A0=C2=A0 arch/riscv/kernel/vdso/getrandom.c=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 10 +
+> > > > > =C2=A0=C2=A0 arch/riscv/kernel/vdso/vdso.lds.S=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
+> > > > > =C2=A0=C2=A0 arch/riscv/kernel/vdso/vgetrandom-chacha.S=C2=A0=C2=
+=A0=C2=A0 | 244
+> > > > > ++++++++++++++++++
+> > > > > =C2=A0=C2=A0 .../selftests/vDSO/vgetrandom-chacha.S=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +
+> > > > > =C2=A0=C2=A0 7 files changed, 300 insertions(+)
+> > > > > =C2=A0=C2=A0 create mode 100644 arch/riscv/include/asm/vdso/getra=
+ndom.h
+> > > > > =C2=A0=C2=A0 create mode 100644 arch/riscv/kernel/vdso/getrandom.=
+c
+> > > > > =C2=A0=C2=A0 create mode 100644 arch/riscv/kernel/vdso/vgetrandom=
+-chacha.S
+> > > > <snip>
+> > > >=20
+> > > > > diff --git a/arch/riscv/kernel/vdso/vdso.lds.S
+> > > > > b/arch/riscv/kernel/vdso/vdso.lds.S
+> > > > > index 8e86965a8aae..abc69cda0445 100644
+> > > > > --- a/arch/riscv/kernel/vdso/vdso.lds.S
+> > > > > +++ b/arch/riscv/kernel/vdso/vdso.lds.S
+> > > > > @@ -80,6 +80,7 @@ VERSION
+> > > > > =C2=A0=C2=A0 #ifndef COMPAT_VDSO
+> > > > > =C2=A0=C2=A0=C2=A0		__vdso_riscv_hwprobe;
+> > > > > =C2=A0=C2=A0 #endif
+> > > > > +		__vdso_getrandom;
+> > > > For consistency this could be gated behind CONFIG_VDSO_GETRANDOM.
+> > >=20
+> > > Nathan sent a fix for this here:
+> > >=20
+> > > https://lore.kernel.org/all/20250423-riscv-fix-compat_vdso-lld-v2-1-b=
+7bbbc244501@kernel.org/
+> > I've given it an R-b.=C2=A0 Do you prefer me to squash the patches and =
+keep
+> > the SoB of both I and Nathan?
+>=20
+> Hmm I was about to send a new PR today after the CI passes, I mentioned=
+=20
+> Nathan's patch in the squash so he keeps credit for the fix. Unless you=
+=20
+> can send something today, I'll keep my squashed patch.
 
-I agree.
+Palmer has reverted this in for-next and Thomas just informed me another
+mistake in the code at https://lore.kernel.org/all/20250603-loongarch-
+vdso-syscall-v1-1-6d12d6dfbdd0@linutronix.de/.
 
-> 
-> If there are no objections, I will remove the path_connected check
-> from path_walk_parent().
+I'll try to sort things up and send v3 in the week.
 
-Sounds good.  The documentation should explain this rationale and
-highlight the differences with follow_dotdot().
-
-> 
-> Thanks,
-> Song
-> 
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
