@@ -1,68 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2123823956A
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 14:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF18F1F8751
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 14:29:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748960927; cv=none; b=JJV5T2LsmPkndeI0sEBfzVYitJz67AcjEqJc8bTM4KJAGcaFLnxDEnerc3+8hganurUqmNk7kPkWD0lIPpkvMq7B2DA/9YBTbnTaz+evoPK9+YZ3ZPniXOu0pKRPx2TXiRZXuvpQ1BCV53bQ2uR7Raz4HOPEvVJc2SZurcuNLW4=
+	t=1748960962; cv=none; b=ADSqa+W9JVDtMln1SI276LiVePXxmnLmFPb0nYqZnMmg9ITelW7rvf427yoOgUtW8cdpIxBBwxm3wFHS3fX6uwgQT4YbCFZJLXORLOneMEbbaoqOdwGcFAkIN3NNbVoer1pvbn8cIXJ0w8xOx+CVIvd2jIZChT2jT55LvN7Saos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748960927; c=relaxed/simple;
-	bh=84arr64fJqUwFWGQ/5viSuxqmTf76JKBuvpYkZ9qiBQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G9LpB6fC9tZBbt6C4XSkiIkMT59rIFw/ImlV6pD5yte1o5kJdIVRdAUnTkRhnGfyqp6ojjSAaUEydLwEOj++LUhEHPTC47bZ6JgXvaWlwZy/J/kaP6s0Zp7tKmUXeZz1Yd8S5ZsaODWS3pWCUXIVDs+aMlf9V4dTV1FGAwgQqz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E196DC4CEED;
-	Tue,  3 Jun 2025 14:28:45 +0000 (UTC)
-Date: Tue, 3 Jun 2025 10:29:59 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Hugh Dickins <hughd@google.com>
-Cc: Matthew Wilcox <willy@infradead.org>, LKML
- <linux-kernel@vger.kernel.org>, linux-mm@kvack.org, Andrew Morton
- <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] mm: Fix compile error when CONFIG_SHMEM is not set
-Message-ID: <20250603102959.20c85adb@gandalf.local.home>
-In-Reply-To: <fc2b6a94-bd2d-a5d9-c935-381a1613f47e@google.com>
-References: <20250602170500.48713a2b@gandalf.local.home>
-	<20250602171458.7ceabb1c@gandalf.local.home>
-	<aD4boBrdZXtz_5kL@casper.infradead.org>
-	<fc2b6a94-bd2d-a5d9-c935-381a1613f47e@google.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1748960962; c=relaxed/simple;
+	bh=tQNECUGCwVN8w2nYeGxHhxzcbA2Ok5UYLhhpx9vz1U0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vDSrYitESHJhQgKq3eMNlYRxrGrp8M1dBfZ2oazIfAnNGND8RvtXOwOMSRDmUYCXlhKkSRd+NuyUH6GhZEhtSdq/yKtjC/KuZrs8Yi/J1qrfstVtRxURTisutGSQcQ6idWSs0UFmNcdQFbNlTmzQIpWlIhK8cb8GriK7emZhiz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=UEflr7AC; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="UEflr7AC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=biEa0C/Zx7biEXb9wrt4J7t8LJ1eZ405M+nXFoTKcvw=; b=UEflr7AC00Fja8TgNI4V56+5Xl
+	lAVk1dQ6yvd1mttvOdmIvxG2jwVo34OgfToE+1k0ECnW6ZnJvEYk8ST5O7uwaTdgsZW/Gd2dgYIrx
+	5v2SOfYJz4Ap/rzMsdr1YyrSGrlteiyaNLs0pOwR8pR6irR/chHc43KfQ0KpIDkSvLd3YAL12gckc
+	NIAPlZDn5UUVv8l4JuexDHusjnp9gvM8EC6BTNiArB55u7nhSBf7uvcfrueJ5r5KTwqdlfkd9yDtz
+	c0QlsagG6aF9PiMyZMGSppEkXAigxezW8y8cQrl0VHMf8Gc6mp4qrXJHezaITrTXXuqrT87Icik9N
+	201yssGQ==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uMSde-0000000Deph-1ZQN;
+	Tue, 03 Jun 2025 14:29:14 +0000
+Date: Tue, 3 Jun 2025 15:29:14 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Julian Vetter <julian@outer-limits.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, "Jason A . Donenfeld" <Jason@zx2c4.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Remove unaligned/packed_struct.h header
+Message-ID: <20250603142914.GA299672@ZenIV>
+References: <20250603132414.3676142-1-julian@outer-limits.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250603132414.3676142-1-julian@outer-limits.org>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Tue, 3 Jun 2025 01:02:36 -0700 (PDT)
-Hugh Dickins <hughd@google.com> wrote:
+On Tue, Jun 03, 2025 at 03:24:14PM +0200, Julian Vetter wrote:
+> The functions in this header are deprecated and are not used anymore.
+> So, remove the header entirely.
 
-> Agreed that ramfs does not use swap, so calling swap_writepage() would
-> be weird.  But, thanks for the build fix Steve, but it cannot be right
-> because return 0 says shmem_writeout() successfully sent the page to
-> swap, and that has unlocked the page (or soon will do so).  It should
-> return an error (-ENXIO?), but I haven't checked what the callers do with
-
-Yeah, I figured it should return an error, but looking at the code I
-couldn't figure out what the proper error would be. Then I also noticed
-that the other stub functions just returned zero so I did the same.
-
-Perhaps add a WARN_ON_ONCE() if it is called without CONFIG_SHMEM configured?
-
-> that, nor whether they need the folio to be redirtied.  And wouldn't it
-> need an EXPORT like the real one?  Sorry, can't keep up, there are many
-> many things I should have looked at but have not... Tomorrow?
-
-Yeah, it probably needs an export as well.
-
-Note, if you come up with a solution, by all means use it and don't use my
-patch. I'm happy with a "Reported-by" and don't need to be the author. This
-is the "fix" I'm using so that I can test my code because without it, my
-tests fail.
-
-I'm also happy to send another update if it's simple.
-
--- Steve
+; git grep -n __get_unaligned_cpu32
+include/linux/jhash.h:80:               a += __get_unaligned_cpu32(k);
+include/linux/jhash.h:81:               b += __get_unaligned_cpu32(k + 4);
+include/linux/jhash.h:82:               c += __get_unaligned_cpu32(k + 8);
+include/linux/unaligned/packed_struct.h:16:static inline u32 __get_unaligned_cpu32(const void *p)
+tools/include/linux/jhash.h:80:         a += __get_unaligned_cpu32(k);
+tools/include/linux/jhash.h:81:         b += __get_unaligned_cpu32(k + 4);
+tools/include/linux/jhash.h:82:         c += __get_unaligned_cpu32(k + 8);
+tools/include/linux/unaligned/packed_struct.h:17:static inline u32 __get_unaligned_cpu32(const void *p)
