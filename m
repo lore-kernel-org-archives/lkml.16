@@ -1,106 +1,152 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mta21.hihonor.com (mta21.honor.com [81.70.160.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA85928151E;
-	Tue,  3 Jun 2025 09:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE7C28137C;
+	Tue,  3 Jun 2025 09:53:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.160.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748944346; cv=none; b=M+IxzA1suwUPHXKwh5KjOvLilnDC8EJhLGZBMenOSEpuDvpHsS6Kb/m6tyv1oJEz6Xw8aYQW6A8nnlBaUWcHcxOHE4GbRm7RbTIowG34vqnKXiB0Ke2g2CaziGOLiLtW/11M5WMLv7NrL8qLMrdxnABtV3VmGxhpXIGpyCvnp0g=
+	t=1748944434; cv=none; b=gARgs5RlXsXDkQZXcFQuqjtdwhlu3TeePc3p+8tjyXuFkhnc/cp8Z3ag25awHGT8nCrEs2VNWsWFIJimNSYyJRdRbXrWQbOeF0cm5bNiGRTcMRcUS+DNaEZ37PhqxS5gSIqc0YdnNPYo22RiOTc11aTujgzHOqDP2nrNz/HZ0fE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748944346; c=relaxed/simple;
-	bh=Xlxi9rPd9vD9mqlymmA7AuEXXEJbaZWZ9v07jx7GWOI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=g4t1CkVjClpexpMmvBw46OQli1rw1ugrA07AbCMQrnolzq03ZaVjxMw4GhKuMoocvG9KYm+AWnyeTud3Y//l6aPEPIaTZ+TSvgKhJtaL1OhNqbFk71cluroC/VAItGoya6T90TCEmvFqwBcEFtZmtknT5ETNvTQuMly6drPj2M4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LWeCr4rn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=5QNFbJ6c; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LWeCr4rn";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5QNFbJ6c"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748944337;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=rmYgAnk0V4lp/9zkefQtVct+J2O63fqxijSOg/js5bY=;
-	b=LWeCr4rnQ8CKYH5Y3v54ZkDkEqGHqYbjpIgtgrAmV10YeqOmIFI3xH2inH60m/rinQGR+N
-	kEBkA4sHSJH4fO1G8uK/xr5fk2H/hgAaq9A6YxWxuES0c6JmwA/o5Y6HgdNiz8LMpjyc1r
-	vFMnwXl/svo1RYoRp7xQDYiGjpn7LvDP89HArd98pjhF3qSTD/PZy7g6N/OfEkfi3coV2V
-	ytbHg8X7HYiYgBPF3N9g3Mh/hM1Xg/fG+hzxY1h5HYt/T5yGylUEnT5wZLqTcj78t2tslr
-	5eFQP7S6Irop0b3dbYFqbFqAyOjwcKbhhOWBHeBeqHkgGM+Hz8qIkz3aXZYytg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748944337;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=rmYgAnk0V4lp/9zkefQtVct+J2O63fqxijSOg/js5bY=;
-	b=5QNFbJ6cHzeTgRCctSafeiupEElh8yGKbOaviuWXQoz8s8lpjC+ahpqMcXgcCjVdBh19z9
-	WlXQyXm5apjgiyAQ==
-Date: Tue, 03 Jun 2025 11:52:13 +0200
-Subject: [PATCH] sched: Fix preemption string of preempt_dynamic_none
+	s=arc-20240116; t=1748944434; c=relaxed/simple;
+	bh=EivE7ISi+0WG5ukbJcn5823I3TbKyL4AilNB3tIDUZY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OQUEOglEC/ID70o1LbOhbREsLBfslpHQlscxifEG2g1VQklZqXRzQ2P9Di1WVru2fD6c9PCs4iK8u6e1uLFog5quUJWDftGpK6dcfhREfnEIJwiCpsBMWI2GtdxZRBST5MWC3RVcEnhpGRxTKpJdlUl4nKsqFLhdvXC7/mDJkkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.160.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
+Received: from w001.hihonor.com (unknown [10.68.25.235])
+	by mta21.hihonor.com (SkyGuard) with ESMTPS id 4bBQwN2MZ8zYlSxZ;
+	Tue,  3 Jun 2025 17:51:48 +0800 (CST)
+Received: from a010.hihonor.com (10.68.16.52) by w001.hihonor.com
+ (10.68.25.235) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 3 Jun
+ 2025 17:53:50 +0800
+Received: from localhost.localdomain (10.144.18.117) by a010.hihonor.com
+ (10.68.16.52) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 3 Jun
+ 2025 17:53:50 +0800
+From: wangtao <tao.wangtao@honor.com>
+To: <sumit.semwal@linaro.org>, <christian.koenig@amd.com>,
+	<kraxel@redhat.com>, <vivek.kasireddy@intel.com>, <viro@zeniv.linux.org.uk>,
+	<brauner@kernel.org>, <hughd@google.com>, <akpm@linux-foundation.org>,
+	<amir73il@gmail.com>
+CC: <benjamin.gaignard@collabora.com>, <Brian.Starkey@arm.com>,
+	<jstultz@google.com>, <tjmercier@google.com>, <jack@suse.cz>,
+	<baolin.wang@linux.alibaba.com>, <linux-media@vger.kernel.org>,
+	<dri-devel@lists.freedesktop.org>, <linaro-mm-sig@lists.linaro.org>,
+	<linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+	<linux-mm@kvack.org>, <bintian.wang@honor.com>, <yipengxiang@honor.com>,
+	<liulu.liu@honor.com>, <feng.han@honor.com>, wangtao <tao.wangtao@honor.com>
+Subject: [PATCH v4 2/4] dmabuf: Implement copy_file_range callback for dmabuf direct I/O prep
+Date: Tue, 3 Jun 2025 17:52:43 +0800
+Message-ID: <20250603095245.17478-3-tao.wangtao@honor.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250603095245.17478-1-tao.wangtao@honor.com>
+References: <20250603095245.17478-1-tao.wangtao@honor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250603-preempt-str-none-v1-1-f0e9916dcf44@linutronix.de>
-X-B4-Tracking: v=1; b=H4sIAMzFPmgC/x2MQQqAIBAAvxJ7bkFXiugr0SF0qz2kohGB+Pek4
- 8DMFMichDPMXYHEj2QJvoHuO7Dn5g9GcY2BFA1qVAZjYr7ijflO6INndKTJaGuJzAQta8Iu779
- c1lo/F9Oz4WIAAAA=
-X-Change-ID: 20250603-preempt-str-none-d21231cc2238
-To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
- Juri Lelli <juri.lelli@redhat.com>, 
- Vincent Guittot <vincent.guittot@linaro.org>, 
- Dietmar Eggemann <dietmar.eggemann@arm.com>, 
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, 
- Shrikanth Hegde <sshegde@linux.ibm.com>, 
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748944334; l=1237;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=Xlxi9rPd9vD9mqlymmA7AuEXXEJbaZWZ9v07jx7GWOI=;
- b=rU9NK325oLcYMqv3CYc1Zro/M5sdzjehER2RK3SaMV9Ymni4W3xTWHL0I7UCRw6dG7TOk9S6U
- k2ypHlC8c85DgoNM4lD1gTI1SQaHUuzRT1mDetLVm6MdioqZH+ztnGK
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+Content-Type: text/plain
+X-ClientProxiedBy: w002.hihonor.com (10.68.28.120) To a010.hihonor.com
+ (10.68.16.52)
 
-Zero is a valid value for "preempt_dynamic_mode", namely
-"preempt_dynamic_none".
+First determine if dmabuf reads from or writes to the file.
+Then call exporter's rw_file callback function.
 
-Fix the off-by-one in preempt_model_str(), so that "preempty_dynamic_none"
-is correctly formatted as PREEMPT(none) instead of PREEMPT(undef).
-
-Fixes: 8bdc5daaa01e ("sched: Add a generic function to return the preemption string")
-Cc: stable@vger.kernel.org
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Signed-off-by: wangtao <tao.wangtao@honor.com>
 ---
- kernel/sched/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma-buf/dma-buf.c | 32 ++++++++++++++++++++++++++++++++
+ include/linux/dma-buf.h   | 16 ++++++++++++++++
+ 2 files changed, 48 insertions(+)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index dce50fa57471dffc4311b9d393ae300a43d38d20..021b0a703d094b3386c5ba50e0e111e3a7c2b3df 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -7663,7 +7663,7 @@ const char *preempt_model_str(void)
+diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+index 5baa83b85515..fc9bf54c921a 100644
+--- a/drivers/dma-buf/dma-buf.c
++++ b/drivers/dma-buf/dma-buf.c
+@@ -523,7 +523,38 @@ static void dma_buf_show_fdinfo(struct seq_file *m, struct file *file)
+ 	spin_unlock(&dmabuf->name_lock);
+ }
  
- 		if (IS_ENABLED(CONFIG_PREEMPT_DYNAMIC)) {
- 			seq_buf_printf(&s, "(%s)%s",
--				       preempt_dynamic_mode > 0 ?
-+				       preempt_dynamic_mode >= 0 ?
- 				       preempt_modes[preempt_dynamic_mode] : "undef",
- 				       brace ? "}" : "");
- 			return seq_buf_str(&s);
-
----
-base-commit: 546b1c9e93c2bb8cf5ed24e0be1c86bb089b3253
-change-id: 20250603-preempt-str-none-d21231cc2238
-
-Best regards,
++static ssize_t dma_buf_rw_file(struct dma_buf *dmabuf, loff_t my_pos,
++	struct file *file, loff_t pos, size_t count, bool is_write)
++{
++	if (!dmabuf->ops->rw_file)
++		return -EINVAL;
++
++	if (my_pos >= dmabuf->size)
++		count = 0;
++	else
++		count = min_t(size_t, count, dmabuf->size - my_pos);
++	if (!count)
++		return 0;
++
++	return dmabuf->ops->rw_file(dmabuf, my_pos, file, pos, count, is_write);
++}
++
++static ssize_t dma_buf_copy_file_range(struct file *file_in, loff_t pos_in,
++	struct file *file_out, loff_t pos_out,
++	size_t count, unsigned int flags)
++{
++	if (is_dma_buf_file(file_in) && file_out->f_op->write_iter)
++		return dma_buf_rw_file(file_in->private_data, pos_in,
++				file_out, pos_out, count, true);
++	else if (is_dma_buf_file(file_out) && file_in->f_op->read_iter)
++		return dma_buf_rw_file(file_out->private_data, pos_out,
++				file_in, pos_in, count, false);
++	else
++		return -EINVAL;
++}
++
+ static const struct file_operations dma_buf_fops = {
++	.fop_flags = FOP_MEMORY_FILE,
+ 	.release	= dma_buf_file_release,
+ 	.mmap		= dma_buf_mmap_internal,
+ 	.llseek		= dma_buf_llseek,
+@@ -531,6 +562,7 @@ static const struct file_operations dma_buf_fops = {
+ 	.unlocked_ioctl	= dma_buf_ioctl,
+ 	.compat_ioctl	= compat_ptr_ioctl,
+ 	.show_fdinfo	= dma_buf_show_fdinfo,
++	.copy_file_range = dma_buf_copy_file_range,
+ };
+ 
+ /*
+diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
+index 36216d28d8bd..d3636e985399 100644
+--- a/include/linux/dma-buf.h
++++ b/include/linux/dma-buf.h
+@@ -22,6 +22,7 @@
+ #include <linux/fs.h>
+ #include <linux/dma-fence.h>
+ #include <linux/wait.h>
++#include <uapi/linux/dma-buf.h>
+ 
+ struct device;
+ struct dma_buf;
+@@ -285,6 +286,21 @@ struct dma_buf_ops {
+ 
+ 	int (*vmap)(struct dma_buf *dmabuf, struct iosys_map *map);
+ 	void (*vunmap)(struct dma_buf *dmabuf, struct iosys_map *map);
++
++	/**
++	 * @rw_file:
++	 *
++	 * If an Exporter needs to support Direct I/O file operations, it can
++	 * implement this optional callback. The exporter must verify that no
++	 * other objects hold the sg_table, ensure exclusive access to the
++	 * dmabuf's sg_table, and only then proceed with the I/O operation.
++	 *
++	 * Returns:
++	 *
++	 * 0 on success or a negative error code on failure.
++	 */
++	ssize_t (*rw_file)(struct dma_buf *dmabuf, loff_t my_pos,
++		struct file *file, loff_t pos, size_t count, bool is_write);
+ };
+ 
+ /**
 -- 
-Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+2.17.1
 
