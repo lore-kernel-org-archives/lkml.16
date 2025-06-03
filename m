@@ -1,195 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC92173;
-	Tue,  3 Jun 2025 04:23:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41809173;
+	Tue,  3 Jun 2025 04:25:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748924586; cv=none; b=kMNBzYpMoo9zZQump8bTDvf9Q5B/MyM9HMn3pqFYXoD66LqfBZQs8OO6RSfIJT3gs4ruTeBbcHM8EQ5At+QhVJTzWVE4hDyI6lekw4ZW+SmoPag1NnfN6JSVOXbFjGW6ii/uRniO7jzM/X//N47V/kq6Ii0t7d5MgvjhWabf2fY=
+	t=1748924712; cv=none; b=eHxO7O2LeaYGTc/H3Y+A2Lw96u1os/7d4v6Zm5uKacA6PC0838BV3MwY5ariGJZxo84iwfxrOmoPQWiRZ6MA2IjsWb4WBGzA2cNSP9PrytlSVx+0srvaDAvmMOS9Niu8T6nRdiTS0u8UuFl5mtWk32xAlU6AoaczcdjaDg2Jj2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748924586; c=relaxed/simple;
-	bh=fAIqxszTFaRSQwf9tqRraJopPW6o0lcu1sGqdzjJGLg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F7SaL1ZQQLre1T+JId66ZI4viqVwqqFe6MGTTmAwph5oQGjUQOSR1szGvqbQ3nHVFVaiqg7yHCAYmkzKDRgmJPbl37aJVLsgv7ZmOrNONcU4up70BbXG10Hjur+uIhlvEEIVmB8mxNrIGevRG0Gao5YrkIACQkfexne8rRbCu8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eJFcCukn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748924712; c=relaxed/simple;
+	bh=3RkXxcODg9tTzCDdEa7WPsKx/lfr+T6zdhtXKxk+LGE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pm+wwJVtRg/I9cscVi+SbV0+uxSncc1XK/0i030BUfyvDOl1F+Bk9HRpHoH9VLH9rqHa/sJ+r5W/ihfvbDvWzs2tnYAUVHmCgXspNISIPn5ZWNABozlc046N6XTfxmniig1nJcOjFW8Ft/qe5XFf/0bnUmKLlUdV41dTFV+slJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=bEX1Qu6R; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eJFcCukn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4358C4CEED;
-	Tue,  3 Jun 2025 04:23:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748924584;
-	bh=fAIqxszTFaRSQwf9tqRraJopPW6o0lcu1sGqdzjJGLg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eJFcCuknik4v5REUzKqnTizBgpZbx97Fkb3RQvCBbm3jS/Vgs87/GXVkOS6q9A/yo
-	 2L427cxLjnQ3zOAhYODyf7c9iP8uFYRZuZMG4vymqZQWTeWSoI2z9NpdYRCMpxVMzt
-	 ZdguiuclP+5ZUHLayqeyO8bgS75m6wpinYUAjM7+ZE8vnsWX3kKdIjsmHsCgX3Lcpv
-	 A2iygk15wHHW8QYRYxIzPhr5AcQCrLSvhqa3qSJ6dUEkA02X/lL7nM+kAbOTxFUvWf
-	 g9qqwxzLXPDwIHiCxotV8yndYfymT0WpWreAFKRsEkQj2xTHQ9L/gWCoCht26BhFUK
-	 2eZQh5NNZCi8w==
-Date: Mon, 2 Jun 2025 21:23:02 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
-	Junhao He <hejunhao3@huawei.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, Leo Yan <leo.yan@arm.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Atish Patra <atishp@rivosinc.com>
-Subject: Re: [PATCH v8 0/4] Prefer sysfs/JSON events also when no PMU is
- provided
-Message-ID: <aD54ptuIFHcKPkRQ@google.com>
-References: <20250416045117.876775-1-irogers@google.com>
- <CAP-5=fU3VW1MjHMiaPG+JirLCCunMC6bEWpsJ3h0E7bTDkh9cA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bEX1Qu6R"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 5534OrUg355270;
+	Mon, 2 Jun 2025 23:24:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1748924693;
+	bh=n6NxpDwg1mf1bOuUw2WDky2Q1KZ624qdIJUn8ZlY//o=;
+	h=From:To:CC:Subject:Date;
+	b=bEX1Qu6RpmvpwdD4L0uZYgoUwsapvT76TezuO2ksHm/rjJKoFuiCc8lzz8sqbtrsY
+	 g9NshKtWoZeAwk6if4Vg/Rj3+rtAu8BDGgQFAJW2Khyf4vnmcp8fqPfXeW0Mk2cHHb
+	 HamrvsIoFFrwnczrlqEcM3QuO5BlxcI6LmC1geb0=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 5534OrJU3348192
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Mon, 2 Jun 2025 23:24:53 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 2
+ Jun 2025 23:24:53 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 2 Jun 2025 23:24:52 -0500
+Received: from udit-HP-Z2-Tower-G9-Workstation-Desktop-PC.dhcp.ti.com (udit-hp-z2-tower-g9-workstation-desktop-pc.dhcp.ti.com [10.24.69.198])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5534OnfH4063997;
+	Mon, 2 Jun 2025 23:24:50 -0500
+From: Udit Kumar <u-kumar1@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>
+CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <u-kumar1@ti.com>, <b-padhi@ti.com>
+Subject: [RESEND PATCH] arm64: dts: ti: k3-j784s4-mcu-wakeup: Configure wkup_uart0 with clock settings
+Date: Tue, 3 Jun 2025 09:54:48 +0530
+Message-ID: <20250603042448.783956-1-u-kumar1@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fU3VW1MjHMiaPG+JirLCCunMC6bEWpsJ3h0E7bTDkh9cA@mail.gmail.com>
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi Ian,
+From: Bhavya Kapoor <b-kapoor@ti.com>
 
-On Tue, May 27, 2025 at 01:50:32PM -0700, Ian Rogers wrote:
-> On Tue, Apr 15, 2025 at 9:51 PM Ian Rogers <irogers@google.com> wrote:
-> >
-> > At the RISC-V summit the topic of avoiding event data being in the
-> > RISC-V PMU kernel driver came up. There is a preference for sysfs/JSON
-> > events being the priority when no PMU is provided so that legacy
-> > events maybe supported via json. Originally Mark Rutland also
-> > expressed at LPC 2023 that doing this would resolve bugs on ARM Apple
-> > M? processors, but James Clark more recently tested this and believes
-> > the driver issues there may not have existed or have been resolved. In
-> > any case, it is inconsistent that with a PMU event names avoid legacy
-> > encodings, but when wildcarding PMUs (ie without a PMU with the event
-> > name) the legacy encodings have priority.
-> >
-> > The situation is further inconsistent as legacy events are case
-> > sensitive, so on Intel that provides a sysfs instructions event, the
-> > instructions event without a PMU and lowercase is legacy while with
-> > uppercase letters it matches with sysfs which is case insensitive. Are
-> > there legacy events with upper case letters? Yes there are, the cache
-> > ones mix case freely:
-> >
-> > L1-dcache|l1-d|l1d|L1-data|L1-icache|l1-i|l1i|L1-instruction|LLC|L2|dTLB|d-tlb|Data-TLB|iTLB|i-tlb|Instruction-TLB|branch|branches|bpu|btb|bpc|node
-> >
-> > meaning LLC that means L2 (which is wrong) both match as part of a
-> > legacy cache name but llc and l2 would only match sysfs/json
-> > events. The whole thing just points at the ridiculous nature of legacy
-> > events and why we'd want them to be preffered I don't know. Why should
-> > case of a letter or having a PMU prefix impact the encoding in the
-> > perf_event_attr?
-> >
-> > The patch doing this work was reverted in a v6.10 release candidate
-> > as, even though the patch was posted for weeks and had been on
-> > linux-next for weeks without issue, Linus was in the habit of using
-> > explicit legacy events with unsupported precision options on his
-> > Neoverse-N1. This machine has SLC PMU events for bus and CPU cycles
-> > where ARM decided to call the events bus_cycles and cycles, the latter
-> > being also a legacy event name. ARM haven't renamed the cycles event
-> > to a more consistent cpu_cycles and avoided the problem. With these
-> > changes the problematic event will now be skipped, a large warning
-> > produced, and perf record will continue for the other PMU events. This
-> > solution was proposed by Arnaldo.
-> >
-> > v8: Change removing of failed to open events that are tracking so that
-> >     the tracking moves to the next event. Make software events able to
-> >     specified with a PMU. Change the perf_api_probe to not load all
-> >     PMUs through scanning, specify a PMU when parsing events.
-> >
-> > v7: Expand cover letter, fix a missed core_ok check in the v6
-> >     rebase. Note, as with v6 there is an alternate series that
-> >     prioritizes legacy events but that is silly and I'd prefer we
-> >     didn't do it.
-> >
-> > v6: Rebase of v5 (dropping already merged patches):
-> >     https://lore.kernel.org/lkml/20250109222109.567031-1-irogers@google.com/
-> >     that unusually had an RFC posted for it:
-> >     https://lore.kernel.org/lkml/Z7Z5kv75BMML2A1q@google.com/
-> >     Note, this patch conflicts/contradicts:
-> >     https://lore.kernel.org/lkml/20250312211623.2495798-1-irogers@google.com/
-> >     that I posted so that we could either consistently prioritize
-> >     sysfs/json (these patches) or legacy events (the other
-> >     patches). That lack of event printing and encoding inconsistency
-> >     is most prominent in the encoding of events like "instructions"
-> >     which on hybrid are reported as "cpu_core/instructions/" but
-> >     "instructions" before these patches gets a legacy encoding while
-> >     "cpu_core/instructions/" gets a sysfs/json encoding. These patches
-> >     make "instructions" always get a sysfs/json encoding while the
-> >     alternate patches make it always get a legacy encoding.
-> >
-> > v5: Follow Namhyung's suggestion and ignore the case where command
-> >     line dummy events fail to open alongside other events that all
-> >     fail to open. Note, the Tested-by tags are left on the series as
-> >     v4 and v5 were changing an error case that doesn't occur in
-> >     testing but was manually tested by myself.
-> >
-> > v4: Rework the no events opening change from v3 to make it handle
-> >     multiple dummy events. Sadly an evlist isn't empty if it just
-> >     contains dummy events as the dummy event may be used with "perf
-> >     record -e dummy .." as a way to determine whether permission
-> >     issues exist. Other software events like cpu-clock would suffice
-> >     for this, but the using dummy genie has left the bottle.
-> >
-> >     Another problem is that we appear to have an excessive number of
-> >     dummy events added, for example, we can likely avoid a dummy event
-> >     and add sideband data to the original event. For auxtrace more
-> >     dummy events may be opened too. Anyway, this has led to the
-> >     approach taken in patch 3 where the number of dummy parsed events
-> >     is computed. If the number of removed/failing-to-open non-dummy
-> >     events matches the number of non-dummy events then we want to
-> >     fail, but only if there are no parsed dummy events or if there was
-> >     one then it must have opened. The math here is hard to read, but
-> >     passes my manual testing.
-> >
-> > v3: Make no events opening for perf record a failure as suggested by
-> >     James Clark and Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>. Also,
-> >     rebase.
-> >
-> > v2: Rebase and add tested-by tags from James Clark, Leo Yan and Atish
-> >     Patra who have tested on RISC-V and ARM CPUs, including the
-> >     problem case from before.
-> 
-> Ping. Thanks,
-> Ian
-> 
-> > Ian Rogers (4):
-> >   perf record: Skip don't fail for events that don't open
-> >   perf parse-events: Reapply "Prefer sysfs/JSON hardware events over
-> >     legacy"
-> >   perf parse-events: Allow software events to be terms
-> >   perf perf_api_probe: Avoid scanning all PMUs, try software PMU first
+This commit adds the assigned-clocks and assigned-clock-parents
+properties for wkup_uart0 in J784S4. Specifically, the assigned-clocks
+property is set to reference the clock identified by
+"wkup_usart_mcupll_bypass_out0", ensuring the UART operates with the
+correct clock source.
 
-Sorry for the delay.  But I think we wanted to move to this instead:
+The assigned-clock-parents property specifies "wkup_usart_clksel_out0"
+as the parent clock. This configuration is critical for establishing
+the proper clocking hierarchy, enabling the UART device to function
+reliably across different baud rates.
 
-https://lore.kernel.org/linux-perf-users/20250312211623.2495798-1-irogers@google.com/
+Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
+---
+Link to v1: https://lore.kernel.org/all/20241009072056.3511346-1-b-kapoor@ti.com/
 
-Thanks,
-Namhyung
+ arch/arm64/boot/dts/ti/k3-j784s4-j742s2-mcu-wakeup-common.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> >
-> >  tools/perf/builtin-record.c      | 63 +++++++++++++++++++---
-> >  tools/perf/util/parse-events.c   | 47 +++++++++++++----
-> >  tools/perf/util/parse-events.h   |  3 +-
-> >  tools/perf/util/parse-events.l   | 90 ++++++++++++++++++--------------
-> >  tools/perf/util/parse-events.y   | 85 ++++++++++++++++++++++--------
-> >  tools/perf/util/perf_api_probe.c | 27 +++++++---
-> >  tools/perf/util/pmu.c            |  9 ++--
-> >  7 files changed, 235 insertions(+), 89 deletions(-)
-> >
-> > --
-> > 2.49.0.777.g153de2bbd5-goog
-> >
+diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-mcu-wakeup-common.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-mcu-wakeup-common.dtsi
+index 52e2965a3bf5..1146bc5990ea 100644
+--- a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-mcu-wakeup-common.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-mcu-wakeup-common.dtsi
+@@ -310,6 +310,8 @@ wkup_uart0: serial@42300000 {
+ 		interrupts = <GIC_SPI 897 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&k3_clks 397 0>;
+ 		clock-names = "fclk";
++		assigned-clocks = <&k3_clks 397 0>;
++		assigned-clock-parents = <&k3_clks 397 1>;
+ 		power-domains = <&k3_pds 397 TI_SCI_PD_EXCLUSIVE>;
+ 		status = "disabled";
+ 	};
+-- 
+2.34.1
+
