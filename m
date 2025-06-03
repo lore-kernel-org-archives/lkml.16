@@ -1,265 +1,136 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D61A17A318
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 06:08:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B209E4A35;
+	Tue,  3 Jun 2025 06:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748930929; cv=none; b=Lavq2ZJApAp2OGZaT9wEkq/vin1QB7d+Fb7zR6P4xfakBGVsTh6vTDG2/L2tl/KAjPfua4JcpfKq36cjBZ1z+A4X3jl2Sf3wHM7HZPRK0M5Hc6UMNiAhYeKrK5X/M9v9kKq4f34tC7ojkQONqJcDV3m8e31ybGGphf24zuO4gYo=
+	t=1748930989; cv=none; b=ZAC0fAnLFOkIRiF+yvm7pgaFEcCRbQP6QP9fAZDlUg3bMiyXc5bE8tiIQUfawosMLNRGWzy2sYsMpOXwhZWipgwvU9JSQFktGV+wGIzNMNqKLOlK21OckWIIjxdlQbH9C1o1ZRlgP+EeUEeqsSsNBpER4BPQXVPTACoz4Gb5J0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748930929; c=relaxed/simple;
-	bh=I+aXo4/DXd11acWkmn2NvLDwHBg1tBRnJlNrBxCoJyg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N4GgChPtoA7OaHZgsF1JXN5X0IxiMcNz1zn2Ue9Q1RE9eYuG63bBbR8g2S0Ncmcq3Tz4tMabiVmdC79nQSWK8ybC49E9nnr8XTpAyJtqv+kJSfw60rWYu61+u9xF6j1NqVAnBP57dj6YzFkJq59OdxbCsXQBEdRmtw9MXAWu4P4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Pvp6LdS6; arc=none smtp.client-ip=209.85.166.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748930989; c=relaxed/simple;
+	bh=UtF4PfDjBcBu1DL9nnNddav9W3fQEtadGM/IMb9N4jE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=gMkoCN76lQWS03MWyV5EBBcKgjRDpJNW1dyJFR/ynrkErTmSegYkZ8nzrCZECekuqmZqh5YLVCN9CzTt9lIket0ZwlB9qLBRFr0uGm3EbLICH9thUaHwxsaNXPxsnZL1P7B+2RCY7Cmb/ht6yriL+S3msSXZ1Px/UajopUAzLPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BhhcIyTr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pvp6LdS6"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3dc8897f64cso143935ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 23:08:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748930926; x=1749535726; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WIZAwtaQwL7pHq02Z22RUsf6XXS9GeViRSX3mpAZ1NA=;
-        b=Pvp6LdS67EmrZYfJwZkbmf5HgLmLCgnpXXfu/naiL4p4Ko7MrgoBk3qHpDT0+mMZSo
-         ClFvEtAivtwnG/k2rHD+cGv9KJ+pepLVXfi0zbrMxH6rZasC1eS9agY0/WlbKPITw3vB
-         sLajdyJwi2k7utplDoh9PBWLO49NGk1Yz8gTvYtrV9KfGvzMXKGIUD+3vNUsMLCaBd5h
-         ZmoD4rUW0cScUDJNjs8WGyg/wbNU94ZhAK+C/zZOq0uwkomke7rNchodMPOl/14wqNxv
-         p7YpG5Tt4wFM+cEeLsVOh28RPinHTU1dfKN+rFzjD1VR7zpfKrqwEtCb9+qisLpP/LzF
-         RPTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748930926; x=1749535726;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WIZAwtaQwL7pHq02Z22RUsf6XXS9GeViRSX3mpAZ1NA=;
-        b=QFvkbbHtlKW3lHq8GqazhgCwkyWA2EAqvWOPvqfXot8O4X1uIQEZsgnsNVT9bp9Opo
-         t1jsxsQ5oIBam9RxVr01muYrNAeE1Hiyy9U60F6qYTZJZTkWaiAVA7vEFARCrq/nqGP6
-         BR39xYRdBT3NfT9mQcfoDM+ONvziHgtwrpRV5hQKuRZRiXKol44Qbk6mGCtKuEcwRu4G
-         nY90V+JVV3tvIuKhwuHQLKZ2qE1kAYiKAd4k1DoGm+7UJLRE+tSPKiLV6V6PtDgni8uF
-         xkwn8qPMOXP1nhhuQAsdxC5nSKVDBN7S3/NtVoULEkB/3pGuME3RzuvpV0ySh2KVGsLl
-         maeA==
-X-Forwarded-Encrypted: i=1; AJvYcCUG741AzRxyjKFx3+vWqpwIkNBn8AKjLV8VwSiw9+P+EjaCtLlHGJ29VAyeWortDpvJCSP3wYRLuZQCH4s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZ7TaxTQSR7oTzJzBiAYFv4Z0MAxCeJ3zcrc+emD7F5Wp6pmCo
-	qGwvCmbc5QQYLCqTHByc4KR/PCcJ7INFBftJyQF7H4Xjm1nr91oseakcv7w/mVw9v+tlYhU9OJu
-	EC0I2iUaBrh/9Q1cvoel2j0+jxdOleugcYMupW4P9
-X-Gm-Gg: ASbGncsqT5P8XW7D19Cuu72VZpmUpyxGEDkM3jl+4Zd+uBwAHmaJnu0PlNoYlo6ARlQ
-	cTYRShBPQEz1+F7tJiwnQVhmbOvVYRUYjY8j6TvlQjXbza+hppOAa4r+iWlrmRJamz6TRn7kZ9z
-	YLu7VDMTIvpNMgNKRKItnmfQjM3eAqdnWfy4rSV0jW6oLI
-X-Google-Smtp-Source: AGHT+IG5Esdou/uheWLfkimtL/ivoJTMeS8QzIs7DFR4pKl909W9ZOIaB2D6el9kWGSDpY3JJzql6qNXyEoB7U2Av3w=
-X-Received: by 2002:a05:6e02:1564:b0:3dd:a452:d0d7 with SMTP id
- e9e14a558f8ab-3ddb7817f43mr1649285ab.5.1748930926045; Mon, 02 Jun 2025
- 23:08:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BhhcIyTr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0960AC4CEED;
+	Tue,  3 Jun 2025 06:09:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748930989;
+	bh=UtF4PfDjBcBu1DL9nnNddav9W3fQEtadGM/IMb9N4jE=;
+	h=Date:From:To:Cc:Subject:From;
+	b=BhhcIyTrhHCWljR/itBfW9/kFaoIzI06VuG0RxttT/E+Angd4Xx5XFk7UgpdDTbGa
+	 N67aNl2qLmAxqqs8ANXpeqCp6YJKSzVKQfCkr3U6y/cH8XK0/m47Umk2rEIPxpt3KX
+	 acw2lwfJZa4ymx1hJXLxfJ07/unL8T5FjdEESqQQtoL6ZlAz8+0tzyM+bZek9cS4iD
+	 6zSeFrHQDJy8nQN5NwJM5qbZxtIN1cEzrZRA+3KPfgSdz3+/5zkeG5YwKoyF8Q30CQ
+	 Jx5mJP+v+nW76eMb7enjpvsxYPh6L5v8zhO61TVQNMnLKc41Cb2aNLE9Akz0QTTFp2
+	 Dgho0RsIEPHhA==
+Date: Tue, 3 Jun 2025 06:09:47 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Wei Liu <wei.liu@kernel.org>,
+	Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+	Linux Kernel List <linux-kernel@vger.kernel.org>, kys@microsoft.com,
+	haiyangz@microsoft.com, decui@microsoft.com
+Subject: [GIT PULL] Hyper-V patches for 6.16
+Message-ID: <aD6Rq7Hm499y5ybR@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416045117.876775-1-irogers@google.com> <CAP-5=fU3VW1MjHMiaPG+JirLCCunMC6bEWpsJ3h0E7bTDkh9cA@mail.gmail.com>
- <aD54ptuIFHcKPkRQ@google.com>
-In-Reply-To: <aD54ptuIFHcKPkRQ@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 2 Jun 2025 23:08:34 -0700
-X-Gm-Features: AX0GCFuk1YXMm7ctf1TcSSrgam4pZBBwbOpB4C4z_x4kmS2s_dv_znGBzzVKuXs
-Message-ID: <CAP-5=fWSfFa6ncV6JkKSN4ByQ9HR+2ff4+uzwpMO5n-GaNbwxQ@mail.gmail.com>
-Subject: Re: [PATCH v8 0/4] Prefer sysfs/JSON events also when no PMU is provided
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, Leo Yan <leo.yan@arm.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Atish Patra <atishp@rivosinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, Jun 2, 2025 at 9:23=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> Hi Ian,
->
-> On Tue, May 27, 2025 at 01:50:32PM -0700, Ian Rogers wrote:
-> > On Tue, Apr 15, 2025 at 9:51=E2=80=AFPM Ian Rogers <irogers@google.com>=
- wrote:
-> > >
-> > > At the RISC-V summit the topic of avoiding event data being in the
-> > > RISC-V PMU kernel driver came up. There is a preference for sysfs/JSO=
-N
-> > > events being the priority when no PMU is provided so that legacy
-> > > events maybe supported via json. Originally Mark Rutland also
-> > > expressed at LPC 2023 that doing this would resolve bugs on ARM Apple
-> > > M? processors, but James Clark more recently tested this and believes
-> > > the driver issues there may not have existed or have been resolved. I=
-n
-> > > any case, it is inconsistent that with a PMU event names avoid legacy
-> > > encodings, but when wildcarding PMUs (ie without a PMU with the event
-> > > name) the legacy encodings have priority.
-> > >
-> > > The situation is further inconsistent as legacy events are case
-> > > sensitive, so on Intel that provides a sysfs instructions event, the
-> > > instructions event without a PMU and lowercase is legacy while with
-> > > uppercase letters it matches with sysfs which is case insensitive. Ar=
-e
-> > > there legacy events with upper case letters? Yes there are, the cache
-> > > ones mix case freely:
-> > >
-> > > L1-dcache|l1-d|l1d|L1-data|L1-icache|l1-i|l1i|L1-instruction|LLC|L2|d=
-TLB|d-tlb|Data-TLB|iTLB|i-tlb|Instruction-TLB|branch|branches|bpu|btb|bpc|n=
-ode
-> > >
-> > > meaning LLC that means L2 (which is wrong) both match as part of a
-> > > legacy cache name but llc and l2 would only match sysfs/json
-> > > events. The whole thing just points at the ridiculous nature of legac=
-y
-> > > events and why we'd want them to be preffered I don't know. Why shoul=
-d
-> > > case of a letter or having a PMU prefix impact the encoding in the
-> > > perf_event_attr?
-> > >
-> > > The patch doing this work was reverted in a v6.10 release candidate
-> > > as, even though the patch was posted for weeks and had been on
-> > > linux-next for weeks without issue, Linus was in the habit of using
-> > > explicit legacy events with unsupported precision options on his
-> > > Neoverse-N1. This machine has SLC PMU events for bus and CPU cycles
-> > > where ARM decided to call the events bus_cycles and cycles, the latte=
-r
-> > > being also a legacy event name. ARM haven't renamed the cycles event
-> > > to a more consistent cpu_cycles and avoided the problem. With these
-> > > changes the problematic event will now be skipped, a large warning
-> > > produced, and perf record will continue for the other PMU events. Thi=
-s
-> > > solution was proposed by Arnaldo.
-> > >
-> > > v8: Change removing of failed to open events that are tracking so tha=
-t
-> > >     the tracking moves to the next event. Make software events able t=
-o
-> > >     specified with a PMU. Change the perf_api_probe to not load all
-> > >     PMUs through scanning, specify a PMU when parsing events.
-> > >
-> > > v7: Expand cover letter, fix a missed core_ok check in the v6
-> > >     rebase. Note, as with v6 there is an alternate series that
-> > >     prioritizes legacy events but that is silly and I'd prefer we
-> > >     didn't do it.
-> > >
-> > > v6: Rebase of v5 (dropping already merged patches):
-> > >     https://lore.kernel.org/lkml/20250109222109.567031-1-irogers@goog=
-le.com/
-> > >     that unusually had an RFC posted for it:
-> > >     https://lore.kernel.org/lkml/Z7Z5kv75BMML2A1q@google.com/
-> > >     Note, this patch conflicts/contradicts:
-> > >     https://lore.kernel.org/lkml/20250312211623.2495798-1-irogers@goo=
-gle.com/
-> > >     that I posted so that we could either consistently prioritize
-> > >     sysfs/json (these patches) or legacy events (the other
-> > >     patches). That lack of event printing and encoding inconsistency
-> > >     is most prominent in the encoding of events like "instructions"
-> > >     which on hybrid are reported as "cpu_core/instructions/" but
-> > >     "instructions" before these patches gets a legacy encoding while
-> > >     "cpu_core/instructions/" gets a sysfs/json encoding. These patche=
-s
-> > >     make "instructions" always get a sysfs/json encoding while the
-> > >     alternate patches make it always get a legacy encoding.
-> > >
-> > > v5: Follow Namhyung's suggestion and ignore the case where command
-> > >     line dummy events fail to open alongside other events that all
-> > >     fail to open. Note, the Tested-by tags are left on the series as
-> > >     v4 and v5 were changing an error case that doesn't occur in
-> > >     testing but was manually tested by myself.
-> > >
-> > > v4: Rework the no events opening change from v3 to make it handle
-> > >     multiple dummy events. Sadly an evlist isn't empty if it just
-> > >     contains dummy events as the dummy event may be used with "perf
-> > >     record -e dummy .." as a way to determine whether permission
-> > >     issues exist. Other software events like cpu-clock would suffice
-> > >     for this, but the using dummy genie has left the bottle.
-> > >
-> > >     Another problem is that we appear to have an excessive number of
-> > >     dummy events added, for example, we can likely avoid a dummy even=
-t
-> > >     and add sideband data to the original event. For auxtrace more
-> > >     dummy events may be opened too. Anyway, this has led to the
-> > >     approach taken in patch 3 where the number of dummy parsed events
-> > >     is computed. If the number of removed/failing-to-open non-dummy
-> > >     events matches the number of non-dummy events then we want to
-> > >     fail, but only if there are no parsed dummy events or if there wa=
-s
-> > >     one then it must have opened. The math here is hard to read, but
-> > >     passes my manual testing.
-> > >
-> > > v3: Make no events opening for perf record a failure as suggested by
-> > >     James Clark and Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>. Also,
-> > >     rebase.
-> > >
-> > > v2: Rebase and add tested-by tags from James Clark, Leo Yan and Atish
-> > >     Patra who have tested on RISC-V and ARM CPUs, including the
-> > >     problem case from before.
-> >
-> > Ping. Thanks,
-> > Ian
-> >
-> > > Ian Rogers (4):
-> > >   perf record: Skip don't fail for events that don't open
-> > >   perf parse-events: Reapply "Prefer sysfs/JSON hardware events over
-> > >     legacy"
-> > >   perf parse-events: Allow software events to be terms
-> > >   perf perf_api_probe: Avoid scanning all PMUs, try software PMU firs=
-t
->
-> Sorry for the delay.  But I think we wanted to move to this instead:
->
-> https://lore.kernel.org/linux-perf-users/20250312211623.2495798-1-irogers=
-@google.com/
+Hi Linus,
 
-Hi Namhyung,
+The following changes since commit 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3:
 
-The preference for sysfs/json over legacy was done as a bug fix and
-because ARM (Mark Rutland) argued strongly that it was the most
-sensible priority. Intel (Kan Liang) approved the change in priority.
-RISC-V have wanted this behavior as it enables the migration of event
-mappings from the driver to the tool. As the primary maintainer of the
-event parsing and metric code I prefer the priority as legacy events
-are weird, for example they aren't case insensitive in their naming.
-For example, on Intel with legacy events as the priority cpu-cycles
-would be a legacy event, but cpu-Cyles a sysfs one. On ARM cpu_cycles
-would be a sysfs event, but cpu-cycles a legacy one. A minor character
-difference and very different and imo surprising event encodings.
+  Linux 6.15-rc6 (2025-05-11 14:54:11 -0700)
 
-On your RFC thread Arnaldo and James said that legacy events somehow
-enabled a form of drill down. As event parsing is mapping a name to a
-perf_event_attr I completely don't see this as the mapping is opaque.
+are available in the Git repository at:
 
-I strongly believe we need consistency. If `perf stat -e cycles .. `
-prints cpu_core/cycles/ as the event name on a hybrid Intel, then
-`perf stat -e cpu_core/cycles/ .. ` should have the same
-perf_event_attr. Both patch series achieve this but this one does it
-with consistency, and from what I see it, the support of 3 vendors.
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed-20250602
 
-Thanks,
-Ian
+for you to fetch changes up to 96959283a58d91ae20d025546f00e16f0a555208:
 
-> Thanks,
-> Namhyung
->
-> > >
-> > >  tools/perf/builtin-record.c      | 63 +++++++++++++++++++---
-> > >  tools/perf/util/parse-events.c   | 47 +++++++++++++----
-> > >  tools/perf/util/parse-events.h   |  3 +-
-> > >  tools/perf/util/parse-events.l   | 90 ++++++++++++++++++------------=
---
-> > >  tools/perf/util/parse-events.y   | 85 ++++++++++++++++++++++--------
-> > >  tools/perf/util/perf_api_probe.c | 27 +++++++---
-> > >  tools/perf/util/pmu.c            |  9 ++--
-> > >  7 files changed, 235 insertions(+), 89 deletions(-)
-> > >
-> > > --
-> > > 2.49.0.777.g153de2bbd5-goog
-> > >
+  Drivers: hv: Always select CONFIG_SYSFB for Hyper-V guests (2025-05-23 16:39:37 +0000)
+
+You will see a conflict when you merge this tag. A resolution can be
+found here:
+
+   https://lore.kernel.org/linux-next/20250515181414.354d8ef7@canb.auug.org.au/
+
+----------------------------------------------------------------
+hyperv-next for v6.16
+  - Support for Virtual Trust Level (VTL) on arm64 (Roman Kisel)
+  - Fixes for Hyper-V UIO driver (Long Li)
+  - Fixes for Hyper-V PCI driver (Michael Kelley)
+  - Select CONFIG_SYSFB for Hyper-V guests (Michael Kelley)
+  - Documentation updates for Hyper-V VMBus (Michael Kelley)
+  - Enhance logging for hv_kvp_daemon (Shradha Gupta)
+----------------------------------------------------------------
+Long Li (5):
+      Drivers: hv: Allocate interrupt and monitor pages aligned to system page boundary
+      uio_hv_generic: Use correct size for interrupt and monitor pages
+      uio_hv_generic: Align ring size to system page
+      Drivers: hv: Use kzalloc for panic page allocation
+      Drivers: hv: Remove hv_alloc/free_* helpers
+
+Michael Kelley (4):
+      PCI: hv: Remove unnecessary flex array in struct pci_packet
+      Documentation: hyperv: Update VMBus doc with new features and info
+      Drivers: hv: vmbus: Add comments about races with "channels" sysfs dir
+      Drivers: hv: Always select CONFIG_SYSFB for Hyper-V guests
+
+Roman Kisel (13):
+      arm64: kvm, smccc: Introduce and use API for getting hypervisor UUID
+      arm64: hyperv: Use SMCCC to detect hypervisor presence
+      Drivers: hv: Enable VTL mode for arm64
+      Drivers: hv: Provide arch-neutral implementation of get_vtl()
+      arm64: hyperv: Initialize the Virtual Trust Level field
+      arm64, x86: hyperv: Report the VTL the system boots in
+      dt-bindings: microsoft,vmbus: Add interrupt and DMA coherence properties
+      Drivers: hv: vmbus: Get the IRQ number from DeviceTree
+      Drivers: hv: vmbus: Introduce hv_get_vmbus_root_device()
+      ACPI: irq: Introduce acpi_get_gsi_dispatcher()
+      PCI: hv: Get vPCI MSI IRQ domain from DeviceTree
+      x86/hyperv: Fix APIC ID and VP index confusion in hv_snp_boot_ap()
+      arch/x86: Provide the CPU number in the wakeup AP callback
+
+Shradha Gupta (1):
+      tools: hv: Enable debug logs for hv_kvp_daemon
+
+ .../devicetree/bindings/bus/microsoft,vmbus.yaml   | 16 +++-
+ Documentation/virt/hyperv/vmbus.rst                | 28 +++++-
+ arch/arm64/hyperv/mshyperv.c                       | 53 ++++++++++--
+ arch/arm64/kvm/hypercalls.c                        | 10 ++-
+ arch/x86/coco/sev/core.c                           | 13 +--
+ arch/x86/hyperv/hv_init.c                          | 67 ++++++++-------
+ arch/x86/hyperv/hv_vtl.c                           | 61 +++----------
+ arch/x86/hyperv/ivm.c                              | 11 ++-
+ arch/x86/include/asm/apic.h                        |  8 +-
+ arch/x86/include/asm/mshyperv.h                    |  7 +-
+ arch/x86/kernel/acpi/madt_wakeup.c                 |  2 +-
+ arch/x86/kernel/apic/apic_noop.c                   |  8 +-
+ arch/x86/kernel/apic/apic_numachip.c               |  2 +-
+ arch/x86/kernel/apic/x2apic_uv_x.c                 |  2 +-
+ arch/x86/kernel/smpboot.c                          | 10 +--
+ drivers/acpi/irq.c                                 | 16 +++-
+ drivers/firmware/smccc/kvm_guest.c                 | 10 +--
+ drivers/firmware/smccc/smccc.c                     | 17 ++++
+ drivers/hv/Kconfig                                 |  7 +-
+ drivers/hv/connection.c                            | 23 +++--
+ drivers/hv/hv_common.c                             | 76 ++++++++---------
+ drivers/hv/vmbus_drv.c                             | 95 ++++++++++++++++++---
+ drivers/pci/controller/pci-hyperv.c                | 99 +++++++++++++++++-----
+ drivers/uio/uio_hv_generic.c                       |  7 +-
+ include/asm-generic/mshyperv.h                     | 10 ++-
+ include/hyperv/hvgdk_mini.h                        |  4 +-
+ include/linux/acpi.h                               |  5 +-
+ include/linux/arm-smccc.h                          | 64 +++++++++++++-
+ include/linux/hyperv.h                             |  2 +
+ tools/hv/hv_kvp_daemon.c                           | 64 ++++++++++++--
+ 30 files changed, 562 insertions(+), 235 deletions(-)
