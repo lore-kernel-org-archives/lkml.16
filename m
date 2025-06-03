@@ -1,135 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp-190a.mail.infomaniak.ch (smtp-190a.mail.infomaniak.ch [185.125.25.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB982040B6;
-	Tue,  3 Jun 2025 13:43:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A58AA26290
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 13:46:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748958232; cv=none; b=i6vzRtm8Gujqa0NNhnt+3AAhHOOpFToR/LicL9mjdkpR3vTT0KFlIqreutRHGFO33qedQcT+710s6HaKfKJHz+HN4aGrq3ky+dBt4uYjsrUoIIbvsfd4kLrfglaWb2gKoA8E1fHcF5wozli4FnRq0QIu1XhuGIeL5+nk28+24Fs=
+	t=1748958375; cv=none; b=ntuo2Qb4M2aEEKPwFPzYTdnistoDlmPL2HmTd08p6moSUog0zRAhWjLf5O6jwCGnKFdWmoSHfzx3qszUE9lX4tkPpIJs1i2AOu7mf90cEpmMXwiwweeEYu8lxmA4BrRlFjFIgoMsMs1W/mgtxde5fZBzEdtHARo+UUbMpBGlL34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748958232; c=relaxed/simple;
-	bh=O/9vgjzrltqM0RlHHMSySJpGp65xGYUrOzaYg0fKtq8=;
+	s=arc-20240116; t=1748958375; c=relaxed/simple;
+	bh=1b8DspUyz9OW+fbjvbxpYBzRCKsiS+bnCshxo8k2YQ4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZTVn/a7ltRX1IYoSKQwzi+g+7YZy7euIMsSe5BE35ipVSJsQoAFdjFbeiR3jXB8HBSzqBha09cmgzzokYM2ZsclAef2zlvNtTgdxePCezDhkuJJMLqzztHAV8v0B9qiErdGNKFt++jBtSF3DhQxrLk4sqsgVDDddOJrqi+kQzw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: ECmCQW5wS5uoVJQonQgH6g==
-X-CSE-MsgGUID: tu5OPRmkQUyE3n7cpo7qWQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="51098931"
-X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
-   d="scan'208";a="51098931"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 06:43:50 -0700
-X-CSE-ConnectionGUID: DRkJL9YPQ3+fRf/gD69gjA==
-X-CSE-MsgGUID: o778+cpFTR2J40dlstcPfQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
-   d="scan'208";a="144838262"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 06:43:46 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1uMRva-00000003HZk-3B1J;
-	Tue, 03 Jun 2025 16:43:42 +0300
-Date: Tue, 3 Jun 2025 16:43:42 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ana-Maria Cusco <ana-maria.cusco@analog.com>, jic23@kernel.org,
-	lars@metafoo.de, Michael.Hennerich@analog.com,
-	dlechner@baylibre.com, nuno.sa@analog.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
-	brgl@bgdev.pl
-Subject: Re: [PATCH v4 02/11] iio: adc: Add basic support for AD4170
-Message-ID: <aD78Di51VHxtOtJG@smile.fi.intel.com>
-References: <cover.1748829860.git.marcelo.schmitt@analog.com>
- <e79f9a126672b33b8a7c01f650fee43a68c74029.1748829860.git.marcelo.schmitt@analog.com>
- <aD27cobHWeBX8o30@smile.fi.intel.com>
- <aD3XQfUfxIiz62ZU@debian-BULLSEYE-live-builder-AMD64>
- <aD6x2caTMd1eBInM@smile.fi.intel.com>
- <aD7kcFupREh4lW0s@debian-BULLSEYE-live-builder-AMD64>
+	 Content-Type:Content-Disposition:In-Reply-To; b=qQA2r6b5Ynd6RNR2pUEbNzjEdYBi7RwyjBk2VD2Z2o4v8qscDIa3e6agP/7R0ccqVOhanJINqiRYmgu7kJ4xdxjdob3SuFpn/wUWQc2dA0kkTyljbngAKj5t8LADrsOzrfY5ApR9tywXZLetCyex2pxFbQlmJrIWVoJHIBUctRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=ZpTsnApp; arc=none smtp.client-ip=185.125.25.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="ZpTsnApp"
+Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bBX6g68h8zsWd;
+	Tue,  3 Jun 2025 15:46:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1748958363;
+	bh=KAWPoC9zvEPauaI6cyydJqYESbKFRZuHC+VAaZx5WOQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZpTsnApp49R+bNOiE6dP1hnLqDaxZAaNt6CdHZqRInjWyzOCgcN8BV3jRefow07O/
+	 IPu0YHtePqzbVKozWgi6MIIW9lTy6Av+xMYRgXrcqG+tmBEQqtoV7jTuE8XIjfKWUy
+	 VLA+gISFSvWnRABg3tBG6DJZF0hoRATTfpuHNrX4=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4bBX6f47pWzJxJ;
+	Tue,  3 Jun 2025 15:46:02 +0200 (CEST)
+Date: Tue, 3 Jun 2025 15:46:01 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Song Liu <song@kernel.org>
+Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, kernel-team@meta.com, 
+	andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, daniel@iogearbox.net, 
+	martin.lau@linux.dev, viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
+	kpsingh@kernel.org, mattbobrowski@google.com, amir73il@gmail.com, repnop@google.com, 
+	jlayton@kernel.org, josef@toxicpanda.com, gnoack@google.com, m@maowtm.org
+Subject: Re: [PATCH v2 bpf-next 2/4] landlock: Use path_walk_parent()
+Message-ID: <20250603.Av6paek5saes@digikod.net>
+References: <20250603065920.3404510-1-song@kernel.org>
+ <20250603065920.3404510-3-song@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aD7kcFupREh4lW0s@debian-BULLSEYE-live-builder-AMD64>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250603065920.3404510-3-song@kernel.org>
+X-Infomaniak-Routing: alpha
 
-On Tue, Jun 03, 2025 at 09:02:56AM -0300, Marcelo Schmitt wrote:
-> On 06/03, Andy Shevchenko wrote:
-> > On Mon, Jun 02, 2025 at 01:54:25PM -0300, Marcelo Schmitt wrote:
+Landlock tests with hostfs fail:
 
-...
+ok 126 layout3_fs.hostfs.tag_inode_file
+#  RUN           layout3_fs.hostfs.release_inodes ...
+# fs_test.c:5555:release_inodes:Expected EACCES (13) == test_open(TMP_DIR, O_RDONLY) (0)
 
-> > > > > +static bool ad4170_setup_eq(struct ad4170_setup *a, struct ad4170_setup *b)
-> > > > > +{
-> > > > > +	/*
-> > > > > +	 * The use of static_assert() here is to make sure that the comparison
-> > > > > +	 * is adapted whenever struct ad4170_setup is changed.
-> > > > > +	 */
-> Does the reason given in the comment justify the use of static_assert?
+This specific test checks that an access to a (denied) mount point over
+an allowed directory is indeed denied.
 
-Should I repeat myself? It makes a little sense when no memcmp() is involved.
+It's not clear to me the origin of the issue, but it seems to be related
+to choose_mountpoint().
 
-> > > > > +	static_assert(sizeof(*a) ==
-> > > > > +		      sizeof(struct {
-> > > > > +				     u16 misc;
-> > > > > +				     u16 afe;
-> > > > > +				     u16 filter;
-> > > > > +				     u16 filter_fs;
-> > > > > +				     u32 offset;
-> > > > > +				     u32 gain;
-> > > > > +			     }));
-> > > > 
-> > > > I think it doesn't make much sense unless one uses memcpy().
-> > > 
-> > > memcpy() is used to update the setups after reg write succeeds.
-> > > Also, previously, memcmp() was used to compare setups.
-> > > Since struct ad4170_setup has only unsigned integers (no floating point fields
-> > > like ad7124 had [1]), ad4170 works properly when comparing setups with memcmp().
-> > > Though, it was asked to do explicit field matching on previous reviews [2] so
-> > > that's how it had been since then. Well, both ways work for ad4170. We can
-> > > compare setup with memcmp(), or do the comparison field by field. I don't mind
-> > > changing it again if requested. I guess we only need to reach an agreement about
-> > > what to go with.
-> > 
-> > The question was "why do you need the static_assert() now?"
+You can run these tests with `check-linux.sh build kselftest` from
+https://github.com/landlock-lsm/landlock-test-tools
+
+Just in case, please always run clang-format -i security/landlock/*.[ch]
+
+
+On Mon, Jun 02, 2025 at 11:59:18PM -0700, Song Liu wrote:
+> Use path_walk_parent() to walk a path up to its parent.
 > 
-> To ensure that the comparison function gets updated if struct ad4170_setup is
-> ever modified? This intends to be similar to what was implemented in ad7124
-> driver as the chips have similar channel configuration mechanisms. We also
-> have ad7173 and ad4130 using static_assert for analogous purpose. There was
-> also a comment about static_assert above.
+> No functional changes intended.
+> 
+> Signed-off-by: Song Liu <song@kernel.org>
+> ---
+>  security/landlock/fs.c | 31 ++++++++++---------------------
+>  1 file changed, 10 insertions(+), 21 deletions(-)
+> 
+> diff --git a/security/landlock/fs.c b/security/landlock/fs.c
+> index 6fee7c20f64d..3adac544dc9e 100644
+> --- a/security/landlock/fs.c
+> +++ b/security/landlock/fs.c
+> @@ -837,8 +837,8 @@ static bool is_access_to_paths_allowed(
+>  	 * restriction.
+>  	 */
+>  	while (true) {
+> -		struct dentry *parent_dentry;
+>  		const struct landlock_rule *rule;
+> +		struct path root = {};
+>  
+>  		/*
+>  		 * If at least all accesses allowed on the destination are
+> @@ -895,34 +895,23 @@ static bool is_access_to_paths_allowed(
+>  		/* Stops when a rule from each layer grants access. */
+>  		if (allowed_parent1 && allowed_parent2)
+>  			break;
+> -jump_up:
+> -		if (walker_path.dentry == walker_path.mnt->mnt_root) {
+> -			if (follow_up(&walker_path)) {
+> -				/* Ignores hidden mount points. */
+> -				goto jump_up;
+> -			} else {
+> -				/*
+> -				 * Stops at the real root.  Denies access
+> -				 * because not all layers have granted access.
+> -				 */
+> -				break;
+> -			}
+> -		}
+> +
+> +		if (path_walk_parent(&walker_path, &root))
+> +			continue;
 
-Does this won;t work if you changes field types? (Assuming only integers to
-integers) I believe it doesn't affect the field-by-field comparison.
+It would be better to avoid a "continue" statement but to just use an if
+block.
 
-The other drivers may have different approach, have you studied them? Do they
-use memcmp()
-
-> > > [1]: https://lore.kernel.org/all/20250303114659.1672695-13-u.kleine-koenig@baylibre.com/
-> > > [2]: https://lore.kernel.org/linux-iio/20250504192117.5e19f44b@jic23-huawei/
-> > > 
-> > > > > +	if (a->misc != b->misc ||
-> > > > > +	    a->afe != b->afe ||
-> > > > > +	    a->filter != b->filter ||
-> > > > > +	    a->filter_fs != b->filter_fs ||
-> > > > > +	    a->offset != b->offset ||
-> > > > > +	    a->gain != b->gain)
-> > > > > +		return false;
-> > > > > +
-> > > > > +	return true;
-> > > > > +}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> +
+>  		if (unlikely(IS_ROOT(walker_path.dentry))) {
+>  			/*
+> -			 * Stops at disconnected root directories.  Only allows
+> -			 * access to internal filesystems (e.g. nsfs, which is
+> -			 * reachable through /proc/<pid>/ns/<namespace>).
+> +			 * Stops at disconnected or real root directories.
+> +			 * Only allows access to internal filesystems
+> +			 * (e.g. nsfs, which is reachable through
+> +			 * /proc/<pid>/ns/<namespace>).
+>  			 */
+>  			if (walker_path.mnt->mnt_flags & MNT_INTERNAL) {
+>  				allowed_parent1 = true;
+>  				allowed_parent2 = true;
+>  			}
+> -			break;
+>  		}
+> -		parent_dentry = dget_parent(walker_path.dentry);
+> -		dput(walker_path.dentry);
+> -		walker_path.dentry = parent_dentry;
+> +		break;
+>  	}
+>  	path_put(&walker_path);
+>  
+> -- 
+> 2.47.1
+> 
+> 
