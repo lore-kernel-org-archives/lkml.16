@@ -1,151 +1,131 @@
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44DC71422DD;
-	Tue,  3 Jun 2025 14:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5B116F265;
+	Tue,  3 Jun 2025 14:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748960575; cv=none; b=PTgpc5bAUEPO8ZON26VNqe1OZaPBUnHi5i4bb4bxMG3V1URIiOyAaXGF8jaVRLpXP2rAOrqSYbwWXuXKZO3ekiis8/2yS7ewU9W8KO1XR+lDwcfSSSDcsyR3RxG9nqeq5ZkIuQqYUA4wughyAX8Jy260KULgzRJO0OraNw4LBWY=
+	t=1748960593; cv=none; b=JDcENl7rU9oissRLnDGsjRXKlmbqcYXBGutpYu7YGhqwldPYOZ+HkEiRsOwhJRUrnwxhDch7os8mhkhJguFMpgwQJuHSYrnQf/XOeW6vqYZEEjc4k5I5BnZVR6m9PcUAHWNv/nqa8Jsww5crTVCnghSReZPIj8QboFZoyrgsMc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748960575; c=relaxed/simple;
-	bh=k5kiH4wTvEIM+F+KJEkPN+o3gWZR/XkDPUA8tjO2p6c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BCxHhgfnubuOD/9JfxNfH+kDxCxu5k5g2AnL56oe2sjQmYsE25vM/k2oxYWrR3qNtInPtfWsCF/nS74x4PBOUFL1nhtdTD4aRVRtr+jCM8GMqrNQtDVsyAZmJnU+GonNqJtw5TYWdHCTPS/cKV3ejxXDO8bASjRWt6EgZwwIi8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=mdpV9532; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1748960593; c=relaxed/simple;
+	bh=NlWl7a3wFvZKvfFyfM6OWivl5MZ1iDz04JjQdHs6kQ0=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=bg0/dZHlKHLFYOFSQFiylES90VNAoVlDDPprBbw0f9AOqmBNePWWVDPV772oSvvQ57x4Ox3FaDkOYT5iNdyp120B1AmpGQWA+kVk+V3+EKQizrclxMl0SCM6yygKIUkUVXToxAFrzphlTHyYvk2BIOL3pxfdvV2q+KT6edtwWT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U5thkw33; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="mdpV9532"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1748960569; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=z5whc9aSlFZxs7dFMWRsS/E387L/NZNDlo8XTMs/rWM=;
-	b=mdpV9532wz2KJgrLr7vIJgnoV8LxqIoU9hXNzJx4oSJM44HTGSUtB5Ctpwtp9BXltMXqo3YikDTpDMmcE02W+4v6ijw0Y/e3Ao2tKaxvWajcCmqWabsjEwK6ZqQf6IYTB/Sh0r65+KHdfpTl6pIWeUn4dHzQLzDb1BG+8t42KZw=
-Received: from 30.171.150.78(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WcvLrj1_1748960566 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 03 Jun 2025 22:22:47 +0800
-Message-ID: <7307bb7a-7c45-43f7-b073-acd9e1389000@linux.alibaba.com>
-Date: Tue, 3 Jun 2025 22:22:46 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U5thkw33"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748960592; x=1780496592;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=NlWl7a3wFvZKvfFyfM6OWivl5MZ1iDz04JjQdHs6kQ0=;
+  b=U5thkw33EsQ/WLnjD3DYmHlkAXUApYjM+ccFgp6Qz3kFLaiJr4KRimCz
+   nnh3r/G3QRftEwZl38EOjqyjBfHekDaGA0ki4h3ccsr6Ovk3PG+3DxzNf
+   PFHxHi4gVxK7sLGQ3UfgCy9b2zcjWMkjGp2m9nkrGsZVtSIYUMRl25ren
+   OM9CAuCY9iZv3ilaL15gfRoEuRfXL4t+qyZKAJWE7/tEbU6gEa6RFIyUE
+   x68R7YMhBEfqSnGWo1P/TQl/pltiyFAbHcoVQrVNTyedgz8kiR/HPgQM+
+   Z9BgciOUduuPUs7Vv5VfetcvNGj2kO4w9M5esnM8LXUQS1IRXzBzlSNMZ
+   A==;
+X-CSE-ConnectionGUID: 31D6/OZqQ9uuc5G2Z4uSsw==
+X-CSE-MsgGUID: KXu8NOYtS9WYa6TOudcnCg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="54662928"
+X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
+   d="scan'208";a="54662928"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 07:23:11 -0700
+X-CSE-ConnectionGUID: Jr+EHcFaRsyguEqjY01W/Q==
+X-CSE-MsgGUID: gjiUFl1USyCleeRHXFixzQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
+   d="scan'208";a="145836666"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.141])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 07:23:07 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 3 Jun 2025 17:23:04 +0300 (EEST)
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+    =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>, 
+    Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    William McVicker <willmcvicker@google.com>
+Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
+ in sync
+In-Reply-To: <a4a5855c-6d58-4fc5-85d7-4727d27efbe0@linaro.org>
+Message-ID: <e0833d0d-cf1c-b036-c9f4-d27b933330f0@linux.intel.com>
+References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com> <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com> <5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org> <8f281667-b4ef-9385-868f-93893b9d6611@linux.intel.com> <3a47fc82-dc21-46c3-873d-68e713304af3@linaro.org>
+ <f6ee05f7-174b-76d4-3dbe-12473f676e4d@linux.intel.com> <867e47dc-9454-c00f-6d80-9718e5705480@linux.intel.com> <a56284a4-755d-4eb4-ba77-9ea30e18d08f@linaro.org> <7e882cfb-a35a-bab0-c333-76a4e79243b6@linux.intel.com> <f2d149c6-41a4-4a9a-9739-1ea1c4b06f4b@linaro.org>
+ <19ccc09c-1d6b-930e-6ed6-398b34020ca1@linux.intel.com> <c1c0bacd-7842-4e9e-aec4-66eb481aa43f@linaro.org> <f8f15489-8b31-4672-9fb9-161c7c4599dc@linaro.org> <a4a5855c-6d58-4fc5-85d7-4727d27efbe0@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm: fix the inaccurate memory statistics issue for users
-To: Michal Hocko <mhocko@suse.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, david@redhat.com,
- shakeel.butt@linux.dev, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
- vbabka@suse.cz, rppt@kernel.org, surenb@google.com, donettom@linux.ibm.com,
- aboorvad@linux.ibm.com, sj@kernel.org, linux-mm@kvack.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <4f0fd51eb4f48c1a34226456b7a8b4ebff11bf72.1748051851.git.baolin.wang@linux.alibaba.com>
- <20250529205313.a1285b431bbec2c54d80266d@linux-foundation.org>
- <aDm1GCV8yToFG1cq@tiehlicka>
- <72f0dc8c-def3-447c-b54e-c390705f8c26@linux.alibaba.com>
- <aD6vHzRhwyTxBqcl@tiehlicka>
- <ef2c9e13-cb38-4447-b595-f461f3f25432@linux.alibaba.com>
- <aD7OM5Mrg5jnEnBc@tiehlicka>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <aD7OM5Mrg5jnEnBc@tiehlicka>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; BOUNDARY="8323328-643506472-1748960221=:937"
+Content-ID: <9240f5a8-bfe9-8fb6-c912-f3d6e2108718@linux.intel.com>
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
+--8323328-643506472-1748960221=:937
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <d97beb54-0e1e-84fe-90fe-278100d12192@linux.intel.com>
 
-On 2025/6/3 18:28, Michal Hocko wrote:
-> On Tue 03-06-25 16:32:35, Baolin Wang wrote:
->>
->>
->> On 2025/6/3 16:15, Michal Hocko wrote:
->>> On Tue 03-06-25 16:08:21, Baolin Wang wrote:
->>>>
->>>>
->>>> On 2025/5/30 21:39, Michal Hocko wrote:
->>>>> On Thu 29-05-25 20:53:13, Andrew Morton wrote:
->>>>>> On Sat, 24 May 2025 09:59:53 +0800 Baolin Wang <baolin.wang@linux.alibaba.com> wrote:
->>>>>>
->>>>>>> On some large machines with a high number of CPUs running a 64K pagesize
->>>>>>> kernel, we found that the 'RES' field is always 0 displayed by the top
->>>>>>> command for some processes, which will cause a lot of confusion for users.
->>>>>>>
->>>>>>>        PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
->>>>>>>     875525 root      20   0   12480      0      0 R   0.3   0.0   0:00.08 top
->>>>>>>          1 root      20   0  172800      0      0 S   0.0   0.0   0:04.52 systemd
->>>>>>>
->>>>>>> The main reason is that the batch size of the percpu counter is quite large
->>>>>>> on these machines, caching a significant percpu value, since converting mm's
->>>>>>> rss stats into percpu_counter by commit f1a7941243c1 ("mm: convert mm's rss
->>>>>>> stats into percpu_counter"). Intuitively, the batch number should be optimized,
->>>>>>> but on some paths, performance may take precedence over statistical accuracy.
->>>>>>> Therefore, introducing a new interface to add the percpu statistical count
->>>>>>> and display it to users, which can remove the confusion. In addition, this
->>>>>>> change is not expected to be on a performance-critical path, so the modification
->>>>>>> should be acceptable.
->>>>>>>
->>>>>>> Fixes: f1a7941243c1 ("mm: convert mm's rss stats into percpu_counter")
->>>>>>
->>>>>> Three years ago.
->>>>>>
->>>>>>> Tested-by Donet Tom <donettom@linux.ibm.com>
->>>>>>> Reviewed-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
->>>>>>> Tested-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
->>>>>>> Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
->>>>>>> Acked-by: SeongJae Park <sj@kernel.org>
->>>>>>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
->>>>>>
->>>>>> Thanks, I added cc:stable to this.
->>>>>
->>>>> I have only noticed this new posting now. I do not think this is a
->>>>> stable material. I am also not convinced that the impact of the pcp lock
->>>>> exposure to the userspace has been properly analyzed and documented in
->>>>> the changelog. I am not nacking the patch (yet) but I would like to see
->>>>> a serious analyses that this has been properly thought through.
->>>>
->>>> Good point. I did a quick measurement on my 32 cores Arm machine. I ran two
->>>> workloads, one is the 'top' command: top -d 1 (updating every second).
->>>> Another workload is kernel building (time make -j32).
->>>>
->>>>   From the following data, I did not see any significant impact of the patch
->>>> changes on the execution of the kernel building workload.
->>>
->>> I do not think this is really representative of an adverse workload. I
->>> believe you need to have a look which potentially sensitive kernel code
->>> paths run with the lock held how would a busy loop over affected proc
->>> files influence those in the worst case. Maybe there are none of such
->>> kernel code paths to really worry about. This should be a part of the
->>> changelog though.
->>
->> IMO, kernel code paths usually have batch caching to avoid lock contention,
->> so I think the impact on kernel code paths is not that obvious.
-> 
-> This is a very generic statement. Does this refer to the existing pcp
-> locking usage in the kernel? Have you evaluated existing users?
+On Tue, 3 Jun 2025, Tudor Ambarus wrote:
+> On 6/3/25 11:48 AM, Tudor Ambarus wrote:
+> > On 6/3/25 11:36 AM, Tudor Ambarus wrote:
+> >> On 6/3/25 9:13 AM, Ilpo J=E4rvinen wrote:
+> >>> So please test if this patch solves your problem:
+> >>
+> >> It fails in a different way, the bridge window resource never gets
+> >> assigned with the proposed patch.
+> >>
+> >> With the patch applied: https://termbin.com/h3w0
+> >=20
+> > above is no revert and with the proposed fix. It also contains the
+> > prints https://termbin.com/g4zn
+> >=20
+> > It seems the prints in pbus_size_mem are not longer hit, likely because
+> > of the new condition added: ``!pdev_resources_assignable(dev) ||``,
+> > pci_dev_for_each_resource() finishes without doing anything.
+> >=20
+> >> With the blamed commit reverted: https://termbin.com/3rh6
+> >=20
+>=20
+> I think I found the inconsistency.
+>=20
+> __pci_bus_assign_resources()
+> =09pbus_assign_resources_sorted()
+> =09=09pdev_sort_resources(dev, &head);
+>=20
+> But pdev_sort_resources() is called with a newly LIST_HEAD(head), not
+> with realloc_head, thus the resources never get sorted.
 
-Let me try to clarify further.
+pdev_sort_resources() is not supposed to add resources into realloc_head=20
+but just collects all the relevant resources in the descending order by
+size.
 
-The 'mm->rss_stat' is updated by using add_mm_counter(), 
-dec/inc_mm_counter(), which are all wrappers around 
-percpu_counter_add_batch(). In percpu_counter_add_batch(), there is 
-percpu batch caching to avoid 'fbc->lock' contention. This patch changes 
-task_mem() and task_statm() to get the accurate mm counters under the 
-'fbc->lock', but this will not exacerbate kernel 'mm->rss_stat' lock 
-contention due to the the percpu batch caching of the mm counters.
+There are two main lists here. The head list contains all relevant=20
+resources we're going to process and realloc_head keeps track which of=20
+them are optional (or optional in part, that is, some resources have the=20
+base size and the optional size).
 
-You might argue that my test cases cannot demonstrate an actual lock 
-contention, but they have already shown that there is no significant 
-'fbc->lock' contention when the kernel updates 'mm->rss_stat'.
+__assign_resources_sorted() will apply the optional sizes from=20
+realloc_head and re-sorts the head list while changing the sizes.
+If not all resources can be assigned, rollback happens and base sizes are=
+=20
+assigned first, and then reassign_resources_sorted() handles the=20
+realloc_head ones afterwards for as many resources as possible.
 
->> Therefore, I
->> also think it's hard to find an adverse workload.
->>
->> How about adding the following comments in the commit log?
->> "
->> I did a quick measurement on my 32 cores Arm machine. I ran two workloads,
->> one is the 'top' command: top -d 1 (updating every second). Another workload
->> is kernel building (time make -j32).
-> 
-> This test doesn't really do much to trigger an actual lock contention as
-> already mentioned.
-> 
+> pdev_sort_resources() exits early at
+> =09``if (!pdev_resources_assignable(dev))``
+
+Yes it does, for 0001:01:00.0.
+
+--=20
+ i.
+--8323328-643506472-1748960221=:937--
