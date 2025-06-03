@@ -1,156 +1,113 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCAF2F32;
-	Tue,  3 Jun 2025 02:26:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6C6156C6F
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 02:26:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748917574; cv=none; b=A4qXOjkJ9WStUJpSUOn8ElbetENNIH0IQ4yUCDgG+spKqwJlHqBzLRHpxnqWdIhtPKEd5n1u1HsDBH9hCkDutAUT2hekUozacs4OfmhXMrNnduzn2OOCDYn6qroxqtHtvEd/TTpLXlJCRIhG2N88y5BOoRWbYMQxTUdLSXre+z4=
+	t=1748917603; cv=none; b=NsI/fpT2zWLy9sf58rXi9c5rZiD1J8udI8qh9PItEm5k7IgKcPif2T2678x9jQxPNDphU50Gc2Ux4u0KyYATuKn+C6U/FC1SSKFFZFKEdEGDrQiL9j0kx9JM7EL8qyYQtJl7Zd+XEqV609MAnMsgtnV2U0rECCmSJ3eC+icYKUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748917574; c=relaxed/simple;
-	bh=Io0+bEqEUTccIkE7WKV5wh8RD2PGXRuYSPuBXx56ZWk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=iO60fJ7VrhCV6+2CAbu1oOtJU82PlfP938GTzlUpIHk4SORcMa/BcQf31E1MxwW0RWM3OBRV3gEumQHY4MK2b2d/H2VJEE/8NkUjjS/HoGBm/8ddFH44eRtAFAqHSerTonK2dxcPkOazKm0VID3MUlDSI89WaW6qYFOKpAPZ+Uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GQpxs7X0; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1748917603; c=relaxed/simple;
+	bh=DJNpaCYN99DDdvRroDw++pPvD0MyuXveLEGneTy/6pg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aPdikgt08RDQE+9IBAGMSN0PhZiuV/kzJihbESoYkNUYzfDtym+i6g4xO83Q6CbI04+4x/TcjmAER0W0yt/opzPOrPGT5lYECKdiFHCMx1bVYOVOwA0Qs6pLmOrKrTrsfmxBU2m6LKV+fqY4uYwr/R12wykfv9kz2bsqYL/BmBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uzvl8BsO; arc=none smtp.client-ip=91.218.175.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GQpxs7X0"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 552HKV1s012543;
-	Tue, 3 Jun 2025 02:26:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=Vj1k61r/rKkCnbDgTyGOAr
-	yQPdF7b2vebfxYw9m7RGo=; b=GQpxs7X0h87cRA9GhtgdfgyLyzDOPywYM38P2r
-	FUf8WIJWekiqJmgRl3Yjv9pEWomA64TMl/yC2dYamijX0t8wyiptdzmv2LSTUEw6
-	32gkcfjBUfbgtLXEQxJeWBPy5Bc2Hf9wgpjB+pQy3q6BjdFT5TX5LcZ9W9qANUZG
-	LVek7nwAFj2NFZKkJ/bzN5QJAysVzPahZxXpCKIXsBQo9U8FMldOUDjLhCDc64pP
-	eQH5fpuYwn4xwYtamm8SzPAjYsF/X6e9o39YgUx4fJQm2kZQI4soHoQaVXxJMV7+
-	UZZSQVvlUQfU7PzkxxR4u6p1RR0riykKFqpMSmXNQTHCAQ2g==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8ss29f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Jun 2025 02:26:06 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5532Q6Oo019045
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 3 Jun 2025 02:26:06 GMT
-Received: from [127.0.1.1] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 2 Jun 2025
- 19:26:04 -0700
-From: Baochen Qiang <quic_bqiang@quicinc.com>
-Date: Tue, 3 Jun 2025 10:25:28 +0800
-Subject: [PATCH ath-next] wifi: ath11k: fix sleeping-in-atomic in
- ath11k_mac_op_set_bitrate_mask()
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uzvl8BsO"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748917589;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=n2aIttrPb9jb8L7NVw+rKsf4ICOcHaTq+bTFXuazTtY=;
+	b=uzvl8BsOdgdYl/BcHMLn+gjQfXLYqPR2IVx5i63PxKVmfs6fYGrQAiS1qyW9y904cbQvHf
+	S/P3hOe+qaDGc0GgQfCaHlflSX7Vh85154XQoBjl5EU2s0PBgjqtxv/E2ry0tMSSsbEmL0
+	rZQzBA3Kr8ILOhFb/xboDiyUt+rqTsg=
+From: Tao Chen <chen.dylane@linux.dev>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	qmo@kernel.org,
+	jolsa@kernel.org
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tao Chen <chen.dylane@linux.dev>
+Subject: [PATCH bpf-next v2 1/3] bpf: Add cookie to raw_tp bpf_link_info
+Date: Tue,  3 Jun 2025 10:26:08 +0800
+Message-Id: <20250603022610.3005963-1-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250603-ath11k-use-non-atomic-iterator-v1-1-d75762068d56@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIABddPmgC/5XNQQ6CMBAF0KuYrh3TFinUlfcwLmgZZGJotQWiM
- dzdCUvd6G5+Jv/9l8iYCLM4bF4i4UyZYuCgthvh+yZcEKjlLLTUpSwLCc3YK3WFKSOEGDjGgTz
- QiInPBK62lbRt6bt9LRi5JezosQ6cBHch4GMUZ/70lLnwXJdntf5/HZkVKDDWKYMNSpT6eJ/IU
- /A7H4cVn/V/oGZw3zrjnTSIpvwGi//AgsHCVbarKqtb9QEuy/IG+v6SIXoBAAA=
-X-Change-ID: 20250530-ath11k-use-non-atomic-iterator-b89709d5cf48
-To: Jeff Johnson <jjohnson@kernel.org>
-CC: <linux-wireless@vger.kernel.org>, <ath11k@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Baochen Qiang <quic_bqiang@quicinc.com>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: yEYEXMIcVbDkkv04F8yM7rgx7GQ3DfxV
-X-Authority-Analysis: v=2.4 cv=EPcG00ZC c=1 sm=1 tr=0 ts=683e5d3f cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=VvPa7mMQmCZPogn7yUkA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: yEYEXMIcVbDkkv04F8yM7rgx7GQ3DfxV
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAzMDAyMCBTYWx0ZWRfXxap40OA2TFd1
- k/uf2ZEgQfIRk+yrWykL9UBgGAqF648o8eecLgWZUjYsPQ59Af4Kj9GY7NCnSzMSgHLoxW1BZVJ
- 64PEpYcR8RpvCt78HLllMZTVeOZf3Rrdg5Z5aslUjM+gpC3YH46PXAnROldCZYlQxUtgdEFSvVN
- E4ANr9AaZ888dHU+pZXwpjhf1B40ZNxNYbDDoCHT+dDfcUPsJ1C3d5/Cv09xaEDQZGQiagEKCUv
- vMLwj/0iMJV/xZZIdQJCq1rNJbh8tdmVu/Oco+9X9TS7PEMKk7fP1D8fHy1WeJeWpdbx5QSV347
- TTS2ZhgJBaHE5NXv8QqWvA3C3cNz3OfNRARTQVc5l7LHZc3B69YWrk9XMrDaMZPVvU9JQgUgTD2
- qs3okn5N7sDOH7dAMLadWYapCsyi3kBoFra7qfLMPbVOrdN4zq3HlUNhqKcFfuS++UO4rVOv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-02_08,2025-06-02_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 suspectscore=0 bulkscore=0 priorityscore=1501 phishscore=0
- impostorscore=0 lowpriorityscore=0 adultscore=0 malwarescore=0 mlxscore=0
- clxscore=1015 mlxlogscore=810 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506030020
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-ath11k_mac_disable_peer_fixed_rate() is passed as the iterator to
-ieee80211_iterate_stations_atomic(). Note in this case the iterator is
-required to be atomic, however ath11k_mac_disable_peer_fixed_rate() does
-not follow it as it might sleep. Consequently below warning is seen:
+After commit 68ca5d4eebb8 ("bpf: support BPF cookie in raw tracepoint
+(raw_tp, tp_btf) programs"), we can show the cookie in bpf_link_info
+like kprobe etc.
 
-BUG: sleeping function called from invalid context at wmi.c:304
-Call Trace:
- <TASK>
- dump_stack_lvl
- __might_resched.cold
- ath11k_wmi_cmd_send
- ath11k_wmi_set_peer_param
- ath11k_mac_disable_peer_fixed_rate
- ieee80211_iterate_stations_atomic
- ath11k_mac_op_set_bitrate_mask.cold
-
-Change to ieee80211_iterate_stations_mtx() to fix this issue.
-
-Tested-on: WCN6855 hw2.0 PCI WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.30
-
-Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
-Signed-off-by: Baochen Qiang <quic_bqiang@quicinc.com>
+Signed-off-by: Tao Chen <chen.dylane@linux.dev>
 ---
- drivers/net/wireless/ath/ath11k/mac.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ include/uapi/linux/bpf.h       | 2 ++
+ kernel/bpf/syscall.c           | 1 +
+ tools/include/uapi/linux/bpf.h | 2 ++
+ 3 files changed, 5 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath11k/mac.c b/drivers/net/wireless/ath/ath11k/mac.c
-index 08d7b136851fabb0a1c1032abcf9c01550e9f4f5..068805daf5fa4e0894be4ea4e8f2e9f756cfdcd3 100644
---- a/drivers/net/wireless/ath/ath11k/mac.c
-+++ b/drivers/net/wireless/ath/ath11k/mac.c
-@@ -8740,9 +8740,9 @@ ath11k_mac_op_set_bitrate_mask(struct ieee80211_hw *hw,
- 				    arvif->vdev_id, ret);
- 			return ret;
- 		}
--		ieee80211_iterate_stations_atomic(ar->hw,
--						  ath11k_mac_disable_peer_fixed_rate,
--						  arvif);
-+		ieee80211_iterate_stations_mtx(ar->hw,
-+					       ath11k_mac_disable_peer_fixed_rate,
-+					       arvif);
- 	} else if (ath11k_mac_bitrate_mask_get_single_nss(ar, arvif, band, mask,
- 							  &single_nss)) {
- 		rate = WMI_FIXED_RATE_NONE;
-@@ -8809,9 +8809,9 @@ ath11k_mac_op_set_bitrate_mask(struct ieee80211_hw *hw,
- 		}
+Change list:
+- v1 -> v2:
+    - fill the hole in bpf_link_info.(Jiri)
+- v1:
+    https://lore.kernel.org/bpf/20250529165759.2536245-1-chen.dylane@linux.dev
+
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index 07ee73cdf9..f3e2aae302 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -6644,6 +6644,8 @@ struct bpf_link_info {
+ 		struct {
+ 			__aligned_u64 tp_name; /* in/out: tp_name buffer ptr */
+ 			__u32 tp_name_len;     /* in/out: tp_name buffer len */
++			__u32 reserved; /* just fill the hole */
++			__u64 cookie;
+ 		} raw_tracepoint;
+ 		struct {
+ 			__u32 attach_type;
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 9794446bc8..1c3dbe44ac 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -3687,6 +3687,7 @@ static int bpf_raw_tp_link_fill_link_info(const struct bpf_link *link,
+ 		return -EINVAL;
  
- 		mutex_lock(&ar->conf_mutex);
--		ieee80211_iterate_stations_atomic(ar->hw,
--						  ath11k_mac_disable_peer_fixed_rate,
--						  arvif);
-+		ieee80211_iterate_stations_mtx(ar->hw,
-+					       ath11k_mac_disable_peer_fixed_rate,
-+					       arvif);
+ 	info->raw_tracepoint.tp_name_len = tp_len + 1;
++	info->raw_tracepoint.cookie = raw_tp_link->cookie;
  
- 		arvif->bitrate_mask = *mask;
- 		ieee80211_iterate_stations_atomic(ar->hw,
-
----
-base-commit: 3d933084a072fd5fb5da54c06a017abc0412c86f
-change-id: 20250530-ath11k-use-non-atomic-iterator-b89709d5cf48
-
-Best regards,
+ 	if (!ubuf)
+ 		return 0;
+diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+index 07ee73cdf9..f3e2aae302 100644
+--- a/tools/include/uapi/linux/bpf.h
++++ b/tools/include/uapi/linux/bpf.h
+@@ -6644,6 +6644,8 @@ struct bpf_link_info {
+ 		struct {
+ 			__aligned_u64 tp_name; /* in/out: tp_name buffer ptr */
+ 			__u32 tp_name_len;     /* in/out: tp_name buffer len */
++			__u32 reserved; /* just fill the hole */
++			__u64 cookie;
+ 		} raw_tracepoint;
+ 		struct {
+ 			__u32 attach_type;
 -- 
-Baochen Qiang <quic_bqiang@quicinc.com>
+2.43.0
 
