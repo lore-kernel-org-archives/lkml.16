@@ -1,65 +1,66 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E83D4224B1F
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 11:57:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C587F22DA08
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 11:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748951850; cv=none; b=kV+Hgyqmce9dT++64ZlFq7as4kC5CnDo6tz/jQZgATGeEySVurzRn+nkhFAAuFQULKED7P3uOoBxqv0LZ0h1kEjimvbIRsT0EjZqlPmx53Kv5pwmWNAqmOax8loENUl4QZn/g+dJ8PARMnvaKpyRnQqR/I9stu3GPBJvlaEK/VU=
+	t=1748951850; cv=none; b=gBvJG4tI6+E6tcznYGWpsmuJDtc5VB4EVYk1ghR+lMSEd75nHgZ7dkJDd38rBWTVpVPDu44OtzmJw88QuiEAPQ91Ca/8NilqSnJ/0WCOXd2EDXW6h5QZ7ww3PQC3PiRGQlyjlIAX+Km/uftoZuWWHorbjQl2XpF5gWyMUaePzvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748951850; c=relaxed/simple;
-	bh=8VGdoBQnsW1Y8fk4p9+RrKW9XWt9gACX/CPbdQ0dOb8=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OzAs1ElG8yhfIcdi2RZC0aes2VPUfxdyuwZy63KYB++4A5KCTeXOJfX0qhCuoeoO8COvaltIdLwgKBBlsIrp3/jSe4ddGA2c8R7vh305uxqjHZa3ktAGjXHvX23I7OzCiuGBxbbugqFB0XbAy0GvK6zwz6YQA5cFY0gORAA7Nrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ju0G0vqW; arc=none smtp.client-ip=209.85.221.50
+	bh=ar5+pdd2TFr1JcFtgPO5JaiU/Jpg3+NCQIURcO8Mub4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=s/0SbQ5+7CSgMpQ5OkPHDTsIAh9f9kVmchKueIfSWjL/klIlkEyhQow2miQ77hhPBIJyqa6BTHbWVye75My0yRK1CtX1p4sdYF5OASrfZWxu3bWsDGf7ifUuL1TGDcuJjQ9dUUKhnoOA3qJTtN2x77rS3WIhzC7PUP2j/JPkDGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=c2GjH7dQ; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ju0G0vqW"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a4ef892ab2so740388f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 04:57:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c2GjH7dQ"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-451d41e19d0so2664615e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 04:57:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748951845; x=1749556645; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1IBFWQj94F31lf6usd6PCcvd2+aXV7FOAOa4N/LRiuA=;
-        b=ju0G0vqWBuSJVuEFV2dCSjU0MIbsyU8GdCozvUoF2AC1UBJP9m/XWXJWb4lPg+2u2Q
-         7HKAZkJ7/OFPUrXKADzsHmyez6eWnbmkaRc8yLhwAMZcIJ78KPUV1UbXlfw1DkLfwlpc
-         ffCKvK3SaQfYXTf9N/AiGBfk5LzbTKBa0uBZicZhLw2+D674t4dQJiU4I1VYjBj0dU/3
-         bphVS8FPsf4vRZJBxOPFgVSzqoswppM7HnVYk2+r50w71AbZNYrgdFVFIa9yMo2oajcs
-         wMM7MK9lG4drKdCweJticdcry7qetqEtMm9ZulOsRa9ES3T6K/gnrc5Jcz3yYJ2O1TyN
-         2F+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748951845; x=1749556645;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1748951847; x=1749556647; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=1IBFWQj94F31lf6usd6PCcvd2+aXV7FOAOa4N/LRiuA=;
-        b=Xz6KIAmadd7rKvBs9VTJlDa6ZdTzuYldSzm0Z3+lDQRjJSHYbuIof1kHR+upk9hxsm
-         ZKUw+uuy3QYGByzwfJyWnBxnJh5TVThEK9AGfD7qVEK5r5+voqNzicfd9mtPmjA3E4iK
-         U9YJ04gpAiZBJg+WP+0hSk3FDumYnmkLjnhkPDrh9sXdmu3vZPojAImoWNkazdCNqhP7
-         L7/sG7NwR7IutxoGWUs3yjL/bj9CyW3KLvwXW7FIJwri232FWdIQZw6YtXTOZDk4hOER
-         dcY+57rawf65Z7RBq/7wtEgsB20PrJcBomWrK8vW+UwTkoZYtniqOTfpq9/rt4m/vJVN
-         RuAg==
-X-Gm-Message-State: AOJu0YwJRotdtvSV0Kh+M935k/rXhpcIQMA1BtK1S+zjjTd+UIxbYR6m
-	TdegIkfy21U18oYurP6dmkava/B4Z1S4z2nOqOhTNDMzoEIhoE53KYW3Guz16od6FH61LOeg66R
-	qyX2q
-X-Gm-Gg: ASbGncstbB3Hzk5Y989pYlhF1TXaiCl6BH0vvBVM490nIDXZJHmNxjbQOIuTrxSeEnt
-	zRy4QzP3Y9GqFwrq5pG1A5QrmozERyHnV5Uz02+mfFty3sGi0CLA1byu/0FXEYWzQatQwxWFxl1
-	ZU4Li9miTLt+6yzdqW+bo5sjWptYdDuisO6o4t3Tp0xOIG1Ct5WcvI/vvuG2a9wbOmBuhXNwxON
-	zpg24Qn9QPQpHCsX6QWvQ2eA7LxU8cTz7yv6q8K8xcDr1HCCymoWs2syzhDUB/Ff7RdZAdgIrGb
-	7FsILlAikP0HyIaeBNKpTek2F+Wlrcflz6BTc5ZDJhOLW2WVy7La3DrTRfi2pWlngyiRI+eE7Px
-	vygWnlLDeLcd2OGVXQMa+Ow==
-X-Google-Smtp-Source: AGHT+IHcDKEnQI0iAe8KmJOAN+5AyRCThhejg+k63FaCsSnbGWGPgYCXX5i11cKOm0Js9aE/AZP8Og==
-X-Received: by 2002:a05:6000:2dc6:b0:3a4:e8c8:fb89 with SMTP id ffacd0b85a97d-3a4f892f306mr4455673f8f.0.1748951845084;
-        Tue, 03 Jun 2025 04:57:25 -0700 (PDT)
+        bh=ekpXsFXiBQlOEYcI0oMkBbtivVJ9v85D39Ocv5s98/g=;
+        b=c2GjH7dQZlQZ9JBt9JiEOwTeA2MdUGu4BS1ykDaKXp5i6LjRStbkM+KxI82qcL4qX8
+         WXoVJU8+N1bFHEfEtt4KQn/hkHKt7bOUdwiaOX+nkNEup3N6T4SEDasMzA/v8veKWd0O
+         gDPW5YtWBM814WD6eKrd3ot3o/hmCTBH5snUVSG4jJgYvpYC8WqbVl9pdOi9tX80q8SR
+         SFWl9qJSwBdF+Egav7kA4giqBf+8nOQrHKz1EOklBjgR5O79ME4S4y+klwQnacIqAOpe
+         t8qbXMzlzzdq4FtvjSbL6GYxm+wk0B/sy5rKdb5i0VFaXGokapvFa7kKWYn9KDMW8i6E
+         qe1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748951847; x=1749556647;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ekpXsFXiBQlOEYcI0oMkBbtivVJ9v85D39Ocv5s98/g=;
+        b=qSs0UIHwj8HhSMGo8YfGh+us53Z3dHUMEd8j7tWmMe2kRp56yiAW+9/XYZ0luE7xzg
+         6fixWZXjlbxLgHIx4ZxGyKrWMn836a62ZQbptSmKi9huA/Ly053mxBT70ItqE5yUju0G
+         zTDwNwco1qq0/jpBRwWLaAOxa9g9RUYZmtSX0A/o5PRWiLx66THUjvgSn+T1Ufh91kfO
+         dzbDg+IwFmd04KTFtlsQIseIi7encZ9R5LXvuDdeqU5nrRNkSxbGXBKykHS+IfvDF/PB
+         NYSDYGRNygKvNyWkkguDjl68WP8sWlXpzmg4aYnn5zvu8gonrfc312F4/DylUdFBA5Yj
+         UJ9w==
+X-Gm-Message-State: AOJu0YwcntubbqvG4x5/CVxG249qCJvsAx/4wZC7T16p0KyglZNzrmaf
+	Kq858pULgblY5c2wnoIudGZhGxFIV07lrSGMIVKk0tt+chdSlLamB/lSLu0DofyXu8c=
+X-Gm-Gg: ASbGnctrUPrdTiRC1qLdbhgqMURmaT7RUysJI7VNK7PINzRbq4+mbh3sinmdHjVPv2F
+	bk8IB9t/VtvwxKS5c9+P6DqfbddUhDJYJqr4EpXovDBV+UfXoVA09LshAJi/tMaXe297+RqeYkj
+	8ZEjMT2hiZ+gwpR55tI13SqOXPgargsKxVkyjFpOEUfRhNSATvgiL+H8RzqWLo0jpGi7LGNCye/
+	nT1/30BMgnU50f0mTKCGeoCP3ZTMU71mXPe7bQSJ+lpJtFpGD769sFN+sTKd2QpHR/gj+wwC4sp
+	GJuXD+vcaWl13apLyOPx3xRwwC4fxG8IbmNLXHYgroBVgszhS6B92GIpLI6seOVI5OBOZyAz79h
+	9/m6uCKgq+sCRsuwfK/UYbg==
+X-Google-Smtp-Source: AGHT+IHBMSZmFHh0iBBqbg6iYgmvQuQtkRQ7ni42guJxRJHi8RXPAyYfJYKwxYJrmX9gnms5o+3FMw==
+X-Received: by 2002:a05:6000:230c:b0:3a4:dc42:a0c2 with SMTP id ffacd0b85a97d-3a512c032ccmr984242f8f.1.1748951847021;
+        Tue, 03 Jun 2025 04:57:27 -0700 (PDT)
 Received: from [172.16.23.13] (adsl-84-227-104-5.adslplus.ch. [84.227.104.5])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe6c7adsm17671666f8f.26.2025.06.03.04.57.21
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe6c7adsm17671666f8f.26.2025.06.03.04.57.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 04:57:24 -0700 (PDT)
+        Tue, 03 Jun 2025 04:57:26 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 0/5] dt-bindings: mailbox: Few cleanups
-Date: Tue, 03 Jun 2025 13:57:07 +0200
-Message-Id: <20250603-dt-bindings-mailbox-cleanup-v1-0-724407563997@linaro.org>
+Date: Tue, 03 Jun 2025 13:57:08 +0200
+Subject: [PATCH 1/5] dt-bindings: mailbox: amlogic,meson-gxbb-mhu: Add
+ missing interrupts maxItems
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,10 +69,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABPjPmgC/x3MSwqDMBAA0KvIrB1IU5OqV5Eu8hl1QEdJbBHEu
- zd0+TbvgkyJKUNfXZDoy5k3KXjUFYTZyUTIsRi00kZZ9cR4oGeJLFPG1fHitxPDQk4+O4a2bUx
- jtH1RB2XYE418/vfhfd8/Li2Ljm0AAAA=
-X-Change-ID: 20250603-dt-bindings-mailbox-cleanup-c884545267e9
+Message-Id: <20250603-dt-bindings-mailbox-cleanup-v1-1-724407563997@linaro.org>
+References: <20250603-dt-bindings-mailbox-cleanup-v1-0-724407563997@linaro.org>
+In-Reply-To: <20250603-dt-bindings-mailbox-cleanup-v1-0-724407563997@linaro.org>
 To: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, 
@@ -91,50 +91,47 @@ Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
  linux-tegra@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1218;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1020;
  i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=8VGdoBQnsW1Y8fk4p9+RrKW9XWt9gACX/CPbdQ0dOb8=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoPuMWnfe5utyaUx5gvALmsxmruk7JbV/krIhA4
- j8qvLrJLFCJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaD7jFgAKCRDBN2bmhouD
- 15ILD/910b+r8xCBseUJF1YO+j/IHLYwnq2p99ZLKQrjJPODK2Hsa8PvABhsMOVX7NEhd45xauB
- 1gokachMmddL3QTHvT2SwZxCkXOkbMCydACOrC/fTJt47ZMqSJVTQddnBcQSgLyjNGm4CeOEnp9
- PNBoEYnzvybXEkQACPTe80hUYBPNMff0l9H1886se4gDoMTuKflotBkuNAKnzK+8kiDBgxNOH9h
- bZsCvRJodQOSAPreMvq0IihcpWlEs34BWltovMVcvF9aAUp083WRW+KVQYmOhWlos+j/T4BRIbR
- CwPlyHjcGOVLxKnlJKijLA9qGkIsezGqUQ2SPYxLPKlc2qzyajNrDlj84gdKweskDeOpiBvLN+B
- KyqdmGfxbd7NpRwX3CTYh4w/0CtWItIAUr9Ys7jFtXr/VsuA0YOCgJjVX1uEFU1xkudoFs1rAth
- RJ/8B3UMC55EENVrV4M2L4siLZlqy2RcczsoTJFZF2waT+o7rvR+fmeeJf0wybsj1f/u9znmagT
- kQ8ZnJpha5iIwXpe+p1xsFf82A53nj0jMMo0yNx2V3WeXOWMo7LyjgxfIAQHTUVhIFc4TIZqJVB
- +kMs1/3Ubq5gPtCQo6w7qymB7PfuxwdaWvtwnw2jPw7zgEtHYR+5EiDbtFhXsuuiB3VyuoxS3ez
- N7pia2kgSwXPEsw==
+ bh=ar5+pdd2TFr1JcFtgPO5JaiU/Jpg3+NCQIURcO8Mub4=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoPuMafbts+SQHLrCKWoSXydLXFpBuxk4+UMd/K
+ nu5qIc0ykGJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaD7jGgAKCRDBN2bmhouD
+ 1ybCD/9RNGsVwuWaYUnIhMCF6XOqANSxF4pvD+oiEd/nFdvuoXKyHPDhNDJkzr5JI+eCG+Ub/MQ
+ IFPA1Eq4zim5rKSJGghjZ4QRpCKGP/BiC0e3S+lzj0PcZ47Upq2cpIw5uEGa84l7HVOKXzobLHS
+ 4dtbpNI66GnxgZ1/hAQyG7cQ+b/JVVCKbo1XzHQdPkwO/sBtnEFmUp36ZDI/u9u2hJTCNd9xwDh
+ z8DyRDvM8YT02OvK2sUVR4UoJIaFA43uNXyC0U+o2mZ/XAHLxkOL6t9aY9JhZ1KZ+heKhYVtVDq
+ jq6Zz6go76ikVf85UUQkieagE/lk1hxHLb8tPkYIOVn2IR9e9sjHN/DFFOa4m725Ke7rxh2Q4FT
+ 3xEYfP/AU+h/cHPAK8he55zMq5tzMMHeNybBTtDKzJP6gXsE3UrINKmF/MYJBWgtu9wx5yWcFY1
+ VYfpQ7cJNEoGpu/gPhFNVgrNwEs9yeRon6WMn3H12OTKdniyzdgIpnJ7JIqajxRgkZkKb7n/zxM
+ zAzeos1xnYnl4qwTwwQHYBwmfVZYlkcYcXUthGxU188ahk3mMCNE5DE2eEzBmKlVUVfoGpETAFD
+ xe8BwA6xrgnmksHotq8VKWpDAzKd0sqUmepz4DJDrs9GYrxZuqqnQzCCE7b34Hj7GArCuhFFaYq
+ RxgIODOMV9Ib71w==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
  fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Few cleanups for Mailbox bindings.
+Lists should have fixed constraint, so add missing maxItems to the
+"interrupts" property.  Since minItems=maxItems, the minItems is implied
+by dtschema so can be dropped.
 
-Best regards,
-Krzysztof
-
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
-Krzysztof Kozlowski (5):
-      dt-bindings: mailbox: amlogic,meson-gxbb-mhu: Add missing interrupts maxItems
-      dt-bindings: mailbox: ti,secure-proxy: Add missing reg maxItems
-      dt-bindings: mailbox: Correct example indentation
-      dt-bindings: mailbox: nvidia,tegra186-hsp: Use generic node name
-      dt-bindings: mailbox: Drop consumers example DTS
+ Documentation/devicetree/bindings/mailbox/amlogic,meson-gxbb-mhu.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- .../bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml   | 14 +++++++-------
- .../bindings/mailbox/amlogic,meson-gxbb-mhu.yaml       | 10 +++++-----
- .../devicetree/bindings/mailbox/apple,mailbox.yaml     | 16 ++++++++--------
- .../bindings/mailbox/nvidia,tegra186-hsp.yaml          |  9 +--------
- .../bindings/mailbox/qcom,apcs-kpss-global.yaml        |  9 +--------
- .../devicetree/bindings/mailbox/ti,omap-mailbox.yaml   | 10 +++-------
- .../devicetree/bindings/mailbox/ti,secure-proxy.yaml   | 18 +++++++++---------
- 7 files changed, 34 insertions(+), 52 deletions(-)
----
-base-commit: 3be1a7a31fbda82f3604b6c31e4f390110de1b46
-change-id: 20250603-dt-bindings-mailbox-cleanup-c884545267e9
+diff --git a/Documentation/devicetree/bindings/mailbox/amlogic,meson-gxbb-mhu.yaml b/Documentation/devicetree/bindings/mailbox/amlogic,meson-gxbb-mhu.yaml
+index 385809ed1569206a7304b777ea42743321c899ad..0849799ee0c5caaeb27fe1e3e3714a630a7c2b09 100644
+--- a/Documentation/devicetree/bindings/mailbox/amlogic,meson-gxbb-mhu.yaml
++++ b/Documentation/devicetree/bindings/mailbox/amlogic,meson-gxbb-mhu.yaml
+@@ -27,7 +27,7 @@ properties:
+     maxItems: 1
+ 
+   interrupts:
+-    minItems: 3
++    maxItems: 3
+     description:
+       Contains the interrupt information corresponding to each of the 3 links
+       of MHU.
 
-Best regards,
 -- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+2.45.2
 
