@@ -1,100 +1,208 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B904A01
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 17:37:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61D3C1C1AAA
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 17:41:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748972271; cv=none; b=PZD3sASLqF4IHKvqxx3s9kjdgzyYiqRZi1EJtRghf5YS36bDtZq9pkcN6VVKTg44sAHE8+e58jJEgVtcrTMcq6hUf6H2s0m79pDsSqe8aYRx19HwQGD0I6ollXTqAsGPKZxvNtKiNxNxjYx6f3Osy5Z4I47ENYakU+xGIBaMDxo=
+	t=1748972495; cv=none; b=Rynj3h2gmunTbiUhy6bUd89XVM7+6eaLujXyhvvr+a9DDR5oT79020/+cZLvzqGghXIZ3Orrs5my9AQCCbFi2/enu1RBhRojjwQqLl3TgL6kHqiqGzeTOL2ogP7/GupR5iEqUhla/UM8QaUeC8c/Sf9tsChe5K2iIKZuBX/h6t8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748972271; c=relaxed/simple;
-	bh=BXwCulW3NF4eqIAJ79GAFvUJVwK96lKpH/HnjTO3pxc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LJDvNJnvLDFrac32va3CaJbXiiV4isRpRRcYuacoWW2+pyX6RpImJ878RJpYyEIpFFaUnVyURUF2Ju4yjTZBH1miLEQysb29z3IK0P7N3fxGGklU7lMKoFpXABn6AMFXpDnsVIPRhMoy2P0GVI8ksRrrXL0uSF+CYUx6gbBuo+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BKtU2Q2Q; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748972495; c=relaxed/simple;
+	bh=Sc8MQqtz6fnvJS5fR7oLAfyaF6gQ/B5iw8Wk/X78j3M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k09aaB57McTv3AR8X4uEupnz4O3O3JD0zBuTIXVMomvj0s557B4Q2xNeKH8r0piKW0xxMeT2lWWeeZ/DJOtoPlo1nhp9RKrumzgiOam8Z6AWhaan1+jLN8K8Drk0Spg64I1FOn3+0HUEtY0uKlEHJ2yX/swtT74XVEzdn0h8gDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=GPp4/Dvw; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BKtU2Q2Q"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-3114c943367so6501144a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 10:37:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="GPp4/Dvw"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-451e24dfe1aso15479935e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 10:41:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748972269; x=1749577069; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qmZbeZgnsejj51mBQflzEWz+C8FHTnGO31W7ha2CzVU=;
-        b=BKtU2Q2QeIP1ce5pf02r+/m88xqRU7D5e2hBtGMd5e+uqHW12psTktNxB+2aCMOGX+
-         CalzI1L1gVqL5tba5O0mK8jof8qdq2Pa89M2cQtIsLhFkuC0JtJA49jbs3ESyqep17/T
-         PkJREG7PvkapTSC+phvp07BVUunJnSTui/966B80GgnWabge1kxSWDkqX27OcbTClS9u
-         ltg5jqR5XFZdTZVtECd4ZCgA/lIoIkRiPKraWlpA1tCUUAEljl950TdJGE2OVmuZyEWp
-         mTnDLiLrUFcEbGkLOXn55KBjIR0WLtI2uF4Le36l7m7siJtrHnAxXXwWcMTyQXylsbQZ
-         izuA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748972491; x=1749577291; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=v17ygnkahOl8aK1nqKOWLN3shaj1c17h4br6h80J3cE=;
+        b=GPp4/DvwScT6mI4BQN6wMvSNqPzuvPOZZWouJ77lMFW4srsG2fajkI3GrgjpYz8af+
+         Scv3Lb0xYXTt/+8SX7us3SmUmPQF7s5L58hzybElgvz4r1sEaIcJT/xzjH1ruasIB8fl
+         przraEGZKbwI++v3ImtgHvk5oyefVDcFSTpEtTSFvUPHQd7c4xpL4YT69weBUzW/NRo/
+         rvmM4TYc7r6qiFrR+cCMsXp9Aq4mYO5ffvX03nb0NxWzukmIEI8Ll9blf9oQH1GoaKRp
+         jPOZWxA8r3yuRZ5IAy7p1bmyjUAAAI0XL/WDUfV0Kh+bj57NKUGz+pKBbF+dTHq9pO0B
+         o3+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748972269; x=1749577069;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qmZbeZgnsejj51mBQflzEWz+C8FHTnGO31W7ha2CzVU=;
-        b=XB4WwF0ttQb252iXStjA8U+bvM4sO0X/7JXOHOxkPqU4cyAnIqy5JXivpH/7X3aAL7
-         ttENe+i5Sphk6nariAoXTEchfWhaJ5YIjcrHUL6dXCh3ZgYOrDgCEMzbyEk7MUU8tvnT
-         xFxP4yxIuU6IotkEVWOa2m9Ap0steEZaLTXAIHNNclu066kWin/aHWnPclErCD4QPcgD
-         B1x1hxiTTy2N6ZMifYusma698g7o1rCoPkdq8TMHPU9R1DJ7FlNESqVa5JT5O4DcJn7N
-         O/8Svu4xErpAk+eTXSjTZLfGg7vqFxJb4500R4NjjZpk+WEOtf6T+pfipIBISCzTqE/G
-         svpw==
-X-Gm-Message-State: AOJu0Yw6Qeg7H9AkldOdMkxvcltmG8OH4EGGu3eJ8drEjRiJ6wSaVoMw
-	Q7QmGeTdZ+DZlj+QReYZkscSpiqNjrxZDFvfGuWezcj+VgrDUMWDM38MS8AkTw==
-X-Gm-Gg: ASbGncvfHOGNTSpxxBQjjGtZewJWNM4KxxVs5HklnZE+BLDg8eBHcG/l9/3E7t/kWeZ
-	SqwwQoySBYJtnXisHBRsFisv7mh7ednd30V/fwiizp73WdKW/0OXFkyoObZD55a4zNAKeYgy3/C
-	yYz2eLbBRXtMlx7ZjLygeQyAhamldoEfOq/2sGwnzaISIShjbaFXUXMhQxnE8CgltIDrVt3NRNl
-	S5d0NkG9ZLld6DF5WD7qmN3VurcMHMmyXEEO1dfCgd8fz8jKkSHB3RlIWQj0RXPF6UCmHZZbyEZ
-	fPTR2YZzL3HoEoxh/gWfWlYl4zL/jPq7FOOo4zeB22UP1KJ6EjIQREenKqk7A5g1AcTi5jn3Vx6
-	Fxc0yd9k2LLgsY4/riNWxw1fHs22i2R32fo3ic8Xj8/s=
-X-Google-Smtp-Source: AGHT+IELgcwm5ycuQ7TBp9o3qO5sV84L5QfSoz36MtjwBB7F3vQBLsvxOsRDFg65VRNp8qlO364Y8A==
-X-Received: by 2002:a17:90b:530d:b0:311:f2bd:dc25 with SMTP id 98e67ed59e1d1-31250405591mr29739222a91.16.1748972269088;
-        Tue, 03 Jun 2025 10:37:49 -0700 (PDT)
-Received: from daehojeong-desktop.mtv.corp.google.com ([2a00:79e0:2e14:7:f466:948b:ebb2:d370])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e3d2999sm7531826a91.46.2025.06.03.10.37.48
+        d=1e100.net; s=20230601; t=1748972491; x=1749577291;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v17ygnkahOl8aK1nqKOWLN3shaj1c17h4br6h80J3cE=;
+        b=SGF82V3elLvPT/PoD7rlTo8GffcGAm/gafrKvzLC6YEqmX5GMi7xCaAZJ+kPpZiwJ+
+         lU3ziyJ84eOV8jhxu7n4ZKllVPiF4HDnGwKFOdSU4Y5c2+SYIZj3Yo9DFOQUp2VTLDUj
+         J1sFHQZwRgEdLujCfKNG4Er2q745gixlKsSjpeFhnhJYCzr9vhJBz279D8wHoW42eKQf
+         eoRteCj+2PMBNYPTusrduHrXI2NFeQVRRN+gzSLoiR11al2CtmTRhN1nhcVf9yJxjZJY
+         hbtV3ZoolUUfJivHq+WkM3U5GdnVlKO/s8F5nVQFCac46Af0h2a9+ArgcPdEhcd9KkvJ
+         ygag==
+X-Forwarded-Encrypted: i=1; AJvYcCVxFdfkQz3ordgETbD3kZerN3Lr33UzVW5OaeVkMMEHvMjl1rMO1vQUjkbflCXZZhH6tnd0PuaCJ13mX3M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQqIUpEdiDaINDEEq2bQqQKiJtuMGjjpxTagzl+geLJhygmUyn
+	HfMoWNG0yjmrlhDVFiqaH65SqZlTSzQVhFfHaPnDs26tXfLDN6VhCTEXT9d3a6NgXRE=
+X-Gm-Gg: ASbGnct/9fz7mIYczruVZ6UWV08rJ2RuAgccrB3I9+UBH7Pl5jPnJa3majP9c+o3Zd9
+	D6f02iSYZfmnCX1LT4ZRfgC+qLvq7ktFjKlSyuCbz5M+MrNwzRcduaBmEVHIMkyF5LqLwXqWDL+
+	xR57Q/TX2D9aazBT2cKzXIu8ParmZFu1U7ARWpKL5jXjft9JC0K6BU7DbkNNWyAi8XjHa0/xelr
+	4OPIZKWZwqIh2rSTe/eRUE4KHbK0a68oVf/DozmTAJkers1e1ou8QxCi7zRQVywu3ZCSpTEt4e7
+	rEdSl2SOl3CcG6x2xzbY5yNcHIzXPgYtQk+ksP6sRXXrdeYc/vaVbOAncCPPghUpJI3NdrwPWLU
+	myQcGo9yqJ2A7fw3CGw==
+X-Google-Smtp-Source: AGHT+IFYtypXcuIceGvwjxuac6BwvbR7xGL6xmwnPpX6addhpz53IWTJ71z2bH3kDmNWY67XQdzWdA==
+X-Received: by 2002:a05:600c:1d0b:b0:439:8c80:6af4 with SMTP id 5b1f17b1804b1-450d64ffea7mr141076015e9.19.1748972490563;
+        Tue, 03 Jun 2025 10:41:30 -0700 (PDT)
+Received: from localhost (p200300f65f13c80400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f13:c804::1b9])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a4efe73f67sm18682208f8f.47.2025.06.03.10.41.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 10:37:48 -0700 (PDT)
-From: Daeho Jeong <daeho43@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	kernel-team@android.com
-Cc: Daeho Jeong <daehojeong@google.com>
-Subject: [PATCH] f2fs: turn off one_time when forcibly set to foreground GC
-Date: Tue,  3 Jun 2025 10:37:39 -0700
-Message-ID: <20250603173739.2483532-1-daeho43@gmail.com>
-X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
+        Tue, 03 Jun 2025 10:41:30 -0700 (PDT)
+Date: Tue, 3 Jun 2025 19:41:28 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Sean Anderson <sean.anderson@seco.com>, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Subject: New default binding for PWM devices? [Was: Re: [PATCH] dt-bindings:
+ timer: xlnx,xps-timer: Make PWM in example usable]
+Message-ID: <crk42dsypmbyqk7avldghjq32vslmalfmmouwxzgtdci4agfhz@rkbmxj5z22fx>
+References: <20250527171504.346696-2-u.kleine-koenig@baylibre.com>
+ <a14be34c-de2a-4bea-9282-1fac7780b9a4@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="mlsk4nchawdtgzth"
+Content-Disposition: inline
+In-Reply-To: <a14be34c-de2a-4bea-9282-1fac7780b9a4@kernel.org>
 
-From: Daeho Jeong <daehojeong@google.com>
 
-one_time mode is only for background GC. So, we need to set it back to
-false when foreground GC is enforced.
+--mlsk4nchawdtgzth
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: New default binding for PWM devices? [Was: Re: [PATCH] dt-bindings:
+ timer: xlnx,xps-timer: Make PWM in example usable]
+MIME-Version: 1.0
 
-Signed-off-by: Daeho Jeong <daehojeong@google.com>
-Fixes: 9748c2ddea4a ("f2fs: do FG_GC when GC boosting is required for zoned devices")
----
- fs/f2fs/gc.c | 1 +
- 1 file changed, 1 insertion(+)
+Hello,
 
-diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-index 2b8f9239bede..f752dec71e45 100644
---- a/fs/f2fs/gc.c
-+++ b/fs/f2fs/gc.c
-@@ -1893,6 +1893,7 @@ int f2fs_gc(struct f2fs_sb_info *sbi, struct f2fs_gc_control *gc_control)
- 	/* Let's run FG_GC, if we don't have enough space. */
- 	if (has_not_enough_free_secs(sbi, 0, 0)) {
- 		gc_type = FG_GC;
-+		gc_control->one_time = false;
- 
- 		/*
- 		 * For example, if there are many prefree_segments below given
--- 
-2.49.0.1204.g71687c7c1d-goog
+On Wed, May 28, 2025 at 09:43:48AM +0200, Krzysztof Kozlowski wrote:
+> On 27/05/2025 19:15, Uwe Kleine-K=F6nig wrote:
+> > With #pwm-cells =3D <0> no usable reference to that PWM can be created.
+> > Even though a xlnx,xps-timer device only provides a single PWM line, Li=
+nux
+> > would fail to determine the right (pwmchip, pwmnumber) combination.
+> >=20
+> > Fix the example to use the recommended value 3 for #pwm-cells.
+> >=20
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
+> > ---
+> >  Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> And what about the binding itself? It allows any arbitrary value.
+> Setting it to const=3D3 would not break the ABI, as long as driver does
+> not care.
 
+Oh indeed. Now I wonder about myself that I didn't notice that without a
+hint.
+
+So with the intention to move all drivers to #pwm-cells =3D <3>, the patch
+to create here is:
+
+diff --git a/Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml b/=
+Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml
+index b1597db04263..8d7a87fb2d35 100644
+--- a/Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml
++++ b/Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml
+@@ -26,7 +26,8 @@ properties:
+   reg:
+     maxItems: 1
+=20
+-  '#pwm-cells': true
++  '#pwm-cells':
++    const: 3
+=20
+   xlnx,count-width:
+     $ref: /schemas/types.yaml#/definitions/uint32
+@@ -82,7 +83,7 @@ examples:
+     };
+=20
+     timer@800f0000 {
+-        #pwm-cells =3D <0>;
++        #pwm-cells =3D <3>;
+         clock-names =3D "s_axi_aclk";
+         clocks =3D <&zynqmp_clk 71>;
+         compatible =3D "xlnx,xps-timer-1.00.a";
+
+There is however one concern that I want to get resolved first to
+prevent churn:
+
+In principle I think it's bad that a phandle to a PWM must contain a
+period and flags specifying the polarity. For some use cases the period
+might not matter or is implicitly given or more than one period length
+is relevant.
+
+So I wonder if instead of unifying all PWM bindings to #pwm-cells =3D <3>
+I should instead go to something like
+
+	mypwm: pwm {
+		compatible =3D "...."
+		#pwm-cells =3D <1>;
+	};
+
+	fan {
+		compatible =3D "pwm-fan";
+		pwms =3D <&mypwm 1>;
+		assigned-pwms =3D <&mypwm>;
+		assigned-pwm-default-period-lengths-ns =3D <40000>;
+		assigned-pwm-default-flags =3D <PWM_POLARITY_INVERTED>;
+	};
+
+(where the single cell specifies the index of the PWM's output).
+
+I already suggested that in
+https://lore.kernel.org/linux-pwm/jmxmxzzfyobuheqe75lj7qcq5rlt625wddb3rlhie=
+rnunjdodu@tgxghvfef4tl/.
+When I asked about that in #armlinux Rob said "no. We don't need a 2nd
+way to set period and flags." Is this still a bad idea if the
+traditional binding with 3 cells will be deprecated for all PWM
+devices? If this would be ok then, I'm also open for improvements to
+the new concept. Maybe something like:
+
+	fan {
+		compatible =3D "pwm-fan";
+		pwms =3D <&mypwm 1>;
+		pwm-default-period-lengths-ns =3D <40000>;
+		pwm-default-flags =3D <PWM_POLARITY_INVERTED>;
+	};
+
+?
+
+Looking forward to your feedback.
+
+Best regards
+Uwe
+
+--mlsk4nchawdtgzth
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmg/M8UACgkQj4D7WH0S
+/k76pQf+KKR79KrBT1QNBsD6yIkYAzmD7T/8LIvQqgixRXVryFFLygmqnoGwUwBd
+iA97beE65dEkV7UC1KA/yL1/mSCEAQVWF2xLuj2t18MIoolf5vkxPfl6TGI7Nwl0
+xLXXg/Uk5gv+DecbWS4NHMva8sAl3kg/uO+saDHPB1WkSzjGsJi2H2mXk0/mt1b2
+18b1a6lKEjaqGb5i8nBjM2LQ4s3NnZvjp6ENwJazXJS/7D+oBVEan7RxR0FY0KO8
+4IE4jUMuJL2u+EyIh14MF/ZU960SDb5Dhyf+wkVl8RPUBFUl6qFxA5Yit7dJ8/IH
+4/QZU/YghjSpmfBo8BMdZoHv1wJ9Ig==
+=+Sib
+-----END PGP SIGNATURE-----
+
+--mlsk4nchawdtgzth--
