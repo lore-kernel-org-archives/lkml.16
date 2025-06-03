@@ -1,109 +1,139 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77BF62C3271;
-	Tue,  3 Jun 2025 08:32:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0AE42C3271;
+	Tue,  3 Jun 2025 08:32:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748939556; cv=none; b=asgtekvNIj0wXYHBl7ySIZT5t3yNgd9vjYBLVa+0vIbivt79dWWr7erxOE0eu9VOXXFBWty5nYr+XoSPxka882vNMEe8ZTmj2wDfl41q6wKxUlBpqHhFYY13wyfSCYKRbw+SIUFfAngLHxKcEGQ+Gi3Yofn7M3VVON2X4JJ3tjc=
+	t=1748939570; cv=none; b=HiPbBu3Ur4qH87RAYxqhgyX956DYSX+wzypT63Z0BuDKN7sUhMholHlSXlD6SI9CMBLoHmTgG3wHCvYsZPQwCVO2LdfEzL8B+y9il5t+MuHOXQpV7ZlLfF5UfpSOCs6o3OAx9bfH2GqP6DxCkUdt+8ar5qsM7ijcEjXdDCtT2NY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748939556; c=relaxed/simple;
-	bh=yHGaE1OTEpeQQ4gsYu4gvSam/RgWFQyoLvAOVXlQrW4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E4JwIIV6MmcOqn3nwF6ooLVa/gXjhefP/LDsJeg7lQw3vPLejiafpjc2OZYxrarD0qAEnpnGu8EnMeZjohvltzuetfI1dB8q1voNcog1ZkY/hhCDCLpGgnSAohrlRthNE/aHI4/qaynHZGn+YA/6boJt1xNt5jr1jIzb+6cbS6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ibDcVAEV; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1748939570; c=relaxed/simple;
+	bh=/dBAN1usklnswkv7RkRecAqcoikOST1NgMuYR2v5O+Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F6t3j+9odKjeNzH8TZU3MOAFiqMcU455Zl5hONQBmPBWjOQh8+z0LdXnhHDBDN8M+hYMtp1Z+wxszolqLxXtnp0tvhsp8jZThYHyZe5BS5SR8Cg+r3Fb4QZ7EFGzQ7/47btdJVKLEqF/3R52lf1hHT+J7wnnudabD+oqBBZI0OM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=tnEmvyvl; arc=none smtp.client-ip=115.124.30.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ibDcVAEV"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E164140E01A0;
-	Tue,  3 Jun 2025 08:32:23 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id R-jqQBazJ1f3; Tue,  3 Jun 2025 08:32:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1748939540; bh=uSTsJyP+dNpREMtqhis9XtwrNy3656bwDJMkEsaZjPg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ibDcVAEVYUbVRIZzxABOqWDfjhCywQTaNqo3Wc8czzBXR6BDUCmo8oWet5vr4R71b
-	 PKhH2VoU1Hv39L1UtOzOQVbMF1j2qB7oTf5QUFDy77uWvrT1CSKdSGbBbfD5UedPXB
-	 BY0K4sHBTbM1QUy6B4nBNnkjJIQlzOuwOSNif0J7FN4aBkvtFR3DyLsyh+bcl/KXI2
-	 mTmFhoAWA5hFjK108RdvahHfiwcAHKUWGRmNAHa0JaM7O3IkyqoUPIb6O7YdOaeboH
-	 tsSAI90uUedmB4kAOC7D1hvkPa77vSnezVATJ5aWeWJfmVAk4r0pNPn03Azc6TI4uT
-	 M33BGTm6ZJYAzy+bNdn//cWeP5tqW/wooXBdFJx2Zf74bIp0uWBQfumpELovZIVCS7
-	 bdrVj3dxm0+79YqI5eA/lNTOS39QPnH2yq71rg0/pF9iCSpXSJ3FqN7vfwFu8BuBdx
-	 UTU5hBGYnKJMHOFpZ20PgLvSHCYbdeOt5cVBZiHnOrSCKoxL957XrDz0XQfT8Q1b8n
-	 el9cHOVzRQv4mHH8kJiNx6rSmOzhZWOWvU/u1fZQz96qf9yHnEuztah5wtukdzSN8M
-	 NKEhGBne8SvIikogWqwLCTelkBaaHOAtGOkdANTS5G/Rk5LpS+V+/xXG+HB4/ZBFAP
-	 ovCzbBnncZ9brCmWPpWY3kks=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C4B3440E01AB;
-	Tue,  3 Jun 2025 08:32:03 +0000 (UTC)
-Date: Tue, 3 Jun 2025 10:31:57 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Luck, Tony" <tony.luck@intel.com>
-Cc: Zaid Alali <zaidal@os.amperecomputing.com>, rafael@kernel.org,
-	lenb@kernel.org, james.morse@arm.com, robert.moore@intel.com,
-	Jonathan.Cameron@huawei.com, ira.weiny@intel.com,
-	Benjamin.Cheatham@amd.com, dan.j.williams@intel.com, arnd@arndb.de,
-	Avadhut.Naik@amd.com, john.allen@amd.com,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	acpica-devel@lists.linux.dev
-Subject: Re: [PATCH v7 9/9] ACPI: APEI: EINJ: Update the documentation for
- EINJv2 support
-Message-ID: <20250603083157.GAaD6y_fec2X_hTnav@fat_crate.local>
-References: <20250506213814.2365788-1-zaidal@os.amperecomputing.com>
- <20250506213814.2365788-10-zaidal@os.amperecomputing.com>
- <20250530102711.GAaDmH_1O7lc6kuveY@fat_crate.local>
- <aDoal24J-BMTIBCq@agluck-desk3>
- <20250531092050.GBaDrJ8iw7cNcpOKeA@fat_crate.local>
- <aDuBjopy_nE9A-ph@agluck-desk3>
- <20250601102554.GAaDwqsgCODzEne7Ow@fat_crate.local>
- <aD3ZFyBW4SCyaGI9@agluck-desk3>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="tnEmvyvl"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1748939558; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=bIlFp1YkISi/JWhTh6BNTs1elacf5rCr0u2jnk6x4Dk=;
+	b=tnEmvyvlDJohgpJ7M3uDyyv6i0fDyo12XruVl53GTUV2gnZg7mL6sPN3rozKJnvvKrYKdOvU8M5AgR2VgoHRp/pWzZ5l29begTjpJFPa9M79nEvVcPbeZUPFza8K0tEJLG9FGxeTgy5UKMWjXqZOahzYhfqQVvAmier9qzyRtME=
+Received: from 30.74.144.120(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WcnIfXx_1748939555 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 03 Jun 2025 16:32:36 +0800
+Message-ID: <ef2c9e13-cb38-4447-b595-f461f3f25432@linux.alibaba.com>
+Date: Tue, 3 Jun 2025 16:32:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aD3ZFyBW4SCyaGI9@agluck-desk3>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: fix the inaccurate memory statistics issue for users
+To: Michal Hocko <mhocko@suse.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, david@redhat.com,
+ shakeel.butt@linux.dev, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+ vbabka@suse.cz, rppt@kernel.org, surenb@google.com, donettom@linux.ibm.com,
+ aboorvad@linux.ibm.com, sj@kernel.org, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <4f0fd51eb4f48c1a34226456b7a8b4ebff11bf72.1748051851.git.baolin.wang@linux.alibaba.com>
+ <20250529205313.a1285b431bbec2c54d80266d@linux-foundation.org>
+ <aDm1GCV8yToFG1cq@tiehlicka>
+ <72f0dc8c-def3-447c-b54e-c390705f8c26@linux.alibaba.com>
+ <aD6vHzRhwyTxBqcl@tiehlicka>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <aD6vHzRhwyTxBqcl@tiehlicka>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 02, 2025 at 10:02:15AM -0700, Luck, Tony wrote:
-> The actual structure passed to BIOS is the same each time. Just the
-> set_error_type_with_address::einjv2_struct::component_arr_count
-> changed to indicate how many errors to inject.  In theory the
-> driver could allocate and copy a correctly sized structure, but
-> Zaid's code here is simpler, an this is hardly a critical path.
 
-Right, allocate it once on driver init and keep massaging it on every
-injection. Simple.
 
-> This is just an improvement on my "option 1" (improved because all-ones
-> for the component ID is going to be invalid for sure, while all zeroes
-> could be a valid component).
+On 2025/6/3 16:15, Michal Hocko wrote:
+> On Tue 03-06-25 16:08:21, Baolin Wang wrote:
+>>
+>>
+>> On 2025/5/30 21:39, Michal Hocko wrote:
+>>> On Thu 29-05-25 20:53:13, Andrew Morton wrote:
+>>>> On Sat, 24 May 2025 09:59:53 +0800 Baolin Wang <baolin.wang@linux.alibaba.com> wrote:
+>>>>
+>>>>> On some large machines with a high number of CPUs running a 64K pagesize
+>>>>> kernel, we found that the 'RES' field is always 0 displayed by the top
+>>>>> command for some processes, which will cause a lot of confusion for users.
+>>>>>
+>>>>>       PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+>>>>>    875525 root      20   0   12480      0      0 R   0.3   0.0   0:00.08 top
+>>>>>         1 root      20   0  172800      0      0 S   0.0   0.0   0:04.52 systemd
+>>>>>
+>>>>> The main reason is that the batch size of the percpu counter is quite large
+>>>>> on these machines, caching a significant percpu value, since converting mm's
+>>>>> rss stats into percpu_counter by commit f1a7941243c1 ("mm: convert mm's rss
+>>>>> stats into percpu_counter"). Intuitively, the batch number should be optimized,
+>>>>> but on some paths, performance may take precedence over statistical accuracy.
+>>>>> Therefore, introducing a new interface to add the percpu statistical count
+>>>>> and display it to users, which can remove the confusion. In addition, this
+>>>>> change is not expected to be on a performance-critical path, so the modification
+>>>>> should be acceptable.
+>>>>>
+>>>>> Fixes: f1a7941243c1 ("mm: convert mm's rss stats into percpu_counter")
+>>>>
+>>>> Three years ago.
+>>>>
+>>>>> Tested-by Donet Tom <donettom@linux.ibm.com>
+>>>>> Reviewed-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
+>>>>> Tested-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
+>>>>> Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
+>>>>> Acked-by: SeongJae Park <sj@kernel.org>
+>>>>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>>>>
+>>>> Thanks, I added cc:stable to this.
+>>>
+>>> I have only noticed this new posting now. I do not think this is a
+>>> stable material. I am also not convinced that the impact of the pcp lock
+>>> exposure to the userspace has been properly analyzed and documented in
+>>> the changelog. I am not nacking the patch (yet) but I would like to see
+>>> a serious analyses that this has been properly thought through.
+>>
+>> Good point. I did a quick measurement on my 32 cores Arm machine. I ran two
+>> workloads, one is the 'top' command: top -d 1 (updating every second).
+>> Another workload is kernel building (time make -j32).
+>>
+>>  From the following data, I did not see any significant impact of the patch
+>> changes on the execution of the kernel building workload.
+> 
+> I do not think this is really representative of an adverse workload. I
+> believe you need to have a look which potentially sensitive kernel code
+> paths run with the lock held how would a busy loop over affected proc
+> files influence those in the worst case. Maybe there are none of such
+> kernel code paths to really worry about. This should be a part of the
+> changelog though.
 
-Right, you need to know at injection time which of the components are valid
-and which are not.
+IMO, kernel code paths usually have batch caching to avoid lock 
+contention, so I think the impact on kernel code paths is not that 
+obvious. Therefore, I also think it's hard to find an adverse workload.
 
-> Or just stop collecting on the first invalid one.
+How about adding the following comments in the commit log?
+"
+I did a quick measurement on my 32 cores Arm machine. I ran two 
+workloads, one is the 'top' command: top -d 1 (updating every second). 
+Another workload is kernel building (time make -j32).
 
-That would mean that you punish the user at the first typo. :-P
+ From the following data, I did not see any significant impact of the 
+patch changes on the execution of the kernel building workload. In 
+addition, kernel code paths usually have batch caching to avoid pcp lock 
+contention, so I think the impact on kernel code paths is not that 
+obvious even the pcp lock is exposed to the userspace.
 
-Considering how complex those interfaces become perhaps not such a good
-idea...
+w/o patch:
+real    4m33.887s
+user    118m24.153s
+sys    9m51.402s
 
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+w/ patch:
+real    4m34.495s
+user    118m21.739s
+sys    9m39.232s
+"
