@@ -1,98 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DAC51D7E4A;
-	Tue,  3 Jun 2025 11:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0AED22A80D
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 11:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748951508; cv=none; b=TAxTbBpUCoMJRIXkEsMkLfHFM5DrO0OXqT6I1OHT8ZQBvcSGOvmR2b6Ayw8mmzsUy4OLJSZQlCWGkUwJJQLuYW+TWwtSyGFCJ+Vo4leY8ShMA0iM3Osp3sLmLmbjNwmKTtIbWFNZmlzYA6Ccx7CZEo7XQ1o/XakT5fs0YJUtt0Y=
+	t=1748951609; cv=none; b=cPrt3R3pb3tSkrHCtU2KdxyCOOwT5eim+/h4Oqe+iTYqdbtRqHytFaFttsT0AJAOCqkbhzIT0ihRvbw5rrORIEYH/IeJIKgfcXerWYjHE2tgmcTAAchuYiYwpmRza++gBUH7MdHD2Gcd3t5aKQIEOyanfNR874QOfXef0dGwSvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748951508; c=relaxed/simple;
-	bh=+0+FjG1D5+BMAtWOeQZfZLKkO7QEDZvJWmT8YImYI40=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tOZWVpW2AFBhMFFO38ppAniqhgAQEaeTfE+WPTNaCelbC2RUOK+3/Wl8qe2AocTKGePEQ4anTt7zYXFZkVPVSnFlIsxFk+xpOosNuJsG8iraQDmrAqck3/3VtiXeo+naliYDZ5HDQS0b1jjQTgWJnC47R9GE75F1+tYJPzme95I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MhM3ICak; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748951609; c=relaxed/simple;
+	bh=mLrPvPCoIseAvMK7yzYSe7ZQ6TqXWL+oY5ypd8T0b04=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=b+cCIIBMKKmTOxBIvT+do52tHtBpQswUrqzZmkG0FnPGQHWZF36HRtPp3YY2F3uum5fnK+LKXfcwMLrH8hr4599/PwVkVisQLjpPoXDowSPqmKH+XMbO+fXbdUCUIddynB1t3zzQKc7u2/vKGdIPbVh2j78nrD2sKy3aOXWg9OE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BiyXegF1; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MhM3ICak"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 146F3C4CEED;
-	Tue,  3 Jun 2025 11:51:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748951508;
-	bh=+0+FjG1D5+BMAtWOeQZfZLKkO7QEDZvJWmT8YImYI40=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MhM3ICakdOUq8YMMClJ+Aoem1yJe+icrKA7IEd+rPdVC3y6OyPe3x2Ua8ZLtD4y4F
-	 NLRhmQHZPKtJXpP+Ys1fw2FEzvFYC/qnqmXa3F5Ve73EnS5kn8dHALzsJVSigeF8Tg
-	 0A9mEsNgn8HKMQjFFyo975nKpA/cITqwIpEph2ZAq8FAGl9MYT33dMT7SsDQFlh+o1
-	 JCxCZH2XJ5KiWQuG/u20Ir+5XWwj5bnsqDwRM+eSe2mlHq8etUwOrW2E/j6pGILH3g
-	 Qqx04b+t/jqlgk8qSUcyWJ6QCYjZMN3/gZLVgJhP3HxgIP8zHg7qRW78WbPqCSP6SD
-	 HsxqrHG8G51PQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uMQBE-00000000453-1hpd;
-	Tue, 03 Jun 2025 13:51:45 +0200
-Date: Tue, 3 Jun 2025 13:51:44 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Baochen Qiang <quic_bqiang@quicinc.com>
-Cc: Miaoqing Pan <quic_miaoqing@quicinc.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Jeff Johnson <jjohnson@kernel.org>, linux-wireless@vger.kernel.org,
-	ath11k@lists.infradead.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 1/3] wifi: ath11k: fix dest ring-buffer corruption
-Message-ID: <aD7h0OOoGjVm8pDK@hovoldconsulting.com>
-References: <20250526114803.2122-1-johan+linaro@kernel.org>
- <20250526114803.2122-2-johan+linaro@kernel.org>
- <026b710f-b50f-4302-ad4f-36932c2558ff@quicinc.com>
- <aD1axxSAJsbUfnHH@hovoldconsulting.com>
- <5268c9ba-16cf-4d3a-87df-bbe0ddd3d584@quicinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BiyXegF1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748951608; x=1780487608;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=mLrPvPCoIseAvMK7yzYSe7ZQ6TqXWL+oY5ypd8T0b04=;
+  b=BiyXegF1pmTtrjeY5sI+3qs83bJpBHJUE/FgK2e/ryGXLqCyoZr9tPPZ
+   6u2QJDLpS1xEq01JQUoFRrhGeCboUGA+yfUrLzgqgRK0lt9x8Ofy1hHwM
+   P2shAC1+54HCwLv8QO/9TaP+6OEb+1LUzVKvrf5Jl30vAFrili7hc/67B
+   qRfIOSPQ4mpbhSknRPggrLYHM6iWmOiO9jcbea114awZkpVLgNLCSSe0c
+   NAmMRkNawIULw1keJXoYdbDTcplSHuzMf3CzAbWP0NfKwaRCZkJ5ISAn2
+   U/rOP7/ezpDMZvmihQ8v/gDO7YD6ksuxe+aQ1Y0P3fUEDxDytJ+cmMy10
+   g==;
+X-CSE-ConnectionGUID: zBORubZ7S3WwaBuPtkEaRQ==
+X-CSE-MsgGUID: AcUJy5A2RhqnhK1bHRToFg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="53616386"
+X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
+   d="scan'208";a="53616386"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 04:53:27 -0700
+X-CSE-ConnectionGUID: o3W8DgHnTtCAJyInaGhuiA==
+X-CSE-MsgGUID: 83o5mtmjTiKeZJJVBCRYQw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
+   d="scan'208";a="149993292"
+Received: from sannilnx-dsk.jer.intel.com ([10.12.231.107])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 04:53:21 -0700
+From: Alexander Usyskin <alexander.usyskin@intel.com>
+To: Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Karthik Poosa <karthik.poosa@intel.com>,
+	Raag Jadav <raag.jadav@intel.com>
+Cc: Reuven Abliyev <reuven.abliyev@intel.com>,
+	Oren Weil <oren.jer.weil@intel.com>,
+	linux-mtd@lists.infradead.org,
+	intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Alexander Usyskin <alexander.usyskin@intel.com>
+Subject: [PATCH v12 00/10] mtd: add driver for Intel discrete graphics
+Date: Tue,  3 Jun 2025 14:39:43 +0300
+Message-ID: <20250603113953.3599816-1-alexander.usyskin@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5268c9ba-16cf-4d3a-87df-bbe0ddd3d584@quicinc.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 03, 2025 at 06:52:37PM +0800, Baochen Qiang wrote:
-> On 6/2/2025 4:03 PM, Johan Hovold wrote:
+Add driver for access to Intel discrete graphics card
+internal NVM device.
+Expose device on auxiliary bus by i915 and Xe drivers and
+provide mtd driver to register this device with MTD framework.
 
-> > No, the barrier is needed between reading the head pointer and accessing
-> > descriptor fields, that's what matters.
-> > 
-> > You can still end up with reading stale descriptor data even when
-> > ath11k_hal_srng_dst_get_next_entry() returns non-NULL due to speculation
-> > (that's what happens on the X13s).
-> 
-> The fact is that a dma_rmb() does not even prevent speculation, no matter where it is
-> placed, right?
+This is a rewrite of "drm/i915/spi: spi access for discrete graphics"
+and "spi: add driver for Intel discrete graphics"
+series with connection to the Xe driver and splitting
+the spi driver part to separate module in mtd subsystem.
 
-It prevents the speculated load from being used.
+This series intended to be pushed through drm-xe-next.
 
-> If so the whole point of dma_rmb() is to prevent from compiler reordering
-> or CPU reordering, but is it really possible?
-> 
-> The sequence is
-> 
-> 	1# reading HP
-> 		srng->u.dst_ring.cached_hp = READ_ONCE(*srng->u.dst_ring.hp_addr);
-> 
-> 	2# validate HP
-> 		if (srng->u.dst_ring.tp == srng->u.dst_ring.cached_hp)
-> 			return NULL;
-> 
-> 	3# get desc
-> 		desc = srng->ring_base_vaddr + srng->u.dst_ring.tp;
-> 
-> 	4# accessing desc
-> 		ath11k_hal_desc_reo_parse_err(... desc, ...)
-> 
-> Clearly each step depends on the results of previous steps. In this case the compiler/CPU
-> is expected to be smart enough to not do any reordering, isn't it?
+V2: Replace dev_* prints with drm_* prints in drm (xe and i915) patches.
+    Enable NVM device on Battlemage HW (xe driver patch)
+    Fix overwrite register address (xe driver patch)
+    Add Rodrigo's r-b
 
-Steps 3 and 4 can be done speculatively before the load in step 1 is
-complete as long as the result is discarded if it turns out not to be
-needed.
+V3: Use devm_pm_runtime_enable to simplify flow.
+    Drop print in i915 unload that was accidentally set as error.
+    Drop HAS_GSC_NVM macro in line with latest Xe changes.
+    Add more Rodrigo's r-b and Miquel's ack.
 
-Johan
+V4: Add patch that always creates mtd master device
+    and adjust mtd-intel-dg power management to use this device.
+
+V5: Fix master device creation to accomodate for devices without
+    partitions (create partitoned master in this case)
+    Rebase over latest drm-xe-next
+    Add ack's
+V6: Fix master device release (use rigth idr in release)
+    Rebase over latest drm-xe-next
+    Grammar and style fixes
+
+V7: Add patch with non-posted erase support (fix hang on BMG)
+    Rebase over latest drm-xe-next
+
+V8: Create separate partition device under master device, if requested
+    and configure parent of usual partitions to this partition.
+    Rebase over drm-tip.
+
+V9: Fix checkpatch warning on non-posted erase patch.
+    Add Rodrigo's review and ack.
+
+V10: Drop master device creation patch as it now in mtd-next.
+     Drop power-management patch, it will be merged lately after
+     master device patch is propagated.
+     Rebase over drm-tip.
+
+V11: Fix review comments.
+     Add reviewed-by.
+     Add cleanup in error path.
+     Add PADDING region that exists on some BMG devices.
+
+V12: Add Raag's r-b.
+     Rebase over drm-tip.
+
+Alexander Usyskin (9):
+  mtd: add driver for intel graphics non-volatile memory device
+  mtd: intel-dg: implement region enumeration
+  mtd: intel-dg: implement access functions
+  mtd: intel-dg: register with mtd
+  mtd: intel-dg: align 64bit read and write
+  drm/i915/nvm: add nvm device for discrete graphics
+  drm/i915/nvm: add support for access mode
+  drm/xe/nvm: add on-die non-volatile memory device
+  drm/xe/nvm: add support for access mode
+
+Reuven Abliyev (1):
+  drm/xe/nvm: add support for non-posted erase
+
+ MAINTAINERS                           |   7 +
+ drivers/gpu/drm/i915/Makefile         |   4 +
+ drivers/gpu/drm/i915/i915_driver.c    |   6 +
+ drivers/gpu/drm/i915/i915_drv.h       |   3 +
+ drivers/gpu/drm/i915/i915_reg.h       |   1 +
+ drivers/gpu/drm/i915/intel_nvm.c      | 121 ++++
+ drivers/gpu/drm/i915/intel_nvm.h      |  15 +
+ drivers/gpu/drm/xe/Makefile           |   1 +
+ drivers/gpu/drm/xe/regs/xe_gsc_regs.h |   4 +
+ drivers/gpu/drm/xe/xe_device.c        |   5 +
+ drivers/gpu/drm/xe/xe_device_types.h  |   6 +
+ drivers/gpu/drm/xe/xe_heci_gsc.c      |   5 +-
+ drivers/gpu/drm/xe/xe_nvm.c           | 167 ++++++
+ drivers/gpu/drm/xe/xe_nvm.h           |  15 +
+ drivers/gpu/drm/xe/xe_pci.c           |   6 +
+ drivers/mtd/devices/Kconfig           |  11 +
+ drivers/mtd/devices/Makefile          |   1 +
+ drivers/mtd/devices/mtd_intel_dg.c    | 830 ++++++++++++++++++++++++++
+ include/linux/intel_dg_nvm_aux.h      |  32 +
+ 19 files changed, 1236 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/gpu/drm/i915/intel_nvm.c
+ create mode 100644 drivers/gpu/drm/i915/intel_nvm.h
+ create mode 100644 drivers/gpu/drm/xe/xe_nvm.c
+ create mode 100644 drivers/gpu/drm/xe/xe_nvm.h
+ create mode 100644 drivers/mtd/devices/mtd_intel_dg.c
+ create mode 100644 include/linux/intel_dg_nvm_aux.h
+
+-- 
+2.43.0
+
