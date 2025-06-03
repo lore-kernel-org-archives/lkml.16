@@ -1,99 +1,153 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EEB7211472;
-	Tue,  3 Jun 2025 06:48:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF7C1F4CBD;
+	Tue,  3 Jun 2025 06:49:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748933294; cv=none; b=N/alH9R8MZDTFY4N9ZSGavKS9TXeoF5V6Iaw4A1zRiRPJF22j1qqOLT35Wb6DxJKHE43BbeC0VhvqRfXppQ1h6swRpocs76OIiaMidoPo/vtbf6bc4i93kZrKhrTnZyWWjFZyMOv36DCKuOGjq1xQRMSATwSg+9AcoTbTgcVbXw=
+	t=1748933367; cv=none; b=D55k8SMwlQY2yRT+jdLvKKmHSAZMYU0TcYSpW6z7GiAWGR3hfQWWsQJefaW1eg4SasMNwxczKOkiSVzhB59ZbYPDbS9Ok7JWQw2E7kHWncOPkXTndc6N0FiqBkVmjZ1+293frCG5HLalFXgHv7lHXoqgsEtkB+bwTNBO85ZvSyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748933294; c=relaxed/simple;
-	bh=LHnlvV2psFWSQzBb0ccN3jNUfgM+ntSpC/MXqdDoyrU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=hXtJxClBVC2gH5RhOJSHo9QeEha8CA6emwO9wxtDvkYNy/bTEBVDNtii1d9pp4GTLF9pxz4EPSIS6IlDC/jnxYMD8sZ2eb4t/1qUb7rqDS/ZNOHWm7H8xp9JTJVr2omWYuJwrsDZOc4BOkNqP9uuzrsnauHtKp3c8fPF+GqqPls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=X0E23+qK reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1748933367; c=relaxed/simple;
+	bh=uuxUKrwj5FlrVqRIz/X9tvz7d2b4yrJTKmnkoMpxRIk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Sd3YCKwrmWwF+AkE32LguAt0QAMiuPoHbBCQsZ4aRiqfKb16Qdy8FulBtdwxdZ/Vmss7mEKgRfVnd+kEtrqfEQncO95Czph3rnmE31fNr5mPaxF6WbLlagfsRxRKp678GtnpMDx+7ajwrslzVdUts/OR5TGdEfG+6T/+vcs/Er0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FHUi0GKN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="X0E23+qK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=SoTDWzjXsQ/Zg5zUJWRO9wNxudG0F5M1LKS0zzLg+pM=; b=X
-	0E23+qK9GTwu6XU4p1EEyiqDATtGmrp7hQucSNZPV1WFUygHICzLeqeG7IFjkL6f
-	A5sdeYN1R1ZbjHBh5mRMPGWZH17E6kAywD7k1/BJDaLwwLhu6vpc3xw4PZxypN0I
-	joaKK9CW2koAgS2zy+8WT3XJ+aGWxqDD2051RvOh8w=
-Received: from 00107082$163.com ( [111.35.189.95] ) by
- ajax-webmail-wmsvr-40-138 (Coremail) ; Tue, 3 Jun 2025 14:47:25 +0800 (CST)
-Date: Tue, 3 Jun 2025 14:47:25 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Yeoreum Yun" <yeoreum.yun@arm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, mingo@kernel.org,
-	acme@kernel.org, namhyung@kernel.org, leo.yan@arm.com,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <aD6YpfGz3MUfedHC@e129823.arm.com>
-References: <19514ed5.5692.19734522326.Coremail.00107082@163.com>
- <aD6Xk2rdBjnVy6DA@e129823.arm.com> <aD6YpfGz3MUfedHC@e129823.arm.com>
-X-NTES-SC: AL_Qu2fCvWYvEov4yGbZekZnEYQheY4XMKyuPkg1YJXOp80iCXQ3wodeXBxJkTkwcOOJiWSvxe8aSZS7+RTe4BFYbChV4TaPaKSjKDs55PotH6X
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FHUi0GKN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07957C4CEED;
+	Tue,  3 Jun 2025 06:49:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748933366;
+	bh=uuxUKrwj5FlrVqRIz/X9tvz7d2b4yrJTKmnkoMpxRIk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FHUi0GKNuVuMh9vwZWOciEoW9DiYFrD+Es9+fsgwHR3nkIMMshz1WNB9iDa//XDbf
+	 ANSOpB1naR7kFTL99CB71/ZMSUyfmtnwWvHwBkmrAHq1wl4azinrMALwvYYsHcX97e
+	 5y0FFfZRtfO9BNDLbt/bRHCwh4qUE6XpS8P3FfKXBj0v2yLG3qCcsbo9YeME8QwFU1
+	 I7HDehUILa0g1NtY05zJxmccHyc+3SGugKdHqf2NyepnnKq7R0pDl68e3aGCVklqbA
+	 gQU0A8Aln+Ab0Vsv+GUSsZk4iMMEHxXmIhZrCAirmC8CdO145dC+Hg4zJnM0XihuNA
+	 UaO5bwxeKoevg==
+Message-ID: <f3f72ade-1ead-46e7-b420-82e8a921bc55@kernel.org>
+Date: Tue, 3 Jun 2025 08:49:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <5d17f1d7.666d.197348b78d1.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:iigvCgD3L9t9mj5o9qwSAA--.26411W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkBJhqmg+kwHr9AAFsX
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] dt-bindings: arm: lpc: add missed lpc43xx board
+To: Frank Li <Frank.li@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Alexander Stein <alexander.stein@ew.tq-group.com>,
+ Marek Vasut <marex@denx.de>, Peng Fan <peng.fan@nxp.com>,
+ Michael Walle <mwalle@kernel.org>, Fabio Estevam <festevam@denx.de>,
+ Markus Niebel <Markus.Niebel@tq-group.com>,
+ Frieder Schrempf <frieder.schrempf@kontron.de>,
+ Francesco Dolcini <francesco.dolcini@toradex.com>,
+ Max Merchel <Max.Merchel@ew.tq-group.com>, Tim Harvey
+ <tharvey@gateworks.com>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ imx@lists.linux.dev
+References: <20250602140613.940785-1-Frank.Li@nxp.com>
+ <5014a8ff-aa91-4ea4-81c5-7aeafc13b330@kernel.org>
+ <aD4jZ3QrOS4fM99s@lizhi-Precision-Tower-5810>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <aD4jZ3QrOS4fM99s@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-CkF0IDIwMjUtMDYtMDMgMTQ6Mzk6MzMsICJZZW9yZXVtIFl1biIgPHllb3JldW0ueXVuQGFybS5j
-b20+IHdyb3RlOgo+PiA+ID4gYXR0YWNoX3N0YXRlIGRvZXNuJ3QgcmVsYXRlZCBmb3IgZXZlbnQt
-PnN0YXRlIGNoYW5nZS4KPj4gPiA+IGlmIG9uZSBldmVudCBhbHJlYWR5IGNsZWFyZWQgUEVSRl9B
-VFRBQ0hfQ09OVEVYVCwgdGhhdCBldmVudCBpcyBjYWxsZWQKPj4gPiA+IHZpYSBsaXN0X2RlbF9l
-dmVudCgpCj4+ID4KPj4gPiBNYXliZSB0aGlzIGNvbmNlcm4gY291bGQgYmUgY2xhcmlmaWVkLCB3
-aGF0IGFib3V0IG90aGVyIHN1YnRsZSBpbXBhY3RzLgo+PiA+IFRoZSBjaGFuZ2Ugc2hvdWxkIGJl
-IHRob3JvdWdoIHJldmlld2VkLCBpZiB5b3Ugd2FudCB0byBwdXNoIGl0IGZ1cnRoZXIuCj4+ID4K
-Pj4gPiBJdCB0YWtlcyBtZSBtb3JlIHRoYW4gYSBtb250aCB0byBmaWd1cmUgb3V0IGEgcHJvY2Vk
-dXJlIHRvIHJlcHJvZHVjZSB0aGUga2VybmVsIHBhbmljIGJ1ZywKPj4gPiBJdCBpcyAganVzdCB2
-ZXJ5IGhhcmQgdG8gY2FwdHVyZSBhIGJ1ZyBoYXBwZW5zIGluIHJhcmUgc2l0dWF0aW9uLgo+PiA+
-Cj4+ID4gQW5kIHlvdXIgcGF0Y2ggaGFzIGEgZ2xvYmFsIGltcGFjdCwgaXQgY2hhbmdlcyBiZWhh
-dmlvciB1bm5lY2Vzc2FyaWx5Lgo+Pgo+PiBUQkgsIHRoaXMgcGF0Y2gganVzdCBjaGFuZ2Ugb2Yg
-dGltZSBvZiAiZXZlbnQtPnN0YXRlIiB3aGlsZSBkb2luZywKPj4gQXMgbXkgYmFkIG1pc3MgdGhl
-IGRpc2FibGUgY2dvcnVwIHBlcmYuCj4+IEkgdGhpbmsgdGhlcmUgc2VlbXMgbm8gb3RoZXIgc2lk
-ZSBlZmZlY3QgZm9yIGNoYW5pbmcgc3RhdGUgd2hpbGUgaW4KPj4gcmVtb3ZpbmcgZXZlbnQuCj4+
-IEJ1dCwgTGV0J3Mgd2FpdCBmb3Igb3RoZXIgcGVvcGxlJ3MgcmV2aWV3Lgo+Pgo+PiA+ID4KPj4g
-PiA+IEFsc28sIHlvdXIgcGF0Y2ggY291bGRuJ3Qgc29sdmUgYSBwcm9ibGVtIGRlc2NyaWJlIGlu
-Cj4+ID4gPiBjb21taXQgYTNjM2M2NjY3KCJwZXJmL2NvcmU6IEZpeCBjaGlsZF90b3RhbF90aW1l
-X2VuYWJsZWQgYWNjb3VudGluZyBidWcgYXQgdGFzayBleGl0IikKPj4gPiA+IGZvciBJTkNBVElW
-RSBldmVudCdzIHRvdGFsX2VuYWJsZV90aW1lLgo+PiA+Cj4+ID4gSSBkbyBub3QgdGhpbmsgc28u
-Cj4+ID4gQ29ycmVjdCBtZSBpZiBJIGFtIG1ha2luZyBzaWxseSAgbWlzdGFrZXMsCj4+ID4gVGhl
-IHBhdGNoLCBodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzIwMjUwNjAzMDMyNjUxLjM5ODgt
-MS0wMDEwNzA4MkAxNjMuY29tLwo+PiA+IGNhbGxzIHBlcmZfZXZlbnRfc2V0X3N0YXRlKCkgYmFz
-ZWQgb24gREVUQUNIX0VYSVQgZmxhZywgd2hpY2ggY292ZXIgdGhlIElOQUNUSVZFIHN0YXRlLCBy
-aWdodD8KPj4gPiBJZiBERVRBQ0hfRVhJVCBpcyBub3QgdXNlZCBmb3IgdGhpcyBwdXJwb3NlPyBU
-aGVuIHdoeSBzaG91bGQgaXQgZXhpc3QgYXQgdGhlIGZpcnN0IHBsYWNlPwo+PiA+IEkgdGhpbmsg
-SSBkb2VzIG5vdCByZXZlcnQgdGhlIHB1cnBvc2Ugb2YgY29tbWl0IGEzYzNjNjY2Ny4uLi4uQnV0
-IEkgY291bGQgYmUgd3JvbmcKPj4gPiBXb3VsZCB5b3Ugc2hvdyBhIGNhbGwgcGF0aCB3aGVyZSBE
-RVRBQ0hfRVhJVCBpcyBub3Qgc2V0LCBidXQgdGhlIGNoYW5nZXMgaW4gY29tbWl0IGEzYzNjNjY2
-NyBpcyBzdGlsbCBuZWVkZWQ/Cj4+Cj4+IFNvcnJ5IGZvciBteSBiYWQgZXhwbGFpbmF0aW9uIHdp
-dGhvdXQgZGV0YWlsLgo+PiBUaGluayBhYm91dCBjcHUgc3BlY2lmaWMgZXZlbnQgYW5kIGNsb3Nl
-ZCBieSB0YXNrLgo+PiBJZiB0aGVyZSBpcyBzcGVjaWZpYyBjaGlsZCBjcHUgZXZlbnQgc3BlY2lm
-aWVkIGluIGNwdSAwLgo+PiAgIDEuIGNwdSAwIC0+IGFjdGl2ZQo+PiAgIDIuIHNjaGV1bGRlZCB0
-byBjcHUxIC0+IGluYWN0aXZlCj4+ICAgMy4gY2xvc2UgdGhlIGNwdSBldmVudCBmcm9tIHBhcmVu
-dCAtPiBpbmFjdGl2ZSBjbG9zZQo+Pgo+PiBDYW4gYmUgZmFpbGVkIHRvIGNvdW50IHRvdGFsX2Vu
-YWJsZV90aW1lLgo+Pgo+PiBUaGFua3MuCj4KPkFuZCBhbHNvLCBjb25zaWRlcmluZyB0aGUgeW91
-ciBwYXRjaCwgZm9yIERFVEFDSF9FWElUIGNhc2UsCj5JZiBpdCBjaGFuZ2VzIHRoZSBzdGF0ZSBi
-ZWZvcmUgbGlzdF9kZWxfZXZlbnQoKSB0aGF0IHdvdWxkbid0IGRpc2FibGUKPnJlbGF0ZWQgdG8g
-dGhlIGNncm91cC4gU28gaXQgd291bGQgbWFrZSBjcHVjdHgtPmNncnAgcG9pbnRlciBjb3VsZCBi
-ZSBkYW5nbGVkCj5hcyBwYXRjaCBkZXNjcmliZS4uLgoKTm8sIEkgZG9uJ3QgdGhpbmsgc28uCmNo
-YW5nZSBzdGF0ZSBiZWZvcmUgbGlzdF9kZWxfZXZlbnQoKSwgdGhpcyBpcyB0aGUgc2FtZSBiZWhh
-dmlvciBiZWZvcmUgY29tbWl0IGEzYzNjNjY2NywgcmlnaHQ/CkFuZCBubyBzdWNoIGtlcm5lbCBw
-YW5pYyBoYXBwZW5lZCAgYmVmb3JlIGNvbW1pdCBhM2MzYzY2NjcuCgo+Cj4+IC0tCj4+IFNpbmNl
-cmVseSwKPj4gWWVvcmV1bSBZdW4KPgo+LS0KPlNpbmNlcmVseSwKPlllb3JldW0gWXVuCg==
+On 03/06/2025 00:19, Frank Li wrote:
+> On Mon, Jun 02, 2025 at 06:17:49PM +0200, Krzysztof Kozlowski wrote:
+>> On 02/06/2025 16:06, Frank Li wrote:
+>>> Add missed legancy lpc43xx board compatible string to fix below CHECK_DTB
+>>
+>> typo: legacy
+>>
+>>> warnings:
+>>> arch/arm/boot/dts/nxp/lpc/lpc4337-ciaa.dtb: /: failed to match any schema with compatible: ['ciaa,lpc4337', 'nxp,lpc4337', 'nxp,lpc4350']
+>>
+>>
+>>>
+>>> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+>>> ---
+>>>  .../devicetree/bindings/arm/fsl.yaml          | 23 +++++++++++++++++++
+>>>  1 file changed, 23 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+>>> index d3b5e6923e416..75e46ffe9ba8c 100644
+>>> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+>>> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+>>> @@ -1711,6 +1711,29 @@ properties:
+>>>                - traverse,ten64            # Ten64 Networking Appliance / Board
+>>>            - const: fsl,ls1088a
+>>>
+>>> +      - description: lpc based Boards
+>>> +        items:
+>>> +          - enum:
+>>> +              - ea,lpc4357-developers-kit
+>>> +              - ciaa,lpc4337
+>>> +          - enum:
+>>> +              - nxp,lpc4337
+>>> +              - nxp,lpc4357
+>>
+>> This feels wrong. Why 4337-based board is compatible with 4357 SoC? If
+>> this was intentional either DTS is wrong or commit msg needs explanation.
+> 
+> I think it is that legacy board dts mess up. I am okay to fix boards's dts.
+> but I have not hardware to test such changes. There are some risk to toggle
+> such old boards, such as the uboot may check these comaptible string to do
+> some fixup. Anyways, these boards is too old.
+> 
+> Do you think it worth to fix dts by take some little risk.
+Well, I do not see ea,lpc4357-developers-kit with 4337 fallback, so I
+don't understand what existing DTS. If you mean out of tree DTS, it's
+their problem.
+
+Best regards,
+Krzysztof
