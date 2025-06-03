@@ -1,177 +1,237 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazolkn19011033.outbound.protection.outlook.com [52.103.14.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624B84C92
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 03:17:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748920647; cv=none; b=jj9G0kp4EDI3Zgjyh+sSOc5AVkMRUxPCT8hFdaZZ3Q9m2xEF4kmxB89FpqAML7ZQDib1Zi85gTguYZyaeUYr25NEOx0l/1FQoyluxMvU2LtUpTku/RXiRdglev/TId/OZn3ZiaBqtsEP4HxE47PNgOk5+Z65Ua2PQxa7zobp8Qw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748920647; c=relaxed/simple;
-	bh=mICnRsB30j+MKei8QViebI5du5rZTT4LMUwMAyhcGXw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rxZSkNlbsZZE4HjvucfDFGxDQXuEz0v63louZo/x1iA5fn7ImbJZcvMHons8ee3EGDM8L+KpRyYKRo06XTumwyL/ua7tJc+AgZPerPc6r61aRXfbuK0WtsrHD3Dh4v0BfzY2BmdAo0Ox4Cofz9peYFe9t5t/Bafo2RqyOwkUJ7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=UE/K5hVb; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D3BE4C92;
+	Tue,  3 Jun 2025 03:18:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.14.33
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748920708; cv=fail; b=oph475CAdtjpDHsG99vbopomGFgrqn15RpI+X09lI5E1dhZDneka/NBiRN/3lr5N1uc0viSFRv6Ds14ygYQjduWMBSZvyGMasfsuEZESZtKAPcy3XvKAV8EiXgxgcV2X2Wb1IA7l/TrkILBxJ31y7cHV01uWbqqeh2Ol5XztrJ0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748920708; c=relaxed/simple;
+	bh=6Wf/egvnWWp/yDOyr+3/5DqPzvzONBKKe9Q1OHSuijo=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=ms3NqtoRvciR3N+vgdLWfQpQB7p0vKNCzE6RrCAdTlzDHBLD4R5EJBH6vKlJ6rup3UvSJxdiwHB/MC3CGarwz7kv2oRkTYM+ddSTsI0yvZLVSzuQI4HhqnrP0B9DK2yl3hyke49AuYhWD4/q5PKXLNvd4MPIQbRzRKDqp05xgh4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=mkt4Cekp; arc=fail smtp.client-ip=52.103.14.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="UE/K5hVb"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 552HJitl011138
-	for <linux-kernel@vger.kernel.org>; Tue, 3 Jun 2025 03:17:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	rMgCs9NrjesFQlLVNGJXrQW0yp9nGoo0WvBW9uMrt1g=; b=UE/K5hVbdmX5taoS
-	AgDaFz3oxpZO9NeuOpgJcu9ZfPImD2rQspS9qYRe+eUVwa17RtoQ4I1uOvVCOFxn
-	OW/Q9A+fylpF47XPz86JlxAS64mavK84xFX44pUhaCFxUeKYXOgva9kaNAN8cIaR
-	WTc9DVOem/eBdFu5pr4OPkxfoIlJSyep1DlHIFGV9k7513Qt3uTTWMJhM2FL2cf+
-	GxTlBY3l8230+vjjU+TGZF2du04mwgar25ADzy0IK6g/RgQxwPrpEOfx57BMlGRf
-	VqIAC0TJgBRyFgxY3evP0EhbQ6xzkrXQoHJdsL84WJNfcTuz009VwlMxYgwH91lO
-	WOsaoA==
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8ss5fs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 03:17:25 +0000 (GMT)
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-23546e35567so29545775ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 20:17:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748920644; x=1749525444;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rMgCs9NrjesFQlLVNGJXrQW0yp9nGoo0WvBW9uMrt1g=;
-        b=bMJo3eidzM5jfq1ZUSsQE4oLUWmnr9Bh/4TtyQ9GA1Xp7IvMKFw6zqhHMVNetmanc/
-         qcQH4BS5uCHIGneR8TYupoL0sFfWI4OPK6MLBRqfuH4ZtCuxQ44fo94v3ZE0ularlMP9
-         yzqNKAj/TE44RcXVAoRfipLEWckrcitLY+WZOJgZbKh6u2DTepq8xsZlU+fbqIjpiiY9
-         hB/j96SsyCIyCd4InK1/oZQlzfng1NctlXwLPf9un46O2TGQLmqQwsV1ICsH78o7VQJh
-         hitUaaRTL7MZiKOBBNZ1u7pXB8UGX40yPqKPp+I1MLfv40MERGz/mDCKGj4z3Xun1eum
-         fHTA==
-X-Forwarded-Encrypted: i=1; AJvYcCXRuv/dVSX9kLbPttd3UsgvDproy4LlJ0pAp04cNGHJ5F5RtSFEHErdYiTiDHfnYdFQ1iVuCVBmndRdME0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSOjvLDf+GSErwr//A3cTeAjsw1htUxwkOqEY5QZqTLnv2JlBb
-	77c4xIGMHE1K7oCjpb5W+TqFcZrQYq+WmxNkSvBm8maV+AQHRMGunMuy5v5IyBBA+aEzQg1cowu
-	r/0/1Ewi6X1yjGctNGDzmDYUHO+gYxToAlpZEge4FuNC8Z53uKlhKFVHGitg7KnewRkw=
-X-Gm-Gg: ASbGncsLSYgLlQSTSxXamsbCgmqh2BiVpe9dJ3TfkOWFnqbfUptgc623nPC7XXTF+e6
-	A00HP9P8uFVDH81/yJtz97Vqb5Zx0wHEhl4ZwkCpjE8B5ZVJU0eVimgF6opWL7mlSWCPhXqg6Ga
-	qQFLkqYD5cfa7XMgSJOZPP3T5RU1A6P7XtJp9Z3V0nGdFan2d+SnPx9ngRT+XYNMga9y6yPKIWh
-	X3ynrN/WmnfTwllTKBXmVKlIEWMHwPRY1uXo1agzja5src8BeQEiBpQPHr42UP995VytsUfRuSl
-	ipyJL0BbQ9FlD7JKuSXNS9R1QiFwTi1cpPZfLZRQ2yRx3JjI43nCDuut5emHHThn+tprvbGkvNk
-	QFBMnoC4=
-X-Received: by 2002:a17:902:d4ca:b0:235:2403:779f with SMTP id d9443c01a7336-235395b621fmr226631745ad.29.1748920644393;
-        Mon, 02 Jun 2025 20:17:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHJAApKbsRRZnpYjpmXHMAeqRWvvuJ1p5ObFhKMNoXU0JlNmL/FtEvJRcGPJWs6NXL4fE5oyw==
-X-Received: by 2002:a17:902:d4ca:b0:235:2403:779f with SMTP id d9443c01a7336-235395b621fmr226631465ad.29.1748920643986;
-        Mon, 02 Jun 2025 20:17:23 -0700 (PDT)
-Received: from [10.133.33.114] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bc8842sm77825665ad.44.2025.06.02.20.17.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Jun 2025 20:17:23 -0700 (PDT)
-Message-ID: <405f0432-3f07-45be-8511-06235dcd84d0@oss.qualcomm.com>
-Date: Tue, 3 Jun 2025 11:17:18 +0800
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="mkt4Cekp"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Zk4fdBYSNd+qjg78txnuIVeADurdDb6sWL1sEBe2FTkRh7mLphcvMhyGgWIJIet2X00LvqJzewXu9r17SW/dPPSpUPM/SXTvj/ibrzGZTactMatlfi55hfpAz/gc7cCKqzHve6mWck3Zruv1MKOygmZoXXwk1FHPfUBcnajobu/4yOma3EWoq5ad9GTv17v1xHZGpMmRFs6pvwNlhcWg/Og0k+nbiVFLbWAUCFbhMu8FgMogvVGc1L2z+t55osmdA0oPPphAXNWI9zcjIV7ELiM6h0sXag+duUjIE2pHzJeK3JlnTRDXcMH1YOkw/pZ4+5Jl6NGqX6EG7HN7GBu1Ng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=K3gT9sDvvs1Okl0MK7pqAvNpdu+73lof8osC/vlrEOo=;
+ b=imzyiKhGJDOCn+ZPi8APSk1sBD477cPS2nwzCOageLi+5r9MrYefwkLRoLoPmMa/ADpiA5txBqPo71VUUaiGqQbeVT9457vTAldIOGNfs2LUX07gpzJNIMhzyPkhEhth2ZtNk6BQR8HcRq9nkMsLzbjkitKgTViuOJqkthlPagh52V+kKqSETWROesez2U2z9sKCWi5dlP7ZNR9Z3Bt3HRNTC5b1iAMrQ85NRgsp4wVKjSySyl67iCrx4lVePSF51R6buQybuF8i2eyKrMpD0AiN3hgBMglhqC/scOKSrONzK5mxvQvC7MMEOsHbNzVoDqncZAmb4yeAuVES+NYMcg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=K3gT9sDvvs1Okl0MK7pqAvNpdu+73lof8osC/vlrEOo=;
+ b=mkt4CekpaciTkG5rO4KfIegi10WwCPLkIKto4yVwuMs6gw0AM8HgXs23N/IOcf3w0yMdeaK6hd3E6fw4apWIr9eGDqWxaqmR3GsxPDjrPBT7z5CmC24s1hzqScazMVuZYeA046Sju9Ze1PBwtFiSduC5Vz8bFLUNOWy7o+wohdyh9euh6Ezt/ZOzBgds+MAEHdFB7WtIf8wypIFQfsmixrUIpG3QksN9lMnHoM0+HoH8e5tQM66PrCoBgT7SiO4UfYZEIUgLnus0LM146SduMn6RQYFocIDy18gInXqZ/3KvY7RrJyqL/AN136ILWPEHrKSGzUh8a4DtUbRUbVg7bQ==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by CO6PR02MB8770.namprd02.prod.outlook.com (2603:10b6:303:141::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.27; Tue, 3 Jun
+ 2025 03:18:23 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8813.016; Tue, 3 Jun 2025
+ 03:18:23 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Toshiyuki Sato <fj6611ie@aa.jp.fujitsu.com>, Russell King
+	<linux@armlinux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "fj6611ie@aa.jp.fujitsu.com"
+	<fj6611ie@aa.jp.fujitsu.com>
+Subject: Problem with nbcon console and amba-pl011 serial port
+Thread-Topic: Problem with nbcon console and amba-pl011 serial port
+Thread-Index: AdvULbS8DdGjT9TLS9OOSVhbv2AtDg==
+Date: Tue, 3 Jun 2025 03:18:23 +0000
+Message-ID:
+ <SN6PR02MB4157A4C5E8CB219A75263A17D46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CO6PR02MB8770:EE_
+x-ms-office365-filtering-correlation-id: d3dc964e-f50d-445d-9a69-08dda24d4c60
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|8060799009|19110799006|8062599006|15080799009|461199028|440099028|3412199025|102099032;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?nRV6KEw0wlO9nk7X4x0qXyip68go7MMH4IpNpEHKf4mdNKG1U+KsrqKZzJON?=
+ =?us-ascii?Q?hxBfIXtgwYFn2K12SLAcSaoVYThmY88NkbjbVUOrl8a1fpW0Pw0XXuUtBH3k?=
+ =?us-ascii?Q?h0DTpvF8XQ0tZBrnzhPlEmdqhqcf3MXsNwcQE0aZfCp04bkGJHNDmsXlWipg?=
+ =?us-ascii?Q?2YcYEHyI5i01QYycK49PGGMiM0OsWJgI9KilqFz+uF0rQVIsCOr4MpQ+rURS?=
+ =?us-ascii?Q?KabCUW6/7Oa/CrAe1G+p5Mjtj8u91amusieYdFCS6PR9hnLDdFSmqBLJshoe?=
+ =?us-ascii?Q?mRSdtxvkoK9qHsaSYD42UqjgNuFO76eCTwCBjrlIFpTJKMbcArlipzlwcUU5?=
+ =?us-ascii?Q?xmG2wBmFzuiyTKRyoGo1IPgmvzFS4I+XQmCKkPjdzHH+c0/6JE1JChCOmCWm?=
+ =?us-ascii?Q?9KeEpZyN5i3O0rPfT8Y3vKwjezMmugYI6KnxeiBjsoyiYl7TsMXl97cuWIPo?=
+ =?us-ascii?Q?dWjcReJKdft8pA02izOS7snr1LfE+cxeS29hTcRf9/EzLcGKFyrZ61sOdXDv?=
+ =?us-ascii?Q?EOx2Vb1IiJR58QretIt5H3S13Rt1fjEt5+wlikvFTEDNO/VAta5768RBEUcb?=
+ =?us-ascii?Q?EmQulGWRd3JdyD+DqK/rSfWMkE+4PbApvDbmCLhBxoi1OcqSqzNNzqawmPpN?=
+ =?us-ascii?Q?L6843g1KtO+h37T38UDNK6RnF38blNcBEBgNJCkKzTm7R9CTJZLC/29bSm4V?=
+ =?us-ascii?Q?pXj1uzU1CbY/wcJ7NGggDt1KWOjSAY9WuVuA29UvWGP0abC5PesK8tCQKei9?=
+ =?us-ascii?Q?JaP8RnaooaNHcNNB9PSrlOT+7WjL3+39Y6CKZWViQpxQbh8mXscCKRay1Krg?=
+ =?us-ascii?Q?OwPMmmlyVnanTUlz6U4D4ttkH7mWEbD8ZDLyaN2Z8D8Ibl4IFpysTxv1/obq?=
+ =?us-ascii?Q?fvVA8FoY6S0uIxQwy9BC4wbZZM65//rHc9p8jsWBNdAX01UuaFPSaogdBtBr?=
+ =?us-ascii?Q?dejbed27nqCIXF9P8JngQJWMLcqrEgSuppiFbRw+Ifj8gYtTQz8sOLTkDuMr?=
+ =?us-ascii?Q?Kv08vyBuwhTPYgNKaakjE4vXgY/Iogzx2J/s7s8/MZJpsLamH6Fg7qHbcDSC?=
+ =?us-ascii?Q?lKEa/jMy1V2JR6V0b+xrivxn7DqkUA=3D=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?1RkYlwI94KiaPgJUFVDic+nGLZhlcnSjT1zfnBPFMjgLfeJ5z8ndhifGbl2s?=
+ =?us-ascii?Q?8TkHSE+VLbsfb+PRTaGG6Q14VfcnJcuSAfkyorWOKnHv8vZ5LglJCLWxp52e?=
+ =?us-ascii?Q?8j7aANJvEUTfIjxL3rZ4Ss9G8hdyqOqbnNkhBXrY6bKk7PzkrJw+1f+eBTEr?=
+ =?us-ascii?Q?K/WaShllQCarSPbMDCen1BBXHi5TtmsWKNVl4PhudQSwT9Ono0CGYTjC2bMq?=
+ =?us-ascii?Q?sxyaf56bL7mBfBh/UnJQwUDOAdt0dUkTi1hgav39Hlq/37O7RL/hjrvbxiwK?=
+ =?us-ascii?Q?MRmDrAnlyQcTM/VUCfXnV2M+xFftlxAH4nriyXv+mb+DQuZQM+lxNcMdN41f?=
+ =?us-ascii?Q?Ys2IlIvfgGQ0orKptKtvLhPz0HkkwWoklHw9Rzu84kaXt+ras7TFlH0ML1Xm?=
+ =?us-ascii?Q?xuh+YciUo3XyfjJqipMeDnt7nOhk8EvokvJJvDXn2EhZc1FgLVWdzejgrJNo?=
+ =?us-ascii?Q?BcvRo6IVKCyFBVOCuyCXFBAawcPiOAOjpuD55ERRvXgeoA+ytOLaIU/MH2kT?=
+ =?us-ascii?Q?2At6uxA2MWxarGEby7mFj1WDhZ+ImMOTjR4+2YOMcGk0eIEcAXc8+hwo8H5N?=
+ =?us-ascii?Q?D1EXHj0HpTHueSdG0ai80+p6h++f1kH+sSeb3+y54eVItI8AKxlDN7UaanID?=
+ =?us-ascii?Q?tZ+grpbQCJafyDrXXSAOvOBP1rbyGMcCvcY3QuwR0oc3qM+PYB+tBPC1YlI+?=
+ =?us-ascii?Q?PKLBsPn8WutXuc7oPHduCHp5A2TbmXk1AXk+r79uzrQH6JzoUnRhKxD4Bp20?=
+ =?us-ascii?Q?PHEBzgoXJTiLA3wkJjz+JcpefeqAtRbeYKZLqpAZS3cmZf6L32DqKI2vY1/B?=
+ =?us-ascii?Q?tUd0Nzv+vZFjzzziapppognLVl6D4bE/HrKNvF/TvTd+60vmWItNFsv9TVGF?=
+ =?us-ascii?Q?I1/QjcnEG25lMRRyc9t1nV20ptyJiGOnvhvZFi7uuSKOJoe0DikbreO7wTAK?=
+ =?us-ascii?Q?QsSz3eEW2cftb6e/kst6Ae3ceFRyIIzMI7lqUrXeIJvdb+NRrsEsRzdYrI2M?=
+ =?us-ascii?Q?fzwt7E/sAI9+szeyaoGyqgNWsy+JbgYzGGF7ls5YSNKmil8WaN81tVh2VEu8?=
+ =?us-ascii?Q?TliodcTmJ1GsPd61fz1FAa4hXtafH7DHEMHVAW8hFqDC8IBmgGd2JV+Ua0xO?=
+ =?us-ascii?Q?ZII/RSIn9ESjf+rk7KbCPEcw/dgIGj7VSR7CjTonIVq0VH0YuNsuMmGQQur7?=
+ =?us-ascii?Q?0LslHJGZIrTCu0RscFNLS3QLsz4nqGfRKk9QxL9giW6bsCMn5KpE1k6mLgg?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: qcs615: disable the CTI device of the
- camera block
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Jie Gan <quic_jiegan@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: Tingwei Zhang <quic_tingweiz@quicinc.com>,
-        Jinlong Mao <quic_jinlmao@quicinc.com>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250527015224.7343-1-jie.gan@oss.qualcomm.com>
- <5fbb515a-c3d0-4bbe-a689-41e730ecd952@oss.qualcomm.com>
- <9a156925-cf7b-4d2e-88a8-fdfed5528553@quicinc.com>
- <1fef810c-47fe-4f6d-95bc-0d72dbd63bf0@oss.qualcomm.com>
- <79f5e42f-f857-4247-abf9-d0f3f5c1a498@quicinc.com>
- <f3f8f446-4f0d-482d-952d-35c80d7d7881@oss.qualcomm.com>
-Content-Language: en-US
-From: Jie Gan <jie.gan@oss.qualcomm.com>
-In-Reply-To: <f3f8f446-4f0d-482d-952d-35c80d7d7881@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: hdTcMwzATwMPpD9_DfwwN72GspuHYWPm
-X-Authority-Analysis: v=2.4 cv=EPcG00ZC c=1 sm=1 tr=0 ts=683e6945 cx=c_pps
- a=cmESyDAEBpBGqyK7t0alAg==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=P-IC7800AAAA:8 a=BXdiI9v_AKGlemzBL5QA:9
- a=QEXdDO2ut3YA:10 a=1OuFwYUASf3TG4hYMiVC:22 a=d3PnA9EDa4IxuAV0gXij:22
-X-Proofpoint-GUID: hdTcMwzATwMPpD9_DfwwN72GspuHYWPm
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAzMDAyNyBTYWx0ZWRfX8qQI7aXJgJHr
- ZE6E7o9KGhpvvtpDAQPtujHt4U3OEJrBYInPpElncaOvalDPoTdseic6QormwRJW4u/aIKEUn81
- cuT1ZWNqJNtx80YDfy9vDnnzD4ZeTjNnaPyLLfnB9xS0yaiSFKkatha7HuA+CKCmosqT/QDXh+r
- SPuHErNC2s/B0j8Hy5quXPgbPtii2eJy9C7J863gz4EYfXSTCdLpX6Vu5vAh4SFuBOjTCwqwT8X
- Z8/+TkBjYqZAHcUdmWWOQ/Ni6QVTsHnv5HTeXf9Fpv8jYPhmvqK5p8NlGT+gjsy3AtjUUSNC+aP
- LyECMiLiYlQvQBI/6ustbkMK9SoiLe5mH2w4eOg0hodKdGVgrYCmYg2otaSLcRl1FuXuqieP1ny
- 43nvUKUBndn0DsoPUGS9fE5U+zbx5qVL80jIPXGvvulOBm7tSlc4O87LIlvNClFtyHZoK1az
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-02_08,2025-06-02_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 suspectscore=0 bulkscore=0 priorityscore=1501 phishscore=0
- impostorscore=0 lowpriorityscore=0 adultscore=0 malwarescore=0 mlxscore=0
- clxscore=1015 mlxlogscore=841 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506030027
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: d3dc964e-f50d-445d-9a69-08dda24d4c60
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2025 03:18:23.3598
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR02MB8770
 
+I'm seeing a problem in the panic path of an ARM64 VM on Hyper-V
+in the Azure public cloud.  Here's the output from the VM's serial port:
 
+# taskset -c 4 /bin/echo c >/proc/sysrq-trigger
 
-On 5/31/2025 7:05 AM, Konrad Dybcio wrote:
-> On 5/28/25 5:02 AM, Jie Gan wrote:
->>
->>
->> On 5/27/2025 6:41 PM, Konrad Dybcio wrote:
->>> On 5/27/25 12:32 PM, Jie Gan wrote:
->>>>
->>>>
->>>> On 5/27/2025 6:23 PM, Konrad Dybcio wrote:
->>>>> On 5/27/25 3:52 AM, Jie Gan wrote:
->>>>>> Disable the CTI device of the camera block to prevent potential NoC errors
->>>>>> during AMBA bus device matching.
->>>>>>
->>>>>> The clocks for the Qualcomm Debug Subsystem (QDSS) are managed by aoss_qmp
->>>>>> through a mailbox. However, the camera block resides outside the AP domain,
->>>>>> meaning its QDSS clock cannot be controlled via aoss_qmp.
->>>>>
->>>>> Which clock drives it then?
->>>>
->>>> It's qcom,aoss-qmp.
->>>>
->>>> clk_prepare->qmp_qdss_clk_prepare
->>>> https://elixir.bootlin.com/linux/v6.15-rc7/source/drivers/soc/qcom/qcom_aoss.c#L280
->>>
->>> I'm confused about this part:
->>>
->>>> However, the camera block resides outside the AP domain,
->>>> meaning its QDSS clock cannot be controlled via aoss_qmp.
->>>
->>> Do we need to poke the QMP of another DRV?
->>
->> The AOSS has a clock control register for all QDSS clocks. when we vote the qdss clock, the aoss_qmp driver will send a message to AOSS to enable the clock control register, then the clock control register will enable all QDSS clocks.
->>
->> The QDSS clock is not a single clock source, it is a term that representing all the clock sources utilized by the QDSS.
-> 
-> What I'm trying to ask is, is there any way we could enable that
-> clock from Linux? Can the camera hw turn these on? Maybe we could
-> trick it into enabling them?
+[
+** replaying previous printk message **
+[   51.616656] sysrq: Trigger a crash
+[   51.616689] Kernel panic - not syncing: sysrq triggered crash
+[   51.624212] CPU: 4 UID: 0 PID: 2278 Comm: echo Tainted: G            E  =
+     6.15.0-rc7-next-20250521 #1 VOLUNTARY=20
+[   51.630165] Tainted: [E]=3DUNSIGNED_MODULE
+[   51.632331] Hardware name: Microsoft Corporation Virtual Machine/Virtual=
+ Machine, BIOS Hyper-V UEFI Release v4.1 09/28/2024
+[   51.638771] Call trace:
+[   51.640179]  show_stack+0x20/0x38 (C)
+[   51.642488]  dump_stack_lvl+0xc8/0xf8
+[   51.644638]  dump_stack+0x18/0x28
+[   51.646654]  panic+0x384/0x478
+[   51.648371]  sysrq_handle_crash+0x20/0x28
+[   51.650815]  __handle_sysrq+0xdc/0x2b8
+[   51.653080]  write_sysrq_trigger+0x124/0x240
+[   51.655508]  proc_reg_write+0xa4/0x100
+[   51.657917]  vfs_write+0xd8/0x3e0
+[   51.659836]  ksys_write+0x74/0x110
+[   51.661735]  __arm64_sys_write+0x24/0x38
+[   51.663967]  invoke_syscall+0x6c/0xf8
+[   51.666025]  el0_svc_common.constprop.0+0xc8/0xf0
+[   51.668771]  do_el0_svc+0x24/0x38
+[   51.670713]  el0_svc+0x40/0x198
+[   51.672509]  el0t_64_sync_handler+0xc8/0xd0
+[   51.675170]  el0t_64_sync+0x1b0/0x1b8
+[   51.677351] SMP: stopping secondary CPUs
+[   52.728175] SMP: failed to stop secondary CPUs 2
+[   52.731229] Kernel Offset: 0x5706ebce0000 from 0xffff800080000000
+[   52.734528] PHYS_OFFSET: 0x0
+[   52.736115] CPU features: 0x2000,400007c0,02110ca1,5401faab
+[   52.739275] Memory Limit: none
+[   52.803615] ---[ end Kernel panic - not syncing: sysrq triggered crash ]=
+---
 
-There is a power issue if we keep the debug clock on with a long time.
+The problem is the failure to stop secondary CPU 2.  (The CPU # that fails
+to stop varies from run-to-run.) It is mostly reproducible, but not always.=
+ I
+bisected to commit 2eb2608618ce ("serial: amba-pl011: Implement nbcon
+console") in the 6.15 kernel. Further custom logging shows the details of
+why the problem can happen. Here are the steps:
 
-We had a discussion with AOP to check if possible to add the debug clock 
-of titan to the QDSS clock list, but they need time to evaluate it.
+1. The "echo" command ends up in __handle_sysrq(), which outputs the
+"sysrq: Trigger a crash" message using pr_info().  I always ran the "echo"
+command on CPU 4 just for consistency in my testing/debugging -- there's
+nothing special about CPU 4.
 
- From Coresight view, what we can do by now is disable it in DT to 
-prevent the unexpected NoC error.
+2. The "pr/ttyAMA0" kernel thread handles the outputting of the message.
+nbcon_kthread_func() calls nbcon_emit_one() with the "use_atomic" parameter
+set to false. nbcon_emit_one() in turn calls nbcon_emit_next_record() with
+the console spin lock held and interrupts disabled. nbcon_emit_next_record(=
+)
+then calls pl011_console_write_thread(). The latter has a "for" loop to out=
+put
+each character of the message, and my custom logging shows that it is indee=
+d
+outputting the string "[   51.616656] sysrq: Trigger a crash".
 
-Thanks,
-Jie
+3. While "pr/ttyAMA0" is doing its thing, __handle_sysrq() calls
+sysrq_handle_crash(), which calls panic(). After some preliminaries, panic(=
+)
+outputs the message "Kernel panic - not syncing: sysrq triggered crash"
+using pr_emerg().
 
-> 
-> Konrad
+4. pr_emerg() has a high logging level, and it effectively steals the conso=
+le
+from the "pr/ttyAMA0" task, which I believe is intentional in the nbcon des=
+ign.
+Down in pl011_console_write_thread(), the "pr/ttyAMA0" task is doing
+nbcon_enter_unsafe() and nbcon_exit_unsafe() around each character
+that it outputs.  When pr_emerg() steals the console, nbcon_exit_unsafe()
+returns 0, so the "for" loop exits. pl011_console_write_thread() then
+enters a busy "while" loop waiting to reclaim the console. It's doing this
+busy "while" loop with interrupts disabled, and because of the panic,
+it never succeeds. Whatever CPU is running "pr/ttyAMA0" is effectively
+stuck at this point.
 
+5. Meanwhile panic() continues, calling panic_other_cpus_shutdown(). On
+ARM64, other CPUs are stopped by sending them an IPI. Each CPU receives
+the IPI and calls the PSCI function to stop itself. But the CPU running
+"pr/ttyAMA0" is looping forever with interrupts disabled, so it never
+processes the IPI and it never stops. ARM64 doesn't have a true NMI that
+can override the looping with interrupts disabled, so there's no way to
+stop that CPU.
+
+6. The failure to stop the "pr/ttyAMA0" CPU then causes downstream
+problems, such as when loading and running a kdump kernel.
+
+The problem is timing dependent.  In some cases, the "pr/ttyAMA0"
+thread is evidently able to get the message out before panic() calls
+pr_emerg(). In my case running as a guest on Hyper-V, the pl011 device
+in the guest VM is emulated by Hyper-V. Each pl011 register access
+traps to the hypervisor, which slows things down and probably makes
+the problem more likely. But from what I can see, the underlying
+race condition exists regardless.
+
+At this point, I just wanted to surface the problem. I don't have any
+specific ideas on how to fix it, as my knowledge of nbcon is limited
+to what I've learned in figuring out the failure path.
+
+Toshiyuki -- what are your thoughts how to fix this?
+
+Michael Kelley
