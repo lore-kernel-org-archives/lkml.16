@@ -1,208 +1,154 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D2726ACC
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 23:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F4391CD1F;
+	Tue,  3 Jun 2025 23:23:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748992987; cv=none; b=cJ7dpSgUtXtMAgCdR4052XXf3sAPilCHRjYAxoVZiIDlOOUEPHMcEARIKvlFfHScYWSEGt9/03HaS/WrIQD0Q0+d/PWdqQI2aC8onk7W1CI3tntRNtXQQpcP8Sc8+LAovQwsbdysJhdr2faROLpqgj6Nw6oasL9JlILp5D+ZWp8=
+	t=1748993029; cv=none; b=M+hAtVrTIR9L9cdgPSdMxmuYoyc228EM/x5LrG2iUu8pChU0d6AAIGP5RKos4K9oscvm5fNKNFrYXEk/7J8w2N2xMTwbxzSM7Ly9TF/ki+xk2TJlhD6/GjW+/vccBDEmKUhQ+hpkwifmPW0vN52y6h5BMSKaLimdviI7/ph93qM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748992987; c=relaxed/simple;
-	bh=5NMenGirlGYd5Gf7/ZLMGVBPOpZKY630QabLL5KqYsQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PdrajKkEt/f7yI+0FiyXDp1HAo+UH5T3RtK/93YbLj7lOSJZFMjlyKRySdALRR1ci69FtUl23dcPFYBuw2D/9Cr31rVbSRjJsOEHQ0CB4OI2sdLmsaDxWRsERDw4PB1KgmrgPLyEE441jBYqaTfk4z1D7ldjatzp7nIW04NT2/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TqB7IIkb; arc=none smtp.client-ip=209.85.166.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748993029; c=relaxed/simple;
+	bh=RB3uO5vqD+jkCq8D4eGcycQQpynIt1GzD+jXQPy3FUA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=nBD8Z1bijmGrTT4VrdJXPIqk5fDQMVWbf1D5G19BjuXT0xQwpNAkkZZ2rb7GhCyAOqDthknKIG4uZbGzkzqSvPVuWq40fdxd/omvePVC853swoNVYYz703aDTLXPdhtVR+1lEFnzB/bqYFXIwzX+2b9n/rMGwayj88bum60vDIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AE+uHbRw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TqB7IIkb"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3dc8897f64cso48455ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 16:23:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748992984; x=1749597784; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q3+/BX3M2Y89rbLNsWUUmJGh+NifKtGuVr8X38aK58k=;
-        b=TqB7IIkby3idJRmGeB3gZgETuZCfbsbBhuXo3qyu9VNN7a4g5cZqP9LT9h6/4bfY3r
-         PyhisV54pOTL1nQCjTCP5yOgEmPfogDDLLvrG2bIs16oHaDIM/wgU5DfOEBATh/kIHWt
-         HAUZIUF/kidxiXbXhFmAV7v3DzDmacqQhQSERstKVFkb7ryWvV0ZDE6XPGfPGMULplzg
-         s1aURG0BcEKX0Shkuxj5TRozQrdg4cHON5qipSLIQHNDpxJX4GB3J43MgWmyjHa5px2E
-         W3Nh7aFXKq2oXebVYlhyiq5bKFA+SJSmQKveO54zDOP8TjHOBtCF3ocVEl0W9B2LSZhS
-         DakA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748992984; x=1749597784;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q3+/BX3M2Y89rbLNsWUUmJGh+NifKtGuVr8X38aK58k=;
-        b=spNudwBod4BFHkweqXXMFxw2jtrlIzBtdwEuIBIGjcf6uWVO+A/IuAmdlf5VSbkh1k
-         +cb4llc8FweZHkP6ZapOHaXoqX0p5NJQ4wSMUF/6wdE2FQeYUzTFjoAkN4/zvoHRE7sr
-         bBPjoIY7NcaEL0D77v5MFEi1uUJM892TnsBMomSZd2gPdy0MYl1BBNOxqysIZpWGLSpg
-         nXLquFuSabHQzQ5Rk8gQ0wautR6Sd+Wq9yyb48Yz3fV8wU1pocMpeC9SXkX0T/PgG92t
-         ebgZj5RTYPWun/7V52URgnFMq5/HPxijDn6nljWuejkZhmyuaR0Wqd9dHqVzpBstMoIK
-         EZAg==
-X-Forwarded-Encrypted: i=1; AJvYcCUzwIhFqaEKMcII0IQrBdAdYvSm5CThOK+lMsIgAqCXSN73Y0EuMcYTHNl1rKdhQFDh5wSoesYwjfJFOkE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5Z0aa8umhWMpjYNefAiZLXfEj3IRkV0lRk5+LAVtTFdZBhQZJ
-	tmThfnIOTNrBc7Pqx/P8iC9Eqpif/YVKF2/jEv0wb3VXqAdDyhBM09+IXxT5kI5oB7YMtgaVXZe
-	CdQa7a0Cmuw7/NIcwqBT3C9VYRDqAg5B+lTtNfWVu
-X-Gm-Gg: ASbGnctbPam1DpOr8zO7kM6ttJEVR49vWMY7DhPodg+/MbHRMljCmscUcNpPztaeT8J
-	hFvJzoV110prOG+DX6HpCNeHHEtLoYLpUVgxo6Lt21TWnAdkvn+BMvk9+pAdt3EnaD2uc/Z3WP3
-	TeyYbj9Axq7GbC962HLDeUbPlrTXbMTd6DcQqAVGRAOsLPdcOdlqKj4MRaoEqwZuK2Yx7rLE9b
-X-Google-Smtp-Source: AGHT+IEUvzqU7FRoFbEh87gPAJQgeCRr8f1sFtdz3WxvkXIfcfQH0XJb+mhdJId8GrzJCCNDfZograTAqpyqHMwzhx8=
-X-Received: by 2002:a92:cdad:0:b0:3dc:7edc:5f42 with SMTP id
- e9e14a558f8ab-3ddbe7b139amr1128855ab.12.1748992984129; Tue, 03 Jun 2025
- 16:23:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AE+uHbRw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43CF9C4CEEF;
+	Tue,  3 Jun 2025 23:23:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748993029;
+	bh=RB3uO5vqD+jkCq8D4eGcycQQpynIt1GzD+jXQPy3FUA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=AE+uHbRworKsxg+gQl1k8efBWqhhDUhyBgo2QfEMJwxiIWUKl3RxMmF5HYwWpGO3t
+	 izyhyfC+bEH1oXtenMRifsInKXj4sHVsWGcv9HJhSQdpITooOIDuhhZQKj+HUOFQoV
+	 NGkujnyoIaNemWjOb9JTn4RSP+8ckZtg6c4rqkWd3M3+/d6O6WyT3ZCM2VKU58wQ1r
+	 41L8ntbQmCNutQdaleLS4+UWnC8vS24b+vqB5PKIJRX/Mr5gC7BEMGKLfHqo/DVEhb
+	 c3ig2C2HqqUp7IID64GzUIhl2vGsktymD58mw/Nq7GdeAi/uR/OmL0ZaVF91mBGanC
+	 4XoVGXOHbYraw==
+Date: Wed, 4 Jun 2025 08:23:46 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Bart Van Assche <bvanassche@acm.org>
+Cc: "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K . Petersen" <martin.petersen@oracle.com>, Sergey Senozhatsky
+ <senozhatsky@chromium.org>, linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] sd: Add timeout_sec and max_retries module parameter
+ for sd
+Message-Id: <20250604082346.2f00f1776700812215e42ec0@kernel.org>
+In-Reply-To: <ac157481-9cd3-47be-92f1-67a67b1b726d@acm.org>
+References: <174892923909.3887244.10526006121005369450.stgit@mhiramat.tok.corp.google.com>
+	<ac157481-9cd3-47be-92f1-67a67b1b726d@acm.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250425214008.176100-1-irogers@google.com> <CAP-5=fXiYHbe9gd_TNyy=txzrd+ONxecnpZr+uPeOnF5XxunGw@mail.gmail.com>
- <aD586_XkeOH2_Fes@google.com> <CAP-5=fUXJ6fW4738Fnx9AK2mPeA74ZpYKv=Ui6wYLWXE3KRRTQ@mail.gmail.com>
- <aD94FJN4Pjsx7exP@google.com>
-In-Reply-To: <aD94FJN4Pjsx7exP@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 3 Jun 2025 16:22:53 -0700
-X-Gm-Features: AX0GCFtEmC2fzpawZdDG0b5JgiRdyvBAmvU4lcNQWGCbVObEs3EY-kJpVkdFZzg
-Message-ID: <CAP-5=fX98m+PPkHR2+KdjtJfc0ONMwkjeoCLzjwG_O=5j50=5g@mail.gmail.com>
-Subject: Re: [PATCH v3 00/10] Move uid filtering to BPF filters
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Veronika Molnarova <vmolnaro@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
-	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Levi Yun <yeoreum.yun@arm.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Xu Yang <xu.yang_2@nxp.com>, 
-	Tengda Wu <wutengda@huaweicloud.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 3, 2025 at 3:32=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> On Mon, Jun 02, 2025 at 11:26:12PM -0700, Ian Rogers wrote:
-> > On Mon, Jun 2, 2025 at 9:41=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
-g> wrote:
-> > >
-> > > Hi Ian,
-> > >
-> > > On Tue, May 27, 2025 at 01:39:21PM -0700, Ian Rogers wrote:
-> > > > On Fri, Apr 25, 2025 at 2:40=E2=80=AFPM Ian Rogers <irogers@google.=
-com> wrote:
-> > > > >
-> > > > > Rather than scanning /proc and skipping PIDs based on their UIDs,=
- use
-> > > > > BPF filters for uid filtering. The /proc scanning in thread_map i=
-s
-> > > > > racy as the PID may exit before the perf_event_open causing perf =
-to
-> > > > > abort. BPF UID filters are more robust as they avoid the race. Th=
-e
-> > > > > /proc scanning also misses processes starting after the perf
-> > > > > command. Add a helper for commands that support UID filtering and=
- wire
-> > > > > up. Remove the non-BPF UID filtering support given it doesn't wor=
-k.
-> > > > >
-> > > > > v3: Add lengthier commit messages as requested by Arnaldo. Rebase=
- on
-> > > > >     tmp.perf-tools-next.
-> > > > >
-> > > > > v2: Add a perf record uid test (Namhyung) and force setting
-> > > > >     system-wide for perf trace and perf record (Namhyung). Ensure=
- the
-> > > > >     uid filter isn't set on tracepoint evsels.
-> > > > >
-> > > > > v1: https://lore.kernel.org/lkml/20250111190143.1029906-1-irogers=
-@google.com/
-> > > >
-> > > > Ping. Thanks,
-> > >
-> > > I'm ok with preferring BPF over /proc scanning, but still hesitate to
-> > > remove it since some people don't use BPF.  Can you please drop that
-> > > part and make parse_uid_filter() conditional on BPF?
-> >
-> > Hi Namhyung,
-> >
-> > The approach of scanning /proc fails as:
-> > 1) processes that start after perf starts will be missed,
-> > 2) processes that terminate between being scanned in /proc and
-> > perf_event_open will cause perf to fail (essentially the -u option is
-> > just sugar to scan /proc and then provide the processes as if they
-> > were a -p option - such an approach doesn't need building into the
-> > tool).
->
-> Yeah, I remember we had this discussion before.  I think (1) is not true
-> as perf events will be inherited to children (but there is a race).
+On Wed, 4 Jun 2025 03:19:54 +0800
+Bart Van Assche <bvanassche@acm.org> wrote:
 
-If you log in from another terminal? Anything that creates a new
-process for that user but isn't inherited will be missed, which isn't
-merely a race.
+> On 6/3/25 1:40 PM, Masami Hiramatsu (Google) wrote:
+> > For example, enabling CONFIG_DETECT_HUNG_TASK_BLOCKER, I got an
+> > error message something like below (Note that this is 6.1 kernel
+> > example, so the function names are a bit different.);
+> > 
+> >   INFO: task udevd:5301 blocked for more than 122 seconds.
+> > ...
+> >   INFO: task udevd:5301 is blocked on a mutex likely owned by task kworker/u4:1:11.
+> >   task:kworker/u4:1state:D stack:0 pid:11ppid:2  flags:0x00004000
+> >   Workqueue: events_unbound async_run_entry_fn
+> >   Call Trace:
+> >    <TASK>
+> >    schedule+0x438/0x1490
+> >    ? blk_mq_do_dispatch_ctx+0x70/0x1c0
+> >    schedule_timeout+0x253/0x790
+> >    ? try_to_del_timer_sync+0xb0/0xb0
+> >    io_schedule_timeout+0x3f/0x80
+> >    wait_for_common_io+0xb4/0x160
+> >    blk_execute_rq+0x1bd/0x210
+> >    __scsi_execute+0x156/0x240
+> >    sd_revalidate_disk+0xa2a/0x2360
+> >    ? kobject_uevent_env+0x158/0x430
+> >    sd_probe+0x364/0x47
+> >    really_probe+0x15a/0x3b0
+> >    __driver_probe_device+0x78/0xc0
+> >    driver_probe_device+0x24/0x1a0
+> >    __device_attach_driver+0x131/0x160
+> >    ? coredump_store+0x50/0x50
+> >    bus_for_each_drv+0x9d/0xf0
+> >    __device_attach_async_helper+0x7e/0xd0  <=== device_lock()
+> > ...
+> 
+> How can this happen? The following code should prevent that a hung task
+> complaint appears while blk_execute_rq() is waiting:
+> 
+> static inline void blk_wait_io(struct completion *done)
+> {
+> 	/* Prevent hang_check timer from firing at us during very long I/O */
+> 	unsigned long timeout = sysctl_hung_task_timeout_secs * HZ / 2;
+> 
+> 	if (timeout)
+> 		while (!wait_for_completion_io_timeout(done, timeout))
+> 			;
+> 	else
+> 		wait_for_completion_io(done);
+> }
 
->  And
-> (2) is a real problem but it's also about a race and it can succeed.
->
-> Maybe we could change it to skip failed events when the target is a
-> user but that's not the direction you want.
+The hung task complaint is for 'udevd:5301', but the stacktrace is for
+'kworker/u4:1:11' (sorry I should paste the udevd's stacktrace too)
 
-We could have other events and try to discover new processes via them,
-do things like dummy events to cover races. It is just a lot of
-complexity for something that is a trivial amount of BPF. In something
-like 10 years nobody has bothered to fix this up.
+>   INFO: task udevd:5301 blocked for more than 122 seconds.
+> ...
+>   INFO: task udevd:5301 is blocked on a mutex likely owned by task kworker/u4:1:11.
 
-> >
-> > This patch series adds a test [1] and perf test has lots of processes
-> > starting and exiting, matching condition (2) above*. If this series
-> > were changed to an approach that uses BPF and falls back on /proc
-> > scanning then the -u option would be broken for both reasons above but
-> > also prove a constant source of test flakes.
-> >
-> > Rather than give the users something both frustrating to use (keeps
-> > quitting due to failed opens) and broken (missing processes) I think
-> > it is better to quit perf at that point informing the user they need
-> > more permissions to load the BPF program. This also makes the -u
-> > option testable.
-> >
-> > So the request for a change I don't think is sensible as it provides a
-> > worse user and testing experience. There is also the cognitive load of
-> > having the /proc scanning code in the code base, whereas the BPF
-> > filter is largely isolated.
->
-> But I think the problem is that it has different requirements - BPF and
-> root privilege.  So it should be used after checking the requirements
-> and fail or fallback.
->
-> Does it print proper error messages if not?  With that we can deprecate
-> the existing behavior and remove it later.
+There are 2 tasks involved, waiter of SCSI commands (kworker),
+and waiter of a lock which is locked by __device_attach_async_helper()
+(udevd).
 
-For `perf top` with TUI you get an error message in a box of:
-```
-failed to set filter "BPF" on event cpu_atom/cycles/P with 1
-(Operation not permitted)
-```
-With --stdio you get:
-```
-libbpf: Error in bpf_object__probe_loading(): -EPERM. Couldn't load
-trivial BPF program. Make sure your kernel supports BPF
-(CONFIG_BPF_SYSCALL=3Dy) and/or that RLIMIT_MEMLOCK is set to big enough
-value.
-libbpf: failed to load object 'sample_filter_bpf'
-libbpf: failed to load BPF skeleton 'sample_filter_bpf': -EPERM
-Failed to load perf sample-filter BPF skeleton
-failed to set filter "BPF" on event cpu_atom/cycles/P with 1
-(Operation not permitted)
-```
-This matches the existing behavior if you put a filter on an event.
+The above blk_wait_io() trick is for preventing a hung task on the
+kworker which is waiting SCSI command. But if it is done under a lock
+and there is a waiter of the lock, it does not help the lock waiter.
 
-Thanks,
-Ian
 
-> Thanks,
-> Namhyung
->
+> 
+> > +/* timeout_sec defines the default value of the SCSI command timeout in second. */
+> > +static int sd_timeout_sec = SD_TIMEOUT / HZ;
+> > +module_param_named(timeout_sec, sd_timeout_sec, int, 0644);
+> > +
+> > +/*
+> > + * write_same_timeout_sec defines the default value of the WRITE SAME SCSI
+> > + * command timeout in second.
+> > + */
+> > +static int sd_write_same_timeout_sec = SD_WRITE_SAME_TIMEOUT / HZ;
+> > +module_param_named(write_same_timeout_sec, sd_write_same_timeout_sec, int, 0644);
+> > +
+> > +/* max_retries defines the default value of the max of SCSI command retries.*/
+> > +static int sd_max_retries = SD_MAX_RETRIES;
+> > +module_param_named(max_retries, sd_max_retries, int, 0644);
+> 
+> Shouldn't these parameters come from the SCSI host template rather than
+> introducing new kernel module parameters? It is impossible to make a 
+> good choice for these kernel module parameters if multiple types of SCSI
+> devices are present (USB, HDD, ...).
+
+Hmm, that does not help us from the hung task for lock waiter case.
+I would like to tune the total timeout according to the hung task
+timeout.
+
+Or, as another idea, instead of tuning it from userspace, maybe
+we can finish waiting earlier according to the deadline of the
+hung task from when it acquires a mutex.
+
+Thank you,
+
+> 
+> Bart.
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
