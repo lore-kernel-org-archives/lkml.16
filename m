@@ -1,196 +1,98 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C6251B0F17
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 08:00:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745401B0F17;
+	Tue,  3 Jun 2025 08:02:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748937662; cv=none; b=JmRiWvV4K+mqT5OZOzz+nrQ9vt4VwjAF9SLECpfYfUollZBsB/QCpGk9eN3CxDDoHVaxH3vG7CIB20Xh0TRY5NJDZ1lmCwdnlNBMVrMgIoYUWmaubGGqTesa50xf3KK7fSMDALqkBbPvqICYTagyfxlHX42P9gwT3U8cMrnvH4k=
+	t=1748937728; cv=none; b=X5F5orVCGPLLnNYwxnWay9cVtF7jUxMmWxsC1656QvZEdhiDgFs+9X0WUoPgAwAEPARmfnRIWEeNwwXurJNEfdMqjmJvTLYC5ACwQzYJXrRknemYgoMhIJrbRvsB4x4FnOjreXeAg7JLZE6h5R/FlLQ/VQjMdLyUELCpNjVcCbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748937662; c=relaxed/simple;
-	bh=Gw+TLIYWmzKK5f/8m74TbizuyuJeuyYUqbsja88P7BQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=kCuFpn0lnOLXAxR0lvTMCc0qvAlysXrjZMRyVexy8I5yTOfkFGJO8McXGrzs7OcE6xUHEcawciqu9daJYxcUq+OtSZj0KZw4uBY+mBmdHzEaf4K/YAxAzUtiTuOj3JLMBn0aPReQ8n8xV6Wfg0iKhSUADaUsD8/j8Qe6nML93cY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=WNtJB9U1 reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1748937728; c=relaxed/simple;
+	bh=9kyAbRkks5+ZeEszHWClhbQsDXdyjmyLLfnOBp9lYlo=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Subject:Cc:
+	 References:In-Reply-To; b=Yn+yYnFWdVuv+e4eKGEI6eTGUwNnjKngiNDhGIQjWXDxXzx3Sf11JKeQs+RUC84Vu7KGCEF1OVE6YzrQHpzExvbwIDESzrPQMUJAunDrIRwbQDJdTgvYt6zblrsU3MHCgSZy7Mbm8kywRJdpNtC4/S2TyIODYXx2nl0uREWmunM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WDZSywUO; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="WNtJB9U1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=Hg0yHiFRSaKRGcv918HNnfNzenkYYXz57h8+U4cPjrY=; b=W
-	NtJB9U1hmALTnz1zKuwrsJVygKd3ImPtG1slLgdRo8CP6hAduhUhxC57UjbO8DGL
-	0mCAGqk3a+uvAKMTR9MTHoqavbWgA5hIzTAa8mZad58EFOUsAYxz2paXlx92lG9P
-	/b7urC4Qo2z1+oBcASA7ITovh/myhRPL0Zb4BMOi0w=
-Received: from xavier_qy$163.com ( [103.126.24.24] ) by
- ajax-webmail-wmsvr-40-125 (Coremail) ; Tue, 3 Jun 2025 16:00:11 +0800 (CST)
-Date: Tue, 3 Jun 2025 16:00:11 +0800 (CST)
-From: Xavier  <xavier_qy@163.com>
-To: will@kernel.org, ryan.roberts@arm.com, 21cnbao@gmail.com,
-	dev.jain@arm.com, ioworker0@gmail.com
-Cc: akpm@linux-foundation.org, catalin.marinas@arm.com, david@redhat.com,
-	gshan@redhat.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, willy@infradead.org, ziy@nvidia.com,
-	"Barry Song" <baohua@kernel.org>
-Subject: Re:[PATCH v6] arm64/mm: Optimize loop to reduce redundant
- operations of contpte_ptep_get
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <20250510125948.2383778-1-xavier_qy@163.com>
-References: <20250510125948.2383778-1-xavier_qy@163.com>
-X-NTES-SC: AL_Qu2fCvWYuE4q5yOdYekfmkgWgus/WcW2u/Qj3IRSO5FwjAzp4A8cXGVSInv77Ma0Kx6cmgmGbjNc8P9mRZFbY4QBoXQPiA+fbbqslzd1xa2ZSQ==
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WDZSywUO"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 86E2A41B50;
+	Tue,  3 Jun 2025 08:01:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1748937718;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c7G1lvf/kPOiqMqyPQvfVR/3H4FSASJvUrGFFqPpIpw=;
+	b=WDZSywUOCm9s0b7b7shrPqvPi/saxIBy0AB+0oGbYY/0GihVHZ/C7YgvSIQJt3kkYvn2X1
+	fJrUwi9wl+yFSnxps8kWvi5L3JDf5HYNuMICVUaIo9zbfbCRBBIfTcd1nwCioq2SAcHDlU
+	ehIMlfXWkuygXwEe1tHLfrcJ+V7yz7Ph11ix2zr95pxcxG1pHD17Cs4ytyx75upwCYWcrY
+	6rxJAb8WKDlmzFO+effCCopvMD/Ts9B5Ai8tA2a+YmtQPS+uQTFn0udeFNUTCqXhp6xsxV
+	BEe4+A3z7TYV9FLu1cMrk9pVUZcwPQk4ASzrZHld2X/VPj5YPkMZy50ZNFDuzQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <6f9842a2.7c3c.19734ce1860.Coremail.xavier_qy@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:fSgvCgD3XyeMqz5oEdwSAA--.16462W
-X-CM-SenderInfo: 50dyxvpubt5qqrwthudrp/1tbiVh9hEGg+pO3IUgACs-
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 03 Jun 2025 10:01:55 +0200
+Message-Id: <DACQOEWJPTU2.34E6UEWBOQ2X8@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Mark Brown" <broonie@kernel.org>
+Subject: Re: [PATCH v10 05/11] regmap: irq: Add support for chips without
+ separate IRQ status
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
+ <mwalle@kernel.org>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich"
+ <dakr@kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+ <linux-input@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+ <andriy.shevchenko@intel.com>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, "Andy Shevchenko"
+ <andriy.shevchenko@linux.intel.com>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250530-mdb-max7360-support-v10-0-ce3b9e60a588@bootlin.com>
+ <20250530-mdb-max7360-support-v10-5-ce3b9e60a588@bootlin.com>
+ <aDmKcNez0Bj41Tcv@finisterre.sirena.org.uk>
+In-Reply-To: <aDmKcNez0Bj41Tcv@finisterre.sirena.org.uk>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdegtddtudculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggfgtgffkffhvffuvefofhgjsehtqhertdertdejnecuhfhrohhmpedfofgrthhhihgvuhcuffhusghoihhsqdeurhhirghnugdfuceomhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepheevtdekffeuleehkedtvdejhfeihfegtdduveeghedvveelgfevteekveelleetnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvuddvrddutdehrdduhedtrddvhedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdduvddruddthedrudehtddrvdehvddphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdefpdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkv
+ ghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-CkhpIEFsbCwKCkl0IGhhcyBiZWVuIHRocmVlIHdlZWtzIHNpbmNlIHRoZSBzdWJtaXNzaW9uIG9m
-IFBhdGNoIHY2LiBJIHRha2UgdGhlIGxpYmVydHkgb2YKYXNraW5nIHdoZXRoZXIgeW91IHN0aWxs
-IGhhdmUgYW55IGNvbW1lbnRzIG9yIHN1Z2dlc3Rpb25zIG9uIHRoaXMgdmVyc2lvbiwKYW5kIHdo
-ZXRoZXIgdGhlIHRlc3QgZGF0YSBpbmRpY2F0ZXMgdGhhdCBpdCBpcyByZWFkeSBmb3IgbWVyZ2lu
-Zy4gSSBzaW5jZXJlbHkKbG9vayBmb3J3YXJkIHRvIHlvdXIgdmFsdWFibGUgZmVlZGJhY2sgYW5k
-IGd1aWRhbmNlLgoKCi0tCgpUaGFua3MsClhhdmllcgoKQXQgMjAyNS0wNS0xMCAyMDo1OTo0OCwg
-IlhhdmllciBYaWEiIDx4YXZpZXJfcXlAMTYzLmNvbT4gd3JvdGU6Cj5UaGlzIGNvbW1pdCBvcHRp
-bWl6ZXMgdGhlIGNvbnRwdGVfcHRlcF9nZXQgYW5kIGNvbnRwdGVfcHRlcF9nZXRfbG9ja2xlc3MK
-PmZ1bmN0aW9uIGJ5IGFkZGluZyBlYXJseSB0ZXJtaW5hdGlvbiBsb2dpYy4gSXQgY2hlY2tzIGlm
-IHRoZSBkaXJ0eSBhbmQKPnlvdW5nIGJpdHMgb2Ygb3JpZ19wdGUgYXJlIGFscmVhZHkgc2V0IGFu
-ZCBza2lwcyByZWR1bmRhbnQgYml0LXNldHRpbmcKPm9wZXJhdGlvbnMgZHVyaW5nIHRoZSBsb29w
-LiBUaGlzIHJlZHVjZXMgdW5uZWNlc3NhcnkgaXRlcmF0aW9ucyBhbmQKPmltcHJvdmVzIHBlcmZv
-cm1hbmNlLgo+Cj5JbiBvcmRlciB0byB2ZXJpZnkgdGhlIG9wdGltaXphdGlvbiBwZXJmb3JtYW5j
-ZSwgYSB0ZXN0IGZ1bmN0aW9uIGhhcyBiZWVuCj5kZXNpZ25lZC4gVGhlIGZ1bmN0aW9uJ3MgZXhl
-Y3V0aW9uIHRpbWUgYW5kIGluc3RydWN0aW9uIHN0YXRpc3RpY3MgaGF2ZQo+YmVlbiB0cmFjZWQg
-dXNpbmcgcGVyZiwgYW5kIHRoZSBmb2xsb3dpbmcgYXJlIHRoZSBvcGVyYXRpb24gcmVzdWx0cyBv
-biBhCj5jZXJ0YWluIFF1YWxjb21tIG1vYmlsZSBwaG9uZSBjaGlwOgo+Cj5UZXN0IENvZGU6Cj4K
-PgkjZGVmaW5lIFBBR0VfU0laRSA0MDk2Cj4JI2RlZmluZSBDT05UX1BURVMgMTYKPgkjZGVmaW5l
-IFRFU1RfU0laRSAoNDA5NiogQ09OVF9QVEVTICogUEFHRV9TSVpFKQo+CSNkZWZpbmUgWU9VTkdf
-QklUIDgKPgl2b2lkIHJ3ZGF0YShjaGFyICpidWYpCj4Jewo+CQlmb3IgKHNpemVfdCBpID0gMDsg
-aSA8IFRFU1RfU0laRTsgaSArPSBQQUdFX1NJWkUpIHsKPgkJCWJ1ZltpXSA9ICdhJzsKPgkJCXZv
-bGF0aWxlIGNoYXIgYyA9IGJ1ZltpXTsKPgkJfQo+CX0KPgl2b2lkIGNsZWFyX3lvdW5nX2RpcnR5
-KGNoYXIgKmJ1ZikKPgl7Cj4JCWlmIChtYWR2aXNlKGJ1ZiwgVEVTVF9TSVpFLCBNQURWX0ZSRUUp
-ID09IC0xKSB7Cj4JCQlwZXJyb3IoIm1hZHZpc2UgZnJlZSBmYWlsZWQiKTsKPgkJCWZyZWUoYnVm
-KTsKPgkJCWV4aXQoRVhJVF9GQUlMVVJFKTsKPgkJfQo+CQlpZiAobWFkdmlzZShidWYsIFRFU1Rf
-U0laRSwgTUFEVl9DT0xEKSA9PSAtMSkgewo+CQkJcGVycm9yKCJtYWR2aXNlIGZyZWUgZmFpbGVk
-Iik7Cj4JCQlmcmVlKGJ1Zik7Cj4JCQlleGl0KEVYSVRfRkFJTFVSRSk7Cj4JCX0KPgl9Cj4Jdm9p
-ZCBzZXRfb25lX3lvdW5nKGNoYXIgKmJ1ZikKPgl7Cj4JCWZvciAoc2l6ZV90IGkgPSAwOyBpIDwg
-VEVTVF9TSVpFOyBpICs9IENPTlRfUFRFUyAqIFBBR0VfU0laRSkgewo+CQkJdm9sYXRpbGUgY2hh
-ciBjID0gYnVmW2kgKyBZT1VOR19CSVQgKiBQQUdFX1NJWkVdOwo+CQl9Cj4JfQo+Cj4Jdm9pZCB0
-ZXN0X2NvbnRwdGVfcGVyZigpIHsKPgkJY2hhciAqYnVmOwo+CQlpbnQgcmV0ID0gcG9zaXhfbWVt
-YWxpZ24oKHZvaWQgKiopJmJ1ZiwgQ09OVF9QVEVTICogUEFHRV9TSVpFLAo+CQkJCVRFU1RfU0la
-RSk7Cj4JCWlmICgocmV0ICE9IDApIHx8ICgodW5zaWduZWQgbG9uZylidWYgJSBDT05UX1BURVMg
-KiBQQUdFX1NJWkUpKSB7Cj4JCQlwZXJyb3IoInBvc2l4X21lbWFsaWduIGZhaWxlZCIpOwo+CQkJ
-ZXhpdChFWElUX0ZBSUxVUkUpOwo+CQl9Cj4KPgkJcndkYXRhKGJ1Zik7Cj4JI2lmIFRFU1RfQ0FT
-RTIgfHwgVEVTVF9DQVNFMwo+CQljbGVhcl95b3VuZ19kaXJ0eShidWYpOwo+CSNlbmRpZgo+CSNp
-ZiBURVNUX0NBU0UyCj4JCXNldF9vbmVfeW91bmcoYnVmKTsKPgkjZW5kaWYKPgo+CQlmb3IgKGlu
-dCBqID0gMDsgaiA8IDUwMDsgaisrKSB7Cj4JCQltbG9jayhidWYsIFRFU1RfU0laRSk7Cj4KPgkJ
-CW11bmxvY2soYnVmLCBURVNUX1NJWkUpOwo+CQl9Cj4JCWZyZWUoYnVmKTsKPgl9Cj4KPglEZXNj
-cmlwdGlvbnMgb2YgdGhyZWUgdGVzdCBzY2VuYXJpb3MKPgo+U2NlbmFyaW8gMQo+CVRoZSBkYXRh
-IG9mIGFsbCAxNiBQVEVzIGFyZSBib3RoIGRpcnR5IGFuZCB5b3VuZy4KPgkjZGVmaW5lIFRFU1Rf
-Q0FTRTIgMAo+CSNkZWZpbmUgVEVTVF9DQVNFMyAwCj4KPlNjZW5hcmlvIDIKPglBbW9uZyB0aGUg
-MTYgUFRFcywgb25seSB0aGUgOHRoIG9uZSBpcyB5b3VuZywgYW5kIHRoZXJlIGFyZSBubyBkaXJ0
-eSBvbmVzLgo+CSNkZWZpbmUgVEVTVF9DQVNFMiAxCj4JI2RlZmluZSBURVNUX0NBU0UzIDAKPgo+
-U2NlbmFyaW8gMwo+CUFtb25nIHRoZSAxNiBQVEVzLCB0aGVyZSBhcmUgbmVpdGhlciB5b3VuZyBu
-b3IgZGlydHkgb25lcy4KPgkjZGVmaW5lIFRFU1RfQ0FTRTIgMAo+CSNkZWZpbmUgVEVTVF9DQVNF
-MyAxCj4KPlRlc3QgcmVzdWx0cwo+Cj58U2NlbmFyaW8gMSAgICAgICAgIHwgICAgICAgT3JpZ2lu
-YWx8ICAgICAgIE9wdGltaXplZHwKPnwtLS0tLS0tLS0tLS0tLS0tLS0tfC0tLS0tLS0tLS0tLS0t
-LXwtLS0tLS0tLS0tLS0tLS0tfAo+fGluc3RydWN0aW9ucyAgICAgICB8ICAgIDM3OTEyNDM2MTYw
-fCAgICAgMTg3MzE1ODAwMzF8Cj58dGVzdCB0aW1lICAgICAgICAgIHwgICAgICAgICA0LjI3OTd8
-ICAgICAgICAgIDIuMjk0OXwKPnxvdmVyaGVhZCBvZiAgICAgICAgfCAgICAgICAgICAgICAgIHwg
-ICAgICAgICAgICAgICAgfAo+fGNvbnRwdGVfcHRlcF9nZXQoKSB8ICAgICAgICAgMjEuMzElfCAg
-ICAgICAgICAgNC44MCV8Cj4KPnxTY2VuYXJpbyAyICAgICAgICAgfCAgICAgICBPcmlnaW5hbHwg
-ICAgICAgT3B0aW1pemVkfAo+fC0tLS0tLS0tLS0tLS0tLS0tLS18LS0tLS0tLS0tLS0tLS0tfC0t
-LS0tLS0tLS0tLS0tLS18Cj58aW5zdHJ1Y3Rpb25zICAgICAgIHwgICAgMzY3MDEyNzA4NjJ8ICAg
-ICAzNjExNTc5MDA4NnwKPnx0ZXN0IHRpbWUgICAgICAgICAgfCAgICAgICAgIDMuMjMzNXwgICAg
-ICAgICAgMy4wODc0fAo+fE92ZXJoZWFkIG9mICAgICAgICB8ICAgICAgICAgICAgICAgfCAgICAg
-ICAgICAgICAgICB8Cj58Y29udHB0ZV9wdGVwX2dldCgpIHwgICAgICAgICAzMi4yNiV8ICAgICAg
-ICAgIDMzLjU3JXwKPgo+fFNjZW5hcmlvIDMgICAgICAgICB8ICAgICAgIE9yaWdpbmFsfCAgICAg
-ICBPcHRpbWl6ZWR8Cj58LS0tLS0tLS0tLS0tLS0tLS0tLXwtLS0tLS0tLS0tLS0tLS18LS0tLS0t
-LS0tLS0tLS0tLXwKPnxpbnN0cnVjdGlvbnMgICAgICAgfCAgICAzNjcwNjI3OTczNXwgICAgIDM2
-NzUwODgxODc4fAo+fHRlc3QgdGltZSAgICAgICAgICB8ICAgICAgICAgMy4yMDA4fCAgICAgICAg
-ICAzLjEyNDl8Cj58T3ZlcmhlYWQgb2YgICAgICAgIHwgICAgICAgICAgICAgICB8ICAgICAgICAg
-ICAgICAgIHwKPnxjb250cHRlX3B0ZXBfZ2V0KCkgfCAgICAgICAgIDMxLjk0JXwgICAgICAgICAg
-MzQuNTklfAo+Cj5Gb3IgU2NlbmFyaW8gMSwgb3B0aW1pemVkIGNvZGUgY2FuIGFjaGlldmUgYW4g
-aW5zdHJ1Y3Rpb24gYmVuZWZpdCBvZiA1MC41OSUKPmFuZCBhIHRpbWUgYmVuZWZpdCBvZiA0Ni4z
-OCUuCj5Gb3IgU2NlbmFyaW8gMiwgb3B0aW1pemVkIGNvZGUgY2FuIGFjaGlldmUgYW4gaW5zdHJ1
-Y3Rpb24gY291bnQgYmVuZWZpdCBvZgo+MS42JSBhbmQgYSB0aW1lIGJlbmVmaXQgb2YgNC41JS4K
-PkZvciBTY2VuYXJpbyAzLCBzaW5jZSBhbGwgdGhlIFBURXMgaGF2ZSBuZWl0aGVyIHRoZSB5b3Vu
-ZyBub3IgdGhlIGRpcnR5Cj5mbGFnLCB0aGUgYnJhbmNoZXMgdGFrZW4gYnkgb3B0aW1pemVkIGNv
-ZGUgc2hvdWxkIGJlIHRoZSBzYW1lIGFzIHRob3NlIG9mCj50aGUgb3JpZ2luYWwgY29kZS4gSW4g
-ZmFjdCwgdGhlIHRlc3QgcmVzdWx0cyBvZiBvcHRpbWl6ZWQgY29kZSBzZWVtIHRvIGJlCj5jbG9z
-ZXIgdG8gdGhvc2Ugb2YgdGhlIG9yaWdpbmFsIGNvZGUuCj4KPkl0IGNhbiBiZSBwcm92ZW4gdGhy
-b3VnaCB0ZXN0IGZ1bmN0aW9uIHRoYXQgdGhlIG9wdGltaXphdGlvbiBmb3IKPmNvbnRwdGVfcHRl
-cF9nZXQgaXMgZWZmZWN0aXZlLiBTaW5jZSB0aGUgbG9naWMgb2YgY29udHB0ZV9wdGVwX2dldF9s
-b2NrbGVzcwo+aXMgc2ltaWxhciB0byB0aGF0IG9mIGNvbnRwdGVfcHRlcF9nZXQsIHRoZSBzYW1l
-IG9wdGltaXphdGlvbiBzY2hlbWUgaXMKPmFsc28gYWRvcHRlZCBmb3IgaXQuCj4KPlJldmlld2Vk
-LWJ5OiBCYXJyeSBTb25nIDxiYW9odWFAa2VybmVsLm9yZz4KPlNpZ25lZC1vZmYtYnk6IFhhdmll
-ciBYaWEgPHhhdmllcl9xeUAxNjMuY29tPgo+LS0tCj5DaGFuZ2VzIGluIHY2Ogo+LSBNb3ZlIHBy
-b3QgPSBwdGVfcGdwcm90KHB0ZV9ta29sZChwdGVfbWtjbGVhbihwdGUpKSkgaW50byB0aGUgY29u
-dHB0ZV9pc19jb25zaXN0ZW50KCksCj4gIGFzIHN1Z2dlc3RlZCBieSBCYXJyeS4KPi0gTGluayB0
-byB2NTogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxsLzIwMjUwNTA5MTIyNzI4LjIzNzk0NjYt
-MS14YXZpZXJfcXlAMTYzLmNvbS8KPgo+Q2hhbmdlcyBpbiB2NToKPi0gUmVwbGFjZSBtYWNybyBD
-SEVDS19DT05UUFRFX0NPTlNJU1RFTkNZIHdpdGggaW5saW5lIGZ1bmN0aW9uIGNvbnRwdGVfaXNf
-Y29uc2lzdGVudAo+ICBmb3IgaW1wcm92ZWQgcmVhZGFiaWxpdHkgYW5kIGNsYXJpdHksIGFzIHN1
-Z2dlc3RlZCBieSBCYXJyeS4KPi0gTGluayB0byB2NDogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcv
-YWxsLzIwMjUwNTA4MDcwMzUzLjIzNzA4MjYtMS14YXZpZXJfcXlAMTYzLmNvbS8KPgo+Q2hhbmdl
-cyBpbiB2NDoKPi0gQ29udmVydCBtYWNybyBDSEVDS19DT05UUFRFX0ZMQUcgdG8gYW4gaW50ZXJu
-YWwgbG9vcCBmb3IgYmV0dGVyIHJlYWRhYmlsaXR5Lgo+LSBSZWZhY3RvciBjb250cHRlX3B0ZXBf
-Z2V0X2xvY2tsZXNzIHVzaW5nIHRoZSBzYW1lIG9wdGltaXphdGlvbiBsb2dpYywgYXMgc3VnZ2Vz
-dGVkIGJ5IFJ5YW4uCj4tIExpbmsgdG8gdjM6IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2FsbC8z
-ZDMzOGY5MS44YzcxLjE5NjVjZDhiMWI4LkNvcmVtYWlsLnhhdmllcl9xeUAxNjMuY29tLwo+LS0t
-Cj4gYXJjaC9hcm02NC9tbS9jb250cHRlLmMgfCA3NCArKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKy0tLS0tLQo+IDEgZmlsZSBjaGFuZ2VkLCA2NCBpbnNlcnRpb25zKCspLCAxMCBk
-ZWxldGlvbnMoLSkKPgo+ZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvbW0vY29udHB0ZS5jIGIvYXJj
-aC9hcm02NC9tbS9jb250cHRlLmMKPmluZGV4IGJjYWM0ZjU1ZjljMS4uNzFlZmU3ZGZmMGFkIDEw
-MDY0NAo+LS0tIGEvYXJjaC9hcm02NC9tbS9jb250cHRlLmMKPisrKyBiL2FyY2gvYXJtNjQvbW0v
-Y29udHB0ZS5jCj5AQCAtMTY5LDE3ICsxNjksNDYgQEAgcHRlX3QgY29udHB0ZV9wdGVwX2dldChw
-dGVfdCAqcHRlcCwgcHRlX3Qgb3JpZ19wdGUpCj4gCWZvciAoaSA9IDA7IGkgPCBDT05UX1BURVM7
-IGkrKywgcHRlcCsrKSB7Cj4gCQlwdGUgPSBfX3B0ZXBfZ2V0KHB0ZXApOwo+IAo+LQkJaWYgKHB0
-ZV9kaXJ0eShwdGUpKQo+KwkJaWYgKHB0ZV9kaXJ0eShwdGUpKSB7Cj4gCQkJb3JpZ19wdGUgPSBw
-dGVfbWtkaXJ0eShvcmlnX3B0ZSk7Cj4tCj4tCQlpZiAocHRlX3lvdW5nKHB0ZSkpCj4rCQkJZm9y
-ICg7IGkgPCBDT05UX1BURVM7IGkrKywgcHRlcCsrKSB7Cj4rCQkJCXB0ZSA9IF9fcHRlcF9nZXQo
-cHRlcCk7Cj4rCQkJCWlmIChwdGVfeW91bmcocHRlKSkgewo+KwkJCQkJb3JpZ19wdGUgPSBwdGVf
-bWt5b3VuZyhvcmlnX3B0ZSk7Cj4rCQkJCQlicmVhazsKPisJCQkJfQo+KwkJCX0KPisJCQlicmVh
-azsKPisJCX0KPisKPisJCWlmIChwdGVfeW91bmcocHRlKSkgewo+IAkJCW9yaWdfcHRlID0gcHRl
-X21reW91bmcob3JpZ19wdGUpOwo+KwkJCWkrKzsKPisJCQlwdGVwKys7Cj4rCQkJZm9yICg7IGkg
-PCBDT05UX1BURVM7IGkrKywgcHRlcCsrKSB7Cj4rCQkJCXB0ZSA9IF9fcHRlcF9nZXQocHRlcCk7
-Cj4rCQkJCWlmIChwdGVfZGlydHkocHRlKSkgewo+KwkJCQkJb3JpZ19wdGUgPSBwdGVfbWtkaXJ0
-eShvcmlnX3B0ZSk7Cj4rCQkJCQlicmVhazsKPisJCQkJfQo+KwkJCX0KPisJCQlicmVhazsKPisJ
-CX0KPiAJfQo+IAo+IAlyZXR1cm4gb3JpZ19wdGU7Cj4gfQo+IEVYUE9SVF9TWU1CT0xfR1BMKGNv
-bnRwdGVfcHRlcF9nZXQpOwo+IAo+K3N0YXRpYyBpbmxpbmUgYm9vbCBjb250cHRlX2lzX2NvbnNp
-c3RlbnQocHRlX3QgcHRlLCB1bnNpZ25lZCBsb25nIHBmbiwKPisJCQkJCXBncHJvdF90IG9yaWdf
-cHJvdCkKPit7Cj4rCXBncHJvdF90IHByb3QgPSBwdGVfcGdwcm90KHB0ZV9ta29sZChwdGVfbWtj
-bGVhbihwdGUpKSk7Cj4rCj4rCXJldHVybiBwdGVfdmFsaWRfY29udChwdGUpICYmIHB0ZV9wZm4o
-cHRlKSA9PSBwZm4gJiYKPisJCQlwZ3Byb3RfdmFsKHByb3QpID09IHBncHJvdF92YWwob3JpZ19w
-cm90KTsKPit9Cj4rCj4gcHRlX3QgY29udHB0ZV9wdGVwX2dldF9sb2NrbGVzcyhwdGVfdCAqb3Jp
-Z19wdGVwKQo+IHsKPiAJLyoKPkBAIC0yMDIsNyArMjMxLDYgQEAgcHRlX3QgY29udHB0ZV9wdGVw
-X2dldF9sb2NrbGVzcyhwdGVfdCAqb3JpZ19wdGVwKQo+IAlwZ3Byb3RfdCBvcmlnX3Byb3Q7Cj4g
-CXVuc2lnbmVkIGxvbmcgcGZuOwo+IAlwdGVfdCBvcmlnX3B0ZTsKPi0JcGdwcm90X3QgcHJvdDsK
-PiAJcHRlX3QgKnB0ZXA7Cj4gCXB0ZV90IHB0ZTsKPiAJaW50IGk7Cj5AQCAtMjE5LDE4ICsyNDcs
-NDQgQEAgcHRlX3QgY29udHB0ZV9wdGVwX2dldF9sb2NrbGVzcyhwdGVfdCAqb3JpZ19wdGVwKQo+
-IAo+IAlmb3IgKGkgPSAwOyBpIDwgQ09OVF9QVEVTOyBpKyssIHB0ZXArKywgcGZuKyspIHsKPiAJ
-CXB0ZSA9IF9fcHRlcF9nZXQocHRlcCk7Cj4tCQlwcm90ID0gcHRlX3BncHJvdChwdGVfbWtvbGQo
-cHRlX21rY2xlYW4ocHRlKSkpOwo+IAo+LQkJaWYgKCFwdGVfdmFsaWRfY29udChwdGUpIHx8Cj4t
-CQkgICBwdGVfcGZuKHB0ZSkgIT0gcGZuIHx8Cj4tCQkgICBwZ3Byb3RfdmFsKHByb3QpICE9IHBn
-cHJvdF92YWwob3JpZ19wcm90KSkKPisJCWlmICghY29udHB0ZV9pc19jb25zaXN0ZW50KHB0ZSwg
-cGZuLCBvcmlnX3Byb3QpKQo+IAkJCWdvdG8gcmV0cnk7Cj4gCj4tCQlpZiAocHRlX2RpcnR5KHB0
-ZSkpCj4rCQlpZiAocHRlX2RpcnR5KHB0ZSkpIHsKPiAJCQlvcmlnX3B0ZSA9IHB0ZV9ta2RpcnR5
-KG9yaWdfcHRlKTsKPisJCQlmb3IgKDsgaSA8IENPTlRfUFRFUzsgaSsrLCBwdGVwKyssIHBmbisr
-KSB7Cj4rCQkJCXB0ZSA9IF9fcHRlcF9nZXQocHRlcCk7Cj4rCj4rCQkJCWlmICghY29udHB0ZV9p
-c19jb25zaXN0ZW50KHB0ZSwgcGZuLCBvcmlnX3Byb3QpKQo+KwkJCQkJZ290byByZXRyeTsKPisK
-PisJCQkJaWYgKHB0ZV95b3VuZyhwdGUpKSB7Cj4rCQkJCQlvcmlnX3B0ZSA9IHB0ZV9ta3lvdW5n
-KG9yaWdfcHRlKTsKPisJCQkJCWJyZWFrOwo+KwkJCQl9Cj4rCQkJfQo+KwkJCWJyZWFrOwo+KwkJ
-fQo+IAo+LQkJaWYgKHB0ZV95b3VuZyhwdGUpKQo+KwkJaWYgKHB0ZV95b3VuZyhwdGUpKSB7Cj4g
-CQkJb3JpZ19wdGUgPSBwdGVfbWt5b3VuZyhvcmlnX3B0ZSk7Cj4rCQkJaSsrOwo+KwkJCXB0ZXAr
-KzsKPisJCQlwZm4rKzsKPisJCQlmb3IgKDsgaSA8IENPTlRfUFRFUzsgaSsrLCBwdGVwKyssIHBm
-bisrKSB7Cj4rCQkJCXB0ZSA9IF9fcHRlcF9nZXQocHRlcCk7Cj4rCj4rCQkJCWlmICghY29udHB0
-ZV9pc19jb25zaXN0ZW50KHB0ZSwgcGZuLCBvcmlnX3Byb3QpKQo+KwkJCQkJZ290byByZXRyeTsK
-PisKPisJCQkJaWYgKHB0ZV9kaXJ0eShwdGUpKSB7Cj4rCQkJCQlvcmlnX3B0ZSA9IHB0ZV9ta2Rp
-cnR5KG9yaWdfcHRlKTsKPisJCQkJCWJyZWFrOwo+KwkJCQl9Cj4rCQkJfQo+KwkJCWJyZWFrOwo+
-KwkJfQo+IAl9Cj4gCj4gCXJldHVybiBvcmlnX3B0ZTsKPi0tIAo+Mi4zNC4xCgoK
+On Fri May 30, 2025 at 12:37 PM CEST, Mark Brown wrote:
+> On Fri, May 30, 2025 at 12:00:13PM +0200, Mathieu Dubois-Briand wrote:
+>> Some GPIO chips allow to rise an IRQ on GPIO level changes but do not
+>> provide an IRQ status for each separate line: only the current gpio
+>> level can be retrieved.
+>>=20
+>> Add support for these chips, emulating IRQ status by comparing GPIO
+>> levels with the levels during the previous interrupt.
+>
+> Please do not submit new versions of already applied patches, please
+> submit incremental updates to the existing code.  Modifying existing
+> commits creates problems for other users building on top of those
+> commits so it's best practice to only change pubished git commits if
+> absolutely essential.
+
+Sorry, the patch is still present in the series as I only rebased on
+6.15, but it is unchanged from the previous series.
+
+So my understanding is I should have rebased on linux-next master branch
+instead, right?
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
