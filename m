@@ -1,148 +1,74 @@
-Received: from smtp-190a.mail.infomaniak.ch (smtp-190a.mail.infomaniak.ch [185.125.25.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A58AA26290
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 13:46:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.10
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09D392745E
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 13:46:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748958375; cv=none; b=ntuo2Qb4M2aEEKPwFPzYTdnistoDlmPL2HmTd08p6moSUog0zRAhWjLf5O6jwCGnKFdWmoSHfzx3qszUE9lX4tkPpIJs1i2AOu7mf90cEpmMXwiwweeEYu8lxmA4BrRlFjFIgoMsMs1W/mgtxde5fZBzEdtHARo+UUbMpBGlL34=
+	t=1748958383; cv=none; b=ckl9dFGrQgVf+CVdZjWCuN5T/+PZKba5nTgyH3FtIMC+qq9imANnsnNCQ1KbYF8WrXiy4L6bVscH0LnOJJ7kKUBWJWF/1MMRMoCgvZvFBNep3LpJyOJUOB6xBL8UXUPt0n5TEsOB/2zkc+jSiWPb+RfpLlpwVn4cU4xU4F71KZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748958375; c=relaxed/simple;
-	bh=1b8DspUyz9OW+fbjvbxpYBzRCKsiS+bnCshxo8k2YQ4=;
+	s=arc-20240116; t=1748958383; c=relaxed/simple;
+	bh=WywppakKA+fzjJMvq7vFPGshhnpNlpCXWxJ/G7TRu/g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qQA2r6b5Ynd6RNR2pUEbNzjEdYBi7RwyjBk2VD2Z2o4v8qscDIa3e6agP/7R0ccqVOhanJINqiRYmgu7kJ4xdxjdob3SuFpn/wUWQc2dA0kkTyljbngAKj5t8LADrsOzrfY5ApR9tywXZLetCyex2pxFbQlmJrIWVoJHIBUctRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=ZpTsnApp; arc=none smtp.client-ip=185.125.25.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="ZpTsnApp"
-Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bBX6g68h8zsWd;
-	Tue,  3 Jun 2025 15:46:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1748958363;
-	bh=KAWPoC9zvEPauaI6cyydJqYESbKFRZuHC+VAaZx5WOQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZpTsnApp49R+bNOiE6dP1hnLqDaxZAaNt6CdHZqRInjWyzOCgcN8BV3jRefow07O/
-	 IPu0YHtePqzbVKozWgi6MIIW9lTy6Av+xMYRgXrcqG+tmBEQqtoV7jTuE8XIjfKWUy
-	 VLA+gISFSvWnRABg3tBG6DJZF0hoRATTfpuHNrX4=
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4bBX6f47pWzJxJ;
-	Tue,  3 Jun 2025 15:46:02 +0200 (CEST)
-Date: Tue, 3 Jun 2025 15:46:01 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Song Liu <song@kernel.org>
-Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, kernel-team@meta.com, 
-	andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, daniel@iogearbox.net, 
-	martin.lau@linux.dev, viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
-	kpsingh@kernel.org, mattbobrowski@google.com, amir73il@gmail.com, repnop@google.com, 
-	jlayton@kernel.org, josef@toxicpanda.com, gnoack@google.com, m@maowtm.org
-Subject: Re: [PATCH v2 bpf-next 2/4] landlock: Use path_walk_parent()
-Message-ID: <20250603.Av6paek5saes@digikod.net>
-References: <20250603065920.3404510-1-song@kernel.org>
- <20250603065920.3404510-3-song@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=XlrEEMubvq2JJ+meCLp+UdCD6fUPfQDQrG54OViEzoyhHJe8lgPU+yHl/h9uC9OSdNqhf3X25qwcrrL4BWO0oi4stoBe9YXb4lRHMviOoHhH2sL38SRUkF+U1UISgt3W7nxVaK3fkcuH9Y0V73PkMOqUhUc0SDsvdr1Snmk6MIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 43D0512FC;
+	Tue,  3 Jun 2025 06:46:00 -0700 (PDT)
+Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 078913F59E;
+	Tue,  3 Jun 2025 06:46:14 -0700 (PDT)
+Date: Tue, 3 Jun 2025 14:46:08 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: Will Deacon <will@kernel.org>, catalin.marinas@arm.com,
+	geert@linux-m68k.org, broonie@kernel.org, mcgrof@kernel.org,
+	joey.gouly@arm.com, kristina.martsenko@arm.com, rppt@kernel.org,
+	pcc@google.com, bigeasy@linutronix.de, ptosi@google.com,
+	james.morse@arm.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, ada.coupriediaz@arm.com
+Subject: Re: [PATCH] arm64/trap: fix broken ct->nmi_nesting when die() is
+ called in a kthread
+Message-ID: <aD78oNHA5SlaH50z@J2N7QTR9R3.cambridge.arm.com>
+References: <20250530092723.3307630-1-yeoreum.yun@arm.com>
+ <20250602124738.GD1227@willie-the-truck>
+ <aD27GxSWsFekORcy@e129823.arm.com>
+ <aD2_Jp7CQgnp15Kx@J2N7QTR9R3>
+ <aD3kfTx8sF8/Yar/@e129823.arm.com>
+ <aD7EA2Bmp-mrWZaN@J2N7QTR9R3.cambridge.arm.com>
+ <aD7ZCnNUqxb9XWNh@e129823.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250603065920.3404510-3-song@kernel.org>
-X-Infomaniak-Routing: alpha
+In-Reply-To: <aD7ZCnNUqxb9XWNh@e129823.arm.com>
 
-Landlock tests with hostfs fail:
-
-ok 126 layout3_fs.hostfs.tag_inode_file
-#  RUN           layout3_fs.hostfs.release_inodes ...
-# fs_test.c:5555:release_inodes:Expected EACCES (13) == test_open(TMP_DIR, O_RDONLY) (0)
-
-This specific test checks that an access to a (denied) mount point over
-an allowed directory is indeed denied.
-
-It's not clear to me the origin of the issue, but it seems to be related
-to choose_mountpoint().
-
-You can run these tests with `check-linux.sh build kselftest` from
-https://github.com/landlock-lsm/landlock-test-tools
-
-Just in case, please always run clang-format -i security/landlock/*.[ch]
-
-
-On Mon, Jun 02, 2025 at 11:59:18PM -0700, Song Liu wrote:
-> Use path_walk_parent() to walk a path up to its parent.
+On Tue, Jun 03, 2025 at 12:14:18PM +0100, Yeoreum Yun wrote:
+> > On Mon, Jun 02, 2025 at 06:50:53PM +0100, Yeoreum Yun wrote:
+> > > So, what I think:
+> > >   1. arm64_enter_el1_dbg() should ct_nmi_enter() as it is.
+> > >   2. in bug_handler() while handling BUG_TYPE, add above ct_nmi_exit()
+> > >      conditional call.
+> > >   3. DAIF.D and DAIF.A handling.
+> >
+> > No, that is not safe. In step 2, calling ct_nmi_exit() would undo *all*
+> > of the ct_nmi_enter() logic, and may stop RCU from watching if the
+> > exception was entered from some intermediate/inconsistent state.
 > 
-> No functional changes intended.
-> 
-> Signed-off-by: Song Liu <song@kernel.org>
-> ---
->  security/landlock/fs.c | 31 ++++++++++---------------------
->  1 file changed, 10 insertions(+), 21 deletions(-)
-> 
-> diff --git a/security/landlock/fs.c b/security/landlock/fs.c
-> index 6fee7c20f64d..3adac544dc9e 100644
-> --- a/security/landlock/fs.c
-> +++ b/security/landlock/fs.c
-> @@ -837,8 +837,8 @@ static bool is_access_to_paths_allowed(
->  	 * restriction.
->  	 */
->  	while (true) {
-> -		struct dentry *parent_dentry;
->  		const struct landlock_rule *rule;
-> +		struct path root = {};
->  
->  		/*
->  		 * If at least all accesses allowed on the destination are
-> @@ -895,34 +895,23 @@ static bool is_access_to_paths_allowed(
->  		/* Stops when a rule from each layer grants access. */
->  		if (allowed_parent1 && allowed_parent2)
->  			break;
-> -jump_up:
-> -		if (walker_path.dentry == walker_path.mnt->mnt_root) {
-> -			if (follow_up(&walker_path)) {
-> -				/* Ignores hidden mount points. */
-> -				goto jump_up;
-> -			} else {
-> -				/*
-> -				 * Stops at the real root.  Denies access
-> -				 * because not all layers have granted access.
-> -				 */
-> -				break;
-> -			}
-> -		}
-> +
-> +		if (path_walk_parent(&walker_path, &root))
-> +			continue;
+> Yes if call ct_nmi_enter() without condition.
+> But I imply with the condition check what I posted.
+> if CT_NESTING_IRQ_NONIDLE,
+> it wouldn't need call and that cpu can be watched by RCU.
 
-It would be better to avoid a "continue" statement but to just use an if
-block.
+I am not keen on conditionally calling ct_nmi_exit(), and would strongly
+prefer to avoid that, regardless of where that lives in the flow.
 
-> +
->  		if (unlikely(IS_ROOT(walker_path.dentry))) {
->  			/*
-> -			 * Stops at disconnected root directories.  Only allows
-> -			 * access to internal filesystems (e.g. nsfs, which is
-> -			 * reachable through /proc/<pid>/ns/<namespace>).
-> +			 * Stops at disconnected or real root directories.
-> +			 * Only allows access to internal filesystems
-> +			 * (e.g. nsfs, which is reachable through
-> +			 * /proc/<pid>/ns/<namespace>).
->  			 */
->  			if (walker_path.mnt->mnt_flags & MNT_INTERNAL) {
->  				allowed_parent1 = true;
->  				allowed_parent2 = true;
->  			}
-> -			break;
->  		}
-> -		parent_dentry = dget_parent(walker_path.dentry);
-> -		dput(walker_path.dentry);
-> -		walker_path.dentry = parent_dentry;
-> +		break;
->  	}
->  	path_put(&walker_path);
->  
-> -- 
-> 2.47.1
-> 
-> 
+I suspect that it would be bettter to triage the interrupted context
+earlier, and rethink the way entry/exit works, but that's a much larger
+bit of work and will take more thinking.
+
+Mark.
