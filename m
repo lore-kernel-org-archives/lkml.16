@@ -1,179 +1,110 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 889967081F
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 20:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39FDE1487F6
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 21:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748984391; cv=none; b=jCbBT3MFPIFxvUVy9raZ+4nShgUO3YBhD/QO/DmC2pA4rUaUS2q0KTGA2E4s+QQqriUZQ4ha/nUZkEL6h/zVC+FksOjwwU6K3WdI7GfWfTKj+xOquOaA5KJJVWOFey3Hhihtx0JqJS5U9Udnp1X6d+b+Mq1hyQW4TOLVjxKwWsA=
+	t=1748984452; cv=none; b=aFIqrQnjqbmuLBr6sBAA8t5s9s9sPXJB+nVyQ7WDkdI0qJab5K2v/FgRturvYfqAk4RQY+ohPHtxDcd5wx2Pyz2KD1hOyURXEcBsKgVrpDTUJ0tQaZsY6OHlBqXda5Lb+f9wzwPz9aZgTGtHLnWddcXfjK8s963Xd+zOzTp9xHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748984391; c=relaxed/simple;
-	bh=HskaPhgOZtUmrCR0dK7cbyBrVTpX1LUwwk3mr/058yk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kEviP480NpojqSja96ksh3aMz0/5fww9hFjV8i99sqirOA4+E4O28cC8CISdkHkzyOIBeQKF/g9Cr/q8XF43hoFgelUEAP5l8+q+CgzNV5ine09shXanjWo8ItGKmqHOiq8rc/kQhV81s0c29Nm8kUvKWeY5VoGzctUFGvaw/80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=a8VhylAd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RZsHFvqs; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=a8VhylAd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RZsHFvqs; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1748984452; c=relaxed/simple;
+	bh=UkVpdqJHMPRKWwzgkIoCA2s+FvvyPiw9dxao/ZWsUgM=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=YRn5JVhFfxSKLH2M5pBvtYEkj8XOShoXSsOlGwpMYgno60XVZRgTMf7PNgFZkTvXxZV6hO9asY8Xz40CB9ZfaaVI16i3ryha1mNZ0GZ/54bsa4rJdZfwyjnokSP5a9IUfb92GXtOL9NZlvXkBtHQXTY4/XbEJM5L+eLAS/zofwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info; spf=pass smtp.mailfrom=jacekk.info; dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b=gr1fRDzQ; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jacekk.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="a8VhylAd";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RZsHFvqs";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="a8VhylAd";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RZsHFvqs"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 5322F21C25;
-	Tue,  3 Jun 2025 20:59:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1748984387; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Tbh/wSI18MgZkL0lNSZSfVY7UbYTbmhbITCCvYgLRSk=;
-	b=a8VhylAd/iR4bokazEEmD2YvoNRPwofTT94bxIw3DM5XpP2Tojo6GsaSnZ/kQwdAIik83Z
-	X/iTZPZDbClKOlSGLFYcWNnJ+TfZQXPznvqE0fHi9umjSSx7vv9ChYg8zWVwhfUO6lbF6n
-	ynDFUe2xvMzNcoi2RSYNDwee+uPruoI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1748984387;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Tbh/wSI18MgZkL0lNSZSfVY7UbYTbmhbITCCvYgLRSk=;
-	b=RZsHFvqsiqbegcvpCXl4VFK3KcYyLW3Fq+NCy2bUCuOMp5BqE1nWeq3NJ9gk6JhdhWUIrX
-	yHoYjdHicmf9jZDw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=a8VhylAd;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=RZsHFvqs
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1748984387; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Tbh/wSI18MgZkL0lNSZSfVY7UbYTbmhbITCCvYgLRSk=;
-	b=a8VhylAd/iR4bokazEEmD2YvoNRPwofTT94bxIw3DM5XpP2Tojo6GsaSnZ/kQwdAIik83Z
-	X/iTZPZDbClKOlSGLFYcWNnJ+TfZQXPznvqE0fHi9umjSSx7vv9ChYg8zWVwhfUO6lbF6n
-	ynDFUe2xvMzNcoi2RSYNDwee+uPruoI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1748984387;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Tbh/wSI18MgZkL0lNSZSfVY7UbYTbmhbITCCvYgLRSk=;
-	b=RZsHFvqsiqbegcvpCXl4VFK3KcYyLW3Fq+NCy2bUCuOMp5BqE1nWeq3NJ9gk6JhdhWUIrX
-	yHoYjdHicmf9jZDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 78D6D13A1D;
-	Tue,  3 Jun 2025 20:59:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id tvIpGkJiP2iDGwAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Tue, 03 Jun 2025 20:59:46 +0000
-Date: Tue, 3 Jun 2025 21:59:46 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, David Hildenbrand <david@redhat.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Lokesh Gidra <lokeshgidra@google.com>, 
-	Tangquan Zheng <zhengtangquan@oppo.com>
-Subject: Re: [PATCH RFC v2] mm: use per_vma lock for MADV_DONTNEED
-Message-ID: <hafjpizztpwazia2ubkieavxw375pb3ziwhd7bfq24i4gv5ayn@ah4zz2zy2lhv>
-References: <20250530104439.64841-1-21cnbao@gmail.com>
- <0b96ce61-a52c-4036-b5b6-5c50783db51f@lucifer.local>
+	dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b="gr1fRDzQ"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ad572ba1347so889457366b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 14:00:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jacekk.info; s=g2024; t=1748984448; x=1749589248; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+PKgRqE/agxHfUSUWE1ZX+G/aaQhrQ+OflgKrEMgMlM=;
+        b=gr1fRDzQD4csOlBG01ID5UNTv7/+iCWDoPaebrtnO7NYNsL+e68Qtl8PpKd0y1KGrx
+         AcfL3DdrjFRhb2LCFVuSBCfb7sZxtDxgEGPt1O5vIOl2ckJU7epXDWOnQ3OvUmkT+D1D
+         U7XqGGphwvZxsHIl6DyBdMnfs8ScanOH2p+3Ic8numiVxBRqlRD4gpNAge/cji8FfbQR
+         8htza4u2Mhpw1yW7fh+8nwSlNlqT0j8mCL9c1e215m7rl2ZHYjbHaoKljMxqO0vfqi85
+         gzBj8pGpSRjtVVnj/br8gbL2GvKwGlT7g090SXSQoiHkRQk/TDPKPeayxtO9YYJhpjIB
+         g6Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748984448; x=1749589248;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+PKgRqE/agxHfUSUWE1ZX+G/aaQhrQ+OflgKrEMgMlM=;
+        b=df01yIifg64bJGD/eS5t1ysQ86SOFJVfA3D1oTVw/Jjyfhq/pGLh2PFFOXPwnTdeEb
+         6yT9iR8t4N99yJBXnrjXPPEIxDdvLdz9qFsnimzRqW+tnpzn3KIy0YZPXmoSgmifQMDp
+         PM4NAkwwtZxy/olxATJ+qYxKDFxEUbgnyqur5223hF//CtI1IHOTBYnGiw6VwQK+SJz/
+         Qd+w7pZh6JUjK9WX8bvE5bC4kJ+vUQp2IULp0JBmbHU5okaCExnEPkWvK9ofMZwbzUJm
+         wEQfoisIGTn+HrZpuOQ2eM/0olzeBcaSgMhJHfkHgs8nZHXrNQAAIlg24PiqT+Ailxfs
+         bvUA==
+X-Forwarded-Encrypted: i=1; AJvYcCVBgjipcs5OZRAV8FlwkIW1EfiGET2T8sJdpklF7YfUaSnQ+ODNy3LIUCuaSO/lvSMX/a057aU6wgLvJXc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvXeTuvNXMwFNQLNGRXSrXeiWI9Ocexz+IpnYS1a3YfuMHEd2v
+	PPBqIOl9JERJATTFgrNhDb5+SHrcSUSp0kDr+4iqtRP3nB5s3jAZYf2u5GT8gfDSRg==
+X-Gm-Gg: ASbGnctlcbaU3ylMeT02NGrFpVmGyR5kzeyN74jZ9/+haH0u04Qu+rcVUCnaJUQzbz0
+	XYAWA43+BymNWVaK/ZnsprwumBYU41NQ1y9nU7wT6mqAEPQkdJBaaI28NGwxsvgO2AiirgJNqF5
+	eRmklobe7kc7L0HMOPQ/jowOJ06RCXCi6gIm1KcZKTfqhKwcw8tyBGYaiXXBxdHMBXg0BqT35cH
+	xx28KUSZTIaWlLPanpnRFBvD6qJGjKHDiUALwAhzTgjfwlBpEY/h45sRSq+gySvW76kUwy9KRIB
+	WjhmIOE56QH81so/khuIZsgBDEQbU4oRSAdiwpf+W3/pm8rlaw==
+X-Google-Smtp-Source: AGHT+IFE/zq55kKCpFNUP8s47xQ1VlVxdxq1nZI5gpd41ZgPDjMuxiJo036Y0yIPNM78hWufsGJ+cQ==
+X-Received: by 2002:a17:907:6d0f:b0:acb:b900:2bca with SMTP id a640c23a62f3a-addf8a92b51mr10123066b.0.1748984448317;
+        Tue, 03 Jun 2025 14:00:48 -0700 (PDT)
+Received: from [10.2.1.100] ([194.53.194.238])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada6ad3d7ebsm1002032566b.159.2025.06.03.14.00.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Jun 2025 14:00:47 -0700 (PDT)
+From: Jacek Kowalski <jacek@jacekk.info>
+X-Google-Original-From: Jacek Kowalski <Jacek@jacekk.info>
+Message-ID: <c0ece81e-6fee-41bb-96c9-eef36b09af37@jacekk.info>
+Date: Tue, 3 Jun 2025 23:00:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0b96ce61-a52c-4036-b5b6-5c50783db51f@lucifer.local>
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[gmail.com,linux-foundation.org,kvack.org,vger.kernel.org,oppo.com,oracle.com,redhat.com,suse.cz,google.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 5322F21C25
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Intel-wired-lan] [PATCH] e1000e: disregard NVM checksum on tgp
+ when valid checksum mask is not set
+To: "Lifshits, Vitaly" <vitaly.lifshits@intel.com>, Vlad URSU <vlad@ursu.me>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>,
+ Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <5555d3bd-44f6-45c1-9413-c29fe28e79eb@jacekk.info>
+ <23bb365c-9d96-487f-84cc-2ca1235a97bb@ursu.me>
+ <03216908-6675-4487-a7e1-4a42d169c401@intel.com>
+ <47b2fe98-da85-4cef-9668-51c36ac66ce5@ursu.me>
+ <8adbc5a0-782d-4a07-93d7-c64ae0e3d805@intel.com>
+ <20f39efe-ba5b-44b2-bfe6-b4ca17d6b0c1@ursu.me>
+ <1e92a26e-1fb9-44bb-86df-8007cf9ee711@intel.com>
+Content-Language: en-US
+In-Reply-To: <1e92a26e-1fb9-44bb-86df-8007cf9ee711@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 03, 2025 at 07:43:04PM +0100, Lorenzo Stoakes wrote:
-> Hi Barry,
+>>> If no update is available, perhaps we can consider ignoring the 
+>>> checksum on TGP systems if one of the following conditions is met:
+>>> 1. SW compatibility bit is not set (current Jacek's approach)
+>>> 2. The checksum word at offset 0x3F retains its factory default value 
+>>> of 0xFFFF.
+>>
+>> I am already on the latest firmware. I have also tried downgrading to 
+>> earlier versions and they have the same problem.
 > 
-> As promised, I enclose a patch to give a sense of how I think we might
-> thread state through this operation.
+> Ok, so in this case I think that we should go with option 2.
 > 
-> There's a todo on the untagged stuff so you can figure that out. This is
-> based on the v1 so it might not encompass everything you addressed in the
-> v2.
-> 
-> Passing in madv_behavior to madvise_walk_vmas() twice kinda sucks, I
-> _despise_ the void *arg function ptr stuff there added just for the anon
-> vma name stuff (ughhh) so might be the only sensible way of threading
-> state.
-> 
-> I don't need any attribution, so please use this patch as you see
-> fit/adapt/delete/do whatever with it, just an easier way for me to show the
-> idea!
-> 
-> I did some very basic testing and it seems to work, but nothing deeper.
-> 
-> Cheers, Lorenzo
-> 
-> ----8<----
-> >From ff4ba0115cb31a0630b6f8c02c68f11b3fb71f7a Mon Sep 17 00:00:00 2001
-> From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Date: Tue, 3 Jun 2025 18:22:55 +0100
-> Subject: [PATCH] mm/madvise: support VMA read locks for MADV_DONTNEED[_LOCKED]
-> 
-> Refactor the madvise() code to retain state about the locking mode utilised
-> for traversing VMAs.
-> 
-> Then use this mechanism to permit VMA locking to be done later in the
-> madvise() logic and also to allow altering of the locking mode to permit
-> falling back to an mmap read lock if required.
-> 
+> Jacek - can you please add this check to your patch?
 
-Just as a quick drive-by comment: I was playing around with using per-vma locks
-for GUP and mm_populate a few weeks ago. I never actually finished the work (and I
-still plan on getting around doing it Eventually(tm)), but my final concept of an
-approach was to simply read-lock every VMA in a range (if that fails, go back
-to the mmap_lock).
-
-I *think* it works, and doesn't have the same limitation for single VMAs.
-
-I understand this is a super handwavy suggestion, but I know this discussion has
-been happening and I just wanted to get this idea out of obscure IRC logs :)
+Yes, I'll prepare v2 by the end of this week.
 
 -- 
-Pedro
+Best regards,
+   Jacek Kowalski
