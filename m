@@ -1,221 +1,220 @@
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE55664C6
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 09:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A34F7664C6;
+	Tue,  3 Jun 2025 09:50:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748944210; cv=none; b=EviAJpRCVwIlxzeqdi/veWOs2esG8OADPKyC4Ib9BQWeRIA/Jy7EaSHv4Pa8XOd/0GnzQtYca57iJcXfexKK9k4stL50SRyh9tcSghi53rOIxF/3myX0/pYulVBmKr+sYEoaaAx1N5SiRV4fBjRVU/wCxKgQTXpKNsJpp1sXL5E=
+	t=1748944224; cv=none; b=c4H3n7GUq040sDxzWq7QMgsQBjVHyrpcv+PxzJZNhEZcxA8qZnhAxwk2+MK96U+bksgydmYY191bCP5N/zO1nt6ja+NyvK9uVgatj8cGp2tEkbS11Qm5ivecKQbQvI5peUUJbuWoKeoKfPkP9AgajId6hXnXizkxF0FugN000wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748944210; c=relaxed/simple;
-	bh=ZMDdXWtRgteJCqeqXf7oIA+PnOJQx4oyfibMSO/WRZ8=;
+	s=arc-20240116; t=1748944224; c=relaxed/simple;
+	bh=bfgWS16/oHW3y3qqAgf4oxs16fetKvRUmJSlL6NTq7k=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=taIh05hF/X2yXjbiqQUIp1cR8v+nVJzdaxoSJhI8Gi+vZtLivw8lq9WlgnLduVRPAT16e/b9uW9/bf6HFymthna3KYOHBUURQnOyNXWcu3mQeFPs5eAEfGuAiGeeE+Sbfc2r9F+9zaw65sFWu6W4COv9TCRQyw06NL/+6SzxGIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hi9c4Hgs; arc=none smtp.client-ip=209.85.222.53
+	 To:Cc:Content-Type; b=KcDm8oAjLP4TYDRBEW0GUqVwAUgjVb2F2RLQe3FkbFfIqAsHX+2RkElv8Ym0nju/Mel8CyG8GchX0gjdsFf67r64eX87dpKA6oEpjLdhq5aXBr4nQzn1b0M3D43THmMembj2Sxyk8ihPr/BNmgYpVIFwb+eH8ztu8s954Xc0jx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MEVlkqiE; arc=none smtp.client-ip=209.85.208.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hi9c4Hgs"
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-87ded588c8eso1269337241.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 02:50:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MEVlkqiE"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-32a72e61a3fso67746411fa.0;
+        Tue, 03 Jun 2025 02:50:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748944207; x=1749549007; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748944221; x=1749549021; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=N+akt4Dp6cmOPFSL8kMH30g7Rp+2DiyUojQn0D3oWqI=;
-        b=Hi9c4Hgs4NwaXAxNX2CAto5eRH2uTEx6XkzLs09oxhUtxQrwQH5VJcr2fttURdvScU
-         X6TdwsLjsYqO22tSGFREWIj2yGWtllGDOVLfjExNnQKSeIYfBZFxUzRgb6dKlV+f1uQ7
-         CQMF/HcfstmDviqckH0kofnbPXordl0+VTSNOtJxrukLWKs3r+mxNTLDmZz4bBXBsUEh
-         KxZrwilsIijLOtizqK5Xn2ID0ECYj6txpmAydH7OO3MscbdXFe+VKiQW9ezHbCHWispR
-         WAzEpK+n5DRimxvbZ9bJbWi4quM29yPcZQq5NDnEOBoW0aoCXtmINiIgRBUCkEJyBWQy
-         NsQQ==
+        bh=bfgWS16/oHW3y3qqAgf4oxs16fetKvRUmJSlL6NTq7k=;
+        b=MEVlkqiE0Y6J0OppBkHFqVJwpRlAiPSHLpXhG4Y0FBAG5QfZOEjAUeRg/seOZnw+p8
+         xAEyW+eEcBdUExZFYQh31NvRSsupxbrsI41m6Ry3WrvMN8DBZEEEpjTEQasc81Q1UXLZ
+         xyoty7ORVZKWjHDvBv4oke00EYafXWGpUFvAm6IwoEA78oNb1CWu8gLvsRGpFSCVz62/
+         4IShh+E91WnCTIlouOUBcfIfcCxne7qg0jr8MkOuzfVrV3EMQhZNtXJGW2y7m9Xp4afv
+         DXq4NlvBOONluL2lIRjDKAFWNdknfZ6Edhe0OvAU4NgBQn1GVEEhqUNZfPFm+1AyMj3B
+         S/Gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748944207; x=1749549007;
+        d=1e100.net; s=20230601; t=1748944221; x=1749549021;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=N+akt4Dp6cmOPFSL8kMH30g7Rp+2DiyUojQn0D3oWqI=;
-        b=kX36OuT/zPuItH9sftkx/J3pbb6nSP+47zipI7QO9mzekIJ4mXj/3RGMDHc6sHjVyC
-         692DrDYN0tTxTsTZ8S1PxAp0fIEUexBoDF8P0Y4kKvb7qUmxZ6xlvJO1P90CnD+r1rdv
-         NC+FnWEj+UblZcu2HJJGVm/z1+3Vgj0DpXH21lHVLMeFWJ4H+SR5tEPHPEoA8z2FugQ3
-         rZQsoBtoCz3Q+tnSyKj2fL8tO3msUR9Wth+mMyjtHKYTKWLmFIV9sxv4fthmvUh0CJdA
-         v4fr5NN2mLxC/fzxa6cKflTJ+YbtvMIfWyolER9fP03NxojaPAlh9mzYIdecVbxPrQvr
-         wAOw==
-X-Forwarded-Encrypted: i=1; AJvYcCXUeWJmO9hYi7uZA746czGQ0jTBnMmgBikFjRHxwcR2JrQ1UEUUz2XjRuPuMIxRjxbTlnOvn+JRBntsCK0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwisETVHI54GMqm0Cu7OsMrwSEF6w18Dd1ob4EDG5M4Y9UQnlUo
-	VSYbFGte5SQKZIZbh6Dj7YX0R0wGs1jaz5ek7Ez7XoDwsWo/kOumu5tzNsKjR2eqVDor3y7JDq6
-	pVk55Je8tFmz+dZnwZlwCdWKTWv29Aec=
-X-Gm-Gg: ASbGncvAS1001FELEZviH4TiD5c+4pIvvLa5fycT4x7DKDHbo63rkoD/ZgxeouWHdxq
-	IM/VHe4CYvmt7hPXZgOoaDSZ4bJiM/9US2ilMyO1pJzo6G+qmr3AZGy9iw1WoViI1vQeOiKrnO2
-	P3b72joLIQIiiDFBhjBwKyAtWi1Mn8bXyYrnZuEZlasen2
-X-Google-Smtp-Source: AGHT+IGdphO3eSjpshfA1ahQtVxmSC0SjGRr0bfVfc6RhBBzixX2doriuCFFelSDmFBYmpd4w0OdVdQjoqLM/q838Cg=
-X-Received: by 2002:a05:6102:3a0b:b0:4e5:a398:b6fa with SMTP id
- ada2fe7eead31-4e6ecd2e74fmr12727388137.3.1748944207155; Tue, 03 Jun 2025
- 02:50:07 -0700 (PDT)
+        bh=bfgWS16/oHW3y3qqAgf4oxs16fetKvRUmJSlL6NTq7k=;
+        b=q/IpQYqtQlbuC9PfcnUNvlwye5leVu6smBwG+yTRe9Bn98RMQoOHy/HC2dawO1qH9N
+         yijBc39XmD8EQsTESH6GdlXXkDp2w6TiygAS0ueFbsKT2smBmjthT22ZKU4x1+7pNOye
+         e3ydA7cW7ISNq1ZofRVxB7cnBpODt8qEXdEO2suv1w2Rvrw0WVW5I/K0U92AC9VE1mYF
+         oVnYrCs3saNmf5mT80pRWSAu8q9TUO0U/+e+HVr+OZnO5BOtO7f2WKA/dInzP7w96CJd
+         dDPXcjjo/m/LMVGv2B0eFeUMBbAXhguYVG6UFyYjnT8uBzsOYyYMyvvX/RS3lWFQ8dBn
+         Aj1g==
+X-Forwarded-Encrypted: i=1; AJvYcCVOscaVJhz1ja/edg+90wBNtR+yMQsvyY3QtU77T2zdfNDiHrz4UPJOObCHpcnKKi9zlWuTgQEjPXo=@vger.kernel.org, AJvYcCVlpaIGam3tvFS/S6WhOZ072d7vRZSqKfFoAVZp5izU4y+Bse5qYfk93s2wuFmtuT8ScmjxtMz+@vger.kernel.org, AJvYcCX9K+84WojxoW0oA4q8tTGjzYs49vnbxSMtxNMUoNoUT5E/jG5ggExEmTc0QXba3mCC3Q6f2Iqi015/t9e3@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkVaK2SMveeQOuKW6VdKiOjXqeiYjVYWkx5SJ4S/RN4hXUQSOJ
+	k5ea7jbZcmhQbyYkSIpKUmLY7yFD4frsAg2cuEVnbT9Os24ziDw/7GxwXt7QfWWfIGBQR/GH6HJ
+	Ei+LWOq89BcstDuQCGt0LODhmL239n7c=
+X-Gm-Gg: ASbGnctk2DjY+v9VvCZGDya6w6NQJlziI5S4a1bQ3E7C7fh+BmC/VkiXdcqTTv7qUQQ
+	L8vj16SUQHaqhmDekNDJxmBjobpaQGgbhfHPqkQFrhC3b/OGgNNrDj6Q//BI453m0lG3H2ohJ/S
+	Iev0sSIi9uQZM7ErSrGQ9r6HvZM/C91WR/
+X-Google-Smtp-Source: AGHT+IFbMWbmAjAWpDW+ugQQa4jB7qBaCa2WAMxYSJu0HZ9aWKD03FUQq0hLL3NX8CwLGm33BAU2lvNa/N2YVz+j/6c=
+X-Received: by 2002:a05:651c:2204:b0:30d:c4c3:eafa with SMTP id
+ 38308e7fff4ca-32abf4f838bmr5347851fa.7.1748944220298; Tue, 03 Jun 2025
+ 02:50:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530152445.2430295-1-ryan.roberts@arm.com>
-In-Reply-To: <20250530152445.2430295-1-ryan.roberts@arm.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Tue, 3 Jun 2025 21:49:55 +1200
-X-Gm-Features: AX0GCFvnuBi9XQmk2yPV4q8ADSSK-euG69kT8A6SLKTtKahFIzprIUZvZjsk9F8
-Message-ID: <CAGsJ_4wfhA6C2dV+a=dnx=EKRmrt80ujrh6KrepJ_P8JqCbPnw@mail.gmail.com>
-Subject: Re: [PATCH v1] arm64/mm: Close theoretical race where stale TLB entry
- remains valid
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Yicong Yang <yangyicong@hisilicon.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250429233848.3093350-1-nphamcs@gmail.com> <aDlUgVFdA7rCUvHx@yjaykim-PowerEdge-T330>
+ <CAKEwX=MjyEsoyDmMBCRr0QnBfgkTA5bfrshPbfSgNp887zaxVw@mail.gmail.com>
+ <aDxN6oz86TD5H4IL@yjaykim-PowerEdge-T330> <CAMgjq7DGMS5A4t6nOQmwyLy5Px96aoejBkiwFHgy9uMk-F8Y-w@mail.gmail.com>
+ <CAKEwX=P4Q6jNQAi+H3sMQ73z-F-rG5jz8jj1NeGgUi=Pem_ZTQ@mail.gmail.com>
+In-Reply-To: <CAKEwX=P4Q6jNQAi+H3sMQ73z-F-rG5jz8jj1NeGgUi=Pem_ZTQ@mail.gmail.com>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Tue, 3 Jun 2025 17:50:01 +0800
+X-Gm-Features: AX0GCFs-IQz1kR-0WuzGFg4LJh-1KD3qVtLjG4T0xeN4cJ7JSdCZNhTOkw9EglY
+Message-ID: <CAMgjq7D4gcOih3235DRBEOv4EaaV3YEKc6w2Ab-wTCgb7=sA6w@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 00/18] Virtual Swap Space
+To: Nhat Pham <nphamcs@gmail.com>
+Cc: YoungJun Park <youngjun.park@lge.com>, linux-mm@kvack.org, akpm@linux-foundation.org, 
+	hannes@cmpxchg.org, hughd@google.com, yosry.ahmed@linux.dev, 
+	mhocko@kernel.org, roman.gushchin@linux.dev, shakeel.butt@linux.dev, 
+	muchun.song@linux.dev, len.brown@intel.com, chengming.zhou@linux.dev, 
+	chrisl@kernel.org, huang.ying.caritas@gmail.com, ryan.roberts@arm.com, 
+	viro@zeniv.linux.org.uk, baohua@kernel.org, osalvador@suse.de, 
+	lorenzo.stoakes@oracle.com, christophe.leroy@csgroup.eu, pavel@kernel.org, 
+	kernel-team@meta.com, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
+	linux-pm@vger.kernel.org, peterx@redhat.com, gunho.lee@lge.com, 
+	taejoon.song@lge.com, iamjoonsoo.kim@lge.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 31, 2025 at 3:24=E2=80=AFAM Ryan Roberts <ryan.roberts@arm.com>=
- wrote:
+On Tue, Jun 3, 2025 at 2:30=E2=80=AFAM Nhat Pham <nphamcs@gmail.com> wrote:
 >
-> Commit 3ea277194daa ("mm, mprotect: flush TLB if potentially racing with
-> a parallel reclaim leaving stale TLB entries") describes a race that,
-> prior to the commit, could occur between reclaim and operations such as
-> mprotect() when using reclaim's tlbbatch mechanism. See that commit for
-> details but the summary is:
+> On Sun, Jun 1, 2025 at 9:15=E2=80=AFAM Kairui Song <ryncsn@gmail.com> wro=
+te:
+> >
+> >
+> > Hi All,
 >
-> """
-> Nadav Amit identified a theoritical race between page reclaim and
-> mprotect due to TLB flushes being batched outside of the PTL being held.
+> Thanks for sharing your setup, Kairui! I've always been curious about
+> multi-tier compression swapping.
 >
-> He described the race as follows:
+> >
+> > I'd like to share some info from my side. Currently we have an
+> > internal solution for multi tier swap, implemented based on ZRAM and
+> > writeback: 4 compression level and multiple block layer level. The
+> > ZRAM table serves a similar role to the swap table in the "swap table
+> > series" or the virtual layer here.
+> >
+> > We hacked the BIO layer to let ZRAM be Cgroup aware, so it even
 >
->         CPU0                            CPU1
->         ----                            ----
->                                         user accesses memory using RW PTE
->                                         [PTE now cached in TLB]
->         try_to_unmap_one()
->         =3D=3D> ptep_get_and_clear()
->         =3D=3D> set_tlb_ubc_flush_pending()
->                                         mprotect(addr, PROT_READ)
->                                         =3D=3D> change_pte_range()
->                                         =3D=3D> [ PTE non-present - no fl=
-ush ]
->
->                                         user writes using cached RW PTE
->         ...
->
->         try_to_unmap_flush()
-> """
->
-> The solution was to insert flush_tlb_batched_pending() in mprotect() and
-> friends to explcitly drain any pending reclaim TLB flushes. In the
-> modern version of this solution, arch_flush_tlb_batched_pending() is
-> called to do that synchronisation.
->
-> arm64's tlbbatch implementation simply issues TLBIs at queue-time
-> (arch_tlbbatch_add_pending()), eliding the trailing dsb(ish). The
-> trailing dsb(ish) is finally issued in arch_tlbbatch_flush() at the end
-> of the batch to wait for all the issued TLBIs to complete.
->
-> Now, the Arm ARM states:
->
-> """
-> The completion of the TLB maintenance instruction is guaranteed only by
-> the execution of a DSB by the observer that performed the TLB
-> maintenance instruction. The execution of a DSB by a different observer
-> does not have this effect, even if the DSB is known to be executed after
-> the TLB maintenance instruction is observed by that different observer.
-> """
->
-> arch_tlbbatch_add_pending() and arch_tlbbatch_flush() conform to this
-> requirement because they are called from the same task (either kswapd or
-> caller of madvise(MADV_PAGEOUT)), so either they are on the same CPU or
-> if the task was migrated, __switch_to() contains an extra dsb(ish).
->
-> HOWEVER, arm64's arch_flush_tlb_batched_pending() is also implemented as
-> a dsb(ish). But this may be running on a CPU remote from the one that
-> issued the outstanding TLBIs. So there is no architectural gurantee of
-> synchonization. Therefore we are still vulnerable to the theoretical
-> race described in Commit 3ea277194daa ("mm, mprotect: flush TLB if
-> potentially racing with a parallel reclaim leaving stale TLB entries").
+> Hmmm this part seems a bit hacky to me too :-?
 
-Hi Ryan,
+Yeah, terribly hackish :P
 
-Sorry for bringing up another question late, but your explanation made me
-reconsider whether I might also be wrong in arch_tlbbatch_flush(). Specific=
-ally,
-try_to_unmap_flush() needs to ensure that all TLBI operations from other CP=
-Us
-for all involved memory contexts have completed. However, as you pointed
-out, a DSB ISH alone cannot guarantee this.
-
-This makes me wonder if we should take inspiration from RISC-V or x86 and u=
-se a
-cpumask to track all CPUs that have pending TLBIs. Then, we could use IPIs =
-to
-explicitly request those CPUs to issue DSB ISH, ensuring their TLB
-invalidations are fully completed.
-
-I mean something similar to what x86 and RISC-V do, but using just a
-simpler approach like issuing DSB ISH on the relevant CPUs.
-
-void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
-{
-        on_each_cpu_mask(&batch->cpumask, __ipi_flush_tlbi, NULL, NULL);
-        cpumask_clear(&batch->cpumask);
-}
-
-static void __ipi_flush_tlbi(void *info)
-{
-        dsb(ish);
-}
-
-Sorry for the mess I made earlier.
+One of the reasons why I'm trying to retire it.
 
 >
-> Fix this by flushing the entire mm in arch_flush_tlb_batched_pending().
-> This aligns with what the other arches that implement the tlbbatch
-> feature do.
+> > supports per-cgroup priority, and per-cgroup writeback control, and it
+> > worked perfectly fine in production.
+> >
+> > The interface looks something like this:
+> > /sys/fs/cgroup/cg1/zram.prio: [1-4]
+> > /sys/fs/cgroup/cg1/zram.writeback_prio [1-4]
+> > /sys/fs/cgroup/cg1/zram.writeback_size [0 - 4K]
 >
-> Fixes: 43b3dfdd0455 ("arm64: support batched/deferred tlb shootdown durin=
-g page reclamation/migration")
-> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-> ---
->  arch/arm64/include/asm/tlbflush.h | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/t=
-lbflush.h
-> index eba1a98657f1..7d564c2a126f 100644
-> --- a/arch/arm64/include/asm/tlbflush.h
-> +++ b/arch/arm64/include/asm/tlbflush.h
-> @@ -323,13 +323,14 @@ static inline bool arch_tlbbatch_should_defer(struc=
-t mm_struct *mm)
->  }
->
->  /*
-> - * If mprotect/munmap/etc occurs during TLB batched flushing, we need to
-> - * synchronise all the TLBI issued with a DSB to avoid the race mentione=
-d in
-> - * flush_tlb_batched_pending().
-> + * If mprotect/munmap/etc occurs during TLB batched flushing, we need to=
- ensure
-> + * all the previously issued TLBIs targeting mm have completed. But sinc=
-e we
-> + * can be executing on a remote CPU, a DSB cannot guarrantee this like i=
-t can
-> + * for arch_tlbbatch_flush(). Our only option is to flush the entire mm.
->   */
->  static inline void arch_flush_tlb_batched_pending(struct mm_struct *mm)
->  {
-> -       dsb(ish);
-> +       flush_tlb_mm(mm);
->  }
->
->  /*
-> --
-> 2.43.0
->
+> How do you do aging with multiple tiers like this? Or do you just rely
+> on time thresholds, and have userspace invokes writeback in a cron
+> job-style?
 
-Thanks
-Barry
+ZRAM already has a time threshold, and I added another LRU for swapped
+out entries, aging is supposed to be done by userspace agents, I
+didn't mention it here as things are becoming more irrelevant to
+upstream implementation.
+
+> Tbh, I'm surprised that we see performance win with recompression. I
+> understand that different workloads might benefit the most from
+> different points in the Pareto frontier of latency-memory saving:
+> latency-sensitive workloads might like a fast compression algorithm,
+> whereas other workloads might prefer a compression algorithm that
+> saves more memory. So a per-cgroup compressor selection can make
+> sense.
+>
+> However, would the overhead of moving a page from one tier to the
+> other not eat up all the benefit from the (usually small) extra memory
+> savings?
+
+So far we are not re-compressing things, but per-cgroup compression /
+writeback level is useful indeed. Compressed memory gets written back
+to the block device, that's a large gain.
+
+> > It's really nothing fancy and complex, the four priority is simply the
+> > four ZRAM compression streams that's already in upstream, and you can
+> > simply hardcode four *bdev in "struct zram" and reuse the bits, then
+> > chain the write bio with new underlayer bio... Getting the priority
+> > info of a cgroup is even simpler once ZRAM is cgroup aware.
+> >
+> > All interfaces can be adjusted dynamically at any time (e.g. by an
+> > agent), and already swapped out pages won't be touched. The block
+> > devices are specified in ZRAM's sys files during swapon.
+> >
+> > It's easy to implement, but not a good idea for upstream at all:
+> > redundant layers, and performance is bad (if not optimized):
+> > - it breaks SYNCHRONIZE_IO, causing a huge slowdown, so we removed the
+> > SYNCHRONIZE_IO completely which actually improved the performance in
+> > every aspect (I've been trying to upstream this for a while);
+> > - ZRAM's block device allocator is just not good (just a bitmap) so we
+> > want to use the SWAP allocator directly (which I'm also trying to
+> > upstream with the swap table series);
+> > - And many other bits and pieces like bio batching are kind of broken,
+>
+> Interesting, is zram doing writeback batching?
+
+Nope, it even has a comment saying "XXX: A single page IO would be
+inefficient for write". We managed to chain bio on the initial page
+writeback but still not an ideal design.
+
+> > busy loop due to the ZRAM_WB bit, etc...
+>
+> Hmmm, this sounds like something swap cache can help with. It's the
+> approach zswap writeback is taking - concurrent assessors can get the
+> page in the swap cache, and OTOH zswap writeback back off if it
+> detects swap cache contention (since the page is probably being
+> swapped in, freed, or written back by another thread).
+>
+> But I'm not sure how zram writeback works...
+
+Yeah, any bit lock design suffers a similar problem (like
+SWAP_HAS_CACHE), I think we should just use folio lock or folio
+writeback in the long term, it works extremely well as a generic
+infrastructure (which I'm trying to push upstream) and we don't need
+any extra locking, minimizing memory / design overhead.
+
+> > - Lacking support for things like effective migration/compaction,
+> > doable but looks horrible.
+> >
+> > So I definitely don't like this band-aid solution, but hey, it works.
+> > I'm looking forward to replacing it with native upstream support.
+> > That's one of the motivations behind the swap table series, which
+> > I think it would resolve the problems in an elegant and clean way
+> > upstreamly. The initial tests do show it has a much lower overhead
+> > and cleans up SWAP.
+> >
+> > But maybe this is kind of similar to the "less optimized form" you
+> > are talking about? As I mentioned I'm already trying to upstream
+> > some nice parts of it, and hopefully replace it with an upstream
+> > solution finally.
+> >
+> > I can try upstream other parts of it if there are people really
+> > interested, but I strongly recommend that we should focus on the
+> > right approach instead and not waste time on that and spam the
+> > mail list.
+>
+> I suppose a lot of this is specific to zram, but bits and pieces of it
+> sound upstreamable to me :)
+>
+> We can wait for YoungJun's patches/RFC for further discussion, but perhap=
+s:
+>
+> 1. A new cgroup interface to select swap backends for a cgroup.
+>
+> 2. Writeback/fallback order either designated by the above interface,
+> or by the priority of the swap backends.
+
+Fully agree, the final interface and features definitely need more
+discussion and collab in upstream...
