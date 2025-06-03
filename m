@@ -1,161 +1,124 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F809AD23;
-	Tue,  3 Jun 2025 07:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 547CF1F63D9;
+	Tue,  3 Jun 2025 07:04:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748934274; cv=none; b=S3Qius/W1IXQ3iALG4jCr8YKeCtu0E4O7aF6ChOXvpavW2DeVYd1Qw/3yIj1eQiL4wlS+bHXJcJPSxNbGnrDJ0a0Jh93FktlHoueh8VFsaJZosKdr5mHNddUQo/eDRkXkLp/jdIOB1jSVZdb2HRh70fmex13NyN0o7/u5NdMOjs=
+	t=1748934283; cv=none; b=Zs/C+waRU4NQPhV2WtEQmy9H+eZCKPe/yWv15ZZNtMTNsnvXLQcU2QHN5U3XvmxNNSInKxLEEnZfSOQdMMLGeydRqhwE4sVn5SNAPjsUwUIlFnZjvHrWXYVjbj+MVA/rWSQFpMis3RNoLTxh7oKUargpgJGyoL/UoLJbPZ3ME14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748934274; c=relaxed/simple;
-	bh=cTc8bZDBuXvDUGPUR+iUxBQOO/Wth1RIqhux1B12JFA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fky+ChlIHajqRNyxAxnrXf1vZBEAb2N6a2qoRLQiIYBuvMKoscp0Jouic0bqG45u9tzC09D4llDOpQ0bXOQ4rmLuFMln+NasNt3vtIO0ysjOOEXsXNxEcRYdJVyiogZFIjOFgDXOS8hahMF6HN/sOPJp9pytLjNZYaOlyRJ9BpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=Mu2BfBf4; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1748934283; c=relaxed/simple;
+	bh=tDULJVvapD3GbaUPZBh6QoAWo7a/Aq/65kFs9l2booE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kKJ8612VI54dtat9proQuXzcjMQbZwEvg65Hv558FGQ1Eq2O98gKfZilD2njYkynpePhCCnINbKHOggQIB+DmGZRTfnN3+25m3TambNFH+kqbzmT9TIbmF0dNcgFFAOigtt6mSaAA3WzXbhZ8dG+RQpHA4NC+CYyUeypGAzAYek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BZ85++bw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Mu2BfBf4"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5535Tf55016555;
-	Tue, 3 Jun 2025 00:04:12 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pfpt0220; bh=9u61GZfHLbM/okiKtAUNpwlGb
-	qA06T27oDXbr/axoPI=; b=Mu2BfBf4RLf4dvAitRJHFFh5qwBgBIwho/Ah8Ol5G
-	6s/lUVQTzn0gYs4COAnLjnxQ7xRjLs4pXY1TWEsnkjgaF4HOGDFJrpnwQwuKLPAT
-	j1nrahrcb+iJqtMNHbOBcTRRmp8gQThwKzXIC3wwIgZfTdqaXqpL3Xwc4nOCf9hd
-	PjDZry8halzKevcwpgoF0AJeFWQ2GV2Vfia9j0/jGuLAnZZCeXfea8wC2sVJlLlB
-	6RzyPYTRz9KBIGVKlZShwfijOnCDJnC2sgwwTiExP9k5t0JlaX/4qlHMvYAfaxLe
-	nrJLtJl68dc8RV1QB+sWUOfUE0DEPrMyU+bMklSonP9Lg==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 471txwr5d5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Jun 2025 00:04:11 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 3 Jun 2025 00:04:11 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Tue, 3 Jun 2025 00:04:11 -0700
-Received: from 04b5e1325d51 (HY-LT91368.marvell.com [10.29.24.116])
-	by maili.marvell.com (Postfix) with SMTP id EB1F23F705A;
-	Tue,  3 Jun 2025 00:04:07 -0700 (PDT)
-Date: Tue, 3 Jun 2025 07:04:05 +0000
-From: Subbaraya Sundeep <sbhatta@marvell.com>
-To: <carlos.fernandez@technica-engineering.de>
-CC: <linux-kernel@vger.kernel.org>, Sabrina Dubroca <sd@queasysnail.net>,
-        Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo
- Abeni <pabeni@redhat.com>, <netdev@vger.kernel.org>
-Subject: Re: [PATCH net] macsec: MACsec SCI assignment for ES = 0
-Message-ID: <aD6eZSFTBzJuuVX_@04b5e1325d51>
-References: <20250529124455.2761783-1-carlos.fernandez@technica-engineering.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BZ85++bw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5AB4C4CEEF;
+	Tue,  3 Jun 2025 07:04:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748934283;
+	bh=tDULJVvapD3GbaUPZBh6QoAWo7a/Aq/65kFs9l2booE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BZ85++bwlHn5oXkn7WjtuKV/ghFie3VmaxFXemAABdrXXTtuRoHAkBON+t4xeI5IA
+	 mt2JvBHRv71/TmH/qTfh2zMPW3QBdqYV4pJ/5RulMfsNjWTai1SiTERfPSdJnY7nnf
+	 +RKtddSHwws3cdHB5dHbg2Flt0AOO0JOA2y0wZu/ytJJyPqftwgkWjDwIUl+2pstAi
+	 Tqrb9NIVKvOkT5z2Su+4wmGaAcc2DYvD8Z815RUvTJ9pkV77xib2WDyZ/mNc+Ah8BD
+	 fv90/STO+OFkXrgbLCLkF9vvhujuP2g+m/8pfanYTF6uUO3FlSD2m0oGmtAqv2+F/m
+	 8OEAKuSrOnoew==
+Message-ID: <8bcc4fb7-b477-4478-a61c-0d7aa37a7f6e@kernel.org>
+Date: Tue, 3 Jun 2025 09:04:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250529124455.2761783-1-carlos.fernandez@technica-engineering.de>
-X-Authority-Analysis: v=2.4 cv=N44pF39B c=1 sm=1 tr=0 ts=683e9e6b cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=ACc6NGWNc1wSfeR37qgA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: X3l8PKdn-Mv38_It55f2_WNGjrlodCs0
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAzMDA1OSBTYWx0ZWRfX7nN6n6t0BvVY rREZ8iAt2Y8GOw5R+OAMUrKl0T4K0WA2pa0dCNyH0RU42t8Zz3Ig7jLsF8UeLHuUVkx5vQE/ngd N/q0SnRCdXrBRtHHziCj+cxSb+A3BLYOW12VApnpBkSGErvEHl6JISmGKwbcFbWt7xayNvjjXja
- AyuJ0To3PUUr9aZQe5NeNmEkoqAP8zoflGVwRJon9Y/NATq34bWPqtO9S2xBrCw587w2lVbaZxZ oLP2J72dJBYBgazNT4V3z17lvGARZa46DLeEvr7aIsFqJ9Keeq6yVSFOB30Y0+fpJKBc/5YO5mn mbnymYP5f+89svjTYfDR7sc7KvYouMxuj02UmURENI8cz7koN9ewoEY5rv2qnChCKdC2evdxrGC
- f88x/q/ZnY0h/S73OX5++z5Uf/wZ9pNDlP0jgCbZxObMsIAAYYjON2jRAdsKsBgNenCFV5PI
-X-Proofpoint-ORIG-GUID: X3l8PKdn-Mv38_It55f2_WNGjrlodCs0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-03_01,2025-06-02_01,2025-03-28_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 03/18] dt-bindings: clock: qcom,sm8450-camcc: Move
+ sc8280xp camcc to sa8775p camcc
+To: Jagadeesh Kona <quic_jkona@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
+ Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
+ Dmitry Baryshkov <lumag@kernel.org>
+Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
+ Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>,
+ Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+References: <20250530-videocc-pll-multi-pd-voting-v5-0-02303b3a582d@quicinc.com>
+ <20250530-videocc-pll-multi-pd-voting-v5-3-02303b3a582d@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250530-videocc-pll-multi-pd-voting-v5-3-02303b3a582d@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
-
-On 2025-05-29 at 12:44:42, carlos.fernandez@technica-engineering.de (carlos.fernandez@technica-engineering.de) wrote:
-> From: Carlos Fernandez <carlos.fernandez@technica-engineering.de>
+On 30/05/2025 15:20, Jagadeesh Kona wrote:
+> SC8280XP camcc only requires the MMCX power domain, unlike SM8450 camcc
+> which now supports both MMCX and MXC power domains. Hence move SC8280XP
+> camcc from SM8450 to SA8775P camcc, to have single power domain support.
 > 
-> According to 802.1AE standard, when ES and SC flags in TCI are zero, used
-> SCI should be the current active SC_RX but current code uses the header
-> MAC address.
+> SA8775P camcc doesn't support required-opps property currently but SC8280XP
+> camcc need that property,  so add required-opps based on SC8280XP camcc
+> conditional check in SA8775P camcc bindings.
 > 
-> Without this patch, when ES flag is 0 (using a bridge or switch), header
-> MAC will not be equal to the SCI and MACSec frames will be discarted.
-> 
-> Signed-off-by: Carlos Fernandez <carlos.fernandez@technica-engineering.de>
+> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
 > ---
->  drivers/net/macsec.c | 25 ++++++++++++++++++++-----
->  1 file changed, 20 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
-> index 3d315e30ee47..9a743aee2cea 100644
-> --- a/drivers/net/macsec.c
-> +++ b/drivers/net/macsec.c
-> @@ -247,15 +247,29 @@ static sci_t make_sci(const u8 *addr, __be16 port)
->  	return sci;
->  }
->  
-> -static sci_t macsec_frame_sci(struct macsec_eth_header *hdr, bool sci_present)
-> +static sci_t macsec_frame_sci(struct macsec_eth_header *hdr, bool sci_present,
-> +			      struct macsec_rxh_data *rxd)
->  {
-> -	sci_t sci;
-> +	struct macsec_dev *macsec_device;
-> +	sci_t sci = 0;
->  
-> -	if (sci_present)
-> +	if (sci_present) {
->  		memcpy(&sci, hdr->secure_channel_id,
->  		       sizeof(hdr->secure_channel_id));
-> -	else
-> +	} else if (!(hdr->tci_an & (MACSEC_TCI_ES | MACSEC_TCI_SC))) {
-> +		list_for_each_entry_rcu(macsec_device, &rxd->secys, secys) {
-> +			struct macsec_secy *secy = &macsec_device->secy;
-> +			struct macsec_rx_sc *rx_sc;
-> +
-> +			for_each_rxsc(secy, rx_sc) {
-> +				rx_sc = rx_sc ? macsec_rxsc_get(rx_sc) : NULL;
-> +				if (rx_sc && rx_sc->active)
-> +					sci = rx_sc->sci;
-The intention of this logic is not clear to reader since you want
-last sci in list or you forgot to return/break. Digging previous mail
-chain you said loop iteration count will only be 1 but we are not
-really sure about it. Please change as Sabrina suggested to check whether
-RXSC is exactly one for lower device and if not drop the packet.
-Write a comment on top of 'else if' so that we dont need to dig
-into history of why this logic is like that.
-Also this looks like net-next material, if you feel strongly this as
-a fix which was missed from beginning then add Fixes tag.
 
-Thanks,
-Sundeep
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-
-> +			}
-> +		}
-> +	} else {
->  		sci = make_sci(hdr->eth.h_source, MACSEC_PORT_ES);
-> +	}
->  
->  	return sci;
->  }
-> @@ -1156,11 +1170,12 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
->  
->  	macsec_skb_cb(skb)->has_sci = !!(hdr->tci_an & MACSEC_TCI_SC);
->  	macsec_skb_cb(skb)->assoc_num = hdr->tci_an & MACSEC_AN_MASK;
-> -	sci = macsec_frame_sci(hdr, macsec_skb_cb(skb)->has_sci);
->  
->  	rcu_read_lock();
->  	rxd = macsec_data_rcu(skb->dev);
->  
-> +	sci = macsec_frame_sci(hdr, macsec_skb_cb(skb)->has_sci, rxd);
-> +
->  	list_for_each_entry_rcu(macsec, &rxd->secys, secys) {
->  		struct macsec_rx_sc *sc = find_rx_sc(&macsec->secy, sci);
->  
-> -- 
-> 2.43.0
-> 
+Best regards,
+Krzysztof
