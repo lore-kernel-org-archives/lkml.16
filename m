@@ -1,119 +1,124 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5341C54AF;
-	Tue,  3 Jun 2025 16:58:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A723E1DA21;
+	Tue,  3 Jun 2025 17:01:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748969891; cv=none; b=FF6aJNmSpvJROGGpwiDtpRelVLxeDiwLk+82yLuaZMP4ra3WO1oxW7QgDG9B2nsMCMjiybtVCcRQLRXmBpbObnFN6gPV/92G+wZD+Edjg8lz22VsOjQCTEfuEazP0UF2nLTt4ODXEnFwasJ312zzHJcNLq4KYuNbJU3TIhxKsZs=
+	t=1748970085; cv=none; b=Tuizoitq8qVXL3xRfdjAm6MIyCz11tCX9dVo+bT9GO3ao1gQZRNhz0eB3uFFN6GCi11wc4om1OAlBR/naDNEhtjUjmog06haFgN3Qa+QnwHWUn3TyLncwr17SxmptUfVegFPCNp3E9wuE9wafyFj1Lh5AFz6jQsxkH+Hh1pQT/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748969891; c=relaxed/simple;
-	bh=6Rr/jI7KzYXdOWM3wJb5qPYTPpXbYm7RJfqISzpfHWk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BKC0RCfSHgAgjR+NmUTJP8WZXhphOBYxWjuEKVJ4XpxmJ1mmhYtnOWviXyJzTo3Gr8d0LhiHBnmusJs8cc456DIAaUzuyB5hQl0+OrLs8LBX/jOlAJ8V5rPN6pbRMdLOc21Ynlwv8Z85u0gnd7JY8rnAqatT7NSv4m8UzGhY8DY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=OgIiwxgw; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1748970085; c=relaxed/simple;
+	bh=I02Vlr73sM+rN6jjjm7Dd7get1VU85/AhuEx5Fpndmg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DHghEU9m+KplyS9Xqx2ODULuazun2ZQQLOzaTvDeJ+qivP/EH7D5a5VZzwCgdHsZDrIOTr7KZZT+jVdL3tDYz+PWEKG2tn0lxS3hjMZvKWbGqpYmBgWVcov5LM37ZepH0xdxTRafJuu9HYrWeP/7p2oAwEpKA9HHOwW/r1pSvgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NATxriGT; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="OgIiwxgw"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 553GvWg53911618
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 3 Jun 2025 09:57:33 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 553GvWg53911618
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025052101; t=1748969859;
-	bh=VVS81/wW86p3Zj2cJ5MzL01raclznidjjI40dSssX2w=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OgIiwxgwgvAMO3sEh/7OSrRlyAIV9BYBlRyltoDFOHcLiPLQ/KpcyV5VNj83XF13g
-	 ZfIslBQ+dxU/ZbnXmqdgp5XXUUD+MnhEqSHE9YKPiTvnues1oxlMHO/KFR89So0BU6
-	 VkgRBVe/4bMt4B9ivIYrUnKvh/K4IUcFMRFhY+FU2dnqvIRaBW+8S3UPpLmpcHeM4n
-	 QuHFx+LiHW7fIgpV4kaERj1YTdizufj3IQsfpg3adgaXSrcT42S+NLQvmBLaU7tH6I
-	 nrnOTiSl2hd7hQIcsTx5r532swaqhITp+8yHo+21+SinsIj6KQxnMCFydI1HQmo6cw
-	 khrc38nFHJhqw==
-Message-ID: <d3114f49-cb56-462c-8faa-82a581dd7a31@zytor.com>
-Date: Tue, 3 Jun 2025 09:57:31 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NATxriGT"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a36e090102so3418833f8f.2;
+        Tue, 03 Jun 2025 10:01:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748970082; x=1749574882; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ciLKL0oNaTcGqmqIOmbZomzL3RZyKAIBEpvy5et0b1w=;
+        b=NATxriGTQEJRWN+LPmpchumfltfjpci/6emEFwud4R4EA5iejKyLCzHj9CApOx0LRU
+         mMjjwGmX45uLDMxpQI0AXrh6rPLVCY5uitrwvJf0Leiorxz1gkgdFMAtMlZ2wgv5nDpn
+         sM/s8RQ7e7XP+Aff3B/WkqJcYsm7h+NdcdMirONXJoRiKRD8bEqLXrSSDq4CZdfHE3r2
+         oWKMUoVunVPEp/iVJKYxrcuTXhE98wXqqDlfcpL4fwgZCL1DaSLiUKrE1xXt0CcBPSkC
+         s96uHvnUmgl3w1izSrIW7LK4/dGCm8vH/pe9VyriX1K4TYWST8dwl1B5QxekfiiGlfl9
+         nmRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748970082; x=1749574882;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ciLKL0oNaTcGqmqIOmbZomzL3RZyKAIBEpvy5et0b1w=;
+        b=At0D0haMjyF/xSYhTcwC60FDVg1JXV8m3Rq7JduZSIylGGTaFdkWdeNwWaaFi8R7hw
+         iaPf7ubNK9pyZLo1oQOQ/eOFHD1JFhwj2KVU/WlcfRbTRY0dp8Gprk0O3fKAio905rmO
+         8ACqenFwBG9/rSBX7PD23bG3Cjmcrxgdi1W/tBwX6tjxMT5PwyRiy3OHn4PKgc73Urxg
+         i6HCPJ4+L07/K4NW1usBHB2Y+3sV+/iySQ054RSVhSwhEW8dhB4bvn+oGBMh0tyDWNIZ
+         qyZCuuiMlGqtRrXVtpVKbDiclI14bu4J6mp13m5RXrjOolCL7ocgRFqwTkmsW5cWFpVV
+         RuAg==
+X-Forwarded-Encrypted: i=1; AJvYcCXuuYNN2ieGCs5t0UpTjkDdqNfjBvr37fPk2BVUh9SjU4wAKdiFQIf4cNlkTf89JYTGaoCokjCwP3CVs14=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxH96z0d/t1hMSPCmeq3B78sQSGcra0XZN46OHVWCAHBFl3duda
+	9PBI74RZVgHt57ytTub4V4Y16sHJvH4ycwe8f+N4PhNJGXgdHR81k56OAWLLcA3+3lIXKA==
+X-Gm-Gg: ASbGncsolEfaOREnEccx97JTnYL2igaXqrOI9bxXB09sBHMkRGgpZtOqcauvsnjvc16
+	DsfocRGwO1XXzvWDAVrCZ5qSDoZzMv2m/+MaWhlUNEyBrh52uEq9hdSaWZzVQyTVzYCwim5EwO6
+	yZe2ifOTaOEF5JSQgF00b/km8YTjz9ElZic2nhY5HXBsTTtihoSFlvszaLOYmG26qxEkcEvpo3o
+	h/mqpaCyJjfNrcHnfGWBnA2HYeVQBJ5AJVPnSkn1O1h75UIV669u/VxiiBbqP6GjReH8cBHoQkP
+	Gyjw3NQ8f95s9ubzVqml/feY0U4axUrrMNb6wl5m5LIyyX9XU/sd1As+NDv8ebPy9dKO3FqIhPo
+	qug8Z5S2Pj0MBvHFNu4CLJJZymw==
+X-Google-Smtp-Source: AGHT+IHfcVfMVKXiAN2N/C9X+Ipnx2mNMy/BaYIgLXf2ajWTXyjeI/MYVV1vFjJZEyxZ2B1igc6u1A==
+X-Received: by 2002:a05:6000:2c12:b0:3a4:d64a:3df0 with SMTP id ffacd0b85a97d-3a4f7a025bdmr14716348f8f.4.1748970081226;
+        Tue, 03 Jun 2025 10:01:21 -0700 (PDT)
+Received: from alchark-surface.localdomain (bba-92-99-174-93.alshamil.net.ae. [92.99.174.93])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe5b92bsm18574640f8f.9.2025.06.03.10.01.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 10:01:20 -0700 (PDT)
+From: Alexey Charkov <alchark@gmail.com>
+Subject: [PATCH 0/4] arm64: dts: rockchip: enable further peripherals on
+ ArmSoM Sige5
+Date: Tue, 03 Jun 2025 21:01:12 +0400
+Message-Id: <20250603-sige5-updates-v1-0-717e8ce4ab77@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 8/9] perf/x86: Enable NMI-source reporting for perfmon
-To: Sohil Mehta <sohil.mehta@intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc: "H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sean Christopherson <seanjc@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>, Tony Luck <tony.luck@intel.com>,
-        Zhang Rui <rui.zhang@intel.com>, Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Jacob Pan <jacob.pan@linux.microsoft.com>,
-        Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
-        Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org,
-        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20250513203803.2636561-1-sohil.mehta@intel.com>
- <20250513203803.2636561-9-sohil.mehta@intel.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <20250513203803.2636561-9-sohil.mehta@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFgqP2gC/x3MQQqAIBBA0avErBMcQRddJVpoTjYbE6ciCO+et
+ HyL/18QqkwC0/BCpZuFj9yB4wDr7nMixbEbjDZWO22UcCKrrhL9SaI8OhOsRo8BoTel0sbP/5u
+ X1j68vxPhXwAAAA==
+X-Change-ID: 20250602-sige5-updates-a162b501a1b1
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Alexey Charkov <alchark@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748970076; l=1451;
+ i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
+ bh=I02Vlr73sM+rN6jjjm7Dd7get1VU85/AhuEx5Fpndmg=;
+ b=VT4GHoLJKWU5AaJj8JZJB66ttYh5p4rDf2CqdTIJXtZD1qVq5vL7nkleI9J5KaCO9xegTgX9R
+ 3gPRGqEW/LnCMEK9xv2lkAp5KTnYDLqAhhQ5W6tYfpSncCx4QswdlzH
+X-Developer-Key: i=alchark@gmail.com; a=ed25519;
+ pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
 
-On 5/13/2025 1:38 PM, Sohil Mehta wrote:
-> 
-> Program the designated PMI NMI-source vector into the local vector table
-> for the PMU. An NMI for the PMU would directly invoke the PMI handler
-> without polling other NMI handlers, resulting in reduced PMI delivery
-> latency.
-> 
-> Co-developed-by: Zeng Guang<guang.zeng@intel.com>
-> Signed-off-by: Zeng Guang<guang.zeng@intel.com>
-> Signed-off-by: Jacob Pan<jacob.jun.pan@linux.intel.com>
-> Signed-off-by: Sohil Mehta<sohil.mehta@intel.com>
-> Reviewed-by: Kan Liang<kan.liang@linux.intel.com>
-> Tested-by: Sandipan Das<sandipan.das@amd.com> # AMD overlapping bits
+Add support for the two USB type A ports, link up the CPU regulators for
+DVFS, enable WiFi and Bluetooth.
 
-Reviewed-by: Xin Li (Intel) <xin@zytor.com>
+The bluetooth part might warrant some discussion and thoughts from the
+list, given that it's connected over UART and thus not discoverable. At
+the same time, there are two revisions of the board which have different
+Bluetooth chips soldered on: Realtek based on v1.1 and Broadcom based on
+v1.2. I'm not sure if there is any way to determine board version from
+software. Mine is v1.2, so the respective patch deals with the Broadcom
+case only, but maybe it's better to move it into a .dtso and thus kick
+the can down the road (i.e. make the user deal with board identification
+and loading of the right overlay)? Thoughts welcome.
+
+Best regards,
+Alexey
+
+Signed-off-by: Alexey Charkov <alchark@gmail.com>
+---
+Alexey Charkov (4):
+      arm64: dts: rockchip: list all CPU supplies on ArmSoM Sige5
+      arm64: dts: rockchip: enable USB A ports on ArmSoM Sige5
+      arm64: dts: rockchip: enable wifi on ArmSoM Sige5
+      arm64: dts: rockchip: enable bluetooth on ArmSoM Sige5
+
+ .../boot/dts/rockchip/rk3576-armsom-sige5.dts      | 135 +++++++++++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3576.dtsi           |  16 +++
+ 2 files changed, 151 insertions(+)
+---
+base-commit: 546b1c9e93c2bb8cf5ed24e0be1c86bb089b3253
+change-id: 20250602-sige5-updates-a162b501a1b1
+
+Best regards,
+-- 
+Alexey Charkov <alchark@gmail.com>
+
