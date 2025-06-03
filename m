@@ -1,134 +1,184 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266831482E7;
-	Tue,  3 Jun 2025 06:52:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D601F268C62;
+	Tue,  3 Jun 2025 06:52:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748933523; cv=none; b=FLfecIH0tTrECt0AFzsr/ObQj2gYJghuTXRz19I8KZi8e9vVJl86LBNHqXWhjvw30DMr9IQpAUayBjlX8EP0qr/wLr+0kyARJ5p8o/EBCOLajV6RiSp1gyk0Y7mzp+9stx9IK5Z1gVUYm83hUkD4BQq/BxcAwfveJM6Rr5yp6wU=
+	t=1748933525; cv=none; b=bYwDGfH1ZBnctXPzWrHPE0sqDuuqasCWEADqOgTOG+ABtzEoE84ZkGTNb/Z4N05BnZYxMocz0Iy8Db+Maor2HOAU8wNI9L9gdXbqaqBwWeenmXhErPzXqhUdRVVheCFqhvZSFgdNL/ll+hGjzJKV+SyffTQF/wE+ro8/kyQry3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748933523; c=relaxed/simple;
-	bh=Kjp0tuLw4XvD1ShgDjXom8aEbBouPSch+dAuZVlg1lc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bbPm83fsGiBoJQ4e+pP052P9tULlPWvtUAMBQjPJIIcDWDtPNOm62T42sn3i8U/YAj2a7cTKk6zYX3YMEhpt/U9+rEekbA8I6QR3ufy11Bou68Wxw0nS5sB4riY3T4L+WjL9+85oSxwH7IM3Tr76Jfj7mxs87Ph5u9/3upM7qdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cp9ubILs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748933525; c=relaxed/simple;
+	bh=lzFWTJcfuXOBClAas9MZhq4SE623nomGZJJDIWUBeao=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qdB42TvL/hsHjf1WoCtcSGJ3Rp/s9Creq1im+BdmIoJn3mw+pmr64Ag3C6KtAnkSPROuD5eD5uLvivyPZNZRfeMOOvX19raT0sBl1jQTj2DbAoBfGbKjLBWBTY+VlIIQCz6AvipIUe8HPw/MFq4LZOF+3lRcktL24uA2zaRG270=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pQsEk4KY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cp9ubILs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEA8AC4CEED;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pQsEk4KY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDBFBC4CEF1;
 	Tue,  3 Jun 2025 06:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748933522;
-	bh=Kjp0tuLw4XvD1ShgDjXom8aEbBouPSch+dAuZVlg1lc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Cp9ubILs58FREDHmwfcXTl8H52EfWllmO2J0fZq/mnImXJRpewkU3Dj5Jkd2ZtHHB
-	 aX6aPQTM1xqYQKsOexgJP0gWMY4hquIuD3hKbJdOc48XFGFiH+OX6RCLbfqc2WomgU
-	 IWxwN52klZVJ6GdpmAh4Cms02mu8bw0QTZFRexRU5C6cvBeNXl6cBSXPkYg0LlcqKP
-	 i2HIclhrTkgfCWe/kDRFBzBZMbtbZpQigz7BEudTCxD3YEK2l+JXVTsc9RINhrezI3
-	 kPIgAa70f//PDY/7axp7PBSUIXBHgpma25WDymPfpsko3IDWHiozSt+ihOsvkCmHUp
-	 63/oCweUJ0/HQ==
-Date: Mon, 2 Jun 2025 23:52:00 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Ravi Bangoria <ravi.bangoria@amd.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Stephane Eranian <eranian@google.com>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>,
-	Joe Mario <jmario@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Santosh Shukla <santosh.shukla@amd.com>,
-	Ananth Narayan <ananth.narayan@amd.com>,
-	Sandipan Das <sandipan.das@amd.com>, bpf@vger.kernel.org
-Subject: Re: [PATCH 1/4] perf/amd/ibs: Add load/store SW filters to IBS OP PMU
-Message-ID: <aD6bkAXjRllFvRTV@google.com>
-References: <20250529123456.1801-1-ravi.bangoria@amd.com>
- <20250529123456.1801-2-ravi.bangoria@amd.com>
- <aDq1iG3P9_BBnx7C@gmail.com>
+	s=k20201202; t=1748933524;
+	bh=lzFWTJcfuXOBClAas9MZhq4SE623nomGZJJDIWUBeao=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pQsEk4KYKFv043uT2ksf1vsov/djJPEWvFanpxuaJ8nYi7AJbOloqeL3kboeYQnbM
+	 BfVX0BmuEPU3p9IG2/yHSI49SXq9uYDrHEVz2i6pI5RdzPe9iiCORY7wBRpkS7/oO6
+	 YZURw3M2DMthp07VDM1SRGbA0/HRUAJrt7yGPuNpGRI90gefrStaDM6FTugZ2XBPzG
+	 /eFvprl1WnQvMvu4r9YcgbK/0IDYY/IlOAu7d5vJYVXwwG2JLKVb2EEzyke+hvAy+H
+	 cawXnY0fB15gvaHKHcfpSxhFTW9vRe0XH2CwJyo/wDGdGXkVbuzjf5x/Npsw4b0VVc
+	 iG2ZekZ407B6A==
+Message-ID: <0fb4b411-1b27-43fc-8d48-e5220fc85478@kernel.org>
+Date: Tue, 3 Jun 2025 08:51:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aDq1iG3P9_BBnx7C@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] dt-bindings: mfd: Add power-button option for TI
+ TPS6594 PMIC
+To: Job Sava <jsava@criticallink.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Julien Panis <jpanis@baylibre.com>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+ jcormier@criticallink.com
+References: <20250520-linux-stable-tps6594-pwrbutton-v1-0-0cc5c6e0415c@criticallink.com>
+ <20250520-linux-stable-tps6594-pwrbutton-v1-1-0cc5c6e0415c@criticallink.com>
+ <20250521-wandering-tested-porpoise-acbef7@kuoka>
+ <CAKMwjwTP=xSsX3UuK02sKbXWaU7y-ErytNYCL_P0UveDytQW2A@mail.gmail.com>
+ <20250529-wise-tremendous-stork-a7d091@kuoka>
+ <CAKMwjwQOBE651A-5VVjwcv5TspO2eNZfgwWzMpTTWxhR3nGKUw@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <CAKMwjwQOBE651A-5VVjwcv5TspO2eNZfgwWzMpTTWxhR3nGKUw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello,
+On 02/06/2025 15:07, Job Sava wrote:
+> On Thu, May 29, 2025 at 5:26 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>
+>> On Fri, May 23, 2025 at 09:46:49AM GMT, Job Sava wrote:
+>>> On Wed, May 21, 2025 at 6:01 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>>>
+>>>> On Tue, May 20, 2025 at 01:43:36PM GMT, Job Sava wrote:
+>>>>> The TPS6594 power-button option permits users to enter STANDBY or
+>>>>> ACTIVE state by a push, release, or short push button request.
+>>>>>
+>>>>> Signed-off-by: Job Sava <jsava@criticallink.com>
+>>>>> ---
+>>>>>  Documentation/devicetree/bindings/mfd/ti,tps6594.yaml | 15 +++++++++++++++
+>>>>>  1 file changed, 15 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml b/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml
+>>>>> index 6341b6070366..a40808fd2747 100644
+>>>>> --- a/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml
+>>>>> +++ b/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml
+>>>>> @@ -37,6 +37,21 @@ properties:
+>>>>>        device on the SPMI bus, and the secondary PMICs are the target devices
+>>>>>        on the SPMI bus.
+>>>>>
+>>>>> +  ti,power-button:
+>>>>> +    type: boolean
+>>>>> +    description: |
+>>>>> +      Optional property that sets the EN/PB/VSENSE pin to be a
+>>>>> +      power-button.
+>>>>> +      TPS6594 has a multipurpose pin called EN/PB/VSENSE that can be either
+>>>>> +      1. EN in which case it functions as an enable pin.
+>>>>> +      2. VSENSE which compares the voltages and triggers an automatic
+>>>>> +      on/off request.
+>>>>> +      3. PB in which case it can be configured to trigger an interrupt
+>>>>> +      to the SoC.
+>>>>> +      ti,power-button reflects the last one of those options
+>>>>> +      where the board has a button wired to the pin and triggers
+>>>>> +      an interrupt on pressing it.
+>>>>
+>>>> Don't you need to handle two other cases as well? I assume you copied
+>>>> this from the other binding, but all three options are valid?
+>>>>
+>>>> Best regards,
+>>>> Krzysztof
+>>>>
+>>> Hello Krzysztof,
+>>>
+>>> Thank you for your response!
+>>>
+>>> I agree that the other two cases are valid options. However, for this
+>>> particular patch series, they may be out of scope. The primary goal of
+>>> this patch is to enable push-button functionality, rather than
+>>> addressing the VSENSE or EN modes.
+>>
+>> Binding should be complete, because if you design this as bool, it
+>> cannot be later changed to three-state (enum).
+>>
+>> I don't know if the EN and VSENSE modes are anyhow useful, maybe people
+>> interested in this hardware should say.
+>>
+>> Best regards,
+>> Krzysztof
+>>
+> 
+> Hi Krzysztof,
+> 
+> Thanks again for the feedback.
+> 
+> I modeled this binding after the TPS65219 PMIC, which uses a boolean
 
-+ bpf list
+Yeah, that's what I meant in my first reply.
 
-On Sat, May 31, 2025 at 09:53:44AM +0200, Ingo Molnar wrote:
-> 
-> * Ravi Bangoria <ravi.bangoria@amd.com> wrote:
-> 
-> > Since current IBS OP PMU does not have the capability to tag only load/
-> > stores instructions, tools like perf mem/c2c ends up recording lots of
-> > unwanted samples. So, introduce a load/store software filter in the IBS
-> > OP PMU:
-> > 
-> >   ibs_op/swfilt=1,ldop=1/         --> Only load samples
-> >   ibs_op/swfilt=1,stop=1/         --> Only store samples
-> >   ibs_op/swfilt=1,ldop=1,stop=1/  --> Load OR store samples
-> > 
-> > Other HW or SW filters in combination with this ldst filter are logical
-> > AND. For ex:
-> > 
-> >   ibs_op/swfilt=1,ldop=1,stop=1/u is
-> >   "privilege == userspace && (ldop == 1 || stop == 1)"
-> > 
-> >   ibs_op/swfilt=1,ldop=1,stop=1,l3missonly=1/ is
-> >   "l3missonly == 1 && (ldop == 1 || stop == 1)"
-> 
-> No objections, but:
-> 
-> > An alternate approach is mem_op BPF filter:
-> > 
-> >   perf record --filter "mem_op == load || mem_op == store" ...
-> > 
-> > However, there are few issues with it:
-> > o BPF filter is called after preparing entire perf sample. If the sample
-> >   does not satisfy the filtering criteria, all the efforts of preparing
-> >   perf sample gets wasted.
-> 
-> Could we add an 'early' BPF callback point as well, to fast-discard 
-> samples?
+> for ti,power-button, despite the same EN/PB/VSENSE options. Since this
+> patch only enables PB mode, I felt a boolean was appropriate and
+> consistent.
 
-I guess that would require a new BPF program type than PERF_EVENT and
-handle driver-specific details.
+Properties should have only one type, so that would be a different
+property. Someone knowing the device should come with arguments whether
+other states for this are useful at all. Or not useful and then argument
+that in commit msg for example.
 
-> 
-> > o BPF filter requires root privilege.
-> 
-> Could we add 'built-in', 'safe' BPF scripts that are specifically 
-> prepared for perf events filtering purposes, that can be toggled by 
-> non-root users as well? These could be toggled by tooling via sysfs or 
-> so, or even via the perf syscall if that turns out to be the better 
-> approach.
 
-We have BPF filter framework in the perf tools and it can be run as
-normal user.  But root user should load and pin the BPF program prior
-to use like below.
-
-  $ sudo perf record --setup-filter pin
-
-  $ perf record -d -e ibs_op/swfilt/u --filter 'mem_op == load' ...
-
-Thanks,
-Namhyung
-
-> 
-> It would give us the flexibility and extensibility of BPF, combining it 
-> with the safety & compatibility of the filtering functionality being 
-> provided by the kernel.
-> 
-> It could be provided in the form of a BPF program crypto signature 
-> registry of upstream-approved BPF scripts for perf BPF callback(s),
-> or so. (While root could load any BPF script.)
-> 
-> Thanks,
-> 
-> 	Ingo
+Best regards,
+Krzysztof
