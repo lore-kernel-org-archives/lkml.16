@@ -1,177 +1,142 @@
-Received: from mx-rz-2.rrze.uni-erlangen.de (mx-rz-2.rrze.uni-erlangen.de [131.188.11.21])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EBB722579E;
-	Tue,  3 Jun 2025 21:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5EB221F09;
+	Tue,  3 Jun 2025 21:28:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748986111; cv=none; b=UkxS8CTdCjPpYJCz4X3Dgf5WBn6kydciJHm6j9CCsoxBWe/RAgIlEi6Iecu2aFEFEEk2HXfVj1UvBY/XXijQwbvt+hnDRTS+rKbxabQjJT+51agtdYXR5dXFm60sgFMWPKymSacXTc0KB83N2jR73WuyyBs2vnttFUuBr8cmFcQ=
+	t=1748986113; cv=none; b=dU62y3MhApzz9qZNzSmALihK59IwYm096HLfHrkB4grDHfWitoGJzxPPe4KQirnmKr78XY0REl167tWKzbX8iywdfUjqhrLr4lnO0Jm+JUretbMV76WnpzrZMuipYR/aN1Ila0sqqD8LcOnpNm9V2YSZwHxCoL7p5ma/dYBNbW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748986111; c=relaxed/simple;
-	bh=91X80LvGHfH90x/qxrnpS8bkmAvt6UUlA5rRQzLZg/I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fAGDMLJYjxnaHK1y80D5bTUufSvegHgv5Td4LNrFP708rglaNu1xDwJBy9xGsRbmiTSZoLBF/WHJGRD7/RgYk3yzeyUFqmN3txRVSrHAqqzSEkik+vRUFSKBWCwDMs02WtXgGuCGhOJB1TcevLWwR50FnB4uDOmPvIoHE7RQq8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=R3pPMiSf; arc=none smtp.client-ip=131.188.11.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
+	s=arc-20240116; t=1748986113; c=relaxed/simple;
+	bh=Gy9dNaig71hrcxBXbrHTFcnl1mHgKYw+Bxh3hUPJVb4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=oVmxZewHPvWxooa/o3OwzpdWnP9E3mg9WtWYjY5iFkgs7TIG9jPYHEofbqfLN+9Q2xWQ5BeG/5NFhG86uHKt8SPTPc+MvTWN1KnnJlrO7QVWP4UoYgPbAdJw4yt9wHgz3t61osjfEzWXLjC6J4v9oie/8EEeI6RK70yB28I3vNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=AP3SrC7y; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="R3pPMiSf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
-	t=1748986107; bh=ARpytHsyfivjxGjflz99PobPaQ/Mtr9Wv+8PNmUUgKc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From:To:CC:
-	 Subject;
-	b=R3pPMiSfvWBr9q+phUTH/uIaiJTRngnHfV38FDKrEu0rWW+NROPwI97cQI7vvjF9b
-	 QlyUwWpcjrB479J15KVsC/l25vUlnmyiCTosRvJ2hJOtB7Ds9aJObDxXllxWOhaPh8
-	 YZre8UFpOFSwEEB9f0BZtu3V6yc+qQt878BdQqa2kxcqpCbIfrOkEDgXcvJd0cBB47
-	 QfCCl0tiF4jeF8x+TUt+UUU8xvyOgWNbL+Xc3T65ZjnzZWH5jnWlhreysMVud+aA/U
-	 vKr1XiZC/4YJUdN/IdteEihDFKFaeCRI48HciCVZ9uM7rWMkpiKMlLhVpI1pBrIE3j
-	 OAviOnKmghToA==
-Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-rz-2.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4bBkNB6ZfkzPkZc;
-	Tue,  3 Jun 2025 23:28:26 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at boeck4.rrze.uni-erlangen.de (RRZE)
-X-RRZE-Flag: Not-Spam
-X-RRZE-Submit-IP: 2001:9e8:3639:fe00:a21f:4ce4:8495:5578
-Received: from luis-tp.fritz.box (unknown [IPv6:2001:9e8:3639:fe00:a21f:4ce4:8495:5578])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: U2FsdGVkX18910nUSGoVfudKBySRew8N0fTZeQak0HM=)
-	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4bBkN73X7dzPkPR;
-	Tue,  3 Jun 2025 23:28:23 +0200 (CEST)
-From: Luis Gerhorst <luis.gerhorst@fau.de>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Xu Kuohai <xukuohai@huaweicloud.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Hari Bathini <hbathini@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Luis Gerhorst <luis.gerhorst@fau.de>,
-	Henriette Herzog <henriette.herzog@rub.de>,
-	Saket Kumar Bhaskar <skb99@linux.ibm.com>,
-	Cupertino Miranda <cupertino.miranda@oracle.com>,
-	Jiayuan Chen <mrpre@163.com>,
-	Matan Shachnai <m.shachnai@gmail.com>,
-	Dimitar Kanaliev <dimitar.kanaliev@siteground.com>,
-	Shung-Hsi Yu <shung-hsi.yu@suse.com>,
-	Daniel Xu <dxu@dxuuu.xyz>,
-	bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kselftest@vger.kernel.org
-Cc: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Subject: [PATCH bpf-next v4 8/9] selftests/bpf: Add test for Spectre v1 mitigation
-Date: Tue,  3 Jun 2025 23:28:14 +0200
-Message-ID: <20250603212814.338867-1-luis.gerhorst@fau.de>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250603205800.334980-1-luis.gerhorst@fau.de>
-References: <20250603205800.334980-1-luis.gerhorst@fau.de>
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="AP3SrC7y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1748986096; x=1749590896; i=wahrenst@gmx.net;
+	bh=Gy9dNaig71hrcxBXbrHTFcnl1mHgKYw+Bxh3hUPJVb4=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=AP3SrC7yoil0xp9VMDOry8/xRmaZJ1JbPWumFqw7RTVB/NkodljDcjYIo5asWiFQ
+	 YQZ9ngnKErej2Kt9TOvP8To7n2fJzIib5umO5Uf69pmlqtAEmgqZmCwzXTk5oaq/z
+	 nKu8UgHPQqcH3vgHUWeV7IxXh4VEpm43jqfxJxhro7wuJbMxarHoC1riTIRXMSXDI
+	 TFfSNcjNC1VZ3dQJ3h+FFu9EkvRYLrrP80UIcjGykES0RYK4+6S/tJd5Z6RxgQEob
+	 NA7r6j8U6MahtbJcmg/qIe74eCSUeVXvFQJya8JyP8hLxoVo6Xebtvx0hDYZlXi+k
+	 mOGcNJabNBhAPuEWRQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.103] ([91.41.216.208]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MHXBp-1u94lt27o9-0075NH; Tue, 03
+ Jun 2025 23:28:16 +0200
+Message-ID: <9483df46-0c1d-4646-9ba1-c38014a22495@gmx.net>
+Date: Tue, 3 Jun 2025 23:28:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/1] dt-bindings: mmc: mxs-mmc: change ref to
+ mmc-controller-common.yaml from mmc-controller.yaml
+To: Frank Li <Frank.Li@nxp.com>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ "open list:MULTIMEDIA CARD (MMC), SECURE DIGITAL (SD) AND..."
+ <linux-mmc@vger.kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>,
+ "open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
+ "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20250603152245.1068740-1-Frank.Li@nxp.com>
+Content-Language: en-US
+From: Stefan Wahren <wahrenst@gmx.net>
+Autocrypt: addr=wahrenst@gmx.net; keydata=
+ xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
+ IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
+ NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
+ JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
+ TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
+ f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
+ V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
+ aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
+In-Reply-To: <20250603152245.1068740-1-Frank.Li@nxp.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:9mJJ9KzYyiEND0uwEQ3VH0FpznhMWOfzChMkl4h0E9E6tUmuony
+ c+SkdZQP/qOrV16VBQfeHB6kV8gE58rboMRp2PHw68Nxo4dRH7js6jt45IsLrBQzl9ZBR8R
+ kfpJZ8FdMqNjCBWGGjnqkqF7Ka09QWEYiGz610GUKXXd/NG4tg8MIIevbxjZqayjspr8809
+ QlwzTyFA1u7Hs4pYfXYLw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:wIwnshtLzdM=;E1dtyHGZzuFNMgvAxBEgUe5Ciqt
+ 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
+ z3wajrF2lunfBwSK
 
-This is based on the gadget from the description of commit 9183671af6db
-("bpf: Fix leakage under speculation on mispredicted branches").
-
-Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
-Acked-by: Kumar Kartikeya Dwivedi <memxor@gmail.com>
----
- .../selftests/bpf/progs/verifier_unpriv.c     | 57 +++++++++++++++++++
- 1 file changed, 57 insertions(+)
-
-diff --git a/tools/testing/selftests/bpf/progs/verifier_unpriv.c b/tools/testing/selftests/bpf/progs/verifier_unpriv.c
-index c42c3839b30c..43236b93ebb5 100644
---- a/tools/testing/selftests/bpf/progs/verifier_unpriv.c
-+++ b/tools/testing/selftests/bpf/progs/verifier_unpriv.c
-@@ -729,4 +729,61 @@ l0_%=:	r0 = 0;						\
- "	::: __clobber_all);
- }
- 
-+SEC("socket")
-+__description("unpriv: Spectre v1 path-based type confusion of scalar as stack-ptr")
-+__success __success_unpriv __retval(0)
-+#ifdef SPEC_V1
-+__xlated_unpriv("if r0 != 0x1 goto pc+2")
-+/* This nospec prevents the exploit because it forces the mispredicted (not
-+ * taken) `if r0 != 0x0 goto l0_%=` to resolve before using r6 as a pointer.
-+ * This causes the CPU to realize that `r6 = r9` should have never executed. It
-+ * ensures that r6 always contains a readable stack slot ptr when the insn after
-+ * the nospec executes.
-+ */
-+__xlated_unpriv("nospec")
-+__xlated_unpriv("r9 = *(u8 *)(r6 +0)")
-+#endif
-+__naked void unpriv_spec_v1_type_confusion(void)
-+{
-+	asm volatile ("					\
-+	r1 = 0;						\
-+	*(u64*)(r10 - 8) = r1;				\
-+	r2 = r10;					\
-+	r2 += -8;					\
-+	r1 = %[map_hash_8b] ll;				\
-+	call %[bpf_map_lookup_elem];			\
-+	if r0 == 0 goto l2_%=;				\
-+	/* r0: pointer to a map array entry */		\
-+	r2 = r10;					\
-+	r2 += -8;					\
-+	r1 = %[map_hash_8b] ll;				\
-+	/* r1, r2: prepared call args */		\
-+	r6 = r10;					\
-+	r6 += -8;					\
-+	/* r6: pointer to readable stack slot */	\
-+	r9 = 0xffffc900;				\
-+	r9 <<= 32;					\
-+	/* r9: scalar controlled by attacker */		\
-+	r0 = *(u64 *)(r0 + 0); /* cache miss */		\
-+	if r0 != 0x0 goto l0_%=;			\
-+	r6 = r9;					\
-+l0_%=:	if r0 != 0x1 goto l1_%=;			\
-+	r9 = *(u8 *)(r6 + 0);				\
-+l1_%=:  /* leak r9 */					\
-+	r9 &= 1;					\
-+	r9 <<= 9;					\
-+	*(u64*)(r10 - 8) = r9;				\
-+	call %[bpf_map_lookup_elem];			\
-+	if r0 == 0 goto l2_%=;				\
-+	/* leak secret into is_cached(map[0|512]): */	\
-+	r0 = *(u64 *)(r0 + 0);				\
-+l2_%=:							\
-+	r0 = 0;						\
-+	exit;						\
-+"	:
-+	: __imm(bpf_map_lookup_elem),
-+	  __imm_addr(map_hash_8b)
-+	: __clobber_all);
-+}
-+
- char _license[] SEC("license") = "GPL";
--- 
-2.49.0
-
+Am 03.06.25 um 17:22 schrieb Frank Li:
+> Change ref to mmc-controller-common.yaml from mmc-controller.yaml because
+> imx23/imx28 use dual mode controller (spi and mmc). So default dts node
+> name use spi instead of mmc. The legacy reason, it use difference
+> compatible string to distringuish work mode (spi / mmc).
+>
+> Fix below CHECK_DTB warnings:
+> arch/arm/boot/dts/nxp/mxs/imx23-olinuxino.dtb: spi@80010000 (fsl,imx23-mmc): $nodename:0: 'spi@80010000' does not match '^mmc(@.*)?$'
+>
+> Additional add clocks property.
+>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
