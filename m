@@ -1,48 +1,33 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC922C327E;
-	Tue,  3 Jun 2025 09:26:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED472288C6;
+	Tue,  3 Jun 2025 09:27:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748942798; cv=none; b=Nm99Gjd4fH1g+BCSQRK69tNXZGwGqaxbVeEQpKhwaFJJJgpdy1IvtZvCEIIFpVG6nyZeul+8Gl5LnTP2hq7wDZ/Q9sH4K6WAO91DKkOE9HDRZ0J6wbhpC+ckd8vVq/ToT+4LzrtAtM1oq9L4aylwefz8C6FxLg57jgMTIpUh89k=
+	t=1748942840; cv=none; b=SdLRFP0ISV3/gGqJnkfuwi1yNva4yTm1zhQfCNz+spxWAJ+m47e6Cq1wDuGI8xt5tgmjUY8H1FD0t6sPn3tJdaSacDIyGJ3T+bOAEnIfKDwnN5JZPKnRmI7pYbgoubm9OqM55GDvfMPlznL6gHNkePw5L/FSQ1XcpCdNv250lXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748942798; c=relaxed/simple;
-	bh=rWu/iFNHJMc0RBPfQaaAnGb4tKaHlTC491HIdR4jnJs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=H5Y9SSzzFulGAYlbwBY33BXNwX/KGKx6iibIU8yvr16lv3o1itPDNaRhpNlq5vNiKRLuHzwo3roxq1QFH4BgeD8dYgs0e+++GHuyTB8UtXeMyPxTZ6oL9jFKSpYkGjK1p5iqFV71ba6sRQjCVe2sOM2+5Le/Z6M9YtUF4Z784LY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=c6fYdD2C; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1748942840; c=relaxed/simple;
+	bh=dEZwb4MvnT5CZfP+wXGA6wqCjVgtdGWgasL4UjDyjIs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s2D5QIG9u79Y3966zE7Hy9aP17qZUiHbQfjxfLhuG2ChNiAF/RDPrf5xA273KDBSB0foBNHfLsT+JNk9Ti+xn6toyiK+XmAMEG3f+pH6EwRyOmIJkMZSehxba8waUcR+3wBdTeSbWEk5fD6BLYemLP+rCEv9wvXGVJsP+6PuLUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MkBSSpog; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="c6fYdD2C"
-Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 5539QUqM479564;
-	Tue, 3 Jun 2025 04:26:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1748942790;
-	bh=Ar3GGAb+/pAvjf2tv2l9yKeAgpPBlAH6wYuKkop+dTc=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=c6fYdD2Cmg3lp7IfgHeapSSfZ/o9v7TnEqybHqLSreuxzk7dhZJJxNpLsM/jGx+7I
-	 6uJJPNybqPuCTx9euftMDYW5ezkSN53LpgNoEoQr8J0T2NeTAKvKyhj6XPqtq2pJGw
-	 kdMwUs1EAMtDDXhgkdTCwwjcbOU0amOqE7zVsQTg=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 5539QUmK1226445
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Tue, 3 Jun 2025 04:26:30 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 3
- Jun 2025 04:26:30 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 3 Jun 2025 04:26:30 -0500
-Received: from [172.24.227.151] (uda0510294.dhcp.ti.com [172.24.227.151])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5539QQrT222532;
-	Tue, 3 Jun 2025 04:26:27 -0500
-Message-ID: <b6b752c8-020b-47be-a77a-84161f8e7267@ti.com>
-Date: Tue, 3 Jun 2025 14:56:26 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MkBSSpog"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77C2BC4CEED;
+	Tue,  3 Jun 2025 09:27:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748942840;
+	bh=dEZwb4MvnT5CZfP+wXGA6wqCjVgtdGWgasL4UjDyjIs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MkBSSpogJsvVb32Z+w2OEYP68ilEUnVBC+dyv4Z5msUsoL9h6L263tF85Cq8GgoFJ
+	 bvN0BlvLpDnqyKjw7gEIZ3xgTLokEXrrLeNwn1L4yhMreGqQ1Tx1kU8IXcsWONFtX/
+	 tgtRj/52Vv953fgUmSWzMTVI48DgGVuC56pMjcb4YI2M6PGho5PJNJcdb7zt1KAzZR
+	 NkmVAUMtbW8NsiSmAYH/j/04Hd9fhjOdYC135TwIXh9q5RrGNrgWL7jVad57m8MS6q
+	 08iLsWOJXYh77TeXlIKCZ01WJdrRQDh7skZHcee6CRQY/wh0LhesNglsg60fp4xHps
+	 lyxHSASihjTHA==
+Message-ID: <6bce7f87-7599-404c-abd4-894078c20665@kernel.org>
+Date: Tue, 3 Jun 2025 11:27:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,59 +35,120 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH] arm64: dts: ti: k3-j784s4-mcu-wakeup: Configure
- wkup_uart0 with clock settings
-To: Udit Kumar <u-kumar1@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250603042448.783956-1-u-kumar1@ti.com>
+Subject: Re: [PATCH v10 01/11] dt-bindings: mfd: gpio: Add MAX7360
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
+ Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Kamel Bouhara <kamel.bouhara@bootlin.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
+ linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com,
+ =?UTF-8?Q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20250530-mdb-max7360-support-v10-0-ce3b9e60a588@bootlin.com>
+ <20250530-mdb-max7360-support-v10-1-ce3b9e60a588@bootlin.com>
+ <082b50fb-813f-4b9f-968d-ed20acaeda53@kernel.org>
+ <DACQXYZZTRNB.2VJ47OLM9VP54@bootlin.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Beleswar Prasad Padhi <b-padhi@ti.com>
-In-Reply-To: <20250603042448.783956-1-u-kumar1@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <DACQXYZZTRNB.2VJ47OLM9VP54@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+On 03/06/2025 10:14, Mathieu Dubois-Briand wrote:
+> On Mon Jun 2, 2025 at 1:21 PM CEST, Krzysztof Kozlowski wrote:
+>> On 30/05/2025 12:00, Mathieu Dubois-Briand wrote:
+>>> Add device tree bindings for Maxim Integrated MAX7360 device with
+>>> support for keypad, rotary, gpios and pwm functionalities.
+>>>
+>>> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+>>> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+>>> ---
+>>>  .../bindings/gpio/maxim,max7360-gpio.yaml          |  83 +++++++++
+>>>  .../devicetree/bindings/mfd/maxim,max7360.yaml     | 191 +++++++++++++++++++++
+>>>  2 files changed, 274 insertions(+)
+>>>
+>>
+>> <form letter>
+>> This is a friendly reminder during the review process.
+>>
+>> It looks like you received a tag and forgot to add it.
+>>
+>> If you do not know the process, here is a short explanation:
+>> Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
+>> of patchset, under or above your Signed-off-by tag, unless patch changed
+>> significantly (e.g. new properties added to the DT bindings). Tag is
+>> "received", when provided in a message replied to you on the mailing
+>> list. Tools like b4 can help here. However, there's no need to repost
+>> patches *only* to add the tags. The upstream maintainer will do that for
+>> tags received on the version they apply.
+>>
+>> Please read:
+>> https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
+>>
+>> If a tag was not added on purpose, please state why and what changed.
+>> </form letter>
+>>
+> 
+> I previously decided to drop your Reviewed-by tag as I made some
 
-On 03/06/25 09:54, Udit Kumar wrote:
-> From: Bhavya Kapoor <b-kapoor@ti.com>
->
-> This commit adds the assigned-clocks and assigned-clock-parents
-> properties for wkup_uart0 in J784S4. Specifically, the assigned-clocks
-> property is set to reference the clock identified by
-> "wkup_usart_mcupll_bypass_out0", ensuring the UART operates with the
-> correct clock source.
->
-> The assigned-clock-parents property specifies "wkup_usart_clksel_out0"
-> as the parent clock. This configuration is critical for establishing
-> the proper clocking hierarchy, enabling the UART device to function
-> reliably across different baud rates.
->
-> Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
-> ---
-> Link to v1: https://lore.kernel.org/all/20241009072056.3511346-1-b-kapoor@ti.com/
->
->  arch/arm64/boot/dts/ti/k3-j784s4-j742s2-mcu-wakeup-common.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-mcu-wakeup-common.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-mcu-wakeup-common.dtsi
+And this should be explained in cover letter. Read above form letter
+again. Read also link to submitting patches.
 
+> substantial changes since you gave it. Main difference since v4 of this
+> series is add of the pinctrl bindings and some additional
+> "rotary-encoder,*" properties.
 
-Also $Subject line needs to be correct for k3-j784s4-j742s2-mcu-wakeup-common.dtsi file.
+Sure, that's fine. Lack of explanation is what I question here.
 
-Thanks,
-Beleswar
-
-> index 52e2965a3bf5..1146bc5990ea 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-mcu-wakeup-common.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-mcu-wakeup-common.dtsi
-> @@ -310,6 +310,8 @@ wkup_uart0: serial@42300000 {
->  		interrupts = <GIC_SPI 897 IRQ_TYPE_LEVEL_HIGH>;
->  		clocks = <&k3_clks 397 0>;
->  		clock-names = "fclk";
-> +		assigned-clocks = <&k3_clks 397 0>;
-> +		assigned-clock-parents = <&k3_clks 397 1>;
->  		power-domains = <&k3_pds 397 TI_SCI_PD_EXCLUSIVE>;
->  		status = "disabled";
->  	};
+Best regards,
+Krzysztof
