@@ -1,144 +1,144 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 444B4182BC;
-	Tue,  3 Jun 2025 06:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF5E26AD9;
+	Tue,  3 Jun 2025 06:17:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748931353; cv=none; b=TIMjp4AYHevUzRYeZiKSTZOso/V8F+x7bB9AduPeT7Tr5x7YDua6zBrJbNCjPlxb0pjSKIIEtjN4i5zbBkbf7nAjGvcCEeosanQ0Fg2un+G0BOu9CgAunSpisSyIvqOhAJSvEHKeBB6oeH9ZmAhxK1lz+/dY5fJzsKbkNBsZkDE=
+	t=1748931457; cv=none; b=bg0dBedv4sOYQ7tXn1qj/Lyd3GYhmJ3jRrxqlUDpuqAWr6DkwF/y7kW8mW8G0jG8w4lv02j4uZsyOg8SKnAt11z7s31uAHpZxXD4IhaxVPP5Ukdk1H2/jPsivMWcLkIObqkWLdKEMDvQtDAraopeHMfbTc91B4/9FSJ/EkiwPeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748931353; c=relaxed/simple;
-	bh=+TCfw6UJc0x8ReuGqpQSLdcc0Fq1J8YMPv6hWfnhg+g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ShgV8Txbpp9j9KE+aON5D7MP6q7m9xJcVN2iaGrA3L69MdUTWi5uHltDeytf/T4LHBg4DlYGCDmL/XoOc2ip1Bsjai60LpX77ndsNWYwZgfJ72zXEBW5idPUE1a9pQ8jJpG5cQhO3xadmfse0TQix6uAlt6KOdLHQ7NRxoLJveA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PA4KVyng; arc=none smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748931457; c=relaxed/simple;
+	bh=ktVyNmKC36IoJfDT1n47jZdc8uH8RN0+HUXL0beA/Us=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KYoA4R2VCsjylzZQ3xL3Y4V4KJGMUCIXyGrAi4Pp7yFvS4rclFX9amFP0pSXvKR9yrikQmNitLFHLZ/B/uzZz3pE4AdWt2ccrCa7qAZjXW8apD/JBl5t/4d3oP89AIaqtPOjLrvvN7FttAlkogUyZ/UxCsFd4VFc6WciU6enE1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fiSUL1+e; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PA4KVyng"
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-70e5599b795so50377787b3.3;
-        Mon, 02 Jun 2025 23:15:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748931351; x=1749536151; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ExuFxCiiYbsiAIp1UmQZoEfKI6isD2hGXE7AN2ae6jI=;
-        b=PA4KVyngyCnC54XYY10ZAkm4BQzDhintsxY5nVYd/2lJLqzKLcKL6skET32PBDUQdJ
-         T0L+XeRIf0wqzoy77U45t42Y+VoKFMh+/dqJ01mB4FZ1c2qai1JB/ophwPjNNCQjD9YY
-         lGCXfDhdorRDIDXfr8QAk6XZX0/6U1T0dU3G+2T57Szwcv483qNwAUbwNHqLCog0ru3U
-         afXh4kteyWCxy1tWKCEaG23JnYiRRex8wRv+4KHdijOt0/64g5h782weS8zObK8IVeIL
-         84CDiT9+cPJnDna1tm4o9CCasSj0MXvOWWxykvtoiXF1EsoNoHzwET8UJ6Kek4FOR0cs
-         lU4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748931351; x=1749536151;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ExuFxCiiYbsiAIp1UmQZoEfKI6isD2hGXE7AN2ae6jI=;
-        b=WQY1IeC2511DrTNxoEwQrB5uOvPgkuf2VAcskDgtzYjwS9ln1dsfAQuSEbaVQhhkUy
-         aBRV89tMO6YAZdv6EwfpnKVuvN549HngkNWLBMm5QLWPcCizXm6xR2Fu1i1YjdC843Zj
-         wY8H7pU6wuduEPL1JYXgi76Nwu0zNQ8V6ntWzihtEVqoKHZf6piOKI7tsq+IuC/jMb7+
-         P9Mt1E1hMqX6CtJDRQIQ0ZlAqyPHZbIhk+5pgidhldpq3rvSRoydvZEdx7ty+9XVIv76
-         xON9uFadGhldCeac5PTaWmgGibm7bacRIxUdYX5RsnZF1ghHhV4WHPlvJVJBE+HSAVQu
-         Mxiw==
-X-Forwarded-Encrypted: i=1; AJvYcCV8KzCH4768BVPjFTuPzZHg57/o9y3VrTwXS65ayxw2pKpTQIhPIm2KNQ2EIRV4WtD14BB4pz88J2uMuJo=@vger.kernel.org, AJvYcCXfifob8ESkBCnSTMfHReLvE/VnPa2mlMM6PwBbVICVQnsF0WzPdWUV9pP6YFIUY5+xUYmXFMaI@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVY/+nmMLeL6TehepavrW3tmFugSJNNu+H5cSL/b9uKLYmahjR
-	QDn3qydkg36cLXHLi51oTHP8L06PZQpugtbmcvWPCjSkv9IG1t91UJkQ9YfqrOehuRBSbQgXhOq
-	XhoipaslJkvqYlBK5P14fo1Ip/zj7Nws=
-X-Gm-Gg: ASbGncvWMU6s2VH3EhdIkRMOrwQI8jmMXQjawUy1bhRx58D1k57IvCisTTR3qNXwkzy
-	K27wFaKtbI9erTFmxWIHpFqrP0qrLr6p2rgcDVftN750NP9sf/ssscHOweifgL3Q6LU6xIy5w3u
-	asSSxsCRjD4mQTkSRYNiqjmR/hWM1X5+q6Btwt2PQvOg==
-X-Google-Smtp-Source: AGHT+IGY6FBmZwmi0m/8ysBAH8/mLaagNSuxT/186P9VesCkOQnw6hhcDIYe/FLHli4CmyVMz+OZWeKmAV3QInXqeoQ=
-X-Received: by 2002:a05:690c:6382:b0:70e:7503:1181 with SMTP id
- 00721157ae682-70f97eaa4femr240501707b3.18.1748931350921; Mon, 02 Jun 2025
- 23:15:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fiSUL1+e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748931456; x=1780467456;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ktVyNmKC36IoJfDT1n47jZdc8uH8RN0+HUXL0beA/Us=;
+  b=fiSUL1+eH4qWlwroz1lYFuMC4xaX2QPXyKfeAHbJVQfA7/Xk3SUdbbi1
+   QPJCSb8J/Ihh/JVjy/JdhiebN0nxwM86+QlIUXVgiL+ZKNMW8bBktjD5a
+   QGLJRas6XaNKTlgpPmzFrBIk5vBZZBMcEtACVCcDRcQKecjfnMY6ijdSA
+   jzJzUbD/g5dS+HlAQpaJEMVz5+6qVr7ujRkoUpvz9xtDT537iAiFGGM9F
+   Lt7u/kTV8D9v/iRyxuCkqq24z3cbd0/gHPEWaut6JuhUPulLZLKtxNXgc
+   KOLGYa0gGURE3BE5cWwqOKMZ6hR8hz83bEYmr15mwmo8O7pIRtKTNkRkD
+   A==;
+X-CSE-ConnectionGUID: C39ryNPkSTm1DjihhwnoXg==
+X-CSE-MsgGUID: cq0GflALQNq2Gcrm8zkF7A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="51101230"
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="51101230"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 23:17:36 -0700
+X-CSE-ConnectionGUID: iqjzXgopRDis4cHMswXQlQ==
+X-CSE-MsgGUID: HmtBv1OfR6eADbm4x8woXw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="144638834"
+Received: from linux-pnp-server-27.sh.intel.com ([10.239.147.41])
+  by fmviesa006.fm.intel.com with ESMTP; 02 Jun 2025 23:17:31 -0700
+From: Tianyou Li <tianyou.li@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	tianyou.li@intel.com,
+	wangyang.guo@intel.com,
+	pan.deng@intel.com,
+	zhiguo.zhou@intel.com,
+	tim.c.chen@intel.com,
+	tim.c.chen@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] Minor improvements for perf script flamegraph
+Date: Tue,  3 Jun 2025 15:10:48 +0800
+Message-ID: <20250603071048.180674-1-tianyou.li@intel.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250602193953.1010487-1-jonas.gorski@gmail.com>
- <20250602193953.1010487-6-jonas.gorski@gmail.com> <c1c3b951-19b8-462a-9dee-a1b893251d6f@broadcom.com>
-In-Reply-To: <c1c3b951-19b8-462a-9dee-a1b893251d6f@broadcom.com>
-From: Jonas Gorski <jonas.gorski@gmail.com>
-Date: Tue, 3 Jun 2025 08:15:38 +0200
-X-Gm-Features: AX0GCFu2kmJ_nnoOXZhbAertSNtMXnGhNEMlYn6h5PxdxbnewlMWrtzy2kbl8tE
-Message-ID: <CAOiHx=n6Mc+nM2QOa8okQbFcj9UHgfMbKKcNXG6D-VJjELHrsw@mail.gmail.com>
-Subject: Re: [PATCH net v2 5/5] net: dsa: b53: do not touch DLL_IQQD on bcm53115
-To: Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Vivien Didelot <vivien.didelot@gmail.com>, =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 2, 2025 at 11:40=E2=80=AFPM Florian Fainelli
-<florian.fainelli@broadcom.com> wrote:
->
-> On 6/2/25 12:39, Jonas Gorski wrote:
-> > According to OpenMDK, bit 2 of the RGMII register has a different
-> > meaning for BCM53115 [1]:
-> >
-> > "DLL_IQQD         1: In the IDDQ mode, power is down0: Normal function
-> >                    mode"
-> >
-> > Configuring RGMII delay works without setting this bit, so let's keep i=
-t
-> > at the default. For other chips, we always set it, so not clearing it
-> > is not an issue.
-> >
-> > One would assume BCM53118 works the same, but OpenMDK is not quite sure
-> > what this bit actually means [2]:
-> >
-> > "BYPASS_IMP_2NS_DEL #1: In the IDDQ mode, power is down#0: Normal
-> >                      function mode1: Bypass dll65_2ns_del IP0: Use
-> >                      dll65_2ns_del IP"
-> >
-> > So lets keep setting it for now.
-> >
-> > [1] https://github.com/Broadcom-Network-Switching-Software/OpenMDK/blob=
-/master/cdk/PKG/chip/bcm53115/bcm53115_a0_defs.h#L19871
-> > [2] https://github.com/Broadcom-Network-Switching-Software/OpenMDK/blob=
-/master/cdk/PKG/chip/bcm53118/bcm53118_a0_defs.h#L14392
-> >
-> > Fixes: 967dd82ffc52 ("net: dsa: b53: Add support for Broadcom RoboSwitc=
-h")
-> > Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
-> > ---
-> > v1 -> v2:
-> > * new patch
-> >
-> >   drivers/net/dsa/b53/b53_common.c | 8 +++++---
-> >   1 file changed, 5 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53=
-_common.c
-> > index be4493b769f4..862bdccb7439 100644
-> > --- a/drivers/net/dsa/b53/b53_common.c
-> > +++ b/drivers/net/dsa/b53/b53_common.c
-> > @@ -1354,8 +1354,7 @@ static void b53_adjust_531x5_rgmii(struct dsa_swi=
-tch *ds, int port,
-> >        * tx_clk aligned timing (restoring to reset defaults)
-> >        */
-> >       b53_read8(dev, B53_CTRL_PAGE, off, &rgmii_ctrl);
-> > -     rgmii_ctrl &=3D ~(RGMII_CTRL_DLL_RXC | RGMII_CTRL_DLL_TXC |
-> > -                     RGMII_CTRL_TIMING_SEL);
-> > +     rgmii_ctrl &=3D ~(RGMII_CTRL_DLL_RXC | RGMII_CTRL_DLL_TXC);
->
-> Are not we missing a:
->
-> if (dev->chip_id !=3D BCM53115_DEVICE_ID)
->         rgmii_ctrl &=3D ~RGMII_CTRL_TIMING_SEL;
->
-> here to be strictly identical before/after?
+When processing the perf data file generated with multiple events,
+the flamegraph script will count all the events regardless of
+different event names. If specify the perf data file with -i option,
+the script will try to read the header information regardless of
+the file name specified, instead it will try to access the perf.data.
 
-We could add it for symmetry, but it would be purely decorational. We
-unconditionally set this bit again later, so clearing it before has no
-actual effect, which is why I didn't add it.
+This patch tries to add a -e option to specify the event name that
+the flamegraph will be generated accordingly. If the -e option omitted,
+the behavior remains unchanged. If the -i option specified, the header
+information will be read from that file.
 
-Regards,
-Jonas
+Signed-off-by: Tianyou Li <tianyou.li@intel.com>
+Reviewed-by: Pan Deng <pan.deng@intel.com>
+Reviewed-by: Zhiguo Zhou <zhiguo.zhou@intel.com>
+Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
+Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
+---
+ tools/perf/scripts/python/flamegraph.py | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts/python/flamegraph.py
+index cf7ce8229a..eb78b93925 100755
+--- a/tools/perf/scripts/python/flamegraph.py
++++ b/tools/perf/scripts/python/flamegraph.py
+@@ -94,6 +94,11 @@ class FlameGraphCLI:
+         return child
+ 
+     def process_event(self, event):
++        # ignore events where the event name does not match
++        # the one specified by the user
++        if self.args.event_name and event.get("ev_name") != self.args.event_name:
++            return
++
+         pid = event.get("sample", {}).get("pid", 0)
+         # event["dso"] sometimes contains /usr/lib/debug/lib/modules/*/vmlinux
+         # for user-space processes; let's use pid for kernel or user-space distinction
+@@ -123,8 +128,15 @@ class FlameGraphCLI:
+             return ""
+ 
+         try:
+-            output = subprocess.check_output(["perf", "report", "--header-only"])
+-            return output.decode("utf-8")
++            if self.args.input:
++                output = subprocess.check_output(["perf", "script", "--header-only", "-i", self.args.input])
++            else:
++                output = subprocess.check_output(["perf", "report", "--header-only"])
++
++            result = output.decode("utf-8")
++            if self.args.event_name:
++                result += "\nFocused event: " + self.args.event_name
++            return result
+         except Exception as err:  # pylint: disable=broad-except
+             print("Error reading report header: {}".format(err), file=sys.stderr)
+             return ""
+@@ -235,6 +247,11 @@ if __name__ == "__main__":
+                         default=False,
+                         action="store_true",
+                         help="allow unprompted downloading of HTML template")
++    parser.add_argument("-e", "--event",
++                        default="",
++                        dest="event_name",
++                        type=str,
++                        help="specify the event to generate flamegraph for")
+ 
+     cli_args = parser.parse_args()
+     cli = FlameGraphCLI(cli_args)
+-- 
+2.43.5
+
