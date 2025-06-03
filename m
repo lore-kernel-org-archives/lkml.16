@@ -1,66 +1,67 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64A222B8D9;
-	Tue,  3 Jun 2025 11:46:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1660822F39B;
+	Tue,  3 Jun 2025 11:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748951181; cv=none; b=B8bSlYwLZKtW5B0POQCiuzFHZlLVmhPU8XJ6cenmGsoV3TggNadrjMVkJE8RSw1+N2A3Rqvkipi0MaDAa6I+J8FrVRVVu42vITzhrdFfDba8NjFEbfbx3ysGxxeqn51hPvGiMv0wZG3Xwx1s9BIkZ8oP2WeCfbUVwTx50ZWfjUc=
+	t=1748951183; cv=none; b=HAt9igHGJNrOO1jxeK5gM4SWoAndnIoLzdA5jsUQ2xEpwwFcxZYSkD2MxTqoumDwEDT/cwSiHaPFdizlCjOi5TXkBPu0Ld5tXEUTh3u2MF8+DpbKCm2hD81eSIfWDjmVK1KaB+yDVD3JsHKfOKyai3Psnec5qqsm3Yp1OXTG69w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748951181; c=relaxed/simple;
-	bh=xCoto2OrpPTlJuUMmQwlmkRuFJs15zgzsOoO0ItvU3A=;
+	s=arc-20240116; t=1748951183; c=relaxed/simple;
+	bh=HMD/cjDrdB42kd7q9Q9vTVu8zbV4eDiLo5TPujNd7Xs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cXjee120ZrxHoX6pYrp0bt3Mo6JfwFXwyRfujJKeY5/ciCtkXIPcArQMmX5AXCaOWWKDn/baWUOD9GTcnRcgAyKatQhTbWqCkxp7/7r5fJ4Y4L9Pb/6uAewWQCYb54fdVWxLjXcNL29Hya/7mzC4TPyA88mK4P9QhKjzcLDAy9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ehDnEHRS; arc=none smtp.client-ip=209.85.210.172
+	 In-Reply-To:To:Cc; b=h/e/P+BPbozu8T5cL1dPsZgR/17X2hKPZNn5eIFKYYs7mxau1xk3m6cfG6hesiVCsX85jCWTkHKaIw0dlzRZluHDc9hTDedBPVE2tBHmxYBHmsixMvupL5SJM/qoqNfEQCQY3/jd1xqfth5tSRo9r5koegAKg/kXHGZcdrEa6U8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ICEyQoQb; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ehDnEHRS"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-747fc77ba9eso571571b3a.0;
-        Tue, 03 Jun 2025 04:46:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ICEyQoQb"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-747ef5996edso1403886b3a.0;
+        Tue, 03 Jun 2025 04:46:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748951178; x=1749555978; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748951181; x=1749555981; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=bXngrH4M5sooQS887LacgOZZPsUjYWZ3tkABH9RYKv4=;
-        b=ehDnEHRSiuAquMPqd1Rr7aEv5IK/iW50MBVS5lf/rx4sIQjizDp+uW4Yk7E+8MDi2H
-         AyRkuTcnFNH0ccnW9Sz5Fj8LN4sTlMZSEwS2JJCamznCmALnkwDkHDnm93DMNf0HwPtU
-         JpLtLlLsKJ0AQ8BSkrT48EKztHpDzHP9HNY79rh/nXLRsYnxWN6Ib2nhLh7PaQaZIJ79
-         y9wC2AqU/7YFmS3rEcKeU1FeZPIfyKUwzgqqYjRNIFuPn9bmJV1iBldjZpoHuq58uAGK
-         W6k+T7bboob6C0il7/8/p6+8F+X622eygo30LL9Xdxta2dxLnSXPFYyQx1+r52yEIEAj
-         GkGQ==
+        bh=0CAOW5vl/LLe1o7M/Bk/ENUPRqGBcwp3DBRCrvbrPQE=;
+        b=ICEyQoQbGrmQVNquDGwhzDMtd4bcRvy22oA4V3ssYMK8xg6BnFRI/UNhDLpMZ5UFzv
+         8miTFWD8TSPkV2cIuflOTP0OH7k+ejb+iUG7BnGhJJq9cwhqH8uskd12nz9F3UICr5PY
+         cERc7P2MUYRY6e+DX/l9EkiiBABB6XNYRj7iwpSHTytPsQ2vqvIU3EpyEaWvXWRECLC9
+         03DFzKf7LWJ1ylBMET2fan4EiusndIRnVSIpN5T6cIksCD7XjJmeGk21Ehrdia6N+KDm
+         Z0m5hN8lrfb00Btn+6vo+/otUkMuOEuW4Jvov5N6O+zS2T5JzGW86k1xZT2XBrikFuBQ
+         ryig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748951178; x=1749555978;
+        d=1e100.net; s=20230601; t=1748951181; x=1749555981;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bXngrH4M5sooQS887LacgOZZPsUjYWZ3tkABH9RYKv4=;
-        b=u5jq7U/MKROaxM+f4hxCpqVNc/seUfxpHP6S/ShZPSJH+ZFr9mM1KCT5pqHc4/v8y6
-         tmLKUuuUk6nzmipW3WzorGZZL9vfMCg4/b0dNAydyu1FPF08frdvSSnJuRlBxHnxfSol
-         Si+tQWR68eAxv9puZDDE9hTC65RntSgoWE0g1BEWNs7Y9qeyVCyo1StgOjLzueiP+Ms7
-         rT7pSaz2U4n8IEvAz9joSkZ9mKFtDjAeEmMYu5//V0+Btg4mcwV5Da/J5M/fKZ/GgbaB
-         hEKAKFHCmVK4M4T6IasuvLvZQ+Jq633pTjr2RELNqohUuED4xgk/09/A6RgN4RLor4BI
-         GTgw==
-X-Forwarded-Encrypted: i=1; AJvYcCWyU+DZD+AwclhacHg4+VmwkkcpEU/g/4GsFJAvqvdqGEDT+bvthT4JVCVhRkEuwsDhCGqHMeQRvS2l@vger.kernel.org, AJvYcCXr7h3bwmBulsVaBmw0HT3bV6kRXJ39K/6NI5YWrsNpEXXwu6Im778zI9AJZ6d0Hpqe3Rfbtnt2UjZ1yLFK@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMH8V5bm0fclaIntyTG3ASmMFfPnguBRWLCar64ogJMPCAttxP
-	tI2jQYH6DuT7Wq9ea87awWdPH1AZqaauqntweZP9mhtoBAz1uwR0Nv1f
-X-Gm-Gg: ASbGncvTbVYIJ/devnY2pLpESLAfYZkdqcBwAmAb2X0aOmu0jcZdkiJkJxzuce3+4vD
-	r+e0pKsA2esUs3Lj2SdrFYFJqlY0hc/ScMImOK3U+13SoA/OSyBZgb6pNmOUA5o7+hyry/Q31Nm
-	3GSOxFu0XLLG7RJX+FGx8URvjpAgKJsIWAErM1uAbeoQI1iMe0ZgkHjIe75P6Q3npKOfnnGwumI
-	kcETb+ZKFx0hxshagRw2YXJm+e6DlEhvcxo+T30FJPrXpeKfSbV6iM8tPf58++THG34kkOdQkLN
-	t7VUL8QuI8XUwxTWp5J83rJLyvJg0lm1ZuBlnFomOfwwuGrxkwhj+lU8o6pCPAC0rsifkvAU9Tl
-	Xrdy8eofEd4h4Hb7Pa0+Z
-X-Google-Smtp-Source: AGHT+IGTYMISjrmni77jIQXj5aPQuZhQq/kj5WBbIC6gXzV4ESB88YOwR3rO1W/qby3kYxOL56IJtQ==
-X-Received: by 2002:a05:6a20:7285:b0:1f5:9961:c44 with SMTP id adf61e73a8af0-21ad95261fdmr26301044637.3.1748951177977;
-        Tue, 03 Jun 2025 04:46:17 -0700 (PDT)
+        bh=0CAOW5vl/LLe1o7M/Bk/ENUPRqGBcwp3DBRCrvbrPQE=;
+        b=m1lm377TjEAN9IUoTIPpnjwXen3TJnpWpLcF56atG/OVowOCjwFvP4NlgNcVlbinnE
+         mH+AaPuD9LO1TormfK4x3Yv97J0CqYdSHWeAb2x5EFv04xJFY0NYBmgxAN0zGRGutt4V
+         NfhDQ5H5ui9icuQq06e5eFGZDuRdHSfmfqAc+VuEAe9h8yus/4ZFZoI3f2KlYku0FNAr
+         obWT8S1MecAuZs6vPW6POCl9CXeiXUz8bBI5td7SjO0hfTkgqax4PCl3ijQ2aEXtXTsF
+         ewDlmm+cl9HR3aFGpr0U47g/h8hmxnyW3ztYoLYPw7cQFShkii8k1dT3N+nDWt9wDGo9
+         2FgA==
+X-Forwarded-Encrypted: i=1; AJvYcCX41jONyzodLv5UiAnOmNpuVsZSUSI98L4pBGLZbv68fJJA/fA7noHR/bplWyMJKDfjfq1awO0LtWVhwRfL@vger.kernel.org, AJvYcCXGZH3GXsrEoLauMLkW3DsKXnF23PakRYGSatZLKC+DvSRu7ljdFdToPB4QWUCnCSsIG2deEDN2RxMT@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyjh2mWrKoZENsOsRPzvE/covoKz2KAcVrCS4qGvL04kLmzz2gU
+	9HkDrdLzzcQ5coYht1cQMM+2UH1Bh4J3Nt+RxM6Id/zVOXdve5NGQPlf
+X-Gm-Gg: ASbGncvJ4hnePU0VkMcKbEH1TNUR2rBsRTaG6w4VzUOSUjpW4BYwMxChliMIlhl5D7o
+	4gBJj4LTlXgONI1k07ZLHOCFrLUFCs5P5nZl/GMzMWbL6snojd44aJwq5M3aWY8KxFDejXsOe7T
+	y8I94u+/ZaM5+lcLyUVr7egLCQJTLlxJ7WsWCjkekc3zb0qoYfrznp9SsLZ+gOheGne+90kKT7R
+	R3ypWi+fAaqgvbTKb+HSsOnHE/TIywGFU7Iw50KRSadq4k4ZflHbZIdz2kXKnPuaSBhrcHnWoeV
+	v2kF7hzg6B71GgkaavTY4Osad46Z4VuazvkhEv37ZuLWmxm0mmDQG76RbVIPgnhN0z8M/j1xheE
+	h7mVy4/SnuA==
+X-Google-Smtp-Source: AGHT+IGzjtc6+54YCsqpCYgZgm0OOfs46vu0/qNM0W+LaLOAwQ27JaDx0VZx3kht7r5zAHsqSmLg1g==
+X-Received: by 2002:a05:6a21:9998:b0:215:e9aa:7fff with SMTP id adf61e73a8af0-21ae00b198cmr28090728637.31.1748951181005;
+        Tue, 03 Jun 2025 04:46:21 -0700 (PDT)
 Received: from joaog-nb.corp.toradex.com ([67.159.246.222])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afeadbb8sm9446459b3a.66.2025.06.03.04.46.15
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afeadbb8sm9446459b3a.66.2025.06.03.04.46.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 04:46:17 -0700 (PDT)
+        Tue, 03 Jun 2025 04:46:20 -0700 (PDT)
 From: =?utf-8?q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <jpaulo.silvagoncalves@gmail.com>
-Date: Tue, 03 Jun 2025 08:44:54 -0300
-Subject: [PATCH v2 1/3] dt-bindings: hwmon: amc6821: Add cooling levels
+Date: Tue, 03 Jun 2025 08:44:55 -0300
+Subject: [PATCH v2 2/3] hwmon: (amc6821) Move reading fan data from OF to a
+ function
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +70,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250603-b4-amc6821-cooling-device-support-v2-1-74943c889a2d@toradex.com>
+Message-Id: <20250603-b4-amc6821-cooling-device-support-v2-2-74943c889a2d@toradex.com>
 References: <20250603-b4-amc6821-cooling-device-support-v2-0-74943c889a2d@toradex.com>
 In-Reply-To: <20250603-b4-amc6821-cooling-device-support-v2-0-74943c889a2d@toradex.com>
 To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
@@ -84,35 +85,105 @@ X-Mailer: b4 0.14.2
 
 From: João Paulo Gonçalves <joao.goncalves@toradex.com>
 
-The fan can be used as a cooling device, add a description of the
-`cooling-levels` property and restrict the maximum value to 255, which
-is the highest PWM duty cycle supported by the AMC6821 fan controller.
+Move fan property reading from OF to a separate function. This keeps OF
+data handling separate from the code logic and makes it easier to add
+features like cooling device support that use the same fan node.
 
 Signed-off-by: João Paulo Gonçalves <joao.goncalves@toradex.com>
 ---
-v2: Unchanged
+v2:
+- Remove devm_action on release and call of_node_put() manually
+- Change of_pwm_polarity to store resulting pwm polarity on driver private data
 v1: https://lore.kernel.org/lkml/20250530-b4-v1-amc6821-cooling-device-support-b4-v1-0-7bb98496c969@toradex.com/
 ---
- Documentation/devicetree/bindings/hwmon/ti,amc6821.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/hwmon/amc6821.c | 26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/hwmon/ti,amc6821.yaml b/Documentation/devicetree/bindings/hwmon/ti,amc6821.yaml
-index 9ca7356760a74b1ab5e6c5a4966ba30f050a1eed..eb00756988be158b104642707d96e371930c9fd7 100644
---- a/Documentation/devicetree/bindings/hwmon/ti,amc6821.yaml
-+++ b/Documentation/devicetree/bindings/hwmon/ti,amc6821.yaml
-@@ -32,6 +32,12 @@ properties:
-     $ref: fan-common.yaml#
-     unevaluatedProperties: false
+diff --git a/drivers/hwmon/amc6821.c b/drivers/hwmon/amc6821.c
+index 13a789cc85d24da282430eb2d4edf0003617fe6b..850a42510649279fba23ed504826384e1d8e335c 100644
+--- a/drivers/hwmon/amc6821.c
++++ b/drivers/hwmon/amc6821.c
+@@ -126,6 +126,7 @@ module_param(init, int, 0444);
+ struct amc6821_data {
+ 	struct regmap *regmap;
+ 	struct mutex update_lock;
++	enum pwm_polarity pwm_polarity;
+ };
  
-+    properties:
-+      cooling-levels:
-+        description: PWM duty cycle values corresponding to thermal cooling states.
-+        items:
-+          maximum: 255
+ /*
+@@ -848,11 +849,11 @@ static int amc6821_detect(struct i2c_client *client, struct i2c_board_info *info
+ 	return 0;
+ }
+ 
+-static enum pwm_polarity amc6821_pwm_polarity(struct i2c_client *client)
++static enum pwm_polarity amc6821_pwm_polarity(struct i2c_client *client,
++					      struct device_node *fan_np)
+ {
+ 	enum pwm_polarity polarity = PWM_POLARITY_NORMAL;
+ 	struct of_phandle_args args;
+-	struct device_node *fan_np;
+ 
+ 	/*
+ 	 * For backward compatibility, the pwminv module parameter takes
+@@ -863,10 +864,6 @@ static enum pwm_polarity amc6821_pwm_polarity(struct i2c_client *client)
+ 	if (pwminv > 0)
+ 		return PWM_POLARITY_INVERSED;
+ 
+-	fan_np = of_get_child_by_name(client->dev.of_node, "fan");
+-	if (!fan_np)
+-		return PWM_POLARITY_NORMAL;
+-
+ 	if (of_parse_phandle_with_args(fan_np, "pwms", "#pwm-cells", 0, &args))
+ 		goto out;
+ 	of_node_put(args.np);
+@@ -877,10 +874,16 @@ static enum pwm_polarity amc6821_pwm_polarity(struct i2c_client *client)
+ 	if (args.args[1] & PWM_POLARITY_INVERTED)
+ 		polarity = PWM_POLARITY_INVERSED;
+ out:
+-	of_node_put(fan_np);
+ 	return polarity;
+ }
+ 
++static void amc6821_of_fan_read_data(struct i2c_client *client,
++				     struct amc6821_data *data,
++				     struct device_node *fan_np)
++{
++	data->pwm_polarity = amc6821_pwm_polarity(client, fan_np);
++}
 +
-   "#pwm-cells":
-     const: 2
-     description: |
+ static int amc6821_init_client(struct i2c_client *client, struct amc6821_data *data)
+ {
+ 	struct regmap *regmap = data->regmap;
+@@ -902,7 +905,7 @@ static int amc6821_init_client(struct i2c_client *client, struct amc6821_data *d
+ 			return err;
+ 
+ 		regval = AMC6821_CONF1_START;
+-		if (amc6821_pwm_polarity(client) == PWM_POLARITY_INVERSED)
++		if (data->pwm_polarity == PWM_POLARITY_INVERSED)
+ 			regval |= AMC6821_CONF1_PWMINV;
+ 
+ 		err = regmap_update_bits(regmap, AMC6821_REG_CONF1,
+@@ -944,6 +947,7 @@ static int amc6821_probe(struct i2c_client *client)
+ 	struct amc6821_data *data;
+ 	struct device *hwmon_dev;
+ 	struct regmap *regmap;
++	struct device_node *fan_np;
+ 	int err;
+ 
+ 	data = devm_kzalloc(dev, sizeof(struct amc6821_data), GFP_KERNEL);
+@@ -956,6 +960,12 @@ static int amc6821_probe(struct i2c_client *client)
+ 				     "Failed to initialize regmap\n");
+ 	data->regmap = regmap;
+ 
++	fan_np = of_get_child_by_name(dev->of_node, "fan");
++	if (fan_np) {
++		amc6821_of_fan_read_data(client, data, fan_np);
++		of_node_put(fan_np);
++	}
++
+ 	err = amc6821_init_client(client, data);
+ 	if (err)
+ 		return err;
 
 -- 
 2.43.0
