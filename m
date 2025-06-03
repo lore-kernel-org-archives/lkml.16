@@ -1,143 +1,202 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA2E223DEC;
-	Tue,  3 Jun 2025 20:49:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E5F224B10
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 20:50:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748983762; cv=none; b=JPAK3nhdzHXCo2KP3ZdNm+4Glrtky+siBIFgluoxv3ahvPljo118eW8f06c0tI9LRRoRdhor4nQXpX8JCyoBQJKIgIRFznxfBS20y3WyEw/969+QxTRkVz/eaeszzGDCGjtctfSTsvjW0H90+0lbekhl+DQIInGA3qJoUwyPIKw=
+	t=1748983811; cv=none; b=R1iQs6JKF6RfRFNSZHaho+o5PfCZmjkRihjTFt3Ai/jgov/pY5cglZ7i1qqPY4BfDIsexS1K0575snEylZtp97JXJV8l2sD2Sx58jrEvoU2hL/RP64SbdkbjXJrtff33S0Sy1YWYjhRbs2LwxxvzlGfde2A9YvbO4oaRnIbU6+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748983762; c=relaxed/simple;
-	bh=pJeUhTGk2r0dYnI9s7giRBaPfqwvTfhWrM/fvTBAFIY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NVGUOoG9701g7HULtnENbXc5j28hbzuUCV3rMPwjoaijM/t/FfCrwT4cBsptVBiTWZk9PU/pAWO70ZYENIk/Qat1iXe82LFYujOP04RxDN/IlfA2t7xm5j4x7x+TSXbhErc0y1norsDrq2ZXVKOeSBYd4fqIzmNTZxII0t+NLUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cYCA1Ow9; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748983811; c=relaxed/simple;
+	bh=j9OUWrhChf7ZQCsdoqnA29xM4WW996oqQ1Kht5NiaRI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dLmB5kcYtfOXeGtewHvCrQLyR4Y4zPnyg9MkHMXmeA37iWGRXeNlPq8pJDdE7f5PESCFZ3NE0jejOt5VqY11QMJn8Fgksz/RwGvBIPh5sZzaann20uF3sq08mNKE5PdZb5i8i3yf7AaNmMmOSpIlIDTt1406BPt/HsPELlmeZzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KB2rPxdM; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cYCA1Ow9"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so46680305e9.0;
-        Tue, 03 Jun 2025 13:49:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748983758; x=1749588558; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=52v/QbdUUbBmAHN06fRxKClhmySRdSIjGq59EvdtlaY=;
-        b=cYCA1Ow9OyVWFR5iX2YwCxf/65EWiSyAcgJePQAaQMWEW+C2GKd5uKISnth6qqCq6H
-         v/GDuKfwisHSjlO82Sib9oSRPwaJxVp0GjXwzPsRBrT+OmZGVmIMkyPf6Jk2b5AmoM/8
-         KHsNwzsbD0fK3PIfF5NqwXHHgSpXqSaie+pQeYgtxZNOIqwB7QNGow0NkJ9fvL70HYFx
-         dZ+Osx+WvXzc1mMm4kGntryfRRum8mQfflUuuc66RQpdSyPAof/x2Jmmzv8Py/w5b91d
-         hXpqKQref7dv54hEx+Ok6mxgoByeBlfSTmufML/0GvR2RXKEKWtV+RdjWX8ALU6RVFCE
-         xbyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748983758; x=1749588558;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=52v/QbdUUbBmAHN06fRxKClhmySRdSIjGq59EvdtlaY=;
-        b=erb8jXf/QOapqdhTDJzpaBPIH5IpRlmDTJW1z8l4T0jX9Vu+aBjDrDC+So5rj+MemG
-         5JpV+IsSGeuBXB0NncDdX1roPEqADP3wV6zGSGFv0FTAoCVEsFuWEiwsL9OQ/ZNGpQK2
-         YSlQSWSGfno44a1NApiO0FyLgUQU0VGeRfyKARsljmScWACJu13jHIPIqQ52sLoP1jlR
-         Xt39QqtSb+KW63PqMJttq8CCz2l46G8ZMN52B1596VJDBU/hGX2ScL/OoGo4E2UguXDn
-         VRfCVHNEB1E2pTqPDcN762e+HkJyAOd556fq5LPIF88JkL0jq5jS8B+u02+iAk34Vzve
-         UIbA==
-X-Forwarded-Encrypted: i=1; AJvYcCVXRrKxkEy2s2cyRbVXpA97nqiUljXd8jike3EvcnWijnlSeGZf+TrGEJCQVLEpq4FZkuOXkIxg6ejjjCQ=@vger.kernel.org, AJvYcCWjJVAfOfoQD16OgqhDN94VykjqQeh5IpMdzyGhuc11rQf1pNJAAIAUEhffedEm+fSBtElwBnmP@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIQTNwlQRf9grbMc7SADl9KkvC+N2z43PNzw/4VSDYKuutVNBe
-	66ynyoAXYFDxQAQNWqJnGCHIeDs4fKjZ4rpIpQAI21yceQDNDnVovOuP
-X-Gm-Gg: ASbGncsKwSNUmf8V9JWQObYxSquNIeuVD66Ifl5WIRp9xZu7kEe8RlcRBGDc0vxaTK7
-	J/QtYBHZB5p0Jb+kaZKg9QlhRepAQ7Z9FgGQu01O29/UDQPMQMJ+cSdPZU84k2kIKsvPJ55I14a
-	1nsKU2/d4vIYGnwjyq16bjh7yrYVOW/1AH0vGKWmLdw2PAcRGCfWKCNGIPgjO9l0LT1nkzpN8WH
-	4IhYTU/u/EBIsh9EJBJoh0g2Dyo8LBVijPHqIVd1N9ma3UPy5QcmzsCvbanUALBrGNjmrxI8iM0
-	qqs8EZ8leFLvGIu2rZ70tahzOkZOskS5hrggu/uQKqUwd/J6KJx/ltjv3C7P+xWTmwKZu+reRI/
-	qb5XyqXZj2rmFcrkGMxQqPk3wT4P1r9Fk8BZwaW75RpBDbwWGFzju
-X-Google-Smtp-Source: AGHT+IGHYkpyvUUrj7nWooHHRmfgpgS7hoX5OXbIZZL5KGDhdzj/iQAOMwGWeClAIz2T3PkaS/r9Ew==
-X-Received: by 2002:a05:6000:40c7:b0:3a4:eb0c:4087 with SMTP id ffacd0b85a97d-3a51d93450emr151649f8f.25.1748983757536;
-        Tue, 03 Jun 2025 13:49:17 -0700 (PDT)
-Received: from skynet.lan (2a02-9142-4580-1500-0000-0000-0000-0008.red-2a02-914.customerbaf.ipv6.rima-tde.net. [2a02:9142:4580:1500::8])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451e58c348asm26258225e9.3.2025.06.03.13.49.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 13:49:16 -0700 (PDT)
-From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
-To: jonas.gorski@gmail.com,
-	florian.fainelli@broadcom.com,
-	andrew@lunn.ch,
-	olteanv@gmail.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	vivien.didelot@gmail.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dgcbueu@gmail.com
-Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
-Subject: [RFC PATCH net-next v2 10/10] net: dsa: b53: ensure BCM5325 PHYs are enabled
-Date: Tue,  3 Jun 2025 22:48:58 +0200
-Message-Id: <20250603204858.72402-11-noltari@gmail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250603204858.72402-1-noltari@gmail.com>
-References: <20250603204858.72402-1-noltari@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KB2rPxdM"
+Message-ID: <4c60e0e4-0bb8-4ae4-b7c3-f29af926f6a0@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748983795;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AYDczDkAWGO7hhWYMWNKnea7MYkw9912XrfEX61Dh/U=;
+	b=KB2rPxdMXmrNDx+/PRWF+SZ0Dq9rGGghN/OMmDeHZb7kzLHmtNXE/N1xPsQ7BN82Nq5CVI
+	oRoiTZXpBOyHUrBLMPr7ZBLs2dUdMknaz/LQDr5fWYnqy4ysEd02nzyawtblVs5UchB8aG
+	fEPIKdVGWtijMCNEcSu6t2AyXcuPa9M=
+Date: Tue, 3 Jun 2025 13:49:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v2 bpf-next 3/4] bpf: Introduce path iterator
+Content-Language: en-GB
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Song Liu <song@kernel.org>
+Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+ kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
+ daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk,
+ brauner@kernel.org, jack@suse.cz, kpsingh@kernel.org,
+ mattbobrowski@google.com, amir73il@gmail.com, repnop@google.com,
+ jlayton@kernel.org, josef@toxicpanda.com, mic@digikod.net,
+ gnoack@google.com, m@maowtm.org
+References: <20250603065920.3404510-1-song@kernel.org>
+ <20250603065920.3404510-4-song@kernel.org>
+ <CAEf4BzasOmqHDnuKd7LCT_FEBVMuJxmVNgvs52y5=qLd1bB=rg@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yonghong Song <yonghong.song@linux.dev>
+In-Reply-To: <CAEf4BzasOmqHDnuKd7LCT_FEBVMuJxmVNgvs52y5=qLd1bB=rg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-According to the datasheet, BCM5325 uses B53_PD_MODE_CTRL_25 register to
-disable clocking to individual PHYs.
-Only ports 1-4 can be enabled or disabled and the datasheet is explicit
-about not toggling BIT(0) since it disables the PLL power and the switch.
 
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
----
- drivers/net/dsa/b53/b53_common.c | 13 +++++++++++++
- drivers/net/dsa/b53/b53_regs.h   |  2 ++
- 2 files changed, 15 insertions(+)
 
- v2: add changes requested by Florian:
-  - Move B53_PD_MODE_CTRL_25 to b53_setup_port().
+On 6/3/25 11:40 AM, Andrii Nakryiko wrote:
+> On Mon, Jun 2, 2025 at 11:59 PM Song Liu <song@kernel.org> wrote:
+>> Introduce a path iterator, which reliably walk a struct path toward
+>> the root. This path iterator is based on path_walk_parent. A fixed
+>> zero'ed root is passed to path_walk_parent(). Therefore, unless the
+>> user terminates it earlier, the iterator will terminate at the real
+>> root.
+>>
+>> Signed-off-by: Song Liu <song@kernel.org>
+>> ---
+>>   kernel/bpf/Makefile    |  1 +
+>>   kernel/bpf/helpers.c   |  3 +++
+>>   kernel/bpf/path_iter.c | 58 ++++++++++++++++++++++++++++++++++++++++++
+>>   kernel/bpf/verifier.c  |  5 ++++
+>>   4 files changed, 67 insertions(+)
+>>   create mode 100644 kernel/bpf/path_iter.c
+>>
+>> diff --git a/kernel/bpf/Makefile b/kernel/bpf/Makefile
+>> index 3a335c50e6e3..454a650d934e 100644
+>> --- a/kernel/bpf/Makefile
+>> +++ b/kernel/bpf/Makefile
+>> @@ -56,6 +56,7 @@ obj-$(CONFIG_BPF_SYSCALL) += kmem_cache_iter.o
+>>   ifeq ($(CONFIG_DMA_SHARED_BUFFER),y)
+>>   obj-$(CONFIG_BPF_SYSCALL) += dmabuf_iter.o
+>>   endif
+>> +obj-$(CONFIG_BPF_SYSCALL) += path_iter.o
+>>
+>>   CFLAGS_REMOVE_percpu_freelist.o = $(CC_FLAGS_FTRACE)
+>>   CFLAGS_REMOVE_bpf_lru_list.o = $(CC_FLAGS_FTRACE)
+>> diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
+>> index b71e428ad936..b190c78e40f6 100644
+>> --- a/kernel/bpf/helpers.c
+>> +++ b/kernel/bpf/helpers.c
+>> @@ -3397,6 +3397,9 @@ BTF_ID_FLAGS(func, bpf_iter_dmabuf_next, KF_ITER_NEXT | KF_RET_NULL | KF_SLEEPAB
+>>   BTF_ID_FLAGS(func, bpf_iter_dmabuf_destroy, KF_ITER_DESTROY | KF_SLEEPABLE)
+>>   #endif
+>>   BTF_ID_FLAGS(func, __bpf_trap)
+>> +BTF_ID_FLAGS(func, bpf_iter_path_new, KF_ITER_NEW | KF_SLEEPABLE)
+>> +BTF_ID_FLAGS(func, bpf_iter_path_next, KF_ITER_NEXT | KF_RET_NULL | KF_SLEEPABLE)
+>> +BTF_ID_FLAGS(func, bpf_iter_path_destroy, KF_ITER_DESTROY | KF_SLEEPABLE)
+>>   BTF_KFUNCS_END(common_btf_ids)
+>>
+>>   static const struct btf_kfunc_id_set common_kfunc_set = {
+>> diff --git a/kernel/bpf/path_iter.c b/kernel/bpf/path_iter.c
+>> new file mode 100644
+>> index 000000000000..0d972ec84beb
+>> --- /dev/null
+>> +++ b/kernel/bpf/path_iter.c
+>> @@ -0,0 +1,58 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/* Copyright (c) 2025 Meta Platforms, Inc. and affiliates. */
+>> +#include <linux/bpf.h>
+>> +#include <linux/bpf_mem_alloc.h>
+>> +#include <linux/namei.h>
+>> +#include <linux/path.h>
+>> +
+>> +/* open-coded iterator */
+>> +struct bpf_iter_path {
+>> +       __u64 __opaque[3];
+>> +} __aligned(8);
+>> +
+>> +struct bpf_iter_path_kern {
+>> +       struct path path;
+>> +       __u64 flags;
+>> +} __aligned(8);
+>> +
+>> +__bpf_kfunc_start_defs();
+>> +
+>> +__bpf_kfunc int bpf_iter_path_new(struct bpf_iter_path *it,
+>> +                                 struct path *start,
+>> +                                 __u64 flags)
+>> +{
+>> +       struct bpf_iter_path_kern *kit = (void *)it;
+>> +
+>> +       BUILD_BUG_ON(sizeof(*kit) > sizeof(*it));
+>> +       BUILD_BUG_ON(__alignof__(*kit) != __alignof__(*it));
+>> +
+>> +       if (flags) {
+>> +               memset(&kit->path, 0, sizeof(struct path));
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       kit->path = *start;
+>> +       path_get(&kit->path);
+>> +       kit->flags = flags;
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +__bpf_kfunc struct path *bpf_iter_path_next(struct bpf_iter_path *it)
+>> +{
+>> +       struct bpf_iter_path_kern *kit = (void *)it;
+>> +       struct path root = {};
+>> +
+>> +       if (!path_walk_parent(&kit->path, &root))
+>> +               return NULL;
+>> +       return &kit->path;
+>> +}
+>> +
+>> +__bpf_kfunc void bpf_iter_path_destroy(struct bpf_iter_path *it)
+>> +{
+>> +       struct bpf_iter_path_kern *kit = (void *)it;
+>> +
+>> +       path_put(&kit->path);
+> note, destroy() will be called even if construction of iterator fails
+> or we exhausted iterator. So you need to make sure that you have
+> bpf_iter_path state where you can detect that there is no path present
+> and skip path_put().
 
-diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
-index a9b19451ffb30..38c08f6278d27 100644
---- a/drivers/net/dsa/b53/b53_common.c
-+++ b/drivers/net/dsa/b53/b53_common.c
-@@ -659,6 +659,19 @@ int b53_setup_port(struct dsa_switch *ds, int port)
- 	if (dsa_is_user_port(ds, port))
- 		b53_set_eap_mode(dev, port, EAP_MODE_SIMPLIFIED);
- 
-+	if (is5325(dev) &&
-+	    (port >= B53_PD_MODE_PORT_MIN) &&
-+	    (port <= B53_PD_MODE_PORT_MAX)) {
-+		u8 reg;
-+
-+		b53_read8(dev, B53_CTRL_PAGE, B53_PD_MODE_CTRL_25, &reg);
-+		if (dsa_is_unused_port(ds, port))
-+			reg |= BIT(port);
-+		else
-+			reg &= ~BIT(port);
-+		b53_write8(dev, B53_CTRL_PAGE, B53_PD_MODE_CTRL_25, reg);
-+	}
-+
- 	return 0;
- }
- EXPORT_SYMBOL(b53_setup_port);
-diff --git a/drivers/net/dsa/b53/b53_regs.h b/drivers/net/dsa/b53/b53_regs.h
-index d6849cf6b0a3a..880c67130a9fc 100644
---- a/drivers/net/dsa/b53/b53_regs.h
-+++ b/drivers/net/dsa/b53/b53_regs.h
-@@ -105,6 +105,8 @@
- 
- /* Power-down mode control */
- #define B53_PD_MODE_CTRL_25		0x0f
-+#define  B53_PD_MODE_PORT_MIN		1
-+#define  B53_PD_MODE_PORT_MAX		4
- 
- /* IP Multicast control (8 bit) */
- #define B53_IP_MULTICAST_CTRL		0x21
--- 
-2.39.5
+In rare cases, it is possible &kit->path address could be destroyed
+and reused, right? Maybe we need more state in kit to detect the change?
+
+>
+>> +}
+>> +
+>> +__bpf_kfunc_end_defs();
+>> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+>> index a7d6e0c5928b..45b45cdfb223 100644
+>> --- a/kernel/bpf/verifier.c
+>> +++ b/kernel/bpf/verifier.c
+>> @@ -7036,6 +7036,10 @@ BTF_TYPE_SAFE_TRUSTED_OR_NULL(struct socket) {
+>>          struct sock *sk;
+>>   };
+>>
+>> +BTF_TYPE_SAFE_TRUSTED_OR_NULL(struct path) {
+>> +       struct dentry *dentry;
+>> +};
+>> +
+>>   static bool type_is_rcu(struct bpf_verifier_env *env,
+>>                          struct bpf_reg_state *reg,
+>>                          const char *field_name, u32 btf_id)
+>> @@ -7076,6 +7080,7 @@ static bool type_is_trusted_or_null(struct bpf_verifier_env *env,
+>>                                      const char *field_name, u32 btf_id)
+>>   {
+>>          BTF_TYPE_EMIT(BTF_TYPE_SAFE_TRUSTED_OR_NULL(struct socket));
+>> +       BTF_TYPE_EMIT(BTF_TYPE_SAFE_TRUSTED_OR_NULL(struct path));
+>>
+>>          return btf_nested_type_is_trusted(&env->log, reg, field_name, btf_id,
+>>                                            "__safe_trusted_or_null");
+>> --
+>> 2.47.1
+>>
 
