@@ -1,130 +1,110 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795B21F9F7C
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 05:28:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E702C326F;
+	Tue,  3 Jun 2025 05:29:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748928510; cv=none; b=dGaivUlQkz34I/Laen6GhvuBrkeG6N/a2PvKDteiHF0kcrq0SnOua0Gw+ah8E6fd9ivMADYnxIJvPxnjJTOUfRtaZk2u88mjOP5p/XiOhDasTu1Kou7V5kH96X3+/MgZd9u2CeK6Nn+Qsj3NDYivWL7a3KMxZ4odwsZVAdA9YzA=
+	t=1748928582; cv=none; b=E2b7zriryq3dXwbkz1gY/D8xqSExuQauMtfPQ8+KwdQYcyzdG3XNWoY9IeKokwtkDcJUq/c9OPbDfwxeUqJWRbs8/0mn+O7LwhPTVrPMWKFBAoK6uowAQ1fCSgJqJi4jBndzE1uV73DVBnMZT3tSWLYHWmgigXeIUZnCTOt9utg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748928510; c=relaxed/simple;
-	bh=tKTwiZHr1T7OcqgJQXsgM7l83EgKhPzPz/oRDLCDRZ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MxbNjM2RzqWVWNlplOcyHX9sXhMEVHFMTiSHszlLCcI34Kc1uBjW7JLOVr7tQe2T5ubSu1B6XGQ+lLlEdmJDJrvjXw1vcoTNRj0+gEVOzVRnZ8jKi9ipCKMPG+lQtvWqWBUC+TU0dCT9oYP8BxzYBjLXMoEPZ6OMtLFSnOkzG/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=DiJwKGSJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Se4xwMfd; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=DiJwKGSJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Se4xwMfd; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1748928582; c=relaxed/simple;
+	bh=FVvPK8h0pt4OOCYiVjpauZS/S4Aq6B9t4g5/nw1c0dw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=i9l7vt3z9r89roHs+3mc9wrfqMiZZrVkYehWovuW9j5tpRYaftdjTvwSTC0VFJMOLerxl932/lcs6lFpWx6PponBUiiEwOos7ChTe0eGDxIcVLoN+eThg2OXUr+uiHLJy+qZ9MlejNbXIjPIkHgzx/aaevlDcCx61RbCAUnQk24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=fi+a92lH; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="DiJwKGSJ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Se4xwMfd";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="DiJwKGSJ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Se4xwMfd"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 75CFF1F38D;
-	Tue,  3 Jun 2025 05:28:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1748928501; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1hN3/bwsM+kQFOPK0LZummJGWGR9dunUQ2aWjPdto+0=;
-	b=DiJwKGSJv82ZIEuOm7Wl2hUsrpFFB1xDlRMLoJ36ovUn2jqPP33MZmfWCkRqQq/osMt2gu
-	KHMVgvgEJunf3hjSY6yo7A81r/NPNmSDuvCBcCcOqmIUDRW1RxbSVhMmvaUVMBsJGb0e/g
-	i7uXBeOmThUuHplH00poz2/ocIa8CIE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1748928501;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1hN3/bwsM+kQFOPK0LZummJGWGR9dunUQ2aWjPdto+0=;
-	b=Se4xwMfd/d4d8prnYYQpuLgb5JIqd7+4sM7yrMlRkcphx0sl88ZobCRPwGcTCDNYh914wC
-	hyCxNFBw4ZcvoZCQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1748928501; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1hN3/bwsM+kQFOPK0LZummJGWGR9dunUQ2aWjPdto+0=;
-	b=DiJwKGSJv82ZIEuOm7Wl2hUsrpFFB1xDlRMLoJ36ovUn2jqPP33MZmfWCkRqQq/osMt2gu
-	KHMVgvgEJunf3hjSY6yo7A81r/NPNmSDuvCBcCcOqmIUDRW1RxbSVhMmvaUVMBsJGb0e/g
-	i7uXBeOmThUuHplH00poz2/ocIa8CIE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1748928501;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1hN3/bwsM+kQFOPK0LZummJGWGR9dunUQ2aWjPdto+0=;
-	b=Se4xwMfd/d4d8prnYYQpuLgb5JIqd7+4sM7yrMlRkcphx0sl88ZobCRPwGcTCDNYh914wC
-	hyCxNFBw4ZcvoZCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 14F0A13700;
-	Tue,  3 Jun 2025 05:28:21 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 2NlIAvWHPmi9aQAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Tue, 03 Jun 2025 05:28:21 +0000
-Date: Tue, 3 Jun 2025 07:28:15 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: Sidhartha Kumar <sidhartha.kumar@oracle.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	akpm@linux-foundation.org, willy@infradead.org,
-	muchun.song@linux.dev
-Subject: Re: [PATCH] mm/hugetlb: convert hugetlb_change_protection() to folios
-Message-ID: <aD6H73HH7BBoJ7XQ@localhost.localdomain>
-References: <20250528192013.91130-1-sidhartha.kumar@oracle.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fi+a92lH"
+Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 5535TIIL430371;
+	Tue, 3 Jun 2025 00:29:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1748928559;
+	bh=oCpKJYDKyOh9iO5kBO1NfGGB6dheG+z5/VPdxwXJobc=;
+	h=From:To:CC:Subject:Date;
+	b=fi+a92lHbLVrq2YnaqNviHppEFf/eISIPHL6ZdS/CfAB1PnI2L7lmka7xATXPZpgZ
+	 cBWOoVW/ZyBDLUsDtuTW6iATxfn9YNe6Md8sB/2mEqfTqKLj8hCWDxZcK9cq0ld2ze
+	 YJ2Ch+2TIwt/lOfUSxHl1OTjYawRqVuhH2BCfZHw=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 5535TIhW3504182
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Tue, 3 Jun 2025 00:29:18 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 3
+ Jun 2025 00:29:18 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 3 Jun 2025 00:29:18 -0500
+Received: from lelv0854.itg.ti.com (lelv0854.itg.ti.com [10.181.64.140])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5535TIOG4130382;
+	Tue, 3 Jun 2025 00:29:18 -0500
+Received: from localhost (meghana-pc.dhcp.ti.com [10.24.69.13] (may be forged))
+	by lelv0854.itg.ti.com (8.14.7/8.14.7) with ESMTP id 5535TG0o020130;
+	Tue, 3 Jun 2025 00:29:17 -0500
+From: Meghana Malladi <m-malladi@ti.com>
+To: <m-malladi@ti.com>, <horms@kernel.org>, <pabeni@redhat.com>,
+        <kuba@kernel.org>, <edumazet@google.com>, <davem@davemloft.net>,
+        <andrew+netdev@lunn.ch>
+CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>,
+        Roger Quadros <rogerq@kernel.org>, <danishanwar@ti.com>
+Subject: [PATCH net v2] net: ti: icssg-prueth: Fix swapped TX stats for MII interfaces.
+Date: Tue, 3 Jun 2025 10:59:04 +0530
+Message-ID: <20250603052904.431203-1-m-malladi@ti.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250528192013.91130-1-sidhartha.kumar@oracle.com>
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Wed, May 28, 2025 at 03:20:13PM -0400, Sidhartha Kumar wrote:
-> The for loop inside hugetlb_change_protection() increments by the huge
-> page size:
-> 
-> psize = huge_page_size(h);
-> for (; address < end; address += psize)
-> 
-> so we are operating on the head page of the huge pages between address
-> and end. We can safely convert the struct page usage to struct folio.
-> 
-> Signed-off-by: Sidhartha Kumar <sidhartha.kumar@oracle.com>
+In MII mode, Tx lines are swapped for port0 and port1, which means
+Tx port0 receives data from PRU1 and the Tx port1 receives data from
+PRU0. This is an expected hardware behavior and reading the Tx stats
+needs to be handled accordingly in the driver. Update the driver to
+read Tx stats from the PRU1 for port0 and PRU0 for port1.
 
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Fixes: c1e10d5dc7a1 ("net: ti: icssg-prueth: Add ICSSG Stats")
+Signed-off-by: Meghana Malladi <m-malladi@ti.com>
+---
 
+v2-v1:
+- Include a comment along with the bug fix as suggested by Simon Horman <horms@kernel.org>
 
+v1: https://lore.kernel.org/all/20250527121325.479334-1-m-malladi@ti.com/
+
+ drivers/net/ethernet/ti/icssg/icssg_stats.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/net/ethernet/ti/icssg/icssg_stats.c b/drivers/net/ethernet/ti/icssg/icssg_stats.c
+index e8241e998aa9..7159baa0155c 100644
+--- a/drivers/net/ethernet/ti/icssg/icssg_stats.c
++++ b/drivers/net/ethernet/ti/icssg/icssg_stats.c
+@@ -28,6 +28,14 @@ void emac_update_hardware_stats(struct prueth_emac *emac)
+ 	spin_lock(&prueth->stats_lock);
+ 
+ 	for (i = 0; i < ARRAY_SIZE(icssg_all_miig_stats); i++) {
++		/* In MII mode TX lines are swapped inside ICSSG, so read Tx stats
++		 * from slice1 for port0 and slice0 for port1 to get accurate Tx
++		 * stats for a given port
++		 */
++		if (emac->phy_if == PHY_INTERFACE_MODE_MII &&
++		    icssg_all_miig_stats[i].offset >= ICSSG_TX_PACKET_OFFSET &&
++		    icssg_all_miig_stats[i].offset <= ICSSG_TX_BYTE_OFFSET)
++			base = stats_base[slice ^ 1];
+ 		regmap_read(prueth->miig_rt,
+ 			    base + icssg_all_miig_stats[i].offset,
+ 			    &val);
+
+base-commit: 558428921eddbd5083fe8116e31b8af460712f44
 -- 
-Oscar Salvador
-SUSE Labs
+2.43.0
+
