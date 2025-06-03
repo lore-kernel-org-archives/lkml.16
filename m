@@ -1,103 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B7A23BCF0;
-	Tue,  3 Jun 2025 18:27:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A47323BCF0;
+	Tue,  3 Jun 2025 18:27:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748975246; cv=none; b=P5uB2/HB/1/8cUJg6Kfx4Gvx/4Ff3ZBEhM1UJrgzUUi5U4I4XRk8HhJpdqXNZ8gpVVfJjZywZiWtYlQJ9QRk7uO6SUjLk5HQ0+4dbDYJBUmsv26BUUzxz6sqh4i2jQB99Xw4WPpoJzhqqO/TnG7JUh1ARg8knxvh2Y7HV8cRr9Q=
+	t=1748975268; cv=none; b=Vp8UkOfk609rvk8MyZyRisEll/ZXtVLyhjkqSFqVfhKH8AUSZVaPOQAyDgD9OILvYJWndX6BKzCQg2J9+8jG337ute4LYfnYOfscRjloA20QBafP0TFvXZyCd+vFi3ByjUC+EX/PqY+0D8jLQZnoihEC+NKeG6/As3kJGp/YD4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748975246; c=relaxed/simple;
-	bh=ckhw827S1BHIzOOsklyV4f5zZYq6GzhskiPmH9tlxgI=;
+	s=arc-20240116; t=1748975268; c=relaxed/simple;
+	bh=2ojqRapvZQ0p/zj56F1HLnrtVP2feRC6AnAIidMhuZQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BmOFF+DxRH9XJS47k8wiwJ8rSvAsgEIxM9ALBNITMX4N2ZKE++dQMvnDI5k8N0moxbHmYpi6HpENTUoLlYTm425dUNaWH641SbQFihliQA7su02SHofI+ULwBajRj4eB7UNytUrJQ3UMtUMqPnU2JyDjdq5XJhHch77ASIpYw5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VJApOzfh; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=sBOLSBHhsIKWiKNNTP98DqSNii4KXUy3bhPe4cirvKpbK/pym118TOq7dAPcF85OuuCZLT4d5bKXyIbrPjH2brRVnJkTmaKW061V4IEGGTcRy3joQS7KEO4vYB0x8hsMGKEhFC6p3mJJt6VNEe759b3RY3Vj9Ut+7MqPC87vG2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CVkdhqsb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VJApOzfh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C77AC4CEED;
-	Tue,  3 Jun 2025 18:27:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CVkdhqsb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79CE2C4CEED;
+	Tue,  3 Jun 2025 18:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748975246;
-	bh=ckhw827S1BHIzOOsklyV4f5zZYq6GzhskiPmH9tlxgI=;
+	s=k20201202; t=1748975266;
+	bh=2ojqRapvZQ0p/zj56F1HLnrtVP2feRC6AnAIidMhuZQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VJApOzfhV9fbEzynGEdok9VjWoCb7Zo0WIq1Yo4MAW8HsrK5lfqLh3IgF33b0Oyo5
-	 UQn885AEGJZfooJizhCV84rKMjABAFcv1NuxQ2W9gACRBxXg184Hyo2Hr9luVRFk41
-	 dcdPfQYGPjbn2tLoeZGofz7MauWnlJ/pajRWdMKX4gue+RSHF3CS/rZwmsT6fryRiz
-	 D9W/83FRVkjQSd462IuobALHZE8IPZR86PEZjaQ7tqsF6NkycgvoHM7hMqIDhRSxnB
-	 NYabQVJDdJSLO0Qskpz8l+ETWZlY3RgCBP3Kxq/Aswh/sXqx9bqwwnFTypxx6yZn7f
-	 i8NPPUHDYBakQ==
-Date: Tue, 3 Jun 2025 19:27:20 +0100
-From: Mark Brown <broonie@kernel.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] selftests/mm: Add helper for logging test start
- and results
-Message-ID: <5e00c276-2d3b-4004-9f98-4703e2d642f9@sirena.org.uk>
-References: <20250527-selftests-mm-cow-dedupe-v2-0-ff198df8e38e@kernel.org>
- <20250527-selftests-mm-cow-dedupe-v2-2-ff198df8e38e@kernel.org>
- <63e00cf8-8592-4117-bb27-42bc8c1f8921@redhat.com>
+	b=CVkdhqsbIlkhwIV5CHtX8HaDVTrcwvoY0ZaT0Es5gepPuEL7ZYkwAxIBX3iIsY0Xf
+	 wsrYRzWIF2BtJLxes/nh9/UtiBTablWOLf0paOZLNLcIFM4/waL+cxRz6iTmF8LeUI
+	 5YQTLByB4Wp/+tctBSP9AbBaS1ErKG+CGNYNm+idtnbjPC/uX4hzVGA99E/evvklez
+	 kCaI6Lcs+K+PsfxuoIosAMm5Q2mi6IMyK8X6z/Cb3acjiMXuhEil5HCY6zpJ+1dYJl
+	 g+iYZHlgJCQh4RLkVOj7LdRiL9B8UfHo2jsffzcp8fbwUtta+nvKsR+eNMlE+OiseQ
+	 cwy8/R3lun31Q==
+Date: Tue, 3 Jun 2025 08:27:45 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Cc: cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Johannes Weiner <hannes@cmpxchg.org>
+Subject: Re: [PATCH] cgroup: Drop sock_cgroup_classid() dummy implementation
+Message-ID: <aD8-oZ-Rl8AnXTi_@slm.duckdns.org>
+References: <20250603154528.807949-1-mkoutny@suse.com>
+ <aD87xm9H_wiQK_S2@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="U87MoMgTYp3o0nhz"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <63e00cf8-8592-4117-bb27-42bc8c1f8921@redhat.com>
-X-Cookie: Avec!
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aD87xm9H_wiQK_S2@slm.duckdns.org>
 
+On Tue, Jun 03, 2025 at 08:15:34AM -1000, Tejun Heo wrote:
+> On Tue, Jun 03, 2025 at 05:45:27PM +0200, Michal Koutný wrote:
+> > The semantic of returning 0 is unclear when !CONFIG_CGROUP_NET_CLASSID.
+> > Since there are no callers of sock_cgroup_classid() with that config
+> > anymore we can undefine the helper at all and enforce all (future)
+> > callers to handle cases when !CONFIG_CGROUP_NET_CLASSID.
+> > 
+> > Signed-off-by: Michal Koutný <mkoutny@suse.com>
+> > Link: https://lore.kernel.org/r/Z_52r_v9-3JUzDT7@calendula/
+> > Acked-by: Tejun Heo <tj@kernel.org>
+> 
+> Applied to cgroup/for-6.16-fixes.
 
---U87MoMgTYp3o0nhz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Make that for-6.17.
 
-On Tue, Jun 03, 2025 at 02:37:41PM +0200, David Hildenbrand wrote:
-> On 27.05.25 18:04, Mark Brown wrote:
+Thanks.
 
-> > +static char test_name[1024];
-> > +
-> > +static inline void log_test_start(const char *name, ...)
-> > +{
-> > +	va_list args;
-> > +	va_start(args, name);
-> > +
-> > +	vsnprintf(test_name, sizeof(test_name), name, args);
-> > +	ksft_print_msg("[RUN] %s\n", test_name);
-
-> We could allocate the array in log_test_start() and free it in
-> log_test_result(). Then, we could assert more easily that we always have a
-> log_test_result() follow exactly one log_test_start() etc.
-
-We could, however we don't have vasprintf() in nolibc and people have
-been doing work towards making nolibc more generally useful as a libc
-for the selftests (and/or the selftest interfaces more friendly to
-nolibc).  I don't really know what the end goal with that is but given
-the fairly small gain and the hope that this won't be a long term
-framework for anything I'd rather not add something that gets in the way
-of whatever's going on there.
-
-Ideally the test programs would be refactored and these helpers deleted,
-but as we said previously that's a bigger job that neither of us is
-likely to get to in the short term :(
-
---U87MoMgTYp3o0nhz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmg/PogACgkQJNaLcl1U
-h9B5Kgf5AUmj3DzX7FVW0uxuQnTuNoG9OfKh4yzJffzPIA7Z+MnjQgY9tahrBn81
-wgz4LO7oLOyIy7fKV4YJqDKzxa5HluHG2uNQ7eHxMpgjD4vVD3/BjM4yWlWPMA0h
-KYXvf60i08dIoKyK67/XnWO8Vu1l8oz7ecj91UGMD962hzRDU6ZkTpq/eOAww5vC
-zA4eSj1fHA+HBINxxrOfd1FWvTUEOF2pemHv5W96eZXVukmCYb1C4uPCProQ2nqy
-jNIrIkZdII3SwcurjSZWn2FEpwMgeTJR3iDo/XSfYN9gfx4np+HATvvCbmx4nkd+
-GDPOC/WHvte6MK6g4NopNT+ZUkTZ4Q==
-=VuyZ
------END PGP SIGNATURE-----
-
---U87MoMgTYp3o0nhz--
+-- 
+tejun
