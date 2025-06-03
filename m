@@ -1,170 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12BB155C82;
-	Tue,  3 Jun 2025 17:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918C119006B
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 17:04:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748970191; cv=none; b=u0MP3/T6itO4CplIB/EGwTqinv0dIvFpWp10pRa2wPuFuTyyNZ+fggi5XXjkle46FNLnKTpd2DH1bo1COmG3jrHfeZJXGV+86XIP8ic6QRC1MdxhaLePs7jzkYmoq91T/pPzciDakTt52rR/5FR+7XE0JU0jL+rOlvTPD/rqoXI=
+	t=1748970247; cv=none; b=WVesJQ2BTHnZmQ9aZK63BwyIuDYIWxOY+MRgqPCldc3FliZgFlL++cIYPelgHkx2LDozv4P8df/If3kvf1MM6exmgQZ77x7NDDZgzInD82FpiPkrgU7bmpTcQzHvbwCs5aeu8jY1UeeRevbh39vtQBohyhTqetQ1g6eYrOmAItI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748970191; c=relaxed/simple;
-	bh=TRM77rUDHAB4m63wuszm/af252clkJ3m7pLdueQYJvU=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ODunuovgDvc7NTJN8+wOLfKAtWnpKlKAophV9fjyIFJm6i4Paqg/qj4xUb5NgPmOLDYh/u2XlWIRZAiIc0i4bSGa1k+6u0CWzVZrkY1GypQxDW/kwSnXZk9sqkrglwja7H/XwAD7K1QnCgcWiK1T53vv/G0FFjKZ3AH/yhonQ2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ObMCOIWb; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748970247; c=relaxed/simple;
+	bh=4r+5Eof096MZjRh8tpVi37f6nJMhY0833cfm9C9HdL0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=pZlWgj+bJKNEdx+WMX+kFJGqLka8O+etEdVt8aBQGvWqQdgGUHdmr3xQBu7NyyJOuvR/hGZDVTks0FcQaNA3fiVjU/+UGsyg0htyU+hvgfaQW1fx2Lkh32Z2j0DdVc28VMHRg0grbtqLa6k3wj9QyodBqRTeqW+1H/khhoq6zT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=2b7cSReR; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ObMCOIWb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748970190; x=1780506190;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=TRM77rUDHAB4m63wuszm/af252clkJ3m7pLdueQYJvU=;
-  b=ObMCOIWbjIRmpgAg6KILXH0cQk62p/chQ42Ry5a9tJXi5OKKHdRsMdhm
-   kwtHy7QqLP3cf68rHI6nXxijqZhqQKXi5iub9cy9LPXzPvSkFJEbLpBef
-   Zi8auincccGzk9h4DUpw+qt6Zk4cTa25BxVhYrxbHyu55M9YHmiEWukG3
-   OXHq9NGM5KCB9nkWOAopGCVD3fIx0cZh6nnC3Y5bLuo7rmUulOnCFHgKW
-   IA/ltGkuPz5PBZ+6nAScNVcxPIc0VBYA2GaTK1zS2MvjebuTWkr+p44zp
-   2NEXmKpzNZOnWRT4//7ljPFD97d3p2XfvGU60mFnSpTxthK+9JhsAlojc
-   A==;
-X-CSE-ConnectionGUID: baLkccmdQ66uiuUgw8/k2A==
-X-CSE-MsgGUID: Vw5HSXD/TPK+RsdJ0pynKg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="61287730"
-X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
-   d="scan'208";a="61287730"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 10:03:09 -0700
-X-CSE-ConnectionGUID: zcEwYNqjQc+waIKAYZFRQA==
-X-CSE-MsgGUID: NU1Z8OqeTQCvx/gLS2TDZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
-   d="scan'208";a="144803125"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.141])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 10:03:07 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 3 Jun 2025 20:03:02 +0300 (EEST)
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-    =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>, 
-    Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>, 
-    William McVicker <willmcvicker@google.com>
-Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
- in sync
-In-Reply-To: <bd579412-d07c-476d-8932-55c1f69adc9f@linaro.org>
-Message-ID: <8df02df4-243e-fbbc-aa00-2da7affde4a0@linux.intel.com>
-References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com> <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com> <5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org> <8f281667-b4ef-9385-868f-93893b9d6611@linux.intel.com> <3a47fc82-dc21-46c3-873d-68e713304af3@linaro.org>
- <f6ee05f7-174b-76d4-3dbe-12473f676e4d@linux.intel.com> <867e47dc-9454-c00f-6d80-9718e5705480@linux.intel.com> <a56284a4-755d-4eb4-ba77-9ea30e18d08f@linaro.org> <7e882cfb-a35a-bab0-c333-76a4e79243b6@linux.intel.com> <f2d149c6-41a4-4a9a-9739-1ea1c4b06f4b@linaro.org>
- <19ccc09c-1d6b-930e-6ed6-398b34020ca1@linux.intel.com> <c1c0bacd-7842-4e9e-aec4-66eb481aa43f@linaro.org> <fc611a93-1f5f-a86d-f3ca-cb737ed5fa4a@linux.intel.com> <bd579412-d07c-476d-8932-55c1f69adc9f@linaro.org>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="2b7cSReR"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a4e742dc97so54251f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 10:04:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748970244; x=1749575044; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=z9KctMIkbgxYBp8QVwwNbz+2eDOalPhBXgUZIQWSTmo=;
+        b=2b7cSReRtXT0uSW84ykQaUZH0gPMRasYIx6cwaadLeBmyvLv96BHM9K8FYF/OD+S9U
+         DMzzJcQ8yeBC+7xuWyvaoRQSCdBNOt0CI9wdPiisC+k1MiNnSD1BL44DM3nvsSkLBogA
+         8CZk2QB7IgorONpNGZSCwarJlaSpV2e/b0WzTvSktUYTzyuU0OZXFlydTgHKtqqMrOTi
+         WlpgAcACamRdhk2P2iKgaXVL+asi14KQMrPXiWj+D9uNC4moIj1G/Mjzx2HPhRgpxcMl
+         kP+5N3ObyOLvvfR+2mo5QSJn3SV0wGV5WtFbvTnvj5ve+Dn1xvYD6kZVhUp/g/dG885v
+         7TtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748970244; x=1749575044;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z9KctMIkbgxYBp8QVwwNbz+2eDOalPhBXgUZIQWSTmo=;
+        b=V7KhHCs6SC2lFndIm5daFRk9T1FwRLF3lYtPeLSAbl0F9gLsyfLDyM50I2Ugdxa0T7
+         idj7z6kXJHingCL4yv+Q8tlyNtVzyXvXGNU8N869GSWe3e1LGlQY/7PO6Nz1SlIpeYkB
+         QV1JEPMCY0FKSCbYZCNOZpIVcp4Rjuw7uhA+gKTKFCFUrG3UQleRBkBYoFRDGiKX3NcE
+         F1fT7Lp1RzuHxCj7aB6mgLx8idl6BuQLjCMO+Oo0MQ4mJPVmlxxyT02imUlV2xo3IZ40
+         eO6dQpgozQntu1wIIr28LrxrCQFaYCZG+Zqhl38r+RKzI0gc930sYDf322O1HBuBf6ia
+         YdOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUkEbpdHnqBVDQQY4MDoTibjm427dcJiTFI4E/YawOoruRLBtWWCyBaPrQgPGkwqAa25bImb8GBEcx32sk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCIzEIoUKWY8WYagvCn4S5RfWpx/aVLCUPd/G3aI9EaFn/3skx
+	o84kVc7xypQV8mwTj4czXApUTPKLp2xCu3cO078aaLkJgjwDW6q87uV9UCMd11ivLP0=
+X-Gm-Gg: ASbGnctg1FufWAAuKzSBu7jfLioZFVppkd35Non0fag/gZK5WnlbI7g63+uVQhj/JpD
+	H63fkk8uvGwsMe9H840yWJqyQL8IjP6RG+Yq4PI2sjcRV3uM5vt6zwIsFTphhEiboUuK8drSV7T
+	c6BQLU+S4lltgQbY9yphMfLf6ZooobajfiY8P8USgugFSNTFsBvGdhw5GMHR25IFlynp/oDr6qk
+	ozGFVzYTsz9ZT5/YFMYKo/GPA5RbJXK2c+V/ljSNYaPyCVCZ2QkutRBf/q6BUg5AF7CLZzSLbA7
+	DCAYd/3aSoJS2IMEkHeRTchUzx09ULU1dnEgq+dj/HszvEP1SvxANLGD2GeD++XfYA==
+X-Google-Smtp-Source: AGHT+IFQ4mga6ZpQOnpfxIJQb2eWoiJqInQW3qkdZiZ9oqXdEFGYy8VI+GYDFKLpm2n+vIAxaELDzA==
+X-Received: by 2002:a05:6000:144d:b0:3a3:7ba5:9a68 with SMTP id ffacd0b85a97d-3a5144f8154mr3094893f8f.18.1748970243645;
+        Tue, 03 Jun 2025 10:04:03 -0700 (PDT)
+Received: from toaster.baylibre.com ([2a01:e0a:3c5:5fb1:ce70:8503:aea6:a8ed])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a4f00972f3sm19165796f8f.69.2025.06.03.10.04.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 10:04:03 -0700 (PDT)
+From: Jerome Brunet <jbrunet@baylibre.com>
+Date: Tue, 03 Jun 2025 19:03:38 +0200
+Subject: [PATCH v2 1/3] PCI: endpoint: pci-epf-vntb: Return an error code
+ on bar init
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1144988712-1748968017=:937"
-Content-ID: <52a0b719-2ea7-4622-cb85-1d872f1eb4d6@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250603-pci-vntb-bar-mapping-v2-1-fc685a22ad28@baylibre.com>
+References: <20250603-pci-vntb-bar-mapping-v2-0-fc685a22ad28@baylibre.com>
+In-Reply-To: <20250603-pci-vntb-bar-mapping-v2-0-fc685a22ad28@baylibre.com>
+To: Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>, 
+ Allen Hubbe <allenbh@gmail.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Frank Li <Frank.Li@nxp.com>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Cc: ntb@lists.linux.dev, linux-pci@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1100; i=jbrunet@baylibre.com;
+ h=from:subject:message-id; bh=4r+5Eof096MZjRh8tpVi37f6nJMhY0833cfm9C9HdL0=;
+ b=owEBbQKS/ZANAwAKAeb8Dxw38tqFAcsmYgBoPyr/rF0NiI9WeluJ+asQYI6+4kWmycSeT3GUm
+ 2/aDNg8qiOJAjMEAAEKAB0WIQT04VmuGPP1bV8btxvm/A8cN/LahQUCaD8q/wAKCRDm/A8cN/La
+ hSLjD/0Q4FwOh6ppUJJ2M+N/1SOee8kK5qxOadTEqWDaaMGNH51khNK0PPAiZMyEIsQQf855Js6
+ EuEJcd77GsM3Ntm+F6UMQk9NQ+ZtPhwaGt7tRQ9jma5HTNRv/WHRy6m8qMCbH3nm5eKMRb3a0vL
+ hP16eJ+EK2drKPfoOMWTQVyXTFHSasvW3MKH13GyM8yihB9CNcksyNl6+5yIbLPItRA/E+Gf9hP
+ 0zP/Wkrga6nAorbLUksBosPRVzCM/BSY/CV2dF1gosh2sBxgjwJFrPWisfTmssTMzi803WllYPs
+ QnYTl2uullBc1Wucl+zMWEbEDDDYDTobNuHfv37GE94RlHVwumK2kMOSTC6AWJzDZYjUzIwedNY
+ ZLnu/atJWd0ffYXGJ2brfXoA2vrvv8b/83LwneArAiKAmrL85Fl+GLsOjxXYXa4IhQN/Hfhp/kv
+ VrFLsB7gG2U3eR2DT3JKdNXYiItVLS2OuaYoMGuLw+zKR/t0FeyVTHd0tz67ff0Yt+YQHmuAn1l
+ gZoAq4N8RGeueybFK86+IV/eQAWyKEf6syYLlxYrC7lBHofKVa2cLQoktWlVt/gfFpsK88Nn4aY
+ NfHplfXZuoXkq48afjQsQzdkE+460W8PcYU/B/afMGCI4qnd4GSGyKMu0wyXC1o+v39S26yeuTh
+ wjDsFm/5vzqCmPA==
+X-Developer-Key: i=jbrunet@baylibre.com; a=openpgp;
+ fpr=F29F26CF27BAE1A9719AE6BDC3C92AAF3E60AED9
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+According the function documentation of epf_ntb_init_epc_bar(),
+the function should return an error code on error. However, it
+returns -1 when no BAR is available.
 
---8323328-1144988712-1748968017=:937
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <cdb1ba6d-ce3a-9525-202b-9d2d3bb82a8d@linux.intel.com>
+Return -EINVAL instead.
 
-On Tue, 3 Jun 2025, Tudor Ambarus wrote:
-> On 6/3/25 3:13 PM, Ilpo J=E4rvinen wrote:
-> > On Tue, 3 Jun 2025, Tudor Ambarus wrote:
-> >> On 6/3/25 9:13 AM, Ilpo J=E4rvinen wrote:
-> >>> So please test if this patch solves your problem:
-> >>
-> >> It fails in a different way, the bridge window resource never gets
-> >> assigned with the proposed patch.
-> >=20
-> > Is that a failure? I was expecting that to occur. It didn't assign=20
-> > any resources into that bridge window.
->=20
-> It leads to a watchdog interrupt on my pixel6. Last print I see on my
-> console is related to the modem booting status. My wild guess is that
-> that modem accesses something from the unassigned bridge window.
+Fixes: e35f56bb0330 ("PCI: endpoint: Support NTB transfer between RC and EP")
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ drivers/pci/endpoint/functions/pci-epf-vntb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The bridge window is not for the bridge device itself. It's as the name=20
-says, a window into where subordinate busses can assign their resources.
-The bridge knows it must forward that window address range to the=20
-subordinate bus.
+diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+index e4da3fdb000723e3adad01f0ddf230ecc0e572a7..35fa0a21fc91100a5539bff775e7ebc25e1fb9c1 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
++++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+@@ -680,7 +680,7 @@ static int epf_ntb_init_epc_bar(struct epf_ntb *ntb)
+ 		barno = pci_epc_get_next_free_bar(epc_features, barno);
+ 		if (barno < 0) {
+ 			dev_err(dev, "Fail to get NTB function BAR\n");
+-			return barno;
++			return -EINVAL;
+ 		}
+ 		ntb->epf_ntb_bar[bar] = barno;
+ 	}
 
-> In the working case I see the bridge window printed:
-> [   15.457310][ T1083] pcieport 0000:00:00.0: [s51xx_pcie_probe] BAR 14:
-> tmp rsc : [mem 0x40000000-0x401fffff]
->=20
-> [   15.457683][ T1083] cpif: s51xx_pcie_probe: Set Doorbell register
-> address.
->=20
-> In the failing case I see:
-> [   15.623270][ T1113] pcieport 0000:00:00.0: [s51xx_pcie_probe] BAR 14:
-> tmp rsc : [??? 0x00000000 flags 0x0]
->=20
-> [   15.623638][ T1113] cpif: s51xx_pcie_probe: Set Doorbell register
-> address.
+-- 
+2.47.2
 
-Oh, is it this one?
-
-https://github.com/oberdfr/google-modules_radio_samsung_s5300/blob/11a10f95=
-5a267a45a1997f65671d7054adf1a33a/s51xx_pcie.c#L366
-
-There are number of crazy things going on there... Probe shouldn't be=20
-messing resources like that. If it wants to change resources, a quirk=20
-would be more appropriate place I guess but I'm very unsure what that=20
-even tries to achieve with all that craziness ("Disable BAR resources" by=
-=20
-assigning them :-/).
-
-But yes, it seems to take the bridge window's address and assumes=20
-something is there (which isn't there as we know). So this driver code is=
-=20
-plain wrong.
-
-Perhaps it would want to use the address of some endpoint device resource=
-=20
-instead of the bridge window address (e.g., that device with class 0?).
-
-> > If there's nothing to be assigned into the bridge window, the bridge=20
-> > window itself is not created, that is the expected behavior (working as=
-=20
-> > designed). So you're comparing to the bridge window that was made too=
-=20
-> > large due to the disparity (and left unused, AFAICT).
-> >=20
-> > It would be possible to put the condition inside the block which adds=
-=20
-> > the resource to the realloc_head, I initially put it there but then=20
-> > decided to remove the disparity completely because why keep it if no=20
-> > resource is going to be placed into the bridge window.
-> >=20
-> Thanks for the educative answers.
->=20
-> > What's that class 0 device anyway? Why it has class 0?
-> >
-> I don't know yet, it's the first time I'm dealing with a PCI driver. Any
-> idea where is the class typically assigned?
-
-https://pcisig.com/sites/default/files/files/PCI_Code-ID_r_1_12__v9_Jan_202=
-0.pdf
-
-Perhaps try a quirk which changes the class of the device underneath the=20
-bridge to something else than 0, it should make the resource fitting and=20
-allocation to assign its resources.
-
-But honestly, that s51xx_pcie_probe() has more than one thing wrong.
-
-> >> With the patch applied: https://termbin.com/h3w0
-> >> With the blamed commit reverted: https://termbin.com/3rh6
-> >=20
->=20
-
---=20
- i.
---8323328-1144988712-1748968017=:937--
