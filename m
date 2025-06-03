@@ -1,117 +1,112 @@
-Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.83])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C8D22DA17;
-	Tue,  3 Jun 2025 13:36:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748957816; cv=pass; b=jawb/XXq/dI3f8HB/SCdCoW/eoL1U71I/rnszAi1py6BfO6p396jwGLRPnt4Q53lPtxJgLD7c+vemNL00AxZH/cdjgNuJ9ZBbx/PEPsXHvkmo837I6IELFbKBjzyQNAo+bzE61LFRnsDL/5AS0T1SRGMbJoFB5UJ6txuc9vPE7o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748957816; c=relaxed/simple;
-	bh=ggSD5TWyCWxeirSaMJPrl1giOPLd1NsohN9SeJ3A2c8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=nsx6xToavbeOlGnYaJWWwDV3TzFl75N9UaH5yZSdCbt9TMZuAv/0kOoqnM0rolfIE5i2CGeG7Yjeh9Vdy+7tep1AcOfmDhu3AJSXBFKsu3qnb7dkqoYFFQyl/v9RO61RXiBwWA7OCN0fpshTpAYg7H9wqxrDLYh3qaRz+O1Lz2I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=outer-limits.org; spf=none smtp.mailfrom=outer-limits.org; dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=I317dWfQ; dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=5KxrZqAq; arc=pass smtp.client-ip=85.215.255.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=outer-limits.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=outer-limits.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C9B233D91
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 13:37:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748957823; cv=none; b=hTitVOJid3uRpYpSXhi7nMAZgf/A4VP2KrzLJR5h/ZEdVo5sKVsS4bzTAT6w73DL/setG3qfnQupuq7JS/5rApdWmG49G1SL8CPCrmDuW+WmYvgGs6L5BQDMDXj9L2QxYfpE8okIFaKmk85Gu01sOCatVaPPgRzQD1Yt2r9jDmY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748957823; c=relaxed/simple;
+	bh=MfnZO5lFJA5kphVhQXFmjyYwzPaWj6A9QLg5HcsjC6c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ExHtv/ZbQNj/KrhNno2uzJHulVYhx2HOEEopNTpD/3atVSKt2GbPmUbQmlW1ypiJFgnmkUXWjfmEqOwH2DTyld7pFxYJ014H82oEXNBXnr3mBwOorakkgjdMT8Qdb7LBUqn/I2qDuzimyWUiXkpCANMAusyAxncLSEPZQhzjoIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=QdRqef0e; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="I317dWfQ";
-	dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="5KxrZqAq"
-ARC-Seal: i=1; a=rsa-sha256; t=1748957804; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=ikoTMZbBkbQOKvsYPM/CBFQZG8NyfGjHDe1B6rNsTzUyWq0X/DedvZ32HU65KyGUm8
-    Uo+U8lSFZH3kJQN7UBT7gQyy7e+zrFst4pfXnQKuMtOyk+PsTkOI+CITP7GDvmseYlFK
-    inNhuNSYW3Jdpo0WY4QePBQbuRja7T0TyiLWLmfQvAs/oftOQeLTMygXmcFtMdHenRtX
-    52gjcTjINA7fzS8fbVHJSsJON7avNwitfUAbtHNzh/Tt97DTU7fwubja08Nd4tfvjsY+
-    FvCOZSbgjlOAV7J8k01xsq7GJsb8w8UoaLmUEyAtOUtnWns+xKueJHEJFJSYR29nH0zv
-    oE1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1748957804;
-    s=strato-dkim-0002; d=strato.com;
-    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
-    bh=ynHn4pR2QysbnPMSx8mcbuJVwE2t+RsfvJbTInBcDCA=;
-    b=ksVRI//7ulTUCCNmNWlzpDP+Z5mmBUhHAMMySdSdCEr9iSa0zhQDGEK42DyEk44AYd
-    cnr8g5GrdBa5iA8OAdlWw1RGQ/LtNBWkBHYzixO6yBp4JOjMsdkKsSazRX3eSDUeWaRW
-    ETQ4X494lOWpYrqUmZDt28E9ilVP6lekR/+E/trhWHjmVa36gx1YPlOZuUaVB4oQmCHv
-    W3hPQhUJ5eTM+Af8RcKZUN8z6HzP2UXd3nMu/iLb8Wgl/AF2QLPS6NdAynzQX3IYVPAM
-    enX7do/ugCTAo3j8cmdiFhWSwxJmBDIFDjD2g/GvL6p3HOZMJK5C56cDJXyuxEhtItwa
-    9Trg==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1748957804;
-    s=strato-dkim-0002; d=outer-limits.org;
-    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
-    bh=ynHn4pR2QysbnPMSx8mcbuJVwE2t+RsfvJbTInBcDCA=;
-    b=I317dWfQF6ux62fZMO7tVxc1ccQSx3xL+SviOHdflqjcU78QfGQq+XPo2QCE0bRDhq
-    Zoli7D1jdt+99ZnbV+G9qjRs7TlXA5HdcQlePlyh9lYnSNoFZ6psB5M32wO3rnqQWgDi
-    Cgy1X4qCX0ThaSpvzR1Ltuu+R+wVd1n6vRmMu4Xl3fXAMiatzQm/260w11FLle76H97P
-    BH3RenAiCRfPuxD93qECfKnJhbYYFiVh/d2ZHQ1jKVOQqvDrKh+WH1kFlGg92s7kHv2z
-    niSAEH+hfxp8FudAAdIq5NTveMVBLWPY6BWRZenwuRkwPtYaEx0L8yRnzI/E6Hlb46wS
-    kw4A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1748957804;
-    s=strato-dkim-0003; d=outer-limits.org;
-    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
-    bh=ynHn4pR2QysbnPMSx8mcbuJVwE2t+RsfvJbTInBcDCA=;
-    b=5KxrZqAqFHu+PlBYbHs5WUWOn3qbHuk5fxRIEvTMTGTiuGMoUTIMlyjtjYXFBjX2zQ
-    YnAen8VgYTVOMCvhDgCw==
-X-RZG-AUTH: ":JnkIfEGmW/AMJS6HttH4FbRVwc4dHlPLCp4e/IoHo8zEMMHAgwTfqBEHcVJSv9P5mRTGd2ImeA=="
-Received: from ws2104.lan.kalrayinc.com
-    by smtp.strato.de (RZmta 51.3.0 AUTH)
-    with ESMTPSA id J2b110153DahwZO
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Tue, 3 Jun 2025 15:36:43 +0200 (CEST)
-From: Julian Vetter <julian@outer-limits.org>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Liang,
-	Kan <kan.liang@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Julian Vetter <julian@outer-limits.org>
-Subject: [PATCH] tools: Remove the check for packed_struct.h header
-Date: Tue,  3 Jun 2025 15:36:35 +0200
-Message-Id: <20250603133635.3685397-1-julian@outer-limits.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="QdRqef0e"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7d09f11657cso510011185a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 06:37:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1748957821; x=1749562621; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=M2tOvYIRYhJ3zgazeT9iy9SxHIfkqCxujQJZWAlLZ4g=;
+        b=QdRqef0eufvBDPsFNSKgItk8ioK5rW0bITD7h/gaJVlsLti5kJbkAWQoNEmZWRe68Y
+         Q4oF4tefxOI7cERsX4wsVaBuaHz22hTf4BcC/yjkMVx+8DuPCBDLYZ3A+RWTRvaraqNs
+         e7pqxu3qqrej8RwTwZermIn33SpopTq52Y2nm/rfb3Wh5IxZqh6cLkWQPdwWIBjD+YoN
+         aiioFJ+ghZ9yPVDMy/MALzaSX/kPFwincvLa9cv4TcSSylFCgKj10d+Rbd3GZwiNMEHs
+         ubZ2U/8vLM8FJ3hFzQB993FiXCNvO+ks/3rtygYKqSmy9D7l/904PPCBEYVreULiWIuI
+         rFWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748957821; x=1749562621;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M2tOvYIRYhJ3zgazeT9iy9SxHIfkqCxujQJZWAlLZ4g=;
+        b=fZlW2OXXdECpSRbBY4Y1C14lOkwcb0YTZtDE5aKNJ0D2bU0GNV4irrXBvom0kgBWST
+         UtaCj52DhHwLIyTOPD3S2lE0zKA81FlaxZZQ+Hq0koJrNJr4djK4pluuy2Hth6hOTleT
+         A3Ux9pcGRcMGUGr5j+3lt7oZgNFvwjOtJenFiZ3I9SpnWfLRbmplrROhF4DkCs+V0/7E
+         vPA32OxoMQDX97tpT0zjnp2U1HQNM8ILqO49szDczwuE4I4BKxD88lLYXYJo60UtEa21
+         Jw1T7nzA9hm0vCu9aHjPkbAfcTki51HKWttOkLlXmj5VY/l1AwAdTDMBM7SoqEuf/G/H
+         TYzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWJv25XZQEIfZqlwr9+5FQ2PyFPouOky5d979f/SxepLpMH9EHZ2YmuwjBS21sSY9xSJGq45VTzLBZruyk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzh6SAw/Y0x0jstKwmrhvrC+IFXsC4LoAZ5KIAokqk7gnjK6cHh
+	kmTTTMyeu93m2ScJWjE7zHJdP5GEJka7m6Efk0+1w5AawwoJIWQFOyU7FXAHH4eXzMY=
+X-Gm-Gg: ASbGncuqn6jDcQrWzrASm8At2deLzhc3xylYAIc9zrwpIGMsC+4mzNIl9kmKzLjHJXx
+	jdRXsXQI6Ob754/SyXy/MQ7piy8tBaNZYkpTexK9aHeBBQuL2RIzWleMo+ddMPKrWVksqJ683j7
+	VF9t9a6SzuCmZCS2bHE3UphLpLTASFoNx7vJM5fgPldZm01zstPrr2yiyG3glgWkwysC1npqQHR
+	f87eHKKMcP7ws4ffV7GORkBAepkn0sa5vYOuA72m1FwrycS23UrW5bf9zNl/AamDzuzDTsDP1z/
+	JQX0uXkbXNdS7paYW+3SiRREKELDbtOBft7d9Eu4tH3liF6eTgPEHu3HmwwUWAF7QkczN2S+VCX
+	0SdYwKpfPhoRYtrVl9Br6unEz+to=
+X-Google-Smtp-Source: AGHT+IF/1nQKKWghBymIv6kapapYp3T/T+mDb2uBcjAQYD1rkFwd/p2CMx7wy82AG8RXeUKzw729SQ==
+X-Received: by 2002:a05:620a:4408:b0:7c5:3d60:7f8d with SMTP id af79cd13be357-7d0a1fb91a0mr2626422385a.19.1748957820692;
+        Tue, 03 Jun 2025 06:37:00 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d09a0fa38fsm842635185a.35.2025.06.03.06.37.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 06:37:00 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uMRp5-00000001h5Y-2rWO;
+	Tue, 03 Jun 2025 10:36:59 -0300
+Date: Tue, 3 Jun 2025 10:36:59 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Alistair Popple <apopple@nvidia.com>
+Cc: linux-mm@kvack.org, gerald.schaefer@linux.ibm.com,
+	dan.j.williams@intel.com, willy@infradead.org, david@redhat.com,
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+	linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
+	zhang.lyra@gmail.com, debug@rivosinc.com, bjorn@kernel.org,
+	balbirs@nvidia.com, lorenzo.stoakes@oracle.com,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	John@groves.net
+Subject: Re: [PATCH 03/12] mm/pagewalk: Skip dax pages in pagewalk
+Message-ID: <20250603133659.GD386142@ziepe.ca>
+References: <cover.541c2702181b7461b84f1a6967a3f0e823023fcc.1748500293.git-series.apopple@nvidia.com>
+ <1799c6772825e1401e7ccad81a10646118201953.1748500293.git-series.apopple@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1799c6772825e1401e7ccad81a10646118201953.1748500293.git-series.apopple@nvidia.com>
 
-The functions in the header 'unaligned/packed_struct.h' were deprecated,
-and not used anymore, thus the header was removed. So, we can also
-remove the check in 'check-headers.sh'.
+On Thu, May 29, 2025 at 04:32:04PM +1000, Alistair Popple wrote:
+> Previously dax pages were skipped by the pagewalk code as pud_special() or
+> vm_normal_page{_pmd}() would be false for DAX pages. Now that dax pages are
+> refcounted normally that is no longer the case, so add explicit checks to
+> skip them.
+> 
+> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+> ---
+>  include/linux/memremap.h | 11 +++++++++++
+>  mm/pagewalk.c            | 12 ++++++++++--
+>  2 files changed, 21 insertions(+), 2 deletions(-)
 
-Signed-off-by: Julian Vetter <julian@outer-limits.org>
----
- tools/perf/check-headers.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+But why do we want to skip them?
 
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index e9fab20e9330..cee372312974 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -188,7 +188,7 @@ check arch/x86/lib/memcpy_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/ex
- check arch/x86/lib/memset_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/export.h>" -I"^SYM_FUNC_START\(_LOCAL\)*(memset_\(erms\|orig\))"'
- check arch/x86/include/asm/amd/ibs.h  '-I "^#include [<\"]\(asm/\)*msr-index.h"'
- check arch/arm64/include/asm/cputype.h '-I "^#include [<\"]\(asm/\)*sysreg.h"'
--check include/linux/unaligned.h '-I "^#include <linux/unaligned/packed_struct.h>" -I "^#include <asm/byteorder.h>" -I "^#pragma GCC diagnostic"'
-+check include/linux/unaligned.h '-I "^#include <asm/byteorder.h>" -I "^#pragma GCC diagnostic"'
- check include/uapi/asm-generic/mman.h '-I "^#include <\(uapi/\)*asm-generic/mman-common\(-tools\)*.h>"'
- check include/uapi/linux/mman.h       '-I "^#include <\(uapi/\)*asm/mman.h>"'
- check include/linux/build_bug.h       '-I "^#\(ifndef\|endif\)\( \/\/\)* static_assert$"'
--- 
-2.34.1
+Like hmm uses pagewalk and it would like to see DAX pages?
 
+I guess it makes sense from the perspective of not changing things,
+but it seems like a comment should be left behind explaining that this
+is just for legacy reasons until someone audits the callers.
+
+Jason
