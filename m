@@ -1,206 +1,240 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2075.outbound.protection.outlook.com [40.107.96.75])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44521FBEA9;
-	Tue,  3 Jun 2025 08:12:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.75
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748938339; cv=fail; b=T+qp4szQBIWDGySWkLRkKuCEAjT1XaVG4L24Z0nUqub/E6ytz70Kse4JUDPMAhvtIPMMbNwcUkoOrZmCFJHeIXoJzyJ+wIQ1d/F++5Zq6lo8sIHUBortV+HqCxdxfpDFMGMnQFlWrHEhq9IeLY0yMSEKyD79KzJr062fi6Wo7YA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748938339; c=relaxed/simple;
-	bh=0wkSDUYVu6MGeYxGS2yZ0lCOwVMFPdRt1a+lV6hAgRc=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
-	 In-Reply-To:MIME-Version; b=rrxkWuEpvE7E9qnLngJZ8+uP4wHXEpkwYyZN5tPyOygh+6d+2/jnuxndid5RNdezDE1FQ+YVt6JUX2rNfRnaKmhOV4Xj9Rqko7ydD13MfvBHWKZIZ0/Vg2pLPVyTKhJydkMuQczYFYyS9YUAklu0oUC4ipPnpX2b+rZtZngbPeo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=tmfVQe8S; arc=fail smtp.client-ip=40.107.96.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4422428031A;
+	Tue,  3 Jun 2025 08:13:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748938441; cv=none; b=rXzh7LrzGv1czZXgP0KNqBlM8GSrbhaZA33JjDoYGdjtQ9Nh+2uG/GB5+fG+NwrFQEAmg6DwKcLrLQFuCinUTW2LqCk8BmW3NaC7EPqiuahZYPbsJ+yIxgszMjpDjq3n3VcAi2NroAZ2jyoyN/wb+UpnffwPmUj9YcZCFAcn5oI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748938441; c=relaxed/simple;
+	bh=NTtThZn7RjKZf8qDSpO5QcKM7j+QaEyLuzwuWaEh37w=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=pMwLedryMK/DTixyidtKYyzG/ufESGEVkcHr1qkssg9pQePUhPGY/jV0lcf1bRLSmcUprgeUoC74nE0AEFYJ8TVR7iEF7TZZEzaemr49azXQt/d0Xi/7/3qDKIsf/IYp7u7r1IZaayL1TknjR8ti4Xje8aEb8loCpBOEzBSXrQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hUulry2R; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="tmfVQe8S"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=R1MMH+0Pv4e9esZWeaH7qWhb0rfBMyGnrTWOh3pGUsyMLkIFCUEd+QMBgsILWDPZ0NLntgZGoGFKMRYLPFMLPnr/3BlgHuHZhoMe9ZOD+QhRqVrAHvN42K0fmSfnxJN6IvcXf0FRk1aVF8tHiPSAIrgiZ6RbPpCU2JPPEhM0O+SBqZUEBbGYLQBg1A2L5MrOwyZm7ysI+GjfqhIgxq1y+7vuyuLDX9ePCWJgXg83n77sqeSOOAPcQ0LQJWoY5UWo2nMEwffYeifnP3w69TzTxCOuOfPNDdc1qhacBnvti0cRE1Vh2RKkTRSn1Ef9dkso6gITmHk0EzHn+gzFBDWaQA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oeCFC542bweMFO2vVjU9No2sCr+HdR15IkukK5uRZ2k=;
- b=WTxKp+9/3hCiJNkJPJWqXl0NyEYvkHecj4txt9cYkN9XA7WXKYqQR6AAYLh/9kCGNLrJWgQQYvZgqbaDlsYOdJJk+fzMe7aZRBo8CsdYTNvQTd8IFHl1hE19oy4lx+yzDt6MOQ6LR2kAtB5A36Y+kPan5yovNr0XbaKaa/sde4wTl1ZjGj8U/5zM30j9UTIfm/hmAPazSQHH+1kKaYnvOy/Qfylpqie9p41zeNwTsODxA7v+o3P9WrpuJJV8/AbLDVtiEgsBaJMK9JTGKd2SL+/QRkQxFeh8wkaNU4e8M6BqFCZ9C8ck9m2HpfquIQGJPYKJcmzhO/F1C+CTimL0Ig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oeCFC542bweMFO2vVjU9No2sCr+HdR15IkukK5uRZ2k=;
- b=tmfVQe8SYdiNanwUyG1V9+5xahKt+wKFcIOLgQUwLa/C8M6wNfqsw9dUdEBjC3zTOM4kFqmgjnH7ZVs/knPvzqgXJ3mxHPvCoGinVqx0m0Vf/plxbh51LiQLz1e4ZkpaVOCvEa8fhGVyMj7ZamZNdE5jLGg99Tv2aWq+MXKJMaTNHGg7UfpdXXVAxq/O5BULwEJC1oA5FoyO8kb67TlMWrWfl+TS/MzmLq+/qQrYAZEJw21AawM5Q81N1C0Q2mxt9lzp0FWeWIchkvYpjuoJwoiD6Ir5Q3hpMP0nHgRNj566FEhijHpkFP2zC5OL5gKzQhXOxGApD34+eV0+OZxyYw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
- by SA1PR12MB7221.namprd12.prod.outlook.com (2603:10b6:806:2bd::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.33; Tue, 3 Jun
- 2025 08:12:13 +0000
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8769.037; Tue, 3 Jun 2025
- 08:12:13 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 03 Jun 2025 17:12:09 +0900
-Message-Id: <DACQW908WCLA.2JHRLQ3V18FPD@nvidia.com>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
- <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "David Airlie"
- <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Maarten Lankhorst"
- <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
- "Thomas Zimmermann" <tzimmermann@suse.de>, "John Hubbard"
- <jhubbard@nvidia.com>, "Ben Skeggs" <bskeggs@nvidia.com>, "Timur Tabi"
- <ttabi@nvidia.com>, "Alistair Popple" <apopple@nvidia.com>,
- <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
- <nouveau@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
- "Shirish Baskaran" <sbaskaran@nvidia.com>
-Subject: Re: [PATCH v4 16/20] nova-core: Add support for VBIOS ucode
- extraction for boot
-From: "Alexandre Courbot" <acourbot@nvidia.com>
-To: "Joel Fernandes" <joelagnelf@nvidia.com>, "Danilo Krummrich"
- <dakr@kernel.org>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
- <20250521-nova-frts-v4-16-05dfd4f39479@nvidia.com>
- <aD2oROKpaU8Bmyj-@pollux> <20250602151506.GA779285@joelnvbox>
-In-Reply-To: <20250602151506.GA779285@joelnvbox>
-X-ClientProxiedBy: OS7PR01CA0289.jpnprd01.prod.outlook.com
- (2603:1096:604:25a::12) To CH2PR12MB3990.namprd12.prod.outlook.com
- (2603:10b6:610:28::18)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hUulry2R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748938439; x=1780474439;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=NTtThZn7RjKZf8qDSpO5QcKM7j+QaEyLuzwuWaEh37w=;
+  b=hUulry2Re9dXvhA2wLdrnUVGQlB1hBh6d4XwDCev7HNghjTGK7PgHc+t
+   kT7OxRwLlgspq+qQtSz6z9QleEY5/9fhne5NvTF4IATHsQpm9oAQdpzKj
+   4Yl4s3v8VX1QnC277YvzHpY5IlYMywGimfn00gyEZXmZ8IVB3mJHeStqU
+   Ha0Y5n5F1TgdMIgSlKnNR0LogzTQyybV8ht59vIEGvTygltoN2O5ekshh
+   DnLwOi/RLEMbSydTHyok89V32Bz0ES1pqopIAtenJdSLuY3C1XFD/y5Mq
+   pZR1KejDxwmfJpfLPnrL3wRHaLYPT3eabgOfN8IPU02TPOINLGIBEFi62
+   w==;
+X-CSE-ConnectionGUID: 1nMiApqnTsqhHq9oC+Yesw==
+X-CSE-MsgGUID: +VYUNPILTB6t3lAFVvJ5Jw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="50840053"
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="50840053"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 01:13:58 -0700
+X-CSE-ConnectionGUID: IX8GggZcRY6XkID3hQSOow==
+X-CSE-MsgGUID: 2O95gdWaQ4mAbJj+R5VeAw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="145764187"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.141])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 01:13:56 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 3 Jun 2025 11:13:51 +0300 (EEST)
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+    =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>, 
+    Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    William McVicker <willmcvicker@google.com>
+Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
+ in sync
+In-Reply-To: <f2d149c6-41a4-4a9a-9739-1ea1c4b06f4b@linaro.org>
+Message-ID: <19ccc09c-1d6b-930e-6ed6-398b34020ca1@linux.intel.com>
+References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com> <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com> <5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org> <8f281667-b4ef-9385-868f-93893b9d6611@linux.intel.com> <3a47fc82-dc21-46c3-873d-68e713304af3@linaro.org>
+ <f6ee05f7-174b-76d4-3dbe-12473f676e4d@linux.intel.com> <867e47dc-9454-c00f-6d80-9718e5705480@linux.intel.com> <a56284a4-755d-4eb4-ba77-9ea30e18d08f@linaro.org> <7e882cfb-a35a-bab0-c333-76a4e79243b6@linux.intel.com>
+ <f2d149c6-41a4-4a9a-9739-1ea1c4b06f4b@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|SA1PR12MB7221:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8765b9f9-9267-4ff7-753d-08dda2765886
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|10070799003|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?T2ZtUzFnejJEOWF1S2xrUDZZV2N6ZjlCNjFKMkNuVHZaOXAxQVdwNEVwZG01?=
- =?utf-8?B?WHFPMHhIL3cwQWZScDB6SGVNM2lFS3Bxb3lIcUNEbzBYRU0zTGxZNEEwMXRV?=
- =?utf-8?B?ZmZ4OEdhUmUvbVprbk55N0k5dU1xYll4WmZDQnlmclVwMFI3NHNtdkJKZ0pN?=
- =?utf-8?B?bnpHTjl4cDFoREZkdGpXd2VvRFR0YWM1bG1YM1ZORmFEZzVjTWZOZTNLQ1Bi?=
- =?utf-8?B?RzR4blI1S1JWZTJ3cUp1VTM3WG1aMk9TU244bXdneUxDbkVCM3JNL0ZNOHJE?=
- =?utf-8?B?QWpwdGk2Z09DRU4zK2VyUllIRGdMcVBBY0lNTFhqUjZIZVNKM1lVUWpudUdO?=
- =?utf-8?B?TlM5UEVvcnFrNE1ZSXBiOXd1NHEwOGlFTXJjdmpvck1YWk1HamNFMTFlZTFC?=
- =?utf-8?B?czVpWmMzdHkzRzNtOEUxZEE3eGVheE1YVXFBa1lGay81MFh2aVdEUUtMVXg3?=
- =?utf-8?B?KzFQV2dCZ3dUWVpIbERhRjFSQ2hTc1FJbUFyMlM5UXJCdkY3Y3VuTm94aXZS?=
- =?utf-8?B?ZHNncEJuQlpFeVl0eWlEb0Ixc1YwUW9NSGJSQ2puL1FXOVlPTHZwbXhQTTFa?=
- =?utf-8?B?WWhrNzFsV0UwTldPR09DRFV6SlRCRG9UR0JjRUkydWs2RDI2aHFnRHViUTVs?=
- =?utf-8?B?ay9vTzNjNTV1RVg4M1VxSUcySmFpOXdkWkNVZnZldnJnR2s1c1pKTXpUT0Mz?=
- =?utf-8?B?bEtNbG5ySHBQQ2dENXM1bXNQZkdwMisxTk02VVU1U3V5Ung4Q01IakRybS9x?=
- =?utf-8?B?SVRObjc3amx6SkZXenFlMnJhb0V6T2RoWEhpSWM3RU9PUDJlcHdjUFJCMWJs?=
- =?utf-8?B?amNMS1pnZ0tmK0xydDZ2QWlHWjVHSHRzL0F2VS82TjhYWHRoeVBUTHJrMHBB?=
- =?utf-8?B?Nmp4NlFjK2VoZm9VNmpYcEtQVnFZYktCcmpyS200RzVQRHJpR0l4b2d0YzF2?=
- =?utf-8?B?bmVnaXpESzU3bEIwaklVVTREblBROGJwS0xZUkI2ZE9vbko1ZC8vWWlhWmEv?=
- =?utf-8?B?SVJ0c2pleHl6VWtQWXVRSCttSjN4eW5qUG9wd1RFU2lCazJ6UVdVUENBaVNm?=
- =?utf-8?B?VVJDSktYbEFBYkFIR2J4WjdPTWhsWk9LNkdjR3hrQmQzaUJmL3ZZa1JESzJv?=
- =?utf-8?B?UTczK0lnRkVjcldndnp1dW1EUS9LUEhaYWFaVEgzVkJNNE9KOHdOTzVQMFJo?=
- =?utf-8?B?Vy9Rb1VJZXRwazFSeE9nSUU1Sy9xSCtJNFIxN2NKQ3pxdHlTK0M0ZWRuN0NH?=
- =?utf-8?B?VC9Yb01UdzVUQ1NVV2lVQlJ4L1IzbXplS0JZSXNJWTcyYVNiTTQzUzdBQUtJ?=
- =?utf-8?B?Q3NwZEg3RHFEcGlKL1FnenhPR3huN0tkbHZFdnhyR3JBNUdsZDlYbkFrd09B?=
- =?utf-8?B?Vkh5eFZ3eGd6cVU2aGpVTkJNOGc2RXhPNnQ2L1NPSWh1Y3h4NGJTRWpLU3BQ?=
- =?utf-8?B?K2J6L0x6cTJYRm5SWkJvZnFyNjNBV2VOWHIvZFp1eGRhMGN0S1UvcDBxeTRK?=
- =?utf-8?B?azgwYTF3UFMyUjArdFpzNEdmbGdzVUwwR0lvTEtkemJkWEd2WENtc0Y0clQ1?=
- =?utf-8?B?eVpkSEM2RTlIZVhtcHptMU9CY1hwQXIzUWJPV1k0c0F0SzArQ2VtaTdxb2JM?=
- =?utf-8?B?L1p5UWovQ2wwME1pYUhPWFdIMVloa2Vqd1NUSWREbzNUd2lvZnB1MUxNR1Bn?=
- =?utf-8?B?c3FEU05zRjV0bnBXem9wVEUxeDNFdnFUdUwxbEFjeTlhV3pJMlBTcS9vN2hF?=
- =?utf-8?B?RDlOTUNTODRWQ0lNbVVISUVnSUZJMmVJSHlxbmxlT3hvMndLRmhGK04wS2I2?=
- =?utf-8?B?d3pWRHRpQTg1SzdxQk1DYVdBN2lzcHB6ZTZOTlR2RVRkbVFTWWpBWVI2MzZ3?=
- =?utf-8?B?NzlNa2tHUGNXKzFQMG5KZkFidlJIUHg1WldITWVnd3paZ0NJbnJPUmk2OXZS?=
- =?utf-8?Q?qahkhqrypUU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WDF6eFR4a0NFd1o1OEpLQzNyN2pWY1dSeXVSSnNIOXIrQXkzdERVbG5HaFhY?=
- =?utf-8?B?RWNTYU4vSE1BazZQelhwVk9QNUw5Qlo1ZEVlbllaK2lCRXhUdkx6djZtWXl5?=
- =?utf-8?B?UmdZMFRQa1ZSN2V0QmVMTnJSYXdMaG4wNlgrTVRnZUk3QWlPL1JiQjVabWtv?=
- =?utf-8?B?Z1FsMzFkU3NraS9NbnVLTHlqNkprY2grM0EyMWI0STJtaHpiNmRPeFBiQVpY?=
- =?utf-8?B?OEZvYmJpQ3FyNmdqenFONFQwbzR0OE15bWJCcWh3QnY5M1llUHBBZ2NRWTNy?=
- =?utf-8?B?SEsrZmZmZWVpS0R4N1ZwVHcxMTUzbVhGb0lOM2htZ3hJNWVBMkhNQ0FaK0RO?=
- =?utf-8?B?cjJxcTFTOWJOTTc0MlBsSDIzQjhwYS9sdHB1ajREUE93QlV2YzRIWEg1ZHc5?=
- =?utf-8?B?aDhBV0gzRWFKd2k0S2hlM0NmR09uSFRxRWVmWDFJTnQxWXIxVGNMZnBzN3dL?=
- =?utf-8?B?ZUQ3QkRkcDkvZnU5WTNwdHFqcGVrOWFqMjAyN1NrYVhFdzdZcVVpVFNwSEo0?=
- =?utf-8?B?bFRkZ0NrTmJCMFU0bitwTFh3TUN5anhnRmFQbmpobjEzVkVpRTk4V2xBVTVx?=
- =?utf-8?B?SHRMWTRiYW5Hc1RVRDhQRVZoTTkrTm5vaDFUVkxKRE5EN0dKa2x2Y1dKTzdr?=
- =?utf-8?B?enM3eXJscmd2bTl2eEdqQVB0VDA2US9jdnpaRFI1Q1JTZmR2Q2FibERRODVi?=
- =?utf-8?B?K3ZtTllnTE5iUmJyODRHTFR0MVZ6OE55c3FIZG93NU9rV01mVGNxZUFhd3Zs?=
- =?utf-8?B?ZkVyMHZzWXVKSVlWREpVRmMwdmlLNExmWWhYQU5SU2h1S0JtQTR6dFdtcUxG?=
- =?utf-8?B?SkhPejhlZzZhZW9sZ0pPRUlHUEVqZHRNcnN6VEtVakRJRkJLTWsyTFh5b2tt?=
- =?utf-8?B?SG51VGdNWHRaSzNRaEZGUDFqMTNkaFZJOEdIRWZPb2JycTBDR3dYSSt2Y0RD?=
- =?utf-8?B?a2ZoSlJCR0dobXBNbS9zS2x5UXd3RGhOTXptaXo3UnZPbzlScGhyTzNNTndq?=
- =?utf-8?B?ZXd5Z0hpUTJyQUNKZlNpRmJsUHQ3L0EwckdnQS90N1dNRHZTVm1YeHQ0ZW1K?=
- =?utf-8?B?YTJNbkVkQXF6R2hIa1o4NzdnbjY0bEEyQXNVM3BTREJWUVlla0dLNkRvQVdv?=
- =?utf-8?B?V0dyMVRObDAyZ29xTGxLSHJCN1VHcTBjYmJXL1ZHamJndlYxTllvVW96QXVS?=
- =?utf-8?B?OXRJMlVzNkZkN2Frc3ZNTjNCQXhBK0VSSHFLcEUyUUIyMlJCcmpUU3NzeTRs?=
- =?utf-8?B?bHRhME1pSU4wbnJrWFc2Zzd1UDhRejkxNGN3Y2ZCRnowbnhUOCtjbnVzTFhT?=
- =?utf-8?B?a2p6MjQ1N2czaGpocjBNWHVSVklwY2FYSTJjbFpibmpnRUIycGgrUkp5VGNz?=
- =?utf-8?B?SVczVGpxSmxWWkpybjdMRmNJOVpQWS82aUlXNFlmTUI1K1JkVTNDTUZSYk5H?=
- =?utf-8?B?UnAweVlYR2JEKzZBTloyRGNiWTRYZlo0U1dZZTcxZjZYUk1uRW0zZXE5UWRv?=
- =?utf-8?B?dkcxa1E4OHAweDlwYlZ5WE85T2x0WjJKYlZzNG1yNG5VZlpFT0QzSTBxc21h?=
- =?utf-8?B?OUswNDg0Tm8zd1ZOcUdOSmczWUN1UzUwMGNPcUx4T25xdzA0cWo1czA1QlhD?=
- =?utf-8?B?aDFtTjB6ZDZBb1NsUzZmdEkrNTljUnExT2dIVCtIR2NGTTlaT3F3cXhTUXRn?=
- =?utf-8?B?SGhuck5BMDVyamoyTUZBRGtJeEx2bkYxRUNVTVZWSFlNUjZRWGR2NFVBQkY2?=
- =?utf-8?B?b3lvcnhhbFQvbFRsREp5N0o2MjRQWHRJbmNland0WmcwbVpGaWZtWVUyYW9T?=
- =?utf-8?B?NVQ1Mi9DTzdPTWVHM3lTdkdvMzJ4ZTRMVHRndGgvT0lUeWhJYS9sQTRZQmt2?=
- =?utf-8?B?bFY4aUw1NjkvU0N6QUZtd29VRklReHk0ZkVPblNmTlFkTldJUkxlWFU2UStN?=
- =?utf-8?B?WHl3Rlp6LzZ1dE4vWXBBZktXQ25xZzVLLzFDZ3NkWFF1SnFtdnV6MlhyWVhS?=
- =?utf-8?B?ZnhqNm1CV1Z0enhJeDd3L292MG9LTjFNNFprMXZNaUVhaG4yUTRwVE9GdkQ4?=
- =?utf-8?B?TlJpcDFHZ2hlZFVhNjhRSlBpN0ZTdjllRGoyWVo5dUgzNHFvZ3Fza3QyNHlK?=
- =?utf-8?B?MTZ2MDN3YU9IYWFyUUw2YUNzejhYVkM3SzNYd1lnQVQwaW1OK09UL1VKL1Jt?=
- =?utf-8?Q?LD8/6PAEEuz4eAVBEvSU75YlclydHhHpsDTkZhv9t9hy?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8765b9f9-9267-4ff7-753d-08dda2765886
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2025 08:12:13.3783
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QPQe93ZNJz78wwX+BiMWpegCU89+B33hIW7POe8y0xvgp+p9vsQNglL8kRf9iwQc6zMwKtFAaXIA8zlHO7rk8g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7221
+Content-Type: multipart/mixed; boundary="8323328-2071521873-1748938431=:937"
 
-On Tue Jun 3, 2025 at 12:15 AM JST, Joel Fernandes wrote:
-> On Mon, Jun 02, 2025 at 03:33:56PM +0200, Danilo Krummrich wrote:
->> On Wed, May 21, 2025 at 03:45:11PM +0900, Alexandre Courbot wrote:
->> > +impl Vbios {
->>=20
->> <snip>
->>=20
->> > +    pub(crate) fn fwsec_header(&self, pdev: &device::Device) -> Resul=
-t<&FalconUCodeDescV3> {
->> > +        self.fwsec_image.fwsec_header(pdev)
->> > +    }
->> > +
->> > +    pub(crate) fn fwsec_ucode(&self, pdev: &device::Device) -> Result=
-<&[u8]> {
->> > +        self.fwsec_image.fwsec_ucode(pdev, self.fwsec_header(pdev)?)
->> > +    }
->> > +
->> > +    pub(crate) fn fwsec_sigs(&self, pdev: &device::Device) -> Result<=
-&[u8]> {
->> > +        self.fwsec_image.fwsec_sigs(pdev, self.fwsec_header(pdev)?)
->> > +    }
->>=20
->> Can't we just implement Deref here? Why do we need this indirection?
->
-> We could, but it seems weird to deref a Vbios struct to an FwsecBiosImage
-> struct. Conceptually a Vbios is a collection of things and it could have
-> future extensions to its struct.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Would it then make sense to make `FwSecBiosImage` public, add an `fn
-fwsec_image(&self) -> &FwSecBiosImage` method and have the caller call
-its methods directly (maybe renamed to `header`, `ucode` and `sigs`)?
+--8323328-2071521873-1748938431=:937
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Mon, 2 Jun 2025, Tudor Ambarus wrote:
+> On 6/2/25 4:08 PM, Ilpo J=C3=A4rvinen wrote:
+> >>> I think I figured out more about the reason. It's not related to that=
+=20
+> >>> bridge window resource.
+> >>>
+> >>> pbus_size_mem() will add also that ROM resource into realloc_head=20
+> >>> as it is considered (intentionally) optional after the optional chang=
+e
+> >>> (as per "tudor: 2:" line). And that resource is never assigned becaus=
+e=20
+>=20
+> cut
+>=20
+> >>> pdev_sort_resources() didn't pick it up into the head list. The next=
+=20
+> >>> question is why the ROM resource isn't in the head list.
+> >>>
+> >> It seems the ROM resource is skipped at:
+> >> https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-
+> >> next.git/tree/drivers/pci/setup-bus.c#n175
+> >>
+> >> tudor: pdev_sort_resources: ROM [??? 0x00000000 flags 0x0] resource
+> >> skipped due to !(r->flags) || r->parent
+> > I don't see the device in this print, hope it is for the same device.
+> >=20
+> > In any case, I don't understand what reset resource's flags in between=
+=20
+> > pbus_size_mem() and pdev_sort_resources(), or alternative, why type=20
+> > checking in pbus_size_mem() matches if flags =3D=3D 0 at that point.
+> >=20
+> > Those two functions should work on the same resources, if one skips=20
+> > something, the other should too. Disparity between them can cause issue=
+s,=20
+> > but despite reading the code multiple times, I couldn't figure out how=
+=20
+> > that disparity occurs (except for the !pdev_resources_assignable() case=
+).
+>=20
+> cut
+>=20
+> > It is of interest to know why the same resource is treated differently.
+> > So what were the resource flags, type* args when it's processed by
+> > pbus_size_mem()? If resource's flags are zero at that point but it matc=
+hes=20
+>=20
+> This is the full output: https://termbin.com/mn1x
+> for the following prints: https://termbin.com/q57h
+>=20
+> It seems ROM resource is of type 2 at pbus_size_mem() time.
+>=20
+> > one of the types, that would be a bug.
+>=20
+> I'll give another try tomorrow. Thanks,
+
+Those are not the same device, so not the same resource either:
+
+[   16.262745][ T1113] pci 0001:01:00.0: tudor: 2: pbus_size_mem: ROM [mem =
+0x00000000-0x0000ffff pref] list empty? 0
+
+[   16.267736][ T1113] pcieport 0001:00:00.0: tudor: pdev_sort_resources: R=
+OM [??? 0x00000000 flags 0x0] resource skipped due to !(r->flags) || r->par=
+ent
+
+0001:01:00.0
+vs
+0001:00:00.0
+
+And the resources for 0001:01:00.0 were never processed by=20
+__pci_bus_assign_resources(). But __pci_bus_assign_resources() should=20
+recurse to subordinate busses.
+
+And, it seems this boils down to the inconsistency I noticed earlier:
+
+[   16.253464][ T1113] pci 0001:01:00.0: [144d:a5a5] type 00 class 0x000000=
+ PCIe Endpoint
+
+include/linux/pci_ids.h:#define PCI_CLASS_NOT_DEFINED           0x0000
+
+pdev_resources_assignable() checks if class =3D=3D PCI_CLASS_NOT_DEFINED an=
+d=20
+pdev_sort_resources() bails out without processing those resources.
+
+So please test if this patch solves your problem:
+
+
+From=2000e440f505a79568cf5203dce265488cb3f66941 Mon Sep 17 00:00:00 2001
+From: =3D?UTF-8?q?Ilpo=3D20J=3DC3=3DA4rvinen?=3D <ilpo.jarvinen@linux.intel=
+=2Ecom>
+Date: Tue, 3 Jun 2025 11:07:38 +0300
+Subject: [PATCH 1/1] PCI: Fix pdev_resources_assignable() disparity
+MIME-Version: 1.0
+Content-Type: text/plain; charset=3DUTF-8
+Content-Transfer-Encoding: 8bit
+
+pdev_sort_resources() uses pdev_resources_assignable() helper to decide
+if device's resources cannot be assigned. pbus_size_mem(), on the other
+hand, does not do the same check. This could lead into a situation
+where a resource ends up on realloc_head list but is not on the head
+list, which is turn prevents emptying the resource from the
+realloc_head list in __assign_resources_sorted().
+
+A non-empty realloc_head is unacceptable because it triggers an
+internal sanity check as show in this log with a device that has class
+0 (PCI_CLASS_NOT_DEFINED):
+
+pci 0001:01:00.0: [144d:a5a5] type 00 class 0x000000 PCIe Endpoint
+pci 0001:01:00.0: BAR 0 [mem 0x00000000-0x000fffff 64bit]
+pci 0001:01:00.0: ROM [mem 0x00000000-0x0000ffff pref]
+pci 0001:01:00.0: enabling Extended Tags
+pci 0001:01:00.0: PME# supported from D0 D3hot D3cold
+pci 0001:01:00.0: 15.752 Gb/s available PCIe bandwidth, limited by 8.0 GT/s=
+ PCIe x2 link at 0001:00:00.0 (capable of 31.506 Gb/s with 16.0 GT/s PCIe x=
+2 link)
+pcieport 0001:00:00.0: bridge window [mem 0x00100000-0x001fffff] to [bus 01=
+-ff] add_size 100000 add_align 100000
+pcieport 0001:00:00.0: bridge window [mem 0x40000000-0x401fffff]: assigned
+------------[ cut here ]------------
+kernel BUG at drivers/pci/setup-bus.c:2532!
+Internal error: Oops - BUG: 00000000f2000800 [#1]  SMP
+=2E..
+Call trace:
+ pci_assign_unassigned_bus_resources+0x110/0x114 (P)
+ pci_rescan_bus+0x28/0x48
+
+Use pdev_resources_assignable() also within pbus_size_mem() to skip
+processing of non-assignable resources which removes the disparity in
+between what resources pdev_sort_resources() and pbus_size_mem()
+consider. As non-assignable resources are no longer processed, they are
+not added to the realloc_head list, thus the sanity check no longer
+triggers.
+
+This disparity problem is very old but only now became apparent after
+the commit 2499f5348431 ("PCI: Rework optional resource handling") that
+made the ROM resources optional when calculating bridge window sizes
+which required adding the resource to the realloc_head list.
+Previously, bridge windows were just sized larger than necessary.
+
+Fixes: 2499f5348431 ("PCI: Rework optional resource handling")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+---
+ drivers/pci/setup-bus.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 54d6f4fa3ce1..da084251df43 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1187,6 +1187,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigne=
+d long mask,
+ =09=09=09resource_size_t r_size;
+=20
+ =09=09=09if (r->parent || (r->flags & IORESOURCE_PCI_FIXED) ||
++=09=09=09    !pdev_resources_assignable(dev) ||
+ =09=09=09    ((r->flags & mask) !=3D type &&
+ =09=09=09     (r->flags & mask) !=3D type2 &&
+ =09=09=09     (r->flags & mask) !=3D type3))
+
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+--=20
+2.39.5
+
+
+--8323328-2071521873-1748938431=:937--
