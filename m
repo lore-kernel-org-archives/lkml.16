@@ -1,118 +1,130 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F8D17A30A;
-	Tue,  3 Jun 2025 10:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C64A21A76AE;
+	Tue,  3 Jun 2025 10:45:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748947489; cv=none; b=qiCpsrO6sq3+5grRPMXbF6t/06mrXFcwT1ndthrphzolny9nhEM3dIuoz4MgZM4dM952Ley3H862NDkfvquIeGcgEEYoWH0Mv0wzsDxVY+xckL0M7x2T51rH+S/K59ThsTNP7+MDVQ1XVvI7fmMXbrENk74IYsT7D6gBvo3CY9c=
+	t=1748947527; cv=none; b=DwAU3F8Nmz8NVFcddpcTYJBVai71VZqr+uKePGHvKJjD2HCSFtFAlln9fSqQTYICRCyeVsfma6vzHDN0Z2/PRQKrRe6OcVu60xbysks2BjFILZSF6KxRW9husDuuhXDetkKN35pgJr83YYgxm4I1YWhlyHBsJMeL2tdKnO9oFG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748947489; c=relaxed/simple;
-	bh=PA8zEiKKCsCWRZbO8ejMZAAPGiQdCkJaJF55XJJ5x58=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Qph/gEEEzxoG5fLfuEywHswAplbPN1Bbn+2UY3581qe8BBkBuX5uSzKSrGk2aXVkhOpQib3s/Tb3QBZ6Xjf/3lf7pZLiVPs59SgBeFh3daPOpwTqGrlvBwEPebsxlhj1f7ub/RWE2xFa+7uQJM5h/3xdGy3OJxrA7AIInyI/b1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wlzLbfwL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=k1gR3bXO; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1748947527; c=relaxed/simple;
+	bh=r9d4Av+7iiiS0LzcHOiwbSp+F4bLppgOlpxzsd68q+k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=qUTFiY2/fhVg2pMR/IBvuwu7B7774/KVBwQfLp7Yti+xVL0Y24dMyOHJOolH2bdC2kImxgXT72LxUk/+5SPZdOBPsDoiQnqKG0dst8XBYQWptGGfL2K+d5hHLT3qOHeLTpCOjwmuc/3QtowtDn7ogH9A8TDcglnWxEV8bxjhrIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=EUC9+smu; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wlzLbfwL";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k1gR3bXO"
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748947485;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qyerjqJWeMkiU3JFd0PuWL/CwiYER2qHnJinnhBcrJE=;
-	b=wlzLbfwLHjpswLCvW1kkayxbHDXig57HNT37SNWboCbiDaDeZYhzPLmZ/DrZw4CxEWOJPz
-	1s8HcczWfbGYkaQgYvgr6BfIOqkdR/aIhXv4R/Nf2TFMfhrmq9Y9OwKWrQOpnmVUIPd+xh
-	pL5U6vd5FGmN2JOkAnxK7IXm20C0442/yp/qsiSxWeRRzZv9PTQ4EIUqZ/IfZW7N9H1O8+
-	F8b1K+2j64BBypXlJos2NQY5jy003Y4YgD2XhoTLBnALSAdZCWMyqj/3E4XhjfgC0gn/F0
-	3Td1V+UQECIXpSp9CQyi6+EwMzzELbLFHXlcvGfFLCBi0knI7sLtqPDzInJw3A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748947485;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qyerjqJWeMkiU3JFd0PuWL/CwiYER2qHnJinnhBcrJE=;
-	b=k1gR3bXODmtwnAo31Z4DtIGO9CBdeclvJrlw+1wVoOFu3E76stL6fOXgqB61E629HPI9a3
-	bAi5ika9rvkNeWCw==
-To: "Toshiyuki Sato (Fujitsu)" <fj6611ie@fujitsu.com>, 'Michael Kelley'
- <mhklinux@outlook.com>
-Cc: "pmladek@suse.com" <pmladek@suse.com>, 'Ryo Takakura'
- <ryotkkr98@gmail.com>, Russell King <linux@armlinux.org.uk>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
- <jirislaby@kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org"
- <linux-serial@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "Toshiyuki Sato (Fujitsu)"
- <fj6611ie@fujitsu.com>
-Subject: RE: Problem with nbcon console and amba-pl011 serial port
-In-Reply-To: <84y0u95e0j.fsf@jogness.linutronix.de>
-References: <SN6PR02MB4157A4C5E8CB219A75263A17D46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
- <OS7PR01MB13775FE1A20762D1EA4A38D0ED76DA@OS7PR01MB13775.jpnprd01.prod.outlook.com>
- <84y0u95e0j.fsf@jogness.linutronix.de>
-Date: Tue, 03 Jun 2025 12:50:45 +0206
-Message-ID: <84sekh5cki.fsf@jogness.linutronix.de>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="EUC9+smu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=r9d4Av+7iiiS0LzcHOiwbSp+F4bLppgOlpxzsd68q+k=; b=E
+	UC9+smuiGxiWhzGVeWmj0OxsFEsVF+D1MBhLnp/GaHFMe/jm4i5ZX6MJD2Bzska9
+	JkdsQIy4W5KqjAnMuw4b0vCXL9eYds0tY7DxQxz1fxuvOC7BgrPjTZbco7KX0/7t
+	OldcL+Vq4ca2fjsQtVKJQqif1CKXCUD+cWxzSfPesY=
+Received: from 00107082$163.com ( [111.35.189.95] ) by
+ ajax-webmail-wmsvr-40-120 (Coremail) ; Tue, 3 Jun 2025 18:44:58 +0800 (CST)
+Date: Tue, 3 Jun 2025 18:44:58 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Peter Zijlstra" <peterz@infradead.org>
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mingo@kernel.org,
+	yeoreum.yun@arm.com, leo.yan@arm.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf/core: restore __perf_remove_from_context when
+ DETACH_EXIT not set
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <20250603091352.GJ21197@noisy.programming.kicks-ass.net>
+References: <20250603032651.3988-1-00107082@163.com>
+ <20250603083304.34132-1-00107082@163.com>
+ <20250603091352.GJ21197@noisy.programming.kicks-ass.net>
+X-NTES-SC: AL_Qu2fCvWfuEwi7iSeYOkZnEYQheY4XMKyuPkg1YJXOp80qiTS4SchZ25qJnLK9PmtFz2moQmoVjhMwclIUoR1QJj/huWh5tQq/GtyvfB6EtTt
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Message-ID: <2633d43d.ae30.1973564f5e5.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:eCgvCgD3P8cr0j5ohAMTAA--.35885W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkA9hqmg+uMH2GgARsG
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-On 2025-06-03, Michael Kelley <mhklinux@outlook.com> wrote:
-> The problem is the failure to stop secondary CPU 2.  (The CPU # that fails
-> to stop varies from run-to-run.) It is mostly reproducible, but not always. I
-> bisected to commit 2eb2608618ce ("serial: amba-pl011: Implement nbcon
-> console") in the 6.15 kernel.
+CkF0IDIwMjUtMDYtMDMgMTc6MTM6NTIsICJQZXRlciBaaWpsc3RyYSIgPHBldGVyekBpbmZyYWRl
+YWQub3JnPiB3cm90ZToKPk9uIFR1ZSwgSnVuIDAzLCAyMDI1IGF0IDA0OjMzOjA0UE0gKzA4MDAs
+IERhdmlkIFdhbmcgd3JvdGU6Cj4+IGNvbW1pdCBhM2MzYzY2NjcwY2UgKCJwZXJmL2NvcmU6IEZp
+eCBjaGlsZF90b3RhbF90aW1lX2VuYWJsZWQgYWNjb3VudGluZwo+PiBidWcgYXQgdGFzayBleGl0
+IikgbWFkZSBjaGFuZ2VzIHRvIF9fcGVyZl9yZW1vdmVfZnJvbV9jb250ZXh0KCkgdG8KPj4gY29v
+cmRpbmF0ZSBpdHMgY2hhbmdlcyB3aXRoIHBlcmZfZXZlbnRfZXhpdF9ldmVudCgpLCBidXQgdGhl
+IGNoYW5nZSBhcmUKPj4gdW5jb25kaXRpb25hbCwgaXQgaW1wYWN0cyBjYWxscGF0aHMgdG8gX19w
+ZXJmX3JlbW92ZV9mcm9tX2NvbnRleHQoKQo+PiBvdGhlciB0aGFuIGZyb20gcGVyZl9ldmVudF9l
+eGl0X2V2ZW50KCkuIE9uZSBvZiB0aGUgaW1wYWN0IGlzIHRvIGNncm91cCwKPj4gd2hpY2ggaXMg
+bm90IHByb3Blcmx5IGhhbmRsZWQgYW5kIHdvdWxkIGNhdXNlIGtlcm5lbCBwYW5pYyB3aXRoIGhp
+Z2gKPj4gcHJvYmFsaWJpdHkgZHVyaW5nIHJlYm9vdCBvbiBzb21lIHN5c3RlbVsxXS4KPgo+U29y
+cnksIGJ1dCBuby4gVGhpcyBkb2VzIG5vdCBkZXNjcmliZSB0aGUgcHJvYmxlbSBhZGVxdWF0ZWx5
+LiBJIHdvdWxkCj5oYXZlIHRvIGdvIHJlYWQgeW91ciBbMV0gdG8gZmlndXJlIG91dCB3aGF0IGlz
+IGFjdHVhbGx5IGJyb2tlbi4KPgo+VGhhdCBpcywgaGF2aW5nIHJlYWQgdGhlIGFib3ZlLCBJJ20g
+c3RpbGwgY2x1ZWxlc3MgYXMgdG8gd2hhdCB0aGUgYWN0dWFsCj5wcm9ibGVtIGlzLgoKd2VsbCwg
+c2hvcnQgc3RvcnkgaXMgY29tbWl0IGEzYzNjNjY2NzBjZSBpbnRyb2R1Y2UgYSBrZXJuZWwgcGFu
+aWMgd2hlbiByZWJvb3QgdGhlIHN5c3RlbQphZnRlciBwZXJmX2V2ZW50X29wZW4gd2l0aCBjZ3Jv
+dXAuCk15IHVuZGVyc3RhbmRpbmcgaXMgY29tbWl0IGEzYzNjNjY2NzBjZSBtYWtlIGNoYW5nZXMg
+dG8gY2FsbCBwYXRoCnBlcmZfZXZlbnRfZXhpdF9ldmVudCgpIC0tPiBfX3BlcmZfcmVtb3ZlX2Zy
+b21fY29udGV4dCgpLCBidXQgdGhpcyBjaGFuZ2VzIGFmZmVjdCBvdGhlcgpjYWxsIHBhdGggYXMg
+d2VsbCwgZm9yIGV4YW1wbGUKcGVyZl9ldmVudF9yZWxlYXNlX2tlcm5lbCgpIC0tPiBwZXJmX3Jl
+bW92ZV9mcm9tX2NvbnRleHQoKQooQXMgeWVvcmV1bS55dW5AYXJtLmNvbSBwb2ludGVkIG91dCwg
+IHRoZSBjaGFuZ2UgaW4gcGVyZl9yZW1vdmVfZnJvbV9jb250ZXh0KCkgbWFkZQpwZXJmX2V2ZW50
+X3NldF9zdGF0ZSgpIGhhcHBlbmVkIGJlZm9yZSBsaXN0X2RlbF9ldmVudCgpLCByZXN1bHRpbmcg
+aW4gcGVyZl9jZ3JvdXBfZXZlbnRfZGlzYWJsZSgpCm5vdCBjYWxsZWQuKQoKTXkgc3VnZ2VzdGlv
+biBoZXJlIGlzIHRvIGNvbmZpbmUgdGhlIGVmZmVjdCBvZiBjb21taXQgYTNjM2M2NjY3MGNlIG9u
+bHkgdG8gY2FsbCBjaGFpbgpwZXJmX2V2ZW50X2V4aXRfZXZlbnQoKSAtLT4gX19wZXJmX3JlbW92
+ZV9mcm9tX2NvbnRleHQoKQoKCihCdXQgdGhpcyB2MiB2ZXJzaW9uIGlzIHRvdGFsbHkgd3Jvbmcs
+IHNob3VsZCBiZSBpZ25vcmVkOyBpdCBicmVha3MgY29tbWl0IGEzYzNjNjY2NzBjZSkKCgoKPgo+
+PiBUbyBjb25maW5lIHRoZSBzaWRlIGVmZmVjdHMsIG1ha2UgdGhlIGNoYW5nZXMgdG8KPj4gX19w
+ZXJmX3JlbW92ZV9mcm9tX2NvbnRleHQoKSBjb25kaXRpb25hbCwgcmVzdG9yZSB0byBpdHMgcHJl
+dmlvdXMgc3RhdGUKPj4gZXhjZXB0IHdoZW4gREVUQUNIX0VYSVQgaXMgc2V0Lgo+PiAKPj4gQ2xv
+c2VzOiBodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzIwMjUwNjAxMTczNjAzLjM5MjAtMS0w
+MDEwNzA4MkAxNjMuY29tLyBbMV0KPj4gRml4ZXM6IGEzYzNjNjY2NzBjZSAoInBlcmYvY29yZTog
+Rml4IGNoaWxkX3RvdGFsX3RpbWVfZW5hYmxlZCBhY2NvdW50aW5nIGJ1ZyBhdCB0YXNrIGV4aXQi
+KQo+PiBTaWduZWQtb2ZmLWJ5OiBEYXZpZCBXYW5nIDwwMDEwNzA4MkAxNjMuY29tPgo+PiAtLS0K
+Pj4gQ2hhbmdlczoKPj4gQWRkcmVzcyB5ZW9yZXVtLnl1bkBhcm0uY29tJ3MgY29uY2VybiBhYm91
+dCBtaXNzaW5nIGNncm91cCBldmVudC4KPj4gLS0tCj4+ICBrZXJuZWwvZXZlbnRzL2NvcmUuYyB8
+IDExICsrKysrKy0tLS0tCj4+ICAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCA1IGRl
+bGV0aW9ucygtKQo+PiAKPj4gZGlmZiAtLWdpdCBhL2tlcm5lbC9ldmVudHMvY29yZS5jIGIva2Vy
+bmVsL2V2ZW50cy9jb3JlLmMKPj4gaW5kZXggOTVlNzAzODkxYjI0Li5lMmMwZjM0YjA3ODkgMTAw
+NjQ0Cj4+IC0tLSBhL2tlcm5lbC9ldmVudHMvY29yZS5jCj4+ICsrKyBiL2tlcm5lbC9ldmVudHMv
+Y29yZS5jCj4+IEBAIC0yNDY2LDcgKzI0NjYsNyBAQCBfX3BlcmZfcmVtb3ZlX2Zyb21fY29udGV4
+dChzdHJ1Y3QgcGVyZl9ldmVudCAqZXZlbnQsCj4+ICAJCQkgICB2b2lkICppbmZvKQo+PiAgewo+
+PiAgCXN0cnVjdCBwZXJmX2V2ZW50X3BtdV9jb250ZXh0ICpwbXVfY3R4ID0gZXZlbnQtPnBtdV9j
+dHg7Cj4+IC0JZW51bSBwZXJmX2V2ZW50X3N0YXRlIHN0YXRlID0gUEVSRl9FVkVOVF9TVEFURV9P
+RkY7Cj4+ICsJZW51bSBwZXJmX2V2ZW50X3N0YXRlIGV4aXRfc3RhdGUgPSBQRVJGX0VWRU5UX1NU
+QVRFX0VYSVQ7Cj4+ICAJdW5zaWduZWQgbG9uZyBmbGFncyA9ICh1bnNpZ25lZCBsb25nKWluZm87
+Cj4+ICAKPj4gIAljdHhfdGltZV91cGRhdGUoY3B1Y3R4LCBjdHgpOwo+PiBAQCAtMjQ3NSwxOSAr
+MjQ3NSwyMCBAQCBfX3BlcmZfcmVtb3ZlX2Zyb21fY29udGV4dChzdHJ1Y3QgcGVyZl9ldmVudCAq
+ZXZlbnQsCj4+ICAJICogRW5zdXJlIGV2ZW50X3NjaGVkX291dCgpIHN3aXRjaGVzIHRvIE9GRiwg
+YXQgdGhlIHZlcnkgbGVhc3QKPj4gIAkgKiB0aGlzIGF2b2lkcyByYWlzaW5nIHBlcmZfcGVuZGlu
+Z190YXNrKCkgYXQgdGhpcyB0aW1lLgo+PiAgCSAqLwo+PiAtCWlmIChmbGFncyAmIERFVEFDSF9F
+WElUKQo+PiAtCQlzdGF0ZSA9IFBFUkZfRVZFTlRfU1RBVEVfRVhJVDsKPj4gIAlpZiAoZmxhZ3Mg
+JiBERVRBQ0hfREVBRCkgewo+PiAgCQlldmVudC0+cGVuZGluZ19kaXNhYmxlID0gMTsKPj4gLQkJ
+c3RhdGUgPSBQRVJGX0VWRU5UX1NUQVRFX0RFQUQ7Cj4+ICsJCWV4aXRfc3RhdGUgPSBQRVJGX0VW
+RU5UX1NUQVRFX0RFQUQ7Cj4+ICAJfQo+PiAgCWV2ZW50X3NjaGVkX291dChldmVudCwgY3R4KTsK
+Pj4gLQlwZXJmX2V2ZW50X3NldF9zdGF0ZShldmVudCwgbWluKGV2ZW50LT5zdGF0ZSwgc3RhdGUp
+KTsKPj4gIAlpZiAoZmxhZ3MgJiBERVRBQ0hfR1JPVVApCj4+ICAJCXBlcmZfZ3JvdXBfZGV0YWNo
+KGV2ZW50KTsKPj4gIAlpZiAoZmxhZ3MgJiBERVRBQ0hfQ0hJTEQpCj4+ICAJCXBlcmZfY2hpbGRf
+ZGV0YWNoKGV2ZW50KTsKPj4gIAlsaXN0X2RlbF9ldmVudChldmVudCwgY3R4KTsKPj4gKwlpZiAo
+ZmxhZ3MgJiBERVRBQ0hfRVhJVCkKPj4gKwkJcGVyZl9ldmVudF9zZXRfc3RhdGUoZXZlbnQsIG1p
+bihldmVudC0+c3RhdGUsIGV4aXRfc3RhdGUpKTsKPj4gKwlpZiAoZmxhZ3MgJiBERVRBQ0hfREVB
+RCkKPj4gKwkJZXZlbnQtPnN0YXRlID0gUEVSRl9FVkVOVF9TVEFURV9ERUFEOwo+Cj5VcmdoLCBu
+by4gVHJ5aW5nIHRvIHJldmVyc2UgZW5naW5lZXIgdGhlIGFib3ZlLCB0aGUgaW50ZW50IGFwcGVh
+cnMgdG8gYmUKPnRvIG5vdCBzZXQgT0ZGLgo+Cj5UaGlzIGNhbiBiZSBhY2hpZXZlZCBieSBkb2lu
+ZzoKPgo+LSAgICAgICBlbnVtIHBlcmZfZXZlbnRfc3RhdGUgc3RhdGUgPSBQRVJGX0VWRU5UX1NU
+QVRFX09GRjsKPisgICAgICAgZW51bSBwZXJmX2V2ZW50X3N0YXRlIHN0YXRlID0gZXZlbnQtPnN0
+YXRlOwo+Cj5ObyBvdGhlciBjaGFuZ2VzIHJlcXVpcmVkLiBZb3UgYWxzbyBtb3ZlIHRoZSBsb2Nh
+dGlvbiBvZgo+cGVyZl9ldmVudF9zZXRfc3RhdGUoKSwgYnV0IGl0IGlzIGVudGlyZWx5IHVuY2xl
+YXIgdG8gbWUgaWYgdGhhdCBpcwo+YWN0dWFsbHkgbmVlZGVkLgo+Cj5Xb3JzZSwgeW91IHNwbGl0
+IHRoZSBtZWFucyBvZiBzZXR0aW5nIHN0YXRlIC0tIHRoYXQgaXMgZW50aXJlbHkgdW5jYWxsZWQK
+PmZvci4gClllcywgdGhhdCBpcyB2ZXJ5IHdpcmVkIHRvIG1lIHRvby4uLi4uIGNvbW1pdCAgYTNj
+M2M2NjY3MGNlIHdhbnRzIHRvIHVzZSBwZXJmX2V2ZW50X3NldF9zdGF0ZSB0byB1cGRhdGUgdGlt
+ZSwKYnV0IHRoZSBvcmlnaW5hbCBjb2RlIHVzZSBqdXN0IGV2ZW50LT5zdGF0ZSA9IC4uLgoKCgoK
 
-Unrelated to this particular report, I am looking at commit 2eb2608618ce
-("serial: amba-pl011: Implement nbcon console") and I do not think it
-implements atomic printing correctly.
-
-pl011_console_write_atomic() assumes uap->clk is disabled when it is
-called. However, if it took over ownership from the printing kthread,
-the uap->clk is already enabled. And then after printing its line it
-disables uap->clk, even though the interrupted printing kthread expects
-uap->clk to still be enabled once it regains ownership.
-
-The atomic printing needs to track if the clock is enabled or disabled
-and act accordingly. I suppose something like this:
-
-diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
-index 11d65097578cd..914449b46b95b 100644
---- a/drivers/tty/serial/amba-pl011.c
-+++ b/drivers/tty/serial/amba-pl011.c
-@@ -2520,11 +2520,14 @@ pl011_console_write_atomic(struct console *co, struct nbcon_write_context *wctxt
- {
- 	struct uart_amba_port *uap = amba_ports[co->index];
- 	unsigned int old_cr = 0;
-+	bool old_enabled;
- 
- 	if (!nbcon_enter_unsafe(wctxt))
- 		return;
- 
--	clk_enable(uap->clk);
-+	old_enabled = __clk_is_enabled(uap->clk);
-+	if (!old_enabled)
-+		clk_enable(uap->clk);
- 
- 	if (!uap->vendor->always_enabled) {
- 		old_cr = pl011_read(uap, REG_CR);
-@@ -2542,7 +2545,8 @@ pl011_console_write_atomic(struct console *co, struct nbcon_write_context *wctxt
- 	if (!uap->vendor->always_enabled)
- 		pl011_write(old_cr, uap, REG_CR);
- 
--	clk_disable(uap->clk);
-+	if (!old_enabled)
-+		clk_disable(uap->clk);
- 
- 	nbcon_exit_unsafe(wctxt);
- }
-
-I am guessing that it is allowed to use __clk_is_enabled() for this
-purpose. Otherwise it can be tracked as a bool in struct uart_amba_port.
-
-John Ogness
