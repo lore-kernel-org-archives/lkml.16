@@ -1,145 +1,114 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 444152C3244
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 08:15:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1E1615573F;
+	Tue,  3 Jun 2025 08:16:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748938538; cv=none; b=ITF/6Y93spWIQOSoFHkdic7pRRp4bDn0+P8Xn/hvPL1Xyaruvbx/REYAHi5SOx6LYu6zx8jbFvFXGIUZZ8dKetCvXx87KRLtPJJZEewwUKgMszjPgydarkjl3vpSw1r8a5NNeay9V0GRlkCTAQQyntp/O/5KYtMHT+BRWOYDI0I=
+	t=1748938600; cv=none; b=QNd+wBUIBZa4xJG+AI1HhVMWSRV0bEjU4te4CVbSzOiWTg/XD+3IBM7LaB4h+ctyRIDObmq+6q+UHTPzh3BcMj9MRi9vxchnvOfG41C2e1NmLP3PM/96rS0a1zYkYDU6g5yx/UO7hUAoTPVuVbugB8o8a05v/2GRhU+Hb6rZ5LE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748938538; c=relaxed/simple;
-	bh=9Osa9RoJKx/1U3bThDLTdrVvx3XeTLv3ASk/Y/yABrQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WesOuMhFesSFQtKjRSmKTGWTMs+v26nFp6b/phOisZbN71i4Yis24/qcideeQ94EdVsCZujjSA4TrK3kYhWFqa0twExDJT3ouL8L41ttGcr3TuM9fD2KQ3j79Cjc7vvWsb4pYvgaYPD9KzEj6hZShNEXGF2BRYdYOKqoMtHx7Ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=SHgnknrD; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1748938600; c=relaxed/simple;
+	bh=apP4JuWMnTE8xXBQVIvrLXzv40DxoMkYsEQa/dTKZRE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=Vv+mygVyhOaVIY98rTpV7NX3S5NY9burksZlAbcHS1t3QCxjZAzyvt0UsfFp/M5pWU282Zyinb3sW7ZCnVC8aOqOjHBgRwo2rkK6/7KxvVEvXm/cZAciCmr8lxVBQTMQ5akCRsSZB+0uK4QabUy6OVSK31jNsRmxsVP4yR7LwvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=LDTMi3HH reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="SHgnknrD"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ad88eb71eb5so658159366b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 01:15:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1748938533; x=1749543333; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7JtWNL9wmv8FUs8JMPyk0qjLcGIi53aG/txZlPwoIlQ=;
-        b=SHgnknrDRl8dgCWb6tr/rDrtDmxoM1BNxgCROH9jf1KNMlvOMWRqnD7gkJEC7GsWi9
-         tKDcrpa+aDflRDotFpNDtLc5PcZkA5F0suXBVJ7ztIB0m6Z/bbXMXBLW9KZz0chpvWUK
-         7zQgRfjFgXAG0rzWDcfvBghnhSEGon7XrYFOxrGtvQ4hD9hKACk5w/iZm0dja633AKLf
-         TXzOOr5nEQDieNjkOvfuj1m7IzQMgeIK4TN+QygQuor4PWnVn2rTnsW5mc/LdHVIlvfJ
-         KaeR5dQwt/TCdAhGAzarTbOL90t25/Ap2gKTuWNaD1UbFprm+rRelkVzamwE7AFCfJH+
-         7TPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748938533; x=1749543333;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7JtWNL9wmv8FUs8JMPyk0qjLcGIi53aG/txZlPwoIlQ=;
-        b=ncGzPPdzW5KuXTuro745E9VnPwzttoLwup2jQz3or3ZF2zrBbciUjkIb1YdoyPtLHs
-         4KK0pEBW8oYRU5YDxF/BLL6GmfK8uk30ULf+vsms3Cz2KEHWgwtWuP5skHQOdkUMialR
-         CEi0Xk2HW5/fkECQRq/S1D7Y57K+p74jAWV2xtYxuvMCy+SzmHxbw8NOsVVGYgNsKAvj
-         W5sZxpD9UqTuhm5n3623l3DZbez8VrPSl6xupyNbq81NEf/lsVqqeEwTEOnvLtw9YBv+
-         d8jNTSusNKoowcDD+igf9qKSPFx/AN8rJd3xkMOnTA7qQ8T3d+m+/iYrew9FYGe29o1U
-         iH7w==
-X-Forwarded-Encrypted: i=1; AJvYcCV7BhfEtBjlOZUugVlq4NRtb8f8ptSdVjvWJMLID2/X0NrKKz5FtZkhZSKaMLSGwJkilDhMiChbKvzsRjk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfA7yK4wDDpNr8Dxi5UJC7Hh4+MTEqcxkQpVAw9IU0hu09jU2p
-	cJqqgAhDxsjZskP2j2mSDMIFfJmypLfS5+MqD+DRPNTyF5FJJvxRLN+wWDNjj2+4pX8=
-X-Gm-Gg: ASbGnctph6nDf96VSwKrr/Sm8Q3jaQp0I5w0xkteuKN58BamcxxRJZ8fTfKdcoRyddo
-	dbSQwM2O0xXrpLIITxtqcuv+c/aa2rKk0j0aoaDWtS0E1WE1TcVi67PpstKLaP0Bix6IOFbiJhn
-	czdeqq0k80a9oQQWlmOL1RJ+0IcvTsf4qZeDqPaxU1wS66/I1iu/9ymxOj6iX2C7es/55m4AJ7n
-	2Y3+0HgJ6D0SP/zjo89GeUjnjOrptP1rf0NWCKGECzBFPW9H928DvS+VWM4reU2u/THmIm6gUvD
-	KGyXqChl9Nl8m7Lh+5UEzXz7kHXmzEtmjIEolfPI/JaxaWS7NQIU5RIOIMh+domh
-X-Google-Smtp-Source: AGHT+IHgWu4IdI3gzh2/uscswRF8XgnFv7trP/TcuTZpl+j7x5yq2ZjYIyS4GD1EWC37yt76MfBT0w==
-X-Received: by 2002:a17:907:3f99:b0:ad8:8efe:3201 with SMTP id a640c23a62f3a-adb325838ffmr1676986366b.43.1748938533445;
-        Tue, 03 Jun 2025 01:15:33 -0700 (PDT)
-Received: from localhost (109-81-89-112.rct.o2.cz. [109.81.89.112])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ada5e2bf0b3sm914953866b.112.2025.06.03.01.15.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 01:15:32 -0700 (PDT)
-Date: Tue, 3 Jun 2025 10:15:27 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, david@redhat.com,
-	shakeel.butt@linux.dev, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, donettom@linux.ibm.com, aboorvad@linux.ibm.com,
-	sj@kernel.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="LDTMi3HH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=OZVDyHYh0KlKWsp8NTWcA027/CB5TLukQZgz0P8Dac4=; b=L
+	DTMi3HHZLUEVkA5EW2cTZegh1E22S9OWZ1mqqrC2s1dbi+brZcWR0fWPII/wMbpz
+	lGgDXCFbl76zbs1UMstxgy7U11Iz6LZ9jN/NQ0MiM909rq52i92auTKJZQvyZxYY
+	/bxMS6koRDIVF5MqtYYD7aeOl4YkeIMxpO/Hio2Krs=
+Received: from 00107082$163.com ( [111.35.189.95] ) by
+ ajax-webmail-wmsvr-40-138 (Coremail) ; Tue, 3 Jun 2025 16:15:58 +0800 (CST)
+Date: Tue, 3 Jun 2025 16:15:58 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Yeoreum Yun" <yeoreum.yun@arm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, mingo@kernel.org,
+	acme@kernel.org, namhyung@kernel.org, leo.yan@arm.com,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: fix the inaccurate memory statistics issue for users
-Message-ID: <aD6vHzRhwyTxBqcl@tiehlicka>
-References: <4f0fd51eb4f48c1a34226456b7a8b4ebff11bf72.1748051851.git.baolin.wang@linux.alibaba.com>
- <20250529205313.a1285b431bbec2c54d80266d@linux-foundation.org>
- <aDm1GCV8yToFG1cq@tiehlicka>
- <72f0dc8c-def3-447c-b54e-c390705f8c26@linux.alibaba.com>
+Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <aD6hVAuHGNZjrKpr@e129823.arm.com>
+References: <aD6hVAuHGNZjrKpr@e129823.arm.com>
+X-NTES-SC: AL_Qu2fCvWYt00u7iGcZukZnEYQheY4XMKyuPkg1YJXOp80iCXQ3wodeXBxJkTkwcOOJiWSvxe8aSZS7+RTe4BFYbCjYNOAPiFOkq1hPMFt4hnK
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <72f0dc8c-def3-447c-b54e-c390705f8c26@linux.alibaba.com>
+Message-ID: <641140e5.84ac.19734dc8ac2.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:iigvCgD3v9g_rz5oT9cSAA--.26955W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0gBhqmg+n-RC7QAIsD
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-On Tue 03-06-25 16:08:21, Baolin Wang wrote:
-> 
-> 
-> On 2025/5/30 21:39, Michal Hocko wrote:
-> > On Thu 29-05-25 20:53:13, Andrew Morton wrote:
-> > > On Sat, 24 May 2025 09:59:53 +0800 Baolin Wang <baolin.wang@linux.alibaba.com> wrote:
-> > > 
-> > > > On some large machines with a high number of CPUs running a 64K pagesize
-> > > > kernel, we found that the 'RES' field is always 0 displayed by the top
-> > > > command for some processes, which will cause a lot of confusion for users.
-> > > > 
-> > > >      PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
-> > > >   875525 root      20   0   12480      0      0 R   0.3   0.0   0:00.08 top
-> > > >        1 root      20   0  172800      0      0 S   0.0   0.0   0:04.52 systemd
-> > > > 
-> > > > The main reason is that the batch size of the percpu counter is quite large
-> > > > on these machines, caching a significant percpu value, since converting mm's
-> > > > rss stats into percpu_counter by commit f1a7941243c1 ("mm: convert mm's rss
-> > > > stats into percpu_counter"). Intuitively, the batch number should be optimized,
-> > > > but on some paths, performance may take precedence over statistical accuracy.
-> > > > Therefore, introducing a new interface to add the percpu statistical count
-> > > > and display it to users, which can remove the confusion. In addition, this
-> > > > change is not expected to be on a performance-critical path, so the modification
-> > > > should be acceptable.
-> > > > 
-> > > > Fixes: f1a7941243c1 ("mm: convert mm's rss stats into percpu_counter")
-> > > 
-> > > Three years ago.
-> > > 
-> > > > Tested-by Donet Tom <donettom@linux.ibm.com>
-> > > > Reviewed-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
-> > > > Tested-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
-> > > > Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
-> > > > Acked-by: SeongJae Park <sj@kernel.org>
-> > > > Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> > > 
-> > > Thanks, I added cc:stable to this.
-> > 
-> > I have only noticed this new posting now. I do not think this is a
-> > stable material. I am also not convinced that the impact of the pcp lock
-> > exposure to the userspace has been properly analyzed and documented in
-> > the changelog. I am not nacking the patch (yet) but I would like to see
-> > a serious analyses that this has been properly thought through.
-> 
-> Good point. I did a quick measurement on my 32 cores Arm machine. I ran two
-> workloads, one is the 'top' command: top -d 1 (updating every second).
-> Another workload is kernel building (time make -j32).
-> 
-> From the following data, I did not see any significant impact of the patch
-> changes on the execution of the kernel building workload.
-
-I do not think this is really representative of an adverse workload. I
-believe you need to have a look which potentially sensitive kernel code
-paths run with the lock held how would a busy loop over affected proc
-files influence those in the worst case. Maybe there are none of such
-kernel code paths to really worry about. This should be a part of the
-changelog though.
-
-Thanks!
--- 
-Michal Hocko
-SUSE Labs
+CkF0IDIwMjUtMDYtMDMgMTU6MTY6MzYsICJZZW9yZXVtIFl1biIgPHllb3JldW0ueXVuQGFybS5j
+b20+IHdyb3RlOgo+SGkgRGF2aWQsCj4KPj4gPgo+PiA+ID4KPj4gPiA+IEFsc28sIHlvdXIgcGF0
+Y2ggY291bGRuJ3Qgc29sdmUgYSBwcm9ibGVtIGRlc2NyaWJlIGluCj4+ID4gPiBjb21taXQgYTNj
+M2M2NjY3KCJwZXJmL2NvcmU6IEZpeCBjaGlsZF90b3RhbF90aW1lX2VuYWJsZWQgYWNjb3VudGlu
+ZyBidWcgYXQgdGFzayBleGl0IikKPj4gPiA+IGZvciBJTkNBVElWRSBldmVudCdzIHRvdGFsX2Vu
+YWJsZV90aW1lLgo+PiA+Cj4+ID4gSSBkbyBub3QgdGhpbmsgc28uCj4+ID4gQ29ycmVjdCBtZSBp
+ZiBJIGFtIG1ha2luZyBzaWxseSAgbWlzdGFrZXMsCj4+ID4gVGhlIHBhdGNoLCBodHRwczovL2xv
+cmUua2VybmVsLm9yZy9sa21sLzIwMjUwNjAzMDMyNjUxLjM5ODgtMS0wMDEwNzA4MkAxNjMuY29t
+Lwo+PiA+IGNhbGxzIHBlcmZfZXZlbnRfc2V0X3N0YXRlKCkgYmFzZWQgb24gREVUQUNIX0VYSVQg
+ZmxhZywgd2hpY2ggY292ZXIgdGhlIElOQUNUSVZFIHN0YXRlLCByaWdodD8KPj4gPiBJZiBERVRB
+Q0hfRVhJVCBpcyBub3QgdXNlZCBmb3IgdGhpcyBwdXJwb3NlPyBUaGVuIHdoeSBzaG91bGQgaXQg
+ZXhpc3QgYXQgdGhlIGZpcnN0IHBsYWNlPwo+PiA+IEkgdGhpbmsgSSBkb2VzIG5vdCByZXZlcnQg
+dGhlIHB1cnBvc2Ugb2YgY29tbWl0IGEzYzNjNjY2Ny4uLi4uQnV0IEkgY291bGQgYmUgd3JvbmcK
+Pj4gPiBXb3VsZCB5b3Ugc2hvdyBhIGNhbGwgcGF0aCB3aGVyZSBERVRBQ0hfRVhJVCBpcyBub3Qg
+c2V0LCBidXQgdGhlIGNoYW5nZXMgaW4gY29tbWl0IGEzYzNjNjY2NyBpcyBzdGlsbCBuZWVkZWQ/
+Cj4+ID4KPj4gPiBTb3JyeSBmb3IgbXkgYmFkIGV4cGxhaW5hdGlvbiB3aXRob3V0IGRldGFpbC4K
+Pj4gPiBUaGluayBhYm91dCBjcHUgc3BlY2lmaWMgZXZlbnQgYW5kIGNsb3NlZCBieSB0YXNrLgo+
+PiA+IElmIHRoZXJlIGlzIHNwZWNpZmljIGNoaWxkIGNwdSBldmVudCBzcGVjaWZpZWQgaW4gY3B1
+IDAuCj4+ID4gMS4gY3B1IDAgLT4gYWN0aXZlCj4+ID4gMi4gc2NoZXVsZGVkIHRvIGNwdTEgLT4g
+aW5hY3RpdmUKPj4gPiAzLiBjbG9zZSB0aGUgY3B1IGV2ZW50IGZyb20gcGFyZW50IC0+IGluYWN0
+aXZlIGNsb3NlCj4+ID4KPj4gPiBDYW4gYmUgZmFpbGVkIHRvIGNvdW50IHRvdGFsX2VuYWJsZV90
+aW1lLgo+Pgo+PiBJcyB0aGlzIGV4cGxhaW5pbmcgdGhlIHB1cnBvc2Ugb2YgY29tbWl0IGEzYzNj
+NjY2NyA/Cj4+IEkgYW0gbm90IGFyZ3Vpbmcgd2l0aCBpdC4gQW5kIEkgYWxzbyBub3Qgc3VnZ2Vz
+dCByZXZlcnRpbmcgaXQuIChpdCBpcyBqdXN0IHRoYXQgcmV2ZXJ0aW5nIGl0IGNhbiBmaXggdGhl
+IGtlcm5lbCBwYW5pYy4pCj4KPkluIGNvbW1pdCBhM2MzYzY2NjcsIEkgZXhwbGFpbiB0aGUgc3Bl
+Y2lmaWMgY2FzZSBidXQgbm90IHdpdGggYWJvdmUKPmNhc2UuIEJ1dCB0aGUgY29tbWl0J3MgcHVy
+cG9zZSBpcyAiYWNjb3VudCB0b3RhbF9lbmFibGVfdGltZSIgcHJvcGVybHkuCj4KPj4gPiBBbmQg
+YWxzbywgY29uc2lkZXJpbmcgdGhlIHlvdXIgcGF0Y2gsIGZvciBERVRBQ0hfRVhJVCBjYXNlLAo+
+PiA+IElmIGl0IGNoYW5nZXMgdGhlIHN0YXRlIGJlZm9yZSBsaXN0X2RlbF9ldmVudCgpIHRoYXQg
+d291bGRuJ3QgZGlzYWJsZQo+PiA+IHJlbGF0ZWQgdG8gdGhlIGNncm91cC4gU28gaXQgd291bGQg
+bWFrZSBjcHVjdHgtPmNncnAgcG9pbnRlciBjb3VsZCBiZSBkYW5nbGVkCj4+ID4gYXMgcGF0Y2gg
+ZGVzY3JpYmUuLi4KPj4gTm8sIEkgZG9uJ3QgdGhpbmsgc28uCj4+IGNoYW5nZSBzdGF0ZSBiZWZv
+cmUgbGlzdF9kZWxfZXZlbnQoKSwgdGhpcyBpcyB0aGUgc2FtZSBiZWhhdmlvciBiZWZvcmUgY29t
+bWl0IGEzYzNjNjY2NywgcmlnaHQ/Cj4+IEFuZCBubyBzdWNoIGtlcm5lbCBwYW5pYyBoYXBwZW5l
+ZCAgYmVmb3JlIGNvbW1pdCBhM2MzYzY2NjcuCgpPaCEgSSB3YXMgd3JvbmcsIGJlZm9yZSBjb21t
+aXQgYTNjM2M2NjY3LCAiY2hhbmdlIHN0YXRlIiBoYXBwZW5lZCAqYWZ0ZXIqIGxpc3RfZGVsX2V2
+ZW50KCkKPgo+VGhhdCdzIHdoeSBsaXN0X2RlbF9ldmVudCgpIGhhbmRsZSB0aGUgcGVyZl9jZ3Jv
+dXBfZGlzYWJsZSgpIGJlZm9yZSB0aGUKPmNvbW1pdCBhM2MzYzY2NjcuIEhvd2V2ZXIgYmVjYXVz
+ZSBvZiAqbXkgbWlzdGFrZSosIEkndmUgZm9yZ2V0IHRvCj5wZXJmX2Nncm91cF9kaXNhYmxlKCkg
+cHJvcGVybHkgYmVmb3JlIGNoYW5nZSB0aGUgZXZlbnQgc3RhdGUuCj5ZZXMsIHlvdXIgcGF0Y2gg
+Y2FuIG1ha2UgYXZvaWQgdGhlIHBhbmljIHNpbmNlIGFzIHNvb24gYXMgZXhpdCwKPnRoZSBldmVu
+dC0+Y2dycCBzd2l0Y2hlZC4KCiBJIGNhbm5vdCBhZ3JlZSB3aXRoIHRoZSByZWFzb25pbmcsIApU
+aGUgcGFuaWMgZG9zZSBub3QgaGFwcGVuZWQgd2hlbiBleGl0LCBpdCBoYXBwZW5lZCB3aGVuIHJl
+Ym9vdC9zaHV0ZG93bi4KKEkgY2xvc2UgcGVyZl9ldmVudF9vcGVuIGJlZm9yZSByZWJvb3QpCgoK
+CgoKPgo+SG93ZXZlciwgYXMgSSBzYWlkLCB0aGUgSU5BQ1RJVkUgZXZlbnQgY291bGQgYmUgZmFp
+bGVkIHRvIGNvdW50Cj50b3RhbF9lbmFibGVfdGltZS4KPgo+U28sIHNldCBldmVudCBzaG91bGQg
+YmUgb2NjdXJlZCBiZWZvcmUgbGlzdF9kZWxfZXZlbnQoKS4KPkFuZCBzaW5jZSBpdCdzIGV2ZW50
+LT5zdGF0ZSBjaGFuZ2Ugb24gcmVtb3ZlLgo+SXQgc2hvdWxkbid0IGhhdmUgYW55IHNpZGUgZWZm
+ZWN0IHRoZSBzdGF0ZSBjaGFuZ2UgaXNuJ3QgY2F1c2Ugb2YgeW91cgo+cGFuaWMuIEJ1dCBtaXNz
+ZWQgcGVyZl9jZ3JvdXBfZGlzYWJsZSgpLgoKQW55IHByb2NlZHVyZSB0byBicmluZyBvdXQgdGhl
+IGltcGFjdCBvZiB0aGlzIG1pc3NlZCBwZXJmX2Nncm91cF9kaXNhYmxlKCk/Ck15IHN5c3RlbSBz
+ZWVtcyBhbGwgbm9ybWFsLCB3aGVyZSBzaG91bGQgSSBjaGVjayBpdD8KCkJ1dCB0byBmaXggaXQs
+ICBpc24ndCBmb2xsb3dpbmcgY2hhbmdlIGxlc3MgYWdncmVzc2l2ZT8KICAgICAgICBldmVudF9z
+Y2hlZF9vdXQoZXZlbnQsIGN0eCk7Ci0gICAgICAgcGVyZl9ldmVudF9zZXRfc3RhdGUoZXZlbnQs
+IG1pbihldmVudC0+c3RhdGUsIHN0YXRlKSk7CiAgICAgICAgaWYgKGZsYWdzICYgREVUQUNIX0dS
+T1VQKQogICAgICAgICAgICAgICAgcGVyZl9ncm91cF9kZXRhY2goZXZlbnQpOwogICAgICAgIGlm
+IChmbGFncyAmIERFVEFDSF9DSElMRCkKICAgICAgICAgICAgICAgIHBlcmZfY2hpbGRfZGV0YWNo
+KGV2ZW50KTsKICAgICAgICBsaXN0X2RlbF9ldmVudChldmVudCwgY3R4KTsKKyAgICAgICBwZXJm
+X2V2ZW50X3NldF9zdGF0ZShldmVudCwgbWluKGV2ZW50LT5zdGF0ZSwgc3RhdGUpKTsKIAoKRGF2
+aWQKCgo+Cj5UaGFua3MuCj4tLQo+U2luY2VyZWx5LAo+WWVvcmV1bSBZdW4K
