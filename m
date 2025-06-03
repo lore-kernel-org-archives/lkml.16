@@ -1,231 +1,219 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76FD213237
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 22:02:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 642671A2643;
+	Tue,  3 Jun 2025 22:09:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748988179; cv=none; b=OI029xyi/04DUVJ+r9FLVfzC4nXCtHO5zCINNKjzsrKkl4pIxjf//JTPGQFsdomLhpI/VVZc305jnYxg8siCWMAUutNwnQhNHVCbxQTnYvT4Vk7x0MVqSs1lKMBZcZtdDcCiHk/XuiMHVfNdPnZb1fibQdraN8WvmR/JPYte2F4=
+	t=1748988594; cv=none; b=JfewvPsaryOKLsh1yeCE823eDRPp8ZQyoGcv1WnphCMKFOVRuvGPqVX8B6kwwHxQXU+Q/cN6kEVCN7iWYXNDRMxLSkiulsPHbYQaocgTc+/FLLRlWLsZG6io70d4RB1TgsmgCWH+Whfu/Y2pYj+QdKEhoaho9xxlCnlo6iYYB1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748988179; c=relaxed/simple;
-	bh=eajd9EavqBNsUT4SvCuI/74b+H2G9N7rEQZ/+V/rvPk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gTEjcJP32bLYzAVtxulSMcFMU1hi6Fq1iOyAl8YjeMEf1bCXM02Brn2nPmfsscR8n7RdqCzT2XcG0XwLRay5hHU7s6LrnG9eoQW6JtFNMNKEkUamy0i6fDYsfStiX6IZ9dD9c7ykmNodwD16MiDzPtawxDp4gs/xM+GPpA1kRFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H/xtzrQA; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748988594; c=relaxed/simple;
+	bh=S0c47ppm0drVdO4jAjCQHwJvNJsQNG50GQKepxniEQo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G35FNx9zxqJFy5dhTEp28TiVshoii2niktBURioeAtYuAetKYQbXwsgJ3mtHj4Ex7BH6FmDIk5LwdCmOR4u82DtDzdyuzZrdfiLLyOkaJjUWg8e2P6P0LB0Dgtf9H4TRe7Exc9lw3kFdGWauRAf2oSqhLHqxefH9pDvVeBMU5u4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RbjoMTCa; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H/xtzrQA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748988176;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=eS7f7quUUty4CLA6etNXIneQrPITZcpqBLU3n/eJmMA=;
-	b=H/xtzrQAvJ8VVBevXMRSnXgP0y//rXG6a58JCTDSGyI1TdaOD9nm+mSBK8mYZS6eBf9vqy
-	/aGoD6d38hP1K9vpxfQNNA0r+aLXvvrjnJd57WDBk2o7DYq2L9lybv7BM2KYUAsrhQ9cw6
-	sn6RBnXSXuTHNWyXDZN5ney/VDREIyw=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-360-NOf0aNLBPD-K7hqNMNhMIA-1; Tue, 03 Jun 2025 18:02:55 -0400
-X-MC-Unique: NOf0aNLBPD-K7hqNMNhMIA-1
-X-Mimecast-MFC-AGG-ID: NOf0aNLBPD-K7hqNMNhMIA_1748988174
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4f85f31d9so1868135f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 15:02:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748988174; x=1749592974;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=eS7f7quUUty4CLA6etNXIneQrPITZcpqBLU3n/eJmMA=;
-        b=ljsayd0Y4DgjEVtFoNXYWpm+9uacG6a65lqT1jFMzv8T9PHUiw0FfbGXarGyPThHQH
-         cExtX58FZ7XL3pZjFplQV7LJxxMF8+Vhmf8EyJ7lsZOszIHBuKW0bj6C0Ke8CxGB0+/u
-         j6tOUuUDsRH4Ho+4d8jW9gD4EvTvkrr0GYQ/hfWrIhezf7E+PVNfEV+TNafe6kWiibhV
-         hCZ5J3+4sFWk/LcsG6NK4qNW3yE9pExvZ5msV2W8oWt6XyE6sfDC+NawpbWoaWtMaxhD
-         1SoCr74kgYCL6ggfn0IEen84z6jD0r5KhVBpo2WGp9xKcYkC2fQiFkgdY+0n2Rbok8C2
-         Wc3Q==
-X-Gm-Message-State: AOJu0YyKUixKOCUyNri7I7cwJQ7Au2wMgAQw8VAz67qhmd/UuQ4NXK+i
-	b+CXNDowFnlZ2Y3itgVbY25cx4WZzx0iaL/CUmdPEbPvkKYYNugbWIrz0OdbVu/rIykIB9e3n5g
-	Q/ZJ4WnLEi/Ol84iARay8zMWXHJm4xmF7k0R5K9S1A2YS1O6z92ii7qWtuMGysHOeLbNIpNOv0b
-	TwMeKKm1cFthEGX7tyQsgNE9waBsq+F2KsFNpfyfBPP6UEyTrY9yU=
-X-Gm-Gg: ASbGnctFtpvtn9d+R5QAkMKPe5cDsIzY6Fa4RIPIOzzq6pdfsaCAYyEVE/2Gyt2nDOJ
-	qOKgBsxnGSS0txDVx05NLgzSCvTZBIpZ0ipQsUkOGA43ECh7R2Igpuyv3zAykH1SnYO0XDU0N2/
-	wP6qkUwDPaffCLLGU/3gX6VyLLsgyVtFSsP+SNxJZo4JTmE7ak5EyJ7MdcL8idZZZs43AKb/sRM
-	vX9boCcN2ljWOGOZk/+Xjw5+GUxHtE2OB7pQTS/l3C9Qex5dSFB96btOB388e91KH6PMTDY0Gig
-	OiA4uxzpw/r4WRVthUIDLS7kgf92tmU4xNNqtv1ke9c6ecyVhqKSVL60rSXb4+ooGxXrjpTumLF
-	5ueJ0Z6APAkxvon69y7hcbzmW+/wKyDDkXTkhL5w=
-X-Received: by 2002:a05:6000:144f:b0:3a4:f7e6:284b with SMTP id ffacd0b85a97d-3a51d8f6a52mr292335f8f.10.1748988174479;
-        Tue, 03 Jun 2025 15:02:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFHKGIadPoiOp938yNpY7WW37URrLF4uvDP2tSTNNwKFPpxKIBCxv1en5PPiTu2Tlm6YnhSjg==
-X-Received: by 2002:a05:6000:144f:b0:3a4:f7e6:284b with SMTP id ffacd0b85a97d-3a51d8f6a52mr292280f8f.10.1748988173962;
-        Tue, 03 Jun 2025 15:02:53 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f0d:f000:eec9:2b8d:4913:f32a? (p200300d82f0df000eec92b8d4913f32a.dip0.t-ipconnect.de. [2003:d8:2f0d:f000:eec9:2b8d:4913:f32a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7f8ed32sm174020795e9.1.2025.06.03.15.02.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jun 2025 15:02:53 -0700 (PDT)
-Message-ID: <d43be0c9-cad5-4712-813b-225e9969d84e@redhat.com>
-Date: Wed, 4 Jun 2025 00:02:51 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RbjoMTCa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748988592; x=1780524592;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=S0c47ppm0drVdO4jAjCQHwJvNJsQNG50GQKepxniEQo=;
+  b=RbjoMTCaMe0G4Qv+1L+j3wNSJQf3/AYqTjhhHAu/p2Vw6JfLXfbFWbTM
+   bLMyb8ojt0Jg89GqzjqOs6p2oyETqkO0rLND4/kcODf6UGVO1KW7Ez7qi
+   LUPWtld5QGaiEJNTL/Ku6PXKQ41bMfcH1G5YPTafhKbcDjTVFJ8eYP+8J
+   svk0e3sdvINgw6Up9139KVo7OCmgv58Smky42EtXBfttD5Q8Zdhb99oT/
+   SFofL53OkPR+JSWCJTsRP2fAzma5Qs/bG1soGkh9D4tFdf26v/9Wqokdv
+   nbZr9lG2q0g9OZ4uqacBGNG7iKVDKF3YibfTb4dS3Yi8JYRW4uzH5Gz46
+   A==;
+X-CSE-ConnectionGUID: XRQRz9eHRGyI3cGZhMzn7A==
+X-CSE-MsgGUID: lrhBVdFwSiqgh/FnDCM9lQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="54840718"
+X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
+   d="scan'208";a="54840718"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 15:09:51 -0700
+X-CSE-ConnectionGUID: uXDwbOKqSaqNgJYSUub+BQ==
+X-CSE-MsgGUID: pmasmQ4sQfmqqaQU15SoOg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
+   d="scan'208";a="168152739"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 03 Jun 2025 15:09:46 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uMZpH-0002kP-3D;
+	Tue, 03 Jun 2025 22:09:43 +0000
+Date: Wed, 4 Jun 2025 06:08:53 +0800
+From: kernel test robot <lkp@intel.com>
+To: "irving.ch.lin" <irving-ch.lin@mediatek.com>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, nfraprado@collabora.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	angelogioacchino.delregno@collabora.com,
+	Project_Global_Chrome_Upstream_Group@mediatek.com,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-pm@vger.kernel.org, netdev@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	Irving lin <irving-ch.lin@mediatek.corp-partner.google.com>
+Subject: Re: [1/5] clk: mt8189: Porting driver for clk
+Message-ID: <202506040506.Hrl72R0Q-lkp@intel.com>
+References: <20250602083624.1849719-1-irving-ch.lin@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/2] mm/huge_memory: don't mark refcounted pages
- special in vmf_insert_folio_pud()
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>,
- Alistair Popple <apopple@nvidia.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Dan Williams <dan.j.williams@intel.com>
-References: <20250603211634.2925015-1-david@redhat.com>
- <20250603211634.2925015-3-david@redhat.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250603211634.2925015-3-david@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250602083624.1849719-1-irving-ch.lin@mediatek.com>
 
-On 03.06.25 23:16, David Hildenbrand wrote:
-> Marking PUDs that map a "normal" refcounted folios as special is
-> against our rules documented for vm_normal_page().
-> 
-> Fortunately, there are not that many pud_special() check that can be
-> mislead and are right now rather harmless: e.g., none so far
-> bases decisions whether to grab a folio reference on that decision.
-> 
-> Well, and GUP-fast will fallback to GUP-slow. All in all, so far no big
-> implications as it seems.
-> 
-> Getting this right will get more important as we introduce
-> folio_normal_page_pud() and start using it in more place where we
-> currently special-case based on other VMA flags.
-> 
-> Fix it by just inlining the relevant code, making the whole
-> pud_none() handling cleaner.
-> 
-> Add folio_mk_pud() to mimic what we do with folio_mk_pmd().
-> 
-> While at it, make sure that the pud that is non-none is actually present
-> before comparing PFNs.
-> 
-> Fixes: dbe54153296d ("mm/huge_memory: add vmf_insert_folio_pud()")
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->   include/linux/mm.h | 15 +++++++++++++++
->   mm/huge_memory.c   | 33 +++++++++++++++++++++++----------
->   2 files changed, 38 insertions(+), 10 deletions(-)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 0ef2ba0c667af..047c8261d4002 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -1816,6 +1816,21 @@ static inline pmd_t folio_mk_pmd(struct folio *folio, pgprot_t pgprot)
->   {
->   	return pmd_mkhuge(pfn_pmd(folio_pfn(folio), pgprot));
->   }
-> +
-> +/**
-> + * folio_mk_pud - Create a PUD for this folio
-> + * @folio: The folio to create a PUD for
-> + * @pgprot: The page protection bits to use
-> + *
-> + * Create a page table entry for the first page of this folio.
-> + * This is suitable for passing to set_pud_at().
-> + *
-> + * Return: A page table entry suitable for mapping this folio.
-> + */
-> +static inline pud_t folio_mk_pud(struct folio *folio, pgprot_t pgprot)
-> +{
-> +	return pud_mkhuge(pfn_pud(folio_pfn(folio), pgprot));
-> +}
->   #endif
->   #endif /* CONFIG_MMU */
+Hi irving.ch.lin,
 
-The following on top should make cross-compiles happy (git diff output because it's late
-here, probably whitespace messed up):
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on clk/clk-next]
+[also build test ERROR on linus/master v6.15 next-20250530]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/irving-ch-lin/clk-mt8189-Porting-driver-for-clk/20250603-105623
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
+patch link:    https://lore.kernel.org/r/20250602083624.1849719-1-irving-ch.lin%40mediatek.com
+patch subject: [1/5] clk: mt8189: Porting driver for clk
+config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20250604/202506040506.Hrl72R0Q-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250604/202506040506.Hrl72R0Q-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506040506.Hrl72R0Q-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/clk/mediatek/clk-mt8189.c:22:10: fatal error: 'dt-bindings/clock/mt8189-clk.h' file not found
+      22 | #include <dt-bindings/clock/mt8189-clk.h>
+         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 error generated.
+--
+>> drivers/clk/mediatek/clk-bringup.c:18:43: error: incomplete definition of type 'struct platform_device'
+      18 |         clk_con = of_count_phandle_with_args(pdev->dev.of_node, "clocks",
+         |                                              ~~~~^
+   include/linux/of_platform.h:14:8: note: forward declaration of 'struct platform_device'
+      14 | struct platform_device;
+         |        ^
+   drivers/clk/mediatek/clk-bringup.c:22:24: error: incomplete definition of type 'struct platform_device'
+      22 |                 clk = of_clk_get(pdev->dev.of_node, i);
+         |                                  ~~~~^
+   include/linux/of_platform.h:14:8: note: forward declaration of 'struct platform_device'
+      14 | struct platform_device;
+         |        ^
+   drivers/clk/mediatek/clk-bringup.c:48:33: error: incomplete definition of type 'struct platform_device'
+      48 |         struct device_node *node = pdev->dev.of_node;
+         |                                    ~~~~^
+   include/linux/of_platform.h:14:8: note: forward declaration of 'struct platform_device'
+      14 | struct platform_device;
+         |        ^
+   drivers/clk/mediatek/clk-bringup.c:78:44: error: incomplete definition of type 'struct platform_device'
+      78 |         clk_probe = of_device_get_match_data(&pdev->dev);
+         |                                               ~~~~^
+   include/linux/of_platform.h:14:8: note: forward declaration of 'struct platform_device'
+      14 | struct platform_device;
+         |        ^
+>> drivers/clk/mediatek/clk-bringup.c:84:3: error: call to undeclared function 'dev_err'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+      84 |                 dev_err(&pdev->dev,
+         |                 ^
+   drivers/clk/mediatek/clk-bringup.c:84:16: error: incomplete definition of type 'struct platform_device'
+      84 |                 dev_err(&pdev->dev,
+         |                          ~~~~^
+   include/linux/of_platform.h:14:8: note: forward declaration of 'struct platform_device'
+      14 | struct platform_device;
+         |        ^
+   drivers/clk/mediatek/clk-bringup.c:86:8: error: incomplete definition of type 'struct platform_device'
+      86 |                         pdev->name, r);
+         |                         ~~~~^
+   include/linux/of_platform.h:14:8: note: forward declaration of 'struct platform_device'
+      14 | struct platform_device;
+         |        ^
+>> drivers/clk/mediatek/clk-bringup.c:96:31: error: variable has incomplete type 'struct platform_driver'
+      96 | static struct platform_driver bring_up = {
+         |                               ^
+   drivers/clk/mediatek/clk-bringup.c:96:15: note: forward declaration of 'struct platform_driver'
+      96 | static struct platform_driver bring_up = {
+         |               ^
+>> drivers/clk/mediatek/clk-bringup.c:106:1: error: type specifier missing, defaults to 'int'; ISO C99 and later do not support implicit int [-Wimplicit-int]
+     106 | module_platform_driver(bring_up);
+         | ^
+         | int
+>> drivers/clk/mediatek/clk-bringup.c:106:24: error: a parameter list without types is only allowed in a function definition
+     106 | module_platform_driver(bring_up);
+         |                        ^
+   10 errors generated.
+--
+>> drivers/clk/mediatek/clk-mt8189-adsp.c:15:10: fatal error: 'dt-bindings/clock/mt8189-clk.h' file not found
+      15 | #include <dt-bindings/clock/mt8189-clk.h>
+         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 error generated.
+--
+>> drivers/clk/mediatek/clk-mt8189-cam.c:15:10: fatal error: 'dt-bindings/clock/mt8189-clk.h' file not found
+      15 | #include <dt-bindings/clock/mt8189-clk.h>
+         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 error generated.
+--
+>> drivers/clk/mediatek/clk-mt8189-mmsys.c:15:10: fatal error: 'dt-bindings/clock/mt8189-clk.h' file not found
+      15 | #include <dt-bindings/clock/mt8189-clk.h>
+         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 error generated.
+--
+>> drivers/clk/mediatek/clk-mt8189-img.c:15:10: fatal error: 'dt-bindings/clock/mt8189-clk.h' file not found
+      15 | #include <dt-bindings/clock/mt8189-clk.h>
+         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 error generated.
+--
+>> drivers/clk/mediatek/clk-mt8189-iic.c:15:10: fatal error: 'dt-bindings/clock/mt8189-clk.h' file not found
+      15 | #include <dt-bindings/clock/mt8189-clk.h>
+         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 error generated.
+--
+>> drivers/clk/mediatek/clk-mt8189-bus.c:15:10: fatal error: 'dt-bindings/clock/mt8189-clk.h' file not found
+      15 | #include <dt-bindings/clock/mt8189-clk.h>
+         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 error generated.
+--
+>> drivers/clk/mediatek/clk-mt8189-mdpsys.c:15:10: fatal error: 'dt-bindings/clock/mt8189-clk.h' file not found
+      15 | #include <dt-bindings/clock/mt8189-clk.h>
+         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 error generated.
+--
+>> drivers/clk/mediatek/clk-mt8189-mfg.c:15:10: fatal error: 'dt-bindings/clock/mt8189-clk.h' file not found
+      15 | #include <dt-bindings/clock/mt8189-clk.h>
+         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 error generated.
+--
+>> drivers/clk/mediatek/clk-mt8189-scp.c:15:10: fatal error: 'dt-bindings/clock/mt8189-clk.h' file not found
+      15 | #include <dt-bindings/clock/mt8189-clk.h>
+         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 error generated.
+..
 
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 047c8261d4002..b7e2abd8ce0df 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1817,6 +1817,7 @@ static inline pmd_t folio_mk_pmd(struct folio *folio, pgprot_t pgprot)
-         return pmd_mkhuge(pfn_pmd(folio_pfn(folio), pgprot));
-  }
-  
-+#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
-  /**
-   * folio_mk_pud - Create a PUD for this folio
-   * @folio: The folio to create a PUD for
-@@ -1831,7 +1832,8 @@ static inline pud_t folio_mk_pud(struct folio *folio, pgprot_t pgprot)
-  {
-         return pud_mkhuge(pfn_pud(folio_pfn(folio), pgprot));
-  }
--#endif
-+#endif /* CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD */
-+#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
-  #endif /* CONFIG_MMU */
-  
-  static inline bool folio_has_pincount(const struct folio *folio
+vim +22 drivers/clk/mediatek/clk-mt8189.c
+
+    21	
+  > 22	#include <dt-bindings/clock/mt8189-clk.h>
+    23	
 
 -- 
-Cheers,
-
-David / dhildenb
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
