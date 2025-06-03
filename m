@@ -1,50 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D70628494;
-	Tue,  3 Jun 2025 23:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 697908494
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 23:46:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748994366; cv=none; b=Rn7m/PsO1qidz65SeiVyTIeW3xbCiVmH8hWwTxFmi4Cf4NERagkG3mS/xf8gQt88Ixxb+W/2aDR/RaK86OkIiKDk9sEoPaogiEUbl6Xm/GpxKBi7vlcGiWKc73dxKCjSNfCVGLBB8zhuBzXy7l9P9rXenxQK4xatGxEUbvFV85I=
+	t=1748994382; cv=none; b=Z1WcZH2Pu4QAwuDWKtbGrLiDejtzVjkECj3c5AXB7f3CM7AvbAikCjgXb+jbZeQoJ3Mq2HXBJNhZSPET3fc1SJomTzKoADyECn0Abz7d53Y4trKDO5Dv73DixRToE+Hbd0f+mL5fpRcCvkP6+vcOIjVbVdofjgusUgR6xwGrb9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748994366; c=relaxed/simple;
-	bh=hWWpMUvDb6toLCS0hdHRob1Q0A+Js+9lzm2MfMkdnK4=;
+	s=arc-20240116; t=1748994382; c=relaxed/simple;
+	bh=1AX25iEg1MxhnD5UtAuwlfAqR0MHHRQ6cafvezuHuAA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jyUFH2ZPRrjO8r++/gzvhhRqlx0j/UpxQvqBFgK2IwtHEGLUML0Sgi28Dpsc+nz72AMxEHsv2B1RKototfb3XGa0XGgMNnQSI6zZfAn3XmsSXE6DuJmydhTx5JaOfTf3jof7XjAbzc1kBnSB8hmbMx9W/CLyAf6fXkIR93sLhis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jjwb9hcc; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=Y03uKMgxa+dWyKsU1vZEIIbx2MPf9zlDul0jtEoCGFinAs3miV/rf+oSsfT5bPQjvPLraH7Wa3jbDcXX5YDKoUee5t7IiJGgZZJIY85PGYpWvL/H9mMqb/I+ikQ/lSlAerg1j0gOgDJikQQwyrEAIOyM0+cj2ioZbHfZpW4HDQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=j8E8Y3SC; arc=none smtp.client-ip=209.85.166.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jjwb9hcc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748994364; x=1780530364;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=hWWpMUvDb6toLCS0hdHRob1Q0A+Js+9lzm2MfMkdnK4=;
-  b=Jjwb9hccybRjJR2Alawxj0QMKeVFgKRuWjYZQ1w48XqNKLDJqKcGWT1f
-   9nEzQ4ZzeLMuwFtTgkshdVY5IM7jgVvGN/V6HUyF886ujsZz63w+D+vCj
-   fs9mbkVwRvC/pEP5iG74tu3v0vI1aLYmqMYTq878/aYLq1Blp3spCs6kA
-   /KZ4TfirpT/71TTQ19J65+aPNxLf1yoX0AmKNORQKXRWhOYyhNTqsXdFk
-   HU9sqdieb67m3jWkbSgNjwSZURcZM6OSKHK8MYti6zvJzHweUwM6CHTFU
-   9ku8dqXQNo4LIq2sdb8Xlc29jUaB/pkKPyoFwy0FLbt5kRPFWuHW+sclg
-   g==;
-X-CSE-ConnectionGUID: c2gr3eAEQH+c7dq5xhIQuA==
-X-CSE-MsgGUID: udVRmbfIS62ABNQlk91WSA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="54846570"
-X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
-   d="scan'208";a="54846570"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 16:46:03 -0700
-X-CSE-ConnectionGUID: MLAtfLerR4SDyGyLL661vw==
-X-CSE-MsgGUID: gaYgkeulTGSxHFyWpRQaMA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
-   d="scan'208";a="144894636"
-Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.110.198]) ([10.125.110.198])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 16:46:01 -0700
-Message-ID: <d9435456-9ae8-4fbe-a67b-e557e2787b0c@intel.com>
-Date: Tue, 3 Jun 2025 16:45:58 -0700
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="j8E8Y3SC"
+Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-872886ed65aso216274239f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 16:46:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1748994378; x=1749599178; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RuCMRQ7iYf1qMbtxSnk4SgDnOMirNXiJvRPwnEkEhZs=;
+        b=j8E8Y3SCsu+4W7KtcWR4O6USu/xjiL14hIXSJWtHi7Sgx3cQQKR+cSCiwUJS93dqQK
+         4/LGDZmhTxPG5pDA5aMWSB8z5mWmKIECqi1upMNjGF8gySd+hnr1nBw2dA65dPE8onaL
+         k+HMSirO9FgPj/l9BVpzYWhEig0YBziZZCWmluKeEdwMtJOsGFIW9kI5cnF/QLfB+JNS
+         a8TfEeR6F5cq9+MPukit7250gZsjgzFzW0ChAOu10NkDCFKBxJbFbutl3hkj6IZObgIt
+         LQyJ1IJlgo2tfLWp4fnXfr/ytK0HGk8kU1qKuphW9cvc6jfNxHmryZQv7rtE6C0xpiaX
+         kJVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748994378; x=1749599178;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RuCMRQ7iYf1qMbtxSnk4SgDnOMirNXiJvRPwnEkEhZs=;
+        b=Pjj3+mnuwfm4JmU3+9iOMh3+qeayX8lRs57CAwbNdvD0kE4PYsxMHEqmnkycg6cU1z
+         nDMWqF2hef7K7rewqeGokvTK7TRzgkVd3KjXQcRyZTHooZoAHJP9FOckcrspNl1QEtrN
+         6NwJjPWiYWvAxC3hq+bS3WxY5ewL/D4swTotdljkqmHwIcLnjWoVhLYm1l4MDG6maP5N
+         hkPV8ewJD3rtFQD5WH/LHDzarzoh7ZsOE3eoIm1nBrirjR7IPoq/9UHQEvKYUSJ7szEh
+         Ka8VVYq2qT8rbGC6/026G4Ug+r3RQ2xrrQ87B6Djzv8M0KN442jM2zIs6wo5ioeojLWC
+         9Tfg==
+X-Forwarded-Encrypted: i=1; AJvYcCXre3G0pd6AZRW1lGqsixJaZM0++POrntDcLy1veOkt0nc+b3AAzBILzlFr7fKvCECA6sCuaLL+UdOUQuE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzuo4uWtdj8jlnAtAaH1Frby2FIbzynuMW6L+Q9rkx/ps/6uq5W
+	K0ng2phlnn3eMStkGjBZ5/22wuqX51aWJKHjAEFngPryn7EqwoAh/RLLMWNhWn7kQig2GL7lnAN
+	wm5J3
+X-Gm-Gg: ASbGncu8yhECJjkIXXPPuu2Pu3yB87M0SlO8dw+lNub4IUqNsrE08Y7o1VLGg+I9eXW
+	WErN6mQF7aJIOD0fFvIIeCvmUmCFRd1CfpQmG9sfS8M9vzKtFPFmO+ddf2N2D46TsmZNhuwDJ17
+	Y7GvS2rI2QNboHBeE6QBsPsSgC4ce9/079PZ2h5XTDRJaFkcTQsKQC+NfsFQpvDOBjKbz0Uz9eC
+	7SWOL3/HX3Oe+tg3ngzlHNTl+F8duj6ANqMMfzrIIUSXCVs2x8cZBBUjpZCvSrJOLvsBZHiYcn3
+	fqZcofTYIi1ftsPDTCYCGUDyOzZnMXpVr7F6KQsF70Adl8XC
+X-Google-Smtp-Source: AGHT+IGYxRcht2r/aeHDnGMEQTh1TXnGFF8yWmcQVpHA/odKJUFXkUEETt44KPk3mlf7gnGLbRmvvw==
+X-Received: by 2002:a05:6e02:4414:10b0:3dd:c04e:49af with SMTP id e9e14a558f8ab-3ddc04e4c9bmr174695ab.3.1748994378409;
+        Tue, 03 Jun 2025 16:46:18 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fdd7dff26csm2455246173.22.2025.06.03.16.46.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Jun 2025 16:46:17 -0700 (PDT)
+Message-ID: <7458912f-d3a3-4cf7-b668-eb0e78590b75@kernel.dk>
+Date: Tue, 3 Jun 2025 17:46:17 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,178 +67,48 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/7] cxl/acpi: Add background worker to wait for
- cxl_pci and cxl_mem probe
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- nvdimm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- linux-pm@vger.kernel.org
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Matthew Wilcox
- <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
- Pavel Machek <pavel@kernel.org>, Li Ming <ming.li@zohomail.com>,
- Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
- Ying Huang <huang.ying.caritas@gmail.com>,
- Yao Xingtao <yaoxt.fnst@fujitsu.com>, Peter Zijlstra <peterz@infradead.org>,
- Greg KH <gregkh@linuxfoundation.org>,
- Nathan Fontenot <nathan.fontenot@amd.com>,
- Terry Bowman <terry.bowman@amd.com>, Robert Richter <rrichter@amd.com>,
- Benjamin Cheatham <benjamin.cheatham@amd.com>,
- PradeepVineshReddy Kodamati <PradeepVineshReddy.Kodamati@amd.com>,
- Zhijian Li <lizhijian@fujitsu.com>
-References: <20250603221949.53272-1-Smita.KoralahalliChannabasappa@amd.com>
- <20250603221949.53272-5-Smita.KoralahalliChannabasappa@amd.com>
+Subject: Re: [PATCH] block: flip iter directions in
+ blk_rq_integrity_map_user()
+To: Anuj gupta <anuj1072538@gmail.com>
+Cc: Caleb Sander Mateos <csander@purestorage.com>,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250603184752.1185676-1-csander@purestorage.com>
+ <e37d8707-8770-4f20-a04a-b77359c5bc32@kernel.dk>
+ <CACzX3Atwuv5RNqk5vah8J3Ce0i6sZdF+Tmnbw1K9qpDLU9bXxQ@mail.gmail.com>
+From: Jens Axboe <axboe@kernel.dk>
 Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250603221949.53272-5-Smita.KoralahalliChannabasappa@amd.com>
+In-Reply-To: <CACzX3Atwuv5RNqk5vah8J3Ce0i6sZdF+Tmnbw1K9qpDLU9bXxQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-
-
-On 6/3/25 3:19 PM, Smita Koralahalli wrote:
-> Introduce a waitqueue mechanism to coordinate initialization between the
-> cxl_pci and cxl_mem drivers.
+On 6/3/25 5:34 PM, Anuj gupta wrote:
+> On Wed, Jun 4, 2025 at 12:24?AM Jens Axboe <axboe@kernel.dk> wrote:
+>>
+>> On 6/3/25 12:47 PM, Caleb Sander Mateos wrote:
+>>> blk_rq_integrity_map_user() creates the ubuf iter with ITER_DEST for
+>>> write-direction operations and ITER_SOURCE for read-direction ones.
+>>> This is backwards; writes use the user buffer as a source for metadata
+>>> and reads use it as a destination. Switch to the rq_data_dir() helper,
+>>> which maps writes to ITER_SOURCE (WRITE) and reads to ITER_DEST(READ).
+>>
+>> Was going to ask "how did this ever work without splats", but looks like
+>> a fairly recent change AND it's for integrity which isn't widely used.
+>> But it does show a gap in testing for sure.
+>>
 > 
-> Launch a background worker from cxl_acpi_probe() that waits for both
-> drivers to complete initialization before invoking wait_for_device_probe().
-> Without this, the probe completion wait could begin prematurely, before
-> the drivers are present, leading to missed updates.
+> Yes, you're absolutely right. blk_rq_integrity_map_user() is currently
+> only used by nvme-passthru, and Keith recently added a test for that
+> path [1].
 > 
-> Co-developed-by: Nathan Fontenot <Nathan.Fontenot@amd.com>
-> Signed-off-by: Nathan Fontenot <Nathan.Fontenot@amd.com>
-> Co-developed-by: Terry Bowman <terry.bowman@amd.com>
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-> ---
->  drivers/cxl/acpi.c         | 23 +++++++++++++++++++++++
->  drivers/cxl/core/suspend.c | 21 +++++++++++++++++++++
->  drivers/cxl/cxl.h          |  2 ++
->  3 files changed, 46 insertions(+)
+> As for the user block integrity interface in general ? it?s been a bit
+> tricky to write generic tests so far, mostly because there's no way to
+> query the device's integrity capabilities from userspace. But that
+> should become much easier once we have support for that via an ioctl[2].
 > 
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index cb14829bb9be..978f63b32b41 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -813,6 +813,24 @@ static int pair_cxl_resource(struct device *dev, void *data)
->  	return 0;
->  }
->  
-> +static void cxl_softreserv_mem_work_fn(struct work_struct *work)
-> +{
-> +	/* Wait for cxl_pci and cxl_mem drivers to load */
-> +	cxl_wait_for_pci_mem();
-> +
-> +	/*
-> +	 * Wait for the driver probe routines to complete after cxl_pci
-> +	 * and cxl_mem drivers are loaded.
-> +	 */
-> +	wait_for_device_probe();
-> +}
-> +static DECLARE_WORK(cxl_sr_work, cxl_softreserv_mem_work_fn);
-> +
-> +static void cxl_softreserv_mem_update(void)
-> +{
-> +	schedule_work(&cxl_sr_work);
-> +}
-> +
->  static int cxl_acpi_probe(struct platform_device *pdev)
->  {
->  	int rc;
-> @@ -887,6 +905,10 @@ static int cxl_acpi_probe(struct platform_device *pdev)
->  
->  	/* In case PCI is scanned before ACPI re-trigger memdev attach */
->  	cxl_bus_rescan();
-> +
-> +	/* Update SOFT RESERVE resources that intersect with CXL regions */
-> +	cxl_softreserv_mem_update();
-> +
->  	return 0;
->  }
->  
-> @@ -918,6 +940,7 @@ static int __init cxl_acpi_init(void)
->  
->  static void __exit cxl_acpi_exit(void)
->  {
-> +	cancel_work_sync(&cxl_sr_work);
->  	platform_driver_unregister(&cxl_acpi_driver);
->  	cxl_bus_drain();
->  }
-> diff --git a/drivers/cxl/core/suspend.c b/drivers/cxl/core/suspend.c
-> index 72818a2c8ec8..c0d8f70aed56 100644
-> --- a/drivers/cxl/core/suspend.c
-> +++ b/drivers/cxl/core/suspend.c
-> @@ -2,12 +2,15 @@
->  /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
->  #include <linux/atomic.h>
->  #include <linux/export.h>
-> +#include <linux/wait.h>
->  #include "cxlmem.h"
->  #include "cxlpci.h"
->  
->  static atomic_t mem_active;
->  static atomic_t pci_loaded;
->  
-> +static DECLARE_WAIT_QUEUE_HEAD(cxl_wait_queue);
-> +
->  bool cxl_mem_active(void)
->  {
->  	if (IS_ENABLED(CONFIG_CXL_MEM))
-> @@ -19,6 +22,7 @@ bool cxl_mem_active(void)
->  void cxl_mem_active_inc(void)
->  {
->  	atomic_inc(&mem_active);
-> +	wake_up(&cxl_wait_queue);
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_mem_active_inc, "CXL");
->  
-> @@ -28,8 +32,25 @@ void cxl_mem_active_dec(void)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_mem_active_dec, "CXL");
->  
-> +static bool cxl_pci_loaded(void)
-> +{
-> +	if (IS_ENABLED(CONFIG_CXL_PCI))
-> +		return atomic_read(&pci_loaded) != 0;
-> +
-> +	return false;
-> +}
-> +
->  void mark_cxl_pci_loaded(void)
->  {
->  	atomic_inc(&pci_loaded);
-> +	wake_up(&cxl_wait_queue);
->  }
->  EXPORT_SYMBOL_NS_GPL(mark_cxl_pci_loaded, "CXL");
-> +
-> +void cxl_wait_for_pci_mem(void)
-> +{
-> +	if (!wait_event_timeout(cxl_wait_queue, cxl_pci_loaded() &&
-> +				cxl_mem_active(), 30 * HZ))
+> [1] https://lore.kernel.org/io-uring/20250416162802.3614051-1-kbusch@meta.com/
+> [2] https://lore.kernel.org/all/20250527104237.2928-1-anuj20.g@samsung.com/
 
-I'm trying to understand why cxl_pci_loaded() is needed. cxl_mem_active() goes above 0 when a cxl_mem_probe() instance succeeds. cxl_mem_probe() being triggered implies that an instance of cxl_pci_probe() has been called since cxl_mem_probe() is triggered from devm_cxl_add_memdev() with memdev being added and cxl_mem driver also have been loaded. So does cxl_mem_active() not imply cxl_pci_loaded() and makes it unnecessary?
+That makes sense, thanks for clarifying.
 
-DJ
-
-
-> +		pr_debug("Timeout waiting for cxl_pci or cxl_mem probing\n");
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_wait_for_pci_mem, "CXL");
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index a9ab46eb0610..1ba7d39c2991 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -902,6 +902,8 @@ void cxl_coordinates_combine(struct access_coordinate *out,
->  
->  bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port);
->  
-> +void cxl_wait_for_pci_mem(void);
-> +
->  /*
->   * Unit test builds overrides this to __weak, find the 'strong' version
->   * of these symbols in tools/testing/cxl/.
-
+-- 
+Jens Axboe
