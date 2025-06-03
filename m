@@ -1,149 +1,252 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE82946F
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 01:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636238821
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 01:48:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748915304; cv=none; b=a1smwDhQAAZ86wj69hsTn/TAXYTcVKEf6e14lDNrabHKoegrL8+AclQ+SXRBeqC5xvNHtlnPLioajsFhaFyGxvq2ZUT+d1zPf1I5p4bYpyTs97sSk4aiSzziPNxckOUG0UP8PHsz8AamPI+kacq4n9doo7xfeUNzUKTv3FEBZIU=
+	t=1748915314; cv=none; b=aahA19Wxrfnre08WXAp8N9z8xXDgZ0fPvAQUjhn0w3EEWSkTYFX41ZX0csVjyAkqUA3KJ+bfU4/G1r5iWMG4fBIHeBBznzXPGhGZcMqG+ejGGmaSeNg5OJ5rwipOBSELyexkmm5h1iWlarXccW6P7VlKLlS7rPK7pGvNFuKbjK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748915304; c=relaxed/simple;
-	bh=zsNJJX1jJoWSC36VMv4Ppa5QB3krmJthNE6p+YJW0+Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PLp6PXZX349GNzniQcKu25iVT8VmDGRIjm9t8mRtM+QLkOYv5JwuLFlNxaSPoP0oXgTyMmuJ4cKHRifdVYL0I6ltG5MDGiEqQzL+5Os/rpj4xMWiX0UGdsreqvcpHEJ44T5/amOjc8AExt5pdLF0rdFU3E5GpyGjsHTY1GJBzOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=YfEU+q1N; arc=none smtp.client-ip=209.85.166.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1748915314; c=relaxed/simple;
+	bh=3G7vEupXjF2JGDhhB+aKBjXpHPIAImnns7bARvwL2tM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cypIfjagYwz5gnbWaClncewrQ6R3UHVRPH2TMAlZMqd1aD6OLwHzaaPl8XlwzNs+FYIihGDigCnKA1Fzn2hHdiHo/8AH6AvjMhUN4mfn1G1rHGtXTlrp8wHDonSxtwKFic9eIc7geOg2vbiSv/i/qXs6cYwn1u99X/8+t+55oIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nxv1fM0u; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="YfEU+q1N"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-86d2d9effe0so212705239f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Jun 2025 18:48:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1748915302; x=1749520102; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=smS8EjzcSloRPTQYvaADW34JGEeBewBx/Qxmpo51PM0=;
-        b=YfEU+q1NfFpgQozLLIxqMBBNSfAuy8565eswIflP0Lstkd1E7hPIba0iIQW0BxWPD0
-         LyMCdNmiFqGqkOALmxVGxw/hOVPGaJ28YEI+4ah4C0uKzyryHG5oRFmBfUvVwzQCYBp7
-         YhOEAqu1Zt3Z0O59Jqhayll4PV7MsClUAsQstq24bgSCJ8mogFT7Z7M/f3kuRrSRYyum
-         57Lxs3Ga+45Ddvya5+9N32J/+KlwuQP2gpRtLflSkjdEn+TeLK5rJQzOi/UR4vhEKY9B
-         v4XBBFb7k2D+yyZQXLuFfe5A7vwTj9nHoMzOF0rDxOft5G5EmCOphHokqFOgtYj/10kU
-         kqEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748915302; x=1749520102;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=smS8EjzcSloRPTQYvaADW34JGEeBewBx/Qxmpo51PM0=;
-        b=RNxSxno/2EHYgYFe9C8iFWceIfL0N1YS7NN1g4LRNpUIAixvuqvJw2y1HHoMGmdPVV
-         gUrqPBWehWRtAHlBims/0pnMpEdUBGG1p4pgVagaHkBSZSiPRScjo74bEDJIOhIiyJoT
-         /neS1SkGFl1966Buk6kdt2CVV+XW6Rejh3WIzz3H50MgLGKVF+FISv4d9p8q6gYdsgRW
-         8UM2Pb3cHrUS7FrgtK+hO8EQFdBjhjVrkiWTLM2EiWekOA8ZmrMxYT6MJEJNE7Nljib2
-         9NnUEY3dfAnOL+sn/gfJhvTl1jmp2dj84V0r4IQb1FzTpNvCurd9YkxA7HTh7Y3z0D1n
-         bpgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU9sKQB3fYRLRld0ctiraNGegohlE6FietskYGqMEpRjVtGKHRxc9EKybNKtgq6VkEnfnoafT9UUI74Bx8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyfr8aZTFQuYSmWoLRQjLIsCyFLzw9G0Pn1S8RyU1mEAE8JRprC
-	caJARbmyVsn2heSBG9YqXQ0DqOwbLCU2xDJOxp3yEZzQGGcNhREIJNzd2zArWOm6CkUYUwDd9/U
-	cjXUyLfl9gEwOOJ3u4Dg8zP80H4EU9F6nRMzR/PDMCg==
-X-Gm-Gg: ASbGnctaIDK7fTECf4zQUtYWAQ05VT43UcptQ0PGM6XyTe1G0rvuFYUYVvDty8pY9G4
-	R7cL/ucI97vm3gQXewWYpjx4vpUAGqA9QE+iTo6OdNVgrm6uuggvo/V8VEjWJWJPZ/wCMTZs4/X
-	PuWc/he1ud5tcktaldPxEBUUQjWv1eZ2itV6CmHRZBufUfNw==
-X-Google-Smtp-Source: AGHT+IFuF/DDjoIRyOOg6n9S1MKOJe4FFEYA3jligAcELhRoJ6MxOU7E4D0SYHCcB1pFVLyWGxF3fvY4DpN/lsFVfjA=
-X-Received: by 2002:a05:6602:4c85:b0:85a:e279:1ed6 with SMTP id
- ca18e2360f4ac-86d000fdd75mr1579564939f.11.1748915301709; Mon, 02 Jun 2025
- 18:48:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nxv1fM0u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748915313; x=1780451313;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3G7vEupXjF2JGDhhB+aKBjXpHPIAImnns7bARvwL2tM=;
+  b=Nxv1fM0ucyVnn59uQ/E/rnb6JyNzdQr4OEZfBd5H/5W/DF/piD1iBuQ2
+   koU2EuYnWKM4oalVLya7MomZuc81aFPm3MnQGKXp4kPljJmoT36QmFbDo
+   rkjATp5qLcrx1VmoTtf3w0IID7QyX9FNmKFhurfb/i8K9FgNuLURrOAuX
+   Cw2hoXv+6rsB0vqhKBLB1ql0apYP3M5cYGxMRICHFqNH66DuY6EbrWyay
+   4/DJQft32IjIpNOeCq5gMjJIk0SLa/56FRJAzFPntw5cK3KLv14ODYqmJ
+   KItDF9HzyKsy4BjOC/jTOof1cIJ0hunCT3v6YYFypDE8/qVgpVzgowTk5
+   g==;
+X-CSE-ConnectionGUID: v8VCSfYUQiS6Wxmkr8N7wQ==
+X-CSE-MsgGUID: DdCt96GrQ6a06V5zM42/yw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="61199217"
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="61199217"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 18:48:32 -0700
+X-CSE-ConnectionGUID: WOYmJrllS+yBWhT6DvR6CA==
+X-CSE-MsgGUID: aJxDHlDES5mpD37asO+KLQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="149854815"
+Received: from ly-workstation.sh.intel.com (HELO ly-workstation) ([10.239.35.3])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 18:48:29 -0700
+Date: Tue, 3 Jun 2025 09:48:26 +0800
+From: "Lai, Yi" <yi1.lai@linux.intel.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>, yi1.lai@intel.com
+Subject: Re: [RFC/PATCH] perf/core: Use POLLHUP for a pinned event in error
+Message-ID: <aD5UatkGo9salMl/@ly-workstation>
+References: <20250317061745.1777584-1-namhyung@kernel.org>
+ <aD2w50VDvGIH95Pf@ly-workstation>
+ <aD3gGKtrww3mjiqG@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250314092614.27372-1-zong.li@sifive.com> <aD3WKnyp_ffk60oF@debug.ba.rivosinc.com>
-In-Reply-To: <aD3WKnyp_ffk60oF@debug.ba.rivosinc.com>
-From: Zong Li <zong.li@sifive.com>
-Date: Tue, 3 Jun 2025 09:48:08 +0800
-X-Gm-Features: AX0GCFs480sGOOGNrguQ_lvoEsdO09nxDNbdUj7rtRkPH6awWaFU0LfDZJKnIyY
-Message-ID: <CANXhq0r8DeksFQC2ht8jeLpfn-0Tvuy4LU52BOMAj-AAB83+5A@mail.gmail.com>
-Subject: Re: [PATCH] riscv: traps: handle uprobe event in software-check exception
-To: Deepak Gupta <debug@rivosinc.com>
-Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aD3gGKtrww3mjiqG@google.com>
 
-On Tue, Jun 3, 2025 at 12:50=E2=80=AFAM Deepak Gupta <debug@rivosinc.com> w=
-rote:
+On Mon, Jun 02, 2025 at 10:32:08AM -0700, Namhyung Kim wrote:
+> Hello,
+> 
+> On Mon, Jun 02, 2025 at 10:10:47PM +0800, Lai, Yi wrote:
+> > Hi Namhyung Kim,
+> > 
+> > Greetings!
+> > 
+> > I used Syzkaller and found that there is WARNING: locking bug in perf_event_wakeup in linux-next next-20250530.
+> > 
+> > After bisection and the first bad commit is:
+> > "
+> > f4b07fd62d4d perf/core: Use POLLHUP for pinned events in error
+> > "
+> > 
+> > All detailed into can be found at:
+> > https://github.com/laifryiee/syzkaller_logs/tree/main/250601_162355_perf_event_wakeup
+> > Syzkaller repro code:
+> > https://github.com/laifryiee/syzkaller_logs/tree/main/250601_162355_perf_event_wakeup/repro.c
+> > Syzkaller repro syscall steps:
+> > https://github.com/laifryiee/syzkaller_logs/tree/main/250601_162355_perf_event_wakeup/repro.prog
+> > Syzkaller report:
+> > https://github.com/laifryiee/syzkaller_logs/tree/main/250601_162355_perf_event_wakeup/repro.report
+> > Kconfig(make olddefconfig):
+> > https://github.com/laifryiee/syzkaller_logs/tree/main/250601_162355_perf_event_wakeup/kconfig_origin
+> > Bisect info:
+> > https://github.com/laifryiee/syzkaller_logs/tree/main/250601_162355_perf_event_wakeup/bisect_info.log
+> > bzImage:
+> > https://github.com/laifryiee/syzkaller_logs/raw/refs/heads/main/250601_162355_perf_event_wakeup/bzImage_next-20250530
+> > Issue dmesg:
+> > https://github.com/laifryiee/syzkaller_logs/blob/main/250601_162355_perf_event_wakeup/next-20250530_dmesg.log
+> > 
+> > "
+> > [   39.913691] =============================
+> > [   39.914157] [ BUG: Invalid wait context ]
+> > [   39.914623] 6.15.0-next-20250530-next-2025053 #1 Not tainted
+> > [   39.915271] -----------------------------
+> > [   39.915731] repro/837 is trying to lock:
+> > [   39.916191] ffff88801acfabd8 (&event->waitq){....}-{3:3}, at: __wake_up+0x26/0x60
+> > [   39.917182] other info that might help us debug this:
+> > [   39.917761] context-{5:5}
+> > [   39.918079] 4 locks held by repro/837:
+> > [   39.918530]  #0: ffffffff8725cd00 (rcu_read_lock){....}-{1:3}, at: __perf_event_task_sched_in+0xd1/0xbc0
+> > [   39.919612]  #1: ffff88806ca3c6f8 (&cpuctx_lock){....}-{2:2}, at: __perf_event_task_sched_in+0x1a7/0xbc0
+> > [   39.920748]  #2: ffff88800d91fc18 (&ctx->lock){....}-{2:2}, at: __perf_event_task_sched_in+0x1f9/0xbc0
+> > [   39.921819]  #3: ffffffff8725cd00 (rcu_read_lock){....}-{1:3}, at: perf_event_wakeup+0x6c/0x470
+> > [   39.922823] stack backtrace:
+> > [   39.923171] CPU: 0 UID: 0 PID: 837 Comm: repro Not tainted 6.15.0-next-20250530-next-2025053 #1 PREEMPT(voluntary)
+> > [   39.923196] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.o4
+> > [   39.923214] Call Trace:
+> > [   39.923221]  <TASK>
+> > [   39.923228]  dump_stack_lvl+0xea/0x150
+> > [   39.923256]  dump_stack+0x19/0x20
+> > [   39.923276]  __lock_acquire+0xb22/0x22a0
+> > [   39.923308]  ? x86_pmu_commit_txn+0x195/0x2b0
+> > [   39.923339]  ? __lock_acquire+0x412/0x22a0
+> > [   39.923375]  lock_acquire+0x170/0x310
+> > [   39.923407]  ? __wake_up+0x26/0x60
+> > [   39.923448]  _raw_spin_lock_irqsave+0x52/0x80
+> > [   39.923473]  ? __wake_up+0x26/0x60
+> > [   39.923504]  __wake_up+0x26/0x60
+> > [   39.923537]  perf_event_wakeup+0x14a/0x470
+> > [   39.923571]  merge_sched_in+0x846/0x15c0
+> > [   39.923610]  visit_groups_merge.constprop.0.isra.0+0x952/0x1420
+> > [   39.923653]  ? __pfx_visit_groups_merge.constprop.0.isra.0+0x10/0x10
+> > [   39.923688]  ? sched_clock_noinstr+0x12/0x20
+> > [   39.923724]  ? __sanitizer_cov_trace_const_cmp1+0x1e/0x30
+> > [   39.923766]  ctx_sched_in+0x471/0xa20
+> > [   39.923804]  ? __pfx_ctx_sched_in+0x10/0x10
+> > [   39.923838]  ? __sanitizer_cov_trace_const_cmp4+0x1a/0x20
+> > [   39.923878]  perf_event_sched_in+0x47/0xa0
+> > [   39.923912]  __perf_event_task_sched_in+0x3fc/0xbc0
+> > [   39.923951]  ? __pfx___perf_event_task_sched_in+0x10/0x10
+> > [   39.923984]  ? __this_cpu_preempt_check+0x21/0x30
+> > [   39.924012]  ? __sanitizer_cov_trace_cmp8+0x1c/0x30
+> > [   39.924046]  ? xfd_validate_state+0x14f/0x1b0
+> > [   39.924081]  finish_task_switch.isra.0+0x525/0x990
+> > [   39.924117]  ? lock_unpin_lock+0xdc/0x170
+> > [   39.924152]  __schedule+0xef3/0x3840
+> > [   39.924185]  ? __pfx___schedule+0x10/0x10
+> > [   39.924218]  ? ktime_get_coarse_real_ts64+0xad/0xf0
+> > [   39.924259]  schedule+0xf6/0x3d0
+> > [   39.924285]  exit_to_user_mode_loop+0x7a/0x110
+> > [   39.924315]  do_syscall_64+0x284/0x2e0
+> > [   39.924340]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> > [   39.924360] RIP: 0033:0x7ff14103ee5d
+> > [   39.924381] Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 8
+> > [   39.924400] RSP: 002b:00007fffb2745578 EFLAGS: 00000202 ORIG_RAX: 0000000000000038
+> > [   39.924418] RAX: 0000000000000346 RBX: 0000000000000000 RCX: 00007ff14103ee5d
+> > [   39.924431] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000082000
+> > [   39.924443] RBP: 00007fffb27455c0 R08: 0000000000000000 R09: 0000000000000000
+> > [   39.924456] R10: 0000000000000000 R11: 0000000000000202 R12: 00007fffb27459a8
+> > [   39.924468] R13: 0000000000404e78 R14: 0000000000406e08 R15: 00007ff141389000
+> > [   39.924497]  </TASK>
+> > [   40.307815] coredump: 804(repro): over core_pipe_limit, skipping core dump
+> > [   40.472093] coredump: 795(repro): over core_pipe_limit, skipping core dump
+> > [   40.545575] coredump: 799(repro): over core_pipe_limit, skipping core dump
+> > [   40.948915] coredump: 833(repro): over core_pipe_limit, skipping core dump
+> > [   40.989336] coredump: 811(repro): over core_pipe_limit, skipping core dump
+> > [   42.121469] coredump: 857(repro): over core_pipe_limit, skipping core dump
+> > "
+> > 
+> > Hope this cound be insightful to you.
+> > 
+> > Regards,
+> > Yi Lai
+> > 
+> > ---
+> > 
+> > If you don't need the following environment to reproduce the problem or if you
+> > already have one reproduced environment, please ignore the following information.
+> > 
+> > How to reproduce:
+> > git clone https://gitlab.com/xupengfe/repro_vm_env.git
+> > cd repro_vm_env
+> > tar -xvf repro_vm_env.tar.gz
+> > cd repro_vm_env; ./start3.sh  // it needs qemu-system-x86_64 and I used v7.1.0
+> >   // start3.sh will load bzImage_2241ab53cbb5cdb08a6b2d4688feb13971058f65 v6.2-rc5 kernel
+> >   // You could change the bzImage_xxx as you want
+> >   // Maybe you need to remove line "-drive if=pflash,format=raw,readonly=on,file=./OVMF_CODE.fd \" for different qemu version
+> > You could use below command to log in, there is no password for root.
+> > ssh -p 10023 root@localhost
+> > 
+> > After login vm(virtual machine) successfully, you could transfer reproduced
+> > binary to the vm by below way, and reproduce the problem in vm:
+> > gcc -pthread -o repro repro.c
+> > scp -P 10023 repro root@localhost:/root/
+> > 
+> > Get the bzImage for target kernel:
+> > Please use target kconfig and copy it to kernel_src/.config
+> > make olddefconfig
+> > make -jx bzImage           //x should equal or less than cpu num your pc has
+> > 
+> > Fill the bzImage file into above start3.sh to load the target kernel in vm.
+> > 
+> > 
+> > Tips:
+> > If you already have qemu-system-x86_64, please ignore below info.
+> > If you want to install qemu v7.1.0 version:
+> > git clone https://github.com/qemu/qemu.git
+> > cd qemu
+> > git checkout -f v7.1.0
+> > mkdir build
+> > cd build
+> > yum install -y ninja-build.x86_64
+> > yum -y install libslirp-devel.x86_64
+> > ../configure --target-list=x86_64-softmmu --enable-kvm --enable-vnc --enable-gtk --enable-sdl --enable-usb-redir --enable-slirp
+> > make
+> > make install 
+> 
+> Thanks for the detailed instruction.  I was able to reproduce it with
+> your setup.  The below patch fixes it for me.  Can you please double
+> check if it works well for you?
+> 
+> Thanks,
+> Namhyung
 >
-> Hi Zong,
->
-> Thanks for taking the initiative for making cfi work with uprobe.
-> And sorry for not noticing the patch earlier.
-> Few comments inline.
->
->
-> On Fri, Mar 14, 2025 at 05:26:14PM +0800, Zong Li wrote:
-> >Handle the uprobe event first before handling the CFI violation in
-> >software-check exception handler. Because when the landing pad is
-> >activated, if the uprobe point is set at the lpad instruction at
-> >the beginning of a function, the system triggers a software-check
-> >exception instead of an ebreak exception due to the exception
-> >priority, then uprobe can't work successfully.
-> >
-> >Co-developed-by: Deepak Gupta <debug@rivosinc.com>
-> >Signed-off-by: Deepak Gupta <debug@rivosinc.com>
-> >Signed-off-by: Zong Li <zong.li@sifive.com>
-> >---
-> >
-> >This patch is based on top of the following series
-> >[PATCH v11 00/27] riscv control-flow integrity for usermode
-> >
-> > arch/riscv/kernel/traps.c | 9 ++++++---
-> > 1 file changed, 6 insertions(+), 3 deletions(-)
-> >
-> >diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-> >index 3f7709f4595a..ef5a92111ee1 100644
-> >--- a/arch/riscv/kernel/traps.c
-> >+++ b/arch/riscv/kernel/traps.c
-> >@@ -386,9 +386,12 @@ asmlinkage __visible __trap_section void do_trap_so=
-ftware_check(struct pt_regs *
-> >       if (user_mode(regs)) {
-> >               irqentry_enter_from_user_mode(regs);
-> >
-> >-              /* not a cfi violation, then merge into flow of unknown t=
-rap handler */
-> >-              if (!handle_user_cfi_violation(regs))
-> >-                      do_trap_unknown(regs);
-> >+              /* handle uprobe event frist */
-> >+              if (!probe_breakpoint_handler(regs)) {
->
-> If task has uprobe enabled and there is a cfi violation due to mismatch i=
-n
-> return address on shadow stack and regular stack, then it would be a cfi
-> bypass, right?
-> Perhaps we should be doing this only when we match that sw check exceptio=
-n
-> is due to forward cfi violation?
->
-> Do you agree?
 
-Yes, let me add a condition for forward cfi violation here. Thanks for
-pointing it out.
+After applying following patch on top of latest linux-next, issue
+cannot be reproduced.
 
->
-> >+                      /* not a cfi violation, then merge into flow of u=
-nknown trap handler */
-> >+                      if (!handle_user_cfi_violation(regs))
-> >+                              do_trap_unknown(regs);
-> >+              }
-> >
-> >               irqentry_exit_to_user_mode(regs);
-> >       } else {
-> >--
-> >2.17.1
-> >
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+Regards,
+Yi Lai
+
+> ---8---
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index f34c99f8ce8f446a..e22eb88eb105b95b 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -3995,7 +3995,8 @@ static int merge_sched_in(struct perf_event *event, void *data)
+>  			if (*perf_event_fasync(event))
+>  				event->pending_kill = POLL_ERR;
+>  
+> -			perf_event_wakeup(event);
+> +			event->pending_wakeup = 1;
+> +			irq_work_queue(&event->pending_irq);
+>  		} else {
+>  			struct perf_cpu_pmu_context *cpc = this_cpc(event->pmu_ctx->pmu);
+>  
+> -- 
+> 2.49.0.1204.g71687c7c1d-goog
+> 
