@@ -1,124 +1,199 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 547CF1F63D9;
-	Tue,  3 Jun 2025 07:04:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E9CAD23
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 07:06:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748934283; cv=none; b=Zs/C+waRU4NQPhV2WtEQmy9H+eZCKPe/yWv15ZZNtMTNsnvXLQcU2QHN5U3XvmxNNSInKxLEEnZfSOQdMMLGeydRqhwE4sVn5SNAPjsUwUIlFnZjvHrWXYVjbj+MVA/rWSQFpMis3RNoLTxh7oKUargpgJGyoL/UoLJbPZ3ME14=
+	t=1748934364; cv=none; b=iLYO+0ivOsf1rlWovwPA8d5VFyQCaXbnNTuQa+dA6+LI/Dd+g1ksSI4oagfTapxfZlpBSUjw7hBSJm/deNQDbEkcH2rshxx2xmSYGkRo4QJjReUOmxm2pRIi0T/t1yfoKRghwCrhsx0DjyM27k6+MC6Pe6zaxl0XJmtwlusYD+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748934283; c=relaxed/simple;
-	bh=tDULJVvapD3GbaUPZBh6QoAWo7a/Aq/65kFs9l2booE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kKJ8612VI54dtat9proQuXzcjMQbZwEvg65Hv558FGQ1Eq2O98gKfZilD2njYkynpePhCCnINbKHOggQIB+DmGZRTfnN3+25m3TambNFH+kqbzmT9TIbmF0dNcgFFAOigtt6mSaAA3WzXbhZ8dG+RQpHA4NC+CYyUeypGAzAYek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BZ85++bw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748934364; c=relaxed/simple;
+	bh=Zw7JnFzVMeuo8BnGhrCv9FlB2nDeaokUhdGlmW2Jmy8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ttZ37cHcdut4W2uOdTsp3RChaKOYIMwpbGeRPcMTiw3E/q5lDKO/dq2MXIm8IWzeU7PyNEjkOy35sLQgplClmPcBrDujr+9LU0DBb2TJo0wH1AHuVJkpqz13s4kQz90o20JGEYeZWGeLE/ozyyPZN4kcjRhzU22cWeGBOhdtka0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=gqVVa1d0; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BZ85++bw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5AB4C4CEEF;
-	Tue,  3 Jun 2025 07:04:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748934283;
-	bh=tDULJVvapD3GbaUPZBh6QoAWo7a/Aq/65kFs9l2booE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BZ85++bwlHn5oXkn7WjtuKV/ghFie3VmaxFXemAABdrXXTtuRoHAkBON+t4xeI5IA
-	 mt2JvBHRv71/TmH/qTfh2zMPW3QBdqYV4pJ/5RulMfsNjWTai1SiTERfPSdJnY7nnf
-	 +RKtddSHwws3cdHB5dHbg2Flt0AOO0JOA2y0wZu/ytJJyPqftwgkWjDwIUl+2pstAi
-	 Tqrb9NIVKvOkT5z2Su+4wmGaAcc2DYvD8Z815RUvTJ9pkV77xib2WDyZ/mNc+Ah8BD
-	 fv90/STO+OFkXrgbLCLkF9vvhujuP2g+m/8pfanYTF6uUO3FlSD2m0oGmtAqv2+F/m
-	 8OEAKuSrOnoew==
-Message-ID: <8bcc4fb7-b477-4478-a61c-0d7aa37a7f6e@kernel.org>
-Date: Tue, 3 Jun 2025 09:04:35 +0200
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="gqVVa1d0"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id CCC3D22DCD;
+	Tue,  3 Jun 2025 09:05:59 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id JxEtRYlshMp1; Tue,  3 Jun 2025 09:05:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1748934359; bh=Zw7JnFzVMeuo8BnGhrCv9FlB2nDeaokUhdGlmW2Jmy8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=gqVVa1d0kS8sNmrwCPstBGKaALFpmZoZReHsVYtLmEaZgjsn4ikGbj3nzh/OugPD5
+	 HXEpOFUPqQ4pR2O+dJe1TC8d+1WujXUJb71txVCDPLb8Ktbi8K8OShQ+CTePJ6Mifv
+	 43F+2G5BmY3obv7HtWVD0XRKp7qlaCX4s8xSNcP4Z11/25z3DRLUcLROr/7E4e5mX+
+	 b4BvC1QaCY1oprNpSoSUsWpHa1R2EzBBZfflFZjdqIiPz619ckNWTIwfEDpDbPZ9xE
+	 jWCD0brTE60P5Hwz48y4h0RRSNoW2N9LfMfbAHUPzUGFlKb+C6MSMt3I+hdUmuLf5d
+	 tntexQwxWhiDw==
+Date: Tue, 3 Jun 2025 07:05:52 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Jianmin Lv <lvjianmin@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
+Subject: Re: [PATCH 2/2] platform/loongarch: laptop: Support backlight power
+ control
+Message-ID: <aD6e0JLntUC6BdH7@pie.lan>
+References: <20250531113851.21426-1-ziyao@disroot.org>
+ <20250531113851.21426-3-ziyao@disroot.org>
+ <CAAhV-H7RBcaAP8WjjrX20cvuMixarqyeTLoMPdb8QMztz_648g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 03/18] dt-bindings: clock: qcom,sm8450-camcc: Move
- sc8280xp camcc to sa8775p camcc
-To: Jagadeesh Kona <quic_jkona@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
- Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
- Dmitry Baryshkov <lumag@kernel.org>
-Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
- Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>,
- Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-References: <20250530-videocc-pll-multi-pd-voting-v5-0-02303b3a582d@quicinc.com>
- <20250530-videocc-pll-multi-pd-voting-v5-3-02303b3a582d@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250530-videocc-pll-multi-pd-voting-v5-3-02303b3a582d@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H7RBcaAP8WjjrX20cvuMixarqyeTLoMPdb8QMztz_648g@mail.gmail.com>
 
-On 30/05/2025 15:20, Jagadeesh Kona wrote:
-> SC8280XP camcc only requires the MMCX power domain, unlike SM8450 camcc
-> which now supports both MMCX and MXC power domains. Hence move SC8280XP
-> camcc from SM8450 to SA8775P camcc, to have single power domain support.
+On Tue, Jun 03, 2025 at 12:16:57PM +0800, Huacai Chen wrote:
+> On Sat, May 31, 2025 at 7:39 PM Yao Zi <ziyao@disroot.org> wrote:
+> >
+> > loongson_laptop_turn_{on,off}_backlight() are designed for controlling
+> > power of the backlight, but they aren't really used in the driver
+> > previously.
+> >
+> > Unify these two functions since they only differ in arguments passed to
+> > ACPI method, and wire up loongson_laptop_backlight_update() to update
+> > power state of the backlight as well. Tested on TongFang L860-T2 3A5000
+> > laptop.
+> >
+> > Signed-off-by: Yao Zi <ziyao@disroot.org>
+> > ---
+> >  drivers/platform/loongarch/loongson-laptop.c | 53 +++++++-------------
+> >  1 file changed, 19 insertions(+), 34 deletions(-)
+> >
+> > diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/platform/loongarch/loongson-laptop.c
+> > index 828bd62e3596..f01e53b1c84d 100644
+> > --- a/drivers/platform/loongarch/loongson-laptop.c
+> > +++ b/drivers/platform/loongarch/loongson-laptop.c
+> > @@ -56,8 +56,6 @@ static struct input_dev *generic_inputdev;
+> >  static acpi_handle hotkey_handle;
+> >  static struct key_entry hotkey_keycode_map[GENERIC_HOTKEY_MAP_MAX];
+> >
+> > -int loongson_laptop_turn_on_backlight(void);
+> > -int loongson_laptop_turn_off_backlight(void);
+> >  static int loongson_laptop_backlight_update(struct backlight_device *bd);
+> >
+> >  /* 2. ACPI Helpers and device model */
+> > @@ -354,6 +352,22 @@ static int ec_backlight_level(u8 level)
+> >         return level;
+> >  }
+> >
+> > +static int ec_backlight_set_power(bool state)
+> > +{
+> > +       int status;
+> > +       union acpi_object arg0 = { ACPI_TYPE_INTEGER };
+> > +       struct acpi_object_list args = { 1, &arg0 };
+> > +
+> > +       arg0.integer.value = state;
+> > +       status = acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
+> > +       if (ACPI_FAILURE(status)) {
+> > +               pr_info("Loongson lvds error: 0x%x\n", status);
+> > +               return -EIO;
+> > +       }
+> > +
+> > +       return 0;
+> > +}
+> > +
+> >  static int loongson_laptop_backlight_update(struct backlight_device *bd)
+> >  {
+> >         int lvl = ec_backlight_level(bd->props.brightness);
+> > @@ -363,6 +377,8 @@ static int loongson_laptop_backlight_update(struct backlight_device *bd)
+> >         if (ec_set_brightness(lvl))
+> >                 return -EIO;
+> >
+> > +       ec_backlight_set_power(bd->props.power == BACKLIGHT_POWER_ON ? true : false);
+> It is better to check the status before setting, because the EC
+> firmware may not be as robust as needed, a checking can reduce
+> interactions between kernel and EC.
 > 
-> SA8775P camcc doesn't support required-opps property currently but SC8280XP
-> camcc need that property,  so add required-opps based on SC8280XP camcc
-> conditional check in SA8775P camcc bindings.
+> There is an example: dp_aux_backlight_update_status() in
+> drivers/gpu/drm/display/drm_dp_helper.c.
+
+It's reasonable and I'll take it.
+
+> > +
+> >         return 0;
+> >  }
+> >
+> > @@ -394,6 +410,7 @@ static int laptop_backlight_register(void)
+> >
+> >         props.brightness = ec_get_brightness();
+> >         props.max_brightness = status;
+> > +       props.power = BACKLIGHT_POWER_ON;
+> >         props.type = BACKLIGHT_PLATFORM;
+> >
+> >         backlight_device_register("loongson_laptop",
+> > @@ -402,38 +419,6 @@ static int laptop_backlight_register(void)
+> >         return 0;
+> >  }
+> >
+> > -int loongson_laptop_turn_on_backlight(void)
+> > -{
+> > -       int status;
+> > -       union acpi_object arg0 = { ACPI_TYPE_INTEGER };
+> > -       struct acpi_object_list args = { 1, &arg0 };
+> > -
+> > -       arg0.integer.value = 1;
+> > -       status = acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
+> > -       if (ACPI_FAILURE(status)) {
+> > -               pr_info("Loongson lvds error: 0x%x\n", status);
+> > -               return -ENODEV;
+> > -       }
+> > -
+> > -       return 0;
+> > -}
+> > -
+> > -int loongson_laptop_turn_off_backlight(void)
+> > -{
+> > -       int status;
+> > -       union acpi_object arg0 = { ACPI_TYPE_INTEGER };
+> > -       struct acpi_object_list args = { 1, &arg0 };
+> > -
+> > -       arg0.integer.value = 0;
+> > -       status = acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
+> > -       if (ACPI_FAILURE(status)) {
+> > -               pr_info("Loongson lvds error: 0x%x\n", status);
+> > -               return -ENODEV;
+> > -       }
+> > -
+> > -       return 0;
+> > -}
+> I prefer to keep them, in downstream kernels there are users of them,
+> I don't want to add them back if one day those users are upstream.
+
+These two functions are mostly identical, and I think unifying them
+together should be the right way to go. If this makes sense, users
+introduced in the future should also adapt it, instead of keeping
+redundant code in the current mainline kernel.
+
+If there're new users of the API out of the loongson3_laptop module in
+the future, it's still easy to rename ec_backlight_set_power() and
+export it.
+
+For these two points, I disagree on keeping these two symbols.
+
+> Huacai
+
+Thanks,
+Yao Zi
+
+> > -
+> >  static int __init event_init(struct generic_sub_driver *sub_driver)
+> >  {
+> >         int ret;
+> > --
+> > 2.49.0
+> >
+> >
 > 
-> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
-> ---
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
