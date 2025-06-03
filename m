@@ -1,98 +1,210 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B57288C9F
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 18:16:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B28288CB3
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 18:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748974612; cv=none; b=d886LvxpPFzCQanGGe4z3gMxioaprlhDuCiofQ7aT7q0l9RjwK1k95vXyLtAousR7acHP8FOYvTf5MeuVg1pTWfxWB+WTmJgguVWPCiWmPar8uQTLHdqx7E62ecZSL8OBDiY0P87SQkkq1MdS3UcHFC6C2eTGmCK0hqL1iOPpQM=
+	t=1748974614; cv=none; b=G+7pZiXtlZiLVIcB4FxFSZdwU2gOwTXhECzRaBVg9+hc2oJYFYOaT7Br75bSHzbTzRbtFetXdHaQC/iLCgdLaj+B+z/86kuT+T01V7CFCV9fUK/UClILoDToaVnmV7awWpTTWEy7tl1WTlKxyE0qk4scbAXXDJ0uLwqAQJrq2l0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748974612; c=relaxed/simple;
-	bh=XwZYNNYPEhCRT8H8UpMTHiRDWFFej+uLkqOYGvKnWqc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EqA21yFolj7aBcPMOl15rEgEMAmRdMWofQQo9tjPQR3wPVoyk0M5L4sb3XgBD4JzbrSsrhW8faW1sOQMEz5rn1QHBHNK5TKH873ewOcPcQYmyD8B0+h+/CzY1oH/NkslcDYZi7qsFKK+vI/WCrCNAx2EoQE8GsOU27IJNkDEHGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=riscv-rocks.de; spf=pass smtp.mailfrom=tometzki.de; dkim=pass (2048-bit key) header.d=riscv-rocks.de header.i=@riscv-rocks.de header.b=evnlob9Z; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=riscv-rocks.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tometzki.de
+	s=arc-20240116; t=1748974614; c=relaxed/simple;
+	bh=wBMwFZ65rrg8ho4R1itK1EGQahIG96i90ewd1ea9HYg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=icjbYkiUqbKBU5b5zR9BRY8QqIM9FOeWLjuKXxetXn4+ZVCuPreSk9MnDMylv/+Ogfd3zCli4g1Y/QshKYE231XCjKxc/aGBQvBDs260HWLLG3VlsBmBzIqCLTyEGiDPgZETDin7akNmNtSWjATgpOYvKMGBuNyDDp7jcj5YOL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FtvKk2i7; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscv-rocks.de header.i=@riscv-rocks.de header.b="evnlob9Z"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-70e4b1acf41so50235897b3.3
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 11:16:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FtvKk2i7"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7394772635dso3940184b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 11:16:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscv-rocks.de; s=google; t=1748974609; x=1749579409; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XwZYNNYPEhCRT8H8UpMTHiRDWFFej+uLkqOYGvKnWqc=;
-        b=evnlob9ZzLNV28C1gxEo6ftwlN4sjSnk1SjzS2x+wUfx3A1i6+a7uSuhssvlZsSVnU
-         otsyxwNsGZXlDVx3S2Vd0IG0tNdU4ZkL8Jv/cxt6y6jbfmxVFoonSCUveF0cZrqs0mV6
-         CrsXnSjjp6gJ3S+Ok/jCAw64LV/tTkzkh4CnWg7TcT1jmDyma1ohRE5Pg2WG3ZapGG3Y
-         Q31x7RjPYMHuBLHUgJegDRMbIyLD4zY4fPOrcdubX06tYSPqkyfUUqHt2F5zHAzaJaTS
-         jQutileHkHkwFEVhL5wbhuMCy2tfDvXQe8iRonXGrfS5XOfF0kscQxTPVnip4KI2kXb6
-         SQyA==
+        d=google.com; s=20230601; t=1748974612; x=1749579412; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XvHfZvteDDVqcCnEge2jWEzX4DjmZnrKZWBqnzvh3sM=;
+        b=FtvKk2i7DM7s4ZJvbtTccyj9kDRt5eJoEBNDFXUWW9GEP8doLWIVIgvoFmIJPpCEEV
+         xe/hSdd2qZhh+FK3/8zj9JddLw8fEqaDwawppFcwrb4ZIMkEH1WtNGJSuKfg/hnEiSy1
+         zOk0/zVEBjmCzJCyjRiv/6JIsaFxIwSlugA2WqEgjqAXD2IKZlFrbWqvJyoFC+J03O/W
+         hkADPPrM6q4leOkfUcx4/ETS0Kr94eXQi1vuHehWvdl0xDwRJtfXVfxvhcW/MMCfDBpJ
+         Ohj3RCV/0pl1VKycUaolJIi5Z9Oi+azEYLwrjydQsmOO1/7AAzWCbGCXElI7a+EvqYw9
+         Jrpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748974609; x=1749579409;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XwZYNNYPEhCRT8H8UpMTHiRDWFFej+uLkqOYGvKnWqc=;
-        b=JHfGk4L6pWMg/gyb8/qQJCpkRxVs1HEEnWu78v+UHpZeGjWI2eoJ75OLpHKTF/jp5B
-         rG9tj1lqqCVd14cOed65tYNVBwAShvJhi4RfrtcOliAZF3qkxaQ3POLsu16SCIEW0BDg
-         igAOG0FVPEMBIi1rteprqn8r7UF/AwXTnAm9TSlipN2UMI/VXZeRCnSK7f5KmtQn9Nk1
-         bvUD6yeT5i66Kbl9thlQrh8jjEZ3yLhALrByk5dD8+23/cAEf0+UBhVdyFfsLBwXHhWO
-         Pk62HatzDvK/xOE8b7C9ZlwFnK0z27BKaPHQojGqsks/3+56i2FpU6V162Fl+KRShMlP
-         tr0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVSkXsb0A4ugplFfRH8+uKdnxoEeiFMCYmHn2jo9SDQrU+FcodAxq1ejZjPSKi/T1FAmQ4gT3lx3nwh5JE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyExfnsJFOcKGkiFPe6Urz/p5OibqFYSYiLHnxsCwnSaIfFMK9M
-	iLws1JUzWZGnx52a9H4VhO5/AaG1UujbH1mRQVkicZNyDKv0fsoW4tRuFhmKIh0mrirmulR3LAa
-	hgcS978OjT+ol0QxkFeC8uHqZYD1+vgasaDN5wrQWfA==
-X-Gm-Gg: ASbGnctpLPtxfPa7sCwVtI5/pIlOR6KbuNOusdJfsmIbhAjwa93RNLelc+NqDxM/CSl
-	g+Rt/i/TcBj78HGuHZOWmVZO3u6asr+tnAM4zAPzCEpksYkplLshpqZ8rZwfQVNdPY7kfAMi9CI
-	va6rlBq09hlGnL3x/eAw1uJfxWkx+B7kRPzoHXgCQ4cEOUfjanaY2kit7fwu1XMlt1t3TvNLe3D
-	Io=
-X-Google-Smtp-Source: AGHT+IFBIpNs5ZFdnmrMyOSBi+WesTkbjtEja3Fo1Yjt1PD6fJ9G9DUcF4K51Sm5nZUrijd5LAIIjQgaZFbzpSu/HG8=
-X-Received: by 2002:a05:690c:6107:b0:70a:2675:70b3 with SMTP id
- 00721157ae682-71057cf83e4mr246755997b3.17.1748974609387; Tue, 03 Jun 2025
- 11:16:49 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748974612; x=1749579412;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XvHfZvteDDVqcCnEge2jWEzX4DjmZnrKZWBqnzvh3sM=;
+        b=tmqWkr2dRMtwgZh5wAhM5q+JXnRxQOXzrCwZgL91bK9gd8YywTw3vu0oXRQlAdY3tL
+         zG1BeVWmrYZTR8Ym/nPGla25tQ2CBa4iBN6UxbPvekSiNtnZno/fjk592A1muZOp9q4f
+         jxiD2j2+LldugFDf6XfNc8iMmok+LT6gZMSopzj0hyfnzBQKXwecGrw1yUo6F9DO4Cy9
+         OLQT7DWegJGsC5vzCzHL1dQE7DKA1UF9iUBYEM8/N91x0shL1LAHF5+PdIJGPlo+r8Gj
+         eiJrxLCVdz6v0CdOj/5Ud2wB3d2vEOihN3or7FemCJGz7apJ59AStG2dep1cDO//Zyaa
+         FTgg==
+X-Gm-Message-State: AOJu0YyX7nQNYZIpT6bBbyVtytZHE9TjoN+c7mb0Ml418F0j9tiLUMSS
+	/TVk2h55Gf7uUrTD0aWouMazKX5c7hLe3rGFFUz2TU/z+e/fuQ3zNgKn4GsxIGIOmkBwJI+NJWJ
+	XA4rhIaP5/MjSLqMB4/BY519LGMStYKh8jyAhVUlzDmCwlSSu/0ZQMtFYYPANvHqLC00atSYCqM
+	2lgE3w1M+rR63CQaYevZm/lcHRgm0EyCNwpT/EWXsk6oZa
+X-Google-Smtp-Source: AGHT+IEuYjk9n2uExO2tYukINHmxBE9zmSFBuDwroUnzVDGF4KT2eakPJ9ADydhQfQMyjArCbTyiOhGBzlU=
+X-Received: from pgbdh4.prod.google.com ([2002:a05:6a02:b84:b0:b2e:ce0c:b3fb])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3944:b0:1f5:8622:5ecb
+ with SMTP id adf61e73a8af0-21ae00c7013mr33177374637.34.1748974612100; Tue, 03
+ Jun 2025 11:16:52 -0700 (PDT)
+Date: Tue,  3 Jun 2025 11:15:54 -0700
+In-Reply-To: <20250603181634.1362626-1-ctshao@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <0107019736e3a599-79e58a4a-0dfa-4f43-aeaf-4a4208845b32-000000@eu-central-1.amazonses.com>
- <DM3PPF63A6024A98E210FB9D166A3CD1316A36DA@DM3PPF63A6024A9.namprd11.prod.outlook.com>
-In-Reply-To: <DM3PPF63A6024A98E210FB9D166A3CD1316A36DA@DM3PPF63A6024A9.namprd11.prod.outlook.com>
-From: Damian Tometzki <damian@riscv-rocks.de>
-Date: Tue, 3 Jun 2025 20:16:38 +0200
-X-Gm-Features: AX0GCFuLbmz7320MGfValmAaRgWc694_-_RyvStDPr9rmaaBAYCOu-qNr0PlmX0
-Message-ID: <CAL=B37=-q=Veghr7bo2GGiy1eyKP_xF0g8SeK5Lu6uKTVZgxoQ@mail.gmail.com>
-Subject: Re: [wireless] WARNING in iwl_mvm_sta_rx_agg+0x9d3/0xb70 [iwlmvm]
-To: "Korenblit, Miriam Rachel" <miriam.rachel.korenblit@intel.com>
-Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Mime-Version: 1.0
+References: <20250603181634.1362626-1-ctshao@google.com>
+X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
+Message-ID: <20250603181634.1362626-2-ctshao@google.com>
+Subject: [PATCH v4 2/2] perf evsel: Find process with busy PMUs for EBUSY
+From: Chun-Tse Shao <ctshao@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Chun-Tse Shao <ctshao@google.com>, Ian Rogers <irogers@google.com>, peterz@infradead.org, 
+	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, james.clark@linaro.org, howardchu95@gmail.com, 
+	weilin.wang@intel.com, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Miri,
-If you need a kernel trace, I can provide a trace-cmd log. Please
-confirm which events are relevant ?
-My idee ?
-sudo trace-cmd record -e mac80211 -e cfg80211
+It parses fdinfo with PMU type, comparing with the event which failed to
+open, and report the processes causing EBUSY error.
 
-I will reproduce the issue and attach the resulting trace.dat file.
+Testing cycles and intel_pt//
 
-Regarding suspend/resume:
-- The warning appears after resuming from suspend-to-RAM.
-Please let me know if you need further details or a specific test scenario.
+  $ ./perf stat -e cycles &
+  [1] 55569
+  $ ./perf stat -e intel_pt// &
+  [2] 55683
+  $ ./perf stat -e intel_pt//
+  Error:
+  The PMU intel_pt counters are busy and in use by another process.
+  Possible processes:
+  55683 ./perf stat -e intel_pt//
 
-Best regards,
-Damian
+Only perf with intel_pt was reported.
 
-On Tue, Jun 3, 2025 at 7:50=E2=80=AFPM Korenblit, Miriam Rachel
-<miriam.rachel.korenblit@intel.com> wrote:
->
-> Could you please provide a trace-cmd?
-> Does this happen also before suspend?
->
-> Miri
+Reviewed-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+---
+v4:
+  Removed the first patch in v3 since it is merged.
+  Retested to make sure the patch still work.
+
+v3: lore.kernel.org/20241106003007.2112584-3-ctshao@google.com/
+ tools/perf/util/evsel.c | 79 +++++++++++++++++++++++++++++------------
+ 1 file changed, 57 insertions(+), 22 deletions(-)
+
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index d55482f094bf..fa281ea15a25 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -3619,7 +3619,8 @@ static bool find_process(const char *name)
+ 	return ret ? false : true;
+ }
+
+-static int dump_perf_event_processes(char *msg, size_t size)
++static int dump_perf_event_processes(const struct perf_event_attr *failed_attr,
++				     char *msg, size_t size)
+ {
+ 	DIR *proc_dir;
+ 	struct dirent *proc_entry;
+@@ -3660,29 +3661,61 @@ static int dump_perf_event_processes(char *msg, size_t size)
+ 				continue;
+ 			/* Take care as readlink doesn't null terminate the string. */
+ 			if (!strncmp(buf, "anon_inode:[perf_event]", link_size)) {
+-				int cmdline_fd;
+-				ssize_t cmdline_size;
+-
+-				scnprintf(buf, sizeof(buf), "%s/cmdline", proc_entry->d_name);
+-				cmdline_fd = openat(dirfd(proc_dir), buf, O_RDONLY);
+-				if (cmdline_fd == -1)
+-					continue;
+-				cmdline_size = read(cmdline_fd, buf, sizeof(buf) - 1);
+-				close(cmdline_fd);
+-				if (cmdline_size < 0)
++				int fdinfo_fd;
++				ssize_t fdinfo_size;
++				char *line;
++				u32 perf_event_type = UINT32_MAX;
++
++				/* Let's check the PMU type reserved by this process */
++				scnprintf(buf, sizeof(buf), "%s/fdinfo/%s",
++					  proc_entry->d_name, fd_entry->d_name);
++				fdinfo_fd = openat(dirfd(proc_dir), buf, O_RDONLY);
++				fdinfo_size = read(fdinfo_fd, buf, sizeof(buf) - 1);
++				if (fdinfo_size < 0)
+ 					continue;
+-				buf[cmdline_size] = '\0';
+-				for (ssize_t i = 0; i < cmdline_size; i++) {
+-					if (buf[i] == '\0')
+-						buf[i] = ' ';
++				buf[fdinfo_size] = '\0';
++
++				line = strtok(buf, "\n");
++				while (line != NULL) {
++					if (sscanf(line,
++						   "perf_event_attr.type:\t%u",
++						   &perf_event_type) == 1)
++						break;
++					line = strtok(NULL, "\n");
+ 				}
+
+-				if (printed == 0)
+-					printed += scnprintf(msg, size, "Possible processes:\n");
+-
+-				printed += scnprintf(msg + printed, size - printed,
+-						"%s %s\n", proc_entry->d_name, buf);
+-				break;
++				/* Report the process which reserves the conflicted PMU. */
++				/* If fdinfo does not contain PMU type, report it too. */
++				if (perf_event_type == failed_attr->type ||
++				    perf_event_type == UINT32_MAX) {
++					int cmdline_fd;
++					ssize_t cmdline_size;
++
++					scnprintf(buf, sizeof(buf),
++						  "%s/cmdline",
++						  proc_entry->d_name);
++					cmdline_fd = openat(dirfd(proc_dir), buf, O_RDONLY);
++					if (cmdline_fd == -1)
++						continue;
++					cmdline_size = read(cmdline_fd, buf, sizeof(buf) - 1);
++					close(cmdline_fd);
++					if (cmdline_size < 0)
++						continue;
++					buf[cmdline_size] = '\0';
++					for (ssize_t i = 0; i < cmdline_size; i++) {
++						if (buf[i] == '\0')
++							buf[i] = ' ';
++					}
++
++					if (printed == 0)
++						printed += scnprintf(
++							msg, size,
++							"Possible processes:\n");
++
++					printed += scnprintf(msg + printed, size - printed,
++							"%s %s\n", proc_entry->d_name, buf);
++					break;
++				}
+ 			}
+ 		}
+ 		closedir(fd_dir);
+@@ -3799,7 +3832,9 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
+ 			msg, size,
+ 			"The PMU %s counters are busy and in use by another process.\n",
+ 			evsel->pmu ? evsel->pmu->name : "");
+-		return printed + dump_perf_event_processes(msg + printed, size - printed);
++		return printed + dump_perf_event_processes(&evsel->core.attr,
++							   msg + printed,
++							   size - printed);
+ 		break;
+ 	case EINVAL:
+ 		if (evsel->core.attr.sample_type & PERF_SAMPLE_CODE_PAGE_SIZE && perf_missing_features.code_page_size)
+--
+2.49.0.1204.g71687c7c1d-goog
+
