@@ -1,221 +1,218 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2052.outbound.protection.outlook.com [40.107.223.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DEE4139B
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 15:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748964640; cv=none; b=l4PD1pAM6rPvrVenx76HwYeOt3ou87HMejlzlGI7LcY1MDg5hfa9Vh0PAYy0ULkrI6tOBpAvDUlvkxVkefLx1b/bTpB0cnVO6dqYdIr2uLI6HVvtHUuG6Q4C4s3wHg8Fm0+9SBnCiTE7YIUHgyMOsLmVXoLwR2ybm6Et2m+g3V0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748964640; c=relaxed/simple;
-	bh=NgVzIKrV+vT373R7pPrBdnfQ+JbPy3LNrhvewfBlpoY=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=J7GaAnKEw2DjydDi7EZxjcbl6CzvNXT8wtEm+w/LLahHLetDCNn8Yv7lrlTqortgjiYA9yWv166MmdnMcHJjJxm6eDwwoMvxF/G+ciheWHTjaxCFXBWqxgQ5JhfQiS8cuY2ddMt0qd63a9e+95UbsC289sf0/f+UZKi/wW0u2jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3ddaf7f2fcdso24085975ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 08:30:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748964637; x=1749569437;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CdTk/4XrBAuy39KbJJeOpNDNYb42O4c1octVwjpyi+Q=;
-        b=kHScaYtIdw9DCkLmN5j3t8k7X/ADunRoi7fICQdArXxtc3JE9npOmm/ApOEMBLBTSX
-         sp5y8gKI+HzsdWSBkz9+t8MhGtTUA6hGwHwvG7HK0zrwRFtTYgyCxejKeu46Sbhz1op+
-         /JHx89zkyNDloSV3+nsbFlrzkYIxVMx4h2likDOljWrrPaxQC5EH1jZoKGfBdYCskcc+
-         LPyGbB7mMj0Q6nwXRCrnbSbmKLUp7WNXezkhSDBjEEuRmpU9B74CYvY1EztoTki77ia4
-         Iv4Q5+FUqEpmP35WoAbZnGSYGXNwnMDHrARbYcQBSMDpZSK1BLVIsA3BPCEaknoNGjCd
-         1bFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWacVn6SD1nHBs8L6Ttmkha1alxaOtBxuEW53BLvAOdi58VhKdyRjXs2gmd3SWsRLp0HRveHuzhVsaXCcg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIeH8eAi6ot2wIaX8VvVVNjiOkie9qFMsw0FNgNMiPotEpJtPI
-	UoM53r9FuiOPvUY2Bkf5HZY6DdWsMBtK6+FmLjZa/S8cx6buPW/UJYFSVrbShtZQRdjhRbH/uX4
-	ZjBSZtKEBjV6m5XJrRR/cDa2Eamo2o6tl7q+PP4XT3sEeVBEjdpkUfcs6aQw=
-X-Google-Smtp-Source: AGHT+IESbnyBV6XlZCYt+k5zSHtdsO6KCiniIvtH0ta7Xbqbk/5TT2jaD91TWXYrgk1NsjL2k1R75FSVdCdjnt23EuWSv+mFTJwy
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076D0239E6A;
+	Tue,  3 Jun 2025 15:31:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748964667; cv=fail; b=uedHKKc0aGH2b35ft4WUuCoyyviNkYmqHo4inAbIKSBqAQvutCcRjooBeADOvm2/AOfzF05PRly13GPUn0zfWn0d7HgrrBnWTf2mCEVo9GOMB6FyuGCtEqMF+oVol/mgyeKJSBseq6zgTEUmwRAGynSDezlVFDaf1uyV/Nsc2CA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748964667; c=relaxed/simple;
+	bh=XQRefeeFgEbj1MgdZVHWcV0Uv0/czAZrFReQtTCxoC8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UY0AmA0J8jPDp14kJTDGjE9cZyl2uguyZzkRx7Nevx0E4PEC27ZWwEs3Rhg2vJycPTNWt0P/A01xEtaD5uQmyUqMq3dTzY/iM7A/b7oeAlhM+VIU9n8DSf6L25OkNOqABCdRUwR2XfGHx7MBUnnqqDLWePreGQb3rstHO6XaFf0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=MBySpgW5; arc=fail smtp.client-ip=40.107.223.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="MBySpgW5"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iU/sHcmawxTVXuOGg5z5TTBFQUdhm0Am/GubizxWY89CtW0fp51LNzhPAYWZMq80Hj+YoaHzJ0jrYnki7w/XOpcvwIAZS596oOW3u8YixsZh3U6G4Dom88vwlBSVuT70fjBqzJ9CqnwgnrxnehSP9KAIGkYx2XSUPVJE4e4n2Y0R73oesuv7Blv3Hyn6CHXGlJfUjrFrHl4YgFK6/d56h8/Opk3juRh0MMmu7FKOQjsIPvB6Svp/lHc8+DFA9VrxUAZBiqPLnNvtuAHV4SN4H/E3sSQ/4S9EvG+ek3zksKapP+jyyAdaWZktyAkKijVg1k5ve0T5zJrIPh8dvIdayQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Cki1GS/my+rFBliluvulsG29pM44Fe9SqWSA+4869Gg=;
+ b=uKO1uOCb2o6K/FngUFWhTjuon6FH1YJtzDWouS28HHU6uo/U0XCgQ4Bxqfnu4aMMrHVTB6qCpX5bqL8Br5r0hnQAMaqXKfUz1ahrNJ2mAsQPtLIII+nWxBeHZVA497dmkRzOrABXASYcE/V7XZqvz3QeYYbmxI/R0Ia1YWL6ewVqQ32ir4vPS1Hfqgd2AYWHTwVegqsdVCYAc6FJtp19ytVwFtaZYu0z8JHBgY6lql7LP1kWgI8VFwmGARNNCQ11QrMz5rOz8brefysnZ6ZMBoLbRsVr8XjlsQWxzOlMQ5mj3r8MYPI+2p4RqJ7zSJz4xlhcW9x0XU+wtrK2K+DW2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Cki1GS/my+rFBliluvulsG29pM44Fe9SqWSA+4869Gg=;
+ b=MBySpgW5ZMOFeQIMRHAj7/MJrzj95LMKmopWzTveSnKpRq+hyyEK4Q45JDGWSgSNijMp7AqxC1PrCo7/XeDoBjMC2tcb3qapAmgsRebo8tBHjtgF585NVmVO6srzFAQnobiaBtctaJi1N5vQ30FKOAvf1oyS9uDE7RSnTQ4hwiM3/QYmw+mQQH/jEEA9+3xvf122JFunKee1nApWoTtcTp5IsHr4PczEWa54mCqonGzKiTfI6zWkJ9EsniMMiqi+0zqfgDg2rd/OFIVX0D9frcApNVAMluOnLG6FwZiPIkyrkkejY7gD4T7yE51c3HILGlPaN2cx9XGsG81dL5sTEQ==
+Received: from BN0PR02CA0050.namprd02.prod.outlook.com (2603:10b6:408:e5::25)
+ by DS4PR12MB9681.namprd12.prod.outlook.com (2603:10b6:8:281::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Tue, 3 Jun
+ 2025 15:31:01 +0000
+Received: from CH1PEPF0000AD7F.namprd04.prod.outlook.com
+ (2603:10b6:408:e5:cafe::df) by BN0PR02CA0050.outlook.office365.com
+ (2603:10b6:408:e5::25) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.19 via Frontend Transport; Tue,
+ 3 Jun 2025 15:31:01 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ CH1PEPF0000AD7F.mail.protection.outlook.com (10.167.244.88) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8792.29 via Frontend Transport; Tue, 3 Jun 2025 15:31:01 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 3 Jun 2025
+ 08:30:43 -0700
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Tue, 3 Jun 2025 08:30:43 -0700
+Received: from BUILDSERVER-IO-L4T.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.126.190.182) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
+ Transport; Tue, 3 Jun 2025 08:30:39 -0700
+From: Akhil R <akhilrajeev@nvidia.com>
+To: <andi.shyti@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+	<ldewangan@nvidia.com>, <digetx@gmail.com>, <p.zabel@pengutronix.de>,
+	<linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Akhil R <akhilrajeev@nvidia.com>
+Subject: [PATCH v4 1/3] dt-bindings: i2c: nvidia,tegra20-i2c: Specify the required properties
+Date: Tue, 3 Jun 2025 21:00:20 +0530
+Message-ID: <20250603153022.39434-1-akhilrajeev@nvidia.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2287:b0:3dc:8a53:c9c4 with SMTP id
- e9e14a558f8ab-3dda3342b6cmr117953985ab.6.1748964634098; Tue, 03 Jun 2025
- 08:30:34 -0700 (PDT)
-Date: Tue, 03 Jun 2025 08:30:34 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <683f151a.050a0220.55ceb.0014.GAE@google.com>
-Subject: [syzbot] [net?] WARNING in napi_disable
-From: syzbot <syzbot+406cbe754deca9aeaa82@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
-	kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
+X-NVConfidentiality: public
+Content-Transfer-Encoding: 8bit
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD7F:EE_|DS4PR12MB9681:EE_
+X-MS-Office365-Filtering-Correlation-Id: d69b17c1-d7e4-4736-6d52-08dda2b3a572
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|36860700013|82310400026|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Z1NkenAzRlM5Mlo1dFkwdnZJTFd5VEwyZTZycklKNzNmajA2T1puYXgwNElF?=
+ =?utf-8?B?MktqelV4eFRSRkl3L3Q3MDAzazV4SXhvZTVCQWZldFNLdDZ2Ym9vRStIYitn?=
+ =?utf-8?B?OXZjM0VST2hQditqVnJBSmcyZDhmWURWSHpqVlMyaXloQy9LSXRpT2VFa04z?=
+ =?utf-8?B?Z29GaTdIY0JFVGdzOXVHb0REblhQeDRmMkl6VU4wMnl2U0YwTjRCaXpIWjdY?=
+ =?utf-8?B?OVBRTGg3VkdNdEFibmRtdmdIK2swTHE4cEI4Yk1oWlE4Ky9jcE16Q2h5dGVj?=
+ =?utf-8?B?TXNuOUFoYktVeHVUbmpIMUoyZ051dC9rd1dqR0VLZWsveVR5cEdHTWo4dHIz?=
+ =?utf-8?B?ZlV4a2tOVWl0ejdFSzZCejJQVkF1eE42TXF3WnN1eWZkNlhBQTArdGxKYWtU?=
+ =?utf-8?B?eTREZnN3NmdqaFdCaUxaRFVraURUK1lnSSsxMGNGN1BOMWxCMUFENUhBODcv?=
+ =?utf-8?B?eUpOTUZza3p3Z1lOS1dSaWVEcW5JUDBqNEFQbTVqSE9KTWc3TXJTTzdEQ205?=
+ =?utf-8?B?N0ZtYlRCME5HNU5JWXlmZUphcDFvaGNaa29hN1Y2ZmxlWURQSlFLM2JSRUFP?=
+ =?utf-8?B?MVA3Sm1KWUhQL3FsaHFiKy9lSVM4a1FCSnBPQ3Yzc1REbEVoWXhpVnMvSG96?=
+ =?utf-8?B?bXlpaW9PUCtZV1B1SWVqRFhmbDZnWktkQkJsd0hmTzliMEJhYWE1Q1N2eW5K?=
+ =?utf-8?B?M08wNk0xRkxsUGMwUDd3VERPUXFRYmNNQ1VsRm80WlkzU0VWTUpRL0dLb0I4?=
+ =?utf-8?B?S0g4aThjVE9SYUhsZXlQVk9Kc01SWGdTUUdEL0dBcVZ4MUxJV3NEWXk4L2Yy?=
+ =?utf-8?B?VUkzZnE3MmdLaFIzQWdvL0V0cjVWWjZFWEduSEt3RURybDdKZWE0Q2NkdmhL?=
+ =?utf-8?B?ZkFlVlAxQWlBUzBvWTVETDNYNjdzeUJaWS9xYXVqdDhZUDZUSXJtZURIQmNv?=
+ =?utf-8?B?RWpiZ05LclhJVDhrWk5YVlJiVGMzSmo0Y0wwTnhDcnR5cFZkTDQxY0RHNTAy?=
+ =?utf-8?B?TUYvd1YxU0pINktMcGtldjQxN0hia3BPUjgzZXozY1pDcTlYUWZKd25IU3ZH?=
+ =?utf-8?B?Qzd5NXNEaTh1YVl1bVBaWm4wZGc4RWQxcjJkSmZaY1JBYXpuSEZNMkMyV2pL?=
+ =?utf-8?B?R29pb0twKys1czIxcXBaU0sxZ2haRVFybDhaZ2tjZy9jNjhqOEcyL3FOZjBy?=
+ =?utf-8?B?V0lvaVMwZXpxdVA5N0llczVqL1VXaUxHUFAyYjRnQXlpa1VoTUgxbStxZ21Y?=
+ =?utf-8?B?MytsN1IvN0Y5dUtsbk80Si83cE5yQXJrbnEvTWQxMVZlTHQxS05maXZyeWpi?=
+ =?utf-8?B?RTIrS1QwWitXT0ltcXFGWmVqRUtNT3lEOG92eFBWVWR3Wk5IK3oweHRicmhD?=
+ =?utf-8?B?UDBoVEdvWkhBZ0RJM2lxejRlVE1BU1E1andIdkNXTDJoTmRTNHZqOXlONWtF?=
+ =?utf-8?B?L0pVVUZEWitScDEvb3pmM2tVTVh2REZVZ21HTDlKRkZ0RWhqajc2SWozVy9j?=
+ =?utf-8?B?OXpmR2U0cko2djQvSVJLQjF3S3kwQ1hzM3krYk9vTU1EeDlET3VNUEQ5OEFr?=
+ =?utf-8?B?L2Z5bU8xY21OU3o5bSs5QTVhSlUvQTk4Q2pSOWhnTUdwNDdaQXBLMlNHVEVq?=
+ =?utf-8?B?S2FtOHRlRnRlYVVKNGI1akFIb0diYXg5bnI3aGNTbnB1ZEpGam1ES2h5MUJo?=
+ =?utf-8?B?d3JRK0x3QndBYVY4ek51K3pxcko3MzVkaHFKYnFWWXo4UE9CN0J0QUFUeVhu?=
+ =?utf-8?B?U1N4WmIzN3daNzdsUm5vN3ZSaGIxR0xaVDRqTU5pUTBscDFXbkR2TldUbHZV?=
+ =?utf-8?B?cy9nUzd0b0lndmMzc1lsQWZqMFliaUlPVG90Mk5FWk1yKytPc09TWitzZUtn?=
+ =?utf-8?B?OEhWU2txRytyMmlHWWhMNDVQeHFTaFc5L1JRemFPTnp0a0RTRHF3V2E2TUlP?=
+ =?utf-8?B?NnpuN05rU21WVHloMXF5ODVodXNDR0pibW1uTEdGOW53VlJ4U0xrWkZHb29i?=
+ =?utf-8?B?MXZXRHEwUTh0M0VyblVwQkZYSFZEZk9aMHk3MWYxcmppcEpKNXgzbU9vUmc1?=
+ =?utf-8?B?UVpwMmUwY0YvVXRKa2JCVkprK2pTSXB2ZjZBdz09?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(36860700013)(82310400026)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2025 15:31:01.3665
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d69b17c1-d7e4-4736-6d52-08dda2b3a572
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH1PEPF0000AD7F.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PR12MB9681
 
-Hello,
+Specify the properties which are essential and which are not for the
+Tegra I2C driver to function correctly. This was not added correctly when
+the TXT binding was converted to yaml. All the existing DT nodes have
+these properties already and hence this does not break the ABI.
 
-syzbot found the following issue on:
+dmas and dma-names which were specified as a must in the TXT binding
+is now made optional since the driver can work in PIO mode if dmas are
+missing.
 
-HEAD commit:    d7fa1af5b33e Merge branch 'for-next/core' into for-kernelci
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=14c71170580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=89c13de706fbf07a
-dashboard link: https://syzkaller.appspot.com/bug?extid=406cbe754deca9aeaa82
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-userspace arch: arm64
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/da97ad659b2c/disk-d7fa1af5.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/659e123552a8/vmlinux-d7fa1af5.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/6ec5dbf4643e/Image-d7fa1af5.gz.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+406cbe754deca9aeaa82@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-DEBUG_LOCKS_WARN_ON(lock->magic != lock)
-WARNING: CPU: 0 PID: 6666 at kernel/locking/mutex.c:580 __mutex_lock_common+0x1650/0x2190 kernel/locking/mutex.c:580
-Modules linked in:
-CPU: 0 UID: 0 PID: 6666 Comm: kworker/u8:4 Not tainted 6.15.0-rc7-syzkaller-gd7fa1af5b33e #0 PREEMPT 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Workqueue: netns cleanup_net
-pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : __mutex_lock_common+0x1650/0x2190 kernel/locking/mutex.c:580
-lr : __mutex_lock_common+0x1650/0x2190 kernel/locking/mutex.c:580
-sp : ffff80009bb27560
-x29: ffff80009bb27720 x28: dfff800000000000 x27: ffff80009bb27640
-x26: ffff700013764ec8 x25: 0000000000000000 x24: ffff80009bb27680
-x23: 0000000000000000 x22: 0000000000000000 x21: 0000000000000000
-x20: 0000000000000000 x19: ffff0000d446ccd2 x18: 1fffe0003386aa76
-x17: 0000000000000000 x16: ffff80008ad27e48 x15: ffff700011e740c0
-x14: 1ffff00011e740c0 x13: 0000000000000004 x12: ffffffffffffffff
-x11: ffff700011e740c0 x10: 0000000000ff0100 x9 : 120a1682c186fb00
-x8 : 120a1682c186fb00 x7 : 0000000000000001 x6 : 0000000000000001
-x5 : ffff80009bb26eb8 x4 : ffff80008f415ba0 x3 : ffff800080548ef0
-x2 : 0000000000000000 x1 : 0000000100000000 x0 : 0000000000000000
-Call trace:
- __mutex_lock_common+0x1650/0x2190 kernel/locking/mutex.c:580 (P)
- __mutex_lock kernel/locking/mutex.c:746 [inline]
- mutex_lock_nested+0x2c/0x38 kernel/locking/mutex.c:798
- netdev_lock include/linux/netdevice.h:2751 [inline]
- napi_disable+0x4c/0x84 net/core/dev.c:7238
- gro_cells_destroy+0xf4/0x374 net/core/gro_cells.c:116
- ip_tunnel_dev_free+0x20/0x38 net/ipv4/ip_tunnel.c:1102
- netdev_run_todo+0xb44/0xd24 net/core/dev.c:11300
- rtnl_unlock+0x14/0x20 net/core/rtnetlink.c:157
- cleanup_net+0x574/0x9c0 net/core/net_namespace.c:650
- process_one_work+0x7e8/0x156c kernel/workqueue.c:3238
- process_scheduled_works kernel/workqueue.c:3319 [inline]
- worker_thread+0x958/0xed8 kernel/workqueue.c:3400
- kthread+0x5fc/0x75c kernel/kthread.c:464
- ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
-irq event stamp: 1642461
-hardirqs last  enabled at (1642461): [<ffff80008addfa48>] __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:151 [inline]
-hardirqs last  enabled at (1642461): [<ffff80008addfa48>] _raw_spin_unlock_irqrestore+0x38/0x98 kernel/locking/spinlock.c:194
-hardirqs last disabled at (1642460): [<ffff80008addf878>] __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:108 [inline]
-hardirqs last disabled at (1642460): [<ffff80008addf878>] _raw_spin_lock_irqsave+0x2c/0x7c kernel/locking/spinlock.c:162
-softirqs last  enabled at (1641216): [<ffff800089102264>] spin_unlock_bh include/linux/spinlock.h:396 [inline]
-softirqs last  enabled at (1641216): [<ffff800089102264>] netif_addr_unlock_bh include/linux/netdevice.h:4804 [inline]
-softirqs last  enabled at (1641216): [<ffff800089102264>] dev_mc_flush+0x1b0/0x1f4 net/core/dev_addr_lists.c:1037
-softirqs last disabled at (1641214): [<ffff800089102794>] local_bh_disable+0x10/0x34 include/linux/bottom_half.h:19
----[ end trace 0000000000000000 ]---
-Unable to handle kernel paging request at virtual address ffff0000d446ccd2
-KASAN: maybe wild-memory-access in range [0xfffc0006a2366690-0xfffc0006a2366697]
-Mem abort info:
-  ESR = 0x0000000096000021
-  EC = 0x25: DABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-  FSC = 0x21: alignment fault
-Data abort info:
-  ISV = 0, ISS = 0x00000021, ISS2 = 0x00000000
-  CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-  GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-swapper pgtable: 4k pages, 48-bit VAs, pgdp=00000002079fa000
-[ffff0000d446ccd2] pgd=0000000000000000, p4d=180000023ffff403, pud=180000023f41b403, pmd=180000023f378403, pte=006800011446c707
-Internal error: Oops: 0000000096000021 [#1]  SMP
-Modules linked in:
-CPU: 1 UID: 0 PID: 6666 Comm: kworker/u8:4 Tainted: G        W           6.15.0-rc7-syzkaller-gd7fa1af5b33e #0 PREEMPT 
-Tainted: [W]=WARN
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Workqueue: netns cleanup_net
-pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : __lse__cmpxchg_case_acq_64 arch/arm64/include/asm/atomic_lse.h:272 [inline]
-pc : __cmpxchg_case_acq_64 arch/arm64/include/asm/cmpxchg.h:121 [inline]
-pc : __cmpxchg_acq arch/arm64/include/asm/cmpxchg.h:169 [inline]
-pc : raw_atomic64_cmpxchg_acquire include/linux/atomic/atomic-arch-fallback.h:4181 [inline]
-pc : raw_atomic64_try_cmpxchg_acquire include/linux/atomic/atomic-arch-fallback.h:4299 [inline]
-pc : raw_atomic_long_try_cmpxchg_acquire include/linux/atomic/atomic-long.h:1482 [inline]
-pc : atomic_long_try_cmpxchg_acquire include/linux/atomic/atomic-instrumented.h:4458 [inline]
-pc : __mutex_trylock_common+0x178/0x258 kernel/locking/mutex.c:112
-lr : instrument_atomic_read_write include/linux/instrumented.h:96 [inline]
-lr : atomic_long_try_cmpxchg_acquire include/linux/atomic/atomic-instrumented.h:4457 [inline]
-lr : __mutex_trylock_common+0x16c/0x258 kernel/locking/mutex.c:112
-sp : ffff80009bb27480
-x29: ffff80009bb27500 x28: ffff0000d9f59e80 x27: ffff80009bb274a0
-x26: 1ffff00013764e94 x25: dfff800000000000 x24: ffff0000d9f59e80
-x23: 1ffff00012dee370 x22: ffff80008f32136c x21: ffff0000d9f59e80
-x20: ffff0000d446ccd2 x19: 0000000000000000 x18: 1fffe0003386aa76
-x17: 0000000000000000 x16: ffff800080514f0c x15: 0000000000000001
-x14: 1ffff00013764e98 x13: 0000000000000000 x12: 0000000000000000
-x11: ffff700013764e99 x10: dfff800000000000 x9 : 0000000000000000
-x8 : 0000000000000000 x7 : 0000000000000001 x6 : ffff8000890d4c0c
-x5 : 0000000000000000 x4 : 0000000000000001 x3 : ffff800080515078
-x2 : 0000000000000001 x1 : 0000000000000008 x0 : 0000000000000001
-Call trace:
- __lse__cmpxchg_case_acq_64 arch/arm64/include/asm/atomic_lse.h:272 [inline] (P)
- __cmpxchg_case_acq_64 arch/arm64/include/asm/cmpxchg.h:121 [inline] (P)
- __cmpxchg_acq arch/arm64/include/asm/cmpxchg.h:169 [inline] (P)
- raw_atomic64_cmpxchg_acquire include/linux/atomic/atomic-arch-fallback.h:4181 [inline] (P)
- raw_atomic64_try_cmpxchg_acquire include/linux/atomic/atomic-arch-fallback.h:4299 [inline] (P)
- raw_atomic_long_try_cmpxchg_acquire include/linux/atomic/atomic-long.h:1482 [inline] (P)
- atomic_long_try_cmpxchg_acquire include/linux/atomic/atomic-instrumented.h:4458 [inline] (P)
- __mutex_trylock_common+0x178/0x258 kernel/locking/mutex.c:112 (P)
- __mutex_trylock kernel/locking/mutex.c:135 [inline]
- __mutex_lock_common+0x1e8/0x2190 kernel/locking/mutex.c:604
- __mutex_lock kernel/locking/mutex.c:746 [inline]
- mutex_lock_nested+0x2c/0x38 kernel/locking/mutex.c:798
- netdev_lock include/linux/netdevice.h:2751 [inline]
- napi_disable+0x4c/0x84 net/core/dev.c:7238
- gro_cells_destroy+0xf4/0x374 net/core/gro_cells.c:116
- ip_tunnel_dev_free+0x20/0x38 net/ipv4/ip_tunnel.c:1102
- netdev_run_todo+0xb44/0xd24 net/core/dev.c:11300
- rtnl_unlock+0x14/0x20 net/core/rtnetlink.c:157
- cleanup_net+0x574/0x9c0 net/core/net_namespace.c:650
- process_one_work+0x7e8/0x156c kernel/workqueue.c:3238
- process_scheduled_works kernel/workqueue.c:3319 [inline]
- worker_thread+0x958/0xed8 kernel/workqueue.c:3400
- kthread+0x5fc/0x75c kernel/kthread.c:464
- ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
-Code: 941c570a f94023e9 d503201f aa0903e8 (c8e87e95) 
----[ end trace 0000000000000000 ]---
-----------------
-Code disassembly (best guess):
-   0:	941c570a 	bl	0x715c28
-   4:	f94023e9 	ldr	x9, [sp, #64]
-   8:	d503201f 	nop
-   c:	aa0903e8 	mov	x8, x9
-* 10:	c8e87e95 	casa	x8, x21, [x20] <-- trapping instruction
-
-
+Fixes: f10a9b722f80 ("dt-bindings: i2c: tegra: Convert to json-schema”)
+Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+v3->v4:
+  * Updated commit message, and "description" section.
+v2->v3:
+  * Updated commit description on the details and fixed indentation
+    issue.
+v1->v2:
+  * Added all required properties
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+ .../bindings/i2c/nvidia,tegra20-i2c.yaml      | 24 ++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+diff --git a/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml
+index b57ae6963e62..10f30d6a1fad 100644
+--- a/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml
++++ b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml
+@@ -97,7 +97,10 @@ properties:
+ 
+   resets:
+     items:
+-      - description: module reset
++      - description:
++          Module reset. This property is optional for controllers in Tegra194,
++          Tegra234 etc where an internal software reset is available as an
++          alternative.
+ 
+   reset-names:
+     items:
+@@ -116,6 +119,13 @@ properties:
+       - const: rx
+       - const: tx
+ 
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
+ allOf:
+   - $ref: /schemas/i2c/i2c-controller.yaml
+   - if:
+@@ -169,6 +179,18 @@ allOf:
+       properties:
+         power-domains: false
+ 
++  - if:
++      not:
++        properties:
++          compatible:
++            contains:
++              enum:
++                - nvidia,tegra194-i2c
++    then:
++      required:
++        - resets
++        - reset-names
++
+ unevaluatedProperties: false
+ 
+ examples:
+-- 
+2.49.0
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
