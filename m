@@ -1,94 +1,81 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2AACAD51;
-	Tue,  3 Jun 2025 23:02:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B43AD51;
+	Tue,  3 Jun 2025 23:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748991744; cv=none; b=ruWVedaKpxoHaZMKMsiL35rRZEu0ibAyfn1v1K7oUuIaR1hOtOIpawmh9WOuURuVnONxsyPO52ulEzj3iT7iLdkgYSgGQNxG9jNQ/l5SEoGIHmIORl/c1KNnF9frdQWkTelfNnHx54HyAroARLwLkeHr6rNnL1y/lKS4Psw5VGg=
+	t=1748991833; cv=none; b=S9NjjSLEDwR3s7qQzTSrvxkZGDXZJzC3h3tacvJZDy8+eB4uHGmMBpZJmeEU2fhi5gkae2fZ1ga+6A6OiQYmjRB/UxhbROnHnQnnFfFoxcoZL6UepEUVoNlsSL1LBqHc27rzaBJNK6ffMpq6A6d3pw3sbr6SezN2Rci/+EChoIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748991744; c=relaxed/simple;
-	bh=4nEwfF4v8gc+6O8dQMD5X50ekrMJYvDA7ONoB1wjc1g=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Egj96wuxXt7y6SAFGPwUyVAnZf3CA8VlO9lSn5wctohNuFfHoHSVlp65RUScU8FXPrl/uM3DcZPaRw7FpdA+5epZll56cWKNOOHjbQtdH4HFmGwtholMGeF3qHViP//AK4rTMePhBFADFX5VCHEA62NdBQz/QLH9YFHyJUfdQ5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=J4NSXC0B; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1748991833; c=relaxed/simple;
+	bh=A4oj6OPfT1mxvNI32b61Y5z402+URhsCBCG9q2dcoQg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h+wI64GioCJFDpXvhgVYfs5mvy3+80nw3N3vKVGz/m5gMB+K+rwFcaP0htzO2zIcMhx/zZLtZub7rKSj2WLsrmQGwZ47NcPIPiOz72uLvwdZ/jyprbX/9pTI4U3RCaE5/IsiYtppGCg2LDBc+J5B8mi0BqqWGelY19Z9BWe9ZGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wzhjy3Yk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="J4NSXC0B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1748991739;
-	bh=8YxBNWpC7l6o7mHHvyfAXJfQe7CZW3e+CIY5WujsDNs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=J4NSXC0BPTyVM3EtyiuLStRMM33lhVsHBMdd/4JhokOLkjcrxWnJjrajlwZm77uI3
-	 Dlso4UvFc+xtwV1MqujyVV6LzwPuALIs8tbSvC9TV0LUtMImS4X/V8n7LUW61ZMmPK
-	 GN/pk+yc4eMH6ByvLFaETEJpwIMgMiTOhG1rEaJd9ToLpvfMMn7erRKpbZ57i7Y2hj
-	 Jz1x3Unb+T+NJ3Ekh1tQ4+xrhck8o241nC2ipDrDF55CbwQtK66qr46R/6aDBOZLH2
-	 8oiY9EJZeLOQ3Jza9FNEKF76xk4iC4KCd9CkAqRQRL2GyYTV1h3dobw2XiQyPnBAB+
-	 wTbSyNQS45pHQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bBmSW6NJpz4x9D;
-	Wed,  4 Jun 2025 09:02:19 +1000 (AEST)
-Date: Wed, 4 Jun 2025 09:02:19 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build warning after merge of the kbuild tree
-Message-ID: <20250604090219.29f09a62@canb.auug.org.au>
-In-Reply-To: <20250526180350.06b825de@canb.auug.org.au>
-References: <20250526180350.06b825de@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wzhjy3Yk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BC69C4CEED;
+	Tue,  3 Jun 2025 23:03:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748991833;
+	bh=A4oj6OPfT1mxvNI32b61Y5z402+URhsCBCG9q2dcoQg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Wzhjy3YkZIV3Lqppzw053X5JGMdhkCh0br5X3j5C0BhGXVtu2+c+BSP9gqA1uEFIP
+	 OqGsX6ogYQcFp0Lvp83tfP2lM1xRnuYHIwcdn65/g9S90a1TJZ0K62YTwZCZ8BfcTX
+	 pX44dBzKRkQGiKJXXcTCVbTmHioh+FY3ywHz2D2bmgAR5/ZnRUxLlwSy0EW4ptx46D
+	 OlhAc5I2/WJWOlAnzBJECl62AaAiuqLkm8yjouz6PFOzIWjIJeORmA0PRwc3TlKn/k
+	 DxwbpYOdm6eS/sT82vHyGM9Z+6e/CmEXS2AqLnStmmlRdwn1uD5iovipU6CXSj+ZiK
+	 5Sh/AEMD8IKYg==
+Date: Tue, 3 Jun 2025 13:03:51 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Tiffany Yang <ynaffit@google.com>
+Cc: linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+	kernel-team@android.com, John Stultz <jstultz@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Pavel Machek <pavel@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Chen Ridong <chenridong@huawei.com>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>
+Subject: Re: [RFC PATCH] cgroup: Track time in cgroup v2 freezer
+Message-ID: <aD9_V1rSqqESFekK@slm.duckdns.org>
+References: <20250603224304.3198729-3-ynaffit@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/SIP0GdZxpfmEqMqQTCFMtHx";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250603224304.3198729-3-ynaffit@google.com>
 
---Sig_/SIP0GdZxpfmEqMqQTCFMtHx
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jun 03, 2025 at 10:43:05PM +0000, Tiffany Yang wrote:
+> The cgroup v2 freezer controller allows user processes to be dynamically
+> added to and removed from an interruptible frozen state from
+> userspace. This feature is helpful for application management, as it
+> allows background tasks to be frozen to prevent them from being
+> scheduled or otherwise contending with foreground tasks for resources.
+> Still, applications are usually unaware of their having been placed in
+> the freezer cgroup, so any watchdog timers they may have set will fire
+> when they exit. To address this problem, I propose tracking the per-task
+> frozen time and exposing it to userland via procfs.
 
-Hi all,
+Just on a glance, it feels rather odd to be tracking this per task given
+that the state is per cgroup. Can you account this per cgroup?
 
-On Mon, 26 May 2025 18:03:50 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->=20
-> After merging the kbuild tree, today's linux-next build (htmldocs)
-> produced this warning:
->=20
-> Documentation/core-api/symbol-namespaces.rst:90: WARNING: Inline emphasis=
- start-string without end-string. [docutils]
->=20
-> Introduced by commit
->=20
->   707f853d7fa3 ("module: Provide EXPORT_SYMBOL_GPL_FOR_MODULES() helper")
+Thanks.
 
-I am still seeing this warning.
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/SIP0GdZxpfmEqMqQTCFMtHx
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg/fvsACgkQAVBC80lX
-0GwYqQf/Sq7A3p32+83Bd2dcoMcimvSl62kKzVgY4th7Q86Jv1tYBVEp0DNa+Mpe
-zxoGBBIonA4IFpYj8+Y8IM6RV+UM8wFHxc1JBP6dk7YIejBMmUuMsDK5AjKVEQA7
-on2RY2UCBZxfRu6fCigQqLPhL2bs7jdp4P+Pp3VACPQtUN0IgT+MpPDwF+eYzrFB
-0pO2X3j/w4f9CAZ2Vtqo5GQTvTMip1Eq84Or5t2KMUyH2fqbfI1fjKWYu4eqblyR
-HYJKdWFg6G7T7hDTQjW/6M/cVolsVn6V9npn/7G/e4e8PNgBMA6waK1kxYNF//zm
-FlLLORWKgnbC7BpkOmWJ6obb3YYs/Q==
-=M48a
------END PGP SIGNATURE-----
-
---Sig_/SIP0GdZxpfmEqMqQTCFMtHx--
+-- 
+tejun
