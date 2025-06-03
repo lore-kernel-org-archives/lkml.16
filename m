@@ -1,233 +1,170 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD4C4C74;
-	Tue,  3 Jun 2025 21:44:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9A4221F09;
+	Tue,  3 Jun 2025 21:44:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748987060; cv=none; b=sn5RaQ6bJP3YbGzWW7IBXkDMVLRhC2K2x78ghOIA2ERAnyC8emas5f1hxhFb2nHh77p91sai25gPoBLOwdBNcdVsb8OzXDiSoivPs/n7EqAQVqxYVJydK5VMaRxYVQO043CTMvN6mn4rwFjm+pTHWShzaZrDuZMn8470/q34NFE=
+	t=1748987082; cv=none; b=iBpHUt6Y/6HtgHzdbl7C/mt1dNFeVE+so2Fcut81KJ4+DoIampm2AGZWMdxj9W82vt3wf45Ed76rY0i9H/F9OZZDOOUTk8oJG64/yp0VjyPRywh5ZNgKXggiFEVPV7dSWfKu1o1n6ezaA3Wmc2UX5idMkGhKWlmfN7Zy7J68yKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748987060; c=relaxed/simple;
-	bh=p1rvwbNQb9+j9EK6XVoHifBzn4XFso0yGK8Ac/FTDC4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pRg8UAMVkYo0nTltk45ot9q9uxLseFbPZO7Q3eS5rj9iUp6ETQu/e08oi5qGmUHPkxYG39AVpazuS6gQauSwVQ0DlrdolETqeIQr/PAaUTsmP0SoKekVIFbO+C4lyNqV6sCRqQFXLKBii+1MxTIS0Ehtmr9Njel2jbYzPhHUYWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ODI6o1nK; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748987082; c=relaxed/simple;
+	bh=7gflI8bQ8A18TGwYKDpl889ph/xH2f2J3Yd9be18SVE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TNaUcaRhu8tKpGugNAphZQ6EsJQyXa69ZcG4fPB4iRk2Gw26Jg3WqizIi8hp70KYJ2wazkoqlH9N1p9v4XbXOZIR1u7feUCDQ3go0dOynXe2bDdqfoIarhntF0bqpPeUeboExsDjbPUgZ9vewq2N8eNxcGBLtS7ZdK1T3irjEcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=op3aNcQB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ODI6o1nK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748987059; x=1780523059;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=p1rvwbNQb9+j9EK6XVoHifBzn4XFso0yGK8Ac/FTDC4=;
-  b=ODI6o1nKS57NkyW+vibC/Rqk4Zl/yWYymJkBNLpoefAUl7bxiLXU72Xm
-   IX5HJHtL8yeAKKDsOhHBkJIuE8wtX0HPDbBbXsv68IFLpgE9B0EVS6fmq
-   ZLqh2dxgxfRbleuZjXDNRZrpg4dSGG6YN3r+cjpkl3J8MlU3bwSY4X+gl
-   DTCPanZuU/juz024UmkTeBvYC9pghJvBwsgWy9Ld5rk79jHf6uG4PUr3u
-   PgUC2Im8T92NFSZx1YhOIUBE3VmPVv5TkpMoPsBT0RM+B6wEQgbX5NR5K
-   79GbYNYkv+F+fWvZNhmNAg9C4QTcc2NPVRQMwd6tJ6k7zQHF8rY9IHJFz
-   w==;
-X-CSE-ConnectionGUID: 0kB1rGdDR2KDRF7IhNOsXA==
-X-CSE-MsgGUID: f0hnA+PlSIavgVSmFcf0Yg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="51118790"
-X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
-   d="scan'208";a="51118790"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 14:44:17 -0700
-X-CSE-ConnectionGUID: Rf42UJcySw6yxIqBkbF+jw==
-X-CSE-MsgGUID: ZNJm7pRQT1iF4jNdpWfDEQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
-   d="scan'208";a="150034204"
-Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.110.198]) ([10.125.110.198])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 14:44:16 -0700
-Message-ID: <372d01ff-2831-41c0-ac8f-2a09eca5c620@intel.com>
-Date: Tue, 3 Jun 2025 14:44:14 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="op3aNcQB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23B94C4CEED;
+	Tue,  3 Jun 2025 21:44:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748987081;
+	bh=7gflI8bQ8A18TGwYKDpl889ph/xH2f2J3Yd9be18SVE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=op3aNcQB6siv2ePJTouwAfA4BRKm4uTb4lJgIU8bYhtE39YTPO7hvbpLwUCKLd0EG
+	 NBxhtoMyNEuvoFzcvAzFCRiwnRmomxY9jOt54DOCDffbv6npVItTyrfI+tKmNL2T0I
+	 SR3OyOOm6CeeheGvfpX2CxUkD57uVbPovQqdLf4uWLlk3XanYR8NK4PRoUJ/qLcZ1B
+	 1k63vLtpI7E3baUodqkC2b7WBXW8NDxqYqwI7J6kLSrVrWInuhZTquDRO5hAziSfbO
+	 QK5EL0hTyzYmTwHXnTrxvvd0FB180p+QBWu1Mszx9C7Inf6bLCJCDNci5CYke5nNg/
+	 f4Oz/a/ATC6DQ==
+Date: Tue, 3 Jun 2025 14:44:38 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Blake Jones <blakejones@google.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Chun-Tse Shao <ctshao@google.com>,
+	Zhongqiu Han <quic_zhonhan@quicinc.com>,
+	James Clark <james.clark@linaro.org>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>,
+	Leo Yan <leo.yan@arm.com>, Yujie Liu <yujie.liu@intel.com>,
+	Graham Woodward <graham.woodward@arm.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Ben Gainey <ben.gainey@arm.com>, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 2/3] perf: collect BPF metadata from existing BPF programs
+Message-ID: <aD9sxuFwwxwHGzNi@google.com>
+References: <20250521222725.3895192-1-blakejones@google.com>
+ <20250521222725.3895192-3-blakejones@google.com>
+ <aD9Xxhwqpm8BDeKe@google.com>
+ <CAP_z_Cj_8uTBGzaoFmi1f956dXi1qDnF4kqc49MSn0jDHYFfxg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4 v3] ACPI: extlog: Trace CPER CXL Protocol Error
- Section
-To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
- linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-cxl@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-pci@vger.kernel.org, linux-edac@vger.kernel.org
-Cc: Yazen Ghannam <yazen.ghannam@amd.com>
-References: <20250603155536.577493-1-fabio.m.de.francesco@linux.intel.com>
- <20250603155536.577493-5-fabio.m.de.francesco@linux.intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250603155536.577493-5-fabio.m.de.francesco@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP_z_Cj_8uTBGzaoFmi1f956dXi1qDnF4kqc49MSn0jDHYFfxg@mail.gmail.com>
 
+Hi Blake,
 
-
-On 6/3/25 8:54 AM, Fabio M. De Francesco wrote:
-> When Firmware First is enabled, BIOS handles errors first and then it makes
-> them available to the kernel via the Common Platform Error Record (CPER)
-> sections (UEFI 2.10 Appendix N). Linux parses the CPER sections via one of
-> two similar paths, either ELOG or GHES. The errors managed by ELOG are
-> signaled to the BIOS by the I/O Machine Check Architecture (I/O MCA).
+On Tue, Jun 03, 2025 at 02:27:53PM -0700, Blake Jones wrote:
+> Hi Namhyung,
 > 
-> Currently, ELOG and GHES show some inconsistencies in how they report to
-> userspace via trace events.
+> On Tue, Jun 3, 2025 at 1:15 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Wed, May 21, 2025 at 03:27:24PM -0700, Blake Jones wrote:
+> > > Look for .rodata maps, find ones with 'bpf_metadata_' variables, extract
+> > > their values as strings, and create a new PERF_RECORD_BPF_METADATA
+> > > synthetic event using that data. The code gets invoked from the existing
+> > > routine perf_event__synthesize_one_bpf_prog().
+> >
+> > It would be great if you can show an example how those metadata is
+> > constructed and shared between BPF programs.
 > 
-> Therefore, make the two mentioned paths act similarly by tracing the CPER
-> CXL Protocol Error Section (UEFI v2.10, Appendix N.2.13).
+> I've added the following to my commit message:
 > 
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
-> ---
->  drivers/acpi/acpi_extlog.c | 64 ++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/ras.c     |  6 ++++
->  include/cxl/event.h        |  2 ++
->  3 files changed, 72 insertions(+)
+> | For example, a BPF program with the following variables:
+> |
+> |     const char bpf_metadata_version[] SEC(".rodata") = "3.14159";
+> |     int bpf_metadata_value[] SEC(".rodata") = 42;
+> |
+> | would generate a PERF_RECORD_BPF_METADATA record with:
+> |
+> |     .prog_name        = <BPF program name, e.g. "bpf_prog_a1b2c3_foo">
+> |     .nr_entries       = 2
+> |     .entries[0].key   = "version"
+> |     .entries[0].value = "3.14159"
+> |     .entries[1].key   = "value"
+> |     .entries[1].value = "42"
+> |
+> | Each of the BPF programs and subprograms that share those variables would
+> | get a distinct PERF_RECORD_BPF_METADATA record, with the ".prog_name" showing
+> | the name of each program or subprogram. The prog_name is deliberately the
+> | same as the ".name" field in the corresponding PERF_RECORD_KSYMBOL record.
+
+Thanks!
+
 > 
-> diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-> index b2928ff297eda..de4f617f32d49 100644
-> --- a/drivers/acpi/acpi_extlog.c
-> +++ b/drivers/acpi/acpi_extlog.c
-> @@ -12,6 +12,7 @@
->  #include <linux/ratelimit.h>
->  #include <linux/edac.h>
->  #include <linux/ras.h>
-> +#include <cxl/event.h>
->  #include <acpi/ghes.h>
->  #include <asm/cpu.h>
->  #include <asm/mce.h>
-> @@ -160,6 +161,62 @@ static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
->  	pci_dev_put(pdev);
->  }
->  
-> +static void
-> +extlog_cxl_cper_handle_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-> +				int severity)
-> +{
-> +#ifdef CONFIG_ACPI_APEI_PCIEAER
-The ifdef should be in a header file?
+> > IIUC the metadata is collected for each BPF program which may have
+> > multiple subprograms.  Then this patch creates multiple PERF_RECORD_
+> > BPF_METADATA for each subprogram, right?
+> >
+> > Can it be shared using the BPF program ID?
+> 
+> In theory, yes, it could be shared. But I want to be able to correlate them
+> with the corresponding PERF_RECORD_KSYMBOL events, and KSYMBOL events for
+> subprograms don't have the full-program ID, so I wouldn't be able to do that.
 
-> +	struct cxl_cper_prot_err_work_data wd;
-> +	u8 *dvsec_start, *cap_start;
-> +
-> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_AGENT_ADDRESS)) {
-> +		pr_err_ratelimited("CXL CPER invalid agent type\n");
-pr_warn_ratelimited()?
-> +		return;
-> +	}
-> +
-> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_ERROR_LOG)) {
-> +		pr_err_ratelimited("CXL CPER invalid protocol error log\n");
-pr_warn_ratelimited()?
-> +		return;
-> +	}
-> +
-> +	if (prot_err->err_len != sizeof(struct cxl_ras_capability_regs)) {
-> +		pr_err_ratelimited("CXL CPER invalid RAS Cap size (%u)\n",
-> +				   prot_err->err_len);
-pr_warn_ratelimited()?
-> +		return;
-> +	}
-> +
-> +	if ((prot_err->agent_type == RCD || prot_err->agent_type == DEVICE ||
-> +	     prot_err->agent_type == LD || prot_err->agent_type == FMLD) &&
-> +	    !(prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER))
-> +		pr_warn(FW_WARN "CXL CPER no device serial number\n");
+It's unfortunate that KSYMBOL doesn't have the program ID, but IIRC the
+following BPF_EVENT should have it.  I think it's safe to think KSYMBOLs
+belong to the BPF_EVENT when they are from the same thread.
 
-Why are the earlier emits ratelimited, but not this one?
+> 
+> > > +     rodata = calloc(1, map_info.value_size);
+> >
+> > You can use 'zalloc()' instead, in other places too.
+> 
+> Fixed, thanks.
+> 
+> > > +void bpf_metadata_free(struct bpf_metadata *metadata)
+> > > +{
+> > > +     if (metadata == NULL)
+> > > +             return;
+> > > +     for (__u32 index = 0; index < metadata->nr_prog_names; index++)
+> > > +             free(metadata->prog_names[index]);
+> > > +     if (metadata->prog_names != NULL)
+> > > +             free(metadata->prog_names);
+> > > +     if (metadata->event != NULL)
+> > > +             free(metadata->event);
+> >
+> > No need to NULL change for free().
+> 
+> I've removed the NULL checks.
+> 
+> > > +static int synthesize_perf_record_bpf_metadata(
+> > > [...]
+> > > +     for (__u32 index = 0; index < metadata->nr_prog_names; index++) {
+> > > +             memcpy(event->bpf_metadata.prog_name,
+> > > +                    metadata->prog_names[index], BPF_PROG_NAME_LEN);
+> >
+> > Is it possible to call synthesize_bpf_prog_name() directly to the
+> > event->bpf_metadata.prog_name instead of saving it metadata->prog_names?
+> 
+> Not with the way the code is currently structured - we need the BTF data
+> to call synthesize_bpf_prog_name(), and that's allocated and freed inside
+> of bpf_metadata_create().
 
-DJ
+I see.  You already freed the map data and BTF.  Ok, it's not a big deal
+and probably not needed if we can switch to BPF ID.
 
-> +
-> +	switch (prot_err->agent_type) {
-> +	case RCD:
-> +	case DEVICE:
-> +	case LD:
-> +	case FMLD:
-> +	case RP:
-> +	case DSP:
-> +	case USP:
-> +		memcpy(&wd.prot_err, prot_err, sizeof(wd.prot_err));
-> +
-> +		dvsec_start = (u8 *)(prot_err + 1);
-> +		cap_start = dvsec_start + prot_err->dvsec_len;
-> +
-> +		memcpy(&wd.ras_cap, cap_start, sizeof(wd.ras_cap));
-> +		wd.severity = cper_severity_to_aer(severity);
-> +		break;
-> +	default:
-> +		pr_err_ratelimited("CXL CPER reserved agent type: %d\n",
-> +				   prot_err->agent_type);
-> +		return;
-> +	}
-> +
-> +	cxl_cper_ras_handle_prot_err(&wd);
-> +
-> +#endif
-> +}
-> +
->  static int extlog_print(struct notifier_block *nb, unsigned long val,
->  			void *data)
->  {
-> @@ -211,6 +268,12 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
->  			if (gdata->error_data_length >= sizeof(*mem))
->  				trace_extlog_mem_event(mem, err_seq, fru_id, fru_text,
->  						       (u8)gdata->error_severity);
-> +		} else if (guid_equal(sec_type, &CPER_SEC_CXL_PROT_ERR)) {
-> +			struct cxl_cper_sec_prot_err *prot_err =
-> +				acpi_hest_get_payload(gdata);
-> +
-> +			extlog_cxl_cper_handle_prot_err(prot_err,
-> +							gdata->error_severity);
->  		} else if (guid_equal(sec_type, &CPER_SEC_PCIE)) {
->  			struct cper_sec_pcie *pcie_err = acpi_hest_get_payload(gdata);
->  
-> @@ -378,3 +441,4 @@ module_exit(extlog_exit);
->  MODULE_AUTHOR("Chen, Gong <gong.chen@intel.com>");
->  MODULE_DESCRIPTION("Extended MCA Error Log Driver");
->  MODULE_LICENSE("GPL");
-> +MODULE_IMPORT_NS("CXL");
-> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-> index 485a831695c70..56db290c88d35 100644
-> --- a/drivers/cxl/core/ras.c
-> +++ b/drivers/cxl/core/ras.c
-> @@ -98,6 +98,12 @@ static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
->  		cxl_cper_trace_uncorr_prot_err(pdev, data->ras_cap);
->  }
->  
-> +void cxl_cper_ras_handle_prot_err(struct cxl_cper_prot_err_work_data *wd)
-> +{
-> +	cxl_cper_handle_prot_err(wd);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_cper_ras_handle_prot_err, "CXL");
-> +
->  static void cxl_cper_prot_err_work_fn(struct work_struct *work)
->  {
->  	struct cxl_cper_prot_err_work_data wd;
-> diff --git a/include/cxl/event.h b/include/cxl/event.h
-> index f9ae1796da85f..aef906e260330 100644
-> --- a/include/cxl/event.h
-> +++ b/include/cxl/event.h
-> @@ -285,4 +285,6 @@ static inline int cxl_cper_prot_err_kfifo_get(struct cxl_cper_prot_err_work_data
->  }
->  #endif
->  
-> +void cxl_cper_ras_handle_prot_err(struct cxl_cper_prot_err_work_data *wd);
-> +
->  #endif /* _LINUX_CXL_EVENT_H */
+Thanks,
+Namhyung
 
