@@ -1,210 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E8B38DD1;
-	Tue,  3 Jun 2025 22:18:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6543F1474DA;
+	Tue,  3 Jun 2025 22:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748989130; cv=none; b=q/4RZYS4AnY9p3dPxyzdn6v/Z8AC103KEoQSGm7JEVKTdXhV/qUdKL4q+Ih4ozOBRc+nfoi2yaxMd+LvrIxTeM6Zv+AOOoBZVrdYmwiDqWvJBbrDCdlKbxvpMTG5DLNc910QtH6sGs88jozX5TTA5PZACTuzCYg3+NCjbwhBPt4=
+	t=1748989163; cv=none; b=QSSmUdnAXHvnBUYjQ8B+LwUYPO/LHkh75GhCOBL9s5iZMoViSxghA+2BYpi/727DC3F7MzRRPs6XNJTEkfi0FFdMoj0SJQy9vOksFVkExz4gMYDAl4ReSZqd5bDQmpb2TByqJC2VmV1Ffe5O43Re7uIj4Yhxqujrb4rnu2iVCpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748989130; c=relaxed/simple;
-	bh=K+F/YtNdZO6JxPVsJPOUW+izB++yyaaoWNSWuIwcQIU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NfEmIxUjp6CLa+28Jbw46LRISUDbszHh4BCno82V/cumOCyNMCEnLXZ9r7kyLQQV/FaBIz/enrIEUffDgywIb86XQGJrz/qCOPYeBY2NoEnhP/YzuSGmD6543VU34T+AkmaKfQpO+x17q8zGkOzyD1dPzA27jznrlvmxh/THDvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kn92s+5n; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748989163; c=relaxed/simple;
+	bh=JwN9ELcSUl3mBJxYBcBop1epVVw04UgyCIZK3jECD2E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rZGwSDAbJO+47ZxuOw4JdJypm4gXnc2fQgEQu7MwSoTyEe5XVRP5lKNAGDUZFSCcGeJ0qIQZh81Nm4OXru4De50vXwXZdEUyUskxVR6t7RKOdT79YAppMdfwdfl0nsWg13yt2yWayMhazfeH8YNx9YNTAd/NwfCdIO5OWRSldUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I5d4nNSw; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kn92s+5n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748989128; x=1780525128;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=K+F/YtNdZO6JxPVsJPOUW+izB++yyaaoWNSWuIwcQIU=;
-  b=kn92s+5nOtRyuDdar+9YB9ctZYaYventc0eSNeabQVGSLXRPPadwG3a7
-   cw0+Gw4YxBYnyrDb/gDBVX77TalMng62PRy6CXldDA0D9gFn9OTPBZDn8
-   PAW4KfD08YJ5qL3nQRCeGX184N50Wics11spOHpqLoEMKSRppXt5p/ab3
-   9QMsAJ35v3yE1G7bRUdMB/1JP4QTXpY0h7WuKTbbSfOmdLMoh903kUX1N
-   yIAH8EPNDmVP8GOVU8UYrBq5N7HiNWl0d8IzXwzfPZ7IRK7vcxDxQ0a5c
-   S7KoLRs23p3KdqyHLxwnViJfNN0Urs7+hjgWSZqW2e1wnVVlvOLty7bC5
-   w==;
-X-CSE-ConnectionGUID: ZIGG0yXERp6qFs3wTwE54A==
-X-CSE-MsgGUID: EDwut+tKTaOkVU9BReQtow==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="53677527"
-X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
-   d="scan'208";a="53677527"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 15:18:47 -0700
-X-CSE-ConnectionGUID: vDKE25ChRcipbzHXBQUJOw==
-X-CSE-MsgGUID: PQehbhp5RjqoV3hwbE53Zw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
-   d="scan'208";a="148829830"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 15:18:46 -0700
-Received: from [10.124.221.22] (unknown [10.124.221.22])
-	by linux.intel.com (Postfix) with ESMTP id A14C120B5736;
-	Tue,  3 Jun 2025 15:18:43 -0700 (PDT)
-Message-ID: <b5c6a148-801e-46d5-bc8a-a550006dbd52@linux.intel.com>
-Date: Tue, 3 Jun 2025 15:18:42 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I5d4nNSw"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-450828af36aso2926775e9.1;
+        Tue, 03 Jun 2025 15:19:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748989160; x=1749593960; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=f2MuCnQmfuymAmGE1q3a3tLJgIKf+tdHvWlxHjuDCBQ=;
+        b=I5d4nNSwStdK3moRruzaQtExXzpHFl+0kus5EUc+XpkCMWfJslZDAzA70B1soCdQpO
+         2vxxpgdCupndGCviCdtgeDS4CzEFFs/L8SdiOhuvvOQJNDIeUC5duTb/jAC3WGEUUm5A
+         DP15xHWPHPUyBWn0Ioqvb1VkvaF3pY14BzrqvZBGS7aVd/pGsd7+E9SvGk05Jyt0sJ55
+         c+uvD/3kjbj5eoV9j6fQoM2z8yNvennfW0xYGt2OSp4d85z7vIXOXNOoaqxYfRYF81uB
+         t00ZOR+Ph4g719Fyqv22DjvoQpZGJItsf1zM8m7qLInCfN4s09wRSez+y6gcURNkVqzX
+         7+XQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748989160; x=1749593960;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=f2MuCnQmfuymAmGE1q3a3tLJgIKf+tdHvWlxHjuDCBQ=;
+        b=IgGdt5cUYV+JoOgAfg3wWB55AHPrbZcDXctBCgOXjUqCzSF2bI9jJQMnf6OqE8qouh
+         qdObNouZSoy7p9zVt49YgipLky3Y9W7IUWa6dVgFitSAkleQk1RDbjcanivINddNM/jC
+         6MTMtXjHilN2OlW4nud1U0ttWELQx7Xa08ZsdCcqHpaQEkMroEImNzGi52g9OLP96shS
+         tbqfoqhA0hSawqZbZavpmn15yonJLe7vyRXu/X+8pGReJmTwjatAhDApolEPJvWsnLD4
+         JfDYMi8XKAM5SfvmSq5oxC8ExJzGTTYbv3sK2kBHdb4AM4lMdRNWcnRBEl5MpjBUlw2L
+         67fg==
+X-Forwarded-Encrypted: i=1; AJvYcCW6aFUdKEWTRQtFS4foqY4FSdsZRt73z84CPEq+BlgE54dMUordTw8ZTgUSZ9ANCyJ4xYcwdb5hNuFsT7M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyd3XlPiPqR+4j0RcAJmElPV1W7u5P0ZAARLvFHBJwjdyk43zC0
+	/goChvtYVU3ywxtDSilbfHaCLN8SIlRG3Ki4oS4OwVQxxB+z+13N/LsG
+X-Gm-Gg: ASbGncsS3Cx35ozZnTAL0szwkK/wce9iSvWGrQ3vlfYFqxylVL2dnSvodiZomguBEhR
+	qtVFUzaiRs1bo3+FKN6/Fo0IvQbjv5o/L8otg14r6MNR1+GDJi+Z1w905M4eRWeXLWGk9j7jvCJ
+	qhY5bKFUeeZC54o7SUFFsz045fk/Gflp0wTxqjm7YADS8iYFp/CQU4cD5Dlmeh1mRgCbwfhPHRc
+	wqhx2EAbZecJ71zRmQlqupkR54X2DiKUwhIfuranpERQ0kcsiltkhiJw/9ln2entovM8G/v2OYy
+	XALJ1d1wcqEv17HAGqhfAz/KsDuRHma4+T1btSBwuqQm1cWJgKk6sBhG0f3fyyAbvPzssIDs6AB
+	Z85F7FK611Mc=
+X-Google-Smtp-Source: AGHT+IEIY12wMUTGy581egmFECqQyjd34dT25No79UiTOYop0jzYJJ+YqVBbCRVZR1wEJPb9MQQJ3g==
+X-Received: by 2002:a05:600c:3b86:b0:439:9a1f:d73d with SMTP id 5b1f17b1804b1-451f0b40015mr969025e9.8.1748989159063;
+        Tue, 03 Jun 2025 15:19:19 -0700 (PDT)
+Received: from localhost.localdomain ([102.40.66.223])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7facf9dsm171215565e9.17.2025.06.03.15.19.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 15:19:18 -0700 (PDT)
+From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+To: shuah@kernel.org,
+	skhan@linuxfoundation.org
+Cc: linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Subject: [PATCH v2] selftests: ir_decoder: Convert header comment to proper multi-line block
+Date: Wed,  4 Jun 2025 01:19:14 +0300
+Message-Id: <20250603221914.102888-1-abdelrahmanfekry375@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4 v3] ACPI: extlog: Trace CPER PCI Express Error Section
-To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
- linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-cxl@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-pci@vger.kernel.org, linux-edac@vger.kernel.org
-Cc: Yazen Ghannam <yazen.ghannam@amd.com>
-References: <20250603155536.577493-1-fabio.m.de.francesco@linux.intel.com>
- <20250603155536.577493-4-fabio.m.de.francesco@linux.intel.com>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20250603155536.577493-4-fabio.m.de.francesco@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+well, i checked the script using checkpatch.pl and
+it shows that the patch has no warnings or errors
+and its ready to be sent
 
-On 6/3/25 8:54 AM, Fabio M. De Francesco wrote:
-> I/O Machine Check Architecture events may signal failing PCIe components
-> or links. The AER event contains details on what was happening on the wire
-> when the error was signaled.
->
-> Trace the CPER PCIe Error section (UEFI v2.10, Appendix N.2.7) reported
-> by the I/O MCA.
->
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
-> ---
->   drivers/acpi/Kconfig       |  1 +
->   drivers/acpi/acpi_extlog.c | 32 ++++++++++++++++++++++++++++++++
->   drivers/pci/pcie/aer.c     |  2 +-
->   include/linux/aer.h        |  8 ++++++--
->   4 files changed, 40 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-> index 7bc40c2735ac0..2bbd9e4868ad7 100644
-> --- a/drivers/acpi/Kconfig
-> +++ b/drivers/acpi/Kconfig
-> @@ -493,6 +493,7 @@ config ACPI_EXTLOG
->   	tristate "Extended Error Log support"
->   	depends on X86_MCE && X86_LOCAL_APIC && EDAC
->   	select UEFI_CPER
-> +	select ACPI_APEI_PCIEAER
->   	help
->   	  Certain usages such as Predictive Failure Analysis (PFA) require
->   	  more information about the error than what can be described in
-> diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-> index 47d11cb5c9120..b2928ff297eda 100644
-> --- a/drivers/acpi/acpi_extlog.c
-> +++ b/drivers/acpi/acpi_extlog.c
-> @@ -132,6 +132,34 @@ static int print_extlog_rcd(const char *pfx,
->   	return 1;
->   }
->   
-> +static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
-> +			      int severity)
-> +{
-> +	struct aer_capability_regs *aer;
-> +	struct pci_dev *pdev;
-> +	unsigned int devfn;
-> +	unsigned int bus;
-> +	int aer_severity;
-> +	int domain;
-> +
-> +	if (!(pcie_err->validation_bits & CPER_PCIE_VALID_DEVICE_ID ||
-> +	      pcie_err->validation_bits & CPER_PCIE_VALID_AER_INFO))
-> +		return;
-> +
-> +	aer_severity = cper_severity_to_aer(severity);
-> +	aer = (struct aer_capability_regs *)pcie_err->aer_info;
-> +	domain = pcie_err->device_id.segment;
-> +	bus = pcie_err->device_id.bus;
-> +	devfn = PCI_DEVFN(pcie_err->device_id.device,
-> +			  pcie_err->device_id.function);
-> +	pdev = pci_get_domain_bus_and_slot(domain, bus, devfn);
-> +	if (!pdev)
-> +		return;
-> +
-> +	pci_print_aer(KERN_DEBUG, pdev, aer_severity, aer);
-> +	pci_dev_put(pdev);
-> +}
-> +
->   static int extlog_print(struct notifier_block *nb, unsigned long val,
->   			void *data)
->   {
-> @@ -183,6 +211,10 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
->   			if (gdata->error_data_length >= sizeof(*mem))
->   				trace_extlog_mem_event(mem, err_seq, fru_id, fru_text,
->   						       (u8)gdata->error_severity);
-> +		} else if (guid_equal(sec_type, &CPER_SEC_PCIE)) {
-> +			struct cper_sec_pcie *pcie_err = acpi_hest_get_payload(gdata);
-> +
-> +			extlog_print_pcie(pcie_err, gdata->error_severity);
->   		} else {
->   			void *err = acpi_hest_get_payload(gdata);
->   
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index d0ebf7c15afa9..627fcf4346983 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -801,7 +801,7 @@ void pci_print_aer(char *level, struct pci_dev *dev, int aer_severity,
->   	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
->   			aer_severity, tlp_header_valid, &aer->header_log);
->   }
-> -EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
-> +EXPORT_SYMBOL_GPL(pci_print_aer);
->   
->   /**
->    * add_error_device - list device to be handled
-> diff --git a/include/linux/aer.h b/include/linux/aer.h
-> index 45d0fb2e2e759..6ce433cee4625 100644
-> --- a/include/linux/aer.h
-> +++ b/include/linux/aer.h
-> @@ -56,16 +56,20 @@ struct aer_capability_regs {
->   #if defined(CONFIG_PCIEAER)
->   int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
->   int pcie_aer_is_native(struct pci_dev *dev);
-> +void pci_print_aer(char *level, struct pci_dev *dev, int aer_severity,
-> +		   struct aer_capability_regs *aer);
->   #else
->   static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
->   {
->   	return -EINVAL;
->   }
->   static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
-> +static inline void pci_print_aer(char *level, struct pci_dev *dev,
-> +				 int aer_severity,
-> +				 struct aer_capability_regs *aer)
-> +{ }
+v2:
+- fixed multiple trailing whitespace errors and
+- the Signed-off-by mismatch
 
-This also needs rebase. With the patches queued for v6.16, you may not
-need to pass level any more.
+The test file for the IR decoder used single-line comments
+at the top to document its purpose and licensing,
+which is inconsistent with the style used throughout the
+Linux kernel.
 
->   #endif
->   
-> -void pci_print_aer(char *level, struct pci_dev *dev, int aer_severity,
-> -		   struct aer_capability_regs *aer);
->   int cper_severity_to_aer(int cper_severity);
->   void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
->   		       int severity, struct aer_capability_regs *aer_regs);
+In this patch i converted the file header to
+a proper multi-line comment block
+(/*) that aligns with standard kernel practices.
+This improves readability, consistency across selftests,
+and ensures the license and documentation are
+clearly visible in a familiar format.
 
+No functional changes have been made.
+
+Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+---
+ tools/testing/selftests/ir/ir_loopback.c | 23 +++++++++++++----------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
+
+diff --git a/tools/testing/selftests/ir/ir_loopback.c b/tools/testing/selftests/ir/ir_loopback.c
+index f4a15cbdd5ea..c94faa975630 100644
+--- a/tools/testing/selftests/ir/ir_loopback.c
++++ b/tools/testing/selftests/ir/ir_loopback.c
+@@ -1,14 +1,17 @@
+ // SPDX-License-Identifier: GPL-2.0
+-// test ir decoder
+-//
+-// Copyright (C) 2018 Sean Young <sean@mess.org>
+-
+-// When sending LIRC_MODE_SCANCODE, the IR will be encoded. rc-loopback
+-// will send this IR to the receiver side, where we try to read the decoded
+-// IR. Decoding happens in a separate kernel thread, so we will need to
+-// wait until that is scheduled, hence we use poll to check for read
+-// readiness.
+-
++/* Copyright (C) 2018 Sean Young <sean@mess.org>
++ *
++ * Selftest for IR decoder
++ *
++ *
++ * When sending LIRC_MODE_SCANCODE, the IR will be encoded.
++ * rc-loopback will send this IR to the receiver side,
++ * where we try to read the decoded IR.
++ * Decoding happens in a separate kernel thread,
++ * so we will need to wait until that is scheduled,
++ * hence we use poll to check for read
++ * readiness.
++ */
+ #include <linux/lirc.h>
+ #include <errno.h>
+ #include <stdio.h>
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+2.25.1
 
