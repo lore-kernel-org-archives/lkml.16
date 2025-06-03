@@ -1,195 +1,75 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 534E7BA34
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 18:37:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C61C82C326F;
+	Tue,  3 Jun 2025 18:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748975856; cv=none; b=W2xZoOCHwEDTE0HqFK9KdHJm95amMOdazLwPcwumqtMViBUMkGs0qok3nf+qFEV004BBy4pFKlP4GTcda88djzckTL/M+vaSJh2vJO2gzxfLk/uH9SW3UGGHv6OIGlgMjWe4Lj9E38oOafgHk8p0m6/nfuSitObU7qzpHv5pjss=
+	t=1748975949; cv=none; b=KLkR2OcSaiMpScqd/JoUe+uQ2dbcRpJiySNySez7jQnWRVzYjiSdnP+586AIH2x/X39kARQd0vjUsEGxQkVN2mQYWuITPKMfZZ1WFYFKqKgLN3Q8dUdE1CF4cOXdnjSE9jKfl1ce8KlpFfM/JXx6WYIMeS16IQbeudzIrf2dOGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748975856; c=relaxed/simple;
-	bh=ik6NzPcxq8a/HP7wlNu4T3qe1umTwogfKsy9N8UEORA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fDCYIXPH4B9rCjwwqIotLphM9Hj4tcA37XE2DlMZ+JpBZnle7xCFfUJaPoC1HB5RBlVVsGBv/VduwNkjK/t7HbreOwDDgbZJFZCYbYE9Ibq7ZXZHcbWhAfff+HguW8zeCCfgxrtI4udZrMclCnF8X8l3sIw6hp6ZytwJTZ+wGQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i3kjfAoN; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748975949; c=relaxed/simple;
+	bh=DvF0YtJZCPbcobMdQgE3+ZNHa9Fjrq28Jh3rCZ4Bn5k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E1EVVYZUNOfCmHp6pre3jeDbez1B6PIBTIX+ZO0aLHjjH++Cs9nyZCWlgUsSA36Xa1qcdoTjH23xLQQMr6CocMK0xsJkhwcNyPYy5G2CbcQKLgRH7xLmlxf7bxCUS21Ie9+O+hKnP2qgLg2BbB4AfSXIrg78ceujJkqHi3kK+qA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZvHnI7lr; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i3kjfAoN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748975853;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=q+wC1nFPKzdRbglr6z/EKVkQfQonArZLpFbOxAc5txg=;
-	b=i3kjfAoNjNcnn29AJ9ZAixOpCMQe/nQ7/cXFn4+ZqkR97j52U92DxSsPPUcQ7/bIwkQBJP
-	JUHDHKcASf3ZCxU3CLN/2MjTl5TZGuSScApeOHEPUfhIq7cgWv+R1oFHkX7KPmvtYO7f8J
-	EI1gkCnt5ZjmDuMbEh5bq+rEkqj3OoM=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-422-O0S0M7Q4Pq-BzW7dIyHgPQ-1; Tue, 03 Jun 2025 14:37:32 -0400
-X-MC-Unique: O0S0M7Q4Pq-BzW7dIyHgPQ-1
-X-Mimecast-MFC-AGG-ID: O0S0M7Q4Pq-BzW7dIyHgPQ_1748975851
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-450d50eacafso31732075e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 11:37:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZvHnI7lr"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-602346b1997so10285851a12.3;
+        Tue, 03 Jun 2025 11:39:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748975946; x=1749580746; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=DvF0YtJZCPbcobMdQgE3+ZNHa9Fjrq28Jh3rCZ4Bn5k=;
+        b=ZvHnI7lrCZDZIDsTELlT4fxS6/Y+GYHQWjSti0S/Y8Irc+q8060/nwdQKDGFC/9nWg
+         nniHUpKMiqATKi2AMIbtSbSA2zS8eoVCDJhc73x0xp+O5dkQ1B3sv17hQO6gjjLAb9B8
+         +1BTPOhw6UG85q7HITRjfUS5B7W9QbWIIGWj+v/uivi/bv/9ooyLdzSZII8/T1sZsx7y
+         x3opRzY0IEiFknUq6/Gx4e3y3wRgbLb4vvXXsTbKmCSK3vN3L93KiUom43JOLt8RABkE
+         I2NAgekh4B8cA8ZHpZlGojKJcmrWpefKhNdMFanpyHwmimjGfK5sTLu6+k8iZUJSF9Nl
+         zi9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748975851; x=1749580651;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=q+wC1nFPKzdRbglr6z/EKVkQfQonArZLpFbOxAc5txg=;
-        b=CJyDpsqp2rgqxmxVq1WIDHPJytPJPZxZ/0Z7BYsSwkVbupQgpfI2qwO1nHJDpD4AJG
-         jrZgG47gvJB2C31W/bFQnWen6AoilcR65EZInpv54SyORkt6W0oU9ZneedtdRuGP71ml
-         2/LvszFTPomC3hIUDRpAojk0LlVIjy6L5Ui5oB8ghEbV3i0gOgaFRAkZKLKutC3WO+oI
-         JRHdZizGANftTaPlpmrkGQuRLoE4ltWroQFsvUvxUKjjUrGVAKlbSsCpBOxsTp26ercG
-         aWrHEAg9J4GDl6Bn/7j2QvognCwMfi3K8c3+wDUMds+evC7MfN4R3tNwZmZ3tlPGQrZ6
-         +Umw==
-X-Forwarded-Encrypted: i=1; AJvYcCWOY92dULhjrEdXU2cecEnWshCijjE/hUUHBA8xL5bpG80nNK7SATmMkjVgyTeMbz99dmuFRltw4q8YtS4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywh7c09c3inDG99R0sReEq9ZUpInhII+PfStwmnVx+C4hWZ/L8K
-	WXD88qYyJwColnJ0KBISgFudsldb1dELnLlXVvYU5I1mfQajLnet2vCTlqkpFzzzbByYmZFmjyS
-	UQotjA9k+toy00Q0DuBpzGsq0TQIr8JBeaBl/6CnE9LNqXNx/ZF/lBmDfZuTrfHTELQ==
-X-Gm-Gg: ASbGncvx/0JfBw4qUsaqcxu5y0bYpyv0bPoXDRq1cYK81os5j1zU1lW3SbAhiFbebWr
-	x0ePvG/9U5oD9Fkpqcq32dlCGqR2OHt5cTUoN0Lt1YsrvEpRoZamKoeZHBEAqCgmkBLhgK37sBT
-	ohfbeu2O09jdSQotQVH0fj9KnLeqIUCg9a4iiWPjktsqkyUpnCXGgziEFnbq04KCZn0hOQNYs86
-	QHzLEqgHB7Vn3n1PbhBE2C+DSUZRRS5Cqw/+zFtubD/DJxQK/z+8t0asgKUaQea1JMSV8hA6iEV
-	Re7b0gNkuL66Kl0zC0ACfzRWdbqYHJxeZ7q8BoHGBF0lFGkd5licbX0jdkgY7RZCe0dF63HOfge
-	42pBiZwAfgEyk+aJSHZBJ2OC4tYSrspUpzxkm8EE=
-X-Received: by 2002:a05:600c:8108:b0:442:cd13:f15d with SMTP id 5b1f17b1804b1-450d658f8f5mr140327755e9.29.1748975850871;
-        Tue, 03 Jun 2025 11:37:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGEn5Swz821eaZ3fVCJn1+W+z533HeiU9aO6LEbaaf2YtRtWBQkU7oRi+ZGI84F1pZBrgY+Fw==
-X-Received: by 2002:a05:600c:8108:b0:442:cd13:f15d with SMTP id 5b1f17b1804b1-450d658f8f5mr140327465e9.29.1748975850437;
-        Tue, 03 Jun 2025 11:37:30 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f0d:f000:eec9:2b8d:4913:f32a? (p200300d82f0df000eec92b8d4913f32a.dip0.t-ipconnect.de. [2003:d8:2f0d:f000:eec9:2b8d:4913:f32a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f00971e4sm19383632f8f.65.2025.06.03.11.37.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jun 2025 11:37:30 -0700 (PDT)
-Message-ID: <db2268f0-7885-471d-94a3-8ae4641ba2e5@redhat.com>
-Date: Tue, 3 Jun 2025 20:37:29 +0200
+        d=1e100.net; s=20230601; t=1748975946; x=1749580746;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DvF0YtJZCPbcobMdQgE3+ZNHa9Fjrq28Jh3rCZ4Bn5k=;
+        b=w1xc2YBZKyzcnmRC05DS9xYgWrcIYiYKu9kOWgY8rAfJas6/9AULyM/UimZb4Zi2nC
+         0x6Niv7A5/w+sPFOtGZKrr7c6BBodakuMnlZLgfK+Ot0TyMYMo7PofI0aChEWVtP+UpF
+         QSeuPvLGeqpkvkZ+w8niYry3ZlMYRVsRxabJX1kIwpMFcFMWFEitXoN+K7w1comaYEMZ
+         0GLSPl9aiaNUUof3l7EWpwsl8Ho9UkCPmcvevvN7vJvEaUKTfpYkxMgOujIns8S8wBiW
+         wb9u7JIswgUKwvqC1MtfOe3OgeDLTqEYbpVLNnjkRHbmon4GU3KyADIfSqd0fo2EQhHA
+         PY1g==
+X-Forwarded-Encrypted: i=1; AJvYcCUHUTs74PEwnFj/xIkI2MC546CHdHzUwMB9vUFI0dIrZrbwgig9Tb3y6zZSbvf5u3W95WSllfp3kMRFzA==@vger.kernel.org, AJvYcCVNdX+2j0IhkkwH98l5tnVQ4fv+VG71agpjvyhHTnSSeALkfRzEzHn6QpuuBew/EjETuH06qFuABRUh3RTg@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKm5fUy3Q3aJtfgdHBdWeG3JTsC3qf0YxWdjeROUCvEbChka+4
+	OqJUCXRkSxWLyoipoqCwcoRdgeh8R7nkeAt8DQxNxlUoYhunWQMhnvG6+6mO0FVwvpm8RNINHcm
+	NmWsbOn0beWdrLFkfLLHUo9o2sLJgBT6UVJxyx5XP
+X-Gm-Gg: ASbGncsUE04AdXrBmNe00imkWRREc/oJ9h+MFPm+G+e4B2o4ZzVUKRhDnVOmAEIu/HY
+	dXEuwh6KCcXW8ovmIuyWcrrlVLDGoNa0a2D0mfAauMW9IYKl7pb4xTMreAfBPy3jMlGCY8HgPHV
+	X1nXEzS4qiL+zw0VJp3QFzo7EAst+WZ/BEPlKSFrfxsCxMkCWgDa4C01fTzlVcNPvpxk9MngN4p
+	g==
+X-Google-Smtp-Source: AGHT+IEgp/H8t8sDlIVXIDA1/FraKwi1oRyldtr5x1vZua2nW4YVnT3NBUszJUfxL2vsAAiNm9j6P2eFL/ZirAIhC8k=
+X-Received: by 2002:a17:907:728a:b0:ad8:9e80:6baf with SMTP id
+ a640c23a62f3a-adb36b4669emr1613991766b.13.1748975945874; Tue, 03 Jun 2025
+ 11:39:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] mm/memory: ensure fork child sees coherent memory
- snapshot
-To: Matthew Wilcox <willy@infradead.org>, Jann Horn <jannh@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- linux-mm@kvack.org, Peter Xu <peterx@redhat.com>,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20250603-fork-tearing-v1-0-a7f64b7cfc96@google.com>
- <20250603-fork-tearing-v1-1-a7f64b7cfc96@google.com>
- <aD8--plab38qiQF8@casper.infradead.org>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <aD8--plab38qiQF8@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250603183133.1178062-1-csander@purestorage.com>
+In-Reply-To: <20250603183133.1178062-1-csander@purestorage.com>
+From: Anuj gupta <anuj1072538@gmail.com>
+Date: Wed, 4 Jun 2025 00:08:26 +0530
+X-Gm-Features: AX0GCFuZoUS8cWsiQh-fsDFI14gLeVU_DVAcKegZPpEd_gCDbRqctwy_P7wpQUM
+Message-ID: <CACzX3AvbOE8CMrDhrJ4=JSd9DDcAdzBxC==jXWPvYQLpSiF2TQ@mail.gmail.com>
+Subject: Re: [PATCH] block: drop direction param from bio_integrity_copy_user()
+To: Caleb Sander Mateos <csander@purestorage.com>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 03.06.25 20:29, Matthew Wilcox wrote:
-> On Tue, Jun 03, 2025 at 08:21:02PM +0200, Jann Horn wrote:
->> When fork() encounters possibly-pinned pages, those pages are immediately
->> copied instead of just marking PTEs to make CoW happen later. If the parent
->> is multithreaded, this can cause the child to see memory contents that are
->> inconsistent in multiple ways:
->>
->> 1. We are copying the contents of a page with a memcpy() while userspace
->>     may be writing to it. This can cause the resulting data in the child to
->>     be inconsistent.
->> 2. After we've copied this page, future writes to other pages may
->>     continue to be visible to the child while future writes to this page are
->>     no longer visible to the child.
->>
->> This means the child could theoretically see incoherent states where
->> allocator freelists point to objects that are actually in use or stuff like
->> that. A mitigating factor is that, unless userspace already has a deadlock
->> bug, userspace can pretty much only observe such issues when fancy lockless
->> data structures are used (because if another thread was in the middle of
->> mutating data during fork() and the post-fork child tried to take the mutex
->> protecting that data, it might wait forever).
-> 
-> Um, OK, but isn't that expected behaviour?  POSIX says:
-> 
-> : A process shall be created with a single thread. If a multi-threaded
-> : process calls fork(), the new process shall contain a replica of the
-> : calling thread and its entire address space, possibly including the
-> : states of mutexes and other resources. Consequently, the application
-> : shall ensure that the child process only executes async-signal-safe
-> : operations until such time as one of the exec functions is successful.
-> 
-> It's always been my understanding that you really, really shouldn't call
-> fork() from a multithreaded process.
-
-I have the same recollection, but rather because of concurrent O_DIRECT 
-and locking (pthread_atfork ...).
-
-Using the allocator above example: what makes sure that no other thread 
-is halfway through modifying allocator state? You really have to sync 
-somehow before calling fork() -- e.g., grabbing allocator locks in 
-pthread_atfork().
-
-
-For Linux we document in the man page
-
-"After  a  fork() in a multithreaded program, the child can safely call 
-only async-signal-safe functions (see signal-safety(7)) until such time 
-as it calls execve(2)."
-
--- 
-Cheers,
-
-David / dhildenb
-
+Looks ok to me.
+Reviewed-by: Anuj Gupta <anuj20.g@samsung.com>
