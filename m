@@ -1,97 +1,116 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B151DB366;
-	Tue,  3 Jun 2025 14:37:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E438017A2EA
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 14:37:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748961446; cv=none; b=Ub0fjCR4IsboowVIhNwhohodS4ARvKVnkJQ+IlztUPg5sx43Nu55hfysEzj16IbRqALP/lhenjjhVxznPLX5fZE9TzaSIGRK186kahPE1tP18iiZT1oSsup+cPS8kYeUoL6CT0bcWDx7zyhPW0FSgINpGPqv3fZls4MV9jOlVBs=
+	t=1748961450; cv=none; b=Ni40E0l3o2i7LmdyisSedlrbW+lTud/N1ExWNzTNRh/gQqpYlC4MSVlwSuPvhx+xkNizF4CsYCpgKiuiVhnjk6qFXweco4VQ4y2Phd2bu6cfu3ntv6IPPs4o7AEao3gHNEAaQ5tFJK3kiyRv7ptHoydYbQtcoeLHGrIbDeV7KWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748961446; c=relaxed/simple;
-	bh=7F0XII4V5s2KPp1ioe9SOauygO51/G8Tc6KLSdROHo0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=PJLHHKVOb2yWN1W9hLlR56xeGkMR2DYG/XnQUbft5qtslbvLFg7hEZhzLifB0DglWjs7fOT0aVL3eqGPsTv309XqGa83E1db1azgWg/67oEP4OAYgRuD4XLFR6bJGkXgp4DhUjX7F0td8DyoWkWAAHXBC+egTCjyc6b4m2Yl3MY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=Fzyv0y/d; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1748961450; c=relaxed/simple;
+	bh=m27aq/uff5R7/6shxNmKRc5alXNmEne/PxgWTW+/ut0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KGdWLeCLx4a1y8xdAcJVxFSZKSd87lBqHgh8vThsV9DK93G7XAiim1QmalgvBiGpVYuGJZ0CrPpWS4GHTWW+LlA9djr4c6BQrLT2id3emBPi/jXLyYvYz8HZCljaLEMqD5P8lRVI2lhKeOw8YRS7FcvuT95rM/DOm39P+41RjvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mwi166Am; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="Fzyv0y/d"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 3756041ED0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1748961444; bh=uw373KZqTxfYc7CgajAJm0hoPspIDINCwb6qNNb/b2c=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Fzyv0y/daizC+CqsktU1eYw3qfqwRekvSQTdxZWnPgVQ4dTTO45tBy2VxZug9voGr
-	 Vo2Oc2sPdIN9zD5H+wA1J8Zt7YjVSyTITU8TAXH4C7QrclLYAz33xAUuYXcSFvmxVb
-	 yHGKsmXe4Ce58i9tfK01pZaqc3xTntavvgxWpKnZJsjNFZl0VKGvD4f8PdE539GgZY
-	 RNGyEkQq4byV+byRM3wi4I/y9GJ4N3irjin11LWZduBaBEd5sft2tN/Cd/RAcuwp6U
-	 ULdlp9Q1VSJq7HVGoS1AHAtbYUIiq6RSv9mmTHnQ8nWtITi1Gf0bdX84WDdy2LclZQ
-	 4NyKT8ktuA/SA==
-Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 3756041ED0;
-	Tue,  3 Jun 2025 14:37:24 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Suren Baghdasaryan
- <surenb@google.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Shakeel Butt <shakeel.butt@linux.dev>,
- Jann Horn <jannh@google.com>, Qi Zheng <zhengqi.arch@bytedance.com>,
- linux-mm@kvack.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs/mm: expand vma doc to highlight pte freeing,
- non-vma traversal
-In-Reply-To: <ea8c2be9-0af0-445b-b7fe-fd9e80bd6a65@lucifer.local>
-References: <20250602210710.106159-1-lorenzo.stoakes@oracle.com>
- <87bjr59634.fsf@trenco.lwn.net>
- <9fc9ac50-abce-48bd-979f-2e00b26917b5@lucifer.local>
- <8734cg9auh.fsf@trenco.lwn.net>
- <ea8c2be9-0af0-445b-b7fe-fd9e80bd6a65@lucifer.local>
-Date: Tue, 03 Jun 2025 08:37:23 -0600
-Message-ID: <87tt4w7uxo.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mwi166Am"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A4B2C4CEED;
+	Tue,  3 Jun 2025 14:37:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748961449;
+	bh=m27aq/uff5R7/6shxNmKRc5alXNmEne/PxgWTW+/ut0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Mwi166Am/NgJs/eDzkpMeigJrf7vlPoBKzdgoDOlCcDDh0tF8R6ld3PatFpTDFa1N
+	 VQ0x+F5XS4xRl4NUr4Qt3dgehgKfNHVIoIl6eurRca1Vabhnkfuc9tsLg2fFqL4xK5
+	 bqa1/qBp+CzGRHL//qEhtyvKdZCEl7TtNqm++mEYlh0ld/wC2goFHPX5A5WYMfsGvi
+	 DzYChK/dm6yo+fk5MKZkkdLTf/dz0rO4wkfofIUfRpR0/q73CufT0Gm12rjo15Sice
+	 XlF4bg7EwwxsPJsOj12viv1Bbu/zKKnCUiVAsJN0m9t8wG4HqPcswEG/Mx+0EEtC0S
+	 XNXpNmoYfwfOw==
+Date: Tue, 3 Jun 2025 16:37:23 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Zenghui Yu <yuzenghui@huawei.com>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>
+Subject: Re: [PATCH v2 3/5] genirq/msi: Move prepare() call to per-device
+ allocation
+Message-ID: <aD8Ioy+v8k/i0e8B@lpieralisi>
+References: <20250513163144.2215824-1-maz@kernel.org>
+ <20250513163144.2215824-4-maz@kernel.org>
+ <0b1d7aec-1eac-a9cd-502a-339e216e08a1@huawei.com>
+ <aD7B96BiSb6mK9Bj@lpieralisi>
+ <87jz5tdl9d.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87jz5tdl9d.wl-maz@kernel.org>
 
-Lorenzo Stoakes <lorenzo.stoakes@oracle.com> writes:
+On Tue, Jun 03, 2025 at 02:09:50PM +0100, Marc Zyngier wrote:
+> On Tue, 03 Jun 2025 10:35:51 +0100,
+> Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+> > 
+> > On Tue, Jun 03, 2025 at 04:22:47PM +0800, Zenghui Yu wrote:
+> > > > +	domain->dev = dev;
+> > > > +	dev->msi.data->__domains[domid].domain = domain;
+> > > > +
+> > > > +	if (msi_domain_prepare_irqs(domain, dev, hwsize, &bundle->alloc_info)) {
+> > > 
+> > > Does it work for MSI?
+> > 
+> > This means that it does not work for MSI for you as it stands, right ?
+> > 
+> > If you spotted an issue, thanks for that, report it fully please.
+> 
+> Honestly, you're barking up the wrong tree. Zenghui points us to a
+> glaring bug in the core code, with detailed information on what could
+> go wrong, as well as what is wrong in the code. It doesn't get better
+> than that.
+> 
+> The usual level of bug reports is "its b0rken", sometimes followed by
+> a trace with lots of hex and no information. Spot the difference?
 
-> But to repeat - 'given C's weirdness with typing I really prefer to be
-> explicit in referencing a struct vs. e.g. a typedef.'
+Agreed, thanks again Zenghui for reporting it and forgive me if the
+message sounded a bit patronizing, I did not mean it.
 
-...and I think that makes perfect sense.
+Lorenzo
 
->> Why would you *not* want to cross-reference something and make life easier
->> for your reader?
->
-> Because it apparently requires me to document every function I reference?
-> Unless I'm missing something?
->
-> I may be misunderstanding you.
->
-> If not then fine, I can delay this patch, go off and do a 'cleanup' patch
-> first, that will drop the '!'s and come back to this.
->
-> But if I need to document every referenced function that just isn't
-> feasible for me with my current workload.
->
-> Please clarify!
-
-Hopefully I already have - I'm in no position to enforce such a
-requirement, even if I thought it would be a good thing -- and I don't.
-It's hard enough to get documentation written as it is, I certainly
-don't want to make it harder.
-
-My suggestion would be: proceed with your changes for now, it was never
-my purpose to put obstacles there.  I'll look at having automarkup do
-something a bit more useful for references that lack documentation, then
-maybe I'll do a cleanup pass on some of the mm docs if nobody else gets
-there first.
-
-Thanks,
-
-jon
+> > > hwsize is 1 in the MSI case, without taking pci_msi_vec_count() into account.
+> > > 
+> > > bool pci_setup_msi_device_domain(struct pci_dev *pdev)
+> > > {
+> > > 	[...]
+> > > 
+> > > 	return pci_create_device_domain(pdev, &pci_msi_template, 1);
+> > 
+> > I had a stab at it with GICv5 models and an MSI capable device and this indeed
+> > calls the ITS msi_prepare() callback with 1 as vector count, so we size
+> > the device tables wrongly.
+> 
+> Not wrongly. Exactly as instructed.
+> 
+> > 
+> > The question is why pci_create_device_domain() is called here with
+> > hwsize == 1. Probably, before this series, the ITS MSI parent code was
+> > fixing the size up so we did not notice, I need to check.
+> 
+> The GICv3 ITS code would upgrade the vector count to the next power of
+> two (one bit of EID space -> 2 MSIs), but with the device domain
+> squarely set to 1, the endpoint driver would never get more. It is
+> prepared to fail gracefully though, hence nothing really breaks.
+> 
+> I don't think this patch makes anything regress though. Commit
+> 15c72f824b327 seems to be the offending one. If Zenghui confirms that
+> the hack I posted separately works for him, I'll follow up with a
+> "real" patch.
+> 
+> 	M.
+> 
+> -- 
+> Jazz isn't dead. It just smells funny.
