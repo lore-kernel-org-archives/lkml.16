@@ -1,92 +1,77 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706F612B73;
-	Tue,  3 Jun 2025 13:04:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57FDB12B73;
+	Tue,  3 Jun 2025 13:04:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748955856; cv=none; b=jOkJ4J0cXeppQM3Uscrx0J+gfAhQKpIbXUuZyDb/PesV+ObaW1nfRA+wX0B6bY7nqzg9PrZr9Ug49dYUgU+8CZmHY7XqLr4cg+K5qp8AAgLd6yPgPgVSTZvswlVpqfvkjASQzZ54q4sjamlTgkXNLQWXZk4isH6wjlJnt4E1TjM=
+	t=1748955864; cv=none; b=td/Flo8VmkwFbjqpNQxiEzIQznVkP/cbIgIvTi/9Y9utK38UjvQks66ulSBgNigJJNDKc4C8Fy5mOLVBxQ0pAZofedFGz60XEVaVsdBgePqRk0fMmlBna2lJPszpmNKagyaDOmYNCBQyChi1aIBeJEwCLvmg+T5grM8UPelYJ6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748955856; c=relaxed/simple;
-	bh=Dricr+w/L9wB17nGicPZZQEshdkqpaGFOdOzgyB7jtU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RbItLM/UZdl4+r9TmKlVqb7+WAyn4yz1/13lfDcCQ7A5xBTNf231eJFXMvI1gfC/yeXVmNHDFbZZZwgYextU5K7ly0e0Nxs3Lo1Luky5DjqZNdI5va4dlmtBxmcY6858n5BBpaBpiFQLlPs6dNHgnxn8/txh7QuZY3+VvaIgdTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bOxqjpku; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748955864; c=relaxed/simple;
+	bh=LTts8eyV7N64hZQZ+j7Pro9m/Qtt9yprFoJa2t2YSxs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=DMYXDBHHMN3BTW/LYWYKfHIBeEhElVNsIL0n283cHV+NRw3Aa63RQUT9F0OnOeS0WiyMTP8MNMhOcbxhsIi4VMlRgo71YEbXMKdWASVgyjFjc1CfhrTPAx6E5pdFEjhlhDejH3XL2E5Y0aMC0yig5/R1bIksp2LCkLyIwmvyi1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=KP/1y5Ep reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bOxqjpku"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-31306794b30so753a91.2;
-        Tue, 03 Jun 2025 06:04:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748955855; x=1749560655; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Dricr+w/L9wB17nGicPZZQEshdkqpaGFOdOzgyB7jtU=;
-        b=bOxqjpkuFrCkTt+/FopdaTHeXjky3z2HTQIMsu5WGzWBtT3S6YNMKtsAMpvxEIyIpD
-         OS+SP0WkNDgoXDqJpwfPwB/nap575glU89ZvTJzXFPPlqJl/5Ow3ASem54WWQgdwStyf
-         AsyA+BaucT0RkD61tZa+5Q4OTjA3pngfS1IauqN/ajNn5cqPgL89xr2ZY9v9OW7PWCcc
-         fLXXuiTIFB/JOr2v+PREHZtQSuqdUOehnVVIjkycFwqnfIVOKXFqh5O383mtqCy0+0zM
-         IZSV4zs3xS86DeW3UvQjZbq5Loj+6/LQdCRT25loq90wJ9IRU8T/hb0LGV7ws9Fhs2AC
-         KFaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748955855; x=1749560655;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Dricr+w/L9wB17nGicPZZQEshdkqpaGFOdOzgyB7jtU=;
-        b=fFiDTRXR3nG4r5hIm1Y1eXyk4WLWNoLBH41wsFgaPQ8Eq1mcB8cFEBNZVnZONyx3cA
-         fJLdTxvnkUblHreFaaB+JxmDPGtPPFpiUsrkD+e8jUloxmQfbhmHq6KwekpEtppfWHEN
-         2JWxJeoqBMFFml6lvuTYJHiC6wo047LWHvHW43eeSRN/w1IDdKiKrq3GvSbnQT0rR28t
-         CvZcdE0YLN0FqfLeGwdoOqNOjp56slR10i2gCW7mRAb1lMKd7aXqZixMw4JwFwxV1LuJ
-         H+xsuZ6wqhW6aZg2/6visXi+gYqX8kKJymedJ8EohRBLO33Hnp430iAqRWGQothOlUZM
-         s9/A==
-X-Forwarded-Encrypted: i=1; AJvYcCW7xoy2SiCb+p+2zq+Rjx0AN4lfpmzkwdWLosX3dJGkCc7H1MqhZ0tBgABrcQ4e5dUWfiJNgeRC2aB+@vger.kernel.org, AJvYcCXplFKgmkryU11kEqDAXw8IoPWLkIrEVdlA30FQ/+aYu4bvQqntM0fL+4vWFL6SxGcIoDWTv01tW47VfRxjTNc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwU4XBRc3hR48lqSzRXR5duTN+J98QRWMITLfp7Wz0OZh10SUn
-	HZUMwy8RjTmhzHCg0qArMbMf2vr3E9EcrhVTo9wFDyAcEtuAsw9RXICVTSND0sZHWuKJSBQ8FTl
-	vcGsqqICkT+PqNyTCJt4w2CO3YdNanys=
-X-Gm-Gg: ASbGncumGkAff4SVDN7aE+EMIhqgcHzoYtylit/u1ruE9UXY2te6wJRm4e3DbSIKGCi
-	/oGjUuuWfZ/vCsEYFon85fuLM7W/vXOWgTkjvxqapHqxPFZymAVmh+vhZ/UT9SQi2t8ruvRxlD7
-	GyI9FTTLY8g8JZUUF0NHlk1XM2ziB8mdlca73yXxBg9A==
-X-Google-Smtp-Source: AGHT+IHZuxjBASZzmcDbKtbKMKwND8EBhwgefoY/g6fQjw8zmCJ40rK69VbfhFbhfFrS77nV3NseKq6ain69S/GuEbc=
-X-Received: by 2002:a17:90b:250b:b0:312:e76f:520f with SMTP id
- 98e67ed59e1d1-312e76f5260mr1035611a91.8.1748955854470; Tue, 03 Jun 2025
- 06:04:14 -0700 (PDT)
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="KP/1y5Ep"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=e1P63WWpE/yNP0EnN6fBqKkEw4tP8IuvstsE1GFOMro=; b=K
+	P/1y5EpnFFZ93GZc3fRvoMm1P9M57iQLhPhIcchf4rhs6yBNw4F7kC6hXR2Ih+nW
+	5lHdcc3Bvf4afWiKUCb/z5gLXy+gZGm1U8oY2fb2oSYntHGtRIxwmoI2TSNKZzM9
+	jOAunHGzsulNznkhz/J431Nv7q25fPXE7hfbVIatQU=
+Received: from 00107082$163.com ( [111.35.189.95] ) by
+ ajax-webmail-wmsvr-40-120 (Coremail) ; Tue, 3 Jun 2025 21:03:55 +0800 (CST)
+Date: Tue, 3 Jun 2025 21:03:55 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Peter Zijlstra" <peterz@infradead.org>
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mingo@kernel.org,
+	yeoreum.yun@arm.com, leo.yan@arm.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf/core: restore __perf_remove_from_context when
+ DETACH_EXIT not set
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <20250603125440.GA35970@noisy.programming.kicks-ass.net>
+References: <20250603032651.3988-1-00107082@163.com>
+ <20250603083304.34132-1-00107082@163.com>
+ <20250603091352.GJ21197@noisy.programming.kicks-ass.net>
+ <2633d43d.ae30.1973564f5e5.Coremail.00107082@163.com>
+ <20250603125056.GI39944@noisy.programming.kicks-ass.net>
+ <20250603125440.GA35970@noisy.programming.kicks-ass.net>
+X-NTES-SC: AL_Qu2fCvWeukAo4ymYY+kZnEYQheY4XMKyuPkg1YJXOp80qiTS4SchZ25qJnLK9PmtFz2moQmoVjhMwclIUoR1QJjNy9VRbwqI51t+XSovUR5d
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <700ebe13-c2d3-48e3-800f-8dc327efb6fc@gmail.com>
- <CANiq72mFL4dn+0JppLLfxyKnM+xYwKeduFw2j07hUfxWVVHdUw@mail.gmail.com> <f5d5b84c-0850-4df9-bad7-61fff12c4248@leemhuis.info>
-In-Reply-To: <f5d5b84c-0850-4df9-bad7-61fff12c4248@leemhuis.info>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 3 Jun 2025 15:04:02 +0200
-X-Gm-Features: AX0GCFs7VQgBRbPSLVv4A4_rBaiT9g1Fb3Qcf6rhz410nhP4a-xSELk381kh9nw
-Message-ID: <CANiq72=+qUNJu5j+uoveMrTbngwA89+ScwjUPd9OyVGqps54aw@mail.gmail.com>
-Subject: Re: REGRESSION: armv7 build mismatched types
-To: Thorsten Leemhuis <linux@leemhuis.info>, Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: linux-kernel@vger.kernel.org, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, rust-for-linux@vger.kernel.org, 
-	Miguel Ojeda <ojeda@kernel.org>, Linux Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <6487969b.b907.19735e42e05.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:eCgvCgD3X9K88j5oPBETAA--.38060W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkBVhqmg+7Kd6qAACsD
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-On Tue, Jun 3, 2025 at 2:51=E2=80=AFPM Thorsten Leemhuis <linux@leemhuis.in=
-fo> wrote:
->
-> Or is this heading towards mainline really soon now anyway?
-
-The Rust PR is, but it would be nice to have the fix in -next before
-sending the PR (I will give Linus a test merge anyway, but it is nice
-to know everything is OK in -next too, and to have another reference
-point for Linus).
-
-> Thx, it fixed things for me.
-
-Thanks for checking!
-
-Cheers,
-Miguel
+CkF0IDIwMjUtMDYtMDMgMjA6NTQ6NDAsICJQZXRlciBaaWpsc3RyYSIgPHBldGVyekBpbmZyYWRl
+YWQub3JnPiB3cm90ZToKPk9uIFR1ZSwgSnVuIDAzLCAyMDI1IGF0IDAyOjUwOjU2UE0gKzAyMDAs
+IFBldGVyIFppamxzdHJhIHdyb3RlOgo+PiBPbiBUdWUsIEp1biAwMywgMjAyNSBhdCAwNjo0NDo1
+OFBNICswODAwLCBEYXZpZCBXYW5nIHdyb3RlOgo+PiAKPj4gCj4+ID4gKEFzIHllb3JldW0ueXVu
+QGFybS5jb20gcG9pbnRlZCBvdXQsICB0aGUgY2hhbmdlIGluIHBlcmZfcmVtb3ZlX2Zyb21fY29u
+dGV4dCgpIG1hZGUKPj4gPiBwZXJmX2V2ZW50X3NldF9zdGF0ZSgpIGhhcHBlbmVkIGJlZm9yZSBs
+aXN0X2RlbF9ldmVudCgpLCByZXN1bHRpbmcgaW4gcGVyZl9jZ3JvdXBfZXZlbnRfZGlzYWJsZSgp
+Cj4+ID4gbm90IGNhbGxlZC4pCj4+IAo+PiBBYWgsIGQnMGguIExldCBtZSBzZWUgd2hhdCB3ZSBz
+aG91bGQgZG8gdGhlcmUuCj4KPkRvZXMgdGhpcyBoZWxwPyBUaGlzIHdheSBldmVudF9zY2hlZF9v
+dXQoKSB3aWxsIGNhbGwKPnBlcmZfY2dyb3VwX2V2ZW50X2Rpc2FibGUoKS4KPgo+Cj5kaWZmIC0t
+Z2l0IGEva2VybmVsL2V2ZW50cy9jb3JlLmMgYi9rZXJuZWwvZXZlbnRzL2NvcmUuYwo+aW5kZXgg
+ZjM0Yzk5ZjhjZThmLi5hZGJiMDM3MjgyNWYgMTAwNjQ0Cj4tLS0gYS9rZXJuZWwvZXZlbnRzL2Nv
+cmUuYwo+KysrIGIva2VybmVsL2V2ZW50cy9jb3JlLmMKPkBAIC0yNDk0LDkgKzI0OTQsOSBAQCBf
+X3BlcmZfcmVtb3ZlX2Zyb21fY29udGV4dChzdHJ1Y3QgcGVyZl9ldmVudCAqZXZlbnQsCj4gCWlm
+IChmbGFncyAmIERFVEFDSF9SRVZPS0UpCj4gCQlzdGF0ZSA9IFBFUkZfRVZFTlRfU1RBVEVfUkVW
+T0tFRDsKPiAJaWYgKGZsYWdzICYgREVUQUNIX0RFQUQpIHsKPi0JCWV2ZW50LT5wZW5kaW5nX2Rp
+c2FibGUgPSAxOwo+IAkJc3RhdGUgPSBQRVJGX0VWRU5UX1NUQVRFX0RFQUQ7Cj4gCX0KPisJZXZl
+bnQtPnBlbmRpbmdfZGlzYWJsZSA9IDE7Cj4gCWV2ZW50X3NjaGVkX291dChldmVudCwgY3R4KTsK
+PiAJcGVyZl9ldmVudF9zZXRfc3RhdGUoZXZlbnQsIG1pbihldmVudC0+c3RhdGUsIHN0YXRlKSk7
+Cj4gCgpPaywgSSB3aWxsIGdpdmUgaXQgYSB0cnkgYW5kIHVwZGF0ZSBsYXRlci4K
