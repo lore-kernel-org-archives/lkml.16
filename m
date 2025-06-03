@@ -1,115 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mo4-p00-ob.smtp.rzone.de (mo4-p00-ob.smtp.rzone.de [81.169.146.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F561A08AF;
-	Tue,  3 Jun 2025 13:21:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748956886; cv=none; b=tGZX6MmBxldBU0xwj+FKJS/iBYSy22yAC+CtqzSXTqW6mlkuDhYP2QsWHuaA4JTzncdJQHtr/8C0XEMfZrNnQaC6iASQJ+x3dxvOCiA40YuWIeJ6zgIB6CHlkX/m2QLoam/FZPguSavefAe0UXnMCxDUG6JkemZ5pEhc4QH+bV8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748956886; c=relaxed/simple;
-	bh=zH4rUyvq8kOPfx1d1qPsT3TCt7wQNpsiju3FOhyNFCQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WYeC5zbN+Yb/Ym4gfgyb7DEuGCzQAtzSFqm72PG8wZ/HyN4Ujltd7EjeUDWtCfkEZnEIIsVwd5JljVnyq11MCex1WP1GOvX+st+tJ7Xiv7m4BK+BExTN07p0MnnZ9GbPIpbakPEuTaJye/1yck3fcgb1upltecjRRX3gcBjWx+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dht3Pp93; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A709D22FE02
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 13:21:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.216
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748956899; cv=pass; b=hCRcjP/o9up3RkDExKMCS4SrqcRrS0mD1yyamaLQct5Z0oLuF6vqKcr0UGb372ayTOlchUf9MlN5FAhQZN3odcmAqbrZDgiAukhnwFiClqwyrrYWC10cb1w/+x3eNCGwD16j9u52gYW7JQCf9Bs7k0e8ZstDmjnvuY+x7fYS15g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748956899; c=relaxed/simple;
+	bh=3686iIqcrD1v0rIwnE5BDEhqKpyTR1lXHiLv92Viv20=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=QL2FrpR+ujjBkfkvX5p1MILgumTDxsK28TDAQiZT/3h/SR8HEN1BAN4+8yXWV51+80bpcTbMQyRAsfnm45ipeJWQAS1wMCJW9ZhZRsMb6jARMgoF35np/kDaHMbh6FpfFnuU1oPabl19PQ2xfopW5u7rGuNNqaXRb5p2lZyuqkA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=outer-limits.org; spf=none smtp.mailfrom=outer-limits.org; dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=Fi1RKISd; dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=BkwicBqF; arc=pass smtp.client-ip=81.169.146.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=outer-limits.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=outer-limits.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dht3Pp93"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79F95C4CEED;
-	Tue,  3 Jun 2025 13:21:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748956886;
-	bh=zH4rUyvq8kOPfx1d1qPsT3TCt7wQNpsiju3FOhyNFCQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dht3Pp931bj65euV99zmThwCaRTyizAb+Jan0MzDsI8jPYpT/7k+RwXq34aF3Rr4w
-	 +fvYFNDVUmsw1dgmKRJ0h4h9mYSsNA/0hgOCgcFDVH8UzVjVBCj9kQUlCUTcZkFg7m
-	 05z0UG4j9eaxtvBdqWjz4K/JyfS6iVdJVtIkig5sLp7HDJIKE4IrUt+gZMG8XNdL6e
-	 AvnuZO0A7XCqCFWq+b3b5duJVDHhUy0/2TnS5iGTp1qX1EebT1YroY3BqvIjhoGSJ6
-	 KhkcD1oHSSPWuR1A1Onr2WvJbtZPMBKrzQaraQ8ErCmsmAij2uCnOS8UBNzcZQdFNx
-	 5NlA3MeYaa3Cg==
-Date: Tue, 3 Jun 2025 14:21:21 +0100
-From: Mark Brown <broonie@kernel.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] selftests/mm: Report unique test names for each
- cow test
-Message-ID: <9961082f-848d-43d3-b97d-3df675ca4415@sirena.org.uk>
-References: <20250527-selftests-mm-cow-dedupe-v2-0-ff198df8e38e@kernel.org>
- <20250527-selftests-mm-cow-dedupe-v2-3-ff198df8e38e@kernel.org>
- <c43347ce-433b-498e-bfd7-f09b8e781197@redhat.com>
+	dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="Fi1RKISd";
+	dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="BkwicBqF"
+ARC-Seal: i=1; a=rsa-sha256; t=1748956894; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=BBByrgHiqQockSFqGHFjQ0HjVGMsx0uDeImcsY4M+hbSDL/t22NRaLpCSewa3CeZWP
+    lsGWz9xWhL7AMSbGJtvjAqt+GldOvIcxGK4wzdoeHvNDoz74jAi1p1vaE3NuakaPM0Q0
+    fkPxL9R97E5q1z9s7erxVzvFpaFUwVR6AEVewYm+wIv5/QLEbaXErNuzI+H7t5Q78LdU
+    ieHhpuajT4ITrwD7lQ/PEt3dKsj5Ye/2F47itIvZjMfUzFOmieceGsIOM6DrN8nDIOsm
+    J3r3PMzAb6LMMIQRpYjIUjyXnro/wNDnzM2ig396qsyCj9UCWLOPtyMbUAAr2mkTosYM
+    5CfA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1748956894;
+    s=strato-dkim-0002; d=strato.com;
+    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=Uw2joeTt8PfL+vQ6RmT2S3am/XAVy6q4yrugxQwId/U=;
+    b=hvqWCxMyG5QLMgfydDNg0wYw2dbjQoiUuW5O4Sp5fzzGda2bW5CRCwruNGlQq04fae
+    TyPh+M6MjEaI90Cv6QRBApCeSqlnafb8R+krX+rl3h36qaEMP4al52OnUp650o8T/6zj
+    lmKagKfvmHo+3hQWfwEXUnY+V7OS8MolzdyFrAWtxC4Ik+VdlkRJ+NogWgO9UeCVhGF3
+    m2theL3o+dM1YV5Nv8L+N620AjZPX8a0W9llSzjpHpxcsHjswdW44KpubEiljZeV5MN9
+    wZ2Gusp8blgTRQPNpDjuxsSzMZ8Gmo4zlck6LKYDt4C2NNUZ1ODptW3ESsIh+5fx4r2N
+    ey+g==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo00
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1748956894;
+    s=strato-dkim-0002; d=outer-limits.org;
+    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=Uw2joeTt8PfL+vQ6RmT2S3am/XAVy6q4yrugxQwId/U=;
+    b=Fi1RKISdLQz4WvUmInHJ/4uxPB6yn7mPvDf2pKBOUYJsleaVUFArDHdU7W+JGLueLJ
+    ufLFgF8C5uIbANcOJlnvNNC1uCSjASqinh+np9nPmbhcTp5iRQLDQDaJ56dP4Y+MSw84
+    HHXEBEarP6QSkvTYG6XFCIP2NRIqN5lEtcHiVECwUSUupsTHh/pT/wElfYjOM+zkOIbb
+    EAxHs1uGtqn8Ew4kUuyObZP0XRFsYNzPifzs5sCbNs1l0LBdyjb1Y51JsVzCMW37DYrJ
+    p51yYvq9a++N8PaQrU8kyFJSGC7NLBNZXgV4YsnNXXNFRjLqAJzxYdp/6Lgo1hDRx6Jj
+    fJuA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1748956894;
+    s=strato-dkim-0003; d=outer-limits.org;
+    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=Uw2joeTt8PfL+vQ6RmT2S3am/XAVy6q4yrugxQwId/U=;
+    b=BkwicBqFn1mCKK5xtlY38hETY+wi5Z2I7AW5vNUQGwjGl1CDqlePZayA349HofQ9k+
+    YJzU11ItgzCg6P7fgPBw==
+X-RZG-AUTH: ":JnkIfEGmW/AMJS6HttH4FbRVwc4dHlPLCp4e/IoHo8zEMMHAgwTfqBEHcVJSv9P5mRTGd2ImeA=="
+Received: from ws2104.lan.kalrayinc.com
+    by smtp.strato.de (RZmta 51.3.0 AUTH)
+    with ESMTPSA id J2b110153DLXwOm
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Tue, 3 Jun 2025 15:21:33 +0200 (CEST)
+From: Julian Vetter <julian@outer-limits.org>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Wei-Hsin Yeh <weihsinyeh168@gmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	Julian Vetter <julian@outer-limits.org>
+Subject: [PATCH] Replace __get_unaligned_cpu32 in jhash function
+Date: Tue,  3 Jun 2025 15:21:21 +0200
+Message-Id: <20250603132121.3674066-1-julian@outer-limits.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6FZ12iParXl9eD5E"
-Content-Disposition: inline
-In-Reply-To: <c43347ce-433b-498e-bfd7-f09b8e781197@redhat.com>
-X-Cookie: Avec!
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
 
+The __get_unaligned_cpu32 function is deprecated. So, replace it with
+the more generic get_unaligned and just cast the input parameter.
 
---6FZ12iParXl9eD5E
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Julian Vetter <julian@outer-limits.org>
+---
+ include/linux/jhash.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-On Tue, Jun 03, 2025 at 02:51:45PM +0200, David Hildenbrand wrote:
-> On 27.05.25 18:04, Mark Brown wrote:
+diff --git a/include/linux/jhash.h b/include/linux/jhash.h
+index fa26a2dd3b52..7c1c1821c694 100644
+--- a/include/linux/jhash.h
++++ b/include/linux/jhash.h
+@@ -24,7 +24,7 @@
+  * Jozsef
+  */
+ #include <linux/bitops.h>
+-#include <linux/unaligned/packed_struct.h>
++#include <linux/unaligned.h>
+ 
+ /* Best hash sizes are of power of two */
+ #define jhash_size(n)   ((u32)1<<(n))
+@@ -77,9 +77,9 @@ static inline u32 jhash(const void *key, u32 length, u32 initval)
+ 
+ 	/* All but the last block: affect some 32 bits of (a,b,c) */
+ 	while (length > 12) {
+-		a += __get_unaligned_cpu32(k);
+-		b += __get_unaligned_cpu32(k + 4);
+-		c += __get_unaligned_cpu32(k + 8);
++		a += get_unaligned((u32 *)k);
++		b += get_unaligned((u32 *)(k + 4));
++		c += get_unaligned((u32 *)(k + 8));
+ 		__jhash_mix(a, b, c);
+ 		length -= 12;
+ 		k += 12;
+-- 
+2.34.1
 
-> >   		ret = mprotect(mem, size, PROT_READ);
-> > -		ret |= mprotect(mem, size, PROT_READ|PROT_WRITE);
-> >   		if (ret) {
-
-> Not sure if that change is really required: if the second mprotect succeeds,
-> errno should not be updated. At least if my memory is correct :)
-
-> Same applies to similar cases below.
-
-I thought about checking to see if that was guaranteed to be the case,
-then I thought that if that wasn't clear to me right now without
-checking it probably also wasn't going to be obvious to future readers
-so it was better to just write something clear.  Previously we didn't
-report errno so it didn't matter.
-
-> >   	} else {
-> > -		ksft_test_result_fail("Leak from parent into child\n");
-
-> Same here and in other cases below (I probably didn't catch all).
-
-> We should log that somehow to indicate what exactly is going wrong, likely
-> using ksft_print_msg().
-
-Can you send a patch with the logging that you think would be clear
-please?  I dropped these because they just seemed to be reporting the
-overall point of the test, unlike the cases where we ran into some error
-during the setup and didn't actually manage to perform the test we were
-trying to do.  Perhaps the tests should be renamed.
-
-> >   	tmp = malloc(size);
-> >   	if (!tmp) {
-> > -		ksft_test_result_fail("malloc() failed\n");
-> > +		ksft_print_msg("malloc() failed\n");
-
-> perror?
-
-malloc() can only set one errno.
-
---6FZ12iParXl9eD5E
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmg+9tAACgkQJNaLcl1U
-h9ALZwf+KcO2BAip9nr8HfmSM0LrVxshV2/1yhu+F0+8i7WhuFXk+1gK/ub0Ue0F
-IhbjYpgC19NQXStOO+NNyG3VJ8ldaOZL3225ADsAjUT+0e7mKaDI3oW2XKNGQOK8
-XCi0/c2xaSCRyANRmYvVHGdzwDqmGZMNDBucCKdr9OZk80s2899XAFqQV35Wp2zV
-71B0pJeaiW0Leb2ym6pzfr6mq/+0FBaEFwk/J14FvzBsyVQYTXPM/WVGbcyW+iEb
-xpdn2cWjA1JRkzA6P/AA7Qhler6UxFACZ2HiVDrlOSP0fNQMFOqw3Im07giphodQ
-QONqZpVJ4ofJp/RM1pN29stc12RnXA==
-=eR7D
------END PGP SIGNATURE-----
-
---6FZ12iParXl9eD5E--
