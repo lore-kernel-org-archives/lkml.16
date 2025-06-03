@@ -1,65 +1,73 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52B90228CB0
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 12:36:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5521E50E
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 12:37:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748954202; cv=none; b=HSPulwWyoSh3SejXkQjqmJnkr/O0BsSDcgXYee3tBKviSopuT6z85IzsmQ/JPb8z8lFX0KFEjDtEkxVyL05Xwt3vKxUF+R0UO7HjKIitaLcaRYoDcauKFlu9EVXuCOckzB7H+7siIsFm5q+GjXbxYDlJVqGiP069A5pILsC0/io=
+	t=1748954269; cv=none; b=bBbk6se8fMkzlUfCTCMG8IIH5qO9KokDad6Y0KZJdVBGbiT4MsiLgu6hfn6VCWbDRE5lut1i70QpsuGbr9QCUjY9l/rh0f7+yB58ZYlaZh7EYzQeh6Msd8TBD7gunH5jZHL7L8hjYfUOUgbHNqf6gWMFMTitspp5OoH5CjH/qEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748954202; c=relaxed/simple;
-	bh=LzLCbIVcH2zYcLtVoHxYEUbzvgGPV0xknpcXcZKIK54=;
+	s=arc-20240116; t=1748954269; c=relaxed/simple;
+	bh=HVxuF/TLh3KWMJoR0FiCFN0I7IF2BxKS9juTKwwH2Ww=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UKjt22VVYqp/Ca4K+2rDLhZ7tUbAyOwPoRrWOHlOniMkhrbwbhNj12xdcWmG0vOehHp3Niq/B4Xuf4/eKUL1kPoDbdnABx2Z6XZsTmUg+XZq5J23eCw/gqPHkpal2rx/gO1O4WnBN3dw/W6CLwvmd8a7YWuEFGQSgxi59haZ/1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=dVculq2A; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 In-Reply-To:Content-Type; b=PKuYqHTFV46bP3u8b2EdkFG7nwzsPaueHze5duU2Hgx4x/nYT6HTZslUo9Z/4pm7tG9i5PWIcHX9WlpyjxfskSe4jYBvVRuow9L0LspSvoqBjXERyER5nxoiM+kYbQQ6Z5JETbJei1w/XWSW9klqscFZwZ7rtE9gmsKj/w+xktU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SzNfIW+8; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="dVculq2A"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-441d437cfaaso37999295e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 05:36:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1748954198; x=1749558998; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=2xViAWrRX5U+Z+Z6xznZc5dX8EHIRo93p2in+GG+LQ0=;
-        b=dVculq2ADloIoqS9foCMfcV6srXmn5SXT6Srv5LVb3+Ukw3UEsRrgFIN/d/bP4rzBZ
-         TdtSBddF5I3yDw3f8RJQqCRR3jhSR/Zjz2YBRYKR4LcprJb4iVqj52XX/TMlQxiUazjV
-         ygVrp9M8HO6qdR8I35VULIPsesvxuLNMnbYubzswZdg8vUUBg7dsdULIwM7TnzreTL89
-         yuqkMzIzA9CDxXa8RjBWcihzTK9/k9h/VjIJloyp0fTNpxFz2Nm3s5FQP/AEK1/6qAoV
-         YMecdDDOi9I3vFtJWcjDmI69mumLZAKcduiWML8qjwJEIk51S1wuG347P8J7sou3G02R
-         Z7tA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SzNfIW+8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748954266;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=kHS2t2oaHj5ILyKgrMhDZwz0UVPhJxY3OnyQEFGAuCE=;
+	b=SzNfIW+8OFJevEbSitgMPuofhiBR+8evR/D+S06q+BRwDv2nPu+yWG05VJUSXm/xyljdEF
+	RGwNqpUI0Q/daqUW5nITiDdk/Pem6+X76vqW0eCDBXdN2vATv1JJk8d/dN8ktUwQxQWOVn
+	5q+SA8DgcZV9bgGH6nm9l2k50sexPso=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-614-FPj2HpDlOvSJhNrd6NAUJg-1; Tue, 03 Jun 2025 08:37:45 -0400
+X-MC-Unique: FPj2HpDlOvSJhNrd6NAUJg-1
+X-Mimecast-MFC-AGG-ID: FPj2HpDlOvSJhNrd6NAUJg_1748954264
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-441c122fa56so28845165e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 05:37:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748954198; x=1749558998;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2xViAWrRX5U+Z+Z6xznZc5dX8EHIRo93p2in+GG+LQ0=;
-        b=lGc6HMAZZlOauHgp7eKoyLiiYibRjODqNI5YRX4cu/JLfYYl6qfu6n5qRYXpaUpuPH
-         b2QneEpUu+d6hDvE4Axd6IkkBF5tqX5LbJQEH8A6Ao3TIycg5R113K0ucDNYDTyLoWse
-         Tisi0drIYInL3VH3ImkJ9Gv8rakkjKyXmxbN6OxO6mnOrNJ7FYBlSZVQpee02ZU4tDgG
-         L2PWyWcmiqpBF5rUmurQDcEPasfyP1Z7udQwN77L4Q7NsR+HrSHoMRtiWWKGfng6kTFQ
-         +6nURSR3Exn44njNscwdFj0oklrF8bo3VbdFLP0XmWCpu2pEV0iaxGzhzP+fCFEdXMaW
-         dEEw==
-X-Forwarded-Encrypted: i=1; AJvYcCWzbt5m1yETYECiOr64zoL35GusqdsCK0sIl/bY6dSVvQgHNZjudqq/tlQLdnPffOlz3/Tk6LZW0p9NQR0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycRHPvtXm4l4J58kfHr5oMDYGOaa/2JMW+Mws5GU8T3sCLTBGf
-	EzmQClstVH43EfzwAbMi0rCZaSFxaJlt+TvQLcNFoyzOTKKAqvlZGChSzGnge7t3+Jw=
-X-Gm-Gg: ASbGncvad8XAjch44Yxi9qMgdsEBphaSX86KAOTARQnCltQneyqgwB7GeHCHrEfKWkl
-	DScpaX6eEz9gW828Z+xDW4sZ3WtWQoZXXxbj631c2/T9j/8lvNF0R9F1EQ9A+XsYgJrhYoScS2f
-	1DrApTfB2daQ3BXmfsFdeBjp1S09ZKyJTrGNCz1jyP+FXdNLI/5IZSLpwT15wlDZL37wpH+7CxF
-	Wivp5NWpNgudGkokEHI8llMm+8HofD6RCGXWjDfCmF1NtwzHHzMPpcXyZsDIvmIoKEpOeInsyjt
-	p8B51MV5EMBs2pS8RTNLAy8sop7dfuiyaPz8ePzkab8Wdman67TOROyE
-X-Google-Smtp-Source: AGHT+IEmSuB7VBhtVy5m9A6RQJKCKnY6TvtFiP4Koiz2XhTPlIPNcYTYt8gFZ1pj9vkQeovJQwl6tA==
-X-Received: by 2002:a5d:6205:0:b0:3a4:f902:3845 with SMTP id ffacd0b85a97d-3a4f9023860mr9622830f8f.21.1748954198308;
-        Tue, 03 Jun 2025 05:36:38 -0700 (PDT)
-Received: from [192.168.0.20] ([212.21.159.167])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe73eadsm17911159f8f.41.2025.06.03.05.36.36
+        d=1e100.net; s=20230601; t=1748954264; x=1749559064;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=kHS2t2oaHj5ILyKgrMhDZwz0UVPhJxY3OnyQEFGAuCE=;
+        b=Ow/Re3KxJyR6xduiTwlLTnQXEC8IOpDbD0j2ndPAc+xpg71n2r4gU3KuatdQlpSer0
+         Tw2+Rd4en3FHArp/eAPsyXDxqYxf41eVhOw83Ark1SkycNiUnQ4NVmgS/H1UfKtubGdL
+         M777Q+zoIf4rqapcQ446Js9JrcveHuJZUVGGkmmH3604R+o/F8wXs2BNjckBwp1C4Bgo
+         H1I7PWMFbAguk2Ua23+IVWLkft++jZOP6OXBVwlwsWGONSGSeOOvPwJz5FnSiWllNRth
+         RYTTM1vf1AK9WwJQHSHw+001C3VOsfjsuZRvut1sZvWRiU/0vpftQXsv6brDvVLEMhtr
+         cFeg==
+X-Forwarded-Encrypted: i=1; AJvYcCUS/Z549Vx07OR+V6/2sRFrt3mJGONX4I8IYY3S7kqvyHHIqkX9sZRPj9JLanfaHLgVrIm89axBDu+QIyI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjCCWw084Bltit0QCxUs3zPjejD7cQRh8FHkjKHWrfmkstk8AB
+	WkNobGW69Fr7j12OTqm43poiYvPRS9uw3Cld07w94sD03Ik3rTI5Kp+fpppa9oI+lVaYERitYu0
+	ic+hjQG72YlZeMNFjTFzC+P7SObv+ZqJ68bhZXGZhhnNTTjyawv8SXrN9hFx+iMG+wg==
+X-Gm-Gg: ASbGncvl7G1VWhEaPILnDxlrqcGKbC/D5PF8gDPbKzALExqik60kXVIN/VceUX3DEpn
+	gjRhTm2FUjeFoS1rgfdBvwyyK2P32p1zJ0CeGQGs5jyNpV1qjsrrAVGFgaScnFjOSe85o47j7bV
+	OcpT3ZJRJod5CrZo3o5X9ZjKDTUBEDjXzw7D1yadV7+RHKadYwkhxqeqKwF3UniKzhYTIjL1tNs
+	gmP/zzaPmz2LZRpcWmqIsLUZFqQUVJX9ygK8RjcY1/6W+9N5tFb73xKhqkb3CofwBUDQ6zrq0HP
+	hyJhRxcd6cB6YOjcc1CmrveJWP0AoAkgzZMOr/N8SS2NraxUK7mOKCr/v2o7+fHiwkaW6mMlzm+
+	LWiZ9zGVxj7+Pla7NARpntcKlB8GYyCnSI5aF+C8=
+X-Received: by 2002:a05:600c:3b27:b0:450:d00d:d0 with SMTP id 5b1f17b1804b1-450d6515da1mr135417995e9.19.1748954264348;
+        Tue, 03 Jun 2025 05:37:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF6hOntpImmJhhOr2kc0P39r0QNY5mPbQ/1OxLQCnMbzyUGLdDBvPRo5mvUE9vEi3arTd5ONw==
+X-Received: by 2002:a05:600c:3b27:b0:450:d00d:d0 with SMTP id 5b1f17b1804b1-450d6515da1mr135417775e9.19.1748954263972;
+        Tue, 03 Jun 2025 05:37:43 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f0d:f000:eec9:2b8d:4913:f32a? (p200300d82f0df000eec92b8d4913f32a.dip0.t-ipconnect.de. [2003:d8:2f0d:f000:eec9:2b8d:4913:f32a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7fb86d2sm161320595e9.30.2025.06.03.05.37.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jun 2025 05:36:37 -0700 (PDT)
-Message-ID: <1f6956aa-5fa4-404f-bce4-3ddf87c50114@suse.com>
-Date: Tue, 3 Jun 2025 15:36:36 +0300
+        Tue, 03 Jun 2025 05:37:43 -0700 (PDT)
+Message-ID: <63e00cf8-8592-4117-bb27-42bc8c1f8921@redhat.com>
+Date: Tue, 3 Jun 2025 14:37:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,246 +75,133 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 12/20] x86/virt/seamldr: Shut down the current TDX
- module
-To: Chao Gao <chao.gao@intel.com>, linux-coco@lists.linux.dev,
- x86@kernel.org, kvm@vger.kernel.org
-Cc: seanjc@google.com, pbonzini@redhat.com, eddie.dong@intel.com,
- kirill.shutemov@intel.com, dave.hansen@intel.com, dan.j.williams@intel.com,
- kai.huang@intel.com, isaku.yamahata@intel.com, elena.reshetova@intel.com,
- rick.p.edgecombe@intel.com, Farrah Chen <farrah.chen@intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- linux-kernel@vger.kernel.org
-References: <20250523095322.88774-1-chao.gao@intel.com>
- <20250523095322.88774-13-chao.gao@intel.com>
-From: Nikolay Borisov <nik.borisov@suse.com>
+Subject: Re: [PATCH v2 2/4] selftests/mm: Add helper for logging test start
+ and results
+To: Mark Brown <broonie@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250527-selftests-mm-cow-dedupe-v2-0-ff198df8e38e@kernel.org>
+ <20250527-selftests-mm-cow-dedupe-v2-2-ff198df8e38e@kernel.org>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-Autocrypt: addr=nik.borisov@suse.com; keydata=
- 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
-In-Reply-To: <20250523095322.88774-13-chao.gao@intel.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250527-selftests-mm-cow-dedupe-v2-2-ff198df8e38e@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-
-
-On 5/23/25 12:52, Chao Gao wrote:
-> TD-Preserving updates request shutting down the existing TDX module.
-> During this shutdown, the module generates hand-off data, which captures
-> the module's states essential for preserving running TDs. The new TDX
-> module can utilize this hand-off data to establish its states.
+On 27.05.25 18:04, Mark Brown wrote:
+> Several of the MM tests have a pattern of printing a description of the
+> test to be run then reporting the actual TAP result using a generic string
+> not connected to the specific test, often in a shared function used by many
+> tests. The name reported typically varies depending on the specific result
+> rather than the test too. This causes problems for tooling that works with
+> test results, the names reported with the results are used to deduplicate
+> tests and track them between runs so both duplicated names and changing
+> names cause trouble for things like UIs and automated bisection.
 > 
-> Invoke the TDH_SYS_SHUTDOWN API on one CPU to perform the shutdown. This
-> API requires a hand-off module version. Use the module's own hand-off
-> version, as it is the highest version the module can produce and is more
-> likely to be compatible with new modules.
+> As a first step towards matching these tests better with the expectations
+> of kselftest provide helpers which record the test name as part of the
+> initial print and then use that as part of reporting a result.
 > 
-> Changes to tdx_global_metadata.{hc} are auto-generated by following the
-> instructions detailed in [1], after adding the following section to the
-> tdx.py script:
+> This is not added as a generic kselftest helper partly because the use of
+> a variable to store the test name doesn't fit well with the header only
+> implementation of kselftest.h and partly because it's not really an
+> intended pattern. Ideally at some point the mm tests that use it will be
+> updated to not need it.
 > 
->      "handoff": [
->         "MODULE_HV",
->      ],
-> 
-> Add a check to ensure that module_hv is guarded by the TDX module's
-> support for TD-Preserving.
-> 
-> Signed-off-by: Chao Gao <chao.gao@intel.com>
-> Tested-by: Farrah Chen <farrah.chen@intel.com>
-> Link: https://lore.kernel.org/kvm/20250226181453.2311849-12-pbonzini@redhat.com/ [1]
+> Signed-off-by: Mark Brown <broonie@kernel.org>
 > ---
->   arch/x86/include/asm/tdx_global_metadata.h  |  5 +++++
->   arch/x86/virt/vmx/tdx/seamldr.c             | 11 +++++++++++
->   arch/x86/virt/vmx/tdx/tdx.c                 | 18 ++++++++++++++++++
->   arch/x86/virt/vmx/tdx/tdx.h                 |  4 ++++
->   arch/x86/virt/vmx/tdx/tdx_global_metadata.c | 13 +++++++++++++
->   5 files changed, 51 insertions(+)
+>   tools/testing/selftests/mm/vm_util.h | 20 ++++++++++++++++++++
+>   1 file changed, 20 insertions(+)
 > 
-> diff --git a/arch/x86/include/asm/tdx_global_metadata.h b/arch/x86/include/asm/tdx_global_metadata.h
-> index ce0370f4a5b9..a2011a3575ff 100644
-> --- a/arch/x86/include/asm/tdx_global_metadata.h
-> +++ b/arch/x86/include/asm/tdx_global_metadata.h
-> @@ -40,12 +40,17 @@ struct tdx_sys_info_td_conf {
->   	u64 cpuid_config_values[128][2];
->   };
+> diff --git a/tools/testing/selftests/mm/vm_util.h b/tools/testing/selftests/mm/vm_util.h
+> index 6effafdc4d8a..4944e4c79051 100644
+> --- a/tools/testing/selftests/mm/vm_util.h
+> +++ b/tools/testing/selftests/mm/vm_util.h
+> @@ -3,6 +3,7 @@
+>   #include <stdbool.h>
+>   #include <sys/mman.h>
+>   #include <err.h>
+> +#include <stdarg.h>
+>   #include <strings.h> /* ffsl() */
+>   #include <unistd.h> /* _SC_PAGESIZE */
+>   #include "../kselftest.h"
+> @@ -74,6 +75,25 @@ int uffd_register_with_ioctls(int uffd, void *addr, uint64_t len,
+>   unsigned long get_free_hugepages(void);
+>   bool check_vmflag_io(void *addr);
 >   
-> +struct tdx_sys_info_handoff {
-> +	u16 module_hv;
-> +};
+> +/* These helpers need to be inline to match the kselftest.h idiom. */
+> +static char test_name[1024];
 > +
->   struct tdx_sys_info {
->   	struct tdx_sys_info_versions versions;
->   	struct tdx_sys_info_features features;
->   	struct tdx_sys_info_tdmr tdmr;
->   	struct tdx_sys_info_td_ctrl td_ctrl;
->   	struct tdx_sys_info_td_conf td_conf;
-> +	struct tdx_sys_info_handoff handoff;
->   };
->   
->   #endif
-> diff --git a/arch/x86/virt/vmx/tdx/seamldr.c b/arch/x86/virt/vmx/tdx/seamldr.c
-> index 9d0d37a92bfd..11c0c5a93c32 100644
-> --- a/arch/x86/virt/vmx/tdx/seamldr.c
-> +++ b/arch/x86/virt/vmx/tdx/seamldr.c
-> @@ -241,6 +241,7 @@ static struct seamldr_params *init_seamldr_params(const u8 *data, u32 size)
->   
->   enum tdp_state {
->   	TDP_START,
-> +	TDP_SHUTDOWN,
->   	TDP_DONE,
->   };
->   
-> @@ -281,8 +282,12 @@ static void ack_state(void)
->   static int do_seamldr_install_module(void *params)
->   {
->   	enum tdp_state newstate, curstate = TDP_START;
-> +	int cpu = smp_processor_id();
-> +	bool primary;
->   	int ret = 0;
->   
-> +	primary = !!(cpumask_first(cpu_online_mask) == cpu);
-
-nit: the !! is not needed here, as the check is clearly boolean.
-
- > +>   	do {
->   		/* Chill out and ensure we re-read tdp_data. */
->   		cpu_relax();
-> @@ -291,6 +296,12 @@ static int do_seamldr_install_module(void *params)
->   		if (newstate != curstate) {
->   			curstate = newstate;
->   			switch (curstate) {
-> +			case TDP_SHUTDOWN:
-> +				if (!primary)
-> +					break;
-> +
-> +				ret = tdx_module_shutdown();
-> +				break;
->   			default:
->   				break;
->   			}
-> diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
-> index 22ffc15b4299..fa6b3f1eb197 100644
-> --- a/arch/x86/virt/vmx/tdx/tdx.c
-> +++ b/arch/x86/virt/vmx/tdx/tdx.c
-> @@ -295,6 +295,11 @@ static int read_sys_metadata_field(u64 field_id, u64 *data)
->   	return 0;
->   }
->   
-> +static bool tdx_has_td_preserving(void)
+> +static inline void log_test_start(const char *name, ...)
 > +{
-> +	return tdx_sysinfo.features.tdx_features0 & TDX_FEATURES0_TD_PRESERVING;
+> +	va_list args;
+> +	va_start(args, name);
+> +
+> +	vsnprintf(test_name, sizeof(test_name), name, args);
+> +	ksft_print_msg("[RUN] %s\n", test_name);
+> +
+> +	va_end(args);
 > +}
 > +
->   #include "tdx_global_metadata.c"
->   
->   static int check_features(struct tdx_sys_info *sysinfo)
-> @@ -1341,6 +1346,19 @@ int tdx_enable(void)
->   }
->   EXPORT_SYMBOL_GPL(tdx_enable);
->   
-> +int tdx_module_shutdown(void)
+> +static inline void log_test_result(int result)
 > +{
-> +	struct tdx_module_args args = {};
-> +
-> +	/*
-> +	 * Shut down TDX module and prepare handoff data for the next TDX module.
-> +	 * Following a successful TDH_SYS_SHUTDOWN, further TDX module APIs will
-> +	 * fail.
-> +	 */
-> +	args.rcx = tdx_sysinfo.handoff.module_hv;
-> +	return seamcall_prerr(TDH_SYS_SHUTDOWN, &args);
+> +	ksft_test_result_report(result, "%s\n", test_name);
 > +}
-> +
->   static bool is_pamt_page(unsigned long phys)
->   {
->   	struct tdmr_info_list *tdmr_list = &tdx_tdmr_list;
-> diff --git a/arch/x86/virt/vmx/tdx/tdx.h b/arch/x86/virt/vmx/tdx/tdx.h
-> index 48c0a850c621..3830dee4da91 100644
-> --- a/arch/x86/virt/vmx/tdx/tdx.h
-> +++ b/arch/x86/virt/vmx/tdx/tdx.h
-> @@ -48,6 +48,7 @@
->   #define TDH_PHYMEM_PAGE_WBINVD		41
->   #define TDH_VP_WR			43
->   #define TDH_SYS_CONFIG			45
-> +#define TDH_SYS_SHUTDOWN		52
->   
->   /*
->    * SEAMCALL leaf:
-> @@ -87,6 +88,7 @@ struct tdmr_info {
->   } __packed __aligned(TDMR_INFO_ALIGNMENT);
->   
->   /* Bit definitions of TDX_FEATURES0 metadata field */
-> +#define TDX_FEATURES0_TD_PRESERVING	BIT(1)
->   #define TDX_FEATURES0_NO_RBP_MOD	BIT(18)
->   
->   /*
-> @@ -122,4 +124,6 @@ struct tdmr_info_list {
->   
->   int seamldr_prerr(u64 fn, struct tdx_module_args *args);
->   
-> +int tdx_module_shutdown(void);
-> +
->   #endif
-> diff --git a/arch/x86/virt/vmx/tdx/tdx_global_metadata.c b/arch/x86/virt/vmx/tdx/tdx_global_metadata.c
-> index 088e5bff4025..a17cbb82e6b8 100644
-> --- a/arch/x86/virt/vmx/tdx/tdx_global_metadata.c
-> +++ b/arch/x86/virt/vmx/tdx/tdx_global_metadata.c
-> @@ -100,6 +100,18 @@ static int get_tdx_sys_info_td_conf(struct tdx_sys_info_td_conf *sysinfo_td_conf
->   	return ret;
->   }
->   
-> +static int get_tdx_sys_info_handoff(struct tdx_sys_info_handoff *sysinfo_handoff)
-> +{
-> +	int ret = 0;
-> +	u64 val;
-> +
-> +	if (!ret && tdx_has_td_preserving() &&
 
-nit: That first !ret is redundant since it's always true.
+Won't win a beauty contest, but should get the job done.
 
-<snip>
+We could allocate the array in log_test_start() and free it in 
+log_test_result(). Then, we could assert more easily that we always have 
+a log_test_result() follow exactly one log_test_start() etc.
+
+-- 
+Cheers,
+
+David / dhildenb
 
