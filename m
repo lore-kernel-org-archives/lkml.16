@@ -1,284 +1,108 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232421E519
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 12:56:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748955410; cv=pass; b=HsZnG9R4XyKeqP3xJ2rVxKNHvi9Yz600S5nlxkcKVqwuGrW2dmy3jtud2vfFiLtMQyFozJpq+jBUeBUugBgFzO8TKccW1+TZy1hLPeS2p75lwkdWm9Ub5LRXYXsSfaueEasjGJj3OQK2z3q6ApAexBJmIHt68RRtD1ZObvPF4mA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748955410; c=relaxed/simple;
-	bh=IO9KyOw3+DX5pVe/A25OU4742Ss9DE3nlol/QI8cPos=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UYwNvEESNARP1eU7jU3pSBQ3nQ4JrEfz11SIkDznnSAtA6viDfc4o8iCKkRLyzxdxFg0QQ8yFyUqD40v5FAWiHCrt5xE3eD+XyW2OFi9Z25J0bETR9wg8oZc+7Y8gFBqZoJvE/PngP8lg+ehhgg3EGIKTvu1fTe4utNfM9O9WSg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=UMn3cCcI; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D82F1E519
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 12:57:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748955428; cv=none; b=KARyhYIqJy1kq6aMw/5HckFJ2c1rljohNTI5+LN7qHBqKarIeNGvtKjvinnwPhwe5xpn/dZkGI/4FaGRcjfR6NHG8rxHCf6C3vmKAk0WrOSYnIbRcj2yDIMx6Qe19BGR8nPZ+GlyUoKojCH5jIwUwbOLU1JJaSRdMqk6JyFTPsg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748955428; c=relaxed/simple;
+	bh=JB5dJY1ZvEfS5wF759w9qPwAnoG1BBGlK7STGS/xjYA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oCGUvrzJoPn6ey4ioLc2CFxEGIsQBXvrWMf+fjKtMfdpbABTo86diEHAs+R+5R+jDM9HsKd/7jEBG1ZRQX5SmPfb34Y81VztuoCdjRuLHunSuJXj7gJPf1FmyD7Aw8W5RaZbYKOGsPaJFvlGnGmai/OrTTeQ0MsvUbMxt3PFE9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SmxuHz5A; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="UMn3cCcI"
-ARC-Seal: i=1; a=rsa-sha256; t=1748955349; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=RXagZj1fGH6Nojxfk1Rz6J0iOD1MKY34Dj0aWtcpj3YuIqbdJTDuoajVO6MLRPo6aS3OO3Z7pGgpZrtuv5Dmnjfq0GZLVHAFMjWDyfTKrnWyuU52cMOMVVyMPzQTYSDpnxlH8Sv5fdL42vtOchRsMwiiPjnwZlrSrhRtSwshkfI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1748955349; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=OKOarRGHsL2ajSiin4VcPu5AlkGxReA7dzEybyUZJ50=; 
-	b=knWRds/IAEI0iYCI1k4z6jjKzQ6AAhToejvBwUkYsrO70K3vfTjqDgUkqQ9I8vdw+INa0viJssxhmJJ/xwTvGYKyQ3boPQ+yfxc/5mpzg+wIbYqKKjMczvFS+gsfb9J9dg/x06FYOKxQhojRvC82tmJ7tVKSJURvXzdrXk+hW6M=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1748955349;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=OKOarRGHsL2ajSiin4VcPu5AlkGxReA7dzEybyUZJ50=;
-	b=UMn3cCcI0tYg01nC1fITQksGt/2f+wTumyUR6A1pTxQ4ypnWz/CADTD32YOuXmk1
-	UjOmUbniXZ/AXnrN4WsuCwct2AsQ6qslqHwW9dW08++dxUgmXlWMmC2ECMC6DjeE4a3
-	FApldWwyKi0b18EYN+cUUBZkq/XZ2WpgrGhUSyV8=
-Received: by mx.zohomail.com with SMTPS id 1748955347750347.95572855171406;
-	Tue, 3 Jun 2025 05:55:47 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Heiko Stuebner <heiko@sntech.de>,
- Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
- William Breathitt Gray <wbg@kernel.org>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Kever Yang <kever.yang@rock-chips.com>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Leon Romanovsky <leon@kernel.org>, Lee Jones <lee@kernel.org>,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
- linux-iio@vger.kernel.org, kernel@collabora.com,
- Jonas Karlman <jonas@kwiboo.se>,
- Detlev Casanova <detlev.casanova@collabora.com>
-Subject: Re: [PATCH v2 3/7] bitfield: introduce HI16_WE bitfield prep macros
-Date: Tue, 03 Jun 2025 14:55:40 +0200
-Message-ID: <2525788.jE0xQCEvom@workhorse>
-In-Reply-To: <aD4DSz3vs41yMQSv@yury>
-References:
- <20250602-rk3576-pwm-v2-0-a6434b0ce60c@collabora.com>
- <20250602-rk3576-pwm-v2-3-a6434b0ce60c@collabora.com> <aD4DSz3vs41yMQSv@yury>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SmxuHz5A"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748955426;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hXN9nPbX3VjM2OeWHPUoDpb9LpXeCU9nEzDdnFdKokk=;
+	b=SmxuHz5A16E0jK8IuYBSGffIFVNpLTZVHYJkw2qwwZ/yzP0KmmSKc8zZVWPj74SVJgQFjb
+	2Ri8zfB/vFtM699Kq4Yui0wObMQGzCwCR+7Fon07Qrnoz9bUa31kDded2OJI1dV/QvDcJ2
+	xKFdLg/JZ0gwZfHWlvwX4MHrioJFaQU=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-674-YxuB4EGBOPeFqJBeX4rZKg-1; Tue,
+ 03 Jun 2025 08:57:04 -0400
+X-MC-Unique: YxuB4EGBOPeFqJBeX4rZKg-1
+X-Mimecast-MFC-AGG-ID: YxuB4EGBOPeFqJBeX4rZKg_1748955423
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 56F771808888;
+	Tue,  3 Jun 2025 12:56:55 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.13])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 304753001FF6;
+	Tue,  3 Jun 2025 12:56:47 +0000 (UTC)
+Date: Tue, 3 Jun 2025 20:56:43 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Jiri Bohac <jbohac@suse.cz>
+Cc: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+	kexec@lists.infradead.org, Philipp Rudo <prudo@redhat.com>,
+	Donald Dutile <ddutile@redhat.com>, Pingfan Liu <piliu@redhat.com>,
+	Tao Liu <ltao@redhat.com>, linux-kernel@vger.kernel.org,
+	David Hildenbrand <dhildenb@redhat.com>,
+	Michal Hocko <mhocko@suse.cz>
+Subject: Re: [PATCH v4 5/5] x86: implement crashkernel cma reservation
+Message-ID: <aD7w/YfdKMqa7m89@MiWiFi-R3L-srv>
+References: <aDoT08LfXUEkS9E4@dwarf.suse.cz>
+ <aDoVhDc11ZcJyHm2@dwarf.suse.cz>
+ <aD7WLv86BOVS+GPm@MiWiFi-R3L-srv>
+ <aD7mi4j2llS-Kpfv@dwarf.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aD7mi4j2llS-Kpfv@dwarf.suse.cz>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Monday, 2 June 2025 22:02:19 Central European Summer Time Yury Norov wrote:
-> On Mon, Jun 02, 2025 at 06:19:14PM +0200, Nicolas Frattaroli wrote:
-> > Hardware of various vendors, but very notably Rockchip, often uses
-> > 32-bit registers where the upper 16-bit half of the register is a
-> > write-enable mask for the lower half.
-> 
-> Can you list them all explicitly please? I grepped myself for the
-> 'HIGHWORD_UPDATE' and 'FIELD_PREP_HIGWORD', and found just 4 or 5 in
-> addition to the rockchip.
-
-Most of the ones Heiko brought up[1] just appear to be the clock stuff,
-I'm only aware of the drivers/mmc/host/sdhci-of-arasan.c one outside of
-Rockchip. For a complete listing I'd have to do a semantic search with
-e.g. Coccinelle, which I've never used before and would need to wrap
-my head around first. grep is a bad fit for catching them all as some
-macros are split across lines, or reverse the operators of the OR.
-Weggli[2] is another possibility but it's abandoned and undocumented, and
-I've ran into its limitations before fairly quickly.
-
->  
-> > This type of hardware setup allows for more granular concurrent register
-> > write access.
+On 06/03/25 at 02:11pm, Jiri Bohac wrote:
+> On Tue, Jun 03, 2025 at 07:02:06PM +0800, Baoquan He wrote:
+> > On 05/30/25 at 10:31pm, Jiri Bohac wrote:
+> > ......snip.. 
+> > > @@ -582,7 +582,7 @@ static void __init arch_reserve_crashkernel(void)
+> > >  
+> > >  	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+> > >  				&crash_size, &crash_base,
+> > > -				&low_size, NULL, &high);
+> > > +				&low_size, &cma_size, &high);
+> > >  	if (ret)
+> > >  		return;
+> > >  
+> > > @@ -592,6 +592,7 @@ static void __init arch_reserve_crashkernel(void)
+> > >  	}
+> > >  
+> > >  	reserve_crashkernel_generic(crash_size, crash_base, low_size, high);
+> > > +	reserve_crashkernel_cma(cma_size);
 > > 
-> > Over the years, many drivers have hand-rolled their own version of this
-> > macro, usually without any checks, often called something like
-> > HIWORD_UPDATE or FIELD_PREP_HIWORD, commonly with slightly different
-> > semantics between them.
-> > 
-> > Clearly there is a demand for such a macro, and thus the demand should
-> > be satisfied in a common header file.
+> > Wondering if ,high|low is still allowed (or needed) when ,cma is specified.
 > 
-> I agree. Nice catch.
-> 
-> > Add two macros: FIELD_PREP_HI16_WE, and FIELD_PREP_HI16_WE_CONST. The
-> > latter is a version that can be used in initializers, like
-> > FIELD_PREP_CONST.
-> 
-> I'm not sure that the name you've chosen reflects the intention. If
-> you just give me the name without any background, I'd bet it updates
-> the HI16 part of presumably 32-bit field. The 'WE' part here is most
-> likely excessive because at this level of abstraction you can't
-> guarantee that 'write-enable mask' is the only purpose for the macro.
-> 
-> > The macro names are chosen to explicitly reference the
-> > assumed half-register width, and its function, while not clashing with
-> > any potential other macros that drivers may already have implemented
-> > themselves.
-> >
-> > Future drivers should use these macros instead of handrolling their own,
-> > and old drivers can be ported to the new macros as time and opportunity
-> > allows.
-> 
-> This is a wrong way to go. Once you introduce a macro that replaces
-> functionality of few other arch or driver macros, you should consolidate
-> them all in the same series. Otherwise, it will be just another flavor
-> of the same, but now living in a core header. 
-> 
-> Can you please prepare a series that introduces the new macro and
-> wires all arch duplications to it?
+> Probably not needed but it works, totally independent of the
+> extra CMA-reserved area.
 
-Okay, I will do that after I learn Coccinelle. Though I suspect the reason
-why I'm the first person to address this is because it's much easier to
-hide duplicated macros away in drivers than go the long route of fixing up
-every single other user. I'm not too miffed about it though, it's cleanup
-of technical debt that's long overdue.
+Allowing it can simplify the current code, while I can't imagine what
+cases need people to specify
+"crashkernel=xM,high crashkernel=xM,low crashkernel=zM,cma" at one time.
 
->  
-> > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> > ---
-> >  include/linux/bitfield.h | 47 +++++++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 47 insertions(+)
-> > 
-> > diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
-> > index 6d9a53db54b66c0833973c880444bd289d9667b1..2b3e7cb90ccb5d48f510104f61443b06748bb7eb 100644
-> > --- a/include/linux/bitfield.h
-> > +++ b/include/linux/bitfield.h
-> > @@ -8,6 +8,7 @@
-> >  #define _LINUX_BITFIELD_H
-> >  
-> >  #include <linux/build_bug.h>
-> > +#include <linux/limits.h>
-> >  #include <linux/typecheck.h>
-> >  #include <asm/byteorder.h>
-> >  
-> > @@ -142,6 +143,52 @@
-> >  		(((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask))	\
-> >  	)
-> >  
-> > +/**
-> > + * FIELD_PREP_HI16_WE() - prepare a bitfield element with a write-enable mask
-> > + * @_mask: shifted mask defining the field's length and position
-> > + * @_val:  value to put in the field
-> > + *
-> > + * FIELD_PREP_HI16_WE() masks and shifts up the value, as well as bitwise ORs
-> > + * the result with the mask shifted up by 16.
-> > + *
-> > + * This is useful for a common design of hardware registers where the upper
-> > + * 16-bit half of a 32-bit register is used as a write-enable mask. In such a
-> > + * register, a bit in the lower half is only updated if the corresponding bit
-> > + * in the upper half is high.
-> > + */
-> > +#define FIELD_PREP_HI16_WE(_mask, _val)					\
-> > +	({								\
-> > +		__BF_FIELD_CHECK(_mask, ((u16) 0U), _val,		\
-> > +				 "FIELD_PREP_HI16_WE: ");		\
-> > +		((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask) |	\
-> > +		((_mask) << 16);					\
-> > +	})
-> 
-> This pretty much is a duplication of the FIELD_PREP(), isn't? Why don't
-> you borrow the approach from drivers/clk/clk-sp7021.c:
-> 
-> 	/* HIWORD_MASK FIELD_PREP */
-> 	#define HWM_FIELD_PREP(mask, value)             \
-> 	({                                              \
-> 	        u64 _m = mask;                          \
-> 	        (_m << 16) | FIELD_PREP(_m, value);     \
-> 	})
-> 
-> If you do so, the existing FIELD_PREP() will do all the work without
-> copy-pasting.
-
-Because then the __BF_FIELD_CHECK macro will be invoked twice, once without
-the proper prefix. Factoring the actual prep-no-check operation out into a
-separate macro is macro definition + 1-line invocation * 2, whereas copy-
-pasting the implementation that will never change is 1-line invocation*2.
-
-> The only questionI have  to the above macro is why '_m'
-> is u64? Seemingly, it should be u32?
-
-I didn't write the HWM_FIELD_PREP macro in clk-sp7021.c, nor am I familiar
-with the hardware. It's possible they were trying to prevent an overflow
-wraparound here though, but they're not checking if the result ends up
-greater than 32 bits so that seems suspect.
-
-> Regarding the name... I can't invent a good one as well, so the best
-> thing I can suggest is not to invent something that can mislead. The
-> HWM_FIELD_PREP() is not bad because it tells almost nothing and
-> encourages one to refer to the documentation. If you want something
-> self-explaining, maybe MASK_HI_FIELD_LO_PREP_U16(), or something?
-
-This seems a bit unwieldy, at 25 characters. "FIELD32_HIMASK_LOPREP"
-(or FIELD16, depending on which end of the cornet to eat) would be 21
-characters but I'm also not in love with it.
-
-I think the name should include the following parts:
-1. it's a field
-2. the field is halved into two halves of 16 bits
-3. the mask is copied into the upper 16 bits
-
-Since we're on the subject of bit widths, I have a somewhat sacrilegious
-point to raise: should this be a function-like macro at all, as opposed
-to a static __pure inline function? It's not generic with regards to the
-data types, as we're always assuming a u16 value and mask input and a
-u32 output. The __pure inline definition should let the compiler treat it
-essentially similar to what the pre-processor expanded macro does, which
-is as not a function call at all but a bunch of code to constant fold away
-if possible. What we get in return is type checking and less awful syntax.
-Then we could call it something like `himask_field_prep_u32`, which is
-also 21 characters but the ambiguity of whether the u32 refers to the mask
-or the whole register width is cleared up by the types of the function
-arguments.
-
-The const version of the macro may still need to remain though because I'm
-not sure C11 can do that for us. With C23 maybe there's a way with
-constexpr but I've never used it before.
+Just personal thought, I haven't think of a strong reason to prevent it
+too.
 
 > 
-> Thanks,
-> Yury
+> I saw no reason to artificially prevent it.
 > 
-
-Kind Regards,
-Nicolas Frattaroli
-
-Link: https://lore.kernel.org/linux-rockchip/1895349.atdPhlSkOF@diego/ [1]
-Link: https://github.com/weggli-rs/weggli [2]
-
-> > +
-> > +/**
-> > + * FIELD_PREP_HI16_WE_CONST() - prepare a constant bitfield element with a
-> > + *                              write-enable mask
-> > + * @_mask: shifted mask defining the field's length and position
-> > + * @_val:  value to put in the field
-> > + *
-> > + * FIELD_PREP_HI16_WE_CONST() masks and shifts up the value, as well as bitwise
-> > + * ORs the result with the mask shifted up by 16.
-> > + *
-> > + * This is useful for a common design of hardware registers where the upper
-> > + * 16-bit half of a 32-bit register is used as a write-enable mask. In such a
-> > + * register, a bit in the lower half is only updated if the corresponding bit
-> > + * in the upper half is high.
-> > + *
-> > + * Unlike FIELD_PREP_HI16_WE(), this is a constant expression and can therefore
-> > + * be used in initializers. Error checking is less comfortable for this
-> > + * version, and non-constant masks cannot be used.
-> > + */
-> > +#define FIELD_PREP_HI16_WE_CONST(_mask, _val)				 \
-> > +	(								 \
-> > +		FIELD_PREP_CONST(_mask, _val) |				 \
-> > +		(BUILD_BUG_ON_ZERO(const_true((u64) (_mask) > U16_MAX)) + \
-> > +		 ((_mask) << 16))					 \
-> > +	)
-> > +
-> >  /**
-> >   * FIELD_GET() - extract a bitfield element
-> >   * @_mask: shifted mask defining the field's length and position
-> > 
+> -- 
+> Jiri Bohac <jbohac@suse.cz>
+> SUSE Labs, Prague, Czechia
 > 
-
 
