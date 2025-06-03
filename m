@@ -1,318 +1,199 @@
-Received: from imap5.colo.codethink.co.uk (imap5.colo.codethink.co.uk [78.40.148.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B322D433C8
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 11:18:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.40.148.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF0D52036FF
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 11:22:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748949514; cv=none; b=e2S5EUd13J3/kS/se91jBp4soV4iBPEHJYvyHs0SC78365JDD33qCO5NS+gtuyfz5vX7IeOoG/SF8lvjKotv40zhFCve9wtneZ7hCWotea8vo8Rb9ZOrwBNSPWtp5u9irj7IOMTNa/PPIrtI7ECpc1a10GGVR7G3NferK14B5+M=
+	t=1748949746; cv=none; b=E2NQbijhANgAz1ULyx0bD3sbRKiRFJoHYuxhGpiEC4gniDRKBVeEm4Na89tSJJqlXLZOIN/+JxUMd/GDKpyvunJMxkE3hjY/E/RCVGeEduKxw+08GCdq2yHit/upLCUZD3TmvMJRRxrd3M+rVZWEF3qYCeqPfYxBY5bYx0CBPCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748949514; c=relaxed/simple;
-	bh=BNZf46n8bhMvCu6po1vY+NpCyR4ldrzinm43uMZLqjE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=PD6+hYmvhIatgHe4MjXzqXUROGYawV7Y6pS7IYomfGwAOxye2XaoUKbt4FSf1YthVnt1MWlIVdbRbbpARK5hHBor+XCeBRGaGT+xCV5FE4qhijICHu6HrxMBR2DBGS4AYxJv6GHJwak7E1XIKsFaYhJlPeUgUTz60vRn81Hu/S0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.co.uk; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=VrMbUxnV; arc=none smtp.client-ip=78.40.148.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codethink.co.uk
+	s=arc-20240116; t=1748949746; c=relaxed/simple;
+	bh=4bYe98B7YedxOKQs5dYV9Ing2H+ahxEuWbcKRNwu5jw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mqe9sjIpHNlt121Ox/Dx+hGznwbxCqu90WONG0OyR/XH+DyRz+rRO6Xh+tbTOX5UrnGhN7nKQeH5bQI9lxqcuNWcXNuiXzU805fVeJuCTGIG0TB4BzNugGpyWY6g6Zd+/rjc94itMV4zrDyNSJKqu+ipwD2OIm39yo8TwGF8/Pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=KfNmzdNN; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="VrMbUxnV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=codethink.co.uk; s=imap5-20230908; h=Sender:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:Cc:To:From
-	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=YvLbDRcHa7wX4WiP9G+A3NJkTto/DIwUq6NuKgsu3fE=; b=VrMbUxnVUZ2IhZzp/YjOOXdW6e
-	yA3vJGqTB4EGCvLBgACTFDbch+njKKMhtthlDVrfSiVo6NOnpgRnF4xEyrpDnBoZ9MScf/fgdt/cF
-	o65S36RB/d8PwyPObA43k4PwnMpZiRdl5Jy2NUZXPaej0/4NsG+KgbppChzX6yhqy3rv4gWkXlslE
-	71xjnhTIJGdFfktfJgFeCBbFVTwL/uy5Mp0z/ndIwXcxfKYTanxOdciWTve2Zsntv9inMA2m3xc70
-	JY865gS4Ygvwi7KiW6CBDPU5rbQGhi4eUSgA00LbBZ2giF3OGAcIpiNNOu6G+8YBEHkV+TrdBhvsm
-	ichahRRA==;
-Received: from [167.98.27.226] (helo=[10.17.2.162])
-	by imap5.colo.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
-	id 1uMPez-00BREJ-VB; Tue, 03 Jun 2025 12:18:26 +0100
-Message-ID: <84b4ab9d1402e4308bf4738e2c53203975ab855a.camel@codethink.co.uk>
-Subject: Re: SCHED_DEADLINE tasks missing their deadline with
- SCHED_FLAG_RECLAIM jobs in the mix (using GRUB)
-From: Marcel Ziswiler <marcel.ziswiler@codethink.co.uk>
-To: luca abeni <luca.abeni@santannapisa.it>
-Cc: Juri Lelli <juri.lelli@redhat.com>, linux-kernel@vger.kernel.org, Ingo
- Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Vineeth
- Pillai	 <vineeth@bitbyteword.org>
-Date: Tue, 03 Jun 2025 13:18:23 +0200
-In-Reply-To: <20250530112108.63a24cde@luca64>
-References: <ce8469c4fb2f3e2ada74add22cce4bfe61fd5bab.camel@codethink.co.uk>
-		<aBTO3r6Py_emwf1Y@jlelli-thinkpadt14gen4.remote.csb>
-		<f532441d8b3cf35e7058305fd9cd3f2cbd3a9fac.camel@codethink.co.uk>
-		<20250507222549.183e0b4a@nowhere>
-		<92690eb9158c1019dc0945f8298800cad17cae05.camel@codethink.co.uk>
-		<20250523214603.043833e3@nowhere>
-		<c91a117401225290fbf0390f2ce78c3e0fb3b2d5.camel@codethink.co.uk>
-	 <20250530112108.63a24cde@luca64>
-Organization: Codethink
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (by Flathub.org) 
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="KfNmzdNN"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-442f9043f56so33098955e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 04:22:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1748949743; x=1749554543; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=uGLHAt8DknR+WLbJkRe9iH2Js5SBq5tvVtKbx041tVU=;
+        b=KfNmzdNNJ9gcWeJi/EE65ST4DajPy42BjbnIB+ArDPKQZLIraWt5sjCejFG2nqc2CV
+         6G1FO2GKSyqf30J7+yifknQ16gtWAmae0qCdI6gN03k4AKotT8R/b34Sdo8S4hhm2qNX
+         e/fxiOJ68H4z4ol0BUeCy3gPKkY2vOLB3wjKfcysBC7zb5wrdwtJbSvYSgsvHwkqloGt
+         5r2Po7/hzP6c9p8ZUSSp9sYVtd2+iOllvR5l8RmOx9Ry4YRSLsHXwW8i8uN5l8zo6Uh3
+         UJupq/6pE6dIBoe8p59F+geQaJZzfWXF+HlfCjDmJRpE3YklQ/Wh6BToRNWO3AS+jEFt
+         qX4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748949743; x=1749554543;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uGLHAt8DknR+WLbJkRe9iH2Js5SBq5tvVtKbx041tVU=;
+        b=iPm/h3DJ5OCHJ65SkZZ+Jt6ZyvCGgOBSeSgt8T1IdYfn62uO3ozhnffJtUdTAorM/W
+         BjmylW2FgeVTUMlelQ6aDK8OBKYNkpvwsOOCBu1mx+ioIXHNYkMVY3JVDO9MjbQ1emiW
+         OSUaOhse3wihdyd/wA2M7SluY2/Es5+mcdZ5Db6m+LXUS8coQtPofatsBzbDKYcTwcqZ
+         NtyD03IP3ATMnGp1Xpj7H2xVzZPN8cR9MUCOT7Brct2iQCRu3ZE7XdaSlPD58ZIns9+/
+         Cr1W/ghWjwLLwRxUYC40erpHsSL/7s1LgmtaHEaoHyGHqwuVQq4HvuU0+/G2GiK32joS
+         6vLA==
+X-Forwarded-Encrypted: i=1; AJvYcCWMOB26mMb3A1xDB7sLcWnQDlDVLFh8C8HhQq0enmx/fgWmI8UltD7BJbxJRRPlZKbynkGmoLIoogVhRXw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGGQMaZvPAuCPVlmZbqOWOmhqx5U7P/uSPlJTAfk2jyU4ANDy7
+	Mc26969bEvkS/lAQ3CrTewyIUqoxc4ZTiqQQ1Ag4gk3fZFhJJkY4YU6oHKDs2+3ZbZE=
+X-Gm-Gg: ASbGncselTz+YV4oRIC6CoeRgUdmkVGRuClKEQK5fatrlHTquEpipcYvfVui4aZ79JX
+	DxorblmmW/qsU3szZY6TUiErT+xdHvKt1Zez5ZUFrzHB7JROA/KArpupekXVMRFlltG1hM3vqge
+	VIClFw7wkKu/eUYEhj2Wl9fFyuN1HI8RqUsPXhi8oVUkVqpoAnaGSz+SodTdYPQ4EGiKiqfJxzV
+	7Q7OXZAHHu1sGKM/jFKUPgUdk+aKkvweScTkJtjhVIYY+wXWcIq20uBkM1YVR9wjoYNpmncMgSK
+	vfIhkDZeMEWjiv0cSHXxH3uz0Dt9H5rzUpbeXc7wV192q2ZJ5SFBGJ2Z6K33m5/edXEB3aH49pN
+	LFw==
+X-Google-Smtp-Source: AGHT+IEgpygrOhv7gLK00yaoYV7PitKSJjxKjZv024rqcceSRp7/7s8ylWvMN2iyAVhCspNkUGxhTg==
+X-Received: by 2002:a05:600c:1c8f:b0:43c:f70a:2af0 with SMTP id 5b1f17b1804b1-4511edd5bfamr127061965e9.16.1748949742895;
+        Tue, 03 Jun 2025 04:22:22 -0700 (PDT)
+Received: from [192.168.0.20] ([212.21.159.167])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe6c8f5sm17608560f8f.27.2025.06.03.04.22.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Jun 2025 04:22:22 -0700 (PDT)
+Message-ID: <d1ec91ad-b368-4993-aadb-18af489ea87e@suse.com>
+Date: Tue, 3 Jun 2025 14:22:20 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Sender: marcel.ziswiler@codethink.co.uk
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 03/20] x86/virt/seamldr: Introduce a wrapper for
+ P-SEAMLDR SEAMCALLs
+To: Chao Gao <chao.gao@intel.com>, linux-coco@lists.linux.dev,
+ x86@kernel.org, kvm@vger.kernel.org
+Cc: seanjc@google.com, pbonzini@redhat.com, eddie.dong@intel.com,
+ kirill.shutemov@intel.com, dave.hansen@intel.com, dan.j.williams@intel.com,
+ kai.huang@intel.com, isaku.yamahata@intel.com, elena.reshetova@intel.com,
+ rick.p.edgecombe@intel.com, Farrah Chen <farrah.chen@intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ linux-kernel@vger.kernel.org
+References: <20250523095322.88774-1-chao.gao@intel.com>
+ <20250523095322.88774-4-chao.gao@intel.com>
+From: Nikolay Borisov <nik.borisov@suse.com>
+Content-Language: en-US
+Autocrypt: addr=nik.borisov@suse.com; keydata=
+ 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
+In-Reply-To: <20250523095322.88774-4-chao.gao@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Luca
 
-Thank you very much!
 
-On Fri, 2025-05-30 at 11:21 +0200, luca abeni wrote:
-> Hi Marcel,
->=20
-> On Sun, 25 May 2025 21:29:05 +0200
-> Marcel Ziswiler <marcel.ziswiler@codethink.co.uk> wrote:
-> [...]
-> > > How do you configure systemd? I am having troubles in reproducing
-> > > your AllowedCPUs configuration... This is an example of what I am
-> > > trying: sudo systemctl set-property --runtime custom-workload.slice
-> > > AllowedCPUs=3D1 sudo systemctl set-property --runtime init.scope
-> > > AllowedCPUs=3D0,2,3 sudo systemctl set-property --runtime
-> > > system.slice AllowedCPUs=3D0,2,3 sudo systemctl set-property
-> > > --runtime user.slice AllowedCPUs=3D0,2,3 and then I try to run a
-> > > SCHED_DEADLINE application with sudo systemd-run --scope -p
-> > > Slice=3Dcustom-workload.slice <application>=C2=A0=20
-> >=20
-> > We just use a bunch of systemd configuration files as follows:
-> >=20
-> > [root@localhost ~]# cat /lib/systemd/system/monitor.slice
-> > # Copyright (C) 2024 Codethink Limited
-> > # SPDX-License-Identifier: GPL-2.0-only
-> [...]
->=20
-> So, I copied your *.slice files in /lib/systemd/system (and I added
-> them to the "Wants=3D" entry of /lib/systemd/system/slices.target,
-> otherwise the slices are not created), but I am still unable to run
-> SCHED_DEADLINE applications in these slices.
+On 5/23/25 12:52, Chao Gao wrote:
+> P-SEAMLDR is another component alongside the TDX module within the
+> protected SEAM range. Software can invoke its functions by executing the
+> SEAMCALL instruction with the 63 bit of RAX set to 1. P-SEAMLDR SEAMCALLs
+> differ from those of the TDX module in terms of error codes and the
+> handling of the current VMCS.
+> 
+> Add a wrapper for P-SEAMLDR SEAMCALLs based on the SEAMCALL infrastructure.
+> 
+> Intel® Trust Domain CPU Architectural Extensions (May 2021 edition)
+> Chapter 2.3 states:
+> 
+> SEAMRET from the P-SEAMLDR clears the current VMCS structure pointed to by
+> the current-VMCS pointer. A VMM that invokes the P-SEAMLDR using SEAMCALL
+> must reload the current-VMCS, if required, using the VMPTRLD instruction.
+> 
+> So, save and restore the current-VMCS pointer using VMPTRST and VMPTRLD
+> instructions to avoid breaking KVM, which manages the current-VMCS.
+> 
+> Disable interrupts to prevent KVM code from interfering with P-SEAMLDR
+> SEAMCALLs. For example, if a vCPU is scheduled before the current VMCS is
+> restored, it may encounter an invalid current VMCS, causing its VMX
+> instruction to fail. Additionally, if KVM sends IPIs to invalidate a
+> current VMCS and the invalidation occurs right after the current VMCS is
+> saved, that VMCS will be reloaded after P-SEAMLDR SEAMCALLs, leading to
+> unexpected behavior.
+> 
+> NMIs are not a problem, as the only scenario where instructions relying on
+> the current-VMCS are used is during guest PMI handling in KVM. This occurs
+> immediately after VM exits with IRQ and NMI disabled, ensuring no
+> interference with P-SEAMLDR SEAMCALLs.
+> 
+> Signed-off-by: Chao Gao <chao.gao@intel.com>
+> Tested-by: Farrah Chen <farrah.chen@intel.com>
+> ---
+>   arch/x86/Kconfig                | 10 ++++++++
+>   arch/x86/virt/vmx/tdx/Makefile  |  1 +
+>   arch/x86/virt/vmx/tdx/seamldr.c | 44 +++++++++++++++++++++++++++++++++
+>   arch/x86/virt/vmx/vmx.h         | 40 ++++++++++++++++++++++++++++++
+>   4 files changed, 95 insertions(+)
+>   create mode 100644 arch/x86/virt/vmx/tdx/seamldr.c
+>   create mode 100644 arch/x86/virt/vmx/vmx.h
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 4b9f378e05f6..8b1e0986b7f8 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -1932,6 +1932,16 @@ config INTEL_TDX_HOST
+>   
+>   	  If unsure, say N.
+>   
+> +config INTEL_TDX_MODULE_UPDATE
+> +	bool "Intel TDX module runtime update"
+> +	depends on INTEL_TDX_HOST
+> +	help
+> +	  This enables the kernel to support TDX module runtime update. This allows
+> +	  the admin to upgrade the TDX module to a newer one without the need to
+> +	  terminate running TDX guests.
+> +
+> +	  If unsure, say N.
+> +
 
-We just link them there e.g.
-
-[root@localhost ~]# ls -l /etc/systemd/system/slices.target.wants/safety1.s=
-lice
-lrwxrwxrwx 1 root root 37 Nov 10  2011 /etc/systemd/system/slices.target.wa=
-nts/safety1.slice ->
-/usr/lib/systemd/system/safety1.slice
-
-BTW: /lib is just sym-linked to /usr/lib in our setup.
-
-> This is due to the fact that the kernel does not create a new root
-> domain for these cpusets (probably because the cpusets' CPUs are not
-> exclusive and the cpuset is not "isolated": for example,
-> /sys/fs/cgroup/safety1.slice/cpuset.cpus.partition is set to "member",
-> not to "isolated").
-
-Not sure, but for me it is indeed root e.g.
-
-[root@localhost ~]# cat /sys/fs/cgroup/safety1.slice/cpuset.cpus.partition
-root
-
-> So, the "cpumask_subset(span, p->cpus_ptr)" in
-> sched_setsched() is still false and the syscall returns -EPERM.
->=20
->=20
-> Since I do not know how to obtain an isolated cpuset with cgroup v2 and
-> systemd, I tried using the old cgroup v1, as described in the
-> SCHED_DEADLINE documentation.
-
-I would have thought it should not make any difference whether cgroup v1 or=
- v2 is used, but then who knows.
-
-> This worked fine, and enabling SCHED_FLAG_RECLAIM actually reduced the
-> number of missed deadlines (I tried with a set of periodic tasks having
-> the same parameters as the ones you described). So, it looks like
-> reclaiming is working correctly (at least, as far as I can see) when
-> using cgroup v1 to configure the CPU partitions... Maybe there is some
-> bug triggered by cgroup v2,
-
-Could be, but anyway would be good to also update the SCHED_DEADLINE docume=
-ntation to cgroup v2.
-
-> or maybe I am misunderstanding your setup.
-
-No, there should be nothing else special really.
-
-> I think the experiment suggested by Juri can help in understanding
-> where the issue can be.
-
-Yes, I already did all that and hope you guys can get some insights from th=
-at experiment.
-
-And remember, if I can help in any other way just let me know. Thanks!
-
-> 			Thanks,
-> 				Luca
->=20
->=20
-> > [Unit]
-> > Description=3DPrioritized slice for the safety monitor.
-> > Before=3Dslices.target
-> >=20
-> > [Slice]
-> > CPUWeight=3D1000
-> > AllowedCPUs=3D0
-> > MemoryAccounting=3Dtrue
-> > MemoryMin=3D10%
-> > ManagedOOMPreference=3Domit
-> >=20
-> > [Install]
-> > WantedBy=3Dslices.target
-> >=20
-> > [root@localhost ~]# cat /lib/systemd/system/safety1.slice
-> > # Copyright (C) 2024 Codethink Limited
-> > # SPDX-License-Identifier: GPL-2.0-only
-> > [Unit]
-> > Description=3DSlice for Safety case processes.
-> > Before=3Dslices.target
-> >=20
-> > [Slice]
-> > CPUWeight=3D1000
-> > AllowedCPUs=3D1
-> > MemoryAccounting=3Dtrue
-> > MemoryMin=3D10%
-> > ManagedOOMPreference=3Domit
-> >=20
-> > [Install]
-> > WantedBy=3Dslices.target
-> >=20
-> > [root@localhost ~]# cat /lib/systemd/system/safety2.slice
-> > # Copyright (C) 2024 Codethink Limited
-> > # SPDX-License-Identifier: GPL-2.0-only
-> > [Unit]
-> > Description=3DSlice for Safety case processes.
-> > Before=3Dslices.target
-> >=20
-> > [Slice]
-> > CPUWeight=3D1000
-> > AllowedCPUs=3D2
-> > MemoryAccounting=3Dtrue
-> > MemoryMin=3D10%
-> > ManagedOOMPreference=3Domit
-> >=20
-> > [Install]
-> > WantedBy=3Dslices.target
-> >=20
-> > [root@localhost ~]# cat /lib/systemd/system/safety3.slice
-> > # Copyright (C) 2024 Codethink Limited
-> > # SPDX-License-Identifier: GPL-2.0-only
-> > [Unit]
-> > Description=3DSlice for Safety case processes.
-> > Before=3Dslices.target
-> >=20
-> > [Slice]
-> > CPUWeight=3D1000
-> > AllowedCPUs=3D3
-> > MemoryAccounting=3Dtrue
-> > MemoryMin=3D10%
-> > ManagedOOMPreference=3Domit
-> >=20
-> > [Install]
-> > WantedBy=3Dslices.target
-> >=20
-> > [root@localhost ~]# cat /lib/systemd/system/system.slice=20
-> > # Copyright (C) 2024 Codethink Limited
-> > # SPDX-License-Identifier: GPL-2.0-only
-> >=20
-> > #
-> > # This slice will control all processes started by systemd by
-> > # default.
-> > #
-> >=20
-> > [Unit]
-> > Description=3DSystem Slice
-> > Documentation=3Dman:systemd.special(7)
-> > Before=3Dslices.target
-> >=20
-> > [Slice]
-> > CPUQuota=3D150%
-> > AllowedCPUs=3D0
-> > MemoryAccounting=3Dtrue
-> > MemoryMax=3D80%
-> > ManagedOOMSwap=3Dkill
-> > ManagedOOMMemoryPressure=3Dkill
-> >=20
-> > [root@localhost ~]# cat /lib/systemd/system/user.slice=20
-> > # Copyright (C) 2024 Codethink Limited
-> > # SPDX-License-Identifier: GPL-2.0-only
-> >=20
-> > #
-> > # This slice will control all processes started by systemd-logind
-> > #
-> >=20
-> > [Unit]
-> > Description=3DUser and Session Slice
-> > Documentation=3Dman:systemd.special(7)
-> > Before=3Dslices.target
-> >=20
-> > [Slice]
-> > CPUQuota=3D25%
-> > AllowedCPUs=3D0
-> > MemoryAccounting=3Dtrue
-> > MemoryMax=3D80%
-> > ManagedOOMSwap=3Dkill
-> > ManagedOOMMemoryPressure=3Dkill
-> >=20
-> > > However, this does not work because systemd is not creating an
-> > > isolated cpuset... So, the root domain still contains CPUs 0-3, and
-> > > the "custom-workload.slice" cpuset only has CPU 1. Hence, the check
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- * Don't allow tasks with an affinity mask
-> > > smaller than
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- * the entire root_domain to become
-> > > SCHED_DEADLINE. We
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- * will also fail if there's no bandwidth
-> > > available. */
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!=
-cpumask_subset(span, p->cpus_ptr) ||
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 rq->rd->dl_bw.bw =3D=3D 0) {
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 retval =3D -EPERM;
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto unlock;
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> > > in sched_setsched() fails.
-> > >=20
-> > >=20
-> > > How are you configuring the cpusets?=C2=A0=20
-> >=20
-> > See above.
-> >=20
-> > > Also, which kernel version are you using?
-> > > (sorry if you already posted this information in previous emails
-> > > and I am missing something obvious)=C2=A0=20
-> >=20
-> > Not even sure, whether I explicitly mentioned that other than that we
-> > are always running latest stable.
-> >=20
-> > Two months ago when we last run some extensive tests on this it was
-> > actually v6.13.6.
-> >=20
-> > > 			Thanks,=C2=A0=20
-> >=20
-> > Thank you!
-> >=20
-> > > 				Luca
-
-Cheers
-
-Marcel
+WHy should this be conditional?
