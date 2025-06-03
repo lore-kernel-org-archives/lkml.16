@@ -1,115 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795CC146A66;
-	Tue,  3 Jun 2025 12:07:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B16E7146A66;
+	Tue,  3 Jun 2025 12:07:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748952462; cv=none; b=RlfsCAGBQ/cL90uiivchCLGW0e8IyYuQcX6tMr/yyQd5l18Fu0BXfNHdnMOEvO4BIuWdKjazjKEdalywnk+r6556HP/QKydPppe5mNhJVAqZc9FErj54qNfvNbQIX1JTVVELZXq0Tv/lF9hdoicLQD6OqxUvGLdF4F7koc0hek8=
+	t=1748952482; cv=none; b=oim4EXGbgcP4yTstpvRwrLg3lHlL0dpThcKfFwt7m3qI2/5W7V4CD/usMIVLCmzCHbtVFJ7/l5KGIUHy92h6+UFUsm+hzZpeiDqtgP7NMoUKDZxTDRjs/rOL0047wx/oanTPtIKvIyHxYjivzBUNvkiaVOUGhkC4JcD6A+udrog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748952462; c=relaxed/simple;
-	bh=BbD8Z3F2Z41vAioRdlDjKkkvrHAem1eOimWX5TqDL6w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i3Nza/i1vFISmkkoKoFfe7k6830c7puFrA1Sd084qPRNmHGo/w0dlG8E447CufkGdrNAfY8kAeOkFyGIdQ7VATKgLz+4Kk+1Nhz1lOO0rkodI58cell/7wHsqBpu0NPHp5r5CHGuM3EujTvjjMe+KpE5bryZa6iBk9s7F6eBvEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bZ1tIPBC; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bZ1tIPBC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96808C4CEEF;
-	Tue,  3 Jun 2025 12:07:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748952461;
-	bh=BbD8Z3F2Z41vAioRdlDjKkkvrHAem1eOimWX5TqDL6w=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bZ1tIPBCMC0FV0OvYa4IU2MI/zLxD6HAAJ/fn3ZQ+kC9SxgorXCRZkF7HWoXqEK0n
-	 iAUDRNsvbeHoYigOApXD/k43x+CXVPQ3n9oDBwYZZffCLBEEqfB1PfpYx9Y3hJ9hXU
-	 hVej6reVni5cdK8W5VOfHAxJLh/bYcfqAAuabxzwug1kXfUlMOrZfzgkq/YUWfF0TH
-	 fB8Jy9pBgprYgPdAxioRfm/9W0rVDFCbfWILT3l/j630UfqzWRXTtcZT2Z47Einhkc
-	 Ky5GLbIPIcidz7PtV6EeAhFEP3IaCAhYrnEn0f7QeqN9wBAPoMPFwVWUYSrCeI5hMn
-	 ULpe6x+Vrd1Wg==
-Message-ID: <ba13c2f1-9b08-4ba7-8093-d55c16143cb2@kernel.org>
-Date: Tue, 3 Jun 2025 14:07:24 +0200
+	s=arc-20240116; t=1748952482; c=relaxed/simple;
+	bh=cKHzIUgnW7PSnuX/LD1d2vlKQO6VXKzAPDVdGxCLw4g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u7hN0HddX814gT1WqRzSQJw0dY5MMgXMWt3Qnhe55ugB6u9m/g6svMBJ3uP1b4FS6OYloai0p9QQvReurSa7aL4G43xqj3/Zig0LjF9i66mUmQ+ySSr7I2Bo85ieblxI3i9T042tt0zZrSIh9UClxhxTNcZAkG6f160hXH1SYLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F77412FC;
+	Tue,  3 Jun 2025 05:07:42 -0700 (PDT)
+Received: from e129166.arm.com (unknown [10.57.27.15])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E81923F673;
+	Tue,  3 Jun 2025 05:07:55 -0700 (PDT)
+From: Lukasz Luba <lukasz.luba@arm.com>
+To: linux-kernel@vger.kernel.org
+Cc: lukasz.luba@arm.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	andrii@kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	rafael@kernel.org
+Subject: [PATCH] sched/tp: Add new tracepoint for tracking uclamp set from user-space
+Date: Tue,  3 Jun 2025 13:07:14 +0100
+Message-ID: <20250603120755.1028396-1-lukasz.luba@arm.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/6] Add SPAcc Skcipher support
-To: Pavitrakumar Managutte <pavitrakumarm@vayavyalabs.com>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, herbert@gondor.apana.org.au, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, Ruud.Derwig@synopsys.com,
- manjunath.hadli@vayavyalabs.com, adityak@vayavyalabs.com,
- Shweta Raikar <shwetar@vayavyalabs.com>
-References: <20250602053231.403143-1-pavitrakumarm@vayavyalabs.com>
- <20250602053231.403143-3-pavitrakumarm@vayavyalabs.com>
- <9f6b4442-1fb0-479d-9514-410d4d8bfd98@kernel.org>
- <CALxtO0kitR0MnjzPwVT8nsuYThTRX+fbyOH9i2z1KKnCPg1dqg@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <CALxtO0kitR0MnjzPwVT8nsuYThTRX+fbyOH9i2z1KKnCPg1dqg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 03/06/2025 14:02, Pavitrakumar Managutte wrote:
+The user-space can set uclamp value for a given task. It impacts task
+placement decisions made by the task scheduler. The user-space services
+can dynamically change the uclamp values for tasks. Tracking the uclamp
+changes is a very useful information and helps to understand the system
+behavior. It allows to track improvements in the OS middleware and
+applications which start using uclamp mechanisms and report test results.
 
->> Please run standard kernel tools for static analysis, like coccinelle,
->> smatch and sparse, and fix reported warnings. Also please check for
->> warnings when building with W=1 for gcc and clang. Most of these
->> commands (checks or W=1 build) can build specific targets, like some
->> directory, to narrow the scope to only your code. The code here looks
->> like it needs a fix. Feel free to get in touch if the warning is not clear.
->>
-Confirm that you understood this. You sent us code with obvious flaws
-which would be found with tools. It's a proof you did not run these
-static tools. It's not the job of community reviewers to replace the
-tools. Using us instead of tools is... well, a mistake but if you think
-about our limited time then kind of close to inappropriate request. So
-did you understand the need of using tools BEFORE you post it?
+This tracepoint is going to help in the further development of combined
+kernel and middleware solutions.
 
-Best regards,
-Krzysztof
+Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+---
+
+Hi all,
+
+This patch is an attempt to refresh a bit my previous attempt in this
+area, which can be found here [1]. It's a smaller version than the
+previous one.
+
+It's based on next-20250530.
+
+Regards,
+Lukasz Luba
+
+[1] https://lore.kernel.org/lkml/20230509122246.1702397-1-lukasz.luba@arm.com/
+
+
+ include/trace/events/sched.h | 3 +++
+ kernel/sched/core.c          | 1 +
+ kernel/sched/syscalls.c      | 4 ++++
+ 3 files changed, 8 insertions(+)
+
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 4e6b2910cec3f..1b14d5bbc9e2a 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -894,6 +894,9 @@ DECLARE_TRACE_CONDITION(sched_set_state,
+ 	TP_ARGS(tsk, state),
+ 	TP_CONDITION(!!(tsk->__state) != !!state));
+ 
++DECLARE_TRACE(uclamp_update_task,
++	TP_PROTO(struct task_struct *p, int uclamp_id,  unsigned int value),
++	TP_ARGS(p, uclamp_id, value));
+ #endif /* _TRACE_SCHED_H */
+ 
+ /* This part must be outside protection */
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index dce50fa57471d..2c3bf0b6830fa 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -116,6 +116,7 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_util_est_cfs_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_util_est_se_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_update_nr_running_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_compute_energy_tp);
++EXPORT_TRACEPOINT_SYMBOL_GPL(uclamp_update_task_tp);
+ 
+ DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
+ 
+diff --git a/kernel/sched/syscalls.c b/kernel/sched/syscalls.c
+index 547c1f05b667e..e8dbc7fbe99d5 100644
+--- a/kernel/sched/syscalls.c
++++ b/kernel/sched/syscalls.c
+@@ -430,12 +430,16 @@ static void __setscheduler_uclamp(struct task_struct *p,
+ 	    attr->sched_util_min != -1) {
+ 		uclamp_se_set(&p->uclamp_req[UCLAMP_MIN],
+ 			      attr->sched_util_min, true);
++		trace_uclamp_update_task_tp(p, UCLAMP_MIN,
++					    attr->sched_util_min);
+ 	}
+ 
+ 	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MAX &&
+ 	    attr->sched_util_max != -1) {
+ 		uclamp_se_set(&p->uclamp_req[UCLAMP_MAX],
+ 			      attr->sched_util_max, true);
++		trace_uclamp_update_task_tp(p, UCLAMP_MAX,
++					    attr->sched_util_max);
+ 	}
+ }
+ 
+-- 
+2.48.1
+
