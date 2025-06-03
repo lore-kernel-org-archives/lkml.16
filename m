@@ -1,190 +1,123 @@
-Received: from mail-il1-f202.google.com (mail-il1-f202.google.com [209.85.166.202])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993AD1F30C3
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 20:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D194B19ABC3;
+	Tue,  3 Jun 2025 20:49:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748983716; cv=none; b=fSELlNUXTH3Z7wTiNfCrNUA4kAwzSLOgYBI55jXMqH/0fSLj8HFiTJxUz7uCSJVlAbTIyv2jHFH6Mbf1GN/aiqZdEDsSfbg3wdV7G8aA5mS5uAKwoP/Rim1ze1/V9gstm0hjaBw8p/9RUuDiM3dM+CSvLVME6TQjHofw0xpwykM=
+	t=1748983748; cv=none; b=kSTEFaOFohXcAKjQbLvvYXhPRXCCKfn5HgOt9x1TYsiZVwYV06liUJ1nNmGbTe1q7kBwE970UsubO7DtvjM4kV0LciTtCaIlyKy0tHL87NLWamni3RwbBX78mQxVHdymnD9H8Zeb8EujmIOd+7gqqilYbKn+RkkiZCKk/bEC2ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748983716; c=relaxed/simple;
-	bh=J4Gy+MHq+K8H73A1pdlJXVmj/G1iM1mYhcwzLpTgyXE=;
-	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=NmokzPcXj0r2sVkpd4Gmm344cODtXyLDET6wHCisVbGYzB+Ssdobvbz53/4PklrA7pzDASYVtsGIuKU3P1HF/pC8MZ6INosSrGFKmxjuLOdDGIbs8RSaLcRd2nNvSF0TJSRXLRW0Mjp4dhQdmXx0ZqBmYEn1Yn5Rzy+luwbKoJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=htkpEJRe; arc=none smtp.client-ip=209.85.166.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
+	s=arc-20240116; t=1748983748; c=relaxed/simple;
+	bh=uamU+kMXc6rwhWtx3UJUQaoWboHSUmWfDCk9ETTsXRk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=nKK3sPTzBykj7F7BPoFXX+5aGVof491YioGDx6VwN7zEQQzEzGFVYp+FCzcrdgVXEPUS5Gh0C1bHofjmH2hmL+aUwoWutcrR8DpsubYgB9TJfsQBnRpulm6bu1MmpacDGWyAUIISzueplex3HjzZCLNi6HQs4D5I0Dos5u9k0tw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gdWCfhf5; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="htkpEJRe"
-Received: by mail-il1-f202.google.com with SMTP id e9e14a558f8ab-3dcd10297d5so93372335ab.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 13:48:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gdWCfhf5"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a4fdc27c4aso2163915f8f.3;
+        Tue, 03 Jun 2025 13:49:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748983714; x=1749588514; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=xqk6Ae+AoodqjhacwdxkSu1Yb8TCbPjMAbFosVWhG+Q=;
-        b=htkpEJReoFE7VEGCg7XYcSAyYDSYdHAaZfuWAqSiunI6KT4v39wfnQ66LVoAwxMqkg
-         ks414emV9EuyBpH4k/iXTQE6kD6NjOva1Zi4bLFEalMOEObfhaF15ZDOltzD2dRf/cPU
-         bHazM9PmuQNlZ2O/CzogpguPMep0FqfmumSuUo9TlVaIHHvULDT89MTRGHNmPtzpl+Mu
-         L9hS3hsnNkO7dUAaEfuCi9wRysW7N0/ET3B7DslMHnx0n+A3KGXlu1goLjVN8CsOqoH+
-         4tBBIgV+I0J4BCBrS7F0xGudu3lX75skESdbZ6MFDF5whLEQrGkTZoIfkXLYJTG3usDC
-         Ju+A==
+        d=gmail.com; s=20230601; t=1748983744; x=1749588544; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=c7W3ZF4Xa0Bh8TC5ljpqLlRfaqMimqDP2/UGKib5BDo=;
+        b=gdWCfhf5J+hdCrO9LswXIUL3QmEuBsRIj3u1Jd1DlQhul3uRhJT9/IGPXtQQj6ZLvz
+         xVy1YJ6OTwPCvd50zJl5MhOC+ZDvHW6VSmTL725daGj19GHm9rwZunQNPQWke/CUU6KJ
+         aJGO4Dt7txEalgK1WSpSPE5FXi8GGVt/3LxoCizuVCEKAO7kGzLR72+hjHF1PIt6p5vk
+         l1qlSNLdj+7ha1W4gfKuASGOt2PX+3AZ3fZn0ILuDnUSpGXb14mEOIVXnVHVUs/4411J
+         Ll0bJONjS4gVX0uoDcE/sqywl9iys/T0oeOiMyQtE1RhbDAarg0LAgSfCWuPL2GsGskc
+         f6Uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748983714; x=1749588514;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xqk6Ae+AoodqjhacwdxkSu1Yb8TCbPjMAbFosVWhG+Q=;
-        b=OT3yPTifNcTMjQ8PlnSF6P1RarV+Q6YIkgx0V6DSmTrL0j36VjAWozRzakGacCtlC0
-         Y4OsGW3BGqJRbqwBROka/nZM4IPzOHJzO4J7AGuNQyzBECXLfbbEAoGrVvvBZ7O1KBIb
-         SBYOiNo6mo+vs85Ekn+Mj9Gg08+lUXEicG68yN7cgGttqBX6/XV9ypOTcaRrRiTRPBP7
-         NaBFXoWECILQz/b5uw1D7s1cPBDsFjnXQTYAcQHEooeg0aUFP0JKewJVDUDL/qo94Q5o
-         mZwLvJSRNF+HFT2F5bikfqNmLO8Lova2I16dF67TF/isof54H9ARiXiBpKNNa8A1GoPO
-         rQIg==
-X-Forwarded-Encrypted: i=1; AJvYcCXtTtyoTJqPm86ZDddxArFb3zM2v/EDHCoa3T0UbrrsQT0rbYkt4hyPUE96SoqMtAPg+AE/kzKEKqwBK7E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBUmEmoLXwu5tfLfCiei3ZgLK11jy+601hXqHkid71AFCtPBir
-	6IAcLPjcsE82KcRVt6Iv0Sj4b6AHw0C5Xkq0Fs7rRm+IPkfRZ6nBBR2Tt6mgGSLFB1XpKeodPUO
-	8PJne+p4c4CZ1cXim/+PLGGQvog==
-X-Google-Smtp-Source: AGHT+IH++9MIP5okdS2+/trmd8V6fLN6bmZyUPwJNgnr4Lv2JKgei2gsZjCTP6Pc/H1zIhLn0nH3fYC4XYFcP1PDwQ==
-X-Received: from ilbbz4.prod.google.com ([2002:a05:6e02:2684:b0:3dd:b9c7:8f2f])
- (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6e02:260c:b0:3dd:89b0:8e1b with SMTP id e9e14a558f8ab-3ddbed8aa48mr5481105ab.15.1748983713821;
- Tue, 03 Jun 2025 13:48:33 -0700 (PDT)
-Date: Tue, 03 Jun 2025 20:48:32 +0000
-In-Reply-To: <aD4a1T7ZmBLNunxi@google.com> (message from Sean Christopherson
- on Mon, 2 Jun 2025 14:42:45 -0700)
+        d=1e100.net; s=20230601; t=1748983744; x=1749588544;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=c7W3ZF4Xa0Bh8TC5ljpqLlRfaqMimqDP2/UGKib5BDo=;
+        b=u7ek3Q1g006tcaz7ywmZJgR8AU8j8xZbmzoWGF7FRmTeLrWTAJ/KFl2Cc7lFBnlS6y
+         VjNvHz+DoE10XODZtJA9u1oefDK40dijib3f6KoTxCzWX/pw59OCBIsDkVsPEr8/CgIa
+         Iu5/Ewq6e0+XPRHebQZMY/oP8n79E+8+PHiQZ4zVJW8HTGO6kVCTZ7GdBks1JnBk5v8j
+         Rix3vpYefCRp06U+RqHB/pHt+wvs2YEni+bhExsDLuUUoPPmfRXp0+4+1IH208lFhKye
+         FWbXFXPs3/lnjW5uylNX0pZBv9gg0kRGBTFJLc6r0tgjDHtI12fsGmQn0wQnEFlWoaOW
+         vJXw==
+X-Forwarded-Encrypted: i=1; AJvYcCWIxBrDHTvOe1/4pwWRdNkkd+GYDK4IUuxTKANTT84XTVeF+K0KcsN27E3a0ZDkMhz0AiKlKmmd@vger.kernel.org, AJvYcCXdP23bgnuS+C63KpgKGMIJMnrwaA1d2WA9BzTi9AX6IhbNf9RiXEfEii28U/Artt8gwTod15ksMYpBTV4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMXH1XY+0rmENN7oJp/tdeAHGm8MqG/xA1aK9fqBdTeZ3M+jQZ
+	yF4yrZlaND9A9KoZDOxa/BE7bb+dkJQb6EMJF6yt8Qaxwx23TSAcZhYC
+X-Gm-Gg: ASbGncv989Gy2d0xXebl3RtlE1e5KcWddeaMJ+SYM4+jgpyf+UEC2rZd+UHc/4kMot7
+	4ig1akZX+FzYWvVw06NJjgyVKcSw8ajbiDrDrdpzJD/gYye8qB0wxtM+QRvqN53BCP3n2rkJMCD
+	OhM2/Cy+bir6s4w9Zgsca3n+mTr7ZeV08j1hTrpfEXP0hHTio5ALJCQLYfKKIGvYBSy3jdxVGNP
+	fZ2nqckv5FEObQu3MKn+12rg+ydOG9/eNsUjIdeGAM16VTSfx8j6oTN6a19admtMbPQcTyffjWf
+	2J4rvTDYbJNGCwGC3kXjRzW47OH5raMmV5DNA5RzGKo6KdaYqu3TE/IAuZRnO/WVDB4ncwIMTJr
+	pSZA2Xsy9uvI+7yA9CIDulghVYNz6K3DbQ8qrgIpH8IGso4xQshm2
+X-Google-Smtp-Source: AGHT+IFxODhTA4FjCqfl65GUPD+pt5gWwWMPs4JCLRSuz21Se5qOusbYl27aSwKwb4mAgm5Gk8NfNA==
+X-Received: by 2002:a05:6000:1887:b0:3a4:c6bc:995b with SMTP id ffacd0b85a97d-3a51d961c14mr156915f8f.35.1748983743831;
+        Tue, 03 Jun 2025 13:49:03 -0700 (PDT)
+Received: from skynet.lan (2a02-9142-4580-1500-0000-0000-0000-0008.red-2a02-914.customerbaf.ipv6.rima-tde.net. [2a02:9142:4580:1500::8])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451e58c348asm26258225e9.3.2025.06.03.13.49.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 13:49:03 -0700 (PDT)
+From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
+To: jonas.gorski@gmail.com,
+	florian.fainelli@broadcom.com,
+	andrew@lunn.ch,
+	olteanv@gmail.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	vivien.didelot@gmail.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dgcbueu@gmail.com
+Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
+Subject: [RFC PATCH net-next v2 00/10] net: dsa: b53: fix BCM5325 support
+Date: Tue,  3 Jun 2025 22:48:48 +0200
+Message-Id: <20250603204858.72402-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <gsnta56o361r.fsf@coltonlewis-kvm.c.googlers.com>
-Subject: Re: [PATCH 04/17] KVM: arm64: Cleanup PMU includes
-From: Colton Lewis <coltonlewis@google.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net, 
-	linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, 
-	maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, 
-	suzuki.poulose@arm.com, yuzenghui@huawei.com, mark.rutland@arm.com, 
-	shuah@kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Sean Christopherson <seanjc@google.com> writes:
+These patches get the BCM5325 switch working with b53.
 
-> On Mon, Jun 02, 2025, Colton Lewis wrote:
->> * Delete kvm/arm_pmu.h. These functions are mostly internal to KVM and
->>    should go in asm/kvm_host.h.
+I'm not really sure that everything here is correct since I don't work for
+Broadcom and all this is based on the public datasheet available for the
+BCM5325 and my own experiments with a Huawei HG556a (BCM6358).
 
-> Ha!  I'm a hair too late, as usual.  I _just_ resurrected a patch[*] to  
-> move and
-> rename all of the <kvm/arm_xxx.h> headers to <asm/kvm_xxx.h>.  If only I  
-> had
-> posted on Friday when they were ready :-)
+ v2: introduce changes requested by Jonas, Florian and Vladimir:
+  - Add b53_arl_to_entry_25 function.
+  - Add b53_arl_from_entry_25 function.
+  - Add b53_arl_read_25 function, fixing usage of ARLTBL_VALID_25 and
+    ARLTBL_VID_MASK_25.
+  - Change b53_set_forwarding function flow.
+  - Disallow BR_LEARNING on b53_br_flags_pre() for BCM5325.
+  - Drop rate control registers.
+  - Move B53_PD_MODE_CTRL_25 to b53_setup_port().
 
-Great minds think alike :) (In this case the other one was Marc)
+Florian Fainelli (1):
+  net: dsa: b53: add support for FDB operations on 5325/5365
 
-> It's a relatively small series (mostly arm64 code movement), but it does  
-> touch
-> all architectures due to giving the same treatment to kvm/iodev.h (and  
-> purging
-> include/kvm entirely).
+Álvaro Fernández Rojas (9):
+  net: dsa: b53: prevent FAST_AGE access on BCM5325
+  net: dsa: b53: prevent SWITCH_CTRL access on BCM5325
+  net: dsa: b53: fix IP_MULTICAST_CTRL on BCM5325
+  net: dsa: b53: prevent DIS_LEARNING access on BCM5325
+  net: dsa: b53: prevent BRCM_HDR access on BCM5325
+  net: dsa: b53: prevent GMII_PORT_OVERRIDE_CTRL access on BCM5325
+  net: dsa: b53: fix unicast/multicast flooding on BCM5325
+  net: dsa: b53: fix b53_imp_vlan_setup for BCM5325
+  net: dsa: b53: ensure BCM5325 PHYs are enabled
 
-> Any preference/thoughts on how to proceed?  My stuff obviously isn't  
-> urgent since
-> I sat on the patches for almost two years.  On the other hand, the almost  
-> pure
-> code movement would be a nice precursor to this patch, e.g. move and  
-> rename to
-> asm/kvm_pmu.h before extracting chunks of code into asm/kvm_host.h.
+ drivers/net/dsa/b53/b53_common.c | 255 ++++++++++++++++++++++++-------
+ drivers/net/dsa/b53/b53_priv.h   |  29 ++++
+ drivers/net/dsa/b53/b53_regs.h   |  24 ++-
+ 3 files changed, 250 insertions(+), 58 deletions(-)
 
-Letting the rename go first is fine and won't inconveneince me. I'm
-expecting this series to take a while to be accepted and Oliver told me
-I'll probably need a reroll to make my context switching lazy. Thanks
-for asking.
+-- 
+2.39.5
 
-> [*]  
-> https://lore.kernel.org/all/20230916003118.2540661-15-seanjc@google.com
-
-
-> Diff stats for context:
-> ---
-> Anish Ghulati (1):
->    KVM: arm64: Move arm_{psci,hypercalls}.h to an internal KVM path
-
-> Sean Christopherson (7):
->    KVM: arm64: Include KVM headers to get forward declarations
->    KVM: arm64: Move ARM specific headers in include/kvm to arch directory
->    KVM: Move include/kvm/iodev.h to include/linux as kvm_iodev.h
->    KVM: MIPS: Stop adding virt/kvm to the arch include path
->    KVM: PPC: Stop adding virt/kvm to the arch include path
->    KVM: s390: Stop adding virt/kvm to the arch include path
->    KVM: Standardize include paths across all architectures
-
->   MAINTAINERS                                                | 1 -
->   .../arm64/include/asm/kvm_arch_timer.h                     | 2 ++
->   arch/arm64/include/asm/kvm_host.h                          | 7 +++----
->   include/kvm/arm_pmu.h => arch/arm64/include/asm/kvm_pmu.h  | 2 ++
->   .../kvm/arm_vgic.h => arch/arm64/include/asm/kvm_vgic.h    | 2 +-
->   arch/arm64/kvm/Makefile                                    | 2 --
->   arch/arm64/kvm/arch_timer.c                                | 5 ++---
->   arch/arm64/kvm/arm.c                                       | 6 +++---
->   {include => arch/arm64}/kvm/arm_hypercalls.h               | 0
->   {include => arch/arm64}/kvm/arm_psci.h                     | 0
->   arch/arm64/kvm/guest.c                                     | 2 +-
->   arch/arm64/kvm/handle_exit.c                               | 2 +-
->   arch/arm64/kvm/hyp/Makefile                                | 6 +++---
->   arch/arm64/kvm/hyp/include/hyp/switch.h                    | 4 ++--
->   arch/arm64/kvm/hyp/nvhe/switch.c                           | 4 ++--
->   arch/arm64/kvm/hyp/vhe/switch.c                            | 4 ++--
->   arch/arm64/kvm/hypercalls.c                                | 4 ++--
->   arch/arm64/kvm/pmu-emul.c                                  | 4 ++--
->   arch/arm64/kvm/psci.c                                      | 4 ++--
->   arch/arm64/kvm/pvtime.c                                    | 2 +-
->   arch/arm64/kvm/reset.c                                     | 3 +--
->   arch/arm64/kvm/trace_arm.h                                 | 2 +-
->   arch/arm64/kvm/trng.c                                      | 2 +-
->   arch/arm64/kvm/vgic/vgic-debug.c                           | 2 +-
->   arch/arm64/kvm/vgic/vgic-init.c                            | 2 +-
->   arch/arm64/kvm/vgic/vgic-irqfd.c                           | 2 +-
->   arch/arm64/kvm/vgic/vgic-kvm-device.c                      | 2 +-
->   arch/arm64/kvm/vgic/vgic-mmio-v2.c                         | 4 ++--
->   arch/arm64/kvm/vgic/vgic-mmio-v3.c                         | 4 ++--
->   arch/arm64/kvm/vgic/vgic-mmio.c                            | 6 +++---
->   arch/arm64/kvm/vgic/vgic-v2.c                              | 2 +-
->   arch/arm64/kvm/vgic/vgic-v3-nested.c                       | 3 +--
->   arch/arm64/kvm/vgic/vgic-v3.c                              | 2 +-
->   arch/loongarch/include/asm/kvm_eiointc.h                   | 2 +-
->   arch/loongarch/include/asm/kvm_ipi.h                       | 2 +-
->   arch/loongarch/include/asm/kvm_pch_pic.h                   | 2 +-
->   arch/mips/include/asm/kvm_host.h                           | 3 +--
->   arch/mips/kvm/Makefile                                     | 2 --
->   arch/powerpc/kvm/Makefile                                  | 2 --
->   arch/powerpc/kvm/mpic.c                                    | 2 +-
->   arch/riscv/kvm/Makefile                                    | 2 --
->   arch/riscv/kvm/aia_aplic.c                                 | 2 +-
->   arch/riscv/kvm/aia_imsic.c                                 | 2 +-
->   arch/s390/kvm/Makefile                                     | 2 --
->   arch/x86/kvm/Makefile                                      | 1 -
->   arch/x86/kvm/i8254.h                                       | 2 +-
->   arch/x86/kvm/ioapic.h                                      | 2 +-
->   arch/x86/kvm/irq.h                                         | 2 +-
->   arch/x86/kvm/lapic.h                                       | 2 +-
->   include/{kvm/iodev.h => linux/kvm_iodev.h}                 | 0
->   virt/kvm/Makefile.kvm                                      | 2 ++
->   virt/kvm/coalesced_mmio.c                                  | 3 +--
->   virt/kvm/eventfd.c                                         | 2 +-
->   virt/kvm/kvm_main.c                                        | 3 +--
->   54 files changed, 64 insertions(+), 77 deletions(-)
->   rename include/kvm/arm_arch_timer.h =>  
-> arch/arm64/include/asm/kvm_arch_timer.h (98%)
->   rename include/kvm/arm_pmu.h => arch/arm64/include/asm/kvm_pmu.h (99%)
->   rename include/kvm/arm_vgic.h => arch/arm64/include/asm/kvm_vgic.h (99%)
->   rename {include => arch/arm64}/kvm/arm_hypercalls.h (100%)
->   rename {include => arch/arm64}/kvm/arm_psci.h (100%)
->   rename include/{kvm/iodev.h => linux/kvm_iodev.h} (100%)
-
-
-> base-commit: 45eb29140e68ffe8e93a5471006858a018480a45
-> --
