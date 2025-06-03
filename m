@@ -1,174 +1,227 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mx-rz-1.rrze.uni-erlangen.de (mx-rz-1.rrze.uni-erlangen.de [131.188.11.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5794821C16D;
-	Tue,  3 Jun 2025 20:51:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A15BC2153EA;
+	Tue,  3 Jun 2025 20:53:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748983884; cv=none; b=hR3T79QXOIT99sshQkOY03Lc6Mv3o9Ey4JS3Bp6lLpH/NoLvmyDul0sOsc+Nbb4wYiODdzIJuRkddC9AVl5k7UzDSRAoHYnaQ4sY+DnhH28zfikl9pwPVSpYyytT2qOKFQtzQcECXK1QI5T7kj1JrWX5USHO+ogM5qAaj3mqrfw=
+	t=1748984035; cv=none; b=ELFy+YGdY5DLhbgylEzEMR1STELxv61DVjwdibOVkQv1fyNKNJxkVav6Yr9/y/+Ou1MzD+g62Cn+A3mPHlNx4HLijZng5WzK2e+gQ4c8W96VoY121eg+j/5t3cSTQofGA5isw4abhm9DcvXT9ou3pu52ZS9eqfSNCapWcPu/0ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748983884; c=relaxed/simple;
-	bh=o4zOLvZFW8pO4zLwuxYUFfk4IAFaKCqbEJ5gNrQFVOg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q5TEiN/6pENiawsSglAXRp4znGbXsmr6HgnMPmnPlvLiXnc2Fz6D7wKqNA5ZuKuzdt86w93CZ/eDdnI3uEaoKjWOApdcD+jI+BfdjxkCp3O3fr2/+7NZ2iIyvgmNl317vPjwEKqjGPPmjUqdUUEgbAApNHDANuE94ovHOiTzaqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P0vL7EPH; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748984035; c=relaxed/simple;
+	bh=0BP/5dGCz0PCIngKdcnEAonCQdD6pNDUv6FrHnLlfWY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ikXte/1XXfEhmtO24ZYpcoHu8jQB7XFcPO/IaveQnZ76cg5X/CZqcxNcn/qutnvMySOZ3gcvJ0OvvmTVAwgmLCDqIeiTgfT06qCO50Bl5lGtRwBO2wbgNqSJPZge4RS35I6vMC/1Woz5Jp6SLyjhL0WcLgHPEa9y8trr1sKqPl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=xig0onIz; arc=none smtp.client-ip=131.188.11.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P0vL7EPH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748983882; x=1780519882;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=o4zOLvZFW8pO4zLwuxYUFfk4IAFaKCqbEJ5gNrQFVOg=;
-  b=P0vL7EPHuDiqV0+XpZFrTN28HFBGtrV8NqT1FN+9a/q52H1cn/yv6k6w
-   buELJecZD3C9nttH0QG7aUmFBR5Z+CCaDJRalv/IOoJU550tfektYp2KT
-   UIYj1eNbkGnJLeus3QQHIrVux7qlwHNx+50LgBJ1omD6ay389VzGBvDTH
-   QcZLko/wzF9/z+WSU+bigGDzAcnEyNWP8XSIAcjZhehfyv1JRdyeol5Jc
-   QgEZ3+cHZg093GH7Q/DaShfM6MXnC4MRqygAtHAn32jUfqEHlPhsiSqDX
-   zEr82rgePoo/KeZ0U33Zo0BSBtmRi+MbZTgbfk0sF6B2mAvsiQ36U6XGY
-   A==;
-X-CSE-ConnectionGUID: Z+CpDmTXQLyaH/ID6G3HwA==
-X-CSE-MsgGUID: d/YSKdpnTQ+aIj0Knww0mQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="53668521"
-X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
-   d="scan'208";a="53668521"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 13:51:21 -0700
-X-CSE-ConnectionGUID: AGrOcP48Te6x84iR91XP2w==
-X-CSE-MsgGUID: wCO6PN/LQnmJUW2Bw83T/Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
-   d="scan'208";a="175839494"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 13:51:21 -0700
-Received: from [10.124.221.22] (unknown [10.124.221.22])
-	by linux.intel.com (Postfix) with ESMTP id B7E6620B58A2;
-	Tue,  3 Jun 2025 13:51:19 -0700 (PDT)
-Message-ID: <220323bb-ebe1-41f8-aca2-53bb9885ea0a@linux.intel.com>
-Date: Tue, 3 Jun 2025 13:51:19 -0700
+	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="xig0onIz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
+	t=1748983580; bh=7DaMB/8Bf1cVB5O1oatwGQNMO20xEogCqa42wONtoKI=;
+	h=From:To:Cc:Subject:Date:From:To:CC:Subject;
+	b=xig0onIzdeIMdm9UlibZ5uNfmNCxzj8tUsn97tYmL+98HujpF/us/mKxckBX/7x9a
+	 Q7I/cTXye7qPrHTRnqSUV9Fi64TesJKHGUANHo8J/wwjU6N30w38J8ob17Vwg48/dZ
+	 798N9vgx6VBIJMO+XzkZHemqEWzS+5qs0pGXhBdbsL/wG7t1Wcd/pz16NMFOM6+O9w
+	 iFUVgTCDAZvjBU4e7fPYO//yvseQfAGsvNZpSPqGr8caeSXiA7GPYelE7BtdUBo9iS
+	 IJGc3m2aE3I76j67yaXs/Qrdrb577tn/a9Q7pzv+2qEWrHktk95loLIVjXQ/6G/Esa
+	 yp9YFF+2ky/Ig==
+Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-rz-1.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4bBjRc2yJlz8slT;
+	Tue,  3 Jun 2025 22:46:20 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at boeck1.rrze.uni-erlangen.de (RRZE)
+X-RRZE-Flag: Not-Spam
+X-RRZE-Submit-IP: 2001:9e8:3639:fe00:a21f:4ce4:8495:5578
+Received: from luis-tp.fritz.box (unknown [IPv6:2001:9e8:3639:fe00:a21f:4ce4:8495:5578])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: U2FsdGVkX1/QoQQ0EeRSuWsH6+0EAiEPD2l8zEg0hjM=)
+	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4bBjRY1kNcz8st8;
+	Tue,  3 Jun 2025 22:46:17 +0200 (CEST)
+From: Luis Gerhorst <luis.gerhorst@fau.de>
+To: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Luis Gerhorst <luis.gerhorst@fau.de>
+Subject: [PATCH bpf-next] bpf: Clarify sanitize_check_bounds()
+Date: Tue,  3 Jun 2025 22:45:57 +0200
+Message-ID: <20250603204557.332447-1-luis.gerhorst@fau.de>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4 v3] PCI/AER: Modify pci_print_aer() to take log level
-To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
- linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-cxl@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-pci@vger.kernel.org, linux-edac@vger.kernel.org
-Cc: Yazen Ghannam <yazen.ghannam@amd.com>
-References: <20250603155536.577493-1-fabio.m.de.francesco@linux.intel.com>
- <20250603155536.577493-3-fabio.m.de.francesco@linux.intel.com>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20250603155536.577493-3-fabio.m.de.francesco@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+As is, it appears as if pointer arithmetic is allowed for everything
+except PTR_TO_{STACK,MAP_VALUE} if one only looks at
+sanitize_check_bounds(). However, this is misleading as the function
+only works together with retrieve_ptr_limit() and the two must be kept
+in sync. This patch documents the interdependency and adds a check to
+ensure they stay in sync.
 
-On 6/3/25 8:54 AM, Fabio M. De Francesco wrote:
-> Modify pci_print_aer() to take a printk() log level in preparation of a
-> patch that logs PCIe Components and Link errors from ELOG.
+adjust_ptr_min_max_vals(): Because the preceding switch returns -EACCES
+for every opcode except for ADD/SUB, the sanitize_needed() following the
+sanitize_check_bounds() call is always true if reached. This means,
+unless sanitize_check_bounds() detected that the pointer goes OOB
+because of the ADD/SUB and returns -EACCES, sanitize_ptr_alu() always
+executes after sanitize_check_bounds().
 
-I think you need to rebase this patch on top of latest PCI changes. A patch to
-consolidate the AER error logging is pushed for v6.16 merge.
+The following shows that this also implies that retrieve_ptr_limit()
+runs in all relevant cases.
 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
-> ---
->   drivers/cxl/core/pci.c |  2 +-
->   drivers/pci/pcie/aer.c | 16 ++++++++--------
->   include/linux/aer.h    |  4 ++--
->   3 files changed, 11 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 3b80e9a76ba86..ad8d7939c2e1c 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -885,7 +885,7 @@ static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
->   	if (!cxl_rch_get_aer_severity(&aer_regs, &severity))
->   		return;
->   
-> -	pci_print_aer(pdev, severity, &aer_regs);
-> +	pci_print_aer(KERN_ERR, pdev, severity, &aer_regs);
->   
->   	if (severity == AER_CORRECTABLE)
->   		cxl_handle_rdport_cor_ras(cxlds, dport);
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index a1cf8c7ef628a..d0ebf7c15afa9 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -760,7 +760,7 @@ int cper_severity_to_aer(int cper_severity)
->   EXPORT_SYMBOL_GPL(cper_severity_to_aer);
->   #endif
->   
-> -void pci_print_aer(struct pci_dev *dev, int aer_severity,
-> +void pci_print_aer(char *level, struct pci_dev *dev, int aer_severity,
->   		   struct aer_capability_regs *aer)
->   {
->   	int layer, agent, tlp_header_valid = 0;
-> @@ -785,14 +785,15 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
->   	info.mask = mask;
->   	info.first_error = PCI_ERR_CAP_FEP(aer->cap_control);
->   
-> -	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
-> +	pci_printk(level, dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n",
-> +		   status, mask);
->   	__aer_print_error(dev, &info);
-> -	pci_err(dev, "aer_layer=%s, aer_agent=%s\n",
-> -		aer_error_layer[layer], aer_agent_string[agent]);
-> +	pci_printk(level, dev, "aer_layer=%s, aer_agent=%s\n",
-> +		   aer_error_layer[layer], aer_agent_string[agent]);
->   
->   	if (aer_severity != AER_CORRECTABLE)
-> -		pci_err(dev, "aer_uncor_severity: 0x%08x\n",
-> -			aer->uncor_severity);
-> +		pci_printk(level, dev, "aer_uncor_severity: 0x%08x\n",
-> +			   aer->uncor_severity);
->   
->   	if (tlp_header_valid)
->   		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
-> @@ -1146,8 +1147,7 @@ static void aer_recover_work_func(struct work_struct *work)
->   			       PCI_SLOT(entry.devfn), PCI_FUNC(entry.devfn));
->   			continue;
->   		}
-> -		pci_print_aer(pdev, entry.severity, entry.regs);
-> -
-> +		pci_print_aer(KERN_ERR, pdev, entry.severity, entry.regs);
->   		/*
->   		 * Memory for aer_capability_regs(entry.regs) is being
->   		 * allocated from the ghes_estatus_pool to protect it from
-> diff --git a/include/linux/aer.h b/include/linux/aer.h
-> index 02940be66324e..45d0fb2e2e759 100644
-> --- a/include/linux/aer.h
-> +++ b/include/linux/aer.h
-> @@ -64,8 +64,8 @@ static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
->   static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
->   #endif
->   
-> -void pci_print_aer(struct pci_dev *dev, int aer_severity,
-> -		    struct aer_capability_regs *aer);
-> +void pci_print_aer(char *level, struct pci_dev *dev, int aer_severity,
-> +		   struct aer_capability_regs *aer);
->   int cper_severity_to_aer(int cper_severity);
->   void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
->   		       int severity, struct aer_capability_regs *aer_regs);
+Note that there are two calls to sanitize_ptr_alu(), these are simply
+needed to easily calculate the correct alu_limit as explained in
+commit 7fedb63a8307 ("bpf: Tighten speculative pointer arithmetic
+mask"). The truncation-simulation is already performed on the first
+call.
 
+In the second sanitize_ptr_alu(commit_window = true), we always run
+retrieve_ptr_limit(), unless:
+
+* can_skip_alu_sanititation() is true, notably `BPF_SRC(insn->code) ==
+  BPF_K`. BPF_K is fine because it means that there is no scalar
+  register (which could be subject to speculative scalar confusion due
+  to Spectre v4) that goes into the ALU operation. The pointer register
+  can not be subject to v4-based value confusion due to the nospec
+  added. Thus, in this case it would have been fine to also skip
+  sanitize_check_bounds().
+
+* If we are on a speculative path (`vstate->speculative`) and in the
+  second "commit" phase, sanitize_ptr_alu() always just returns 0. This
+  makes sense because there are no ALU sanitization limits to be learned
+  from speculative paths. Furthermore, because the sanitization will
+  ensure that pointer arithmetic stays in (architectural) bounds, the
+  sanitize_check_bounds() on the speculative path could also be skipped.
+
+The second case needs more attention: Assume we have some ALU operation
+that is used with scalars architecturally, but with a
+non-PTR_TO_{STACK,MAP_VALUE} pointer (e.g., PTR_TO_PACKET)
+speculatively. It might appear as if this would allow an unsanitized
+pointer ALU operations, but this can not happen because one of the
+following two always holds:
+
+* The type mismatch stems from Spectre v4, then it is prevented by a
+  nospec after the possibly-bypassed store involving the pointer. There
+  is no speculative path simulated for this case thus it never happens.
+
+* The type mismatch stems from a Spectre v1 gadget like the following:
+
+    r1 = slow(0)
+    r4 = fast(0)
+    r3 = SCALAR // Spectre v4 scalar confusion
+    if (r1) {
+      r2 = PTR_TO_PACKET
+    } else {
+      r2 = 42
+    }
+    if (r4) {
+      r2 += r3
+      *r2
+    }
+
+  If `r2 = PTR_TO_PACKET` is indeed dead code, it will be sanitized to
+  `goto -1` (as is the case for the r4-if block). If it is not (e.g., if
+  `r1 = r4 = 1` is possible), it will also be explored on an
+  architectural path and retrieve_ptr_limit() will reject it.
+
+To summarize, the exception for `vstate->speculative` is safe.
+
+Back to retrieve_ptr_limit(): It only allows the ALU operation if the
+involved pointer register (can be either source or destination for ADD)
+is PTR_TO_STACK or PTR_TO_MAP_VALUE. Otherwise, it returns -EOPNOTSUPP.
+
+Therefore, sanitize_check_bounds() returning 0 for
+non-PTR_TO_{STACK,MAP_VALUE} is fine because retrieve_ptr_limit() also
+runs for all relevant cases and prevents unsafe operations.
+
+To summarize, we allow unsanitized pointer arithmetic with 64-bit
+ADD/SUB for the following instructions if the requirements from
+retrieve_ptr_limit() AND sanitize_check_bounds() hold:
+
+* ptr -=/+= imm32 (i.e. `BPF_SRC(insn->code) == BPF_K`)
+
+* PTR_TO_{STACK,MAP_VALUE} -= scalar
+
+* PTR_TO_{STACK,MAP_VALUE} += scalar
+
+* scalar += PTR_TO_{STACK,MAP_VALUE}
+
+To document the interdependency between sanitize_check_bounds() and
+retrieve_ptr_limit(), add a verifier_bug_if() to make sure they stay in
+sync.
+
+Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
+Reported-by: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+Link: https://lore.kernel.org/bpf/CAP01T76HZ+s5h+_REqRFkRjjoKwnZZn9YswpSVinGicah1pGJw@mail.gmail.com/
+Link: https://lore.kernel.org/bpf/CAP01T75oU0zfZCiymEcH3r-GQ5A6GOc6GmYzJEnMa3=53XuUQQ@mail.gmail.com/
+---
+ kernel/bpf/verifier.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index a7d6e0c5928b..e31f6b0ccb30 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -14284,7 +14284,7 @@ static int sanitize_check_bounds(struct bpf_verifier_env *env,
+ 		}
+ 		break;
+ 	default:
+-		break;
++		return -EOPNOTSUPP;
+ 	}
+ 
+ 	return 0;
+@@ -14311,7 +14311,7 @@ static int adjust_ptr_min_max_vals(struct bpf_verifier_env *env,
+ 	struct bpf_sanitize_info info = {};
+ 	u8 opcode = BPF_OP(insn->code);
+ 	u32 dst = insn->dst_reg;
+-	int ret;
++	int ret, bounds_ret;
+ 
+ 	dst_reg = &regs[dst];
+ 
+@@ -14511,11 +14511,19 @@ static int adjust_ptr_min_max_vals(struct bpf_verifier_env *env,
+ 	if (!check_reg_sane_offset(env, dst_reg, ptr_reg->type))
+ 		return -EINVAL;
+ 	reg_bounds_sync(dst_reg);
+-	if (sanitize_check_bounds(env, insn, dst_reg) < 0)
+-		return -EACCES;
++	bounds_ret = sanitize_check_bounds(env, insn, dst_reg);
++	if (bounds_ret == -EACCES)
++		return bounds_ret;
+ 	if (sanitize_needed(opcode)) {
+ 		ret = sanitize_ptr_alu(env, insn, dst_reg, off_reg, dst_reg,
+ 				       &info, true);
++		if (verifier_bug_if(!can_skip_alu_sanitation(env, insn)
++				    && !env->cur_state->speculative
++				    && bounds_ret
++				    && !ret,
++				    env, "Pointer type unsupported by sanitize_check_bounds() not rejected by retrieve_ptr_limit() as required")) {
++			return -EFAULT;
++		}
+ 		if (ret < 0)
+ 			return sanitize_err(env, insn, ret, off_reg, dst_reg);
+ 	}
+
+base-commit: cd2e103d57e5615f9bb027d772f93b9efd567224
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+2.49.0
 
