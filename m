@@ -1,164 +1,160 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0D6C2F2
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 11:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6874D22DFE8
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 11:40:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748950829; cv=none; b=K9KMy3/xI0IGckYAHzR3xAymFySAoqTNDuMZ2d2UR1ow3anPuViT8twsSX5A++PWoDaWsuNyOGJzmFUS2DsEKzVRmkZ1eAswYA43cvQlvWLo8mzltLowHBJnWC4tcVmjDXVFSEnxm8XtRlpP5F3fEni9hwV3qFVmtBNTNkWrpGE=
+	t=1748950835; cv=none; b=r2sn+QsTd/S5NHpC8u5a5l/vNW1K4aZJU2KKYRIt2fmetzxj91T+nYxLVRMoEzUgG7V2su9Ew73J31+DTDUBJRxtvujmqWjdupd+Fy4ZjOrJpVRNzD7J6mDDK/JLLJPAwFDBga+jd0aENOiH8z501oPz3u8iDGnQNnsmsGHAe7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748950829; c=relaxed/simple;
-	bh=lInIOnu02nSuzGUxFDI/H3CZR9jABCLpyMlUX8cRz+s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eMg0rN++heB+kjoDGubyfFCt6Sh0xCqVpj5Iwn8msDRDFgAa0skwl2NGShMRxm0jIPHsF/aSPFYU05If6rzNWx1MCcW8X68USuUAdZ4rZeq1mJTXSs522a+rnASEYgDF7fA5rpOiJeBdQ0bhqEtjZ0DtM1JFawZG+42RUKsVDnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=fk4Hkbj9; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	s=arc-20240116; t=1748950835; c=relaxed/simple;
+	bh=L0vHIc+oMzlkJ8aajqE45z0niL4axMzyxGK6cJQLgOU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
+	 References:In-Reply-To; b=Zaxj5AFYvSoZfcdQCsNZs4/l0DmOvjEp2CKoNL0PnURZwBty/FXOYC3PLPBtLRqVXSlsjWKkvyaJZH/gYOGouvWY9V/G+RmxTJddbQSSumUGaaq8upmV710olpvRX58g9uibxfLP0/dyImBfwWZzxOpl1OH6KQiRxhssXXA/7Dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=S0VL5U2+; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="fk4Hkbj9"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ad8a6c202ffso1064745766b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 04:40:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="S0VL5U2+"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a4e575db1aso934012f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 04:40:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1748950826; x=1749555626; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ciIAygqOrWJd3fbCLXBzNH0Xz2cW+3EmmUs8ebciGxE=;
-        b=fk4Hkbj9n00ubbVnLOmPj+7o9mUV/gPPBlCHcICoDB9H4Y1+DY1IugMP174BW3oNnj
-         Kn+XufF+VkTBqIq5OOoCY2RqV2aua4IEWSdHUGfJORbY2LuU11fL1bQ2eLujVHELrasq
-         vImVT7S/1FZw4mfQ6RqUqHRE7KOTFW0C0PgLs=
+        d=ventanamicro.com; s=google; t=1748950832; x=1749555632; darn=vger.kernel.org;
+        h=in-reply-to:references:to:cc:subject:from:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MqVabgXFstwYrAYyfsH8IvHqrVwku7JGFF8O9u+W/Po=;
+        b=S0VL5U2+r0LZzontIsEdrnrcmTtRWhfLjDEAZ/MA2OqH/qTLDK0B0ZDc3ldpp1PSEC
+         FJusZAzQLzug1SUUY+HDLsuGArCOE99MUyQk7JVTlwzafT65WxoZZOJo6wTOiABvTOGs
+         p775BbozQ+1vOsI2vfxurGrGNR3ZS19XK5R4ilkQtUcidn9s1XpxJmK9y3GmP+bIhd4f
+         boJjxjgHLLcCMZvDQEd+Vs28SVJSHrOiRzxF80nYln9/2frugIiTKl7hcm5mnqhBxDJ6
+         F6kjrtzi9xfL0qpZ4w80DuNGfkrdLF8M5eD9tpye2RAMf0gqxGq5759Cpu0Mq/Nd1bVM
+         mFTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748950826; x=1749555626;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ciIAygqOrWJd3fbCLXBzNH0Xz2cW+3EmmUs8ebciGxE=;
-        b=qy9n3lji7q8iXU9QQq18eNbi2YcgmFpEpNuckYFzfmDKLSnVSkJrWeS4vlBVw1Nc5x
-         Vl9Hrw0k8b/1yOi3QK/rPS2tB8Lljg+YFOKOjdD0Y0AWGdS3Na4gaTeqBBg5DLRAiGbp
-         hHd8IM8a9xxX/0L04X3j2d339rwx4r5loCkg1rtmu1sr1aCgM4gSIzfoXfpT+a2/gTnH
-         ovAbBbg/iS/9YicpbvDkCIkZByjLaUAH2P2EAs1/s803S4rWsO0AAJiC3FHgSx4sNxkq
-         Wo0BOr0vI36SA2QKuSwdjqp0ADirUFpUo+R5BBsWldiZ6jHHY5EWL7yqWBcbuzRNxsyo
-         ci0w==
-X-Forwarded-Encrypted: i=1; AJvYcCXMXpkKIAuzRHnG4cC1Lsx5+5WkOzFUJb1AkDWvXzCNVNfOOXX+Qs/mMRWeTOymtf6UD2T1WpblAGAiA7M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAsDGpbcAEWZ4b4GVZJf1vocnILySoYfDdTyOSxKlQrtW99iWm
-	QBgpek75PqcDS3ksNBXk1rz9hu1ab4+OxmLGBdJmMcrH/SjOj/dPU0BHcNZPbeZjLuo=
-X-Gm-Gg: ASbGnctQuojEgsNddv9kQdaduU5EDkC4B3jvYdThSDUxE7tHuBFgKvs+6RgBDZ/8MtH
-	bP6HhJu7GGgb+anB4agfEE3lNW2VdVf3GulDeYoZB0G/5aTFw7c8tG4d1eoODSGkSgz2IBE5LLG
-	BhoH7rnFq+XHXKsVySzYDlG+yi4J/tdPvPjJFt0Ncp2N8sPKXO74SDhrrMUSLKGHWiY6my5x8/p
-	e1sfsklTOtrQ9UUkLAVXdEtjEG8XQ9qRqNnILICFSF66I1BqhuZbj8BWuQQ0JXM6l6pEH2V7xqg
-	Ttw9va83OxmWIhX9wsdGzjpkkgXMYoh8eVi7zzdwXI1Zi4ujCtCY0YAnOu23gLeZP4doPTWb1A=
-	=
-X-Google-Smtp-Source: AGHT+IFku9TE8EUVSLqmoCZBKfzqgA+/g+kH4IUAPWkSww+uTbuttoOauNZ+o0S0Qv506mn1chR6iQ==
-X-Received: by 2002:a17:907:944d:b0:ace:c518:1327 with SMTP id a640c23a62f3a-adb493df457mr1224596266b.14.1748950826063;
-        Tue, 03 Jun 2025 04:40:26 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada6ad6abc2sm941360566b.173.2025.06.03.04.40.24
+        d=1e100.net; s=20230601; t=1748950832; x=1749555632;
+        h=in-reply-to:references:to:cc:subject:from:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=MqVabgXFstwYrAYyfsH8IvHqrVwku7JGFF8O9u+W/Po=;
+        b=P3Plkj++dAtJDRlXate6ixquySgpFk0AGPAUzdoxzgvT2kCPudo0qlFX982OdD1wWR
+         9baHDuahOoahv5UARBxEl51XnU0pdMhi7O6XzXekbcZrPwCOOi+hdlHix0fhmfAD9Asm
+         K8Lcc68lCKzyblfl5cb1WzBK9s37QIaoc7lZ5iJhNlJGFff04tyDVCPcbrIvWVYFQl8z
+         sqH6ZE5JGp+tHhHAjaZRVJKJfmhHKW06KmjN7uzEJJJj977Cz8vqHjN4MSED8+A4Pum4
+         s16x2r63hvzGByxNWCR5FK2XKqv7mXEnWiYhoKvpV82Oxbi3JDV+AowEdLHy+q+uy8A5
+         0aSA==
+X-Forwarded-Encrypted: i=1; AJvYcCWWATJUV8A52vkrYYQO+5eeTBP6TQJPBbCEj3SfpGlj5FNbbqm75OlxMpG+OE91xiwIIK9qTZ4FpkUBYc8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBkfgMFQajaXBMeTKazToG/hkWpPTldmRpsA2KiKOLxcMgTBst
+	72fpZprQGEn7LdDzcVQeM4pfZZSvlGg1qLKJZPoTvT3rHcOtHC8jxGuFhl9Nv+VCKFg=
+X-Gm-Gg: ASbGncuIPU8gprS9f/Ke+Hwa899qVqLjgdeahwqcgFghbbQ8YDYZI1CHF2fVj5qEXqj
+	StyjsNvi0uauiShCMIIvck/eHllpeERkZrMjgEu7DknavNvSBJ1ut+a+7FS4Me8+YpHkMzZmvAC
+	KKrtP1aXjullLOrVO0Oj6HhimARLyXatfQ5AyN2+aydeX6jfqYBk6JUk8HosNxLioecyiwFQg0e
+	zSmiEvhpB61B7g/hHMjOXeCBnW42m34YUAKzLBb4Ucb08DSX20FjgDnzguO4VmLSgim2Z9D4bjW
+	EVzQTdAQcZ5ctKU8vT2pH5gQEMjof1/zPPmNE3ek9AaqlEmyTAt/MQXxOGU=
+X-Google-Smtp-Source: AGHT+IGFDhiWKgjK9Y+TCcxKDa8nUqu/n2RN/MNtIHJIhQEdhoO4uixfNqx5KKNaUAuRzy9bZilwyQ==
+X-Received: by 2002:a05:6000:230d:b0:3a0:782e:9185 with SMTP id ffacd0b85a97d-3a4f895f857mr4292350f8f.2.1748950831495;
+        Tue, 03 Jun 2025 04:40:31 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200:37e0:4ec0:b6ec:ef2a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f0097210sm17962177f8f.73.2025.06.03.04.40.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 04:40:25 -0700 (PDT)
-Date: Tue, 3 Jun 2025 13:40:23 +0200
-From: Simona Vetter <simona.vetter@ffwll.ch>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Kees Cook <kees@kernel.org>,
-	Alessandro Carminati <acarmina@redhat.com>,
-	linux-kselftest@vger.kernel.org,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Daniel Diaz <daniel.diaz@linaro.org>,
-	David Gow <davidgow@google.com>,
-	Arthur Grillo <arthurgrillo@riseup.net>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ville Syrjala <ville.syrjala@linux.intel.com>,
-	Daniel Vetter <daniel@ffwll.ch>, Guenter Roeck <linux@roeck-us.net>,
-	Alessandro Carminati <alessandro.carminati@gmail.com>,
-	Jani Nikula <jani.nikula@intel.com>,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Linux Kernel Functional Testing <lkft@linaro.org>,
-	dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v5 1/5] bug/kunit: Core support for suppressing warning
- backtraces
-Message-ID: <aD7fJxQWggfGekOf@phenom.ffwll.local>
-Mail-Followup-To: Maxime Ripard <mripard@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, Kees Cook <kees@kernel.org>,
-	Alessandro Carminati <acarmina@redhat.com>,
-	linux-kselftest@vger.kernel.org,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Daniel Diaz <daniel.diaz@linaro.org>,
-	David Gow <davidgow@google.com>,
-	Arthur Grillo <arthurgrillo@riseup.net>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ville Syrjala <ville.syrjala@linux.intel.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Alessandro Carminati <alessandro.carminati@gmail.com>,
-	Jani Nikula <jani.nikula@intel.com>,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Linux Kernel Functional Testing <lkft@linaro.org>,
-	dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
-References: <20250526132755.166150-1-acarmina@redhat.com>
- <20250526132755.166150-2-acarmina@redhat.com>
- <20250529090129.GZ24938@noisy.programming.kicks-ass.net>
- <CAGegRW76X8Fk_5qqOBw_aqBwAkQTsc8kXKHEuu9ECeXzdJwMSw@mail.gmail.com>
- <20250530140140.GE21197@noisy.programming.kicks-ass.net>
- <202505301037.D816A49@keescook>
- <20250531102304.GF21197@noisy.programming.kicks-ass.net>
- <8C5E309E-03E5-4353-8515-67A53EC6C9E3@kernel.org>
- <20250602075707.GI21197@noisy.programming.kicks-ass.net>
- <20250602-vegan-lumpy-marmoset-488b6a@houat>
+        Tue, 03 Jun 2025 04:40:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250602-vegan-lumpy-marmoset-488b6a@houat>
-X-Operating-System: Linux phenom 6.12.25-amd64 
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 03 Jun 2025 13:40:30 +0200
+Message-Id: <DACVBRLJ5MMV.1COZ83HBMUD6A@ventanamicro.com>
+From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
+Subject: Re: [PATCH v3 9/9] RISC-V: KVM: Upgrade the supported SBI version
+ to 3.0
+Cc: "Anup Patel" <anup@brainfault.org>, "Will Deacon" <will@kernel.org>,
+ "Mark Rutland" <mark.rutland@arm.com>, "Paul Walmsley"
+ <paul.walmsley@sifive.com>, "Palmer Dabbelt" <palmer@dabbelt.com>,
+ "Mayuresh Chitale" <mchitale@ventanamicro.com>,
+ <linux-riscv@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+ <kvm-riscv@lists.infradead.org>, "linux-riscv"
+ <linux-riscv-bounces@lists.infradead.org>
+To: "Atish Patra" <atish.patra@linux.dev>, "Andrew Jones"
+ <ajones@ventanamicro.com>
+References: <20250522-pmu_event_info-v3-0-f7bba7fd9cfe@rivosinc.com>
+ <20250522-pmu_event_info-v3-9-f7bba7fd9cfe@rivosinc.com>
+ <DA3KSSN3MJW5.2CM40VEWBWDHQ@ventanamicro.com>
+ <61627296-6f94-45ea-9410-ed0ea2251870@linux.dev>
+ <DA5YWWPPVCQW.22VHONAQHOCHE@ventanamicro.com>
+ <20250526-224478e15ee50987124a47ac@orel>
+ <ace8be22-3dba-41b0-81f0-bf6d661b4343@linux.dev>
+ <20250528-ff9f6120de39c3e4eefc5365@orel>
+ <1169138f-8445-4522-94dd-ad008524c600@linux.dev>
+ <DA8KL716NTCA.2QJX4EW2OI6AL@ventanamicro.com>
+ <2bac252c-883c-4f8a-9ae1-283660991520@linux.dev>
+ <DA9G60UI0ZLC.1KIWBXCTX0427@ventanamicro.com>
+ <0dcd01cd-419f-4225-b22c-cbaf82718235@linux.dev>
+In-Reply-To: <0dcd01cd-419f-4225-b22c-cbaf82718235@linux.dev>
 
-On Mon, Jun 02, 2025 at 12:38:10PM +0200, Maxime Ripard wrote:
-> On Mon, Jun 02, 2025 at 09:57:07AM +0200, Peter Zijlstra wrote:
-> > On Sat, May 31, 2025 at 06:51:50AM -0700, Kees Cook wrote:
-> > 
-> > > It's not for you, then. :) I can't operate ftrace, but I use kunit
-> > > almost daily. Ignoring WARNs makes this much nicer, and especially for
-> > > CIs.
-> > 
-> > I'm thinking you are more than capable of ignoring WARNs too. This
-> > leaves the CI thing.
-> > 
-> > So all this is really about telling CIs which WARNs are to be ignored,
-> > and which are not? Surely the easiest way to achieve that is by
-> > printing more/better identifying information instead of suppressing
-> > things?
-> 
-> You might also want to test that the warn is indeed emitted, and it not
-> being emitted result in a test failure.
-> 
-> And I can see a future where we would fail a test that would trigger an
-> unexpected WARN.
-> 
-> Doing either, or none, would be pretty terrible UX for !CI users too.
-> How on earth would you know if the hundreds of WARN you got from the
-> tests output are legitimate or not, and if you introduced new ones
-> you're supposed to fix?
+2025-05-30T12:29:30-07:00, Atish Patra <atish.patra@linux.dev>:
+> On 5/30/25 4:09 AM, Radim Kr=C4=8Dm=C3=A1=C5=99 wrote:
+>> 2025-05-29T11:44:38-07:00, Atish Patra <atish.patra@linux.dev>:
+>>> On 5/29/25 3:24 AM, Radim Kr=C4=8Dm=C3=A1=C5=99 wrote:
+>>>> I originally gave up on the idea, but I feel kinda bad for Drew now, s=
+o
+>>>> trying again:
+>>> I am sorry if some of my replies came across in the wrong way. That was
+>>> never
+>>> the intention.
+>> I didn't mean to accuse you, my apologies.  I agree with Drew's
+>> positions, so to expand on a question that wasn't touched in his mail:
+>>
+>>>> Even if userspace wants SBI for the M-mode interface, security minded
+>>> This is probably a 3rd one ? Why we want M-mode interface in the user
+>>> space ?
+>> It is about turning KVM into an ISA accelerator.
+>>
+>> A guest thinks it is running in S/HS-mode.
+>> The ecall instruction traps to M-mode.  RISC-V H extension doesn't
+>> accelerate M-mode, so we have to emulate the trap in software.
+> We don't need to accelerate M-mode. That's the beauty of the RISC-V H=20
+> extension.
 
-Yeah we'd like to make sure that when drivers misuse subsystem api, things
-blow up. Kunit that makes sure we hit the warn we put in place for that
-seems like the best way to go about that, because in the past we've had
-cases where we thought we should have caught abuse but didn't. And this
-isn't the only thing we use, it's just one tool in the box among many
-others to keep the flood of driver issues at a manageable level.
+(It is a gap to me. :])
 
-Cheers, Sima
--- 
-Simona Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+> The ISA is designed in such a way that the SBI is the interface between=
+=20
+> the supervisor environment (VS/HS)
+> and the supervisor execution environment (HS/M).
+
+The ISA says nothing about the implementation of said interface.
+
+Returning 42 in x21 as a response to an ecall with 0x10 in a7 and 0x3 in
+a6 is perfectly valid RISC-V implementation that KVM currently cannot
+virtualize.
+
+>> The ISA doesn't say that M-mode means SBI.  We try really hard to have
+>> SBI on all RISC-V, but I think KVM is taking it a bit too far.
+>>
+>> We can discuss how best to describe SBI, so userspace can choose to
+>> accelerate the M-mode in KVM, but I think that the ability to emulate
+>> M-mode in userspace should be provided.
+> I am still trying to understand the advantages of emulating the M-mode=20
+> in the user space.
+> Can you please elaborate ?
+
+This thread already has a lot of them, so to avoid repeating them, I
+have to go into quite niche use-cases:
+When developing M-mode software on RISC-V (when RISC-V has more useful
+implementations than QEMU), a developer might want to accelerate the
+S/U-modes in KVM.
+It is also simpler to implement an old SBI interface (especially with
+bugs/quirks) if virtualization just executes the old M-mode binary.
+
+Why must KVM prevent userspace from virtualizing RISC-V?
+
+> I am assuming you are not hinting Nested virtualization which can be=20
+> achieved with existing
+> ISA provided mechanisms and accelerated by SBI NACL.
+
+Right, I am talking about virtualization of RISC-V, because I don't have
+a crystal ball to figure out what users will want.
