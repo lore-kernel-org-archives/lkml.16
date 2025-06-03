@@ -1,114 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807081A2643;
-	Tue,  3 Jun 2025 22:10:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84B624C664
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 22:10:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748988600; cv=none; b=SaYdIpLSQbLrRefqeMESOR0NVl6+f+plYdg+zt7K6+ieQZAWK09U/vMxDv8oirRnnRZIKjpUhtLX3+ZzQyjHN9Q3noLt2iDHgueE0ZPdEKW9zjDI1UEm2C2r7ZVz8cnv9L6k0vSCLzSiAk/Ed7uu59PFDCdLpfyVqZyTrOVSUeI=
+	t=1748988609; cv=none; b=S3h80NjpKwxs3+26tRlRn/EeGPSj3efFtnfLPQKQv47/Lm3gi2yIpk4ltFmL1dPYl1ge5WBIhkRUIczGup5J6f/FE9XzjdDQUC+BKHTP3n3TW7Yja7T8Lh8sccRpJ/g/9aScaa9eToFHWGjjMP/vD/BBVx9NfzB2IaMTB3apTRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748988600; c=relaxed/simple;
-	bh=yDwtTU7q5ftKQNzN/brcoLgZJNUcYEqPo41Z09sqrYg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vq9qJypbB4RKsqWLi+p6nc+aZeEXtCbz3as2fXDClEGr8pIePcw2mLPSnQkIGd8Ybmdu3AbVoSVcVeaPN3iGXrvTnEZoCVxjzvet1zwN0N3e26kHKovfEhJFnmCgS9ZcQBBx7YxE36CchfM/Oppjh1UiyiEVhGRkvl5EvhZC9Us=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Apt0Rs/F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748988609; c=relaxed/simple;
+	bh=D4BNPFyXw8YmMxTGf0cIhoo97jch6QwsAvNNNQZDsQU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=NXRJPS6vclM10UQg8Ojima/X4CQGhr8cj4Cl3hO7prg3vC4aW4AkScmooNQPDuWSPjtHC9fh5Rk9hqtiAgdn21ciOp97sAlOgXICwYbAZwAWzS6DGTdXmptiUb5J3Arii/FaJsExEjhXApKyo9FLm1R4zWbzq/gtcYvRjkiCxbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Jc0zGUHO; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Apt0Rs/F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6BFDC4CEED;
-	Tue,  3 Jun 2025 22:09:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748988599;
-	bh=yDwtTU7q5ftKQNzN/brcoLgZJNUcYEqPo41Z09sqrYg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Apt0Rs/FW6gf736dQ7/ejmjD8IszQ0GRdGw8RM8CkIvCUW5W90Q4FH11vJtYRblqv
-	 9rBtkWZtP1QBc0roa36IRl6YBNwscgbBxKPNYTLm4Q8S83ewbFYqEBU9gdQ4vErvcl
-	 AnSGRhGgcfbyionV6zX/0pca7M/EYPtc3JLL1wq3fLe35Vc2J/sK5kZHKxh4QpG6ov
-	 ELZ7m7pqIdkCakQNZ54g8b8Ajwo5NXI1mkl1QFCQNCOcb7m+RzgD2gkdblyBDywx7O
-	 ZLvgFm374M7uOMrUw9mIaP4CigRkLt9XBk4XZvoxaM8MfpnodsmvfUNDdmrmtcxIog
-	 sUBaoSIdiNSFg==
-Date: Tue, 3 Jun 2025 15:09:57 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Blake Jones <blakejones@google.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Zhongqiu Han <quic_zhonhan@quicinc.com>,
-	James Clark <james.clark@linaro.org>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>,
-	Leo Yan <leo.yan@arm.com>, Yujie Liu <yujie.liu@intel.com>,
-	Graham Woodward <graham.woodward@arm.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Ben Gainey <ben.gainey@arm.com>, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 2/3] perf: collect BPF metadata from existing BPF programs
-Message-ID: <aD9yte49C_BM5oA9@google.com>
-References: <20250521222725.3895192-1-blakejones@google.com>
- <20250521222725.3895192-3-blakejones@google.com>
- <aD9Xxhwqpm8BDeKe@google.com>
- <CAP_z_Cj_8uTBGzaoFmi1f956dXi1qDnF4kqc49MSn0jDHYFfxg@mail.gmail.com>
- <aD9sxuFwwxwHGzNi@google.com>
- <CAP_z_Cg+mPpdzxg-d+VV5J9t7vTTNXQmKLdnfuNETm1H40OA+g@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Jc0zGUHO"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b2c4476d381so336200a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 15:10:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1748988607; x=1749593407; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=oCZ69tNf5F/nH9gg/JK+KCJHpj+nRd8zzomueksqFYs=;
+        b=Jc0zGUHOBWmKBiZM0ui/g1Sdqh/YVt9g17mUCgnPTOe1GpknzfIq3KZDPNh2vn2ebM
+         IxxrhsEf6BjzTNKtdVSP9Fx/9XgID9/ci9F6yN/VNAxHGB31qzImfEGl0XP7onidbnuD
+         ayaEqtDOsvLClgRtendsOH9BNmjYqiXB3gAwg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748988607; x=1749593407;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oCZ69tNf5F/nH9gg/JK+KCJHpj+nRd8zzomueksqFYs=;
+        b=LZL9yDiNVOOoK23CGmAypDcykq6lVGT6tviF9YP0b9y0xIoiYJuVdmBdX90tYKec5n
+         eh53LJfp7NmBo/hE/vrojGLvn8FCQIf/i80fTdaO81bxUmo5pYos2+u/cvBMZ8uwK5Tp
+         ItiT/0ML8Jsq6V/3Ybm/FQVOTjSbrT1Ch8ar4/1mho1/0Mg5SbXhD3yxYl6uLCNUEtWu
+         4ilEKoGwl/n+GmQa0W+fmybdswSclaAsT72p7U1jQgEYHaOOgsN3vVH2QoUJfhZHCtre
+         bI+NVSt1esNIBDxfxmzNWTqTIbBCuvNIwiz/hHQETBwxaXJK6qhuKU7ibispQNLlCauz
+         rECg==
+X-Forwarded-Encrypted: i=1; AJvYcCU0iqayZIrGGWirQttSME2bq2++2Fw5WkFFW66+KjlEUo/b2w0NwLBZEsY2T8U/IgcuIg005PAo5UvKCGs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3O5mJApvnB3ntmZ6civYehxxW+eEkv2t2ZSxamqaI08PrAB7c
+	2BgXf/ABBFXxhzglstGLP8ms/idcR7ei0BQZ4oXkSt2AFDLupDvz7XzGQUb/s6bWjQ==
+X-Gm-Gg: ASbGncuj6QRNB/bu2JI7fhizO+a2VCScQA8FeLyAcfVhlXJEe87bEb7Z+FkOmB9R0V+
+	G5i2qb9hhDBjSYDMiZhO/0l0lx7V6DN09iw2PDWs4NDwt25NAur1RnDxx2PS427Pf2sq1wAZw7N
+	Plr5wnIonvFkNTXNkzQIHLJq53iLy2ZCUm64H3Q/VTMTtiNcwL8u1JWXfPx4tPH/A1QKERu7GBI
+	oirvFJqc66XemoUFfSI0AQodMsDfSDj1gSCVZamHxeTaLuxA5vdlvtnfXdFt9iSuJcl1REV4X51
+	+JtblGoxmdyoL8OsCp7VRiu9YPDlmQn+ngTn1LALhq/S+osxuD4gfr9zPtOK+OnJangIyAGSWhv
+	E8EW5+p2OrK5stvgjexjfeegVDQ==
+X-Google-Smtp-Source: AGHT+IFUc2/MB2me6Q0F4p+ojx6fjolGHIbVISR6ynDA5066KSNqwO5Jisc9OWXMc0F8jOKyYsadJQ==
+X-Received: by 2002:a17:90b:5112:b0:30e:3737:7c87 with SMTP id 98e67ed59e1d1-3130db414dcmr805466a91.5.1748988606871;
+        Tue, 03 Jun 2025 15:10:06 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bd945esm92372945ad.94.2025.06.03.15.10.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Jun 2025 15:10:05 -0700 (PDT)
+Message-ID: <507a09f6-8b6e-4800-8c90-f2b1662cafa2@broadcom.com>
+Date: Tue, 3 Jun 2025 15:10:04 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH net-next v2 01/10] net: dsa: b53: add support for FDB
+ operations on 5325/5365
+To: =?UTF-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>,
+ jonas.gorski@gmail.com, florian.fainelli@broadcom.com, andrew@lunn.ch,
+ olteanv@gmail.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, vivien.didelot@gmail.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, dgcbueu@gmail.com
+References: <20250603204858.72402-1-noltari@gmail.com>
+ <20250603204858.72402-2-noltari@gmail.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250603204858.72402-2-noltari@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP_z_Cg+mPpdzxg-d+VV5J9t7vTTNXQmKLdnfuNETm1H40OA+g@mail.gmail.com>
 
-On Tue, Jun 03, 2025 at 02:54:50PM -0700, Blake Jones wrote:
-> Hi Namhyung,
+On 6/3/25 13:48, Álvaro Fernández Rojas wrote:
+> From: Florian Fainelli <f.fainelli@gmail.com>
 > 
-> On Tue, Jun 3, 2025 at 2:44 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > IIUC the metadata is collected for each BPF program which may have
-> > > > multiple subprograms.  Then this patch creates multiple PERF_RECORD_
-> > > > BPF_METADATA for each subprogram, right?
-> > > >
-> > > > Can it be shared using the BPF program ID?
-> > >
-> > > In theory, yes, it could be shared. But I want to be able to correlate them
-> > > with the corresponding PERF_RECORD_KSYMBOL events, and KSYMBOL events for
-> > > subprograms don't have the full-program ID, so I wouldn't be able to do that.
-> >
-> > It's unfortunate that KSYMBOL doesn't have the program ID, but IIRC the
-> > following BPF_EVENT should have it.  I think it's safe to think KSYMBOLs
-> > belong to the BPF_EVENT when they are from the same thread.
+> BCM5325 and BCM5365 are part of a much older generation of switches which,
+> due to their limited number of ports and VLAN entries (up to 256) allowed
+> a single 64-bit register to hold a full ARL entry.
+> This requires a little bit of massaging when reading, writing and
+> converting ARL entries in both directions.
 > 
-> Hmmm. Is that documented and tested anywhere? Offhand it sounds like an
-> implementation detail that I wouldn't feel great about depending on -
-> certainly not without a strong guarantee that it wouldn't change.
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> ---
 
-Good point.  Maybe BPF folks have some idea?
+[snip]
 
-Anyway the current code generates them together in a function.
+>   static int b53_arl_op(struct b53_device *dev, int op, int port,
+>   		      const unsigned char *addr, u16 vid, bool is_valid)
+>   {
+> @@ -1795,14 +1834,18 @@ static int b53_arl_op(struct b53_device *dev, int op, int port,
+>   
+>   	/* Perform a read for the given MAC and VID */
+>   	b53_write48(dev, B53_ARLIO_PAGE, B53_MAC_ADDR_IDX, mac);
+> -	b53_write16(dev, B53_ARLIO_PAGE, B53_VLAN_ID_IDX, vid);
+> +	if (!is5325(dev))
+> +		b53_write16(dev, B53_ARLIO_PAGE, B53_VLAN_ID_IDX, vid);
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/events/core.c?h=v6.15#n9825
+I used the 5325M-DS113-RDS datasheet for this code initially but the 
+5325E-DS14-R datasheet shows that this register is defined. It's not 
+clear to me how to differentiate the two kinds of switches. The 5325M 
+would report itself as:
 
-> 
-> Can you say more about why the duplicated records concern you?
+0x00406330
 
-More data means more chance to lost something.  I don't expect this is
-gonna be a practical concern but in general we should pursue less data.
-
-Thanks,
-Namhyung
+in the integrated PHY PHYSID1/2 registers, whereas a 5325E would report 
+itself as 0x0143bc30. Maybe we can use that to key off the very first 
+generation 5325 switches?
+-- 
+Florian
 
