@@ -1,168 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73DF7AD23;
-	Tue,  3 Jun 2025 02:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D30A1FDD;
+	Tue,  3 Jun 2025 02:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748916883; cv=none; b=pu7GIV4Uh/gvkdE9nLukNAeR9oSeewmQqiZfMWAuP7cQBvULPC5WeVvxI2/lQwj2shmAxYVk1iDW6UiE/R4UvVxDLSB3tTl0c73tPhFqrTujsPiVQJyXbIx8Tvwjk5HbWnhaGHfD4dI5man3fo2vcy6PPlcLQHFvbPk/334Z2GI=
+	t=1748917220; cv=none; b=lKqCV600UEO8U7cx86TzHVJskds+B4xlLTvou9eV4yCkjTcvtjR6M1t63Of58kqlK+ZbswtG5AjPN8qEWZu26Y2xBL0GFSE2xP8TtjoKWeq6+DwRDCDmUDa9RHRckhOaAAtfWkFKHkHP3SGZfQbIg4pDmZdpPtqxSZ0lq5W8AJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748916883; c=relaxed/simple;
-	bh=y8oBFuwHhFlEhkjWTDjbf0m9eyGhP7r/lbU9v9hLVYo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D6XubYCCDsY1dCgt0OQ2lGkKzeG8X6Ro6gFyRToH3WKpVrQ2rkSEyLWHx1o8aqr3DSJoIvzjCk9ykpvwUUFw20fpe0Nn9zzsyNcTm82oFbVoeH9NaWRzadeVLzZODln5JGCRGBnO2yilDC5JwTDXhM5/fvUel+PQgZz7Ieyalmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ku2EBJ2t; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748917220; c=relaxed/simple;
+	bh=sb8aMKwOFN1OkMEx5IARyjkiaAla6JcgyM2TamJ4yLY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=BPTx3kfcg5FyAukyqicTeaAyZ+BsGHRJwNfHnCGrdSSp8DJza395C0QIRb5iMNB+NNpEwgr5Te8gubYdXcbEOVy+SyZHkWS+Ki0CgurPK2QCH3SWr+MTN18UMyD68Olp6lDLw2eCYohlV6KleeDsWCN6IzTY7jgnSLN9yWxurmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=a4lvuXlJ; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ku2EBJ2t"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748916881; x=1780452881;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=y8oBFuwHhFlEhkjWTDjbf0m9eyGhP7r/lbU9v9hLVYo=;
-  b=Ku2EBJ2t+eUiQ+hLxcUU/pJwJGQfAXD8jjQvDZXpSmlI6PPQgucvw6q+
-   ckVkYLKuvMWgR618h/1rx2wfMeDsjkXz4gcWTxOHOrLFSWuEAwVr+m5ZP
-   xBRSzG3MlnU/G3SVM79KRBwkXtKHBmjBgHcTQn+JEYh/64Jzc0PU/LIKV
-   Tcy6d9X1q8as6w5ZHqE2xLg6aSD6XOmgbfsfh4Ke9S/DoGvLLFPonYyw0
-   f/VjAQCAVfqOFdpMqGDvro1TNWyfJ3yhvD/MjtM2AwhpUGgsYob3pKZrl
-   QL6S9Vw56R5QM1x2He2+BJyvtLKoJFt7eoWz6k7Py+9hjG8fAIWL8zt55
-   Q==;
-X-CSE-ConnectionGUID: 34CP8NXDTUaRKMj+YcN+lA==
-X-CSE-MsgGUID: PK3y0+7ERMiq+ZbCThkauw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="50806111"
-X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
-   d="scan'208";a="50806111"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 19:14:41 -0700
-X-CSE-ConnectionGUID: FU2B+paLSUOKFVS1BgBgXw==
-X-CSE-MsgGUID: 47HY3mYyRpaxlEllrdS67Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
-   d="scan'208";a="149869266"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.144]) ([10.124.245.144])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 19:14:36 -0700
-Message-ID: <15e4f7a6-7c68-4d89-8813-cd142eb4c416@linux.intel.com>
-Date: Tue, 3 Jun 2025 10:14:35 +0800
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="a4lvuXlJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1748917213;
+	bh=tUcgjga5jsScMn0vU8PJPV2zExaHfj0+KVEKwI4ZLUY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=a4lvuXlJ4ndF7oaTWYIFQmNf3kbItFMrRmVXq23FyJY7j0XPe3/b1Zy2APaJ5kftN
+	 Lb5Tp2s/zomHqoZ8u5TfQLEc5IdgVq2KdN3hQGasxOwkJYeiGtG8VJX77oxS6hfJM6
+	 k4A9YIabM46px16ZaInR3m6Uxc9jsxhjt1jTBYsk89b3iGW0cjoWPcq49OeYuh6ANw
+	 XqnS3hpBK+Ypz/OTCcmH1HE+F/iQ4mnZD5UE27ADPcMNLhs9Tc/jhQcr6t92ARgYg0
+	 vW9r180lYbmna8Ap+qtN04JeRM8sbPsBKiVBBvV3qakt6lxrWLq9x3WCISPU2zOrbv
+	 ZkkVW8VqAf/cg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bBDvK0D98z4x3J;
+	Tue,  3 Jun 2025 12:20:13 +1000 (AEST)
+Date: Tue, 3 Jun 2025 12:20:12 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Andrea della Porta <andrea.porta@suse.com>, Florian Fainelli
+ <florian.fainelli@broadcom.com>, "Jiri Slaby (SUSE)"
+ <jirislaby@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Linux Kernel
+ Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the broadcom tree
+Message-ID: <20250603122012.4ff9c5ea@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] perf/x86/intel: Fix IA32_PMC_x_CFG_B MSRs access
- error
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
- Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250529080236.2552247-1-dapeng1.mi@linux.intel.com>
- <aDq3S9lwO1YadCKT@gmail.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <aDq3S9lwO1YadCKT@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/jXjk9JPC9VFA1GvEu3Xmu0g";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_/jXjk9JPC9VFA1GvEu3Xmu0g
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 5/31/2025 4:01 PM, Ingo Molnar wrote:
-> * Dapeng Mi <dapeng1.mi@linux.intel.com> wrote:
->
->> When running perf_fuzzer on PTL, sometimes the below "unchecked MSR
->>  access error" is seen when accessing IA32_PMC_x_CFG_B MSRs.
->>
->> [   55.611268] unchecked MSR access error: WRMSR to 0x1986 (tried to write 0x0000000200000001) at rIP: 0xffffffffac564b28 (native_write_msr+0x8/0x30)
->> [   55.611280] Call Trace:
->> [   55.611282]  <TASK>
->> [   55.611284]  ? intel_pmu_config_acr+0x87/0x160
->> [   55.611289]  intel_pmu_enable_acr+0x6d/0x80
->> [   55.611291]  intel_pmu_enable_event+0xce/0x460
->> [   55.611293]  x86_pmu_start+0x78/0xb0
->> [   55.611297]  x86_pmu_enable+0x218/0x3a0
->> [   55.611300]  ? x86_pmu_enable+0x121/0x3a0
->> [   55.611302]  perf_pmu_enable+0x40/0x50
->> [   55.611307]  ctx_resched+0x19d/0x220
->> [   55.611309]  __perf_install_in_context+0x284/0x2f0
->> [   55.611311]  ? __pfx_remote_function+0x10/0x10
->> [   55.611314]  remote_function+0x52/0x70
->> [   55.611317]  ? __pfx_remote_function+0x10/0x10
->> [   55.611319]  generic_exec_single+0x84/0x150
->> [   55.611323]  smp_call_function_single+0xc5/0x1a0
->> [   55.611326]  ? __pfx_remote_function+0x10/0x10
->> [   55.611329]  perf_install_in_context+0xd1/0x1e0
->> [   55.611331]  ? __pfx___perf_install_in_context+0x10/0x10
->> [   55.611333]  __do_sys_perf_event_open+0xa76/0x1040
->> [   55.611336]  __x64_sys_perf_event_open+0x26/0x30
->> [   55.611337]  x64_sys_call+0x1d8e/0x20c0
->> [   55.611339]  do_syscall_64+0x4f/0x120
->> [   55.611343]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
->>
->> On PTL, GP counter 0 and 1 doesn't support auto counter reload feature,
->> thus it would trigger a #GP when trying to write 1 on bit 0 of CFG_B MSR
->> which requires to enable auto counter reload on GP counter 0.
->>
->> The root cause of causing this issue is the check for auto counter
->> reload (ACR) counter mask from user space is incorrect in
->> intel_pmu_acr_late_setup() helper. It leads to an invalid ACR counter
->> mask from user space could be set into hw.config1 and then written into
->> CFG_B MSRs and trigger the MSR access warning.
->>
->> e.g., User may create a perf event with ACR counter mask (config2=0xcb),
->> and there is only 1 event created, so "cpuc->n_events" is 1.
->>
->> The correct check condition should be "i + idx >= cpuc->n_events"
->> instead of "i + idx > cpuc->n_events" (it looks a typo). Otherwise,
->> the counter mask would traverse twice and an invalid "cpuc->assign[1]"
->> bit (bit 0) is set into hw.config1 and cause MSR accessing error.
->>
->> Besides, also check if the ACR counter mask corresponding events are
->> ACR events. If not, filter out these counter mask. If a event is not a
->> ACR event, it could be scheduled to an HW counter which doesn't support
->> ACR. It's invalid to add their counter index in ACR counter mask.
->>
->> Furthermore, remove the WARN_ON_ONCE() since it's easily triggered as
->> user could set any invalid ACR counter mask and the warning message
->> could mislead users.
->>
->> Fixes: ec980e4facef ("perf/x86/intel: Support auto counter reload")
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>  arch/x86/events/intel/core.c | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->> index 3a319cf6d364..8d046b1a237e 100644
->> --- a/arch/x86/events/intel/core.c
->> +++ b/arch/x86/events/intel/core.c
->> @@ -2994,7 +2994,8 @@ static void intel_pmu_acr_late_setup(struct cpu_hw_events *cpuc)
->>  			if (event->group_leader != leader->group_leader)
->>  				break;
->>  			for_each_set_bit(idx, (unsigned long *)&event->attr.config2, X86_PMC_IDX_MAX) {
->> -				if (WARN_ON_ONCE(i + idx > cpuc->n_events))
->> +				if (i + idx >= cpuc->n_events ||
->> +				    !is_acr_event_group(cpuc->event_list[i + idx]))
->>  					return;
-> Is this a normal condition?
->
->  - If it's normal then the 'return' is destructive, isn't it? Shouldn't 
->    it be a 'break', if this condition is legitimate?
->
->  - If it's not normal, then the WARN_ON_ONCE() was justified, right?
+Hi all,
 
-It's not normal.Strictly speaking, it's an invalid user configuration. It
-looks not reasonable to trigger a kernel space warning for an invalid user
-space configuration. It would mislead users and let users think there is
-something wrong in kernel. That's why to remove the WARN_ON_ONCE(). Thanks.
+After merging the broadcom tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
+drivers/pinctrl/pinctrl-rp1.c: In function 'rp1_gpio_irq_handler':
+drivers/pinctrl/pinctrl-rp1.c:385:36: error: implicit declaration of functi=
+on 'irq_linear_revmap' [-Wimplicit-function-declaration]
+  385 |                 generic_handle_irq(irq_linear_revmap(pc->gpio_chip.=
+irq.domain,
+      |                                    ^~~~~~~~~~~~~~~~~
 
->
-> Thanks,
->
-> 	Ingo
+Caused by commit
+
+  f4b3c1c25d39 ("pinctrl: rp1: Implement RaspberryPi RP1 gpio support")
+
+interatcing with commit
+
+  14ebb11ba895 ("irqdomain: Drop irq_linear_revmap()")
+
+from Linus' tree.
+
+I have applied the following merge fix patch.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Tue, 3 Jun 2025 12:07:49 +1000
+Subject: [PATCH] fix up for "pinctrl: rp1: Implement RaspberryPi RP1 gpio
+ support"
+
+interacting with commit
+
+  14ebb11ba895 ("irqdomain: Drop irq_linear_revmap()")
+
+from Linus' tree.
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/pinctrl/pinctrl-rp1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/pinctrl-rp1.c b/drivers/pinctrl/pinctrl-rp1.c
+index 7ff2db0320ba..8c70ea0fc160 100644
+--- a/drivers/pinctrl/pinctrl-rp1.c
++++ b/drivers/pinctrl/pinctrl-rp1.c
+@@ -382,7 +382,7 @@ static void rp1_gpio_irq_handler(struct irq_desc *desc)
+ 		struct rp1_pin_info *pin =3D rp1_get_pin(chip, bit_pos);
+=20
+ 		regmap_field_write(pin->gpio[RP1_GPIO_CTRL_IRQRESET_SET], 1);
+-		generic_handle_irq(irq_linear_revmap(pc->gpio_chip.irq.domain,
++		generic_handle_irq(irq_find_mapping(pc->gpio_chip.irq.domain,
+ 						     bank->gpio_offset + bit_pos));
+ 	}
+=20
+--=20
+2.47.2
+
+--=20
+Cheers,
+Stephen Rothwell
+
+P.S. did you get the message about "no new stuff in -next until the end
+of the merge window"?
+
+--Sig_/jXjk9JPC9VFA1GvEu3Xmu0g
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg+W9wACgkQAVBC80lX
+0GwQZQf+NDccNqoax++cB5De6KL58VUaF2Unij1oj4r6LGiWt1xD/bJ4Rd/Vko5F
+QHq20LzbxuIFLISVC0jdZ7lHr6P/qjvhykGYKzi82+58eHi5XV4WxTbg3J0m214w
+E2cqdIWK2JXA+csqz0gJ3/xlB05QuSDzkgY7zXYuUij+0XNz9i7ZlLwRdt/Kx8nJ
+ZxATvC/VlwNmVb4K9nILQXR+eFrblgdFrLTlIo2w/o0Sw8i+wEiNM2l133aVojq4
+uxs3x2N6tOwHsn//uRSrH5FFeYBE2livjhj2Th3PbAEBJB2wgmUwWVmfFHet25Bc
+PlAcZGT18oZtcj+CkTFwg90+1uvwGg==
+=MJR7
+-----END PGP SIGNATURE-----
+
+--Sig_/jXjk9JPC9VFA1GvEu3Xmu0g--
