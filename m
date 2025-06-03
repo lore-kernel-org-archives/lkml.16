@@ -1,153 +1,137 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0057C26290;
-	Tue,  3 Jun 2025 13:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74BB6238D49
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 13:50:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748958599; cv=none; b=AldPn/G4kEFGI+TaT/Os3kAKMv/T9NTX0GlWaRUMiEdxmJ+yunFAu+3IbgPUsLeZqCVqh8EZahZ/Ws1orvorV9v8vmaowzDVBfy4P3nq9HnqrV1EnZuJ3+/4hrkHIrhLihFNJyxp3TeJVXsNzT2+dcNs3ES3kbjgbZS3duDiN5Q=
+	t=1748958623; cv=none; b=Hpfr/66JM49gqOLSO2CGX6lKs0CuGMPdDDDREumEPBCSlExF1CgH1iY3BkVXP8QY75Hxd2/TEKww1U0qIu5YlbS/ZSX3bc0TvJ2HdPW/Oz/FM83WLFsI1WP0QxWQcN87uR7v1oif8YhWNjIl4hL+cEYQ6SGnemLN4JICBoJrJxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748958599; c=relaxed/simple;
-	bh=0qft8roO3BhMkBJROqNCAOJFha8+AZ4A+sT37xulpWM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=rZAEbKiYNgU1osYyK+bqfP8A66g2oyfOE/rCtskMLZPWyUoKYR1gpebuaZVgnh/I7Ek9tELjZMlZ7pEUDSAwVYog1RRz3lq9MhEQTn0117bFpPxEFnfl3eDRtUKjMBjx1nXgzHPbyllB9eJBdQXklM6mZ7HS8pbu327OgqSNhRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=CZ3pwL5t reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1748958623; c=relaxed/simple;
+	bh=1doqpPZBZdBJM8o+kHQlB7CeX2bycDJ6ijoRgFE2Vjg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cWUmAEh9fL/ovtfzIDBotjtbLJ+SIgkVW8ZeWHqEB1Itrcn7JyVySrgdgVzQANApqN9fcFEMcPWj5VCBccsNwvaooFz8jSg7QXQNoDUx/reiK/0KnWHB2Yq6hNomuaMJkJL1FN0q5MNMYoHoCRWA0oA9OwSBwfiWEnVzOHOOPJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=kNIl6V3J; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="CZ3pwL5t"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=aLh7SmPBkBQLWmbv7psrQymqaKUMU+aDUy+SYzEszUw=; b=C
-	Z3pwL5t9BTQIbkSmh2gZz3TQtF/iohvi7EMQ4X8Ygk4rzgNZyTiF/FpAX5qfqlTe
-	ECSArZv0kWN/XSW1uCqFkALp1anIPWy9IqSWGSVg7rKs5SROyvcUVJcuYjJei/e7
-	PZXyzKvOtH+GDdShCWh3bi9DJBoVKX4vSzJRe87nq0=
-Received: from 00107082$163.com ( [111.35.189.95] ) by
- ajax-webmail-wmsvr-40-103 (Coremail) ; Tue, 3 Jun 2025 21:49:17 +0800 (CST)
-Date: Tue, 3 Jun 2025 21:49:17 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Peter Zijlstra" <peterz@infradead.org>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mingo@kernel.org,
-	yeoreum.yun@arm.com, leo.yan@arm.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf/core: restore __perf_remove_from_context when
- DETACH_EXIT not set
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <6487969b.b907.19735e42e05.Coremail.00107082@163.com>
-References: <20250603032651.3988-1-00107082@163.com>
- <20250603083304.34132-1-00107082@163.com>
- <20250603091352.GJ21197@noisy.programming.kicks-ass.net>
- <2633d43d.ae30.1973564f5e5.Coremail.00107082@163.com>
- <20250603125056.GI39944@noisy.programming.kicks-ass.net>
- <20250603125440.GA35970@noisy.programming.kicks-ass.net>
- <6487969b.b907.19735e42e05.Coremail.00107082@163.com>
-X-NTES-SC: AL_Qu2fCvWet00u4SGdY+kXn0oTju85XMCzuv8j3YJeN500tSTX4wA4cW9GFHDV986uDAqhoAiVSRNw8OpieZNiVY4BISCOyU0xATAzW53hFcm6
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="kNIl6V3J"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4a43afb04a7so29710211cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 06:50:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1748958619; x=1749563419; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=YkymsPnXdQBda6JrJEhL1GWpprQuWSyxObGqKIJXWus=;
+        b=kNIl6V3JpKp6i8E1J3rartq8Eb1PZ0J+L6CKvgEXKdMxoKIiAfmyApPk6Y4TMiZb1x
+         It/fmYK+k1cXfB8qG9pGwNRJjb4gPaxbUch+Mm8CIWuz7JVInJmWeoYZE3nZDBxao0md
+         udDjoJz8SeH9bHFbetsiOzOJhUqdkwNzpkDkG1GV1/K0iEliFCR7/7nYpNCdgUlejOPG
+         4xxdlClipsKftsjPceD+0xfW+xGFK49r1r5C25TYjU4CIh4b+FvbGPnpBsK8Q0mYwzCX
+         xhN9Jb3u/lp1E5JmRLMQUZ5KmpVwImFt3N02p34b/K1tafFpvi/pGJeK3f9QTwtxu0N4
+         YlnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748958619; x=1749563419;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YkymsPnXdQBda6JrJEhL1GWpprQuWSyxObGqKIJXWus=;
+        b=hNZDCcReX7w4Z6ZZtmy872/DF+scz66vmWn8wUuqO3VMayMx9qj4IQMH1PsInZRwZg
+         0wUS3DRDI1OACJ1fJafcHphPgrTzL039kvZZbkYjob1pB5xedR89Zd1bqPN4sY97JZEq
+         5wdtmkThR/xH3r/l+ofqVV0+b54UZZ9f7F542OsOwci9INV43+CbnrefIB8+J7GPejpa
+         Z9+WEBvM1DeUQOEb5/810y+0QDS5eiJv3O3xRV0cKfJfQZHsFZsIBzpr6ct2+NNXqNLQ
+         1jx9fkk2KAtIseBrNGEiuw/VDW8MNWrSIA6h0b73j90j8/8Mt9XRK3WJJqDCwzljVzHE
+         JCmg==
+X-Forwarded-Encrypted: i=1; AJvYcCX6Tn7E4lAgX+oSW+t6CsR7LkKnzgmbqLaP/yA6WRizgPLzPXqHVv9footZXKtLgR+BS68oIRo7OMalQu0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0XihKPI8uzzZWcQcQOwulhpHcGDfOfde3bel2gy3IIGaKRvZV
+	CIqhreJaXFZzGvWe0xqKXFhnVniD4imDndYAfOvIzbVZ6KiBl8n/ZUXY/0700CJR1QdgHCWLNcV
+	mRABt
+X-Gm-Gg: ASbGncvYveI86VPfcWL50kRJK+SO7d96f0dAX60cyDLAAQe6gtWBleo9YcHOGPoMQhf
+	r4DLSDb7XdJGrwWzYmyNMPv+iMspvIMynQf61qtBOdXvH8sNM5dT0ww0W3ZQpC8pNbWTF4opi0J
+	H6fiV5L6sZI4EW94B6k+OifOXiUJWBRrP4giu4I0YKD8JhUmXUpNyplYPvgQXTYUqqf5ynVAOvT
+	WcfnmMNlq6t0GHtRQcfBDDSV576CfJG1mKOkP0ayK0oQpgPTpCSz4aYH0+xdjglIMyehWrN8f20
+	D/jLA+ZFbiV4hkYpUCa78IVTO5bHw3OreLGkQg51gIU0wXSDs0g66AWYaAFuxIUHPo3cD9bTrJO
+	TSq/pPDfSrdHQ94qqw6vZeduuwwQ=
+X-Google-Smtp-Source: AGHT+IFrQ3mNOrW6/ZBr5BKf2weoO3iOKbQMChhnKb6iKzSLwy4jyxYkXr8u6rUugOKC/0R4gbcrnw==
+X-Received: by 2002:a05:622a:4d96:b0:4a4:3171:b942 with SMTP id d75a77b69052e-4a4aed86ba3mr229299171cf.39.1748958619327;
+        Tue, 03 Jun 2025 06:50:19 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a4358eef6csm75933171cf.48.2025.06.03.06.50.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 06:50:18 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uMS1y-00000001hCj-1MTz;
+	Tue, 03 Jun 2025 10:50:18 -0300
+Date: Tue, 3 Jun 2025 10:50:18 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Alistair Popple <apopple@nvidia.com>
+Cc: linux-mm@kvack.org, gerald.schaefer@linux.ibm.com,
+	dan.j.williams@intel.com, willy@infradead.org, david@redhat.com,
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+	linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
+	zhang.lyra@gmail.com, debug@rivosinc.com, bjorn@kernel.org,
+	balbirs@nvidia.com, lorenzo.stoakes@oracle.com,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	John@groves.net, Will Deacon <will@kernel.org>,
+	=?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>
+Subject: Re: [PATCH 10/12] mm: Remove devmap related functions and page table
+ bits
+Message-ID: <20250603135018.GK386142@ziepe.ca>
+References: <cover.541c2702181b7461b84f1a6967a3f0e823023fcc.1748500293.git-series.apopple@nvidia.com>
+ <32209333cfdddffc76f18981f41a989b14780956.1748500293.git-series.apopple@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <b3624f4.bde4.197360db3ea.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:ZygvCgD3H+Je_T5o+yETAA--.13827W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkAZhqmg+9NnRwgADs2
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <32209333cfdddffc76f18981f41a989b14780956.1748500293.git-series.apopple@nvidia.com>
 
-CgoKQXQgMjAyNS0wNi0wMyAyMTowMzo1NSwgIkRhdmlkIFdhbmciIDwwMDEwNzA4MkAxNjMuY29t
-PiB3cm90ZToKPgo+QXQgMjAyNS0wNi0wMyAyMDo1NDo0MCwgIlBldGVyIFppamxzdHJhIiA8cGV0
-ZXJ6QGluZnJhZGVhZC5vcmc+IHdyb3RlOgo+Pk9uIFR1ZSwgSnVuIDAzLCAyMDI1IGF0IDAyOjUw
-OjU2UE0gKzAyMDAsIFBldGVyIFppamxzdHJhIHdyb3RlOgo+Pj4gT24gVHVlLCBKdW4gMDMsIDIw
-MjUgYXQgMDY6NDQ6NThQTSArMDgwMCwgRGF2aWQgV2FuZyB3cm90ZToKPj4+IAo+Pj4gCj4+PiA+
-IChBcyB5ZW9yZXVtLnl1bkBhcm0uY29tIHBvaW50ZWQgb3V0LCAgdGhlIGNoYW5nZSBpbiBwZXJm
-X3JlbW92ZV9mcm9tX2NvbnRleHQoKSBtYWRlCj4+PiA+IHBlcmZfZXZlbnRfc2V0X3N0YXRlKCkg
-aGFwcGVuZWQgYmVmb3JlIGxpc3RfZGVsX2V2ZW50KCksIHJlc3VsdGluZyBpbiBwZXJmX2Nncm91
-cF9ldmVudF9kaXNhYmxlKCkKPj4+ID4gbm90IGNhbGxlZC4pCj4+PiAKPj4+IEFhaCwgZCcwaC4g
-TGV0IG1lIHNlZSB3aGF0IHdlIHNob3VsZCBkbyB0aGVyZS4KPj4KPj5Eb2VzIHRoaXMgaGVscD8g
-VGhpcyB3YXkgZXZlbnRfc2NoZWRfb3V0KCkgd2lsbCBjYWxsCj4+cGVyZl9jZ3JvdXBfZXZlbnRf
-ZGlzYWJsZSgpLgo+Pgo+Pgo+PmRpZmYgLS1naXQgYS9rZXJuZWwvZXZlbnRzL2NvcmUuYyBiL2tl
-cm5lbC9ldmVudHMvY29yZS5jCj4+aW5kZXggZjM0Yzk5ZjhjZThmLi5hZGJiMDM3MjgyNWYgMTAw
-NjQ0Cj4+LS0tIGEva2VybmVsL2V2ZW50cy9jb3JlLmMKPj4rKysgYi9rZXJuZWwvZXZlbnRzL2Nv
-cmUuYwo+PkBAIC0yNDk0LDkgKzI0OTQsOSBAQCBfX3BlcmZfcmVtb3ZlX2Zyb21fY29udGV4dChz
-dHJ1Y3QgcGVyZl9ldmVudCAqZXZlbnQsCj4+IAlpZiAoZmxhZ3MgJiBERVRBQ0hfUkVWT0tFKQo+
-PiAJCXN0YXRlID0gUEVSRl9FVkVOVF9TVEFURV9SRVZPS0VEOwo+PiAJaWYgKGZsYWdzICYgREVU
-QUNIX0RFQUQpIHsKPj4tCQlldmVudC0+cGVuZGluZ19kaXNhYmxlID0gMTsKPj4gCQlzdGF0ZSA9
-IFBFUkZfRVZFTlRfU1RBVEVfREVBRDsKPj4gCX0KPj4rCWV2ZW50LT5wZW5kaW5nX2Rpc2FibGUg
-PSAxOwo+PiAJZXZlbnRfc2NoZWRfb3V0KGV2ZW50LCBjdHgpOwo+PiAJcGVyZl9ldmVudF9zZXRf
-c3RhdGUoZXZlbnQsIG1pbihldmVudC0+c3RhdGUsIHN0YXRlKSk7Cj4+IAo+Cj5PaywgSSB3aWxs
-IGdpdmUgaXQgYSB0cnkgYW5kIHVwZGF0ZSBsYXRlci4KClNhZGx5IG5vLCBjYXVnaHQgYSBrZXJu
-ZWwgcGFuaWMgYXQgdGhlIGZpcnN0IHJvdW5kLi4uLgoKSSB0cmllZCB0byB1c2UgcGVyZiB0byBy
-ZXByb2R1Y2UgdGhpcywgYnV0IG5vIGx1Y2sgc28gZmFyLiBGb2xsb3dpbmcgaXMgdGhlIGNvZGUg
-SSB1c2VkIHRvIHJlcHJvZHVjZS4KCihUaGUgY29kZSBpcyBzaWxseSwgYnV0IHZhbGlkIEkgdGhp
-bmsuLi4uKQpUbyByZXByb2R1Y2UsIEkgdXNlIGZvbGxvd2luZyBzdGVwczoKT3BlbiB0d28gdGVy
-bWluYWxzOgoxLiBJbiB0ZXJtaW5hbCBBCm1rZGlyIC9zeXMvZnMvY2dyb3VwL215dGVzdAplY2hv
-ICQkID4gL3N5cy9mcy9jZ3JvdXAvbXl0ZXN0L2Nncm91cC5wcm9jcwoyLiBJbiB0ZXJtaW5hbCBC
-CltnKysgZm9sbG93aW5nIGNvZGUgaWYgbm90IGRvbmUgeWV0IGcrKyAtbyBwcm9maWxlciB4eC5j
-cHBdCi4vcHJvZmlsZXIgbXl0ZXN0CjMuIERvIHNvbWV0aGluZyBpbiB0ZXJtaW5hbCBBLCB1c3Vh
-bGx5IEkgd291bGQgcnVuIGZvbGxvd2luZyBjb21tYW5kIHVuZGVyIGtlcm5lbCBzb3VyY2UgdHJl
-ZQpmb3IgaSBpbiB7MS4uMjAwfTsgZG8gZmluZCAuLyAtbmFtZSBub3R0b2JlZm91bmQgPiAvZGV2
-L251bGw7IGRvbmUKNC4gd2FpdCBmb3IgNX4xMG1pbnRlcwo1LiBJbiB0ZXJtaW5hbCBCLCBjdHJs
-LUMgc3RvcCB0aGUgcHJvZmlsZXIKNi4gcmVib290CihPbiBteSBzeXN0ZW0sIHdpdGggNi4xNSBh
-dCBtb3N0IDQgcm91bmRzIG9mIHRlc3Qgd291bGQgY2F0Y2ggYSBrZXJuZWwgcGFuaWMuKQoKSSBj
-b3VsZCBub3QgcmVwcm9kdWNlIGl0IHdpdGggbXkgS1ZNLCBtYXliZSBJIG5lZWQgbW9yZSB0cmlh
-bHMuCk5vdCBzdXJlIHdoZXRoZXIgYW55b25lIGVsc2UgY291bGQgcmVwcm9kdWNlIHRoaXMuIAoK
-Ci0tLQojaW5jbHVkZSA8c3RkbGliLmg+CiNpbmNsdWRlIDxzdGRpby5oPgojaW5jbHVkZSA8dW5p
-c3RkLmg+CiNpbmNsdWRlIDxzdHJpbmcuaD4KI2luY2x1ZGUgPHN5cy9pb2N0bC5oPgojaW5jbHVk
-ZSA8bGludXgvcGVyZl9ldmVudC5oPgojaW5jbHVkZSA8YXNtL3VuaXN0ZC5oPgojaW5jbHVkZSA8
-c3lzL21tYW4uaD4KI2luY2x1ZGUgPHN5cy9zdGF0Lmg+CiNpbmNsdWRlIDxwb2xsLmg+CiNpbmNs
-dWRlIDxzaWduYWwuaD4KI2luY2x1ZGUgPGZjbnRsLmg+CiNpbmNsdWRlIDxlbGYuaD4KI2luY2x1
-ZGUgPHN0cmluZy5oPgoKI2luY2x1ZGUgPHZlY3Rvcj4KI2luY2x1ZGUgPHN0cmluZz4KI2luY2x1
-ZGUgPG1hcD4KI2luY2x1ZGUgPHVub3JkZXJlZF9tYXA+CiNpbmNsdWRlIDx1bm9yZGVyZWRfc2V0
-PgojaW5jbHVkZSA8YWxnb3JpdGhtPgp1c2luZyBuYW1lc3BhY2Ugc3RkOwoKCiNkZWZpbmUgTUFY
-TiAgNTEyCiNkZWZpbmUgTUFYQ1BVIDEyOAojZGVmaW5lIGVycm9yKG1zZykgZG8geyBwZXJyb3Io
-bXNnKTsgZXhpdCgxKTsgfSB3aGlsZSgwKQoKc3RhdGljIGxvbmcgcGVyZl9ldmVudF9vcGVuKHN0
-cnVjdCBwZXJmX2V2ZW50X2F0dHIgKnBlcmZfZXZlbnQsCgkJcGlkX3QgcGlkLCBpbnQgY3B1LCBp
-bnQgZ3JvdXBfZmQsIHVuc2lnbmVkIGxvbmcgZmxhZ3MpIHsKICAgIHJldHVybiBzeXNjYWxsKF9f
-TlJfcGVyZl9ldmVudF9vcGVuLCBwZXJmX2V2ZW50LAoJCSAgICBwaWQsIGNwdSwgZ3JvdXBfZmQs
-IGZsYWdzKTsKfQoKc3RydWN0IHBvbGxmZCBwb2xsc1tNQVhDUFVdOwovLyByZXMgZm9yIGNsZWFu
-dXAKc3RhdGljIGxvbmcgbG9uZyBwc2l6ZTsKbWFwPGludCwgcGFpcjx2b2lkKiwgbG9uZyBsb25n
-Pj4gcmVzOwpzdGF0aWMgbG9uZyBsb25nIGV2ZW50YyA9IDA7Cgp2b2lkIGludF9leGl0KGludCBf
-KSB7CiAgICBmb3IgKGF1dG8geDogcmVzKSB7CiAgICAgICAgYXV0byB5ID0geC5zZWNvbmQ7CiAg
-ICAgICAgdm9pZCogYWRkciA9IHkuZmlyc3Q7CiAgICAgICAgbXVubWFwKGFkZHIsICgxK01BWE4p
-KnBzaXplKTsKICAgICAgICBjbG9zZSh4LmZpcnN0KTsKICAgIH0KICAgIHJlcy5jbGVhcigpOwog
-ICAgcHJpbnRmKCJ0b3RhbCAlbGxkIGV2ZW50cyBjb2xsZWN0XG4iLCBldmVudGMpOwogICAgZXhp
-dCgwKTsKfQppbnQgcHJvY2Vzc19ldmVudChjaGFyICpiYXNlLCB1bnNpZ25lZCBsb25nIGxvbmcg
-c2l6ZSwgdW5zaWduZWQgbG9uZyBsb25nIG9mZnNldCkgewoJc3RydWN0IHBlcmZfZXZlbnRfaGVh
-ZGVyKiBwID0gTlVMTDsKCW9mZnNldCU9c2l6ZTsKCXAgPSAoc3RydWN0IHBlcmZfZXZlbnRfaGVh
-ZGVyKikgKGJhc2Urb2Zmc2V0KTsKCWV2ZW50YysrOwoJcmV0dXJuIHAtPnNpemU7Cn0KCmludCBt
-YWluKGludCBhcmdjLCBjaGFyICphcmd2W10pIHsKCWlmIChhcmdjPDIpIHsgcHJpbnRmKCJOZWVk
-IGNncm91cCBuYW1lXG4iKTsgcmV0dXJuIDE7IH0KCWNoYXIgeGJbMjU2XTsKCXNucHJpbnRmKHhi
-LCBzaXplb2YoeGIpLCAiL3N5cy9mcy9jZ3JvdXAvJXMiLCBhcmd2WzFdKTsKCWludCBjZ3JvdXBf
-aWQgPSBvcGVuKHhiLCBPX0NMT0VYRUMpOwoJaWYgKGNncm91cF9pZCA8PSAwKSBlcnJvcigiZXJy
-b3Igb3BlbiBjZ3JvdXAgZGlyIik7CglpbnQgY3B1X251bSA9IHN5c2NvbmYoX1NDX05QUk9DRVNT
-T1JTX09OTE4pOwoJcHNpemUgPSBzeXNjb25mKF9TQ19QQUdFX1NJWkUpOyAvLyBnZXRwYWdlc2l6
-ZSgpOwoJc3RydWN0IHBlcmZfZXZlbnRfYXR0ciBhdHRyOwoJbWVtc2V0KCZhdHRyLCAwLCBzaXpl
-b2YoYXR0cikpOwoJYXR0ci50eXBlID0gUEVSRl9UWVBFX1NPRlRXQVJFOwoJYXR0ci5zaXplID0g
-c2l6ZW9mKGF0dHIpOwoJYXR0ci5jb25maWcgPSBQRVJGX0NPVU5UX1NXX0NQVV9DTE9DSzsKCWF0
-dHIuc2FtcGxlX2ZyZXEgPSA5OTk5Oy8vNzc3OyAvLyBhZGp1c3QgaXQKCWF0dHIuZnJlcSA9IDE7
-CglhdHRyLndha2V1cF9ldmVudHMgPSAxNjsKCWF0dHIuc2FtcGxlX3R5cGUgPSBQRVJGX1NBTVBM
-RV9DQUxMQ0hBSU47CglhdHRyLnNhbXBsZV9tYXhfc3RhY2sgPSAzMjsKCWF0dHIuZXhjbHVkZV9j
-YWxsY2hhaW5fdXNlciA9IDE7CgkvLyBzdGFydCBwZXJmIGV2ZW50CglpbnQgaSwgaywgZmQ7Cgl2
-b2lkKiBhZGRyOwoJZm9yIChpPTAsIGs9MDsgaTxjcHVfbnVtJiZpPE1BWENQVTsgaSsrKSB7CgkJ
-cHJpbnRmKCJhdHRhY2hpbmcgY3B1ICVkXG4iLCBpKTsKCQlmZCA9IHBlcmZfZXZlbnRfb3Blbigm
-YXR0ciwgY2dyb3VwX2lkLCBpLCAtMSwgUEVSRl9GTEFHX0ZEX0NMT0VYRUN8UEVSRl9GTEFHX1BJ
-RF9DR1JPVVApOwoJCWlmIChmZDwwKSBlcnJvcigiZmFpbCB0byBvcGVuIHBlcmYgZXZlbnQiKTsK
-CQlhZGRyID0gbW1hcChOVUxMLCAoMStNQVhOKSpwc2l6ZSwgUFJPVF9SRUFELCBNQVBfU0hBUkVE
-LCBmZCwgMCk7CgkJaWYgKGFkZHIgPT0gTUFQX0ZBSUxFRCkgZXJyb3IoIm1tYXAgZmFpbGVkIik7
-CgkJcmVzW2ZkXSA9IHthZGRyLCAwfTsKCQlwb2xsc1trXS5mZCA9IGZkOwoJCXBvbGxzW2tdLmV2
-ZW50cyA9IFBPTExJTjsKCQlwb2xsc1trXS5yZXZlbnRzID0gMDsKCQlrKys7Cgl9CglzaWduYWwo
-U0lHSU5ULCBpbnRfZXhpdCk7CglzaWduYWwoU0lHVEVSTSwgaW50X2V4aXQpOwoKCXVuc2lnbmVk
-IGxvbmcgbG9uZyBoZWFkOwoJaW50IGV2ZW50X3NpemU7CglzdHJ1Y3QgcGVyZl9ldmVudF9tbWFw
-X3BhZ2UgKm1wOwoJd2hpbGUgKHBvbGwocG9sbHMsIGssIC0xKT4wKSB7CgkJZm9yIChpPTA7IGk8
-azsgaSsrKSB7CgkJCWlmICgocG9sbHNbaV0ucmV2ZW50cyZQT0xMSU4pPT0wKSBjb250aW51ZTsK
-CQkJZmQgPSBwb2xsc1tpXS5mZDsKCQkJYWRkciA9IHJlc1tmZF0uZmlyc3Q7CgkJCW1wID0gKHN0
-cnVjdCBwZXJmX2V2ZW50X21tYXBfcGFnZSAqKWFkZHI7CgkJCWhlYWQgPSByZXNbZmRdLnNlY29u
-ZDsKCQkJaW9jdGwoZmQsIFBFUkZfRVZFTlRfSU9DX1BBVVNFX09VVFBVVCwgMSk7CgkJCWlmICho
-ZWFkPm1wLT5kYXRhX2hlYWQpIGhlYWQ9bXAtPmRhdGFfaGVhZDsKCQkJaGVhZCA9IG1wLT5kYXRh
-X2hlYWQtKChtcC0+ZGF0YV9oZWFkLWhlYWQpJW1wLT5kYXRhX3NpemUpOwoJCQl3aGlsZShoZWFk
-PG1wLT5kYXRhX2hlYWQpIHsKCQkJCWhlYWQgKz0gcHJvY2Vzc19ldmVudCgoY2hhciopYWRkcitt
-cC0+ZGF0YV9vZmZzZXQsIG1wLT5kYXRhX3NpemUsIGhlYWQpOwoJCQl9CgkJCXJlc1tmZF0uc2Vj
-b25kID0gbXAtPmRhdGFfaGVhZDsKCQkJaW9jdGwoZmQsIFBFUkZfRVZFTlRfSU9DX1BBVVNFX09V
-VFBVVCwgMCk7CgkJfQoJfQoJaW50X2V4aXQoMCk7CglyZXR1cm4gMDsKfQo=
+On Thu, May 29, 2025 at 04:32:11PM +1000, Alistair Popple wrote:
+> Now that DAX and all other reference counts to ZONE_DEVICE pages are
+> managed normally there is no need for the special devmap PTE/PMD/PUD
+> page table bits. So drop all references to these, freeing up a
+> software defined page table bit on architectures supporting it.
+> 
+> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+> Acked-by: Will Deacon <will@kernel.org> # arm64
+> Suggested-by: Chunyan Zhang <zhang.lyra@gmail.com>
+> Reviewed-by: Björn Töpel <bjorn@rivosinc.com>
+> ---
+>  Documentation/mm/arch_pgtable_helpers.rst     |  6 +--
+>  arch/arm64/Kconfig                            |  1 +-
+>  arch/arm64/include/asm/pgtable-prot.h         |  1 +-
+>  arch/arm64/include/asm/pgtable.h              | 24 +--------
+>  arch/loongarch/Kconfig                        |  1 +-
+>  arch/loongarch/include/asm/pgtable-bits.h     |  6 +--
+>  arch/loongarch/include/asm/pgtable.h          | 19 +------
+>  arch/powerpc/Kconfig                          |  1 +-
+>  arch/powerpc/include/asm/book3s/64/hash-4k.h  |  6 +--
+>  arch/powerpc/include/asm/book3s/64/hash-64k.h |  7 +--
+>  arch/powerpc/include/asm/book3s/64/pgtable.h  | 53 +------------------
+>  arch/powerpc/include/asm/book3s/64/radix.h    | 14 +-----
+>  arch/riscv/Kconfig                            |  1 +-
+>  arch/riscv/include/asm/pgtable-64.h           | 20 +-------
+>  arch/riscv/include/asm/pgtable-bits.h         |  1 +-
+>  arch/riscv/include/asm/pgtable.h              | 17 +------
+>  arch/x86/Kconfig                              |  1 +-
+>  arch/x86/include/asm/pgtable.h                | 51 +-----------------
+>  arch/x86/include/asm/pgtable_types.h          |  5 +--
+>  include/linux/mm.h                            |  7 +--
+>  include/linux/pgtable.h                       | 19 +------
+>  mm/Kconfig                                    |  4 +-
+>  mm/debug_vm_pgtable.c                         | 59 +--------------------
+>  mm/hmm.c                                      |  3 +-
+>  mm/madvise.c                                  |  8 +--
+>  25 files changed, 17 insertions(+), 318 deletions(-)
+
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+
+Jason
