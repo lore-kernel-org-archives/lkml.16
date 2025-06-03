@@ -1,115 +1,86 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3CB23C8AA;
-	Tue,  3 Jun 2025 16:01:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF67972605;
+	Tue,  3 Jun 2025 16:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748966516; cv=none; b=C94KWJVLm5qk0UQ0XBJbSD2uqWqTB/ix741NlroLuFB8EB6A5tScl993/YVoJXC+rIbHMfkOrZKFNMWjJyuj0VabBduNWsM3yYSq5D7LNHVYhL/C04el9d1NVTduSnsoZQK5quffqdLB0ccH9V1bzKmyL0/7LXwsiV8FVzy6JhM=
+	t=1748966531; cv=none; b=i7FrN8rM9ESqiplNlWKC0ZqKlKomb3T+jnAA7OAM1zvwOWey9NfDgUH/Ty4wPwSLR5y1Q76LG+KnBIpktfBpjWyfBuQv3W/q0ObsisxTV8RJ9yAqQv9RRgHZWitdrNAYQxlhmUxYG1QeyJ62w/J6Fhn+QItabMb8hDk05zKjgM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748966516; c=relaxed/simple;
-	bh=9fmqYUcVPdPRnM8XfFQcxXImysQ44UM2JtaMXqYVC2w=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lN/rGMTYVK38TXH9OSVpytZWr+fPM/Y3M++9bHgjwUWcFwktScPqTA40sX1VYmsVTZ7hAqoGEi216qFr5QTDtQu7nPdpAzhz2BdY8p0AHo1OOqwPHu/Mqmh3erMm/zXS2npcbwRjm9TexH4EXwcxIzeR5uP7XcFnrk6bd7ntpFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Avd+XDHT; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1748966531; c=relaxed/simple;
+	bh=utGGHye6zuMyX2IqEOVmv3+Md9E7v87JO8RTvtptp4w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WiHDy98mmW+haaLt4hlR3krye0GUsmDuxIeYlyntyTdV69OZBMPPWu37M/z6KQT2ajzOSEWvz2Xhb0RCoKgqkmiY+PAniyZ5Abu5yd0bQibT/l0tbGrVMFPHMu/64UXAFedTSODj83WVIfXDTVunvbbkB5fiPLbcglCnwodC118=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=OluYoGGV; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Avd+XDHT"
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 553G1mhQ510791;
-	Tue, 3 Jun 2025 11:01:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1748966508;
-	bh=0lYSal3GcLPOQfw4qEh69xNQYPJhEpOr8ui06S4slnE=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=Avd+XDHTrY0/zOX1CeCoQt0XfNmtcLHzvHkPTR3CxII5xG4AJeVtqAP1az0K8c6wn
-	 ZwTjjluDv03dLCE069CMIGGnFF3VfIzr10swomSSwvbJW1twfeuuYDjwtaOIsV40qN
-	 ktLowLSeipC8ausfTp9cDy9na4xHaNjknVO1RXz8=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 553G1mh73862105
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Tue, 3 Jun 2025 11:01:48 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 3
- Jun 2025 11:01:47 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 3 Jun 2025 11:01:47 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 553G1l0L667428;
-	Tue, 3 Jun 2025 11:01:47 -0500
-Date: Tue, 3 Jun 2025 11:01:47 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Udit Kumar <u-kumar1@ti.com>
-CC: <vigneshr@ti.com>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <b-padhi@ti.com>
-Subject: Re: [RESEND PATCH] arm64: dts: ti: k3-j784s4-mcu-wakeup: Configure
- wkup_uart0 with clock settings
-Message-ID: <20250603160147.47orn74obh2lz3qm@rethink>
-References: <20250603042448.783956-1-u-kumar1@ti.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OluYoGGV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Transfer-Encoding
+	:Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=lqpA2obXAEGYiV7llfEv48yhrGfp0onTICfwh/ANc24=; b=OluYoGGVKqLlm6rzxdjM4LhMQ1
+	eOPz3SupE+Bw9ysysO+kM/cAgvP06gWwIbzC4/e4gASjwVugANssBjc40YPUGAx+Pj/cmjG3+82q5
+	ArJv2MFY9l9APkjyj+Yoq3yRmcH4NTq6C8N7+2xDqz76XDB+kn3u2iRial5JhXnskyYxuwaozZLDK
+	86nULefboRLcSVdt6e0PZk4PZPJNI/v2PdtKLZ9GxYdJtdmt/bXzjlJ5pPNkX0MbOyih2PJE2o/JN
+	5iAGN7D8oW5lzjB+iOXUn0QOl0bteQbmcnNIdnGqC+cRk6GyHKpthYQeF10F4Y/qlSP7eOdt5Vl6m
+	oPf9mjfw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uMU5P-0000000BMWf-1H2s;
+	Tue, 03 Jun 2025 16:01:59 +0000
+Date: Tue, 3 Jun 2025 09:01:59 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Cc: Christoph Hellwig <hch@infradead.org>, wangtao <tao.wangtao@honor.com>,
+	sumit.semwal@linaro.org, kraxel@redhat.com,
+	vivek.kasireddy@intel.com, viro@zeniv.linux.org.uk,
+	brauner@kernel.org, hughd@google.com, akpm@linux-foundation.org,
+	amir73il@gmail.com, benjamin.gaignard@collabora.com,
+	Brian.Starkey@arm.com, jstultz@google.com, tjmercier@google.com,
+	jack@suse.cz, baolin.wang@linux.alibaba.com,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	bintian.wang@honor.com, yipengxiang@honor.com, liulu.liu@honor.com,
+	feng.han@honor.com
+Subject: Re: [PATCH v4 0/4] Implement dmabuf direct I/O via copy_file_range
+Message-ID: <aD8cd137bWPALs4u@infradead.org>
+References: <20250603095245.17478-1-tao.wangtao@honor.com>
+ <aD7x_b0hVyvZDUsl@infradead.org>
+ <09c8fb7c-a337-4813-9f44-3a538c4ee8b1@amd.com>
+ <aD72alIxu718uri4@infradead.org>
+ <924ac01f-b86b-4a03-b563-878fa7736712@amd.com>
+ <aD8Gi9ShWDEYqWjB@infradead.org>
+ <d1937343-5fc3-4450-b31a-d45b6f5cfc16@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250603042448.783956-1-u-kumar1@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d1937343-5fc3-4450-b31a-d45b6f5cfc16@amd.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On 09:54-20250603, Udit Kumar wrote:
-> From: Bhavya Kapoor <b-kapoor@ti.com>
+On Tue, Jun 03, 2025 at 05:55:18PM +0200, Christian König wrote:
+> On 6/3/25 16:28, Christoph Hellwig wrote:
+> > On Tue, Jun 03, 2025 at 04:18:22PM +0200, Christian König wrote:
+> >>> Does it matter compared to the I/O in this case?
+> >>
+> >> It unfortunately does, see the numbers on patch 3 and 4.
+> > 
+> > That's kinda weird.  Why does the page table lookup tage so much
+> > time compared to normal I/O?
 > 
-> This commit adds the assigned-clocks and assigned-clock-parents
-> properties for wkup_uart0 in J784S4. Specifically, the assigned-clocks
-> property is set to reference the clock identified by
-> "wkup_usart_mcupll_bypass_out0", ensuring the UART operates with the
-> correct clock source.
+> I have absolutely no idea. It's rather surprising for me as well.
 > 
-> The assigned-clock-parents property specifies "wkup_usart_clksel_out0"
-> as the parent clock. This configuration is critical for establishing
-> the proper clocking hierarchy, enabling the UART device to function
-> reliably across different baud rates.
+> The user seems to have a rather slow CPU paired with fast I/O, but it still looks rather fishy to me.
+> 
+> Additional to that allocating memory through memfd_create() is *much* slower on that box than through dma-buf-heaps (which basically just uses GFP and an array).
 
-Please fix the commit message - not clear what specifically in the clock
-hierarchy does permit the multiple baud rates.
+Can someone try to reproduce these results on a normal system
+before we're building infrastructure based on these numbers?
 
-> 
-> Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
-
-You need to add your SoB.
-> ---
-> Link to v1: https://lore.kernel.org/all/20241009072056.3511346-1-b-kapoor@ti.com/
-
-Also as Baleswar stated, the $subject needs to be fixed.
-> 
->  arch/arm64/boot/dts/ti/k3-j784s4-j742s2-mcu-wakeup-common.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-mcu-wakeup-common.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-mcu-wakeup-common.dtsi
-> index 52e2965a3bf5..1146bc5990ea 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-mcu-wakeup-common.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-mcu-wakeup-common.dtsi
-> @@ -310,6 +310,8 @@ wkup_uart0: serial@42300000 {
->  		interrupts = <GIC_SPI 897 IRQ_TYPE_LEVEL_HIGH>;
->  		clocks = <&k3_clks 397 0>;
->  		clock-names = "fclk";
-> +		assigned-clocks = <&k3_clks 397 0>;
-> +		assigned-clock-parents = <&k3_clks 397 1>;
->  		power-domains = <&k3_pds 397 TI_SCI_PD_EXCLUSIVE>;
->  		status = "disabled";
->  	};
-> -- 
-> 2.34.1
-> 
-
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
