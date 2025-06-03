@@ -1,113 +1,145 @@
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9FD231830
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 13:29:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70F16231828
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 13:30:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748957396; cv=none; b=VsJfsv6TLRvsrFTGLqTBc6odlk0UXKWs121fQ2ekILbmpL1yePuUNd5iSf3yCybLQBGQViOOJkm0G9TNez875sBtd5kna1epMwyzKm7EeXoVPRl76pz/ZReKkdnFsdfcB/XThKOLLXfp2YJJvo6reH78WE5z9najWt9YJYyfsrI=
+	t=1748957403; cv=none; b=cngLjIcg1Fg4e23MDUQOH47K6v2mhJxjfErZ0ihGr4I7iMl3ohjtyNpvZfpGy4xIsYS7kOiezvLOilvmaSrJRapLVofZgeW0qoAbq53unjaesZ/Hh8X1pqV6ko4T+h1D5bMtcfM3q7UoGz0DqAhlE0H05czOzQ0+7tUlgCfclT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748957396; c=relaxed/simple;
-	bh=cALEzadqM287uTeXN80M2rgaHzMsWBb39Fvo+oH+CF0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YLL1EIG6/EzEEmUY12cCstZcGttrSU3wBNsFbzhNbNVmMkdHOGCn9G67hq4AcRSL9R/f0t3EWQ7TuEg74584EN2HxAIZc0/u2UQIPGmom2Fcm5S+ZbGeOWAkrEql1SfsxnODV0Ze7cWa2JMn4zga4i7zewywGr8oaQIG8FiCY+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Cw6jC+X9; arc=none smtp.client-ip=209.85.210.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1748957403; c=relaxed/simple;
+	bh=SqETY9ANTPbdK3VFt37imgf1Txorsar+chC5aa3Cp0Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tdWjrcUSjhHgiywENR0evgl8zr5TQ7spzsZirHJL8fDEAgQUXfJLneoj7/qwXp96AjPrjYLwR5lRfjTJkTmzK/NDJRtXW1tWJvVFDB/fI2JAF1KxA7yifx+6gpMPktPk0iU9tPU3+9m7H4/HmqtFWjlKx82bOrs+vIQ+HBn2Gxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D1VzN47+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Cw6jC+X9"
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-735ae79a44bso4561359a34.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 06:29:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748957393; x=1749562193; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=B4074lnBbCE6o69YYHhmehNVryk0Fo/i6I6lU14MnK0=;
-        b=Cw6jC+X92BlLi/wmBuOnLuUP/AdKqtDDP0eHpAV34V75HpR2Rine2TqLhJWOIkikGT
-         h3JyVF9uH21kDWmI7aJPeuEpOxWzQY8VrsoUasyxU4TNI9iW93d47z++cqZLgb1x1Zxy
-         2yyJFYgjIx4XMQlg8BCPa2wYywnp6CLvNw6mp9JBWzl6YQBE2OZoF8yXycqPvl3ZVohw
-         zRPmNRIDeYhGPlVxXRJKmiQTVTWeJ9yLf4xAM5cIhGXFijdFnSG2nB/RuqoSSdVR8RLJ
-         JCj7mCDrXKiv1FXQJHOfV2Dqk2PT2ckCkluMYs4VeGeoE+s7yA3NUBT6ttQI6iw3hgB5
-         9pdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748957393; x=1749562193;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B4074lnBbCE6o69YYHhmehNVryk0Fo/i6I6lU14MnK0=;
-        b=KCKA/V7zm5Lef7WQy84QyOx+9uPUX8tnfanHfVrWGyz1dYDNW2zgUe6C/CSUJJiNRn
-         czGe6Ff5SMh3AhJ7j393tJARkAZMEQxChkcjvVM0WYxoyGm5HZbGSrMI2ExDudI8ad6K
-         NcnCRDViI/NqnBUWxOVH6pKTecFjV4ThQF5E7gtN5tXqSHn7SECtNObV5tWyzC/JOhgM
-         M5UHQo/CbI3NWSR2CBqoEG2ZoXmV6WCy703Zpjg+6hGowo3izedyhlOyINFPqFtfHJrw
-         9UqaQ9ZVvRt7uPTyq8rTuHKYiAFujscmCPu0YvIi3ihayOVvczGKGPgwgBJiR7S4MAdK
-         pkfg==
-X-Forwarded-Encrypted: i=1; AJvYcCURJ7FAIjtAepRRs7n3n99jpEKJSmhHGNwVqADwcEL6GBO/xpVyKCYI+7kX5aOejvkhlf8MzDrJlkQTtow=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWaulP9HvqhMu3/u10wf0ojGCKG4mI93DddvCIXuEmom69+FW7
-	ei0rYCBnrVdELEFxAF8+O7/dynyX68v2zaFX41bXOA1i0tChX2U77W90xvznK4k4f4s=
-X-Gm-Gg: ASbGnctYlWp9GzYbRI2I/BDQPHeeSDUnUdgM8LCfOxSDZSa2Br3LahgimEjl5TjIxgU
-	59wPFfIf0vDEoVNZ3nbxNOmcJHylvlufSk3//fwU9FZAmUAsgb1W6dQOwRNDuQlNBQGNSnC30oV
-	APRjoN+y97a0jzwOod7K3cik3JOa1Tbv+K/yLk2A5qExtnHzqRDQoM5/nIVr96FhbZbQnLYxVqb
-	IT/UrVc9sq/q4KC7mu15syFRX/pL/E8DPOiKiIsDmlxsnuzXPsHR/4N7hjlYnOyKmcQIjrTfHVL
-	jISYQSfDz3YLOW4py0JyiUXYWBbhKWbG6+gCz1cPMjpQ0FGMVNPp02snPZ+TKHEO60vSyzUlfcm
-	7RboqvWpyqkSHbzjUw1ES8lNdcX9ztSydY1Iy
-X-Google-Smtp-Source: AGHT+IF8kMDOg8rwg3c36JfYuMIR4bv1Il8ofYqW9P5T2sZ5z3aDyr/IKbsJ1zcRJnmWjOwA0bGxPg==
-X-Received: by 2002:a05:6830:370b:b0:735:b40e:2b47 with SMTP id 46e09a7af769-73758c0ad87mr9227072a34.5.1748957392742;
-        Tue, 03 Jun 2025 06:29:52 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:e835:af77:41c:3a1f? ([2600:8803:e7e4:1d00:e835:af77:41c:3a1f])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-735af879fe2sm1962952a34.40.2025.06.03.06.29.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jun 2025 06:29:52 -0700 (PDT)
-Message-ID: <b1f0dbee-13bd-4e5c-90b9-c6d88cb15971@baylibre.com>
-Date: Tue, 3 Jun 2025 08:29:51 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D1VzN47+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0795C4CEED;
+	Tue,  3 Jun 2025 13:30:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748957403;
+	bh=SqETY9ANTPbdK3VFt37imgf1Txorsar+chC5aa3Cp0Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D1VzN47+SCfNpJNJCugePfyugbmrcTXkDh+X/O1lCNcpPA0+A7QyVYrO9TFGii7K0
+	 ba8j8G9hShux9EHPwz9xhjx2G/qXp+mGGiTcGH962uW++Ors+MQU1fjDZBteyF39Q9
+	 2OSN/Ibgu7YfsFQyuWPKKvl29aVceqReWpNaBBsYV9PI9GMf8PpIwVM+9BK2uP2sif
+	 JMr+onb9T0O0zB9RQyVpuJWJPoa2V0oLuJgV0T9UYS6wI6qpl7qhskF2x1c5U9AFp3
+	 M8RLM3wOGavIrZbSvhhr+Y/4mnPBe56NXQ6pMwqDo0vF6xwDfLC9ixv9kMMQzQrAz2
+	 ru67xXhnpJAZw==
+Date: Tue, 3 Jun 2025 15:29:58 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Zenghui Yu <yuzenghui@huawei.com>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>
+Subject: Re: [PATCH v2 3/5] genirq/msi: Move prepare() call to per-device
+ allocation
+Message-ID: <aD741hI7MfTmi7Rl@lpieralisi>
+References: <20250513163144.2215824-1-maz@kernel.org>
+ <20250513163144.2215824-4-maz@kernel.org>
+ <0b1d7aec-1eac-a9cd-502a-339e216e08a1@huawei.com>
+ <87ldq9dm54.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] iio: accel: fxls8962af: Fix use after free in
- fxls8962af_fifo_flush
-To: Sean Nyekjaer <sean@geanix.com>, Jonathan Cameron <jic23@kernel.org>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20250603-fxlsrace-v2-1-5381b36ba1db@geanix.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250603-fxlsrace-v2-1-5381b36ba1db@geanix.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87ldq9dm54.wl-maz@kernel.org>
 
-On 6/3/25 7:25 AM, Sean Nyekjaer wrote:
-> fxls8962af_fifo_flush() uses indio_dev->active_scan_mask (with
-> iio_for_each_active_channel()) without making sure the indio_dev
-> stays in buffer mode.
-> There is a race if indio_dev exits buffer mode in the middle of the
-> interrupt that flushes the fifo. Fix this by calling
-> synchronize_irq() to ensure that no interrupt is currently running when
-> disabling buffer mode.
+On Tue, Jun 03, 2025 at 01:50:47PM +0100, Marc Zyngier wrote:
+> Hi Zenghui,
 > 
-> Unable to handle kernel NULL pointer dereference at virtual address 00000000 when read
-> [...]
-> _find_first_bit_le from fxls8962af_fifo_flush+0x17c/0x290
-> fxls8962af_fifo_flush from fxls8962af_interrupt+0x80/0x178
-> fxls8962af_interrupt from irq_thread_fn+0x1c/0x7c
-> irq_thread_fn from irq_thread+0x110/0x1f4
-> irq_thread from kthread+0xe0/0xfc
-> kthread from ret_from_fork+0x14/0x2c
+> On Tue, 03 Jun 2025 09:22:47 +0100,
+> Zenghui Yu <yuzenghui@huawei.com> wrote:
+> > 
+> > > +	domain->dev = dev;
+> > > +	dev->msi.data->__domains[domid].domain = domain;
+> > > +
+> > > +	if (msi_domain_prepare_irqs(domain, dev, hwsize, &bundle->alloc_info)) {
+> > 
+> > Does it work for MSI? hwsize is 1 in the MSI case, without taking
+> > pci_msi_vec_count() into account.
+> >
+> > bool pci_setup_msi_device_domain(struct pci_dev *pdev)
+> > {
+> > 	[...]
+> > 
+> > 	return pci_create_device_domain(pdev, &pci_msi_template, 1);
 > 
-> Fixes: 79e3a5bdd9ef ("iio: accel: fxls8962af: add hw buffered sampling")
-> Cc: stable@vger.kernel.org
-> Suggested-by: David Lechner <dlechner@baylibre.com>
-> Signed-off-by: Sean Nyekjaer <sean@geanix.com>
-> ---
-> Changes in v2:
-> - As per David's suggestion; switched to use synchronize_irq() instead.
-> - Link to v1: https://lore.kernel.org/r/20250524-fxlsrace-v1-1-dec506dc87ae@geanix.com
-Were you able to find a way to reproduce the bug well enough to
-test this?
+> Well spotted.
+> 
+> This looks like a PCI bug ignoring Multi-MSI. Can you give the
+> following a go and let people know whether that fixes your issue?
+> 
+> Thanks,
+> 
+> 	M.
+> 
+> diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
+> index d7ba8795d60f..89677a21d525 100644
+> --- a/drivers/pci/msi/irqdomain.c
+> +++ b/drivers/pci/msi/irqdomain.c
+> @@ -287,7 +287,7 @@ static bool pci_create_device_domain(struct pci_dev *pdev, const struct msi_doma
+>   *	- The device is removed
+>   *	- MSI is disabled and a MSI-X domain is created
+>   */
+> -bool pci_setup_msi_device_domain(struct pci_dev *pdev)
+> +bool pci_setup_msi_device_domain(struct pci_dev *pdev, unsigned int hwsize)
+>  {
+>  	if (WARN_ON_ONCE(pdev->msix_enabled))
+>  		return false;
+> @@ -297,7 +297,7 @@ bool pci_setup_msi_device_domain(struct pci_dev *pdev)
+>  	if (pci_match_device_domain(pdev, DOMAIN_BUS_PCI_DEVICE_MSIX))
+>  		msi_remove_device_irq_domain(&pdev->dev, MSI_DEFAULT_DOMAIN);
+>  
+> -	return pci_create_device_domain(pdev, &pci_msi_template, 1);
+> +	return pci_create_device_domain(pdev, &pci_msi_template, hwsize);
+>  }
+>  
+>  /**
+> diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
+> index 8b8848788618..81891701840a 100644
+> --- a/drivers/pci/msi/msi.c
+> +++ b/drivers/pci/msi/msi.c
+> @@ -449,7 +449,7 @@ int __pci_enable_msi_range(struct pci_dev *dev, int minvec, int maxvec,
+>  	if (rc)
+>  		return rc;
+>  
+> -	if (!pci_setup_msi_device_domain(dev))
+> +	if (!pci_setup_msi_device_domain(dev, nvec))
 
+If pci_msi_vec_count(dev) > maxvec we would cap nvec and size the
+domain with the capped value.
+
+In __pci_enable_msix_range() we are sizing the device according to
+pci_msix_vec_count(dev) regardless of maxvec, if I read the code correctly.
+
+While fixing it it would be good to make them consistent unless there is
+a reason why they should not.
+
+Lorenzo
+
+>  		return -ENODEV;
+>  
+>  	for (;;) {
+> diff --git a/drivers/pci/msi/msi.h b/drivers/pci/msi/msi.h
+> index ee53cf079f4e..3ab898af88a7 100644
+> --- a/drivers/pci/msi/msi.h
+> +++ b/drivers/pci/msi/msi.h
+> @@ -107,7 +107,7 @@ enum support_mode {
+>  };
+>  
+>  bool pci_msi_domain_supports(struct pci_dev *dev, unsigned int feature_mask, enum support_mode mode);
+> -bool pci_setup_msi_device_domain(struct pci_dev *pdev);
+> +bool pci_setup_msi_device_domain(struct pci_dev *pdev, unsigned int hwsize);
+>  bool pci_setup_msix_device_domain(struct pci_dev *pdev, unsigned int hwsize);
+>  
+>  /* Legacy (!IRQDOMAIN) fallbacks */
+> 
+> -- 
+> Jazz isn't dead. It just smells funny.
