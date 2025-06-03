@@ -1,272 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B57412F2D;
-	Tue,  3 Jun 2025 14:32:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431C71DB366;
+	Tue,  3 Jun 2025 14:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748961156; cv=none; b=N7G/I3ixYuXw0HP0rMAlUXKswbvAHjUBC9gMM66iiAUnBQ/jiZrzora61ALDnUiBs98aZ5netyeslnmzoAVq1VRYz2mzGlLzJaxqNttnC/n5LkvpSY9qmFiOLh3j9gUMFS40neUDkEe6+MZnQ1qrNSkDVJNe6rRelWwZf31w2eo=
+	t=1748961238; cv=none; b=f+Bw4uAMnsdmC1HgtB9uh9+ZWXEwEEqYsXkMNIH+lHNl6iYZFOMEJxoGBfe15GVQr3lv2BFlCsofCx1vaezLlBpHBAH7qdbYg9TGCxUbyvy8chEt1yx3NSmij2SKZpJ93i/Ak4Ke/RtmY/TyvMRR7/Tbe3KLv+MP5plIt8husNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748961156; c=relaxed/simple;
-	bh=Er43LVCfm7TQ+NTUlYRePBhzMmQPDYhHStZrJmnmvNg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TEIud4hxuNHF9oYdI8754WMWjy9lVxZMr4RIzdx3W3wwq7ym+Dplog5sZww8sfaseOU7J7VXJpKpKYIn40b69lXzV0dlpUcEhc4p4xsgfR/00M/pMKriGYOstYR/91Itj4ja+g6z8X4joRCK2hEb9JXWHCw/KAKUwHDBgxmkamM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QvxmytoX; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748961238; c=relaxed/simple;
+	bh=Pax7Wp8g4EBK5lfGZTNO6TWJfzNxTHPQp6fy7syi1Lk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Pq43idy+5Q6sNnf7mYkkgMcgJqrVQs/geFoqVzeNO+Agzdhgs5oCldYcHVRRiS2bDCJ2pO5u6MnY/Zc1fsVoVFtyVhqFNx3prxjE34e8F7qDIFKo0mnwe1WkuHqMt2Q5BEB4QwP+PNf7d+79S7TtxCZRvyTHE2pW1+qSz0Ikrp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=bjuvxdBO; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QvxmytoX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748961154; x=1780497154;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Er43LVCfm7TQ+NTUlYRePBhzMmQPDYhHStZrJmnmvNg=;
-  b=QvxmytoX9v5cuR+k9I1ox88oOFByTka9qo8+m+TjHbchZfcifZX31yQ/
-   dfj5s/3oIq3hKtZZhAsIP2+nEZFXw89FT2MTYZgML5IMaqHxG3wbcWM4Q
-   3ey6v7t2RpxdLjVO0pGgzMsPRNWRSeMOIRT4sDBJsTbcvqwaRokSevNFx
-   4uw0avh7Gmsy05TEWq+r8d8IWMaO0QKGKZzjy2vDc6nvkF1Piv1y1pm9Z
-   FpSonTVUl3bFA4lRO34P13grZ8Khx9vAsekglc3lsMsx+Yf3cU3XM+WvS
-   tPYJNgm6ndV/QIwivQG/bcRohn3Nq/rgDk3fr1VdevZDzkyqVKIORHZua
-   g==;
-X-CSE-ConnectionGUID: GGV7hHbmTsSRZp4VC43J7A==
-X-CSE-MsgGUID: EekfFtf8Qa66Z8xG3XBDEg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="61270012"
-X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
-   d="scan'208";a="61270012"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 07:32:33 -0700
-X-CSE-ConnectionGUID: PYJvZTbfQA+UZkREiaV6ZQ==
-X-CSE-MsgGUID: VqljPof8SJynX8C8qEFhmw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
-   d="scan'208";a="144905813"
-Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.110.198]) ([10.125.110.198])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 07:32:32 -0700
-Message-ID: <226ecbd8-af44-49e8-9d4c-1f2294832897@intel.com>
-Date: Tue, 3 Jun 2025 07:32:29 -0700
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="bjuvxdBO"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 2C74141ED0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1748961236; bh=xuzJ6pVHRkOA6mC6eSB047dEohJN/pd9soeYCZQRrNY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=bjuvxdBOkFWFGc9lPwDAFgGPB1xqaSZmxICh+WhRoqYTpFzqQ3UsZtYRwl1o7W3XQ
+	 1v09x5i1ajdt//pT9RuhWYc07eOq4VHR3IyVj2yrMi0V7GISj/1ScS2DBt5LzSV+xA
+	 PhUR6ddS3kXbntmYGyH8Dih6G/UZb+FnrM8YF9eOT/BFNx2ixsOydPxunVxvNw/2x4
+	 2pZy6hU8gIkML3r7FPR4YANeqSzl4gwELRxATwefXtl2phZVdRu1yc0U1QMzTHEmqD
+	 u0ux7dcw8WXFX/+g6iDKHp2r6ecGLcx5Rk7gQJDGwy0HmBce7QdC9szyGV5aaF+CRI
+	 O3Dduxgjs/8Ag==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 2C74141ED0;
+	Tue,  3 Jun 2025 14:33:56 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Suren Baghdasaryan
+ <surenb@google.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Jann Horn <jannh@google.com>, Qi Zheng <zhengqi.arch@bytedance.com>,
+ linux-mm@kvack.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs/mm: expand vma doc to highlight pte freeing,
+ non-vma traversal
+In-Reply-To: <28f53f7e-5ac2-4ef4-8944-6741161e6870@lucifer.local>
+References: <20250602210710.106159-1-lorenzo.stoakes@oracle.com>
+ <87bjr59634.fsf@trenco.lwn.net>
+ <9fc9ac50-abce-48bd-979f-2e00b26917b5@lucifer.local>
+ <38bcf562-86dc-42b2-9ffc-53cbc5d8ac22@lucifer.local>
+ <877c1s9b6p.fsf@trenco.lwn.net>
+ <28f53f7e-5ac2-4ef4-8944-6741161e6870@lucifer.local>
+Date: Tue, 03 Jun 2025 08:33:55 -0600
+Message-ID: <87y0u87v3g.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] dmaengine: idxd: Fix race condition between WQ
- enable and reset paths
-To: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
- Shuai Xue <xueshuai@linux.alibaba.com>, fenghuay@nvidia.com, vkoul@kernel.org
-Cc: dmaengine@vger.kernel.org, colin.i.king@gmail.com,
- linux-kernel@vger.kernel.org
-References: <20250522063329.51156-1-xueshuai@linux.alibaba.com>
- <20250522063329.51156-2-xueshuai@linux.alibaba.com>
- <a03e4f97-2289-4af7-8bfc-ad2d38ec8677@intel.com>
- <b2153756-a57e-4054-bde2-deb8865c9e59@linux.alibaba.com>
- <4cd53b91-bd20-46a1-854c-9bf0950ea496@intel.com>
- <87234fab-081e-4e2e-9ef1-0414b23601ce@linux.alibaba.com>
- <874ix5bhkz.fsf@intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <874ix5bhkz.fsf@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
+Lorenzo Stoakes <lorenzo.stoakes@oracle.com> writes:
 
+>> OK ... If you look at what's going on, some of the functions will be
+>> marked, others not.  The difference is that there is no markup for
+>> functions where a cross-reference cannot be made (because they are
+>> undocumented).
+>>
+>> We could easily change the automarkup code to always do the markup; the
+>> problem with that (which is also a problem with the existing markup
+>> under Documentation/mm) is you'll have rendered text that looks like a
+>> cross-reference link, but which is not.  We also lose a clue as to which
+>> functions are still in need of documentation.
+>
+> Isn't it a pretty egregious requirement to require documentation of every
+> referenced function?
+>
+> I mean if that were a known requirement I'd simply not have written this
+> document at all, frankly.
 
-On 5/27/25 7:21 PM, Vinicius Costa Gomes wrote:
-> Shuai Xue <xueshuai@linux.alibaba.com> writes:
-> 
->> 在 2025/5/23 22:54, Dave Jiang 写道:
->>>
->>>
->>> On 5/22/25 10:20 PM, Shuai Xue wrote:
->>>>
->>>>
->>>> 在 2025/5/22 22:55, Dave Jiang 写道:
->>>>>
->>>>>
->>>>> On 5/21/25 11:33 PM, Shuai Xue wrote:
->>>>>> A device reset command disables all WQs in hardware. If issued while a WQ
->>>>>> is being enabled, it can cause a mismatch between the software and hardware
->>>>>> states.
->>>>>>
->>>>>> When a hardware error occurs, the IDXD driver calls idxd_device_reset() to
->>>>>> send a reset command and clear the state (wq->state) of all WQs. It then
->>>>>> uses wq_enable_map (a bitmask tracking enabled WQs) to re-enable them and
->>>>>> ensure consistency between the software and hardware states.
->>>>>>
->>>>>> However, a race condition exists between the WQ enable path and the
->>>>>> reset/recovery path. For example:
->>>>>>
->>>>>> A: WQ enable path                   B: Reset and recovery path
->>>>>> ------------------                 ------------------------
->>>>>> a1. issue IDXD_CMD_ENABLE_WQ
->>>>>>                                      b1. issue IDXD_CMD_RESET_DEVICE
->>>>>>                                      b2. clear wq->state
->>>>>>                                      b3. check wq_enable_map bit, not set
->>>>>> a2. set wq->state = IDXD_WQ_ENABLED
->>>>>> a3. set wq_enable_map
->>>>>>
->>>>>> In this case, b1 issues a reset command that disables all WQs in hardware.
->>>>>> Since b3 checks wq_enable_map before a2, it doesn't re-enable the WQ,
->>>>>> leading to an inconsistency between wq->state (software) and the actual
->>>>>> hardware state (IDXD_WQ_DISABLED).
->>>>>
->>>>>
->>>>> Would it lessen the complication to just have wq enable path grab the device lock before proceeding?
->>>>>
->>>>> DJ
->>>>
->>>> Yep, how about add a spin lock to enable wq and reset device path.
->>>>
->>>> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
->>>> index 38633ec5b60e..c0dc904b2a94 100644
->>>> --- a/drivers/dma/idxd/device.c
->>>> +++ b/drivers/dma/idxd/device.c
->>>> @@ -203,6 +203,29 @@ int idxd_wq_enable(struct idxd_wq *wq)
->>>>   }
->>>>   EXPORT_SYMBOL_GPL(idxd_wq_enable);
->>>>   
->>>> +/*
->>>> + * This function enables a WQ in hareware and updates the driver maintained
->>>> + * wq->state to IDXD_WQ_ENABLED. It should be called with the dev_lock held
->>>> + * to prevent race conditions with IDXD_CMD_RESET_DEVICE, which could
->>>> + * otherwise disable the WQ without the driver's state being properly
->>>> + * updated.
->>>> + *
->>>> + * For IDXD_CMD_DISABLE_DEVICE, this function is safe because it is only
->>>> + * called after the WQ has been explicitly disabled, so no concurrency
->>>> + * issues arise.
->>>> + */
->>>> +int idxd_wq_enable_locked(struct idxd_wq *wq)
->>>> +{
->>>> +       struct idxd_device *idxd = wq->idxd;
->>>> +       int ret;
->>>> +
->>>> +       spin_lock(&idxd->dev_lock);
->>>
->>> Let's start using the new cleanup macro going forward:
->>> guard(spinlock)(&idxd->dev_lock);
->>>
->>> On a side note, there's been a cleanup on my mind WRT this driver's locking. I think we can replace idxd->dev_lock with idxd_confdev(idxd) device lock. You can end up just do:
->>> guard(device)(idxd_confdev(idxd));
->>
->> Then we need to replace the lock from spinlock to mutex lock?
-> 
-> We still need a (spin) lock that we could hold in interrupt contexts.
-> 
->>
->>>
->>> And also drop the wq->wq_lock and replace with wq_confdev(wq) device lock:
->>> guard(device)(wq_confdev(wq));
->>>
->>> If you are up for it that is.
->>
->> We creates a hierarchy: pdev -> idxd device -> wq device.
->> idxd_confdev(idxd) is the parent of wq_confdev(wq) because:
->>
->>      (wq_confdev(wq))->parent = idxd_confdev(idxd);
->>
->> Is it safe to grap lock of idxd_confdev(idxd) under hold
->> lock of wq_confdev(wq)?
->>
->> We have mounts of code use spinlock of idxd->dev_lock under
->> hold of wq->wq_lock.
->>
-> 
-> I agree with Dave that the locking could be simplified, but I don't
-> think that we should hold this series because of that. That
-> simplification can be done later.
+Who said anything about it being a requirement?  I think we have gone
+way off track here.
 
-I agree. Just passing musing on the current code.
+Certainly it would be *nice* to have all of that stuff documented, and I
+think there is value in giving a visual clue for stuff that lacks
+documentation, but I never said anything about requirements.
 
-> 
->>>
->>>
->>>> +       ret = idxd_wq_enable_locked(wq);
->>>> +       spin_unlock(&idxd->dev_lock);
->>>> +
->>>> +       return ret;
->>>> +}
->>>> +
->>>>   int idxd_wq_disable(struct idxd_wq *wq, bool reset_config)
->>>>   {
->>>>          struct idxd_device *idxd = wq->idxd;
->>>> @@ -330,7 +353,7 @@ int idxd_wq_set_pasid(struct idxd_wq *wq, int pasid)
->>>>   
->>>>          __idxd_wq_set_pasid_locked(wq, pasid);
->>>>   
->>>> -       rc = idxd_wq_enable(wq);
->>>> +       rc = idxd_wq_enable_locked(wq);
->>>>          if (rc < 0)
->>>>                  return rc;
->>>>   
->>>> @@ -380,7 +403,7 @@ int idxd_wq_disable_pasid(struct idxd_wq *wq)
->>>>          iowrite32(wqcfg.bits[WQCFG_PASID_IDX], idxd->reg_base + offset);
->>>>          spin_unlock(&idxd->dev_lock);
->>>>   
->>>> -       rc = idxd_wq_enable(wq);
->>>> +       rc = idxd_wq_enable_locked(wq);
->>>>          if (rc < 0)
->>>>                  return rc;
->>>>   
->>>> @@ -644,7 +667,11 @@ int idxd_device_disable(struct idxd_device *idxd)
->>>>   
->>>>   void idxd_device_reset(struct idxd_device *idxd)
->>>>   {
->>>> +
->>>> +       spin_lock(&idxd->dev_lock);
->>>>          idxd_cmd_exec(idxd, IDXD_CMD_RESET_DEVICE, 0, NULL);
->>>> +       spin_unlock(&idxd->dev_lock);
->>>> +
->>>>
->>>
->>> I think you just need the wq_enable locked and also in idxd_device_clear_state(), extend the lock to the whole function. Locking the reset function around just the command execute won't protect the wq enable path against the changing of the software states on the reset side.
->>
->> Quite agreed.
->>
->>>
->>> DJ
->>>
->>>> (The dev_lock should also apply to idxd_wq_enable(), I did not paste here)
->>>>
->>>> Also, I found a new bug that idxd_device_config() is called without
->>>> hold idxd->dev_lock.
->>>>> idxd_device_config() explictly asserts the hold of idxd->dev_lock.
->>>>
->>>> +++ b/drivers/dma/idxd/irq.c
->>>> @@ -33,12 +33,17 @@ static void idxd_device_reinit(struct work_struct *work)
->>>>   {
->>>>          struct idxd_device *idxd = container_of(work, struct idxd_device, work);
->>>>          struct device *dev = &idxd->pdev->dev;
->>>> -       int rc, i;
->>>> +       int rc = 0, i;
->>>>   
->>>>          idxd_device_reset(idxd);
->>>> -       rc = idxd_device_config(idxd);
->>>> -       if (rc < 0)
->>>> +       spin_lock(&idxd->dev_lock);
->>> I wonder if you should also just lock the idxd_device_reset() and the idxd_device_enable() as well in this case as you don't anything to interfere with the entire reinit path.
->>
->> During reset, any operation to enable wq should indeed be avoided,
->> but there isn't a suitable lock currently. idxd->dev_lock is a
->> lightweight lock, only used when updating the device state, and
->> it's used while holding wq->wq_lock. Therefore, holding idxd->dev_lock
->> currently cannot form mutual exclusion with wq->wq_lock.
->>
->> And the sub caller of idxd_device_reset(), e.g. idxd_device_clear_state()
->> also spins to hold idxd->dev_lock.
->>
->> A hack way it to grab wq_lock of all wqs before before reinit, but
->> this is hardly elegant (:
->>
->> Thanks.
->> Have a nice holiday!
->>
->> Best regards,
->> Shuai
->>
-> 
-> 
-> Cheers,
+>> The right answer might be to mark them up differently, I guess.
+>
+> But... what I'm doing here, and what mm does elsewhere works perfectly fine? Why
+> do we need something new?
 
+Because you're thinking in terms of the rendered docs, and not the
+people who read the plain text.  "function()" is far more readable than
+":c:func:`!function()`", don't you agree?  And rather easier to write as
+well.
+
+> Surely this cross-referencing stuff is more useful for API documentation
+> that explicitly intends to describe functions like this?
+
+The cross-referencing is *to* the API documentation.  Again, you are
+mentioning a function, why would you *not* want to let the system
+automatically link to that function's documentation?  Especially since
+you're using markup that is explicitly provided for exactly that
+purpose?  Does the link cause some sort of harm?
+
+Thanks,
+
+jon
