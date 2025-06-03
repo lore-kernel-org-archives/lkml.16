@@ -1,219 +1,245 @@
-Received: from mail-24422.protonmail.ch (mail-24422.protonmail.ch [109.224.244.22])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2080.outbound.protection.outlook.com [40.107.101.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92159280018;
-	Tue,  3 Jun 2025 08:03:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.22
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748937789; cv=none; b=fMh8Ernu6MBCEnXJYoPrdGFuWYGzMUpXM4N8+rnmhdtndgKayd8SFG2Pq0ENJbiCym9GLLkTwnYEwjlkldc4Z973PUILUdkuLB3h9UW19roWnfuXJoQH9t3KWu86ecKl2g6Xd787wzZ0zNehyCnwMi1JG2E1opZt2J33WkJ0ko4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748937789; c=relaxed/simple;
-	bh=V1RuypRc8wpmKJy9fD2ps+Jjaz1BIeVwW+uLlISu6G8=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j/gez+LY0TtUKMStfI4FQFSXATt30la/LdWwWZX48IebBOdMQfu8eO0X13mx1Mb+/cIXiWbjQYr304Ab6MD/e7KA6dCWR0WDWX+8GiMcbWP82ROQnJxJA3NH9suYB1bF/yMaROEH01BD/3P2hVM3fnaGLbVig+VLiM9uK0didl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=nxsw.ie; spf=pass smtp.mailfrom=nxsw.ie; dkim=pass (2048-bit key) header.d=nxsw.ie header.i=@nxsw.ie header.b=dJZL/ubb; arc=none smtp.client-ip=109.224.244.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=nxsw.ie
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxsw.ie
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84FD280026;
+	Tue,  3 Jun 2025 08:03:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.80
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748937790; cv=fail; b=Is9jMu2Aanxi0WwtsrswdQ1cvV8H0LsJPJEokgg6LuoI0QG1LC6+wvD3No7w2tI3O1l6fw0r9cywsgOzZv+Bsyt++/ANZQWV2xoGz6jPNhR/0stxhyl6t0gmBpTdKw3y+LE6KoBzUrjCT1uDhh5LLSEjCQv0NlROxlMpsO0OSHM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748937790; c=relaxed/simple;
+	bh=yULo/bpCQpffpjofOo0qZtntYV+D9mmklpGmEYMD/nY=;
+	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
+	 In-Reply-To:MIME-Version; b=Q+U6h7YKgGafaeEhgdsv0E5Ll7YR72IRC5DBcRr7zbMq/9cipIAlEYUg5uN712EYHWWW4/krCIJX3/dYnoRQUBksVZ32lStq1ro7XwwN5u60DB+wy34CC7l1ySGyMtmKexWABohcT1h5bpVyqd63r2OyF6c7sOkluSzefTu0GPw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Zr1QmhwF; arc=fail smtp.client-ip=40.107.101.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxsw.ie header.i=@nxsw.ie header.b="dJZL/ubb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxsw.ie;
-	s=protonmail2; t=1748937776; x=1749196976;
-	bh=wvT9a/zTe4Ix1oUXKhYeqP9LCyzR2z2SG/ZmYqZaYAI=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=dJZL/ubbSvZqRw+eG0O87cu/CrzJZqet9UEp3gHkwp68TMyKt4ZneT7IJQoJl236r
-	 EGAoMCjFhpp5iEK5kN6W4IIKIQVhszYOcbU5hfxII4b5WyW0lpHsZ3O3uWH1MqAQIe
-	 o/sHIjbNAnuSPeeDMaWrwu6VJfQL+DeS+2GNhD+LwUg8buK8ChYC2CAomVf57nxJHX
-	 KN1TFowIN1erm54hzwyG94Q8kk1RfPvd3IBOvByNIzhbgWf0DXtid5PjzIeJdAAa9g
-	 a0tWMKVQpDkkN/HpXe5xMKB3xV7hYx4RiM+ROA2aEj3pTtNR8vncKbt3jxngnzNzNw
-	 tE73fRxe3RL8g==
-Date: Tue, 03 Jun 2025 08:02:51 +0000
-To: Jagadeesh Kona <quic_jkona@quicinc.com>, Bjorn Andersson <andersson@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>, Dmitry Baryshkov <lumag@kernel.org>
-From: Bryan O'Donoghue <bod.linux@nxsw.ie>
-Cc: Ajit Pandey <quic_ajipan@quicinc.com>, Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>, Satya Priya Kakitapalli <quic_skakitap@quicinc.com>, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Subject: Re: [PATCH v5 08/18] clk: qcom: videocc-sm8550: Move PLL & clk configuration to really probe
-Message-ID: <dc8d4ca9-93bf-4aed-a744-d8b799e01606@nxsw.ie>
-In-Reply-To: <20250530-videocc-pll-multi-pd-voting-v5-8-02303b3a582d@quicinc.com>
-References: <20250530-videocc-pll-multi-pd-voting-v5-0-02303b3a582d@quicinc.com> <20250530-videocc-pll-multi-pd-voting-v5-8-02303b3a582d@quicinc.com>
-Feedback-ID: 136405006:user:proton
-X-Pm-Message-ID: cb9fd4fa3ad6bfa0b16cc759d8a825477ae58d2d
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Zr1QmhwF"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kwyzaWv5RxhhMnSCAs6hqRfycOxCMF5hNiwCg+DSO0L0F/3X5SLgpQdPBxWizShRRTwGgjFy/lTfJML7oI9jus6zJ3PI0TkZ+ydiAvXh+2YxONTV/10FJmHTMsndZrolcdnBg6cF+vG3s4Jpx8JVLFkKVe/S2YbteKTlXeNPiapigGxaJrRq9/cjF1/+9uYpi/coASJNXD+waG2v84bKTqOTWal+DIx/CUqI4f2FYuNcCRjjJ4wMd2XAJnALXW04Vb4o5gLOJnTlRkCQDlCrul5cUrJ32a9U5Qz5JfPtHWupGqo3n6nBRpfEDsyOCQnr56v/K4eg3fCnKBUVvU50JQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Kg1HOH/bd1WdXoMm5yaaES4pWY5AU0KMIKrL/rWt0Vc=;
+ b=MuyzR7hWyY3w1Yh8YbFUILvQJcbQLGVEaI4zmHS/0GJVG6RMWx/0ETvLpiMo1h29B0J5MgMgJZ90Ed//nAkUuooKWiPslxsL6uC/ZG+IXINX51cyE9huv8iDVvwLA6ztDtMLbEM8PWPPNsmTCYCimiApCEP6+wGEXdEL957YyJuJ0yJtVyUbzpUB5/FJk+f99OpLcLq7ouAMAXWtTj7hJcTvRlY9h094INdw+Qi0aAsAk3LW9jILI51qd615/UGVGm5bBpYtPekS39xwxGsdNyJ5Hyma6Q63zx78yBdJngGusySUFqLSuYqX9HWh4aRJmZq+nHy84QoY1JGF2udEZw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Kg1HOH/bd1WdXoMm5yaaES4pWY5AU0KMIKrL/rWt0Vc=;
+ b=Zr1QmhwFMOLoC8WmFyICTzK6WXb+b6USOvqjVpV4ngs3hghlrM/DrflEt6CbynkIj7y+0odk5tzX37wGqiYSdxxMnKvUTUSPoQF8LtUEUoRaJb7tApTEo3nGzXSoJ8HNg/U8NSakg7Ra023TJETvWAQy+YT5VlNwhhlAfLqxAgfyock7ebXXEM8Q9bTJcOQ0q1jhLXVoZ7jtB/I0a2CB5GrYctCto5S7NeY3Lh1RTxRUeRMWXpZbPV51Ojg4pTiIBHDD+bJ7XmiUrevFglbL7C2iZTIJTYyDCn6IakXTlQQI13P+x4yV+ILWaYyHDFH7hwFPuMQ9AjrkidpNYp+hqQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by DM4PR12MB6109.namprd12.prod.outlook.com (2603:10b6:8:ae::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.32; Tue, 3 Jun
+ 2025 08:03:05 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8769.037; Tue, 3 Jun 2025
+ 08:03:05 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 03 Jun 2025 17:03:02 +0900
+Message-Id: <DACQP9IFQ89O.3HILG5TOLU8H6@nvidia.com>
+Cc: "John Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs" <bskeggs@nvidia.com>,
+ "Joel Fernandes" <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>,
+ "Alistair Popple" <apopple@nvidia.com>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
+ <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v4 14/20] gpu: nova-core: add falcon register
+ definitions and base code
+From: "Alexandre Courbot" <acourbot@nvidia.com>
+To: "Lyude Paul" <lyude@redhat.com>, "Miguel Ojeda" <ojeda@kernel.org>,
+ "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>,
+ "Gary Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
+ Krummrich" <dakr@kernel.org>, "David Airlie" <airlied@gmail.com>, "Simona
+ Vetter" <simona@ffwll.ch>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
+ <20250521-nova-frts-v4-14-05dfd4f39479@nvidia.com>
+ <bb140d63b2a2201bdd7bf3df8012ccca8e895e36.camel@redhat.com>
+In-Reply-To: <bb140d63b2a2201bdd7bf3df8012ccca8e895e36.camel@redhat.com>
+X-ClientProxiedBy: TYCP286CA0172.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:3c6::10) To CH2PR12MB3990.namprd12.prod.outlook.com
+ (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|DM4PR12MB6109:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3cc536f9-a45d-44e7-6575-08dda27511df
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|10070799003|7416014|376014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?OUczOWFRbEZnS29aaFpsc2I3blVTZmcyVURJSk50RS9HUElXbVIyaDlFYXB5?=
+ =?utf-8?B?ZmNVSGF6WWRhZHhYUUtKaURkalY5ZHo4ems3REtXM0IxSmNEM1hrVllLenhs?=
+ =?utf-8?B?VHlDZ25qdkQ1NjR0NmJuODJZK2FXUk5FRENuekVkV0wrclRSdUhwTmMvdExM?=
+ =?utf-8?B?cmVqMml6cCt3djQzUkZibmwrYWNCcFdZUnUyUGxhdmo2R0UxNHpDbWZieTV6?=
+ =?utf-8?B?ZzhpaU5uc242WTZZd2JjYlR4aXpRMnRBcUtUbjQrQjg0a3ZQek00UHBPbUZY?=
+ =?utf-8?B?Y3JtMVN6R2dMc0NHWGkrMWZXSGFZSSt2emI3Yi9XbHNxMGpaVlFhS0hTQkcv?=
+ =?utf-8?B?d1U4Y2dwK3RZVC9WNjJuUlBSbUFTOTRiRkpielQ5WmpqOFVyUjVCRWtiZ1BW?=
+ =?utf-8?B?UEY5RTNodU8rZVRVVjV5LzFUUUFKVnRlUFlVZWFIcXpKMExsOVBIZ2x1TVZO?=
+ =?utf-8?B?WTM0OXV0NGlZZUprS3VZWkd0ZUZWN3ZybkN2ekpZNHNJeHdLTGVPQkdFUjJQ?=
+ =?utf-8?B?QXJLVEVWQVFRSldJMXdkL0cyMm5YNDhqeXFTVHQrdEhCRHRnU3dWeTZmQXJ2?=
+ =?utf-8?B?WTlMOVM5bXA1MUUwR0dVeHB1YTVrbUZpVnVXWmRXYm9Id3ZPbXpobUlnaWdI?=
+ =?utf-8?B?S2xVSURSL2ZqM3R5U0NMRys0K083cEZXMjExSUtCOXhGUkJoODRmY2lUKzJZ?=
+ =?utf-8?B?TzB1RXVESE5CbmZTcE5XcWlMOWVuOThXRkI5R0VMMWxmRTJ0SkpPait2dmt6?=
+ =?utf-8?B?YmJaNk1YTFc1YXYzMXVEQnZqazRRNXl0ZmptYXIxc3k3a1dxWmZGSm1sWGZl?=
+ =?utf-8?B?eFZ6dEkycGdCeS9Xa1lFT2craTFFcWhqZ3BUM3BxalVLL0NOVmhQRTZSSjI1?=
+ =?utf-8?B?VDhVVy9GVHkzZnhySWlFSmpPMzVmbCtISnhxbk1ialk5dzNoU2loUkR4c21a?=
+ =?utf-8?B?T3ZGUDBockw0Y2N5L3VNa0pzZ2JZS2dFbjZOMjF4MU9IOHg2cE9QSmhCWmx3?=
+ =?utf-8?B?bjlyZStCSkxicjRpV0xtTFpQU2NMY1I2UFpsaWNRenYrT2t3dDk5Vk5HUHNO?=
+ =?utf-8?B?NFZLd0V4ZlBZcWJ1aVRJT0swaVZTZFhyUSs3QmY1WTVTVFg1WmZ1bzhDSDJJ?=
+ =?utf-8?B?SnRMWXA5SitiMzZPNytkRHpHZGticGY2SkRlNWVES1B5OXJQODBiRFprTW1p?=
+ =?utf-8?B?SzJUOXdoOTQ0Y1VaRi9jUTVVUlhRM2FWOTRtTExqeGRiSWd2RnJYbmg2Nnd5?=
+ =?utf-8?B?NVRZMmhxNDA5Rys4YWhnTVFYVU1XQUw4MWhuZ2R0NitxR3Q0eURPMUlrWENa?=
+ =?utf-8?B?TFNvcno2ZFQxV3R6M1lHSm5NeSsvTGhSOVVCTVUrSFFUSVF6bkIza3dibGV5?=
+ =?utf-8?B?eGNPTk9pZGw5dHMrdUNkdXZKSzFSanRlRnE5TCs2TTZjSmQzNENySjg0TlRn?=
+ =?utf-8?B?UTJhMXhyb2ZQdXhZalc1SFR3cm13cVp0WDhuYU1wbzd6ZHdTNFZ4d0c1S1Z1?=
+ =?utf-8?B?bWNwa2tSdXdBVmZ0N1RLUzh5SXlxZHJmOXUxdnplaGtYMENnUVB1cGlCaUtj?=
+ =?utf-8?B?SzZnQXJCYnI0Q1BidjM0eEFhaTBxNXM3a09vNGhuNjZHdEpHd3hITlZTVWl5?=
+ =?utf-8?B?NDNmTFp5WENsdVlrNW00NkZFRzhsZDJ0UURlanJvT1hMTHBRODVNeGVqUk5r?=
+ =?utf-8?B?Z3hZM29hS3hnS1BZb2V4MmEyaE1rV0h0cENUK2ZvVW5DVUduYjlITGxiVHBs?=
+ =?utf-8?B?ZzJnNGU1d2dTajVCMlpvcm1mQmNjNTBDOGlvUlNhcGVRMWx6WER3OHd1OVFP?=
+ =?utf-8?B?NUVhRFlKTXNyQjNKamM5NFVweUxnTXc5ZkNONUt3aDdKR24yNTY4cmJuUkpX?=
+ =?utf-8?B?alM0bWJxWmxET29ac3dTSnVjTGthb3YzTXFqU3g0ekdKZlBESVkrNkZpU1lO?=
+ =?utf-8?B?dldyU096djA3MHBlWk5SdWdEc0doMzdSUnIwQWlqaGJxZXM4UUErQ3ZPNmFF?=
+ =?utf-8?B?THRRTE0wdE5RPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(10070799003)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SkNEcnFJc1k4Wmh3ODNnV2VwZDlmbER2eURST2pwL0JZcFp3MU5ZQjlnb3l3?=
+ =?utf-8?B?QVBnTy95dnNZdnRqcFNCbmZFY3QrWk92b1ZkaXZPY1pFbUxTcmpVZTZVZ3g1?=
+ =?utf-8?B?ZVd2OUh0cGJQckFTcXNKK2F3YldJUUl4Y2V4akYzbnc0YVdFTkZzUjNjdHlE?=
+ =?utf-8?B?dW5xM3FlNXIrZGEyNCtoNzlxM3p2SGFRSVlMWWQyaXRiaEx3VUQ3SXNZZExQ?=
+ =?utf-8?B?YlFYaG9DcE1rS2JTWFVycWF3OCtQblQzdDlienEzc1BPVWxabXkvUWUwRk52?=
+ =?utf-8?B?T09zU0xVNEk0bjEyY1ZidVN3OUx2YmJoaklob011YnFjUmlvZ2NJaFlRVjlj?=
+ =?utf-8?B?TjVsOUZycFlyYkRzcmIyNVhvR3daZ2g0aG4wWjRJSWEwR0hWRWcxUjB4K3Bl?=
+ =?utf-8?B?bGlRNWxJa0tRVGxPMUtyc2h3ZFpMMkpabjk0Mlh3YU5UcVJ5UTBpOG9teVhC?=
+ =?utf-8?B?cWFlaWl0emo2bnlPaVJHUCtVN3ZyUXpFb0VGMXZSeDVOTUxMRGZyenZ5Rldz?=
+ =?utf-8?B?UzNCZE1mQUZSa2FDcXV2cHBVQVo4ZnpjS1VQdEh3cmJiaXJRczhBeE0rRm9a?=
+ =?utf-8?B?RFlBUXZKV2U2NEJDTHQ0bHpRci9YU2tyclNFUDZ4ZWpwdnk2ZmMrdG11cWhu?=
+ =?utf-8?B?UGJNUDlYQUhkbG5pMnJBK2VoVE44WUQ0RkNtQTl0YkxSTGlpSzJ6L2xCUWRs?=
+ =?utf-8?B?VlJnRW56cjNlRHpwY1ZwNFMybTltLzRra3Z3MGljSXZhMElDeTg4cFAzWTBR?=
+ =?utf-8?B?Z0RPZnN4SDJORnRrQWJNbEdjaTE3eWlKNUJNUU9zZmgvK1o3QmxzK0d0VXZC?=
+ =?utf-8?B?b0FoNk1sT1JlWnMwKzNPMFdsbWpPZkNuSFplWGlVMzIzdm9wRFJjU1hub0hM?=
+ =?utf-8?B?VXA0SHd4dVl3K01jY0toekNjcTJSNkpuVDR5MG9wcG56UlBCOW4rZHJtdmls?=
+ =?utf-8?B?UWt6MEpHMFRkRW1pWENkT2g2Q0NCc21KVk12NGRSMFJyRXJBbW5MZHdhL1Q2?=
+ =?utf-8?B?bEh5V0taNHFWY3ZZUGtzQkFtbmxqRHRIc2wyODlPSitzSGk3dmZwc3JkWnZn?=
+ =?utf-8?B?TXlRSXpyS0JxQ2M5emVjOHBLZjNNMFJaZG1HZm0xcHhLcjQxbU5BdHh5YmJZ?=
+ =?utf-8?B?R3Y3SjhwMXl6cW1VMFpVYlpLTEFOM3NxSDlkaHlzcmJrc0NFUmNPTzUzYWY3?=
+ =?utf-8?B?U2pCQWE0V1AyVnRmYU93aTFPUGZrbTBQclpFT0dXdkRvMHo3Q3NhZ3NralJo?=
+ =?utf-8?B?YUxzUjZjUGVhaDN2ZEJVTVRYcU52Q256YTQvUGlYTlhpSnJtNXpaOEdLU0tE?=
+ =?utf-8?B?cm4xNUc4NzA3eVRtM3EvSXh2VEVxL2N3eTZYZGRJTXVMVWNScmdINVMxN3Ns?=
+ =?utf-8?B?WEdKRmswUUFCaGJob3JkRURIdEY5TVIrTHNhUVFtelhZNWljeThNSWN6alNS?=
+ =?utf-8?B?bWtXMk9MSjRuQTAwdFc5VDRhWkZtdDdwRUFqb3JIclFReGlKdzloNjYrZ0F0?=
+ =?utf-8?B?M04xR2JkYy9iTXd0OVMrdDg2RGo1NW92RFgxc2NJUEJUbFNUck05dngrSE5M?=
+ =?utf-8?B?LzdILzVCWUJoRHU4Qkc3TStWTUo0cWdQNFp6Qkc2a1JyQzBUSFNpWnh5Q2tX?=
+ =?utf-8?B?ZjF3Y05vQ0pNTGFpaGk1UkNTUlE2aHh2OVdMSDRZTWtWd0FuNFh0TTQ0Z0hs?=
+ =?utf-8?B?RTZTVEtRcW5rVnlXK29mRDNJNHJUVkVSeGxwQ0JrZ3RWbmtYaTNJYUwxNUhO?=
+ =?utf-8?B?L1B3ZzdXRW8wWlNQNU5YLzR4cDVzT3JVOGt5VFFBd1ltQXdXQkUrbHczUnJ4?=
+ =?utf-8?B?dENNVHdDN1hzc2tKZ1lkdENNYjVvQWpyVUNiWU1tZVZPMmJ5UUFHVktDVE9v?=
+ =?utf-8?B?azBzZEVTbjdNK0pZZXdxZGlSc0k0NTY3U3hOQ1Fha3g4VThJS3VwN2xvdnFo?=
+ =?utf-8?B?d1VxS2p5MGlQek5jeHJ4VEhJNS9NSXUrOEVCR0FMbTFZN1FicEhzMHZJdWRY?=
+ =?utf-8?B?TlBBSU1QWmtUc1BEWUR6eGw1RmM4MnFOMjJIcVZ4TmhIR083eVkzbVNhWGFX?=
+ =?utf-8?B?U1VOK0FiMitlaG1Kdi9qWVFZbjNGam1yNHpyV2t3UWo0SkdDMzhGOTM3U2xE?=
+ =?utf-8?B?TE9ncmNIdm1QcWhMK3NvVUFpTUl1UFRLYnFyV1o5NEg5OHE1TWplcDROUEZ4?=
+ =?utf-8?Q?HEPyYx4UVTYT1N5ezwSg+yf5RrQcuhgwbHbAvyhjmSWC?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3cc536f9-a45d-44e7-6575-08dda27511df
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2025 08:03:05.2825
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lIAM4dl79n6cE+phV2eaacvX3DYKcXL4dzNLLrlcej00khqAoBFIo9T493O7BMONapON6xcjR5FRX7ksWst5Mw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6109
 
-On 30/05/2025 14:20, Jagadeesh Kona wrote:
-> Video PLLs on SM8550/SM8650 require both MMCX and MXC rails to be kept ON
-> to configure the PLLs properly. Hence move runtime power management, PLL
-> configuration and enable critical clocks to qcom_cc_really_probe() which
-> ensures all required power domains are in enabled state before configurin=
-g
-> the PLLs or enabling the clocks.
->=20
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
-> ---
->   drivers/clk/qcom/videocc-sm8550.c | 66 +++++++++++++++++++-------------=
--------
->   1 file changed, 33 insertions(+), 33 deletions(-)
->=20
-> diff --git a/drivers/clk/qcom/videocc-sm8550.c b/drivers/clk/qcom/videocc=
--sm8550.c
-> index fcfe0cade6d0a95e749aabbc2af1174e5a70f0db..3e5891b43ee404edc6c99bbf8=
-f2583cb44df9e37 100644
-> --- a/drivers/clk/qcom/videocc-sm8550.c
-> +++ b/drivers/clk/qcom/videocc-sm8550.c
-> @@ -7,7 +7,6 @@
->   #include <linux/mod_devicetable.h>
->   #include <linux/module.h>
->   #include <linux/platform_device.h>
-> -#include <linux/pm_runtime.h>
->   #include <linux/regmap.h>
->=20
->   #include <dt-bindings/clock/qcom,sm8650-videocc.h>
-> @@ -51,6 +50,7 @@ static struct alpha_pll_config video_cc_pll0_config =3D=
- {
->=20
->   static struct clk_alpha_pll video_cc_pll0 =3D {
->   =09.offset =3D 0x0,
-> +=09.config =3D &video_cc_pll0_config,
->   =09.vco_table =3D lucid_ole_vco,
->   =09.num_vco =3D ARRAY_SIZE(lucid_ole_vco),
->   =09.regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_LUCID_OLE],
-> @@ -82,6 +82,7 @@ static struct alpha_pll_config video_cc_pll1_config =3D=
- {
->=20
->   static struct clk_alpha_pll video_cc_pll1 =3D {
->   =09.offset =3D 0x1000,
-> +=09.config =3D &video_cc_pll1_config,
->   =09.vco_table =3D lucid_ole_vco,
->   =09.num_vco =3D ARRAY_SIZE(lucid_ole_vco),
->   =09.regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_LUCID_OLE],
-> @@ -511,6 +512,23 @@ static const struct qcom_reset_map video_cc_sm8550_r=
-esets[] =3D {
->   =09[VIDEO_CC_XO_CLK_ARES] =3D { .reg =3D 0x8124, .bit =3D 2, .udelay =
-=3D 100 },
->   };
->=20
-> +static struct clk_alpha_pll *video_cc_sm8550_plls[] =3D {
-> +=09&video_cc_pll0,
-> +=09&video_cc_pll1,
-> +};
-> +
-> +static u32 video_cc_sm8550_critical_cbcrs[] =3D {
-> +=090x80f4, /* VIDEO_CC_AHB_CLK */
-> +=090x8124, /* VIDEO_CC_XO_CLK */
-> +=090x8140, /* VIDEO_CC_SLEEP_CLK */
-> +};
-> +
-> +static u32 video_cc_sm8650_critical_cbcrs[] =3D {
-> +=090x80f4, /* VIDEO_CC_AHB_CLK */
-> +=090x8124, /* VIDEO_CC_XO_CLK */
-> +=090x8150, /* VIDEO_CC_SLEEP_CLK */
-> +};
-> +
->   static const struct regmap_config video_cc_sm8550_regmap_config =3D {
->   =09.reg_bits =3D 32,
->   =09.reg_stride =3D 4,
-> @@ -519,6 +537,13 @@ static const struct regmap_config video_cc_sm8550_re=
-gmap_config =3D {
->   =09.fast_io =3D true,
->   };
->=20
-> +static struct qcom_cc_driver_data video_cc_sm8550_driver_data =3D {
-> +=09.alpha_plls =3D video_cc_sm8550_plls,
-> +=09.num_alpha_plls =3D ARRAY_SIZE(video_cc_sm8550_plls),
-> +=09.clk_cbcrs =3D video_cc_sm8550_critical_cbcrs,
-> +=09.num_clk_cbcrs =3D ARRAY_SIZE(video_cc_sm8550_critical_cbcrs),
-> +};
-> +
->   static const struct qcom_cc_desc video_cc_sm8550_desc =3D {
->   =09.config =3D &video_cc_sm8550_regmap_config,
->   =09.clks =3D video_cc_sm8550_clocks,
-> @@ -527,6 +552,8 @@ static const struct qcom_cc_desc video_cc_sm8550_desc=
- =3D {
->   =09.num_resets =3D ARRAY_SIZE(video_cc_sm8550_resets),
->   =09.gdscs =3D video_cc_sm8550_gdscs,
->   =09.num_gdscs =3D ARRAY_SIZE(video_cc_sm8550_gdscs),
-> +=09.use_rpm =3D true,
-> +=09.driver_data =3D &video_cc_sm8550_driver_data,
->   };
->=20
->   static const struct of_device_id video_cc_sm8550_match_table[] =3D {
-> @@ -538,26 +565,7 @@ MODULE_DEVICE_TABLE(of, video_cc_sm8550_match_table)=
-;
->=20
->   static int video_cc_sm8550_probe(struct platform_device *pdev)
->   {
-> -=09struct regmap *regmap;
-> -=09int ret;
-> -=09u32 sleep_clk_offset =3D 0x8140;
-> -
-> -=09ret =3D devm_pm_runtime_enable(&pdev->dev);
-> -=09if (ret)
-> -=09=09return ret;
-> -
-> -=09ret =3D pm_runtime_resume_and_get(&pdev->dev);
-> -=09if (ret)
-> -=09=09return ret;
-> -
-> -=09regmap =3D qcom_cc_map(pdev, &video_cc_sm8550_desc);
-> -=09if (IS_ERR(regmap)) {
-> -=09=09pm_runtime_put(&pdev->dev);
-> -=09=09return PTR_ERR(regmap);
-> -=09}
-> -
->   =09if (of_device_is_compatible(pdev->dev.of_node, "qcom,sm8650-videocc"=
-)) {
-> -=09=09sleep_clk_offset =3D 0x8150;
->   =09=09video_cc_pll0_config.l =3D 0x1e;
->   =09=09video_cc_pll0_config.alpha =3D 0xa000;
->   =09=09video_cc_pll1_config.l =3D 0x2b;
-> @@ -569,21 +577,13 @@ static int video_cc_sm8550_probe(struct platform_de=
-vice *pdev)
->   =09=09video_cc_sm8550_clocks[VIDEO_CC_MVS1_SHIFT_CLK] =3D &video_cc_mvs=
-1_shift_clk.clkr;
->   =09=09video_cc_sm8550_clocks[VIDEO_CC_MVS1C_SHIFT_CLK] =3D &video_cc_mv=
-s1c_shift_clk.clkr;
->   =09=09video_cc_sm8550_clocks[VIDEO_CC_XO_CLK_SRC] =3D &video_cc_xo_clk_=
-src.clkr;
-> -=09}
-> -
-> -=09clk_lucid_ole_pll_configure(&video_cc_pll0, regmap, &video_cc_pll0_co=
-nfig);
-> -=09clk_lucid_ole_pll_configure(&video_cc_pll1, regmap, &video_cc_pll1_co=
-nfig);
->=20
-> -=09/* Keep some clocks always-on */
-> -=09qcom_branch_set_clk_en(regmap, 0x80f4); /* VIDEO_CC_AHB_CLK */
-> -=09qcom_branch_set_clk_en(regmap, sleep_clk_offset); /* VIDEO_CC_SLEEP_C=
-LK */
-> -=09qcom_branch_set_clk_en(regmap, 0x8124); /* VIDEO_CC_XO_CLK */
-> -
-> -=09ret =3D qcom_cc_really_probe(&pdev->dev, &video_cc_sm8550_desc, regma=
-p);
-> -
-> -=09pm_runtime_put(&pdev->dev);
-> +=09=09video_cc_sm8550_driver_data.clk_cbcrs =3D video_cc_sm8650_critical=
-_cbcrs;
-> +=09=09video_cc_sm8550_driver_data.num_clk_cbcrs =3D
-> +=09=09=09=09=09=09=09ARRAY_SIZE(video_cc_sm8650_critical_cbcrs);
-> +=09}
->=20
-> -=09return ret;
-> +=09return qcom_cc_probe(pdev, &video_cc_sm8550_desc);
->   }
->=20
->   static struct platform_driver video_cc_sm8550_driver =3D {
->=20
-> --
-> 2.34.1
->=20
->=20
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Hi Lyude, thanks for the review!
 
+On Sat May 31, 2025 at 7:22 AM JST, Lyude Paul wrote:
+<snip>
+>> +    /// `target_mem`.
+>> +    ///
+>> +    /// `sec` is set if the loaded firmware is expected to run in secur=
+e mode.
+>> +    fn dma_wr(
+>> +        &self,
+>> +        bar: &Bar0,
+>> +        dma_handle: bindings::dma_addr_t,
+>> +        target_mem: FalconMem,
+>> +        load_offsets: FalconLoadTarget,
+>> +        sec: bool,
+>> +    ) -> Result {
+>> +        const DMA_LEN: u32 =3D 256;
+>> +
+>> +        // For IMEM, we want to use the start offset as a virtual addre=
+ss tag for each page, since
+>> +        // code addresses in the firmware (and the boot vector) are vir=
+tual.
+>> +        //
+>> +        // For DMEM we can fold the start offset into the DMA handle.
+>> +        let (src_start, dma_start) =3D match target_mem {
+>> +            FalconMem::Imem =3D> (load_offsets.src_start, dma_handle),
+>> +            FalconMem::Dmem =3D> (
+>> +                0,
+>> +                dma_handle + load_offsets.src_start as bindings::dma_ad=
+dr_t,
+>
+> I wonder if maybe we shouldn't use dma_addr_t directly from bindings and =
+add a
+> proper type alias for it somewhere?
+
+I guess so, let me see if I can easily change CoherentAllocation to
+support that (and address Danilo's related comment).
+
+>> +pub(crate) trait FalconHal<E: FalconEngine>: Sync {
+>> +    // Activates the Falcon core if the engine is a risvc/falcon dual e=
+ngine.
+>> +    fn select_core(&self, _falcon: &Falcon<E>, _bar: &Bar0) -> Result<(=
+)> {
+>
+> Could just be Result
+>
+>> +        Ok(())
+>> +    }
+>> +
+>> +    /// Returns the fused version of the signature to use in order to r=
+un a HS firmware on this
+>> +    /// falcon instance. `engine_id_mask` and `ucode_id` are obtained f=
+rom the firmware header.
+>> +    fn get_signature_reg_fuse_version(
+>> +        &self,
+>> +        falcon: &Falcon<E>,
+>> +        bar: &Bar0,
+>> +        engine_id_mask: u16,
+>> +        ucode_id: u8,
+>> +    ) -> Result<u32>;
+>> +
+>> +    // Program the boot ROM registers prior to starting a secure firmwa=
+re.
+>> +    fn program_brom(&self, falcon: &Falcon<E>, bar: &Bar0, params: &Fal=
+conBromParams)
+>> +        -> Result<()>;
+>
+> Same here
+
+Urrk I've done this throughout the code. Fixed them all, thanks.
