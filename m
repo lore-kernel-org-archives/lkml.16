@@ -1,190 +1,119 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A39D239086;
-	Tue,  3 Jun 2025 14:08:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C55AE239E6F;
+	Tue,  3 Jun 2025 14:08:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748959707; cv=none; b=R4ftw5tsKDBwpYv4fwpv2Z6sUI/1lBDf19ShR1TUOIZrVhzBsIXrKW6MMM884fpIDMfJbf4mf3KdVFw54gzLQh3iJTE+N1vppkBXmIYGld9pUSlw0QYLg5hK8vvfuyyxfy08Fba+95RhJAt7Gf6HvaxlVsmrBLEYKAHIvgs1HWA=
+	t=1748959715; cv=none; b=rf9IiGcx6RCd3ipX6Lkke2eXkK6FLM8xiZufI+1yn9Ae6+3IZRj4fcH5sC0UhjceXY4CrxRVF7gMT0WQ7niYP9w05UF9EDk0D1jL4oHycSC/T3HXJc66faXAhy1Xl0P6k6KfORkds3LzRtsq+uEoPeNE1iTiGofhFKoTac4yyaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748959707; c=relaxed/simple;
-	bh=5EudBcfEszL6gBVCnHkKuKmLA2viOUk0WrqkZ5BCh5o=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=BluOaq4x/rgySfDeG16t/OyDUm78I6iGEUnbhh3MD9sXpYYS8ZpTV1Bf9fG4UU0R2Cl3mZmRMztiRgyd8KMGg4U6SjACUpZuGsYeAoYl6IemA8QjaQbkZRWDHaYgiCEXfBOaT9/53/uAGO87GOreZLL8Tgw+hQjZOVqXN+mIpTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=T3LuJQt7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0B8OcsWL; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1748959715; c=relaxed/simple;
+	bh=5x/f0EZuI/JqhMxT7VHKCt5FkLTKEV6h9MAJTamDwh8=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=inpktmFjxtg4/idHSc5KoGBlo8ExH6oqSIk1AJgaaGzw2GbE5r55N1jBQ+D+/mPzgNKAKNkmvFr73mhcdOQ5bYr6+XNWsIG+73sEgzHxEp78eAzGc9WPx4ZHRdEh+QXFGnDIcZ4X8HaUFE7/+7+upepB9nr6GEt0V3mtzgOD/7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WJIFBuS6; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="T3LuJQt7";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0B8OcsWL"
-Date: Tue, 03 Jun 2025 14:08:20 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748959702;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FTNeQM0OFI1EkFlZcWKkjPtR/twmYHMH0DZe3+JTBaI=;
-	b=T3LuJQt7HuSuLowYaseWUFS9fpuKvbvHtnrgcLiz/ThVXugsW6wHK6XaSTHtS7uNNkQHgl
-	BsM3cRZWUnOYiMAHDlbMpvP7pbkF6+g9tgGeXSiOixANUCSWUbVbP78EDPz9NuHTEJoXtL
-	Lk1HzaGn5PUrQhjmxhdUGF7dpJuSh7Ha9GlBGkU85ppNgXWpRK15LbsNkte5UdiANCN5yB
-	MbYJX9eVV99GZ8YZwif1FOQ+c5KRTDjyEqd4cNPaY6ZnMjCAYTcsuxx4JqFIdOa+gvtlWi
-	F/QvguBDjrfyNONyJpkyQ4Xsk4uDE+j8mjUdBW6IYNvl1fbWFWUHwBlP9XCGog==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748959702;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FTNeQM0OFI1EkFlZcWKkjPtR/twmYHMH0DZe3+JTBaI=;
-	b=0B8OcsWLgubo6569xtNaz8o15QPJuwP1KJ1+DDf4D6F+ZP5Mf+T2jVTb510RC5oZXAEGAD
-	WN8+NR+vWjpk+fCA==
-From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/iopl: Cure TIF_IO_BITMAP inconsistencies
-Cc: syzbot+e2b1803445d236442e54@syzkaller.appspotmail.com,
- Thomas Gleixner <tglx@linutronix.de>, "Borislav Petkov (AMD)" <bp@alien8.de>,
- stable@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <87wmdceom2.ffs@tglx>
-References: <87wmdceom2.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WJIFBuS6"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b271f3ae786so3977363a12.3;
+        Tue, 03 Jun 2025 07:08:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748959712; x=1749564512; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fQQ/cv1hJEUU0b2kO6L2aGXF38EM9DHmWuiQsHfN/k8=;
+        b=WJIFBuS6gnqDmlngSQjULCaTP8VY4lXtrI0s3+fQ26ewTmiaSa1eOdW9BNPOkfB/AN
+         hixaAxmo0JHNuaPhSz1+785Y4v0JrOCTMC0AZ+SjwF4uUQ8YvBtkiYmkXFtyW/79Bg5a
+         FZVsjko21LzlbcVjaLLLSwG+cbCy5vqTvbkR+8Bps/EbE0pPRBcsyVJ3A7YQ3Y0Tnrh4
+         1DcqpwUPcnPvlPNNAh9hy5/dlTMyiaNNeJ7k+RAx2K4eQ9oqGIR388URzROsVu+LW3Wy
+         7iKiWZUIrPhlm7sde2IxDp0eIo9ZkusAIsZcZjmcEgI6SGsqQ09Mjw5HKvj70VlnXHYP
+         DFPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748959712; x=1749564512;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=fQQ/cv1hJEUU0b2kO6L2aGXF38EM9DHmWuiQsHfN/k8=;
+        b=AtVkvb0wXLyGnW5lpzx1xVm9okxIBMzgliyda140lMSqe+E2NMKCyn+zdWu/c1pLWc
+         55AbWe5MKABJelZoQstMC+r+ktM4zm3fbxf+xJLwADxTR37AeEbnvSx43E9gXsKJbFTA
+         RhV8Hj4/UsOWSnRKNj0WdxknBVmsuEreQu5kBju54O1YM9i5TdmE9uFbl3RIQyOAeobo
+         +OTe0MQcXit6vGkSrqSnYcaYARs7BTr0+KIPJ3AbgJHLnxzZ6Bfp/coNxJJWdYcFPYtp
+         GHH4yajmne0cuePqOZ1Qthgt2KlrtwAYR0NxYahX9BL2ZQHOhgrneo4ZGsMRBuCrOxs7
+         5jFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUS7L28a8ZFcjO+c60DDpLbKPKV625SbuOpsrJl/ivvefE7r2ZcHm1qams87DaJsodJ4cJmdNPRo3izBE1cGmo=@vger.kernel.org, AJvYcCWcHw+s1rJBOPfA+Z/3cLAtnwjlS+/rd2nausySHYNOW6d7VLYRLaaOeYHCFjmMufgAKrfHhsxHpCv4b6c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3E7cRsmjOuf/o0wCRtf6WnqV0rfdpqUCo35eV8x4wqW0xZM8Q
+	Tzccen9ZiZYaJCZxmB6kECmYCgQCXI4WfB/hcpu+CmCpnvLVboc5mbSA
+X-Gm-Gg: ASbGnctfycuXtTh0qq9LZd6ph5vxsCktcOzYOjHr664/HXZcGE85YPySEabMfiB+d1R
+	hyQM9u/WzuQhKesTJ3gWyxQ4FkckSB15VhCLT0tWbxBCHvasBpyzmAJGjotxmw1YGUW7fMPyOxx
+	pvmsZhE+VMyBRkG1bCErgMLrOr1ow2gWntYKcvLLIToiQ3esGexpIy6cpxeMzcxEK577ntEP5zu
+	IPpFUFLdHHgt40m0b1wgN83+Mui7zy9/P7tVt+VKUCeFxZGrZK+pmuRCGIkAsLVZEOhIXLBMTvm
+	z+dFzFLxfCC0S9jozqh6Hk7ztYXIIeQiADKm61Ug96bAjHKhd2LFWGP1HbLZC3lw/dmBxQ1zqAx
+	xvzFh3HcyENUiVxfWslqjeuHOJRvFmcuUW28XRtliJMKi
+X-Google-Smtp-Source: AGHT+IGh2ZcHlAX/bFqZ4WSwa/ggCYCIcvpet9Y90iHPYRTenGfyss3jsjmeb5QPinu/zA94b6EwrQ==
+X-Received: by 2002:a05:6a20:4388:b0:1f5:6abb:7cbb with SMTP id adf61e73a8af0-21ad95c0ac3mr27308808637.23.1748959711639;
+        Tue, 03 Jun 2025 07:08:31 -0700 (PDT)
+Received: from localhost (p4138183-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.129.206.183])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2eceb28ea8sm7155211a12.18.2025.06.03.07.08.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 07:08:31 -0700 (PDT)
+Date: Tue, 03 Jun 2025 23:08:15 +0900 (JST)
+Message-Id: <20250603.230815.1426696742567640092.fujita.tomonori@gmail.com>
+To: a.hindborg@kernel.org
+Cc: fujita.tomonori@gmail.com, rust-for-linux@vger.kernel.org,
+ boqun.feng@gmail.com, frederic@kernel.org, lyude@redhat.com,
+ tglx@linutronix.de, anna-maria@linutronix.de, jstultz@google.com,
+ sboyd@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
+ gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+ aliceryhl@google.com, tmgross@umich.edu, dakr@kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 4/5] rust: time: Make HasHrTimer generic over
+ HrTimerMode
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <877c1u71uh.fsf@kernel.org>
+References: <HhGhHOv9fvWu0G7TihU0V5UMif0USODr5QagKogYlf-zE9P6uyPWYdEckCaFi747sl_vkLi5XDB_O9BFcwsjow==@protonmail.internalid>
+	<20250504045959.238068-5-fujita.tomonori@gmail.com>
+	<877c1u71uh.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <174895970095.406.15848786102493716530.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Mon, 02 Jun 2025 14:41:10 +0200
+Andreas Hindborg <a.hindborg@kernel.org> wrote:
 
-Commit-ID:     8b68e978718f14fdcb080c2a7791c52a0d09bc6d
-Gitweb:        https://git.kernel.org/tip/8b68e978718f14fdcb080c2a7791c52a0d09bc6d
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Wed, 26 Feb 2025 16:01:57 +01:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Tue, 03 Jun 2025 15:56:39 +02:00
+>> @@ -579,12 +604,16 @@ macro_rules! impl_has_hr_timer {
+>>          impl$({$($generics:tt)*})?
+>>              HasHrTimer<$timer_type:ty>
+>>              for $self:ty
+>> -        { self.$field:ident }
+>> +        {
+>> +            mode = $mode:ty,
+>> +            self.$field:ident
+> 
+> How about:
+> 
+>   mode = $mode:ty,
+>   field = self.$field:ident
 
-x86/iopl: Cure TIF_IO_BITMAP inconsistencies
+Works fo me.
 
-io_bitmap_exit() is invoked from exit_thread() when a task exists or
-when a fork fails. In the latter case the exit_thread() cleans up
-resources which were allocated during fork().
+> So that there is some sort of red line when calling this. We could also
+> consider adopting another syntax for association:
+> 
+>   mode: $mode:ty,
+>   field: self.$field:ident
 
-io_bitmap_exit() invokes task_update_io_bitmap(), which in turn ends up
-in tss_update_io_bitmap(). tss_update_io_bitmap() operates on the
-current task. If current has TIF_IO_BITMAP set, but no bitmap installed,
-tss_update_io_bitmap() crashes with a NULL pointer dereference.
+Looks fine too.
 
-There are two issues, which lead to that problem:
+> or something else like `<-` or `->` ?
 
-  1) io_bitmap_exit() should not invoke task_update_io_bitmap() when
-     the task, which is cleaned up, is not the current task. That's a
-     clear indicator for a cleanup after a failed fork().
+I personally prefer one of the two options above, but I'm also ok with
+`<-` or `->`.
 
-  2) A task should not have TIF_IO_BITMAP set and neither a bitmap
-     installed nor IOPL emulation level 3 activated.
 
-     This happens when a kernel thread is created in the context of
-     a user space thread, which has TIF_IO_BITMAP set as the thread
-     flags are copied and the IO bitmap pointer is cleared.
-
-     Other than in the failed fork() case this has no impact because
-     kernel threads including IO workers never return to user space and
-     therefore never invoke tss_update_io_bitmap().
-
-Cure this by adding the missing cleanups and checks:
-
-  1) Prevent io_bitmap_exit() to invoke task_update_io_bitmap() if
-     the to be cleaned up task is not the current task.
-
-  2) Clear TIF_IO_BITMAP in copy_thread() unconditionally. For user
-     space forks it is set later, when the IO bitmap is inherited in
-     io_bitmap_share().
-
-For paranoia sake, add a warning into tss_update_io_bitmap() to catch
-the case, when that code is invoked with inconsistent state.
-
-Fixes: ea5f1cd7ab49 ("x86/ioperm: Remove bitmap if all permissions dropped")
-Reported-by: syzbot+e2b1803445d236442e54@syzkaller.appspotmail.com
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/87wmdceom2.ffs@tglx
----
- arch/x86/kernel/ioport.c  | 13 +++++++++----
- arch/x86/kernel/process.c |  6 ++++++
- 2 files changed, 15 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/kernel/ioport.c b/arch/x86/kernel/ioport.c
-index 6290dd1..ff40f09 100644
---- a/arch/x86/kernel/ioport.c
-+++ b/arch/x86/kernel/ioport.c
-@@ -33,8 +33,9 @@ void io_bitmap_share(struct task_struct *tsk)
- 	set_tsk_thread_flag(tsk, TIF_IO_BITMAP);
- }
- 
--static void task_update_io_bitmap(struct task_struct *tsk)
-+static void task_update_io_bitmap(void)
- {
-+	struct task_struct *tsk = current;
- 	struct thread_struct *t = &tsk->thread;
- 
- 	if (t->iopl_emul == 3 || t->io_bitmap) {
-@@ -54,7 +55,12 @@ void io_bitmap_exit(struct task_struct *tsk)
- 	struct io_bitmap *iobm = tsk->thread.io_bitmap;
- 
- 	tsk->thread.io_bitmap = NULL;
--	task_update_io_bitmap(tsk);
-+	/*
-+	 * Don't touch the TSS when invoked on a failed fork(). TSS
-+	 * reflects the state of @current and not the state of @tsk.
-+	 */
-+	if (tsk == current)
-+		task_update_io_bitmap();
- 	if (iobm && refcount_dec_and_test(&iobm->refcnt))
- 		kfree(iobm);
- }
-@@ -192,8 +198,7 @@ SYSCALL_DEFINE1(iopl, unsigned int, level)
- 	}
- 
- 	t->iopl_emul = level;
--	task_update_io_bitmap(current);
--
-+	task_update_io_bitmap();
- 	return 0;
- }
- 
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index c1d2dac..704883c 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -176,6 +176,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
- 	frame->ret_addr = (unsigned long) ret_from_fork_asm;
- 	p->thread.sp = (unsigned long) fork_frame;
- 	p->thread.io_bitmap = NULL;
-+	clear_tsk_thread_flag(p, TIF_IO_BITMAP);
- 	p->thread.iopl_warn = 0;
- 	memset(p->thread.ptrace_bps, 0, sizeof(p->thread.ptrace_bps));
- 
-@@ -464,6 +465,11 @@ void native_tss_update_io_bitmap(void)
- 	} else {
- 		struct io_bitmap *iobm = t->io_bitmap;
- 
-+		if (WARN_ON_ONCE(!iobm)) {
-+			clear_thread_flag(TIF_IO_BITMAP);
-+			native_tss_invalidate_io_bitmap();
-+		}
-+
- 		/*
- 		 * Only copy bitmap data when the sequence number differs. The
- 		 * update time is accounted to the incoming task.
